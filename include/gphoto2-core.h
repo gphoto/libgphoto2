@@ -51,8 +51,8 @@
 
 	/* Create a new camera */
 	/* ============================================================================== */
-	int gp_camera_new 	  (Camera **camera, int camera_number, CameraPortSettings *port);
-	int gp_camera_new_by_name (Camera **camera, char *camera_name, CameraPortSettings *port);
+	int gp_camera_new 	  (Camera **camera, int camera_number, CameraPortInfo *port);
+	int gp_camera_new_by_name (Camera **camera, char *camera_name, CameraPortInfo *port);
 
 	/* Free a camera */
 	/* ============================================================================== */

@@ -888,7 +888,7 @@ OPTION_CALLBACK(about) {
 
 int set_globals () {
 	/* takes all the settings and sets up the gphoto lib */
-	CameraPortSettings s;
+	CameraPortInfo s;
 
 	if (strlen(glob_model) == 0) {
 		error_print("Must specify a camera model using \"%scamera model\"",LONG_OPTION);

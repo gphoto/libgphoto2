@@ -16,7 +16,7 @@ SHELL = /bin/sh
 
 srcdir = .
 top_srcdir = ../..
-prefix = /opt/gphoto2
+prefix = /opt/gphoto2/
 exec_prefix = ${prefix}
 
 bindir = ${exec_prefix}/bin
@@ -78,20 +78,20 @@ NM = /usr/bin/nm -B
 OBJDUMP = @OBJDUMP@
 PACKAGE = gphoto2
 RANLIB = ranlib
-SUBDIRS_CAMLIBS =  barbie directory fujitsu konica panasonic digita canon
+SUBDIRS_CAMLIBS =  barbie canon directory fujitsu konica panasonic digita
 VERSION = 1.90
 
 camlibdir = $(prefix)/lib/gphoto2
 camlib_LTLIBRARIES = libgphoto2_canon.la
 
-CFLAGS = -g -O2 -I/usr/local/include/gpio -I/usr/local/include -I/usr/local/include `gtk-config --cflags` `gpio-config --cflags` -g -Wall
+CFLAGS = -g -O2 -I/usr/local/include/gpio -I/usr/local/include -I/usr/local/include `gpio-config --cflags` -g -Wall
 LDFLAGS =  -g `gpio-config --libs`
 INCLUDES = -I$(top_srcdir)/include
 
 libgphoto2_canon_la_SOURCES = canon.c canon.h psa50.c psa50.h serial.c serial.h 	crc.c crc.h util.c util.h
 
 
-libgphoto_canon_la_LDFLAGS = -version-info 0:0:0 `gpio-config --libs`
+libgphoto2_canon_la_LDFLAGS = -version-info 0:0:0
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../config.h
 CONFIG_CLEAN_FILES = 
@@ -100,7 +100,6 @@ LTLIBRARIES =  $(camlib_LTLIBRARIES)
 
 DEFS = -DHAVE_CONFIG_H -I. -I$(srcdir) -I../..
 CPPFLAGS = 
-libgphoto2_canon_la_LDFLAGS = 
 libgphoto2_canon_la_LIBADD = 
 libgphoto2_canon_la_OBJECTS =  canon.lo psa50.lo serial.lo crc.lo \
 util.lo
@@ -233,7 +232,7 @@ distdir: $(DISTFILES)
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
 	  if test -d $$d/$$file; then \
-	    cp -pr $$/$$file $(distdir)/$$file; \
+	    cp -pr $$d/$$file $(distdir)/$$file; \
 	  else \
 	    test -f $(distdir)/$$file \
 	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \

@@ -75,7 +75,8 @@ void icon_resize(GtkWidget *window) {
 int camera_set() {
 
 	GtkWidget *camera_tree, *message, *message_label, *camera_label, *icon_list;
-	CameraPortSettings ps;
+	CameraPortInfo ps;
+	Camera *new_camera;
 	char camera[1024], port[1024], speed[1024];
 
 	/* Mark camera as not init'd */
@@ -87,16 +88,16 @@ int camera_set() {
 	gtk_label_set_text(GTK_LABEL(message_label), _("Initializing camera..."));
 
 	/* Retrieve which camera to use */
-	if (gp_setting_get("camera", camera)==GP_ERROR) {
-		gp_message(_("You must choose a camera"));
+	if (gp_setting_get("gtk-old", "camera", camera)==GP_ERROR) {
+		gp_camera_message(NULL, _("You must choose a camera"));
 		camera_select();
 	}
 
 	/* Retrieve the port to use */
-	gp_setting_get("port", port);
+	gp_setting_get("gtk-old", "port", port);
 
 	/* Retrieve the speed to use */
-	gp_setting_get("speed", speed);
+	gp_setting_get("gtk-old", "speed", speed);
 
 	/* Set up the camera initialization */
 	strcpy(ps.path, port);
@@ -107,15 +108,16 @@ int camera_set() {
 	gtk_widget_show(message);
 	idle();
 
-	/* Set the camera model in the gPhoto library */
-	if (gp_camera_set_by_name(camera, &ps)==GP_ERROR) {
+	/* Create the new camera */
+	if (gp_camera_new_by_name(&new_camera, camera, &ps) == GP_ERROR) {
 		gtk_widget_destroy(message);
 		return (GP_ERROR);
 	}
 
 	/* Set the current folder */
-	if (gp_folder_set("/")==GP_ERROR) {
+	if (gp_camera_folder_set(new_camera, "/")==GP_ERROR) {
 		gtk_widget_destroy(message);
+		gp_camera_free(new_camera);
 		return (GP_ERROR);
 	}
 
@@ -136,6 +138,13 @@ int camera_set() {
 	/* Mark the camera as init'd */
 	gp_gtk_camera_init = 1;
 
+	/* Destroy the old camera after the new one is successfully loaded */
+	if (gp_gtk_camera)
+		gp_camera_free(gp_gtk_camera);
+
+	/* Set the new camera to be active */
+	gp_gtk_camera = new_camera;
+
 	return (GP_OK);
 }
 
@@ -147,9 +156,9 @@ int main_quit(GtkWidget *widget, gpointer data) {
 	/* Save the window size */
 	gdk_window_get_size(gp_gtk_main_window->window, &x, &y);
 	sprintf(buf, "%i", x);
-	gp_setting_set("width", buf);
+	gp_setting_set("gtk-old", "width", buf);
 	sprintf(buf, "%i", y);
-	gp_setting_set("height", buf);
+	gp_setting_set("gtk-old", "height", buf);
 
 	if (gp_gtk_camera_init)
 		gp_exit();
@@ -161,11 +170,6 @@ int main_quit(GtkWidget *widget, gpointer data) {
 /* File operations */
 /* ----------------------------------------------------------- */
 
-void append_photo(CameraFile *file) {
-	debug_print("append photo");
-
-}
-
 void open_photo() {
 	
 	GtkWidget *filesel;
@@ -174,7 +178,7 @@ void open_photo() {
 	debug_print("open photo");
 
 	filesel = gtk_file_selection_new("Open a photo");
-	gp_setting_get("cwd", buf);
+	gp_setting_get("gtk-old", "cwd", buf);
 	gtk_file_selection_set_filename(GTK_FILE_SELECTION(filesel), buf);
 
 	if (wait_for_hide(filesel, GTK_FILE_SELECTION(filesel)->ok_button,
@@ -217,7 +221,7 @@ void save_selected_photos() {
 	}
 
 	if (num == 0) {
-		gp_message("Please select some photos to save first");
+		gp_camera_message(NULL, "Please select some photos to save first");
 		return;
 	}
 
@@ -243,7 +247,7 @@ void save_selected_photos() {
 		prefix = gtk_entry_get_text(GTK_ENTRY(prefix_entry));
 	}
 
-	gp_progress(0.00);
+	gp_camera_progress(gp_gtk_camera, NULL, 0.00);
 	gtk_widget_show(gp_gtk_progress_window);
 	for (x=0; x<GTK_ICON_LIST(icon_list)->num_icons; x++) {
 		item = gtk_icon_list_get_nth(GTK_ICON_LIST(icon_list), x);
@@ -251,9 +255,9 @@ void save_selected_photos() {
 		   /* Save the photo */
 		   if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(save_photos))) {
 			sprintf(msg, "Saving photo #%04i of %04i", x+1, num);
-			gp_message(msg);
+			gp_camera_message(gp_gtk_camera, msg);
 			f = gp_file_new();
-			gp_file_get(x, f);
+			gp_camera_file_get(gp_gtk_camera, f, x);
 			/* determine the name to use */
 			if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(use_camera_filename))) {
 			   if (strlen(f->name)>0) {
@@ -264,7 +268,7 @@ void save_selected_photos() {
 				*slash = '/';
 			   } else {
 				/* If not, error, and return */
-				gp_message(_("Camera did not suggest a filename.\nPlease select \"Save\" again and specify a filename yourself."));
+				gp_camera_message(NULL, _("Camera did not suggest a filename.\nPlease select \"Save\" again and specify a filename yourself."));
 				gp_file_free(f);
 				return;
 			   }
@@ -291,7 +295,7 @@ void save_selected_photos() {
 			if (file_exists(fname)) {
 				sprintf(msg, "%s already exists. Overwrite?", fname);
 				gtk_widget_hide(gp_gtk_progress_window);
-				if (gp_confirm(msg))
+				if (gp_camera_confirm(gp_gtk_camera, msg))
 					gp_file_save(f, fname);
 				gtk_widget_show(gp_gtk_progress_window);
 			} else {
@@ -304,9 +308,9 @@ void save_selected_photos() {
 		   /* Save the thumbnail */
 		   if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(save_thumbs))) {
 			sprintf(msg, "Saving thumbnail #%04i of %04i", x+1, num);
-			gp_status(msg);
+			gp_camera_status(gp_gtk_camera, msg);
 			f = gp_file_new();
-			gp_file_get_preview(x, f);
+			gp_camera_file_get_preview(gp_gtk_camera, f, x);
 			/* determine the name to use */
 			if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(use_camera_filename))) {
 			   if (strlen(f->name)>0) {
@@ -317,7 +321,7 @@ void save_selected_photos() {
 				*slash = '/';
 			   } else {
 				/* If not, error, and return */
-				gp_message(_("Camera did not suggest a filename.\nPlease select \"Save\" again and specify a filename yourself."));
+				gp_camera_message(NULL, _("Camera did not suggest a filename.\nPlease select \"Save\" again and specify a filename yourself."));
 				gp_file_free(f);
 				return;
 			   }
@@ -334,7 +338,7 @@ void save_selected_photos() {
 			/* check for existing file */
 			if (file_exists(fname)) {
 				sprintf(msg, "%s already exists. Overwrite?", fname);
-				if (gp_confirm(msg))
+				if (gp_camera_confirm(gp_gtk_camera, msg))
 					gp_file_save(f, fname);
 			} else {
 				gp_file_save(f, fname);
@@ -344,7 +348,7 @@ void save_selected_photos() {
 		}
 	}
 	gtk_widget_destroy(window);
-	gp_progress(0.00);
+	gp_camera_progress(gp_gtk_camera, NULL, 0.00);
 	gtk_widget_hide(gp_gtk_progress_window);
 }
 
@@ -434,9 +438,9 @@ void folder_set (GtkWidget *tree_item, gpointer data) {
 	sprintf(buf, "camera folder path = %s", path);
 	debug_print(buf);
 
-	if (gp_folder_set(path)==GP_ERROR) {
+	if (gp_camera_folder_set(gp_gtk_camera, path)==GP_ERROR) {
 		sprintf(buf, _("Could not open folder:\n%s"), path);
-		gp_message(buf);
+		gp_camera_message(gp_gtk_camera, buf);
 		return;
 
 	}
@@ -504,9 +508,9 @@ void folder_expand (GtkWidget *tree_item, gpointer data) {
 	if (gtk_object_get_data(GTK_OBJECT(tree_item), "expanded")) return;
 
 	/* Count however many folders are in this folder */
-	if ((count = gp_folder_list(path, list))==GP_ERROR) {
+	if ((count = gp_camera_folder_list(gp_gtk_camera, path, list))==GP_ERROR) {
 		sprintf(buf, _("Could not open folder\n%s"), path);
-		gp_message(buf);
+		gp_camera_message(gp_gtk_camera, buf);
 		return;
 	}
 
@@ -600,13 +604,13 @@ void camera_select_update_camera(GtkWidget *entry, gpointer data) {
 
 	if (gp_camera_abilities_by_name(new_camera, &a)==GP_ERROR) {
 		sprintf(buf, _("Could not get abilities for %s"), new_camera);
-		gp_message(buf);
+		gp_camera_message(NULL, buf);
 		return;
 	}
 
 	/* Get the number of ports */
 	if ((num_ports = gp_port_count())==GP_ERROR) {
-		gp_message(_("Could not retrieve number of ports"));
+		gp_camera_message(NULL, _("Could not retrieve number of ports"));
 		return;
 	}
 
@@ -642,7 +646,7 @@ void camera_select_update_camera(GtkWidget *entry, gpointer data) {
 					buf, (gpointer)strdup(buf1));
 			}
 		}  else {
-			gp_message(_("Error retrieving the port list"));
+			gp_camera_message(NULL, _("Error retrieving the port list"));
 		}
 	}
 	gtk_combo_set_popdown_strings(GTK_COMBO(port), port_list);
@@ -675,7 +679,7 @@ void camera_select() {
 
 	/* Get the number of cameras */
 	if ((num_cameras = gp_camera_count())==GP_ERROR) {
-		gp_message(_("Could not retrieve number of cameras"));
+		gp_camera_message(NULL, _("Could not retrieve number of cameras"));
 		return;
 	}
 
@@ -708,11 +712,11 @@ void camera_select() {
 		GTK_SIGNAL_FUNC (camera_select_update_port), (gpointer)window);
 
 	/* Retrieve the saved values */
-	if (gp_setting_get("camera", buf)==GP_OK)
+	if (gp_setting_get("gtk-old", "camera", buf)==GP_OK)
 		gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(camera)->entry), buf);
-	if (gp_setting_get("port name", buf)==GP_OK)
+	if (gp_setting_get("gtk-old", "port name", buf)==GP_OK)
 		gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(port)->entry), buf);
-	if (gp_setting_get("speed", buf)==GP_OK)
+	if (gp_setting_get("gtk-old", "speed", buf)==GP_OK)
 		gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(speed)->entry), buf);
 
 camera_select_again:
@@ -726,36 +730,36 @@ camera_select_again:
 	speed_name  = (char*)gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(speed)->entry));
 
 	if (strlen(camera_name)==0) {
-		gp_message(_("You must choose a camera model"));
+		gp_camera_message(NULL, _("You must choose a camera model"));
 		goto camera_select_again;
 	}
 
 	if ((strlen(port_name)==0)&&(GTK_WIDGET_SENSITIVE(port))) {
-		gp_message(_("You must choose a port"));
+		gp_camera_message(NULL, _("You must choose a port"));
 		goto camera_select_again;
 	}
 
 	if ((strlen(speed_name)==0)&&(GTK_WIDGET_SENSITIVE(speed))) {
-		gp_message(_("You must choose a port speed"));
+		gp_camera_message(NULL, _("You must choose a port speed"));
 		goto camera_select_again;
 	}
 
-	gp_setting_set("camera", camera_name);
+	gp_setting_set("gtk-old", "camera", camera_name);
 
 	if (GTK_WIDGET_SENSITIVE(port)) {
 		sprintf(buf, "%s path", port_name);
 		port_path = (char*)gtk_object_get_data(GTK_OBJECT(window), buf);
-		gp_setting_set("port name", port_name);
-		gp_setting_set("port", port_path);
+		gp_setting_set("gtk-old", "port name", port_name);
+		gp_setting_set("gtk-old", "port", port_path);
 	}  else {
-		gp_setting_set("port name", "");
-		gp_setting_set("port", "");
+		gp_setting_set("gtk-old", "port name", "");
+		gp_setting_set("gtk-old", "port", "");
 	}
 
 	if (GTK_WIDGET_SENSITIVE(speed))
-		gp_setting_set("speed", speed_name);
+		gp_setting_set("gtk-old", "speed", speed_name);
 	   else
-		gp_setting_set("speed", "");
+		gp_setting_set("gtk-old", "speed", "");
 
 
 	if (camera_set()==GP_ERROR)
@@ -784,18 +788,18 @@ void camera_index () {
 	icon_list   = (GtkWidget*) lookup_widget(gp_gtk_main_window, "icons");
 	GTK_ICON_LIST(icon_list)->is_editable = FALSE;
 
-	if (gp_setting_get("camera", buf)==GP_ERROR) {
-		gp_message(_("ERROR: please choose your camera model again"));
+	if (gp_setting_get("gtk-old", "camera", buf)==GP_ERROR) {
+		gp_camera_message(NULL, _("ERROR: please choose your camera model again"));
 		camera_select();
 		return;
 	}
 	if (gp_camera_abilities_by_name(buf, &a)==GP_ERROR) {
-		gp_message(_("Could not retrieve the camera's abilities"));
+		gp_camera_message(NULL, _("Could not retrieve the camera's abilities"));
 		return;
 	}
 
-	if ((count = gp_file_count())==GP_ERROR) {
-		gp_message(_("Could not retrieve the number of pictures"));
+	if ((count = gp_camera_file_count(gp_gtk_camera))==GP_ERROR) {
+		gp_camera_message(NULL, _("Could not retrieve the number of pictures"));
 		return;
 	}
 
@@ -807,19 +811,18 @@ void camera_index () {
 	use_thumbs  = (GtkWidget*) lookup_widget(gp_gtk_main_window, "use_thumbs");
 	x=0;
 	gtk_widget_set_sensitive(camera_tree, FALSE);
-	gp_progress(0.00);
 	gtk_widget_show(gp_gtk_progress_window);
 	while ((x<count)&&(GTK_WIDGET_VISIBLE(gp_gtk_progress_window))) {
 		sprintf(buf,_("Getting Thumbnail #%04i of %04i"), x+1, count);
-		gp_message(buf);
+		gp_camera_message(NULL, buf);
 		idle();
 		if ((get_thumbnails)&&
 		    (a.file_preview)&&
 		    (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(use_thumbs)))) {
 			/* Get the thumbnails */
 			f = gp_file_new();
-			sprintf(buf, "Photo #%04i", x);
-			if (gp_file_get_preview(x, f) == GP_OK) {
+			sprintf(buf, "Photo #%04i", x+1);
+			if (gp_camera_file_get_preview(gp_gtk_camera, f, x) == GP_OK) {
 				gdk_image_new_from_data(f->data,f->size,1,&pixmap,&bitmap);
 				item = gtk_icon_list_add_from_data(GTK_ICON_LIST(icon_list),
 					no_thumbnail_xpm,buf,NULL);
@@ -840,36 +843,10 @@ void camera_index () {
 		gtk_signal_connect(GTK_OBJECT(item->entry), "button_press_event",
 			GTK_SIGNAL_FUNC(toggle_icon), NULL);
 		sprintf(buf, "%i", x);
-		gp_progress(100.0*(float)x/(float)count);
 		x++;
 	}
-	gp_progress(0.00);
 	gtk_widget_hide(gp_gtk_progress_window);
 	gtk_widget_set_sensitive(camera_tree, TRUE);
-}
-
-void camera_download_thumbnails() {
-	debug_print("camera download thumbnails");
-
-	if (!gp_gtk_camera_init)
-		if (camera_set()==GP_ERROR) {return;}
-
-}
-
-void camera_download_photos() {
-	debug_print("camera download photos");
-
-	if (!gp_gtk_camera_init)
-		if (camera_set()==GP_ERROR) {return;}
-
-}
-
-void camera_download_both() {
-	debug_print("camera download both");
-
-	if (!gp_gtk_camera_init)
-		if (camera_set()==GP_ERROR) {return;}
-
 }
 
 void camera_delete_common(int all) {
@@ -887,35 +864,35 @@ void camera_delete_common(int all) {
 	   else
 		strcpy(buf, _("Are you sure you want to DELETE the selected photos?"));
 		
-	if (gp_confirm(buf)==0)
+	if (gp_camera_confirm(gp_gtk_camera,  buf)==0)
 		return;
 
-	if (gp_setting_get("camera", buf)==GP_ERROR) {
-		gp_message(_("ERROR: please choose your camera model again"));
+	if (gp_setting_get("gtk-old", "camera", buf)==GP_ERROR) {
+		gp_camera_message(NULL, _("ERROR: please choose your camera model again"));
 		camera_select();
 		return;
 	}
 	if (gp_camera_abilities_by_name(buf, &a)==GP_ERROR) {
-		gp_message(_("Could not retrieve the camera's abilities"));
+		gp_camera_message(NULL, _("Could not retrieve the camera's abilities"));
 		return;
 	}
 
 /* Not working? */
 	if (!a.file_delete) {
-		gp_message(_("This camera does not support deleting photos."));
+		gp_camera_message(NULL, _("This camera does not support deleting photos."));
 		return;
 	}
 
-	if ((count = gp_file_count())==GP_ERROR) {
-		gp_message(_("Could not retrieve the number of pictures"));
+	if ((count = gp_camera_file_count(gp_gtk_camera))==GP_ERROR) {
+		gp_camera_message(NULL, _("Could not retrieve the number of pictures"));
 		return;
 	}
 	
 	if (all) {
 		for (x=0; x<count; x++) {
-			if (gp_file_delete(0)==GP_ERROR) {
+			if (gp_camera_file_delete(gp_gtk_camera, 0)==GP_ERROR) {
 				sprintf(buf, _("Could not delete photo #%04i. Stopping."), x);
-				gp_message(buf);
+				gp_camera_message(NULL, buf);
 				return;
 			}
 		}
@@ -925,9 +902,9 @@ void camera_delete_common(int all) {
 	for (x=0; x<count; x++) {
 		item = gtk_icon_list_get_nth(GTK_ICON_LIST(icon_list), x);
 		if (item->state == GTK_STATE_SELECTED) {
-			if (gp_file_delete(0)==GP_ERROR) {
+			if (gp_camera_file_delete(gp_gtk_camera, x)==GP_ERROR) {
 				sprintf(buf, _("Could not delete photo #%04i. Stopping."), x);
-				gp_message(buf);				
+				gp_camera_message(NULL, buf);				
 				return;
 			}
 			gtk_icon_list_remove(GTK_ICON_LIST(icon_list), item);
@@ -1178,8 +1155,8 @@ void camera_configure() {
 	/* Get the camera configuration widgets */
 	w = gp_widget_new(GP_WIDGET_WINDOW, "Camera Configuration");
 
-	if (gp_config_get(w)==GP_ERROR) {
-		gp_message("Could not retrieve camera configuration information");
+	if (gp_camera_config_get(gp_gtk_camera, w)==GP_ERROR) {
+		gp_camera_message(NULL, "Could not retrieve camera configuration information");
 		gp_widget_free(w);
 		return;
 	}
@@ -1212,8 +1189,8 @@ void camera_configure() {
 
 	camera_configure_retrieve_rec(w, window, s, &s_count);
 
-	if (gp_config_set(s, s_count)==GP_ERROR)
-		gp_message("Could not set camera configuration");
+	if (gp_camera_config_set(gp_gtk_camera, s, s_count)==GP_ERROR)
+		gp_camera_message(NULL, "Could not set camera configuration");
 
 	/* Clean up and leave */
 	gp_widget_free(w);
@@ -1236,14 +1213,14 @@ void camera_show_information() {
 
 	gtk_widget_show(message);
 	idle();
-	if (gp_summary(&buf)==GP_ERROR) {
+	if (gp_camera_summary(gp_gtk_camera, &buf)==GP_ERROR) {
 		gtk_widget_hide(message);
-		gp_message(_("Could not retrieve camera information"));
+		gp_camera_message(gp_gtk_camera, _("Could not retrieve camera information"));
 		return;
 	}
 	gtk_widget_hide(message);
 
-	gp_message(buf.text);
+	gp_camera_message(gp_gtk_camera, buf.text);
 }
 
 void camera_show_manual() {
@@ -1255,12 +1232,12 @@ void camera_show_manual() {
 	if (!gp_gtk_camera_init)
 		if (camera_set()==GP_ERROR) {return;}
 
-	if (gp_manual(&buf)==GP_ERROR) {
-		gp_message(_("Could not retrieve the camera manual"));
+	if (gp_camera_manual(gp_gtk_camera, &buf)==GP_ERROR) {
+		gp_camera_message(gp_gtk_camera, _("Could not retrieve the camera manual"));
 		return;
 	}
 
-	gp_message(buf.text);
+	gp_camera_message(gp_gtk_camera, buf.text);
 
 }
 
@@ -1273,12 +1250,12 @@ void camera_show_about() {
 	if (!gp_gtk_camera_init)
 		if (camera_set()==GP_ERROR) {return;}
 
-	if (gp_about(&buf)==GP_ERROR) {
-		gp_message(_("Could not retrieve library information"));
+	if (gp_camera_about(gp_gtk_camera, &buf)==GP_ERROR) {
+		gp_camera_message(gp_gtk_camera, _("Could not retrieve library information"));
 		return;
 	}
 
-	gp_message(buf.text);
+	gp_camera_message(gp_gtk_camera, buf.text);
 }
 
 
@@ -1289,7 +1266,7 @@ void help_about() {
 
 	debug_print("help about");
 
-	gp_message(_("gPhoto2 (v1.90)- Cross-platform digital camera library.\nCopyright (C) 2000 Scott Fritzinger <scottf@unr.edu>\nLicensed under the Library GNU Public License (LGPL)."));
+	gp_camera_message(NULL, _("gPhoto2 (v1.90)- Cross-platform digital camera library.\nCopyright (C) 2000 Scott Fritzinger <scottf@unr.edu>\nLicensed under the Library GNU Public License (LGPL)."));
 }
 
 void help_authors() {
@@ -1306,7 +1283,7 @@ void help_authors() {
 	sprintf(buf, "%s/AUTHORS", DOCDIR);
 	f = gp_file_new();
 	if (gp_file_open(f, buf)==GP_ERROR) {
-		gp_message(_("Can't find gPhoto2 GTK AUTHORS file"));
+		gp_camera_message(NULL, _("Can't find gPhoto2 GTK AUTHORS file"));
 		return;
 	}
 	message_window_notebook_append(window, "gPhoto2 GTK Authors", f->data);
@@ -1314,7 +1291,7 @@ void help_authors() {
 	sprintf(buf, "%s/AUTHORS", GPDOCDIR);
 	g = gp_file_new();
 	if (gp_file_open(g, buf)==GP_ERROR) {
-		gp_message(_("Can't find gPhoto2 AUTHORS file"));
+		gp_camera_message(NULL, _("Can't find gPhoto2 AUTHORS file"));
 		return;
 	}
 	message_window_notebook_append(window, "gPhoto2 Authors", g->data);
@@ -1341,7 +1318,7 @@ void help_license() {
 	sprintf(buf, "%s/COPYING", DOCDIR);
 	f = gp_file_new();
 	if (gp_file_open(f, buf)==GP_ERROR) {
-		gp_message(_("Can't find gPhoto2 GTK COPYING file"));
+		gp_camera_message(NULL, _("Can't find gPhoto2 GTK COPYING file"));
 		return;
 	}
 	message_window_notebook_append(window, "gPhoto2 GTK License", f->data);
@@ -1349,7 +1326,7 @@ void help_license() {
 	sprintf(buf, "%s/COPYING", GPDOCDIR);
 	g = gp_file_new();
 	if (gp_file_open(g, buf)==GP_ERROR) {
-		gp_message(_("Can't find gPhoto2 COPYING file"));
+		gp_camera_message(NULL, _("Can't find gPhoto2 COPYING file"));
 		return;
 	}
 	message_window_notebook_append(window, "gPhoto2 License", g->data);
@@ -1373,7 +1350,7 @@ void help_manual() {
 	sprintf(buf, "%s/MANUAL", DOCDIR);
 	f = gp_file_new();
 	if (gp_file_open(f, buf)==GP_ERROR) {
-		gp_message(_("Can't find gPhoto2 GTK MANUAL file"));
+		gp_camera_message(NULL, _("Can't find gPhoto2 GTK MANUAL file"));
 		return;
 	}
 	window = create_message_window_notebook();
@@ -1432,21 +1409,6 @@ void on_select_none_activate (GtkMenuItem *menuitem, gpointer user_data) {
 void on_select_camera_activate (GtkMenuItem *menuitem, gpointer user_data) {
 	camera_select();
 }
-
-void on_download_thumbnails_activate (GtkMenuItem *menuitem, gpointer user_data) {
-	camera_download_thumbnails();
-}
-
-
-void on_download_photos_activate (GtkMenuItem *menuitem, gpointer user_data) {
-	camera_download_photos();
-}
-
-
-void on_download_both_activate (GtkMenuItem *menuitem, gpointer user_data) {
-	camera_download_both();
-}
-
 
 void on_delete_photos_activate (GtkMenuItem *menuitem, gpointer user_data) {
 	camera_delete_selected();

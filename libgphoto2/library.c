@@ -14,15 +14,14 @@ int is_library(char *library_filename) {
         char buf[1024];
         void *lh;
 
-
 #if defined(OS2) || defined(WINDOWS)
         sprintf(buf, "%s\\%s", CAMLIBS, library_filename);
 #else
         sprintf(buf, "%s/%s", CAMLIBS, library_filename);
 #endif
         if ((lh = dlopen(buf, RTLD_LAZY))==NULL) {
-                if (glob_debug)
-                        perror("core:\tis_library");
+	        if (glob_debug)
+        		perror("core:\tis_library");
                 return (GP_ERROR);
         }
 
@@ -44,28 +43,10 @@ int load_library (Camera *camera, char *camera_name) {
                                 perror("core:\tload_library");
                         return (GP_ERROR);
                 }
-                camera->library_handle = lh;
-                camera->functions->id = dlsym(lh, "camera_id");
-                camera->functions->abilities = dlsym(lh, "camera_abilities");
-                camera->functions->init = dlsym(lh, "camera_init");
-/* replaced with camera_init, which initializes the ->functions
-                camera->functions->exit = dlsym(lh, "camera_exit");
-                camera->functions->folder_list = dlsym(lh, "camera_folder_list");
-                camera->functions->folder_set = dlsym(lh, "camera_folder_set");
-                camera->functions->file_count = dlsym(lh, "camera_file_count");
-                camera->functions->file_get = dlsym(lh, "camera_file_get");
-                camera->functions->file_get_preview = dlsym(lh, "camera_file_get_preview");
-                camera->functions->file_put = dlsym(lh, "camera_file_put");
-                camera->functions->file_delete = dlsym(lh, "camera_file_delete");
-                camera->functions->file_lock = dlsym(lh, "camera_file_lock");
-                camera->functions->file_unlock = dlsym(lh, "camera_file_unlock");
-                camera->functions->config_get = dlsym(lh, "camera_config_get");
-                camera->functions->config_set = dlsym(lh, "camera_config_set");
-                camera->functions->capture = dlsym(lh, "camera_capture");
-                camera->functions->summary = dlsym(lh, "camera_summary");
-                camera->functions->manual = dlsym(lh, "camera_manual");
-                camera->functions->about = dlsym(lh, "camera_about");
-*/
+                camera->library_handle 		= lh;
+                camera->functions->id 		= dlsym(lh, "camera_id");
+                camera->functions->abilities 	= dlsym(lh, "camera_abilities");
+                camera->functions->init 	= dlsym(lh, "camera_init");
 
                 return (GP_OK);
            }

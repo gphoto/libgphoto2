@@ -87,23 +87,19 @@ typedef struct {
 } CameraCaptureInfo;
 
 typedef struct {
-	CameraPortType type;
-        char name[64];
-        char path[64];
-} CameraPortInfo;
-
-typedef struct {
+	CameraPortType type;	
+	char name[128];
 	char path[128];
 		/* path to serial port device 			 */
 		/* For serial port, "/dev/ttyS0" or variants	 */
 		/* For parallel port, "/dev/lpt0" or variants	 */
 		/* For usb, "usb"				 */
 		/* For ieee1394, "ieee1394"			 */
-		/* For network, the address (ip or fqdn).	 */
+		/* For network, the host's address (ip or fqdn)  */
 
 	int speed;
 		/* Speed to use	(serial)			 */
-} CameraPortSettings;
+} CameraPortInfo;
 
 typedef struct {
 	char model[128];
@@ -124,7 +120,7 @@ typedef struct {
 
 
 	int config;
-		/* Camera can be configures remotely 		 */
+		/* Camera can be configured remotely 		 */
 
 	int file_delete;
 		/* Camera can delete files 			 */
@@ -143,7 +139,7 @@ typedef struct {
 typedef struct {
 	char model[128]; 		   /* Name of the camera */
 
-	CameraPortSettings port_settings; 	/* Port settings */
+	CameraPortInfo port_settings;		/* Port settings */
 
 	int debug;	          /* Debugging output 0=off 1=on */
 } CameraInit;
@@ -229,7 +225,7 @@ typedef struct {
 struct Camera {
 	char		model[128];
 
-	CameraPortSettings *port;
+	CameraPortInfo *port;
 
 	int 		debug;
 

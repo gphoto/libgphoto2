@@ -58,7 +58,7 @@ AC_SUBST(CFLAGS)
 AC_SUBST(LIBS)
 
 dnl Find out which drivers to compile
-camlibs='barbie directory fujitsu konica panasonic digita'
+camlibs='barbie canon directory fujitsu konica panasonic digita'
 AC_SUBST(SUBDIRS_CAMLIBS)
 for i in $camlibs; do
   d=`echo $i | tr a-z A-Z`

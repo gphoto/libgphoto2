@@ -59,7 +59,7 @@ l_return_status_t l_receive (
 /******************************************************************************/
 /* Functions						                      */
 /******************************************************************************/
-l_return_status_t l_init (CameraPortSettings port_settings, gboolean debug_flag)
+l_return_status_t l_init (CameraPortInfo port_settings, gboolean debug_flag)
 {
 	guchar c;
 	gint i;
@@ -659,4 +659,3 @@ l_return_status_t l_send_receive_receive (
 	}
 	return (return_status);
 }
-

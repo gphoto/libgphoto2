@@ -286,7 +286,7 @@ typedef enum {
 /****************************************************************/
 k_return_status_t k_init (
 	gboolean image_id_long, 
-	CameraPortSettings port_settings, 
+	CameraPortInfo port_settings, 
 	gboolean debug_flag);
 
 

@@ -84,14 +84,14 @@ VERSION = @VERSION@
 camlibdir = $(prefix)/lib/gphoto2
 camlib_LTLIBRARIES = libgphoto2_canon.la
 
-CFLAGS = @CFLAGS@ `gtk-config --cflags` `gpio-config --cflags` -g -Wall
+CFLAGS = @CFLAGS@ `gpio-config --cflags` -g -Wall
 LDFLAGS = @LDFLAGS@ -g `gpio-config --libs`
 INCLUDES = -I$(top_srcdir)/include
 
 libgphoto2_canon_la_SOURCES = canon.c canon.h psa50.c psa50.h serial.c serial.h 	crc.c crc.h util.c util.h
 
 
-libgphoto_canon_la_LDFLAGS = -version-info 0:0:0 `gpio-config --libs`
+libgphoto2_canon_la_LDFLAGS = -version-info 0:0:0
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../config.h
 CONFIG_CLEAN_FILES = 
@@ -100,7 +100,6 @@ LTLIBRARIES =  $(camlib_LTLIBRARIES)
 
 DEFS = @DEFS@ -I. -I$(srcdir) -I../..
 CPPFLAGS = @CPPFLAGS@
-libgphoto2_canon_la_LDFLAGS = 
 libgphoto2_canon_la_LIBADD = 
 libgphoto2_canon_la_OBJECTS =  canon.lo psa50.lo serial.lo crc.lo \
 util.lo
@@ -233,7 +232,7 @@ distdir: $(DISTFILES)
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
 	  if test -d $$d/$$file; then \
-	    cp -pr $$/$$file $(distdir)/$$file; \
+	    cp -pr $$d/$$file $(distdir)/$$file; \
 	  else \
 	    test -f $(distdir)/$$file \
 	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \

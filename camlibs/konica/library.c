@@ -182,7 +182,7 @@ int camera_abilities (CameraAbilities *abilities, int *count)
 int camera_init (Camera *camera, CameraInit *init)
 {
 	gint i, j;
-	CameraPortSettings port_settings;
+	CameraPortInfo port_settings;
 	gboolean image_id_long = FALSE;
 	guint test_bit_rate[10] = {
 		9600, 

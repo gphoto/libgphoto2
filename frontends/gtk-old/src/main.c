@@ -19,12 +19,13 @@
 #include "support.h"
 
 /* The Globals */
-GtkWidget *gp_gtk_main_window;
-GtkWidget *gp_gtk_progress_window;
-int	   gp_gtk_debug;
+GtkWidget *gp_gtk_main_window		= NULL;
+GtkWidget *gp_gtk_progress_window	= NULL;
+int	   gp_gtk_debug			= 0;
 char	   gp_gtk_camera_model[1024];
-int	   gp_gtk_camera_init=0;
-int	   gp_gtk_old_width;
+int	   gp_gtk_camera_init		= 0;
+int	   gp_gtk_old_width		= 640;
+Camera*	   gp_gtk_camera 		= NULL;
 
 int
 main (int argc, char *argv[])
@@ -60,9 +61,9 @@ main (int argc, char *argv[])
 		GTK_SIGNAL_FUNC(icon_resize), NULL);
 
 	/* Retrieve the last width/height of the window */
-        if (gp_setting_get("width", buf)==GP_OK) {
+        if (gp_setting_get("gtk-old", "width", buf)==GP_OK) {
 		x = atoi(buf);
-		if (gp_setting_get("height", buf)==GP_OK) {
+		if (gp_setting_get("gtk-old", "height", buf)==GP_OK) {
 			y = atoi(buf);
 		        gdk_window_resize(gp_gtk_main_window->window, x, y);
 		}
@@ -72,7 +73,7 @@ main (int argc, char *argv[])
 	gp_gtk_old_width = x;
 
 	/* Retrieve the last camera used */
-	if (gp_setting_get("camera", buf)==GP_OK) {
+	if (gp_setting_get("gtk-old", "camera", buf)==GP_OK) {
 		/* Set the camera model label */
 		label = (GtkWidget*) lookup_widget(gp_gtk_main_window, "camera_label");
 		gtk_label_set_text(GTK_LABEL(label), buf);
@@ -81,7 +82,7 @@ main (int argc, char *argv[])
 	/* Set the current working directory */
 	getcwd(buf, 1024);
 	strcat(buf, "/");
-	gp_setting_set("cwd", buf);
+	gp_setting_set("gtk-old", "cwd", buf);
 
 	gtk_signal_connect (GTK_OBJECT(gp_gtk_main_window), "delete_event",
 		GTK_SIGNAL_FUNC(main_quit), NULL);

@@ -111,7 +111,7 @@ k_return_status_t return_status_translation (gchar byte1, gchar byte2)
 
 k_return_status_t k_init (
 	gboolean image_id_long, 
-	CameraPortSettings port_settings, 
+	CameraPortInfo port_settings, 
 	gboolean debug_flag) 
 {
 	image_id_int = !image_id_long;
@@ -1684,4 +1684,3 @@ k_return_status_t k_cancel (k_command_t *command)
 		return (k_return_status);
 	}
 }
-

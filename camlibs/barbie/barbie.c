@@ -249,7 +249,7 @@ printf("\tn1=%i n2=%i n3=%i n4=%i size=%i\n", n1, n2 ,n3, n4, *size);
 
 int camera_id (char *id) {
 
-	strcpy(id, "barbie-scottf");
+	strcpy(id, "barbie");
 
 	return (GP_OK);
 }

@@ -40,7 +40,7 @@ typedef enum {
 /* Prototypes							*/
 /****************************************************************/
 l_return_status_t l_init (
-	CameraPortSettings port_settings, 
+	CameraPortInfo port_settings, 
 	gboolean debug_flag);
 
 
@@ -81,4 +81,3 @@ l_return_status_t l_send_receive_receive (
         guchar **receive_buffer, 
         guint   *receive_buffer_size, 
 	guint    timeout);
-

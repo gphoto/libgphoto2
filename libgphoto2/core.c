@@ -184,7 +184,7 @@ int gp_camera_abilities_by_name (char *camera_name, CameraAbilities *abilities) 
 
 }
 
-int gp_camera_new (Camera **camera, int camera_number, CameraPortSettings *settings) {
+int gp_camera_new (Camera **camera, int camera_number, CameraPortInfo *settings) {
 
 	CameraInit ci;
 
@@ -196,14 +196,14 @@ int gp_camera_new (Camera **camera, int camera_number, CameraPortSettings *setti
 	/* Initialize the members */
 	strcpy((*camera)->model, glob_camera[camera_number].name);
 	(*camera)->debug      = glob_debug;
-	(*camera)->port	      = (CameraPortSettings*)malloc(sizeof(CameraPortSettings));
+	(*camera)->port	      = (CameraPortInfo*)malloc(sizeof(CameraPortInfo));
 	(*camera)->abilities  = (CameraAbilities*)malloc(sizeof(CameraAbilities));
 	(*camera)->functions  = (CameraFunctions*)malloc(sizeof(CameraFunctions));
 	(*camera)->library_handle  = NULL;
 	(*camera)->camlib_data     = NULL;
 	(*camera)->frontend_data   = NULL;
 
-	memcpy((*camera)->port, settings, sizeof(CameraPortSettings));
+	memcpy((*camera)->port, settings, sizeof(CameraPortInfo));
 
 	if (load_library(*camera, glob_camera[camera_number].name)==GP_ERROR) {
 		gp_camera_free(*camera);
@@ -216,7 +216,7 @@ int gp_camera_new (Camera **camera, int camera_number, CameraPortSettings *setti
 			glob_camera[camera_number].name,
 			glob_camera[camera_number].library);
 	strcpy(ci.model, glob_camera[camera_number].name);
-	memcpy(&ci.port_settings, settings, sizeof(CameraPortSettings));
+	memcpy(&ci.port_settings, settings, sizeof(CameraPortInfo));
 
 	if (gp_camera_init(*camera, &ci)==GP_ERROR) {
 		gp_camera_free(*camera);
@@ -241,7 +241,7 @@ int gp_camera_free(Camera *camera) {
 	return (GP_OK);	
 }
 
-int gp_camera_new_by_name (Camera **camera, char *camera_name, CameraPortSettings *settings) {
+int gp_camera_new_by_name (Camera **camera, char *camera_name, CameraPortInfo *settings) {
 
 	int x=0;
 
@@ -256,8 +256,17 @@ int gp_camera_new_by_name (Camera **camera, char *camera_name, CameraPortSetting
 
 int gp_camera_init (Camera *camera, CameraInit *init) {
 
+	int x;
+	CameraPortInfo info;
+
 	if (camera->functions->init == NULL)
 		return(GP_ERROR);
+
+	for (x=0; x<gp_port_count(); x++) {
+		gp_port_info(x, &info);
+		if (strcmp(info.path, init->port_settings.path)==0)
+			init->port_settings.type = info.type;
+	}
 
 	return(camera->functions->init(camera, init));
 }

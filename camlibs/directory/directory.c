@@ -17,7 +17,7 @@
 
 int camera_id (char *id) {
 
-        strcpy(id, "directory-scottf");
+        strcpy(id, "directory");
 
         return (GP_OK);
 }

@@ -23,7 +23,7 @@
 #include "util.h"
 
 /* Not in gphoto API */
-int gp_interface_message_long(char *message) {
+int gp_interface_message_long(Camera *camera, char *message) {
         GtkWidget *window, *ok, *text;
 
         window = create_message_window_long();
@@ -38,12 +38,12 @@ int gp_interface_message_long(char *message) {
 	return (GP_OK);
 }
 
-int gp_interface_message(char *message) {
+int gp_interface_message(Camera *camera, char *message) {
 
 	GtkWidget *window, *label, *ok;
 
 	if (strlen(message) > 1024) {
-		gp_interface_message_long(message);
+		gp_interface_message_long(camera, message);
 		return (GP_OK);
 	}
 
@@ -67,7 +67,7 @@ int gp_interface_message(char *message) {
 	return (GP_OK);
 }
 
-int gp_interface_status(char *message) {
+int gp_interface_status(Camera *camera, char *message) {
 
 	GtkWidget *label;
 
@@ -81,7 +81,7 @@ int gp_interface_status(char *message) {
 	return (GP_OK);
 }
 
-int gp_interface_progress(float percentage) {
+int gp_interface_progress(Camera *camera, CameraFile *file, float percentage) {
 
 	GtkWidget *progress = (GtkWidget*)lookup_widget(gp_gtk_progress_window, "progress_bar");
 
@@ -91,7 +91,7 @@ int gp_interface_progress(float percentage) {
 	return (GP_OK);
 }
 
-int gp_interface_confirm(char *message) {
+int gp_interface_confirm(Camera *camera, char *message) {
 
 	GtkWidget *confirm = create_confirm_window();
 	GtkWidget *label   = (GtkWidget*) lookup_widget(confirm, "message");
@@ -130,7 +130,7 @@ create_save_window (int directory_only)
   gtk_window_set_position (GTK_WINDOW (save_window), GTK_WIN_POS_CENTER);
   gtk_window_set_modal (GTK_WINDOW (save_window), TRUE);
   gtk_window_set_default_size (GTK_WINDOW (save_window), 450, 400);
-  if (gp_setting_get("cwd", buf)==GP_OK)
+  if (gp_setting_get("gtk-old", "cwd", buf)==GP_OK)
 	  gtk_file_selection_set_filename(GTK_FILE_SELECTION(save_window),buf);
 
   frame = gtk_frame_new("What to save:");
