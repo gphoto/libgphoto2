@@ -9,6 +9,8 @@ manual_ps = @manual_ps@
 # build HTML manual if possible
 manual_html = @manual_html@
 
+CLEAN_FILES = $(manual_pdf) $(manual_ps) figures-stamp
+
 EXTRA_DIST = DAEMON build_OS2.txt 					\
 	camlib_devel.lyx 						\
 	camlib_devel-portmon.eps camlib_devel-repeater.eps 		\
@@ -22,8 +24,11 @@ man_MANS = gphoto2.1 gphoto2.3 gphoto2_port.3
 
 docdir = @DOC_DIR@
 
-doc_DATA = gphoto2-cli.txt gphoto2.txt FAQ
+doc_DATA = gphoto2-cli.txt gphoto2.txt FAQ $(manual_pdf) $(manual_ps)
 
+figures-stamp:
+	$(MAKE) -C figures
+	touch $@
 
 ########################################################################
 # The following rules are for regenerating man pages, pdf, html and ps
@@ -37,22 +42,26 @@ doc_DATA = gphoto2-cli.txt gphoto2.txt FAQ
 
 ########################################################################
 if XMLTOPDF
-gphoto2.pdf: gphoto2.xml
-	$(XMLTO) pdf $<
+gphoto2.pdf: gphoto2.xml figures-stamp
+	test -e $$(basename $<) || ln -s $< # symlink file from srcdir to builddir if required
+	$(XMLTO) pdf $$(basename $<) # work on local file or symlink
 endif
 ########################################################################
 
 
 ########################################################################
 if XMLTOPS
-gphoto2.ps: gphoto2.xml
-	$(XMLTO) ps $<
+# doesn't work if builddir != srcdir
+gphoto2.ps: gphoto2.xml figures-stamp
+	test -e $$(basename $<) || ln -s $< # symlink file from srcdir to builddir if required
+	$(XMLTO) ps $$(basename $<) # work on local file or symlink
 endif
 ########################################################################
 
 
 ########################################################################
 if XMLTOMAN
+# works if builddir != srcdir
 $(man_MANS): gphoto2.xml
 	$(XMLTO) man $<
 endif
@@ -66,6 +75,7 @@ endif
 
 ########################################################################
 if XMLTOHTML
+# doesn't work correctly if builddir != srcdir
 
 # do not empty this variable
 htmldir=@HTML_DIR@
@@ -73,7 +83,9 @@ htmldir=@HTML_DIR@
 TARGET_DIR=$(htmldir)/manual
 
 manual: gphoto2.xml
+	echo "$$(pwd) $@ $<"
 	$(XMLTO) html -o "$@" "$<"
+	cd $@ && rm -f figures && ln -s ../figures figures # to view docs in src tree
 	touch "$@"
 
 clean_local_manual = clean-local-manual
@@ -81,16 +93,17 @@ clean-local-manual:
 	rm -rf "manual/"
 
 install_data_local_manual = install-data-local-manual
-install-data-local-manual:
+install-data-local-manual: manual figures-stamp
 	$(INSTALL) -d -m 0755 $(DESTDIR)$(TARGET_DIR)
 	$(INSTALL_DATA) ./manual/*.html $(DESTDIR)$(TARGET_DIR)
 	$(INSTALL) -d -m 0755 $(DESTDIR)$(TARGET_DIR)/figures
 	$(INSTALL_DATA) ./figures/*.png $(DESTDIR)$(TARGET_DIR)/figures
 
+# copy HTML manual to distribution
 dist_hook_manual = dist-hook-manual
-dist-hook-manual:
-	(cd $(srcdir) ; tar cvf - manual/) | (cd $(distdir); tar xf -)
-	(cd $(srcdir) ; tar cvf - $(figure_dir)) | (cd $(distdir)/manual/; tar xf -)
+dist-hook-manual: manual figures-stamp
+	$(AMTAR) cf - manual/*.html | (cd $(distdir); $(AMTAR) xvf -)
+	$(AMTAR) cf - figures/*.png | (cd $(distdir)/manual/; $(AMTAR) xvf -)
 endif
 ########################################################################
 
