@@ -147,7 +147,7 @@ print_info_action (const char *folder, const char *filename)
 		if (info.file.fields & GP_FILE_INFO_TYPE)
 			printf (_("  Mime type:   '%s'\n"), info.file.type);
 		if (info.file.fields & GP_FILE_INFO_SIZE)
-			printf (_("  Size:        %i byte(s)\n"), info.file.size);
+			printf (_("  Size:        %li byte(s)\n"), info.file.size);
 		if (info.file.fields & GP_FILE_INFO_WIDTH)
 			printf (_("  Width:       %i pixel(s)\n"), info.file.width);
 		if (info.file.fields & GP_FILE_INFO_HEIGHT)
@@ -179,7 +179,7 @@ print_info_action (const char *folder, const char *filename)
 		if (info.preview.fields & GP_FILE_INFO_TYPE)
 			printf (_("  Mime type:   '%s'\n"), info.preview.type);
 		if (info.preview.fields & GP_FILE_INFO_SIZE)
-			printf (_("  Size:        %i byte(s)\n"), info.preview.size);
+			printf (_("  Size:        %li byte(s)\n"), info.preview.size);
 		if (info.preview.fields & GP_FILE_INFO_WIDTH)
 			printf (_("  Width:       %i pixel(s)\n"), info.preview.width);
 		if (info.preview.fields & GP_FILE_INFO_HEIGHT)
@@ -195,7 +195,7 @@ print_info_action (const char *folder, const char *filename)
 		if (info.audio.fields & GP_FILE_INFO_TYPE)
 			printf (_("  Mime type:  '%s'\n"), info.audio.type);
 		if (info.audio.fields & GP_FILE_INFO_SIZE)
-			printf (_("  Size:       %i byte(s)\n"), info.audio.size);
+			printf (_("  Size:       %li byte(s)\n"), info.audio.size);
 		if (info.audio.fields & GP_FILE_INFO_STATUS)
 			printf (_("  Downloaded: %s\n"),
 				(info.audio.status == GP_FILE_STATUS_DOWNLOADED) ? _("yes") : _("no"));

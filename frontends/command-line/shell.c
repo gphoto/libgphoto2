@@ -172,7 +172,7 @@ shell_read_line (void)
 	line = malloc (1024);
 	if (!line)
 		return (NULL);
-	printf (shell_prompt_text, prompt, glob_folder);
+	printf (SHELL_PROMPT, prompt, glob_folder);
 	fflush(stdout);
 	fgets (line, 1023, stdin);
 	line[strlen (line) - 1] = '\0'; 
