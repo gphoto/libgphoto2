@@ -1,3 +1,10 @@
+2001-12-24  Hans Ulrich Niedermann <hun@n-dimensional.de>
+
+	* frontends/command-line/main.h: added constants for USB hotplug matching
+	* frontends/command-line/main.c:
+	  Fixed Bug #490542: wrong match_flags at --print-usb-usermap
+	  Thanks to JohnMcPherson for reporting this
+
 2001-12-20 Dan Fandrich <dan@coneharvesters.com>
 
 	* libgphoto2_port/m4/byteorder.m4
