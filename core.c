@@ -34,7 +34,6 @@ CameraMessage  gp_fe_message  = NULL;
 CameraConfirm  gp_fe_confirm  = NULL;
 CameraPrompt   gp_fe_prompt   = NULL;
 
-
 int gp_init (int debug)
 {
         char buf[1024];
@@ -62,8 +61,8 @@ int gp_init (int debug)
         if (gpio_init(debug) == GPIO_ERROR)
                 return (GP_ERROR);
 
-	gp_debug_printf(GP_DEBUG_LOW, "core", "Trying to load settings");
         /* Load settings */
+	gp_debug_printf(GP_DEBUG_LOW, "core", "Trying to load settings");
         load_settings();
 
 	gp_debug_printf(GP_DEBUG_LOW, "core", "Trying to load libraries");
