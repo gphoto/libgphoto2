@@ -1,5 +1,10 @@
 2001-12-31  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2/gphoto2-filesys.[c,h] (gp_filesystem_delete_file_noop):
+	  New.
+
+2001-12-31  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* configure.in: Give users the possibility to specify the location
 	  of cdk
 	* frontends/command-line/gphoto2-cmd-config.c: Use fscale if
