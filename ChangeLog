@@ -1,3 +1,8 @@
+2002-01-14  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2/gphoto2-camera.c:
+	* frontends/command-line/main.c: Translation fixes.
+	
 2002-01-13  Colin Marquardt  <colin@marquardt-home.de>
 
 	*  libgphoto2_port/po/fr.po: New translation from Jérôme.

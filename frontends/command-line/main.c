@@ -1385,7 +1385,7 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n"));
 			break;
 		default:
 			fprintf (stderr, _("*** Error ('%s') ***       \n\n"),
-				 _(gp_result_as_string (result)));
+				 gp_result_as_string (result));
 #ifndef DISABLE_DEBUGGING
 			if (!glob_debug) {
 				int n;

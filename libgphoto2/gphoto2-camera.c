@@ -81,9 +81,9 @@
 			gp_context_error ((ctx), _("An error occurred "	\
 				"in the io-library ('%s'): %s"),	\
 				gp_port_result_as_string (r),		\
-				(c) ? gp_port_get_error ((c)->port) : 	\
-				      "No additional information "	\
-				      "available.");			\
+				(c) ? gp_port_get_error ((c)->port) :	\
+				      _("No additional information "	\
+				      "available."));			\
 		if (c)							\
 			CAMERA_UNUSED((c),(ctx));			\
 		return (r);						\

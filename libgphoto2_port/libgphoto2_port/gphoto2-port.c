@@ -735,5 +735,5 @@ gp_port_get_error (GPPort *port)
 	if (port && port->pc && strlen (port->pc->error))
 		return (port->pc->error);
 
-	return (N_("No error description available"));
+	return (_("No error description available"));
 }
