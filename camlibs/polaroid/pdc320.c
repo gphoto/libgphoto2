@@ -28,6 +28,7 @@
 
 #include <gphoto2-library.h>
 #include <gphoto2-core.h>
+#include <gphoto2-debug.h>
 #include <stdlib.h>
 #include <string.h>
 //#include "jpeghead.h"
@@ -310,11 +311,11 @@ static int
 camera_file_get (Camera *camera, const char *folder, const char *filename,
 		 CameraFileType type, CameraFile *file)
 {
-    jpeg *myjpeg;
-    chunk *tempchunk;
+	jpeg *myjpeg;
+	chunk *tempchunk;
 	int n, size;
-    unsigned char *data;
-    unsigned char *temp;
+	unsigned char *data;
+	unsigned char *temp;
 
 	if ((type != GP_FILE_TYPE_RAW) && (type != GP_FILE_TYPE_NORMAL))
 		return (GP_ERROR_NOT_SUPPORTED);
@@ -330,22 +331,27 @@ camera_file_get (Camera *camera, const char *folder, const char *filename,
 	/* Get the file */
 	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Getting file %i...", n);
 	CHECK_RESULT (pdc320_pic (camera, n, &data, &size));
-if (type == GP_FILE_TYPE_RAW) {
-	CHECK_RESULT (gp_file_set_data_and_size (file, data, size));
-	CHECK_RESULT (gp_file_set_name (file, filename));
-	CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_RAW));
-    } else {
+
+	/* Post-processing */
+	switch (type) {
+	case GP_FILE_TYPE_RAW:
+		CHECK_RESULT (gp_file_set_data_and_size (file, data, size));
+		CHECK_RESULT (gp_file_set_name (file, filename));
+		CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_RAW));
+		break;
+	case GP_FILE_TYPE_NORMAL:
+	default:
     if (camera->model[9]=='6')
-        myjpeg = jpeg_header(640,240, 11,11,21, 1,0,0, &chrominance, &luminance,
+        myjpeg = gp_jpeg_header(640,240, 11,11,21, 1,0,0, &chrominance, &luminance,
             0,0,0, chunk_new_filled(HUFF_00), chunk_new_filled(HUFF_10), NULL, NULL);
     else if (camera->model[9]=='F')
-        myjpeg = jpeg_header(320,120, 11,11,21, 1,0,0, &chrominance, &luminance,
+        myjpeg = gp_jpeg_header(320,120, 11,11,21, 1,0,0, &chrominance, &luminance,
             0,0,0, chunk_new_filled(HUFF_00), chunk_new_filled(HUFF_10), NULL, NULL);
     tempchunk = chunk_new(size);
     tempchunk->data = data;
-    jpeg_add_marker(myjpeg, tempchunk, 6, size-1);
-    write_jpeg(file, filename, myjpeg);
-    jpeg_destroy(myjpeg);
+    gp_jpeg_add_marker(myjpeg, tempchunk, 6, size-1);
+    gp_jpeg_write(file, filename, myjpeg);
+    gp_jpeg_destroy(myjpeg);
 /* Here is the old code */
 /*    temp=data;
     temp+=6;
@@ -428,7 +434,6 @@ camera_summary (Camera *camera, CameraText *summary)
 int
 camera_init (Camera *camera)
 {
-	int result;
 	gp_port_settings settings;
 
         /* First, set up all the function pointers */

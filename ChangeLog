@@ -1,5 +1,11 @@
 2001-09-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2/jpeg.h:
+	* camlibs/polaroid/pdc320.c: Adapt to changes jpeg_* -> gp_jpeg_*
+	* libgphoto2/jpeg.h: Kill yet another warning.
+
+2001-09-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2/jpeg.[c,h]: Respect the namespace of libjpeg. Otherwise,
 	gtkam and other graphical frontends will horribly fail.
 
