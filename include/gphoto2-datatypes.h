@@ -278,7 +278,7 @@ typedef struct Camera {
 } Camera;
 
 /* Interface function pointers */
-typedef int (*CameraStatus)		(struct Camera*, char*);
-typedef int (*CameraProgress)	(struct Camera*, CameraFile*, float);
-typedef int (*CameraMessage)	(struct Camera*, char*);
-typedef int (*CameraConfirm)	(struct Camera*, char*);
+typedef int (*CameraStatus)	(Camera*, char*);
+typedef int (*CameraProgress)	(Camera*, CameraFile*, float);
+typedef int (*CameraMessage)	(Camera*, char*);
+typedef int (*CameraConfirm)	(Camera*, char*);

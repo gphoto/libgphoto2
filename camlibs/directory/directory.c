@@ -12,6 +12,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <gphoto2.h>
+#include <gpio.h>
 
 #include "directory.h"
 
@@ -123,23 +124,26 @@ int camera_exit (Camera *camera) {
 
 int camera_file_list(Camera *camera, CameraList *list, char *folder) {
 
-	DIR *d;
-	struct dirent *de;
+	GP_DIR d;
+	GP_DIRENT de;
+/* REPLACE NEXT WITH GP_IS_FILE/GP_IS_DIR */
 	struct stat st;
+/* ************************************** */
 	char *ch;
 	char buf[1024];
 	int count=0;
 
-	if ((d = opendir(folder))==NULL)
+	if ((d = GP_OPENDIR(folder))==NULL)
 		return (GP_ERROR);
 
-	while (de = readdir(d)) {
-		if ((strcmp(de->d_name, "." )!=0) &&
-		    (strcmp(de->d_name, "..")!=0)) {
-			sprintf(buf, "%s/%s", folder, de->d_name);
+	while (de = GP_READDIR(d)) {
+		if ((strcmp(GP_FILENAME(de), "." )!=0) &&
+		    (strcmp(GP_FILENAME(de), "..")!=0)) {
+			sprintf(buf, "%s/%s", folder, GP_FILENAME(de));
 			if (stat(buf, &st)==0) {
+/* blech */
 			   if ((!S_ISDIR(st.st_mode))&&(is_image(de->d_name)))
-				gp_list_append(list, de->d_name, GP_LIST_FILE);
+				gp_list_append(list, GP_FILENAME(de), GP_LIST_FILE);
 			}
 		}
 	}

@@ -1220,8 +1220,8 @@ e.g. SET CAMLIBS=C:\\GPHOTO2\\CAM\n");
 
         /* Initialize gPhoto core */
         gp_init(glob_debug);
-//		gp_frontend_register(gp_interface_status, gp_interface_progress, 
-//			gp_interface_message, gp_interface_confirm);
+	gp_frontend_register(gp_interface_status, gp_interface_progress, 
+		gp_interface_message, gp_interface_confirm);
         if (execute_options(argc, argv) == GP_ERROR) {
 //              if (!glob_quiet)
 //                      usage();
