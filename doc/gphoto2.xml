@@ -20,6 +20,14 @@ About this file:
    system, but you're free to use any other adequate processing tool,
    of course :-)
 
+ - stylesheet options which may be interesting: 
+     use.id.as.filename=true
+     make.valid.html=true
+     navig.graphics=true
+     chapter.autolabel=7
+     section.autolabel=8
+     section.label.includes.component.label=9
+
 ================================================================= -->
 
 <?xml-stylesheet type="text/css" href="docbook-xml.css"?>
@@ -75,7 +83,7 @@ About this file:
     <subtitle>Mission statement, history and options for the future</subtitle>
 
     <para>
-      This document is "&docname;".
+      This document is <quote>&docname;</quote>.
     </para>
 
     <formalpara>
@@ -229,7 +237,13 @@ About this file:
       (<acronym>RPM</acronym> packages, <acronym>DEB</acronym>
       packages or <acronym>BSD</acronym> ports) and/or your system
       administrator should already have done for you. If not, follow
-      the instructions in the <xref linkend="setup-perms"/> chapter first.
+      the instructions in the <link linkend="permissions">chapter on
+	permission setup</link>
+      <!-- for some reasons, 
+         <xref linkend="permissions"/>
+        doesn't work
+      -->
+      first. 
     </para>
 
     <para>FIXME: We need examples using <acronym>RS232</acronym>
@@ -286,7 +300,8 @@ Canon PowerShot G2             usb:            </computeroutput>
 <prompt>uli@mir:~$ </prompt>
       </screen>
       <para>
-	In this case, a camera called "Canon PowerShot G2" is connected
+	In this case, a camera called 
+	<quote>Canon PowerShot G2</quote> is connected
 	to your system's <acronym>USB</acronym> bus.
       </para>
 
@@ -406,7 +421,7 @@ Saving file as MVI_5418.AVI                                                     
   <!-- =========================================================== --> 
   <!-- =========================================================== --> 
 
-  <chapter id="setup-perms">
+  <chapter id="permissions">
     <title>Setting up your system for use with 
       <systemitem class="library">libgphoto2</systemitem>
       and <command>gphoto2</command>
@@ -448,7 +463,7 @@ Saving file as MVI_5418.AVI                                                     
         <xref linkend="libgphoto2"/>
         frontend as root. So you have to set up the permissions of your camera
         device accordingly. This is described in the following two sections,
-	<xref linkend="perms-rs232"/> and <xref linkend="perms-usb"/>.
+	<xref linkend="permissions-RS232"/> and <xref linkend="permissions-USB"/>.
       </para>
       <para>
         Then you can run your frontend. For the command line 
@@ -459,7 +474,7 @@ Saving file as MVI_5418.AVI                                                     
       </para>    
     </section>
 
-    <section id="perms-rs232">
+    <section id="permissions-RS232">
       <title>Setting up permissions for serial (<acronym>RS232</acronym>) ports</title>
       <note>
 	<simpara>
@@ -473,7 +488,7 @@ Saving file as MVI_5418.AVI                                                     
       </para>    
     </section>
 
-    <section id="perms-usb">
+    <section id="permissions-USB">
       <title>Setting up permissions for <acronym>USB</acronym> ports</title>
       <para>
         As <acronym>USB</acronym> is designed for hotplugging of
@@ -561,14 +576,15 @@ Saving file as MVI_5418.AVI                                                     
         </para>
 
 	<note>
-	  <para>The fact that we are using the name "usbcam" for
+	  <para>The fact that we are using the name <quote>usbcam</quote> for
 	    setting up permissions for gphoto2 has a reason. In fact,
 	    the permission setup you're doing here has nothing to do
 	    with gphoto2 specifically - any user space software
 	    wanting to access your USB camera will be able to make use
 	    of your camera only if the permissions are correctly set
 	    up. So I (hun) chose the identifier and script name
-	    "usbcam" and not "gphoto2cam" or somethink similar.
+	    <quote>usbcam</quote> and not <quote>gphoto2cam</quote> or
+	    somethink similar. 
 	  </para>
 	</note>
 
@@ -634,7 +650,7 @@ Saving file as MVI_5418.AVI                                                     
 	    </para>
             <para>
 	      In the file <filename>/etc/hotplug/usb.usermap</filename> 
-	      remove all lines beginning with "usbcam".
+	      remove all lines beginning with <quote>usbcam</quote>.
             </para>
 	    <para>
               Then add the output of
@@ -1070,7 +1086,7 @@ Saving file as MVI_5418.AVI                                                     
   <!-- =========================================================== --> 
   <!-- =========================================================== --> 
 
-<reference>
+<reference id="reference">
   <title>The gPhoto2 Reference (the man pages)</title>
 
   <refentry id="gphoto2-cli">
@@ -1808,7 +1824,7 @@ Saving file as MVI_5418.AVI                                                     
   <!-- =========================================================== --> 
   <!-- =========================================================== -->
   
-  <appendix>
+  <appendix id="related-info">
     <title>Resources: Where to find related information</title>
     <variablelist>
       <varlistentry>
