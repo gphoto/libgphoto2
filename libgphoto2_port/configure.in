@@ -329,6 +329,14 @@ dnl ********
 GP_CHECK_DOC_DIR()dnl
 GP_BUILD_DOCS()dnl
 
+
+dnl ---------------------------------------------------------------------------
+dnl Reference definitions
+dnl ---------------------------------------------------------------------------
+
+GP_REFERENCES()dnl
+
+
 AC_OUTPUT([
 Makefile
 libgphoto2_port/Makefile
