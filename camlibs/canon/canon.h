@@ -31,17 +31,6 @@
 
 #define CAMERA_MASK_BATTERY  32
 
-#ifdef OBSOLETE
-struct canon_dir {
-  const char *name; /* NULL if at end */
-  unsigned int size;
-  time_t date;
-  unsigned char attrs; /* File attributes, see "Protocols" for details */
-  int is_file;
-  void *user;	/* user-specific data */
-};
-#endif
-
 
 /**
  * Various camera types
