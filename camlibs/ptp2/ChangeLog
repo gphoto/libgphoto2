@@ -1,3 +1,8 @@
+2003-05-09 Mariusz Woloszyn
+	* ptp.h: added some Kodak extension device property codes
+	  definitions
+	* test_ptp.c: added properties listing support and --force option
+
 2003-05-01  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* library.c: add explicitly DSC-P32 (was autodetected)

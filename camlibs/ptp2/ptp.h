@@ -1,3 +1,5 @@
+
+
 /* ptp.h
  *
  * Copyright (C) 2001 Mariusz Woloszyn <emsi@ipartners.pl>
@@ -460,6 +462,13 @@ typedef struct _PTPDevicePropDesc PTPDevicePropDesc;
 #define PTP_DPC_UploadURL		0x501D
 #define PTP_DPC_Artist			0x501E
 #define PTP_DPC_CopyrightInfo		0x501F
+// Eastman Kodak extension device property codes
+#define PTP_DPC_EK_ColorTemperature	0xD001
+#define PTP_DPC_EK_DateTimeStampFormat	0xD002
+#define PTP_DPC_EK_BeepMode		0xD003
+#define PTP_DPC_EK_VideoOut		0xD004
+#define PTP_DPC_EK_PowerSaving		0xD005
+#define PTP_DPC_EK_UI_Language		0xD006
 
 // Device Property Form Flag
 

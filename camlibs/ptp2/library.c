@@ -1,3 +1,4 @@
+
 /* library.c
  *
  * Copyright (C) 2001 Mariusz Woloszyn <emsi@ipartners.pl>
@@ -94,6 +95,7 @@
 
 #define STORAGE_FOLDER_PREFIX		"store_"
 
+// PTP error descriptions
 static struct {
 	short n;
 	const char *txt;
