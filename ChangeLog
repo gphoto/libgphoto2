@@ -1,5 +1,12 @@
 2002-02-07  Lutz Müller <lutz@users.sourceforge.net>
 
+	* frontends/command-line: Fix my previous (broken) patch and hide
+	  all that recursive id look-up stuff.
+	* frontends/command-line/gphoto2-cmd-exif.[c,h]: Removed. Now in 
+	  actions.[c,h]
+
+2002-02-07  Lutz Müller <lutz@users.sourceforge.net>
+
 	* frontends/command-line/foreach.[c,h]: Pass CameraList as parameter.
 	  This be where the const filename is allocated. Before, the string
 	  got messed up.

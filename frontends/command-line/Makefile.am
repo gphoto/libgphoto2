@@ -32,16 +32,9 @@ else
 AA_FILES =
 endif
 
-if HAVE_EXIF
-EXIF_FILES = gphoto2-cmd-exif.c gphoto2-cmd-exif.h
-else
-EXIF_FILES =
-endif
-
 gphoto2_SOURCES = 		\
 	$(AA_FILES)		\
 	$(CDK_FILES)		\
-	$(EXIF_FILES)		\
 	actions.c actions.h 	\
 	foreach.c foreach.h 	\
 	globals.h 		\

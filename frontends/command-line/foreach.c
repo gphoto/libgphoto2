@@ -62,7 +62,7 @@ for_each_subfolder (const char *folder, folder_action faction,
 
 	char	prefix[1024], subfolder[1024];
 	int	i, l, res;
-	
+
 	prefix[0] = 0;
 	subfolder[0] = 0;
 
@@ -78,7 +78,7 @@ for_each_subfolder (const char *folder, folder_action faction,
 	 * for_each_image(). We let for_each_image() do the output
 	 * in this case.
 	 */
-	if (gp_list_count(&folderlist) && (faction != for_each_image)) {
+	if (gp_list_count (&folderlist) && (faction != for_each_image)) {
 		if (glob_quiet)
 			printf ("%i\n", gp_list_count (&folderlist));
 		else
@@ -93,7 +93,7 @@ for_each_subfolder (const char *folder, folder_action faction,
 	 * recursion. This way, we obtain a cleaner display
 	 * when file names are displayed. 
 	 */
-	for (i = 0; i < gp_list_count(&folderlist); i++) {
+	for (i = 0; i < gp_list_count (&folderlist); i++) {
 		const char *name;
 
 		gp_list_get_name (&folderlist, i, &name);
@@ -143,37 +143,42 @@ for_each_image (const char *folder, image_action iaction, int reverse)
 	if (reverse) {
 		for (i = gp_list_count (&filelist) - 1; 0 <= i; i--) {
 			gp_list_get_name (&filelist, i, &name);
-			CR (iaction (folder, (char*)name));
+			CR (iaction (folder, name));
 		}
 	} else {
 		for (i = 0; i < gp_list_count (&filelist); i++) {
 			gp_list_get_name (&filelist, i, &name);
-			CR (iaction (folder, (char*)name));
+			CR (iaction (folder, name));
 		}
 	}
 
 	return (GP_OK);
 }
 
+#define MAX_FOLDER_LEN 1024
+#define MAX_FILE_LEN   1024
+
 static int
 get_path_for_id_rec (const char *base_folder, unsigned int id,
-		     unsigned int *base_id, const char **folder,
-		     const char **filename, CameraList *list)
+		     unsigned int *base_id, char *folder,
+		     char *filename)
 {
 	char subfolder[1024];
 	int n_folders, n_files, r;
 	unsigned int i;
 	const char *name;
+	CameraList list;
 
-	*folder = base_folder;
-	CR (gp_camera_folder_list_files (glob_camera, base_folder, list,
+	strncpy (folder, base_folder, MAX_FOLDER_LEN);
+	CR (gp_camera_folder_list_files (glob_camera, base_folder, &list,
 					 glob_context));
-	CR (n_files = gp_list_count (list));
+	CR (n_files = gp_list_count (&list));
 	if (id - *base_id < n_files) {
 
 		/* ID is in this folder */
 		GP_DEBUG ("ID %i is in folder '%s'.", id, base_folder);
-		CR (gp_list_get_name (list, id - *base_id, filename));
+		CR (gp_list_get_name (&list, id - *base_id, &name));
+		strncpy (filename, name, MAX_FILE_LEN);
 		return (GP_OK);
 	} else {
 
@@ -181,16 +186,16 @@ get_path_for_id_rec (const char *base_folder, unsigned int id,
 		GP_DEBUG ("ID %i is not in folder '%s'.", id, base_folder);
 		*base_id += n_files;
 		CR (gp_camera_folder_list_folders (glob_camera, base_folder,
-						   list, glob_context));
-		CR (n_folders = gp_list_count (list));
+						   &list, glob_context));
+		CR (n_folders = gp_list_count (&list));
 		for (i = 0; i < n_folders; i++) {
-			CR (gp_list_get_name (list, i, &name));
+			CR (gp_list_get_name (&list, i, &name));
 			strncpy (subfolder, base_folder, sizeof (subfolder));
 			if (strlen (base_folder) > 1)
 				strncat (subfolder, "/", sizeof (subfolder));
 			strncat (subfolder, name, sizeof (subfolder));
 			r = get_path_for_id_rec (subfolder, id, base_id,
-						 folder, filename, list);
+						 folder, filename);
 			switch (r) {
 			case GP_ERROR_FRONTEND_BAD_ID:
 				break;
@@ -202,33 +207,55 @@ get_path_for_id_rec (const char *base_folder, unsigned int id,
 	}
 }
 
-/*
- * Sorry for the last parameter CameraList. Because we return
- * const filename, the string must be allocated somewhere. As
- * we will need a list anyways and use the string from there, we just pass
- * the list around as parameter. Quite ugly, but it works.
- */
-int
+static int
 get_path_for_id (const char *base_folder, unsigned char recurse,
-		 unsigned int id, const char **folder, const char **filename,
-		 CameraList *list)
+		 unsigned int id, char *folder, char *filename)
 {
 	int r;
 	unsigned int base_id;
+	CameraList list;
+	const char *name;
 
+	strncpy (folder, base_folder, MAX_FOLDER_LEN);
 	if (!recurse) {
 
 		/* If we have no recursion, things are easy. */
 		GP_DEBUG ("No recursion. Taking file %i from folder '%s'.",
 			  id, base_folder);
 		CR (gp_camera_folder_list_files (glob_camera, base_folder,
-						 list, glob_context));
-		CR (gp_list_get_name (list, id, filename));
+						 &list, glob_context));
+		if (id >= gp_list_count (&list)) {
+			switch (gp_list_count (&list)) {
+			case 0:
+				gp_context_error (glob_context,
+					_("There are no files in "
+					"folder '%s'."), base_folder);
+				return (GP_ERROR_BAD_PARAMETERS);
+			case 1:
+				gp_context_error (glob_context, 
+					_("Bad image number. "
+					"You specified %i, but there is only "
+					"1 file available in '%s'."), id + 1,
+					base_folder);
+				return (GP_ERROR_BAD_PARAMETERS);
+			default:
+				gp_context_error (glob_context,
+					_("Bad image number. "
+					"You specified %i, but there are only "
+					"%i files available in '%s'."
+					"Please obtain a valid image number "
+					"from a file listing first."), id + 1,
+					gp_list_count (&list), base_folder);
+				return (GP_ERROR_BAD_PARAMETERS);
+			}
+		}
+		CR (gp_list_get_name (&list, id, &name));
+		strncpy (filename, name, MAX_FILE_LEN);
 		return (GP_OK);
 	} else {
 		base_id = 0;
 		r = get_path_for_id_rec (base_folder, id, &base_id, folder,
-					 filename, list);
+					 filename);
 		switch (r) {
 		case GP_ERROR_FRONTEND_BAD_ID:
 			gp_context_error (glob_context, _("Bad image number. "
@@ -237,7 +264,7 @@ get_path_for_id (const char *base_folder, unsigned char recurse,
 				"Please obtain a valid image number from "
 				"a file listing first."), id + 1, base_id,
 				base_folder);
-			return (GP_ERROR);
+			return (GP_ERROR_BAD_PARAMETERS);
 		default:
 			return (r);
 		}
@@ -250,8 +277,7 @@ for_each_image_in_range (const char *folder, unsigned char recurse,
 {
 	char	index[MAX_IMAGE_NUMBER];
 	int 	i, max = 0;
-	CameraList list;
-	const char *name;
+	char ffolder[MAX_FOLDER_LEN], ffile[MAX_FILE_LEN];
 
 	memset(index, 0, MAX_IMAGE_NUMBER);
 	
@@ -263,18 +289,16 @@ for_each_image_in_range (const char *folder, unsigned char recurse,
 		for (i = max; 0 <= i; i--)
 			if (index[i]) {
 				CR (get_path_for_id (folder, recurse,
-					(unsigned int) i, &folder, &name,
-					&list));
-				CR (action (folder, (char*)name));
+					(unsigned int) i, ffolder, ffile));
+				CR (action (ffolder, ffile));
 			}
 	} else 
 		for (i = 0; i <= max; i++)
 			if (index[i]) {
 				GP_DEBUG ("Now processing ID %i...", i);
 				CR (get_path_for_id (folder, recurse,
-					(unsigned int) i, &folder, &name,
-					&list));
-				CR (action (folder, (char*)name));
+					(unsigned int) i, ffolder, ffile));
+				CR (action (ffolder, ffile));
 			}
 		
 	return (GP_OK);

@@ -1,4 +1,22 @@
-/* $Id$ */
+/* $Id$
+ *
+ * Copyright (C) 2002 Lutz Müller <lutz@users.sourceforge.net>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details. 
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
 
 #include <config.h>
 
@@ -27,10 +45,6 @@
 
 #ifdef HAVE_AA
 #include "gphoto2-cmd-capture.h"
-#endif
-
-#ifdef HAVE_EXIF
-#include "gphoto2-cmd-exif.h"
 #endif
 
 #include "gphoto2-port-info-list.h"
@@ -646,9 +660,15 @@ OPTION_CALLBACK(show_exif)
 {
 	CR (set_globals ());
 
-	CR (gp_cmd_exif (glob_camera, glob_folder, arg, glob_context));
+	/*
+	 * If the user specified the file directly (and not a range),
+	 * directly dump EXIF information.
+	 */
+	if (strchr (arg, '.'))
+		return (print_exif_action (glob_folder, arg));
 
-	return (GP_OK);
+	return (for_each_image_in_range (glob_folder, glob_recurse, arg,
+					 print_exif_action, 0));
 }
 #endif
 
