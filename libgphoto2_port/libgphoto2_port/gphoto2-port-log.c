@@ -38,9 +38,6 @@ typedef struct {
 static LogFunc *log_funcs = NULL;
 static unsigned int log_funcs_count = 0;
 
-static char        *log_history = NULL;
-static unsigned int log_history_size = 0;
-
 /**
  * gp_log_add_func:
  * @levels: gphoto2 log levels
@@ -99,28 +96,6 @@ gp_log_remove_func (int id)
 	log_funcs_count--;
 
 	return (GP_OK);
-}
-
-static void
-gp_log_history_append (const char *msg)
-{
-	int needed, available, delta;
-
-	/* First of all, skip the whole thing if the message is too long */
-	if (strlen (msg) + 2 > log_history_size)
-		return;
-
-	/* Do we have to forget parts of the log history? */
-	needed = strlen (msg) + 1;
-	available = log_history_size - strlen (log_history) - 1;
-	delta = available - needed;
-	if (delta < 0)
-		 memmove (log_history, log_history - delta,
-			  log_history_size + delta);
-
-	/* Append the message */
-	strcat (log_history, msg);
-	strcat (log_history, "\n");
 }
 
 /*
@@ -232,6 +207,19 @@ gp_log_data (const char *domain, const char *data, unsigned int size)
 	free (result);
 }
 
+void
+gp_logv (GPLogLevels levels, const char *domain, const char *format,
+	 va_list args)
+{
+	int i;
+
+	for (i = 0; i < log_funcs_count; i++) {
+		if (log_funcs[i].levels & levels)
+			log_funcs[i].func (levels, domain, format, args,
+					   log_funcs[i].data);
+	}
+}
+
 /**
  * gp_log:
  * @levels: gphoto2 log levels
@@ -245,72 +233,9 @@ gp_log_data (const char *domain, const char *data, unsigned int size)
 void
 gp_log (GPLogLevels levels, const char *domain, const char *format, ...)
 {
-	char buffer[2048];
 	va_list args;
-	int i;
 
 	va_start (args, format);
-	for (i = 0; i < log_funcs_count; i++) {
-		if (log_funcs[i].levels & levels)
-			log_funcs[i].func (levels, domain, format, args,
-					   log_funcs[i].data);
-	}
-	vsnprintf (buffer, sizeof (buffer), format, args);
-	gp_log_history_append (buffer);
+	gp_logv (levels, domain, format, args);
 	va_end (args);
-}
-
-/**
- * gp_log_history_set_size:
- * @size: the new size
- *
- * Sets the size of the builtin history to @size.
- *
- * Return value: a gphoto2 error code
- **/
-int
-gp_log_history_set_size (unsigned int size)
-{
-	char *new_log_history;
-
-	if (!log_history)
-		new_log_history = malloc (sizeof (char) * size);
-	else
-		new_log_history = realloc (log_history, sizeof (char) * size);
-
-	if (size && !new_log_history)
-		return (GP_ERROR_NO_MEMORY);
-
-	log_history_size = size;
-	log_history = new_log_history;
-
-	return (GP_OK);
-}
-
-/**
- * gp_log_history_get_size:
- *
- * Retreives the current size of the builtin log history. You can adjust the
- * size with #gp_log_history_set_size.
- *
- * Return value: The current size of the builtin log history or a
- * 		 gphoto2 error code
- **/
-int
-gp_log_history_get_size (void)
-{
-	return (log_history_size);
-}
-
-/**
- * gp_log_history_get:
- *
- * Retreives the current log history.
- *
- * Return value: the current log history
- **/
-const char *
-gp_log_history_get (void)
-{
-	return (log_history);
 }

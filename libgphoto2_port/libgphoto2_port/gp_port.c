@@ -51,6 +51,8 @@
 #define CHECK_SUPP(s,o) {if (!(o)) {gp_log (GP_LOG_ERROR, "gphoto2-port", ("The operation '%s' is not supported by this device"), (s)); return (GP_ERROR_NOT_SUPPORTED);}}
 
 struct _GPPortPrivateCore {
+	char error[2048];
+
 	void *lh; /* Library handle */
 };
 
@@ -481,4 +483,54 @@ int gp_port_usb_msg_read (GPPort *dev, int request, int value, int index,
 	gp_log (GP_LOG_DEBUG, "gphoto2-port", bytes, retval);
 
         return (retval);
+}
+
+/**
+ * gp_port_set_error:
+ * @port: a #GPPort
+ * @format:
+ * ...:
+ *
+ * Sets an error message that can later be retreived using #gp_port_get_error.
+ *
+ * Return value: a gphoto2 error code
+ **/
+int
+gp_port_set_error (GPPort *port, const char *format, ...)
+{
+	va_list args;
+
+	if (!port)
+		return (GP_ERROR_BAD_PARAMETERS);
+
+	if (format) {
+		va_start (args, format);
+		vsnprintf (port->pc->error, sizeof (port->pc->error),
+			   format, args);
+		gp_logv (GP_LOG_ERROR, "gphoto2-port", format, args);
+		va_end (args);
+	} else
+		port->pc->error[0] = '\0';
+
+	return (GP_OK);
+}
+
+/**
+ * gp_port_get_error:
+ * @port: a #GPPort
+ *
+ * Retreives an error message from a @port. If you want to make sure that
+ * you get correct error messages, you need to call #gp_port_set_error with
+ * an error message of %NULL each time before calling another port-related
+ * function of which you want to check the return value.
+ *
+ * Return value: an error message
+ **/
+const char *
+gp_port_get_error (GPPort *port)
+{
+	if (port && port->pc && strlen (port->pc->error))
+		return (port->pc->error);
+
+	return (N_("No error description available"));
 }

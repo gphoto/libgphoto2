@@ -1,3 +1,10 @@
+2001-10-23  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2_port/gphoto2-port-log.[c,h]: Remove the history stuff.
+	* libgphoto2_port/gp_port.c (gp_port_set_error), (gp_port_get_error):
+	  New.
+	* serial/unix.c: Use gp_port_set_error
+
 2001-10-22  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2_port/gphoto2-port-log.[c,h]: Use va_list instead of 

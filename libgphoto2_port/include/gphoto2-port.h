@@ -238,6 +238,9 @@ typedef GPPortOperations gp_port_operations;
 
 
 
+/* Error reporting */
+int         gp_port_set_error (GPPort *port, const char *format, ...);
+const char *gp_port_get_error (GPPort *port);
 
 #endif /* _GP_PORT_H_ */
 

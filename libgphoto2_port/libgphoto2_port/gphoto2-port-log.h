@@ -38,11 +38,8 @@ int  gp_log_remove_func (int id);
 /* Logging */
 void gp_log      (GPLogLevels levels, const char *domain,
 		  const char *format, ...);
+void gp_logv     (GPLogLevels level, const char *domain, const char *format,
+		  va_list args);
 void gp_log_data (const char *domain, const char *data, unsigned int size);
-
-/* History */
-int         gp_log_history_set_size (unsigned int size);
-int         gp_log_history_get_size (void);
-const char *gp_log_history_get (void);
 
 #endif /* __GPHOTO2_PORT_LOG_H__ */
