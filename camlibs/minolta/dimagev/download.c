@@ -309,7 +309,7 @@ int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file)
 
 		free(r);
 
-		GP_DEBUG( "dimagev_get_thumbnail::current file size is %d", size);
+		GP_DEBUG( "dimagev_get_thumbnail::current file size is %ld", size);
 	}
 
 	size++;
