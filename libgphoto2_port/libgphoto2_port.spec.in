@@ -1,3 +1,5 @@
+# -*- rpm-spec -*-
+
 %define ver      @VERSION@
 %define rel      1
 %define prefix   /usr
@@ -8,9 +10,8 @@ Version: %ver
 Release: %rel
 Copyright: LGPL
 Group: System Environment/Libraries
-Source: http://www.gphoto.net/dist/libgphoto2-port-%{ver}.tar.gz
 BuildRoot: /var/tmp/libgphoto2-port-%{PACKAGE_VERSION}-root
-URL: http://www.gphoto.net/
+URL: @URL_GPHOTO_HOME@
 Docdir: %{prefix}/doc
 Requires: libusb
 

@@ -17,8 +17,9 @@ Release: 1
 License: LGPL
 Group: Applications/Multimedia
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
-Source: http://www.gphoto.org/dist/@PACKAGE@-@VERSION@.tar.gz
-Url: http://www.gphoto.org/
+# sources only available from sf.net - but not wgettable.
+# Source: http://www.gphoto.org/dist/@PACKAGE@-@VERSION@.tar.gz
+Url: @URL_GPHOTO_HOME@
 ExcludeArch: s390 s390x
 Provides: libgphoto2
 Provides: libgphoto2_port
