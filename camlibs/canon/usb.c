@@ -269,7 +269,7 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
                  * packet size - 0x40) and then move the last 0x10 bytes of msg to
                  * offset 0x40 and write it back to the camera.
                  */
-                //memset ( msg, 0, 0x40 );
+                memset ( msg, 0, 0x40 );
                 msg[0] = 0x10;
                 memmove (msg + 0x40, msg + 0x48, 0x10);
                 i = gp_port_usb_msg_write (camera->port, 0x04, 0x11, 0, msg, 0x50);
@@ -836,7 +836,6 @@ static int canon_usb_poll_interrupt_pipe ( Camera *camera, unsigned char *buf, i
 
         memset ( buf, 0x81, 0x40 ); /* Put weird stuff in buffer */
         gettimeofday ( &start, NULL );
-        fprintf ( stderr, "Time at start is %6.3f sec\n", start.tv_sec +   start.tv_usec/1e6f );
         /* Read repeatedly until we get either an
            error or a non-zero size. */
         for ( i=0; i<n_tries; i++ ) {
@@ -846,7 +845,6 @@ static int canon_usb_poll_interrupt_pipe ( Camera *camera, unsigned char *buf, i
                         break;
         }
         gettimeofday ( &end, NULL );
-        fprintf ( stderr, "Time at end is %6.3f sec\n", end.tv_sec +   end.tv_usec/1e6f );
         duration  =   end.tv_sec +   end.tv_usec/1e6f;
         duration -= start.tv_sec + start.tv_usec/1e6f;
         if ( status <= 0 )
