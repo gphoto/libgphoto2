@@ -72,10 +72,10 @@ int gp_camera_new (Camera **camera, int camera_number, CameraPortInfo *settings)
         (*camera)->library_handle  = NULL;
         (*camera)->camlib_data     = NULL;
         (*camera)->frontend_data   = NULL;
+	(*camera)->session    = glob_session_camera++;
 
         memcpy((*camera)->port, settings, sizeof(CameraPortInfo));
 
-	(*camera)->session = glob_session_camera++;
 
         if (load_library(*camera, glob_abilities_list->abilities[camera_number]->model)==GP_ERROR) {
                 gp_camera_free(*camera);
@@ -110,6 +110,13 @@ int gp_camera_free(Camera *camera)
                 free(camera->functions);
 
         return (GP_OK);
+}
+
+int gp_camera_session (Camera *camera)
+{
+
+	return (camera->session);
+
 }
 
 int gp_camera_new_by_name (Camera **camera, char *camera_name, CameraPortInfo *settings)

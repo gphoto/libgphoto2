@@ -1,14 +1,9 @@
 lib_LTLIBRARIES = libgphoto2.la
 
 CFLAGS= @CFLAGS@ \
-	-g \
-	-Wall \
 	-I$(top_srcdir)/include \
 	-DCAMLIBS=\"$(prefix)/lib/gphoto2\" \
-	-DDOCDIR=\"$(prefix)/doc/gphoto2\" \
-	`gpio-config --cflags`
-
-LDFLAGS = @LDFLAGS@ -g `gpio-config --libs`
+	-DDOCDIR=\"$(prefix)/doc/gphoto2\"
 
 libgphoto2_la_LDFLAGS = -version-info 0:0:0
 libgphoto2_la_SOURCES = \
