@@ -99,6 +99,7 @@ FRAG_LEN_MSB
 <TITLE>Directory Entries</TITLE>
 <INCLUDE>canon.h</INCLUDE>
 canon_usb_get_dirents
+canon_usb_list_all_dirs
 canonDirentOffset
 </SECTION>
 
