@@ -301,6 +301,7 @@ pdc700_pic (Camera *camera, int n, unsigned char **data, int *size,
 	while (status != PDC700_LAST) {
 		cmd[4] = PDC700_DONE;
 		cmd[5] = sequence_num;
+		GP_DEBUG ("Fetching sequence %i...", sequence_num);
 		CHECK_RESULT_FREE (pdc700_read (camera, cmd, 7,
 						buf, &len, &status), *data);
 		sequence_num = buf[0];
@@ -308,11 +309,13 @@ pdc700_pic (Camera *camera, int n, unsigned char **data, int *size,
 		i += (len - 1);
 	}
 
+#if 0
 	/* Terminate transfer */
 	cmd[4] = PDC700_LAST;
 	cmd[5] = sequence_num;
 	CHECK_RESULT_FREE (pdc700_read (camera, cmd, 7, buf, &len, &status),
 			   *data);
+#endif
 
 	return (GP_OK);
 }
