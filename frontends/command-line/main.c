@@ -282,7 +282,7 @@ int glob_usbid[5];
 Camera    *glob_camera  = NULL;
 GPContext *glob_context = NULL;
 
-static ForEachParams fparams = {NULL, NULL, NULL, FOR_EACH_FLAGS_RECURSE};
+static ForEachParams fparams;
 static ActionParams  aparams;
 
 int  glob_quiet=0;
@@ -1462,6 +1462,7 @@ set_globals (void)
 	fparams.camera  = aparams.camera  = glob_camera;
 	fparams.context = aparams.context = glob_context;
 	fparams.folder  = aparams.folder  = glob_folder;
+	fparams.flags   = FOR_EACH_FLAGS_RECURSE;
 
         return (GP_OK);
 }

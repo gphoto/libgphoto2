@@ -1,5 +1,9 @@
 2002-05-19  Christophe Barbe <christophe.barbe@ufies.org>
 	
+	* frontends/command-line/main.c: fixed fparams initialization.
+
+2002-05-19  Christophe Barbe <christophe.barbe@ufies.org>
+	
 	* frontends/command-line/main.c: replaced a missused #if with a #ifdef
 	* frontends/command-line/gphoto2-cmd-capture.c: same 2 times.
 	   reported by Luciano Campal Vazquez <luch0@telefonica.net>
