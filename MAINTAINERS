@@ -8,6 +8,9 @@ libgphoto2_port:
 libgphoto2:
 	Scott Fritzinger <scottf@unr.edu>
 
+camlibs/agfa-cl18:
+	Vince Weaver <vince@deater.net>
+
 camlibs/barbie:
 	Scott Fritzinger <scottf@unr.edu> 
 
