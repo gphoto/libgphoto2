@@ -1,4 +1,6 @@
 .cvsignore~
+ch*.html
+index.html
 Makefile
 Makefile.in
 canon-api.html
