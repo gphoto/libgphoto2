@@ -209,7 +209,7 @@ const struct canonCamModelData models[] = {
 
 	{"Canon:PowerShot SD20 (normal mode)",  CANON_CLASS_5,  0x04A9, 0x30c4, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
 
-	{"Canon:EOS 20D (normal mode)",		CANON_CLASS_6,	0x04A9, 0x30eb, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	/*{"Canon:EOS 20D (normal mode)",		CANON_CLASS_6,	0x04A9, 0x30eb, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},*/
 
 	{NULL}
 	/* *INDENT-ON* */
@@ -1999,7 +1999,8 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 					 */
 					if (!camera->pl->list_all_files
 					    && !is_image (info.file.name)
-					    && !is_movie (info.file.name)) {
+					    && !is_movie (info.file.name)
+					    && !is_audio (info.file.name)) {
                                                 /* FIXME: Find associated main file and add it there */
 						/* do nothing */
 						GP_DEBUG ("Ignored %s/%s", folder,
