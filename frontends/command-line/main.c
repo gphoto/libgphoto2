@@ -1229,6 +1229,7 @@ main (int argc, char **argv)
         int result;
 
 	/* For translation */
+	setlocale (LC_ALL, "");
         bindtextdomain (PACKAGE, GPHOTO2_LOCALEDIR);
         textdomain (PACKAGE);
 

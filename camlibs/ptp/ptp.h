@@ -104,25 +104,7 @@
 #define PTP_ERROR_RESP_EXPECTED		0x2FD
 #define PTP_ERROR_BADPARAM		0x2fC
 
-// Requests
-
 #define PTP_REQ_DATALEN                 16384
-#define PTP_REQ_LEN                     30
-#define PTP_REQ_HDR_LEN                 (2*sizeof(int)+2*sizeof(short))
-#define PTP_RESP_LEN                    sizeof(PTPReq)
-
-
-// PTP request/response type
-
-typedef struct _PTPReq PTPReq;
-struct _PTPReq {
-	int len;
-	short type;
-	short code;
-	int trans_id;
-	char data[PTP_REQ_DATALEN];
-};
-
 
 // PTP device info structure (returned by GetDevInfo)
 

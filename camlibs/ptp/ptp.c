@@ -72,6 +72,19 @@ ptp_error (PTPParams *params, const char *format, ...)
         va_end (args);
 }
 
+#define PTP_REQ_LEN                     30
+#define PTP_REQ_HDR_LEN                 (2*sizeof(int)+2*sizeof(short))
+#define PTP_RESP_LEN                    sizeof(PTPReq)
+
+typedef struct _PTPReq PTPReq;
+struct _PTPReq {
+	int len;
+	short type;
+	short code;
+	int trans_id;
+	char data[PTP_REQ_DATALEN];
+};
+
 static short
 ptp_sendreq(PTPParams* params, PTPReq* databuf, short code)
 {

@@ -1,3 +1,9 @@
+2001-11-17  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* camlibs/ptp/ptp.[c,h]: Hide some internals
+	* frontends/command-line/main.c: Fix translation by calling
+	  setlocale (LC_ALL, "") (?).
+
 2001-11-17  Colin Marquardt  <colin@marquardt-home.de>
 
 	* libgphoto2_port/configure.in (BUILD_INCLUDED_LIBINTL): Added
