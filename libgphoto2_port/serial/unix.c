@@ -66,12 +66,6 @@
 #include <gphoto2-port-log.h>
 #include <gphoto2-port.h>
 
-#ifdef HAVE_TERMIOS_H
-static struct termios term_old;
-#else
-static struct sgttyb term_old;
-#endif
-
 #ifdef ENABLE_NLS
 #  include <libintl.h>
 #  undef _
@@ -313,6 +307,9 @@ gp_port_library_list (GPPortInfoList *list)
 static int
 gp_port_serial_init (GPPort *dev)
 {
+	if (!dev)
+		return (GP_ERROR_BAD_PARAMETERS);
+
 	dev->pl = malloc (sizeof (GPPortPrivateLibrary));
 	if (!dev->pl)
 		return (GP_ERROR_NO_MEMORY);
@@ -321,18 +318,6 @@ gp_port_serial_init (GPPort *dev)
 	/* There is no default speed. */
 	dev->pl->baudrate = -1;
 
-#if HAVE_TERMIOS_H
-        if (tcgetattr (dev->pl->fd, &term_old) < 0) {
-                perror("tcgetattr2");
-                /*return GP_ERROR_IO_INIT;*/
-        }
-#else
-        if (ioctl (dev->pl->fd, TIOCGETP, &term_old) < 0) {
-                perror("ioctl(TIOCGETP)");
-                return GP_ERROR_IO_INIT;
-        }
-#endif
-
         return GP_OK;
 }
 
@@ -340,7 +325,7 @@ static int
 gp_port_serial_exit (GPPort *dev)
 {
 	if (!dev)
-		return (GP_OK);
+		return (GP_ERROR_BAD_PARAMETERS);
 
 	if (dev->pl) {
 		free (dev->pl);
@@ -427,6 +412,9 @@ gp_port_serial_write (GPPort *dev, char *bytes, int size)
 {
         int len, ret;
 
+	if (!dev)
+		return (GP_ERROR_BAD_PARAMETERS);
+
 	/* The device needs to be opened for that operation */
 	if (!dev->pl->fd)
 		CHECK (gp_port_serial_open (dev));
@@ -474,8 +462,10 @@ gp_port_serial_read (GPPort *dev, char *bytes, int size)
 {
         struct timeval timeout;
         fd_set readfs;          /* file descriptor set */
-        int readen = 0;
-        int rc;
+        int readen = 0, now;
+
+	if (!dev)
+		return (GP_ERROR_BAD_PARAMETERS);
 
 	/* The device needs to be opened for that operation */
 	if (!dev->pl->fd)
@@ -488,37 +478,25 @@ gp_port_serial_read (GPPort *dev, char *bytes, int size)
         FD_SET (dev->pl->fd, &readfs);
 
         while (readen < size) {
-                /* set timeout value within input loop */
+
+		/* Set timeout value within input loop */
                 timeout.tv_usec = (dev->timeout % 1000) * 1000;
-                timeout.tv_sec = (dev->timeout / 1000);  /* = 0
-                                                          * if dev->timeout < 1000
-                                                          */
+                timeout.tv_sec = (dev->timeout / 1000); 
 
-
-                rc = select(dev->pl->fd + 1, &readfs, NULL, NULL, &timeout);
-/*              if ( (rc == 0) && (readen == 0)) { */
-                /* Timeout before reading anything */
-/*                printf("gp_port_serial_read (timeout)\n"); */
-/*                return GP_ERROR_TIMEOUT; */
-/*              } */
-                if (0 == rc) {
+		/* Any data available? */
+                if (!select (dev->pl->fd + 1, &readfs, NULL, NULL, &timeout))
                         return GP_ERROR_IO_TIMEOUT;
-                }
-                if (FD_ISSET(dev->pl->fd, &readfs)) {
-                        int now = read(dev->pl->fd, bytes, size - readen);
+		if (!FD_ISSET (dev->pl->fd, &readfs))
+			return (GP_ERROR_IO_TIMEOUT);
 
-                        if (now < 0) {
-                                perror("gp_port_serial_read (read fails)");
-                                return GP_ERROR_IO_READ;
-                        } else {
-                                bytes += now;
-                                readen += now;
-                        }
-                } else {
-                        perror("gp_port_serial_read (tty timeout)");
-                        return GP_ERROR_IO_TIMEOUT;
-                }
+		/* Read the bytes */
+		now = read (dev->pl->fd, bytes, size - readen);
+		if (now < 0)
+			return GP_ERROR_IO_READ;
+		bytes += now;
+		readen += now;
         }
+
         return readen;
 }
 
