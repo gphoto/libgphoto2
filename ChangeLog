@@ -1,3 +1,11 @@
+2001-10-15  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	Patch approved by Gus Hartmann <hartmann@madison-expat.net>:
+
+	* camlibs/minolta/dimagev/download.c
+	* camlibs/minolta/dimagev/upload.c: Don't access the CameraFile struct
+	  directly.
+
 2001-10-14  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* include/gphoto2-library.h: Moved to ...

@@ -26,6 +26,8 @@
 int dimagev_put_file(dimagev_t* dimagev, CameraFile *file) {
 	unsigned char total_packets= (unsigned char) 0, sent_packets= (unsigned char) 0;
 	int left_to_send=0;
+	const char *data;
+	long int size;
 
 	dimagev_packet *p;
 	unsigned char char_buffer, command_buffer[3], *packet_buffer;
@@ -44,6 +46,8 @@ int dimagev_put_file(dimagev_t* dimagev, CameraFile *file) {
 			return GP_ERROR_IO;
 		}
 	}
+
+	gp_file_get_data_and_size (file, &data, &size);
 
 	/* First make the command packet. */
 	command_buffer[0] = 0x0e;
@@ -82,7 +86,7 @@ int dimagev_put_file(dimagev_t* dimagev, CameraFile *file) {
 
 	/* Now start chopping up the picture and sending it over. */
 
-	total_packets = ( file->size / 993 ) +1;
+	total_packets = ( size / 993 ) +1;
 
 	/* The first packet is a special case. */
 	if ( ( packet_buffer = malloc((size_t)993)) == NULL ) {
@@ -91,7 +95,7 @@ int dimagev_put_file(dimagev_t* dimagev, CameraFile *file) {
 	}
 
 	packet_buffer[0]= total_packets;
-	memcpy(&(packet_buffer[1]), file->data, (size_t) 992);
+	memcpy(&(packet_buffer[1]), data, (size_t) 992);
 
 	if ( ( p = dimagev_make_packet(packet_buffer, 993, 0) ) == NULL ) {
 		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "dimagev_put_file::unable to allocate command packet");
@@ -127,18 +131,18 @@ int dimagev_put_file(dimagev_t* dimagev, CameraFile *file) {
 			return GP_ERROR_IO;
 	}
 
-	left_to_send = ( file->size - 992 );
+	left_to_send = ( size - 992 );
 
 	for ( sent_packets = (unsigned char) 1 ; sent_packets < total_packets ; sent_packets++ ) {
 		if ( left_to_send > 993 ) {
-			if ( ( p = dimagev_make_packet(&(file->data[(sent_packets * 993) - 1]), 993, sent_packets) ) == NULL ) {
+			if ( ( p = dimagev_make_packet(&(data[(sent_packets * 993) - 1]), 993, sent_packets) ) == NULL ) {
 				gp_debug_printf(GP_DEBUG_LOW, "dimagev", "dimagev_put_file::unable to allocate data packet");
 				free(p);
 				return GP_ERROR_NO_MEMORY;
 			}
 			left_to_send-=993;
 		} else {
-			if ( ( p = dimagev_make_packet(&(file->data[((sent_packets * 993) - 1)]), left_to_send, sent_packets) ) == NULL ) {
+			if ( ( p = dimagev_make_packet(&(data[((sent_packets * 993) - 1)]), left_to_send, sent_packets) ) == NULL ) {
 				gp_debug_printf(GP_DEBUG_LOW, "dimagev", "dimagev_put_file::unable to allocate data packet");
 				return GP_ERROR_NO_MEMORY;
 			}

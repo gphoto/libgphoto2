@@ -25,8 +25,10 @@
 
 int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 	int length, total_packets, i;
+	unsigned long size = 0;
 	dimagev_packet *p, *r;
 	unsigned char char_buffer, command_buffer[3];
+	char *data;
 #ifdef _gphoto_exif_
 	exifparser exifdat;
 #endif
@@ -97,19 +99,15 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 	total_packets = (int) r->buffer[0];
 	length = ( r->length - 1 );
 
-	if ( file->data != NULL ) {
-		free(file->data);
-	}
-
 	/* Allocate an extra byte just in case. */
-	if ( ( file->data = malloc((size_t)((993 * total_packets) + 1)) ) == NULL ) {
+	if ( ( data = malloc((size_t)((993 * total_packets) + 1)) ) == NULL ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::unable to allocate buffer for file");
 		free(r);
 		return GP_ERROR_NO_MEMORY;
 	}
 
-	memcpy(file->data, &(r->buffer[1]), (size_t) r->length );
-	file->size += ( r->length - 2 );
+	memcpy(data, &(r->buffer[1]), (size_t) r->length );
+	size += ( r->length - 2 );
 
 	free(r);
 
@@ -148,13 +146,13 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 		
 		free(p);
 
-		memcpy(&( file->data[ ( file->size + 1) ] ), r->buffer, (size_t) r->length );
-		file->size += r->length;
+		memcpy(&( data[ ( size + 1) ] ), r->buffer, (size_t) r->length );
+		size += r->length;
 
 		free(r);
 	}
 
-	file->size++;
+	size++;
 
 	char_buffer=DIMAGEV_EOT;
 	if ( gp_port_write(dimagev->dev, &char_buffer, 1) < GP_OK ) {
@@ -182,8 +180,8 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 	}
 
 #ifdef _gphoto_exif_
-	exifdat.header = file->data;
-	exifdat.data = file->data + 12 ;
+	exifdat.header = data;
+	exifdat.data = data + 12 ;
 
 	if ( stat_exif(&exifdat) != 0 ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::unable to stat EXIF tags");
@@ -194,12 +192,16 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 
 #endif
 
+	gp_file_set_data_and_size (file, data, size);
+
 	return GP_OK;
 }
 
 int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file) {
 	dimagev_packet *p, *r;
 	unsigned char char_buffer, command_buffer[3], *ycrcb_data;
+	char *data;
+	long int size = 0;
 
 	if ( dimagev->data->host_mode != (unsigned char) 1 ) {
 
@@ -270,11 +272,11 @@ int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file)
 	}
 
 	memcpy(ycrcb_data, r->buffer, (size_t) r->length );
-	file->size +=  r->length - 1 ;
+	size +=  r->length - 1 ;
 
 	free(r);
 
-	while ( file->size < 9599 ) {
+	while ( size < 9599 ) {
 
 		char_buffer=DIMAGEV_ACK;
 		if ( gp_port_write(dimagev->dev, &char_buffer, 1) < GP_OK ) {
@@ -298,15 +300,15 @@ int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file)
 		
 		free(p);
 
-		memcpy(&( ycrcb_data[ ( file->size + 1) ] ), r->buffer, (size_t) r->length );
-		file->size += r->length;
+		memcpy(&( ycrcb_data[ ( size + 1) ] ), r->buffer, (size_t) r->length );
+		size += r->length;
 
 		free(r);
 
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_thumbnail::current file size is %d", file->size);
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_thumbnail::current file size is %d", size);
 	}
 
-	file->size++;
+	size++;
 
 	char_buffer=DIMAGEV_EOT;
 	if ( gp_port_write(dimagev->dev, &char_buffer, 1) < GP_OK ) {
@@ -338,8 +340,10 @@ int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file)
 			return GP_ERROR_IO;
 	}
 
-	file->data = dimagev_ycbcr_to_ppm(ycrcb_data);
-	file->size = 14413;
+	data = dimagev_ycbcr_to_ppm(ycrcb_data);
+	size = 14413;
+
+	gp_file_set_data_and_size (file, data, size);
 
 	return GP_OK;
 }
