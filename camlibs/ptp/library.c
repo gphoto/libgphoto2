@@ -191,15 +191,20 @@ static struct {
 	{"Kodak DX-3700", 0x040a, 0x0530},
 	{"Kodak DX-3900", 0x040a, 0x0170},
 	{"Kodak MC3", 0x040a, 0x0400},
-	{"Sony DSC P5", 0x054c, 0x004e},
-	{"Sony DSC F707", 0x054c, 0x004e},
-	{"Sony DSC P30", 0x054c, 0x004e},
-	{"Sony DSC P50",  0x054c, 0x004e},
 	{"HP PhotoSmart 318", 0x03f0, 0x6302},
-	{"HP PhotoSmart 715", 0x03f0, 0x6402},
+	// I got information that all SONY PTP cameras use the same
+	// product/vendor IDs
+	{"Sony DSC-P5", 0x054c, 0x004e},
+	{"Sony DSC-F707V", 0x054c, 0x004e},
+	{"Sony DSC-P30", 0x054c, 0x004e},
+	{"Sony DSC-P50",  0x054c, 0x004e},
+	{"Sony DSC-S75",  0x054c, 0x004e},
+	{"Sony DSC-S85",  0x054c, 0x004e},
+	{"Sony MVC-CD300",  0x054c, 0x004e},
 
 	// we're looking for vendor/product IDs of following:
 	{"HP PhotoSmart 612", 0x0000, 0x0000},
+	{"HP PhotoSmart 715",  0x03f0, 0x6402},
 	// more comming soon :)
 	{NULL, 0, 0}
 };
