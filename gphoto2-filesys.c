@@ -27,14 +27,23 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <unistd.h>
 
 #include "gphoto2-result.h"
 #include "gphoto2-file.h"
 #include "gphoto2-port-log.h"
 
 #ifdef HAVE_PROCMEMINFO
-#  include <unistd.h>
 #  include <fcntl.h>
+#endif
+
+#ifdef HAVE_SYSCTL
+#	include <sys/sysctl.h>
+#	if __FreeBSD__
+#		include <sys/types.h>
+#	elif (__NetBSD__ || __OpenBSD__)
+#		include <sys/param.h>
+#	endif
 #endif
 
 #ifdef HAVE_EXIF
@@ -1821,25 +1830,26 @@ gp_filesystem_lru_free (CameraFilesystem *fs)
 	return (GP_OK);
 }
 
-#ifdef HAVE_PROCMEMINFO
-
 /**
  * gp_get_free_memory:
  * @context: a #GPContext
  * @free:
  *
- * Reads the amount of free kB (free memory + free swap) from /proc/meminfo.
+ * Reads the amount of free kB:
+ *  - free memory + free swap for Linux
+ *  XXX - free memory for BSD (need a way to find free swap)
  *
  * Return value: a gphoto2 error code.
  **/
 static int
 gp_get_free_memory (GPContext *context, unsigned *free)
 {
+#ifdef HAVE_PROCMEMINFO
+
 	char buf[1024], *head, *tail, *tmp;
 	int n, fd = -1;
-	
 	*free=0;
-	
+
 	if ((fd = open ("/proc/meminfo", O_RDONLY)) == -1) {
 		gp_context_error (context, _("Could not open '/proc/meminfo' "
 			"for reading ('%m'). Make sure the proc filesystem "
@@ -1876,10 +1886,23 @@ gp_get_free_memory (GPContext *context, unsigned *free)
 		head = tail + 1;
 	} while (n != 2);
 
+#elif HAVE_SYSCTL && (__FreeBSD__ || __NetBSD__ || __OpenBSD__)
+
+	int mib[2] = { CTL_HW, HW_PHYSMEM };
+	int value;
+	size_t valuelen = sizeof(value);
+	*free=0;
+	if (sysctl(mib, 2 , &value, &valuelen, NULL, 0) == -1) {
+		gp_context_error (context, _("sysctl call failed ('%m')."));
+		return (GP_ERROR);
+	}
+	*free=value;
+
+#endif
+
 	return (GP_OK);
 }
 
-#endif
 
 static int
 gp_filesystem_lru_update (CameraFilesystem *fs, const char *folder,
@@ -1911,7 +1934,6 @@ gp_filesystem_lru_update (CameraFilesystem *fs, const char *folder,
 	}
 #endif
 
-#ifdef HAVE_PROCMEMINFO
 	CR (gp_get_free_memory (context, &free));
 	while (free < (size / 1024 + 1024)) {
 		GP_DEBUG ("Freeing cached data before adding new data "
@@ -1920,7 +1942,6 @@ gp_filesystem_lru_update (CameraFilesystem *fs, const char *folder,
 		CR (gp_filesystem_lru_free (fs));
 		CR (gp_get_free_memory (context, &free));
 	}
-#endif
 
 	GP_DEBUG ("Adding file '%s' from folder '%s' to the fscache LRU list "
 		  "(type %i)...", filename, folder, type);
