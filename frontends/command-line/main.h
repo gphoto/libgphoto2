@@ -1,3 +1,4 @@
+#include <config.h>
 #include <gphoto2.h>
 
 /* Make it easy to add command-line options */
@@ -25,7 +26,7 @@ typedef struct {
 	int	required;
 } Option;
 
-#ifndef DISPABLE_DEBUGGING
+#ifndef DISABLE_DEBUGGING
 void 	cli_debug_print(char *format, ...);
 #else
 #define cli_debug_print(format, args...) /**/
