@@ -142,6 +142,7 @@ patt_rec_avg (int w, float *fgfx, int x, int y)
      case 15:
      default:
        /* shouldn't happen */
+       break;
   }
    
        
@@ -205,6 +206,7 @@ pattrec (int w, int h, unsigned char *igfx)
 
 			case 0: /* GREEN 1 */
 			case 3: /* GREEN 2 */
+				break;
 			}
 		}
 
