@@ -112,7 +112,9 @@ install-data-local-manual: manual figures-stamp
 dist_hook_manual = dist-hook-manual
 dist-hook-manual: manual figures-stamp
 	$(AMTAR) cf - manual/*.html | (cd $(distdir); $(AMTAR) xvf -)
+if ENABLE_FIGURES
 	$(AMTAR) cf - figures/*.png | (cd $(distdir)/manual/; $(AMTAR) xvf -)
+endif
 endif
 ########################################################################
 

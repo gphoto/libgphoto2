@@ -1,4 +1,10 @@
 2002-06-17  Christophe Barbé <christophe.barbe@ufies.org>
+
+	Patch by Arnaud Launay <asl@launay.org>
+
+	* doc/Makefile.am : Don't try to move figures when fig2dev is not there.
+
+2002-06-17  Christophe Barbé <christophe.barbe@ufies.org>
   
 	* Makefile.am: Removed autogen.sh from EXTRA_DIST.
 
