@@ -57,6 +57,8 @@ struct camera_to_usb {
 	 * It has been rebranded and rereleased dozens of times.
 	 */
 
+	/* http://www.logitech.com/cf/products/productoverview.cfm/3041 */
+	{ "Logitech Clicksmart 310",    0x0553, 0x0202 },
 	/* http://www.iomagic.com/support/digitalcameras/magicimage400/magicimage400manual.htm */
 	{ "IOMagic MagicImage 400",     0x0553, 0x0202 },
 	/* http://www.pctekonline.com/phoebsmardig.html */
