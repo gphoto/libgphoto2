@@ -36,9 +36,9 @@
  **/
 struct _CameraWidget {
 	CameraWidgetType type;
-	char    label [32];
+	char    label [256];
 	char    info [1024];
-	char    name [32];
+	char    name [256];
 
 	CameraWidget *parent;
 
