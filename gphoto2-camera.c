@@ -53,7 +53,24 @@
 #endif
 
 #define CHECK_NULL(r)              {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
-#define CHECK_RESULT(result)       {int r = (result); if (r < 0) return (r);}
+
+#define CAMERA_UNUSED(c)						\
+{									\
+	(c)->pc->in_use = 0;						\
+	if (!(c)->pc->ref_count)					\
+		gp_camera_free (c);					\
+}
+
+#define CR(c,result)							\
+{									\
+	int r = (result);						\
+									\
+	if (r < 0) {							\
+		if (c)							\
+			CAMERA_UNUSED(c);				\
+		return (r);						\
+	}								\
+}
 
 /*
  * HAVE_MULTI
@@ -82,6 +99,7 @@
 		r = gp_port_open ((c)->port);				\
 		if (r < 0) {						\
 			gp_camera_status ((c), "");			\
+			CAMERA_UNUSED (c);				\
 			return (r);					\
 		}							\
 	}								\
@@ -89,6 +107,7 @@
 		r = (c)->functions->pre_func (c);			\
 		if (r < 0) {						\
 			gp_camera_status ((c), "");			\
+			CAMERA_UNUSED (c);                              \
 			return (r);					\
 		}							\
 	}								\
@@ -102,6 +121,7 @@
 		r = (c)->functions->pre_func (c);                       \
 		if (r < 0) {                                            \
 			gp_camera_status ((c), "");                     \
+			CAMERA_UNUSED (c);                              \
 			return (r);                                     \
 		}                                                       \
 	}                                                               \
@@ -119,6 +139,7 @@
 		r = (c)->functions->post_func (c);			\
 		if (r < 0) {						\
 			gp_camera_status ((c), "");			\
+			CAMERA_UNUSED (c);				\
 			return (r);					\
 		}							\
 	}								\
@@ -132,13 +153,23 @@
 		r = (c)->functions->post_func (c);                      \
 		if (r < 0) {                                            \
 			gp_camera_status ((c), "");                     \
+			CAMERA_UNUSED (c);				\
 			return (r);                                     \
 		}                                                       \
 	}                                                               \
 }
 #endif
 
-#define CRS(c,res) {int r = (res); if (r < 0) {gp_camera_status ((c), ""); return (r);}}
+#define CRS(c,res)							\
+{									\
+	int r = (res);							\
+									\
+	if (r < 0) {							\
+		gp_camera_status ((c), "");				\
+		CAMERA_UNUSED (c);                              	\
+		return (r);						\
+	}								\
+}
 
 #define CHECK_RESULT_OPEN_CLOSE(c,result)				\
 {									\
@@ -151,12 +182,18 @@
 		gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Operation failed!");\
 		gp_camera_status ((c), "");				\
 		gp_camera_progress ((c), 0.0);				\
+		CAMERA_UNUSED (c);                              	\
 		return (r);						\
 	}								\
 	CHECK_CLOSE (c);						\
 }
 
-#define CHECK_INIT(c) {if (!(c)->pc->lh) {CHECK_RESULT(gp_camera_init(c));}}
+#define CHECK_INIT(c)							\
+{									\
+	(c)->pc->in_use = 1;						\
+	if (!(c)->pc->lh)						\
+		CR((c), gp_camera_init(c));				\
+}
 
 struct _CameraPrivateCore {
 
@@ -181,6 +218,7 @@ struct _CameraPrivateCore {
 	char error[2048];
 
 	unsigned int ref_count;
+	unsigned char in_use;
 
 	int initialized;
 };
@@ -332,7 +370,7 @@ gp_camera_get_port_info (Camera *camera, GPPortInfo *info)
 {
 	CHECK_NULL (camera && info);
 
-	CHECK_RESULT (gp_port_get_info (camera->port, info));
+	CR (camera, gp_port_get_info (camera->port, info));
 
 	return (GP_OK);
 }
@@ -348,7 +386,7 @@ gp_camera_set_port_info (Camera *camera, GPPortInfo info)
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Setting port info for "
 		"port '%s' at '%s'...", info.name, info.path);
-	CHECK_RESULT (gp_port_set_info (camera->port, info));
+	CR (camera, gp_port_set_info (camera->port, info));
 
 	return (GP_OK);
 }
@@ -391,9 +429,9 @@ gp_camera_set_port_speed (Camera *camera, int speed)
 	if (camera->pc->lh)
 		gp_camera_exit (camera);
 
-	CHECK_RESULT (gp_port_get_settings (camera->port, &settings));
+	CR (camera, gp_port_get_settings (camera->port, &settings));
 	settings.serial.speed = speed;
-	CHECK_RESULT (gp_port_set_settings (camera->port, settings));
+	CR (camera, gp_port_set_settings (camera->port, settings));
 	camera->pc->speed = speed;
 
 	return (GP_OK);
@@ -634,8 +672,12 @@ gp_camera_unref (Camera *camera)
 
 	camera->pc->ref_count -= 1;
 
-	if (!camera->pc->ref_count)
-		gp_camera_free (camera);
+	if (!camera->pc->ref_count) {
+
+		/* We cannot free a camera that is currently in use */
+		if (!camera->pc->in_use)
+			gp_camera_free (camera);
+	}
 
 	return (GP_OK);
 }
@@ -839,6 +881,7 @@ gp_camera_get_config (Camera *camera, CameraWidget **window)
 	if (!camera->functions->get_config) {
 		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("This camera does "
 			"not offer any configuration options"));
+		CAMERA_UNUSED (camera);
                 return (GP_ERROR_NOT_SUPPORTED);
 	}
 
@@ -847,6 +890,7 @@ gp_camera_get_config (Camera *camera, CameraWidget **window)
 								   window));
 	gp_camera_status (camera, "");
 
+	CAMERA_UNUSED (camera);
 	return (GP_OK);
 }
 
@@ -870,6 +914,7 @@ gp_camera_set_config (Camera *camera, CameraWidget *window)
 	if (!camera->functions->set_config) {
 		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("This camera does "
 			"not support setting configuration options"));
+		CAMERA_UNUSED (camera);
                 return (GP_ERROR_NOT_SUPPORTED);
 	}
 
@@ -878,6 +923,7 @@ gp_camera_set_config (Camera *camera, CameraWidget *window)
 								   window));
 	gp_camera_status (camera, "");
 
+	CAMERA_UNUSED (camera);
 	return (GP_OK);
 }
 
@@ -901,6 +947,7 @@ gp_camera_get_summary (Camera *camera, CameraText *summary)
 	if (!camera->functions->summary) {
 		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("This camera does "
 			"not support summaries"));
+		CAMERA_UNUSED (camera);
                 return (GP_ERROR_NOT_SUPPORTED);
 	}
 
@@ -909,6 +956,7 @@ gp_camera_get_summary (Camera *camera, CameraText *summary)
 								summary));
 	gp_camera_status (camera, "");
 
+	CAMERA_UNUSED (camera);
 	return (GP_OK);
 }
 
@@ -931,12 +979,14 @@ gp_camera_get_manual (Camera *camera, CameraText *manual)
 	if (!camera->functions->manual) {
 		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("This camera "
 			"does not offer a manual"));
+		CAMERA_UNUSED (camera);
                 return (GP_ERROR_NOT_SUPPORTED);
 	}
 
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->manual (camera,
 								    manual));
 
+	CAMERA_UNUSED (camera);
 	return (GP_OK);
 }
 
@@ -959,12 +1009,14 @@ gp_camera_get_about (Camera *camera, CameraText *about)
 	if (!camera->functions->about) {
 		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("This camera does "
 			"not provide information about the driver"));
+		CAMERA_UNUSED (camera);
                 return (GP_ERROR_NOT_SUPPORTED);
 	}
 
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->about (camera,
 								   about));
 
+	CAMERA_UNUSED (camera);
 	return (GP_OK);
 }
 
@@ -990,6 +1042,7 @@ gp_camera_capture (Camera *camera, CameraCaptureType type,
 	if (!camera->functions->capture) {
 		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("This camera can "
 			"not capture"));
+		CAMERA_UNUSED (camera);
                 return (GP_ERROR_NOT_SUPPORTED);
 	}
 
@@ -999,6 +1052,7 @@ gp_camera_capture (Camera *camera, CameraCaptureType type,
 	gp_camera_status (camera, "");
 	gp_camera_progress (camera, 0.0);
 
+	CAMERA_UNUSED (camera);
 	return (GP_OK);
 }
 
@@ -1019,11 +1073,12 @@ gp_camera_capture_preview (Camera *camera, CameraFile *file)
 	CHECK_NULL (camera && file);
 	CHECK_INIT (camera);
 
-	CHECK_RESULT (gp_file_clean (file));
+	CR (camera, gp_file_clean (file));
 
 	if (!camera->functions->capture_preview) {
 		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("This camera can "
 			"not capture previews"));
+		CAMERA_UNUSED (camera);
                 return (GP_ERROR_NOT_SUPPORTED);
 	}
 
@@ -1033,6 +1088,7 @@ gp_camera_capture_preview (Camera *camera, CameraFile *file)
 	gp_camera_status (camera, "");
 	gp_camera_progress (camera, 0.0);
 
+	CAMERA_UNUSED (camera);
 	return (GP_OK);
 }
 
@@ -1055,14 +1111,15 @@ gp_camera_folder_list_files (Camera *camera, const char *folder,
 
 	CHECK_NULL (camera && folder && list);
 	CHECK_INIT (camera);
-	CHECK_RESULT (gp_list_reset (list));
+	CR (camera, gp_list_reset (list));
 
 	gp_camera_status (camera, _("Listing files in '%s'..."), folder);
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_list_files (camera->fs,
 							folder, list));
 	gp_camera_status (camera, "");
 
-	CHECK_RESULT (gp_list_sort (list));
+	CR (camera, gp_list_sort (list));
+	CAMERA_UNUSED (camera);
         return (GP_OK);
 }
 
@@ -1085,14 +1142,15 @@ gp_camera_folder_list_folders (Camera *camera, const char* folder,
 
 	CHECK_NULL (camera && folder && list);
 	CHECK_INIT (camera);
-	CHECK_RESULT (gp_list_reset (list));
+	CR (camera, gp_list_reset (list));
 
 	gp_camera_status (camera, _("Listing folders in '%s'..."), folder);
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_list_folders (
 						camera->fs, folder, list));
 	gp_camera_status (camera, "");
 
-	CHECK_RESULT (gp_list_sort (list));
+	CR (camera, gp_list_sort (list));
+	CAMERA_UNUSED (camera);
         return (GP_OK);
 }
 
@@ -1119,6 +1177,7 @@ gp_camera_folder_delete_all (Camera *camera, const char *folder)
 								folder));
 	gp_camera_status (camera, "");
 
+	CAMERA_UNUSED (camera);
 	return (GP_OK);
 }
 
@@ -1146,6 +1205,7 @@ gp_camera_folder_put_file (Camera *camera, const char *folder, CameraFile *file)
 							folder, file));
 	gp_camera_status (camera, "");
 
+	CAMERA_UNUSED (camera);
 	return (GP_OK);
 }
 
@@ -1188,6 +1248,7 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 	CHECK_CLOSE (camera);
 	if (result != GP_ERROR_NOT_SUPPORTED) {
 		gp_camera_status (camera, "");
+		CAMERA_UNUSED (camera);
 		return (result);
 	}
 
@@ -1220,6 +1281,7 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 	strncpy (info->file.name, file, sizeof (info->file.name));
 	info->preview.fields &= ~GP_FILE_INFO_NAME;
 
+	CAMERA_UNUSED (camera);
 	return (GP_OK);
 }
 
@@ -1244,6 +1306,7 @@ gp_camera_file_set_info (Camera *camera, const char *folder,
 	CHECK_RESULT_OPEN_CLOSE (camera,
 		gp_filesystem_set_info (camera->fs, folder, file, info));
 
+	CAMERA_UNUSED (camera);
 	return (GP_OK);
 }
 
@@ -1269,13 +1332,17 @@ gp_camera_file_get (Camera *camera, const char *folder, const char *file,
 	CHECK_NULL (camera && folder && file && camera_file);
 	CHECK_INIT (camera);
 
-	CHECK_RESULT (gp_file_clean (camera_file));
+	CR (camera, gp_file_clean (camera_file));
 
 	/* Did we get reasonable foldername/filename? */
-	if (strlen (folder) == 0)
+	if (strlen (folder) == 0) {
+		CAMERA_UNUSED (camera);
 		return (GP_ERROR_DIRECTORY_NOT_FOUND);
-	if (strlen (file) == 0)
+	}
+	if (strlen (file) == 0) {
+		CAMERA_UNUSED (camera);
 		return (GP_ERROR_FILE_NOT_FOUND);
+	}
   
 	gp_camera_status (camera, _("Getting '%s' from folder '%s'..."),
 			  file, folder);
@@ -1284,8 +1351,7 @@ gp_camera_file_get (Camera *camera, const char *folder, const char *file,
 	gp_camera_status (camera, "");
 	gp_camera_progress (camera, 0.0);
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Got file '%s'.", file);
-
+	CAMERA_UNUSED (camera);
 	return (GP_OK);
 }
 
@@ -1314,6 +1380,7 @@ gp_camera_file_delete (Camera *camera, const char *folder, const char *file)
 						camera->fs, folder, file));
 	gp_camera_status (camera, "");
 
+	CAMERA_UNUSED (camera);
 	return (GP_OK);
 }
 
@@ -1340,6 +1407,7 @@ gp_camera_folder_make_dir (Camera *camera, const char *folder,
 							folder, name));
 	gp_camera_status (camera, "");
 
+	CAMERA_UNUSED (camera);
 	return (GP_OK);
 }
 
@@ -1366,6 +1434,7 @@ gp_camera_folder_remove_dir (Camera *camera, const char *folder,
 								folder, name));
 	gp_camera_status (camera, "");
 
+	CAMERA_UNUSED (camera);
 	return (GP_OK);
 }
 
