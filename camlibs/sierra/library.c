@@ -133,6 +133,12 @@ int sierra_list_files (Camera *camera, const char *folder, CameraList *list, GPC
 
 	GP_DEBUG ("Listing files in folder '%s'...", folder);
 
+	CHECK (sierra_get_int_register (camera, 51, &i, context));
+	if (i == 1) {
+		gp_context_error (context, _("No memory card present"));
+		return (GP_ERROR_NOT_SUPPORTED);
+	}
+
 	/* We need to change to the folder first */
 	CHECK (sierra_change_folder (camera, folder, context));
 
@@ -1278,6 +1284,12 @@ sierra_capture (Camera *camera, CameraCaptureType type,
 	/* We can only capture images */
 	if (type != GP_CAPTURE_IMAGE)
 		return (GP_ERROR_NOT_SUPPORTED);
+
+	CHECK (sierra_get_int_register (camera, 51, &n, context));
+	if (n == 1) {
+		gp_context_error (context, _("No memory card present"));
+		return (GP_ERROR_NOT_SUPPORTED);
+	}
 
 	/* Send to the camera the capture request and wait
 	   for the completion */

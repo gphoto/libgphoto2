@@ -1766,16 +1766,16 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 
 	CHECK (camera_start (camera, context));
 
+	strcpy(buf, "");
+
 	/* At least on PhotoPC 3000z, if no card is present near all retrieved
 	   info are either unreadable or invalid... */
 	if (sierra_get_int_register(camera, 51, &value, context) >= 0)
 		if (value == 1) {
-			strcpy (buf, _("NO MEMORY CARD PRESENT\n"));
+			strcpy (buf, _("Note: no memory card present, some"
+				       " values may be invalid\n"));
 			strcpy (summary->text, buf);
-			return (camera_stop (camera, context));
 		}
-
-	strcpy(buf, "");
 
 	/* Get all the string-related info */
 	ret = sierra_get_string_register (camera, 27, 0, NULL, t, &value, context);
@@ -1810,7 +1810,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 
 	/* Get date */
 	if (sierra_get_int_register (camera, 2, &value, context) >= 0)
-		sprintf (buf, _("%sDate: %s\n"), buf, 
+		sprintf (buf, _("%sDate: %s"), buf, 
 			 ctime ((time_t*) &value));
 
 	strcpy (summary->text, buf);

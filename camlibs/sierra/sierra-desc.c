@@ -23,8 +23,6 @@
 #include <stdio.h>
 #include <string.h>
 
-/* XXX hack hack how do we define this via gcc? For use with round() */
-#define __USE_ISOC99	1
 #include <math.h>
 
 #include <gphoto2-library.h>
@@ -54,6 +52,11 @@
 #endif
 
 #define GP_MODULE "sierra"
+
+/*
+ * For some reason, round() does not get a prototype from math.h.
+ */
+extern double round(double x);
 
 static int 
 camera_cam_desc_get_value (ValueNameType *val_name_p, CameraWidgetType widge, 

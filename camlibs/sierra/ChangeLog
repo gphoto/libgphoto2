@@ -1,3 +1,9 @@
+2002-07-06  Patrick Mansfield <patmans@users.sourceforge.net>
+
+	* sierra.c: Output summary with warning if no memory card present.
+	* library.c: Check for memory card before capture or listing.
+	* sierra-desc.c: add extern round() rather than a complete hack.
+
 2002-07-05  Lutz Müller <lutz@users.sourceforge.net>
 
 	Patch by Thomas Reitelbach <tr@erdfunkstelle.de>:
