@@ -27,18 +27,16 @@ CameraStatus   gp_fe_status   = NULL;
 CameraProgress gp_fe_progress = NULL;
 CameraMessage  gp_fe_message  = NULL;
 CameraConfirm  gp_fe_confirm  = NULL;
-CameraPrompt   gp_fe_prompt   = NULL;
 
 int
 gp_frontend_register (CameraStatus status, CameraProgress progress,
 		      CameraMessage message, CameraConfirm confirm,
-		      CameraPrompt prompt)
+		      void *dummy)
 {
 	gp_fe_status   = status;
 	gp_fe_progress = progress;
 	gp_fe_message  = message;
 	gp_fe_confirm  = confirm;
-	gp_fe_prompt   = prompt;
 
 	return (GP_OK);
 }
@@ -75,35 +73,4 @@ gp_frontend_confirm (Camera *camera, char *message)
 		/* return YES. dangerous? */
 		return 1;
         return(gp_fe_confirm(camera, message));
-}
-
-static int
-gp_frontend_prompt_clean_all (CameraWidget *widget)
-{
-	CameraWidget *child;
-        int x;
-
-	if (!widget)
-		return (GP_ERROR_BAD_PARAMETERS);
-
-	gp_widget_set_changed (widget, 0);
- 
-        for (x = 0; x < gp_widget_count_children (widget); x++) {
-		child = NULL;
-		gp_widget_get_child (widget, x, &child);
-                gp_frontend_prompt_clean_all (child);
-	}
- 
-        return (GP_OK);
-}
-
-int
-gp_frontend_prompt (Camera *camera, CameraWidget *window)
-{
-	gp_frontend_prompt_clean_all(window);
-
-	if (!gp_fe_prompt)
-		/* return OK */
-		return GP_PROMPT_OK;
-        return(gp_fe_prompt(camera, window));
 }

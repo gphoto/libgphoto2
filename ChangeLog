@@ -1,3 +1,9 @@
+2001-10-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* include/gphoto2-frontend.h
+	* libgphoto2/frontend.c: Remove gp_frontend_prompt. This and the other
+	gp_frontend functions will reappear some day in gphoto2-camera.
+
 2001-10-07 Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* configure.in: remove unnecessary variables at the beginning
