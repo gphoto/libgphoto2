@@ -15,7 +15,7 @@ AC_PROG_CPP
 AM_PROG_LIBTOOL
 
 dnl Languages
-ALL_LINGUAS=""
+ALL_LINGUAS="de"
 AM_GNU_GETTEXT
 
 dnl Turn on debugging and all warnings
@@ -142,4 +142,5 @@ frontends/libgphoto2_frontend/Makefile \
 include/Makefile \
 libgphoto2/Makefile \
 gphoto2-config \
+po/Makefile.in 
 )

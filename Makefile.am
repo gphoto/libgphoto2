@@ -2,7 +2,7 @@
 
 bin_SCRIPTS = gphoto2-config
 
-SUBDIRS = include libgphoto2 camlibs frontends
+SUBDIRS = include libgphoto2 camlibs frontends po
 
 gphotodocdir = $(prefix)/doc/gphoto2
 gphotodoc_DATA = AUTHORS COPYING
