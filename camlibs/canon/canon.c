@@ -187,9 +187,10 @@ const struct canonCamModelData models[] = {
 	/* PS G5 uses the same ProductID for PTP and Canon, with protocol autodetection */
 	{"Canon:PowerShot G5 (normal mode)",	CANON_PS_G5,	0x04A9, 0x3085, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:PowerShot A80 (normal mode)",CANON_PS_A80,      0x04A9, 0x309A, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-	{"Canon:Digital IXUS 430 (normal mode)",CANON_PS_S410,  0x04A9, 0x30ba, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-	{"Canon:PowerShot S410 (normal mode)",CANON_PS_S410,  0x04A9, 0x30ba, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:Digital IXUS 500 (normal mode)",CANON_PS_S500,  0x04A9, 0x30b4, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	 {"Canon:PowerShot A75",        CANON_PS_A75, 	        0x04A9, 0x30b5, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:PowerShot S410 (normal mode)",CANON_PS_S410,  0x04A9, 0x30ba, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:Digital IXUS 430 (normal mode)",CANON_PS_S410,  0x04A9, 0x30ba, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
 	{NULL}
 	/* *INDENT-ON* */
