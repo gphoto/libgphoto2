@@ -1,3 +1,9 @@
+2002-11-08  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* configure.in: increased AGE to 1, define HAVE_USB and HAVE_SERIAL
+	* libgphoto2-port/gphoto2-port-version.[ch]: added
+	* libgphoto2-port/Makefile.am: added gphoto2-version.[ch]
+
 2002-09-12  Marcus Meissner <marcus@jet.franken.de>
 	
 	* configure.in, serial/Makefile.am: Do not use xx_LDFLAGS, 

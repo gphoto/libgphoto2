@@ -2,7 +2,7 @@ dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.50)
 AC_INIT(libgphoto2/gphoto2.h)
 AM_CONFIG_HEADER(config.h)
-AM_INIT_AUTOMAKE(libgphoto2, 2.1.1dev9)
+AM_INIT_AUTOMAKE(libgphoto2, 2.1.1dev10)
 AM_MAINTAINER_MODE
 AC_LIBTOOL_DLOPEN
 
@@ -16,7 +16,7 @@ dnl                      0 if you incremented CURRENT.
 dnl  - CURRENT (Major):  Increment if the interface has additions, changes,
 dnl                      removals.
 dnl ---------------------------------------------------------------------------
-LIBGPHOTO2_AGE=2
+LIBGPHOTO2_AGE=3
 LIBGPHOTO2_REVISION=0
 LIBGPHOTO2_CURRENT=2
 AC_SUBST(LIBGPHOTO2_AGE)

@@ -1,3 +1,9 @@
+2002-11-08  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* configure.in: 2.1.1dev10, increased AGE to 3
+	* libgphoto2/gphoto2-version.[ch]: added
+	* libgphoto2/Makefile.am: added gphoto2-version.[ch]
+
 2002-11-06  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 	
 	* camlibs/*/Makefile.am:
