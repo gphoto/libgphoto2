@@ -165,20 +165,29 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	int n, i;
 	const char *name;
 
-	/* Count the pictures on the camera */
+	/*
+	 * Count the pictures on the camera. If we don't have any, we
+	 * are done.
+	 */
 	CR (fuji_pic_count (camera, &n, context));
+	if (!n)
+		return (GP_OK);
 
 	/*
-	 * If the camera supports file names, get the name of each file. 
-	 * If not, make up a dummy list.
+	 * Try to get the name of the first file. If we can't, just come
+	 * up with some dummy names.
 	 */
-	if (camera->pl->cmds[FUJI_CMD_PIC_NAME]) {
-		for (i = 1; i <= n; i++) {
-			CR (fuji_pic_name (camera, i, &name, context));
-			CR (gp_list_append (list, name, NULL));
-		}
-	} else
+	if (fuji_pic_name (camera, 1, &name, context) < 0) {
 		CR (gp_list_populate (list, "DSCF%04i.JPG", n));
+		return (GP_OK);
+	}
+	CR (gp_list_append (list, name, NULL));
+
+	/* Get the names of the remaining files. */
+	for (i = 2; i <= n; i++) {
+		CR (fuji_pic_name (camera, i, &name, context));
+		CR (gp_list_append (list, name, NULL));
+	}
 
 	return (GP_OK);
 }
@@ -372,6 +381,35 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	return (GP_OK);
 }
 
+static int
+get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
+	       CameraFileInfo *info, void *data, GPContext *context)
+{
+	Camera *camera = data;
+	int n;
+	unsigned int size;
+
+	info->file.fields = GP_FILE_INFO_NONE;
+	info->preview.fields = GP_FILE_INFO_NONE;
+	info->audio.fields = GP_FILE_INFO_NONE;
+
+	/* Name */
+	info->file.fields |= GP_FILE_INFO_NAME;
+	strncpy (info->file.name, filename, sizeof (info->file.name));
+
+	/* We need file numbers starting with 1 */
+	CR (n = gp_filesystem_number (camera->fs, folder, filename, context));
+	n++;
+
+	/* Size */
+	if (fuji_pic_size (camera, n, &size, context) >= 0) {
+		info->file.fields |= GP_FILE_INFO_SIZE;
+		info->file.size = size;
+	}
+
+	return (GP_OK);
+}
+
 int
 camera_init (Camera *camera, GPContext *context)
 {
@@ -407,16 +445,25 @@ camera_init (Camera *camera, GPContext *context)
 					  camera));
 	CR (gp_filesystem_set_file_funcs (camera->fs, get_file_func,
 					  del_file_func, camera));
+	CR (gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL,
+					  camera));
 
 	/* Initialize the connection */
 	CR (pre_func (camera, context));
 
-	/* What commands does this camera support? */
-	CR (fuji_get_cmds (camera, camera->pl->cmds, context));
-	GP_DEBUG ("Your camera supports the following command(s):");
-	for (i = 0; i < 0xff; i++)
-		if (camera->pl->cmds[i])
-			GP_DEBUG (" - 0x%02x: '%s'", i, cmd_get_name (i));
+	/*
+	 * What commands does this camera support? The question is not
+	 * easy to answer, as "One issue the DS7 has is that the 
+	 * supported command list command is not supported" 
+	 * (Matt Martin <mgmartin@screaminet.com>).
+	 */
+	if (fuji_get_cmds (camera, camera->pl->cmds, context) >= 0) {
+		GP_DEBUG ("Your camera supports the following command(s):");
+		for (i = 0; i < 0xff; i++)
+			if (camera->pl->cmds[i])
+				GP_DEBUG (" - 0x%02x: '%s'", i,
+					  cmd_get_name (i));
+	}
 
 	return (GP_OK);
 }

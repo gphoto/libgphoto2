@@ -1,5 +1,9 @@
 2002-04-19  Lutz Müller <lutz@users.sourceforge.net>
 
+	* library.c: Don't make the check for supported commands fatal.
+
+2002-04-19  Lutz Müller <lutz@users.sourceforge.net>
+
 	* library.c: If we tell the camera to switch to another speed, we
 	  need to change the port's speed, too.
 
