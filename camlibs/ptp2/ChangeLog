@@ -1,4 +1,6 @@
 2003-08-28 Mariusz Woloszyn
+	* library.c: added Canon IXUS 400, thanks to Till Kamppeter
+2003-08-28 Mariusz Woloszyn
 	* library.c: added Nikon Coolpix 3500, 5000, 3100 & 2100, thanks to
 	  Antti Tuominen
 2003-08-22 Mariusz Woloszyn
