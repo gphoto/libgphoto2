@@ -58,7 +58,7 @@
 
 #define ACK 0x06
 
-#define RETRIES 3
+#define RETRIES 0
 
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 #define CHECK_RESULT_FREE(result, data) {int r = (result); if (r < 0) {free (data); return (r);}}
@@ -186,7 +186,7 @@ pdc320_size (CameraPort *port, int n)
 	cmd[5] = n;		/* n is from 1 on up */
 	cmd[7] = 0xff - n;
 
-	for (i = 0; i < RETRIES; i++) {
+	for (i = 0; i <= RETRIES; i++) {
 
 		/* Write the command */
 		CHECK_RESULT (gp_port_write (port, cmd, sizeof (cmd)));
@@ -403,3 +403,4 @@ camera_init (Camera *camera)
 
 	return (result);
 }
+
