@@ -5,21 +5,21 @@
 /*                                                              */
 /* Author: Chris Pinkham <cpinkham@infi.net>                    */
 /*                                                              */
-/* This program is free software; you can redistribute it       */
-/* and/or modify it under the terms of the GNU General Public   */
-/* License as published by the Free Software Foundation; either */
-/* version 2 of the License, or (at your option) any later      */
-/* version.                                                     */
+/* This library is free software; you can redistribute it       */
+/* and/or modify it under the terms of the GNU Library General  */
+/* Public License as published by the Free Software Foundation; */
+/* either version 2 of the License, or (at your option) any     */
+/* later version.                                               */
 /*                                                              */
-/* This program is distributed in the hope that it will be      */
+/* This library is distributed in the hope that it will be      */
 /* useful, but WITHOUT ANY WARRANTY; without even the implied   */
 /* warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR      */
-/* PURPOSE.  See the GNU General Public License for more        */
-/* details.                                                     */
+/* PURPOSE.  See the GNU Library General Public License for     */
+/* more details.                                                */
 /*                                                              */
-/* You should have received a copy of the GNU General Public    */
-/* License along with this program; if not, write to the Free   */
-/* Software Foundation, Inc., 59 Temple Place, Suite 330,       */
+/* You should have received a copy of the GNU Library General   */
+/* Public License along with this library; if not, write to the */
+/* Free Software Foundation, Inc., 59 Temple Place - Suite 330, */
 /* Boston, MA 02111-1307, USA.                                  */
 /****************************************************************/
 
@@ -35,6 +35,28 @@
 struct jamcam_file jamcam_files[1024];
 static int jamcam_count = 0;
 static int jamcam_mmc_card_size = 0;
+
+
+static int jamcam_set_int_at_pos( unsigned char *buf, int pos, int value ) {
+	
+	buf[pos + 0] = ( value       ) & 0xff;
+	buf[pos + 1] = ( value >>  8 ) & 0xff;
+	buf[pos + 2] = ( value >> 16 ) & 0xff;
+	buf[pos + 3] = ( value >> 24 ) & 0xff;
+
+	return( value );
+}
+
+static int jamcam_get_int_at_pos( unsigned char *buf, int pos ) {
+	int ret = 0;
+
+	ret += buf[pos + 0];
+	ret += buf[pos + 1] * 256;
+	ret += buf[pos + 2] * 256 * 256;
+	ret += buf[pos + 3] * 256 * 256 * 256;
+
+	return( ret );
+}
 
 static int jamcam_set_usb_mem_pointer( Camera *camera, int position ) {
 	char reply[4];
@@ -76,10 +98,7 @@ static int jamcam_mmc_card_file_count (Camera *camera) {
 		default:
 		case GP_PORT_SERIAL:
 			strcpy( buf, "KB00" );
-			buf[4] = ( position       ) & 0xff;
-			buf[5] = ( position >>  8 ) & 0xff;
-			buf[6] = ( position >> 16 ) & 0xff;
-			buf[7] = ( position >> 24 ) & 0xff;
+			jamcam_set_int_at_pos( buf, 4, position );
 			jamcam_write_packet( camera, buf, 8 );
 
 			jamcam_read_packet( camera, reply, 16 );
@@ -88,11 +107,7 @@ static int jamcam_mmc_card_file_count (Camera *camera) {
 				width  = (reply[5] * 256) + reply[4];
 				height = (reply[7] * 256) + reply[6];
 
-				data_incr = 0;
-				data_incr += reply[8];
-				data_incr += reply[9] * 256;
-				data_incr += reply[10] * 256 * 256;
-				data_incr += reply[11] * 256 * 256 * 256;
+				data_incr = jamcam_get_int_at_pos( reply, 8 );
 
 				jamcam_files[jamcam_count].position = position;
 				jamcam_files[jamcam_count].width = width;
@@ -103,10 +118,7 @@ static int jamcam_mmc_card_file_count (Camera *camera) {
 
 				position += data_incr;
 
-				buf[4] = ( position       ) & 0xff;
-				buf[5] = ( position >>  8 ) & 0xff;
-				buf[6] = ( position >> 16 ) & 0xff;
-				buf[7] = ( position >> 24 ) & 0xff;
+				jamcam_set_int_at_pos( buf, 4, position );
 				jamcam_write_packet( camera, buf, 8 );
 			
 				jamcam_read_packet( camera, reply, 16 );
@@ -129,7 +141,7 @@ static int jamcam_mmc_card_file_count (Camera *camera) {
 
 			jamcam_set_usb_mem_pointer( camera, position + 8 );
 
-			CHECK( gp_port_read (camera->port, reply, 0x200 ));
+			CHECK( gp_port_read (camera->port, reply, 512 ));
 
 			gp_port_usb_msg_write( camera->port,
 				0xa5,
@@ -138,12 +150,10 @@ static int jamcam_mmc_card_file_count (Camera *camera) {
 				NULL, 0 );
 
 			while(((unsigned char)reply[0] != 0xff ) &&
-			      ((unsigned char)reply[0] != 0xaa )) {
-				data_incr = 0;
-				data_incr += reply[0];
-				data_incr += reply[1] * 256;
-				data_incr += reply[2] * 256 * 256;
-				data_incr += reply[3] * 256 * 256 * 256;
+			      ((unsigned char)reply[0] != 0xaa ) &&
+				  (((unsigned char)reply[0] != 0x00 ) ||
+				   ((unsigned char)reply[1] != 0x00 ))) {
+				data_incr = jamcam_get_int_at_pos( reply, 0 );
 
 				jamcam_files[jamcam_count].position = position;
 				jamcam_files[jamcam_count].width = width;
@@ -168,7 +178,7 @@ static int jamcam_mmc_card_file_count (Camera *camera) {
 
 				jamcam_set_usb_mem_pointer( camera, position + 8 );
 
-				CHECK( gp_port_read (camera->port, reply, 0x200 ));
+				CHECK( gp_port_read (camera->port, reply, 512 ));
 
 				gp_port_usb_msg_write( camera->port,
 					0xa5,
@@ -203,10 +213,7 @@ int jamcam_file_count (Camera *camera) {
 		default:
 		case GP_PORT_SERIAL:
 			strcpy( buf, "KB00" );
-			buf[4] = ( position       ) & 0xff;
-			buf[5] = ( position >>  8 ) & 0xff;
-			buf[6] = ( position >> 16 ) & 0xff;
-			buf[7] = ( position >> 24 ) & 0xff;
+			jamcam_set_int_at_pos( buf, 4, position );
 			jamcam_write_packet( camera, buf, 8 );
 
 			jamcam_read_packet( camera, reply, 16 );
@@ -215,11 +222,7 @@ int jamcam_file_count (Camera *camera) {
 				width  = (reply[5] * 256) + reply[4];
 				height = (reply[7] * 256) + reply[6];
 
-				data_incr = 0;
-				data_incr += reply[8];
-				data_incr += reply[9] * 256;
-				data_incr += reply[10] * 256 * 256;
-				data_incr += reply[11] * 256 * 256 * 256;
+				data_incr = jamcam_get_int_at_pos( reply, 8 );
 
 				last_offset_size = data_incr;
 
@@ -232,10 +235,7 @@ int jamcam_file_count (Camera *camera) {
 
 				position += data_incr;
 
-				buf[4] = ( position       ) & 0xff;
-				buf[5] = ( position >>  8 ) & 0xff;
-				buf[6] = ( position >> 16 ) & 0xff;
-				buf[7] = ( position >> 24 ) & 0xff;
+				jamcam_set_int_at_pos( buf, 4, position );
 				jamcam_write_packet( camera, buf, 8 );
 			
 				jamcam_read_packet( camera, reply, 16 );
@@ -260,11 +260,7 @@ int jamcam_file_count (Camera *camera) {
 			CHECK( gp_port_read (camera->port, reply, 0x10 ));
 
 			while((unsigned char)reply[0] != 0xff ) {
-				data_incr = 0;
-				data_incr += reply[0];
-				data_incr += reply[1] * 256;
-				data_incr += reply[2] * 256 * 256;
-				data_incr += reply[3] * 256 * 256 * 256;
+				data_incr = jamcam_get_int_at_pos( reply, 0 );
 
 				jamcam_files[jamcam_count].position = position;
 				jamcam_files[jamcam_count].width = width;
@@ -298,6 +294,7 @@ int jamcam_file_count (Camera *camera) {
 }
 
 int jamcam_fetch_memory( Camera *camera, char *data, int start, int length ) {
+	char tmp_buf[16];
 	char packet[16];
 	int new_start;
 	int new_end;
@@ -325,17 +322,9 @@ int jamcam_fetch_memory( Camera *camera, char *data, int start, int length ) {
 				new_start = start + bytes_read;
 				new_end   = start + bytes_read + bytes_to_read - 1;
 
-				/* start */
-				packet[4] = ( new_start      ) & 0xff;
-				packet[5] = ( new_start >>  8 ) & 0xff;
-				packet[6] = ( new_start >> 16 ) & 0xff;
-				packet[7] = ( new_start >> 24 ) & 0xff;
-
-				/* end (inclusive) */
-				packet[8]  = ( new_end       ) & 0xff;
-				packet[9]  = ( new_end >>  8 ) & 0xff;
-				packet[10] = ( new_end >> 16 ) & 0xff;
-				packet[11] = ( new_end >> 24 ) & 0xff;
+				/* start and end (inclusive) */
+				jamcam_set_int_at_pos( packet, 4, new_start );
+				jamcam_set_int_at_pos( packet, 8, new_end );
 
 				jamcam_write_packet( camera, packet, 12 );
 
@@ -344,8 +333,18 @@ int jamcam_fetch_memory( Camera *camera, char *data, int start, int length ) {
 				break;
 			case GP_PORT_USB:
 				bytes_to_read = bytes_left > USB_PKT_SIZE ? USB_PKT_SIZE : bytes_left;
+
+				/* for some reason this priming read fixes an offset problem */
+				/* in the images, we are only reading the first 16 bytes of  */
+				/* data twice by doing this, so I don't know why it works    */
+				jamcam_set_usb_mem_pointer( camera, start + bytes_read );
+				CHECK( gp_port_read (camera->port, tmp_buf, 16 ));
+
+
 				jamcam_set_usb_mem_pointer( camera, start + bytes_read );
 				CHECK( gp_port_read (camera->port, data + bytes_read, bytes_to_read ));
+
+
 				break;
 		}
 				
@@ -355,7 +354,7 @@ int jamcam_fetch_memory( Camera *camera, char *data, int start, int length ) {
 		/* hate this hardcoded, but don't want to update here */
 		/* when downloading parts of a thumbnail              */
 		if ( length > 1000 ) {
-			percentage = bytes_read / length;
+			percentage = ( 1.0 * bytes_read ) / length;
 			gp_camera_progress( camera, percentage );
 		}
 	}
@@ -366,22 +365,44 @@ int jamcam_fetch_memory( Camera *camera, char *data, int start, int length ) {
 
 int jamcam_request_image( Camera *camera, char *buf, int *len, int number ) {
 	int position;
+	int result;
+	char tmp_buf[300000];
 
 	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* jamcam_request_image");
 
-	*len = DATA_SIZE;
+	position = jamcam_files[number].position;
 
-	position = jamcam_files[number].position + 0x10;
-	*len = jamcam_files[number].width * jamcam_files[number].height;
-
+	/* don't know why this is necessary, but do it anyway */
 	if ( camera->port->type == GP_PORT_USB ) {
-		jamcam_set_usb_mem_pointer( camera, position );
-		CHECK( gp_port_read (camera->port, buf, 120 ));
-
 		position += 8;
 	}
 
-	return( jamcam_fetch_memory( camera, buf, position, *len ));
+	if ( camera->port->type == GP_PORT_USB ) {
+		gp_port_usb_msg_write( camera->port,
+			0xa5,
+			0x0005,
+			0x0000,
+			NULL, 0 );
+	}
+
+	result = jamcam_fetch_memory( camera, tmp_buf, position,
+		jamcam_files[number].data_incr );
+
+	/* this seems to reset the camera to a sane status */
+	if ( camera->port->type == GP_PORT_USB ) {
+		gp_port_usb_msg_write( camera->port,
+			0xa5,
+			0x0006,
+			0x0000,
+			NULL, 0 );
+	}
+
+	if ( result == GP_OK ) {
+		*len = jamcam_files[number].width * jamcam_files[number].height;
+		memcpy( buf, tmp_buf + 0x10, *len );
+	}
+
+	return( result );
 }
 
 struct jamcam_file *jamcam_file_info(Camera *camera, int number)
@@ -390,12 +411,13 @@ struct jamcam_file *jamcam_file_info(Camera *camera, int number)
 }
 
 int jamcam_request_thumbnail( Camera *camera, char *buf, int *len, int number ) {
-	char line[600];
+	char line[2048];
 	char packet[16];
 	int position;
 	int x, y;
 	char *ptr;
 	float percentage;
+	int bytes_to_read;
 
 	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* jamcam_request_thumbnail");
 
@@ -407,13 +429,34 @@ int jamcam_request_thumbnail( Camera *camera, char *buf, int *len, int number ) 
 
 	ptr = buf;
 
+	if ( camera->port->type == GP_PORT_USB ) {
+		/* windows driver does this sometimes */
+		gp_port_usb_msg_write( camera->port,
+			0xa5,
+			0x0005,
+			0x0000,
+			NULL, 0 );
+
+		/* just read one row of data at a time */
+		bytes_to_read = jamcam_files[number].width;
+	} else {
+		/* MMC card is quirky, need to fetch larger amounts of data */
+		if ( position >= 0x40000000 ) {
+			/* serial with mmc card needs bigger packets */
+			bytes_to_read = 2048;
+		} else {
+			/* just read one row of data at a time */
+			bytes_to_read = jamcam_files[number].width;
+		}
+	}
+
+
 	/* fetch thumbnail lines and build the thumbnail */
 	position += 10 * jamcam_files[number].width;
 	for( y = 0 ; y < 60 ; y++ ) {
-		jamcam_fetch_memory( camera, line, position,
-			jamcam_files[number].width );
+		jamcam_fetch_memory( camera, line, position, bytes_to_read );
 
-		percentage = y / 60;
+		percentage = (1.0 * y) / 60;
 		gp_camera_progress( camera, percentage );
 
 		if ( jamcam_files[number].width == 600 ) {
@@ -435,6 +478,15 @@ int jamcam_request_thumbnail( Camera *camera, char *buf, int *len, int number ) 
 				position += 3 * 320;
 			}
 		}
+	}
+
+	/* this seems to reset the camera to a sane status */
+	if ( camera->port->type == GP_PORT_USB ) {
+		gp_port_usb_msg_write( camera->port,
+			0xa5,
+			0x0006,
+			0x0000,
+			NULL, 0 );
 	}
 
 	return( GP_OK );
@@ -493,9 +545,8 @@ int jamcam_enq (Camera *camera)
 	switch( camera->port->type ) {
 		default:
 		case GP_PORT_SERIAL:
-			strcpy((char *)buf, "KB99" );
-
 			for (r = 0; r < RETRIES; r++) {
+				strcpy((char *)buf, "KB99" );
 
 				ret = jamcam_write_packet (camera, (char *)buf, 4);
 				if (ret == GP_ERROR_IO_TIMEOUT)
@@ -509,57 +560,52 @@ int jamcam_enq (Camera *camera)
 				if (ret != GP_OK)
 					return (ret);
 
-				if ( !strncmp( (char *)buf, "KIDB", 4 ))
-					/* OK, so query mmc card size, and return result of that */
-					/* disabled for now until can autodetect camera version 
-					return( jamcam_query_mmc_card( camera ));
-					*/
+				if ( !strncmp( (char *)buf, "KIDB", 4 )) {
 					return (GP_OK);
-				else
-					return (GP_ERROR_CORRUPTED_DATA);
-			
+				}
 			}
+			return (GP_ERROR_CORRUPTED_DATA);
 			break;
 
 		case GP_PORT_USB:
-			gp_port_usb_msg_write( camera->port,
-				0xa5,
-				0x0004,
-				0x0000,
-				NULL, 0 );
-			jamcam_set_usb_mem_pointer( camera, 0x0000 );
+			for (r = 0; r < RETRIES; r++) {
+				gp_port_usb_msg_write( camera->port,
+					0xa5,
+					0x0004,
+					0x0000,
+					NULL, 0 );
+				jamcam_set_usb_mem_pointer( camera, 0x0000 );
 
-			CHECK( gp_port_read( camera->port, (char *)buf, 0x0c ));
+				CHECK( gp_port_read( camera->port, (char *)buf, 0x0c ));
 
-			if ( !strncmp( (char *)buf, "KB00", 4 )) {
-				/* found a JamCam v3 camera */
-				/* reply contains 4-bytes showing length of MMC card if any */
-				/* set to 0 if none */
-				jamcam_mmc_card_size = 0;
-				jamcam_mmc_card_size += buf[8];
-				jamcam_mmc_card_size += buf[9] * 256;
-				jamcam_mmc_card_size += buf[10] * 256 * 256;
-				jamcam_mmc_card_size += buf[11] * 256 * 256 * 256;
+				if (( !strncmp( (char *)buf, "KB00", 4 )) ||
+					(( buf[0] == 0xff ) && ( buf[1] == 0xff ) &&
+					 ( buf[2] == 0xff ) && ( buf[3] == 0xff ) &&
+					 ( buf[4] == 0xff ) && ( buf[5] == 0xff ) &&
+					 ( buf[6] == 0xff ) && ( buf[7] == 0xff ))) {
+					/* found a JamCam v3 camera */
+					/* reply contains 4-bytes with MMC card size if present */
+					/* set to 0 if none */
+					jamcam_mmc_card_size = jamcam_get_int_at_pos( buf, 8 );
 
-				if ( jamcam_mmc_card_size ) {
-					gp_debug_printf (GP_DEBUG_LOW, "jamcam",
-						"* jamcam_enq, MMC card size = %d",
-						jamcam_mmc_card_size );
+					if ( jamcam_mmc_card_size ) {
+						gp_debug_printf (GP_DEBUG_LOW, "jamcam",
+							"* jamcam_enq, MMC card size = %d",
+							jamcam_mmc_card_size );
+					}
+
+					return (GP_OK);
+				} else if ( !strncmp( (char *)buf + 8, "KB00", 4 )) {
+					/* found a JamCam v2 camera */
+					/* JamCam v2 doesn't support MMC card so no need to check */
+					return (GP_OK);
+				} else if (( buf[0] == 0xf0 ) &&
+						 ( buf[1] == 0xfd ) &&
+						 ( buf[2] == 0x03 )) {
+					return( GP_OK );
 				}
-
-				return (GP_OK);
-			} else if ( !strncmp( (char *)buf + 8, "KB00", 4 )) {
-				/* found a JamCam v2 camera */
-				/* JamCam v2 doesn't support MMC card so no need to check */
-				return (GP_OK);
-			} else if (( buf[0] == 0xf0 ) &&
-					 ( buf[1] == 0xfd ) &&
-					 ( buf[2] == 0x03 )) {
-				return( GP_OK );
-			} else {
-				return (GP_ERROR_CORRUPTED_DATA);
 			}
-
+			return (GP_ERROR_CORRUPTED_DATA);
 			break;
 	}
 
@@ -570,8 +616,6 @@ int jamcam_query_mmc_card (Camera *camera)
 {
 	int ret, r = 0;
 	char buf[16];
-
-	/* FIXME! JamCam v2 doesn't support MMC card so no need to check */
 
 	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* jamcam_query_mmc_card");
 
@@ -597,11 +641,7 @@ int jamcam_query_mmc_card (Camera *camera)
 			return (ret);
 
 		/* reply is 4-byte int showing length of MMC card if any, 0 if none */
-		jamcam_mmc_card_size = 0;
-		jamcam_mmc_card_size += buf[0];
-		jamcam_mmc_card_size += buf[1] * 256;
-		jamcam_mmc_card_size += buf[2] * 256 * 256;
-		jamcam_mmc_card_size += buf[3] * 256 * 256 * 256;
+		jamcam_mmc_card_size = jamcam_get_int_at_pos( buf, 0 );
 
 		if ( jamcam_mmc_card_size ) {
 			gp_debug_printf (GP_DEBUG_LOW, "jamcam",

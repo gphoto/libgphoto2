@@ -1,9 +1,7 @@
 Panasonic KXL-600A and KXL-601A a.k.a. "Coolshot"
 
 This driver is based upon protocol reverse-engineered
-using ComLite32 under Windows 95.  Known protocol info
-along with some sample captured data is in the file
-protocol.txt.
+using ComLite32 under Windows 95.
 
 For questions/comments, email the library author:
 

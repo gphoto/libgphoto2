@@ -8,9 +8,15 @@ For questions/comments, email the library author:
 	Chris Pinkham
 	cpinkham@infi.net
 
+----------------------------------------------------------------
 
 TODO List
 ---------
-	- Fix downloading of thumbnails from mmc card
+	- Fix downloading of thumbnails from mmc card (serial and usb)
 	- better error checking/handling
-	- retry when receiving corrupted data messages in enquiry function
+	- optimize code, it's nowhere near theoretical max download speed
+
+-----------------------------------------------------------------
+Author:
+	Chris Pinkham <cpinkham@infi.net>
+

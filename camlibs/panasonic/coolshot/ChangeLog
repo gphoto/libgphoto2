@@ -1,0 +1,11 @@
+2001-11-28  Chris Pinkham <cpinkham@infi.net>
+
+	* README: took out mention of protocol.txt until file is ready.
+	* coolshot.c, library.c, library.h: fixed bug in code where value
+	  passed to gp_camera_progress was always 0.0.  Changed license of
+	  source code from GPL to LPGL.
+
+2001-11-28  Chris Pinkham <cpinkham@infi.net>
+
+	* ChangeLog: created file.
+
