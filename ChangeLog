@@ -1,5 +1,9 @@
 2001-11-27  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2/gphoto2-camera.c: Update documentation.
+
+2001-11-27  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2/gphoto2-file.h: Fix formatting of comments: Should
 	  always be
 	  /** (nothing here - new line!)
