@@ -399,24 +399,17 @@ static int camera_about(Camera *camera, CameraText *about, GPContext *context)
 	return GP_OK;
 }
 
-#if 0
-static int delete_picture(int index)
+static int digita_file_delete(Camera *camera, const char *folder, 
+			     const char *filename, GPContext *context)
 {
 	struct filename fn;
 
-	fprintf(stderr, "digita_delete_picture\n");
-
-	if (index > digita_num_pictures)
-		return 0;
-
-	index--;
-
-	fprintf(stderr, "deleting %d, %s%s\n", index, digita_file_list[index].fn.path, digita_file_list[index].fn.dosname);
-
 	/* Setup the filename */
-	fn.driveno = digita_file_list[index].fn.driveno;
-	strcpy(fn.path, digita_file_list[index].fn.path);
-	strcpy(fn.dosname, digita_file_list[index].fn.dosname);
+	/* FIXME: This is kinda lame, but it's a quick hack */
+	fn.driveno = camera->pl->file_list[0].fn.driveno;
+	strcpy(fn.path, folder);
+	strcat(fn.path, "/");
+	strcpy(fn.dosname, filename);
 
 	if (digita_delete_picture(camera->pl, &fn) < 0)
 		return 0;
@@ -424,9 +417,19 @@ static int delete_picture(int index)
 	if (digita_get_file_list(camera->pl) < 0)
 		return 0;
 
-	return 1;
+        return GP_OK;
 }
-#endif
+
+static int delete_file_func(CameraFilesystem *fs, const char *folder,
+		const char *filename, void *user_data, GPContext *context)
+{
+        Camera *camera = user_data;
+
+	if (folder[0] == '/')
+		folder++;
+
+        return digita_file_delete(camera, folder, filename, context);
+}
 
 int camera_init(Camera *camera, GPContext *context)
 {
@@ -443,7 +446,8 @@ int camera_init(Camera *camera, GPContext *context)
 	/* Set up the CameraFilesystem */
 	gp_filesystem_set_list_funcs(camera->fs, file_list_func,
 				      folder_list_func, camera);
-	gp_filesystem_set_file_funcs(camera->fs, get_file_func, NULL, camera);
+	gp_filesystem_set_file_funcs(camera->fs, get_file_func,
+				      delete_file_func, camera);
 
 	GP_DEBUG( "Initializing the camera");
 

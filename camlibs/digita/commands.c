@@ -192,9 +192,10 @@ int digita_delete_picture(CameraPrivateLibrary *dev, struct filename *filename)
 	struct digita_command response;
 	int ret;
 
-	build_command(&ef.cmd, sizeof(ef) - sizeof(ef.cmd), DIGITA_ERASE_FILE);
+	build_command(&ef.cmd, sizeof(ef.fn), DIGITA_ERASE_FILE);
 
 	memcpy(&ef.fn, filename, sizeof(ef.fn));
+	ef.zero = 0;
 
 	ret = dev->send(dev, (unsigned char *)&ef, sizeof(ef));
 	if (ret < 0) {

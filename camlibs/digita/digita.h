@@ -130,6 +130,8 @@ struct erase_file {
 	struct digita_command cmd;
 
 	struct filename fn;
+
+	unsigned int zero;
 };
 
 /* gphoto2 header magic. this is also CameraPrivateLibrary */
