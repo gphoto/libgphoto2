@@ -65,6 +65,9 @@
  *   image.
  * @CANON_USB_FUNCTION_CONTROL_CAMERA: Remote camera control (with
  *   many subcodes)
+ * @CANON_USB_FUNCTION_FLASH_DEVICE_IDENT_2: Command to request the
+ *   disk specifier (drive letter) for the storage device being
+ *   used. Used with the "newer" protocol, e.g. with EOS 20D.
  * @CANON_USB_FUNCTION_POWER_STATUS_2: Command to query the camera for
  *   its power status: battery vs. mains, and whether the battery is
  *   low. Used in the "newer" protocol, e.g. with EOS 20D.
@@ -113,6 +116,7 @@ typedef enum {
 	CANON_USB_FUNCTION_RETRIEVE_CAPTURE,
 	CANON_USB_FUNCTION_RETRIEVE_PREVIEW,
 	CANON_USB_FUNCTION_CONTROL_CAMERA,
+	CANON_USB_FUNCTION_FLASH_DEVICE_IDENT_2,
 	CANON_USB_FUNCTION_POWER_STATUS_2,
 	CANON_USB_FUNCTION_UNKNOWN_FUNCTION,
 	CANON_USB_FUNCTION_EOS_GET_BODY_ID,
@@ -210,6 +214,15 @@ struct canon_usb_cmdstruct
 	int return_length;
 };
 
+/*
+ * Command codes are structured:
+ *   cmd2=11 -> camera control,
+ *   cmd2=12 -> storage control.
+ *
+ *   cmd3=201 -> fixed length response
+ *   cmd3=202 -> variable length response
+ */
+
 static const struct canon_usb_cmdstruct canon_usb_cmd[] = {
 	{CANON_USB_FUNCTION_GET_FILE,		"Get file",			0x01, 0x11, 0x202,	0x40},
 	{CANON_USB_FUNCTION_IDENTIFY_CAMERA,	"Identify camera",		0x01, 0x12, 0x201,	0x9c},
@@ -223,10 +236,14 @@ static const struct canon_usb_cmdstruct canon_usb_cmd[] = {
 	{CANON_USB_FUNCTION_POWER_STATUS,	"Power supply status",		0x0a, 0x12, 0x201,	0x58},
 	{CANON_USB_FUNCTION_GET_DIRENT,		"Get directory entries",	0x0b, 0x11, 0x202,	0x40},
 	{CANON_USB_FUNCTION_DELETE_FILE,	"Delete file",			0x0d, 0x11, 0x201,	0x54},
+	/* Command code 0x0e is overloaded: set file attribute (old),
+	 * flash device ID (new). And the response is different: fixed
+	 * length in old, variable length in new. */
 	{CANON_USB_FUNCTION_SET_ATTR,		"Set file attribute",		0x0e, 0x11, 0x201,	0x54},
+	{CANON_USB_FUNCTION_FLASH_DEVICE_IDENT_2, "Flash device ident",		0x0e, 0x11, 0x202,	0x40},
 	{CANON_USB_FUNCTION_SET_FILE_TIME,	"Set file time",		0x0f, 0x11, 0x201,	0x54},
-	// Notice the overloaded command code 0x13: remote camera control
-        // in the original protocol, power status in the new protocol.
+	/* Notice the overloaded command code 0x13: remote camera control
+	   in the original protocol, power status in the new protocol. */
 	{CANON_USB_FUNCTION_CONTROL_CAMERA,	"Remote camera control",	0x13, 0x12, 0x201,      0x40},
 	{CANON_USB_FUNCTION_POWER_STATUS_2,	"Power supply status (new protocol)",	0x13, 0x12, 0x201,      0x58},
 	{CANON_USB_FUNCTION_RETRIEVE_CAPTURE,	"Download a captured image",	0x17, 0x12, 0x202,      0x40},
