@@ -189,6 +189,8 @@ Please report any changes to this list to the gphoto2 developer mailing
 list.  As of this writing, USB support is only available on Linux and
 FreeBSD as those are the only systems on which libusb is available.
 
+General Hints:
+
 If you have build problems in the intl or po directories, try re-running
 configure with the --disable-nls flag.  If configure stops due to an error
 with 'test', try re-running configure with the --without-usb flag.  If
@@ -243,24 +245,28 @@ StrongARM:
   Linux (cross-compiled gcc)
 
 Itanium:
-  Red Hat 7.1 (gcc)
+  Red Hat Linux 7.1 (gcc)
 
 
 The following systems have some problems compiling, but may be made to
 work with some effort:
 
 Itanium:
-  Red Hat 7.1 (Intel ecc)
+  Red Hat Linux 7.1 (Intel ecc)
   	There is a bug in ver. 5.0.1 of this compiler tickled by gphoto2 that
   	prevents full compilation.
   	Need better libtool support (newer than version 1.4.2).
-  Red Hat 7.1 (sgicc)
+  Red Hat Linux 7.1 (sgicc)
   	Need better libtool support (newer than version 1.4.2).
 
 Sparc:
   Solaris 8 (cc)
   	Sun's cc doesn't support #warning or # or ## macro features, which
   	occur several times in the code.
+
+MIPS:
+  IRIX (cc)
+    MIPSpro C doesn't support #warning.
 
 
 Thanks go to SourceForge for their compile farm, and Compaq for their
