@@ -21,6 +21,8 @@
 #ifndef __GPHOTO2_PORT_LOG_H__
 #define __GPHOTO2_PORT_LOG_H__
 
+#include <stdarg.h>
+
 typedef enum {
 	GP_LOG_ERROR = 1 << 2,
 	GP_LOG_DATA  = 1 << 6,
@@ -29,7 +31,7 @@ typedef enum {
 
 /* Custom log function */
 typedef void (* GPLogFunc) (GPLogLevels levels, const char *domain,
-			    const char *msg, void *data);
+			    const char *format, va_list args, void *data);
 int  gp_log_add_func    (GPLogLevels levels, GPLogFunc func, void *data);
 int  gp_log_remove_func (int id);
 

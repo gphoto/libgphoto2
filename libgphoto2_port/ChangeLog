@@ -1,3 +1,8 @@
+2001-10-22  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2_port/gphoto2-port-log.[c,h]: Use va_list instead of 
+	  a buffers. That means, no more incomplete data dumps.
+
 2001-10-20  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2_port/gp_port.c: Forot to set default speed to 0

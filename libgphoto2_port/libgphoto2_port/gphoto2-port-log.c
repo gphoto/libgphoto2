@@ -246,20 +246,18 @@ void
 gp_log (GPLogLevels levels, const char *domain, const char *format, ...)
 {
 	char buffer[2048];
-	va_list arg;
+	va_list args;
 	int i;
 
-	va_start (arg, format);
-	vsnprintf (buffer, sizeof (buffer), format, arg);
-	va_end (arg);
-
+	va_start (args, format);
 	for (i = 0; i < log_funcs_count; i++) {
 		if (log_funcs[i].levels & levels)
-			log_funcs[i].func (levels, domain, buffer,
+			log_funcs[i].func (levels, domain, format, args,
 					   log_funcs[i].data);
 	}
-
+	vsnprintf (buffer, sizeof (buffer), format, args);
 	gp_log_history_append (buffer);
+	va_end (args);
 }
 
 /**
