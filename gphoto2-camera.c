@@ -665,7 +665,7 @@ gp_camera_init (Camera *camera)
 	 * If the port or the model hasn't been indicated, try to
 	 * figure it out (USB only). Beware of "Directory Browse".
 	 */
-	if (strcmp (camera->abilities->model, "Directory Browse")) {
+	if (strcasecmp (camera->abilities->model, "Directory Browse")) {
 		if (!camera->port || !strcmp ("", camera->abilities->model)) {
 			
 			/* Call auto-detect and choose the first camera */
