@@ -1310,20 +1310,27 @@ cli_error_print (char *format, ...)
 static void
 signal_exit (int signo)
 {
+	/* If we already were told to cancel, abort. */
+	if (glob_cancel) {
+		if (!glob_quiet)
+			printf (_("\nAborting...\n"));
+		if (glob_camera)
+			gp_camera_unref (glob_camera);
+		if (glob_context)
+			gp_context_unref (glob_context);
+		if (!glob_quiet)
+			printf (_("Aborted.\n"));
+		exit (EXIT_FAILURE);
+	}
+
         if (!glob_quiet)
-                printf(_("\nCancelling...\n"));
+                printf (_("\nCancelling...\n"));
 
 	glob_cancel = 1;
 
 #if 0
-	/* If we've got a camera, unref it */
-        if (glob_camera) {
-		gp_camera_unref (glob_camera);
-		glob_camera = NULL;
-	}
-
-        if (strlen(glob_owd)>0)
-                chdir(glob_owd);
+        if (strlen (glob_owd) > 0)
+                chdir (glob_owd);
 
         exit (EXIT_SUCCESS);
 #endif

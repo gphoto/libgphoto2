@@ -1,3 +1,8 @@
+2002-01-14  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* frontends/command-line/main.c: If the user presses 2 times 
+	  <ctrl>-c, abort.
+
 2002-01-14  Colin Marquardt  <colin@marquardt-home.de>
 
 	*  libgphoto2_port/po/fr.po: Update from Jérôme (is ISO-8859-1 now).
