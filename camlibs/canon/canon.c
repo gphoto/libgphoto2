@@ -863,7 +863,7 @@ int camera_init(Camera *camera, CameraInit *init)
       gp_debug_printf(GP_DEBUG_LOW,"canon","Camera transmission speed : %i\n", cs->speed);
 	
 
-	return !canon_serial_init(camera,init->port.path);
+	return canon_serial_init(camera,init->port.path);
 }
 
 
