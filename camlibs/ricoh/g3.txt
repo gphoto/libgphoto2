@@ -1,0 +1,50 @@
+RETR
+-STOR
+DELE
+RNFR
+RNTO
+-VER
+-SPWD
+-PRET
+-SRET
+-INFO
+-CCTL
+-SINF
+-FMT
+-DCAP
+-ATTR
+-PWOF
+-SDIS
+-GDIS
+-ABOR
+QUIT
+-FUPL
+-FDWL
+-GFCI
+-GFGI
+-SGID
+-GTPN
+-RTST
+
+
+"-FDAT folder/file"	- 200 date=2003:10:08 16:57:06 for -FDAT.
+			- 200 date=%s for -FDAT.
+
+"-INFO folder/file" 	- 200 %d byte W=%d H=%d K=%d for -INFO
+"-GSID"			- 200 SD ID=%02x%02x%02x%02x%02x%02x%02x%02x for -GSID.
+"-GCID"			- 451 -GCID command failure
+			- 200 CameraID=%s for -GCID.
+"-TIME"			- 200 %02d%02d/%02d/%02d %02d:%02d:%02d for -TIME.
+
+"-NLST"			- 150 data connection for -NLST.
+			  ... data blocks ...
+			  250 -NLST command success.
+
+"CWD folder"		- 501 CWD command failure
+			- 250 CWD command success.
+
+"RETR file"		- 150 data connection for RETR.(%d)
+			  ... data , %d bytes ...
+			  250 RETR command success.
+
+
