@@ -91,7 +91,7 @@ static int stv0680_cmd(GPPort *port, unsigned char cmd,
 
 	// write to port
 	printf("Writing packet to port\n");
-	if((ret = gp_port_write(port, packet, 8)) != GP_OK)
+	if((ret = gp_port_write(port, packet, 8)) < GP_OK)
 		return ret;
 
 	printf("Reading response header\n");

@@ -1,3 +1,7 @@
+2002-07-30  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c: Change "!= GP_OK" to "< GP_OK".
+
 2001-07-08  Marcus Meissner <meissner@suse.de>
 	
 	* stv680.c: Added SpyPen Cleo, Axys, Xion, Memo, as reported
