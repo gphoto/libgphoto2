@@ -1,5 +1,9 @@
 2002-07-11  Lutz Müller <lutz@users.sourceforge.net>
 
+	* library.c: Initialize some variables to NULL.
+
+2002-07-11  Lutz Müller <lutz@users.sourceforge.net>
+
 	* ricoh.c: Remove 3 direct calls to ricoh_send and ricoh_recv.
 
 2002-07-10  Lutz Müller <lutz@users.sourceforge.net>

@@ -371,7 +371,7 @@ static struct {
 #undef R_ADD_RADIO
 #define R_ADD_RADIO(ca,co,s,type,n,Name)				\
 {									\
-	CameraWidget *w;						\
+	CameraWidget *w = NULL;						\
 	type v;								\
 	unsigned int i;							\
 									\
@@ -390,8 +390,8 @@ static struct {
 #undef R_CHECK_RADIO
 #define R_CHECK_RADIO(c,co,wi,n,Name)					\
 {									\
-	CameraWidget *w;						\
-	const char *v;							\
+	CameraWidget *w = NULL;						\
+	const char *v = NULL;						\
 	unsigned int i;							\
 									\
         CR (gp_widget_get_child_by_name (wi, Name, &w));		\
