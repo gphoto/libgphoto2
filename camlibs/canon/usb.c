@@ -808,18 +808,15 @@ canon_usb_identify (Camera *camera, GPContext *context)
 
 	for (i = 0; models[i].id_str != NULL; i++) {
 		if (models[i].usb_vendor && models[i].usb_product &&
-		    (models[i].usb_vendor == a.usb_vendor &&
-		     models[i].usb_product == a.usb_product)) {
-			GP_DEBUG ("canon_usb_identify: USB product and vendor ID matches '%s'",
-				  models[i].id_str);
+		    !strcmp (models[i].id_str, a.model)) {
+			GP_DEBUG ("canon_usb_identify: model names match '%s'", models[i].id_str);
 			gp_context_status (context, _("Detected a '%s'."), models[i].id_str);
 			camera->pl->md = (struct canonCamModelData *) &models[i];
 			return GP_OK;
 		}
 	}
 
-	gp_context_error (context, "Could not identify camera based on USB id 0x%x/0x%x",
-			     a.usb_vendor, a.usb_product);
+	gp_context_error (context, "Could not identify camera based on name id %s", models[i].id_str);
 
 	return GP_ERROR_MODEL_NOT_FOUND;
 }
