@@ -78,7 +78,8 @@ int camera_id(CameraText *id)
 
 int camera_manual(Camera *camera, CameraText *manual)
 {
-        strcpy(manual->text, "For the A50, 115200 may not be faster than 57600");
+        strcpy(manual->text, "For the A50, 115200 may not be faster than 57600"
+			   "Folders are NOT supported");
 
         return GP_OK;
 }
@@ -102,7 +103,7 @@ int camera_abilities(CameraAbilitiesList *list)
         a->speed[4]   = 115200;
         a->speed[5]   = 0;
         a->capture    = 0;
-        a->config     = 0;
+        a->config     = 1;
         a->file_delete = 1;
         a->file_preview = 1;
         a->file_put = 1;
@@ -116,7 +117,7 @@ int camera_abilities(CameraAbilitiesList *list)
         strcpy(a->model, models_USB[i]);
         a->port = GP_PORT_USB;
         a->capture    = 0;
-        a->config     = 0;
+        a->config     = 1;
         a->file_delete = 1;
         a->file_preview = 1;
         a->file_put = 0;
@@ -136,7 +137,7 @@ int camera_abilities(CameraAbilitiesList *list)
         a->speed[4]   = 115200;
         a->speed[5]   = 0;
         a->capture    = 0;
-        a->config     = 0;
+        a->config     = 1;
         a->file_delete = 1;
         a->file_preview = 1;
         a->file_put = 1;
@@ -152,9 +153,9 @@ int camera_folder_list(Camera *camera, CameraList *list, char *folder)
     return GP_OK;
 }
 
-static void clear_readiness(Camera *camera)
+void clear_readiness(Camera *camera)
 {
-	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
+	canon_info *cs = (struct canon_info*)camera->camlib_data;
 
     cs->cached_ready = 0;
 }
@@ -598,11 +599,17 @@ int camera_file_get(Camera *camera, CameraFile *file, char *folder, char *filena
 {
 	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
     char *data;
-    int buflen,j;
+    int buflen,i,j;
     char path[300];
 
+	// initialize memory to avoid problems later
+	for (i=0; i < sizeof(path); i++)
+	  path[i] = '\0';
 
-    strcpy(path, cs->cached_drive);
+	if(check_readiness(camera) != 1)
+	  return GP_ERROR;
+
+	strcpy(path, cs->cached_drive);
 
     if (get_file_path(camera, filename,path) == GP_ERROR) {
         gp_debug_printf(GP_DEBUG_LOW,"canon","Filename not found!\n");
@@ -610,17 +617,17 @@ int camera_file_get(Camera *camera, CameraFile *file, char *folder, char *filena
     }
 
     if (canon_comm_method != CANON_USB) {
-      j = strrchr(path,'\\') - path;
-      path[j+1] = '\0';     
+		j = strrchr(path,'\\') - path;
+		path[j+1] = '\0';
     } else {
-      j = strchr(path,'\0') - path;
-      path[j] = '\\';     
-      path[j+1] = '\0';
+		j = strchr(path,'\0') - path;
+		path[j] = '\\';     
+		path[j+1] = '\0';
     }
 
     data = canon_get_picture(camera, filename, path, 0, &buflen);
     if (!data)
-        return GP_ERROR;
+	  return GP_ERROR;
 
     file->data = data;
     strcpy(file->type, "image/jpeg");
@@ -638,6 +645,13 @@ int camera_file_get_preview(Camera *camera, CameraFile *preview, char *folder, c
     char *data;
     int buflen,i,j,size;
     char path[300], tempfilename[300];
+	
+	// initialize memory to avoid problems later
+	for (i=0; i < sizeof(path); i++)
+	  path[i] = '\0';
+	
+	if(check_readiness(camera) != 1)
+	  return GP_ERROR;
 
     strcpy(path, cs->cached_drive);
 
@@ -647,14 +661,15 @@ int camera_file_get_preview(Camera *camera, CameraFile *preview, char *folder, c
     }
 
     if (canon_comm_method != CANON_USB) {
-      j = strrchr(path,'\\') - path;
-      path[j+1] = '\0';        
+		j = strrchr(path,'\\') - path;
+		path[j+1] = '\0';
     } else {
-      j = strchr(path,'\0') - path;
-      path[j] = '\\';     
-      path[j+1] = '\0';
+		j = strchr(path,'\0') - path;
+		path[j] = '\\';     
+		path[j+1] = '\0';
     }
 
+	fprintf(stderr,"name: %s\npath%s\n",filename,path);
     data = canon_get_picture(camera, filename, path, 1, &buflen);
     if (!data)
         return GP_ERROR;
@@ -835,6 +850,9 @@ int camera_summary(Camera *camera, CameraText *summary)
 	int pwr_source, pwr_status;
 	char power_stats[48], cde[16];
 
+	if(check_readiness(camera) != 1)
+	  return GP_ERROR;
+	
     /*clear_readiness();*/
     if (!update_disk_cache(camera)) return GP_ERROR;
     
@@ -851,7 +869,7 @@ int camera_summary(Camera *camera, CameraText *summary)
 	 case CANON_PS_S20:     model = "Canon Powershot S20"; break;
 	 case CANON_PS_S100:    model = "Canon Powershot S100 / Digital IXUS"; break;
     }
-
+		
 	canon_get_batt_status(camera, &pwr_status, &pwr_source);
 	switch (pwr_source) {
 	 case CAMERA_ON_AC:
@@ -878,8 +896,8 @@ int camera_summary(Camera *camera, CameraText *summary)
 		break;
 	}
 	
-    sprintf(summary->text,"%s\n%s\nDrive %s\n%11s bytes total\n%11s bytes available\n",
-      model, power_stats,cs->cached_drive,a,b);
+    sprintf(summary->text,"%s\n%s\n%s\nDrive %s\n%11s bytes total\n%11s bytes available\n",
+      model, cs->owner,power_stats,cs->cached_drive,a,b);
     return GP_OK;
 }
 
@@ -907,10 +925,8 @@ int camera_file_delete(Camera *camera, char *folder, char *filename)
     char path[300];
     int j;
 
-        /*clear_readiness();*/
-    if (!check_readiness(camera)) {
-        return 0;
-    }
+	if(check_readiness(camera) != 1)
+	  return GP_ERROR;
 
     if (!(cs->model == CANON_PS_A5 ||
         cs->model == CANON_PS_A5_ZOOM)) { /* this is tested only on powershot A50 */
@@ -952,6 +968,9 @@ int camera_file_put(Camera *camera, CameraFile *file, char *folder)
     char destpath[300], destname[300];
 	int j;
 
+	if(check_readiness(camera) != 1)
+	  return GP_ERROR;
+	
 	if (cs->speed>57600 && 
 		(strcmp(camera->model,"Canon PowerShot A50") == 0
 		 || strcmp(camera->model, "Canon PowerShot Pro70") == 0)) {
@@ -970,7 +989,8 @@ int camera_file_put(Camera *camera, CameraFile *file, char *folder)
         gp_frontend_status(NULL, "Could not obtain directory listing");
         return GP_ERROR;
     }
-	
+
+	//FIXME: (pm) should be determined at runtime
 	sprintf(destpath,"D:\\DCIM\\100CANON\\");
 	
 	j = strrchr(destpath,'\\') - destpath;
@@ -995,9 +1015,8 @@ int camera_config(Camera *camera)
 	int pwr_status, pwr_source;
 	struct tm *camtm;
 	time_t camtime;
-	struct canon_info *fd = (struct canon_info*)camera->camlib_data;
 	
-	if (cs->cached_ready) {
+	if (cs->cached_ready == 1) {
 		camtime = psa50_get_time(camera);
 		camtm = gmtime(&camtime);
 	}
@@ -1011,15 +1030,15 @@ int camera_config(Camera *camera)
 	gp_widget_append(window,section);
 	
 	t = gp_widget_new(GP_WIDGET_TEXT,"Camera Model");
-	strcpy(t->value,fd->ident);
+	strcpy(t->value,cs->ident);
 	gp_widget_append(section,t);
 
 	t = gp_widget_new(GP_WIDGET_TEXT,"Owner name");
-	strcpy(t->value,fd->owner);
+	strcpy(t->value,cs->owner);
 	gp_widget_append(section,t);
 
 	t = gp_widget_new(GP_WIDGET_TEXT, "date");
-	if (cs->cached_ready)
+	if (cs->cached_ready == 1)
 	  strcpy(t->value,asctime(camtm));
 	else
 	  sprintf(t->value,"Unavailable");
@@ -1029,12 +1048,12 @@ int camera_config(Camera *camera)
 	gp_widget_append(section,t);
 	
 	t = gp_widget_new(GP_WIDGET_TEXT,"Firmware revision");
-	sprintf(t->value,"%i.%i.%i.%i",fd->firmwrev[3], 
-			fd->firmwrev[2],fd->firmwrev[1],
-			fd->firmwrev[0]);
+	sprintf(t->value,"%i.%i.%i.%i",cs->firmwrev[3], 
+			cs->firmwrev[2],cs->firmwrev[1],
+			cs->firmwrev[0]);
 	gp_widget_append(section,t);
 	
-	if (cs->cached_ready) {
+	if (cs->cached_ready == 1) {
 		canon_get_batt_status(camera, &pwr_status,&pwr_source);
 		switch (pwr_source) {
 		 case CAMERA_ON_AC:
@@ -1103,11 +1122,7 @@ int camera_config(Camera *camera)
 		return GP_OK;
 	}
 	
-    if(!window) {
-		fprintf(stderr,"no window");
-		return GP_ERROR;
-	}
-	w = gp_widget_child_by_label(window,"Debug Level");
+	w = gp_widget_child_by_label(window,"Debug level");
 	if (gp_widget_changed(w)) {
 		wvalue = gp_widget_value_get(w);
 		if(wvalue) {

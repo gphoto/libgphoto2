@@ -31,6 +31,7 @@
 #include "util.h"
 #include "crc.h"
 #include "psa50.h"
+#include "canon.h"
 
 /************ new stuff ********/
 #include <gpio.h>
@@ -377,6 +378,7 @@ static int psa50_send_msg(Camera *camera,unsigned char mtype,
 					if (good_ack==0) {
 						receive_error = FATAL_ERROR;
 						gp_debug_printf(GP_DEBUG_LOW,"canon","ERROR: FATAL ERROR\n");
+						clear_readiness(camera);
 						return -1;
 					}
 				}
@@ -1051,7 +1053,7 @@ int psa50_ready(Camera *camera)
 		/*      cts=canon_serial_get_cts();
 		 gp_debug_printf(GP_DEBUG_LOW,"canon","cts : %i\n",cts);
 		 if (cts==32) {  CTS == 32  when the camera is connected. */
-			 if (cs->first_init==0) {
+			 if (cs->first_init==0 && cs->cached_ready==1) {
 				 /* First case, the serial speed of the camera is the same as
 				  * ours, so let's try to send a ping packet : */
 				 if (!psa50_send_packet(camera, PKT_EOT,seq_tx,psa50_eot+PKT_HDR_LEN,0))

@@ -47,7 +47,7 @@ typedef enum {
 } canonCamModel;
 
 
-struct canon_info
+typedef struct canon_info
 {
 	canonCamModel model;
 	gpio_device *gdev;
@@ -77,7 +77,7 @@ struct canon_info
 	struct psa50_dir *cached_tree;
 	int cached_images;
 	char **cached_paths; /* only used by A5 */
-};
+} canon_info;
 
 
 // extern struct canon_info camera_data;

@@ -45,6 +45,9 @@ typedef struct {
 #define CANON_PCK_CMD			0x00
 #define CANON_PCK_IDENT			0x06
 
+
+void clear_readiness(Camera *camera);
+
 #endif /* _CANON_H */
 
 /****************************************************************************
