@@ -1,3 +1,9 @@
+2002-01-08  christophe barbé <christophe.barbe.ml@online.fr>
+
+	* usb.c: Change model detection to look at model name instead
+	  of USB vendor/product ID since this is required to make the
+	  current implementation of overriding camera model work.
+
 2002-01-21  Fredrik <fredrik@krixor.xy.org>
 
 	* usb.c: Don't key lock Pro 90 IS cameras, they do not support
