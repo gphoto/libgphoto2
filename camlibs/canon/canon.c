@@ -104,109 +104,102 @@ int camera_manual(Camera *camera, CameraText *manual)
 
 int camera_abilities(CameraAbilities *abilities, int *count)
 {
-        int x=0;
-        int i;
-        CameraAbilities a;
+	int i, x;
+	CameraAbilities a;
 
-        strcpy(a.model, "");
-        a.speed[0]   = 9600;
-        a.speed[1]   = 19200;
-        a.speed[2]   = 38400;
-        a.speed[3]   = 57600;
-        a.speed[4]   = 115200;
-        a.speed[5]   = 0;
-        a.capture    = 0;
-        a.config     = 0;
-        a.file_delete = 1;
-        a.file_preview = 1;
-        a.file_put = 0;
+	strcpy(a.model, "");
+	a.speed[0]	= 9600;
+	a.speed[1]	= 19200;
+	a.speed[2]	= 38400;
+	a.speed[3]	= 57600;
+	a.speed[4]	= 115200;
+	a.speed[5]	= 0;
+	a.capture	= 0;
+	a.config	= 0;
+	a.file_delete	= 1;
+	a.file_preview	= 1;
+	a.file_put	= 0;
 
-        i=0;
-        a.port = GP_PORT_SERIAL | GP_PORT_USB;
-        while (i<NUM_SERIAL_USB) {
-                memcpy(&abilities[x], &a, sizeof(a));
-                strcpy(abilities[x].model, models_serialandUSB[i]);
-                x++;
-                i++;
-        }
+	a.port = GP_PORT_SERIAL | GP_PORT_USB;
+	x = 0;
+	for (i = 0; i < NUM_SERIAL_USB; i++, x++) {
+		memcpy(&abilities[x], &a, sizeof(a));
+		strcpy(abilities[x].model, models_serialandUSB[i]);
+	}
 
-        i=0;
-        a.port = GP_PORT_USB;
-        while (i<NUM_USB) {
-                memcpy(&abilities[x], &a, sizeof(a));
-                strcpy(abilities[x].model, models_USB[i]);
-                x++;
-                i++;
-        }
+	a.port = GP_PORT_USB;
+	for (i = 0; i < NUM_USB; i++, x++) {
+		memcpy(&abilities[x], &a, sizeof(a));
+		strcpy(abilities[x].model, models_USB[i]);
+	}
 
-        i=0;
-        a.port = GP_PORT_SERIAL;
-        while (i<NUM_SERIAL) {
-                memcpy(&abilities[x], &a, sizeof(a));
-                strcpy(abilities[x].model, models_serial[i]);
-                x++;
-                i++;
-        }
+	a.port = GP_PORT_SERIAL;
+	for (i = 0; i < NUM_SERIAL; i++, x++) {
+		memcpy(&abilities[x], &a, sizeof(a));
+		strcpy(abilities[x].model, models_serial[i]);
+	}
 
+	*count = x;
 
-        *count = x;
-
-        return GP_OK;
+	return GP_OK;
 }
-
-
 
 int camera_folder_list(Camera *camera, char *folder_name, CameraFolderInfo *list)
 {
-        return GP_OK;
+	return GP_OK;
 }
 
 int camera_folder_set(Camera *camera, char *folder_name)
 {
-        return GP_OK;
+	return GP_OK;
 }
 
 static void clear_readiness(void)
 {
-    cached_ready = 0;
+	cached_ready = 0;
 }
 
 static int check_readiness(void)
 {
-    if (cached_ready) return 1;
-    if (psa50_ready()) {
-      debug_message("Camera type:  %d\n",camera_data.model);
-      cached_ready = 1;
-      return 1;
-    }
-    gp_camera_status(NULL, "Camera unavailable");
-    return 0;
+	if (cached_ready)
+		return 1;
+
+	if (psa50_ready()) {
+		debug_message("Camera type:  %d\n",camera_data.model);
+		cached_ready = 1;
+		return 1;
+	}
+
+	gp_camera_status(NULL, "Camera unavailable");
+	return 0;
 }
 
 void switch_camera_off(void)
 {
 	gp_camera_status(NULL, "Switching Camera Off");
-        psa50_off();
-        clear_readiness();
+	psa50_off();
+	clear_readiness();
 }
 
 int camera_exit(Camera *camera)
 {
-        CanonDataStruct *cs = (CanonDataStruct*)camera->camlib_data;
-        switch_camera_off();
+	CanonDataStruct *cs = (CanonDataStruct*)camera->camlib_data;
+
 	switch_camera_off();
 
-        free(cs);
-        return GP_OK;
+	free(cs);
+
+	return GP_OK;
 }
 
 int canon_get_batt_status(int *pwr_status, int *pwr_source)
 {
-        if (!check_readiness())
-                return -1;
+	if (!check_readiness())
+		return -1;
 
-        return psa50_get_battery(pwr_status, pwr_source);
+	return psa50_get_battery(pwr_status, pwr_source);
 }
+
 #if 0
 static void canon_set_owner(GtkWidget *win,GtkWidget *owner)
 {
