@@ -26,8 +26,6 @@
 #include <gphoto2-library.h>
 #include <gphoto2-result.h>
 
-#include "web2.h"
-
 #ifdef ENABLE_NLS
 #  include <libintl.h>
 #  undef _
@@ -77,17 +75,17 @@ web2_command(
     return ret;
 }
 
-int
+static int
 web2_init(GPPort *port, GPContext *context) {
     return web2_command(port, 1, WEB2_OPEN_CAMERA, 1, 0, NULL, 0);
 }
 
-int
+static int
 web2_exit(GPPort *port, GPContext *context) {
     return web2_command(port, 1, WEB2_CLOSE_CAMERA, 0, 0, NULL, 0);
 }
 
-int
+static int
 web2_select_picture(GPPort *port, GPContext *context, int picnum) {
     char cmdbuf[2];
 
@@ -99,7 +97,7 @@ web2_select_picture(GPPort *port, GPContext *context, int picnum) {
 
 static const unsigned char ExifHeader[] = {0x45, 0x78, 0x69, 0x66, 0x00, 0x00};
 
-int
+static int
 web2_getexif(GPPort *port, GPContext *context, CameraFile *file)
 {
     int ret, i;
@@ -124,7 +122,7 @@ web2_getexif(GPPort *port, GPContext *context, CameraFile *file)
     return GP_OK;
 }
 
-int
+static int
 web2_getthumb(GPPort *port, GPContext *context, CameraFile *file)
 {
     int ret, i;
@@ -145,7 +143,25 @@ web2_getthumb(GPPort *port, GPContext *context, CameraFile *file)
     return GP_OK;
 }
 
-int
+static int
+web2_get_file_info(GPPort *port, GPContext *context, char *name, int *filesize) {
+    unsigned char cmdbuf[26];
+    int i, hmm, ret;
+    ret = web2_command(port, 0, WEB2_GET_DIRENTRY, 0, 0, cmdbuf, 26);
+
+    /* 0 usually? */
+    hmm = cmdbuf[0]  | (cmdbuf[1] << 8);
+    /* flip filename bytes to be in correct order */
+    for (i=2;i<16;i++)
+	name[i-2] = cmdbuf[i^1];
+    *filesize =	(cmdbuf[18]      ) | (cmdbuf[19] <<  8) | \
+		(cmdbuf[20] << 16) | (cmdbuf[21] << 24);
+    /* 22-25 unused? */
+    return ret;
+}
+
+
+static int
 web2_getpicture(GPPort *port, GPContext *context, CameraFile *file)
 {
     char	xbuf[8192];
@@ -188,7 +204,7 @@ web2_getpicture(GPPort *port, GPContext *context, CameraFile *file)
     return GP_OK;
 }
 
-int
+static int
 web2_get_picture_info(
     GPPort *port, GPContext *context,
     int picnum,
@@ -208,23 +224,6 @@ web2_get_picture_info(
     return GP_OK;
 }
 
-int
-web2_get_file_info(GPPort *port, GPContext *context, char *name, int *filesize) {
-    unsigned char cmdbuf[26];
-    int i, hmm, ret;
-    ret = web2_command(port, 0, WEB2_GET_DIRENTRY, 0, 0, cmdbuf, 26);
-
-    /* 0 usually? */
-    hmm = cmdbuf[0]  | (cmdbuf[1] << 8);
-    /* flip filename bytes to be in correct order */
-    for (i=2;i<16;i++)
-	name[i-2] = cmdbuf[i^1];
-    *filesize =	(cmdbuf[18]      ) | (cmdbuf[19] <<  8) | \
-		(cmdbuf[20] << 16) | (cmdbuf[21] << 24);
-    /* 22-25 unused? */
-    return ret;
-}
-
 /********************** Unknown and/or incomplete ******************/
 
 /* Called after 0xad and 0xb2 , with 0, 1, 2, or similar x values
@@ -232,7 +231,7 @@ web2_get_file_info(GPPort *port, GPContext *context, char *name, int *filesize) 
  * mode?) Not clear. You need to set it correctly before download or delete
  * thought
  */
-int
+static int
 web2_set_xx_mode(GPPort *port, GPContext *context, int mode) {
     char cmdbuf[2];
 
@@ -241,7 +240,7 @@ web2_set_xx_mode(GPPort *port, GPContext *context, int mode) {
     return web2_command(port, 1, 0xae, 0, 0, cmdbuf, 2);
 }
 
-int
+static int
 web2_getnumpics(
     GPPort *port, GPContext *context,
     int *x1, int *numpics, int *x3, int *freemem
@@ -264,7 +263,7 @@ web2_getnumpics(
 /* called with 0x00, 0x20, or 0x40 */
 /* 0x40 is 'delete selected picture' */
 /* the others are unknown */
-int
+static int
 web2_set_picture_attribute(GPPort *port, GPContext *context, int x, int *y) {
     char cmdbuf[2];
     int ret;
@@ -276,8 +275,9 @@ web2_set_picture_attribute(GPPort *port, GPContext *context, int x, int *y) {
     return GP_OK;
 }
 
+#if 0
 /* gets 7 shorts */
-int
+static int
 _cmd_e6(GPPort *port, GPContext *context, short *arr) {
     char cmdbuf[14];
     int i;
@@ -289,8 +289,6 @@ _cmd_e6(GPPort *port, GPContext *context, short *arr) {
 	arr[i] = cmdbuf[2*i+0] | (cmdbuf[2*i+1]<<8);
     return GP_OK;
 }
-
-#if 0
 
 int
 _cmd_d0(GPPort *port, GPContext *context, int flag, short *retval) {

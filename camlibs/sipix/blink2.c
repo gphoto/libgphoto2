@@ -27,8 +27,6 @@
 #include <gphoto2-port-log.h>
 #include <gphoto2-result.h>
 
-#include "blink2.h"
-
 #ifdef ENABLE_NLS
 #  include <libintl.h>
 #  undef _
