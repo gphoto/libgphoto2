@@ -195,7 +195,14 @@ pdc320_size (CameraPort *port, int n)
 		/* Read one byte and check if we can continue */
 		CHECK_RESULT (gp_port_read (port, buf, 1));
 		if (buf[0] != ACK) {
-
+			/*			
+			if (model==PDC640SE) {
+				CHECK_RESULT (gp_port_read (port, buf, buf[0]));
+				CHECK_RESULT (pdc320_init(port));
+			} else if (model==PDC320) {
+			// I have no clue else than to flush the whole buffer
+			}
+			*/
 			/*
 			 * Do we need to dump some bytes here before trying
 			 * again?
@@ -405,5 +412,4 @@ camera_init (Camera *camera)
 
 	return (result);
 }
-
 
