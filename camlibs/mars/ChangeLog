@@ -1,4 +1,9 @@
-2005-01-14  Hubert Figuiere  <hfiguiere@teaser.fr>
+2005-01-17  Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Argus DC-1610/20 do not currently work; commented out.
+
+
+2005-01-14  Theodore Kilgore <kilgota@auburn.edu>
 
 	* library.c: Added Argus DC-1610 and DC-1620.
 
