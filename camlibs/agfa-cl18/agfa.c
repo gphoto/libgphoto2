@@ -122,7 +122,8 @@ static int agfa_file_get (Camera *camera, const char *filename, int thumbnail,
     int buflen,throwaway,result;
 
     gp_debug_printf(GP_DEBUG_LOW, "agfa", "Getting file '%s'...",filename);
-      
+
+    agfa_reset(dev);
         /* Always have to check num photos,
 	 * then pic size no matter what.  Otherwise
 	 * the camera will stop responding 
