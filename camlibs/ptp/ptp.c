@@ -408,7 +408,9 @@ ptp_getobject(PTPParams* params, PTPObjectHandles* objecthandles,
 		free(req);
 		return PTP_ERROR_IO;
 	}
-	ptr=req; req=(PTPReq*)object;
+	{
+	char* obj_tmp=malloc(objectinfo->ObjectCompressedSize+PTP_REQ_HDR_LEN);
+	ptr=req; req=(PTPReq*)obj_tmp;
 	ret=params->read_func((unsigned char *) req,
 		objectinfo->ObjectCompressedSize+PTP_REQ_HDR_LEN,
 		params->data);	
@@ -424,9 +426,80 @@ ptp_getobject(PTPParams* params, PTPObjectHandles* objecthandles,
 		if (ret!=PTP_RC_OK) ret=PTP_ERROR_IO; else
 			 ret=(req->type==PTP_TYPE_DATA)?
 			 req->code:PTP_ERROR_DATA_EXPECTED;
+		free(obj_tmp);
 		req=ptr;
 		free(req);
 		return ret;
+	}
+	memcpy(object, req->data, objectinfo->ObjectCompressedSize);
+	free(obj_tmp);
+	}
+	req=ptr;
+	ret=ptp_getresp(params, req);
+	if ((ret!=PTP_RC_OK) ||
+		(req->type!=PTP_TYPE_RESP) ||
+		(req->code!=PTP_RC_OK)) {
+		ptp_error (params, "ptp_getobject getting resp");
+#ifdef DEBUG
+		ptp_error (params, "GetObject data returned:\nlen=0x%8.8x"
+		"type=0x%4.4x code=0x%4.4x ID=0x%8.8x\n",
+		req->len, req->type, req->code, req->trans_id);
+#endif
+		free(req);
+		return ret;
+	}
+	free(req);
+	}
+	return PTP_RC_OK;
+}
+
+
+short
+ptp_getthumb(PTPParams* params, PTPObjectHandles* objecthandles, 
+			PTPObjectInfo* objectinfo, int n,
+			char* object)
+{
+	short ret;
+	if ((objecthandles==NULL)||(objectinfo==NULL)||((object==NULL)))
+		return PTP_ERROR_BADPARAM;
+
+	{
+	PTPReq* req=malloc(sizeof(PTPReq));
+	PTPReq* ptr;
+	
+	memset(req, 0, PTP_RESP_LEN);
+	*(int *)(req->data)=objecthandles->handler[n];
+	ret=ptp_sendreq(params, req, PTP_OC_GetThumb);
+	if (ret!=PTP_RC_OK) {
+		ptp_error (params, "ptp_getobject sending req");
+		free(req);
+		return PTP_ERROR_IO;
+	}
+	{
+	char* obj_tmp=malloc(objectinfo->ObjectCompressedSize+PTP_REQ_HDR_LEN);
+	ptr=req; req=(PTPReq*)obj_tmp;
+	ret=params->read_func((unsigned char *) req,
+		objectinfo->ObjectCompressedSize+PTP_REQ_HDR_LEN,
+		params->data);	
+	if ((ret!=PTP_RC_OK) ||
+		(req->type!=PTP_TYPE_DATA) ||
+		(req->code!=PTP_OC_GetThumb)) {
+		ptp_error (params, "ptp_getobject getting data");
+#ifdef DEBUG
+		ptp_error (params, "GetObject data returned:\nlen=0x%8.8x"
+		"type=0x%4.4x code=0x%4.4x ID=0x%8.8x\n",
+		req->len, req->type, req->code, req->trans_id);
+#endif
+		if (ret!=PTP_RC_OK) ret=PTP_ERROR_IO; else
+			 ret=(req->type==PTP_TYPE_DATA)?
+			 req->code:PTP_ERROR_DATA_EXPECTED;
+		free(obj_tmp);
+		req=ptr;
+		free(req);
+		return ret;
+	}
+	memcpy(object, req->data, objectinfo->ObjectCompressedSize);
+	free(obj_tmp);
 	}
 	req=ptr;
 	ret=ptp_getresp(params, req);

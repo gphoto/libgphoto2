@@ -132,6 +132,8 @@ translate_gp_result (int result)
 }
 
 #define CPR(camera,result) {short r=(result); if (r!=PTP_RC_OK) {report_result ((camera), r); return (translate_ptp_result (r));}}
+#define CHECK(c,r) {int ret=(r);if(ret<0){log_error(c,ret);return(ret);}}
+
 
 static struct {
 	const char *model;
@@ -218,7 +220,7 @@ camera_abilities (CameraAbilitiesList *list)
 		a.usb_vendor = models[i].usb_vendor;
 		a.usb_product= models[i].usb_product;
 		a.operations        = GP_OPERATION_NONE;
-		a.file_operations   = GP_FILE_OPERATION_NONE;
+		a.file_operations   = GP_FILE_OPERATION_PREVIEW;
 		a.folder_operations = GP_FOLDER_OPERATION_NONE;
 		CR (gp_abilities_list_append (list, a));
 	}
@@ -289,6 +291,8 @@ static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *data)
 {
+// XXX Hacked version works properly for JPG files only!
+// Will be changed in future
 	Camera *camera = data;
 	unsigned char *fdata = NULL;
 	char image_id_string[] = {0, 0, 0, 0, 0};
@@ -296,7 +300,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	PTPObjectInfo ptp_objectinfo;
 
 
-	if (strlen (filename) != 14)
+	if (strlen (filename) != 13)
 		return (GP_ERROR_FILE_NOT_FOUND);
 	if (strcmp (folder, "/"))
 		return (GP_ERROR_DIRECTORY_NOT_FOUND);
@@ -306,22 +310,30 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	strncpy (image_id_string, filename+5,4);
 	image_id = atol (image_id_string);
 
-
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
 		CPR (camera, ptp_getobjectinfo(&camera->pl->params,
 		&camera->pl->params.handles, image_id, &ptp_objectinfo));
-		fdata=malloc(ptp_objectinfo.ObjectCompressedSize+PTP_REQ_HDR_LEN);
+		fdata=malloc(ptp_objectinfo.ObjectCompressedSize);
 		CPR (camera, ptp_getobject(&camera->pl->params,
 		&camera->pl->params.handles, &ptp_objectinfo, image_id, fdata));
 		break;
 
+	case GP_FILE_TYPE_PREVIEW:
+		CPR (camera, ptp_getobjectinfo(&camera->pl->params,
+		&camera->pl->params.handles, image_id, &ptp_objectinfo));
+		fdata=malloc(ptp_objectinfo.ObjectCompressedSize);
+		CPR (camera, ptp_getthumb(&camera->pl->params,
+		&camera->pl->params.handles, &ptp_objectinfo, image_id, fdata));
+		break;
+		
+
 	default:
-		return (GP_ERROR_NOT_SUPPORTED);
+
 	}
 
-	CPR (camera, gp_file_set_data_and_size (file, fdata+PTP_REQ_HDR_LEN, ptp_objectinfo.ObjectCompressedSize));
-	CPR (camera, gp_file_set_mime_type (file, GP_MIME_JPEG));
+	CHECK (camera, gp_file_set_data_and_size (file, fdata, ptp_objectinfo.ObjectCompressedSize));
+	CHECK (camera, gp_file_set_mime_type (file, GP_MIME_JPEG));
 
 	return (GP_OK);
 }

@@ -190,5 +190,8 @@ short ptp_getobjectinfo   (PTPParams *params, PTPObjectHandles* objecthandles,
 short ptp_getobject        (PTPParams *params, PTPObjectHandles* objecthandles,
 			    PTPObjectInfo* objectinfoarray, int n,
 			    char* object);
+short ptp_getthumb         (PTPParams *params, PTPObjectHandles* objecthandles,
+			    PTPObjectInfo* objectinfoarray, int n,
+			    char* object);
 
 #endif /* __PTP_H__ */
