@@ -31,6 +31,8 @@
 #define PDC640_PING  "\x01"
 #define PDC640_SPEED "\x69\x0b"
 
+#define PDC640_FILESPEC "pdc640%04i.ppm"
+
 #define PDC640_MAXTRIES 3
 
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
@@ -107,7 +109,7 @@ pdc640_transmit_pic (CameraPort *port, char cmd, int width, int thumbnail,
 {
 	char cmd1[] = {0x61, cmd};
 	char cmd2[] = {0x15, 0x00, 0x00, 0x00, 0x00};
-	int i, packet_size, result, size;
+	int i, packet_size, result, size, ofs;
 	char *data;
 
 	/* First send the command ... */
@@ -133,6 +135,7 @@ pdc640_transmit_pic (CameraPort *port, char cmd, int width, int thumbnail,
 		return (GP_ERROR_NO_MEMORY);
 
 	/* Now get the packets */
+	ofs = 0;
 	result = GP_OK;
 	for (i = 0; i < buf_size; i += packet_size) {
 		/* Read the packet */
@@ -148,7 +151,9 @@ pdc640_transmit_pic (CameraPort *port, char cmd, int width, int thumbnail,
 		memcpy(buf + i, data, size);
 
 		/* Move to next offset */
-		cmd2[2] += cmd2[4];
+		ofs += cmd2[4];
+		cmd2[2] = ofs & 0xFF;
+		cmd2[1] = (ofs >> 8) & 0xFF;
 	}
 
 	free (data);
@@ -272,6 +277,33 @@ pdc640_picinfo (CameraPort *port, char n,
 	*size_thumb   = buf[25] | (buf[26] << 8) | (buf[27] << 16);
 	*width_thumb  = buf[28] | (buf[29] << 8);
 	*height_thumb  = buf[30] | (buf[31] << 8);
+
+	return (GP_OK);
+}
+
+static int
+pdc640_processtn (int width, int height, char **data, int size) {
+	char *newdata;
+	int y;
+
+	/* Sanity checks */
+	if ((data == NULL) || (size < width * height))
+		return (GP_ERROR_CORRUPTED_DATA);
+
+	/* Allocate a new buffer */
+	newdata = malloc(size);
+	if (!newdata)
+		return (GP_ERROR_NO_MEMORY);
+
+	/* Flip the thumbnail */
+	for (y = 0; y < height; y++) {
+		memcpy(&newdata[(height - y - 1) * width],
+			&((*data)[y * width]), width);
+	}
+
+	/* Set new buffer */
+	free (*data);
+	*data = newdata;
 
 	return (GP_OK);
 }
@@ -432,10 +464,15 @@ pdc640_getpic (CameraPort *port, int n, int thumbnail, int justraw,
 	if (justraw)
 		return(GP_OK);
 
-	/* Image data is delta encoded so decode it */
-	if (!thumbnail)
+	if (thumbnail) {
+		/* Process thumbnail data */
+		CHECK_RESULT (pdc640_processtn (width, height,
+						data, *size));
+	} else {
+		/* Image data is delta encoded so decode it */
 		CHECK_RESULT (pdc640_deltadecode (width, height, 
 						  data, size));
+	}
 
 	gp_debug_printf(GP_DEBUG_LOW, "pdc640", "*** Bayer decode");
 
@@ -466,16 +503,6 @@ pdc640_getpic (CameraPort *port, int n, int thumbnail, int justraw,
 	free (*data);
 	*data = outdata;
 	*size = outsize;
-
-	return (GP_OK);
-}
-
-static int
-pdc640_delallpics (CameraPort *port)
-{
-	char cmd[2] = {0x59, 0x00};
-
-	CHECK_RESULT (pdc640_transmit (port, cmd, 2, NULL, 0));
 
 	return (GP_OK);
 }
@@ -580,15 +607,15 @@ camera_file_get (Camera *camera, const char *folder, const char *filename,
 	return (GP_OK);
 }
 
-#if 0
 static int
 camera_folder_delete_all (Camera *camera, const char *folder)
 {
-	CHECK_RESULT (pdc640_delallpics (camera->port));
+	char cmd[2] = {0x59, 0x00};
+
+	CHECK_RESULT (pdc640_transmit (camera->port, cmd, 2, NULL, 0));
 
 	return (GP_OK);
 }
-#endif
 
 static int
 camera_file_delete (Camera *camera, const char *folder, const char *file)
@@ -633,10 +660,14 @@ camera_capture (Camera *camera, int capture_type, CameraFilePath *path)
 	/* Wait a bit for the camera */
 	sleep(4);
 
-	/* Picture will be the last one */
+	/* Picture will be the last one in the camera */
 	CHECK_RESULT (pdc640_caminfo (camera->port, &num));
 	if (num <= numpic)
 		return (GP_ERROR);
+
+	/* Set the filename */
+        sprintf (path->name, PDC640_FILESPEC, num);
+        strcpy (path->folder, "/");
 
         return (GP_OK);
 }
@@ -650,7 +681,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 	/* Fill the list */
 	CHECK_RESULT (pdc640_caminfo (camera->port, &n));
-	CHECK_RESULT (gp_list_populate (list, "PDC640%04i.ppm", n));
+	CHECK_RESULT (gp_list_populate (list, PDC640_FILESPEC, n));
 
 	return (GP_OK);
 }
@@ -699,6 +730,7 @@ camera_init (Camera *camera)
 
 	camera->functions->file_get   = camera_file_get;
 	camera->functions->file_delete = camera_file_delete;
+	camera->functions->folder_delete_all = camera_folder_delete_all;
 	camera->functions->about      = camera_about;
 	camera->functions->capture      = camera_capture;
 
