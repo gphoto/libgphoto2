@@ -337,7 +337,7 @@ int camera_about (Camera *camera, CameraText *about)
 	return (GP_OK);
 }
 
-char* camera_result_as_string (Camera *camera, int result)
+const char* camera_result_as_string (Camera *camera, int result)
 {
 	if (result >= 0) return (_("This is not an error..."));
 	if (-result < 100) return gp_result_as_string (result);
@@ -355,6 +355,7 @@ int camera_init (Camera *camera)
         dd = (DC3200Data*)malloc(sizeof(DC3200Data));
         if (!dd)
                 return (GP_ERROR);
+	dd->camera = camera;
 
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;

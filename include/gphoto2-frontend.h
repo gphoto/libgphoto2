@@ -32,18 +32,14 @@ typedef enum {
 	GP_CONFIRM_NOTOALL
 } CameraConfirmValue;
 
-typedef int (* CameraStatus)             (Camera *, char *);
 typedef int (* CameraMessage)            (Camera *, char *);
 typedef int (* CameraConfirm)            (Camera *, char *);
-typedef int (* CameraProgress)           (Camera *, CameraFile *, float);
 
-int  gp_frontend_register (CameraStatus status, CameraProgress progress,
+int  gp_frontend_register (void *dummy1, void *dummy2,
 			   CameraMessage message, CameraConfirm confirm,
-			   void *dummy);
+			   void *dummy3);
 
-int gp_frontend_status   (Camera *camera, char *status);
 int gp_frontend_message  (Camera *camera, char *message);
 int gp_frontend_confirm  (Camera *camera, char *message);
-int gp_frontend_progress (Camera *camera, CameraFile *file, float percentage);
 
 #endif /* __GPHOTO2_FRONTEND_H__ */

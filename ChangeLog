@@ -1,5 +1,12 @@
 2001-10-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* include/gphoto2-frontend.h
+	* libgphoto2/frontend.c
+	* camlibs: gp_frontend_progress -> gp_camera_progress,
+	gp_frontend_status -> gp_camera_status
+
+2001-10-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2/camera.c: Correctly initialize on gp_camera_new
 	* frontends/command-line: Use the new gp_camera_[status,progress]
 

@@ -538,15 +538,12 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 	CHECK (gp_file_set_name(file, filename));
 	CHECK (gp_file_set_mime_type(file, GP_MIME_JPEG));
 
-        gp_frontend_progress(camera, file, 0.00);
-
         blocks = (size - 1)/DSC_BLOCKSIZE + 1;
 
         for (i = 0; i < blocks; i++) {
 		CHECK (dsc2_readimageblock(camera, i, NULL));
                 CHECK (gp_file_append(file, &dsc->buf[4], DSC_BLOCKSIZE));
-                gp_frontend_progress(camera, file, 
-				      (float)(i+1)/(float)blocks*100.0);
+                gp_camera_progress(camera, (float)(i+1)/(float)blocks*100.0);
         }
 
         return GP_OK;
@@ -580,8 +577,6 @@ int camera_folder_put_file (Camera *camera, const char *folder, CameraFile *file
 
 	if ((result = dsc2_setimagesize(camera, size)) != GP_OK) return result;
 
-        gp_frontend_progress(camera, file, 0.00);
-
         blocks = (size - 1)/DSC_BLOCKSIZE + 1;
 
         for (i = 0; i < blocks; i++) {
@@ -593,8 +588,7 @@ int camera_folder_put_file (Camera *camera, const char *folder, CameraFile *file
 					       blocksize);
 		if (result != GP_OK)
 			return result;
-                gp_frontend_progress(camera, file, 
-				      (float)(i+1)/(float)blocks*100.0);
+                gp_camera_progress(camera, (float)(i+1)/(float)blocks*100.0);
         }
 
         return GP_OK;

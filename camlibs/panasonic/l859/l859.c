@@ -549,8 +549,6 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 	if (size < 0)
 		return (size);
 
-	gp_frontend_progress (camera, file, 0.00);
-
 	for (i = 0, s = 0; s < size; i++) {
 
 		if (l859_sendcmd(dsc, L859_CMD_ACK) != GP_OK)
@@ -565,8 +563,7 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 		l859_debug("Packet Size: %i Data Size: %i", bufIndex - 3, s);
 		gp_file_append (file, buffer, bufIndex - 3);
 
-		gp_frontend_progress (camera, file,
-				(float)(s)/(float)size*100.0);
+		gp_camera_progress (camera, (float)(s)/(float)size*100.0);
 	}
 
 	gp_file_set_name (file, filename);

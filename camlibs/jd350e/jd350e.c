@@ -197,7 +197,7 @@ int camera_about (Camera *camera, CameraText *about)
 	return (GP_OK);
 }
 
-char* camera_result_as_string (Camera *camera, int result) 
+const char* camera_result_as_string (Camera *camera, int result) 
 {
 	if (result >= 0) return ("This is not an error...");
 	if (-result < 100) return gp_result_as_string (result);

@@ -271,6 +271,7 @@ int camera_init (Camera *camera) {
         dd = (DC120Data*)malloc(sizeof(DC120Data));
         if (!dd)
                 return (GP_ERROR);
+	dd->camera = camera;
 
         /* First, set up all the function pointers */
         camera->functions->exit         = camera_exit;
@@ -329,7 +330,6 @@ int camera_init (Camera *camera) {
         }
 
         /* Everything went OK. Save the data*/
-        gp_filesystem_new(&dd->fs);
         camera->camlib_data = dd;
 
         return (GP_OK);

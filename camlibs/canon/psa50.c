@@ -465,12 +465,12 @@ static unsigned char *psa50_recv_msg(Camera *camera, unsigned char mtype,
                         if(frag[MSG_MTYPE] =='\x01' && frag[MSG_DIR] == '\x00' &&
                            memcmp(frag+12,"\x30\x00\x00\x30",4)) {
                                 gp_debug_printf(GP_DEBUG_LOW,"canon","ERROR: Battery exhausted, camera off");
-                                gp_frontend_status(camera, _("Battery exhausted, camera off."));
+                                gp_camera_status(camera, _("Battery exhausted, camera off."));
                                 receive_error=ERROR_LOWBATT;
                         }
                         else {
                                 gp_debug_printf(GP_DEBUG_LOW,"canon","ERROR: unexpected message.\n");
-                                gp_frontend_status(camera, _("ERROR: unexpected message"));
+                                gp_camera_status(camera, _("ERROR: unexpected message"));
                         }
                         return NULL;
                 }
@@ -481,7 +481,7 @@ static unsigned char *psa50_recv_msg(Camera *camera, unsigned char mtype,
                 if (receive_error == NOERROR) {
                         if (msg_pos+len > length) {
                                 gp_debug_printf(GP_DEBUG_LOW,"canon","ERROR: message overrun\n");
-                                gp_frontend_status(camera, _("ERROR: message overrun"));
+                                gp_camera_status(camera, _("ERROR: message overrun"));
                                 return NULL;
                         }
                         if (msg_pos+len > msg_size || !msg) {
@@ -507,13 +507,13 @@ static unsigned char *psa50_recv_msg(Camera *camera, unsigned char mtype,
                         } else {
                                 if (seq == seq_rx)  break;
                                 gp_debug_printf(GP_DEBUG_LOW,"canon","ERROR: out of sequence\n");
-                                gp_frontend_status(camera, _("ERROR: out of sequence."));
+                                gp_camera_status(camera, _("ERROR: out of sequence."));
                                 return NULL;
                         }
                 }
                 if (type != PKT_MSG && receive_error == NOERROR) {
             gp_debug_printf(GP_DEBUG_LOW,"canon","ERROR: unexpected packet type\n");
-            gp_frontend_status(camera, _("ERROR: unexpected packet type."));
+            gp_camera_status(camera, _("ERROR: unexpected packet type."));
             return NULL;
         }
                 if (type == PKT_EOT && receive_error == ERROR_RECEIVED) {
@@ -524,7 +524,7 @@ static unsigned char *psa50_recv_msg(Camera *camera, unsigned char mtype,
                         length = frag[MSG_LEN_LSB] | (frag[MSG_LEN_MSB] << 8);
                         if (len < MSG_HDR_LEN || frag[MSG_02] != 2) {
                                 gp_debug_printf(GP_DEBUG_LOW,"canon","ERROR: message format error\n");
-                                gp_frontend_status(camera, _("ERROR: message format error."));
+                                gp_camera_status(camera, _("ERROR: message format error."));
                                 return NULL;
                         }
 
@@ -532,12 +532,12 @@ static unsigned char *psa50_recv_msg(Camera *camera, unsigned char mtype,
                                 if(frag[MSG_MTYPE] =='\x01' && frag[MSG_DIR] == '\x00' &&
                                    memcmp(frag+12,"\x30\x00\x00\x30",4)) {
                                         gp_debug_printf(GP_DEBUG_LOW,"canon","ERROR: Battery exhausted, camera off");
-                                        gp_frontend_status(camera, _("Battery exhausted, camera off."));
+                                        gp_camera_status(camera, _("Battery exhausted, camera off."));
                                         receive_error=ERROR_LOWBATT;
                                 }
                                 else {
                                         gp_debug_printf(GP_DEBUG_LOW,"canon","ERROR: unexpected message2\n");
-                                        gp_frontend_status(camera, _("ERROR: unexpected message2."));
+                                        gp_camera_status(camera, _("ERROR: unexpected message2."));
                                 }
                                 return NULL;
                         }
@@ -995,7 +995,7 @@ int psa50_set_owner_name(Camera *camera, const char *name)
 
         if (strlen(name) > 30) {
                 gp_debug_printf(GP_DEBUG_LOW,"canon","Name too long (%i chars), could not store it !", strlen(name));
-                gp_frontend_status(camera, _("Name too long, could not store it!"));
+                gp_camera_status(camera, _("Name too long, could not store it!"));
                 return 0;
         }
         gp_debug_printf(GP_DEBUG_LOW,"canon","New owner: %s\n",name);
@@ -1120,25 +1120,25 @@ int psa50_ready(Camera *camera)
     	return 0;
     }
     if (!strcmp("Canon PowerShot S20",cs->ident)) {
-      gp_frontend_status(camera, "Detected a Powershot S20");
+      gp_camera_status(camera, "Detected a Powershot S20");
       cs->model = CANON_PS_S20;
       A5 = 0;
       return 1;
     }
     else if (!strcmp("Canon PowerShot S10",cs->ident)) {
-      gp_frontend_status(camera, "Detected a Powershot S10");
+      gp_camera_status(camera, "Detected a Powershot S10");
       cs->model = CANON_PS_S10;
       A5 = 0;
       return 1;
     }
     else if (!strcmp("Canon PowerShot G1",cs->ident)) {
-      gp_frontend_status(camera, "Detected a Powershot G1");
+      gp_camera_status(camera, "Detected a Powershot G1");
       cs->model = CANON_PS_G1;
       A5 = 0;
       return 1;
     }
     else if (!strcmp("Canon PowerShot G2",cs->ident)) {
-      gp_frontend_status(camera, "Detected a Powershot G2");
+      gp_camera_status(camera, "Detected a Powershot G2");
       cs->model = CANON_PS_G2;
       A5 = 0;
       return 1;
@@ -1148,7 +1148,7 @@ int psa50_ready(Camera *camera)
 	     || (!strcmp("Canon PowerShot S110",cs->ident))
 	     || (!strcmp("Canon PowerShot S100",cs->ident)) 
 	     || (!strcmp("Canon DIGITAL IXUS v",cs->ident))) {
-      gp_frontend_status(camera, "Detected a Digital IXUS series / IXY DIGITAL / Powershot S100 series");
+      gp_camera_status(camera, "Detected a Digital IXUS series / IXY DIGITAL / Powershot S100 series");
       cs->model = CANON_PS_S100;
       A5=0;
       return 1;
@@ -1156,31 +1156,31 @@ int psa50_ready(Camera *camera)
     else if ((!strcmp("Canon DIGITAL IXUS 300",cs->ident))
 	     || (!strcmp("Canon IXY DIGITAL 300",cs->ident))
 	     || (!strcmp("Canon PowerShot S300",cs->ident))) {
-      gp_frontend_status(camera, "Detected a Digital IXUS 300 / IXY DIGITAL 300 / Powershot S300");
+      gp_camera_status(camera, "Detected a Digital IXUS 300 / IXY DIGITAL 300 / Powershot S300");
       cs->model = CANON_PS_S300;
       A5=0;
       return 1;
     }
     else if (!strcmp("Canon PowerShot A10",cs->ident)) {
-      gp_frontend_status(camera, "Detected a Powershot A10");
+      gp_camera_status(camera, "Detected a Powershot A10");
       cs->model = CANON_PS_A10;
       A5 = 0;
       return 1;
     }
     else if (!strcmp("Canon PowerShot A20",cs->ident)) {
-      gp_frontend_status(camera, "Detected a Powershot A20");
+      gp_camera_status(camera, "Detected a Powershot A20");
       cs->model = CANON_PS_A20;
       A5 = 0;
       return 1;
     }
     else if (!strcmp("Canon EOS D30",cs->ident)) {
-      gp_frontend_status(camera, "Detected a EOS D30");
+      gp_camera_status(camera, "Detected a EOS D30");
       cs->model = CANON_EOS_D30;
       A5 = 0;
       return 1;
     }
     else if (!strcmp("Canon PowerShot Pro90 IS",cs->ident)) {
-      gp_frontend_status(camera, "Detected a PowerShot Pro90 IS");
+      gp_camera_status(camera, "Detected a PowerShot Pro90 IS");
       cs->model = CANON_PS_PRO90_IS;
       A5 = 0;
       return 1;
@@ -1215,7 +1215,7 @@ int psa50_ready(Camera *camera)
 	speed=cs->speed;
 	if (speed!=9600) {
 	  if(!canon_serial_change_speed(camera->port, speed)) {
-	    gp_frontend_status(camera, _("Error changing speed."));
+	    gp_camera_status(camera, _("Error changing speed."));
 	    gp_debug_printf(GP_DEBUG_LOW,"canon","speed changed.\n");
 	  }
 	}
@@ -1223,7 +1223,7 @@ int psa50_ready(Camera *camera)
 	  return 0;
 	good_ack=psa50_wait_for_ack(camera);
 	if (good_ack==0) {
-	  gp_frontend_status(camera, _("Resetting protocol..."));
+	  gp_camera_status(camera, _("Resetting protocol..."));
 	  psa50_off(camera);
 	  sleep(3); /* The camera takes a while to switch off */
 	  return psa50_ready(camera);
@@ -1232,7 +1232,7 @@ int psa50_ready(Camera *camera)
 	  gp_debug_printf(GP_DEBUG_LOW,"canon","Received a NACK !\n");
 	  return 0;
 	}
-	gp_frontend_status(camera, _("Camera OK.\n"));
+	gp_camera_status(camera, _("Camera OK.\n"));
 	return 1;
       }
       if (good_ack==-1) {
@@ -1245,8 +1245,8 @@ int psa50_ready(Camera *camera)
     
     /* Camera was off... */
     
-    gp_frontend_status(camera, _("Looking for camera ..."));
-    gp_frontend_progress(camera, NULL, 0);
+    gp_camera_status(camera, _("Looking for camera ..."));
+    gp_camera_progress(camera, 0);
     if(receive_error==FATAL_ERROR) {
       /* we try to recover from an error
 	 we go back to 9600bps */
@@ -1257,24 +1257,24 @@ int psa50_ready(Camera *camera)
       receive_error=NOERROR;
     }
     for (try = 1; try < MAX_TRIES; try++) {
-      gp_frontend_progress(camera, NULL, (try/(float) MAX_TRIES)*100);
+      gp_camera_progress(camera, (try/(float) MAX_TRIES)*100);
       if (canon_serial_send(camera,"\x55\x55\x55\x55\x55\x55\x55\x55",8,USLEEP1) < 0) {
-	gp_frontend_status(camera, _("Communication error 1"));
+	gp_camera_status(camera, _("Communication error 1"));
 	return 0;
       }
       pkt = psa50_recv_frame(camera, &len);
       if (pkt) break;
     }
     if (try == MAX_TRIES) {
-      gp_frontend_status(camera, _("No response from camera"));
+      gp_camera_status(camera, _("No response from camera"));
       return 0;
     }
     if (!pkt) {
-      gp_frontend_status(camera, _("No response from camera"));
+      gp_camera_status(camera, _("No response from camera"));
       return 0;
     }
     if (len < 40 && strncmp(pkt+26,"Canon",5)) {
-      gp_frontend_status(camera, _("Unrecognized response"));
+      gp_camera_status(camera, _("Unrecognized response"));
       return 0;
     }
     strcpy(psa50_id,pkt+26); /* @@@ check size */
@@ -1284,50 +1284,50 @@ int psa50_ready(Camera *camera)
     cs->first_init=0;
     
     if (!strcmp("DE300 Canon Inc.",psa50_id)) {
-      gp_frontend_status(camera, "Powershot A5");
+      gp_camera_status(camera, "Powershot A5");
       cs->model = CANON_PS_A5;
       if (cs->speed>57600) cs->slow_send = 1;
       A5 = 1;
     } else if (!strcmp("Canon PowerShot A5 Zoom",psa50_id)) {
-      gp_frontend_status(camera, "Powershot A5 Zoom");
+      gp_camera_status(camera, "Powershot A5 Zoom");
       cs->model = CANON_PS_A5_ZOOM;
       if (cs->speed>57600) cs->slow_send = 1;
       A5 = 1;
     } else if (!strcmp("Canon PowerShot A50",psa50_id)) {
-      gp_frontend_status(camera, "Detected a Powershot A50");
+      gp_camera_status(camera, "Detected a Powershot A50");
       cs->model = CANON_PS_A50;
       if (cs->speed>57600) cs->slow_send = 1;
       A5 = 0;
     } else if (!strcmp("Canon PowerShot S20",psa50_id)) {
-      gp_frontend_status(camera, "Detected a Powershot S20");
+      gp_camera_status(camera, "Detected a Powershot S20");
       cs->model = CANON_PS_S20;
       A5 = 0;
     } else if (!strcmp("Canon PowerShot G1",psa50_id)) {
-      gp_frontend_status(camera, "Detected a Powershot G1");
+      gp_camera_status(camera, "Detected a Powershot G1");
       cs->model = CANON_PS_G1;
       A5 = 0;
     } else if (!strcmp("Canon PowerShot G2",psa50_id)) {
-      gp_frontend_status(camera, "Detected a Powershot G2");
+      gp_camera_status(camera, "Detected a Powershot G2");
       cs->model = CANON_PS_G2;
       A5 = 0;
     } else if (!strcmp("Canon PowerShot A10",psa50_id)) {
-      gp_frontend_status(camera, "Detected a Powershot A10");
+      gp_camera_status(camera, "Detected a Powershot A10");
       cs->model = CANON_PS_A10;
       A5 = 0;
     } else if (!strcmp("Canon PowerShot A20",psa50_id)) {
-      gp_frontend_status(camera, "Detected a Powershot A20");
+      gp_camera_status(camera, "Detected a Powershot A20");
       cs->model = CANON_PS_A20;
       A5 = 0;
     } else if (!strcmp("Canon EOS D30",psa50_id)) {
-      gp_frontend_status(camera, "Detected a EOS D30");
+      gp_camera_status(camera, "Detected a EOS D30");
       cs->model = CANON_EOS_D30;
       A5 = 0;
     } else if (!strcmp("Canon PowerShot Pro90 IS",psa50_id)) {
-      gp_frontend_status(camera, "Detected a Powershot Pro90 IS");
+      gp_camera_status(camera, "Detected a Powershot Pro90 IS");
       cs->model = CANON_PS_PRO90_IS;
       A5 = 0;
     } else if (!strcmp("Canon PowerShot Pro70",psa50_id)) {
-      gp_frontend_status(camera, "Detected a Powershot Pro70");
+      gp_camera_status(camera, "Detected a Powershot Pro70");
       cs->model = CANON_PS_A70;
       A5=0;
     } else if ((!strcmp("Canon DIGITAL IXUS",psa50_id))
@@ -1335,18 +1335,18 @@ int psa50_ready(Camera *camera)
 	       || (!strcmp("Canon PowerShot S100",psa50_id))
 	       || (!strcmp("Canon DIGITAL IXUS v",psa50_id)))
       {
-	gp_frontend_status(camera, "Detected a Digital IXUS series / IXY DIGITAL / Powershot S100 series");
+	gp_camera_status(camera, "Detected a Digital IXUS series / IXY DIGITAL / Powershot S100 series");
 	cs->model = CANON_PS_S100;
 	A5=0;
     } else if ((!strcmp("Canon DIGITAL IXUS 300",psa50_id))
 	       || (!strcmp("Canon IXY DIGITAL 300",psa50_id))
 	       || (!strcmp("Canon PowerShot S300",psa50_id)))
       {
-	gp_frontend_status(camera, "Detected a Digital IXUS 300 / IXY DIGITAL 300 / Powershot S300");
+	gp_camera_status(camera, "Detected a Digital IXUS 300 / IXY DIGITAL 300 / Powershot S300");
 	cs->model = CANON_PS_S300;
 	A5=0;
       } else {
-	gp_frontend_status(camera, "Detected a Powershot S10");
+	gp_camera_status(camera, "Detected a Powershot S10");
 	cs->model = CANON_PS_S10;
 	A5 = 0;
       }
@@ -1357,13 +1357,13 @@ int psa50_ready(Camera *camera)
     serial_set_timeout(camera->port,5000);
     (void) psa50_recv_packet(camera, &type,&seq,NULL);
     if (type != PKT_EOT || seq) {
-      gp_frontend_status(camera, _("Bad EOT"));
+      gp_camera_status(camera, _("Bad EOT"));
       return 0;
     }
     seq_tx = 0;
     seq_rx = 1;
     if (!psa50_send_frame(camera,"\x00\x05\x00\x00\x00\x00\xdb\xd1",8)) {
-      gp_frontend_status(camera, _("Communication error 2"));
+      gp_camera_status(camera, _("Communication error 2"));
       return 0;
     }
     res=0;
@@ -1376,15 +1376,15 @@ int psa50_ready(Camera *camera)
     }
     
     if( !res || !psa50_send_frame(camera,"\x00\x04\x01\x00\x00\x00\x24\xc6",8)) {
-      gp_frontend_status(camera, _("Communication error 3"));
+      gp_camera_status(camera, _("Communication error 3"));
       return 0;
     }
     speed=cs->speed;
-    gp_frontend_status(camera, _("Changing speed... wait..."));
+    gp_camera_status(camera, _("Changing speed... wait..."));
     if (!psa50_wait_for_ack(camera)) return 0;
     if (speed!=9600) {
       if(!canon_serial_change_speed(camera->port,speed)) {
-	gp_frontend_status(camera, _("Error changing speed"));
+	gp_camera_status(camera, _("Error changing speed"));
 	gp_debug_printf(GP_DEBUG_LOW,"canon","ERROR: Error changing speed");
       }
       else {
@@ -1395,16 +1395,16 @@ int psa50_ready(Camera *camera)
     for (try=1; try < MAX_TRIES; try++) {
       psa50_send_packet(camera, PKT_EOT,seq_tx,psa50_eot+PKT_HDR_LEN,0);
       if (!psa50_wait_for_ack(camera)) {
-	gp_frontend_status(camera, _("Error waiting ACK during initialization retrying"));
+	gp_camera_status(camera, _("Error waiting ACK during initialization retrying"));
       } else
 	break;
     }
   }
   if (try==MAX_TRIES) {
-    gp_frontend_status(camera, _("Error waiting ACK during initialization"));
+    gp_camera_status(camera, _("Error waiting ACK during initialization"));
     return 0;
   }
-  gp_frontend_status(camera, _("Connected to camera"));
+  gp_camera_status(camera, _("Connected to camera"));
   /* Now is a good time to ask the camera for its owner
    * name (and Model String as well)  */
   psa50_get_owner_name(camera);
@@ -1614,7 +1614,7 @@ unsigned char *psa50_get_file_serial(Camera *camera, const char *name,int *lengt
     unsigned int total = 0,expect = 0,size;
     int len,maxfilesize;
 
-    gp_frontend_progress(camera, NULL, 0);
+    gp_camera_progress(camera, 0);
     if(receive_error==FATAL_ERROR) {
       gp_debug_printf(GP_DEBUG_LOW,"canon","ERROR: can't continue a fatal error condition detected\n");
       return NULL;
@@ -1659,7 +1659,7 @@ unsigned char *psa50_get_file_serial(Camera *camera, const char *name,int *lengt
         }
         memcpy(file+expect,msg+20,size);
         expect += size;
-        gp_frontend_progress(camera, NULL, total ? (expect/(float) total)*100 : 100);
+        gp_camera_progress(camera, total ? (expect/(float) total)*100 : 100);
         if ((expect == total) != get_int(msg+16)) {
             gp_debug_printf(GP_DEBUG_LOW,"canon","ERROR: end mark != end of data\n");
             break;
@@ -1685,7 +1685,7 @@ unsigned char *psa50_get_file_usb(Camera *camera, const char *name,int *length)
   gp_debug_printf(GP_DEBUG_LOW,"canon","psa50_get_file_usb() called for file '%s'", name);
   memset(msg, 0, sizeof(msg));
   
-  gp_frontend_progress(camera, NULL, 0);
+  gp_camera_progress(camera, 0);
   if(receive_error==FATAL_ERROR) {
     gp_debug_printf(GP_DEBUG_LOW,"canon","ERROR: can't continue a fatal error condition detected\n");
     return NULL;
@@ -1747,7 +1747,7 @@ unsigned char *psa50_get_file_usb(Camera *camera, const char *name,int *length)
     
     expect += size;
     
-    gp_frontend_progress(camera, NULL, total ? (expect/(float) total)*100 : 100);
+    gp_camera_progress(camera, total ? (expect/(float) total)*100 : 100);
     if (expect == total) return file;
     
     if ((total-expect) < size)
@@ -1797,7 +1797,7 @@ unsigned char *psa50_get_thumbnail(Camera *camera, const char *name,int *length)
     int i,j,in;
     unsigned char *thumb;
 
-    gp_frontend_progress(camera, NULL, 0);
+    gp_camera_progress(camera, 0);
     if(receive_error==FATAL_ERROR) {
                 gp_debug_printf(GP_DEBUG_LOW,"canon","ERROR: can't continue a fatal error condition detected\n");
                 return NULL;
@@ -1870,7 +1870,7 @@ unsigned char *psa50_get_thumbnail(Camera *camera, const char *name,int *length)
                         }
                         memcpy(file+expect,msg+20,size);
                         expect += size;
-                        gp_frontend_progress(camera, NULL, total ? (expect/(float) total)*100 : 100);
+                        gp_camera_progress(camera, total ? (expect/(float) total)*100 : 100);
                         if ((expect == total) != get_int(msg+16)) {
                                 gp_debug_printf(GP_DEBUG_LOW,"canon","ERROR: end mark != end of data\n");
                                 return NULL;
@@ -2048,7 +2048,7 @@ int psa50_put_file_serial(Camera *camera, CameraFile *file, char *destname, char
 
         hdr_len = HDR_FIXED_LEN + strlen(name) + strlen(destpath);
 
-        gp_frontend_progress(camera, NULL, 0);
+        gp_camera_progress(camera, 0);
 	gp_file_get_data_and_size (file, &data, &size);
 
         while(sent<size) {
@@ -2082,7 +2082,7 @@ int psa50_put_file_serial(Camera *camera, CameraFile *file, char *destname, char
                 return GP_ERROR;
         }
                 sent += block_len;
-                gp_frontend_progress(camera, NULL, size ? (sent/(float) size)*100 : 100);
+                gp_camera_progress(camera, size ? (sent/(float) size)*100 : 100);
         }
         cs->uploading = 0;
     return GP_OK;

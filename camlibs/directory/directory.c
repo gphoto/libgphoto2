@@ -114,7 +114,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	GP_SYSTEM_DIR dir;
 	GP_SYSTEM_DIRENT de;
 	char buf[1024], f[1024];
-	char *dirname;
+	const char *dirname;
 	int view_hidden=1;
 
 	if (gp_setting_get ("directory", "hidden", buf) == GP_OK)

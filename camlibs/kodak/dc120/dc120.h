@@ -98,6 +98,7 @@
 
 typedef struct {
 	gp_port *dev;
+	Camera *camera;
 	CameraFilesystem *fs;
 	/* anything else? :P */
 } DC120Data;

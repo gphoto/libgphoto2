@@ -23,39 +23,18 @@
 #include "gphoto2-result.h"
 
 /* Front-end function pointers */
-CameraStatus   gp_fe_status   = NULL;
-CameraProgress gp_fe_progress = NULL;
 CameraMessage  gp_fe_message  = NULL;
 CameraConfirm  gp_fe_confirm  = NULL;
 
 int
-gp_frontend_register (CameraStatus status, CameraProgress progress,
+gp_frontend_register (void *dummy1, void *dummy2,
 		      CameraMessage message, CameraConfirm confirm,
-		      void *dummy)
+		      void *dummy3)
 {
-	gp_fe_status   = status;
-	gp_fe_progress = progress;
 	gp_fe_message  = message;
 	gp_fe_confirm  = confirm;
 
 	return (GP_OK);
-}
-
-int
-gp_frontend_status (Camera *camera, char *status)
-{
-	if (gp_fe_status)
-		gp_fe_status(camera, status);
-        return(GP_OK);
-}
-
-int
-gp_frontend_progress (Camera *camera, CameraFile *file, float percentage)
-{
-	if (gp_fe_progress)
-		gp_fe_progress(camera, file, percentage);
-
-        return(GP_OK);
 }
 
 int

@@ -210,7 +210,7 @@ printf("digita: getting %s%s\n", folder, filename);
         }
         memset(data, 0, buflen);
 
-        gp_frontend_progress(NULL, NULL, 0.00);
+        gp_camera_progress(camera, 0.00);
 
         if (digita_get_file_data(dev, thumbnail, &fn, &tag, data) < 0) {
                 printf("digita_get_picture: digita_get_file_data failed\n");
@@ -230,7 +230,7 @@ printf("digita: getting %s%s\n", folder, filename);
         len = ntohl(tag.filesize);
         pos = ntohl(tag.length);
         while (pos < len) {
-                gp_frontend_progress(NULL, NULL, (float)pos / (float)len);
+                gp_camera_progress(camera, (float)pos / (float)len);
 
                 tag.offset = htonl(pos);
                 if ((len - pos) > GFD_BUFSIZE)
@@ -245,7 +245,7 @@ printf("digita: getting %s%s\n", folder, filename);
                 pos += ntohl(tag.length);
         }
 
-        gp_frontend_progress(NULL, NULL, 1.00);
+        gp_camera_progress(camera, 1.00);
 
         if (size)
                 *size = buflen;

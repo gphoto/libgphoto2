@@ -142,8 +142,6 @@ static int agfa_file_get (Camera *camera, const char *filename, int thumbnail,
    
     memset(*data, 0, buflen);
  
-    gp_frontend_progress(NULL, NULL, 0.00);
-
     if (thumbnail) {
        result=agfa_get_thumb(dev, filename, *data, buflen);
        if (result < 0) {
@@ -160,8 +158,6 @@ static int agfa_file_get (Camera *camera, const char *filename, int thumbnail,
           return result;
        }
     }
-    gp_frontend_progress(NULL, NULL, 1.00);
-
     if (size)
        *size = buflen;
 

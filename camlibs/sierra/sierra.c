@@ -1211,7 +1211,7 @@ camera_about (Camera *camera, CameraText *about)
  *
  * Returns: a string
  */
-static char *
+static const char *
 camera_result_as_string(Camera *camera, int result)
 {
 	/* Do we have an error description? */

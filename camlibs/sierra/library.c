@@ -729,10 +729,6 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 	packet[5] = reg;
 	CHECK (sierra_write_packet (camera, packet));
 
-	/* Progress initialisation */
-	if (file && do_percent)
-		gp_frontend_progress (camera, file, 0.0);
-
 	/* Read all the data packets */
 	x = 0; done = 0;
 	while (!done) {
@@ -752,8 +748,8 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 		if (file) {
 			CHECK (gp_file_append (file, &packet[4], packlength));
 			if (do_percent)
-				gp_frontend_progress (camera, file, 
-						      (float)(100.0*(float)(x+packlength)/(float)(l)));
+				gp_camera_progress (camera,
+					(float)(100.0*(float)(x+packlength)/(float)(l)));
 		}
 
 		x += packlength;

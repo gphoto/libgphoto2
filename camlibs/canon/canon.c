@@ -173,7 +173,7 @@ static int check_readiness(Camera *camera)
 		cs->cached_ready = 1;
 		return 1;
     }
-    gp_frontend_status(NULL, _("Camera unavailable"));
+    gp_camera_status(camera, _("Camera unavailable"));
     return 0;
 }
 
@@ -182,7 +182,7 @@ static void switch_camera_off(Camera *camera)
 	gp_debug_printf(GP_DEBUG_LOW,"canon","switch_camera_off()");
 
 	
-	gp_frontend_status(NULL, _("Switching Camera Off"));
+	gp_camera_status(camera, _("Switching Camera Off"));
 
 	psa50_off(camera);
 	clear_readiness(camera);
@@ -276,13 +276,13 @@ static int update_disk_cache(Camera *camera)
 	if (!check_readiness(camera)) return 0;
 	disk = psa50_get_disk(camera);
 	if (!disk) {
-		gp_frontend_status(NULL, _("No response"));
+		gp_camera_status(camera, _("No response"));
 		return 0;
 	}
 	strcpy(cs->cached_drive,disk);
 	sprintf(root,"%s\\",disk);
 	if (!psa50_disk_info(camera, root,&cs->cached_capacity,&cs->cached_available)) {
-		gp_frontend_status(NULL, _("No response"));
+		gp_camera_status(camera, _("No response"));
 		return 0;
 	}
 	cs->cached_disk = 1;
@@ -535,7 +535,7 @@ static int canon_file_list (Camera *camera, const char *folder,
   gp_debug_printf(GP_DEBUG_LOW,"canon","canon_file_list()");
   
   if(!update_dir_cache(camera)) {
-    gp_frontend_status(NULL, _("Could not obtain directory listing"));
+    gp_camera_status(camera, _("Could not obtain directory listing"));
     return GP_ERROR;
   }
   
@@ -592,11 +592,11 @@ static char *canon_get_picture (Camera *camera, char *filename,
 		}
 		memset(image,0,sizeof(*image));
 		if (!picture_number || picture_number > cached_images) {
-			gp_frontend_status(NULL, _("Invalid index"));
+			gp_camera_status(camera, _("Invalid index"));
 			free(image);
 			return NULL;
 		}
-		gp_frontend_status(NULL, cached_paths[picture_number]);
+		gp_camera_status(camera, cached_paths[picture_number]);
 		if (!check_readiness(camera)) {
 			free(image);
 			return NULL;
@@ -611,7 +611,7 @@ static char *canon_get_picture (Camera *camera, char *filename,
 		/* For A50 or others */
 		/* clear_readiness(); */
 		if (!update_dir_cache(camera)) {
-			gp_frontend_status(NULL, _("Could not obtain directory listing"));
+			gp_camera_status(camera, _("Could not obtain directory listing"));
 			return 0;
 		}
 		image = malloc(sizeof(*image));
@@ -740,7 +740,7 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 
 	/* update file cache (if necessary) first */
 	if(!update_dir_cache(camera)) {
-		gp_frontend_status(NULL, _("Could not obtain directory listing"));
+		gp_camera_status(camera, _("Could not obtain directory listing"));
 		return GP_ERROR;
 	}
 	
@@ -945,7 +945,7 @@ int camera_file_delete (Camera *camera, const char *folder,
         cs->model == CANON_PS_A5_ZOOM)) { /* Tested only on powershot A50 */
 
         if (!update_dir_cache(camera)) {
-            gp_frontend_status(NULL, _("Could not obtain directory listing"));
+            gp_camera_status(camera, _("Could not obtain directory listing"));
             return 0;
         }
         strcpy(path, cs->cached_drive);
@@ -965,7 +965,7 @@ int camera_file_delete (Camera *camera, const char *folder,
 
 		fprintf(stderr,"filename: %s\n path: %s\n",filename,path);
         if (psa50_delete_file(camera, filename,path)) {
-            gp_frontend_status(NULL, _("error deleting file"));
+            gp_camera_status(camera, _("error deleting file"));
             return GP_ERROR;
         }
         else {
@@ -974,7 +974,7 @@ int camera_file_delete (Camera *camera, const char *folder,
 			strcpy(thumbname, filename);
 			strcpy(thumbname+strlen("MVI_XXXX"), ".THM\0"); 
 			if (psa50_delete_file(camera, thumbname, path)) {
-				gp_frontend_status(NULL, _("error deleting thumbnail"));
+				gp_camera_status(camera, _("error deleting thumbnail"));
 				return GP_ERROR;
 			}
 		}
@@ -1108,7 +1108,7 @@ int camera_folder_put_file (Camera *camera, const char *folder,
 	}
 
     if(!update_dir_cache(camera)) {
-        gp_frontend_status(NULL, _("Could not obtain directory listing"));
+        gp_camera_status(camera, _("Could not obtain directory listing"));
         return GP_ERROR;
     }
 
@@ -1342,12 +1342,12 @@ int camera_set_config (Camera *camera, CameraWidget *window)
   if (gp_widget_changed (w)) {
     gp_widget_get_value (w, &wvalue);
     if(!check_readiness(camera)) {
-      gp_frontend_status(camera,_("Camera unavailable"));
+      gp_camera_status(camera,_("Camera unavailable"));
     } else {
       if(psa50_set_owner_name(camera, wvalue) == GP_OK)
-	gp_frontend_status(camera, _("Owner name changed"));
+	gp_camera_status(camera, _("Owner name changed"));
       else
-	gp_frontend_status (camera, 
+	gp_camera_status (camera, 
 			    _("could not change owner name"));
     }
   }
@@ -1356,12 +1356,12 @@ int camera_set_config (Camera *camera, CameraWidget *window)
   if (gp_widget_changed (w)) {
     gp_widget_get_value (w, &wvalue);
     if(!check_readiness(camera)) {
-      gp_frontend_status(camera,_("Camera unavailable"));
+      gp_camera_status(camera,_("Camera unavailable"));
     } else {
       if(psa50_set_time(camera)) {
-	gp_frontend_status(camera,_("time set"));
+	gp_camera_status(camera,_("time set"));
       } else {
-	gp_frontend_status(camera,_("could not set time"));
+	gp_camera_status(camera,_("could not set time"));
       }
     }
   }
@@ -1445,7 +1445,7 @@ int camera_folder_set_config (Camera *camera, const char *folder,
   return GP_ERROR_NOT_SUPPORTED;
 }
 
-char *camera_result_as_string (Camera *camera, int result)
+const char *camera_result_as_string (Camera *camera, int result)
 {
   return NULL;
 }

@@ -87,8 +87,6 @@ camera_file_get (Camera *camera, const char *folder, const char *filename,
         int size, num;
         char *data;
 
-        gp_frontend_progress(camera, NULL, 0.00);
-
         /* Retrieve the number of the photo on the camera */
         num = gp_filesystem_number (camera->fs, "/", filename);
 

@@ -139,7 +139,7 @@ static int dc240_wait_for_completion (Camera *camera) {
                default:
                     done = 1;
             }
-            gp_frontend_progress(NULL, NULL, 0.0);
+            gp_camera_progress(camera, 0.0);
     }
 
     if (x==25)
@@ -179,7 +179,7 @@ static int dc240_wait_for_busy_completion (Camera *camera)
 		done = 1;
 	    }
 	}
-	gp_frontend_progress(NULL, NULL, 0.0);
+	gp_camera_progress(camera, 0.0);
     }
     
     if (x == BUSY_RETRIES)
@@ -224,7 +224,7 @@ read_data_write_again:
 
     while (x < num_packets) {
 read_data_read_again:
-        gp_frontend_progress(NULL, NULL, 100.0*(float)x/(float)num_packets);
+        gp_camera_progress(camera, 100.0*(float)x/(float)num_packets);
 
         /* Read the response/data */
         retval = dc240_packet_read(camera, packet, block_size+2);

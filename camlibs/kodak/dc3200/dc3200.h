@@ -28,6 +28,7 @@
 typedef struct {
         gp_port			*dev;
         gp_port_settings	settings;
+	Camera                  *camera;
 	CameraFilesystem	*fs;
 	int			pkt_seqnum;	/* sequence number */
 	int			cmd_seqnum;	/* command seqnum */

@@ -21,6 +21,14 @@
  *
  * History:
  * $Log$
+ * Revision 1.19  2001/10/08 08:18:29  lutz
+ * 2001-10-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ *
+ *         * include/gphoto2-frontend.h
+ *         * libgphoto2/frontend.c
+ *         * camlibs: gp_frontend_progress -> gp_camera_progress,
+ *         gp_frontend_status -> gp_camera_status
+ *
  * Revision 1.18  2001/08/31 01:33:34  dfandrich
  * Replaced references to PNM with the appropriate PPM or PGM
  *
@@ -332,8 +340,6 @@ static int camera_file_get (Camera *camera, const char *folder, const char *file
 	int num, width, height;
 	char *data;
 	long int size;
-
-	gp_frontend_progress(camera, NULL, 0.00);
 
 	/* Retrieve the number of the photo on the camera */
 	if (strcmp(filename, RAM_IMAGE_TEMPLATE) == 0)
@@ -679,8 +685,6 @@ Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
 	ia.inc2 = 128;
 	ia.inc3 = ia.inc4 = 0;
 
-	gp_frontend_progress(camera, NULL, 0 );
-
 	/* due to reports of mesa_read_image not working for some cameras */
 	/* this is changed to use mesa_read_row */
 #if 0
@@ -708,7 +712,7 @@ Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
 			*size = 0;
 			return 0;
 		}
-		gp_frontend_progress(camera, NULL, 100 * ia.row / (height + 4) );
+		gp_camera_progress(camera, 100 * ia.row / (height + 4) );
 	}
 #else
 	for ( ia.row = 4, b = rbuffer; ia.row < (*height + 4) ;
@@ -735,7 +739,7 @@ Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
 			*size = 0;
 			return 0;
 		}
-		gp_frontend_progress(camera, NULL, 100 * ia.row / (*height + 4) );
+		gp_camera_progress(camera, 100 * ia.row / (*height + 4) );
 	}
 #endif
 
