@@ -56,50 +56,42 @@ AC_DEFUN(GP_BUILD_DOCS,
 # doc dir has to be determined in advance
 AC_REQUIRE([GP_CHECK_DOC_DIR])
 
-# check for the gtk-doc documentation generation utility
-AC_CHECK_PROG(GTKDOC, gtkdoc-mkdb, true, false)
-AM_CONDITIONAL(HAVE_GTK_DOC, $GTKDOC)
-AC_SUBST(HAVE_GTK_DOC)
-
-# check for the transfig graphics file conversion utility
-AC_CHECK_PROG(TRANSFIG, gtkdoc-mkdb, true, false)
-AM_CONDITIONAL(HAVE_TRANSFIG, $TRANSFIG)
-AC_SUBST(HAVE_TRANSFIG)
-
-# check whether we are to build docs
-AC_ARG_ENABLE(docs, [  --enable-docs           Use gtk-doc to build documentation [default=no]], enable_docs="$enableval", enable_docs=no)
-
-AC_MSG_CHECKING([whether we can and will build docs])
-if test "$enable_docs" = "yes" && test "$GTKDOC" = "true"
-then
-    if test "$TRANSFIG" != "true"
-    then
-        AC_MSG_RESULT([yes (without figures)])
-        AC_MSG_WARN([
-You told us explicitly to build the docs, but I can't find the
-transfig program. Therefore you won't have illustrations in 
-your documentation.
-])
-    else
-        AC_MSG_RESULT([yes (with figures)])
-    fi
-elif test "$enable_docs" = "yes" && test "$GTKDOC" = "false"
-then
-	# if we can't fulfill an explicit wish, we don't just
-	# warn them but complain and stop
-        AC_MSG_RESULT([no (impossible)])
-        AC_MSG_ERROR([
-You told us explicitly to build the docs with gtk-doc, but I
-can't find the gtk-doc program. Aborting further configuration.
-])
+dnl ---------------------------------------------------------------------------
+dnl fig2dev: This program is needed for processing images. If not found,
+dnl          documentation can still be built, but without figures.
+dnl ---------------------------------------------------------------------------
+try_fig2dev=true
+AC_ARG_WITH(fig2dev, [  --without-fig2dev     Don't use fig2dev],[
+	if test x$withval = xno; then
+		try_fig2dev=false
+	fi])
+if $try_fig2dev; then
+	AC_CHECK_PROG(have_fig2dev,fig2dev,true,false)
 else
-    AC_MSG_RESULT([no])
+	have_fig2dev=false
 fi
+AM_CONDITIONAL(ENABLE_TRANSFIG, $have_fig2dev)
 
-AM_CONDITIONAL(ENABLE_FIGURES, test "x$enable_docs" = "xyes" && test "x$TRANSFIG" = "xtrue")
-AM_CONDITIONAL(ENABLE_GTK_DOC, test "x$enable_docs" = "xyes" && test "x$GTKDOC" = "xtrue")
+dnl ---------------------------------------------------------------------------
+dnl gtk-doc: We use gtk-doc for building our documentation. However, we
+dnl          require the user to explicitely request the build.
+dnl ---------------------------------------------------------------------------
+try_gtkdoc=false
+AC_ARG_ENABLE(docs, [  --enable-docs           Use gtk-doc to build documentation [default=no]],[
+	if test x$enableval = xyes; then
+		try_gtkdoc=true
+	fi])
+if $try_gtkdoc; then
+	AC_CHECK_PROG(have_gtkdoc,gtkdoc-mkdb,true,false)
+else
+	have_gtkdoc=false
+fi
+AM_CONDITIONAL(ENABLE_GTK_DOC, $have_gtkdoc)
 
-# check where to install HTML docs
+dnl ---------------------------------------------------------------------------
+dnl Give the user the possibility to install html documentation in a 
+dnl user-defined location.
+dnl ---------------------------------------------------------------------------
 AC_ARG_WITH(html-dir, [  --with-html-dir=PATH    where to install html docs [default=autodetect]])
 AC_MSG_CHECKING([for html dir])
 if test "x${with_html_dir}" = "x" ; then
