@@ -1,5 +1,8 @@
 #include <stdio.h>
 #include <string.h>
+#ifdef _GNU_SOURCE
+#include <mcheck.h>
+#endif
 
 #include <gphoto2-filesys.h>
 #include <gphoto2-result.h>
@@ -84,6 +87,10 @@ main (int argc, char **argv)
 	CameraList list;
 	int x, count;
 	const char *name;
+
+#ifdef _GNU_SOURCE
+	mtrace();
+#endif
 
 	printf ("*** Creating file system...\n");
 	CHECK (gp_filesystem_new (&fs));
@@ -203,5 +210,15 @@ main (int argc, char **argv)
 	printf ("*** Freeing file system...\n");
 	CHECK (gp_filesystem_free (fs));
 
+#ifdef _GNU_SOURCE
+	muntrace();
+#endif
+
 	return (0);
 }
+
+/*
+ * Local variables:
+ *  compile-command: "gcc -pedantic -Wstrict-prototypes -O2 -g test-filesys.c -o test-filesys `gphoto2-config --cflags --libs` && export MALLOC_TRACE=test-filesys.log && ./test-filesys && mtrace ./test-filesys test-filesys.log"
+ * End:
+ */

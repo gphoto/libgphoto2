@@ -1,5 +1,11 @@
 2001-11-18  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	Patch from Ole Aamot <Ole.Aamot@nr.no>:
+
+	* tests: Use mcheck.h (useful when searching for mem-leaks).
+
+2001-11-18  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	Patch from Bill Marr <marr@shianet.org>:
 
 	* camlibs/digita/commands.c: Fix bug causing 8 bad trailing 

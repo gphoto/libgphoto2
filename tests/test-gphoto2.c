@@ -1,6 +1,9 @@
 #include <gphoto2-camera.h>
 
 #include <stdio.h>
+#ifdef _GNU_SOURCE
+#include <mcheck.h>
+#endif
 
 #define CHECK(f) {int res = f; if (res < 0) {printf ("ERROR: %s\n", gp_result_as_string (res)); return (1);}}
 
@@ -12,6 +15,10 @@ main (int argc, char *argv [])
 	CameraAbilitiesList *al;
 	CameraAbilities abilities;
 	int m;
+
+#ifdef _GNU_SOURCE
+	mtrace();
+#endif
 
 	/*
 	 * You'll probably want to access your camera. You will first have
@@ -54,5 +61,15 @@ main (int argc, char *argv [])
 	printf ("Unrefing camera...\n");
 	CHECK (gp_camera_unref (camera));
 
+#ifdef _GNU_SOURCE
+	muntrace();
+#endif
+
 	return (0);
 }
+
+/*
+ * Local variables:
+ *  compile-command: "gcc -pedantic -Wstrict-prototypes -O2 -g test-gphoto2.c -o test-gphoto2 `gphoto2-config --cflags --libs` && export MALLOC_TRACE=test-gphoto2.log && ./test-gphoto2 && mtrace ./test-gphoto2 test-gphoto2.log"
+ * End:
+ */
