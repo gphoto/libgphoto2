@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2 2.0beta6dev2\n"
-"POT-Creation-Date: 2002-02-23 00:06+0900\n"
-"PO-Revision-Date: 2002-02-23 00:06+0900\n"
+"POT-Creation-Date: 2002-02-23 09:05+0900\n"
+"PO-Revision-Date: 2002-02-25 19:34+0100\n"
 "Last-Translator: Takeshi Aihana <aihana@gnome.gr.jp>\n"
 "Language-Team: Japanese <translation@gnome.gr.jp>\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,7 @@ msgstr ""
 #: camlibs/agfa/agfa.c:211 camlibs/digita/digita.c:389
 #, c-format
 msgid "Number of pictures: %d"
-msgstr "写真の番号: %d"
+msgstr "写真の数: %d"
 
 #: camlibs/agfa/agfa.c:218
 msgid ""
@@ -56,7 +56,7 @@ msgstr ""
 "Andreas Meyer <ahm@spies.com>\n"
 "Pete Zaitcev <zaitcev@metabyte.com>\n"
 "\n"
-"画像データの反転処理の担当:\n"
+"画像データのリバースエンジニアリング担当:\n"
 "Jeff Laing <jeffl@SPATIALinfo.com>\n"
 "\n"
 "WEB 上に実装済みの使用方法のドキュメント\n"
@@ -246,7 +246,7 @@ msgstr "所有者の名前"
 #: camlibs/canon/library.c:728 camlibs/canon/library.c:732
 #: camlibs/canon/library.c:737
 msgid "Date and Time (readonly)"
-msgstr "日付と時間 (読み取りのみ)"
+msgstr "日付と時刻 (読み取りのみ)"
 
 #: camlibs/canon/library.c:733
 msgid "Error"
@@ -411,8 +411,7 @@ msgstr "USB 設定を適用することが出来ませんでした"
 #: camlibs/canon/usb.c:240
 #, c-format
 msgid "Camera not ready, multiple 'Identify camera' requests failed: %s"
-msgstr ""
-"カメラの準備ができていません。複数の \"カメラ情報\" 要求が失敗しました: %s"
+msgstr "カメラの準備ができていません。複数回 \"カメラ情報\" 要求が失敗しました: %s"
 
 #: camlibs/canon/usb.c:249
 #, c-format
@@ -562,13 +561,13 @@ msgid ""
 "  automatically set by the capture preview function.\n"
 "* Image quality is currently lower than it could be.\n"
 msgstr ""
-"* 画像が欠落しているか、またはバッテリが少ない\n"
-"ことによって時々発生する通信上の問題です。\n"
-"* このカメラにあるリモートでキャプチャされた画像は\n"
-"フラッシュメモリ・カードではなく一時的に RAM 上に保存されました。\n"
-"* 全画像のキャプチャ中の露出の制御はキャプチャ・プレビュー機能\n"
-"によって自動的にセットされました。\n"
-"* 現在の画像の品質は低解像度に変更されました。\n"
+"* 画像の欠損や通信上の問題は\n"
+"  ほとんどの場合バッテリー不足が原因です。\n"
+"* このカメラでリモートでキャプチャされた画像は\n"
+"  フラッシュメモリ・カードではなく一時的に RAM 上に保存されています。\n"
+"* 全画像のキャプチャ中の露出の制御はキャプチャ・プレビュー機能によって\n"
+"  自動的にセットされます。\n"
+"* 画像の品質は今のところ可能なレベルよりも低いものになっています。\n"
 
 #: camlibs/dimera/dimera3500.c:573
 msgid ""
@@ -755,7 +754,7 @@ msgstr ""
 "JD11\n"
 "Marcus Meissner <marcus@jet.franken.de>\n"
 "Jenoptik JD11 カメラ用のドライバ担当。\n"
-"WINE と IDA を使った Protocol Reverse Engineer"
+"WINE と IDA を使用してリバースエンジニアされたプロトコル。"
 
 #.
 #. * Check if the widgets' values have changed. If yes, tell the camera.
@@ -1005,7 +1004,7 @@ msgid ""
 "Support for all Konica and several HP cameras."
 msgstr ""
 "Konica ライブラリ\n"
-"Lutz Muller <lutz@users.sourceforge.net>\n"
+"Lutz Mueller <lutz@users.sourceforge.net>\n"
 "Konika 全機種と幾つかの HP カメラのサポート担当。"
 
 #: camlibs/konica/library.c:616
@@ -2155,8 +2154,8 @@ msgstr ""
 "  * ズーム\n"
 "  * フォーカス\n"
 "  * ホワイト・バランスのカスタム設定\n"
-"- PhotoPC 3000z 設定は Reverse-Engineered で、\n"
-"  お使いのカメラが変な動きをした場合は\n"
+"- 設定は PhotoPC 3000z でリバースエンジニアされました。\n"
+"  お使いのカメラがおかしな動きをした場合は\n"
 "  <gphoto-devel@gphoto.org> (英語で) まで連絡して下さい。\n"
 
 #: camlibs/sierra/sierra.c:1860
@@ -3304,7 +3303,7 @@ msgstr "フォルダ '%s' の中にフォルダが一つあります:"
 #: frontends/command-line/actions.c:85
 #, c-format
 msgid "There are %i folders in folder '%s':"
-msgstr "フォルダの中に %i 個のフォルダがあります:"
+msgstr "%i 個のフォルダがフォルダ '%s' の中にあります:"
 
 #: frontends/command-line/actions.c:111
 #, c-format
@@ -3319,7 +3318,7 @@ msgstr "フォルダ '%s' の中にファイルが一つあります:"
 #: frontends/command-line/actions.c:119
 #, c-format
 msgid "There are %i files in folder '%s':"
-msgstr "フォルダ '%s' の中に %i 個のファイルがあります:"
+msgstr "%i 個のファイルがフォルダ '%s' の中にあります:"
 
 #: frontends/command-line/actions.c:139
 #, c-format
