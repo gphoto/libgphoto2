@@ -21,8 +21,6 @@
 #include <config.h>
 #include "bayer.h"
 
-#include <stdio.h>
-
 #include <gphoto2-result.h>
 
 static int tile_colors[8][4] = {
@@ -274,4 +272,5 @@ gp_bayer_decode (unsigned char *input, int w, int h, unsigned char *output,
 
 	return (GP_OK);
 }
+
 
