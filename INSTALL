@@ -17,27 +17,54 @@ Step 0: Preparing configuration
 
 If you got your copy of gphoto2 packaged as a .tar.gz or .tar.bz2 tarball, 
 skip this step. If you got gphoto2 from CVS, then you will have to prepare
-step 1, the configuration of the sources. For that, we supply you with
-a script called 'autogen.sh'. This skript is far from being perfect and
-we recommend that you prepare step 1 manually. That is, the following
-commands need to be executed in both gphoto2 and gphoto2/libgphoto2_port:
+step 1, the configuration of the sources. 
 
- - libtoolize --force --copy
- - gettextize --force --copy
- - aclocal -I/path/to/macros (these macros typically are in
-   /opt/gnome/share/aclocal or /usr/share/aclocal)
- - autoheader
- - automake --add-missing --gnu
- - autoconf
+For that, we supply you with a script called 'autogen.sh'.
 
-Not surprisingly, above commands will only work if you have 
+As to whether 'autogen.sh' does its job, we are not completely sure.
 
- - autoconf
- - automake (version >= 1.5)
- - libtool (version >= 1.4)
- - gettext (version >= 0.10.35)
 
-installed on your system.
+  Debian/Unstable user Lutz says:
+  ===============================
+
+    This skript is far from being perfect and we recommend that you
+    prepare step 1 manually. That is, the following commands need to be
+    executed in both gphoto2 and gphoto2/libgphoto2_port: 
+
+    - libtoolize --force --copy
+    - gettextize --force --copy
+    - aclocal -I/path/to/macros (these macros typically are in
+      /opt/gnome/share/aclocal or /usr/share/aclocal)
+    - autoheader
+    - automake --add-missing --gnu
+    - autoconf
+
+    Not surprisingly, above commands will only work if you have 
+
+    - autoconf
+    - automake (version >= 1.5)
+    - libtool (version >= 1.4)
+    - gettext (version >= 0.10.35)
+
+    installed on your system.
+
+
+  Redhat Linux 7.3 user Uli says:
+  ===============================
+
+    This skript is far from being perfect, but it works on my stock
+    Redhat 7.3 installation, provided you have the following packages
+    installed: 
+
+    - automake (version 1.4-p5, package 1.4p5-4)
+    - autoconf (version 2.13,   package 2.13-17)
+    - libtool  (version 1.4.2,  package 1.4.2-7)
+    - gettext  (version 0.11.1, package 0.11.1-2)
+
+    Just run './autogen.sh', and you may even supply it with the
+    parameters to ./configure.in from step 1 and spare yourself step
+    1.
+
 
 =============================
 Step 1: Configure the sources
