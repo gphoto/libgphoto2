@@ -1,3 +1,7 @@
+2001-08-22  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* README: Update USB Mass Storage list
+
 2001-08-21  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2/camera.c (gp_camera_file_get_info): Fix logic.
