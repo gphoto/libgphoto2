@@ -513,8 +513,12 @@ canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length,
  * canon_usb_long_dialogue:
  * @camera: the Camera to work with
  * @canon_funct: integer constant that identifies function we are execute
+ * @data: Pointer to pointer to allocated memory holding the data returned from the camera
+ * @data_length: Pointer to where you want the number of bytes read from the camera
+ * @max_data_size: Max realistic data size so that we can abort if something goes wrong
  * @payload: data we are to send to the camera
  * @payload_length: length of #payload
+ * @display_status: Whether you want progress bar for this operation or not
  *
  * This function is used to invoke camera commands which return L (long) data.
  * It calls #canon_usb_dialogue(), if it gets a good response it will malloc()
@@ -540,7 +544,6 @@ canon_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **data,
 	/* Call canon_usb_dialogue(), this will not return any data "the usual way"
 	 * but after this we read 0x40 bytes from the USB port, the int at pos 6 in
 	 * the returned data holds the total number of bytes we are to read.
-	 *
 	 */
 	lpacket =
 		canon_usb_dialogue (camera, canon_funct, &bytes_read, payload, payload_length);
@@ -556,7 +559,7 @@ canon_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **data,
 				 "canon_usb_long_dialogue: canon_usb_dialogue "
 				 "did not return (%i bytes) the number of bytes "
 				 "we expected (%i)!. Aborting.", bytes_read, 0x40);
-		return GP_ERROR;
+		return GP_ERROR_CORRUPTED_DATA;
 	}
 
 	total_data_size = le32atoh (lpacket + 0x6);
@@ -570,7 +573,7 @@ canon_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **data,
 				 "ERROR: Packet of size %i is too big "
 				 "(max reasonable size specified is %i)",
 				 total_data_size, max_data_size);
-		return GP_ERROR;
+		return GP_ERROR_CORRUPTED_DATA;
 	}
 	*data = malloc (total_data_size);
 	if (!*data) {
@@ -597,14 +600,14 @@ canon_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **data,
 			free (*data);
 
 			/* here, it is an error to get 0 bytes from gp_port_read()
-			 * too, but 0 is GP_OK so if bytes_read is 0 return GP_ERROR
+			 * too, but 0 is GP_OK so if bytes_read is 0 return GP_ERROR_CORRUPTED_DATA
 			 * instead, otherwise return bytes_read since that is the
 			 * error code returned by gp_port_read()
 			 */
 			if (bytes_read < 0)
 				return bytes_read;
 			else
-				return GP_ERROR;
+				return GP_ERROR_CORRUPTED_DATA;
 		}
 
 		if (bytes_read < read_bytes)
