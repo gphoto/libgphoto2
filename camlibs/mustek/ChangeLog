@@ -1,0 +1,8 @@
+2001-03-25  Marcus Meissner <marcus@jet.franken.de>
+	
+	* *: forward ported from gphoto 0.4.3.
+	  
+	  I doesnt work for me due to USB interrupt problems which
+	  will hopefully clear up in the future.
+	  
+	  Someone please test if you have a serial cable.
