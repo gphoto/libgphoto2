@@ -303,10 +303,10 @@ int camera_init(CameraInit *init) {
 	}
 	dev = gpio_new(GPIO_DEVICE_SERIAL);
 	gpio_set_timeout(dev, 5000);
-
+printf("port: %s\n", init->port_settings.port);
 	strcpy(settings.serial.port, init->port_settings.port);
 
-	settings.serial.speed	= init->port_settings.speed;
+	settings.serial.speed	= 57600;
 	settings.serial.bits	= 8;
 	settings.serial.parity	= 0;
 	settings.serial.stopbits= 1;
@@ -409,12 +409,7 @@ int camera_file_delete (int file_number) {
 	return GP_ERROR;
 }
 
-int camera_config_get (char *filename) {
-
-	return GP_ERROR;
-}
-
-int camera_config_query (char *label, char *value) {
+int camera_config_get (CameraWidget *window) {
 
 	return GP_ERROR;
 }
