@@ -1,0 +1,287 @@
+#!/usr/bin/perl
+#
+# $Id$
+#
+# This script is only of interest for developers who want to analyze
+# USB snoopy dumps of canon camera communication.
+#
+
+use strict;
+
+my %canon_cmd = (
+		 "0x01 0x11 0x202" => "Get picture/thumbnail",
+		 "0x01 0x12 0x201" => "Identify camera request",
+		 "0x03 0x12 0x201" => "Get time",
+		 "0x04 0x12 0x201" => "Set time",
+		 "0x05 0x11 0x201" => "Make directory",
+		 "0x05 0x12 0x201" => "Change owner",
+		 "0x06 0x11 0x201" => "Remove directory",
+		 "0x09 0x11 0x201" => "Disk info request",
+		 "0x0a 0x11 0x202" => "Flash device identification",
+		 "0x0a 0x12 0x201" => "Power supply status",
+		 "0x0b 0x11 0x202" => "Get directory",
+		 "0x0d 0x11 0x201" => "Delete file",
+		 "0x0e 0x11 0x201" => "Set file attribute",
+		 "0x1b 0x12 0x201" => "EOS lock keys",
+		 "0x1c 0x12 0x201" => "EOS unlock keys",
+		 "0x1f 0x12 0x201" => "Get camera photo abilities?",
+		 "0x20 0x12 0x201" => "Lock keys, turn off LCD"	
+		);
+
+
+my ($file, %urb, %urbdata, %urbpipe);
+foreach $file (@ARGV) {
+	open(FILE, "< $file") or die("Could not open file '$file' for reading: $!\n");
+
+	my $line;
+	my $byte_offset;
+	my $dumping_urbdata = 0;
+	my $current_urb = -1;
+	my $buffer = 0;
+	my $direction;
+
+	warn("FILE: $file\n");
+
+	while ($line = <FILE>) {
+		chomp($line);
+		$line =~ s/\r//;
+		
+		if ($line =~ />>> URB (\d+) going down/) {
+			$current_urb = $1;
+			$direction = "down";
+			#warn("URB $current_urb down...\n");
+		} elsif ($line =~ /<<< URB (\d+) coming back/) {
+			$current_urb = $1;
+			warn("URB $current_urb read\n");
+			$direction = "back";
+		} else {
+			if ($current_urb) {
+				if ($line =~ /^(\d+)	([\w\d:\.]+?)	\s*0000:\s+/) {
+					$dumping_urbdata = 1;
+					$byte_offset = "0000";
+				
+					# start of urbdata, decide which buffer this is
+					if ($urbdata{$current_urb}{buffer0}) {
+						$buffer = "buffer1";
+					} else {
+						$buffer = "buffer0";
+					}
+				
+					#warn("URB $current_urb $buffer\n");
+					
+					# mark that the buffer goes here
+					push(@{$urb{$current_urb}}, "[buffer $buffer]");
+				}
+				if ($dumping_urbdata) {
+					my $hex = "";
+					#if ($line =~ /^(\d+)	([\w\d:\.]+?)	\s*([\da-f]+):( ([\da-f][\da-f])+) 	/) {
+					if ($line =~ /^(\d+)	([\w\d:\.]+?)	\s*([\da-f]+):(( [\da-f][\da-f])+)\s+$/) {
+						$byte_offset = $3;
+						$hex = $4;
+					} else {
+						if ($line =~ /^(\d+)	([\w\d:\.]+?)	\s*([\da-f]+):\s+$/) {
+							# every other line is this kind of line, data offset
+							$byte_offset = $3;
+							next;				
+						} elsif ($line =~ /^(\d+)\s+([\w\d:\.]+?)	(( [a-f0-9][a-f0-9])+)	/) {
+							$hex = $3;
+						} else {
+							if ($line =~ /(URB_FUNCTION|UrbLink)/) {
+								# this is not a urbdata line. reset.
+								$dumping_urbdata = 0;
+								next;	# unimportant line, just go to next
+							} else {
+								warn("$file:$. Unknown data '$line' when dumping URB data\n");
+							}
+						}
+					}
+					if ($hex) {
+						# check if it is bytes in the 0x00 or 0x40 range - in that case,
+						# save certain bytes that are 'canon commands'.
+						if (hex($byte_offset) == 0x00) {
+							my @h = split(" ", $hex);
+							$urbdata{$current_urb}{cmd3} = sprintf("0x%02x", hex("$h[7]$h[6]$h[5]$h[4]"));
+						} elsif (hex($byte_offset) == 0x40) {
+							my @h = split(" ", $hex);
+							$urbdata{$current_urb}{cmd1} = "0x$h[4]";
+							$urbdata{$current_urb}{cmd2} = "0x$h[7]";
+						}
+
+						push(@{ $urbdata{$current_urb}{ $buffer } }, hex_format($byte_offset, $hex));
+						$byte_offset = -1;
+						next;
+					}
+				} else {
+				
+					if ($line =~ /\sInterface\[0\]: Pipes\[(\d+)\] : PipeHandle\s+= 0x([\da-f]+)	/) {
+						# remember URB pipe
+						$urbpipe{$2} = $1;
+						#warn("PIPE $2 = $1\n");
+					} elsif ($line =~ /\sPipeHandle\s+= ([\da-f]+)/) {
+						# check if we know this URB pipe
+						$urbdata{$current_urb}{pipe} = $urbpipe{$1};
+						#warn("URB $current_urb PIPE $1 = $urbpipe{$1}\n");
+					}
+					
+					if ($line =~ /\sTransferFlags.+USBD_TRANSFER_DIRECTION_(OUT|IN)/) {
+						# OP in "coming back" is most reliable, and that one
+						# is always after "going down" so we don't neeed to
+						# check previous value here, just overwrite
+				    		if ($1 eq "OUT") {
+					    		$urbdata{$current_urb}{op} = "WRITE";
+					    	} else {
+					    		$urbdata{$current_urb}{op} = "READ";
+					    	}
+					}
+					if ($line =~ /\sTransferBufferLength = ([\da-f]+)/) {
+						my $t = hex($1);
+						
+						if ($urbdata{$current_urb}{op} eq "READ") {
+							# ok, this is read operation. info is
+							# always good.
+							$urbdata{$current_urb}{bytes} = $t;
+						} elsif ($urbdata{$current_urb}{op} eq "WRITE") {
+							if ($direction eq "down") {
+								$urbdata{$current_urb}{bytes} = $t;
+							}
+							# else, this information is unreliable
+						}
+					}
+				}
+			}
+		}
+	
+		if ($line =~ /^(\d+)	([\w\d:\.]+?)	(.+?)\s*$/) {
+			# we want to trim down the line numbers and time
+			
+			my $lineno = $1;
+			my $time = $2;
+			my $rest = $3;
+			
+			$line = sprintf("%.5d %.3f  %s", $lineno, $time, $rest);
+		} else {
+			# replace tabs with two spaces to make lines shorter
+			$line =~ s/	/  /g;
+		}
+
+		if ($current_urb == -1) {
+			print("$line\n");
+		} else {
+			push(@{$urb{$current_urb}}, $line);
+		}
+	}
+	
+	close(FILE);
+
+	warn("\noutputting formatted data\n");
+	
+	foreach $current_urb (sort numerically keys %urb) {
+
+		# these are declared for readability
+		my $cmd1 = $urbdata{$current_urb}{cmd1};
+		my $cmd2 = $urbdata{$current_urb}{cmd2};
+		my $cmd3 = $urbdata{$current_urb}{cmd3};
+		my $pipe = $urbdata{$current_urb}{pipe};
+		my $type = $urbdata{$current_urb}{type};
+		my $op = $urbdata{$current_urb}{op};
+		my $length = $urbdata{$current_urb}{bytes};
+
+		if ($pipe eq "2") {
+			print("\n*** URB $current_urb KEEP-ALIVE, skipped ***\n");
+			next;
+		} else {
+			if ($op eq "READ") {
+				if ($length == 0x40) {
+					print("\n*** URB $current_urb possible CANON RESPONSE ***\n")				
+				} elsif ($length == 0x01) {
+					print("\n\n\n\n*** URB $current_urb PROBABLY CAMERA INIT ***\n\n");
+				} else {
+					print("\n");
+				}
+			} elsif ($op eq "WRITE") {
+				my $cmd = "$urbdata{$current_urb}{cmd1} $urbdata{$current_urb}{cmd2} $urbdata{$current_urb}{cmd3}";
+				if ($length == 0x50) {
+					if ($canon_cmd{$cmd}) {
+						print("\n\n\n\n*** URB $current_urb CANON COMMAND '$canon_cmd{$cmd}' ($cmd) ***\n\n");
+					} elsif ($cmd3 eq "0x201" or $cmd3 eq "0x202") {
+						print("\n\n\n\n*** URB $current_urb PROBABLE CANON COMMAND ($cmd) ***\n\n");
+					} else {
+						print("\n\n\n\n*** URB $current_urb possible CANON COMMAND ($cmd) ***\n\n");
+					}
+				} elsif ($cmd3 eq "0x201" or $cmd3 eq "0x202") {
+					if ($canon_cmd{$cmd}) {
+						print("\n\n\n\n*** URB $current_urb CANON COMMAND '$canon_cmd{$cmd}' ($cmd) ***\n\n");
+					} else {
+						print("\n\n\n\n*** URB $current_urb PROBABLE CANON COMMAND ($cmd) ***\n\n");
+					}
+				}
+			}
+		}
+
+		if ($urbdata{$current_urb}{op} ne "") {
+			printf("%s 0x%x BYTES\n", $op, $length);
+		}
+			
+		if ($urbdata{$current_urb}{pipe}) {
+			print("*** URB $current_urb  PIPE $urbdata{$current_urb}{pipe}\n");
+		} else {
+			print("*** URB $current_urb\n");
+		}
+		foreach $line (@{$urb{$current_urb}}) {
+			if ($line =~ /^\[buffer (buffer\d)\]$/) {
+				my $b = $1;
+				
+				if ($b eq "buffer0" and $urbdata{$current_urb}{buffer1}) {
+					# this is buffer 0 but this URB has two buffers,
+					# this one is FOO (buffer contents before read typically)
+					# so we just skip it
+					print("[cut]\n");
+					next;
+				}
+				
+				print("DATA:\n",
+					join("\n", @{ $urbdata{$current_urb}{$b} }), 
+					"\n");
+			} else {
+				print("$line\n");
+			}
+		}
+	}
+}
+
+warn("\nDone\n\n");
+exit(0);
+
+
+# SUBROUTINES
+# -----------
+
+sub numerically { $a <=> $b };
+
+sub hex_format
+{
+	my $byte_offset = shift;
+	my $hex = shift;
+	
+	$hex =~ s/^\s*(.+?)\s*$/$1/;	# trim
+	my @chars = split(" ", $hex);
+	my $out_rad = "$byte_offset  $hex  ";
+	
+	# if not a full line, add whitespace			
+	if ($#chars < 15) {
+		$out_rad .= " " x ((15 - $#chars) * 3);
+	}
+
+	# add ASCII
+	my $ch;
+	foreach $ch (@chars) {
+		my $i = hex($ch);
+		if ($i > 32 and $i < 128) {
+			$out_rad .= sprintf("%c", $i);
+		} else {
+			$out_rad .= ".";
+		}
+	}
+
+	return $out_rad;
+}
