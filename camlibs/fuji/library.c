@@ -342,12 +342,13 @@ post_func (Camera *camera, GPContext *context)
 	GPPortSettings settings;
 	GP_DEBUG ("Terminating connection...");
 
-	/* Reset the camera and put it back to 9600 bps. */
-	CR (fuji_reset (camera, context));
+	/* Put the camera back to 9600 bps if necessary. */
 	CR (gp_port_get_settings (camera->port, &settings));
-	settings.serial.speed = 9600;
-	CR (gp_port_set_settings (camera->port, settings));
-	CR (fuji_set_speed (camera, FUJI_SPEED_9600, context));
+	if (settings.serial.speed != 9600) {
+		CR (fuji_set_speed (camera, FUJI_SPEED_9600, context));
+		settings.serial.speed = 9600;
+		CR (gp_port_set_settings (camera->port, settings));
+	}
 
 	return (GP_OK);
 }

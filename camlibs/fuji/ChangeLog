@@ -1,11 +1,16 @@
+2002-04-22  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c (post_func): Only put the camera back to 9600 bps if
+	  this is needed. And don't reset the camera before the speed change.
+
 2002-04-21 Matt Martin <matt.martin@ieee.org>
 
 	* library.c In post_func: Bring serial port speed back down
-	immediately after resetting the camera (kills the high speed at
-	least on the DS7).  Note that this doesn't seem to be a problem
-	immediately following the speed change command. Needs to be tested
-	on all cams in light of Lutz's earlier comment that the speed
-	isn't getting reset !
+	  immediately after resetting the camera (kills the high speed at
+	  least on the DS7).  Note that this doesn't seem to be a problem
+	  immediately following the speed change command. Needs to be tested
+	  on all cams in light of Lutz's earlier comment that the speed
+	  isn't getting reset !
 
 2002-04-21 Matt Martin <matt.martin@ieee.org>
 
