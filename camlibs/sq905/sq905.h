@@ -11,16 +11,16 @@ typedef enum {
 	SQ_MODEL_UNKNOWN
 } SQModel;
 
-int sq_reset             (GPPort *port);
-int sq_init              (GPPort *port, SQModel *, SQData *data);
+int sq_reset             (GPPort *);
+int sq_init              (GPPort *, SQModel *, SQData *);
 
 /* Those functions don't need data transfer with the camera */
-int sq_get_num_pics      (SQData *data); 
-int sq_get_comp_ratio    (SQData *data, int n);
-int sq_get_picture_width (SQData *data, int n);
+int sq_get_num_pics      (SQData *); 
+int sq_get_comp_ratio    (SQData *, int n);
+int sq_get_picture_width (SQData *, int n);
 
-unsigned char *sq_read_data         (GPPort *port, char *data, int size);
-unsigned char *sq_read_picture_data (GPPort *port, char *data, int size);
+unsigned char *sq_read_data         (GPPort *, char *data, int size);
+unsigned char *sq_read_picture_data (GPPort *, char *data, int size);
 
 #endif
 

@@ -64,6 +64,9 @@ struct {
         {"Argus DC-1510",     GP_DRIVER_STATUS_PRODUCTION,   0x2770, 0x9120},
 	{"Gear to go",        GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"Mitek CD10" ,       GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
+	{"Mitek CD30P",       GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
+	{"Magpix B350",       GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
+	{"Jenoptik JD 350",   GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"GTW Electronics",   GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"Concord Eye-Q Easy",GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"Che-ez Snap",       GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
@@ -136,7 +139,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
         Camera *camera = data; 
     	int n = sq_get_num_pics (camera->pl->data);
 
-    	gp_list_populate (list, "pict%02i.ppm", n);
+    	gp_list_populate (list, "pict%03i.ppm", n);
 
     	return GP_OK;
 }
@@ -186,9 +189,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	case GP_FILE_TYPE_NORMAL:
 		sq_read_picture_data (camera->port, data, buffersize);
 		break;
+	/*
 	case GP_FILE_TYPE_PREVIEW:
 		sq_read_picture_data (camera->port, data, buffersize);
 		break;
+	*/
 	default:
 		free (data);
 		free (p_data);
@@ -207,22 +212,48 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
     	 * shows up on some computers. Anyway, the switch turns off 
     	 * the machine which makes the salt!
     	 */
-    
-    	for (m = 0; m < buffersize; m++) 
-		switch (comp_ratio) {
-			/* This is an experiment which does not work. 
-			 * But it almost works! 
-	 	 	 * By looking at the output, an expert might 
-			 * actually be able to 
-	 	 	 * see what to instead!
-	 	 	 */
-		case 2:
-			p_data[2 * m] = 0x10 * (data[m]/0x10 );
-			p_data[2 * m + 1] = 0x10 * (data[m] % 0x10);
-			break;
-		default:
-			p_data[m] = data[m];
-		}
+
+	/*
+	 * Data seems to be arranged in planar form.
+	 * The colors are still not quite right, but the
+	 * geometry comes through. Evidence from photos of solid color
+	 * seems to show the order of the planes is GBR. The method
+	 * followed here is to try to "decompress" the raw data first and
+	 * then to do Bayer interpolation afterwards.
+	 *
+	 * The even pixels on the odd lines of output are green, and the
+	 * odd pixels on the even lines of output. We don't know if the
+	 * data is right, but the output is at least preserves the 
+	 * geometry of the image. At least for the 09 05 00 26 cameras.
+	 */
+
+	/* Green */
+    	for (m = 0; m < buffersize; m++) {
+		p_data[w * ((m * 4) / w) + 4*(m % (w / 4))
+			                 + ((m * 4) / w) % 2 + 1] = data[m];
+		p_data[w * ((m * 4) / w) + 4*(m % (w / 4))
+			                 + ((m * 4) / w) % 2 + 3] = data[m];
+	}
+
+	/*
+	 * Blue.
+	 * 
+	 * The even pixels on the even output lines are blue.
+	 * We don't know yet if the data represent blue pixels,
+	 * but again the geometry is preserved.
+	 *
+	 * The odd pixels on the odd lines of output are red.
+	 */
+	for (m = 0;  m < buffersize / 4; m++) {
+		p_data[w * (2 * ((m * 4) / w))
+			+ 4 * (m % (w / 4)) + 2] = data[m + 2 * buffersize / 4];
+		p_data[w * (2 * ((m * 4) / w))
+			+ 4 * (m % (w / 4)) + 4] = data[m + 2 * buffersize / 4];
+		p_data[w * (2 * ((m * 4) / w) + 1)
+			+ 4 * (m % (w / 4)) + 1] = data[m + 3 * buffersize / 4];
+		p_data[w * (2 * ((m * 4) / w) +1)
+			+ 4 * (m % (w / 4)) + 3] = data[m + 3 * buffersize / 4];
+	}
 
 	/*
 	 * Now we want to get our picture into a file on 
@@ -230,10 +261,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
      	 * Otherwise, the picture will be upside down.  
      	 */
 
-    	for (i = 0; i <= buffersize/2; ++i) {
+    	for (i = 0; i <= w * h / 2; ++i) {
         	temp = p_data[i];
-        	p_data[i] = p_data[buffersize -1 -i];
-        	p_data[buffersize - 1 - i] = temp;
+        	p_data[i] = p_data[w * h -1 -i];
+        	p_data[w * h - 1 - i] = temp;
     	}    	
 
 	/* Now put the data into a real PPM picture file! 

@@ -1,3 +1,11 @@
+2003-10-07  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* sq905.c: Patch by Theodore Kilgore <kilgota@banach.math.auburn.edu>,
+	  without ChangeLog entry, unfortunately not against latest cvs, and
+	  not in 'cvs diff -u3 -p' format. Hence no guaranty that I figured
+	  out the right lines and the right changes. No idea if the code
+	  now works better than before. But it compiles :-)
+
 2003-08-01  Lutz Mueller <lutz@users.sourceforge.net>
 
 	* sq905.c: Additional information by Paulo Tribolet Abreu
