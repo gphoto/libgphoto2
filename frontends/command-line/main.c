@@ -882,7 +882,16 @@ set_globals (void)
 	CHECK_RESULT (gp_camera_set_abilities (glob_camera, abilities));
         if (strcmp (glob_model, "Directory Browse"))
                 CHECK_RESULT (gp_camera_set_port_path (glob_camera, glob_port));
-        CHECK_RESULT (gp_camera_set_port_speed (glob_camera, glob_speed));
+
+	/* 
+	 * Setting of speed only makes sense for serial ports. gphoto2 
+	 * knows that and will complain if we try to set the speed for
+	 * ports other than serial ones. Because we are paranoid here and
+	 * check every single error message returned by gphoto2, we need
+	 * to make sure that we have a serial port.
+	 */
+	if (!strncmp (glob_port, "serial", 6))
+	        CHECK_RESULT (gp_camera_set_port_speed (glob_camera, glob_speed));
 
 	gp_camera_set_status_func (glob_camera, status_func, NULL);
 	gp_camera_set_progress_func (glob_camera, progress_func, NULL);
