@@ -816,6 +816,8 @@ int camera_init(Camera *camera, CameraInit *init)
 	camera->functions->file_get_preview =  camera_file_get_preview;
 	camera->functions->file_put  = camera_file_put;
 	camera->functions->file_delete = camera_file_delete;
+	camera->functions->config_get = camera_config_get;
+	camera->functions->config_set = camera_config_set;
 	camera->functions->config    = camera_config;
 	camera->functions->capture   = camera_capture;
 	camera->functions->summary   = camera_summary;
@@ -1250,30 +1252,27 @@ int camera_file_put(Camera *camera, CameraFile *file, char *folder)
 
 /****************************************************************************/
 	
-int camera_config(Camera *camera)
+int camera_config_get(Camera *camera, CameraWidget **window)
 {
 	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
-	CameraWidget *window, *w, *t, *section;
-	char *wvalue;
-        char power_stats[48], buf[8], firm[64];
+	CameraWidget *t, *section;
+        char power_stats[48], firm[64];
 	int pwr_status, pwr_source;
 	struct tm *camtm;
 	time_t camtime;
 
-	gp_debug_printf(GP_DEBUG_LOW,"canon","camera_config()");
+	gp_debug_printf(GP_DEBUG_LOW,"canon","camera_config_get()");
 	
 	if (cs->cached_ready == 1) {
 		camtime = psa50_get_time(camera);
 		camtm = gmtime(&camtime);
 	}
 
-	window = gp_widget_new(GP_WIDGET_WINDOW, "Canon Configuration");
+	*window = gp_widget_new(GP_WIDGET_WINDOW, 
+		"Canon PowerShot Configuration");
 
-	/* set the window label to something more specific */
-	strcpy(window->label, "Canon PowerShot series");
-	
 	section = gp_widget_new(GP_WIDGET_SECTION, "Configure");
-	gp_widget_append(window,section);
+	gp_widget_append(*window,section);
 	
 	t = gp_widget_new(GP_WIDGET_TEXT,"Camera Model");
 	gp_widget_value_set (t, cs->ident);
@@ -1335,7 +1334,7 @@ int camera_config(Camera *camera)
 	gp_widget_append(section,t);
 	
 	section = gp_widget_new(GP_WIDGET_SECTION, "Debug");
-	gp_widget_append(window,section);
+	gp_widget_append(*window,section);
 	
 	t = gp_widget_new(GP_WIDGET_MENU, "Debug level");
 	gp_widget_choice_add (t, "none");
@@ -1355,17 +1354,39 @@ int camera_config(Camera *camera)
 	}
 	gp_widget_append(section,t);
 
-	t = gp_widget_new(GP_WIDGET_TOGGLE, 
-					  "Dump data by packets to stderr");
+	t = gp_widget_new(GP_WIDGET_TOGGLE, "Dump data by packets to stderr");
 	gp_widget_value_set(t, &(cs->dump_packets));
 	gp_widget_append(section,t);
 
+	return GP_OK;
+}
+
+int gp_camera_config(Camera *camera)
+{
+	CameraWidget *window;
+
+	gp_camera_config_get (camera, &window);
+	
 	/* Prompt the user with the config window */	
 	if (gp_frontend_prompt (camera, window) == GP_PROMPT_CANCEL) {
 		gp_widget_unref(window);
 		return GP_OK;
 	}
-	
+
+	gp_camera_config_set (camera, window);
+	gp_widget_unref (window);
+	return GP_OK;
+}
+
+int gp_camera_config_set (Camera *camera, CameraWidget *window)
+{
+        struct canon_info *cs = (struct canon_info*)camera->camlib_data;
+        CameraWidget *w;
+        char *wvalue;
+        char buf[8];
+
+	gp_debug_printf(GP_DEBUG_LOW,"canon","camera_config_set()");
+
 	w = gp_widget_child_by_label(window,"Debug level");
 	if (gp_widget_changed(w)) {
 		gp_widget_value_get(w, &wvalue);
@@ -1415,9 +1436,8 @@ int camera_config(Camera *camera)
         }
 
 	gp_debug_printf(GP_DEBUG_LOW,"canon","done configuring camera.\n");
-	gp_debug_printf(GP_DEBUG_LOW,"canon","done configuring camera.\n");
 
-    return GP_OK;
+	return GP_OK;
 }
 
 /****************************************************************************/
