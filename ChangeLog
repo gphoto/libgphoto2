@@ -1,3 +1,8 @@
+2001-11-01 Marcus Meissner <marcus@jet.franken.de>
+	
+	* frontends/command-line/main.c: x was not set to 0 before listing
+	  serial speeds leading to corrupt output.
+
 2001-11-01 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2/gphoto2-filesys.c: Fix bug (folder deletion)

@@ -315,6 +315,7 @@ OPTION_CALLBACK (abilities)
 		(abilities.port & GP_PORT_USB)? "yes":"no");
         if (abilities.speed[0] != 0) {
         printf("Transfer speeds supported        :\n");
+		x = 0;
                 do {
         printf("                                 : %i\n", abilities.speed[x]);
                         x++;
