@@ -113,6 +113,12 @@ do
 	rm -f "m4/$file"
     done
     rm -rf intl/
+    grep "intl/Makefile" configure.in > /dev/null &&
+    ( sed -e 's#^AC_OUTPUT(\[.*intl/Makefile po/Makefile.in#AC_OUTPUT(\[#' \
+    configure.in >configure.in.new && mv configure.in.new configure.in )
+    grep "SUBDIRS.*intl" Makefile.am > /dev/null &&
+    ( sed -e 's#\(^SUBDIRS.*\) intl#\1#' Makefile.am >Makefile.am.new \
+    && mv Makefile.am.new Makefile.am )
 
     echo "Running gettextize --copy $gettext_opt"
     gettextize --copy $gettext_opt || fail
