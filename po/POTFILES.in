@@ -44,7 +44,6 @@ camlibs/polaroid/pdc640.c
 camlibs/polaroid/pdc700.c
 camlibs/ptp2/library.c
 camlibs/ptp2/ptp.c
-camlibs/ptp2/ptpcam.c
 camlibs/ricoh/library.c
 camlibs/ricoh/ricoh.c
 camlibs/samsung/samsung.c
