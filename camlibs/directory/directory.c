@@ -83,13 +83,12 @@ int camera_init (Camera *camera)
         camera->functions->abilities    	= camera_abilities;
         camera->functions->init         	= camera_init;
         camera->functions->exit         	= camera_exit;
-        camera->functions->folder_list  	= camera_folder_list;
-        camera->functions->file_list    	= camera_file_list;
+        camera->functions->folder_list_folders 	= camera_folder_list_folders;
+        camera->functions->folder_list_files    = camera_folder_list_files;
         camera->functions->file_get     	= camera_file_get;
-	camera->functions->file_info_set	= camera_file_info_set;
-	camera->functions->config_get		= camera_config_get;
-	camera->functions->config_set		= camera_config_set;
-        camera->functions->config       	= camera_config;
+	camera->functions->file_set_info	= camera_file_set_info;
+	camera->functions->get_config		= camera_get_config;
+	camera->functions->set_config		= camera_set_config;
         camera->functions->summary      	= camera_summary;
         camera->functions->manual       	= camera_manual;
         camera->functions->about        	= camera_about;
@@ -122,7 +121,7 @@ int camera_exit (Camera *camera)
         return (GP_OK);
 }
 
-int camera_file_info_set (Camera *camera, CameraFileInfo *info, char *folder, char *file)
+int camera_file_set_info (Camera *camera, char *folder, char *file, CameraFileInfo *info)
 {
 	int retval;
 	char *path_old;
@@ -177,7 +176,7 @@ int camera_file_info_set (Camera *camera, CameraFileInfo *info, char *folder, ch
 	return (GP_OK);
 }
 
-int camera_file_list(Camera *camera, CameraList *list, char *folder) 
+int camera_folder_list_files(Camera *camera, char *folder, CameraList *list)
 {
         GP_SYSTEM_DIR d;
         GP_SYSTEM_DIRENT de;
@@ -204,7 +203,7 @@ int camera_file_list(Camera *camera, CameraList *list, char *folder)
         return (GP_OK);
 }
 
-int camera_folder_list(Camera *camera, CameraList *list, char *folder) 
+int camera_folder_list_folders(Camera *camera, char *folder, CameraList *list)
 {
         GP_SYSTEM_DIR d;
         GP_SYSTEM_DIRENT de;
@@ -276,7 +275,7 @@ int directory_folder_set(Camera *camera, char *folder_name)
         return (folder_index(camera));
 }
 
-int camera_file_get (Camera *camera, CameraFile *file, char *folder, char *filename) 
+int camera_file_get (Camera *camera, char *folder, char *filename, CameraFile *file)
 {
         /**********************************/
         /* file_number now starts at 0!!! */
@@ -295,7 +294,7 @@ int camera_file_get (Camera *camera, CameraFile *file, char *folder, char *filen
         return (GP_OK);
 }
 
-int camera_config_get (Camera *camera, CameraWidget **window) 
+int camera_get_config (Camera *camera, CameraWidget **window) 
 {
 	CameraWidget *widget;
 	char buf[256];
@@ -311,7 +310,7 @@ int camera_config_get (Camera *camera, CameraWidget **window)
 	return (GP_OK);
 }
 
-int camera_config_set (Camera *camera, CameraWidget *window) 
+int camera_set_config (Camera *camera, CameraWidget *window) 
 {
 	CameraWidget *widget;
 	char buf[256];
@@ -332,7 +331,7 @@ int camera_config (Camera *camera)
 {
 	CameraWidget *window;
 
-	camera_config_get (camera, &window);
+	camera_get_config (camera, &window);
 
         /* Prompt the user with the config window */
         if (gp_frontend_prompt (camera, window) == GP_PROMPT_CANCEL) {
@@ -340,7 +339,7 @@ int camera_config (Camera *camera)
                 return GP_OK;
         }
 	
-	camera_config_set (camera, window);
+	camera_set_config (camera, window);
 
         return (GP_OK);
 } /* END DEPRECATED */

@@ -59,8 +59,8 @@ int camera_init (Camera *camera) {
     camera->functions->abilities 	= camera_abilities;
     camera->functions->init 	        = camera_init;
     camera->functions->exit 	        = camera_exit;
-    camera->functions->folder_list      = camera_folder_list;
-    camera->functions->file_list	= camera_file_list;
+    camera->functions->folder_list_folders      = camera_folder_list_folders;
+    camera->functions->folder_list_files	= camera_folder_list_files;
     camera->functions->file_get 	= camera_file_get;
     camera->functions->file_get_preview = camera_file_get_preview;
     camera->functions->file_delete 	= camera_file_delete;
@@ -169,30 +169,28 @@ int camera_exit (Camera *camera) {
     return (GP_OK);
 }
 
-int camera_folder_list	(Camera *camera, CameraList *list, char *folder) {
+int camera_folder_list_folders (Camera *camera, char *folder, CameraList *list) {
 
     DC240Data *dd = camera->camlib_data;
 
     return (dc240_get_folders(dd, list, folder));
 }
 
-int camera_file_list (Camera *camera, CameraList *list, char *folder) {
+int camera_folder_list_files (Camera *camera, char *folder, CameraList *list) {
 
     DC240Data *dd = camera->camlib_data;
 
     return (dc240_get_filenames(dd, list, folder));
 }
 
-int camera_file_get (Camera *camera, CameraFile *file, char *folder,
-                     char *filename) {
+int camera_file_get (Camera *camera, char *folder, char *filename, CameraFile *file) {
 
     DC240Data *dd = camera->camlib_data;
 
     return (dc240_file_action(dd, DC240_ACTION_IMAGE, file, folder, filename));
 }
 
-int camera_file_get_preview (Camera *camera, CameraFile *file,
-			     char *folder, char *filename) {
+int camera_file_get_preview (Camera *camera, char *folder, char *filename, CameraFile *file) {
 
     DC240Data *dd = camera->camlib_data;
 

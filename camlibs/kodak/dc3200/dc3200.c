@@ -60,8 +60,8 @@ int camera_init (Camera *camera) {
 	camera->functions->abilities 		= camera_abilities;
 	camera->functions->init 		= camera_init;
 	camera->functions->exit 		= camera_exit;
-	camera->functions->folder_list  	= camera_folder_list;
-	camera->functions->file_list		= camera_file_list;
+	camera->functions->folder_list_folders  = camera_folder_list_folders;
+	camera->functions->folder_list_files	= camera_folder_list_files;
 	camera->functions->file_get 		= camera_file_get;
 	camera->functions->file_get_preview 	= camera_file_get_preview;
 	camera->functions->summary		= camera_summary;

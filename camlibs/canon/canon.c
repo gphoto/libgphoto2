@@ -150,7 +150,7 @@ int camera_abilities(CameraAbilitiesList *list)
     return GP_OK;
 }
 
-int camera_folder_list(Camera *camera, CameraList *list, char *folder)
+int camera_folder_list(Camera *camera, char *folder, CameraList *list)
 {
 	gp_debug_printf(GP_DEBUG_LOW,"canon","camera_folder_list()");
 					
@@ -503,7 +503,7 @@ static int canon_file_list(Camera *camera, CameraList *list, char *folder)
 }
 
 
-int camera_file_list(Camera *camera, CameraList *list, char *folder)
+int camera_file_list(Camera *camera, char *folder, CameraList *list)
 {
 	gp_debug_printf(GP_DEBUG_LOW,"canon","camera_file_list()");
 
@@ -666,7 +666,7 @@ static int get_file_path(Camera *camera, char *filename, char *path)
 
 }
 
-int camera_file_get(Camera *camera, CameraFile *file, char *folder, char *filename)
+int camera_file_get(Camera *camera, char *folder, char *filename, CameraFile *file)
 {
 	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
     char *data;
@@ -712,7 +712,7 @@ int camera_file_get(Camera *camera, CameraFile *file, char *folder, char *filena
     return GP_OK;
 }
 
-int camera_file_get_preview(Camera *camera, CameraFile *preview, char *folder, char *filename)
+int camera_file_get_preview(Camera *camera, char *folder, char *filename, CameraFile *preview)
 {
 	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
     char *data;
@@ -805,19 +805,18 @@ int camera_init(Camera *camera)
 	camera->functions->abilities         = camera_abilities;
 	camera->functions->init      = camera_init;
 	camera->functions->exit      = camera_exit;
-	camera->functions->folder_list = camera_folder_list;
-	camera->functions->file_list = camera_file_list;
-	camera->functions->file_get  = camera_file_get;
+	camera->functions->folder_list_folders = camera_folder_list;
+	camera->functions->folder_list_files = camera_file_list;
+        camera->functions->folder_put_file  = camera_folder_put_file;
+        camera->functions->file_get  = camera_file_get;
 	camera->functions->file_get_preview =  camera_file_get_preview;
-	camera->functions->folder_put_file  = camera_folder_put_file;
 	camera->functions->file_delete = camera_file_delete;
-	camera->functions->config_get = camera_config_get;
-	camera->functions->config_set = camera_config_set;
-	camera->functions->file_config_get = camera_file_config_get;
-	camera->functions->file_config_set = camera_file_config_set;
-	camera->functions->folder_config_get = camera_folder_config_get;
-	camera->functions->folder_config_set = camera_folder_config_set;
-	camera->functions->config    = camera_config; 
+	camera->functions->get_config = camera_get_config;
+	camera->functions->set_config = camera_set_config;
+	camera->functions->file_get_config = camera_file_get_config;
+	camera->functions->file_set_config = camera_file_set_config;
+	camera->functions->folder_get_config = camera_folder_get_config;
+	camera->functions->folder_set_config = camera_folder_set_config;
 	camera->functions->capture   = camera_capture;
 	camera->functions->summary   = camera_summary;
 	camera->functions->manual    = camera_manual;
@@ -1149,7 +1148,7 @@ static int get_last_picture(Camera *camera, char *directory, char *filename)
 }
 
 
-int camera_folder_put_file(Camera *camera, CameraFile *file, char *folder)
+int camera_folder_put_file(Camera *camera, char *folder, CameraFile *file)
 {
 	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
     char destpath[300], destname[300], dir[300], dcf_root_dir[10];
@@ -1251,7 +1250,7 @@ int camera_folder_put_file(Camera *camera, CameraFile *file, char *folder)
 
 /****************************************************************************/
 	
-int camera_config_get(Camera *camera, CameraWidget **window)
+int camera_get_config(Camera *camera, CameraWidget **window)
 {
 	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
 	CameraWidget *t, *section;
@@ -1260,7 +1259,7 @@ int camera_config_get(Camera *camera, CameraWidget **window)
 	struct tm *camtm;
 	time_t camtime;
 
-	gp_debug_printf(GP_DEBUG_LOW,"canon","camera_config_get()");
+	gp_debug_printf(GP_DEBUG_LOW,"canon","camera_get_config()");
 	
 	*window = gp_widget_new(GP_WIDGET_WINDOW, 
 		"Canon PowerShot Configuration");
@@ -1361,7 +1360,7 @@ int camera_config(Camera *camera)
 {
 	CameraWidget *window;
 
-	camera_config_get (camera, &window);
+	camera_get_config (camera, &window);
 	
 	/* Prompt the user with the config window */	
 	if (gp_frontend_prompt (camera, window) == GP_PROMPT_CANCEL) {
@@ -1369,19 +1368,19 @@ int camera_config(Camera *camera)
 		return GP_OK;
 	}
 
-	camera_config_set (camera, window);
+	camera_set_config (camera, window);
 	gp_widget_unref (window);
 	return GP_OK;
 }
 
-int camera_config_set (Camera *camera, CameraWidget *window)
+int camera_set_config (Camera *camera, CameraWidget *window)
 {
         struct canon_info *cs = (struct canon_info*)camera->camlib_data;
         CameraWidget *w;
         char *wvalue;
         char buf[8];
 
-	gp_debug_printf(GP_DEBUG_LOW,"canon","camera_config_set()");
+	gp_debug_printf(GP_DEBUG_LOW,"canon","camera_set_config()");
 
 	w = gp_widget_child_by_label(window,"Debug level");
 	if (gp_widget_changed(w)) {
@@ -1438,7 +1437,7 @@ int camera_config_set (Camera *camera, CameraWidget *window)
 
 /****************************************************************************/
 	
-int camera_capture(Camera *camera, CameraFilePath *path, CameraCaptureSetting *setting)
+int camera_capture(Camera *camera, CameraFilePath *path)
 {
   gp_debug_printf(GP_DEBUG_LOW,"canon","camera_capture()");
   
@@ -1452,23 +1451,23 @@ int camera_capture_preview(Camera *camera, CameraFile *file)
   return GP_ERROR_NOT_SUPPORTED;
 }
 
-int camera_file_config_get (Camera *camera, CameraWidget **window,
-							char *folder, char *filename)
+int camera_file_get_config (Camera *camera, char *folder, char *filename,
+                            CameraWidget **window)
 {
 	return GP_ERROR;
 }
-int camera_file_config_set  (Camera *camera, CameraWidget *window, 
-                                char *folder, char *filename)
+int camera_file_set_config  (Camera *camera, char *folder, char *filename,
+                             CameraWidget *window)
 {
     return GP_ERROR;
 }
-int camera_folder_config_get(Camera *camera, CameraWidget **window,
-                                char *folder)
+int camera_folder_get_config(Camera *camera, char *folder,
+                             CameraWidget **window)
 {
     return GP_ERROR;
 }
-int camera_folder_config_set(Camera *camera, CameraWidget *window,
-                                char *folder)
+int camera_folder_set_config(Camera *camera, char *folder,
+                             CameraWidget *window)
 {
     return GP_ERROR;
 }

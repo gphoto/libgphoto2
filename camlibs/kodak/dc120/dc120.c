@@ -60,12 +60,11 @@ int camera_init (Camera *camera) {
 	camera->functions->abilities 	= camera_abilities;
 	camera->functions->init 	= camera_init;
 	camera->functions->exit 	= camera_exit;
-	camera->functions->folder_list  = camera_folder_list;
-	camera->functions->file_list	= camera_file_list;
+	camera->functions->folder_list_folders  = camera_folder_list_folders;
+	camera->functions->folder_list_files	= camera_folder_list_files;
 	camera->functions->file_get 	= camera_file_get;
 	camera->functions->file_get_preview =  camera_file_get_preview;
 	camera->functions->file_delete 	= camera_file_delete;
-//	camera->functions->capture 	= camera_capture;
 	camera->functions->summary	= camera_summary;
 	camera->functions->manual 	= camera_manual;
 	camera->functions->about 	= camera_about;
@@ -142,7 +141,7 @@ int camera_exit (Camera *camera) {
 	return (GP_OK);
 }
 
-int camera_folder_list	(Camera *camera, CameraList *list, char *folder) {
+int camera_folder_list_folders (Camera *camera, char *folder, CameraList *list) {
 
 	DC120Data *dd = camera->camlib_data;
 	char buf[32];
@@ -169,7 +168,7 @@ int camera_folder_list	(Camera *camera, CameraList *list, char *folder) {
 	return (GP_ERROR);
 }
 
-int camera_file_list (Camera *camera, CameraList *list, char *folder) {
+int camera_folder_list_files (Camera *camera, char *folder, CameraList *list) {
 
 	DC120Data *dd = camera->camlib_data;
 	CameraListEntry *entry;
@@ -252,13 +251,12 @@ int camera_file_action (Camera *camera, int action, CameraFile *file, char *fold
 	return (dc120_file_action(dd, action, from_card, album_num, picnum+1, file));
 }
 
-int camera_file_get (Camera *camera, CameraFile *file, char *folder, char *filename) { 
+int camera_file_get (Camera *camera, char *folder, char *filename, CameraFile *file) {
 
 	return (camera_file_action(camera, DC120_ACTION_IMAGE, file, folder, filename));
 }
 
-int camera_file_get_preview (Camera *camera, CameraFile *file,
-			     char *folder, char *filename) {
+int camera_file_get_preview (Camera *camera, char *folder, char *filename, CameraFile *file) {
 
 	return (camera_file_action(camera, DC120_ACTION_PREVIEW, file, folder, filename));
 }
@@ -277,7 +275,7 @@ int camera_file_delete (Camera *camera, char *folder, char *filename) {
 }
 
 #if 0
-int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
+int camera_capture (Camera *camera, CameraFile *file) {
 
 	DC120Data *dd = camera->camlib_data;
 
