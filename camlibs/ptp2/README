@@ -1,5 +1,4 @@
 libptp2 (c)2001-2003 Mariusz Woloszyn <emsi@ipartners.pl>
-ptpcam  (c)2001-2003 Mariusz Woloszyn <emsi@ipartners.pl>
 
 =====================
 *About this software*
@@ -9,12 +8,10 @@ This folder contains following code:
 ptp.c		- the main libptp2 code; this library is used to communicate
 		  with PTP devices
 ptp.h		- libptp2 header files
-ptp-pack.c	- this file is included into ptp.c (internal code)
-library.c	- gphoto2 PTP driver (used by gphoto2 to communicate with
+ptp-pack.c	- this file is included into ptp.c (internal structure
+		  pack/unpack code)
+library.c	- gphoto2 PTP2 driver (used by gphoto2 to communicate with
 		  PTP devices)
-ptpcam.c	- the software to manimpulate PTP cameras
-		  (currently get/set properties); it does things that
-		  you can't do with gphoto2
 
 The libptp2 library is under developement yet, but is considered to be
 functional and quite stable.
@@ -27,7 +24,7 @@ software.
 *Supported Cameras*
 ===================
 
-NOTE that if your camera is not on the list it DOES NOT mean that it is not
+NOTE, that if your camera is not on the list, it DOES NOT mean that it is not
 supported! Most of USB cameras designed after 2002 are PTP or USB Mass
 Storage. In both cases the camera is supported under Linux!
 
@@ -98,18 +95,18 @@ Canon Digital IXUS v3	| 0x04a9  |  0x3071  |
 Canon PowerShot A70	| 0x04a9  |  0x3073  |
 ==============================================
 
-ABOVE LIST MIGHT BE OUTDATED!
+ABOVE LIST IS OUTDATED!
 
 Note that for some HP, Nikon, Canon and Sony cameras you have to switch
-them to PTP mode as in most cases the camera is dual mode:
+them to PTP mode, as in most cases the camera is dual mode:
 PTP and USB Mass Storage.
 For some cameras it even changes the Product ID number, so don't panic if
 it does not match the one listed above, just switch the mode.
 Don't ask me how to do it. Refer to camera documentation.
 
 If you know that your camera might be a PTP one, you may test it
-against this code even if it's not on the list above. If it's really in
-PTP mode, the USB interface class should be set to 6 (it's called "still").
+against this code even if it's not on the list above. If it's really
+a PTP device, the USB interface class should be set to 6 (it's called "still").
 You may check this by reading /proc/bus/usb/devices, for example:
 
 cat /proc/bus/usb/devices | grep "Cls=06"
@@ -123,11 +120,15 @@ The ptp driver should detect that camera by interface class as "USB PTP
 Class Camera" and allow downloading the pictures and do other stuff exactly
 the same way as if it would be detected by product and vendor ID.
 
-If you're not Linux user try compiling ptpcam (if you have the source
-tarball of libgphoto2 ptpcam is build automaticaly camlibs/ptp2 folder).
+If you're not Linux user fetch libptp2 from:
+http://sourceforge.net/projects/libptp
+and try to compile and install it.
+The ptpcam tool attached to thil library is able to find and identify PTP
+devices. Type:
 
-ptpcam --list-devices will search through all usb devices looking for a
-PTP one.
+ptpcam --list-devices
+
+and ptpcam will search and display the names of all found PTP devices.
 
 
 ================================

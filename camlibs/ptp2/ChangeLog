@@ -1,3 +1,10 @@
+2003-09-12 Mariusz Woloszyn
+	* ptp.h: added some defines (sync with libptpt2-1.0pre6)
+	* library.c: use kodak extension operation ONLY VendorExtensionID
+	  field indicates that the device uses kodak PTP extension
+	* ptpcam.c: removed; download libptp2 sources if you need it
+	* Makefile.am: ptpcam.c removed
+	* README: updated for ptpcam.c removal
 2003-09-11  Marcus Meissner <marcus@jet.franken.de>
 
 	* library.c: Note down filename in info struct.

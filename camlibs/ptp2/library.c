@@ -899,7 +899,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	switch (type) {
 
 	case	GP_FILE_TYPE_EXIF:
-		/* Ups... no easy way to obtain EXIF information */
+		/* Ups... no easy way to obtain plain EXIF information */
 		return (GP_ERROR_NOT_SUPPORTED);
 
 	case	GP_FILE_TYPE_PREVIEW:
@@ -970,7 +970,12 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	oi.ObjectFormat=get_mimetype(camera, file);
 	oi.ObjectCompressedSize=size;
 	gp_file_get_mtime(file, &oi.ModificationDate);
-	if (ptp_operation_issupported(params, PTP_OC_EK_SendFileObject)) {
+	/* if the device is usign PTP_VENDOR_EASTMAN_KODAK extension try
+	 * PTP_OC_EK_SendFileObject
+	 */
+	if ((params->deviceinfo.VendorExtensionID==PTP_VENDOR_EASTMAN_KODAK) &&
+		(ptp_operation_issupported(params, PTP_OC_EK_SendFileObject)))
+	{
 		CPR (context, ptp_ek_sendfileobjectinfo (params, &storage,
 			&parent, &handle, &oi));
 		CPR (context, ptp_ek_sendfileobject (params, object, size));
@@ -1096,6 +1101,7 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 	uint32_t parent;
 	uint32_t storage;
 	uint32_t handle;
+	PTPParams* params=&camera->pl->params;
 
 	((PTPData *) camera->pl->params.data)->context = context;
 	memset(&oi, 0, sizeof (PTPObjectInfo));
@@ -1117,8 +1123,14 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 	oi.ProtectionStatus=PTP_PS_NoProtection;
 	oi.AssociationType=PTP_AT_GenericFolder;
 
-	CPR (context, ptp_ek_sendfileobjectinfo (&camera->pl->params,
-		&storage, &parent, &handle, &oi));
+	if ((params->deviceinfo.VendorExtensionID==
+			PTP_VENDOR_EASTMAN_KODAK) &&
+		(ptp_operation_issupported(params,
+			PTP_OC_EK_SendFileObjectInfo)))
+	{
+		CPR (context, ptp_ek_sendfileobjectinfo (&camera->pl->params,
+			&storage, &parent, &handle, &oi));
+	}
 	/* to create folder on kodak camera you don't have to sendfileobject */
 #if 0
 	CPR (context, ptp_ek_sendfileobject (&camera->pl->params,

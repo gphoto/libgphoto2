@@ -23,7 +23,7 @@
 
 #include <stdarg.h>
 #include <time.h>
-#include <gphoto2-endian.h>
+#include "gphoto2-endian.h"
 
 // PTP datalayer byteorder
 
@@ -460,6 +460,13 @@ typedef struct _PTPDevicePropDesc PTPDevicePropDesc;
 #define PTP_DPC_UploadURL		0x501D
 #define PTP_DPC_Artist			0x501E
 #define PTP_DPC_CopyrightInfo		0x501F
+
+// Proprietary vendor extension device property mask
+#define PTP_DPC_EXTENSION_MASK		0xF000
+#define PTP_DPC_EXTENSION		0xD000
+
+// Vendor Extensions device property codes
+
 // Eastman Kodak extension device property codes
 #define PTP_DPC_EK_ColorTemperature	0xD001
 #define PTP_DPC_EK_DateTimeStampFormat	0xD002
@@ -467,6 +474,11 @@ typedef struct _PTPDevicePropDesc PTPDevicePropDesc;
 #define PTP_DPC_EK_VideoOut		0xD004
 #define PTP_DPC_EK_PowerSaving		0xD005
 #define PTP_DPC_EK_UI_Language		0xD006
+// Canon extension device property codes
+#define PTP_DPC_CANON_BeepMode		0xD001
+#define PTP_DPC_CANON_FlashMemory	0xD031
+#define PTP_DPC_CANON_CameraModel	0xD032
+#define PTP_DPC_CANON_UnixTime		0xD034
 
 // Device Property Form Flag
 
