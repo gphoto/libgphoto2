@@ -21,7 +21,7 @@ CameraWidget* gp_widget_new(CameraWidgetType type, char *label) {
 	strcpy(w->value, "");
 
 	/* for now, for ease of mem management, pre-alloc 64 children pointers */
-	memset(w->children, 0, sizeof(CameraWidget*)*64);	
+	memset(w->children, 0, sizeof(CameraWidget*)*64);
 
 	w->children_count = 0;
 
@@ -78,7 +78,10 @@ char *gp_widget_label(CameraWidget *widget) {
 
 int gp_widget_value_set (CameraWidget *widget, char *value) {
 
-	strcpy(widget->value, value);
+	if (strcmp(widget->value, value) != 0) {
+		strcpy(widget->value, value);
+		widget->changed = 1;
+	}
 
 	return (GP_OK);
 }
@@ -222,6 +225,11 @@ char *gp_widget_choice (CameraWidget *widget, int choice_number) {
 	return (widget->choice[choice_number]);
 }
 
+int gp_widget_changed (CameraWidget *widget) {
+
+	return (widget->changed);
+}
+
 /* Debugging output								*/
 /* --------------------------------------------------------------------------	*/
 
@@ -232,7 +240,12 @@ void gp_widget_dump_rec (CameraWidget *widget, int depth) {
 	printf("core: ");
 	for (x=0; x<depth*2; x++)
 		printf(" ");
-	printf("%s\n", widget->label);
+	printf("/ label=\"%s\"\n", widget->label);
+
+	printf("core: ");
+	for (x=0; x<depth*2; x++)
+		printf(" ");
+	printf("\\ value=\"%s\"\n", widget->value);
 
 	for (x=0; x<widget->children_count; x++)
 		gp_widget_dump_rec(widget->children[x], depth+1);

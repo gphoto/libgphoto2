@@ -20,3 +20,4 @@ extern	CameraStatus   gp_fe_status;
 extern	CameraProgress gp_fe_progress;
 extern	CameraMessage  gp_fe_message;
 extern	CameraConfirm  gp_fe_confirm; 
+extern	CameraPrompt   gp_fe_prompt; 
