@@ -262,7 +262,7 @@ int canon_serial_send(const unsigned char *buf, int len, int sleep)
       for(i=0;i<len;i++) {
         gpio_write(gdev,buf,1);
         buf++;
-        usleep(1);
+        usleep(sleep);
       }
     }
     else {
