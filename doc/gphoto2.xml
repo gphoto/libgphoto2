@@ -614,6 +614,9 @@ Saving file as MVI_5418.AVI                                                     
           </listitem>
 
           <listitem>
+	    <para>FIXME: use packaging/linux-hotplug/print-usb-usermap
+	      instead of gphoto2 --print-usb-usermap.
+	    </para>
             <para>
               Add the output of 
               <screen>
@@ -632,14 +635,14 @@ Saving file as MVI_5418.AVI                                                     
 
 		Instead of modifying
 		<filename>/etc/hotplug/usb.usermap</filename>
-		directly, we set up special file
-		<filename>/usr/lib/hotplug/usbcam/usb.usermap</filename> 
+		directly, we set up a special file
+		<filename>/usr/lib/hotplug/libgphoto2/usb.usermap</filename> 
 		and let <command>update-usb.usermap</command>
 		update the
 		<filename>/etc/hotplug/usb.usermap</filename> file:
 		<screen>
-<prompt>[root@home ~]# </prompt><command>mkdir <parameter>/usr/lib/hotplug/usbcam</parameter></command>
-<prompt>[root@home ~]# </prompt><command>gphoto2 <parameter>--print-usb-usermap</parameter> > <filename>/usr/lib/hotplug/usbcam/usb.usermap</filename></command>
+<prompt>[root@home ~]# </prompt><command>mkdir <parameter>/usr/lib/hotplug/libgphoto2</parameter></command>
+<prompt>[root@home ~]# </prompt><command>gphoto2 <parameter>--print-usb-usermap</parameter> > <filename>/usr/lib/hotplug/libgphoto2/usb.usermap</filename></command>
 <prompt>[root@home ~]# </prompt><command>update-usb.usermap</command>
 		</screen>
 	      </para>
@@ -1096,8 +1099,6 @@ Saving file as MVI_5418.AVI                                                     
 	  <arg>--help</arg>
 	</group><sbr/>
 	<arg choice="opt">--list-cameras</arg>
-	<arg choice="opt">--usb-usermap-script <replaceable>NAME</replaceable></arg><sbr/>
-	<arg choice="opt">--print-usb-usermap</arg>
 	<arg choice="opt">--list-ports</arg>
 	<arg choice="opt">--stdout</arg><sbr/>
 	<arg choice="opt">--stdout-size</arg>
@@ -1234,20 +1235,6 @@ Saving file as MVI_5418.AVI                                                     
 	  <term><option>--list-cameras</option></term>
 	  <listitem>
 	    <para>List supported camera models.</para>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><option>--usb-usermap-script</option> <replaceable>NAME</replaceable></term>
-	  <listitem>
-	    <para>Use <replaceable>NAME</replaceable> as the hotplug usb script used in the output of <option>--print-usb-usermap</option>. Default is "usbcam".</para>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><option>--print-usb-usermap</option></term>
-	  <listitem>
-	    <para>For every camera supported by your version of <command>gphoto2</command>, print the corresponding line for inclusion into the <filename>usb.usermap</filename> hotplug config file. The script name used in these lines is specified with the <option>--usb-usermap-script</option> option.</para>
 	  </listitem>
 	</varlistentry>
 
