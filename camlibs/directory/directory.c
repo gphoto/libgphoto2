@@ -166,7 +166,7 @@ int camera_file_get (int file_number, CameraFile *file) {
 	long imagesize;
 	char filename[1024];
 
-#ifdef (OS2) || (WINDOWS)
+#if defined(OS2) || defined(WINDOWS)
 	sprintf(filename, "%s\\%s", dir_directory,
 		dir_images[file_number]);
 #else
@@ -244,14 +244,19 @@ int camera_capture (CameraFileType type) {
 
 int camera_summary (char *summary) {
 
-	strcpy(summary, "Summary Not Available");
+	sprintf(summary, "Current directory:\n%s", dir_directory);
 
 	return (GP_OK);
 }
 
 int camera_manual (char *manual) {
 
-	strcpy(manual, "Manual Not Available");
+	strcpy(manual, 
+"The Directory Browse \"camera\" lets you index
+photos on your hard drive. The folder list on the
+left contains the folders on your hard drive,
+beginning at the root directory (\"/\").
+");
 
 	return (GP_OK);
 }
