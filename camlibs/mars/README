@@ -1,0 +1,56 @@
+MARS MR97310 STILLCAM DRIVER
+Theodore Kilgore <kilgota@auburn.edu> April, 2004.
+
+(Driver is LGPL like most of the rest of libgphoto2; see any of the 
+source files for a more complete statement of the license.)
+
+INTRODUCTION
+
+This driver is for a camera which uses the Mars MR97310 chip. I understand 
+that there are several of these. Mine is an Aiptek PenCam VGA+ (Vendor:Product
+ID 0x08ca:0x0111). The interface is proprietary, and these cameras are 
+supported commercially only in Windows.
+
+FEATURES OF THE CAMERA
+
+The Aiptek PenCam VGA+ is a "budget" camera. The camera has resolution settings 
+of 640x480 and 320x240. The default behavior of the manufacturer's camera 
+driver is to save photos in JPEG format, with BMP format optional. However, 
+the raw data is in Bayer array format. Here, everything is saved in PPM format. 
+The camera can also be used as a webcam (unsupported here) or to make a "video 
+clip." This driver supports the 640x480 and 320x240 *uncompressed* stillcam 
+and "clip" modes only. Clips download nicely as a succession of PPM files. 
+There is an optional 3X compression mode, proprietary and not obvious. 
+The adventurous and persistent are hereby encouraged to play with it. 
+
+The outside of the package advertises "Interpolated XGA (1024x768) Resolution" 
+(which can be turned on or off). If "enhancement" is turned on, the appearance 
+of the photos does change, but not much to the better. The photos are only 
+slightly sharper but become much more blocky with jagged lines and curves.  
+It seems  not worth the trouble. If you find that the "enhancement" does 
+something nice, please let me know. Especially if you can understand how to 
+get "Interpolated 1024x768 Resolution" from 640x480 bytes downloaded from a 
+640x480 Bayer array.  
+
+The camera uses a configuration "block," as do the sq905 cameras. However, 
+here the information can be used to run options such as gphoto2 -p 3 and 
+gphoto2 -p 3-5. Whether this flexibility is of any practical effect or not 
+is another question, since apparently the camera will not download thumbnails. 
+The driver provided with the camera is for Windows only, and that driver does 
+not take full advantage even of the mentioned abilities. There, one has the 
+choice either to download all photos, or none. If all are downloaded, then 
+thumbnails are created. The user can then do previews and decide what to save. 
+
+
+FURTHER DETAILS
+
+Further details are given in "protocol.txt". These details have been obtained 
+through trial and error and are intended solely to meet the problems of 
+compatibility in other than a Microsoft Windows (trademark) environment. 
+
+WARRANTY?
+
+Absolutely none. Remember, I did not sell you this software. I have written 
+this driver for my own edification and in the sincere hope that it might help 
+you to use of your camera. Please see also the warranty clauses 
+in the LGPL license. 
