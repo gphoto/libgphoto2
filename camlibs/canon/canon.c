@@ -2101,7 +2101,8 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
                                         if (!camera->pl->list_all_files
                                             && !is_image (info.file.name)
                                             && !is_movie (info.file.name)
-                                            && !is_audio (info.file.name)) {
+                                            && !is_audio (info.file.name)
+                                            && !is_thumbnail (info.file.name)) {
                                                 /* FIXME: Find associated main file and add it there */
                                                 /* do nothing */
                                                 GP_DEBUG ("Ignored %s/%s", folder,
