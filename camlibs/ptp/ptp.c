@@ -332,7 +332,7 @@ ptp_getobjectinfo(PTPParams* params, PTPObjectHandles* objecthandles,
 	*(int *)(req->data)=objecthandles->handler[n];
 	ret=ptp_sendreq(params, req, PTP_OC_GetObjectInfo);
 	if (ret!=PTP_RC_OK) {
-		ptp_error (params, "ptp_getobjectsinfo sending req");
+		ptp_error (params, "ptp_getobjectinfo sending req");
 		free(req);
 		return PTP_ERROR_IO;
 	}
@@ -340,7 +340,7 @@ ptp_getobjectinfo(PTPParams* params, PTPObjectHandles* objecthandles,
 	if ((ret!=PTP_RC_OK) ||
 		(req->type!=PTP_TYPE_DATA) ||
 		(req->code!=PTP_OC_GetObjectInfo)) {
-		ptp_error (params, "ptp_getobjectsinfo getting data");
+		ptp_error (params, "ptp_getobjectinfo getting data");
 #ifdef DEBUG
 		ptp_error (params, "GetObjectInfo data returned:\nlen=0x%8.8x"
 		"type=0x%4.4x code=0x%4.4x ID=0x%8.8x\n",
@@ -358,7 +358,7 @@ ptp_getobjectinfo(PTPParams* params, PTPObjectHandles* objecthandles,
 	if ((ret!=PTP_RC_OK) ||
 		(req->type!=PTP_TYPE_RESP) ||
 		(req->code!=PTP_RC_OK)) {
-		ptp_error (params, "ptp_getobjectsinfo getting resp");
+		ptp_error (params, "ptp_getobjetsinfo getting resp");
 #ifdef DEBUG
 		ptp_error (params, "PTP_OC_GetObjectInfo resp:\nlen=0x%8.8x"
 		" type=0x%4.4x code=0x%4.4x ID=0x%8.8x\n",

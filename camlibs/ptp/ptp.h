@@ -201,7 +201,7 @@ short ptp_opensession  (PTPParams *params);
 short ptp_closesession (PTPParams *params);
 
 short ptp_getobjecthandles (PTPParams *params, PTPObjectHandles* objecthandles);
-short ptp_getobjectsinfo   (PTPParams *params, PTPObjectHandles* objecthandles,
+short ptp_getobjectinfo   (PTPParams *params, PTPObjectHandles* objecthandles,
 			    PTPObjectInfo** objectinfoarray, int n);
 short ptp_getobject        (PTPParams *params, PTPObjectHandles* objecthandles,
 			    PTPObjectInfo* objectinfoarray, int n,
