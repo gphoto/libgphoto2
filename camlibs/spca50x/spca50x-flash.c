@@ -231,8 +231,8 @@ spca50x_flash_get_file (CameraPrivateLibrary *lib, GPContext *context,
 		}
 	}
 	/* align */
-	if (file_size % 16384 != 0)
-		aligned_size = ((file_size / 16384) + 1) * 16384;
+	if (file_size % 8192 != 0)
+		aligned_size = ((file_size / 8192) + 1) * 8192;
 
 	buf = malloc (aligned_size); 
 	if (!buf)
