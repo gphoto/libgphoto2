@@ -124,6 +124,9 @@ gp_filesystem_folder_number (CameraFilesystem *fs, const char *folder)
 	CHECK_NULL (fs && folder);
 	CHECK_ABS (folder);
 
+	gp_debug_printf (GP_DEBUG_HIGH, "core", "Looking for folder '%s'...",
+			 folder);
+
 	/*
 	 * We are nice to front-end/camera-driver writers - we'll ignore
 	 * trailing slashes (if any).
@@ -133,8 +136,11 @@ gp_filesystem_folder_number (CameraFilesystem *fs, const char *folder)
 		len--;
 
 	for (x = 0; x < fs->count; x++)
-		if (!strncmp (fs->folder[x].name, folder, len))
+		if (!strncmp (fs->folder[x].name, folder, len) &&
+		    (len == strlen (fs->folder[x].name)))
 			return (x);
+
+	gp_debug_printf (GP_DEBUG_HIGH, "core", "... not found.");
 
 	/* Ok, we didn't find the folder. Do we have a parent? */
 	if (!strcmp (folder, "/"))
@@ -142,6 +148,7 @@ gp_filesystem_folder_number (CameraFilesystem *fs, const char *folder)
 
 	/* If the parent folder is not dirty, return. */
 	strncpy (buf, folder, len);
+	buf[len] = '\0';
 	for (y = strlen (buf) - 1; y >= 0; y--)
 		if (buf[y] == '/')
 			break;
@@ -463,6 +470,9 @@ gp_filesystem_list_folders (CameraFilesystem *fs, const char *folder,
 	/* The folder is clean now */
 	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
 	fs->folder[x].folders_dirty = 0;
+
+	gp_debug_printf (GP_DEBUG_HIGH, "core", "Folder listing in '%s' done.",
+			 folder);
 
 	return (GP_OK);
 }

@@ -1,5 +1,9 @@
 2001-09-22  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2/filesys.c: Fix two small bugs.
+
+2001-09-22  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/jamcam/.cvsignore:
 	* camlibs/sonydscf55/.cvsignore: New
 	* include/gphoto2-debug.h:
