@@ -10,6 +10,7 @@ CameraWidget* gp_widget_new(CameraWidgetType type, char *label) {
 
 	CameraWidget *w;
 	int x;
+	static int i = 0;
 
 	w = (CameraWidget*)malloc(sizeof(CameraWidget));
 	memset(w, 0, sizeof(CameraWidget));
@@ -24,6 +25,7 @@ CameraWidget* gp_widget_new(CameraWidgetType type, char *label) {
 
         w->ref_count    = 1;
 	w->choice_count = 0;
+	w->id		= i++;
 
         /* Alloc 64 children pointers */
 	memset(w->children, 0, sizeof(CameraWidget*)*64);
@@ -85,6 +87,11 @@ int gp_widget_unref (CameraWidget *widget) {
 
 /* Retrieve some common widget properties					*/
 /* --------------------------------------------------------------------------	*/
+
+int gp_widget_id (CameraWidget *widget) {
+
+	return (widget->id);
+}
 
 int gp_widget_type (CameraWidget *widget) {
 
@@ -289,6 +296,23 @@ CameraWidget* gp_widget_child_by_label (CameraWidget *widget, char *label) {
 
 	for (x=0; x<widget->children_count; x++) {
 		child = gp_widget_child_by_label(widget->children[x],label);
+		if (child)
+			return (child);
+	}
+
+	return (NULL);
+}
+
+CameraWidget* gp_widget_child_by_id (CameraWidget *widget, int id) {
+
+	int x;
+	CameraWidget *child;
+
+	if (widget->id == id)
+		return (widget);
+	
+	for (x = 0; x < widget->children_count; x++) {
+		child = gp_widget_child_by_id (widget->children[x], id);
 		if (child)
 			return (child);
 	}
