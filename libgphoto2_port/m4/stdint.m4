@@ -81,7 +81,7 @@ EOF],
 /* 64-bit types are not available on this system */
 /* typedef u_int64_t uint64_t; */
 #endif /*!__STDINT_H*/
-EOF]),
+EOF])
 
 ],
 [AC_MSG_WARN([I can't find size-specific integer definitions on this system])
