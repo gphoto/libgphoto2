@@ -1,5 +1,9 @@
 2001-10-17  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2_port/gphoto2-port-log.[c,h]: Added GP_LOG_DATA
+
+2001-10-17  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* include/gphoto2-port-debug.h
 	* libgphoto2_port/debug.c: Removed
 

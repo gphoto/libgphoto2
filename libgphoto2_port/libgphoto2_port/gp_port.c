@@ -247,7 +247,7 @@ gp_port_write (GPPort *dev, char *data, int size)
 
 	CHECK_NULL (dev && data);
 
-	gp_log_data (GP_LOG_DEBUG, "gphoto2-port", data, size);
+	gp_log_data ("gphoto2-port", data, size);
 
 	/* Check if we wrote all bytes */
 	CHECK_SUPP (_("write"), dev->ops->write);
@@ -278,7 +278,7 @@ gp_port_read (GPPort *dev, char *data, int size)
 			"out of %i byte(s)", retval, size);
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-port", "%5i byte(s) read", retval);
-	gp_log_data (GP_LOG_DEBUG, "gphoto2-port", data, retval);
+	gp_log_data ("gphoto2-port", data, retval);
 
 	return (retval);
 }
@@ -435,7 +435,7 @@ int gp_port_usb_msg_write (GPPort *dev, int request, int value, int index,
 	gp_log (GP_LOG_DEBUG, "gphoto2-port", "Writing message "
 		"(request=0x%x value=0x%x index=0x%x size=%i=0x%x)...",
 		request, value, index, size, size);
-	gp_log_data (GP_LOG_DEBUG, "gphoto2-port", bytes, size);
+	gp_log_data ("gphoto2-port", bytes, size);
 
 	CHECK_NULL (dev);
 

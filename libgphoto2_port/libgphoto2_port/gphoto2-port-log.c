@@ -167,7 +167,6 @@ gp_log_history_append (const char *msg)
 
 /**
  * gp_log_data:
- * @levels: gphoto2 log levels
  * @domain: the domain
  * @data: the data to be logged
  * @size: the size of the @data
@@ -176,8 +175,7 @@ gp_log_history_append (const char *msg)
  * to log text messages, use #gp_log instead.
  **/
 void
-gp_log_data (GPLogLevels levels, const char *domain, const char *data,
-	     unsigned int size)
+gp_log_data (const char *domain, const char *data, unsigned int size)
 {
 	static char hexchars[16] = "0123456789abcdef";
 	char *curline, *result;
@@ -187,12 +185,12 @@ gp_log_data (GPLogLevels levels, const char *domain, const char *data,
 	unsigned char value;
 
 	if (!data) {
-		gp_log (levels, domain, "No hexdump (NULL buffer)");
+		gp_log (GP_LOG_DATA, domain, "No hexdump (NULL buffer)");
 		return;
 	}
 
 	if (!size) {
-		gp_log (levels, domain, "Empty hexdump of empty buffer");
+		gp_log (GP_LOG_DATA, domain, "Empty hexdump of empty buffer");
 		return;
 	}
 
@@ -229,7 +227,7 @@ gp_log_data (GPLogLevels levels, const char *domain, const char *data,
         }
         curline[0] = '\0';
 
-	gp_log (levels, domain, "Hexdump of %i = 0x%x bytes follows:\n%s",
+	gp_log (GP_LOG_DATA, domain, "Hexdump of %i = 0x%x bytes follows:\n%s",
 		size, size, result);
 	free (result);
 }

@@ -23,6 +23,7 @@
 
 typedef enum {
 	GP_LOG_ERROR = 1 << 2,
+	GP_LOG_DATA  = 1 << 6,
 	GP_LOG_DEBUG = 1 << 7
 } GPLogLevels;
 
@@ -35,8 +36,7 @@ int  gp_log_remove_func (int id);
 /* Logging */
 void gp_log      (GPLogLevels levels, const char *domain,
 		  const char *format, ...);
-void gp_log_data (GPLogLevels levels, const char *domain,
-		  const char *data, unsigned int size);
+void gp_log_data (const char *domain, const char *data, unsigned int size);
 
 /* History */
 int         gp_log_history_set_size (unsigned int size);
