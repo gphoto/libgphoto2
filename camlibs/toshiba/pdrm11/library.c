@@ -233,7 +233,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	GP_DEBUG("get_info_func");
 
 	now = time(NULL);
-	GP_DEBUG("now: 0x%x", now);
+	GP_DEBUG("now: 0x%lx", (long)now);
 	info->file.mtime = now;
 
 	info->file.fields = GP_FILE_INFO_MTIME;

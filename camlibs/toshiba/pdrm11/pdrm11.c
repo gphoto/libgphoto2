@@ -106,7 +106,7 @@ int pdrm11_get_filenames(GPPort *port, CameraList *list)
 		}
 		name[12] = '\0';
 
-		GP_DEBUG(name);
+		GP_DEBUG("%s",name);
 		gp_list_append(list, name, NULL);
 	}
 
