@@ -1,3 +1,8 @@
+2002-09-01  Lutz Müller <lutz@users.sourceforge.net>
+
+	* MAINTAINERS: Arnaud is now responsible for autogen.sh. Added 
+	  myself on top of Scott regarding libgphoto2(_port).
+
 2002-07-30  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* autogen.sh: new package name: libgphoto2

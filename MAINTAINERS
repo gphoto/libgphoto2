@@ -3,9 +3,11 @@ If you have specific questions (like why doesn't my HP C20 answer with 0x20
 if I send 0xff as described in whatever/file.c), those are the guys to ask.
 
 libgphoto2_port:
+	Lutz Müller <lutz@users.sourceforge.net>
 	Scott Fritzinger <scottf@unr.edu>
 
 libgphoto2:
+	Lutz Müller <lutz@users.sourceforge.net>
 	Scott Fritzinger <scottf@unr.edu>
 
 --------------------------------------------------------------------------------
@@ -121,6 +123,9 @@ SANE (?):
 --------------------------------------------------------------------------------
 				    SUPPORT
 --------------------------------------------------------------------------------
+
+Build system up to 'configure' (i.e. 'autogen.sh'):
+	Arnaud Launay <asl@launay.org>
 
 Bug reports:
 	Hubert Figuiere <hfiguiere@teaser.fr>
