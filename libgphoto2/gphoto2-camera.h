@@ -256,9 +256,12 @@ int gp_camera_file_delete     	(Camera *camera, const char *folder,
 				 const char *file);
 
 /* Informing frontends */
-int gp_camera_set_status_func   (Camera *, CameraStatusFunc func, void *data);
-int gp_camera_set_progress_func (Camera *, CameraProgressFunc func, void *data);
-int gp_camera_set_message_func  (Camera *, CameraMessageFunc func, void *data);
+int gp_camera_set_status_func   (Camera *camera, CameraStatusFunc func,
+				 void *data);
+int gp_camera_set_progress_func (Camera *camera, CameraProgressFunc func,
+				 void *data);
+int gp_camera_set_message_func  (Camera *camera, CameraMessageFunc func,
+				 void *data);
 
 int gp_camera_message           (Camera *camera, const char *format, ...);
 int gp_camera_status            (Camera *camera, const char *format, ...);

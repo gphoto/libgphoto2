@@ -1,6 +1,8 @@
 <SECTION>
 <FILE>gphoto2-camera</FILE>
 <TITLE>Camera</TITLE>
+CameraText
+CameraFunctions
 Camera
 
 gp_camera_new
@@ -8,25 +10,61 @@ gp_camera_ref
 gp_camera_unref
 gp_camera_free
 
-gp_camera_capture
-gp_camera_folder_list_folders
+CameraStatusFunc
+gp_camera_set_status_func
 
-gp_camera_file_delete
+CameraProgressFunc
+gp_camera_set_progress_func
 
-gp_camera_file_set_info
-gp_camera_file_get_config
+CameraMessageFunc
+gp_camera_set_message_func
 
-gp_camera_file_set_config
-
-gp_camera_get_summary
-gp_camera_get_about
-
-
-CameraCaptureType
-
+gp_camera_status
 gp_camera_progress
 gp_camera_message
 
+gp_camera_set_abilities
+gp_camera_get_abilities
+
+gp_camera_set_port_path
+gp_camera_get_port_path
+
+gp_camera_set_port_name
+gp_camera_get_port_name
+
+gp_camera_init
+
+CameraFilePath
+CameraCaptureType
+gp_camera_capture
+gp_camera_capture_preview
+
+gp_camera_get_result_as_string
+
+gp_camera_get_config
+gp_camera_set_config
+
+gp_camera_folder_list_files
+gp_camera_folder_list_folders
+
+gp_camera_folder_put_file
+gp_camera_folder_delete_all
+
+gp_camera_folder_get_config
+gp_camera_folder_set_config
+
+gp_camera_file_get
+gp_camera_file_delete
+
+gp_camera_file_get_info
+gp_camera_file_set_info
+
+gp_camera_file_get_config
+gp_camera_file_set_config
+
+gp_camera_get_manual
+gp_camera_get_summary
+gp_camera_get_about
 
 </SECTION>
 
