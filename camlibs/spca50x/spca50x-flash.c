@@ -193,7 +193,6 @@ spca50x_flash_get_TOC(CameraPrivateLibrary *pl, int *filecount)
 	} else { /* all other cams with flash... */
 		/* read the TOC from the cam */
 		CHECK (gp_port_read (pl->gpdev, pl->flash_toc, toc_size));
-		pl->files = NULL;
 	}
 	/* record that TOC has been updated - clear the "dirty" flag */
 	pl->num_files_on_flash = *filecount;

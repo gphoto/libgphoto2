@@ -882,6 +882,7 @@ spca50x_get_FATs (CameraPrivateLibrary * lib, int dramtype)
 				lib->files[file_index].width = w;
 				lib->files[file_index].height = h;
 			}
+			lib->files[file_index].thumb = NULL;
 			file_index++;
 		}
 		p += SPCA50X_FAT_PAGE_SIZE;
