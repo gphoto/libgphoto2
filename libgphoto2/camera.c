@@ -86,6 +86,7 @@ int gp_camera_new (Camera **camera, int camera_number)
         /* Initialize the members */
         strcpy((*camera)->model, glob_abilities_list->abilities[camera_number]->model);
         (*camera)->port       = (CameraPortInfo*)malloc(sizeof(CameraPortInfo));
+	(*camera)->port->type = GP_PORT_NONE;
         (*camera)->abilities  = (CameraAbilities*)malloc(sizeof(CameraAbilities));
         (*camera)->functions  = (CameraFunctions*)malloc(sizeof(CameraFunctions));
         (*camera)->library_handle  = NULL;
@@ -213,14 +214,14 @@ int gp_camera_init (Camera *camera)
                 return(GP_ERROR_NOT_SUPPORTED);
 	}
 
-	/* Set the port type from the path. */
-//FIXME: This should really be done by the frontends...
-        for (x=0; x<gp_port_count(); x++) {
-                gp_port_info(x, &info);
-                if (strcmp(info.path, camera->port->path)==0)
-                        camera->port->type = info.type;
-        }
-
+	/* Set the port type from the path in case the frontend didn't. */
+	if (camera->port->type == GP_PORT_NONE) {
+	        for (x=0; x<gp_port_count(); x++) {
+        	        gp_port_info(x, &info);
+                	if (strcmp(info.path, camera->port->path)==0)
+                        	camera->port->type = info.type;
+	        }
+	}
 
 
         return (camera->functions->init (camera));
