@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
 PACKAGE=gphoto2
-VERSION=1.90
+VERSION=0.1
 libdir=${prefix}/lib/gphoto2
 
 AC_INIT(include/gphoto2.h)
