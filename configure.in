@@ -63,6 +63,7 @@ camlibs/Makefile \
 camlibs/barbie/Makefile \
 camlibs/fujitsu/Makefile \
 camlibs/directory/Makefile \
+camlibs/panasonic/Makefile \
 frontends/Makefile \
 frontends/command-line/Makefile \
 frontends/libgphoto2_frontend/Makefile \

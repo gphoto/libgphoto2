@@ -369,8 +369,6 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 	*count = 1;
 
 	/* Fill in each camera model's abilities */
-	/* Make separate entries for each conneciton type (usb, serial, etc...)
-	   if a camera supported multiple ways. */
 
 	strcpy(abilities[0].model, "Panasonic DC1580");
 	abilities[0].serial   = 1;

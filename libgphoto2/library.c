@@ -14,8 +14,11 @@ int is_library(char *library_filename) {
 	char buf[1024];
 	void *lh;
 
+#ifdef (OS2) || (WINDOWS)
 	sprintf(buf, "%s/%s", CAMLIBS, library_filename);
-
+#else
+	sprintf(buf, "%s/%s", CAMLIBS, library_filename);
+#endif
 	if ((lh = dlopen(buf, RTLD_LAZY))==NULL) {
 		if (glob_debug)
 			perror("core:\tis_library");

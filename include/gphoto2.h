@@ -10,3 +10,6 @@
 #include <gphoto2-core.h>
 #include <gphoto2-library.h>
 #include <gphoto2-interface.h>
+#ifdef OS2
+#include <gphotoos2.h>
+#endif

@@ -797,6 +797,9 @@ void usage () {
 	printf(
 	"\ngPhoto2 (v%s)- Cross-platform digital camera library.\n"
 	"Copyright (C) 2000 Scott Fritzinger\n"
+#ifdef OS2
+        "OS/2 port by Bart van Leeuwen\n"
+#endif
 	"Licensed under the Library GNU Public License (LGPL).\n"
 	"Usage:\n", VERSION
 	);
@@ -867,6 +870,16 @@ int main (int argc, char **argv) {
 	/* Peek ahead: Check to see if we need to turn on debugging output */
 	if (option_is_present("debug", argc, argv)==GP_OK)
 		glob_debug=1;
+
+#ifdef OS2 /*check if environment is set otherwise quit*/
+        if(CAMLIBS==NULL)
+        {
+printf("gPhoto2 for OS/2 requires you to set the enviroment value CAMLIBS 
+to the location of the camera libraries.
+e.g. SET CAMLIBS=C:\\GPHOTO2\\CAM\n");
+		exit(EXIT_FAILURE);
+        } 
+#endif
 
 	/* Peek ahead: Make sure we were called correctly */
 	if ((argc == 1)||(verify_options(argc, argv)==GP_ERROR)) {

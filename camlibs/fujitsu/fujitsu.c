@@ -42,7 +42,6 @@ char *models[] = {
 	"Epson PhotoPC 800",
 	"Nikon CoolPix 100",
 	"Nikon CoolPix 300",
-	"Nikon CoolPix 600",
 	"Nikon CoolPix 700",
 	"Nikon CoolPix 800",
 	"Nikon CoolPix 900",

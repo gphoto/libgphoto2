@@ -1,8 +1,8 @@
 /* Notes:
-	* only supports jpegs/gifs right now
 	* uses the setting value of "dir_directory" to open as the directory
 	  (interfaces will want to set this when they choose to "open" a 
 	  directory.)
+	* adding filetypes: search for "jpg", copy line and change extension
 */
 
 #include <stdio.h>
@@ -166,8 +166,13 @@ int camera_file_get (int file_number, CameraFile *file) {
 	long imagesize;
 	char filename[1024];
 
+#ifdef (OS2) || (WINDOWS)
+	sprintf(filename, "%s\\%s", dir_directory,
+		dir_images[file_number]);
+#else
 	sprintf(filename, "%s/%s", dir_directory,
 		dir_images[file_number]);
+#endif
 	if ((fp = fopen(filename, "r"))==NULL)
 		return (GP_ERROR);
 	fseek(fp, 0, SEEK_END);
