@@ -179,7 +179,6 @@ static void clear_readiness(void)
 static int check_readiness(void)
 {
     if (cached_ready) return 1;
-	gp_camera_status(NULL, "Connecting to camera");
     if (psa50_ready()) {
       debug_message("Camera type:  %d\n",camera_data.model);
       cached_ready = 1;
@@ -1211,6 +1210,8 @@ int camera_file_count(Camera *camera)
     gp_camera_status(NULL, "Could not obtain directory listing");
     return 0;
   }
+	
+	
   switch (camera_data.model) {
   case CANON_PS_A5:
   case CANON_PS_A5_ZOOM:
@@ -1304,7 +1305,7 @@ int camera_init(Camera *camera, CameraInit *init)
                     canon_debug_driver = 9;
                 fprintf(stderr,"Debug level: %i\n",canon_debug_driver);
             }
-		  canon_debug_driver = 1;
+				canon_debug_driver = 1;
         }
         fclose(conf);
   }
@@ -1514,6 +1515,15 @@ int camera_file_put(Camera *camera, CameraFile *file, char *folder)
 int camera_config_get(Camera *camera, CameraWidget *window)
 {
 	CameraWidget *t, *section;
+	char power_stats[48];
+	int pwr_status, pwr_source;
+	struct tm *camtm;
+	time_t camtime;
+	
+	if (cached_ready) {
+		camtime = psa50_get_time();
+		camtm = gmtime(&camtime);
+	}
 
 	/* set the window label to something more specific */
 	strcpy(window->label, "Canon PowerShot series");
@@ -1521,17 +1531,81 @@ int camera_config_get(Camera *camera, CameraWidget *window)
 	section = gp_widget_new(GP_WIDGET_SECTION, "Owner name");
 	gp_widget_append(window,section);
 	
+	t = gp_widget_new(GP_WIDGET_TEXT,"Camera Model");
+	strcpy(t->value,camera_data.ident);
+	gp_widget_append(section,t);
+
 	t = gp_widget_new(GP_WIDGET_TEXT,"Owner name");
 	strcpy(t->value,camera_data.owner);
 	gp_widget_append(section,t);
 
-	t = gp_widget_new(GP_WIDGET_TEXT,"Camera Model");
-	strcpy(t->value,camera_data.ident);
+	t = gp_widget_new(GP_WIDGET_TEXT, "date");
+	if (cached_ready)
+	  strcpy(t->value,asctime(camtm));
+	else
+	  sprintf(t->value,"Unavailable");
+	gp_widget_append(section,t);
+	
+	t = gp_widget_new(GP_WIDGET_BUTTON, "Set camera date to PC date");
+	strcpy(t->value,"psa50_set_time()");
 	gp_widget_append(section,t);
 	
 	t = gp_widget_new(GP_WIDGET_TEXT,"Firmware revision");
-	strcpy(t->value,camera_data.firmwrev);
+	sprintf(t->value,"%i.%i.%i.%i",camera_data.firmwrev[3], 
+			camera_data.firmwrev[2],camera_data.firmwrev[1],
+			camera_data.firmwrev[0]);
 	gp_widget_append(section,t);
+	
+	if (cached_ready) {
+		canon_get_batt_status(&pwr_status,&pwr_source);
+		switch (pwr_source) {
+		 case CAMERA_ON_AC:
+			strcpy(power_stats, "AC adapter ");
+			break;
+		 case CAMERA_ON_BATTERY:
+			strcpy(power_stats, "on battery ");
+			break;
+		 default:
+			sprintf(power_stats,"unknown (%i",pwr_source);
+			break;
+		}
+		switch (pwr_status) {
+			char cde[16];
+		 case CAMERA_POWER_OK:
+			strcat(power_stats, "(power OK)");
+			break;
+		 case CAMERA_POWER_BAD:
+			strcat(power_stats, "(power low)");
+			break;
+		 default:
+			strcat(power_stats,cde);
+			sprintf(cde," - %i)",pwr_status);
+			break;
+		}
+	}
+	else
+	  strcpy(power_stats,"Power: camera unavailable");
+	
+	t = gp_widget_new(GP_WIDGET_TEXT,"Power");
+	strcpy(t->value, power_stats);
+	gp_widget_append(section,t);
+	
+	t = gp_widget_new(GP_WIDGET_MENU, "Debug level");
+	gp_widget_choice_add (t, "none");
+	gp_widget_choice_add (t, "functions");
+	gp_widget_choice_add (t, "complete");
+	switch (canon_debug_driver) {
+	 case 0:
+	 default:
+		gp_widget_value_set(t, "none");
+		break;
+	 case 1:
+		gp_widget_choice_add (t, "functions");
+		break;
+	 case 9:
+		gp_widget_choice_add (t, "complete");
+		break;
+	}
 	
     return GP_OK;
 }

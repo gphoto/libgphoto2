@@ -929,6 +929,37 @@ time_t psa50_get_time(void)
   return byteswap32(date);
 }
 
+int psa50_set_time(void)
+{
+	unsigned char *msg;
+	int len,i;
+	time_t date;
+	char pcdate[4];
+	
+	date = time(NULL);
+	for (i=0;i<4;i++)
+	  pcdate[i] = (date >> (8*i)) & 0xff;
+	
+	switch (canon_comm_method) {
+	 case CANON_USB:
+		len=0x10;
+		msg = psa50_usb_dialogue(0x04,0x12,0x201,&len,0,0);
+		break;
+	 case CANON_SERIAL_RS232:
+	 default:
+		msg = psa50_serial_dialogue(0x04, 0x12, &len, pcdate, 
+									sizeof(pcdate),
+									"\x00\x00\x00\x00\x00\x00\x00\x00",8,NULL);
+		break;
+	}
+	
+	if (!msg) {
+    psa50_error_type();
+		return 0;
+	}
+
+	return 1;
+}
 
 /**
  * Switches the camera on, detects the model and sets its speed.

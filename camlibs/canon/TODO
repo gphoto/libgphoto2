@@ -11,9 +11,10 @@
  - The configuration dialog has to be made with the new toolkit independent
    functions provided by gphoto2. It should use gp_config_get and
    gp_config_set to retrieve and store its configuration information.
-   I think it should include : date, owner, battery status and firmware 
-   revision. I don't know if anything else is needed.
+   I think it should include : date, owner, battery status, firmware 
+   revision and Compact flash space used/available.
+   I don't know if anything else is needed.
  - Starting a Changelog file.
- - FOLDERS : folders are not support on the A50 (users have no control on
+ - FOLDERS : folders are not supported on the A50 (users have no control on
    the directory where images are stored on the compact flash) so for the
    moment the internal directory structure is hidden to gphoto2.

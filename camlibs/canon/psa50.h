@@ -122,6 +122,7 @@ int psa50_end(void);
 int psa50_off(void);
 int psa50_sync_time(void);
 time_t psa50_get_time(void);
+int psa50_set_time(void);
 int psa50_directory_operations(char *path, int action);
 int psa50_get_owner_name(void);
 int psa50_set_owner_name(const char *name);
