@@ -872,10 +872,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	switch (type) {
 
 	case	GP_FILE_TYPE_EXIF:
-		/* If file is PTP_OFC_EXIF_JPEG  - fetch thumbnail,
-		   otherwise return GP_ERROR_NOT_SUPPORTED */
-		if (oi->ObjectFormat!=PTP_OFC_EXIF_JPEG)
-			return (GP_ERROR_NOT_SUPPORTED);
+		/* Ups... no easy way to obtain EXIF information */
+		return (GP_ERROR_NOT_SUPPORTED);
 
 	case	GP_FILE_TYPE_PREVIEW:
 		/* If thumb size is 0 then there is no thumbnail at all... */
