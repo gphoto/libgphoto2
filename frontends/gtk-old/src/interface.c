@@ -1109,6 +1109,8 @@ create_main_window (void)
   gtk_widget_ref (exit_button);
   gtk_object_set_data_full (GTK_OBJECT (main_window), "exit_button", exit_button,
                             (GtkDestroyNotify) gtk_widget_unref);
+  gtk_signal_connect(GTK_OBJECT(exit_button), "clicked",
+	GTK_SIGNAL_FUNC(main_quit), NULL);
   gtk_widget_show (exit_button);
 
   hpaned1 = gtk_hpaned_new ();

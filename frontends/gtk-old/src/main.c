@@ -4,55 +4,44 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 
 #include <gtk/gtk.h>
 #include <gphoto2.h>
 
+#include "callbacks.h"
 #include "interface.h"
 #include "support.h"
+
+GtkWidget *main_window;
 
 int
 main (int argc, char *argv[])
 {
-  GtkWidget *main_window;
-  GtkWidget *message_window_long;
-  GtkWidget *confirm_window;
-  GtkWidget *message_window;
-  GtkWidget *select_camera_window;
 
 #ifdef ENABLE_NLS
-  bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
-  textdomain (PACKAGE);
+	bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+	textdomain (PACKAGE);
 #endif
 
-  gtk_set_locale ();
-  gtk_init (&argc, &argv);
+	gtk_set_locale ();
+	gtk_init (&argc, &argv);
+	gp_init();	
+
+	add_pixmap_directory (PACKAGE_DATA_DIR "/pixmaps");
+	add_pixmap_directory (PACKAGE_SOURCE_DIR "/pixmaps");
+
+	/*
+	 * The following code was added by Glade to create one of each component
+	 * (except popup menus), just so that you see something after building
+	 * the project. Delete any components that you don't want shown initially.
+	 */
+	main_window = create_main_window ();
+	gtk_widget_show (main_window);
+	gtk_signal_connect (GTK_OBJECT(main_window), "delete_event",
+		GTK_SIGNAL_FUNC(main_quit), NULL);
 	
-
-  add_pixmap_directory (PACKAGE_DATA_DIR "/pixmaps");
-  add_pixmap_directory (PACKAGE_SOURCE_DIR "/pixmaps");
-
-  /*
-   * The following code was added by Glade to create one of each component
-   * (except popup menus), just so that you see something after building
-   * the project. Delete any components that you don't want shown initially.
-   */
-  main_window = create_main_window ();
-  gtk_widget_show (main_window);
-  
-/*
-  message_window_long = create_message_window_long ();
-  gtk_widget_show (message_window_long);
-  confirm_window = create_confirm_window ();
-  gtk_widget_show (confirm_window);
-  message_window = create_message_window ();
-  gtk_widget_show (message_window);
-  select_camera_window = create_select_camera_window ();
-  gtk_widget_show (select_camera_window);
-*/
-
-  gtk_main ();
-  return 0;
+	gtk_main ();
+	return 0;
 }
