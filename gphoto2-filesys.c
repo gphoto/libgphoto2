@@ -1359,11 +1359,16 @@ gp_filesystem_set_info (CameraFilesystem *fs, const char *folder,
 	result = fs->set_info_func (fs, folder, filename, info, fs->info_data);
 	if (result < 0) {
 		fs->folder[x].file[y].info_dirty = 1;
+		if (info->file.fields & GP_FILE_INFO_NAME)
+			fs->folder[x].files_dirty = 1;
 		return (result);
 	}
 
 	memcpy (&fs->folder[x].file[y].info, info, sizeof (CameraFileInfo));
 	fs->folder[x].file[y].info_dirty = 0;
+	if (info->file.fields & GP_FILE_INFO_NAME)
+		strncpy (fs->folder[x].file[y].name, info->file.name,
+			 sizeof (fs->folder[x].file[y].name));
 
 	return (GP_OK);
 }
