@@ -99,12 +99,12 @@ SierraCamera sierra_cameras[] = {
 
 int camera_abilities (CameraAbilitiesList *list) 
 {
-	int x=0;
+	int x;
 	CameraAbilities *a;
 
-	while (strlen(sierra_cameras[x].model)>0) {
+	for (x = 0; strlen (sierra_cameras[x].model) > 0; x++) {
 		a = gp_abilities_new();
-		strcpy(a->model, sierra_cameras[x].model);
+		strcpy (a->model, sierra_cameras[x].model);
 		a->port     = GP_PORT_SERIAL;
 		if ((sierra_cameras[x].usb_vendor  > 0) &&
 		    (sierra_cameras[x].usb_product > 0))
@@ -123,9 +123,7 @@ int camera_abilities (CameraAbilitiesList *list)
 		a->folder_operations = 	GP_FOLDER_OPERATION_NONE;
 		a->usb_vendor  = sierra_cameras[x].usb_vendor;
 		a->usb_product = sierra_cameras[x].usb_product;
-		gp_abilities_list_append(list, a);
-
-		x++;
+		gp_abilities_list_append (list, a);
 	}
 
 	return (GP_OK);
@@ -151,6 +149,7 @@ int camera_init (Camera *camera)
 	camera->functions->exit 		= camera_exit;
 	camera->functions->folder_list_folders 	= camera_folder_list_folders;
 	camera->functions->folder_list_files   	= camera_folder_list_files;
+	camera->functions->file_get_info	= camera_file_get_info;
 	camera->functions->file_get 		= camera_file_get;
 	camera->functions->file_get_preview 	= camera_file_get_preview;
 	camera->functions->file_delete 		= camera_file_delete;
@@ -544,7 +543,7 @@ int camera_file_get_generic (Camera *camera, CameraFile *file,
 	CHECK (camera_start (camera));
 
 	/* Get the file number from the CameraFileSystem */
-	file_number = gp_filesystem_number(fd->fs, folder, filename);
+	file_number = gp_filesystem_number (fd->fs, folder, filename);
 	if (file_number < 0)
 		return (file_number);
 
@@ -563,6 +562,41 @@ int camera_file_get_generic (Camera *camera, CameraFile *file,
 	/* Get the picture data */
 	CHECK (sierra_get_string_register (camera, regd, file_number + 1, file,
 					  NULL, NULL));
+	return (camera_stop (camera));
+}
+
+int camera_file_get_info (Camera *camera, const char *folder, 
+			  const char *filename, CameraFileInfo *info)
+{
+	int file_number, l;
+	SierraData *fd = (SierraData*)camera->camlib_data;
+
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_file_get_info");
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** filename: %s", filename);
+
+	CHECK (camera_start (camera));
+
+	/* Get the file number from the CameraFileSystem */
+	file_number = gp_filesystem_number (fd->fs, folder, filename);
+	if (file_number < 0) 
+		return (file_number);
+	
+	/* Set the current picture number */
+	CHECK_STOP (camera, sierra_set_int_register (camera, 4, file_number));
+
+	/* Get the size of the current image */
+	CHECK_STOP (camera, sierra_get_int_register (camera, 12, &l));
+	info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
+	strcpy (info->file.type, "image/jpeg");
+	info->file.size = l;
+
+	/* Get the size of the current thumbnail */
+	CHECK_STOP (camera, sierra_get_int_register (camera, 13, &l));
+	info->preview.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
+	strcpy (info->preview.type, "image/jpeg");
+	info->preview.size = l;
+
 	return (camera_stop (camera));
 }
 
