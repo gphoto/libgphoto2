@@ -52,7 +52,7 @@ longer everyday, so we won't publish it.
 
 For a more up to date list, you can consult 
 
-	@URL_CAMERA_LIST@
+	@URL_DIGICAM_LIST@
 
 Your operating system will tell you about that because it is likely to recognise
 the device as a SCSI disk that you can mount (for Linux 'dmesg' will tell you).
