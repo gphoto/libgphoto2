@@ -32,10 +32,10 @@ typedef struct _tagPacket {
 	unsigned char checksum;
 } Packet;
 
-typedef struct {
+struct _CameraPrivateLibrary {
 	unsigned short int sequence_id;
 	int msac_sr1;
-} SonyData;
+};
 
 int sony_init(Camera * camera, int ismsac);
 int sony_exit(Camera * camera);
@@ -44,8 +44,6 @@ int sony_mpeg_count(Camera * camera);
 int sony_image_get(Camera * camera, int imageid, CameraFile * file);
 int sony_thumbnail_get(Camera * camera, int imageid, CameraFile * file);
 int sony_image_info(Camera * camera, int imageid, CameraFileInfo * info);
-
-#define sony_data(c) ((SonyData *)((c)->camlib_data))
 
 #endif				/* SONY_H */
 

@@ -17,7 +17,11 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <config.h>
+
 #include <string.h>
+#include <stdlib.h>
+
 #include <gphoto2.h>
 #include <sys/types.h>
 
@@ -59,9 +63,20 @@ int camera_abilities(CameraAbilitiesList * list)
  */
 static int camera_exit(Camera * camera)
 {
+	int rc;
+
 	gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID,
 			"camera_exit()");
-	return sony_exit (camera);
+
+	if (camera->pl) {
+		rc = sony_exit (camera);
+		if (rc < 0)
+			return (rc);
+		free (camera->pl);
+		camera->pl = NULL;
+	}
+
+	return (GP_OK);
 }
 
 
@@ -157,7 +172,7 @@ get_info_func (CameraFilesystem *fs, const char *folder,
  */
 int camera_init(Camera * camera)
 {
-	int is_msac;
+	int is_msac, rc;
 
 	gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID, "Initialising %s",
 			camera->model);
@@ -171,7 +186,18 @@ int camera_init(Camera * camera)
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
 
-	return sony_init (camera, is_msac);
+	camera->pl = malloc (sizeof (CameraPrivateLibrary));
+	if (!camera->pl)
+		return (GP_ERROR_NO_MEMORY);
+
+	rc = sony_init (camera, is_msac);
+	if (rc < 0) {
+		free (camera->pl);
+		camera->pl = NULL;
+		return (rc);
+	}
+
+	return (GP_OK);
 }
 
 /*

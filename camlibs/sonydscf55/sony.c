@@ -196,7 +196,7 @@ static int sony_packet_validate(Camera * camera, Packet * p)
 		return SONY_RESEND_PACKET;
 	}
 
-	if (sony_sequence[sony_data(camera)->sequence_id] != p->buffer[0]) {
+	if (sony_sequence[camera->pl->sequence_id] != p->buffer[0]) {
 		gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID,
 				"sony_packet_validate: invalid sequence");
 		return SONY_INVALID_SEQUENCE;
@@ -212,19 +212,18 @@ static int
 sony_packet_make(Camera * camera, Packet * p, unsigned char *buffer,
 		 unsigned short int length)
 {
-	SonyData *data = sony_data(camera);
 	p->length = 0;
 
 	while (length--)
 		p->buffer[p->length++] = *(buffer++);
 
-	if (255 == sony_sequence[++(data->sequence_id)])
-		data->sequence_id = 0;
+	if (255 == sony_sequence[++(camera->pl->sequence_id)])
+		camera->pl->sequence_id = 0;
 
-	p->buffer[0] = sony_sequence[data->sequence_id++];
+	p->buffer[0] = sony_sequence[camera->pl->sequence_id++];
 
-	if (255 == sony_sequence[data->sequence_id])
-		data->sequence_id = 0;
+	if (255 == sony_sequence[camera->pl->sequence_id])
+		camera->pl->sequence_id = 0;
 
 	p->checksum = sony_packet_checksum(p);
 
@@ -295,12 +294,10 @@ static int sony_packet_read(Camera * camera, Packet * pack)
 static int sony_packet_write(Camera * camera, Packet * p)
 {
 	unsigned short int count;
-	SonyData *data;
 	int rc;
 
 	gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID,
 			"sony_packet_write()");
-	data = sony_data(camera);
 
 	rc = gp_port_write(camera->port, &START_PACKET, 1);
 
@@ -342,7 +339,6 @@ sony_converse(Camera * camera, Packet * out, unsigned char *str, int len)
 	int sequence_count = 0;
 	int invalid_sequence = 0;
 	int count;
-	SonyData *data = sony_data(camera);
 	int rc;
 
 	gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID, "sony_converse()");
@@ -371,7 +367,7 @@ sony_converse(Camera * camera, Packet * out, unsigned char *str, int len)
 					break;
 
 				case SONY_INVALID_SEQUENCE:
-					if (sony_data(camera)->msac_sr1) {
+					if (camera->pl->msac_sr1) {
 						invalid_sequence = 1;
 						sony_packet_make(camera,
 								 &ps, str,
@@ -390,13 +386,13 @@ sony_converse(Camera * camera, Packet * out, unsigned char *str, int len)
 						    (GP_DEBUG_LOW,
 						     SONY_CAMERA_ID,
 						     "Attempting to reset sequence id - image may be corrupt.");
-						data->sequence_id = 0;
+						camera->pl->sequence_id = 0;
 
 						while (sony_sequence
-						       [data->
+						       [camera->pl->
 							sequence_id] !=
 						       old_sequence)
-							data->
+							camera->pl->
 							    sequence_id++;
 
 						return GP_OK;
@@ -411,7 +407,7 @@ sony_converse(Camera * camera, Packet * out, unsigned char *str, int len)
 					break;
 
 				case SONY_RESET_SEQUENCE:
-					data->sequence_id = 0;
+					camera->pl->sequence_id = 0;
 					return GP_OK;
 
 				case SONY_RESEND_PACKET:
@@ -515,11 +511,10 @@ static int sony_init_first_contact (Camera *camera)
 {
 	int count = 0;
 	Packet dp;
-	SonyData *data = sony_data (camera);
 	int rc = GP_ERROR;
 	
 	for (count = 0; count < 3; count++) {
-		data->sequence_id = 0;
+		camera->pl->sequence_id = 0;
 
 		rc = sony_converse(camera, &dp, IdentString, 12);
 		if (rc == GP_OK) {
@@ -542,21 +537,9 @@ int sony_init (Camera * camera, int msac)
 	int rc;
 
 	rc = sony_init_port (camera);
-	if (rc == GP_OK) {
-		SonyData *data;
-		data = (SonyData *) malloc(sizeof(SonyData));
-		camera->camlib_data = data;
-		if (data) {
-			rc = sony_init_first_contact (camera);
-			if (rc != GP_OK) {
-				free (data);
-				camera->camlib_data = NULL;
-			}
-		}
-		else {
-			rc = GP_ERROR;
-		}
-	}
+	if (rc == GP_OK)
+		rc = sony_init_first_contact (camera);
+
 	return rc;
 }
 
@@ -568,15 +551,11 @@ int sony_exit(Camera * camera)
 	Packet dp;
 	int rc = GP_ERROR;
 
-	if (camera->camlib_data) {
-		SonyData *data = sony_data(camera);
-		rc = sony_baud_set(camera, 9600);
-		while (rc == GP_OK && data->sequence_id > 0) {
-			rc = sony_converse(camera, &dp, EmptyPacket, 1);
-		}
-		free (camera->camlib_data);
-		camera->camlib_data = NULL;
+	rc = sony_baud_set(camera, 9600);
+	while (rc == GP_OK && camera->pl->sequence_id > 0) {
+		rc = sony_converse(camera, &dp, EmptyPacket, 1);
 	}
+
 	return rc;
 }
 
@@ -662,7 +641,7 @@ sony_file_get(Camera * camera, int imageid, int thumbnail,
 						"XYZ %11.11s",
 						dp.buffer + 5);
 
-				if (sony_data(camera)->msac_sr1) {
+				if (camera->pl->msac_sr1) {
 					gp_file_append(file,
 						       "\xff\xd8\xff", 3);
 				}

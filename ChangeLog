@@ -1,4 +1,8 @@
-2001-10-17  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+2001-10-18  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* camlibs/sonydscf55: Use camera->pl, fix compile warnings
+
+2001-10-18  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* camlibs/panasonic/l859
 	* camlibs/sierra: Use camera->pl
