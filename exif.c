@@ -141,6 +141,14 @@ int gpe_datsize(unsigned char *data,int tagind);
 int gpe_tagnum( char *data,int tagind);
 int gpe_getintval(unsigned char *data, int tagnum);
 
+long exif_get_lilend(unsigned char *data, int size);
+int gpe_theval(unsigned char *data,int tagind);
+void gpe_setval(unsigned char *data,int tagind,long newval);
+long exif_next_ifd(unsigned char *exif,int num);
+int exif_get_comment(exifparser *exifdat, char *comment);
+int exif_set_comment(exifparser *exifdat, char *comment);
+int gpe_dump_ifd(int ifdnum,exifparser *exifdata,char **allpars);
+
 /*
  *  Utility functions: get fields in little-endian format,
  * initialize data structures, etc.
