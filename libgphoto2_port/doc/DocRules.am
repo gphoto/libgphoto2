@@ -29,12 +29,12 @@ sgml:
 
 html:
 	if ! test -d html ; then mkdir html ; fi
-	-cd $(srcdir)/html && gtkdoc-mkhtml $(DOC_MODULE) ../$(DOC_MAIN_SGML_FILE)
+	cd html && gtkdoc-mkhtml $(DOC_MODULE) ../$(srcdir)/$(DOC_MAIN_SGML_FILE)
 
 install-data-local:
 	$(INSTALL) -d -m 0755 $(DESTDIR)$(TARGET_DIR)
-	$(INSTALL_DATA) $(srcdir)/html/*.html $(DESTDIR)$(TARGET_DIR)
-	$(INSTALL_DATA) $(srcdir)/html/index.sgml $(DESTDIR)$(TARGET_DIR)
+	$(INSTALL_DATA) ./html/*.html $(DESTDIR)$(TARGET_DIR)
+	$(INSTALL_DATA) ./html/index.sgml $(DESTDIR)$(TARGET_DIR)
 	gtkdoc-fixxref --module=$(DOC_MODULE) --html-dir=$(DESTDIR)$(htmldir)
 
 dist-hook:
