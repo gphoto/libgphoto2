@@ -20,6 +20,7 @@
 #include "config.h"
 
 #include <stdio.h>
+#include <time.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -257,24 +258,23 @@ static int
 delete_file_func (CameraFilesystem *fs, const char *folder,
 		  const char *filename, void *data, GPContext *context)
 {
-	/*Camera *camera = data;*/
+	Camera *camera = data;
+	char *reply = NULL, *cmd = NULL;
+	int ret;
 
-	/* Delete the file from the camera. */
-
-	return (GP_OK);
-}
-
-static int
-delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
-		 GPContext *context)
-{
-	/*Camera *camera = data;*/
-
-	/*
-	 * Delete all files in the given folder. If your camera doesn't have
-	 * such a functionality, just don't implement this function.
-	 */
-
+	cmd = malloc(strlen("CWD ")+strlen(folder)+1);
+	sprintf(cmd,"CWD %s",folder);
+	ret = g3_ftp_command_and_reply(camera->port, cmd, &reply);
+	if (ret < GP_OK)
+		goto out;
+	cmd = realloc(cmd,strlen("DELE ")+strlen(filename)+1);
+	sprintf(cmd,"DELE %s",filename);
+	ret = g3_ftp_command_and_reply(camera->port, cmd, &reply);
+	if (ret < GP_OK)
+		goto out;
+out:
+	if (cmd) free(cmd);
+	if (reply) free(reply);
 	return (GP_OK);
 }
 
@@ -361,11 +361,65 @@ static int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileInfo *info, void *data, GPContext *context)
 {
-	/*Camera *camera = data;*/
+	Camera *camera = data;
+	int ret, bytes, width, height, k;
+	struct tm xtm;
+	char *cmd = NULL, *reply = NULL;
 
-	/* Get the file info here and write it into <info> */
+	info->file.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME |
+			GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
+	strcpy(info->file.type,GP_MIME_UNKNOWN);
+	strcpy(info->file.name, filename);
+
+	if (!strcmp(filename+9,"JPG") || !strcmp(filename+9,"jpg"))
+		strcpy(info->file.type,GP_MIME_JPEG);
+
+	if (!strcmp(filename+9,"AVI") || !strcmp(filename+9,"avi"))
+		strcpy(info->file.type,GP_MIME_AVI);
+
+	if (!strcmp(filename+9,"MTA") || !strcmp(filename+9,"mta"))
+		strcpy(info->file.type,"text/plain");
+
+	cmd = malloc(6+strlen(folder)+1+strlen(filename)+1);
+	sprintf(cmd, "-FDAT %s/%s", folder,filename);
+	g3_ftp_command_and_reply(camera->port, cmd, &reply);
+	if (ret < GP_OK) goto out;
+	if (sscanf(reply, "200 date=%d:%d:%d %d:%d:%d",
+			&xtm.tm_year,
+			&xtm.tm_mon,
+			&xtm.tm_mday,
+			&xtm.tm_hour,
+			&xtm.tm_min,
+			&xtm.tm_sec
+	)) {
+		xtm.tm_mon--; 		/* range 0 - 11 */
+		xtm.tm_year -= 1900;	/* number of years since 1900 */
+		info->file.mtime = mktime(&xtm);
+		info->file.fields |= GP_FILE_INFO_MTIME;
+	}
+
+	sprintf(cmd, "-INFO %s/%s", folder,filename);
+	g3_ftp_command_and_reply(camera->port, cmd, &reply);
+	if (ret < GP_OK) goto out;
+
+	/* 200 1330313 byte W=2048 H=1536 K=0 for -INFO */
+	if (sscanf(reply, "200 %d byte W=%d H=%d K=%d for -INFO", &bytes, &width, &height , &k)) {
+		if (width != 0 && height != 0) {
+			info->file.fields |= GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT;
+			info->file.height = height;
+			info->file.width = width;
+		}
+		info->file.fields |= GP_FILE_INFO_SIZE;
+		info->file.size = bytes;
+		if (k != 0)
+			gp_log(GP_LOG_ERROR, "g3", "k is %d for %s/%s\n", k, folder,filename);
+	}
+out:
+	if (reply) free(reply);
+	if (cmd) free(cmd);
 
 	return (GP_OK);
+
 }
 static int
 set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
@@ -445,57 +499,14 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 		for (n=0;n < len/32;n++) {
 			if (buf[n*32+11] == 0x20) {
-				CameraFileInfo  info;
-				int bytes, width, height, k;
+				char xfn[12];
 
-				info.file.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME |
-                                		GP_FILE_INFO_SIZE;
-				strcpy(info.file.name, buf+n*32);
-				info.file.name[8] = '.';
-				strcpy(info.file.name+9, buf+n*32+8);
-				info.file.name[8+1+3] = '\0';
-				strcpy(info.file.type,GP_MIME_UNKNOWN);
-				if (	!strcmp(info.file.name+9,"JPG") ||
-					!strcmp(info.file.name+9,"jpg")
-				)
-					strcpy(info.file.type,GP_MIME_JPEG);
-				if (	!strcmp(info.file.name+9,"AVI") ||
-					!strcmp(info.file.name+9,"avi")
-				)
-					strcpy(info.file.type,GP_MIME_AVI);
+				strcpy(xfn, buf+n*32);
+				xfn[8] = '.';
+				strcpy(xfn+9, buf+n*32+8);
+				xfn[8+1+3] = '\0';
 
-				if (	!strcmp(info.file.name+9,"MTA") ||
-					!strcmp(info.file.name+9,"mta")
-				)
-					strcpy(info.file.type,"text/plain");
-
-				info.file.size =(((unsigned char*)buf)[n*32+31])	|
-				 		(((unsigned char*)buf)[n*32+30]<<8)	|
-				 		(((unsigned char*)buf)[n*32+29]<<16)	|
-				 		(((unsigned char*)buf)[n*32+28]<<24);
-				ret = gp_filesystem_append (fs, folder, info.file.name, context);
-				cmd = malloc(6+strlen(folder)+1+strlen(info.file.name)+1);
-				sprintf(cmd, "-FDAT %s/%s", folder,info.file.name);
-				g3_ftp_command_and_reply(camera->port, cmd, &reply);
-				if (ret < GP_OK) goto out;
-
-				sprintf(cmd, "-INFO %s/%s", folder,info.file.name);
-				g3_ftp_command_and_reply(camera->port, cmd, &reply);
-				if (ret < GP_OK) goto out;
-
-				/* 200 1330313 byte W=2048 H=1536 K=0 for -INFO */
-				if (sscanf(reply, "200 %d byte W=%d H=%d K=%d for -INFO", &bytes, &width, &height , &k)) {
-					if (width != 0 && height != 0) {
-						info.file.fields |= GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT;
-						info.file.height = height;
-						info.file.width = width;
-					}
-					if (k != 0)
-						gp_log(GP_LOG_ERROR, "g3", "k is %d for %s/%s\n", k, folder,info.file.name);
-					if (bytes != info.file.size)
-						gp_log(GP_LOG_ERROR, "g3", "size is %d from -INFO, but %d from listing!\n", bytes, info.file.size);
-				}
-				ret = gp_filesystem_set_info_noop(fs, folder, info, context);
+				ret = gp_filesystem_append (fs, folder, xfn, context);
 				if (ret < GP_OK) goto out;
 			}
 		}
@@ -533,7 +544,7 @@ camera_init (Camera *camera, GPContext *context)
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func,
 				      delete_file_func, camera);
 	gp_filesystem_set_folder_funcs (camera->fs, put_file_func,
-					delete_all_func, NULL, NULL, camera);
+					NULL, NULL, NULL, camera);
 
 
         gp_port_get_settings(camera->port, &settings);
