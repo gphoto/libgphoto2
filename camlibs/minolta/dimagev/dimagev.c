@@ -276,7 +276,6 @@ int camera_file_delete (Camera *camera, const char *folder,
 	return dimagev_delete_picture(dimagev, (file_number + 1 ));
 }
 
-#if 0
 int camera_capture (Camera *camera, int capture_type, CameraFilePath *path) 
 {
 	dimagev_t *dimagev;
@@ -284,11 +283,12 @@ int camera_capture (Camera *camera, int capture_type, CameraFilePath *path)
 	dimagev=camera->camlib_data;
 
 	switch ( capture_type ) {
-		case GP_CAPTURE_VIDEO:
+		case GP_OPERATION_CAPTURE_VIDEO:
 			gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_capture::unable to capture video");
 			return GP_ERROR_BAD_PARAMETERS;
 			break;
-		case GP_CAPTURE_PREVIEW: case GP_CAPTURE_IMAGE:
+		case GP_OPERATION_CAPTURE_PREVIEW: 
+		case GP_OPERATION_CAPTURE_IMAGE:
 			/* Proceed with the code below. Since the Dimage V doesn't support
 			grabbing just the input (to the best of my knowledge), we take the
 			picture either way. */
@@ -310,7 +310,7 @@ int camera_capture (Camera *camera, int capture_type, CameraFilePath *path)
 		return GP_ERROR_IO;
 	}
 
-	if ( capture_type == GP_CAPTURE_PREVIEW ) {
+	if ( capture_type == GP_OPERATION_CAPTURE_PREVIEW ) {
 #if defined HAVE_SNPRINTF
 		snprintf(path->folder, sizeof(path->folder), "/");
 		snprintf(path->name, sizeof(path->name), DIMAGEV_THUMBNAIL_FMT, dimagev->status->number_images);
@@ -318,7 +318,7 @@ int camera_capture (Camera *camera, int capture_type, CameraFilePath *path)
 		sprintf(path->folder, "/");
 		sprintf(path->name, DIMAGEV_THUMBNAIL_FMT, dimagev->status->number_images);
 #endif
-	} else if (capture_type == GP_CAPTURE_IMAGE) {
+	} else if (capture_type == GP_OPERATION_CAPTURE_IMAGE) {
 #if defined HAVE_SNPRINTF
 		snprintf(path->folder, sizeof(path->folder), "/");
 		snprintf(path->name, sizeof(path->name), DIMAGEV_FILENAME_FMT, dimagev->status->number_images);
