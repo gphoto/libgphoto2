@@ -28,7 +28,7 @@
 
 #include <gphoto2-port-log.h>
 
-#if HAVE_JPEG
+#ifdef HAVE_JPEG
 #include <jpeglib.h>
 #include <unistd.h>
 #endif
@@ -88,7 +88,7 @@ gp_cmd_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		gp_file_get_mime_type (file, &type);
 		bitmap = aa_image (c);
 
-#if HAVE_JPEG
+#ifdef HAVE_JPEG
 		if (!strcmp (type, GP_MIME_JPEG)) {
 			struct jpeg_decompress_struct cinfo;
 			struct jpeg_error_mgr pub;

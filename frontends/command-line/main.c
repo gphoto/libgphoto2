@@ -1174,7 +1174,7 @@ OPTION_CALLBACK (capture_preview)
 	CR (set_globals ());
 
 	CR (gp_file_new (&file));
-#if HAVE_AA
+#ifdef HAVE_AA
 	result = gp_cmd_capture_preview (glob_camera, file, glob_context);
 #else
 	result = gp_camera_capture_preview (glob_camera, file, glob_context);
