@@ -1,3 +1,8 @@
+2002-07-30  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* autogen.sh: new package name: libgphoto2
+	* configure.in: 2.1.1dev3 -> 2.1.1dev4
+
 2002-07-29  Lutz Müller <lutz@users.sourceforge.net>
 
 	* README: First attempt to separate gphoto2 from libgphoto2.
