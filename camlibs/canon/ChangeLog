@@ -1,3 +1,10 @@
+2002-03-08  Fredrik <fredrik@krixor.xy.org>
+
+	* canon.{c,h}, library.c:
+	  Implemented EXIF file type support, re-worked thumbnail
+	  handling and got rid of the ../../libgphoto2/exif.*
+	  dependency.
+
 2002-01-09  Fredrik <fredrik@krixor.xy.org>
 
 	* *.{c,h}: Re-indented and removed everything

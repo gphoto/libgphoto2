@@ -32,6 +32,7 @@
 #include <sys/stat.h>
 #include <termios.h>
 #include <time.h>
+
 #ifdef HAVE_LOCALE_H
 #include <locale.h>
 #endif
@@ -231,6 +232,12 @@ update_disk_cache (Camera *camera, GPContext *context)
 	return 1;
 }
 
+/****************************************************************************
+ *
+ * gphoto library interface calls
+ *
+ ****************************************************************************/
+
 static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list, void *data,
 		GPContext *context)
@@ -259,21 +266,16 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list, vo
 	return canon_int_list_directory (camera, folder, list, CANON_LIST_FOLDERS, context);
 }
 
-
-/****************************************************************************
- *
- * gphoto library interface calls
- *
- ****************************************************************************/
-
 static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *user_data, GPContext *context)
 {
 	Camera *camera = user_data;
-	unsigned char *data = NULL;
-	int datalen, ret;
-	char tempfilename[300], canon_path[300];
+	unsigned char *data = NULL, *thumbdata = NULL;
+	const char *thumbname = NULL;
+	int ret;
+	unsigned int datalen;
+	char canon_path[300];
 
 	/* put complete canon path into canon_path */
 	ret = snprintf (canon_path, sizeof (canon_path) - 3, "%s\\%s",
@@ -289,15 +291,20 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		  folder, filename, canon_path,
 		  (type == GP_FILE_TYPE_PREVIEW) ? "thumbnail" : "file itself");
 
-	/* FIXME:
-	 * There are probably some memory leaks in the fetching of
-	 * files and thumbnails with the different buffers used in
-	 * that process.
-	 */
+	/* preparation, if it is _PREVIEW or _EXIF we get the thumbnail name */
+	if (type == GP_FILE_TYPE_PREVIEW || type == GP_FILE_TYPE_EXIF) {
+		thumbname = canon_int_filename2thumbname (camera, canon_path);
+		if (thumbname == NULL) {
+			/* no thumbnail available */
+			gp_context_error (context,
+					  "No thumbnail could be fould for %s",
+					  canon_path);
+			ret = GP_ERROR;
+		} 
+	}
 
+	/* fetch image/thumbnail/exif */	
 	switch (type) {
-			const char *thumbname;
-
 		case GP_FILE_TYPE_NORMAL:
 			ret = canon_int_get_file (camera, canon_path, &data, &datalen,
 						  context);
@@ -323,14 +330,20 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			}
 			break;
 		case GP_FILE_TYPE_PREVIEW:
-			thumbname = canon_int_filename2thumbname (camera, canon_path);
-			if (thumbname == NULL) {
-				/* no thumbnail available */
-				gp_context_error (context,
-						  "No thumbnail could be fould for %s",
-						  canon_path);
-				ret = GP_ERROR;
-			} else if (*thumbname == '\0') {
+#ifdef HAVE_EXIF
+			/* Check if we have libexif, it is an image and it is not
+			 * a PS A70 (which does not support EXIF), return not
+			 * supported here so that gPhoto2 query for
+			 * GP_FILE_TYPE_EXIF instead
+			 */
+			if (is_image (filename))
+				if (camera->pl->md->model != CANON_PS_A70) {
+					GP_DEBUG ("get_file_func: preview requested where "
+						  "EXIF should be possible");
+					return (GP_ERROR_NOT_SUPPORTED);
+			}
+#endif /* HAVE_EXIF */
+			if (*thumbname == '\0') {
 				/* file internal thumbnail */
 				ret = canon_int_get_thumbnail (camera, canon_path, &data,
 							       &datalen, context);
@@ -340,8 +353,28 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 							  context);
 			}
 			break;
+		case GP_FILE_TYPE_EXIF:
+#ifdef HAVE_EXIF
+			/* the PS A70 does not support EXIF */
+			if (camera->pl->md->model == CANON_PS_A70)
+				return (GP_ERROR_NOT_SUPPORTED);
+				
+			if (*thumbname == '\0') {
+				/* file internal thumbnail with EXIF data */
+				ret = canon_int_get_thumbnail (camera, canon_path, &data,
+							       &datalen, context);
+			} else {
+				/* extra thumbnail file */
+				ret = canon_int_get_file (camera, thumbname, &data, &datalen,
+							  context);
+			}
+#else
+			GP_DEBUG ("get_file_func: EXIF file type requested but no libexif");
+			return (GP_ERROR_NOT_SUPPORTED);
+#endif /* HAVE_EXIF */
+			break;		
 		default:
-			GP_DEBUG ("unsupported file type %i", type);
+			GP_DEBUG ("get_file_func: unsupported file type %i", type);
 			return (GP_ERROR_NOT_SUPPORTED);
 	}
 
@@ -364,42 +397,54 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return GP_ERROR_CORRUPTED_DATA;
 	}
 
+	/* do different things with the data fetched above */
+	
 	switch (type) {
-			int size;
-
 		case GP_FILE_TYPE_PREVIEW:
-			/* we count the byte returned until the end of the jpeg data
-			   which is FF D9 */
-			/* It would be prettier to get that info from the exif tags */
-			for (size = 1; size < datalen; size++)
-				if ((data[size - 1] == JPEG_ESC) && (data[size] == JPEG_END))
-					break;
-			if (!(data[size - 1] == JPEG_ESC) && (data[size] == JPEG_END)) {
-				GP_DEBUG ("JPEG_END not found in %i bytes of data", datalen);
-				return GP_ERROR_CORRUPTED_DATA;
+			/* Either this camera model does not support EXIF,
+			 * this is not a file known to contain EXIF thumbnails
+			 * (movies for example) or we do not have libexif.
+			 * Try to extract thumbnail by looking for JPEG start/end
+			 * in data.
+			 */
+			ret = canon_int_extract_jpeg_thumb (data, datalen, &thumbdata, &datalen, context);
+			
+			if (thumbdata != NULL) {
+				/* free old data */
+				free (data);
+				/* make data point to extracted thumbnail data */
+				data = thumbdata;
+				thumbdata = NULL;
 			}
-			datalen = size + 1;
+			if (ret != GP_OK) {
+				GP_DEBUG ("get_file_func: GP_FILE_TYPE_PREVIEW: couldn't extract JPEG thumbnail data");
+				if (data)
+					free (data);
+				data = NULL;
+				return ret;
+			}
+			GP_DEBUG ("get_file_func: GP_FILE_TYPE_PREVIEW: extracted thumbnail data (%i bytes)", datalen);
+
 			gp_file_set_data_and_size (file, data, datalen);
 			gp_file_set_mime_type (file, GP_MIME_JPEG);	/* always */
-			strncpy (tempfilename, filename, sizeof (tempfilename) - 1);
-			tempfilename[sizeof (tempfilename) - 1] = 0;
-			/* 4 is length of .JPG, must be at least X.FOO */
-			if (strlen (tempfilename) > 4)
-				strcpy (tempfilename + strlen (tempfilename) - 4, ".JPG");
-			else {
-				GP_DEBUG ("File name '%s' too short, cannot make it a .JPG",
-					  tempfilename);
-				return GP_ERROR_CORRUPTED_DATA;
-			}
-			gp_file_set_name (file, tempfilename);
+			gp_file_set_name (file, filename);
 			break;
 		case GP_FILE_TYPE_NORMAL:
 			gp_file_set_mime_type (file, filename2mimetype (filename));
 			gp_file_set_data_and_size (file, data, datalen);
 			gp_file_set_name (file, filename);
 			break;
+#ifdef HAVE_EXIF
+		case GP_FILE_TYPE_EXIF:
+			gp_file_set_mime_type (file, GP_MIME_JPEG);
+			gp_file_set_data_and_size (file, data, datalen);
+			break;
+#endif /* HAVE_EXIF */			
 		default:
 			/* this case should've been caught above anyway */
+			if (data)
+				free (data);
+			data = NULL;
 			return (GP_ERROR_NOT_SUPPORTED);
 	}
 
@@ -831,7 +876,7 @@ static int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileInfo * info, void *data, GPContext *context)
 {
-	GP_DEBUG ("canon get_info_func() called for '%s'/'%s'", folder, filename);
+	GP_DEBUG ("get_info_func() called for '%s'/'%s'", folder, filename);
 
 	info->preview.fields = GP_FILE_INFO_TYPE;
 

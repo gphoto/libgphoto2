@@ -52,8 +52,6 @@
 #  define N_(String) (String)
 #endif
 
-#include "../../libgphoto2/exif.h"
-
 #include "usb.h"
 #include "util.h"
 #include "library.h"
@@ -1144,33 +1142,47 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 					} else {
 						const char *thumbname;
 
-						GP_DEBUG ("Added file %s/%s", folder,
-							  info.file.name);
-						gp_filesystem_append (camera->fs, folder,
+						res = gp_filesystem_append (camera->fs, folder,
 								      info.file.name, context);
-						thumbname =
-							canon_int_filename2thumbname (camera,
-										      info.
-										      file.
-										      name);
-						if (thumbname == NULL) {
-							/* no thumbnail */
+						if (res != GP_OK) {
+							GP_DEBUG ("Could not gp_filesystem_append "
+								  "%s in folder %s: %s",
+								  info.file.name, folder, gp_result_as_string (res));
 						} else {
-							/* all known Canon cams have JPEG thumbs */
-							info.preview.fields =
-								GP_FILE_INFO_TYPE;
-							strncpy (info.preview.type,
-								 GP_MIME_JPEG,
-								 sizeof (info.preview.type));
-						}
+							GP_DEBUG ("Added file %s/%s", folder,
+								  info.file.name);
 
-						gp_filesystem_set_info_noop (camera->fs,
-									     folder, info,
-									     context);
+							thumbname =
+								canon_int_filename2thumbname (camera,
+											      info.file.name);
+							if (thumbname == NULL) {
+								/* no thumbnail */
+							} else {
+								/* all known Canon cams have JPEG thumbs */
+								info.preview.fields =
+									GP_FILE_INFO_TYPE;
+								strncpy (info.preview.type,
+									 GP_MIME_JPEG,
+									 sizeof (info.preview.type));
+							}
+
+							res = gp_filesystem_set_info_noop (camera->fs,
+										     folder, info,
+										     context);
+							if (res != GP_OK) {
+								GP_DEBUG ("Could not gp_filesystem_set_info_noop() "
+									  "%s in folder %s: %s",
+									  info.file.name, folder, gp_result_as_string (res));
+							}
+						}
 					}
 				}
 				if (is_dir) {
-					gp_list_append (list, info.file.name, NULL);
+					res = gp_list_append (list, info.file.name, NULL);
+					if (res != GP_OK)
+						GP_DEBUG ("Could not gp_list_append "
+							  "folder %s: %s",
+							  folder, gp_result_as_string (res));
 				}
 			} else {
 				/* this case could mean that this was the last dirent */
@@ -1218,103 +1230,16 @@ canon_int_get_file (Camera *camera, const char *name, unsigned char **data, int 
 }
 
 /**
- * canon_int_handle_jfif_thumb:
- *
- * extract thumbnail from JFIF image (A70)
- * just extracted the code from the old #canon_int_get_thumbnail
- **/
-
-static int
-canon_int_handle_jfif_thumb (unsigned char *data, const unsigned int total,
-			     unsigned char **retdata)
-{
-	int i, j, in;
-	unsigned char *thumb;
-
-	CHECK_PARAM_NULL (data);
-	CHECK_PARAM_NULL (retdata);
-
-	*retdata = NULL;
-
-	/* pictures are JFIF files */
-	/* we skip the first FF D8 */
-	i = 3;
-	j = 0;
-	in = 0;
-
-	/* we want to drop the header to get the thumbnail */
-
-	thumb = malloc (total);
-	if (!thumb) {
-		perror ("malloc");
-		return GP_ERROR_NO_MEMORY;
-	}
-
-	while (i < total) {
-		if (data[i] == JPEG_ESC) {
-			if (data[i + 1] == JPEG_BEG && ((data[i + 3] == JPEG_SOS)
-							|| (data[i + 3] == JPEG_A50_SOS))) {
-				in = 1;
-			} else if (data[i + 1] == JPEG_END) {
-				in = 0;
-				thumb[j++] = data[i];
-				thumb[j] = data[i + 1];
-				*retdata = thumb;
-				return GP_OK;
-			}
-		}
-
-		if (in == 1)
-			thumb[j++] = data[i];
-		i++;
-
-	}
-	return GP_ERROR;
-}
-
-/**
- * canon_int_handle_exif_thumb:
- * @data: pointer to the data which contain EXIF data
- * @length: length of the EXIF data
- * @retdata: we return the pointer to the thumbnail date here
- * @Returns: a GP_ERROR code
- *
- * Get information and thumbnail data from EXIF thumbnail.
- * just extracted the code from the old #canon_int_get_thumbnail
- **/
-static int
-canon_int_handle_exif_thumb (unsigned char *data, const unsigned int length,
-			     unsigned char **retdata)
-{
-	exifparser exifdat;
-
-	CHECK_PARAM_NULL (data);
-	CHECK_PARAM_NULL (retdata);
-
-	exifdat.header = data;
-	exifdat.data = data + 12;
-
-	GP_DEBUG ("Got thumbnail, extracting it with the EXIF lib.");
-	if (exif_parse_data (&exifdat) > 0) {
-		GP_DEBUG ("Parsed exif data.");
-		*retdata = exif_get_thumbnail (&exifdat);	/* Extract Thumbnail */
-		if (*retdata == NULL) {
-			GP_DEBUG ("canon_int_handle_exif_thumb: No EXIF thumbnail found.");
-			return GP_ERROR_CORRUPTED_DATA;
-		}
-		GP_DEBUG ("Got thumbnail data.");
-		return GP_OK;
-	}
-	GP_DEBUG ("couldn't parse exif thumbnail data");
-	return GP_ERROR;
-}
-
-/**
  * canon_int_get_thumbnail:
  * @camera: camera to work with
  * @name: image to get thumbnail of
  * @length: length of data returned
  * @retdata: The thumbnail data
+ *
+ * NOTE: Since cameras that do not store the thumbnail in a separate
+ * file does not return just the thumbnail but the first 10813 bytes
+ * of the image (most oftenly the EXIF header with thumbnail data in
+ * it) this must be treated before called a true thumbnail.
  *
  * Returns GPError.
  **/
@@ -1323,7 +1248,6 @@ canon_int_get_thumbnail (Camera *camera, const char *name, unsigned char **retda
 			 int *length, GPContext *context)
 {
 	int res;
-	unsigned char *data = NULL;
 
 	GP_DEBUG ("canon_int_get_thumbnail() called for file '%s'", name);
 
@@ -1332,38 +1256,19 @@ canon_int_get_thumbnail (Camera *camera, const char *name, unsigned char **retda
 
 	switch (camera->port->type) {
 		case GP_PORT_USB:
-			res = canon_usb_get_thumbnail (camera, name, &data, length, context);
+			res = canon_usb_get_thumbnail (camera, name, retdata, length, context);
 			break;
 		case GP_PORT_SERIAL:
-			res = canon_serial_get_thumbnail (camera, name, &data, length,
+			res = canon_serial_get_thumbnail (camera, name, retdata, length,
 							  context);
 			break;
 		GP_PORT_DEFAULT
 	}
 	if (res != GP_OK) {
-		GP_DEBUG ("canon_port_get_thumbnail() failed, returned %i", res);
+		GP_DEBUG ("canon_int_get_thumbnail() failed, returned %i", res);
 		return res;
 	}
 
-	switch (camera->pl->md->model) {
-			/* XXX We should decide this not on model base. Better use
-			 * capabilities or just have a look at the data itself
-			 */
-		case CANON_PS_A70:
-			/* XXX does this work? */
-			res = canon_int_handle_jfif_thumb (data, *length, retdata);
-			break;
-		default:
-			res = canon_int_handle_exif_thumb (data, *length, retdata);
-			break;
-	}
-	if (res != GP_OK) {
-		GP_DEBUG ("canon_int_get_thumbnail: couldn't extract thumbnail data");
-		free (data);
-		data = NULL;
-		return res;
-	}
-	GP_DEBUG ("canon_int_get_thumbnail: extracted thumbnail data");
 	return res;
 }
 
@@ -1435,6 +1340,74 @@ canon_int_put_file (Camera *camera, CameraFile *file, char *destname, char *dest
 	}
 	/* Never reached */
 	return GP_ERROR;
+}
+
+/**
+ * canon_int_extract_jpeg_thumb:
+ *
+ * extract thumbnail from JFIF image (A70) or movie .thm file.
+ * just extracted the code from the old #canon_int_get_thumbnail
+ **/
+
+int
+canon_int_extract_jpeg_thumb (unsigned char *data, const unsigned int datalen,
+			     unsigned char **retdata, unsigned int *retdatalen,
+			     GPContext *context)
+{
+	unsigned int i, thumbstart = 0, thumbsize = 0;
+
+	CHECK_PARAM_NULL (data);
+	CHECK_PARAM_NULL (retdata);
+
+	*retdata = NULL;
+	*retdatalen = 0;
+
+	if (data[0] != JPEG_ESC || data[1] != JPEG_BEG) {
+		gp_context_error (context, "Could not extract JPEG "
+				  "thumbnail from data: Data is not JFIF");
+		GP_DEBUG ("canon_int_extract_jpeg_thumb: data is not JFIF, cannot extract thumbnail");
+		return GP_ERROR_CORRUPTED_DATA;
+	}
+	
+	/* pictures are JFIF files, we skip the first 2 bytes (0xFF 0xD8)
+	 * first go look for start of JPEG, when that is found we set thumbstart
+	 * to the current position and never look for JPEG begin bytes again.
+	 * when thumbstart is set look for JPEG end.
+	 */
+	for (i = 3; i < datalen; i++)
+		if (data[i] == JPEG_ESC) {
+			if (! thumbstart) {
+				if (i < (datalen - 3) &&
+					data[i + 1] == JPEG_BEG &&
+					((data[i + 3] == JPEG_SOS) || (data[i + 3] == JPEG_A50_SOS)))
+					thumbstart = i;
+			} else if (i < (datalen - 1) && (data[i + 1] == JPEG_END)) {
+				thumbsize = i + 2 - thumbstart;
+				break;
+			}
+		
+		}					
+	if (! thumbsize) {
+		gp_context_error (context, "Could not extract JPEG "
+				  "thumbnail from data: No beginning/end");
+		GP_DEBUG ("canon_int_extract_jpeg_thumb: could not find JPEG "
+			  "beginning (offset %s) or end (size %s) in %i bytes of data",
+			  datalen, thumbstart, thumbsize);
+		return GP_ERROR_CORRUPTED_DATA;	  
+	}
+
+	/* now that we know the size of the thumbnail embedded in the JFIF data, malloc() */
+	*retdata = malloc (thumbsize);
+	if (! *retdata) {
+		GP_DEBUG ("canon_int_extract_jpeg_thumb: could not allocate %i bytes of memory", thumbsize);
+		return GP_ERROR_NO_MEMORY;
+	}
+
+	/* and copy */
+	memcpy (*retdata, data + thumbstart, thumbsize);
+	*retdatalen = thumbsize;
+	
+	return GP_OK;
 }
 
 /*

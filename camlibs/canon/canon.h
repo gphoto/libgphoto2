@@ -206,6 +206,8 @@ const char *gphoto2canonpath(Camera *camera, const char *path, GPContext *contex
 
 const char *canon_int_filename2thumbname (Camera *camera, const char *filename);
 
+int canon_int_extract_jpeg_thumb (unsigned char *data, const unsigned int datalen, unsigned char **retdata, unsigned int *retdatalen, GPContext *context);
+
 /* for the macros abbreviating gp_log* */
 #define GP_MODULE "canon"
 
