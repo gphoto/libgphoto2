@@ -24,8 +24,9 @@
 
 /* FIXME: Needs to be converted to new config stuff first */
 
-
 #include "config.h"
+
+#include "mustek-config.h"
 #include "mdc800.h"
 
 #include "../src/gphoto.h"
