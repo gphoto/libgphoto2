@@ -85,6 +85,18 @@ sq_config_get_comp (SQConfig data, unsigned int n)
 }
 
 int
+sq_reset (GPPort *port)
+{
+	unsigned char c;
+
+	SQWRITE (port, 0x0c, 0xc0, 0x00, SQ905_PING, 1);
+	SQWRITE (port, 0x0c, 0x06, 0xa0, SQ905_PING, 1);
+	SQREAD  (port, 0x0c, 0x07, 0x00, &c, 1);
+
+	return GP_OK;
+}
+
+int
 sq_init (GPPort *port, SQConfig data)
 {
 	char c[5];
@@ -141,9 +153,9 @@ sq_init (GPPort *port, SQConfig data)
 		SQWRITE (port, 0x0c, 0xc0, 0x00, SQ905_GET, 1);
 		SQWRITE (port, 0x0c, 0x06, 0xa0, SQ905_PING, 1);
 		SQREAD  (port, 0x0c, 0x07, 0x00, &c[0], 1);
-		SQWRITE (port, 0x0c, 0xc0, 0x00, SQ905_PING, 1);
-		SQWRITE (port, 0x0c, 0x06, 0x30, SQ905_PING, 1);
-		SQREAD  (port, 0x0c, 0x07, 0x00, &c[0], 1);
+
+		/* Reset and do it again. */
+		sq905_reset (port);
 	}
 
 	return GP_OK;
