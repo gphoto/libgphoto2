@@ -578,11 +578,14 @@ canon_int_get_disk_name (Camera *camera)
 int
 canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, int *available)
 {
-	unsigned char *msg;
+	unsigned char *msg = NULL;
 	int len, cap, ava;
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_int_get_disk_name_info() name '%s'",
-			 name);
+	GP_DEBUG ("canon_int_get_disk_name_info() name '%s'", name);
+
+	CHECK_PARAM_NULL(name);
+	CHECK_PARAM_NULL(capacity);
+	CHECK_PARAM_NULL(available);
 
 	switch (camera->port->type) {
 		case GP_PORT_USB:
