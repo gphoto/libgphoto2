@@ -23,6 +23,49 @@ else
   AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "${prefix}/${DATADIRNAME}/locale")
 fi
 
+dnl Check for gPhoto2 configuration
+AC_PATH_PROG(GPHOTO_CONFIG,gphoto2-config)
+if test -n "${GPHOTO_CONFIG}"; then
+  CFLAGS="$CFLAGS `$GPHOTO_CONFIG --cflags`"
+  LIBS="$LIBS `$GPHOTO_CONFIG --libs`"
+else
+  AC_MSG_ERROR([
+***
+*** gPhoto2 is required. Available from gPhoto's Sourceforge CVS.
+*** Check http://www.gphoto.net/download.html for details
+***])
+  exit 1
+fi
+
+dnl Check for libgpio configuration
+AC_PATH_PROG(LIBGPIO_CONFIG,gpio-config)
+if test -n "${LIBGPIO_CONFIG}"; then
+  CFLAGS="$CFLAGS `$LIBGPIO_CONFIG --cflags`"
+  LIBS="$LIBS `$LIBGPIO_CONFIG --libs`"
+else
+  AC_MSG_ERROR([
+***
+*** libgpio is required. Available from gPhoto's Sourceforge CVS.
+*** Check http://www.gphoto.net/download.html for details
+***])
+  exit 1
+fi
+
+
+dnl Check for gdk-pixbuf configuration
+AC_PATH_PROG(GDK_PIXBUF_CONFIG,gdk-pixbuf-config)
+if test -n "${GDK_PIXBUF_CONFIG}"; then
+  CFLAGS="$CFLAGS `$GDK_PIXBUF_CONFIG --cflags`"
+  LIBS="$LIBS `$GDK_PIXBUF_CONFIG --libs`"
+else
+  AC_MSG_ERROR([
+***
+*** gdk-pixbuf (and headers) is required. Available from GNOME CVS.
+*** Check http://www.gnome.org for details
+***])
+  exit 1
+fi
+
 dnl Set PACKAGE_DATA_DIR in config.h.
 if test "x${datadir}" = 'x${prefix}/share'; then
   if test "x${prefix}" = "xNONE"; then
