@@ -247,6 +247,7 @@ camlibs/Makefile
 camlibs/agfa/Makefile
 camlibs/barbie/Makefile
 camlibs/canon/Makefile
+camlibs/canon/doc/Makefile
 camlibs/casio/Makefile
 camlibs/digita/Makefile
 camlibs/dimera/Makefile
