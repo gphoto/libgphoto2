@@ -1178,7 +1178,7 @@ canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, int 
 
 	/* the 1 is to show status */
 	res = canon_usb_long_dialogue (camera, CANON_USB_FUNCTION_GET_FILE, data, length,
-				       camera->pl->md->max_movie_size, max_file_size, payload,
+				       camera->pl->md->max_movie_size, payload,
 				       payload_length, 1, context);
 	if (res != GP_OK) {
 		GP_DEBUG ("canon_usb_get_file: canon_usb_long_dialogue() "
