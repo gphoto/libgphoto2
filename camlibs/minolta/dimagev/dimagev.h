@@ -148,7 +148,7 @@ typedef struct {
 /* These functions are in packet.c */
 dimagev_packet *dimagev_make_packet(unsigned char *buffer, unsigned int length, unsigned int seq);
 dimagev_packet *dimagev_read_packet(dimagev_t *dimagev);
-int dimagev_verify_packet(dimagev_packet *p);
+int dimagev_verify_packet(dimagev_packet *p, int debug);
 dimagev_packet *dimagev_strip_packet(dimagev_packet *p);
 void dimagev_dump_packet(dimagev_packet *p);
 unsigned char dimagev_decimal_to_bcd(unsigned char decimal);
