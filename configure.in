@@ -2,7 +2,7 @@ dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.50)
 AC_INIT(libgphoto2/gphoto2.h)
 AM_CONFIG_HEADER(libgphoto2/config.h)
-AM_INIT_AUTOMAKE(gphoto2, 2.1.1dev3)
+AM_INIT_AUTOMAKE(libgphoto2, 2.1.1dev3)
 AM_MAINTAINER_MODE
 AC_LIBTOOL_DLOPEN
 
