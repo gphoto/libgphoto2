@@ -297,7 +297,7 @@ gp_port_library_list (GPPortInfoList *list)
 	/* Generic support */
 	info.type = GP_PORT_SERIAL;
 	strncpy (info.path, "^serial", sizeof (info.path));
-	strncpy (info.name, "Generic", sizeof (info.name));
+	memset (info.name, 0, sizeof (info.name));
 	CHECK (gp_port_info_list_append (list, info));
 
         return (GP_OK);

@@ -119,6 +119,7 @@ gp_port_info_list_free (GPPortInfoList *list)
 int
 gp_port_info_list_append (GPPortInfoList *list, GPPortInfo info)
 {
+	int generic, i;
 	GPPortInfo *new_info;
 
 	CHECK_NULL (list);
@@ -136,7 +137,11 @@ gp_port_info_list_append (GPPortInfoList *list, GPPortInfo info)
 
 	memcpy (&(list->info[list->count - 1]), &info, sizeof (GPPortInfo));
 
-	return (list->count - 1);
+	/* Ignore generic entries */
+	for (generic = i = 0; i < list->count; i++)
+		if (!strlen (list->info[i].name))
+			generic++;
+	return (list->count - 1 - generic);
 }
 
 /**
@@ -261,7 +266,7 @@ gp_port_info_list_count (GPPortInfoList *list)
 	/* Ignore generic entries */
 	count = list->count;
 	for (i = 0; i < list->count; i++)
-		if (!strcmp (list->info[i].name, "Generic"))
+		if (!strlen (list->info[i].name))
 			count--;
 	return (count);
 }
@@ -281,7 +286,7 @@ int
 gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 {
 	int i, result;
-	regex_t reb;
+	regex_t pattern;
 #if HAVE_GNU_REGEX
 	const char *rv;
 #else
@@ -290,38 +295,38 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 
 	CHECK_NULL (list && path);
 
+#if 0
 	/* Exact match? */
 	for (i = 0; i < list->count; i++)
 		if (!strcmp (list->info[i].path, path))
 			return (i);
+#endif
 
 	/* Regex match? */
 	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list",
 		"Starting regex search for '%s'...", path);
 	for (i = 0; i < list->count; i++) {
+		if (strlen (list->info[i].name))
+			continue;
+
 		gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list",
 			"Trying '%s'...", list->info[i].path);
 
 		/* Compile the pattern */
 #if HAVE_GNU_REGEX
-		re_syntax_options = RE_SYNTAX_POSIX_EXTENDED;
-		reb.allocated = 0;
-		reb.buffer = NULL;
-		reb.fastmap = NULL;
-		reb.translate = 0;
-		reb.no_sub = 0;
+		memset (&pattern, 0, sizeof (pattern));
 		rv = re_compile_pattern (list->info[i].path,
-					 sizeof (list->info[i].path), &reb);
+					 strlen (list->info[i].path), &pattern);
 		if (rv) {
 			gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list",
 				"%s", rv);
 			continue;
 		}
 #else
-		result = regcomp (&reb, list->info[i].path, REG_ICASE);
+		result = regcomp (&pattern, list->info[i].path, REG_ICASE);
 		if (result) {
 			char buf[1024];
-			if (regerror (result, &reb, buf, sizeof (buf)))
+			if (regerror (result, &pattern, buf, sizeof (buf)))
 				gp_log (GP_LOG_ERROR, "gphoto2-port-info-list",
 					"%s", buf);
 			else
@@ -333,14 +338,17 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 
 		/* Try to match */
 #if HAVE_GNU_REGEX
-		result = re_match (&reb, path, strlen (path), 0, NULL);
+		result = re_match (&pattern, path, strlen (path), 0, NULL);
+		regfree (&pattern);
 		if (result < 0) {
 			gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list",
 				"re_match failed (%i)", result);
 			continue;
 		}
 #else
-		if (!regexec (&reb, path, 1, &match, 0)) {
+		result = regexec (&pattern, path, 1, &match, 0);
+		regfree (&pattern);
+		if (!result) {
 			gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list",
 				"regexec failed");
 			continue;
@@ -349,6 +357,8 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 		CR (result = gp_port_info_list_append (list, list->info[i]));
 		strncpy (list->info[result].path, path,
 			 sizeof (list->info[result].path));
+		strncpy (list->info[result].name, _("Generic Port"),
+			 sizeof (list->info[result].name));
 		return (result);
 	}
 
@@ -367,13 +377,16 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 int
 gp_port_info_list_lookup_name (GPPortInfoList *list, const char *name)
 {
-	int i;
+	int i, generic;
 
 	CHECK_NULL (list && name);
 
-	for (i = 0; i < list->count; i++)
-		if (!strcmp (list->info[i].name, name))
-			return (i);
+	/* Ignore generic entries */
+	for (generic = i = 0; i < list->count; i++)
+		if (!strlen (list->info[i].name))
+			generic++;
+		else if (!strcmp (list->info[i].name, name))
+			return (i + generic);
 
 	return (GP_ERROR_UNKNOWN_PORT);
 }
@@ -395,12 +408,12 @@ gp_port_info_list_get_info (GPPortInfoList *list, int n, GPPortInfo *info)
 
 	CHECK_NULL (list && info);
 
-	if (n < 0)
+	if (n < 0 || n >= list->count)
 		return (GP_ERROR_BAD_PARAMETERS);
 
 	/* Ignore generic entries */
 	for (i = 0; i <= n; i++)
-		if (!strcmp (list->info[i].name, "Generic"))
+		if (!strlen (list->info[i].name))
 			n++;
 
 	if (n >= list->count)

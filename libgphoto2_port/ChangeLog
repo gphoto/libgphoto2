@@ -1,5 +1,10 @@
 2001-11-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2_port/gphoto2-port-info-list.c: Fix regex stuff 
+	  (at least for HAVE_GNU_REGEX).
+
+2001-11-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* configure.in: Check for GNU regex
 	* acconfig.h: HAVE_GNU_REGEX
 	* serial:
