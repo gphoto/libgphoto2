@@ -1,3 +1,202 @@
+
+/* Widget Data Structures
+   --------------------------------------------------------------- */
+typedef enum {
+	WIDGET_WINDOW,
+	WIDGET_PAGE,
+	WIDGET_TEXT,
+	WIDGET_RANGE,
+	WIDGET_TOGGLE,
+	WIDGET_RADIO,
+	WIDGET_MENU,
+	WIDGET_BUTTON,
+	WIDGET_NONE
+} CameraWidgetType;
+
+#define CameraWidgetCallback(_a) int (*_a) (CameraWidget *widget)
+
+typedef struct {
+
+	/* Publicly accessible
+	   ------------------------------ */
+	WidgetType 	type;
+	char		label[32];
+
+	/* Current value of the widget */
+	char		value_string[32];
+	float		value_number;
+
+
+	/* For Radio and Menu */
+	char 		choice[32];
+
+	/* For Range */
+	float		min;
+	float 		max;
+	float		step
+
+	/* Function Callback */
+	CameraWidgetCallback(callback);
+
+	/* Private (don't access)
+	   ------------------------------ */
+	CameraWidget	*children;
+	int 		 children_count;
+
+} CameraWidget;
+
+
+/* Widget API
+   --------------------------------------------------------------- */
+
+CameraWidget*	gp_widget_new(CameraWidgetType type, char *label);
+	/* Create a new widget */
+
+int		gp_widget_append(CameraWidget *parent, CameraWidget *child);
+int		gp_widget_prepend(CameraWidget *parent, CameraWidget *child);
+	/* Add a child widget to the parent widget */
+
+int	   	gp_widget_child_count(CameraWidget *parent);
+	/* Retrieve the number of children a parent has */
+
+CameraWidget*	gp_widget_child(CameraWidget *parent, int child_number);
+	/* Retrieve a pointer to a child #child_number of the parent */
+
+int		gp_widget_free(CameraWidget *widget);
+	/* Frees a widget, as well as all the children */
+
+Then, you can build an interface in the library, and set the initial values and pass that 
+back to the front-end.
+
+now, the library can make decisions as to what widgets to show depending on the camera 
+model. BUT, (the big but), it adds to the complexity in the libraries. we've always been 
+trying to find the trade-off between complexity of the camera library API and the ease of 
+creating a camera library.
+
+The camera_config_get() function would be passed in a CameraWidget pointer tho the 
+top-level window.
+
+here is an example config_get function:
+
+int camera_config_get (CameraWidget *window) {
+
+	CameraWidget *t, *page;
+	int num;
+	char buf[1024];
+
+	/* set the window label to something more specific */
+	strcpy(window->label, "Fujitsu Camera Settings");
+
+	/* Create a new page for "Quality" */
+	page = gp_widget_new(WIDGET_PAGE, "Quality");
+
+	/* Add the page to the window */
+	gp_widget_add(window, page);
+
+		/* Get the current camera resolution setting */
+		num = fujitstu_setting_int(FUJITSU_RESOLUTION);
+			/* returns 0,1, or 2 */
+
+		/* Add the Resolution setting radio buttons */
+		t = gp_widget_new(WIDGET_RADIO, "Resolution");
+		strcpy(t->choice, "Standard");
+		if (num == 0) {t->value_number = 1;}
+		gp_widget_append(page, t);
+
+		t = gp_widget_new(WIDGET_RADIO, "Resolution");
+		strcpy(t->choice, "High");
+		if (num == 1) {t->value_number = 1;}
+		gp_widget_append(page, t);
+
+		t = gp_widget_new(WIDGET_RADIO, "Resolution");
+		strcpy(t->choice, "Best");
+		if (num == 2) {t->value_number = 1;}
+		gp_widget_append(page, t);
+
+
+	     /* Don't show the compression settings if current model
+		is D220-L because it doesn't support it */
+	     if (strcmp(current_camera, "olympus D220-L")!=0) {
+		/* Get the current camera compression setting */
+		num = fujitstu_setting_int(FUJITSU_COMPRESSION);
+			/* returns 0,1, or 2 */
+
+		/* Add the Compression setting radio buttons */
+		t = gp_widget_new(WIDGET_RADIO, "Compression");
+		strcpy(t->choice, "None");
+		if (num == 0) {t->value_number = 1;}			
+		gp_widget_append(page, t);
+
+		t = gp_widget_new(WIDGET_RADIO, "Compression");
+		strcpy(t->choice, "Low");
+		if (num == 1) {t->value_number = 1;}			
+		gp_widget_append(page, t);
+
+		t = gp_widget_new(WIDGET_RADIO, "Compression");
+		strcpy(t->choice, "High");
+		if (num == 2) {t->value_number = 1;}			
+		gp_widget_append(page, t);
+	     }
+
+	/* Create a new page for "Flash/Lens" */
+	page = gp_widget_new(WIDGET_PAGE, "Flash/Lens");
+
+	/* Add the page to the window */
+	gp_widget_add(window, page);
+
+		/* Get the current camera flash setting */
+		num = fujitstu_setting_int(FUJITSU_FLASH);
+			/* returns 0,1,2, or 3 */
+		t = gp_widget_new(WIDGET_MENU, "Flash Setting");
+		strcpy(t->choice, "Auto");
+		if (num == 0) {t->value_number = 1;}			
+		gp_widget_append(page, t);
+
+		t = gp_widget_new(WIDGET_MENU, "Flash Setting");
+		strcpy(t->choice, "Red-eye");
+		if (num == 1) {t->value_number = 1;}			
+		gp_widget_append(page, t);
+
+		t = gp_widget_new(WIDGET_MENU, "Flash Setting");
+		strcpy(t->choice, "Force");
+		if (num == 2) {t->value_number = 1;}			
+		gp_widget_append(page, t);
+
+		t = gp_widget_new(WIDGET_MENU, "Flash Setting");
+		strcpy(t->choice, "None");
+		if (num == 3) {t->value_number = 1;}			
+		gp_widget_append(page, t);
+
+
+		/* Get the current camera lens setting */
+		num = fujitstu_setting_int(FUJITSU_LENS);
+			/* returns 0, or 1 */
+
+		t = gp_widget_new(WIDGET_RADIO, "Lens Mode");
+		strcpy(t->choice, "Normal");
+		if (num == 0) {t->value_number = 1;}			
+		gp_widget_append(page, t);
+
+		t = gp_widget_new(WIDGET_RADIO, "Lens Mode");
+		strcpy(t->choice, "Macro");
+		if (num == 1) {t->value_number = 1;}			
+		gp_widget_append(page, t);
+
+		t = gp_widget_new(WIDGET_RANGE, "Zoom");
+		t->min = 28.0;
+		t->max = 135.0;
+		t->step = 1.0;
+		t->value_number = (float)fujitsu_setting_int(FUJITSU_ZOOM);
+		gp_widget_append(page, t);
+
+	return (GP_OK);
+}
+
+
+
+old
+--------=-=-=-=------------------ - - - -   -     ------------------------
+
 This is simply a draft for the configuration dialog spec for the camera
 libraries. Please ask questions if something doesn't jive or sucks.
 					-Scott <scottf@unr.edu>
