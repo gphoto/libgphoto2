@@ -1,3 +1,7 @@
+2002-11-12  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* libgphoto2_port/gphoto2-port-version.c: Use HAVE_CC only if defined.
+
 2002-11-08  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
 	* configure.in: increased AGE to 1, define HAVE_USB and HAVE_SERIAL

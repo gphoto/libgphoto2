@@ -30,7 +30,11 @@ const char **gp_port_library_version(GPVersionVerbosity verbose)
 	static const char *shrt[] =
 		{
 			VERSION,
+#ifdef HAVE_CC
 			HAVE_CC,
+#else
+			"unknown",
+#endif
 #ifdef HAVE_USB
 			"USB",
 #else
@@ -60,7 +64,11 @@ const char **gp_port_library_version(GPVersionVerbosity verbose)
 	static const char *verb[] =
 		{
 			VERSION,
+#ifdef HAVE_CC
 			HAVE_CC " (C compiler used)",
+#else
+			"unknown (C compiler used)",
+#endif
 #ifdef HAVE_USB
 			"USB (for USB cameras)",
 #else
