@@ -1,3 +1,10 @@
+2001-09-22  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	Patch from Carsten Pfeiffer <carpdjih@sp.zrz.tu-berlin.de>
+
+	* libgphoto2_port/library.c: 
+	* libgphoto2_port/portability.c: char *whatever -> const char *whatever
+
 2001-09-18  Chris PInkham <cpinkham@infi.net>
 
 	* include/gphoto2-port.h

@@ -9,7 +9,7 @@ extern int glob_debug_level;
 extern gp_port_info device_list[];
 void *device_lh;
 
-int gp_port_library_is_valid (char *filename) {
+int gp_port_library_is_valid (const char *filename) {
 
         void *lh;
 
@@ -25,7 +25,7 @@ int gp_port_library_is_valid (char *filename) {
         return (GP_OK);
 }
 
-int gp_port_library_list_load(char *filename, int loaded[], gp_port_info *list, int *count) {
+int gp_port_library_list_load(const char *filename, int loaded[], gp_port_info *list, int *count) {
 
         void *lh;
         int type, x;

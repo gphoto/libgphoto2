@@ -5,7 +5,7 @@
    ------------------------------------------------------------------ */
 #ifdef WIN32
 
-void gp_port_win_convert_path (char *path) {
+void gp_port_win_convert_path (const char *path) {
 
         int x;
 
