@@ -39,7 +39,6 @@ If you have a serial port reserved for the camera, you may just chown
 the device file to the user you want to run gphoto2 as.
 
 
-
 2.2 USB ports
 =============
 
@@ -133,6 +132,7 @@ model.
 =================
 Appendix A. Files
 =================
+
 
 A.1 usbcam script
 =================
