@@ -69,7 +69,9 @@ static const struct {
 	{NULL, NULL}
 };
 
-/*#define DEBUG*/
+/* #define DEBUG */
+/* #define FOLLOW_LINKS */
+
 #define GP_MODULE "directory"
 
 static const char *
@@ -112,7 +114,11 @@ int camera_abilities (CameraAbilitiesList *list)
         a.port     = GP_PORT_NONE;
         a.speed[0] = 0;
 
+#ifdef DEBUG
+	a.operations = GP_OPERATION_CONFIG | GP_OPERATION_CAPTURE_PREVIEW;
+#else
         a.operations = GP_OPERATION_CONFIG;
+#endif
 #ifdef DEBUG
         a.file_operations = GP_FILE_OPERATION_PREVIEW |
 			    GP_FILE_OPERATION_DELETE;
@@ -187,7 +193,10 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 {
 	GP_SYSTEM_DIR dir;
 	GP_SYSTEM_DIRENT de;
-	char buf[1024], f[1024], link[1024];
+	char buf[1024], f[1024];
+#ifdef FOLLOW_LINKS
+	char link[1024];
+#endif
 	const char *dirname;
 	int view_hidden=1;
 	unsigned int id, n;
@@ -196,12 +205,14 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	if (gp_setting_get ("directory", "hidden", buf) == GP_OK)
 		view_hidden = atoi (buf);
 
-	/* Check if this is a link */
 	if (lstat (folder, &st) != 0) {
 		gp_context_error (context, _("Could not get information "
 				  "about '%s' (%m)."), folder);
 		return (GP_ERROR);
 	}
+
+#ifdef FOLLOW_LINKS
+	/* Check if this is a link */
 	if (S_ISLNK (st.st_mode)) {
 		if (readlink (folder, link, sizeof (link) < 0)) {
 			gp_context_error (context, _("Could not follow the "
@@ -211,6 +222,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		GP_DEBUG ("Following link '%s' -> '%s'...", folder, link);
 		return (folder_list_func (fs, link, list, data, context));
 	}
+#endif
 
 	dir = GP_SYSTEM_OPENDIR ((char*) folder);
 	if (!dir)
@@ -268,8 +280,11 @@ static int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 		      CameraFileInfo *info, void *data, GPContext *context)
 {
-	char path[1024], link[1024];
+	char path[1024];
+#ifdef FOLLOW_LINKS
+	char link[1024];
 	char *name;
+#endif
 	const char *mime_type;
 	struct stat st;
 
@@ -282,6 +297,8 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 			"about '%s' in '%s' (%m)."), file, folder);
 		return (GP_ERROR);
 	}
+
+#ifdef FOLLOW_LINKS
 	if (S_ISLNK (st.st_mode)) {
 		if (readlink (path, link, sizeof (link) < 0)) {
 			gp_context_error (context, _("Could not follow the "
@@ -298,6 +315,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 					       context));
 		}
 	}
+#endif
 
 #ifdef DEBUG
 	info->preview.fields = GP_FILE_INFO_SIZE;
@@ -618,6 +636,20 @@ put_file_func (CameraFilesystem *fs, const char *folder,
 	return (GP_OK);
 }
 
+#ifdef DEBUG
+static int
+camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
+{
+	int r;
+
+	r = gp_file_open (file, "/usr/share/pixmaps/gnome-logo-large.png");
+	if (r < 0)
+		return (r);
+	
+	return (GP_OK);
+}
+#endif
+
 int
 camera_init (Camera *camera, GPContext *context)
 {
@@ -628,6 +660,9 @@ camera_init (Camera *camera, GPContext *context)
         camera->functions->set_config           = camera_set_config;
         camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;
+#ifdef DEBUG
+	camera->functions->capture_preview	= camera_capture_preview;
+#endif
 
         if (gp_setting_get("directory", "hidden", buf) != GP_OK)
                 gp_setting_set("directory", "hidden", "1");
