@@ -189,7 +189,7 @@ void
 print_version (void)
 {
 	printf (_("gPhoto (v%s) - Cross-platform digital camera library.\n"
-		  "Copyright (C) 2000,2001 Scott Fritzinger and others\n"
+		  "Copyright (C) 2000-2002 Scott Fritzinger and others\n"
 		  "%s"
 		  "Licensed under the Library GNU Public License (LGPL).\n"),
 		  VERSION,
