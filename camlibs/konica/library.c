@@ -1202,8 +1202,7 @@ camera_init (Camera* camera)
         int image_id_long;
         int inep, outep;
         GPPortSettings settings;
-
-	CHECK_NULL (camera);
+	CameraAbilities a;
 
         /* First, set up all the function pointers. */
         camera->functions->exit                 = camera_exit;
@@ -1217,8 +1216,9 @@ camera_init (Camera* camera)
         camera->functions->result_as_string     = camera_result_as_string;
 
         /* Lookup model information */
+	gp_camera_get_abilities (camera, &a);
         for (i = 0; konica_cameras [i].model; i++)
-                if (!strcmp (konica_cameras [i].model, camera->model))
+                if (!strcmp (konica_cameras [i].model, a.model))
                         break;
         if (!konica_cameras [i].model)
                 return (GP_ERROR_MODEL_NOT_FOUND);
@@ -1272,9 +1272,6 @@ camera_init (Camera* camera)
 				      delete_file_func, camera);
 	gp_filesystem_set_folder_funcs (camera->fs, NULL, delete_all_func,
 					camera);
-
-        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** EXIT: "
-                         "camera_init ***");
 
         return (GP_OK);
 }
