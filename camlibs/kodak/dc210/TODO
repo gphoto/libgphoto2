@@ -1,14 +1,9 @@
 There are still some minor problems/issues:
 
-- Better initialization code for speed. The current code does not
-  work very reliable when the camera is on an speed already set
-  to 115200
-- Implement battery check; the status field in the status table
-  is not automatically updated (according to documentation)
-- Allow switching the thumbnail type in preferences
+- Implement a pseudo capturing of previews (by taking a picture
+  to the card, downloading and deleting it) for webcam purposes
 - Check the epoch problem that occurs when setting/reading the
   camera or file time
 - Internationalization
-- Implement a pseudo capturing of previews (by taking a picture
-  to the card, downloading and deleting it) for webcam purposes
-- Add some more comments
+- Allow switching the thumbnail type in preferences
+- Clean up the code and add some more comments

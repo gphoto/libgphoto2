@@ -1,3 +1,8 @@
+2002-09-08  Michael Koltan <koltan@gmx.de>
+
+	* Implemented reliable code for speed setting
+	* Added battery check
+
 2002-09-06  Michael Koltan <koltan@gmx.de>
 
 	* Implemeted the named commands for displaying,

@@ -592,16 +592,6 @@ int dc210_system_time_callback (Camera * camera, CameraWidget * widget, GPContex
 
 };
 
-int dc210_initialize (Camera * camera){
-
-	/* this procedure works, but I don't know, if it has any
-	   effect */
-
-	return dc210_set_option(camera, DC210_INITIALIZE, 0, 0);
-
-};
-
-
 int dc210_format_card (Camera * camera, char * album_name, GPContext * context){
 
   char data[DC210_CMD_DATA_SIZE];
@@ -701,76 +691,110 @@ int dc210_format_callback(Camera * camera, CameraWidget * widget, GPContext * co
 
 };
 
-int dc210_set_speed (Camera *camera, int speed) {
+static int dc210_check_battery (Camera *camera){
 
   unsigned char cmd[8];
-  int i;
-  GPPortSettings settings;
-  CameraAbilities abilities;
-  dc210_cmd_init(cmd, DC210_SET_SPEED);
+  dc210_cmd_init(cmd, DC210_CHECK_BATTERY);
 	
-  switch (speed) {
-  case 0: /* Default */
-  case 9600:
-	  cmd[2] = 0x96; cmd[3] = 0x00; break;
-  case 19200:
-	  cmd[2] = 0x19; cmd[3] = 0x20; break;
-  case 38400:
-	  cmd[2] = 0x38; cmd[3] = 0x40; break;
-  case 57600:
-	  cmd[2] = 0x57; cmd[3] = 0x60; break;
-  case 115200:
-	  cmd[2] = 0x11; cmd[3] = 0x52; break;
-  default:
-	  return (GP_ERROR);
-  };
+  if (dc210_execute_command(camera, cmd) == GP_ERROR) return GP_ERROR;
+  if (dc210_wait_for_response(camera, 0, NULL) == GP_ERROR) return GP_ERROR;
 
-  gp_port_get_settings (camera->port, &settings);
+  return GP_OK;
 
-  /* fast try, if we have initialized the speed already */
-  if (settings.serial.speed != 0){
-	  if (dc210_execute_command(camera, cmd) != GP_ERROR){
-		  settings.serial.speed = speed;
-		  gp_port_set_settings (camera->port, settings);
-		  return GP_OK;
-	  };
-  };
+};
 
-  /* okay, we need to try harder; test all available speed settings */
+void dc210_reset_speed (Camera *camera){
 
-  settings.serial.bits     = 8;
-  settings.serial.parity   = 0;
-  settings.serial.stopbits = 1;
-  gp_port_set_timeout (camera->port, TIMEOUT);
+	/* sending a break command resets the
+	   speed to 9600 */
+	int camera_speeds[] = {115200, 19200, 38400, 57600};
+	int i;
 
-  gp_camera_get_abilities(camera, &abilities);
+	GPPortSettings settings;
 
-  for (i = 0; i < sizeof(abilities.speed); i++){
+	gp_port_get_settings (camera->port, &settings);
+	gp_port_set_timeout (camera->port, TIMEOUT);
+	settings.serial.bits     = 8;
+	settings.serial.parity   = 0;
+	settings.serial.stopbits = 1;
+	settings.serial.speed = 9600;
+	gp_port_set_settings (camera->port, settings);
 
-	  if (abilities.speed[i] == 0) break;
+	/* ok, run a dummy command; if the camera was off,
+	   this will activate it and set the speed to 9600; 
+	   but the command will return an error */
+	if (dc210_check_battery(camera) == GP_OK) return;
 
-	  DC210_DEBUG("Trying to use speed %d\n", abilities.speed[i]);
-	  settings.serial.speed    = abilities.speed[i];
+	/* Fine, the last command didn't work, but we are now
+	   sure, the camera is working, if it is connected
+	   and has enough power.
+	   This is the time to send a break to reset the speed
+	   to 9600 */
+	
+	gp_port_send_break(camera->port, 300);
+	GP_SYSTEM_SLEEP(300);
 
-	  gp_port_set_settings (camera->port, settings);
-	  gp_port_send_break (camera->port, 2);
+	/* Excellent. Now our dummy command should work */
 
-	  if (dc210_execute_command(camera, cmd) == GP_ERROR){
-		  if (dc210_cmd_error == DC210_GARBAGE_ERROR){
-			  DC210_DEBUG("Obviously the port settings differ between camera and system.\n");
-		  };
-	  }
-	  else{
-		  DC210_DEBUG("Port speed %d seems to work!\n", abilities.speed[i]);
-		  settings.serial.speed = speed;
-		  gp_port_set_settings (camera->port, settings);
-		  return GP_OK;
-	  };
-  };
+	if (dc210_check_battery(camera) == GP_OK) return;
+
+	/* My, my, this is not nice. We change the timeout
+	   and try other speeds */
+
+	gp_port_set_timeout (camera->port, 100);
+
+	for (i = 0; i < 4; i++){
+		settings.serial.speed = camera_speeds[i];
+		gp_port_set_settings (camera->port, settings);
+
+		if (dc210_check_battery(camera) == GP_OK) break;
+
+		DC210_DEBUG("What a pity. Speed %d dos not work.\n", camera_speeds[i]);
+	};
+
+	/* reset the timeout */
+	gp_port_set_timeout (camera->port, TIMEOUT);
+
+	/* wether it worked or not: it's time to say goodbye */
+	return;
+
+};
+
+int dc210_set_speed (Camera *camera, int speed) {
+
+	unsigned char cmd[8];
+	GPPortSettings settings;
+
+	dc210_cmd_init(cmd, DC210_SET_SPEED);
+	
+	switch (speed) {
+	case 0: /* Default */
+	case 9600:
+		cmd[2] = 0x96; cmd[3] = 0x00; break;
+	case 19200:
+		cmd[2] = 0x19; cmd[3] = 0x20; break;
+	case 38400:
+		cmd[2] = 0x38; cmd[3] = 0x40; break;
+	case 57600:
+		cmd[2] = 0x57; cmd[3] = 0x60; break;
+	case 115200:
+		cmd[2] = 0x11; cmd[3] = 0x52; break;
+	default:
+		return (GP_ERROR);
+	};
+
+	/* try to get a defined state */
+	dc210_reset_speed (camera);
+
+	if (dc210_execute_command(camera, cmd) == GP_ERROR) return GP_ERROR;
+
+	gp_port_get_settings (camera->port, &settings);
+	settings.serial.speed = speed;
+	gp_port_set_settings (camera->port, settings);
+
+	return GP_OK;
   
-  return GP_ERROR;
-  
-}
+};
 
 /****** Picture actions *****/
 
@@ -1139,6 +1163,10 @@ int dc210_get_status (Camera *camera, dc210_status *status) {
 	char data[DC210_STATUS_SIZE];
 	char cmd[8];
 
+	/* you have to check the battery status explicitely 
+	   before reading the status table*/
+	dc210_check_battery(camera);
+
 	dc210_cmd_init(cmd, DC210_GET_STATUS);
 	
 	if (dc210_execute_command(camera, cmd) == GP_ERROR) return GP_ERROR;
@@ -1240,8 +1268,10 @@ static int dc210_read_dummy_packet(Camera * camera){
 };
 
 static int dc210_test_command
-(Camera * camera, unsigned char cmdbyte, unsigned char modifier, unsigned int value, int size){
-	
+(Camera * camera, unsigned char cmdbyte, unsigned char *databytes){
+
+	/* this is a debug command to test the behaviour
+	   of certain camera commands */
 	unsigned char cmd[8];
 	unsigned char answer;
 	signed char error;
@@ -1252,27 +1282,7 @@ static int dc210_test_command
 
 	dc210_cmd_init(cmd, cmdbyte);
 
-	cmd[1] = modifier;
-
-	switch(size){
-	case 0:
-		break;
-	case 1:
-		cmd[2] = value & 0xFF;
-		break;
-	case 2:
-		cmd[3] = value & 0xFF;
-		cmd[2] = (value >> 8) & 0xFF;
-		break;
-	case 4:
-		cmd[5] = value & 0xFF;
-		cmd[4] = (value >> 8) & 0xFF;
-		cmd[3] = (value >> 16) & 0xFF;
-		cmd[2] = (value >> 24) & 0xFF;
-		break;
-	default:
-		return GP_ERROR;
-	};
+	memcpy(cmd + 2, databytes, 4); 
 
 	/* okay, write the command and wait for acknowledge */
 
@@ -1344,7 +1354,10 @@ int dc210_debug_callback(Camera * camera, CameraWidget * widget, GPContext * con
 	char * s_param1, *s_param2, *s_param3;
 	int param1, param2, param3;
 	int value;
+	unsigned char params[4];
 	dc210_status status;
+
+	memset(params, 0, 4);
 
 	gp_widget_get_root(widget, &window);
 
@@ -1362,7 +1375,7 @@ int dc210_debug_callback(Camera * camera, CameraWidget * widget, GPContext * con
 
 	/* Put the stuff you want to test here */
 	dc210_get_status(camera, &status);
-	dc210_get_filenames(camera, NULL, NULL);
+	dc210_test_command(camera, 0x85, params);
 	dc210_get_status(camera, &status);
 
 	return GP_OK;

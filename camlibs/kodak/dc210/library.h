@@ -27,13 +27,13 @@ static int dc210_read_to_file (Camera *camera, CameraFile * f, int blocksize, lo
 static int dc210_read_single_block (Camera *camera, unsigned char * b, int blocksize);
 static int dc210_take_picture (Camera * camera, GPContext *context);
 static int dc210_set_option (Camera * camera, char command, unsigned int value, int valuesize);
+static int dc210_check_battery (Camera *camera);
 static int dc210_space_on_card(Camera * camera, int * space);
 static void dc210_picinfo_from_block (dc210_picture_info * picinfo, unsigned char * data);
 
 #ifdef DEBUG
 static int dc210_read_dummy_packet(Camera * camera);
-static int dc210_test_command(Camera * camera, unsigned char cmdbyte, unsigned char modifier,
-			      unsigned int value, int size);
+static int dc210_test_command(Camera * camera, unsigned char cmdbyte, unsigned char *databytes);
 #endif
 
 #endif /* _DC210_LIBRARY_H_ */

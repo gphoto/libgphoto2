@@ -103,7 +103,7 @@ typedef struct {
 
 /* I really don't get it, why I have a shift of seven hours in
    each direction to get/set the camara time correctly. I'm afraid
-   it's dependent on the timezone */
+   it's dependent on the timezone  (and an outdated clib)*/
 
 /* #define CAMERA_EPOC              852094800*/
 #define CAMERA_GET_EPOC              852094800 - 25200
@@ -133,28 +133,26 @@ typedef struct {
 #define DC210_SET_ZOOM              0x78 /* implemented */
 #define DC210_DELETE_PICTURE        0x7B /* implemented */
 #define DC210_TAKE_PICTURE          0x7C /* implemented */
-#define DC210_INITIALIZE            0x7E /* implemented, but effect unknown */
+#define DC210_CHECK_BATTERY         0x7E /* implemented */
 #define DC210_GET_STATUS            0x7F /* implemented */
 
 #define DC210_SET_EXPOSURE          0x80 /* implemented */
 #define DC210_RESET		    0x8A /* working, but not yet implemented */
 #define DC210_FIRMWARE_MODE_SET	    0x8D /* working, but not yet implemented */
 
-
-
-/* untested commands */
-#define DC210_CARD_GET_PICINFO	    0x91 /* needs unknown cmd packet */
-#define DC210_CARD_GET_SUMMARY	    0x92 /* needs unknown cmd packet */
-#define DC210_CARD_READ_THUMB	    0x93 /* needs unknown cmd packet */
-#define DC210_CARD_FORMAT	    0x95 /* needs unknown cmd packet */
-#define DC210_CARD_OPEN		    0x96 /* is working, sets bit 3 in status[30] */
-#define DC210_CARD_CLOSE	    0x97 /* is working, clears bit 3 in status[30] */
+/* Filename commands */
+#define DC210_CARD_GET_PICINFO	    0x91 /* implemented */
+#define DC210_CARD_GET_SUMMARY	    0x92 /* not implemented */
+#define DC210_CARD_READ_THUMB	    0x93 /* implemented */
+#define DC210_CARD_FORMAT	    0x95 /* implemented */
+#define DC210_CARD_OPEN		    0x96 /* implemented */
+#define DC210_CARD_CLOSE	    0x97 /* implemented */
 #define DC210_CARD_GET_STATUS	    0x98 /* is working, returns packet of size 16 */
-#define DC210_CARD_GET_DIRECTORY    0x99 /* needs unknown cmd packet */
-#define DC210_CARD_READ_FILE	    0x9A /* needs unknown cmd packet */
-#define DC210_CARD_UNKNOWN_COMMAND1 0x9C /* needs unknown cmd packet */
-#define DC210_CARD_FILE_DEL	    0x9D /* needs unknown cmd packet */
-#define DC210_CARD_UNKNOWN_COMMAND2 0x9E /* needs unknown cmd packet */
+#define DC210_CARD_GET_DIRECTORY    0x99 /* not implemented */
+#define DC210_CARD_READ_FILE	    0x9A /* implemented */
+#define DC210_CARD_UNKNOWN_COMMAND1 0x9C /* not implemented */
+#define DC210_CARD_FILE_DEL	    0x9D /* implemented */
+#define DC210_CARD_UNKNOWN_COMMAND2 0x9E /* not implemented */
 
 /* Responses */
 #define DC210_COMMAND_COMPLETE      0x00
@@ -178,6 +176,7 @@ int dc210_set_flash (Camera * camera, dc210_flash_type flash, char preflash);
 int dc210_set_zoom (Camera * camera, dc210_zoom_type zoom);
 int dc210_set_file_type (Camera * camera, dc210_file_type_type file_type);
 int dc210_set_resolution (Camera * camera, dc210_resolution_type res);
+void dc210_reset_speed (Camera *camera);
 int dc210_set_speed     (Camera *camera, int speed);
 int dc210_set_delay (Camera * camera);
 int dc210_set_exp_compensation (Camera * camera, signed int compensation);
