@@ -1,3 +1,7 @@
+2004-06-13  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Added Canon PowerShot S1 IS.
+
 2004-05-29 Mariusz Woloszyn
 	* library.c: Fixed a small problem that caused objects of undefined
 	type not beeing downloadable. Now they are downloadable if the Thumb
