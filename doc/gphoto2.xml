@@ -525,6 +525,25 @@ Saving file as MVI_5418.AVI                                                     
               <filename>/etc/hotplug/usb.usermap</filename> after
               removing all lines beginning with "usbcam".
             </para>
+	    <formalpara>
+	      <title>Debian peculiarity</title>
+	      <para>
+		As Debian uses a structured hotplug setup, you 
+		should use its benefits instead of working against
+		it. Instead of modifying
+		<filename>/etc/hotplug/usb.usermap</filename>
+		directly, we set up special file
+		<filename>/usr/lib/hotplug/usbcam/usb.usermap</filename> 
+		and let <command>update-usb.usermap</command>
+		update the
+		<filename>/etc/hotplug/usb.usermap</filename> file:
+		<screen>
+<prompt># </prompt><command>mkdir <parameter>/usr/lib/hotplug/usbcam</parameter></command>
+<prompt># </prompt><command>gphoto2 <parameter>--print-usb-usermap</parameter> > <filename>/usr/lib/hotplug/usbcam/usb.usermap</filename></command>
+<prompt># </prompt><command>update-usb.usermap</command>
+		</screen>
+	      </para>
+	    </formalpara>
             <para>
               This makes hotplug recognise all <acronym>USB</acronym> cameras which your version 
               of <xref linkend="libgphoto2"/> supports and makes
