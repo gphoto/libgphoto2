@@ -35,6 +35,11 @@
 #  define N_(String) (String)
 #endif
 
+#define CONTEXT_EXISTS _("There is currently an operation in progress. \
+This camera only supports one operation \
+at a time. Please wait until the current \
+operation has finished.")
+
 int camera_id (CameraText *id) 
 {
 	strcpy(id->text, "kodak-dc3200");
@@ -112,6 +117,12 @@ int init(Camera *camera)
 
 static int camera_exit (Camera *camera, GPContext *context)
 {
+	if(camera->pl->context)
+	{
+		gp_context_error(context, CONTEXT_EXISTS);
+		return GP_ERROR;
+	}
+
 	if (camera->pl) {
 		free (camera->pl);
 		camera->pl = NULL;
@@ -146,25 +157,35 @@ static int folder_list_func (CameraFilesystem *fs, const char *folder,
 	char		filename[13], *ptr;
 	int		res, i;
 
-	camera->pl->context = context;
+	if(camera->pl->context)
+	{
+		gp_context_error(context, CONTEXT_EXISTS);
+		return GP_ERROR;
+	}
 
 	if(check_last_use(camera) == GP_ERROR)
+	{
 		return GP_ERROR;
+	}
 
 	/* get file list data */
 	res = dc3200_get_data (camera, &data, &data_len, CMD_LIST_FILES, folder,
 			       NULL);
 	if (res == GP_ERROR)
+	{
 		return GP_ERROR;
+	}
 
 	/* check the data length, each record is 20 bytes */
-	if(data_len%20 != 0 || data_len < 1) {
-		/* there is a problem */
+	if(data_len%20 != 0 || data_len < 1)
+	{
 		return GP_ERROR;
 	}
 	
 	if (data == NULL)
+	{
 		return GP_ERROR;
+	}
 
 	/* add directories to the list */
 	ptr_data_buff = data;
@@ -217,25 +238,35 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 	char		filename[13];
 	int		res, i;
 
-	camera->pl->context = context;
+	if(camera->pl->context)
+	{
+		gp_context_error(context, CONTEXT_EXISTS);
+		return GP_ERROR;
+	}
 
 	if(check_last_use(camera) == GP_ERROR)
+	{
 		return GP_ERROR;
-
+	}
+	
 	/* get file list data */
 	res = dc3200_get_data (camera, &data, &data_len, CMD_LIST_FILES, folder,
 			       NULL);
 	if (res == GP_ERROR)
+	{
 		return GP_ERROR;
-
+	}
+	
 	/* check the data length */
-	if(data_len%20 != 0 || data_len < 1) {
-		/* there is a problem */
+	if(data_len%20 != 0 || data_len < 1)
+	{
 		return GP_ERROR;
 	}
 
 	if(data == NULL)
+	{
 		return GP_ERROR;
+	}
 
 	/* add files to the list */
 	ptr_data_buff = data;
@@ -284,10 +315,19 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	long		data_len = 0;
 	int		res;
 
+	if(camera->pl->context)
+	{
+		gp_context_error(context, CONTEXT_EXISTS);
+		return GP_ERROR;
+	}
+
 	camera->pl->context = context;
 
 	if(check_last_use(camera) == GP_ERROR)
+	{
+		camera->pl->context = NULL;
 		return GP_ERROR;
+	}
 
 	switch (type) {
 	case GP_FILE_TYPE_PREVIEW:
@@ -295,21 +335,29 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 				       CMD_GET_PREVIEW, folder, filename);
 		break;
 	case GP_FILE_TYPE_NORMAL:
-		res = dc3200_get_data (camera, &data, &data_len, CMD_GET_FILE,
-				       folder, filename);
+		res = dc3200_get_data (camera, &data, &data_len, 
+				       CMD_GET_FILE, folder, filename);
 		break;
 	default:
+		camera->pl->context = NULL;
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
 	if (res < 0)
+	{
+		camera->pl->context = NULL;
 		return (res);
+	}
 
 	if (data == NULL || data_len < 1)
-		return (GP_ERROR);
+	{
+		camera->pl->context = NULL;
+		return GP_ERROR;
+	}
 
 	gp_file_append (file, data, data_len);
 
 	free(data);
+	camera->pl->context = NULL;
 	return (dc3200_keep_alive(camera));
 }
 
@@ -324,13 +372,21 @@ get_info_func (CameraFilesystem *fs, const char *folder,
 	int		res;
 	char		file[1024];
 
-	camera->pl->context = context;
+	if(camera->pl->context)
+	{
+		gp_context_error(context, CONTEXT_EXISTS);
+		return GP_ERROR;
+	}
 
 	if(check_last_use(camera) == GP_ERROR)
+	{
 		return GP_ERROR;
+	}
 
 	if(!folder)
+	{
 		return GP_ERROR;
+	}
 	
 	strcpy(file, folder);
 	if(folder[strlen(folder)-1] != '\\' || folder[strlen(folder)-1] != '/')
@@ -341,16 +397,21 @@ get_info_func (CameraFilesystem *fs, const char *folder,
 	res = dc3200_get_data (camera, &data, &data_len, CMD_LIST_FILES, file,
 			       NULL);
 	if (res == GP_ERROR)
+	{
 		return GP_ERROR;
+	}
 
 	/* check the data length */
-	if(data_len%20 != 0 || data_len < 1) {
+	if(data_len%20 != 0 || data_len < 1)
+	{
 		/* there is a problem */
 		return GP_ERROR;
 	}
 
 	if(data == NULL)
+	{
 		return GP_ERROR;
+	}
 
 	/* get the file length && type and stuff */
 	info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
@@ -373,11 +434,7 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
 		"every 10 seconds, it will time out, and will have to be "
 		"re-initialized. If you notice the camera does not respond, "
 		"simply re-select the camera. This will cause it to "
-		"reinitialize.\n"
-		"\n"
-		"2. If you cancel a picture transfer, the driver will be left "
-		"in an unknown state, and will most likely need to be "
-		"re-initialized."));
+		"reinitialize."));
 	return (GP_OK);
 }
 
@@ -425,6 +482,7 @@ int camera_init (Camera *camera, GPContext *context)
 		return (ret);
 	}
 
+	camera->pl->context = NULL;
 	return (GP_OK);
 }
 
