@@ -59,9 +59,10 @@
 /* Digita protocol primitives */
 struct digita_command {
 	unsigned int length;
-	unsigned int unknown;
+	unsigned char version;
+	unsigned char reserved[3];
 	unsigned short command;
-	unsigned short status;
+	unsigned short result;
 };
 
 struct partial_tag {
