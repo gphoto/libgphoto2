@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: <gphoto-translation@lists.sourceforge.net>\n"
-"POT-Creation-Date: 2005-01-06 16:33+0100\n"
-"PO-Revision-Date: 2005-01-06 18:19+0100\n"
+"POT-Creation-Date: 2005-01-17 08:40+0100\n"
+"PO-Revision-Date: 2005-01-17 09:04+0100\n"
 "Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
 "Language-Team: deutsch <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -87,26 +87,26 @@ msgstr ""
 "Implementiert mit Hilfe von Dokumenten\n"
 "aus dem Web. Mit Erlaubnis von Vision."
 
-#: camlibs/canon/canon.c:486
+#: camlibs/canon/canon.c:491
 #, c-format
 msgid "Could not create directory %s."
 msgstr "Konnte Verzeichnis >>%s<< nicht anlegen."
 
-#: camlibs/canon/canon.c:489
+#: camlibs/canon/canon.c:494
 #, c-format
 msgid "Could not remove directory %s."
 msgstr "Konnte Verzeichnis >>%s<< nicht löschen."
 
-#: camlibs/canon/canon.c:831 camlibs/canon/canon.c:1051
-#: camlibs/canon/usb.c:282
+#: camlibs/canon/canon.c:841 camlibs/canon/canon.c:1109
+#: camlibs/canon/usb.c:305
 msgid "lock keys failed."
 msgstr "könnte Tasten nicht sperren."
 
-#: camlibs/canon/canon.c:894 camlibs/canon/canon.c:895
+#: camlibs/canon/canon.c:905 camlibs/canon/canon.c:906
 msgid "*UNKNOWN*"
 msgstr "*UNBEKANNT*"
 
-#: camlibs/canon/canon.c:1000
+#: camlibs/canon/canon.c:1053
 #, c-format
 msgid ""
 "canon_int_capture_image: initial canon_usb_list_all_dirs() failed with "
@@ -115,7 +115,7 @@ msgstr ""
 "canon_int_capture_image: erste canon_usb_list_all_dirs() fehlgeschlagen mit "
 "status %i"
 
-#: camlibs/canon/canon.c:1081
+#: camlibs/canon/canon.c:1140
 #, c-format
 msgid ""
 "canon_int_capture_image: final canon_usb_list_all_dirs() failed with status %"
@@ -124,40 +124,40 @@ msgstr ""
 "canon_int_capture_image: finalletzte canon_usb_list_all_dirs() "
 "fehlgeschlagen mit status %i"
 
-#: camlibs/canon/canon.c:1200
+#: camlibs/canon/canon.c:1259
 #, c-format
 msgid "Name '%s' (%i characters) too long, maximum 30 characters are allowed."
 msgstr "Name »%s« (%i Zeichen) ist zu lang, maximal 30 Zeichen erlaubt."
 
-#: camlibs/canon/canon.c:1575
+#: camlibs/canon/canon.c:1634
 #, c-format
 msgid "Lower case letters in %s not allowed."
 msgstr "Kleingeschriebene Buchstaben sind in %s nicht erlaubt."
 
-#: camlibs/canon/canon.c:1732
+#: camlibs/canon/canon.c:1791
 #, c-format
 msgid "canon_int_list_dir: ERROR: initial message too short (%i < minimum %i)"
 msgstr "canon_int_list_dir: ERROR: erste Meldung zu kurz (%i < minimum %i)"
 
-#: camlibs/canon/canon.c:1754
+#: camlibs/canon/canon.c:1813
 msgid "canon_int_list_dir: Reached end of packet while examining the first dirent"
 msgstr ""
 "canon_int_list_dir: Ende des Pakets erreicht als erste Verzeichniselemente "
 "untersich wird"
 
-#: camlibs/canon/canon.c:1839
+#: camlibs/canon/canon.c:1898
 msgid "canon_int_list_dir: truncated directory entry encountered"
 msgstr "canon_int_list_dir: verkurzte Verzeichniselemente gefunden"
 
-#: camlibs/canon/canon.c:2150
+#: camlibs/canon/canon.c:2210
 msgid "File protected."
 msgstr "Datei geschützt."
 
-#: camlibs/canon/canon.c:2221
+#: camlibs/canon/canon.c:2281
 msgid "Could not extract JPEG thumbnail from data: Data is not JFIF"
 msgstr "Könnte JPEG Vorschaubild von Daten nicht ausziehen: Daten sind nicht JFIF"
 
-#: camlibs/canon/canon.c:2246
+#: camlibs/canon/canon.c:2306
 msgid "Could not extract JPEG thumbnail from data: No beginning/end"
 msgstr "Könnte JPEG Vorschaubild von Daten nicht ausziehen: keine Anfang/Ende"
 
@@ -202,49 +202,49 @@ msgstr ""
 "den Computer so unbeschäftigt wie möglich zu lassen (besonders keine "
 "Plattenaktivität).\n"
 
-#: camlibs/canon/library.c:248 camlibs/canon/library.c:1337
-#: camlibs/canon/library.c:1350
-msgid "Camera unavailable"
-msgstr "Kamera nicht verfügbar"
+#: camlibs/canon/library.c:253
+#, c-format
+msgid "Camera unavailable: %s"
+msgstr "Kamera nicht verfügbar: %s"
 
-#: camlibs/canon/library.c:267
+#: camlibs/canon/library.c:273
 msgid "Switching Camera Off"
 msgstr "Schalte Kamera aus"
 
-#: camlibs/canon/library.c:324 camlibs/canon/library.c:358
+#: camlibs/canon/library.c:331 camlibs/canon/library.c:365
 msgid "Error capturing image"
 msgstr "Fehler beim Aufnehmen des Bildes"
 
-#: camlibs/canon/library.c:414
+#: camlibs/canon/library.c:421
 #, c-format
 msgid "Could not get disk name: %s"
 msgstr "Konnte Plattennamen nicht holen: %s"
 
-#: camlibs/canon/library.c:415
+#: camlibs/canon/library.c:422
 msgid "No reason available"
 msgstr "Kein Grund verfügbar"
 
-#: camlibs/canon/library.c:422
+#: camlibs/canon/library.c:429
 #, c-format
 msgid "Could not get disk info: %s"
 msgstr "Konnte Platteninfo nicht holen: %s"
 
-#: camlibs/canon/library.c:486
+#: camlibs/canon/library.c:493
 #, c-format
 msgid "Internal error #1 in get_file_func() (%s line %i)"
 msgstr "Interne Fehler nr.1 in get_file_func() (%s Zeile %i)"
 
-#: camlibs/canon/library.c:509
+#: camlibs/canon/library.c:516
 #, c-format
 msgid "No audio file could be found for %s"
 msgstr "Keine Tondatei für »%s« konnte gefunden werden."
 
-#: camlibs/canon/library.c:557 camlibs/canon/library.c:595
+#: camlibs/canon/library.c:564 camlibs/canon/library.c:602
 #, c-format
 msgid "%s is a file type for which no thumbnail is provided"
 msgstr "%s ist ein Filetyp für den keine Preview angeboten wird"
 
-#: camlibs/canon/library.c:765
+#: camlibs/canon/library.c:772
 #, c-format
 msgid ""
 "  Drive %s\n"
@@ -255,35 +255,35 @@ msgstr ""
 "  %11s bytes gesamt\n"
 "  %11s bytes verfügbar"
 
-#: camlibs/canon/library.c:773 camlibs/canon/library.c:779
-#: camlibs/canon/library.c:1292 camlibs/canon/library.c:1298
+#: camlibs/canon/library.c:780 camlibs/canon/library.c:786
+#: camlibs/canon/library.c:1300 camlibs/canon/library.c:1306
 msgid "AC adapter"
 msgstr "Netzadapter "
 
-#: camlibs/canon/library.c:773 camlibs/canon/library.c:779
-#: camlibs/canon/library.c:1292 camlibs/canon/library.c:1298
+#: camlibs/canon/library.c:780 camlibs/canon/library.c:786
+#: camlibs/canon/library.c:1300 camlibs/canon/library.c:1306
 msgid "on battery"
 msgstr "mit Batterie "
 
-#: camlibs/canon/library.c:775 camlibs/canon/library.c:1294
+#: camlibs/canon/library.c:782 camlibs/canon/library.c:1302
 msgid "power OK"
 msgstr "Energieversorgung OK"
 
-#: camlibs/canon/library.c:775 camlibs/canon/library.c:1294
+#: camlibs/canon/library.c:782 camlibs/canon/library.c:1302
 msgid "power bad"
 msgstr "Energieversorgung nicht OK"
 
-#: camlibs/canon/library.c:783
+#: camlibs/canon/library.c:790
 #, c-format
 msgid "not available: %s"
 msgstr "nicht verfügbar: %s"
 
-#: camlibs/canon/library.c:809
+#: camlibs/canon/library.c:816
 #, c-format
 msgid "%s (host time %s%i seconds)"
 msgstr "%s (Zeit am PC %s%i Sekunden)"
 
-#: camlibs/canon/library.c:819
+#: camlibs/canon/library.c:826
 #, c-format
 msgid ""
 "\n"
@@ -310,7 +310,7 @@ msgstr ""
 "\n"
 "Zeit: %s\n"
 
-#: camlibs/canon/library.c:836
+#: camlibs/canon/library.c:843
 msgid ""
 "Canon PowerShot series driver by\n"
 "Wolfgang G. Reissnegger,\n"
@@ -328,23 +328,23 @@ msgstr ""
 "A5-Zusätze von Ole W. Saastad\n"
 "Holger Klemm\n"
 
-#: camlibs/canon/library.c:875
+#: camlibs/canon/library.c:882
 msgid "Error deleting file"
 msgstr "Fehler beim Löschen der Datei"
 
-#: camlibs/canon/library.c:891
+#: camlibs/canon/library.c:898
 msgid "Error deleting associated thumbnail file"
 msgstr "Fehler beim Löschen des zugehörigen Vorschaubildes"
 
-#: camlibs/canon/library.c:1021 camlibs/canon/library.c:1149
+#: camlibs/canon/library.c:1028 camlibs/canon/library.c:1157
 msgid "Speeds greater than 57600 are not supported for uploading to this camera"
 msgstr "Raten über 57600 sind mit dieser Kamera nicht für das Hochladen unterstützt"
 
-#: camlibs/canon/library.c:1038 camlibs/canon/library.c:1166
+#: camlibs/canon/library.c:1045 camlibs/canon/library.c:1174
 msgid "Could not get flash drive letter"
 msgstr "Konnte keinen Laufwerksbuchstaben für das Flash-Laufwerk bekommen"
 
-#: camlibs/canon/library.c:1081 camlibs/canon/library.c:1189
+#: camlibs/canon/library.c:1089 camlibs/canon/library.c:1197
 msgid ""
 "Could not upload, no free folder name available!\n"
 "999CANON folder name exists and has an AUT_9999.JPG picture in it."
@@ -353,86 +353,90 @@ msgstr ""
 "Der Verzeichnisname 999CANON existiert und enthält eine Datei namens "
 "AUT_9999.JPG."
 
-#: camlibs/canon/library.c:1103 camlibs/canon/library.c:1209
+#: camlibs/canon/library.c:1111 camlibs/canon/library.c:1217
 msgid "Could not create \\DCIM directory."
 msgstr "Konnte Verzeichnis \\\\DCIM nicht anlegen."
 
-#: camlibs/canon/library.c:1109 camlibs/canon/library.c:1215
+#: camlibs/canon/library.c:1117 camlibs/canon/library.c:1223
 msgid "Could not create destination directory."
 msgstr "Konnte Zielverzeichnis nicht anlegen."
 
-#: camlibs/canon/library.c:1247 camlibs/ptp2/library.c:1362
-#: camlibs/ptp2/library.c:1450
+#: camlibs/canon/library.c:1255 camlibs/ptp2/library.c:1544
+#: camlibs/ptp2/library.c:1632
 msgid "Camera and Driver Configuration"
 msgstr "Kamera- und Treiber-Konfiguration"
 
-#: camlibs/canon/library.c:1249 camlibs/polaroid/pdc700.c:982
+#: camlibs/canon/library.c:1257 camlibs/polaroid/pdc700.c:982
 msgid "Camera"
 msgstr "Kamera"
 
-#: camlibs/canon/library.c:1252
+#: camlibs/canon/library.c:1260
 msgid "Camera Model (readonly)"
 msgstr "Kameramodell (Nur-Lesen)"
 
-#: camlibs/canon/library.c:1256 camlibs/canon/library.c:1333
+#: camlibs/canon/library.c:1264 camlibs/canon/library.c:1341
 msgid "Owner name"
 msgstr "Eigentümername"
 
-#: camlibs/canon/library.c:1263 camlibs/canon/library.c:1267
-#: camlibs/canon/library.c:1272
+#: camlibs/canon/library.c:1271 camlibs/canon/library.c:1275
+#: camlibs/canon/library.c:1280
 msgid "Date and Time (readonly)"
 msgstr "Datum und Zeit (Nur-Lesen)"
 
-#: camlibs/canon/library.c:1268
+#: camlibs/canon/library.c:1276
 msgid "Error"
 msgstr "Fehler"
 
-#: camlibs/canon/library.c:1273 camlibs/canon/library.c:1300
+#: camlibs/canon/library.c:1281 camlibs/canon/library.c:1308
 msgid "Unavailable"
 msgstr "Nicht verfügbar"
 
-#: camlibs/canon/library.c:1277 camlibs/canon/library.c:1346
+#: camlibs/canon/library.c:1285 camlibs/canon/library.c:1354
 msgid "Set camera date to PC date"
 msgstr "Setze Kameradatum auf das Datum des PCs"
 
-#: camlibs/canon/library.c:1280
+#: camlibs/canon/library.c:1288
 msgid "Firmware revision (readonly)"
 msgstr "Firmware-Revision (Nur-Lesen)"
 
-#: camlibs/canon/library.c:1304 camlibs/ptp2/library.c:1396
-#: camlibs/ptp2/library.c:1426
+#: camlibs/canon/library.c:1312 camlibs/ptp2/library.c:1578
+#: camlibs/ptp2/library.c:1608
 msgid "Power (readonly)"
 msgstr "Energie (Nur-Lesen)"
 
-#: camlibs/canon/library.c:1308
+#: camlibs/canon/library.c:1316
 msgid "Driver"
 msgstr "Treiber"
 
-#: camlibs/canon/library.c:1311 camlibs/canon/library.c:1360
+#: camlibs/canon/library.c:1319 camlibs/canon/library.c:1368
 msgid "List all files"
 msgstr "Liste alle Dateien"
 
-#: camlibs/canon/library.c:1316 camlibs/canon/library.c:1368
+#: camlibs/canon/library.c:1324 camlibs/canon/library.c:1376
 msgid "Keep filename on upload"
 msgstr "Dateinamen beim Hochladen beibehalten"
 
-#: camlibs/canon/library.c:1340
+#: camlibs/canon/library.c:1345 camlibs/canon/library.c:1358
+msgid "Camera unavailable"
+msgstr "Kamera nicht verfügbar"
+
+#: camlibs/canon/library.c:1348
 msgid "Owner name changed"
 msgstr "Eigentümername geändert"
 
-#: camlibs/canon/library.c:1342
+#: camlibs/canon/library.c:1350
 msgid "could not change owner name"
 msgstr "Konnte Eigentümernamen nicht ändern"
 
-#: camlibs/canon/library.c:1353
+#: camlibs/canon/library.c:1361
 msgid "time set"
 msgstr "Zeit gesetzt"
 
-#: camlibs/canon/library.c:1355
+#: camlibs/canon/library.c:1363
 msgid "could not set time"
 msgstr "Konnte Zeit nicht setzen"
 
-#: camlibs/canon/library.c:1571
+#: camlibs/canon/library.c:1579
 #, c-format
 msgid "Unsupported port type %i = 0x%x given. Initialization impossible."
 msgstr ""
@@ -604,32 +608,32 @@ msgstr "FEHLER: %d ist zu groß"
 msgid "Getting thumbnail..."
 msgstr "Hole Vorschaubild..."
 
-#: camlibs/canon/usb.c:80
+#: camlibs/canon/usb.c:82
 msgid "NOT RECOGNIZED"
 msgstr "UNBEKANNT"
 
-#: camlibs/canon/usb.c:95
+#: camlibs/canon/usb.c:97
 msgid "Could not establish initial contact with camera"
 msgstr "Konnte Kamera nicht anfänglich kontaktieren."
 
-#: camlibs/canon/usb.c:101
+#: camlibs/canon/usb.c:103
 msgid "Camera was already active"
 msgstr "Kamera war schon aktiv"
 
-#: camlibs/canon/usb.c:104
+#: camlibs/canon/usb.c:106
 msgid "Camera was woken up"
 msgstr "Kamera wurde aufgeweckt"
 
-#: camlibs/canon/usb.c:108
+#: camlibs/canon/usb.c:111
 msgid "Unknown (some kind of error))"
 msgstr "Unbekannter Antwort (Kamerafehler) bei Initialisierung"
 
 #: camlibs/canon/usb.c:112
 #, c-format
-msgid "Initial camera response %c/'%s' unrecognized)"
-msgstr "Anfangene Kameraantwort %c/>>%s<< unbekannt"
+msgid "Initial camera response %c/ unrecognized)"
+msgstr "Erste Kameraantwort %c/ unbekannt"
 
-#: camlibs/canon/usb.c:122
+#: camlibs/canon/usb.c:126
 #, c-format
 msgid ""
 "Step #2 of initialization failed for PowerShot camera! (returned %i, "
@@ -638,7 +642,7 @@ msgstr ""
 "Stufe nr.2 von PowerShot-Kamera Initialisierung fehlgeschlagen! (%i "
 "erhalten, %i erwartet) Kamera funktioniert nicht"
 
-#: camlibs/canon/usb.c:133
+#: camlibs/canon/usb.c:140
 #, c-format
 msgid ""
 "EOS Step #3 of initialization failed! (returned %i, expected %i) Camera not "
@@ -647,7 +651,7 @@ msgstr ""
 "Stufe nr.3 von EOS-Kamera Initialisierung fehlgeschlagen! (%i erhalten, %i "
 "erwartet) Kamera funktioniert nicht"
 
-#: camlibs/canon/usb.c:150
+#: camlibs/canon/usb.c:160
 #, c-format
 msgid ""
 "Step #3 of initialization failed! (returned %i, expected %i) Camera not "
@@ -656,29 +660,29 @@ msgstr ""
 "Stufe nr.3 von Kamerainitialisierung fehlgeschlagen! (%i erhalten, %i "
 "erwartet) Kamera funktioniert nicht"
 
-#: camlibs/canon/usb.c:177
+#: camlibs/canon/usb.c:190
 #, c-format
 msgid "Step #4.1 failed! (returned %i, expected %i) Camera not operational"
 msgstr ""
 "Stufe nr.3.1 fehlgeschlagen! (%i erhalten, %i erwartet) Kamera funktioniert "
 "nicht"
 
-#: camlibs/canon/usb.c:232 camlibs/sipix/blink.c:1068
+#: camlibs/canon/usb.c:248 camlibs/sipix/blink.c:1068
 #: camlibs/stv0674/stv0674.c:250
 msgid "Could not apply USB settings"
 msgstr "Konnte USB-Einstellungen nicht setzen"
 
-#: camlibs/canon/usb.c:257
+#: camlibs/canon/usb.c:273
 #, c-format
 msgid "Camera not ready, multiple 'Identify camera' requests failed: %s"
 msgstr "Kamera nicht bereit, mehrere »Identify camera«-Anfragen fehlgeschlagen: %s"
 
-#: camlibs/canon/usb.c:288
+#: camlibs/canon/usb.c:312
 #, c-format
 msgid "Camera not ready, get_battery failed: %s"
 msgstr "Kamera nicht bereit, get_battery-Anfrage fehlgeschlagen: %s"
 
-#: camlibs/canon/usb.c:334
+#: camlibs/canon/usb.c:361
 #, c-format
 msgid ""
 "canon_usb_lock_keys: Unexpected return of %i bytes (expected %i) from \"get "
@@ -687,7 +691,7 @@ msgstr ""
 "canon_usb_lock_keys: Unerwartete Dateilänge erhalten (%i erhalten, %i "
 "erwartet) bei >>get picture abilities<<"
 
-#: camlibs/canon/usb.c:346 camlibs/canon/usb.c:368 camlibs/canon/usb.c:391
+#: camlibs/canon/usb.c:375 camlibs/canon/usb.c:397 camlibs/canon/usb.c:422
 #, c-format
 msgid ""
 "canon_usb_lock_keys: Unexpected amount of data returned (%i bytes, expected %"
@@ -696,7 +700,7 @@ msgstr ""
 "canon_usb_lock_keys: Unerwartete Dateilänge erhalten (%i erhalten, %i "
 "erwartet)"
 
-#: camlibs/canon/usb.c:430
+#: camlibs/canon/usb.c:461
 #, c-format
 msgid ""
 "canon_usb_unlock_keys: Unexpected amount of data returned (%i bytes, "
@@ -705,14 +709,14 @@ msgstr ""
 "canon_usb_unlock_keys: Unerwartete Dateilänge erhalten (%i erhalten, %i "
 "erwartet)"
 
-#: camlibs/canon/usb.c:479
+#: camlibs/canon/usb.c:510
 #, c-format
 msgid "canon_usb_poll_interrupt_pipe: interrupt read failed after %i tries, \"%s\""
 msgstr ""
 "canon_usb_poll_interrupt_pipe: lesen von Interruptrohr fehlgeschlagen nach %"
 "i versuchen, >>%s<<"
 
-#: camlibs/canon/usb.c:532
+#: camlibs/canon/usb.c:563
 #, c-format
 msgid ""
 "canon_usb_poll_interrupt_multiple: interrupt read failed after %i tries, \"%s"
@@ -721,58 +725,58 @@ msgstr ""
 "canon_usb_poll_interrupt_pipe: lesen vom Interruptrohr fehlgeschlagen nach %"
 "i versuchen, >>%s<<"
 
-#: camlibs/canon/usb.c:630
+#: camlibs/canon/usb.c:661
 #, c-format
 msgid "canon_usb_capture_dialogue: bogus length 0x%04x for thumbnail size packet"
 msgstr "canon_usb_capture_dialogue: Falsche Paketlänge 0x%04x füer Vorschaubildslänge"
 
-#: camlibs/canon/usb.c:641
+#: camlibs/canon/usb.c:672
 #, c-format
 msgid "canon_usb_capture_dialogue: bogus length 0x%04x for full image size packet"
 msgstr "canon_usb_capture_dialogue: Falsche Paketlänge 0x%04x für Bildslänge"
 
-#: camlibs/canon/usb.c:661
+#: camlibs/canon/usb.c:692
 msgid "canon_usb_capture_dialogue: first interrupt read out of sequence"
 msgstr "canon_usb_capture_dialogue: erste Interruptspaket außer Reihenfolge"
 
-#: camlibs/canon/usb.c:669
+#: camlibs/canon/usb.c:700
 msgid "canon_usb_capture_dialogue: second interrupt read out of sequence"
 msgstr "canon_usb_capture_dialogue: zweite Interruptspaket außer Reihenfolge"
 
-#: camlibs/canon/usb.c:679
+#: camlibs/canon/usb.c:710
 #, c-format
 msgid "canon_usb_capture_dialogue: photographic failure signaled, code = 0x%08x"
 msgstr ""
 "canon_usb_capture_dialogue: Aufnahme photographisch fehlgeschlagen, code=0x%"
 "08x"
 
-#: camlibs/canon/usb.c:697
+#: camlibs/canon/usb.c:728
 msgid "canon_usb_capture_dialogue: third EOS interrupt read out of sequence"
 msgstr "canon_usb_capture_dialogue: dritte EOS Interruptspaket außer Reihenfolge"
 
-#: camlibs/canon/usb.c:724
+#: camlibs/canon/usb.c:755
 msgid "canon_usb_capture_dialogue: fourth EOS interrupt read out of sequence"
 msgstr "canon_usb_capture_dialogue: zweite EOS Interruptspaket außer Reihenfolge"
 
-#: camlibs/canon/usb.c:879
+#: camlibs/canon/usb.c:910
 #, c-format
 msgid "canon_usb_dialogue: payload too big, won't fit into buffer (%i > %i)"
 msgstr "canon_usb_dialogue: Nutzlast zu groß, passt nicht in Puffer (%i > %i)"
 
-#: camlibs/canon/usb.c:1033
+#: camlibs/canon/usb.c:1064
 msgid "Receiving data..."
 msgstr "Empfange Daten..."
 
-#: camlibs/canon/usb.c:1314 camlibs/canon/usb.c:1450
+#: camlibs/canon/usb.c:1345 camlibs/canon/usb.c:1481
 #, c-format
 msgid "Out of memory: %d bytes needed."
 msgstr "Speicherplatz fehlt: %d bytes benötigt."
 
-#: camlibs/canon/usb.c:1377
+#: camlibs/canon/usb.c:1408
 msgid "canon_usb_set_file_attributes: canon_usb_dialogue failed"
 msgstr "canon_usb_set_file_attributes: canon_usb_dialogue fehlgeschlagen"
 
-#: camlibs/canon/usb.c:1384
+#: camlibs/canon/usb.c:1415
 #, c-format
 msgid ""
 "canon_usb_set_file_attributes: canon_usb_dialogue returned error status 0x%"
@@ -781,22 +785,22 @@ msgstr ""
 "canon_usb_set_file_attributes: canon_usb_dialogue gibt status 0x%08x vom "
 "Kamera"
 
-#: camlibs/canon/usb.c:1461
+#: camlibs/canon/usb.c:1492
 #, c-format
 msgid "Couldn't read from file \"%s\""
 msgstr "Konnte Daten vom Datei >>%s<< nicht holen"
 
-#: camlibs/canon/usb.c:1471
+#: camlibs/canon/usb.c:1502
 #, c-format
 msgid "Out of memory: %ld bytes needed."
 msgstr "Speicherplatz fehlt: %ld bytes benötigt."
 
-#: camlibs/canon/usb.c:1504 camlibs/canon/usb.c:1515 camlibs/canon/usb.c:1551
-#: camlibs/canon/usb.c:1562 camlibs/canon/usb.c:1573
+#: camlibs/canon/usb.c:1535 camlibs/canon/usb.c:1546 camlibs/canon/usb.c:1582
+#: camlibs/canon/usb.c:1596 camlibs/canon/usb.c:1610
 msgid "File upload failed."
 msgstr "Bildhochladung fehlgeschlagen."
 
-#: camlibs/canon/usb.c:1594
+#: camlibs/canon/usb.c:1634
 msgid ""
 "File was too big. You may have to turn your camera off and back on before "
 "uploading more files."
@@ -804,14 +808,14 @@ msgstr ""
 "Datei war zu groß. Möglicherweise müssen Sie ihre Kamera aus- und wieder "
 "einschalten, um weitere Dateien hochzuladen."
 
-#: camlibs/canon/usb.c:1640
+#: camlibs/canon/usb.c:1680
 #, c-format
 msgid ""
 "canon_usb_get_dirents: Couldn't fit payload into buffer, '%.96s' (truncated) "
 "too long."
 msgstr "canon_usb_get_dirents: Nutzlast passt nicht in Puffer, '%.96s' (verkurzt)"
 
-#: camlibs/canon/usb.c:1657
+#: camlibs/canon/usb.c:1697
 #, c-format
 msgid ""
 "canon_usb_get_dirents: canon_usb_long_dialogue failed to fetch direntries, "
@@ -820,7 +824,7 @@ msgstr ""
 "canon_usb_get_dirents: canon_usb_long_dialogue könnte keine "
 "Verzeichniselemente holen, status %i"
 
-#: camlibs/canon/usb.c:1707
+#: camlibs/canon/usb.c:1748
 #, c-format
 msgid ""
 "canon_usb_list_all_dirs: Couldn't fit payload into buffer, "
@@ -829,7 +833,7 @@ msgstr ""
 "canon_usb_list_all_dirs: Nutzlast passt nicht in Puffer, >>'%.96s<< "
 "(verkurtzt) zu lang."
 
-#: camlibs/canon/usb.c:1726
+#: camlibs/canon/usb.c:1767
 #, c-format
 msgid ""
 "canon_usb_list_all_dirs: canon_usb_long_dialogue failed to fetch direntries, "
@@ -838,12 +842,12 @@ msgstr ""
 "canon_usb_list_all_dirs: canon_usb_long_dialogue könnte keine "
 "Verzeichniselemente holen, status %i"
 
-#: camlibs/canon/usb.c:1795
+#: camlibs/canon/usb.c:1836
 #, c-format
 msgid "Detected a '%s'."
 msgstr "Erkannte eine »%s«."
 
-#: camlibs/canon/usb.c:1801
+#: camlibs/canon/usb.c:1842
 #, c-format
 msgid "Name \"%s\" from camera does not match any known camera"
 msgstr "Name >>%s<< passt mit keinem bekanntes Modell"
@@ -913,8 +917,9 @@ msgstr ""
 #: camlibs/dimera/dimera3500.c:399 camlibs/dimera/dimera3500.c:785
 #: camlibs/kodak/dc210/dc210.c:253 camlibs/kodak/dc210/dc210.c:421
 #: camlibs/konica/library.c:778 camlibs/konica/library.c:1019
-#: camlibs/konica/qm150.c:854 camlibs/ptp2/library.c:1345
-#: camlibs/ricoh/library.c:500 camlibs/sierra/nikon-desc.c:252
+#: camlibs/konica/qm150.c:854 camlibs/ptp2/library.c:1158
+#: camlibs/ptp2/library.c:1526 camlibs/ricoh/library.c:500
+#: camlibs/sierra/nikon-desc.c:252
 msgid "Flash"
 msgstr "Blitz"
 
@@ -1169,9 +1174,9 @@ msgid ""
 "com>, and adapted from spca50x driver.Thanks you, spca50x team, it was easy "
 "to port your driver on this cam! "
 msgstr ""
-"Download Programm f?r die Digital Dream Enigma 1.3 durch <olivier@aixmarseille.com>, "
-"angepaßt vom spca50x Treiber. Danke, spca50x Team, es war einfach den Treiber "
-"auf diese Kamera zu portieren!"
+"Download Programm f?r die Digital Dream Enigma 1.3 durch "
+"<olivier@aixmarseille.com>, angepaßt vom spca50x Treiber. Danke, spca50x "
+"Team, es war einfach den Treiber auf diese Kamera zu portieren!"
 
 #: camlibs/fuji/fuji.c:85
 #, c-format
@@ -1512,7 +1517,7 @@ msgid "Capture"
 msgstr "Aufnahme"
 
 #: camlibs/kodak/dc210/dc210.c:220 camlibs/kodak/dc210/dc210.c:379
-#: camlibs/konica/qm150.c:1039 camlibs/ptp2/library.c:1342
+#: camlibs/konica/qm150.c:1039 camlibs/ptp2/library.c:1523
 #: camlibs/ptp2/ptp.c:1528 camlibs/ricoh/library.c:499
 #: camlibs/sierra/sierra.c:1097 camlibs/sierra/sierra.c:1357
 msgid "Zoom"
@@ -1608,11 +1613,11 @@ msgstr "Rote-Augen-Blitz"
 #: camlibs/konica/qm150.c:815 camlibs/konica/qm150.c:857
 #: camlibs/konica/qm150.c:870 camlibs/konica/qm150.c:1027
 #: camlibs/konica/qm150.c:1034 camlibs/konica/qm150.c:1041
-#: camlibs/konica/qm150.c:1048 camlibs/ptp2/library.c:1081
-#: camlibs/ptp2/library.c:1083 camlibs/ptp2/library.c:1095
-#: camlibs/ptp2/library.c:1112 camlibs/ptp2/library.c:1114
-#: camlibs/ptp2/library.c:1126 camlibs/ptp2/library.c:1188
-#: camlibs/ptp2/library.c:1190 camlibs/ptp2/library.c:1202
+#: camlibs/konica/qm150.c:1048 camlibs/ptp2/library.c:1255
+#: camlibs/ptp2/library.c:1257 camlibs/ptp2/library.c:1269
+#: camlibs/ptp2/library.c:1286 camlibs/ptp2/library.c:1288
+#: camlibs/ptp2/library.c:1300 camlibs/ptp2/library.c:1362
+#: camlibs/ptp2/library.c:1364 camlibs/ptp2/library.c:1376
 #: camlibs/ricoh/library.c:338 camlibs/ricoh/library.c:369
 #: camlibs/sierra/nikon-desc.c:271 camlibs/sierra/sierra.c:1077
 #: camlibs/sierra/sierra.c:1083 camlibs/sierra/sierra.c:1346
@@ -1628,11 +1633,11 @@ msgstr "An"
 #: camlibs/konica/qm150.c:818 camlibs/konica/qm150.c:856
 #: camlibs/konica/qm150.c:863 camlibs/konica/qm150.c:1028
 #: camlibs/konica/qm150.c:1031 camlibs/konica/qm150.c:1042
-#: camlibs/konica/qm150.c:1045 camlibs/ptp2/library.c:1082
-#: camlibs/ptp2/library.c:1083 camlibs/ptp2/library.c:1099
-#: camlibs/ptp2/library.c:1113 camlibs/ptp2/library.c:1114
-#: camlibs/ptp2/library.c:1130 camlibs/ptp2/library.c:1189
-#: camlibs/ptp2/library.c:1190 camlibs/ptp2/library.c:1206
+#: camlibs/konica/qm150.c:1045 camlibs/ptp2/library.c:1256
+#: camlibs/ptp2/library.c:1257 camlibs/ptp2/library.c:1273
+#: camlibs/ptp2/library.c:1287 camlibs/ptp2/library.c:1288
+#: camlibs/ptp2/library.c:1304 camlibs/ptp2/library.c:1363
+#: camlibs/ptp2/library.c:1364 camlibs/ptp2/library.c:1380
 #: camlibs/ricoh/library.c:339 camlibs/ricoh/library.c:368
 #: camlibs/ricoh/library.c:376 camlibs/sierra/epson-desc.c:153
 #: camlibs/sierra/nikon-desc.c:202 camlibs/sierra/nikon-desc.c:270
@@ -2530,7 +2535,8 @@ msgstr ""
 "Equivalenten ??Pixart PAC0x7??) und sollte mit gtkam arbeiten.\n"
 "Der Treiber erlaubt ihnen:\n"
 "   - Thumbnails f?r gtkam zu holen\n"
-"   - volle Bilder (im 640x480 oder 320x240 PPM Format) (??352x288 & 176x144??)\n"
+"   - volle Bilder (im 640x480 oder 320x240 PPM Format) (??352x288 & "
+"176x144??)\n"
 "Die Kamera unterst?tzt nicht das Löschen, auch kein Upload von Daten.\n"
 "Dieser Treiber unterst?tzt nicht den optionalen Bildkompressionsmodus.\n"
 "Wenn Videoclip Bilder auf der Kamera vorhanden sind, werden diese\n"
@@ -3026,8 +3032,8 @@ msgstr ""
 msgid "Image Quality"
 msgstr "Bildqualität"
 
-#: camlibs/polaroid/pdc700.c:160 camlibs/ptp2/ptp.c:1462
-#: camlibs/ptp2/ptp.c:1516
+#: camlibs/polaroid/pdc700.c:160 camlibs/ptp2/library.c:1517
+#: camlibs/ptp2/ptp.c:1462 camlibs/ptp2/ptp.c:1516
 msgid "Image Size"
 msgstr "Bildgröße"
 
@@ -3347,7 +3353,7 @@ msgstr "PTP- Protokollfehler: Daten erwartet"
 msgid "PTP Protocol error, response expected"
 msgstr "PTP-Protokollfehler: Antwort erwartet"
 
-#: camlibs/ptp2/library.c:691
+#: camlibs/ptp2/library.c:694
 msgid ""
 "PTP2 driver\n"
 "(c)2001-2003 by Mariusz Woloszyn <emsi@ipartners.pl>.\n"
@@ -3357,32 +3363,32 @@ msgstr ""
 "(c) 2001-2003 Mariusz Woloszyn <emsi@ipartners.pl>.\n"
 "Viel Spaß!"
 
-#: camlibs/ptp2/library.c:737
+#: camlibs/ptp2/library.c:784
 msgid "Sorry, your camera does not support generic capture"
 msgstr "Diese Kamera unterstützt keine Aufnahme von Bildern"
 
-#: camlibs/ptp2/library.c:784
+#: camlibs/ptp2/library.c:832
 msgid "Capture command completed, but no confirmation received"
 msgstr "Aufnahme abgeschlossen, aber keine Bestätigung erhalten"
 
-#: camlibs/ptp2/library.c:791
+#: camlibs/ptp2/library.c:839
 #, c-format
 msgid "Received event 0x%04x"
 msgstr "Ereignis 0x%04x erhalten"
 
-#: camlibs/ptp2/library.c:869
+#: camlibs/ptp2/library.c:931
 msgid "read only"
 msgstr "schreibgeschützt"
 
-#: camlibs/ptp2/library.c:870
+#: camlibs/ptp2/library.c:932
 msgid "readwrite"
 msgstr "schreibbar"
 
-#: camlibs/ptp2/library.c:871 camlibs/ptp2/library.c:873
+#: camlibs/ptp2/library.c:933 camlibs/ptp2/library.c:935
 msgid "Unknown"
 msgstr "Unbekannt"
 
-#: camlibs/ptp2/library.c:885
+#: camlibs/ptp2/library.c:947
 #, c-format
 msgid ""
 "Model: %s\n"
@@ -3397,70 +3403,127 @@ msgstr ""
 "Händler Kennung: 0x%08x\n"
 "Händler Beschreibung: %s\n"
 
-#: camlibs/ptp2/library.c:1014 camlibs/ptp2/library.c:1031
-#: camlibs/ptp2/library.c:1065
+#: camlibs/ptp2/library.c:1082 camlibs/ptp2/library.c:1099
+#: camlibs/ptp2/library.c:1143
 #, c-format
 msgid "unexpected datatype %i"
 msgstr "unerwarteter Datentyp %i"
 
-#: camlibs/ptp2/library.c:1332 camlibs/ptp2/ptp.c:1532
+#: camlibs/ptp2/library.c:1152 camlibs/sierra/olympus-desc.c:330
+msgid "Manual"
+msgstr "Manuell"
+
+#: camlibs/ptp2/library.c:1153
+msgid "Automatic"
+msgstr "Automatisch"
+
+#: camlibs/ptp2/library.c:1154
+msgid "One-push Automatic"
+msgstr "Vollautomatik"
+
+#: camlibs/ptp2/library.c:1155 camlibs/sierra/olympus-desc.c:292
+#: camlibs/sierra/olympus-desc.c:311
+msgid "Daylight"
+msgstr "Tageslicht"
+
+#: camlibs/ptp2/library.c:1156 camlibs/ricoh/library.c:328
+#: camlibs/sierra/nikon-desc.c:251 camlibs/sierra/olympus-desc.c:293
+#: camlibs/sierra/olympus-desc.c:312 camlibs/sierra/sierra.c:1023
+#: camlibs/sierra/sierra.c:1032 camlibs/sierra/sierra.c:1311
+msgid "Fluorescent"
+msgstr "Kunstlicht - Fluoreszenzlampe"
+
+#: camlibs/ptp2/library.c:1157 camlibs/sierra/olympus-desc.c:294
+#: camlibs/sierra/olympus-desc.c:313 camlibs/sierra/sierra.c:1024
+#: camlibs/sierra/sierra.c:1034 camlibs/sierra/sierra.c:1313
+msgid "Tungsten"
+msgstr "Kunstlicht - Glühlampe"
+
+#: camlibs/ptp2/library.c:1159 camlibs/sierra/nikon-desc.c:254
+#: camlibs/sierra/olympus-desc.c:295 camlibs/sierra/olympus-desc.c:314
+#: camlibs/sierra/sierra.c:1025 camlibs/sierra/sierra.c:1037
+#: camlibs/sierra/sierra.c:1315
+msgid "Cloudy"
+msgstr "Wolkig"
+
+#: camlibs/ptp2/library.c:1160
+msgid "Shade"
+msgstr "Schatten"
+
+#: camlibs/ptp2/library.c:1161 camlibs/sierra/nikon-desc.c:253
+msgid "Preset"
+msgstr "Voreinstellung"
+
+#: camlibs/ptp2/library.c:1506 camlibs/ptp2/ptp.c:1532
 msgid "Camera Owner"
 msgstr "Kamerabesitzer"
 
-#: camlibs/ptp2/library.c:1333 camlibs/ptp2/ptp.c:1531
+#: camlibs/ptp2/library.c:1507 camlibs/ptp2/ptp.c:1531
 msgid "Camera Model"
 msgstr "Kameramodell"
 
-#: camlibs/ptp2/library.c:1334 camlibs/ptp2/ptp.c:1530
+#: camlibs/ptp2/library.c:1508 camlibs/ptp2/ptp.c:1530
 msgid "Flash Memory"
 msgstr "Interner Speicher"
 
-#: camlibs/ptp2/library.c:1335 camlibs/ptp2/library.c:1336
+#: camlibs/ptp2/library.c:1509 camlibs/ptp2/library.c:1510
 msgid "Camera Time"
 msgstr "Kamerazeit"
 
-#: camlibs/ptp2/library.c:1337 camlibs/ptp2/ptp.c:1502 camlibs/ptp2/ptp.c:1513
+#: camlibs/ptp2/library.c:1511 camlibs/ptp2/ptp.c:1502 camlibs/ptp2/ptp.c:1513
 msgid "Beep Mode"
 msgstr "Signalton Modus"
 
-#: camlibs/ptp2/library.c:1343 camlibs/ptp2/ptp.c:1536
+#: camlibs/ptp2/library.c:1512
+msgid "Image Comment"
+msgstr "Bild Kommentar"
+
+#: camlibs/ptp2/library.c:1518
+msgid "WhiteBalance"
+msgstr "Weißabgleich"
+
+#: camlibs/ptp2/library.c:1524 camlibs/ptp2/ptp.c:1536
 msgid "Assist Light"
 msgstr "Autofokus Hilfslicht"
 
-#: camlibs/ptp2/library.c:1344 camlibs/ptp2/ptp.c:1527
+#: camlibs/ptp2/library.c:1525 camlibs/ptp2/ptp.c:1527
 #: camlibs/sierra/nikon-desc.c:425 camlibs/sierra/nikon-desc.c:448
 #: camlibs/sierra/olympus-desc.c:457
 msgid "Exposure Compensation"
 msgstr "Belichtungskompensation"
 
-#: camlibs/ptp2/library.c:1351 camlibs/sierra/epson-desc.c:282
+#: camlibs/ptp2/library.c:1532 camlibs/sierra/epson-desc.c:282
 #: camlibs/sierra/nikon-desc.c:594 camlibs/sierra/olympus-desc.c:640
 #: camlibs/sierra/olympus-desc.c:690 camlibs/sierra/olympus-desc.c:704
 #: camlibs/sierra/sierra.c:1122 camlibs/sierra/sierra.c:1584
 msgid "Camera Settings"
 msgstr "Kameraeinstellungen"
 
-#: camlibs/ptp2/library.c:1352
+#: camlibs/ptp2/library.c:1533
+msgid "Image Settings"
+msgstr "Bildeinstellungen"
+
+#: camlibs/ptp2/library.c:1534
 msgid "Capture Settings"
 msgstr "Aufnahme Einstellungen"
 
-#: camlibs/ptp2/library.c:1405
+#: camlibs/ptp2/library.c:1587
 msgid "Number of values"
 msgstr "Anzahl der Werte"
 
-#: camlibs/ptp2/library.c:1409
+#: camlibs/ptp2/library.c:1591
 msgid "Supported values"
 msgstr "Unterstützte Werte"
 
-#: camlibs/ptp2/library.c:1417
+#: camlibs/ptp2/library.c:1599
 msgid "Current value"
 msgstr "Aktueller Wert"
 
-#: camlibs/ptp2/library.c:1943
+#: camlibs/ptp2/library.c:2114
 msgid "Initializing Camera"
 msgstr "Initialisiere Kamera"
 
-#: camlibs/ptp2/library.c:2039
+#: camlibs/ptp2/library.c:2210
 msgid "PTP is implemented for USB cameras only."
 msgstr "PTP- Ist nur für USB Kameras implementiert."
 
@@ -3979,13 +4042,6 @@ msgstr "1280 x 960"
 msgid "Outdoor"
 msgstr "Im Freien"
 
-#: camlibs/ricoh/library.c:328 camlibs/sierra/nikon-desc.c:251
-#: camlibs/sierra/olympus-desc.c:293 camlibs/sierra/olympus-desc.c:312
-#: camlibs/sierra/sierra.c:1023 camlibs/sierra/sierra.c:1032
-#: camlibs/sierra/sierra.c:1311
-msgid "Fluorescent"
-msgstr "Kunstlicht - Fluoreszenzlampe"
-
 #: camlibs/ricoh/library.c:329 camlibs/sierra/nikon-desc.c:250
 msgid "Incandescent"
 msgstr "Kunstlicht - Glühlampe"
@@ -4444,16 +4500,6 @@ msgstr "Helligkeit-"
 msgid "Image Adjustment"
 msgstr "Bildjustierung"
 
-#: camlibs/sierra/nikon-desc.c:253
-msgid "Preset"
-msgstr "Voreinstellung"
-
-#: camlibs/sierra/nikon-desc.c:254 camlibs/sierra/olympus-desc.c:295
-#: camlibs/sierra/olympus-desc.c:314 camlibs/sierra/sierra.c:1025
-#: camlibs/sierra/sierra.c:1037 camlibs/sierra/sierra.c:1315
-msgid "Cloudy"
-msgstr "Wolkig"
-
 #: camlibs/sierra/nikon-desc.c:272
 msgid "Blink"
 msgstr "Blinkend"
@@ -4596,20 +4642,6 @@ msgstr "White Board"
 #: camlibs/sierra/olympus-desc.c:260
 msgid "Black board"
 msgstr "Black Board"
-
-#: camlibs/sierra/olympus-desc.c:292 camlibs/sierra/olympus-desc.c:311
-msgid "Daylight"
-msgstr "Tageslicht"
-
-#: camlibs/sierra/olympus-desc.c:294 camlibs/sierra/olympus-desc.c:313
-#: camlibs/sierra/sierra.c:1024 camlibs/sierra/sierra.c:1034
-#: camlibs/sierra/sierra.c:1313
-msgid "Tungsten"
-msgstr "Kunstlicht - Glühlampe"
-
-#: camlibs/sierra/olympus-desc.c:330
-msgid "Manual"
-msgstr "Manuell"
 
 #: camlibs/sierra/olympus-desc.c:350
 msgid "Monitor"
@@ -5277,13 +5309,19 @@ msgstr ""
 "\n"
 "Alle bekannten S&Q Kameras haben zwei Auflösungen. Welche dies sind\n"
 "ist abhängig von der speziellen Kamera.\n"
-"Einige dieser Kameras erlauben das Löschen aller Bilder, die meisten unterst?tzen\n"
+"Einige dieser Kameras erlauben das Löschen aller Bilder, die meisten unterst?"
+"tzen\n"
 "dies aber nicht.\n"
-"Wenn Videoclips auf der Kamera vorhanden sind, werden diese als Unterverzeichnisse\n"
-"dargestellt. In gtkam ist dies durch ein Dreieck vor dem Namen gekennzeichnet.\n"
-"Öffnen sie diese wie gewohnt um die enthaltenen Bilder des Clips runterzuladen.\n"
-"Diese Bilder haben spezielle Namen die bezeichnen zu welchem Videoclip sie gehören.\n"
-"So können Sie diese in verschiedene Verzeichnisse abspeichern oder auch nicht.\n"
+"Wenn Videoclips auf der Kamera vorhanden sind, werden diese als "
+"Unterverzeichnisse\n"
+"dargestellt. In gtkam ist dies durch ein Dreieck vor dem Namen "
+"gekennzeichnet.\n"
+"Öffnen sie diese wie gewohnt um die enthaltenen Bilder des Clips "
+"runterzuladen.\n"
+"Diese Bilder haben spezielle Namen die bezeichnen zu welchem Videoclip sie "
+"gehören.\n"
+"So können Sie diese in verschiedene Verzeichnisse abspeichern oder auch "
+"nicht.\n"
 
 #: camlibs/sq905/library.c:164
 msgid ""
