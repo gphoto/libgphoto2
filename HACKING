@@ -1,6 +1,12 @@
 If you want to hack on gphoto2 (or a camera driver for gphoto2),
 please follow some rules to make our work easier: 
 
+licensing
+---------
+
+We urge you to license your contributions under the LGPL so we can
+distribute gphoto2 under the LGPL as well.
+
 camlib
 ------
 
