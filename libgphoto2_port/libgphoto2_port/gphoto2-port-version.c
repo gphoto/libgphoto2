@@ -35,13 +35,13 @@ const char **gp_port_library_version(GPVersionVerbosity verbose)
 #endif
 #ifdef HAVE_SERIAL
 			"serial "
-#elif HAVE_BAUDBOY
+#ifdef HAVE_BAUDBOY
 			"baudboy locking",
 #elif HAVE_TTYLOCK
 			"ttylock locking",
 #elif HAVE_LOCKDEV
 			"lockdev locking",
-#elif HAVE_SERIAL
+#else HAVE_SERIAL
 			"without locking",
 #endif
 #else
