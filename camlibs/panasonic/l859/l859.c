@@ -534,7 +534,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 		l859_debug("Packet Size: %i Data Size: %i", bufIndex - 3, s);
 		gp_file_append (file, buffer, bufIndex - 3);
 
-		gp_camera_progress (camera, (float)(s)/(float)size*100.0);
+		gp_camera_progress (camera, (float)(s)/(float)size);
 	}
 
 	gp_file_set_name (file, filename);

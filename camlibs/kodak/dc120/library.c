@@ -128,7 +128,7 @@ read_data_write_again:
 				if ((num_packets == 16)&&(x==16))
 					p[0] = CANCL;
 				/* No break on purpose */
-				gp_camera_progress(dd->camera, (float)(100.0 * (float)((x-1)*block_size)/(float)(*size)));
+				gp_camera_progress(dd->camera, (float)((float)((x-1)*block_size)/(float)(*size)));
 				break;
 			   default:
 				/* Nada */
@@ -385,7 +385,7 @@ int dc120_wait_for_completion (DC120Data *dd) {
 		   default:
 			done = 1;
 		}
-		gp_camera_progress(dd->camera, (float)(100.0*(float)x/25.0));
+		gp_camera_progress(dd->camera, (float)((float)x/25.0));
 	}
 
 	if (x==25)

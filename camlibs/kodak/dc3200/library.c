@@ -361,7 +361,7 @@ int dc3200_get_data(DC3200Data *dd, u_char **data, u_long *data_len, int command
 			ptr_data += resp_len - data_start_pos;
 
 			/* update gphoto2 frontend */
-			gp_camera_progress(dd->camera, 100.0*(((float)total-(float)num_left)/(float)total));
+			gp_camera_progress(dd->camera, (((float)total-(float)num_left)/(float)total));
 			break;
 
 		case 0x01:
@@ -382,7 +382,7 @@ int dc3200_get_data(DC3200Data *dd, u_char **data, u_long *data_len, int command
 			ptr_data += resp_len - data_start_pos;
 
 			/* update gphoto2 frontend */
-			gp_camera_progress(dd->camera, 100.0*(((float)total-(float)num_left)/(float)total));
+			gp_camera_progress(dd->camera, (((float)total-(float)num_left)/(float)total));
 			break;
 			
 		case 0x81:
@@ -404,7 +404,7 @@ int dc3200_get_data(DC3200Data *dd, u_char **data, u_long *data_len, int command
 			
 			/* update gphoto2 frontend */
 			/*gp_frontend_progress(NULL, NULL, 100.0*(((float)total-(float)num_left)/(float)total));*/
-			gp_camera_progress(dd->camera, 100.0);
+			gp_camera_progress(dd->camera, 1.);
 			break;
 
 		default:

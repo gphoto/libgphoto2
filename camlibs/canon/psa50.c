@@ -1366,7 +1366,7 @@ psa50_ready (Camera *camera)
 				receive_error = NOERROR;
 			}
 			for (try = 1; try < MAX_TRIES; try++) {
-				gp_camera_progress (camera, (try / (float) MAX_TRIES) * 100);
+				gp_camera_progress (camera, (try / (float) MAX_TRIES));
 				if (canon_serial_send
 				    (camera, "\x55\x55\x55\x55\x55\x55\x55\x55", 8,
 				     USLEEP1) < 0) {
@@ -1830,7 +1830,7 @@ psa50_get_file_serial (Camera *camera, const char *name, int *length)
 		}
 		memcpy (file + expect, msg + 20, size);
 		expect += size;
-		gp_camera_progress (camera, total ? (expect / (float) total) * 100 : 100);
+		gp_camera_progress (camera, total ? (expect / (float) total) : 1.);
 		if ((expect == total) != get_int (msg + 16)) {
 			gp_debug_printf (GP_DEBUG_LOW, "canon",
 					 "ERROR: end mark != end of data\n");
@@ -1925,7 +1925,7 @@ psa50_get_file_usb (Camera *camera, const char *name, int *length)
 
 		expect += size;
 
-		gp_camera_progress (camera, total ? (expect / (float) total) * 100 : 100);
+		gp_camera_progress (camera, total ? (expect / (float) total) : 1.);
 		if (expect == total)
 			return file;
 
@@ -2062,8 +2062,7 @@ psa50_get_thumbnail (Camera *camera, const char *name, int *length)
 				memcpy (file + expect, msg + 20, size);
 				expect += size;
 				gp_camera_progress (camera,
-						    total ? (expect / (float) total) *
-						    100 : 100);
+						    total ? (expect / (float) total) : 1.);
 				if ((expect == total) != get_int (msg + 16)) {
 					gp_debug_printf (GP_DEBUG_LOW, "canon",
 							 "ERROR: end mark != end of data\n");
@@ -2290,7 +2289,7 @@ psa50_put_file_serial (Camera *camera, CameraFile * file, char *destname, char *
 			return GP_ERROR;
 		}
 		sent += block_len;
-		gp_camera_progress (camera, size ? (sent / (float) size) * 100 : 100);
+		gp_camera_progress (camera, size ? (sent / (float) size) : 1.);
 	}
 	cs->uploading = 0;
 	return GP_OK;

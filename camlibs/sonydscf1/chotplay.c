@@ -296,7 +296,7 @@ long get_file(char *name, char **data, int format, int verbose)
     if(len < 0)
       return(0);
     total = total + len;
-//    gp_camera_progress(camera, ((float)total / (float)filelen)*100);
+//    gp_camera_progress(camera, ((float)total / (float)filelen));
     if(verbose){
       fprintf(stderr, "%6u/", total);
       fprintf(stderr, "%6u", filelen);

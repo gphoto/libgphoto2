@@ -112,7 +112,7 @@ typedef gp_port_info CameraPortInfo;
 
 typedef void (* CameraMessageFunc)  (Camera *, const char *msg, void *data);
 typedef void (* CameraStatusFunc)   (Camera *, const char *status, void *data);
-typedef void (* CameraProgressFunc) (Camera *, float progress, void *data);
+typedef void (* CameraProgressFunc) (Camera *, float percentage, void *data);
 
 struct _Camera {
 	char            model[128];
@@ -249,6 +249,6 @@ int gp_camera_set_message_func  (Camera *, CameraMessageFunc func, void *data);
 
 int gp_camera_message           (Camera *camera, const char *format, ...);
 int gp_camera_status            (Camera *camera, const char *format, ...);
-int gp_camera_progress          (Camera *camera, float progress);
+int gp_camera_progress          (Camera *camera, float percentage);
 
 #endif /* __GPHOTO2_CAMERA_H__ */

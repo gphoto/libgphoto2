@@ -545,7 +545,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
         for (i = 0; i < blocks; i++) {
 		CHECK (dsc2_readimageblock(camera, i, NULL));
                 CHECK (gp_file_append(file, &dsc->buf[4], DSC_BLOCKSIZE));
-                gp_camera_progress(camera, (float)(i+1)/(float)blocks*100.0);
+                gp_camera_progress(camera, (float)(i+1)/(float)blocks);
         }
 
         return GP_OK;
@@ -592,7 +592,7 @@ static int put_file_func (CameraFilesystem *fs, const char *folder,
 					       blocksize);
 		if (result != GP_OK)
 			return result;
-                gp_camera_progress(camera, (float)(i+1)/(float)blocks*100.0);
+                gp_camera_progress(camera, (float)(i+1)/(float)blocks);
         }
 
         return GP_OK;

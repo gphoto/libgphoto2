@@ -224,7 +224,7 @@ read_data_write_again:
 
     while (x < num_packets) {
 read_data_read_again:
-        gp_camera_progress(camera, 100.0*(float)x/(float)num_packets);
+        gp_camera_progress(camera, (float)x/(float)num_packets);
 
         /* Read the response/data */
         retval = dc240_packet_read(camera, packet, block_size+2);

@@ -36,7 +36,7 @@ progress_func (Camera *camera, float percentage, void *data)
 		return;
 
 	if (percentage > 0.) {
-		printf ("Percent completed: %02.01f\r", percentage);
+		printf ("Percent completed: %02.01f\r", percentage * 100.);
 		fflush(stdout);
 	}
 }

@@ -749,7 +749,7 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 			CHECK (gp_file_append (file, &packet[4], packlength));
 			if (do_percent)
 				gp_camera_progress (camera,
-					(float)(100.0*(float)(x+packlength)/(float)(l)));
+					(float)((float)(x+packlength)/(float)(l)));
 		}
 
 		x += packlength;

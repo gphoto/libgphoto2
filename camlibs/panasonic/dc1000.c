@@ -418,7 +418,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 			return GP_ERROR;
 		s += rsize;
 		gp_file_append (file, dsc->buf, dsc->size);
-		gp_camera_progress (camera, (float)(s)/(float)size*100.0);
+		gp_camera_progress (camera, (float)(s)/(float)size);
 	}
 	
 	return GP_OK;
@@ -469,7 +469,7 @@ static int put_file_func (CameraFilesystem *fs, const char *folder,
 		if (result != GP_OK)
 			return (result);
 
-		gp_camera_progress (camera, (float)(i+1)/(float)blocks*100.0);
+		gp_camera_progress (camera, (float)(i+1)/(float)blocks);
 	}
 
 	return GP_OK;

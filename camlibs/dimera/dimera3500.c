@@ -21,6 +21,21 @@
  *
  * History:
  * $Log$
+ * Revision 1.20  2001/10/11 22:01:25  lutz
+ * 2001-10-11  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ *
+ *         * camlibs/canon/psa50.c
+ *         * camlibs/dimera/dimera3500.c:
+ *         * camlibs/kodak/dc120/library.c:
+ *         * camlibs/kodak/dc240/library.c:
+ *         * camlibs/kodak/dc3200/library.c:
+ *         * camlibs/panasonic/dc1000.c:
+ *         * camlibs/panasonic/dc1580.c:
+ *         * camlibs/panasonic/l859/l859.c:
+ *         * camlibs/sierra/library.c:
+ *         * frontends/command-line/interface.c: Unify percentage handling and
+ *         define 0.0 <= percentage <= 1.0.
+ *
  * Revision 1.19  2001/10/08 08:18:29  lutz
  * 2001-10-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
  *
@@ -712,7 +727,7 @@ Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
 			*size = 0;
 			return 0;
 		}
-		gp_camera_progress(camera, 100 * ia.row / (height + 4) );
+		gp_camera_progress(camera, ia.row / (height + 4) );
 	}
 #else
 	for ( ia.row = 4, b = rbuffer; ia.row < (*height + 4) ;
@@ -739,7 +754,7 @@ Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
 			*size = 0;
 			return 0;
 		}
-		gp_camera_progress(camera, 100 * ia.row / (*height + 4) );
+		gp_camera_progress(camera, ia.row / (*height + 4) );
 	}
 #endif
 
