@@ -36,6 +36,7 @@
 #define PTP_RESP_LEN			sizeof(PTPReq)
 #define PTP_REQ_HDR_LEN                 (2*sizeof(uint32_t)+2*sizeof(uint16_t))
 #define PTP_REQ_DATALEN			16384
+#define PTP_EVENT_LEN			sizeof(PTPEvent)
 
 struct _PTPReq {
 	uint32_t len;
@@ -138,23 +139,25 @@ typedef struct _PTPReq PTPReq;
 
 #define PTP_EC_Undefined		0x4000
 #define PTP_EC_CancelTransaction	0x4001
-#define PTP_EC_ObjectAdded		0x4000
-#define PTP_EC_ObjectRemoved		0x4000
-#define PTP_EC_StoreAdded		0x4000
-#define PTP_EC_StoreRemoved		0x4000
-#define PTP_EC_DevicePropChanged	0x4000
-#define PTP_EC_ObjectInfoChanged	0x4000
-#define PTP_EC_DeviceInfoChanged	0x4000
-#define PTP_EC_RequestObjectTransfer	0x4000
-#define PTP_EC_StoreFull		0x4000
-#define PTP_EC_DeviceReset		0x4000
-#define PTP_EC_StorageInfoChanged	0x4000
-#define PTP_EC_CaptureComplete		0x4000
-#define PTP_EC_UnreportedStatus		0x4000
+#define PTP_EC_ObjectAdded		0x4002
+#define PTP_EC_ObjectRemoved		0x4003
+#define PTP_EC_StoreAdded		0x4004
+#define PTP_EC_StoreRemoved		0x4005
+#define PTP_EC_DevicePropChanged	0x4006
+#define PTP_EC_ObjectInfoChanged	0x4007
+#define PTP_EC_DeviceInfoChanged	0x4008
+#define PTP_EC_RequestObjectTransfer	0x4009
+#define PTP_EC_StoreFull		0x400A
+#define PTP_EC_DeviceReset		0x400B
+#define PTP_EC_StorageInfoChanged	0x400C
+#define PTP_EC_CaptureComplete		0x400D
+#define PTP_EC_UnreportedStatus		0x400E
 
 // PTP event structre (returned by chceck_event)
 
 struct _PTPEvent {
+	uint32_t len;
+	uint16_t type;
 	uint16_t EventCode;
 	uint32_t Param1;
 	uint32_t Param2;
@@ -398,5 +401,6 @@ uint16_t ptp_ek_sendfileobject	(PTPParams* params, PTPReq* object,
 				uint32_t size);
 
 int ptp_operation_issupported	(PTPParams* params, uint16_t operation);
+int ptp_property_issupported	(PTPParams* params, uint16_t property);
 
 #endif /* __PTP_H__ */

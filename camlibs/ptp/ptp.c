@@ -247,44 +247,38 @@ ptp_transaction (PTPParams* params, PTPReq* req, uint16_t code,
 #define PTP_EVENT_CHECK			0x0000	// waits for
 #define PTP_EVENT_CHECK_FAST		0x0001	// checks
 
-static uint16_t
+static inline uint16_t
 ptp_event (PTPParams* params, PTPEvent* event, int wait)
 {
 	uint16_t ret;
-	PTPReq req;
 
 	if ((params==NULL) || (event==NULL)) 
 		return PTP_ERROR_BADPARAM;
 	
-	if (wait==PTP_EVENT_CHECK)
-		ret=params->check_int_func((unsigned char*) &req, PTP_RESP_LEN, params->data);
-	if (wait==PTP_EVENT_CHECK_FAST)
-		ret=params->check_int_fast_func((unsigned char*) &req, PTP_RESP_LEN, params->data);
-		else return PTP_ERROR_BADPARAM;
-/*
-	if (ret>0) {
-		int i;
-
-		printf("\n");
-		for (i=0;i<=ret;i++) {
-			printf ("%2.2x ",((unsigned char *)&req)[i]);
-		}
-		printf("\n");
+	switch(wait) {
+		case PTP_EVENT_CHECK:
+			ret=params->check_int_func((unsigned char*) event, PTP_EVENT_LEN, params->data);
+			break;
+		case PTP_EVENT_CHECK_FAST:
+			ret=params->check_int_fast_func((unsigned char*) event, PTP_EVENT_LEN, params->data);
+			break;
+		default:
+			ret=PTP_ERROR_BADPARAM;
 	}
-*/
-	return PTP_RC_OK;
+
+	return ret;
 }
 
 uint16_t
 ptp_event_check (PTPParams* params, PTPEvent* event) {
 
-	ptp_event (params, event,PTP_EVENT_CHECK);
-	return PTP_RC_OK;
+	return ptp_event (params, event, PTP_EVENT_CHECK_FAST);
 }
 
 uint16_t
 ptp_event_wait (PTPParams* params, PTPEvent* event) {
-	return PTP_RC_OK;
+
+	return ptp_event (params, event, PTP_EVENT_CHECK);
 }
 
 /**
@@ -591,6 +585,19 @@ ptp_operation_issupported(PTPParams* params, uint16_t operation)
 
 	for (;i<params->deviceinfo.OperationsSupported_len;i++) {
 		if (params->deviceinfo.OperationsSupported[i]==operation)
+			return 1;
+	}
+	return 0;
+}
+
+
+int
+ptp_property_issupported(PTPParams* params, uint16_t property)
+{
+	int i=0;
+
+	for (;i<params->deviceinfo.DevicePropertiesSupported_len;i++) {
+		if (params->deviceinfo.DevicePropertiesSupported[i]==property)
 			return 1;
 	}
 	return 0;

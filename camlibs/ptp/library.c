@@ -406,7 +406,7 @@ camera_abilities (CameraAbilitiesList *list)
 		a.speed[0] = 0;
 		a.usb_vendor = models[i].usb_vendor;
 		a.usb_product= models[i].usb_product;
-		a.operations        = GP_OPERATION_NONE;
+		a.operations        = GP_CAPTURE_IMAGE;
 		a.file_operations   = GP_FILE_OPERATION_PREVIEW|
 					GP_FILE_OPERATION_DELETE;
 		a.folder_operations = GP_FOLDER_OPERATION_PUT_FILE
@@ -444,6 +444,7 @@ camera_id (CameraText *id)
 static int
 camera_exit (Camera *camera, GPContext *context)
 {
+
 	if (camera->pl) {
 		ptp_closesession (&camera->pl->params);
 		free (camera->pl);
@@ -462,6 +463,28 @@ camera_about (Camera *camera, CameraText *text, GPContext *context)
 		 _("Written by Mariusz Woloszyn <emsi@ipartners.pl>. "
 		   "Enjoy!"), sizeof (text->text));
 	return (GP_OK);
+}
+
+static int
+camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
+		GPContext *context)
+{
+	PTPEvent event;
+
+	if (type != GP_CAPTURE_IMAGE) {
+		return GP_ERROR_NOT_SUPPORTED;
+	}
+
+	CPR(context,ptp_initiatecapture(&camera->pl->params, 0x00000000, 0x00000000));
+	while (ptp_event_wait (&camera->pl->params, &event)!=PTP_RC_OK);
+	if (event.EventCode==PTP_EC_ObjectAdded) {
+		while (ptp_event_wait (&camera->pl->params, &event)!=PTP_RC_OK);
+		if (event.EventCode==PTP_EC_CaptureComplete) {
+			return GP_OK;
+		}
+	} 
+	/* we're not going to set path, ptp does not use paths anyway ;) */
+	return GP_ERROR;
 }
 
 /* following functions are used for fs testing only */
@@ -936,8 +959,8 @@ init_ptp_fs (Camera *camera, GPContext *context)
 	camera->pl->params.objectinfo =
 		(PTPObjectInfo*)malloc(sizeof(PTPObjectInfo)*
 		camera->pl->params.handles.n);
-	// XXX !!!
-	//memset (camera->pl->params.objectinfo,0,sizeof(PTPObjectInfo));
+	memset (camera->pl->params.objectinfo,0,sizeof(PTPObjectInfo)
+		*camera->pl->params.handles.n);
 	for (i = 0; i < camera->pl->params.handles.n; i++) {
 		CPR (context, ptp_getobjectinfo(&camera->pl->params,
 			camera->pl->params.handles.handler[i],
@@ -976,6 +999,7 @@ camera_init (Camera *camera, GPContext *context)
 
 	camera->functions->about = camera_about;
 	camera->functions->exit = camera_exit;
+	camera->functions->capture = camera_capture;
 
 	/* We need some data that we pass around */
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));
@@ -991,16 +1015,28 @@ camera_init (Camera *camera, GPContext *context)
 	memset (camera->pl->params.data, 0, sizeof (PTPData));
 	((PTPData *) camera->pl->params.data)->camera = camera;
 	camera->pl->params.byteorder = PTP_DL_LE;
-	/* the transaction_id is incemente before sending, thus it means 0x0 */
+	/* the transaction_id is incremented before sending,
+	   thus 0xffffffff means 0 ;) */
 	camera->pl->params.transaction_id=0xffffffff;
 
-	/* On large fiels (over 50M) deletion takes over 3 seconds */
-	CR (gp_port_set_timeout (camera->port, 6000));
+	/* On large fiels (over 50M) deletion takes over 3 seconds,
+	 * waiting for event after capture may take some time also
+	 */
+	CR (gp_port_set_timeout (camera->port, 8000));
 	/* Configure the port */
 	CR (gp_port_get_settings (camera->port, &settings));
 
 	/* Use the defaults the core parsed */
 	CR (gp_port_set_settings (camera->port, settings));
+
+	/* get device info */
+	CPR(context, ptp_getdeviceinfo(&camera->pl->params,
+	&camera->pl->params.deviceinfo));
+
+	GP_DEBUG ("Vendor extension description: %s",camera->pl->params.deviceinfo.VendorExtensionDesc);
+	GP_DEBUG ("Manufacturer: %s",camera->pl->params.deviceinfo.Manufacturer);
+	GP_DEBUG ("  model: %s", camera->pl->params.deviceinfo.Model);
+	GP_DEBUG ("  device version: %s", camera->pl->params.deviceinfo.DeviceVersion);
 
 	/* Establish a connection to the camera */
 	((PTPData *) camera->pl->params.data)->context = context;
@@ -1017,18 +1053,6 @@ camera_init (Camera *camera, GPContext *context)
 	/* init internal ptp objectfiles (required for fs implementation) */
 	init_ptp_fs (camera, context);
 
-	CPR(context, ptp_getdeviceinfo(&camera->pl->params,
-	&camera->pl->params.deviceinfo));
-
-	GP_DEBUG ("Manufacturer: %s",camera->pl->params.deviceinfo.Manufacturer);
-	GP_DEBUG ("model: %s", camera->pl->params.deviceinfo.Model);
-	GP_DEBUG ("device version: %s", camera->pl->params.deviceinfo.DeviceVersion);
-
-	{
-	PTPEvent event;
-//	ptp_event_check (&camera->pl->params,event);
-	}
-
 	/* Configure the CameraFilesystem */
 	CR (gp_filesystem_set_list_funcs (camera->fs, file_list_func,
 					  folder_list_func, camera));
@@ -1039,6 +1063,5 @@ camera_init (Camera *camera, GPContext *context)
 	CR (gp_filesystem_set_folder_funcs (camera->fs, put_file_func,
 					    NULL, make_dir_func,
 					    remove_dir_func, camera));
-
 	return (GP_OK);
 }

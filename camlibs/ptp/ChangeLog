@@ -1,3 +1,6 @@
+2002-06-10 Mariusz Woloszyn
+	* added basic capture functionality with events support
+
 2002-03-18 Mariusz Woloszyn
 	* library.c: added multiple storage support
 	* ptp.c: fixed missed parameter for getstorageinfo
