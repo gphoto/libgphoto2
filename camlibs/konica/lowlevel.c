@@ -53,6 +53,8 @@
 
 #define DEFAULT_TIMEOUT	1000
 
+#define LESSER_ESCAPES
+
 /* ESC quotes */
 #define STX	0x02
 #define ETX	0x03
@@ -186,8 +188,12 @@ l_esc_read (GPPort *p, unsigned char *c)
 	 * ESC. As before, if it is not one of those, we'll not report an
 	 * error, as it will be recovered automatically later.
 	 */
+#ifndef LESSER_ESCAPES
 	if ((*c == STX ) || (*c == ETX) || (*c == ENQ ) || (*c == ACK) ||
 	    (*c == XOFF) || (*c == XON) || (*c == NACK) || (*c == ETB)) {
+#else /* LESSER_ESCAPES */
+	if ((*c == STX ) || (*c == XOFF) || (*c == XON)) {
+#endif /* LESSER_ESCAPES */
 		GP_DEBUG ("Wrong ESC masking!");
 		if ((*c == ETX) || (*c == ETB))
 			return (GP_ERROR_CORRUPTED_DATA);
@@ -430,9 +436,13 @@ while (read < rbs_internal) {
 	for (i = read; i < read + r; i++) {
 		unsigned char *c = &(*rb)[*rbs + i];
 
+#ifndef LESSER_ESCAPES
 	        if ((*c == STX) || (*c == ETX) || (*c == ENQ ) ||
 		    (*c == ACK) || (*c == XOFF) || (*c == XON) ||
 		    (*c == NACK) || (*c == ETB)) {
+#else /* LESSER_ESCAPES */
+	        if ((*c == STX) ||  (*c == XOFF) || (*c == XON)) {
+#endif /* LESSER_ESCAPES */
 			GP_DEBUG ("Wrong ESC masking!");
 			error_flag = 1;
 			break;

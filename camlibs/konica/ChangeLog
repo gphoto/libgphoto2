@@ -1,3 +1,8 @@
+2002-03-08  Marcus Meissner <marcus@jet.franken.de>
+	
+	* lowlevel.c: When reading we do not need to escape that much,
+	  the original HP PhotoSmart does not escape all characters.
+
 2002-03-04  Lutz Müller <lutz@users.sourceforge.net>
 
 	With the help of Thomas Ronayne <trona@ameritech.net>:
