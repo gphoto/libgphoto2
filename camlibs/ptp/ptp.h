@@ -24,6 +24,11 @@
 #include <stdarg.h>
 #include <gphoto2-endian.h>
 
+// PTP datalayer byteorder
+
+#define PTP_DL_BE			0xF0
+#define	PTP_DL_LE			0x0F
+
 // PTP request/response/data packet structure
 
 #define PTP_REQ_LEN			30
@@ -238,7 +243,9 @@ typedef void (* PTPDebugFunc) (void *data, const char *format, va_list args);
 
 typedef struct _PTPParams PTPParams;
 struct _PTPParams {
-
+	/* data layer byteorder */
+	uint8_t	byteorder;
+	
 	/* Custom IO functions */
 	PTPIOReadFunc  read_func;
 	PTPIOWriteFunc write_func;

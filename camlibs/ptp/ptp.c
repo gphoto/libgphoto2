@@ -49,6 +49,32 @@
 #define CHECK_PTP_RC(result)	{uint16_t r=(result); if (r!=PTP_RC_OK) return r;}
 //#define CHECK_PTP_RC_free(result, free_ptr) {uint16_t r=(result); if (r!=PTP_RC_OK) {return r; free(free_ptr);}}
 
+static inline uint16_t
+htod16 (PTPParams *params, uint16_t var)
+{
+	return ((params->byteorder==PTP_DL_LE)?htole16(var):htobe16(var));
+}
+
+static inline uint32_t
+htod32 (PTPParams *params, uint32_t var)
+{
+	return ((params->byteorder==PTP_DL_LE)?htole32(var):htobe32(var));
+}
+
+static inline uint16_t
+dtoh16 (PTPParams *params, uint16_t var)
+{
+	return ((params->byteorder==PTP_DL_LE)?le16toh(var):be16toh(var));
+}
+
+static inline uint32_t
+dtoh32 (PTPParams *params, uint32_t var)
+{
+	return ((params->byteorder==PTP_DL_LE)?le32toh(var):be32toh(var));
+}
+
+
+
 static void
 ptp_debug (PTPParams *params, const char *format, ...)
 {  
