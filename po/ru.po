@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gphoto\n"
 "Report-Msgid-Bugs-To: <gphoto-translation@lists.sourceforge.net>\n"
-"POT-Creation-Date: 2005-01-17 09:07+0100\n"
+"POT-Creation-Date: 2005-01-18 08:55+0100\n"
 "PO-Revision-Date: 2005-01-08 23:52+0300\n"
 "Last-Translator: Вячеслав Диконов (Vyacheslav Dikonov) <slava@altlinux.ru>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -647,7 +647,8 @@ msgstr "Невозможно применить конфигурацию USB"
 #, c-format
 msgid "Camera not ready, multiple 'Identify camera' requests failed: %s"
 msgstr ""
-"Фотоаппарат не готов, несколько запросов идентификации завершились ошибкой: %s"
+"Фотоаппарат не готов, несколько запросов идентификации завершились ошибкой: %"
+"s"
 
 #: camlibs/canon/usb.c:312
 #, c-format
@@ -1021,7 +1022,7 @@ msgstr "Ошибка съёмки"
 
 #: camlibs/dimera/dimera3500.c:771 camlibs/kodak/dc210/dc210.c:168
 #: camlibs/polaroid/pdc700.c:980 camlibs/sierra/sierra.c:849
-#: camlibs/sierra/sierra.c:1427 camlibs/sierra/sierra-desc.c:192
+#: camlibs/sierra/sierra.c:1427 camlibs/sierra/sierra-desc.c:193
 msgid "Camera Configuration"
 msgstr "Конфигурация фотоаппарата"
 
@@ -1509,7 +1510,7 @@ msgstr "Приближение"
 #: camlibs/kodak/dc210/dc210.c:227 camlibs/kodak/dc210/dc210.c:241
 #: camlibs/konica/qm150.c:1025 camlibs/ricoh/library.c:498
 #: camlibs/sierra/epson-desc.c:218 camlibs/sierra/nikon-desc.c:290
-#: camlibs/sierra/olympus-desc.c:328 camlibs/sierra/sierra.c:1052
+#: camlibs/sierra/olympus-desc.c:488 camlibs/sierra/sierra.c:1052
 #: camlibs/sierra/sierra.c:1057 camlibs/sierra/sierra.c:1328
 #: camlibs/sierra/sierra.c:1524 camlibs/sierra/sierra.c:1527
 #: camlibs/sierra/sierra.c:1740
@@ -1554,28 +1555,31 @@ msgstr ""
 #: camlibs/sierra/epson-desc.c:169 camlibs/sierra/nikon-desc.c:134
 #: camlibs/sierra/nikon-desc.c:168 camlibs/sierra/nikon-desc.c:200
 #: camlibs/sierra/nikon-desc.c:218 camlibs/sierra/nikon-desc.c:248
-#: camlibs/sierra/olympus-desc.c:150 camlibs/sierra/olympus-desc.c:194
-#: camlibs/sierra/olympus-desc.c:226 camlibs/sierra/olympus-desc.c:274
-#: camlibs/sierra/olympus-desc.c:291 camlibs/sierra/olympus-desc.c:310
-#: camlibs/sierra/olympus-desc.c:329 camlibs/sierra/olympus-desc.c:530
-#: camlibs/sierra/sierra.c:860 camlibs/sierra/sierra.c:866
-#: camlibs/sierra/sierra.c:900 camlibs/sierra/sierra.c:906
-#: camlibs/sierra/sierra.c:960 camlibs/sierra/sierra.c:967
-#: camlibs/sierra/sierra.c:1021 camlibs/sierra/sierra.c:1028
-#: camlibs/sierra/sierra.c:1195 camlibs/sierra/sierra.c:1224
-#: camlibs/sierra/sierra.c:1264 camlibs/sierra/sierra.c:1307
-#: camlibs/sierra/sierra.c:1470 camlibs/sierra/sierra.c:1476
-#: camlibs/sierra/sierra.c:1498 camlibs/sierra/sierra.c:1503
-#: camlibs/sierra/sierra.c:1703 camlibs/sierra/sierra.c:1723
+#: camlibs/sierra/olympus-desc.c:167 camlibs/sierra/olympus-desc.c:213
+#: camlibs/sierra/olympus-desc.c:290 camlibs/sierra/olympus-desc.c:322
+#: camlibs/sierra/olympus-desc.c:352 camlibs/sierra/olympus-desc.c:394
+#: camlibs/sierra/olympus-desc.c:411 camlibs/sierra/olympus-desc.c:430
+#: camlibs/sierra/olympus-desc.c:449 camlibs/sierra/olympus-desc.c:468
+#: camlibs/sierra/olympus-desc.c:489 camlibs/sierra/olympus-desc.c:690
+#: camlibs/sierra/olympus-desc.c:707 camlibs/sierra/sierra.c:860
+#: camlibs/sierra/sierra.c:866 camlibs/sierra/sierra.c:900
+#: camlibs/sierra/sierra.c:906 camlibs/sierra/sierra.c:960
+#: camlibs/sierra/sierra.c:967 camlibs/sierra/sierra.c:1021
+#: camlibs/sierra/sierra.c:1028 camlibs/sierra/sierra.c:1195
+#: camlibs/sierra/sierra.c:1224 camlibs/sierra/sierra.c:1264
+#: camlibs/sierra/sierra.c:1307 camlibs/sierra/sierra.c:1470
+#: camlibs/sierra/sierra.c:1476 camlibs/sierra/sierra.c:1498
+#: camlibs/sierra/sierra.c:1503 camlibs/sierra/sierra.c:1703
+#: camlibs/sierra/sierra.c:1723
 msgid "Auto"
 msgstr "Авто"
 
 #: camlibs/kodak/dc210/dc210.c:256 camlibs/kodak/dc210/dc210.c:263
 #: camlibs/sierra/epson-desc.c:152 camlibs/sierra/nikon-desc.c:201
-#: camlibs/sierra/olympus-desc.c:275 camlibs/sierra/sierra.c:961
-#: camlibs/sierra/sierra.c:969 camlibs/sierra/sierra.c:1266
-#: camlibs/sierra/sierra.c:1471 camlibs/sierra/sierra.c:1478
-#: camlibs/sierra/sierra.c:1705
+#: camlibs/sierra/olympus-desc.c:395 camlibs/sierra/olympus-desc.c:412
+#: camlibs/sierra/sierra.c:961 camlibs/sierra/sierra.c:969
+#: camlibs/sierra/sierra.c:1266 camlibs/sierra/sierra.c:1471
+#: camlibs/sierra/sierra.c:1478 camlibs/sierra/sierra.c:1705
 msgid "Force"
 msgstr ""
 
@@ -1624,13 +1628,14 @@ msgstr "Вкл"
 #: camlibs/ricoh/library.c:339 camlibs/ricoh/library.c:368
 #: camlibs/ricoh/library.c:376 camlibs/sierra/epson-desc.c:153
 #: camlibs/sierra/nikon-desc.c:202 camlibs/sierra/nikon-desc.c:270
-#: camlibs/sierra/nikon-desc.c:325 camlibs/sierra/olympus-desc.c:276
-#: camlibs/sierra/olympus-desc.c:349 camlibs/sierra/olympus-desc.c:513
-#: camlibs/sierra/olympus-desc.c:563 camlibs/sierra/sierra.c:962
-#: camlibs/sierra/sierra.c:971 camlibs/sierra/sierra.c:1078
-#: camlibs/sierra/sierra.c:1081 camlibs/sierra/sierra.c:1268
-#: camlibs/sierra/sierra.c:1348 camlibs/sierra/sierra.c:1472
-#: camlibs/sierra/sierra.c:1480 camlibs/sierra/sierra.c:1707
+#: camlibs/sierra/nikon-desc.c:325 camlibs/sierra/olympus-desc.c:396
+#: camlibs/sierra/olympus-desc.c:413 camlibs/sierra/olympus-desc.c:509
+#: camlibs/sierra/olympus-desc.c:673 camlibs/sierra/olympus-desc.c:757
+#: camlibs/sierra/sierra.c:962 camlibs/sierra/sierra.c:971
+#: camlibs/sierra/sierra.c:1078 camlibs/sierra/sierra.c:1081
+#: camlibs/sierra/sierra.c:1268 camlibs/sierra/sierra.c:1348
+#: camlibs/sierra/sierra.c:1472 camlibs/sierra/sierra.c:1480
+#: camlibs/sierra/sierra.c:1707
 msgid "Off"
 msgstr "Выкл"
 
@@ -2181,8 +2186,8 @@ msgstr "Автоспуск (только след. снимок)"
 #: camlibs/konica/qm150.c:1098 camlibs/konica/qm150.c:1105
 #: camlibs/minolta/dimagev/dimagev.c:405 camlibs/ricoh/library.c:348
 #: camlibs/sierra/epson-desc.c:219 camlibs/sierra/nikon-desc.c:219
-#: camlibs/sierra/nikon-desc.c:291 camlibs/sierra/olympus-desc.c:256
-#: camlibs/sierra/olympus-desc.c:351 camlibs/sierra/sierra.c:930
+#: camlibs/sierra/nikon-desc.c:291 camlibs/sierra/olympus-desc.c:376
+#: camlibs/sierra/olympus-desc.c:511 camlibs/sierra/sierra.c:930
 #: camlibs/sierra/sierra.c:937 camlibs/sierra/sierra.c:991
 #: camlibs/sierra/sierra.c:998 camlibs/sierra/sierra.c:1053
 #: camlibs/sierra/sierra.c:1059 camlibs/sierra/sierra.c:1243
@@ -2337,7 +2342,7 @@ msgid "Black and White"
 msgstr "Чёрно-белый"
 
 #: camlibs/konica/qm150.c:1004 camlibs/konica/qm150.c:1020
-#: camlibs/ricoh/library.c:331 camlibs/sierra/olympus-desc.c:258
+#: camlibs/ricoh/library.c:331 camlibs/sierra/olympus-desc.c:378
 #: camlibs/sierra/sierra.c:932 camlibs/sierra/sierra.c:941
 #: camlibs/sierra/sierra.c:1247
 msgid "Sepia"
@@ -2479,7 +2484,7 @@ msgstr ""
 "\n"
 "Поддержка фотоаппарата Largan Lmini.\n"
 
-#: camlibs/mars/library.c:109
+#: camlibs/mars/library.c:111
 #, c-format
 msgid ""
 "Mars MR97310 camera.\n"
@@ -2488,7 +2493,7 @@ msgstr ""
 "Фотоаппарат Mars MR97310.\n"
 "Содержит %i снимков. \n"
 
-#: camlibs/mars/library.c:113
+#: camlibs/mars/library.c:115
 #, c-format
 msgid ""
 "Mars MR97310 camera.\n"
@@ -2497,7 +2502,7 @@ msgstr ""
 "Фотоаппарат Mars MR97310.\n"
 "Содержит %i снимков. \n"
 
-#: camlibs/mars/library.c:125
+#: camlibs/mars/library.c:127
 msgid ""
 "This driver supports cameras with Mars MR97310 chip (and direct\n"
 "equivalents ??Pixart PACx07??) and should work with gtkam.\n"
@@ -2521,7 +2526,7 @@ msgstr ""
 "Если фотоаппарат хранит видеозаписи, то отдельные кадры можно получить\n"
 "в виде последовательности неподвижных фотографий.\n"
 
-#: camlibs/mars/library.c:146
+#: camlibs/mars/library.c:148
 msgid ""
 "Mars MR97310 camera library\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
@@ -3389,7 +3394,7 @@ msgstr ""
 msgid "unexpected datatype %i"
 msgstr "неожиданный тип данных %i"
 
-#: camlibs/ptp2/library.c:1152 camlibs/sierra/olympus-desc.c:330
+#: camlibs/ptp2/library.c:1152 camlibs/sierra/olympus-desc.c:490
 msgid "Manual"
 msgstr "Ручной"
 
@@ -3403,28 +3408,29 @@ msgstr "Автомат\n"
 msgid "One-push Automatic"
 msgstr "Автомат\n"
 
-#: camlibs/ptp2/library.c:1155 camlibs/sierra/olympus-desc.c:292
-#: camlibs/sierra/olympus-desc.c:311
+#: camlibs/ptp2/library.c:1155 camlibs/sierra/olympus-desc.c:431
+#: camlibs/sierra/olympus-desc.c:450 camlibs/sierra/olympus-desc.c:469
 msgid "Daylight"
 msgstr "Дневной свет"
 
 #: camlibs/ptp2/library.c:1156 camlibs/ricoh/library.c:328
-#: camlibs/sierra/nikon-desc.c:251 camlibs/sierra/olympus-desc.c:293
-#: camlibs/sierra/olympus-desc.c:312 camlibs/sierra/sierra.c:1023
+#: camlibs/sierra/nikon-desc.c:251 camlibs/sierra/olympus-desc.c:432
+#: camlibs/sierra/olympus-desc.c:451 camlibs/sierra/sierra.c:1023
 #: camlibs/sierra/sierra.c:1032 camlibs/sierra/sierra.c:1311
 msgid "Fluorescent"
 msgstr "Флуоресцентная лампа"
 
-#: camlibs/ptp2/library.c:1157 camlibs/sierra/olympus-desc.c:294
-#: camlibs/sierra/olympus-desc.c:313 camlibs/sierra/sierra.c:1024
-#: camlibs/sierra/sierra.c:1034 camlibs/sierra/sierra.c:1313
+#: camlibs/ptp2/library.c:1157 camlibs/sierra/olympus-desc.c:433
+#: camlibs/sierra/olympus-desc.c:452 camlibs/sierra/olympus-desc.c:470
+#: camlibs/sierra/sierra.c:1024 camlibs/sierra/sierra.c:1034
+#: camlibs/sierra/sierra.c:1313
 msgid "Tungsten"
 msgstr "Вольфрамовая лампа"
 
 #: camlibs/ptp2/library.c:1159 camlibs/sierra/nikon-desc.c:254
-#: camlibs/sierra/olympus-desc.c:295 camlibs/sierra/olympus-desc.c:314
-#: camlibs/sierra/sierra.c:1025 camlibs/sierra/sierra.c:1037
-#: camlibs/sierra/sierra.c:1315
+#: camlibs/sierra/olympus-desc.c:434 camlibs/sierra/olympus-desc.c:453
+#: camlibs/sierra/olympus-desc.c:474 camlibs/sierra/sierra.c:1025
+#: camlibs/sierra/sierra.c:1037 camlibs/sierra/sierra.c:1315
 msgid "Cloudy"
 msgstr "Облачность"
 
@@ -3473,13 +3479,13 @@ msgstr "Вспомогательное освещение"
 
 #: camlibs/ptp2/library.c:1525 camlibs/ptp2/ptp.c:1527
 #: camlibs/sierra/nikon-desc.c:425 camlibs/sierra/nikon-desc.c:448
-#: camlibs/sierra/olympus-desc.c:457
+#: camlibs/sierra/olympus-desc.c:617
 msgid "Exposure Compensation"
 msgstr "Компенсация выдержки"
 
 #: camlibs/ptp2/library.c:1532 camlibs/sierra/epson-desc.c:282
-#: camlibs/sierra/nikon-desc.c:594 camlibs/sierra/olympus-desc.c:640
-#: camlibs/sierra/olympus-desc.c:690 camlibs/sierra/olympus-desc.c:704
+#: camlibs/sierra/nikon-desc.c:594 camlibs/sierra/olympus-desc.c:834
+#: camlibs/sierra/olympus-desc.c:889 camlibs/sierra/olympus-desc.c:903
 #: camlibs/sierra/sierra.c:1122 camlibs/sierra/sierra.c:1584
 msgid "Camera Settings"
 msgstr ""
@@ -3505,11 +3511,11 @@ msgstr "Допустимые значения"
 msgid "Current value"
 msgstr "Текущее значение"
 
-#: camlibs/ptp2/library.c:2114
+#: camlibs/ptp2/library.c:2118
 msgid "Initializing Camera"
 msgstr "Инициализация фотоаппарата"
 
-#: camlibs/ptp2/library.c:2210
+#: camlibs/ptp2/library.c:2214
 msgid "PTP is implemented for USB cameras only."
 msgstr ""
 
@@ -3692,9 +3698,10 @@ msgstr "Параметры сжатия"
 
 #: camlibs/ptp2/ptp.c:1464 camlibs/ptp2/ptp.c:1523
 #: camlibs/sierra/epson-desc.c:176 camlibs/sierra/nikon-desc.c:259
-#: camlibs/sierra/olympus-desc.c:300 camlibs/sierra/olympus-desc.c:319
-#: camlibs/sierra/sierra.c:1020 camlibs/sierra/sierra.c:1303
-#: camlibs/sierra/sierra.c:1497 camlibs/sierra/sierra.c:1720
+#: camlibs/sierra/olympus-desc.c:439 camlibs/sierra/olympus-desc.c:458
+#: camlibs/sierra/olympus-desc.c:479 camlibs/sierra/sierra.c:1020
+#: camlibs/sierra/sierra.c:1303 camlibs/sierra/sierra.c:1497
+#: camlibs/sierra/sierra.c:1720
 msgid "White Balance"
 msgstr "Баланс белого"
 
@@ -3715,7 +3722,7 @@ msgid "Focus Distance"
 msgstr "Фокусное расстояние"
 
 #: camlibs/ptp2/ptp.c:1469 camlibs/sierra/nikon-desc.c:297
-#: camlibs/sierra/olympus-desc.c:335
+#: camlibs/sierra/olympus-desc.c:495
 msgid "Focus Mode"
 msgstr "Режим фокусировки"
 
@@ -3842,7 +3849,8 @@ msgstr "Макрорежим"
 msgid "Focusing Point"
 msgstr "Точка фокусировки"
 
-#: camlibs/ptp2/ptp.c:1524 camlibs/sierra/olympus-desc.c:538
+#: camlibs/ptp2/ptp.c:1524 camlibs/sierra/olympus-desc.c:698
+#: camlibs/sierra/olympus-desc.c:716
 msgid "ISO Speed"
 msgstr "Скорость ISO"
 
@@ -4198,24 +4206,24 @@ msgstr ""
 "усовершенствования."
 
 #: camlibs/sierra/epson-desc.c:85 camlibs/sierra/nikon-desc.c:92
-#: camlibs/sierra/olympus-desc.c:107
+#: camlibs/sierra/olympus-desc.c:106 camlibs/sierra/olympus-desc.c:136
 msgid "Resolution plus Size"
 msgstr "Разрешение плюс размер"
 
 #: camlibs/sierra/epson-desc.c:103 camlibs/sierra/nikon-desc.c:110
-#: camlibs/sierra/olympus-desc.c:125
+#: camlibs/sierra/olympus-desc.c:154
 msgid "Date and time (GMT)"
 msgstr "Дата и время (GMT)"
 
 #: camlibs/sierra/epson-desc.c:127 camlibs/sierra/nikon-desc.c:176
-#: camlibs/sierra/olympus-desc.c:215 camlibs/sierra/olympus-desc.c:247
+#: camlibs/sierra/olympus-desc.c:311 camlibs/sierra/olympus-desc.c:343
+#: camlibs/sierra/olympus-desc.c:367
 msgid "Aperature Settings"
 msgstr "Параметры диафрагмы"
 
 #: camlibs/sierra/epson-desc.c:142 camlibs/sierra/nikon-desc.c:191
-#: camlibs/sierra/olympus-desc.c:265 camlibs/sierra/sierra.c:929
-#: camlibs/sierra/sierra.c:1239 camlibs/sierra/sierra.c:1568
-#: camlibs/sierra/sierra.c:1769
+#: camlibs/sierra/sierra.c:929 camlibs/sierra/sierra.c:1239
+#: camlibs/sierra/sierra.c:1568 camlibs/sierra/sierra.c:1769
 msgid "Color Mode"
 msgstr "Режим цвета"
 
@@ -4234,7 +4242,7 @@ msgid "Slow Sync"
 msgstr "Замедленная синхронизация"
 
 #: camlibs/sierra/epson-desc.c:160 camlibs/sierra/nikon-desc.c:209
-#: camlibs/sierra/olympus-desc.c:282
+#: camlibs/sierra/olympus-desc.c:402 camlibs/sierra/olympus-desc.c:421
 msgid "Flash Settings"
 msgstr ""
 
@@ -4243,11 +4251,11 @@ msgstr ""
 msgid "Custom"
 msgstr "Пользовательский"
 
-#: camlibs/sierra/epson-desc.c:193 camlibs/sierra/olympus-desc.c:400
+#: camlibs/sierra/epson-desc.c:193 camlibs/sierra/olympus-desc.c:560
 msgid "Host power save (seconds)"
 msgstr "Время до перехода компьютера в спящий режим (секунд)"
 
-#: camlibs/sierra/epson-desc.c:209 camlibs/sierra/olympus-desc.c:385
+#: camlibs/sierra/epson-desc.c:209 camlibs/sierra/olympus-desc.c:545
 msgid "Camera power save (seconds)"
 msgstr "Время до перехода фотоаппарата в спящий режим (секунд)"
 
@@ -4301,8 +4309,8 @@ msgid "Portugese"
 msgstr "Португальский"
 
 #: camlibs/sierra/epson-desc.c:278 camlibs/sierra/nikon-desc.c:590
-#: camlibs/sierra/olympus-desc.c:636 camlibs/sierra/olympus-desc.c:686
-#: camlibs/sierra/olympus-desc.c:697 camlibs/sierra/sierra.c:850
+#: camlibs/sierra/olympus-desc.c:830 camlibs/sierra/olympus-desc.c:885
+#: camlibs/sierra/olympus-desc.c:896 camlibs/sierra/sierra.c:850
 #: camlibs/sierra/sierra.c:1517
 msgid "Picture Settings"
 msgstr "Настройки изображения"
@@ -4418,19 +4426,21 @@ msgstr ""
 msgid "Expected 32 bytes, got %i. Please contact %s."
 msgstr ""
 
-#: camlibs/sierra/nikon-desc.c:128 camlibs/sierra/olympus-desc.c:144
+#: camlibs/sierra/nikon-desc.c:128 camlibs/sierra/olympus-desc.c:280
 msgid "Shutter Speed microseconds (0 auto)"
 msgstr ""
 
-#: camlibs/sierra/nikon-desc.c:159 camlibs/sierra/olympus-desc.c:183
+#: camlibs/sierra/nikon-desc.c:159 camlibs/sierra/olympus-desc.c:200
+#: camlibs/sierra/olympus-desc.c:261
 msgid "Shutter Speed (in seconds)"
 msgstr ""
 
-#: camlibs/sierra/nikon-desc.c:186 camlibs/sierra/olympus-desc.c:257
+#: camlibs/sierra/nikon-desc.c:186 camlibs/sierra/olympus-desc.c:377
 msgid "B/W"
 msgstr "Ч/Б"
 
-#: camlibs/sierra/nikon-desc.c:203 camlibs/sierra/olympus-desc.c:277
+#: camlibs/sierra/nikon-desc.c:203 camlibs/sierra/olympus-desc.c:397
+#: camlibs/sierra/olympus-desc.c:414
 msgid "Anti-redeye"
 msgstr "Против красных глаз"
 
@@ -4488,12 +4498,12 @@ msgstr "Предыдущий"
 msgid "Operation Mode"
 msgstr "Режим работы"
 
-#: camlibs/sierra/nikon-desc.c:358 camlibs/sierra/olympus-desc.c:371
+#: camlibs/sierra/nikon-desc.c:358 camlibs/sierra/olympus-desc.c:531
 #: camlibs/sierra/sierra.c:1157 camlibs/sierra/sierra.c:1396
 msgid "LCD Brightness"
 msgstr "Яркость ЖК-экрана"
 
-#: camlibs/sierra/nikon-desc.c:373 camlibs/sierra/olympus-desc.c:413
+#: camlibs/sierra/nikon-desc.c:373 camlibs/sierra/olympus-desc.c:573
 msgid "LCD Auto Shut Off (seconds)"
 msgstr "Автоматическое отключение ЖК (сек.)"
 
@@ -4501,11 +4511,11 @@ msgstr "Автоматическое отключение ЖК (сек.)"
 msgid "Center-Weighted"
 msgstr "Центрально-взвешенный"
 
-#: camlibs/sierra/nikon-desc.c:458 camlibs/sierra/olympus-desc.c:466
+#: camlibs/sierra/nikon-desc.c:458 camlibs/sierra/olympus-desc.c:626
 msgid "Spot"
 msgstr "Точечный"
 
-#: camlibs/sierra/nikon-desc.c:459 camlibs/sierra/olympus-desc.c:467
+#: camlibs/sierra/nikon-desc.c:459 camlibs/sierra/olympus-desc.c:627
 msgid "Matrix"
 msgstr "Матричный"
 
@@ -4513,12 +4523,12 @@ msgstr "Матричный"
 msgid "Spot-AF"
 msgstr "Точечный автофокус"
 
-#: camlibs/sierra/nikon-desc.c:465 camlibs/sierra/olympus-desc.c:472
+#: camlibs/sierra/nikon-desc.c:465 camlibs/sierra/olympus-desc.c:632
 msgid "Exposure Metering"
 msgstr "Экспозамер"
 
-#: camlibs/sierra/nikon-desc.c:483 camlibs/sierra/olympus-desc.c:488
-#: camlibs/sierra/olympus-desc.c:504
+#: camlibs/sierra/nikon-desc.c:483 camlibs/sierra/olympus-desc.c:648
+#: camlibs/sierra/olympus-desc.c:664
 msgid "Zoom (in millimeters)"
 msgstr "Приближение (в миллиметрах)"
 
@@ -4595,35 +4605,57 @@ msgstr ""
 "\n"
 "    Копирование снимков должно работать верно.\n"
 
-#: camlibs/sierra/olympus-desc.c:259
+#: camlibs/sierra/olympus-desc.c:379
 msgid "White board"
 msgstr "Белая доска"
 
-#: camlibs/sierra/olympus-desc.c:260
+#: camlibs/sierra/olympus-desc.c:380
 msgid "Black board"
 msgstr "Чёрная доска"
 
-#: camlibs/sierra/olympus-desc.c:350
+#: camlibs/sierra/olympus-desc.c:385
+#, fuzzy
+msgid "Color or Function Mode"
+msgstr "Режим цвета"
+
+#: camlibs/sierra/olympus-desc.c:415
+#, fuzzy
+msgid "Slow"
+msgstr "Замедленная синхронизация"
+
+#: camlibs/sierra/olympus-desc.c:471
+msgid "Flourescent-1-home-6700K"
+msgstr ""
+
+#: camlibs/sierra/olympus-desc.c:472
+msgid "Flourescent-2-desk-5000K"
+msgstr ""
+
+#: camlibs/sierra/olympus-desc.c:473
+msgid "Flourescent-3-office-4200K"
+msgstr ""
+
+#: camlibs/sierra/olympus-desc.c:510
 msgid "Monitor"
 msgstr "Монитор"
 
-#: camlibs/sierra/olympus-desc.c:356
+#: camlibs/sierra/olympus-desc.c:516
 msgid "LCD Mode"
 msgstr "Режим ЖК экрана"
 
-#: camlibs/sierra/olympus-desc.c:521
+#: camlibs/sierra/olympus-desc.c:681
 msgid "Digital zoom"
 msgstr "Цифровое увеличение"
 
-#: camlibs/sierra/olympus-desc.c:554
+#: camlibs/sierra/olympus-desc.c:732 camlibs/sierra/olympus-desc.c:748
 msgid "Focus position"
 msgstr ""
 
-#: camlibs/sierra/olympus-desc.c:571
+#: camlibs/sierra/olympus-desc.c:765
 msgid "Time format"
 msgstr "Формат времени"
 
-#: camlibs/sierra/olympus-desc.c:711
+#: camlibs/sierra/olympus-desc.c:910
 msgid ""
 "Some notes about Olympus cameras:\n"
 "(1) Camera Configuration:\n"
@@ -4661,7 +4693,7 @@ msgstr ""
 "    таком положении, нужно заново подключить аппарат к \n"
 "    компьютеру и переключить параметр в 'Off'."
 
-#: camlibs/sierra/olympus-desc.c:732
+#: camlibs/sierra/olympus-desc.c:931
 msgid ""
 "Olympus 750 Ultra Zoom:\n"
 "(1) Olympus 750UZ has a USB PC Control mode. In order\n"
@@ -4693,7 +4725,7 @@ msgstr ""
 "    таком положении, нужно заново подключить аппарат к \n"
 "    компьютеру и переключить параметр в 'Off'."
 
-#: camlibs/sierra/olympus-desc.c:750
+#: camlibs/sierra/olympus-desc.c:949
 msgid ""
 "Default sierra driver:\n"
 "\n"
@@ -5037,7 +5069,7 @@ msgstr ""
 "за предоставление Olympus C-3030Z для реализации\n"
 "поддержки USB."
 
-#: camlibs/sierra/sierra-desc.c:173
+#: camlibs/sierra/sierra-desc.c:174
 #, c-format
 msgid "%lld (unknown)"
 msgstr ""
@@ -5219,7 +5251,7 @@ msgstr ""
 msgid "Unsupported port type: %d. This driver only works with USB cameras.\n"
 msgstr ""
 
-#: camlibs/sq905/library.c:122
+#: camlibs/sq905/library.c:124
 #, c-format
 msgid ""
 "Your USB camera has a S&Q chipset.\n"
@@ -5232,7 +5264,7 @@ msgstr ""
 "Некоторые из них могут быть видеозаписями,\n"
 "состоящими из нескольких кадров.\n"
 
-#: camlibs/sq905/library.c:136
+#: camlibs/sq905/library.c:138
 msgid ""
 "For cameras with S&Q Technologies chip.\n"
 "Should work with gtkam. Photos will be saved in PPM format.\n"
@@ -5272,7 +5304,7 @@ msgstr ""
 "видеопоследовательности они относятся. Таким образом можно \n"
 "выбрать, сохранять ли кадры в отдельных каталогах или нет.\n"
 
-#: camlibs/sq905/library.c:164
+#: camlibs/sq905/library.c:166
 msgid ""
 "sq905 generic driver\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
@@ -5697,45 +5729,45 @@ msgid "Unknown error"
 msgstr "Неизвестная ошибка"
 
 #, fuzzy
-msgid "Camera settings"
-msgstr "Прочие параметры"
+#~ msgid "Camera settings"
+#~ msgstr "Прочие параметры"
 
 #, fuzzy
-msgid "No thumbnail could be found for %s"
-msgstr "Не найден файл звукозаписи для %s"
+#~ msgid "No thumbnail could be found for %s"
+#~ msgstr "Не найден файл звукозаписи для %s"
 
 #, fuzzy
-msgid ""
-"Expected %i, got %i. Please report this error to <gphoto-devel@lists."
-"sourceforge.net>."
-msgstr ""
-"уППВЭБКФЕ ПВ ПЫЙВЛБИ Й ХУРЕИБИ РП БДТЕУХ gphoto-devel@lists.sourceforge."
-"net.\n"
+#~ msgid ""
+#~ "Expected %i, got %i. Please report this error to <gphoto-devel@lists."
+#~ "sourceforge.net>."
+#~ msgstr ""
+#~ "уППВЭБКФЕ ПВ ПЫЙВЛБИ Й ХУРЕИБИ РП БДТЕУХ gphoto-devel@lists.sourceforge."
+#~ "net.\n"
 
 #, fuzzy
-msgid ""
-"Expected %i bytes, got %i. Please report this error to <gphoto-devel@lists."
-"sourceforge.net>."
-msgstr ""
-"уППВЭБКФЕ ПВ ПЫЙВЛБИ Й ХУРЕИБИ РП БДТЕУХ gphoto-devel@lists.sourceforge."
-"net.\n"
+#~ msgid ""
+#~ "Expected %i bytes, got %i. Please report this error to <gphoto-"
+#~ "devel@lists.sourceforge.net>."
+#~ msgstr ""
+#~ "уППВЭБКФЕ ПВ ПЫЙВЛБИ Й ХУРЕИБИ РП БДТЕУХ gphoto-devel@lists.sourceforge."
+#~ "net.\n"
 
 #, fuzzy
-msgid ""
-"Communication error even after 2 retries. Please contact <gphoto-devel@lists."
-"sourceforge.net>."
-msgstr ""
-"уППВЭБКФЕ ПВ ПЫЙВЛБИ Й ХУРЕИБИ РП БДТЕУХ gphoto-devel@lists.sourceforge."
-"net.\n"
+#~ msgid ""
+#~ "Communication error even after 2 retries. Please contact <gphoto-"
+#~ "devel@lists.sourceforge.net>."
+#~ msgstr ""
+#~ "уППВЭБКФЕ ПВ ПЫЙВЛБИ Й ХУРЕИБИ РП БДТЕУХ gphoto-devel@lists.sourceforge."
+#~ "net.\n"
 
 #, fuzzy
-msgid "Could not identify camera based on name \"%s\""
-msgstr "Невозможно получить имя диска: %s"
+#~ msgid "Could not identify camera based on name \"%s\""
+#~ msgstr "Невозможно получить имя диска: %s"
 
 #, fuzzy
-msgid "Driver Configuration"
-msgstr "Конфигурация фотоаппарата"
+#~ msgid "Driver Configuration"
+#~ msgstr "Конфигурация фотоаппарата"
 
 #, fuzzy
-msgid "Not implemented!"
-msgstr "%s ЕЭЕ ОЕ ТЕБМЙЪПЧБОП"
+#~ msgid "Not implemented!"
+#~ msgstr "%s ЕЭЕ ОЕ ТЕБМЙЪПЧБОП"
