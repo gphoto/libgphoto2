@@ -65,7 +65,7 @@ struct model models[] = {
 	{ "Canon PowerShot Pro70", 	0, 0, 1},
 	{ "Canon PowerShot S10", 	0x04A9, 0x3041, 1},
 	{ "Canon PowerShot S20", 	0x04A9, 0x0304, 1 },
-	{ "Canon PowerShot G1", 	0x04A9, 0x0304, 1 },
+	{ "Canon PowerShot G1", 	0x04A9, 0x3048, 1 },
 	{ "Canon PowerShot Pro90 SI", 	0x04A9, 0x3049, 1 },
 	{ "Canon Digital IXUS", 	0x04A9, 0x3047, 0 },
 	{ "Canon IXY DIGITAL", 		0x04A9, 0x3046, 0 },
