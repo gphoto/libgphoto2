@@ -946,27 +946,29 @@ static void canon_int_find_new_image ( Camera *camera, unsigned char *initial_st
 	while ( le16atoh ( old_entry+CANON_DIRENT_ATTRS ) != 0
 		|| le32atoh ( old_entry + CANON_DIRENT_SIZE ) != 0
 		|| le32atoh ( old_entry + CANON_DIRENT_TIME ) != 0 ) {
+		char *old_name = old_entry + CANON_DIRENT_NAME,
+			*new_name = new_entry + CANON_DIRENT_NAME;
 		GP_DEBUG ( " old entry \"%s\", attr = 0x%02x, size=%i",
-			   old_entry + CANON_DIRENT_NAME,
+			   old_name,
 			   old_entry[CANON_DIRENT_ATTRS],
 			   le32atoh ( old_entry + CANON_DIRENT_SIZE ) );
 		GP_DEBUG ( " new entry \"%s\", attr = 0x%02x, size=%i",
-			   new_entry + CANON_DIRENT_NAME,
+			   new_name,
 			   new_entry[CANON_DIRENT_ATTRS],
 			   le32atoh ( new_entry + CANON_DIRENT_SIZE ) );
 		if ( *old_entry != *new_entry
 		     || le32atoh ( old_entry + CANON_DIRENT_SIZE ) != le32atoh ( new_entry + CANON_DIRENT_SIZE )
 		     || le32atoh ( old_entry + CANON_DIRENT_TIME ) != le32atoh ( new_entry + CANON_DIRENT_TIME )
-		     || strcmp ( old_entry + CANON_DIRENT_NAME, new_entry + CANON_DIRENT_NAME ) ) {
+		     || strcmp ( old_name, new_name ) ) {
 			/* Mismatch. Presumably a
 			   new file, but is it an
 			   image file? */
 			GP_DEBUG ( "Found mismatch" );
-			if ( is_image ( new_entry + CANON_DIRENT_NAME ) ) {
+			if ( is_image ( new_name ) ) {
 				/* Yup, we'll assume that this is the new image. */
 				GP_DEBUG ( "  Found our new image file" );
-				strncpy ( path->name, new_entry + CANON_DIRENT_NAME,
-					  strlen ( new_entry + CANON_DIRENT_NAME ) );
+				strncpy ( path->name, new_name,
+					  strlen ( new_name ) );
 				strcpy ( path->folder, canon2gphotopath ( camera, path->folder ) );
 				break;
 			}
@@ -995,7 +997,7 @@ static void canon_int_find_new_image ( Camera *camera, unsigned char *initial_st
 
 				    */
 				if ( le16atoh ( new_entry+CANON_DIRENT_ATTRS ) & CANON_ATTR_RECURS_ENT_DIR ) {
-					if ( !strcmp ( "..", new_entry + CANON_DIRENT_NAME ) ) {
+					if ( !strcmp ( "..", new_name ) ) {
 						/* Pop out of this directory */
 						unsigned char *local_dir = strrchr(path->folder,'\\') + 1;
 						GP_DEBUG ( "Leaving directory \"%s\"", local_dir );
@@ -1003,20 +1005,19 @@ static void canon_int_find_new_image ( Camera *camera, unsigned char *initial_st
 					}
 					else {
 						// New directory, and we need to enter it.
-						GP_DEBUG ( "Entering directory \"%s\"", new_entry + CANON_DIRENT_NAME );
+						GP_DEBUG ( "Entering directory \"%s\"", new_name );
 						if ( new_entry[CANON_DIRENT_NAME] == '.' )
 							/* Ignore a leading dot */
 							strncat ( path->folder,
-								  new_entry + CANON_DIRENT_NAME + 1,
+								  new_name + 1,
 								  sizeof(path->folder) - strlen(path->folder) - 1 );
 						else
 							strncat ( path->folder,
-								  new_entry + CANON_DIRENT_NAME,
+								  new_name,
 								  sizeof(path->folder) - strlen(path->folder) - 1 );
 					}
 				}
-				else
-					new_entry += CANON_MINIMUM_DIRENT_SIZE + strlen ( new_entry+CANON_DIRENT_NAME );
+				new_entry += CANON_MINIMUM_DIRENT_SIZE + strlen ( new_entry+CANON_DIRENT_NAME );
 			}
 		}
 		else {
@@ -1026,22 +1027,22 @@ static void canon_int_find_new_image ( Camera *camera, unsigned char *initial_st
 				   The end of a directory is signaled
 				   by an entry with zero length and
 				   time, and name "..". */
-				if ( !strcmp ( "..", old_entry + CANON_DIRENT_NAME ) ) {
+				if ( !strcmp ( "..", old_name ) ) {
 					/* Pop out of this directory */
 					unsigned char *local_dir = strrchr(path->folder,'\\') + 1;
 					GP_DEBUG ( "Leaving directory \"%s\"", local_dir );
 					local_dir[-1] = 0;
 				}
 				else {
-					GP_DEBUG ( "Entering directory \"%s\"", old_entry + CANON_DIRENT_NAME );
-					if ( old_entry[CANON_DIRENT_NAME] == '.' )
+					GP_DEBUG ( "Entering directory \"%s\"", old_name );
+					if ( old_name[0] == '.' )
 						/* Ignore a leading dot */
 						strncat ( path->folder,
-							  old_entry + CANON_DIRENT_NAME + 1,
+							  old_name + 1,
 							  sizeof(path->folder) - strlen(path->folder) - 1 );
 					else
 						strncat ( path->folder,
-							  old_entry + CANON_DIRENT_NAME,
+							  old_name,
 							  sizeof(path->folder) - strlen(path->folder) - 1 );
 				}
 			}
