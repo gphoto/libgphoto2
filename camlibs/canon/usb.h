@@ -46,6 +46,8 @@
  *   battery vs. mains, and whether the battery is low.
  * @CANON_USB_FUNCTION_GET_DIRENT: Get directory entries
  * @CANON_USB_FUNCTION_DELETE_FILE: Delete file
+ * @CANON_USB_FUNCTION_DISK_INFO_2: get disk info for newer protocol
+ *   (capacity and free space)
  * @CANON_USB_FUNCTION_SET_ATTR: Command to set the attributes of a
  *   file on the camera (e.g. downloaded, protect from delete).
  * @CANON_USB_FUNCTION_GET_PIC_ABILITIES: Command to "get picture
@@ -89,6 +91,8 @@
  *   %CANON_USB_FUNCTION_RETRIEVE_CAPTURE, but first seen on EOS 20D.
  * @CANON_USB_FUNCTION_20D_UNKNOWN_4: First seen with EOS 20D, not yet
  *   understood.
+ * @CANON_USB_FUNCTION_20D_UNKNOWN_4: First seen with EOS 20D, not yet
+ *   understood.
  *
  * Codes to give to canon_usb_dialogue() or canon_usb_long_dialogue()
  * to select which command to issue to the camera. See the protocol
@@ -116,6 +120,7 @@ typedef enum {
 	CANON_USB_FUNCTION_RETRIEVE_CAPTURE,
 	CANON_USB_FUNCTION_RETRIEVE_PREVIEW,
 	CANON_USB_FUNCTION_CONTROL_CAMERA,
+	CANON_USB_FUNCTION_DISK_INFO_2,
 	CANON_USB_FUNCTION_FLASH_DEVICE_IDENT_2,
 	CANON_USB_FUNCTION_POWER_STATUS_2,
 	CANON_USB_FUNCTION_UNKNOWN_FUNCTION,
@@ -128,6 +133,8 @@ typedef enum {
 	CANON_USB_FUNCTION_20D_UNKNOWN_3,
 	CANON_USB_FUNCTION_20D_RETRIEVE_CAPTURE_2,
 	CANON_USB_FUNCTION_20D_UNKNOWN_4,
+	CANON_USB_FUNCTION_20D_UNKNOWN_5,
+	CANON_USB_FUNCTION_DELETE_FILE_2,
 } canonCommandIndex;
 
 /**
@@ -232,20 +239,25 @@ static const struct canon_usb_cmdstruct canon_usb_cmd[] = {
 	{CANON_USB_FUNCTION_CAMERA_CHOWN,	"Change camera owner",		0x05, 0x12, 0x201,	0x54},
 	{CANON_USB_FUNCTION_RMDIR,		"Remove directory",		0x06, 0x11, 0x201,	0x54},
 	{CANON_USB_FUNCTION_DISK_INFO,		"Disk info request",		0x09, 0x11, 0x201,	0x5c},
+	/* 0x0a is overloaded: "flash device ident" and "delete file", with different responses */
 	{CANON_USB_FUNCTION_FLASH_DEVICE_IDENT,	"Flash device ident",		0x0a, 0x11, 0x202,	0x40},
+	{CANON_USB_FUNCTION_DELETE_FILE_2,	"Delete file",			0x0a, 0x11, 0x201,	0x54},
 	{CANON_USB_FUNCTION_POWER_STATUS,	"Power supply status",		0x0a, 0x12, 0x201,	0x58},
 	{CANON_USB_FUNCTION_GET_DIRENT,		"Get directory entries",	0x0b, 0x11, 0x202,	0x40},
+	/* Command code 0x0d is overloaded: delete file (old),
+	 * disk info request ID (new). */
 	{CANON_USB_FUNCTION_DELETE_FILE,	"Delete file",			0x0d, 0x11, 0x201,	0x54},
+	{CANON_USB_FUNCTION_DISK_INFO_2,	"Disk info request (new)",	0x0d, 0x11, 0x201,	0x5c},
 	/* Command code 0x0e is overloaded: set file attribute (old),
 	 * flash device ID (new). And the response is different: fixed
 	 * length in old, variable length in new. */
 	{CANON_USB_FUNCTION_SET_ATTR,		"Set file attribute",		0x0e, 0x11, 0x201,	0x54},
-	{CANON_USB_FUNCTION_FLASH_DEVICE_IDENT_2, "Flash device ident",		0x0e, 0x11, 0x202,	0x40},
+	{CANON_USB_FUNCTION_FLASH_DEVICE_IDENT_2, "Flash device ident (new)",	0x0e, 0x11, 0x202,	0x40},
 	{CANON_USB_FUNCTION_SET_FILE_TIME,	"Set file time",		0x0f, 0x11, 0x201,	0x54},
 	/* Notice the overloaded command code 0x13: remote camera control
 	   in the original protocol, power status in the new protocol. */
 	{CANON_USB_FUNCTION_CONTROL_CAMERA,	"Remote camera control",	0x13, 0x12, 0x201,      0x40},
-	{CANON_USB_FUNCTION_POWER_STATUS_2,	"Power supply status (new protocol)",	0x13, 0x12, 0x201,      0x58},
+	{CANON_USB_FUNCTION_POWER_STATUS_2,	"Power supply status (new)",	0x13, 0x12, 0x201,      0x58},
 	{CANON_USB_FUNCTION_RETRIEVE_CAPTURE,	"Download a captured image",	0x17, 0x12, 0x202,      0x40},
 	{CANON_USB_FUNCTION_RETRIEVE_PREVIEW,	"Download a captured preview",	0x18, 0x12, 0x202,      0x40},
 	{CANON_USB_FUNCTION_UNKNOWN_FUNCTION,	"Unknown function",		0x1a, 0x12, 0x201,	0x80},
@@ -260,7 +272,8 @@ static const struct canon_usb_cmdstruct canon_usb_cmd[] = {
 	{CANON_USB_FUNCTION_GET_PIC_ABILITIES_2, "New get picture abilities",	0x24, 0x12, 0x201,	0x474},
 	{CANON_USB_FUNCTION_20D_UNKNOWN_3,	"Unknown EOS 20D function",	0x25, 0x12, 0x201,	0x54},
 	{CANON_USB_FUNCTION_20D_RETRIEVE_CAPTURE_2, "New download a captured image", 0x26, 0x12, 0x202,	0x54},
-	{CANON_USB_FUNCTION_20D_UNKNOWN_4,	"Unknown EOS 20D function",	0x36, 0x12, 0x201,	0x54},
+	{CANON_USB_FUNCTION_20D_UNKNOWN_4,	"Unknown EOS 20D function",	0x35, 0x12, 0x201,	0x5c},
+	{CANON_USB_FUNCTION_20D_UNKNOWN_5,	"Unknown EOS 20D function",	0x36, 0x12, 0x201,	0x54},
 	{ 0 }
 };
 
