@@ -119,3 +119,18 @@ A: Cool down, Joe, and listen to the wise words of Linda MacPhee-Cobb:
 	or better, uninstall it."
 
 ========================================================================
+
+Q: Dudes, Windows is the way to go. How do I compile gphoto2 for that
+   environment?
+
+A: We don't have the money to buy Windows and something like Visual C.
+   Therefore, we can't provide you a gphoto2 for Windows. You have two 
+   choices (at least):
+    (1) Buy a fast computer, buy Windows and Visual C and some manuals on
+        how to access USB or serial ports on Windows. Send all that
+	including a blank cheque to us (ask for the address on
+	gphoto-devel@gphoto.org). 
+    (2) Try to figure out how to get gphoto2 working on Windows and send
+        us the patches.
+
+========================================================================
