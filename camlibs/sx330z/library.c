@@ -1,5 +1,4 @@
-/* library.c
- *
+/* library.c *
  * Copyright © 2002 Dominik Kuhlen <dkuhlen@fhm.edu>
  *
  * This library is free software; you can redistribute it and/or
@@ -77,10 +76,13 @@ static struct
  {"Traveler:SX330z",USB_VENDOR_TRAVELER,USB_PRODUCT_SX330Z},
  {"Maginon:SX330z",USB_VENDOR_TRAVELER,USB_PRODUCT_SX330Z},
  {"Skanhex:SX-330z",USB_VENDOR_TRAVELER,USB_PRODUCT_SX330Z},
- {"Medion:9700",USB_VENDOR_TRAVELER,USB_PRODUCT_MEDION},
+ {"Medion:MD 9700",USB_VENDOR_TRAVELER,USB_PRODUCT_MEDION},
  {"Jenoptik:JD-3300z3",USB_VENDOR_TRAVELER,USB_PRODUCT_SX330Z},
+
  {"Traveler:SX410z",USB_VENDOR_TRAVELER,USB_PRODUCT_SX410Z},
  {"Concord:EyeQ 4330",USB_VENDOR_TRAVELER,USB_PRODUCT_SX410Z},
+ {"Jenoptik:JD-4100z3",USB_VENDOR_TRAVELER,USB_PRODUCT_SX410Z},
+ {"Medion:MD 6000",USB_VENDOR_TRAVELER,USB_PRODUCT_SX410Z},
  {NULL,0,0}
 };
 

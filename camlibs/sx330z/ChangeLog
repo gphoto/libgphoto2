@@ -1,3 +1,8 @@
+2002-01-15  Marcus Meissner <marcus@jet.franken.de>
+	
+	* Added Medion MD 6000 (same as JD 4100z3) and Jenoptik JD 4100z3 
+	  (verified usb ids by downloading driver).
+
 2002-01-10  Marcus Meissner <meissner@suse.de>
 	
 	* Added Concord EyeQ 4330 (has same id as Traveller 410z), reported by
