@@ -334,7 +334,8 @@ int camera_init (Camera *camera)
 	fd->speed = camera->port_info->speed;
 	camera->port->type  = camera->port->type;
 
-	/* Establish a connection */
+	/* Establish a connection. We need to open the port first. */
+	CHECK_FREE (camera, gp_port_open (camera->port));
 	CHECK_FREE (camera, camera_start (camera));
 
 	/* FIXME??? What's that for? */
