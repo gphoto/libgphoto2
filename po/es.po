@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2003-05-26 23:26+0200\n"
+"POT-Creation-Date: 2003-05-27 00:15+0200\n"
 "PO-Revision-Date: 2002-11-21 11:01-0300\n"
 "Last-Translator: Fabian Mandelbaum <fabman@mandrakesoft.com>\n"
 "Language-Team: Castellano <traduc@traduc.org>\n"
@@ -4465,18 +4465,18 @@ msgstr ""
 msgid "sx330z is USB only"
 msgstr "sx330z es sólo USB"
 
-#: libgphoto2/gphoto2-abilities-list.c:179
-#: libgphoto2/gphoto2-abilities-list.c:276
+#: libgphoto2/gphoto2-abilities-list.c:181
+#: libgphoto2/gphoto2-abilities-list.c:278
 #, c-format
 msgid "Loading camera drivers from '%s'..."
 msgstr "Cargando los controladores para la cámara desde '%s'..."
 
-#: libgphoto2/gphoto2-abilities-list.c:264
+#: libgphoto2/gphoto2-abilities-list.c:266
 #, c-format
 msgid "Could not open '%s'"
 msgstr "No se puede abrir '%s'"
 
-#: libgphoto2/gphoto2-abilities-list.c:699
+#: libgphoto2/gphoto2-abilities-list.c:698
 #, c-format
 msgid "Could not find any driver for '%s'"
 msgstr "No se puede encontrar un controlador para '%s'"

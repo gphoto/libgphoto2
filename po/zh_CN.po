@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2003-05-26 23:26+0200\n"
+"POT-Creation-Date: 2003-05-27 00:15+0200\n"
 "PO-Revision-Date: 2002-11-21 11:02+0800\n"
 "Last-Translator: Wang Li <charles@linux.net.cn>\n"
 "Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
@@ -5169,20 +5169,20 @@ msgid "sx330z is USB only"
 msgstr "sx330z 只支持 USB"
 
 # libgphoto2/gphoto2-abilities-list.c:260
-#: libgphoto2/gphoto2-abilities-list.c:179
-#: libgphoto2/gphoto2-abilities-list.c:276
+#: libgphoto2/gphoto2-abilities-list.c:181
+#: libgphoto2/gphoto2-abilities-list.c:278
 #, c-format
 msgid "Loading camera drivers from '%s'..."
 msgstr "正在从“%s”装入相机驱动程序..."
 
 # libgphoto2/gphoto2-abilities-list.c:248
-#: libgphoto2/gphoto2-abilities-list.c:264
+#: libgphoto2/gphoto2-abilities-list.c:266
 #, c-format
 msgid "Could not open '%s'"
 msgstr "无法打开“%s”"
 
 # libgphoto2/gphoto2-abilities-list.c:622
-#: libgphoto2/gphoto2-abilities-list.c:699
+#: libgphoto2/gphoto2-abilities-list.c:698
 #, c-format
 msgid "Could not find any driver for '%s'"
 msgstr "无法为“%s”找到任何驱动程序"

@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2 2.1.1rc2\n"
-"POT-Creation-Date: 2003-05-26 23:26+0200\n"
+"POT-Creation-Date: 2003-05-27 00:15+0200\n"
 "PO-Revision-Date: 2002-11-26 00:46+0900\n"
 "Last-Translator: Takeshi Aihana <aihana@gnome.gr.jp>\n"
 "Language-Team: Japanese <translation@gnome.gr.jp>\n"
@@ -4431,18 +4431,18 @@ msgstr ""
 msgid "sx330z is USB only"
 msgstr "sx330z は USB にのみ対応しています"
 
-#: libgphoto2/gphoto2-abilities-list.c:179
-#: libgphoto2/gphoto2-abilities-list.c:276
+#: libgphoto2/gphoto2-abilities-list.c:181
+#: libgphoto2/gphoto2-abilities-list.c:278
 #, c-format
 msgid "Loading camera drivers from '%s'..."
 msgstr "'%s' からカメラのドライバを読み込み中..."
 
-#: libgphoto2/gphoto2-abilities-list.c:264
+#: libgphoto2/gphoto2-abilities-list.c:266
 #, c-format
 msgid "Could not open '%s'"
 msgstr "'%s' を開くことが出来ませんでした"
 
-#: libgphoto2/gphoto2-abilities-list.c:699
+#: libgphoto2/gphoto2-abilities-list.c:698
 #, c-format
 msgid "Could not find any driver for '%s'"
 msgstr "'%s' 用のドライバが見つかりませんでした"
