@@ -262,6 +262,8 @@ struct _CameraPrivateCore {
 int
 gp_camera_exit (Camera *camera, GPContext *context)
 {
+	unsigned int i;
+
 	CHECK_NULL (camera);
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Exiting camera ('%s')...",
@@ -276,6 +278,13 @@ gp_camera_exit (Camera *camera, GPContext *context)
 		camera->pc->exit_requested = 1;
 		return (GP_OK);
 	}
+
+	/* Remove every timeout that is still pending */
+	for (i = 0; i < camera->pc->timeout_ids_len; i++)
+		gp_camera_stop_timeout (camera, camera->pc->timeout_ids[i]);
+	free (camera->pc->timeout_ids);
+	camera->pc->timeout_ids = NULL;
+	camera->pc->timeout_ids_len = 0;
 
 	if (camera->functions->exit) {
 #ifdef HAVE_MULTI
@@ -585,6 +594,8 @@ gp_camera_free (Camera *camera)
 	}
 
 	if (camera->pc) {
+		if (camera->pc->timeout_ids)
+			free (camera->pc->timeout_ids);
 		free (camera->pc);
 		camera->pc = NULL;
 	}
