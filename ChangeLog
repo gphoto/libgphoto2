@@ -1,3 +1,8 @@
+2003-02-26  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* configure.in: added toshiba/pdrm11 to build
+	* MAINTAINERS: added toshiba/pdrm11 maintainer
+
 2003-02-21  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
 	* doc/Makefile.am: renamed man pages

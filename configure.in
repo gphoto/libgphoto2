@@ -169,7 +169,7 @@ AC_SUBST(camlibdir)
 dnl ---------------------------------------------------------------------------
 dnl Camera drivers
 dnl ---------------------------------------------------------------------------
-camlibs='barbie benq canon casio digita dimera directory fuji gsmart gsmart300 jamcam jd11 kodak konica largan minolta mustek panasonic pccam300 pccam600 polaroid ptp ptp2 ricoh samsung sierra sipix sipixblink smal sonydscf1 sonydscf55 soundvision spca504_flash stv0674 stv0680 sx330z'
+camlibs='barbie benq canon casio digita dimera directory fuji gsmart gsmart300 jamcam jd11 kodak konica largan minolta mustek panasonic pccam300 pccam600 polaroid ptp ptp2 ricoh samsung sierra sipix sipixblink smal sonydscf1 sonydscf55 soundvision spca504_flash stv0674 stv0680 sx330z toshiba'
 AC_SUBST(SUBDIRS_CAMLIBS)
 for i in $camlibs; do
   d=`echo $i | $TR a-z A-Z`
@@ -396,6 +396,8 @@ camlibs/spca504_flash/Makefile
 camlibs/stv0674/Makefile
 camlibs/stv0680/Makefile
 camlibs/sx330z/Makefile
+camlibs/toshiba/Makefile
+camlibs/toshiba/pdrm11/Makefile
 tests/Makefile
 libgphoto2/Makefile
 libgphoto2/libgphoto2.pc

@@ -125,6 +125,9 @@ camlibs/stv0680:
 camlibs/sx330z:
 	Dominik Kuhlen <kinimod@users.sourceforge.net>
 
+camlibs/toshiba/pdrm11
+	David Hogue <david@jawa.gotdns.org>
+
 --------------------------------------------------------------------------------
 				   FRONTENDS
 --------------------------------------------------------------------------------
