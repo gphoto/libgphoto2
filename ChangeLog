@@ -1,3 +1,14 @@
+2002-05-26  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* doc/Makefile.am: only include rules if corresponding programs exist
+
+2002-05-25  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* doc/gphoto2.xml: moved content of gphoto2.txt here
+	* doc/gphoto2.txt: declared file obsolete
+	* doc/Makefile.am: make man pages with command displayed,
+		make html pages out of gphoto2.xml
+
 2002-05-20  Christophe Barbe <christophe.barbe@ufies.org>
 	
 	* camlibs/canon/canon.c: mtime is now converted to UTC as expected.

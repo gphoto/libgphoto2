@@ -1,3 +1,7 @@
+2002-05-25  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* linux-hotplug/usbcam.console: Fixed *silly* typo by me (chown vs chmod)
+
 2002-05-18  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
 	* rpm/package.spec.in: added API HTML docs to the -devel package

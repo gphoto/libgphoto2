@@ -1,3 +1,12 @@
+2002-05-26  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* m4/documentation.m4: test for xmlto, define API_DIR
+
+2002-05-25  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* m4/documentation.m4: use AC_BEFORE where sensible
+	* serial/unix.c: the locking problems only concern RS232 cams
+
 2002-05-25  Lutz Müller <lutz@users.sourceforge.net>
 
 	Patch by Dave Woodman <dave@naffnet.org>, slightly modified:
