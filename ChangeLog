@@ -1,5 +1,9 @@
 2001-08-18  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
 
+	* include/Makefile.am: Oops, add gphoto2-result.h.
+
+2001-08-18  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
+
 	* po/POTFILES.in: Add core.c, camera.c and result.c
 
 2001-08-18  Lutz Müller  <urc8@rz.uni-karlsruhe.de>

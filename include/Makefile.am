@@ -13,5 +13,6 @@ gphotohead_HEADERS= 				\
 		gphoto2-library.h		\
 		gphoto2-list.h			\
 		gphoto2-setting.h		\
+		gphoto2-result.h		\
 		gphoto2-widget.h
 
