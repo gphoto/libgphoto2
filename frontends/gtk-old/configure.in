@@ -40,7 +40,10 @@ AC_DEFINE_UNQUOTED(PACKAGE_SOURCE_DIR, "${packagesrcdir}")
 
 dnl find the gphoto doc dir to display the AUTHORS file
 gphoto2docdir=`gphoto2-config --prefix`
-CFLAGS="$CFLAGS -DDOCDIR=\\\"$gphoto2docdir/doc/gphoto2\\\""
+CFLAGS="$CFLAGS -DGPDOCDIR=\\\"$gphoto2docdir/doc/gphoto2\\\""
+
+GPHOTO_EXPAND_DIR(DOCDIR, "${prefix}/doc/gphoto2_gtk")
+AC_DEFINE_UNQUOTED(DOCDIR, "$DOCDIR")
 
 dnl Use -Wall if we have gcc.
 changequote(,)dnl

@@ -859,31 +859,97 @@ void help_about() {
 
 void help_authors() {
 
-	char buf[1024*8];
-	CameraFile *f;
+	char buf[1024];
+	CameraFile *f, *g;
+	GtkWidget *window, *ok;
+
+	window = create_message_window_notebook();
+	ok   = (GtkWidget*) lookup_widget(window, "close");
 
 	debug_print("help authors");
 
 	sprintf(buf, "%s/AUTHORS", DOCDIR);
 	f = gp_file_new();
 	if (gp_file_open(f, buf)==GP_ERROR) {
-		gp_message(_("Can't find AUTHORS file"));
+		gp_message(_("Can't find gPhoto2 GTK AUTHORS file"));
 		return;
 	}
-	gp_message(f->data);
+	message_window_notebook_append(window, "gPhoto2 GTK Authors", f->data);
+
+	sprintf(buf, "%s/AUTHORS", GPDOCDIR);
+	g = gp_file_new();
+	if (gp_file_open(g, buf)==GP_ERROR) {
+		gp_message(_("Can't find gPhoto2 AUTHORS file"));
+		return;
+	}
+	message_window_notebook_append(window, "gPhoto2 Authors", g->data);
+
+	wait_for_hide(window, ok, NULL);
 
 	gp_file_free(f);
+	gp_file_free(g);
+
+	gtk_widget_destroy(window);
 }
 
 void help_license() {
+
+	char buf[1024];
+	CameraFile *f, *g;
+	GtkWidget *window, *ok;
+
+	window = create_message_window_notebook();
+	ok   = (GtkWidget*) lookup_widget(window, "close");
+
 	debug_print("help license");
 
+	sprintf(buf, "%s/COPYING", DOCDIR);
+	f = gp_file_new();
+	if (gp_file_open(f, buf)==GP_ERROR) {
+		gp_message(_("Can't find gPhoto2 GTK COPYING file"));
+		return;
+	}
+	message_window_notebook_append(window, "gPhoto2 GTK License", f->data);
+
+	sprintf(buf, "%s/COPYING", GPDOCDIR);
+	g = gp_file_new();
+	if (gp_file_open(g, buf)==GP_ERROR) {
+		gp_message(_("Can't find gPhoto2 COPYING file"));
+		return;
+	}
+	message_window_notebook_append(window, "gPhoto2 License", g->data);
+
+	wait_for_hide(window, ok, NULL);
+
+	gp_file_free(f);
+	gp_file_free(g);
 	
+	gtk_widget_destroy(window);
 }
 
 void help_manual() {
+
+	char buf[1024];
+	CameraFile *f;
+	GtkWidget *window, *ok;
+
 	debug_print("help manual");
 
+	sprintf(buf, "%s/MANUAL", DOCDIR);
+	f = gp_file_new();
+	if (gp_file_open(f, buf)==GP_ERROR) {
+		gp_message(_("Can't find gPhoto2 GTK MANUAL file"));
+		return;
+	}
+	window = create_message_window_notebook();
+	ok = (GtkWidget*) lookup_widget(window, "close");
+	message_window_notebook_append(window, "gPhoto2 GTK Manual", f->data);
+
+	wait_for_hide(window, ok, NULL);
+
+	gp_file_free(f);
+	
+	gtk_widget_destroy(window);
 }
 
 /* Menu callbacks. just calls above mentioned functions */

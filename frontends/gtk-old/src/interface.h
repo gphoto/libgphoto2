@@ -8,6 +8,9 @@ GtkWidget* create_progress_window (void);
 GtkWidget* create_message_window (void);
 GtkWidget* create_message_window_long (void);
 GtkWidget* create_message_window_transient (void);
+GtkWidget* create_message_window_notebook (void);
+void message_window_notebook_append(GtkWidget *window, char *label, char *text);
+
 GtkWidget* create_select_camera_window (void);
 
 int gp_interface_message(char *message);

@@ -1146,6 +1146,88 @@ create_message_window (void)
   return message_window;
 }
 
+void message_window_notebook_append(GtkWidget *window, char *label, char *text) {
+
+  GtkWidget *scrolledwindow4, *message_window_text, *label1;
+  GtkWidget *notebook = (GtkWidget*)lookup_widget(window, "notebook");
+
+  if (!notebook)
+	return;
+	
+  label1 = gtk_label_new (label);
+  gtk_widget_ref (label1);
+  gtk_object_set_data_full (GTK_OBJECT (window), "label", label1,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (label1);
+
+  scrolledwindow4 = gtk_scrolled_window_new (NULL, NULL);
+  gtk_widget_ref (scrolledwindow4);
+  gtk_object_set_data_full (GTK_OBJECT (window), "scrolledwindow4", scrolledwindow4,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (scrolledwindow4);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow4), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
+
+  message_window_text = gtk_label_new (text);
+  gtk_widget_ref (message_window_text);
+  gtk_object_set_data_full (GTK_OBJECT (window), "message", message_window_text,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (message_window_text);
+  gtk_label_set_line_wrap (GTK_LABEL (message_window_text), TRUE);
+  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolledwindow4), 
+	message_window_text);
+
+  gtk_notebook_append_page(GTK_NOTEBOOK(notebook), scrolledwindow4, label1);
+}
+
+GtkWidget*
+create_message_window_notebook (void)
+{
+  /* widget labels:  "notebook" "close" */
+  GtkWidget *message_window;
+  GtkWidget *vbox5;
+  GtkWidget *notebook;
+  GtkWidget *button21;
+  GtkWidget *hsep;
+
+  message_window = gtk_window_new (GTK_WINDOW_DIALOG);
+  gtk_object_set_data (GTK_OBJECT (message_window), "message_window", message_window);
+  gtk_window_set_title (GTK_WINDOW (message_window), _("gPhoto2"));
+  gtk_window_set_position (GTK_WINDOW (message_window), GTK_WIN_POS_CENTER);
+  gtk_window_set_modal (GTK_WINDOW (message_window), TRUE);
+  gtk_window_set_default_size (GTK_WINDOW (message_window), 350, 400);
+  gtk_container_set_border_width (GTK_CONTAINER (message_window), 5);
+
+  vbox5 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_ref (vbox5);
+  gtk_object_set_data_full (GTK_OBJECT (message_window), "vbox5", vbox5,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (vbox5);
+  gtk_container_add (GTK_CONTAINER (message_window), vbox5);
+
+  notebook = gtk_notebook_new();
+  gtk_widget_ref (notebook);
+  gtk_object_set_data_full (GTK_OBJECT (message_window), "notebook", notebook,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (notebook);
+  gtk_box_pack_start (GTK_BOX (vbox5), notebook, TRUE, TRUE, 0);
+
+  hsep = gtk_hseparator_new();
+  gtk_widget_ref (hsep);
+  gtk_object_set_data_full (GTK_OBJECT (message_window), "hsep", hsep,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (hsep);
+  gtk_box_pack_start (GTK_BOX (vbox5), hsep, FALSE, FALSE, 0);
+
+  button21 = gtk_button_new_with_label (_("    Close    "));
+  gtk_widget_ref (button21);
+  gtk_object_set_data_full (GTK_OBJECT (message_window), "close", button21,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (button21);
+  gtk_box_pack_start (GTK_BOX (vbox5), button21, FALSE, FALSE, 0);
+
+  return message_window;
+}
+
 GtkWidget*
 create_progress_window (void)
 {
