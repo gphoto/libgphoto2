@@ -356,6 +356,25 @@ ptp_check_int (unsigned char *bytes, unsigned int size, void *data)
 		return (translate_gp_result (result));
 }
 
+static short
+ptp_check_int_fast (unsigned char *bytes, unsigned int size, void *data)
+{
+	Camera *camera = ((PTPData *)data)->camera;
+	int result;
+
+	/*
+	 * gp_port_check_int returns (in case of success) the number of bytes
+	 * read. libptp doesn't need that.
+	 */
+
+	result = gp_port_check_int_fast (camera->port, bytes, size);
+	if (result==0) result = gp_port_check_int_fast (camera->port, bytes, size);
+	if (result >= 0)
+		return (PTP_RC_OK);
+	else
+		return (translate_gp_result (result));
+}
+
 
 static void
 ptp_debug_func (void *data, const char *format, va_list args)
@@ -952,6 +971,8 @@ camera_init (Camera *camera, GPContext *context)
 		return (GP_ERROR_NO_MEMORY);
 	camera->pl->params.write_func = ptp_write_func;
 	camera->pl->params.read_func  = ptp_read_func;
+	camera->pl->params.check_int_func = ptp_check_int;
+	camera->pl->params.check_int_fast_func = ptp_check_int_fast;
 	camera->pl->params.debug_func = ptp_debug_func;
 	camera->pl->params.error_func = ptp_error_func;
 	camera->pl->params.data = malloc (sizeof (PTPData));
@@ -984,6 +1005,10 @@ camera_init (Camera *camera, GPContext *context)
 	/* init internal ptp objectfiles (required for fs implementation) */
 	init_ptp_fs (camera, context);
 
+	{
+	PTPEvent event;
+//	ptp_event_check (&camera->pl->params,event);
+	}
 
 	/* Configure the CameraFilesystem */
 	CR (gp_filesystem_set_list_funcs (camera->fs, file_list_func,

@@ -12,4 +12,12 @@ Sorry, no docs yet :(
 To compile test_ptp.c type:
 cc -g -O2 -g -Wall -I/usr/local/include/libexif -I../../libgphoto2 -I/usr/local/include -g -Wall test_ptp.c -lusb ptp.o -o test_ptp
 
+or something similar :)
+
 Enjoy!
+
+==========
+Documentation
+
+While ptp transactions usage seems to be quite obvious the ptp events
+handling code should be documented.

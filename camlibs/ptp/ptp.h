@@ -152,6 +152,16 @@ typedef struct _PTPReq PTPReq;
 #define PTP_EC_CaptureComplete		0x4000
 #define PTP_EC_UnreportedStatus		0x4000
 
+// PTP event structre (returned by chceck_event)
+
+struct _PTPEvent {
+	uint16_t EventCode;
+	uint32_t Param1;
+	uint32_t Param2;
+	uint32_t Param3;
+};
+typedef struct _PTPEvent PTPEvent;
+
 // PTP device info structure (returned by GetDevInfo)
 
 struct _PTPDeviceInfo {
@@ -322,7 +332,8 @@ struct _PTPParams {
 	/* Custom IO functions */
 	PTPIOReadFunc  read_func;
 	PTPIOWriteFunc write_func;
-	PTPIOReadFunc  intr_func;
+	PTPIOReadFunc  check_int_func;
+	PTPIOReadFunc  check_int_fast_func;
 
 	/* Custom error and debug function */
 	PTPErrorFunc error_func;
@@ -342,6 +353,9 @@ typedef struct _PTPParams PTPParams;
 
 
 // ptp functions
+
+uint16_t ptp_event_check	(PTPParams* params, PTPEvent* event);
+uint16_t ptp_event_wait		(PTPParams* params, PTPEvent* event);
 
 uint16_t ptp_opensession	(PTPParams *params, uint32_t session);
 uint16_t ptp_closesession	(PTPParams *params);

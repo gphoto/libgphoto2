@@ -176,11 +176,6 @@ ptp_getresp (PTPParams* params, PTPReq* databuf, uint16_t code)
 	return ret;
 }
 
-static uint16_t
-ptp_check_event (PTPParams* params, PTPReq* databuf)
-{
-}
-
 // major PTP functions
 
 // Transaction data phase description
@@ -245,6 +240,54 @@ ptp_transaction (PTPParams* params, PTPReq* req, uint16_t code,
 	CHECK_PTP_RC(ptp_getresp(params, req, code));
 	return PTP_RC_OK;
 }
+
+// Enets handling functions
+
+// PTP Events wait for or check mode
+#define PTP_EVENT_CHECK			0x0000	// waits for
+#define PTP_EVENT_CHECK_FAST		0x0000	// checks
+
+static uint16_t
+ptp_event (PTPParams* params, PTPEvent* event, int wait)
+{
+	uint16_t ret;
+	PTPReq req;
+
+	if ((params==NULL) || (event==NULL)) 
+		return PTP_ERROR_BADPARAM;
+	
+	if (wait==PTP_EVENT_CHECK)
+		ret=params->check_int_func((unsigned char*) &req, PTP_RESP_LEN, params->data);
+	if (wait==PTP_EVENT_CHECK_FAST)
+		ret=params->check_int_fast_func((unsigned char*) &req, PTP_RESP_LEN, params->data);
+		else return PTP_ERROR_BADPARAM;
+/*
+	if (ret>0) {
+		int i;
+
+		printf("\n");
+		for (i=0;i<=ret;i++) {
+			printf ("%2.2x ",((unsigned char *)&req)[i]);
+		}
+		printf("\n");
+	}
+*/
+	return PTP_RC_OK;
+}
+
+uint16_t
+ptp_event_check (PTPParams* params, PTPEvent* event) {
+
+	ptp_event (params, event,PTP_EVENT_CHECK);
+	return PTP_RC_OK;
+}
+
+uint16_t
+ptp_event_wait (PTPParams* params, PTPEvent* event) {
+	return PTP_RC_OK;
+}
+
+// PTP operation functions
 
 #if 0
 // Do GetDevInfo (we may use it for some camera_about)
@@ -441,7 +484,7 @@ ptp_deleteobject (PTPParams* params, uint32_t handle,
  *		storageid		- destination StorageID on Responder
  *		ofc			- object format code
  * 
- * Causes device to initiate the capture of one or more ne data objects
+ * Causes device to initiate the capture of one or more new data objects
  * according to its current device properties, storing the data into store
  * indicated by storageid. If storageid is 0x00000000, the object(s) will
  * be stored in a store that is determined by the capturing device.

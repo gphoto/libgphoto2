@@ -11,6 +11,7 @@ struct _PTP_USB {
 	usb_dev_handle* handle;
 	int inep;
 	int outep;
+	int intep;
 };
 
 static short
@@ -43,13 +44,11 @@ static short
 ptp_check_int (unsigned char *bytes, unsigned int size, void *data)
 {
 	int result;
+	PTP_USB *ptp_usb=(PTP_USB *)data;
 
 	result = usb_bulk_read(ptp_usb->handle, ptp_usb->intep, bytes, size, 3000);
-	if (result==0) result = b_bulk_read(ptp_usb->handle, ptp_usb->intep, bytes, size, 3000);
-	if (result >= 0)
-		return (PTP_RC_OK);
-	else
-		return (translate_gp_result (result));
+	if (result==0) result = usb_bulk_read(ptp_usb->handle, ptp_usb->intep, bytes, size, 3000);
+	return (result);
 }
 
 void talk (struct usb_device *dev, int inep, int outep, int eventep) {
@@ -70,6 +69,7 @@ PTPParams* ptp_params;
 	ptp_params->byteorder = PTP_DL_LE;
 	ptp_usb.inep=inep;
 	ptp_usb.outep=outep;
+	ptp_usb.intep=eventep;
 
 	if ((device_handle=usb_open(dev))){
 	if (!device_handle) {
@@ -82,7 +82,10 @@ PTPParams* ptp_params;
 
 	sleep(3);
 	printf("Checking event ep\n");
-	ret=usb_bulk_read(device_handle, eventep, buf, 16384, 5000);
+
+//	ret=usb_bulk_read(device_handle, eventep, buf, 16384, 5000);
+
+	ret=ptp_check_int (buf, 16384, ptp_params->data);
 	if (ret<=0) {
 		perror ("bulk_read():");
 	} else {
