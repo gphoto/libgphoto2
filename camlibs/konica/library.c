@@ -509,7 +509,7 @@ int camera_file_get (
 		konica_data->device,
 		konica_data->image_id_long,
 		image_id, 
-		K_IMAGE_JPEG, 
+		K_IMAGE_EXIF, 
 		(guchar **) &file->data, 
 		(guint *) &file->size))) return (GP_ERROR);
 
