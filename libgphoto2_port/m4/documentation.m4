@@ -61,6 +61,11 @@ AC_CHECK_PROG(GTKDOC, gtkdoc-mkdb, true, false)
 AM_CONDITIONAL(HAVE_GTK_DOC, $GTKDOC)
 AC_SUBST(HAVE_GTK_DOC)
 
+# check for the transfig graphics file conversion utility
+AC_CHECK_PROG(TRANSFIG, gtkdoc-mkdb, true, false)
+AM_CONDITIONAL(HAVE_TRANSFIG, $TRANSFIG)
+AC_SUBST(HAVE_TRANSFIG)
+
 # check whether we are to build docs
 AC_ARG_ENABLE(docs, [  --enable-docs  Use gtk-doc to build documentation [default=no]], enable_docs="$enableval", enable_docs=no)
 
@@ -77,7 +82,15 @@ You told us explicitly to build the docs with gtk-doc, but I
 can't find the gtk-doc program. Aborting further configuration.
 ])
     fi
+    if test "$TRANSFIG" != "true"; then
+        AC_MSG_WARN([
+You told us explicitly to build the docs, but I can't find the
+transfig program. Therefore you won't have illustrations in 
+your documentation.
+])
+    fi
 fi
+AM_CONDITIONAL(ENABLE_FIGURES, test "x$TRANSFIG" = "xtrue")
 AM_CONDITIONAL(ENABLE_GTK_DOC, test "x$enable_docs" = "xyes")
 
 # check where to install HTML docs
