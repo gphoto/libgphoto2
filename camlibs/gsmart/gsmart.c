@@ -54,7 +54,7 @@
 #  define N_(String) (String)
 #endif
 
-#define GP_MODULE "gsmartmini2"
+#define GP_MODULE "gsmartmini"
 static int gsmart_mode_set_idle (CameraPrivateLibrary * lib);
 static int gsmart_is_idle (CameraPrivateLibrary * lib);
 static int gsmart_mode_set_download (CameraPrivateLibrary * lib);
@@ -62,16 +62,20 @@ static int gsmart_download_data (CameraPrivateLibrary * lib, u_int32_t start,
 				 unsigned int size, u_int8_t * buf);
 static int gsmart_get_FATs (CameraPrivateLibrary * lib);
 static int yuv2rgb (int y, int u, int v, int *r, int *g, int *b);
+static void create_jpeg_from_data (u_int8_t * dst, u_int8_t * src, int qIndex,
+				   int w, int h, u_int8_t format,
+				   int original_size, int *size);
+static inline u_int8_t *put_dword (u_int8_t * ptr, u_int32_t value);
 static int gsmart_get_avi_thumbnail (CameraPrivateLibrary * lib,
 				     u_int8_t ** buf, unsigned int *len,
 				     struct GsmartFile *g_file);
 static int gsmart_get_image_thumbnail (CameraPrivateLibrary * lib,
 				       u_int8_t ** buf, unsigned int *len,
 				       struct GsmartFile *g_file);
-static int gsmart_get_avi (CameraPrivateLibrary * lib,
-			   u_int8_t ** buf, unsigned int *len, struct GsmartFile *g_file);
-static int gsmart_get_image (CameraPrivateLibrary * lib,
-			     u_int8_t ** buf, unsigned int *len, struct GsmartFile *g_file);
+static int gsmart_get_avi (CameraPrivateLibrary * lib, u_int8_t ** buf,
+			   unsigned int *len, struct GsmartFile *g_file);
+static int gsmart_get_image (CameraPrivateLibrary * lib, u_int8_t ** buf,
+			     unsigned int *len, struct GsmartFile *g_file);
 
 int
 gsmart_get_file_count (CameraPrivateLibrary * lib)
@@ -93,9 +97,13 @@ gsmart_delete_file (CameraPrivateLibrary * lib, unsigned int index)
 
 	CHECK (gsmart_get_file_info (lib, index, &g_file));
 
-	fat_index = 0xD8000 - g_file->fat_start - 1;
+	if (lib->bridge == GSMART_BRIDGE_SPCA500)
+		fat_index = 0x70FF - g_file->fat_start - 1;
+	else			/* if (lib->bridge == GSMART_BRIDGE_SPCA504A) */
+		fat_index = 0xD8000 - g_file->fat_start - 1;
 
-	CHECK (gp_port_usb_msg_write (lib->gpdev, 0x06, fat_index, 0x0007, NULL, 0));
+	CHECK (gp_port_usb_msg_write
+	       (lib->gpdev, 0x06, fat_index, 0x0007, NULL, 0));
 	sleep (1);
 
 	/* Reread fats the next time it is accessed */
@@ -107,7 +115,8 @@ gsmart_delete_file (CameraPrivateLibrary * lib, unsigned int index)
 int
 gsmart_delete_all (CameraPrivateLibrary * lib)
 {
-	CHECK (gp_port_usb_msg_write (lib->gpdev, 0x02, 0x0000, 0x0005, NULL, 0));
+	CHECK (gp_port_usb_msg_write
+	       (lib->gpdev, 0x02, 0x0000, 0x0005, NULL, 0));
 	sleep (3);
 
 	/* Reread fats the next time it is accessed */
@@ -134,22 +143,31 @@ int
 gsmart_get_image (CameraPrivateLibrary * lib, u_int8_t ** buf,
 		  unsigned int *len, struct GsmartFile *g_file)
 {
-	u_int8_t *p, *lp_jpg, *start_of_file;
-	u_int8_t qIndex, quality, value;
+	u_int8_t *p, *lp_jpg;
+	u_int8_t qIndex;
 	u_int32_t start;
 	u_int8_t *mybuf;
-	int size, o_size, i, file_size;
+	int size, o_size, file_size;
 
 	p = g_file->fat;
+
+	if ((lib->bridge == GSMART_BRIDGE_SPCA500)
+	    && ((p[20] & 0xFF) != 0))
+		return GP_ERROR_NOT_SUPPORTED;
 
 	/* get the position in memory where the image is */
 	start = (p[1] & 0xff) + (p[2] & 0xff) * 0x100;
 	start *= 128;
 
 	/* decode the image size */
-	o_size = size = (p[13] & 0xff) * 0x10000 + (p[12] & 0xff) * 0x100 + (p[11] & 0xff);
+	if (lib->bridge == GSMART_BRIDGE_SPCA504A) {
+		o_size = size =
+			(p[13] & 0xff) * 0x10000 + (p[12] & 0xff) * 0x100 +
+			(p[11] & 0xff);
+	} else {		/* if (lib->bridge == GSMART_BRIDGE_SPCA500) */
+		o_size = size = (p[5] & 0xff) * 0x100 + (p[6] & 0xff);
+	}
 	qIndex = p[7] & 0x07;
-	quality = p[40] & 0xff;
 
 	/* align */
 	if (size % 64 != 0)
@@ -162,46 +180,30 @@ gsmart_get_image (CameraPrivateLibrary * lib, u_int8_t ** buf,
 	if (!mybuf)
 		return GP_ERROR_NO_MEMORY;
 
-	CHECK (gsmart_download_data (lib, start, size, mybuf));
+	if (lib->bridge == GSMART_BRIDGE_SPCA504A) {
+		CHECK (gsmart_download_data (lib, start, size, mybuf));
+	} else if (lib->bridge == GSMART_BRIDGE_SPCA500) {
+		/* find the file index on the camera */
+		int index;
 
+		index = (g_file->fat - lib->fats) / FLASH_PAGE_SIZE;
+		gsmart_reset (lib);
+		/* trigger upload of image at that index */
+		CHECK (gp_port_usb_msg_write (lib->gpdev, 0x06,
+					      0x70FF - index, 0x01, NULL, 0));
+		sleep (1);
+		CHECK (gp_port_read (lib->gpdev, mybuf, size));
+	}
 	/* now build a jpeg */
 	lp_jpg = malloc (file_size);
 	if (!lp_jpg)
 		return GP_ERROR_NO_MEMORY;
-	start_of_file = lp_jpg;
+	create_jpeg_from_data (lp_jpg, mybuf, qIndex, g_file->width,
+			       g_file->height, 0x21, o_size, &file_size);
 
-	/* copy the header from the template */
-	memcpy (lp_jpg, GsmartJPGDefaultHeader, GSMART_JPG_DEFAULT_HEADER_LENGTH);
-
-	/* modify quantization table */
-	memcpy (lp_jpg + 7, GsmartQTable[qIndex * 2], 64);
-	memcpy (lp_jpg + 72, GsmartQTable[qIndex * 2 + 1], 64);
-
-	/* modify the image width, height */
-	*(lp_jpg + 564) = (g_file->width) & 0xFF;	//Image width low byte
-	*(lp_jpg + 563) = (g_file->width >> 8) & 0xFF;	//Image width high byte
-	*(lp_jpg + 562) = (g_file->height) & 0xFF;	//Image height low byte
-	*(lp_jpg + 561) = (g_file->height >> 8) & 0xFF;	//Image height high byte
-
-	/* point to real JPG compress data start position and copy */
-	lp_jpg += GSMART_JPG_DEFAULT_HEADER_LENGTH;
-
-	for (i = 0; i < o_size; i++) {
-		value = *(mybuf + i) & 0xFF;
-		*(lp_jpg) = value;
-		lp_jpg++;
-		if (value == 0xFF) {
-			*(lp_jpg) = 0x00;
-			lp_jpg++;
-		}
-	}
-	/* Add end of image marker */
-	*(lp_jpg++) = 0xFF;
-	*(lp_jpg++) = 0xD9;
 	free (mybuf);
-	file_size = lp_jpg - start_of_file;
-	start_of_file = realloc (start_of_file, file_size);
-	*buf = start_of_file;
+	lp_jpg = realloc (lp_jpg, file_size);
+	*buf = lp_jpg;
 	*len = file_size;
 
 	return (GP_OK);
@@ -211,16 +213,19 @@ int
 gsmart_get_avi (CameraPrivateLibrary * lib, u_int8_t ** buf,
 		unsigned int *len, struct GsmartFile *g_file)
 {
-	int i, j, k;
+	int i, j, length;
 	int frame_count = 0, frames_per_fat = 0;
 	int size = 0;
 	int frame_width, frame_height;
 	int file_size;
+	int index_size;
 	u_int32_t frame_size = 0;
 	u_int32_t total_frame_size = 0;
 	u_int32_t start = 0;
 	u_int8_t *p, *mybuf, *avi, *start_of_file, *start_of_frame, *data;
-	u_int8_t value, qIndex;
+	u_int8_t qIndex;
+	u_int8_t *avi_index, *avi_index_ptr;
+	u_int8_t index_item[16];
 
 	avi = mybuf = start_of_file = data = NULL;
 
@@ -239,31 +244,50 @@ gsmart_get_avi (CameraPrivateLibrary * lib, u_int8_t ** buf,
 	 * one fat page. Iterate over all fat pages for this movie and count
 	 * all frames in all fats. Same for size. */
 	for (i = g_file->fat_start; i <= g_file->fat_end; i++) {
-		p += (i - g_file->fat_start) * FLASH_PAGE_SIZE;
-		frame_count += (p[49] & 0xFF) * 0x100 + (p[48] & 0xFF);
-		size += (p[13] & 0xFF) * 0x10000 + (p[12] & 0xFF) * 0x100 + (p[11] & 0xFF);
+		frames_per_fat = (p[49] & 0xFF) * 0x100 + (p[48] & 0xFF);
+		frame_count += frames_per_fat;
+		size += (p[13] & 0xFF) * 0x10000 + (p[12] & 0xFF) * 0x100 +
+			(p[11] & 0xFF);
+		if (frames_per_fat < 60)
+			break;
+		p += FLASH_PAGE_SIZE;
 	}
+	/* align */
+	size = (size + 63) & 0xffffffc0;
+
+	/* mem for index */
+	index_size = frame_count * 16;
+	avi_index_ptr = avi_index = malloc (index_size);
+	if (!avi_index)
+		return GP_ERROR_NO_MEMORY;
 
 	/* slurp in the movie */
 	mybuf = malloc (size);
-	if (!mybuf)
+	if (!mybuf) {
+		free (avi_index);
 		return GP_ERROR_NO_MEMORY;
+	}
 
 	CHECK (gsmart_download_data (lib, start, size, mybuf));
 
 	/* Now write our data to a file with an avi header */
-	file_size = size + GSMART_AVI_HEADER_LENGTH + 1024 * 10;
+	file_size = size + GSMART_AVI_HEADER_LENGTH
+		+ (GSMART_JPG_DEFAULT_HEADER_LENGTH * frame_count)
+		+ 8 + index_size	/* for index chunk */
+		+ 1024 * 10 * frame_count;
+
 	avi = malloc (file_size);
 	if (!avi)
 		return GP_ERROR_NO_MEMORY;
 
 	start_of_file = avi;
 
+	/* prepare index item */
+	put_dword (index_item, 0x63643030);	/* 00dc */
+	put_dword (index_item + 4, 0x10);	// KEYFRAME
+
 	/* copy the header from the template */
 	memcpy (avi, GsmartAviHeader, GSMART_AVI_HEADER_LENGTH);
-	/* correct framecount in the header at offset 48 */
-	memcpy (avi + 48, &frame_count, sizeof (frame_count));
-
 	avi += GSMART_AVI_HEADER_LENGTH;
 
 	/* Reset to the first fat */
@@ -274,57 +298,28 @@ gsmart_get_avi (CameraPrivateLibrary * lib, u_int8_t ** buf,
 	 * each frame. Add the jpeg to the avi.
 	 * FIXME Build an index and append it to the file. */
 	for (i = g_file->fat_start; i <= g_file->fat_end; i++) {
-		p += (i - g_file->fat_start) * FLASH_PAGE_SIZE;
 		frames_per_fat = ((p[49] & 0xFF) * 0x100 + (p[48] & 0xFF));
+		if (frames_per_fat > 60 || frames_per_fat == 0)
+			break;
 
 		for (j = 0; j < frames_per_fat; j++) {
 			frame_size = ((p[52 + j * 3] & 0xFF) * 0x10000)
-				+ ((p[51 + j * 3] & 0xFF) * 0x100)
-				+ (p[50 + j * 3] & 0xFF);
+				+ ((p[51 + j * 3] & 0xFF) * 0x100) +
+				(p[50 + j * 3] & 0xFF);
 
-			if ((frame_size % 8) != 0)
-				frame_size = ((frame_size / 8) + 1) * 8;
-
-			memcpy (avi, GsmartAviFrameHeader, 
-			      GSMART_AVI_FRAME_HEADER_LENGTH);
+			memcpy (avi, GsmartAviFrameHeader,
+				GSMART_AVI_FRAME_HEADER_LENGTH);
 
 			avi += GSMART_AVI_FRAME_HEADER_LENGTH;
 			start_of_frame = avi;
+
 			/* jpeg starts here */
-			memcpy (avi, GsmartJPGDefaultHeader, 
-			      GSMART_JPG_DEFAULT_HEADER_LENGTH);
+			create_jpeg_from_data (avi, data, qIndex, frame_width,
+					       frame_height, 0x22, frame_size,
+					       &length);
 
-			/* modify quantization table */
-			memcpy (avi + 7, GsmartQTable[qIndex * 2], 64);
-			memcpy (avi + 72, GsmartQTable[qIndex * 2 + 1], 64);
-
-			/* modify the image width, height */
-			*(avi + 564) = frame_width & 0xFF;
-			*(avi + 563) = frame_width >> 8 & 0xFF;
-			*(avi + 562) = frame_height & 0xFF;
-			*(avi + 561) = frame_height >> 8 & 0xFF;
-
-			/* set the format to yuv 211 */
-			*(avi + 567) = 0x22;
-
-			avi += GSMART_JPG_DEFAULT_HEADER_LENGTH;
-
-			/* Copy and escape FF in the jpeg stream */
-			for (k = 0; k < frame_size; k++) {
-				value = *(data + k) & 0xFF;
-				*(avi) = value;
-				avi++;
-				if (value == 0xFF) {
-					*(avi) = 0x00;
-					avi++;
-				}
-			}
-			data += frame_size;
-
-			/* Add end of image marker */
-			*(avi++) = 0xFF;
-			*(avi++) = 0xD9;
-
+			data += (frame_size + 7) & 0xfffffff8;
+			avi += length;
 			/* Make sure the next frame is aligned */
 			if ((avi - start_of_frame) % 2 != 0)
 				avi++;
@@ -332,25 +327,37 @@ gsmart_get_avi (CameraPrivateLibrary * lib, u_int8_t ** buf,
 			/* Now we know the real frame size after escaping and
 			 * adding the EOI marker. Put it in the frame header. */
 			frame_size = avi - start_of_frame;
-			memcpy (start_of_frame - 4, &frame_size, 
-			      sizeof (frame_size));
+			put_dword (start_of_frame - 4, frame_size);
+			put_dword (index_item + 8,
+				   start_of_frame - start_of_file -
+				   GSMART_AVI_HEADER_LENGTH - 4);
+			put_dword (index_item + 12, frame_size);
+			memcpy (avi_index_ptr, index_item, 16);
+			avi_index_ptr += 16;
 		}
+		p += FLASH_PAGE_SIZE;
 	}
 	total_frame_size = avi - (start_of_file + GSMART_AVI_HEADER_LENGTH - 4);
-	memcpy (start_of_file + GSMART_AVI_HEADER_LENGTH - 8,
-		&total_frame_size, sizeof (total_frame_size));
+	put_dword (start_of_file + GSMART_AVI_HEADER_LENGTH - 8,
+		   total_frame_size);
+
+	avi = put_dword (avi, 0x31786469);	/* idx1 */
+	avi = put_dword (avi, index_size);
+	memcpy (avi, avi_index, index_size);
+	avi += index_size;
+	free (avi_index);
+	put_dword (start_of_file + 0x30, frame_count);
+	put_dword (start_of_file + 0x8c, frame_count);
+
 	/* And reuse total_frame_size for the file size RIFF marker at offset
 	 * 4 */
 	total_frame_size = avi - (start_of_file + 4);
-	memcpy (start_of_file + 4, &total_frame_size, 
-	      sizeof (total_frame_size));
+	put_dword (start_of_file + 4, total_frame_size);
 
 	free (mybuf);
-	/* Account for the first four bytes of riff header */
-	total_frame_size += 4;
-	start_of_file = realloc (start_of_file, total_frame_size);
+	start_of_file = realloc (start_of_file, avi - start_of_file);
 	*buf = start_of_file;
-	*len = total_frame_size;
+	*len = avi - start_of_file;
 	return (GP_OK);
 }
 
@@ -363,10 +370,22 @@ gsmart_request_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
 	CHECK (gsmart_get_file_info (lib, number, &g_file));
 
 	*type = g_file->mime_type;
-	if (g_file->mime_type == GSMART_FILE_TYPE_AVI)
+	if (g_file->mime_type == GSMART_FILE_TYPE_AVI) {
 		return (gsmart_get_avi_thumbnail (lib, buf, len, g_file));
-	else
-		return (gsmart_get_image_thumbnail (lib, buf, len, g_file));
+	} else {
+
+		/* the spca500 stores the quality in p[20], the rest of them
+		 * in [p40].  We need to check for the smallest resolution of
+		 * the mini, since resolution does not have thumbnails.
+		 * Download the full image instead. */
+		if (lib->bridge == GSMART_BRIDGE_SPCA500
+		    && (g_file->fat[20] & 0xFF) == 0) {
+			return (gsmart_get_image (lib, buf, len, g_file));
+		} else {
+			return (gsmart_get_image_thumbnail
+				(lib, buf, len, g_file));
+		}
+	}
 }
 
 
@@ -374,11 +393,11 @@ static int
 gsmart_get_avi_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
 			  unsigned int *len, struct GsmartFile *g_file)
 {
-	u_int8_t *p, *lp_jpg, *start_of_file;
-	u_int8_t qIndex, quality, value;
+	u_int8_t *p, *lp_jpg;
+	u_int8_t qIndex;
 	u_int32_t start;
 	u_int8_t *mybuf;
-	int size, o_size, i, file_size;
+	int size, o_size, file_size;
 	int w, h;
 
 	p = g_file->fat;
@@ -388,9 +407,10 @@ gsmart_get_avi_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
 	start *= 128;
 
 	/* decode the image size */
-	o_size = size = (p[52] & 0xff) * 0x10000 + (p[51] & 0xff) * 0x100 + (p[50] & 0xff);
+	o_size = size =
+		(p[52] & 0xff) * 0x10000 + (p[51] & 0xff) * 0x100 +
+		(p[50] & 0xff);
 	qIndex = p[7] & 0x07;
-	quality = p[40] & 0xff;
 	w = (int) ((p[8] & 0xFF) * 16);
 	h = (int) ((p[9] & 0xFF) * 16);
 
@@ -411,43 +431,12 @@ gsmart_get_avi_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
 	lp_jpg = malloc (file_size);
 	if (!lp_jpg)
 		return GP_ERROR_NO_MEMORY;
-	start_of_file = lp_jpg;
 
-	/* copy the header from the template */
-	memcpy (lp_jpg, GsmartJPGDefaultHeader, GSMART_JPG_DEFAULT_HEADER_LENGTH);
-
-	/* modify quantization table */
-	memcpy (lp_jpg + 7, GsmartQTable[qIndex * 2], 64);
-	memcpy (lp_jpg + 72, GsmartQTable[qIndex * 2 + 1], 64);
-
-	/* modify the image width, height */
-	*(lp_jpg + 564) = w & 0xFF;	//Image width low byte
-	*(lp_jpg + 563) = w >> 8 & 0xFF;	//Image width high byte
-	*(lp_jpg + 562) = h & 0xFF;	//Image height low byte
-	*(lp_jpg + 561) = h >> 8 & 0xFF;	//Image height high byte
-
-	/* set the format to yuv 211 */
-	*(lp_jpg + 567) = 0x22;
-
-	/* point to real JPG compress data start position and copy */
-	lp_jpg += GSMART_JPG_DEFAULT_HEADER_LENGTH;
-
-	for (i = 0; i < o_size; i++) {
-		value = *(mybuf + i) & 0xFF;
-		*(lp_jpg) = value;
-		lp_jpg++;
-		if (value == 0xFF) {
-			*(lp_jpg) = 0x00;
-			lp_jpg++;
-		}
-	}
-	/* Add end of image marker */
-	*(lp_jpg++) = 0xFF;
-	*(lp_jpg++) = 0xD9;
+	create_jpeg_from_data (lp_jpg, mybuf, qIndex, g_file->width,
+			       g_file->height, 0x22, o_size, &file_size);
 	free (mybuf);
-	file_size = lp_jpg - start_of_file;
-	start_of_file = realloc (start_of_file, file_size);
-	*buf = start_of_file;
+	lp_jpg = realloc (lp_jpg, file_size);
+	*buf = lp_jpg;
 	*len = file_size;
 
 	return (GP_OK);
@@ -460,7 +449,6 @@ gsmart_get_image_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
 {
 	unsigned int size;
 	u_int8_t *p;
-	u_int8_t quality;
 	u_int32_t start;
 	u_int8_t *mybuf = NULL;
 	u_int8_t *tmp;
@@ -470,7 +458,10 @@ gsmart_get_image_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
 	unsigned char pbm_header[16];
 
 	p = g_file->fat;
-	quality = p[40] & 0xFF;
+
+	if ((lib->bridge == GSMART_BRIDGE_SPCA500)
+	    && ((p[20] & 0xFF) != 0))
+		return GP_ERROR_NOT_SUPPORTED;
 
 	start = (p[3] & 0xff) + (p[4] & 0xff) * 0x100;
 	start *= 128;
@@ -478,14 +469,29 @@ gsmart_get_image_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
 	size = g_file->width * g_file->height * 2 / 64;
 	t_width = g_file->width / 8;
 	t_height = g_file->height / 8;
-	snprintf (pbm_header, sizeof (pbm_header), "P6 %d %d 255\n", t_width, t_height);
+	snprintf (pbm_header, sizeof (pbm_header), "P6 %d %d 255\n", t_width,
+		  t_height);
 
 	/* align */
 	if (size % 64 != 0)
 		size = ((size / 64) + 1) * 64;
 
 	mybuf = malloc (size);
-	CHECK (gsmart_download_data (lib, start, size, mybuf));
+
+	if (lib->bridge == GSMART_BRIDGE_SPCA504A) {
+		CHECK (gsmart_download_data (lib, start, size, mybuf));
+	} else if (lib->bridge == GSMART_BRIDGE_SPCA500) {
+		/* find the file index on the camera */
+		int index;
+
+		index = (g_file->fat - lib->fats) / FLASH_PAGE_SIZE;
+		gsmart_reset (lib);
+		/* trigger upload of thumbnail at that index */
+		CHECK (gp_port_usb_msg_write (lib->gpdev, 0x06,
+					      0x70FF - index, 0x09, NULL, 0));
+		sleep (1);
+		CHECK (gp_port_read (lib->gpdev, mybuf, size));
+	}
 	*len = t_width * t_height * 3 + sizeof (pbm_header);
 	*buf = malloc (*len);
 	if (!*buf)
@@ -551,7 +557,8 @@ gsmart_get_info (CameraPrivateLibrary * lib)
 	} else
 		lib->size_used = 0;
 
-	lib->size_free = 16 * 1024 * 1024 - 0x2800 * FLASH_PAGE_SIZE - lib->size_used;
+	lib->size_free =
+		16 * 1024 * 1024 - 0x2800 * FLASH_PAGE_SIZE - lib->size_used;
 	lib->dirty = 0;
 
 	return GP_OK;
@@ -571,7 +578,15 @@ int
 gsmart_reset (CameraPrivateLibrary * lib)
 {
 	GP_DEBUG ("* gsmart_reset");
-	CHECK (gp_port_usb_msg_write (lib->gpdev, 0x02, 0x0000, 0x0003, NULL, 0));
+	if (lib->bridge == GSMART_BRIDGE_SPCA500) {
+		/* This is not reset but "Change Mode to Idle (Clear Buffer)"
+		 * Cant hurt, I guess. */
+		CHECK (gp_port_usb_msg_write
+		       (lib->gpdev, 0x02, 0x0000, 0x07, NULL, 0));
+	} else if (lib->bridge == GSMART_BRIDGE_SPCA504A) {
+		CHECK (gp_port_usb_msg_write
+		       (lib->gpdev, 0x02, 0x0000, 0x0003, NULL, 0));
+	}
 	sleep (1);
 	return GP_OK;
 }
@@ -580,7 +595,8 @@ int
 gsmart_capture (CameraPrivateLibrary * lib)
 {
 	sleep (2);
-	CHECK (gp_port_usb_msg_write (lib->gpdev, 0x06, 0x0000, 0x0003, NULL, 0));
+	CHECK (gp_port_usb_msg_write
+	       (lib->gpdev, 0x06, 0x0000, 0x0003, NULL, 0));
 	sleep (3);
 	return GP_OK;
 }
@@ -589,7 +605,8 @@ static int
 gsmart_mode_set_idle (CameraPrivateLibrary * lib)
 {
 	CHECK (gp_port_usb_msg_write
-	       (lib->gpdev, 0, GSMART_CamMode_Idle, GSMART_REG_CamMode, NULL, 0));
+	       (lib->gpdev, 0, GSMART_CamMode_Idle, GSMART_REG_CamMode, NULL,
+		0));
 	return GP_OK;
 }
 
@@ -608,7 +625,8 @@ static int
 gsmart_mode_set_download (CameraPrivateLibrary * lib)
 {
 	CHECK (gp_port_usb_msg_write
-	       (lib->gpdev, 0, GSMART_CamMode_Upload, GSMART_REG_CamMode, NULL, 0));
+	       (lib->gpdev, 0, GSMART_CamMode_Upload, GSMART_REG_CamMode, NULL,
+		0));
 	return GP_OK;
 }
 
@@ -626,32 +644,42 @@ gsmart_download_data (CameraPrivateLibrary * lib, u_int32_t start,
 	gsmart_mode_set_download (lib);
 
 	foo = size & 0xFF;
-	CHECK (gp_port_usb_msg_write (lib->gpdev, 0, foo, GSMART_REG_SdramSizeL, NULL, 0));
+	CHECK (gp_port_usb_msg_write (lib->gpdev, 0, foo,
+				      GSMART_REG_SdramSizeL, NULL, 0));
 	foo = (size >> 8) & 0xFF;
-	CHECK (gp_port_usb_msg_write (lib->gpdev, 0, foo, GSMART_REG_SdramSizeM, NULL, 0));
+	CHECK (gp_port_usb_msg_write (lib->gpdev, 0, foo,
+				      GSMART_REG_SdramSizeM, NULL, 0));
 	foo = (size >> 16) & 0xFF;
-	CHECK (gp_port_usb_msg_write (lib->gpdev, 0, foo, GSMART_REG_SdramSizeH, NULL, 0));
+	CHECK (gp_port_usb_msg_write (lib->gpdev, 0, foo,
+				      GSMART_REG_SdramSizeH, NULL, 0));
 
 	CHECK (gp_port_usb_msg_read
-	       (lib->gpdev, 0, 0, GSMART_REG_VlcAddressL, (u_int8_t *) & vlcAddressL, 1));
+	       (lib->gpdev, 0, 0, GSMART_REG_VlcAddressL,
+		(u_int8_t *) & vlcAddressL, 1));
 	CHECK (gp_port_usb_msg_read
-	       (lib->gpdev, 0, 0, GSMART_REG_VlcAddressM, (u_int8_t *) & vlcAddressM, 1));
+	       (lib->gpdev, 0, 0, GSMART_REG_VlcAddressM,
+		(u_int8_t *) & vlcAddressM, 1));
 	CHECK (gp_port_usb_msg_read
-	       (lib->gpdev, 0, 0, GSMART_REG_VlcAddressH, (u_int8_t *) & vlcAddressH, 1));
+	       (lib->gpdev, 0, 0, GSMART_REG_VlcAddressH,
+		(u_int8_t *) & vlcAddressH, 1));
 
 	foo = start & 0xFF;
-	CHECK (gp_port_usb_msg_write (lib->gpdev, 0, foo, GSMART_REG_VlcAddressL, NULL, 0));
+	CHECK (gp_port_usb_msg_write
+	       (lib->gpdev, 0, foo, GSMART_REG_VlcAddressL, NULL, 0));
 	foo = (start >> 8) & 0xFF;
-	CHECK (gp_port_usb_msg_write (lib->gpdev, 0, foo, GSMART_REG_VlcAddressM, NULL, 0));
+	CHECK (gp_port_usb_msg_write
+	       (lib->gpdev, 0, foo, GSMART_REG_VlcAddressM, NULL, 0));
 	foo = (start >> 16) & 0xFF;
-	CHECK (gp_port_usb_msg_write (lib->gpdev, 0, foo, GSMART_REG_VlcAddressH, NULL, 0));
+	CHECK (gp_port_usb_msg_write
+	       (lib->gpdev, 0, foo, GSMART_REG_VlcAddressH, NULL, 0));
 
 	/* Set mode to ram -> usb */
 	CHECK (gp_port_usb_msg_write
 	       (lib->gpdev, 0, GSMART_DramUsb, GSMART_REG_PbSrc, NULL, 0));
 	/* and pull the trigger */
 	CHECK (gp_port_usb_msg_write
-	       (lib->gpdev, 0, GSMART_TrigDramFifo, GSMART_REG_Trigger, NULL, 0));
+	       (lib->gpdev, 0, GSMART_TrigDramFifo, GSMART_REG_Trigger, NULL,
+		0));
 
 	CHECK (gp_port_read (lib->gpdev, buf, size));
 
@@ -680,11 +708,19 @@ gsmart_get_FATs (CameraPrivateLibrary * lib)
 	/* Reset image and movie counter */
 	lib->num_images = lib->num_movies = 0;
 
-	CHECK (gp_port_usb_msg_write (lib->gpdev, 0x05, 0x0000, 0x0008, NULL, 0));
-	sleep (0.1);
+	CHECK (gp_port_usb_msg_write
+	       (lib->gpdev, 0x05, 0x0000, 0x0008, NULL, 0));
 
-	CHECK (gp_port_usb_msg_read (lib->gpdev, 0, 0, 0x0e19, (u_int8_t *) & lower, 1));
-	CHECK (gp_port_usb_msg_read (lib->gpdev, 0, 0, 0x0e20, (u_int8_t *) & upper, 1));
+	/* The spca500 is a little slower */
+	if (lib->bridge == GSMART_BRIDGE_SPCA504A)
+		sleep (0.1);
+	else if (lib->bridge == GSMART_BRIDGE_SPCA500)
+		sleep (1.0);
+
+	CHECK (gp_port_usb_msg_read
+	       (lib->gpdev, 0, 0, 0x0e19, (u_int8_t *) & lower, 1));
+	CHECK (gp_port_usb_msg_read
+	       (lib->gpdev, 0, 0, 0x0e20, (u_int8_t *) & upper, 1));
 
 	fatscount = ((upper & 0xFF << 8) | (lower & 0xFF));
 
@@ -696,52 +732,94 @@ gsmart_get_FATs (CameraPrivateLibrary * lib)
 		free (lib->files);
 	lib->files = malloc (lib->num_files * sizeof (struct GsmartFile));
 
-	if (!gsmart_is_idle (lib))
-		gsmart_mode_set_idle (lib);
+	if (lib->bridge == GSMART_BRIDGE_SPCA504A) {
+		if (!gsmart_is_idle (lib))
+			gsmart_mode_set_idle (lib);
 
-	gsmart_mode_set_download (lib);
+		gsmart_mode_set_download (lib);
 
-	CHECK (gp_port_usb_msg_write
-	       (lib->gpdev, 0x00, 0x0001, GSMART_REG_AutoPbSize, NULL, 0));
-	CHECK (gp_port_usb_msg_read
-	       (lib->gpdev, 0, 0, GSMART_REG_DramType, (u_int8_t *) & dramtype, 1));
+		CHECK (gp_port_usb_msg_write
+		       (lib->gpdev, 0x00, 0x0001, GSMART_REG_AutoPbSize, NULL,
+			0));
+		CHECK (gp_port_usb_msg_read
+		       (lib->gpdev, 0, 0, GSMART_REG_DramType,
+			(u_int8_t *) & dramtype, 1));
 
-	dramtype &= 0xFF;
+		dramtype &= 0xFF;
+	} else if (lib->bridge == GSMART_BRIDGE_SPCA500) {
+		/* for the spca500, download the whole fat in one go. */
+		gsmart_reset (lib);
+		CHECK (gp_port_usb_msg_write
+		       (lib->gpdev, 0x05, 0x00, 0x07, NULL, 0));
+		sleep (1);
+		CHECK (gp_port_read
+		       (lib->gpdev, lib->fats, fatscount * FLASH_PAGE_SIZE));
+	}
+
 	p = lib->fats;
 
 	while (index < fatscount) {
 		switch (dramtype) {
 			case 4:	/* 128 Mbit */
 				CHECK (gsmart_download_data
-				       (lib, 0x7fff80 - index * 0x80, FLASH_PAGE_SIZE, p));
+				       (lib, 0x7fff80 - index * 0x80,
+					FLASH_PAGE_SIZE, p));
 				break;
-			default:	/* FALLTHROUGH */
 			case 3:	/* 64 Mbit */
 				CHECK (gsmart_download_data
-				       (lib, 0x3fff80 - index * 0x80, FLASH_PAGE_SIZE, p));
+				       (lib, 0x3fff80 - index * 0x80,
+					FLASH_PAGE_SIZE, p));
+				break;
+			default:
 				break;
 		}
 		if (p[0] == 0xFF)
 			break;
 		type = p[0];
-		if (type == 0x00 || type == 0x08) {
-			if (type == 0x00) {	/* its an image */
-				snprintf (buf, 13, "Image%03d.jpg", ++lib->num_images);
-				lib->files[file_index].mime_type = GSMART_FILE_TYPE_IMAGE;
+
+		/* While the spca504a indicates start of avi as 0x08 and cont.
+		 * of avi as 0x80, the spca500 uses 0x03 for both. Each frame
+		 * gets its own fat table with a sequence number at p[18]. */
+		if ((type == 0x80) || (type == 0x03 && (p[18] != 0x00))) {
+			/* continuation of an avi */
+			lib->files[file_index - 1].fat_end = index;
+		} else {
+			/* its an image */
+			if (type == 0x00 || type == 0x01) {
+				snprintf (buf, 13, "Image%03d.jpg",
+					  ++lib->num_images);
+				lib->files[file_index].mime_type =
+					GSMART_FILE_TYPE_IMAGE;
 				lib->files[file_index].fat_end = index;
-			} else if (type == 0x08) {	/* its the start of an avi */
-				snprintf (buf, 13, "Movie%03d.avi", ++lib->num_movies);
-				lib->files[file_index].mime_type = GSMART_FILE_TYPE_AVI;
+			} else if ((type == 0x08) || (type == 0x03)) {
+				/* its the start of an avi */
+				snprintf (buf, 13, "Movie%03d.avi",
+					  ++lib->num_movies);
+				lib->files[file_index].mime_type =
+					GSMART_FILE_TYPE_AVI;
 			}
 			lib->files[file_index].fat = p;
 			lib->files[file_index].fat_start = index;
 			lib->files[file_index].name = strdup (buf);
-			lib->files[file_index].width = (p[8] & 0xFF) * 16;
-			lib->files[file_index].height = (p[9] & 0xFF) * 16;
-			lib->files[file_index].name = strdup (buf);
+			if (lib->bridge == GSMART_BRIDGE_SPCA504A) {
+				lib->files[file_index].width =
+					(p[8] & 0xFF) * 16;
+				lib->files[file_index].height =
+					(p[9] & 0xFF) * 16;
+			} else if (lib->bridge == GSMART_BRIDGE_SPCA500) {
+				int w, h;
+
+				if (p[20] == 2) {
+					w = 320;
+					h = 240;
+				} else {
+					w = 640;
+					h = 480;
+				}
+				lib->files[file_index].width = w;
+				lib->files[file_index].height = h;
+			}
 			file_index++;
-		} else if (type == 0x80) {	/* continuation of an avi */
-			lib->files[file_index - 1].fat_end = index;
 		}
 		p += FLASH_PAGE_SIZE;
 		index++;
@@ -777,4 +855,59 @@ yuv2rgb (int y, int u, int v, int *_r, int *_g, int *_b)
 	*_b = b;
 
 	return GP_OK;
+}
+
+static void
+create_jpeg_from_data (u_int8_t * dst, u_int8_t * src, int qIndex, int w,
+		       int h, u_int8_t format, int o_size, int *size)
+{
+
+	int i = 0;
+	u_int8_t *start;
+	u_int8_t value;
+
+	start = dst;
+	/* copy the header from the template */
+	memcpy (dst, GsmartJPGDefaultHeader, GSMART_JPG_DEFAULT_HEADER_LENGTH);
+
+	/* modify quantization table */
+	memcpy (dst + 7, GsmartQTable[qIndex * 2], 64);
+	memcpy (dst + 72, GsmartQTable[qIndex * 2 + 1], 64);
+
+	/* modify the image width, height */
+	*(dst + 564) = w & 0xFF;	//Image width low byte
+	*(dst + 563) = w >> 8 & 0xFF;	//Image width high byte
+	*(dst + 562) = h & 0xFF;	//Image height low byte
+	*(dst + 561) = h >> 8 & 0xFF;	//Image height high byte
+
+	/* set the format */
+	*(dst + 567) = format;
+
+	/* point to real JPG compress data start position and copy */
+	dst += GSMART_JPG_DEFAULT_HEADER_LENGTH;
+
+	for (i = 0; i < o_size; i++) {
+		value = *(src + i) & 0xFF;
+		*(dst) = value;
+		dst++;
+		if (value == 0xFF) {
+			*(dst) = 0x00;
+			dst++;
+		}
+	}
+	/* Add end of image marker */
+	*(dst++) = 0xFF;
+	*(dst++) = 0xD9;
+
+	*size = dst - start;
+}
+
+static inline u_int8_t *
+put_dword (u_int8_t * ptr, u_int32_t value)
+{
+	ptr[0] = (value & 0xff);
+	ptr[1] = (value & 0xff00) >> 8;
+	ptr[2] = (value & 0xff0000) >> 16;
+	ptr[3] = (value & 0xff000000) >> 24;
+	return ptr + 4;
 }

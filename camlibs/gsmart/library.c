@@ -47,10 +47,10 @@
 
 #include "gsmart.h"
 
-#define GP_MODULE "gsmartmini2"
+#define GP_MODULE "gsmartmini"
 #define TIMEOUT	      5000
 
-#define GSMART_VERSION "0.2"
+#define GSMART_VERSION "0.3"
 #define GSMART_LAST_MOD "08/09/02 - 23:14:11"
 
 /* forward declarations */
@@ -58,10 +58,12 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 			   CameraList *list, void *data, GPContext *context);
 static int get_file_func (CameraFilesystem *fs, const char *folder,
 			  const char *filename, CameraFileType type,
-			  CameraFile *file, void *user_data, GPContext *context);
+			  CameraFile *file, void *user_data,
+			  GPContext *context);
 
 static int delete_file_func (CameraFilesystem *fs, const char *folder,
-			     const char *filename, void *data, GPContext *context);
+			     const char *filename, void *data,
+			     GPContext *context);
 static int delete_all_func (CameraFilesystem *fs, const char *folder,
 			    void *data, GPContext *context);
 static int get_info_func (CameraFilesystem *fs, const char *folder,
@@ -74,13 +76,20 @@ static struct
 	char *model;
 	int usb_vendor;
 	int usb_product;
+	GsmartBridgeChip bridge;
 }
 models[] =
 {
-	{"Mustek gSmart mini 2", 0x055f, 0xc420}, 
-	{"Mustek gSmart mini 3", 0x055f, 0xc520}, 
-	{"So. Show 301", 0x0ec7, 0x1008}, 
-	{ NULL, 0, 0}
+	{
+	"Mustek gSmart mini", 0x055f, 0xc220, GSMART_BRIDGE_SPCA500}
+	, {
+	"Mustek gSmart mini 2", 0x055f, 0xc420, GSMART_BRIDGE_SPCA504A}
+	, {
+	"Mustek gSmart mini 3", 0x055f, 0xc520, GSMART_BRIDGE_SPCA504A}
+	, {
+	"So. Show 301", 0x0ec7, 0x1008, GSMART_BRIDGE_SPCA504A}
+	, {
+	NULL, 0, 0}
 };
 
 int
@@ -101,12 +110,17 @@ camera_abilities (CameraAbilitiesList *list)
 	while (ptr) {
 		memset (&a, 0, sizeof (a));
 		strcpy (a.model, ptr);
-		a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
 		a.port = GP_PORT_USB;
 		a.speed[0] = 0;
 
-		a.operations = GP_OPERATION_CAPTURE_IMAGE;
-		a.file_operations = GP_FILE_OPERATION_PREVIEW | GP_FILE_OPERATION_DELETE;
+		if (models[x].bridge == GSMART_BRIDGE_SPCA504A) {
+			a.operations = GP_OPERATION_CAPTURE_IMAGE;
+			a.status = GP_DRIVER_STATUS_TESTING;
+		} else {
+			a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
+		}
+		a.file_operations =
+			GP_FILE_OPERATION_PREVIEW | GP_FILE_OPERATION_DELETE;
 
 		a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
 
@@ -126,10 +140,17 @@ camera_capture (Camera *camera, CameraCaptureType type,
 		CameraFilePath * path, GPContext *context)
 {
 	struct GsmartFile *file;
+	CameraAbilities a;
+
+	/* Not all our cameras support capture */
+	gp_camera_get_abilities (camera, &a);
+	if (!a.operations & GP_OPERATION_CAPTURE_IMAGE)
+		return GP_ERROR_NOT_SUPPORTED;
 
 	CHECK (gsmart_capture (camera->pl));
 	CHECK (gsmart_get_info (camera->pl));
-	CHECK (gsmart_get_file_info (camera->pl, camera->pl->num_files - 1, &file));
+	CHECK (gsmart_get_file_info
+	       (camera->pl, camera->pl->num_files - 1, &file));
 
 	/* Now tell the frontend where to look for the image */
 	strncpy (path->folder, "/", sizeof (path->folder) - 1);
@@ -137,8 +158,8 @@ camera_capture (Camera *camera, CameraCaptureType type,
 	strncpy (path->name, file->name, sizeof (path->name) - 1);
 	path->name[sizeof (path->name) - 1] = '\0';
 
-	CHECK (gp_filesystem_append (camera->fs, path->folder, path->name, context));
-
+	CHECK (gp_filesystem_append
+	       (camera->fs, path->folder, path->name, context));
 	return GP_OK;
 }
 
@@ -174,7 +195,8 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 	snprintf (tmp, sizeof (tmp),
 		  "Files: %d\n  Images: %4d\n  Movies: %4d\nSpace used: %8d\nSpace free: %8d\n",
 		  camera->pl->num_files, camera->pl->num_images,
-		  camera->pl->num_movies, camera->pl->size_used, camera->pl->size_free);
+		  camera->pl->num_movies, camera->pl->size_used,
+		  camera->pl->size_free);
 	strcat (summary->text, tmp);
 
 	return (GP_OK);
@@ -187,9 +209,10 @@ camera_about (Camera *camera, CameraText *about, GPContext *context)
 		_("gsmart library v" GSMART_VERSION
 		  " " GSMART_LAST_MOD "\n"
 		  "Till Adam <till@adam-lilienthal.de>\n"
-		  "Support for Mustek gSmart mini 2 digital cameras\n"
-		  "based on several other gphoto2 camlib modules and "
-		  "the windows driver source kindly provided by Mustek.\n" "\n"));
+		  "Support for the Mustek gSmart mini series of digital "
+		  "cameras based on several other gphoto2 camlib modules and "
+		  "the windows driver source kindly provided by Mustek.\n"
+		  "\n"));
 
 	return (GP_OK);
 }
@@ -198,7 +221,11 @@ int
 camera_init (Camera *camera, GPContext *context)
 {
 	int ret;
+	int x = 0;
+	char *model;
+
 	GPPortSettings settings;
+	CameraAbilities abilities;
 
 	/* First, set up all the function pointers */
 	camera->functions->exit = camera_exit;
@@ -235,6 +262,18 @@ camera_init (Camera *camera, GPContext *context)
 	camera->pl->gpdev = camera->port;
 	camera->pl->dirty = 1;
 
+	/* What bridge chip is inside the camera? The Gsmart mini is spca500
+	 * based, while the others have a spca504a */
+	gp_camera_get_abilities (camera, &abilities);
+	model = models[x].model;
+	while (model) {
+		if (!strcmp (model, abilities.model)) {
+			camera->pl->bridge = models[x].bridge;
+			break;
+		}
+		model = models[++x].model;
+	}
+
 	ret = gsmart_reset (camera->pl);
 
 	if (ret < 0) {
@@ -246,12 +285,14 @@ camera_init (Camera *camera, GPContext *context)
 	}
 
 	/* Set up the CameraFilesystem */
-	CHECK (gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera));
-	CHECK (gp_filesystem_set_file_funcs (camera->fs, get_file_func,
-					     delete_file_func, camera));
-	CHECK (gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL, camera));
-	CHECK (gp_filesystem_set_folder_funcs (camera->fs,
-					       NULL, delete_all_func, NULL, NULL, camera));
+	CHECK (gp_filesystem_set_list_funcs
+	       (camera->fs, file_list_func, NULL, camera));
+	CHECK (gp_filesystem_set_file_funcs
+	       (camera->fs, get_file_func, delete_file_func, camera));
+	CHECK (gp_filesystem_set_info_funcs
+	       (camera->fs, get_info_func, NULL, camera));
+	CHECK (gp_filesystem_set_folder_funcs
+	       (camera->fs, NULL, delete_all_func, NULL, NULL, camera));
 
 	return (GP_OK);
 }
@@ -289,23 +330,29 @@ get_file_func (CameraFilesystem *fs, const char *folder,
 	unsigned char *data = NULL;
 	int size, number, filetype;
 
-	CHECK (number = gp_filesystem_number (camera->fs, folder, filename, context));
+	CHECK (number =
+	       gp_filesystem_number (camera->fs, folder, filename, context));
 	switch (type) {
 		case GP_FILE_TYPE_NORMAL:
-			CHECK (gsmart_request_file (camera->pl, &data, &size, number, &filetype));
+			CHECK (gsmart_request_file
+			       (camera->pl, &data, &size, number, &filetype));
 			if (filetype == GSMART_FILE_TYPE_IMAGE) {
-				CHECK (gp_file_set_mime_type (file, GP_MIME_JPEG));
+				CHECK (gp_file_set_mime_type
+				       (file, GP_MIME_JPEG));
 			} else if (filetype == GSMART_FILE_TYPE_AVI) {
-				CHECK (gp_file_set_mime_type (file, GP_MIME_AVI));
+				CHECK (gp_file_set_mime_type
+				       (file, GP_MIME_AVI));
 			}
 			break;
 		case GP_FILE_TYPE_PREVIEW:
 			CHECK (gsmart_request_thumbnail
 			       (camera->pl, &data, &size, number, &filetype));
 			if (filetype == GSMART_FILE_TYPE_IMAGE) {
-				CHECK (gp_file_set_mime_type (file, GP_MIME_BMP));
+				CHECK (gp_file_set_mime_type
+				       (file, GP_MIME_BMP));
 			} else if (filetype == GSMART_FILE_TYPE_AVI) {
-				CHECK (gp_file_set_mime_type (file, GP_MIME_JPEG));
+				CHECK (gp_file_set_mime_type
+				       (file, GP_MIME_JPEG));
 			}
 
 			break;
@@ -324,18 +371,22 @@ get_file_func (CameraFilesystem *fs, const char *folder,
 
 static int
 get_info_func (CameraFilesystem *fs, const char *folder,
-	       const char *filename, CameraFileInfo *info, void *data, GPContext *context)
+	       const char *filename, CameraFileInfo *info, void *data,
+	       GPContext *context)
 {
 	Camera *camera = data;
 	int n;
 	struct GsmartFile *file;
 
 	/* Get the file number from the CameraFileSystem */
-	CHECK (n = gp_filesystem_number (camera->fs, folder, filename, context));
+	CHECK (n =
+	       gp_filesystem_number (camera->fs, folder, filename, context));
 
 	CHECK (gsmart_get_file_info (camera->pl, n, &file));
 
-	info->file.fields = GP_FILE_INFO_NAME | GP_FILE_INFO_TYPE | GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT;
+	info->file.fields =
+		GP_FILE_INFO_NAME | GP_FILE_INFO_TYPE | GP_FILE_INFO_WIDTH |
+		GP_FILE_INFO_HEIGHT;
 	strncpy (info->file.name, filename, sizeof (info->file.name));
 	if (file->mime_type == GSMART_FILE_TYPE_IMAGE) {
 		strcpy (info->file.type, GP_MIME_JPEG);
@@ -349,7 +400,8 @@ get_info_func (CameraFilesystem *fs, const char *folder,
 	info->file.width = file->width;
 	info->file.height = file->height;
 
-	info->preview.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT;
+	info->preview.fields =
+		GP_FILE_INFO_TYPE | GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT;
 	strcpy (info->preview.type, GP_MIME_BMP);
 
 	return (GP_OK);
@@ -363,16 +415,18 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	int n, c;
 
 	/* Get the file number from the CameraFileSystem */
-	CHECK (n = gp_filesystem_number (camera->fs, folder, filename, context));
+	CHECK (n =
+	       gp_filesystem_number (camera->fs, folder, filename, context));
 	CHECK (c = gp_filesystem_count (camera->fs, folder, context));
 	if (n + 1 != c) {
 		const char *name;
 
 		gp_filesystem_name (fs, "/", c - 1, &name, context);
 		gp_context_error (context,
-				  _("Your camera does only support deleting the last file "
-				    "on the camera. In this case, this is "
-				    "file '%s'."), name);
+				  _
+				  ("Your camera does only support deleting the "
+				   "last file on the camera. In this case, this"
+				   "is file '%s'."), name);
 		return (GP_ERROR);
 	}
 	CHECK (gsmart_delete_file (camera->pl, n));
@@ -380,7 +434,8 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 }
 
 static int
-delete_all_func (CameraFilesystem *fs, const char *folder, void *data, GPContext *context)
+delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
+		 GPContext *context)
 {
 	Camera *camera = data;
 

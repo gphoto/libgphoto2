@@ -44,9 +44,15 @@ struct GsmartFile
 	int mime_type;
 };
 
+typedef enum {
+           GSMART_BRIDGE_SPCA500,
+	   GSMART_BRIDGE_SPCA504A
+} GsmartBridgeChip;
+
 struct _CameraPrivateLibrary
 {
 	GPPort *gpdev;
+	GsmartBridgeChip bridge;
 	int dirty;
 	int num_files;
 	int num_images;

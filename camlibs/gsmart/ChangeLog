@@ -1,3 +1,13 @@
+Mon Oct 14 20:32:08 2002  Till Adam  <till@adam-lilienthal.de>
+ 
+ * move jpeg creation into function
+ * add experimental support for the "gsmart mini"
+ * bump version number to 0.3
+ * driver status for the spca504a based is now TESTING
+ * patch from Piotr Pawlow <pp@siedziba.pl> adding an index to downloaded
+   avi's and fixing a few bugs.
+ * endianess fixes
+
 Wed Oct 09 19:58:01 2002  Till Adam  <till@adam-lilienthal.de>
  
  * add experimental support for the "gSmart mini 3" and "So. Show 301" 
