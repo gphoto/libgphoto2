@@ -10,11 +10,11 @@
 #ifndef _CANON_H
 #define _CANON_H
 
-#ifdef EXPERIMENTAL_CAPTURE
+#ifdef CANON_EXPERIMENTAL_CAPTURE
 #warning COMPILING WITH EXPERIMENTAL CAPTURE FEATURE
 #endif
 
-#ifdef EXPERIMENTAL_UPLOAD
+#ifdef CANON_EXPERIMENTAL_UPLOAD
 #warning COMPILING WITH EXPERIMENTAL UPLOAD FEATURE
 #endif
 
@@ -112,21 +112,21 @@ struct _CameraPrivateLibrary
 	unsigned char seq_tx;
 	unsigned char seq_rx;
 
-#ifdef EXPERIMENTAL_CAPTURE
+#ifdef CANON_EXPERIMENTAL_CAPTURE
 	int capturing; /* whether we are capturing or not
 			  hack to speed up usb_dialogue 
 			  when not capturing [no sleep(2)] */
-#endif /* EXPERIMENTAL_CAPTURE */
+#endif /* CANON_EXPERIMENTAL_CAPTURE */
 
 	/* driver settings
 	 * leave these as int, as gp_widget_get_value sets them as int!
 	 */
 	int list_all_files; /* whether to list all files, not just know types */
 
-#ifdef EXPERIMENTAL_UPLOAD
+#ifdef CANON_EXPERIMENTAL_UPLOAD
 	int upload_keep_filename; /* 0=DCIF compatible filenames (AUT_*), 
 				     1=keep original filename */
-#endif /* EXPERIMENTAL_UPLOAD */
+#endif /* CANON_EXPERIMENTAL_UPLOAD */
 
 	char *cached_drive;	/* usually something like C: */
 	int cached_ready;       /* whether the camera is ready to rock */
@@ -200,7 +200,7 @@ char *canon_int_get_disk_name(Camera *camera, GPContext *context);
 int canon_int_get_battery(Camera *camera, int *pwr_status, int *pwr_source, GPContext *context);
 
 
-#ifdef EXPERIMENTAL_CAPTURE
+#ifdef CANON_EXPERIMENTAL_CAPTURE
 /*
  *
  */

@@ -396,7 +396,7 @@ canon_int_get_battery (Camera *camera, int *pwr_status, int *pwr_source, GPConte
 
 
 
-#ifdef EXPERIMENTAL_CAPTURE
+#ifdef CANON_EXPERIMENTAL_CAPTURE
 
 int
 canon_int_pack_control_subcmd (unsigned char *payload, int subcmd,
@@ -568,7 +568,7 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 	return GP_OK;
 }
 
-#endif /* EXPERIMENTAL_CAPTURE */
+#endif /* CANON_EXPERIMENTAL_CAPTURE */
 
 
 /**

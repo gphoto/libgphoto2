@@ -1,3 +1,11 @@
+2002-08-28  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* library.c: s/EXPERIMENTAL_/CANON_EXPERIMENTAL_/
+	* canon.[ch], usb.[ch]: s/EXPERIMENTAL_/CANON_EXPERIMENTAL_/
+	* library.c: only report EXPERIMENTAL on USB cams
+	* Makefile.am: removed EXPERIMENTAL_ CFLAGS stuff
+	* README: Added note about new CANON_EXPERIMENTAL_ stuff
+	
 2002-07-29  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
 	* canon.[ch]: support for PowerShot A100, A200

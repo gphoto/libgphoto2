@@ -77,6 +77,21 @@ extern long int timezone;
 
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 
+#define TRUE (0==0)
+#define FALSE (0!=0)
+
+#ifdef CANON_EXPERIMENTAL_CAPTURE
+#define CAPTURE_BOOL TRUE
+#else
+#define CAPTURE_BOOL FALSE
+#endif
+
+#ifdef CANON_EXPERIMENTAL_UPLOAD
+#define UPLOAD_BOOL TRUE
+#else
+#define UPLOAD_BOOL FALSE
+#endif
+
 
 int
 camera_id (CameraText *id)
@@ -112,13 +127,13 @@ camera_abilities (CameraAbilitiesList *list)
 
 	for (i = 0; models[i].id_str; i++) {
 		memset (&a, 0, sizeof (a));
-		a.status = GP_DRIVER_STATUS_PRODUCTION;
-#ifdef EXPERIMENTAL_CAPTURE
-		a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
-#endif
-#ifdef EXPERIMENTAL_UPLOAD
-		a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
-#endif
+
+		if ((CAPTURE_BOOL || UPLOAD_BOOL) && 
+		    (models[i].usb_vendor && models[i].usb_product)) {
+			a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
+		} else {
+			a.status = GP_DRIVER_STATUS_PRODUCTION;
+		}
 
 		strcpy (a.model, models[i].id_str);
 		a.port = 0;
@@ -137,12 +152,12 @@ camera_abilities (CameraAbilitiesList *list)
 			a.speed[5] = 0;
 		}
 		a.operations = GP_OPERATION_CONFIG;
-#ifdef EXPERIMENTAL_CAPTURE
+#ifdef CANON_EXPERIMENTAL_CAPTURE
 		a.operations |= GP_OPERATION_CAPTURE_IMAGE |
 			GP_OPERATION_CAPTURE_PREVIEW;
 #endif
 		a.folder_operations =
-#ifdef EXPERIMENTAL_UPLOAD
+#ifdef CANON_EXPERIMENTAL_UPLOAD
 			GP_FOLDER_OPERATION_PUT_FILE 
 #else
 			(models[i].serial_support?GP_FOLDER_OPERATION_PUT_FILE:0)
@@ -214,7 +229,7 @@ camera_exit (Camera *camera, GPContext *context)
 	return GP_OK;
 }
 
-#ifdef EXPERIMENTAL_CAPTURE
+#ifdef CANON_EXPERIMENTAL_CAPTURE
 
 static int
 camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
@@ -252,7 +267,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	return GP_OK;
 }
 
-#endif /* EXPERIMENTAL_CAPTURE */
+#endif /* CANON_EXPERIMENTAL_CAPTURE */
 
 static int
 canon_get_batt_status (Camera *camera, int *pwr_status, int *pwr_source, GPContext *context)
@@ -715,7 +730,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder, const char *filename
 	return GP_OK;
 }
 
-#ifdef EXPERIMENTAL_UPLOAD
+#ifdef CANON_EXPERIMENTAL_UPLOAD
 /*
  * get from the filesystem the name of the highest numbered picture or directory
  * 
@@ -939,7 +954,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 	return canon_int_put_file (camera, file, destname, destpath, context);
 }
 
-#else /* not EXPERIMENTAL_UPLOAD */
+#else /* not CANON_EXPERIMENTAL_UPLOAD */
 
 static int
 put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void *data,
@@ -1047,7 +1062,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 	return canon_int_put_file (camera, file, destname, destpath, context);
 }
 
-#endif /* EXPERIMENTAL_UPLOAD */
+#endif /* CANON_EXPERIMENTAL_UPLOAD */
 
 
 
@@ -1131,11 +1146,11 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_set_value (t, &camera->pl->list_all_files);
 	gp_widget_append (section, t);
 
-#ifdef EXPERIMENTAL_CAPTURE
+#ifdef CANON_EXPERIMENTAL_CAPTURE
 	gp_widget_new (GP_WIDGET_TOGGLE, _("Keep filename on upload"), &t);
 	gp_widget_set_value (t, &camera->pl->upload_keep_filename);
 	gp_widget_append (section, t);
-#endif /* EXPERIMENTAL_CAPTURE */
+#endif /* CANON_EXPERIMENTAL_CAPTURE */
 
 	return GP_OK;
 }
@@ -1182,13 +1197,13 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		GP_DEBUG ("New config value for tmb: %i", &camera->pl->list_all_files);
 	}
 	
-#ifdef EXPERIMENTAL_CAPTURE
+#ifdef CANON_EXPERIMENTAL_CAPTURE
 	gp_widget_get_child_by_label (window, _("Keep filename on upload"), &w);
 	if (gp_widget_changed (w)) {
 		gp_widget_get_value (w, &camera->pl->upload_keep_filename);
 		GP_DEBUG ("New config value for tmb: %i", &camera->pl->upload_keep_filename);
 	}
-#endif /* EXPERIMENTAL_CAPTURE */
+#endif /* CANON_EXPERIMENTAL_CAPTURE */
 
 	GP_DEBUG ("done configuring camera.");
 
@@ -1324,11 +1339,11 @@ camera_init (Camera *camera, GPContext *context)
 
 	/* First, set up all the function pointers */
 	camera->functions->exit = camera_exit;
-#ifdef EXPERIMENTAL_CAPTURE
+#ifdef CANON_EXPERIMENTAL_CAPTURE
 	/* we should only set this if the camera supports it */
 	camera->functions->capture_preview = camera_capture_preview;
 	camera->functions->capture = camera_capture;
-#endif /* EXPERIMENTAL_CAPTURE */
+#endif /* CANON_EXPERIMENTAL_CAPTURE */
 	camera->functions->get_config = camera_get_config;
 	camera->functions->set_config = camera_set_config;
 	camera->functions->summary = camera_summary;
@@ -1340,11 +1355,11 @@ camera_init (Camera *camera, GPContext *context)
 	gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL, camera);
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func, delete_file_func, camera);
 	gp_filesystem_set_folder_funcs (camera->fs,
-#ifdef EXPERIMENTAL_UPLOAD
+#ifdef CANON_EXPERIMENTAL_UPLOAD
 					put_file_func, 
 #else
 					(camera->port->type == GP_PORT_SERIAL)?put_file_func:NULL,
-#endif /* EXPERIMENTAL_UPLOAD */
+#endif /* CANON_EXPERIMENTAL_UPLOAD */
 					NULL, make_dir_func,
 					remove_dir_func, camera);
 
@@ -1356,14 +1371,14 @@ camera_init (Camera *camera, GPContext *context)
 	camera->pl->seq_tx = 1;
 	camera->pl->seq_rx = 1;
 
-#ifdef EXPERIMENTAL_CAPTURE
+#ifdef CANON_EXPERIMENTAL_CAPTURE
 	/* we are currently not capturing, are we? */
 	camera->pl->capturing = FALSE;
 #endif
 
 	/* default to false, i.e. list only known file types, use DCIF filenames */
 	camera->pl->list_all_files = FALSE;
-#ifdef EXPERIMENTAL_UPLOAD
+#ifdef CANON_EXPERIMENTAL_UPLOAD
 	camera->pl->upload_keep_filename = FALSE;
 #endif
 

@@ -56,7 +56,7 @@ int canon_usb_identify (Camera *camera, GPContext *context);
 
 
 
-#ifdef EXPERIMENTAL_CAPTURE
+#ifdef CANON_EXPERIMENTAL_CAPTURE
 
 #define CANON_USB_FUNCTION_RETRIEVE_CAPTURE     18
 #define CANON_USB_FUNCTION_RETRIEVE_PREVIEW     19
@@ -99,7 +99,7 @@ struct canon_usb_control_cmdstruct
 	int additional_return_length;
 };
 
-#endif /* EXPERIMENTAL_CAPTURE */
+#endif /* CANON_EXPERIMENTAL_CAPTURE */
 
 
 
@@ -127,11 +127,11 @@ static const struct canon_usb_cmdstruct canon_usb_cmd[] = {
 	{CANON_USB_FUNCTION_GET_DIRENT,		"Get directory entries",	0x0b, 0x11, 0x202,	0x40},
 	{CANON_USB_FUNCTION_DELETE_FILE,	"Delete file",			0x0d, 0x11, 0x201,	0x54},
 	{CANON_USB_FUNCTION_SET_ATTR,		"Set file attribute",		0x0e, 0x11, 0x201,	0x54},
-#ifdef EXPERIMENTAL_CAPTURE
+#ifdef CANON_EXPERIMENTAL_CAPTURE
 	{CANON_USB_FUNCTION_CONTROL_CAMERA,     "Remote camera control",        0x13, 0x12, 0x201,      0x40},
 	{CANON_USB_FUNCTION_RETRIEVE_CAPTURE,   "Download a captured image",    0x17, 0x12, 0x202,      0x40},
 	{CANON_USB_FUNCTION_RETRIEVE_PREVIEW,   "Download a captured preview",  0x18, 0x12, 0x202,      0x40},
-#endif /* EXPERIMENTAL_CAPTURE */
+#endif /* CANON_EXPERIMENTAL_CAPTURE */
 	{CANON_USB_FUNCTION_EOS_LOCK_KEYS,	"EOS lock keys",		0x1b, 0x12, 0x201,	0x54},
 	{CANON_USB_FUNCTION_EOS_UNLOCK_KEYS,	"EOS unlock keys",		0x1c, 0x12, 0x201,	0x54},
 	{CANON_USB_FUNCTION_GET_PIC_ABILITIES,	"Get picture abilities",	0x1f, 0x12, 0x201,	0x384},
@@ -140,7 +140,7 @@ static const struct canon_usb_cmdstruct canon_usb_cmd[] = {
 };
 
 
-#ifdef EXPERIMENTAL_CAPTURE
+#ifdef CANON_EXPERIMENTAL_CAPTURE
 
 static const struct canon_usb_control_cmdstruct canon_usb_control_cmd[] = {
 	/* COMMAND NAME                         Description            Value   CmdLen ReplyLen */
@@ -176,7 +176,7 @@ static const struct canon_usb_control_cmdstruct canon_usb_control_cmd[] = {
 #define REMOTE_CAPTURE_THUMB_TO_DRIVE (0x0004)
 #define REMOTE_CAPTURE_FULL_TO_DRIVE  (0x0008)
 
-#endif /* EXPERIMENTAL_CAPTURE */
+#endif /* CANON_EXPERIMENTAL_CAPTURE */
 
 
 #endif /* _CANON_USB_H */

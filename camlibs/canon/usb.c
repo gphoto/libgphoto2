@@ -393,7 +393,7 @@ canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length, const c
 	unsigned char packet[1024];	/* used for sending data to camera */
 	static unsigned char buffer[0x9c];	/* used for receiving data from camera */
 
-#ifdef EXPERIMENTAL_CAPTURE
+#ifdef CANON_EXPERIMENTAL_CAPTURE
 	int j, canon_subfunc = 0;
 	char subcmd = 0, *subfunct_descr = "";
 	int additional_read_bytes = 0, returned_read_bytes = 0;
@@ -433,7 +433,7 @@ canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length, const c
 	GP_DEBUG ("canon_usb_dialogue() cmd 0x%x 0x%x 0x%x (%s)", cmd1, cmd2, cmd3,
 		  funct_descr);
 
-#ifdef EXPERIMENTAL_CAPTURE
+#ifdef CANON_EXPERIMENTAL_CAPTURE
 	/*
 	 * The CONTROL_CAMERA function is special in that it's payload specifies a 
 	 * subcommand, and the size of the return data is dependent on which
@@ -461,7 +461,7 @@ canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length, const c
 		GP_DEBUG ("canon_usb_dialogue() called with CONTROL_CAMERA, %s",
 			  canon_usb_control_cmd[j].description);
 	}
-#endif /* EXPERIMENTAL_CAPTURE */
+#endif /* CANON_EXPERIMENTAL_CAPTURE */
 
 	if (read_bytes > sizeof (buffer)) {
 		/* If this message is ever printed, chances are that you just added
@@ -521,7 +521,7 @@ canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length, const c
 	 * read this response back.
 	 */
 
-#ifdef EXPERIMENTAL_CAPTURE
+#ifdef CANON_EXPERIMENTAL_CAPTURE
 	// TESTING
 
 	if (camera->pl->capturing)
@@ -791,7 +791,7 @@ int
 canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath,
 		    GPContext *context)
 {
-#ifndef EXPERIMENTAL_UPLOAD
+#ifndef CANON_EXPERIMENTAL_UPLOAD
 	return GP_ERROR_NOT_SUPPORTED;
 #else
 	long int packet_size = USB_BULK_WRITE_SIZE;
@@ -942,7 +942,7 @@ canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *dest
 	    free(newdata);
 	free(packet);
 	return GP_OK;
-#endif /* EXPERIMENTAL_UPLOAD */
+#endif /* CANON_EXPERIMENTAL_UPLOAD */
 }
 
 int
