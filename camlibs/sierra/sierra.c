@@ -82,6 +82,7 @@ SierraCamera sierra_cameras[] = {
 	{"Olympus C-1400XL", 	0, 0, 0, 0 },
 	{"Olympus C-2000Z", 	0, 0, 0, 0 },
 	{"Olympus C-2500Z", 	0, 0, 0, 0 },
+	{"Olympus C-3000Z", 	0x07b4, 0x100, 0x83, 0x04},
 	{"Olympus C-3030Z", 	0x07b4, 0x100, 0x83, 0x04},
 	{"Panasonic Coolshot KXl-600A", 0, 0, 0, 0 },
 	{"Panasonic Coolshot NV-DCF5E", 0, 0, 0, 0 },
@@ -392,6 +393,8 @@ int camera_file_list(Camera *camera, CameraList *list, char *folder) {
 			return (GP_ERROR);
 	}
 
+	count = sierra_file_count(camera);
+
 	while ((x<count)&&(!error)) {
 #if 0
 	/* are all filenames *.jpg, or are there *.tif files too? */
@@ -430,7 +433,10 @@ int camera_folder_list(Camera *camera, CameraList *list, char *folder) {
 
 	sierra_debug_print(fd, "Listing folders");
 
-	if (!fd->folders) /* camera doesn't support folders */
+	if ((!fd->folders)&&(strcmp(folder, "/")!=0))
+		return GP_ERROR;
+
+	if (!fd->folders)
 		return GP_OK;
 
 	if (camera_start(camera) != GP_OK) /* XXX */

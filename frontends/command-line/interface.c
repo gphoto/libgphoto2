@@ -20,13 +20,15 @@ int gp_interface_message (Camera *camera, char *message) {
 
 int gp_interface_confirm (Camera *camera, char *message) {
 
-	char c;
+	char c[1024];
 
-	printf("%s [y/n] ", message);
-	fflush(stdout);
-	c = getchar();
-	fflush(stdin);
-	return ((c=='y') || (c=='Y'));
+	do {
+		printf("%s [y/n] ", message);
+		fflush(stdout);
+		fgets(c, 1023, stdin);
+	} while ((c[0]!='y')&&(c[0]!='Y')&&(c[0]!='n')&&(c[0]!='N'));
+
+	return ( ((c[0]=='y') || (c[0]=='Y'))? GP_CONFIRM_YES: GP_CONFIRM_NO);
 }
 
 int gp_interface_progress (Camera *camera, CameraFile *file, float percentage) {

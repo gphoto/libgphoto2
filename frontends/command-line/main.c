@@ -4,6 +4,11 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
+#include <unistd.h>
+
+#ifndef WIN32
+#include <signal.h>
+#endif
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -16,6 +21,7 @@
 #include "interface.h"
 #include "options.h"
 #include "range.h"
+#include "shell.h"
 #include "test.h"
 
 /* Initializes the globals */
@@ -54,7 +60,7 @@ int  set_globals();
 OPTION_CALLBACK(abilities);
 OPTION_CALLBACK(help);
 OPTION_CALLBACK(test);
-OPTION_CALLBACK(daemonmode);
+OPTION_CALLBACK(shell);
 OPTION_CALLBACK(list_cameras);
 OPTION_CALLBACK(list_ports);
 OPTION_CALLBACK(filename);
@@ -99,7 +105,6 @@ Option option[] = {
 
 {"h", "help",           "",             "Displays this help screen",    help,           0},
 {"",  "verify",         "",             "Verifies gPhoto installation", test,           0},
-{"S", "server mode",    "",             "gPhoto server (stdin/stdout)", daemonmode,     0},
 {"",  "list-cameras",   "",             "List supported camera models", list_cameras,   0},
 {"",  "list-ports",     "",             "List supported port devices",  list_ports,     0},
 {"",  "stdout",		"",		"Send file to stdout",		use_stdout,	0},
@@ -129,6 +134,7 @@ Option option[] = {
 {"",  "summary",	"",		"Summary of camera status",	summary,	0},
 {"",  "manual",		"",		"Camera driver manual",		manual,		0},
 {"",  "about",		"",		"About the camera driver",	about,		0},
+{"",  "shell",    	"",             "gPhoto shell", 		shell,		0},
 
 /* End of list                  */
 {"" , "",               "",             "",                             NULL,           0}
@@ -142,7 +148,9 @@ Option option[] = {
 int  glob_option_count;
 char glob_port[128];
 char glob_model[64];
-char glob_folder[128];
+char glob_folder[1024];
+char glob_owd[1024];
+char glob_cwd[1024];
 int  glob_speed;
 int  glob_num=1;
 
@@ -150,7 +158,7 @@ Camera         *glob_camera=NULL;
 CameraAbilities glob_abilities;
 
 int  glob_debug=0;
-int  glob_daemon=0;
+int  glob_shell=0;
 int  glob_quiet=0;
 int  glob_filename_override=0;
 int  glob_recurse=0;
@@ -345,23 +353,17 @@ OPTION_CALLBACK(quiet) {
         return (GP_OK);
 }
 
-OPTION_CALLBACK(daemonmode) {
+OPTION_CALLBACK(shell) {
 
-        char buf[1024];
-        int n=0;
+	cli_debug_print("Entering shell mode");
 
-        glob_daemon = 1;
+	if (set_globals() == GP_ERROR)
+		return (GP_ERROR);
 
-	while (1) {
-#ifdef WIN32
-		n = _read(0, buf, 1024);
-#else
-		n = read(0, buf, 1024);
-#endif
-//		gpfe_script(buf);
-	}
+        glob_shell = 1;
 
-	return (GP_OK);
+	return (shell_prompt());	
+	
 }
 
 OPTION_CALLBACK(use_folder) {
@@ -428,7 +430,10 @@ OPTION_CALLBACK(num_pictures) {
 
 int save_picture_to_file(char *folder, char *filename, int thumbnail) {
 
-	char out_filename[1024], buf[1024];
+	char out_filename[1024], out_folder[1024], buf[1024], msg[1024];
+	char *f;
+	int resp1, resp2;
+
 	CameraFile *file;
 
 	file = gp_file_new();
@@ -451,21 +456,53 @@ int save_picture_to_file(char *folder, char *filename, int thumbnail) {
 		return GP_OK;
 	}
 
+	/* Determine the folder and filename */
+	strcpy(out_filename, "");
+	strcpy(out_folder, "");
 
-	if ((glob_filename_override)&&(strlen(glob_filename)>0))
-		sprintf(out_filename, glob_filename, glob_num++);
-	   else
-		strcpy(out_filename, filename);
-
-	if (thumbnail) {
-		sprintf(buf, "thumb_%s", out_filename);
-		strcpy(out_filename, buf);
+	if (glob_filename_override) {
+		if (strchr(glob_filename, '/')) {		/* Check if they specified an output dir */
+			f = strrchr(glob_filename, '/');
+			strcpy(buf, f+1);			/* Get the filename */
+			sprintf(out_filename, buf, glob_num++);
+			*f = 0;
+			strcpy(out_folder, glob_filename);	/* Get the folder */
+			strcat(out_folder, "/");
+			*f = '/';
+		} else {					/* If not, subst and set */
+			sprintf(out_filename, glob_filename, glob_num++);
+		}
+	} else {
+		strcat(out_filename, filename);
 	}
 
-	if (!glob_quiet)
-		printf("Saving %s as %s\n", thumbnail ? "preview" : "image", out_filename);
-	if (gp_file_save(file, out_filename) == GP_ERROR) 
-		cli_error_print("Can not save %s as %s", thumbnail ? "preview" : "image", out_filename);
+	if (thumbnail)
+		sprintf(buf, "%sthumb_%s", out_folder, out_filename);
+	   else
+		sprintf(buf, "%s%s", out_folder, out_filename);
+
+	if (!glob_quiet) {
+		while (GPIO_IS_FILE(buf)) {
+			sprintf(msg, "File %s exists. Overwrite?", buf);
+			resp1 = gp_frontend_confirm(glob_camera, msg);
+			if ((resp1==GP_CONFIRM_NO)||(resp1==GP_CONFIRM_NOTOALL)) {
+				resp2 = gp_frontend_confirm(glob_camera, "Specify new filename?");
+				if ((resp2==GP_CONFIRM_NO)||(resp2==GP_CONFIRM_NOTOALL)) {
+					gp_file_free(file);
+					return (GP_OK);
+				}
+				printf("Enter new filename: ");
+				fflush(stdout);
+				fgets(buf, 1023, stdin);
+				buf[strlen(buf)-1]=0;
+			} else {
+				break;
+			}
+		}
+		printf("Saving %s as %s\n", thumbnail ? "preview" : "image", buf);
+	}
+	if (gp_file_save(file, buf) == GP_ERROR) 
+		cli_error_print("Can not save %s as %s", thumbnail ? "preview" : "image", buf);
 
 	gp_file_free(file);
 
@@ -747,6 +784,9 @@ int init_globals () {
 	strcpy(glob_port, "");
 	strcpy(glob_filename, "gphoto");
 	strcpy(glob_folder, "/");
+	if (!getcwd(glob_owd, 1023))
+		strcpy(glob_owd, "./");
+	strcpy(glob_cwd, glob_owd);
 
 	glob_camera = NULL;
 	glob_speed = 0;
@@ -784,6 +824,23 @@ void cli_error_print(char *format, ...) {
 	fprintf(stderr, "\n"); 
 }
 
+void signal_exit (int signo) {
+
+	if (!glob_quiet)
+		printf("\nExiting gPhoto...\n");
+
+        /* Exit gPhoto core */
+	if (glob_camera)
+               gp_camera_free(glob_camera);
+        gp_exit();
+
+	if (strlen(glob_owd)>0)
+		chdir(glob_owd);
+
+	exit(EXIT_SUCCESS);
+	
+}
+
 /* Main :)								*/
 /* -------------------------------------------------------------------- */
 
@@ -791,6 +848,8 @@ int main (int argc, char **argv) {
 
         /* Initialize the globals */
         init_globals();
+
+	signal(SIGINT, signal_exit);
 
         /* Count the number of command-line options we have */
         while ((strlen(option[glob_option_count].short_id)>0) ||

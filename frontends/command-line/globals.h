@@ -2,6 +2,7 @@ extern char 		glob_port[];
 extern char 		glob_model[];
 extern char 		glob_folder[];
 extern char 		glob_filename[];
+extern char		glob_cwd[];
 extern int  		glob_speed;
 extern int  		glob_num;
 extern int  		glob_debug;
