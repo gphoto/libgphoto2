@@ -7,7 +7,7 @@ extern	int		glob_debug;
 			/* total cameras found 		*/
 extern	int		glob_camera_count;
 			/* camera/library list 		*/
-extern	CameraChoice	glob_camera[512];
+extern	CameraChoice	glob_camera_list[512];
 			/* camera abilities 		*/
 extern	CameraAbilities glob_camera_abilities[512];
 			/* camera library id's 		*/
