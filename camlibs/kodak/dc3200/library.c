@@ -24,7 +24,7 @@
 #include "library.h"
 
 
-#define DEBUG
+//#define DEBUG
 
 /*
  * dc3200_set_speed
