@@ -172,6 +172,7 @@ const struct canonCamModelData models[] = {
 	/* MV630i seems to be a DV camcorder */
 	{"Canon:MV630i",		CANON_MV630I,		0x04A9, 0x307b, CAP_SUP, S99M, S32K, S2M, NULL},
 	{"Canon:Optura 20",		CANON_OPT_20,		0x04A9, 0x307f, CAP_SUP, S99M, S32K, S2M, NULL},
+	{"Canon:Optura 10",		CANON_OPT_10,		0x04A9, 0x3081, CAP_SUP, S99M, S32K, S2M, NULL},
 
 	{"Canon:EOS 10D",		CANON_EOS_10D,		0x04A9, 0x3083, CAP_SUP, S10M, S32K, S2M, NULL},
 	/* 0x3099 is the EOS 300D/Digital Rebel in PTP mode */

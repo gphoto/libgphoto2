@@ -97,8 +97,9 @@ typedef enum {
  * @CANON_PS_S230: PowerShot S230, Digital IXUS v3
  * @CANON_MV630I: MV630i camcorder
  * @CANON_EOS_10D: EOS 10D
- * @CANON_OPT_200: Optura 200 MC, MVX2i
+ * @CANON_OPT_10: Optura 10
  * @CANON_OPT_20: Optura 20
+ * @CANON_OPT_200: Optura 200 MC, MVX2i
  * @CANON_PS_UNK1: Unknown camera seen in Mac OS X Image Capture
  * @CANON_PS_UNK2: Unknown camera seen in Mac OS X Image Capture
  * @CANON_PS_UNK3: Unknown camera seen in Mac OS X Image Capture
@@ -158,7 +159,8 @@ typedef enum {
 	CANON_PS_SD100,
 	CANON_EOS_300D,
 	CANON_PS_G5,
-	CANON_OPT_20
+	CANON_OPT_20,
+	CANON_OPT_10
 } canonCamModel;
 
 /**
