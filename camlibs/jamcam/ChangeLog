@@ -1,5 +1,9 @@
 2001-11-28  Chris Pinkham <cpinkham@infi.net>
 
+	* jamcam.c: changed driver version to reflect new revision.
+
+2001-11-28  Chris Pinkham <cpinkham@infi.net>
+
 	* README: updated TODO list.
 	* jamcam.c, library.c, library.h: Changed license of source code
 	  from GPL to LPGL.  Various bugfixes to make driver more robust

@@ -51,8 +51,8 @@
 
 #define TIMEOUT	      2000
 
-#define JAMCAM_VERSION "0.5"
-#define JAMCAM_LAST_MOD "11/08/2001 08:13 EST"
+#define JAMCAM_VERSION "0.6"
+#define JAMCAM_LAST_MOD "11/28/2001 14:51 EST"
 
 /* define what cameras we support */
 static struct {
