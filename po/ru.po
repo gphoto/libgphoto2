@@ -1,17 +1,17 @@
-# Copyright © 2000 Free Software Foundation, Inc.
-# Valek Filippov <frob@df.ru>, 2000.
-#
+# Valek Filippov <frob@df.ru>, 2005.
+# 
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto\n"
 "Report-Msgid-Bugs-To: <gphoto-translation@lists.sourceforge.net>\n"
-"POT-Creation-Date: 2004-11-26 08:24+0100\n"
-"PO-Revision-Date: 2000-05-23 22:02+00:00\n"
-"Last-Translator: Valek Filippov <frob@df.ru>\n"
+"POT-Creation-Date: 2005-01-17 09:07+0100\n"
+"PO-Revision-Date: 2005-01-08 23:52+0300\n"
+"Last-Translator: Вячеслав Диконов (Vyacheslav Dikonov) <slava@altlinux.ru>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=koi8-r\n"
-"Content-Transfer-Encoding: 8-bit\n"
+"Content-Type: text/plain; charset=cp1251\n"
+"Content-Transfer-Encoding: 8bit\n"
 
 #: camlibs/agfa-cl20/agfa_cl20.c:555
 msgid ""
@@ -20,6 +20,10 @@ msgid ""
 "     Email us at cl20@poeml.de    \n"
 " Visit us at http://cl20.poeml.de "
 msgstr ""
+"agfa_cl20\n"
+"Разработчики драйвера Agfa CL20 для Linux!\n"
+"     Э-почта - cl20@poeml.de    \n"
+" Веб-адрес http://cl20.poeml.de "
 
 #: camlibs/aox/library.c:106
 #, c-format
@@ -29,12 +33,18 @@ msgid ""
 "Number of hi-res PICs = %i\n"
 "Number of PICs = %i\n"
 msgstr ""
+"Ваш USB-фотоаппарат основан на м/с наборе Aox.\n"
+"Число изображений низкого разрешения = %i\n"
+"Число изображений высокого разрешения = %i\n"
+"Число изображений = %i\n"
 
 #: camlibs/aox/library.c:119
 msgid ""
 "Aox generic driver\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
 msgstr ""
+"Базовый драйвер Aox\n"
+"Theodore Kilgore <kilgota@auburn.edu>\n"
 
 #: camlibs/barbie/barbie.c:149
 #, c-format
@@ -42,6 +52,8 @@ msgid ""
 "Number of pictures: %i\n"
 "Firmware Version: %s"
 msgstr ""
+"Количество изображений: %i\n"
+"Версия прошивки: %s"
 
 #: camlibs/barbie/barbie.c:159
 msgid ""
@@ -56,86 +68,93 @@ msgid ""
 "Implemented using documents found on\n"
 "the web. Permission given by Vision."
 msgstr ""
+"Barbie/HotWheels/WWF\n"
+"Scott Fritzinger <scottf@unr.edu>\n"
+"Andreas Meyer <ahm@spies.com>\n"
+"Pete Zaitcev <zaitcev@metabyte.com>\n"
+"\n"
+"Формат изображений исследовал:\n"
+"Jeff Laing <jeffl@SPATIALinfo.com>\n"
+"\n"
+"Реализовано благодаря документации доступной в\n"
+"Интернете с согласия Vision."
 
-#: camlibs/canon/canon.c:502
-#, fuzzy, c-format
+#: camlibs/canon/canon.c:491
+#, c-format
 msgid "Could not create directory %s."
-msgstr ""
-"оЕ ХДБМПУШ ПФЛТЩФШ:\n"
-"%s"
+msgstr "Невозможно создать каталог %s."
 
-#: camlibs/canon/canon.c:505
-#, fuzzy, c-format
+#: camlibs/canon/canon.c:494
+#, c-format
 msgid "Could not remove directory %s."
-msgstr ""
-"оЕ ХДБМПУШ ПФЛТЩФШ:\n"
-"%s"
+msgstr "Невозможно удалить каталог %s."
 
-#: camlibs/canon/canon.c:847 camlibs/canon/canon.c:1067
-#: camlibs/canon/usb.c:229
+#: camlibs/canon/canon.c:841 camlibs/canon/canon.c:1109
+#: camlibs/canon/usb.c:305
 msgid "lock keys failed."
 msgstr ""
 
-#: camlibs/canon/canon.c:910 camlibs/canon/canon.c:911
+#: camlibs/canon/canon.c:905 camlibs/canon/canon.c:906
 msgid "*UNKNOWN*"
-msgstr ""
+msgstr "*НЕИЗВЕСТНО*"
 
-#: camlibs/canon/canon.c:1016
+#: camlibs/canon/canon.c:1053
 #, c-format
 msgid ""
 "canon_int_capture_image: initial canon_usb_list_all_dirs() failed with "
 "status %i"
 msgstr ""
 
-#: camlibs/canon/canon.c:1097
+#: camlibs/canon/canon.c:1140
 #, c-format
 msgid ""
 "canon_int_capture_image: final canon_usb_list_all_dirs() failed with status %"
 "i"
 msgstr ""
 
-#: camlibs/canon/canon.c:1216
+#: camlibs/canon/canon.c:1259
 #, c-format
 msgid "Name '%s' (%i characters) too long, maximum 30 characters are allowed."
 msgstr ""
 
-#: camlibs/canon/canon.c:1591
+#: camlibs/canon/canon.c:1634
 #, c-format
 msgid "Lower case letters in %s not allowed."
-msgstr ""
+msgstr "Нельзя использовать строчные буквы в %s."
 
-#: camlibs/canon/canon.c:1748
+#: camlibs/canon/canon.c:1791
 #, c-format
 msgid "canon_int_list_dir: ERROR: initial message too short (%i < minimum %i)"
 msgstr ""
 
-#: camlibs/canon/canon.c:1770
+#: camlibs/canon/canon.c:1813
 msgid ""
 "canon_int_list_dir: Reached end of packet while examining the first dirent"
 msgstr ""
 
-#: camlibs/canon/canon.c:1855
+#: camlibs/canon/canon.c:1898
 msgid "canon_int_list_dir: truncated directory entry encountered"
 msgstr ""
 
-#: camlibs/canon/canon.c:2166
+#: camlibs/canon/canon.c:2210
 msgid "File protected."
-msgstr ""
+msgstr "Файл защищен."
 
-#: camlibs/canon/canon.c:2237
+#: camlibs/canon/canon.c:2281
 msgid "Could not extract JPEG thumbnail from data: Data is not JFIF"
 msgstr ""
+"Невозможно получить миниатюру JPEG: Данные не соответствуют формату JFIF"
 
-#: camlibs/canon/canon.c:2262
+#: camlibs/canon/canon.c:2306
 msgid "Could not extract JPEG thumbnail from data: No beginning/end"
-msgstr ""
+msgstr "Невозможно получить миниатюру JPEG: Отсутствует начало/конец"
 
-#: camlibs/canon/canon.h:261 camlibs/canon/canon.h:275
+#: camlibs/canon/canon.h:144 camlibs/canon/canon.h:158
 #, c-format
 msgid "NULL parameter \"%s\" in %s line %i"
 msgstr ""
 
-#: camlibs/canon/canon.h:457
+#: camlibs/canon/canon.h:340
 #, c-format
 msgid ""
 "Don't know how to handle camera->port->type value %i aka 0x%xin %s line %i."
@@ -156,6 +175,8 @@ msgid ""
 "warning: CRC not checked (add len %d, value 0x%04x) "
 "#########################\n"
 msgstr ""
+"внимание: контрольная сумма не проверена (+ длина %d, значение 0x%04x) "
+"#########################\n"
 
 #: camlibs/canon/library.c:134
 msgid ""
@@ -164,92 +185,93 @@ msgid ""
 "computer as idle as possible\n"
 " (i.e. no disk activity)\n"
 msgstr ""
+"Для модели A50 скорость 115200 может оказаться медленнее чем 57600\n"
+"Если возникает много ошибок передачи данных, попытайтесь не нагружать "
+"систему задачами\n"
+" (например снизить активность жёсткого диска)\n"
 
-#: camlibs/canon/library.c:248 camlibs/canon/library.c:1340
-#: camlibs/canon/library.c:1353
-msgid "Camera unavailable"
-msgstr ""
+#: camlibs/canon/library.c:253
+#, fuzzy, c-format
+msgid "Camera unavailable: %s"
+msgstr "Фотоаппарат недоступен"
 
-#: camlibs/canon/library.c:267
+#: camlibs/canon/library.c:273
 msgid "Switching Camera Off"
-msgstr ""
+msgstr "Фотоаппарат выключается"
 
-#: camlibs/canon/library.c:327 camlibs/canon/library.c:361
-#, fuzzy
+#: camlibs/canon/library.c:331 camlibs/canon/library.c:365
 msgid "Error capturing image"
-msgstr "пФЛТЩФШ ЙЪПВТБЦЕОЙЕ"
+msgstr "Ошибка захвата изображения"
 
-#: camlibs/canon/library.c:417
-#, fuzzy, c-format
+#: camlibs/canon/library.c:421
+#, c-format
 msgid "Could not get disk name: %s"
-msgstr "оЕ ХДБМПУШ РПМХЮЙФШ РТПУНПФТ"
+msgstr "Невозможно получить имя диска: %s"
 
-#: camlibs/canon/library.c:418
-#, fuzzy
+#: camlibs/canon/library.c:422
 msgid "No reason available"
-msgstr "оЕ ДПУФХРОП"
+msgstr "Причина неизвестна"
 
-#: camlibs/canon/library.c:425
-#, fuzzy, c-format
+#: camlibs/canon/library.c:429
+#, c-format
 msgid "Could not get disk info: %s"
-msgstr ""
-"оЕ ХДБМПУШ ПФЛТЩФШ:\n"
-"%s"
+msgstr "Невозможно получить информацию о диске: %s"
 
-#: camlibs/canon/library.c:489
+#: camlibs/canon/library.c:493
 #, c-format
 msgid "Internal error #1 in get_file_func() (%s line %i)"
-msgstr ""
+msgstr "Внутренняя ошибка 1 в функции get_file_func() (%s строка %i)"
 
-#: camlibs/canon/library.c:512
-#, fuzzy, c-format
+#: camlibs/canon/library.c:516
+#, c-format
 msgid "No audio file could be found for %s"
-msgstr ""
-"оЕ ХДБМПУШ ПФЛТЩФШ:\n"
-"%s"
+msgstr "Не найден файл звукозаписи для %s"
 
-#: camlibs/canon/library.c:560 camlibs/canon/library.c:598
+#: camlibs/canon/library.c:564 camlibs/canon/library.c:602
 #, c-format
 msgid "%s is a file type for which no thumbnail is provided"
-msgstr ""
+msgstr "%s относится к одному из типов файлов, не имеющих миниатюр"
 
-#: camlibs/canon/library.c:768
+#: camlibs/canon/library.c:772
 #, c-format
 msgid ""
 "  Drive %s\n"
 "  %11s bytes total\n"
 "  %11s bytes available"
 msgstr ""
+"  Диск %s\n"
+"  %11s байт всего\n"
+"  %11s байт свободно"
 
-#: camlibs/canon/library.c:776 camlibs/canon/library.c:782
-#: camlibs/canon/library.c:1295 camlibs/canon/library.c:1301
+#: camlibs/canon/library.c:780 camlibs/canon/library.c:786
+#: camlibs/canon/library.c:1300 camlibs/canon/library.c:1306
 msgid "AC adapter"
-msgstr ""
+msgstr "блок питания"
 
-#: camlibs/canon/library.c:776 camlibs/canon/library.c:782
-#: camlibs/canon/library.c:1295 camlibs/canon/library.c:1301
+#: camlibs/canon/library.c:780 camlibs/canon/library.c:786
+#: camlibs/canon/library.c:1300 camlibs/canon/library.c:1306
 msgid "on battery"
-msgstr ""
+msgstr "аккумулятор"
 
-#: camlibs/canon/library.c:778 camlibs/canon/library.c:1297
+#: camlibs/canon/library.c:782 camlibs/canon/library.c:1302
 msgid "power OK"
-msgstr ""
+msgstr "питание ОК"
 
-#: camlibs/canon/library.c:778 camlibs/canon/library.c:1297
+#: camlibs/canon/library.c:782 camlibs/canon/library.c:1302
 msgid "power bad"
-msgstr ""
+msgstr "сбой питания"
 
-#: camlibs/canon/library.c:786
-#, fuzzy, c-format
+#: camlibs/canon/library.c:790
+#, c-format
 msgid "not available: %s"
-msgstr "оЕ ДПУФХРОП"
+msgstr "нет данных: %s"
 
-#: camlibs/canon/library.c:812
+#: camlibs/canon/library.c:816
 #, c-format
 msgid "%s (host time %s%i seconds)"
-msgstr ""
+msgstr "%s (время компьютера %s%i секунд)"
 
-#: camlibs/canon/library.c:822
+#: camlibs/canon/library.c:826
 #, c-format
 msgid ""
 "\n"
@@ -264,8 +286,19 @@ msgid ""
 "\n"
 "Time: %s\n"
 msgstr ""
+"\n"
+"Определение фотоаппарата:\n"
+"  Модель: %s\n"
+"  Владелец: %s\n"
+"\n"
+"Питание: %s\n"
+"\n"
+"Карта памяти:\n"
+"%s\n"
+"\n"
+"Время: %s\n"
 
-#: camlibs/canon/library.c:839
+#: camlibs/canon/library.c:843
 msgid ""
 "Canon PowerShot series driver by\n"
 "Wolfgang G. Reissnegger,\n"
@@ -275,161 +308,162 @@ msgid ""
 "A5 additions by Ole W. Saastad\n"
 "Holger Klemm\n"
 msgstr ""
+"Драйвер Canon PowerShot создан\n"
+"Wolfgang G. Reissnegger,\n"
+"Werner Almesberger,\n"
+"Edouard Lafargue,\n"
+"Philippe Marzouk,\n"
+"добавление A5 - Ole W. Saastad\n"
+"Holger Klemm\n"
 
-#: camlibs/canon/library.c:878
+#: camlibs/canon/library.c:882
 msgid "Error deleting file"
-msgstr ""
+msgstr "Ошибка удаления файла"
 
-#: camlibs/canon/library.c:894
+#: camlibs/canon/library.c:898
 msgid "Error deleting associated thumbnail file"
-msgstr ""
+msgstr "Ошибка удаления связанного файла миниатюры"
 
-#: camlibs/canon/library.c:1024 camlibs/canon/library.c:1152
+#: camlibs/canon/library.c:1028 camlibs/canon/library.c:1157
 msgid ""
 "Speeds greater than 57600 are not supported for uploading to this camera"
 msgstr ""
+"Превышающие 57600 скорости не поддерживаются при загрузке в этот фотоаппарат"
 
-#: camlibs/canon/library.c:1041 camlibs/canon/library.c:1169
-#, fuzzy
+#: camlibs/canon/library.c:1045 camlibs/canon/library.c:1174
 msgid "Could not get flash drive letter"
-msgstr "оЕ ХДБМПУШ ЧПУУФБОПЧЙФШ #%i"
+msgstr "Невозможно получить букву устройства карты памяти"
 
-#: camlibs/canon/library.c:1084 camlibs/canon/library.c:1192
+#: camlibs/canon/library.c:1089 camlibs/canon/library.c:1197
 msgid ""
 "Could not upload, no free folder name available!\n"
 "999CANON folder name exists and has an AUT_9999.JPG picture in it."
 msgstr ""
 
-#: camlibs/canon/library.c:1106 camlibs/canon/library.c:1212
+#: camlibs/canon/library.c:1111 camlibs/canon/library.c:1217
 msgid "Could not create \\DCIM directory."
-msgstr ""
+msgstr "Невозможно создать каталог \\DCIM."
 
-#: camlibs/canon/library.c:1112 camlibs/canon/library.c:1218
+#: camlibs/canon/library.c:1117 camlibs/canon/library.c:1223
 msgid "Could not create destination directory."
-msgstr ""
+msgstr "Невозможно создать целевой каталог"
 
-#: camlibs/canon/library.c:1250 camlibs/ptp2/library.c:1323
-#: camlibs/ptp2/library.c:1411
-#, fuzzy
+#: camlibs/canon/library.c:1255 camlibs/ptp2/library.c:1544
+#: camlibs/ptp2/library.c:1632
 msgid "Camera and Driver Configuration"
-msgstr "лПОЖЙЗХТБГЙС ЛБНЕТЩ"
+msgstr "Конфигурация фотоаппарата и драйвера "
 
-#: camlibs/canon/library.c:1252 camlibs/polaroid/pdc700.c:982
-#, fuzzy
+#: camlibs/canon/library.c:1257 camlibs/polaroid/pdc700.c:982
 msgid "Camera"
-msgstr "цЙЧБС ЛБНЕТБ!"
+msgstr "Фотоаппарат"
 
-#: camlibs/canon/library.c:1255
-#, fuzzy
+#: camlibs/canon/library.c:1260
 msgid "Camera Model (readonly)"
-msgstr "нПДЕМШ ЛБНЕТЩ:"
+msgstr "Модель фотоаппарата (только для чтения)"
 
-#: camlibs/canon/library.c:1259 camlibs/canon/library.c:1336
+#: camlibs/canon/library.c:1264 camlibs/canon/library.c:1341
 msgid "Owner name"
-msgstr ""
+msgstr "Имя владельца"
 
-#: camlibs/canon/library.c:1266 camlibs/canon/library.c:1270
-#: camlibs/canon/library.c:1275
+#: camlibs/canon/library.c:1271 camlibs/canon/library.c:1275
+#: camlibs/canon/library.c:1280
 msgid "Date and Time (readonly)"
-msgstr ""
+msgstr "Дата и время (только для чтения)"
 
-#: camlibs/canon/library.c:1271
+#: camlibs/canon/library.c:1276
 msgid "Error"
-msgstr ""
+msgstr "Ошибка"
 
-#: camlibs/canon/library.c:1276 camlibs/canon/library.c:1303
-#, fuzzy
+#: camlibs/canon/library.c:1281 camlibs/canon/library.c:1308
 msgid "Unavailable"
-msgstr "оЕ ДПУФХРОП"
+msgstr "нет данных"
 
-#: camlibs/canon/library.c:1280 camlibs/canon/library.c:1349
+#: camlibs/canon/library.c:1285 camlibs/canon/library.c:1354
 msgid "Set camera date to PC date"
 msgstr ""
 
-#: camlibs/canon/library.c:1283
+#: camlibs/canon/library.c:1288
 msgid "Firmware revision (readonly)"
-msgstr ""
+msgstr "Версия прошивки (только для чтения)"
 
-#: camlibs/canon/library.c:1307 camlibs/ptp2/library.c:1357
-#: camlibs/ptp2/library.c:1387
+#: camlibs/canon/library.c:1312 camlibs/ptp2/library.c:1578
+#: camlibs/ptp2/library.c:1608
 msgid "Power (readonly)"
-msgstr ""
+msgstr "Питание (только для чтения)"
 
-#: camlibs/canon/library.c:1311
+#: camlibs/canon/library.c:1316
 msgid "Driver"
-msgstr ""
+msgstr "Драйвер"
 
-#: camlibs/canon/library.c:1314 camlibs/canon/library.c:1363
+#: camlibs/canon/library.c:1319 camlibs/canon/library.c:1368
 msgid "List all files"
-msgstr ""
+msgstr "Показатьсписок всех файлов"
 
-#: camlibs/canon/library.c:1319 camlibs/canon/library.c:1371
+#: camlibs/canon/library.c:1324 camlibs/canon/library.c:1376
 msgid "Keep filename on upload"
-msgstr ""
+msgstr "Сохранить имя файла при закачке"
 
-#: camlibs/canon/library.c:1343
+#: camlibs/canon/library.c:1345 camlibs/canon/library.c:1358
+msgid "Camera unavailable"
+msgstr "Фотоаппарат недоступен"
+
+#: camlibs/canon/library.c:1348
 msgid "Owner name changed"
-msgstr ""
+msgstr "Имя владельца изменено"
 
-#: camlibs/canon/library.c:1345
+#: camlibs/canon/library.c:1350
 msgid "could not change owner name"
-msgstr ""
+msgstr "невозможно изменить имя владельца"
 
-#: camlibs/canon/library.c:1356
-#, fuzzy
+#: camlibs/canon/library.c:1361
 msgid "time set"
-msgstr "уВТПУЙФШ"
+msgstr "время установлено"
 
-#: camlibs/canon/library.c:1358
-#, fuzzy
+#: camlibs/canon/library.c:1363
 msgid "could not set time"
-msgstr "оЕ ХДБМПУШ УПИТБОЙФШ #%i"
+msgstr "невозможно установить время"
 
-#: camlibs/canon/library.c:1574
+#: camlibs/canon/library.c:1579
 #, c-format
 msgid "Unsupported port type %i = 0x%x given. Initialization impossible."
 msgstr ""
+"Получен неподдерживаемый тип порта %i = 0x%x. Инициализация невозможна."
 
 #: camlibs/canon/serial.c:699 camlibs/canon/serial.c:764
 msgid "Battery exhausted, camera off."
-msgstr ""
+msgstr "Акуумулятор разряжен, фотоаппарат выключен."
 
 #: camlibs/canon/serial.c:702
-#, fuzzy
 msgid "ERROR: unexpected message"
-msgstr "пыйвлб: ОЕ ХДБМПУШ ХДБМПУШ ЙЪПВТБЦЕОЙЕ.\n"
+msgstr "ОШИБКА: неожиданное сообщение"
 
 #: camlibs/canon/serial.c:712
 msgid "ERROR: message overrun"
-msgstr ""
+msgstr "ОШИБКА: наслоение сообщений"
 
 #: camlibs/canon/serial.c:741
-#, fuzzy
 msgid "ERROR: out of sequence."
-msgstr "пыйвлб: ОЕ ХДБМПУШ УПИТБОЙФШ ЙЪПВТБЦЕОЙЕ.\n"
+msgstr "ОШИБКА: нарушение последовательности"
 
 #: camlibs/canon/serial.c:746
 msgid "ERROR: unexpected packet type."
-msgstr ""
+msgstr "ОШИБКА: неожиданный тип пакета"
 
 #: camlibs/canon/serial.c:756
 msgid "ERROR: message format error."
-msgstr ""
+msgstr "ОШИБКА: неверный формат сообщения"
 
 #: camlibs/canon/serial.c:768
-#, fuzzy
 msgid "ERROR: unexpected message2."
-msgstr "пыйвлб: ОЕ ХДБМПУШ ХДБМПУШ ЙЪПВТБЦЕОЙЕ.\n"
+msgstr "ОШИБКА: неожиданное сообщение2"
 
 #: camlibs/canon/serial.c:982
-#, fuzzy
 msgid "Uploading file..."
-msgstr "нБУЫФБВ ЙЪПВТБЦЕОЙС 50%..."
+msgstr "Закачка файла..."
 
 #: camlibs/canon/serial.c:1053 camlibs/digita/digita.c:256
-#, fuzzy
 msgid "Getting file..."
-msgstr "рПМХЮЕОЙЕ ЙОДЕЛУБ..."
+msgstr "Получение файла..."
 
 #: camlibs/canon/serial.c:1123
 msgid ""
@@ -467,46 +501,46 @@ msgstr ""
 
 #: camlibs/canon/serial.c:1295
 msgid "Error changing speed."
-msgstr ""
+msgstr "Ошибка изменения скорости."
 
 #: camlibs/canon/serial.c:1304
 msgid "Resetting protocol..."
-msgstr ""
+msgstr "Сброс протокола..."
 
 #: camlibs/canon/serial.c:1313
 msgid "Camera OK.\n"
-msgstr ""
+msgstr "Фотоаппарат ОК.\n"
 
 #: camlibs/canon/serial.c:1326
 msgid "Looking for camera ..."
-msgstr ""
+msgstr "Поиск фотоаппарата..."
 
 #: camlibs/canon/serial.c:1336
 msgid "Trying to contact camera..."
-msgstr ""
+msgstr "Установление связи с фотоаппаратом..."
 
 #: camlibs/canon/serial.c:1340
 msgid "Communication error 1"
-msgstr ""
+msgstr "Ошибка связи 1"
 
 #: camlibs/canon/serial.c:1350 camlibs/canon/serial.c:1354
 #: camlibs/dimera/dimera3500.c:921
 msgid "No response from camera"
-msgstr ""
+msgstr "Нет ответа от фотоаппарата"
 
 #: camlibs/canon/serial.c:1358
 msgid "Unrecognized response"
-msgstr ""
+msgstr "Нераспознанный ответ"
 
 #: camlibs/canon/serial.c:1378
 #, c-format
 msgid "Detected a \"%s\" aka \"%s\""
-msgstr ""
+msgstr "Обнаружен \"%s\" или \"%s\""
 
 #: camlibs/canon/serial.c:1386
 #, c-format
 msgid "Unknown model \"%s\""
-msgstr ""
+msgstr "Неизвестная модель \"%s\""
 
 #: camlibs/canon/serial.c:1407
 msgid "Bad EOT"
@@ -514,322 +548,309 @@ msgstr ""
 
 #: camlibs/canon/serial.c:1413
 msgid "Communication error 2"
-msgstr ""
+msgstr "Ошибка связи 2"
 
 #: camlibs/canon/serial.c:1436
 msgid "Communication error 3"
-msgstr ""
+msgstr "Ошибка связи 3"
 
 #: camlibs/canon/serial.c:1440
 msgid "Changing speed... wait..."
-msgstr ""
+msgstr "Изменение скорости... подождите..."
 
 #: camlibs/canon/serial.c:1445
 msgid "Error changing speed"
-msgstr ""
+msgstr "Ошибка изменения скорости"
 
 #: camlibs/canon/serial.c:1456
 msgid "Error waiting for ACK during initialization retrying"
-msgstr ""
+msgstr "Ошибка ожидания сигнала ACK во время повторной инициализации"
 
 #: camlibs/canon/serial.c:1462
 msgid "Error waiting ACK during initialization"
-msgstr ""
+msgstr "Ошибка ожидания сигнала ACK во время инициализации"
 
 #: camlibs/canon/serial.c:1466
 msgid "Connected to camera"
-msgstr ""
+msgstr "Фотоаппарат подключен"
 
 #: camlibs/canon/serial.c:1504
 msgid "ERROR: a fatal error condition was detected, can't continue "
-msgstr ""
+msgstr "ОШИБКА: обнаружены признаки неисправимой ошибки. Невозможно продолжать"
 
 #: camlibs/canon/serial.c:1520
 #, c-format
 msgid "ERROR: %d is too big"
-msgstr ""
+msgstr "ОШИБКА: %d слишком велик"
 
 #: camlibs/canon/serial.c:1530
-#, fuzzy
 msgid "Getting thumbnail..."
-msgstr "рПМХЮЕОЙЕ НЙОЙБФАТЩ %i..."
+msgstr "Получение миниатюры..."
 
-#: camlibs/canon/usb.c:80
+#: camlibs/canon/usb.c:82
 msgid "NOT RECOGNIZED"
-msgstr ""
+msgstr "НЕ РАСПОЗНАНО"
 
-#: camlibs/canon/usb.c:94
-#, fuzzy
+#: camlibs/canon/usb.c:97
 msgid "Could not establish initial contact with camera"
-msgstr "оЕ ХДБМПУШ РПМХЮЙФШ ЙЪПВТБЦЕОЙЕ."
-
-#: camlibs/canon/usb.c:100
-msgid "Camera was already active"
-msgstr ""
+msgstr "Невозможно установить соединение с фотоаппаратом"
 
 #: camlibs/canon/usb.c:103
-msgid "Camera was woken up"
-msgstr ""
+msgid "Camera was already active"
+msgstr "Фотоаппарат уже был активен"
 
-#: camlibs/canon/usb.c:107
-msgid "Unknown (some kind of error))"
-msgstr ""
+#: camlibs/canon/usb.c:106
+msgid "Camera was woken up"
+msgstr "Фотоаппарат выведен из спящего режима"
 
 #: camlibs/canon/usb.c:111
-#, c-format
-msgid "Initial camera response %c/'%s' unrecognized)"
-msgstr ""
+msgid "Unknown (some kind of error))"
+msgstr "Неизвестно что (какая-то ошибка))"
 
-#: camlibs/canon/usb.c:123
+#: camlibs/canon/usb.c:112
+#, fuzzy, c-format
+msgid "Initial camera response %c/ unrecognized)"
+msgstr "не распознан начальный ответ фотоаппарата %c/'%s')"
+
+#: camlibs/canon/usb.c:126
 #, c-format
 msgid ""
 "Step #2 of initialization failed for PowerShot camera! (returned %i, "
 "expected %i) Camera not operational"
 msgstr ""
 
-#: camlibs/canon/usb.c:135
+#: camlibs/canon/usb.c:140
 #, c-format
 msgid ""
 "EOS Step #3 of initialization failed! (returned %i, expected %i) Camera not "
 "operational"
 msgstr ""
 
-#: camlibs/canon/usb.c:149
-#, c-format
-msgid ""
-"Step #2 of initialization failed for EOS camera! (returned %i, expected %i) "
-"Camera not operational"
-msgstr ""
-
-#: camlibs/canon/usb.c:164
+#: camlibs/canon/usb.c:160
 #, c-format
 msgid ""
 "Step #3 of initialization failed! (returned %i, expected %i) Camera not "
 "operational"
 msgstr ""
 
-#: camlibs/canon/usb.c:195
+#: camlibs/canon/usb.c:190
 #, c-format
 msgid "Step #4.1 failed! (returned %i, expected %i) Camera not operational"
 msgstr ""
 
-#: camlibs/canon/usb.c:262 camlibs/sipix/blink.c:1068
+#: camlibs/canon/usb.c:248 camlibs/sipix/blink.c:1068
 #: camlibs/stv0674/stv0674.c:250
-#, fuzzy
 msgid "Could not apply USB settings"
-msgstr ""
-"оЕ ХДБМПУШ ПФЛТЩФШ:\n"
-"%s"
+msgstr "Невозможно применить конфигурацию USB"
 
-#: camlibs/canon/usb.c:287
+#: camlibs/canon/usb.c:273
 #, c-format
 msgid "Camera not ready, multiple 'Identify camera' requests failed: %s"
 msgstr ""
+"Фотоаппарат не готов, несколько запросов идентификации завершились ошибкой: %s"
 
-#: camlibs/canon/usb.c:295
+#: camlibs/canon/usb.c:312
 #, c-format
 msgid "Camera not ready, get_battery failed: %s"
-msgstr ""
+msgstr "Фотоаппарат не готов, %s"
 
-#: camlibs/canon/usb.c:341
+#: camlibs/canon/usb.c:361
 #, c-format
 msgid ""
 "canon_usb_lock_keys: Unexpected return of %i bytes (expected %i) from \"get "
 "picture abilities.\""
 msgstr ""
 
-#: camlibs/canon/usb.c:353 camlibs/canon/usb.c:374 camlibs/canon/usb.c:397
+#: camlibs/canon/usb.c:375 camlibs/canon/usb.c:397 camlibs/canon/usb.c:422
 #, c-format
 msgid ""
 "canon_usb_lock_keys: Unexpected amount of data returned (%i bytes, expected %"
 "i)"
 msgstr ""
 
-#: camlibs/canon/usb.c:436
+#: camlibs/canon/usb.c:461
 #, c-format
 msgid ""
 "canon_usb_unlock_keys: Unexpected amount of data returned (%i bytes, "
 "expected %i)"
 msgstr ""
 
-#: camlibs/canon/usb.c:485
+#: camlibs/canon/usb.c:510
 #, c-format
 msgid ""
 "canon_usb_poll_interrupt_pipe: interrupt read failed after %i tries, \"%s\""
 msgstr ""
 
-#: camlibs/canon/usb.c:538
+#: camlibs/canon/usb.c:563
 #, c-format
 msgid ""
 "canon_usb_poll_interrupt_multiple: interrupt read failed after %i tries, \"%s"
 "\""
 msgstr ""
 
-#: camlibs/canon/usb.c:636
+#: camlibs/canon/usb.c:661
 #, c-format
 msgid ""
 "canon_usb_capture_dialogue: bogus length 0x%04x for thumbnail size packet"
 msgstr ""
 
-#: camlibs/canon/usb.c:647
+#: camlibs/canon/usb.c:672
 #, c-format
 msgid ""
 "canon_usb_capture_dialogue: bogus length 0x%04x for full image size packet"
 msgstr ""
 
-#: camlibs/canon/usb.c:667
+#: camlibs/canon/usb.c:692
 msgid "canon_usb_capture_dialogue: first interrupt read out of sequence"
 msgstr ""
 
-#: camlibs/canon/usb.c:675
+#: camlibs/canon/usb.c:700
 msgid "canon_usb_capture_dialogue: second interrupt read out of sequence"
 msgstr ""
 
-#: camlibs/canon/usb.c:685
+#: camlibs/canon/usb.c:710
 #, c-format
 msgid ""
 "canon_usb_capture_dialogue: photographic failure signaled, code = 0x%08x"
 msgstr ""
 
-#: camlibs/canon/usb.c:703
+#: camlibs/canon/usb.c:728
 msgid "canon_usb_capture_dialogue: third EOS interrupt read out of sequence"
 msgstr ""
 
-#: camlibs/canon/usb.c:730
+#: camlibs/canon/usb.c:755
 msgid "canon_usb_capture_dialogue: fourth EOS interrupt read out of sequence"
 msgstr ""
 
-#: camlibs/canon/usb.c:885
+#: camlibs/canon/usb.c:910
 #, c-format
 msgid "canon_usb_dialogue: payload too big, won't fit into buffer (%i > %i)"
 msgstr ""
 
-#: camlibs/canon/usb.c:1039
+#: camlibs/canon/usb.c:1064
 msgid "Receiving data..."
-msgstr ""
+msgstr "Принимаются данные..."
 
-#: camlibs/canon/usb.c:1320 camlibs/canon/usb.c:1456
+#: camlibs/canon/usb.c:1345 camlibs/canon/usb.c:1481
 #, c-format
 msgid "Out of memory: %d bytes needed."
-msgstr ""
+msgstr "Недостаточно памяти: необходимо %d байт(ов)."
 
-#: camlibs/canon/usb.c:1383
+#: camlibs/canon/usb.c:1408
 msgid "canon_usb_set_file_attributes: canon_usb_dialogue failed"
 msgstr ""
 
-#: camlibs/canon/usb.c:1390
+#: camlibs/canon/usb.c:1415
 #, c-format
 msgid ""
 "canon_usb_set_file_attributes: canon_usb_dialogue returned error status 0x%"
 "08x from camera"
 msgstr ""
 
-#: camlibs/canon/usb.c:1467
-#, fuzzy, c-format
+#: camlibs/canon/usb.c:1492
+#, c-format
 msgid "Couldn't read from file \"%s\""
-msgstr ""
-"оЕ ХДБМПУШ ПФЛТЩФШ:\n"
-"%s"
+msgstr "Невозможно прочесть файл \"%s\""
 
-#: camlibs/canon/usb.c:1477
+#: camlibs/canon/usb.c:1502
 #, c-format
 msgid "Out of memory: %ld bytes needed."
-msgstr ""
+msgstr "Недостаточно памяти: необходимо %ld байт(ов)."
 
-#: camlibs/canon/usb.c:1510 camlibs/canon/usb.c:1521 camlibs/canon/usb.c:1557
-#: camlibs/canon/usb.c:1568 camlibs/canon/usb.c:1579
-#, fuzzy
+#: camlibs/canon/usb.c:1535 camlibs/canon/usb.c:1546 camlibs/canon/usb.c:1582
+#: camlibs/canon/usb.c:1596 camlibs/canon/usb.c:1610
 msgid "File upload failed."
-msgstr "нБУЫФБВ ЙЪПВТБЦЕОЙС 50%..."
+msgstr "Закачка файла не удалась."
 
-#: camlibs/canon/usb.c:1600
+#: camlibs/canon/usb.c:1634
 msgid ""
 "File was too big. You may have to turn your camera off and back on before "
 "uploading more files."
 msgstr ""
 
-#: camlibs/canon/usb.c:1646
+#: camlibs/canon/usb.c:1680
 #, c-format
 msgid ""
 "canon_usb_get_dirents: Couldn't fit payload into buffer, '%.96s' (truncated) "
 "too long."
 msgstr ""
 
-#: camlibs/canon/usb.c:1663
+#: camlibs/canon/usb.c:1697
 #, c-format
 msgid ""
 "canon_usb_get_dirents: canon_usb_long_dialogue failed to fetch direntries, "
 "returned %i"
 msgstr ""
 
-#: camlibs/canon/usb.c:1713
+#: camlibs/canon/usb.c:1748
 #, c-format
 msgid ""
 "canon_usb_list_all_dirs: Couldn't fit payload into buffer, "
 "'%.96s' (truncated) too long."
 msgstr ""
 
-#: camlibs/canon/usb.c:1732
+#: camlibs/canon/usb.c:1767
 #, c-format
 msgid ""
 "canon_usb_list_all_dirs: canon_usb_long_dialogue failed to fetch direntries, "
 "returned %i"
 msgstr ""
 
-#: camlibs/canon/usb.c:1801
+#: camlibs/canon/usb.c:1836
 #, c-format
 msgid "Detected a '%s'."
-msgstr ""
+msgstr "Обнаружен '%s'."
 
-#: camlibs/canon/usb.c:1807
+#: camlibs/canon/usb.c:1842
 #, c-format
 msgid "Name \"%s\" from camera does not match any known camera"
-msgstr ""
+msgstr "Сообщаемого фооаппаратом названия \"%s\" нет среди известных моделей"
 
 #: camlibs/digita/digita.c:331
 msgid "Unsupported image type"
-msgstr ""
+msgstr "Неподдерживаемый формат изображения"
 
 #: camlibs/digita/digita.c:389
-#, fuzzy, c-format
+#, c-format
 msgid "Number of pictures: %d"
-msgstr "оПЧПЕ ЙЪПВТБЦЕОЙЕ #%03i"
+msgstr "Количество изображений: %d"
 
 #: camlibs/digita/digita.c:396
 msgid ""
 "Digita\n"
 "Johannes Erdfelt <johannes@erdfelt.com>"
 msgstr ""
+"Digita\n"
+"Johannes Erdfelt <johannes@erdfelt.com>"
 
 #: camlibs/dimera/dimera3500.c:161
 #, c-format
 msgid ""
 "Only root folder is supported - you requested a file listing for folder '%s'."
 msgstr ""
+"Поддерживается обращения только в корневую папку - запрошен список файлов "
+"папки '%s'."
 
 #: camlibs/dimera/dimera3500.c:169 camlibs/dimera/dimera3500.c:363
-#, fuzzy
 msgid "Problem getting number of images"
-msgstr "оЕ ХДБМПУШ РПМХЮЙФШ ЮЙУМП ЙЪПВТБЦЕОЙК"
+msgstr "Проблема получения числа изображений"
 
 #: camlibs/dimera/dimera3500.c:213
-#, fuzzy
 msgid "Image type is not supported"
-msgstr "уПИТБОЕОЙЕ ЙОДЕЛУБ ЕЭЕ ОЕ РПДДЕТЦЙЧБЕФУС"
+msgstr "Данный формат изображения не поддерживается"
 
 #: camlibs/dimera/dimera3500.c:268 camlibs/dimera/dimera3500.c:514
 msgid "Problem getting image information"
-msgstr ""
+msgstr "Проблема получения сведений об изображении"
 
 #: camlibs/dimera/dimera3500.c:299
-#, fuzzy
 msgid "Capture type is not supported"
-msgstr "уПИТБОЕОЙЕ ЙОДЕЛУБ ЕЭЕ ОЕ РПДДЕТЦЙЧБЕФУС"
+msgstr "Неподдерживаемый метод съёмки"
 
 #: camlibs/dimera/dimera3500.c:384
 #, c-format
 msgid " (battery is %d%% full)"
-msgstr ""
+msgstr " (аккумулятор заряжен на %d%%)"
 
 #: camlibs/dimera/dimera3500.c:388
 #, c-format
@@ -841,78 +862,85 @@ msgid ""
 "Resolution is set to %s\n"
 "Camera is %s powered%s\n"
 msgstr ""
+"Dimera 3500 вер. %s %d/%d %d:%d\n"
+"%d снимков из примерно %d (высокое разрешение) или %d (низкое разрешение)\n"
+"Возможности фотоаппарата: %s, %s, %s, %s\n"
+"Карта памяти - %s, %s и %s\n"
+"Выбрано разрешение %s\n"
+"Тип питания: %s, %s\n"
 
 #: camlibs/dimera/dimera3500.c:399 camlibs/dimera/dimera3500.c:785
 #: camlibs/kodak/dc210/dc210.c:253 camlibs/kodak/dc210/dc210.c:421
 #: camlibs/konica/library.c:778 camlibs/konica/library.c:1019
-#: camlibs/konica/qm150.c:854 camlibs/ricoh/library.c:500
+#: camlibs/konica/qm150.c:854 camlibs/ptp2/library.c:1158
+#: camlibs/ptp2/library.c:1526 camlibs/ricoh/library.c:500
 #: camlibs/sierra/nikon-desc.c:252
 msgid "Flash"
-msgstr ""
+msgstr "Вспышка"
 
 #: camlibs/dimera/dimera3500.c:399
 msgid "NO Flash"
-msgstr ""
+msgstr "БЕЗ вспышки"
 
 #: camlibs/dimera/dimera3500.c:401
 msgid "Dual Iris"
-msgstr ""
+msgstr "Двойная ирисовая диафрагма"
 
 #: camlibs/dimera/dimera3500.c:401
 msgid "NO Dual Iris"
-msgstr ""
+msgstr "БЕЗ двойной ирисовой диафрагмы"
 
 #: camlibs/dimera/dimera3500.c:403
 msgid "Resolution Switch"
-msgstr ""
+msgstr "Переключение разрешения"
 
 #: camlibs/dimera/dimera3500.c:403
 msgid "NO Resolution Switch"
-msgstr ""
+msgstr "БЕЗ переключения разрешения"
 
 #: camlibs/dimera/dimera3500.c:405
 msgid "NO Power Light"
-msgstr ""
+msgstr "БЕЗ индикатора питания"
 
 #: camlibs/dimera/dimera3500.c:407
 msgid "ON"
-msgstr ""
+msgstr "ВКЛ"
 
 #: camlibs/dimera/dimera3500.c:407
 msgid "OFF"
-msgstr ""
+msgstr "ВЫКЛ"
 
 #: camlibs/dimera/dimera3500.c:409
 msgid "ready"
-msgstr ""
+msgstr "готов"
 
 #: camlibs/dimera/dimera3500.c:409
 msgid "NOT ready"
-msgstr ""
+msgstr "НЕ готов"
 
 #: camlibs/dimera/dimera3500.c:411
 msgid "in fill mode"
-msgstr ""
+msgstr "в режиме заполнения"
 
 #: camlibs/dimera/dimera3500.c:411
 msgid "NOT in fill mode"
-msgstr ""
+msgstr "НЕ в режиме заполнения"
 
 #: camlibs/dimera/dimera3500.c:413
 msgid "low (320x240)"
-msgstr ""
+msgstr "низкое (320x240)"
 
 #: camlibs/dimera/dimera3500.c:413
 msgid "high (640x480)"
-msgstr ""
+msgstr "высокое  (640x480)"
 
 #: camlibs/dimera/dimera3500.c:415
 msgid "externally"
-msgstr ""
+msgstr "снаружи"
 
 #: camlibs/dimera/dimera3500.c:415
 msgid "internally"
-msgstr ""
+msgstr "внутри"
 
 #: camlibs/dimera/dimera3500.c:425
 msgid ""
@@ -924,6 +952,13 @@ msgid ""
 "  configured manually or set to automatic mode.\n"
 "* Image quality is currently lower than it could be.\n"
 msgstr ""
+"* Часто артефакты на изображениях или сбои передачи данных\n"
+"  возникают из-за недостаточного заряда аккумулятора.\n"
+"* Сделанные эти аппаратом по удалённой команде снимки \n"
+"  хранятся во временном ОЗУ, и не записываются на карту памяти.\n"
+"* Выдержка при съёмке фотографий может быть задана вручную\n"
+"  или определяться автоматически.\n"
+"* Пока что качество изображений уступает возможному.\n"
 
 #: camlibs/dimera/dimera3500.c:439
 msgid ""
@@ -941,124 +976,128 @@ msgid ""
 "     Information on protocol, raw image format,\n"
 "     gphoto2 port\n"
 msgstr ""
+"gPhoto2 Mustek VDC-3500/Relisys Dimera 3500\n"
+"При создании этой программы использовалась\n"
+"закрытая информация, принадлежащая фирме\n"
+"StarDot Technologies.\n"
+"\n"
+"Автор:\n"
+"  Brian Beattie  <URL:http://www.beattie-home.net>\n"
+"Помощь оказывали:\n"
+"  Chuck Homic <chuck@vvisions.com>\n"
+"     Преобразование исходных данных снимков в формат RGB\n"
+"  Dan Fandrich <dan@coneharvesters.com>\n"
+"     Информация о протоколе обмена, формате исходных данных,\n"
+"     портирование для gphoto2\n"
 
 #: camlibs/dimera/dimera3500.c:532
 msgid "Problem reading image from flash"
-msgstr ""
+msgstr "Ошибка чтения изображения с карты памяти"
 
 #: camlibs/dimera/dimera3500.c:550 camlibs/dimera/dimera3500.c:716
 #: camlibs/dimera/dimera3500.c:860
 msgid "Out of memory"
-msgstr ""
+msgstr "Недостаточно памяти"
 
 #: camlibs/dimera/dimera3500.c:567 camlibs/dimera/dimera3500.c:603
 #: camlibs/konica/qm150.c:259 camlibs/panasonic/coolshot/library.c:375
 #: camlibs/ricoh/g3.c:301 camlibs/samsung/samsung.c:214
 #: camlibs/sipix/web2.c:175 camlibs/smal/ultrapocket.c:127
 #: camlibs/smal/ultrapocket.c:173
-#, fuzzy
 msgid "Downloading image..."
-msgstr "уЛБЮЙЧБОЙЕ ПУФБОПЧМЕОП."
+msgstr "Копируется изображение..."
 
 #: camlibs/dimera/dimera3500.c:589 camlibs/dimera/dimera3500.c:625
-#, fuzzy
 msgid "Problem downloading image"
-msgstr "уЛБЮЙЧБОЙЕ ЪБЧЕТЫЕОП."
+msgstr "Проблема копирования изображения"
 
 #: camlibs/dimera/dimera3500.c:597
 msgid "User canceled download"
-msgstr ""
+msgstr "Копирование прервано пользователем"
 
 #: camlibs/dimera/dimera3500.c:731
-#, fuzzy
 msgid "Problem taking live image"
-msgstr "рПМХЮЕОЙЕ ЦЙЧПЗП ЙЪПВТБЦЕОЙС..."
+msgstr "Ошибка съёмки"
 
 #: camlibs/dimera/dimera3500.c:771 camlibs/kodak/dc210/dc210.c:168
-#: camlibs/polaroid/pdc700.c:980 camlibs/sierra/sierra.c:838
-#: camlibs/sierra/sierra.c:1416 camlibs/sierra/sierra-desc.c:192
+#: camlibs/polaroid/pdc700.c:980 camlibs/sierra/sierra.c:849
+#: camlibs/sierra/sierra.c:1427 camlibs/sierra/sierra-desc.c:192
 msgid "Camera Configuration"
-msgstr "лПОЖЙЗХТБГЙС ЛБНЕТЩ"
+msgstr "Конфигурация фотоаппарата"
 
 #: camlibs/dimera/dimera3500.c:773 camlibs/konica/library.c:804
 #: camlibs/konica/library.c:1037 camlibs/konica/qm150.c:882
 #: camlibs/ricoh/library.c:496
 msgid "Exposure"
-msgstr ""
+msgstr "Выдержка"
 
 #: camlibs/dimera/dimera3500.c:776 camlibs/dimera/dimera3500.c:813
 msgid "Automatic exposure adjustment on preview"
-msgstr ""
+msgstr "Автоматическая настройка выдержки во время предварительного просмотра"
 
 #: camlibs/dimera/dimera3500.c:780 camlibs/dimera/dimera3500.c:805
 msgid "Exposure level on preview"
-msgstr ""
+msgstr "Длительность выдержки во время предварительного просмотра"
 
 #: camlibs/dimera/dimera3500.c:788 camlibs/dimera/dimera3500.c:822
 msgid "Automatic flash on capture"
-msgstr ""
+msgstr "Автовспышка при съёмке"
 
 #: camlibs/dimera/dimera3500.c:888
 msgid "Problem opening port"
-msgstr ""
+msgstr "Ошибка открытия порта"
 
 #: camlibs/dimera/dimera3500.c:898
 msgid "Problem resetting camera"
-msgstr ""
+msgstr "Ошибка сброса состояния фотоаппарата"
 
 #: camlibs/dimera/dimera3500.c:908
 msgid "Problem setting camera communication speed"
-msgstr ""
+msgstr "Проблема установки скорости обмена данными с фотоаппаратом"
 
 #: camlibs/dimera/dimera3500.c:927
 msgid "Looks like a modem, not a camera"
-msgstr ""
+msgstr "Похоже, что это модем, а не фотоаппарат"
 
 #: camlibs/directory/directory.c:168
 #, c-format
 msgid "Listing files in '%s'..."
-msgstr ""
+msgstr "Составление списка файлов в '%s'..."
 
 #: camlibs/directory/directory.c:215
-#, fuzzy, c-format
+#, c-format
 msgid "Could not get information about '%s' (%m)."
-msgstr ""
-"оЕ ХДБМПУШ ПФЛТЩФШ:\n"
-"%s"
+msgstr "Невозможно получить сведения о '%s' (%m)."
 
 #: camlibs/directory/directory.c:224
-#, fuzzy, c-format
+#, c-format
 msgid "Could not follow the link '%s' (%m)."
-msgstr ""
-"оЕ ХДБМПУШ ПФЛТЩФШ:\n"
-"%s"
+msgstr "Невозможно последовать ссылке '%s' (%m)."
 
 #: camlibs/directory/directory.c:252
 #, c-format
 msgid "Listing folders in '%s'..."
-msgstr ""
+msgstr "Получение списка папок в '%s'..."
 
 #: camlibs/directory/directory.c:304
 #, c-format
 msgid "Could not get information about '%s' in '%s' (%m)."
-msgstr ""
+msgstr "Невозможно получить сведения о '%s' в '%s' (%m)."
 
 #: camlibs/directory/directory.c:312
 #, c-format
 msgid "Could not follow the link '%s' in '%s' (%m)."
-msgstr ""
+msgstr "Невозможно последовать ссылке '%s' in '%s' (%m)."
 
 #: camlibs/directory/directory.c:378
 #, c-format
 msgid "Could not change time of file '%s' in '%s' (%m)."
-msgstr ""
+msgstr "Невозможно изменить время файла '%s' в '%s' (%m)"
 
 #: camlibs/directory/directory.c:459
-#, fuzzy, c-format
+#, c-format
 msgid "Could not open '%s'."
-msgstr ""
-"оЕ ХДБМПУШ ПФЛТЩФШ:\n"
-"%s"
+msgstr "Невозможно открыть '%s'."
 
 #: camlibs/directory/directory.c:500
 msgid "Directory Browse"
@@ -1066,7 +1105,7 @@ msgstr ""
 
 #: camlibs/directory/directory.c:501 camlibs/directory/directory.c:532
 msgid "View hidden directories"
-msgstr ""
+msgstr "Просматривать скрытые каталоги"
 
 #: camlibs/directory/directory.c:545
 msgid ""
@@ -1074,16 +1113,13 @@ msgid ""
 msgstr ""
 
 #: camlibs/directory/directory.c:554
-#, fuzzy
 msgid "Directory Browse Mode - written by Scott Fritzinger <scottf@unr.edu>."
 msgstr ""
-"бЧФПТУЛПЕ РТБЧП © 1998-2000 Scott Fritzinger <scottf@unr.edu>\n"
-"\n"
 
 #: camlibs/directory/directory.c:601
 #, c-format
 msgid "Could not delete file '%s' in folder '%s' (error code %i: %m)."
-msgstr ""
+msgstr "Невозможно удалить файл '%s' в папке '%s' (код ошибки %i: %m)."
 
 #: camlibs/enigma13/enigma13.c:69
 msgid ""
@@ -1091,6 +1127,9 @@ msgid ""
 "com>, and adapted from spca50x driver.Thanks you, spca50x team, it was easy "
 "to port your driver on this cam! "
 msgstr ""
+"Программа копирования снимков для Digital Dream Enigma 1.3. от "
+"<olivier@aixmarseille.com>, сделана на основе драйвера spca50x.Спасибо "
+"авторам spca50x! Адаптировать ваш драйвер для этого аппарата было нетрудно! "
 
 #: camlibs/fuji/fuji.c:85
 #, c-format
@@ -1098,9 +1137,8 @@ msgid "The camera sent only %i byte(s), but we need at least %i."
 msgstr ""
 
 #: camlibs/fuji/fuji.c:126 camlibs/ricoh/library.c:551
-#, fuzzy
 msgid "Could not contact camera."
-msgstr "оЕ ХДБМПУШ РПМХЮЙФШ ЙЪПВТБЦЕОЙЕ."
+msgstr "Невозможно установить соединение с фотоаппаратом."
 
 #: camlibs/fuji/fuji.c:188
 #, c-format
@@ -1129,12 +1167,11 @@ msgstr ""
 
 #: camlibs/fuji/fuji.c:289 camlibs/fuji/fuji.c:728
 msgid "Camera rejected the command."
-msgstr ""
+msgstr "Фотоаппарат отклонил команду."
 
 #: camlibs/fuji/fuji.c:298 camlibs/fuji/fuji.c:737
-#, fuzzy
 msgid "Camera reset itself."
-msgstr "гЧЕФПЧЩЕ ОБУФТПКЛЙ"
+msgstr "Самопроизвольный сброс состояния фотоаппарата."
 
 #: camlibs/fuji/fuji.c:302 camlibs/fuji/fuji.c:742
 #, c-format
@@ -1143,9 +1180,8 @@ msgstr ""
 
 #: camlibs/fuji/fuji.c:317 camlibs/konica/lowlevel.c:382
 #: camlibs/polaroid/pdc700.c:314 camlibs/ricoh/g3.c:295
-#, fuzzy
 msgid "Downloading..."
-msgstr "уЛБЮЙЧБОЙЕ ЪБЧЕТЫЕОП."
+msgstr "Копирование..."
 
 #: camlibs/fuji/fuji.c:538
 #, c-format
@@ -1168,9 +1204,9 @@ msgid "Could not initialize upload (camera responded with 0x%02x)."
 msgstr ""
 
 #: camlibs/fuji/fuji.c:773
-#, fuzzy, c-format
+#, c-format
 msgid "The camera does not support speed %i."
-msgstr "уПИТБОЕОЙЕ ЙОДЕЛУБ ЕЭЕ ОЕ РПДДЕТЦЙЧБЕФУС"
+msgstr "Фотоаппарат не поддерживает скорость %i."
 
 #: camlibs/fuji/fuji.c:777
 #, c-format
@@ -1182,11 +1218,13 @@ msgid ""
 "Matthew G. Martin\n"
 "Based on fujiplay by Thierry Bousch <bousch@topo.math.u-psud.fr>\n"
 msgstr ""
+"Matthew G. Martin\n"
+"На основе fujiplay от Thierry Bousch <bousch@topo.math.u-psud.fr>\n"
 
 #: camlibs/fuji/library.c:317
-#, fuzzy, c-format
+#, c-format
 msgid "Bit rate %ld is not supported."
-msgstr "уПИТБОЕОЙЕ ЙОДЕЛУБ ЕЭЕ ОЕ РПДДЕТЦЙЧБЕФУС"
+msgstr "Битовая скорость %ld не поддерживается."
 
 #: camlibs/fuji/library.c:365
 msgid "Configuration for your FUJI camera"
@@ -1194,25 +1232,25 @@ msgstr ""
 
 #: camlibs/fuji/library.c:370 camlibs/fuji/library.c:403
 #: camlibs/ricoh/library.c:445 camlibs/ricoh/library.c:447
-#: camlibs/sierra/sierra.c:1644 camlibs/sierra/sierra.c:1817
+#: camlibs/sierra/sierra.c:1655 camlibs/sierra/sierra.c:1828
 msgid "Date & Time"
-msgstr ""
+msgstr "Дата и время"
 
 #: camlibs/fuji/library.c:385 camlibs/fuji/library.c:418
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #: camlibs/fuji/library.c:438
 msgid "Version: "
-msgstr ""
+msgstr "Версия:"
 
 #: camlibs/fuji/library.c:444
 msgid "Model: "
-msgstr ""
+msgstr "Модель:"
 
 #: camlibs/fuji/library.c:451
 msgid "Available memory: "
-msgstr ""
+msgstr "Доступная память:"
 
 #: camlibs/gsmart300/library.c:163
 msgid ""
@@ -1224,6 +1262,13 @@ msgid ""
 "provided by Mustek.\n"
 "\n"
 msgstr ""
+"Библиотека gsmart300 \n"
+"Till Adam <till@adam-lilienthal.de>\n"
+"Jerome Lodewyck <jerome.lodewyck@ens.fr>\n"
+"Поддержка фотоаппаратов Mustek gSmart 300\n"
+"основывается на нескольких модулях gphoto2 и спецификациях, которые были "
+"любезно предоставлены фирмой Mustek.\n"
+"\n"
 
 #: camlibs/gsmart300/library.c:199
 #, c-format
@@ -1231,9 +1276,8 @@ msgid "Unsupported port type: %d.This driver only works with USBcameras.\n"
 msgstr ""
 
 #: camlibs/gsmart300/library.c:216 camlibs/spca50x/library.c:628
-#, fuzzy
 msgid "Could not reset camera.\n"
-msgstr "оЕ ХДБМПУШ РПМХЮЙФШ ЙЪПВТБЦЕОЙЕ."
+msgstr "Невозможно сбросить состояние фотоаппарата.\n"
 
 #: camlibs/gsmart300/library.c:346 camlibs/spca50x/library.c:516
 #, c-format
@@ -1241,11 +1285,44 @@ msgid ""
 "Your camera does only support deleting the last file on the camera. In this "
 "case, this is file '%s'."
 msgstr ""
+"Фотоаппарат позволяет удалить только последний файл. В данном случае это "
+"файл '%s'."
+
+#: camlibs/iclick/library.c:102
+#, fuzzy, c-format
+msgid ""
+"Your USB camera is an iClick 5X.\n"
+"The total number of pictures taken is %i\n"
+msgstr ""
+"Модель вашего USB-фотоаппарата - Kodak EZ200.\n"
+"Число изображений = %i\n"
+
+#: camlibs/iclick/library.c:114
+msgid ""
+"For cameras with ID 0x2770:0x9153.\n"
+"\n"
+"We do not recommend the use of a GUI program to access\n"
+"this camera, unless you are just having fun or trying to\n"
+"see if you can blow a fuse.\n"
+"If you seriously want your photos, try\n"
+"gphoto2 -P\n"
+"from the command line.\n"
+"Also don't even try to download video clips.\n"
+msgstr ""
+
+#: camlibs/iclick/library.c:132
+#, fuzzy
+msgid ""
+"iClick 5X driver\n"
+"Theodore Kilgore <kilgota@auburn.edu>\n"
+msgstr ""
+"Базовый драйвер Aox\n"
+"Theodore Kilgore <kilgota@auburn.edu>\n"
 
 #: camlibs/jamcam/jamcam.c:284
 #, c-format
 msgid "Frames Taken     : %4d\n"
-msgstr ""
+msgstr "Сделано снимков     : %4d\n"
 
 #: camlibs/jamcam/jamcam.c:295
 msgid "jamcam library v"
@@ -1264,16 +1341,20 @@ msgid ""
 "based on reverse engineering serial protocol.\n"
 "\n"
 msgstr ""
+"\n"
+"Chris Pinkham <cpinkham@infi.net>\n"
+"Поддержка цифровых фотоаппаратов KBGear JamCam v2.0 & v3.0\n"
+"основана на исследованиях протокола передачи данных по последовательному "
+"порту.\n"
+"\n"
 
 #: camlibs/jamcam/library.c:337 camlibs/jd11/serial.c:459
-#, fuzzy
 msgid "Downloading data..."
-msgstr "уЛБЮЙЧБОЙЕ ЪБЧЕТЫЕОП."
+msgstr "Копируются данные..."
 
 #: camlibs/jamcam/library.c:497 camlibs/jd11/serial.c:375
-#, fuzzy
 msgid "Downloading thumbnail..."
-msgstr "уЛБЮЙЧБОЙЕ ПУФБОПЧМЕОП."
+msgstr "Копируется миниатюра..."
 
 #: camlibs/jd11/jd11.c:161
 msgid ""
@@ -1284,6 +1365,12 @@ msgid ""
 "   - thumbnails (64x48 PGM format)\n"
 "   - full images (640x480 PPM format)\n"
 msgstr ""
+"Фотоаппарат JD11 достаточно хорошо работает с этим драйвером.\n"
+"Для получения изображений необходим интерфейс RS232 со скоростью 115 Кбит.\n"
+"Драйвер позволяет копировать\n"
+"\n"
+"   - миниатюры (64x48, формат PGM )\n"
+"   - фотографии (640x480, формат PPM)\n"
 
 #: camlibs/jd11/jd11.c:174
 msgid ""
@@ -1292,36 +1379,43 @@ msgid ""
 "Driver for the Jenoptik JD11 camera.\n"
 "Protocol reverse engineered using WINE and IDA."
 msgstr ""
+"JD11\n"
+"Marcus Meissner <marcus@jet.franken.de>\n"
+"Драйвер фотоаппарата Jenoptik JD11.\n"
+"Для исследования протокола применялись WINE и IDA."
 
-#: camlibs/jd11/jd11.c:189 camlibs/jd11/jd11.c:241
+#: camlibs/jd11/jd11.c:187
 #, fuzzy
+msgid "JD11 Configuration"
+msgstr "Конфигурация"
+
+#: camlibs/jd11/jd11.c:190 camlibs/jd11/jd11.c:247
 msgid "Other Settings"
-msgstr "гЧЕФПЧЩЕ ОБУФТПКЛЙ"
+msgstr "Прочие параметры"
 
-#: camlibs/jd11/jd11.c:194 camlibs/jd11/jd11.c:242
+#: camlibs/jd11/jd11.c:195 camlibs/jd11/jd11.c:248
 msgid "Bulb Exposure Time"
-msgstr ""
+msgstr "Продолжительность сверхдлинной выдержки"
 
-#: camlibs/jd11/jd11.c:202 camlibs/jd11/jd11.c:250
-#, fuzzy
+#: camlibs/jd11/jd11.c:204 camlibs/jd11/jd11.c:256
 msgid "Color Settings"
-msgstr "гЧЕФПЧЩЕ ОБУФТПКЛЙ"
+msgstr "Настройки цвета"
 
-#: camlibs/jd11/jd11.c:208 camlibs/jd11/jd11.c:252
+#: camlibs/jd11/jd11.c:211 camlibs/jd11/jd11.c:258
 msgid "Red"
-msgstr ""
+msgstr "Красный"
 
-#: camlibs/jd11/jd11.c:215 camlibs/jd11/jd11.c:257
+#: camlibs/jd11/jd11.c:219 camlibs/jd11/jd11.c:263
 msgid "Green"
-msgstr ""
+msgstr "Зелёный"
 
-#: camlibs/jd11/jd11.c:222 camlibs/jd11/jd11.c:262
+#: camlibs/jd11/jd11.c:227 camlibs/jd11/jd11.c:268
 msgid "Blue"
-msgstr ""
+msgstr "Синий"
 
 #: camlibs/kodak/dc120/dc120.c:31
 msgid "CompactFlash Card"
-msgstr ""
+msgstr "Карта CompactFlash"
 
 #: camlibs/kodak/dc120/dc120.c:364
 msgid ""
@@ -1330,6 +1424,9 @@ msgid ""
 "download the \"kdc2tiff\" program. It is available from http://kdc2tiff."
 "sourceforge.net"
 msgstr ""
+"Фотоаппарат Kodak DC120 использует формат KDC для записи изображений. Для "
+"просмотра полученных из аппарата изображений понадобится программа \"kdc2tiff"
+"\". Её можно загрузить по адресу http://kdc2tiff.sourceforge.net"
 
 #: camlibs/kodak/dc120/dc120.c:376
 msgid ""
@@ -1338,13 +1435,16 @@ msgid ""
 "Camera Library for the Kodak DC120 camera.\n"
 "(by popular demand)."
 msgstr ""
+"Библиотека поддержки Kodak DC120\n"
+"Scott Fritzinger <scottf@gphoto.net>\n"
+"Библиотека для работы с фотоаппаратом Kodak DC120.\n"
+"(по многочисленным требованиям)."
 
 #: camlibs/kodak/dc120/library.c:122 camlibs/kodak/dc210/library.c:441
 #: camlibs/kodak/dc240/library.c:316 camlibs/panasonic/dc1000.c:422
 #: camlibs/panasonic/dc1580.c:550
-#, fuzzy
 msgid "Getting data..."
-msgstr "рПМХЮЕОЙЕ ЙОДЕЛУБ..."
+msgstr "Получение данных..."
 
 #: camlibs/kodak/dc120/library.c:506
 msgid "Waiting for completion..."
@@ -1352,90 +1452,89 @@ msgstr ""
 
 #: camlibs/kodak/dc210/dc210.c:170
 msgid "File"
-msgstr ""
+msgstr "Файл"
 
 #: camlibs/kodak/dc210/dc210.c:173 camlibs/kodak/dc210/dc210.c:342
 msgid "File type"
-msgstr ""
+msgstr "Тип файла"
 
 #: camlibs/kodak/dc210/dc210.c:175 camlibs/kodak/dc210/dc210.c:180
 msgid "JPEG"
-msgstr ""
+msgstr "JPEG"
 
 #: camlibs/kodak/dc210/dc210.c:176 camlibs/kodak/dc210/dc210.c:182
 msgid "FlashPix"
-msgstr ""
+msgstr "FlashPix"
 
 #: camlibs/kodak/dc210/dc210.c:186 camlibs/kodak/dc210/dc210.c:351
 msgid "File resolution"
-msgstr ""
+msgstr "Разрешение"
 
 #: camlibs/kodak/dc210/dc210.c:188 camlibs/kodak/dc210/dc210.c:193
 #: camlibs/ricoh/library.c:318
 msgid "640 x 480"
-msgstr ""
+msgstr "640 x 480"
 
 #: camlibs/kodak/dc210/dc210.c:189 camlibs/kodak/dc210/dc210.c:195
 msgid "1152 x 864"
-msgstr ""
+msgstr "1152 x 864"
 
 #: camlibs/kodak/dc210/dc210.c:201 camlibs/kodak/dc210/dc210.c:364
 msgid "File compression"
-msgstr ""
+msgstr "Сжатие файла"
 
 #: camlibs/kodak/dc210/dc210.c:203 camlibs/kodak/dc210/dc210.c:209
 msgid "Low (best quality)"
-msgstr ""
+msgstr "слабое (наилучшее качество)"
 
 #: camlibs/kodak/dc210/dc210.c:204 camlibs/kodak/dc210/dc210.c:211
 msgid "Medium (better quality)"
-msgstr ""
+msgstr "среднее (повышенное качество)"
 
 #: camlibs/kodak/dc210/dc210.c:205 camlibs/kodak/dc210/dc210.c:213
 msgid "High (good quality)"
-msgstr ""
+msgstr "высокое (хорошее качество)"
 
 #: camlibs/kodak/dc210/dc210.c:217 camlibs/konica/qm150.c:1053
-#, fuzzy
 msgid "Capture"
-msgstr "пФЛТЩФШ ЙЪПВТБЦЕОЙЕ"
+msgstr "Съёмка"
 
 #: camlibs/kodak/dc210/dc210.c:220 camlibs/kodak/dc210/dc210.c:379
-#: camlibs/konica/qm150.c:1039 camlibs/ptp2/library.c:1305
+#: camlibs/konica/qm150.c:1039 camlibs/ptp2/library.c:1523
 #: camlibs/ptp2/ptp.c:1528 camlibs/ricoh/library.c:499
-#: camlibs/sierra/sierra.c:1086 camlibs/sierra/sierra.c:1346
+#: camlibs/sierra/sierra.c:1097 camlibs/sierra/sierra.c:1357
 msgid "Zoom"
-msgstr ""
+msgstr "Приближение"
 
 #: camlibs/kodak/dc210/dc210.c:227 camlibs/kodak/dc210/dc210.c:241
 #: camlibs/konica/qm150.c:1025 camlibs/ricoh/library.c:498
 #: camlibs/sierra/epson-desc.c:218 camlibs/sierra/nikon-desc.c:290
-#: camlibs/sierra/olympus-desc.c:328 camlibs/sierra/sierra.c:1041
-#: camlibs/sierra/sierra.c:1046 camlibs/sierra/sierra.c:1317
-#: camlibs/sierra/sierra.c:1513 camlibs/sierra/sierra.c:1516
-#: camlibs/sierra/sierra.c:1729
+#: camlibs/sierra/olympus-desc.c:328 camlibs/sierra/sierra.c:1052
+#: camlibs/sierra/sierra.c:1057 camlibs/sierra/sierra.c:1328
+#: camlibs/sierra/sierra.c:1524 camlibs/sierra/sierra.c:1527
+#: camlibs/sierra/sierra.c:1740
 msgid "Macro"
-msgstr ""
+msgstr "Макро"
 
 #: camlibs/kodak/dc210/dc210.c:231
 msgid "58 mm"
-msgstr ""
+msgstr "58 мм"
 
 #: camlibs/kodak/dc210/dc210.c:233
 msgid "51 mm"
-msgstr ""
+msgstr "51 мм"
 
 #: camlibs/kodak/dc210/dc210.c:235
 msgid "41 mm"
-msgstr ""
+msgstr "41 мм"
 
 #: camlibs/kodak/dc210/dc210.c:237
 msgid "34 mm"
-msgstr ""
+msgstr "34 мм"
 
 #: camlibs/kodak/dc210/dc210.c:239
 msgid "29 mm"
-msgstr ""
+msgstr "29 мм"
 
 #: camlibs/kodak/dc210/dc210.c:245 camlibs/kodak/dc210/dc210.c:404
 msgid "Exposure compensation"
@@ -1459,32 +1558,31 @@ msgstr ""
 #: camlibs/sierra/olympus-desc.c:226 camlibs/sierra/olympus-desc.c:274
 #: camlibs/sierra/olympus-desc.c:291 camlibs/sierra/olympus-desc.c:310
 #: camlibs/sierra/olympus-desc.c:329 camlibs/sierra/olympus-desc.c:530
-#: camlibs/sierra/sierra.c:849 camlibs/sierra/sierra.c:855
-#: camlibs/sierra/sierra.c:889 camlibs/sierra/sierra.c:895
-#: camlibs/sierra/sierra.c:949 camlibs/sierra/sierra.c:956
-#: camlibs/sierra/sierra.c:1010 camlibs/sierra/sierra.c:1017
-#: camlibs/sierra/sierra.c:1184 camlibs/sierra/sierra.c:1213
-#: camlibs/sierra/sierra.c:1253 camlibs/sierra/sierra.c:1296
-#: camlibs/sierra/sierra.c:1459 camlibs/sierra/sierra.c:1465
-#: camlibs/sierra/sierra.c:1487 camlibs/sierra/sierra.c:1492
-#: camlibs/sierra/sierra.c:1692 camlibs/sierra/sierra.c:1712
+#: camlibs/sierra/sierra.c:860 camlibs/sierra/sierra.c:866
+#: camlibs/sierra/sierra.c:900 camlibs/sierra/sierra.c:906
+#: camlibs/sierra/sierra.c:960 camlibs/sierra/sierra.c:967
+#: camlibs/sierra/sierra.c:1021 camlibs/sierra/sierra.c:1028
+#: camlibs/sierra/sierra.c:1195 camlibs/sierra/sierra.c:1224
+#: camlibs/sierra/sierra.c:1264 camlibs/sierra/sierra.c:1307
+#: camlibs/sierra/sierra.c:1470 camlibs/sierra/sierra.c:1476
+#: camlibs/sierra/sierra.c:1498 camlibs/sierra/sierra.c:1503
+#: camlibs/sierra/sierra.c:1703 camlibs/sierra/sierra.c:1723
 msgid "Auto"
-msgstr ""
+msgstr "Авто"
 
 #: camlibs/kodak/dc210/dc210.c:256 camlibs/kodak/dc210/dc210.c:263
 #: camlibs/sierra/epson-desc.c:152 camlibs/sierra/nikon-desc.c:201
-#: camlibs/sierra/olympus-desc.c:275 camlibs/sierra/sierra.c:950
-#: camlibs/sierra/sierra.c:958 camlibs/sierra/sierra.c:1255
-#: camlibs/sierra/sierra.c:1460 camlibs/sierra/sierra.c:1467
-#: camlibs/sierra/sierra.c:1694
+#: camlibs/sierra/olympus-desc.c:275 camlibs/sierra/sierra.c:961
+#: camlibs/sierra/sierra.c:969 camlibs/sierra/sierra.c:1266
+#: camlibs/sierra/sierra.c:1471 camlibs/sierra/sierra.c:1478
+#: camlibs/sierra/sierra.c:1705
 msgid "Force"
 msgstr ""
 
 #: camlibs/kodak/dc210/dc210.c:257 camlibs/kodak/dc210/dc210.c:265
 #: camlibs/ricoh/library.c:346
-#, fuzzy
 msgid "None"
-msgstr "чЩРПМОЕОП."
+msgstr "Нет"
 
 #: camlibs/kodak/dc210/dc210.c:269 camlibs/kodak/dc210/dc210.c:422
 msgid "Red eye flash"
@@ -1498,15 +1596,16 @@ msgstr ""
 #: camlibs/konica/qm150.c:815 camlibs/konica/qm150.c:857
 #: camlibs/konica/qm150.c:870 camlibs/konica/qm150.c:1027
 #: camlibs/konica/qm150.c:1034 camlibs/konica/qm150.c:1041
-#: camlibs/konica/qm150.c:1048 camlibs/ptp2/library.c:1075
-#: camlibs/ptp2/library.c:1077 camlibs/ptp2/library.c:1089
-#: camlibs/ptp2/library.c:1151 camlibs/ptp2/library.c:1153
-#: camlibs/ptp2/library.c:1165 camlibs/ricoh/library.c:338
-#: camlibs/ricoh/library.c:369 camlibs/sierra/nikon-desc.c:271
-#: camlibs/sierra/sierra.c:1066 camlibs/sierra/sierra.c:1072
-#: camlibs/sierra/sierra.c:1335
+#: camlibs/konica/qm150.c:1048 camlibs/ptp2/library.c:1255
+#: camlibs/ptp2/library.c:1257 camlibs/ptp2/library.c:1269
+#: camlibs/ptp2/library.c:1286 camlibs/ptp2/library.c:1288
+#: camlibs/ptp2/library.c:1300 camlibs/ptp2/library.c:1362
+#: camlibs/ptp2/library.c:1364 camlibs/ptp2/library.c:1376
+#: camlibs/ricoh/library.c:338 camlibs/ricoh/library.c:369
+#: camlibs/sierra/nikon-desc.c:271 camlibs/sierra/sierra.c:1077
+#: camlibs/sierra/sierra.c:1083 camlibs/sierra/sierra.c:1346
 msgid "On"
-msgstr ""
+msgstr "Вкл"
 
 #: camlibs/kodak/dc210/dc210.c:272 camlibs/kodak/dc210/dc210.c:277
 #: camlibs/kodak/dc210/dc210.c:437 camlibs/konica/library.c:684
@@ -1517,22 +1616,23 @@ msgstr ""
 #: camlibs/konica/qm150.c:818 camlibs/konica/qm150.c:856
 #: camlibs/konica/qm150.c:863 camlibs/konica/qm150.c:1028
 #: camlibs/konica/qm150.c:1031 camlibs/konica/qm150.c:1042
-#: camlibs/konica/qm150.c:1045 camlibs/ptp2/library.c:1076
-#: camlibs/ptp2/library.c:1077 camlibs/ptp2/library.c:1093
-#: camlibs/ptp2/library.c:1152 camlibs/ptp2/library.c:1153
-#: camlibs/ptp2/library.c:1169 camlibs/ricoh/library.c:339
-#: camlibs/ricoh/library.c:368 camlibs/ricoh/library.c:376
-#: camlibs/sierra/epson-desc.c:153 camlibs/sierra/nikon-desc.c:202
-#: camlibs/sierra/nikon-desc.c:270 camlibs/sierra/nikon-desc.c:325
-#: camlibs/sierra/olympus-desc.c:276 camlibs/sierra/olympus-desc.c:349
-#: camlibs/sierra/olympus-desc.c:513 camlibs/sierra/olympus-desc.c:563
-#: camlibs/sierra/sierra.c:951 camlibs/sierra/sierra.c:960
-#: camlibs/sierra/sierra.c:1067 camlibs/sierra/sierra.c:1070
-#: camlibs/sierra/sierra.c:1257 camlibs/sierra/sierra.c:1337
-#: camlibs/sierra/sierra.c:1461 camlibs/sierra/sierra.c:1469
-#: camlibs/sierra/sierra.c:1696
+#: camlibs/konica/qm150.c:1045 camlibs/ptp2/library.c:1256
+#: camlibs/ptp2/library.c:1257 camlibs/ptp2/library.c:1273
+#: camlibs/ptp2/library.c:1287 camlibs/ptp2/library.c:1288
+#: camlibs/ptp2/library.c:1304 camlibs/ptp2/library.c:1363
+#: camlibs/ptp2/library.c:1364 camlibs/ptp2/library.c:1380
+#: camlibs/ricoh/library.c:339 camlibs/ricoh/library.c:368
+#: camlibs/ricoh/library.c:376 camlibs/sierra/epson-desc.c:153
+#: camlibs/sierra/nikon-desc.c:202 camlibs/sierra/nikon-desc.c:270
+#: camlibs/sierra/nikon-desc.c:325 camlibs/sierra/olympus-desc.c:276
+#: camlibs/sierra/olympus-desc.c:349 camlibs/sierra/olympus-desc.c:513
+#: camlibs/sierra/olympus-desc.c:563 camlibs/sierra/sierra.c:962
+#: camlibs/sierra/sierra.c:971 camlibs/sierra/sierra.c:1078
+#: camlibs/sierra/sierra.c:1081 camlibs/sierra/sierra.c:1268
+#: camlibs/sierra/sierra.c:1348 camlibs/sierra/sierra.c:1472
+#: camlibs/sierra/sierra.c:1480 camlibs/sierra/sierra.c:1707
 msgid "Off"
-msgstr ""
+msgstr "Выкл"
 
 #: camlibs/kodak/dc210/dc210.c:280
 msgid "Other"
@@ -1544,11 +1644,11 @@ msgstr ""
 
 #: camlibs/kodak/dc210/dc210.c:290 camlibs/kodak/dc210/dc210.c:415
 msgid "Port speed"
-msgstr ""
+msgstr "Скорость порта"
 
 #: camlibs/kodak/dc210/dc210.c:300 camlibs/kodak/dc210/library.c:697
 msgid "Album name"
-msgstr ""
+msgstr "Название альбома"
 
 #: camlibs/kodak/dc210/dc210.c:303
 msgid "Name to set on card when formatting."
@@ -1564,13 +1664,15 @@ msgstr ""
 
 #: camlibs/kodak/dc210/dc210.c:311
 msgid "Debug"
-msgstr ""
+msgstr "Отладка"
 
 #: camlibs/kodak/dc210/dc210.c:329
 msgid ""
 "Execute predefined command\n"
 "with parameter values."
 msgstr ""
+"Выполнить предопределённую команду\n"
+"с параметрами."
 
 #: camlibs/kodak/dc210/dc210.c:625
 msgid ""
@@ -1579,49 +1681,54 @@ msgid ""
 "please send a message to koltan@gmx.de to let me know, if you have any "
 "troubles with this driver library or if everything is okay."
 msgstr ""
+"Работоспособность драйвера проверена с аппаратом Kodak DC 215 Zoom Возможно "
+"он подойдёт для DC 200 и DC 210. Если у вас есть один из перечисленных "
+"фотоаппаратов, напишите, пожалуйста по адресу koltan@gmx.de и сообщите, все "
+"ли функции доступны с этим драйвером, и нет ли с ним проблем."
 
 #: camlibs/kodak/dc210/dc210.c:637
 msgid ""
 "Camera Library for the Kodak DC215 Zoom camera.\n"
 "Michael Koltan <koltan@gmx.de>\n"
 msgstr ""
+"Библиотека для фотоаппарата Kodak DC215 Zoom.\n"
+"Michael Koltan <koltan@gmx.de>\n"
 
 #: camlibs/kodak/dc210/library.c:349
-#, fuzzy
 msgid "Waiting..."
-msgstr "нБУЫФБВ ЙЪПВТБЦЕОЙС 50%..."
+msgstr "Ожидание..."
 
 #: camlibs/kodak/dc210/library.c:1369
 msgid "Parameter 1"
-msgstr ""
+msgstr "Параметр 1"
 
 #: camlibs/kodak/dc210/library.c:1373
 msgid "Parameter 2"
-msgstr ""
+msgstr "Параметр 2"
 
 #: camlibs/kodak/dc210/library.c:1377
 msgid "Parameter 3"
-msgstr ""
+msgstr "Параметр 3"
 
 #: camlibs/kodak/dc240/dc240.c:180
 #, c-format
 msgid "Model: Kodak %s\n"
-msgstr ""
+msgstr "Модель: Kodak %s\n"
 
 #: camlibs/kodak/dc240/dc240.c:181
 #, c-format
 msgid "Firmware version: %d.%02d\n"
-msgstr ""
+msgstr "Версия прошивки: %d.%02d\n"
 
 #: camlibs/kodak/dc240/dc240.c:183
 #, c-format
 msgid "Battery status: %s, AC Adapter: %s\n"
-msgstr ""
+msgstr "Состояние аккумулятора: %s, Блок питания: %s\n"
 
 #: camlibs/kodak/dc240/dc240.c:187
-#, fuzzy, c-format
+#, c-format
 msgid "Number of pictures: %d\n"
-msgstr "оПЧПЕ ЙЪПВТБЦЕОЙЕ #%03i"
+msgstr "Количество изображений: %d\n"
 
 #: camlibs/kodak/dc240/dc240.c:189
 #, c-format
@@ -1646,56 +1753,59 @@ msgid ""
 "Camera Library for the Kodak DC240, DC280, DC3400 and DC5000 cameras.\n"
 "Rewritten and updated for gPhoto2."
 msgstr ""
+"Библиотека для фотоаппарата Kodak DC240\n"
+"Scott Fritzinger <scottf@gphoto.net> и Hubert Figuiere <hfiguiere@teaser."
+"fr>\n"
+"Библиотека для фотоаппаратов Kodak DC240, DC280, DC3400 и DC5000.\n"
+"Обновлено и переписано для gPhoto2."
 
 #: camlibs/kodak/dc240/library.c:570
 msgid "OK"
-msgstr "пл"
+msgstr "ОК"
 
 #: camlibs/kodak/dc240/library.c:573
 msgid "Weak"
-msgstr ""
+msgstr "Слабая"
 
 #: camlibs/kodak/dc240/library.c:576
 msgid "Empty"
-msgstr ""
+msgstr "Пусто"
 
 #: camlibs/kodak/dc240/library.c:581 camlibs/kodak/dc240/library.c:596
 msgid "Invalid"
-msgstr ""
+msgstr "Ошибка"
 
 #: camlibs/kodak/dc240/library.c:588
 msgid "Not used"
-msgstr ""
+msgstr "Отсоединён"
 
 #: camlibs/kodak/dc240/library.c:591
 msgid "In use"
-msgstr ""
+msgstr "Подсоединён"
 
 #: camlibs/kodak/dc240/library.c:605
 msgid "Card is open"
-msgstr ""
+msgstr "Карта памяти вынута"
 
 #: camlibs/kodak/dc240/library.c:608
-#, fuzzy
 msgid "Card is not open"
-msgstr ""
-"оЕ ХДБМПУШ ПФЛТЩФШ:\n"
-"%s"
+msgstr "Карта памяти не открыта"
 
 #: camlibs/kodak/dc240/library.c:612
-#, fuzzy
 msgid "Card is not formatted"
-msgstr "уПИТБОЕОЙЕ ЙОДЕЛУБ ЕЭЕ ОЕ РПДДЕТЦЙЧБЕФУС"
+msgstr "Карта памяти не отформатирована"
 
 #: camlibs/kodak/dc240/library.c:616
 msgid "No card"
-msgstr ""
+msgstr "Нет карты памяти"
 
 #: camlibs/kodak/dc3200/dc3200.c:38
 msgid ""
 "There is currently an operation in progress. This camera only supports one "
 "operation at a time. Please wait until the current operation has finished."
 msgstr ""
+"Выполняется действие. Данный фотоаппарат не поддерживает одновременное "
+"выполнение нескольких команд. Дождитесь окончания текущей операции.."
 
 #: camlibs/kodak/dc3200/dc3200.c:142
 msgid "camera inactive for > 9 seconds, re-initing.\n"
@@ -1710,6 +1820,12 @@ msgid ""
 "camera does not respond, simply re-select the camera. This will cause it to "
 "reinitialize."
 msgstr ""
+"Известные проблемы:\n"
+"\n"
+"1. Если Kodak DC3200 не получает команд в течение 10 секунд, Произойдёт тайм-"
+"аут и потребуется повторная инициализация. Если аппарат перестаёт "
+"реагировать, просто заново выберите его. При этом произойдёт новая "
+"инициализация."
 
 #: camlibs/kodak/dc3200/dc3200.c:444
 msgid ""
@@ -1718,6 +1834,10 @@ msgid ""
 "\n"
 "Questions and comments appreciated."
 msgstr ""
+"Драйвер Kodak DC3200\n"
+"Donn Morrison <dmorriso@gulf.uvic.ca>\n"
+"\n"
+"Вопросы и отзывы принимаются с благодарностью."
 
 #: camlibs/kodak/ez200/library.c:111
 #, c-format
@@ -1725,20 +1845,24 @@ msgid ""
 "Your USB camera is a Kodak EZ200.\n"
 "Number of PICs = %i\n"
 msgstr ""
+"Модель вашего USB-фотоаппарата - Kodak EZ200.\n"
+"Число изображений = %i\n"
 
 #: camlibs/kodak/ez200/library.c:124
 msgid ""
 "Kodak EZ200 driver\n"
 "Bucas Jean-Francois <jfbucas@tuxfamily.org>\n"
 msgstr ""
+"Драйвер Kodak EZ200\n"
+"Bucas Jean-Francois <jfbucas@tuxfamily.org>\n"
 
 #: camlibs/konica/konica.c:62
 msgid "Focusing error."
-msgstr ""
+msgstr "Ошибка фокусировки."
 
 #: camlibs/konica/konica.c:65
 msgid "Iris error."
-msgstr ""
+msgstr "Ошибка ирисовой диафрагмы"
 
 #: camlibs/konica/konica.c:68
 msgid "Strobe error."
@@ -1746,24 +1870,23 @@ msgstr ""
 
 #: camlibs/konica/konica.c:71
 msgid "EEPROM checksum error."
-msgstr ""
+msgstr "Ошибка контрольной суммы ППЗУ"
 
 #: camlibs/konica/konica.c:74
 msgid "Internal error (1)."
-msgstr ""
+msgstr "Внутренняя ошибка (1)."
 
 #: camlibs/konica/konica.c:77
 msgid "Internal error (2)."
-msgstr ""
+msgstr "Внутренняя ошибка (2)."
 
 #: camlibs/konica/konica.c:80
 msgid "No card present."
-msgstr ""
+msgstr "Нет карты памяти."
 
 #: camlibs/konica/konica.c:83
-#, fuzzy
 msgid "Card not supported."
-msgstr "уПИТБОЕОЙЕ ЙОДЕЛУБ ЕЭЕ ОЕ РПДДЕТЦЙЧБЕФУС"
+msgstr "Неподдерживаемая карта памяти"
 
 #: camlibs/konica/konica.c:86
 msgid "Card removed during access."
@@ -1774,14 +1897,12 @@ msgid "Image number not valid."
 msgstr ""
 
 #: camlibs/konica/konica.c:92
-#, fuzzy
 msgid "Card can not be written."
-msgstr "уПИТБОЕОЙЕ ЙОДЕЛУБ ЕЭЕ ОЕ РПДДЕТЦЙЧБЕФУС"
+msgstr ""
 
 #: camlibs/konica/konica.c:95
-#, fuzzy
 msgid "Card is write protected."
-msgstr "уПИТБОЕОЙЕ ЙОДЕЛУБ ЕЭЕ ОЕ РПДДЕТЦЙЧБЕФУС"
+msgstr "Карта памяти защищена от записи"
 
 #: camlibs/konica/konica.c:98
 msgid "No space left on card."
@@ -1789,23 +1910,23 @@ msgstr ""
 
 #: camlibs/konica/konica.c:101
 msgid "Image protected."
-msgstr ""
+msgstr "Изображение защищено."
 
 #: camlibs/konica/konica.c:104
 msgid "Light too dark."
-msgstr ""
+msgstr "Недостаточное освещение"
 
 #: camlibs/konica/konica.c:107
 msgid "Autofocus error."
-msgstr ""
+msgstr "Ошибка автофокусировки"
 
 #: camlibs/konica/konica.c:110
 msgid "System error."
-msgstr ""
+msgstr "Системная ошибка."
 
 #: camlibs/konica/konica.c:113
 msgid "Illegal parameter."
-msgstr ""
+msgstr "Недопустимый параметр:"
 
 #: camlibs/konica/konica.c:116
 msgid "Command can not be cancelled."
@@ -1821,7 +1942,7 @@ msgstr ""
 
 #: camlibs/konica/konica.c:125
 msgid "Unsupported command."
-msgstr ""
+msgstr "Неподдерживаемая команда."
 
 #: camlibs/konica/konica.c:128
 msgid "Other command executing."
@@ -1833,7 +1954,7 @@ msgstr ""
 
 #: camlibs/konica/konica.c:134
 msgid "Unknown error."
-msgstr ""
+msgstr "Неизвестная ошибка."
 
 #: camlibs/konica/konica.c:137
 #, c-format
@@ -1842,11 +1963,13 @@ msgid ""
 "report the following to %s with additional information how you got this "
 "error: (0x%x,0x%x). Thank you very much!"
 msgstr ""
+"Фотоаппарат только что сообщил об нераспознанной ошибке. Пожалуйста, "
+"сообщите об этом %s и опишите, как и когда произошла эта ошибка: (0x%x,0x%"
+"x). Большое спасибо!"
 
 #: camlibs/konica/library.c:158 camlibs/pccam300/library.c:123
-#, fuzzy
 msgid "Getting file list..."
-msgstr "рПМХЮЕОЙЕ НЙОЙБФАТЩ %i..."
+msgstr "Получение списка файлов..."
 
 #: camlibs/konica/library.c:325
 msgid "Testing different speeds..."
@@ -1857,11 +1980,12 @@ msgid ""
 "The camera could not be contacted. Please make sure it is conntected to the "
 "computer and turned on."
 msgstr ""
+"Невозможно установить связь с фотоаппаратом. Убедитесь, что он включён и "
+"подсоединён к компьютеру."
 
 #: camlibs/konica/library.c:373
-#, fuzzy
 msgid "Your camera does not support changing filenames."
-msgstr "уПИТБОЕОЙЕ ЙОДЕЛУБ ЕЭЕ ОЕ РПДДЕТЦЙЧБЕФУС"
+msgstr ""
 
 #: camlibs/konica/library.c:432
 #, c-format
@@ -1879,6 +2003,13 @@ msgid ""
 "Name: %s,\n"
 "Manufacturer: %s\n"
 msgstr ""
+"Модель: %s\n"
+"Серийный номер: %s,\n"
+"Версия устройства: %i.%i\n"
+"Версия программы: %i.%i\n"
+"Версия диагностической программы: %i.%i\n"
+"Название: %s,\n"
+"Производитель: %s\n"
 
 #: camlibs/konica/library.c:626
 msgid ""
@@ -1886,32 +2017,32 @@ msgid ""
 "Lutz Mueller <lutz@users.sourceforge.net>\n"
 "Support for all Konica and several HP cameras."
 msgstr ""
+"Библиотека Konica\n"
+"Lutz Mueller <lutz@users.sourceforge.net>\n"
+"Поддержка всех аппаратов Konica и некоторых моделей HP."
 
 #: camlibs/konica/library.c:651
-#, fuzzy
 msgid "Getting configuration..."
-msgstr "лПОЖЙЗХТБГЙС ЛБНЕТЩ"
+msgstr "Получение конфигурации..."
 
 #: camlibs/konica/library.c:658 camlibs/konica/qm150.c:755
-#, fuzzy
 msgid "Konica Configuration"
-msgstr "лПОЖЙЗХТБГЙС ЛБНЕТЩ"
+msgstr "Настройка Konica"
 
 #: camlibs/konica/library.c:663 camlibs/konica/library.c:874
 #: camlibs/konica/qm150.c:760
 msgid "Persistent Settings"
-msgstr ""
+msgstr "Постоянные настройки"
 
 #: camlibs/konica/library.c:667 camlibs/konica/library.c:878
 #: camlibs/konica/qm150.c:764 camlibs/polaroid/pdc700.c:1004
 #: camlibs/polaroid/pdc700.c:1017 camlibs/polaroid/pdc700.c:1087
 msgid "Date and Time"
-msgstr ""
+msgstr "Дата и время"
 
 #: camlibs/konica/library.c:681 camlibs/konica/library.c:895
-#, fuzzy
 msgid "Beep"
-msgstr "уПИТБОЙФШ"
+msgstr "Сигнал"
 
 #: camlibs/konica/library.c:693
 msgid "Shall the camera beep when taking a picture?"
@@ -1919,90 +2050,90 @@ msgstr ""
 
 #: camlibs/konica/library.c:697 camlibs/konica/library.c:907
 msgid "Self Timer Time"
-msgstr ""
+msgstr "Время автоспуска"
 
 #: camlibs/konica/library.c:704 camlibs/konica/library.c:915
 #: camlibs/konica/qm150.c:769
 msgid "Auto Off Time"
-msgstr ""
+msgstr "Время автовыключения"
 
 #: camlibs/konica/library.c:711 camlibs/konica/library.c:923
 msgid "Slide Show Interval"
-msgstr ""
+msgstr "Интервал между слайдами"
 
 #: camlibs/konica/library.c:718 camlibs/konica/library.c:932
 #: camlibs/konica/qm150.c:777 camlibs/ricoh/library.c:495
-#: camlibs/sierra/sierra.c:848 camlibs/sierra/sierra.c:1180
-#: camlibs/sierra/sierra.c:1531 camlibs/sierra/sierra.c:1740
+#: camlibs/sierra/sierra.c:859 camlibs/sierra/sierra.c:1191
+#: camlibs/sierra/sierra.c:1542 camlibs/sierra/sierra.c:1751
 msgid "Resolution"
-msgstr ""
+msgstr "Разрешение"
 
 #: camlibs/konica/library.c:720 camlibs/konica/library.c:728
 #: camlibs/konica/library.c:937
 msgid "Low (576 x 436)"
-msgstr ""
+msgstr "высокое (576 x 436)"
 
 #: camlibs/konica/library.c:721 camlibs/konica/library.c:731
 msgid "Medium (1152 x 872)"
-msgstr ""
+msgstr "среднее (1152 x 872)"
 
 #: camlibs/konica/library.c:722 camlibs/konica/library.c:725
 #: camlibs/konica/library.c:935
 msgid "High (1152 x 872)"
-msgstr ""
+msgstr "высокое (1152 x 872)"
 
 #: camlibs/konica/library.c:738 camlibs/konica/library.c:948
 #: camlibs/konica/qm150.c:825
 msgid "Localization"
-msgstr ""
+msgstr "Локализация"
 
 #: camlibs/konica/library.c:744 camlibs/konica/library.c:951
 #: camlibs/sierra/epson-desc.c:246 camlibs/sierra/nikon-desc.c:400
-#: camlibs/sierra/sierra.c:1607 camlibs/sierra/sierra.c:1791
+#: camlibs/sierra/sierra.c:1618 camlibs/sierra/sierra.c:1802
 msgid "Language"
-msgstr ""
+msgstr "Язык"
 
 #: camlibs/konica/library.c:751 camlibs/konica/library.c:760
 #: camlibs/konica/library.c:768 camlibs/konica/library.c:955
 #: camlibs/konica/library.c:980 camlibs/konica/library.c:998
 msgid "None selected"
-msgstr ""
+msgstr "Не выбран"
 
 #: camlibs/konica/library.c:755 camlibs/konica/library.c:977
 msgid "TV Output Format"
-msgstr ""
+msgstr "Формат вывода на ТВ"
 
 #: camlibs/konica/library.c:757 camlibs/konica/library.c:981
 msgid "NTSC"
-msgstr ""
+msgstr "NTSC"
 
 #: camlibs/konica/library.c:758 camlibs/konica/library.c:983
 msgid "PAL"
-msgstr ""
+msgstr "PAL"
 
 #: camlibs/konica/library.c:759 camlibs/konica/library.c:985
 msgid "Do not display TV menu"
-msgstr ""
+msgstr "Не показывать ТВ меню"
 
 #: camlibs/konica/library.c:763 camlibs/konica/library.c:995
 #: camlibs/konica/qm150.c:829
 msgid "Date Format"
-msgstr ""
+msgstr "Формат даты"
 
 #: camlibs/konica/library.c:765 camlibs/konica/library.c:999
 #: camlibs/konica/qm150.c:831 camlibs/konica/qm150.c:836
 msgid "Month/Day/Year"
-msgstr ""
+msgstr "Месяц/День/Год"
 
 #: camlibs/konica/library.c:766 camlibs/konica/library.c:1001
 #: camlibs/konica/qm150.c:832 camlibs/konica/qm150.c:839
 msgid "Day/Month/Year"
-msgstr ""
+msgstr "День/Месяц/Год"
 
 #: camlibs/konica/library.c:767 camlibs/konica/library.c:1003
 #: camlibs/konica/qm150.c:833 camlibs/konica/qm150.c:842
 msgid "Year/Month/Day"
-msgstr ""
+msgstr "Год/Месяц/День"
 
 #: camlibs/konica/library.c:773 camlibs/konica/library.c:1015
 #: camlibs/konica/qm150.c:849
@@ -2013,67 +2144,66 @@ msgstr ""
 #: camlibs/konica/library.c:1026 camlibs/konica/qm150.c:858
 #: camlibs/konica/qm150.c:868
 msgid "On, red-eye reduction"
-msgstr ""
+msgstr "Вкл, уменьшение красноты глаз"
 
 #: camlibs/konica/library.c:784 camlibs/konica/library.c:796
 #: camlibs/konica/qm150.c:860 camlibs/konica/qm150.c:875
 msgid "Auto, red-eye reduction"
-msgstr ""
+msgstr "Авто, уменьшение красноты глаз"
 
 #: camlibs/konica/library.c:811 camlibs/konica/library.c:1045
 #: camlibs/konica/qm150.c:941
 msgid "Focus"
-msgstr ""
+msgstr "Фокус"
 
 #: camlibs/konica/library.c:813 camlibs/konica/library.c:820
-#: camlibs/sierra/epson-desc.c:170 camlibs/sierra/sierra.c:1488
-#: camlibs/sierra/sierra.c:1494 camlibs/sierra/sierra.c:1714
+#: camlibs/sierra/epson-desc.c:170 camlibs/sierra/sierra.c:1499
+#: camlibs/sierra/sierra.c:1505 camlibs/sierra/sierra.c:1725
 msgid "Fixed"
-msgstr ""
+msgstr "Фикс."
 
 #: camlibs/konica/library.c:827 camlibs/konica/library.c:1050
 #: camlibs/konica/qm150.c:1091
-#, fuzzy
 msgid "Volatile Settings"
-msgstr "гЧЕФПЧЩЕ ОБУФТПКЛЙ"
+msgstr "Временные настройки"
 
 #: camlibs/konica/library.c:831 camlibs/konica/library.c:1053
 #: camlibs/konica/qm150.c:1095 camlibs/polaroid/pdc700.c:163
 msgid "Self Timer"
-msgstr ""
+msgstr "Автоспуск"
 
 #: camlibs/konica/library.c:833 camlibs/konica/library.c:1063
 #: camlibs/konica/qm150.c:1097
 msgid "Self Timer (only next picture)"
-msgstr ""
+msgstr "Автоспуск (только след. снимок)"
 
 #: camlibs/konica/library.c:834 camlibs/konica/library.c:841
 #: camlibs/konica/qm150.c:1098 camlibs/konica/qm150.c:1105
 #: camlibs/minolta/dimagev/dimagev.c:405 camlibs/ricoh/library.c:348
 #: camlibs/sierra/epson-desc.c:219 camlibs/sierra/nikon-desc.c:219
 #: camlibs/sierra/nikon-desc.c:291 camlibs/sierra/olympus-desc.c:256
-#: camlibs/sierra/olympus-desc.c:351 camlibs/sierra/sierra.c:919
-#: camlibs/sierra/sierra.c:926 camlibs/sierra/sierra.c:980
-#: camlibs/sierra/sierra.c:987 camlibs/sierra/sierra.c:1042
-#: camlibs/sierra/sierra.c:1048 camlibs/sierra/sierra.c:1232
-#: camlibs/sierra/sierra.c:1275 camlibs/sierra/sierra.c:1319
-#: camlibs/sierra/sierra.c:1514 camlibs/sierra/sierra.c:1518
-#: camlibs/sierra/sierra.c:1731
+#: camlibs/sierra/olympus-desc.c:351 camlibs/sierra/sierra.c:930
+#: camlibs/sierra/sierra.c:937 camlibs/sierra/sierra.c:991
+#: camlibs/sierra/sierra.c:998 camlibs/sierra/sierra.c:1053
+#: camlibs/sierra/sierra.c:1059 camlibs/sierra/sierra.c:1243
+#: camlibs/sierra/sierra.c:1286 camlibs/sierra/sierra.c:1330
+#: camlibs/sierra/sierra.c:1525 camlibs/sierra/sierra.c:1529
+#: camlibs/sierra/sierra.c:1742
 msgid "Normal"
-msgstr ""
+msgstr "Норм."
 
 #: camlibs/konica/library.c:837 camlibs/konica/qm150.c:1101
 msgid "Self Timer (next picture only)"
-msgstr ""
+msgstr "Автоспуск (след. снимок только)"
 
 #: camlibs/konica/library.c:1094
 #, c-format
 msgid "Could not find localization data at '%s'"
-msgstr ""
+msgstr "Не найдены данные локализации в '%s'"
 
 #: camlibs/konica/library.c:1158
 msgid "Localization file too long!"
-msgstr ""
+msgstr "Слишком длинный файл локализации!"
 
 #: camlibs/konica/qm150.c:252
 msgid "This preview doesn't exist."
@@ -2081,31 +2211,30 @@ msgstr ""
 
 #: camlibs/konica/qm150.c:284
 msgid "Data has been corrupted."
-msgstr ""
+msgstr "Данные повреждены."
 
 #: camlibs/konica/qm150.c:404
-#, fuzzy, c-format
+#, c-format
 msgid "Image type %d is not supported by this camera !"
-msgstr "уПИТБОЕОЙЕ ЙОДЕЛУБ ЕЭЕ ОЕ РПДДЕТЦЙЧБЕФУС"
+msgstr "Формат изображения %d не поддерживается фотоаппаратом !"
 
 #: camlibs/konica/qm150.c:442
-#, fuzzy, c-format
+#, c-format
 msgid "Image %s is delete protected."
-msgstr "уПИТБОЕОЙЕ ЙОДЕЛУБ ЕЭЕ ОЕ РПДДЕТЦЙЧБЕФУС"
+msgstr "Изображение %s защищено от удаления."
 
 #: camlibs/konica/qm150.c:460
-#, fuzzy, c-format
+#, c-format
 msgid "Can't delete image %s."
-msgstr "хДБМЕОЩ ЧУЕ ЙЪПВТБЦЕОЙС."
+msgstr ""
 
 #: camlibs/konica/qm150.c:491
 msgid "Can't delete all images."
 msgstr ""
 
 #: camlibs/konica/qm150.c:523
-#, fuzzy
 msgid "Uploading image..."
-msgstr "нБУЫФБВ ЙЪПВТБЦЕОЙС 50%..."
+msgstr "Закачка изображения..."
 
 #: camlibs/konica/qm150.c:533 camlibs/konica/qm150.c:598
 msgid "Can't upload this image to the camera. An error has occured."
@@ -2125,157 +2254,152 @@ msgstr ""
 
 #: camlibs/konica/qm150.c:659
 msgid "No answer from the camera."
-msgstr ""
+msgstr "Нет ответа от фотоаппарата."
 
 #: camlibs/konica/qm150.c:779 camlibs/konica/qm150.c:787
-#: camlibs/sierra/nikon-desc.c:169 camlibs/sierra/sierra.c:890
-#: camlibs/sierra/sierra.c:897 camlibs/sierra/sierra.c:1215
+#: camlibs/sierra/nikon-desc.c:169 camlibs/sierra/sierra.c:901
+#: camlibs/sierra/sierra.c:908 camlibs/sierra/sierra.c:1226
 msgid "Low"
-msgstr ""
+msgstr "Низк."
 
 #: camlibs/konica/qm150.c:780 camlibs/konica/qm150.c:790
-#: camlibs/sierra/nikon-desc.c:170 camlibs/sierra/sierra.c:891
-#: camlibs/sierra/sierra.c:899 camlibs/sierra/sierra.c:1217
+#: camlibs/sierra/nikon-desc.c:170 camlibs/sierra/sierra.c:902
+#: camlibs/sierra/sierra.c:910 camlibs/sierra/sierra.c:1228
 msgid "Medium"
-msgstr ""
+msgstr "Средн."
 
 #: camlibs/konica/qm150.c:781 camlibs/konica/qm150.c:784
-#: camlibs/sierra/sierra.c:851 camlibs/sierra/sierra.c:859
-#: camlibs/sierra/sierra.c:892 camlibs/sierra/sierra.c:901
-#: camlibs/sierra/sierra.c:1188 camlibs/sierra/sierra.c:1219
-#, fuzzy
+#: camlibs/sierra/sierra.c:862 camlibs/sierra/sierra.c:870
+#: camlibs/sierra/sierra.c:903 camlibs/sierra/sierra.c:912
+#: camlibs/sierra/sierra.c:1199 camlibs/sierra/sierra.c:1230
 msgid "High"
-msgstr "чЩУПФБ:"
+msgstr "Высок."
 
 #: camlibs/konica/qm150.c:795 camlibs/polaroid/pdc700.c:162
 msgid "LCD"
-msgstr ""
+msgstr "ЖК"
 
 #: camlibs/konica/qm150.c:809
 msgid "Icons"
-msgstr ""
+msgstr "Значки"
 
 #: camlibs/konica/qm150.c:943 camlibs/konica/qm150.c:952
 msgid "2.0m"
-msgstr ""
+msgstr "2.0м"
 
 #: camlibs/konica/qm150.c:944 camlibs/konica/qm150.c:955
 msgid "0.5m"
-msgstr ""
+msgstr "0.5м"
 
 #: camlibs/konica/qm150.c:945 camlibs/konica/qm150.c:958
 msgid "0.1m"
-msgstr ""
+msgstr "0.1м"
 
 #: camlibs/konica/qm150.c:963
 msgid "White balance"
-msgstr ""
+msgstr "Баланс белого"
 
 #: camlibs/konica/qm150.c:965 camlibs/konica/qm150.c:976
 msgid "Office"
-msgstr ""
+msgstr "Офис"
 
 #: camlibs/konica/qm150.c:966 camlibs/konica/qm150.c:973
 msgid "Day-lt"
-msgstr ""
+msgstr "Дневной"
 
 #: camlibs/konica/qm150.c:981 camlibs/ptp2/ptp.c:1482
 msgid "Sharpness"
-msgstr ""
+msgstr "Чёткость"
 
 #: camlibs/konica/qm150.c:983 camlibs/konica/qm150.c:991
 msgid "Sharp"
-msgstr ""
+msgstr "Резко"
 
 #: camlibs/konica/qm150.c:984 camlibs/konica/qm150.c:994
 msgid "Soft"
-msgstr ""
+msgstr "Мягко"
 
 #: camlibs/konica/qm150.c:999 camlibs/sierra/epson-desc.c:136
 #: camlibs/sierra/nikon-desc.c:185
-#, fuzzy
 msgid "Color"
-msgstr "гЧЕФБ"
+msgstr "Цвет"
 
 #: camlibs/konica/qm150.c:1001 camlibs/konica/qm150.c:1011
-#, fuzzy
 msgid "Light"
-msgstr "чЩУПФБ:"
+msgstr "Светлый"
 
 #: camlibs/konica/qm150.c:1002 camlibs/konica/qm150.c:1014
-#, fuzzy
 msgid "Deep"
-msgstr "уПИТБОЙФШ"
+msgstr "Глубокий"
 
 #: camlibs/konica/qm150.c:1003 camlibs/konica/qm150.c:1017
 msgid "Black and White"
-msgstr ""
+msgstr "Чёрно-белый"
 
 #: camlibs/konica/qm150.c:1004 camlibs/konica/qm150.c:1020
 #: camlibs/ricoh/library.c:331 camlibs/sierra/olympus-desc.c:258
-#: camlibs/sierra/sierra.c:921 camlibs/sierra/sierra.c:930
-#: camlibs/sierra/sierra.c:1236
+#: camlibs/sierra/sierra.c:932 camlibs/sierra/sierra.c:941
+#: camlibs/sierra/sierra.c:1247
 msgid "Sepia"
-msgstr ""
+msgstr "Сепия"
 
 #: camlibs/konica/qm150.c:1055 camlibs/konica/qm150.c:1059
 msgid "Single"
-msgstr ""
+msgstr "Одиночный кадр"
 
 #: camlibs/konica/qm150.c:1056 camlibs/konica/qm150.c:1062
 msgid "Sequence 9"
-msgstr ""
+msgstr "Последовательность 9"
 
 #: camlibs/konica/qm150.c:1067
 msgid "Date display"
-msgstr ""
+msgstr "Отображение даты"
 
 #: camlibs/konica/qm150.c:1069 camlibs/konica/qm150.c:1078
 msgid "Anywhere"
-msgstr ""
+msgstr "Где угодно"
 
 #: camlibs/konica/qm150.c:1070 camlibs/konica/qm150.c:1076
 msgid "Play mode"
-msgstr ""
+msgstr "Режим воспроизведения"
 
 #: camlibs/konica/qm150.c:1071 camlibs/konica/qm150.c:1084
-#, fuzzy
 msgid "Record mode"
-msgstr "гЧЕФБ"
+msgstr "Режим записи"
 
 #: camlibs/konica/qm150.c:1072 camlibs/konica/qm150.c:1082
 msgid "Everywhere"
-msgstr ""
+msgstr "Везде"
 
 #: camlibs/konica/qm150.c:1140
 msgid "Battery"
-msgstr ""
+msgstr "Аккумулятор"
 
 #: camlibs/konica/qm150.c:1142
 msgid "AC"
-msgstr ""
+msgstr "Блок питания"
 
 #: camlibs/konica/qm150.c:1145 camlibs/minolta/dimagev/dimagev.c:306
 #: camlibs/sierra/nikon-desc.c:327
 msgid "Play"
-msgstr ""
+msgstr "Воспроизв."
 
 #: camlibs/konica/qm150.c:1147 camlibs/minolta/dimagev/dimagev.c:306
 #: camlibs/sierra/nikon-desc.c:326
 msgid "Record"
-msgstr ""
+msgstr "Запись"
 
 #: camlibs/konica/qm150.c:1157
 msgid "DD/MM/YYYY"
-msgstr ""
+msgstr "ДД/ММ/ГГГГ"
 
 #: camlibs/konica/qm150.c:1162
 msgid "YYYY/MM/AA"
-msgstr ""
+msgstr "ГГГГ/ММ/ДД"
 
 #: camlibs/konica/qm150.c:1166
 msgid "MM/DD/YYYY"
-msgstr ""
+msgstr "ММ/ДД/ГГГГ"
 
 #: camlibs/konica/qm150.c:1170
 #, c-format
@@ -2289,6 +2413,14 @@ msgid ""
 "Date display: %s\n"
 "Date and Time: %s\n"
 msgstr ""
+"Модель: %s\n"
+"Вместимость: %iМ\n"
+"Питание: %s\n"
+"Время до самовыключения: %iмин\n"
+"Режим: %s\n"
+"Изображений: %i/%i\n"
+"Отображение даты: %s\n"
+"Дата и время: %s\n"
 
 #: camlibs/konica/qm150.c:1193
 msgid ""
@@ -2298,6 +2430,11 @@ msgid ""
 "http://www.ap2c.com\n"
 "Support for the french Konica Q-M150."
 msgstr ""
+"Библиотека Konica Q-M150\n"
+"Marcus Meissner <marcus@jet.franken.de>\n"
+"Aurelien Croc (AP2C) <programming@ap2c.com>\n"
+"http://www.ap2c.com\n"
+"Поддержка французской версии Konica Q-M150."
 
 #: camlibs/konica/qm150.c:1208
 msgid ""
@@ -2312,6 +2449,15 @@ msgid ""
 "\n"
 "Thanks to use GPhoto2 and UNIX/Linux Operating systems.\n"
 msgstr ""
+"О Konica Q-M150:\n"
+"Данный аппарат не поддерживает внешнюю настройку, \n"
+"поэтому можно лишь просматривать текущие настройки\n"
+"по команде конфигурации, но нельзя ничего изменить\n"
+"\n"
+"В случае проблем с этим драйвером, напишите, пожалуйста,\n"
+"его автору по электронной почте.\n"
+"\n"
+"Спасибо за использование GPhoto2 и ОС UNIX/Linux.\n"
 
 #: camlibs/largan/lmini/largan.c:268
 msgid "There is nothing to summarize for this camera."
@@ -2319,7 +2465,7 @@ msgstr ""
 
 #: camlibs/largan/lmini/largan.c:280
 msgid "No manual"
-msgstr ""
+msgstr "Нет руководства"
 
 #: camlibs/largan/lmini/largan.c:288
 msgid ""
@@ -2328,6 +2474,10 @@ msgid ""
 "\n"
 "Handles Largan Lmini camera.\n"
 msgstr ""
+"Драйвер Largan\n"
+"Hubert Figuiere <hfiguiere@teaser.fr>\n"
+"\n"
+"Поддержка фотоаппарата Largan Lmini.\n"
 
 #: camlibs/mars/library.c:109
 #, c-format
@@ -2335,6 +2485,8 @@ msgid ""
 "Mars MR97310 camera.\n"
 "There is %i photo in it. \n"
 msgstr ""
+"Фотоаппарат Mars MR97310.\n"
+"Содержит %i снимков. \n"
 
 #: camlibs/mars/library.c:113
 #, c-format
@@ -2342,6 +2494,8 @@ msgid ""
 "Mars MR97310 camera.\n"
 "There are %i photos in it. \n"
 msgstr ""
+"Фотоаппарат Mars MR97310.\n"
+"Содержит %i снимков. \n"
 
 #: camlibs/mars/library.c:125
 msgid ""
@@ -2356,12 +2510,24 @@ msgid ""
 "If present on the camera, video clip frames are downloaded \n"
 "as consecutive still photos.\n"
 msgstr ""
+"Драйвер поддерживает фотоаппараты с м/с Mars MR97310 (и его прямыми\n"
+"аналогами ??Pixart PACx07??) и должен работать с gtkam.\n"
+"Драйвер позволяет копировать\n"
+"   - миниатюры для gtkam\n"
+"   - фотографии (640x480 или 320x240PPM) (??352x288 & 176x144??)\n"
+"Фотоаппарат не поддерживает удаление снимков и закачку данных\n"
+"Драйвер не поддерживает режим дополнительного сжатия изображений.\n"
+"\n"
+"Если фотоаппарат хранит видеозаписи, то отдельные кадры можно получить\n"
+"в виде последовательности неподвижных фотографий.\n"
 
 #: camlibs/mars/library.c:146
 msgid ""
 "Mars MR97310 camera library\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
 msgstr ""
+"Библиотека для фотоаппарата Mars MR97310\n"
+"Theodore Kilgore <kilgota@auburn.edu>\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:270
 #, c-format
@@ -2370,6 +2536,9 @@ msgid ""
 "Hardware Revision:\t%s\n"
 "Firmware Revision:\t%s\n"
 msgstr ""
+"Модель:\t\t\tMinolta Dimage V (%s)\n"
+"Версия устройства:\t%s\n"
+"Версия прошивки:\t%s\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:285
 #, c-format
@@ -2386,49 +2555,60 @@ msgid ""
 "Card ID:\t\t%d\n"
 "Flash Mode:\t\t"
 msgstr ""
+"Режим работы:\t\t%s\n"
+"Коррекция выдержки:\t%s\n"
+"Данные выдержки:\t\t%d\n"
+"Дата указана:\t\t%s\n"
+"Дата:\t\t\t%d/%02d/%02d %02d:%02d:%02d\n"
+"Задержка спуска:\t\t%s\n"
+"Уровень качества:\t%s\n"
+"Режим воспроизведения/записи:\t%s\n"
+"ID карты указан:\t\t%s\n"
+"ID карты:\t\t%d\n"
+"Режим вспышки:\t\t"
 
 #: camlibs/minolta/dimagev/dimagev.c:297
 msgid "Remote"
-msgstr ""
+msgstr "Автономный"
 
 #: camlibs/minolta/dimagev/dimagev.c:297
 msgid "Local"
-msgstr ""
+msgstr "Подключённый"
 
 #: camlibs/minolta/dimagev/dimagev.c:298 camlibs/minolta/dimagev/dimagev.c:300
 #: camlibs/minolta/dimagev/dimagev.c:304 camlibs/minolta/dimagev/dimagev.c:307
 msgid "Yes"
-msgstr "дБ"
+msgstr "Да"
 
 #: camlibs/minolta/dimagev/dimagev.c:298 camlibs/minolta/dimagev/dimagev.c:300
 #: camlibs/minolta/dimagev/dimagev.c:304 camlibs/minolta/dimagev/dimagev.c:307
 msgid "No"
-msgstr "оЕ ХДБМСФШ"
+msgstr "Нет"
 
 #: camlibs/minolta/dimagev/dimagev.c:305 camlibs/sierra/nikon-desc.c:249
-#: camlibs/sierra/sierra.c:1533 camlibs/sierra/sierra.c:1540
-#: camlibs/sierra/sierra.c:1745
+#: camlibs/sierra/sierra.c:1544 camlibs/sierra/sierra.c:1551
+#: camlibs/sierra/sierra.c:1756
 msgid "Fine"
-msgstr ""
+msgstr "Улучшенный"
 
-#: camlibs/minolta/dimagev/dimagev.c:305 camlibs/sierra/sierra.c:850
-#: camlibs/sierra/sierra.c:857 camlibs/sierra/sierra.c:1186
-#: camlibs/sierra/sierra.c:1532 camlibs/sierra/sierra.c:1538
-#: camlibs/sierra/sierra.c:1743
+#: camlibs/minolta/dimagev/dimagev.c:305 camlibs/sierra/sierra.c:861
+#: camlibs/sierra/sierra.c:868 camlibs/sierra/sierra.c:1197
+#: camlibs/sierra/sierra.c:1543 camlibs/sierra/sierra.c:1549
+#: camlibs/sierra/sierra.c:1754
 msgid "Standard"
-msgstr ""
+msgstr "Стандартный"
 
 #: camlibs/minolta/dimagev/dimagev.c:321
 msgid "Automatic\n"
-msgstr ""
+msgstr "Автомат\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:329
 msgid "Force Flash\n"
-msgstr ""
+msgstr "Принудительная вспышка\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:337
 msgid "Prohibit Flash\n"
-msgstr ""
+msgstr "Запрет вспышки\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:345
 #, c-format
@@ -2445,34 +2625,40 @@ msgid ""
 "Flash Charging:\t\t%s\n"
 "Lens Status:\t\t"
 msgstr ""
+"Зарядка аккумулятора:\t\t%s\n"
+"Число изображений:\t%d\n"
+"Минимальный оставшийся объём:\t%d\n"
+"Занято:\t\t\t%s\n"
+"Зарядка вспышки:\t\t%s\n"
+"Состояние объектива:\t\t"
 
 #: camlibs/minolta/dimagev/dimagev.c:365
 msgid "Not Full"
-msgstr ""
+msgstr "Неполная"
 
 #: camlibs/minolta/dimagev/dimagev.c:365 camlibs/minolta/dimagev/dimagev.c:408
 msgid "Full"
-msgstr ""
+msgstr "Полная"
 
 #: camlibs/minolta/dimagev/dimagev.c:368
 msgid "Busy"
-msgstr ""
+msgstr "Занято"
 
 #: camlibs/minolta/dimagev/dimagev.c:368
 msgid "Idle"
-msgstr ""
+msgstr "Свободно"
 
 #: camlibs/minolta/dimagev/dimagev.c:369
 msgid "Charging"
-msgstr ""
+msgstr "Зарядка"
 
 #: camlibs/minolta/dimagev/dimagev.c:369
 msgid "Ready"
-msgstr ""
+msgstr "Готов"
 
 #: camlibs/minolta/dimagev/dimagev.c:380
 msgid "Normal\n"
-msgstr ""
+msgstr "Нормальный\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:383
 msgid "Lens direction does not match flash light\n"
@@ -2489,15 +2675,15 @@ msgstr ""
 
 #: camlibs/minolta/dimagev/dimagev.c:398
 msgid "Card Status:\t\t"
-msgstr ""
+msgstr "Состояние карты:\t\t"
 
 #: camlibs/minolta/dimagev/dimagev.c:411
 msgid "Write-protected"
-msgstr ""
+msgstr "Защищена от записи"
 
 #: camlibs/minolta/dimagev/dimagev.c:414
 msgid "Unsuitable card"
-msgstr ""
+msgstr "Несовместимая карта"
 
 #: camlibs/minolta/dimagev/dimagev.c:417
 #, c-format
@@ -2512,39 +2698,42 @@ msgid ""
 "Gus Hartmann <gphoto@gus-the-cat.org>\n"
 "Special thanks to Minolta for the spec."
 msgstr ""
+"Библиотека для фотоаппарата Minolta Dimage V\n"
+"%s\n"
+"Gus Hartmann <gphoto@gus-the-cat.org>\n"
+"Особо благодарю фирму Minolta за предоставленные спецификации."
 
 #: camlibs/mustek/core.c:575
 msgid "FlashLight : Auto (RedEye Reduction)"
-msgstr ""
+msgstr "Вспышка: Авто (Против красных глаз)"
 
 #: camlibs/mustek/core.c:577
 msgid "FlashLight : Auto"
-msgstr ""
+msgstr "Вспышка : Авто"
 
 #: camlibs/mustek/core.c:579
 msgid "FlashLight : On (RedEye Reduction)"
-msgstr ""
+msgstr "Вспышка : Вкл. (Против красных глаз)"
 
 #: camlibs/mustek/core.c:581
 msgid "FlashLight : On"
-msgstr ""
+msgstr "Вспышка : Вкл."
 
 #: camlibs/mustek/core.c:583
 msgid "FlashLight : Off"
-msgstr ""
+msgstr "Вспышка : Выкл."
 
 #: camlibs/mustek/core.c:585
 msgid "FlashLight : undefined"
-msgstr ""
+msgstr "Вспышка : не определено"
 
 #: camlibs/mustek/mdc800.c:231
 msgid "Summary for Mustek MDC800:\n"
 msgstr ""
 
 #: camlibs/mustek/mdc800.c:234
-#, fuzzy
 msgid "no status reported."
-msgstr "уПИТБОЕОЙЕ ЙОДЕЛУБ ЕЭЕ ОЕ РПДДЕТЦЙЧБЕФУС"
+msgstr ""
 
 #: camlibs/mustek/mdc800.c:240
 msgid "Compact Flash Card detected\n"
@@ -2564,11 +2753,11 @@ msgstr ""
 
 #: camlibs/mustek/mdc800.c:257
 msgid "Batteries are ok."
-msgstr ""
+msgstr "Заряд аккумулятора в норме."
 
 #: camlibs/mustek/mdc800.c:259
 msgid "Batteries are low."
-msgstr ""
+msgstr "Заряд аккумулятора недостаточен."
 
 #: camlibs/mustek/mdc800.c:278
 msgid ""
@@ -2577,10 +2766,14 @@ msgid ""
 "Ported to gphoto2 by Marcus Meissner <marcus@jet.franken.de>\n"
 "Supports Serial and USB Protocol."
 msgstr ""
+"Библиотека gPhoto2 для Mustek MDC-800\n"
+"Henning Zabel <henning@uni-paderborn.de>\n"
+"Адаптация для gphoto2 - Marcus Meissner <marcus@jet.franken.de>\n"
+"Поддерживает последовательный и USB протоколы."
 
 #: camlibs/panasonic/coolshot/coolshot.c:264
 msgid "coolshot library v"
-msgstr ""
+msgstr "Библиотека coolshot v"
 
 #: camlibs/panasonic/coolshot/coolshot.c:265
 msgid ""
@@ -2590,20 +2783,25 @@ msgid ""
 "based on reverse engineering serial protocol.\n"
 "\n"
 msgstr ""
+"\n"
+"Chris Pinkham <cpinkham@infi.net>\n"
+"Поддержка цифровых фотоаппаратов Panasonic Coolshot\n"
+"основана на исследованиях протокола передачи через последовательный порт.\n"
+"\n"
 
 #: camlibs/panasonic/dc1000.c:369 camlibs/panasonic/dc1580.c:466
 msgid "Disconnecting camera."
-msgstr ""
+msgstr "Отключение фотоаппарата."
 
 #: camlibs/panasonic/dc1000.c:409
-#, fuzzy, c-format
+#, c-format
 msgid "Downloading image %s."
-msgstr "уЛБЮЙЧБОЙЕ ПУФБОПЧМЕОП."
+msgstr "Копируется изображение %s."
 
 #: camlibs/panasonic/dc1000.c:450 camlibs/panasonic/dc1580.c:575
-#, fuzzy, c-format
+#, c-format
 msgid "Uploading image: %s."
-msgstr "нБУЫФБВ ЙЪПВТБЦЕОЙС 50%..."
+msgstr "Закачка изображения: %s."
 
 #: camlibs/panasonic/dc1000.c:461 camlibs/panasonic/dc1580.c:586
 #, c-format
@@ -2611,17 +2809,18 @@ msgid ""
 "File size is %ld bytes. The size of the largest file possible to upload is: %"
 "i bytes."
 msgstr ""
+"Размер файла составляет %ld байт. Максимально возможный размер для закачки: %"
+"i байт."
 
 #: camlibs/panasonic/dc1000.c:474 camlibs/panasonic/dc1580.c:597
 #: camlibs/ricoh/ricoh.c:837
-#, fuzzy
 msgid "Uploading..."
-msgstr "нБУЫФБВ ЙЪПВТБЦЕОЙС 50%..."
+msgstr "Закачка..."
 
 #: camlibs/panasonic/dc1000.c:501 camlibs/panasonic/dc1580.c:623
-#, fuzzy, c-format
+#, c-format
 msgid "Deleting image %s."
-msgstr "хДБМЕОЩ ЧУЕ ЙЪПВТБЦЕОЙС."
+msgstr "Удаляется изображение %s."
 
 #: camlibs/panasonic/dc1000.c:514
 msgid ""
@@ -2632,11 +2831,17 @@ msgid ""
 "Fredrik Roubert <roubert@df.lth.se> and\n"
 "Galen Brooks <galen@nine.com>."
 msgstr ""
+"Библиотека gPhoto для Panasonic DC1000\n"
+"Mariusz Zynel <mariusz@mizar.org>\n"
+"\n"
+"Основана на программе для dc1000, написанной\n"
+"Fredrik Roubert <roubert@df.lth.se> и\n"
+"Galen Brooks <galen@nine.com>."
 
 #: camlibs/panasonic/dc1580.c:526
-#, fuzzy, c-format
+#, c-format
 msgid "Downloading %s."
-msgstr "уЛБЮЙЧБОЙЕ ЪБЧЕТЫЕОП."
+msgstr "Копируется %s."
 
 #: camlibs/panasonic/dc1580.c:635
 msgid ""
@@ -2647,11 +2852,17 @@ msgid ""
 "Fredrik Roubert <roubert@df.lth.se> and\n"
 "Galen Brooks <galen@nine.com>."
 msgstr ""
+"Библиотека gPhoto для Panasonic DC1580\n"
+"Mariusz Zynel <mariusz@mizar.org>\n"
+"\n"
+"Основана на программе для dc1000, написанной\n"
+"Fredrik Roubert <roubert@df.lth.se> и\n"
+"Galen Brooks <galen@nine.com>."
 
 #: camlibs/panasonic/l859/l859.c:503
-#, fuzzy, c-format
+#, c-format
 msgid "Downloading '%s'..."
-msgstr "уЛБЮЙЧБОЙЕ ЪБЧЕТЫЕОП."
+msgstr "Копируется '%s'..."
 
 #: camlibs/panasonic/l859/l859.c:584
 msgid ""
@@ -2664,6 +2875,15 @@ msgid ""
 "320x240 and FINE is 640x480.  The CCD device which captures the images from "
 "the lens is only 300K and thus produces only low quality pictures."
 msgstr ""
+"Panasonic PV-L859-K/PV-L779-K Palmcorder\n"
+"\n"
+"Фирма Panasonic впервые применила технологию получения снимков PHOTOSHOT в "
+"этой серии аппаратов Palmcorder. Изображения сохраняются в формате JPEG на "
+"внутренней карте памяти и могут быть переданы на компьютер через "
+"встроенныйпоследовательный порт. Изображения сохраняются в одном из двух "
+"разрешений:НОРМАЛЬНОМ - 320x240 и ВЫСОКОМ - 640x480. Разрешение ПЗС матрицы "
+"равно лишь 300 тысячам пикселей, поэтому качество получаемых снимков "
+"оставляет желатьлучшего."
 
 #: camlibs/panasonic/l859/l859.c:602
 msgid ""
@@ -2674,12 +2894,20 @@ msgid ""
 "situations, especially if a problem occurs and the camera is not properly "
 "shutdown at speeds faster than 9600."
 msgstr ""
+"Известные проблемы:\n"
+"\n"
+"При возникновении ошибок передачи данных выполните сброс фотоаппарата и "
+"перезапустите программу. Драйвер пока не может самостоятельно выходить из "
+"таких положений, особенно, если проблема возникает при скоростях больших чем "
+"9600 и аппарат не выключается полностью."
 
 #: camlibs/panasonic/l859/l859.c:616
 msgid ""
 "Panasonic PV-L859-K/PV-L779-K Palmcorder Driver\n"
 "Andrew Selkirk <aselkirk@mailandnews.com>"
 msgstr ""
+"Драйвер Panasonic PV-L859-K/PV-L779-K Palmcorder\n"
+"Andrew Selkirk <aselkirk@mailandnews.com>"
 
 #: camlibs/pccam300/library.c:237
 #, c-format
@@ -2688,11 +2916,13 @@ msgid ""
 " Free memory is  %8d bytes.\n"
 " Filecount: %d"
 msgstr ""
+" Всего памяти %8d байт.\n"
+" Свободно памяти %8d байт.\n"
+" Число файлов: %d"
 
 #: camlibs/pccam300/library.c:248 camlibs/pccam600/library.c:250
-#, fuzzy
 msgid "Manual Not Implemented Yet"
-msgstr "%s ЕЭЕ ОЕ ТЕБМЙЪПЧБОП"
+msgstr ""
 
 #: camlibs/pccam300/library.c:256
 msgid ""
@@ -2702,11 +2932,15 @@ msgid ""
 "and: Miah Gregory\n"
 " <mace@darksilence.net>"
 msgstr ""
+"Creative PC-CAM 300\n"
+" Авторы: Till Adam\n"
+"<till@adam-lilienthal.de>\n"
+"и: Miah Gregory\n"
+" <mace@darksilence.net>"
 
 #: camlibs/pccam600/library.c:190
-#, fuzzy
 msgid "Downloading file..."
-msgstr "уЛБЮЙЧБОЙЕ ПУФБОПЧМЕОП."
+msgstr "Копируется файл..."
 
 #: camlibs/pccam600/library.c:257
 msgid ""
@@ -2714,6 +2948,9 @@ msgid ""
 " Author: Peter Kajberg\n"
 " email: <pbk@odense.kollegienet.dk>\n"
 msgstr ""
+"Creative PC-CAM600\n"
+" Автор: Peter Kajberg\n"
+" э-почта: <pbk@odense.kollegienet.dk>\n"
 
 #: camlibs/pccam600/pccam600.c:128 camlibs/pccam600/pccam600.c:157
 #, c-format
@@ -2748,11 +2985,16 @@ msgid ""
 "sf.net>.\n"
 "Polaroid 640SE testing was done by Michael Golden <naugrim@juno.com>."
 msgstr ""
+"Программа копирования снимков для нескольких моделей PolaroidПервоначальный "
+"автор - Peter Desnoyers <pjd@fred.cambridge.ma.us>, адаптация для gphoto2 - "
+"Nathan Stenzel <nathanstenzel@users.sourceforge.net>и Lutz Mueller "
+"<lutz@users.sf.net>.\n"
+"Тестирование Polaroid 640SE - Michael Golden <naugrim@juno.com>."
 
 #: camlibs/polaroid/pdc320.c:485
 #, c-format
 msgid "Model: %x, %x, %x, %x"
-msgstr ""
+msgstr "Модель: %x, %x, %x, %x"
 
 #: camlibs/polaroid/pdc640.c:896
 msgid ""
@@ -2762,25 +3004,29 @@ msgid ""
 "JD350e by Michael Trawny <trawny99@users.sourceforge.net>.Bugfixes by Marcus "
 "Meissner <marcus@jet.franken.de>."
 msgstr ""
+"Программа копирования изображений для фотоаппаратов основанных на  GrandTek "
+"98x.Первоначальный автор - Chris Byrne <adapt@ihug.co.nz>, адаптация для "
+"gphoto2 - Lutz Mueller <lutz@users.sf.net>. Усовершенствование протокола и "
+"доработка дляJenoptik JD350e выполнил Michael Trawny <trawny99@users."
+"sourceforge.net>.Исправление ошибок - Marcus Meissner <marcus@jet.franken."
+"de>."
 
 #: camlibs/polaroid/pdc700.c:159 camlibs/ptp2/ptp.c:1515
 msgid "Image Quality"
-msgstr ""
+msgstr "Качество изображения"
 
-#: camlibs/polaroid/pdc700.c:160 camlibs/ptp2/ptp.c:1462
-#: camlibs/ptp2/ptp.c:1516
-#, fuzzy
+#: camlibs/polaroid/pdc700.c:160 camlibs/ptp2/library.c:1517
+#: camlibs/ptp2/ptp.c:1462 camlibs/ptp2/ptp.c:1516
 msgid "Image Size"
-msgstr "йОДЕЛУ ЙЪПВТБЦЕОЙК"
+msgstr "Размер изображения"
 
 #: camlibs/polaroid/pdc700.c:161
-#, fuzzy
 msgid "Flash Setting"
-msgstr "гЧЕФПЧЩЕ ОБУФТПКЛЙ"
+msgstr "Параметры вспышки"
 
 #: camlibs/polaroid/pdc700.c:164
 msgid "Auto Power Off (minutes)"
-msgstr ""
+msgstr "Автоматическое отключение (минуты)"
 
 #: camlibs/polaroid/pdc700.c:165
 msgid "Information"
@@ -2788,52 +3034,51 @@ msgstr ""
 
 #: camlibs/polaroid/pdc700.c:167
 msgid "normal"
-msgstr ""
+msgstr "нормальное"
 
 #: camlibs/polaroid/pdc700.c:167
 msgid "fine"
-msgstr ""
+msgstr "высокое"
 
 #: camlibs/polaroid/pdc700.c:167
 msgid "superfine"
-msgstr ""
+msgstr "наилучшее"
 
 #: camlibs/polaroid/pdc700.c:169 camlibs/sierra/epson-desc.c:116
-#: camlibs/sierra/sierra.c:1431 camlibs/sierra/sierra.c:1445
-#: camlibs/sierra/sierra.c:1680
+#: camlibs/sierra/sierra.c:1442 camlibs/sierra/sierra.c:1456
+#: camlibs/sierra/sierra.c:1691
 msgid "auto"
-msgstr ""
+msgstr "авто"
 
 #: camlibs/polaroid/pdc700.c:169 camlibs/polaroid/pdc700.c:170
 #: camlibs/sierra/nikon-desc.c:531 camlibs/sierra/nikon-desc.c:536
 msgid "on"
-msgstr ""
+msgstr "вкл"
 
 #: camlibs/polaroid/pdc700.c:169 camlibs/polaroid/pdc700.c:170
 #: camlibs/sierra/nikon-desc.c:530 camlibs/sierra/nikon-desc.c:535
 msgid "off"
-msgstr ""
+msgstr "выкл"
 
 #: camlibs/polaroid/pdc700.c:171
-#, fuzzy
 msgid "play"
-msgstr "рТЙНЕОЙФШ"
+msgstr "воспроизведение"
 
 #: camlibs/polaroid/pdc700.c:171
 msgid "record"
-msgstr ""
+msgstr "запись"
 
 #: camlibs/polaroid/pdc700.c:171
 msgid "menu"
-msgstr ""
+msgstr "меню"
 
 #: camlibs/polaroid/pdc700.c:172
 msgid "battery"
-msgstr ""
+msgstr "аккумулятор"
 
 #: camlibs/polaroid/pdc700.c:172
 msgid "a/c adaptor"
-msgstr ""
+msgstr "блок питания"
 
 #: camlibs/polaroid/pdc700.c:229
 #, c-format
@@ -2842,11 +3087,11 @@ msgstr ""
 
 #: camlibs/polaroid/pdc700.c:242
 msgid "Received unexpected response"
-msgstr ""
+msgstr "Получен неожиданный ответ"
 
 #: camlibs/polaroid/pdc700.c:263
 msgid "Checksum error"
-msgstr ""
+msgstr "Ошибка контрольной суммы"
 
 #: camlibs/polaroid/pdc700.c:296
 msgid "The camera did not accept the command."
@@ -2865,13 +3110,11 @@ msgid ""
 msgstr ""
 
 #: camlibs/polaroid/pdc700.c:914
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%i bytes of an unknown image format have been received. Please write to %s "
 "and ask for assistance."
 msgstr ""
-"уППВЭБКФЕ ПВ ПЫЙВЛБИ Й ХУРЕИБИ РП БДТЕУХ gphoto-devel@lists.sourceforge."
-"net.\n"
 
 #: camlibs/polaroid/pdc700.c:939
 msgid ""
@@ -2879,15 +3122,17 @@ msgid ""
 "Lantzer <rlantzer@umr.edu> for gphoto-4.x. Adapted for gphoto2 by Lutz "
 "Mueller <lutz@users.sf.net>."
 msgstr ""
+"Программа копирования изображений для Polaroid DC700. Первоначально написана "
+"- Ryan Lantzer <rlantzer@umr.edu> для gphoto-4.x. Адаптация для gphoto2 - "
+"Lutz Mueller <lutz@users.sf.net>."
 
 #: camlibs/polaroid/pdc700.c:995
 msgid "How long will it take until the camera powers off?"
 msgstr ""
 
 #: camlibs/polaroid/pdc700.c:998 camlibs/ricoh/library.c:356
-#, fuzzy
 msgid "Image"
-msgstr "йОДЕЛУ ЙЪПВТБЦЕОЙК"
+msgstr "Изображение"
 
 #: camlibs/polaroid/pdc700.c:1109
 #, c-format
@@ -2907,6 +3152,20 @@ msgid ""
 "Auto power off: %i minutes\n"
 "Power source: %s"
 msgstr ""
+"Дата: %i/%02i/%02i %02i:%02i:%02i\n"
+"Сделано снимков: %i\n"
+"Осталось снимков: %i\n"
+"Версия программы: %s\n"
+"Скорость: %s\n"
+"Память: %i мегабайт\n"
+"Режим фотоаппарата: %s\n"
+"Уровень качества: %s\n"
+"Параметры вспышки: %s\n"
+"Информация: %s\n"
+"Таймер: %s\n"
+"ЖК: %s\n"
+"Автоматическое выключение: %i минут\n"
+"Источник питания: %s"
 
 #: camlibs/polaroid/pdc700.c:1229
 #, c-format
@@ -2938,9 +3197,8 @@ msgid "PTP Operation Not Supported"
 msgstr ""
 
 #: camlibs/ptp2/library.c:123
-#, fuzzy
 msgid "PTP Parameter Not Supported"
-msgstr "уПИТБОЕОЙЕ ЙОДЕЛУБ ЕЭЕ ОЕ РПДДЕТЦЙЧБЕФУС"
+msgstr "PTP Параметр не поддерживается"
 
 #: camlibs/ptp2/library.c:124
 msgid "PTP Incomplete Transfer"
@@ -2993,7 +3251,7 @@ msgstr ""
 #: camlibs/ptp2/library.c:136
 #, fuzzy
 msgid "PTP Store Not Available"
-msgstr "оЕ ДПУФХРОП"
+msgstr "Причина неизвестна"
 
 #: camlibs/ptp2/library.c:138
 msgid "PTP Specification By Format Unsupported"
@@ -3016,7 +3274,7 @@ msgid "PTP Capture Already Terminated"
 msgstr ""
 
 #: camlibs/ptp2/library.c:144
-msgid "PTP Device Bus"
+msgid "PTP Device Busy"
 msgstr ""
 
 #: camlibs/ptp2/library.c:145
@@ -3040,9 +3298,8 @@ msgid "PTP Session Already Opened"
 msgstr ""
 
 #: camlibs/ptp2/library.c:150
-#, fuzzy
 msgid "PTP Transaction Canceled"
-msgstr "уЛБЮЙЧБОЙЕ ПФНЕОЕОП."
+msgstr ""
 
 #: camlibs/ptp2/library.c:152
 msgid "PTP Specification Of Destination Unsupported"
@@ -3076,40 +3333,42 @@ msgstr ""
 msgid "PTP Protocol error, response expected"
 msgstr ""
 
-#: camlibs/ptp2/library.c:685
+#: camlibs/ptp2/library.c:694
 msgid ""
 "PTP2 driver\n"
 "(c)2001-2003 by Mariusz Woloszyn <emsi@ipartners.pl>.\n"
 "Enjoy!"
 msgstr ""
+"Драйвер PTP2\n"
+"(c)2001-2003 - Mariusz Woloszyn <emsi@ipartners.pl>.\n"
+"Пользуйтесь!"
 
-#: camlibs/ptp2/library.c:731
-#, fuzzy
+#: camlibs/ptp2/library.c:784
 msgid "Sorry, your camera does not support generic capture"
-msgstr "уПИТБОЕОЙЕ ЙОДЕЛУБ ЕЭЕ ОЕ РПДДЕТЦЙЧБЕФУС"
+msgstr ""
 
-#: camlibs/ptp2/library.c:778
+#: camlibs/ptp2/library.c:832
 msgid "Capture command completed, but no confirmation received"
 msgstr ""
 
-#: camlibs/ptp2/library.c:785
+#: camlibs/ptp2/library.c:839
 #, c-format
 msgid "Received event 0x%04x"
 msgstr ""
 
-#: camlibs/ptp2/library.c:863
+#: camlibs/ptp2/library.c:931
 msgid "read only"
-msgstr ""
+msgstr "только для чтения"
 
-#: camlibs/ptp2/library.c:864
+#: camlibs/ptp2/library.c:932
 msgid "readwrite"
-msgstr ""
+msgstr "чтение и запись"
 
-#: camlibs/ptp2/library.c:865 camlibs/ptp2/library.c:867
+#: camlibs/ptp2/library.c:933 camlibs/ptp2/library.c:935
 msgid "Unknown"
-msgstr ""
+msgstr "Неизвестно"
 
-#: camlibs/ptp2/library.c:879
+#: camlibs/ptp2/library.c:947
 #, c-format
 msgid ""
 "Model: %s\n"
@@ -3118,78 +3377,139 @@ msgid ""
 "Vendor extension ID: 0x%08x\n"
 "Vendor extension description: %s\n"
 msgstr ""
+"Модель: %s\n"
+"  версия устройства: %s\n"
+"  серийный номер:  %s\n"
+"ID фирменного дополнения: 0x%08x\n"
+"Описание фирменного дополнения: %s\n"
 
-#: camlibs/ptp2/library.c:1008 camlibs/ptp2/library.c:1025
-#: camlibs/ptp2/library.c:1059
+#: camlibs/ptp2/library.c:1082 camlibs/ptp2/library.c:1099
+#: camlibs/ptp2/library.c:1143
 #, c-format
 msgid "unexpected datatype %i"
-msgstr ""
+msgstr "неожиданный тип данных %i"
 
-#: camlibs/ptp2/library.c:1295 camlibs/ptp2/ptp.c:1532
+#: camlibs/ptp2/library.c:1152 camlibs/sierra/olympus-desc.c:330
+msgid "Manual"
+msgstr "Ручной"
+
+#: camlibs/ptp2/library.c:1153
 #, fuzzy
+msgid "Automatic"
+msgstr "Автомат\n"
+
+#: camlibs/ptp2/library.c:1154
+#, fuzzy
+msgid "One-push Automatic"
+msgstr "Автомат\n"
+
+#: camlibs/ptp2/library.c:1155 camlibs/sierra/olympus-desc.c:292
+#: camlibs/sierra/olympus-desc.c:311
+msgid "Daylight"
+msgstr "Дневной свет"
+
+#: camlibs/ptp2/library.c:1156 camlibs/ricoh/library.c:328
+#: camlibs/sierra/nikon-desc.c:251 camlibs/sierra/olympus-desc.c:293
+#: camlibs/sierra/olympus-desc.c:312 camlibs/sierra/sierra.c:1023
+#: camlibs/sierra/sierra.c:1032 camlibs/sierra/sierra.c:1311
+msgid "Fluorescent"
+msgstr "Флуоресцентная лампа"
+
+#: camlibs/ptp2/library.c:1157 camlibs/sierra/olympus-desc.c:294
+#: camlibs/sierra/olympus-desc.c:313 camlibs/sierra/sierra.c:1024
+#: camlibs/sierra/sierra.c:1034 camlibs/sierra/sierra.c:1313
+msgid "Tungsten"
+msgstr "Вольфрамовая лампа"
+
+#: camlibs/ptp2/library.c:1159 camlibs/sierra/nikon-desc.c:254
+#: camlibs/sierra/olympus-desc.c:295 camlibs/sierra/olympus-desc.c:314
+#: camlibs/sierra/sierra.c:1025 camlibs/sierra/sierra.c:1037
+#: camlibs/sierra/sierra.c:1315
+msgid "Cloudy"
+msgstr "Облачность"
+
+#: camlibs/ptp2/library.c:1160
+#, fuzzy
+msgid "Shade"
+msgstr "Резко"
+
+#: camlibs/ptp2/library.c:1161 camlibs/sierra/nikon-desc.c:253
+msgid "Preset"
+msgstr "Шаблон"
+
+#: camlibs/ptp2/library.c:1506 camlibs/ptp2/ptp.c:1532
 msgid "Camera Owner"
-msgstr "цЙЧБС ЛБНЕТБ!"
+msgstr "Владелец фотоаппарата"
 
-#: camlibs/ptp2/library.c:1296 camlibs/ptp2/ptp.c:1531
-#, fuzzy
+#: camlibs/ptp2/library.c:1507 camlibs/ptp2/ptp.c:1531
 msgid "Camera Model"
-msgstr "нПДЕМШ ЛБНЕТЩ:"
+msgstr "Модель фотоаппарата"
 
-#: camlibs/ptp2/library.c:1297 camlibs/ptp2/ptp.c:1530
+#: camlibs/ptp2/library.c:1508 camlibs/ptp2/ptp.c:1530
 msgid "Flash Memory"
-msgstr ""
+msgstr "Память ППЗУ"
 
-#: camlibs/ptp2/library.c:1298 camlibs/ptp2/library.c:1299
-#, fuzzy
+#: camlibs/ptp2/library.c:1509 camlibs/ptp2/library.c:1510
 msgid "Camera Time"
-msgstr "цЙЧБС ЛБНЕТБ!"
+msgstr "Время фотоаппарата"
 
-#: camlibs/ptp2/library.c:1300 camlibs/ptp2/ptp.c:1502 camlibs/ptp2/ptp.c:1513
-#, fuzzy
+#: camlibs/ptp2/library.c:1511 camlibs/ptp2/ptp.c:1502 camlibs/ptp2/ptp.c:1513
 msgid "Beep Mode"
-msgstr "уПИТБОЙФШ"
-
-#: camlibs/ptp2/library.c:1306 camlibs/ptp2/ptp.c:1536
-msgid "Assist Light"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1307 camlibs/ptp2/ptp.c:1527
+#: camlibs/ptp2/library.c:1512
+#, fuzzy
+msgid "Image Comment"
+msgstr "Изображение защищено."
+
+#: camlibs/ptp2/library.c:1518
+#, fuzzy
+msgid "WhiteBalance"
+msgstr "Баланс белого"
+
+#: camlibs/ptp2/library.c:1524 camlibs/ptp2/ptp.c:1536
+msgid "Assist Light"
+msgstr "Вспомогательное освещение"
+
+#: camlibs/ptp2/library.c:1525 camlibs/ptp2/ptp.c:1527
 #: camlibs/sierra/nikon-desc.c:425 camlibs/sierra/nikon-desc.c:448
 #: camlibs/sierra/olympus-desc.c:457
 msgid "Exposure Compensation"
-msgstr ""
+msgstr "Компенсация выдержки"
 
-#: camlibs/ptp2/library.c:1312 camlibs/sierra/epson-desc.c:282
+#: camlibs/ptp2/library.c:1532 camlibs/sierra/epson-desc.c:282
 #: camlibs/sierra/nikon-desc.c:594 camlibs/sierra/olympus-desc.c:640
 #: camlibs/sierra/olympus-desc.c:690 camlibs/sierra/olympus-desc.c:704
-#: camlibs/sierra/sierra.c:1111 camlibs/sierra/sierra.c:1573
-#, fuzzy
+#: camlibs/sierra/sierra.c:1122 camlibs/sierra/sierra.c:1584
 msgid "Camera Settings"
-msgstr "гЧЕФПЧЩЕ ОБУФТПКЛЙ"
+msgstr ""
 
-#: camlibs/ptp2/library.c:1313
+#: camlibs/ptp2/library.c:1533
 #, fuzzy
+msgid "Image Settings"
+msgstr "Прочие параметры"
+
+#: camlibs/ptp2/library.c:1534
 msgid "Capture Settings"
-msgstr "гЧЕФПЧЩЕ ОБУФТПКЛЙ"
+msgstr ""
 
-#: camlibs/ptp2/library.c:1366
-#, fuzzy
+#: camlibs/ptp2/library.c:1587
 msgid "Number of values"
-msgstr "оПЧПЕ ЙЪПВТБЦЕОЙЕ #%03i"
+msgstr "Число значений"
 
-#: camlibs/ptp2/library.c:1370
+#: camlibs/ptp2/library.c:1591
 msgid "Supported values"
-msgstr ""
+msgstr "Допустимые значения"
 
-#: camlibs/ptp2/library.c:1378
+#: camlibs/ptp2/library.c:1599
 msgid "Current value"
-msgstr ""
+msgstr "Текущее значение"
 
-#: camlibs/ptp2/library.c:1904
+#: camlibs/ptp2/library.c:2114
 msgid "Initializing Camera"
-msgstr ""
+msgstr "Инициализация фотоаппарата"
 
-#: camlibs/ptp2/library.c:1976
+#: camlibs/ptp2/library.c:2210
 msgid "PTP is implemented for USB cameras only."
 msgstr ""
 
@@ -3210,19 +3530,16 @@ msgid "PTP: Session Not Open"
 msgstr ""
 
 #: camlibs/ptp2/ptp.c:1402
-#, fuzzy
 msgid "PTP: Invalid Transaction ID"
-msgstr "уЛБЮЙЧБОЙЕ ПФНЕОЕОП."
+msgstr ""
 
 #: camlibs/ptp2/ptp.c:1403
-#, fuzzy
 msgid "PTP: Operation Not Supported"
-msgstr "уПИТБОЕОЙЕ ЙОДЕЛУБ ЕЭЕ ОЕ РПДДЕТЦЙЧБЕФУС"
+msgstr ""
 
 #: camlibs/ptp2/ptp.c:1404
-#, fuzzy
 msgid "PTP: Parameter Not Supported"
-msgstr "уПИТБОЕОЙЕ ЙОДЕЛУБ ЕЭЕ ОЕ РПДДЕТЦЙЧБЕФУС"
+msgstr ""
 
 #: camlibs/ptp2/ptp.c:1405
 msgid "PTP: Incomplete Transfer"
@@ -3237,18 +3554,16 @@ msgid "PTP: Invalid Object Handle"
 msgstr ""
 
 #: camlibs/ptp2/ptp.c:1408
-#, fuzzy
 msgid "PTP: Device Prop Not Supported"
-msgstr "уПИТБОЕОЙЕ ЙОДЕЛУБ ЕЭЕ ОЕ РПДДЕТЦЙЧБЕФУС"
+msgstr ""
 
 #: camlibs/ptp2/ptp.c:1409
 msgid "PTP: Invalid Object Format Code"
 msgstr ""
 
 #: camlibs/ptp2/ptp.c:1410
-#, fuzzy
 msgid "PTP: Store Full"
-msgstr "оЕ ДПУФХРОП"
+msgstr ""
 
 #: camlibs/ptp2/ptp.c:1411
 msgid "PTP: Object Write Protected"
@@ -3277,7 +3592,7 @@ msgstr ""
 #: camlibs/ptp2/ptp.c:1417
 #, fuzzy
 msgid "PTP: Store Not Available"
-msgstr "оЕ ДПУФХРОП"
+msgstr "Причина неизвестна"
 
 #: camlibs/ptp2/ptp.c:1419
 msgid "PTP: Specification By Format Unsupported"
@@ -3300,7 +3615,7 @@ msgid "PTP: Capture Already Terminated"
 msgstr ""
 
 #: camlibs/ptp2/ptp.c:1425
-msgid "PTP: Device Bus"
+msgid "PTP: Device Busy"
 msgstr ""
 
 #: camlibs/ptp2/ptp.c:1426
@@ -3324,9 +3639,8 @@ msgid "PTP: Session Already Opened"
 msgstr ""
 
 #: camlibs/ptp2/ptp.c:1431
-#, fuzzy
 msgid "PTP: Transaction Canceled"
-msgstr "уЛБЮЙЧБОЙЕ ПФНЕОЕОП."
+msgstr ""
 
 #: camlibs/ptp2/ptp.c:1433
 msgid "PTP: Specification Of Destination Unsupported"
@@ -3366,78 +3680,74 @@ msgstr ""
 
 #: camlibs/ptp2/ptp.c:1460
 msgid "Battery Level"
-msgstr ""
+msgstr "Зарядка аккумулятора"
 
 #: camlibs/ptp2/ptp.c:1461
-#, fuzzy
 msgid "Functional Mode"
-msgstr "уЛБЮЙЧБОЙЕ ПФНЕОЕОП."
+msgstr ""
 
 #: camlibs/ptp2/ptp.c:1463
-#, fuzzy
 msgid "Compression Setting"
-msgstr "гЧЕФПЧЩЕ ОБУФТПКЛЙ"
+msgstr "Параметры сжатия"
 
 #: camlibs/ptp2/ptp.c:1464 camlibs/ptp2/ptp.c:1523
 #: camlibs/sierra/epson-desc.c:176 camlibs/sierra/nikon-desc.c:259
 #: camlibs/sierra/olympus-desc.c:300 camlibs/sierra/olympus-desc.c:319
-#: camlibs/sierra/sierra.c:1009 camlibs/sierra/sierra.c:1292
-#: camlibs/sierra/sierra.c:1486 camlibs/sierra/sierra.c:1709
+#: camlibs/sierra/sierra.c:1020 camlibs/sierra/sierra.c:1303
+#: camlibs/sierra/sierra.c:1497 camlibs/sierra/sierra.c:1720
 msgid "White Balance"
-msgstr ""
+msgstr "Баланс белого"
 
 #: camlibs/ptp2/ptp.c:1465
 msgid "RGB Gain"
-msgstr ""
+msgstr "Усиление RGB"
 
 #: camlibs/ptp2/ptp.c:1466
 msgid "F-Number"
-msgstr ""
+msgstr "Число F"
 
 #: camlibs/ptp2/ptp.c:1467
 msgid "Focal Length"
-msgstr ""
+msgstr "Длина фокуса"
 
 #: camlibs/ptp2/ptp.c:1468
 msgid "Focus Distance"
-msgstr ""
+msgstr "Фокусное расстояние"
 
 #: camlibs/ptp2/ptp.c:1469 camlibs/sierra/nikon-desc.c:297
 #: camlibs/sierra/olympus-desc.c:335
-#, fuzzy
 msgid "Focus Mode"
-msgstr "гЧЕФБ"
+msgstr "Режим фокусировки"
 
 #: camlibs/ptp2/ptp.c:1470
-#, fuzzy
 msgid "Exposure Metering Mode"
-msgstr "гЧЕФБ"
+msgstr "Режим экспозамера"
 
-#: camlibs/ptp2/ptp.c:1471 camlibs/ptp2/ptp.c:1517 camlibs/sierra/sierra.c:948
-#: camlibs/sierra/sierra.c:1249 camlibs/sierra/sierra.c:1458
-#: camlibs/sierra/sierra.c:1689
+#: camlibs/ptp2/ptp.c:1471 camlibs/ptp2/ptp.c:1517 camlibs/sierra/sierra.c:959
+#: camlibs/sierra/sierra.c:1260 camlibs/sierra/sierra.c:1469
+#: camlibs/sierra/sierra.c:1700
 msgid "Flash Mode"
-msgstr ""
+msgstr "Режим вспышки"
 
 #: camlibs/ptp2/ptp.c:1472
 msgid "Exposure Time"
-msgstr ""
+msgstr "Время выдержки"
 
 #: camlibs/ptp2/ptp.c:1473
 msgid "Exposure Program Mode"
-msgstr ""
+msgstr "Режим программируемой выдержки"
 
 #: camlibs/ptp2/ptp.c:1475
 msgid "Exposure Index (film speed ISO)"
-msgstr ""
+msgstr "Индекс выдержки (ISO скорость плёнки)"
 
 #: camlibs/ptp2/ptp.c:1477
 msgid "Exposure Bias Compensation"
-msgstr ""
+msgstr "Экспокоррекция"
 
 #: camlibs/ptp2/ptp.c:1478
 msgid "Date Time"
-msgstr ""
+msgstr "Дата Время"
 
 #: camlibs/ptp2/ptp.c:1479
 msgid "Pre-Capture Delay"
@@ -3449,17 +3759,16 @@ msgstr ""
 
 #: camlibs/ptp2/ptp.c:1481
 msgid "Contrast"
-msgstr ""
+msgstr "Контраст"
 
 #: camlibs/ptp2/ptp.c:1483 camlibs/sierra/nikon-desc.c:519
 #: camlibs/sierra/nikon-desc.c:542
 msgid "Digital Zoom"
-msgstr ""
+msgstr "Цифровое увеличение"
 
 #: camlibs/ptp2/ptp.c:1484
-#, fuzzy
 msgid "Effect Mode"
-msgstr "гЧЕФБ"
+msgstr ""
 
 #: camlibs/ptp2/ptp.c:1485
 msgid "Burst Number"
@@ -3478,9 +3787,8 @@ msgid "Timelapse Interval"
 msgstr ""
 
 #: camlibs/ptp2/ptp.c:1489
-#, fuzzy
 msgid "Focus Metering Mode"
-msgstr "гЧЕФБ"
+msgstr ""
 
 #: camlibs/ptp2/ptp.c:1490
 msgid "Upload URL"
@@ -3488,15 +3796,15 @@ msgstr ""
 
 #: camlibs/ptp2/ptp.c:1491
 msgid "Artist"
-msgstr ""
+msgstr "Автор"
 
 #: camlibs/ptp2/ptp.c:1492
 msgid "Copyright Info"
-msgstr ""
+msgstr "Сведения о Copyright"
 
 #: camlibs/ptp2/ptp.c:1499
 msgid "Color Temperature"
-msgstr ""
+msgstr "Цветовая температура"
 
 #: camlibs/ptp2/ptp.c:1501
 msgid "Date Time Stamp Format"
@@ -3508,44 +3816,41 @@ msgstr ""
 
 #: camlibs/ptp2/ptp.c:1504
 msgid "Power Saving"
-msgstr ""
+msgstr "Экономия энергии"
 
 #: camlibs/ptp2/ptp.c:1505
 msgid "UI Language"
-msgstr ""
+msgstr "Язык интерфейса"
 
 #: camlibs/ptp2/ptp.c:1514
 msgid "Viewfinder Mode"
-msgstr ""
+msgstr "Режим видоискателя"
 
 #: camlibs/ptp2/ptp.c:1519
 msgid "TV A/V Setting"
-msgstr ""
+msgstr "Настройка ТВ A/V·вывода"
 
 #: camlibs/ptp2/ptp.c:1520
-#, fuzzy
 msgid "Metering Mode"
-msgstr "гЧЕФБ"
+msgstr "Режим замера"
 
 #: camlibs/ptp2/ptp.c:1521
-#, fuzzy
 msgid "Macro Mode"
-msgstr "гЧЕФБ"
+msgstr "Макрорежим"
 
 #: camlibs/ptp2/ptp.c:1522
-#, fuzzy
 msgid "Focusing Point"
-msgstr "гЧЕФБ"
+msgstr "Точка фокусировки"
 
 #: camlibs/ptp2/ptp.c:1524 camlibs/sierra/olympus-desc.c:538
 msgid "ISO Speed"
-msgstr ""
+msgstr "Скорость ISO"
 
-#: camlibs/ptp2/ptp.c:1525 camlibs/sierra/sierra.c:888
-#: camlibs/sierra/sierra.c:1209 camlibs/sierra/sierra.c:1424
-#: camlibs/sierra/sierra.c:1665
+#: camlibs/ptp2/ptp.c:1525 camlibs/sierra/sierra.c:899
+#: camlibs/sierra/sierra.c:1220 camlibs/sierra/sierra.c:1435
+#: camlibs/sierra/sierra.c:1676
 msgid "Aperture"
-msgstr ""
+msgstr "Диафрагма"
 
 #: camlibs/ptp2/ptp.c:1526
 msgid "ShutterSpeed"
@@ -3557,7 +3862,7 @@ msgstr ""
 
 #: camlibs/ptp2/ptp.c:1533
 msgid "UNIX Time"
-msgstr ""
+msgstr "Время UNIX"
 
 #: camlibs/ptp2/ptp.c:1534
 msgid "Real Image Width"
@@ -3568,50 +3873,38 @@ msgid "Photo Effect"
 msgstr ""
 
 #: camlibs/ricoh/g3.c:297
-#, fuzzy
 msgid "Downloading movie..."
-msgstr "уЛБЮЙЧБОЙЕ ПУФБОПЧМЕОП."
+msgstr "Копируется видеозапись..."
 
 #: camlibs/ricoh/g3.c:303
-#, fuzzy
 msgid "Downloading audio..."
-msgstr "уЛБЮЙЧБОЙЕ ЪБЧЕТЫЕОП."
+msgstr "Копируется звукопись..."
 
 #: camlibs/ricoh/g3.c:318
-#, fuzzy
 msgid "Downloading EXIF data..."
-msgstr "уЛБЮЙЧБОЙЕ ЪБЧЕТЫЕОП."
+msgstr "Копируется данные EXIF..."
 
 #: camlibs/ricoh/g3.c:320 camlibs/ricoh/g3.c:339
-#, fuzzy, c-format
+#, c-format
 msgid "No EXIF data available for %s."
-msgstr "оЕ ДПУФХРОП"
+msgstr "Нет данных EXIF для %s."
 
 #: camlibs/ricoh/g3.c:425
-#, fuzzy
 msgid "Could not delete file."
-msgstr ""
-"оЕ ХДБМПУШ ПФЛТЩФШ:\n"
-"%s"
+msgstr "Невозможно удалить файл."
 
 #: camlibs/ricoh/g3.c:452
-#, fuzzy
 msgid "Could not remove directory."
-msgstr ""
-"оЕ ХДБМПУШ ПФЛТЩФШ:\n"
-"%s"
+msgstr "Невозможно удалить каталог."
 
 #: camlibs/ricoh/g3.c:479
-#, fuzzy
 msgid "Could not create directory."
-msgstr ""
-"оЕ ХДБМПУШ ПФЛТЩФШ:\n"
-"%s"
+msgstr "Невозможно создать каталог."
 
 #: camlibs/ricoh/g3.c:498
 #, c-format
 msgid "Version: %s\n"
-msgstr ""
+msgstr "Версия: %s\n"
 
 #: camlibs/ricoh/g3.c:503
 #, c-format
@@ -3619,19 +3912,18 @@ msgid "RTC Status: %d\n"
 msgstr ""
 
 #: camlibs/ricoh/g3.c:509
-#, fuzzy, c-format
+#, c-format
 msgid "Camera time: %s %s\n"
-msgstr "нПДЕМШ ЛБНЕТЩ:"
+msgstr ""
 
 #: camlibs/ricoh/g3.c:515
-#, fuzzy, c-format
+#, c-format
 msgid "Camera ID: %s\n"
-msgstr "нПДЕМШ ЛБНЕТЩ:"
+msgstr "ID фотоаппарата: %s\n"
 
 #: camlibs/ricoh/g3.c:521
-#, fuzzy
 msgid "No SD Card inserted.\n"
-msgstr "уПИТБОЕОЙЕ ЙОДЕЛУБ ЕЭЕ ОЕ РПДДЕТЦЙЧБЕФУС"
+msgstr ""
 
 #: camlibs/ricoh/g3.c:524
 #, c-format
@@ -3639,9 +3931,9 @@ msgid "SD Card ID: %s\n"
 msgstr ""
 
 #: camlibs/ricoh/g3.c:532
-#, fuzzy, c-format
+#, c-format
 msgid "Photos on camera: %d\n"
-msgstr "оЕ ХДБМПУШ РПМХЮЙФШ ЙЪПВТБЦЕОЙЕ."
+msgstr ""
 
 #: camlibs/ricoh/g3.c:538
 #, c-format
@@ -3660,6 +3952,10 @@ msgid ""
 "Reverse engineered using USB Snoopy, looking\n"
 "at the firmware update image and wild guessing.\n"
 msgstr ""
+"Ricoh Caplio G3.\n"
+"Marcus Meissner <marcus@jet.franken.de>\n"
+"Исследование протокола проведено с помощью USB Snoopy,\n"
+"декомпиляции прошивки и интуиции.\n"
 
 #: camlibs/ricoh/library.c:215
 msgid ""
@@ -3668,6 +3964,10 @@ msgid ""
 "Martin Fischer <martin.fischer@inka.de>,\n"
 "based on Bob Paauwe's driver\n"
 msgstr ""
+"Драйвер Ricoh / Philips\n"
+"Lutz Mueller <lutz@users.sourceforge.net>,\n"
+"Martin Fischer <martin.fischer@inka.de>,\n"
+"на основе драйвера от Bob Paauwe\n"
 
 #: camlibs/ricoh/library.c:249
 #, c-format
@@ -3680,128 +3980,121 @@ msgid ""
 "Model: %s\n"
 "Memory: %d byte(s) of %d available"
 msgstr ""
+"Модель: %s\n"
+"Память: %d байт(ов) из %d доступных"
 
 #: camlibs/ricoh/library.c:302
 msgid "-2.0"
-msgstr ""
+msgstr "-2,0"
 
 #: camlibs/ricoh/library.c:303
 msgid "-1.5"
-msgstr ""
+msgstr "-1,5"
 
 #: camlibs/ricoh/library.c:304
 msgid "-1.0"
-msgstr ""
+msgstr "-1,0"
 
 #: camlibs/ricoh/library.c:305
 msgid "-0.5"
-msgstr ""
+msgstr "-0,5"
 
 #: camlibs/ricoh/library.c:306
 msgid "0.0"
-msgstr ""
+msgstr "0,0"
 
 #: camlibs/ricoh/library.c:307
 msgid "0.5"
-msgstr ""
+msgstr "0,5"
 
 #: camlibs/ricoh/library.c:308
 msgid "1.0"
-msgstr ""
+msgstr "1,0"
 
 #: camlibs/ricoh/library.c:309
 msgid "1.5"
-msgstr ""
+msgstr "1,5"
 
 #: camlibs/ricoh/library.c:310
 msgid "2.0"
-msgstr ""
+msgstr "2,0"
 
 #: camlibs/ricoh/library.c:319
 msgid "1280 x 960"
-msgstr ""
+msgstr "1280 x 960"
 
 #: camlibs/ricoh/library.c:327
 msgid "Outdoor"
-msgstr ""
-
-#: camlibs/ricoh/library.c:328 camlibs/sierra/nikon-desc.c:251
-#: camlibs/sierra/olympus-desc.c:293 camlibs/sierra/olympus-desc.c:312
-#: camlibs/sierra/sierra.c:1012 camlibs/sierra/sierra.c:1021
-#: camlibs/sierra/sierra.c:1300
-msgid "Fluorescent"
-msgstr ""
+msgstr "Солнечный"
 
 #: camlibs/ricoh/library.c:329 camlibs/sierra/nikon-desc.c:250
 msgid "Incandescent"
-msgstr ""
+msgstr "Лампа накаливания"
 
 #: camlibs/ricoh/library.c:330 camlibs/sierra/epson-desc.c:137
 msgid "Black & White"
-msgstr ""
+msgstr "Чёрно-белый"
 
 #: camlibs/ricoh/library.c:347
 msgid "Maximal"
-msgstr ""
+msgstr "Макс."
 
 #: camlibs/ricoh/library.c:349
 msgid "Minimal"
-msgstr ""
+msgstr "Мин."
 
 #: camlibs/ricoh/library.c:357
 msgid "Character"
-msgstr ""
+msgstr "Текст"
 
 #: camlibs/ricoh/library.c:358
 msgid "Sound"
-msgstr ""
+msgstr "Звук"
 
 #: camlibs/ricoh/library.c:359
-#, fuzzy
 msgid "Image & Sound"
-msgstr "йОДЕЛУ ЙЪПВТБЦЕОЙК"
+msgstr "Изображение и звук"
 
 #: camlibs/ricoh/library.c:360
 msgid "Character & Sound"
-msgstr ""
+msgstr "Character & Sound"
 
-#: camlibs/ricoh/library.c:377 camlibs/sierra/sierra.c:1089
-#: camlibs/sierra/sierra.c:1095
+#: camlibs/ricoh/library.c:377 camlibs/sierra/sierra.c:1100
+#: camlibs/sierra/sierra.c:1106
 msgid "2x"
-msgstr ""
+msgstr "2x"
 
 #: camlibs/ricoh/library.c:378
 msgid "3x"
-msgstr ""
+msgstr "3x"
 
 #: camlibs/ricoh/library.c:379
 msgid "4x"
-msgstr ""
+msgstr "4x"
 
 #: camlibs/ricoh/library.c:380
 msgid "5x"
-msgstr ""
+msgstr "5x"
 
 #: camlibs/ricoh/library.c:381
 msgid "6x"
-msgstr ""
+msgstr "6x"
 
 #: camlibs/ricoh/library.c:382
 msgid "7x"
-msgstr ""
+msgstr "7x"
 
 #: camlibs/ricoh/library.c:383
 msgid "8x"
-msgstr ""
+msgstr "8x"
 
 #: camlibs/ricoh/library.c:384
 msgid "9x"
-msgstr ""
+msgstr "9x"
 
 #: camlibs/ricoh/library.c:430
-#, fuzzy
 msgid "Configuration"
-msgstr "лПОЖЙЗХТБГЙС ЛБНЕТЩ"
+msgstr "Конфигурация"
 
 #: camlibs/ricoh/library.c:433
 msgid "General"
@@ -3809,104 +4102,82 @@ msgstr ""
 
 #: camlibs/ricoh/library.c:437
 msgid "Copyright"
-msgstr ""
+msgstr "Copyright"
 
 #: camlibs/ricoh/library.c:439
 msgid "Copyright (max. 20 characters)"
-msgstr ""
+msgstr "Copyright (макс.. 20 знаков)"
 
 #: camlibs/ricoh/library.c:453
-#, fuzzy
 msgid "Pictures"
-msgstr "рПМХЮЙФШ ЙЪПВТБЦЕОЙЕ"
+msgstr "Изображения"
 
 #: camlibs/ricoh/library.c:497
 msgid "White level"
-msgstr ""
+msgstr "Уровень белого"
 
 #: camlibs/ricoh/library.c:501
-#, fuzzy
 msgid "Record Mode"
-msgstr "гЧЕФБ"
+msgstr "Режим записи"
 
 #: camlibs/ricoh/library.c:502
 msgid "Compression"
-msgstr ""
+msgstr "Сжатие"
 
 #: camlibs/ricoh/library.c:561
-#, fuzzy, c-format
+#, c-format
 msgid "Speed %i is not supported!"
-msgstr "уПИТБОЕОЙЕ ЙОДЕЛУБ ЕЭЕ ОЕ РПДДЕТЦЙЧБЕФУС"
+msgstr "Скорость %i не поддерживается!"
 
 #: camlibs/ricoh/ricoh.c:66
-#, fuzzy, c-format
+#, c-format
 msgid "Expected %i, got %i. Please report this error to %s."
 msgstr ""
-"уППВЭБКФЕ ПВ ПЫЙВЛБИ Й ХУРЕИБИ РП БДТЕУХ gphoto-devel@lists.sourceforge."
-"net.\n"
 
 #: camlibs/ricoh/ricoh.c:75
-#, fuzzy, c-format
+#, c-format
 msgid "Expected %i bytes, got %i. Please report this error to %s."
 msgstr ""
-"уППВЭБКФЕ ПВ ПЫЙВЛБИ Й ХУРЕИБИ РП БДТЕУХ gphoto-devel@lists.sourceforge."
-"net.\n"
 
 #: camlibs/ricoh/ricoh.c:172 camlibs/ricoh/ricoh.c:186
-#, fuzzy, c-format
+#, c-format
 msgid "We expected 0x%x but received 0x%x. Please contact %s."
 msgstr ""
-"уППВЭБКФЕ ПВ ПЫЙВЛБИ Й ХУРЕИБИ РП БДТЕУХ gphoto-devel@lists.sourceforge."
-"net.\n"
 
 #: camlibs/ricoh/ricoh.c:215
-#, fuzzy, c-format
+#, c-format
 msgid "Bad characters (0x%x, 0x%x). Please contact %s."
 msgstr ""
-"уППВЭБКФЕ ПВ ПЫЙВЛБИ Й ХУРЕИБИ РП БДТЕУХ gphoto-devel@lists.sourceforge."
-"net.\n"
 
 #: camlibs/ricoh/ricoh.c:256 camlibs/ricoh/ricoh.c:325
-#, fuzzy, c-format
+#, c-format
 msgid "Camera busy. If the problem persists, please contact %s."
 msgstr ""
-"уППВЭБКФЕ ПВ ПЫЙВЛБИ Й ХУРЕИБИ РП БДТЕУХ gphoto-devel@lists.sourceforge."
-"net.\n"
 
 #: camlibs/ricoh/ricoh.c:291
-#, fuzzy, c-format
+#, c-format
 msgid "Timeout even after 2 retries. Please contact %s."
 msgstr ""
-"уППВЭБКФЕ ПВ ПЫЙВЛБИ Й ХУРЕИБИ РП БДТЕУХ gphoto-devel@lists.sourceforge."
-"net.\n"
 
 #: camlibs/ricoh/ricoh.c:307
-#, fuzzy, c-format
+#, c-format
 msgid "Communication error even after 2 retries. Please contact %s."
 msgstr ""
-"уППВЭБКФЕ ПВ ПЫЙВЛБИ Й ХУРЕИБИ РП БДТЕУХ gphoto-devel@lists.sourceforge."
-"net.\n"
 
 #: camlibs/ricoh/ricoh.c:339
-#, fuzzy, c-format
+#, c-format
 msgid "Camera is in wrong mode. Please contact %s."
 msgstr ""
-"уППВЭБКФЕ ПВ ПЫЙВЛБИ Й ХУРЕИБИ РП БДТЕУХ gphoto-devel@lists.sourceforge."
-"net.\n"
 
 #: camlibs/ricoh/ricoh.c:348
-#, fuzzy, c-format
+#, c-format
 msgid "Camera did not accept the parameters. Please contact %s."
 msgstr ""
-"уППВЭБКФЕ ПВ ПЫЙВЛБИ Й ХУРЕИБИ РП БДТЕУХ gphoto-devel@lists.sourceforge."
-"net.\n"
 
 #: camlibs/ricoh/ricoh.c:354
-#, fuzzy, c-format
+#, c-format
 msgid "An unknown error occurred. Please contact %s."
 msgstr ""
-"уППВЭБКФЕ ПВ ПЫЙВЛБИ Й ХУРЕИБИ РП БДТЕУХ gphoto-devel@lists.sourceforge."
-"net.\n"
 
 #: camlibs/ricoh/ricoh.c:816
 #, c-format
@@ -3921,121 +4192,120 @@ msgid ""
 "net> ported it to gphoto2. Marcus Meissner <marcus@jet.franken.de> fixed and "
 "enhanced the port."
 msgstr ""
+"Драйвер Samsung digimax 800k написан James McKenzie <james@fishsoup.dhs.org> "
+"для gphoto. Lutz Mueller <lutz@users.sourceforge.net> портировал его в "
+"gphoto2. Marcus Meissner <marcus@jet.franken.de> исправлял ошибки и вносил "
+"усовершенствования."
 
 #: camlibs/sierra/epson-desc.c:85 camlibs/sierra/nikon-desc.c:92
 #: camlibs/sierra/olympus-desc.c:107
 msgid "Resolution plus Size"
-msgstr ""
+msgstr "Разрешение плюс размер"
 
 #: camlibs/sierra/epson-desc.c:103 camlibs/sierra/nikon-desc.c:110
 #: camlibs/sierra/olympus-desc.c:125
 msgid "Date and time (GMT)"
-msgstr ""
+msgstr "Дата и время (GMT)"
 
 #: camlibs/sierra/epson-desc.c:127 camlibs/sierra/nikon-desc.c:176
 #: camlibs/sierra/olympus-desc.c:215 camlibs/sierra/olympus-desc.c:247
-#, fuzzy
 msgid "Aperature Settings"
-msgstr "гЧЕФПЧЩЕ ОБУФТПКЛЙ"
+msgstr "Параметры диафрагмы"
 
 #: camlibs/sierra/epson-desc.c:142 camlibs/sierra/nikon-desc.c:191
-#: camlibs/sierra/olympus-desc.c:265 camlibs/sierra/sierra.c:918
-#: camlibs/sierra/sierra.c:1228 camlibs/sierra/sierra.c:1557
-#: camlibs/sierra/sierra.c:1758
-#, fuzzy
+#: camlibs/sierra/olympus-desc.c:265 camlibs/sierra/sierra.c:929
+#: camlibs/sierra/sierra.c:1239 camlibs/sierra/sierra.c:1568
+#: camlibs/sierra/sierra.c:1769
 msgid "Color Mode"
-msgstr "гЧЕФБ"
+msgstr "Режим цвета"
 
-#: camlibs/sierra/epson-desc.c:154 camlibs/sierra/sierra.c:952
-#: camlibs/sierra/sierra.c:962 camlibs/sierra/sierra.c:1259
-#: camlibs/sierra/sierra.c:1462 camlibs/sierra/sierra.c:1471
-#: camlibs/sierra/sierra.c:1698
+#: camlibs/sierra/epson-desc.c:154 camlibs/sierra/sierra.c:963
+#: camlibs/sierra/sierra.c:973 camlibs/sierra/sierra.c:1270
+#: camlibs/sierra/sierra.c:1473 camlibs/sierra/sierra.c:1482
+#: camlibs/sierra/sierra.c:1709
 msgid "Red-eye Reduction"
-msgstr ""
+msgstr "Уменьшение эффекта красных глаз"
 
-#: camlibs/sierra/epson-desc.c:155 camlibs/sierra/sierra.c:953
-#: camlibs/sierra/sierra.c:964 camlibs/sierra/sierra.c:1261
-#: camlibs/sierra/sierra.c:1463 camlibs/sierra/sierra.c:1473
-#: camlibs/sierra/sierra.c:1700
+#: camlibs/sierra/epson-desc.c:155 camlibs/sierra/sierra.c:964
+#: camlibs/sierra/sierra.c:975 camlibs/sierra/sierra.c:1272
+#: camlibs/sierra/sierra.c:1474 camlibs/sierra/sierra.c:1484
+#: camlibs/sierra/sierra.c:1711
 msgid "Slow Sync"
-msgstr ""
+msgstr "Замедленная синхронизация"
 
 #: camlibs/sierra/epson-desc.c:160 camlibs/sierra/nikon-desc.c:209
 #: camlibs/sierra/olympus-desc.c:282
-#, fuzzy
 msgid "Flash Settings"
-msgstr "гЧЕФПЧЩЕ ОБУФТПКЛЙ"
-
-#: camlibs/sierra/epson-desc.c:171 camlibs/sierra/sierra.c:1489
-#: camlibs/sierra/sierra.c:1496 camlibs/sierra/sierra.c:1716
-msgid "Custom"
 msgstr ""
+
+#: camlibs/sierra/epson-desc.c:171 camlibs/sierra/sierra.c:1500
+#: camlibs/sierra/sierra.c:1507 camlibs/sierra/sierra.c:1727
+msgid "Custom"
+msgstr "Пользовательский"
 
 #: camlibs/sierra/epson-desc.c:193 camlibs/sierra/olympus-desc.c:400
 msgid "Host power save (seconds)"
-msgstr ""
+msgstr "Время до перехода компьютера в спящий режим (секунд)"
 
 #: camlibs/sierra/epson-desc.c:209 camlibs/sierra/olympus-desc.c:385
-#, fuzzy
 msgid "Camera power save (seconds)"
-msgstr "нПДЕМШ ЛБНЕТЩ:"
+msgstr "Время до перехода фотоаппарата в спящий режим (секунд)"
 
-#: camlibs/sierra/epson-desc.c:224 camlibs/sierra/sierra.c:1040
-#: camlibs/sierra/sierra.c:1313 camlibs/sierra/sierra.c:1512
-#: camlibs/sierra/sierra.c:1725
+#: camlibs/sierra/epson-desc.c:224 camlibs/sierra/sierra.c:1051
+#: camlibs/sierra/sierra.c:1324 camlibs/sierra/sierra.c:1523
+#: camlibs/sierra/sierra.c:1736
 msgid "Lens Mode"
-msgstr ""
+msgstr "Режим объектива"
 
-#: camlibs/sierra/epson-desc.c:233 camlibs/sierra/sierra.c:1608
-#: camlibs/sierra/sierra.c:1617 camlibs/sierra/sierra.c:1794
+#: camlibs/sierra/epson-desc.c:233 camlibs/sierra/sierra.c:1619
+#: camlibs/sierra/sierra.c:1628 camlibs/sierra/sierra.c:1805
 msgid "Korean"
-msgstr ""
+msgstr "Корейский"
 
 #: camlibs/sierra/epson-desc.c:234 camlibs/sierra/nikon-desc.c:385
-#: camlibs/sierra/sierra.c:1609 camlibs/sierra/sierra.c:1619
-#: camlibs/sierra/sierra.c:1796
+#: camlibs/sierra/sierra.c:1620 camlibs/sierra/sierra.c:1630
+#: camlibs/sierra/sierra.c:1807
 msgid "English"
-msgstr ""
+msgstr "Английский"
 
 #: camlibs/sierra/epson-desc.c:235 camlibs/sierra/nikon-desc.c:386
-#: camlibs/sierra/sierra.c:1610 camlibs/sierra/sierra.c:1621
-#: camlibs/sierra/sierra.c:1798
+#: camlibs/sierra/sierra.c:1621 camlibs/sierra/sierra.c:1632
+#: camlibs/sierra/sierra.c:1809
 msgid "French"
-msgstr ""
+msgstr "Французский"
 
 #: camlibs/sierra/epson-desc.c:236 camlibs/sierra/nikon-desc.c:387
-#: camlibs/sierra/sierra.c:1611 camlibs/sierra/sierra.c:1623
-#: camlibs/sierra/sierra.c:1800
+#: camlibs/sierra/sierra.c:1622 camlibs/sierra/sierra.c:1634
+#: camlibs/sierra/sierra.c:1811
 msgid "German"
-msgstr ""
+msgstr "Немецкий"
 
-#: camlibs/sierra/epson-desc.c:237 camlibs/sierra/sierra.c:1612
-#: camlibs/sierra/sierra.c:1625 camlibs/sierra/sierra.c:1802
+#: camlibs/sierra/epson-desc.c:237 camlibs/sierra/sierra.c:1623
+#: camlibs/sierra/sierra.c:1636 camlibs/sierra/sierra.c:1813
 msgid "Italian"
-msgstr ""
+msgstr "Итальянский"
 
-#: camlibs/sierra/epson-desc.c:238 camlibs/sierra/sierra.c:1613
-#: camlibs/sierra/sierra.c:1627 camlibs/sierra/sierra.c:1804
+#: camlibs/sierra/epson-desc.c:238 camlibs/sierra/sierra.c:1624
+#: camlibs/sierra/sierra.c:1638 camlibs/sierra/sierra.c:1815
 msgid "Japanese"
-msgstr ""
+msgstr "Японский"
 
-#: camlibs/sierra/epson-desc.c:239 camlibs/sierra/sierra.c:1614
-#: camlibs/sierra/sierra.c:1629 camlibs/sierra/sierra.c:1806
+#: camlibs/sierra/epson-desc.c:239 camlibs/sierra/sierra.c:1625
+#: camlibs/sierra/sierra.c:1640 camlibs/sierra/sierra.c:1817
 msgid "Spanish"
-msgstr ""
+msgstr "Испанский"
 
-#: camlibs/sierra/epson-desc.c:240 camlibs/sierra/sierra.c:1615
-#: camlibs/sierra/sierra.c:1631 camlibs/sierra/sierra.c:1808
+#: camlibs/sierra/epson-desc.c:240 camlibs/sierra/sierra.c:1626
+#: camlibs/sierra/sierra.c:1642 camlibs/sierra/sierra.c:1819
 msgid "Portugese"
-msgstr ""
+msgstr "Португальский"
 
 #: camlibs/sierra/epson-desc.c:278 camlibs/sierra/nikon-desc.c:590
 #: camlibs/sierra/olympus-desc.c:636 camlibs/sierra/olympus-desc.c:686
-#: camlibs/sierra/olympus-desc.c:697 camlibs/sierra/sierra.c:839
-#: camlibs/sierra/sierra.c:1506
-#, fuzzy
+#: camlibs/sierra/olympus-desc.c:697 camlibs/sierra/sierra.c:850
+#: camlibs/sierra/sierra.c:1517
 msgid "Picture Settings"
-msgstr "гЧЕФПЧЩЕ ОБУФТПКЛЙ"
+msgstr "Настройки изображения"
 
 #: camlibs/sierra/epson-desc.c:289
 msgid ""
@@ -4048,10 +4318,18 @@ msgid ""
 "  a PhotoPC 3000z, if your camera acts differently\n"
 "  please send a mail to the gphoto developer mailing list (in English)\n"
 msgstr ""
+"Несколько замечаний о фотоаппаратах Epson:\n"
+"- Отдельными параметрами нельзя управлять удалённо:\n"
+"  * приближение\n"
+"  * фокус\n"
+"  * пользовательские настройки баланса белого\n"
+"- Декомпиляция файлов конфигурации производилась с\n"
+"  PhotoPC 3000z, если ваш аппарат работает иначе, напишите\n"
+"  об этом в список рассылки для разработчиков gphoto (по английски)\n"
 
 #: camlibs/sierra/library.c:144 camlibs/sierra/library.c:1353
 msgid "No memory card present"
-msgstr ""
+msgstr "Нет карты памяти"
 
 #: camlibs/sierra/library.c:295
 msgid "Cannot retrieve the battery capacity"
@@ -4062,6 +4340,7 @@ msgstr ""
 msgid ""
 "The battery level of the camera is too low (%d%%). The operation is aborted."
 msgstr ""
+"Слишком слабый заряд аккумулятора фотоаппарата (%d%%). Действие прервано."
 
 #: camlibs/sierra/library.c:325
 msgid "Cannot retrieve the available memory left"
@@ -4087,60 +4366,47 @@ msgid "Could not transmit packet even after several retries."
 msgstr ""
 
 #: camlibs/sierra/library.c:762
-#, fuzzy, c-format
+#, c-format
 msgid "Packet got rejected by camera. Please contact %s."
 msgstr ""
-"уППВЭБКФЕ ПВ ПЫЙВЛБИ Й ХУРЕИБИ РП БДТЕУХ gphoto-devel@lists.sourceforge."
-"net.\n"
 
 #: camlibs/sierra/library.c:789
-#, fuzzy, c-format
+#, c-format
 msgid "Could not transmit packet (error code %i). Please contact %s."
 msgstr ""
-"уППВЭБКФЕ ПВ ПЫЙВЛБИ Й ХУРЕИБИ РП БДТЕУХ gphoto-devel@lists.sourceforge."
-"net.\n"
 
 #: camlibs/sierra/library.c:880
 msgid "Transmission timed out even after 2 retries. Giving up..."
 msgstr ""
 
 #: camlibs/sierra/library.c:899
-#, fuzzy, c-format
+#, c-format
 msgid "Got unexpected result 0x%x. Please contact %s."
 msgstr ""
-"уППВЭБКФЕ ПВ ПЫЙВЛБИ Й ХУРЕИБИ РП БДТЕУХ gphoto-devel@lists.sourceforge."
-"net.\n"
 
 #: camlibs/sierra/library.c:997
-#, fuzzy, c-format
+#, c-format
 msgid "Received unexpected answer (%i). Please contact %s."
 msgstr ""
-"уППВЭБКФЕ ПВ ПЫЙВЛБИ Й ХУРЕИБИ РП БДТЕУХ gphoto-devel@lists.sourceforge."
-"net.\n"
 
 #: camlibs/sierra/library.c:1059
-#, fuzzy, c-format
+#, c-format
 msgid "Could not get register %i. Please contact %s."
-msgstr ""
-"оЕ ХДБМПУШ ПФЛТЩФШ:\n"
-"%s"
+msgstr "Невозможно получить значение регистра %i. Пожалуйста, свяжитесь с %s."
 
 #: camlibs/sierra/library.c:1079 camlibs/sierra/library.c:1099
 msgid "Too many retries failed."
 msgstr ""
 
 #: camlibs/sierra/library.c:1139
-#, fuzzy
 msgid "Sending data..."
-msgstr "рПМХЮЕОЙЕ ЙОДЕЛУБ..."
+msgstr "Передача данных..."
 
 #: camlibs/sierra/library.c:1198
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "recursive calls are not supported by the sierra driver! Please contact %s."
 msgstr ""
-"уППВЭБКФЕ ПВ ПЫЙВЛБИ Й ХУРЕИБИ РП БДТЕУХ gphoto-devel@lists.sourceforge."
-"net.\n"
 
 #: camlibs/sierra/library.c:1253
 #, c-format
@@ -4162,60 +4428,49 @@ msgstr ""
 
 #: camlibs/sierra/nikon-desc.c:186 camlibs/sierra/olympus-desc.c:257
 msgid "B/W"
-msgstr ""
+msgstr "Ч/Б"
 
 #: camlibs/sierra/nikon-desc.c:203 camlibs/sierra/olympus-desc.c:277
 msgid "Anti-redeye"
-msgstr ""
+msgstr "Против красных глаз"
 
 #: camlibs/sierra/nikon-desc.c:204
 msgid "Slow-sync"
-msgstr ""
+msgstr "Замедленная синхронизация"
 
-#: camlibs/sierra/nikon-desc.c:220 camlibs/sierra/sierra.c:983
-#: camlibs/sierra/sierra.c:993 camlibs/sierra/sierra.c:1281
+#: camlibs/sierra/nikon-desc.c:220 camlibs/sierra/sierra.c:994
+#: camlibs/sierra/sierra.c:1004 camlibs/sierra/sierra.c:1292
 msgid "Contrast+"
-msgstr ""
+msgstr "Контраст+"
 
-#: camlibs/sierra/nikon-desc.c:221 camlibs/sierra/sierra.c:984
-#: camlibs/sierra/sierra.c:995 camlibs/sierra/sierra.c:1283
+#: camlibs/sierra/nikon-desc.c:221 camlibs/sierra/sierra.c:995
+#: camlibs/sierra/sierra.c:1006 camlibs/sierra/sierra.c:1294
 msgid "Contrast-"
-msgstr ""
+msgstr "Контраст-"
 
 #: camlibs/sierra/nikon-desc.c:222
 msgid "Brightness+"
-msgstr ""
+msgstr "Яркость+"
 
 #: camlibs/sierra/nikon-desc.c:223
 msgid "Brightness-"
-msgstr ""
+msgstr "Яркость-"
 
 #: camlibs/sierra/nikon-desc.c:228
-#, fuzzy
 msgid "Image Adjustment"
-msgstr "рПДВПТ ГЧЕФБ"
-
-#: camlibs/sierra/nikon-desc.c:253
-msgid "Preset"
-msgstr ""
-
-#: camlibs/sierra/nikon-desc.c:254 camlibs/sierra/olympus-desc.c:295
-#: camlibs/sierra/olympus-desc.c:314 camlibs/sierra/sierra.c:1014
-#: camlibs/sierra/sierra.c:1026 camlibs/sierra/sierra.c:1304
-msgid "Cloudy"
 msgstr ""
 
 #: camlibs/sierra/nikon-desc.c:272
 msgid "Blink"
-msgstr ""
+msgstr "Мигать"
 
 #: camlibs/sierra/nikon-desc.c:277
 msgid "LED Mode"
-msgstr ""
+msgstr "Светодиод"
 
 #: camlibs/sierra/nikon-desc.c:292
 msgid "Infinity"
-msgstr ""
+msgstr "Бесконечность"
 
 #: camlibs/sierra/nikon-desc.c:328
 msgid "Preview Thumbnail"
@@ -4223,67 +4478,65 @@ msgstr ""
 
 #: camlibs/sierra/nikon-desc.c:329
 msgid "Next"
-msgstr ""
+msgstr "Следующий"
 
 #: camlibs/sierra/nikon-desc.c:330
 msgid "Previous"
-msgstr ""
+msgstr "Предыдущий"
 
 #: camlibs/sierra/nikon-desc.c:344
-#, fuzzy
 msgid "Operation Mode"
-msgstr "уЛБЮЙЧБОЙЕ ПФНЕОЕОП."
+msgstr "Режим работы"
 
 #: camlibs/sierra/nikon-desc.c:358 camlibs/sierra/olympus-desc.c:371
-#: camlibs/sierra/sierra.c:1146 camlibs/sierra/sierra.c:1385
+#: camlibs/sierra/sierra.c:1157 camlibs/sierra/sierra.c:1396
 msgid "LCD Brightness"
-msgstr ""
+msgstr "Яркость ЖК-экрана"
 
 #: camlibs/sierra/nikon-desc.c:373 camlibs/sierra/olympus-desc.c:413
 msgid "LCD Auto Shut Off (seconds)"
-msgstr ""
+msgstr "Автоматическое отключение ЖК (сек.)"
 
 #: camlibs/sierra/nikon-desc.c:457
 msgid "Center-Weighted"
-msgstr ""
+msgstr "Центрально-взвешенный"
 
 #: camlibs/sierra/nikon-desc.c:458 camlibs/sierra/olympus-desc.c:466
 msgid "Spot"
-msgstr ""
+msgstr "Точечный"
 
 #: camlibs/sierra/nikon-desc.c:459 camlibs/sierra/olympus-desc.c:467
 msgid "Matrix"
-msgstr ""
+msgstr "Матричный"
 
 #: camlibs/sierra/nikon-desc.c:460
 msgid "Spot-AF"
-msgstr ""
+msgstr "Точечный автофокус"
 
 #: camlibs/sierra/nikon-desc.c:465 camlibs/sierra/olympus-desc.c:472
 msgid "Exposure Metering"
-msgstr ""
+msgstr "Экспозамер"
 
 #: camlibs/sierra/nikon-desc.c:483 camlibs/sierra/olympus-desc.c:488
 #: camlibs/sierra/olympus-desc.c:504
 msgid "Zoom (in millimeters)"
-msgstr ""
+msgstr "Приближение (в миллиметрах)"
 
 #: camlibs/sierra/nikon-desc.c:509
-#, fuzzy
 msgid "none"
-msgstr "чЩРПМОЕОП."
+msgstr "нет"
 
 #: camlibs/sierra/nikon-desc.c:512
 msgid "AE-lock"
-msgstr ""
+msgstr "Фиксация выдержки"
 
 #: camlibs/sierra/nikon-desc.c:513
 msgid "Fisheye"
-msgstr ""
+msgstr "Рыбий глаз"
 
 #: camlibs/sierra/nikon-desc.c:514
 msgid "Wide"
-msgstr ""
+msgstr "Широкоугольный"
 
 #: camlibs/sierra/nikon-desc.c:524
 msgid "Misc exposure/lense settings"
@@ -4291,7 +4544,7 @@ msgstr ""
 
 #: camlibs/sierra/nikon-desc.c:547
 msgid "Auto exposure lock"
-msgstr ""
+msgstr "Запоминание настроек выдержки"
 
 #: camlibs/sierra/nikon-desc.c:601
 msgid ""
@@ -4309,6 +4562,19 @@ msgid ""
 "        Put the camera in 'M' mode in order to\n"
 "        to set the shutter speed.\n"
 msgstr ""
+"Nikon Coolpix 880:\n"
+"    Настройка фотоаппарата (предпочтения):\n"
+"\n"
+"        Оптическое приближение работает\n"
+"        неправильно.\n"
+"\n"
+"        Не все параметры настройки\n"
+"        можно как следует читать и изменять\n"
+"        например, это относится к тонкой настройке\n"
+"        баланса белого и настройкам языка.\n"
+"\n"
+"        Переведите аппарат в режим 'M', если хотите\n"
+"        задать скорость затвора.\n"
 
 #: camlibs/sierra/nikon-desc.c:620
 msgid ""
@@ -4321,41 +4587,33 @@ msgid ""
 "\n"
 "    The download should function correctly.\n"
 msgstr ""
+"Nikon Coolpix 995:\n"
+"    Набор параметров настройки этого аппарата\n"
+"    неполон, напишите в список рассылки\n"
+"    разработчиков gphoto, если хотите внести \n"
+"    поправки·в·этот·драйвер.\n"
+"\n"
+"    Копирование снимков должно работать верно.\n"
 
 #: camlibs/sierra/olympus-desc.c:259
 msgid "White board"
-msgstr ""
+msgstr "Белая доска"
 
 #: camlibs/sierra/olympus-desc.c:260
 msgid "Black board"
-msgstr ""
-
-#: camlibs/sierra/olympus-desc.c:292 camlibs/sierra/olympus-desc.c:311
-msgid "Daylight"
-msgstr ""
-
-#: camlibs/sierra/olympus-desc.c:294 camlibs/sierra/olympus-desc.c:313
-#: camlibs/sierra/sierra.c:1013 camlibs/sierra/sierra.c:1023
-#: camlibs/sierra/sierra.c:1302
-msgid "Tungsten"
-msgstr ""
-
-#: camlibs/sierra/olympus-desc.c:330
-msgid "Manual"
-msgstr ""
+msgstr "Чёрная доска"
 
 #: camlibs/sierra/olympus-desc.c:350
 msgid "Monitor"
-msgstr ""
+msgstr "Монитор"
 
 #: camlibs/sierra/olympus-desc.c:356
-#, fuzzy
 msgid "LCD Mode"
-msgstr "гЧЕФБ"
+msgstr "Режим ЖК экрана"
 
 #: camlibs/sierra/olympus-desc.c:521
 msgid "Digital zoom"
-msgstr ""
+msgstr "Цифровое увеличение"
 
 #: camlibs/sierra/olympus-desc.c:554
 msgid "Focus position"
@@ -4363,7 +4621,7 @@ msgstr ""
 
 #: camlibs/sierra/olympus-desc.c:571
 msgid "Time format"
-msgstr ""
+msgstr "Формат времени"
 
 #: camlibs/sierra/olympus-desc.c:711
 msgid ""
@@ -4385,6 +4643,23 @@ msgid ""
 "    state, you should reconnect the camera to the\n"
 "    PC and switch LCD to 'Off'."
 msgstr ""
+"несколько замечаний о фотоаппаратах Olympus:\n"
+"(1) Настройка фотоаппарата:\n"
+"    Значение 0 означает настройку по умолчанию (авто).\n"
+"(2) Olympus C-3040Z (возможно также C-2040Z и другие)\n"
+"    имеют режим управления с компьютера через USB.\n"
+"    Чтобы его использовать, фотоаппарат нужно·переключить\n"
+"    в режим 'USB PC control mode'. Чтобы·попасть в меню\n"
+"    выбора режима, включите аппарат,·откройте·крышку\n"
+"    отсека карты памяти и затем·нажмите·и·удерживайте\n"
+"    кнопки меню и ЖК экрана·пока·не·появится\n"
+"    меню управления Выберите значение ON.\n"
+"(3) Если вы измените значение пункта 'LCD mode' на 'Monitor'\n"
+"    или 'Normal', не забудьте вернуть его обратно в 'Off'\n"
+"    перед отключением. В противном случае вы не сможете\n"
+"    использовать кнопки фотоаппарата. Если вы окажетесь в\n"
+"    таком положении, нужно заново подключить аппарат к \n"
+"    компьютеру и переключить параметр в 'Off'."
 
 #: camlibs/sierra/olympus-desc.c:732
 msgid ""
@@ -4403,6 +4678,20 @@ msgid ""
 "    state, you should reconnect the camera to the\n"
 "    PC and switch LCD to 'Off'."
 msgstr ""
+"Olympus 750 Ultra Zoom:\n"
+"(1) Olympus 750UZ имеет режим управления через·USB.\n"
+"    Чтобы его использовать, фотоаппарат нужно·переключить\n"
+"    в режим 'USB PC control mode'. Чтобы·попасть в меню\n"
+"    выбора режима, включите аппарат,·откройте·крышку\n"
+"    отсека карты памяти и затем·нажмите·и·удерживайте\n"
+"    кнопки 'OK' и 'quickview' пока·не·появится\n"
+"    меню управления Выберите значение режим управления.\n"
+"(2) Если вы измените значение пункта 'LCD mode' на 'Monitor'\n"
+"    или 'Normal', не забудьте вернуть его обратно в 'Off'\n"
+"    перед отключением. В противном случае вы не сможете\n"
+"    использовать кнопки фотоаппарата. Если вы окажетесь в\n"
+"    таком положении, нужно заново подключить аппарат к \n"
+"    компьютеру и переключить параметр в 'Off'."
 
 #: camlibs/sierra/olympus-desc.c:750
 msgid ""
@@ -4420,243 +4709,256 @@ msgid ""
 "    code to support complete configuration,\n"
 "    please contact the developer mailing list.\n"
 msgstr ""
+"Стандартный драйвер sierra:\n"
+"\n"
+"    Этот драйвер sierra используется по умолчанию.\n"
+"    Он должен поддерживать копирование изображений\n"
+"    и просмотр файлов в памяти фотоаппарата.\n"
+"\n"
+"    Настройки фотоаппарата (или предпочтения)\n"
+"    основаны на Olympus 3040 и скорее всего\n"
+"    неполны. Если вы можете подтвердить, что\n"
+"    список настроек вашего аппарата полон или\n"
+"    сможете добавить свой код для поддержки\n"
+"    всех имеющихся параметров, напишите, пожа-\n"
+"    луйста в список рассылки для разработчиков.\n"
 
-#: camlibs/sierra/sierra.c:696 camlibs/soundvision/soundvision.c:411
+#: camlibs/sierra/sierra.c:707 camlibs/soundvision/soundvision.c:411
 msgid "The file to be uploaded has a null length"
 msgstr ""
 
-#: camlibs/sierra/sierra.c:710
+#: camlibs/sierra/sierra.c:721
 msgid "Not enough memory available on the memory card"
 msgstr ""
 
-#: camlibs/sierra/sierra.c:717
+#: camlibs/sierra/sierra.c:728
 msgid "Cannot retrieve the name of the folder containing the pictures"
 msgstr ""
 
-#: camlibs/sierra/sierra.c:724
+#: camlibs/sierra/sierra.c:735
 #, c-format
 msgid "Upload is supported into the '%s' folder only"
 msgstr ""
 
-#: camlibs/sierra/sierra.c:852 camlibs/sierra/sierra.c:861
-#: camlibs/sierra/sierra.c:1190
-#, fuzzy
+#: camlibs/sierra/sierra.c:863 camlibs/sierra/sierra.c:872
+#: camlibs/sierra/sierra.c:1201
 msgid "Best"
-msgstr "уВТПУЙФШ"
+msgstr "Лучшее"
 
-#: camlibs/sierra/sierra.c:864 camlibs/sierra/sierra.c:904
-#: camlibs/sierra/sierra.c:937 camlibs/sierra/sierra.c:967
-#: camlibs/sierra/sierra.c:998 camlibs/sierra/sierra.c:1029
-#: camlibs/sierra/sierra.c:1053 camlibs/sierra/sierra.c:1075
-#: camlibs/sierra/sierra.c:1104 camlibs/sierra/sierra.c:1448
-#: camlibs/sierra/sierra.c:1476 camlibs/sierra/sierra.c:1499
-#: camlibs/sierra/sierra.c:1521 camlibs/sierra/sierra.c:1547
-#: camlibs/sierra/sierra.c:1566 camlibs/sierra/sierra.c:1634
+#: camlibs/sierra/sierra.c:875 camlibs/sierra/sierra.c:915
+#: camlibs/sierra/sierra.c:948 camlibs/sierra/sierra.c:978
+#: camlibs/sierra/sierra.c:1009 camlibs/sierra/sierra.c:1040
+#: camlibs/sierra/sierra.c:1064 camlibs/sierra/sierra.c:1086
+#: camlibs/sierra/sierra.c:1115 camlibs/sierra/sierra.c:1459
+#: camlibs/sierra/sierra.c:1487 camlibs/sierra/sierra.c:1510
+#: camlibs/sierra/sierra.c:1532 camlibs/sierra/sierra.c:1558
+#: camlibs/sierra/sierra.c:1577 camlibs/sierra/sierra.c:1645
 #, c-format
 msgid "%i (unknown)"
 msgstr ""
 
-#: camlibs/sierra/sierra.c:876 camlibs/sierra/sierra.c:1200
+#: camlibs/sierra/sierra.c:887 camlibs/sierra/sierra.c:1211
 msgid "Shutter Speed (microseconds, 0 auto)"
 msgstr ""
 
-#: camlibs/sierra/sierra.c:920 camlibs/sierra/sierra.c:928
-#: camlibs/sierra/sierra.c:1234
+#: camlibs/sierra/sierra.c:931 camlibs/sierra/sierra.c:939
+#: camlibs/sierra/sierra.c:1245
 msgid "Black/White"
-msgstr ""
+msgstr "Чёрный/белый"
 
-#: camlibs/sierra/sierra.c:922 camlibs/sierra/sierra.c:932
-#: camlibs/sierra/sierra.c:1238
+#: camlibs/sierra/sierra.c:933 camlibs/sierra/sierra.c:943
+#: camlibs/sierra/sierra.c:1249
 msgid "White Board"
-msgstr ""
+msgstr "Белая доска"
 
-#: camlibs/sierra/sierra.c:923 camlibs/sierra/sierra.c:934
-#: camlibs/sierra/sierra.c:1240
+#: camlibs/sierra/sierra.c:934 camlibs/sierra/sierra.c:945
+#: camlibs/sierra/sierra.c:1251
 msgid "Black Board"
-msgstr ""
+msgstr "Чёрная доска"
 
-#: camlibs/sierra/sierra.c:978 camlibs/sierra/sierra.c:1271
+#: camlibs/sierra/sierra.c:989 camlibs/sierra/sierra.c:1282
 msgid "Brightness/Contrast"
 msgstr ""
 
-#: camlibs/sierra/sierra.c:981 camlibs/sierra/sierra.c:989
-#: camlibs/sierra/sierra.c:1277
+#: camlibs/sierra/sierra.c:992 camlibs/sierra/sierra.c:1000
+#: camlibs/sierra/sierra.c:1288
 msgid "Bright+"
 msgstr ""
 
-#: camlibs/sierra/sierra.c:982 camlibs/sierra/sierra.c:991
-#: camlibs/sierra/sierra.c:1279
+#: camlibs/sierra/sierra.c:993 camlibs/sierra/sierra.c:1002
+#: camlibs/sierra/sierra.c:1290
 msgid "Bright-"
 msgstr ""
 
-#: camlibs/sierra/sierra.c:1011 camlibs/sierra/sierra.c:1019
-#: camlibs/sierra/sierra.c:1298
+#: camlibs/sierra/sierra.c:1022 camlibs/sierra/sierra.c:1030
+#: camlibs/sierra/sierra.c:1309
 msgid "Skylight"
-msgstr ""
+msgstr "Дневной свет"
 
-#: camlibs/sierra/sierra.c:1043 camlibs/sierra/sierra.c:1050
-#: camlibs/sierra/sierra.c:1321
+#: camlibs/sierra/sierra.c:1054 camlibs/sierra/sierra.c:1061
+#: camlibs/sierra/sierra.c:1332
 msgid "Infinity/Fish-eye"
-msgstr ""
+msgstr "Бесконечность/Рыбий глаз"
 
-#: camlibs/sierra/sierra.c:1064 camlibs/sierra/sierra.c:1331
+#: camlibs/sierra/sierra.c:1075 camlibs/sierra/sierra.c:1342
 msgid "Spot Metering Mode"
-msgstr ""
+msgstr "Точечный режим замера"
 
-#: camlibs/sierra/sierra.c:1087 camlibs/sierra/sierra.c:1093
+#: camlibs/sierra/sierra.c:1098 camlibs/sierra/sierra.c:1104
 msgid "1x"
-msgstr ""
+msgstr "1x"
 
-#: camlibs/sierra/sierra.c:1088 camlibs/sierra/sierra.c:1098
+#: camlibs/sierra/sierra.c:1099 camlibs/sierra/sierra.c:1109
 msgid "1.6x"
-msgstr ""
+msgstr "1,6x"
 
-#: camlibs/sierra/sierra.c:1090 camlibs/sierra/sierra.c:1101
+#: camlibs/sierra/sierra.c:1101 camlibs/sierra/sierra.c:1112
 msgid "2.5x"
-msgstr ""
+msgstr "2,5x"
 
-#: camlibs/sierra/sierra.c:1118 camlibs/sierra/sierra.c:1365
-#: camlibs/sierra/sierra.c:1580 camlibs/sierra/sierra.c:1772
+#: camlibs/sierra/sierra.c:1129 camlibs/sierra/sierra.c:1376
+#: camlibs/sierra/sierra.c:1591 camlibs/sierra/sierra.c:1783
 msgid "Auto Off (host) (in seconds)"
-msgstr ""
+msgstr "Автоматическое отключение (компьютер) (в секундах)"
 
-#: camlibs/sierra/sierra.c:1120 camlibs/sierra/sierra.c:1582
+#: camlibs/sierra/sierra.c:1131 camlibs/sierra/sierra.c:1593
 msgid ""
 "How long will it take until the camera powers off when connected to the "
 "computer?"
 msgstr ""
+"Сколько времени пройдёт до автоматического выключения фотоаппарата,когда он "
+"подключён к компьютеру?"
 
-#: camlibs/sierra/sierra.c:1132 camlibs/sierra/sierra.c:1375
-#: camlibs/sierra/sierra.c:1594 camlibs/sierra/sierra.c:1782
+#: camlibs/sierra/sierra.c:1143 camlibs/sierra/sierra.c:1386
+#: camlibs/sierra/sierra.c:1605 camlibs/sierra/sierra.c:1793
 msgid "Auto Off (field) (in seconds)"
-msgstr ""
+msgstr "Автовыключение (автономн.) (в секундах)"
 
-#: camlibs/sierra/sierra.c:1134 camlibs/sierra/sierra.c:1596
+#: camlibs/sierra/sierra.c:1145 camlibs/sierra/sierra.c:1607
 msgid ""
 "How long will it take until the camera powers off when not connected to the "
 "computer?"
 msgstr ""
+"Сколько времени пройдёт до автоматического выключения фотоаппарата,когда он "
+"не подключён к компьютеру?"
 
-#: camlibs/sierra/sierra.c:1156 camlibs/sierra/sierra.c:1394
+#: camlibs/sierra/sierra.c:1167 camlibs/sierra/sierra.c:1405
 msgid "LCD Auto Off (in seconds)"
 msgstr ""
 
-#: camlibs/sierra/sierra.c:1418
-#, fuzzy
+#: camlibs/sierra/sierra.c:1429
 msgid "Shot Settings"
-msgstr "гЧЕФПЧЩЕ ОБУФТПКЛЙ"
+msgstr ""
 
-#: camlibs/sierra/sierra.c:1425 camlibs/sierra/sierra.c:1433
-#: camlibs/sierra/sierra.c:1668
+#: camlibs/sierra/sierra.c:1436 camlibs/sierra/sierra.c:1444
+#: camlibs/sierra/sierra.c:1679
 msgid "F2"
-msgstr ""
+msgstr "F2"
 
-#: camlibs/sierra/sierra.c:1426 camlibs/sierra/sierra.c:1435
-#: camlibs/sierra/sierra.c:1670
+#: camlibs/sierra/sierra.c:1437 camlibs/sierra/sierra.c:1446
+#: camlibs/sierra/sierra.c:1681
 msgid "F2.3"
-msgstr ""
+msgstr "F2,3"
 
-#: camlibs/sierra/sierra.c:1427 camlibs/sierra/sierra.c:1437
-#: camlibs/sierra/sierra.c:1672
+#: camlibs/sierra/sierra.c:1438 camlibs/sierra/sierra.c:1448
+#: camlibs/sierra/sierra.c:1683
 msgid "F2.8"
-msgstr ""
+msgstr "F2,8"
 
-#: camlibs/sierra/sierra.c:1428 camlibs/sierra/sierra.c:1439
-#: camlibs/sierra/sierra.c:1674
+#: camlibs/sierra/sierra.c:1439 camlibs/sierra/sierra.c:1450
+#: camlibs/sierra/sierra.c:1685
 msgid "F4"
-msgstr ""
+msgstr "F4"
 
-#: camlibs/sierra/sierra.c:1429 camlibs/sierra/sierra.c:1441
-#: camlibs/sierra/sierra.c:1676
+#: camlibs/sierra/sierra.c:1440 camlibs/sierra/sierra.c:1452
+#: camlibs/sierra/sierra.c:1687
 msgid "F5.6"
-msgstr ""
+msgstr "F5,6"
 
-#: camlibs/sierra/sierra.c:1430 camlibs/sierra/sierra.c:1443
-#: camlibs/sierra/sierra.c:1678
+#: camlibs/sierra/sierra.c:1441 camlibs/sierra/sierra.c:1454
+#: camlibs/sierra/sierra.c:1689
 msgid "F8"
-msgstr ""
+msgstr "F8"
 
-#: camlibs/sierra/sierra.c:1534 camlibs/sierra/sierra.c:1542
-#: camlibs/sierra/sierra.c:1747
+#: camlibs/sierra/sierra.c:1545 camlibs/sierra/sierra.c:1553
+#: camlibs/sierra/sierra.c:1758
 msgid "SuperFine"
 msgstr ""
 
-#: camlibs/sierra/sierra.c:1535 camlibs/sierra/sierra.c:1544
-#: camlibs/sierra/sierra.c:1749
+#: camlibs/sierra/sierra.c:1546 camlibs/sierra/sierra.c:1555
+#: camlibs/sierra/sierra.c:1760
 msgid "HyPict"
 msgstr ""
 
-#: camlibs/sierra/sierra.c:1558 camlibs/sierra/sierra.c:1561
-#: camlibs/sierra/sierra.c:1761
-#, fuzzy
+#: camlibs/sierra/sierra.c:1569 camlibs/sierra/sierra.c:1572
+#: camlibs/sierra/sierra.c:1772
 msgid "color"
-msgstr "гЧЕФБ"
+msgstr "цвет"
 
-#: camlibs/sierra/sierra.c:1559 camlibs/sierra/sierra.c:1563
-#: camlibs/sierra/sierra.c:1763
+#: camlibs/sierra/sierra.c:1570 camlibs/sierra/sierra.c:1574
+#: camlibs/sierra/sierra.c:1774
 msgid "black & white"
 msgstr ""
 
-#: camlibs/sierra/sierra.c:1865
+#: camlibs/sierra/sierra.c:1876
 msgid "Note: no memory card present, some values may be invalid\n"
 msgstr ""
 
-#: camlibs/sierra/sierra.c:1873
-#, fuzzy, c-format
+#: camlibs/sierra/sierra.c:1884
+#, c-format
 msgid "%sCamera Model: %s\n"
-msgstr "нПДЕМШ ЛБНЕТЩ:"
+msgstr "%sМодель фотоаппарата: %s\n"
 
-#: camlibs/sierra/sierra.c:1875
+#: camlibs/sierra/sierra.c:1886
 #, c-format
 msgid "%sManufacturer: %s\n"
-msgstr ""
+msgstr "%sПроизводитель: %s\n"
 
-#: camlibs/sierra/sierra.c:1877
+#: camlibs/sierra/sierra.c:1888
 #, c-format
 msgid "%sCamera ID: %s\n"
-msgstr ""
+msgstr "%sID фотоаппарата: %s\n"
 
-#: camlibs/sierra/sierra.c:1879
+#: camlibs/sierra/sierra.c:1890
 #, c-format
 msgid "%sSerial Number: %s\n"
-msgstr ""
-
-#: camlibs/sierra/sierra.c:1881
-#, c-format
-msgid "%sSoftware Rev.: %s\n"
-msgstr ""
-
-#: camlibs/sierra/sierra.c:1886 camlibs/sierra/sierra.c:1889
-#, c-format
-msgid "%sFrames Taken: %i\n"
-msgstr ""
+msgstr "%sСерийный номер: %s\n"
 
 #: camlibs/sierra/sierra.c:1892
 #, c-format
-msgid "%sFrames Left: %i\n"
-msgstr ""
+msgid "%sSoftware Rev.: %s\n"
+msgstr "%sВерсия ПО: %s\n"
 
-#: camlibs/sierra/sierra.c:1894
+#: camlibs/sierra/sierra.c:1897 camlibs/sierra/sierra.c:1900
+#, c-format
+msgid "%sFrames Taken: %i\n"
+msgstr "%sСнято кадров: %i\n"
+
+#: camlibs/sierra/sierra.c:1903
+#, c-format
+msgid "%sFrames Left: %i\n"
+msgstr "%sОсталось кадров: %i\n"
+
+#: camlibs/sierra/sierra.c:1905
 #, c-format
 msgid "%sBattery Life: %i\n"
-msgstr ""
+msgstr "%sРабота от аккумулятора: %i\n"
 
-#: camlibs/sierra/sierra.c:1896
+#: camlibs/sierra/sierra.c:1907
 #, c-format
 msgid "%sMemory Left: %i bytes\n"
-msgstr ""
+msgstr "%sОсталось памяти: %i байт\n"
 
-#: camlibs/sierra/sierra.c:1901
+#: camlibs/sierra/sierra.c:1912
 #, c-format
 msgid "%sDate: %s"
-msgstr ""
+msgstr "%sДата: %s"
 
-#: camlibs/sierra/sierra.c:1917
-#, fuzzy
+#: camlibs/sierra/sierra.c:1928
 msgid "No camera manual available.\n"
-msgstr "оЕ ДПУФХРОП"
+msgstr "Руководство пользователя фотоаппарата недоступно.\n"
 
-#: camlibs/sierra/sierra.c:1924
+#: camlibs/sierra/sierra.c:1935
 #, c-format
 msgid ""
 "Some notes about Epson cameras:\n"
@@ -4668,8 +4970,16 @@ msgid ""
 "  a PhotoPC 3000z, if your camera acts differently\n"
 "  please send a mail to %s (in English)\n"
 msgstr ""
+"Несколько замечаний о фотоаппаратах Epson:\n"
+"- Отдельными параметрами нельзя управлять удалённо:\n"
+"  * приближение\n"
+"  * фокус\n"
+"  * пользовательские настройки баланса белого\n"
+"- Декомпиляция файлов конфигурации производилась с\n"
+"  PhotoPC 3000z. Если ваш аппарат работает иначе, напишите,\n"
+"  пожалуйста по адресу %s (по английски)\n"
 
-#: camlibs/sierra/sierra.c:1936
+#: camlibs/sierra/sierra.c:1947
 msgid ""
 "Some notes about Olympus cameras (and others?):\n"
 "(1) Camera Configuration:\n"
@@ -4689,8 +4999,25 @@ msgid ""
 "    state, you should reconnect the camera to the\n"
 "    PC and switch LCD to 'Off'."
 msgstr ""
+"Несколько замечаний о фотоаппаратах Olympus (и не только?):\n"
+"(1) Настройка фотоаппарата:\n"
+"    Значение 0 означает настройку по умолчанию (авто).\n"
+"(2) Olympus C-3040Z (возможно также C-2040Z и другие)\n"
+"    имеют режим управления с компьютера через USB.\n"
+"    Чтобы его использовать, фотоаппарат нужно·переключить\n"
+"    в режим 'USB PC control mode'. Чтобы·попасть в меню\n"
+"    выбора режима, включите аппарат,·откройте·крышку\n"
+"    отсека карты памяти и затем·нажмите·и·удерживайте\n"
+"    кнопки меню и ЖК экрана·пока·не·появится\n"
+"    меню управления Выберите значение ON.\n"
+"(3) Если вы измените значение пункта 'LCD mode' на 'Monitor'\n"
+"    или 'Normal', не забудьте вернуть его обратно в 'Off'\n"
+"    перед отключением. В противном случае вы не сможете\n"
+"    использовать кнопки фотоаппарата. Если вы окажетесь в\n"
+"    таком положении, нужно заново подключить аппарат к \n"
+"    компьютеру и переключить параметр в 'Off'."
 
-#: camlibs/sierra/sierra.c:1965
+#: camlibs/sierra/sierra.c:1976
 msgid ""
 "sierra SPARClite library\n"
 "Scott Fritzinger <scottf@unr.edu>\n"
@@ -4701,6 +5028,14 @@ msgid ""
 "for the use of their Olympus C-3030Z for USB\n"
 "support implementation."
 msgstr ""
+"Библиотека sierra SPARClite\n"
+"Scott Fritzinger <scottf@unr.edu>\n"
+"Поддержка цифровых фотоаппаратов на базе sierra,\n"
+"включая Olympus, Nikon, Epson и другие.\n"
+"\n"
+"Благодарю Data Engines (www.dataengines.com)\n"
+"за предоставление Olympus C-3030Z для реализации\n"
+"поддержки USB."
 
 #: camlibs/sierra/sierra-desc.c:173
 #, c-format
@@ -4713,6 +5048,9 @@ msgid ""
 "Vincent Sanders <vince@kyllikki.org>\n"
 "Marcus Meissner <marcus@jet.franken.de>.\n"
 msgstr ""
+"Драйвер Sipix StyleCam Blink\n"
+"Vincent Sanders <vince@kyllikki.org>\n"
+"Marcus Meissner <marcus@jet.franken.de>.\n"
 
 #: camlibs/sipix/web2.c:629
 msgid ""
@@ -4720,6 +5058,9 @@ msgid ""
 "Marcus Meissner <marcus@jet.franken.de>\n"
 "Driver for accessing the SiPix Web2 camera."
 msgstr ""
+"SiPix Web2\n"
+"Marcus Meissner <marcus@jet.franken.de>\n"
+"Драйвер доступа к веб-камере SiPix Web2."
 
 #: camlibs/smal/smal.c:168
 msgid ""
@@ -4727,6 +5068,9 @@ msgid ""
 "Lee Benfield <lee@benf.org>\n"
 "Driver for accessing the Smal Ultrapocket camera, and OEM versions (slimshot)"
 msgstr ""
+"Smal Ultrapocket\n"
+"Lee Benfield <lee@benf.org>\n"
+"Драйвер доступа к аппарату Smal Ultrapocket и его OEM вариантам (slimshot)"
 
 #: camlibs/sonydscf1/dsc_f1.c:134
 msgid "Sorry, this function not implemented..."
@@ -4741,14 +5085,12 @@ msgid "Sorry, taking pictures is not implemented..."
 msgstr ""
 
 #: camlibs/sonydscf1/dsc_f1.c:152
-#, fuzzy
 msgid "Couldn't open camera.\n"
-msgstr "оЕ ХДБМПУШ РПМХЮЙФШ ЙЪПВТБЦЕОЙЕ."
+msgstr "Невозможно открыть фотоаппарат.\n"
 
 #: camlibs/sonydscf1/dsc_f1.c:166
-#, fuzzy
 msgid "Error opening camera\n"
-msgstr "пФЛТЩФШ ЙЪПВТБЦЕОЙЕ"
+msgstr "Ошибка открытия фотоаппарата\n"
 
 #: camlibs/sonydscf1/dsc_f1.c:171
 msgid "Picture number is too large.\n"
@@ -4764,11 +5106,17 @@ msgid ""
 "\n"
 "This lib may not work. YMMV\n"
 msgstr ""
+"Поддержка фотоаппарата Sony DSC-F1\n"
+"M. Adam Kendall <joker@penguinpub.com>\n"
+"\n"
+"На основе консольной версии chotplay от\n"
+"Кен-Ичи Хайяши\n"
+"\n"
+"Работать наверняка не будет!\n"
 
 #: camlibs/sonydscf1/dsc_f1.c:187 camlibs/sonydscf1/dsc_f1.c:188
-#, fuzzy
 msgid "Error opening camera.\n"
-msgstr "пФЛТЩФШ ЙЪПВТБЦЕОЙЕ"
+msgstr "Ошибка открытия фотоаппарата.\n"
 
 #: camlibs/sonydscf1/sonydscf1.c:132
 msgid ""
@@ -4778,6 +5126,11 @@ msgid ""
 "Ken-ichi Hayashi\n"
 "Gphoto2 port by Bart van Leeuwen <bart@netage.nl>"
 msgstr ""
+"Поддержка фотоаппарата Sony DSC-F1\n"
+"M. Adam Kendall <joker@penguinpub.com>\n"
+"На основе консольной версии chotplay от\n"
+"Кен-Ичи Хайяши\n"
+"Портирование в Gphoto2 выполнил Bart van Leeuwen <bart@netage.nl>"
 
 #: camlibs/sonydscf55/camera.c:102
 msgid ""
@@ -4786,6 +5139,10 @@ msgid ""
 "Originally written by Mark Davies <mdavies@dial.pipex.com>\n"
 "gPhoto2 port by Raymond Penners <raymond@dotsphinx.com>"
 msgstr ""
+"Библиотека gPhoto для Sony DSC-F55/505\n"
+"Поддерживает Sony MSAC-SR1 и карты Memory Stick от DCR-PC100\n"
+"Изначально написана Mark Davies <mdavies@dial.pipex.com>\n"
+"Адаптация к gPhoto2 - Raymond Penners <raymond@dotsphinx.com>"
 
 #: camlibs/soundvision/soundvision.c:317
 #, c-format
@@ -4795,17 +5152,23 @@ msgid ""
 "Memory Total: %ikB\n"
 "Memory Free:  %ikB\n"
 msgstr ""
+"Версия прошивки: %8s\n"
+"Изображения:     %i\n"
+"Всего памяти: %iкб\n"
+"Свободно памяти:  %iкб\n"
 
 #: camlibs/soundvision/soundvision.c:325
 #, c-format
 msgid "Firmware Revision: %8s"
-msgstr ""
+msgstr "Версия прошивки: %8s"
 
 #: camlibs/soundvision/soundvision.c:333
 msgid ""
 "Soundvision Driver\n"
 "Vince Weaver <vince@deater.net>\n"
 msgstr ""
+"Драйвер Soundvision\n"
+"Vince Weaver <vince@deater.net>\n"
 
 #: camlibs/spca50x/library.c:269
 #, c-format
@@ -4813,6 +5176,8 @@ msgid ""
 "FLASH:\n"
 " Files: %d\n"
 msgstr ""
+"ППЗУ:\n"
+" Файлов: %d\n"
 
 #: camlibs/spca50x/library.c:278
 #, c-format
@@ -4824,6 +5189,12 @@ msgid ""
 "Space used: %8d\n"
 "Space free: %8d\n"
 msgstr ""
+"SDRAM:\n"
+" Файлов: %d\n"
+"  Изображений: %4d\n"
+"  Видеозаписей: %4d\n"
+"Занято: %8d\n"
+"Свободно: %8d\n"
 
 #: camlibs/spca50x/library.c:302
 msgid "spca50x library v"
@@ -4837,13 +5208,18 @@ msgid ""
 "other gphoto2 camlib modules and the information kindly provided by Mustek.\n"
 "\n"
 msgstr ""
+"\n"
+"Till Adam <till@adam-lilienthal.de>\n"
+"Поддержка фотоаппаратов с микросхемой sunplus spca50x основана на других "
+"модулях gphoto2 и сведениях любезно предоставленных Mustek.\n"
+"\n"
 
 #: camlibs/spca50x/library.c:571
 #, c-format
 msgid "Unsupported port type: %d. This driver only works with USB cameras.\n"
 msgstr ""
 
-#: camlibs/sq905/library.c:120
+#: camlibs/sq905/library.c:122
 #, c-format
 msgid ""
 "Your USB camera has a S&Q chipset.\n"
@@ -4851,8 +5227,12 @@ msgid ""
 "Some of these could be clips containing\n"
 "several frames\n"
 msgstr ""
+"Ваш USB фотоаппарат имеет м/с набор S&Q.\n"
+"Общее число сделанных снимков - %i\n"
+"Некоторые из них могут быть видеозаписями,\n"
+"состоящими из нескольких кадров.\n"
 
-#: camlibs/sq905/library.c:134
+#: camlibs/sq905/library.c:136
 msgid ""
 "For cameras with S&Q Technologies chip.\n"
 "Should work with gtkam. Photos will be saved in PPM format.\n"
@@ -4873,12 +5253,32 @@ msgid ""
 "specify from which clip they came. Thus, you may freely \n"
 "choose to save clip frames in separate directories. or not.\n"
 msgstr ""
+"Для фотоаппаратов с микросхемой S&Q Technologies.\n"
+"Работает с gtkam. Снимки сохраняются в формате PPM.\n"
+"\n"
+"Все известные аппараты S&Q имеют два разрешения.\n"
+"Каковы они, зависит от конкретной модели. Некоторые из\n"
+"этих·фотоаппаратов позволяют удалять любые снимки, но\n"
+"большинство·-·нет. Закачка данных в память не поддер-\n"
+"живается.·Режим·сжатия, имеющийся у многих аппаратов\n"
+"S&Q·отчасти·поддерживается.\n"
+"Если фотоаппарат позволяет, видеозаписи представляются.\n"
+"в виде подкаталогов. Gtkam копирует их раздельно.При\n"
+"наличии видеозаписей перед названием аппарата появляется\n"
+"маленький треугольник. Если в списке нет папок, щёлкните на\n"
+"треугольнике, чтобы отобразить их. Щёлкните папку, чтобы\n"
+"войти в неё и увидеть или копировать кадры. Кадры извлекаются\n"
+"как отдельные изображения, имена которых сообщают, к какой\n"
+"видеопоследовательности они относятся. Таким образом можно \n"
+"выбрать, сохранять ли кадры в отдельных каталогах или нет.\n"
 
-#: camlibs/sq905/library.c:162
+#: camlibs/sq905/library.c:164
 msgid ""
 "sq905 generic driver\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
 msgstr ""
+"Базовый драйвер sq905\n"
+"Theodore Kilgore <kilgota@auburn.edu>\n"
 
 #: camlibs/stv0674/stv0674.c:203
 msgid ""
@@ -4887,6 +5287,10 @@ msgid ""
 "Driver for cameras using the STV0674 processor ASIC.\n"
 "Protocol reverse engineered using SnoopyPro\n"
 msgstr ""
+"STV0674\n"
+"Vincent Sanders <vince@kyllikki.org>\n"
+"Драйвер для фотоаппаратов с процессором STV0674.\n"
+"Для исследование протокола использовался SnoopyPro\n"
 
 #: camlibs/stv0680/library.c:354 camlibs/stv0680/library.c:388
 msgid "Bad exposure (not enough light probably)"
@@ -4899,7 +5303,7 @@ msgstr ""
 #: camlibs/stv0680/library.c:523
 #, c-format
 msgid "Firmware Revision: %d.%d\n"
-msgstr ""
+msgstr "Версия прошивки: %d.%d\n"
 
 #: camlibs/stv0680/library.c:527
 #, c-format
@@ -4909,7 +5313,7 @@ msgstr ""
 #: camlibs/stv0680/library.c:531
 #, c-format
 msgid "Sensor ID: %d.%d\n"
-msgstr ""
+msgstr "ID сенсора: %d.%d\n"
 
 #: camlibs/stv0680/library.c:537
 #, c-format
@@ -4935,7 +5339,7 @@ msgstr ""
 
 #: camlibs/stv0680/library.c:551
 msgid "Camera has memory.\n"
-msgstr ""
+msgstr "Фотоаппарат имеет память.\n"
 
 #: camlibs/stv0680/library.c:553
 msgid "Camera supports videoformats: "
@@ -4944,17 +5348,17 @@ msgstr ""
 #: camlibs/stv0680/library.c:559
 #, c-format
 msgid "Vendor ID: %02x%02x\n"
-msgstr ""
+msgstr "ID производителя: %02x%02x\n"
 
 #: camlibs/stv0680/library.c:563
 #, c-format
 msgid "Product ID: %02x%02x\n"
-msgstr ""
+msgstr "ID продукта: %02x%02x\n"
 
 #: camlibs/stv0680/library.c:570
 #, c-format
 msgid "Number of Images: %d\n"
-msgstr ""
+msgstr "Количество изображений: %d\n"
 
 #: camlibs/stv0680/library.c:573
 #, c-format
@@ -4989,7 +5393,7 @@ msgstr ""
 #: camlibs/stv0680/library.c:588
 #, c-format
 msgid "Thumbnail size: %d\n"
-msgstr ""
+msgstr "Размер миниатюры: %d\n"
 
 #: camlibs/stv0680/stv0680.c:270
 msgid ""
@@ -5000,11 +5404,17 @@ msgid ""
 "Carsten Weinholz <c.weinholz@netcologne.de>\n"
 "Extended for Aiptek PenCam and other STM USB Dual-mode cameras."
 msgstr ""
+"STV0680\n"
+"Adam Harrison <adam@antispin.org>\n"
+"Драйвер с процессором STV0680.\n"
+"Исследование протокола выполнено с помощью CommLite Beta 5\n"
+"Carsten Weinholz <c.weinholz@netcologne.de>\n"
+"Расширено для  Aiptek PenCam и других двурежимных USB фотоаппаратов STM."
 
 #: camlibs/sx330z/library.c:138
-#, fuzzy, c-format
+#, c-format
 msgid "Getting information on %i files..."
-msgstr "лПОЖЙЗХТБГЙС ЛБНЕТЩ"
+msgstr "Получение сведений о %i файлах..."
 
 #: camlibs/sx330z/library.c:252
 msgid ""
@@ -5013,6 +5423,11 @@ msgid ""
 "Please send bugreports and comments.\n"
 "Dominik Kuhlen <kinimod@users.sourceforge.net>\n"
 msgstr ""
+"Библиотека для (Traveler) SX330z (И других фотоаппаратов Aldi).\n"
+"Также должны работать аппараты таких производителей, как Jenoptik, Skanhex, "
+"Maginon.\n"
+"Сообщения об ошибках и отзывы шлите по адресу:\n"
+"Dominik Kuhlen <kinimod@users.sourceforge.net>\n"
 
 #: camlibs/sx330z/library.c:291
 msgid "sx330z is USB only"
@@ -5024,6 +5439,9 @@ msgid ""
 "David Hogue <david@jawa.gotdns.org>\n"
 "Toshiba pdr-m11 driver.\n"
 msgstr ""
+"Toshiba\n"
+"David Hogue <david@jawa.gotdns.org>\n"
+"Драйвер Toshiba pdr-m11.\n"
 
 #: libgphoto2/gphoto2-abilities-list.c:183
 #: libgphoto2/gphoto2-abilities-list.c:280
@@ -5032,23 +5450,19 @@ msgid "Loading camera drivers from '%s'..."
 msgstr ""
 
 #: libgphoto2/gphoto2-abilities-list.c:268
-#, fuzzy, c-format
+#, c-format
 msgid "Could not open '%s'"
-msgstr ""
-"оЕ ХДБМПУШ ПФЛТЩФШ:\n"
-"%s"
+msgstr "Невозможно открыть '%s'"
 
 #: libgphoto2/gphoto2-abilities-list.c:725
 #, c-format
 msgid "Could not find any driver for '%s'"
-msgstr ""
+msgstr "Не найден драйвер для '%s'"
 
 #: libgphoto2/gphoto2-abilities-list.c:755
 #, fuzzy, c-format
 msgid "Could not find any driver for '%s' / '%s'"
-msgstr ""
-"оЕ ХДБМПУШ ПФЛТЩФШ:\n"
-"%s"
+msgstr "Не найден драйвер для '%s'"
 
 #: libgphoto2/gphoto2-camera.c:81
 #, c-format
@@ -5056,32 +5470,26 @@ msgid "An error occurred in the io-library ('%s'): %s"
 msgstr ""
 
 #: libgphoto2/gphoto2-camera.c:85
-#, fuzzy
 msgid "No additional information available."
-msgstr "оЕ ДПУФХРОП"
+msgstr "Нет дополнительных сведений."
 
 #: libgphoto2/gphoto2-camera.c:686
-#, fuzzy
 msgid "Could not detect any camera"
-msgstr "оЕ ХДБМПУШ РПМХЮЙФШ ЙЪПВТБЦЕОЙЕ."
+msgstr "Фотоаппарат не обнаружен"
 
 #: libgphoto2/gphoto2-camera.c:708
 msgid "You have to set the port prior initialization of the camera."
 msgstr ""
 
 #: libgphoto2/gphoto2-camera.c:734
-#, fuzzy, c-format
+#, c-format
 msgid "Could not load required camera driver '%s' (%s)."
-msgstr ""
-"оЕ ХДБМПУШ ПФЛТЩФШ:\n"
-"%s"
+msgstr "Невозможно загрузить драйвер фотоаппарата '%s' (%s)."
 
 #: libgphoto2/gphoto2-camera.c:743
-#, fuzzy, c-format
+#, c-format
 msgid "Could not load required camera driver '%s'."
-msgstr ""
-"оЕ ХДБМПУШ ПФЛТЩФШ:\n"
-"%s"
+msgstr "Невозможно загрузить драйвер фотоаппарата '%s'."
 
 #: libgphoto2/gphoto2-camera.c:763
 #, c-format
@@ -5089,9 +5497,8 @@ msgid "Camera driver '%s' is missing the 'camera_init' function."
 msgstr ""
 
 #: libgphoto2/gphoto2-camera.c:823
-#, fuzzy
 msgid "This camera does not offer any configuration options."
-msgstr "оЕФ РБТБНЕФТПЧ ЛПОЖЙЗХТБГЙЙ."
+msgstr ""
 
 #: libgphoto2/gphoto2-camera.c:855
 msgid "This camera does not support setting configuration options."
@@ -5128,18 +5535,14 @@ msgid "Could not append folder '%s' as this folder already exists."
 msgstr ""
 
 #: libgphoto2/gphoto2-filesys.c:552
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find folder '%s'."
-msgstr ""
-"оЕ ХДБМПУШ ПФЛТЩФШ:\n"
-"%s"
+msgstr "Не найдена папка '%s'."
 
 #: libgphoto2/gphoto2-filesys.c:569
-#, fuzzy, c-format
+#, c-format
 msgid "Folder '%s' does not contain a folder '%s'."
 msgstr ""
-"оЕ ХДБМПУШ ПФЛТЩФШ:\n"
-"%s"
 
 #: libgphoto2/gphoto2-filesys.c:633
 #, c-format
@@ -5166,7 +5569,7 @@ msgstr ""
 
 #: libgphoto2/gphoto2-filesys.c:1162
 msgid "The filesystem does not support upload of files."
-msgstr ""
+msgstr "Файловая система не поддерживает закачку файлов."
 
 #: libgphoto2/gphoto2-filesys.c:1203
 #, c-format
@@ -5174,35 +5577,32 @@ msgid ""
 "Folder '%s' does only contain %i files, but you requested a file with number "
 "%i."
 msgstr ""
+"Папка '%s' содержит лишь %i файлов, однако был запрошен файл с номером %i."
 
 #: libgphoto2/gphoto2-filesys.c:1248
-#, fuzzy, c-format
+#, c-format
 msgid "File '%s' could not be found in folder '%s'."
-msgstr ""
-"оЕ ХДБМПУШ ПФЛТЩФШ:\n"
-"%s"
+msgstr "Файла '%s' нет в папке '%s'."
 
 #: libgphoto2/gphoto2-filesys.c:1335
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find file '%s'."
-msgstr ""
-"оЕ ХДБМПУШ ПФЛТЩФШ:\n"
-"%s"
+msgstr "Невозможно найти файл '%s'."
 
 #: libgphoto2/gphoto2-filesys.c:1460
 msgid "The filesystem doesn't support getting files"
-msgstr ""
+msgstr "Файловая система не поддерживает получение файлов"
 
 #: libgphoto2/gphoto2-filesys.c:1495 libgphoto2/gphoto2-filesys.c:2042
 #: libgphoto2/gphoto2-filesys.c:2195
 #, c-format
 msgid "Unknown file type %i."
-msgstr ""
+msgstr "Неизвестный тип файла %i."
 
 #: libgphoto2/gphoto2-filesys.c:1499
-#, fuzzy, c-format
+#, c-format
 msgid "Downloading '%s' from folder '%s'..."
-msgstr "уЛБЮЙЧБОЙЕ ПУФБОПЧМЕОП."
+msgstr "Копирование '%s' из папки '%s'..."
 
 #: libgphoto2/gphoto2-filesys.c:1709
 msgid "The filesystem doesn't support getting file information"
@@ -5218,7 +5618,7 @@ msgstr ""
 #: libgphoto2/gphoto2-filesys.c:1892
 #, c-format
 msgid "An error occured while reading '/proc/meminfo' ('%m')."
-msgstr ""
+msgstr "Ошибка во время чтения '/proc/meminfo' ('%m')."
 
 #: libgphoto2/gphoto2-filesys.c:1927
 #, c-format
@@ -5237,7 +5637,7 @@ msgstr ""
 
 #: libgphoto2/gphoto2-filesys.c:2298
 msgid "The filesystem doesn't support setting file information"
-msgstr ""
+msgstr "Файловая система не поддерживает изменение сведений о файле"
 
 #: libgphoto2/gphoto2-filesys.c:2321
 msgid "Read-only file attributes like width and height can not be changed."
@@ -5245,91 +5645,97 @@ msgstr ""
 
 #: libgphoto2/gphoto2-result.c:44
 msgid "Corrupted data"
-msgstr ""
+msgstr "Данные повреждены"
 
 #: libgphoto2/gphoto2-result.c:45
 msgid "File exists"
-msgstr ""
+msgstr "Файл существует"
 
 #: libgphoto2/gphoto2-result.c:46
 msgid "Unknown model"
-msgstr ""
+msgstr "Неизвестная модель"
 
 #: libgphoto2/gphoto2-result.c:47
 msgid "Directory not found"
-msgstr ""
+msgstr "Каталог не найден"
 
 #: libgphoto2/gphoto2-result.c:48
 msgid "File not found"
-msgstr ""
+msgstr "Файл не найден"
 
 #: libgphoto2/gphoto2-result.c:49
 msgid "Directory exists"
-msgstr ""
+msgstr "Каталог существует"
 
 #: libgphoto2/gphoto2-result.c:50
 msgid "I/O in progress"
-msgstr ""
+msgstr "Выполняется операция ввода-вывода"
 
 #: libgphoto2/gphoto2-result.c:51
 msgid "Path not absolute"
-msgstr ""
+msgstr "Неабсолютный путь"
 
 #: libgphoto2/gphoto2-result.c:52
-#, fuzzy
 msgid "Operation cancelled"
-msgstr "уЛБЮЙЧБОЙЕ ПФНЕОЕОП."
+msgstr "Действие отменено"
 
-#: libgphoto2/gphoto2-result.c:77
+#: libgphoto2/gphoto2-result.c:53
+msgid "Camera could not complete operation"
+msgstr ""
+
+#: libgphoto2/gphoto2-result.c:54
+#, fuzzy
+msgid "OS error in camera communication"
+msgstr "Проблема установки скорости обмена данными с фотоаппаратом"
+
+#: libgphoto2/gphoto2-result.c:79
 msgid "Unknown camera library error"
-msgstr ""
+msgstr "Неизвестная ошибка драйвера фотоаппарата"
 
-#: libgphoto2/gphoto2-result.c:83
+#: libgphoto2/gphoto2-result.c:85
 msgid "Unknown error"
+msgstr "Неизвестная ошибка"
+
+#, fuzzy
+msgid "Camera settings"
+msgstr "Прочие параметры"
+
+#, fuzzy
+msgid "No thumbnail could be found for %s"
+msgstr "Не найден файл звукозаписи для %s"
+
+#, fuzzy
+msgid ""
+"Expected %i, got %i. Please report this error to <gphoto-devel@lists."
+"sourceforge.net>."
 msgstr ""
+"уППВЭБКФЕ ПВ ПЫЙВЛБИ Й ХУРЕИБИ РП БДТЕУХ gphoto-devel@lists.sourceforge."
+"net.\n"
 
 #, fuzzy
-#~ msgid "Camera settings"
-#~ msgstr "гЧЕФПЧЩЕ ОБУФТПКЛЙ"
+msgid ""
+"Expected %i bytes, got %i. Please report this error to <gphoto-devel@lists."
+"sourceforge.net>."
+msgstr ""
+"уППВЭБКФЕ ПВ ПЫЙВЛБИ Й ХУРЕИБИ РП БДТЕУХ gphoto-devel@lists.sourceforge."
+"net.\n"
 
 #, fuzzy
-#~ msgid "No thumbnail could be found for %s"
-#~ msgstr ""
-#~ "оЕ ХДБМПУШ ПФЛТЩФШ:\n"
-#~ "%s"
+msgid ""
+"Communication error even after 2 retries. Please contact <gphoto-devel@lists."
+"sourceforge.net>."
+msgstr ""
+"уППВЭБКФЕ ПВ ПЫЙВЛБИ Й ХУРЕИБИ РП БДТЕУХ gphoto-devel@lists.sourceforge."
+"net.\n"
 
 #, fuzzy
-#~ msgid ""
-#~ "Expected %i, got %i. Please report this error to <gphoto-devel@lists."
-#~ "sourceforge.net>."
-#~ msgstr ""
-#~ "уППВЭБКФЕ ПВ ПЫЙВЛБИ Й ХУРЕИБИ РП БДТЕУХ gphoto-devel@lists.sourceforge."
-#~ "net.\n"
+msgid "Could not identify camera based on name \"%s\""
+msgstr "Невозможно получить имя диска: %s"
 
 #, fuzzy
-#~ msgid ""
-#~ "Expected %i bytes, got %i. Please report this error to <gphoto-"
-#~ "devel@lists.sourceforge.net>."
-#~ msgstr ""
-#~ "уППВЭБКФЕ ПВ ПЫЙВЛБИ Й ХУРЕИБИ РП БДТЕУХ gphoto-devel@lists.sourceforge."
-#~ "net.\n"
+msgid "Driver Configuration"
+msgstr "Конфигурация фотоаппарата"
 
 #, fuzzy
-#~ msgid ""
-#~ "Communication error even after 2 retries. Please contact <gphoto-"
-#~ "devel@lists.sourceforge.net>."
-#~ msgstr ""
-#~ "уППВЭБКФЕ ПВ ПЫЙВЛБИ Й ХУРЕИБИ РП БДТЕУХ gphoto-devel@lists.sourceforge."
-#~ "net.\n"
-
-#, fuzzy
-#~ msgid "Could not identify camera based on name \"%s\""
-#~ msgstr "оЕ ХДБМПУШ РПМХЮЙФШ РТПУНПФТ"
-
-#, fuzzy
-#~ msgid "Driver Configuration"
-#~ msgstr "лПОЖЙЗХТБГЙС ЛБНЕТЩ"
-
-#, fuzzy
-#~ msgid "Not implemented!"
-#~ msgstr "%s ЕЭЕ ОЕ ТЕБМЙЪПЧБОП"
+msgid "Not implemented!"
+msgstr "%s ЕЭЕ ОЕ ТЕБМЙЪПЧБОП"
