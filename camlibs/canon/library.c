@@ -220,16 +220,17 @@ static void
 canon_int_switch_camera_off (Camera *camera)
 {
 	GP_DEBUG ("switch_camera_off()");
-	gp_camera_status (camera, _("Switching Camera Off"));
 
 	switch (camera->port->type) {
 		case GP_PORT_SERIAL:
+			gp_camera_status (camera, _("Switching Camera Off"));
 			canon_serial_off (camera);
 			break;
 		case GP_PORT_USB:
+			GP_DEBUG ("Not trying to shut down USB camera...");
+			break;
 		case GP_PORT_NONE:
 		default:
-			// FIXME: What about USB?
 			GP_DEBUG ("Unknown camera->port->type in canon_int_switch_camera_off()");
 	}
 	clear_readiness (camera);
