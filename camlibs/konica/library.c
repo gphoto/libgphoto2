@@ -542,7 +542,7 @@ camera_file_get_generic (Camera* camera, CameraFile* file, const gchar* folder, 
 	gulong 		image_id;
 	gchar*		image_id_string;
 	konica_data_t*	kd;
-	char *data;
+	char *data = NULL;
 	long int size;
 
 	g_return_val_if_fail (camera, 	GP_ERROR_BAD_PARAMETERS);
