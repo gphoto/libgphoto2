@@ -319,6 +319,7 @@ static struct {
 		/* 0x3084 is the EOS 300D/Digital Rebel in normal (canon) mode */
 	{"Canon:EOS 300D (PTP mode)",           0x04a9, 0x3099},
 	{"Canon:EOS Digital Rebel (PTP mode)",  0x04a9, 0x3099},
+	{"Canon:EOS Kiss Digital (PTP mode)",   0x04a9, 0x3099},
 
 	/* more coming soon :) */
 	{NULL, 0, 0}
