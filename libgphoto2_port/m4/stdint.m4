@@ -15,7 +15,7 @@ dnl but works on older autoconf versions and has a different license.
 dnl AC_CHECK_DEFINED_TYPE ( TYPE, FILE, ACTION-IF-FOUND, ACTION-IF-NOT-FOUND )
 dnl This is similar to _AC_CHECK_TYPE_NEW (a.k.a. new syntax version of
 dnl AC_CHECK_TYPE) in autoconf 2.50 but works on older versions
-AC_DEFUN(AC_CHECK_DEFINED_TYPE,
+AC_DEFUN([AC_CHECK_DEFINED_TYPE],
 [AC_MSG_CHECKING([for $1 in $2])
 AC_EGREP_CPP(changequote(<<,>>)dnl
 <<(^|[^a-zA-Z_0-9])$1[^a-zA-Z_0-9]>>dnl
@@ -30,7 +30,7 @@ fi
 ])
 
 dnl Look for a header file that defines size-specific integer types
-AC_DEFUN(AC_NEED_STDINT_H,
+AC_DEFUN([AC_NEED_STDINT_H],
 [
 changequote(, )dnl
 ac_dir=`echo "$1"|sed 's%/[^/][^/]*$%%'`
