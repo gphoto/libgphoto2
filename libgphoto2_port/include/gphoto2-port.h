@@ -31,10 +31,7 @@
 
 /* Include the various headers for other devices */
 #include "gphoto2-port-serial.h"
-#include "gphoto2-port-parallel.h"
-#include "gphoto2-port-network.h"
 #include "gphoto2-port-usb.h"
-#include "gphoto2-port-ieee1394.h"
 
 #include "gphoto2-port-result.h"
 
@@ -52,25 +49,13 @@
 typedef enum {
     GP_PORT_NONE        =      0,
     GP_PORT_SERIAL      = 1 << 0,
-    GP_PORT_PARALLEL    = 1 << 1,             /* <- Not supported yet */
     GP_PORT_USB         = 1 << 2,
-    GP_PORT_IEEE1394    = 1 << 3,             /* <- Not supported yet */
-    GP_PORT_NETWORK     = 1 << 4,             /* <- Not supported yet */
-} gp_port_type;
-
-typedef gp_port_type GPPortType;
-
-
-/* Device struct
-   -------------------------------------------------------------- */
+} GPPortType;
 
 /* Put the settings together in a union */
 typedef union {
         gp_port_serial_settings         serial;
-        gp_port_parallel_settings       parallel;
-        gp_port_network_settings        network;
         gp_port_usb_settings            usb;
-        gp_port_ieee1394_settings       ieee1394;
 } GPPortSettings;
 
 enum {
@@ -131,7 +116,7 @@ typedef GPPort gp_port;
 typedef GPPortSettings gp_port_settings;
 #include "gphoto2-port-info-list.h"
 
-int gp_port_new         (GPPort **dev, gp_port_type type);
+int gp_port_new         (GPPort **dev, GPPortType type);
 int gp_port_free        (GPPort *dev);
 
 int gp_port_open        (GPPort *dev);

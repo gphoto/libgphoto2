@@ -163,30 +163,6 @@ else
 ])
 fi
 
-dnl Compile in parallel support 
-GP_PORT_PARALLEL=0
-if test "$GPPORT_PARALLEL" = "1"; then
-	IOLIB_SUBDIRS="$IOLIB_SUBDIRS parallel"
-	IOLIB_CFLAGS="$IOLIB_CFLAGS -DGP_PORT_SUPPORTED_PARALLEL"
-	IOLIB_LDFLAGS="$IOLIB_LDFLAGS -Lparallel -lgphoto2_port_parallel"
-fi
-
-dnl Compile in network support 
-GP_PORT_NETWORK=0
-if test "$GPPORT_NETWORK" = "1"; then
-	IOLIB_SUBDIRS="$IOLIB_SUBDIRS network"
-	IOLIB_CFLAGS="$IOLIB_CFLAGS -DGP_PORT_SUPPORTED_NETWORK"
-	IOLIB_LDFLAGS="$IOLIB_LDFLAGS -Lnetwork -lgphoto2_port_network"
-fi
-
-dnl Compile in firewire (oops, i said the word) support 
-GP_PORT_IEEE1394=0
-if test "$GPPORT_IEEE1394" = "1"; then
-	IOLIB_SUBDIRS="$IOLIB_SUBDIRS ieee1394"
-	IOLIB_CFLAGS="$IOLIB_CFLAGS -DGP_PORT_SUPPORTED_IEEE1394"
-	IOLIB_LDFLAGS="$IOLIB_LDFLAGS -Lieee1394 -lgphoto2_port_ieee1394"
-fi
-
 AC_SUBST(GPPORT_LIBDIR)
 AC_SUBST(GPPORT_LIBS)
 AC_SUBST(GPPORT_INCLUDEDIR)
@@ -205,10 +181,7 @@ libgphoto2_port.spec
 Makefile
 libgphoto2_port/Makefile
 serial/Makefile
-parallel/Makefile
 usb/Makefile
-ieee1394/Makefile
-network/Makefile
 include/Makefile
 gphoto2-port-config
 intl/Makefile

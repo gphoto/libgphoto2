@@ -1,3 +1,10 @@
+2001-10-26  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* network
+	* parallel
+	* ieee1394: Removed. Once someone wants to implement those, they can
+	  be easily resurrected.
+
 2001-10-25  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* usb/libusb.c:

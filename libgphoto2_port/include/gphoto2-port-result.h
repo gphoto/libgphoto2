@@ -36,9 +36,6 @@
 
 #define GP_ERROR_IO_SUPPORTED_SERIAL    -20
 #define GP_ERROR_IO_SUPPORTED_USB       -21
-#define GP_ERROR_IO_SUPPORTED_PARALLEL  -22
-#define GP_ERROR_IO_SUPPORTED_NETWORK   -23
-#define GP_ERROR_IO_SUPPORTED_IEEE1394  -24
 
 #define GP_ERROR_IO_INIT                -31
 #define GP_ERROR_IO_OPEN                -32

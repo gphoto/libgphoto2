@@ -136,21 +136,6 @@ gp_port_new (GPPort **dev, GPPortType type)
 		return GP_ERROR_IO_SUPPORTED_USB;
 #endif
 		break;
-        case GP_PORT_PARALLEL:
-#ifndef GP_PORT_SUPPORTED_PARALLEL
-		return GP_ERROR_IO_SUPPORTED_PARALLEL;
-#endif
-		break;
-        case GP_PORT_NETWORK:
-#ifndef GP_PORT_SUPPORTED_NETWORK
-		return GP_ERROR_IO_SUPPORTED_NETWORK;
-#endif
-		break;
-        case GP_PORT_IEEE1394:
-#ifndef GP_PORT_SUPPORTED_IEEE1394
-		return GP_ERROR_IO_SUPPORTED_IEEE1394;
-#endif
-		break;
         default:
 		return GP_ERROR_UNKNOWN_PORT;
         }
@@ -190,13 +175,6 @@ gp_port_new (GPPort **dev, GPPortType type)
 
 		gp_port_timeout_set (*dev, 500);
 		break;
-        case GP_PORT_PARALLEL:
-		sprintf (buf, GP_PORT_SERIAL_PREFIX, GP_PORT_SERIAL_RANGE_LOW);
-		strcpy (settings.parallel.port, buf);
-		break;
-        case GP_PORT_NETWORK:
-		gp_port_timeout_set (*dev, 50000);
-		break;
         case GP_PORT_USB:
 		/* Initialize settings.usb */
 		(*dev)->settings.usb.inep = -1;
@@ -206,9 +184,6 @@ gp_port_new (GPPort **dev, GPPortType type)
 		(*dev)->settings.usb.altsetting = -1;
 
 		gp_port_timeout_set (*dev, 5000);
-		break;
-        case GP_PORT_IEEE1394:
-		/* blah ? */
 		break;
         default:
 		return GP_ERROR_UNKNOWN_PORT;
