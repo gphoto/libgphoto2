@@ -1,5 +1,39 @@
 2001-10-09  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/agfa/agfa.c: delete_file_func, get_file_func
+	* camlibs/canon/canon.c: Add warning that upload and deletion is
+	  broken
+	* camlibs/jd350e/jd350e.c: Tiny update
+	* camlibs/kodak/dc120/dc120.c: folder_list_func, file_list_func, 
+	  get_file_func, delete_file_func
+	* camlibs/kodak/dc240.c: Add warning that changes have to be made
+	* camlibs/konica/library.c: delete_all_func, delete_file_func
+	* camlibs/minolta/dimagev/dimagev.c: delete_file_func, put_file_func,
+	* camlibs/panasonic/dc1000.c: file_list_func, get_file_func,
+	  put_file_func, delete_file_func
+	* camlibs/panasonic/dc1580.c: get_file_func, put_file_func, 
+	  delete_file_func
+	* camlibs/panasonic/l859.c: delete_file_func, delete_all_func
+	* camlibs/polaroid/pdc320.c: get_file_func, delete_all_func
+	* camlibs/polaroid/pdc640.c: get_file_func, delete_file_func
+	* camlibs/sierra/library.c:
+	* camlibs/sierra/sierra.c: delete_all_func, delete_file_func
+	* camlibs/sonydscf1/sonydscf1.c: delete_file_func
+	* camlibs/sonydscf55/sonydscf55.c: Tiny update
+	* camlibs/stv0680/stv0680.c: Tiny update
+	* frontens/command-line/interface.c: Don't show "" status and 0.0
+	  progress
+	* libgphoto2/camera.c:
+	* include/gphoto2-camera.h: Remove put_file, delete_all and delete - 
+	  this should all be done using the filesystem. In the future, 
+	  file_get and the listing functions will also disappear.
+	* include/gphoto2-filesys.h:
+	* libgphoto2/filesys.c: Add deletion and upload.
+	* libgphoto2/jpeg.c: Kill unused variable
+	* tests/test-filesys.c: Update
+
+2001-10-09  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/sonydscf1:
 	  Clean up a bit. This camera uses globals and won't work with
 	  big frontends...

@@ -545,9 +545,10 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	return (GP_OK);
 }
 
-static int camera_file_delete (Camera *camera, const char *folder,
-			       const char *filename) {
+static int delete_file_func (CameraFilesystem *fs, const char *folder,
+			     const char *filename, void *data) {
 
+	Camera *camera = data;
 	l859_t	*dsc = (l859_t *)camera->camlib_data;
 	int		index;
 	int		result;
@@ -563,15 +564,15 @@ static int camera_file_delete (Camera *camera, const char *folder,
 	if (result < 0)
 		return (result);
 
-	gp_filesystem_delete (camera->fs, folder, filename);
-
 	l859_debug("Delete File Done");
 
 	return GP_OK;
 }
 
-static int camera_folder_delete_all(Camera *camera, const char *folder) {
+static int delete_all_func (CameraFilesystem *fs, const char *folder,
+			    void *data) {
 
+	Camera *camera = data;
 	l859_t	*dsc = (l859_t *)camera->camlib_data;
 
 	l859_debug("Delete all images");
@@ -582,8 +583,6 @@ static int camera_folder_delete_all(Camera *camera, const char *folder) {
 		return GP_ERROR;
 	if (l859_sendcmd(dsc, L859_CMD_DELETE_ACK) != GP_OK)
 		return GP_ERROR;
-
-	gp_filesystem_delete_all (camera->fs, folder);
 
 	l859_debug("Delete all images done.");
 
@@ -636,11 +635,10 @@ int camera_init (Camera *camera) {
         l859_debug("Camera Init %s", camera->model);
 
         /* First, set up all the function pointers */
-        camera->functions->exit                                 = camera_exit;
-        camera->functions->folder_delete_all    = camera_folder_delete_all;
-        camera->functions->file_delete                  = camera_file_delete;
-        camera->functions->summary                              = camera_summary;
-        camera->functions->manual                               = camera_manual;        camera->functions->about                                = camera_about;
+        camera->functions->exit    = camera_exit;
+        camera->functions->summary = camera_summary;
+        camera->functions->manual  = camera_manual;
+	camera->functions->about   = camera_about;
 
         /* first of all allocate memory for a dsc struct */
         if ((dsc = (l859_t*)malloc(sizeof(l859_t))) == NULL) {
@@ -668,7 +666,10 @@ int camera_init (Camera *camera) {
 
 	/* Set up the filesystem */
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
-	gp_filesystem_set_file_func (camera->fs, get_file_func, camera);
+	gp_filesystem_set_file_funcs (camera->fs, get_file_func,
+				      delete_file_func, camera);
+	gp_filesystem_set_folder_funcs (camera->fs, NULL, delete_all_func,
+					camera);
 
         ret = l859_connect(dsc, camera->port_info->speed);
 	if (ret < 0) {

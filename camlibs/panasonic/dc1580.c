@@ -461,7 +461,7 @@ int camera_abilities (CameraAbilitiesList *list) {
         return GP_OK;
 }
 
-int camera_exit (Camera *camera) {
+static int camera_exit (Camera *camera) {
         
         dsc_t   *dsc = camera->camlib_data;
 
@@ -510,9 +510,11 @@ static int get_info_func (CameraFilesystem *fs, const char *folder,
         return GP_OK;
 }
 
-int camera_file_get (Camera *camera, const char *folder, const char *filename,
-		     CameraFileType type, CameraFile *file) {
+static int get_file_func (CameraFilesystem *fs, const char *folder,
+			  const char *filename, CameraFileType type,
+			  CameraFile *file, void *data) {
 
+	Camera *camera = data;
         dsc_t   *dsc = camera->camlib_data;
         int     index, i, size, blocks, result;
 
@@ -549,8 +551,10 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
         return GP_OK;
 }
 
-int camera_folder_put_file (Camera *camera, const char *folder, CameraFile *file) {
+static int put_file_func (CameraFilesystem *fs, const char *folder,
+			  CameraFile *file, void *user_data) {
         
+	Camera *camera = user_data;
         int             blocks, blocksize, i, result;
 	const char      *name;
 	const char      *data;
@@ -594,8 +598,10 @@ int camera_folder_put_file (Camera *camera, const char *folder, CameraFile *file
         return GP_OK;
 }
 
-int camera_file_delete (Camera *camera, const char *folder, const char *filename) {
+static int delete_file_func (CameraFilesystem *fs, const char *folder,
+			     const char *filename, void *data) {
         
+	Camera *camera = data;
         int     index, result;
 
         dsc_print_status(camera, _("Deleting image %s."), filename);
@@ -607,21 +613,21 @@ int camera_file_delete (Camera *camera, const char *folder, const char *filename
         return dsc2_delete(camera, index);
 }
 
-int camera_summary (Camera *camera, CameraText *summary) 
+static int camera_summary (Camera *camera, CameraText *summary) 
 {
         strcpy(summary->text, _("Summary not available."));
 
         return (GP_OK);
 }
 
-int camera_manual (Camera *camera, CameraText *manual) 
+static int camera_manual (Camera *camera, CameraText *manual) 
 {
         strcpy(manual->text, _("Manual not available."));
 
         return (GP_OK);
 }
 
-int camera_about (Camera *camera, CameraText *about) 
+static int camera_about (Camera *camera, CameraText *about) 
 {
         strcpy(about->text,
                         _("Panasonic DC1580 gPhoto library\n"
@@ -642,9 +648,6 @@ int camera_init (Camera *camera)
 
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;
-        camera->functions->file_get             = camera_file_get;
-        camera->functions->folder_put_file      = camera_folder_put_file;
-        camera->functions->file_delete          = camera_file_delete;
         camera->functions->summary              = camera_summary;
         camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;
@@ -671,6 +674,10 @@ int camera_init (Camera *camera)
 		file_list_func, NULL, camera));
 	CHECK (gp_filesystem_set_info_funcs (camera->fs,
 		get_info_func, NULL, camera));
+	CHECK (gp_filesystem_set_file_funcs (camera->fs,
+		get_file_func, delete_file_func, camera));
+	CHECK (gp_filesystem_set_folder_funcs (camera->fs,
+		put_file_func, NULL, camera));
 
         /* allocate memory for a dsc read/write buffer */
         if ((dsc->buf = (char *)malloc(sizeof(char)*(DSC_BUFSIZE))) == NULL) {

@@ -559,9 +559,10 @@ camera_abilities (CameraAbilitiesList *list)
 }
 
 static int
-camera_file_get (Camera *camera, const char *folder, const char *filename,
-		 CameraFileType type, CameraFile *file)
+get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
+	       CameraFileType type, CameraFile *file, void *user_data)
 {
+	Camera *camera = user_data;
 	int n, size;
 	char *data, *p;
 
@@ -608,8 +609,9 @@ camera_file_get (Camera *camera, const char *folder, const char *filename,
 }
 
 static int
-camera_folder_delete_all (Camera *camera, const char *folder)
+delete_all_func (CameraFilesystem *fs, const char *folder, void *data)
 {
+	Camera *camera = data;
 	char cmd[2] = {0x59, 0x00};
 
 	CHECK_RESULT (pdc640_transmit (camera->port, cmd, 2, NULL, 0));
@@ -618,8 +620,10 @@ camera_folder_delete_all (Camera *camera, const char *folder)
 }
 
 static int
-camera_file_delete (Camera *camera, const char *folder, const char *file)
+delete_file_func (CameraFilesystem *fs, const char *folder, const char *file,
+		  void *data)
 {
+	Camera *camera = data;
 	int n, count;
 
 	/* We can only delete the last picture */
@@ -728,9 +732,6 @@ camera_init (Camera *camera)
 	int result;
 	gp_port_settings settings;
 
-	camera->functions->file_get   = camera_file_get;
-	camera->functions->file_delete = camera_file_delete;
-	camera->functions->folder_delete_all = camera_folder_delete_all;
 	camera->functions->about      = camera_about;
 	camera->functions->capture      = camera_capture;
 
@@ -739,6 +740,10 @@ camera_init (Camera *camera)
 						    NULL, camera));
 	CHECK_RESULT (gp_filesystem_set_info_funcs (camera->fs, get_info_func,
 						    NULL, camera));
+	CHECK_RESULT (gp_filesystem_set_folder_funcs (camera->fs, NULL,
+						delete_all_func, camera));
+	CHECK_RESULT (gp_filesystem_set_file_funcs (camera->fs, get_file_func,
+						delete_file_func, camera));
 
 	/* Open the port */
 	CHECK_RESULT (gp_port_settings_get (camera->port, &settings));

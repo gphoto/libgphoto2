@@ -225,7 +225,7 @@ int camera_init (Camera *camera)
 	/* Set up the filesystem */
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL,
 				      camera);
-	gp_filesystem_set_file_func  (camera->fs, get_file_func, camera);
+	gp_filesystem_set_file_funcs  (camera->fs, get_file_func, NULL, camera);
 
         /* test camera */
         ret = jd350e_ping(device);

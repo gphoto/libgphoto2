@@ -390,8 +390,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 }
 
 static int
-camera_folder_delete_all (Camera *camera, const char *folder)
+delete_all_func (CameraFilesystem *fs, const char *folder, void *data)
 {
+	Camera *camera = data;
+
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", 
 			 "*** sierra_folder_delete_all");
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
@@ -408,18 +410,16 @@ camera_folder_delete_all (Camera *camera, const char *folder)
 	 * It seems that those cameras just acknowledge the command but do
 	 * nothing in the end. gphoto2 will check if all pictures have deleted,
 	 * therefore we don't handle this case here.
-	 *
-	 * However, we need to format the filesystem so that gphoto2 can
-	 * handle this case.
 	 */
-	CHECK (gp_filesystem_format (camera->fs));
-	
+
 	return (GP_OK);
 }
 
 static int
-camera_file_delete (Camera *camera, const char *folder, const char *filename) 
+delete_file_func (CameraFilesystem *fs, const char *folder,
+		  const char *filename, void *data) 
 {
+	Camera *camera = data;
 	int n;
 
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** sierra_file_delete");
@@ -434,9 +434,6 @@ camera_file_delete (Camera *camera, const char *folder, const char *filename)
 	CHECK_STOP (camera, sierra_change_folder (camera, folder));
 	CHECK_STOP (camera, sierra_delete (camera, n + 1));
 	CHECK (camera_stop (camera));
-
-	/* Now delete the file on the CameraFilesystem */
-	CHECK (gp_filesystem_delete (camera->fs, folder, filename));
 
 	return (GP_OK);
 }
@@ -1283,8 +1280,6 @@ int camera_init (Camera *camera)
         
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;
-        camera->functions->file_delete          = camera_file_delete;
-        camera->functions->folder_delete_all    = camera_folder_delete_all;
         camera->functions->capture_preview      = camera_capture_preview;
         camera->functions->capture              = camera_capture;
         camera->functions->get_config           = camera_get_config;
@@ -1391,13 +1386,13 @@ int camera_init (Camera *camera)
         /* We are in "/" */
         strcpy (fd->folder, "/");
         CHECK_STOP_FREE (camera, gp_filesystem_set_list_funcs (camera->fs,
-                                        file_list_func, folder_list_func,
-                                        camera));
+				file_list_func, folder_list_func, camera));
         CHECK_STOP_FREE (camera, gp_filesystem_set_info_funcs (camera->fs,
-                                        get_info_func, set_info_func,
-                                        camera));
-	CHECK_STOP_FREE (camera, gp_filesystem_set_file_func (camera->fs,
-					get_file_func, camera));
+                                get_info_func, set_info_func, camera));
+	CHECK_STOP_FREE (camera, gp_filesystem_set_file_funcs (camera->fs,
+				get_file_func, delete_file_func, camera));
+	CHECK_STOP_FREE (camera, gp_filesystem_set_folder_funcs (camera->fs,
+				NULL, delete_all_func, camera));
 
         gp_debug_printf (GP_DEBUG_LOW, "sierra", "************************");
         gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_init done ***");

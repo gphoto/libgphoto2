@@ -190,7 +190,7 @@ camera_capture (Camera *camera, int type, CameraFilePath *path)
 	CHECK_RESULT (QVcapture (camera));
 
 	/* Tell libgphoto2 that the filesystem changed */
-	CHECK_RESULT (gp_filesystem_format (camera->fs));
+	CHECK_RESULT (gp_filesystem_reset (camera->fs));
 
 	/* Tell libgphoto2 where to look for the new image */
 	strcpy (path->folder, "/");

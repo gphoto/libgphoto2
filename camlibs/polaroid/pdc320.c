@@ -309,14 +309,14 @@ camera_abilities (CameraAbilitiesList *list)
 }
 
 static int
-camera_file_get (Camera *camera, const char *folder, const char *filename,
-		 CameraFileType type, CameraFile *file)
+get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
+	       CameraFileType type, CameraFile *file, void *user_data)
 {
+	Camera *camera = user_data;
 	jpeg *myjpeg;
 	chunk *tempchunk;
 	int n, size, width, height;
 	unsigned char *data;
-	unsigned char *temp;
 
 	if ((type != GP_FILE_TYPE_RAW) && (type != GP_FILE_TYPE_NORMAL))
 		return (GP_ERROR_NOT_SUPPORTED);
@@ -389,11 +389,11 @@ camera_file_get (Camera *camera, const char *folder, const char *filename,
 }
 
 static int
-camera_folder_delete_all (Camera *camera, const char *folder)
+delete_all_func (CameraFilesystem *fs, const char *folder, void *data)
 {
-	/* Delete and tell the filesyste */
+	Camera *camera = data;
+
 	CHECK_RESULT (pdc320_delete (camera->port));
-	CHECK_RESULT (gp_filesystem_format (camera->fs));
 
 	return (GP_OK);
 }
@@ -444,13 +444,15 @@ camera_init (Camera *camera)
 	gp_port_settings settings;
 
         /* First, set up all the function pointers */
-        camera->functions->file_get          = camera_file_get;
-        camera->functions->folder_delete_all = camera_folder_delete_all;
         camera->functions->about             = camera_about;
 	camera->functions->summary           = camera_summary;
 
 	/* Now, tell the filesystem where to get lists and info */
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
+	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL,
+				      camera);
+	gp_filesystem_set_folder_funcs (camera->fs, NULL, delete_all_func,
+					camera);
 
 	/* Open the port and check if the camera is there */
 	CHECK_RESULT (gp_port_settings_get (camera->port, &settings));

@@ -443,21 +443,30 @@ camera_exit (Camera* camera)
 }
 
 static int
-camera_folder_delete_all (Camera* camera, const char* folder)
+delete_all_func (CameraFilesystem *fs, const char* folder, void *data)
 {
+	CameraList list;
+	Camera *camera = data;
         unsigned int not_erased = 0;
+	int i;
+	const char *name;
 
         if (strcmp (folder, "/"))
                 return (GP_ERROR_DIRECTORY_NOT_FOUND);
 
         CHECK (k_erase_all (camera->port, &not_erased));
-        CHECK (gp_filesystem_format (camera->fs));
 
         if (not_erased) {
 		gp_camera_message (camera,
 				   _("%i pictures could not be deleted "
 				     "because they are protected!"),
 				   not_erased);
+		list.count = 0;
+		file_list_func (fs, folder, &list, camera);
+		for (i = 0; i < gp_list_count (&list); i++) {
+			gp_list_get_name (&list, i, &name);
+			gp_filesystem_append (fs, folder, name);
+		}
         }
 
         return (GP_OK);
@@ -506,8 +515,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 }
 
 static int
-camera_file_delete (Camera* camera, const char *folder, const char *filename)
+delete_file_func (CameraFilesystem *fs, const char *folder,
+		  const char *filename, void *data)
 {
+	Camera *camera = data;
         char tmp[] = {0, 0, 0, 0, 0, 0, 0};
         unsigned long image_id;
         KonicaData*     kd;
@@ -524,11 +535,9 @@ camera_file_delete (Camera* camera, const char *folder, const char *filename)
         image_id = atol (tmp);
 
         CHECK (k_erase_image (camera->port, kd->image_id_long, image_id));
-        CHECK (gp_filesystem_delete (camera->fs, folder, filename));
 
         return (GP_OK);
 }
-
 
 static int
 camera_summary (Camera* camera, CameraText* summary)
@@ -1219,8 +1228,6 @@ camera_init (Camera* camera)
 
         /* First, set up all the function pointers. */
         camera->functions->exit                 = camera_exit;
-        camera->functions->folder_delete_all    = camera_folder_delete_all;
-        camera->functions->file_delete          = camera_file_delete;
         camera->functions->get_config           = camera_get_config;
         camera->functions->set_config           = camera_set_config;
         camera->functions->capture              = camera_capture;
@@ -1283,7 +1290,10 @@ camera_init (Camera* camera)
                                       set_info_func, camera);
         gp_filesystem_set_list_funcs (camera->fs, file_list_func,
                                       NULL, camera);
-        gp_filesystem_set_file_func (camera->fs, get_file_func, camera);
+        gp_filesystem_set_file_funcs (camera->fs, get_file_func,
+				      delete_file_func, camera);
+	gp_filesystem_set_folder_funcs (camera->fs, NULL, delete_all_func,
+					camera);
 
         gp_debug_printf (GP_DEBUG_LOW, "konica", "*** EXIT: "
                          "camera_init ***");

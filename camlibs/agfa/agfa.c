@@ -78,7 +78,7 @@ int camera_abilities(CameraAbilitiesList *list) {
     return GP_OK;
 }
 
-int camera_exit (Camera *camera) {
+static int camera_exit (Camera *camera) {
    
     struct agfa_device *dev = camera->camlib_data;
     
@@ -165,9 +165,11 @@ static int agfa_file_get (Camera *camera, const char *filename, int thumbnail,
 
 }
 
-static int camera_file_get (Camera *camera, const char *folder, 
-			    const char *filename, CameraFileType type, CameraFile *file) {
+static int get_file_func (CameraFilesystem *fs, const char *folder, 
+			  const char *filename, CameraFileType type,
+			  CameraFile *file, void *user_data) {
 
+    Camera *camera = user_data;
     unsigned char *data = NULL;
     int size,ret;
 
@@ -193,7 +195,7 @@ static int camera_file_get (Camera *camera, const char *folder,
     return GP_OK;
 }
 
-int camera_summary(Camera *camera, CameraText *summary) {
+static int camera_summary(Camera *camera, CameraText *summary) {
 
     struct agfa_device *dev = camera->camlib_data;
     int taken;
@@ -206,7 +208,7 @@ int camera_summary(Camera *camera, CameraText *summary) {
     return GP_OK;
 }
 
-int camera_manual(Camera *camera, CameraText *manual) {
+static int camera_manual(Camera *camera, CameraText *manual) {
 
     strcpy(manual->text, _("Manual Not Implemented Yet"));
 
@@ -214,7 +216,7 @@ int camera_manual(Camera *camera, CameraText *manual) {
 
 }
 
-int camera_about(Camera *camera, CameraText *about) {
+static int camera_about(Camera *camera, CameraText *about) {
         
     strcpy(about->text, _("Agfa CL18\nVince Weaver <vince@deater.net>\n"));
 
@@ -223,7 +225,7 @@ int camera_about(Camera *camera, CameraText *about) {
 
 
     /* Below contributed by Ben Hague <benhague@btinternet.com> */
-int camera_capture (Camera *camera, int capture_type, CameraFilePath *path)
+static int camera_capture (Camera *camera, int capture_type, CameraFilePath *path)
 {
     struct agfa_device *dev=camera->camlib_data;
 
@@ -236,19 +238,15 @@ int camera_capture (Camera *camera, int capture_type, CameraFilePath *path)
 }
 
 
-static int camera_file_delete (Camera *camera, const char *folder,
-			       const char *filename) {
+static int delete_file_func (CameraFilesystem *fs, const char *folder,
+			     const char *filename, void *data) {
   
+    Camera *camera = data;
     struct agfa_device *dev=camera->camlib_data;
-    int result;
-   
+
     gp_debug_printf(GP_DEBUG_LOW,"agfa","Deleting '%s' in '%s'...",filename,folder); 
    
     agfa_delete_picture(dev,filename);
-   
-       /* Delete the picture on the filesystem */
-    result=gp_filesystem_delete(camera->fs, folder, filename);
-    if (result<0) return result;
    
        /* Update our file list */
     if (agfa_get_file_list(dev)<0) return GP_ERROR;
@@ -265,11 +263,9 @@ int camera_init(Camera *camera) {
 
        /* First, set up all the function pointers */
     camera->functions->exit         = camera_exit;
-    camera->functions->file_get     = camera_file_get;
     camera->functions->summary      = camera_summary;
     camera->functions->manual       = camera_manual;
     camera->functions->about        = camera_about;
-    camera->functions->file_delete  = camera_file_delete;
     camera->functions->capture      = camera_capture;
    
     gp_debug_printf (GP_DEBUG_LOW, "agfa", "Initializing the camera\n");
@@ -304,6 +300,8 @@ int camera_init(Camera *camera) {
     
        /* Tell the CameraFilesystem where to get lists from */
     gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
+    gp_filesystem_set_file_funcs (camera->fs, get_file_func, delete_file_func,
+		    		  camera);
 
     return GP_OK;
 }

@@ -75,9 +75,10 @@ int camera_exit (Camera *camera) {
 	return (GP_OK);
 }
 
-int camera_folder_list_folders (Camera *camera, const char *folder, 
-				CameraList *list) 
+static int folder_list_func (CameraFilesystem *fs, const char *folder,
+			     CameraList *list, void *data) 
 {
+	Camera *camera = data;
 	DC120Data *dd = camera->camlib_data;
 	char buf[32];
 
@@ -103,14 +104,13 @@ int camera_folder_list_folders (Camera *camera, const char *folder,
 	return (GP_ERROR);
 }
 
-int camera_folder_list_files (Camera *camera, const char *folder, 
-			      CameraList *list) 
+static int file_list_func (CameraFilesystem *fs, const char *folder,
+			   CameraList *list, void *data) 
 {
+	Camera *camera = data;
 	DC120Data *dd = camera->camlib_data;
 	char buf[32];
 	int retval = GP_OK;
-	int x;
-	const char *name;
 
 	/* Chop trailing slash */
 	if (folder[strlen(folder)-1] == '/')
@@ -131,13 +131,6 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 		retval = dc120_get_filenames (dd, 1, folder[strlen (dc120_folder_card)+8] - '0', list);
 
 	/* Save the order of the pics (wtf: no filename access on dc120???) */
-	/* Use the filesystem helpers to maintain picture list */
-	if (retval == GP_OK) {
-		for (x=0; x<gp_list_count(list); x++) {
-			gp_list_get_name (list, x, &name);
-			gp_filesystem_append(dd->fs, folder, name);
-		}
-	}
 
 	return (retval);
 }
@@ -188,9 +181,12 @@ int camera_file_action (Camera *camera, int action, CameraFile *file,
 	return (dc120_file_action(dd, action, from_card, album_num, picnum+1, file));
 }
 
-int camera_file_get (Camera *camera, const char *folder, const char *filename, 
-		     CameraFileType type, CameraFile *file) 
+static int get_file_func (CameraFilesystem *fs, const char *folder,
+			  const char *filename, CameraFileType type,
+			  CameraFile *file, void *data) 
 {
+	Camera *camera = data;
+
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
 		return (camera_file_action (camera, DC120_ACTION_IMAGE, file,
@@ -203,17 +199,15 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 	}
 }
 
-int camera_file_delete (Camera *camera, const char *folder, 
-			const char *filename) 
+static int delete_file_func (CameraFilesystem *fs, const char *folder, 
+			     const char *filename, void *data) 
 {
+	Camera *camera = data;
 	DC120Data *dd = camera->camlib_data;
 	int retval;
 
 	retval = camera_file_action (camera, DC120_ACTION_DELETE, NULL, folder, 
 				     filename);
-
-	if (retval == GP_OK)
-		gp_filesystem_delete(dd->fs, folder, filename);
 
 	return (retval);
 }
@@ -275,13 +269,14 @@ int camera_init (Camera *camera) {
 
         /* First, set up all the function pointers */
         camera->functions->exit         = camera_exit;
-        camera->functions->folder_list_folders  = camera_folder_list_folders;
-        camera->functions->folder_list_files    = camera_folder_list_files;
-        camera->functions->file_get     = camera_file_get;
-        camera->functions->file_delete  = camera_file_delete;
         camera->functions->summary      = camera_summary;
         camera->functions->manual       = camera_manual;
         camera->functions->about        = camera_about;
+
+	gp_filesystem_set_list_funcs (camera->fs, file_list_func,
+				      folder_list_func, camera);
+	gp_filesystem_set_file_funcs (camera->fs, get_file_func,
+				      delete_file_func, camera);
 
         if ((ret= gp_port_new(&(dd->dev), GP_PORT_SERIAL)) < 0) {
                 free(dd);

@@ -1,8 +1,9 @@
-/* gphoto2-filesys.h: Filesystem emulation for cameras that don't support 
- *                    filenames. In addition, it can be used to cache the
- *                    contents of the camera in order to avoid traffic.
+/* gphoto2-filesys.h
  *
  * Copyright (C) 2000 Scott Fritzinger
+ *
+ * Contributions:
+ * 	Lutz Müller <urc8@rz.uni-karlsruhe.de> (2001)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -64,26 +65,24 @@ typedef struct _CameraFilesystem CameraFilesystem;
 int gp_filesystem_new	 (CameraFilesystem **fs);
 int gp_filesystem_free	 (CameraFilesystem *fs);
 
-/* Adding */
-int gp_filesystem_populate (CameraFilesystem *fs, const char *folder,
-			    const char *format, int count);
+/* Manual editing */
 int gp_filesystem_append   (CameraFilesystem *fs, const char *folder,
 			    const char *filename);
-
-/* Deleting */
-int gp_filesystem_format     (CameraFilesystem *fs);
-int gp_filesystem_delete     (CameraFilesystem *fs, const char *folder,
-			      const char *filename);
-int gp_filesystem_delete_all (CameraFilesystem *fs, const char *folder);
+int gp_filesystem_reset    (CameraFilesystem *fs);
 
 /* Information retreival */
 int gp_filesystem_count	       (CameraFilesystem *fs, const char *folder);
 int gp_filesystem_name         (CameraFilesystem *fs, const char *folder,
 			        int filenumber, const char **filename);
-int gp_filesystem_number       (CameraFilesystem *fs, const char *folder,
-			        const char *filename);
 int gp_filesystem_get_folder   (CameraFilesystem *fs, const char *filename,
 			        const char **folder);
+
+int gp_filesystem_file_number   (CameraFilesystem *fs, const char *folder,
+						       const char *filename);
+int gp_filesystem_folder_number (CameraFilesystem *fs, const char *folder);
+
+/* Don't use... */
+int gp_filesystem_number       (CameraFilesystem *, const char *, const char *);
 
 /* Listings */
 typedef int (*CameraFilesystemListFunc) (CameraFilesystem *fs,
@@ -113,18 +112,40 @@ int gp_filesystem_set_info       (CameraFilesystem *fs, const char *folder,
 				  const char *filename, CameraFileInfo *info);
 
 /* Files */
-typedef int (*CameraFilesystemGetFileFunc) (CameraFilesystem *fs,
-					    const char *folder,
-					    const char *filename,
-					    CameraFileType type,
-					    CameraFile *file, void *data);
-int gp_filesystem_set_file_func (CameraFilesystem *fs,
-				 CameraFilesystemGetFileFunc get_file_func,
-				 void *data);
-int gp_filesystem_get_file      (CameraFilesystem *fs, const char *folder,
-				 const char *filename, CameraFileType type,
-				 CameraFile *file);
+typedef int (*CameraFilesystemGetFileFunc)    (CameraFilesystem *fs,
+					       const char *folder,
+					       const char *filename,
+					       CameraFileType type,
+					       CameraFile *file, void *data);
+typedef int (*CameraFilesystemDeleteFileFunc) (CameraFilesystem *fs,
+					       const char *folder,
+					       const char *filename,
+					       void *data);
+int gp_filesystem_set_file_funcs (CameraFilesystem *fs,
+				  CameraFilesystemGetFileFunc get_file_func,
+				  CameraFilesystemDeleteFileFunc del_file_func,
+				  void *data);
+int gp_filesystem_get_file       (CameraFilesystem *fs, const char *folder,
+				  const char *filename, CameraFileType type,
+				  CameraFile *file);
+int gp_filesystem_delete_file    (CameraFilesystem *fs, const char *folder,
+				  const char *filename);
 
+/* Folders */
+typedef int (*CameraFilesystemPutFileFunc)   (CameraFilesystem *fs,
+					      const char *folder,
+					      CameraFile *file, void *data);
+typedef int (*CameraFilesysetmDeleteAllFunc) (CameraFilesystem *fs,
+					      const char *folder, void *data);
+int gp_filesystem_set_folder_funcs (CameraFilesystem *fs,
+				    CameraFilesystemPutFileFunc put_file_func,
+				    CameraFilesysetmDeleteAllFunc del_all_func,
+				    void *data);
+int gp_filesystem_put_file   (CameraFilesystem *fs, const char *folder,
+			      CameraFile *file);
+int gp_filesystem_delete_all (CameraFilesystem *fs, const char *folder);
+
+/* For debugging */
 int gp_filesystem_dump         (CameraFilesystem *fs);
 
 #endif /* __GPHOTO2_FILESYS_H__ */

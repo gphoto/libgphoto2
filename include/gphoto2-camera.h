@@ -57,8 +57,6 @@ typedef int (*c_folder_list_files)      (Camera*, const char*, CameraList*);
 
 typedef int (*c_folder_get_config)      (Camera*, const char*, CameraWidget**);
 typedef int (*c_folder_set_config)      (Camera*, const char*, CameraWidget*);
-typedef int (*c_folder_put_file)        (Camera*, const char*, CameraFile*);
-typedef int (*c_folder_delete_all)      (Camera*, const char*);
 
 /* Don't use (see below) */
 typedef int (*c_file_get_info)          (Camera*, const char*,
@@ -73,7 +71,6 @@ typedef int (*c_file_set_config)        (Camera*, const char*,
 typedef int (*c_file_get)               (Camera*, const char*,
 		                         const char*, CameraFileType type,
 					 CameraFile*);
-typedef int (*c_file_delete)            (Camera*, const char*, const char*);
 
 typedef const char *(*c_result_as_string) (Camera*, int);
 
@@ -94,8 +91,6 @@ typedef struct {
 
 	c_folder_get_config     folder_get_config;
 	c_folder_set_config     folder_set_config;
-	c_folder_put_file       folder_put_file;
-	c_folder_delete_all     folder_delete_all;
 
 	/* Don't use those, use gp_filesystem_set_info_funcs instead */
 	c_file_get_info         file_get_info;
@@ -104,7 +99,6 @@ typedef struct {
 	c_file_get_config       file_get_config;
 	c_file_set_config       file_set_config;
 	c_file_get              file_get;
-	c_file_delete           file_delete;
 
 	c_result_as_string      result_as_string;
 } CameraFunctions;

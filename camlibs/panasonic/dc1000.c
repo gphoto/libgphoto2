@@ -362,7 +362,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 	return GP_OK;
 }
 
-int camera_exit (Camera *camera) {
+static int camera_exit (Camera *camera) {
 	
 	dsc_t	*dsc = (dsc_t *)camera->camlib_data;
 	
@@ -375,29 +375,25 @@ int camera_exit (Camera *camera) {
 	return GP_OK;
 }
 
-int camera_folder_list_files (Camera *camera, const char *folder, 
-			      CameraList *list) 
+static int file_list_func (CameraFilesystem *fs, const char *folder,
+			   CameraList *list, void *data) 
 {
-	dsc_t	*dsc = (dsc_t *)camera->camlib_data;
-	int 	count, i;
-	const char *name;
+	Camera *camera = data;
+	int 	count;
 	
 	if ((count = dsc1_getindex (camera)) == GP_ERROR)
 		return GP_ERROR;
 	
-	gp_filesystem_populate (camera->fs, "/", DSC_FILENAMEFMT, count);
-
-	for (i = 0; i < count; i++) {
-		gp_filesystem_name (camera->fs, "/", i, &name);
-		gp_list_append (list, name, NULL);
-	}
+	gp_list_populate (list, DSC_FILENAMEFMT, count);
 
 	return GP_OK;
 }
 
-int camera_file_get (Camera *camera, const char *folder, const char *filename, 
-		     CameraFileType type, CameraFile *file) 
+static int get_file_func (CameraFilesystem *fs, const char *folder,
+			  const char *filename, CameraFileType type,
+			  CameraFile *file, void *data) 
 {
+	Camera *camera = data;
 	dsc_t	*dsc = (dsc_t *)camera->camlib_data;
 	int	index, size, rsize, i, s;
 
@@ -428,10 +424,10 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 	return GP_OK;
 }
 
-int camera_folder_put_file (Camera *camera, const char *folder, 
-			    CameraFile *file) 
+static int put_file_func (CameraFilesystem *fs, const char *folder,
+			  CameraFile *file, void *user_data) 
 {
-	dsc_t	*dsc = (dsc_t *)camera->camlib_data;
+	Camera *camera = user_data;
 	int	blocks, blocksize, i;
 	int	result;
 	const char *name;
@@ -479,10 +475,10 @@ int camera_folder_put_file (Camera *camera, const char *folder,
 	return GP_OK;
 }
 
-int camera_file_delete (Camera *camera, const char *folder, 
-			const char *filename) 
+static int delete_file_func (CameraFilesystem *fs, const char *folder,
+			     const char *filename, void *data) 
 {
-	dsc_t	*dsc = (dsc_t *)camera->camlib_data;
+	Camera *camera = data;
 	int	index, result;
 
 	dsc_print_status(camera, _("Deleting image %s."), filename);
@@ -494,21 +490,21 @@ int camera_file_delete (Camera *camera, const char *folder,
 	return dsc1_delete(camera, index);
 }
 
-int camera_summary (Camera *camera, CameraText *summary) 
+static int camera_summary (Camera *camera, CameraText *summary) 
 {
 	strcpy(summary->text, _("Summary not available."));
 
 	return GP_OK;
 }
 
-int camera_manual (Camera *camera, CameraText *manual) 
+static int camera_manual (Camera *camera, CameraText *manual) 
 {
 	strcpy (manual->text, _("Manual not available."));
 
 	return GP_OK;
 }
 
-int camera_about (Camera *camera, CameraText *about) 
+static int camera_about (Camera *camera, CameraText *about) 
 {
 	strcpy(about->text,
 			_("Panasonic DC1000 gPhoto library\n"
@@ -527,10 +523,6 @@ int camera_init (Camera *camera) {
         dsc_print_status(camera, _("Initializing camera %s"), camera->model);   
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;
-        camera->functions->folder_list_files    = camera_folder_list_files;
-        camera->functions->file_get             = camera_file_get;
-        camera->functions->folder_put_file      = camera_folder_put_file;
-        camera->functions->file_delete          = camera_file_delete;
         camera->functions->summary              = camera_summary;
         camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;
@@ -563,14 +555,19 @@ int camera_init (Camera *camera) {
 
         gp_port_settings_set(camera->port, dsc->settings);
 
-        gp_port_open(camera->port);
-        
         /* allocate memory for a dsc read/write buffer */
         if ((dsc->buf = (char *)malloc(sizeof(char)*(DSC_BUFSIZE))) == NULL) {
                 dsc_errorprint(EDSCSERRNO, __FILE__, __LINE__);
                 free(camera);
                 return GP_ERROR;
         }
+
+	/* Set up the filesystem */
+	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
+	gp_filesystem_set_file_funcs (camera->fs, get_file_func,
+				      delete_file_func, camera);
+	gp_filesystem_set_folder_funcs (camera->fs, put_file_func,
+				        NULL, camera);
         
         return dsc1_connect(camera, camera->port_info->speed); 
                 /* connect with selected speed */

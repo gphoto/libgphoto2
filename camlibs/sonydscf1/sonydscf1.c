@@ -101,17 +101,18 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
         return GP_OK;
 }
 
-static int camera_file_delete (Camera *camera, const char *folder,
-			       const char *filename)
+static int delete_file_func (CameraFilesystem *fs, const char *folder,
+			     const char *filename, void *data)
 {
+	Camera *camera = data;
         int max, num;
+
         num = gp_filesystem_number(camera->fs, "/", filename);
         max = gp_filesystem_count(camera->fs,folder)  ;
         printf("sony dscf1: file delete: %d\n",num);
         if(!F1ok())
            return (GP_ERROR);
         delete_picture(num,max);
-	gp_filesystem_delete (camera->fs, folder, filename);
         return(GP_OK);
         /*return (F1deletepicture(file_number));*/
 }
@@ -169,7 +170,6 @@ int camera_init (Camera *camera) {
         }
 
         camera->functions->exit         = camera_exit;
-        camera->functions->file_delete  = camera_file_delete;
 //	camera->functions->capture      = camera_capture;
         camera->functions->summary      = camera_summary;
         camera->functions->manual       = camera_manual;
@@ -192,7 +192,8 @@ int camera_init (Camera *camera) {
 
 	/* Set up the filesystem */
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
-	gp_filesystem_set_file_func (camera->fs, get_file_func, camera);
+	gp_filesystem_set_file_funcs (camera->fs, get_file_func,
+				      delete_file_func, camera);
 
         return (GP_OK);
 }

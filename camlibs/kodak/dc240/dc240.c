@@ -164,10 +164,12 @@ camera_init (Camera *camera)
 	
 	/* First, set up all the function pointers */
 	camera->functions->exit             = camera_exit;
+#warning This library is broken. Please use camera->fs!
 	camera->functions->folder_list_folders = camera_folder_list_folders;
 	camera->functions->folder_list_files   = camera_folder_list_files;
 	camera->functions->file_get         = camera_file_get;
-	camera->functions->file_delete      = camera_file_delete;
+#warning Deletion only using camera->fs! Please change!
+//	camera->functions->file_delete      = camera_file_delete;
 	camera->functions->capture          = camera_capture;
 	camera->functions->summary          = camera_summary;
 	camera->functions->manual           = camera_manual;

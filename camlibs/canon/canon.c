@@ -1466,9 +1466,11 @@ int camera_init(Camera *camera)
   camera->functions->exit                = camera_exit;
   camera->functions->folder_list_folders = camera_folder_list_folders;
   camera->functions->folder_list_files   = camera_folder_list_files;
-  camera->functions->folder_put_file     = camera_folder_put_file;
+#warning File upload and deletion now only works using the filesystem.
+#warning Please update this library!
+//  camera->functions->folder_put_file     = camera_folder_put_file;
   camera->functions->file_get            = camera_file_get;
-  camera->functions->file_delete         = camera_file_delete;
+//  camera->functions->file_delete         = camera_file_delete;
   camera->functions->file_get_info       = camera_file_get_info;
   camera->functions->file_set_info       = camera_file_set_info;
   camera->functions->get_config          = camera_get_config;

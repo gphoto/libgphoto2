@@ -1,6 +1,7 @@
 #include <gphoto2-filesys.h>
 #include <gphoto2-result.h>
 #include <gphoto2-core.h>
+#include <gphoto2-debug.h>
 
 #include <stdio.h>
 
@@ -32,7 +33,7 @@ static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data)
 {
-	printf ("  -> The camera will list the files in '%s' here.\n", folder);
+	printf ("### -> The camera will list the files in '%s' here.\n", folder);
 
 	if (!strcmp (folder, "/whatever")) {
 		gp_list_append (list, "file1", NULL);
@@ -46,7 +47,7 @@ static int
 folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		  void *data)
 {
-	printf ("  -> The camera will list the folders in '%s' here.\n", 
+	printf ("### -> The camera will list the folders in '%s' here.\n", 
 		folder);
 
 	if (!strcmp (folder, "/")) {
@@ -56,11 +57,21 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 	if (!strcmp (folder, "/whatever")) {
 		gp_list_append (list, "directory", NULL);
+		gp_list_append (list, "dir", NULL);
 	}
 
 	if (!strcmp (folder, "/whatever/directory")) {
 		gp_list_append (list, "my_special_folder", NULL);
 	}
+
+	return (GP_OK);
+}
+
+static int
+delete_file_func (CameraFilesystem *fs, const char *folder, const char *file,
+		  void *data)
+{
+	printf ("Here we should delete %s from folder %s...\n", file, folder);
 
 	return (GP_OK);
 }
@@ -74,11 +85,15 @@ main (int argc, char **argv)
 	int x, count;
 	const char *name;
 
+	gp_debug_set_level (GP_DEBUG_HIGH);
+
 	printf ("*** Creating file system...\n");
 	CHECK (gp_filesystem_new (&fs));
 
-	printf ("*** Setting the info callbacks...\n");
+	printf ("*** Setting the callbacks...\n");
 	CHECK (gp_filesystem_set_info_funcs (fs, get_info_func, set_info_func,
+					     NULL));
+	CHECK (gp_filesystem_set_file_funcs (fs, NULL, delete_file_func,
 					     NULL));
 
 	printf ("*** Adding a file...\n");
@@ -87,20 +102,34 @@ main (int argc, char **argv)
 	gp_filesystem_dump (fs);
 
 	printf ("*** Removing this file...\n");
-	CHECK (gp_filesystem_delete (fs, "/", "my.file"));
+	CHECK (gp_filesystem_delete_file (fs, "/", "my.file"));
 
 	gp_filesystem_dump (fs);
 
-	printf ("*** Removing /...\n");
-	CHECK (gp_filesystem_delete (fs, "/", NULL));
+	printf ("*** Resetting...\n");
+	CHECK (gp_filesystem_reset (fs));
 
 	gp_filesystem_dump (fs);
 
-	printf ("*** Adding some files...\n");
+	printf ("*** Adding /...\n");
 	CHECK (gp_filesystem_append (fs, "/", NULL));
+
+	printf ("*** Adding /whatever ...\n");
 	CHECK (gp_filesystem_append (fs, "/whatever", NULL));
+
+	printf ("*** Adding /whatever/dir...\n");
 	CHECK (gp_filesystem_append (fs, "/whatever/dir", NULL));
-	CHECK (gp_filesystem_populate (fs, "/whatever/dir", "file%i", 5));
+
+	printf ("*** Adding /whatever/dir/file1...\n");
+	CHECK (gp_filesystem_append (fs, "/whatever/dir", "file1"));
+
+	gp_filesystem_dump (fs);
+
+	printf ("*** Adding /whatever/dir/file2...\n");
+	CHECK (gp_filesystem_append (fs, "/whatever/dir", "file2"));
+	CHECK (gp_filesystem_append (fs, "/whatever/dir", "file3"));
+	CHECK (gp_filesystem_append (fs, "/whatever/dir", "file4"));
+	CHECK (gp_filesystem_append (fs, "/whatever/dir", "file5"));
 
 	gp_filesystem_dump (fs);
 
@@ -140,21 +169,18 @@ main (int argc, char **argv)
 				       &info));
 
 	printf ("*** Deleting a file...\n");
-	CHECK (gp_filesystem_delete (fs, "/whatever/directory", "some.file2"));
+	CHECK (gp_filesystem_delete_file (fs, "/whatever/directory", "some.file2"));
 
 	gp_filesystem_dump (fs);
 
-	printf ("*** Deleting a directory...\n");
-	CHECK (gp_filesystem_delete (fs, "/whatever", NULL));
-
-	gp_filesystem_dump (fs);
-
-	printf ("*** Formatting the filesystem...\n");
-	CHECK (gp_filesystem_format (fs));
+	printf ("*** Resetting the filesystem...\n");
+	CHECK (gp_filesystem_reset (fs));
 
 	printf ("*** Setting the listing callbacks...\n");
 	CHECK (gp_filesystem_set_list_funcs (fs, file_list_func,
 					     folder_list_func, NULL));
+
+	gp_filesystem_dump (fs);
 
 	printf ("*** Getting file list for folder '/whatever/directory'...\n");
 	CHECK (gp_filesystem_list_folders (fs, "/whatever/directory", &list));

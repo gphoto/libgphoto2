@@ -178,9 +178,10 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	return GP_OK;
 }
 
-static int camera_file_delete (Camera *camera, const char *folder, 
-			const char *filename) 
+static int delete_file_func (CameraFilesystem *fs, const char *folder, 
+			     const char *filename, void *data) 
 {
+	Camera *camera = data;
 	dimagev_t *dimagev;
 	int file_number=0, ret;
 
@@ -191,7 +192,6 @@ static int camera_file_delete (Camera *camera, const char *folder,
 		return (file_number);
 
 	ret = dimagev_delete_picture(dimagev, (file_number + 1 ));
-	gp_filesystem_delete (camera->fs, folder, filename);
 
 	return (ret);
 }
@@ -250,9 +250,10 @@ static int camera_capture (Camera *camera, int capture_type, CameraFilePath *pat
 	return GP_OK;
 }
 
-static int camera_folder_put_file (Camera *camera, const char *folder, 
-			    CameraFile *file) 
+static int put_file_func (CameraFilesystem *fs, const char *folder, 
+			  CameraFile *file, void *data) 
 {
+	Camera *camera = data;
 	dimagev_t *dimagev;
 
 	dimagev = camera->camlib_data;
@@ -260,13 +261,14 @@ static int camera_folder_put_file (Camera *camera, const char *folder,
 	return dimagev_put_file(dimagev, file);
 }
 
-static int camera_folder_delete_all (Camera *camera, const char *folder) 
+static int delete_all_func (CameraFilesystem *fs, const char *folder,
+			    void *data) 
 {
+	Camera *camera = data;
 	dimagev_t *dimagev = camera->camlib_data;
 	int ret;
 
 	ret = dimagev_delete_all(dimagev);
-	gp_filesystem_delete_all (camera->fs, folder);
 
 	return (ret);
 }
@@ -493,9 +495,6 @@ int camera_init (Camera *camera)
 
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;
-        camera->functions->file_delete          = camera_file_delete;
-        camera->functions->folder_put_file      = camera_folder_put_file;
-        camera->functions->folder_delete_all    = camera_folder_delete_all;
         camera->functions->capture              = camera_capture;
         camera->functions->summary              = camera_summary;
         camera->functions->manual               = camera_manual;
@@ -542,7 +541,10 @@ int camera_init (Camera *camera)
 
 	/* Set up the filesystem */
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
-	gp_filesystem_set_file_func (camera->fs, get_file_func, camera);
+	gp_filesystem_set_file_funcs (camera->fs, get_file_func,
+				      delete_file_func, camera);
+	gp_filesystem_set_folder_funcs (camera->fs, put_file_func,
+					delete_all_func, camera);
 
         return GP_OK;
 }

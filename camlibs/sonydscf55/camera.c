@@ -170,7 +170,7 @@ int camera_init(Camera * camera)
 
 	gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL, camera);
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
-	gp_filesystem_set_file_func (camera->fs, get_file_func, camera);
+	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
 
 	return sony_init (camera, is_msac);
 }
