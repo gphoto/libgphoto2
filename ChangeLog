@@ -1,3 +1,7 @@
+2001-08-23  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2/list.c (gp_list_new): memset on *list instead of list.
+
 2001-08-22  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* camlibs/dimera/dimera3500.c: removed * / * embedded inside comments
