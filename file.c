@@ -55,13 +55,19 @@ int gp_file_session (CameraFile *file) {
 
 int gp_file_append (CameraFile *file, char *data, int size) {
 
+        char *t;
+
         if (size < 0)
                 return (GP_ERROR_BAD_PARAMETERS);
 
-        if (!file->data)
+        if (!file->data) {
                 file->data = (char*)malloc(sizeof(char) * (size));
-           else
-                file->data = (char*)realloc(file->data, sizeof(char) * (file->size + size));
+        } else {
+               t = (char*)realloc(file->data, sizeof(char) * (file->size + size));
+               if (!t)
+                   return GP_ERROR_NO_MEMORY;
+               file->data = t;
+        }
         memcpy(&file->data[file->size], data, size);
 
         file->bytes_read = size;
@@ -79,7 +85,7 @@ int gp_file_get_last_chunk (CameraFile *file, char **data, int *size) {
                 return (GP_ERROR);
         }
 
-        /* They must free the returned data data! */
+        /* They must free the returned data! */
         *data = (char*)malloc(file->bytes_read);
         memcpy(*data, &file->data[file->size - file->bytes_read], file->bytes_read);
         *size = file->bytes_read;
