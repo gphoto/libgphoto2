@@ -1,6 +1,7 @@
 *~ .*~
 Makefile Makefile.in
 rpmmacros rpmrc
+package.spec
 BUILD
 RPMS
 SOURCES
