@@ -24,6 +24,7 @@
 #include <stdio.h>
 
 #include <gphoto2-library.h>
+#include <gphoto2-debug.h>
 #include <gphoto2-port-log.h>
 
 #ifdef ENABLE_NLS
@@ -132,7 +133,7 @@ translate_gp_result (int result)
 }
 
 #define CPR(camera,result) {short r=(result); if (r!=PTP_RC_OK) {report_result ((camera), r); return (translate_ptp_result (r));}}
-#define CHECK(c,r) {int ret=(r);if(ret<0){log_error(c,ret);return(ret);}}
+#define CHECK(camera,result) {int ret=(result);if(ret<0){return(ret);}}
 
 
 static struct {
@@ -262,14 +263,17 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data)
 {
 	Camera *camera = data;
+	PTPObjectInfo objectinfo;
 	int i;
-	char filename[1024];
+	char filename[MAXFILELEN];
 
 
 	CPR (camera, ptp_getobjecthandles (&camera->pl->params, &camera->pl->params.handles));
 
 	 for (i = 0; i < camera->pl->params.handles.n; i++) {
-		 sprintf (filename, "image%04i.jpg", i); 	// 9999 pictures
+		 ptp_getobjectinfo(&camera->pl->params,
+		 &camera->pl->params.handles, i, &objectinfo);
+		 ptp_objectfilename (&objectinfo, filename);
 		 CR (gp_list_append (list, filename, NULL));
 	 }
 
@@ -284,20 +288,16 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 // Will be changed in future
 	Camera *camera = data;
 	unsigned char *fdata = NULL;
-	char image_id_string[] = {0, 0, 0, 0, 0};
 	unsigned long image_id;
 	PTPObjectInfo ptp_objectinfo;
 
 
-	if (strlen (filename) != 13)
-		return (GP_ERROR_FILE_NOT_FOUND);
 	if (strcmp (folder, "/"))
 		return (GP_ERROR_DIRECTORY_NOT_FOUND);
 
 
-	// Get ID from filename
-	strncpy (image_id_string, filename+5,4);
-	image_id = atol (image_id_string);
+	// Get image numer
+	image_id = gp_filesystem_number (fs, folder, filename);
 
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:

@@ -107,6 +107,7 @@
 
 #define PTP_REQ_HDR_LEN                 (2*sizeof(int)+2*sizeof(short))
 #define PTP_REQ_DATALEN			16384
+#define MAXFILELEN			256
 
 // PTP device info structure (returned by GetDevInfo)
 
@@ -186,14 +187,15 @@ struct _PTPParams {
 short ptp_opensession  (PTPParams *params, int session);
 short ptp_closesession (PTPParams *params);
 
-short ptp_getobjecthandles (PTPParams *params, PTPObjectHandles* objecthandles);
-short ptp_getobjectinfo   (PTPParams *params, PTPObjectHandles* objecthandles,
-			    int n, PTPObjectInfo* objectinfoarray);
-short ptp_getobject        (PTPParams *params, PTPObjectHandles* objecthandles,
-			    PTPObjectInfo* objectinfoarray, int n,
-			    char* object);
-short ptp_getthumb         (PTPParams *params, PTPObjectHandles* objecthandles,
-			    PTPObjectInfo* objectinfoarray, int n,
-			    char* object);
+short ptp_getobjecthandles(PTPParams *params, PTPObjectHandles* objecthandles);
+short ptp_getobjectinfo	(PTPParams *params, PTPObjectHandles* objecthandles,
+			int n, PTPObjectInfo* objectinfoarray);
+short ptp_getobject	(PTPParams *params, PTPObjectHandles* objecthandles,
+			PTPObjectInfo* objectinfo, int n,
+			char* object);
+short ptp_getthumb	(PTPParams *params, PTPObjectHandles* objecthandles,
+			PTPObjectInfo* objectinfo, int n,
+			char* object);
+void ptp_objectfilename	(PTPObjectInfo* objectinfo, char* filename);
 
 #endif /* __PTP_H__ */

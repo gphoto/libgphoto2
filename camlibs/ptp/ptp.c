@@ -471,7 +471,7 @@ ptp_getthumb(PTPParams* params, PTPObjectHandles* objecthandles,
 	*(int *)(req->data)=objecthandles->handler[n];
 	ret=ptp_sendreq(params, req, PTP_OC_GetThumb);
 	if (ret!=PTP_RC_OK) {
-		ptp_error (params, "ptp_getobject sending req");
+		ptp_error (params, "ptp_getthumb sending req");
 		free(req);
 		return PTP_ERROR_IO;
 	}
@@ -484,9 +484,9 @@ ptp_getthumb(PTPParams* params, PTPObjectHandles* objecthandles,
 	if ((ret!=PTP_RC_OK) ||
 		(req->type!=PTP_TYPE_DATA) ||
 		(req->code!=PTP_OC_GetThumb)) {
-		ptp_error (params, "ptp_getobject getting data");
+		ptp_error (params, "ptp_getthumb getting data");
 #ifdef DEBUG
-		ptp_error (params, "GetObject data returned:\nlen=0x%8.8x"
+		ptp_error (params, "GetThumb data returned:\nlen=0x%8.8x"
 		"type=0x%4.4x code=0x%4.4x ID=0x%8.8x\n",
 		req->len, req->type, req->code, req->trans_id);
 #endif
@@ -506,9 +506,9 @@ ptp_getthumb(PTPParams* params, PTPObjectHandles* objecthandles,
 	if ((ret!=PTP_RC_OK) ||
 		(req->type!=PTP_TYPE_RESP) ||
 		(req->code!=PTP_RC_OK)) {
-		ptp_error (params, "ptp_getobject getting resp");
+		ptp_error (params, "ptp_getthumb getting resp");
 #ifdef DEBUG
-		ptp_error (params, "GetObject data returned:\nlen=0x%8.8x"
+		ptp_error (params, "GetThumb data returned:\nlen=0x%8.8x"
 		"type=0x%4.4x code=0x%4.4x ID=0x%8.8x\n",
 		req->len, req->type, req->code, req->trans_id);
 #endif
@@ -518,4 +518,15 @@ ptp_getthumb(PTPParams* params, PTPObjectHandles* objecthandles,
 	free(req);
 	}
 	return PTP_RC_OK;
+}
+
+void
+ptp_objectfilename (PTPObjectInfo* objectinfo, char* filename) {
+	int i;
+
+	memset (filename, 0, MAXFILELEN);
+
+	for (i=0;i<objectinfo->filenamelen&&i<MAXFILELEN;i++) {
+		filename[i]=objectinfo->data[i*2];
+	}
 }
