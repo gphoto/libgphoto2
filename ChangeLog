@@ -3,6 +3,9 @@
 	* frontends/command-line/main.c: ENABLE_DEBUGGING -> DISABLE_DEBUGGING
 	* frontends/command-line/main.h: ENABLE_DEBUGGING -> DISABLE_DEBUGGING
 	* libgphoto2/gphoto2-filesys.c: dump filesystem using gp_log
+	* doc/gphoto2.txt: small addition about x-bit
+	* doc/api/gphoto2-sections.txt: added misc. functions and constants
+	* doc/api/*: reflect changed gphoto2-sections.txt
 	
 2001-12-07  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 

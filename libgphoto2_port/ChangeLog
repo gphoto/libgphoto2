@@ -1,6 +1,8 @@
 2001-12-07  Hans Ulrich Niedermann <hun@n-dimensional.de>
 
 	* libgphoto2_port/gphoto2-port-log.c: ENABLE_DEBUGGING -> DISABLE_DEBUGGING
+	* doc/gphoto2-port-sections.txt: added lots of constants, a few macros and
+	  created new sections about serial and usb specific stuff
 
 2001-12-07  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
