@@ -1,3 +1,7 @@
+2004-05-09  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* canon.[ch]: Added IXUS 500 as reported.
+
 2004-03-07  Marcus Meissner  <marcus@jet.franken.de>
 
 	* canon.c: We check for consecutive 0s, so check for !*temp_ch.
