@@ -282,7 +282,7 @@ int camera_start (Camera *camera)
 						      camera->pl->speed));
 		return (GP_OK);
 	case GP_PORT_USB:
-		CHECK_STOP (camera, gp_port_timeout_set (camera->port, 5000));
+		CHECK_STOP (camera, gp_port_set_timeout (camera->port, 5000));
 		return (GP_OK);
 	default:
 		return (GP_OK);
@@ -1288,7 +1288,7 @@ int camera_init (Camera *camera)
 	camera->pl->first_packet = 1;
 	camera->pl->usb_wrap = 0;
 
-	CHECK_FREE (camera, gp_port_settings_get (camera->port, &settings));
+	CHECK_FREE (camera, gp_port_get_settings (camera->port, &settings));
         switch (camera->port->type) {
         case GP_PORT_SERIAL:
 
@@ -1342,8 +1342,8 @@ int camera_init (Camera *camera)
                 return (GP_ERROR_UNKNOWN_PORT);
         }
 
-        CHECK_FREE (camera, gp_port_settings_set (camera->port, settings));
-        CHECK_FREE (camera, gp_port_timeout_set (camera->port, TIMEOUT));
+        CHECK_FREE (camera, gp_port_set_settings (camera->port, settings));
+        CHECK_FREE (camera, gp_port_set_timeout (camera->port, TIMEOUT));
 
         /* Establish a connection */
         CHECK_FREE (camera, camera_start (camera));
@@ -1362,7 +1362,7 @@ int camera_init (Camera *camera)
 		gp_log (GP_LOG_DEBUG, "sierra", "Could not set register 83 "
 			"to -1: %s", gp_camera_get_error (camera));
 
-        CHECK_STOP_FREE (camera, gp_port_timeout_set (camera->port, 50));
+        CHECK_STOP_FREE (camera, gp_port_set_timeout (camera->port, 50));
 
         /* Folder support? */
         ret = sierra_set_string_register (camera, 84, "\\", 1);
@@ -1376,7 +1376,7 @@ int camera_init (Camera *camera)
                                  "*** folder support: yes");
         }
 
-        CHECK_STOP_FREE (camera, gp_port_timeout_set (camera->port, TIMEOUT));
+        CHECK_STOP_FREE (camera, gp_port_set_timeout (camera->port, TIMEOUT));
 
         /* We are in "/" */
         strcpy (camera->pl->folder, "/");

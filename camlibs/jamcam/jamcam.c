@@ -299,7 +299,7 @@ int camera_init (Camera *camera)
 	camera->functions->manual 	= camera_manual;
 	camera->functions->about 	= camera_about;
 
-	CHECK (gp_port_settings_get (camera->port, &settings));
+	CHECK (gp_port_get_settings (camera->port, &settings));
 	switch( camera->port->type ) {
 	case GP_PORT_SERIAL:
 		settings.serial.speed 	 = 57600;
@@ -319,9 +319,9 @@ int camera_init (Camera *camera)
 		return ( GP_ERROR );
 		break;
 	}
-	CHECK (gp_port_settings_set (camera->port, settings));
+	CHECK (gp_port_set_settings (camera->port, settings));
 
-	CHECK (gp_port_timeout_set (camera->port, TIMEOUT));
+	CHECK (gp_port_set_timeout (camera->port, TIMEOUT));
 
 	/* check to see if camera is really there */
 	CHECK (jamcam_enq (camera));
