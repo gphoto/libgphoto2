@@ -90,7 +90,6 @@ typedef struct {
         gp_port*                device;
 	gboolean                image_id_long;
 	CameraFilesystem*       filesystem;
-	gboolean		filesystem_up_to_date;
 } konica_data_t;
 			
 /**************/
@@ -138,7 +137,7 @@ update_filesystem (Camera* camera)
 
         gp_debug_printf (GP_DEBUG_LOW, "konica",
 			 "*** Entering update_filesystem ***");
-        g_return_val_if_fail (camera,   GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (camera, GP_ERROR_BAD_PARAMETERS);
 
         konica_data = (konica_data_t *) camera->camlib_data;
 
@@ -167,7 +166,6 @@ update_filesystem (Camera* camera)
                 gp_filesystem_append (konica_data->filesystem, "/", filename);
                 g_free (filename);
         }
-	konica_data->filesystem_up_to_date = TRUE;
 
         gp_debug_printf (GP_DEBUG_LOW, "konica",
 			 "*** Leaving camera_file_list ***");
@@ -455,9 +453,10 @@ camera_init (Camera* camera)
 	konica_data = g_new (konica_data_t, 1);
 	camera->camlib_data = konica_data;
 	konica_data->filesystem = gp_filesystem_new ();
-	konica_data->filesystem_up_to_date = FALSE;
 	konica_data->device = device;
 	konica_data->image_id_long = image_id_long;
+
+	update_filesystem (camera);
 
 	return (GP_OK);
 }
@@ -491,13 +490,13 @@ camera_exit (Camera* camera)
 gint
 camera_folder_list_folders (Camera* camera, const gchar* folder, CameraList* list)
 {
-	g_return_val_if_fail (camera, 	GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (list, 	GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (folder, 	GP_ERROR_BAD_PARAMETERS);
-	
-	if (strcmp (folder, "/")) return (GP_ERROR_DIRECTORY_NOT_FOUND);
+	konica_data_t*  kd;
 
-	return (GP_OK);
+	g_return_val_if_fail (camera, 	GP_ERROR_BAD_PARAMETERS);
+
+	kd = (konica_data_t *) camera->camlib_data;
+	
+	return (gp_filesystem_list_folders (kd->filesystem, folder, list));
 }
 
 gint
@@ -529,33 +528,13 @@ camera_folder_delete_all (Camera* camera, const gchar* folder)
 gint 
 camera_folder_list_files (Camera* camera, const gchar* folder, CameraList* list)
 {
-	konica_data_t*	konica_data;
-	gint		count;
-	gint 		i;
+	konica_data_t*	kd;
 
-        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_file_list ***");
 	g_return_val_if_fail (camera, 	GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (list, 	GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (folder, 	GP_ERROR_BAD_PARAMETERS);
+	
+	kd = (konica_data_t *) camera->camlib_data;
 
-	if (strcmp (folder, "/")) return (GP_ERROR_DIRECTORY_NOT_FOUND);
-
-	konica_data = (konica_data_t *) camera->camlib_data;
-
-	/* If needed, bring the virtual filesystem up to date */
-	if (!konica_data->filesystem_up_to_date)
-		CHECK (update_filesystem (camera));
-
-	CHECK (count = gp_filesystem_count (konica_data->filesystem, folder));
-
-	for (i = 0; i < count; i++)
-		CHECK (gp_list_append (list,
-			gp_filesystem_name (konica_data->filesystem, folder, i),
-			GP_LIST_FILE));
-
-	gp_debug_printf (GP_DEBUG_LOW,
-			 "konica", "*** Leaving camera_file_list ***");
-	return (GP_OK);
+	return (gp_filesystem_list_files (kd->filesystem, folder, list));
 }
 
 
@@ -734,9 +713,6 @@ camera_capture (Camera* camera, gint type, CameraFilePath* path)
 	strcpy (path->name, tmp);
 	g_free (tmp);
 	strcpy (path->folder, "/");
-
-	if (!kd->filesystem_up_to_date) 
-		CHECK (update_filesystem (camera));
 
 	CHECK (gp_filesystem_append (kd->filesystem, path->folder, path->name));
 
