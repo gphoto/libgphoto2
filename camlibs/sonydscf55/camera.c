@@ -55,7 +55,7 @@ int camera_abilities(CameraAbilitiesList * list)
 		a.port = GP_PORT_SERIAL;
 		a.speed[0] = 0;
 		a.operations = GP_OPERATION_NONE;
-		a.file_operations = GP_FILE_OPERATION_PREVIEW;
+		a.file_operations = GP_FILE_OPERATION_PREVIEW | GP_FILE_OPERATION_EXIF;
 		a.folder_operations = GP_FOLDER_OPERATION_NONE;
 		gp_abilities_list_append(list, a);
 	}
