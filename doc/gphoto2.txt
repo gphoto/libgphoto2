@@ -70,6 +70,12 @@ Note that the following solution does *not* provide real security, but
 it allows you to run gphoto2 as a non-root user and avoids chance
 conflicts between to different users accessing the camera.
 
+0. Load your USB driver and mount the USB device filesystem, i.e. e.g.
+      modprobe usb-uhci
+      modprobe usb-ohci
+      mount -t usbdevfs /proc/bus/usb
+   Modern distributions like Redhat 7.2 handle this automatically.
+
 1. Add the output of "gphoto2 --print-usb-usermap" to
    /etc/hotplug/usb.usermap
 
