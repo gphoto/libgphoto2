@@ -1,3 +1,5 @@
+EXTRA_DIST = .indent.pro Changelog canon.df makefile.os2 mkpatch Protocol
+
 camlibdir = $(prefix)/lib/gphoto2
 camlib_LTLIBRARIES = libgphoto2_canon.la
 
@@ -9,7 +11,8 @@ libgphoto2_canon_la_SOURCES =\
  canon.c canon.h\
  psa50.c psa50.h\
  serial.c serial.h \
- crc.c crc.h
+ crc.c crc.h \
+ util.c util.h
 
 libgphoto2_canon_la_LDFLAGS =\
  -avoid-version -g\

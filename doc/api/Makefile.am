@@ -9,7 +9,7 @@ DOC_MAIN_SGML_FILE=gphoto2-api.sgml
 # The directory containing the source code (if it contains documentation).
 DOC_SOURCE_DIR=$(top_srcdir)/libgphoto2
 
-EXTRA_DIST=gphoto2-api.sgml
+EXTRA_DIST = gphoto2-api.sgml gphoto2-sections.txt
 
 if ENABLE_GTK_DOC
 htmldir = @HTML_DIR@

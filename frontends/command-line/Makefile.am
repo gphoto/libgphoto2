@@ -1,5 +1,7 @@
 ## Process this file with automake to create a GNU Makefile
 
+EXTRA_DIST = makefile.os2
+
 bin_PROGRAMS = gphoto2
 
 CFLAGS = @CFLAGS@ -g 

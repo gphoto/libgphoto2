@@ -12,6 +12,7 @@ libgphoto2_port_la_LDFLAGS = -version-info @LIBGPPORT_VERSION_INFO@
 libgphoto2_port_la_SOURCES =	\
 	gphoto2-port-core.c	\
 	gphoto2-port-log.c	\
+	gphoto2-port-library.h	\
 	gp_port.c \
 	result.c \
 	portability.c

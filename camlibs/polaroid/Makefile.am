@@ -1,3 +1,5 @@
+EXTRA_DIST = jpeg.txt jpeghead.h
+
 camlibdir = $(prefix)/lib/gphoto2
 camlib_LTLIBRARIES =			\
 	libgphoto2_polaroid_pdc320.la	\
@@ -6,7 +8,7 @@ camlib_LTLIBRARIES =			\
 
 INCLUDES = -I$(top_srcdir)/include  -I$(top_srcdir)/libgphoto2
 
-libgphoto2_polaroid_pdc320_la_SOURCES = pdc320.c
+libgphoto2_polaroid_pdc320_la_SOURCES = pdc320.c pdc320.h
 libgphoto2_polaroid_pdc640_la_SOURCES = pdc640.c
 libgphoto2_polaroid_pdc700_la_SOURCES = pdc700.c
 

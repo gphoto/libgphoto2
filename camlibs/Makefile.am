@@ -2,3 +2,4 @@
 
 SUBDIRS = @SUBDIRS_CAMLIBS@
 
+EXTRA_DIST = makefile.os2

@@ -1,3 +1,5 @@
+EXTRA_DIST = stv0680.df makefile.os2 CREDITS LICENCE
+
 camlibdir = $(prefix)/lib/gphoto2
 camlib_LTLIBRARIES = libgphoto2_stv0680.la
 

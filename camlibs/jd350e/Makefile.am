@@ -1,3 +1,5 @@
+EXTRA_DIST = CREDITS LICENCE
+
 camlibdir = $(prefix)/lib/gphoto2
 camlib_LTLIBRARIES = libgphoto2_jd350e.la
 

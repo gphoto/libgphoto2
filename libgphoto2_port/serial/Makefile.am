@@ -1,3 +1,5 @@
+EXTRA_DIST = makefile.os2 serial.df
+
 ## Specify some includes and versioning
 INCLUDES = -I../ $(VERSION_FLAGS) -I$(top_srcdir)/include
 VERSION_FLAGS = -DLIBGPPORT_VERSION=\"@LIBGPPORT_VERSION@\" -DHAVE_TERMIOS_H

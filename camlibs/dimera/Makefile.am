@@ -1,3 +1,5 @@
+EXTRA_DIST = dimera.df makefile.os2 CREDITS Protocol.txt
+
 camlibdir = $(prefix)/lib/gphoto2
 camlib_LTLIBRARIES = libgphoto2_dimera3500.la
 
