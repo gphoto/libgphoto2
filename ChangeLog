@@ -1,3 +1,8 @@
+2001-10-04  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2/filesys.c: Only spew debugging messages in case of error -
+	there don't seem to be serious bugs in there any more.
+
 2001-10-04  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* camlibs/kodak/dc240/library.c: patch by Peter Fales <peter@fales.com>

@@ -124,9 +124,6 @@ gp_filesystem_folder_number (CameraFilesystem *fs, const char *folder)
 	CHECK_NULL (fs && folder);
 	CHECK_ABS (folder);
 
-	gp_debug_printf (GP_DEBUG_HIGH, "core", "Looking for folder '%s'...",
-			 folder);
-
 	/*
 	 * We are nice to front-end/camera-driver writers - we'll ignore
 	 * trailing slashes (if any).
@@ -140,11 +137,12 @@ gp_filesystem_folder_number (CameraFilesystem *fs, const char *folder)
 		    (len == strlen (fs->folder[x].name)))
 			return (x);
 
-	gp_debug_printf (GP_DEBUG_HIGH, "core", "... not found.");
-
 	/* Ok, we didn't find the folder. Do we have a parent? */
-	if (!strcmp (folder, "/"))
+	if (!strcmp (folder, "/")) {
+		gp_debug_printf (GP_DEBUG_HIGH, "core", "Could not find "
+				 "folder '%s'.", folder);
 		return (GP_ERROR_DIRECTORY_NOT_FOUND);
+	}
 
 	/* If the parent folder is not dirty, return. */
 	strncpy (buf, folder, len);
@@ -157,8 +155,12 @@ gp_filesystem_folder_number (CameraFilesystem *fs, const char *folder)
 	else
 		buf[y + 1] = '\0'; /* Parent is root */
 	CHECK_RESULT (x = gp_filesystem_folder_number (fs, buf));
-	if (!fs->folder[x].folders_dirty)
+	if (!fs->folder[x].folders_dirty) {
+		gp_debug_printf (GP_DEBUG_HIGH, "core", "Folder '%s' is up "
+				 "to date but does not contain a folder "
+				 "'%s'.", buf, folder);
 		return (GP_ERROR_DIRECTORY_NOT_FOUND);
+	}
 
 	/*
 	 * The parent folder is dirty. List the folders in the parent 
@@ -179,15 +181,18 @@ gp_filesystem_append_folder (CameraFilesystem *fs, const char *folder)
 	CHECK_NULL (fs && folder);
 	CHECK_ABS (folder);
 
-	gp_debug_printf (GP_DEBUG_HIGH, "core", "Appending folder '%s'...",
-			 folder);
-
 	/* Make sure the directory doesn't exist */
 	x = gp_filesystem_folder_number (fs, folder);
-	if (x >= 0)
+	if (x >= 0) {
+		gp_debug_printf (GP_DEBUG_HIGH, "core", "Could not append "
+				 "folder '%s' as this folder already exists.",
+				 folder);
 		return (GP_ERROR_DIRECTORY_EXISTS);
-	else if (x != GP_ERROR_DIRECTORY_NOT_FOUND)
+	} else if (x != GP_ERROR_DIRECTORY_NOT_FOUND) {
+		gp_debug_printf (GP_DEBUG_HIGH, "core", "Could not append "
+				 "folder '%s'.", folder);
 		return (x);
+	}
 
 	/* Make sure the parent exist. If not, create it. */
 	strcpy (buf, folder);
@@ -196,13 +201,15 @@ gp_filesystem_append_folder (CameraFilesystem *fs, const char *folder)
 			break;
 	if (x > 0) {
 		buf[x] = '\0';
-		gp_debug_printf (GP_DEBUG_HIGH, "core", "Making sure that "
-				 "parent '%s' exists...", buf);
 		x = gp_filesystem_folder_number (fs, buf);
 		if (x == GP_ERROR_DIRECTORY_NOT_FOUND)
 			CHECK_RESULT (gp_filesystem_append_folder (fs, buf))
-		else if (x < 0)
+		else if (x < 0) {
+			gp_debug_printf (GP_DEBUG_HIGH, "core", "Could not "
+					 "append folder '%s' to '%s'.",
+					 folder, buf);
 			return (x);
+		}
 	}
 
 	/* Allocate the folder pointer and the actual folder */
@@ -223,8 +230,6 @@ gp_filesystem_append_folder (CameraFilesystem *fs, const char *folder)
 	fs->folder[fs->count - 1].files_dirty = 1;
 	fs->folder[fs->count - 1].folders_dirty = 1;
 
-	gp_debug_printf (GP_DEBUG_HIGH, "core", "Added folder '%s'...", folder);
-
 	return (GP_OK);
 }
 
@@ -238,15 +243,15 @@ gp_filesystem_append (CameraFilesystem *fs, const char *folder,
 	CHECK_NULL (fs && folder);
 	CHECK_ABS (folder);
 
-	gp_debug_printf (GP_DEBUG_HIGH, "core", "Appending '%s' to folder "
-			 "'%s'...", filename, folder);
-
 	/* Check for existence */
 	x = gp_filesystem_folder_number (fs, folder);
 	if (x == GP_ERROR_DIRECTORY_NOT_FOUND)
 		CHECK_RESULT (gp_filesystem_append_folder (fs, folder))
-	else if (x < 0)
+	else if (x < 0) {
+		gp_debug_printf (GP_DEBUG_HIGH, "core", "Could not append "
+				 "'%s' to folder '%s'.", filename, folder);
 		return (x);
+	}
 	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
 
 	if (!filename)
@@ -254,10 +259,16 @@ gp_filesystem_append (CameraFilesystem *fs, const char *folder,
 
 	/* If file exists, return error */
 	y = gp_filesystem_number (fs, folder, filename);
-	if (y >= 0)
+	if (y >= 0) {
+		gp_debug_printf (GP_DEBUG_HIGH, "core", "Could not append "
+				 "'%s' to folder '%s'. That file already "
+				 "exists.", filename, folder);
 		return (GP_ERROR_FILE_EXISTS);
-	else if (y != GP_ERROR_FILE_NOT_FOUND)
+	} else if (y != GP_ERROR_FILE_NOT_FOUND) {
+		gp_debug_printf (GP_DEBUG_HIGH, "core", "Could not append "
+				 "'%s' to folder '%s'.", filename, folder);
 		return (y);
+	}
 
 	/* Allocate a new file in that folder and append the file */
 	if (!fs->folder[x].count)
@@ -309,9 +320,6 @@ gp_filesystem_delete_all_files (CameraFilesystem *fs, const char *folder)
 	CHECK_NULL (fs && folder);
 	CHECK_ABS (folder);
 
-	gp_debug_printf (GP_DEBUG_HIGH, "core", "Deleting all files in "
-			 "'%s'...", folder);
-
 	CHECK_RESULT (gp_filesystem_list_files (fs, folder, &list));
 	CHECK_RESULT (count = gp_list_count (&list));
 	for (x = 0; x < count; x++) {
@@ -333,9 +341,6 @@ gp_filesystem_delete_all_folders (CameraFilesystem *fs, const char *folder)
 
 	CHECK_NULL (fs && folder);
 	CHECK_ABS (folder);
-
-	gp_debug_printf (GP_DEBUG_HIGH, "core", "Deleting all folders in "
-			 "'%s'...", folder);
 
 	CHECK_RESULT (gp_filesystem_list_folders (fs, folder, &list));
 	CHECK_RESULT (count = gp_list_count (&list));
@@ -408,9 +413,6 @@ gp_filesystem_list_folders (CameraFilesystem *fs, const char *folder,
 	CHECK_NULL (fs && folder && list);
 	CHECK_ABS (folder);
 
-	gp_debug_printf (GP_DEBUG_HIGH, "core", "Listing folders in '%s'...",
-			 folder);
-
 	list->count = 0;
 
 	/* Search the folder */
@@ -471,9 +473,6 @@ gp_filesystem_list_folders (CameraFilesystem *fs, const char *folder,
 	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
 	fs->folder[x].folders_dirty = 0;
 
-	gp_debug_printf (GP_DEBUG_HIGH, "core", "Folder listing in '%s' done.",
-			 folder);
-
 	return (GP_OK);
 }
 
@@ -487,8 +486,6 @@ gp_filesystem_populate (CameraFilesystem *fs, const char *folder,
 	CHECK_NULL (fs && folder && format);
 	CHECK_ABS (folder);
 
-	gp_debug_printf (GP_DEBUG_HIGH, "core", "Populating '%s'...", folder);
-
 	/*
 	 * Search for the folder and create one if it doesn't exist. If it
 	 * exists, delete the contents.
@@ -498,8 +495,11 @@ gp_filesystem_populate (CameraFilesystem *fs, const char *folder,
 		CHECK_RESULT (gp_filesystem_delete_all (fs, folder))
 	else if (x == GP_ERROR_DIRECTORY_NOT_FOUND)
 		CHECK_RESULT (gp_filesystem_append_folder (fs, folder))
-	else if (x < 0)
+	else if (x < 0) {
+		gp_debug_printf (GP_DEBUG_HIGH, "core", "Could not populate "
+				 "folder '%s' with '%s'.", folder, format);
 		return (x);
+	}
 	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
 
         /* Allocate the files in that (empty) folder */
@@ -539,10 +539,6 @@ gp_filesystem_delete (CameraFilesystem *fs, const char *folder,
 
 	CHECK_NULL (fs && folder);
 	CHECK_ABS (folder);
-
-	gp_debug_printf (GP_DEBUG_HIGH, "core",
-			 "Deleting file '%s' in folder '%s'...",
-			 filename, folder);
 
 	/* If no file is given, first delete the contents of the folder */
 	if (!filename)
@@ -600,9 +596,6 @@ gp_filesystem_delete_all (CameraFilesystem *fs, const char *folder)
 	CHECK_NULL (fs && folder);
 	CHECK_ABS (folder);
 
-	gp_debug_printf (GP_DEBUG_HIGH, "core",
-			 "Deleting everything in '%s'...", folder);
-
 	/* Delete subfolders and files */
 	CHECK_RESULT (gp_filesystem_delete_all_folders (fs, folder));
 	CHECK_RESULT (gp_filesystem_delete_all_files (fs, folder));
@@ -616,8 +609,6 @@ gp_filesystem_format (CameraFilesystem *fs)
         int x;
 
 	CHECK_NULL (fs);
-
-	gp_debug_printf (GP_DEBUG_HIGH, "core", "Formatting file system...");
 
 	/*
 	 * Set all folders to 'clean' so that we don't have
@@ -732,6 +723,8 @@ gp_filesystem_get_folder (CameraFilesystem *fs, const char *filename,
 				return (GP_OK);
 			}
 
+	gp_debug_printf (GP_DEBUG_HIGH, "core", "Could not find file '%s'.",
+			 filename);
 	return (GP_ERROR_FILE_NOT_FOUND);
 }
 
@@ -774,8 +767,11 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 	CHECK_NULL (fs && folder && file && filename);
 	CHECK_ABS (folder);
 
-	if (!fs->get_file_func)
+	if (!fs->get_file_func) {
+		gp_debug_printf (GP_DEBUG_HIGH, "core", "No get_file_func "
+				 "available.");
 		return (GP_ERROR_NOT_SUPPORTED);
+	}
 
 	/* Search folder and file */
 	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
@@ -798,6 +794,7 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 					fs->folder[x].file[y].raw));
 		break;
 	default:
+		gp_debug_printf (GP_DEBUG_HIGH, "core", "Unknown file type.");
 		return (GP_ERROR);
 	}
 
@@ -821,6 +818,7 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 		break;
 	default:
 		gp_file_unref (tmp);
+		gp_debug_printf (GP_DEBUG_HIGH, "core", "Unknown file type.");
 		return (GP_ERROR);
 	}
 
@@ -855,11 +853,11 @@ gp_filesystem_get_info (CameraFilesystem *fs, const char *folder,
 	CHECK_NULL (fs && folder && filename && info);
 	CHECK_ABS (folder);
 
-	gp_debug_printf (GP_DEBUG_HIGH, "core", "Getting info for '%s' in "
-			 "folder '%s'...", filename, folder);
-
-	if (!fs->get_info_func)
+	if (!fs->get_info_func) {
+		gp_debug_printf (GP_DEBUG_HIGH, "core", "No get_info_func "
+				 "available.");
 		return (GP_ERROR_NOT_SUPPORTED);
+	}
 
 	/* Search folder and file and get info if needed */
 	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
@@ -885,8 +883,11 @@ gp_filesystem_set_info (CameraFilesystem *fs, const char *folder,
 	CHECK_NULL (fs && folder && filename && info);
 	CHECK_ABS (folder);
 
-	if (!fs->set_info_func)
+	if (!fs->set_info_func) {
+		gp_debug_printf (GP_DEBUG_HIGH, "core", "No set_info_func "
+				 "available.");
 		return (GP_ERROR_NOT_SUPPORTED);
+	}
 
 	/* Search folder and file and set info */
 	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
