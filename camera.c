@@ -51,8 +51,8 @@ static int glob_session_camera = 0;
 #define CHECK_NULL(r)              {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CHECK_RESULT(result)       {int r = (result); if (r < 0) return (r);}
 
-#define CHECK_OPEN(c)              {int r = gp_port_open ((c)->port); if (r < 0) {gp_camera_status ((c), ""); return (r);}}
-#define CHECK_CLOSE(c)             {gp_port_close ((c)->port);}
+#define CHECK_OPEN(c)              {int r = ((c)->port ? gp_port_open ((c)->port) : GP_OK); if (r < 0) {gp_camera_status ((c), ""); return (r);}}
+#define CHECK_CLOSE(c)             {if ((c)->port) gp_port_close ((c)->port);}
 
 #define CRS(c,res) {int r = (res); if (r < 0) {gp_camera_status ((c), ""); return (r);}}
 
