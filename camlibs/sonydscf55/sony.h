@@ -1,5 +1,5 @@
 /* Sony DSC-F55 & MSAC-SR1 - gPhoto2 camera library
- * Copyright © 2001, 2002 Raymond Penners <raymond@dotsphinx.com>
+ * Copyright © 2001, 2002, 2004 Raymond Penners <raymond@dotsphinx.com>
  * Copyright © 2000 Mark Davies <mdavies@dial.pipex.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -38,6 +38,7 @@ typedef struct _tagPacket {
 struct _CameraPrivateLibrary {
 	unsigned short int sequence_id;
 	int msac_sr1;
+	long current_baud_rate;
 };
 
 int sony_init(Camera * camera, int ismsac);
@@ -48,6 +49,7 @@ int sony_image_get(Camera * camera, int imageid, CameraFile * file, GPContext *c
 int sony_thumbnail_get(Camera * camera, int imageid, CameraFile * file, GPContext *context);
 int sony_exif_get(Camera * camera, int imageid, CameraFile * file, GPContext *context);
 int sony_image_info(Camera * camera, int imageid, CameraFileInfo * info, GPContext *context);
+int sony_file_name_get(Camera *camera, int imageid, char buf[13]);
 
 #endif				/* SONY_H */
 

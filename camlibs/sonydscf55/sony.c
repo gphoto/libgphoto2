@@ -1,5 +1,5 @@
 /* Sony DSC-F55 & MSAC-SR1 - gPhoto2 camera library
- * Copyright © 2001, 2002 Raymond Penners <raymond@dotsphinx.com>
+ * Copyright © 2001, 2002, 2004 Raymond Penners <raymond@dotsphinx.com>
  * Copyright © 2000 Mark Davies <mdavies@dial.pipex.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -309,6 +309,15 @@ static int sony_packet_write(Camera * camera, Packet * p)
 	GP_DEBUG(
 			"sony_packet_write()");
 
+        /**
+	 * This usleep is necessary when using (relatively) fast CPUs,
+	 * as P4 2Ghz. Without it gphoto2 stops with a segmentation fault
+	 * and the --debug message sony_packet_validate: invalid sequence
+	 * Failed to read packet during transfer. The delay is somewhat
+	 * arbitrary. (alberto-g@(remove_me)inventati.org)
+	 **/
+	usleep(10000);
+
 	rc = gp_port_write(camera->port, &START_PACKET, 1);
 
 	p->buffer[p->length] = p->checksum;
@@ -464,14 +473,24 @@ static int sony_baud_set(Camera * camera, long baud)
 
 	GP_DEBUG( "sony_baud_set(%ld)",
 			baud);
-	/* FIXME */
-	SetTransferRate[3] = sony_baud_to_id(baud);
 
-	rc = sony_converse(camera, &dp, SetTransferRate, 4);
-	if (rc == GP_OK) {
-		sony_baud_port_set(camera, baud);
-		rc = sony_converse(camera, &dp, EmptyPacket, 1);
-		usleep(100000);	/* 50000 was good too, jw */
+	if (camera->pl->current_baud_rate != baud) {
+		/* FIXME */
+		SetTransferRate[3] = sony_baud_to_id(baud);
+	
+		rc = sony_converse(camera, &dp, SetTransferRate, 4);
+		if (rc == GP_OK) {
+			sony_baud_port_set(camera, baud);
+			rc = sony_converse(camera, &dp, EmptyPacket, 1);
+			if (rc == GP_OK) {
+				camera->pl->current_baud_rate = baud;
+			}
+			usleep(100000);	/* 50000 was good too, jw */
+
+		}
+	}
+	else {
+		rc = GP_OK;
 	}
 	return rc;
 }
@@ -534,6 +553,9 @@ int sony_init (Camera * camera, int msac)
 {
 	int rc;
 
+	camera->pl->msac_sr1 = msac;
+	camera->pl->current_baud_rate = -1;
+	
 	rc = sony_init_port (camera);
 	if (rc == GP_OK)
 		rc = sony_init_first_contact (camera);
@@ -602,6 +624,31 @@ int sony_mpeg_count(Camera * camera)
 
 
 /**
+ * Fetches file name.
+ */
+int
+sony_file_name_get(Camera *camera, int imageid, char buf[13])
+{
+       Packet dp;
+       int rc;
+ 
+       GP_DEBUG( "sony_file_name_get()");
+       sony_baud_set(camera, baud_rate);
+       /* FIXME: Not nice, changing global data like this. */
+       SelectImage[3] = (imageid >> 8);
+       SelectImage[4] = imageid & 0xff;
+       rc = sony_converse(camera, &dp, SelectImage, 7);
+       if (rc == GP_OK) {
+	       memcpy(buf, &dp.buffer[5], 8);
+	       buf[8] = '.';
+	       memcpy(buf+9, &dp.buffer[5+8], 3);
+	       buf[12] = 0;
+       }
+       return rc;
+}
+
+
+/**
  * Fetches an image.
  */
 static int
@@ -621,9 +668,10 @@ sony_file_get(Camera * camera, int imageid, int file_type,
 	rc = gp_file_clean(file);
 	if (rc == GP_OK) {
 		gp_file_set_mime_type (file, GP_MIME_JPEG);
-		/* FIXME: There appears to be a file name at dp.buffer+5 */
-		/* after a SelectImage. We could use that for the real */
-		/* file name instead of our own mockup ("dsc%d.jpg"). */
+		/* The file name we specify here is not important,
+		 * since the calling function, gp_filesystem_get_file_impl,
+		 * overwrites it with the correct one.
+		 */
 		sprintf(buffer, SONY_FILE_NAME_FMT, imageid);
 		gp_file_set_name (file, buffer);
 

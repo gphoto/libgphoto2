@@ -1,5 +1,5 @@
 /* Sony DSC-F55 & MSAC-SR1 - gPhoto2 camera library
- * Copyright © 2001, 2002 Raymond Penners <raymond@dotsphinx.com>
+ * Copyright © 2001, 2002, 2004 Raymond Penners <raymond@dotsphinx.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -102,7 +102,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data, GPContext *context)
 {
 	Camera *camera = data;
-	int count;
+	int count, i, rc;
 
 	GP_DEBUG(
 			"camera_folder_list_files()");
@@ -111,10 +111,17 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	if (count < 0)
 		return (count);
 
-	/* Populate the filesystem */
-	gp_list_populate(list, SONY_FILE_NAME_FMT, count);
-
-	return GP_OK;
+	rc = GP_OK;
+	for (i = 1; i <= count; i++) {
+		char buf[13];
+		rc = sony_file_name_get(camera, i, buf);
+		if (rc != GP_OK) {
+			break;
+		}
+		gp_list_append(list, buf, NULL);
+	}
+	
+	return rc;
 }
 
 static int
