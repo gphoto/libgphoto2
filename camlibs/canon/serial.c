@@ -117,7 +117,7 @@ int canon_serial_get_cts(gp_port *gdev)
  * 
  * return 1 on success, 0 on failure
  ****************************************************************************/
-#ifdef GP_PORT_USB
+#ifdef GP_PORT_SUPPORTED_USB
 int canon_usb_probe(gp_port *gdev, int i)
 {
 	
@@ -126,8 +126,10 @@ int canon_usb_probe(gp_port *gdev, int i)
 
 	if (gp_port_usb_find_device(gdev, camera_to_usb[i].idVendor,
 							 camera_to_usb[i].idProduct) == GP_OK) {
-		printf("found '%s' @ %s/%s\n", camera_to_usb[i].name,
-			   gdev->usb_device->bus->dirname, gdev->usb_device->filename);
+//		printf("found '%s' @ %s/%s\n", camera_to_usb[i].name,
+//			   gdev->usb_device->bus->dirname, gdev->usb_device->filename);
+		printf("found '%s' @\n", camera_to_usb[i].name);
+
 		return 1;
 	}
 
@@ -154,7 +156,7 @@ err:
 int canon_serial_init(Camera *camera, const char *devname)
 {
 	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
-#ifdef GP_PORT_USB
+#ifdef GP_PORT_SUPPORTED_USB
 	int i;
     char msg[65536];
 //    char mem;
@@ -168,7 +170,7 @@ int canon_serial_init(Camera *camera, const char *devname)
 	
 	switch (canon_comm_method) {
 	 case CANON_USB:
-#ifdef GP_PORT_USB
+#ifdef GP_PORT_SUPPORTED_USB
 		cs->gdev = gp_port_new(GP_PORT_USB);
 		if (!cs->gdev) {
 			return -1;

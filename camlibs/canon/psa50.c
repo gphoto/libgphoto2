@@ -623,7 +623,7 @@ void intatpos(unsigned char *block, int pos, int integer )
  */
 static unsigned char *psa50_usb_dialogue(Camera *camera,char cmd1, char cmd2, int cmd3, int *retlen, const char *payload, int pay_length)
 {
-#ifdef GP_PORT_USB
+#ifdef GP_PORT_SUPPORTED_USB
         struct canon_info *cs = (struct canon_info*)camera->camlib_data;
         int msgsize;
         char packet[0x3000];
@@ -1502,7 +1502,7 @@ unsigned char *psa50_get_file_serial(Camera *camera, const char *name,int *lengt
 
 unsigned char *psa50_get_file_usb(Camera *camera, const char *name,int *length)
 {
-#ifdef GP_PORT_USB
+#ifdef GP_PORT_SUPPORTED_USB
         struct canon_info *cs = (struct canon_info*)camera->camlib_data;
     unsigned char *file = NULL;
     unsigned char msg[0x3000];
