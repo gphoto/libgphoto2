@@ -1,3 +1,7 @@
+2003-04-17  Marcus Meissner <marcus@jet.franken.de>
+	
+	* pdc640.c: Added SiPix StyleCam (0x0d64/0x1001).
+
 2003-03-02  Marcus Meissner <marcus@jet.franken.de>
 	
 	* pdc640.c,jd350e.[ch]: Meade binocs need filter and
