@@ -2,6 +2,7 @@
 #include <gphoto2.h>
 #include <gpio/gpio.h>
 
+#include "library.h"
 #include "fujitsu.h"
 
 int 		glob_debug	=0;
@@ -11,7 +12,7 @@ char		glob_folder[128];
 void debug_print(char *message) {
 
 	if (glob_debug) {
-		printf("FUJITSU: ");
+		printf("fujitsu: ");
 		printf(message);
 		printf("\n");
 	}
@@ -112,25 +113,20 @@ int camera_init (CameraInit *init) {
 	settings.serial.stopbits = 1;
 	gpio_set_settings(glob_dev, settings);
 
-	if (gpio_open(glob_dev)==GPIO_ERROR)
+	if (gpio_open(glob_dev)==GPIO_ERROR) {
+		interface_message("Can not open the port");
 		return (GP_ERROR);
+	}
 
-	if (fujitsu_ping(glob_dev)==GP_ERROR)
+	if (fujitsu_ping(glob_dev)==GP_ERROR) {
+		interface_message("Can not establish communications with the camera");
 		return (GP_ERROR);
+	}
 
-	/* Build the packet */
-	p = fujitsu_build_packet(TYPE_COMMAND, SUBTYPE_COMMAND_FIRST,3);	
-
-	/* Fill in the data */
-	p[3] = 0x00;
-	p[4] = 0x11;
-	p[5] = 0x05;
-
-	l = fujitsu_process_packet(p);
-printf("length=%i\n");
-	gpio_write(glob_dev, p, l);
-	gpio_read(glob_dev, buf, 1);
-printf("got: 0x%02x\n", buf[0]);
+	if (fujitsu_set_int_register(glob_dev, 17, 5)==GP_ERROR) {
+		interface_message("Can not set the serial port speed");
+		return (GP_ERROR);
+	}
 
 /*
 	if (init->speed)
@@ -138,6 +134,7 @@ printf("got: 0x%02x\n", buf[0]);
 	   else
 		settings,serial.speed = 115200;
 */	
+
 	return (GP_OK);
 }
 
