@@ -47,6 +47,16 @@ static int glob_session_camera = 0;
 int
 gp_camera_new (Camera **camera)
 {
+	int result;
+
+	if (!camera)
+		return (GP_ERROR_BAD_PARAMETERS);
+
+	/* Be nice to frontend-writers... */
+	if (!gp_is_initialized ())
+		if ((result = gp_init (GP_DEBUG_NONE)) != GP_OK)
+			return (result);
+		
 
         *camera = malloc (sizeof (Camera));
 	if (!*camera) 
