@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <gtk/gtk.h>
 #include <gphoto2.h>
 
@@ -19,9 +20,63 @@ void debug_print (char *message) {
 		printf("%s\n", message);
 }
 
+void idle() {
+	/* Let's GTK do some processing */
+
+        while (gtk_events_pending())
+                gtk_main_iteration();
+	usleep(300000);
+        while (gtk_events_pending())
+                gtk_main_iteration();
+}
+
+int camera_set() {
+	/* Takes the settings 'camera', 'port', and 'speed' and
+	   sets it to the current camera */
+
+	GtkWidget *message, *message_label;
+	CameraPortSettings ps;
+	char camera[1024], port[1024], speed[1024];
+
+	/* create a transient window */
+	message = create_message_window_transient();
+	message_label = (GtkWidget*) lookup_widget(message, "message");
+	gtk_label_set_text(GTK_LABEL(message_label), "Initializing camera...");
+
+	if (gp_setting_get("camera", camera)==GP_ERROR) {
+		gp_message("You must choose a camera");
+		camera_select();
+	}
+
+	gp_setting_get("port", port);
+	gp_setting_get("speed", speed);
+
+	strcpy(ps.path, port);
+	if (strlen(speed)>0)
+		ps.speed = atoi(speed);
+	   else
+		ps.speed = 0; /* use the default speed */
+
+	gtk_widget_show_all(message);
+	idle();
+
+	if (gp_camera_set_by_name(camera, &ps)==GP_ERROR) {
+		gtk_widget_destroy(message);
+		gp_gtk_camera_init = 0;
+		return (GP_ERROR);
+	}
+
+	gtk_widget_destroy(message);
+
+	gp_gtk_camera_init = 1;
+	return (GP_OK);
+
+}
+
 int main_quit(GtkWidget *widget, gpointer data) {
 
-	gp_exit();
+	if (gp_gtk_camera_init)
+		gp_exit();
 	gtk_main_quit();
 
 	return (FALSE);
@@ -139,19 +194,28 @@ void camera_select_update_port(GtkWidget *entry, gpointer data) {
 	if (strlen(new_port)==0)
 		return;
 
-	sprintf(buf, "Selected port: %s\n", new_port);
+	sprintf(buf, "Selected port: %s", new_port);
 	debug_print(buf);
 
 	window = (GtkWidget*)data;
 	speed  = (GtkWidget*)lookup_widget(window, "speed");
 	t      = (char*)gtk_object_get_data (GTK_OBJECT(window), new_port);
-	type   = (CameraPortType)atoi(t);
+	if (!t) {
+		debug_print("port type not being set");
+		return;
+	}
 
+	type   = (CameraPortType)atoi(t);
 	sprintf(buf, "%s path", new_port);
 	path = gtk_object_get_data(GTK_OBJECT(window), buf);
 
+	/* Disabled by default */
+	gtk_widget_set_sensitive(GTK_WIDGET(speed), FALSE);
 	if (type == GP_PORT_SERIAL)
 		gtk_widget_set_sensitive(GTK_WIDGET(speed), TRUE);
+	   else
+		gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(speed)->entry), "");
+
 }
 
 void camera_select_update_camera(GtkWidget *entry, gpointer data) {
@@ -173,25 +237,18 @@ void camera_select_update_camera(GtkWidget *entry, gpointer data) {
 	port   = (GtkWidget*)lookup_widget(window, "port");
 	speed  = (GtkWidget*)lookup_widget(window, "speed");
 
-	sprintf(buf, "Selected camera: %s\n", new_camera);
+	sprintf(buf, "Selected camera: %s", new_camera);
 	debug_print(buf);
 
 	if (gp_camera_abilities_by_name(new_camera, &a)==GP_ERROR) {
-		sprintf(buf, "Could not get abilities for %s\n", new_camera);
+		sprintf(buf, "Could not get abilities for %s", new_camera);
 		debug_print(buf);
 		return;
 	}
 
-	/* Do nothing if the device doesn't support any ports (ports ports) */
-	if (!a.serial && !a.parallel && !a.ieee1394 && !a.socket && !a.usb)
-		return;
-
-	/* Enable the port drop-down */
-	gtk_widget_set_sensitive(GTK_WIDGET(port), TRUE);
-
 	/* Get the number of ports */
 	if ((num_ports = gp_port_count())==GP_ERROR) {
-		gp_interface_message("Could not retrieve number of ports");
+		gp_message("Could not retrieve number of ports");
 		return;
 	}
 
@@ -215,17 +272,19 @@ void camera_select_update_camera(GtkWidget *entry, gpointer data) {
 			if (append) {
 				sprintf(buf, "%s (%s)", info.name, info.path);
 				port_list = g_list_append(port_list, strdup(buf));
+
 				/* Associate a path with this entry */
 				sprintf(buf1, "%s path", buf);
 				gtk_object_set_data(GTK_OBJECT(window), 
 					buf1, (gpointer)strdup(info.path));
+
 				/* Associate a type with this entry */
 				sprintf(buf1, "%i", info.type);
 				gtk_object_set_data(GTK_OBJECT(window), 
 					buf, (gpointer)strdup(buf1));
 			}
 		}  else {
-			gp_interface_message("Error retrieving the port list");
+			gp_message("Error retrieving the port list");
 		}
 	}
 	gtk_combo_set_popdown_strings(GTK_COMBO(port), port_list);
@@ -241,13 +300,15 @@ void camera_select_update_camera(GtkWidget *entry, gpointer data) {
 	}
 	gtk_combo_set_popdown_strings(GTK_COMBO(speed), speed_list);
 
-	
+	gtk_widget_set_sensitive(GTK_WIDGET(port), FALSE);
+	gtk_widget_set_sensitive(GTK_WIDGET(speed), FALSE);
+	if (a.serial || a.parallel || a.ieee1394 || a.socket || a.usb)
+		gtk_widget_set_sensitive(GTK_WIDGET(port), TRUE);
 }
 
 void camera_select() {
-	GtkWidget *window, *ok, *cancel, *camera, *port, *speed;
+	GtkWidget *window, *ok, *cancel, *camera, *port, *speed, *label;
 	GList *camera_list;
-	CameraPortSettings port_settings;
 	int num_cameras, x;
 	char buf[1024];
 	char *camera_name, *port_name, *port_path, *speed_name;
@@ -256,7 +317,7 @@ void camera_select() {
 
 	/* Get the number of cameras */
 	if ((num_cameras = gp_camera_count())==GP_ERROR) {
-		gp_interface_message("Could not retrieve number of cameras");
+		gp_message("Could not retrieve number of cameras");
 		return;
 	}
 
@@ -288,15 +349,23 @@ void camera_select() {
 	gtk_signal_connect(GTK_OBJECT(GTK_COMBO(port)->entry), "changed",
 		GTK_SIGNAL_FUNC (camera_select_update_port), (gpointer)window);
 
-	if (gp_get_setting("camera", buf)==GP_OK)
-		gtk_entry_set_text(GTK_ENTRY(camera), buf);
+	/* Retrieve the saved values */
+	if (gp_setting_get("camera", buf)==GP_OK)
+		gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(camera)->entry), buf);
+	if (gp_setting_get("port name", buf)==GP_OK)
+		gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(port)->entry), buf);
+	if (gp_setting_get("speed", buf)==GP_OK)
+		gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(speed)->entry), buf);
+
 camera_select_again:
 	if (wait_for_hide(window, ok, cancel) == 0) {
-		debug_print("clicked cancel!\n");
+		debug_print("clicked cancel!");
 		return;
 	}
 
-	debug_print("clicked ok!\n");
+	debug_print("clicked ok!");
+
+	idle(); /* let GTK catch up */
 
 	camera_name = (char*)gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(camera)->entry));
 	port_name   = (char*)gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(port)->entry));
@@ -307,7 +376,7 @@ camera_select_again:
 		goto camera_select_again;
 	}
 
-	if (strlen(port_name)==0) {
+	if ((strlen(port_name)==0)&&(GTK_WIDGET_SENSITIVE(port))) {
 		gp_message("You must choose a port");
 		goto camera_select_again;
 	}
@@ -317,72 +386,148 @@ camera_select_again:
 		goto camera_select_again;
 	}
 
-	sprintf(buf, "%s path", port_name);
-	port_path = gtk_object_get_data(GTK_OBJECT(window), buf);
+	gp_setting_set("camera", camera_name);
 
-	strcpy(port_settings.path, port_path);
-	port_settings.speed = atoi(speed_name);
-/*
-	if (gp_camera_set_by_name(
-	gp_setting_set("camera", (char*)gtk_
-*/
-	/* Set the camera */
-	/* Set the port */
+	if (GTK_WIDGET_SENSITIVE(port)) {
+		sprintf(buf, "%s path", port_name);
+		port_path = (char*)gtk_object_get_data(GTK_OBJECT(window), buf);
+		gp_setting_set("port name", port_name);
+		gp_setting_set("port", port_path);
+	}  else {
+		gp_setting_set("port name", "");
+		gp_setting_set("port", "");
+	}
+
+	if (GTK_WIDGET_SENSITIVE(speed))
+		gp_setting_set("speed", speed_name);
+	   else
+		gp_setting_set("speed", "");
+
+
+	if (camera_set()==GP_ERROR)
+		goto camera_select_again;
+
+	/* Clean up */
+	label = (GtkWidget*) lookup_widget(gp_gtk_main_window, "camera_label");
+	gtk_label_set_text(GTK_LABEL(label), camera_name);
+
+	gtk_widget_destroy(window);
 }
 
 void camera_index_thumbnails() {
 	debug_print("camera index thumbnails");
+
+	if (!gp_gtk_camera_init)
+		if (camera_set()==GP_ERROR) {return;}
 
 }
 
 void camera_index_no_thumbnails() {
 	debug_print("camera index no thumbnails");
 
+	if (!gp_gtk_camera_init)
+		if (camera_set()==GP_ERROR) {return;}
+
 }
 
 void camera_download_thumbnails() {
 	debug_print("camera download thumbnails");
+
+	if (!gp_gtk_camera_init)
+		if (camera_set()==GP_ERROR) {return;}
 
 }
 
 void camera_download_photos() {
 	debug_print("camera download photos");
 
+	if (!gp_gtk_camera_init)
+		if (camera_set()==GP_ERROR) {return;}
+
 }
 
 void camera_download_both() {
 	debug_print("camera download both");
+
+	if (!gp_gtk_camera_init)
+		if (camera_set()==GP_ERROR) {return;}
 
 }
 
 void camera_delete_selected() {
 	debug_print("camera delete selected");
 
+	if (!gp_gtk_camera_init)
+		if (camera_set()==GP_ERROR) {return;}
+
 }
 
 void camera_delete_all() {
 	debug_print("camera delete all");
 
+	if (!gp_gtk_camera_init)
+		if (camera_set()==GP_ERROR) {return;}
+
 }
 
 void camera_configure() {
+
 	debug_print("camera configure");
 
+	if (!gp_gtk_camera_init)
+		if (camera_set()==GP_ERROR) {return;}
 }
 
 void camera_show_information() {
+
+	char buf[1024*32];
+
 	debug_print("camera information");
 
+	if (!gp_gtk_camera_init)
+		if (camera_set()==GP_ERROR) {return;}
+
+	if (gp_summary(buf)==GP_ERROR) {
+		gp_message("Could not retrieve camera information");
+		return;
+	}
+
+	gp_message(buf);
 }
 
 void camera_show_manual() {
+
+	char buf[1024*32];
+
 	debug_print("camera manual");
+
+	if (!gp_gtk_camera_init)
+		if (camera_set()==GP_ERROR) {return;}
+
+	if (gp_manual(buf)==GP_ERROR) {
+		gp_message("Could not retrieve the camera manual");
+		return;
+	}
+
+	gp_message(buf);
 
 }
 
 void camera_show_about() {
+
+	char buf[1024*32];
+
 	debug_print("camera about");
 
+	if (!gp_gtk_camera_init)
+		if (camera_set()==GP_ERROR) {return;}
+
+	if (gp_about(buf)==GP_ERROR) {
+		gp_message("Could not retrieve library information");
+		return;
+	}
+
+	gp_message(buf);
 }
 
 

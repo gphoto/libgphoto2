@@ -20,10 +20,28 @@
 #include "support.h"
 #include "util.h"
 
+/* Not in gphoto API */
+int gp_interface_message_long(char *message) {
+        GtkWidget *window, *ok, *text;
+        char buf[1024*32];
+
+        window = create_message_window_long();
+        text = (GtkWidget*) lookup_widget(window, "message");
+        ok   = (GtkWidget*) lookup_widget(window, "close");
+        gtk_text_insert(GTK_TEXT(text),NULL,NULL,NULL,buf,strlen(buf));
+
+        wait_for_hide(window, ok, NULL);
+
+	return (GP_OK);
+}
+
 int gp_interface_message(char *message) {
 
 	GtkWidget *window, *label, *ok;
 
+	if (strlen(message) > 1024)
+		gp_interface_message_long(message);
+	
 	window = create_message_window();
 	label  = (GtkWidget*) lookup_widget(window, "message");
         ok     = (GtkWidget*) lookup_widget(window, "close");
@@ -54,8 +72,15 @@ int gp_interface_confirm(char *message) {
 GtkWidget*
 create_main_window (void)
 {
+/* __main */
+  /* widget labels: "camera_label" "camera_tree" "progress bar" "thumbnail_table"
+		    "status_bar" "notebook"
+  */
+
   GtkWidget *main_window;
   GtkWidget *vbox1;
+  GtkWidget *notebook;
+  GtkWidget *label;
   GtkWidget *menubar1;
   guint tmp_key;
   GtkWidget *file2;
@@ -161,7 +186,6 @@ create_main_window (void)
   GtkWidget *exit_button;
   GtkWidget *hpaned1;
   GtkWidget *vbox2;
-  GtkWidget *camera_model_label;
   GtkWidget *scrolledwindow1;
   GtkWidget *viewport1;
   GtkWidget *tree1;
@@ -1124,12 +1148,26 @@ create_main_window (void)
 	GTK_SIGNAL_FUNC(main_quit), NULL);
   gtk_widget_show (exit_button);
 
+  notebook = gtk_notebook_new();
+  gtk_widget_ref (notebook);
+  gtk_object_set_data_full (GTK_OBJECT (main_window), "notebook", notebook,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (notebook);
+  gtk_box_pack_start (GTK_BOX (vbox1), notebook, TRUE, TRUE, 0);
+
+  label = gtk_label_new("Index");
+  gtk_widget_ref (label);
+  gtk_object_set_data_full (GTK_OBJECT (main_window), "label", label,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (label);
+
   hpaned1 = gtk_hpaned_new ();
   gtk_widget_ref (hpaned1);
   gtk_object_set_data_full (GTK_OBJECT (main_window), "hpaned1", hpaned1,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (hpaned1);
-  gtk_box_pack_start (GTK_BOX (vbox1), hpaned1, TRUE, TRUE, 0);
+  gtk_notebook_append_page(GTK_NOTEBOOK(notebook), hpaned1, label);
+//  gtk_box_pack_start (GTK_BOX (vbox1), hpaned1, TRUE, TRUE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (hpaned1), 2);
   gtk_paned_set_position (GTK_PANED (hpaned1), 200);
 
@@ -1140,16 +1178,7 @@ create_main_window (void)
   gtk_widget_show (vbox2);
   gtk_paned_pack1 (GTK_PANED (hpaned1), vbox2, FALSE, TRUE);
 
-  camera_model_label = gtk_label_new (_("No Camera Selected"));
-  gtk_widget_ref (camera_model_label);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "camera_model_label", camera_model_label,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (camera_model_label);
-  gtk_box_pack_start (GTK_BOX (vbox2), camera_model_label, FALSE, FALSE, 0);
-  gtk_label_set_justify (GTK_LABEL (camera_model_label), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (camera_model_label), 0, 0.5);
-  gtk_misc_set_padding (GTK_MISC (camera_model_label), 0, 5);
-
+/* __main */
   scrolledwindow1 = gtk_scrolled_window_new (NULL, NULL);
   gtk_widget_ref (scrolledwindow1);
   gtk_object_set_data_full (GTK_OBJECT (main_window), "scrolledwindow1", scrolledwindow1,
@@ -1167,7 +1196,7 @@ create_main_window (void)
 
   tree1 = gtk_tree_new ();
   gtk_widget_ref (tree1);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "tree1", tree1,
+  gtk_object_set_data_full (GTK_OBJECT (main_window), "camera_tree", tree1,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (tree1);
   gtk_container_add (GTK_CONTAINER (viewport1), tree1);
@@ -1196,7 +1225,7 @@ create_main_window (void)
 
   table1 = gtk_table_new (100, 5, FALSE);
   gtk_widget_ref (table1);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "table1", table1,
+  gtk_object_set_data_full (GTK_OBJECT (main_window), "thumbnail_table", table1,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (table1);
   gtk_container_add (GTK_CONTAINER (viewport2), table1);
@@ -1327,7 +1356,7 @@ create_message_window_long (void)
   GtkWidget *vbox3;
   GtkWidget *scrolledwindow4;
   GtkWidget *message_window_text;
-  GtkWidget *hbox1;
+  GtkWidget *hsep;
   GtkWidget *message_window_close;
 
   message_window_long = gtk_window_new (GTK_WINDOW_DIALOG);
@@ -1336,6 +1365,7 @@ create_message_window_long (void)
   gtk_window_set_position (GTK_WINDOW (message_window_long), GTK_WIN_POS_CENTER);
   gtk_window_set_modal (GTK_WINDOW (message_window_long), TRUE);
   gtk_window_set_default_size (GTK_WINDOW (message_window_long), 400, 400);
+  gtk_container_set_border_width (GTK_CONTAINER (message_window_long), 5);
 
   vbox3 = gtk_vbox_new (FALSE, 0);
   gtk_widget_ref (vbox3);
@@ -1357,21 +1387,22 @@ create_message_window_long (void)
   gtk_object_set_data_full (GTK_OBJECT (message_window_long), "message", message_window_text,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (message_window_text);
+  gtk_text_set_editable(GTK_TEXT(message_window_text), FALSE);
   gtk_container_add (GTK_CONTAINER (scrolledwindow4), message_window_text);
 
-  hbox1 = gtk_hbox_new (TRUE, 0);
-  gtk_widget_ref (hbox1);
-  gtk_object_set_data_full (GTK_OBJECT (message_window_long), "hbox1", hbox1,
+  hsep = gtk_hseparator_new();
+  gtk_widget_ref (hsep);
+  gtk_object_set_data_full (GTK_OBJECT (message_window_long), "hsep", hsep,
                             (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (hbox1);
-  gtk_box_pack_start (GTK_BOX (vbox3), hbox1, FALSE, FALSE, 0);
+  gtk_widget_show (hsep);
+  gtk_box_pack_start (GTK_BOX (vbox3), hsep, FALSE, FALSE, 0);
 
   message_window_close = gtk_button_new_with_label (_("    Close    "));
   gtk_widget_ref (message_window_close);
   gtk_object_set_data_full (GTK_OBJECT (message_window_long), "close", message_window_close,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (message_window_close);
-  gtk_box_pack_start (GTK_BOX (hbox1), message_window_close, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox3), message_window_close, FALSE, FALSE, 0);
 
   return message_window_long;
 }
@@ -1387,6 +1418,7 @@ create_confirm_window (void)
   GtkWidget *hbox2;
   GtkWidget *button19;
   GtkWidget *button20;
+  GtkWidget *hsep;
 
   confirm_window = gtk_window_new (GTK_WINDOW_DIALOG);
   gtk_object_set_data (GTK_OBJECT (confirm_window), "confirm_window", confirm_window);
@@ -1394,6 +1426,7 @@ create_confirm_window (void)
   gtk_window_set_position (GTK_WINDOW (confirm_window), GTK_WIN_POS_CENTER);
   gtk_window_set_modal (GTK_WINDOW (confirm_window), TRUE);
   gtk_window_set_default_size (GTK_WINDOW (confirm_window), 350, 200);
+  gtk_container_set_border_width (GTK_CONTAINER (confirm_window), 5);
 
   vbox4 = gtk_vbox_new (FALSE, 7);
   gtk_widget_ref (vbox4);
@@ -1408,6 +1441,13 @@ create_confirm_window (void)
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (confirm_label);
   gtk_box_pack_start (GTK_BOX (vbox4), confirm_label, TRUE, TRUE, 0);
+
+  hsep = gtk_hseparator_new();
+  gtk_widget_ref (hsep);
+  gtk_object_set_data_full (GTK_OBJECT (confirm_window), "hsep", hsep,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (hsep);
+  gtk_box_pack_start (GTK_BOX (vbox4), hsep, FALSE, FALSE, 0);
 
   hbox2 = gtk_hbox_new (TRUE, 5);
   gtk_widget_ref (hbox2);
@@ -1441,8 +1481,8 @@ create_message_window (void)
   GtkWidget *message_window;
   GtkWidget *vbox5;
   GtkWidget *label8;
-  GtkWidget *hbox3;
   GtkWidget *button21;
+  GtkWidget *hsep;
 
   message_window = gtk_window_new (GTK_WINDOW_DIALOG);
   gtk_object_set_data (GTK_OBJECT (message_window), "message_window", message_window);
@@ -1450,6 +1490,7 @@ create_message_window (void)
   gtk_window_set_position (GTK_WINDOW (message_window), GTK_WIN_POS_CENTER);
   gtk_window_set_modal (GTK_WINDOW (message_window), TRUE);
   gtk_window_set_default_size (GTK_WINDOW (message_window), 350, 200);
+  gtk_container_set_border_width (GTK_CONTAINER (message_window), 5);
 
   vbox5 = gtk_vbox_new (FALSE, 0);
   gtk_widget_ref (vbox5);
@@ -1466,19 +1507,53 @@ create_message_window (void)
   gtk_box_pack_start (GTK_BOX (vbox5), label8, TRUE, TRUE, 0);
   gtk_label_set_line_wrap (GTK_LABEL (label8), TRUE);
 
-  hbox3 = gtk_hbox_new (TRUE, 0);
-  gtk_widget_ref (hbox3);
-  gtk_object_set_data_full (GTK_OBJECT (message_window), "hbox3", hbox3,
+  hsep = gtk_hseparator_new();
+  gtk_widget_ref (hsep);
+  gtk_object_set_data_full (GTK_OBJECT (message_window), "hsep", hsep,
                             (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (hbox3);
-  gtk_box_pack_start (GTK_BOX (vbox5), hbox3, FALSE, FALSE, 0);
+  gtk_widget_show (hsep);
+  gtk_box_pack_start (GTK_BOX (vbox5), hsep, FALSE, FALSE, 0);
 
   button21 = gtk_button_new_with_label (_("    Close    "));
   gtk_widget_ref (button21);
   gtk_object_set_data_full (GTK_OBJECT (message_window), "close", button21,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (button21);
-  gtk_box_pack_start (GTK_BOX (hbox3), button21, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox5), button21, FALSE, FALSE, 0);
+
+  return message_window;
+}
+
+GtkWidget*
+create_message_window_transient (void)
+{
+  /* widget labels:  "message" */
+  GtkWidget *message_window;
+  GtkWidget *vbox5;
+  GtkWidget *label8;
+
+  message_window = gtk_window_new (GTK_WINDOW_DIALOG);
+  gtk_object_set_data (GTK_OBJECT (message_window), "message_window", message_window);
+  gtk_window_set_title (GTK_WINDOW (message_window), _("gPhoto2 Message"));
+  gtk_window_set_position (GTK_WINDOW (message_window), GTK_WIN_POS_CENTER);
+  gtk_window_set_modal (GTK_WINDOW (message_window), TRUE);
+  gtk_window_set_default_size (GTK_WINDOW (message_window), 250, 100);
+  gtk_container_set_border_width (GTK_CONTAINER (message_window), 5);
+
+  vbox5 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_ref (vbox5);
+  gtk_object_set_data_full (GTK_OBJECT (message_window), "vbox5", vbox5,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (vbox5);
+  gtk_container_add (GTK_CONTAINER (message_window), vbox5);
+
+  label8 = gtk_label_new (_("No message."));
+  gtk_widget_ref (label8);
+  gtk_object_set_data_full (GTK_OBJECT (message_window), "message", label8,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (label8);
+  gtk_box_pack_start (GTK_BOX (vbox5), label8, TRUE, TRUE, 0);
+  gtk_label_set_line_wrap (GTK_LABEL (label8), TRUE);
 
   return message_window;
 }
@@ -1512,6 +1587,7 @@ create_select_camera_window (void)
   gtk_window_set_position (GTK_WINDOW (select_camera_window), GTK_WIN_POS_CENTER);
   gtk_window_set_modal (GTK_WINDOW (select_camera_window), TRUE);
   gtk_window_set_default_size (GTK_WINDOW (select_camera_window), 300, 150);
+  gtk_container_set_border_width(GTK_CONTAINER(select_camera_window), 5);
 
   vbox6 = gtk_vbox_new (FALSE, 0);
   gtk_widget_ref (vbox6);
@@ -1547,6 +1623,7 @@ create_select_camera_window (void)
   gtk_object_set_data_full (GTK_OBJECT (select_camera_window), "camera", camera_combo,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (camera_combo);
+  gtk_entry_set_editable(GTK_ENTRY(GTK_COMBO(camera_combo)->entry), FALSE);
   gtk_box_pack_start (GTK_BOX (vbox7), camera_combo, FALSE, FALSE, 0);
 
   combo_entry1 = GTK_COMBO (camera_combo)->entry;
@@ -1572,6 +1649,7 @@ create_select_camera_window (void)
 
   port_combo = gtk_combo_new ();
   gtk_widget_ref (port_combo);
+  gtk_entry_set_editable(GTK_ENTRY(GTK_COMBO(port_combo)->entry), FALSE);
   gtk_object_set_data_full (GTK_OBJECT (select_camera_window), "port", port_combo,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (port_combo);
@@ -1593,6 +1671,7 @@ create_select_camera_window (void)
 
   speed_combo = gtk_combo_new ();
   gtk_widget_ref (speed_combo);
+  gtk_entry_set_editable(GTK_ENTRY(GTK_COMBO(speed_combo)->entry), FALSE);
   gtk_object_set_data_full (GTK_OBJECT (select_camera_window), "speed", speed_combo,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (speed_combo);

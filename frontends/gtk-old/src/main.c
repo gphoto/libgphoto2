@@ -14,13 +14,15 @@
 #include "interface.h"
 #include "support.h"
 
-GtkWidget *main_window;
-int	   gp_gtk_debug=1;
+GtkWidget *gp_gtk_main_window;
+int	   gp_gtk_debug;
 char	   gp_gtk_camera_model[1024];
+int	   gp_gtk_camera_init=0;
 
 int
 main (int argc, char *argv[])
 {
+	char buf[1024];
 
 #ifdef ENABLE_NLS
 	bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
@@ -29,7 +31,17 @@ main (int argc, char *argv[])
 
 	gtk_set_locale ();
 	gtk_init (&argc, &argv);
-	gp_init();	
+
+
+	if (argc > 1) {
+		if (strcmp(argv[1], "-d")==0)
+			gp_gtk_debug = 1;
+		   else
+			gp_gtk_debug = 0;
+	}
+
+	gp_debug_set(gp_gtk_debug);
+	gp_init();
 
 	add_pixmap_directory (PACKAGE_DATA_DIR "/pixmaps");
 	add_pixmap_directory (PACKAGE_SOURCE_DIR "/pixmaps");
@@ -39,10 +51,14 @@ main (int argc, char *argv[])
 	 * (except popup menus), just so that you see something after building
 	 * the project. Delete any components that you don't want shown initially.
 	 */
-	main_window = create_main_window ();
-	
-	gtk_widget_show (main_window);
-	gtk_signal_connect (GTK_OBJECT(main_window), "delete_event",
+	gp_gtk_main_window = create_main_window ();
+	gtk_widget_show (gp_gtk_main_window);
+
+	if (gp_setting_get("camera", buf)==GP_OK) {
+		/* Set the camera model label */
+	}
+
+	gtk_signal_connect (GTK_OBJECT(gp_gtk_main_window), "delete_event",
 		GTK_SIGNAL_FUNC(main_quit), NULL);
 	
 	gtk_main ();

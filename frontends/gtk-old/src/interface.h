@@ -3,9 +3,10 @@
  */
 
 GtkWidget* create_main_window (void);
-GtkWidget* create_message_window_long (void);
 GtkWidget* create_confirm_window (void);
 GtkWidget* create_message_window (void);
+GtkWidget* create_message_window_long (void);
+GtkWidget* create_message_window_transient (void);
 GtkWidget* create_select_camera_window (void);
 
 int gp_interface_message(char *message);
