@@ -1,4 +1,4 @@
-<?xml version='1.0' ?> <!-- -*- xml -*- -->
+<?xml version='1.0' ?>
 <!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <reference>
@@ -575,6 +575,8 @@
     <refsect1>
       <title>See also</title>
       <para><xref linkend="libgphoto2"/>,
+        <filename path="doc/">gphoto2.txt</filename>, 
+        <filename path="doc/">gphoto2-cli.txt</filename>, 
         <ulink
                url="http://www.gphoto.org/">http://www.gphoto.org/</ulink> 
       </para>
@@ -664,6 +666,7 @@
     <refsect1>
       <title>See also</title>
       <para><xref linkend="gphoto2-cli"/>,
+        <filename path="doc/">gphoto2.txt</filename>,
         <ulink
                url="http://www.gphoto.org/">http://www.gphoto.org/</ulink> 
       </para>
@@ -671,3 +674,10 @@
 
   </refentry>
 </reference>
+
+<!--
+Local Variables:
+mode: xml
+sgml-indent-data: t
+End:
+-->
