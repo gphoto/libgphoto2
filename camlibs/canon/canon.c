@@ -182,8 +182,8 @@ const struct canonCamModelData models[] = {
 	{"Canon:PowerShot A60",		CANON_CLASS_5,	0x04A9, 0x3074, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	/* reported working on SourceForge patch tracker. */
 	/* PS S400 uses the same ProductID for PTP and Canon, with protocol autodetection */
-	{"Canon:Digital IXUS 400",	CANON_CLASS_3,	0x04A9, 0x3075, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-	{"Canon:PowerShot S400",	CANON_CLASS_3,	0x04A9, 0x3075, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:Digital IXUS 400",	CANON_CLASS_1,	0x04A9, 0x3075, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:PowerShot S400",	CANON_CLASS_1,	0x04A9, 0x3075, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
 	{"Canon:PowerShot A300",	CANON_CLASS_4,	0x04A9, 0x3076, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:PowerShot S50 (normal mode)",	CANON_CLASS_4,	0x04A9, 0x3077, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
