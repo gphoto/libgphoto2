@@ -35,6 +35,10 @@
 
 #ifdef HAVE_PROCMEMINFO
 #  include <fcntl.h>
+#elif (defined(sun) || defined(__sun__)) && defined(__svr4__)
+#  include <sys/stat.h>
+#  include <sys/swap.h>
+#  include <sys/fcntl.h>
 #endif
 
 #ifdef HAVE_SYSCTL
@@ -1923,6 +1927,38 @@ gp_get_free_memory (GPContext *context, unsigned *free)
 		return (GP_ERROR);
 	}
 	*free=value;
+	return (GP_OK);
+
+#elif (defined(sun) || defined(__sun__)) && defined(__svr4__)
+
+	long freemem=0;
+	long freeswap=0;
+	int page_size;
+	static struct anoninfo anon;
+
+	*free = 0;
+
+	page_size = getpagesize();
+	if ( (freemem = sysconf(_SC_AVPHYS_PAGES)) == -1 )
+	  {
+	    gp_context_error (context, _("sysconf call failed ('%m')."));
+	    return (GP_ERROR);
+	  }
+
+	freemem *= page_size;
+
+	if (swapctl(SC_AINFO, &anon) == -1)
+	  {
+	    gp_context_error (context, _("swapctl call failed ('%m')."));
+	    return (GP_ERROR);
+	  }
+
+	freeswap = anon.ani_max - anon.ani_resv;
+	freeswap *= page_size;
+
+	printf("Free Memory : %ld Swap %ld\n",freemem,freeswap);
+
+	*free = freemem + freeswap;
 	return (GP_OK);
 
 #else
