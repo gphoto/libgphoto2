@@ -102,8 +102,8 @@ find $RPM_BUILD_ROOT -name '*.la' | \
 install -d -m755 %{buildroot}/etc/hotplug/usb/
 install -m755 packaging/linux-hotplug/usbcam.console %{buildroot}/etc/hotplug/usb/usbcam
 
-cp -a %{buildroot}%{_docdir}/%{name}-%{version}/html/%{name} installed-doc
-find installed-doc -name '*.sgml' | xargs rm
+cp -a %{buildroot}%{_docdir}/%{name}-%{version}/html html
+find html -name '*.sgml' | xargs rm
 
 
 %find_lang %{name}
@@ -183,7 +183,7 @@ fi
 ####################################
 %files devel
 %defattr(-,root,root)
-%doc installed-doc/html
+%doc html
 %{_bindir}/gphoto2-config
 %{_bindir}/gphoto2-port-config
 %{_includedir}/gphoto2
@@ -195,7 +195,10 @@ fi
 # ChangeLog
 ########################################################################
 %changelog
-* Thu May  9 2002 Hans Ulrich Niedermann <gp@n-dimensional.de> 2.0dev6-1
+* Sat May 18 2002 Hans Ulrich Niedermann <gp@n-dimensional.de> 2.0.1dev5-1
+- added API HTML docs to the -devel package
+
+* Thu May  9 2002 Hans Ulrich Niedermann <gp@n-dimensional.de> 2.0.1dev4-1
 - merged changes from current Redhat spec file into gphoto2 distribution
   as they managed to get the beast to build
 - re-added FAQ to package (Redhat left it out regrettably)
