@@ -346,7 +346,7 @@ gp_abilities_list_load (CameraAbilitiesList *list)
 
 static int
 gp_abilities_list_detect_usb (CameraAbilitiesList *list,
-			      GPPortInfo *info, GPPort *port)
+			      int *ability, GPPort *port)
 {
 	int i, count, res = GP_ERROR_IO_USB_FIND;
 
@@ -367,6 +367,7 @@ gp_abilities_list_detect_usb (CameraAbilitiesList *list,
 					"Found '%s' (0x%x,0x%x)",
 					list->abilities[i].model,
 					v, p);
+				*ability = i;
 			} else if (res < 0 && res != GP_ERROR_IO_USB_FIND) {
 				/* another error occured. 
 				 * perhaps we should better
@@ -393,6 +394,7 @@ gp_abilities_list_detect_usb (CameraAbilitiesList *list,
 					"Found '%s' (0x%x,0x%x,0x%x)",
 					list->abilities[i].model,
 					c, s, p);
+				*ability = i;
 			} else if (res < 0 && res != GP_ERROR_IO_USB_FIND) {
 				/* another error occured. 
 				 * perhaps we should better
@@ -432,7 +434,7 @@ gp_abilities_list_detect (CameraAbilitiesList *list,
 {
 	GPPortInfo info;
 	GPPort *port;
-	int i, info_count;
+	int i, info_count, ability;
 
 	CHECK_NULL (list && info_list && l);
 
@@ -448,10 +450,10 @@ gp_abilities_list_detect (CameraAbilitiesList *list,
 		CHECK_RESULT (gp_port_set_info (port, info));
 		switch (info.type) {
 		case GP_PORT_USB:
-			res = gp_abilities_list_detect_usb (list, &info, port);
+			res = gp_abilities_list_detect_usb (list, &ability, port);
 			if (res == GP_OK) {
 				gp_list_append(l,
-					list->abilities[i].model,
+					list->abilities[ability].model,
 					info.path);
 			} else if (res < 0)
 				gp_port_set_error (port, NULL);
