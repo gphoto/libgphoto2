@@ -49,7 +49,10 @@ struct {
    char serial;
 } models[] = {
         {"Agfa ePhoto CL18",0x06bd,0x0403,0},
+        {"RCA CDS1005",0x0784,0x0100,0},
         {"Tiger Fast Flicks",0x0919,0x0100,0},
+        {"Oregon Scientific DShot II",0x0919,0x100,0},
+        {"Media-Tech mt-406",0x0919,0x100,0},
         {NULL,0,0,0}
 };
 

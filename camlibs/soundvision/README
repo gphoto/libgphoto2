@@ -12,11 +12,14 @@ entirely on reverse-engineering USB transactions.
 List of Cameras known to work with this driver:
 
    Agfa ePhoto CL18
+   RCA CDS1005
+   
    Tiger Fast Flicks
+   Oregon Scientific DShot II
+   Media-Tech mt-406
 
 Cameras that might work with the proper USB ID's
 
-   RCA CDS1005
-   Poloroid MP3
+   Polaroid MP3
    Eye Q3X Digital
    Axia iX-100

@@ -1,3 +1,8 @@
+2002-10-21  Vince Weaver <vince@deater.net>
+
+	* Add usb-id's for RCA CDS1005, and some
+	  name overloading for the Fastflicks driver.
+
 2002-10-03  Lutz Müller <lutz@users.sourceforge.net>
 
 	* Makefile.am: -I$(top_builddir)/libgphoto2
