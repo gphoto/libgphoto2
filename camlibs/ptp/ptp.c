@@ -183,6 +183,13 @@ ptp_getresp (PTPParams* params, PTPReq* databuf, uint16_t code)
 #define PTP_DP_SENDDATA		0x01	// sending data
 #define PTP_DP_GETDATA		0x02	// geting data
 
+// Number of PTP Request phase parameters
+#define PTP_RQ_PARAM0		0x0000	// one parameter
+#define PTP_RQ_PARAM1		0x0100	// one parameter
+#define PTP_RQ_PARAM2		0x0200	// two parameter
+#define PTP_RQ_PARAM3		0x0300	// three parameter
+#define PTP_RQ_PARAM4		0x0400	// four parameter
+
 /**
  * ptp_transaction:
  * params:	PTPParams*
@@ -210,8 +217,11 @@ ptp_transaction (PTPParams* params, PTPReq* req, uint16_t code,
 	if ((params==NULL) || (req==NULL)) 
 		return PTP_ERROR_BADPARAM;
 	params->transaction_id++;
+	// compute the request phase container length
+	req->len=PTP_REQ_HDR_LEN+((flags>>8)*sizeof(uint32_t));
+	// send request
 	CHECK_PTP_RC(ptp_sendreq(params, req, code));
-	switch (flags&&0x00ff) {
+	switch (flags&0x00ff) {
 		case PTP_DP_SENDDATA:
 			datalen+=PTP_REQ_HDR_LEN;
 			CHECK_PTP_RC(ptp_senddata(params, dataphasebuf,
@@ -261,7 +271,7 @@ ptp_opensession (PTPParams* params, uint32_t session)
 	*(int *)(req.data)=htod32(session);
 
 	return ptp_transaction(params, &req, PTP_OC_OpenSession,
-		PTP_DP_NODATA, 0, NULL);
+		PTP_DP_NODATA | PTP_RQ_PARAM1, 0, NULL);
 }
 
 /**
@@ -278,7 +288,7 @@ ptp_closesession (PTPParams* params)
 	PTPReq req;
 
 	return ptp_transaction(params, &req, PTP_OC_CloseSession,
-		PTP_DP_NODATA, 0, NULL);
+		PTP_DP_NODATA | PTP_RQ_PARAM0, 0, NULL);
 }
 
 /**
@@ -297,7 +307,7 @@ ptp_getstorageids (PTPParams* params, PTPStorageIDs* storageids)
 	PTPReq req;
 
 	ret=ptp_transaction(params, &req, PTP_OC_GetStorageIDs,
-		PTP_DP_GETDATA, PTP_REQ_DATALEN, &si);
+		PTP_DP_GETDATA | PTP_RQ_PARAM0, PTP_REQ_DATALEN, &si);
 	ptp_unpack_SIDs(params, &si, storageids);
 	return ret;
 }
@@ -326,7 +336,7 @@ ptp_getobjecthandles (PTPParams* params, PTPObjectHandles* objecthandles,
 	*(int *)(req.data)=htod32(store);
 
 	ret=ptp_transaction(params, &req, PTP_OC_GetObjectHandles,
-		PTP_DP_GETDATA, PTP_REQ_DATALEN, &oh);
+		PTP_DP_GETDATA | PTP_RQ_PARAM1, PTP_REQ_DATALEN, &oh);
 	ptp_unpack_OH(params, &oh, objecthandles);
 	return ret;
 }
@@ -341,7 +351,7 @@ ptp_getobjectinfo (PTPParams* params, uint32_t handle,
 
 	*(int *)(req.data)=htod32(handle);
 	ret=ptp_transaction(params, &req, PTP_OC_GetObjectInfo,
-		PTP_DP_GETDATA, PTP_REQ_DATALEN, &oi);
+		PTP_DP_GETDATA | PTP_RQ_PARAM1, PTP_REQ_DATALEN, &oi);
 	ptp_unpack_OI(params, &oi, objectinfo);
 	return ret;
 }
@@ -354,7 +364,7 @@ ptp_getobject (PTPParams* params, uint32_t handle,
 
 	*(int *)(req.data)=htod32(handle);
 	return ptp_transaction(params, &req, PTP_OC_GetObject,
-		PTP_DP_GETDATA, size, object);
+		PTP_DP_GETDATA | PTP_RQ_PARAM1, size, object);
 }
 
 
@@ -366,7 +376,7 @@ ptp_getthumb (PTPParams* params, uint32_t handle,
 
 	*(int *)(req.data)=htod32(handle);
 	return ptp_transaction(params, &req, PTP_OC_GetThumb,
-		PTP_DP_GETDATA, size, object);
+		PTP_DP_GETDATA | PTP_RQ_PARAM1, size, object);
 }
 
 /**
@@ -388,7 +398,7 @@ ptp_deleteobject (PTPParams* params, uint32_t handle,
 	*(uint32_t *)(req.data+4)=htod32(ofc);
 
 	return ptp_transaction(params, &req, PTP_OC_DeleteObject,
-	PTP_DP_NODATA, 0, NULL);
+	PTP_DP_NODATA | PTP_RQ_PARAM2, 0, NULL);
 }
 
 /**
@@ -424,7 +434,7 @@ ptp_ek_sendfileobjectinfo (PTPParams* params, uint32_t* store,
 	
 	size=ptp_pack_OI(params, objectinfo, &req_oi);
 	ret= ptp_transaction(params, &req, PTP_OC_EK_SendFileObjectInfo,
-		PTP_DP_SENDDATA, size, &req_oi); 
+		PTP_DP_SENDDATA | PTP_RQ_PARAM2, size, &req_oi); 
 	*store=dtoh32a(req.data);
 	*parenthandle=dtoh32a(req.data+4);
 	*handle=dtoh32a(req.data+8); 
@@ -448,6 +458,6 @@ ptp_ek_sendfileobject (PTPParams* params, PTPReq* object, uint32_t size)
 {
 	PTPReq req;
 	return ptp_transaction(params, &req, PTP_OC_EK_SendFileObject,
-		PTP_DP_SENDDATA, size, object);
+		PTP_DP_SENDDATA | PTP_RQ_PARAM0, size, object);
 }
 
