@@ -23,7 +23,7 @@
 
 #include <gphoto2-port.h>
 
-int usb_wrap_write_packet (GPPort *dev, char *sierra_msg,      int sierra_len);
-int usb_wrap_read_packet  (GPPort *dev, char *sierra_response, int sierra_len);
+int usb_wrap_write_packet (GPPort *dev, unsigned int type, char *sierra_msg,      int sierra_len);
+int usb_wrap_read_packet  (GPPort *dev, unsigned int type, char *sierra_response, int sierra_len);
 
 #endif /* __SIERRA_USBWRAP_H__ */

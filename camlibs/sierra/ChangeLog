@@ -1,3 +1,11 @@
+2005-02-14  Marcus Meissner <marcus@jet.franken.de>
+	* library.c, sierra-desc.h, sierra.c, sierra.h, sierra-usbwrap.c:
+	  Nikon Coolpix * and Pentax cameras also support the Sierra 
+	  protocol (usb wrapped), however with different command bytes.
+
+	  This patch adds support to specify the usb wrapping camera
+	  type and also adds the Nikon Coolpix 2500.
+
 2005-01-22  Patrick Mansfield <patmans@users.sourceforge.net>
 	* sierra-desc.c, sierra-desc.h: Add code in case we ever need a
 	  GP_WIDGET_BUTTON/callback created, not currently used.

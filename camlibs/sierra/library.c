@@ -444,8 +444,10 @@ sierra_write_packet (Camera *camera, char *packet, GPContext *context)
 		packet[length-1] = (checksum >> 8) & 0xff; 
 	}
 
-	if (camera->pl->flags & SIERRA_WRAP_USB) {
-		CHECK (usb_wrap_write_packet (camera->port, packet, length));
+	if (camera->pl->flags & SIERRA_WRAP_USB_MASK) {
+		CHECK (usb_wrap_write_packet (camera->port,
+			(camera->pl->flags & SIERRA_WRAP_USB_MASK),
+			packet, length));
 	} else {
 		CHECK (gp_port_write (camera->port, packet, length));
 	}
@@ -458,7 +460,7 @@ sierra_clear_usb_halt(Camera *camera)
 {
 	
 	if ( (camera->port->type == GP_PORT_USB) &&
-	     !(camera->pl->flags & SIERRA_WRAP_USB) &&
+	     !(camera->pl->flags & SIERRA_WRAP_USB_MASK) &&
 	     !(camera->pl->flags & SIERRA_NO_USB_CLEAR) )
 		gp_port_usb_clear_halt(camera->port, GP_PORT_USB_ENDPOINT_IN);
         return (GP_OK);
@@ -538,9 +540,10 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 		 * Read data through the bus. If an error occurred,
 		 * try again.
 		 */
-		if (camera->port->type == GP_PORT_USB && (camera->pl->flags & SIERRA_WRAP_USB))
-			result = usb_wrap_read_packet (camera->port, packet,
-						       blocksize);
+		if (camera->port->type == GP_PORT_USB && (camera->pl->flags & SIERRA_WRAP_USB_MASK))
+			result = usb_wrap_read_packet (camera->port,
+					(camera->pl->flags & SIERRA_WRAP_USB_MASK),
+					packet, blocksize);
 		else
 			result = gp_port_read (camera->port, packet, blocksize);
 		if (result < 0) {
