@@ -32,14 +32,14 @@ int dimagev_delete_picture(dimagev_t *dimagev, int file_number) {
 		return GP_ERROR;
 	}
 
+	dimagev_dump_camera_status(dimagev->status);
 	/* An image can only be deleted if the card is normal or full. */
-	if (( dimagev->status->card_status != 0 ) || ( dimagev->status->card_status != 1 )) {
+	if ( dimagev->status->card_status > 1 ) {
 		if ( dimagev->debug != 0 ) {
 				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::memory card does not permit deletion");
 		}
 		return GP_ERROR;
 	}
-			
 
 	if ( dimagev->data->host_mode != 1 ) {
 
