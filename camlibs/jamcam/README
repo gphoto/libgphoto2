@@ -1,4 +1,4 @@
-KBGear JamCam v3.0
+KBGear JamCam v2 and v3
 
 This driver is based upon protocol reverse-engineered
 using Portmon and sniffusb under Windows 98.
@@ -11,4 +11,6 @@ For questions/comments, email the library author:
 
 TODO List
 ---------
-
+	- Fix downloading of thumbnails from mmc card
+	- better error checking/handling
+	- retry when receiving corrupted data messages in enquiry function

@@ -1,3 +1,13 @@
+2001-11-08  Chris Pinkham <cpinkham@infi.net>
+
+	* camlibs/jamcam/README
+	  camlibs/jamcam/jamcam.c
+	  camlibs/jamcam/library.h
+	  camlibs/jamcam/library.c: made downloading images more robust and
+	  added better error recovery.  Added support for downloading images
+	  from MMC card.  Changed summary info to show support for v2 cameras.
+	  Fixed gp_camera_progress percentage argument to be >0 and <1.
+
 2001-11-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2/gphoto2-filesys.h: Expand CameraFileInfo to include 

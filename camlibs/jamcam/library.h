@@ -28,7 +28,7 @@
 
 #define	RETRIES			10
 
-#define SER_PKT_SIZE 2048
+#define SER_PKT_SIZE 4096
 #define USB_PKT_SIZE 4096
 #define DATA_SIZE  261600
 #define DATA_INCR  261616

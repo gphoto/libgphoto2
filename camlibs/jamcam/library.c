@@ -191,6 +191,7 @@ int jamcam_file_count (Camera *camera) {
 	int data_incr;
 	int width;
 	int height;
+	int last_offset_size = 0;
 
 	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* jamcam_file_count");
 
@@ -220,6 +221,8 @@ int jamcam_file_count (Camera *camera) {
 				data_incr += reply[10] * 256 * 256;
 				data_incr += reply[11] * 256 * 256 * 256;
 
+				last_offset_size = data_incr;
+
 				jamcam_files[jamcam_count].position = position;
 				jamcam_files[jamcam_count].width = width;
 				jamcam_files[jamcam_count].height = height;
@@ -236,6 +239,11 @@ int jamcam_file_count (Camera *camera) {
 				jamcam_write_packet( camera, buf, 8 );
 			
 				jamcam_read_packet( camera, reply, 16 );
+			}
+
+			/* the v3 camera uses 0x3fdf0 data increments so check for MMC */
+			if ( last_offset_size == 0x03fdf0 ) {
+				jamcam_query_mmc_card( camera );
 			}
 			break;
 
@@ -291,50 +299,48 @@ int jamcam_file_count (Camera *camera) {
 
 int jamcam_fetch_memory( Camera *camera, char *data, int start, int length ) {
 	char packet[16];
-	int end = start + length - 1;
+	int new_start;
+	int new_end;
 	int bytes_read = 0;
 	int bytes_to_read;
 	int bytes_left = length;
+	float percentage;
 
 	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* jamcam_fetch_memory");
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "*** start:  %d (0x%x)",
+	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "  * start:  %d (0x%x)",
 		start, start);
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "*** length: %d (0x%x)",
+	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "  * length: %d (0x%x)",
 		length, length);
-
-	switch( camera->port->type ) {
-		default:
-		case GP_PORT_SERIAL:
-			memset( packet, 0, sizeof( packet ));
-			strcpy( packet, "KB01" );
-
-			/* start */
-			packet[4] = ( start       ) & 0xff;
-			packet[5] = ( start >>  8 ) & 0xff;
-			packet[6] = ( start >> 16 ) & 0xff;
-			packet[7] = ( start >> 24 ) & 0xff;
-
-			/* end (inclusive) */
-			packet[8]  = ( end       ) & 0xff;
-			packet[9]  = ( end >>  8 ) & 0xff;
-			packet[10] = ( end >> 16 ) & 0xff;
-			packet[11] = ( end >> 24 ) & 0xff;
-
-			jamcam_write_packet( camera, packet, 12 );
-
-			break;
-
-		case GP_PORT_USB:
-
-			break;
-	}
 
 	while( bytes_left ) {
 		switch( camera->port->type ) {
 			default:
 			case GP_PORT_SERIAL:
-				bytes_to_read = bytes_left > SER_PKT_SIZE ? SER_PKT_SIZE : bytes_left;
-				CHECK (jamcam_read_packet( camera, data + bytes_read, bytes_to_read ));
+				bytes_to_read =
+					bytes_left > SER_PKT_SIZE ? SER_PKT_SIZE : bytes_left;
+
+				memset( packet, 0, sizeof( packet ));
+				strcpy( packet, "KB01" );
+
+				new_start = start + bytes_read;
+				new_end   = start + bytes_read + bytes_to_read - 1;
+
+				/* start */
+				packet[4] = ( new_start      ) & 0xff;
+				packet[5] = ( new_start >>  8 ) & 0xff;
+				packet[6] = ( new_start >> 16 ) & 0xff;
+				packet[7] = ( new_start >> 24 ) & 0xff;
+
+				/* end (inclusive) */
+				packet[8]  = ( new_end       ) & 0xff;
+				packet[9]  = ( new_end >>  8 ) & 0xff;
+				packet[10] = ( new_end >> 16 ) & 0xff;
+				packet[11] = ( new_end >> 24 ) & 0xff;
+
+				jamcam_write_packet( camera, packet, 12 );
+
+				CHECK (jamcam_read_packet( camera, data + bytes_read,
+					bytes_to_read ));
 				break;
 			case GP_PORT_USB:
 				bytes_to_read = bytes_left > USB_PKT_SIZE ? USB_PKT_SIZE : bytes_left;
@@ -349,7 +355,8 @@ int jamcam_fetch_memory( Camera *camera, char *data, int start, int length ) {
 		/* hate this hardcoded, but don't want to update here */
 		/* when downloading parts of a thumbnail              */
 		if ( length > 1000 ) {
-			gp_camera_progress( camera, 100 * bytes_read / length );
+			percentage = bytes_read / length;
+			gp_camera_progress( camera, percentage );
 		}
 	}
 
@@ -388,6 +395,7 @@ int jamcam_request_thumbnail( Camera *camera, char *buf, int *len, int number ) 
 	int position;
 	int x, y;
 	char *ptr;
+	float percentage;
 
 	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* jamcam_request_thumbnail");
 
@@ -405,7 +413,8 @@ int jamcam_request_thumbnail( Camera *camera, char *buf, int *len, int number ) 
 		jamcam_fetch_memory( camera, line, position,
 			jamcam_files[number].width );
 
-		gp_camera_progress( camera, 100 * y / 60 );
+		percentage = y / 60;
+		gp_camera_progress( camera, percentage );
 
 		if ( jamcam_files[number].width == 600 ) {
 			for( x = 22; x < 578 ; x += 7 ) {

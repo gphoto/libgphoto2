@@ -51,8 +51,8 @@
 
 #define TIMEOUT	      2000
 
-#define JAMCAM_VERSION "0.4"
-#define JAMCAM_LAST_MOD "11/05/2001 15:18 EST"
+#define JAMCAM_VERSION "0.5"
+#define JAMCAM_LAST_MOD "11/08/2001 08:13 EST"
 
 /* define what cameras we support */
 static struct {
@@ -282,7 +282,7 @@ static int camera_about (Camera *camera, CameraText *about)
 		_("jamcam library v" JAMCAM_VERSION
 		" " JAMCAM_LAST_MOD "\n"
 		"Chris Pinkham <cpinkham@infi.net>\n"
-		"Support for KBGear JamCam v3.0 digital cameras\n"
+		"Support for KBGear JamCam v2.0 & v3.0 digital cameras\n"
 		"based on reverse engineering serial protocol.\n"
 		"\n"));
 
