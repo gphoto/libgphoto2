@@ -121,8 +121,6 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	Camera *camera = data;
 
 
-	return (GP_ERROR_NOT_SUPPORTED);
-
 	picNum = gp_filesystem_number(fs, folder, filename, context) + 1;
 	ret = pdrm11_delete_file(camera->port, picNum);
 	return (GP_OK);
