@@ -1004,7 +1004,7 @@ camera_get_config (Camera* camera, CameraWidget** window)
 	/****************/
 	/* Localization */
 	/****************/
-        gp_widget_new (GP_WIDGET_SECTION, "Localization", &widget);
+        gp_widget_new (GP_WIDGET_SECTION, "Localization", &section);
         gp_widget_append (*window, section);
 
         /* Language */
@@ -1028,7 +1028,7 @@ camera_get_config (Camera* camera, CameraWidget** window)
         /********************************/
         /* Session-persistent Settings  */
         /********************************/
-        gp_widget_new (GP_WIDGET_SECTION, "Session-persistent Settings", &widget);
+        gp_widget_new (GP_WIDGET_SECTION, "Session-persistent Settings", &section);
         gp_widget_append (*window, section);
 
         /* Flash */
