@@ -130,7 +130,7 @@ const struct canonCamModelData models[] = {
 	{"Canon:PowerShot S200",	CANON_PS_S200,		0x04A9, 0x3065, CAP_SUP, S10M, S32K, NULL},
 	{"Canon:Digital IXUS v2",	CANON_PS_S200,		0x04A9, 0x3065, CAP_SUP, S10M, S32K, NULL},
 	{"Canon:Digital IXUS 330",	CANON_PS_S330,		0x04A9, 0x3066, CAP_SUP, S10M, S32K, NULL},
-	{"Canon PowerShot S50 (normal mode)",	CANON_PS_S50,	0x04A9, 0x3077, CAP_SUP, S99M, S32K, NULL},
+	{"Canon:PowerShot S50 (normal mode)",	CANON_PS_S50,	0x04A9, 0x3077, CAP_SUP, S99M, S32K, NULL},
 	{"Canon:PowerShot S45 (normal mode)",	CANON_PS_S45,	0x04A9, 0x306C, CAP_SUP, S99M, S32K, NULL},
 	/* 306a is in MacOS Info.plist, but I don't know what it is --swestin. */
 	/*{"Canon:Digital ???",	CANON_PS_??,		0x04A9, 0x3066, CAP_SUP, S10M, S32K, NULL},*/
@@ -144,15 +144,15 @@ const struct canonCamModelData models[] = {
         /* 0x3071 is IXUS v3 in PTP mode */
 	/* reported working on SourceForge patch tracker. */
 	/* FIXME: dunno about capture, assuming none for now -Marcus */
-	{"Canon Digital IXUS 400",              CANON_PS_S230,  0x04A9, 0x3075, CAP_NON, S99M, S32K, NULL},
-	{"Canon PowerShot S400",                CANON_PS_S230,  0x04A9, 0x3075, CAP_NON, S99M, S32K, NULL},
+	{"Canon:Digital IXUS 400",              CANON_PS_S230,  0x04A9, 0x3075, CAP_SUP, S99M, S32K, NULL},
+	{"Canon:PowerShot S400",                CANON_PS_S230,  0x04A9, 0x3075, CAP_SUP, S99M, S32K, NULL},
 
 	/* added from report on mailinglist. XXX: assuming capture works -Marcus */
 	/* reports suggest that they provide 1 interface which does
 	 * both PTP and Canon access modes.
 	 */
-	{"Canon PowerShot A60",         CANON_PS_A60,           0x04A9, 0x3074, CAP_SUP,  S99M, S32K},
-	{"Canon PowerShot A70",         CANON_PS_A70,           0x04A9, 0x3073, CAP_SUP,  S99M, S32K},
+	{"Canon:PowerShot A60",         CANON_PS_A60,           0x04A9, 0x3074, CAP_SUP,  S99M, S32K},
+	{"Canon:PowerShot A70",         CANON_PS_A70,           0x04A9, 0x3073, CAP_SUP,  S99M, S32K},
 
 	/* S400 product ID for PTP mode is 0x3075; there may be no
 	 * "Canon" mode, so it will be supported by the PTP driver,
@@ -231,13 +231,12 @@ replace_filename_extension(const char *filename, const char *newext)
 /**
  * canon_int_filename2audioname:
  * @camera: Camera to work on
- * @filename: the file to get the name of the thumbnail of
+ * @filename: the file for which to get the name of the audio annotation
  *
  * The identifier returned is 
- *  a) NULL if no thumbnail exists for this file or an internal error occured
- *  b) pointer to empty string if thumbnail is contained in the file itself
- *  c) pointer to string with file name of the corresponding thumbnail
- *  d) pointer to filename in case filename is a thumbnail itself
+ *  a) NULL if no audio file exists for this file or an internal error occured
+ *  b) pointer to string with file name of the corresponding thumbnail
+ *  c) pointer to filename in case filename is a thumbnail itself
  *
  * Returns: identifier for corresponding thumbnail
  */
@@ -268,14 +267,14 @@ canon_int_filename2audioname (Camera *camera, const char *filename)
 		return filename;
 	}
 
-	/* There are only thumbnails for images and movies */
+	/* There are only audio files for images and movies */
 	if (!is_movie (filename) && !is_image (filename)) {
 		GP_DEBUG ("canon_int_filename2audioname: "
 			  "\"%s\" is neither movie nor image -> no audio file", filename);
 		return NULL;
 	}
 
-	GP_DEBUG ("canon_int_filename2audioname: thumbnail for file \"%s\" is external",
+	GP_DEBUG ("canon_int_filename2audioname: audio for file \"%s\" is external",
 		  filename);
 
 	/* We just replace file ending by .WAV and assume this is the
@@ -804,6 +803,99 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, int *length,
 }
 
 /**
+ * canon_int_find_new_image
+ * @camera Camera * to this camera
+ * @initial_state Camera directory dump before image capture
+ * @final_state Directory dump after image capture
+ * @path: Will be filled in with the path and filename of the captured
+ *        image, in canonical gphoto2 format.
+ *
+ * Compares two complete dumps of the camera directory: before and
+ * after an image capture command. The first new image file is found,
+ * and its pathname is decoded into the given CameraFilePath.
+ *
+ */
+static void canon_int_find_new_image ( Camera *camera, unsigned char *initial_state, unsigned char *final_state,
+			   CameraFilePath *path )
+{
+	unsigned char *old_entry = initial_state, *new_entry = final_state;
+
+	/* Set default path name */
+	strncpy ( path->name, "*UNKNOWN*", sizeof(path->name) );
+	strncpy ( path->folder, "*UNKNOWN*", sizeof(path->folder) );
+
+	path->folder[0] = 0; /* Start with null pathname string. */
+	GP_DEBUG ( "canon_int_capture_image: starting directory compare" );
+	while ( le16atoh ( old_entry+CANON_DIRENT_ATTRS ) != 0
+		|| le32atoh ( old_entry + CANON_DIRENT_SIZE ) != 0
+		|| le32atoh ( old_entry + CANON_DIRENT_TIME ) != 0 ) {
+		GP_DEBUG ( " old entry \"%s\", attr = 0x%02x, size=%i",
+			   old_entry + CANON_DIRENT_NAME,
+			   old_entry[CANON_DIRENT_ATTRS],
+			   le32atoh ( old_entry + CANON_DIRENT_SIZE ) );
+		GP_DEBUG ( " new entry \"%s\", attr = 0x%02x, size=%i",
+			   new_entry + CANON_DIRENT_NAME,
+			   new_entry[CANON_DIRENT_ATTRS],
+			   le32atoh ( new_entry + CANON_DIRENT_SIZE ) );
+		if ( *old_entry != *new_entry
+		     || le32atoh ( old_entry + CANON_DIRENT_SIZE ) != le32atoh ( new_entry + CANON_DIRENT_SIZE )
+		     || le32atoh ( old_entry + CANON_DIRENT_TIME ) != le32atoh ( new_entry + CANON_DIRENT_TIME )
+		     || strcmp ( old_entry + CANON_DIRENT_NAME, new_entry + CANON_DIRENT_NAME ) ) {
+			/* Mismatch. Presumably a
+			   new file, but is it an
+			   image file? */
+			GP_DEBUG ( "Found mismatch" );
+			if ( is_image ( new_entry + CANON_DIRENT_NAME ) ) {
+				/* Yup, we'll assume that this is the new image. */
+				GP_DEBUG ( "  Found our new image file" );
+				strncpy ( path->name, new_entry + CANON_DIRENT_NAME,
+					  strlen ( new_entry + CANON_DIRENT_NAME ) );
+				strcpy ( path->folder, canon2gphotopath ( camera, path->folder ) );
+				free ( initial_state );
+				free ( final_state );
+				break;
+			}
+			else {
+				/* The mismatch is not an image file. There are three possibilities:
+				   1. This is a new directory with no files. The next entry will be
+				   another directory.
+				   2. This is a new directory with new files, and we will enter it.
+				   The next entry in the new directory will be
+				   a new file, which may well be our new image file.
+				   3. This is an auxiliary file (sound, thumbnail, catalog).
+
+				   In all cases, the thing to do is to skip this entry in the
+				   new directory. */
+				new_entry += CANON_MINIMUM_DIRENT_SIZE + strlen ( new_entry+CANON_DIRENT_NAME );
+			}
+		}
+		else {
+			if ( le16atoh ( old_entry+CANON_DIRENT_ATTRS ) & CANON_ATTR_RECURS_ENT_DIR ) {
+				/* Entered a new directory; append its name to the current folder path.
+				   But how do I sense the end of a directory and remove this? */
+				if ( !strcmp ( "..", old_entry + CANON_DIRENT_NAME ) ) {
+					/* Pop out of this directory */
+					unsigned char *local_dir = strrchr(path->folder,'\\') + 1;
+					GP_DEBUG ( "Leaving directory \"%s\"", local_dir );
+					local_dir[-1] = 0;
+				}
+				else {
+					GP_DEBUG ( "Entering directory \"%s\"", old_entry + CANON_DIRENT_NAME );
+					if ( old_entry[CANON_DIRENT_NAME] == '.' )
+						/* Ignore a leading dot */
+						strcat ( path->folder, old_entry + CANON_DIRENT_NAME + 1 );
+					else
+						strcat ( path->folder, old_entry + CANON_DIRENT_NAME  );
+				}
+			}
+			/* Move to next entry */
+			new_entry += CANON_MINIMUM_DIRENT_SIZE + strlen ( new_entry+CANON_DIRENT_NAME );
+			old_entry += CANON_MINIMUM_DIRENT_SIZE + strlen ( old_entry+CANON_DIRENT_NAME );
+		}
+	}
+}
+
+/**
  * canon_int_capture_image
  * @camera: camera to work with
  * @path: gets filled in with the path and filename of the captured
@@ -829,10 +921,6 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 	int initial_state_len, final_state_len;
 	int mstimeout = -1;
 	int len;
-
-	/* Set default path name */
-	strncpy ( path->name, "*UNKNOWN*", sizeof(path->name) );
-	strncpy ( path->folder, "*UNKNOWN*", sizeof(path->folder) );
 
 	switch (camera->port->type) {
 	case GP_PORT_USB:
@@ -923,85 +1011,15 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 		if ( len < 0 ) {
 			gp_context_error ( context,
 					   "canon_int_capture_image:"
-					   " initial canon_usb_list_all_dirs() failed with status %i",
+					   " final canon_usb_list_all_dirs() failed with status %i",
 					   len );
 			return len;
 		}
 
-		/* Compare the directories to find the new image file. */
-		{
-			unsigned char *old_entry = initial_state, *new_entry = final_state;
-
-			path->folder[0] = 0; /* Start with null pathname string. */
-			GP_DEBUG ( "canon_int_capture_image: starting directory compare" );
-			while ( le16atoh ( old_entry+CANON_DIRENT_ATTRS ) != 0
-				|| le32atoh ( old_entry + CANON_DIRENT_SIZE ) != 0
-				|| le32atoh ( old_entry + CANON_DIRENT_TIME ) != 0 ) {
-				GP_DEBUG ( " old entry \"%s\", attr = 0x%02x, size=%i",
-					   old_entry + CANON_DIRENT_NAME,
-					   old_entry[CANON_DIRENT_ATTRS],
-					   le32atoh ( old_entry + CANON_DIRENT_SIZE ) );
-				GP_DEBUG ( " new entry \"%s\", attr = 0x%02x, size=%i",
-					   new_entry + CANON_DIRENT_NAME,
-					   new_entry[CANON_DIRENT_ATTRS],
-					   le32atoh ( new_entry + CANON_DIRENT_SIZE ) );
-				if ( *old_entry != *new_entry
-				     || le32atoh ( old_entry + CANON_DIRENT_SIZE ) != le32atoh ( new_entry + CANON_DIRENT_SIZE )
-				     || le32atoh ( old_entry + CANON_DIRENT_TIME ) != le32atoh ( new_entry + CANON_DIRENT_TIME )
-				     || strcmp ( old_entry + CANON_DIRENT_NAME, new_entry + CANON_DIRENT_NAME ) ) {
-					/* Mismatch. Presumably a
-					   new file, but is it an
-					   image file? */
-					GP_DEBUG ( "Found mismatch" );
-					if ( is_image ( new_entry + CANON_DIRENT_NAME ) ) {
-						/* Yup, we'll assume that this is the new image. */
-						GP_DEBUG ( "  Found our new image file" );
-						strncpy ( path->name, new_entry + CANON_DIRENT_NAME,
-							strlen ( new_entry + CANON_DIRENT_NAME ) );
-						strcpy ( path->folder, canon2gphotopath ( camera, path->folder ) );
-						free ( initial_state );
-						free ( final_state );
-						break;
-					}
-					else {
-						/* The mismatch is not an image file. There are three possibilities:
-						   1. This is a new directory with no files. The next entry will be
-						      another directory.
-						   2. This is a new directory with new files, and we will enter it.
-						      The next entry in the new directory will be
-						      a new file, which may well be our new image file.
-						   3. This is an auxiliary file (sound, thumbnail, catalog).
-
-						   In all cases, the thing to do is to skip this entry in the
-						   new directory. */
-						new_entry += CANON_MINIMUM_DIRENT_SIZE + strlen ( new_entry+CANON_DIRENT_NAME );
-					}
-				}
-				else {
-					if ( le16atoh ( old_entry+CANON_DIRENT_ATTRS ) & CANON_ATTR_RECURS_ENT_DIR ) {
-						/* Entered a new directory; append its name to the current folder path.
-						   But how do I sense the end of a directory and remove this? */
-						if ( !strcmp ( "..", old_entry + CANON_DIRENT_NAME ) ) {
-							/* Pop out of this directory */
-							unsigned char *local_dir = strrchr(path->folder,'\\') + 1;
-							GP_DEBUG ( "Leaving directory \"%s\"", local_dir );
-							local_dir[-1] = 0;
-						}
-						else {
-							GP_DEBUG ( "Entering directory \"%s\"", old_entry + CANON_DIRENT_NAME );
-							if ( old_entry[CANON_DIRENT_NAME] == '.' )
-								/* Ignore a leading dot */
-								strcat ( path->folder, old_entry + CANON_DIRENT_NAME + 1 );
-							else
-								strcat ( path->folder, old_entry + CANON_DIRENT_NAME  );
-						}
-					}
-					/* Move to next entry */
-					new_entry += CANON_MINIMUM_DIRENT_SIZE + strlen ( new_entry+CANON_DIRENT_NAME );
-					old_entry += CANON_MINIMUM_DIRENT_SIZE + strlen ( old_entry+CANON_DIRENT_NAME );
-				}
-			}
-		}
+		/* Find new file name in camera directory */
+		canon_int_find_new_image ( camera, initial_state, final_state, path );
+		free ( initial_state );
+		free ( final_state );
 		break;
 	case GP_PORT_SERIAL:
 		return GP_ERROR_NOT_SUPPORTED;
