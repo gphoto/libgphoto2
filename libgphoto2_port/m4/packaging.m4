@@ -1,6 +1,6 @@
 AC_DEFUN(GPKG_CHECK_RPM,
 [
-AC_ARG_WITH(rpmbuild, [  --with-rpmbuild=PATH    program to use for building RPMs])
+AC_ARG_WITH(rpmbuild, [  --with-rpmbuild=PATH      Program to use for building RPMs])
 
 AC_MSG_CHECKING([for rpmbuild or rpm])
 if test -x "${with_doc_dir}"

@@ -194,7 +194,7 @@ dnl ---------------------------------------------------------------------------
 cdk_msg=no
 try_cdk=true
 have_cdk=false
-AC_ARG_WITH(cdk,        [  --without-cdk            Don't use cdk],
+AC_ARG_WITH(cdk,        [  --without-cdk             Don't use cdk],
 	if test x$withval = xno; then
 		try_cdk=false
 	fi
@@ -204,7 +204,7 @@ if test "x$prefix" = xNONE; then
 else
 	cdk_prefix=$prefix
 fi
-AC_ARG_WITH(cdk-prefix, [  --with-cdk-prefix=PREFIX Location of cdk],
+AC_ARG_WITH(cdk-prefix, [  --with-cdk-prefix=PREFIX  Location of cdk],
 	cdk_prefix="$withval")
 if $try_cdk; then
 	CPPFLAGS_save="$CPPFLAGS"
@@ -235,7 +235,7 @@ dnl ---------------------------------------------------------------------------
 jpeg_msg=no
 try_jpeg=true
 have_jpeg=false
-AC_ARG_WITH(jpeg, [  --without-jpeg          Don't use jpeg],
+AC_ARG_WITH(jpeg, [  --without-jpeg            Don't use jpeg],
 	if test x$withval = xno; then
 		try_jpeg=false
 	fi
@@ -262,23 +262,48 @@ AM_CONDITIONAL(HAVE_JPEG, $have_jpeg)
 AC_SUBST(JPEG_LIBS)
 
 dnl ---------------------------------------------------------------------------
+dnl pkg-config: pkg-config is a tool to simplify checks for libraries and
+dnl             versions. I really think this is a good thing and therefore
+dnl             use it here. However, if pkg-config is not installed,
+dnl             we offer alternative checks, too.
+dnl ---------------------------------------------------------------------------
+pkgconfig_msg="no (http://www.freedesktop.org/software/pkgconfig)"
+try_pkgconfig=true
+have_pkgconfig=false
+AC_ARG_WITH(pkgconfig, [  --without-pkgconfig       Don't use pkg-config],[
+	if test x$withval = xno; then
+		try_pkgconfig=false
+	fi])
+if $try_pkgconfig; then
+	AC_PATH_PROG(have_pkgconfig,pkg-config,true,false)
+	if $have_pkgconfig; then
+		pkgconfig_msg="yes"
+	fi
+fi
+
+dnl ---------------------------------------------------------------------------
 dnl libexif: The CameraFilesystem can use libexif for extracting thumbnails
 dnl	     out of EXIF data. Similarly, it can extract the mtime of
 dnl	     a file. 
 dnl	     libexif is available from
-dnl	     http://www.sourceforge.net/projects/libexif or
-dnl	     (as packages) from http://www.topfrose.de.
+dnl	     http://www.sourceforge.net/projects/libexif
 dnl ---------------------------------------------------------------------------
 exif_msg="no (http://www.sourceforge.net/projects/libexif)"
 try_exif=true
 have_exif=false
-AC_ARG_WITH(exif, [  --without-exif          Don't use libexif],[
+AC_ARG_WITH(exif, [  --without-exif            Don't use libexif],[
 	if test x$withval = xno; then
 		try_exif=false
 	fi])
+if test "x$prefix" = xNONE; then
+	exif_prefix=$ac_default_prefix
+else
+	exif_prefix=$prefix
+fi
+AC_ARG_WITH(exif-prefix, [  --with-exif-prefix=PREFIX Location of libexif],[
+	exif_prefix="$withval"]) 
 if $try_exif; then
-	AC_PATH_PROG(PKG_CONFIG,pkg-config)
-	if test -n "${PKG_CONFIG}"; then
+	if $have_pkgconfig; then
 		AC_MSG_CHECKING([for libexif])
 		if ${PKG_CONFIG} --exists libexif > /dev/null 2>&1; then
 			EXIF_CFLAGS=`$PKG_CONFIG --cflags libexif`
@@ -288,6 +313,15 @@ if $try_exif; then
 			AC_DEFINE(HAVE_EXIF)
 		fi
 		AC_MSG_RESULT($exif_msg)
+	else
+		CPPFLAGS_save="$CPPFLAGS"
+		CPPFLAGS="-I$exif_prefix/include/libexif -I$exif_prefix/include $CPPFLAGS"
+		AC_CHECK_HEADER(exif-data.h, [
+			EXIF_CFLAGS="-I$exif_prefix/include -I$exif_prefix/include/libexif"
+			EXIF_LIBS="-L$exif_prefix/lib -lexif"
+			have_exif=true
+			exif_msg=yes
+			AC_DEFINE(HAVE_EXIF)])
 	fi
 fi
 AM_CONDITIONAL(HAVE_EXIF, $have_exif)
@@ -303,7 +337,7 @@ dnl ---------------------------------------------------------------------------
 aa_msg="no (http://www.sourceforge.net/projects/aa-project)"
 try_aa=true
 have_aa=false
-AC_ARG_WITH(aalib, [  --without-aalib         Don't use aalib],
+AC_ARG_WITH(aalib, [  --without-aalib           Don't use aalib],
 	if test x$withval = xno; then
 		try_aa=false
 	fi
@@ -386,9 +420,10 @@ Configuration (libgphoto2):
 	Version:                   ${VERSION}
 	Compiler:                  ${CC}
 
-	Build documenation:        $enable_docs
+	Build documenation:        $gtkdoc_msg
 	Config. support (gphoto2): $cdk_msg
 	Preview support (gphoto2): $aa_msg
 	JPEG support:              $jpeg_msg
-	EXIF support:		   $exif_msg
+	pkg-config:                $pkgconfig_msg
+	EXIF support:              $exif_msg
 "

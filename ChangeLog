@@ -1,3 +1,8 @@
+2002-02-12  Lutz Müller <lutz@users.sourceforge.net>
+
+	* configure.in: Ok, not everybody likes pkg-config. Offer an
+	  alternative check, too.
+
 2002-02-11  Lutz Müller <lutz@users.sourceforge.net>
 
 	* libgphoto2/gphoto-filesys.c: Previously, we searched thumbnails in

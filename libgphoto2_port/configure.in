@@ -284,5 +284,5 @@ Configuration
 
 	USB support:          $usb_msg
 
-	Build documenation:   $enable_docs
+	Build documenation:   $gtkdoc_msg
 "

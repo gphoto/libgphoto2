@@ -7,7 +7,7 @@ dnl
 
 AC_DEFUN(GP_CHECK_DOC_DIR,
 [
-AC_ARG_WITH(doc-dir, [  --with-doc-dir=PATH     where to install docs  [default=autodetect]])
+AC_ARG_WITH(doc-dir, [  --with-doc-dir=PATH       Where to install docs  [default=autodetect]])
 
 # check for the main ("root") documentation directory
 AC_MSG_CHECKING([main docdir])
@@ -61,14 +61,13 @@ dnl fig2dev: This program is needed for processing images. If not found,
 dnl          documentation can still be built, but without figures.
 dnl ---------------------------------------------------------------------------
 try_fig2dev=true
-AC_ARG_WITH(fig2dev, [  --without-fig2dev     Don't use fig2dev],[
+have_fig2dev=false
+AC_ARG_WITH(fig2dev, [  --without-fig2dev         Don't use fig2dev],[
 	if test x$withval = xno; then
 		try_fig2dev=false
 	fi])
 if $try_fig2dev; then
 	AC_CHECK_PROG(have_fig2dev,fig2dev,true,false)
-else
-	have_fig2dev=false
 fi
 AM_CONDITIONAL(ENABLE_FIGURES, $have_fig2dev)
 
@@ -76,15 +75,20 @@ dnl ---------------------------------------------------------------------------
 dnl gtk-doc: We use gtk-doc for building our documentation. However, we
 dnl          require the user to explicitely request the build.
 dnl ---------------------------------------------------------------------------
+gtkdoc_msg="no (not requested)"
 try_gtkdoc=false
-AC_ARG_ENABLE(docs, [  --enable-docs           Use gtk-doc to build documentation [default=no]],[
+have_gtkdoc=false
+AC_ARG_ENABLE(docs, [  --enable-docs             Use gtk-doc to build documentation [default=no]],[
 	if test x$enableval = xyes; then
 		try_gtkdoc=true
 	fi])
 if $try_gtkdoc; then
 	AC_CHECK_PROG(have_gtkdoc,gtkdoc-mkdb,true,false)
-else
-	have_gtkdoc=false
+	if $have_gtkdoc; then
+		gtkdoc_msg="yes"
+	else
+		gtkdoc_msg="no (http://www.gtk.org/rdp/download.html)"
+	fi
 fi
 AM_CONDITIONAL(ENABLE_GTK_DOC, $have_gtkdoc)
 
@@ -92,7 +96,7 @@ dnl ---------------------------------------------------------------------------
 dnl Give the user the possibility to install html documentation in a 
 dnl user-defined location.
 dnl ---------------------------------------------------------------------------
-AC_ARG_WITH(html-dir, [  --with-html-dir=PATH    where to install html docs [default=autodetect]])
+AC_ARG_WITH(html-dir, [  --with-html-dir=PATH      Where to install html docs [default=autodetect]])
 AC_MSG_CHECKING([for html dir])
 if test "x${with_html_dir}" = "x" ; then
     HTML_DIR="${DOC_DIR}/html"
