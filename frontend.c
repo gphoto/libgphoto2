@@ -41,12 +41,19 @@ int gp_frontend_confirm (Camera *camera, char *message)
 
 int gp_frontend_prompt_clean_all (CameraWidget *widget)
 {
+	CameraWidget *child;
         int x;
+
+	if (!widget)
+		return (GP_ERROR_BAD_PARAMETERS);
+
+	gp_widget_set_changed (widget, 0);
  
-	widget->changed = 0;
- 
-        for (x=0; x<widget->children_count; x++)
-                gp_frontend_prompt_clean_all(widget->children[x]);
+        for (x = 0; x < gp_widget_count_children (widget); x++) {
+		child = NULL;
+		gp_widget_get_child (widget, x, &child);
+                gp_frontend_prompt_clean_all (child);
+	}
  
         return (GP_OK);
 }
