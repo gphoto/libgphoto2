@@ -25,8 +25,8 @@
 struct _CameraPrivateLibrary
 {
 	GPPort *gpdev;
-	int dirty;
 	u_int8_t *toc;
+	int dirty :1;
 };
 
 

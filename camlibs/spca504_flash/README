@@ -2,6 +2,7 @@ This camlib supports the following cameras:
 
 Aiptek Pencam
 Medion MD 5319 (Aldi-Cam)
+nisis Quickpix Qp3
 
 There are probably others with this chip and flash storage which we dont know
 about. They should also work.
@@ -16,5 +17,8 @@ Without Armin this would not have been possible, so if you own a camera that
 is supported by this driver consider sending him an email and thanking him for
 risking his cam so yours works on linux ;).
 
+Thanks also to Martyn Ranyard <ranyardm@lineone.net> for testing and reporting
+success with the nisis Quickpix Qp3. He also helped debug the beginnings of
+avi support.
 
 Till Adam <till@adam-lilienthal.de>

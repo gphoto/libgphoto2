@@ -353,7 +353,11 @@ spca504_flash_init (GPPort *port, GPContext *context)
    CHECK (gp_port_usb_msg_write (port, 0x00, 0x0000, 0x2306, NULL, 0x00));
    CHECK (gp_port_usb_msg_write (port, 0x08, 0x0000, 0x0006, NULL, 0x00));
 
-   /* Read the same thing thrice, for whatever reason */
+   /* Read the same thing thrice, for whatever reason. 
+    * From working on getting iso traffic working with this chip, I've found
+    * out, that 0x01, 0x0000, 0x0001 polls the chip for completion of a
+    * command. Unfortunately it is of yet unclear, what the exact procedure
+    * is. Until we know, let's keep this here. */
    CHECK (gp_port_usb_msg_read (port, 0x01, 0x0000, 0x0001, bytes, 0x01));
    CHECK (gp_port_usb_msg_read (port, 0x01, 0x0000, 0x0001, bytes, 0x01));
    CHECK (gp_port_usb_msg_read (port, 0x01, 0x0000, 0x0001, bytes, 0x01));

@@ -63,7 +63,8 @@ struct models
 models[] =
 {
 	{"Aiptek Pencam", 0x04fc, 0x504a, 0},
-	{"Medion MD 5319", 0x04fc, 0x504a, 0}
+	{"Medion MD 5319", 0x04fc, 0x504a, 0},
+	{"nisis Quickpix Qp3", 0x04fc, 0x504a, 0}
 	, {
 	NULL, 0, 0, 0}
 };
