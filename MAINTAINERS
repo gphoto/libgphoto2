@@ -53,6 +53,9 @@ camlibs/polaroid/pdc640.c:
 camlibs/ptp:
 	Mariusz Woloszyn <emsi@ipartners.pl>
 
+camlibs/samsung:
+	Marcus Meissner <marcus@jet.franken.de>
+
 camlibs/sierra:
 	Scott Fritzinger <scottf@unr.edu>
 
