@@ -958,7 +958,7 @@ int
 gp_camera_capture (Camera *camera, CameraCaptureType type,
 		   CameraFilePath *path, GPContext *context)
 {
-	CHECK_NULL (camera && path);
+	CHECK_NULL (camera);
 	CHECK_INIT (camera, context);
 
 	if (!camera->functions->capture) {
