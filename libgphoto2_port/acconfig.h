@@ -12,7 +12,7 @@
 #undef HAVE_STPCPY
 
 /* Debugging */
-#undef ENABLE_DEBUGGING
+#undef DISABLE_DEBUGGING
 
 #undef HAVE_RTS_IOCTL
 

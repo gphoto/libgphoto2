@@ -11,9 +11,6 @@
 #undef HAVE_LC_MESSAGES
 #undef HAVE_STPCPY
 
-/* Debugging */
-#undef ENABLE_DEBUGGING
-
 #undef HAVE_CDK
 #undef HAVE_AA
 #undef HAVE_JPEG

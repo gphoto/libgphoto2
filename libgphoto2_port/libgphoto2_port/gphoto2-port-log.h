@@ -45,7 +45,7 @@ typedef enum {
 typedef void (* GPLogFunc) (GPLogLevel level, const char *domain,
 			    const char *format, va_list args, void *data);
 
-#ifdef ENABLE_DEBUGGING
+#ifndef DISABLE_DEBUGGING
 
 int  gp_log_add_func    (GPLogLevel level, GPLogFunc func, void *data);
 int  gp_log_remove_func (int id);
@@ -85,7 +85,7 @@ void gp_log_data (const char *domain, const char *data, unsigned int size);
 #define GP_DEBUG(msg, params...) \
         gp_log(GP_LOG_DEBUG, GP_MODULE "/" __FILE__, msg, ##params)
 
-#else /* ENABLE_DEBUGGING */
+#else /* DISABLE_DEBUGGING */
 
 /* Stub these functions out if debugging is disabled */
 #define gp_log_add_func(level, func, data) (0)
@@ -96,6 +96,6 @@ void gp_log_data (const char *domain, const char *data, unsigned int size);
 #define GP_LOG(level, msg, params...) /**/
 #define GP_DEBUG(msg, params...) /**/
 
-#endif /* ENABLE_DEBUGGING */
+#endif /* DISABLE_DEBUGGING */
 
 #endif /* __GPHOTO2_PORT_LOG_H__ */

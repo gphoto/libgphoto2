@@ -1,3 +1,9 @@
+2001-12-07  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* configure.in:
+	* acconfig.h: ENABLE_DEBUGGING -> DISABLE_DEBUGGING. If you don't, 
+	  you don't get any logging in gtkam.
+
 2001-12-07  Hans Ulrich Niedermann <hun@n-dimensional.de>
 
 	* configure.in: it is time for 2.0beta4dev4
