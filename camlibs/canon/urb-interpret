@@ -17,7 +17,7 @@ use warnings;
 
 my %canon_cmd = (
     "0x01 0x11 0x202" => "Get picture/thumbnail",
-    "0x01 0x12 0x201" => "Identify camera request",
+    "0x01 0x12 0x201" => "Identify camera",
     "0x03 0x12 0x201" => "Get time",
     "0x03 0x11 0x403" => "Upload data block",
     "0x04 0x12 0x201" => "Set time",
@@ -25,28 +25,30 @@ my %canon_cmd = (
     "0x05 0x12 0x201" => "Change owner",
     "0x06 0x11 0x201" => "Remove directory",
     "0x09 0x11 0x201" => "Disk info request",
-    "0x0a 0x11 0x202" => "Flash device identification",
+    "0x0a 0x11 0x202" => "Flash device ID",
     "0x0a 0x12 0x201" => "Power supply status",
     "0x0b 0x11 0x202" => "Get directory",
     "0x0d 0x11 0x201" => "Delete file",
-    "0x0e 0x11 0x202" => "Set file attribute",
+    "0x0e 0x11 0x201" => "Set file attribute",
+    "0x0e 0x11 0x202" => "Flash Device ID (new)",
     "0x0f 0x11 0x201" => "Set file time",
     "0x13 0x12 0x201" => "Remote Camera control",
-    "0x17 0x12 0x202" => "Download a captured image",
-    "0x18 0x12 0x202" => "Download a captured preview",
+    "0x17 0x12 0x202" => "Download captured image",
+    "0x18 0x12 0x202" => "Download captured preview",
     "0x1a 0x12 0x201" => "Unknown EOS D30 command",
     "0x1b 0x12 0x201" => "EOS lock keys",
     "0x1c 0x12 0x201" => "EOS unlock keys",
     "0x1d 0x12 0x201" => "EOS get body ID",
-    "0x1f 0x12 0x201" => "Get camera photo abilities",
+    "0x1f 0x12 0x201" => "Get camera abilities",
     "0x20 0x12 0x201" => "Lock keys, turn off LCD",
     "0x21 0x12 0x201" => "Unknown newer command",
     "0x22 0x12 0x201" => "Unknown newer command",
-    "0x23 0x12 0x201" => "Get EOS Body ID (newer)",
-    "0x24 0x12 0x201" => "Get camera photo abilities (newer)",
+    "0x23 0x12 0x201" => "Get EOS Body ID (new)",
+    "0x24 0x12 0x201" => "Get camera abilities (new)",
     "0x25 0x12 0x201" => "Unknown newer command",
-    "0x26 0x12 0x202" => "newer retrieve image?",
-    "0x35 0x12 0x201" => "Unknown newer command"
+    "0x26 0x12 0x202" => "Get captured image (new)",
+    "0x35 0x12 0x201" => "Unknown newer command",
+    "0x36 0x12 0x201" => "Unknown newer command"
 );
 
 my %control_subcmd = ( "0x00" => "Camera control init",
@@ -101,6 +103,8 @@ foreach $file (@ARGV) {
     my $buffer = 0;
     my $direction;
     my $current_lines;
+    my $seq;
+    my $timestamp;
 
     warn("FILE: $file\n");
 
@@ -110,12 +114,18 @@ foreach $file (@ARGV) {
 
 	if ($line =~ />>>\s+URB (\d+) going down/) {
 	    $current_urb = $1;
-	    $direction = "down";
 	    #warn("URB $current_urb down...\n");
+	    $direction = "down";
+	    # There may be a previous URB under way that was truncated.
+	    $dumping_urbdata = 0;
+	    $dumping_setup = 0;
 	} elsif ($line =~ /<<<\s+URB (\d+) coming back/) {
 	    $current_urb = $1;
 	    #warn("URB $current_urb read\n");
 	    $direction = "back";
+	    # There may be a previous URB under way that was truncated.
+	    $dumping_urbdata = 0;
+	    $dumping_setup = 0;
 	} elsif ( $line =~ /Diag Driver: Receive/
 		  || $line =~ /isEchoRequest/
 		  || $line =~ /isWakeUpRequest/
@@ -125,11 +135,14 @@ foreach $file (@ARGV) {
 	    $dumping_urbdata = 0;
 	    $dumping_setup = 0;
 	    next;
+	} elsif ( $line =~ /^\d+\s+\d+\.\d+\s+UrbLink/ ) {
+	    $dumping_urbdata = 0;
+	    $dumping_setup = 0;
+	    next;
 	} else {
-	    if ($current_urb) {
+	    if ($current_urb > 0) {
 		if ( $line =~ /^(\d+)\s+(\d\d:\d\d:\d\d [AP]M)\s+0000:\s+/
-		     || $line =~ /^(\d+)\s+(\d+\.\d+)\s+0000:\s+/
-		     || $line =~ /^\s+00000000:\s+/ ) {
+		     || $line =~ /^(\d+)\s+(\d+\.\d+)\s+0000:\s+/ ) {
 		    if ( !($dumping_setup) ) {
 			#warn ( "dumping URB data\n" );
 			$dumping_urbdata = 1;
@@ -162,12 +175,21 @@ foreach $file (@ARGV) {
 		    my $hex = "";
 		    if ($line =~ /^(\d+)\s+(\d\d:\d\d:\d\d [AP]M)\s+([\da-f]+):((\s[\da-f][\da-f])+)\s+$/
 			|| $line =~ /^(\d+)\s+(\d+\.\d+)\s+([\da-f]+):((\s[\da-f][\da-f])+)\s+$/ ) {
+			$seq = $1;
+			$timestamp = $2;
 			$byte_offset = $3;
 			$hex = $4;
+			#warn ( "case 1: row $byte_offset of URB $current_urb: seq $seq time $timestamp data $hex\n" );
 		    } elsif ( $line =~ /^\s+([\da-f]+):((\s[\da-f][\da-f])+)\s*$/ ) {
 			$byte_offset = $1;
 			$hex = $2;
+			#warn ( "case 2: row $byte_offset of URB $current_urb\n" );
+		    } elsif ( $line =~ /^(\d)+\s+(\d+\.\d+)\s+[a-f]:\s+$/ ) {
+			$byte_offset = $3;
+			$hex = $4;
+			#warn ( "case 3: row $byte_offset of URB $current_urb\n" );
 		    } else {
+			#warn ( "case 4: not in data URB $current_urb\n" );
 			if ($line =~ /^(\d+)\s+(\d\d:\d\d:\d\d [AP]M)\s+([\da-f]+):\s+$/
 			    || $line =~ /^(\d+)\s+(\d+\.\d+)\s+([\da-f]+):\s+$/ ) {
 			    # every other line is this kind of line, data offset
@@ -176,7 +198,8 @@ foreach $file (@ARGV) {
 			} elsif ( $line =~ /^\s+([a-f0-9]+):(( [a-f0-9][a-f0-9])+)$/ ) {
 			    $hex = $2;
 			} else {
-			    if ($line =~ /UrbLink/) {
+			    if ( $line =~ /UrbLink/
+				 || $line =~ /^(\d+)\s+(\d+\.\d+)\s*$/ ) {
 				# this is not a urbdata line. reset.
 				$dumping_urbdata = 0;
 				next;	# unimportant line, just go to next
@@ -294,7 +317,9 @@ foreach $file (@ARGV) {
 			next;
 		    }
 
-		    if ( $line =~ /^--\s+URB_FUNCTION_([A-Z_]+):/ ) {
+		    if ( $line =~ /^--\s+URB_FUNCTION_([A-Z_]+):/
+			 || $line =~ /^\d+\s+\d+\.\d+\s+--\s+URB_FUNCTION_([A-Z_]+):/
+			 || $line =~ /^\d+\s+\d\d:\d\d:\d\d [AP]M\s+--\s+URB_FUNCTION_([A-Z_]+):/ ) {
 			# Informing us of transfer type. Seven kinds have been seen.
 			$current_function_type = $1;
 			#warn ( "URB $current_urb is of function type $current_function_type" );
@@ -304,7 +329,7 @@ foreach $file (@ARGV) {
 			    $urbdata{$current_urb}{op} = "READ";
 			}
 		    }
-		    elsif ($line =~ /\sTransferFlags.+USBD_TRANSFER_DIRECTION_(OUT|IN)/) {
+		    elsif ($line =~ /.*\sTransferFlags.+USBD_TRANSFER_DIRECTION_(OUT|IN)/) {
 			# OP in "coming back" is most reliable, and that one
 			# is always after "going down" so we don't need to
 			# check previous value here, just overwrite
@@ -326,9 +351,11 @@ foreach $file (@ARGV) {
 			    # ok, this is read operation. info is
 			    # always good.
 			    $urbdata{$current_urb}{bytes} = $t;
+			    #warn ( "URB $current_urb read $t\n" );
 			} elsif ($urbdata{$current_urb}{op} eq "WRITE") {
 			    if ($direction eq "down") {
 				$urbdata{$current_urb}{bytes} = $t;
+				#warn ( "URB $current_urb $urbdata{$current_urb}{op} $urbdata{$current_urb}{bytes}\n" );
 			    }
 			    # else, this information is unreliable
 			}
@@ -338,6 +365,14 @@ foreach $file (@ARGV) {
 	}
 
 	if ($line =~ /^(\d+)	([\w\d:\.]+?)	(.+?)\s*$/) {
+	    # we want to trim down the line numbers and time
+
+	    my $lineno = $1;
+	    my $time = $2;
+	    my $rest = $3;
+
+	    $line = sprintf("%.5d %.3f  %s", $lineno, $time, $rest);
+	} elsif ( $line =~ /^(\d+)\s+(\d+\.\d+)\s+(.+?)\s*$/ ) {
 	    # we want to trim down the line numbers and time
 
 	    my $lineno = $1;
@@ -373,38 +408,52 @@ foreach $file (@ARGV) {
 	my $cmd2 = $urbdata{$current_urb}{cmd2};
 	my $cmd3 = $urbdata{$current_urb}{cmd3};
 	my $pipe = $urbdata{$current_urb}{pipe};
-	my $type = $urbdata{$current_urb}{type};
 	my $op = $urbdata{$current_urb}{op};
 	my $length = $urbdata{$current_urb}{bytes};
 	my $keep_alive = 0;
 
 	if ( defined($op) ) {
-	    if ( defined($pipe) ) {
-		if ( $pipe eq "2" && $length eq "0") {
-		    $keep_alive = 1;
-		}
-	    }
 	    if ( !defined($length) ) {
 		warn ( "Missing operation length in URB $current_urb\n" );
-	    }
-	    if ( $keep_alive ) {
-		$n_skipped++;
-		next;
-	    } else {
-		if ( $n_skipped ) {
-		    print ( "\n*** Skipped $n_skipped null interrupt reads ***\n" );
-		    $n_skipped = 0;
+	    } elsif ( defined($pipe) ) {
+		if ( $pipe eq "2" && $length eq "0") {
+		    $n_skipped++;
+		    next;
 		}
-		if ($op eq "READ") {
-		    if ( defined($length) ) {
-			if ( $pipe eq "2" ) {
-			    my $hex = $urbdata{$current_urb}{intdata};
+	    }
+	    if ( $n_skipped ) {
+		print ( "\n*** Skipped $n_skipped null interrupt reads ***\n" );
+		$n_skipped = 0;
+	    }
+	    if ($op eq "READ") {
+		if ( defined($length) ) {
+		    if ( $pipe eq "2" ) {
+			my $hex = "";
+			if ( defined ( $urbdata{$current_urb}{intdata} ) ) {
+			    $hex = $urbdata{$current_urb}{intdata};
 			    my @h = split ( " ", $hex );
 			    my $code = $h[4];
 			    if ( defined ( $intcode{$code} ) ) {
-				printf ( "\n*** URB $current_urb $intcode{$code} interrupt read 0x%02x bytes ***\n\n", $length );
+				if ( hex($code) == 0x0a ) {
+				    # Capture status: there's a subcode that tells us more.
+				    my $subcode = hex($h[0x0c]);
+				    if ( $subcode == 0x1c ) {
+					printf ( "\n*** URB $current_urb interrupt read 0x%02x bytes: capture start ***\n\n", $length );
+				    }
+				    elsif ( $subcode == 0x1d ) {
+					printf ( "\n*** URB $current_urb interrupt read 0x%02x bytes: capture finish ***\n\n", $length );
+				    }
+				    elsif ( $subcode == 0x1b ) {
+					printf ( "\n*** URB $current_urb interrupt read 0x%02x bytes: flash wait ***\n\n", $length );
+				    }
+				    elsif ( $subcode == 0x0a ) {
+					printf ( "\n*** URB $current_urb interrupt read 0x%02x bytes: photographic failure ***\n\n", $length );
+				    }
+				} else {
+				    printf ( "\n*** URB $current_urb interrupt read 0x%02x bytes: $intcode{$code} ***\n\n", $length );
+				}
 			    } else {
-				printf ( "\n*** URB $current_urb $code interrupt read 0x%02x bytes ***\n\n", $length );
+				printf ( "\n*** URB $current_urb interrupt read 0x%02x bytes: unknown type $code ***\n\n", $length );
 			    }
 			} elsif ($length == 0x40) {
 			    print("\n\n\n\n*** URB $current_urb possible CANON RESPONSE ***\n");
@@ -413,12 +462,22 @@ foreach $file (@ARGV) {
 			} elsif ($length == 0x58 && defined ($urbdata{$current_urb}{usbid}) ) {
 			    print("\n\n\n\n*** URB $current_urb probably camera initial response, USB ID=$urbdata{$current_urb}{usbid}, magic=$urbdata{$current_urb}{magic} ***\n\n");
 			} else {
-			    print("\n");
+			    print ( "\n*** URB $current_urb interrupt read, but data are missing from log file ***\n\n" );
 			}
+		    } elsif ($length == 0x58 && defined ($urbdata{$current_urb}{usbid}) ) {
+			print("\n\n\n\n*** URB $current_urb probably camera initial response, USB ID=$urbdata{$current_urb}{usbid}, magic=$urbdata{$current_urb}{magic} ***\n\n");
+		    } elsif ($length == 0x01) {
+			print("\n\n\n\n*** URB $current_urb probably CAMERA INIT ***\n\n");
+		    } elsif ($length >= 0x40) {
+			printf("\n\n\n\n*** URB $current_urb possible CANON RESPONSE 0x%x bytes ***\n", $length);
 		    } else {
 			print("\n");
 		    }
-		} elsif ($op eq "WRITE") {
+		} else {
+		    print("\n");
+		}
+	    } elsif ($op eq "WRITE") {
+		if ( defined($length) ) {
 		    my $cmd;
 		    if ( defined($urbdata{$current_urb}{cmd1}) ) {
 			$cmd = "$urbdata{$current_urb}{cmd1}";
@@ -444,12 +503,12 @@ foreach $file (@ARGV) {
 				if ( $cmd eq "0x13 0x12 0x201" ) {
 				    if ( defined($urbdata{$current_urb}{subcmd}) ) {
 					printf("\n\n\n\n*** URB $current_urb CANON COMMAND '$canon_cmd{$cmd}' ($cmd) 0x%02x bytes", $length);
-                                        if ( $control_subcmd{$urbdata{$current_urb}{subcmd}} ) {
+					if ( $control_subcmd{$urbdata{$current_urb}{subcmd}} ) {
 					    print ( ": $control_subcmd{$urbdata{$current_urb}{subcmd}} ***\n\n" );
-				        } else {
+					} else {
 					    print ( ". Unknown subcommand: $urbdata{$current_urb}{subcmd} ***\n\n" );
-                                        }
-                                    } else {
+					}
+				    } else {
 					# Special case for newer (e.g. EOS 20D) protocol
 					printf("\n\n\n\n*** URB $current_urb CANON COMMAND 'Get Power Status (newer)' ($cmd) 0x%02x bytes ***\n\n", $length);
 				    }
@@ -467,8 +526,19 @@ foreach $file (@ARGV) {
 			    } else {
 				printf("\n\n\n\n*** URB $current_urb PROBABLE CANON COMMAND ($cmd) 0x%02x bytes ***\n\n", $length);
 			    }
+			} else {
+			    printf("\n\n\n\n*** URB $current_urb possible CANON COMMAND ($cmd) 0x%02x bytes ***\n\n", $length);
+			}
+		    } elsif ($cmd3 eq "0x201" or $cmd3 eq "0x202") {
+			if ($canon_cmd{$cmd}) {
+			    printf("\n\n\n\n*** URB $current_urb CANON COMMAND '$canon_cmd{$cmd}' ($cmd) 0x%02x bytes ***\n\n", $length);
+			} else {
+			    printf("\n\n\n\n*** URB $current_urb PROBABLE CANON COMMAND ($cmd) 0x%02x bytes ***\n\n", $length);
 			}
 		    }
+		} else {
+		    warn ( "URB $current_urb write of unknown length" );
+		    print ( "\n\n\n\n*** URB $current_urb write of unknown length ***\n\n" );
 		}
 	    }
 
@@ -477,6 +547,8 @@ foreach $file (@ARGV) {
 	    } else {
 		printf( "%s *unknown* BYTES\n", $op );
 	    }
+	} else {
+	    print ( "*** URB $current_urb has missing type info ***\n" );
 	}
 
 	if ($urbdata{$current_urb}{pipe}) {
