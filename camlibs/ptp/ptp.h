@@ -23,6 +23,11 @@
 
 // PTP protocol constatnts and structures definition folows
 
+// USB timeout value
+
+#define PTP_USB_TIMEOUT                 2000
+
+
 // Container types
 
 #define PTP_TYPE_REQ                    0x0001
@@ -99,8 +104,9 @@
 
 // PTP extended ERROR codes
 
-#define PTP_ERROR_DATA_EXPECTED		0x2FF
-#define PTP_ERROR_RESP_EXPECTED		0x2FE
+#define PTP_ERROR_IO			0x2FF
+#define PTP_ERROR_DATA_EXPECTED		0x2FE
+#define PTP_ERROR_RESP_EXPECTED		0x2FD
 
 // Error description structure
 #include "ptperr.h"
@@ -111,6 +117,7 @@
 #define PTP_REQ_LEN                     30
 #define PTP_REQ_HDR_LEN                 (2*sizeof(int)+2*sizeof(short))
 #define PTP_RESP_LEN                    sizeof(PTPReq)
+
 
 // PTP request/response type
 
@@ -124,6 +131,17 @@ struct _PTPReq {
 };
 
 
+// PTP device info structure (returned by GetDevInfo)
+
+typedef struct _PTPDeviceInfo PTPDedviceInfo;
+struct _PTPDeviceInfo {
+	short StaqndardVersion;
+	int VendorExtensionID;
+	short VendorExtensionDesc;
+	char data [PTP_REQ_DATALEN-(2*sizeof(short))-sizeof(int)];
+};
+
+
 // PTP objecthandles structure (returned by GetObjectHandles)
 
 typedef struct _PTPObjectHandles PTPObjectHandles;
@@ -131,6 +149,7 @@ struct _PTPObjectHandles {
 	int n;
 	int handler[(PTP_REQ_DATALEN-sizeof(int))/sizeof(int)];
 };
+
 
 // PTP objectinfo structure (returned by GetObjectInfo)
 
@@ -152,7 +171,7 @@ struct _PTPObjectInfo {
 	int AssociationDesc;
 	int SequenceNumber;
 	char filenamelen;		// makes reading easyier
-	char data[(PTP_REQ_DATALEN-13*sizeof(int))/sizeof(int)];
+	char data[PTP_REQ_DATALEN-11*sizeof(int)-2*sizeof(short)-sizeof(char)];
 };
 
 // Glue stuff
@@ -174,11 +193,19 @@ struct _PTPParams {
 	PTPIOReadFunc io_read;
 	PTPIOWriteFunc io_write;
 	PTPError ptp_error;
-	int id;			// Transaction ID
+	int id;		// Transaction ID
 	void *io_data;
 };
 
 
 // ptp functions
+
+short                           
+ptp_opensession(PTPParams* params, PTPReq* databuf, int session);
+short                           
+ptp_closesession(PTPParams* params, PTPReq* databuf);
+
+/* no more yet ;) */
+
 
 #endif /* __PTP_H__ */
