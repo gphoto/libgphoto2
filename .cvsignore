@@ -1,6 +1,6 @@
 gphoto.spec
 .*~ *~
-*.patch
+*.patch *.patch.new
 config.guess
 config.sub
 ltconfig
