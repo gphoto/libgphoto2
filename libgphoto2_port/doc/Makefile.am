@@ -12,9 +12,9 @@ DOC_SOURCE_DIR=$(top_srcdir)/libgphoto2_port
 EXTRA_DIST=gphoto2-port-api.sgml
 
 if ENABLE_GTK_DOC
-HTML_DIR=$(datadir)/gphoto2-port/html
+htmldir=@HTML_DIR@
 
-TARGET_DIR=$(HTML_DIR)/$(DOC_MODULE)
+TARGET_DIR=$(htmldir)/$(DOC_MODULE)
 
 all-local: html
 
@@ -43,7 +43,7 @@ install-data-local:
 	$(INSTALL) -d -m 0755 $(TARGET_DIR)
 	$(INSTALL_DATA) $(srcdir)/html/*.html $(TARGET_DIR)
 	$(INSTALL_DATA) $(srcdir)/html/index.sgml $(TARGET_DIR)
-	gtkdoc-fixxref --module=$(DOC_MODULE) --html-dir=$(HTML_DIR)
+	gtkdoc-fixxref --module=$(DOC_MODULE) --html-dir=$(htmldir)
 
 dist-hook:
 	(cd $(srcdir) ; tar cvf - html) | (cd $(distdir); tar xf -)
