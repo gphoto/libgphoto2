@@ -145,6 +145,7 @@ int gp_port_info(int port_number, CameraPortInfo *info) {
 	if (gpio_get_device_info(port_number, &i)==GPIO_ERROR)
 		return (GP_ERROR);
 
+	/* Translate to gPhoto types */
 	switch (i.type) {
 		case GPIO_DEVICE_SERIAL:
 			info->type = GP_PORT_SERIAL;
@@ -152,21 +153,15 @@ int gp_port_info(int port_number, CameraPortInfo *info) {
 		case GPIO_DEVICE_PARALLEL:
 			info->type = GP_PORT_PARALLEL;
 			break;
-#ifdef GPIO_USB
 	        case GPIO_DEVICE_USB:
 			info->type = GP_PORT_USB;
 			break;
-#endif
-#ifdef GPIO_IEEE1394
 	        case GPIO_DEVICE_IEEE1394:
 			info->type = GP_PORT_IEEE1394;
 			break;
-#endif			
-#ifdef GPIO_NETWORK
 	        case GPIO_DEVICE_NETWORK:
 			info->type = GP_PORT_NETWORK;
 			break;
-#endif
 		default:
 			info->type = GP_PORT_NONE;
 	}
@@ -191,7 +186,6 @@ int gp_camera_name (int camera_number, char *camera_name) {
 }
 
 int gp_camera_abilities (int camera_number, CameraAbilities *abilities) {
-
 
 	memcpy(abilities, &glob_camera_abilities[camera_number],
 	       sizeof(glob_camera_abilities[camera_number]));
