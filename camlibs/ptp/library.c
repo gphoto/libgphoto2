@@ -938,8 +938,9 @@ camera_init (Camera *camera, GPContext *context)
 	/* the transaction_id is incemente before sending, thus it means 0x0 */
 	camera->pl->params.transaction_id=0xffffffff;
 
+	/* On large fiels (over 50M) deletion takes over 3 seconds */
+	CR (gp_port_set_timeout (camera->port, 6000));
 	/* Configure the port */
-	CR (gp_port_set_timeout (camera->port, 3000));
 	CR (gp_port_get_settings (camera->port, &settings));
 
 	/* Use the defaults the core parsed */
