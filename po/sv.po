@@ -1,5 +1,5 @@
 # Swedish translation of gPhoto
-# Copyright © 2000 Free Software Foundation, Inc.
+# Copyright (C) 2000 Free Software Foundation, Inc.
 # Andreas Hyden <a.hyden@cyberpoint.se> 2000.
 # Stefan Björnelund <stefanb@update.uu.se> 2002.
 # Sverker Wiberg <sverkerw@du.uab.ericsson.se> 2002.
@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gphoto 0.4.3\n"
 "POT-Creation-Date: 2002-12-01 21:13+0100\n"
-"PO-Revision-Date: 2002-07-24 08:56+0200\n"
+"PO-Revision-Date: 2003-01-09 08:13+0100\n"
 "Last-Translator: Stefan Björnelund <stefanb@update.uu.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -851,16 +851,22 @@ msgid ""
 "provided by Mustek.\n"
 "\n"
 msgstr ""
+"\n"
+"Till Adam <till@adam-lilienthal.de>\\n\"\n"
+"Stöd för Mustek gSmart mini serien av digital kameror baserade på\n"
+"flera andra gphoto2 kamerabiblioteks moduler och windows källkoden \n"
+"vänligen tillhandahållen av Mustek.\n"
+"\n"
 
 #: camlibs/gsmart/library.c:251
 #, c-format
 msgid "Unsupported port type: %d. This driver only works with USB cameras.\n"
 msgstr ""
+"Porttypen stöds ej: %d. Denna drivrutin fungerar bara med USB kamror.\n"
 
 #: camlibs/gsmart/library.c:280
-#, fuzzy
 msgid "Could not reset camera.\n"
-msgstr "Kunde inte finna någon kamera."
+msgstr "Kunde inte nollställa kameran.\n"
 
 #: camlibs/gsmart/library.c:427
 #, c-format
@@ -868,6 +874,8 @@ msgid ""
 "Your camera does only support deleting the last file on the camera. In this "
 "case, this is file '%s'."
 msgstr ""
+"Din kamera stödjer radering av den senaste filen på kameran. I detta fall, "
+"denhär filen '%s'."
 
 #: camlibs/jamcam/jamcam.c:280
 msgid "jamcam library v"
@@ -993,26 +1001,23 @@ msgstr "Kamerakonfiguration"
 
 #: camlibs/kodak/dc210/dc210.c:170
 msgid "File"
-msgstr "Fil"
+msgstr "Fil:"
 
 #: camlibs/kodak/dc210/dc210.c:173 camlibs/kodak/dc210/dc210.c:342
-#, fuzzy
 msgid "File type"
-msgstr "Filen finns"
+msgstr "Filtyp"
 
 #: camlibs/kodak/dc210/dc210.c:175 camlibs/kodak/dc210/dc210.c:180
 msgid "JPEG"
 msgstr "JPEG"
 
 #: camlibs/kodak/dc210/dc210.c:176 camlibs/kodak/dc210/dc210.c:182
-#, fuzzy
 msgid "FlashPix"
-msgstr "Blixt"
+msgstr "FlashPix"
 
 #: camlibs/kodak/dc210/dc210.c:186 camlibs/kodak/dc210/dc210.c:351
-#, fuzzy
 msgid "File resolution"
-msgstr "Upplösning"
+msgstr "Fil upplösning"
 
 #: camlibs/kodak/dc210/dc210.c:188 camlibs/kodak/dc210/dc210.c:193
 #: camlibs/ricoh/library.c:318
@@ -1025,24 +1030,23 @@ msgstr "1152 x 864"
 
 #: camlibs/kodak/dc210/dc210.c:201 camlibs/kodak/dc210/dc210.c:364
 msgid "File compression"
-msgstr ""
+msgstr "Fil kompression"
 
 #: camlibs/kodak/dc210/dc210.c:203 camlibs/kodak/dc210/dc210.c:209
 msgid "Low (best quality)"
-msgstr ""
+msgstr "Låg (bäst kvalité)"
 
 #: camlibs/kodak/dc210/dc210.c:204 camlibs/kodak/dc210/dc210.c:211
 msgid "Medium (better quality)"
-msgstr ""
+msgstr "Medium (bättre kvalité)"
 
 #: camlibs/kodak/dc210/dc210.c:205 camlibs/kodak/dc210/dc210.c:213
 msgid "High (good quality)"
-msgstr ""
+msgstr "Hög (god kvalité)"
 
 #: camlibs/kodak/dc210/dc210.c:217
-#, fuzzy
 msgid "Capture"
-msgstr "Bländare"
+msgstr "Foto"
 
 #: camlibs/kodak/dc210/dc210.c:220 camlibs/kodak/dc210/dc210.c:379
 #: camlibs/ricoh/library.c:499 camlibs/sierra/sierra.c:1010
@@ -1060,27 +1064,27 @@ msgstr "Makro"
 
 #: camlibs/kodak/dc210/dc210.c:231
 msgid "58 mm"
-msgstr ""
+msgstr "58 mm"
 
 #: camlibs/kodak/dc210/dc210.c:233
 msgid "51 mm"
-msgstr ""
+msgstr "51 mm"
 
 #: camlibs/kodak/dc210/dc210.c:235
 msgid "41 mm"
-msgstr ""
+msgstr "41 mm"
 
 #: camlibs/kodak/dc210/dc210.c:237
 msgid "34 mm"
-msgstr ""
+msgstr "34 mm"
 
 #: camlibs/kodak/dc210/dc210.c:239
 msgid "29 mm"
-msgstr ""
+msgstr "29 mm"
 
 #: camlibs/kodak/dc210/dc210.c:245 camlibs/kodak/dc210/dc210.c:404
 msgid "Exposure compensation"
-msgstr ""
+msgstr "Exponerings kompensation"
 
 #: camlibs/kodak/dc210/dc210.c:255 camlibs/kodak/dc210/dc210.c:261
 #: camlibs/konica/library.c:782 camlibs/konica/library.c:798
@@ -1109,13 +1113,12 @@ msgstr "Tvinga"
 
 #: camlibs/kodak/dc210/dc210.c:257 camlibs/kodak/dc210/dc210.c:265
 #: camlibs/ricoh/library.c:346
-#, fuzzy
 msgid "None"
-msgstr "ingen"
+msgstr "Ingen"
 
 #: camlibs/kodak/dc210/dc210.c:269 camlibs/kodak/dc210/dc210.c:422
 msgid "Red eye flash"
-msgstr ""
+msgstr "Röda ögon reduktion"
 
 #: camlibs/kodak/dc210/dc210.c:271 camlibs/kodak/dc210/dc210.c:275
 #: camlibs/konica/library.c:682 camlibs/konica/library.c:689
@@ -1142,43 +1145,43 @@ msgstr "Av"
 
 #: camlibs/kodak/dc210/dc210.c:280
 msgid "Other"
-msgstr ""
+msgstr "Övrigt"
 
 #: camlibs/kodak/dc210/dc210.c:286
-#, fuzzy
 msgid "Set clock in camera"
-msgstr "Frånkopplar kamera."
+msgstr "Sätt kamerans klocka."
 
 #: camlibs/kodak/dc210/dc210.c:290 camlibs/kodak/dc210/dc210.c:415
-#, fuzzy
 msgid "Port speed"
-msgstr "Inte använt"
+msgstr "Porthastighet"
 
 #: camlibs/kodak/dc210/dc210.c:300 camlibs/kodak/dc210/library.c:697
 msgid "Album name"
-msgstr ""
+msgstr "Albumnamn"
 
 #: camlibs/kodak/dc210/dc210.c:303
 msgid "Name to set on card when formatting."
-msgstr ""
+msgstr "Namn att sätta på kortet vid formatering."
 
 #: camlibs/kodak/dc210/dc210.c:305
 msgid "Format compact flash"
-msgstr ""
+msgstr "Formatera CompactFlash"
 
 #: camlibs/kodak/dc210/dc210.c:308
 msgid "Format card and set album name."
-msgstr ""
+msgstr "Formatera kort och sätt albumnamn"
 
 #: camlibs/kodak/dc210/dc210.c:311
 msgid "Debug"
-msgstr ""
+msgstr "Avlusning"
 
 #: camlibs/kodak/dc210/dc210.c:329
 msgid ""
 "Execute predefined command\n"
 "with parameter values."
 msgstr ""
+"Exekvera fördefinierat kommando\n"
+"med parametervärden."
 
 #: camlibs/kodak/dc210/dc210.c:625
 msgid ""
@@ -1187,29 +1190,36 @@ msgid ""
 "please send a message to koltan@gmx.de to let me know, if you have any "
 "troubles with this driver library or if everything is okay."
 msgstr ""
+"Detta bibliotek har testats med en Kodak DC 215 Zoom kamera. Det kan "
+"fungera\n"
+"också med DC 200 och DC 210 kameror. Om du råkar ha en sådan kamera,\n"
+"vänligen skicka ett meddelade till koltan@gmx.de för att låta mig veta, om "
+"du\n"
+"har några problem med detta drivrutinsbibliotek eller om allt fungerar bra."
 
 #: camlibs/kodak/dc210/dc210.c:637
 msgid ""
 "Camera Library for the Kodak DC215 Zoom camera.\n"
 "Michael Koltan <koltan@gmx.de>\n"
 msgstr ""
+"Kamera bibliotek för Kodak DC215 Zoom kameror.\n"
+"Michael Koltan <koltan@gmx.de>\n"
 
 #: camlibs/kodak/dc210/library.c:349
-#, fuzzy
 msgid "Waiting..."
-msgstr "Uppladdning..."
+msgstr "Väntar..."
 
 #: camlibs/kodak/dc210/library.c:1369
 msgid "Parameter 1"
-msgstr ""
+msgstr "Parameter 1"
 
 #: camlibs/kodak/dc210/library.c:1373
 msgid "Parameter 2"
-msgstr ""
+msgstr "Parameter 2"
 
 #: camlibs/kodak/dc210/library.c:1377
 msgid "Parameter 3"
-msgstr ""
+msgstr "Parameter 3"
 
 #: camlibs/kodak/dc240/dc240.c:180
 #, c-format
@@ -1474,9 +1484,8 @@ msgstr ""
 "ansluten till datorn."
 
 #: camlibs/konica/library.c:372
-#, fuzzy
 msgid "Your camera does not support changing filenames."
-msgstr "Denna kamera stödjer inte sammanfattningar."
+msgstr "Din kamera stödjer inte ändring av filnamn."
 
 #: camlibs/konica/library.c:431
 #, c-format
@@ -1686,12 +1695,11 @@ msgstr "Lokaliseringsfil för lång!"
 
 #: camlibs/largan/lmini/largan.c:247
 msgid "There is nothing to summarize for this camera."
-msgstr ""
+msgstr "Det finns inget att summera för denna kamera."
 
 #: camlibs/largan/lmini/largan.c:259
-#, fuzzy
 msgid "No manual"
-msgstr "Normal"
+msgstr "Ingen manual"
 
 #: camlibs/largan/lmini/largan.c:267
 msgid ""
@@ -1700,6 +1708,10 @@ msgid ""
 "\n"
 "Handles Largan Lmini camera.\n"
 msgstr ""
+"Largan drivrutin\n"
+"Hubert Figuiere <hfiguiere@teaser.fr>\n"
+"\n"
+"Hanterar Largan Lmini kamror.\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:270
 #, c-format
@@ -1883,64 +1895,60 @@ msgstr ""
 "Speciellt tack till Minolta för specifikationen."
 
 #: camlibs/mustek/core.c:575
-#, fuzzy
 msgid "FlashLight : Auto (RedEye Reduction)"
-msgstr "Auto, röda-ögon reduktion"
+msgstr "Blixt : Auto (röda-ögon reduktion)"
 
 #: camlibs/mustek/core.c:577
 msgid "FlashLight : Auto"
-msgstr ""
+msgstr "Blixt : Auto"
 
 #: camlibs/mustek/core.c:579
 msgid "FlashLight : On (RedEye Reduction)"
-msgstr ""
+msgstr "Blixt : På (röda-ögon reduktion)"
 
 #: camlibs/mustek/core.c:581
 msgid "FlashLight : On"
-msgstr ""
+msgstr "Blixt : På"
 
 #: camlibs/mustek/core.c:583
 msgid "FlashLight : Off"
-msgstr ""
+msgstr "Blixt : Av"
 
 #: camlibs/mustek/core.c:585
 msgid "FlashLight : undefined"
-msgstr ""
+msgstr "Blixt : odefinierat"
 
 #: camlibs/mustek/mdc800.c:228
 msgid "Summary for Mustek MDC800:\n"
-msgstr ""
+msgstr "Summering för Mustek MDC800:\n"
 
 #: camlibs/mustek/mdc800.c:231
-#, fuzzy
 msgid "no status reported."
-msgstr "Kort stöds ej."
+msgstr "ingen status rapporterad."
 
 #: camlibs/mustek/mdc800.c:237
-#, fuzzy
 msgid "Compact Flash Card detected\n"
-msgstr "CompactFlash kort"
+msgstr "CompactFlash kort detekterat\n"
 
 #: camlibs/mustek/mdc800.c:239
-#, fuzzy
 msgid "No Compact Flash Card detected\n"
-msgstr "CompactFlash kort"
+msgstr "Inget CompactFlash kort detekterat\n"
 
 #: camlibs/mustek/mdc800.c:243
 msgid "Current Mode: Camera Mode\n"
-msgstr ""
+msgstr "Nuvarande läge: Kameraläge\n"
 
 #: camlibs/mustek/mdc800.c:245
 msgid "Current Mode: Playback Mode\n"
-msgstr ""
+msgstr "Nuvarande läge: Uppspelningsläge\n"
 
 #: camlibs/mustek/mdc800.c:254
 msgid "Batteries are ok."
-msgstr ""
+msgstr "Batterierna är ok."
 
 #: camlibs/mustek/mdc800.c:256
 msgid "Batteries are low."
-msgstr ""
+msgstr "Batterierna är låga."
 
 #: camlibs/mustek/mdc800.c:275
 msgid ""
@@ -1949,6 +1957,10 @@ msgid ""
 "Ported to gphoto2 by Marcus Meissner <marcus@jet.franken.de>\n"
 "Supports Serial and USB Protocol."
 msgstr ""
+"Mustek MDC-800 gPhoto2 bibliotek\n"
+"Henning Zabel <henning@uni-paderborn.de>\n"
+"Konverterat till gphoto2 av Marcus Meissner <marcus@jet.franken.de>\n"
+"Stödjer seriella and USB protokoll."
 
 #: camlibs/panasonic/coolshot/coolshot.c:264
 msgid "coolshot library v"
@@ -2087,14 +2099,12 @@ msgstr ""
 "Andrew Selkirk <aselkirk@mailandnews.com>"
 
 #: camlibs/pccam600/library.c:199
-#, fuzzy
 msgid "Downloading file..."
-msgstr "Nerladdning av bild..."
+msgstr "Nerladdning av fil..."
 
 #: camlibs/pccam600/library.c:259 camlibs/spca504_flash/library.c:172
-#, fuzzy
 msgid "Manual Not Implemented Yet"
-msgstr "Inte implementerat!"
+msgstr "Manual inte implementerat ännu"
 
 #: camlibs/pccam600/library.c:266
 msgid ""
@@ -2102,6 +2112,9 @@ msgid ""
 " Author: Peter Kajberg\n"
 " email: <pbk@odense.kollegienet.dk>\n"
 msgstr ""
+"Creative PC-CAM600\n"
+" Författare: Peter Kajberg\n"
+" e-post: <pbk@odense.kollegienet.dk>\n"
 
 #: camlibs/polaroid/pdc700.c:159
 msgid "Image Quality"
@@ -2461,67 +2474,68 @@ msgid ""
 "Martin Fischer <martin.fischer@inka.de>,\n"
 "based on Bob Paauwe's driver\n"
 msgstr ""
+"Ricoh / Philips drivrutin av\n"
+"Lutz Mueller <lutz@users.sourceforge.net>,\n"
+"Martin Fischer <martin.fischer@inka.de>,\n"
+"baserat på Bob Paauwes drivrutin\n"
 
 #: camlibs/ricoh/library.c:249
 #, c-format
 msgid "unknown (0x%02x)"
-msgstr ""
+msgstr "okänd  (0x%02x)"
 
 #: camlibs/ricoh/library.c:252
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Model: %s\n"
 "Memory: %d byte(s) of %d available"
 msgstr ""
-"Kameramodell: %s\n"
-"Kamera ID: %s\n"
-"Minne: %d byte(s) av %d tillgängliga\n"
-"Kamera tid: %s\n"
+"Modell: %s\n"
+"Minne: %d byte(s) av %d tillgängliga"
 
 #: camlibs/ricoh/library.c:302
 msgid "-2.0"
-msgstr ""
+msgstr "-2.0"
 
 #: camlibs/ricoh/library.c:303
 msgid "-1.5"
-msgstr ""
+msgstr "-1.5"
 
 #: camlibs/ricoh/library.c:304
 msgid "-1.0"
-msgstr ""
+msgstr "-1.0"
 
 #: camlibs/ricoh/library.c:305
 msgid "-0.5"
-msgstr ""
+msgstr "-0.5"
 
 #: camlibs/ricoh/library.c:306
 msgid "0.0"
-msgstr ""
+msgstr "0.0"
 
 #: camlibs/ricoh/library.c:307
 msgid "0.5"
-msgstr ""
+msgstr "0.5"
 
 #: camlibs/ricoh/library.c:308
 msgid "1.0"
-msgstr ""
+msgstr "1.0"
 
 #: camlibs/ricoh/library.c:309
 msgid "1.5"
-msgstr ""
+msgstr "1.5"
 
 #: camlibs/ricoh/library.c:310
 msgid "2.0"
-msgstr ""
+msgstr "2.0"
 
 #: camlibs/ricoh/library.c:319
 msgid "1280 x 960"
-msgstr ""
+msgstr "128 x 960"
 
 #: camlibs/ricoh/library.c:327
-#, fuzzy
 msgid "Outdoor"
-msgstr "Slut på minne"
+msgstr "Utomhus"
 
 #: camlibs/ricoh/library.c:328 camlibs/sierra/sierra.c:936
 #: camlibs/sierra/sierra.c:945 camlibs/sierra/sierra.c:1224
@@ -2530,12 +2544,11 @@ msgstr "Lysrör"
 
 #: camlibs/ricoh/library.c:329
 msgid "Incandescent"
-msgstr ""
+msgstr "Bländande"
 
 #: camlibs/ricoh/library.c:330
-#, fuzzy
 msgid "Black & White"
-msgstr "svartvitt"
+msgstr "Svartvit"
 
 #: camlibs/ricoh/library.c:331 camlibs/sierra/sierra.c:845
 #: camlibs/sierra/sierra.c:854 camlibs/sierra/sierra.c:1160
@@ -2544,30 +2557,27 @@ msgstr "Sepiabrunt"
 
 #: camlibs/ricoh/library.c:347
 msgid "Maximal"
-msgstr ""
+msgstr "Maximal"
 
 #: camlibs/ricoh/library.c:349
-#, fuzzy
 msgid "Minimal"
-msgstr "normal"
+msgstr "Minimal"
 
 #: camlibs/ricoh/library.c:357
-#, fuzzy
 msgid "Character"
-msgstr "Nätadapter"
+msgstr "Karaktär"
 
 #: camlibs/ricoh/library.c:358
 msgid "Sound"
-msgstr ""
+msgstr "Ljud"
 
 #: camlibs/ricoh/library.c:359
-#, fuzzy
 msgid "Image & Sound"
-msgstr "Bildstorlek"
+msgstr "Bild & Ljud"
 
 #: camlibs/ricoh/library.c:360
 msgid "Character & Sound"
-msgstr ""
+msgstr "Karaktär & Ljud"
 
 #: camlibs/ricoh/library.c:377 camlibs/sierra/sierra.c:1013
 #: camlibs/sierra/sierra.c:1019
@@ -2576,71 +2586,63 @@ msgstr "2x"
 
 #: camlibs/ricoh/library.c:378
 msgid "3x"
-msgstr ""
+msgstr "3x"
 
 #: camlibs/ricoh/library.c:379
 msgid "4x"
-msgstr ""
+msgstr "4x"
 
 #: camlibs/ricoh/library.c:380
-#, fuzzy
 msgid "5x"
-msgstr "2.5x"
+msgstr "5x"
 
 #: camlibs/ricoh/library.c:381
-#, fuzzy
 msgid "6x"
-msgstr "1.6x"
+msgstr "6x"
 
 #: camlibs/ricoh/library.c:382
 msgid "7x"
-msgstr ""
+msgstr "7x"
 
 #: camlibs/ricoh/library.c:383
 msgid "8x"
-msgstr ""
+msgstr "8x"
 
 #: camlibs/ricoh/library.c:384
 msgid "9x"
-msgstr ""
+msgstr "9x"
 
 #: camlibs/ricoh/library.c:430
-#, fuzzy
 msgid "Configuration"
-msgstr "Kamerakonfiguration"
+msgstr "Konfiguration"
 
 #: camlibs/ricoh/library.c:433
-#, fuzzy
 msgid "General"
-msgstr "normal"
+msgstr "Generellt"
 
 #: camlibs/ricoh/library.c:437
-#, fuzzy
 msgid "Copyright"
-msgstr "Ljus+"
+msgstr "Copyright"
 
 #: camlibs/ricoh/library.c:439
 msgid "Copyright (max. 20 characters)"
-msgstr ""
+msgstr "Copyright (max. 20 tecken)"
 
 #: camlibs/ricoh/library.c:453
-#, fuzzy
 msgid "Pictures"
-msgstr "Ta bild"
+msgstr "Bilder"
 
 #: camlibs/ricoh/library.c:497
-#, fuzzy
 msgid "White level"
 msgstr "Vitbalans"
 
 #: camlibs/ricoh/library.c:501
-#, fuzzy
 msgid "Record Mode"
-msgstr "Spela in"
+msgstr "Inspelningsläge"
 
 #: camlibs/ricoh/library.c:502
 msgid "Compression"
-msgstr ""
+msgstr "Kompression"
 
 #: camlibs/ricoh/library.c:561
 #, c-format
@@ -2687,47 +2689,39 @@ msgstr ""
 "devel@gphoto.org>."
 
 #: camlibs/ricoh/ricoh.c:292
-#, fuzzy
 msgid "Timeout even after 2 retries. Please contact <gphoto-devel@gphoto.org>."
 msgstr ""
-"Överförringen av paketet avbröts efter %i försök.  Vänligen kontakta <gphoto-"
-"devel@gphoto.org>."
+"Timeout även efter 2 försök.  Vänligen kontakta <gphoto-devel@gphoto.org>."
 
 #: camlibs/ricoh/ricoh.c:308
-#, fuzzy
 msgid ""
 "Communication error even after 2 retries. Please contact <gphoto-"
 "devel@gphoto.org>."
 msgstr ""
-"Överförringen av paketet avbröts efter %i försök.  Vänligen kontakta <gphoto-"
+"Kommunikationsfel även efter 2 försök.  Vänligen kontakta <gphoto-"
 "devel@gphoto.org>."
 
 #: camlibs/ricoh/ricoh.c:340
-#, fuzzy
 msgid "Camera is in wrong mode. Please contact <gphoto-devel@gphoto.org>."
-msgstr ""
-"Kameran upptagen. Om problemet kvarstår, vänligen kontakta <gphoto-"
-"devel@gphoto.org>."
+msgstr "Kameran är i fel läge. Vänligen kontakta <gphoto-devel@gphoto.org>."
 
 #: camlibs/ricoh/ricoh.c:349
-#, fuzzy
 msgid ""
 "Camera did not accept the parameters. Please contact <gphoto-devel@gphoto."
 "org>."
 msgstr ""
-"Kunde inte hämta register %i.  Vänligen kontakta <gphoto-devel@gphoto.org>."
+"Kameran accepterade inte parametrarna.  Vänligen kontakta <gphoto-"
+"devel@gphoto.org>."
 
 #: camlibs/ricoh/ricoh.c:355
-#, fuzzy
 msgid "An unknown error occurred. Please contact <gphoto-devel@gphoto.org>."
-msgstr ""
-"Kunde inte hämta register %i.  Vänligen kontakta <gphoto-devel@gphoto.org>."
+msgstr "Ett okänt fel uppstod.  Vänligen kontakta <gphoto-devel@gphoto.org>."
 
 #: camlibs/ricoh/ricoh.c:817
 #, c-format
 msgid ""
 "The filename's length must not exceed 12 characters ('%s' has %i characters)."
-msgstr ""
+msgstr "Filnamnets längd kan inte överstiga 12 tecken (%s) har %i tecken)."
 
 #: camlibs/samsung/samsung.c:243
 msgid ""
@@ -2743,19 +2737,16 @@ msgstr ""
 
 #: camlibs/sierra/epson-desc.c:82 camlibs/sierra/nikon-desc.c:91
 #: camlibs/sierra/olympus-desc.c:103
-#, fuzzy
 msgid "Resolution plus Size"
-msgstr "Upplösnings byte"
+msgstr "Upplösning plus Storlek"
 
 #: camlibs/sierra/epson-desc.c:100 camlibs/sierra/nikon-desc.c:109
 #: camlibs/sierra/olympus-desc.c:121
-#, fuzzy
 msgid "Date and time (GMT)"
-msgstr "Datum och Tid"
+msgstr "Datum och Tid (GMT)"
 
 #: camlibs/sierra/epson-desc.c:179 camlibs/sierra/nikon-desc.c:175
 #: camlibs/sierra/olympus-desc.c:211
-#, fuzzy
 msgid "Aperature Settings"
 msgstr "Bildinställningar"
 
@@ -2768,9 +2759,8 @@ msgstr "Färgläge"
 
 #: camlibs/sierra/epson-desc.c:212 camlibs/sierra/nikon-desc.c:208
 #: camlibs/sierra/olympus-desc.c:246
-#, fuzzy
 msgid "Flash Settings"
-msgstr "Blixtinställning"
+msgstr "Blixtinställningar"
 
 #: camlibs/sierra/epson-desc.c:228 camlibs/sierra/nikon-desc.c:258
 #: camlibs/sierra/olympus-desc.c:264 camlibs/sierra/sierra.c:933
@@ -2780,14 +2770,12 @@ msgid "White Balance"
 msgstr "Vitbalans"
 
 #: camlibs/sierra/epson-desc.c:245 camlibs/sierra/olympus-desc.c:346
-#, fuzzy
 msgid "Host power save (seconds)"
-msgstr "%s (värdtid %s%i sekunder)"
+msgstr "Värd kraft besparing (sekunder)"
 
 #: camlibs/sierra/epson-desc.c:261 camlibs/sierra/olympus-desc.c:331
-#, fuzzy
 msgid "Camera power save (seconds)"
-msgstr "Kameramodell (skrivskyddad)"
+msgstr "Kamera kraft besparing (skrivskyddad)"
 
 #: camlibs/sierra/epson-desc.c:276 camlibs/sierra/sierra.c:964
 #: camlibs/sierra/sierra.c:1237 camlibs/sierra/sierra.c:1436
@@ -2828,9 +2816,8 @@ msgstr ""
 "  vanligen skriv ett brev till <gphoto-devel@gphoto.org> (på Engelska)\n"
 
 #: camlibs/sierra/library.c:142 camlibs/sierra/library.c:1341
-#, fuzzy
 msgid "No memory card present"
-msgstr "Inget kort isatt."
+msgstr "Inget minnes kort isatt."
 
 #: camlibs/sierra/library.c:288
 msgid "Cannot retrieve the battery capacity"
@@ -2916,13 +2903,12 @@ msgid "Sending data..."
 msgstr "Hämtar data..."
 
 #: camlibs/sierra/library.c:1194
-#, fuzzy
 msgid ""
 "recursive calls are not supported by the sierra driver! Please contact "
 "<gphoto-devel@gphoto.org>."
 msgstr ""
-"Paketet blev avvisat av kameran.  Vänligen kontakta <gphoto-devel@gphoto."
-"org>."
+"rekursiva anrop stöds ej av sierra drivrutinen.  Vänligen kontakta <gphoto-"
+"devel@gphoto.org>."
 
 #: camlibs/sierra/library.c:1243
 #, c-format
@@ -2943,34 +2929,28 @@ msgid "Not implemented!"
 msgstr "Inte implementerat!"
 
 #: camlibs/sierra/nikon-desc.c:127 camlibs/sierra/olympus-desc.c:140
-#, fuzzy
 msgid "Shutter Speed microseconds (0 auto)"
-msgstr "Slutartid (mikrosekunder, 0 auto)"
+msgstr "Slutartid mikrosekunder (0 auto)"
 
 #: camlibs/sierra/nikon-desc.c:158 camlibs/sierra/olympus-desc.c:179
-#, fuzzy
 msgid "Shutter Speed (in seconds)"
-msgstr "Slutartid (mikrosekunder, 0 auto)"
+msgstr "Slutartid sekunder (0 auto)"
 
 #: camlibs/sierra/nikon-desc.c:227
-#, fuzzy
 msgid "Image Adjustment"
-msgstr "Färg justering"
+msgstr "Bildjustering"
 
 #: camlibs/sierra/nikon-desc.c:275
-#, fuzzy
 msgid "LED Mode"
-msgstr "Linsläge"
+msgstr "LED-läge"
 
 #: camlibs/sierra/nikon-desc.c:295 camlibs/sierra/olympus-desc.c:281
-#, fuzzy
 msgid "Focus Mode"
-msgstr "Blixt Läge"
+msgstr "Fokusläge"
 
 #: camlibs/sierra/nikon-desc.c:342
-#, fuzzy
 msgid "Operation Mode"
-msgstr "Operationen avbruten."
+msgstr "Operationsläge."
 
 #: camlibs/sierra/nikon-desc.c:356 camlibs/sierra/olympus-desc.c:317
 #: camlibs/sierra/sierra.c:1070 camlibs/sierra/sierra.c:1309
@@ -2978,35 +2958,33 @@ msgid "LCD Brightness"
 msgstr "LCD Ljusstyrka"
 
 #: camlibs/sierra/nikon-desc.c:371 camlibs/sierra/olympus-desc.c:359
-#, fuzzy
 msgid "LCD Auto Shut Off (seconds)"
-msgstr "Auto av (i sekunder)"
+msgstr "LCD Automatisk avstängning (sekunder)"
 
 #: camlibs/sierra/nikon-desc.c:423 camlibs/sierra/nikon-desc.c:446
 #: camlibs/sierra/olympus-desc.c:403
 msgid "Exposure Compensation"
-msgstr ""
+msgstr "Exponeringskompensation"
 
 #: camlibs/sierra/nikon-desc.c:463 camlibs/sierra/olympus-desc.c:418
-#, fuzzy
 msgid "Exposure Metering"
-msgstr "Exponering"
+msgstr "Exponeringsmätning"
 
 #: camlibs/sierra/nikon-desc.c:481 camlibs/sierra/olympus-desc.c:434
 msgid "Zoom (in millimeters)"
-msgstr ""
+msgstr "Zoom (i millimeter)"
 
 #: camlibs/sierra/nikon-desc.c:518 camlibs/sierra/nikon-desc.c:541
 msgid "Digital Zoom"
-msgstr ""
+msgstr "Digital Zoom"
 
 #: camlibs/sierra/nikon-desc.c:523
 msgid "Misc exposure/lense settings"
-msgstr ""
+msgstr "Diverse exponerings- och linsinställningar"
 
 #: camlibs/sierra/nikon-desc.c:546
 msgid "Auto exposure lock"
-msgstr ""
+msgstr "Auto exponeringslås"
 
 #: camlibs/sierra/nikon-desc.c:600
 msgid ""
@@ -3024,6 +3002,19 @@ msgid ""
 "        Put the camera in 'M' mode in order to\n"
 "        to set the shutter speed.\n"
 msgstr ""
+"Nikon Coolpix 880:\n"
+"    Kamera konfiguration (eller preferenser):\n"
+"\n"
+"        Den optiska zoomen fungerar inte helt\n"
+"        korrekt.\n"
+"\n"
+"        Alla konfigurations inställningar kan\n"
+"        inte läsas eller sättas korrekt, till\n"
+"        exempel, fininställning av vitbalansen,\n"
+"        och språkinställningarna.\n"
+"\n"
+"        Sätt kameran i 'M'-läge för att sätta\n"
+"        slutarhastigheten.\n"
 
 #: camlibs/sierra/nikon-desc.c:619
 msgid ""
@@ -3036,31 +3027,35 @@ msgid ""
 "\n"
 "    The download should function correctly.\n"
 msgstr ""
+"Nikon Coolpix 995:\n"
+"    Kamera konfiguration (preferenser) för denna\n"
+"    kamera är ej kompletta, kontakta gphoto\\n\"\n"
+"    utvecklarna på gphoto-devel@gphoto.net\\n\"\n"
+"    om du skulle vilja bidra till denna drivrutin.\n"
+"\n"
+"    Nerladdningen bör fungera korrekt.\n"
 
 #: camlibs/sierra/olympus-desc.c:302
-#, fuzzy
 msgid "LCD Mode"
-msgstr "Linsläge"
+msgstr "LCD-läge"
 
 #: camlibs/sierra/olympus-desc.c:451
 msgid "Digital zoom"
-msgstr ""
+msgstr "Digital zoom"
 
 #: camlibs/sierra/olympus-desc.c:468
 msgid "ISO Speed"
-msgstr ""
+msgstr "ISO hastighet"
 
 #: camlibs/sierra/olympus-desc.c:484
 msgid "Focus position"
-msgstr ""
+msgstr "Fokusläge"
 
 #: camlibs/sierra/olympus-desc.c:501
-#, fuzzy
 msgid "Time format"
-msgstr "Datumformat"
+msgstr "Tidsformat"
 
 #: camlibs/sierra/olympus-desc.c:556
-#, fuzzy
 msgid ""
 "Some notes about Olympus cameras:\n"
 "(1) Camera Configuration:\n"
@@ -3084,12 +3079,17 @@ msgstr ""
 "(1) Kamera-konfiguration:\n"
 "    Ett värde av 0 innebär standardvärdet (auto)\n"
 "(2) Olympus C-3040Z (och möjligen också C-2040Z och andra)\n"
-"    har ett USB PC-kontroll-läge. För att använda detta \n"
+"    har ett USB PC-kontroll-läge. För att använda detta\n"
 "    läge, måste kameran vara inställd på 'USB PC control mode'.\n"
-"    För att komma till menyn för att byta lägen, öppna \n"
-"    luckan för minneskortet och tryck och håll nere \n"
-"    båda menyknapparna tills kamera kontrolls menyn kommer\n"
-"    fram. Sätt den till PÅ."
+"    För att komma till menyn för att byta lägen, öppna\n"
+"    luckan för minneskortet och tryck och håll nere\n"
+"    båda menyknapparna och LCD knapparna tills kamera kontroll\n"
+"    menyn framträder. Sätt den till på ('ON').\n"
+"(3) Om du byter 'LCD-läge' till 'Monitor' eller\n"
+"    'Normal', glöm inte att byta tillbaka till 'Av'\n"
+"    innan du kopplar loss kameran. Annars kan du inte använda\n"
+"    kamerans knappar. Om du hamnar i detta läge, bör du\n"
+"    återansluta kameran till PC:n och ändra LCD till 'Av'."
 
 #: camlibs/sierra/olympus-desc.c:577
 msgid ""
@@ -3107,11 +3107,24 @@ msgid ""
 "    code to support complete configuration,\n"
 "    please contact gphoto-devel@gphoto.net\n"
 msgstr ""
+"Standard sierra drivrutinen:\n"
+"\n"
+"    Detta är standard sierra drivrutinen, den\n"
+"    bör vara kapabel att stödja nerladdning och\n"
+"    och bläddring av bilder på din kamera.\n"
+"\n"
+"    Kamera konfiguration (eller preferenser)\n"
+"    inställningar är baserade på Olympus 3040,\n"
+"    och är sannolikt ej kompletta. Om du\n"
+"    verifierar att konfiguration inställningarna\n"
+"    är kompletta för din kamera, eller du kan bidra\n"
+"    kod för att stödja en komplett konfiguration,\n"
+"    vänligen kontakta gphoto-devel@gphoto.net\n"
 
 #: camlibs/sierra/sierra-desc.c:172
-#, fuzzy, c-format
+#, c-format
 msgid "%lld (unknown)"
-msgstr "%i (okänd)"
+msgstr "%lld (okänd)"
 
 #: camlibs/sierra/sierra.c:620
 msgid "The file to be uploaded has a null length"
@@ -3396,6 +3409,7 @@ msgstr "Portugiska"
 #: camlibs/sierra/sierra.c:1790
 msgid "Note: no memory card present, some values may be invalid\n"
 msgstr ""
+"Notera: inget minneskort tillgängligt, vissa värden kan vara ogiltiga\n"
 
 #: camlibs/sierra/sierra.c:1797
 #, c-format
@@ -3443,12 +3457,11 @@ msgid "%sMemory Left: %i bytes\n"
 msgstr "%sMinne kvar: %i byte\n"
 
 #: camlibs/sierra/sierra.c:1820
-#, fuzzy, c-format
+#, c-format
 msgid "%sDate: %s"
-msgstr "%sDatum: %s\n"
+msgstr "%sDatum: %s"
 
 #: camlibs/sierra/sierra.c:1855
-#, fuzzy
 msgid ""
 "Some notes about Olympus cameras (and others?):\n"
 "(1) Camera Configuration:\n"
@@ -3472,12 +3485,17 @@ msgstr ""
 "(1) Kamera-konfiguration:\n"
 "    Ett värde av 0 innebär standardvärdet (auto)\n"
 "(2) Olympus C-3040Z (och möjligen också C-2040Z och andra)\n"
-"    har ett USB PC-kontroll-läge. För att använda detta \n"
+"    har ett USB PC-kontroll-läge. För att använda detta\n"
 "    läge, måste kameran vara inställd på 'USB PC control mode'.\n"
-"    För att komma till menyn för att byta lägen, öppna \n"
-"    luckan för minneskortet och tryck och håll nere \n"
-"    båda menyknapparna tills kamera kontrolls menyn kommer\n"
-"    fram. Sätt den till PÅ."
+"    För att komma till menyn för att byta lägen, öppna\n"
+"    luckan för minneskortet och tryck och håll nere\n"
+"    båda menyknapparna och LCD knapparna tills kamera kontroll\n"
+"    menyn framträder. Sätt den till på ('ON').\n"
+"(3) Om du byter 'LCD-läge' till 'Monitor' eller\n"
+"    'Normal', glöm inte att byta tillbaka till 'Av'\n"
+"    innan du kopplar loss kameran. Annars kan du inte använda\n"
+"    kamerans knappar. Om du hamnar i detta läge, bör du\n"
+"    återansluta kameran till PC:n och ändra LCD till 'Av'."
 
 #: camlibs/sierra/sierra.c:1884
 msgid ""
@@ -3504,6 +3522,9 @@ msgid ""
 "Marcus Meissner <marcus@jet.franken.de>\n"
 "Driver for accessing the SiPix Web2 camera."
 msgstr ""
+"SiPix Web2\n"
+"Marcus Meissner <marcus@jet.franken.de>\n"
+"Drivrutin för åtkomst av SiPix Web2 kameror."
 
 #: camlibs/sipixblink/sipixblink.c:323
 msgid ""
@@ -3511,35 +3532,35 @@ msgid ""
 "Vincent Sanders <vince@kyllikki.org>\n"
 "Marcus Meissner <marcus@jet.franken.de>.\n"
 msgstr ""
+"Sipix StyleCam Blink drivrutin\n"
+"Vincent Sanders <vince@kyllikki.org>\n"
+"Marcus Meissner <marcus@jet.franken.de>.\n"
 
 #: camlibs/sonydscf1/dsc_f1.c:134
 msgid "Sorry, this function not implemented..."
-msgstr ""
+msgstr "Ledsen, denna funktion är inte implementerad..."
 
 #: camlibs/sonydscf1/dsc_f1.c:140
 msgid "Sorry, nothing to configure..."
-msgstr ""
+msgstr "Ledsen, inget att konfigurera..."
 
 #: camlibs/sonydscf1/dsc_f1.c:146
 msgid "Sorry, taking pictures is not implemented..."
-msgstr ""
+msgstr "Ledsen, att ta bilder är inte implementerat..."
 
 #: camlibs/sonydscf1/dsc_f1.c:152
-#, fuzzy
 msgid "Couldn't open camera.\n"
-msgstr "Kunde inte finna någon kamera."
+msgstr "Kunde inte öppna kameran.\n"
 
 #: camlibs/sonydscf1/dsc_f1.c:166
-#, fuzzy
 msgid "Error opening camera\n"
-msgstr "Problem med att nollställa kamera"
+msgstr "Fel vid öppning av kamera\n"
 
 #: camlibs/sonydscf1/dsc_f1.c:171
 msgid "Picture number is too large.\n"
-msgstr ""
+msgstr "Bildnumret är för stort.\n"
 
 #: camlibs/sonydscf1/dsc_f1.c:182
-#, fuzzy
 msgid ""
 "Sony DSC-F1 Digital Camera Support\n"
 "M. Adam Kendall <joker@penguinpub.com>\n"
@@ -3549,16 +3570,17 @@ msgid ""
 "\n"
 "This lib may not work. YMMV\n"
 msgstr ""
-"Sony DSC-F1 Digital Kamera Stöd\n"
+"Sony DSC-F1 digital kamera stöd\n"
 "M. Adam Kendall <joker@penguinpub.com>\n"
+"\n"
 "Baserad på chotplay CLI-gränssnittet av\n"
 "Ken-ichi Hayashi\n"
-"Gphoto2-konvertering av Bart van Leeuwen <bart@netage.nl>"
+"\n"
+"Detta lib kanske inte fungerar. YMMV\n"
 
 #: camlibs/sonydscf1/dsc_f1.c:187 camlibs/sonydscf1/dsc_f1.c:188
-#, fuzzy
 msgid "Error opening camera.\n"
-msgstr "Problem med att nollställa kamera"
+msgstr "Fel vid öppning av kameran.\n"
 
 #: camlibs/sonydscf1/sonydscf1.c:132
 msgid ""
@@ -3587,17 +3609,16 @@ msgstr ""
 "gPhoto2 anpassning av Raymond Penners <raymond@dotsphinx.com>"
 
 #: camlibs/soundvision/soundvision.c:230
-#, fuzzy, c-format
+#, c-format
 msgid "Revision: %8s"
-msgstr "ASIC-revision: %d.%d\n"
+msgstr "Revision: %8s"
 
 #: camlibs/soundvision/soundvision.c:237
-#, fuzzy
 msgid ""
 "Soundvision Driver\n"
 "Vince Weaver <vince@deater.net>\n"
 msgstr ""
-"Agfa CL18\n"
+"Soundvision drivrutin\n"
 "Vince Weaver <vince@deater.net>\n"
 
 #: camlibs/spca504_flash/library.c:182
@@ -3608,6 +3629,10 @@ msgid ""
 "based on work by Matthias Krauss\n"
 "and Mark A. Zimmerman <mark@foresthaven.com>"
 msgstr ""
+"spca504_flash kamera bibliotek\n"
+"Upphovsman: Till Adam <till@adam-lilienthal.de>\n"
+"baserat på arbete av Matthias Krauss\n"
+"och Mark A. Zimmerman <mark@foresthaven.com>"
 
 #: camlibs/stv0680/library.c:354 camlibs/stv0680/library.c:388
 msgid "Bad exposure (not enough light probably)"
@@ -3729,9 +3754,9 @@ msgstr ""
 "Utökad för Aiptek PenCam och andra STM USB dubbel-läges kameror."
 
 #: camlibs/sx330z/library.c:135
-#, fuzzy, c-format
+#, c-format
 msgid "Getting information on %i files..."
-msgstr "Hämtar konfiguration..."
+msgstr "Hämtar information om %i filer..."
 
 #: camlibs/sx330z/library.c:239
 msgid ""
@@ -3740,6 +3765,11 @@ msgid ""
 "Even the 4100 Cameras could work.\n"
 "Not tested, please report if this driver works with them!)\n"
 msgstr ""
+"0.1 Traveler SX330z ALDI-cam\n"
+"(många andra tillverkare, som Jenoptik, Skanhex, Maginon bör fungera också.\n"
+"Även '4100' kamerorna kan fungera.\n"
+"Inte testat, vänligen rapportera om drivrutinen även fungerar med dessa!)\n"
+"\n"
 
 #: camlibs/sx330z/library.c:253
 msgid ""
@@ -3747,10 +3777,13 @@ msgid ""
 "See summary for more information\n"
 "Dominik Kuhlen <dkuhlen@fhm.edu>\n"
 msgstr ""
+"(Traveler) SX330z bibliotek\n"
+"Se summering för mer information.\n"
+"Dominik Kuhlen <dkuhlen@fhm.edu>\n"
 
 #: camlibs/sx330z/library.c:274
 msgid "sx330z is USB only"
-msgstr ""
+msgstr "sx330z är USB enbart"
 
 #: libgphoto2/gphoto2-abilities-list.c:178
 #: libgphoto2/gphoto2-abilities-list.c:273
@@ -3922,16 +3955,18 @@ msgid ""
 "Could not open '/proc/meminfo' for reading ('%m'). Make sure the proc "
 "filesystem is mounted."
 msgstr ""
+"Kunde inte öppna '/proc/meminfo' för läsning ('%m'). Se till att proc-"
+"filsystemet är monterat."
 
 #: libgphoto2/gphoto2-filesys.c:1862
 #, c-format
 msgid "An error occured while reading '/proc/meminfo' ('%m')."
-msgstr ""
+msgstr "Ett fel uppstod vid läsning av '/proc/meminfo' ('%m')."
 
 #: libgphoto2/gphoto2-filesys.c:1896
 #, c-format
 msgid "sysctl call failed ('%m')."
-msgstr ""
+msgstr "sysctl anropet misslyckades ('%m')."
 
 #: libgphoto2/gphoto2-filesys.c:2229
 msgid "The filesystem doesn't support setting file information"
