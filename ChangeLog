@@ -1,3 +1,7 @@
+2001-11-19  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* configure.in: Remove gettext hack. Let's see if someone complains...
+
 2001-11-18  Hans Ulrich Niedermann <hun@n-dimensional.de>
 
 	* INSTALL: added note about RPM temporarily not working

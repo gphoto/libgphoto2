@@ -29,8 +29,8 @@ AC_PROG_INSTALL
 dnl The following is a hack to get gphoto2 to build on gettext-0.10.35
 dnl systems - BUILD_INCLUDED_LIBINTL is set only in gettext-0.10.37 which is
 dnl the gettext version provided with gphoto2.
-BUILD_INCLUDED_LIBINTL=no
-AC_SUBST(BUILD_INCLUDED_LIBINTL)
+dnl BUILD_INCLUDED_LIBINTL=no
+dnl AC_SUBST(BUILD_INCLUDED_LIBINTL)
 
 dnl Languages
 ALL_LINGUAS="de"
