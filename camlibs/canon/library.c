@@ -827,8 +827,8 @@ static int
 camera_summary (Camera *camera, CameraText *summary)
 {
 	char a[20], b[20];
-	int pwr_source, pwr_status;
-	char power_str[128];
+	int pwr_source, pwr_status, res;
+	char disk_str[128], power_str[128], time_str[128];
 	time_t camera_time;
 	double time_diff;
 	char formatted_camera_time[20];
@@ -845,29 +845,48 @@ camera_summary (Camera *camera, CameraText *summary)
 	pretty_number (camera->pl->cached_capacity, a);
 	pretty_number (camera->pl->cached_available, b);
 
-	canon_get_batt_status (camera, &pwr_status, &pwr_source);
-	if (pwr_status == CAMERA_POWER_OK || pwr_status == CAMERA_POWER_BAD)
-		snprintf (power_str, sizeof (power_str), "%s (%s)",
-			  ((pwr_source & CAMERA_MASK_BATTERY) ==
-			   0) ? _("AC adapter") : _("on battery"),
-			  pwr_status == CAMERA_POWER_OK ? _("power OK") : _("power bad"));
-	else
-		snprintf (power_str, sizeof (power_str), "%s - %i",
-			  ((pwr_source & CAMERA_MASK_BATTERY) ==
-			   0) ? _("AC adapter") : _("on battery"), pwr_status);
+	snprintf (disk_str, sizeof (disk_str), _("  Drive %s\n  %11s bytes total\n  %11s bytes available"),
+		 camera->pl->cached_drive, a, b);
+
+	res = canon_get_batt_status (camera, &pwr_status, &pwr_source);
+	if (res == GP_OK) {
+		if (pwr_status == CAMERA_POWER_OK || pwr_status == CAMERA_POWER_BAD)
+			snprintf (power_str, sizeof (power_str), "%s (%s)",
+				  ((pwr_source & CAMERA_MASK_BATTERY) ==
+				   0) ? _("AC adapter") : _("on battery"),
+				  pwr_status == CAMERA_POWER_OK ? _("power OK") : _("power bad"));
+		else
+			snprintf (power_str, sizeof (power_str), _("%s - unknown value %i"),
+				  ((pwr_source & CAMERA_MASK_BATTERY) ==
+				   0) ? _("AC adapter") : _("on battery"), pwr_status);
+	} else {
+		GP_DEBUG ("canon_get_batt_status() returned error: %s (%i), ",
+			 gp_result_as_string (res), res);
+		snprintf (power_str, sizeof (power_str), _("not available: %s"), gp_result_as_string (res));
+	}
 
 	camera_time = canon_int_get_time (camera);
-
-	time_diff = difftime (camera_time, time(NULL));
+	if (camera_time > 0) {
+		time_diff = difftime (camera_time, time(NULL));
 	
-	strftime (formatted_camera_time, sizeof (formatted_camera_time),
-		  "%Y-%m-%d %H:%M:%S", localtime (&camera_time));
+		strftime (formatted_camera_time, sizeof (formatted_camera_time),
+			  "%Y-%m-%d %H:%M:%S", localtime (&camera_time));
+			  
+		snprintf (time_str, sizeof (time_str), _("%s (host time %s%i seconds)"),
+			  formatted_camera_time, time_diff>=0?"+":"", (int) time_diff);
+	} else {
+		GP_DEBUG ("canon_int_get_time() returned negative result: %s (%i)",
+			  gp_result_as_string ((int) camera_time), (int) camera_time);
+		snprintf (time_str, sizeof (time_str), ("not available: %s"), 
+			gp_result_as_string ((int) camera_time));
+	}
 
-	sprintf (summary->text, _("%s\n%s\n%s\n"
-				  "Drive %s\n%11s bytes total\n%11s bytes available\n"
-				  "Time %s (host time %s%i seconds)\n"), camera->pl->md->id_str,
-		 camera->pl->owner, power_str, camera->pl->cached_drive, a, b,
-		 formatted_camera_time, time_diff>=0?"+":"", (int) time_diff);
+	sprintf (summary->text, _("\nCamera identification:\n  Model: %s\n  Owner: %s\n\n"
+				  "Power status: %s\n\n"
+				  "Flash disk information:\n%s\n\n"
+				  "Time: %s\n"),
+				camera->pl->md->id_str, camera->pl->owner, power_str,
+				disk_str, time_str);
 
 	return GP_OK;
 }
