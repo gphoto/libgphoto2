@@ -25,8 +25,8 @@
 #include <gphoto2-port.h>
 
 extern int jd11_file_count(GPPort *port, int *count);
-extern int jd11_get_image_preview(Camera *camera,int nr, char **data, int *size);
-extern int jd11_get_image_full(Camera *camera,int nr, char **data, int *size,int raw);
+extern int jd11_get_image_preview(Camera *camera,CameraFile *file,int nr, char **data, int *size);
+extern int jd11_get_image_full(Camera *camera,CameraFile *file,int nr, char **data, int *size,int raw);
 extern int jd11_erase_all(GPPort *port);
 extern int jd11_ping(GPPort *port);
 extern int jd11_float_query(GPPort *port);

@@ -53,6 +53,8 @@ int camera_abilities (CameraAbilitiesList *list)
 {
 	CameraAbilities a;
 
+	memset(&a,0,sizeof(a));
+
 	a.status		= GP_DRIVER_STATUS_TESTING;
 	a.port			= GP_PORT_SERIAL;
 	a.speed[0]		= 115200;
@@ -122,15 +124,15 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 
 	switch (type) {
 	case GP_FILE_TYPE_RAW:
-		result =  jd11_get_image_full (camera, image_no, &data,
+		result =  jd11_get_image_full (camera, file, image_no, &data,
 					    (int*) &size, 1);
 		break;
 	case GP_FILE_TYPE_NORMAL:
-		result =  jd11_get_image_full (camera, image_no, &data,
+		result =  jd11_get_image_full (camera, file, image_no, &data,
 					    (int*) &size, 0);
 		break;
 	case GP_FILE_TYPE_PREVIEW:
-		result =  jd11_get_image_preview (camera, image_no,
+		result =  jd11_get_image_preview (camera, file, image_no,
 						&data, (int*) &size);
 		break;
 	default:
