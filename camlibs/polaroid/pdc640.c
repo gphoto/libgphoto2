@@ -88,6 +88,13 @@ static struct {
 			"pdc640%04i.ppm"
 		}
 	},
+	{"Novatech:Digital Camera CC30", 0, 0, {
+		 	pdc640,
+			BAYER_TILE_RGGB,
+			NULL, // add postprocessor here!
+			"pdc640%04i.ppm"
+		}
+	},
 	{"Jenoptik:JD350 entrance", 0x5da, 0x1006, {
 		 	jd350e,
 			BAYER_TILE_BGGR,
