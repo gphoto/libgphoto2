@@ -4,6 +4,9 @@
 # Raph Levien .
 
 DIE=0
+srcdir=`dirname $0`
+test -z "$srcdir" && srcdir=.
+test "$srcdir" = "." && srcdir=$(pwd)
 
 PROJECT=gphoto2
 
@@ -50,21 +53,28 @@ case $CC in
 *xlc | *xlc\ * | *lcc | *lcc\ *) am_opt=--include-deps;;
 esac
 
-ACLOCAL_FLAGS="-I $(dirname $0)/libgphoto2_port/m4 ${ACLOCAL_FLAGS}"
+ACLOCAL_FLAGS="-I ${srcdir}/libgphoto2_port/m4 ${ACLOCAL_FLAGS}"
 
-for dir in .
+for dir in . libgphoto2_port
 do 
     echo processing $dir
-    (cd $dir; \
-    libtoolize --copy --force; \
-    aclocalinclude="$ACLOCAL_FLAGS"; \
-    aclocal $aclocalinclude; \
-    autoheader; automake --add-missing --gnu $am_opt; autoconf)
+    if ! cd $dir; then
+        echo "Fatal: Could not enter directory $dir."
+        exit 1
+    fi
+    echo "Running aclocal $ACLOCAL_FLAGS"
+    aclocal $ACLOCAL_FLAGS
+    echo "Running autoheader"
+    autoheader
+    echo "Running automake --add-missing --gnu $am_opt"
+    automake --add-missing --gnu $am_opt
+    echo "Running autoconf"
+    autoconf
+    echo "Running ./configure"
+    ./configure "$@"
+    cd ${srcdir}
 done
 
-cd libgphoto2_port
-./autogen.sh "$@"
-cd ..
 ./configure "$@"
 
 echo 
