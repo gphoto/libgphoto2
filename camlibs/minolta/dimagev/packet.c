@@ -64,9 +64,9 @@ dimagev_packet *dimagev_make_packet(unsigned char *buffer, unsigned int length, 
 	{
 		checksum += (unsigned int) p->buffer[i];
 	}
-	p->buffer[(p->length - 3)] = (checksum & 0x0000ff00) >> 8;
-	p->buffer[(p->length - 2)] = checksum & 0x000000ff;
-	p->buffer[(p->length - 1)] = DIMAGEV_ETX;
+	p->buffer[(p->length - 3)] = (unsigned char) ((checksum & 0x0000ff00) >> 8 );
+	p->buffer[(p->length - 2)] = (unsigned char) ( checksum & 0x000000ff );
+	p->buffer[(p->length - 1)] = (unsigned char) DIMAGEV_ETX;
 	
 	return p;
 }
@@ -77,7 +77,7 @@ int dimagev_verify_packet(dimagev_packet *p) {
 	unsigned short correct_checksum=0, current_checksum=0;
 
 	/* All packets must start with DIMAGEV_STX and end with DIMAGEV_ETX. It's an easy check. */
-	if ( ( p->buffer[0] != DIMAGEV_STX ) || ( p->buffer[(p->length - 1)] != DIMAGEV_ETX ) ) {
+	if ( ( p->buffer[0] != (unsigned char) DIMAGEV_STX ) || ( p->buffer[(p->length - 1)] != (unsigned char) DIMAGEV_ETX ) ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_verify_packet::packet missing STX and/or ETX");
 		return GP_ERROR_CORRUPTED_DATA;
 	}
@@ -157,7 +157,7 @@ dimagev_packet *dimagev_strip_packet(dimagev_packet *p) {
 
 	/* All camera packets must start with DIMAGEV_STX and end with DIMAGEV_ETX. */
 	/* Packets used as strings shouldn't have these. It's an easy check. */
-	if ( ( p->buffer[0] != DIMAGEV_STX ) || ( p->buffer[(p->length - 1)] != DIMAGEV_ETX ) ) {
+	if ( ( p->buffer[0] != (unsigned char) DIMAGEV_STX ) || ( p->buffer[(p->length - 1)] != (unsigned char) DIMAGEV_ETX ) ) {
 		return NULL;
 	}
 
@@ -174,8 +174,8 @@ dimagev_packet *dimagev_strip_packet(dimagev_packet *p) {
 }
 
 unsigned char dimagev_decimal_to_bcd(unsigned char decimal) {
-	unsigned char bcd=0;
-	int tensdigit=0;
+	unsigned char bcd = (unsigned char) 0;
+	int tensdigit = 0;
 
 	if ( decimal > (unsigned char) 99 ) {
 		/* No good way to handle this. */
@@ -198,5 +198,5 @@ unsigned char dimagev_bcd_to_decimal(unsigned char bcd) {
 }
 
 int dimagev_packet_sequence(dimagev_packet *p) {
-	return p->buffer[1];
+	return (int) p->buffer[1];
 }

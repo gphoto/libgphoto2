@@ -1,4 +1,4 @@
-/**********************************************************************
+/**********************************************************************;
 *       Minolta Dimage V digital camera communication library         *
 *               Copyright (C) 2000,2001 Gus Hartmann                  *
 *                                                                     *
@@ -162,7 +162,7 @@ int camera_exit (Camera *camera)
 		return GP_ERROR_BAD_PARAMETERS;
 	}
 
-	dimagev->data->host_mode = 0;
+	dimagev->data->host_mode = (unsigned char) 0;
 
 	/* This will also send the host mode of zero. */
 	if ( dimagev_set_date(dimagev) < GP_OK ) {
@@ -219,7 +219,11 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 		return GP_ERROR_IO;
 	}
 
-	gp_filesystem_populate(dimagev->fs, "/", DIMAGEV_FILENAME_FMT, dimagev->status->number_images);
+	if ( gp_filesystem_populate(dimagev->fs, "/", DIMAGEV_FILENAME_FMT, dimagev->status->number_images) < GP_OK ) {
+		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_file_list::unable to popukate filesystem");
+		return GP_ERROR_NO_MEMORY;
+	}
+		
 
 	for ( i = 0 ; i < dimagev->status->number_images ; i++ ) {
 		gp_list_append(list, gp_filesystem_name(dimagev->fs, "/", i), GP_LIST_FILE);
@@ -304,7 +308,6 @@ int camera_capture (Camera *camera, int capture_type, CameraFilePath *path)
 		case GP_OPERATION_CAPTURE_VIDEO:
 			gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_capture::unable to capture video");
 			return GP_ERROR_BAD_PARAMETERS;
-			break;
 		case GP_OPERATION_CAPTURE_PREVIEW: 
 		case GP_OPERATION_CAPTURE_IMAGE:
 			/* Proceed with the code below. Since the Dimage V doesn't support
@@ -314,7 +317,6 @@ int camera_capture (Camera *camera, int capture_type, CameraFilePath *path)
 		default:
 			gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_capture::unkown capture type %02x", capture_type);
 			return GP_ERROR_BAD_PARAMETERS;
-			break;
 		}
 
 	if ( dimagev_shutter(dimagev) < GP_OK ) {
@@ -323,7 +325,7 @@ int camera_capture (Camera *camera, int capture_type, CameraFilePath *path)
 	}
 
 	/* Now check how many pictures are taken, and return the last one. */
-	if ( dimagev_get_camera_status(dimagev) ) {
+	if ( dimagev_get_camera_status(dimagev) != 0 ) {
 		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_capture::unable to get camera status");
 		return GP_ERROR_IO;
 	}
@@ -431,18 +433,17 @@ int camera_summary (Camera *camera, CameraText *summary)
 		"Card ID:\t\t%d\n"
 		"Flash Mode:\t\t"),
 
-		( dimagev->data->host_mode ? _("Remote") : _("Local") ),
-		( dimagev->data->exposure_valid ? _("Yes") : _("No") ),
+		( dimagev->data->host_mode != (unsigned char) 0 ? _("Remote") : _("Local") ),
+		( dimagev->data->exposure_valid != (unsigned char) 0 ? _("Yes") : _("No") ),
 		(signed char)dimagev->data->exposure_correction,
-		( dimagev->data->date_valid ? _("Yes") : _("No") ),
-		( dimagev->data->year < 70 ? 2000 + dimagev->data->year : 1900 + dimagev->data->year ),
+		( dimagev->data->date_valid != (unsigned char) 0 ? _("Yes") : _("No") ),
+		( dimagev->data->year < (unsigned char) 70 ? 2000 + (int) dimagev->data->year : 1900 + (int) dimagev->data->year ),
 		dimagev->data->month, dimagev->data->day, dimagev->data->hour,
 		dimagev->data->minute, dimagev->data->second,
-		( dimagev->data->self_timer_mode ? _("Yes") : _("No")),
-		( dimagev->data->quality_setting ? _("Fine") : _("Standard") ),
-		( dimagev->data->play_rec_mode ? _("Record") : _("Play") ),
-		( dimagev->data->valid ? _("Yes") : _("No")),
-		dimagev->data->id_number );
+		( dimagev->data->self_timer_mode != (unsigned char) 0 ? _("Yes") : _("No")),
+		( dimagev->data->quality_setting != (unsigned char) 0 ? _("Fine") : _("Standard") ),
+		( dimagev->data->play_rec_mode != (unsigned char) 0 ? _("Record") : _("Play") ),
+		( dimagev->data->valid != (unsigned char) 0 ? _("Yes") : _("No")), dimagev->data->id_number );
 
 	if ( i > 0 ) {
 		count += i;
@@ -451,16 +452,36 @@ int camera_summary (Camera *camera, CameraText *summary)
 	/* Flash is a special case, a switch is needed. */
 	switch ( dimagev->data->flash_mode ) {
 		case 0:
-			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, _("Automatic\n"));
+#if defined HAVE_SNPRINTF
+			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count,
+#else
+			i = sprintf(&(summary->text[count]),
+#endif
+				_("Automatic\n"));
 			break;
 		case 1:
-			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, _("Force Flash\n"));
+#if defined HAVE_SNPRINTF
+			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count,
+#else
+			i = sprintf(&(summary->text[count]),
+#endif
+				_("Force Flash\n"));
 			break;
 		case 2:
-			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, _("Prohibit Flash\n"));
+#if defined HAVE_SNPRINTF
+			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count,
+#else
+			i = sprintf(&(summary->text[count]),
+#endif
+				_("Prohibit Flash\n"));
 			break;
 		default:
-			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, _("Invalid Value ( %d )\n"), dimagev->data->flash_mode);
+#if defined HAVE_SNPRINTF
+			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count,
+#else
+			i = sprintf(&(summary->text[count]),
+#endif
+				_("Invalid Value ( %d )\n"), dimagev->data->flash_mode);
 			break;
 	}
 
