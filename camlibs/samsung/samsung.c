@@ -174,16 +174,14 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 {
 	Camera *camera = user_data;
 	int result, i;
-	unsigned char buffer[SDSC_BLOCKSIZE];
+	int havefirst = 0;
+	unsigned char buffer[SDSC_BLOCKSIZE], first[SDSC_BLOCKSIZE];
 	long int size;
 	unsigned char *data;
 	unsigned int pid;
 
 	if (type != GP_FILE_TYPE_NORMAL)
 		return (GP_ERROR_NOT_SUPPORTED);
-
-	/* Rewind */
-	CHECK_RESULT (SDSC_initialize (camera->port));
 
 	/* Seek the header of our file */
 	while (1) {
@@ -192,8 +190,17 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		CHECK_RESULT (SDSC_receive (camera->port, buffer, SDSC_INFOSIZE));
 		if (!strcmp(buffer,filename))
 		    break;
-		if (is_null(buffer)) /* skipped to the end of the camera? */
-		    return GP_ERROR_BAD_PARAMETERS;
+		if (is_null(buffer)) { /* skipped to the end of the camera? */
+		    /* Since we start at a random position, we wrap around. */
+		    continue;
+	        }
+		/* We are at the first item again, so break. */
+		if (havefirst && !strcmp(first,buffer))
+			return GP_ERROR_BAD_PARAMETERS;
+		if (!havefirst) {
+			havefirst = 1;
+			strcpy(first,buffer);
+		}
 	}
 	/* The buffer header has
 	 * filename (8.3 DOS format and \0)
@@ -275,6 +282,44 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	return (GP_OK);
 }
 
+static int
+get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
+               CameraFileInfo *info, void *data, GPContext *context)
+{
+	Camera *camera = data;
+	int havefirst = 0;
+	unsigned char buffer[SDSC_INFOSIZE], first[SDSC_INFOSIZE];
+
+	info->file.fields	= GP_FILE_INFO_NONE;
+	/* Don't rewind, just go forward until we find it.
+	 * Works way better for linear queries. 
+	 */
+	while (1) {
+		CHECK_RESULT (SDSC_send (camera->port, SDSC_NEXT));
+		CHECK_RESULT (SDSC_send (camera->port, SDSC_START));
+		CHECK_RESULT (SDSC_receive (camera->port,buffer,SDSC_INFOSIZE));
+		if (is_null (buffer))
+			continue;
+		if (!strcmp(buffer,filename)) {
+			info->file.fields	= GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT | GP_FILE_INFO_SIZE;
+			info->file.width	= 1024;
+			info->file.height	= 768;
+			strcpy(info->file.type,GP_MIME_JPEG);
+			sscanf(buffer+12,"%ld",&info->file.size);
+			return GP_OK;
+	        }
+		/* We are at the first item again */
+		if (havefirst && !strcmp(first,buffer))
+			break;
+		if (!havefirst) {
+			havefirst = 1;
+			strcpy(first,buffer);
+		}
+	}
+	return (GP_OK);
+}
+
+
 int
 camera_init (Camera *camera, GPContext *context) 
 {
@@ -286,6 +331,7 @@ camera_init (Camera *camera, GPContext *context)
 	/* Now, tell the filesystem where to get lists and info */
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
+	gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL, camera);
 
 	/* Some settings */
 	CHECK_RESULT (gp_port_get_settings (camera->port, &settings));

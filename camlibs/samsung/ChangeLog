@@ -1,3 +1,9 @@
+2002-04-04  Marcus Meissner <marcus@jet.franken.de>
+	
+	* samsung.c: Implemented get_info_func, so kio_camera
+	  download images only once. Some logical changes to other
+	  functions which might make them faster on large imagesets.
+
 2002-01-14  Marcus Meissner <marcus@jet.franken.de>
 	
 	* samsung.c: Added progress and abort handling to image download.
