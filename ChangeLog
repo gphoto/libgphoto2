@@ -1,5 +1,12 @@
 2001-11-22  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* configure.in:
+	* acconfig.h: No need for --with-multi any more
+	* libgphoto2/gphoto2-camera.c: Add some comments about the 
+	  problems with HAVE_MULTI.
+
+2001-11-22  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2/gphoto2-camera.[c,h]: Expose gp_camera_exit to the world.
 
 2001-11-22  Lutz Müller <urc8@rz.uni-karlsruhe.de>

@@ -223,34 +223,6 @@ AM_CONDITIONAL(HAVE_AA, $have_aa)
 AC_SUBST(AA_LIBS)
 AC_SUBST(AA_CFLAGS)
 
-dnl ****************************************
-dnl Support for multiple frontends (at once)
-dnl ****************************************
-multi_msg=no
-try_multi=false
-have_multi=false
-AC_ARG_WITH(multi, [  --with-multi      Don't compile with support for]
-		   [                    multiple progams (needed by GNOME]
-		   [                    and KDE)],
-        if test x$withval = xyes; then
-		try_multi=true
-	fi
-)
-if $try_multi; then
-	multi_msg=yes
-	have_multi=true;
-	AC_DEFINE(HAVE_MULTI)
-else
-	AC_WARN([
-*** You are compiling gphoto2 without support for multiple frontends. This
-*** will lead to problems with frontends like Konqueror or Nautilus, even
-*** with gtkam and gimp. However, some camera drivers don't support 
-*** multiple frontends as of now (digita, dc240). If you don't have one of
-*** the cameras supported by those drivers, it is STRONGLY RECOMMENDED to 
-*** compile gphoto2 with support for multiple frontends (--with-multi).
-])
-fi
-
 AC_OUTPUT([
 Makefile
 camlibs/Makefile
@@ -307,6 +279,4 @@ Configuration (libgphoto2):
 	Config. support (gphoto2): $cdk_msg
 	Preview support (gphoto2): $aa_msg
 	JPEG support:              $jpeg_msg
-
-	Support for GNOME and KDE: $multi_msg
 "
