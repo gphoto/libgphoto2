@@ -40,6 +40,12 @@ int camera_file_list		(Camera *camera,
 	/* Returns a list of file from the 'folder_name'	*/
 	/* folder. 						*/
 
+int camera_file_info            (Camera *camera,
+                                 CameraFileInfo *info,
+                                 char *folder,
+                                 char *filename);
+        /* Returns information about a file on the camera       */
+
 int camera_file_get 	    	(Camera *camera,
 				 CameraFile *file,
 				 char *folder,
@@ -114,17 +120,34 @@ int camera_file_delete 		(Camera *camera,
 	/* Deletes a picture from the current folder on the	*/
 	/* camera. 						*/
 
+int camera_file_delete_all    	(Camera *camera,
+                                 char *folder);
+        /* Delete all files in a given folder.                  */
+        /* Some cameras have a built-in command that makes this */
+        /* instantaneous. If yours doesn't, don't support this. */
+
+
 int camera_config		(Camera *camera);
 	/* Builds the configuration window interface using the	*/
 	/* gp_widget_* functions. This is a toolkit independent	*/
 	/* widget set that is very generic and easy to use.	*/
 
 int camera_capture 		(Camera *camera,
-				 CameraFile *file,
-				 CameraCaptureInfo *info);
-	/* Have the camera capture a file of type 'type'. 	*/
-	/* type will be one of the generic CameraFileType's.	*/
-	/* This is used to get live previews.			*/
+				 CameraFilePath *path,
+				 CameraCaptureSetting *setting);
+        /* Capture options are stored in the option struct.     */
+        /* The library should return the full path and name of  */
+        /* the file that was just captured.                     */
+
+int camera_capture_preview     	(Camera *camera,
+                                 CameraFile *file);
+        /* Download a quick from the camera. This is used for   */
+        /* cameras that support quick CCD dumps such that the   */
+        /* the shutter on the camera doesn't need to be pressed */
+        /* to take a picture. If the shutter needs to be        */
+        /* pressed, OR if there is a file stored on the camera  */
+        /* when this is called, use camera_capture instead and  */
+        /* don't support this. */
 
 int camera_summary 		(Camera *camera, 
 			 	 CameraText *summary);
