@@ -32,6 +32,14 @@
 #  define __FILE__ "dc.c"
 #endif
 
+#ifndef uint8_t
+#  define uint8_t unsigned char
+#endif
+
+#ifndef uint32_t
+#  define uint32_t unsigned int
+#endif
+
 dsc_t	*dsc = NULL;
 int	glob_debug = 0;
 
