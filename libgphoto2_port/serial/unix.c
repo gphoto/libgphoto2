@@ -289,14 +289,15 @@ gp_port_library_list (GPPortInfoList *list)
 		info.type = GP_PORT_SERIAL;
 		strncpy (info.path, "serial:", sizeof (info.path));
 		strncat (info.path, path, sizeof (info.path));
-		snprintf (info.name, sizeof (info.name), "Serial Port %i", x);
+		snprintf (info.name, sizeof (info.name),
+			  _("Serial Port %i"), x);
 		CHECK (gp_port_info_list_append (list, info));
         }
 
 	/* Generic support */
 	info.type = GP_PORT_SERIAL;
 	strncpy (info.path, "^serial", sizeof (info.path));
-	strncpy (info.name, "Generic Serial Port", sizeof (info.name));
+	strncpy (info.name, "Generic", sizeof (info.name));
 	CHECK (gp_port_info_list_append (list, info));
 
         return (GP_OK);

@@ -254,9 +254,16 @@ gp_port_info_list_load (GPPortInfoList *list)
 int
 gp_port_info_list_count (GPPortInfoList *list)
 {
+	int count, i;
+
 	CHECK_NULL (list);
 
-	return (list->count);
+	/* Ignore generic entries */
+	count = list->count;
+	for (i = 0; i < list->count; i++)
+		if (!strcmp (list->info[i].name, "Generic"))
+			count--;
+	return (count);
 }
 
 /**
@@ -384,9 +391,19 @@ gp_port_info_list_lookup_name (GPPortInfoList *list, const char *name)
 int
 gp_port_info_list_get_info (GPPortInfoList *list, int n, GPPortInfo *info)
 {
+	int i;
+
 	CHECK_NULL (list && info);
 
-	if (n < 0 || n >= list->count)
+	if (n < 0)
+		return (GP_ERROR_BAD_PARAMETERS);
+
+	/* Ignore generic entries */
+	for (i = 0; i <= n; i++)
+		if (!strcmp (list->info[i].name, "Generic"))
+			n++;
+
+	if (n >= list->count)
 		return (GP_ERROR_BAD_PARAMETERS);
 
 	memcpy (info, &(list->info[n]), sizeof (GPPortInfo));
