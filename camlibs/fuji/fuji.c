@@ -490,6 +490,8 @@ fuji_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 				"byte 0x%02x."), c);
 			return (GP_ERROR_CORRUPTED_DATA);
 		}
+		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
+			return (GP_ERROR_CANCEL);
 	}
 
 	/* Read the response */
@@ -535,8 +537,15 @@ fuji_pic_count (Camera *camera, unsigned int *n, GPContext *context)
 	cmd[3] = 0;
 	CR (fuji_transmit (camera, cmd, 4, buf, &buf_len, context));
 
-	CLEN (buf_len, 2);
+	CLEN (buf_len, 4);
+
+	/* The first two bytes are the number of pictures. */
 	*n = (buf[1] << 8) | buf[0];
+
+	/*
+	 * The next two bytes we don't know the meaning of. We have seen
+	 * 0x02 0x00.
+	 */
 
 	return (GP_OK);
 
@@ -610,6 +619,32 @@ fuji_pic_size (Camera *camera, unsigned int i, unsigned int *size,
 	CLEN (buf_len, 4);
 
 	*size = buf[0] | (buf[1] << 8) | (buf[2] << 16) | (buf[3] << 24);
+
+	return (GP_OK);
+}
+
+int
+fuji_pic_get_thumb (Camera *camera, unsigned int i, unsigned char **data,
+		    unsigned int *size, GPContext *context)
+{
+	unsigned char cmd[6];
+
+	/* It seems that all thumbnails have the size of 60 x 175. */
+	*size = 60 * 175;
+	*data = malloc (sizeof (char) * *size);
+	if (!*data) {
+		gp_context_error (context, _("Could not allocate "
+			"%i byte(s) for downloading the thumbnail."), *size);
+		return (GP_ERROR_NO_MEMORY);
+	}
+
+	cmd[0] = 0;
+	cmd[1] = FUJI_CMD_PIC_GET_THUMB;
+	cmd[2] = 2;
+	cmd[4] = i;
+	cmd[5] = (i >> 8);
+
+	CRF (fuji_transmit (camera, cmd, 6, *data, size, context), data);
 
 	return (GP_OK);
 }

@@ -148,7 +148,16 @@ get_file_func (CameraFilesystem *fs, const char *folder,
 	CR (n = gp_filesystem_number (camera->fs, folder, filename, context));
 	n++;
 
-	CR (fuji_pic_get (camera, n, &d, &size, context));
+	switch (type) {
+	case GP_FILE_TYPE_NORMAL:
+		CR (fuji_pic_get (camera, n, &d, &size, context));
+		break;
+	case GP_FILE_TYPE_PREVIEW:
+		CR (fuji_pic_get_thumb (camera, n, &d, &size, context));
+		break;
+	default:
+		return (GP_ERROR_NOT_SUPPORTED);
+	}
 	CR (gp_file_set_data_and_size (file, d, size));
 
 	return (GP_OK);

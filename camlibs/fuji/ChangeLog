@@ -1,3 +1,8 @@
+2002-04-18  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c:
+	* fuji.[c,h]: Implement fetching of previews.
+
 2002-04-17  Lutz Müller <lutz@users.sourceforge.net>
 
 	* fuji.c: Fix logic.

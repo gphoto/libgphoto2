@@ -44,13 +44,17 @@ int fuji_get_cmds  (Camera *camera, unsigned char *cmds, GPContext *context);
 
 int fuji_ping      (Camera *camera, GPContext *context);
 int fuji_pic_count (Camera *camera, unsigned int *n, GPContext *context);
-int fuji_pic_name  (Camera *camera, unsigned int i, const char **name,
-		    GPContext *context);
-int fuji_pic_size  (Camera *camera, unsigned int i, unsigned int *size,
-		    GPContext *context);
-int fuji_pic_del   (Camera *camera, unsigned int i, GPContext *context);
-int fuji_pic_get   (Camera *camera, unsigned int i, unsigned char **data,
-		    unsigned int *size, GPContext *context);
+
+/* Operations on pictures */
+int fuji_pic_name      (Camera *camera, unsigned int i, const char **name,
+		        GPContext *context);
+int fuji_pic_size      (Camera *camera, unsigned int i, unsigned int *size,
+		        GPContext *context);
+int fuji_pic_del       (Camera *camera, unsigned int i, GPContext *context);
+int fuji_pic_get       (Camera *camera, unsigned int i, unsigned char **data,
+		        unsigned int *size, GPContext *context);
+int fuji_pic_get_thumb (Camera *camera, unsigned int i, unsigned char **data,
+			unsigned int *size, GPContext *context);
 
 typedef enum _FujiSpeed FujiSpeed;
 enum _FujiSpeed {
