@@ -56,7 +56,7 @@
 #define CHECK_RESULT(result)       {int r = (result); if (r < 0) return (r);}
 
 #define CHECK_OPEN(c)              {int r = (strcmp ((c)->pc->a.model,"Directory Browse") ? gp_port_open ((c)->port) : GP_OK); if (r < 0) {gp_camera_status ((c), ""); return (r);}}
-#define CHECK_CLOSE(c)             {if ((c)->port) gp_port_close ((c)->port);}
+#define CHECK_CLOSE(c)             {if (strcmp ((c)->pc->a.model,"Directory Browse")) gp_port_close ((c)->port);}
 
 #define CRS(c,res) {int r = (res); if (r < 0) {gp_camera_status ((c), ""); return (r);}}
 
@@ -371,6 +371,9 @@ gp_camera_status (Camera *camera, const char *format, ...)
 	vsprintf (buffer, format, arg);
 #endif
 	va_end (arg);
+
+	if (strlen (buffer))
+		gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Status: %s", buffer);
 
 	if (camera->pc->status_func)
 		camera->pc->status_func (camera, buffer,
@@ -1128,6 +1131,57 @@ gp_camera_file_delete (Camera *camera, const char *folder, const char *file)
 }
 
 /**
+ * gp_camera_folder_make_dir:
+ * @camera: a #Camera
+ * @folder: the location where to create the new directory
+ * @name: the name of the directory to be created
+ *
+ * Creates a new directory called @name in given @folder.
+ *
+ * Return value: a gphoto2 error code
+ **/
+int
+gp_camera_folder_make_dir (Camera *camera, const char *folder,
+			   const char *name)
+{
+	CHECK_NULL (camera && folder && name);
+
+	gp_camera_status (camera, _("Creating folder '%s' in folder '%s'..."),
+			  name, folder);
+	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_make_dir (camera->fs,
+							folder, name));
+	gp_camera_status (camera, "");
+
+	return (GP_OK);
+}
+
+/**
+ * gp_camera_folder_remove_dir:
+ * @camera: a #Camera
+ * @folder: the folder from which to remove the directory
+ * @name: the name of the directory to be removed
+ *
+ * Removes an (empty) directory called @name from the given @folder.
+ *
+ * Return value: a gphoto2 error code
+ **/
+int
+gp_camera_folder_remove_dir (Camera *camera, const char *folder,
+			     const char *name)
+{
+	CHECK_NULL (camera && folder && name);
+
+	gp_camera_status (camera, _("Removing folder '%s' from folder '%s'..."),
+			  name, folder);
+	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_remove_dir (camera->fs,
+								folder, name));
+	gp_camera_status (camera, "");
+
+	return (GP_OK);
+}
+
+
+/**
  * gp_camera_set_error:
  * @camera: a #Camera
  * @format:
@@ -1192,3 +1246,4 @@ gp_camera_get_error (Camera *camera)
 
 	return (N_("No error description available"));
 }
+

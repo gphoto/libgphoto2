@@ -64,9 +64,8 @@ typedef enum {
 typedef enum {
         GP_FILE_OPERATION_NONE          = 0,
         GP_FILE_OPERATION_DELETE        = 1 << 1,
-        GP_FILE_OPERATION_CONFIG        = 1 << 2,
         GP_FILE_OPERATION_PREVIEW       = 1 << 3,
-        GP_FILE_OPERATION_RAW           = 1 << 4
+        GP_FILE_OPERATION_RAW           = 1 << 4,
 } CameraFileOperation;
 
 /**
@@ -79,7 +78,8 @@ typedef enum {
         GP_FOLDER_OPERATION_NONE        = 0, 
         GP_FOLDER_OPERATION_DELETE_ALL  = 1 << 0,
         GP_FOLDER_OPERATION_PUT_FILE    = 1 << 1,
-        GP_FOLDER_OPERATION_CONFIG      = 1 << 2
+	GP_FOLDER_OPERATION_MAKE_DIR    = 1 << 2,
+	GP_FOLDER_OPERATION_REMOVE_DIR  = 1 << 3
 } CameraFolderOperation;
 
 /**

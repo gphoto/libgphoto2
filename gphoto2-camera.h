@@ -206,6 +206,7 @@ struct _Camera {
 /* Create a new camera device */
 int gp_camera_new               (Camera **camera);
 
+/* Preparing initialization */
 int gp_camera_set_abilities     (Camera *camera, CameraAbilities  abilities);
 int gp_camera_get_abilities	(Camera *camera, CameraAbilities *abilities);
 int gp_camera_set_port_info     (Camera *camera, GPPortInfo  info);
@@ -218,27 +219,13 @@ int gp_camera_get_port_info     (Camera *camera, GPPortInfo *info);
 int gp_camera_set_port_speed    (Camera *camera, int speed);
 int gp_camera_get_port_speed    (Camera *camera);
 
-/************************************************************************
- * Part I:                                                              *
- *             Operations on CAMERAS                                    *
- *                                                                      *
- *   - ref                 : Ref the camera                             *
- *   - unref               : Unref the camera                           *
- *   - free                : Free                                       *
- *   - init                : Initialize the camera                      *
- *   - get_config          : Get configuration options                  *
- *   - set_config          : Set those configuration options            *
- *   - get_summary         : Get information about the camera           *
- *   - get_manual          : Get information about the driver           *
- *   - get_about           : Get information about authors of the driver*
- *   - capture             : Capture an image                           *
- *   - capture_preview     : Capture a preview                          *
- ************************************************************************/
+/* Initialization */
+int gp_camera_init               (Camera *camera);
 
+/* Operations on cameras */
 int gp_camera_ref   		 (Camera *camera);
 int gp_camera_unref 		 (Camera *camera);
 int gp_camera_free 		 (Camera *camera);
-int gp_camera_init 		 (Camera *camera);
 int gp_camera_get_config	 (Camera *camera, CameraWidget **window);
 int gp_camera_set_config	 (Camera *camera, CameraWidget  *window);
 int gp_camera_get_summary	 (Camera *camera, CameraText *summary);
@@ -248,34 +235,20 @@ int gp_camera_capture 		 (Camera *camera, CameraCaptureType type,
 				  CameraFilePath *path);
 int gp_camera_capture_preview 	 (Camera *camera, CameraFile *file);
 
-/************************************************************************
- * Part II:                                                             *
- *             Operations on FOLDERS                                    *
- *                                                                      *
- *   - list_files  : Get a list of files in this folder                 *
- *   - list_folders: Get a list of folders in this folder               *
- *   - delete_all  : Delete all files in this folder                    *
- *   - put_file    : Upload a file into this folder                     *
- ************************************************************************/
-
+/* Operations on folders */
 int gp_camera_folder_list_files   (Camera *camera, const char *folder, 
 				   CameraList *list);
 int gp_camera_folder_list_folders (Camera *camera, const char *folder, 
 				   CameraList *list);
 int gp_camera_folder_delete_all   (Camera *camera, const char *folder);
-int gp_camera_folder_put_file     (Camera *camera, const char *folder, 
+int gp_camera_folder_put_file     (Camera *camera, const char *folder,
 				   CameraFile *file);
-								
-/************************************************************************
- * Part III:                                                            *
- *             Operations on FILES                                      *
- *                                                                      *
- *   - get_info   : Get specific information about a file               *
- *   - set_info   : Set specific parameters of a file                   *
- *   - get_file   : Get a file                                          *
- *   - delete     : Delete a file                                       *
- ************************************************************************/
+int gp_camera_folder_make_dir     (Camera *camera, const char *folder,
+				   const char *name);
+int gp_camera_folder_remove_dir   (Camera *camera, const char *folder,
+				   const char *name);
 
+/* Operations on files */
 int gp_camera_file_get_info 	(Camera *camera, const char *folder, 
 				 const char *file, CameraFileInfo *info);
 int gp_camera_file_set_info 	(Camera *camera, const char *folder, 
