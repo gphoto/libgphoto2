@@ -113,7 +113,7 @@ void gpe_setval(unsigned char *data,int tagind,long newval){
 };
 
 
-/**
+/*
  * Returns the offset of the next IFD entry after
  * offset "num".
  *
@@ -539,7 +539,7 @@ int gpe_tagnum( char *data,int tagind){
  return(exif_get_lilend(data+tagind*12+2,2));
 };
 
-/**
+/*
  * Get the value of a tag as an integer.
  * only works for 4 byte values.
  *
