@@ -537,7 +537,6 @@ gsmart_get_image_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
 	unsigned int t_width, t_height;
 	u_int8_t *yuv_p;
 	u_int8_t *rgb_p;
-	unsigned char pbm_header[16];
 	int headerlength;
 
 	p = g_file->fat;
@@ -548,8 +547,10 @@ gsmart_get_image_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
 	size = g_file->width * g_file->height * 2 / 64;
 	t_width = g_file->width / 8;
 	t_height = g_file->height / 8;
-	headerlength = snprintf (pbm_header, sizeof (pbm_header), 
-			"P6 %d %d 255\n", t_width, t_height);
+	/* Adjust the headerlenght */
+	headerlength = 13;
+	if (t_width > 99) headerlength++;
+	if (t_height > 99) headerlength++;
 
 	/* align */
 	if (size % 64 != 0)
@@ -579,7 +580,7 @@ gsmart_get_image_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
 		return (GP_ERROR_NO_MEMORY);
 
 	tmp = *buf;
-	snprintf (tmp, headerlength+1, pbm_header);
+	snprintf (tmp, *len, "P6 %d %d 255\n", t_width, t_height);
 	tmp += headerlength;
 
 	yuv_p = mybuf;
