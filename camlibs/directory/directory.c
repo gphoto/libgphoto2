@@ -66,7 +66,8 @@ int camera_abilities (CameraAbilitiesList *list)
 
         a.operations = GP_OPERATION_CONFIG;
         a.file_operations = GP_FILE_OPERATION_NONE;
-        a.folder_operations = GP_FOLDER_OPERATION_NONE;
+        a.folder_operations = GP_FOLDER_OPERATION_MAKE_DIR |
+			      GP_FOLDER_OPERATION_REMOVE_DIR;
 
         gp_abilities_list_append(list, a);
 

@@ -174,7 +174,9 @@ camera_abilities (CameraAbilitiesList * list)
 			a.speed[5] = 0;
 		}
 		a.operations = GP_OPERATION_CONFIG;
-		a.folder_operations = GP_FOLDER_OPERATION_PUT_FILE;
+		a.folder_operations = GP_FOLDER_OPERATION_PUT_FILE |
+				      GP_FOLDER_OPERATION_MAKE_DIR |
+				      GP_FOLDER_OPERATION_REMOVE_DIR;
 		a.file_operations = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
 		gp_abilities_list_append (list, a);
 	}
