@@ -34,6 +34,16 @@ The driver caches a lot of information. If the camera status changes
 during a session or if the driver gets stuck for some other reason,
 the caches can be manually flushed using "Configure camera".
 
+We are currently working on support for the raw file format the Canon
+cameras use (CRW -Canon RaW files). See
+
+    http://www.shore.net/~dcoffin/powershot/
+
+or
+    http://www2.primushost.com/~dcoffin/powershot/
+
+for details on the file format.
+
 
 Change history
 ==============
