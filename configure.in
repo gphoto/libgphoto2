@@ -90,7 +90,7 @@ AC_SUBST(dotlibs)
 
 dnl Find out which drivers to compile
 
-camlibs='agfa-cl18 barbie canon dimera directory sierra konica panasonic digita kodak minolta samsung stv0680 sonydscf1'
+camlibs='agfa-cl18 barbie canon dimera directory sierra konica panasonic polaroid digita kodak minolta samsung stv0680 sonydscf1'
 AC_SUBST(SUBDIRS_CAMLIBS)
 for i in $camlibs; do
   d=`echo $i | $TR a-z A-Z`
@@ -104,7 +104,7 @@ AC_ARG_WITH(drivers,
   [                            possible drivers are: ]
   [                            agfa-cl18, barbie, canon, digita, dimera, ]
   [                            directory, kodak, konica, minolta, panasonic, ]
-  [                            samsung, sierra, sonydscf1 stv0680 ],
+  [                            polaroid, samsung, sierra, sonydscf1 stv0680 ],
   drivers="$withval", drivers="all")
 if test "$drivers" = "all"; then
   for i in $camlibs; do
@@ -168,8 +168,6 @@ camlibs/barbie/Makefile
 camlibs/dimera/Makefile
 camlibs/sierra/Makefile
 camlibs/directory/Makefile
-camlibs/panasonic/Makefile
-camlibs/panasonic/l859/Makefile
 camlibs/konica/Makefile
 camlibs/digita/Makefile
 camlibs/canon/Makefile
@@ -181,6 +179,9 @@ camlibs/kodak/dc240/Makefile
 camlibs/kodak/dc3200/Makefile
 camlibs/minolta/Makefile
 camlibs/minolta/dimagev/Makefile
+camlibs/panasonic/Makefile
+camlibs/panasonic/l859/Makefile
+camlibs/polaroid/Makefile
 camlibs/sonydscf1/Makefile
 camlibs/stv0680/Makefile
 frontends/Makefile
