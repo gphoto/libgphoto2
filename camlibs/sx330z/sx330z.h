@@ -115,7 +115,7 @@ int sx330z_init(Camera *camera,GPContext *context);
 /*
  * Get number of TOC pages 
  */
-int sx330z_get_toc_num_pages(Camera *camera,GPContext *context,unsigned int *pages);
+int sx330z_get_toc_num_pages(Camera *camera,GPContext *context,uint32_t *pages);
 
 
 /*
