@@ -108,9 +108,12 @@ usbcam script you are going to use.
    Example scripts are found in packages/ in the source tree
    and in linux-hotplug/ after installation and in the doc dir of 
    the binary package. Choose one, adapt it for your needs, and copy
-   it to /etc/hotplug/usb/usbcam. All three scripts shipped with
-   gphoto2 also have extensive commentary explaining their usage in
-   more detail.
+   it to /etc/hotplug/usb/usbcam. The directory /etc/hotplug should
+   already exists, whereas it may be that you have to create the
+   directory /etc/hotplug/usb.
+
+   All three scripts shipped with gphoto2 also have extensive
+   commentary explaining their usage in more detail.
 
    a) The most simple solution is using usbcam.console. This
       changes the permissions so that the user owning /dev/console can
