@@ -184,7 +184,7 @@ static struct {
 	 */
 	{"Kodak DC-4800", 0x040a, 0x0160},
 	/* Below other camers known to be detected by interface class */
-/*
+
 	{"Kodak DX-3215", 0x040a, 0x0525},
 	{"Kodak DX-3500", 0x040a, 0x0500},
 	{"Kodak DX-3600", 0x040a, 0x0510},
@@ -194,7 +194,7 @@ static struct {
 	{"Sony DSC-P5", 0, 0},
 	{"Sony DSC-F707", 0x054c, 0x004e},
 	{"HP PhotoSmart 318", 0x03f0, 0x6302},
-*/	{NULL, 0, 0}
+	{NULL, 0, 0}
 };
 
 static struct {
@@ -361,7 +361,7 @@ camera_abilities (CameraAbilitiesList *list)
 	}
 
 	strcpy(a.model, "USB PTP Class Camera");
-	a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
+	a.status = GP_DRIVER_STATUS_TESTING;
 	a.port   = GP_PORT_USB;
 	a.speed[0] = 0;
 	a.usb_class = 6;
