@@ -22,16 +22,16 @@
 #include <stdlib.h>
 #include <string.h>
 
-//                                                xf?
-#define PDC320_INIT     "\x6\x6\x6\x6\x6\x6\x6\x6\x0\xff\xff"
-#define PDC320_ID                   "\x6\x6\x6\x6\x1\xfe\xff"
-#define PDC320_STATE                "\x6\x6\x6\x6\x2\xfd\xff"
-#define PDC320_NUM                  "\x6\x6\x6\x6\x3\xfc\xff"
-#define PDC320_SIZE     {0x6, 0x6, 0x6, 0x6, 0x4, 0x01, 0xfb, 0xfe}
-#define PDC320_PIC      {0x6, 0x6, 0x6, 0x6, 0x5, 0x01, 0xfa, 0xfe}
-#define PDC320_DEL                  "\x6\x6\x6\x6\x7\xf8\xff"
-#define PDC320_ENDINIT              "\x6\x6\x6\x6\xa\xf5\xff"
-#define PDC320_UNKNOWN3             "\x6\x6\x6\x6\xc\xf3\xf3"
+//                                                        xf?
+#define PDC320_INIT     "\xe6\xe6\xe6\xe6\xe6\xe6\xe6\xe6\x0\xff\xff"
+#define PDC320_ID                       "\xe6\xe6\xe6\xe6\x1\xfe\xff"
+#define PDC320_STATE                    "\xe6\xe6\xe6\xe6\x2\xfd\xff"
+#define PDC320_NUM                      "\xe6\xe6\xe6\xe6\x3\xfc\xff"
+#define PDC320_SIZE     {0xe6, 0xe6, 0xe6, 0xe6, 0x4, 0x01, 0xfb, 0xfe}
+#define PDC320_PIC      {0xe6, 0xe6, 0xe6, 0xe6, 0x5, 0x01, 0xfa, 0xfe}
+#define PDC320_DEL                      "\xe6\xe6\xe6\xe6\x7\xf8\xff"
+#define PDC320_ENDINIT                  "\xe6\xe6\xe6\xe6\xa\xf5\xff"
+#define PDC320_UNKNOWN3                 "\xe6\xe6\xe6\xe6\xc\xf3\xf3"
 
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 #define CHECK_RESULT_FREE(result, data) {int r = (result); if (r < 0) {free (data); return (r);}}
