@@ -96,9 +96,9 @@ is_image (const char *name)
 
 	pos = strchr (name, '.');
 	if (pos) {
-		res = (!strcmp (pos, ".JPG"));
-		if (!res)
-			res = (!strcmp (pos, ".CRW"));
+		res |= !strcmp (pos, ".JPG");
+		res |= !strcmp (pos, ".CRW");
+		res |= !strcmp (pos, ".CR2");
 	}
 
 	GP_DEBUG ("is_image(%s) == %i", name, res);
