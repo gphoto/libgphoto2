@@ -427,11 +427,11 @@
           identifies a camera by two values:
           <orderedlist numeration="loweralpha">
             <listitem>
-              <simpara>the <link linkend="ports">port</link> it 
+              <simpara>the <link linkend="port-names"port</link> it 
                 is connected to</simpara>
             </listitem>
             <listitem>
-              <simpara>the <link linkend="cameras">name</link> of the
+              <simpara>the <link linkend="camera-namess">name</link> of the
                 camera</simpara>
             </listitem>
           </orderedlist>
@@ -516,10 +516,10 @@
         <title>The gPhoto2 system architecture</title>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="figures/architecture.eps" format="EPS"/>
+            <imagedata fileref="figures/architecture.png" format="PNG"/>
           </imageobject>
           <imageobject>
-            <imagedata fileref="figures/architecture.png" format="PNG"/>
+            <imagedata fileref="figures/architecture.eps" format="EPS"/>
           </imageobject>
           <imageobject>
             <imagedata fileref="figures/architecture.jpg" format="JPG"/>
@@ -545,10 +545,10 @@
         <title>The gPhoto2 system architecture</title>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="figures/libgphoto2-api.eps" format="EPS"/>
+            <imagedata fileref="figures/libgphoto2-api.png" format="PNG"/>
           </imageobject>
           <imageobject>
-            <imagedata fileref="figures/libgphoto2-api.png" format="PNG"/>
+            <imagedata fileref="figures/libgphoto2-api.eps" format="EPS"/>
           </imageobject>
           <imageobject>
             <imagedata fileref="figures/libgphoto2-api.jpg" format="JPG"/>
@@ -574,10 +574,10 @@
         <title>The gPhoto2 system architecture</title>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="figures/libgphoto2-camlib.eps" format="EPS"/>
+            <imagedata fileref="figures/libgphoto2-camlib.png" format="PNG"/>
           </imageobject>
           <imageobject>
-            <imagedata fileref="figures/libgphoto2-camlib.png" format="PNG"/>
+            <imagedata fileref="figures/libgphoto2-camlib.eps" format="EPS"/>
           </imageobject>
           <imageobject>
             <imagedata fileref="figures/libgphoto2-camlib.jpg" format="JPG"/>
@@ -603,10 +603,10 @@
         <title>The gPhoto2 system architecture</title>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="figures/libgphoto2_port.eps" format="EPS"/>
+            <imagedata fileref="figures/libgphoto2_port.png" format="PNG"/>
           </imageobject>
           <imageobject>
-            <imagedata fileref="figures/libgphoto2_port.png" format="PNG"/>
+            <imagedata fileref="figures/libgphoto2_port.eps" format="EPS"/>
           </imageobject>
           <imageobject>
             <imagedata fileref="figures/libgphoto2_port.jpg" format="JPG"/>
@@ -657,10 +657,10 @@
         <title>The gPhoto2 file system architecture</title>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="figures/gphotofs.eps" format="EPS"/>
+            <imagedata fileref="figures/gphotofs.png" format="PNG"/>
           </imageobject>
           <imageobject>
-            <imagedata fileref="figures/gphotofs.png" format="PNG"/>
+            <imagedata fileref="figures/gphotofs.eps" format="EPS"/>
           </imageobject>
           <imageobject>
             <imagedata fileref="figures/gphotofs.jpg" format="JPG"/>
