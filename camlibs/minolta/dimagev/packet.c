@@ -78,7 +78,8 @@ int dimagev_verify_packet(dimagev_packet *p) {
 
 	/* All packets must start with DIMAGEV_STX and end with DIMAGEV_ETX. It's an easy check. */
 	if ( ( p->buffer[0] != DIMAGEV_STX ) || ( p->buffer[(p->length - 1)] != DIMAGEV_ETX ) ) {
-		return 0;
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_verify_packet::packet missing STX and/or ETX");
+		return GP_ERROR;
 	}
 
 	correct_checksum = (p->buffer[(p->length - 3)] * 256) + p->buffer[(p->length - 2)];
@@ -119,7 +120,6 @@ dimagev_packet *dimagev_read_packet(dimagev_t *dimagev) {
 	/* Now we *should* have a packet. Let's do a sanity check. */
 	if ( dimagev_verify_packet(p) == GP_ERROR ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_read_packet::got an invalid packet");
-		fprintf(stderr, "dimagev_read_packet::got an invalid packet\n");
 		free(p);
 		
 		/* Send a NAK */
