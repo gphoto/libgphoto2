@@ -72,7 +72,7 @@ dwrite(GPPort*port, caddr_t buf, int xsize) {
     int i;
     int ret = gp_port_write(port,buf,xsize);
 
-    if (ret == -1) {
+    if (ret < GP_OK) {
 	perror("dwrite");
 	return -1;
     }
@@ -158,7 +158,7 @@ int jd11_ping(GPPort *port) {
 	    while (1==READ(port,buf,1))
 		    /* drain input queue before PING */;
 	    ret=_send_cmd_2(port,0xff08,&xcmd);
-	    if ((ret==GP_OK) && (xcmd==0xfff1))
+	    if ((ret>=GP_OK) && (xcmd==0xfff1))
 		return GP_OK;
 	}
 	return ret;
@@ -214,7 +214,7 @@ jd11_select_index(GPPort *port) {	/* select index */
 	int ret;
 
 	ret = _send_cmd_2(port,0xffa4,&xcmd);
-	if (ret!=GP_OK)
+	if (ret < GP_OK)
 	    return ret;
 	if (xcmd!=0xff01)
 	    return GP_ERROR_IO;

@@ -203,7 +203,7 @@ static int camera_config_get (Camera *camera, CameraWidget **window,
 	gp_widget_append (*window, section);
 
 	ret = jd11_get_rgb(camera->port,&red,&green,&blue);
-	if (ret != GP_OK)
+	if (ret < GP_OK)
 	    return ret;
 	gp_widget_new (GP_WIDGET_RANGE, _("Red"), &widget);
 	gp_widget_append (section, widget);
@@ -243,7 +243,7 @@ static int camera_config_set (Camera *camera, CameraWidget *window,
 	if (gp_widget_changed (widget)) {
 		gp_widget_get_value (widget, &f);
 		ret = jd11_set_bulb_exposure(camera->port,(int)f);
-		if (ret != GP_OK)
+		if (ret < GP_OK)
 		    return ret;
 	}
 
