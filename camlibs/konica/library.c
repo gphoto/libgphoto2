@@ -67,35 +67,138 @@ static gchar* models_qm200[] = {"Konica Q-M200", "HP PhotoSmart C200",	"HP Photo
 
 static gchar** models[2] = {models_qm100, models_qm200};
 
+/********************/
+/* Type definitions */
+/********************/
+typedef struct {
+        gp_port*                device;
+	gboolean                image_id_long;
+	CameraFilesystem*       filesystem;
+	gboolean		filesystem_up_to_date;
+} konica_data_t;
 
+			
 /**************/
 /* Prototypes */
 /**************/
 gboolean localization_file_read (Camera* camera, gchar* file_name, guchar** data, gulong* data_size);
 
-gint erase_all_unprotected_images (Camera* camera, CameraWidget* widget);
-
 
 /*************/
 /* Functions */
 /*************/
-gint
+
+static gint
+update_filesystem (Camera* camera)
+{
+        guint                   self_test_result;
+        k_power_level_t         power_level;
+        k_power_source_t        power_source;
+        k_card_status_t         card_status;
+        k_display_t             display;
+        guint           card_size;
+        guint           pictures = 0;
+        guint           pictures_left;
+        guchar          year;
+        guchar          month;
+        guchar          day;
+        guchar          hour;
+        guchar          minute;
+        guchar          second;
+        guint           io_setting_bit_rate;
+        guint           io_setting_flags;
+        guchar          flash;
+        guchar          quality;
+        guchar          focus;
+        guchar          exposure;
+        guint           total_pictures;
+        guint           total_strobes;
+        guint           i;
+        guchar*         information_buffer = NULL;
+        guint           information_buffer_size;
+        guint           exif_size;
+        gboolean        protected;
+        gulong          image_id;
+        konica_data_t*  konica_data;
+        gchar*          filename;
+        gint            result;
+
+        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering update_filesystem ***");
+        g_return_val_if_fail (camera,   GP_ERROR_BAD_PARAMETERS);
+
+        konica_data = (konica_data_t *) camera->camlib_data;
+
+        if ((result = k_get_status (
+                konica_data->device,
+                &self_test_result,
+                &power_level,
+                &power_source,
+                &card_status,
+                &display,
+                &card_size,
+                &pictures,
+                &pictures_left,
+                &year,
+                &month,
+                &day,
+                &hour,
+                &minute,
+                &second,
+                &io_setting_bit_rate,
+                &io_setting_flags,
+                &flash,
+                &quality,
+                &focus,
+                &exposure,
+                &total_pictures,
+                &total_strobes)) != GP_OK) return (result);
+
+        /* We can't get the filename from the camera.   */
+        /* But we decide to call the images             */
+        /* %6i.jpeg', with the image id as              */
+        /* parameter. Therefore, let's get the image    */
+        /* ids.                                         */
+        for (i = 0; i < pictures; i++) {
+                if (k_get_image_information (
+                        konica_data->device,
+                        konica_data->image_id_long,
+                        i + 1,
+                        &image_id,
+                        &exif_size,
+                        &protected,
+                        &information_buffer,
+                        &information_buffer_size) == GP_OK) filename = g_strdup_printf ("%06i.jpeg", (int) image_id);
+                else filename = g_strdup ("??????.jpeg");
+                g_free (information_buffer);
+                information_buffer = NULL;
+                gp_filesystem_append (konica_data->filesystem, "/", filename);
+                g_free (filename);
+        }
+	konica_data->filesystem_up_to_date = TRUE;
+
+        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Leaving camera_file_list ***");
+        return (GP_OK);
+}
+
+
+static gint
 erase_all_unprotected_images (Camera* camera, CameraWidget* widget)
 {
-	konica_data_t*	konica_data;
-	gint		not_erased;
-	gint		result;
-	gchar*		tmp;
+        konica_data_t*  konica_data;
+        gint            not_erased;
+        gint            result;
+        gchar*          tmp;
 
-	konica_data = (konica_data_t *) camera->camlib_data;
+        konica_data = (konica_data_t *) camera->camlib_data;
 
-	result = k_erase_all (konica_data->device, &not_erased);
-	if ((result == GP_OK) && (not_erased > 0)) {
-		tmp = g_strdup_printf (_("%i images were protected and have not been erased."), not_erased);
-		gp_frontend_status (camera, tmp);
-		g_free (tmp);
-	}
-	return (result);
+        result = k_erase_all (konica_data->device, &not_erased);
+        if ((result == GP_OK) && (not_erased > 0)) {
+                tmp = g_strdup_printf (_("%i images were protected and have not been erased."), not_erased);
+                gp_frontend_status (camera, tmp);
+                g_free (tmp);
+        }
+        update_filesystem (camera);
+        return (result);
 }
 
 
@@ -196,6 +299,7 @@ camera_init (Camera* camera)
 	konica_data = g_new (konica_data_t, 1);
 	camera->camlib_data = konica_data;
 	konica_data->filesystem = gp_filesystem_new ();
+	konica_data->filesystem_up_to_date = FALSE;
 	konica_data->device = device;
 	konica_data->image_id_long = FALSE;
 	for (i = 0; i < 2; i++) {
@@ -382,37 +486,10 @@ camera_folder_delete_all (Camera* camera, const gchar* folder)
 gint 
 camera_folder_list_files (Camera* camera, const gchar* folder, CameraList* list)
 {
-	guint 			self_test_result;
-	k_power_level_t 	power_level;
-	k_power_source_t 	power_source;
-	k_card_status_t 	card_status;
-	k_display_t 		display;
-	guint 		card_size;
-	guint 		pictures = 0;
-	guint 		pictures_left;
-	guchar 		year;
-	guchar 		month;
-	guchar 		day;
-	guchar 		hour;
-	guchar 		minute;
-	guchar 		second;
-	guint 		io_setting_bit_rate;
-	guint 		io_setting_flags;
-	guchar 		flash;
-	guchar 		quality;
-	guchar 		focus;
-	guchar 		exposure;
-	guint 		total_pictures;
-	guint 		total_strobes;
-	guint 		i;
-	guchar* 	information_buffer = NULL;
-	guint		information_buffer_size;
-	guint		exif_size;
-	gboolean	protected;
-	gulong		image_id;
 	konica_data_t*	konica_data;
-	gchar*		filename;
 	gint		result;
+	gint		count;
+	gint 		i;
 
         gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_file_list ***");
 	g_return_val_if_fail (camera, 	GP_ERROR_BAD_PARAMETERS);
@@ -422,52 +499,22 @@ camera_folder_list_files (Camera* camera, const gchar* folder, CameraList* list)
 	if (strcmp (folder, "/")) return (GP_ERROR_DIRECTORY_NOT_FOUND);
 
 	konica_data = (konica_data_t *) camera->camlib_data;
-	if ((result = k_get_status (
-		konica_data->device,
-		&self_test_result, 
-		&power_level,
-		&power_source,
-		&card_status,
-		&display, 
-		&card_size,
-		&pictures, 
-		&pictures_left, 
-		&year, 
-		&month, 
-		&day,
-		&hour,
-		&minute,
-		&second,
-		&io_setting_bit_rate,
-		&io_setting_flags,
-		&flash,
-		&quality,
-		&focus,
-		&exposure,
-		&total_pictures,
-		&total_strobes)) != GP_OK) return (result);
 
-	/* We can't get the filename from the camera. 	*/
-	/* But we decide to call the images		*/
-	/* 'image%6i.jpeg', with the image id as 	*/
-	/* parameter. Therefore, let's get the image	*/
-	/* ids.						*/
-	for (i = 0; i < pictures; i++) {
-	        if (k_get_image_information (
-	                konica_data->device,
-	                konica_data->image_id_long,
-	                i + 1,
-	                &image_id,
-	                &exif_size,
-	                &protected,
-	                &information_buffer,
-	                &information_buffer_size) == GP_OK) filename = g_strdup_printf ("%06i.jpeg", (int) image_id);
-		else filename = g_strdup ("??????.jpeg");
-		g_free (information_buffer);
-		information_buffer = NULL;
-		if ((result = gp_list_append (list, filename, GP_LIST_FILE)) != GP_OK) return (result);
-		gp_filesystem_append (konica_data->filesystem, "/", filename);
-		g_free (filename);
+	/* If needed, bring the virtual filesystem up to date */
+	if (!konica_data->filesystem_up_to_date) {
+		result = update_filesystem (camera);
+		if (result != GP_OK)
+			return (result);
+	}
+
+	count = gp_filesystem_count (konica_data->filesystem, folder);
+	if (count < 0)
+		return (count);
+
+	for (i = 0; i < count; i++) {
+		result = gp_list_append (list, gp_filesystem_name (konica_data->filesystem, folder, i), GP_LIST_FILE);
+		if (result != GP_OK)
+			return (result);
 	}
 
 	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Leaving camera_file_list ***");
@@ -535,6 +582,7 @@ camera_file_delete (Camera* camera, const gchar* folder, const gchar* filename)
 {
 	gulong 		image_id; 
 	gchar		image_id_string[] = {0, 0, 0, 0, 0, 0, 0};
+	gint		result;
 	konica_data_t*	konica_data;
 
         gp_debug_printf (GP_DEBUG_LOW, "konica", "*** camera_file_delete ***");
@@ -551,7 +599,11 @@ camera_file_delete (Camera* camera, const gchar* folder, const gchar* filename)
 	memcpy (image_id_string, filename, 6);
 	image_id = atol (image_id_string);
 	
-	return (k_erase_image (konica_data->device, konica_data->image_id_long, image_id));
+	result = k_erase_image (konica_data->device, konica_data->image_id_long, image_id);
+	if (result != GP_OK)
+		return (result);
+	
+	return (gp_filesystem_delete (konica_data->filesystem, folder, filename));
 }
 
 

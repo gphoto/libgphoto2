@@ -1,12 +1,3 @@
-/********************/
-/* Type definitions */
-/********************/
-typedef struct {
-        gp_port*		device;
-	gboolean 		image_id_long;
-        CameraFilesystem*	filesystem;
-} konica_data_t;
-
 
 /***************/
 /* Definitions */
