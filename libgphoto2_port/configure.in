@@ -50,7 +50,7 @@ AC_CHECK_HEADERS(sys/param.h termios.h sgetty.h ttold.h ioctl-types.h \
 
 dnl Checks for library functions.
 AC_FUNC_STRFTIME
-AC_CHECK_FUNCS(strdup strndup strerror snprintf)
+AC_CHECK_FUNCS(strdup strndup strerror snprintf vsnprintf)
 AC_CHECK_FUNCS(strftime localtime)
 
 dnl Check if TIOCM_RTS is included in one of several possible files

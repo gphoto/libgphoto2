@@ -1,5 +1,12 @@
 2001-10-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	Suggestion from Fredrik <fredrik@krixor.xy.org>:
+
+	* configure.in: Check for vsnprintf
+	* libgphoto2_port/debug.c: Use vsnprintf if available
+
+2001-10-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	Patch based on suggestions from Fredrik <fredrik@krixor.xy.org>:
 
 	* libgphoto2_port/debug.c: Make sure we memset the same number of 

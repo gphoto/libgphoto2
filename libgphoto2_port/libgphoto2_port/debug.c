@@ -56,7 +56,11 @@ gp_port_debug_printf (int target_debug_level, int debug_level,
 	va_list arg;
 
 	va_start (arg, format);
+#if HAVE_VSNPRINTF
+	vsnprintf (buffer, sizeof (buffer), format, arg);
+#else
 	vsprintf (buffer, format, arg);
+#endif
 	va_end (arg);
 
 	gp_port_debug_history_append (buffer);
