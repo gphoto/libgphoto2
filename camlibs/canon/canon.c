@@ -121,28 +121,34 @@ extern long int timezone;
  ************************************************************************/
 
 
-/**
- * canon_int_filename2thumbname:
- * @filename: file name on camera
- * @Returns: file name of corresponding thumbnail if it exists, NULL else
+/* Simulate capabilities
  *
- * Determine name of corresponding thumbnail file.
- *
- * XXX We should use information about the camera type to
- * determine for what kinds of files the thumbnail is located
- * in an extra file. Until then, we just replace .XXX by .THM
- * and return that string.
- **/
+ * If you need to change these for a certain camera, it is time to
+ * introduce and use general capabilities as replacement.
+ */
 
-/* simulate capabilities */
 #define extra_file_for_thumb_of_jpeg FALSE
 #define extra_file_for_thumb_of_crw TRUE
+
+/**
+ * canon_int_filename2thumbname:
+ * @camera: Camera to work on
+ * @filename: the file to get the name of the thumbnail of
+ * @Returns: identifier for corresponding thumbnail
+ *
+ * The identifier returned is 
+ *  a) NULL if no thumbnail exists for this file or an internal error occured
+ *  b) pointer to empty string if thumbnail is contained in the file itself
+ *  c) pointer to string with file name of the corresponding thumbnail
+ *  d) pointer to filename in case filename is a thumbnail itself
+ */
 
 const char *
 canon_int_filename2thumbname (Camera *camera, const char *filename)
 {
 	static char buf[1024];
 	char *p;
+	static char *nullstring = "";
 
 	/* First handle cases where we shouldn't try to get extra .THM
 	 * file but use the special get_thumbnail_of_xxx function.
@@ -150,12 +156,12 @@ canon_int_filename2thumbname (Camera *camera, const char *filename)
 	if (!extra_file_for_thumb_of_jpeg && is_jpeg (filename)) {
 		GP_DEBUG ("canon_int_filename2thumbname: thumbnail for JPEG \"%s\" is internal",
 			  filename);
-		return NULL;
+		return nullstring;
 	}
 	if (!extra_file_for_thumb_of_crw  && is_crw (filename)) {
 		GP_DEBUG ("canon_int_filename2thumbname: thumbnail for CRW \"%s\" is internal",
 			  filename);
-		return NULL;
+		return nullstring;
 	}
 
 	/* We use the thumbnail file itself as the thumbnail of the
@@ -165,6 +171,13 @@ canon_int_filename2thumbname (Camera *camera, const char *filename)
 		GP_DEBUG ("canon_int_filename2thumbname: \"%s\" IS a thumbnail file",
 			  filename);
 		return filename;
+	}
+
+	/* There are only thumbnails for images and movies */
+	if (!is_movie(filename) && !is_image(filename)) {
+		GP_DEBUG ("canon_int_filename2thumbname: "
+			  "\"%s\" is neither movie nor image -> no thumbnail", filename);
+		return NULL;
 	}
 
 	GP_DEBUG ("canon_int_filename2thumbname: thumbnail for file \"%s\" is external",
@@ -188,7 +201,8 @@ canon_int_filename2thumbname (Camera *camera, const char *filename)
 			  filename, buf);
 		return buf;
 	} else {
-		GP_DEBUG ("canon_int_filename2thumbname: Thumbnail name for filename '%s' doesnt fit in %s line %i.",
+		GP_DEBUG ("canon_int_filename2thumbname: "
+			  "Thumbnail name for filename '%s' doesnt fit in %s line %i.",
 			  filename, __FILE__, __LINE__);
 		return NULL;
 	}
@@ -1117,11 +1131,14 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 						gp_filesystem_append (camera->fs, folder, info.file.name, context);
 						thumbname = canon_int_filename2thumbname(camera,
 											 info.file.name);
-
-						/* all known Canon cams have JPEG thumbs */
-						info.preview.fields = GP_FILE_INFO_TYPE;
-						strncpy (info.preview.type, GP_MIME_JPEG,
-							 sizeof(info.preview.type));
+						if (thumbname == NULL) {
+							/* no thumbnail */
+						} else {
+							/* all known Canon cams have JPEG thumbs */
+							info.preview.fields = GP_FILE_INFO_TYPE;
+							strncpy (info.preview.type, GP_MIME_JPEG,
+								 sizeof(info.preview.type));
+						}
 
 						gp_filesystem_set_info_noop (camera->fs, folder, info, context);
 					}

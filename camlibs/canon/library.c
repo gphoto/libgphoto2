@@ -441,11 +441,18 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			break;
 		case GP_FILE_TYPE_PREVIEW:
 			thumbname = canon_int_filename2thumbname (camera, canon_path);
-			if (thumbname != NULL) {
+			if (thumbname == NULL) {
+				/* no thumbnail available */
+				gp_camera_set_error (camera, "No thumbnail could be fould for %s",
+						     canon_path);
+				ret = GP_ERROR;
+			} else if (*thumbname == '\0') {
+				/* file internal thumbnail */
+				ret = canon_int_get_thumbnail (camera, canon_path, &data, &datalen);
+			} else {
+				/* extra thumbnail file */
 				ret = canon_int_get_file (camera, thumbname,
 							  &data, &datalen);
-			} else {
-				ret = canon_int_get_thumbnail (camera, canon_path, &data, &datalen);
 			}
 			break;
 		default:
@@ -456,22 +463,18 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (ret != GP_OK) {
 		GP_DEBUG ("get_file_func: "
 			  "getting image data failed, returned %i", ret);
-		/* XXX we should return a generic error image here 
-		 * and NOT return an error. This lets us handle
-		 * non-thumbnailed files MUCH better.
-		 */
 		return ret;
 	}
 
-	/* 256 is picked out of the blue, I figured no JPEG with EXIF header
-	 * (not all canon cameras produces EXIF headers I think, but still)
-	 * should be less than 256 bytes long.
-	 */
 	if (data == NULL) {
 		GP_DEBUG ("get_file_func: "
 			  "Fatal error: data == NULL");
 		return GP_ERROR_CORRUPTED_DATA;
 	}
+	/* 256 is picked out of the blue, I figured no JPEG with EXIF header
+	 * (not all canon cameras produces EXIF headers I think, but still)
+	 * should be less than 256 bytes long.
+	 */
 	if (datalen < 256) {
 		GP_DEBUG ("get_file_func: "
 			  "datalen < 256 (datalen = %i = 0x%x)", 
@@ -943,14 +946,14 @@ camera_get_config (Camera *camera, CameraWidget **window)
 	int pwr_status, pwr_source;
 	time_t camtime;
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_get_config()");
+	GP_DEBUG ("camera_get_config()");
 
-	gp_widget_new (GP_WIDGET_WINDOW, "Canon PowerShot Configuration", window);
+	gp_widget_new (GP_WIDGET_WINDOW, _("Camera and Driver Configuration"), window);
 
-	gp_widget_new (GP_WIDGET_SECTION, _("Configure"), &section);
+	gp_widget_new (GP_WIDGET_SECTION, _("Camera"), &section);
 	gp_widget_append (*window, section);
 
-	gp_widget_new (GP_WIDGET_TEXT, _("Camera Model"), &t);
+	gp_widget_new (GP_WIDGET_TEXT, _("Camera Model (readonly)"), &t);
 	gp_widget_set_value (t, camera->pl->ident);
 	gp_widget_append (section, t);
 
@@ -958,21 +961,27 @@ camera_get_config (Camera *camera, CameraWidget **window)
 	gp_widget_set_value (t, camera->pl->owner);
 	gp_widget_append (section, t);
 
-	gp_widget_new (GP_WIDGET_TEXT, "date", &t);
 	if (camera->pl->cached_ready == 1) {
 		camtime = canon_int_get_time (camera);
-		if (camtime >= 0)
-			gp_widget_set_value (t, asctime (localtime (&camtime)));
-		else
+		if (camtime >= 0) {
+			gp_widget_new (GP_WIDGET_DATE, _("Date and Time (readonly)"), &t);
+			gp_widget_set_value (t, &camtime);
+			gp_widget_append (section, t);
+		} else {
+			gp_widget_new (GP_WIDGET_TEXT, _("Date and Time (readonly)"), &t);
 			gp_widget_set_value (t, _("Error"));
-	} else
+			gp_widget_append (section, t);
+		}
+	} else {
+		gp_widget_new (GP_WIDGET_TEXT, _("Date and Time (readonly)"), &t);
 		gp_widget_set_value (t, _("Unavailable"));
-	gp_widget_append (section, t);
+		gp_widget_append (section, t);
+	}
 
 	gp_widget_new (GP_WIDGET_TOGGLE, _("Set camera date to PC date"), &t);
 	gp_widget_append (section, t);
 
-	gp_widget_new (GP_WIDGET_TEXT, _("Firmware revision"), &t);
+	gp_widget_new (GP_WIDGET_TEXT, _("Firmware revision (readonly)"), &t);
 	sprintf (firm, "%i.%i.%i.%i", camera->pl->firmwrev[3],
 		 camera->pl->firmwrev[2], camera->pl->firmwrev[1], camera->pl->firmwrev[0]);
 	gp_widget_set_value (t, firm);
@@ -994,12 +1003,16 @@ camera_get_config (Camera *camera, CameraWidget **window)
 	} else
 		strncpy (power_str, _("Unavaliable"), sizeof (power_str) - 1);
 
-	gp_widget_new (GP_WIDGET_TEXT, _("Power"), &t);
+	gp_widget_new (GP_WIDGET_TEXT, _("Power (readonly)"), &t);
 	gp_widget_set_value (t, power_str);
 	gp_widget_append (section, t);
 
-	gp_widget_new (GP_WIDGET_SECTION, _("Debug"), &section);
+	gp_widget_new (GP_WIDGET_SECTION, _("Driver"), &section);
 	gp_widget_append (*window, section);
+
+	gp_widget_new (GP_WIDGET_TOGGLE, _("List all files"), &t);
+	gp_widget_set_value (t, &camera->pl->list_all_files);
+	gp_widget_append (section, t);
 
 	return GP_OK;
 }
@@ -1010,7 +1023,7 @@ camera_set_config (Camera *camera, CameraWidget *window)
 	CameraWidget *w;
 	char *wvalue;
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_set_config()");
+	GP_DEBUG ("camera_set_config()");
 
 	gp_widget_get_child_by_label (window, _("Owner name"), &w);
 	if (gp_widget_changed (w)) {
@@ -1039,7 +1052,14 @@ camera_set_config (Camera *camera, CameraWidget *window)
 		}
 	}
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", _("done configuring camera.\n"));
+	gp_widget_get_child_by_label (window, _("List all files"), &w);
+	if (gp_widget_changed (w)) {
+		/* XXXXX mark CameraFS as dirty */
+		gp_widget_get_value (w, &camera->pl->list_all_files);
+		GP_DEBUG ("New config value for tmb: %i", &camera->pl->list_all_files);
+	}
+
+	GP_DEBUG ("done configuring camera.");
 
 	return GP_OK;
 }
