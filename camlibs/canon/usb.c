@@ -47,6 +47,8 @@
 #include "canon.h"
 #include "util.h"
 
+#define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
+
 
 /*****************************************************************************
  *
@@ -773,13 +775,173 @@ canon_usb_get_thumbnail (Camera *camera, const char *name, unsigned char **data,
 
 /*
  * Upload to USB Camera
- *
+ * 
+ * at the moment, files bigger than 65572-length(filename), while being
+ * correctly uploaded, cause the camera to not accept any more uploads.
+ * Smaller files work fine.
+ * s10sh (http://www.kyuzz.org/antirez/s10sh.html) has the same problem.
+ * The problem only appears when USB deinitialisation and initialisation
+ * is performed between uploads. You can call this function more than
+ * once with big files during one session without encountering the problem 
+ * described. <kramm@quiss.org>
+ * 
  */
 int
 canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath,
 		    GPContext *context)
 {
+#ifndef EXPERIMENTAL_UPLOAD
 	return GP_ERROR_NOT_SUPPORTED;
+#else
+	long int packet_size = USB_BULK_WRITE_SIZE;
+	char buffer[0x80];
+	long int len1,len2;
+	int status;
+	long int offs = 0;
+	char filename[256];
+	int filename_len;
+	const char *data;
+	char *newdata = NULL;
+	long int size;
+	FILE *fi;
+	const char *srcname;
+	char *packet; 
+
+	sprintf(filename, "%s%s", destpath, destname);
+	filename_len = strlen(filename);
+	
+	packet = malloc(packet_size + filename_len + 0x5d);
+	
+	if(!packet) {
+	    int len = packet_size + filename_len + 0x5d;
+	    GP_DEBUG ("canon_put_file_usb: Couldn't reserve %d bytes of memory", len);
+	    gp_context_error(context, "Out of memory: %d bytes needed.", len);
+	    return GP_ERROR_NO_MEMORY;
+	}
+	
+	CHECK_RESULT (gp_file_get_name (file, &srcname));
+
+	if(!gp_file_get_data_and_size (file, &data, &size)) {
+	    fi = fopen(srcname, "rb");
+	    if(!fi) {
+		GP_DEBUG ("canon_put_file_usb: Couldn't read from %s", srcname);
+		gp_context_error(context, "Couldn't read from %s", srcname);
+		free(packet);
+		return GP_ERROR;
+	    }
+	    fseek(fi, 0, SEEK_END);
+	    size = ftell(fi);
+	    fseek(fi, 0, SEEK_SET);
+	    newdata = data = malloc(size);
+	    if(!newdata) {
+		GP_DEBUG ("canon_put_file_usb: Couldn't reserve memory for %s", srcname);
+		gp_context_error(context, "Out of memory: %d bytes needed.", size);
+		free(packet);
+		return GP_ERROR_NO_MEMORY;
+	    }
+	    fread(newdata, size, 1, fi);
+	    fclose(fi);
+	}
+	while(offs < size) {
+	    len2 = packet_size;
+	    if(size - offs < len2)
+		len2 = size - offs;
+	    len1 = len2 + 0x1c + filename_len + 1;
+
+	    memset(packet, 0, 0x40);
+	    packet[4]=3;
+	    packet[5]=2;
+	    packet[6]=(0x40+len1)&255;
+	    packet[7]=(0x40+len1)>>8;
+	    packet[8]=(0x40+len1)>>16;
+	    packet[9]=(0x40+len1)>>24;
+
+	    /* now send the packet to the camera */
+	    status = gp_port_usb_msg_write (camera->port, 0x04, 0x10, 0,
+					    packet, 0x40);
+	    if (status != 0x40) {
+		    GP_DEBUG ("canon_put_file_usb: write 1 failed! (returned %i)\n", status);
+		    gp_context_error(context, "File upload failed.");
+		    if(newdata)
+			free(newdata);
+		    free(packet);
+		    return GP_ERROR_CORRUPTED_DATA;
+	    }
+
+	    status = gp_port_read (camera->port, buffer, 0x40);
+	    if (status != 0x40) {
+		    GP_DEBUG ("canon_put_file_usb: read 1 failed! "
+			      "(returned %i, expected %i)", status, 0x40);
+		    gp_context_error(context, "File upload failed.");
+		    if(newdata)
+			free(newdata);
+		    free(packet);
+		    return GP_ERROR_CORRUPTED_DATA;
+	    }
+
+	    memset(packet, 0, len1 + 0x40);
+	    packet[0x00] = len1&255;
+	    packet[0x01] = len1>>8;
+	    packet[0x02] = len1>>16;
+	    packet[0x03] = len1>>24;
+	    packet[0x04] = 3;
+	    packet[0x05] = 4;
+	    packet[0x40] = 2;
+	    packet[0x44] = 3;
+	    packet[0x47] = 0x11;
+	    packet[0x48] = len1&255;
+	    packet[0x49] = len1>>8;
+	    packet[0x4a] = len1>>16;
+	    packet[0x4b] = len1>>24;
+	    packet[0x4c] = 0x78;
+	    packet[0x4d] = 0x56;
+	    packet[0x4e] = 0x34;
+	    packet[0x4f] = 0x12;
+	    packet[0x50] = 2;
+	    packet[0x54] = offs&255;
+	    packet[0x55] = offs>>8;
+	    packet[0x56] = offs>>16;
+	    packet[0x57] = offs>>24;
+	    packet[0x58] = len2&255;
+	    packet[0x59] = len2>>8;
+	    packet[0x5a] = len2>>16;
+	    packet[0x5b] = len2>>24;
+	    strcpy(&packet[0x5c], filename); 
+	    memcpy(&packet[0x5c+filename_len+1], &data[offs], len2);
+
+	    status = gp_port_write (camera->port, packet, len1+0x40);
+	    if (status != len1+0x40) {
+		    GP_DEBUG ("canon_put_file_usb: write 2 failed! "
+			      "(returned %i, expected %i)", status, len1+0x40);
+		    gp_context_error(context, "File upload failed.");
+		    if(newdata)
+			free(newdata);
+		    free(packet);
+		    return GP_ERROR_CORRUPTED_DATA;
+	    }
+
+	    status = gp_port_read (camera->port, buffer, 0x5c);
+	    if (status != 0x5c) {
+		    GP_DEBUG ("canon_put_file_usb: read 2 failed! "
+			      "(returned %i, expected %i)", status, 0x5c);
+		    gp_context_error(context, "File upload failed.");
+		    if(newdata)
+			free(newdata);
+		    free(packet);
+		    return GP_ERROR_CORRUPTED_DATA;
+	    }
+	    offs += len2;
+	}
+
+	if(size > 65572-filename_len) {
+	    gp_context_message(context, _("File was too big. You may have to turn your camera off and back on before uploading more files."));
+	}
+
+	if(newdata)
+	    free(newdata);
+	free(packet);
+	return GP_OK;
+#endif /* EXPERIMENTAL_UPLOAD */
 }
 
 int
