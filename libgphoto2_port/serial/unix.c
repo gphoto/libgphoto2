@@ -32,40 +32,40 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#if HAVE_UNISTD_H
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#if HAVE_FCNTL_H
+#ifdef HAVE_FCNTL_H
 #include <fcntl.h>
 #endif
-#if HAVE_ERRNO_H
+#ifdef HAVE_ERRNO_H
 #include <errno.h>
 #endif
 #include <string.h>
 #include <signal.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#if HAVE_SYS_TIME_H
+#ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
 #endif
-#if HAVE_SYS_IOCTL_H
+#ifdef HAVE_SYS_IOCTL_H
 #include <sys/ioctl.h>
 #endif
 
-#if HAVE_TERMIOS_H
-#include <termios.h>
-#ifndef CRTSCTS
-#define CRTSCTS  020000000000
-#endif
+#ifdef HAVE_TERMIOS_H
+#  include <termios.h>
+#  ifndef CRTSCTS
+#    define CRTSCTS  020000000000
+#  endif
 #else
-#include <sgtty.h>
+#  include <sgtty.h>
 #endif
 
-#if HAVE_BAUDBOY
+#ifdef HAVE_BAUDBOY
 #  include <baudboy.h>
-#elif HAVE_TTYLOCK
+#elif defined(HAVE_TTYLOCK)
 #  include <ttylock.h>
-#elif HAVE_LOCKDEV
+#elif defined(HAVE_LOCKDEV)
 #  include <lockdev.h>
 #endif
 
@@ -201,21 +201,21 @@ gp_port_library_type ()
 static int
 gp_port_serial_lock (GPPort *dev, const char *path)
 {
-#if HAVE_LOCKDEV
+#if defined(HAVE_LOCKDEV)
 	int pid;
 #endif
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-port-serial",
 		"Trying to lock '%s'...", path);
 
-#if HAVE_TTYLOCK || HAVE_BAUDBOY
+#if defined(HAVE_TTYLOCK) || defined(HAVE_BAUDBOY)
 	if (ttylock ((char*) path)) {
 		if (dev)
 			gp_port_set_error (dev, _("Could not lock device "
 						  "'%s'"), path);
 		return (GP_ERROR_IO_LOCK);
 	}
-#elif HAVE_LOCKDEV
+#elif defined(HAVE_LOCKDEV)
 	pid = dev_lock (path);
 	if (pid) {
 		if (dev) {
@@ -243,14 +243,14 @@ gp_port_serial_lock (GPPort *dev, const char *path)
 static int
 gp_port_serial_unlock (GPPort *dev, const char *path)
 {
-#if HAVE_TTYLOCK || HAVE_BAUDBOY
+#if defined(HAVE_TTYLOCK) || defined(HAVE_BAUDBOY)
 	if (ttyunlock ((char*) path)) {
 		if (dev)
 			gp_port_set_error (dev, _("Device '%s' could not be "
 					   "unlocked."), path);
 		return (GP_ERROR_IO_LOCK);
 	}
-#elif HAVE_LOCKDEV
+#elif defined(HAVE_LOCKDEV)
 
 	int pid;
 
@@ -495,7 +495,7 @@ gp_port_serial_write (GPPort *dev, const char *bytes, int size)
 
         /* wait till all bytes are really sent */
 #ifndef OS2
-#if HAVE_TERMIOS_H
+#ifdef HAVE_TERMIOS_H
         tcdrain (dev->pl->fd);
 #else
         ioctl (dev->pl->fd, TCDRAIN, 0);
@@ -580,7 +580,7 @@ gp_port_serial_read (GPPort *dev, char *bytes, int size)
         return readen;
 }
 
-#if HAVE_TERMIOS_H
+#ifdef HAVE_TERMIOS_H
 static int
 get_termios_bit (GPPort *dev, GPPin pin, int *bit)
 {
@@ -614,7 +614,7 @@ get_termios_bit (GPPort *dev, GPPin pin, int *bit)
 static int
 gp_port_serial_get_pin (GPPort *dev, GPPin pin, GPLevel *level)
 {
-#if HAVE_TERMIOS_H
+#ifdef HAVE_TERMIOS_H
 	int j, bit;
 #endif
 
@@ -623,7 +623,7 @@ gp_port_serial_get_pin (GPPort *dev, GPPin pin, GPLevel *level)
 
 	*level = 0;
 
-#if HAVE_TERMIOS_H
+#ifdef HAVE_TERMIOS_H
 	CHECK (get_termios_bit (dev, pin, &bit));
         if (ioctl (dev->pl->fd, TIOCMGET, &j) < 0) {
 		gp_port_set_error (dev, _("Could not get level of pin %i "
@@ -641,14 +641,14 @@ gp_port_serial_get_pin (GPPort *dev, GPPin pin, GPLevel *level)
 static int
 gp_port_serial_set_pin (GPPort *dev, GPPin pin, GPLevel level)
 {
-#if HAVE_TERMIOS_H
+#ifdef HAVE_TERMIOS_H
         int bit, request;
 #endif
 
 	if (!dev)
 		return (GP_ERROR_BAD_PARAMETERS);
 
-#if HAVE_TERMIOS_H
+#ifdef HAVE_TERMIOS_H
 	CHECK (get_termios_bit (dev, pin, &bit));
         switch (level) {
 	case GP_LEVEL_LOW:
@@ -680,7 +680,7 @@ gp_port_serial_flush (GPPort *dev, int direction)
 	/* Make sure we are operating at the specified speed */
 	CHECK (gp_port_serial_check_speed (dev));
 
-#if HAVE_TERMIOS_H
+#ifdef HAVE_TERMIOS_H
 	if (tcflush (dev->pl->fd, direction ? TCOFLUSH : TCIFLUSH) < 0) {
 		gp_port_set_error (dev, _("Could not flush '%s' (%m)."),
 			dev->settings.serial.port);
@@ -895,7 +895,7 @@ gp_port_serial_send_break (GPPort *dev, int duration)
 	CHECK (gp_port_serial_check_speed (dev));
 
         /* Duration is in milliseconds */
-#if HAVE_TERMIOS_H
+#ifdef HAVE_TERMIOS_H
         tcsendbreak (dev->pl->fd, duration / 310);
         tcdrain (dev->pl->fd);
 #else
