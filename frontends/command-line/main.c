@@ -917,7 +917,9 @@ OPTION_CALLBACK (about)
 static int
 set_globals (void)
 {
+	CameraAbilitiesList *al;
 	CameraAbilities abilities;
+	int model;
 
         /* takes all the settings and sets up the gphoto lib */
 
@@ -925,9 +927,20 @@ set_globals (void)
 
         cli_debug_print ("Setting globals...");
         CHECK_RESULT (gp_camera_new (&glob_camera));
-	CHECK_RESULT (gp_camera_abilities_by_name (glob_model, &abilities));
-	CHECK_RESULT (gp_camera_set_abilities (glob_camera, abilities));
-        if (strcmp (glob_model, "Directory Browse"))
+
+	/* Only set the model if the user specified one */
+	if (strcmp ("", glob_model)) {
+		CHECK_RESULT (gp_abilities_list_new (&al));
+		CHECK_RESULT (gp_abilities_list_load (al));
+		model = gp_abilities_list_lookup_model (al, glob_model);
+		CHECK_RESULT (model);
+		CHECK_RESULT (gp_abilities_list_get_abilities (al, model,
+							       &abilities));
+		CHECK_RESULT (gp_camera_set_abilities (glob_camera, abilities));
+	}
+
+	/* Only set the port if the user specified one */
+        if (strcmp (glob_model, "Directory Browse") && strcmp ("", glob_port))
                 CHECK_RESULT (gp_camera_set_port_path (glob_camera, glob_port));
 
 	/* 
