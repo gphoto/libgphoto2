@@ -179,6 +179,8 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 
 	CHECK (n = gp_filesystem_number (camera->fs, folder, filename));
 
+	gp_camera_progress( camera, 0 );
+
 	switch (type) {
 	case GP_FILE_TYPE_PREVIEW:
 		CHECK (jamcam_request_thumbnail (camera, raw, &size, n));

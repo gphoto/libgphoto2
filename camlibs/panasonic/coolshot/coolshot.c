@@ -191,6 +191,8 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 
 	CHECK (camera_start (camera));
 
+	gp_camera_progress( camera, 0 );
+
 	/*
 	 * Get the file number from the CameraFileSystem (and increment 
 	 * because we need numbers starting with 1)
@@ -283,14 +285,14 @@ int camera_init (Camera *camera)
 		return (GP_ERROR_NO_MEMORY);
 
 	/* Set up the port and remember the requested speed */
-	CHECK (gp_port_settings_get (camera->port, &settings));
+	CHECK (gp_port_get_settings (camera->port, &settings));
 	camera->pl->speed = settings.serial.speed;
 	settings.serial.speed 	 = DEFAULT_SPEED;
 	settings.serial.bits 	 = 8;
 	settings.serial.parity 	 = 0;
 	settings.serial.stopbits = 1;
-	CHECK (gp_port_settings_set (camera->port, settings));
-	CHECK (gp_port_timeout_set (camera->port, TIMEOUT));
+	CHECK (gp_port_set_settings (camera->port, settings));
+	CHECK (gp_port_set_timeout (camera->port, TIMEOUT));
 
 	/* check to see if camera is really there */
 	CHECK (coolshot_enq (camera));

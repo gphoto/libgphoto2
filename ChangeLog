@@ -1,3 +1,11 @@
+2001-11-05  Chris Pinkham <cpinkham@infi.net>
+
+	* camlibs/panasonic/coolshot/coolshot.c
+	  camlibs/panasonic/coolshot/library.c
+	  camlibs/jamcam/jamcam.c
+	  camlibs/jamcam/library.c: added support for gp_camera_progress().
+	  Fixed bug in jamcam driver jamcam_file_count() routine.
+
 2001-11-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* camlibs/polaroid/pdc700.c: Timeout = 2sec, try each speed 2 times.

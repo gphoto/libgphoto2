@@ -77,8 +77,8 @@ int jamcam_file_count (Camera *camera) {
 			strcpy( buf, "KB00" );
 			buf[4] = ( position       ) & 0xff;
 			buf[5] = ( position >>  8 ) & 0xff;
-			buf[5] = ( position >> 16 ) & 0xff;
-			buf[5] = ( position >> 24 ) & 0xff;
+			buf[6] = ( position >> 16 ) & 0xff;
+			buf[7] = ( position >> 24 ) & 0xff;
 			jamcam_write_packet( camera, buf, 8 );
 
 			jamcam_read_packet( camera, reply, 16 );
@@ -214,6 +214,12 @@ int jamcam_fetch_memory( Camera *camera, char *data, int start, int length ) {
 				
 		bytes_left -= bytes_to_read;
 		bytes_read += bytes_to_read;
+
+		/* hate this hardcoded, but don't want to update here */
+		/* when downloading parts of a thumbnail              */
+		if ( length > 1000 ) {
+			gp_camera_progress( camera, 100 * bytes_read / length );
+		}
 	}
 
 	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* jamcam_fetch_memory OK");
@@ -267,6 +273,8 @@ int jamcam_request_thumbnail( Camera *camera, char *buf, int *len, int number ) 
 	for( y = 0 ; y < 60 ; y++ ) {
 		jamcam_fetch_memory( camera, line, position,
 			jamcam_files[number].width );
+
+		gp_camera_progress( camera, 100 * y / 60 );
 
 		if ( jamcam_files[number].width == 600 ) {
 			for( x = 22; x < 578 ; x += 7 ) {

@@ -81,7 +81,7 @@ int coolshot_sb( Camera *camera, int speed ) {
 	buf[4] = 0x01;
 	buf[15] = 0x02;
 
-	gp_port_settings_get (camera->port, &settings);
+	gp_port_get_settings (camera->port, &settings);
 
 	switch (speed) {
 		case 9600:
@@ -128,7 +128,7 @@ int coolshot_sb( Camera *camera, int speed ) {
 	/* ack the OK */
 	coolshot_ack( camera );
 
-	CHECK (gp_port_settings_set (camera->port, settings));
+	CHECK (gp_port_set_settings (camera->port, settings));
 
 	GP_SYSTEM_SLEEP(10);
 	return (GP_OK);
@@ -319,6 +319,7 @@ int coolshot_download_image( Camera *camera, char *buf, int *len, int thumbnail 
 	int data_len;
 	int bytes_read = 0;
 	int last_good = 0;
+	double percentage;
 
 	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* coolshot_download_image");
 
@@ -355,6 +356,13 @@ int coolshot_download_image( Camera *camera, char *buf, int *len, int thumbnail 
 
 			bytes_read += data_len;
 		}
+
+		if ( thumbnail ) {
+			percentage = bytes_read > 1800 ? 100 : 100 * bytes_read / 1800;
+		} else {
+			percentage = bytes_read > 80000 ? 100 : 100 * bytes_read / 80000;
+		}
+		gp_camera_progress( camera, percentage );
 
 		coolshot_read_packet( camera, packet );
 
