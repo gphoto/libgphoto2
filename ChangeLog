@@ -1,5 +1,11 @@
 2001-10-07  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	Patch from Chris Byrne <adapt@ihug.co.nz>:
+
+	* camlibs/polaroid/pdc640.c: Updated
+
+2001-10-07  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	Patch from David Faure <david@mandrakesoft.com>
 
 	* libgphoto2/core.c: Fix logic

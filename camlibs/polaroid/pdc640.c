@@ -22,9 +22,12 @@
 #include <gphoto2-core.h>
 #include <stdlib.h>
 #include <string.h>
+#include "camlibs/jamcam/library.h"
 
 #define PDC640_PING  "\x01"
 #define PDC640_SPEED "\x69\x0b"
+
+#define PDC640_MAXTRIES 3
 
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 
@@ -41,6 +44,10 @@ pdc640_read_packet (CameraPort *port, char *buf, int buf_size)
 	int i;
 	char checksum, c;
 
+	/* Calculate the checksum */
+	for (i = 0, checksum = 0; i < buf_size; i++)
+		buf[i] = 0;
+
 	/* Read the packet */
 	CHECK_RESULT (gp_port_read (port, buf, buf_size));
 
@@ -50,6 +57,10 @@ pdc640_read_packet (CameraPort *port, char *buf, int buf_size)
 
 	/* Read the checksum */
 	CHECK_RESULT (gp_port_read (port, &c, 1));
+
+	gp_debug_printf(GP_DEBUG_LOW, "pdc640", 
+			"*** (%d = %d)", checksum, c);
+
 	if (checksum != c)
 		return (GP_ERROR_CORRUPTED_DATA);
 
@@ -61,51 +72,84 @@ pdc640_transmit (CameraPort *port, char *cmd, int cmd_size,
 				   char *buf, int buf_size)
 {
 	char c;
+	int tries, r;
 
-	/*
-	 * The first byte returned is always the same as the first byte
-	 * of the command.
-	 */
-	CHECK_RESULT (gp_port_write (port, cmd, cmd_size));
-	CHECK_RESULT (gp_port_read (port, &c, 1));
-	if (c != cmd[0])
-		return (GP_ERROR_CORRUPTED_DATA);
+	/* In event of a checksum or timing failure, retry */
+	for (tries = 0; tries < PDC640_MAXTRIES; tries++) {
+		/*
+		 * The first byte returned is always the same as the first byte
+		 * of the command.
+		 */
+		CHECK_RESULT (gp_port_write (port, cmd, cmd_size));
+		r = gp_port_read (port, &c, 1);
+		if ((r < 0) || (c != cmd[0]))
+			continue;
 
-	if (buf)
-		CHECK_RESULT (pdc640_read_packet (port, buf, buf_size));
+		if (buf) {
+			r = pdc640_read_packet (port, buf, buf_size);
+			if (r < 0)
+				continue;
+		}
 
-	return (GP_OK);
+		return (GP_OK);
+	}
+
+	return (GP_ERROR_CORRUPTED_DATA);
 }
 
 static int
-pdc640_transmit_pic (CameraPort *port, char cmd, int thumbnail,
+pdc640_transmit_pic (CameraPort *port, char cmd, int width, int thumbnail,
 		     char *buf, int buf_size)
 {
 	char cmd1[] = {0x61, cmd};
 	char cmd2[] = {0x15, 0x00, 0x00, 0x00, 0x00};
-	int i, packet_size;
+	int i, packet_size, result, size;
+	char *data;
 
 	/* First send the command ... */
 	CHECK_RESULT (pdc640_transmit (port, cmd1, 2, NULL, 0));
 
+/*
 	if (thumbnail) {
-		packet_size = 80;
 		cmd2[4] = 0x01;
 	} else {
-		packet_size = 3840;
 		cmd2[4] = 0x06;
 	}
+*/
 
-	/* ... then get the packets */
+	/* Set how many scanlines worth of data to get at once */
+	cmd2[4] = 0x06;
+
+	/* Packet size is a multiple of the image width */
+	packet_size = width * cmd2[4];
+
+	/* Allocate memory to temporarily store received data */
+	data = malloc (packet_size);
+	if (!data)
+		return (GP_ERROR_NO_MEMORY);
+
+	/* Now get the packets */
+	result = GP_OK;
 	for (i = 0; i < buf_size; i += packet_size) {
-
 		/* Read the packet */
-		CHECK_RESULT (pdc640_transmit (port, cmd2, 5,
-					       buf + i, packet_size));
-		cmd2[2] += cmd1[4];
+		result = pdc640_transmit (port, cmd2, 5,
+					data, packet_size);
+		if (result < 0)
+			break;
+
+		/* Copy from temp buffer -> actual */
+		size = packet_size;
+		if (size > buf_size - i)
+			size = buf_size - i;
+		memcpy(buf + i, data, size);
+
+		/* Move to next offset */
+		cmd2[2] += cmd2[4];
 	}
 
-	return (GP_OK);
+	free (data);
+
+	return (result);
 }
 
 static int
@@ -181,7 +225,7 @@ pdc640_caminfo (CameraPort *port, int *numpic)
 	char buf[1280];
 
 	CHECK_RESULT (pdc640_transmit_packet (port, 0x40, buf, 1280));
-	*numpic = buf[3];
+	*numpic = buf[2];
 
 	return (GP_OK);
 }
@@ -192,7 +236,7 @@ pdc640_setpic (CameraPort *port, char n)
 	char cmd[2] = {0xf6, n};
 	char buf[8];
 
-	CHECK_RESULT (pdc640_transmit (port, cmd, 2, buf, 8));
+	CHECK_RESULT (pdc640_transmit (port, cmd, 2, buf, 7));
 
 	return (GP_OK);
 }
@@ -202,12 +246,12 @@ pdc640_picinfo (CameraPort *port, char n,
 		int *size_pic,   int *width_pic,   int *height_pic,
 		int *size_thumb, int *width_thumb, int *height_thumb)
 {
-	char buf[32];
+	unsigned char buf[32];
 
 	CHECK_RESULT (pdc640_setpic (port, n));
 	CHECK_RESULT (pdc640_transmit_packet (port, 0x80, buf, 32));
 
-	/* Image number */
+	/* Check image number matches */
 	if (buf[0] != n)
 		return (GP_ERROR_CORRUPTED_DATA);
 
@@ -218,38 +262,212 @@ pdc640_picinfo (CameraPort *port, char n,
 
 	/* Thumbnail size, width and height */
 	*size_thumb   = buf[25] | (buf[26] << 8) | (buf[27] << 16);
-	*width_thumb  = buf[28] | (buf[29] << 8) | (buf[30] << 16);
+	*width_thumb  = buf[28] | (buf[29] << 8);
+	*height_thumb  = buf[30] | (buf[31] << 8);
 
 	return (GP_OK);
 }
 
 static int
-pdc640_getpic (CameraPort *port, int n, int thumbnail, char **data, int *size)
+pdc640_getbit (char *data, int *ofs, int size, int *bit) {
+	static char c;
+	int b;
+
+	/* Check if next byte required */
+	if (*bit == 0) {
+		if (*ofs >= size)
+			return (-1);
+
+		c = data[*ofs];
+		(*ofs)++;
+	}
+
+	/* Get current bit value */
+	b = (c >> *bit) & 1;
+
+	/* Then move onto the next bit */
+	(*bit)++;
+	if (*bit >= 8)
+		*bit = 0;
+
+	return (b);
+}
+
+static int
+pdc640_deltadecode (int width, int height, char **rawdata, int *rawsize)
 {
-	char cmd;
-	int size_pic, size_thumb;
-	int width_pic, width_thumb, height_pic, height_thumb; 
+	char col1, col2;
+	char *data;
+	int rawofs, x, y, ofs, bit, ones;
+	int size;
+	int e, d, o, val;
+
+	gp_debug_printf(GP_DEBUG_LOW, "pdc640", "*** deltadecode");
+
+	/* Create a buffer to store RGB data in */
+	size = width * height;
+	data = malloc (size * sizeof (char));
+	if (!data)
+		return (GP_ERROR_NO_MEMORY);
+
+	/* Delta decode scanline by scanline */
+	rawofs = 0;
+	for (y = height-1; y >= 0; y--) {
+		/* Word alignment */
+		if (rawofs & 1)
+			rawofs++;
+
+		/* Sanity check */
+		if (rawofs >= *rawsize) {
+			free (data);
+			return (GP_ERROR_CORRUPTED_DATA);
+		}
+
+		/* Offset into the uncompressed data */
+		ofs = y * width;
+
+		/* Get the first two pixel values */
+		col1 = (*rawdata)[rawofs];
+		col2 = (*rawdata)[rawofs + 1];
+		rawofs += 2;
+		data[ofs + 0] = col1 << 1;
+		data[ofs + 1] = col2 << 1;
+
+		/* Work out the remaining pixels */
+		bit = 0;
+		for (x = 2; x < width; x++) {
+			/* Count number of ones */
+			ones = 0;
+			while (pdc640_getbit(*rawdata, &rawofs, *rawsize, &bit) == 1)
+				ones++;
+
+			/* 
+			 * Get the delta value
+			 * (size dictated by number of ones)
+			 */
+			val = 0;
+			for (o = 0, e = 0, d = 1; o < ones; o++, d <<= 1) {
+				e = pdc640_getbit(*rawdata, &rawofs, *rawsize, &bit);
+				if (e == 1) val += d;
+			}
+			if (e == 0) val += 1 - d; /* adjust for negatives */
+
+			/* Adjust the corresponding pixel value */
+			if (x & 1)
+				val = (col2 += val);
+			else
+				val = (col1 += val);
+
+			data[ofs + x] = val << 1;
+		}		
+	}
+
+	/* Set new buffer */
+	free (*rawdata);
+	*rawdata = data;
+	*rawsize = size;
+
+	return (GP_OK);
+}
+
+static int
+pdc640_getpic (CameraPort *port, int n, int thumbnail, int justraw,
+		char **data, int *size)
+{
+	char cmd, ppmheader[100];
+	int size_pic, width_pic, height_pic;
+	int size_thumb, width_thumb, height_thumb;
+	int height, width, outsize, result;
+	char *outdata;
 
 	/* Get the size of the picture */
 	CHECK_RESULT (pdc640_picinfo (port, n,
 				&size_pic,   &width_pic,   &height_pic,
 				&size_thumb, &width_thumb, &height_thumb));
 
-	/* Allocate the memory */
+	/* Evaluate parameters */
 	if (thumbnail) {
-		*size = 4720;
+		gp_debug_printf(GP_DEBUG_LOW, "pdc640", 
+				"*** Size: %d Width: %d Height: %d", 
+				size_thumb, width_thumb, height_thumb);
+
+		*size = size_thumb;
+		width = width_thumb;
+		height = height_thumb;
 		cmd = 0x03;
 	} else {
-		*size = 138240;
+		gp_debug_printf(GP_DEBUG_LOW, "pdc640", 
+				"*** Size: %d Width: %d Height: %d", 
+				size_pic, width_pic, height_pic);
+
+		*size = size_pic;
+		width = width_pic;
+		height = height_pic;
 		cmd = 0x10;
 	}
+
+	/* Sanity check */
+	if ((*size <= 0) || (width <= 0) || (height <= 0))
+		return (GP_ERROR_CORRUPTED_DATA);
+
+	/* Allocate the memory */
 	*data = malloc (*size * sizeof (char));
 	if (!*data)
 		return (GP_ERROR_NO_MEMORY);
 
-	/* Get the picture */
+	/* Get the raw picture */
 	CHECK_RESULT (pdc640_setpic (port, n));
-	CHECK_RESULT (pdc640_transmit_pic (port, cmd, thumbnail, *data, *size));
+	CHECK_RESULT (pdc640_transmit_pic (port, cmd, width, thumbnail, 
+					*data, *size));
+
+	/* Just wanted the raw camera data */
+	if (justraw)
+		return(GP_OK);
+
+	/* Image data is delta encoded so decode it */
+	if (!thumbnail)
+		CHECK_RESULT (pdc640_deltadecode (width, height, 
+						  data, size));
+
+	gp_debug_printf(GP_DEBUG_LOW, "pdc640", "*** Bayer decode");
+
+	sprintf(ppmheader, "P6\n"
+			   "# CREATOR: gphoto2, pdc640 library\n"
+			   "%d %d\n"
+			   "255\n", width, height);
+
+	/* Allocate memory for Interpolated ppm image */
+	result = strlen(ppmheader);
+	outsize = width * height * 3 + result + 1;
+	outdata = malloc(outsize);
+	if (!outdata)
+		return (GP_ERROR_NO_MEMORY);
+
+	/* Set header */
+	strcpy(outdata, ppmheader);
+
+	/* Decode and interpolate the Bayer Mask */
+	result = gp_bayer_decode(width, height, *data,
+				&outdata[result], BAYER_TILE_RGGB);
+	if (result < 0) {
+		free (outdata);
+		return (result);
+	}
+
+	/* Fix up data pointers */
+	free (*data);
+	*data = outdata;
+	*size = outsize;
+
+	return (GP_OK);
+}
+
+static int
+pdc640_delallpics (CameraPort *port)
+{
+	char cmd[2] = {0x59, 0x00};
+
+	CHECK_RESULT (pdc640_transmit (port, cmd, 2, NULL, 0));
 
 	return (GP_OK);
 }
@@ -258,6 +476,16 @@ static int
 pdc640_delpic (CameraPort *port)
 {
 	char cmd[2] = {0x59, 0x01};
+
+	CHECK_RESULT (pdc640_transmit (port, cmd, 2, NULL, 0));
+
+	return (GP_OK);
+}
+
+static int
+pdc640_takepic (CameraPort *port)
+{
+	char cmd[2] = {0x2D, 0x00};
 
 	CHECK_RESULT (pdc640_transmit (port, cmd, 2, NULL, 0));
 
@@ -300,10 +528,7 @@ camera_file_get (Camera *camera, const char *folder, const char *filename,
 		 CameraFileType type, CameraFile *file)
 {
 	int n, size;
-	char *data;
-
-	if (type == GP_FILE_TYPE_NORMAL)
-		return (GP_ERROR_NOT_SUPPORTED);
+	char *data, *p;
 
 	/*
 	 * Get the number of the picture from the filesystem and increment
@@ -312,21 +537,45 @@ camera_file_get (Camera *camera, const char *folder, const char *filename,
 	CHECK_RESULT (n = gp_filesystem_number (camera->fs, folder, filename));
 	n++;
 
+	CHECK_RESULT (gp_file_set_name (file, filename));
+
 	/* Get the picture */
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
-		return (GP_ERROR_NOT_SUPPORTED);
+		CHECK_RESULT (pdc640_getpic (camera->port, n, 0, 0, &data, &size));
+		CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_PPM));
+		break;
 	case GP_FILE_TYPE_RAW:
-		CHECK_RESULT (pdc640_getpic (camera->port, n, 0, &data, &size));
+		CHECK_RESULT (pdc640_getpic (camera->port, n, 0, 1, &data, &size));
+		CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_RAW));
+
+		/* Change extension to raw */
+		n = strlen(filename);
+		p = malloc (n + 1);
+		if (p) {
+			strcpy (p, filename);
+			p[n-3] = 'r';
+			p[n-2] = 'a';
+			p[n-1] = 'w';
+			CHECK_RESULT (gp_file_set_name (file, p));
+			free (p);
+		}
 		break;
 	case GP_FILE_TYPE_PREVIEW:
-		CHECK_RESULT (pdc640_getpic (camera->port, n, 1, &data, &size));
+		CHECK_RESULT (pdc640_getpic (camera->port, n, 1, 0, &data, &size));
+		CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_PPM));
 		break;
 	}
 
 	CHECK_RESULT (gp_file_set_data_and_size (file, data, size));
-	CHECK_RESULT (gp_file_set_name (file, filename));
-	CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_RAW));
+
+	return (GP_OK);
+}
+
+static int
+camera_folder_delete_all (Camera *camera, const char *folder)
+{
+	CHECK_RESULT (pdc640_delallpics (camera->port));
 
 	return (GP_OK);
 }
@@ -336,7 +585,7 @@ camera_file_delete (Camera *camera, const char *folder, const char *file)
 {
 	int n, count;
 
-	/* We can only delete the last picture. (Is this really the case?) */
+	/* We can only delete the last picture */
 	CHECK_RESULT (n = gp_filesystem_number (camera->fs, folder, file));
 	n++;
 
@@ -360,6 +609,27 @@ camera_about (Camera *camera, CameraText *about)
 	return (GP_OK);
 }
 
+camera_capture (Camera *camera, int capture_type, CameraFilePath *path)
+{
+	int num, numpic;
+
+	/* First get the current number of images */
+	CHECK_RESULT (pdc640_caminfo (camera->port, &numpic));
+
+	/* Take a picture */
+	CHECK_RESULT (pdc640_takepic (camera->port));
+
+	/* Wait a bit for the camera */
+	sleep(4);
+
+	/* Picture will be the last one */
+	CHECK_RESULT (pdc640_caminfo (camera->port, &num));
+	if (num <= numpic)
+		return (GP_ERROR);
+
+        return (GP_OK);
+}
+
 static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data)
@@ -369,7 +639,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 	/* Fill the list */
 	CHECK_RESULT (pdc640_caminfo (camera->port, &n));
-	CHECK_RESULT (gp_list_populate (list, "PDC640%04i.raw", n));
+	CHECK_RESULT (gp_list_populate (list, "PDC640%04i.ppm", n));
 
 	return (GP_OK);
 }
@@ -394,15 +664,18 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 			    GP_FILE_INFO_HEIGHT | GP_FILE_INFO_TYPE;
 	info->file.width  = width_pic;
 	info->file.height = height_pic;
+/*	
 	info->file.size   = size_pic;
-	strcpy (info->file.type, GP_MIME_RAW);
+*/
+	info->file.size   = width_pic * height_pic * 3;
+	strcpy (info->file.type, GP_MIME_PPM);
 
 	info->preview.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_WIDTH |
 			       GP_FILE_INFO_HEIGHT | GP_FILE_INFO_TYPE;
 	info->preview.width  = width_thumb;
 	info->preview.height = height_thumb;
-	info->preview.size   = size_thumb;
-	strcpy (info->preview.type, GP_MIME_RAW);
+	info->preview.size   = size_thumb * 3;
+	strcpy (info->preview.type, GP_MIME_PPM);
 
 	return (GP_OK);
 }
@@ -416,6 +689,7 @@ camera_init (Camera *camera)
 	camera->functions->file_get   = camera_file_get;
 	camera->functions->file_delete = camera_file_delete;
 	camera->functions->about      = camera_about;
+	camera->functions->capture      = camera_capture;
 
 	/* Tell the filesystem where to get lists and info */
 	CHECK_RESULT (gp_filesystem_set_list_funcs (camera->fs, file_list_func,
@@ -428,78 +702,26 @@ camera_init (Camera *camera)
 	strcpy (settings.serial.port, camera->port_info->path);
 	settings.serial.speed = 9600;
 	CHECK_RESULT (gp_port_settings_set (camera->port, settings));
-	CHECK_RESULT (gp_port_timeout_set (camera->port, 5000));
+
+	/* Start with a low timeout (so we don't have to wait if already initialized) */
+	CHECK_RESULT (gp_port_timeout_set (camera->port, 1000));
 
 	/* Is the camera at 9600? */
 	result = pdc640_ping_low (camera->port);
 	if (result == GP_OK)
 		CHECK_RESULT (pdc640_speed (camera->port, 115200));
 
+	/* Switch to 115200 */
+	settings.serial.speed = 115200;
+	CHECK_RESULT (gp_port_settings_set (camera->port, settings));
+
 	/* Is the camera at 115200? */
-	CHECK_RESULT (pdc640_ping_high (camera->port));
+	result = pdc640_ping_high (camera->port);
+	if (result != GP_OK)
+		return(GP_ERROR_NO_CAMERA_FOUND);
+
+	/* Switch to a higher timeout */
+	CHECK_RESULT (gp_port_timeout_set (camera->port, 5000));
 
 	return (GP_OK);
 }
-
-/* The following code was in an email from Karl Grill
-   I imagine it is for converting the raw camera data into a usable image.
-#include <stdio.h>
-#include <stdlib.h>
-
- FILE *f;
- int bitcount=0;
- int byteno=-1;
- unsigned char mybyte;
-
- int getbit(int number)
- {int a, b;
-  a=number>>3;
-  b=number &7;
-  while(byteno<a) {mybyte=fgetc(f); byteno++;}
-  return ( (mybyte >>b) &1 );
- }
-int main(int argc, char ** argv)
-{
- unsigned short width;
- unsigned short height;
- int numbytes;
- int bytes_read;
- int i,j,k;
- char compression;
- int what;
- int a,b;
- int d, e, x, l;
-
- if(argc!=2) exit(1);
- f=fopen(argv[1], "r");
- if (!f) exit(1);
- fread(&width, 2, 1, f);
- fread(&height, 2, 1, f);
- fread(&numbytes, 4, 1, f);
- fread(&compression, 1, 1, f);
- fread(& what, 4, 1, f);
- printf("P5 %d %d 255\n", width, height);
- bytes_read=0;
- for(i=0; i<height; i++)
-  {
-   while( byteno<bitcount/8) {a=fgetc(f);byteno++;}
-   b=fgetc(f);bitcount+=16;
-   byteno+=1;
-   putchar(a);
-   putchar(b);
-   for(j=0; j<width-2; j++)
-    {k=0;
-     while (getbit(bitcount)) {k++; bitcount++;}
-     bitcount++;
-     for(l=0,d=1,e=0,x=0; l<k; l++, d<<=1)
-      { if (e=getbit(bitcount++)) x+=d;
-      }
-     if(!e) x+=1-d;
-     putchar ( (j & 1) ? (b+=x) : (a+=x) );
-    }
-   bitcount= (bitcount+15)&0xfffffff0;
- }
- fprintf(stderr, "%d %d \n",numbytes, bitcount >>3);
- exit(0);
-}
- */
