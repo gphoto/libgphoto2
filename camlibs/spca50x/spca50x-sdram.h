@@ -33,10 +33,10 @@ int spca50x_sdram_delete_file (CameraPrivateLibrary * lib, unsigned int index);
 int spca50x_sdram_delete_all (CameraPrivateLibrary * lib);
 int spca50x_sdram_get_file_info (CameraPrivateLibrary * lib, unsigned int index,
 			  struct SPCA50xFile **file);
-int spca50x_sdram_request_file (CameraPrivateLibrary * lib, u_int8_t ** buf,
+int spca50x_sdram_request_file (CameraPrivateLibrary * lib, uint8_t ** buf,
 			 unsigned int *len, unsigned int number, int *type);
 int spca50x_sdram_request_thumbnail (CameraPrivateLibrary * lib, 
-		u_int8_t ** buf, unsigned int *len, 
+		uint8_t ** buf, unsigned int *len, 
 		unsigned int number, int *type);
 
 #endif /* __SPCA50X_SDRAM_H__ */

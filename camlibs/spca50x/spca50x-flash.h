@@ -30,7 +30,7 @@ int spca50x_flash_get_file_name(CameraPrivateLibrary *pl, int index, char *name)
 int spca50x_flash_get_file_dimensions(CameraPrivateLibrary *pl, int index,
 		int *w, int *h);
 int spca50x_flash_get_file (CameraPrivateLibrary *pl, GPContext *context, 
-		u_int8_t **buf, unsigned int *len, int index, int thumbnail);
+		uint8_t **buf, unsigned int *len, int index, int thumbnail);
 int spca50x_flash_get_file_size(CameraPrivateLibrary *pl, int index, int *size);
 int spca50x_flash_get_filecount(CameraPrivateLibrary *pl, int *filecount);
 int spca50x_flash_delete_all (CameraPrivateLibrary *pl, GPContext *context);

@@ -26,6 +26,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <_stdint.h>
 
 #include "pccam300.h"
 
@@ -102,7 +103,7 @@ pccam300_delete_all (GPPort *port, GPContext *context)
 int
 pccam300_get_filecount (GPPort *port, int *filecount)
 {
-	u_int8_t response;
+	uint8_t response;
 
 	gp_port_set_timeout (port, 400000);
 	CHECK (gp_port_usb_msg_read (port, 0x08, 0x00, 0x00, &response, 0x01));
@@ -114,8 +115,8 @@ int
 pccam300_get_filesize (GPPort *port, unsigned int index,
                        unsigned int *filesize)
 {
-	u_int8_t response[3];
-	u_int16_t i = index;
+	uint8_t response[3];
+	uint16_t i = index;
 
 	gp_port_set_timeout (port, 400000);
 	CHECK (gp_port_usb_msg_read (port, 0x08, i, 0x0001, response, 0x03));
@@ -149,7 +150,7 @@ pccam300_get_file (GPPort *port, GPContext *context, int index,
                    unsigned int *type)
 {
 	int data_size;
-	u_int8_t *buf = NULL;
+	uint8_t *buf = NULL;
 
 	/* This is somewhat strange, but works, and the win driver does the
 	 * same. Apparently requesting the file size twice triggers the

@@ -60,31 +60,31 @@
 static int spca50x_mode_set_idle (CameraPrivateLibrary * lib);
 static int spca50x_is_idle (CameraPrivateLibrary * lib);
 static int spca50x_mode_set_download (CameraPrivateLibrary * lib);
-static int spca50x_download_data (CameraPrivateLibrary * lib, u_int32_t start,
-				 unsigned int size, u_int8_t * buf);
+static int spca50x_download_data (CameraPrivateLibrary * lib, uint32_t start,
+				 unsigned int size, uint8_t * buf);
 static int spca50x_get_FATs (CameraPrivateLibrary * lib, int dramtype);
 static int spca50x_sdram_get_file_count_and_fat_count 
                             (CameraPrivateLibrary * lib, int dramtype);
-static void create_jpeg_from_data (u_int8_t * dst, u_int8_t * src, int qIndex,
-				   int w, int h, u_int8_t format,
+static void create_jpeg_from_data (uint8_t * dst, uint8_t * src, int qIndex,
+				   int w, int h, uint8_t format,
 				   int original_size, int *size,
 				   int omit_huffman_table, int omit_escape);
 static int spca50x_get_avi_thumbnail (CameraPrivateLibrary * lib,
-				     u_int8_t ** buf, unsigned int *len,
+				     uint8_t ** buf, unsigned int *len,
 				     struct SPCA50xFile *g_file);
 static int spca50x_get_image_thumbnail (CameraPrivateLibrary * lib,
-				       u_int8_t ** buf, unsigned int *len,
+				       uint8_t ** buf, unsigned int *len,
 				       struct SPCA50xFile *g_file);
-static int spca50x_get_avi (CameraPrivateLibrary * lib, u_int8_t ** buf,
+static int spca50x_get_avi (CameraPrivateLibrary * lib, uint8_t ** buf,
 			   unsigned int *len, struct SPCA50xFile *g_file);
-static int spca50x_get_image (CameraPrivateLibrary * lib, u_int8_t ** buf,
+static int spca50x_get_image (CameraPrivateLibrary * lib, uint8_t ** buf,
 			     unsigned int *len, struct SPCA50xFile *g_file);
-static inline u_int8_t *put_dword (u_int8_t * ptr, u_int32_t value);
+static inline uint8_t *put_dword (uint8_t * ptr, uint32_t value);
 
 
 static int
 spca50x_sdram_get_fat_page (CameraPrivateLibrary * lib, int index, 
-		            int dramtype, u_int8_t *p)
+		            int dramtype, uint8_t *p)
 {
 	switch (dramtype) {
 		case 4:	/* 128 Mbit */
@@ -110,19 +110,19 @@ static int
 spca50x_sdram_get_file_count_and_fat_count (CameraPrivateLibrary * lib, 
 		                            int dramtype)
 {
-	u_int8_t theFat[256];
+	uint8_t theFat[256];
 
 	lib->num_fats = 0;
 	lib->num_files = 0;
 
 	if (lib->bridge == BRIDGE_SPCA500){
-		u_int8_t lower, upper;
+		uint8_t lower, upper;
 
 		CHECK (gp_port_usb_msg_write (lib->gpdev, 0x5, 0, 0, NULL, 0));
 		sleep (1);
 		CHECK (gp_port_usb_msg_read
 				(lib->gpdev, 0, 0, 0xe15,
-				 (u_int8_t *) & lib->num_files, 1));
+				 (uint8_t *) & lib->num_files, 1));
 		LE32TOH (lib->num_files);
 
 		// get fatscount 
@@ -131,10 +131,10 @@ spca50x_sdram_get_file_count_and_fat_count (CameraPrivateLibrary * lib,
 		sleep (1);
 		CHECK (gp_port_usb_msg_read
 				(lib->gpdev, 0, 0, 0x0e19, 
-				 (u_int8_t *) & lower, 1));
+				 (uint8_t *) & lower, 1));
 		CHECK (gp_port_usb_msg_read
 				(lib->gpdev, 0, 0, 0x0e20, 
-				 (u_int8_t *) & upper, 1));
+				 (uint8_t *) & upper, 1));
 
 		lib->num_fats = ((upper & 0xFF << 8) | (lower & 0xFF));
 	} else {
@@ -157,7 +157,7 @@ int
 spca50x_sdram_delete_file (CameraPrivateLibrary * lib, unsigned int index)
 {
 	struct SPCA50xFile *g_file;
-	u_int16_t fat_index;
+	uint16_t fat_index;
 
 	CHECK (spca50x_sdram_get_file_info (lib, index, &g_file));
 
@@ -195,7 +195,7 @@ spca50x_sdram_delete_all (CameraPrivateLibrary * lib)
 }
 
 int
-spca50x_sdram_request_file (CameraPrivateLibrary * lib, u_int8_t ** buf,
+spca50x_sdram_request_file (CameraPrivateLibrary * lib, uint8_t ** buf,
 		     unsigned int *len, unsigned int number, int *type)
 {
 	struct SPCA50xFile *g_file;
@@ -210,13 +210,13 @@ spca50x_sdram_request_file (CameraPrivateLibrary * lib, u_int8_t ** buf,
 }
 
 static int
-spca50x_get_image (CameraPrivateLibrary * lib, u_int8_t ** buf,
+spca50x_get_image (CameraPrivateLibrary * lib, uint8_t ** buf,
 		  unsigned int *len, struct SPCA50xFile *g_file)
 {
-	u_int8_t *p, *lp_jpg;
-	u_int8_t qIndex = 0, format;
-	u_int32_t start;
-	u_int8_t *mybuf;
+	uint8_t *p, *lp_jpg;
+	uint8_t qIndex = 0, format;
+	uint32_t start;
+	uint8_t *mybuf;
 	int size, o_size, file_size;
 	int omit_escape = 0;
 
@@ -290,7 +290,7 @@ spca50x_get_image (CameraPrivateLibrary * lib, u_int8_t ** buf,
 }
 
 static int
-spca50x_get_avi (CameraPrivateLibrary * lib, u_int8_t ** buf,
+spca50x_get_avi (CameraPrivateLibrary * lib, uint8_t ** buf,
 		unsigned int *len, struct SPCA50xFile *g_file)
 {
 	int i, j, length;
@@ -298,13 +298,13 @@ spca50x_get_avi (CameraPrivateLibrary * lib, u_int8_t ** buf,
 	int size = 0;
 	int file_size;
 	int index_size;
-	u_int32_t frame_size = 0, frame_width = 0, frame_height = 0;
-	u_int32_t total_frame_size = 0;
-	u_int32_t start = 0;
-	u_int8_t *p, *mybuf, *avi, *start_of_file, *start_of_frame, *data;
-	u_int8_t qIndex;
-	u_int8_t *avi_index, *avi_index_ptr;
-	u_int8_t index_item[16];
+	uint32_t frame_size = 0, frame_width = 0, frame_height = 0;
+	uint32_t total_frame_size = 0;
+	uint32_t start = 0;
+	uint8_t *p, *mybuf, *avi, *start_of_file, *start_of_frame, *data;
+	uint8_t qIndex;
+	uint8_t *avi_index, *avi_index_ptr;
+	uint8_t index_item[16];
 
 	/* FIXME */
 	if (lib->bridge == BRIDGE_SPCA500)
@@ -463,7 +463,7 @@ spca50x_get_avi (CameraPrivateLibrary * lib, u_int8_t ** buf,
 }
 
 int
-spca50x_sdram_request_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
+spca50x_sdram_request_thumbnail (CameraPrivateLibrary * lib, uint8_t ** buf,
 			  unsigned int *len, unsigned int number, int *type)
 {
 	struct SPCA50xFile *g_file;
@@ -495,13 +495,13 @@ spca50x_sdram_request_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
 
 
 static int
-spca50x_get_avi_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
+spca50x_get_avi_thumbnail (CameraPrivateLibrary * lib, uint8_t ** buf,
 			  unsigned int *len, struct SPCA50xFile *g_file)
 {
-	u_int8_t *p, *lp_jpg;
-	u_int8_t qIndex;
-	u_int32_t start;
-	u_int8_t *mybuf;
+	uint8_t *p, *lp_jpg;
+	uint8_t qIndex;
+	uint32_t start;
+	uint8_t *mybuf;
 	int size, o_size, file_size;
 	int w, h;
 
@@ -553,17 +553,17 @@ spca50x_get_avi_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
 
 
 static int
-spca50x_get_image_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
+spca50x_get_image_thumbnail (CameraPrivateLibrary * lib, uint8_t ** buf,
 			    unsigned int *len, struct SPCA50xFile *g_file)
 {
 	unsigned int size;
-	u_int8_t *p;
-	u_int32_t start;
-	u_int8_t *mybuf = NULL;
-	u_int8_t *tmp;
+	uint8_t *p;
+	uint32_t start;
+	uint8_t *mybuf = NULL;
+	uint8_t *tmp;
 	unsigned int t_width, t_height;
-	u_int8_t *yuv_p;
-	u_int8_t *rgb_p;
+	uint8_t *yuv_p;
+	uint8_t *rgb_p;
 	int headerlength;
 
 	p = g_file->fat;
@@ -641,10 +641,10 @@ int
 spca50x_sdram_get_info (CameraPrivateLibrary * lib)
 {
 	unsigned int index;
-	u_int8_t dramtype = 0;
-	u_int8_t *p;
-	u_int32_t start_page, end_page;
-	u_int8_t file_type;
+	uint8_t dramtype = 0;
+	uint8_t *p;
+	uint32_t start_page, end_page;
+	uint8_t file_type;
 
 	GP_DEBUG ("* spca50x_sdram_get_info");
 
@@ -660,7 +660,7 @@ spca50x_sdram_get_info (CameraPrivateLibrary * lib)
 		
 		CHECK (gp_port_usb_msg_read
 		       (lib->gpdev, 0, 0, SPCA50X_REG_DramType,
-			(u_int8_t *) & dramtype, 1));	
+			(uint8_t *) & dramtype, 1));	
 		dramtype &= 0xFF;
 	}
 
@@ -714,7 +714,7 @@ spca50x_is_idle (CameraPrivateLibrary * lib)
 	int mode;
 
 	CHECK (gp_port_usb_msg_read
-	       (lib->gpdev, 0, 0, SPCA50X_REG_CamMode, (u_int8_t *) & mode, 1));
+	       (lib->gpdev, 0, 0, SPCA50X_REG_CamMode, (uint8_t *) & mode, 1));
 
 	return mode == SPCA50X_CamMode_Idle ? 1 : 0;
 }
@@ -729,12 +729,12 @@ spca50x_mode_set_download (CameraPrivateLibrary * lib)
 }
 
 static int
-spca50x_download_data (CameraPrivateLibrary * lib, u_int32_t start,
-		      unsigned int size, u_int8_t * buf)
+spca50x_download_data (CameraPrivateLibrary * lib, uint32_t start,
+		      unsigned int size, uint8_t * buf)
 {
 
-	u_int8_t foo;
-	u_int8_t vlcAddressL, vlcAddressM, vlcAddressH;
+	uint8_t foo;
+	uint8_t vlcAddressL, vlcAddressM, vlcAddressH;
 
 	if (!spca50x_is_idle (lib))
 		spca50x_mode_set_idle (lib);
@@ -753,13 +753,13 @@ spca50x_download_data (CameraPrivateLibrary * lib, u_int32_t start,
 
 	CHECK (gp_port_usb_msg_read
 	       (lib->gpdev, 0, 0, SPCA50X_REG_VlcAddressL,
-		(u_int8_t *) & vlcAddressL, 1));
+		(uint8_t *) & vlcAddressL, 1));
 	CHECK (gp_port_usb_msg_read
 	       (lib->gpdev, 0, 0, SPCA50X_REG_VlcAddressM,
-		(u_int8_t *) & vlcAddressM, 1));
+		(uint8_t *) & vlcAddressM, 1));
 	CHECK (gp_port_usb_msg_read
 	       (lib->gpdev, 0, 0, SPCA50X_REG_VlcAddressH,
-		(u_int8_t *) & vlcAddressH, 1));
+		(uint8_t *) & vlcAddressH, 1));
 
 	foo = start & 0xFF;
 	CHECK (gp_port_usb_msg_write
@@ -795,11 +795,11 @@ spca50x_download_data (CameraPrivateLibrary * lib, u_int32_t start,
 static int
 spca50x_get_FATs (CameraPrivateLibrary * lib, int dramtype)
 {
-	u_int8_t type;
+	uint8_t type;
 	unsigned int index = 0;
 	unsigned int file_index = 0;
-	u_int8_t *p = NULL;
-	u_int8_t buf[14];
+	uint8_t *p = NULL;
+	uint8_t buf[14];
 
 	/* Reset image and movie counter */
 	lib->num_images = lib->num_movies = 0;
@@ -897,14 +897,14 @@ spca50x_get_FATs (CameraPrivateLibrary * lib, int dramtype)
 }
 
 static void
-create_jpeg_from_data (u_int8_t * dst, u_int8_t * src, int qIndex, int w,
-		       int h, u_int8_t format, int o_size, int *size,
+create_jpeg_from_data (uint8_t * dst, uint8_t * src, int qIndex, int w,
+		       int h, uint8_t format, int o_size, int *size,
 		       int omit_huffman_table, int omit_escape)
 {
 
 	int i = 0;
-	u_int8_t *start;
-	u_int8_t value;
+	uint8_t *start;
+	uint8_t value;
 
 	start = dst;
 	/* copy the header from the template */
@@ -955,8 +955,8 @@ create_jpeg_from_data (u_int8_t * dst, u_int8_t * src, int qIndex, int w,
 	*size = dst - start;
 }
 
-static inline u_int8_t *
-put_dword (u_int8_t * ptr, u_int32_t value)
+static inline uint8_t *
+put_dword (uint8_t * ptr, uint32_t value)
 {
 	ptr[0] = (value & 0xff);
 	ptr[1] = (value & 0xff00) >> 8;

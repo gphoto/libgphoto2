@@ -17,6 +17,7 @@
 #ifndef __SPCA504_FLASH_H__
 #define __SPCA504_FLASH_H__
 
+#include <_stdint.h>
 #include <gphoto2.h>
 #include <gphoto2-port.h>
 
@@ -25,7 +26,7 @@
 struct _CameraPrivateLibrary
 {
 	GPPort *gpdev;
-	u_int8_t *toc;
+	uint8_t *toc;
 	int dirty :1;
 };
 
@@ -39,7 +40,7 @@ int spca504_flash_get_file_name(CameraPrivateLibrary *pl, int index, char *name)
 int spca504_flash_get_file_dimensions(CameraPrivateLibrary *pl, int index,
 		int *w, int *h);
 int spca504_flash_get_file (CameraPrivateLibrary *lib, GPContext *context, 
-		u_int8_t **buf, unsigned int *len, int index, int thumbnail);
+		uint8_t **buf, unsigned int *len, int index, int thumbnail);
 int spca504_flash_get_file_size(CameraPrivateLibrary *pl, int index, int *size);
 int spca504_flash_get_filecount(GPPort *port, int *filecount);
 #endif 

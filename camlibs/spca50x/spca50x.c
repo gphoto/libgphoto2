@@ -68,7 +68,7 @@ int
 spca50x_detect_storage_type (CameraPrivateLibrary *lib)
 {
 	int i;
-	u_int8_t buf[3];
+	uint8_t buf[3];
 
 	for (i=0;i<3;i++)
 	{

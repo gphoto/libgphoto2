@@ -29,6 +29,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <_stdint.h>
 #include "spca504_flash.h"
 
 #include <gphoto2.h>
@@ -44,7 +45,7 @@ spca504_flash_wait_for_ready(GPPort *port)
 {
 	/* FIXME tweak this. What is reasonable? 30 s seems a bit long */
 	int timeout = 30;
-	u_int8_t ready = 0;
+	uint8_t ready = 0;
 	while (timeout--) {
 		sleep(1);
 		CHECK (gp_port_usb_msg_read (port, 0x0b, 0x0000, 0x0004, 
@@ -58,7 +59,7 @@ spca504_flash_wait_for_ready(GPPort *port)
 int
 spca504_flash_get_TOC(CameraPrivateLibrary *pl, int *filecount)
 {
-	u_int16_t n_toc_entries;
+	uint16_t n_toc_entries;
 	int toc_size = 0;
 	
 	if (!pl->dirty)
@@ -99,7 +100,7 @@ spca504_flash_get_TOC(CameraPrivateLibrary *pl, int *filecount)
 int
 spca504_flash_get_filecount (GPPort *port, int *filecount)
 {
-	u_int16_t response = 0;
+	uint16_t response = 0;
 	CHECK (gp_port_usb_msg_read (port, 0x0b, 0x0000, 0x0000, 
 				(char*)&response, 0x02));
 	/* Each file gets two toc entries, one for the image, one for the
@@ -111,7 +112,7 @@ spca504_flash_get_filecount (GPPort *port, int *filecount)
 int
 spca504_flash_get_file_name (CameraPrivateLibrary *lib, int index, char *name)
 {
-	u_int8_t *p;
+	uint8_t *p;
 
 	p = lib->toc + index*2*32;
 	memcpy (name, p, 8);
@@ -124,7 +125,7 @@ spca504_flash_get_file_name (CameraPrivateLibrary *lib, int index, char *name)
 int
 spca504_flash_get_file_dimensions (CameraPrivateLibrary *lib, int index, int *w, int *h)
 {
-	u_int8_t *p;
+	uint8_t *p;
 
 	p = lib->toc + index*2*32;
 	*w = (p[0x0c] & 0xff) + (p[0x0d] & 0xff) * 0x100;
@@ -135,7 +136,7 @@ spca504_flash_get_file_dimensions (CameraPrivateLibrary *lib, int index, int *w,
 int
 spca504_flash_get_file_size (CameraPrivateLibrary *lib, int index, int *size)
 {	
-	u_int8_t *p;
+	uint8_t *p;
 
 	p = lib->toc + index*2*32;
 	*size =   (p[0x1c] & 0xff) 
@@ -148,12 +149,12 @@ spca504_flash_get_file_size (CameraPrivateLibrary *lib, int index, int *size)
 
 int
 spca504_flash_get_file (CameraPrivateLibrary *lib, GPContext *context, 
-		u_int8_t ** data, unsigned int *len, int index, int thumbnail)
+		uint8_t ** data, unsigned int *len, int index, int thumbnail)
 {
-	u_int32_t file_size = 0, aligned_size = 0;
-	u_int32_t addr = 0;
-	u_int8_t *p, *buf;
-	u_int8_t *tmp, *rgb_p, *yuv_p;
+	uint32_t file_size = 0, aligned_size = 0;
+	uint32_t addr = 0;
+	uint8_t *p, *buf;
+	uint8_t *tmp, *rgb_p, *yuv_p;
 
 	if (thumbnail) {
 		p = lib->toc + (index*2+1) * 32;
@@ -193,7 +194,7 @@ spca504_flash_get_file (CameraPrivateLibrary *lib, GPContext *context,
 	 * yuv to rgb and a pbm header added. */
 	if (thumbnail) {
 		int alloc_size, true_size, w, h, hdrlen;
-		u_int8_t *p2 = lib->toc + index*2*32;
+		uint8_t *p2 = lib->toc + index*2*32;
 
 		/* thumbnails are generated from dc coefficients and are
 		 * therefor w/8 x h/8
@@ -345,7 +346,7 @@ spca504_flash_init (GPPort *port, GPContext *context)
 	};
 
 	int len = sizeof (jpReg) / sizeof (jpReg[0]);
-	u_int8_t bytes[4];
+	uint8_t bytes[4];
 	int i;
 	
    CHECK (gp_port_usb_msg_write (port, 0x00, 0x0000, 0x2000, NULL, 0x00));

@@ -26,6 +26,7 @@
 
 #ifndef __SPCA50X_H__
 #define __SPCA50X_H__
+#include <_stdint.h>
 #include <gphoto2-camera.h>
 
 #define SPCA50X_FAT_PAGE_SIZE 0x100
@@ -41,7 +42,7 @@ struct SPCA50xFile
 	int height;
 	int fat_start;
 	int fat_end;
-	u_int8_t *fat;
+	uint8_t *fat;
 	int mime_type;
 };
 
@@ -55,7 +56,7 @@ struct _CameraPrivateLibrary
 	GPPort *gpdev;
 	int dirty:1;
 	int storage_media_mask;
-	u_int8_t fw_rev;
+	uint8_t fw_rev;
 	SPCA50xBridgeChip bridge;
 	int num_files;
 	int num_images;
@@ -63,8 +64,8 @@ struct _CameraPrivateLibrary
 	int num_fats;
 	int size_used;
 	int size_free;
-	u_int8_t *flash_toc;
-	u_int8_t *fats;
+	uint8_t *flash_toc;
+	uint8_t *fats;
 	struct SPCA50xFile *files;
 };
 

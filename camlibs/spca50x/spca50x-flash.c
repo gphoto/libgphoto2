@@ -45,7 +45,7 @@ spca50x_flash_wait_for_ready(CameraPrivateLibrary *pl)
 {
 	/* FIXME tweak this. What is reasonable? 30 s seems a bit long */
 	int timeout = 30;
-	u_int8_t ready = 0;
+	uint8_t ready = 0;
 	while (timeout--) {
 		sleep(1);
 		if (pl->fw_rev == 1) {
@@ -64,7 +64,7 @@ spca50x_flash_wait_for_ready(CameraPrivateLibrary *pl)
 int
 spca50x_flash_get_TOC(CameraPrivateLibrary *pl, int *filecount)
 {
-	u_int16_t n_toc_entries;
+	uint16_t n_toc_entries;
 	int toc_size = 0;
 		
 	if (pl->fw_rev == 1) {
@@ -114,7 +114,7 @@ spca50x_flash_get_TOC(CameraPrivateLibrary *pl, int *filecount)
 int
 spca50x_flash_get_filecount (CameraPrivateLibrary *pl, int *filecount)
 {
-	u_int16_t response = 0;
+	uint16_t response = 0;
 	
 	if (pl->fw_rev == 1) {
 		CHECK (gp_port_usb_msg_read (pl->gpdev, 0x0b, 0x0000, 0x0000, 
@@ -147,7 +147,7 @@ spca50x_flash_delete_all (CameraPrivateLibrary *pl, GPContext *context)
 int
 spca50x_flash_get_file_name (CameraPrivateLibrary *pl, int index, char *name)
 {
-	u_int8_t *p;
+	uint8_t *p;
 
 	if (pl->fw_rev == 1) {
 		p = pl->flash_toc + index*2*32;
@@ -164,7 +164,7 @@ spca50x_flash_get_file_name (CameraPrivateLibrary *pl, int index, char *name)
 int
 spca50x_flash_get_file_dimensions (CameraPrivateLibrary *pl, int index, int *w, int *h)
 {
-	u_int8_t *p;
+	uint8_t *p;
 
 	if (pl->fw_rev == 1) {
 		p = pl->flash_toc + index*2*32;
@@ -180,7 +180,7 @@ spca50x_flash_get_file_dimensions (CameraPrivateLibrary *pl, int index, int *w, 
 int
 spca50x_flash_get_file_size (CameraPrivateLibrary *pl, int index, int *size)
 {	
-	u_int8_t *p;
+	uint8_t *p;
 
 	if (pl->fw_rev == 1) {
 		p = pl->flash_toc + index*2*32;
@@ -198,11 +198,11 @@ spca50x_flash_get_file_size (CameraPrivateLibrary *pl, int index, int *size)
 
 int
 spca50x_flash_get_file (CameraPrivateLibrary *lib, GPContext *context, 
-		u_int8_t ** data, unsigned int *len, int index, int thumbnail)
+		uint8_t ** data, unsigned int *len, int index, int thumbnail)
 {
-	u_int32_t file_size = 0, aligned_size = 0;
-	u_int8_t *p, *buf;
-	u_int8_t *tmp, *rgb_p, *yuv_p;
+	uint32_t file_size = 0, aligned_size = 0;
+	uint8_t *p, *buf;
+	uint8_t *tmp, *rgb_p, *yuv_p;
 
 	if (lib->fw_rev != 1 && thumbnail)
 		return GP_ERROR_NOT_SUPPORTED;
@@ -249,7 +249,7 @@ spca50x_flash_get_file (CameraPrivateLibrary *lib, GPContext *context,
 	 * yuv to rgb and a pbm header added. */
 	if (thumbnail) {
 		int alloc_size, true_size, w, h, hdrlen;
-		u_int8_t *p2 = lib->flash_toc + index*2*32;
+		uint8_t *p2 = lib->flash_toc + index*2*32;
 
 		/* thumbnails are generated from dc coefficients and are
 		 * therefor w/8 x h/8
@@ -407,7 +407,7 @@ spca50x_flash_init (CameraPrivateLibrary *pl, GPContext *context)
 	};
 
 	int len = sizeof (jpReg) / sizeof (jpReg[0]);
-	u_int8_t bytes[4];
+	uint8_t bytes[4];
 	int i;
 
 	if (pl->fw_rev == 1) {
@@ -450,7 +450,7 @@ spca50x_flash_init (CameraPrivateLibrary *pl, GPContext *context)
 
 	} else {
 
-		u_int8_t bytes[7];
+		uint8_t bytes[7];
 		time_t t;
 		struct tm *ftm;
 		int i;
