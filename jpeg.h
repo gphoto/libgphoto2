@@ -19,6 +19,9 @@
 
 #ifndef __GPHOTO2_JPEG_H__
 #define __GPHOTO2_JPEG_H__
+
+#include <gphoto2-file.h>
+
 typedef enum {
     JPEG_START=0xD8,        JPEG_COMMENT=0xFE,      JPEG_APPO=0xE0,
     JPEG_QUANTIZATION=0xDB, JPEG_HUFFMAN=0xC4,      JPEG_SOFC0=0xC0,
