@@ -82,11 +82,9 @@ int camera_folder_list(char *folder_name, CameraFolderInfo *list) {
 	char buf[1024];
 	int count=0;
 
-	if ((d = opendir(folder_name))==NULL) {
-		sprintf(buf, "Could not access folder %s", folder_name);
-		gp_message(buf);
+	if ((d = opendir(folder_name))==NULL)
 		return (GP_ERROR);
-	}
+
 	while (de = readdir(d)) {
 		if ((strcmp(de->d_name, ".") !=0) &&
 		    (strcmp(de->d_name, "..")!=0)) {
@@ -111,10 +109,8 @@ int camera_folder_set(char *folder_name) {
 
 	strcpy(dir_directory, folder_name);
 	dir = opendir(dir_directory);
-	if (!dir) {
-		perror("directory: folder_set");
+	if (!dir)
 		return (GP_ERROR);
-	}
 	de = readdir(dir);
 	while (de) {
 		gp_progress(-1);
@@ -123,7 +119,8 @@ int camera_folder_set(char *folder_name) {
                 /* If it's a file ...*/
                 if (S_ISREG(s.st_mode)) {
 			dot = strrchr(de->d_name, '.');
-			if (
+			if (dot) {
+			   if (
 			    (strcasecmp(dot, ".gif")==0)||
 			    (strcasecmp(dot, ".jpg")==0)||
 			    (strcasecmp(dot, ".jpeg")==0)) {
@@ -132,6 +129,7 @@ int camera_folder_set(char *folder_name) {
 #ifdef DEBUG
 				printf("directory: found \"%s\"\n", de->d_name);
 #endif
+			   }
 			}
 		}
 		de = readdir(dir);
