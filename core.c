@@ -130,7 +130,12 @@ load_cameras_search (char *directory)
            if (de) {
 		sprintf(buf, "%s%c%s", directory, GP_SYSTEM_DIR_DELIM, GP_SYSTEM_FILENAME(de));
                 gp_debug_printf(GP_DEBUG_LOW, "core", "\tis %s a library? ", buf);
-                /* try to open the library */
+
+		/* Don't try to open ".*" */
+		if (*buf && (buf[0] == '.'))
+			continue;
+
+		/* Try to open the library */
                 if (is_library (buf) == GP_OK) {
                         gp_debug_printf(GP_DEBUG_LOW, "core", "yes");
                         load_camera_list (buf);
@@ -225,7 +230,7 @@ gp_exit (void)
 }
 
 int
-gp_autodetect (CameraList **list)
+gp_autodetect (CameraList *list)
 {
 	int x = 0;
 	int vendor, product;
@@ -234,25 +239,23 @@ gp_autodetect (CameraList **list)
 	CHECK_NULL (list);
 	CHECK_INIT;
 
+	list->count = 0;
 	if (gp_port_new (&dev, GP_PORT_USB) != GP_OK)
 		return (GP_ERROR_NO_CAMERA_FOUND);
 
-	*list = NULL;
 	for (x = 0; x < glob_abilities_list->count; x++) {
 		vendor = glob_abilities_list->abilities[x]->usb_vendor;
 		product = glob_abilities_list->abilities[x]->usb_product;
 		if (vendor)
 			if (gp_port_usb_find_device (dev, vendor, product)
 					== GP_OK) {
-				if (!*list)
-					CHECK_RESULT (gp_list_new (list));
-				gp_list_append (*list, glob_abilities_list->abilities[x]->model, "usb:");
+				gp_list_append (list, glob_abilities_list->abilities[x]->model, "usb:");
 			}
 	}
 	
 	gp_port_free (dev);
 	
-	if (*list)
+	if (list->count)
 		return GP_OK;
 	
 	return GP_ERROR_NO_CAMERA_FOUND;
