@@ -12,6 +12,21 @@ SUBDIRS = libgphoto2_port libgphoto2 camlibs tests po packaging doc
 doc_DATA = AUTHORS COPYING README CHANGES NEWS
 
 ########################################################################
+# source code check maintenance task
+#
+#   This finds code patterns we don't want to have.
+#
+#   Use it to get rid of existing patterns and make sure they aren't
+#   reintroduced later.
+
+.PHONY: source-code-check
+source-code-check:
+	@echo "Finding // comments"
+	find . -type f -name '*.[ch]' -exec egrep -H '(^//|[^:]//)' {} \;
+	@echo "Finding explicit libintl.h references"
+	find . -type f -name '*.[ch]' -exec egrep -H '^#.*include.*libintl\.h' {} \;
+
+########################################################################
 # The following default options for aclocal and automake
 # are required in the top level Makefile.am for the automatic 
 # re-building of the build system files (only if configured with
