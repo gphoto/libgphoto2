@@ -216,7 +216,7 @@ if $try_aa; then
 		aa_msg=yes
 		AC_DEFINE(HAVE_AA)
 		AA_CFLAGS="`aalib-config --cflags`"
-		AA_LIBS="`aalib-config --libs`"
+		AA_LIBS="`aalib-config --libs || echo ' -laa'`"
 	)
 fi
 AM_CONDITIONAL(HAVE_AA, $have_aa)
