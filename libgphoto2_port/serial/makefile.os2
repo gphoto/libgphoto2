@@ -24,4 +24,4 @@ serial.def: unix.o
    @$(MAKEDEF)
 
 $(IOLIBS)\giserial.dll: $(OBJS) serial.def
-   @$(LINK) $(DLLLINKFLAGS) -o $@ $** -ldllib
+   @$(LINK) $(DLLLINKFLAGS) -o $@ $** $(LIBS)

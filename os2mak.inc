@@ -1,7 +1,7 @@
 CAMLIBS=$(BASEPATH)\CAMLIBS
 IOLIBS=$(BASEPATH)\LIBGPHOTO2_PORT
 OBJPATH=$(BASEPATH)\OBJ
-CCFLAGS=-O2 -c -I$(BASEPATH)\include -IE:\gs\gs7.00\zlib -I$(BASEPATH)\libgphoto2_port\include -Zmtd -Zcrtdll -Zbin-files -D__ST_MT_ERRNO_ -I. -DOS2 -DHAVE_TERMIOS_H
+CCFLAGS=-g -O2 -c -I$(BASEPATH)\include -IE:\gs\gs7.00\zlib -I$(BASEPATH)\libgphoto2_port\include -Zmtd -Zcrtdll -Zbin-files -D__ST_MT_ERRNO_ -I. -DOS2 -DHAVE_TERMIOS_H
 CC=gcc
 DLLLINKFLAGS=-Zdll -Zmtd -Zcrtdll
 EXELINKFLAGS=-Zmtd -Zcrtdll

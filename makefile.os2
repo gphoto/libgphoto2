@@ -11,10 +11,12 @@ all:
   @cd libgphoto2
   @nmake -nologo -f makefile.os2
   @cd ..
-  @cd frontends\libgphoto2_frontend
+#  @cd frontends\libgphoto2_frontend
+#  @nmake -nologo -f makefile.os2
+  @cd frontends\command-line
   @nmake -nologo -f makefile.os2
-  @cd ..\command-line
-  @nmake -nologo -f makefile.os2
+#  @cd ..\os2-daemon
+#  @nmake -nologo -f makefile.os2
   @cd ..\..
   @cd camlibs
   @nmake -nologo -f makefile.os2

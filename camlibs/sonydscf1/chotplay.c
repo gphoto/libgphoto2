@@ -266,6 +266,7 @@ long get_file(char *name, char **data, int format, int verbose)
   u_char jpeg_comment[256];
 
   //verbose=1;
+  gp_frontend_progress(NULL, NULL, 0);
   F1ok();
 
   F1status(0);
@@ -296,6 +297,7 @@ long get_file(char *name, char **data, int format, int verbose)
     if(len < 0)
       return(0);
     total = total + len;
+    gp_frontend_progress(NULL, NULL, ((float)total / (float)filelen)*100);
     if(verbose){
       fprintf(stderr, "%6u/", total);
       fprintf(stderr, "%6u", filelen);
@@ -311,6 +313,7 @@ long get_file(char *name, char **data, int format, int verbose)
   F1fclose();
   if(verbose)
     fprintf(stderr, "\n");
+  gp_frontend_progress(NULL, NULL, 100);
   return(total);
 }
 

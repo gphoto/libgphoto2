@@ -69,46 +69,46 @@ camera_abilities (CameraAbilitiesList *list)
 
 static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
-		void *data)
+                void *data)
 {
-	Camera *camera = data;
+        Camera *camera = data;
         int count;
 
         count = barbie_file_count (camera->port);
-	gp_list_populate (list, "mattel%02i.ppm", count);
+        gp_list_populate (list, "mattel%02i.ppm", count);
 
         return GP_OK;
 }
 
 static int
 camera_file_get (Camera *camera, const char *folder, const char *filename,
-		 CameraFileType type, CameraFile *file)
+                 CameraFileType type, CameraFile *file)
 {
         int size, num;
-	char *data;
+        char *data;
 
         gp_frontend_progress(camera, NULL, 0.00);
 
         /* Retrieve the number of the photo on the camera */
         num = gp_filesystem_number (camera->fs, "/", filename);
 
-	switch (type) {
-	case GP_FILE_TYPE_NORMAL:
-	        data = barbie_read_picture (camera->port, num, 0, &size);
-		break;
-	case GP_FILE_TYPE_PREVIEW:
-		data = barbie_read_picture (camera->port, num, 1, &size);
-		break;
-	default:
-		return (GP_ERROR_NOT_SUPPORTED);
-	}
+        switch (type) {
+        case GP_FILE_TYPE_NORMAL:
+                data = barbie_read_picture (camera->port, num, 0, &size);
+                break;
+        case GP_FILE_TYPE_PREVIEW:
+                data = barbie_read_picture (camera->port, num, 1, &size);
+                break;
+        default:
+                return (GP_ERROR_NOT_SUPPORTED);
+        }
 
         if (!data)
                 return GP_ERROR;
 
-	gp_file_set_name (file, filename);
-	gp_file_set_mime_type (file, "image/ppm"); 
-	gp_file_set_data_and_size (file, data, size);
+        gp_file_set_name (file, filename);
+        gp_file_set_mime_type (file, "image/ppm");
+        gp_file_set_data_and_size (file, data, size);
 
         return GP_OK;
 }
@@ -160,7 +160,7 @@ camera_manual (Camera *camera, CameraText *manual)
         return GP_OK;
 }
 static int
-	camera_about (Camera *camera, CameraText *about)
+        camera_about (Camera *camera, CameraText *about)
 {
         strcpy (about->text,_("Barbie/HotWheels/WWF\nScott Fritzinger <scottf@unr.edu>\nAndreas Meyer <ahm@spies.com>\nPete Zaitcev <zaitcev@metabyte.com>\n\nReverse engineering of image data by:\nJeff Laing <jeffl@SPATIALinfo.com>\n\nImplemented using documents found on\nthe web. Permission given by Vision."));
         return GP_OK;
@@ -178,9 +178,9 @@ camera_init (Camera *camera)
         camera->functions->manual       = camera_manual;
         camera->functions->about        = camera_about;
 
-	/* Initialize the filesystem */
-	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL,
-				      camera);
+        /* Initialize the filesystem */
+        gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL,
+                                      camera);
 
         gp_port_timeout_set (camera->port, 5000);
         strcpy (settings.serial.port, camera->port_info->path);
@@ -193,9 +193,9 @@ camera_init (Camera *camera)
         gp_port_settings_set (camera->port, settings);
         gp_port_open (camera->port);
 
-	res = barbie_ping (camera->port);
-	if (res)
-		return (GP_OK);
+        res = barbie_ping (camera->port);
+        if (res)
+                return (GP_OK);
 
-	return (GP_ERROR);
+        return (GP_ERROR);
 }

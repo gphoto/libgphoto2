@@ -19,13 +19,15 @@ OBJS=core.o \
      file.o \
      filesys.o \
      library.o \
-     settings.o \
-     util.o \
+     setting.o \
      widget.o \
-     lists.o \
      camera.o \
      frontend.o \
-     port.o
+     port.o \
+     result.o \
+     list.o \
+     abilities-list.o \
+     abilities.o
 
 
 $(BASEPATH)\lib\libgphoto2.a: $(OBJS)
