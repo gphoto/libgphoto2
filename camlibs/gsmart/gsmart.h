@@ -28,8 +28,8 @@
 #include <gphoto2-camera.h>
 
 #define FLASH_PAGE_SIZE 0x100
-#define FILE_TYPE_IMAGE 0x00
-#define FILE_TYPE_AVI 0x01
+#define GSMART_FILE_TYPE_IMAGE 0x00
+#define GSMART_FILE_TYPE_AVI 0x01
 
 #define CHECK(result) {int res; res = result; if (res < 0) return (res);}
 
@@ -65,10 +65,10 @@ int gsmart_delete_file (CameraPrivateLibrary * lib, unsigned int index);
 int gsmart_delete_all (CameraPrivateLibrary * lib);
 int gsmart_get_file_info (CameraPrivateLibrary * lib, unsigned int index,
 			  struct GsmartFile **file);
-int gsmart_request_file (CameraPrivateLibrary * lib, u_int8_t ** buf, 
-                         unsigned int *len, unsigned int number);
-int gsmart_request_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf, 
-                              unsigned int *len, unsigned int number);
+int gsmart_request_file (CameraPrivateLibrary * lib, u_int8_t ** buf,
+			 unsigned int *len, unsigned int number);
+int gsmart_request_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
+			      unsigned int *len, unsigned int number, int *type);
 
 
 #endif /* __GSMART_H__ */
