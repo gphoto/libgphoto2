@@ -15,5 +15,14 @@
    * preview: Capture preview, don't store it anywhere but return it 
      immediately.
 
+- New function: gp_camera_file_get_info. The info should contain
+   * size (file_size)
+   * size of preview (preview_size)
+   * permissions (GP_PERM_READ | GP_PERM_WRITE | GP_PERM_EXEC)
+   * mime type (mime_type)
+   * ref count (ref_count)
+  Supporting functions: 
+   * gp_file_info_ref
+   * gp_file_info_unref
 
 
