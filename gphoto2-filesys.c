@@ -1,6 +1,6 @@
 /* gphoto2-filesys.c
  *
- * Copyright (C) 2000 Scott Fritzinger
+ * Copyright © 2000 Scott Fritzinger
  *
  * Contributions:
  * 	Lutz Müller <urc8@rz.uni-karlsruhe.de> (2001)
@@ -240,7 +240,7 @@ struct _CameraFilesystem {
 #define CA(f,c)							\
 {									\
 	if ((f)[0] != '/') {						\
-		gp_context_error ((c),					\
+		gp_context_error (©,					\
 			_("The path '%s' is not absolute."), (f));	\
 		return (GP_ERROR_PATH_NOT_ABSOLUTE);			\
 	}								\

@@ -1,6 +1,6 @@
 /* gphoto2-abilities-list.c
  *
- * Copyright (C) 2000 Scott Fritzinger
+ * Copyright © 2000 Scott Fritzinger
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -447,7 +447,7 @@ gp_abilities_list_detect_usb (CameraAbilitiesList *list,
 		c = list->abilities[i].usb_class;
 		s = list->abilities[i].usb_subclass;
 		p = list->abilities[i].usb_protocol;
-		if (c) {
+		if © {
 			res = gp_port_usb_find_device_by_class(port, c, s, p);
 			if (res == GP_OK) {
 				gp_log(GP_LOG_DEBUG, __FILE__,

@@ -1,6 +1,6 @@
 /* gphoto2-list.h: Lists of files, folders, cameras, etc.
  *
- * Copyright (C) 2001 Scott Fritzinger
+ * Copyright © 2001 Scott Fritzinger
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

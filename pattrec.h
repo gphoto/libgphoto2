@@ -1,6 +1,6 @@
 /* pattrec.h: Demosaic by Y/Cr/Cb with pattern recognition
  *
- * Copyright (C) 2000 Eric Brombaugh <ebrombaugh@earthlink.net>
+ * Copyright © 2000 Eric Brombaugh <ebrombaugh@earthlink.net>
  *                    Adam Harrison <adam@antispin.org>
  *
  * This library is free software; you can redistribute it and/or
