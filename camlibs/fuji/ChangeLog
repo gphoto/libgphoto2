@@ -1,0 +1,7 @@
+2002-04-16  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c: New.
+	* fuji.[c,h]: Rewrite.
+	* exif.[c,h]:
+	* fuji_exif.c: Removed.
+	* Makefile.am: Updated.
