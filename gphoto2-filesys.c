@@ -1609,12 +1609,15 @@ gp_filesystem_set_file_noop (CameraFilesystem *fs, const char *folder,
 	CC (context);
 	CA (folder, context);
 
+	CR (gp_file_get_name (file, &filename));
+	CR (gp_file_get_type (file, &type));
+	GP_DEBUG ("Adding file '%s' to folder '%s' (type %i)...",
+		  filename, folder, type);
+
 	/* Search folder and file */
 	CR (x = gp_filesystem_folder_number (fs, folder, context));
-	CR (gp_file_get_name (file, &filename));
 	CR (y = gp_filesystem_number (fs, folder, filename, context));
 
-	CR (gp_file_get_type (file, &type));
 	switch (type) {
 	case GP_FILE_TYPE_PREVIEW:
 		if (fs->folder[x].file[y].preview)
