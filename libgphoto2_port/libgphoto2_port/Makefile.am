@@ -3,10 +3,6 @@ INCLUDES = 						\
 	-DIOLIBS=\"$(libdir)/gphoto2_port/$(VERSION)\"	\
 	-DLOCALEDIR=\"$(datadir)/locale\"
 
-## What is this for?
-CFLAGS = @CFLAGS@ -g
-LDFLAGS = @LDFLAGS@ -g
-
 ## Compile the IO library into a shared library
 lib_LTLIBRARIES = libgphoto2_port.la
 libgphoto2_port_la_LDFLAGS = -version-info $(LIBGPHOTO2_PORT_CURRENT):$(LIBGPHOTO2_PORT_REVISION):$(LIBGPHOTO2_PORT_AGE)

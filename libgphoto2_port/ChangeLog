@@ -1,3 +1,8 @@
+2003-03-22  Lutz Müller <lutz@users.sourceforge.net>
+
+	* libgphoto2_port/Makefile.am: Remove "-g" from [C,LD]FLAGS. If you
+	  need it, please add it again in configure.in.
+
 2002-03-21  Marcus Meissner <marcus@jet.franken.de>
 	
 	* usb/libusb.c: gp_port_usb_find_bulk no exists, replaced with _ep.
