@@ -48,37 +48,17 @@ USLEEP2
 HDR_FIXED_LEN
 DATA_BLOCK
 <SUBSECTION Error-handling>
-ERROR_ADDRESSED
-ERROR_LOWBATT
-ERROR_RECEIVED
-FATAL_ERROR
-NOERROR
+canonSerialErrorCode
 <SUBSECTION Frame-level-processing>
-CANON_FBEG
-CANON_FEND
-CANON_ESC
-CANON_XOR
+canonSerialFramingByte
 <SUBSECTION Packet-level-processing>
+canonPacketThirdByte
+canonPacketType
+canonPacketOffset
 MAX_PKT_PAYLOAD
-PKT_HDR_LEN
-PKT_SEQ
-PKT_TYPE
-PKT_LEN_LSB
-PKT_LEN_MSB
-PKT_MSG
-PKT_EOT
-PKT_ACK
-PKT_NACK
-PKTACK_NACK
-PKT_UPLOAD_EOT
 <SUBSECTION Message-level-processing>
+canonSerialMsgHeader
 MAX_MSG_SIZE
-MSG_HDR_LEN
-MSG_02
-MSG_MTYPE
-MSG_DIR
-MSG_LEN_LSB
-MSG_LEN_MSB
 DIR_REVERSE
 UPLOAD_DATA_BLOCK
 <SUBSECTION Command-level-processing>
@@ -87,11 +67,6 @@ SPEED_19200
 SPEED_38400
 SPEED_57600
 SPEED_115200
-<SUBSECTION Unused>
-MAX_PKT_SIZE
-FRAG_NUM
-FRAG_LEN_LSB
-FRAG_LEN_MSB
 </SECTION>
 
 <SECTION>
@@ -129,9 +104,10 @@ canon_usb_identify
 canon_usb_init
 canon_usb_lock_keys
 canon_usb_long_dialogue
-canon_usb_set_file_time
+canon_usb_poll_interrupt_multiple
 canon_usb_put_file
 canon_usb_ready
+canon_usb_set_file_time
 canon_usb_unlock_keys
 canonCommandIndex
 canonSubcommandIndex

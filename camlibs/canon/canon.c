@@ -867,10 +867,10 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, int *length,
 }
 
 /**
- * canon_int_find_new_image
- * @camera Camera * to this camera
- * @initial_state Camera directory dump before image capture
- * @final_state Directory dump after image capture
+ * canon_int_find_new_image:
+ * @camera: Camera * to this camera
+ * @initial_state: Camera directory dump before image capture
+ * @final_state: Directory dump after image capture
  * @path: Will be filled in with the path and filename of the captured
  *        image, in canonical gphoto2 format.
  *
@@ -960,7 +960,7 @@ static void canon_int_find_new_image ( Camera *camera, unsigned char *initial_st
 }
 
 /**
- * canon_int_capture_image
+ * canon_int_capture_image:
  * @camera: camera to work with
  * @path: gets filled in with the path and filename of the captured
  *   image, in canonical gphoto2 format.
@@ -1098,8 +1098,8 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 /**
  * canon_int_set_file_attributes:
  * @camera: camera to work with
+ * @dir: directory to work in
  * @file: file to work on
- * @dir: directory to work in
  * @attrs: #canonDirentAttributeBits with the bits to set
  * @context: context for error reporting
  *

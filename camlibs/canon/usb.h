@@ -9,8 +9,21 @@
 #ifndef _CANON_USB_H
 #define _CANON_USB_H
 
-
+/**
+ * USB_BULK_READ_SIZE
+ *
+ * Maximum size to be used for a USB "bulk read" operation
+ *
+ */
 #define USB_BULK_READ_SIZE 0x1400
+
+
+/**
+ * USB_BULK_WRITE_SIZE
+ *
+ * Maximum size to be used for a USB "bulk write" operation
+ *
+ */
 /* #define USB_BULK_WRITE_SIZE 0xC000 */
 #define USB_BULK_WRITE_SIZE 0x1400
 

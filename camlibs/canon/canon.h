@@ -32,6 +32,12 @@ typedef enum {
 /* #define CAMERA_ON_AC       16 obsolete; we now just use*/
 /* #define CAMERA_ON_BATTERY  48 the bit that makes the difference */
 
+/**
+ * CAMERA_MASK_BATTERY
+ *
+ * Bit mask to use to find battery/AC flag
+ *
+ */
 #define CAMERA_MASK_BATTERY  32
 
 /**
@@ -89,7 +95,6 @@ typedef enum {
  * @CANON_PS_G3: PowerShot G3
  * @CANON_PS_G5: PowerShot G5
  * @CANON_PS_S230: PowerShot S230, Digital IXUS v3
- * @CANON_PS_A60: PowerShot A60
  * @CANON_MV630I: MV630i camcorder
  * @CANON_EOS_10D: EOS 10D
  * @CANON_OPT_200: Optura 200 MC, MVX2i
@@ -99,6 +104,9 @@ typedef enum {
  * @CANON_PS_UNK4: Unknown camera seen in Mac OS X Image Capture
  * @CANON_PS_UNK5: Unknown camera seen in Mac OS X Image Capture
  * @CANON_EOS_300D: EOS 300D / Digital Rebel / KISS Rebel
+ * @CANON_PS_S50: PowerShot S50
+ * @CANON_PS_S400: PowerShot S400, Digital IXUS 400
+ * @CANON_PS_SD100: PowerShot SD100, Digital IXUS II
  *
  * Enumeration of all camera types currently supported.
  *
@@ -275,10 +283,8 @@ struct _CameraPrivateLibrary
 	 */
 	int list_all_files; /* whether to list all files, not just know types */
 
-#ifdef CANON_EXPERIMENTAL_UPLOAD
 	int upload_keep_filename; /* 0=DCIF compatible filenames (AUT_*), 
 				     1=keep original filename */
-#endif /* CANON_EXPERIMENTAL_UPLOAD */
 
 	char *cached_drive;	/* usually something like C: */
 	int cached_ready;       /* whether the camera is ready to rock */

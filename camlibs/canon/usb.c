@@ -1833,8 +1833,8 @@ canon_usb_identify (Camera *camera, GPContext *context)
 		    && models[i].usb_product
 		    && (a.usb_vendor  == models[i].usb_vendor) 
 		    && (a.usb_product == models[i].usb_product)) {
-			GP_DEBUG ("canon_usb_identify: model name match '%s'",
-				  models[i].id_str);
+			GP_DEBUG ("canon_usb_identify: USB ID match 0x%04x:0x%04x (%s)",
+				  models[i].usb_vendor, models[i].usb_product, models[i].id_str);
 			gp_context_status (context, _("Detected a '%s'."), models[i].id_str);
 			camera->pl->md = (struct canonCamModelData *) &models[i];
 			return GP_OK;
