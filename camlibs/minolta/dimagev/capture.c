@@ -37,7 +37,15 @@ int dimagev_shutter(dimagev_t *dimagev) {
 	/* Check the device. */
 	if ( dimagev->dev == NULL ) {
 		if ( dimagev->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::device not valid\n");
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::device not valid");
+		}
+		return GP_ERROR;
+	}
+
+	/* Verify that we can write to the memory card. */
+	if ( dimagev->status->card_status != 0 ) {
+		if ( dimagev->debug != 0 ) {
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::unable to write to memory card - check status");
 		}
 		return GP_ERROR;
 	}
@@ -90,13 +98,13 @@ int dimagev_shutter(dimagev_t *dimagev) {
 			break;
 		case DIMAGEV_NAK:
 			if ( dimagev->debug != 0 ) {
-				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::camera did not acknowledge transmission\n");
+				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::camera did not acknowledge transmission");
 			}
 			return GP_ERROR;
 			break;
 		case DIMAGEV_CAN:
 			if ( dimagev->debug != 0 ) {
-				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::camera cancels transmission\n");
+				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::camera cancels transmission");
 			}
 			return GP_ERROR;
 			break;
@@ -159,13 +167,13 @@ int dimagev_shutter(dimagev_t *dimagev) {
 			break;
 		case DIMAGEV_NAK:
 			if ( dimagev->debug != 0 ) {
-				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::camera did not acknowledge transmission\n");
+				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::camera did not acknowledge transmission");
 			}
 			return GP_ERROR;
 			break;
 		case DIMAGEV_CAN:
 			if ( dimagev->debug != 0 ) {
-				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::camera cancels transmission\n");
+				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::camera cancels transmission");
 			}
 			return GP_ERROR;
 			break;
