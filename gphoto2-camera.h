@@ -130,12 +130,6 @@ typedef struct _CameraPrivateFrontend CameraPrivateFrontend;
 struct _Camera {
 
 	/*
-	 * Don't use, use gp_camera_get_abilities and abilities.model
-	 * instead. This entry will disappear at some point in the future.
-	 */
-	char            model[128];
-
-	/*
 	 * Don't use. It'll disappear sooner or later
 	 */
 	GPPortInfo     *port_info;
