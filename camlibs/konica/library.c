@@ -695,10 +695,15 @@ camera_file_config_get (Camera* camera, CameraWidget** window, gchar* folder, gc
 	gulong		image_id;
 	guint		exif_size;
 	gboolean 	protected;
-	guchar*		information_buffer;
+	guchar*		information_buffer = NULL;
 	guint		information_buffer_size;
 	gint		result;
 	gint		value_int = 0;
+	
+	g_return_val_if_fail (camera,   GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (window,   GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (!*window,	GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (folder,   GP_ERROR_BAD_PARAMETERS);
 	
 	/* Get some information about the picture. */
 	konica_data = (konica_data_t*) camera->camlib_data;
@@ -720,26 +725,32 @@ camera_file_config_get (Camera* camera, CameraWidget** window, gchar* folder, gc
 }
 
 int
-camera_file_config_set (Camera* camera, CameraWidget* window, gchar* folder, gchar* filename)
+camera_file_config_set (Camera* camera, CameraWidget* window, gchar* folder, gchar* file)
 {
 	CameraWidget* 	widget;
 	gint		result = GP_OK;
-	gchar		image_id_string[] = {'0', '0', '0', '0', '0', '0', '0'};
+	gchar		image_id_string[] = {0, 0, 0, 0, 0, 0, 0};
 	glong		image_id;
 	gint		value_int;
 	konica_data_t*	konica_data;
+
+	g_return_val_if_fail (camera,   GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (window,   GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (folder,   GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (file, 	GP_ERROR_BAD_PARAMETERS);
+	
 	
 	/* Some information we need. */
 	konica_data = (konica_data_t*) camera->camlib_data;
-	g_return_val_if_fail (filename[0] != '?', GP_ERROR);
-	memcpy (image_id_string, filename, 6);
+	g_return_val_if_fail (file[0] != '?', GP_ERROR);
+	memcpy (image_id_string, file, 6);
 	image_id = atol (image_id_string);
 	
 	/* Protect status? */
 	g_return_val_if_fail (widget = gp_widget_child_by_label (window, _("Protect")), GP_ERROR_BAD_PARAMETERS);
 	if (gp_widget_changed (widget)) {
 		gp_widget_value_get (widget, &value_int);
-		result = k_set_protect_status (konica_data->device, konica_data->image_id_long, image_id, (value_int == 1));
+		result = k_set_protect_status (konica_data->device, konica_data->image_id_long, image_id, (value_int != 0));
 	}
 		
 	return (result);
@@ -749,6 +760,11 @@ int
 camera_folder_config_get (Camera* camera, CameraWidget** window, gchar* folder)
 {
 	CameraWidget*	widget;
+
+	g_return_val_if_fail (camera,   GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (window, 	GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (!*window,	GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (folder,	GP_ERROR_BAD_PARAMETERS);
 
 	/* Construct the window. */
 	*window = gp_widget_new (GP_WIDGET_WINDOW, folder);
@@ -762,6 +778,10 @@ camera_folder_config_get (Camera* camera, CameraWidget** window, gchar* folder)
 int
 camera_folder_config_set (Camera* camera, CameraWidget* window, gchar* folder)
 {
+	g_return_val_if_fail (camera,   GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (window,   GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (folder,   GP_ERROR_BAD_PARAMETERS);
+	
 	return (GP_OK);
 }
 
@@ -1033,8 +1053,6 @@ int camera_config_set (Camera *camera, CameraWidget *window)
 	g_return_val_if_fail (camera, GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (window, GP_ERROR_BAD_PARAMETERS);
 
-	c = g_new0 (gchar, 256);
-
         konica_data = (konica_data_t *) camera->camlib_data;
 
         /************************/
@@ -1225,7 +1243,7 @@ gchar*
 camera_result_as_string (Camera* camera, gint result)
 {
 	/* Really an error? */
-	g_return_val_if_fail (result >= 0, _("Unknown error"));
+	g_return_val_if_fail (result < 0, _("Unknown error"));
 
 	/* libgphoto2 error? */
 	if (-result < 100) return (gp_result_as_string (result));
