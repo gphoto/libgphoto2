@@ -1,6 +1,6 @@
 #include <unistd.h>
 #include <gphoto2.h>
-#include <gpio/gpio.h>
+#include <gpio.h>
 #include "fujitsu.h"
 #include "library.h"
 

@@ -1,6 +1,6 @@
 #include <string.h>
 #include <gphoto2.h>
-#include <gpio/gpio.h>
+#include <gpio.h>
 
 int camera_id (char *id) {
 
