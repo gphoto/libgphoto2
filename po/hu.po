@@ -1,0 +1,4012 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# This file is distributed under the same license as the PACKAGE package.
+# Tamas Szanto <tszanto@mol.hu>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libgphoto2\n"
+"POT-Creation-Date: 2002-12-01 22:47+0100\n"
+"PO-Revision-Date: 2003-02-14 11:11+0100\n"
+"Last-Translator: Tamas Szanto <tszanto@mol.hu>\n"
+"Language-Team: Hungarian <kde-lista@sophia.jpte.hu>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: camlibs/barbie/barbie.c:149
+#, c-format
+msgid ""
+"Number of pictures: %i\n"
+"Firmware Version: %s"
+msgstr ""
+"A képek száma: %i\n"
+"A firmware verziószáma: %s"
+
+#: camlibs/barbie/barbie.c:159
+msgid ""
+"Barbie/HotWheels/WWF\n"
+"Scott Fritzinger <scottf@unr.edu>\n"
+"Andreas Meyer <ahm@spies.com>\n"
+"Pete Zaitcev <zaitcev@metabyte.com>\n"
+"\n"
+"Reverse engineering of image data by:\n"
+"Jeff Laing <jeffl@SPATIALinfo.com>\n"
+"\n"
+"Implemented using documents found on\n"
+"the web. Permission given by Vision."
+msgstr ""
+"Barbie/HotWheels/WWF\n"
+"Scott Fritzinger <scottf@unr.edu>\n"
+"Andreas Meyer <ahm@spies.com>\n"
+"Pete Zaitcev <zaitcev@metabyte.com>\n"
+"\n"
+"A képformátum visszafejtése:\n"
+"Jeff Laing <jeffl@SPATIALinfo.com>\n"
+"\n"
+"A weben talált dokumentáció alapján\n"
+"készült. A Vision engedélyével."
+
+#: camlibs/canon/canon.c:674
+#, c-format
+msgid ""
+"Name '%s' (%i characters) too long (%i chars), maximal 30 characters are "
+"allowed."
+msgstr ""
+"A(z) '%s' név (%i karakter) túl hosszú (%i karakter), legfeljebb 30 "
+"karaktert lehet használni."
+
+#: camlibs/canon/canon.c:1538
+msgid "File protected."
+msgstr "Védett fájl."
+
+#: camlibs/canon/library.c:115
+msgid ""
+"For the A50, 115200 may not be faster than 57600\n"
+"Folders are NOT supported\n"
+"if you experience a lot of transmissions errors, try to have you computer as "
+"idle as possible (ie: no disk activity)"
+msgstr ""
+"Az A50-nél a 115200 nem gyorsabb az 57600-nál\n"
+"Könyvtárak használata NEM támogatott\n"
+"Ha sok átviteli hibával találkozik, próbálja csökkenti a "
+"számítógép terhelését (pl. a lemezkezelését)"
+
+#: camlibs/canon/library.c:198 camlibs/canon/library.c:1173
+#: camlibs/canon/library.c:1186
+msgid "Camera unavailable"
+msgstr "Nem áll rendelkezésre kamera"
+
+#: camlibs/canon/library.c:209
+msgid "Switching Camera Off"
+msgstr "A kamera kikapcsolása"
+
+#: camlibs/canon/library.c:265
+msgid "Error capturing image"
+msgstr "Hiba képrögzítéskor"
+
+#: camlibs/canon/library.c:300
+#, c-format
+msgid "Could not get disk name: %s"
+msgstr "Nem sikerült lekérdezni a lemez nevét: %s"
+
+#: camlibs/canon/library.c:301
+msgid "No reason available"
+msgstr "A hiba oka nem ismert"
+
+#: camlibs/canon/library.c:308
+#, c-format
+msgid "Could not get disk info: %s"
+msgstr "Nem sikerült lekérdezni a lemez jellemzőit: %s"
+
+#: camlibs/canon/library.c:602
+#, c-format
+msgid ""
+"  Drive %s\n"
+"  %11s bytes total\n"
+"  %11s bytes available"
+msgstr ""
+"  Meghajtó: %s\n"
+"  %11s bájt összesen\n"
+"  %11s bájt szabad"
+
+#: camlibs/canon/library.c:610 camlibs/canon/library.c:616
+#: camlibs/canon/library.c:1129 camlibs/canon/library.c:1135
+msgid "AC adapter"
+msgstr "AC adapterről"
+
+#: camlibs/canon/library.c:610 camlibs/canon/library.c:616
+#: camlibs/canon/library.c:1129 camlibs/canon/library.c:1135
+msgid "on battery"
+msgstr "akkumulátorról"
+
+#: camlibs/canon/library.c:612 camlibs/canon/library.c:1131
+msgid "power OK"
+msgstr "energiaszint: megfelelő"
+
+#: camlibs/canon/library.c:612 camlibs/canon/library.c:1131
+msgid "power bad"
+msgstr "energiaszint: nem megfelelő"
+
+#: camlibs/canon/library.c:620
+#, c-format
+msgid "not available: %s"
+msgstr "nem érhető el: %s"
+
+#: camlibs/canon/library.c:646
+#, c-format
+msgid "%s (host time %s%i seconds)"
+msgstr "%s (a számítógép ideje %s%i másodperc)"
+
+#: camlibs/canon/library.c:656
+#, c-format
+msgid ""
+"\n"
+"Camera identification:\n"
+"  Model: %s\n"
+"  Owner: %s\n"
+"\n"
+"Power status: %s\n"
+"\n"
+"Flash disk information:\n"
+"%s\n"
+"\n"
+"Time: %s\n"
+msgstr ""
+"\n"
+"A kamera adatai:\n"
+"  Típus: %s\n"
+"  Tulajdonos: %s\n"
+"\n"
+"Energia: %s\n"
+"\n"
+"A flash-lemez adatai:\n"
+"%s\n"
+"\n"
+"Idő: %s\n"
+
+#: camlibs/canon/library.c:673
+msgid ""
+"Canon PowerShot series driver by\n"
+"Wolfgang G. Reissnegger,\n"
+"Werner Almesberger,\n"
+"Edouard Lafargue,\n"
+"Philippe Marzouk,\n"
+"A5 additions by Ole W. Saastad\n"
+"Holger Klemm\n"
+msgstr ""
+"Meghajtóprogram a Canon PowerShot sorozathoz\n"
+"Wolfgang G. Reissnegger,\n"
+"Werner Almesberger,\n"
+"Edouard Lafargue,\n"
+"Philippe Marzouk,\n"
+"A5-kiegészítések: Ole W. Saastad\n"
+"Holger Klemm\n"
+
+#: camlibs/canon/library.c:712
+msgid "Error deleting file"
+msgstr "Hiba történt a fájl törlésekor"
+
+#: camlibs/canon/library.c:728
+msgid "Error deleting associated thumbnail file"
+msgstr "Nem sikerült törölni a társított előnézeti képet"
+
+#: camlibs/canon/library.c:858 camlibs/canon/library.c:987
+msgid ""
+"Speeds greater than 57600 are not supported for uploading to this camera"
+msgstr ""
+"57600-nál magasabb sebességet nem lehet használni ennél a kameránál feltöltéshez"
+
+#: camlibs/canon/library.c:875 camlibs/canon/library.c:1004
+msgid "Could not get flash drive letter"
+msgstr "Nem sikerült lekérdezni a Flash meghajtó betűjelét"
+
+#: camlibs/canon/library.c:919 camlibs/canon/library.c:1028
+msgid ""
+"Could not upload, no free folder name available!\n"
+"999CANON folder name exists and has an AUT 9999.JPG picture in it."
+msgstr ""
+"A feltöltés nem sikerült, nincs szabad könyvtárnév.\n"
+"A 999CANON könyvtár létezik, és található benne egy AUT 9999.JPG nevű kép."
+
+#: camlibs/canon/library.c:941 camlibs/canon/library.c:1048
+msgid "Could not create \\DCIM directory."
+msgstr "Nem sikerült létrehozni a \\DCIM könyvtárat."
+
+#: camlibs/canon/library.c:947 camlibs/canon/library.c:1054
+msgid "Could not create destination directory."
+msgstr "Nem sikerült létrehozni a célkönyvtárat."
+
+#: camlibs/canon/library.c:1084
+msgid "Camera and Driver Configuration"
+msgstr "A kamera és a meghajtóprogram beállításai"
+
+#: camlibs/canon/library.c:1086 camlibs/polaroid/pdc700.c:984
+msgid "Camera"
+msgstr "Kamera"
+
+#: camlibs/canon/library.c:1089
+msgid "Camera Model (readonly)"
+msgstr "A kamera típusa (csak olvasható)"
+
+#: camlibs/canon/library.c:1093 camlibs/canon/library.c:1169
+msgid "Owner name"
+msgstr "A tulajdonos neve"
+
+#: camlibs/canon/library.c:1100 camlibs/canon/library.c:1104
+#: camlibs/canon/library.c:1109
+msgid "Date and Time (readonly)"
+msgstr "Dátum és idő (csak olvasható)"
+
+#: camlibs/canon/library.c:1105
+msgid "Error"
+msgstr "Hiba"
+
+#: camlibs/canon/library.c:1110 camlibs/canon/library.c:1137
+msgid "Unavailable"
+msgstr "Nem áll rendelkezésre"
+
+#: camlibs/canon/library.c:1114 camlibs/canon/library.c:1182
+msgid "Set camera date to PC date"
+msgstr "A kamera dátumának beállítása a számítógép dátumára"
+
+#: camlibs/canon/library.c:1117
+msgid "Firmware revision (readonly)"
+msgstr "A firmware revíziószáma (csak olvasható)"
+
+#: camlibs/canon/library.c:1141
+msgid "Power (readonly)"
+msgstr "Energia (csak olvasható)"
+
+#: camlibs/canon/library.c:1145
+msgid "Driver"
+msgstr "Meghajtó"
+
+#: camlibs/canon/library.c:1148 camlibs/canon/library.c:1196
+msgid "List all files"
+msgstr "Az összes fájl kilistázása"
+
+#: camlibs/canon/library.c:1153 camlibs/canon/library.c:1204
+msgid "Keep filename on upload"
+msgstr "A fájlnév megőrzése feltöltéskor"
+
+#: camlibs/canon/library.c:1176
+msgid "Owner name changed"
+msgstr "A tulajdonos neve megváltozott"
+
+#: camlibs/canon/library.c:1178
+msgid "could not change owner name"
+msgstr "a tulajdonos nevét nem sikerült megváltoztatni"
+
+#: camlibs/canon/library.c:1189
+msgid "time set"
+msgstr "az idő beállítva"
+
+#: camlibs/canon/library.c:1191
+msgid "could not set time"
+msgstr "az idő beállítása nem sikerült"
+
+#: camlibs/canon/library.c:1410
+#, c-format
+msgid "Unsupported port type %i = 0x%x given. Initialization impossible."
+msgstr "Nem támogatott porttípus (%i = 0x%x) van megadva. Nem lehet inicializálni a kamerát."
+
+#: camlibs/canon/serial.c:624 camlibs/canon/serial.c:689
+msgid "Battery exhausted, camera off."
+msgstr "Az akkumulátor lemerült, a kamera kikapcsolt."
+
+#: camlibs/canon/serial.c:627
+msgid "ERROR: unexpected message"
+msgstr "HIBA: nem várt üzenet"
+
+#: camlibs/canon/serial.c:637
+msgid "ERROR: message overrun"
+msgstr "HIBA: üzenettúlfutás"
+
+#: camlibs/canon/serial.c:666
+msgid "ERROR: out of sequence."
+msgstr "HIBA: nem megfelelő sorrend"
+
+#: camlibs/canon/serial.c:671
+msgid "ERROR: unexpected packet type."
+msgstr "HIBA: nem várt csomagtípus"
+
+#: camlibs/canon/serial.c:681
+msgid "ERROR: message format error."
+msgstr "HIBA: hibás üzenetformátum"
+
+#: camlibs/canon/serial.c:693
+msgid "ERROR: unexpected message2."
+msgstr "HIBA: nem várt üzenet2"
+
+#: camlibs/canon/serial.c:887
+msgid "Uploading file..."
+msgstr "Fájl feltöltése..."
+
+#: camlibs/canon/serial.c:945 camlibs/digita/digita.c:256
+msgid "Getting file..."
+msgstr "Fájl letöltése..."
+
+#: camlibs/canon/serial.c:1171
+msgid "Error changing speed."
+msgstr "A sebesség megváltoztatása nem sikerült."
+
+#: camlibs/canon/serial.c:1180
+msgid "Resetting protocol..."
+msgstr "A protokoll alapállapotba hozása..."
+
+#: camlibs/canon/serial.c:1189
+msgid "Camera OK.\n"
+msgstr "A kamera OK.\n"
+
+#: camlibs/canon/serial.c:1202
+msgid "Looking for camera ..."
+msgstr "Kamera keresése..."
+
+#: camlibs/canon/serial.c:1212
+msgid "Trying to contact camera..."
+msgstr "Kapcsolatfelvétel a kamerával..."
+
+#: camlibs/canon/serial.c:1216
+msgid "Communication error 1"
+msgstr "Kommunikációs hiba (1)"
+
+#: camlibs/canon/serial.c:1226 camlibs/canon/serial.c:1230
+#: camlibs/dimera/dimera3500.c:836
+msgid "No response from camera"
+msgstr "A kamera nem válaszolt"
+
+#: camlibs/canon/serial.c:1234
+msgid "Unrecognized response"
+msgstr "Nem felismerhető válasz"
+
+#: camlibs/canon/serial.c:1277
+msgid "Bad EOT"
+msgstr "Hibás EOT"
+
+#: camlibs/canon/serial.c:1283
+msgid "Communication error 2"
+msgstr "Kommunikációs hiba (2)"
+
+#: camlibs/canon/serial.c:1306
+msgid "Communication error 3"
+msgstr "Kommunikációs hiba (3)"
+
+#: camlibs/canon/serial.c:1310
+msgid "Changing speed... wait..."
+msgstr "Sebességváltás...egy kis türelmet kérek..."
+
+#: camlibs/canon/serial.c:1315
+msgid "Error changing speed"
+msgstr "A sebesség megváltoztatása nem sikerült"
+
+#: camlibs/canon/serial.c:1327
+msgid "Error waiting ACK during initialization retrying"
+msgstr "A reinicializálás során hiba történt az ACK jelre való várakozás közben"
+
+#: camlibs/canon/serial.c:1333
+msgid "Error waiting ACK during initialization"
+msgstr "Nem jött ACK válasz az inicializálás közben"
+
+#: camlibs/canon/serial.c:1337
+msgid "Connected to camera"
+msgstr "Létrejött a kapcsolat a kamerával"
+
+#: camlibs/canon/serial.c:1399
+msgid "Getting thumbnail..."
+msgstr "Előnézeti képek letöltése..."
+
+#: camlibs/canon/usb.c:216 camlibs/sipixblink/sipixblink.c:486
+msgid "Could not apply USB settings"
+msgstr "Nem sikerült alkalmazni az USB-beállításokat"
+
+#: camlibs/canon/usb.c:241
+#, c-format
+msgid "Camera not ready, multiple 'Identify camera' requests failed: %s"
+msgstr "A kamera nem áll készen, több kameraazonosítási kísérlet nem sikerült: %s"
+
+#: camlibs/canon/usb.c:250
+#, c-format
+msgid "Camera not ready, could not lock camera keys: %s"
+msgstr "A kamera nem áll készen, a kamera gombjait nem sikerült zárolni: %s"
+
+#: camlibs/canon/usb.c:649
+msgid "Receiving data..."
+msgstr "Adatok fogadása..."
+
+#: camlibs/canon/usb.c:944
+msgid ""
+"File was too big. You may have to turn your camera off and back on before "
+"uploading more files."
+msgstr ""
+"A fájl túl nagy. A következő feltöltési kísérlet előtt érdemes ki- és "
+"bekapcsolni a kamerát."
+
+#: camlibs/canon/usb.c:1040
+#, c-format
+msgid "Detected a '%s'."
+msgstr "Detektálva: '%s'."
+
+#: camlibs/digita/digita.c:331
+msgid "Unsupported image type"
+msgstr "Nem támogatott képtípus"
+
+#: camlibs/digita/digita.c:389
+#, c-format
+msgid "Number of pictures: %d"
+msgstr "A képek száma: %d"
+
+#: camlibs/digita/digita.c:396
+msgid ""
+"Digita\n"
+"Johannes Erdfelt <johannes@erdfelt.com>"
+msgstr ""
+"Digita\n"
+"Johannes Erdfelt <johannes@erdfelt.com>"
+
+#: camlibs/dimera/dimera3500.c:161
+#, c-format
+msgid ""
+"Only root folder is supported - you requested a file listing for folder '%s'."
+msgstr ""
+"Csak a gyökérkönyvtár használható - listázási kísérlet történt a(z) '%s' könyvtárra."
+
+#: camlibs/dimera/dimera3500.c:169 camlibs/dimera/dimera3500.c:363
+msgid "Problem getting number of images"
+msgstr "Nem sikerült lekérdezni a képek számát"
+
+#: camlibs/dimera/dimera3500.c:213
+msgid "Image type is not supported"
+msgstr "A képtípus nem támogatott"
+
+#: camlibs/dimera/dimera3500.c:268 camlibs/dimera/dimera3500.c:514
+msgid "Problem getting image information"
+msgstr "Nem sikerült lekérdezni a kép adatait"
+
+#: camlibs/dimera/dimera3500.c:299
+msgid "Capture type is not supported"
+msgstr "A felvétel típusa nem támogatott"
+
+#: camlibs/dimera/dimera3500.c:384
+#, c-format
+msgid " (battery is %d%% full)"
+msgstr " (az akkumulátor feltöltöttsége: %d%%)"
+
+#: camlibs/dimera/dimera3500.c:388
+#, c-format
+msgid ""
+"Dimera 3500 ver. %s %d/%d %d:%d\n"
+"%d pictures used of approximately %d (high res) or %d (low res)\n"
+"Camera features: %s, %s, %s, %s\n"
+"Flash is %s, is %s and is %s\n"
+"Resolution is set to %s\n"
+"Camera is %s powered%s\n"
+msgstr ""
+"Dimera 3500 ver. %s %d/%d %d:%d\n"
+"%d kép található, kb. %d nagyfelbontású vagy %d alacsony felbontású\n"
+"A kamera jellemzői: %s, %s, %s, %s\n"
+"A vaku: %s, %s és %s\n"
+"A pillanatnyi felbontás: %s\n"
+"A kamera ellátása: %s - %s\n"
+
+#: camlibs/dimera/dimera3500.c:399 camlibs/kodak/dc210/dc210.c:253
+#: camlibs/kodak/dc210/dc210.c:421 camlibs/konica/library.c:777
+#: camlibs/konica/library.c:1018 camlibs/ricoh/library.c:500
+msgid "Flash"
+msgstr "Vaku"
+
+#: camlibs/dimera/dimera3500.c:399
+msgid "NO Flash"
+msgstr "NINCS vaku"
+
+#: camlibs/dimera/dimera3500.c:401
+msgid "Dual Iris"
+msgstr "Duál írisz"
+
+#: camlibs/dimera/dimera3500.c:401
+msgid "NO Dual Iris"
+msgstr "NINCS duál írisz"
+
+#: camlibs/dimera/dimera3500.c:403
+msgid "Resolution Switch"
+msgstr "Felbontáskapcsoló"
+
+#: camlibs/dimera/dimera3500.c:403
+msgid "NO Resolution Switch"
+msgstr "NINCS felbontáskapcsoló"
+
+#: camlibs/dimera/dimera3500.c:405
+msgid "NO Power Light"
+msgstr "NINCS energiajelző fény"
+
+#: camlibs/dimera/dimera3500.c:407
+msgid "ON"
+msgstr "BE"
+
+#: camlibs/dimera/dimera3500.c:407
+msgid "OFF"
+msgstr "KI"
+
+#: camlibs/dimera/dimera3500.c:409
+msgid "ready"
+msgstr "kész"
+
+#: camlibs/dimera/dimera3500.c:409
+msgid "NOT ready"
+msgstr "NEM áll készen"
+
+#: camlibs/dimera/dimera3500.c:411
+msgid "in fill mode"
+msgstr "feltöltöttségi mód"
+
+#: camlibs/dimera/dimera3500.c:411
+msgid "NOT in fill mode"
+msgstr "NEM feltöltöttségi mód"
+
+#: camlibs/dimera/dimera3500.c:413
+msgid "low (320x240)"
+msgstr "alacsony (320x240)"
+
+#: camlibs/dimera/dimera3500.c:413
+msgid "high (640x480)"
+msgstr "magas (640x480)"
+
+#: camlibs/dimera/dimera3500.c:415
+msgid "externally"
+msgstr "külső"
+
+#: camlibs/dimera/dimera3500.c:415
+msgid "internally"
+msgstr "belső"
+
+#: camlibs/dimera/dimera3500.c:425
+msgid ""
+"* Image glitches or problems communicating are\n"
+"  often caused by a low battery.\n"
+"* Images captured remotely on this camera are stored\n"
+"  in temporary RAM and not in the flash memory card.\n"
+"* Exposure control when capturing all images is\n"
+"  automatically set by the capture preview function.\n"
+"* Image quality is currently lower than it could be.\n"
+msgstr ""
+"* A képminőség vagy az adatátvitel problémáit\n"
+"  gyakran az alacsony tápfeszültség okozza.\n"
+"* A távolról készített képek átmenetileg a gép RAM-jába\n"
+"  kerülnek, nem a Flash kártyára.\n"
+"* Az exponálási módot felvétel esetén\n"
+"  az előnézeti képet kezelő rész állítja be.\n"
+"* A képminőség jelenleg nem a lehető legjobbra van beállítva.\n"
+
+#: camlibs/dimera/dimera3500.c:439
+msgid ""
+"gPhoto2 Mustek VDC-3500/Relisys Dimera 3500\n"
+"This software was created with the\n"
+"help of proprietary information belonging\n"
+"to StarDot Technologies.\n"
+"\n"
+"Author:\n"
+"  Brian Beattie  <URL:http://www.beattie-home.net>\n"
+"Contributors:\n"
+"  Chuck Homic <chuck@vvisions.com>\n"
+"     Converting raw camera images to RGB\n"
+"  Dan Fandrich <dan@coneharvesters.com>\n"
+"     Information on protocol, raw image format,\n"
+"     gphoto2 port\n"
+msgstr ""
+"gPhoto2 Mustek VDC-3500/Relisys Dimera 3500\n"
+"Ez a szoftver a StarDot Technologies\n"
+"kereskedelmi szoftverfejlesztő\n"
+"csomagjával készült.\n"
+"\n"
+"Szerző:\n"
+"  Brian Beattie  <URL:http://www.beattie-home.net>\n"
+"Hozzájárultak még:\n"
+"  Chuck Homic <chuck@vvisions.com>\n"
+"     A kamera képeinek RGB-re konvertálása\n"
+"  Dan Fandrich <dan@coneharvesters.com>\n"
+"     Információ a protokollról, a nyers képformátumról,\n"
+"     a gphoto2-átiratról\n"
+
+#: camlibs/dimera/dimera3500.c:532
+msgid "Problem reading image from flash"
+msgstr "Nem sikerült beolvasni egy képet a Flash kártyáról"
+
+#: camlibs/dimera/dimera3500.c:550 camlibs/dimera/dimera3500.c:716
+#: camlibs/dimera/dimera3500.c:784
+msgid "Out of memory"
+msgstr "Elfogyott a memória"
+
+#: camlibs/dimera/dimera3500.c:567 camlibs/dimera/dimera3500.c:603
+#: camlibs/panasonic/coolshot/library.c:375 camlibs/samsung/samsung.c:214
+#: camlibs/sipix/web2.c:158
+msgid "Downloading image..."
+msgstr "Kép letöltése..."
+
+#: camlibs/dimera/dimera3500.c:589 camlibs/dimera/dimera3500.c:625
+msgid "Problem downloading image"
+msgstr "Nem sikerült letölteni a képet"
+
+#: camlibs/dimera/dimera3500.c:597
+msgid "User canceled download"
+msgstr "A felhasználó megszakította a letöltést"
+
+#: camlibs/dimera/dimera3500.c:731
+msgid "Problem taking live image"
+msgstr "Nem sikerült közvetlenül felvételt készíteni"
+
+#: camlibs/dimera/dimera3500.c:803
+msgid "Problem opening port"
+msgstr "Hiba történt a port megnyitásakor"
+
+#: camlibs/dimera/dimera3500.c:813
+msgid "Problem resetting camera"
+msgstr "Nem sikerült alapállapotba hozni a kamerát"
+
+#: camlibs/dimera/dimera3500.c:823
+msgid "Problem setting camera communication speed"
+msgstr "Nem sikerült beállítani a kamera átviteli sebességét"
+
+#: camlibs/dimera/dimera3500.c:842
+msgid "Looks like a modem, not a camera"
+msgstr "Az eszköz modemnek tűnik, nem kamerának"
+
+#: camlibs/directory/directory.c:166
+#, c-format
+msgid "Listing files in '%s'..."
+msgstr "A fájlok kilistázása itt: '%s'..."
+
+#: camlibs/directory/directory.c:210
+#, c-format
+msgid "Could not get information about '%s' (%m)."
+msgstr "Nem sikerült információt lekérdezni erről: '%s' (%m)."
+
+#: camlibs/directory/directory.c:219
+#, c-format
+msgid "Could not follow the link '%s' (%m)."
+msgstr "A(z) '%s' link követése nem sikerült (%m)."
+
+#: camlibs/directory/directory.c:247
+#, c-format
+msgid "Listing folders in '%s'..."
+msgstr "A könyvtárak listázása itt: '%s'..."
+
+#: camlibs/directory/directory.c:297
+#, c-format
+msgid "Could not get information about '%s' in '%s' (%m)."
+msgstr "Nem sikerült információt lekérdezni erről: '%s' itt: '%s' (%m)."
+
+#: camlibs/directory/directory.c:305
+#, c-format
+msgid "Could not follow the link '%s' in '%s' (%m)."
+msgstr "Nem sikerült követni a(z) '%s' linket itt: '%s' (%m)."
+
+#: camlibs/directory/directory.c:371
+#, c-format
+msgid "Could not change time of file '%s' in '%s' (%m)."
+msgstr "Nem sikerült módosítani a(z) '%s' fájl idejét itt: '%s' (%m)."
+
+#: camlibs/directory/directory.c:452
+#, c-format
+msgid "Could not open '%s'."
+msgstr "'%s' megnyitása nem sikerült."
+
+#: camlibs/directory/directory.c:493
+msgid "Directory Browse"
+msgstr "Könyvtártallózás"
+
+#: camlibs/directory/directory.c:494 camlibs/directory/directory.c:525
+msgid "View hidden directories"
+msgstr "A rejtett könyvtárak megjelenítése"
+
+#: camlibs/directory/directory.c:538
+msgid ""
+"The Directory Browse \"camera\" lets you index photos on your hard drive."
+msgstr ""
+"A \"camera\" böngészése lehetővé teszi a képek indexelését a merevlemezen."
+
+#: camlibs/directory/directory.c:547
+msgid "Directory Browse Mode - written by Scott Fritzinger <scottf@unr.edu>."
+msgstr "Könyvtárböngészési mód - készítette: Scott Fritzinger <scottf@unr.edu>."
+
+#: camlibs/directory/directory.c:594
+#, c-format
+msgid "Could not delete file '%s' in folder '%s' (error code %i: %m)."
+msgstr "Nem sikerült törölni a(z) '%s' fájlt a(z) '%s' könyvtárban (hibakód - %i: %m)."
+
+#: camlibs/fuji/fuji.c:85
+#, c-format
+msgid "The camera sent only %i byte(s), but we need at least %i."
+msgstr "A kamera csak %i bájtot küldött, de legalább %i bájtot kellett volna."
+
+#: camlibs/fuji/fuji.c:126 camlibs/ricoh/library.c:551
+msgid "Could not contact camera."
+msgstr "Nem sikerült felvenni a kapcsolatot a kamerával."
+
+#: camlibs/fuji/fuji.c:188
+#, c-format
+msgid "Received unexpected data (0x%02x, 0x%02x)."
+msgstr "Nem várt adatok érkeztek (0x%02x, 0x%02x)."
+
+#: camlibs/fuji/fuji.c:214
+#, c-format
+msgid "Wrong escape sequence: expected 0x%02x, got 0x%02x."
+msgstr "Hibás escape-szekvencia: 0x%02x helyett 0x%02x érkezett."
+
+#: camlibs/fuji/fuji.c:231
+#, c-format
+msgid "Bad data - got 0x%02x, expected 0x%02x."
+msgstr "Hibás adatok - 0x%02x érkezett 0x%02x helyett."
+
+#: camlibs/fuji/fuji.c:244
+#, c-format
+msgid "Bad data - got 0x%02x, expected 0x%02x or 0x%02x."
+msgstr "Hibás adatok - 0x%02x érkezett 0x%02x vagy 0x%02x helyett."
+
+#: camlibs/fuji/fuji.c:251
+#, c-format
+msgid "Bad checksum - got 0x%02x, expected 0x%02x."
+msgstr "Hibás ellenőrzőösszeg - 0x%02x érkezett 0x%02x helyett."
+
+#: camlibs/fuji/fuji.c:289 camlibs/fuji/fuji.c:728
+msgid "Camera rejected the command."
+msgstr "A kamera nem fogadta el a parancsot."
+
+#: camlibs/fuji/fuji.c:298 camlibs/fuji/fuji.c:737
+msgid "Camera reset itself."
+msgstr "A kamera alapállapotba állt vissza."
+
+#: camlibs/fuji/fuji.c:302 camlibs/fuji/fuji.c:742
+#, c-format
+msgid "Camera sent unexpected byte 0x%02x."
+msgstr "Nem várt bájt (0x%02x) érkezett a kamerától."
+
+#: camlibs/fuji/fuji.c:317 camlibs/konica/lowlevel.c:382
+#: camlibs/polaroid/pdc700.c:314
+msgid "Downloading..."
+msgstr "Letöltés..."
+
+#: camlibs/fuji/fuji.c:538
+#, c-format
+msgid "Could not allocate %i byte(s) for downloading the thumbnail."
+msgstr "Nem sikerült %i bájtot lefoglalni az előnézeti képek részére."
+
+#: camlibs/fuji/fuji.c:572
+#, c-format
+msgid "Could not allocate %i byte(s) for downloading the picture."
+msgstr "Nem sikerült %i bájtot lefoglalni a kép letöltéséhez."
+
+#: camlibs/fuji/fuji.c:671
+#, c-format
+msgid "The camera does not accept '%s' as filename."
+msgstr "A kamera nem fogadja el a(z) '%s' fájlnevet."
+
+#: camlibs/fuji/fuji.c:675
+#, c-format
+msgid "Could not initialize upload (camera responded with 0x%02x)."
+msgstr "Nem sikerült inicializálni a feltöltést (a kamera válasza: 0x%02x)."
+
+#: camlibs/fuji/fuji.c:773
+#, c-format
+msgid "The camera does not support speed %i."
+msgstr "A kamera nem támogatja a(z) %i sebességet."
+
+#: camlibs/fuji/fuji.c:777
+#, c-format
+msgid "Could not set speed to %i (camera responded with %i)."
+msgstr "Nem sikerült beállítani a(z) %i sebességet (a kamera válasza: %i)."
+
+#: camlibs/fuji/library.c:153
+msgid ""
+"Matthew G. Martin\n"
+"Based on fujiplay by Thierry Bousch <bousch@topo.math.u-psud.fr>\n"
+msgstr ""
+"Matthew G. Martin\n"
+"Thierry Bousch <bousch@topo.math.u-psud.fr> fujiplay programja alapján\n"
+
+#: camlibs/fuji/library.c:317
+#, c-format
+msgid "Bit rate %i is not supported."
+msgstr "A(z) %i bitráta nem támogatott."
+
+#: camlibs/fuji/library.c:365
+msgid "Configuration for your FUJI camera"
+msgstr "A Fuji kamera beállításai"
+
+#: camlibs/fuji/library.c:370 camlibs/fuji/library.c:403
+#: camlibs/ricoh/library.c:445 camlibs/ricoh/library.c:447
+#: camlibs/sierra/sierra.c:1568 camlibs/sierra/sierra.c:1741
+msgid "Date & Time"
+msgstr "Dátum és idő"
+
+#: camlibs/fuji/library.c:385 camlibs/fuji/library.c:418
+msgid "ID"
+msgstr "Azonosító"
+
+#: camlibs/fuji/library.c:438
+msgid "Version: "
+msgstr "Verzió:"
+
+#: camlibs/fuji/library.c:444
+msgid "Model: "
+msgstr "Típus:"
+
+#: camlibs/fuji/library.c:451
+msgid "Available memory: "
+msgstr "A rendelkezésre álló memória: "
+
+#: camlibs/gsmart/library.c:209
+msgid "gsmart library v"
+msgstr "gsmart programkönyvtár v"
+
+#: camlibs/gsmart/library.c:210 camlibs/jamcam/jamcam.c:281
+#: camlibs/panasonic/coolshot/coolshot.c:265
+msgid " "
+msgstr " "
+
+#: camlibs/gsmart/library.c:210
+msgid ""
+"\n"
+"Till Adam <till@adam-lilienthal.de>\n"
+"Support for the Mustek gSmart mini series of digital cameras based on "
+"several other gphoto2 camlib modules and the windows driver source kindly "
+"provided by Mustek.\n"
+"\n"
+msgstr ""
+"\n"
+"Till Adam <till@adam-lilienthal.de>\n"
+"Támogatás a Mustek gSmart mini digitális kamerákhoz, több "
+"gphoto2 camlib modul és a Windows-meghajtó forráskódja alapján "
+"(ezt a Mustek bocsátotta rendelkezésre).\n"
+"\n"
+
+#: camlibs/gsmart/library.c:251
+#, c-format
+msgid "Unsupported port type: %d. This driver only works with USB cameras.\n"
+msgstr "Nem támogatott porttípus: %d. Ez a meghajtó csak USB-alapú kamerákkal működik.\n"
+
+#: camlibs/gsmart/library.c:280
+msgid "Could not reset camera.\n"
+msgstr "A kamerát nem sikerült alapállapotba hozni.\n"
+
+#: camlibs/gsmart/library.c:427
+#, c-format
+msgid ""
+"Your camera does only support deleting the last file on the camera. In this "
+"case, this is file '%s'."
+msgstr ""
+"A kamera csak az utolsó felvétel törlését teszi lehetővé. Jelen pillanatban "
+"ennek neve: '%s'."
+
+#: camlibs/jamcam/jamcam.c:280
+msgid "jamcam library v"
+msgstr "jamcam programkönyvtár v"
+
+#: camlibs/jamcam/jamcam.c:281
+msgid ""
+"\n"
+"Chris Pinkham <cpinkham@infi.net>\n"
+"Support for KBGear JamCam v2.0 & v3.0 digital cameras\n"
+"based on reverse engineering serial protocol.\n"
+"\n"
+msgstr ""
+"\n"
+"Chris Pinkham <cpinkham@infi.net>\n"
+"Támogatás a KBGear JamCam v2.0 & v3.0 digitális kamerákhoz\n"
+"a kamerák protokolljának visszafejtésével.\n"
+"\n"
+
+#: camlibs/jamcam/library.c:336 camlibs/jd11/serial.c:459
+msgid "Downloading data..."
+msgstr "Adatok letöltése..."
+
+#: camlibs/jamcam/library.c:494 camlibs/jd11/serial.c:375
+msgid "Downloading thumbnail..."
+msgstr "Előnézeti képek letöltése..."
+
+#: camlibs/jd11/jd11.c:161
+msgid ""
+"The JD11 camera works rather well with this driver.\n"
+"An RS232 interface @ 115 kbit is required for image transfer.\n"
+"The driver allows you to get\n"
+"\n"
+"   - thumbnails (64x48 PGM format)\n"
+"   - full images (640x480 PPM format)\n"
+msgstr ""
+"A JD11 kamera elég jól működik ezzel a meghajtóval.\n"
+"RS232 felület és 115 kbites kapcsolat szükséges képek áttöltéséhez.\n"
+"A meghajtó segítségével létrehozhatók:\n"
+"\n"
+"   - előnézeti képek (64x48 PGM formátumban)\n"
+"   - teljes képek (640x480 PPM formátumban)\n"
+
+#: camlibs/jd11/jd11.c:174
+msgid ""
+"JD11\n"
+"Marcus Meissner <marcus@jet.franken.de>\n"
+"Driver for the Jenoptik JD11 camera.\n"
+"Protocol reverse engineered using WINE and IDA."
+msgstr ""
+"JD11\n"
+"Marcus Meissner <marcus@jet.franken.de>\n"
+"Meghajtóprogram a Jenoptik JD11 kamerához.\n"
+"A protokoll visszafejtése a WINE és az IDA segítségével történt."
+
+#: camlibs/jd11/jd11.c:189 camlibs/jd11/jd11.c:241
+msgid "Other Settings"
+msgstr "Egyéb beállítások"
+
+#: camlibs/jd11/jd11.c:194 camlibs/jd11/jd11.c:242
+msgid "Bulb Exposure Time"
+msgstr "Az izzó exponálási ideje"
+
+#: camlibs/jd11/jd11.c:202 camlibs/jd11/jd11.c:250
+msgid "Color Settings"
+msgstr "Színbeállítások"
+
+#: camlibs/jd11/jd11.c:208 camlibs/jd11/jd11.c:252
+msgid "Red"
+msgstr "Vörös"
+
+#: camlibs/jd11/jd11.c:215 camlibs/jd11/jd11.c:257
+msgid "Green"
+msgstr "Zöld"
+
+#: camlibs/jd11/jd11.c:222 camlibs/jd11/jd11.c:262
+msgid "Blue"
+msgstr "Kék"
+
+#: camlibs/kodak/dc120/dc120.c:31
+msgid "CompactFlash Card"
+msgstr "Compact Flash kártya"
+
+#: camlibs/kodak/dc120/dc120.c:364
+msgid ""
+"The Kodak DC120 camera uses the KDC file format for storing images. If you "
+"want to view the images you download from your camera, you will need to "
+"download the \"kdc2tiff\" program. It is available from http://kdc2tiff."
+"sourceforge.net"
+msgstr ""
+"A Kodak DC120 kamera a KDC nevű fájlformátumot használja képek tárolásához. A kameráról "
+"letöltött képek megtekintéséhez szükség van a "
+"\"kdc2tiff\" programra, mely letölthető innen: http://kdc2tiff."
+"sourceforge.net"
+
+#: camlibs/kodak/dc120/dc120.c:376
+msgid ""
+"Kodak DC120 Camera Library\n"
+"Scott Fritzinger <scottf@gphoto.net>\n"
+"Camera Library for the Kodak DC120 camera.\n"
+"(by popular demand)."
+msgstr ""
+"Kodak DC120 programkönyvtár\n"
+"Scott Fritzinger <scottf@gphoto.net>\n"
+"Programkönyvtár a Kodak DC120 kamera kezeléséhez\n"
+"(sokak kérésére)."
+
+#: camlibs/kodak/dc120/library.c:122 camlibs/kodak/dc210/library.c:441
+#: camlibs/kodak/dc240/library.c:316 camlibs/panasonic/dc1000.c:422
+#: camlibs/panasonic/dc1580.c:550
+msgid "Getting data..."
+msgstr "Adatok lekérdezése..."
+
+#: camlibs/kodak/dc120/library.c:506
+msgid "Waiting for completion..."
+msgstr "Várakozás a művelet befejeződésére..."
+
+#: camlibs/kodak/dc210/dc210.c:168 camlibs/polaroid/pdc700.c:982
+#: camlibs/sierra/sierra-desc.c:191 camlibs/sierra/sierra.c:763
+#: camlibs/sierra/sierra.c:1340
+msgid "Camera Configuration"
+msgstr "A kamera beállításai"
+
+#: camlibs/kodak/dc210/dc210.c:170
+msgid "File"
+msgstr "Fájl"
+
+#: camlibs/kodak/dc210/dc210.c:173 camlibs/kodak/dc210/dc210.c:342
+msgid "File type"
+msgstr "Fájltípus"
+
+#: camlibs/kodak/dc210/dc210.c:175 camlibs/kodak/dc210/dc210.c:180
+msgid "JPEG"
+msgstr "JPEG"
+
+#: camlibs/kodak/dc210/dc210.c:176 camlibs/kodak/dc210/dc210.c:182
+msgid "FlashPix"
+msgstr "FlashPix"
+
+#: camlibs/kodak/dc210/dc210.c:186 camlibs/kodak/dc210/dc210.c:351
+msgid "File resolution"
+msgstr "Fájlfelbontás"
+
+#: camlibs/kodak/dc210/dc210.c:188 camlibs/kodak/dc210/dc210.c:193
+#: camlibs/ricoh/library.c:318
+msgid "640 x 480"
+msgstr "640 x 480"
+
+#: camlibs/kodak/dc210/dc210.c:189 camlibs/kodak/dc210/dc210.c:195
+msgid "1152 x 864"
+msgstr "1152 x 864"
+
+#: camlibs/kodak/dc210/dc210.c:201 camlibs/kodak/dc210/dc210.c:364
+msgid "File compression"
+msgstr "Fájltömörítés"
+
+#: camlibs/kodak/dc210/dc210.c:203 camlibs/kodak/dc210/dc210.c:209
+msgid "Low (best quality)"
+msgstr "Alacsony (a legjobb minőség)"
+
+#: camlibs/kodak/dc210/dc210.c:204 camlibs/kodak/dc210/dc210.c:211
+msgid "Medium (better quality)"
+msgstr "Közepes (jobb minőség)"
+
+#: camlibs/kodak/dc210/dc210.c:205 camlibs/kodak/dc210/dc210.c:213
+msgid "High (good quality)"
+msgstr "Magas (jó minőség)"
+
+#: camlibs/kodak/dc210/dc210.c:217
+msgid "Capture"
+msgstr "Rögzítés"
+
+#: camlibs/kodak/dc210/dc210.c:220 camlibs/kodak/dc210/dc210.c:379
+#: camlibs/ricoh/library.c:499 camlibs/sierra/sierra.c:1010
+#: camlibs/sierra/sierra.c:1270
+msgid "Zoom"
+msgstr "Nagyítás"
+
+#: camlibs/kodak/dc210/dc210.c:227 camlibs/kodak/dc210/dc210.c:241
+#: camlibs/ricoh/library.c:498 camlibs/sierra/sierra.c:965
+#: camlibs/sierra/sierra.c:970 camlibs/sierra/sierra.c:1241
+#: camlibs/sierra/sierra.c:1437 camlibs/sierra/sierra.c:1440
+#: camlibs/sierra/sierra.c:1653
+msgid "Macro"
+msgstr "Makró"
+
+#: camlibs/kodak/dc210/dc210.c:231
+msgid "58 mm"
+msgstr "58 mm"
+
+#: camlibs/kodak/dc210/dc210.c:233
+msgid "51 mm"
+msgstr "51 mm"
+
+#: camlibs/kodak/dc210/dc210.c:235
+msgid "41 mm"
+msgstr "41 mm"
+
+#: camlibs/kodak/dc210/dc210.c:237
+msgid "34 mm"
+msgstr "34 mm"
+
+#: camlibs/kodak/dc210/dc210.c:239
+msgid "29 mm"
+msgstr "29 mm"
+
+#: camlibs/kodak/dc210/dc210.c:245 camlibs/kodak/dc210/dc210.c:404
+msgid "Exposure compensation"
+msgstr "Exponálási kompenzáció"
+
+#: camlibs/kodak/dc210/dc210.c:255 camlibs/kodak/dc210/dc210.c:261
+#: camlibs/konica/library.c:782 camlibs/konica/library.c:798
+#: camlibs/konica/library.c:813 camlibs/konica/library.c:816
+#: camlibs/konica/library.c:1027 camlibs/konica/library.c:1057
+#: camlibs/ricoh/library.c:311 camlibs/ricoh/library.c:326
+#: camlibs/ricoh/library.c:367 camlibs/sierra/sierra.c:774
+#: camlibs/sierra/sierra.c:780 camlibs/sierra/sierra.c:814
+#: camlibs/sierra/sierra.c:820 camlibs/sierra/sierra.c:873
+#: camlibs/sierra/sierra.c:880 camlibs/sierra/sierra.c:934
+#: camlibs/sierra/sierra.c:941 camlibs/sierra/sierra.c:1108
+#: camlibs/sierra/sierra.c:1137 camlibs/sierra/sierra.c:1177
+#: camlibs/sierra/sierra.c:1220 camlibs/sierra/sierra.c:1383
+#: camlibs/sierra/sierra.c:1389 camlibs/sierra/sierra.c:1411
+#: camlibs/sierra/sierra.c:1416 camlibs/sierra/sierra.c:1616
+#: camlibs/sierra/sierra.c:1636
+msgid "Auto"
+msgstr "Automatikus"
+
+#: camlibs/kodak/dc210/dc210.c:256 camlibs/kodak/dc210/dc210.c:263
+#: camlibs/sierra/sierra.c:874 camlibs/sierra/sierra.c:882
+#: camlibs/sierra/sierra.c:1179 camlibs/sierra/sierra.c:1384
+#: camlibs/sierra/sierra.c:1391 camlibs/sierra/sierra.c:1618
+msgid "Force"
+msgstr "Kényszerítés"
+
+#: camlibs/kodak/dc210/dc210.c:257 camlibs/kodak/dc210/dc210.c:265
+#: camlibs/ricoh/library.c:346
+msgid "None"
+msgstr "Nincs"
+
+#: camlibs/kodak/dc210/dc210.c:269 camlibs/kodak/dc210/dc210.c:422
+msgid "Red eye flash"
+msgstr "Vörösszem-vaku"
+
+#: camlibs/kodak/dc210/dc210.c:271 camlibs/kodak/dc210/dc210.c:275
+#: camlibs/konica/library.c:682 camlibs/konica/library.c:689
+#: camlibs/konica/library.c:780 camlibs/konica/library.c:789
+#: camlibs/konica/library.c:1023 camlibs/ricoh/library.c:338
+#: camlibs/ricoh/library.c:369 camlibs/sierra/sierra.c:990
+#: camlibs/sierra/sierra.c:996 camlibs/sierra/sierra.c:1259
+msgid "On"
+msgstr "Be"
+
+#: camlibs/kodak/dc210/dc210.c:272 camlibs/kodak/dc210/dc210.c:277
+#: camlibs/kodak/dc210/dc210.c:437 camlibs/konica/library.c:683
+#: camlibs/konica/library.c:686 camlibs/konica/library.c:779
+#: camlibs/konica/library.c:786 camlibs/konica/library.c:897
+#: camlibs/konica/library.c:1021 camlibs/ricoh/library.c:339
+#: camlibs/ricoh/library.c:368 camlibs/ricoh/library.c:376
+#: camlibs/sierra/sierra.c:875 camlibs/sierra/sierra.c:884
+#: camlibs/sierra/sierra.c:991 camlibs/sierra/sierra.c:994
+#: camlibs/sierra/sierra.c:1181 camlibs/sierra/sierra.c:1261
+#: camlibs/sierra/sierra.c:1385 camlibs/sierra/sierra.c:1393
+#: camlibs/sierra/sierra.c:1620
+msgid "Off"
+msgstr "Ki"
+
+#: camlibs/kodak/dc210/dc210.c:280
+msgid "Other"
+msgstr "Egyéb"
+
+#: camlibs/kodak/dc210/dc210.c:286
+msgid "Set clock in camera"
+msgstr "A kamera órájának beállítása"
+
+#: camlibs/kodak/dc210/dc210.c:290 camlibs/kodak/dc210/dc210.c:415
+msgid "Port speed"
+msgstr "A csatlakozó sebessége"
+
+#: camlibs/kodak/dc210/dc210.c:300 camlibs/kodak/dc210/library.c:697
+msgid "Album name"
+msgstr "Kötetnév"
+
+#: camlibs/kodak/dc210/dc210.c:303
+msgid "Name to set on card when formatting."
+msgstr "Formázáskor beállítható név."
+
+#: camlibs/kodak/dc210/dc210.c:305
+msgid "Format compact flash"
+msgstr "A Compact Flash kártya formázása"
+
+#: camlibs/kodak/dc210/dc210.c:308
+msgid "Format card and set album name."
+msgstr "A kártya leformázása és kötetnév beállítása."
+
+#: camlibs/kodak/dc210/dc210.c:311
+msgid "Debug"
+msgstr "Nyomkövetés"
+
+#: camlibs/kodak/dc210/dc210.c:329
+msgid ""
+"Execute predefined command\n"
+"with parameter values."
+msgstr ""
+"Előre megadott parancs végrehajtása\n"
+"paraméterekkel."
+
+#: camlibs/kodak/dc210/dc210.c:625
+msgid ""
+"This library has been tested with a Kodak DC 215 Zoom camera. It might work "
+"also with DC 200 and DC 210 cameras. If you happen to have such a camera, "
+"please send a message to koltan@gmx.de to let me know, if you have any "
+"troubles with this driver library or if everything is okay."
+msgstr ""
+"A programkönyvtár tesztelése egy Kodak DC 215 Zoom kamerával történt. Lehet, hogy nem "
+"működik a DC 200 és DC 210 kamerákkal. Ha Ön ilyennel rendelkezik, "
+"kérem írjon e-mailt a koltan@gmx.de címre, és írja meg, "
+"milyen hibákat tapasztalt, vagy hibátlan-e a működés."
+
+#: camlibs/kodak/dc210/dc210.c:637
+msgid ""
+"Camera Library for the Kodak DC215 Zoom camera.\n"
+"Michael Koltan <koltan@gmx.de>\n"
+msgstr ""
+"Kamerakezelési programkönyvtár a Kodak DC215 Zoom kamerához.\n"
+"Michael Koltan <koltan@gmx.de>\n"
+
+#: camlibs/kodak/dc210/library.c:349
+msgid "Waiting..."
+msgstr "Várakozás..."
+
+#: camlibs/kodak/dc210/library.c:1369
+msgid "Parameter 1"
+msgstr "1. paraméter"
+
+#: camlibs/kodak/dc210/library.c:1373
+msgid "Parameter 2"
+msgstr "2. paraméter"
+
+#: camlibs/kodak/dc210/library.c:1377
+msgid "Parameter 3"
+msgstr "3. paraméter"
+
+#: camlibs/kodak/dc240/dc240.c:180
+#, c-format
+msgid "Model: Kodak %s\n"
+msgstr "Típus: Kodak %s\n"
+
+#: camlibs/kodak/dc240/dc240.c:181
+#, c-format
+msgid "Firmware version: %d.%02d\n"
+msgstr "A firmware verziószáma: %d.%02d\n"
+
+#: camlibs/kodak/dc240/dc240.c:183
+#, c-format
+msgid "Battery status: %s, AC Adapter: %s\n"
+msgstr "Az akkumulátor állapota: %s, AC adapter: %s\n"
+
+#: camlibs/kodak/dc240/dc240.c:187
+#, c-format
+msgid "Number of pictures: %d\n"
+msgstr "A képek száma: %d\n"
+
+#: camlibs/kodak/dc240/dc240.c:189
+#, c-format
+msgid "Space remaining: High: %d, Medium: %d, Low: %d\n"
+msgstr "Megmaradt hely: magas (%d), közepes (%d), alacsony (%d)\n"
+
+#: camlibs/kodak/dc240/dc240.c:193
+#, c-format
+msgid "Memory card status (%d): %s\n"
+msgstr "A memóriakártya állapota (%d): %s\n"
+
+#: camlibs/kodak/dc240/dc240.c:197
+#, c-format
+msgid "Total pictures captured: %d, Flashes fired: %d\n"
+msgstr "A felvett képek száma: %d, a vakuvillanások száma: %d\n"
+
+#: camlibs/kodak/dc240/dc240.c:211
+msgid ""
+"Kodak DC240 Camera Library\n"
+"Scott Fritzinger <scottf@gphoto.net> and Hubert Figuiere <hfiguiere@teaser."
+"fr>\n"
+"Camera Library for the Kodak DC240, DC280, DC3400 and DC5000 cameras.\n"
+"Rewritten and updated for gPhoto2."
+msgstr ""
+"Kodak DC240 programkönyvtár\n"
+"Scott Fritzinger <scottf@gphoto.net> és Hubert Figuiere <hfiguiere@teaser."
+"fr>\n"
+"Programkönyvtár a Kodak DC240, DC280, DC3400 és DC5000 kamerák kezeléséhez.\n"
+"Újraírva és felfrissítve a gPhoto2-höz."
+
+#: camlibs/kodak/dc240/library.c:570
+msgid "OK"
+msgstr "OK"
+
+#: camlibs/kodak/dc240/library.c:573
+msgid "Weak"
+msgstr "Gyenge"
+
+#: camlibs/kodak/dc240/library.c:576
+msgid "Empty"
+msgstr "Üres"
+
+#: camlibs/kodak/dc240/library.c:581 camlibs/kodak/dc240/library.c:596
+msgid "Invalid"
+msgstr "Érvénytelen"
+
+#: camlibs/kodak/dc240/library.c:588
+msgid "Not used"
+msgstr "Nem használt"
+
+#: camlibs/kodak/dc240/library.c:591
+msgid "In use"
+msgstr "Használt"
+
+#: camlibs/kodak/dc240/library.c:605
+msgid "Card is open"
+msgstr "A kártya meg van nyitva"
+
+#: camlibs/kodak/dc240/library.c:608
+msgid "Card is not open"
+msgstr "A kártya nincs megnyitva"
+
+#: camlibs/kodak/dc240/library.c:612
+msgid "Card is not formatted"
+msgstr "A kértya nincs megformázva"
+
+#: camlibs/kodak/dc240/library.c:616
+msgid "No card"
+msgstr "Nincs kártya"
+
+#: camlibs/kodak/dc3200/dc3200.c:38
+msgid ""
+"There is currently an operation in progress. This camera only supports one "
+"operation at a time. Please wait until the current operation has finished."
+msgstr ""
+"Jelenleg még tart egy művelet, és a kamera egyszerre csak egy művelet végzését "
+"teszi lehetővé. Kérem várja meg a művelet befejeződését."
+
+#: camlibs/kodak/dc3200/dc3200.c:142
+msgid "camera inactive for > 9 seconds, re-initing.\n"
+msgstr "a kamera inaktív volt több mint 9 másodpercig, újrainicializálás.\n"
+
+#: camlibs/kodak/dc3200/dc3200.c:431
+msgid ""
+"Known problems:\n"
+"\n"
+"1. If the Kodak DC3200 does not receive a command at least every 10 seconds, "
+"it will time out, and will have to be re-initialized. If you notice the "
+"camera does not respond, simply re-select the camera. This will cause it to "
+"reinitialize."
+msgstr ""
+"Ismert problémák:\n"
+"\n"
+"1. A Kodak DC3200 típusokat újra kell inicializálni, ha 10 másodpercig nem kapnak "
+"semmiylen parancsot. Ha azt veszi észre, hogy a kamera nem válaszol, "
+"válassza ki újból a kamerát, melynek hatására megtörténik az "
+"újrainicializálás."
+
+#: camlibs/kodak/dc3200/dc3200.c:444
+msgid ""
+"Kodak DC3200 Driver\n"
+"Donn Morrison <dmorriso@gulf.uvic.ca>\n"
+"\n"
+"Questions and comments appreciated."
+msgstr ""
+"Kodak DC3200 meghajtó\n"
+"Donn Morrison <dmorriso@gulf.uvic.ca>\n"
+"\n"
+"Várom a kérdéseket, észrevételeket."
+
+#: camlibs/kodak/dc3200/library.c:386
+#, c-format
+msgid "%s"
+msgstr "%s"
+
+#: camlibs/konica/konica.c:62
+msgid "Focusing error."
+msgstr "Fókuszálási hiba."
+
+#: camlibs/konica/konica.c:65
+msgid "Iris error."
+msgstr "Íriszhiba."
+
+#: camlibs/konica/konica.c:68
+msgid "Strobe error."
+msgstr "Strobe-hiba."
+
+#: camlibs/konica/konica.c:71
+msgid "EEPROM checksum error."
+msgstr "Hibás EEPROM-ellenőrzőösszeg."
+
+#: camlibs/konica/konica.c:74
+msgid "Internal error (1)."
+msgstr "Belső hiba (1)."
+
+#: camlibs/konica/konica.c:77
+msgid "Internal error (2)."
+msgstr "Belső hiba (2)."
+
+#: camlibs/konica/konica.c:80
+msgid "No card present."
+msgstr "Nincs behelyezve kártya."
+
+#: camlibs/konica/konica.c:83
+msgid "Card not supported."
+msgstr "A kártya nem támogatott."
+
+#: camlibs/konica/konica.c:86
+msgid "Card removed during access."
+msgstr "A kártyát eltávolították a hozzáférés közben."
+
+#: camlibs/konica/konica.c:89
+msgid "Image number not valid."
+msgstr "Egy képszám érvénytelen."
+
+#: camlibs/konica/konica.c:92
+msgid "Card can not be written."
+msgstr "A kártya nem írható."
+
+#: camlibs/konica/konica.c:95
+msgid "Card is write protected."
+msgstr "A kártya írásvédett."
+
+#: camlibs/konica/konica.c:98
+msgid "No space left on card."
+msgstr "Nem maradt szabd hely a kártyán."
+
+#: camlibs/konica/konica.c:101
+msgid "Image protected."
+msgstr "Védett kép."
+
+#: camlibs/konica/konica.c:104
+msgid "Light too dark."
+msgstr "Túl sötét a megvilágítás."
+
+#: camlibs/konica/konica.c:107
+msgid "Autofocus error."
+msgstr "Autofókuszálási hiba."
+
+#: camlibs/konica/konica.c:110
+msgid "System error."
+msgstr "Rendszerhiba."
+
+#: camlibs/konica/konica.c:113
+msgid "Illegal parameter."
+msgstr "Nem megengedett paraméter."
+
+#: camlibs/konica/konica.c:116
+msgid "Command can not be cancelled."
+msgstr "A parancs nem szakítható félbe."
+
+#: camlibs/konica/konica.c:119
+msgid "Localization data too long."
+msgstr "A nemzetköziesítési adat túl hosszú."
+
+#: camlibs/konica/konica.c:122
+msgid "Localization data corrupt."
+msgstr "A nemzetköziesítési adat hibás."
+
+#: camlibs/konica/konica.c:125
+msgid "Unsupported command."
+msgstr "Nem támogatott parancs."
+
+#: camlibs/konica/konica.c:128
+msgid "Other command executing."
+msgstr "Más parancs fut."
+
+#: camlibs/konica/konica.c:131
+msgid "Command order error."
+msgstr "Hibás parancssorrend."
+
+#: camlibs/konica/konica.c:134
+msgid "Unknown error."
+msgstr "Ismeretlen hiba."
+
+#: camlibs/konica/konica.c:137
+#, c-format
+msgid ""
+"The camera has just sent an error that has not yet been discovered. Please "
+"report the following to <gphoto-devel@gphoto.org> with additional "
+"information how you got this error: (0x%x,0x%x). Thank you very much!"
+msgstr ""
+"A kamera nem értelmezhető hibaüzenetet küldött. Kérjük küldje el az alábbi "
+"adatokat a <gphoto-devel@gphoto.org> címre a hiba bekövetkezésének "
+"részletes leírásával: (0x%x,0x%x). Köszönjük a segítségét!"
+
+#: camlibs/konica/library.c:158
+msgid "Getting file list..."
+msgstr "A fájllista lekérdezése..."
+
+#: camlibs/konica/library.c:324
+msgid "Testing different speeds..."
+msgstr "A különféle sebességek tesztelése..."
+
+#: camlibs/konica/library.c:339
+msgid ""
+"The camera could not be contacted. Please make sure it is conntected to the "
+"computer and turned on."
+msgstr ""
+"Nem sikerült felvenni a kapcsolatot a kamerával. Ellenőrizze, hogy össze van-e kötve "
+"a számítógéppel és be van-e kapcsolva."
+
+#: camlibs/konica/library.c:372
+msgid "Your camera does not support changing filenames."
+msgstr "A kamera nem támogatja fájlnevek cserélését."
+
+#: camlibs/konica/library.c:431
+#, c-format
+msgid "%i pictures could not be deleted because they are protected"
+msgstr "%i képet nem sikerült letörölni, mert védettek"
+
+#: camlibs/konica/library.c:532
+#, c-format
+msgid ""
+"Model: %s\n"
+"Serial Number: %s,\n"
+"Hardware Version: %i.%i\n"
+"Software Version: %i.%i\n"
+"Testing Software Version: %i.%i\n"
+"Name: %s,\n"
+"Manufacturer: %s\n"
+msgstr ""
+"Típus: %s\n"
+"Sorozatszám: %s,\n"
+"Hardververzió: %i.%i\n"
+"Szoftververzió: %i.%i\n"
+"Tesztelési szoftververzió: %i.%i\n"
+"Név: %s,\n"
+"Gyártó: %s\n"
+
+#: camlibs/konica/library.c:625
+msgid ""
+"Konica library\n"
+"Lutz Mueller <lutz@users.sourceforge.net>\n"
+"Support for all Konica and several HP cameras."
+msgstr ""
+"Konica programkönyvtár\n"
+"Lutz Mueller <lutz@users.sourceforge.net>\n"
+"Az összes Konica és néhány HP kamera támogatása."
+
+#: camlibs/konica/library.c:650
+msgid "Getting configuration..."
+msgstr "Információk lekérdezése..."
+
+#: camlibs/konica/library.c:657
+msgid "Konica Configuration"
+msgstr "Konica-beállítások"
+
+#: camlibs/konica/library.c:662 camlibs/konica/library.c:873
+msgid "Persistent Settings"
+msgstr "Megmaradó beállítások"
+
+#: camlibs/konica/library.c:666 camlibs/konica/library.c:877
+#: camlibs/polaroid/pdc700.c:1006 camlibs/polaroid/pdc700.c:1019
+#: camlibs/polaroid/pdc700.c:1089
+msgid "Date and Time"
+msgstr "Dátum és idő"
+
+#: camlibs/konica/library.c:680 camlibs/konica/library.c:894
+msgid "Beep"
+msgstr "Hangjelzés"
+
+#: camlibs/konica/library.c:692
+msgid "Shall the camera beep when taking a picture?"
+msgstr "Adjon hangjelzést a kamera kép felvételekor?"
+
+#: camlibs/konica/library.c:696 camlibs/konica/library.c:906
+msgid "Self Timer Time"
+msgstr "A saját időzítő ideje"
+
+#: camlibs/konica/library.c:703 camlibs/konica/library.c:914
+msgid "Auto Off Time"
+msgstr "Automatikus lekapcsolási idő"
+
+#: camlibs/konica/library.c:710 camlibs/konica/library.c:922
+msgid "Slide Show Interval"
+msgstr "Diavetítési időköz"
+
+#: camlibs/konica/library.c:717 camlibs/konica/library.c:931
+#: camlibs/ricoh/library.c:495 camlibs/sierra/sierra.c:773
+#: camlibs/sierra/sierra.c:1104 camlibs/sierra/sierra.c:1455
+#: camlibs/sierra/sierra.c:1664
+msgid "Resolution"
+msgstr "Felbontás"
+
+#: camlibs/konica/library.c:719 camlibs/konica/library.c:727
+#: camlibs/konica/library.c:936
+msgid "Low (576 x 436)"
+msgstr "Alacsony (576 x 436)"
+
+#: camlibs/konica/library.c:720 camlibs/konica/library.c:730
+msgid "Medium (1152 x 872)"
+msgstr "Közepes (1152 x 872)"
+
+#: camlibs/konica/library.c:721 camlibs/konica/library.c:724
+#: camlibs/konica/library.c:934
+msgid "High (1152 x 872)"
+msgstr "Magas (1152 x 872)"
+
+#: camlibs/konica/library.c:737 camlibs/konica/library.c:947
+msgid "Localization"
+msgstr "Nemzetköziesítés"
+
+#: camlibs/konica/library.c:743 camlibs/konica/library.c:950
+#: camlibs/sierra/epson-desc.c:371 camlibs/sierra/nikon-desc.c:398
+#: camlibs/sierra/sierra.c:1531 camlibs/sierra/sierra.c:1715
+msgid "Language"
+msgstr "Nyelv"
+
+#: camlibs/konica/library.c:750 camlibs/konica/library.c:759
+#: camlibs/konica/library.c:767 camlibs/konica/library.c:954
+#: camlibs/konica/library.c:979 camlibs/konica/library.c:997
+msgid "None selected"
+msgstr "Nincs kiválasztva"
+
+#: camlibs/konica/library.c:754 camlibs/konica/library.c:976
+msgid "TV Output Format"
+msgstr "TV-kimeneti formátum"
+
+#: camlibs/konica/library.c:756 camlibs/konica/library.c:980
+msgid "NTSC"
+msgstr "NTSC"
+
+#: camlibs/konica/library.c:757 camlibs/konica/library.c:982
+msgid "PAL"
+msgstr "PAL"
+
+#: camlibs/konica/library.c:758 camlibs/konica/library.c:984
+msgid "Do not display TV menu"
+msgstr "A TV-menü ne jelenjen meg"
+
+#: camlibs/konica/library.c:762 camlibs/konica/library.c:994
+msgid "Date Format"
+msgstr "Dátumformátum"
+
+#: camlibs/konica/library.c:764 camlibs/konica/library.c:998
+msgid "Month/Day/Year"
+msgstr "Hónap/nap/év"
+
+#: camlibs/konica/library.c:765 camlibs/konica/library.c:1000
+msgid "Day/Month/Year"
+msgstr "Nap/hónap/év"
+
+#: camlibs/konica/library.c:766 camlibs/konica/library.c:1002
+msgid "Year/Month/Day"
+msgstr "Év/hónap/nap"
+
+#: camlibs/konica/library.c:772 camlibs/konica/library.c:1014
+msgid "Session-persistent Settings"
+msgstr "Munkafolyamathoz kötött beállítások"
+
+#: camlibs/konica/library.c:781 camlibs/konica/library.c:792
+#: camlibs/konica/library.c:1025
+msgid "On, red-eye reduction"
+msgstr "Be, vörösszemeffektus-csökkentés"
+
+#: camlibs/konica/library.c:783 camlibs/konica/library.c:795
+msgid "Auto, red-eye reduction"
+msgstr "Automatikus, vörösszemeffektus-csökkentés"
+
+#: camlibs/konica/library.c:803 camlibs/konica/library.c:1036
+#: camlibs/ricoh/library.c:496
+msgid "Exposure"
+msgstr "Exponálás"
+
+#: camlibs/konica/library.c:810 camlibs/konica/library.c:1044
+msgid "Focus"
+msgstr "Fókusz"
+
+#: camlibs/konica/library.c:812 camlibs/konica/library.c:819
+#: camlibs/sierra/sierra.c:1412 camlibs/sierra/sierra.c:1418
+#: camlibs/sierra/sierra.c:1638
+msgid "Fixed"
+msgstr "Rögzített"
+
+#: camlibs/konica/library.c:826 camlibs/konica/library.c:1049
+msgid "Volatile Settings"
+msgstr "Nem megmaradó beállítások"
+
+#: camlibs/konica/library.c:830 camlibs/konica/library.c:1052
+#: camlibs/polaroid/pdc700.c:163
+msgid "Self Timer"
+msgstr "Saját időzítő"
+
+#: camlibs/konica/library.c:832 camlibs/konica/library.c:1062
+msgid "Self Timer (only next picture)"
+msgstr "Saját időzítő (csak a következő képnél)"
+
+#: camlibs/konica/library.c:833 camlibs/konica/library.c:840
+#: camlibs/minolta/dimagev/dimagev.c:405 camlibs/ricoh/library.c:348
+#: camlibs/sierra/sierra.c:843 camlibs/sierra/sierra.c:850
+#: camlibs/sierra/sierra.c:904 camlibs/sierra/sierra.c:911
+#: camlibs/sierra/sierra.c:966 camlibs/sierra/sierra.c:972
+#: camlibs/sierra/sierra.c:1156 camlibs/sierra/sierra.c:1199
+#: camlibs/sierra/sierra.c:1243 camlibs/sierra/sierra.c:1438
+#: camlibs/sierra/sierra.c:1442 camlibs/sierra/sierra.c:1655
+msgid "Normal"
+msgstr "Normál"
+
+#: camlibs/konica/library.c:836
+msgid "Self Timer (next picture only)"
+msgstr "Saját időzítő (csak a következő képnél)"
+
+#: camlibs/konica/library.c:1093
+#, c-format
+msgid "Could not find localization data at '%s'"
+msgstr "Nemzetköziesítési adat nem található itt: '%s'"
+
+#: camlibs/konica/library.c:1157
+msgid "Localization file too long!"
+msgstr "A nemzetköziesítési fájl túl hosszú."
+
+#: camlibs/largan/lmini/largan.c:247
+msgid "There is nothing to summarize for this camera."
+msgstr "Nincs összefoglalás ennél a kameránál."
+
+#: camlibs/largan/lmini/largan.c:259
+msgid "No manual"
+msgstr "Nincs kézikönyv"
+
+#: camlibs/largan/lmini/largan.c:267
+msgid ""
+"Largan driver\n"
+"Hubert Figuiere <hfiguiere@teaser.fr>\n"
+"\n"
+"Handles Largan Lmini camera.\n"
+msgstr ""
+"Largan meghajtó\n"
+"Hubert Figuiere <hfiguiere@teaser.fr>\n"
+"\n"
+"Largan Lmini kamerák kezeléséhez.\n"
+
+#: camlibs/minolta/dimagev/dimagev.c:270
+#, c-format
+msgid ""
+"Model:\t\t\tMinolta Dimage V (%s)\n"
+"Hardware Revision:\t%s\n"
+"Firmware Revision:\t%s\n"
+msgstr ""
+"Típus:\t\t\tMinolta Dimage V (%s)\n"
+"Hardver-verzió:\t%s\n"
+"Firmware-verzió:\t%s\n"
+
+#: camlibs/minolta/dimagev/dimagev.c:285
+#, c-format
+msgid ""
+"Host Mode:\t\t%s\n"
+"Exposure Correction:\t%s\n"
+"Exposure Data:\t\t%d\n"
+"Date Valid:\t\t%s\n"
+"Date:\t\t\t%d/%02d/%02d %02d:%02d:%02d\n"
+"Self Timer Set:\t\t%s\n"
+"Quality Setting:\t%s\n"
+"Play/Record Mode:\t%s\n"
+"Card ID Valid:\t\t%s\n"
+"Card ID:\t\t%d\n"
+"Flash Mode:\t\t"
+msgstr ""
+"Host-mód:\t\t%s\n"
+"Exponálási korrekció:\t%s\n"
+"Exponálási adatok:\t\t%d\n"
+"Érvényességi dátum:\t\t%s\n"
+"Dátum:\t\t\t%d/%02d/%02d %02d:%02d:%02d\n"
+"Az időzítő beállítása:\t\t%s\n"
+"Minőségi beállítás:\t%s\n"
+"Lejátszási/felvételi mód:\t%s\n"
+"Kártyaazonosító-érvényesség:\t\t%s\n"
+"Kártyaazonosító:\t\t%d\n"
+"Vakuzási mód:\t\t"
+
+#: camlibs/minolta/dimagev/dimagev.c:297
+msgid "Remote"
+msgstr "távoli"
+
+#: camlibs/minolta/dimagev/dimagev.c:297
+msgid "Local"
+msgstr "helyi"
+
+#: camlibs/minolta/dimagev/dimagev.c:298 camlibs/minolta/dimagev/dimagev.c:300
+#: camlibs/minolta/dimagev/dimagev.c:304 camlibs/minolta/dimagev/dimagev.c:307
+msgid "Yes"
+msgstr "Igen"
+
+#: camlibs/minolta/dimagev/dimagev.c:298 camlibs/minolta/dimagev/dimagev.c:300
+#: camlibs/minolta/dimagev/dimagev.c:304 camlibs/minolta/dimagev/dimagev.c:307
+msgid "No"
+msgstr "Nem"
+
+#: camlibs/minolta/dimagev/dimagev.c:305 camlibs/sierra/sierra.c:1457
+#: camlibs/sierra/sierra.c:1464 camlibs/sierra/sierra.c:1669
+msgid "Fine"
+msgstr "Finom"
+
+#: camlibs/minolta/dimagev/dimagev.c:305 camlibs/sierra/sierra.c:775
+#: camlibs/sierra/sierra.c:782 camlibs/sierra/sierra.c:1110
+#: camlibs/sierra/sierra.c:1456 camlibs/sierra/sierra.c:1462
+#: camlibs/sierra/sierra.c:1667
+msgid "Standard"
+msgstr "Standard"
+
+#: camlibs/minolta/dimagev/dimagev.c:306
+msgid "Record"
+msgstr "Felvétel"
+
+#: camlibs/minolta/dimagev/dimagev.c:306
+msgid "Play"
+msgstr "Lejátszás"
+
+#: camlibs/minolta/dimagev/dimagev.c:321
+msgid "Automatic\n"
+msgstr "Automatikus\n"
+
+#: camlibs/minolta/dimagev/dimagev.c:329
+msgid "Force Flash\n"
+msgstr "Vaku mindig\n"
+
+#: camlibs/minolta/dimagev/dimagev.c:337
+msgid "Prohibit Flash\n"
+msgstr "A vaku letiltása\n"
+
+#: camlibs/minolta/dimagev/dimagev.c:345
+#, c-format
+msgid "Invalid Value ( %d )\n"
+msgstr "Érvénytelen érték ( %d )\n"
+
+#: camlibs/minolta/dimagev/dimagev.c:359
+#, c-format
+msgid ""
+"Battery Level:\t\t%s\n"
+"Number of Images:\t%d\n"
+"Minimum Capacity Left:\t%d\n"
+"Busy:\t\t\t%s\n"
+"Flash Charging:\t\t%s\n"
+"Lens Status:\t\t"
+msgstr ""
+"Feltöltöttségi szint:\t\t%s\n"
+"A képek száma:\t%d\n"
+"Minimális megmaradt kapacitás:\t%d\n"
+"Elfoglaltság:\t\t\t%s\n"
+"vaku-feltöltés:\t\t%s\n"
+"A lencse állapota:\t\t"
+
+#: camlibs/minolta/dimagev/dimagev.c:365
+msgid "Not Full"
+msgstr "Nincs tele"
+
+#: camlibs/minolta/dimagev/dimagev.c:365 camlibs/minolta/dimagev/dimagev.c:408
+msgid "Full"
+msgstr "Tele"
+
+#: camlibs/minolta/dimagev/dimagev.c:368
+msgid "Busy"
+msgstr "Elfoglalt"
+
+#: camlibs/minolta/dimagev/dimagev.c:368
+msgid "Idle"
+msgstr "Üresjárat"
+
+#: camlibs/minolta/dimagev/dimagev.c:369
+msgid "Charging"
+msgstr "Töltés"
+
+#: camlibs/minolta/dimagev/dimagev.c:369
+msgid "Ready"
+msgstr "Kész"
+
+#: camlibs/minolta/dimagev/dimagev.c:380
+msgid "Normal\n"
+msgstr "Normál\n"
+
+#: camlibs/minolta/dimagev/dimagev.c:383
+msgid "Lens direction does not match flash light\n"
+msgstr "A lencse iránya nem felel meg a vakuénak\n"
+
+#: camlibs/minolta/dimagev/dimagev.c:386
+msgid "Lens is not connected\n"
+msgstr "A lencse nincs bekötve\n"
+
+#: camlibs/minolta/dimagev/dimagev.c:389
+#, c-format
+msgid "Bad value for lens status %d\n"
+msgstr "Hibás értékű lencse-állapotkód: %d\n"
+
+#: camlibs/minolta/dimagev/dimagev.c:398
+msgid "Card Status:\t\t"
+msgstr "A kártya állapota:\t\t"
+
+#: camlibs/minolta/dimagev/dimagev.c:411
+msgid "Write-protected"
+msgstr "Írásvédett"
+
+#: camlibs/minolta/dimagev/dimagev.c:414
+msgid "Unsuitable card"
+msgstr "Nem megfelelő kártya"
+
+#: camlibs/minolta/dimagev/dimagev.c:417
+#, c-format
+msgid "Bade value for card status %d"
+msgstr "Hibás kártya-állapotkód: %d"
+
+#: camlibs/minolta/dimagev/dimagev.c:436
+#, c-format
+msgid ""
+"Minolta Dimage V Camera Library\n"
+"%s\n"
+"Gus Hartmann <gphoto@gus-the-cat.org>\n"
+"Special thanks to Minolta for the spec."
+msgstr ""
+"Minolta Dimage V programkönyvtár\n"
+"%s\n"
+"Gus Hartmann <gphoto@gus-the-cat.org>\n"
+"Köszönet a Minoltának a specifikáció megadásáért!"
+
+#: camlibs/mustek/core.c:575
+msgid "FlashLight : Auto (RedEye Reduction)"
+msgstr "Vaku: automatikus (vörösszem-csökkentés)"
+
+#: camlibs/mustek/core.c:577
+msgid "FlashLight : Auto"
+msgstr "Vaku: automatikus"
+
+#: camlibs/mustek/core.c:579
+msgid "FlashLight : On (RedEye Reduction)"
+msgstr "Vaku: be (vörösszem-csökkentés)"
+
+#: camlibs/mustek/core.c:581
+msgid "FlashLight : On"
+msgstr "Vaku: be"
+
+#: camlibs/mustek/core.c:583
+msgid "FlashLight : Off"
+msgstr "Vaku: ki"
+
+#: camlibs/mustek/core.c:585
+msgid "FlashLight : undefined"
+msgstr "Vaku: nem definiált"
+
+#: camlibs/mustek/mdc800.c:228
+msgid "Summary for Mustek MDC800:\n"
+msgstr "A Mustek MDC800 áttekintése:\n"
+
+#: camlibs/mustek/mdc800.c:231
+msgid "no status reported."
+msgstr "nincs állapotinformáció."
+
+#: camlibs/mustek/mdc800.c:237
+msgid "Compact Flash Card detected\n"
+msgstr "Compact Flash kártya detektálva\n"
+
+#: camlibs/mustek/mdc800.c:239
+msgid "No Compact Flash Card detected\n"
+msgstr "Nem található Compact Flash kártya\n"
+
+#: camlibs/mustek/mdc800.c:243
+msgid "Current Mode: Camera Mode\n"
+msgstr "A jelenlegi mód: kameramód\n"
+
+#: camlibs/mustek/mdc800.c:245
+msgid "Current Mode: Playback Mode\n"
+msgstr "Jelenlegi üzemmód: lejátszás\n"
+
+#: camlibs/mustek/mdc800.c:254
+msgid "Batteries are ok."
+msgstr "Az akkumulátor szintje megfelelő."
+
+#: camlibs/mustek/mdc800.c:256
+msgid "Batteries are low."
+msgstr "Az akkumulátor szintje alacsony."
+
+#: camlibs/mustek/mdc800.c:275
+msgid ""
+"Mustek MDC-800 gPhoto2 Library\n"
+"Henning Zabel <henning@uni-paderborn.de>\n"
+"Ported to gphoto2 by Marcus Meissner <marcus@jet.franken.de>\n"
+"Supports Serial and USB Protocol."
+msgstr ""
+"Mustek MDC-800 gPhoto2 programkönyvtár\n"
+"Henning Zabel <henning@uni-paderborn.de>\n"
+"A gphoto2-átirat Marcus Meissner <marcus@jet.franken.de> munkája\n"
+"Soros és USB-csatlakozós gépeket is támogat."
+
+#: camlibs/panasonic/coolshot/coolshot.c:264
+msgid "coolshot library v"
+msgstr "Coolshot programkönyvtár v"
+
+#: camlibs/panasonic/coolshot/coolshot.c:265
+msgid ""
+"\n"
+"Chris Pinkham <cpinkham@infi.net>\n"
+"Support for Panasonic Coolshot digital cameras\n"
+"based on reverse engineering serial protocol.\n"
+"\n"
+msgstr ""
+"\n"
+"Chris Pinkham <cpinkham@infi.net>\n"
+"Támogatás a Panasonic Coolshot digitális kamerákhoz\n"
+"a soros protokoll visszafejtése alapján.\n"
+"\n"
+
+#: camlibs/panasonic/dc1000.c:369 camlibs/panasonic/dc1580.c:466
+msgid "Disconnecting camera."
+msgstr "A kapcsolat megszűnt a kamerával."
+
+#: camlibs/panasonic/dc1000.c:409
+#, c-format
+msgid "Downloading image %s."
+msgstr "A(z) %s kép letöltése."
+
+#: camlibs/panasonic/dc1000.c:450 camlibs/panasonic/dc1580.c:575
+#, c-format
+msgid "Uploading image: %s."
+msgstr "Kép feltöltése: %s."
+
+#: camlibs/panasonic/dc1000.c:461 camlibs/panasonic/dc1580.c:586
+#, c-format
+msgid ""
+"File size is %i bytes. The size of the largest file possible to upload is: %"
+"i bytes."
+msgstr ""
+"A fájlméret %i bájt. A feltölthető fájlok maximális mérete: %"
+"i bájt."
+
+#: camlibs/panasonic/dc1000.c:474 camlibs/panasonic/dc1580.c:597
+#: camlibs/ricoh/ricoh.c:838
+msgid "Uploading..."
+msgstr "Feltöltés..."
+
+#: camlibs/panasonic/dc1000.c:501 camlibs/panasonic/dc1580.c:623
+#, c-format
+msgid "Deleting image %s."
+msgstr "A(z) %s kép törlése."
+
+#: camlibs/panasonic/dc1000.c:514
+msgid ""
+"Panasonic DC1000 gPhoto library\n"
+"Mariusz Zynel <mariusz@mizar.org>\n"
+"\n"
+"Based on dc1000 program written by\n"
+"Fredrik Roubert <roubert@df.lth.se> and\n"
+"Galen Brooks <galen@nine.com>."
+msgstr ""
+"Panasonic DC1000 gPhoto programkönyvtár\n"
+"Mariusz Zynel <mariusz@mizar.org>\n"
+"\n"
+"Fredrik Roubert <roubert@df.lth.se> és\n"
+"Galen Brooks <galen@nine.com>\n"
+"dc1000 nevű programja alapján."
+
+#: camlibs/panasonic/dc1580.c:526
+#, c-format
+msgid "Downloading %s."
+msgstr "%s letöltése."
+
+#: camlibs/panasonic/dc1580.c:635
+msgid ""
+"Panasonic DC1580 gPhoto library\n"
+"Mariusz Zynel <mariusz@mizar.org>\n"
+"\n"
+"Based on dc1000 program written by\n"
+"Fredrik Roubert <roubert@df.lth.se> and\n"
+"Galen Brooks <galen@nine.com>."
+msgstr ""
+"Panasonic DC1580 gPhoto programkönyvtár\n"
+"Mariusz Zynel <mariusz@mizar.org>\n"
+"\n"
+"Fredrik Roubert <roubert@df.lth.se> és\n"
+"Galen Brooks <galen@nine.com>\n"
+"dc1000 nevű programja alapján."
+
+#: camlibs/panasonic/l859/l859.c:503
+#, c-format
+msgid "Downloading '%s'..."
+msgstr "'%s' letöltése..."
+
+#: camlibs/panasonic/l859/l859.c:584
+msgid ""
+"Panasonic PV-L859-K/PV-L779-K Palmcorder\n"
+"\n"
+"Panasonic introduced image capturing technology called PHOTOSHOT for the "
+"first time to this series of Palmcorders.  Images are stored in JPEG format "
+"on an internal flashcard and can be transfered to a computer through the "
+"built-in serial port.  Images are saved in one of two resolutions; NORMAL is "
+"320x240 and FINE is 640x480.  The CCD device which captures the images from "
+"the lens is only 300K and thus produces only low quality pictures."
+msgstr ""
+"Panasonic PV-L859-K/PV-L779-K Palmcorder\n"
+"\n"
+"A Panasonic a PHOTOSHOT nevű felvételi technológiáját ennél a "
+"Palmcorder-sorozatnál alkalmazta először. A képek JPEG formátumban tárolódnak "
+"egy Flash-kártyán, soros porton keresztül lehet átvinni őket "
+"számítógépre. A képek kétféle felbontásban készülhetnek: normálban "
+"(320x240) és finomban (640x480). A CCD eszköz - mely a képeket a lencsékről "
+"digitális formában leveszi - 300K-s, ezért a gép csak alacsony minőségű képek készítésére alkalmas."
+
+#: camlibs/panasonic/l859/l859.c:602
+msgid ""
+"Known problems:\n"
+"\n"
+"If communications problems occur, reset the camera and restart the "
+"application.  The driver is not robust enough yet to recover from these "
+"situations, especially if a problem occurs and the camera is not properly "
+"shutdown at speeds faster than 9600."
+msgstr ""
+"Ismert problémák:\n"
+"\n"
+"Ha adatátviteli problémák adódnak, hozza alaphelyzetbe a kamerát és indítsa újra "
+"az alkalmazást. A meghajtó nem elég robosztus ahhoz, hogy az ilyen helyzeteket automatikusan "
+"megoldja, különösen akkor, ha a sebesség nagyobb 9600-nál és a kamera lezárása "
+"nem a szokott módon történt."
+
+#: camlibs/panasonic/l859/l859.c:616
+msgid ""
+"Panasonic PV-L859-K/PV-L779-K Palmcorder Driver\n"
+"Andrew Selkirk <aselkirk@mailandnews.com>"
+msgstr ""
+"Panasonic PV-L859-K/PV-L779-K Palmcorder-meghajtó\n"
+"Andrew Selkirk <aselkirk@mailandnews.com>"
+
+#: camlibs/pccam600/library.c:199
+msgid "Downloading file..."
+msgstr "Fájl letöltése..."
+
+#: camlibs/pccam600/library.c:259 camlibs/spca504 flash/library.c:172
+msgid "Manual Not Implemented Yet"
+msgstr "A kézikönyv még nem készült el"
+
+#: camlibs/pccam600/library.c:266
+msgid ""
+"Creative PC-CAM600\n"
+" Author: Peter Kajberg\n"
+" email: <pbk@odense.kollegienet.dk>\n"
+msgstr ""
+"Creative PC-CAM600\n"
+" Szerző: Peter Kajberg\n"
+" E-mail: <pbk@odense.kollegienet.dk>\n"
+
+#: camlibs/polaroid/pdc700.c:159
+msgid "Image Quality"
+msgstr "Képminőség"
+
+#: camlibs/polaroid/pdc700.c:160
+msgid "Image Size"
+msgstr "Képméret"
+
+#: camlibs/polaroid/pdc700.c:161
+msgid "Flash Setting"
+msgstr "A vaku beállításai"
+
+#: camlibs/polaroid/pdc700.c:162
+msgid "LCD"
+msgstr "LCD"
+
+#: camlibs/polaroid/pdc700.c:164
+msgid "Auto Power Off (minutes)"
+msgstr "Automatikus kikapcsolás (perc)"
+
+#: camlibs/polaroid/pdc700.c:165
+msgid "Information"
+msgstr "Információ"
+
+#: camlibs/polaroid/pdc700.c:167
+msgid "normal"
+msgstr "normál"
+
+#: camlibs/polaroid/pdc700.c:167
+msgid "fine"
+msgstr "finom"
+
+#: camlibs/polaroid/pdc700.c:167
+msgid "superfine"
+msgstr "nagyon finom"
+
+#: camlibs/polaroid/pdc700.c:169 camlibs/sierra/sierra.c:1355
+#: camlibs/sierra/sierra.c:1369 camlibs/sierra/sierra.c:1604
+msgid "auto"
+msgstr "automatikus"
+
+#: camlibs/polaroid/pdc700.c:169 camlibs/polaroid/pdc700.c:170
+msgid "on"
+msgstr "be"
+
+#: camlibs/polaroid/pdc700.c:169 camlibs/polaroid/pdc700.c:170
+msgid "off"
+msgstr "ki"
+
+#: camlibs/polaroid/pdc700.c:171
+msgid "play"
+msgstr "lejátszás"
+
+#: camlibs/polaroid/pdc700.c:171
+msgid "record"
+msgstr "felvétel"
+
+#: camlibs/polaroid/pdc700.c:171
+msgid "menu"
+msgstr "menü"
+
+#: camlibs/polaroid/pdc700.c:172
+msgid "battery"
+msgstr "akkumulátor"
+
+#: camlibs/polaroid/pdc700.c:172
+msgid "a/c adaptor"
+msgstr "a/c adapter"
+
+#: camlibs/polaroid/pdc700.c:173
+msgid "9600"
+msgstr "9600"
+
+#: camlibs/polaroid/pdc700.c:173
+msgid "19200"
+msgstr "19200"
+
+#: camlibs/polaroid/pdc700.c:173
+msgid "38400"
+msgstr "38400"
+
+#: camlibs/polaroid/pdc700.c:174
+msgid "57600"
+msgstr "57600"
+
+#: camlibs/polaroid/pdc700.c:174
+msgid "115200"
+msgstr "115200"
+
+#: camlibs/polaroid/pdc700.c:175
+msgid "VGA (640x480)"
+msgstr "VGA (640x480)"
+
+#: camlibs/polaroid/pdc700.c:175
+msgid "XGA (1024x768"
+msgstr "XGA (1024x768)"
+
+#: camlibs/polaroid/pdc700.c:229
+#, c-format
+msgid "Received unexpected header (%i)"
+msgstr "Nem várt fejléc érkezett (%i)"
+
+#: camlibs/polaroid/pdc700.c:242
+msgid "Received unexpected response"
+msgstr "Nem várt válasz érkezett"
+
+#: camlibs/polaroid/pdc700.c:263
+msgid "Checksum error"
+msgstr "Hibás ellenőrzőösszeg"
+
+#: camlibs/polaroid/pdc700.c:296
+msgid "The camera did not accept the command."
+msgstr "A kamera nem fogadta el a parancsot."
+
+#: camlibs/polaroid/pdc700.c:349
+#, c-format
+msgid "The camera sent more bytes than expected (%i)"
+msgstr "A kamera a vártnál több bájtot küldött (%i)"
+
+#: camlibs/polaroid/pdc700.c:451
+#, c-format
+msgid ""
+"Requested information about picture %i (= 0x%x), but got information about "
+"picture %i back"
+msgstr ""
+"A(z) %i (= 0x%x) azonosítójú kép adatainak lekérdezése történt, de a gép a(z) "
+"%i azonosítójú kép adatait adta vissza"
+
+#: camlibs/polaroid/pdc700.c:916
+#, c-format
+msgid ""
+"%i bytes of an unknown image format have been received. Please write <gphoto-"
+"devel@gphoto.org> for assistance."
+msgstr ""
+"%i bájtnyi adat érkezett ismeretlen képformátumban. Kérem küldje el a hiba körülményeinek leírását a <gphoto-"
+"devel@gphoto.org> címre."
+
+#: camlibs/polaroid/pdc700.c:997
+msgid "How long will it take until the camera powers off?"
+msgstr "Mennyi idő után kapcsoljon ki a kamera?"
+
+#: camlibs/polaroid/pdc700.c:1000 camlibs/ricoh/library.c:356
+msgid "Image"
+msgstr "Kép"
+
+#: camlibs/polaroid/pdc700.c:1111
+#, c-format
+msgid ""
+"Date: %i/%02i/%02i %02i:%02i:%02i\n"
+"Pictures taken: %i\n"
+"Free pictures: %i\n"
+"Software version: %s\n"
+"Baudrate: %s\n"
+"Memory: %i megabytes\n"
+"Camera mode: %s\n"
+"Image quality: %s\n"
+"Flash setting: %s\n"
+"Information: %s\n"
+"Timer: %s\n"
+"LCD: %s\n"
+"Auto power off: %i minutes\n"
+"Power source: %s"
+msgstr ""
+"Dátum: %i/%02i/%02i %02i:%02i:%02i\n"
+"A képek száma: %i\n"
+"Szabad képhelyek: %i\n"
+"Szoftververzió: %s\n"
+"Baud-ráta: %s\n"
+"Memória: %i MB\n"
+"Kameramód: %s\n"
+"Képminőség: %s\n"
+"A vaku beállítása: %s\n"
+"Információ: %s\n"
+"Időzítő: %s\n"
+"LCD: %s\n"
+"Automatikus kikapcsolás: %i perc után\n"
+"Áramellátás: %s"
+
+#: camlibs/polaroid/pdc700.c:1230
+#, c-format
+msgid "The requested port type (%i) is not supported by this driver."
+msgstr "A kért porttípust (%i) nem támogatja ez a meghajtó."
+
+#: camlibs/ptp/library.c:90
+msgid "PTP Undefined Error"
+msgstr "PTP - nem definiált hiba"
+
+#: camlibs/ptp/library.c:91
+msgid "PTP OK!"
+msgstr "PTP OK."
+
+#: camlibs/ptp/library.c:92
+msgid "PTP General Error"
+msgstr "PTP - általános hiba"
+
+#: camlibs/ptp/library.c:93
+msgid "PTP Session Not Open"
+msgstr "PTP - a munkafolyamat nincs megnyitva"
+
+#: camlibs/ptp/library.c:94
+msgid "PTP Invalid Transaction ID"
+msgstr "PTP - érvénytelen tranzakciós azonosító"
+
+#: camlibs/ptp/library.c:95
+msgid "PTP Operation Not Supported"
+msgstr "PTP - nem támogatott művelet"
+
+#: camlibs/ptp/library.c:96
+msgid "PTP Parameter Not Supported"
+msgstr "PTP - nem támogatott paraméter"
+
+#: camlibs/ptp/library.c:97
+msgid "PTP Incomplete Transfer"
+msgstr "PTP - nem teljes transzfer"
+
+#: camlibs/ptp/library.c:98
+msgid "PTP Invalid Storage ID"
+msgstr "PTP érvénytelen tárolóazonosító"
+
+#: camlibs/ptp/library.c:99
+msgid "PTP Invalid Object Handle"
+msgstr "Érvénytelen PTP objektumazonosító"
+
+#: camlibs/ptp/library.c:100
+msgid "PTP Device Prop Not Supported"
+msgstr "Nem támogatott PTP eszköztulajdonság"
+
+#: camlibs/ptp/library.c:101
+msgid "PTP Invalid Object Format Code"
+msgstr "PTP érvénytelen objektumformátum-kód"
+
+#: camlibs/ptp/library.c:102
+msgid "PTP Store Full"
+msgstr "PTP - a tároló betelt"
+
+#: camlibs/ptp/library.c:103
+msgid "PTP Object Write Protected"
+msgstr "PTP - az objektum írásvédett"
+
+#: camlibs/ptp/library.c:104
+msgid "PTP Store Read Only"
+msgstr "PTP - a tároló csak olvasható"
+
+#: camlibs/ptp/library.c:105
+msgid "PTP Access Denied"
+msgstr "PTP - a hozzáférés megtagadva"
+
+#: camlibs/ptp/library.c:106
+msgid "PTP No Thumbnail Present"
+msgstr "PTP - nem érhető el előnézeti kép"
+
+#: camlibs/ptp/library.c:107
+msgid "PTP Self Test Failed"
+msgstr "PTP - az önteszt nem sikerült"
+
+#: camlibs/ptp/library.c:108
+msgid "PTP Partial Deletion"
+msgstr "PTP - részleges törlés"
+
+#: camlibs/ptp/library.c:109
+msgid "PTP Store Not Available"
+msgstr "A PTP-tároló nem érhető el"
+
+#: camlibs/ptp/library.c:111
+msgid "PTP Specification By Format Unsupported"
+msgstr "Nem támogatott formátumú PTP-specifikáció"
+
+#: camlibs/ptp/library.c:112
+msgid "PTP No Valid Object Info"
+msgstr "PTP érvénytelen objektuminformáció"
+
+#: camlibs/ptp/library.c:113
+msgid "PTP Invalid Code Format"
+msgstr "PTP érvénytelen kódformátum"
+
+#: camlibs/ptp/library.c:114
+msgid "PTP Unknown Vendor Code"
+msgstr "Ismeretlen PTP gyártókód"
+
+#: camlibs/ptp/library.c:116
+msgid "PTP Capture Already Terminated"
+msgstr "A PTP-felvétel már befejeződött"
+
+#: camlibs/ptp/library.c:117
+msgid "PTP Device Bus"
+msgstr "PTP eszközbusz"
+
+#: camlibs/ptp/library.c:118
+msgid "PTP Invalid Parent Object"
+msgstr "PTP - érvénytelen szülőobjektum"
+
+#: camlibs/ptp/library.c:119
+msgid "PTP Invalid Device Prop Format"
+msgstr "PTP érvénytelen eszköztulajdonság-formátum"
+
+#: camlibs/ptp/library.c:120
+msgid "PTP Invalid Device Prop Value"
+msgstr "PTP érvénytelen eszköztulajdonság-érték"
+
+#: camlibs/ptp/library.c:121
+msgid "PTP Invalid Parameter"
+msgstr "PTP - érvénytelen paraméter"
+
+#: camlibs/ptp/library.c:122
+msgid "PTP Session Already Opened"
+msgstr "PTP - a munkafolyamat már meg van nyitva"
+
+#: camlibs/ptp/library.c:123
+msgid "PTP Transaction Canceled"
+msgstr "PTP - a tranzakció félbeszakadt"
+
+#: camlibs/ptp/library.c:125
+msgid "PTP Specification Of Destination Unsupported"
+msgstr "Nem támogatott PTP specifikáció vagy cél"
+
+#: camlibs/ptp/library.c:126
+msgid "PTP EK Filename Required"
+msgstr "PTP EK fájlnév szükséges"
+
+#: camlibs/ptp/library.c:127
+msgid "PTP EK Filename Conflicts"
+msgstr "PTP EK fájlnévütközés"
+
+#: camlibs/ptp/library.c:128
+msgid "PTP EK Filename Invalid"
+msgstr "Érvénytelen PTP EK fájlnév"
+
+#: camlibs/ptp/library.c:130
+msgid "PTP I/O error"
+msgstr "PTP I/O-hiba"
+
+#: camlibs/ptp/library.c:131
+msgid "PTP Error: bad parameter"
+msgstr "PTP hiba: nem megfelelő paraméter"
+
+#: camlibs/ptp/library.c:132
+msgid "PTP Protocol error, data expected"
+msgstr "PTP protokollhiba, nem érkezett adat"
+
+#: camlibs/ptp/library.c:133
+msgid "PTP Protocol error, response expected"
+msgstr "PTP protokollhiba, nem jött válasz"
+
+#: camlibs/ptp/library.c:495
+msgid "Written by Mariusz Woloszyn <emsi@ipartners.pl>. Enjoy!"
+msgstr "Készítette: Mariusz Woloszyn <emsi@ipartners.pl>. Sok sikert!"
+
+#: camlibs/ptp/library.c:1022
+msgid "PTP is implemented for USB cameras only."
+msgstr "A PTP csak USB-csatolós kameráknál használható."
+
+#: camlibs/ricoh/library.c:215
+msgid ""
+"Ricoh / Philips driver by\n"
+"Lutz Mueller <lutz@users.sourceforge.net>,\n"
+"Martin Fischer <martin.fischer@inka.de>,\n"
+"based on Bob Paauwe's driver\n"
+msgstr ""
+"Ricoh/Philips meghajtó\n"
+"Lutz Mueller <lutz@users.sourceforge.net>,\n"
+"Martin Fischer <martin.fischer@inka.de>,\n"
+"Bob Paauwe meghajtóprogramja segítségével\n"
+
+#: camlibs/ricoh/library.c:249
+#, c-format
+msgid "unknown (0x%02x)"
+msgstr "ismeretlen (0x%02x)"
+
+#: camlibs/ricoh/library.c:252
+#, c-format
+msgid ""
+"Model: %s\n"
+"Memory: %d byte(s) of %d available"
+msgstr ""
+"Típus: %s\n"
+"Memória: %d bájt áll rendelkezésre %d bájtból"
+
+#: camlibs/ricoh/library.c:302
+msgid "-2.0"
+msgstr "-2,0"
+
+#: camlibs/ricoh/library.c:303
+msgid "-1.5"
+msgstr "-1,5"
+
+#: camlibs/ricoh/library.c:304
+msgid "-1.0"
+msgstr "-1,0"
+
+#: camlibs/ricoh/library.c:305
+msgid "-0.5"
+msgstr "-0,5"
+
+#: camlibs/ricoh/library.c:306
+msgid "0.0"
+msgstr "0,0"
+
+#: camlibs/ricoh/library.c:307
+msgid "0.5"
+msgstr "0,5"
+
+#: camlibs/ricoh/library.c:308
+msgid "1.0"
+msgstr "1,0"
+
+#: camlibs/ricoh/library.c:309
+msgid "1.5"
+msgstr "1,5"
+
+#: camlibs/ricoh/library.c:310
+msgid "2.0"
+msgstr "2,0"
+
+#: camlibs/ricoh/library.c:319
+msgid "1280 x 960"
+msgstr "1280 x 960"
+
+#: camlibs/ricoh/library.c:327
+msgid "Outdoor"
+msgstr "Szabadban"
+
+#: camlibs/ricoh/library.c:328 camlibs/sierra/sierra.c:936
+#: camlibs/sierra/sierra.c:945 camlibs/sierra/sierra.c:1224
+msgid "Fluorescent"
+msgstr "Fluoreszkáló"
+
+#: camlibs/ricoh/library.c:329
+msgid "Incandescent"
+msgstr "Fehéren izzó"
+
+#: camlibs/ricoh/library.c:330
+msgid "Black & White"
+msgstr "Fekete-fehér"
+
+#: camlibs/ricoh/library.c:331 camlibs/sierra/sierra.c:845
+#: camlibs/sierra/sierra.c:854 camlibs/sierra/sierra.c:1160
+msgid "Sepia"
+msgstr "Szépia"
+
+#: camlibs/ricoh/library.c:347
+msgid "Maximal"
+msgstr "Maximális"
+
+#: camlibs/ricoh/library.c:349
+msgid "Minimal"
+msgstr "Minimális"
+
+#: camlibs/ricoh/library.c:357
+msgid "Character"
+msgstr "Karakter"
+
+#: camlibs/ricoh/library.c:358
+msgid "Sound"
+msgstr "Hang"
+
+#: camlibs/ricoh/library.c:359
+msgid "Image & Sound"
+msgstr "Kép és hang"
+
+#: camlibs/ricoh/library.c:360
+msgid "Character & Sound"
+msgstr "Karakter és hang"
+
+#: camlibs/ricoh/library.c:377 camlibs/sierra/sierra.c:1013
+#: camlibs/sierra/sierra.c:1019
+msgid "2x"
+msgstr "2x"
+
+#: camlibs/ricoh/library.c:378
+msgid "3x"
+msgstr "3x"
+
+#: camlibs/ricoh/library.c:379
+msgid "4x"
+msgstr "4x"
+
+#: camlibs/ricoh/library.c:380
+msgid "5x"
+msgstr "5x"
+
+#: camlibs/ricoh/library.c:381
+msgid "6x"
+msgstr "6x"
+
+#: camlibs/ricoh/library.c:382
+msgid "7x"
+msgstr "7x"
+
+#: camlibs/ricoh/library.c:383
+msgid "8x"
+msgstr "8x"
+
+#: camlibs/ricoh/library.c:384
+msgid "9x"
+msgstr "9x"
+
+#: camlibs/ricoh/library.c:430
+msgid "Configuration"
+msgstr "Beállítások"
+
+#: camlibs/ricoh/library.c:433
+msgid "General"
+msgstr "Általános"
+
+#: camlibs/ricoh/library.c:437
+msgid "Copyright"
+msgstr "Szerzői jog"
+
+#: camlibs/ricoh/library.c:439
+msgid "Copyright (max. 20 characters)"
+msgstr "Szerzői jog (max. 20 karakter)"
+
+#: camlibs/ricoh/library.c:453
+msgid "Pictures"
+msgstr "Képek"
+
+#: camlibs/ricoh/library.c:497
+msgid "White level"
+msgstr "Fehérszint"
+
+#: camlibs/ricoh/library.c:501
+msgid "Record Mode"
+msgstr "Felvételi mód"
+
+#: camlibs/ricoh/library.c:502
+msgid "Compression"
+msgstr "Tömörítés"
+
+#: camlibs/ricoh/library.c:561
+#, c-format
+msgid "Speed %i is not supported!"
+msgstr "A megadott sebesség (%i) nem támogatott."
+
+#: camlibs/ricoh/ricoh.c:66
+#, c-format
+msgid ""
+"Expected %i, got %i. Please report this error to <gphoto-devel@gphoto.org>."
+msgstr ""
+"%i helyett %i érkezett. Kérjük jelezze a hibát itt: <gphoto-devel@gphoto.org>."
+
+#: camlibs/ricoh/ricoh.c:75
+#, c-format
+msgid ""
+"Expected %i bytes, got %i. Please report this error to <gphoto-devel@gphoto."
+"org>."
+msgstr ""
+"%i bájt helyett %i bájt érkezett. Kérjük jelezze a hibát itt: <gphoto-devel@gphoto."
+"org>."
+
+#: camlibs/ricoh/ricoh.c:172 camlibs/ricoh/ricoh.c:186
+#, c-format
+msgid ""
+"We expected 0x%x but received 0x%x. Please contact <gphoto-devel@gphoto.org>."
+msgstr ""
+"0x%x helyett 0x%x érkezett. Kérjük jelezze a hibát itt: <gphoto-devel@gphoto.org>."
+
+#: camlibs/ricoh/ricoh.c:215
+#, c-format
+msgid "Bad characters (0x%x, 0x%x). Please contact <gphoto-devel@gphoto.org>."
+msgstr "Hibás karakterek (0x%x, 0x%x). Kérjük jelezze a hibát ezen a címen: <gphoto-devel@gphoto.org>."
+
+#: camlibs/ricoh/ricoh.c:257 camlibs/ricoh/ricoh.c:326
+msgid ""
+"Camera busy. If the problem persists, please contact <gphoto-devel@gphoto."
+"org>."
+msgstr ""
+"A kamera nem tud kéréseket fogadni, mert más feladattal foglalkozik. Ha a probkléma nem szűnik meg, "
+"kérjük jelezze itt: <gphoto-devel@gphoto.org>."
+
+#: camlibs/ricoh/ricoh.c:292
+msgid "Timeout even after 2 retries. Please contact <gphoto-devel@gphoto.org>."
+msgstr "Időtúllépési hiba történt 2 sikertelen próbálkozás után. Kérjük jelezze a hibát itt: <gphoto-devel@gphoto.org>."
+
+#: camlibs/ricoh/ricoh.c:308
+msgid ""
+"Communication error even after 2 retries. Please contact <gphoto-"
+"devel@gphoto.org>."
+msgstr ""
+"Adatátviteli hiba történt 2 sikertelen próbálkozás után. Kérjük jelezze a hibát itt: <gphoto-"
+"devel@gphoto.org>."
+
+#: camlibs/ricoh/ricoh.c:340
+msgid "Camera is in wrong mode. Please contact <gphoto-devel@gphoto.org>."
+msgstr "A kamera nem megfelelő módba van kacsolva. További információ: <gphoto-devel@gphoto.org>."
+
+#: camlibs/ricoh/ricoh.c:349
+msgid ""
+"Camera did not accept the parameters. Please contact <gphoto-devel@gphoto."
+"org>."
+msgstr ""
+"A kamera nem fogadta el a paramétereket. Kérjük jelezze a hibát ezen a címen: <gphoto-devel@gphoto."
+"org>."
+
+#: camlibs/ricoh/ricoh.c:355
+msgid "An unknown error occurred. Please contact <gphoto-devel@gphoto.org>."
+msgstr "Ismeretlen hiba történt. Kérjük jelezze a hibát ezen a címen: <gphoto-devel@gphoto.org>."
+
+#: camlibs/ricoh/ricoh.c:817
+#, c-format
+msgid ""
+"The filename's length must not exceed 12 characters ('%s' has %i characters)."
+msgstr ""
+"A fájlnév nem lehet 12 karakternél hosszabb ('%s': %i karakter)."
+
+#: camlibs/samsung/samsung.c:243
+msgid ""
+"The Samsung digimax 800k driver has been written by James McKenzie "
+"<james@fishsoup.dhs.org> for gphoto. Lutz Mueller <lutz@users.sourceforge."
+"net> ported it to gphoto2. Marcus Meissner <marcus@jet.franken.de> fixed and "
+"enhanced the port."
+msgstr ""
+"A Samsung digimax 800k meghajtót James McKenzie "
+"<james@fishsoup.dhs.org> készítette a gphoto-hoz. Később Lutz Mueller <lutz@users.sourceforge."
+"net> átírta a gphoto2-höz. Marcus Meissner <marcus@jet.franken.de> tovább tökéletesítette az "
+"átiratot, kijavítva néhány hibát."
+
+#: camlibs/sierra/epson-desc.c:82 camlibs/sierra/nikon-desc.c:91
+#: camlibs/sierra/olympus-desc.c:103
+msgid "Resolution plus Size"
+msgstr "Felbontás és méret"
+
+#: camlibs/sierra/epson-desc.c:100 camlibs/sierra/nikon-desc.c:109
+#: camlibs/sierra/olympus-desc.c:121
+msgid "Date and time (GMT)"
+msgstr "Dátum és idő (GMT)"
+
+#: camlibs/sierra/epson-desc.c:179 camlibs/sierra/nikon-desc.c:175
+#: camlibs/sierra/olympus-desc.c:211
+msgid "Aperature Settings"
+msgstr "Az apertúra beállításai"
+
+#: camlibs/sierra/epson-desc.c:194 camlibs/sierra/nikon-desc.c:190
+#: camlibs/sierra/olympus-desc.c:229 camlibs/sierra/sierra.c:842
+#: camlibs/sierra/sierra.c:1152 camlibs/sierra/sierra.c:1481
+#: camlibs/sierra/sierra.c:1682
+msgid "Color Mode"
+msgstr "Színmód"
+
+#: camlibs/sierra/epson-desc.c:212 camlibs/sierra/nikon-desc.c:208
+#: camlibs/sierra/olympus-desc.c:246
+msgid "Flash Settings"
+msgstr "A vaku beállításai"
+
+#: camlibs/sierra/epson-desc.c:228 camlibs/sierra/nikon-desc.c:258
+#: camlibs/sierra/olympus-desc.c:264 camlibs/sierra/sierra.c:933
+#: camlibs/sierra/sierra.c:1216 camlibs/sierra/sierra.c:1410
+#: camlibs/sierra/sierra.c:1633
+msgid "White Balance"
+msgstr "Fehéregyensúly"
+
+#: camlibs/sierra/epson-desc.c:245 camlibs/sierra/olympus-desc.c:346
+msgid "Host power save (seconds)"
+msgstr "A számítógép energiatakarékossági ideje (s)"
+
+#: camlibs/sierra/epson-desc.c:261 camlibs/sierra/olympus-desc.c:331
+msgid "Camera power save (seconds)"
+msgstr "A kamera energiatakarékossági ideje (s)"
+
+#: camlibs/sierra/epson-desc.c:276 camlibs/sierra/sierra.c:964
+#: camlibs/sierra/sierra.c:1237 camlibs/sierra/sierra.c:1436
+#: camlibs/sierra/sierra.c:1649
+msgid "Lens Mode"
+msgstr "Lencsemód"
+
+#: camlibs/sierra/epson-desc.c:538 camlibs/sierra/nikon-desc.c:589
+#: camlibs/sierra/olympus-desc.c:545 camlibs/sierra/sierra.c:764
+#: camlibs/sierra/sierra.c:1430
+msgid "Picture Settings"
+msgstr "Képbeállítások"
+
+#: camlibs/sierra/epson-desc.c:542 camlibs/sierra/nikon-desc.c:593
+#: camlibs/sierra/olympus-desc.c:549 camlibs/sierra/sierra.c:1035
+#: camlibs/sierra/sierra.c:1497
+msgid "Camera Settings"
+msgstr "A kamera beállításai"
+
+#: camlibs/sierra/epson-desc.c:549 camlibs/sierra/sierra.c:1843
+msgid ""
+"Some notes about Epson cameras:\n"
+"- Some parameters are not controllable remotely:\n"
+"  * zoom\n"
+"  * focus\n"
+"  * custom white balance setup\n"
+"- Configuration has been reverse-engineered with\n"
+"  a PhotoPC 3000z, if your camera acts differently\n"
+"  please send a mail to <gphoto-devel@gphoto.org> (in English)\n"
+msgstr ""
+"Néhány megjegyzés az Epson kamerákkal kapcsolatban:\n"
+"- Néhány paraméter nem módosítható távolról:\n"
+"  * nagyítás\n"
+"  * fókusz\n"
+"  * egyéni fehéregyensúly-beállítás\n"
+"- A beállításokat a PhotoPC 3000z készüléknél\n"
+"  fejtettem vissza, ha az Ön gépénél nem működik valami,\n"
+"  kérem értesítsen a <gphoto-devel@gphoto.org> címen (angolul)\n"
+
+#: camlibs/sierra/library.c:142 camlibs/sierra/library.c:1341
+msgid "No memory card present"
+msgstr "Nincs behelyezve memóriakártya"
+
+#: camlibs/sierra/library.c:288
+msgid "Cannot retrieve the battery capacity"
+msgstr "A telep kapacitását nem lehet lekérdezni"
+
+#: camlibs/sierra/library.c:294
+#, c-format
+msgid ""
+"The battery level of the camera is too low (%d%%). The operation is aborted."
+msgstr ""
+"A kamera energiaszintje nagyon alacsony (%d%%). A művelet félbeszakadt."
+
+#: camlibs/sierra/library.c:318
+msgid "Cannot retrieve the available memory left"
+msgstr "Nem kérdezhető le a rendelkezésre álló szabad memória"
+
+#: camlibs/sierra/library.c:373
+msgid "Camera refused 3 times to keep a connection open."
+msgstr "A kamera háromszor is megtagadta a kapcsolat nyitvatartását."
+
+#: camlibs/sierra/library.c:583
+#, c-format
+msgid "The first byte received (0x%x) is not valid."
+msgstr "Az első fogadott bájt (0x%x) érvénytelen."
+
+#: camlibs/sierra/library.c:706
+#, c-format
+msgid ""
+"Transmission of packet timed out even after %i retries. Please contact "
+"<gphoto-devel@gphoto.org>."
+msgstr ""
+"Egy csomag átvitele %i próbálkozás után is időtúllépési hibával fejeződött be. Kérjük "
+"jelezze a hibát itt: <gphoto-devel@gphoto.org>."
+
+#: camlibs/sierra/library.c:740 camlibs/sierra/library.c:764
+msgid "Could not transmit packet even after several retries."
+msgstr "Több próbálkozás után sem sikerült egy csomag átvitele."
+
+#: camlibs/sierra/library.c:755
+msgid ""
+"Packet got rejected by camera. Please contact <gphoto-devel@gphoto.org>."
+msgstr ""
+"A kamera visszautasított egy csomagot. Kérjük jelezze a hibát itt: <gphoto-devel@gphoto.org>."
+
+#: camlibs/sierra/library.c:782
+#, c-format
+msgid ""
+"Could not transmit packet (error code %i). Please contact <gphoto-"
+"devel@gphoto.org>."
+msgstr ""
+"Egy csomag átvitele nem sikerült (hibakód: %i). Kérjük jelezze a hibát itt: <gphoto-"
+"devel@gphoto.org>."
+
+#: camlibs/sierra/library.c:874
+msgid "Transmission timed out even after 2 retries. Giving up..."
+msgstr "Az adatátvitel 2 próbálkozás után sem sikerült (időtúllépés történt). A művelet nem sikerült..."
+
+#: camlibs/sierra/library.c:893
+#, c-format
+msgid "Got unexpected result 0x%x. Please contact <gphoto-devel@gphoto.org>."
+msgstr "Nem várt eredmény: 0x%x. További információ: <gphoto-devel@gphoto.org>."
+
+#: camlibs/sierra/library.c:991
+#, c-format
+msgid ""
+"Received unexpected answer (%i). Please contact <gphoto-devel@gphoto.org>."
+msgstr ""
+"Nem várt válasz érkezett (%i). Küldjön hibajelentést erre a címre: <gphoto-devel@gphoto.org>."
+
+#: camlibs/sierra/library.c:1053
+#, c-format
+msgid "Could not get register %i. Please contact <gphoto-devel@gphoto.org>."
+msgstr "Nem sikerült regisztrálni: %i. További információ: <gphoto-devel@gphoto.org>."
+
+#: camlibs/sierra/library.c:1073 camlibs/sierra/library.c:1093
+msgid "Too many retries failed."
+msgstr "Túl sok próbálkozás nem sikerült."
+
+#: camlibs/sierra/library.c:1133
+msgid "Sending data..."
+msgstr "Adatok küldése..."
+
+#: camlibs/sierra/library.c:1194
+msgid ""
+"recursive calls are not supported by the sierra driver! Please contact "
+"<gphoto-devel@gphoto.org>."
+msgstr ""
+"Rekurzív hívásokat nem támogat a Sierra-meghajtó! További információ: "
+"<gphoto-devel@gphoto.org>."
+
+#: camlibs/sierra/library.c:1243
+#, c-format
+msgid ""
+"Could not get string register %i. Please contact <gphoto-devel@gphoto.org>."
+msgstr ""
+"Egy sztringregiszter (%i) letöltése nem sikerült. Kérjük jelezze a hibát itt: <gphoto-devel@gphoto.org>."
+
+#: camlibs/sierra/library.c:1426
+#, c-format
+msgid "Expected 32 bytes, got %i. Please contact <gphoto-devel@gphoto.org>."
+msgstr "32 bájt helyett %i bájt érkezett. Kérjük jelezze a hibát itt: <gphoto-devel@gphoto.org>."
+
+#: camlibs/sierra/library.c:1457
+msgid "Not implemented!"
+msgstr "Nem implementált funkció!"
+
+#: camlibs/sierra/nikon-desc.c:127 camlibs/sierra/olympus-desc.c:140
+msgid "Shutter Speed microseconds (0 auto)"
+msgstr "Zársebesség [ezredmásodpercben] (0=automatikus)"
+
+#: camlibs/sierra/nikon-desc.c:158 camlibs/sierra/olympus-desc.c:179
+msgid "Shutter Speed (in seconds)"
+msgstr "Zársebesség (s)"
+
+#: camlibs/sierra/nikon-desc.c:227
+msgid "Image Adjustment"
+msgstr "Képkiigazítás"
+
+#: camlibs/sierra/nikon-desc.c:275
+msgid "LED Mode"
+msgstr "LED-mód"
+
+#: camlibs/sierra/nikon-desc.c:295 camlibs/sierra/olympus-desc.c:281
+msgid "Focus Mode"
+msgstr "Fókuszálási mód"
+
+#: camlibs/sierra/nikon-desc.c:342
+msgid "Operation Mode"
+msgstr "Működési mód"
+
+#: camlibs/sierra/nikon-desc.c:356 camlibs/sierra/olympus-desc.c:317
+#: camlibs/sierra/sierra.c:1070 camlibs/sierra/sierra.c:1309
+msgid "LCD Brightness"
+msgstr "Az LCD fényereje"
+
+#: camlibs/sierra/nikon-desc.c:371 camlibs/sierra/olympus-desc.c:359
+msgid "LCD Auto Shut Off (seconds)"
+msgstr "Az LCD automatikus kikapcsolása (s)"
+
+#: camlibs/sierra/nikon-desc.c:423 camlibs/sierra/nikon-desc.c:446
+#: camlibs/sierra/olympus-desc.c:403
+msgid "Exposure Compensation"
+msgstr "Exponálási kompenzáció"
+
+#: camlibs/sierra/nikon-desc.c:463 camlibs/sierra/olympus-desc.c:418
+msgid "Exposure Metering"
+msgstr "Exponálásmérés"
+
+#: camlibs/sierra/nikon-desc.c:481 camlibs/sierra/olympus-desc.c:434
+msgid "Zoom (in millimeters)"
+msgstr "Nagyítás (mm)"
+
+#: camlibs/sierra/nikon-desc.c:518 camlibs/sierra/nikon-desc.c:541
+msgid "Digital Zoom"
+msgstr "Digitális nagyítás"
+
+#: camlibs/sierra/nikon-desc.c:523
+msgid "Misc exposure/lense settings"
+msgstr "Egyéb exponálási- és lencsebeállítások"
+
+#: camlibs/sierra/nikon-desc.c:546
+msgid "Auto exposure lock"
+msgstr "Autoexponálási zárolás"
+
+#: camlibs/sierra/nikon-desc.c:600
+msgid ""
+"Nikon Coolpix 880:\n"
+"    Camera configuration (or preferences):\n"
+"\n"
+"        The optical zoom does not properly\n"
+"        function.\n"
+"\n"
+"        Not all configuration settings\n"
+"        can be properly read or written, for\n"
+"        example, the fine tuned setting of\n"
+"        white balance, and the language settings.\n"
+"\n"
+"        Put the camera in 'M' mode in order to\n"
+"        to set the shutter speed.\n"
+msgstr ""
+"Nikon Coolpix 880:\n"
+"    A kamera beállítási opciói:\n"
+"\n"
+"        Az optikai nagyítás egyelőre nem működik\n"
+"        megfelelően.\n"
+"\n"
+"        Nem minden beállítás olvasható és írható\n"
+"        megfelelő módon, ilyen például\n"
+"        a fehéregyensúly finombeállítása\n"
+"        és a nyelvválasztás.\n"
+"\n"
+"        Kapcsolja a kamerát 'M' módba a\n"
+"        zársebesség beállításához.\n"
+
+#: camlibs/sierra/nikon-desc.c:619
+msgid ""
+"Nikon Coolpix 995:\n"
+"    Camera configuration (preferences) for this\n"
+"    camera are incomplete, contact the gphoto\n"
+"    developers at gphoto-devel@gphoto.net\n"
+"    if you would like to contribute to this\n"
+"    driver.\n"
+"\n"
+"    The download should function correctly.\n"
+msgstr ""
+"Nikon Coolpix 995:\n"
+"    A kamera beállításához szükséges opciók\n"
+"    jelenleg nem fednek le mindent, kérjük vegye\n"
+"    fel a kapcsolatot a fejlesztőkkel a\n"
+"    gphoto-devel@gphoto.net címen, ha részt szeretne\n"
+"    venni a meghajtóprogram továbbfejlesztésében.\n"
+"\n"
+"    A letöltési funkciónak mindenképpen működnie kell.\n"
+
+#: camlibs/sierra/olympus-desc.c:302
+msgid "LCD Mode"
+msgstr "LCD-mód"
+
+#: camlibs/sierra/olympus-desc.c:451
+msgid "Digital zoom"
+msgstr "Digitális nagyítás"
+
+#: camlibs/sierra/olympus-desc.c:468
+msgid "ISO Speed"
+msgstr "ISO-sebesség"
+
+#: camlibs/sierra/olympus-desc.c:484
+msgid "Focus position"
+msgstr "A fókusz helyzete"
+
+#: camlibs/sierra/olympus-desc.c:501
+msgid "Time format"
+msgstr "Időformátum"
+
+#: camlibs/sierra/olympus-desc.c:556
+msgid ""
+"Some notes about Olympus cameras:\n"
+"(1) Camera Configuration:\n"
+"    A value of 0 will take the default one (auto).\n"
+"(2) Olympus C-3040Z (and possibly also the C-2040Z\n"
+"    and others) have a USB PC Control mode. In order\n"
+"    to use this mode, the camera must be switched\n"
+"    into 'USB PC control mode'. To get to the menu\n"
+"    for switching modes, turn on the camera, open\n"
+"    the memory card access door and then press and\n"
+"    hold both of the menu and LCD buttons until the\n"
+"    camera control menu appears. Set it to ON.\n"
+"(3) If you switch the 'LCD mode' to 'Monitor' or\n"
+"    'Normal', don't forget to switch it back to 'Off'\n"
+"    before disconnectig. Otherwise you cannot use\n"
+"    the camera's buttons. If you end up with this\n"
+"    state, you should reconnect the camera to the\n"
+"    PC and switch LCD to 'Off'."
+msgstr ""
+"Néhány megjegyzés az Olympus kamerákkal kapcsolatban:\n"
+"(1) A kamera beállításai:\n"
+"    0 érték esetén mindig az alapértelmezés lesz érvényes.\n"
+"(2) A Olympus C-3040Z (sőt talán a C-2040Z\n"
+"    és más típusok is) rendelkeznek USB-s vezérlési móddal.\n"
+"    Ez csak akkor használható, ha a kamera át van állítva\n"
+"    'USB PC control mode'-ba. A módváltási menü eléréséhez\n"
+"    kapcsolja be a kamerát, nyissa fel a memóriakártya\n"
+"    tartójának fedelét és tartsa lenyomva a menü és az LCD\n"
+"    gombot egészen addig, amíg a beállítómenü\n"
+"    meg nem jelenik. ON állásba kell kapcsolni.\n"
+"(3) Ha az 'LCD mode'-ot 'Monitor' vagy\n"
+"    'Normal' állásba kapcsolja, de felejtse el visszaállítani 'Off'-ra\n"
+"    a kapcsolat bontása előtt, máskülönben a kamera gombjait nem\n"
+"    lehet használni. Ha mégis 'sikerült' előidézni ezt az állapotot,\n"
+"    kösse össze újból a számítógépet és a kamerát,\n"
+"    és kapcsolja 'Off' állapotba az LCD-t."
+
+#: camlibs/sierra/olympus-desc.c:577
+msgid ""
+"Default sierra driver:\n"
+"\n"
+"    This is the default sierra driver, it\n"
+"    should be capable of supporting the download\n"
+"    and browsing of pictures on your camera.\n"
+"\n"
+"    Camera configuration (or preferences)\n"
+"    settings are based on the Olympus 3040,\n"
+"    and are likely incomplete. If you verify\n"
+"    that the configuration settings are\n"
+"    complete for your camera, or can contribute\n"
+"    code to support complete configuration,\n"
+"    please contact gphoto-devel@gphoto.net\n"
+msgstr ""
+"Az alapértelmezett Sierra-meghajtó:\n"
+"\n"
+"    Ez az alapértelmezett Sierra-meghajtó, segítségével\n"
+"    a kamerában tárolt képek böngészhetők és\n"
+"    a kiválasztott képek letölthetők.\n"
+"\n"
+"    A kamera beállításainál található opciók\n"
+"    az Olympus 3040 alapján készültek\n"
+"    és valószínűleg nem fednek le mindent. Ha\n"
+"    meggyőződött arról, hogy az Ön géptípusánál\n"
+"    egyik beállítás sem hiányzik, vagy tud segíteni\n"
+"    a hiányzó opciók elkészítésében, kérjük\n"
+"    értesítsen minket a gphoto-devel@gphoto.net címen.\n"
+
+#: camlibs/sierra/sierra-desc.c:172
+#, c-format
+msgid "%lld (unknown)"
+msgstr "%lld (ismeretlen)"
+
+#: camlibs/sierra/sierra.c:620
+msgid "The file to be uploaded has a null length"
+msgstr "A feltöltendő fájl 0 hosszúságú"
+
+#: camlibs/sierra/sierra.c:634
+msgid "Not enough memory available on the memory card"
+msgstr "Nincs elég szabad memória a memóriakártyán"
+
+#: camlibs/sierra/sierra.c:641
+msgid "Cannot retrieve the name of the folder containing the pictures"
+msgstr "Nem sikerült lekérdezni a képeket tartalmazó könyvtár nevét"
+
+#: camlibs/sierra/sierra.c:648
+#, c-format
+msgid "Upload is supported into the '%s' folder only"
+msgstr "Csak a(z) '%s' mappába lehet fájlokat feltölteni"
+
+#: camlibs/sierra/sierra.c:776 camlibs/sierra/sierra.c:784
+#: camlibs/sierra/sierra.c:817 camlibs/sierra/sierra.c:826
+#: camlibs/sierra/sierra.c:1112 camlibs/sierra/sierra.c:1143
+msgid "High"
+msgstr "Magas"
+
+#: camlibs/sierra/sierra.c:777 camlibs/sierra/sierra.c:786
+#: camlibs/sierra/sierra.c:1114
+msgid "Best"
+msgstr "Legjobb"
+
+#: camlibs/sierra/sierra.c:789 camlibs/sierra/sierra.c:829
+#: camlibs/sierra/sierra.c:861 camlibs/sierra/sierra.c:891
+#: camlibs/sierra/sierra.c:922 camlibs/sierra/sierra.c:953
+#: camlibs/sierra/sierra.c:977 camlibs/sierra/sierra.c:999
+#: camlibs/sierra/sierra.c:1028 camlibs/sierra/sierra.c:1372
+#: camlibs/sierra/sierra.c:1400 camlibs/sierra/sierra.c:1423
+#: camlibs/sierra/sierra.c:1445 camlibs/sierra/sierra.c:1471
+#: camlibs/sierra/sierra.c:1490 camlibs/sierra/sierra.c:1558
+#, c-format
+msgid "%i (unknown)"
+msgstr "%i (ismeretlen)"
+
+#: camlibs/sierra/sierra.c:801 camlibs/sierra/sierra.c:1124
+msgid "Shutter Speed (microseconds, 0 auto)"
+msgstr "Zársebesség (ezredmásodperc, 0 = automatikus)"
+
+#: camlibs/sierra/sierra.c:813 camlibs/sierra/sierra.c:1133
+#: camlibs/sierra/sierra.c:1348 camlibs/sierra/sierra.c:1589
+msgid "Aperture"
+msgstr "Apertúra"
+
+#: camlibs/sierra/sierra.c:815 camlibs/sierra/sierra.c:822
+#: camlibs/sierra/sierra.c:1139
+msgid "Low"
+msgstr "Alacsony"
+
+#: camlibs/sierra/sierra.c:816 camlibs/sierra/sierra.c:824
+#: camlibs/sierra/sierra.c:1141
+msgid "Medium"
+msgstr "Közepes"
+
+#: camlibs/sierra/sierra.c:844 camlibs/sierra/sierra.c:852
+#: camlibs/sierra/sierra.c:1158
+msgid "Black/White"
+msgstr "Fekete/fehér"
+
+#: camlibs/sierra/sierra.c:846 camlibs/sierra/sierra.c:856
+#: camlibs/sierra/sierra.c:1162
+msgid "White Board"
+msgstr "Fehér alap"
+
+#: camlibs/sierra/sierra.c:847 camlibs/sierra/sierra.c:858
+#: camlibs/sierra/sierra.c:1164
+msgid "Black Board"
+msgstr "Fekete alap"
+
+#: camlibs/sierra/sierra.c:872 camlibs/sierra/sierra.c:1173
+#: camlibs/sierra/sierra.c:1382 camlibs/sierra/sierra.c:1613
+msgid "Flash Mode"
+msgstr "Vakus mód"
+
+#: camlibs/sierra/sierra.c:876 camlibs/sierra/sierra.c:886
+#: camlibs/sierra/sierra.c:1183 camlibs/sierra/sierra.c:1386
+#: camlibs/sierra/sierra.c:1395 camlibs/sierra/sierra.c:1622
+msgid "Red-eye Reduction"
+msgstr "Vörösszemhatás-csökkentés"
+
+#: camlibs/sierra/sierra.c:877 camlibs/sierra/sierra.c:888
+#: camlibs/sierra/sierra.c:1185 camlibs/sierra/sierra.c:1387
+#: camlibs/sierra/sierra.c:1397 camlibs/sierra/sierra.c:1624
+msgid "Slow Sync"
+msgstr "Lassú szinkronizálás"
+
+#: camlibs/sierra/sierra.c:902 camlibs/sierra/sierra.c:1195
+msgid "Brightness/Contrast"
+msgstr "Fényerő/kontraszt"
+
+#: camlibs/sierra/sierra.c:905 camlibs/sierra/sierra.c:913
+#: camlibs/sierra/sierra.c:1201
+msgid "Bright+"
+msgstr "Fényerő+"
+
+#: camlibs/sierra/sierra.c:906 camlibs/sierra/sierra.c:915
+#: camlibs/sierra/sierra.c:1203
+msgid "Bright-"
+msgstr "Fényerő-"
+
+#: camlibs/sierra/sierra.c:907 camlibs/sierra/sierra.c:917
+#: camlibs/sierra/sierra.c:1205
+msgid "Contrast+"
+msgstr "Kontraszt+"
+
+#: camlibs/sierra/sierra.c:908 camlibs/sierra/sierra.c:919
+#: camlibs/sierra/sierra.c:1207
+msgid "Contrast-"
+msgstr "Kontraszt-"
+
+#: camlibs/sierra/sierra.c:935 camlibs/sierra/sierra.c:943
+#: camlibs/sierra/sierra.c:1222
+msgid "Skylight"
+msgstr "Égbolt"
+
+#: camlibs/sierra/sierra.c:937 camlibs/sierra/sierra.c:947
+#: camlibs/sierra/sierra.c:1226
+msgid "Tungsten"
+msgstr "Tungsten"
+
+#: camlibs/sierra/sierra.c:938 camlibs/sierra/sierra.c:950
+#: camlibs/sierra/sierra.c:1228
+msgid "Cloudy"
+msgstr "Felhős"
+
+#: camlibs/sierra/sierra.c:967 camlibs/sierra/sierra.c:974
+#: camlibs/sierra/sierra.c:1245
+msgid "Infinity/Fish-eye"
+msgstr "Végtelen/halszem"
+
+#: camlibs/sierra/sierra.c:988 camlibs/sierra/sierra.c:1255
+msgid "Spot Metering Mode"
+msgstr "Pontmérő mód (spot metering)"
+
+#: camlibs/sierra/sierra.c:1011 camlibs/sierra/sierra.c:1017
+msgid "1x"
+msgstr "1x"
+
+#: camlibs/sierra/sierra.c:1012 camlibs/sierra/sierra.c:1022
+msgid "1.6x"
+msgstr "1,6x"
+
+#: camlibs/sierra/sierra.c:1014 camlibs/sierra/sierra.c:1025
+msgid "2.5x"
+msgstr "2,5x"
+
+#: camlibs/sierra/sierra.c:1042 camlibs/sierra/sierra.c:1289
+#: camlibs/sierra/sierra.c:1504 camlibs/sierra/sierra.c:1696
+msgid "Auto Off (host) (in seconds)"
+msgstr "Automatikus kikapcsolás (kapcsolat esetén) (s)"
+
+#: camlibs/sierra/sierra.c:1044 camlibs/sierra/sierra.c:1506
+msgid ""
+"How long will it take until the camera powers off when connected to the "
+"computer?"
+msgstr ""
+"Mennyi idő után kapcsoljon le a kamera, ha össze van kötve "
+"egy számítógéppel?"
+
+#: camlibs/sierra/sierra.c:1056 camlibs/sierra/sierra.c:1299
+#: camlibs/sierra/sierra.c:1518 camlibs/sierra/sierra.c:1706
+msgid "Auto Off (field) (in seconds)"
+msgstr "Automatikus kikapcsolás (kapcsolat nélkül) (s)"
+
+#: camlibs/sierra/sierra.c:1058 camlibs/sierra/sierra.c:1520
+msgid ""
+"How long will it take until the camera powers off when not connected to the "
+"computer?"
+msgstr ""
+"Mennyi idő után kapcsoljon le a kamera, ha nincs összekötve "
+"számítógéppel?"
+
+#: camlibs/sierra/sierra.c:1080 camlibs/sierra/sierra.c:1318
+msgid "LCD Auto Off (in seconds)"
+msgstr "LCD automatikus kikapcsolás (s)"
+
+#: camlibs/sierra/sierra.c:1342
+msgid "Shot Settings"
+msgstr "Képkészítési beállítások"
+
+#: camlibs/sierra/sierra.c:1349 camlibs/sierra/sierra.c:1357
+#: camlibs/sierra/sierra.c:1592
+msgid "F2"
+msgstr "F2"
+
+#: camlibs/sierra/sierra.c:1350 camlibs/sierra/sierra.c:1359
+#: camlibs/sierra/sierra.c:1594
+msgid "F2.3"
+msgstr "F2.3"
+
+#: camlibs/sierra/sierra.c:1351 camlibs/sierra/sierra.c:1361
+#: camlibs/sierra/sierra.c:1596
+msgid "F2.8"
+msgstr "F2.8"
+
+#: camlibs/sierra/sierra.c:1352 camlibs/sierra/sierra.c:1363
+#: camlibs/sierra/sierra.c:1598
+msgid "F4"
+msgstr "F4"
+
+#: camlibs/sierra/sierra.c:1353 camlibs/sierra/sierra.c:1365
+#: camlibs/sierra/sierra.c:1600
+msgid "F5.6"
+msgstr "F5.6"
+
+#: camlibs/sierra/sierra.c:1354 camlibs/sierra/sierra.c:1367
+#: camlibs/sierra/sierra.c:1602
+msgid "F8"
+msgstr "F8"
+
+#: camlibs/sierra/sierra.c:1413 camlibs/sierra/sierra.c:1420
+#: camlibs/sierra/sierra.c:1640
+msgid "Custom"
+msgstr "egyéni"
+
+#: camlibs/sierra/sierra.c:1458 camlibs/sierra/sierra.c:1466
+#: camlibs/sierra/sierra.c:1671
+msgid "SuperFine"
+msgstr "SuperFine"
+
+#: camlibs/sierra/sierra.c:1459 camlibs/sierra/sierra.c:1468
+#: camlibs/sierra/sierra.c:1673
+msgid "HyPict"
+msgstr "HyPict"
+
+#: camlibs/sierra/sierra.c:1482 camlibs/sierra/sierra.c:1485
+#: camlibs/sierra/sierra.c:1685
+msgid "color"
+msgstr "színes"
+
+#: camlibs/sierra/sierra.c:1483 camlibs/sierra/sierra.c:1487
+#: camlibs/sierra/sierra.c:1687
+msgid "black & white"
+msgstr "fekete-fehér"
+
+#: camlibs/sierra/sierra.c:1532 camlibs/sierra/sierra.c:1541
+#: camlibs/sierra/sierra.c:1718
+msgid "Korean"
+msgstr "koreai"
+
+#: camlibs/sierra/sierra.c:1533 camlibs/sierra/sierra.c:1543
+#: camlibs/sierra/sierra.c:1720
+msgid "English"
+msgstr "angol"
+
+#: camlibs/sierra/sierra.c:1534 camlibs/sierra/sierra.c:1545
+#: camlibs/sierra/sierra.c:1722
+msgid "French"
+msgstr "francia"
+
+#: camlibs/sierra/sierra.c:1535 camlibs/sierra/sierra.c:1547
+#: camlibs/sierra/sierra.c:1724
+msgid "German"
+msgstr "német"
+
+#: camlibs/sierra/sierra.c:1536 camlibs/sierra/sierra.c:1549
+#: camlibs/sierra/sierra.c:1726
+msgid "Italian"
+msgstr "olasz"
+
+#: camlibs/sierra/sierra.c:1537 camlibs/sierra/sierra.c:1551
+#: camlibs/sierra/sierra.c:1728
+msgid "Japanese"
+msgstr "japán"
+
+#: camlibs/sierra/sierra.c:1538 camlibs/sierra/sierra.c:1553
+#: camlibs/sierra/sierra.c:1730
+msgid "Spanish"
+msgstr "spanyol"
+
+#: camlibs/sierra/sierra.c:1539 camlibs/sierra/sierra.c:1555
+#: camlibs/sierra/sierra.c:1732
+msgid "Portugese"
+msgstr "portugál"
+
+#: camlibs/sierra/sierra.c:1790
+msgid "Note: no memory card present, some values may be invalid\n"
+msgstr "Megjegyzés: nincs memóriakártya, néhány érték érvénytelen lehet\n"
+
+#: camlibs/sierra/sierra.c:1797
+#, c-format
+msgid "%sCamera Model: %s\n"
+msgstr "%sA kamera típusa: %s\n"
+
+#: camlibs/sierra/sierra.c:1799
+#, c-format
+msgid "%sManufacturer: %s\n"
+msgstr "%sGyártó: %s\n"
+
+#: camlibs/sierra/sierra.c:1801
+#, c-format
+msgid "%sCamera ID: %s\n"
+msgstr "%sKameraazonosító: %s\n"
+
+#: camlibs/sierra/sierra.c:1803
+#, c-format
+msgid "%sSerial Number: %s\n"
+msgstr "%sSorozatszám: %s\n"
+
+#: camlibs/sierra/sierra.c:1805
+#, c-format
+msgid "%sSoftware Rev.: %s\n"
+msgstr "%sA szoftver revíziója: %s\n"
+
+#: camlibs/sierra/sierra.c:1809
+#, c-format
+msgid "%sFrames Taken: %i\n"
+msgstr "%sFelvett képkocka: %i\n"
+
+#: camlibs/sierra/sierra.c:1811
+#, c-format
+msgid "%sFrames Left: %i\n"
+msgstr "%sMegmaradt képkocka: %i\n"
+
+#: camlibs/sierra/sierra.c:1813
+#, c-format
+msgid "%sBattery Life: %i\n"
+msgstr "%sA telep élettartama: %i\n"
+
+#: camlibs/sierra/sierra.c:1815
+#, c-format
+msgid "%sMemory Left: %i bytes\n"
+msgstr "%sMegmaradt memória: %i bájt\n"
+
+#: camlibs/sierra/sierra.c:1820
+#, c-format
+msgid "%sDate: %s"
+msgstr "%sDátum: %s"
+
+#: camlibs/sierra/sierra.c:1855
+msgid ""
+"Some notes about Olympus cameras (and others?):\n"
+"(1) Camera Configuration:\n"
+"    A value of 0 will take the default one (auto).\n"
+"(2) Olympus C-3040Z (and possibly also the C-2040Z\n"
+"    and others) have a USB PC Control mode. In order\n"
+"    to use this mode, the camera must be switched\n"
+"    into 'USB PC control mode'. To get to the menu\n"
+"    for switching modes, turn on the camera, open\n"
+"    the memory card access door and then press and\n"
+"    hold both of the menu and LCD buttons until the\n"
+"    camera control menu appears. Set it to ON.\n"
+"(3) If you switch the 'LCD mode' to 'Monitor' or\n"
+"    'Normal', don't forget to switch it back to 'Off'\n"
+"    before disconnectig. Otherwise you cannot use\n"
+"    the camera's buttons. If you end up with this\n"
+"    state, you should reconnect the camera to the\n"
+"    PC and switch LCD to 'Off'."
+msgstr ""
+"Néhány megjegyzés az Olympus kamerákkal kapcsolatban:\n"
+"(1) A kamera beállításai:\n"
+"    0 érték esetén mindig az alapértelmezés lesz érvényes.\n"
+"(2) A Olympus C-3040Z (sőt talán a C-2040Z\n"
+"    és más típusok is) rendelkeznek USB-s vezérlési móddal.\n"
+"    Ez csak akkor használható, ha a kamera át van állítva\n"
+"    'USB PC control mode'-ba. A módváltási menü eléréséhez\n"
+"    kapcsolja be a kamerát, nyissa fel a memóriakártya\n"
+"    tartójának fedelét és tartsa lenyomva a menü és az LCD\n"
+"    gombot egészen addig, amíg a beállítómenü\n"
+"    meg nem jelenik. ON állásba kell kapcsolni.\n"
+"(3) Ha az 'LCD mode'-ot 'Monitor' vagy\n"
+"    'Normal' állásba kapcsolja, de felejtse el visszaállítani 'Off'-ra\n"
+"    a kapcsolat bontása előtt, máskülönben a kamera gombjait nem\n"
+"    lehet használni. Ha mégis 'sikerült' előidézni ezt az állapotot,\n"
+"    kösse össze újból a számítógépet és a kamerát,\n"
+"    és kapcsolja 'Off' állapotba az LCD-t."
+
+#: camlibs/sierra/sierra.c:1884
+msgid ""
+"sierra SPARClite library\n"
+"Scott Fritzinger <scottf@unr.edu>\n"
+"Support for sierra-based digital cameras\n"
+"including Olympus, Nikon, Epson, and others.\n"
+"\n"
+"Thanks to Data Engines (www.dataengines.com)\n"
+"for the use of their Olympus C-3030Z for USB\n"
+"support implementation."
+msgstr ""
+"sierra SPARClite programkönyvtár\n"
+"Scott Fritzinger <scottf@unr.edu>\n"
+"Támogatás a Sierra-alapú digitális kamerákhoz,\n"
+"az Olympus, a Nikon, az Epson és más gyártók termékeihez.\n"
+"\n"
+"Köszönet a Data Engines-nek (www.dataengines.com)\n"
+"akik engedélyezték az Olympus C-3030Z for USB termékük\n"
+"felhasználását a program elkészítéséhez."
+
+#: camlibs/sipix/sipix.c:194
+msgid ""
+"SiPix Web2\n"
+"Marcus Meissner <marcus@jet.franken.de>\n"
+"Driver for accessing the SiPix Web2 camera."
+msgstr ""
+"SiPix Web2\n"
+"Marcus Meissner <marcus@jet.franken.de>\n"
+"Meghajtó a SiPix Web2 kamera kezeléséhez."
+
+#: camlibs/sipixblink/sipixblink.c:323
+msgid ""
+"Sipix StyleCam Blink Driver\n"
+"Vincent Sanders <vince@kyllikki.org>\n"
+"Marcus Meissner <marcus@jet.franken.de>.\n"
+msgstr ""
+"Sipix StyleCam Blink meghajtó\n"
+"Vincent Sanders <vince@kyllikki.org>\n"
+"Marcus Meissner <marcus@jet.franken.de>.\n"
+
+#: camlibs/sonydscf1/dsc f1.c:134
+msgid "Sorry, this function not implemented..."
+msgstr "Ez a funkció még nem használható."
+
+#: camlibs/sonydscf1/dsc f1.c:140
+msgid "Sorry, nothing to configure..."
+msgstr "Nincs mit beállítani."
+
+#: camlibs/sonydscf1/dsc f1.c:146
+msgid "Sorry, taking pictures is not implemented..."
+msgstr "Képek készítése egyelőre nem lehetséges."
+
+#: camlibs/sonydscf1/dsc f1.c:152
+msgid "Couldn't open camera.\n"
+msgstr "A kamera megnyitása nem sikerült.\n"
+
+#: camlibs/sonydscf1/dsc f1.c:166
+msgid "Error opening camera\n"
+msgstr "Hiba történt a kamera megnyitása közben\n"
+
+#: camlibs/sonydscf1/dsc f1.c:171
+msgid "Picture number is too large.\n"
+msgstr "A képek száma túl nagy.\n"
+
+#: camlibs/sonydscf1/dsc f1.c:182
+msgid ""
+"Sony DSC-F1 Digital Camera Support\n"
+"M. Adam Kendall <joker@penguinpub.com>\n"
+"\n"
+"Based on the chotplay CLI interface from\n"
+"Ken-ichi Hayashi\n"
+"\n"
+"This lib may not work. YMMV\n"
+msgstr ""
+"Támogatás a Sony DSC-F1 digitális kamerákhoz\n"
+"M. Adam Kendall <joker@penguinpub.com>\n"
+"\n"
+"A chotplay CLI felületen alapul, amely\n"
+"Ken-ichi Hayashi munkája\n"
+"\n"
+"Elképzelhető, hogy a program nem minden konfigurációval működik\n"
+
+#: camlibs/sonydscf1/dsc f1.c:187 camlibs/sonydscf1/dsc f1.c:188
+msgid "Error opening camera.\n"
+msgstr "Hiba történt a kamera megnyitásakor.\n"
+
+#: camlibs/sonydscf1/sonydscf1.c:132
+msgid ""
+"Sony DSC-F1 Digital Camera Support\n"
+"M. Adam Kendall <joker@penguinpub.com>\n"
+"Based on the chotplay CLI interface from\n"
+"Ken-ichi Hayashi\n"
+"Gphoto2 port by Bart van Leeuwen <bart@netage.nl>"
+msgstr ""
+"Támogatás a Sony DSC-F1 digitális kamerákhoz\n"
+"M. Adam Kendall <joker@penguinpub.com>\n"
+"A chotplay CLI felületen alapul, amely\n"
+"Ken-ichi Hayashi munkája\n"
+"A Gphoto2-átirat szerzője: Bart van Leeuwen <bart@netage.nl>"
+
+#: camlibs/sonydscf55/camera.c:92
+msgid ""
+"Sony DSC-F55/505 gPhoto library\n"
+"Supports Sony MSAC-SR1 and Memory Stick used by DCR-PC100\n"
+"Originally written by Mark Davies <mdavies@dial.pipex.com>\n"
+"gPhoto2 port by Raymond Penners <raymond@dotsphinx.com>"
+msgstr ""
+"Sony DSC-F55/505 gPhoto programkönyvtár\n"
+"Támogatás a Sony MSAC-SR1 és a Memory Stick használatához a DCR-PC100-ben\n"
+"Az eredeti program Mark Davies <mdavies@dial.pipex.com> munkája\n"
+"Átirat a gPhoto2-höz: Raymond Penners <raymond@dotsphinx.com>"
+
+#: camlibs/soundvision/soundvision.c:230
+#, c-format
+msgid "Revision: %8s"
+msgstr "Revízió: %8s"
+
+#: camlibs/soundvision/soundvision.c:237
+msgid ""
+"Soundvision Driver\n"
+"Vince Weaver <vince@deater.net>\n"
+msgstr ""
+"Soundvision-meghajtó\n"
+"Vince Weaver <vince@deater.net>\n"
+
+#: camlibs/spca504 flash/library.c:182
+msgid ""
+"spca504 flash camlib\n"
+" Authors: Till Adam\n"
+" <till@adam-lilienthal.de>\n"
+"based on work by Matthias Krauss\n"
+"and Mark A. Zimmerman <mark@foresthaven.com>"
+msgstr ""
+"spca504 Flash camlib\n"
+" Szerzők: Till Adam\n"
+" <till@adam-lilienthal.de>\n"
+"Matthias Krauss és\n"
+"Mark A. Zimmerman <mark@foresthaven.com> munkájának felhasználásával"
+
+#: camlibs/stv0680/library.c:354 camlibs/stv0680/library.c:388
+msgid "Bad exposure (not enough light probably)"
+msgstr "Hibás exponálás (valószínűleg nincs elég fény)"
+
+#: camlibs/stv0680/library.c:518
+msgid "Information for STV0680 based camera:\n"
+msgstr "Információ (STV0680-alapú kamera):\n"
+
+#: camlibs/stv0680/library.c:523
+#, c-format
+msgid "Firmware Revision: %d.%d\n"
+msgstr "Firmware-revízió: %d.%d\n"
+
+#: camlibs/stv0680/library.c:527
+#, c-format
+msgid "ASIC Revision: %d.%d\n"
+msgstr "ASIC-revízió: %d.%d\n"
+
+#: camlibs/stv0680/library.c:531
+#, c-format
+msgid "Sensor ID: %d.%d\n"
+msgstr "Érzékelőazonosító: %d.%d\n"
+
+#: camlibs/stv0680/library.c:537
+#, c-format
+msgid "Camera is configured for lights flickering with %dHz.\n"
+msgstr "A kamera %dHz-es fényfelvillantásra van beállítva.\n"
+
+#: camlibs/stv0680/library.c:540
+#, c-format
+msgid "Memory in camera: %d Mbit.\n"
+msgstr "A kamera memóriája: %d Mbit.\n"
+
+#: camlibs/stv0680/library.c:544
+msgid "Camera supports Thumbnails.\n"
+msgstr "A kamera támogatja gyorsnézeti képek (thumbnailek) használatát.\n"
+
+#: camlibs/stv0680/library.c:546
+msgid "Camera supports Video.\n"
+msgstr "A kamera támogatja videofelvételek készítését.\n"
+
+#: camlibs/stv0680/library.c:549
+msgid "Camera pictures are monochrome.\n"
+msgstr "A kamera képei fekete-fehérek.\n"
+
+#: camlibs/stv0680/library.c:551
+msgid "Camera has memory.\n"
+msgstr "A kamera nem tartalmaz memóriát.\n"
+
+#: camlibs/stv0680/library.c:553
+msgid "Camera supports videoformats: "
+msgstr "A kamera által támogatott videoformátumok: "
+
+#: camlibs/stv0680/library.c:559
+#, c-format
+msgid "Vendor ID: %02x%02x\n"
+msgstr "Gyártóazonosító: %02x%02x\n"
+
+#: camlibs/stv0680/library.c:563
+#, c-format
+msgid "Product ID: %02x%02x\n"
+msgstr "Termékazonosító: %02x%02x\n"
+
+#: camlibs/stv0680/library.c:570
+#, c-format
+msgid "Number of Images: %d\n"
+msgstr "A képek száma: %d\n"
+
+#: camlibs/stv0680/library.c:573
+#, c-format
+msgid "Maximum number of Images: %d\n"
+msgstr "A képek maximális száma: %d\n"
+
+#: camlibs/stv0680/library.c:576
+#, c-format
+msgid "Image width: %d\n"
+msgstr "A kép szélessége: %d\n"
+
+#: camlibs/stv0680/library.c:579
+#, c-format
+msgid "Image height: %d\n"
+msgstr "A kép magassága: %d\n"
+
+#: camlibs/stv0680/library.c:582
+#, c-format
+msgid "Image size: %d\n"
+msgstr "A kép mérete: %d\n"
+
+#: camlibs/stv0680/library.c:586
+#, c-format
+msgid "Thumbnail width: %d\n"
+msgstr "Az előnézeti kép szélessége: %d\n"
+
+#: camlibs/stv0680/library.c:587
+#, c-format
+msgid "Thumbnail height: %d\n"
+msgstr "Az előnézeti kép magassága: %d\n"
+
+#: camlibs/stv0680/library.c:588
+#, c-format
+msgid "Thumbnail size: %d\n"
+msgstr "Az előnézeti kép mérete: %d\n"
+
+#: camlibs/stv0680/stv0680.c:262
+msgid ""
+"STV0680\n"
+"Adam Harrison <adam@antispin.org>\n"
+"Driver for cameras using the STV0680 processor ASIC.\n"
+"Protocol reverse engineered using CommLite Beta 5\n"
+"Carsten Weinholz <c.weinholz@netcologne.de>\n"
+"Extended for Aiptek PenCam and other STM USB Dual-mode cameras."
+msgstr ""
+"STV0680\n"
+"Adam Harrison <adam@antispin.org>\n"
+"Meghajtóprogram az STV0680 ASIC processzorral ellátott kamerákhoz.\n"
+"A protokoll visszafejtése a CommLite Beta 5 segítségével történt.\n"
+"Carsten Weinholz <c.weinholz@netcologne.de>\n"
+"Továbbfejlesztette a meghajtóprogramot az Aiptek PenCam és más STM USB duál módú kamerák kezeléséhez."
+
+#: camlibs/sx330z/library.c:135
+#, c-format
+msgid "Getting information on %i files..."
+msgstr "Információ lekérdezése %i fájlról..."
+
+#: camlibs/sx330z/library.c:239
+msgid ""
+"0.1 Traveler SX330z ALDI-cam\n"
+"(many other vendors, like Jenoptik, Skanhex, Maginon should work too.\n"
+"Even the 4100 Cameras could work.\n"
+"Not tested, please report if this driver works with them!)\n"
+msgstr ""
+"0.1 Traveler SX330z ALDI-cam\n"
+"(Sok más gyártó, pl. a Jenoptik, a Skanhex és a Maginon gyártmányaival is működik.\n"
+"A 4100-as kamerákkal is működőképes.\n"
+"Tesztelést ezekkel nem végeztünk, ezért kérjük jelezze, ha a meghajtóprogram nem működik.\n"
+
+#: camlibs/sx330z/library.c:253
+msgid ""
+"(Traveler) SX330z Library\n"
+"See summary for more information\n"
+"Dominik Kuhlen <dkuhlen@fhm.edu>\n"
+msgstr ""
+"(Traveler) SX330z programkönyvtár\n"
+"További információ a leírásban található\n"
+"Dominik Kuhlen <dkuhlen@fhm.edu>\n"
+
+#: camlibs/sx330z/library.c:274
+msgid "sx330z is USB only"
+msgstr "az sx330z csak USB-s"
+
+#: libgphoto2/gphoto2-abilities-list.c:178
+#: libgphoto2/gphoto2-abilities-list.c:273
+#, c-format
+msgid "Loading camera drivers from '%s'..."
+msgstr "Kamerameghajtók letöltése innen: '%s'..."
+
+#: libgphoto2/gphoto2-abilities-list.c:261
+#, c-format
+msgid "Could not open '%s'"
+msgstr "Nem sikerült megnyitni: '%s'..."
+
+#: libgphoto2/gphoto2-abilities-list.c:667
+#, c-format
+msgid "Could not find any driver for '%s'"
+msgstr "Nem található meghajtó ehhez: '%s'"
+
+#: libgphoto2/gphoto2-camera.c:81
+#, c-format
+msgid "An error occurred in the io-library ('%s'): %s"
+msgstr "Hiba történt a kimeneti/bemeneti programkönyvtárban ('%s'): %s"
+
+#: libgphoto2/gphoto2-camera.c:85
+msgid "No additional information available."
+msgstr "Nem áll rendelkezésre további információ."
+
+#: libgphoto2/gphoto2-camera.c:670
+msgid "Could not detect any camera"
+msgstr "Nem található kamera"
+
+#: libgphoto2/gphoto2-camera.c:690
+msgid "You have to set the port prior initialization of the camera."
+msgstr "A kamera inicializálása előtt be kell állítani a port értékét."
+
+#: libgphoto2/gphoto2-camera.c:716
+#, c-format
+msgid "Could not load required camera driver '%s' (%s)."
+msgstr "Nem sikerült betölteni a(z) '%s' nevű meghajtóprogramot (%s)."
+
+#: libgphoto2/gphoto2-camera.c:725
+#, c-format
+msgid "Could not load required camera driver '%s'."
+msgstr "A szükséges meghajtóprogram ('%s') betöltése nem sikerült."
+
+#: libgphoto2/gphoto2-camera.c:745
+#, c-format
+msgid "Camera driver '%s' is missing the 'camera init' function."
+msgstr "A(z) '%s' nevű meghajtóprogram nem tartalmaz 'camera init' függvényt."
+
+#: libgphoto2/gphoto2-camera.c:805
+msgid "This camera does not offer any configuration options."
+msgstr "A kamerán nem érhető el egyetlen beállítási opció sem."
+
+#: libgphoto2/gphoto2-camera.c:837
+msgid "This camera does not support setting configuration options."
+msgstr "A kamera nem teszi lehetővé a beállítások módosítását."
+
+#: libgphoto2/gphoto2-camera.c:869
+msgid "This camera does not support summaries."
+msgstr "Ez a kamera nem támogat összesítéseket."
+
+#: libgphoto2/gphoto2-camera.c:900
+msgid "This camera does not offer a manual."
+msgstr "Ez a kamera nem tartalmaz kézikönyvet."
+
+#: libgphoto2/gphoto2-camera.c:931
+msgid "This camera does not provide information about the driver."
+msgstr "A meghajtóprogram adatai nem érhetők el ennél a kameránál."
+
+#: libgphoto2/gphoto2-camera.c:965
+msgid "This camera can not capture."
+msgstr "Ez a kamera nem támogat rögzítést."
+
+#: libgphoto2/gphoto2-camera.c:998
+msgid "This camera can not capture previews."
+msgstr "Ez a kamera nem támogat gyorsnézeteket."
+
+#: libgphoto2/gphoto2-filesys.c:244
+#, c-format
+msgid "The path '%s' is not absolute."
+msgstr "Az elérési út ('%s') nem abszolút."
+
+#: libgphoto2/gphoto2-filesys.c:365
+#, c-format
+msgid "Could not append folder '%s' as this folder already exists."
+msgstr "A(z) '%s' nevű könyvtár hozzáfűzése nem sikerült, mert már létezik ilyen nevű könyvtár."
+
+#: libgphoto2/gphoto2-filesys.c:537
+#, c-format
+msgid "Could not find folder '%s'."
+msgstr "'%s' nevű könyvtár nem ttalálható."
+
+#: libgphoto2/gphoto2-filesys.c:554
+#, c-format
+msgid "Folder '%s' does not contain a folder '%s'."
+msgstr "A(z) '%s' nevű könyvtár nem tartalmaz '%s' nevű fájlt."
+
+#: libgphoto2/gphoto2-filesys.c:617
+#, c-format
+msgid "Could not append '%s' to folder '%s' because this file already exists."
+msgstr "Nem sikerült hozzáfűzni ezt: '%s' a(z) '%s' mappához, mert a fájl már létezik."
+
+#: libgphoto2/gphoto2-filesys.c:993
+#, c-format
+msgid ""
+"You have been trying to delete '%s' from folder '%s', but the filesystem "
+"does not support deletion of files."
+msgstr ""
+"A program megpróbálta törölni a(z) '%s' fájlt a(z) '%s' mappából, de a fájlrendszer "
+"nem támogatja fájlok törlését."
+
+#: libgphoto2/gphoto2-filesys.c:1094
+#, c-format
+msgid "There are still files in folder '%s' that you are trying to remove."
+msgstr "Az eltávolítani kívánt '%s' könyvtár még nem üres, fájlokat tartalmaz."
+
+#: libgphoto2/gphoto2-filesys.c:1100
+#, c-format
+msgid ""
+"There are still subfolders in folder '%s' that you are trying to remove."
+msgstr ""
+"Az eltávolítani kívánt '%s' könyvtár nem üres, még tartalmaz alkönyvtárakat."
+
+#: libgphoto2/gphoto2-filesys.c:1140
+msgid "The filesystem does not support upload of files."
+msgstr "A fájlrendszer nem támogatja fájlok feltöltését."
+
+#: libgphoto2/gphoto2-filesys.c:1181
+#, c-format
+msgid ""
+"Folder '%s' does only contain %i files, but you requested a file with number "
+"%i."
+msgstr ""
+"A(z) '%s' könyvtár csak %i fájlt tartalmaz, de a kért fájl száma %i volt."
+
+#: libgphoto2/gphoto2-filesys.c:1222
+#, c-format
+msgid "File '%s' could not be found in folder '%s'."
+msgstr "'%s' nevű fájl nem létezik a(z) '%s' könyvtárban."
+
+#: libgphoto2/gphoto2-filesys.c:1305
+#, c-format
+msgid "Could not find file '%s'."
+msgstr "A(z) '%s' fájl nem található."
+
+#: libgphoto2/gphoto2-filesys.c:1430
+msgid "The filesystem doesn't support getting files"
+msgstr "A fájlrendszer nem támogatja fájlok letöltését"
+
+#: libgphoto2/gphoto2-filesys.c:1465 libgphoto2/gphoto2-filesys.c:1973
+#: libgphoto2/gphoto2-filesys.c:2126
+#, c-format
+msgid "Unknown file type %i."
+msgstr "Ismeretlen fájltípus: %i."
+
+#: libgphoto2/gphoto2-filesys.c:1469
+#, c-format
+msgid "Downloading '%s' from folder '%s'..."
+msgstr "'%s' letöltése a(z) '%s' mappából..."
+
+#: libgphoto2/gphoto2-filesys.c:1679
+msgid "The filesystem doesn't support getting file information"
+msgstr "A fájlrendszer nem támogatja a fájljellemzők lekérdezését."
+
+#: libgphoto2/gphoto2-filesys.c:1854
+#, c-format
+msgid ""
+"Could not open '/proc/meminfo' for reading ('%m'). Make sure the proc "
+"filesystem is mounted."
+msgstr ""
+"Nem sikerült megnyitni olvasásra a '/proc/meminfo' fájlt ('%m'). Ellenőrizze, hogy a "
+"proc fájlrendszer csatlakoztatva van-e."
+
+#: libgphoto2/gphoto2-filesys.c:1862
+#, c-format
+msgid "An error occured while reading '/proc/meminfo' ('%m')."
+msgstr "Hiba történt '/proc/meminfo' olvasása közben ('%m')."
+
+#: libgphoto2/gphoto2-filesys.c:1896
+#, c-format
+msgid "sysctl call failed ('%m')."
+msgstr "A sysctl hívás nem sikerült ('%m')."
+
+#: libgphoto2/gphoto2-filesys.c:2229
+msgid "The filesystem doesn't support setting file information"
+msgstr "A fájlrendszer nem támogatja fájlinformációk beállítását"
+
+#: libgphoto2/gphoto2-filesys.c:2252
+msgid "Read-only file attributes like width and height can not be changed."
+msgstr "A csak olvasható fájljellemzők (pl. szélesség, magasság) nem változtathatók meg."
+
+#: libgphoto2/gphoto2-result.c:44
+msgid "Corrupted data"
+msgstr "Hibás adatok"
+
+#: libgphoto2/gphoto2-result.c:45
+msgid "File exists"
+msgstr "A fájl már létezik"
+
+#: libgphoto2/gphoto2-result.c:46
+msgid "Unknown model"
+msgstr "Ismeretlen típus"
+
+#: libgphoto2/gphoto2-result.c:47
+msgid "Directory not found"
+msgstr "A könyvtár nem található"
+
+#: libgphoto2/gphoto2-result.c:48
+msgid "File not found"
+msgstr "A fájl nem található"
+
+#: libgphoto2/gphoto2-result.c:49
+msgid "Directory exists"
+msgstr "A könyvtár már létezik"
+
+#: libgphoto2/gphoto2-result.c:50
+msgid "Path not absolute"
+msgstr "Az elérési út nem abzolút"
+
+#: libgphoto2/gphoto2-result.c:51
+msgid "Operation cancelled"
+msgstr "A művelet félbeszakadt"
+
+#: libgphoto2/gphoto2-result.c:76
+msgid "Unknown camera library error"
+msgstr "Ismeretlen hiba a kamerakezelő programkönyvtárban"
+
+#: libgphoto2/gphoto2-result.c:82
+msgid "Unknown error"
+msgstr "Ismeretlen hiba"
