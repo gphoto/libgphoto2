@@ -1,3 +1,25 @@
+2001-12-05  Fredrik <fredrik@krixor.xy.org>
+
+	* usb.h:
+	  Added EOS D30 (and possibly other models) commands to
+	  lock and unlock camera keys.
+
+	* usb.c, usb.h:
+	  Renamed canon_usb_keylock() to canon_usb_lock_keys().
+	  Added canon_usb_unlock_keys(), the only camera known to
+	  support this is the EOS D30. This is called from
+	  camera_exit().
+	  Corrected comments about how canon_usb_dialogue() works.
+
+	* canon.c: Improved error checking on return from
+	  canon_{usb,serial}_dialogue() calls and changed some
+	  functions to return GP_ codes instead of hard coded
+	  integer values.
+
+	* library.c:
+	  Call canon_usb_unlock_keys() from camera_exit() if
+	  using USB.
+
 2001-12-04  Fredrik <fredrik@krixor.xy.org>
 	
 	* canon.c: Improved debug output in canon_int_get_time().
