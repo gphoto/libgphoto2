@@ -1,3 +1,10 @@
+2002-06-06  Lutz Müller <lutz@users.sourceforge.net>
+
+        * acconfig.h: According to
+          http://www.gnu.org/manual/autoconf-2.53/html_mono/autoconf.html,
+          this file is obsolete.
+        * configure.in: Adapt to above.
+
 2002-06-04  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* configure.in: 2.0.1dev10
