@@ -1,4 +1,4 @@
-EXTRA_DIST = README ptp-pack.c test_ptp.c
+EXTRA_DIST = ptp-pack.c
 
 camlib_LTLIBRARIES = libgphoto2_ptp2.la
 

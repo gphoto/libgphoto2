@@ -4,10 +4,13 @@
 # © 2001 Hans Ulrich Niedermann <gp@n-dimensional.de>
 #
 
-EXTRA_DIST = package.spec.in
+EXTRA_DIST = package.spec.in @PACKAGE@.spec
 
 clean-generic:
 	rm -rf BUILD RPMS SPECS SOURCES SRPMS
+
+@PACKAGE@.spec: package.spec
+	cp $< $@
 
 rpm: Makefile package.spec
 if RPM_LIBUSB_DEVEL
