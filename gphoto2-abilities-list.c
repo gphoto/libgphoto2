@@ -656,13 +656,25 @@ gp_abilities_list_lookup_id (CameraAbilitiesList *list, const char *id)
 int
 gp_abilities_list_lookup_model (CameraAbilitiesList *list, const char *model)
 {
+	char m[1024], *c;
 	int x;
 
 	CHECK_NULL (list && model);
 
-	for (x = 0; x < list->count; x++)
+	for (x = 0; x < list->count; x++) {
 		if (!strcasecmp (list->abilities[x].model, model))
 			return (x);
+
+		/* Check if the "old-style" model (without colon) fits */
+		memset (m, 0, sizeof (m));
+		strncpy (m, list->abilities[x].model, sizeof (m) - 1);
+		c = strchr (m, ':');
+		if (c) {
+			memmove (c, c + 1, strlen (m) - (c - m));
+			if (!strcasecmp (model, m))
+				return x;
+		}
+	}
 
 	gp_log (GP_LOG_ERROR, "gphoto2-abilities-list", _("Could not find "
 		"any driver for '%s'"), model);
