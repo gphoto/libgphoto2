@@ -22,12 +22,6 @@
 
 #define MAX_IMAGE_NUMBER		1024
 
-#ifdef WIN32
-#define FOLDER_DELIM			'\\'
-#else
-#define FOLDER_DELIM			'/'
-#endif
-
 /* Command-line option functions */
 void usage();
 int  verify_options (int argc, char **argv);
@@ -430,8 +424,8 @@ int for_each_subfolder(char *folder, folder_action faction,
 		strcat(prefix, folder);
 	else
 		strcat(prefix, glob_folder);
-	if (prefix[strlen(prefix) - 1] != FOLDER_DELIM)
-		sprintf(prefix, "%s%c", prefix, FOLDER_DELIM);
+	if (prefix[strlen(prefix) - 1] != '/')
+		strcat(prefix, "/");
 	gp_camera_folder_list(glob_camera, &folderlist, prefix);
 	
 	for (i = 0; i < gp_list_count(&folderlist); i++) {
@@ -484,7 +478,7 @@ int print_folder(char *subfolder, image_action action, int reverse) {
 	char *c;
 	
 	c = subfolder + strlen(glob_folder);
-	if (*c == GPIO_DIR_DELIM)
+	if (*c == '/')
 		c++;
 
 	printf("\"%s\"\n", c);
@@ -977,7 +971,7 @@ int init_globals () {
 	strcpy(glob_model, "");
 	strcpy(glob_port, "");
 	strcpy(glob_filename, "gphoto");
-	sprintf(glob_folder, "%c", FOLDER_DELIM);
+	strcpy(glob_folder, "/");
 
 	glob_camera = NULL;
 	glob_speed = 0;

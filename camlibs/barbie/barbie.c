@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include <gphoto2.h>
 #include <gpio.h>
 #include "barbie.h"
@@ -138,7 +137,6 @@ int camera_file_list (Camera *camera, CameraList *list, char *folder) {
 int camera_file_get (Camera *camera, CameraFile *file, char *folder, char *filename) {
 
 	int size, num;
-	char name[16];
 	BarbieStruct *b = (BarbieStruct*)camera->camlib_data;
 
 	if (b->debug)
@@ -163,7 +161,6 @@ int camera_file_get (Camera *camera, CameraFile *file, char *folder, char *filen
 int camera_file_get_preview (Camera *camera, CameraFile *file, char *folder, char *filename) {
 
 	int size, num;
-	char name[24];
 	BarbieStruct *b = (BarbieStruct*)camera->camlib_data;
 
 	if (b->debug)
@@ -240,9 +237,7 @@ int camera_summary (Camera *camera, CameraText *summary) {
 	num = barbie_file_count(b);
 	firm = barbie_read_firmware(b);
 
-	sprintf(summary->text, 
-"Number of pictures: %i
-Firmware Version: %s", num,firm);
+	sprintf(summary->text, "Number of pictures: %i\nFirmware Version: %s", num,firm);
 
 	free(firm);
 
@@ -257,16 +252,6 @@ int camera_manual (Camera *camera, CameraText *manual) {
 }
 int camera_about (Camera *camera, CameraText *about) {
 
-	strcpy(about->text,
-"Barbie/HotWheels/WWF
-Scott Fritzinger <scottf@unr.edu>
-Andreas Meyer <ahm@spies.com>
-Pete Zaitcev <zaitcev@metabyte.com>
-
-Reverse engineering of image data by:
-Jeff Laing <jeffl@SPATIALinfo.com>
-
-Implemented using documents found on
-the web. Permission given by Vision.");
+	strcpy(about->text,"Barbie/HotWheels/WWF\nScott Fritzinger <scottf@unr.edu>\nAndreas Meyer <ahm@spies.com>\nPete Zaitcev <zaitcev@metabyte.com>\n\nReverse engineering of image data by:\nJeff Laing <jeffl@SPATIALinfo.com>\n\nImplemented using documents found on\nthe web. Permission given by Vision.");
 	return GP_OK;
 }

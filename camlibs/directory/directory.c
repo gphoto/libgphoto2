@@ -128,10 +128,10 @@ int camera_file_list(Camera *camera, CameraList *list, char *folder) {
 
 	if ((d = GPIO_OPENDIR(folder))==NULL)
 		return (GP_ERROR);
-
-	/* Make sure we only have 1 delimiter */
-	if (folder[strlen(folder)-1] != GPIO_DIR_DELIM)
-		sprintf(f, "%s%c", folder, GPIO_DIR_DELIM);
+	
+	/* Make sure we have 1 delimiter */
+	if (folder[strlen(folder)-1] != '/')
+		sprintf(f, "%s%c", folder, '/');
 	 else
 		strcpy(f, folder);
 
@@ -157,12 +157,11 @@ int camera_folder_list(Camera *camera, CameraList *list, char *folder) {
 	if ((d = GPIO_OPENDIR(folder))==NULL)
 		return (GP_ERROR);
 
-	/* Make sure we only have 1 delimiter */
-	if (folder[strlen(folder)-1] != GPIO_DIR_DELIM)
-		sprintf(f, "%s%c", folder, GPIO_DIR_DELIM);
+	/* Make sure we have 1 delimiter */
+	if (folder[strlen(folder)-1] != '/')
+		sprintf(f, "%s%c", folder, '/');
 	 else
 		strcpy(f, folder);
-
 
 	while (de = GPIO_READDIR(d)) {
 		if ((strcmp(GPIO_FILENAME(de), "." )!=0) &&

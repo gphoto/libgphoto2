@@ -9,8 +9,6 @@
 #include <stdio.h>
 #include <errno.h>
 #include <fcntl.h>
-#include <dirent.h>
-#include <termios.h>
 
 #include "digita.h"
 

@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include <gphoto2.h>
 #include <gpio.h>
 #include "barbie.h"
@@ -84,7 +83,7 @@ int barbie_exchange (BarbieStruct *b, char *cmd, int cmd_size, char *resp, int r
 		if (resp[RESPONSE_BYTE] != '!')
 			return (1);
 		/* if busy, sleep 2 seconds */
-		sleep(2);
+		GPIO_SLEEP(2000);
 	}
 
 	return (0);

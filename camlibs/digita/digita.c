@@ -8,8 +8,6 @@
 #include <stdio.h>
 #include <errno.h>
 #include <fcntl.h>
-#include <dirent.h>
-#include <termios.h>
 
 #include <gphoto2.h>
 
@@ -57,6 +55,8 @@ int camera_abilities(CameraAbilitiesList *list)
                 gp_abilities_list_append(list, a);
                 x++;
         }
+
+	return (GP_OK);
 }
 
 int camera_init(Camera *camera, CameraInit *init)
@@ -138,7 +138,7 @@ static char *digita_file_get(char *folder, char *filename, int thumbnail,
 	struct filename fn;
 	struct partial_tag tag;
 	unsigned char *data;
-	int i, ret, pos, len, buflen;
+	int pos, len, buflen;
 
 	printf("digita: camera_file_get\n");
 
@@ -356,7 +356,6 @@ int camera_about(Camera *camera, CameraText *about)
 static int delete_picture(int index)
 {
         struct filename fn;
-        int ret;
 
         printf("digita_delete_picture\n");
 
