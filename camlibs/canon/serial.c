@@ -125,7 +125,7 @@ canon_serial_get_cts (GPPort *gdev)
  *
  * canon_serial_init
  *
- * Initializes the given serial or USB device.
+ * Initializes the given serial device.
  *
  * devname - the name of the device to open
  *
@@ -1245,7 +1245,7 @@ canon_serial_ready (Camera *camera, GPContext *context)
 	/* Compare what the camera identified itself as with our list of known models */
 	for (i = 0; models[i].id_str != NULL; i++) {
 		if (!strcmp (models[i].id_str, cam_id_str)) {
-			GP_DEBUG ("canon_usb_identify: Serial ID string matches '%s'",
+			GP_DEBUG ("canon_serial_ready: Serial ID string matches '%s'",
 				  models[i].id_str);
 			gp_context_status (context, "Detected a %s", models[i].id_str);
 			camera->pl->md = (struct canonCamModelData *) &models[i];
