@@ -1059,7 +1059,7 @@ int psa50_ready(Camera *camera)
 	     || (!strcmp("Canon IXY DIGITAL 300",cs->ident))
 	     || (!strcmp("Canon PowerShot S300",cs->ident))) {
       gp_frontend_status(camera, "Detected a Digital IXUS 300 / IXY DIGITAL 300 / Powershot S300");
-      cs->model = CANON_PS_S100;
+      cs->model = CANON_PS_S300;
       A5=0;
       return 1;
     }
@@ -1077,7 +1077,7 @@ int psa50_ready(Camera *camera)
     }
     else if (!strcmp("Canon EOS D30",cs->ident)) {
       gp_frontend_status(camera, "Detected a EOS D30");
-      cs->model = CANON_PS_EOS_D30;
+      cs->model = CANON_EOS_D30;
       A5 = 0;
       return 1;
     }
@@ -1218,7 +1218,7 @@ int psa50_ready(Camera *camera)
       A5 = 0;
     } else if (!strcmp("Canon EOS D30",psa50_id)) {
       gp_frontend_status(camera, "Detected a EOS D30");
-      cs->model = CANON_PS_EOS_D30;
+      cs->model = CANON_EOS_D30;
       A5 = 0;
     } else if (!strcmp("Canon PowerShot Pro90 IS",psa50_id)) {
       gp_frontend_status(camera, "Detected a Powershot Pro90 IS");
@@ -1601,8 +1601,11 @@ unsigned char *psa50_get_file_usb(Camera *camera, const char *name,int *length)
   while (1) {
     if (!file) {
       total=len;
-      if(cs->model == CANON_PS_S20 || cs->model == CANON_PS_G1
-	 || cs->model == CANON_PS_S10) {
+      if(cs->model == CANON_PS_S10 || cs->model == CANON_PS_S20 
+      	 || cs->model == CANON_PS_G1 ||  cs->model == CANON_PS_S300 
+	 || cs->model == CANON_PS_S100 ||  cs->model == CANON_PS_A10
+	 ||  cs->model == CANON_PS_A20 ||  cs->model == CANON_EOS_D30
+	 ||  cs->model == CANON_PS_PRO90_IS) {
 	maxfilesize=10000000;
       } else {
 	maxfilesize=2000000;

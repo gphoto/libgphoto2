@@ -272,7 +272,7 @@ char *camera_model_string(Camera *camera)
                 return "Powershot A10";
          case CANON_PS_A20:
                 return "Powershot A20";
-         case CANON_PS_EOS_D30:
+         case CANON_EOS_D30:
                 return "EOS D30";
          case CANON_PS_PRO90_IS:
                 return "Powershot Pro90 IS";
@@ -1000,7 +1000,7 @@ int camera_summary(Camera *camera, CameraText *summary)
          case CANON_PS_S300:     model = "Canon Powershot S300 / Digital IXUS 300 / IXY DIGITAL 300"; break;
          case CANON_PS_A10:      model = "Canon Powershot A10"; break;
          case CANON_PS_A20:      model = "Canon Powershot A20"; break;
-         case CANON_PS_EOS_D30:  model = "Canon EOS D30"; break;
+         case CANON_EOS_D30:  model = "Canon EOS D30"; break;
          case CANON_PS_PRO90_IS: model = "Canon Pro90 IS"; break;
     }
 		
