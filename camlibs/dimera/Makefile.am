@@ -3,8 +3,6 @@ EXTRA_DIST = dimera.df makefile.os2 CREDITS Protocol.txt
 camlibdir = $(prefix)/lib/gphoto2/$(VERSION)
 camlib_LTLIBRARIES = libgphoto2_dimera3500.la
 
-CFLAGS = @CFLAGS@ -g -Wall
-LDFLAGS = @LDFLAGS@ -g
 INCLUDES =                                              \
         -I$(top_srcdir)/libgphoto2_port/libgphoto2_port \
         -I$(top_srcdir)/libgphoto2
