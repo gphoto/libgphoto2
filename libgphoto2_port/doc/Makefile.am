@@ -7,4 +7,4 @@ DOC_MODULE=gphoto2-port
 DOC_SOURCE_DIR=$(top_srcdir)/libgphoto2_port
 
 # include common doc generation rules
-include $(top_srcdir)/libgphoto2_port/doc/DocRules.am
+include DocRules.am
