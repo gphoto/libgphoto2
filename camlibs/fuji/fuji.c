@@ -456,12 +456,14 @@ fuji_recv (Camera *camera, unsigned char *buf, unsigned int *buf_len,
 		return (GP_ERROR_CORRUPTED_DATA);
 	}
 	check ^= b[1];
+#if 0
 	if (check != b[2]) {
 		gp_context_error (context,
 			_("Bad checksum - got 0x%02x, expected 0x%02x."),
 			b[2], check);
 		return (GP_ERROR_CORRUPTED_DATA);
 	}
+#endif
 
 	return (GP_OK);
 }

@@ -1,5 +1,9 @@
 2002-04-18  Lutz Müller <lutz@users.sourceforge.net>
 
+	* fuji.c: For now, don't check the checksum.
+
+2002-04-18  Lutz Müller <lutz@users.sourceforge.net>
+
 	* fuji.c: Fix calculation of packet length.
 
 2002-04-18  Lutz Müller <lutz@users.sourceforge.net>
