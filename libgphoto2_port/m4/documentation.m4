@@ -66,7 +66,7 @@ dnl ---------------------------------------------------------------------------
 try_fig2dev=true
 have_fig2dev=false
 AC_ARG_WITH(fig2dev, [  --without-fig2dev         Don't use fig2dev],[
-	if test x$withval = xno; then
+	if test "x$withval" = "xno"; then
 		try_fig2dev=false
 	fi])
 if $try_fig2dev; then
@@ -110,5 +110,26 @@ else
     AC_MSG_RESULT([${HTML_DIR} (from parameter)])
 fi
 AC_SUBST(HTML_DIR)
+API_DIR="${HTML_DIR}/api"
+AC_SUBST(API_DIR)
+
+dnl ------------------------------------------------------------------------
+dnl try to find xmlto (required for generation of man pages and html docs)
+dnl ------------------------------------------------------------------------
+AC_MSG_CHECKING([for xmlto])
+AM_CONDITIONAL(XMLTOHTML, xmlto --help | grep html > /dev/null 2>&1)
+AM_CONDITIONAL(XMLTOMAN, xmlto --help | grep man > /dev/null 2>&1)
+AM_CONDITIONAL(XMLTOPDF, xmlto --help | grep pdf > /dev/null 2>&1)
+xxx=""
+if test "x$XMLTOHTML_FALSE" = "x#"; then xxx="html "; fi
+if test "x$XMLTOMAN_FALSE" = "x#"; then xxx="man "; fi
+if test "x$XMLTOPDF_FALSE" = "x#"; then xxx="pdf "; fi
+if test "x$xxx" != "x"
+then
+        AC_MSG_RESULT([support for  ${xxx} found])
+else
+        AC_MSG_RESULT([no])
+fi
+AM_CONDITIONAL(XMLTO, test "x$xxx" != "x")
 
 ])dnl
