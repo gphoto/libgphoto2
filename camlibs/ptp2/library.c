@@ -267,7 +267,8 @@ static struct {
 	{"Canon:Digital IXUS v3 (PTP mode)",  0x04a9, 0x3071},
 		/* it's the same as S230 */
 	{"Canon:PowerShot A70",  0x04a9, 0x3073},
-		/* A60 and A70 are PTP only */
+		/* A60 and A70 are PTP also */
+	{"Canon:PowerShot A60",  0x04a9, 0x3074},
 
 	/* more coming soon :) */
 	{NULL, 0, 0}
