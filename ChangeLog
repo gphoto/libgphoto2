@@ -1,3 +1,11 @@
+2001-11-13  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* camlibs/kodak/dc240/library.c: Handle GP_ERROR_IO_TIMEOUT errors. Better
+	  handling of checksums. (patch by Peter Fales <psfales@lucent.com>)
+	* camlibs/kodak/dc240/dc240.c (camera_init): camera reset sends garbage
+	  within the 1500ms timeout. Handle that properly with 2 read. (patch by
+	  Peter Fales <psfales@lucent.com>)
+
 2001-11-13 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2/gphoto2-filesys.c: Adjust filename only for thumbnails,

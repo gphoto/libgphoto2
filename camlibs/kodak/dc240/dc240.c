@@ -221,11 +221,19 @@ camera_init (Camera *camera)
 		return (ret);
 
 	if (camera->port->type == GP_PORT_SERIAL) {
+		char buf[8];	
 		/* Reset the camera to 9600 */
 		gp_port_send_break(camera->port, 1);
 
-		/* Wait for it to reset */
-		GP_SYSTEM_SLEEP(1500);
+		/* Used to have a 1500 msec pause here to give
+		 * the camera time to reset - but, since
+		 * the serial port sometimes returns a garbage
+		 * character or two after the break, we do 
+		 * a couple of TIMEOUT (750 msec) pauses here
+		 * force the delay as well as flush the port 
+		 */
+		gp_port_read(camera->port, buf, 8);
+		gp_port_read(camera->port, buf, 8);
 
 		ret = dc240_set_speed (camera, selected_speed);
 		if (ret < 0)
