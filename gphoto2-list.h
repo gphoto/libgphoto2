@@ -21,6 +21,8 @@
 #ifndef __GPHOTO2_LIST_H__
 #define __GPHOTO2_LIST_H__
 
+#include <config.h>
+
 #define MAX_ENTRIES 1024
 
 typedef struct _CameraList CameraList;
