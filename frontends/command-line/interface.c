@@ -3,6 +3,8 @@
 
 #include <gphoto2.h>
 
+extern int glob_stdout;
+
 int gp_interface_status (Camera *camera, char *status) {
 
 	printf("Status: %s\n", status);
@@ -27,6 +29,9 @@ int gp_interface_confirm (Camera *camera, char *message) {
 }
 
 int gp_interface_progress (Camera *camera, CameraFile *file, float percentage) {
+
+	if (glob_stdout)
+		return GP_OK;
 
 	if (percentage >= 0) {
 		printf("Percent completed: %02.01f\r", percentage);

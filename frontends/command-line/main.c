@@ -81,6 +81,7 @@ OPTION_CALLBACK(quiet);
 OPTION_CALLBACK(debug);
 OPTION_CALLBACK(use_folder);
 OPTION_CALLBACK(recurse);
+OPTION_CALLBACK(use_stdout);
 OPTION_CALLBACK(list_folders);
 OPTION_CALLBACK(list_files);
 OPTION_CALLBACK(num_pictures);
@@ -117,7 +118,7 @@ Option option[] = {
 {"S", "server mode",    "",             "gPhoto server (stdin/stdout)", daemonmode,     0},
 {"",  "list-cameras",   "",             "List supported camera models", list_cameras,   0},
 {"",  "list-ports",     "",             "List supported port devices",  list_ports,     0},
-
+{"",  "stdout",		"",		"Send file to stdout",		use_stdout,	0},
 
 /* Settings needed for camera functions */
 {"" , "port",           "path",         "Specify port device",          port,           0},
@@ -171,6 +172,7 @@ int  glob_quiet=0;
 int  glob_filename_override=0;
 int  glob_recurse=0;
 char glob_filename[128];
+int  glob_stdout=0;
 
 /* 4) Finally, add your callback function.                              */
 /*    ----------------------------------------------------------------- */
@@ -196,6 +198,13 @@ OPTION_CALLBACK(test) {
 	cli_debug_print("Testing gPhoto Installation");
 	test_gphoto();
 	exit(EXIT_SUCCESS);
+	return GP_OK;
+}
+
+OPTION_CALLBACK(use_stdout) {
+
+	glob_stdout = 1;
+
 	return GP_OK;
 }
 
@@ -738,6 +747,14 @@ int save_picture_to_file(char *folder, char *filename, int thumbnail) {
 			return (GP_ERROR);
 		}
 	}
+
+	if (glob_stdout) {
+		fwrite(file->data, sizeof(char), file->size, stdout);
+		gp_file_free(file);
+		return GP_OK;
+	}
+
+
 	if ((glob_filename_override)&&(strlen(glob_filename)>0))
 		sprintf(out_filename, glob_filename, glob_num++);
 	   else
@@ -788,12 +805,12 @@ int delete_picture_action(char *folder, char *filename) {
   	thumbnails according to thumbnail argument, and save to files.  
 */
 
-int get_picture_common(char *range, int thumbnail) {
+int get_picture_common(char *arg, int thumbnail) {
 
 	if (thumbnail)
-		cli_debug_print("Getting thumbnail(s) %s", range);
+		cli_debug_print("Getting thumbnail(s) %s", arg);
 	else
-		cli_debug_print("Getting picture(s) %s", range);
+		cli_debug_print("Getting picture(s) %s", arg);
 		
 	if (set_globals() == GP_ERROR)
 		return (GP_ERROR);
@@ -803,10 +820,15 @@ int get_picture_common(char *range, int thumbnail) {
 		return (GP_ERROR);
 	}
 
+	if (strchr(arg, '.')) {
+		save_picture_to_file(glob_folder, arg, thumbnail);
+		return (GP_OK);
+	}
+
 	if (thumbnail)
-		return for_each_image_in_range(glob_folder, range, save_thumbnail_action, 0);
+		return for_each_image_in_range(glob_folder, arg, save_thumbnail_action, 0);
 	else
-		return for_each_image_in_range(glob_folder, range, save_picture_action, 0);
+		return for_each_image_in_range(glob_folder, arg, save_picture_action, 0);
 }
 
 OPTION_CALLBACK(get_picture) {

@@ -487,7 +487,7 @@ int sierra_folder_set(Camera *camera, char *folder) {
 	if (tf[strlen(fd->folder)-1] != '/')
 	       strcat(tf, "/");
 
-	sprintf(buf, "Folder set to %s", tf);
+	printf(buf, "Folder set to %s", tf);
 
 	/* TODO: check whether the selected folder is valid.
 		 It should be done after implementing camera_lock/unlock pair */
@@ -513,7 +513,6 @@ return (GP_ERROR);
 	/* Get the file number from the CameraFileSystem */
 	file_number = gp_filesystem_number(fd->fs, folder, filename);
 
-gp_filesystem_dump(fd->fs);
 	if (file_number == GP_ERROR)
 		return GP_ERROR;
 
