@@ -163,7 +163,6 @@ char *barbie_read_data (GPPort *port, char *cmd, int cmd_size, int data_type, in
 	int n1, n2, n3, n4, x, y, z;
 	unsigned char r, g, b;
 	char *s = NULL, *us = NULL, *rg = NULL;
-	char *ppmhead_t = "P6\n# test.ppm\n%i %i\n255\n";
 	char ppmhead[64];
 
 	if (barbie_exchange(port, cmd, cmd_size, resp, 4) != 1)
@@ -194,7 +193,7 @@ char *barbie_read_data (GPPort *port, char *cmd, int cmd_size, int data_type, in
 			n4 = (unsigned char)c;
 			*size = PICTURE_SIZE(n1, n2, n3, n4);
 printf("\tn1=%i n2=%i n3=%i n4=%i size=%i\n", n1, n2 ,n3, n4, *size);
-			sprintf(ppmhead, ppmhead_t, n1-1, (n2+n3-1));
+			sprintf(ppmhead, "P6\n# test.ppm\n%i %i\n255\n", n1-1, (n2+n3-1));
 			us = (char *)malloc(sizeof(char)*(*size));
 			rg = (char *)malloc(sizeof(char)*(*size));
 			s  = (char *)malloc(sizeof(char)*(n1-1)*(n2+n3-1)*3+strlen(ppmhead));
