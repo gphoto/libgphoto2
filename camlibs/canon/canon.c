@@ -182,8 +182,8 @@ const struct canonCamModelData models[] = {
 	{"Canon:PowerShot A60",		CANON_CLASS_5,	0x04A9, 0x3074, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	/* reported working on SourceForge patch tracker. */
 	/* PS S400 uses the same ProductID for PTP and Canon, with protocol autodetection */
-	{"Canon:Digital IXUS 400",	CANON_CLASS_1,	0x04A9, 0x3075, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-	{"Canon:PowerShot S400",	CANON_CLASS_1,	0x04A9, 0x3075, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:Digital IXUS 400",	CANON_CLASS_4,	0x04A9, 0x3075, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:PowerShot S400",	CANON_CLASS_4,	0x04A9, 0x3075, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
 	{"Canon:PowerShot A300",	CANON_CLASS_4,	0x04A9, 0x3076, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:PowerShot S50 (normal mode)",	CANON_CLASS_4,	0x04A9, 0x3077, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
@@ -223,7 +223,7 @@ const struct canonCamModelData models[] = {
 	{"Canon:PowerShot S500 Digital ELPH (normal mode)",CANON_CLASS_5,	0x04A9, 0x30b4, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:IXY Digital 500 (normal mode)",	CANON_CLASS_5,	0x04A9, 0x30b4, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:PowerShot A75",			CANON_CLASS_5,	0x04A9, 0x30b5, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-	{"Canon:PowerShot A400",		CANON_CLASS_4,	0x04A9, 0x30b7,	CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:PowerShot A400",		CANON_CLASS_5,	0x04A9, 0x30b7,	CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:PowerShot A310",		CANON_CLASS_5,	0x04A9, 0x30b8, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:PowerShot A85 (normal mode)",	CANON_CLASS_5,	0x04A9, 0x30b9, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:PowerShot S410 Digital ELPH (normal mode)", CANON_CLASS_5,	0x04A9, 0x30ba, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
@@ -1551,7 +1551,7 @@ canon_int_get_disk_name (Camera *camera, GPContext *context)
 			 */
 			msg = strdup ((char *) msg + 4);	/* @@@ should check length */
 			if ( msg == NULL ) {
-				GP_DEBUG ("canon_int_get_disk_name: could not allocate %i "
+				GP_DEBUG ("canon_int_get_disk_name: could not allocate %li "
 					  "bytes of memory to hold response",
 					  strlen ((char *) msg + 4));
 				return NULL;
@@ -1715,7 +1715,7 @@ canon2gphotopath (Camera *camera, const char *path)
 
 	/* 3 is D: plus NULL byte */
 	if (strlen (path) - 3 > sizeof (tmp)) {
-		GP_DEBUG ("canon2gphotopath called on too long canon path (%i bytes): %s",
+		GP_DEBUG ("canon2gphotopath called on too long canon path (%li bytes): %s",
 			  strlen (path), path);
 		return NULL;
 	}
@@ -1967,7 +1967,7 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 		 */
 		if (dirent_name_len > 256) {
 			GP_DEBUG ("canon_int_list_dir: "
-				  "dirent at position %i of %i has too long name in it (%i bytes)."
+				  "the name in dirent at position %i of %i is too long. (%i bytes)."
 				  "bailing out with what we've got.", (pos - dirent_data),
 				  (end_of_data - dirent_data), dirent_name_len);
 			break;
@@ -1976,7 +1976,7 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 		/* 10 bytes of attributes, size and date, a name and a NULL terminating byte */
 		/* don't use GP_DEBUG since we log this with GP_LOG_DATA */
 		GP_LOG (GP_LOG_DATA,
-			"canon_int_list_dir: dirent determined to be %i=0x%x bytes :",
+			"canon_int_list_dir: dirent determined to be %li=0x%lx bytes :",
 			dirent_ent_size, dirent_ent_size);
 		gp_log_data ("canon", pos, dirent_ent_size);
 		if (dirent_name_len) {
