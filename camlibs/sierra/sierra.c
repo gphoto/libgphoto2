@@ -156,6 +156,8 @@ static struct {
 					SIERRA_WRAP_USB, &oly3040_cam_desc},
 	{"Olympus", "C-4040Z",     SIERRA_MODEL_CAM_DESC,  0x07b4, 0x105,
 					SIERRA_WRAP_USB, &oly3040_cam_desc},
+	{"Olympus", "C-5050Z", 	SIERRA_MODEL_CAM_DESC,	0x07b4, 0x105,
+					SIERRA_WRAP_USB, &oly3040_cam_desc},
 	{"Panasonic", "Coolshot NV-DCF5E", SIERRA_MODEL_DEFAULT, 0, 0, 0 },
 	{"Polaroid", "PDC 640", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Polaroid", "PDC 2300Z", SIERRA_MODEL_DEFAULT, 0x0546, 0x0daf,
