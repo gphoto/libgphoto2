@@ -121,7 +121,7 @@ models[] =
 	, {
 	"Canon DIGITAL IXUS v", 0x04A9, 0x3052, 0}
 	, {
-	0, 0, 0}
+	NULL, 0, 0, 0}
 };
 
 int
@@ -238,7 +238,7 @@ camera_exit (Camera *camera)
 static int
 canon_get_batt_status (Camera *camera, int *pwr_status, int *pwr_source)
 {
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_get_batt_status()");
+	GP_DEBUG ("canon_get_batt_status() called");
 
 	if (!check_readiness (camera))
 		return -1;
@@ -273,10 +273,11 @@ update_disk_cache (Camera *camera)
 	return 1;
 }
 
-/*
- * Test whether the name given corresponds
- * to a thumbnail (.THM)
- */
+/**
+ * is_thumbnail:
+ * @name: name of file to examine
+ * Test whether the given @name corresponds to a thumbnail (.THM).
+ **/
 static int
 is_thumbnail (const char *name)
 {
@@ -287,16 +288,41 @@ is_thumbnail (const char *name)
 	if (pos)
 		res = (!strcmp (pos, ".THM"));
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "is_thumbnail(%s) == %i", name, res);
+	GP_DEBUG ("is_thumbnail(%s) == %i", name, res);
 	return (res);
 }
 
-/*
- * Test whether the name given corresponds
- * to an image (.JPG)
- */
+/**
+ * is_image:
+ * @name: name of file to examine
+ *
+ * Test whether the given @name corresponds to an image (.JPG or .CRW).
+ **/
 static int
 is_image (const char *name)
+{
+	const char *pos;
+	int res = 0;
+
+	pos = strchr (name, '.');
+	if (pos) {
+		res = (!strcmp (pos, ".JPG"));
+		if (!res)
+			res = (!strcmp (pos, ".CRW"));
+	}
+
+	GP_DEBUG ("is_image(%s) == %i", name, res);
+	return (res);
+}
+
+/**
+ * is_jpeg:
+ * @name: name of file to examine
+ *
+ * Test whether the given @name corresponds to a JPEG image (.JPG).
+ **/
+static int
+is_jpeg (const char *name)
 {
 	const char *pos;
 	int res = 0;
@@ -305,15 +331,16 @@ is_image (const char *name)
 	if (pos)
 		res = (!strcmp (pos, ".JPG"));
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "is_image(%s) == %i", name, res);
+	GP_DEBUG ("is_jpeg(%s) == %i", name, res);
 	return (res);
 }
 
-/*
- * Test whether the name given corresponds
- * to a raw CRW image (.CRW)
- */
-#if 0
+/**
+ * is_crw:
+ * @name: name of file to examine
+ *
+ * Test whether the name given corresponds to a raw CRW image (.CRW).
+ **/
 static int
 is_crw (const char *name)
 {
@@ -324,10 +351,9 @@ is_crw (const char *name)
 	if (pos)
 		res = (!strcmp (pos, ".CRW"));
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "is_crw(%s) == %i", name, res);
+	GP_DEBUG ("is_crw(%s) == %i", name, res);
 	return (res);
 }
-#endif
 
 /*
  * Test whether the name given corresponds
@@ -711,19 +737,30 @@ canon_get_picture (Camera *camera, char *filename, char *path, int thumbnail,
 	return GP_ERROR;
 }
 
-/*
- * _get_file_path()
+/**
+ * _get_file_path:
+ * @camera: a #Camera to work with
+ * @canon_dir: seems to be a reference to the current
+ * @filename: seems to be the file name to look for
+ * @path: returns (?!) the full path to the file given by @filename
  *
- * this is a strange function, it's name suggests it would return the path to a file
+ * _get_file_path seems to find a given filename anywhere in the
+ * directory tree and returns the complete path to the file in @path.
+ *
+ * _get_file_path is an internal function and is only called from #get_file_path.
+ *
+ * This is a strange function. Its name suggests it would return the path to a file
  * of a known name, but it returns *path = the whole filename (the filename argument
- * we are called with) so in effect, this function only does a lot of is_*() checking
- * and if we are not using USB it prepends a \ to the name. prepending the \ should
+ * we are called with). So in effect, this function only does a lot of is_*() checking
+ * and if we are not using USB it prepends a \ to the name. Prepending the \ should
  * be made somewhere else, IMO.
- */
-static int
+ *
+ * Return value: a gphoto2 error code.
+ **/
+int
 _get_file_path (Camera *camera, struct canon_dir *tree, const char *filename, char *path)
 {
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "_get_file_path() filename '%s'", filename);
+        GP_DEBUG ("_get_file_path() called: filename '%s' path '%s'", filename, path);
 
 	if (tree == NULL)
 		return GP_ERROR;
@@ -749,10 +786,15 @@ _get_file_path (Camera *camera, struct canon_dir *tree, const char *filename, ch
 		if ((is_image (tree->name)
 		     || (is_movie (tree->name) || is_thumbnail (tree->name)))
 		    && strcmp (tree->name, filename) == 0) {
+			GP_DEBUG ("_get_file_path() returns with "
+				  "filename '%s' path '%s'", filename, path);
 			return GP_OK;
 		} else if (!tree->is_file) {
-			if (_get_file_path (camera, tree->user, filename, path) == GP_OK)
+			if (_get_file_path (camera, tree->user, filename, path) == GP_OK) {
+				GP_DEBUG ("_get_file_path() returns with "
+					  "filename '%s' path '%s'", filename, path);
 				return GP_OK;
+			}
 		}
 		tree++;
 	}
@@ -1525,10 +1567,13 @@ remove_dir_func (CameraFilesystem *fs, const char *folder, const char *name,
 /****************************************************************************/
 
 /**
+ * camera_init:
+ * @camera: the camera to initialize
+ *
  * This routine initializes the serial/USB port and also load the
  * camera settings. Right now it is only the speed that is
  * saved.
- */
+ **/
 int
 camera_init (Camera *camera)
 {
