@@ -128,6 +128,10 @@ do
     && mv Makefile.am.new Makefile.am )
 
     echo "Running gettextize $gettext_opt"
+    echo "########################################################################"
+    echo "# If gettextize asks you to acknowledge some stuff and press Return,   #"
+    echo "# just do that. autogen.sh already does what gettextize wants done.    #"
+    echo "########################################################################"
     gettextize $gettext_opt || fail
     if test -f po/Makevars.template
     then
