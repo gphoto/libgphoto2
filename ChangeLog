@@ -1,5 +1,10 @@
 2001-09-07  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2/filesys.c (gp_filesystem_format): Don't request any
+	listings here.
+
+2001-09-07  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/polaroid/pdc640.c: New
 	* camlibs/polaroid/Makefile.am: Added pdc640
 

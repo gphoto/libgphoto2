@@ -599,10 +599,18 @@ gp_filesystem_format (CameraFilesystem *fs)
 
 	gp_debug_printf (GP_DEBUG_HIGH, "core", "Formatting file system...");
 
+	/*
+	 * Set all folders to 'clean' so that we don't have
+	 * a camera access here and delete everything below root.
+	 */
+	for (x = 0; x < fs->count; x++) {
+		fs->folder[x].files_dirty = 0;
+		fs->folder[x].folders_dirty = 0;
+	}
 	CHECK_RESULT (gp_filesystem_delete (fs, "/", NULL));
-	CHECK_RESULT (x = gp_filesystem_folder_number (fs, "/"));
 
 	/* Set dirty flag so that file_list and folder_list will be called */
+	CHECK_RESULT (x = gp_filesystem_folder_number (fs, "/"));
 	fs->folder[x].files_dirty = 1;
 	fs->folder[x].folders_dirty = 1;
 
