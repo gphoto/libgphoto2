@@ -1,6 +1,11 @@
 2002-03-23  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* library.c,Makefile.am: made capture stuff a little easier for testing
+	* canon.h: removed last remains from obsolete caching layer
+	* library.c,canon.h,usb.c: accelerate non-capture operations by
+	  omitting sleep(2) hack when not capturing
+	* library.c: added G2 to list of supposedly capture-able cams
+	* canon.h: removed last remains from obsolete caching layer
 
 2002-03-22  Fredrik <fredrik@krixor.xy.org>
 
