@@ -62,10 +62,9 @@ struct models
 }
 models[] =
 {
-	{
-	"Creative PC-CAM 300", 0x041e, 0x400a}
-	, {
-	NULL, 0, 0}
+	{ "Creative PC-CAM 300",    0x041e, 0x400a},
+	{ "Intel Pocket PC Camera", 0x8086, 0x0630},
+	{ NULL, 0, 0}
 };
 
 static int delete_all_func (CameraFilesystem *fs, const char *folder,
@@ -90,7 +89,6 @@ camera_abilities (CameraAbilitiesList *list)
 		strcpy (a.model, models[i].name);
 		a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
 		a.port = GP_PORT_USB;
-		a.speed[0] = 0;
 		a.usb_vendor = models[i].idVendor;
 		a.usb_product = models[i].idProduct;
 		a.operations = GP_OPERATION_NONE;

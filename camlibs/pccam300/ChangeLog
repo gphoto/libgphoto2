@@ -1,3 +1,7 @@
+2004-08-04  Marcus Meissner <meissner@suse.de>
+
+	* library: added Intel Pocket PC Camera as reported.
+
 2003-06-26  Lutz Mueller <lutz@users.sourceforge.net>
 
 	* pccam300.c: Fix includes so that the thing compiles.
