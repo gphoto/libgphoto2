@@ -1,3 +1,8 @@
+2004-04-26  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* library.c: Added Canon Digital IXUS 430 /
+	  PowerShot S410 as reported.
+
 2004-04-18  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* library.c: Nikon Coolpix 3200 as reported.
