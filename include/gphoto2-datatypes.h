@@ -52,6 +52,14 @@ typedef enum {
 	GP_CAPTURE_PREVIEW	= 1 << 2
 } CameraCaptureType;
 
+/* Config Type */
+typedef enum {
+	GP_CONFIG_NONE		= 0,
+	GP_CONFIG_CAMERA	= 1 << 0,
+	GP_CONFIG_FOLDER	= 1 << 1,
+	GP_CONFIG_FILE		= 1 << 2
+} CameraConfigType;
+
 /* Widget types */
 typedef enum {
 	GP_WIDGET_WINDOW,
@@ -117,9 +125,9 @@ typedef struct {
 		/* Supported serial baud rates, terminated with  */
 		/* a 0.						 */
 
-	int config;
-		/* Camera can be configured	 		 */
-
+	CameraConfigType config;
+		/* Camera/Folders/Files can be configured	 */
+	
 	int file_delete;
 		/* Camera can delete files 			 */
 

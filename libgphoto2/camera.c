@@ -234,11 +234,11 @@ int gp_camera_init (Camera *camera)
 	}
 	if (x == glob_abilities_list->count)
 		return GP_ERROR_MODEL_NOT_FOUND;
-	camera->abilities->file_delete       = glob_abilities_list->abilities[x]->file_delete;
-	camera->abilities->file_preview      = glob_abilities_list->abilities[x]->file_preview;
-	camera->abilities->file_put          = glob_abilities_list->abilities[x]->file_put;
-	camera->abilities->capture           = glob_abilities_list->abilities[x]->capture;
-	camera->abilities->config            = glob_abilities_list->abilities[x]->config;
+	camera->abilities->file_delete   = glob_abilities_list->abilities[x]->file_delete;
+	camera->abilities->file_preview  = glob_abilities_list->abilities[x]->file_preview;
+	camera->abilities->file_put      = glob_abilities_list->abilities[x]->file_put;
+	camera->abilities->capture       = glob_abilities_list->abilities[x]->capture;
+	camera->abilities->config        = glob_abilities_list->abilities[x]->config;
 
 	/* Load the library. */
 	gp_debug_printf(GP_DEBUG_LOW, "core", "Loading library %s...", glob_abilities_list->abilities[x]->library);

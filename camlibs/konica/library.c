@@ -133,7 +133,7 @@ camera_abilities (CameraAbilitiesList* list)
 			a->speed[9]	= 115200;
 			a->speed[10]	= 0;
 			a->capture	= GP_CAPTURE_IMAGE | GP_CAPTURE_PREVIEW;
-			a->config	= 1;
+			a->config	= GP_CONFIG_CAMERA | GP_CONFIG_FOLDER | GP_CONFIG_FILE;
 			a->file_delete	= 1;
 			a->file_preview	= 1;
 			a->file_put	= 0;
@@ -1094,7 +1094,7 @@ int camera_config_set (Camera *camera, CameraWidget *window)
 		gp_widget_value_get (widget, &c);
 		if (strcmp (c, "Off") == 0) beep = 0;
 		else if (strcmp (c, "On") == 0) beep = 1;
-		else g_assert_not_reached ();
+		else g_warning (_("Value '%s' invalid. Valid values are 'Off' and 'On'."), c);
 		if ((result = k_set_preference (konica_data->device, K_PREFERENCE_BEEP, beep)) != GP_OK) return (result);
 	}
 
@@ -1191,7 +1191,7 @@ int camera_config_set (Camera *camera, CameraWidget *window)
                 else if (strcmp (c, "On, red-eye reduction") == 0) j = 5;
 		else if (strcmp (c, "Auto") == 0) j = 2;
 		else if (strcmp (c, "Auto, red-eye reduction") == 0) j = 6;
-		else g_assert_not_reached ();
+		else g_warning (_("Value '%s' invalid. Valid values are 'On', 'Off', 'On, red-eye reduction', 'Auto' and 'Auto, red-eye reduction'."), c);
 		if ((result = k_set_preference (konica_data->device, K_PREFERENCE_FLASH, j)) != GP_OK) return (result);
 	}
 

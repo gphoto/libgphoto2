@@ -108,7 +108,7 @@ int camera_abilities(CameraAbilitiesList *list)
         a->speed[4]   = 115200;
         a->speed[5]   = 0;
         a->capture    = GP_CAPTURE_NONE;
-        a->config     = 1;
+        a->config     = GP_CONFIG_CAMERA;
         a->file_delete = 1;
         a->file_preview = 1;
         a->file_put = 1;
@@ -122,7 +122,7 @@ int camera_abilities(CameraAbilitiesList *list)
         strcpy(a->model, models_USB[i]);
         a->port = GP_PORT_USB;
         a->capture    = GP_CAPTURE_NONE;
-        a->config     = 1;
+        a->config     = GP_CONFIG_CAMERA;
         a->file_delete = 1;
         a->file_preview = 1;
         a->file_put = 0;
@@ -142,7 +142,7 @@ int camera_abilities(CameraAbilitiesList *list)
         a->speed[4]   = 115200;
         a->speed[5]   = 0;
         a->capture    = GP_CAPTURE_NONE;
-        a->config     = 1;
+        a->config     = GP_CONFIG_CAMERA;
         a->file_delete = 1;
         a->file_preview = 1;
         a->file_put = 1;
