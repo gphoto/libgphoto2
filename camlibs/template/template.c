@@ -2,9 +2,9 @@
 #include <gphoto2.h>
 #include <gpio.h>
 
-int camera_id (char *id) {
+int camera_id (CameraText *id) {
 
-	strcpy(id, "REPLACE WITH UNIQUE LIBRARY ID");
+	strcpy(id->text, "REPLACE WITH UNIQUE LIBRARY ID");
 
 	return (GP_OK);
 }

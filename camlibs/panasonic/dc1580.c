@@ -397,9 +397,9 @@ int dsc2_preview(dsc_t *dsc, int index)
 
 /* Library interface functions */
 
-int camera_id (char *id) {
+int camera_id (CameraText *id) {
 
-	strcpy(id, "panasonic-dc1580");
+	strcpy(id->text, "panasonic-dc1580");
 
 	return (GP_OK);
 }

@@ -12,9 +12,9 @@ extern int glob_debug;
 char glob_camera_model[64];
 static int all_pic_num = -1;
 
-int camera_id (char *id) {
+int camera_id (CameraText *id) {
 
-        strcpy(id, "sonydscf1-bvl1");
+        strcpy(id->text, "sonydscf1-bvl1");
 
         return (GP_OK);
 }

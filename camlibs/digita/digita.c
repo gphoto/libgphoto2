@@ -23,9 +23,9 @@ static struct digita_device *dev = NULL;
 int (*digita_send)(struct digita_device *dev, void *buffer, int buflen) = NULL;
 int (*digita_read)(struct digita_device *dev, void *buffer, int buflen) = NULL;
 
-int camera_id(char *id)
+int camera_id(CameraText *id)
 {
-        strcpy(id, "digita");
+        strcpy(id->text, "digita");
 
         return GP_OK;
 }

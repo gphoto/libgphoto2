@@ -9,9 +9,9 @@
 
 extern char packet_1[];
 
-int camera_id (char *id) {
+int camera_id (CameraText *id) {
 
-	strcpy(id, "barbie");
+	strcpy(id->text, "barbie");
 
 	return (GP_OK);
 }

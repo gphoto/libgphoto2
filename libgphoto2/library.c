@@ -56,7 +56,8 @@ int load_camera_list (char *library_filename) {
         /* Returns the number of cameras added to the CameraChoice list */
         /* 0 implies an error occurred */
 
-        char buf[1024], id[64];
+        char buf[1024];
+	CameraText id;
         void *lh;
         c_abilities load_camera_abilities;
         c_id load_camera_id;
@@ -73,19 +74,19 @@ int load_camera_list (char *library_filename) {
 
         /* check to see if this library has been loaded */
         load_camera_id = dlsym(lh, "camera_id");
-        load_camera_id(id);
+        load_camera_id(&id);
 
         if (glob_debug)
-                printf("core:\t library id: %s\n", id);
+                printf("core:\t library id: %s\n", id.text);
 
         for (x=0; x<glob_camera_id_count; x++) {
-                if (strcmp(glob_camera_id[x], id)==0) {
+                if (strcmp(glob_camera_id[x], id.text)==0) {
                         dlclose(lh);
                         return (GP_ERROR);
                 }
         }
 
-        strcpy(glob_camera_id[glob_camera_id_count], id);
+        strcpy(glob_camera_id[glob_camera_id_count], id.text);
         glob_camera_id_count++;
 
         /* load in the camera_abilities function */

@@ -1,6 +1,6 @@
 /* All return values are either GP_OK, or a GP_ERROR variation  */
 
-int camera_id 			(char *id);
+int camera_id 			(CameraText *id);
 	/* Copies a unique library ID into 'id' 		*/
 	/* This is used to uniquely identify a library so that	*/
 	/* multiple libraries can support the same camera. 	*/

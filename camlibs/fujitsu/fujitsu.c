@@ -17,9 +17,9 @@ void debug_print(FujitsuData *fd, char *message) {
 	}
 }
 
-int camera_id (char *id) {
+int camera_id (CameraText *id) {
 
-	strcpy(id, "fujitsu-scottf");
+	strcpy(id->text, "fujitsu-scottf");
 
 	return (GP_OK);
 }

@@ -44,9 +44,9 @@ int is_image (char *filename) {
 	return (0);
 }
 
-int camera_id (char *id) {
+int camera_id (CameraText *id) {
 
-        strcpy(id, "directory");
+        strcpy(id->text, "directory");
 
         return (GP_OK);
 }

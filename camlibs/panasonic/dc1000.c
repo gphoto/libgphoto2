@@ -313,9 +313,9 @@ int dsc1_preview(dsc_t *dsc, int index)
 
 /* Library interface functions */
 
-int camera_id (char *id) {
+int camera_id (CameraText *id) {
 
-	strcpy(id, "panasonic-dc1000");
+	strcpy(id->text, "panasonic-dc1000");
 
 	return (GP_OK);
 }

@@ -339,30 +339,32 @@ int fujitsu_set_speed(Camera *camera, int speed) {
 
 	gpio_get_settings(fd->dev, &settings);
 
-	settings.serial.speed = speed;
-
-	switch (speed) {		
+	switch (speed) {
 		case 9600:
 			speed = 1;
+			settings.serial.speed = 9600;
 			break;
 		case 19200:
 			speed = 2;
+			settings.serial.speed = 19200;
 			break;
 		case 38400:
 			speed = 3;
+			settings.serial.speed = 38400;
 			break;
 		case 57600:
 			speed = 4;
+			settings.serial.speed = 57600;
 			break;
 		case 0:		/* Default speed */
-			settings.serial.speed = 115200;
 		case 115200:
 			speed = 5;
+			settings.serial.speed = 115200;
 			break;
 
 		case -1:	/* End session */
 			settings.serial.speed = 19200;
-			speed = 0;
+			speed = 2;
 			break;
 		default:
 			return (GP_ERROR);

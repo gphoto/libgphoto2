@@ -88,9 +88,9 @@ char *models_serialandUSB[] = {
         NULL
 };
 
-int camera_id(char *id)
+int camera_id(CameraText *id)
 {
-        strcpy(id, "canon");
+        strcpy(id->text, "canon");
 
         return GP_OK;
 }

@@ -134,9 +134,9 @@ gboolean error_happened (k_return_status_t return_status)
 }
 
 
-int camera_id (char *id)
+int camera_id (CameraText *id)
 {
-	strcpy (id, "konica");
+	strcpy (id->text, "konica");
 	return (GP_OK);
 }
 
