@@ -5,5 +5,6 @@ INCLUDES = -I$(top_srcdir)/libgphoto2_port $(USB_CFLAGS)
 iolibdir = $(libdir)/gphoto2_port/$(VERSION)
 iolib_LTLIBRARIES = libgphoto2_port_usb.la
 libgphoto2_port_usb_la_LDFLAGS = -module -avoid-version
-libgphoto2_port_usb_la_LIBADD = $(USB_LIBS)
+libgphoto2_port_usb_la_LIBADD = $(USB_LIBS)			\
+	$(top_builddir)/libgphoto2_port/libgphoto2_port.la
 libgphoto2_port_usb_la_SOURCES = libusb.c

@@ -1,3 +1,7 @@
+2002-02-23  Lutz Müller <lutz@users.sourceforge.net>
+
+	* [serial,usb]/Makefile.am: LIBADD libgphoto2_port.
+
 2002-02-22  Lutz Müller <lutz@users.sourceforge.net>
 
 	* serial/unix.c: Improved IRIX fix to set the speed exactly once after
