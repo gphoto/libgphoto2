@@ -71,6 +71,12 @@
 	* libgphoto2/camera.c: Not all cameras implement delete_all - fall back
 	to deletion one by one then.
 
+2001-07-09  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* camlibs/kodak/dc240/dc240.c:
+	* camlibs/kodak/dc240/library.[c,h]: stricter typing of prototypes
+	using const
+
 2000-08-20 15:47  scottf
 
 	* libgphoto2/library.c: minor formatting changes
