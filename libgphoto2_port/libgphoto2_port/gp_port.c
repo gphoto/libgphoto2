@@ -27,6 +27,7 @@
 
 #include <gphoto2-port.h>
 #include <gphoto2-port-debug.h>
+#include <gphoto2-port-result.h>
 #include "library.h"
 
 extern int glob_debug_level;
@@ -49,48 +50,6 @@ gp_port_info     device_list[256];
 int              device_count;
 
 int initialized = 0;
-
-#define GP_ERR_RES(num,str) \
-    if (result == num) \
-    return (N_(str));
-
-char *gp_port_result_as_string (int result) {
-
-    /* gp_port error range is -1 .. -99 */
-
-    if ((result < -99) || (result > 0))
-        return (N_("Unknown error"));
-
-    GP_ERR_RES( 0,  "No error");
-    GP_ERR_RES(-1,  "Unspecified error");
-    GP_ERR_RES(-2,  "There was a timeout reading from or writing to the port");
-    GP_ERR_RES(-3,  "The serial port is not supported");
-    GP_ERR_RES(-4,  "The USB port is not supported");
-    GP_ERR_RES(-5,  "The parallel port is not supported");
-    GP_ERR_RES(-6,  "The network port is not supported");
-    GP_ERR_RES(-7,  "The IEEE1394 port is not supported");
-    GP_ERR_RES(-8,  "Unknown port");
-    GP_ERR_RES(-9,  "Out of memory");
-    GP_ERR_RES(-10, "Error loading a required library");
-    GP_ERR_RES(-11, "Error initializing the port");
-    GP_ERR_RES(-12, "Error opening the port");
-    GP_ERR_RES(-13, "Timeout reading from or writing to the port");
-    GP_ERR_RES(-14, "Error reading from the port");
-    GP_ERR_RES(-15, "Error writing to the port");
-    GP_ERR_RES(-16, "Error closing the port");
-    GP_ERR_RES(-17, "Error updating the port settings");
-    GP_ERR_RES(-18, "Error with the port");
-    GP_ERR_RES(-19, "Error setting the serial port speed");
-    GP_ERR_RES(-20, "Error sending a break to the serial port");
-    GP_ERR_RES(-21, "Error flushing the serial line");
-    GP_ERR_RES(-22, "Error clearing a halt condition on the USB port");
-    GP_ERR_RES(-23, "Could not find the requested device on the USB port");
-    GP_ERR_RES(-24, "Could not lock the device");
-
-    return (N_("Unknown error"));
-}
-
-#undef GP_ERR_RES
 
 /*
    Required library functions

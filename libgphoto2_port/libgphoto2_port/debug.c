@@ -25,7 +25,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-#include <gphoto2-port.h>
+#include <gphoto2-port-result.h>
 
 int glob_debug_level = 0;
 
@@ -91,6 +91,10 @@ gp_port_debug_history_append (const char *msg)
 		memset (debug_history, 0, debug_history_size);
 	}
 
+	/* First of all, skip the whole thing if the message is too long */
+	if (strlen (msg) + 2 > debug_history_size)
+		return;
+
 	/* Do we have to forget parts of the debug history? */
 	while (debug_history_size - strlen (debug_history) <
 			strlen (msg) + 1) {
@@ -105,6 +109,7 @@ gp_port_debug_history_append (const char *msg)
 			 strlen (debug_history) - i);
 	}
 
+	/* Append the message */
 	strcat (debug_history, msg);
 	strcat (debug_history, "\n");
 }
@@ -117,7 +122,7 @@ gp_port_debug_history_set_size (unsigned int size)
 	new_debug_history = realloc (debug_history, sizeof (char) * size);
 
 	if (!new_debug_history)
-		return (GP_ERROR);
+		return (GP_ERROR_IO_MEMORY);
 
 	debug_history_size = size;
 	debug_history = new_debug_history;

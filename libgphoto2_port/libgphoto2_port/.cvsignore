@@ -2,7 +2,5 @@ Makefile.in
 Makefile
 .deps
 .libs
-gp_port.lo
-library.lo
-portability.lo
+*.lo
 libgphoto2_port.la

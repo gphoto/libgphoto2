@@ -21,6 +21,12 @@
 #ifndef __GPHOTO2_PORT_DEBUG_H__
 #define __GPHOTO2_PORT_DEBUG_H__
 
+/* Debug levels */
+#define GP_DEBUG_NONE           0
+#define GP_DEBUG_LOW            1
+#define GP_DEBUG_MEDIUM         2
+#define GP_DEBUG_HIGH           3
+
 void gp_port_debug_set_level (int level);
 void gp_port_debug_printf (int target_debug_level, int debug_level,
 			   char *format, ...);

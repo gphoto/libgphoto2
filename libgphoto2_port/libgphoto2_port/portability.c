@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <gphoto2-port.h>
+#include <gphoto2-port-result.h>
 
 /* Windows Portability
    ------------------------------------------------------------------ */

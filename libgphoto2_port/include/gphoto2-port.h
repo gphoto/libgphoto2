@@ -16,6 +16,9 @@
 #include "gphoto2-port-usb.h"
 #include "gphoto2-port-ieee1394.h"
 
+#include "gphoto2-port-result.h"
+#include "gphoto2-port-debug.h"
+
 #ifndef TRUE
 #define TRUE (0==0)
 #endif
@@ -24,53 +27,7 @@
 #define FALSE (1==0)
 #endif
 
-/* Defines and enums
-   --------------------------------------------------------------
-   Note: this is a base set of return values.                      */
-
-/* Return values */
-/* Note: This lib should be allocated return values of 0 to -99 */
-
-#define GP_OK                            0
-
-#define GP_ERROR                        -1
-#define GP_ERROR_TIMEOUT                -2
-#define GP_ERROR_IO_SUPPORTED_SERIAL    -3
-#define GP_ERROR_IO_SUPPORTED_USB       -4
-#define GP_ERROR_IO_SUPPORTED_PARALLEL  -5
-#define GP_ERROR_IO_SUPPORTED_NETWORK   -6
-#define GP_ERROR_IO_SUPPORTED_IEEE1394  -7
-#define GP_ERROR_IO_UNKNOWN_PORT        -8
-
-#define GP_ERROR_IO_MEMORY              -9
-#define GP_ERROR_IO_LIBRARY             -10
-
-#define GP_ERROR_IO_INIT                -11
-#define GP_ERROR_IO_OPEN                -12
-#define GP_ERROR_IO_TIMEOUT             -13
-#define GP_ERROR_IO_READ                -14
-#define GP_ERROR_IO_WRITE               -15
-#define GP_ERROR_IO_CLOSE               -16
-#define GP_ERROR_IO_UPDATE              -17
-#define GP_ERROR_IO_PIN                 -18
-
-#define GP_ERROR_IO_SERIAL_SPEED        -19
-#define GP_ERROR_IO_SERIAL_BREAK        -20
-#define GP_ERROR_IO_SERIAL_FLUSH        -21
-
-#define GP_ERROR_IO_USB_CLEAR_HALT      -22
-#define GP_ERROR_IO_USB_FIND            -23
-#define GP_ERROR_IO_USB_CLAIM		-24
-
-#define GP_ERROR_IO_LOCK		-25
-
-/* Debugging definitions for init */
-#define GP_DEBUG_NONE           0
-#define GP_DEBUG_LOW            1
-#define GP_DEBUG_MEDIUM         2
-#define GP_DEBUG_HIGH           3
-
-#define GP_PORT_MAX_BUF_LEN 4096                /* max length of receive buffer */
+#define GP_PORT_MAX_BUF_LEN 4096             /* max length of receive buffer */
 
 /* Specify the types of devices */
 typedef enum {
@@ -176,9 +133,6 @@ struct gp_port {
 
 /* Core functions
    -------------------------------------------------------------- */
-
-        char *gp_port_result_as_string (int result);
-                /* Returns a string describing the error */
 
         int gp_port_init (int debug_level);
                 /* Initializes the library.

@@ -2,7 +2,8 @@
 #include <stdio.h>
 
 #include <gphoto2-port-debug.h>
-#include "gphoto2-port.h"
+#include <gphoto2-port-result.h>
+#include <gphoto2-port.h>
 #include "library.h"
 
 extern int device_count;
