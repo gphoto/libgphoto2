@@ -84,6 +84,7 @@ gsmart_delete_file (CameraPrivateLibrary * lib, unsigned int index)
 	fat_index = 0xD8000 - g_file->fat_start - 1;
 
 	CHECK (gp_port_usb_msg_write (lib->gpdev, 0x06, fat_index, 0x0007, NULL, 0));
+	sleep(1);
 
 	/* Reread fats the next time it is accessed */
 	lib->dirty = 1;
@@ -186,6 +187,7 @@ gsmart_request_file (CameraPrivateLibrary * lib, u_int8_t ** buf,
 	return (GP_OK);
 }
 
+
 int
 gsmart_request_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
 			  unsigned int *len, unsigned int number)
@@ -206,7 +208,8 @@ gsmart_request_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
 
 	/* FIXME implement avi downloading */
 	if (g_file->mime_type == FILE_TYPE_AVI)
-	      return GP_ERROR_NOT_SUPPORTED;
+		return GP_ERROR_NOT_SUPPORTED;
+	
 
 	p = g_file->fat;
 	quality = p[40] & 0xFF;
