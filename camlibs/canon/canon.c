@@ -1661,10 +1661,15 @@ canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, i
 		return GP_ERROR_CORRUPTED_DATA;
 	}
 
-	if (capacity)
-		*capacity = cap;
-	if (available)
-		*available = ava;
+	/* Capacity and available are not NULL as verified above.
+	 * But cap and ava are only set for the USB case, so we have to check for that.
+	 * If you know the logic better, feel free to improve it. */
+	switch (camera->port->type) {
+		case GP_PORT_USB:
+			*capacity = cap;
+			*available = ava;
+			break;
+	}
 
 	GP_DEBUG ("canon_int_get_disk_name_info: capacity %i kb, available %i kb",
 		  cap > 0 ? (cap / 1024) : 0, ava > 0 ? (ava / 1024) : 0);
