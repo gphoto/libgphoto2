@@ -416,8 +416,8 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 						gp_log (GP_LOG_VERBOSE, "gphoto2-port-usb",
 							_("USB device (vendor 0x%x, product 0x%x) is a mass"
 							  " storage device, and might not function with gphoto2."
-							  " Reference: http://www.linux-usb.org/USB-guide/x498.html"),
-							idvendor, idproduct);
+							  " Reference: %s"),
+							idvendor, idproduct, URL_USB_MASSSTORAGE);
 					}
 					port->settings.usb.config = dev->config[config].bConfigurationValue;
 					port->settings.usb.interface = dev->config[config].interface[interface].altsetting[altsetting].bInterfaceNumber;
