@@ -125,6 +125,10 @@ int folder_index() {
 			    (strcasecmp(dot, ".tif")==0)||
 			    (strcasecmp(dot, ".tiff")==0)||
 			    (strcasecmp(dot, ".jpg")==0)||
+			    (strcasecmp(dot, ".xpm")==0)||
+			    (strcasecmp(dot, ".png")==0)||
+			    (strcasecmp(dot, ".pbm")==0)||
+			    (strcasecmp(dot, ".pgm")==0)||
 			    (strcasecmp(dot, ".jpeg")==0)) {
 				strcpy(dir_images[dir_num_images++],
 					de->d_name);
