@@ -99,3 +99,8 @@ int camera_about 		(Camera *camera,
 	/* Returns information about the camera library.	*/
 	/* Includes author's name, email, models supported,	*/
 	/* and anything else library-specific.			*/
+
+char *camera_result_as_string 	(Camera *camera, 
+				 int result);
+	/* Returns a pointer to a description of the result.	*/
+	/* Do not free it.					*/

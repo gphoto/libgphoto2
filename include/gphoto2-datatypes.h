@@ -10,7 +10,10 @@
 
 /* Return values. 
    Return values below -99 (starting with -100) are defined by the 
-   individual camera library. */ 
+   individual camera library. 
+   
+   Don't forget to add the corresponding error descriptions in 
+   libgphoto2/core.c. */ 
 #define GP_OK			  0
 #define GP_ERROR		 -1	/* generic			*/
 #define GP_ERROR_NONCRITICAL	 -2	/* deprecated	 		*/
@@ -297,6 +300,7 @@ typedef int (*c_config)		 (struct Camera*);
 typedef int (*c_summary)	 (struct Camera*, CameraText*);
 typedef int (*c_manual)		 (struct Camera*, CameraText*);
 typedef int (*c_about)		 (struct Camera*, CameraText*);
+typedef char *(*c_result_as_string) (struct Camera*, int);
 
 /* Function pointers to the current library functions */
 typedef struct {
@@ -315,6 +319,7 @@ typedef struct {
 	c_summary		summary;
 	c_manual		manual;
 	c_about			about;
+	c_result_as_string	result_as_string;
 } CameraFunctions;
 
 typedef struct Camera {

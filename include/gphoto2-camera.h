@@ -41,3 +41,6 @@ int gp_camera_manual  (Camera *camera, CameraText *manual);
 int gp_camera_about   (Camera *camera, CameraText *about);
 
 int gp_camera_config (Camera *camera);
+
+char *gp_camera_result_as_string (Camera *camera, int result);
+
