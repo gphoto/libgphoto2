@@ -289,6 +289,7 @@ init_serial_connection (Camera *camera)
 		CHECK (gp_port_open (camera->port));
 		if (k_init (camera->port) == GP_OK)
 			break;
+		CHECK (gp_port_close (camera->port));
 	}
 	if (!camera->port_info->speed && (i == 1)) {
 		CHECK (gp_port_close (camera->port));
