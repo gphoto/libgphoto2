@@ -1228,10 +1228,9 @@ main (int argc, char **argv)
 {
         int result;
 
-#ifdef ENABLE_NLS
+	/* For translation */
         bindtextdomain (PACKAGE, GPHOTO2_LOCALEDIR);
         textdomain (PACKAGE);
-#endif
 
         /* Initialize the globals */
         init_globals();
