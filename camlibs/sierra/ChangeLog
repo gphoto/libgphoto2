@@ -1,5 +1,11 @@
 2002-02-05  Lutz Müller <lutz@users.sourceforge.net>
 
+	* sierra.c (camera_init): Pass NULL as context, because we will
+	  ignore those error messages and are just probing for the level of
+	  support for filenames or folders.
+
+2002-02-05  Lutz Müller <lutz@users.sourceforge.net>
+
 	* library.c (sierra_read_packet): TYPE_COMMAND is a multi-byte
 	  packet, too, according to protocol.htm (see photopc).
 

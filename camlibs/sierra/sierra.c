@@ -1959,15 +1959,15 @@ int camera_init (Camera *camera, GPContext *context)
         CHECK_FREE (camera, camera_start (camera, context));
 
         /* FIXME??? What's that for? */
-        ret = sierra_get_int_register (camera, 1, &value, context);
+	sierra_get_int_register (camera, 1, &value, NULL);
 
         /* FIXME??? What's that for? "Resetting folder system"? */
-        ret = sierra_set_int_register (camera, 83, -1, context);
+	sierra_set_int_register (camera, 83, -1, NULL);
 
         CHECK_STOP_FREE (camera, gp_port_set_timeout (camera->port, 50));
 
         /* Folder support? */
-        ret = sierra_set_string_register (camera, 84, "\\", 1, context);
+        ret = sierra_set_string_register (camera, 84, "\\", 1, NULL);
         if (ret != GP_OK) {
                 camera->pl->folders = 0;
                 GP_DEBUG ("*** folder support: no");
