@@ -34,7 +34,7 @@
 
 #define PTP_REQ_LEN			30
 #define PTP_RESP_LEN			sizeof(PTPReq)
-#define PTP_REQ_HDR_LEN                 (2*sizeof(uint32_t)+2*sizeof(uint16_t))
+#define PTP_REQ_HDR_LEN                 (3*sizeof(uint32_t)+2*sizeof(uint16_t))
 #define PTP_REQ_DATALEN			16384
 #define PTP_EVENT_LEN			sizeof(PTPEvent)
 
@@ -42,6 +42,7 @@ struct _PTPReq {
 	uint32_t len;
 	uint16_t type;
 	uint16_t code;
+	uint32_t session_id;
 	uint32_t trans_id;
 	char data[PTP_REQ_DATALEN];
 };
