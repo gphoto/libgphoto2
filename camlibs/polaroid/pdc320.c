@@ -37,6 +37,26 @@
 #include <gphoto2-library.h>
 #include <gphoto2-port-log.h>
 
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (GETTEXT_PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define N_(String) (String)
+#  endif
+#else
+#  define textdomain(String) (String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory) (Domain)
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
+
 #define GP_MODULE "pdc320"
 
 /*******************************************************************************/
@@ -83,7 +103,7 @@ pdc320_id (GPPort *port, const char **model)
 	CR (gp_port_write (port, PDC320_ID, sizeof (PDC320_ID) - 1));
 	CR (gp_port_read (port, buf, 14));
 	if (model) {
-		*model = "unknown";
+		*model = _("unknown");
 		for (i = 0; models[i].model; i++)
 			if (buf[1] == models[i].id) {
 				*model = models[i].model;
@@ -388,13 +408,13 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 static int
 camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
-	strcpy (about->text, "Download program for several Polaroid cameras. "
+	strcpy (about->text, _("Download program for several Polaroid cameras. "
 		"Originally written by Peter Desnoyers "
 		"<pjd@fred.cambridge.ma.us>, and adapted for gphoto2 by "
 		"Nathan Stenzel <nathanstenzel@users.sourceforge.net> and "
-		"Lutz Müller <urc8@rz.uni-karlsruhe.de>.\n"
+		"Lutz Mueller <urc8@rz.uni-karlsruhe.de>.\n"
 		"Polaroid 640SE testing was done by Michael Golden "
-		"<naugrim@juno.com>.");
+		"<naugrim@juno.com>."));
 
 	return (GP_OK);
 }
@@ -419,7 +439,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 	const char *model;
 
 	CR (pdc320_id (camera->port, &model));
-	strcpy (summary->text, "Model: ");
+	strcpy (summary->text, _("Model: "));
 	strcat (summary->text, model);
 
 	return (GP_OK);

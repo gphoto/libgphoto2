@@ -39,6 +39,26 @@
 
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (GETTEXT_PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define N_(String) (String)
+#  endif
+#else
+#  define textdomain(String) (String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory) (Domain)
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
+
 typedef enum{
 	pdc640,
 	jd350e
@@ -757,13 +777,13 @@ delete_file_func (CameraFilesystem *fs, const char *folder, const char *file,
 static int
 camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
-	strcpy (about->text, "Download program for Polaroid Fun Flash 640. "
+	strcpy (about->text, _("Download program for Polaroid Fun Flash 640. "
 		"Originally written by Chris Byrne <adapt@ihug.co.nz>, "
 		"and adapted for gphoto2 by Lutz Müller "
 		"<urc8@rz.uni-karlsruhe.de>."
 		"Protocol enhancements and postprocessing "
 		" for Jenoptik JD350e by Michael Trawny "
-		"<trawny99@users.sourceforge.net>.");
+		"<trawny99@users.sourceforge.net>."));
 
 	return (GP_OK);
 }

@@ -170,9 +170,9 @@ static const char *flash[]   = {N_("auto"), N_("on"), N_("off"), NULL};
 static const char *bool[]    = {N_("off"), N_("on"), NULL};
 static const char *mode[]    = {N_("play"), N_("record"), N_("menu"), NULL};
 static const char *power[]   = {N_("battery"), N_("a/c adaptor"), NULL};
-static const char *speed[]   = {N_("9600"), N_("19200"), N_("38400"), 
-				N_("57600"), N_("115200"), NULL};
-static const char *size[]    = {N_("VGA (640x480)"), N_("XGA (1024x768"), NULL};
+/* no real need to translate those ... */
+static const char *speed[]   = {"9600", "19200", "38400", "57600", "115200", NULL};
+static const char *size[]    = {"VGA (640x480)", "XGA (1024x768", NULL};
 
 #define CR(result) {int r=(result);if(r<0) return (r);}
 #define CRF(result,d)      {int r=(result);if(r<0) {free(d);return(r);}}
@@ -938,10 +938,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 static int
 camera_about (Camera *camera, CameraText *about, GPContext *context) 
 {
-	strcpy (about->text, "Download program for Polaroid DC700 camera. "
+	strcpy (about->text, _("Download program for Polaroid DC700 camera. "
 		"Originally written by Ryan Lantzer "
 		"<rlantzer@umr.edu> for gphoto-4.x. Adapted for gphoto2 by "
-		"Lutz Müller <urc8@rz.uni-karlsruhe.de>.");
+		"Lutz Mueller <urc8@rz.uni-karlsruhe.de>."));
 
 	return (GP_OK);
 }
@@ -1127,15 +1127,16 @@ camera_summary (Camera *camera, CameraText *about, GPContext *context)
 		info.date.month, info.date.day,
 		info.date.hour, info.date.minute, info.date.second,
 		info.num_taken, info.num_free, info.version,
-		speed[info.speed],
+		_(speed[info.speed]),
 		info.memory,
-		mode[info.mode],
-		quality[info.quality], flash[info.flash],
-		bool[info.caption],
-		bool[info.timer],
-		bool[info.lcd],
+		_(mode[info.mode]),
+		_(quality[info.quality]),
+		_(flash[info.flash]),
+		_(bool[info.caption]),
+		_(bool[info.timer]),
+		_(bool[info.lcd]),
 		info.auto_poweroff,
-		power[info.ac_power]);
+		_(power[info.ac_power]));
 
 	return (GP_OK);
 }
@@ -1235,4 +1236,3 @@ camera_init (Camera *camera, GPContext *context)
 
 	return (GP_OK);
 }
- 
