@@ -408,6 +408,14 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 
 				/* Use the first config, interface and altsetting we find */
 				gp_port_usb_find_first_altsetting(dev, &config, &interface, &altsetting);
+				if (dev->descriptor.bDeviceClass == USB_CLASS_MASS_STORAGE) {
+					gp_port_set_error (port, 
+						_("USB device (vendor 0x%x, product 0x%x) is a mass"
+						  " storage device, and cannot function with gphoto2."
+						  " Reference: http://www.linux-usb.org/USB-guide/x498.html"),
+						idvendor, idproduct);
+					return GP_ERROR_IO_USB_FIND;
+				}
 
 				/* Set the defaults */
 				if (dev->config) {

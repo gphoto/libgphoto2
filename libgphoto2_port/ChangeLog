@@ -1,3 +1,8 @@
+2003-08-10  Patrick Mansfield <patmans@users.sourceforge.net>
+
+	* usb/libusb.c: Check for and do not allow USB mass
+	  storage devices.
+
 2003-05-04  Lutz Mueller <lutz@users.sourceforge.net>
 
 	* libgphoto2_port/gphoto2-port-portability.h: Patch by 
