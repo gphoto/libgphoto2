@@ -5,4 +5,8 @@ INCLUDES = -I$(top_srcdir)/include
 
 libgphoto2_template_la_SOURCES = template.c template.h
 
-libgphoto2_template_la_LDFLAGS = -version-info 0:0:0
+libgphoto2_template_la_LDFLAGS =\
+ -avoid-version\
+ -L$(shell pwd)/$(top_builddir)/libgphoto2/.libs
+
+libgphoto2_template_la_LIBADD = -lgphoto2

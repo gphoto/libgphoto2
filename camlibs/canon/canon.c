@@ -1268,11 +1268,6 @@ int camera_config_get(Camera *camera, CameraWidget **window)
 
 	gp_debug_printf(GP_DEBUG_LOW,"canon","camera_config_get()");
 	
-	if (cs->cached_ready == 1) {
-		camtime = psa50_get_time(camera);
-		camtm = gmtime(&camtime);
-	}
-
 	*window = gp_widget_new(GP_WIDGET_WINDOW, 
 		"Canon PowerShot Configuration");
 
@@ -1288,9 +1283,11 @@ int camera_config_get(Camera *camera, CameraWidget **window)
 	gp_widget_append(section,t);
 
 	t = gp_widget_new(GP_WIDGET_TEXT, "date");
-	if (cs->cached_ready == 1)
+	if (cs->cached_ready == 1) {
+	  camtime = psa50_get_time(camera);
+	  camtm = gmtime(&camtime);
 	  gp_widget_value_set (t, asctime(camtm));
-	else
+	} else
 	  gp_widget_value_set (t, "Unavailable");
 	gp_widget_append(section,t);
 	

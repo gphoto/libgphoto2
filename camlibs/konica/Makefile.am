@@ -7,8 +7,12 @@ EXTRA_DIST = ChangeLog EXPERTS
 INCLUDES = -I$(top_srcdir)/include
 
 libgphoto2_konica_la_SOURCES = \
-	lowlevel.c lowlevel.h \
-	konica.c konica.h \
-	library.c library.h
+ lowlevel.c lowlevel.h \
+ konica.c konica.h \
+ library.c library.h
 
-libgphoto2_konica_la_LDFLAGS = -version-info 0:0:0
+libgphoto2_konica_la_LDFLAGS =\
+ -avoid-version\
+ -L$(shell pwd)/$(top_builddir)/libgphoto2/.libs
+
+libgphoto2_konica_la_LIBADD = -lgphoto2

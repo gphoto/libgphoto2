@@ -5,6 +5,8 @@ INCLUDES = -I$(top_srcdir)/include
 
 libgphoto2_kodak_dc240_la_SOURCES = dc240.c dc240.h library.c library.h
 
-libgphoto2_kodak_dc240_la_LDFLAGS = -version-info 0:0:0
+libgphoto2_kodak_dc240_la_LDFLAGS =\
+ -avoid-version\
+ -L$(shell pwd)/$(top_builddir)/libgphoto2/.libs
 
-#libgphoto2_kodak_dc240_la_LIBADD = -lgphoto2
+libgphoto2_kodak_dc240_la_LIBADD = -lgphoto2
