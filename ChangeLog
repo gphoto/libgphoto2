@@ -2,6 +2,13 @@
 
 	Patch from Arnaud Launay <asl@launay.org>:
 
+	* autogen.sh: Call libtoolize - newer automakes don't call it
+	  automatically.
+
+2002-06-27  Lutz Müller <lutz@users.sourceforge.net>
+
+	Patch from Arnaud Launay <asl@launay.org>:
+
 	* Makefile.am: /$(TAR)/tar/
 
 2002-06-24  Christophe Barbé <christophe.barbe@ufies.org>
