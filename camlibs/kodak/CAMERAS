@@ -1,0 +1,29 @@
+This file describe which driver must be used for a Kodak
+camera.
+
+digita
+	DC-220, DC-260, DC-265, DC-290
+kodak/dc240
+	DC-240, DC-280, DC-3400, DC-5000
+kodak/dc120
+	DC-120
+kodak/dc3200
+	DC-3200
+ptp [*]
+	DC-4800, DX-3500, DX-3600
+none
+	DC-3800 [**]
+dc210 [***]
+	DC-210, DC-215
+dc20 [***]
+	DC-20, DC-25
+
+
+
+[*] PTP is a new standardized protocol. Currently only
+implemented in jphoto. http://jphoto.sourceforge.net/
+[**] DC-3800 can't be connected to a computer. Use CompactFlash
+reader instead.
+[***] dc210 and dc20 no longer exists in gphoto2.
+
+
