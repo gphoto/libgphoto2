@@ -1,11 +1,21 @@
 This driver  is  for the Canon   PowerShot series. It  works  with the
 following models:
 
- - Powershot A5
- - Powershot A5 Zoom
  - Powershot A50
  - Powershot S10
  - Powershot S20
+ - Powershot S100/ Digital IXUS
+ - Powershot IXY Digital
+ - Powershot G1
+
+The support of the following cameras is mostly there as they were supported
+in gphoto 0.4.x but an API change broke the support as they handle files a 
+little differently. If you are interested in fixing it mail 
+gphoto-devel@gphoto.net or philm@users.sourceforge.net :
+ 
+ - Powershot A5
+ - Powershot A5 Zoom
+  
 
  It doesn't  work with the  PowerShot  350. However, the  PS350 uses a
 vaguely similar protocol, so some parts of the sources can probably be
@@ -18,6 +28,14 @@ the caches can be manually flushed using "Configure camera".
 
 Change history
 ==============
+
+Version 8 (1-APRIL-2001)
+---------
+- This history have not been updated in a while...
+- support for G1, S100, Ixus and Ixy was added
+- upload support only on serial
+
+
 Version 7 (25-JULY-2000)
 ---------
 - Ported to gphoto2
@@ -103,6 +121,9 @@ Version 0 (27-AUG-1999)
 To do
 =====
 
+Not very up to date contact gphoto-devel@gphoto.net if you wish to 
+contribute.
+ 
 - code structure is still pretty ugly. Things that absolutely need fixing:
   - command codes and fffbs are spread all over the place
   - "ping" (empty message) should probably be merged into normal message
