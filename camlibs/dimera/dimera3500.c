@@ -21,6 +21,9 @@
  *
  * History:
  * $Log$
+ * Revision 1.46  2002/11/23 00:47:45  hun
+ * gettext stuff for Arnaud
+ *
  * Revision 1.45  2002/11/17 15:48:47  marcusmeissner
  * 	* dimera3500.c: fixed 64bit problems (using long* to int*).
  *
@@ -171,7 +174,7 @@
 #ifdef ENABLE_NLS
 #  include <libintl.h>
 #  undef _
-#  define _(String) dgettext (PACKAGE, String)
+#  define _(String) dgettext (GETTEXT_PACKAGE, String)
 #  ifdef gettext_noop
 #    define N_(String) gettext_noop (String)
 #  else
