@@ -20,15 +20,27 @@
  *
  * Modified by Aurélien Croc (AP²C) <programming@ap2c.com>
  * In particular : fix some bugs, and implementation of advanced 
- * functions : delete some images, delete all images, capture new image
+ * functions : delete some images, delete all images, capture new image,
+ * update an image to the camera, get thumbnails, get information, get
+ * summary, get configuration, get manual, get about, get EXIF informations
  *
  */
+
+/* NOTES :
+ * Becareful, image information number starts at 1 and finish at the 
+ * max image number. But when you want to work on the images, you must
+ * read image informations, and check the real image number in the image
+ * information header and use this number with all functions !!
+ */
+
 #include "config.h"
 
 #include <string.h>
 #include <stdio.h>
 #include <gphoto2-library.h>
 #include <gphoto2-result.h>
+#include <gphoto2-port-log.h>
+#include <exif.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -44,308 +56,96 @@
 #  define N_(String) (String)
 #endif
 
+/* Functions codes */
+#define CAPTUREIMAGE_CMD2	0x30
+#define SETSPEED		0x42
+#define ERASEIMAGE_CMD1		0x45
+#define IMAGE_CMD2		0x46
+#define GETIMAGE_CMD1		0x47
+#define GETIMAGEINFO		0x49
+#define CAPTUREIMAGE_CMD1	0x52
+#define GETCAMINFO		0x53
+#define GETTHUMBNAIL_CMD1	0x54
+#define UPLOADDATA		0x55
+#define PING			0x58
 
-#define PING		0x58
-#define CAPTURE		0x52
-#define GETCAMINFO	0x53
-#define IMAGEINFO	0x49
-#define SETSPEED	0x42
-#define IMAGE		0x46
-#define GETDATA		0x47
-#define GETTHUMBNAIL	0x54
-#define ERAZEDATA	0x45
+/* Return codes */
+#define ESC			0x1b
+#define ACK			0x06
+#define NACK			0x15
+#define NEXTFRAME		0x01
+#define EOT			0x04
 
-#define IMAGE		0x46
-#define NOSE		0x30
+/* Data section pointers */
+#define REC_MODE		0x01
+#define IMAGE_PROTECTED		0x01
 
-#define ESC		0x1b
-#define ACK		0x06
-#define EOT		0x04
-#define CAMERAERROR	0x15
+#define GP_MODULE		"Konica"
+#define FILENAME		"image%04d.jpg"
+#define IMAGE_WIDTH		1360
+#define IMAGE_HEIGHT		1024
+#define PREVIEW_WIDTH		160
+#define PREVIEW_HEIGHT		120
+#define FILENAME_LEN		1024+128
 
-int
-camera_id (CameraText *id) 
+#define ACK_LEN			1
+#define STATE_LEN		1
+#define CSUM_LEN		1
+#define INFO_BUFFER		256
+#define DATA_BUFFER		512
+
+/* Image information pointers */
+#define PREVIEW_SIZE_PTR	0x4
+#define IMAGE_SIZE_PTR		0x8
+#define IMAGE_NUMBER		0xE
+#define IMAGE_PROTECTION_FLAG	0x11
+
+/* Camera information pointers */
+#define CAPACITY_PTR		0x3
+#define POWER_STATE_PTR		0x7
+#define AUTO_OFF_PTR		0x8
+#define CAMERA_MODE_PTR		0xA
+#define LCD_STATE_PTR		0xB
+#define ICON_STATE_PTR		0xC
+#define FLASH_STATE_PTR		0xD
+#define TIMER_PTR		0xE
+#define RESOLUTION_PTR		0xF
+#define WHITE_BALANCE_PTR	0x10
+#define EXPOSURE_TIME_PTR	0x11
+#define TAKEN_IMAGE_PTR		0x12
+#define FREE_IMAGE_PTR		0x14
+#define SHARPNESS_PTR		0x16
+#define COLOR_PTR		0x17
+#define RED_EYE_STATE_PTR	0x18
+#define FOCUS_PTR		0x19
+#define MACRO_PTR		0x1A
+#define ZOOM_PTR		0x1B
+#define CAPTURE_TYPE_PTR	0x1E
+#define REC_DATE_DISP_PTR	0x1F
+#define PLAY_DATE_DISP_PTR	0x20
+#define DATE_FORMAT_PTR		0x21
+#define TIMESTAMP_PTR		0x22
+extern unsigned char k_calculate_checksum (unsigned char *buf,
+		unsigned long int len);
+
+/** Local functions **********************************************************/
+
+/* 
+ * Check the integrity of datas
+ */
+unsigned char
+k_calculate_checksum (unsigned char *buf, unsigned long int len)
 {
-	strcpy(id->text, "konica qm150");
-	return (GP_OK);
+	int i;
+	unsigned char result=0;
+	for (i=0; i < len; i++)
+		result += buf[i];
+	return result;
 }
 
-int
-camera_abilities (CameraAbilitiesList *list) 
-{
-	CameraAbilities a;
-
-	memset(&a, 0, sizeof(a));
-	strcpy(a.model, "Konica:Q-M150");
-	a.status	= GP_DRIVER_STATUS_EXPERIMENTAL;
-	a.port		= GP_PORT_SERIAL;
-	a.speed[0]	= 115200;
-	a.speed[1]	= 0;
-	a.operations        = 	GP_CAPTURE_IMAGE;
-	a.file_operations   = 	GP_FILE_OPERATION_DELETE;
-	a.folder_operations = 	GP_FOLDER_OPERATION_DELETE_ALL;
-	gp_abilities_list_append(list, a);
-	return (GP_OK);
-}
-
-static int
-get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
-	       CameraFileType type, CameraFile *file, void *data,
-	       GPContext *context)
-{
-	Camera *camera = data;
-	unsigned char	cmd[7], buf[512];
-	int	image_no, i, len, ret;
-		
-        image_no = gp_filesystem_number(fs, folder, filename, context);
-	if (image_no < 0) return image_no;
-
-	image_no++;
-	cmd[0] = ESC;
-	cmd[1] = IMAGEINFO;
-	cmd[2] = 0x30 + ((image_no/1000)%10);
-	cmd[3] = 0x30 + ((image_no/100 )%10);
-	cmd[4] = 0x30 + ((image_no/10  )%10);
-	cmd[5] = 0x30 + ( image_no      %10);
-
-	ret = gp_port_write (camera->port, cmd, 6); 
-	if (ret<GP_OK) return ret;
-	ret = gp_port_read (camera->port, buf, 256);
-	if (ret<GP_OK) return ret;
-
-	len =	(buf[8]	<< 24)| (buf[9]	<< 16)| (buf[10]<<  8)| buf[11];
-
-	cmd[0] = ESC;
-	cmd[1] = GETDATA;
-	cmd[2] = IMAGE;
-	cmd[3] = 0x30 + ((image_no/1000)%10);
-	cmd[4] = 0x30 + ((image_no/100 )%10);
-	cmd[5] = 0x30 + ((image_no/10  )%10);
-	cmd[6] = 0x30 + ( image_no      %10);
-
-	ret = gp_port_write (camera->port, cmd, 7);
-	if (ret<GP_OK) return ret;
-	ret = gp_port_read (camera->port, buf, 1);
-	if (ret < GP_OK) return ret;
-	if (buf[0] == CAMERAERROR) {
-		gp_context_error(context, _("This image doesn't exist."));
-		return (GP_ERROR);
-	}
-
-	gp_file_set_name (file, filename);
-	gp_file_set_mime_type (file, GP_MIME_JPEG);
-	for (i=0; i<(len+511)/512 ; i++) {
-		unsigned char csum;
-		int xret;
-
-		xret = gp_port_read (camera->port, buf, 512);
-		if (xret < GP_OK) return xret;
-		ret = gp_port_read (camera->port, &csum, 1);
-		if (ret < GP_OK) return ret;
-
-		ret = gp_file_append (file, buf, xret);
-		if (ret < GP_OK) return ret;
-
-		/* acknowledge the packet */
-		cmd[0] = ACK; 
-		ret = gp_port_write (camera->port, cmd, 1);
-		if (ret < GP_OK) return ret;
-
-		ret = gp_port_read (camera->port, buf, 1);
-		if (ret < GP_OK) return ret;
-		if (buf[0] == EOT) break;
-
-	}
-	/* acknowledge the packet */
-	cmd[0] = ACK; 
-	ret = gp_port_write (camera->port, cmd, 1);
-	if (ret < GP_OK) return ret;
-	
-	return (GP_OK);
-}
-
-static int
-delete_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
-	       void *data, GPContext *context)
-{
-	Camera *camera = data;
-	unsigned char	cmd[7], buf[512];
-	int	image_no, len, ret;
-		
-        image_no = gp_filesystem_number(fs, folder, filename, context);
-	if (image_no < 0) return image_no;
-
-	image_no++;
-	cmd[0] = ESC;
-	cmd[1] = IMAGEINFO;
-	cmd[2] = 0x30 + ((image_no/1000)%10);
-	cmd[3] = 0x30 + ((image_no/100 )%10);
-	cmd[4] = 0x30 + ((image_no/10  )%10);
-	cmd[5] = 0x30 + ( image_no      %10);
-	ret = gp_port_write (camera->port, cmd, 6); 
-	if (ret<GP_OK) return ret;
-	ret = gp_port_read (camera->port, buf, 256);
-	if (ret<GP_OK) return ret;
-
-	if (cmd[17] == 0x1) {
-		gp_context_error(context, _("Image %s is delete protected."),filename);
-		return (GP_ERROR);
-	}
-	
-	len =	(buf[8]	<< 24)| (buf[9]	<< 16)| (buf[10]<<  8)| buf[11];
-	cmd[0] = ESC;
-	cmd[1] = ERAZEDATA;
-	cmd[2] = IMAGE;
-	cmd[3] = 0x30 + ((image_no/1000)%10);
-	cmd[4] = 0x30 + ((image_no/100 )%10);
-	cmd[5] = 0x30 + ((image_no/10  )%10);
-	cmd[6] = 0x30 + ( image_no      %10);
-	ret = gp_port_write (camera->port, cmd, 7);
-	if (ret<GP_OK) return ret;
-	ret = gp_port_read (camera->port, buf, 1);
-	if (ret<GP_OK) return ret;
-	if (buf[0] != ACK) {
-		gp_context_error(context, _("Can't delete image %s."),filename);
-		return (GP_ERROR);
-	}	
-	return (GP_OK);
-}
-
-static int
-delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
-		GPContext *context)
-{
-	unsigned char	cmd[7], buf[512];
-	int	ret;
-	Camera *camera = data;
-	cmd[0] = ESC;
-	cmd[1] = ERAZEDATA;
-	cmd[2] = IMAGE;
-	cmd[3] = 0x30;
-	cmd[4] = 0x30;
-	cmd[5] = 0x30;
-	cmd[6] = 0x30;
-	ret = gp_port_write (camera->port, cmd, 7);
-	if (ret<GP_OK) return ret;
-	ret = gp_port_read (camera->port, buf, 1);
-	if (ret<GP_OK) return ret;
-	if (buf[0] != ACK) {
-		gp_context_error(context, _("Can't delete all images."));
-		return (GP_ERROR);
-	}	
-	return (GP_OK);
-}
-
-static int
-get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
-	       CameraFileInfo *info, void *data, GPContext *context)
-{
-	Camera *camera = data;
-	unsigned char	cmd[7], buf[512];
-	int	ret;
-
-	/* Get the file info here and write it into <info> */
-	cmd[0] = ESC;
-	cmd[1] = GETCAMINFO;
-	ret = gp_port_write (camera->port, cmd, 2); 
-	if (ret<GP_OK) return ret;
-	ret = gp_port_read (camera->port, buf, 256);
-	if (ret<GP_OK) return ret;
-
-	return (GP_OK);
-}
-
-static int
-file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
-		void *data, GPContext *context)
-{
-	Camera *camera = data;
-	unsigned char	cmd[2], buf[256];
-	int	num, ret;
-		
-	cmd[0] = ESC;
-	cmd[1] = GETCAMINFO;
-	ret = gp_port_write (camera->port, cmd, 2); 
-	if (ret<GP_OK) return ret;
-	ret = gp_port_read (camera->port, buf, 256);
-	if (ret<GP_OK) return ret;
-	num =	(buf[0x10] << 24) | 
-		(buf[0x11] << 16) |
-		(buf[0x12] << 8)  |
-		(buf[0x13]);
-	gp_list_populate (list, "image%04d.jpg", num);
-	return GP_OK;
-}
-
-static int
-camera_capture (Camera* camera, CameraCaptureType type, CameraFilePath* path,
-		GPContext *context)
-{
-	unsigned char	cmd[2], buf[256];
-	int	image_id, ret;
-
-	cmd[0] = ESC;
-	cmd[1] = GETCAMINFO;
-	ret = gp_port_write (camera->port, cmd, 2); 
-	if (ret<GP_OK) return ret;
-	ret = gp_port_read (camera->port, buf, 256);
-	cmd[0] = ESC;
-	cmd[1] = CAPTURE;
-	cmd[2] = NOSE;
-	ret = gp_port_write (camera->port, cmd, 3);
-	if (ret<GP_OK) return ret;
-	ret = gp_port_read (camera->port, buf, 1);
-	if (ret<GP_OK) return ret;
-	if (buf[0] == CAMERAERROR) {
-		gp_context_error(context, _("You must be on record mode to capture image."));
-		return (GP_ERROR);
-	}
-	if (buf[0] != ACK) {
-		gp_context_error(context, _("Can't capture picture."));
-		return (GP_ERROR);
-	}
-	cmd[0] = ESC;
-	cmd[1] = GETCAMINFO;
-	ret = gp_port_write (camera->port, cmd, 2); 
-	if (ret<GP_OK) return ret;
-	ret = gp_port_read (camera->port, buf, 256);
-
-
-	/* Find the name of the image captured */
-	cmd[0] = ESC;
-	cmd[1] = GETCAMINFO;
-	ret = gp_port_write (camera->port, cmd, 2); 
-	if (ret<GP_OK) return ret;
-	ret = gp_port_read (camera->port, buf, 256);
-	if (ret<GP_OK) return ret;
-	image_id =	(buf[0x10] << 24) | 
-			(buf[0x11] << 16) |
-			(buf[0x12] << 8)  |
-			(buf[0x13]);
-	image_id++;
-	sprintf (path->name, "image%04d.jpg", (int) image_id);
-	strcpy (path->folder, "/");
-	gp_filesystem_append (camera->fs, path->folder,
-				path->name, context);
-	return (GP_OK);
-}
-
-static int
-camera_about (Camera* camera, CameraText* about, GPContext *context)
-{
-	unsigned char	cmd[2], buf[256];
-	int	ret;
-		
-	cmd[0] = ESC;
-	cmd[1] = GETCAMINFO;
-	ret = gp_port_write (camera->port, cmd, 2); 
-	if (ret<GP_OK) return ret;
-	ret = gp_port_read (camera->port, buf, 256);
-	if (ret<GP_OK) return ret;
-
-	return (GP_OK);
-}
-
+/* 
+ * Check the connection and the camera
+ */
 static int
 k_ping (GPPort *port) {
 	char	cmd[2], buf[1];
@@ -361,6 +161,1099 @@ k_ping (GPPort *port) {
 	return GP_OK;
 }
 
+/* 
+ * Read image informations 
+ */
+static int
+k_info_img (unsigned int image_no, void *data, CameraFileInfo* info, 
+		unsigned int *data_number)
+{
+	unsigned char	cmd[6], buf[INFO_BUFFER];
+	Camera *camera = data;
+	int ret;
+
+	/* Read file information */
+	cmd[0] = ESC;
+	cmd[1] = GETIMAGEINFO;
+	cmd[2] = 0x30 + ((image_no/1000)%10);
+	cmd[3] = 0x30 + ((image_no/100 )%10);
+	cmd[4] = 0x30 + ((image_no/10  )%10);
+	cmd[5] = 0x30 + ( image_no      %10);
+	ret = gp_port_write (camera->port, cmd, sizeof(cmd)); 
+	if (ret<GP_OK) return ret;
+	ret = gp_port_read (camera->port, buf, INFO_BUFFER);
+	if (ret<GP_OK) return ret;
+
+	/* Search the image data number into the memory */
+	if (data_number != NULL)
+		*data_number = (buf[IMAGE_NUMBER] << 8)
+			| (buf[IMAGE_NUMBER+1]);
+
+	/* Get the file info here and write it into <info> */
+	/* There is no audio support with this camera */
+	info->audio.fields = GP_FILE_INFO_NONE;
+	/* Preview informations */
+	info->preview.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_SIZE 
+		| GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT;
+	strcpy (info->preview.type, GP_MIME_JPEG);
+	info->preview.size = ((buf[PREVIEW_SIZE_PTR] << 24) | 
+		(buf[PREVIEW_SIZE_PTR+1] << 16) | (buf[PREVIEW_SIZE_PTR+2] << 8)
+		| buf[PREVIEW_SIZE_PTR+3]);
+	info->preview.width = PREVIEW_WIDTH;
+	info->preview.height = PREVIEW_HEIGHT;
+
+	/* Image information */
+	info->file.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_SIZE
+		| GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT | GP_FILE_INFO_NAME
+		| GP_FILE_INFO_PERMISSIONS;
+	strcpy (info->file.type, GP_MIME_JPEG);
+	info->file.size = ((buf[IMAGE_SIZE_PTR] << 24) |
+		(buf[IMAGE_SIZE_PTR+1] << 16) | (buf[IMAGE_SIZE_PTR+2] << 8)
+		| buf[IMAGE_SIZE_PTR+3]);
+	info->file.width = IMAGE_WIDTH;
+	info->file.height = IMAGE_HEIGHT;
+	snprintf (info->file.name, sizeof (info->file.name),(char *) FILENAME,
+		image_no);
+	if (buf[IMAGE_PROTECTION_FLAG] == IMAGE_PROTECTED)
+		info->file.permissions = GP_FILE_PERM_READ;
+	else
+		info->file.permissions = GP_FILE_PERM_ALL;
+	return (GP_OK);
+}
+
+/*
+ * Get data from the camera
+ * type = GP_FILE_TYPE_NORMAL, GP_FILE_TYPE_PREVIEW or GP_FILE_TYPE_EXIF
+ */
+static int
+k_getdata (int image_no, int type, unsigned int len, void *data, 
+		unsigned char *d, GPContext *context)
+{
+	Camera *camera = data;
+	unsigned char ack,state, cmd[7], buf[DATA_BUFFER], *buffer=d;
+	unsigned int id=0, bytes_read=0, i;
+	int ret;
+
+	cmd[0] = ESC;
+	cmd[1] = GETIMAGE_CMD1;
+	if (type != GP_FILE_TYPE_NORMAL)
+		cmd[1] = GETTHUMBNAIL_CMD1;
+	cmd[2] = IMAGE_CMD2;
+	cmd[3] = 0x30 + ((image_no/1000)%10);
+	cmd[4] = 0x30 + ((image_no/100 )%10);
+	cmd[5] = 0x30 + ((image_no/10  )%10);
+	cmd[6] = 0x30 + ( image_no      %10);
+
+	ret = gp_port_write (camera->port, cmd, sizeof(cmd));
+	if (ret<GP_OK) return ret;
+	ret = gp_port_read (camera->port, &ack, ACK_LEN);
+	if (ret < GP_OK) return ret;
+	if (ack == NACK) {
+		gp_context_error(context, _("This preview doesn't exist."));
+		return (GP_ERROR);
+	}
+
+	/* Download the required image */
+	if (type == GP_FILE_TYPE_NORMAL)
+		id = gp_context_progress_start (context, len, 
+			_("Downloading image..."));
+	for (i=0; i <= (len+DATA_BUFFER-1)/DATA_BUFFER ; i++) {
+		unsigned char csum;
+		int xret;
+
+		xret = gp_port_read (camera->port, buf, DATA_BUFFER);
+		if (xret < GP_OK) {
+			if (type == GP_FILE_TYPE_NORMAL)
+				gp_context_progress_stop (context, id);
+			return xret; 
+		}
+		ret = gp_port_read (camera->port, &csum, CSUM_LEN);
+		if (ret < GP_OK) {
+			if (type == GP_FILE_TYPE_NORMAL)
+				gp_context_progress_stop (context, id);
+			return ret;
+		}
+		if ((k_calculate_checksum(buf, DATA_BUFFER)) != csum) {
+			if (type == GP_FILE_TYPE_NORMAL)
+				gp_context_progress_stop (context, id);
+			/* acknowledge the packet */
+			ack = NACK;
+			ret = gp_port_write (camera->port, &ack, ACK_LEN);
+			if (ret < GP_OK)
+				return ret;
+			gp_context_error(context, _("Datas has corrupted."));
+			return (GP_ERROR_CORRUPTED_DATA);
+		}
+		if ((len - bytes_read) > DATA_BUFFER) {
+			memcpy((char *)buffer, buf, xret);
+			(unsigned int)buffer += DATA_BUFFER;
+		} else {
+			memcpy((char *)buffer, buf, (len - bytes_read));
+			(unsigned int)buffer += len - bytes_read;
+		}
+
+		/* acknowledge the packet */
+		ack = ACK; 
+		ret = gp_port_write (camera->port, &ack, ACK_LEN);
+		if (ret < GP_OK) {
+			if (type == GP_FILE_TYPE_NORMAL)
+				gp_context_progress_stop (context, id);
+			return ret;
+		}
+		ret = gp_port_read (camera->port, &state, STATE_LEN);
+		if (ret < GP_OK) {
+			if (type == GP_FILE_TYPE_NORMAL)
+				gp_context_progress_stop (context, id);
+			return ret;
+		}
+		if (state == EOT)
+			break;
+		bytes_read += DATA_BUFFER;
+		if (type == GP_FILE_TYPE_NORMAL)
+			gp_context_progress_update (context, id, bytes_read);
+	}
+	/* acknowledge the packet */
+	ack = ACK; 
+	ret = gp_port_write (camera->port, &ack, ACK_LEN);
+	if (ret < GP_OK) {
+		if (type == GP_FILE_TYPE_NORMAL)
+			gp_context_progress_stop (context, id);
+		return ret;
+	}
+	if (type == GP_FILE_TYPE_NORMAL)
+		gp_context_progress_stop (context, id);
+	return (GP_OK);
+}
+
+
+/** Get and delete files *****************************************************/
+
+/*
+ * Get images, thumbnails or EXIF datas
+ */
+static int
+get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
+	       CameraFileType type, CameraFile *file, void *data,
+	       GPContext *context)
+{
+	unsigned char *d,*thumbnail;
+	int image_no, len, ret, image_number;
+	long long_len;
+	CameraFileInfo file_info;
+	exifparser exifdat;
+	GP_DEBUG ("*** ENTER: get_file_func ***");
+
+        image_no = gp_filesystem_number(fs, folder, filename, context);
+	if (image_no < 0) return image_no;
+
+	/* Search the image informations */
+	image_no++;
+	ret = k_info_img (image_no, data, (CameraFileInfo *)&file_info, 
+		&image_number);
+	image_no = image_number;
+	if (ret < GP_OK)
+		return ret;
+
+	switch (type) {
+		case GP_FILE_TYPE_NORMAL:
+			len = file_info.file.size;
+			if (!(d = (unsigned char *)malloc(len)))
+				return (GP_ERROR_NO_MEMORY);
+			ret = k_getdata(image_no, GP_FILE_TYPE_NORMAL,len,
+				data, d, context);
+			if (ret < GP_OK) {
+				free(d);
+				return ret; 
+			}
+			break;
+		case GP_FILE_TYPE_PREVIEW:
+			len = file_info.preview.size;
+			long_len = (long)len;
+			if (!(d = (unsigned char *)malloc(len)))
+				return (GP_ERROR_NO_MEMORY);
+			ret = k_getdata(image_no, GP_FILE_TYPE_PREVIEW, len, 
+				data, d, context);
+			if (ret < GP_OK) {
+				free(d);
+				return ret;
+			}
+			exifdat.header = d;
+			exifdat.data = d+12;
+			thumbnail = exif_get_thumbnail_and_size(&exifdat,
+				&long_len);
+			free(d);
+			d = thumbnail;
+			if (ret < GP_OK) {
+				free(d);
+				return ret;
+			}
+			break;
+		case GP_FILE_TYPE_EXIF:
+			len = file_info.preview.size;
+			if (!(d = (unsigned char *)malloc(len)))
+				return (GP_ERROR_NO_MEMORY);
+			ret = k_getdata(image_no, GP_FILE_TYPE_EXIF, len, 
+				data, d, context);
+			if (ret < GP_OK) {
+				free(d);
+				return ret;
+			}
+			break;
+		default:
+			gp_context_error(context, 
+				_("This is not supported by this camera !"));
+			return (GP_ERROR_NOT_SUPPORTED);
+	}
+	gp_file_set_name (file, filename);
+	gp_file_set_mime_type (file, GP_MIME_JPEG);
+	if (type == GP_FILE_TYPE_EXIF)
+		gp_file_set_type (file, GP_FILE_TYPE_EXIF);
+	ret = gp_file_append(file, d, len);
+	free(d);
+	return (ret);
+}
+
+/*
+ * Delete one image
+ * The image mustn't be protected
+ */
+static int
+delete_file_func (CameraFilesystem *fs, const char *folder, 
+		const char *filename, void *data, GPContext *context)
+{
+	Camera *camera = data;
+	CameraFileInfo file_info;
+	unsigned char cmd[7], ack;
+	int image_no, ret;
+
+	GP_DEBUG ("*** ENTER: delete_file_func ***");
+
+        image_no = gp_filesystem_number(fs, folder, filename, context);
+	if (image_no < 0) return image_no;
+
+	image_no++;
+	ret = k_info_img (image_no, data, (CameraFileInfo *)&file_info, 
+		&image_no);
+	if (ret < GP_OK)
+		return ret;
+
+	/* Now, check if the image isn't protected */
+	if (file_info.file.permissions == GP_FILE_PERM_READ) {
+		gp_context_error(context, _("Image %s is delete protected."),
+			filename);
+		return (GP_ERROR);
+	}
+
+	/* Erase the image */
+	cmd[0] = ESC;
+	cmd[1] = ERASEIMAGE_CMD1;
+	cmd[2] = IMAGE_CMD2;
+	cmd[3] = 0x30 + ((image_no/1000)%10);
+	cmd[4] = 0x30 + ((image_no/100 )%10);
+	cmd[5] = 0x30 + ((image_no/10  )%10);
+	cmd[6] = 0x30 + ( image_no      %10);
+	ret = gp_port_write (camera->port, cmd, sizeof(cmd));
+	if (ret<GP_OK) return ret;
+	ret = gp_port_read (camera->port, &ack, ACK_LEN);
+	if (ret<GP_OK) return ret;
+	if (ack != ACK) {
+		gp_context_error(context, _("Can't delete image %s."),filename);
+		return (GP_ERROR);
+	}	
+	return (GP_OK);
+}
+
+/*
+ * Delete all images
+ */
+static int
+delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
+		GPContext *context)
+{
+	unsigned char	cmd[7], ack;
+	int	ret;
+	Camera *camera = data;
+
+	GP_DEBUG ("*** ENTER: delete_all_func ***");
+
+	cmd[0] = ESC;
+	cmd[1] = ERASEIMAGE_CMD1;
+	cmd[2] = IMAGE_CMD2;
+	cmd[3] = 0x30;
+	cmd[4] = 0x30;
+	cmd[5] = 0x30;
+	cmd[6] = 0x30;
+	ret = gp_port_write (camera->port, cmd, sizeof(cmd));
+	if (ret<GP_OK) return ret;
+	ret = gp_port_read (camera->port, &ack, ACK_LEN);
+	if (ret<GP_OK) return ret;
+	if (ack != ACK) {
+		gp_context_error(context, _("Can't delete all images."));
+		return (GP_ERROR);
+	}	
+	return (GP_OK);
+}
+
+
+/** Additional functions to handle images ************************************/
+
+/*
+ * Upload an image to the camera
+ */
+static int
+put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, 
+		void *data, GPContext *context)
+{
+	Camera *camera = data;
+	unsigned char	cmd[2], buf[DATA_BUFFER],ack,sum,state;
+	const char *d;
+	unsigned long int len, len_sent=0;
+	unsigned int id;
+	int ret,i;
+	
+	GP_DEBUG ("*** ENTER: put_file_func ***");
+
+	/* Send function */
+	cmd[0] = ESC;
+	cmd[1] = UPLOADDATA;
+	ret = gp_port_write (camera->port, cmd, sizeof(cmd)); 
+	if (ret<GP_OK) 
+		return ret;
+	gp_file_get_data_and_size(file, (const char **)&d, (unsigned long int *)&len);
+	id = gp_context_progress_start (context, len, _("Upload image..."));
+	for (i=0; i < ((len+DATA_BUFFER-1) / DATA_BUFFER); i++) {
+		ret = gp_port_read (camera->port, &ack, ACK_LEN);
+		if (ret<GP_OK) {
+			gp_context_progress_stop (context, id);
+			return ret;
+		}
+		if (ack != ACK) {
+			gp_context_progress_stop (context, id);
+			gp_context_error(context, 
+				_("Can't upload this image to the camera. "
+				"An error has occured."));
+			return (GP_ERROR);
+		}
+		state = NEXTFRAME;
+		ret = gp_port_write (camera->port, &state, STATE_LEN); 
+		if (ret<GP_OK) {
+			gp_context_progress_stop (context, id);
+			return ret;
+		}
+		if ((len - len_sent) <= DATA_BUFFER) {
+			/* Send the last datas */
+			ret = gp_port_write (camera->port, &d[i*DATA_BUFFER],
+				(len - len_sent));
+			if (ret<GP_OK) {
+				gp_context_progress_stop (context, id);
+				return ret;
+			}
+			/* and complete with zeros */
+			bzero(buf,DATA_BUFFER);
+			ret = gp_port_write (camera->port, buf, (DATA_BUFFER - 
+				(len - len_sent)));
+			if (ret<GP_OK) {
+				gp_context_progress_stop (context, id);
+				return ret;
+			}
+			/* Calculate the checksum */
+			sum = k_calculate_checksum(
+				(unsigned char *)&d[i*DATA_BUFFER],
+				(len-len_sent));
+			len_sent += (len - len_sent);
+		}
+		else {
+			/* Just send the datas */
+			ret = gp_port_write (camera->port, &d[i*DATA_BUFFER],
+				DATA_BUFFER);
+			if (ret<GP_OK) {
+				gp_context_progress_stop (context, id);
+				return ret;
+			}
+			len_sent += DATA_BUFFER;
+			sum = k_calculate_checksum(
+				(unsigned char *)&d[i*DATA_BUFFER],
+				DATA_BUFFER);
+		}
+		ret = gp_port_write (camera->port, &sum, CSUM_LEN); 
+		if (ret<GP_OK) {
+			gp_context_progress_stop (context, id);
+			return ret;
+		}
+		gp_context_progress_update (context, id, len_sent);
+	}
+	state = EOT;
+	ret = gp_port_write (camera->port, &state, STATE_LEN); 
+	if (ret<GP_OK) {
+		gp_context_progress_stop (context, id);
+		return ret;
+	}
+	ret = gp_port_read (camera->port, &ack, ACK_LEN);
+	if (ret<GP_OK) {
+		gp_context_progress_stop (context, id);
+		return ret;
+	}
+	if (ack != ACK) {
+		gp_context_progress_stop (context, id);
+		gp_context_error(context, _("Can't upload this image to the"
+			"camera. An error has occured."));
+		return (GP_ERROR);
+	}
+	gp_context_progress_stop (context, id);
+	return (GP_OK);
+}
+
+/*
+ * Capture an image
+ */
+static int
+camera_capture (Camera* camera, CameraCaptureType type, CameraFilePath* path,
+		GPContext *context)
+{
+	unsigned char cmd[3], buf[256], ack;
+	int ret, nbr_images,images_taken,i;
+
+	GP_DEBUG ("*** ENTER: camera_capture ***");
+
+	/* Just check if there is space available yet */
+	cmd[0] = ESC;
+	cmd[1] = GETCAMINFO;
+	ret = gp_port_write (camera->port, cmd, 2); 
+	if (ret<GP_OK)
+		return ret;
+	ret = gp_port_read (camera->port, buf, INFO_BUFFER);
+	nbr_images = (buf[FREE_IMAGE_PTR] << 8) | (buf[FREE_IMAGE_PTR+1]);
+	images_taken = (buf[TAKEN_IMAGE_PTR] << 8) | (buf[TAKEN_IMAGE_PTR+1]);
+
+	/* Capture the image */
+	cmd[0] = ESC;
+	cmd[1] = CAPTUREIMAGE_CMD1;
+	cmd[2] = CAPTUREIMAGE_CMD2;
+	ret = gp_port_write (camera->port, cmd, sizeof(cmd));
+	if (ret<GP_OK)
+		return ret;
+	ret = gp_port_read (camera->port, &ack, ACK_LEN);
+	if (ret<GP_OK)
+		return ret;
+	if (ack == NACK) {
+		if (buf[CAMERA_MODE_PTR] != REC_MODE)
+			gp_context_error(context, _("You must be on record"
+				"mode to capture image."));
+		else if (!nbr_images)
+			gp_context_error(context, _("No space available"
+				"to capture new image. You must delete some"
+				"images."));
+		else
+			gp_context_error(context, _("Can't capture new image."
+				"Unknown error"));
+		return (GP_ERROR);
+	}
+
+	/* Wait image writting in camera's memory */
+	for (i=0; i<=15; i++) {
+		sleep(1);
+		if ((ret = k_ping(camera->port)) == GP_OK)
+			break;
+	}
+	if (ret < GP_OK) {
+		gp_context_error(context, _("No answer from the camera."));
+		return (GP_ERROR);
+	}
+
+	/* Now register new image */
+	images_taken++;
+	sprintf (path->name, FILENAME, (unsigned int) images_taken);
+	return (GP_OK);
+}
+
+/*
+ * Get informations about an image
+ */
+static int
+get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
+	       CameraFileInfo *info, void *data, GPContext *context)
+{
+	int image_no;
+
+	GP_DEBUG ("*** ENTER: get_info_func ***");
+
+        image_no = gp_filesystem_number(fs, folder, filename, context);
+	if (image_no < 0)
+		return image_no;
+	image_no++;
+
+	return (k_info_img(image_no, data, info, NULL));
+}
+
+
+/** Driver base functions ****************************************************/
+
+/*
+ * Create the image list
+ */
+static int
+file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
+		void *data, GPContext *context)
+{
+	Camera *camera = data;
+	unsigned char	cmd[2], buf[INFO_BUFFER];
+	int	num, ret;
+
+	GP_DEBUG ("*** ENTER: file_list_func ***");
+
+	cmd[0] = ESC;
+	cmd[1] = GETCAMINFO;
+	ret = gp_port_write (camera->port, cmd, sizeof(cmd));
+	if (ret<GP_OK)
+		return ret;
+	ret = gp_port_read (camera->port, buf, INFO_BUFFER);
+	if (ret<GP_OK)
+		return ret;
+	num = (buf[TAKEN_IMAGE_PTR] << 8) | (buf[TAKEN_IMAGE_PTR+1]);
+	gp_list_populate (list, FILENAME, num);
+	return GP_OK;
+}
+
+
+/** Camera settings **********************************************************/
+/*
+ * List all informations about the camera
+ */
+static int
+camera_get_config (Camera* camera, CameraWidget** window, GPContext *context)
+{
+	unsigned char cmd[2], buf[INFO_BUFFER];
+	int ret;
+        CameraWidget *widget;
+        CameraWidget *section;
+	time_t timestamp=0;
+	float value_float;
+
+	GP_DEBUG ("*** ENTER: camera_get_config ***");
+
+	/* get informations about camera */
+	cmd[0] = ESC;
+	cmd[1] = GETCAMINFO;
+	ret = gp_port_write (camera->port, cmd, sizeof(cmd));
+	if (ret<GP_OK)
+		return ret;
+	ret = gp_port_read (camera->port, buf, INFO_BUFFER);
+	if (ret<GP_OK)
+		return ret;
+
+	/* Informations manipulation */
+	timestamp = (buf[TIMESTAMP_PTR] << 24) + (buf[TIMESTAMP_PTR+1] << 16)
+		+ (buf[TIMESTAMP_PTR+2] << 8) + buf[TIMESTAMP_PTR+3];
+	/*
+	 * This timestamp start the 1 January 1980 at 00:00 
+	 * but UNIX timestamp start the 1 January 1970 at 00:00
+	 * so we calculate the UNIX timestamp with the camera's one
+	 */
+	(int)timestamp += (8*365 + 2*366)*24*3600-3600;
+
+	/* Window creation */
+	gp_widget_new (GP_WIDGET_WINDOW, _("Konica Configuration"), window);
+
+        /************************/
+        /* Persistent Settings  */
+        /************************/
+        gp_widget_new (GP_WIDGET_SECTION, _("Persistent Settings"), &section);
+        gp_widget_append (*window, section);
+
+        /* Date */
+        gp_widget_new (GP_WIDGET_DATE, _("Date and Time"), &widget);
+        gp_widget_append (section, widget);
+        gp_widget_set_value (widget, &timestamp);
+
+        /* Auto Off Time */
+        gp_widget_new (GP_WIDGET_RANGE, _("Auto Off Time"), &widget);
+        gp_widget_append (section, widget);
+        gp_widget_set_range (widget, 1, 255, 1);
+        value_float = ((buf[AUTO_OFF_PTR] << 8) + buf[AUTO_OFF_PTR+1]) / 60;
+        gp_widget_set_value (widget, &value_float);
+
+
+        /* Resolution */
+        gp_widget_new (GP_WIDGET_RADIO, _("Resolution"), &widget);
+        gp_widget_append (section, widget);
+        gp_widget_add_choice (widget, _("Low"));
+        gp_widget_add_choice (widget, _("Medium"));
+        gp_widget_add_choice (widget, _("High"));
+        switch (buf[RESOLUTION_PTR]) {
+	        case 1:
+        	        gp_widget_set_value (widget, _("High"));
+                	break;
+	        case 2:
+        	        gp_widget_set_value (widget, _("Low"));
+	               	break;
+		case 0:
+        	        gp_widget_set_value (widget, _("Medium"));
+                	break;
+        }
+
+        /* LCD */
+        gp_widget_new (GP_WIDGET_RADIO, _("LCD"), &widget);
+        gp_widget_append (section, widget);
+        gp_widget_add_choice (widget, _("On"));
+        gp_widget_add_choice (widget, _("Off"));
+        switch (buf[LCD_STATE_PTR]) {
+	        case 0:
+        	        gp_widget_set_value (widget, _("On"));
+                	break;
+	        case 1:
+        	        gp_widget_set_value (widget, _("Off"));
+                	break;
+        }
+
+        /* Icons */
+        gp_widget_new (GP_WIDGET_RADIO, _("Icons"), &widget);
+        gp_widget_append (section, widget);
+        gp_widget_add_choice (widget, _("On"));
+        gp_widget_add_choice (widget, _("Off"));
+        switch (buf[ICON_STATE_PTR]) {
+	        case 0:
+        	        gp_widget_set_value (widget, _("On"));
+                	break;
+	        case 1:
+        	        gp_widget_set_value (widget, _("Off"));
+                	break;
+        }
+
+        /****************/
+        /* Localization */
+        /****************/
+        gp_widget_new (GP_WIDGET_SECTION, _("Localization"), &section);
+        gp_widget_append (*window, section);
+
+        /* Date format */
+        gp_widget_new (GP_WIDGET_MENU, _("Date Format"), &widget);
+        gp_widget_append (section, widget);
+        gp_widget_add_choice (widget, _("Month/Day/Year"));
+        gp_widget_add_choice (widget, _("Day/Month/Year"));
+        gp_widget_add_choice (widget, _("Year/Month/Day"));
+	switch (buf[DATE_FORMAT_PTR]) {
+		case 0:
+			gp_widget_set_value (widget, _("Month/Day/Year"));
+			break;
+		case 1:
+			gp_widget_set_value (widget, _("Day/Month/Year"));
+			break;
+		case 2:
+			gp_widget_set_value (widget, _("Year/Month/Day"));
+			break;
+	}
+
+	/********************************/
+        /* Session-persistent Settings  */
+        /********************************/
+        gp_widget_new (GP_WIDGET_SECTION, _("Session-persistent Settings"),
+                       &section);
+        gp_widget_append (*window, section);
+
+        /* Flash */
+        gp_widget_new (GP_WIDGET_RADIO, _("Flash"), &widget);
+        gp_widget_append (section, widget);
+        gp_widget_add_choice (widget, _("Off"));
+        gp_widget_add_choice (widget, _("On"));
+        gp_widget_add_choice (widget, _("On, red-eye reduction"));
+        gp_widget_add_choice (widget, _("Auto"));
+        gp_widget_add_choice (widget, _("Auto, red-eye reduction"));
+        switch (buf[FLASH_STATE_PTR]) {
+	        case 2:
+        	        gp_widget_set_value (widget, _("Off"));
+                	break;
+	        case 1:
+			if (buf[RED_EYE_STATE_PTR] == 1)
+	        	        gp_widget_set_value (widget, 
+					_("On, red-eye reduction"));
+			else
+				gp_widget_set_value (widget, _("On"));
+                	break;
+	        case 0:
+			if (buf[RED_EYE_STATE_PTR] == 1)
+	        	        gp_widget_set_value (widget, 
+					_("Auto, red-eye reduction"));
+			else
+				gp_widget_set_value (widget, _("Auto"));
+                	break;
+        }
+
+        /* Exposure */
+        gp_widget_new (GP_WIDGET_RANGE, _("Exposure"), &widget);
+        gp_widget_append (section, widget);
+        gp_widget_set_range (widget, -2, 2, 0.1);
+	switch(buf[EXPOSURE_TIME_PTR]) {
+		case 0:
+			value_float = 0;
+			break;
+		case 1:
+			value_float = 0.3;
+			break;
+		case 2:
+			value_float = 0.5;
+			break;
+		case 3:
+			value_float = 0.8;
+			break;
+		case 4:
+			value_float = 1.0;
+			break;
+		case 5:
+			value_float = 1.3;
+			break;
+		case 6:
+			value_float = 1.5;
+			break;
+		case 7:
+			value_float = 1.8;
+			break;
+		case 8:
+			value_float = 2.0;
+			break;
+		case 0xF8:
+			value_float = -2.0;
+			break;
+		case 0xF9:
+			value_float = -1.8;
+			break;
+		case 0xFA:
+			value_float = -1.5;
+			break;
+		case 0xFB:
+			value_float = -1.3;
+			break;
+		case 0xFC:
+			value_float = -1.0;
+			break;
+		case 0xFD:
+			value_float = -0.8;
+			break;
+		case 0xFE:
+			value_float = -0.5;
+			break;
+		case 0xFF:
+			value_float = -0.3;
+			break;
+	}
+        gp_widget_set_value (widget, &value_float);
+
+       /* Focus */
+        gp_widget_new (GP_WIDGET_RADIO, _("Focus"), &widget);
+        gp_widget_append (section, widget);
+        gp_widget_add_choice (widget, _("2.0m"));
+	gp_widget_add_choice (widget, _("0.5m"));
+	gp_widget_add_choice (widget, _("0.1m"));
+        gp_widget_add_choice (widget, _("Auto"));
+        switch (buf[FOCUS_PTR]) {
+		case 0:
+			gp_widget_set_value (widget, _("Auto"));
+			break;
+		case 1:
+	                gp_widget_set_value (widget, _("2.0m"));
+	                break;
+	        case 2:
+        	        gp_widget_set_value (widget, _("0.5m"));
+                	break;
+	        case 3:
+        	        gp_widget_set_value (widget, _("0.1m"));
+                	break;
+        }
+
+       /* white balance */
+        gp_widget_new (GP_WIDGET_RADIO, _("White balance"), &widget);
+        gp_widget_append (section, widget);
+        gp_widget_add_choice (widget, _("Office"));
+	gp_widget_add_choice (widget, _("Day-lt"));
+	gp_widget_add_choice (widget, _("Auto"));
+        switch (buf[WHITE_BALANCE_PTR]) {
+	        case 0:
+        	        gp_widget_set_value (widget, _("Auto"));
+                	break;
+	        case 1:
+        	        gp_widget_set_value (widget, _("Day-lt"));
+                	break;
+	        case 2:
+        	        gp_widget_set_value (widget, _("Office"));
+                	break;
+	}
+
+       /* Sharpness */
+        gp_widget_new (GP_WIDGET_RADIO, _("Sharpness"), &widget);
+        gp_widget_append (section, widget);
+        gp_widget_add_choice (widget, _("Sharp"));
+	gp_widget_add_choice (widget, _("Soft"));
+	gp_widget_add_choice (widget, _("Auto"));
+        switch (buf[SHARPNESS_PTR]) {
+	        case 0:
+        	        gp_widget_set_value (widget, _("Auto"));
+                	break;
+	        case 1:
+        	        gp_widget_set_value (widget, _("Sharp"));
+                	break;
+	        case 2:
+        	        gp_widget_set_value (widget, _("Soft"));
+                	break;
+	}
+
+       /* Color */
+        gp_widget_new (GP_WIDGET_RADIO, _("Color"), &widget);
+        gp_widget_append (section, widget);
+        gp_widget_add_choice (widget, _("Light"));
+	gp_widget_add_choice (widget, _("Deep"));
+	gp_widget_add_choice (widget, _("Black and White"));
+	gp_widget_add_choice (widget, _("Sepia"));
+	gp_widget_add_choice (widget, _("Auto"));
+        switch (buf[COLOR_PTR]) {
+	        case 0:
+        	        gp_widget_set_value (widget, _("Auto"));
+                	break;
+	        case 1:
+        	        gp_widget_set_value (widget, _("Light"));
+                	break;
+	        case 2:
+        	        gp_widget_set_value (widget, _("Deep"));
+                	break;
+	        case 3:
+        	        gp_widget_set_value (widget, _("Black and White"));
+                	break;
+	        case 4:
+        	        gp_widget_set_value (widget, _("Sepia"));
+                	break;
+	}
+
+       /* Macro */
+        gp_widget_new (GP_WIDGET_RADIO, _("Macro"), &widget);
+        gp_widget_append (section, widget);
+        gp_widget_add_choice (widget, _("On"));
+	gp_widget_add_choice (widget, _("Off"));
+        switch (buf[MACRO_PTR]) {
+	        case 0:
+        	        gp_widget_set_value (widget, _("Off"));
+                	break;
+	        case 1:
+        	        gp_widget_set_value (widget, _("On"));
+                	break;
+	}
+
+       /* Zoom */
+        gp_widget_new (GP_WIDGET_RADIO, _("Zoom"), &widget);
+        gp_widget_append (section, widget);
+        gp_widget_add_choice (widget, _("On"));
+	gp_widget_add_choice (widget, _("Off"));
+        switch (buf[ZOOM_PTR]) {
+	        case 0:
+        	        gp_widget_set_value (widget, _("Off"));
+                	break;
+	        case 1:
+        	        gp_widget_set_value (widget, _("On"));
+                	break;
+	}
+
+       /* Capture */
+        gp_widget_new (GP_WIDGET_RADIO, _("Capture"), &widget);
+        gp_widget_append (section, widget);
+	gp_widget_add_choice (widget, _("Single"));
+	gp_widget_add_choice (widget, _("Sequence 9"));
+        switch (buf[CAPTURE_TYPE_PTR]) {
+	        case 0:
+        	        gp_widget_set_value (widget, _("Single"));
+                	break;
+	        case 1:
+        	        gp_widget_set_value (widget, _("Sequence 9"));
+                	break;
+	}
+
+       /* Date display */
+        gp_widget_new (GP_WIDGET_RADIO, _("Date display"), &widget);
+        gp_widget_append (section, widget);
+        gp_widget_add_choice (widget, _("Anywhere"));
+	gp_widget_add_choice (widget, _("Play mode"));
+	gp_widget_add_choice (widget, _("Record mode"));
+	gp_widget_add_choice (widget, _("Everywhere"));
+        switch (buf[REC_DATE_DISP_PTR]) {
+	        case 0:
+			if (buf[PLAY_DATE_DISP_PTR] == 0)
+				gp_widget_set_value (widget, _("Play mode"));
+			else
+        	        	gp_widget_set_value (widget, _("Anywhere"));
+                	break;
+	        case 1:
+			if (buf[PLAY_DATE_DISP_PTR] == 0)
+				gp_widget_set_value (widget, _("Everywhere"));
+			else
+        	        	gp_widget_set_value (widget, _("Record mode"));
+                	break;
+	}
+
+        /************************/
+        /* Volatile Settings    */
+        /************************/
+        gp_widget_new (GP_WIDGET_SECTION, _("Volatile Settings"), &section);
+        gp_widget_append (*window, section);
+
+        /* Self Timer */
+        gp_widget_new (GP_WIDGET_RADIO, _("Self Timer"), &widget);
+        gp_widget_append (section, widget);
+        gp_widget_add_choice (widget, _("Self Timer (only next picture)"));
+        gp_widget_add_choice (widget, _("Normal"));
+        switch (buf[TIMER_PTR]) {
+	        case 1:
+        	        gp_widget_set_value (widget, _("Self Timer ("
+                	                     "next picture only)"));
+	                break;
+	        case 0:
+        	        gp_widget_set_value (widget, _("Normal"));
+                	break;
+	        }
+	return (GP_OK);
+}
+
+static int
+camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
+{
+	/* Can't change configuration */
+	return(GP_ERROR);
+}
+
+static int
+camera_summary (Camera *camera, CameraText *text, GPContext *context)
+{
+	unsigned char cmd[2], buf[INFO_BUFFER];
+	unsigned char power[20],mode[20],date_disp[20],date[50];
+	int ret,capacity=0,autopoweroff=0,image_taken=0,image_remained=0;
+	time_t timestamp=0;
+	struct tm tmp;
+
+	GP_DEBUG ("*** ENTER: camera_summary ***");
+
+	/* get informations about camera */
+	cmd[0] = ESC;
+	cmd[1] = GETCAMINFO;
+	ret = gp_port_write (camera->port, cmd, sizeof(cmd));
+	if (ret<GP_OK)
+		return ret;
+	ret = gp_port_read (camera->port, buf, INFO_BUFFER);
+	if (ret<GP_OK)
+		return ret;
+
+	capacity = buf[CAPACITY_PTR]*0x100 + buf[CAPACITY_PTR+1];
+	snprintf(power,sizeof(power),_("battery"));
+	if (buf[POWER_STATE_PTR] == 1)
+		snprintf(power,sizeof(power),_("AC"));
+	autopoweroff = buf[AUTO_OFF_PTR]*0x100 + buf[AUTO_OFF_PTR+1];
+	autopoweroff /= 60;
+	snprintf(mode,sizeof(mode),_("play"));
+	if (buf[CAMERA_MODE_PTR] == 1)
+		snprintf(mode,sizeof(mode),_("record"));
+	image_taken = buf[TAKEN_IMAGE_PTR] * 0x100 + buf[TAKEN_IMAGE_PTR+1];
+	image_remained = buf[FREE_IMAGE_PTR] * 0x100 + buf[FREE_IMAGE_PTR+1];
+
+	timestamp = (buf[TIMESTAMP_PTR] << 24) + (buf[TIMESTAMP_PTR+1] << 16)
+		+ (buf[TIMESTAMP_PTR+2] << 8) + buf[TIMESTAMP_PTR+3];
+	(unsigned int)timestamp += (8*365 + 2*366)*24*3600-3600;
+	tmp = *localtime(&timestamp);
+	switch (buf[DATE_FORMAT_PTR]) {
+		case 1:
+			snprintf(date_disp,sizeof(date_disp),_("DD/MM/YYYY"));
+			strftime(date,sizeof(date),"%d/%m/%Y %H:%M",&tmp);
+			break;
+		case 2:
+			strftime(date,sizeof(date),"%Y/%m/%d %H:%M",&tmp);
+			snprintf(date_disp,sizeof(date_disp),_("YYYY/MM/AA"));
+			break;
+		default:
+			strftime(date,sizeof(date),"%m/%d/%Y %H:%M",&tmp);
+			snprintf(date_disp,sizeof(date_disp),_("MM/DD/YYYY"));
+			break;
+	}
+	snprintf(text->text, sizeof(text->text), 
+			_("Model: %s\n"
+			"Capacity: %iMo\n"
+			"Power: %s\n"
+			"Auto Off Time: %imin\n"
+			"Mode: %s\n"
+			"Images: %i/%i\n"
+			"Date display: %s\n"
+			"Date and Time: %s\n"),
+			"Konica Q-M150",capacity,
+			power,autopoweroff,mode,
+			image_taken,image_remained,
+			date_disp,date);
+	return (GP_OK);
+}
+
+/** Camera's driver informations *********************************************/
+
+/*
+ * Say somethings about driver's authors
+ */
+static int
+camera_about (Camera* camera, CameraText* about, GPContext *context)
+{
+	snprintf(about->text,sizeof(about->text),_("Konica Q-M150 Library\n"
+			"Marcus Meissner <marcus@jet.franken.de>\n"
+			"Aurelien Croc (AP2C) <programming@ap2c.com>\n"
+			"http://www.ap2c.com\n"
+			"Support for the french Konica Q-M150."));
+	return(GP_OK);
+}
+
+/*
+ * just say some things about this driver
+ */
+static int
+camera_manual (Camera *camera, CameraText *manual, GPContext *context)
+{
+	snprintf(manual->text,sizeof(manual->text),
+		_("About Konica Q-M150:\n"
+		"This camera does not support to do any changes\n"
+		"from the outside. So in the configuration, you could\n"
+		"just see what it is configured on the camera\n"
+		"but you can't change anything.\n\n"
+		"If you have some issues with this driver, please\n"
+		"send an e-mail to the authors of this driver.\n\n"
+		"Thanks to use GPhoto2 and UNIX/Linux Operating systems.\n"));
+	return (GP_OK);
+}
+
+/*
+ * Camera's identification
+ */
+int
+camera_id (CameraText *id) 
+{
+	strcpy(id->text, "konica qm150");
+	return (GP_OK);
+}
+
+/*
+ * List all camera's abilities
+ */
+int
+camera_abilities (CameraAbilitiesList *list) 
+{
+	CameraAbilities a;
+
+	memset(&a, 0, sizeof(a));
+	strcpy(a.model, "Konica:Q-M150");
+	a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
+	a.port = GP_PORT_SERIAL;
+	a.speed[0] = 115200;
+	a.speed[1] = 0;
+	a.operations = GP_OPERATION_CAPTURE_IMAGE | 
+		GP_OPERATION_CAPTURE_PREVIEW | GP_OPERATION_CONFIG;
+	a.file_operations = GP_FILE_OPERATION_DELETE | 
+		GP_FILE_OPERATION_EXIF | GP_FILE_OPERATION_PREVIEW;
+	a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL | 
+		GP_FOLDER_OPERATION_PUT_FILE;
+	gp_abilities_list_append(list, a);
+	return (GP_OK);
+}
+
+/** Camera's initialization **************************************************/
+/*
+ * Initialization of the camera
+ */
 int
 camera_init (Camera *camera, GPContext *context) 
 {
@@ -371,14 +1264,20 @@ camera_init (Camera *camera, GPContext *context)
 
 	/* First, set up all the function pointers. */
 	camera->functions->capture              = camera_capture;
-	/* camera->functions->about		= camera_about; */
+	camera->functions->about		= camera_about;
+	camera->functions->get_config		= camera_get_config;
+	camera->functions->set_config		= camera_set_config;
+	camera->functions->summary		= camera_summary;
+	camera->functions->manual		= camera_manual;
 
 
 	/* Now, tell the filesystem where to get lists, files and info */
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
 	gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL, camera);
-	gp_filesystem_set_file_funcs (camera->fs, get_file_func, delete_file_func, camera);
-	gp_filesystem_set_folder_funcs (camera->fs, NULL, delete_all_func, NULL, NULL, camera);
+	gp_filesystem_set_file_funcs (camera->fs, get_file_func, 
+		delete_file_func, camera);
+	gp_filesystem_set_folder_funcs (camera->fs, put_file_func, 
+		delete_all_func, NULL, NULL, camera);
 
 	/*
 	 * The port is already provided with camera->port (and
