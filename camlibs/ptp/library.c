@@ -628,7 +628,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		if (strlen(folder)<strlen(STORAGE_FOLDER_PREFIX)+1) return (GP_ERROR);
 		sprintf(storagetxt,"0x%s",&folder[strlen(STORAGE_FOLDER_PREFIX)+1]);
 		storage=strtol(storagetxt,NULL,16);
-	}
+	} else return (GP_ERROR);
 	/* Get (parent) folder handle omiting storage pseudofolder */
 	find_folder_handle(folder,parent,data);
 	for (i = 0; i < params->handles.n; i++) {
