@@ -1,4 +1,4 @@
-/* gphoto2-lists.h: Lists of files, folders, cameras, abilities, etc.
+/* gphoto2-list.h: Lists of files, folders, cameras, etc.
  *
  * Copyright (C) 2001 Scott Fritzinger
  *
@@ -18,8 +18,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __GPHOTO2_LISTS_H__
-#define __GPHOTO2_LISTS_H__
+#ifndef __GPHOTO2_LIST_H__
+#define __GPHOTO2_LIST_H__
 
 typedef struct {
 	char name [128];
@@ -37,19 +37,4 @@ int			gp_list_count	(CameraList *list);
 int			gp_list_append	(CameraList *list, char *name);
 CameraListEntry*	gp_list_entry	(CameraList *list, int entry_number);
 
-
-typedef struct _CameraAbilities CameraAbilities;
-
-CameraAbilities*	gp_abilities_new         (void);
-int 			gp_abilities_free        (CameraAbilities *abilities);
-
-
-typedef struct _CameraAbilitiesList CameraAbilitiesList;
-
-CameraAbilitiesList*	gp_abilities_list_new    (void);
-int 			gp_abilities_list_free   (CameraAbilitiesList *list);
-int 			gp_abilities_list_dump   (CameraAbilitiesList *list);
-int 			gp_abilities_list_append (CameraAbilitiesList *list, 
-						  CameraAbilities *abilities);
-
-#endif /* __GPHOTO2_LISTS_H__ */
+#endif /* __GPHOTO2_LIST_H__ */

@@ -1,42 +1,65 @@
+/* file.c
+ *
+ * Copyright (C) 2000 Scott Fritzinger
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details. 
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+#include "gphoto2-file.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <gphoto2.h>
 
-#include "globals.h"
+#include "gphoto2-result.h"
 
-CameraFile* gp_file_new () {
+static int glob_session_file = 0;
 
+CameraFile* gp_file_new ()
+{
     CameraFile *file;
 
-    file = (CameraFile*)malloc(sizeof(CameraFile));
-    strcpy(file->type, "unknown/unknown");
-    strcpy(file->name, "");
+    file = malloc (sizeof (CameraFile));
+    strcpy (file->type, "unknown/unknown");
+    strcpy (file->name, "");
     file->data = NULL;
     file->size = 0;
     file->bytes_read = 0;
     file->session = glob_session_file++;
     file->ref_count = 1;
 
-    return(file);
+    return (file);
 }
 
-int gp_file_free (CameraFile *file) {
-
-    gp_file_clean(file);
-    free(file);
-    return(GP_OK);
+int gp_file_free (CameraFile *file)
+{
+    gp_file_clean (file);
+    free (file);
+    return (GP_OK);
 }
 
-int gp_file_ref (CameraFile *file) {
-
+int gp_file_ref (CameraFile *file)
+{
     file->ref_count += 1;
 
     return (GP_OK);
 }
 
-int gp_file_unref (CameraFile *file) {
-
+int gp_file_unref (CameraFile *file)
+{
     if (file == NULL)
         return GP_ERROR_BAD_PARAMETERS;
 
@@ -48,13 +71,13 @@ int gp_file_unref (CameraFile *file) {
     return (GP_OK);
 }
 
-int gp_file_session (CameraFile *file) {
-
+int gp_file_session (CameraFile *file)
+{
         return (file->session);
 }
 
-int gp_file_append (CameraFile *file, char *data, int size) {
-
+int gp_file_append (CameraFile *file, char *data, int size)
+{
         char *t;
 
         if (size < 0)
@@ -76,8 +99,8 @@ int gp_file_append (CameraFile *file, char *data, int size) {
         return (GP_OK);
 }
 
-int gp_file_get_last_chunk (CameraFile *file, char **data, int *size) {
-
+int gp_file_get_last_chunk (CameraFile *file, char **data, int *size)
+{
         if (file->bytes_read == 0) {
                 /* chunk_add was never called. return safely. */
                 *data = NULL;
@@ -93,8 +116,8 @@ int gp_file_get_last_chunk (CameraFile *file, char **data, int *size) {
         return (GP_OK);
 }
 
-int gp_file_save (CameraFile *file, char *filename) {
-
+int gp_file_save (CameraFile *file, char *filename)
+{
         FILE *fp;
 
         if ((fp = fopen(filename, "wb"))==NULL)
@@ -181,12 +204,12 @@ int gp_file_open (CameraFile *file, char *filename) {
         return (GP_OK);
 }
 
-int gp_file_clean (CameraFile *file) {
-
-        /*
-        frees a CameraFile's components, not the CameraFile itself.
-        this is used to prep a CameraFile struct to be filled.
-        */
+int gp_file_clean (CameraFile *file)
+{
+        /* 
+	 * Frees a CameraFile's components, not the CameraFile itself.
+	 * This is used to prep a CameraFile struct to be filled.
+         */
         if (file->data != NULL)
                 free(file->data);
         strcpy(file->name, "");

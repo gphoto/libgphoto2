@@ -1,4 +1,4 @@
-/* gphoto2-core.h
+/* gphoto2-setting.h
  *
  * Copyright (C) 2000 Scott Fritzinger
  *
@@ -18,28 +18,12 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __GPHOTO2_CORE_H__
-#define __GPHOTO2_CORE_H__
+#ifndef __GPHOTO2_SETTING_H__
+#define __GPHOTO2_SETTING_H__
 
-#include <gphoto2-list.h>
-#include <gphoto2-abilities.h>
+int load_settings (void);
 
-int gp_init           (int debug);
-int gp_is_initialized (void);
-int gp_exit           (void);
+int gp_setting_set (char *id, char *key, char *value);
+int gp_setting_get (char *id, char *key, char *value);
 
-void gp_debug_printf (int level, char *id, char *format, ...);
-
-int  gp_autodetect (CameraList *list);
-
-/* Retrieve the number of available cameras */
-int gp_camera_count ();
-
-/* Retrieve the name of a particular camera */
-int gp_camera_name  (int camera_number, char *camera_name);
-
-/* Retreive abilities for a given camera */
-int gp_camera_abilities         (int camera_number, CameraAbilities *abilities);
-int gp_camera_abilities_by_name (char *camera_name, CameraAbilities *abilities);
-
-#endif /* __GPHOTO2_CORE_H__ */
+#endif /* __GPHOTO2_SETTING_H__ */

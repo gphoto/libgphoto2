@@ -1,4 +1,5 @@
-#include <gphoto2.h>
+#include <gphoto2-core.h>
+#include <gphoto2-camera.h>
 #include <stdio.h>
 
 #define CHECK(f) {int res = f; if (res < 0) {printf ("ERROR: %s\n", gp_result_as_string (res)); exit (1);}}

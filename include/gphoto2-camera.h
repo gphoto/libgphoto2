@@ -21,9 +21,16 @@
 #ifndef __GPHOTO2_CAMERA_H__
 #define __GPHOTO2_CAMERA_H__
 
+typedef struct _Camera Camera;
+
+#include <gphoto2-port.h>
+
 #include <gphoto2-widget.h>
-#include <gphoto2-lists.h>
+#include <gphoto2-list.h>
 #include <gphoto2-file.h>
+#include <gphoto2-abilities.h>
+#include <gphoto2-abilities-list.h>
+#include <gphoto2-result.h>
 
 typedef struct {
 	char text [32 * 1024];
@@ -66,17 +73,92 @@ typedef struct {
 	CameraFileInfoStruct    file;
 } CameraFileInfo;
 
-typedef struct _Camera Camera;
+typedef int (*c_id)                     (CameraText *);
+typedef int (*c_abilities)              (CameraAbilitiesList *);
+typedef int (*c_init)                   (Camera*);
+typedef int (*c_exit)                   (Camera*);
+typedef int (*c_get_config)             (Camera*, CameraWidget**);
+typedef int (*c_set_config)             (Camera*, CameraWidget*);
+typedef int (*c_capture)                (Camera*, int, CameraFilePath*);
+typedef int (*c_capture_preview)        (Camera*, CameraFile*);
+typedef int (*c_summary)                (Camera*, CameraText*);
+typedef int (*c_manual)                 (Camera*, CameraText*);
+typedef int (*c_about)                  (Camera*, CameraText*);
 
-/* Retrieve the number of available cameras */
-int gp_camera_count ();
+typedef int (*c_folder_list_folders)    (Camera*, const char*, CameraList*);
+typedef int (*c_folder_list_files)      (Camera*, const char*, CameraList*);
+typedef int (*c_folder_get_config)      (Camera*, const char*, CameraWidget**);
+typedef int (*c_folder_set_config)      (Camera*, const char*, CameraWidget*);
+typedef int (*c_folder_put_file)        (Camera*, const char*, CameraFile*);
+typedef int (*c_folder_delete_all)      (Camera*, const char*);
 
-/* Retrieve the name of a particular camera */
-int gp_camera_name  (int camera_number, char *camera_name);
+typedef int (*c_file_get_info)          (Camera*, const char*,
+					 const char*, CameraFileInfo*);
+typedef int (*c_file_set_info)          (Camera*, const char*,
+					 const char*, CameraFileInfo*);
+typedef int (*c_file_get_config)        (Camera*, const char*,
+		                         const char*, CameraWidget**);
+typedef int (*c_file_set_config)        (Camera*, const char*,
+		                         const char*, CameraWidget*);
+typedef int (*c_file_get)               (Camera*, const char*,
+		                         const char*, CameraFile*);
+typedef int (*c_file_get_preview)       (Camera*, const char*,
+		                         const char*, CameraFile*);
+typedef int (*c_file_delete)            (Camera*, const char*, const char*);
 
-/* Retreive abilities for a given camera */
-int gp_camera_abilities     (int camera_number, CameraAbilities *abilities);
-int gp_camera_abilities_by_name (char *camera_name, CameraAbilities *abilities);
+typedef char *(*c_result_as_string)     (Camera*, int);
+
+
+typedef struct {
+	c_id                    id;
+	c_abilities             abilities;
+	c_init                  init;
+	c_exit                  exit;
+	c_get_config            get_config;
+	c_set_config            set_config;
+	c_capture               capture;
+	c_capture_preview       capture_preview;
+	c_summary               summary;
+	c_manual                manual;
+	c_about                 about;
+
+	c_folder_list_folders   folder_list_folders;
+	c_folder_list_files     folder_list_files;
+	c_folder_get_config     folder_get_config;
+	c_folder_set_config     folder_set_config;
+	c_folder_put_file       folder_put_file;
+	c_folder_delete_all     folder_delete_all;
+
+	c_file_get_info         file_get_info;
+	c_file_set_info         file_set_info;
+	c_file_get_config       file_get_config;
+	c_file_set_config       file_set_config;
+	c_file_get_preview      file_get_preview;
+	c_file_get              file_get;
+	c_file_delete           file_delete;
+
+	c_result_as_string      result_as_string;
+} CameraFunctions;
+
+typedef gp_port_info CameraPortInfo;
+
+struct _Camera {
+	char            model[128];
+
+	CameraPortInfo  *port;
+	
+	int             ref_count;
+	
+	void            *library_handle;
+	
+	CameraAbilities *abilities;
+	CameraFunctions *functions;
+
+	void            *camlib_data;
+	void            *frontend_data;
+
+	int             session;
+};
 
 /* Create a new camera device */
 int gp_camera_new               (Camera **camera);

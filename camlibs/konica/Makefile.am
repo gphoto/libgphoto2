@@ -3,7 +3,7 @@ camlib_LTLIBRARIES = libgphoto2_konica.la
 
 CFLAGS = @CFLAGS@ `glib-config --cflags`
 LDFLAGS = @LDFLAGS@ `glib-config --libs`
-EXTRA_DIST = ChangeLog EXPERTS
+EXTRA_DIST = EXPERTS
 
 INCLUDES =\
  -I$(top_srcdir)/include\

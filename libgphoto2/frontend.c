@@ -1,13 +1,46 @@
-#include <gphoto2.h>
+/* frontend.c
+ *
+ * Copyright (C) 2000 Scott Fritzinger
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details. 
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
+#include "gphoto2-frontend.h"
 
-#include "globals.h"
-#include "library.h"
-#include "settings.h"
-#include "util.h"
+#include "gphoto2-result.h"
+
+/* Front-end function pointers */
+CameraStatus   gp_fe_status   = NULL;
+CameraProgress gp_fe_progress = NULL;
+CameraMessage  gp_fe_message  = NULL;
+CameraConfirm  gp_fe_confirm  = NULL;
+CameraPrompt   gp_fe_prompt   = NULL;
+
+int gp_frontend_register (CameraStatus status, CameraProgress progress,
+			  CameraMessage message, CameraConfirm confirm,
+			  CameraPrompt prompt)
+{
+	gp_fe_status   = status;
+	gp_fe_progress = progress;
+	gp_fe_message  = message;
+	gp_fe_confirm  = confirm;
+	gp_fe_prompt   = prompt;
+
+	return (GP_OK);
+}
 
 int gp_frontend_status (Camera *camera, char *status)
 {

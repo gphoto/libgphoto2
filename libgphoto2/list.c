@@ -1,4 +1,4 @@
-/* gphoto2-core.h
+/* list.c
  *
  * Copyright (C) 2000 Scott Fritzinger
  *
@@ -18,28 +18,47 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __GPHOTO2_CORE_H__
-#define __GPHOTO2_CORE_H__
+#include "gphoto2-list.h"
 
-#include <gphoto2-list.h>
-#include <gphoto2-abilities.h>
+#include <stdlib.h>
+#include <string.h>
 
-int gp_init           (int debug);
-int gp_is_initialized (void);
-int gp_exit           (void);
+#include "gphoto2-result.h"
 
-void gp_debug_printf (int level, char *id, char *format, ...);
+CameraList *gp_list_new ()
+{
+        CameraList *list;
 
-int  gp_autodetect (CameraList *list);
+        list = (CameraList*)malloc (sizeof (CameraList));
+        if (!list)
+                return NULL;
 
-/* Retrieve the number of available cameras */
-int gp_camera_count ();
+        memset (list, 0, sizeof (CameraList));
+        return (list);
+}
 
-/* Retrieve the name of a particular camera */
-int gp_camera_name  (int camera_number, char *camera_name);
+int gp_list_free (CameraList *list) 
+{
+        if (list)
+                free (list);
+        return (GP_OK);
+}
 
-/* Retreive abilities for a given camera */
-int gp_camera_abilities         (int camera_number, CameraAbilities *abilities);
-int gp_camera_abilities_by_name (char *camera_name, CameraAbilities *abilities);
+int gp_list_append (CameraList *list, char *name)
+{
+        strcpy (list->entry[list->count].name, name);
 
-#endif /* __GPHOTO2_CORE_H__ */
+        list->count += 1;
+
+        return (GP_OK);
+}
+
+int gp_list_count (CameraList *list)
+{
+        return (list->count);
+}
+
+CameraListEntry *gp_list_entry (CameraList *list, int entrynum)
+{
+        return (&list->entry [entrynum]);
+}

@@ -1,4 +1,4 @@
-/* gphoto2-core.h
+/* gphoto2-abilities-list.h
  *
  * Copyright (C) 2000 Scott Fritzinger
  *
@@ -18,28 +18,20 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __GPHOTO2_CORE_H__
-#define __GPHOTO2_CORE_H__
+#ifndef __GPHOTO2_ABILITIES_LIST_H__
+#define __GPHOTO2_ABILITIES_LIST_H__
 
-#include <gphoto2-list.h>
 #include <gphoto2-abilities.h>
 
-int gp_init           (int debug);
-int gp_is_initialized (void);
-int gp_exit           (void);
+typedef struct {
+	int count;
+	CameraAbilities **abilities;
+} CameraAbilitiesList;
 
-void gp_debug_printf (int level, char *id, char *format, ...);
+CameraAbilitiesList* gp_abilities_list_new    (void);
 
-int  gp_autodetect (CameraList *list);
+int gp_abilities_list_free   (CameraAbilitiesList *list);
+int gp_abilities_list_dump   (CameraAbilitiesList *list);
+int gp_abilities_list_append (CameraAbilitiesList *list, CameraAbilities *);
 
-/* Retrieve the number of available cameras */
-int gp_camera_count ();
-
-/* Retrieve the name of a particular camera */
-int gp_camera_name  (int camera_number, char *camera_name);
-
-/* Retreive abilities for a given camera */
-int gp_camera_abilities         (int camera_number, CameraAbilities *abilities);
-int gp_camera_abilities_by_name (char *camera_name, CameraAbilities *abilities);
-
-#endif /* __GPHOTO2_CORE_H__ */
+#endif /* __GPHOTO2_ABILITIES_LIST_H__ */

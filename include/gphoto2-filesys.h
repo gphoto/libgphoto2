@@ -20,10 +20,10 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __GPHOTO2_FILESYSTEM_H__
-#define __GPHOTO2_FILESYSTEM_H__
+#ifndef __GPHOTO2_FILESYS_H__
+#define __GPHOTO2_FILESYS_H__
 
-#include <gphoto2-lists.h>
+#include <gphoto2-list.h>
 
 /* You don't really want to know what's inside, do you? */
 typedef struct _CameraFilesystem CameraFilesystem;
@@ -54,4 +54,4 @@ int gp_filesystem_list_folders (CameraFilesystem *fs, const char *folder,
 				CameraList *list);
 int gp_filesystem_dump         (CameraFilesystem *fs);
 
-#endif /* __GPHOTO2_FILESYSTEM_H__ */
+#endif /* __GPHOTO2_FILESYS_H__ */

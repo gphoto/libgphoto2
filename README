@@ -32,6 +32,26 @@ and availability of gphoto2. Another source of information is
 where you can access our CVS server to fetch the source code of
 gphoto2, gtkam and GnoCam (see below).
 
+What is gphoto2 not?
+--------------------
+
+gphoto2 can only talk to cameras the language of those it understands. That is,
+if you own a camera that speaks a language that isn't published anywhere and 
+nobody has been able to figure out the meaning of the sentences, gphoto2 cannot
+communicate with those cameras. 
+
+Then, there are cameras supporting the so-called USB Mass Storage protocol.
+This is a protocol that has been published and lets you access any storage
+device, be it a camera or a disk connected via USB to your computer. As there
+are already drivers for this protocol out there, you don't need an additional
+program like gphoto2. As of now, the following cameras seem to support the 
+USB Mass Storage protocol:
+ * Minolta Dimage 7
+ * Nikon Coolpix 995
+ * Olympus C-200Z, C-860L, C-2040, C-3040Z
+ * HP PhotoSmart 315, 618, 912
+Again, those cameras cannot be accessed through gphoto2.
+
 Requirements
 ------------
 
