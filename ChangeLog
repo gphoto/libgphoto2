@@ -1,3 +1,10 @@
+2002-02-23  Lutz Müller <lutz@users.sourceforge.net>
+
+	Patch from Patrick Mansfield <patman@aracnet.com>:
+
+	* libgphoto2/gphoto2-filesys.c: sizeof (path), not sizeof (folder).
+	  Doh.
+
 2002-02-21  Colin Marquardt  <colin@marquardt-home.de>
 
 	* configure.in: Removed zh_CN.GB2312 from ALL_LINGUAS. 
