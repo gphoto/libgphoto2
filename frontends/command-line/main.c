@@ -590,7 +590,7 @@ OPTION_CALLBACK(config)
 {
 	CHECK_RESULT (set_globals ());
 
-	CHECK_RESULT (gp_cmd_config (glob_camera, NULL, NULL));
+	CHECK_RESULT (gp_cmd_config (glob_camera));
 
 	return (GP_OK);
 }

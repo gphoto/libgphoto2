@@ -23,6 +23,6 @@
 
 #include <gphoto2-camera.h>
 
-int gp_cmd_config (Camera *camera, const char *folder, const char *file);
+int gp_cmd_config (Camera *camera);
 
 #endif /* __GPHOTO2_CMD_CONFIG_H__ */

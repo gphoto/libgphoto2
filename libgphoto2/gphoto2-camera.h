@@ -48,44 +48,131 @@ typedef enum {
 	GP_CAPTURE_SOUND
 } CameraCaptureType;
 
+/**
+ * CameraExitFunc:
+ * @camera: a #Camera
+ *
+ * Implement this function in camera drivers if you need to clean up on
+ * exit. You need this function for example if you use camera->pl and 
+ * allocated memory for that on #camera_init. Then, you would free the
+ * memory here.
+ *
+ * Return value: a gphoto2 error code
+ **/
 typedef int (*CameraExitFunc)      (Camera *camera);
 
-/* Configuration */
+/**
+ * CameraGetConfigFunc:
+ * @camera: a #Camera
+ * @widget:
+ *
+ * Implement this function if your camera supports some configuration
+ * operations (like adjusting exposure).
+ *
+ * Return value: a gphoto2 error code
+ **/
 typedef int (*CameraGetConfigFunc) (Camera *camera, CameraWidget **widget);
-typedef int (*CameraSetConfigFunc) (Camera *camera, CameraWidget  *widget);
-typedef int (*CameraFolderGetConfigFunc) (Camera *camera, const char *folder,
-					  CameraWidget **widget);
-typedef int (*CameraFolderSetConfigFunc) (Camera *camera, const char *folder,
-					  CameraWidget *widget);
-typedef int (*CameraFileGetConfigFunc) (Camera *camera, const char *folder,
-				        const char *file,
-					CameraWidget **widget);
-typedef int (*CameraFileSetConfigFunc) (Camera *camera, const char *folder,
-				        const char *file, CameraWidget *widget);
 
-/* Capturing */
+/**
+ * CameraSetConfigFunc:
+ * @camera: a #Camera
+ * @widget: a #CameraWidget
+ *
+ * If you implement the #CameraGetConfigFunc, you should also implement this
+ * function in order to make it possible for frontends to actually adjust
+ * configuration options. Parse the @widget tree and check for each item
+ * if the value has been changed (using #gp_widget_changed). If this is the
+ * case, adjust this configuration option on the camera.
+ *
+ * Return value: a gphoto2 error code
+ **/
+typedef int (*CameraSetConfigFunc) (Camera *camera, CameraWidget  *widget);
+
+/**
+ * CameraCaptureFunc: 
+ * @camera: a #Camera
+ * @type: a #CameraCaptureType
+ * @path: a #CameraFilePath
+ *
+ * Implement this function if your camera supports remote capturing of images.
+ * When capturing an image, this image needs to be saved on the camera. The
+ * location of the image on the camera should then be written into 
+ * supplied @path so that the frontend will know where to get the 
+ * newly captured image from. Don't forget to tell the #CameraFilesystem 
+ * (camera->fs) that a new picture is on the camera using
+ * #gp_filesystem_append.
+ *
+ * Return value: a gphoto2 error code
+ **/
 typedef int (*CameraCaptureFunc)        (Camera *camera, CameraCaptureType type,
 				         CameraFilePath *path);
+
+/**
+ * CameraCapturePreviewFunc:
+ * @camera: a #Camera
+ * @file: a #CameraFile
+ *
+ * Implement this function if your camera supports capturing
+ * previews of low resolution. Those previews must not be stored on the camera.
+ * They need to be written to the supplied @file (using for example
+ * #gp_file_set_data_and_size).
+ *
+ * Return value: a gphoto2 error code
+ **/
 typedef int (*CameraCapturePreviewFunc) (Camera *camera, CameraFile *file);
 
-/* Textual information */
+/**
+ * CameraSummaryFunc:
+ * @camera: a #Camera
+ * @text: a #CameraText
+ *
+ * Implement this function if your camera provides static information and
+ * non-configurable data like serial number or number of pictures taken. All
+ * configurable data should be displayed through #CameraGetConfigFunc 
+ * instead.
+ *
+ * Return value: a gphoto2 error code
+ **/
 typedef int (*CameraSummaryFunc) (Camera *camera, CameraText *text);
+
+/**
+ * CameraManualFunc:
+ * @camera: a #Camera
+ * @text: a #CameraText
+ *
+ * Implement this function if you need to give the user instructions on
+ * how to use his camera. Here, you can for example inform the user about known
+ * limitations of the protocol.
+ *
+ * Return value: a gphoto2 error code
+ **/
 typedef int (*CameraManualFunc)  (Camera *camera, CameraText *text);
+
+/**
+ * CameraAboutFunc:
+ * @camera: a #Camera
+ * @text: a #CameraText
+ *
+ * Implement this function if you want to give frontends the possibility to 
+ * inform users who wrote this driver or who contributed to it.
+ *
+ * Return value: a gphoto2 error code
+ **/
 typedef int (*CameraAboutFunc)   (Camera *camera, CameraText *text);
 
-/* Error reporting */
-typedef const char *(*CameraResultFunc) (Camera *camera, int result);
-
+/**
+ * CameraFunctions:
+ *
+ * Those functions are optionally. Depending on the features of the protocol,
+ * you would implement some functions and leave others out. Tell gphoto2
+ * what functions you provide on #camera_init.
+ **/
 typedef struct {
 	CameraExitFunc exit;
 
 	/* Configuration */
 	CameraGetConfigFunc       get_config;
 	CameraSetConfigFunc       set_config;
-	CameraFolderGetConfigFunc folder_get_config;
-	CameraFolderSetConfigFunc folder_set_config;
-	CameraFileGetConfigFunc   file_get_config;
-	CameraFileSetConfigFunc   file_set_config;
 
 	/* Capturing */
 	CameraCaptureFunc        capture;
@@ -169,8 +256,6 @@ int gp_camera_capture_preview 	 (Camera *camera, CameraFile *file);
  *   - list_folders: Get a list of folders in this folder               *
  *   - delete_all  : Delete all files in this folder                    *
  *   - put_file    : Upload a file into this folder                     *
- *   - get_config  : Get configuration options of a folder              *
- *   - set_config  : Set those configuration options                    *
  ************************************************************************/
 
 int gp_camera_folder_list_files   (Camera *camera, const char *folder, 
@@ -180,10 +265,6 @@ int gp_camera_folder_list_folders (Camera *camera, const char *folder,
 int gp_camera_folder_delete_all   (Camera *camera, const char *folder);
 int gp_camera_folder_put_file     (Camera *camera, const char *folder, 
 				   CameraFile *file);
-int gp_camera_folder_get_config   (Camera *camera, const char *folder, 
-				   CameraWidget **window);
-int gp_camera_folder_set_config   (Camera *camera, const char *folder, 
-				   CameraWidget  *window);
 								
 /************************************************************************
  * Part III:                                                            *
@@ -192,8 +273,6 @@ int gp_camera_folder_set_config   (Camera *camera, const char *folder,
  *   - get_info   : Get specific information about a file               *
  *   - set_info   : Set specific parameters of a file                   *
  *   - get_file   : Get a file                                          *
- *   - get_config : Get additional configuration options of a file      *
- *   - set_config : Set those additional configuration options          *
  *   - delete     : Delete a file                                       *
  ************************************************************************/
 
@@ -204,10 +283,6 @@ int gp_camera_file_set_info 	(Camera *camera, const char *folder,
 int gp_camera_file_get		(Camera *camera, const char *folder, 
 				 const char *file, CameraFileType type,
 				 CameraFile *camera_file);
-int gp_camera_file_get_config  	(Camera *camera, const char *folder, 
-				 const char *file, CameraWidget **window);
-int gp_camera_file_set_config  	(Camera *camera, const char *folder, 
-				 const char *file, CameraWidget  *window);
 int gp_camera_file_delete     	(Camera *camera, const char *folder, 
 				 const char *file);
 

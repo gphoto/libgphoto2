@@ -41,10 +41,6 @@ CameraExitFunc
 
 CameraGetConfigFunc
 CameraSetConfigFunc
-CameraFolderGetConfigFunc
-CameraFolderSetConfigFunc
-CameraFileGetConfigFunc
-CameraFileSetConfigFunc
 
 CameraCaptureFunc
 CameraCapturePreviewFunc
@@ -52,8 +48,6 @@ CameraCapturePreviewFunc
 CameraSummaryFunc
 CameraManualFunc
 CameraAboutFunc
-
-CameraResultFunc
 
 CameraPrivateLibrary
 CameraPrivateCore
@@ -108,17 +102,11 @@ gp_camera_folder_list_folders
 gp_camera_folder_put_file
 gp_camera_folder_delete_all
 
-gp_camera_folder_get_config
-gp_camera_folder_set_config
-
 gp_camera_file_get
 gp_camera_file_delete
 
 gp_camera_file_get_info
 gp_camera_file_set_info
-
-gp_camera_file_get_config
-gp_camera_file_set_config
 
 gp_camera_get_manual
 gp_camera_get_summary

@@ -38,9 +38,102 @@ CameraAbilities
 CameraAbilities
 
 
+<!-- ##### USER_FUNCTION CameraFileGetConfigFunc ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@file: 
+@widget: 
+@Returns: 
+
+<!-- ##### USER_FUNCTION CameraFileSetConfigFunc ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@file: 
+@widget: 
+@Returns: 
+
+<!-- ##### USER_FUNCTION CameraFolderGetConfigFunc ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@widget: 
+@Returns: 
+
+<!-- ##### USER_FUNCTION CameraFolderSetConfigFunc ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@widget: 
+@Returns: 
+
+<!-- ##### USER_FUNCTION CameraResultFunc ##### -->
+<para>
+
+</para>
+
+@camera: 
+@result: 
+@Returns: 
+
 <!-- ##### MACRO GP_ERROR_IO ##### -->
 <para>
 
 </para>
 
+
+<!-- ##### FUNCTION gp_camera_file_get_config ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@file: 
+@window: 
+@Returns: 
+
+<!-- ##### FUNCTION gp_camera_file_set_config ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@file: 
+@window: 
+@Returns: 
+
+<!-- ##### FUNCTION gp_camera_folder_get_config ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@window: 
+@Returns: 
+
+<!-- ##### FUNCTION gp_camera_folder_set_config ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@window: 
+@Returns: 
 

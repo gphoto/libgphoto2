@@ -1480,32 +1480,6 @@ get_info_func (CameraFilesystem * fs, const char *folder, const char *filename,
 
 /****************************************************************************/
 
-static int
-camera_file_get_config (Camera *camera, const char *folder,
-			const char *filename, CameraWidget ** window)
-{
-	return GP_ERROR_NOT_SUPPORTED;
-}
-
-static int
-camera_file_set_config (Camera *camera, const char *folder,
-			const char *filename, CameraWidget * window)
-{
-	return GP_ERROR_NOT_SUPPORTED;
-}
-
-static int
-camera_folder_get_config (Camera *camera, const char *folder, CameraWidget ** window)
-{
-	return GP_ERROR_NOT_SUPPORTED;
-}
-
-static int
-camera_folder_set_config (Camera *camera, const char *folder, CameraWidget * window)
-{
-	return GP_ERROR_NOT_SUPPORTED;
-}
-
 /**
  * This routine initializes the serial/USB port and also load the
  * camera settings. Right now it is only the speed that is
@@ -1523,10 +1497,6 @@ camera_init (Camera *camera)
 	camera->functions->exit = camera_exit;
 	camera->functions->get_config = camera_get_config;
 	camera->functions->set_config = camera_set_config;
-	camera->functions->file_get_config = camera_file_get_config;
-	camera->functions->file_set_config = camera_file_set_config;
-	camera->functions->folder_get_config = camera_folder_get_config;
-	camera->functions->folder_set_config = camera_folder_set_config;
 	camera->functions->summary = camera_summary;
 	camera->functions->manual = camera_manual;
 	camera->functions->about = camera_about;

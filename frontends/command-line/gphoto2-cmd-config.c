@@ -48,8 +48,6 @@
 typedef struct {
 	Camera *camera;
 	CDKSCREEN *screen;
-	const char *folder;
-	const char *file;
 	CameraWidget *window;
 } CmdConfig;
 
@@ -58,18 +56,7 @@ static int show_widget (CmdConfig *cmd_config, CameraWidget *widget);
 static int
 set_config (CmdConfig *cmd_config)
 {
-	if (cmd_config->file)
-		return (gp_camera_file_set_config (cmd_config->camera,
-						   cmd_config->folder,
-						   cmd_config->file,
-						   cmd_config->window));
-	else if (cmd_config->folder)
-		return (gp_camera_folder_set_config (cmd_config->camera,
-						     cmd_config->folder,
-						     cmd_config->window));
-	else
-		return (gp_camera_set_config (cmd_config->camera,
-					      cmd_config->window));
+	return (gp_camera_set_config (cmd_config->camera, cmd_config->window));
 }
 
 static int
@@ -284,7 +271,7 @@ status_func (Camera *camera, const char *status, void *data)
 }
 
 int
-gp_cmd_config (Camera *camera, const char *folder, const char *file)
+gp_cmd_config (Camera *camera)
 {
 	CmdConfig cmd_config;
 	CameraWidget *config;
@@ -295,15 +282,7 @@ gp_cmd_config (Camera *camera, const char *folder, const char *file)
 	if (!camera)
 		return (GP_ERROR_BAD_PARAMETERS);
 
-	if (file) {
-		if (!folder)
-			return (GP_ERROR_BAD_PARAMETERS);
-		result = gp_camera_file_get_config (camera, folder, file,
-						    &config);
-	} else if (folder)
-		result = gp_camera_folder_get_config (camera, folder, &config);
-	else
-		result = gp_camera_get_config (camera, &config);
+	result = gp_camera_get_config (camera, &config);
 	if (result < 0)
 		return (result);
 
@@ -316,8 +295,6 @@ gp_cmd_config (Camera *camera, const char *folder, const char *file)
 
 	/* Go! */
 	cmd_config.camera = camera;
-	cmd_config.folder = folder;
-	cmd_config.file = file;
 	cmd_config.screen = screen;
 	cmd_config.window = config;
 	gp_camera_set_status_func (camera, status_func, &cmd_config);
