@@ -162,7 +162,7 @@ int gp_camera_free(Camera *camera)
 
 int gp_camera_init (Camera *camera)
 {
-	int x;
+	int x, i;
         int result;
         gp_port_info info;
 
@@ -242,6 +242,14 @@ int gp_camera_init (Camera *camera)
 	camera->abilities->folder_operations = 
 		glob_abilities_list->abilities[x]->folder_operations;
 	camera->abilities->config = glob_abilities_list->abilities[x]->config;
+	for (i = 0; glob_abilities_list->abilities[x]->capture [i].type != 
+	     GP_CAPTURE_NONE; i++) {
+		camera->abilities->capture [i].type = 
+			glob_abilities_list->abilities[x]->capture [i].type;
+		strcpy (camera->abilities->capture [i].name,
+			glob_abilities_list->abilities[x]->capture [i].name);
+	}
+	camera->abilities->capture [i].type = GP_CAPTURE_NONE;
 
 	/* Load the library. */
 	gp_debug_printf (GP_DEBUG_LOW, "core", "Loading library %s...", 
@@ -599,7 +607,7 @@ int gp_camera_file_get_preview (Camera *camera, char *folder, char *file,
         if (camera->functions->file_get_preview == NULL)
                 return (GP_ERROR_NOT_SUPPORTED);
 
-        gp_file_clean (file);
+        gp_file_clean (camera_file);
 
         return (camera->functions->file_get_preview (camera, camera_file, 
 						     folder, file));
