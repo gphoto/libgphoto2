@@ -27,7 +27,7 @@ The installation procedure should be quite simple:
    libraries' and/or command-line client's functionality if present:
 
 	libusb (ver. >= 0.1.5) -- Universal Serial Bus camera support
-	    <URL:http://sourceforge.net/projects/libusb/>
+	    <URL:http://www.sourceforge.net/projects/libusb/>
 
 	gettext (ver. >= 0.10.35) -- internationalization using shared library
 
@@ -67,6 +67,15 @@ The installation procedure should be quite simple:
       you can build .deb packages and install these. The packages will
       be located in FIXME. 
 
+gphoto2 is not designed to be installed as a setuid/setgid program.  Doing
+so will open up a security hole in your system!  If you have permission
+problems when accessing your camera, you will probably want to create a
+new user group for the users that are to have camera access and change the
+permissions of the serial or USB device to match.
+
+
+Compiling Hints:
+
 gphoto2 has been successfully used on many system.  Some systems where it
 has been reported to successfully compile are listed below. Not all, or even
 any, camera libraries have been tested on these systems, so there may be
@@ -79,7 +88,9 @@ If you have build problems in the intl or po directories, try re-running
 configure with the --disable-nls flag.  If configure stops due to an error
 with 'test', try re-running configure with the --without-usb flag.  If
 'make' reports an error, try using GNU make (often called gmake or gnumake)
-instead of the make that comes with your system.
+instead of the make that comes with your system.  If one camera driver
+has compilation errors, re-run configure with an appropriate --with-drivers=
+flag to prevent that driver from being compiled.
 
 i386:
   Debian GNU/Linux 2.2
@@ -95,19 +106,25 @@ i386:
 	Use GNU make to build (gmake).
 
 Alpha:
+  Debian GNU/Linux 2.2
   OpenBSD 3.0
   NetBSD 1.5.1
   	Configure with this command:
   	  ./configure --disable-nls
 	Use GNU make to build (gmake).
-  Debian GNU/Linux 2.2
   Tru64 5.1A
   	Configure with this command:
-  	  CFLAGS='-D__STDC_VERSION__=0' ./configure --disable-nls
+  	  env CFLAGS='-D__STDC_VERSION__=0' ./configure --disable-nls
 	Use GNU make to build (gnumake).
 
 PowerPC:
   Debian GNU/Linux 2.2
+  Apple Darwin/OS X
+  	Need dlcompat from <URL:http://fink.sourceforge.net>
+  	Configure with this command:
+  	  env CFLAGS="-I/path/to/dlcompat -no-cpp-precomp" \
+  	  LDFLAGS="-L/path/to/dlcompat" ./configure --disable-nls
+	Need libtool ver. >= 1.4.2a
 
 Sparc:
   Debian GNU/Linux 2.2
@@ -123,24 +140,17 @@ StrongARM:
 Itanium:
   Red Hat 7.1 (gcc)
 
-The following systems have some problems compiling, and some could be made
-to work with some effort.  Many linking problems should be resolved with an
-newer libtool (newer than version 1.4.2):
 
-PowerPC:
-  Apple Darwin (OS X)
-  	Need dlcompat from <URL:http://fink.sourceforge.net>
-  	Configure with this command:
-  	  env CFLAGS="-I/path/to/dlcompat -no-cpp-precomp" \
-  	  LDFLAGS="-L/path/to/dlcompat" ./configure --disable-nls
+The following systems have some problems compiling, but may be made to
+work with some effort:
 
 Itanium:
   Red Hat 7.1 (Intel ecc)
   	There is a bug in ver. 5.0.1 of this compiler tickled by gphoto2 that
-  	prevent full compilation (but is fairly simple to overcome).
-  	Need better libtool support.
+  	prevents full compilation.
+  	Need better libtool support (newer than version 1.4.2).
   Red Hat 7.1 (sgicc)
-  	Need better libtool support.
+  	Need better libtool support (newer than version 1.4.2).
 
 Sparc:
   Solaris 8 (cc)
