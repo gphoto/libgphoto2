@@ -25,11 +25,17 @@
 
 #include "actions.h"
 
-int for_each_subfolder      (const char *folder, folder_action faction,
-			     image_action action, int reverse);
-int for_each_image          (const char *folder, image_action iaction,
-			     int reverse);
-int for_each_image_in_range (const char *folder, unsigned char recurse,
-			     char *range, image_action action, int reverse);
+typedef enum _ForEachFlags ForEachFlags;
+enum _ForEachFlags {
+	FOR_EACH_FLAGS_RECURSE = 1 << 0,
+	FOR_EACH_FLAGS_REVERSE = 1 << 1
+};
+
+int for_each_folder         (const char *folder, folder_action action,
+			     ForEachFlags flags);
+int for_each_image          (const char *folder, image_action action,
+			     ForEachFlags flags);
+int for_each_image_in_range (const char *folder, image_action action,
+			     ForEachFlags flags, char *range);
 
 #endif /* __FOREACH_H__ */

@@ -246,11 +246,12 @@ int  glob_debug;
 int  glob_shell=0;
 int  glob_quiet=0;
 int  glob_filename_override=0;
-int  glob_recurse=1;
 char glob_filename[128];
 int  glob_stdout=0;
 int  glob_stdout_size=0;
 static char glob_cancel = 0;
+
+static ForEachFlags glob_flags = FOR_EACH_FLAGS_RECURSE;
 
 /* 4) Finally, add your callback function.                              */
 /*    ----------------------------------------------------------------- */
@@ -623,7 +624,7 @@ OPTION_CALLBACK (recurse)
 {
         cli_debug_print("Recursion requested, this is now the default");
 
-	glob_recurse = 1;
+	glob_flags |= FOR_EACH_FLAGS_RECURSE;
 
         return (GP_OK);
 }
@@ -632,7 +633,7 @@ OPTION_CALLBACK (no_recurse)
 {
         cli_debug_print("Clearing recursive mode");
 
-        glob_recurse = 0;
+	glob_flags &= ~FOR_EACH_FLAGS_RECURSE;
 
         return (GP_OK);
 }
@@ -640,8 +641,9 @@ OPTION_CALLBACK (no_recurse)
 OPTION_CALLBACK (list_folders)
 {
         CR (set_globals ());
+	CR (for_each_folder (glob_folder, list_folders_action, glob_flags));
 
-        return for_each_subfolder (glob_folder, print_folder, NULL, glob_recurse);
+	return (GP_OK);
 }
 
 #ifdef HAVE_CDK
@@ -667,20 +669,17 @@ OPTION_CALLBACK(show_exif)
 	if (strchr (arg, '.'))
 		return (print_exif_action (glob_folder, arg));
 
-	return (for_each_image_in_range (glob_folder, glob_recurse, arg,
-					 print_exif_action, 0));
+	return (for_each_image_in_range (glob_folder, print_exif_action,
+					 glob_flags, arg));
 }
 #endif
 
 OPTION_CALLBACK (list_files)
 {
         CR (set_globals ());
-        CR (for_each_image (glob_folder, print_picture_action, 0));
+        CR (for_each_folder (glob_folder, list_files_action, glob_flags));
 
-        if (!glob_recurse)
-                return (GP_OK);
-
-        return for_each_subfolder(glob_folder, for_each_image, print_picture_action, glob_recurse);
+	return (GP_OK);
 }
 
 OPTION_CALLBACK (num_pictures)
@@ -830,7 +829,7 @@ save_picture_to_file (const char *folder, const char *filename,
 */
 
 int
-get_picture_common(char *arg, CameraFileType type )
+get_picture_common (char *arg, CameraFileType type )
 {
         cli_debug_print("Getting %s", arg);
 
@@ -845,20 +844,20 @@ get_picture_common(char *arg, CameraFileType type )
 
         switch (type) {
         case GP_FILE_TYPE_PREVIEW:
-		return for_each_image_in_range (glob_folder, glob_recurse, arg,
-						save_thumbnail_action, 0);
+		return for_each_image_in_range (glob_folder,
+				save_thumbnail_action, glob_flags, arg);
         case GP_FILE_TYPE_NORMAL:
-                return for_each_image_in_range (glob_folder, glob_recurse, arg,
-						save_picture_action, 0);
+                return for_each_image_in_range (glob_folder,
+				save_picture_action, glob_flags, arg);
         case GP_FILE_TYPE_RAW:
-                return for_each_image_in_range (glob_folder, glob_recurse, arg,
-						save_raw_action, 0);
+                return for_each_image_in_range (glob_folder,
+				save_raw_action, glob_flags, arg);
 	case GP_FILE_TYPE_AUDIO:
-		return for_each_image_in_range (glob_folder, glob_recurse, arg,
-						save_audio_action, 0);
+		return for_each_image_in_range (glob_folder,
+				save_audio_action, glob_flags, arg);
 	case GP_FILE_TYPE_EXIF:
-		return for_each_image_in_range (glob_folder, glob_recurse, arg,
-						save_exif_action, 0);
+		return for_each_image_in_range (glob_folder,
+				save_exif_action, glob_flags, arg);
         default:
                 return (GP_ERROR_NOT_SUPPORTED);
         }
@@ -874,12 +873,9 @@ OPTION_CALLBACK (get_all_pictures)
         cli_debug_print("Getting all pictures");
 
         CR (set_globals ());
-        CR (for_each_image (glob_folder, save_picture_action, 0));
+        CR (for_each_image (glob_folder, save_picture_action, glob_flags));
 
-        if (!glob_recurse)
-                return (GP_OK);
-
-        return for_each_subfolder(glob_folder, for_each_image, save_picture_action, glob_recurse);
+	return (GP_OK);
 }
 
 OPTION_CALLBACK (get_thumbnail)
@@ -892,12 +888,9 @@ OPTION_CALLBACK(get_all_thumbnails)
         cli_debug_print("Getting all thumbnails");
 
         CR (set_globals ());
-        CR (for_each_image (glob_folder, save_thumbnail_action, 0));
+        CR (for_each_image (glob_folder, save_thumbnail_action, glob_flags));
 
-        if (!glob_recurse)
-                return (GP_OK);
-
-        return for_each_subfolder(glob_folder, for_each_image, save_thumbnail_action, glob_recurse);
+	return (GP_OK);
 }
 
 OPTION_CALLBACK (get_raw_data)
@@ -908,12 +901,9 @@ OPTION_CALLBACK (get_raw_data)
 OPTION_CALLBACK (get_all_raw_data)
 {
         CR (set_globals ());
-        CR (for_each_image (glob_folder, save_raw_action, 0));
+        CR (for_each_image (glob_folder, save_raw_action, glob_flags));
 
-        if (!glob_recurse)
-                return (GP_OK);
-
-        return for_each_subfolder(glob_folder, for_each_image, save_raw_action, glob_recurse);
+	return (GP_OK);
 }
 
 OPTION_CALLBACK (get_audio_data)
@@ -924,12 +914,9 @@ OPTION_CALLBACK (get_audio_data)
 OPTION_CALLBACK (get_all_audio_data)
 {
 	CR (set_globals ());
-	CR (for_each_image (glob_folder, save_audio_action, 0));
+	CR (for_each_image (glob_folder, save_audio_action, glob_flags));
 
-	if (!glob_recurse)
-		return (GP_OK);
-
-	return for_each_subfolder (glob_folder, for_each_image, save_audio_action, glob_recurse);
+	return (GP_OK);
 }
 
 OPTION_CALLBACK (delete_picture)
@@ -938,8 +925,11 @@ OPTION_CALLBACK (delete_picture)
 
         CR (set_globals ());
 
-        return for_each_image_in_range (glob_folder, glob_recurse, arg,
-					delete_picture_action, 1);
+	if (strchr (arg, '.'))
+		return (delete_picture_action (glob_folder, arg));
+
+	return for_each_image_in_range (glob_folder, delete_picture_action,
+					glob_flags, arg);
 }
 
 OPTION_CALLBACK (delete_all_pictures)
@@ -947,12 +937,9 @@ OPTION_CALLBACK (delete_all_pictures)
 	cli_debug_print("Deleting all pictures in '%s'", glob_folder);
 
 	CR (set_globals ());
-	CR (delete_folder_files (glob_folder, NULL, 0));
-	
-	if (!glob_recurse)
-		return (GP_OK);
-		
-	return for_each_subfolder (glob_folder, delete_folder_files, NULL, glob_recurse);
+	CR (for_each_folder (glob_folder, delete_all_action, glob_flags));
+
+	return (GP_OK);
 }
 
 OPTION_CALLBACK (upload_picture)
@@ -1337,7 +1324,6 @@ init_globals (void)
         glob_debug = 0;
         glob_quiet = 0;
         glob_filename_override = 0;
-        glob_recurse = 1;
 
 	glob_context = gp_context_new ();
 	gp_context_set_cancel_func    (glob_context, ctx_cancel_func,   NULL);
@@ -1480,9 +1466,9 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n"));
 	if ((option_is_present ("delete-all-images", argc, argv) == GP_OK) ||
 	    (option_is_present ("D", argc, argv) == GP_OK)) {
 		if (option_is_present ("recurse", argc, argv) == GP_OK)
-			glob_recurse = 1;
+			glob_flags |= FOR_EACH_FLAGS_RECURSE;
 		else
-			glob_recurse = 0;
+			glob_flags &= ~FOR_EACH_FLAGS_RECURSE;
 	}
 
 	result = execute_options (argc, argv);

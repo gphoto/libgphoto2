@@ -53,36 +53,83 @@
 #define CR(result)       {int r=(result); if (r<0) return r;}
 #define CRU(result,file) {int r=(result); if (r<0) {gp_file_unref(file);return r;}}
 
-/* Folder actions 						*/
-/* ------------------------------------------------------------ */
+int
+delete_all_action (const char *folder)
+{
+	cli_debug_print ("Deleting all files in '%s'", folder);
+
+	return gp_camera_folder_delete_all (glob_camera, folder, glob_context);
+}
 
 int
-print_folder (const char *subfolder, image_action action, int reverse)
+list_folders_action (const char *folder)
 {
-	char *c;
-	
-	/* remove the basename for clarity purposes */
-	c = strrchr(subfolder, '/');
-	if (*c == '/')
-		c++;
-	printf("\"%s\"\n", c);
-		
+	CameraList list;
+	int count;
+	const char *name;
+	unsigned int i;
+
+	CR (gp_camera_folder_list_folders (glob_camera, folder, &list,
+					   glob_context));
+	CR (count = gp_list_count (&list));
+	switch (count) {
+        case 0:
+                printf (_("There are no folders in folder '%s'."), folder);
+                printf ("\n");
+                break;
+        case 1:
+                printf (_("There is one folder in folder '%s':"), folder);
+                printf ("\n");
+                break;
+        default:
+                printf (_("There are %i folders in folder '%s':"),
+			 count, folder);
+                printf ("\n");
+                break;
+	}
+	for (i = 0; i < count; i++) {
+		CR (gp_list_get_name (&list, i, &name));
+		printf (" - %s\n", name);
+	}
+
 	return (GP_OK);
 }
 
 int
-delete_folder_files (const char *subfolder, image_action action, int reverse)
+list_files_action (const char *folder)
 {
-	cli_debug_print("Deleting all files in '%s'", subfolder);
-	
-	return gp_camera_folder_delete_all (glob_camera, subfolder, glob_context);
+	CameraList list;
+	int count;
+	const char *name;
+	unsigned int i;
+
+	CR (gp_camera_folder_list_files (glob_camera, folder, &list,
+					 glob_context));
+	CR (count = gp_list_count (&list));
+	switch (count) {
+	case 0:
+		printf (_("There are no files in folder '%s'."), folder);
+		printf ("\n");
+		break;
+	case 1:
+		printf (_("There is one file in folder '%s':"), folder);
+		printf ("\n");
+		break;
+	default:
+		printf (_("There are %i files in folder '%s':"), count, folder);
+		printf ("\n");
+		break;
+	}
+	for (i = 0; i < count; i++) {
+		CR (gp_list_get_name (&list, i, &name));
+		CR (print_file_action (folder, name));
+	}
+
+	return (GP_OK);
 }
 
-/* File actions 						*/
-/* ------------------------------------------------------------ */
-
 int
-print_picture_action (const char *folder, const char *filename)
+print_file_action (const char *folder, const char *filename)
 {
 	static int x=0;
 

@@ -1,5 +1,11 @@
 2002-02-08  Lutz Müller <lutz@users.sourceforge.net>
 
+	* frontends/commend-line/main.c:
+	* frontends/command-line/actions[c,h]:
+	* frontends/command-line/foreach[c,h]: Clean up, simplify.
+
+2002-02-08  Lutz Müller <lutz@users.sourceforge.net>
+
 	* libgphoto2/gphoto2-filesys.c: Add support for getting the 
 	  mtime out of the file data.
 
