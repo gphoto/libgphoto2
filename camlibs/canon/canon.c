@@ -104,7 +104,7 @@
   IXUS 50            PowerShot SD400                IXY Digital 55       February 2005
   PowerShot A520                                                         January 2005
   PowerShot A510                                                         January 2005
-  Digital IXUS 40    PowerShot SD300                 IXY Digital 50      September 2004
+  Digital IXUS 40    PowerShot SD300                IXY Digital 50       September 2004
   PowerShot G6                                                           August 2004
   Digital IXUS IIs   PowerShot SD110                      ???            February 2004
   PowerShot Pro1                                                         February 2004
@@ -135,7 +135,7 @@ const struct canonCamModelData models[] = {
 	{"Canon:PowerShot unknown 1",	CANON_CLASS_1,	0x04A9, 0x3050, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
 	/* Canon IXY DIGITAL 200 here? */
 	{"Canon:PowerShot S110",	CANON_CLASS_0,	0x04A9, 0x3051, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
-	{"Canon:Digital IXUS v",	CANON_CLASS_1,	0x04A9, 0x3052, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:Digital IXUS v",	CANON_CLASS_0,	0x04A9, 0x3052, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
 
 	{"Canon:PowerShot G2",		CANON_CLASS_1,	0x04A9, 0x3055, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:PowerShot S40",		CANON_CLASS_1,	0x04A9, 0x3056, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
@@ -158,14 +158,13 @@ const struct canonCamModelData models[] = {
 
 	/* Reported at http://www.linux-usb.org/usb.ids, we have 306E. */
 	/*{"Canon:PowerShot G3",	CANON_CLASS_1,	0x04A9, 0x3069, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},*/
-
 	/* 306a is in MacOS Info.plist, but I don't know what it is --swestin. */
 	{"Canon:Digital unknown 3",	CANON_CLASS_1,	0x04A9, 0x306a, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
 	/* Apparently the MVX2i is the same as Optura 200 MC (Philippe
 	 * Gramoulle), so share the code. */
 	{"Canon:MVX2i",			CANON_CLASS_1,	0x04A9, 0x306B, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:Optura 200 MC",		CANON_CLASS_1,	0x04A9, 0x306B, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-	{"Canon:PowerShot S45 (normal mode)",	CANON_CLASS_5,	0x04A9, 0x306C, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:PowerShot S45 (normal mode)",	CANON_CLASS_4,	0x04A9, 0x306C, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	/* 0x306D is S45 in PTP mode */
 	{"Canon:PowerShot G3 (normal mode)",	CANON_CLASS_5,	0x04A9, 0x306E, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	/* 0x306F is G3 in PTP mode */
@@ -184,19 +183,16 @@ const struct canonCamModelData models[] = {
 	/* PS S400 uses the same ProductID for PTP and Canon, with protocol autodetection */
 	{"Canon:Digital IXUS 400",	CANON_CLASS_1,	0x04A9, 0x3075, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:PowerShot S400",	CANON_CLASS_1,	0x04A9, 0x3075, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-
 	{"Canon:PowerShot A300",	CANON_CLASS_1,	0x04A9, 0x3076, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:PowerShot S50 (normal mode)",	CANON_CLASS_4,	0x04A9, 0x3077, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:ZR70MC",		CANON_CLASS_5,	0x04A9, 0x3078, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:MV650i",		CANON_CLASS_5,	0x04A9, 0x3079, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-
 	/* 307a is in MacOS Info.plist, but I don't know what it is
 	 * --swestin. */
 	{"Canon:PowerShot unknown 5",	CANON_CLASS_5,	0x04A9, 0x307a, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
 	/* MV630i is a DV camcorder */
 	{"Canon:MV630i",		CANON_CLASS_5,	0x04A9, 0x307b, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:Optura 20",		CANON_CLASS_5,	0x04A9, 0x307f, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-
 	/* 3080 is in MacOS Info.plist, but I don't know what it is
 	 * --swestin. */
 	{"Canon:Unknown 4",		CANON_CLASS_5,	0x04A9, 0x3080, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
@@ -232,8 +228,7 @@ const struct canonCamModelData models[] = {
 	{"Canon:PowerShot A95 (normal mode)",	CANON_CLASS_5,	0x04A9, 0x30bb, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
 	/* 0x30bf is PowerShot SD300/Digital IXUS 40 in PTP mode */
-
-	/* 0x20c0 is PowerShot SD200 in PTP mode */
+	/* 0x30c0 is PowerShot SD200 in PTP mode */
 	{"Canon:PowerShot SD200 (normal mode)",	CANON_CLASS_5,	0x04A9, 0x30c0, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:Digital IXUS 30 (normal mode)",	CANON_CLASS_5,	0x04A9, 0x30c0, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:IXY Digital 40 (normal mode)",	CANON_CLASS_5,	0x04A9, 0x30c0, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
