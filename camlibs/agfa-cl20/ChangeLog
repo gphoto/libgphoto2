@@ -1,3 +1,9 @@
+2004-03-16 Dennis Noordsij
+	- fix compactflash detection
+	- fix number of picturs detection
+	- get rid of the heavy stack usage and use the heap instead
+	- fix USB download size
+
 2003-05-12  Marcus Meissner <meissner@suse.de>
 	
 	* agfa-cl20.c: Made it compile without warnings.
