@@ -92,6 +92,8 @@ struct camera_to_usb {
       	{ "DigitalDream:l'esprit",   0x0553, 0x0202, 0 },
 	/* http://www.digitaldreamco.com/shop/laronde.htm, VGA */
       	{ "DigitalDream:la ronde",   0x0553, 0x0202, 0 },
+	/* https://sf.net/tracker/index.php?func=detail&aid=1000498&group_id=8874&atid=358874 */
+	{ "DigitalDream:l'espion XS", 0x1183, 0x0001, 0 },
 	
 
 	/* reported by jerry white */ 
