@@ -22,6 +22,7 @@
 #include "pdrm11.h"
 
 #include <stdint.h>
+#include <string.h>
 
 #include <gphoto2.h>
 
