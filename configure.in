@@ -191,7 +191,7 @@ dnl CDK: If you would like to access the camera's configuration using
 dnl      gphoto2, the command-line frontend, you need this. Old versions
 dnl      of CDK don't include fscale, therefore check for it here.
 dnl ---------------------------------------------------------------------------
-cdk_msg=no
+cdk_msg="no (http://dickey.his.com/cdk/cdk.html)"
 try_cdk=true
 have_cdk=false
 AC_ARG_WITH(cdk,        [  --without-cdk             Don't use cdk],
@@ -223,6 +223,8 @@ if $try_cdk; then
 		LDFLAGS="$LDFLAGS_save"]
 	)
 	CPPFLAGS="$CPPFLAGS_save"
+else
+	cdk_msg="no (not requested)"
 fi
 AM_CONDITIONAL(HAVE_CDK, $have_cdk)
 AC_SUBST(CDK_CFLAGS)
@@ -257,6 +259,8 @@ if $try_jpeg; then
 		AC_DEFINE(HAVE_JPEG)
 		JPEG_LIBS="-ljpeg"
 	fi
+else
+	jpeg_msg="no (not requested)"
 fi
 AM_CONDITIONAL(HAVE_JPEG, $have_jpeg)
 AC_SUBST(JPEG_LIBS)
@@ -275,10 +279,13 @@ AC_ARG_WITH(pkgconfig, [  --without-pkgconfig       Don't use pkg-config],[
 		try_pkgconfig=false
 	fi])
 if $try_pkgconfig; then
-	AC_PATH_PROG(have_pkgconfig,pkg-config,true,false)
-	if $have_pkgconfig; then
+	AC_PATH_PROG(PKG_CONFIG,pkg-config)
+	if test -n "${PKG_CONFIG}"; then
+		have_pkgconfig=true
 		pkgconfig_msg="yes"
 	fi
+else
+	pkgconfig_msg="no (not requested)"
 fi
 
 dnl ---------------------------------------------------------------------------
@@ -323,6 +330,8 @@ if $try_exif; then
 			exif_msg=yes
 			AC_DEFINE(HAVE_EXIF)])
 	fi
+else
+	exif_msg="no (not requested)"
 fi
 AM_CONDITIONAL(HAVE_EXIF, $have_exif)
 AC_SUBST(EXIF_CFLAGS)
@@ -354,6 +363,8 @@ if $try_aa; then
 		else
 			AA_LIBS="-laa"
 		fi])
+else
+	aa_msg="no (not requested)"
 fi
 AM_CONDITIONAL(HAVE_AA, $have_aa)
 AC_SUBST(AA_LIBS)
