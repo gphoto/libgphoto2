@@ -86,7 +86,7 @@ lockdev_msg=no
 try_baudboy_msg=true
 try_ttylock=true
 try_lockdev=true
-AC_ARG_WITH(serial, [  --without-serial  Don't compile in SERIAL support],
+AC_ARG_WITH(serial, [  --without-serial        Don't compile in SERIAL support],
 	if test x$withval = xno; then
 		have_serial=false
 		serial_msg=no
@@ -175,7 +175,7 @@ dnl libusb
 dnl ******
 usb_msg=no
 try_usb=true
-AC_ARG_WITH(usb, [  --without-usb   Don't compile in USB support],
+AC_ARG_WITH(usb, [  --without-usb           Don't compile in USB support],
 	if test x$withval = xno; then
 		try_usb=false
 	fi

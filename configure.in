@@ -115,7 +115,7 @@ for i in $camlibs; do
 done
 AC_MSG_CHECKING(which drivers to compile)
 AC_ARG_WITH(drivers,
-  [  --with-drivers=<list>     compile drivers in <list>; ]
+  [  --with-drivers=<list>   compile drivers in <list>; ]
   [                            drivers may be separated with commas; ]
   [                            'all' compiles all drivers; ]
   [                            possible drivers are: ]
@@ -175,7 +175,7 @@ dnl ***
 cdk_msg=no
 try_cdk=true
 have_cdk=false
-AC_ARG_WITH(cdk, [  --without-cdk     Don't use cdk],
+AC_ARG_WITH(cdk, [  --without-cdk           Don't use cdk],
 	if test x$withval = xno; then
 		try_cdk=false
 	fi
@@ -197,7 +197,7 @@ dnl ****
 jpeg_msg=no
 try_jpeg=true
 have_jpeg=false
-AC_ARG_WITH(jpeg, [  --without-jpeg    Don't use jpeg],
+AC_ARG_WITH(jpeg, [  --without-jpeg          Don't use jpeg],
 	if test x$withval = xno; then
 		try_jpeg=false
 	fi
@@ -229,7 +229,7 @@ dnl *****
 aa_msg=no
 try_aa=true
 have_aa=false
-AC_ARG_WITH(aalib, [  --without-aalib   Don't use aalib],
+AC_ARG_WITH(aalib, [  --without-aalib         Don't use aalib],
 	if test x$withval = xno; then
 		try_aa=false
 	fi
