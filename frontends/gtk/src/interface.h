@@ -1,8 +1,8 @@
 /* 
-file : interface.h
-author : jae gangemi (jgangemi@yahoo.com) 
-
-header file for all the interface functions.
+   file : interface.h
+   author : jae gangemi (jgangemi@yahoo.com) 
+   
+   header file for all the interface functions.
 */
 
 /* the following defines are for window creation via a callback */
@@ -14,3 +14,5 @@ header file for all the interface functions.
 GtkWidget *create_main_win(void);
 GtkWidget *create_img_win(void);
 GtkWidget *create_xport_win(void);
+GtkWidget *create_message_win_long(void);
+GtkWidget *create_message_win(void);

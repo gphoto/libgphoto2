@@ -1248,3 +1248,10 @@ GtkWidget *create_xport_win (void) {
   return xport_win;
 }
 
+GtkWidget *create_message_win_long(void) {
+
+} /* create_message_win_long */
+
+GtkWidget *create_message_win(void) {
+
+} /* create_message_win */
