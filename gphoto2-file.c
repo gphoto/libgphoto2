@@ -23,6 +23,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <utime.h>
@@ -162,15 +163,23 @@ gp_file_get_data_and_size (CameraFile *file, const char **data,
 int
 gp_file_save (CameraFile *file, const char *filename)
 {
-        FILE *fp;
+	FILE *fp;
 	struct utimbuf u;
 
 	CHECK_NULL (file && filename);
 
-        if (!(fp = fopen (filename, "wb")))
-                return (GP_ERROR);
-	fwrite (file->data, (size_t)sizeof(char), (size_t)file->size, fp);
-        fclose (fp);
+	if (!(fp = fopen (filename, "wb")))
+		return (GP_ERROR);
+
+	if (fwrite (file->data, (size_t)sizeof(char), (size_t)file->size, fp) != (size_t)file->size) {
+		gp_log (GP_LOG_ERROR, "libgphoto2",
+			"Not enough space on device in "
+			"order to save '%s'.", filename);
+		unlink (filename);
+		return (GP_ERROR);
+	}
+
+	fclose (fp);
 
 	if (file->mtime) {
 		u.actime = file->mtime;
@@ -178,7 +187,7 @@ gp_file_save (CameraFile *file, const char *filename)
 		utime (filename, &u);
 	}
 
-        return (GP_OK);
+	return (GP_OK);
 }
 
 int
