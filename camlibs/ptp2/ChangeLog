@@ -1,3 +1,7 @@
+2004-04-02  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* library.c: Added PowerShot S500 (Digital IXUS 500 alias)
+
 2004-04-01  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* library.c: Added HP PhotoSmart 635
