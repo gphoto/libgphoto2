@@ -1109,15 +1109,20 @@ gp_filesystem_set_file_funcs (CameraFilesystem *fs,
  * @fs: a #CameraFilesystem
  * @put_file_func: function used to upload files
  * @delete_all_func: function used to delete all files in a folder
- * @data:
+ * @make_dir_func: function used to create a new directory
+ * @remove_dir_func: function used to remove an existing directory
+ * @data: a data object that will passed to all called functions
  *
- * Tells the filesystem which functions to call for file upload or deletion
- * of all files in a given folder. Typically, a camera driver would call
- * this function on initialization. If one functionality is not 
- * supported, NULL can be supplied. If you don't call this function, the @fs
- * will assume that neither upload nor deletion of all files in a folder
- * at once is supported. The @fs will try to compensate latter with the
- * delete_file_func if such a function has been supplied.
+ * Tells the filesystem which functions to call for file upload, deletion
+ * of all files in a given folder, creation or removal of a folder. 
+ * Typically, a camera driver would call this function on initialization. 
+ * If one functionality is not supported, NULL can be supplied. 
+ * If you don't call this function, the @fs will assume that neither
+ * of these features is supported.
+ *
+ * The @fs will try to compensate missing @delete_all_func
+ * functionality with the delete_file_func if such a function has been
+ * supplied.
  *
  * Return value: a gphoto2 error code.
  **/
