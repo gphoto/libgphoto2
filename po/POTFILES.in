@@ -3,7 +3,6 @@ camlibs/canon/canon.c
 camlibs/canon/library.c
 camlibs/canon/serial.c
 camlibs/canon/usb.c
-camlibs/canon/util.c
 camlibs/digita/digita.c
 camlibs/dimera/dimera3500.c
 camlibs/directory/directory.c
@@ -35,9 +34,7 @@ camlibs/panasonic/dc1000.c
 camlibs/panasonic/dc1580.c
 camlibs/panasonic/l859/l859.c
 camlibs/pccam600/library.c
-camlibs/pccam600/pccam600.c
 camlibs/polaroid/pdc700.c
-camlibs/ptp/ptp.c
 camlibs/ptp/library.c
 camlibs/ricoh/library.c
 camlibs/ricoh/ricoh.c
@@ -46,14 +43,16 @@ camlibs/sierra/epson-desc.c
 camlibs/sierra/library.c
 camlibs/sierra/nikon-desc.c
 camlibs/sierra/olympus-desc.c
-camlibs/sierra/sierra.c
 camlibs/sierra/sierra-desc.c
+camlibs/sierra/sierra.c
 camlibs/sipix/sipix.c
 camlibs/sipix/web2.c
 camlibs/sipixblink/sipixblink.c
+camlibs/sonydscf1/dsc_f1.c
 camlibs/sonydscf1/sonydscf1.c
 camlibs/sonydscf55/camera.c
 camlibs/soundvision/soundvision.c
+camlibs/spca504_flash/library.c
 camlibs/stv0680/library.c
 camlibs/stv0680/stv0680.c
 camlibs/sx330z/library.c
