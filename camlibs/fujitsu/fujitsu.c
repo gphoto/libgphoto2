@@ -164,6 +164,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 	settings.serial.stopbits = 1;
 	gpio_set_settings(fd->dev, settings);
 	gpio_set_timeout(fd->dev, TIMEOUT);
+	strcpy(fd->folder, "/");
 
 	if (gpio_open(fd->dev)==GPIO_ERROR) {
 		gp_camera_message(camera, "Can not open the port");
@@ -203,6 +204,47 @@ return (GP_ERROR);
 	return (GP_OK);
 }
 
+static int fujitsu_change_folder(Camera *camera, const char *folder)
+{	
+	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
+
+	int st=0,i = 1;
+	char target[128];
+
+	if (!fd->folders)
+		return GP_OK;
+	if (!folder)
+		return GP_ERROR;
+
+	if (folder[0]) {
+		strncpy(target, folder, sizeof(target)-1);
+		target[sizeof(target)-1]='\0';
+		if (target[strlen(target)-1] != '/') strcat(target, "/");
+	} else
+		strcpy(target, "/");
+
+	if (target[0] != '/') {
+		debug_print(fd, "Change dir called with relative path?");
+		i = 0;
+	} else {
+		if (fujitsu_set_string_register(camera, 84, "\\", 1)==GP_ERROR)
+			return GP_ERROR;
+	}
+	st = i;
+	for (; target[i]; i++) {
+		if (target[i] == '/') {
+			target[i] = '\0';
+			if (st == i-1)
+				break;
+			if (fujitsu_set_string_register(camera, 84, target+st, strlen(target+st))==GP_ERROR)
+				return GP_ERROR; 
+			st = i+1;
+			target[i] = '/';
+		}
+	}
+	return GP_OK;
+}
+
 int camera_start(Camera *camera) {
 
 	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
@@ -211,7 +253,10 @@ int camera_start(Camera *camera) {
 		gp_camera_message(camera, "Can not set the serial port speed");
 		return (GP_ERROR);
 	}
-
+	if (fujitsu_change_folder(camera, fd->folder)) {
+		gp_camera_message(camera, "Can't change folder");
+		return (GP_ERROR);
+	}
 	return (GP_OK);
 }
 
@@ -248,13 +293,37 @@ int camera_exit (Camera *camera) {
 int camera_folder_list(Camera *camera, char *folder_name, CameraFolderInfo *list) {
 
 	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
+	int count, i, bsize;
+
 
 	debug_print(fd, "Listing folders");
 
 	if (!fd->folders) /* camera doesn't support folders */
 		return (0);
 
-	return (0);
+	if (camera_start(camera) != GP_OK) /* XXX */
+		return 0;
+
+	if ((fujitsu_change_folder(camera, folder_name) != GP_OK) ||
+	    (fujitsu_get_int_register(camera, 83, &count) != GP_OK)) {
+		camera_stop(camera);
+		return 0;
+	}
+	if (count)
+	for (i = 0; i < count; i++) {
+		if (fujitsu_change_folder(camera, folder_name) != GP_OK) {
+			break;
+		}
+		if (fujitsu_set_int_register(camera, 83, i+1) != GP_OK) {
+			break;
+		}
+		bsize = sizeof(list[i].name);
+		if (fujitsu_get_string_register(camera, 84, NULL, list[i].name, &bsize) != GP_OK) {
+			break;
+		}
+	}
+	camera_stop(camera);
+	return (i);
 }
 
 int camera_folder_set(Camera *camera, char *folder_name) {
@@ -262,11 +331,23 @@ int camera_folder_set(Camera *camera, char *folder_name) {
 	char buf[4096];
 	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
 
-	sprintf(buf, "Setting folder to %s", folder_name);
-	debug_print(fd, buf);
+	if (!fd->folders)
+		return GP_ERROR;
 
-	strcpy(fd->folder, folder_name);
+	if (folder_name[0] != '/') {
+		strcat(fd->folder, folder_name);
+	} else {
+		strcpy(fd->folder, folder_name);
+	}
 
+	if (fd->folder[strlen(fd->folder)-1] != '/')
+	       strcat(fd->folder, "/");
+
+	sprintf(buf, "Folder set to %s", fd->folder);
+
+	/* TODO: check whether the selected folder is valid.
+		 It should be done after implementing camera_lock/unlock pair */
+	
 	return (GP_OK);
 }
 
@@ -542,7 +623,7 @@ return (GP_ERROR);
 				break;
 			case 2:	strcpy(t, "Normal");
 				break;
-			case 3:	strcpy(t, "Inifity/Fish-eye");
+			case 3:	strcpy(t, "Infinity/Fish-eye");
 				break;
 			default:
 				sprintf(t, "%i (unknown)", value);
