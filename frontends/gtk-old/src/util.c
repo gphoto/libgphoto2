@@ -13,7 +13,6 @@
 int exec_command (char *command, char *args) {
 
 	char buf[1024];
-	printf("running \"%s %s\"\n", command, args);
 
 	if (fork() == 0) {
 		execlp(command, command, args, NULL);
