@@ -10,10 +10,10 @@ then
     AC_SUBST(RPMBUILD)
 else
     AC_MSG_RESULT([using autodetection])
-    AC_CHECK_PROGS(RPMBUILD, [rpmbuild rpm], /bin/false)
+    AC_CHECK_PROGS(RPMBUILD, [rpmbuild rpm], false)
     AC_MSG_RESULT([${RPMBUILD} (autodetect)])
 fi
-AM_CONDITIONAL(ENABLE_RPM, test "$RPMBUILD" != "/bin/false")
+AM_CONDITIONAL(ENABLE_RPM, test "$RPMBUILD" != "false")
 
 # whether libusb-devel is installed or not defines whether the RPM
 # packages we're going to build will depend on libusb and libusb-devel
@@ -26,7 +26,7 @@ AC_DEFUN(GPKG_CHECK_LINUX,
 	# effective_target has to be determined in advance
 	AC_REQUIRE([AC_NEED_BYTEORDER_H])
 
-	is_linux=/bin/false
+	is_linux=false
 	case "$effective_target" in 
 		*linux*)
 			is_linux=/bin/true
