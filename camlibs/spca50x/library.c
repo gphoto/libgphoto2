@@ -115,11 +115,18 @@ models[] =
 	{"Benq:DC1300", 0x04a5, 0x3003,
 	        BRIDGE_SPCA504, 0 },
 	/* Some other 500a cams with flash */
+/*	
 	{"Trust Familycam 300", 0x084d, 0x0003,
 		BRIDGE_SPCA500, SPCA50X_SDRAM},	
-	{"Minton S-Cam F5", 0x0, 0x0,
+	{"D-Link DSC 350+", 0x084d, 0x0003,
 		BRIDGE_SPCA500, SPCA50X_SDRAM},	
-	{NULL, 0, 0, 0, 0}
+       // This is reported to work, but I can't reach the reporter and don't
+       // know the id's. Presumably this is also a 0x084d 0x0003 like the two
+       // above.
+        {"Minton S-Cam F5", 0x0, 0x0,
+	        BRIDGE_SPCA500, SPCA50X_SDRAM},	
+*/
+		{NULL, 0, 0, 0, 0}
 };
 
 int
@@ -173,7 +180,7 @@ camera_capture (Camera *camera, CameraCaptureType type,
 	gp_camera_get_abilities (camera, &a);
 	if (!a.operations & GP_OPERATION_CAPTURE_IMAGE)
 		return GP_ERROR_NOT_SUPPORTED;
-
+	
 	CHECK (spca50x_capture (camera->pl));
 	CHECK (spca50x_sdram_get_info (camera->pl));
 	CHECK (spca50x_sdram_get_file_info
