@@ -66,6 +66,10 @@ int camera_abilities (CameraAbilitiesList *list)
 	strcpy(a.model, "Jenoptik JD11");
 	gp_abilities_list_append(list, a);
 
+	/* http://www.digitalkamera.de/Kameras/PrakticaQD500-de.htm (german) */
+	strcpy(a.model, "Praktica QD500");
+	gp_abilities_list_append(list, a);
+
 	/* Reported to be just a rebranded version by Russ Burdick
 	 * <grub@extrapolation.net> */
 	/* from Gallantcom, http://www.gallantcom.com/prodfaq-probe99.htm */
