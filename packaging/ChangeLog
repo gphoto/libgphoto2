@@ -1,5 +1,14 @@
 2002-05-25  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
+	* rpm/package.spec.in:
+		- comment out requirements if not used (gtk-doc, transfig)
+		- provide libgphoto2_port - for future compatibility
+		- fixed handling of misc HTML docs (API docs and docbook-generated manual)
+		- install linux-hotplug scripts into a directory of that name
+		- added gphoto2_port(3) man page
+
+2002-05-25  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
 	* linux-hotplug/usbcam.console: Fixed *silly* typo by me (chown vs chmod)
 
 2002-05-18  Hans Ulrich Niedermann  <gp@n-dimensional.de>

@@ -1,5 +1,9 @@
 2002-05-26  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
+	* doc/gphoto2.xml: added gphoto2_port(3) man page
+
+2002-05-26  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
 	* doc/Makefile.am: only include rules if corresponding programs exist
 
 2002-05-25  Hans Ulrich Niedermann <gp@n-dimensional.de>
