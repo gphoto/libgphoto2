@@ -1,3 +1,10 @@
+2005-02-16  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* sierra.c: Added Pentax Optio 450. Thanks to Jack
+	  for lending me his camera for some minutes. :)
+	  (Capture works, but only if you plug it in with the lens
+	   extracted already.)
+
 2005-02-14  Marcus Meissner <marcus@jet.franken.de>
 	* library.c, sierra-desc.h, sierra.c, sierra.h, sierra-usbwrap.c:
 	  Nikon Coolpix * and Pentax cameras also support the Sierra 

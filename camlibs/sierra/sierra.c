@@ -173,6 +173,9 @@ static struct {
 	{"Olympus", "C-5050Z", 	SIERRA_MODEL_CAM_DESC,	0x07b4, 0x105,
 					SIERRA_WRAP_USB_OLYMPUS, &oly3040_cam_desc},
 	{"Panasonic", "Coolshot NV-DCF5E", SIERRA_MODEL_DEFAULT, 0, 0, 0 },
+
+	{"Pentax", "Optio 450", SIERRA_MODEL_DEFAULT, 0x0a17,0x0007, SIERRA_WRAP_USB_PENTAX },
+
 	{"Polaroid", "PDC 640", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Polaroid", "PDC 2300Z", SIERRA_MODEL_DEFAULT, 0x0546, 0x0daf,
 					SIERRA_SKIP_INIT },
@@ -1979,7 +1982,7 @@ camera_about (Camera *camera, CameraText *about, GPContext *context)
 		_("sierra SPARClite library\n"
 		"Scott Fritzinger <scottf@unr.edu>\n"
 		"Support for sierra-based digital cameras\n"
-		"including Olympus, Nikon, Epson, and others.\n"
+		"including Olympus, Nikon, Epson, Pentax, and others.\n"
 		"\n"
 		"Thanks to Data Engines (www.dataengines.com)\n"
 		"for the use of their Olympus C-3030Z for USB\n"
