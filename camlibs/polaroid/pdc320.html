@@ -1,0 +1,49 @@
+<html>
+<head><title>PDC320 protocol description</title></head>
+<body>
+<h1>Polaroid PDC320 protocol description</h1>
+<hr>
+Commands are prefixed with 4 E6.
+<hr>
+<table>
+<tr>
+	<td>name</td>
+	<td>byte code</td>
+	<td>command length</td>
+	<td>reply length</td>
+	<td>reply desc</td>
+</tr>
+<tr>
+	<td>Init</td>
+	<td>0x00</td>
+	<td>None.</td>
+	<td>1 byte, 0x05</td>
+	<td>Just returns 1 byte.</td>
+</tr>
+<tr>
+	<td>Id</td>
+	<td>0x01</td>
+	<td>None.</td>
+	<td>12 bytes, starting with 0x00</td>
+	<td>Returns 12 byte. Byte 1-9 are the string "XIRLINK", these are followed
+	    by a 0x02, 0x01 and 2 unknown additional bytes.
+	</td>
+</tr>
+<tr>
+	<td>State</td>
+	<td>0x02</td>
+	<td>None.</td>
+	<td>22 bytes, starting with 0x02</td>
+	<td>Returns 22 bytes. First byte is 0x02.
+	</td>
+</tr>
+<tr>
+	<td>End Init</td>
+	<td>0x0a</td>
+	<td>no additional parameters</td>
+	<td>1 byte, 0x09</td>
+	<td>Just returns 1 byte.</td>
+</tr>
+</table>
+
+</body></html>
