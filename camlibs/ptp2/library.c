@@ -648,7 +648,6 @@ camera_exit (Camera *camera, GPContext *context)
 	}
 	if (camera->port!=NULL)  {
 		/* clear halt */
-		fprintf(stderr,"clearing halt...\n");
 		gp_port_usb_clear_halt
 				(camera->port, GP_PORT_USB_ENDPOINT_IN);
 		gp_port_usb_clear_halt
