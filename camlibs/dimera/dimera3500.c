@@ -21,6 +21,9 @@
  *
  * History:
  * $Log$
+ * Revision 1.29  2001/11/08 08:09:22  lutz
+ * Small compile fix (you don't set permissions on thumbnails).
+ *
  * Revision 1.28  2001/11/03 14:30:21  marcusmeissner
  * If we check for 'ENABLE_NLS', we need to include <config.h>.
  * Fix 'redefinition of _' compile warnings due to broken copy & pasted macro
@@ -485,6 +488,8 @@ static int get_file_func (CameraFilesystem *fs, const char *folder, const char *
 		gp_file_set_mime_type (file, GP_MIME_RAW); 
 		gp_file_adjust_name_for_mime_type (file);
 		break;
+	default:
+		return (GP_ERROR_NOT_SUPPORTED);
 	}
 
 	return GP_OK;
@@ -508,8 +513,6 @@ static int get_info_func (CameraFilesystem *fs, const char *folder, const char *
 
 	info->preview.fields = GP_FILE_INFO_ALL;
 	strcpy(info->preview.type, GP_MIME_PGM);
-	strcpy(info->preview.name, filename);
-	info->preview.permissions = GP_FILE_PERM_READ;
 	info->preview.size = MESA_THUMB_SZ + sizeof( Dimera_thumbhdr ) - 1;
 	info->preview.width = 64;
 	info->preview.height = 48;
