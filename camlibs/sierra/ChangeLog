@@ -1,5 +1,10 @@
 2003-02-15  Patrick Mansfield <patmans@users.sourceforge.net>
 
+	* sierra.c, sierra.h: Add and use SIERRA_SKIP_INIT for use with 
+	  Polaroid PDC 2300Z.
+
+2003-02-15  Patrick Mansfield <patmans@users.sourceforge.net>
+
 	* epson-desc.c, library.c, nikon-desc.c olympus-desc.c
 	  sierra-desc.h, sierra.c, sierra.h: Remove use_extended_protocol
 	  field and use a bit in the flags field instead.

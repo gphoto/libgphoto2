@@ -10,6 +10,7 @@ typedef enum {
 	SIERRA_NO_51	 = 1<<1,
 	SIERRA_LOW_SPEED = 1<<2,
 	SIERRA_EXT_PROTO = 1<<3,
+	SIERRA_SKIP_INIT = 1<<4,
 } SierraFlags;
 
 struct _CameraPrivateLibrary {

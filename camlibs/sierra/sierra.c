@@ -158,7 +158,8 @@ static struct {
 					SIERRA_WRAP_USB, &oly3040_cam_desc},
 	{"Panasonic", "Coolshot NV-DCF5E", SIERRA_MODEL_DEFAULT, 0, 0, 0 },
 	{"Polaroid", "PDC 640", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
-	{"Polaroid", "PDC 2300Z",	SIERRA_MODEL_DEFAULT,   0, 0, 0 },
+	{"Polaroid", "PDC 2300Z",	SIERRA_MODEL_DEFAULT,   0,
+					SIERRA_SKIP_INIT, 0 },
 	{"Sanyo", "DSC-X300", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Sanyo", "DSC-X350", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Sanyo", "VPC-G200", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
@@ -2112,11 +2113,11 @@ camera_init (Camera *camera, GPContext *context)
         CHECK_FREE (camera, gp_port_set_timeout (camera->port, TIMEOUT));
 
 	/*
-	 * Send initialization sequence. Do not do this for the
-	 * 'Polaroid PDC 2300Z' (reported by William Bader
-	 * <williambader@hotmail.com>).
+	 * Send initialization sequence unless otherwise flagged. (The
+	 * 'Polaroid PDC 2300Z' fails sierra_init as reported by William
+	 * Bader <williambader@hotmail.com>).
 	 */
-	if (strcmp (a.model, "Polaroid:PDC 2300Z"))
+	if (!(camera->pl->flags & SIERRA_SKIP_INIT))
 		CHECK (sierra_init (camera, context));
 
         /* Establish a connection */
