@@ -1,3 +1,8 @@
+2004-09-12  Marcus Meissner  <meissner@suse.de>
+
+	* g3.c: Added Ricoh Caplio GX as reported by
+	        Christoph Bauer.
+
 2004-08-11  Marcus Meissner  <meissner@suse.de>
 
 	* g3.c: Get the mtime out of NLST, so we get the

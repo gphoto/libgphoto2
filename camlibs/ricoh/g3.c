@@ -245,6 +245,12 @@ camera_abilities (CameraAbilitiesList *list)
 	a.usb_product	= 0x2208;
 	gp_abilities_list_append(list, a);
 
+	strcpy(a.model, "Ricoh:Capilo RX");
+	a.usb_vendor	= 0x5ca;
+	a.usb_product	= 0x220b;
+	gp_abilities_list_append(list, a);
+
+
 	strcpy(a.model, "Medion:MD 6126");
 	a.usb_vendor    = 0x5ca;
 	a.usb_product   = 0x2205;
