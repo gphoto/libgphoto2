@@ -1,5 +1,10 @@
 2001-08-19  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2/filesys.c (gp_filesystem_format): Fix bug found by 
+	Stéphane Castejon.
+
+2001-08-19  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2/globals.h: Unused. Removed.
 
 2001-08-19  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
