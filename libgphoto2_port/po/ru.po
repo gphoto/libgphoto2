@@ -11,7 +11,7 @@ msgstr ""
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit"
+"Content-Transfer-Encoding: 8bit\n"
 
 #: libgphoto2_port/gphoto2-port-info-list.c:178
 #, c-format
@@ -48,8 +48,8 @@ msgstr "Загрузка драйверов ввода/вывода из '%s'...
 #, c-format
 msgid "Could not load any io-library because '%s' could not be opened (%m)"
 msgstr ""
-"Невозможно загрузить библиотеку функций ввода/вывода, потому что "
-"невозможно открыть '%s'(%m) "
+"Невозможно загрузить библиотеку функций ввода/вывода, потому что невозможно "
+"открыть '%s'(%m) "
 
 #: libgphoto2_port/gphoto2-port-info-list.c:300
 #, c-format
@@ -336,12 +336,14 @@ msgstr "Очистить признак halt..."
 #: libgphoto2_port/gphoto2-port.c:778
 #, c-format
 msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr "Запись сообщения (запрос=0x%x значение=0x%x индекс=0x%x размер=%i=0x%x)..."
+msgstr ""
+"Запись сообщения (запрос=0x%x значение=0x%x индекс=0x%x размер=%i=0x%x)..."
 
 #: libgphoto2_port/gphoto2-port.c:799
 #, c-format
 msgid "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr "Чтение сообщения (запрос=0x%x значение=0x%x индекс=0x%x размер=%i=0x%x)..."
+msgstr ""
+"Чтение сообщения (запрос=0x%x значение=0x%x индекс=0x%x размер=%i=0x%x)..."
 
 #: libgphoto2_port/gphoto2-port.c:806
 msgid "msg_read"

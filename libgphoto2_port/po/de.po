@@ -343,7 +343,8 @@ msgstr "Lösche Halt..."
 #: libgphoto2_port/gphoto2-port.c:778
 #, c-format
 msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr "Schreibe Nachricht (request=0x%x, Wert=0x%x, Index=0x%x, Größe=%i=0x%x)..."
+msgstr ""
+"Schreibe Nachricht (request=0x%x, Wert=0x%x, Index=0x%x, Größe=%i=0x%x)..."
 
 #: libgphoto2_port/gphoto2-port.c:799
 #, c-format
@@ -482,8 +483,7 @@ msgid ""
 msgstr ""
 "Konnte Schnittstelle %d nicht reservieren (%m). Stellen Sie sicher, dass "
 "kein\n"
-"anderes Programm oder Kernelmodul (z.B. %s) das Gerät "
-"verwendet und Sie \n"
+"anderes Programm oder Kernelmodul (z.B. %s) das Gerät verwendet und Sie \n"
 "Lese- und Schreibrechte für das Gerät haben."
 
 #: usb/libusb.c:236
@@ -509,7 +509,8 @@ msgstr "Konnte Alternativ-Setting %d/%d nicht setzen (%m)"
 #: usb/libusb.c:497
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
-msgstr "Die angegebene Hersteller- oder Produkt-ID (0x%x,0x%x) ist nicht gültig."
+msgstr ""
+"Die angegebene Hersteller- oder Produkt-ID (0x%x,0x%x) ist nicht gültig."
 
 #: usb/libusb.c:529
 #, c-format
@@ -580,4 +581,3 @@ msgstr ""
 
 #~ msgid "msg_write"
 #~ msgstr "msg_write"
-

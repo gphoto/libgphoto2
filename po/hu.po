@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2\n"
 "Report-Msgid-Bugs-To: <gphoto-translation@lists.sourceforge.net>\n"
-"POT-Creation-Date: 2005-01-24 08:14+0100\n"
+"POT-Creation-Date: 2005-02-08 12:57+0100\n"
 "PO-Revision-Date: 2003-02-14 11:11+0100\n"
 "Last-Translator: Tamas Szanto <tszanto@mol.hu>\n"
 "Language-Team: Hungarian <kde-lista@sophia.jpte.hu>\n"
@@ -159,6 +159,7 @@ msgid "FATAL ERROR: initial CRC value for length %d unknown\n"
 msgstr ""
 
 #: camlibs/canon/crc.c:250
+#, c-format
 msgid "unable to guess initial CRC value\n"
 msgstr ""
 
@@ -605,12 +606,12 @@ msgstr ""
 
 #: camlibs/canon/usb.c:111
 #, fuzzy
-msgid "Unknown (some kind of error))"
+msgid "Unknown (some kind of error)"
 msgstr "Ismeretlen hiba a kamerakezelő programkönyvtárban"
 
 #: camlibs/canon/usb.c:112
 #, c-format
-msgid "Initial camera response %c/ unrecognized)"
+msgid "Initial camera response '%c' unrecognized"
 msgstr ""
 
 #: camlibs/canon/usb.c:126
@@ -835,12 +836,12 @@ msgstr ""
 #: camlibs/casio/casio-qv.c:261 camlibs/dimera/dimera3500.c:771
 #: camlibs/kodak/dc210/dc210.c:168 camlibs/polaroid/pdc700.c:980
 #: camlibs/sierra/sierra.c:849 camlibs/sierra/sierra.c:1427
-#: camlibs/sierra/sierra-desc.c:193
+#: camlibs/sierra/sierra-desc.c:203
 msgid "Camera Configuration"
 msgstr "A kamera beállításai"
 
 #: camlibs/casio/casio-qv.c:264 camlibs/konica/qm150.c:1140
-#, fuzzy
+#, fuzzy, c-format
 msgid "Battery"
 msgstr "akkumulátor"
 
@@ -931,7 +932,7 @@ msgstr ""
 #: camlibs/kodak/dc210/dc210.c:253 camlibs/kodak/dc210/dc210.c:421
 #: camlibs/konica/library.c:778 camlibs/konica/library.c:1019
 #: camlibs/konica/qm150.c:854 camlibs/ptp2/library.c:1244
-#: camlibs/ptp2/library.c:1677 camlibs/ptp2/ptp.c:1866
+#: camlibs/ptp2/library.c:1677 camlibs/ptp2/ptp.c:1928
 #: camlibs/ricoh/library.c:500 camlibs/sierra/nikon-desc.c:252
 msgid "Flash"
 msgstr "Vaku"
@@ -1060,7 +1061,7 @@ msgstr "Elfogyott a memória"
 
 #: camlibs/dimera/dimera3500.c:567 camlibs/dimera/dimera3500.c:603
 #: camlibs/konica/qm150.c:259 camlibs/panasonic/coolshot/library.c:375
-#: camlibs/ricoh/g3.c:301 camlibs/samsung/samsung.c:214
+#: camlibs/ricoh/g3.c:305 camlibs/samsung/samsung.c:214
 #: camlibs/sipix/web2.c:175 camlibs/smal/ultrapocket.c:127
 #: camlibs/smal/ultrapocket.c:173
 msgid "Downloading image..."
@@ -1234,7 +1235,7 @@ msgid "Camera sent unexpected byte 0x%02x."
 msgstr "Nem várt bájt (0x%02x) érkezett a kamerától."
 
 #: camlibs/fuji/fuji.c:317 camlibs/konica/lowlevel.c:382
-#: camlibs/polaroid/pdc700.c:314 camlibs/ricoh/g3.c:295
+#: camlibs/polaroid/pdc700.c:314 camlibs/ricoh/g3.c:299
 msgid "Downloading..."
 msgstr "Letöltés..."
 
@@ -1327,7 +1328,7 @@ msgstr ""
 
 #: camlibs/gsmart300/library.c:199
 #, fuzzy, c-format
-msgid "Unsupported port type: %d.This driver only works with USBcameras.\n"
+msgid "Unsupported port type: %d. This driver only works with USBcameras.\n"
 msgstr ""
 "Nem támogatott porttípus: %d. Ez a meghajtó csak USB-alapú kamerákkal "
 "működik.\n"
@@ -1552,13 +1553,13 @@ msgstr "Rögzítés"
 
 #: camlibs/kodak/dc210/dc210.c:220 camlibs/kodak/dc210/dc210.c:379
 #: camlibs/konica/qm150.c:1039 camlibs/ptp2/library.c:1674
-#: camlibs/ptp2/ptp.c:1541 camlibs/ricoh/library.c:499
+#: camlibs/ptp2/ptp.c:1603 camlibs/ricoh/library.c:499
 #: camlibs/sierra/sierra.c:1097 camlibs/sierra/sierra.c:1357
 msgid "Zoom"
 msgstr "Nagyítás"
 
 #: camlibs/kodak/dc210/dc210.c:227 camlibs/kodak/dc210/dc210.c:241
-#: camlibs/konica/qm150.c:1025 camlibs/ptp2/ptp.c:1894
+#: camlibs/konica/qm150.c:1025 camlibs/ptp2/ptp.c:1956
 #: camlibs/ricoh/library.c:498 camlibs/sierra/epson-desc.c:218
 #: camlibs/sierra/nikon-desc.c:290 camlibs/sierra/olympus-desc.c:488
 #: camlibs/sierra/sierra.c:1052 camlibs/sierra/sierra.c:1057
@@ -1600,7 +1601,7 @@ msgstr "Exponálási kompenzáció"
 #: camlibs/konica/qm150.c:967 camlibs/konica/qm150.c:970
 #: camlibs/konica/qm150.c:985 camlibs/konica/qm150.c:988
 #: camlibs/konica/qm150.c:1005 camlibs/konica/qm150.c:1008
-#: camlibs/ptp2/ptp.c:1862 camlibs/ptp2/ptp.c:1891 camlibs/ptp2/ptp.c:1907
+#: camlibs/ptp2/ptp.c:1924 camlibs/ptp2/ptp.c:1953 camlibs/ptp2/ptp.c:1969
 #: camlibs/ricoh/library.c:311 camlibs/ricoh/library.c:326
 #: camlibs/ricoh/library.c:367 camlibs/sierra/epson-desc.c:151
 #: camlibs/sierra/epson-desc.c:169 camlibs/sierra/nikon-desc.c:134
@@ -1657,8 +1658,8 @@ msgstr "Vörösszem-vaku"
 #: camlibs/ptp2/library.c:1418 camlibs/ptp2/library.c:1435
 #: camlibs/ptp2/library.c:1437 camlibs/ptp2/library.c:1449
 #: camlibs/ptp2/library.c:1511 camlibs/ptp2/library.c:1513
-#: camlibs/ptp2/library.c:1525 camlibs/ptp2/ptp.c:1811 camlibs/ptp2/ptp.c:1812
-#: camlibs/ptp2/ptp.c:1909 camlibs/ricoh/library.c:338
+#: camlibs/ptp2/library.c:1525 camlibs/ptp2/ptp.c:1873 camlibs/ptp2/ptp.c:1874
+#: camlibs/ptp2/ptp.c:1971 camlibs/ricoh/library.c:338
 #: camlibs/ricoh/library.c:369 camlibs/sierra/nikon-desc.c:271
 #: camlibs/sierra/sierra.c:1077 camlibs/sierra/sierra.c:1083
 #: camlibs/sierra/sierra.c:1346
@@ -1680,8 +1681,8 @@ msgstr "Be"
 #: camlibs/ptp2/library.c:1422 camlibs/ptp2/library.c:1436
 #: camlibs/ptp2/library.c:1437 camlibs/ptp2/library.c:1453
 #: camlibs/ptp2/library.c:1512 camlibs/ptp2/library.c:1513
-#: camlibs/ptp2/library.c:1529 camlibs/ptp2/ptp.c:1811 camlibs/ptp2/ptp.c:1812
-#: camlibs/ptp2/ptp.c:1908 camlibs/ricoh/library.c:339
+#: camlibs/ptp2/library.c:1529 camlibs/ptp2/ptp.c:1873 camlibs/ptp2/ptp.c:1874
+#: camlibs/ptp2/ptp.c:1970 camlibs/ricoh/library.c:339
 #: camlibs/ricoh/library.c:368 camlibs/ricoh/library.c:376
 #: camlibs/sierra/epson-desc.c:153 camlibs/sierra/nikon-desc.c:202
 #: camlibs/sierra/nikon-desc.c:270 camlibs/sierra/nikon-desc.c:325
@@ -1865,6 +1866,7 @@ msgstr ""
 "végzését teszi lehetővé. Kérem várja meg a művelet befejeződését."
 
 #: camlibs/kodak/dc3200/dc3200.c:142
+#, c-format
 msgid "camera inactive for > 9 seconds, re-initing.\n"
 msgstr "a kamera inaktív volt több mint 9 másodpercig, újrainicializálás.\n"
 
@@ -2029,8 +2031,9 @@ msgid "Testing different speeds..."
 msgstr "A különféle sebességek tesztelése..."
 
 #: camlibs/konica/library.c:340
+#, fuzzy
 msgid ""
-"The camera could not be contacted. Please make sure it is conntected to the "
+"The camera could not be contacted. Please make sure it is connected to the "
 "computer and turned on."
 msgstr ""
 "Nem sikerült felvenni a kapcsolatot a kamerával. Ellenőrizze, hogy össze van-"
@@ -2242,6 +2245,7 @@ msgstr "Saját időzítő (csak a következő képnél)"
 #: camlibs/sierra/sierra.c:1286 camlibs/sierra/sierra.c:1330
 #: camlibs/sierra/sierra.c:1525 camlibs/sierra/sierra.c:1529
 #: camlibs/sierra/sierra.c:1742
+#, c-format
 msgid "Normal"
 msgstr "Normál"
 
@@ -2362,7 +2366,7 @@ msgstr "Ki"
 msgid "Day-lt"
 msgstr "Égbolt"
 
-#: camlibs/konica/qm150.c:981 camlibs/ptp2/ptp.c:1495
+#: camlibs/konica/qm150.c:981 camlibs/ptp2/ptp.c:1557
 msgid "Sharpness"
 msgstr ""
 
@@ -2433,28 +2437,34 @@ msgid "Everywhere"
 msgstr ""
 
 #: camlibs/konica/qm150.c:1142
+#, c-format
 msgid "AC"
 msgstr ""
 
 #: camlibs/konica/qm150.c:1145 camlibs/minolta/dimagev/dimagev.c:306
 #: camlibs/sierra/nikon-desc.c:327
+#, c-format
 msgid "Play"
 msgstr "Lejátszás"
 
 #: camlibs/konica/qm150.c:1147 camlibs/minolta/dimagev/dimagev.c:306
 #: camlibs/sierra/nikon-desc.c:326
+#, c-format
 msgid "Record"
 msgstr "Felvétel"
 
 #: camlibs/konica/qm150.c:1157
+#, c-format
 msgid "DD/MM/YYYY"
 msgstr ""
 
 #: camlibs/konica/qm150.c:1162
-msgid "YYYY/MM/AA"
+#, c-format
+msgid "YYYY/MM/DD"
 msgstr ""
 
 #: camlibs/konica/qm150.c:1166
+#, c-format
 msgid "MM/DD/YYYY"
 msgstr ""
 
@@ -2472,6 +2482,7 @@ msgid ""
 msgstr ""
 
 #: camlibs/konica/qm150.c:1193
+#, c-format
 msgid ""
 "Konica Q-M150 Library\n"
 "Marcus Meissner <marcus@jet.franken.de>\n"
@@ -2481,6 +2492,7 @@ msgid ""
 msgstr ""
 
 #: camlibs/konica/qm150.c:1208
+#, c-format
 msgid ""
 "About Konica Q-M150:\n"
 "This camera does not support to do any changes\n"
@@ -2514,21 +2526,21 @@ msgstr ""
 "\n"
 "Largan Lmini kamerák kezeléséhez.\n"
 
-#: camlibs/mars/library.c:111
+#: camlibs/mars/library.c:112
 #, c-format
 msgid ""
 "Mars MR97310 camera.\n"
 "There is %i photo in it. \n"
 msgstr ""
 
-#: camlibs/mars/library.c:115
+#: camlibs/mars/library.c:116
 #, c-format
 msgid ""
 "Mars MR97310 camera.\n"
 "There are %i photos in it. \n"
 msgstr ""
 
-#: camlibs/mars/library.c:127
+#: camlibs/mars/library.c:128
 msgid ""
 "This driver supports cameras with Mars MR97310 chip (and direct\n"
 "equivalents ??Pixart PACx07??) and should work with gtkam.\n"
@@ -2542,7 +2554,7 @@ msgid ""
 "as consecutive still photos.\n"
 msgstr ""
 
-#: camlibs/mars/library.c:148
+#: camlibs/mars/library.c:149
 msgid ""
 "Mars MR97310 camera library\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
@@ -2586,7 +2598,7 @@ msgstr ""
 "Kártyaazonosító:\t\t%d\n"
 "Vakuzási mód:\t\t"
 
-#: camlibs/minolta/dimagev/dimagev.c:297 camlibs/ptp2/ptp.c:1901
+#: camlibs/minolta/dimagev/dimagev.c:297 camlibs/ptp2/ptp.c:1963
 msgid "Remote"
 msgstr "távoli"
 
@@ -2596,13 +2608,13 @@ msgstr "helyi"
 
 #: camlibs/minolta/dimagev/dimagev.c:298 camlibs/minolta/dimagev/dimagev.c:300
 #: camlibs/minolta/dimagev/dimagev.c:304 camlibs/minolta/dimagev/dimagev.c:307
-#: camlibs/ptp2/ptp.c:1813
+#: camlibs/ptp2/ptp.c:1875
 msgid "Yes"
 msgstr "Igen"
 
 #: camlibs/minolta/dimagev/dimagev.c:298 camlibs/minolta/dimagev/dimagev.c:300
 #: camlibs/minolta/dimagev/dimagev.c:304 camlibs/minolta/dimagev/dimagev.c:307
-#: camlibs/ptp2/ptp.c:1813
+#: camlibs/ptp2/ptp.c:1875
 msgid "No"
 msgstr "Nem"
 
@@ -2620,14 +2632,17 @@ msgid "Standard"
 msgstr "Standard"
 
 #: camlibs/minolta/dimagev/dimagev.c:321
+#, c-format
 msgid "Automatic\n"
 msgstr "Automatikus\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:329
+#, c-format
 msgid "Force Flash\n"
 msgstr "Vaku mindig\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:337
+#, c-format
 msgid "Prohibit Flash\n"
 msgstr "A vaku letiltása\n"
 
@@ -2658,7 +2673,8 @@ msgid "Not Full"
 msgstr "Nincs tele"
 
 #: camlibs/minolta/dimagev/dimagev.c:365 camlibs/minolta/dimagev/dimagev.c:408
-#: camlibs/ptp2/ptp.c:1915
+#: camlibs/ptp2/ptp.c:1977
+#, c-format
 msgid "Full"
 msgstr "Tele"
 
@@ -2679,14 +2695,17 @@ msgid "Ready"
 msgstr "Kész"
 
 #: camlibs/minolta/dimagev/dimagev.c:380
+#, c-format
 msgid "Normal\n"
 msgstr "Normál\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:383
+#, c-format
 msgid "Lens direction does not match flash light\n"
 msgstr "A lencse iránya nem felel meg a vakuénak\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:386
+#, c-format
 msgid "Lens is not connected\n"
 msgstr "A lencse nincs bekötve\n"
 
@@ -2696,14 +2715,17 @@ msgid "Bad value for lens status %d\n"
 msgstr "Hibás értékű lencse-állapotkód: %d\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:398
+#, c-format
 msgid "Card Status:\t\t"
 msgstr "A kártya állapota:\t\t"
 
 #: camlibs/minolta/dimagev/dimagev.c:411
+#, c-format
 msgid "Write-protected"
 msgstr "Írásvédett"
 
 #: camlibs/minolta/dimagev/dimagev.c:414
+#, c-format
 msgid "Unsuitable card"
 msgstr "Nem megfelelő kártya"
 
@@ -2749,39 +2771,39 @@ msgstr "Vaku: ki"
 msgid "FlashLight : undefined"
 msgstr "Vaku: nem definiált"
 
-#: camlibs/mustek/mdc800.c:231
+#: camlibs/mustek/mdc800.c:232
 msgid "Summary for Mustek MDC800:\n"
 msgstr "A Mustek MDC800 áttekintése:\n"
 
-#: camlibs/mustek/mdc800.c:234
+#: camlibs/mustek/mdc800.c:235
 msgid "no status reported."
 msgstr "nincs állapotinformáció."
 
-#: camlibs/mustek/mdc800.c:240
+#: camlibs/mustek/mdc800.c:241
 msgid "Compact Flash Card detected\n"
 msgstr "Compact Flash kártya detektálva\n"
 
-#: camlibs/mustek/mdc800.c:242
+#: camlibs/mustek/mdc800.c:243
 msgid "No Compact Flash Card detected\n"
 msgstr "Nem található Compact Flash kártya\n"
 
-#: camlibs/mustek/mdc800.c:246
+#: camlibs/mustek/mdc800.c:247
 msgid "Current Mode: Camera Mode\n"
 msgstr "A jelenlegi mód: kameramód\n"
 
-#: camlibs/mustek/mdc800.c:248
+#: camlibs/mustek/mdc800.c:249
 msgid "Current Mode: Playback Mode\n"
 msgstr "Jelenlegi üzemmód: lejátszás\n"
 
-#: camlibs/mustek/mdc800.c:257
+#: camlibs/mustek/mdc800.c:258
 msgid "Batteries are ok."
 msgstr "Az akkumulátor szintje megfelelő."
 
-#: camlibs/mustek/mdc800.c:259
+#: camlibs/mustek/mdc800.c:260
 msgid "Batteries are low."
 msgstr "Az akkumulátor szintje alacsony."
 
-#: camlibs/mustek/mdc800.c:278
+#: camlibs/mustek/mdc800.c:279
 msgid ""
 "Mustek MDC-800 gPhoto2 Library\n"
 "Henning Zabel <henning@uni-paderborn.de>\n"
@@ -3013,12 +3035,12 @@ msgid ""
 msgstr ""
 
 #: camlibs/polaroid/pdc700.c:159 camlibs/ptp2/library.c:1667
-#: camlibs/ptp2/ptp.c:1528
+#: camlibs/ptp2/ptp.c:1590
 msgid "Image Quality"
 msgstr "Képminőség"
 
 #: camlibs/polaroid/pdc700.c:160 camlibs/ptp2/library.c:1668
-#: camlibs/ptp2/ptp.c:1475 camlibs/ptp2/ptp.c:1529
+#: camlibs/ptp2/ptp.c:1537 camlibs/ptp2/ptp.c:1591
 msgid "Image Size"
 msgstr "Képméret"
 
@@ -3368,7 +3390,7 @@ msgid "readwrite"
 msgstr ""
 
 #: camlibs/ptp2/library.c:938 camlibs/ptp2/library.c:940
-#: camlibs/ptp2/ptp.c:1938
+#: camlibs/ptp2/ptp.c:2000
 #, fuzzy
 msgid "Unknown"
 msgstr "Ismeretlen hiba"
@@ -3389,7 +3411,7 @@ msgstr ""
 msgid "unexpected datatype %i"
 msgstr "HIBA: nem várt csomagtípus"
 
-#: camlibs/ptp2/library.c:1238 camlibs/ptp2/ptp.c:1913
+#: camlibs/ptp2/library.c:1238 camlibs/ptp2/ptp.c:1975
 #: camlibs/sierra/olympus-desc.c:490
 #, fuzzy
 msgid "Manual"
@@ -3405,14 +3427,14 @@ msgstr "Automatikus\n"
 msgid "One-push Automatic"
 msgstr "Automatikus\n"
 
-#: camlibs/ptp2/library.c:1241 camlibs/ptp2/ptp.c:1865
+#: camlibs/ptp2/library.c:1241 camlibs/ptp2/ptp.c:1927
 #: camlibs/sierra/olympus-desc.c:431 camlibs/sierra/olympus-desc.c:450
 #: camlibs/sierra/olympus-desc.c:469
 #, fuzzy
 msgid "Daylight"
 msgstr "Égbolt"
 
-#: camlibs/ptp2/library.c:1242 camlibs/ptp2/ptp.c:1864
+#: camlibs/ptp2/library.c:1242 camlibs/ptp2/ptp.c:1926
 #: camlibs/ricoh/library.c:328 camlibs/sierra/nikon-desc.c:251
 #: camlibs/sierra/olympus-desc.c:432 camlibs/sierra/olympus-desc.c:451
 #: camlibs/sierra/sierra.c:1023 camlibs/sierra/sierra.c:1032
@@ -3427,7 +3449,7 @@ msgstr "Fluoreszkáló"
 msgid "Tungsten"
 msgstr "Tungsten"
 
-#: camlibs/ptp2/library.c:1245 camlibs/ptp2/ptp.c:1867
+#: camlibs/ptp2/library.c:1245 camlibs/ptp2/ptp.c:1929
 #: camlibs/sierra/nikon-desc.c:254 camlibs/sierra/olympus-desc.c:434
 #: camlibs/sierra/olympus-desc.c:453 camlibs/sierra/olympus-desc.c:474
 #: camlibs/sierra/sierra.c:1025 camlibs/sierra/sierra.c:1037
@@ -3435,17 +3457,17 @@ msgstr "Tungsten"
 msgid "Cloudy"
 msgstr "Felhős"
 
-#: camlibs/ptp2/library.c:1246 camlibs/ptp2/ptp.c:1868
+#: camlibs/ptp2/library.c:1246 camlibs/ptp2/ptp.c:1930
 msgid "Shade"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1247 camlibs/ptp2/ptp.c:1869
+#: camlibs/ptp2/library.c:1247 camlibs/ptp2/ptp.c:1931
 #: camlibs/sierra/nikon-desc.c:253
 #, fuzzy
 msgid "Preset"
 msgstr "portugál"
 
-#: camlibs/ptp2/library.c:1306 camlibs/ptp2/ptp.c:1857
+#: camlibs/ptp2/library.c:1306 camlibs/ptp2/ptp.c:1919
 msgid "JPEG Basic"
 msgstr ""
 
@@ -3454,7 +3476,7 @@ msgstr ""
 msgid "JPEG Normal"
 msgstr "Normál"
 
-#: camlibs/ptp2/library.c:1308 camlibs/ptp2/ptp.c:1859
+#: camlibs/ptp2/library.c:1308 camlibs/ptp2/ptp.c:1921
 #, fuzzy
 msgid "JPEG Fine"
 msgstr "JPEG"
@@ -3467,17 +3489,17 @@ msgstr ""
 msgid "NEF+BASIC"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1655 camlibs/ptp2/ptp.c:1545
+#: camlibs/ptp2/library.c:1655 camlibs/ptp2/ptp.c:1607
 #, fuzzy
 msgid "Camera Owner"
 msgstr "A kamera OK.\n"
 
-#: camlibs/ptp2/library.c:1656 camlibs/ptp2/ptp.c:1544
+#: camlibs/ptp2/library.c:1656 camlibs/ptp2/ptp.c:1606
 #, fuzzy
 msgid "Camera Model"
 msgstr "%sA kamera típusa: %s\n"
 
-#: camlibs/ptp2/library.c:1657 camlibs/ptp2/ptp.c:1543
+#: camlibs/ptp2/library.c:1657 camlibs/ptp2/ptp.c:1605
 #, fuzzy
 msgid "Flash Memory"
 msgstr "Vakus mód"
@@ -3487,7 +3509,7 @@ msgstr "Vakus mód"
 msgid "Camera Time"
 msgstr "Kamera"
 
-#: camlibs/ptp2/library.c:1660 camlibs/ptp2/ptp.c:1515 camlibs/ptp2/ptp.c:1526
+#: camlibs/ptp2/library.c:1660 camlibs/ptp2/ptp.c:1577 camlibs/ptp2/ptp.c:1588
 #, fuzzy
 msgid "Beep Mode"
 msgstr "LED-mód"
@@ -3506,11 +3528,11 @@ msgstr ""
 msgid "WhiteBalance"
 msgstr "Fehéregyensúly"
 
-#: camlibs/ptp2/library.c:1675 camlibs/ptp2/ptp.c:1549
+#: camlibs/ptp2/library.c:1675 camlibs/ptp2/ptp.c:1611
 msgid "Assist Light"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1676 camlibs/ptp2/ptp.c:1540 camlibs/ptp2/ptp.c:1622
+#: camlibs/ptp2/library.c:1676 camlibs/ptp2/ptp.c:1602 camlibs/ptp2/ptp.c:1684
 #: camlibs/sierra/nikon-desc.c:425 camlibs/sierra/nikon-desc.c:448
 #: camlibs/sierra/olympus-desc.c:617
 msgid "Exposure Compensation"
@@ -3546,236 +3568,236 @@ msgstr ""
 msgid "Current value"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2298
+#: camlibs/ptp2/library.c:2329
 #, fuzzy
 msgid "Initializing Camera"
 msgstr "A kamera kikapcsolása"
 
-#: camlibs/ptp2/library.c:2401
+#: camlibs/ptp2/library.c:2432
 msgid "PTP is implemented for USB cameras only."
 msgstr "A PTP csak USB-csatolós kameráknál használható."
 
-#: camlibs/ptp2/ptp.c:1411
+#: camlibs/ptp2/ptp.c:1473
 #, fuzzy
 msgid "PTP: Undefined Error"
 msgstr "PTP - nem definiált hiba"
 
-#: camlibs/ptp2/ptp.c:1412
+#: camlibs/ptp2/ptp.c:1474
 #, fuzzy
 msgid "PTP: OK!"
 msgstr "PTP OK."
 
-#: camlibs/ptp2/ptp.c:1413
+#: camlibs/ptp2/ptp.c:1475
 #, fuzzy
 msgid "PTP: General Error"
 msgstr "PTP - általános hiba"
 
-#: camlibs/ptp2/ptp.c:1414
+#: camlibs/ptp2/ptp.c:1476
 #, fuzzy
 msgid "PTP: Session Not Open"
 msgstr "PTP - a munkafolyamat nincs megnyitva"
 
-#: camlibs/ptp2/ptp.c:1415
+#: camlibs/ptp2/ptp.c:1477
 #, fuzzy
 msgid "PTP: Invalid Transaction ID"
 msgstr "PTP - érvénytelen tranzakciós azonosító"
 
-#: camlibs/ptp2/ptp.c:1416
+#: camlibs/ptp2/ptp.c:1478
 #, fuzzy
 msgid "PTP: Operation Not Supported"
 msgstr "PTP - nem támogatott művelet"
 
-#: camlibs/ptp2/ptp.c:1417
+#: camlibs/ptp2/ptp.c:1479
 #, fuzzy
 msgid "PTP: Parameter Not Supported"
 msgstr "PTP - nem támogatott paraméter"
 
-#: camlibs/ptp2/ptp.c:1418
+#: camlibs/ptp2/ptp.c:1480
 #, fuzzy
 msgid "PTP: Incomplete Transfer"
 msgstr "PTP - nem teljes transzfer"
 
-#: camlibs/ptp2/ptp.c:1419
+#: camlibs/ptp2/ptp.c:1481
 #, fuzzy
 msgid "PTP: Invalid Storage ID"
 msgstr "PTP érvénytelen tárolóazonosító"
 
-#: camlibs/ptp2/ptp.c:1420
+#: camlibs/ptp2/ptp.c:1482
 #, fuzzy
 msgid "PTP: Invalid Object Handle"
 msgstr "Érvénytelen PTP objektumazonosító"
 
-#: camlibs/ptp2/ptp.c:1421
+#: camlibs/ptp2/ptp.c:1483
 #, fuzzy
 msgid "PTP: Device Prop Not Supported"
 msgstr "Nem támogatott PTP eszköztulajdonság"
 
-#: camlibs/ptp2/ptp.c:1422
+#: camlibs/ptp2/ptp.c:1484
 #, fuzzy
 msgid "PTP: Invalid Object Format Code"
 msgstr "PTP érvénytelen objektumformátum-kód"
 
-#: camlibs/ptp2/ptp.c:1423
+#: camlibs/ptp2/ptp.c:1485
 #, fuzzy
 msgid "PTP: Store Full"
 msgstr "PTP - a tároló betelt"
 
-#: camlibs/ptp2/ptp.c:1424
+#: camlibs/ptp2/ptp.c:1486
 #, fuzzy
 msgid "PTP: Object Write Protected"
 msgstr "PTP - az objektum írásvédett"
 
-#: camlibs/ptp2/ptp.c:1425
+#: camlibs/ptp2/ptp.c:1487
 #, fuzzy
 msgid "PTP: Store Read Only"
 msgstr "PTP - a tároló csak olvasható"
 
-#: camlibs/ptp2/ptp.c:1426
+#: camlibs/ptp2/ptp.c:1488
 #, fuzzy
 msgid "PTP: Access Denied"
 msgstr "PTP - a hozzáférés megtagadva"
 
-#: camlibs/ptp2/ptp.c:1427
+#: camlibs/ptp2/ptp.c:1489
 #, fuzzy
 msgid "PTP: No Thumbnail Present"
 msgstr "PTP - nem érhető el előnézeti kép"
 
-#: camlibs/ptp2/ptp.c:1428
+#: camlibs/ptp2/ptp.c:1490
 #, fuzzy
 msgid "PTP: Self Test Failed"
 msgstr "PTP - az önteszt nem sikerült"
 
-#: camlibs/ptp2/ptp.c:1429
+#: camlibs/ptp2/ptp.c:1491
 #, fuzzy
 msgid "PTP: Partial Deletion"
 msgstr "PTP - részleges törlés"
 
-#: camlibs/ptp2/ptp.c:1430
+#: camlibs/ptp2/ptp.c:1492
 #, fuzzy
 msgid "PTP: Store Not Available"
 msgstr "A PTP-tároló nem érhető el"
 
-#: camlibs/ptp2/ptp.c:1432
+#: camlibs/ptp2/ptp.c:1494
 #, fuzzy
 msgid "PTP: Specification By Format Unsupported"
 msgstr "Nem támogatott formátumú PTP-specifikáció"
 
-#: camlibs/ptp2/ptp.c:1433
+#: camlibs/ptp2/ptp.c:1495
 #, fuzzy
 msgid "PTP: No Valid Object Info"
 msgstr "PTP érvénytelen objektuminformáció"
 
-#: camlibs/ptp2/ptp.c:1434
+#: camlibs/ptp2/ptp.c:1496
 #, fuzzy
 msgid "PTP: Invalid Code Format"
 msgstr "PTP érvénytelen kódformátum"
 
-#: camlibs/ptp2/ptp.c:1435
+#: camlibs/ptp2/ptp.c:1497
 #, fuzzy
 msgid "PTP: Unknown Vendor Code"
 msgstr "Ismeretlen PTP gyártókód"
 
-#: camlibs/ptp2/ptp.c:1437
+#: camlibs/ptp2/ptp.c:1499
 #, fuzzy
 msgid "PTP: Capture Already Terminated"
 msgstr "A PTP-felvétel már befejeződött"
 
-#: camlibs/ptp2/ptp.c:1438
+#: camlibs/ptp2/ptp.c:1500
 #, fuzzy
 msgid "PTP: Device Busy"
 msgstr "PTP eszközbusz"
 
-#: camlibs/ptp2/ptp.c:1439
+#: camlibs/ptp2/ptp.c:1501
 #, fuzzy
 msgid "PTP: Invalid Parent Object"
 msgstr "PTP - érvénytelen szülőobjektum"
 
-#: camlibs/ptp2/ptp.c:1440
+#: camlibs/ptp2/ptp.c:1502
 #, fuzzy
 msgid "PTP: Invalid Device Prop Format"
 msgstr "PTP érvénytelen eszköztulajdonság-formátum"
 
-#: camlibs/ptp2/ptp.c:1441
+#: camlibs/ptp2/ptp.c:1503
 #, fuzzy
 msgid "PTP: Invalid Device Prop Value"
 msgstr "PTP érvénytelen eszköztulajdonság-érték"
 
-#: camlibs/ptp2/ptp.c:1442
+#: camlibs/ptp2/ptp.c:1504
 #, fuzzy
 msgid "PTP: Invalid Parameter"
 msgstr "PTP - érvénytelen paraméter"
 
-#: camlibs/ptp2/ptp.c:1443
+#: camlibs/ptp2/ptp.c:1505
 #, fuzzy
 msgid "PTP: Session Already Opened"
 msgstr "PTP - a munkafolyamat már meg van nyitva"
 
-#: camlibs/ptp2/ptp.c:1444
+#: camlibs/ptp2/ptp.c:1506
 #, fuzzy
 msgid "PTP: Transaction Canceled"
 msgstr "PTP - a tranzakció félbeszakadt"
 
-#: camlibs/ptp2/ptp.c:1446
+#: camlibs/ptp2/ptp.c:1508
 #, fuzzy
 msgid "PTP: Specification Of Destination Unsupported"
 msgstr "Nem támogatott PTP specifikáció vagy cél"
 
-#: camlibs/ptp2/ptp.c:1447
+#: camlibs/ptp2/ptp.c:1509
 #, fuzzy
 msgid "PTP: EK Filename Required"
 msgstr "PTP EK fájlnév szükséges"
 
-#: camlibs/ptp2/ptp.c:1448
+#: camlibs/ptp2/ptp.c:1510
 #, fuzzy
 msgid "PTP: EK Filename Conflicts"
 msgstr "PTP EK fájlnévütközés"
 
-#: camlibs/ptp2/ptp.c:1449
+#: camlibs/ptp2/ptp.c:1511
 #, fuzzy
 msgid "PTP: EK Filename Invalid"
 msgstr "Érvénytelen PTP EK fájlnév"
 
-#: camlibs/ptp2/ptp.c:1451
+#: camlibs/ptp2/ptp.c:1513
 #, fuzzy
 msgid "PTP: I/O error"
 msgstr "PTP I/O-hiba"
 
-#: camlibs/ptp2/ptp.c:1452
+#: camlibs/ptp2/ptp.c:1514
 #, fuzzy
 msgid "PTP: Error: bad parameter"
 msgstr "PTP hiba: nem megfelelő paraméter"
 
-#: camlibs/ptp2/ptp.c:1453
+#: camlibs/ptp2/ptp.c:1515
 #, fuzzy
 msgid "PTP: Protocol error, data expected"
 msgstr "PTP protokollhiba, nem érkezett adat"
 
-#: camlibs/ptp2/ptp.c:1454
+#: camlibs/ptp2/ptp.c:1516
 #, fuzzy
 msgid "PTP: Protocol error, response expected"
 msgstr "PTP protokollhiba, nem jött válasz"
 
-#: camlibs/ptp2/ptp.c:1472
+#: camlibs/ptp2/ptp.c:1534
 #, fuzzy
-msgid "PTP Undefined Property"
+msgid "Undefined PTP Property"
 msgstr "PTP - nem definiált hiba"
 
-#: camlibs/ptp2/ptp.c:1473
+#: camlibs/ptp2/ptp.c:1535
 #, fuzzy
 msgid "Battery Level"
 msgstr "%sA telep élettartama: %i\n"
 
-#: camlibs/ptp2/ptp.c:1474
+#: camlibs/ptp2/ptp.c:1536
 #, fuzzy
 msgid "Functional Mode"
 msgstr "Működési mód"
 
-#: camlibs/ptp2/ptp.c:1476
+#: camlibs/ptp2/ptp.c:1538
 #, fuzzy
 msgid "Compression Setting"
 msgstr "Tömörítés"
 
-#: camlibs/ptp2/ptp.c:1477 camlibs/ptp2/ptp.c:1536
+#: camlibs/ptp2/ptp.c:1539 camlibs/ptp2/ptp.c:1598
 #: camlibs/sierra/epson-desc.c:176 camlibs/sierra/nikon-desc.c:259
 #: camlibs/sierra/olympus-desc.c:439 camlibs/sierra/olympus-desc.c:458
 #: camlibs/sierra/olympus-desc.c:479 camlibs/sierra/sierra.c:1020
@@ -3784,873 +3806,873 @@ msgstr "Tömörítés"
 msgid "White Balance"
 msgstr "Fehéregyensúly"
 
-#: camlibs/ptp2/ptp.c:1478
+#: camlibs/ptp2/ptp.c:1540
 msgid "RGB Gain"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1479
+#: camlibs/ptp2/ptp.c:1541
 msgid "F-Number"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1480
+#: camlibs/ptp2/ptp.c:1542
 msgid "Focal Length"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1481
+#: camlibs/ptp2/ptp.c:1543
 #, fuzzy
 msgid "Focus Distance"
 msgstr "A fókusz helyzete"
 
-#: camlibs/ptp2/ptp.c:1482 camlibs/sierra/nikon-desc.c:297
+#: camlibs/ptp2/ptp.c:1544 camlibs/sierra/nikon-desc.c:297
 #: camlibs/sierra/olympus-desc.c:495
 msgid "Focus Mode"
 msgstr "Fókuszálási mód"
 
-#: camlibs/ptp2/ptp.c:1483
+#: camlibs/ptp2/ptp.c:1545
 #, fuzzy
 msgid "Exposure Metering Mode"
 msgstr "Exponálásmérés"
 
-#: camlibs/ptp2/ptp.c:1484 camlibs/ptp2/ptp.c:1530 camlibs/ptp2/ptp.c:1656
-#: camlibs/ptp2/ptp.c:1722 camlibs/sierra/sierra.c:959
+#: camlibs/ptp2/ptp.c:1546 camlibs/ptp2/ptp.c:1592 camlibs/ptp2/ptp.c:1718
+#: camlibs/ptp2/ptp.c:1784 camlibs/sierra/sierra.c:959
 #: camlibs/sierra/sierra.c:1260 camlibs/sierra/sierra.c:1469
 #: camlibs/sierra/sierra.c:1700
 msgid "Flash Mode"
 msgstr "Vakus mód"
 
-#: camlibs/ptp2/ptp.c:1485
+#: camlibs/ptp2/ptp.c:1547
 #, fuzzy
 msgid "Exposure Time"
 msgstr "Az izzó exponálási ideje"
 
-#: camlibs/ptp2/ptp.c:1486
+#: camlibs/ptp2/ptp.c:1548
 #, fuzzy
 msgid "Exposure Program Mode"
 msgstr "Exponálásmérés"
 
-#: camlibs/ptp2/ptp.c:1488
+#: camlibs/ptp2/ptp.c:1550
 msgid "Exposure Index (film speed ISO)"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1490
+#: camlibs/ptp2/ptp.c:1552
 #, fuzzy
 msgid "Exposure Bias Compensation"
 msgstr "Exponálási kompenzáció"
 
-#: camlibs/ptp2/ptp.c:1491
+#: camlibs/ptp2/ptp.c:1553
 #, fuzzy
 msgid "Date Time"
 msgstr "Dátum és idő"
 
-#: camlibs/ptp2/ptp.c:1492
+#: camlibs/ptp2/ptp.c:1554
 msgid "Pre-Capture Delay"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1493
+#: camlibs/ptp2/ptp.c:1555
 msgid "Still Capture Mode"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1494
+#: camlibs/ptp2/ptp.c:1556
 #, fuzzy
 msgid "Contrast"
 msgstr "Kontraszt-"
 
-#: camlibs/ptp2/ptp.c:1496 camlibs/sierra/nikon-desc.c:519
+#: camlibs/ptp2/ptp.c:1558 camlibs/sierra/nikon-desc.c:519
 #: camlibs/sierra/nikon-desc.c:542
 msgid "Digital Zoom"
 msgstr "Digitális nagyítás"
 
-#: camlibs/ptp2/ptp.c:1497
+#: camlibs/ptp2/ptp.c:1559
 #, fuzzy
 msgid "Effect Mode"
 msgstr "Felvételi mód"
 
-#: camlibs/ptp2/ptp.c:1498
+#: camlibs/ptp2/ptp.c:1560
 msgid "Burst Number"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1499
+#: camlibs/ptp2/ptp.c:1561
 msgid "Burst Interval"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1500
+#: camlibs/ptp2/ptp.c:1562
 msgid "Timelapse Number"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1501
+#: camlibs/ptp2/ptp.c:1563
 msgid "Timelapse Interval"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1502
+#: camlibs/ptp2/ptp.c:1564
 #, fuzzy
 msgid "Focus Metering Mode"
 msgstr "Pontmérő mód (spot metering)"
 
-#: camlibs/ptp2/ptp.c:1503
+#: camlibs/ptp2/ptp.c:1565
 msgid "Upload URL"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1504
+#: camlibs/ptp2/ptp.c:1566
 msgid "Artist"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1505
+#: camlibs/ptp2/ptp.c:1567
 #, fuzzy
 msgid "Copyright Info"
 msgstr "Szerzői jog"
 
-#: camlibs/ptp2/ptp.c:1512
+#: camlibs/ptp2/ptp.c:1574
 msgid "Color Temperature"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1514
+#: camlibs/ptp2/ptp.c:1576
 #, fuzzy
 msgid "Date Time Stamp Format"
 msgstr "Dátumformátum"
 
-#: camlibs/ptp2/ptp.c:1516
+#: camlibs/ptp2/ptp.c:1578
 msgid "Video Out"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1517
+#: camlibs/ptp2/ptp.c:1579
 #, fuzzy
 msgid "Power Saving"
 msgstr "NINCS energiajelző fény"
 
-#: camlibs/ptp2/ptp.c:1518
+#: camlibs/ptp2/ptp.c:1580
 #, fuzzy
 msgid "UI Language"
 msgstr "Nyelv"
 
-#: camlibs/ptp2/ptp.c:1527
+#: camlibs/ptp2/ptp.c:1589
 msgid "Viewfinder Mode"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1532
+#: camlibs/ptp2/ptp.c:1594
 msgid "TV A/V Setting"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1533
+#: camlibs/ptp2/ptp.c:1595
 #, fuzzy
 msgid "Metering Mode"
 msgstr "Pontmérő mód (spot metering)"
 
-#: camlibs/ptp2/ptp.c:1534
+#: camlibs/ptp2/ptp.c:1596
 #, fuzzy
 msgid "Macro Mode"
 msgstr "Felvételi mód"
 
-#: camlibs/ptp2/ptp.c:1535
+#: camlibs/ptp2/ptp.c:1597
 #, fuzzy
 msgid "Focusing Point"
 msgstr "Fókuszálási hiba."
 
-#: camlibs/ptp2/ptp.c:1537 camlibs/sierra/olympus-desc.c:698
+#: camlibs/ptp2/ptp.c:1599 camlibs/sierra/olympus-desc.c:698
 #: camlibs/sierra/olympus-desc.c:716
 msgid "ISO Speed"
 msgstr "ISO-sebesség"
 
-#: camlibs/ptp2/ptp.c:1538 camlibs/sierra/sierra.c:899
+#: camlibs/ptp2/ptp.c:1600 camlibs/sierra/sierra.c:899
 #: camlibs/sierra/sierra.c:1220 camlibs/sierra/sierra.c:1435
 #: camlibs/sierra/sierra.c:1676
 msgid "Aperture"
 msgstr "Apertúra"
 
-#: camlibs/ptp2/ptp.c:1539
+#: camlibs/ptp2/ptp.c:1601
 #, fuzzy
 msgid "ShutterSpeed"
 msgstr "Zársebesség (s)"
 
-#: camlibs/ptp2/ptp.c:1542
+#: camlibs/ptp2/ptp.c:1604
 #, fuzzy
 msgid "Size Quality Mode"
 msgstr "Képminőség"
 
-#: camlibs/ptp2/ptp.c:1546
+#: camlibs/ptp2/ptp.c:1608
 msgid "UNIX Time"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1547
+#: camlibs/ptp2/ptp.c:1609
 #, fuzzy
 msgid "Real Image Width"
 msgstr "A kép szélessége: %d\n"
 
-#: camlibs/ptp2/ptp.c:1548
+#: camlibs/ptp2/ptp.c:1610
 msgid "Photo Effect"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1558
+#: camlibs/ptp2/ptp.c:1620
 #, fuzzy
 msgid "Auto White Balance Bias"
 msgstr "Fehéregyensúly"
 
-#: camlibs/ptp2/ptp.c:1560
+#: camlibs/ptp2/ptp.c:1622
 #, fuzzy
 msgid "Tungsten White Balance Bias"
 msgstr "Fehéregyensúly"
 
-#: camlibs/ptp2/ptp.c:1562
+#: camlibs/ptp2/ptp.c:1624
 #, fuzzy
 msgid "Flourescent White Balance Bias"
 msgstr "Fehéregyensúly"
 
-#: camlibs/ptp2/ptp.c:1564
+#: camlibs/ptp2/ptp.c:1626
 #, fuzzy
 msgid "Daylight White Balance Bias"
 msgstr "Fehéregyensúly"
 
-#: camlibs/ptp2/ptp.c:1566
+#: camlibs/ptp2/ptp.c:1628
 #, fuzzy
 msgid "Flash White Balance Bias"
 msgstr "Fehéregyensúly"
 
-#: camlibs/ptp2/ptp.c:1568
+#: camlibs/ptp2/ptp.c:1630
 #, fuzzy
 msgid "Cloudy White Balance Bias"
 msgstr "Fehéregyensúly"
 
-#: camlibs/ptp2/ptp.c:1570
+#: camlibs/ptp2/ptp.c:1632
 #, fuzzy
 msgid "Shady White Balance Bias"
 msgstr "Fehéregyensúly"
 
-#: camlibs/ptp2/ptp.c:1572
+#: camlibs/ptp2/ptp.c:1634
 msgid "White Balance Colour Temperature"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1574
+#: camlibs/ptp2/ptp.c:1636
 #, fuzzy
 msgid "Sharpening"
 msgstr "Töltés"
 
-#: camlibs/ptp2/ptp.c:1576
+#: camlibs/ptp2/ptp.c:1638
 #, fuzzy
 msgid "Tone Compensation"
 msgstr "Exponálási kompenzáció"
 
-#: camlibs/ptp2/ptp.c:1578
+#: camlibs/ptp2/ptp.c:1640
 #, fuzzy
 msgid "Colour Mode"
 msgstr "Színmód"
 
-#: camlibs/ptp2/ptp.c:1580
+#: camlibs/ptp2/ptp.c:1642
 #, fuzzy
 msgid "Hue Adjustment"
 msgstr "Képkiigazítás"
 
-#: camlibs/ptp2/ptp.c:1582
+#: camlibs/ptp2/ptp.c:1644
 msgid "Lens Focal Length (Non CPU)"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1584
+#: camlibs/ptp2/ptp.c:1646
 msgid "Lens Max. Aperture (Non CPU)"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1586
+#: camlibs/ptp2/ptp.c:1648
 msgid "PTP_DPC_NIKON_CSMMenuBankSelect"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1588
+#: camlibs/ptp2/ptp.c:1650
 msgid "PTP_DPC_NIKON_MenuBankNameA"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1590
+#: camlibs/ptp2/ptp.c:1652
 msgid "PTP_DPC_NIKON_MenuBankNameB"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1592
+#: camlibs/ptp2/ptp.c:1654
 msgid "PTP_DPC_NIKON_MenuBankNameC"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1594
+#: camlibs/ptp2/ptp.c:1656
 msgid "PTP_DPC_NIKON_MenuBankNameD"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1596
+#: camlibs/ptp2/ptp.c:1658
 msgid "PTP_DPC_NIKON_A1AFCModePriority"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1598
+#: camlibs/ptp2/ptp.c:1660
 msgid "PTP_DPC_NIKON_A2AFSModePriority"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1600
+#: camlibs/ptp2/ptp.c:1662
 msgid "PTP_DPC_NIKON_A3GroupDynamicAF"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1602
+#: camlibs/ptp2/ptp.c:1664
 msgid "PTP_DPC_NIKON_A4AFActivation"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1604
+#: camlibs/ptp2/ptp.c:1666
 msgid "PTP_DPC_NIKON_A5FocusAreaIllumManualFocus"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1606
+#: camlibs/ptp2/ptp.c:1668
 msgid "PTP_DPC_NIKON_FocusAreaIllumContinuous"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1608
+#: camlibs/ptp2/ptp.c:1670
 msgid "PTP_DPC_NIKON_FocusAreaIllumWhenSelected"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1610
+#: camlibs/ptp2/ptp.c:1672
 #, fuzzy
 msgid "Focus Area"
 msgstr "Fókuszálási mód"
 
-#: camlibs/ptp2/ptp.c:1612
+#: camlibs/ptp2/ptp.c:1674
 msgid "Vertical AF On"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1614
+#: camlibs/ptp2/ptp.c:1676
 #, fuzzy
 msgid "Auto ISO"
 msgstr "Automatikus"
 
-#: camlibs/ptp2/ptp.c:1616
+#: camlibs/ptp2/ptp.c:1678
 #, fuzzy
 msgid "ISO Step"
 msgstr "ISO-sebesség"
 
-#: camlibs/ptp2/ptp.c:1618
+#: camlibs/ptp2/ptp.c:1680
 #, fuzzy
 msgid "Exposure Step"
 msgstr "Az izzó exponálási ideje"
 
-#: camlibs/ptp2/ptp.c:1620
+#: camlibs/ptp2/ptp.c:1682
 #, fuzzy
 msgid "Exposure Compensation (EV)"
 msgstr "Exponálási kompenzáció"
 
-#: camlibs/ptp2/ptp.c:1624
+#: camlibs/ptp2/ptp.c:1686
 msgid "Centre Weight Area"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1626
+#: camlibs/ptp2/ptp.c:1688
 #, fuzzy
 msgid "Exposure Lock"
 msgstr "Exponálás"
 
-#: camlibs/ptp2/ptp.c:1628
+#: camlibs/ptp2/ptp.c:1690
 #, fuzzy
 msgid "Focus Lock"
 msgstr "Fókuszálási mód"
 
-#: camlibs/ptp2/ptp.c:1630
+#: camlibs/ptp2/ptp.c:1692
 #, fuzzy
 msgid "Auto Meter Off Time"
 msgstr "Automatikus lekapcsolási idő"
 
-#: camlibs/ptp2/ptp.c:1632
+#: camlibs/ptp2/ptp.c:1694
 #, fuzzy
 msgid "Self Timer Delay"
 msgstr "A saját időzítő ideje"
 
-#: camlibs/ptp2/ptp.c:1634
+#: camlibs/ptp2/ptp.c:1696
 #, fuzzy
 msgid "LCD Off Time"
 msgstr "Automatikus lekapcsolási idő"
 
-#: camlibs/ptp2/ptp.c:1636
+#: camlibs/ptp2/ptp.c:1698
 #, fuzzy
 msgid "Shooting Speed"
 msgstr "Zársebesség (s)"
 
-#: camlibs/ptp2/ptp.c:1638
+#: camlibs/ptp2/ptp.c:1700
 msgid "Max. Shots"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1640
+#: camlibs/ptp2/ptp.c:1702
 msgid "PTP_DPC_NIKON_D3ExpDelayMode"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1642
+#: camlibs/ptp2/ptp.c:1704
 #, fuzzy
 msgid "Long Exposure Noise Reduction"
 msgstr "Exponálási kompenzáció"
 
-#: camlibs/ptp2/ptp.c:1644
+#: camlibs/ptp2/ptp.c:1706
 msgid "File Number Sequencing"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1646
+#: camlibs/ptp2/ptp.c:1708
 msgid "PTP_DPC_NIKON_D6ControlPanelFinderRearControl"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1648
+#: camlibs/ptp2/ptp.c:1710
 msgid "PTP_DPC_NIKON_ControlPanelFinderViewfinder"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1650
+#: camlibs/ptp2/ptp.c:1712
 msgid "PTP_DPC_NIKON_D7Illumination"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1652
-msgid "Flash Sync. Speed"
-msgstr ""
-
-#: camlibs/ptp2/ptp.c:1654
-#, fuzzy
-msgid "Flash Shutter Speed"
-msgstr "Zársebesség (s)"
-
-#: camlibs/ptp2/ptp.c:1658
-#, fuzzy
-msgid "Modeling Flash"
-msgstr "Vaku mindig\n"
-
-#: camlibs/ptp2/ptp.c:1660
-msgid "Auto Bracket Set"
-msgstr ""
-
-#: camlibs/ptp2/ptp.c:1662
-msgid "Manual Mode Bracketing"
-msgstr ""
-
-#: camlibs/ptp2/ptp.c:1664
-msgid "Auto Bracket Order"
-msgstr ""
-
-#: camlibs/ptp2/ptp.c:1666
-#, fuzzy
-msgid "Auto Bracket Selection"
-msgstr "Automatikus, vörösszemeffektus-csökkentés"
-
-#: camlibs/ptp2/ptp.c:1668
-#, fuzzy
-msgid "Center Button Shooting Mode"
-msgstr "Pontmérő mód (spot metering)"
-
-#: camlibs/ptp2/ptp.c:1670
-#, fuzzy
-msgid "Center Button Playback Mode"
-msgstr "Jelenlegi üzemmód: lejátszás\n"
-
-#: camlibs/ptp2/ptp.c:1672
-msgid "Multiselector"
-msgstr ""
-
-#: camlibs/ptp2/ptp.c:1674
-msgid "Photo Info. Playback"
-msgstr ""
-
-#: camlibs/ptp2/ptp.c:1676
-msgid "Assign Func. Button"
-msgstr ""
-
-#: camlibs/ptp2/ptp.c:1678
-msgid "Customise Command Dials"
-msgstr ""
-
-#: camlibs/ptp2/ptp.c:1680
-msgid "Reverse Command Dials"
-msgstr ""
-
-#: camlibs/ptp2/ptp.c:1682
-#, fuzzy
-msgid "Aperture Setting"
-msgstr "Az apertúra beállításai"
-
-#: camlibs/ptp2/ptp.c:1684
-msgid "Menus and Playback"
-msgstr ""
-
-#: camlibs/ptp2/ptp.c:1686
-msgid "Buttons and Dials"
-msgstr ""
-
-#: camlibs/ptp2/ptp.c:1688
-msgid "No CF Card Release"
-msgstr ""
-
-#: camlibs/ptp2/ptp.c:1690
-#, fuzzy
-msgid "Auto Image Rotation"
-msgstr "A kamera beállításai"
-
-#: camlibs/ptp2/ptp.c:1692
-#, fuzzy
-msgid "Exposure Bracketing"
-msgstr "Exponálásmérés"
-
-#: camlibs/ptp2/ptp.c:1694
-#, fuzzy
-msgid "Exposure Bracketing Distance"
-msgstr "Exponálásmérés"
-
-#: camlibs/ptp2/ptp.c:1696
-#, fuzzy
-msgid "Exposure Bracketing Number"
-msgstr "Exponálásmérés"
-
-#: camlibs/ptp2/ptp.c:1698
-#, fuzzy
-msgid "AF LCD Top Mode 2"
-msgstr "LCD-mód"
-
-#: camlibs/ptp2/ptp.c:1700
-msgid "Active AF Sensor"
-msgstr ""
-
-#: camlibs/ptp2/ptp.c:1702
-#, fuzzy
-msgid "Exposure Meter"
-msgstr "Exponálásmérés"
-
-#: camlibs/ptp2/ptp.c:1704
-#, fuzzy
-msgid "Exposure Aperture Lock"
-msgstr "Exponálásmérés"
-
-#: camlibs/ptp2/ptp.c:1706
-msgid "Maximum Shots"
-msgstr ""
-
-#: camlibs/ptp2/ptp.c:1708
-#, fuzzy
-msgid "AF Beep Mode"
-msgstr "LED-mód"
-
-#: camlibs/ptp2/ptp.c:1710
-msgid "??? AF Related"
-msgstr ""
-
-#: camlibs/ptp2/ptp.c:1712
-msgid "AF Lamp"
-msgstr ""
-
 #: camlibs/ptp2/ptp.c:1714
-msgid "Auto ISO P/A/DVP Setting"
+msgid "Flash Sync. Speed"
 msgstr ""
 
 #: camlibs/ptp2/ptp.c:1716
 #, fuzzy
-msgid "Image Review"
-msgstr "Képméret"
-
-#: camlibs/ptp2/ptp.c:1718
-msgid "Viewfinder Grid Display"
-msgstr ""
+msgid "Flash Shutter Speed"
+msgstr "Zársebesség (s)"
 
 #: camlibs/ptp2/ptp.c:1720
-msgid "AF Area Illumination"
+#, fuzzy
+msgid "Modeling Flash"
+msgstr "Vaku mindig\n"
+
+#: camlibs/ptp2/ptp.c:1722
+msgid "Auto Bracket Set"
 msgstr ""
 
 #: camlibs/ptp2/ptp.c:1724
+msgid "Manual Mode Bracketing"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:1726
+msgid "Auto Bracket Order"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:1728
+#, fuzzy
+msgid "Auto Bracket Selection"
+msgstr "Automatikus, vörösszemeffektus-csökkentés"
+
+#: camlibs/ptp2/ptp.c:1730
+#, fuzzy
+msgid "Center Button Shooting Mode"
+msgstr "Pontmérő mód (spot metering)"
+
+#: camlibs/ptp2/ptp.c:1732
+#, fuzzy
+msgid "Center Button Playback Mode"
+msgstr "Jelenlegi üzemmód: lejátszás\n"
+
+#: camlibs/ptp2/ptp.c:1734
+msgid "Multiselector"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:1736
+msgid "Photo Info. Playback"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:1738
+msgid "Assign Func. Button"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:1740
+msgid "Customise Command Dials"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:1742
+msgid "Reverse Command Dials"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:1744
+#, fuzzy
+msgid "Aperture Setting"
+msgstr "Az apertúra beállításai"
+
+#: camlibs/ptp2/ptp.c:1746
+msgid "Menus and Playback"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:1748
+msgid "Buttons and Dials"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:1750
+msgid "No CF Card Release"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:1752
+#, fuzzy
+msgid "Auto Image Rotation"
+msgstr "A kamera beállításai"
+
+#: camlibs/ptp2/ptp.c:1754
+#, fuzzy
+msgid "Exposure Bracketing"
+msgstr "Exponálásmérés"
+
+#: camlibs/ptp2/ptp.c:1756
+#, fuzzy
+msgid "Exposure Bracketing Distance"
+msgstr "Exponálásmérés"
+
+#: camlibs/ptp2/ptp.c:1758
+#, fuzzy
+msgid "Exposure Bracketing Number"
+msgstr "Exponálásmérés"
+
+#: camlibs/ptp2/ptp.c:1760
+#, fuzzy
+msgid "AF LCD Top Mode 2"
+msgstr "LCD-mód"
+
+#: camlibs/ptp2/ptp.c:1762
+msgid "Active AF Sensor"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:1764
+#, fuzzy
+msgid "Exposure Meter"
+msgstr "Exponálásmérés"
+
+#: camlibs/ptp2/ptp.c:1766
+#, fuzzy
+msgid "Exposure Aperture Lock"
+msgstr "Exponálásmérés"
+
+#: camlibs/ptp2/ptp.c:1768
+msgid "Maximum Shots"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:1770
+#, fuzzy
+msgid "AF Beep Mode"
+msgstr "LED-mód"
+
+#: camlibs/ptp2/ptp.c:1772
+msgid "??? AF Related"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:1774
+msgid "AF Lamp"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:1776
+msgid "Auto ISO P/A/DVP Setting"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:1778
+#, fuzzy
+msgid "Image Review"
+msgstr "Képméret"
+
+#: camlibs/ptp2/ptp.c:1780
+msgid "Viewfinder Grid Display"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:1782
+msgid "AF Area Illumination"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:1786
 #, fuzzy
 msgid "Flash Power"
 msgstr "Vakus mód"
 
-#: camlibs/ptp2/ptp.c:1726
+#: camlibs/ptp2/ptp.c:1788
 #, fuzzy
 msgid "Flash Sign"
 msgstr "A vaku beállításai"
 
-#: camlibs/ptp2/ptp.c:1728
+#: camlibs/ptp2/ptp.c:1790
 #, fuzzy
 msgid "Flash Exposure Compensation"
 msgstr "Exponálási kompenzáció"
 
-#: camlibs/ptp2/ptp.c:1730
+#: camlibs/ptp2/ptp.c:1792
 #, fuzzy
 msgid "Remote Timeout"
 msgstr "Dátum és idő"
 
-#: camlibs/ptp2/ptp.c:1732
+#: camlibs/ptp2/ptp.c:1794
 #, fuzzy
 msgid "Image Comment String"
 msgstr "Képkiigazítás"
 
-#: camlibs/ptp2/ptp.c:1734
+#: camlibs/ptp2/ptp.c:1796
 #, fuzzy
 msgid "Flash Open"
 msgstr "Vakus mód"
 
-#: camlibs/ptp2/ptp.c:1736
+#: camlibs/ptp2/ptp.c:1798
 #, fuzzy
 msgid "Flash Charged"
 msgstr "Compact Flash kártya"
 
-#: camlibs/ptp2/ptp.c:1738
+#: camlibs/ptp2/ptp.c:1800
 #, fuzzy
 msgid "Lens ID"
 msgstr "Lencsemód"
 
-#: camlibs/ptp2/ptp.c:1740
+#: camlibs/ptp2/ptp.c:1802
 msgid "Min. Focal Length"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1742
+#: camlibs/ptp2/ptp.c:1804
 msgid "Max. Focal Length"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1744
+#: camlibs/ptp2/ptp.c:1806
 msgid "Max. Aperture at Min. Focal Length"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1746
+#: camlibs/ptp2/ptp.c:1808
 msgid "Max. Aperture at Max. Focal Length"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1748
+#: camlibs/ptp2/ptp.c:1810
 #, fuzzy
 msgid "Low Light"
 msgstr "Magas"
 
-#: camlibs/ptp2/ptp.c:1841 camlibs/ptp2/ptp.c:1842 camlibs/ptp2/ptp.c:1843
+#: camlibs/ptp2/ptp.c:1903 camlibs/ptp2/ptp.c:1904 camlibs/ptp2/ptp.c:1905
 #, c-format
 msgid "%.1f stops"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1844
+#: camlibs/ptp2/ptp.c:1906
 #, c-format
 msgid "%.0f mm"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1858
+#: camlibs/ptp2/ptp.c:1920
 #, fuzzy
 msgid "JPEG Norm"
 msgstr "JPEG"
 
-#: camlibs/ptp2/ptp.c:1860
+#: camlibs/ptp2/ptp.c:1922
 msgid "RAW"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1861
+#: camlibs/ptp2/ptp.c:1923
 msgid "RAW + JPEG Basic"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1863
+#: camlibs/ptp2/ptp.c:1925
 #, fuzzy
-msgid "Incadesent"
+msgid "Incadescent"
 msgstr "Fehéren izzó"
 
-#: camlibs/ptp2/ptp.c:1870
+#: camlibs/ptp2/ptp.c:1932
 #, fuzzy
 msgid "Default"
 msgstr "Égbolt"
 
-#: camlibs/ptp2/ptp.c:1871 camlibs/sierra/epson-desc.c:154
+#: camlibs/ptp2/ptp.c:1933 camlibs/sierra/epson-desc.c:154
 #: camlibs/sierra/sierra.c:963 camlibs/sierra/sierra.c:973
 #: camlibs/sierra/sierra.c:1270 camlibs/sierra/sierra.c:1473
 #: camlibs/sierra/sierra.c:1482 camlibs/sierra/sierra.c:1709
 msgid "Red-eye Reduction"
 msgstr "Vörösszemhatás-csökkentés"
 
-#: camlibs/ptp2/ptp.c:1872
+#: camlibs/ptp2/ptp.c:1934
 #, fuzzy
 msgid "Red-eye Reduction + Slow Sync"
 msgstr "Vörösszemhatás-csökkentés"
 
-#: camlibs/ptp2/ptp.c:1873 camlibs/sierra/epson-desc.c:155
+#: camlibs/ptp2/ptp.c:1935 camlibs/sierra/epson-desc.c:155
 #: camlibs/sierra/sierra.c:964 camlibs/sierra/sierra.c:975
 #: camlibs/sierra/sierra.c:1272 camlibs/sierra/sierra.c:1474
 #: camlibs/sierra/sierra.c:1484 camlibs/sierra/sierra.c:1711
 msgid "Slow Sync"
 msgstr "Lassú szinkronizálás"
 
-#: camlibs/ptp2/ptp.c:1874
+#: camlibs/ptp2/ptp.c:1936
 msgid "Rear Curtain Sync + Slow Sync"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1875
+#: camlibs/ptp2/ptp.c:1937
 msgid "Dynamic Area"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1876
+#: camlibs/ptp2/ptp.c:1938
 msgid "Single Area"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1877
+#: camlibs/ptp2/ptp.c:1939
 msgid "Closest Subject"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1878
+#: camlibs/ptp2/ptp.c:1940
 #, fuzzy
 msgid "Manual Focus"
 msgstr "Nincs kézikönyv"
 
-#: camlibs/ptp2/ptp.c:1884
+#: camlibs/ptp2/ptp.c:1946
 msgid "Center Weighted"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1885 camlibs/sierra/nikon-desc.c:459
+#: camlibs/ptp2/ptp.c:1947 camlibs/sierra/nikon-desc.c:459
 #: camlibs/sierra/olympus-desc.c:627
 msgid "Matrix"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1886 camlibs/sierra/nikon-desc.c:458
+#: camlibs/ptp2/ptp.c:1948 camlibs/sierra/nikon-desc.c:458
 #: camlibs/sierra/olympus-desc.c:626
 msgid "Spot"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1892
+#: camlibs/ptp2/ptp.c:1954
 #, fuzzy
 msgid "Portrait"
 msgstr "Kontraszt-"
 
-#: camlibs/ptp2/ptp.c:1893
+#: camlibs/ptp2/ptp.c:1955
 msgid "Landscape"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1895
+#: camlibs/ptp2/ptp.c:1957
 msgid "Sports"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1896
+#: camlibs/ptp2/ptp.c:1958
 msgid "Night Landscape"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1897
+#: camlibs/ptp2/ptp.c:1959
 msgid "Night Portrait"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1898
+#: camlibs/ptp2/ptp.c:1960
 msgid "Single Shot"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1899
+#: camlibs/ptp2/ptp.c:1961
 #, fuzzy
 msgid "Power Wind"
 msgstr "NINCS energiajelző fény"
 
-#: camlibs/ptp2/ptp.c:1900
+#: camlibs/ptp2/ptp.c:1962
 #, fuzzy
 msgid "Timer"
 msgstr "Saját időzítő"
 
-#: camlibs/ptp2/ptp.c:1902
+#: camlibs/ptp2/ptp.c:1964
 #, fuzzy
 msgid "Timer + Remote"
 msgstr "távoli"
 
-#: camlibs/ptp2/ptp.c:1914
+#: camlibs/ptp2/ptp.c:1976
 #, fuzzy
 msgid "Commander"
 msgstr "Hibás parancssorrend."
 
-#: camlibs/ptp2/ptp.c:1921
+#: camlibs/ptp2/ptp.c:1983
 #, fuzzy
 msgid "1 min"
 msgstr "41 mm"
 
-#: camlibs/ptp2/ptp.c:1922
+#: camlibs/ptp2/ptp.c:1984
 msgid "5 mins"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1923
+#: camlibs/ptp2/ptp.c:1985
 msgid "10 mins"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1924
+#: camlibs/ptp2/ptp.c:1986
 msgid "15 mins"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1933
+#: camlibs/ptp2/ptp.c:1995
 #, fuzzy
 msgid "Centre"
 msgstr "Rögzítés"
 
-#: camlibs/ptp2/ptp.c:1934
+#: camlibs/ptp2/ptp.c:1996
 msgid "Top"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1935
+#: camlibs/ptp2/ptp.c:1997
 #, fuzzy
 msgid "Bottom"
 msgstr "Nagyítás"
 
-#: camlibs/ptp2/ptp.c:1936
+#: camlibs/ptp2/ptp.c:1998
 msgid "Left"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1937
+#: camlibs/ptp2/ptp.c:1999
 #, fuzzy
 msgid "Right"
 msgstr "Magas"
 
-#: camlibs/ricoh/g3.c:297
+#: camlibs/ricoh/g3.c:301
 #, fuzzy
 msgid "Downloading movie..."
 msgstr "Fájl letöltése..."
 
-#: camlibs/ricoh/g3.c:303
+#: camlibs/ricoh/g3.c:307
 #, fuzzy
 msgid "Downloading audio..."
 msgstr "Letöltés..."
 
-#: camlibs/ricoh/g3.c:318
+#: camlibs/ricoh/g3.c:322
 #, fuzzy
 msgid "Downloading EXIF data..."
 msgstr "Adatok letöltése..."
 
-#: camlibs/ricoh/g3.c:320 camlibs/ricoh/g3.c:339
+#: camlibs/ricoh/g3.c:324 camlibs/ricoh/g3.c:343
 #, fuzzy, c-format
 msgid "No EXIF data available for %s."
 msgstr "nem érhető el: %s"
 
-#: camlibs/ricoh/g3.c:425
+#: camlibs/ricoh/g3.c:429
 #, fuzzy
 msgid "Could not delete file."
 msgstr "A(z) '%s' fájl nem található."
 
-#: camlibs/ricoh/g3.c:452
+#: camlibs/ricoh/g3.c:456
 #, fuzzy
 msgid "Could not remove directory."
 msgstr "Nem sikerült létrehozni a \\DCIM könyvtárat."
 
-#: camlibs/ricoh/g3.c:479
+#: camlibs/ricoh/g3.c:483
 #, fuzzy
 msgid "Could not create directory."
 msgstr "Nem sikerült létrehozni a \\DCIM könyvtárat."
 
-#: camlibs/ricoh/g3.c:498
+#: camlibs/ricoh/g3.c:502
 #, fuzzy, c-format
 msgid "Version: %s\n"
 msgstr "Verzió:"
 
-#: camlibs/ricoh/g3.c:503
+#: camlibs/ricoh/g3.c:507
 #, fuzzy, c-format
 msgid "RTC Status: %d\n"
 msgstr "A kártya állapota:\t\t"
 
-#: camlibs/ricoh/g3.c:509
+#: camlibs/ricoh/g3.c:513
 #, fuzzy, c-format
 msgid "Camera time: %s %s\n"
 msgstr "%sKameraazonosító: %s\n"
 
-#: camlibs/ricoh/g3.c:515
+#: camlibs/ricoh/g3.c:519
 #, fuzzy, c-format
 msgid "Camera ID: %s\n"
 msgstr "%sKameraazonosító: %s\n"
 
-#: camlibs/ricoh/g3.c:521
-#, fuzzy
+#: camlibs/ricoh/g3.c:525
+#, fuzzy, c-format
 msgid "No SD Card inserted.\n"
 msgstr "A kártya nem támogatott."
 
-#: camlibs/ricoh/g3.c:524
+#: camlibs/ricoh/g3.c:528
 #, fuzzy, c-format
 msgid "SD Card ID: %s\n"
 msgstr "%sKameraazonosító: %s\n"
 
-#: camlibs/ricoh/g3.c:532
+#: camlibs/ricoh/g3.c:536
 #, fuzzy, c-format
 msgid "Photos on camera: %d\n"
 msgstr "A kamera memóriája: %d Mbit.\n"
 
-#: camlibs/ricoh/g3.c:538
+#: camlibs/ricoh/g3.c:542
 #, c-format
 msgid "SD memory: %d MB total, %d MB free.\n"
 msgstr ""
 
-#: camlibs/ricoh/g3.c:545
+#: camlibs/ricoh/g3.c:549
 #, c-format
 msgid "Internal memory: %d MB total, %d MB free.\n"
 msgstr ""
 
-#: camlibs/ricoh/g3.c:555
+#: camlibs/ricoh/g3.c:559
 msgid ""
 "Ricoh Caplio G3.\n"
 "Marcus Meissner <marcus@jet.franken.de>\n"
@@ -5796,7 +5818,7 @@ msgstr ""
 "akik engedélyezték az Olympus C-3030Z for USB termékük\n"
 "felhasználását a program elkészítéséhez."
 
-#: camlibs/sierra/sierra-desc.c:174
+#: camlibs/sierra/sierra-desc.c:184
 #, c-format
 msgid "%lld (unknown)"
 msgstr "%lld (ismeretlen)"
@@ -5841,14 +5863,17 @@ msgid "Sorry, taking pictures is not implemented..."
 msgstr "Képek készítése egyelőre nem lehetséges."
 
 #: camlibs/sonydscf1/dsc_f1.c:152
+#, c-format
 msgid "Couldn't open camera.\n"
 msgstr "A kamera megnyitása nem sikerült.\n"
 
 #: camlibs/sonydscf1/dsc_f1.c:166
+#, c-format
 msgid "Error opening camera\n"
 msgstr "Hiba történt a kamera megnyitása közben\n"
 
 #: camlibs/sonydscf1/dsc_f1.c:171
+#, c-format
 msgid "Picture number is too large.\n"
 msgstr "A képek száma túl nagy.\n"
 
@@ -5871,6 +5896,7 @@ msgstr ""
 "Elképzelhető, hogy a program nem minden konfigurációval működik\n"
 
 #: camlibs/sonydscf1/dsc_f1.c:187 camlibs/sonydscf1/dsc_f1.c:188
+#, c-format
 msgid "Error opening camera.\n"
 msgstr "Hiba történt a kamera megnyitásakor.\n"
 
@@ -6116,7 +6142,7 @@ msgstr "Az előnézeti kép magassága: %d\n"
 msgid "Thumbnail size: %d\n"
 msgstr "Az előnézeti kép mérete: %d\n"
 
-#: camlibs/stv0680/stv0680.c:270
+#: camlibs/stv0680/stv0680.c:272
 msgid ""
 "STV0680\n"
 "Adam Harrison <adam@antispin.org>\n"
@@ -6133,12 +6159,12 @@ msgstr ""
 "Továbbfejlesztette a meghajtóprogramot az Aiptek PenCam és más STM USB duál "
 "módú kamerák kezeléséhez."
 
-#: camlibs/sx330z/library.c:138
+#: camlibs/sx330z/library.c:139
 #, c-format
 msgid "Getting information on %i files..."
 msgstr "Információ lekérdezése %i fájlról..."
 
-#: camlibs/sx330z/library.c:252
+#: camlibs/sx330z/library.c:253
 msgid ""
 "(Traveler) SX330z Library (And other Aldi-cams).\n"
 "Even other Vendors like Jenoptik, Skanhex, Maginon should work.\n"
@@ -6146,7 +6172,7 @@ msgid ""
 "Dominik Kuhlen <kinimod@users.sourceforge.net>\n"
 msgstr ""
 
-#: camlibs/sx330z/library.c:291
+#: camlibs/sx330z/library.c:292
 msgid "sx330z is USB only"
 msgstr "az sx330z csak USB-s"
 
@@ -6157,25 +6183,20 @@ msgid ""
 "Toshiba pdr-m11 driver.\n"
 msgstr ""
 
-#: libgphoto2/gphoto2-abilities-list.c:183
-#: libgphoto2/gphoto2-abilities-list.c:280
+#: libgphoto2/gphoto2-abilities-list.c:181
+#: libgphoto2/gphoto2-abilities-list.c:278
 #, c-format
 msgid "Loading camera drivers from '%s'..."
 msgstr "Kamerameghajtók letöltése innen: '%s'..."
 
-#: libgphoto2/gphoto2-abilities-list.c:268
+#: libgphoto2/gphoto2-abilities-list.c:266
 #, c-format
 msgid "Could not open '%s'"
 msgstr "Nem sikerült megnyitni: '%s'..."
 
-#: libgphoto2/gphoto2-abilities-list.c:725
+#: libgphoto2/gphoto2-abilities-list.c:698
 #, c-format
 msgid "Could not find any driver for '%s'"
-msgstr "Nem található meghajtó ehhez: '%s'"
-
-#: libgphoto2/gphoto2-abilities-list.c:755
-#, fuzzy, c-format
-msgid "Could not find any driver for '%s' / '%s'"
 msgstr "Nem található meghajtó ehhez: '%s'"
 
 #: libgphoto2/gphoto2-camera.c:81
@@ -6238,36 +6259,36 @@ msgstr "Ez a kamera nem támogat rögzítést."
 msgid "This camera can not capture previews."
 msgstr "Ez a kamera nem támogat gyorsnézeteket."
 
-#: libgphoto2/gphoto2-filesys.c:259
+#: libgphoto2/gphoto2-filesys.c:284
 #, c-format
 msgid "The path '%s' is not absolute."
 msgstr "Az elérési út ('%s') nem abszolút."
 
-#: libgphoto2/gphoto2-filesys.c:380
+#: libgphoto2/gphoto2-filesys.c:405
 #, c-format
 msgid "Could not append folder '%s' as this folder already exists."
 msgstr ""
 "A(z) '%s' nevű könyvtár hozzáfűzése nem sikerült, mert már létezik ilyen "
 "nevű könyvtár."
 
-#: libgphoto2/gphoto2-filesys.c:552
+#: libgphoto2/gphoto2-filesys.c:577
 #, c-format
 msgid "Could not find folder '%s'."
 msgstr "'%s' nevű könyvtár nem ttalálható."
 
-#: libgphoto2/gphoto2-filesys.c:569
+#: libgphoto2/gphoto2-filesys.c:594
 #, c-format
 msgid "Folder '%s' does not contain a folder '%s'."
 msgstr "A(z) '%s' nevű könyvtár nem tartalmaz '%s' nevű fájlt."
 
-#: libgphoto2/gphoto2-filesys.c:633
+#: libgphoto2/gphoto2-filesys.c:658
 #, c-format
 msgid "Could not append '%s' to folder '%s' because this file already exists."
 msgstr ""
 "Nem sikerült hozzáfűzni ezt: '%s' a(z) '%s' mappához, mert a fájl már "
 "létezik."
 
-#: libgphoto2/gphoto2-filesys.c:1010
+#: libgphoto2/gphoto2-filesys.c:1035
 #, c-format
 msgid ""
 "You have been trying to delete '%s' from folder '%s', but the filesystem "
@@ -6276,23 +6297,23 @@ msgstr ""
 "A program megpróbálta törölni a(z) '%s' fájlt a(z) '%s' mappából, de a "
 "fájlrendszer nem támogatja fájlok törlését."
 
-#: libgphoto2/gphoto2-filesys.c:1113
+#: libgphoto2/gphoto2-filesys.c:1138
 #, c-format
 msgid ""
 "There are still subfolders in folder '%s' that you are trying to remove."
 msgstr ""
 "Az eltávolítani kívánt '%s' könyvtár nem üres, még tartalmaz alkönyvtárakat."
 
-#: libgphoto2/gphoto2-filesys.c:1120
+#: libgphoto2/gphoto2-filesys.c:1145
 #, c-format
 msgid "There are still files in folder '%s' that you are trying to remove."
 msgstr "Az eltávolítani kívánt '%s' könyvtár még nem üres, fájlokat tartalmaz."
 
-#: libgphoto2/gphoto2-filesys.c:1162
+#: libgphoto2/gphoto2-filesys.c:1187
 msgid "The filesystem does not support upload of files."
 msgstr "A fájlrendszer nem támogatja fájlok feltöltését."
 
-#: libgphoto2/gphoto2-filesys.c:1203
+#: libgphoto2/gphoto2-filesys.c:1228
 #, c-format
 msgid ""
 "Folder '%s' does only contain %i files, but you requested a file with number "
@@ -6300,36 +6321,36 @@ msgid ""
 msgstr ""
 "A(z) '%s' könyvtár csak %i fájlt tartalmaz, de a kért fájl száma %i volt."
 
-#: libgphoto2/gphoto2-filesys.c:1248
+#: libgphoto2/gphoto2-filesys.c:1273
 #, c-format
 msgid "File '%s' could not be found in folder '%s'."
 msgstr "'%s' nevű fájl nem létezik a(z) '%s' könyvtárban."
 
-#: libgphoto2/gphoto2-filesys.c:1335
+#: libgphoto2/gphoto2-filesys.c:1360
 #, c-format
 msgid "Could not find file '%s'."
 msgstr "A(z) '%s' fájl nem található."
 
-#: libgphoto2/gphoto2-filesys.c:1460
+#: libgphoto2/gphoto2-filesys.c:1485
 msgid "The filesystem doesn't support getting files"
 msgstr "A fájlrendszer nem támogatja fájlok letöltését"
 
-#: libgphoto2/gphoto2-filesys.c:1495 libgphoto2/gphoto2-filesys.c:2042
-#: libgphoto2/gphoto2-filesys.c:2195
+#: libgphoto2/gphoto2-filesys.c:1520 libgphoto2/gphoto2-filesys.c:2067
+#: libgphoto2/gphoto2-filesys.c:2220
 #, c-format
 msgid "Unknown file type %i."
 msgstr "Ismeretlen fájltípus: %i."
 
-#: libgphoto2/gphoto2-filesys.c:1499
+#: libgphoto2/gphoto2-filesys.c:1524
 #, c-format
 msgid "Downloading '%s' from folder '%s'..."
 msgstr "'%s' letöltése a(z) '%s' mappából..."
 
-#: libgphoto2/gphoto2-filesys.c:1709
+#: libgphoto2/gphoto2-filesys.c:1734
 msgid "The filesystem doesn't support getting file information"
 msgstr "A fájlrendszer nem támogatja a fájljellemzők lekérdezését."
 
-#: libgphoto2/gphoto2-filesys.c:1884
+#: libgphoto2/gphoto2-filesys.c:1909
 #, c-format
 msgid ""
 "Could not open '/proc/meminfo' for reading ('%m'). Make sure the proc "
@@ -6338,31 +6359,31 @@ msgstr ""
 "Nem sikerült megnyitni olvasásra a '/proc/meminfo' fájlt ('%m'). "
 "Ellenőrizze, hogy a proc fájlrendszer csatlakoztatva van-e."
 
-#: libgphoto2/gphoto2-filesys.c:1892
+#: libgphoto2/gphoto2-filesys.c:1917
 #, c-format
 msgid "An error occured while reading '/proc/meminfo' ('%m')."
 msgstr "Hiba történt '/proc/meminfo' olvasása közben ('%m')."
 
-#: libgphoto2/gphoto2-filesys.c:1927
+#: libgphoto2/gphoto2-filesys.c:1952
 #, c-format
 msgid "sysctl call failed ('%m')."
 msgstr "A sysctl hívás nem sikerült ('%m')."
 
-#: libgphoto2/gphoto2-filesys.c:1945
+#: libgphoto2/gphoto2-filesys.c:1970
 #, fuzzy, c-format
 msgid "sysconf call failed ('%m')."
 msgstr "A sysctl hívás nem sikerült ('%m')."
 
-#: libgphoto2/gphoto2-filesys.c:1953
+#: libgphoto2/gphoto2-filesys.c:1978
 #, fuzzy, c-format
 msgid "swapctl call failed ('%m')."
 msgstr "A sysctl hívás nem sikerült ('%m')."
 
-#: libgphoto2/gphoto2-filesys.c:2298
+#: libgphoto2/gphoto2-filesys.c:2323
 msgid "The filesystem doesn't support setting file information"
 msgstr "A fájlrendszer nem támogatja fájlinformációk beállítását"
 
-#: libgphoto2/gphoto2-filesys.c:2321
+#: libgphoto2/gphoto2-filesys.c:2346
 msgid "Read-only file attributes like width and height can not be changed."
 msgstr ""
 "A csak olvasható fájljellemzők (pl. szélesség, magasság) nem változtathatók "
@@ -6420,6 +6441,20 @@ msgstr "Ismeretlen hiba a kamerakezelő programkönyvtárban"
 #: libgphoto2/gphoto2-result.c:85
 msgid "Unknown error"
 msgstr "Ismeretlen hiba"
+
+#, fuzzy
+#~ msgid "Unsupported port type: %d.This driver only works with USBcameras.\n"
+#~ msgstr ""
+#~ "Nem támogatott porttípus: %d. Ez a meghajtó csak USB-alapú kamerákkal "
+#~ "működik.\n"
+
+#, fuzzy
+#~ msgid "Incadesent"
+#~ msgstr "Fehéren izzó"
+
+#, fuzzy
+#~ msgid "Could not find any driver for '%s' / '%s'"
+#~ msgstr "Nem található meghajtó ehhez: '%s'"
 
 #, fuzzy
 #~ msgid "Camera settings"
