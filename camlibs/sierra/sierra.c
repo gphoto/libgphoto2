@@ -24,7 +24,9 @@
 
 #define TIMEOUT	   2000
 
-#define CHECK_STOP(camera,result) {int res; res = result; if (res != GP_OK) {gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** operation failed!"); camera_stop (camera); return (res);}}
+#define CHECK_STOP(camera,result) {int res; res = result; if (res < 0) {gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** operation failed!"); camera_stop (camera); return (res);}}
+
+#define CHECK_STOP_FREE(camera,result) {int res; SierraData *fd = camera->camlib_data; res = result; if (res < 0) {gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** operation failed!"); camera_stop (camera); gp_port_free (fd->dev); free (fd); return (res);}}
 
 int camera_start(Camera *camera);
 int camera_stop(Camera *camera);
@@ -224,14 +226,11 @@ int camera_init (Camera *camera)
 			return (ret);
 		}
 
-	        ret = gp_port_usb_find_device (fd->dev, vendor, product);
-		if (ret != GP_OK) {
-			gp_port_free (fd->dev);
-			free (fd);
-	                return (ret);
-		}
+	        CHECK_STOP_FREE (camera, gp_port_usb_find_device (fd->dev, 
+							vendor, product));
 
-	        gp_port_timeout_set (fd->dev, 5000);
+	        CHECK_STOP_FREE (camera, gp_port_timeout_set (fd->dev, 5000));
+
        		settings.usb.inep 	= inep;
        		settings.usb.outep 	= outep;
        		settings.usb.config 	= 1;
@@ -245,39 +244,20 @@ int camera_init (Camera *camera)
                 return (GP_ERROR_IO_UNKNOWN_PORT);
 	}
 
-	ret = gp_port_settings_set (fd->dev, settings);
-	if (ret != GP_OK) {
-		gp_port_free (fd->dev);
-		free (fd);
-                return (ret);
-	}
+	CHECK_STOP_FREE (camera, gp_port_settings_set (fd->dev, settings));
 
-	gp_port_timeout_set (fd->dev, TIMEOUT);
+	CHECK_STOP_FREE (camera, gp_port_timeout_set (fd->dev, TIMEOUT));
 	fd->type = camera->port->type;
 
-	ret = gp_port_open (fd->dev);
-	if (ret != GP_OK) {
-		gp_port_free (fd->dev);
-		free (fd);
-		return (ret);
-	}
+	CHECK_STOP_FREE (camera, gp_port_open (fd->dev));
 
 	/* If it is a serial camera, check if it's really there. */
 	if (camera->port->type == GP_PORT_SERIAL) {
 
-		ret = sierra_ping (camera);
-		if (ret != GP_OK) {
-			gp_port_free (fd->dev);
-			free (fd);
-			return (ret);
-		}
+		CHECK_STOP_FREE (camera, sierra_ping (camera));
 
-		ret = sierra_set_speed (camera, camera->port->speed);
-		if (ret != GP_OK) {
-			gp_port_free (fd->dev);
-			free (fd);
-			return (ret);
-		}
+		CHECK_STOP_FREE (camera, sierra_set_speed (camera, 
+					                camera->port->speed));
 
 		fd->speed = camera->port->speed;
 	}
@@ -285,11 +265,12 @@ int camera_init (Camera *camera)
 	if (camera->port->type == GP_PORT_USB)
 		gp_port_usb_clear_halt (fd->dev, GP_PORT_USB_ENDPOINT_IN);
 
+	/* FIXME??? What's that for? */
 	ret = sierra_get_int_register (camera, 1, &value);
 	if (ret != GP_OK) {
-		gp_port_free(fd->dev);
-		free (fd);
-		return (ret);
+		gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** Could not get "
+				 "register 1: %s", 
+				 gp_camera_get_result_as_string (camera, ret));
 	}
 
 	/* FIXME??? What's that for? */
@@ -300,7 +281,7 @@ int camera_init (Camera *camera)
 				 gp_camera_get_result_as_string (camera, ret));
 	}
 
-	CHECK (gp_port_timeout_set (fd->dev, 50));
+	CHECK_STOP_FREE (camera, gp_port_timeout_set (fd->dev, 50));
 
 	/* Folder support? */
 	ret = sierra_set_string_register (camera, 84, "\\", 1);
@@ -315,18 +296,20 @@ int camera_init (Camera *camera)
 	}
 
 	fd->fs = gp_filesystem_new ();
-	count = sierra_file_count (camera);
-	if (count < 0) 
-		return (count);
+	CHECK_STOP_FREE (camera, (count = sierra_file_count (camera)));
 
         /* Populate the filesystem */
-	CHECK (gp_filesystem_populate (fd->fs, "/", "PIC%04i.jpg", count));
+	CHECK_STOP_FREE (camera, 
+		         gp_filesystem_populate (fd->fs, "/", 
+			                         "PIC%04i.jpg", count));
 
 	strcpy (fd->folder, "/");
 
-	CHECK (gp_port_timeout_set (fd->dev, TIMEOUT));
+	CHECK_STOP_FREE (camera, gp_port_timeout_set (fd->dev, TIMEOUT));
 
-	return (camera_stop (camera));
+	CHECK_STOP_FREE (camera, camera_stop (camera));
+
+	return (GP_OK);
 }
 
 static int sierra_change_folder (Camera *camera, const char *folder)
