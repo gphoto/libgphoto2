@@ -59,7 +59,7 @@ static int uv_min[12]= {
 	};
 
 
-/* /////////////////////////////////////////////////////////////////////////// */
+/* --------------------------------------------------------------------------- */
 void largan_ccd2dib(char *pData, char *pDib, long dwDibRowBytes, int nCcdFactor)
 {
     int i, j, w, h;
@@ -123,7 +123,7 @@ void largan_ccd2dib(char *pData, char *pDib, long dwDibRowBytes, int nCcdFactor)
 	}
 }
 
-/* /////////////////////////////////////////////////////////////////////////// */
+/* --------------------------------------------------------------------------- */
 static void YCbCr2RGB(int *YY, int Cb, int Cr, int w, int h)
 {
     int     i;
@@ -185,7 +185,7 @@ static void YCbCr2RGB(int *YY, int Cb, int Cr, int w, int h)
 	}
 }
 
-/* /////////////////////////////////////////////////////////////////////////// */
+/* --------------------------------------------------------------------------- */
 static void dhuf(int flag)
 {
     int     code_leng, val_leng;
@@ -262,7 +262,7 @@ static void dhuf(int flag)
 }
 
 
-/* /////////////////////////////////////////////////////////////////////////// */
+/* --------------------------------------------------------------------------- */
 static void fetchstr(int shift_bit, int val_flag, int flag)
 {
     int    temp_val;
