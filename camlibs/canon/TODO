@@ -9,36 +9,41 @@ List of work that still has to be done on this driver:
 
  - make file upload work
 
- - set "downloaded" attribute after successful download
-
  - getting other info on file (resolution and stuff)
+   this will be done using the new EXIF stuff from libgphoto2
 
- - setting attributes in general
-
- - handle rotated files correctly
-
- - rework configuration dialog
-
- - make thumbnail download work on serial cameras
+ - rework configuration dialog (also wrt i18n)
 
  - handle thumbnails and sound annotations in a more generic way to
    reuse the code
 
  - extend file attributes from 1 octet to 2 octets
 
- - introduce use capabilities everywhere
+ - introduce use capabilities everywhere (how?)
 
  - the canon_int* functions often shouldn't use gphoto2 structures
    the canon_usb* and canon_serial* should even less
 
- - deleting files
-
  - handle rotated images correctly (how?)
 
  - A5 support is completely broken, with the new filename based API, the 
-   directory caching mecanism must be completely revisited.
+   directory caching mecanism must be completely revisited. On the
+   other hand, when removing the internal caching layer, we perhaps
+   facilitated the solution to this problem.
 
  - make sure serial cameras work with new CameraFS based code
+
+ - make sure thumbnail download work on serial cameras
+
+========================================================================
+List of work that has already been done:
+========================================================================
+
+ - deleting files [done -hun]
+
+ - setting attributes in general [done -hun]
+
+ - set "downloaded" attribute after successful download [done -hun}
 
  - make CameraFilesystem distinguish between files and folders [done -hun]
 
