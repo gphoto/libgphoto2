@@ -106,7 +106,7 @@ Specify serial transfer speed.
 
 .TP
 \fB--camera\fR \fIMODEL\fR
-Specify camera model. Most model names contain spaces: remember to enclose the name in quotes so that the shell knows it is one parameter. For example: \fB--camera "Kodak DC240"\fR.
+Specify camera model. Most model names contain spaces: remember to enclose the name in quotes so that the shell knows it is one parameter. For example: \fB\fB--camera\fR "Kodak DC240"\fR.
 
 .TP
 \fB--filename\fR \fIFILENAME\fR
@@ -284,20 +284,20 @@ List the contents of the current directory on the camera.
 .SH "SEE ALSO"
 
 .PP
-\fBgphoto2\fR(3), \fIhttp://www.gphoto.org/\fR 
+\fBgphoto2\fR(3), \fIgphoto2.txt\fR, \fIgphoto2-cli.txt\fR, \fIhttp://www.gphoto.org/\fR
 
 .SH "EXAMPLES"
 
 .TP
-\fBgphoto2 --list-files\fR
+\fB\fBgphoto2\fR \fB--list-files\fR\fR
 List files on camera.
 
 .TP
-\fBgphoto2 --get-file 7-13\fR
-Get files number 7 through 13 from the list output by \fBgphoto2 --list-files\fR.
+\fB\fBgphoto2\fR \fB--get-file\fR \fI7-13\fR\fR
+Get files number 7 through 13 from the list output by \fB\fBgphoto2\fR \fB--list-files\fR\fR.
 
 .TP
-\fBgphoto2 --usb-usermap-script gphoto2cam --print-usb-usermap\fR >> \fI/etc/hotplug/usb.usermap\fR
+\fB\fBgphoto2\fR \fB--usb-usermap-script\fR \fIgphoto2cam\fR \fB--print-usb-usermap\fR\fR >> \fI/etc/hotplug/usb.usermap\fR
 Append a line to the \fBhotplug\fR config file \fI/etc/hotplug/usb.usermap\fR for every supported camera, using \fI/etc/hotplug/usb/gphoto2cam\fR for setting up permissions correctly.
 
 .SH AUTHOR
