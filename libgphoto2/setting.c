@@ -26,7 +26,7 @@
 
 #include "gphoto2-result.h"
 #include "gphoto2-debug.h"
-#include "gphoto2-port.h"
+#include "gphoto2-port-log.h"
 
 typedef struct {
 	/* key = value settings */
@@ -64,14 +64,18 @@ int gp_setting_get (char *id, char *key, char *value)
         return(GP_ERROR);
 }
 
-int gp_setting_set (char *id, char *key, char *value)
+int
+gp_setting_set (char *id, char *key, char *value)
 {
         int x;
 
 	CHECK_NULL (id && key);
 
-	gp_debug_printf(GP_DEBUG_LOW, "core", "(%s) Setting key \"%s\" to value \"%s\"",
-                        id,key,value);
+	if (!glob_setting_count)
+		load_settings ();
+
+	gp_log (GP_LOG_DEBUG, "gphoto2-setting",
+		"Setting key '%s' to value '%s' (%s)", key, value, id);
 
         for (x=0; x<glob_setting_count; x++) {
                 if ((strcmp(glob_setting[x].id, id)==0) &&
@@ -187,9 +191,11 @@ save_settings (void)
 	char buf[1024];
 	int x=0;
 
-	sprintf(buf, "%s/.gphoto/settings", getenv("HOME"));
+	sprintf (buf, "%s/.gphoto/settings", getenv ("HOME"));
 
-	gp_debug_printf(GP_DEBUG_LOW, "core", "Saving settings to file \"%s\"", buf);
+	gp_log (GP_LOG_DEBUG, "gphoto2-setting",
+		"Saving %i setting(s) to file \"%s\"",
+		glob_setting_count, buf);
 
 	if ((f=fopen(buf, "w+"))==NULL) {
 		gp_debug_printf(GP_DEBUG_LOW, "core", "Can't open settings file for writing");

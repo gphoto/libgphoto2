@@ -27,6 +27,7 @@
 
 #include "gphoto2-port-info-list.h"
 #include "gphoto2-port-log.h"
+#include "gphoto2-setting.h"
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -977,7 +978,7 @@ set_globals (void)
 	GPPortInfoList *il;
 	GPPortInfo info;
 	CameraAbilities abilities;
-	int model = 0, port = 0, count;
+	int model = -1, port = -1, count;
 	const char *name, *value;
 
         /* takes all the settings and sets up the gphoto lib */
@@ -991,7 +992,7 @@ set_globals (void)
 	CHECK_RESULT (gp_port_info_list_new (&il));
 	CHECK_RESULT (gp_port_info_list_load (il));
 
-	/* If the user didn't specify a model, we'll look for one */
+	/* Model? */
 	if (!strcmp ("", glob_model)) {
 		CHECK_RESULT (gp_abilities_list_detect (al, il, &list));
 		count = gp_list_count (&list);
@@ -1008,12 +1009,13 @@ set_globals (void)
 
 		} else if (!count) {
 
-			/* No camera detected */
-//FIXME: Ask the user for a model
-			cli_error_print (_("Could not detect any camera. "
-				"Please specify a model."));
-			return (GP_ERROR_MODEL_NOT_FOUND);
-
+			/* No camera detected. Have a look at the settings */
+			gp_setting_get ("gphoto2", "model", glob_model);
+			model = gp_abilities_list_lookup_model (al, glob_model);
+			if (model < 0) {
+				cli_error_print (_("Please specify a model."));
+				return (GP_ERROR_MODEL_NOT_FOUND);
+			}
 		} else {
 
 			/* More than one camera detected */
@@ -1028,15 +1030,23 @@ set_globals (void)
 	} else {
 		model = gp_abilities_list_lookup_model (al, glob_model);
 		CHECK_RESULT (model);
-		if (strcmp (glob_model, "Directory Browse")) {
-			if (strcmp ("", glob_port)) {
-				port = gp_port_info_list_lookup_path (il,
-								glob_port);
-				CHECK_RESULT (port);
-			} else {
+	}
+	CHECK_RESULT (gp_abilities_list_get_abilities (al, model, &abilities));
+	CHECK_RESULT (gp_camera_set_abilities (glob_camera, abilities));
+	gp_setting_set ("gphoto2", "model", abilities.model);
 
-				/* Let the user choose from a list */
-//FIXME: Implement
+	/* Port? */
+	if (strcmp (glob_model, "Directory Browse") && (port < 0)) {
+		if (strcmp ("", glob_port)) {
+			port = gp_port_info_list_lookup_path (il, glob_port);
+			CHECK_RESULT (port);
+		} else {
+
+			/* Let's have a look at the settings */
+			gp_setting_get ("gphoto2", "port", glob_port);
+			port = gp_port_info_list_lookup_path (il, glob_port);
+			if (port < 0) {
+				cli_error_print (_("Please specify a port."));
 				return (GP_ERROR_UNKNOWN_PORT);
 			}
 		}
@@ -1046,10 +1056,8 @@ set_globals (void)
 	if (strcmp (glob_model, "Directory Browse")) {
 		CHECK_RESULT (gp_port_info_list_get_info (il, port, &info));
 		CHECK_RESULT (gp_camera_set_port_info (glob_camera, info));
+		gp_setting_set ("gphoto2", "port", info.path);
 	}
-
-	CHECK_RESULT (gp_abilities_list_get_abilities (al, model, &abilities));
-	CHECK_RESULT (gp_camera_set_abilities (glob_camera, abilities));
 
 	gp_abilities_list_free (al);
 	gp_port_info_list_free (il);
