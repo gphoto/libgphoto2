@@ -365,15 +365,74 @@ camera_about (Camera *camera, CameraText *text)
 	return (GP_OK);
 }
 
+static void
+add_dir (Camera *camera, uint32_t parent, uint32_t handle, const char *filename)
+{
+	int n;
+	n=camera->pl->params.handles.n++;
+	camera->pl->params.objectinfo = (PTPObjectInfo*)
+		realloc(camera->pl->params.objectinfo,
+		sizeof(PTPObjectInfo)*(n+1));
+	camera->pl->params.handles.handler[n]=handle;
+
+	camera->pl->params.objectinfo[n].Filename=malloc(strlen(filename)+1);
+	strcpy(camera->pl->params.objectinfo[n].Filename, filename);
+	camera->pl->params.objectinfo[n].ObjectFormat=PTP_OFC_Association;
+	camera->pl->params.objectinfo[n].AssociationType=PTP_AT_GenericFolder;
+	
+	camera->pl->params.objectinfo[n].ParentObject=parent;
+}
+
+
+static uint32_t
+find_child (const char *file, uint32_t handle, Camera *camera)
+{
+	int i;
+	PTPObjectInfo *oi = camera->pl->params.objectinfo;
+
+	for (i = 0; i < camera->pl->params.handles.n; i++) {
+		if (oi[i].ParentObject==handle)
+			if (!strcmp(oi[i].Filename,file))
+				return (camera->pl->params.handles.handler[i]);
+	}
+	return 0xffffffff;  // NOT FOUND
+}
+
+
+static uint32_t
+folder_to_handle(const char *folder, uint32_t parent, Camera *camera)
+{
+	char *c;
+	if (!strlen(folder)) return 0x00000000;
+	if (!strcmp(folder,"/")) return 0x00000000;
+
+	c=strchr(folder+1,'/');
+	if (c!=NULL) {
+		*c=0;
+		parent=find_child (folder, parent, camera);
+		return folder_to_handle(c+1,parent, camera);
+	} else  {
+		return find_child (folder, parent, camera);
+	}
+}
+	
+
 static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data)
 {
 	Camera *camera = data;
+	uint32_t parent;
+	char *backfolder=malloc(strlen(folder));
 	int i;
-
+	
+	memcpy(backfolder,folder+1, strlen(folder));
+	parent=folder_to_handle(backfolder,0, camera);
+	free(backfolder);
 	if (!strcmp(folder,"/"))
 	for (i = 0; i < camera->pl->params.handles.n; i++) {
+	if (( camera->pl->params.objectinfo[i].ObjectFormat & 0x0800) != 0)
+	if (camera->pl->params.objectinfo[i].ParentObject==parent)
 		CR (gp_list_append (list, camera->pl->params.objectinfo[i].Filename, NULL));
 	}
 
@@ -384,7 +443,22 @@ static int
 folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data)
 {
-	CR (gp_list_append (list, "dir", NULL));
+	Camera *camera = data;
+	PTPObjectInfo * oi = ((Camera*)data)->pl->params.objectinfo;
+	int i;
+	uint32_t parent;
+	char *backfolder=malloc(strlen(folder));
+
+	memcpy(backfolder,folder+1, strlen(folder));
+	parent=folder_to_handle(backfolder,0, camera);
+	free(backfolder);
+	gp_filesystem_dump(fs);
+	for (i = 0; i < ((Camera*)data)->pl->params.handles.n; i++) {
+	if (oi[i].ObjectFormat==PTP_OFC_Association &&
+		oi[i].AssociationType==PTP_AT_GenericFolder)
+	if (camera->pl->params.objectinfo[i].ParentObject==parent)
+			CR (gp_list_append (list, oi[i].Filename, NULL));
+	}
 	return (GP_OK);
 }
 
@@ -547,7 +621,7 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 }
 
 static int
-ptp_fs_init (Camera *camera)
+init_ptp_fs (Camera *camera)
 {
 	int i;
 
@@ -560,6 +634,11 @@ ptp_fs_init (Camera *camera)
 		CPR (camera, ptp_getobjectinfo(&camera->pl->params,
 		camera->pl->params.handles.handler[i], &camera->pl->params.objectinfo[i]));
 	}
+
+	add_dir (camera, 0x00000000, 0xff000000, "DIR1");
+	add_dir (camera, 0x00000000, 0xff000001, "DIR20");
+	add_dir (camera, 0xff000000, 0xff000002, "subDIR1");
+	add_dir (camera, 0xff000002, 0xff000003, "subsubDIR1");
 
 	return (GP_OK);
 }
@@ -612,7 +691,7 @@ camera_init (Camera *camera)
 	}
 
 	// init internal ptp objectfiles (required for fs implementation)
-	ptp_fs_init (camera);
+	init_ptp_fs (camera);
 
 
 	/* Configure the CameraFilesystem */
