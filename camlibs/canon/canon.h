@@ -50,6 +50,7 @@ typedef enum {
 	CANON_PS_G2,
 	CANON_PS_A10,
 	CANON_PS_A20,
+	CANON_PS_A40,
 	CANON_EOS_D30,
 	CANON_PS_PRO90_IS
 } canonCamModel;

@@ -1,3 +1,8 @@
+2002-03-22  Fredrik <fredrik@krixor.xy.org>
+
+	* canon.c, canon.h: Added support for the S40, reported
+	  by David Willmore.
+
 2002-03-18  Fredrik <fredrik@krixor.xy.org>
 
 	* usb.c, usb.h, library.c, canon.c, canon.h:
