@@ -75,7 +75,35 @@ int camera_exit () {
 
 int camera_folder_list(char *folder_name, CameraFolderInfo *list) {
 
-	return (GP_ERROR);
+	DIR *d;
+	struct dirent *de;
+	struct stat st;
+	char *ch;
+	char buf[1024];
+	int has_files=0, count=0;
+
+	if ((d = opendir(folder_name))==NULL) {
+		sprintf(buf, "Could not access folder %s", folder_name);
+		gp_message(buf);
+		return (GP_ERROR);
+	}
+	while (de = readdir(d)) {
+		if ((strcmp(de->d_name, ".") !=0) &&
+		    (strcmp(de->d_name, "..")!=0)) {
+			sprintf(buf, "%s/%s", folder_name, de->d_name);
+			if (stat(buf, &st)==0) {
+				if (S_ISDIR(st.st_mode)) {
+					strcpy(list[count++].name, de->d_name);
+				} else  {
+					has_files = 1;
+				}
+			}
+		}
+	}
+	if (has_files)
+		strcpy(list[count++].name, "<photos>");
+
+	return (count);
 }
 
 int camera_folder_set(char *folder_name) {
@@ -132,9 +160,10 @@ int camera_file_get (int file_number, CameraFile *file) {
 	long imagesize;
 	char filename[1024];
 
-	sprintf(filename, "%s%s", dir_directory,
+	sprintf(filename, "%s/%s", dir_directory,
 		dir_images[file_number]);
-	fp = fopen(filename, "r");
+	if ((fp = fopen(filename, "r"))==NULL)
+		return (GP_ERROR);
 	fseek(fp, 0, SEEK_END);
 	imagesize = ftell(fp);
 	rewind(fp);

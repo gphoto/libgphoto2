@@ -316,20 +316,24 @@ void list_folders_rec (char *path) {
 
 	CameraFolderInfo fl[512];
 	char buf[1024];
-	int count, x;
+	int count, x=0;
 
 	if (strcmp("<photos>", path)==0)
 		return;	
 
 	count = gp_folder_list(path, fl);
-
 	while (x<count) {
 		if (strcmp(fl[x].name, "<photos>")!=0) {
-			sprintf(buf, "%s/%s", path, fl[x].name);
+			if (strcmp(path, "/")==0)
+				sprintf(buf, "/%s", fl[x].name);
+			   else
+				sprintf(buf, "%s/%s", path, fl[x].name);
 			printf("%s\n", buf);
 			list_folders_rec(buf);
-			x++;
+		} else  {
+//			printf("%s has files!\n", path);
 		}
+		x++;
 	}
 
 	return;
@@ -351,12 +355,20 @@ OPTION_CALLBACK(list_folders) {
 
 OPTION_CALLBACK(use_folder) {
 
+	if (glob_debug)
+		debug_print("Setting folder: \"%s\"", arg);
+
+	strcpy(glob_folder, arg);
+
 	return (GP_OK);
 }
 
 OPTION_CALLBACK(get_picture) {
 
 	CameraFile *f;
+	int count=0;
+	int num = atoi(arg);
+	char filename[1024];
 
 	if (glob_debug)
 		debug_print("Getting picture", arg);
@@ -364,8 +376,18 @@ OPTION_CALLBACK(get_picture) {
 	if (set_globals() == GP_ERROR)
 		return (GP_ERROR);
 
-	/* 
-	/* gp_file_get(atoi(arg), f);	*/
+	count = gp_file_count();
+	if (num >= count) {
+		error_print("Picture number is too large", "");
+		return (GP_ERROR);
+	}
+
+	f = gp_file_new();
+	gp_file_get(num, f);
+
+	
+	// gp_file_save_to_disk(f, filename);
+
 	/* if glob_filename_override==1 */
 	/* 	save as glob_filename   */
 	/*   else			*/
@@ -407,6 +429,7 @@ int set_globals () {
 
 	gp_camera_set_by_name(glob_model, &s);
 
+	gp_folder_set(glob_folder);
 	
 }
 
@@ -415,6 +438,7 @@ int init_globals () {
 	strcpy(glob_model, "");
 	strcpy(glob_port, "");
 	strcpy(glob_filename, "gphoto");
+	strcpy(glob_folder, "/");
 
 	glob_speed = 0;
 	glob_debug = 0;
@@ -484,7 +508,7 @@ int verify_options (int argc, char **argv) {
 		if (!match) {
 			printf("\n** Bad option \"%s\": ", argv[x]);
 			if (missing_arg)
-				printf("\n\tMissing argument. You must specify \"%s\"",
+				printf("\n\tMissing argument. You must specify the \"%s\"",
 					option[which].argument);
 			    else
 				printf("unknown option");

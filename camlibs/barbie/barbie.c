@@ -327,8 +327,9 @@ int camera_exit() {
 
 int camera_folder_list (char *folder_name, CameraFolderInfo *list) {
 
+	strcpy(list[0].name, "<photos>");
 
-	return 0;
+	return 1;
 }
 
 int camera_folder_set (char *folder_name) {

@@ -69,7 +69,8 @@
 	/* Delete a file from the current folder */
 	int gp_file_delete (int file_number);
 
-	/* ---- These next 2 are just utilities ---- */
+
+	/* ---- These next 4 are just utilities ---- */
 
 	/* Allocates a new CameraFile */
 	CameraFile* gp_file_new ();
