@@ -795,18 +795,29 @@ get_picture_common(char *arg, CameraFileType type )
 
         CHECK_RESULT (set_globals ());
 
-        if (strchr(arg, '.'))
-                return (save_picture_to_file(glob_folder, arg, type));
+	/*
+	 * If the user specified the file directly (and not a number),
+	 * get that file.
+	 */
+        if (strchr (arg, '.'))
+                return (save_picture_to_file (glob_folder, arg, type));
 
         switch (type) {
         case GP_FILE_TYPE_PREVIEW:
-                return for_each_image_in_range (glob_folder, arg, save_thumbnail_action, 0);
+		return for_each_image_in_range (glob_folder, glob_recurse, arg,
+						save_thumbnail_action, 0);
         case GP_FILE_TYPE_NORMAL:
-                return for_each_image_in_range (glob_folder, arg, save_picture_action, 0);
+                return for_each_image_in_range (glob_folder, glob_recurse, arg,
+						save_picture_action, 0);
         case GP_FILE_TYPE_RAW:
-                return for_each_image_in_range (glob_folder, arg, save_raw_action, 0);
+                return for_each_image_in_range (glob_folder, glob_recurse, arg,
+						save_raw_action, 0);
 	case GP_FILE_TYPE_AUDIO:
-		return for_each_image_in_range (glob_folder, arg, save_audio_action, 0);
+		return for_each_image_in_range (glob_folder, glob_recurse, arg,
+						save_audio_action, 0);
+	case GP_FILE_TYPE_EXIF:
+		return for_each_image_in_range (glob_folder, glob_recurse, arg,
+						save_exif_action, 0);
         default:
                 return (GP_ERROR_NOT_SUPPORTED);
         }
@@ -886,7 +897,8 @@ OPTION_CALLBACK (delete_picture)
 
         CHECK_RESULT (set_globals ());
 
-        return for_each_image_in_range(glob_folder, arg, delete_picture_action, 1);
+        return for_each_image_in_range (glob_folder, glob_recurse, arg,
+					delete_picture_action, 1);
 }
 
 OPTION_CALLBACK (delete_all_pictures)

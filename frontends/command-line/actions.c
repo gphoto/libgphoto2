@@ -64,6 +64,12 @@ save_picture_action (const char *folder, const char *filename)
 }
 
 int
+save_exif_action (const char *folder, const char *filename)
+{
+	return (save_picture_to_file (folder, filename, GP_FILE_TYPE_EXIF));
+}
+
+int
 save_thumbnail_action (const char *folder, const char *filename)
 {
 	return (save_picture_to_file (folder, filename, GP_FILE_TYPE_PREVIEW));
