@@ -46,6 +46,7 @@ effective_target="$target"
 if test "x$effective_target" = xNONE -o "x$effective_target" = x ; then
 	effective_target="$host"
 fi
+AC_SUBST(effective_target)
 
 cat > "$1" << EOF
 /* This file is generated automatically by configure */
