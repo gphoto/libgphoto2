@@ -223,7 +223,6 @@ int digita_serial_open(CameraPrivateLibrary *dev, Camera *camera)
 /*
 	dev->gpdev->settings.serial.speed = 0;
 	gp_port_serial_set_baudrate(dev->gpdev);
-*/
 
 	usleep(50);
 
@@ -231,6 +230,7 @@ int digita_serial_open(CameraPrivateLibrary *dev, Camera *camera)
 	ret = gp_port_set_settings(dev->gpdev, settings);
 	if (ret < 0)
 		return ret;
+*/
 
 	usleep(2000);
 
