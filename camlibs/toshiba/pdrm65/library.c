@@ -52,16 +52,13 @@ camera_abilities (CameraAbilitiesList *list)
 
 	memset(&a, 0, sizeof(a));
 	strcpy(a.model, "Toshiba:PDR-M65");
-	a.status = GP_DRIVER_STATUS_PRODUCTION;
-	a.port     = GP_PORT_SERIAL | GP_PORT_USB;
+	a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
+	a.port     = GP_PORT_USB;
         a.usb_vendor = 0x1132;
         a.usb_product = 0x4334;
-	a.speed[0] = 0;
-	a.operations        = 	GP_OPERATION_CAPTURE_PREVIEW | 
-				GP_CAPTURE_IMAGE;
-	a.file_operations   = 	GP_FILE_OPERATION_DELETE | 
-				GP_FILE_OPERATION_PREVIEW;
-	a.folder_operations = 	GP_FOLDER_OPERATION_NONE;
+	a.operations        =GP_OPERATION_CAPTURE_PREVIEW | GP_CAPTURE_IMAGE;
+	a.file_operations   =GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
+	a.folder_operations =GP_FOLDER_OPERATION_NONE;
 
 	gp_abilities_list_append(list, a);
 
@@ -238,7 +235,8 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 	/* List your folders here */
 
-	return (GP_ERROR_NOT_SUPPORTED);
+	//return (GP_ERROR_NOT_SUPPORTED);
+	return (GP_OK);
 }
 
 static int
