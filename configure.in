@@ -31,6 +31,32 @@ AC_TYPE_SIZE_T
 dnl Checks for library functions.
 AC_CHECK_FUNCS(mkdir strdup)
 
+AC_PATH_PROG(LIBGPIO_CONFIG,gpio-config)
+if test -n "${LIBGPIO_CONFIG}"; then
+  CFLAGS="$CFLAGS `$LIBGPIO_CONFIG --cflags`"
+  LIBS="$LIBS `$LIBGPIO_CONFIG --libs`"
+else
+  AC_MSG_ERROR([
+***
+*** libgpio is required
+*** Available from GNOME CVS module 'libgpio'.
+***])
+  exit 1
+fi
+
+LIBGPHOTO2_INCLUDEDIR='-I${includedir}'
+LIBGPHOTO2_LIBDIR='-L${libdir}'
+LIBGPHOTO2_LIBS="-lgphoto2"
+LIBGPHOTO2_VERSION=$VERSION
+
+AC_SUBST(LIBGPHOTO2_INCLUDEDIR)
+AC_SUBST(LIBGPHOTO2_LIBDIR)
+AC_SUBST(LIBGPHOTO2_LIBS)
+AC_SUBST(LIBGPHOTO2_VERSION)
+
+AC_SUBST(CFLAGS)
+AC_SUBST(LIBS)
+
 AC_OUTPUT(\
 Makefile \
 camlibs/Makefile \
