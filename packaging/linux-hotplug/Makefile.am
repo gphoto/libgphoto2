@@ -20,6 +20,7 @@ USERMAP = gphoto2-usb.usermap
 
 install-data-local: print-usb-usermap
 	./print-usb-usermap > $(USERMAP)
+	mkdir -p $(DESTDIR)$(docdir)/
 	$(INSTALL_DATA) $(USERMAP) $(DESTDIR)$(docdir)/
 
 uninstall-local:
