@@ -40,10 +40,10 @@ maintainer-clean-local: clean
 
 if ENABLE_GTK_DOC
 install-data-local:
-	$(INSTALL) -d -m 0755 $(TARGET_DIR)
-	$(INSTALL_DATA) $(srcdir)/html/*.html $(TARGET_DIR)
-	$(INSTALL_DATA) $(srcdir)/html/index.sgml $(TARGET_DIR)
-	gtkdoc-fixxref --module=$(DOC_MODULE) --html-dir=$(htmldir)
+	$(INSTALL) -d -m 0755 $(DESTDIR)$(TARGET_DIR)
+	$(INSTALL_DATA) $(srcdir)/html/*.html $(DESTDIR)$(TARGET_DIR)
+	$(INSTALL_DATA) $(srcdir)/html/index.sgml $(DESTDIR)$(TARGET_DIR)
+	gtkdoc-fixxref --module=$(DOC_MODULE) --html-dir=$(DESTDIR)$(htmldir)
 
 dist-hook:
 	(cd $(srcdir) ; tar cvf - html) | (cd $(distdir); tar xf -)
