@@ -112,12 +112,12 @@ ptp_unpack_uint32_t_array(PTPParams *params, PTPReq *req, uint16_t offset, uint3
 static inline uint32_t
 ptp_unpack_uint16_t_array(PTPParams *params, PTPReq *req, uint16_t offset, uint16_t **array)
 {
-	uint32_t n, i=1;
+	uint32_t n, i=0;
 
 	n=dtoh32a(&req->data[offset]);
 	*array = malloc (n*sizeof(uint16_t));
 	while (n>=i) {
-		(*array)[i-1]=dtoh16a(&req->data[offset+(sizeof(uint16_t)*i)]);
+		(*array)[i]=dtoh16a(&req->data[offset+(sizeof(uint16_t)*(i+2))]);
 		i++;
 	}
 	return n;
