@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <getopt.h>
 #include <usb.h>
 
@@ -58,13 +59,24 @@
 #define USB_FEATURE_HALT	0x00
 #endif
 
+/* Check value and Return on error */
 #define CR(result,error) {						\
 			if((result)!=PTP_RC_OK) {			\
 				fprintf(stderr,error);			\
 				usb_release_interface(ptp_usb.handle,	\
 		dev->config->interface->altsetting->bInterfaceNumber);	\
-				return;			\
-			}				\
+				return;					\
+			}						\
+}
+
+/* Check value and Continue on error */
+#define CC(result,error) {						\
+			if((result)!=PTP_RC_OK) {			\
+				fprintf(stderr,error);			\
+				usb_release_interface(ptp_usb.handle,	\
+		dev->config->interface->altsetting->bInterfaceNumber);	\
+				continue;					\
+			}						\
 }
 
 /* requested actions */
@@ -85,8 +97,8 @@ struct _PTP_USB {
 /* some functions declarations to avoid warnings */
 
 //void talk (struct usb_device*, int , int , int );
-void usage(char* progname);
-void help(char* progname);
+void usage(void);
+void help(void);
 struct usb_bus* init_usb(void);
 void init_ptp_usb (PTPParams*, PTP_USB*, struct usb_device*);
 void list_devices(short force);
@@ -97,76 +109,33 @@ void list_properties (int dev, int bus, short force);
 
 short verbose=0;
 
-// Device Property descriptions
-struct {
-	uint16_t dpc;
-	const char *txt;
-} ptp_device_properties[] = {
-	{PTP_DPC_Undefined,		N_("PTP Undefined Property")},
-	{PTP_DPC_BatteryLevel,		N_("Battery Level")},
-	{PTP_DPC_FunctionalMode,	N_("Functional Mode")},
-	{PTP_DPC_ImageSize,		N_("Image Size")},
-	{PTP_DPC_CompressionSetting,	N_("Compression Setting")},
-	{PTP_DPC_WhiteBalance,		N_("White Balance")},
-	{PTP_DPC_RGBGain,		N_("RGB Gain")},
-	{PTP_DPC_FNumber,		N_("F-Number")},
-	{PTP_DPC_FocalLength,		N_("Focal Length")},
-	{PTP_DPC_FocusDistance,		N_("Focus Distance")},
-	{PTP_DPC_FocusMode,		N_("Focus Mode")},
-	{PTP_DPC_ExposureMeteringMode,	N_("Exposure Metering Mode")},
-	{PTP_DPC_FlashMode,		N_("Flash Mode")},
-	{PTP_DPC_ExposureTime,		N_("Exposure Time")},
-	{PTP_DPC_ExposureProgramMode,	N_("Exposure Program Mode")},
-	{PTP_DPC_ExposureIndex,		N_("Exposure Index (film speed ISO)")},
-	{PTP_DPC_ExposureBiasCompensation,
-					N_("Exposure Bias Compensation")},
-	{PTP_DPC_DateTime,		N_("Date Time")},
-	{PTP_DPC_CaptureDelay,		N_("Pre-Capture Delay")},
-	{PTP_DPC_StillCaptureMode,	N_("Still Capture Mode")},
-	{PTP_DPC_Contrast,		N_("Contrast")},
-	{PTP_DPC_Sharpness,		N_("Sharpness")},
-	{PTP_DPC_DigitalZoom,		N_("Digital Zoom")},
-	{PTP_DPC_EffectMode,		N_("Effect Mode")},
-	{PTP_DPC_BurstNumber,		N_("Burst Number")},
-	{PTP_DPC_BurstInterval,		N_("Burst Interval")},
-	{PTP_DPC_TimelapseNumber,	N_("Timelapse Number")},
-	{PTP_DPC_TimelapseInterval,	N_("Timelapse Interval")},
-	{PTP_DPC_FocusMeteringMode,	N_("Focus Metering Mode")},
-	{PTP_DPC_UploadURL,		N_("Upload URL")},
-	{PTP_DPC_Artist,		N_("Artist")},
-	{PTP_DPC_CopyrightInfo,		N_("Copyright Info")},
-	{PTP_DPC_EK_ColorTemperature,	N_("EK Color Temperature")},
-	{PTP_DPC_EK_DateTimeStampFormat,N_("EK Date Time Stamp Format")},
-	{PTP_DPC_EK_BeepMode,		N_("EK Beep Mode")},
-	{PTP_DPC_EK_VideoOut,		N_("EK Video Out")},
-	{PTP_DPC_EK_PowerSaving,	N_("EK Power Saving")},
-	{PTP_DPC_EK_UI_Language,	N_("EK UI Language")},
-	{0,NULL}
-};
-
 
 void
-usage(char* progname)
+usage()
 {
-	printf("USAGE: %s [OPTION]\n\n",progname);
+	printf("USAGE: ptpcam [OPTION]\n\n");
 }
 
 void
-help(char* progname)
+help()
 {
-	printf("USAGE: %s [OPTION]\n\n",progname);
+	printf("USAGE: ptpcam [OPTION]\n\n");
 	printf("Options:\n"
-	"	-h, --help		Print this help message\n"
-	"	-r, --reset		Reset the device\n"
-	"	-l, --list-devices	List all PTP devices\n"
-	"	-p, --list-properties	List all PTP device properties "
-					"(e.g. focus mode)\n"
-
-	"	-s, --show-property	display the property\n"
-	"	-f, --force		force\n"
-	"	-v, --verbose		be verbosive (print more debug)\n"
-	"	-B, --bus=BUS-NUMBER	USB bus number\n"
-	"	-D, --dev=DEV-NUMBER	USB assigned device number\n"
+	"  -h, --help                   Print this help message\n"
+	"  -B, --bus=BUS-NUMBER         USB bus number\n"
+	"  -D, --dev=DEV-NUMBER         USB assigned device number\n"
+	"  -r, --reset                  Reset the device\n"
+	"  -l, --list-devices           List all PTP devices\n"
+	"  -p, --list-properties        List all PTP device properties\n"
+	"                               "
+				"(e.g. focus mode, focus distance, etc.)\n"
+	"  -s, --show-property=NUMBER   Display property details "
+					"(or set its value,\n"
+	"                               if used in conjunction with --val)\n"
+	"  --set-property=NUMBER        Set property value (--val required)\n"
+	"  --val=VALUE                  Property value\n"
+	"  -f, --force                  Talk to non PTP devices\n"
+	"  -v, --verbose                Be verbosive (print more debug)\n"
 	"\n");
 }
 
@@ -184,7 +153,7 @@ ptp_read_func (unsigned char *bytes, unsigned int size, void *data)
 		return (PTP_RC_OK);
 	else 
 	{
-		perror("usb_bulk_read");
+		if (verbose) perror("usb_bulk_read");
 		return PTP_ERROR_IO;
 	}
 }
@@ -200,7 +169,7 @@ ptp_write_func (unsigned char *bytes, unsigned int size, void *data)
 		return (PTP_RC_OK);
 	else 
 	{
-		perror("usb_bulk_write");
+		if (verbose) perror("usb_bulk_write");
 		return PTP_ERROR_IO;
 	}
 }
@@ -210,9 +179,21 @@ debug (void *data, const char *format, va_list args);
 void
 debug (void *data, const char *format, va_list args)
 {
+	if (verbose<2) return;
+	vfprintf (stderr, format, args);
+	fprintf (stderr,"\n");
+	fflush(stderr);
+}
+
+void
+error (void *data, const char *format, va_list args);
+void
+error (void *data, const char *format, va_list args)
+{
 	if (!verbose) return;
 	vfprintf (stderr, format, args);
 	fprintf (stderr,"\n");
+	fflush(stderr);
 }
 
 #if 0
@@ -299,7 +280,7 @@ init_ptp_usb (PTPParams* ptp_params, PTP_USB* ptp_usb, struct usb_device* dev)
 
 	ptp_params->write_func=ptp_write_func;
 	ptp_params->read_func=ptp_read_func;
-	ptp_params->error_func=NULL;
+	ptp_params->error_func=error;
 	ptp_params->debug_func=debug;
 	ptp_params->sendreq_func=ptp_usb_sendreq;
 	ptp_params->senddata_func=ptp_usb_senddata;
@@ -416,14 +397,9 @@ list_devices(short force)
 
 			if (!found){
 				printf("Listing devices...\n");
-				printf("bus/dev\tvendorID/prodID\tdevice model");
+				printf("bus/dev\tvendorID/prodID\tdevice model\n");
 				found=1;
 			}
-      			printf("\n%s/%s\t0x%04X/0x%04X\t",
-				bus->dirname, dev->filename,
-				dev->descriptor.idVendor,
-				dev->descriptor.idProduct);
-
 			ep = dev->config->interface->altsetting->endpoint;
 			n=dev->config->interface->altsetting->bNumEndpoints;
 			/* find endpoints */
@@ -445,15 +421,19 @@ list_devices(short force)
 			find_endpoints(dev,&ptp_usb.inep,&ptp_usb.outep,
 				&ptp_usb.intep);
 			init_ptp_usb(&ptp_params, &ptp_usb, dev);
-			CR(ptp_opensession (&ptp_params,1),
-				"Could not open session!\n");
-			CR(ptp_getdeviceinfo (&ptp_params, &deviceinfo),
-				"Could not get device info!\n");
 
-			printf("%s",deviceinfo.Model);
+			CC(ptp_opensession (&ptp_params,1),
+				"ERROR: Could not open session!\n");
+			CC(ptp_getdeviceinfo (&ptp_params, &deviceinfo),
+				"ERROR: Could not get device info!\n");
 
-			CR(ptp_closesession(&ptp_params),
-				"Could not close session!\n");
+      			printf("%s/%s\t0x%04X/0x%04X\t%s\n",
+				bus->dirname, dev->filename,
+				dev->descriptor.idVendor,
+				dev->descriptor.idProduct, deviceinfo.Model);
+
+			CC(ptp_closesession(&ptp_params),
+				"ERROR: Could not close session!\n");
 			usb_release_interface(ptp_usb.handle,
 			dev->config->interface->altsetting->bInterfaceNumber);
 		}
@@ -463,15 +443,74 @@ list_devices(short force)
 }
 
 const char*
-get_property_description(uint16_t dpc);
+get_property_description(PTPParams* params, uint16_t dpc);
 const char*
-get_property_description(uint16_t dpc)
+get_property_description(PTPParams* params, uint16_t dpc)
 {
 	int i;
+	// Device Property descriptions
+	struct {
+		uint16_t dpc;
+		const char *txt;
+	} ptp_device_properties[] = {
+		{PTP_DPC_Undefined,		N_("PTP Undefined Property")},
+		{PTP_DPC_BatteryLevel,		N_("Battery Level")},
+		{PTP_DPC_FunctionalMode,	N_("Functional Mode")},
+		{PTP_DPC_ImageSize,		N_("Image Size")},
+		{PTP_DPC_CompressionSetting,	N_("Compression Setting")},
+		{PTP_DPC_WhiteBalance,		N_("White Balance")},
+		{PTP_DPC_RGBGain,		N_("RGB Gain")},
+		{PTP_DPC_FNumber,		N_("F-Number")},
+		{PTP_DPC_FocalLength,		N_("Focal Length")},
+		{PTP_DPC_FocusDistance,		N_("Focus Distance")},
+		{PTP_DPC_FocusMode,		N_("Focus Mode")},
+		{PTP_DPC_ExposureMeteringMode,	N_("Exposure Metering Mode")},
+		{PTP_DPC_FlashMode,		N_("Flash Mode")},
+		{PTP_DPC_ExposureTime,		N_("Exposure Time")},
+		{PTP_DPC_ExposureProgramMode,	N_("Exposure Program Mode")},
+		{PTP_DPC_ExposureIndex,
+					N_("Exposure Index (film speed ISO)")},
+		{PTP_DPC_ExposureBiasCompensation,
+					N_("Exposure Bias Compensation")},
+		{PTP_DPC_DateTime,		N_("Date Time")},
+		{PTP_DPC_CaptureDelay,		N_("Pre-Capture Delay")},
+		{PTP_DPC_StillCaptureMode,	N_("Still Capture Mode")},
+		{PTP_DPC_Contrast,		N_("Contrast")},
+		{PTP_DPC_Sharpness,		N_("Sharpness")},
+		{PTP_DPC_DigitalZoom,		N_("Digital Zoom")},
+		{PTP_DPC_EffectMode,		N_("Effect Mode")},
+		{PTP_DPC_BurstNumber,		N_("Burst Number")},
+		{PTP_DPC_BurstInterval,		N_("Burst Interval")},
+		{PTP_DPC_TimelapseNumber,	N_("Timelapse Number")},
+		{PTP_DPC_TimelapseInterval,	N_("Timelapse Interval")},
+		{PTP_DPC_FocusMeteringMode,	N_("Focus Metering Mode")},
+		{PTP_DPC_UploadURL,		N_("Upload URL")},
+		{PTP_DPC_Artist,		N_("Artist")},
+		{PTP_DPC_CopyrightInfo,		N_("Copyright Info")},
+		{0,NULL}
+	};
+	struct {
+		uint16_t dpc;
+		const char *txt;
+	} ptp_device_properties_EK[] = {
+		{PTP_DPC_EK_ColorTemperature,	N_("EK Color Temperature")},
+		{PTP_DPC_EK_DateTimeStampFormat,
+					N_("EK Date Time Stamp Format")},
+		{PTP_DPC_EK_BeepMode,		N_("EK Beep Mode")},
+		{PTP_DPC_EK_VideoOut,		N_("EK Video Out")},
+		{PTP_DPC_EK_PowerSaving,	N_("EK Power Saving")},
+		{PTP_DPC_EK_UI_Language,	N_("EK UI Language")},
+		{0,NULL}
+	};
 
 	for (i=0; ptp_device_properties[i].txt!=NULL; i++)
 		if (ptp_device_properties[i].dpc==dpc)
 			return (ptp_device_properties[i].txt);
+
+	if (params->deviceinfo.VendorExtensionID==PTP_VENDOR_EASTMAN_KODAK)
+	for (i=0; ptp_device_properties_EK[i].txt!=NULL; i++)
+		if (ptp_device_properties_EK[i].dpc==dpc)
+			return (ptp_device_properties_EK[i].txt);
 	return NULL;
 }
 
@@ -480,7 +519,6 @@ list_properties (int busn, int devn, short force)
 {
 	PTPParams ptp_params;
 	PTP_USB ptp_usb;
-	PTPDeviceInfo deviceinfo;
 	struct usb_device *dev;
 	const char* propdesc;
 	int i;
@@ -500,19 +538,20 @@ list_properties (int busn, int devn, short force)
 	init_ptp_usb(&ptp_params, &ptp_usb, dev);
 	CR(ptp_opensession (&ptp_params,1),
 		"Could not open session!\n");
-	CR(ptp_getdeviceinfo (&ptp_params, &deviceinfo),"Could not get"
-		"device info\n");
-	printf("Quering: %s\n",deviceinfo.Model);
-	for (i=0; i<deviceinfo.DevicePropertiesSupported_len;i++){
-		propdesc=get_property_description(deviceinfo.
-					DevicePropertiesSupported[i]);
+	CR(ptp_getdeviceinfo (&ptp_params, &ptp_params.deviceinfo),
+		"Could not get device info\n");
+	printf("Quering: %s\n",ptp_params.deviceinfo.Model);
+	for (i=0; i<ptp_params.deviceinfo.DevicePropertiesSupported_len;i++){
+		propdesc=get_property_description(&ptp_params,
+			ptp_params.deviceinfo.DevicePropertiesSupported[i]);
 		if (propdesc!=NULL) 
-			printf("0x%04x : %s\n",deviceinfo.
+			printf("0x%04x : %s\n",ptp_params.deviceinfo.
 				DevicePropertiesSupported[i], propdesc);
 		else
-			printf("0x%04x : 0x%04x\n",deviceinfo.
-				DevicePropertiesSupported[i], deviceinfo.
-				DevicePropertiesSupported[i]);
+			printf("0x%04x : 0x%04x\n",ptp_params.deviceinfo.
+				DevicePropertiesSupported[i],
+				ptp_params.deviceinfo.
+					DevicePropertiesSupported[i]);
 	}
 	CR(ptp_closesession(&ptp_params), "Could not close session!\n");
 	usb_release_interface(ptp_usb.handle,
@@ -526,16 +565,22 @@ print_propval (uint16_t datatype, void* value)
 {
 	switch (datatype) {
 		case PTP_DTC_INT8:
-		case PTP_DTC_UINT8:
 			printf("%hhi",*(char*)value);
 			return 0;
+		case PTP_DTC_UINT8:
+			printf("%hhu",*(unsigned char*)value);
+			return 0;
 		case PTP_DTC_INT16:
+			printf("%hi",*(int16_t*)value);
+			return 0;
 		case PTP_DTC_UINT16:
-			printf("%i",*(uint16_t*)value);
+			printf("%hu",*(uint16_t*)value);
 			return 0;
 		case PTP_DTC_INT32:
+			printf("%i",*(int32_t*)value);
+			return 0;
 		case PTP_DTC_UINT32:
-			printf("%i",*(uint32_t*)value);
+			printf("%u",*(uint32_t*)value);
 			return 0;
 		case PTP_DTC_STR:
 			printf("%s",(char *)value);
@@ -543,18 +588,10 @@ print_propval (uint16_t datatype, void* value)
 	return -1;
 }
 
-short
-print_propcurval (PTPDevicePropDesc* dpd);
-short
-print_propcurval (PTPDevicePropDesc* dpd)
-{
-	return (print_propval(dpd->DataType, dpd->CurrentValue));
-}
-
 void
-show_property (int busn, int devn, uint16_t property, short force);
+show_property (int busn, int devn, uint16_t property, char* value, short force);
 void
-show_property (int busn, int devn, uint16_t property, short force)
+show_property (int busn, int devn, uint16_t property, char* value, short force)
 {
 	PTPParams ptp_params;
 	PTP_USB ptp_usb;
@@ -562,6 +599,7 @@ show_property (int busn, int devn, uint16_t property, short force)
 	PTPDevicePropDesc dpd;
 	const char* propdesc;
 
+	if (value) printf("val = %s\n",value);
 #ifdef DEBUG
 	printf("dev %i\tbus %i\n",devn,busn);
 #endif
@@ -578,27 +616,60 @@ show_property (int busn, int devn, uint16_t property, short force)
 		"Could not open session!\nTry to reset the camera.\n");
 	CR(ptp_getdeviceinfo (&ptp_params, &ptp_params.deviceinfo),
 		"Could not get device info\nTry to reset the camera.\n");
-	propdesc=get_property_description(property);
-	printf("Quering: %s\n"
-		"Checking for '%s'\n",ptp_params.deviceinfo.Model, propdesc);
-	if (!ptp_property_issupported(&ptp_params, property)){
+	propdesc=get_property_description(&ptp_params,property);
+	printf("Camera: %s",ptp_params.deviceinfo.Model);
+	if ((devn!=0)||(busn!=0)) 
+		printf(" (bus %i, dev %i)\n",busn,devn);
+	else
+		printf("\n");
+	if (!ptp_property_issupported(&ptp_params, property)||propdesc==NULL)
+	{
 		fprintf(stderr,"The dvice does not support this property!\n");
 		CR(ptp_closesession(&ptp_params), "Could not close session!\n"
 			"Try to reset the camera.\n");
 		return;
 	}
+	printf("Property '%s'\n",propdesc);
 	memset(&dpd,0,sizeof(dpd));
 	CR(ptp_getdevicepropdesc(&ptp_params,property,&dpd),
 		"Could not get device property description!\n"
 		"Try to reset the camera.\n");
 	printf ("Current value is ");
-	print_propcurval(&dpd);
+	print_propval(dpd.DataType, dpd.CurrentValue);
+	printf("\n");
+	printf ("Factory default value is ");
+	print_propval(dpd.DataType, dpd.FactoryDefaultValue);
 	printf("\n");
 	printf("The property is ");
 	if (dpd.GetSet==PTP_DPGS_Get)
-		printf ("read only\n");
+		printf ("read only");
 	else
-		printf ("settable\n");
+		printf ("settable");
+	switch (dpd.FormFlag) {
+	case PTP_DPFF_Enumeration:
+		printf (", enumerated. Allowed values are:\n");
+		{
+			int i;
+			for(i=0;i<dpd.FORM.Enum.NumberOfValues;i++){
+				print_propval(dpd.DataType,
+					dpd.FORM.Enum.SupportedValue[i]);
+				printf("\n");
+			}
+		}
+		break;
+	case PTP_DPFF_Range:
+		printf (", within range:\n");
+		print_propval(dpd.DataType, dpd.FORM.Range.MinimumValue);
+		printf(" - ");
+		print_propval(dpd.DataType, dpd.FORM.Range.MaximumValue);
+		printf("; step size: ");
+		print_propval(dpd.DataType, dpd.FORM.Range.StepSize);
+		printf("\n");
+		break;
+	case PTP_DPFF_None:
+		printf(".\n");
+	}
+	ptp_free_devicepropdesc(&dpd);
 	CR(ptp_closesession(&ptp_params), "Could not close session!\n"
 	"Try to reset the camera.\n");
 	usb_release_interface(ptp_usb.handle,
@@ -719,6 +790,8 @@ reset_device (int busn, int devn, short force)
 	// finally reset the device (that clears prevoiusly opened sessions)
 	ret = usb_ptp_device_reset(&ptp_usb);
 	if (ret<0)perror ("usb_ptp_device_reset()");
+	// get device status (devices likes that regardless of its result)
+	usb_ptp_get_device_status(&ptp_usb,devstatus);
 
 	usb_release_interface(ptp_usb.handle,
 		dev->config->interface->altsetting->bInterfaceNumber);
@@ -733,28 +806,35 @@ main(int argc, char ** argv)
 	int action=0;
 	short force=0;
 	uint16_t property=0;
+	char* value=NULL;
 	/* parse options */
 	int option_index = 0,opt;
 	static struct option loptions[] = {
 		{"help",0,0,'h'},
-		{"dev",1,0,'D'},
 		{"bus",1,0,'B'},
-		{"force",0,0,'f'},
-		{"verbose",0,0,'v'},
+		{"dev",1,0,'D'},
 		{"reset",0,0,'r'},
 		{"list-devices",0,0,'l'},
 		{"list-properties",0,0,'p'},
 		{"show-property",1,0,'s'},
+		{"set-property",1,0,'s'},
+		{"val",1,0,0},
+		{"force",0,0,'f'},
+		{"verbose",2,0,'v'},
 		{0,0,0,0}
 	};
 	
 	while(1) {
-		opt = getopt_long (argc, argv, "hlpfvrs:D:B:", loptions, &option_index);
+		opt = getopt_long (argc, argv, "hlpfrs:D:B:v::", loptions, &option_index);
 		if (opt==-1) break;
 	
 		switch (opt) {
+		case 0:
+			if (!(strcmp("val",loptions[option_index].name)))
+				value=strdup(optarg);
+			break;
 		case 'h':
-			help(argv[0]);
+			help();
 			break;
 		case 'B':
 			busn=strtol(optarg,NULL,10);
@@ -766,7 +846,11 @@ main(int argc, char ** argv)
 			force=~force;
 			break;
 		case 'v':
-			verbose=~verbose;
+			if (optarg) 
+				verbose=strtol(optarg,NULL,10);
+			else
+				verbose=1;
+			printf("VERBOSE LEVEL  = %i\n",verbose);
 			break;
 		case 'r':
 			action=ACT_DEVICE_RESET;
@@ -790,7 +874,7 @@ main(int argc, char ** argv)
 		}
 	}
 	if (argc==1) {
-		usage(argv[0]);
+		usage();
 		return 0;
 	}
 	switch (action) {
@@ -804,7 +888,7 @@ main(int argc, char ** argv)
 			list_properties(busn,devn,force);
 			break;
 		case ACT_SHOW_PROPERTY:
-			show_property(busn,devn,property,force);
+			show_property(busn,devn,property,value,force);
 			break;
 	}
 
