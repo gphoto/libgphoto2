@@ -154,9 +154,10 @@ int camera_exit (Camera *camera) {
 
 	dimagev->data->host_mode = 0;
 
-	if ( dimagev_send_data(dimagev) == GP_ERROR ) {
-		if ( dimagev->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::unable to set host mode");
+	/* This will also send the host mode of zero. */
+	if ( dimagev_set_date(dimagev) == GP_ERROR ) {
+		if ( camera->debug != 0 ) {
+			gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to set camera to system time");
 		}
 		return GP_ERROR;
 	}
