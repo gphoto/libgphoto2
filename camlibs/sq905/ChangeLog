@@ -1,3 +1,9 @@
+2003-10-29  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* library.c: Patch by Theodore Kilgore
+	  <kilgota@banach.math.auburn.edu>: Fix postprocessing of files
+	  where comp_ration != 2.
+
 2003-10-10  Lutz Mueller <lutz@users.sourceforge.net>
 
 	* library.c: Patch by Theodore Kilgore

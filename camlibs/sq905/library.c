@@ -201,46 +201,57 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return GP_ERROR_NOT_SUPPORTED;
     	}
 
-	/*
-	 * Data seems to be arranged in planar form.
-	 * The colors are still not quite right, but the
-	 * geometry comes through. Evidence from photos of solid color
-	 * seems to show the order of the planes is GBR. The method
-	 * followed here is to try to "decompress" the raw data first and
-	 * then to do Bayer interpolation afterwards.
-	 *
-	 * The even pixels on the odd lines of output are green, and the
-	 * odd pixels on the even lines of output. We don't know if the
-	 * data is right, but the output is at least preserves the 
-	 * geometry of the image. At least for the 09 05 00 26 cameras.
-	 */
+	switch (comp_ratio) {
+	case 2:
 
-	/* Green */
-    	for (m = 0; m < buffersize; m++) {
-		p_data[w * ((m * 4) / w) + 4*(m % (w / 4))
+		/*
+		 * Data seems to be arranged in planar form.
+		 * The colors are still not quite right, but the
+		 * geometry comes through. Evidence from photos of solid color
+		 * seems to show the order of the planes is GBR. The method
+		 * followed here is to try to "decompress" the raw data
+		 * first and then to do Bayer interpolation afterwards.
+		 *
+		 * The even pixels on the odd lines of output are green, and the
+		 * odd pixels on the even lines of output. We don't know if the
+		 * data is right, but the output is at least preserves the 
+		 * geometry of the image. At least for the 09 05 00 26 cameras.
+		 */
+
+		/* Green */
+    		for (m = 0; m < buffersize; m++) {
+			p_data[w * ((m * 4) / w) + 4*(m % (w / 4))
 			                 + ((m * 4) / w) % 2 + 1] = data[m];
-		p_data[w * ((m * 4) / w) + 4*(m % (w / 4))
+			p_data[w * ((m * 4) / w) + 4*(m % (w / 4))
 			                 + ((m * 4) / w) % 2 + 3] = data[m];
-	}
+		}
 
-	/*
-	 * Blue.
-	 * 
-	 * The even pixels on the even output lines are blue.
-	 * We don't know yet if the data represent blue pixels,
-	 * but again the geometry is preserved.
-	 *
-	 * The odd pixels on the odd lines of output are red.
-	 */
-	for (m = 0;  m < buffersize / 4; m++) {
-		p_data[w * (2 * ((m * 4) / w))
-			+ 4 * (m % (w / 4)) + 2] = data[m + 2 * buffersize / 4];
-		p_data[w * (2 * ((m * 4) / w))
-			+ 4 * (m % (w / 4)) + 4] = data[m + 2 * buffersize / 4];
-		p_data[w * (2 * ((m * 4) / w) + 1)
-			+ 4 * (m % (w / 4)) + 1] = data[m + 3 * buffersize / 4];
-		p_data[w * (2 * ((m * 4) / w) +1)
-			+ 4 * (m % (w / 4)) + 3] = data[m + 3 * buffersize / 4];
+		/*
+		 * Blue.
+		 * 
+		 * The even pixels on the even output lines are blue.
+		 * We don't know yet if the data represent blue pixels,
+		 * but again the geometry is preserved.
+		 *
+		 * The odd pixels on the odd lines of output are red.
+		 */
+		for (m = 0;  m < buffersize / 4; m++) {
+			p_data[w * (2 * ((m * 4) / w))
+				+ 4 * (m % (w / 4)) + 2] 
+					= data[m + 2 * buffersize / 4];
+			p_data[w * (2 * ((m * 4) / w))
+				+ 4 * (m % (w / 4)) + 4] 
+					= data[m + 2 * buffersize / 4];
+			p_data[w * (2 * ((m * 4) / w) + 1)
+				+ 4 * (m % (w / 4)) + 1] 
+					= data[m + 3 * buffersize / 4];
+			p_data[w * (2 * ((m * 4) / w) +1)
+				+ 4 * (m % (w / 4)) + 3] 
+					= data[m + 3 * buffersize / 4];
+		}
+		break;
+	default:
+		memcpy (p_data, data, buffersize);
 	}
 
 	/*
@@ -248,7 +259,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
      	 * the hard drive. We reverse the data string.
      	 * Otherwise, the picture will be upside down.  
      	 */
-
     	for (i = 0; i <= w * h / 2; ++i) {
         	temp = p_data[i];
         	p_data[i] = p_data[w * h -1 -i];
@@ -260,7 +270,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	 * But if comp_ratio=2 this procedure still does 
 	 * give the picture back!
 	 */
-
     	sprintf (ppm,
 		"P6\n"
 		"# CREATOR: gphoto2, SQ905 library\n"
@@ -268,9 +277,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		"255\n", w, h);
 
 	ptr = ppm + strlen (ppm);	
-
 	size = strlen (ppm) + (w * h * 3);
-
 	GP_DEBUG ("size = %i\n", size);
 
 	switch (camera->pl->model) {
