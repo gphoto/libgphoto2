@@ -185,31 +185,25 @@ dc240_packet_read (Camera *camera, char *packet, int size)
 static int dc240_packet_write_ack (Camera *camera) 
 {
     int retval;
-    char p[2];
+    unsigned char c;
 
-    p[0] = DC240_SC_CORRECT;
-    retval = gp_port_write(camera->port, p, 1);
-    if (retval < GP_OK) {
+    c = DC240_SC_CORRECT;
+    retval = gp_port_write(camera->port, &c, 1);
+    if (retval < GP_OK)
 	return retval;
-    }
-    else { 
-	return GP_OK;
-    }
+    return GP_OK;
 }
 
 static int dc240_packet_write_nak (Camera *camera) 
 {
     int retval;
-    char p[2];
+    unsigned char c;
 
-    p[0] = DC240_SC_ILLEGAL;
-    retval = gp_port_write(camera->port, p, 1);
-    if (retval < GP_OK) {
+    c = DC240_SC_ILLEGAL;
+    retval = gp_port_write(camera->port, &c, 1);
+    if (retval < GP_OK)
 	return retval;
-    }
-    else { 
-	return GP_OK;
-    }
+    return GP_OK;
 }
 
 static int dc240_wait_for_completion (Camera *camera) {
