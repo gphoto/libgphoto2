@@ -15,7 +15,7 @@ static int dc210_write_command_packet(Camera * camera, char * data);
 static int dc210_execute_command (Camera *camera, char *cmd);
 static int dc210_read_single_char (Camera *camera, unsigned char * p);
 static int dc210_wait_for_response (Camera *camera, int expect_busy, GPContext *context);
-static int dc210_read_to_file (Camera *camera, CameraFile * f, long int filesize, GPContext *context);
+static int dc210_read_to_file (Camera *camera, CameraFile * f, int blocksize, long int expectsize, GPContext *context);
 static int dc210_read_single_block (Camera *camera, unsigned char * b, int blocksize);
 static int dc210_take_picture (Camera * camera, GPContext *context);
 static int dc210_set_option (Camera * camera, char command, unsigned int value, int valuesize);

@@ -113,7 +113,7 @@ typedef struct {
 #define DC210_SET_RESOLUTION        0x36 /* implemented */
 #define DC210_SET_FILE_TYPE         0x37 /* implemented */
 #define DC210_SET_SPEED             0x41 /* implemented */
-#define DC210_SET_ALBUM_FILENAME    0x4A /* not yet implemented;
+#define DC210_GET_ALBUM_FILENAMES   0x4A /* not yet implemented;
 					    description seems to be wrong
 					    returns fileinformation in a packet of size 256 */
 #define DC210_GET_PICTURE	    0x64 /* implemented */

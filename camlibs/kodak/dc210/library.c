@@ -236,7 +236,7 @@ static int dc210_wait_for_response
 {
 	/* Waits for a command to finish.
 	   Expects either a timeout, a DC210_BUSY, 
-	   a DC210_COMMAND_COMPLETE od a
+	   a DC210_COMMAND_COMPLETE or a
 	   DC210_PACKET_FOLLOWING; all other answers
 	   are considered errors */
 
@@ -320,15 +320,18 @@ static int dc210_read_single_block
 };
 
 static int dc210_read_to_file
-(Camera *camera, CameraFile * f, long int filesize, GPContext *context) 
+(Camera *camera, CameraFile * f, int blocksize, long int expectsize, GPContext *context) 
 {
 
   int packets, k, l, fatal_error, packet_following;
   unsigned int progress_id = 0;
   unsigned char cs_read, cs_computed;
-  unsigned char b[DC210_DOWNLOAD_BLOCKSIZE];
-  int blocks = filesize / DC210_DOWNLOAD_BLOCKSIZE;
-  int remaining = filesize % DC210_DOWNLOAD_BLOCKSIZE;
+  unsigned char * b;
+
+  int blocks = expectsize / blocksize;
+  int remaining = expectsize % blocksize;
+
+  if (NULL == (b = malloc(blocksize))) return GP_ERROR;
 
   if (remaining) blocks++;
 
@@ -341,14 +344,16 @@ static int dc210_read_to_file
 	  fatal_error = 1;
 	  for (k = 0; k < RETRIES; k++){
 		  /* read packet */
-		  if (gp_port_read(camera->port, b, DC210_DOWNLOAD_BLOCKSIZE) < 0)
+		  if (gp_port_read(camera->port, b, blocksize) < 0)
 			  continue;
 		  /* read checksum */
-		  if (dc210_read_single_char(camera, &cs_read) == GP_ERROR)
+		  if (dc210_read_single_char(camera, &cs_read) == GP_ERROR){
+			  free(b); 
 			  return GP_ERROR;
+		  };
 		  /* test checksum */
 		  cs_computed = 0;
-		  for (l = 0 ; l < DC210_DOWNLOAD_BLOCKSIZE; l++)
+		  for (l = 0 ; l < blocksize; l++)
 			  cs_computed ^= b[l];
 		  if (cs_computed != cs_read){
 			  dc210_write_single_char(camera, DC210_ILLEGAL_PACKET);
@@ -358,7 +363,7 @@ static int dc210_read_to_file
 		  if (packets == blocks - 1 && remaining)
 			  gp_file_append(f, b, remaining);
 		  else
-			  gp_file_append(f, b, DC210_DOWNLOAD_BLOCKSIZE);
+			  gp_file_append(f, b, blocksize);
 		  /* request next packet */
 		  dc210_write_single_char(camera, DC210_CORRECT_PACKET);
 		  fatal_error = 0;
@@ -375,6 +380,8 @@ static int dc210_read_to_file
 
   if (context != 0)
 	  gp_context_progress_stop (context, progress_id);
+
+  free(b);
 
   if (fatal_error) return GP_ERROR;
 
@@ -774,10 +781,10 @@ int dc210_download_picture
 
 		gp_file_set_mime_type(file, GP_MIME_PPM);
 		gp_file_append(file, ppmheader, sizeof(ppmheader));
-		dc210_read_to_file(camera, file, 96 * 72 * 3, NULL);
+		dc210_read_to_file(camera, file, DC210_DOWNLOAD_BLOCKSIZE, 96 * 72 * 3, NULL);
 	}
 	else
-		dc210_read_to_file(camera, file, picinfo.picture_size, context);
+		dc210_read_to_file(camera, file, DC210_DOWNLOAD_BLOCKSIZE, picinfo.picture_size, context);
 
 	return GP_OK;
 
@@ -841,7 +848,7 @@ int dc210_get_picture_number (Camera *camera, const char * filename){
 
 };
 
-int dc210_get_filenames (Camera *camera, CameraList *list, GPContext *context) 
+int dc210_get_filenames_old (Camera *camera, CameraList *list, GPContext *context) 
 {
   dc210_status status;
   dc210_picture_info picinfo;
@@ -859,6 +866,43 @@ int dc210_get_filenames (Camera *camera, CameraList *list, GPContext *context)
       return GP_ERROR;
     gp_list_append(list, picinfo.image_name, NULL);
   };
+
+  return GP_OK;
+
+};
+
+int dc210_get_filenames (Camera *camera, CameraList *list, GPContext *context) 
+{
+  char cmd[8];
+  CameraFile *file;
+  char filename[13];
+  const char * data;
+  unsigned long datasize;
+  int pictures, i;
+
+  gp_file_new(&file);
+
+  dc210_cmd_init(cmd, DC210_GET_ALBUM_FILENAMES);
+
+  dc210_execute_command(camera, cmd);
+  
+  dc210_read_to_file(camera, file, 256, 0, NULL);
+
+  gp_file_get_data_and_size(file, &data, &datasize);
+
+  pictures = (unsigned char) data[0] * 0x100 + (unsigned char) data[1];
+  DC210_DEBUG("There are %d pictures in the camera\n", pictures);
+
+  filename[8] = '.';
+  filename[12] = '\0';
+  for (i = 0; i < pictures; i++){
+	  strncpy(filename, data + 2 + i*20, 8);
+	  strncpy(filename + 9, data + 10 + i*20, 3);
+	  DC210_DEBUG("Adding filename %s to list\n", filename);
+	  gp_list_append(list, filename, NULL);
+  };
+
+  gp_file_free(file);
 
   return GP_OK;
 
@@ -1141,7 +1185,7 @@ int dc210_debug_callback(Camera * camera, CameraWidget * widget, GPContext * con
 
 	/* Put the stuff you want to test here */
 	dc210_get_status(camera, &status);
-	dc210_space_on_card(camera, &value);
+	dc210_get_filenames_new(camera, NULL, NULL);
 	dc210_get_status(camera, &status);
 
 	return GP_OK;
