@@ -334,6 +334,8 @@ canon_usb_init (Camera *camera, GPContext *context)
 		}
 		else if ( i > 0x10 )
 			GP_DEBUG ( "canon_usb_camera_init() interrupt read %d bytes, expected 16", read_bytes );
+		else
+			GP_DEBUG ( "canon_usb_camera_init() interrupt read OK" );
 	}
 	else {
 		do {
@@ -354,7 +356,8 @@ canon_usb_init (Camera *camera, GPContext *context)
 		}
 		else if ( i > 0x10 )
 			GP_DEBUG ( "canon_usb_camera_init() interrupt read %d bytes, expected 16", read_bytes );
-		if ( camera->pl->md->model != CANON_CLASS_4 ) {
+		if ( camera->pl->md->model != CANON_CLASS_4
+			&& camera->pl->md->model != CANON_CLASS_6 ) {
 			i = canon_usb_lock_keys(camera,context);
 			if( i < 0 ) {
 				gp_context_error (context, _("lock keys failed."));
@@ -414,9 +417,9 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 			if ( bytes_read == 0x334 ) {
 				GP_DEBUG ( "canon_usb_lock_keys: Got the expected number of bytes back from \"get picture abilities.\"" );
 			} else {
-				gp_context_message ( context,
-						   _("canon_usb_lock_keys: "
-						   "Unexpected return of %i bytes (expected %i) from \"get picture abilities.\" We will continue."),
+				GP_DEBUG ( "canon_usb_lock_keys: "
+					   "Unexpected return of %i bytes (expected %i) from "
+					   "\"get picture abilities.\" We will continue.",
 						   bytes_read, 0x334 );
 			}
 			c_res = canon_usb_dialogue (camera,
@@ -433,6 +436,7 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 						  bytes_read, 0x4);
 				return GP_ERROR_CORRUPTED_DATA;
 			}
+			camera->pl->keys_locked = TRUE;
 			break;
 
 		case CANON_CLASS_4:
@@ -454,6 +458,7 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 						  bytes_read, 0x4);
 				return GP_ERROR_CORRUPTED_DATA;
 			}
+			camera->pl->keys_locked = TRUE;
 			break;
 
 		case CANON_CLASS_5:
@@ -479,6 +484,7 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 						  bytes_read, 0x4);
 				return GP_ERROR_CORRUPTED_DATA;
 			}
+			camera->pl->keys_locked = TRUE;
 			break;
 		case CANON_CLASS_6:
 			/* Newest variation of protocol, and quite
@@ -506,21 +512,21 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 			memset (payload, 0, sizeof (payload));
 			payload[0] = 0x06;
 
-			c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_EOS_LOCK_KEYS,
+			c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_20D_UNKNOWN_4,
 						    &bytes_read, payload, 4);
 			if ( c_res == NULL )
 				return GP_ERROR_OS_FAILURE;
-			if (bytes_read == 0x4) {
+			if (bytes_read == 0xc) {
 				GP_DEBUG ("canon_usb_lock_keys: Got the expected number of bytes back.");
 			} else {
 				gp_context_error (context,
 						  _("canon_usb_lock_keys: "
 						  "Unexpected amount of data returned (%i bytes, expected %i)"),
-						  bytes_read, 0x4);
+						  bytes_read, 0xc);
 				return GP_ERROR_CORRUPTED_DATA;
 			}
+			camera->pl->keys_locked = TRUE;
 			break;
-
 
 	}
 
@@ -545,30 +551,49 @@ canon_usb_unlock_keys (Camera *camera, GPContext *context)
 
 	GP_DEBUG ("canon_usb_unlock_keys()");
 
-	if ( camera->pl->md->model == CANON_CLASS_4
-	     || camera->pl->md->model == CANON_CLASS_6 ) {
-		c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_EOS_UNLOCK_KEYS,
-					    &bytes_read, NULL, 0);
-		if ( c_res == NULL )
-			return GP_ERROR_OS_FAILURE;
-		if (bytes_read == 0x4) {
-			GP_DEBUG ("canon_usb_unlock_keys: Got the expected number of bytes back.");
-		} else {
-			gp_context_error (context,
-					  _("canon_usb_unlock_keys: "
-					    "Unexpected amount of data returned (%i bytes, expected %i)"),
-					  bytes_read, 0x4);
-			return GP_ERROR_CORRUPTED_DATA;
+	if ( !camera->pl->keys_locked )
+		GP_DEBUG ("canon_usb_unlock_keys: keys aren't locked" );
+	else
+		if ( camera->pl->md->model == CANON_CLASS_4 ) {
+			c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_EOS_UNLOCK_KEYS,
+						    &bytes_read, NULL, 0);
+			if ( c_res == NULL )
+				return GP_ERROR_OS_FAILURE;
+			if (bytes_read == 0x4) {
+				GP_DEBUG ("canon_usb_unlock_keys: Got the expected number of bytes back.");
+			} else {
+				gp_context_error (context,
+						  _("canon_usb_unlock_keys: "
+						    "Unexpected amount of data returned (%i bytes, expected %i)"),
+						  bytes_read, 0x4);
+				return GP_ERROR_CORRUPTED_DATA;
+			}
+			camera->pl->keys_locked = FALSE;
 		}
-	}
-	else {
-		/* Your camera model does not need unlocking, cannot do unlocking or
-		 * we don't know how to unlock its keys. 
-		 */
-		GP_DEBUG ("canon_usb_unlock_keys: Key unlocking not implemented for this camera model.\n"
-			  "If unlocking works when using the Windows software with your camera,\n"
-			  "please contact %s.", MAIL_GPHOTO_DEVEL);
-	}
+		else if ( camera->pl->md->model == CANON_CLASS_6 ) {
+			c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_20D_UNKNOWN_5,
+						    &bytes_read, NULL, 0);
+			if ( c_res == NULL )
+				return GP_ERROR_OS_FAILURE;
+			if (bytes_read == 0x4) {
+				GP_DEBUG ("canon_usb_unlock_keys: Got the expected number of bytes back.");
+			} else {
+				gp_context_error (context,
+						  _("canon_usb_unlock_keys: "
+						    "Unexpected amount of data returned (%i bytes, expected %i)"),
+						  bytes_read, 0x4);
+				return GP_ERROR_CORRUPTED_DATA;
+			}
+			camera->pl->keys_locked = FALSE;
+		}
+		else {
+			/* Your camera model does not need unlocking, cannot do unlocking or
+			 * we don't know how to unlock its keys. 
+			 */
+			GP_DEBUG ("canon_usb_unlock_keys: Key unlocking not implemented for this camera model.\n"
+				  "If unlocking works when using the Windows software with your camera,\n"
+				  "please contact %s.", MAIL_GPHOTO_DEVEL);
+		}
 
 	return GP_OK;
 }
@@ -1071,13 +1096,13 @@ canon_usb_dialogue (Camera *camera, canonCommandIndex canon_funct, int *return_l
 		 */
 		GP_DEBUG ("canon_usb_dialogue() "
 			  "read_bytes %i won't fit in buffer of size %li!", read_bytes,
-			  sizeof (buffer));
+			  (long)sizeof (buffer));
 		return NULL;
 	}
 
 	if (payload_length) {
 		GP_DEBUG ("Payload :");
-		gp_log_data ("canon", payload, payload_length);
+		gp_log_data ("canon", payload, (long)payload_length);
 	}
 
 	if ((payload_length + 0x50) > sizeof (packet)) {
@@ -1102,12 +1127,13 @@ canon_usb_dialogue (Camera *camera, canonCommandIndex canon_funct, int *return_l
 	packet[0x44] = cmd1;
 	packet[0x47] = cmd2;
 	htole32a (packet + 0x04, cmd3);
-	if ( camera->pl->md->model == CANON_CLASS_6 )
+	if ( camera->pl->md->model == CANON_CLASS_6 ) {
 		/* New style of protocol is picky about this byte. */
 		if ( cmd3 == 0x202 )
 			packet[0x46] = 0x20;
 		else
 			packet[0x46] = 0x10;
+	}
 
 	htole32a (packet + 0x4c, serial_code++);	/* serial number */
 	htole32a (packet + 0x48, 0x10 + payload_length);
@@ -1142,19 +1168,20 @@ canon_usb_dialogue (Camera *camera, canonCommandIndex canon_funct, int *return_l
 	 * - The final read is for the remainder of the data. This
 	 *   can never be longer than 0x37 bytes.
 	 *
-	 * Read three is optional. If the requested length is only
+	 * Read two is optional. If the requested length is only
 	 * 0x40, only the first read will be issued.  If the length is
 	 * divisible by 0x40, the second read will be skipped.
 	 *
 	 * We read like this because the Windows driver reads in two
-	 * operations (first and second reads are combined), and some
-	 * cameras (EOS D30 for example) seem to not like it if we
-	 * were to read read_bytes in a single read instead. We check
-	 * the size a safety measure: if we are mistaken about the
-	 * length of data returned for some command, we can work
-	 * around it with just a warning. The "get camera abilities"
-	 * command, in particular, seems to vary from camera to
-	 * camera.
+	 * operations, and some cameras (EOS D30 for example) seem to
+	 * not like it if we were to read read_bytes in a single read
+	 * instead.
+	 *
+	 * We check the size a safety measure: if we are mistaken
+	 * about the length of data returned for some command, we can
+	 * work around it with just a warning. The "get camera
+	 * abilities" command, in particular, seems to vary from
+	 * camera to camera.
 	 */
 	read_bytes1 = read_bytes - (read_bytes % 0x40);
 	status = gp_port_read (camera->port, buffer, read_bytes1);
@@ -1218,7 +1245,7 @@ canon_usb_dialogue (Camera *camera, canonCommandIndex canon_funct, int *return_l
 	} else {
 		if ( le32atoh ( buffer+0x50 ) != 0 ) {
 			GP_DEBUG ( "canon_usb_dialogue: got nonzero camera status code"
-				 " %08x in response to command 0x%x 0x%x 0x%x (%s)",
+				 " 0x%08x in response to command 0x%x 0x%x 0x%x (%s)",
 				 le32atoh ( buffer+0x50 ), cmd1, cmd2, cmd3, funct_descr );
 		}
 		if (return_length)
@@ -1901,7 +1928,7 @@ canon_usb_get_dirents (Camera *camera, unsigned char **dirent_data,
 	if (strlen (path) + 4 > sizeof (payload)) {
 		GP_DEBUG ("canon_usb_get_dirents: "
 			  "Path '%s' too long (%li), won't fit in payload buffer.", path,
-			  strlen (path));
+			  (long)strlen (path));
 		gp_context_error (context,
 				  _("canon_usb_get_dirents: "
 				  "Couldn't fit payload into buffer, "
@@ -1969,7 +1996,7 @@ canon_usb_list_all_dirs (Camera *camera, unsigned char **dirent_data,
 	if (strlen (disk_name) + 4 > sizeof (payload)) {
 		GP_DEBUG ("canon_usb_list_all_dirs: "
 			  "Path '%s' too long (%li), won't fit in payload buffer.",
-			  disk_name, strlen (disk_name));
+			  disk_name, (long)strlen (disk_name));
 		gp_context_error (context,
 				  _("canon_usb_list_all_dirs: "
 				  "Couldn't fit payload into buffer, "
