@@ -112,7 +112,7 @@ const struct canonCamModelData models[] = {
 	{"Canon:PowerShot A20",		CANON_PS_A20,		0x04A9, 0x304E, CAP_SUP, S10M, S32K, NULL},
 	{"Canon:PowerShot A10",		CANON_PS_A10,		0x04A9, 0x304F, CAP_SUP, S10M, S32K, NULL},
 	/* Mac OS includes this as a valid ID; don't know which camera model --swestin */
-	/*{"Canon:PowerShot ??",		CANON_PS_A10,		0x04A9, 0x3050, CAP_SUP, S10M, S32K, NULL},*/
+	{"Canon:PowerShot unknown 1",	CANON_PS_UNK1,		0x04A9, 0x3050, CAP_SUP, S10M, S32K, NULL},
 	/* Canon IXY DIGITAL 200 here? */
 	{"Canon:PowerShot S110",	CANON_PS_S100,		0x04A9, 0x3051, CAP_SUP, S10M, S32K, NULL},
 	{"Canon:DIGITAL IXUS v",	CANON_PS_S100,		0x04A9, 0x3052, CAP_SUP, S10M, S32K, NULL},
@@ -122,7 +122,7 @@ const struct canonCamModelData models[] = {
 	{"Canon:PowerShot A40",		CANON_PS_A40,		0x04A9, 0x3058, CAP_SUP, S10M, S32K, NULL},
 	{"Canon:PowerShot A30",		CANON_PS_A30,		0x04A9,	0x3059, CAP_SUP, S10M, S32K, NULL},
 	/* 305c is in MacOS Info.plist, but I don't know what it is --swestin. */
-	/*{"Canon:PowerShot ????",		CANON_PS_A30,		0x04A9,	0x305c, CAP_SUP, S10M, S32K, NULL},*/
+	{"Canon:PowerShot unknown 2",	CANON_PS_UNK2,		0x04A9,	0x305c, CAP_SUP, S10M, S32K, NULL},
 	{"Canon:EOS D60",		CANON_EOS_D60,		0x04A9, 0x3060, CAP_SUP, S10M, S32K, NULL},
 	{"Canon:PowerShot A100",	CANON_PS_A100,		0x04A9, 0x3061, CAP_SUP, S10M, S32K, NULL},
 	{"Canon:PowerShot A200",	CANON_PS_A200,		0x04A9, 0x3062, CAP_SUP, S10M, S32K, NULL},
@@ -131,10 +131,9 @@ const struct canonCamModelData models[] = {
 	{"Canon:Digital IXUS v2",	CANON_PS_S200,		0x04A9, 0x3065, CAP_SUP, S10M, S32K, NULL},
 	{"Canon:Digital IXUS 330",	CANON_PS_S330,		0x04A9, 0x3066, CAP_SUP, S10M, S32K, NULL},
 	{"Canon:PowerShot S50 (normal mode)",	CANON_PS_S50,	0x04A9, 0x3077, CAP_SUP, S99M, S32K, NULL},
-	{"Canon:PowerShot S45 (normal mode)",	CANON_PS_S45,	0x04A9, 0x306C, CAP_SUP, S99M, S32K, NULL},
 	/* 306a is in MacOS Info.plist, but I don't know what it is --swestin. */
-	/*{"Canon:Digital ???",	CANON_PS_??,		0x04A9, 0x3066, CAP_SUP, S10M, S32K, NULL},*/
-	{"Canon:PowerShot S45 (normal mode)",	CANON_PS_S45,	0x04A9, 0x306a, CAP_SUP, S99M, S32K, NULL},
+	{"Canon:Digital unknown 3",	CANON_PS_UNK3,		0x04A9, 0x306a, CAP_SUP, S10M, S32K, NULL},
+	{"Canon:PowerShot S45 (normal mode)",	CANON_PS_S45,	0x04A9, 0x306C, CAP_SUP, S99M, S32K, NULL},
         /* 0x306D is S45 in PTP mode */
 	{"Canon:PowerShot G3 (normal mode)",	CANON_PS_G3,	0x04A9, 0x306E, CAP_SUP, S99M, S32K, NULL},
         /* 0x306F is G3 in PTP mode */
@@ -157,11 +156,16 @@ const struct canonCamModelData models[] = {
 	/* S400 product ID for PTP mode is 0x3075; there may be no
 	 * "Canon" mode, so it will be supported by the PTP driver,
 	 * not here. */
+
 	/* 3078 and 307a are in MacOS Info.plist, but I don't know
 	 * what they are --swestin. */
-	/*{"Canon:PowerShot ?????",		CANON_PS_A60,		0x04A9, 0x3078, CAP_SUP, S10M, S32K, NULL},*/
-	/*{"Canon:PowerShot ?????",		CANON_PS_A60,		0x04A9, 0x307a, CAP_SUP, S10M, S32K, NULL},*/
+	{"Canon:PowerShot unknown 4",		CANON_PS_UNK4,		0x04A9, 0x3078, CAP_SUP, S10M, S32K, NULL},
+	{"Canon:PowerShot unknown 5",		CANON_PS_UNK5,		0x04A9, 0x307a, CAP_SUP, S10M, S32K, NULL},
+
+	/* MV630i seems to be a DV camcorder */
+	{"Canon:MV630i",		CANON_MV630I,		0x04A9, 0x307b, CAP_SUP, S99M, S32K, NULL},
 	{"Canon:EOS 10D",		CANON_EOS_10D,		0x04A9, 0x3083, CAP_SUP, S10M, S32K, NULL},
+
 	/* Canon MVX2i in some mode is 0x3067 - probably PTP */
 	/* Apparently the MVX2i is the same as Optura 200 MC (Philippe
 	 * Gramoulle), so share the code. */

@@ -16,7 +16,7 @@
   <!-- ================================================================================ -->
 
   <title><phrase role="strong">Canon PowerShot Series Transfer
- Protocol Specifications</phrase> Friday, March 7, 2003</title>
+ Protocol Specifications</phrase> Friday, August 8, 2003</title>
 
   <chapter id="chap.Intro">
     <title>Introduction</title>
@@ -1014,7 +1014,7 @@ do {
 		<entry>
 	      <para>&ldquo;EOS lock keys&rdquo; failed,
                  e.g. shutter release is half-depressed or camera is
-                 in review mode.</para>
+                 in review or menu mode.</para>
 	    </entry>
 	      </row>
 	      <row>
@@ -1031,6 +1031,7 @@ do {
 	      <para>&ldquo;camera control
 	        initialization&rdquo; failed.</para>
 	      <para>Couldn't extend lens (on G2)</para>
+	      <para>Camera was left in camera control mode</para>
 	      <para>For D60: we just filled the CF card (on next
 	        &ldquo;camera control initialization&rdquo;;
 		power cycle clears this)</para>
@@ -1656,7 +1657,16 @@ do {
     </section>
     <section id="sec.USBSetTime">
       <title>Set Time</title>
-      <para>No documentation yet; not yet seen in USB stream.</para>
+      <para>Command block is 0x5c bytes.</para>
+      <itemizedlist>
+	<listitem><para>0x50 contains a UNIX time</para></listitem>
+	<listitem><para>Other bytes are zero</para>
+	</listitem>
+      </itemizedlist>
+      <para>Status codes:</para>
+      <simplelist>
+	<member>0x02000086 Invalid parameters (e.g. command block wrong length)</member>
+      </simplelist>
     </section>
     <section id="sec.USBMakeDirectory">
       <title>Make directory</title>
@@ -1786,7 +1796,13 @@ do {
 
       <para>The subcommand is stored as a little-endian 4-byte number at the start of the message payload (i.e. starting 0x50 bytes from the start of the buffer). Parameters vary by subcommand, as noted below; they follow the subcommand in the message payload. The minimum is <emphasis>&lt;subcommand&gt; </emphasis> 0, so the minimum length of a command packet is 0x58.</para>
 
-      <para>In the reply, the payload will always start with 0, <emphasis>&lt;subcommand&gt;</emphasis>. After that, the minimum is one more zero word, or there may be more information. The minimum length is 0x5c</para>
+      <para>In the reply, the payload will always start with
+        <emphasis>status,</emphasis>
+        <emphasis>&lt;subcommand&gt;</emphasis>. After that, the
+        minimum is one more zero word, or there may be more
+        information. The minimum length is 0x5c.
+      </para>
+
       <section id="sec.CamContInit">
 	<title>Camera control initialization: 00</title>
 
@@ -2107,7 +2123,30 @@ do {
 #define FLASH_AUTO 0x02
 	</programlisting>
 
+	<para>Response is 0x5c bytes (failure):</para>
+
+	<programlisting>
+0000:  00 00 00 00 01 03 00 00 00 00 00 00 00 00 00 00  ................
+0010:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+0020:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+0030:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+0040:  02 00 00 00 13 00 00 22 1c 00 00 00 2f 00 00 00  ......."..../...
+0050:  00 00 00 00 07 01 00 ff 00 00 00 00              ............
+	</programlisting>
+
+	<para>(success):</para>
+
+	<programlisting>
+0000:  00 00 00 00 01 03 00 00 00 00 00 00 00 00 00 00  ................
+0010:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+0020:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+0030:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+0040:  02 00 00 00 13 00 00 22 1c 00 00 00 2f 00 00 00  ......."..../...
+0050:  00 00 00 00 07 00 00 00 00 00 00 00              ............
+        </programlisting>
+
       </section>
+
       <section id="sec.CamContSetXferMode">
 	<title>Set transfer mode: 09</title>
 
