@@ -109,7 +109,7 @@ static int camera_exit(Camera *camera)
 }
 
 static int folder_list_func(CameraFilesystem *fs, const char *folder,
-			     CameraList *list, void *data)
+			    CameraList *list, void *data, GPContext *context)
 {
 	Camera *camera = data;
 	int i, i1;
@@ -166,13 +166,10 @@ static int folder_list_func(CameraFilesystem *fs, const char *folder,
 }
 
 static int file_list_func(CameraFilesystem *fs, const char *folder,
-			   CameraList *list, void *data)
+			   CameraList *list, void *data, GPContext *context)
 {
 	Camera *camera = data;
 	int i;
-
-	gp_debug_printf(GP_DEBUG_HIGH, "digita", "camera_file_list %s", 
-			 folder);
 
 	/* We should probably check to see if we have a list already and */
 	/*  get the changes since */
@@ -299,8 +296,8 @@ static void decode_ycc422(unsigned char *input, int width, int height, unsigned 
 }
 
 static int get_file_func(CameraFilesystem *fs, const char *folder,
-			  const char *filename, CameraFileType type,
-			  CameraFile *file, void *user_data)
+			 const char *filename, CameraFileType type,
+			 CameraFile *file, void *user_data, GPContext *context)
 {
 	Camera *camera = user_data;
 	unsigned char *data;

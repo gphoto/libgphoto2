@@ -95,7 +95,7 @@ static int camera_about(Camera * camera, CameraText * about)
 
 static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
-		void *data)
+		void *data, GPContext *context)
 {
 	Camera *camera = data;
 	int count;
@@ -115,7 +115,8 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
-	       CameraFileType type, CameraFile * file, void *data)
+	       CameraFileType type, CameraFile * file, void *data,
+	       GPContext *context)
 {
 	Camera *camera = data;
 	int num;
@@ -124,7 +125,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID,
 			"camera_file_get(\"%s/%s\")", folder, filename);
 
-	num = gp_filesystem_number(camera->fs, folder, filename);
+	num = gp_filesystem_number(camera->fs, folder, filename, context);
 	if (num < 0)
 		return (num);
 
@@ -155,12 +156,13 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 static int
 get_info_func (CameraFilesystem *fs, const char *folder,
-	       const char *filename, CameraFileInfo *info, void *data)
+	       const char *filename, CameraFileInfo *info, void *data,
+	       GPContext *context)
 {
 	Camera *camera = data;
 	int num;
 
-	num = gp_filesystem_number(camera->fs, folder, filename);
+	num = gp_filesystem_number(camera->fs, folder, filename, context);
 	if (num < 0)
 		return (num);
 

@@ -75,8 +75,8 @@ pdc320_id (GPPort *port, const char **model)
 	unsigned char buf[32];
 
 	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "*** PDC320_ID ***");
-	CHECK_RESULT (gp_port_write (port, PDC320_ID, sizeof (PDC320_ID) - 1));
-	CHECK_RESULT (gp_port_read (port, buf, 14));
+	CR (gp_port_write (port, PDC320_ID, sizeof (PDC320_ID) - 1));
+	CR (gp_port_read (port, buf, 14));
 	if (model) {
 		*model = "unknown";
 		for (i = 0; models[i].model; i++)
@@ -95,9 +95,9 @@ pdc320_init (GPPort *port)
 	unsigned char buf[32];
 
 	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "*** PDC320_INIT ***");
-	CHECK_RESULT (gp_port_write (port, PDC320_INIT,
+	CR (gp_port_write (port, PDC320_INIT,
 				     sizeof (PDC320_INIT) - 1));
-	CHECK_RESULT (gp_port_read (port, buf, 3));
+	CR (gp_port_read (port, buf, 3));
 #if 0
 	if ((buf[0] != 0x05) || //0x0f?
 	    (buf[1] != 0xfa) ||
@@ -105,17 +105,17 @@ pdc320_init (GPPort *port)
 		return (GP_ERROR_CORRUPTED_DATA);
 #endif
 
-	CHECK_RESULT (pdc320_id (port, NULL));
+	CR (pdc320_id (port, NULL));
 
 	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "*** PDC320_STATE ***");
-	CHECK_RESULT (gp_port_write (port, PDC320_STATE,
+	CR (gp_port_write (port, PDC320_STATE,
 				     sizeof (PDC320_STATE) - 1));
-	CHECK_RESULT (gp_port_read (port, buf, 16));
+	CR (gp_port_read (port, buf, 16));
 
 	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "*** PDC320_ENDINIT ***");
-	CHECK_RESULT (gp_port_write (port, PDC320_ENDINIT,
+	CR (gp_port_write (port, PDC320_ENDINIT,
 				     sizeof (PDC320_ENDINIT) - 1));
-	CHECK_RESULT (gp_port_read (port, buf, 8));
+	CR (gp_port_read (port, buf, 8));
 	return (GP_OK);
 }
 
@@ -126,9 +126,9 @@ pdc320_num (GPPort *port)
 	unsigned char buf[4];
 
 	/* The first byte we get is the number of images on the camera */
-	CHECK_RESULT (gp_port_write (port, PDC320_NUM,
+	CR (gp_port_write (port, PDC320_NUM,
 					   sizeof (PDC320_NUM) - 1));
-	CHECK_RESULT (gp_port_read (port, buf, 3));
+	CR (gp_port_read (port, buf, 3));
 	num = buf[1];
 
 #if 0
@@ -153,17 +153,17 @@ pdc320_delete (GPPort *port)
 	 * For the PDC320, we get 3 bytes (0x8 0xf7 0xff) back. It could
 	 * well be that other cameras send other bytes.
 	 */
-	CHECK_RESULT (gp_port_write (port, PDC320_DEL,
+	CR (gp_port_write (port, PDC320_DEL,
 				     sizeof (PDC320_DEL) - 1));
 /* Since the Polaroid 640SE times out here, I will read one byte at a time to
    find out how many bytes to read.
  * Now, let's see how many bytes it reads before it times out. : )
  */
-/*	CHECK_RESULT (gp_port_read (port, buf, 1));
-	CHECK_RESULT (gp_port_read (port, buf, 1));
-	CHECK_RESULT (gp_port_read (port, buf, 1));
+/*	CR (gp_port_read (port, buf, 1));
+	CR (gp_port_read (port, buf, 1));
+	CR (gp_port_read (port, buf, 1));
 */
-	CHECK_RESULT (gp_port_read (port, buf, 3));
+	CR (gp_port_read (port, buf, 3));
 #if 0
 	if ((buf[0] != 0x08) ||
 	    (buf[1] != 0xf7) ||
@@ -187,10 +187,10 @@ pdc320_size (Camera *camera, int n)
 	for (i = 0; i <= RETRIES; i++) {
 
 		/* Write the command */
-		CHECK_RESULT (gp_port_write (camera->port, cmd, sizeof (cmd)));
+		CR (gp_port_write (camera->port, cmd, sizeof (cmd)));
 
 		/* Read one byte and check if we can continue */
-		CHECK_RESULT (gp_port_read (camera->port, buf, 1));
+		CR (gp_port_read (camera->port, buf, 1));
 		if (buf[0] != ACK) {
 
 			/*
@@ -200,9 +200,9 @@ pdc320_size (Camera *camera, int n)
 			 */
 			switch (camera->pl->model) {
 			case PDC640SE:
-				CHECK_RESULT (gp_port_read (camera->port, buf,
+				CR (gp_port_read (camera->port, buf,
 							    buf[0] + 2));
-				CHECK_RESULT (pdc320_init (camera->port));
+				CR (pdc320_init (camera->port));
 				break;
 			case PDC320:
 				i = RETRIES;
@@ -215,7 +215,7 @@ pdc320_size (Camera *camera, int n)
 		 * Ok, everything is fine. Read 6 bytes containing the size
 		 * and return.
 		 */
-		CHECK_RESULT (gp_port_read (camera->port, buf, 6));
+		CR (gp_port_read (camera->port, buf, 6));
 		size = (buf[0] << 24) + (buf[1] << 16) + (buf[2] << 8) + buf[3];
 		gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Image %i has size "
 				 "%i.", n, size);
@@ -236,7 +236,7 @@ pdc320_pic (Camera *camera, int n, unsigned char **data, int *size)
 	/* Get the size of the picture and allocate the memory */
 	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Checking size of image %i...",
 			 n);
-	CHECK_RESULT (*size = pdc320_size (camera, n));
+	CR (*size = pdc320_size (camera, n));
 	*data = malloc (sizeof (char) * (*size));
 	if (!*data)
 		return (GP_ERROR_NO_MEMORY);
@@ -244,7 +244,7 @@ pdc320_pic (Camera *camera, int n, unsigned char **data, int *size)
 	cmd[5] = n;
 	cmd[7] = 0xff - n;
 
-	CHECK_RESULT_FREE (gp_port_write (camera->port, cmd, sizeof (cmd)),
+	CR_FREE (gp_port_write (camera->port, cmd, sizeof (cmd)),
 			   *data);
 
 	switch (camera->pl->model) {
@@ -265,7 +265,7 @@ pdc320_pic (Camera *camera, int n, unsigned char **data, int *size)
 
 		/* Read the frame number */
 		usleep (10000);
-		CHECK_RESULT_FREE (gp_port_read (camera->port, buf, 5), *data);
+		CR_FREE (gp_port_read (camera->port, buf, 5), *data);
 		f1 = (buf[1] << 8) + buf[2];
 		f2 = (buf[3] << 8) + buf[4];
 		gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Reading frame %d "
@@ -273,10 +273,10 @@ pdc320_pic (Camera *camera, int n, unsigned char **data, int *size)
 
 		/* Read the actual data */
 		usleep(1000);
-		CHECK_RESULT_FREE (gp_port_read (camera->port, *data + i, len), *data);
+		CR_FREE (gp_port_read (camera->port, *data + i, len), *data);
 		
 		/* Read the checksum */
-		CHECK_RESULT_FREE (gp_port_read (camera->port, buf, 2), *data);
+		CR_FREE (gp_port_read (camera->port, buf, 2), *data);
 		checksum = (buf[0] << 8) + buf[1];
 	}
 
@@ -307,7 +307,7 @@ camera_abilities (CameraAbilitiesList *list)
 		a.file_operations   = GP_FILE_OPERATION_NONE;
 		a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
 
-		CHECK_RESULT (gp_abilities_list_append (list, a));
+		CR (gp_abilities_list_append (list, a));
 	}
 
 	return (GP_OK);
@@ -315,7 +315,8 @@ camera_abilities (CameraAbilitiesList *list)
 
 static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
-	       CameraFileType type, CameraFile *file, void *user_data)
+	       CameraFileType type, CameraFile *file, void *user_data,
+	       GPContext *context)
 {
 	Camera *camera = user_data;
 	jpeg *myjpeg;
@@ -331,19 +332,19 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	 * since we need a range starting with 1.
 	 */
 	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Getting number from fs...");
-	CHECK_RESULT (n = gp_filesystem_number (camera->fs, folder, filename));
+	CR (n = gp_filesystem_number (camera->fs, folder, filename, context));
 	n++;
 
 	/* Get the file */
 	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Getting file %i...", n);
-	CHECK_RESULT (pdc320_pic (camera, n, &data, &size));
+	CR (pdc320_pic (camera, n, &data, &size));
 
 	/* Post-processing */
 	switch (type) {
 	case GP_FILE_TYPE_RAW:
-		CHECK_RESULT (gp_file_set_data_and_size (file, data, size));
-		CHECK_RESULT (gp_file_set_name (file, filename));
-		CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_RAW));
+		CR (gp_file_set_data_and_size (file, data, size));
+		CR (gp_file_set_name (file, filename));
+		CR (gp_file_set_mime_type (file, GP_MIME_RAW));
 		break;
 	case GP_FILE_TYPE_NORMAL:
 	default:
@@ -369,11 +370,12 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 }
 
 static int
-delete_all_func (CameraFilesystem *fs, const char *folder, void *data)
+delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
+		 GPContext *context)
 {
 	Camera *camera = data;
 
-	CHECK_RESULT (pdc320_delete (camera->port));
+	CR (pdc320_delete (camera->port));
 
 	return (GP_OK);
 }
@@ -394,13 +396,13 @@ camera_about (Camera *camera, CameraText *about)
 
 static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
-		void *data)
+		void *data, GPContext *context)
 {
 	int n;
 	Camera *camera = data;
 
 	/* Fill the list */
-	CHECK_RESULT (n = pdc320_num (camera->port));
+	CR (n = pdc320_num (camera->port));
 	gp_list_populate (list, "PDC320%04i.jpg", n);
 
 	return (GP_OK);
@@ -411,7 +413,7 @@ camera_summary (Camera *camera, CameraText *summary)
 {
 	const char *model;
 
-	CHECK_RESULT (pdc320_id (camera->port, &model));
+	CR (pdc320_id (camera->port, &model));
 	strcpy (summary->text, "Model: ");
 	strcat (summary->text, model);
 

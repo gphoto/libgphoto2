@@ -607,7 +607,8 @@ camera_abilities (CameraAbilitiesList *list)
 
 static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
-	       CameraFileType type, CameraFile *file, void *user_data)
+	       CameraFileType type, CameraFile *file, void *user_data,
+	       GPContext *context)
 {
 	Camera *camera = user_data;
 	int n, size;
@@ -617,7 +618,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	 * Get the number of the picture from the filesystem and increment
 	 * since we need a range starting with 1.
 	 */
-	CHECK_RESULT (n = gp_filesystem_number (camera->fs, folder, filename));
+	CHECK_RESULT (n = gp_filesystem_number (camera->fs, folder, filename,
+						context));
 	n++;
 
 	CHECK_RESULT (gp_file_set_name (file, filename));
@@ -658,7 +660,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 }
 
 static int
-delete_all_func (CameraFilesystem *fs, const char *folder, void *data)
+delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
+		 GPContext *context)
 {
 	Camera *camera = data;
 	char cmd[2] = {0x59, 0x00};
@@ -670,13 +673,14 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data)
 
 static int
 delete_file_func (CameraFilesystem *fs, const char *folder, const char *file,
-		  void *data)
+		  void *data, GPContext *context)
 {
 	Camera *camera = data;
 	int n, count;
 
 	/* We can only delete the last picture */
-	CHECK_RESULT (n = gp_filesystem_number (camera->fs, folder, file));
+	CHECK_RESULT (n = gp_filesystem_number (camera->fs, folder, file,
+						context));
 	n++;
 
 	CHECK_RESULT (pdc640_caminfo (camera->port, &count));
@@ -703,7 +707,8 @@ camera_about (Camera *camera, CameraText *about)
 }
 
 static int
-camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path)
+camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
+		GPContext *context)
 {
 	int num, numpic;
 
@@ -728,14 +733,15 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path)
         sprintf (path->name, camera->pl->filespec, num);
         strcpy (path->folder, "/");
 
-	CHECK_RESULT (gp_filesystem_append (camera->fs, "/", path->name));
+	CHECK_RESULT (gp_filesystem_append (camera->fs, "/", path->name,
+					    context));
 
         return (GP_OK);
 }
 
 static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
-		void *data)
+		void *data, GPContext *context)
 {
 	int n;
 	Camera *camera = data;
@@ -749,14 +755,14 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 static int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
-	       CameraFileInfo *info, void *data)
+	       CameraFileInfo *info, void *data, GPContext *context)
 {
 	Camera *camera = data;
 	int n, dummy;
 	int size_pic, size_thumb;
 	int width_pic, width_thumb, height_pic, height_thumb;
 
-	CHECK_RESULT (n = gp_filesystem_number (fs, folder, file));
+	CHECK_RESULT (n = gp_filesystem_number (fs, folder, file, context));
 	n++;
 
 	CHECK_RESULT (pdc640_picinfo (camera->port, n,

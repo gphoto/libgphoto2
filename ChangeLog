@@ -1,5 +1,14 @@
 2002-01-10  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2/gphoto2-filesys.[c,h]: Add a GPContext to all functions 
+	  that potentially access the camera. This makes cancelling of 
+	  all operations possible and improves error reporting.
+	* tests/test-filesys.c:
+	* libgphoto2/gphoto2-camera.c:
+	* camlibs: Adjust to reflect above changes
+
+2002-01-10  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2/Makefile.am
 	* libgphoto2/gphoto2-context.[c,h]: New files
 	* libgphoto2/gphoto2-abilities-list.[c,h]

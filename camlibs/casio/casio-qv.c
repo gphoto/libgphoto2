@@ -89,7 +89,8 @@ camera_abilities (CameraAbilitiesList *list)
 
 static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
-	       CameraFileType type, CameraFile *file, void *user_data)
+	       CameraFileType type, CameraFile *file, void *user_data,
+	       GPContext *context)
 {
 	Camera *camera = user_data;
 	int n;
@@ -97,7 +98,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	long int size = 0;
 
 	/* Get the number of the picture from the filesystem */
-	CHECK_RESULT (n = gp_filesystem_number (camera->fs, folder, filename));
+	CHECK_RESULT (n = gp_filesystem_number (camera->fs, folder, filename,
+					        context));
 
 	/* Prepare the transaction */
 	CHECK_RESULT (QVshowpic (camera, n));
@@ -148,7 +150,7 @@ camera_summary (Camera *camera, CameraText *about)
 
 static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
-		void *data)
+		void *data, GPContext *context)
 {
 	int num;
 	Camera *camera = data;
@@ -162,13 +164,13 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 static int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
-	       CameraFileInfo *info, void *data)
+	       CameraFileInfo *info, void *data, GPContext *context)
 {
 	int n, size_thumb, size_pic;
 	Camera *camera = data;
 
 	/* Get the picture number from the CameraFilesystem */
-	CHECK_RESULT (n = gp_filesystem_number (fs, folder, file));
+	CHECK_RESULT (n = gp_filesystem_number (fs, folder, file, context));
 
 	/* Get some information */
 	camera = NULL;
@@ -185,7 +187,8 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 }
 
 static int
-camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path)
+camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
+		GPContext *context)
 {
 	if (type != GP_CAPTURE_IMAGE)
 		return (GP_ERROR_NOT_SUPPORTED);
@@ -196,9 +199,10 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path)
 	/* Tell libgphoto2 where to look for the new image */
 	strcpy (path->folder, "/");
 	sprintf (path->name, "CASIO_QV_%04i.jpg",
-		 gp_filesystem_count (camera->fs, "/"));
+		 gp_filesystem_count (camera->fs, "/", context));
 
-	CHECK_RESULT (gp_filesystem_append (camera->fs, "/", path->name));
+	CHECK_RESULT (gp_filesystem_append (camera->fs, "/", path->name,
+					    context));
 
 	return (GP_OK);
 }

@@ -167,7 +167,8 @@ camera_exit (Camera *camera)
 
 static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
-	       CameraFileType type, CameraFile *file, void *user_data)
+	       CameraFileType type, CameraFile *file, void *user_data,
+	       GPContext *context)
 {
 	Camera *camera = user_data;
 	int i, n, result;
@@ -179,7 +180,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return (GP_ERROR_NOT_SUPPORTED);
 
 	/* Get the picture number from the filesystem (those start at 0!) */
-	CHECK_RESULT (n = gp_filesystem_number (camera->fs, folder, filename));
+	CHECK_RESULT (n = gp_filesystem_number (camera->fs, folder, filename,
+						context));
 
 	/* Rewind */
 	CHECK_RESULT (SDSC_initialize (camera->port));
@@ -240,7 +242,7 @@ camera_about (Camera *camera, CameraText *about)
 
 static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
-		void *data)
+		void *data, GPContext *context)
 {
 	int n;
 	unsigned char buffer[SDSC_INFOSIZE];
@@ -279,10 +281,10 @@ camera_init (Camera *camera)
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
 
 	/* Some settings */
-	CHECK_RESULT (gp_port_settings_get (camera->port, &settings));
+	CHECK_RESULT (gp_port_get_settings (camera->port, &settings));
 	/* Should we adjust anything here? */
-	CHECK_RESULT (gp_port_settings_set (camera->port, settings));
-	CHECK_RESULT (gp_port_timeout_set (camera->port, SDSC_TIMEOUT));
+	CHECK_RESULT (gp_port_set_settings (camera->port, settings));
+	CHECK_RESULT (gp_port_set_timeout (camera->port, SDSC_TIMEOUT));
 
 	/* Open the port and check if the camera is there */
 	CHECK_RESULT (SDSC_initialize (camera->port));

@@ -67,7 +67,7 @@ static int camera_exit (Camera *camera) {
 
 static int get_file_func (CameraFilesystem *fs, const char *folder,
 			  const char *filename, CameraFileType type,
-			  CameraFile *file, void *user_data)
+			  CameraFile *file, void *user_data, GPContext *context)
 {
 	Camera *camera = user_data;
         int num;
@@ -81,7 +81,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	gp_file_set_mime_type (file, "image/jpeg");
 
         /* Retrieve the number of the photo on the camera */
-	num = gp_filesystem_number(camera->fs, "/", filename);
+	num = gp_filesystem_number(camera->fs, "/", filename, context);
 
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
@@ -103,13 +103,14 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 }
 
 static int delete_file_func (CameraFilesystem *fs, const char *folder,
-			     const char *filename, void *data)
+			     const char *filename, void *data,
+			     GPContext *context)
 {
 	Camera *camera = data;
         int max, num;
 
-        num = gp_filesystem_number(camera->fs, "/", filename);
-        max = gp_filesystem_count(camera->fs,folder)  ;
+        num = gp_filesystem_number(camera->fs, "/", filename, context);
+        max = gp_filesystem_count(camera->fs,folder, context);
         printf("sony dscf1: file delete: %d\n",num);
         if(!F1ok())
            return (GP_ERROR);
@@ -145,7 +146,7 @@ _("Sony DSC-F1 Digital Camera Support\nM. Adam Kendall <joker@penguinpub.com>\nB
 }
 
 static int file_list_func (CameraFilesystem *fs, const char *folder,
-			   CameraList *list, void *data)
+			   CameraList *list, void *data, GPContext *context)
 {
 /*	Camera *camera = data; */
         int count;
@@ -172,12 +173,12 @@ int camera_init (Camera *camera) {
 	dev = camera->port;
 
 	/* Configure the port */
-        gp_port_timeout_set (camera->port, 5000);
-	gp_port_settings_get (camera->port, &settings);
+        gp_port_set_timeout (camera->port, 5000);
+	gp_port_get_settings (camera->port, &settings);
         settings.serial.bits    = 8;
         settings.serial.parity  = 0;
         settings.serial.stopbits= 1;
-        gp_port_settings_set (camera->port, settings);
+        gp_port_set_settings (camera->port, settings);
 
 	/* Set up the filesystem */
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);

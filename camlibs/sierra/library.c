@@ -268,7 +268,7 @@ int sierra_get_picture_folder (Camera *camera, char **folder)
 	/* It is assumed that the camera conforms with the JEIDA standard .
 	   Thus, look for the picture folder into the /DCIM directory */
 	CHECK( gp_list_new(&list) );
-	CHECK( gp_filesystem_list_folders(camera->fs, "/DCIM", list) );
+	CHECK( gp_filesystem_list_folders(camera->fs, "/DCIM", list, NULL) );
 	for(i=0 ; i < gp_list_count(list) ; i++) {
 		CHECK( gp_list_get_name(list, i, &name) );
 		GP_DEBUG ("* check folder %s", name);
@@ -1117,7 +1117,7 @@ int sierra_capture_preview (Camera *camera, CameraFile *file)
 }
 
 int sierra_capture (Camera *camera, CameraCaptureType type,
-		    CameraFilePath *filepath)
+		    CameraFilePath *filepath, GPContext *context)
 {
 	int n, len = 0;
 	char filename[128];
@@ -1155,7 +1155,7 @@ int sierra_capture (Camera *camera, CameraCaptureType type,
 		snprintf (filename, sizeof (filename), "P101%04i.JPG", n);
 	GP_DEBUG ("... done ('%s')", filename);
 	CHECK (gp_filesystem_reset (camera->fs));
-	CHECK (gp_filesystem_get_folder (camera->fs, filename, &folder));
+	CHECK (gp_filesystem_get_folder (camera->fs, filename, &folder, context));
 	strncpy (filepath->folder, folder, sizeof (filepath->folder));
 	strncpy (filepath->name, filename, sizeof (filepath->name));
 

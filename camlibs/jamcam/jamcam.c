@@ -108,7 +108,7 @@ int camera_abilities (CameraAbilitiesList *list)
 }
 
 static int file_list_func (CameraFilesystem *fs, const char *folder,
-			      CameraList *list, void *data)
+			   CameraList *list, void *data, GPContext *context)
 {
 	Camera *camera = data;
 	int count;
@@ -123,7 +123,8 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 }
 
 static int get_info_func (CameraFilesystem *fs, const char *folder,
-		const char *filename, CameraFileInfo *info, void *data)
+		const char *filename, CameraFileInfo *info, void *data,
+		GPContext *context)
 {
 	Camera *camera = data;
 	int n;
@@ -134,7 +135,8 @@ static int get_info_func (CameraFilesystem *fs, const char *folder,
 	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "*** filename: %s",filename);
 
 	/* Get the file number from the CameraFileSystem */
-	CHECK (n = gp_filesystem_number (camera->fs, folder, filename));
+	CHECK (n = gp_filesystem_number (camera->fs, folder,
+					 filename, context));
 
 	jc_file = jamcam_file_info( camera, n );
 
@@ -162,7 +164,7 @@ static int camera_exit (Camera *camera)
 
 static int get_file_func (CameraFilesystem *fs, const char *folder,
 			  const char *filename, CameraFileType type,
-			  CameraFile *file, void *user_data)
+			  CameraFile *file, void *user_data, GPContext *context)
 {
 	Camera *camera = user_data;
 	char raw[265000];
@@ -180,7 +182,8 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "*** filename: %s",filename);
 	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "*** type: %d", type);
 
-	CHECK (n = gp_filesystem_number (camera->fs, folder, filename));
+	CHECK (n = gp_filesystem_number (camera->fs, folder,
+					 filename, context));
 
 	res = gp_file_progress( file, 0 );
 	if ( res < 0 ) {

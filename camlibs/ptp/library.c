@@ -455,7 +455,7 @@ folder_to_handle(const char *folder, uint32_t parent, Camera *camera)
 
 static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
-		void *data)
+		void *data, GPContext *context)
 {
 	PTPParams *params = &((Camera *)data)->pl->params;
 	uint32_t parent;
@@ -473,7 +473,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 static int
 folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
-		void *data)
+		void *data, GPContext *context)
 {
 	PTPParams *params = &((Camera *)data)->pl->params;
 	uint32_t parent;
@@ -491,7 +491,8 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
-	       CameraFileType type, CameraFile *file, void *data)
+	       CameraFileType type, CameraFile *file, void *data,
+	       GPContext *context)
 {
 	Camera *camera = data;
 	PTPReq *fdata = NULL;
@@ -551,7 +552,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 static int
 delete_file_func (CameraFilesystem *fs, const char *folder,
-			const char *filename, void *data)
+			const char *filename, void *data, GPContext *context)
 {
 	Camera *camera = data;
 
@@ -574,7 +575,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 
 static int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
-	       CameraFileInfo *info, void *data)
+	       CameraFileInfo *info, void *data, GPContext *context)
 {
 	Camera *camera = data;
 	PTPObjectInfo *oi;
@@ -630,7 +631,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 static int
 make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
-	       void *data)
+	       void *data, GPContext *context)
 {
 	Camera *camera = data;
 	PTPObjectInfo oi;

@@ -195,7 +195,7 @@ int camera_abilities (CameraAbilitiesList *list)
 
 static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
-	       void *data)
+	       void *data, GPContext *context)
 {
 	Camera *camera = data;
 
@@ -206,7 +206,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 static int
 folder_list_func (CameraFilesystem *fs, const char *folder,
-		      CameraList *list, void *data)
+		      CameraList *list, void *data, GPContext *context)
 {
 	Camera *camera = data;
 
@@ -217,7 +217,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder,
 
 static int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
-	       CameraFileInfo *info, void *data)
+	       CameraFileInfo *info, void *data, GPContext *context)
 {
 	Camera *camera = data;
 	int n;
@@ -227,7 +227,8 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	 * Get the file number from the CameraFilesystem. We need numbers
 	 * starting with 1.
 	 */
-	CHECK (n = gp_filesystem_number (camera->fs, folder, filename));
+	CHECK (n = gp_filesystem_number (camera->fs, folder, filename,
+					 context));
 	n++;
 
 	info->file.fields    = GP_FILE_INFO_NONE;
@@ -289,13 +290,13 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 static int
 set_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
-	       CameraFileInfo info, void *data)
+	       CameraFileInfo info, void *data, GPContext *context)
 {
 	Camera *camera = data;
 	int n;
 	SierraPicInfo pic_info;
 
-	CHECK (n = gp_filesystem_number (camera->fs, folder, filename));
+	CHECK (n = gp_filesystem_number (camera->fs, folder, filename, context));
 	n++;
 
 	CHECK (camera_start (camera));
@@ -374,7 +375,8 @@ camera_exit (Camera *camera)
 
 static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
-	       CameraFileType type, CameraFile *file, void *user_data)
+	       CameraFileType type, CameraFile *file, void *user_data,
+	       GPContext *context)
 {
 	Camera *camera = user_data;
         int regd, n;
@@ -388,7 +390,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	 * Get the file number from the CameraFileSystem.
 	 * We need file numbers starting with 1.
 	 */
-	CHECK (n = gp_filesystem_number (camera->fs, folder, filename));
+	CHECK (n = gp_filesystem_number (camera->fs, folder, filename, context));
 	n++;
 
 	/* In which register do we have to look for data? */
@@ -466,7 +468,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 }
 
 static int
-delete_all_func (CameraFilesystem *fs, const char *folder, void *data)
+delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
+		 GPContext *context)
 {
 	Camera *camera = data;
 	int count;
@@ -498,7 +501,7 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data)
 
 static int
 delete_file_func (CameraFilesystem *fs, const char *folder,
-		  const char *filename, void *data) 
+		  const char *filename, void *data, GPContext *context) 
 {
 	Camera *camera = data;
 	int n;
@@ -508,7 +511,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** filename: %s", filename);
 
 	/* Get the file number from the CameraFilesystem */
-	CHECK (n = gp_filesystem_number (camera->fs, folder, filename));
+	CHECK (n = gp_filesystem_number (camera->fs, folder, filename, context));
 
 	/* Set the working folder and delete the file */
 	CHECK (camera_start (camera));
@@ -520,31 +523,28 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 }
 
 static int
-camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path) 
+camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
+		GPContext *context) 
 {
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_capture");
-
 	CHECK (camera_start (camera));
+	CHECK_STOP (camera, sierra_capture (camera, type, path, context));
+	CHECK (camera_stop (camera));
 
-	CHECK_STOP (camera, sierra_capture (camera, type, path));
-
-	return (camera_stop (camera));
+	return (GP_OK);
 }
 
 static int
 camera_capture_preview (Camera *camera, CameraFile *file)
 {
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_capture_preview");
-
 	CHECK (camera_start (camera));
-	
 	CHECK_STOP (camera, sierra_capture_preview (camera, file));
+	CHECK (camera_stop (camera));
 
-	return (camera_stop (camera));
+	return (GP_OK);
 }
 
 static int
-put_file_func (CameraFilesystem * fs, const char *folder, CameraFile * file, void *data)
+put_file_func (CameraFilesystem * fs, const char *folder, CameraFile * file, void *data, GPContext *context)
 {
 	Camera *camera = data;
 	char *picture_folder;

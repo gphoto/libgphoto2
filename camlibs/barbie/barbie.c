@@ -68,7 +68,7 @@ camera_abilities (CameraAbilitiesList *list)
 
 static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
-                void *data)
+                void *data, GPContext *context)
 {
         Camera *camera = data;
         int count;
@@ -81,14 +81,15 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
-	       CameraFileType type, CameraFile *file, void *user_data)
+	       CameraFileType type, CameraFile *file, void *user_data,
+	       GPContext *context)
 {
 	Camera *camera = user_data;
         int size, num;
         char *data;
 
         /* Retrieve the number of the photo on the camera */
-        num = gp_filesystem_number (camera->fs, "/", filename);
+        num = gp_filesystem_number (camera->fs, "/", filename, context);
 
         switch (type) {
         case GP_FILE_TYPE_NORMAL:

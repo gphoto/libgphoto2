@@ -100,7 +100,7 @@ camera_exit (Camera *camera)
 
 static int
 folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
-		  void *data) 
+		  void *data, GPContext *context) 
 {
 	Camera *camera = data;
 
@@ -109,7 +109,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
-		void *data) 
+		void *data, GPContext *context) 
 {
 	Camera *camera = data;
 
@@ -118,7 +118,8 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
-	       CameraFileType type, CameraFile *file, void *data) 
+	       CameraFileType type, CameraFile *file, void *data,
+	       GPContext *context) 
 {
 	Camera *camera = data;
 
@@ -136,7 +137,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 static int
 delete_file_func (CameraFilesystem *fs, const char *folder,
-		  const char *filename, void *data)
+		  const char *filename, void *data, GPContext *context)
 {
 	Camera *camera = data;
 
@@ -146,7 +147,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 
 static int
 camera_capture (Camera *camera, CameraCaptureType type,
-		CameraFilePath *path) 
+		CameraFilePath *path, GPContext *context) 
 {
 	int result;
 
@@ -159,7 +160,7 @@ camera_capture (Camera *camera, CameraCaptureType type,
 		return (result);
 
 	/* Tell the filesystem about it */
-	result = gp_filesystem_append (camera->fs, path->folder, path->name);
+	result = gp_filesystem_append (camera->fs, path->folder, path->name, context);
 	if (result < 0)
 		return (result);
 

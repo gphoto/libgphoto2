@@ -153,7 +153,7 @@ get_info (Camera *camera, unsigned int n, CameraFileInfo *info,
 
 static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
-                void *data)
+                void *data, GPContext *context)
 {
 	CameraFile *file;
 	CameraFileInfo info;
@@ -182,9 +182,10 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		 * Append directly to the filesystem instead of to the list,
 		 * because we have additional information.
 		 */
-		gp_filesystem_append (camera->fs, folder, info.file.name);
-		gp_filesystem_set_info_noop (camera->fs, folder, info);
-		gp_filesystem_set_file_noop (camera->fs, folder, file);
+		gp_filesystem_append (camera->fs, folder, info.file.name,
+				      context);
+		gp_filesystem_set_info_noop (camera->fs, folder, info, context);
+		gp_filesystem_set_file_noop (camera->fs, folder, file, context);
 		gp_file_unref (file);
         }
 
@@ -339,7 +340,7 @@ test_speed (Camera *camera)
 
 static int
 set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
-               CameraFileInfo info, void *data)
+               CameraFileInfo info, void *data, GPContext *context)
 {
         Camera *camera = data;
         char tmp[7];
@@ -364,14 +365,14 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 
 static int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
-               CameraFileInfo *info, void *data)
+               CameraFileInfo *info, void *data, GPContext *context)
 {
         Camera *camera = data;
 	CameraFile *file;
         int n, result;
 
 	/* We need image numbers starting with 1 */
-	n = gp_filesystem_number (camera->fs, folder, filename);
+	n = gp_filesystem_number (camera->fs, folder, filename, context);
 	if (n < 0)
 		return (n);
 	n++;
@@ -382,7 +383,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		gp_file_unref (file);
 		return (result);
 	}
-	gp_filesystem_set_file_noop (fs, folder, file);
+	gp_filesystem_set_file_noop (fs, folder, file, context);
 	gp_file_unref (file);
 
         return (GP_OK);
@@ -400,7 +401,8 @@ camera_exit (Camera* camera)
 }
 
 static int
-delete_all_func (CameraFilesystem *fs, const char* folder, void *data)
+delete_all_func (CameraFilesystem *fs, const char* folder, void *data,
+		 GPContext *context)
 {
 	Camera *camera = data;
         unsigned int not_erased = 0;
@@ -422,7 +424,8 @@ delete_all_func (CameraFilesystem *fs, const char* folder, void *data)
 
 static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
-               CameraFileType type, CameraFile *file, void *data)
+               CameraFileType type, CameraFile *file, void *data,
+	       GPContext *context)
 {
         Camera *camera = data;
         unsigned long image_id;
@@ -465,7 +468,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 static int
 delete_file_func (CameraFilesystem *fs, const char *folder,
-		  const char *filename, void *data)
+		  const char *filename, void *data, GPContext *context)
 {
 	Camera *camera = data;
         char tmp[] = {0, 0, 0, 0, 0, 0, 0};
@@ -539,7 +542,8 @@ camera_capture_preview (Camera* camera, CameraFile* file)
 }
 
 static int
-camera_capture (Camera* camera, CameraCaptureType type, CameraFilePath* path)
+camera_capture (Camera* camera, CameraCaptureType type, CameraFilePath* path,
+		GPContext *context)
 {
         unsigned long image_id;
 	int exif_size;
@@ -561,7 +565,7 @@ camera_capture (Camera* camera, CameraCaptureType type, CameraFilePath* path)
 	sprintf (path->name, "%06i.jpeg", (int) image_id);
 	strcpy (path->folder, "/");
 	CHECK (camera, gp_filesystem_append (camera->fs, path->folder,
-					     path->name));
+					     path->name, context));
 
 	info.preview.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
 	info.preview.size = buffer_size;
@@ -576,7 +580,7 @@ camera_capture (Camera* camera, CameraCaptureType type, CameraFilePath* path)
 	strcpy (info.file.type, GP_MIME_JPEG);
 	snprintf (info.file.name, sizeof (info.file.name),
 		  "%06i.jpeg", (int) image_id);
-	gp_filesystem_set_info_noop (camera->fs, path->folder, info);
+	gp_filesystem_set_info_noop (camera->fs, path->folder, info, context);
 
 	gp_file_new (&file);
 	gp_file_set_name (file, info.file.name);
@@ -584,7 +588,7 @@ camera_capture (Camera* camera, CameraCaptureType type, CameraFilePath* path)
 	gp_file_set_type (file, GP_FILE_TYPE_PREVIEW);
 	gp_file_set_data_and_size (file, buffer, buffer_size);
 	free (buffer);
-	gp_filesystem_set_file_noop (camera->fs, path->folder, file);
+	gp_filesystem_set_file_noop (camera->fs, path->folder, file, context);
 	gp_file_unref (file);
 
         return (GP_OK);

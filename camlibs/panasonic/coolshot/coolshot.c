@@ -126,7 +126,7 @@ static int camera_stop (Camera *camera)
 }
 
 static int file_list_func (CameraFilesystem *fs, const char *folder,
-			      CameraList *list, void *data)
+			   CameraList *list, void *data, GPContext *context)
 {
 	Camera *camera = data;
 	int count;
@@ -142,7 +142,8 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 }
 
 static int get_info_func (CameraFilesystem *fs, const char *folder,
-		const char *filename, CameraFileInfo *info, void *data)
+		const char *filename, CameraFileInfo *info, void *data,
+		GPContext *context)
 {
 	Camera *camera = data;
 	int n;
@@ -154,7 +155,8 @@ static int get_info_func (CameraFilesystem *fs, const char *folder,
 	CHECK (camera_start (camera));
 
 	/* Get the file number from the CameraFileSystem */
-	CHECK (n = gp_filesystem_number (camera->fs, folder, filename));
+	CHECK (n = gp_filesystem_number (camera->fs, folder, filename,
+					 context));
 
 	/* fixme, get file size also */
 	info->file.fields = GP_FILE_INFO_TYPE;
@@ -178,7 +180,7 @@ static int camera_exit (Camera *camera)
 
 static int get_file_func (CameraFilesystem *fs, const char *folder,
 			  const char *filename, CameraFileType type,
-			  CameraFile *file, void *user_data)
+			  CameraFile *file, void *user_data, GPContext *context)
 {
 	Camera *camera = user_data;
 	char data[128000];
@@ -201,7 +203,8 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	 * Get the file number from the CameraFileSystem (and increment 
 	 * because we need numbers starting with 1)
 	 */
-	CHECK (n = gp_filesystem_number (camera->fs, folder, filename));
+	CHECK (n = gp_filesystem_number (camera->fs, folder, filename,
+					 context));
 	n++;
 
 	switch (type) {

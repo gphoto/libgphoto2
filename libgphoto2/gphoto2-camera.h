@@ -32,6 +32,7 @@ typedef struct _Camera Camera;
 #include <gphoto2-filesys.h>
 #include <gphoto2-abilities-list.h>
 #include <gphoto2-result.h>
+#include <gphoto2-context.h>
 
 typedef struct {
 	char text [32 * 1024];
@@ -51,8 +52,8 @@ typedef enum {
 typedef int (*CameraExitFunc)      (Camera *camera);
 typedef int (*CameraGetConfigFunc) (Camera *camera, CameraWidget **widget);
 typedef int (*CameraSetConfigFunc) (Camera *camera, CameraWidget  *widget);
-typedef int (*CameraCaptureFunc)        (Camera *camera, CameraCaptureType type,
-				         CameraFilePath *path);
+typedef int (*CameraCaptureFunc)   (Camera *camera, CameraCaptureType type,
+				    CameraFilePath *path, GPContext *context);
 typedef int (*CameraCapturePreviewFunc) (Camera *camera, CameraFile *file);
 typedef int (*CameraSummaryFunc) (Camera *camera, CameraText *text);
 typedef int (*CameraManualFunc)  (Camera *camera, CameraText *text);

@@ -21,6 +21,16 @@
  *
  * History:
  * $Log$
+ * Revision 1.39  2002/01/10 23:06:54  lutz
+ * 2002-01-10  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ *
+ *         * libgphoto2/gphoto2-filesys.[c,h]: Add a GPContext to all functions
+ *           that potentially access the camera. This makes cancelling of
+ *           all operations possible and improves error reporting.
+ *         * tests/test-filesys.c:
+ *         * libgphoto2/gphoto2-camera.c:
+ *         * camlibs: Adjust to reflect above changes
+ *
  * Revision 1.38  2002/01/04 23:15:55  dfandrich
  * Renamed macro arguments to avoid luser compilers replacing %s
  *
@@ -236,7 +246,7 @@ static int camera_exit(Camera *camera) {
 	return mesa_port_close(camera->port);
 }
 
-static int file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list, void *data) {
+static int file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list, void *data, GPContext *context) {
 
 	Camera *camera = data;
 	int count;
@@ -244,7 +254,9 @@ static int file_list_func (CameraFilesystem *fs, const char *folder, CameraList 
 	/* We only support root folder */
 	if (strcmp (folder, "/"))
 	{
-		gp_camera_set_error(camera, _("Only root directory is supported"));
+		gp_context_error (context, _("Only root folder is "
+			"supported - you requested a file listing for "
+			"folder '%s'."), folder);
 		return (GP_ERROR_DIRECTORY_NOT_FOUND);
 	}
 
@@ -265,7 +277,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder, CameraList 
 	return (gp_list_populate (list, IMAGE_NAME_TEMPLATE, count));
 }
 
-static int get_file_func (CameraFilesystem *fs, const char *folder, const char *filename, CameraFileType type, CameraFile *file, void *user_data) {
+static int get_file_func (CameraFilesystem *fs, const char *folder, const char *filename, CameraFileType type, CameraFile *file, void *user_data, GPContext *context) {
 
 	Camera *camera = user_data;
 	int num, width, height;
@@ -277,7 +289,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder, const char *
 		/* Magic file name specifies magic image number */
 		num = RAM_IMAGE_NUM;
 	else
-		num = gp_filesystem_number(camera->fs, "/", filename);
+		num = gp_filesystem_number(camera->fs, "/", filename, context);
 
 	if (num < 0)
 		return num;
@@ -335,12 +347,12 @@ static int get_file_func (CameraFilesystem *fs, const char *folder, const char *
 	return GP_OK;
 }
 
-static int get_info_func (CameraFilesystem *fs, const char *folder, const char *filename, CameraFileInfo *info, void *data) {
+static int get_info_func (CameraFilesystem *fs, const char *folder, const char *filename, CameraFileInfo *info, void *data, GPContext *context) {
 
 	Camera *camera = data;
 	int num, std_res;
 
-	num = gp_filesystem_number (fs, folder, filename);
+	num = gp_filesystem_number (fs, folder, filename, context);
 	if (num < 0)
 		return num;
 
@@ -374,7 +386,7 @@ static int get_info_func (CameraFilesystem *fs, const char *folder, const char *
 	return GP_OK;
 }
 
-static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path) {
+static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context) {
 
 	if (type != GP_CAPTURE_IMAGE)
 	{
@@ -394,7 +406,8 @@ static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePat
 	 * has disappeared. Tell the CameraFilesystem. If it didn't exist, 
 	 * never mind (don't check return value).
 	 */
-	gp_filesystem_delete_file_noop (camera->fs, "/", RAM_IMAGE_TEMPLATE);
+	gp_filesystem_delete_file_noop (camera->fs, "/", RAM_IMAGE_TEMPLATE,
+					context);
 
 	/*
 	 * User must download special RAM_IMAGE_TEMPLATE file.
@@ -402,7 +415,7 @@ static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePat
 	 */
 	strncpy (path->folder, "/", sizeof (path->folder));
 	strncpy (path->name, RAM_IMAGE_TEMPLATE, sizeof (path->name));
-	CHECK (gp_filesystem_append (camera->fs, path->folder, path->name));
+	CHECK (gp_filesystem_append (camera->fs, path->folder, path->name, context));
 
 	return (GP_OK);
 }

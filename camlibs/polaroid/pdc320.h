@@ -55,8 +55,8 @@ jpeg_quantization_table luminance = {
 
 #define RETRIES 3
 
-#define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
-#define CHECK_RESULT_FREE(result, data) {int r = (result); if (r < 0) {free (data); return (r);}}
+#define CR(result) {int r = (result); if (r < 0) return (r);}
+#define CR_FREE(result, data) {int r = (result); if (r < 0) {free (data); return (r);}}
 
 static struct {
 	const char *model;

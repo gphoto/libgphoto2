@@ -96,7 +96,7 @@ static int camera_exit (Camera *camera) {
 }
 
 static int file_list_func (CameraFilesystem *fs, const char *folder, 
-			   CameraList *list, void *data) {
+			   CameraList *list, void *data, GPContext *context) {
  
     Camera *camera=data;
     int i;
@@ -170,7 +170,8 @@ static int agfa_file_get (Camera *camera, const char *filename, int thumbnail,
 
 static int get_file_func (CameraFilesystem *fs, const char *folder, 
 			  const char *filename, CameraFileType type,
-			  CameraFile *file, void *user_data) {
+			  CameraFile *file, void *user_data,
+			  GPContext *context) {
 
     Camera *camera = user_data;
     unsigned char *data = NULL;
@@ -227,7 +228,8 @@ static int camera_about(Camera *camera, CameraText *about) {
 
 
     /* Below contributed by Ben Hague <benhague@btinternet.com> */
-static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path)
+static int camera_capture (Camera *camera, CameraCaptureType type,
+			   CameraFilePath *path, GPContext *context)
 {
     /* this is broken.  We capture image to the camera, but
      * we don't detect the new filename.  We should detect
@@ -239,7 +241,8 @@ static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePat
 
 
 static int delete_file_func (CameraFilesystem *fs, const char *folder,
-			     const char *filename, void *data) {
+			     const char *filename, void *data,
+			     GPContext *context) {
   
     Camera *camera = data;
 

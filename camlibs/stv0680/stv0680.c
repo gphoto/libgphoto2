@@ -137,7 +137,7 @@ int camera_abilities (CameraAbilitiesList *list)
 }
 
 static int file_list_func (CameraFilesystem *fs, const char *folder, 
-			   CameraList *list, void *data) 
+			   CameraList *list, void *data, GPContext *context) 
 {
 	Camera *camera = data;
 	int count, result;
@@ -155,14 +155,14 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 
 static int get_file_func (CameraFilesystem *fs, const char *folder,
 			  const char *filename, CameraFileType type,
-			  CameraFile *file, void *user_data)
+			  CameraFile *file, void *user_data, GPContext *context)
 {
 	Camera *camera = user_data;
 	int image_no, result;
 	char *data;
 	long int size;
 
-	image_no = gp_filesystem_number(camera->fs, folder, filename);
+	image_no = gp_filesystem_number(camera->fs, folder, filename, context);
 	if(image_no < 0)
 		return image_no;
 
@@ -193,7 +193,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	return (GP_OK);
 }
 
-static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path)
+static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context)
 {
 	int result;
 	int count,oldcount;
@@ -214,7 +214,8 @@ static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePat
 	sprintf(path->name,"image%03i.pnm",count);
 
 	/* Tell the filesystem about it */
-	result = gp_filesystem_append (camera->fs, path->folder, path->name);
+	result = gp_filesystem_append (camera->fs, path->folder, path->name,
+				       context);
 	if (result < 0)
 		return (result);
 
@@ -265,7 +266,8 @@ static int camera_about (Camera *camera, CameraText *about)
 }
 
 static int
-delete_all_func (CameraFilesystem *fs, const char* folder, void *data)
+delete_all_func (CameraFilesystem *fs, const char* folder, void *data,
+		 GPContext *context)
 {
         Camera *camera = data;
 	if (strcmp (folder, "/"))

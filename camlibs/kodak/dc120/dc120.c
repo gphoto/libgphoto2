@@ -135,7 +135,7 @@ static int find_folder( Camera *camera, const char *folder,
 }
 
 static int folder_list_func (CameraFilesystem *fs, const char *folder,
-			     CameraList *list, void *data) 
+			     CameraList *list, void *data, GPContext *context)
 {
     int res;
     int from_card;
@@ -160,7 +160,7 @@ static int folder_list_func (CameraFilesystem *fs, const char *folder,
 }
 
 static int file_list_func (CameraFilesystem *fs, const char *folder,
-			   CameraList *list, void *data) 
+			   CameraList *list, void *data, GPContext *context) 
 {
     int res;
     int from_card;
@@ -180,7 +180,8 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 
 
 static int camera_file_action (Camera *camera, int action, CameraFile *file,
-			       const char *folder, const char *filename) 
+			       const char *folder, const char *filename,
+			       GPContext *context) 
 {
     CameraList *files = NULL;
     const char* file_name;
@@ -228,12 +229,11 @@ static int camera_file_action (Camera *camera, int action, CameraFile *file,
     }
     
     
-    picnum = gp_filesystem_number(camera->fs, folder, filename);
-    if (picnum == GP_ERROR) {
-	return (GP_ERROR);
-    }
-    
-    
+    picnum = gp_filesystem_number(camera->fs, folder, filename, context);
+    if (picnum < 0)
+	    return (picnum);
+
+ 
     if (action == DC120_ACTION_PREVIEW) {
 	dot = strrchr(filename, '.');
 	if( dot && strlen( dot )>3 ) {
@@ -251,35 +251,36 @@ static int camera_file_action (Camera *camera, int action, CameraFile *file,
 
 static int get_file_func (CameraFilesystem *fs, const char *folder,
 			  const char *filename, CameraFileType type,
-			  CameraFile *file, void *data) 
+			  CameraFile *file, void *data, GPContext *context) 
 {
 	Camera *camera = data;
 
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
 		return (camera_file_action (camera, DC120_ACTION_IMAGE, file,
-					    folder, filename));
+					    folder, filename, context));
 	case GP_FILE_TYPE_PREVIEW:
 		return (camera_file_action (camera, DC120_ACTION_PREVIEW, file,
-					    folder, filename));
+					    folder, filename, context));
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
 }
 
 static int delete_file_func (CameraFilesystem *fs, const char *folder, 
-			     const char *filename, void *data) 
+			     const char *filename, void *data,
+			     GPContext *context) 
 {
 	Camera *camera = data;
 	int retval;
 
 	retval = camera_file_action (camera, DC120_ACTION_DELETE, NULL, 
-				     folder, filename);
+				     folder, filename, context);
 
 	return (retval);
 }
 
-static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path) {
+static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context) {
 	CameraList *list;
 	int   count;
         const char* name;
@@ -306,7 +307,7 @@ static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePat
 
 	CHECK_RESULT (gp_filesystem_append (camera->fs, 
 					    path->folder, 
-					    path->name));
+					    path->name, context));
 
         return (GP_OK);
 

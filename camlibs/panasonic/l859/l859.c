@@ -388,7 +388,7 @@ static int camera_exit (Camera *camera) {
 }
 
 static int file_list_func (CameraFilesystem *fs, const char *folder,
-			   CameraList *list, void *data) {
+			   CameraList *list, void *data, GPContext *context) {
 
 	Camera *camera = data;
 	int	num = 0;
@@ -471,7 +471,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 
 static int get_file_func (CameraFilesystem *fs, const char *folder,
 			  const char *filename, CameraFileType type,
-			  CameraFile *file, void *data) {
+			  CameraFile *file, void *data, GPContext *context) {
 
 	Camera *camera = data;
 	int		index;
@@ -484,7 +484,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	GP_DEBUG ("Get File %s", filename);
 
 	/* index is the 0-based image number on the camera */
-	index = gp_filesystem_number (camera->fs, folder, filename);
+	index = gp_filesystem_number (camera->fs, folder, filename, context);
 	if (index < 0)
 		return (index);
 
@@ -534,7 +534,8 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 }
 
 static int delete_file_func (CameraFilesystem *fs, const char *folder,
-			     const char *filename, void *data) {
+			     const char *filename, void *data,
+			     GPContext *context) {
 
 	Camera *camera = data;
 	int		index;
@@ -543,7 +544,7 @@ static int delete_file_func (CameraFilesystem *fs, const char *folder,
 	GP_DEBUG ("Delete File %s", filename);
 
 	/* index is the 0-based image number on the camera */
-	index = gp_filesystem_number (camera->fs, folder, filename);
+	index = gp_filesystem_number (camera->fs, folder, filename, context);
 	if (index < 0)
 		return (index);
 
@@ -557,7 +558,7 @@ static int delete_file_func (CameraFilesystem *fs, const char *folder,
 }
 
 static int delete_all_func (CameraFilesystem *fs, const char *folder,
-			    void *data) {
+			    void *data, GPContext *context) {
 
 	Camera *camera = data;
 

@@ -382,7 +382,7 @@ static int camera_exit (Camera *camera) {
 }
 
 static int file_list_func (CameraFilesystem *fs, const char *folder,
-			   CameraList *list, void *data) 
+			   CameraList *list, void *data, GPContext *context) 
 {
 	Camera *camera = data;
 	int 	count;
@@ -397,7 +397,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 
 static int get_file_func (CameraFilesystem *fs, const char *folder,
 			  const char *filename, CameraFileType type,
-			  CameraFile *file, void *data) 
+			  CameraFile *file, void *data, GPContext *context) 
 {
 	Camera *camera = data;
 	int	index, size, rsize, i, s;
@@ -408,7 +408,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	dsc_print_status(camera, _("Downloading image %s."), filename);
 
 	/* index is the 0-based image number on the camera */
-	index = gp_filesystem_number (camera->fs, folder, filename);
+	index = gp_filesystem_number (camera->fs, folder, filename, context);
 	if (index < 0) 
 		return (index);
 
@@ -430,7 +430,8 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 }
 
 static int put_file_func (CameraFilesystem *fs, const char *folder,
-			  CameraFile *file, void *user_data) 
+			  CameraFile *file, void *user_data,
+			  GPContext *context) 
 {
 	Camera *camera = user_data;
 	int	blocks, blocksize, i;
@@ -481,7 +482,8 @@ static int put_file_func (CameraFilesystem *fs, const char *folder,
 }
 
 static int delete_file_func (CameraFilesystem *fs, const char *folder,
-			     const char *filename, void *data) 
+			     const char *filename, void *data,
+			     GPContext *context) 
 {
 	Camera *camera = data;
 	int	index, result;
@@ -489,7 +491,8 @@ static int delete_file_func (CameraFilesystem *fs, const char *folder,
 	dsc_print_status(camera, _("Deleting image %s."), filename);
 
 	/* index is the 0-based image number on the camera */
-	CHECK (index = gp_filesystem_number (camera->fs, folder, filename));
+	CHECK (index = gp_filesystem_number (camera->fs, folder, filename,
+					     context));
         index++;
 
 	return dsc1_delete(camera, index);
@@ -542,14 +545,14 @@ int camera_init (Camera *camera) {
 	}
 
 	/* Configure the port (remember the selected speed) */
-        gp_port_timeout_set(camera->port, 5000);
-	gp_port_settings_get(camera->port, &settings);
+        gp_port_set_timeout(camera->port, 5000);
+	gp_port_get_settings(camera->port, &settings);
 	selected_speed = settings.serial.speed;
         settings.serial.speed      = 9600; /* hand shake speed */
         settings.serial.bits       = 8;
         settings.serial.parity     = 0;
         settings.serial.stopbits   = 1;
-        gp_port_settings_set(camera->port, settings);
+        gp_port_set_settings(camera->port, settings);
 
 	/* Set up the filesystem */
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);

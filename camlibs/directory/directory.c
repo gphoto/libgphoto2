@@ -123,7 +123,7 @@ int camera_abilities (CameraAbilitiesList *list)
 
 static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
-		void *data)
+		void *data, GPContext *context)
 {
 	GP_SYSTEM_DIR dir;
 	GP_SYSTEM_DIRENT de;
@@ -154,7 +154,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 static int
 folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
-		  void *data)
+		  void *data, GPContext *context)
 {
 	GP_SYSTEM_DIR dir;
 	GP_SYSTEM_DIRENT de;
@@ -197,7 +197,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 static int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
-		      CameraFileInfo *info, void *data)
+		      CameraFileInfo *info, void *data, GPContext *context)
 {
 	Camera *camera = data;
 	char path[1024], link[1024];
@@ -226,7 +226,8 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 		else {
 			*name = '\0';
 			name++;
-			return (get_info_func (fs, link, name, info, data));
+			return (get_info_func (fs, link, name, info, data,
+					       context));
 		}
 	}
 
@@ -261,7 +262,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 
 static int
 set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
-	       CameraFileInfo info, void *data)
+	       CameraFileInfo info, void *data, GPContext *context)
 {
 	Camera *camera = data;
 	int retval;
@@ -330,7 +331,8 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 
 static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
-	       CameraFileType type, CameraFile *file, void *data)
+	       CameraFileType type, CameraFile *file, void *data,
+	       GPContext *context)
 {
         char path[1024];
 	int result = GP_OK;
@@ -440,7 +442,7 @@ camera_about (Camera *camera, CameraText *about)
 
 static int
 make_dir_func (CameraFilesystem *fs, const char *folder, const char *name,
-	       void *data)
+	       void *data, GPContext *context)
 {
 	char path[2048];
 
@@ -454,7 +456,7 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *name,
 
 static int
 remove_dir_func (CameraFilesystem *fs, const char *folder, const char *name,
-		 void *data)
+		 void *data, GPContext *context)
 {
 	char path[2048];
 
@@ -468,7 +470,7 @@ remove_dir_func (CameraFilesystem *fs, const char *folder, const char *name,
 
 static int
 delete_file_func (CameraFilesystem *fs, const char *folder,
-		  const char *file, void *data)
+		  const char *file, void *data, GPContext *context)
 {
 	char path[2048];
 
@@ -484,7 +486,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 
 static int
 put_file_func (CameraFilesystem *fs, const char *folder,
-	       CameraFile *file, void *data)
+	       CameraFile *file, void *data, GPContext *context)
 {
 	char path[2048];
 	const char *name;

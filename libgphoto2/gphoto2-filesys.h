@@ -26,6 +26,7 @@
 
 #include <time.h>
 
+#include <gphoto2-context.h>
 #include <gphoto2-list.h>
 #include <gphoto2-file.h>
 
@@ -98,84 +99,94 @@ int gp_filesystem_free	 (CameraFilesystem *fs);
 
 /* Manual editing */
 int gp_filesystem_append           (CameraFilesystem *fs, const char *folder,
-			            const char *filename);
+			            const char *filename, GPContext *context);
 int gp_filesystem_set_info_noop    (CameraFilesystem *fs, const char *folder,
-				    CameraFileInfo info);
+				    CameraFileInfo info, GPContext *context);
 int gp_filesystem_set_file_noop    (CameraFilesystem *fs, const char *folder,
-				    CameraFile *file);
+				    CameraFile *file, GPContext *context);
 int gp_filesystem_delete_file_noop (CameraFilesystem *fs, const char *folder,
-				    const char *filename);
+				    const char *filename, GPContext *context);
 int gp_filesystem_reset            (CameraFilesystem *fs);
 
 /* Information retrieval */
-int gp_filesystem_count	       (CameraFilesystem *fs, const char *folder);
+int gp_filesystem_count	       (CameraFilesystem *fs, const char *folder,
+				GPContext *context);
 int gp_filesystem_name         (CameraFilesystem *fs, const char *folder,
-			        int filenumber, const char **filename);
+			        int filenumber, const char **filename,
+				GPContext *context);
 int gp_filesystem_get_folder   (CameraFilesystem *fs, const char *filename,
-			        const char **folder);
+			        const char **folder, GPContext *context);
 int gp_filesystem_number       (CameraFilesystem *fs, const char *folder,
-				const char *filename);
+				const char *filename, GPContext *context);
 
 /* Listings */
 typedef int (*CameraFilesystemListFunc) (CameraFilesystem *fs,
 					 const char *folder, CameraList *list,
-					 void *data);
+					 void *data, GPContext *context);
 int gp_filesystem_set_list_funcs (CameraFilesystem *fs,
 				  CameraFilesystemListFunc file_list_func,
 				  CameraFilesystemListFunc folder_list_func,
 				  void *data);
 int gp_filesystem_list_files     (CameraFilesystem *fs, const char *folder,
-				  CameraList *list);
+				  CameraList *list, GPContext *context);
 int gp_filesystem_list_folders   (CameraFilesystem *fs, const char *folder,
-				  CameraList *list);
+				  CameraList *list, GPContext *context);
 
 /* File information */
 typedef int (*CameraFilesystemSetInfoFunc) (CameraFilesystem *fs,
 					    const char *folder,
 					    const char *filename,
-					    CameraFileInfo info, void *data);
+					    CameraFileInfo info, void *data,
+					    GPContext *context);
 typedef int (*CameraFilesystemGetInfoFunc) (CameraFilesystem *fs,
 					    const char *folder,
 					    const char *filename,
-					    CameraFileInfo *info, void *data);
+					    CameraFileInfo *info, void *data,
+					    GPContext *context);
 int gp_filesystem_set_info_funcs (CameraFilesystem *fs,
 				  CameraFilesystemGetInfoFunc get_info_func,
 				  CameraFilesystemSetInfoFunc set_info_func,
 				  void *data);
 int gp_filesystem_get_info       (CameraFilesystem *fs, const char *folder,
-				  const char *filename, CameraFileInfo *info);
+				  const char *filename, CameraFileInfo *info,
+				  GPContext *context);
 int gp_filesystem_set_info       (CameraFilesystem *fs, const char *folder,
-				  const char *filename, CameraFileInfo info);
+				  const char *filename, CameraFileInfo info,
+				  GPContext *context);
 
 /* Files */
 typedef int (*CameraFilesystemGetFileFunc)    (CameraFilesystem *fs,
 					       const char *folder,
 					       const char *filename,
 					       CameraFileType type,
-					       CameraFile *file, void *data);
+					       CameraFile *file, void *data,
+					       GPContext *context);
 typedef int (*CameraFilesystemDeleteFileFunc) (CameraFilesystem *fs,
 					       const char *folder,
 					       const char *filename,
-					       void *data);
+					       void *data, GPContext *context);
 int gp_filesystem_set_file_funcs (CameraFilesystem *fs,
 				  CameraFilesystemGetFileFunc get_file_func,
 				  CameraFilesystemDeleteFileFunc del_file_func,
 				  void *data);
 int gp_filesystem_get_file       (CameraFilesystem *fs, const char *folder,
 				  const char *filename, CameraFileType type,
-				  CameraFile *file);
+				  CameraFile *file, GPContext *context);
 int gp_filesystem_delete_file    (CameraFilesystem *fs, const char *folder,
-				  const char *filename);
+				  const char *filename, GPContext *context);
 
 /* Folders */
 typedef int (*CameraFilesystemPutFileFunc)   (CameraFilesystem *fs,
 					      const char *folder,
-					      CameraFile *file, void *data);
+					      CameraFile *file, void *data,
+					      GPContext *context);
 typedef int (*CameraFilesystemDeleteAllFunc) (CameraFilesystem *fs,
-					      const char *folder, void *data);
+					      const char *folder, void *data,
+					      GPContext *context);
 typedef int (*CameraFilesystemDirFunc)       (CameraFilesystem *fs,
 					      const char *folder,
-					      const char *name, void *data);
+					      const char *name, void *data,
+					      GPContext *context);
 int gp_filesystem_set_folder_funcs (CameraFilesystem *fs,
 				  CameraFilesystemPutFileFunc put_file_func,
 				  CameraFilesystemDeleteAllFunc delete_all_func,
@@ -183,12 +194,13 @@ int gp_filesystem_set_folder_funcs (CameraFilesystem *fs,
 				  CameraFilesystemDirFunc remove_dir_func,
 				  void *data);
 int gp_filesystem_put_file   (CameraFilesystem *fs, const char *folder,
-			      CameraFile *file);
-int gp_filesystem_delete_all (CameraFilesystem *fs, const char *folder);
+			      CameraFile *file, GPContext *context);
+int gp_filesystem_delete_all (CameraFilesystem *fs, const char *folder,
+			      GPContext *context);
 int gp_filesystem_make_dir   (CameraFilesystem *fs, const char *folder,
-			      const char *name);
+			      const char *name, GPContext *context);
 int gp_filesystem_remove_dir (CameraFilesystem *fs, const char *folder,
-			      const char *name);
+			      const char *name, GPContext *context);
 
 /* For debugging */
 int gp_filesystem_dump         (CameraFilesystem *fs);

@@ -109,7 +109,7 @@ static int camera_exit (Camera *camera)
 }
 
 static int file_list_func (CameraFilesystem *fs, const char *folder, 
-			   CameraList *list, void *data) 
+			   CameraList *list, void *data, GPContext *context) 
 {
 	Camera *camera = data;
 	int ret;
@@ -129,13 +129,13 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 
 static int get_file_func (CameraFilesystem *fs, const char *folder,
 			  const char *filename, CameraFileType type,
-			  CameraFile *file, void *data) 
+			  CameraFile *file, void *data, GPContext *context) 
 {
 	Camera *camera = data;
 	int file_number=0, result;
 	char buffer[128];
 
-	file_number = gp_filesystem_number(fs, folder, filename);
+	file_number = gp_filesystem_number(fs, folder, filename, context);
 	if (file_number < 0)
 		return (file_number);
 
@@ -169,12 +169,13 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 }
 
 static int delete_file_func (CameraFilesystem *fs, const char *folder, 
-			     const char *filename, void *data) 
+			     const char *filename, void *data,
+			     GPContext *context) 
 {
 	Camera *camera = data;
 	int file_number=0, ret;
 
-	file_number = gp_filesystem_number(camera->fs, folder, filename);
+	file_number = gp_filesystem_number(camera->fs, folder, filename, context);
 	if (file_number < 0)
 		return (file_number);
 
@@ -183,7 +184,7 @@ static int delete_file_func (CameraFilesystem *fs, const char *folder,
 	return (ret);
 }
 
-static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path) 
+static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context) 
 {
 	if (type != GP_CAPTURE_IMAGE)
 		return (GP_ERROR_NOT_SUPPORTED);
@@ -208,13 +209,13 @@ static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePat
 #endif
 
 	/* Tell the CameraFilesystem about this picture */
-	gp_filesystem_append (camera->fs, path->folder, path->name);
+	gp_filesystem_append (camera->fs, path->folder, path->name, context);
 
 	return GP_OK;
 }
 
 static int put_file_func (CameraFilesystem *fs, const char *folder, 
-			  CameraFile *file, void *data) 
+			  CameraFile *file, void *data, GPContext *context) 
 {
 	Camera *camera = data;
 
@@ -222,7 +223,7 @@ static int put_file_func (CameraFilesystem *fs, const char *folder,
 }
 
 static int delete_all_func (CameraFilesystem *fs, const char *folder,
-			    void *data) 
+			    void *data, GPContext *context) 
 {
 	Camera *camera = data;
 	int ret;

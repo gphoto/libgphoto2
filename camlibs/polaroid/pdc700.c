@@ -724,7 +724,8 @@ pdc700_expand (unsigned char *src, unsigned char *dst)
 }
 
 static int
-camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path)
+camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
+		GPContext *context)
 {
 	int count;
 	char buf[1024];
@@ -735,9 +736,9 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path)
 	 * We don't get any info back. However, we need to tell the
 	 * CameraFilesystem that there is one additional picture.
 	 */
-	CR (count = gp_filesystem_count (camera->fs, "/"));
+	CR (count = gp_filesystem_count (camera->fs, "/", context));
 	snprintf (buf, sizeof (buf), "PDC700%04i.jpg", count + 1);
-	CR (gp_filesystem_append (camera->fs, "/", buf));
+	CR (gp_filesystem_append (camera->fs, "/", buf, context));
 
 	/* Now tell the frontend where to look for the image */
 	strncpy (path->folder, "/", sizeof (path->folder));
@@ -748,13 +749,13 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path)
 
 static int
 del_file_func (CameraFilesystem *fs, const char *folder, const char *file,
-	       void *data)
+	       void *data, GPContext *context)
 {
 	Camera *camera = data;
 	int n;
 
 	/* We need picture numbers starting with 1 */
-	CR (n = gp_filesystem_number (fs, folder, file));
+	CR (n = gp_filesystem_number (fs, folder, file, context));
 	n++;
 
 	CR (pdc700_delete (camera, n));
@@ -764,7 +765,8 @@ del_file_func (CameraFilesystem *fs, const char *folder, const char *file,
 
 static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename, 
-	       CameraFileType type, CameraFile *file, void *user_data)
+	       CameraFileType type, CameraFile *file, void *user_data,
+	       GPContext *context)
 {
 	Camera *camera = user_data;
 	int n;
@@ -777,7 +779,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 #endif
 
 	/* Get the number of the picture from the filesystem */
-	CR (n = gp_filesystem_number (camera->fs, folder, filename));
+	CR (n = gp_filesystem_number (camera->fs, folder, filename, context));
 
 	/* Get the file */
 	CR (pdc700_pic (camera, n + 1, &data, &size, 
@@ -1043,7 +1045,7 @@ camera_summary (Camera *camera, CameraText *about)
 
 static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
-		void *data)
+		void *data, GPContext *context)
 {
 	Camera *camera = data;
 	PDCInfo info;
@@ -1057,14 +1059,14 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 static int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
-	       CameraFileInfo *info, void *data)
+	       CameraFileInfo *info, void *data, GPContext *context)
 {
 	int n;
 	Camera *camera = data;
 	PDCPicInfo pic_info;
 
 	/* Get the picture number from the CameraFilesystem */
-	CR (n = gp_filesystem_number (fs, folder, file));
+	CR (n = gp_filesystem_number (fs, folder, file, context));
 
 	CR (pdc700_picinfo (camera, n + 1, &pic_info));
 	info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;

@@ -61,7 +61,7 @@ int init(Camera *camera)
 	GPPortSettings settings;
 	int ret, selected_speed;
 
-	ret = gp_port_settings_get (camera->port, &settings);
+	ret = gp_port_get_settings (camera->port, &settings);
 	if (ret < 0)
 		return (ret);
 
@@ -73,18 +73,18 @@ int init(Camera *camera)
 	settings.serial.parity   = 0;
 	settings.serial.stopbits = 1;
 
-	ret = gp_port_settings_set (camera->port, settings);
+	ret = gp_port_set_settings (camera->port, settings);
 	if (ret < 0)
 		return (ret);
 
-	gp_port_timeout_set (camera->port, TIMEOUT);
+	gp_port_set_timeout (camera->port, TIMEOUT);
 
 	if (dc3200_set_speed (camera, selected_speed) == GP_ERROR)
 		return GP_ERROR;
 
 	/* Set the new speed */
 	settings.serial.speed = selected_speed;
-	ret = gp_port_settings_set (camera->port, settings);
+	ret = gp_port_set_settings (camera->port, settings);
 	if (ret < 0)
 		return (ret);
 
@@ -128,7 +128,8 @@ int check_last_use(Camera *camera)
 }
 
 static int folder_list_func (CameraFilesystem *fs, const char *folder,
-			     CameraList *list, void *user_data)
+			     CameraList *list, void *user_data,
+			     GPContext *context)
 {
 	Camera 		*camera = user_data;
 	u_char		*data = NULL;
@@ -198,7 +199,8 @@ static int folder_list_func (CameraFilesystem *fs, const char *folder,
 }
 
 static int file_list_func (CameraFilesystem *fs, const char *folder,
-			   CameraList *list, void *user_data)
+			   CameraList *list, void *user_data,
+			   GPContext *context)
 {
 	Camera		*camera = user_data;
 	u_char		*data = NULL;
@@ -264,7 +266,8 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 
 static int get_file_func (CameraFilesystem *fs, const char *folder,
 			  const char *filename, CameraFileType type,
-			  CameraFile *file, void *user_data)
+			  CameraFile *file, void *user_data, 
+			  GPContext *context)
 {
 	Camera		*camera = user_data;
 	u_char		*data = NULL;
