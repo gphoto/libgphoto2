@@ -730,6 +730,10 @@ gp_widget_add_choice (CameraWidget *widget, const char *choice)
 	    (widget->type != GP_WIDGET_MENU))
 		return (GP_ERROR_BAD_PARAMETERS);
 
+	/* static list of choices is full (32?) */
+	if (widget->choice_count >= sizeof(widget->choice)/sizeof(widget->choice[0]))
+		return (GP_ERROR);
+
 	strncpy (widget->choice[widget->choice_count], choice, 64);
 	widget->choice_count += 1;
 
