@@ -22,7 +22,8 @@
 #include <time.h>
 #include <unistd.h>
 #include <termios.h>
-
+#include <ctype.h>
+#include <netinet/in.h>
 #include <gphoto2.h>
 #include "../../libgphoto2/exif.h"
 
@@ -82,12 +83,12 @@ int psa50_send_frame(const unsigned char *pkt,int len)
 unsigned char *psa50_recv_frame(int *len)
 {
     static unsigned char buffer[5000];
-        /* more than enough :-) (allow for a few run-together packets) */
+	/* more than enough :-) (allow for a few run-together packets) */
     unsigned char *p = buffer;
     int c;
-
+	
     while ((c = canon_serial_get_byte()) != CANON_FBEG)
-        if (c == -1) return NULL;
+	  if (c == -1) return NULL;
     while ((c = canon_serial_get_byte()) != CANON_FEND) {
         if (c < 0) return NULL;
         if (c == CANON_ESC) c = canon_serial_get_byte() ^ CANON_XOR;
@@ -121,6 +122,8 @@ unsigned char *psa50_recv_frame(int *len)
 #define PKT_ACK         5
 #define PKT_NACK        255
 #define PKTACK_NACK     0x01
+#define PKT_UPLOAD_EOT  3
+
 
 static unsigned char seq_tx = 1;
 static unsigned char seq_rx = 1;
@@ -132,19 +135,32 @@ static int psa50_send_packet(unsigned char type,unsigned char seq,
     unsigned char *hdr = pkt-PKT_HDR_LEN;
     unsigned short crc;
 
-
     hdr[PKT_TYPE] = type;
     hdr[PKT_SEQ] = seq;
-    hdr[PKT_LEN_LSB] = len & 0xff;
-    hdr[PKT_LEN_MSB] = len >> 8;
-        if (type == PKT_NACK) {
-                hdr[PKT_TYPE] = PKT_ACK;
-                hdr[PKT_TYPE+1] = '\xff';/* PKTACK_NACK; */
-        }
+	hdr[PKT_LEN_LSB] = len & 0xff;
+	hdr[PKT_LEN_MSB] = len >> 8;
+
+	if (type == PKT_NACK) {
+		hdr[PKT_TYPE] = PKT_ACK;
+		hdr[PKT_TYPE+1] = '\xff';/* PKTACK_NACK; */
+	}
+	
+	if (type == PKT_UPLOAD_EOT) {
+		hdr[PKT_TYPE] = PKT_EOT;
+		hdr[PKT_TYPE+1] = 0x3;
+		len = 2;
+	}
+	/*
+	if (pkt[4] == 0x3 && pkt[7] == 0x11) {
+		hdr[PKT_LEN_LSB] = (len - 58) & 0xff;
+		hdr[PKT_LEN_MSB] = (len - 58) >> 8;
+	}
+	*/
     if (type == PKT_EOT || type == PKT_ACK || type == PKT_NACK) len = 2; /* @@@ hack */
     crc = canon_psa50_gen_crc(hdr,len+PKT_HDR_LEN);
     pkt[len] = crc & 0xff;
     pkt[len+1] = crc >> 8;
+	
     return psa50_send_frame(hdr,len+PKT_HDR_LEN+2);
 }
 
@@ -155,7 +171,7 @@ static unsigned char *psa50_recv_packet(unsigned char *type,unsigned char *seq,
     unsigned char *pkt;
     unsigned short crc;
     int raw_length,length=0;
-
+	
     pkt = psa50_recv_frame(&raw_length);
     if (!pkt) return NULL;
     if (raw_length < PKT_HDR_LEN) {
@@ -166,9 +182,9 @@ static unsigned char *psa50_recv_packet(unsigned char *type,unsigned char *seq,
         length = pkt[PKT_LEN_LSB] | (pkt[PKT_LEN_MSB] << 8);
         if (length+PKT_HDR_LEN > raw_length-2) {
             debug_message("ERROR: invalid length\n");
-                /*fprintf(stderr,"Sending NACK\n");
-                psa50_send_packet(PKT_NACK,seq_rx++,psa50_eot+PKT_HDR_LEN,0); */
-                receive_error = ERROR_RECEIVED;
+			/*fprintf(stderr,"Sending NACK\n");
+			 psa50_send_packet(PKT_NACK,seq_rx++,psa50_eot+PKT_HDR_LEN,0); */
+			receive_error = ERROR_RECEIVED;
             return NULL;
         }
     }
@@ -180,7 +196,7 @@ static unsigned char *psa50_recv_packet(unsigned char *type,unsigned char *seq,
     if (type) *type = pkt[PKT_TYPE];
     if (seq) *seq = pkt[PKT_SEQ];
     if (len) *len = length;
-        if (*type == PKT_ACK || *type == PKT_EOT) return pkt;
+	if (*type == PKT_ACK || *type == PKT_EOT) return pkt;
     return pkt+PKT_HDR_LEN;
 }
 
@@ -309,36 +325,54 @@ static int psa50_send_msg(unsigned char mtype,unsigned char dir,
         memcpy(pos,str,len);
         pos += len;
     }
-    total = pos-pkt;
-    pkt[MSG_LEN_LSB] = total & 0xff;
-    pkt[MSG_LEN_MSB] = total >> 8;
-    for (try=1; try < MAX_TRIES; try++) {
-      if (!psa50_send_packet(PKT_MSG,0,pkt,total)) return 0;
-      if (!psa50_send_packet(PKT_EOT,seq_tx,psa50_eot+PKT_HDR_LEN,1)) return 0;
-      good_ack = psa50_wait_for_ack();
-      if (good_ack == -1) {
-        debug_message("NACK received, retrying command\n");
-      }
-      else if (good_ack==1) {
-        return good_ack;
-      }
-      else  {
-        debug_message("No ACK received, retrying command\n");
-        if (try==2) {
-                                //is the camera still there?
-          if (!psa50_send_packet(PKT_EOT,seq_tx,psa50_eot+PKT_HDR_LEN,0)) return 0;
-          good_ack = psa50_wait_for_ack();
-          if (good_ack==0) {
-            receive_error = FATAL_ERROR;
-            debug_message("ERROR: FATAL ERROR\n");
-            return -1;
-          }
-        }
-      }
-    }
-    return -1;
-}
 
+    total = pos-pkt;
+	
+	if (mtype == 0x3 && dir == 0x11) {
+		pkt[MSG_LEN_LSB] = total & 0xff;
+		pkt[MSG_LEN_MSB] = total >> 8;
+		
+		psa50_send_packet(PKT_MSG,0,pkt,total);
+//		psa50_send_packet(PKT_MSG,0x1,pkt+(total/2),total/2);
+		if (!psa50_send_packet(PKT_EOT,seq_tx,psa50_eot+PKT_HDR_LEN,1))
+		  return 0;
+		return psa50_wait_for_ack();
+	}
+	else {
+		pkt[MSG_LEN_LSB] = total & 0xff;
+		pkt[MSG_LEN_MSB] = total >> 8;
+		for (try=1; try < MAX_TRIES; try++) {
+			if (!psa50_send_packet(PKT_MSG,0,pkt,total)) return 0;
+			/* if upload packet (03 11) a second packet have to be sent before EOT. */
+			if (mtype == 0x03 && dir == 0x11) {
+				if (!psa50_send_packet(PKT_UPLOAD_EOT,seq_tx,psa50_eot+PKT_HDR_LEN,1))
+				  return 0;
+			} else
+			  if (!psa50_send_packet(PKT_EOT,seq_tx,psa50_eot+PKT_HDR_LEN,1)) return 0;
+			good_ack = psa50_wait_for_ack();
+			if (good_ack == -1) {
+				debug_message("NACK received, retrying command\n");
+			}
+			else if (good_ack==1) {
+				return good_ack;
+			}
+			else  {
+				debug_message("No ACK received, retrying command\n");
+				if (try==2) {
+					//is the camera still there?
+					if (!psa50_send_packet(PKT_EOT,seq_tx,psa50_eot+PKT_HDR_LEN,0)) return 0;
+					good_ack = psa50_wait_for_ack();
+					if (good_ack==0) {
+						receive_error = FATAL_ERROR;
+						debug_message("ERROR: FATAL ERROR\n");
+						return -1;
+					}
+				}
+			}
+		}
+		return -1;
+	}
+}
 
 /**
  * Receive a message from the camera.
@@ -363,120 +397,121 @@ static unsigned char *psa50_recv_msg(unsigned char mtype,unsigned char dir,
     unsigned char type,seq;
     int len,length = 0,msg_pos = 0;
 
+//	serial_set_timeout(5000);
     while (1) {
-                frag = psa50_recv_packet(&type,NULL,&len);
-                if (!frag) return NULL;
-                if (type == PKT_MSG) break;
-                if (type == PKT_EOT) {
-                        debug_message("Old EOT received sending corresponding ACK\n");
-                        psa50_send_packet(PKT_ACK,frag[0],psa50_eot+PKT_HDR_LEN,0);
-                }
-                debug_message("ERROR: protocol error, retrying\n");
+		frag = psa50_recv_packet(&type,NULL,&len);
+		if (!frag) return NULL;
+		if (type == PKT_MSG) break;
+		if (type == PKT_EOT) {
+			debug_message("Old EOT received sending corresponding ACK\n");
+			psa50_send_packet(PKT_ACK,frag[0],psa50_eot+PKT_HDR_LEN,0);
+		}
+		debug_message("ERROR: protocol error, retrying\n");
     }
     /* we keep the fragment only if there was no error */
-        if (receive_error == NOERROR) {
-    length = frag[MSG_LEN_LSB] | (frag[MSG_LEN_MSB] << 8);
-    if (len < MSG_HDR_LEN || frag[MSG_02] != 2) {
-                debug_message("ERROR: message format error\n");
-                return NULL;
-    }
+	if (receive_error == NOERROR) {
+		length = frag[MSG_LEN_LSB] | (frag[MSG_LEN_MSB] << 8);
+		if (len < MSG_HDR_LEN || frag[MSG_02] != 2) {
+			debug_message("ERROR: message format error\n");
+			return NULL;
+		}
 
-    if (frag[MSG_MTYPE] != mtype || frag[MSG_DIR] != dir) {
-        if(frag[MSG_MTYPE] =='\x01' && frag[MSG_DIR] == '\x00' &&
-           memcmp(frag+12,"\x30\x00\x00\x30",4)) {
-                debug_message("ERROR: Battery exhausted, camera off");
-                gp_camera_status(NULL, "Battery exhausted, camera off.");
-                receive_error=ERROR_LOWBATT;
-        }
-        else {
-          debug_message("ERROR: unexpected message.\n");
-          gp_camera_status(NULL, "ERROR: unexpected message");
-        }
-        return NULL;
-    }
-    frag += MSG_HDR_LEN;
-    len -= MSG_HDR_LEN;
-        }
+		if (frag[MSG_MTYPE] != mtype || frag[MSG_DIR] != dir) {
+			if(frag[MSG_MTYPE] =='\x01' && frag[MSG_DIR] == '\x00' &&
+			   memcmp(frag+12,"\x30\x00\x00\x30",4)) {
+				debug_message("ERROR: Battery exhausted, camera off");
+				gp_camera_status(NULL, "Battery exhausted, camera off.");
+				receive_error=ERROR_LOWBATT;
+			}
+			else {
+				debug_message("ERROR: unexpected message.\n");
+				gp_camera_status(NULL, "ERROR: unexpected message");
+			}
+			return NULL;
+		}
+		frag += MSG_HDR_LEN;
+		len -= MSG_HDR_LEN;
+	}
     while (1) {
-                if (receive_error == NOERROR) {
-        if (msg_pos+len > length) {
-            debug_message("ERROR: message overrun\n");
-            gp_camera_status(NULL, "ERROR: message overrun");
-            return NULL;
-        }
-        if (msg_pos+len > msg_size || !msg) {
-            msg_size *= 2;
-            msg = realloc(msg,msg_size);
-            if (!msg) {
-                perror("realloc");
-                exit(1);
-            }
-        }
-        memcpy(msg+msg_pos,frag,len);
-        msg_pos += len;
-                }
+		if (receive_error == NOERROR) {
+			if (msg_pos+len > length) {
+				debug_message("ERROR: message overrun\n");
+				gp_camera_status(NULL, "ERROR: message overrun");
+				return NULL;
+			}
+			if (msg_pos+len > msg_size || !msg) {
+				msg_size *= 2;
+				msg = realloc(msg,msg_size);
+				if (!msg) {
+					perror("realloc");
+					exit(1);
+				}
+			}
+			memcpy(msg+msg_pos,frag,len);
+			msg_pos += len;
+		}
         frag = psa50_recv_packet(&type,&seq,&len);
         if (!frag) return NULL;
         if (type == PKT_EOT) {
-                /* in case of error we don't want to stop as the camera will send
-                        the 1st packet of the sequence again */
-                        if (receive_error == ERROR_RECEIVED) {
-                                seq_rx = seq;
-                                psa50_send_packet(PKT_NACK,seq_rx,psa50_eot+PKT_HDR_LEN,0);
-                                receive_error = ERROR_ADDRESSED;
-                        } else {
-            if (seq == seq_rx)  break;
-            debug_message("ERROR: out of sequence\n");
-            gp_camera_status(NULL, "ERROR: out of sequence.");
-            return NULL;
-        }
-                }
-                if (type != PKT_MSG && receive_error == NOERROR) {
+			/* in case of error we don't want to stop as the camera will send
+			 the 1st packet of the sequence again */
+			if (receive_error == ERROR_RECEIVED) {
+				seq_rx = seq;
+				psa50_send_packet(PKT_NACK,seq_rx,psa50_eot+PKT_HDR_LEN,0);
+				receive_error = ERROR_ADDRESSED;
+			} else {
+				if (seq == seq_rx)  break;
+				debug_message("ERROR: out of sequence\n");
+				gp_camera_status(NULL, "ERROR: out of sequence.");
+				return NULL;
+			}
+		}
+		if (type != PKT_MSG && receive_error == NOERROR) {
             debug_message("ERROR: unexpected packet type\n");
             gp_camera_status(NULL, "ERROR: unexpected packet type.");
             return NULL;
         }
-                if (type == PKT_EOT && receive_error == ERROR_RECEIVED) {
-                        receive_error = ERROR_ADDRESSED;
-                }
-                if (type == PKT_MSG && receive_error == ERROR_ADDRESSED) {
-                        msg_pos =0;
-                        length = frag[MSG_LEN_LSB] | (frag[MSG_LEN_MSB] << 8);
-                if (len < MSG_HDR_LEN || frag[MSG_02] != 2) {
-                                debug_message("ERROR: message format error\n");
-                                gp_camera_status(NULL, "ERROR: message format error.");
-                                return NULL;
-                }
-
-                if (frag[MSG_MTYPE] != mtype || frag[MSG_DIR] != dir) {
-                        if(frag[MSG_MTYPE] =='\x01' && frag[MSG_DIR] == '\x00' &&
-                          memcmp(frag+12,"\x30\x00\x00\x30",4)) {
-                          debug_message("ERROR: Battery exhausted, camera off");
-                          gp_camera_status(NULL, "Battery exhausted, camera off.");
-                          receive_error=ERROR_LOWBATT;
-                        }
-                        else {
-                          debug_message("ERROR: unexpected message2\n");
-                          gp_camera_status(NULL, "ERROR: unexpected message2.");
-                        }
-                        return NULL;
-                }
-                frag += MSG_HDR_LEN;
-                len -= MSG_HDR_LEN;
-                        receive_error = NOERROR;
-                }
+		if (type == PKT_EOT && receive_error == ERROR_RECEIVED) {
+			receive_error = ERROR_ADDRESSED;
+		}
+		if (type == PKT_MSG && receive_error == ERROR_ADDRESSED) {
+			msg_pos =0;
+			length = frag[MSG_LEN_LSB] | (frag[MSG_LEN_MSB] << 8);
+			if (len < MSG_HDR_LEN || frag[MSG_02] != 2) {
+				debug_message("ERROR: message format error\n");
+				gp_camera_status(NULL, "ERROR: message format error.");
+				return NULL;
+			}
+			
+			if (frag[MSG_MTYPE] != mtype || frag[MSG_DIR] != dir) {
+				if(frag[MSG_MTYPE] =='\x01' && frag[MSG_DIR] == '\x00' &&
+				   memcmp(frag+12,"\x30\x00\x00\x30",4)) {
+					debug_message("ERROR: Battery exhausted, camera off");
+					gp_camera_status(NULL, "Battery exhausted, camera off.");
+					receive_error=ERROR_LOWBATT;
+				}
+				else {
+					debug_message("ERROR: unexpected message2\n");
+					gp_camera_status(NULL, "ERROR: unexpected message2.");
+				}
+				return NULL;
+			}
+			frag += MSG_HDR_LEN;
+			len -= MSG_HDR_LEN;
+			receive_error = NOERROR;
+		}
     }
-        if (receive_error == ERROR_ADDRESSED) {
-                receive_error = NOERROR;
-        }
-        if (receive_error == NOERROR) {
-    if (!psa50_send_packet(PKT_ACK,seq_rx++,psa50_eot+PKT_HDR_LEN,0))
-        return NULL;
-    if (total) *total = msg_pos;
-    return msg;
-        }
-
-        return NULL;
+	if (receive_error == ERROR_ADDRESSED) {
+		receive_error = NOERROR;
+	}
+	if (receive_error == NOERROR) {
+		if (!psa50_send_packet(PKT_ACK,seq_rx++,psa50_eot+PKT_HDR_LEN,0))
+		  return NULL;
+		if (total) *total = msg_pos;
+		return msg;
+	}
+	
+	return NULL;
 }
 
 /**
@@ -504,23 +539,26 @@ static unsigned char *psa50_serial_dialogue(unsigned char mtype,unsigned char di
 {
     va_list ap;
     int okay,try;
-        unsigned char *good_ack;
+	unsigned char *good_ack;
+	
+	for ( try = 1; try < MAX_TRIES; try++) {
+		va_start(ap,len);
+		okay = psa50_send_msg(mtype,dir,&ap);
+		va_end(ap);
+		if (!okay) return NULL;
+//		if (mtype==0x03 && dir==0x11)
+//		  return NULL; /*  no error but we want to quit at this point */
 
-        for ( try = 1; try < MAX_TRIES; try++) {
-                va_start(ap,len);
-                okay = psa50_send_msg(mtype,dir,&ap);
-                va_end(ap);
-                if (!okay) return NULL;
-                good_ack = psa50_recv_msg(mtype,dir ^ DIR_REVERSE,len);
-
-                if (good_ack) return good_ack;
-                if (receive_error == NOERROR) {
-                debug_message("Resending message\n");
-                seq_tx--;
+		good_ack = psa50_recv_msg(mtype,dir ^ DIR_REVERSE,len);
+		
+		if (good_ack) return good_ack;
+		if (receive_error == NOERROR) {
+			debug_message("Resending message\n");
+			seq_tx--;
         }
-                if (receive_error == FATAL_ERROR) break;
-        }
-        return NULL;
+		if (receive_error == FATAL_ERROR) break;
+	}
+	return NULL;
 }
 
 
@@ -654,6 +692,57 @@ int psa50_sync_time()
 }
 
 /**
+ * does operations on a directory based on the value
+ * of action : DIR_CREATE, DIR_REMOVE
+ * 
+ */
+int psa50_directory_operations(char *path, int action)
+{
+	unsigned char *msg;
+	int len;
+	char type;
+	
+	switch (action) {
+	 case DIR_CREATE:
+		type = 0x5;
+		break;
+	 case DIR_REMOVE:
+		type = 0x6;
+		break;
+	 default:
+		debug_message("Bad operation specified : %i\n", action);
+		return GP_ERROR;
+		break;
+	}
+	
+	switch (canon_comm_method) {
+	 case CANON_USB:
+		debug_message("USB directory creation not implemented\n");
+		return 0;
+		break;
+	 case CANON_SERIAL_RS232:
+	 default:
+		msg = psa50_serial_dialogue(type,0x11,&len,path,strlen(path)+1,NULL);
+		break;
+	}
+	
+	if (!msg) {
+		psa50_error_type();
+		return 0;
+	}
+
+	if(msg[0] != 0x00) {
+		if (action == DIR_CREATE)
+		  debug_message("Could not create directory %s\n",path);
+		else
+		  debug_message("Could not remove directory %s\n",path);
+		return 0;
+	}
+	
+	return 1;
+}
+
+/**
  *  Gets   the   camera identification  string,  usually   the  owner
  * name.  This information is stored  in the "camera" structure, which
  * is a global variable for the driver.
@@ -662,31 +751,31 @@ int psa50_sync_time()
  */
 int psa50_get_owner_name(void)
 {
-  unsigned char *msg;
-  int len;
-
-  switch (canon_comm_method) {
-  case CANON_USB:
-    len=0x4c;
-    msg = psa50_usb_dialogue(0x01,0x12,0x201,&len,0,0);
-    break;
-  case CANON_SERIAL_RS232:
-  default:
-    msg =  psa50_serial_dialogue(0x01,0x12,&len,NULL);
-    break;
-
-  }
-
-        if (!msg) {
-                psa50_error_type();
-                return 0;
-        }
-  /* Store these values in our "camera" structure: */
-  memcpy(camera_data.firmwrev,(char *) msg+8,4);
-  strncpy(camera_data.ident,(char *) msg+12,30);
-  strncpy(camera_data.owner,(char *) msg+44,30);
-
-  return 0;
+	unsigned char *msg;
+	int len;
+	
+	switch (canon_comm_method) {
+	 case CANON_USB:
+		len=0x4c;
+		msg = psa50_usb_dialogue(0x01,0x12,0x201,&len,0,0);
+		break;
+	 case CANON_SERIAL_RS232:
+	 default:
+		msg =  psa50_serial_dialogue(0x01,0x12,&len,NULL);
+		break;
+		
+	}
+	
+	if (!msg) {
+		psa50_error_type();
+		return 0;
+	}
+	/* Store these values in our "camera" structure: */
+	memcpy(camera_data.firmwrev,(char *) msg+8,4);
+	strncpy(camera_data.ident,(char *) msg+12,30);
+	strncpy(camera_data.owner,(char *) msg+44,30);
+	
+	return 0;
 }
 
 /**
@@ -723,36 +812,36 @@ int psa50_get_battery( int *pwr_status, int *pwr_source) {
  * Sets a file's attributes. See the 'Protocol' file for details.
  */
 int psa50_set_file_attributes(const char *file, const char *dir, char attrs) {
-  unsigned char buf[300];
-  unsigned char *msg;
-  unsigned char attr[4];
-  int len,name_len;
-
-  attr[0] = attr[1] = attr[2] = 0;
-  attr[3] = attrs;
-
-  switch (canon_comm_method) {
-  case CANON_USB:
-    memcpy(buf,attr,4);
-    memcpy(buf+4,dir,strlen(dir)+1);
-    memcpy(buf+4+strlen(dir)+1,file,strlen(file)+1);
-    name_len=strlen(dir)+strlen(file)+2+4;
-    len=0x4;
-    msg = psa50_usb_dialogue(0x0e,0x11,0x201,&len,buf,name_len);
-    break;
-  case CANON_SERIAL_RS232:
-  default:
-    msg =  psa50_serial_dialogue(0xe,0x11,&len,attr,4,dir,strlen(dir)+1,
-                                 file,strlen(file)+1,NULL);
-    break;
-  }
-
-  if (!msg) {
-    psa50_error_type();
-    return -1;
-  }
-
-  return 0;
+	unsigned char buf[300];
+	unsigned char *msg;
+	unsigned char attr[4];
+	int len,name_len;
+	
+	attr[0] = attr[1] = attr[2] = 0;
+	attr[3] = attrs;
+	
+	switch (canon_comm_method) {
+	 case CANON_USB:
+		memcpy(buf,attr,4);
+		memcpy(buf+4,dir,strlen(dir)+1);
+		memcpy(buf+4+strlen(dir)+1,file,strlen(file)+1);
+		name_len=strlen(dir)+strlen(file)+2+4;
+		len=0x4;
+		msg = psa50_usb_dialogue(0x0e,0x11,0x201,&len,buf,name_len);
+		break;
+	 case CANON_SERIAL_RS232:
+	 default:
+		msg =  psa50_serial_dialogue(0xe,0x11,&len,attr,4,dir,strlen(dir)+1,
+									 file,strlen(file)+1,NULL);
+		break;
+	}
+	
+	if (!msg) {
+		psa50_error_type();
+		return -1;
+	}
+	
+	return 0;
 }
 
 /**
@@ -1548,10 +1637,109 @@ int psa50_delete_file(const char *name, const char *dir)
 }
 
 /*
+ * Upload to USB Camera
+ *
+ */
+int psa50_put_file_usb(CameraFile *file, char *destname, char *destpath) 
+{
+    gp_interface_message(NULL,"Not implemented!");
+    return GP_ERROR;
+}
+
+/*
+ * Upload to serial Camera
+ *
+ */
+
+#define HDR_FIXED_LEN 30
+#define DATA_BLOCK 512
+int psa50_put_file_serial(CameraFile *file, char *destname, char *destpath)
+{
+	unsigned char *msg;
+	char filename[64];
+	char buf[4096];
+	int offset=0;
+	char offset2[4];
+	int block_len;
+	char block_len2[4];
+	int i,j=0,len, hdr_len;
+	int okay, good_ack;
+	
+	for(i=0;file->name[i];i++)
+	  filename[i]=toupper(file->name[i]);
+	filename[i]='\0';
+
+	hdr_len = HDR_FIXED_LEN + strlen(file->name) + strlen(destpath);
+
+	block_len = 118;
+	
+	for(i=0;i<4;i++) {
+		offset2[i] = (offset >> (8*i)) & 0xff;
+        block_len2[i] = (block_len >> (8*i)) & 0xff;
+	}
+
+	for(i=0; i<DATA_BLOCK; i++) {
+		buf[i] = file->data[j];
+		j++;
+	}
+
+	msg = psa50_serial_dialogue(0x3,0x11,&len,"\x02\x00\x00\x00",4,
+			    offset2,4,block_len2,4,
+				destpath,strlen(destpath),destname,strlen(destname)+1,
+				"<PRE>\r\nCIFF_VERSION=1.00\r\n<IMG SRC=\"../../DCIM/621CANON/AUT_2103.JPG\">\r\n<IMG SRC=\"../../DCIM/621CANON/AUT_2104.JPG\">\r\n",118,
+				NULL);
+	
+/* 
+    for(i=0; i<PUT_BLOCK1; i++) {
+		buf[i] = file->data[j];
+		j++;
+	}
+	okay = psa50_send_packet(PKT_MSG,0x01,buf,PUT_BLOCK2);
+	if(!okay)
+	  return GP_ERROR;
+*/ 
+	fprintf(stderr,"Message sent!\n");
+/*	
+	if (!psa50_send_packet(PKT_UPLOAD_EOT,seq_tx,psa50_eot+PKT_HDR_LEN,1)) 
+	  return 0;
+	good_ack = psa50_wait_for_ack();
+	if (good_ack == -1) {
+		debug_message("ERROR: NACK received\n");
+		return GP_ERROR;
+	}
+	else if (good_ack==1) {
+		debug_message("ACK received\n");
+	}
+*/	
+	
+	
+	
+	
+    return GP_OK;
+}
+
+/*
+ * Upload a file to the camera
+ *
+ */
+int psa50_put_file(CameraFile *file, char *destname, char *destpath)
+{
+
+  switch (canon_comm_method) {
+  case CANON_USB:
+    return psa50_put_file_usb(file,destname,destpath);
+    break;
+  case CANON_SERIAL_RS232:
+  default:
+    return psa50_put_file_serial(file,destname,destpath);
+    break;
+  }
+}
+
+/*
  * return to the calling function a number corresponding
  * to the error encountered
  */
-
 void psa50_error_type()
 {
         switch(receive_error) {

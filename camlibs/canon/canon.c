@@ -1,4 +1,4 @@
-/****************************************************************************
+/***************************************************************************
  *
  * canon.c
  *
@@ -158,7 +158,7 @@ int camera_abilities(CameraAbilitiesList *list)
         a->config     = 0;
         a->file_delete = 1;
         a->file_preview = 1;
-        a->file_put = 0;
+        a->file_put = 1;
         gp_abilities_list_append(list, a);
         i++;
     }
@@ -170,8 +170,6 @@ int camera_folder_list(Camera *camera, CameraList *list, char *folder)
 {
     return GP_OK;
 }
-
-
 
 static void clear_readiness(void)
 {
@@ -433,10 +431,12 @@ static int update_dir_cache(void)
 static int picfiles=0;
 static int _canon_file_list(struct psa50_dir *tree, CameraList *list, char *folder)
 {
+/*
     if (!tree) {
         debug_message("no directory listing available!\n");
         return GP_ERROR;
 	}
+*/
     while (tree->name) {
         if(is_image(tree->name)) {
             sprintf(list->entry[picfiles].name,"%s",tree->name);
@@ -1309,6 +1309,7 @@ int camera_init(Camera *camera, CameraInit *init)
                     canon_debug_driver = 9;
                 fprintf(stderr,"Debug level: %i\n",canon_debug_driver);
             }
+		  canon_debug_driver = 9;
         }
         fclose(conf);
   }
@@ -1484,7 +1485,35 @@ int camera_file_delete(Camera *camera, char *folder, char *filename)
 
 int camera_file_put(Camera *camera, CameraFile *file, char *folder)
 {
-        return GP_OK;
+    char destpath[300], destname[300];
+	int j;
+
+	if (!check_readiness()) {
+		return 0;
+	}
+	
+	strcpy(destname,file->name);
+
+    if(!update_dir_cache()) {
+        gp_camera_status(NULL, "Could not obtain directory listing");
+        return GP_ERROR;
+    }
+	
+	/* FIXME: Just a hack for testing purposes then we will have to
+	   find the suitable directory to create or to store in*/
+    sprintf(destpath,"D:\\DCIM\\CANONMSC\\");
+	sprintf(destname,"PLAY_00.MRK");
+	/* end of FIXME */
+	
+	j = strrchr(destpath,'\\') - destpath;
+	destpath[j] = '\0';
+	
+	if(!psa50_directory_operations(destpath, DIR_CREATE)) 
+	  return GP_ERROR;
+	
+	destpath[j] = '\\';
+	
+    return psa50_put_file(file, destname, destpath);     
 }
 
 int camera_config_get(Camera *camera, CameraWidget *window)

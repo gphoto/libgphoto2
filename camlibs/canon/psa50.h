@@ -66,7 +66,11 @@ int A5;
  */
 #define CANON_SERIAL_RS232 0
 #define CANON_USB 1
+
 int canon_comm_method;
+
+#define DIR_CREATE 0
+#define DIR_REMOVE 1
 
 
 typedef unsigned long u32;
@@ -111,12 +115,14 @@ struct psa50_dir *psa50_list_directory(const char *name);
 void psa50_free_dir(struct psa50_dir *list);
 unsigned char *psa50_get_file(const char *name,int *length);
 unsigned char *psa50_get_thumbnail(const char *name,int *length);
+int psa50_put_file(CameraFile *file, char *destname, char *destpath);
 int psa50_set_file_attributes(const char *file, const char *dir, char attrs);
 int psa50_delete_file(const char *name, const char *dir);
 int psa50_end(void);
 int psa50_off(void);
 int psa50_sync_time(void);
 time_t psa50_get_time(void);
+int psa50_directory_operations(char *path, int action);
 int psa50_get_owner_name(void);
 int psa50_set_owner_name(const char *name);
 void psa50_error_type(void);
