@@ -439,7 +439,7 @@ static int _canon_file_list(struct psa50_dir *tree, CameraList *list, char *fold
 */
     while (tree->name) {
         if(is_image(tree->name)) {
-            sprintf(list->entry[picfiles].name,"%s",tree->name);
+            strcpy(list->entry[picfiles].name,tree->name);
             list->entry[picfiles].type=GP_LIST_FILE;
             picfiles++;
         }
