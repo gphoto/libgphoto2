@@ -22,6 +22,7 @@ int receive_error;
 #define CAMERA_POWER_OK     6
 #define CAMERA_POWER_BAD    4
 
+
 /* @@@ change this to canon_dir when merging with other models */
 struct psa50_dir {
   const char *name; /* NULL if at end */

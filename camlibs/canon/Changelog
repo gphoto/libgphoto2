@@ -1,8 +1,11 @@
+2000-10-13
+    philm       destination path and filename are now determined at runtime
+                when uploading (try to follow the JEIDA DCF standard).
 2000-10-07
-	philm		fixed some problems with error handling if the camera has
-				shut itself off (more work need to be done).
-				fixed a problem which would prevent getting correctly the
-				path of the pictures from the internal cache.
+    philm       fixed some problems with error handling if the camera has
+                shut itself off (more work need to be done).
+                fixed a problem which would prevent getting correctly the
+                path of the pictures from the internal cache.
 2000-08-25
     philm       fixed minor issues
 2000-08-22
