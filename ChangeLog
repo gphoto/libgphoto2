@@ -1,3 +1,7 @@
+2002-12-03  Marcus Meissner <marcus@jet.franken.de>
+	
+	* Imported stv0674 camlib from Vincent Sanders <vince@kyllikki.org>.
+
 2002-11-21  Patrick Mansfield <patmans@users.sourceforge.net>
 
 	* libgphoto2/gphoto2-camera.c: Allow a NULL for the path to be

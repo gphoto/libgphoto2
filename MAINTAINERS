@@ -102,6 +102,9 @@ camlibs/soundvision:
 camlibs/spca504_flash:
 	Till Adam <till@adam-lilienthal.de>
 
+camlibs/stv0674:
+	Vincent Sanders <vince@kyllikki.org>
+
 camlibs/stv0680:
 	Carsten Weinholz <cweinholz@users.sourceforge.net>
 	Marcus Meissner <marcus@jet.franken.de>
