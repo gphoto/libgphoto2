@@ -28,8 +28,6 @@
 
 #include "gphoto2-result.h"
 
-static int glob_session_file = 0;
-
 #define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 #define CHECK_MEM(m)         {if (!(m)) return (GP_ERROR_NO_MEMORY);}
@@ -46,7 +44,6 @@ struct _CameraFile {
         long int size;
         unsigned char *data;
         int bytes_read;
-        int session;
         int ref_count;
 
         unsigned char *red_table, *blue_table, *green_table;
@@ -71,7 +68,6 @@ gp_file_new (CameraFile **file)
 	(*file)->data = NULL;
 	(*file)->size = 0;
 	(*file)->bytes_read = 0;
-	(*file)->session = glob_session_file++;
 	(*file)->ref_count = 1;
 
 	(*file)->red_table   = NULL;
@@ -116,13 +112,6 @@ gp_file_unref (CameraFile *file)
 		CHECK_RESULT (gp_file_free (file));
 
 	return (GP_OK);
-}
-
-int gp_file_session (CameraFile *file)
-{
-	CHECK_NULL (file);
-
-        return (file->session);
 }
 
 int
