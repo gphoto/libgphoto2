@@ -125,7 +125,7 @@ models[] =
 };
 
 int
-camera_id (CameraText * id)
+camera_id (CameraText *id)
 {
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_id()");
 
@@ -135,7 +135,7 @@ camera_id (CameraText * id)
 }
 
 static int
-camera_manual (Camera *camera, CameraText * manual)
+camera_manual (Camera *camera, CameraText *manual)
 {
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_manual()");
 
@@ -148,7 +148,7 @@ camera_manual (Camera *camera, CameraText * manual)
 }
 
 int
-camera_abilities (CameraAbilitiesList * list)
+camera_abilities (CameraAbilitiesList *list)
 {
 	int i;
 	CameraAbilities a;
@@ -175,8 +175,7 @@ camera_abilities (CameraAbilitiesList * list)
 		}
 		a.operations = GP_OPERATION_CONFIG;
 		a.folder_operations = GP_FOLDER_OPERATION_PUT_FILE |
-				      GP_FOLDER_OPERATION_MAKE_DIR |
-				      GP_FOLDER_OPERATION_REMOVE_DIR;
+			GP_FOLDER_OPERATION_MAKE_DIR | GP_FOLDER_OPERATION_REMOVE_DIR;
 		a.file_operations = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
 		gp_abilities_list_append (list, a);
 	}
@@ -556,7 +555,7 @@ update_dir_cache (Camera *camera)
 }
 
 static int
-_canon_file_list (struct canon_dir *tree, const char *folder, CameraList * list)
+_canon_file_list (struct canon_dir *tree, const char *folder, CameraList *list)
 {
 
 	if (!tree) {
@@ -577,7 +576,7 @@ _canon_file_list (struct canon_dir *tree, const char *folder, CameraList * list)
 }
 
 static int
-canon_file_list (Camera *camera, const char *folder, CameraList * list)
+canon_file_list (Camera *camera, const char *folder, CameraList *list)
 {
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_file_list()");
 
@@ -592,7 +591,7 @@ canon_file_list (Camera *camera, const char *folder, CameraList * list)
 
 
 static int
-file_list_func (CameraFilesystem * fs, const char *folder, CameraList * list, void *data)
+file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list, void *data)
 {
 	Camera *camera = data;
 
@@ -760,7 +759,7 @@ canon_get_picture (Camera *camera, char *filename, char *path, int thumbnail,
 int
 _get_file_path (Camera *camera, struct canon_dir *tree, const char *filename, char *path)
 {
-        GP_DEBUG ("_get_file_path() called: filename '%s' path '%s'", filename, path);
+	GP_DEBUG ("_get_file_path() called: filename '%s' path '%s'", filename, path);
 
 	if (tree == NULL)
 		return GP_ERROR;
@@ -809,8 +808,8 @@ get_file_path (Camera *camera, const char *filename, char *path)
 }
 
 static int
-get_file_func (CameraFilesystem * fs, const char *folder, const char *filename,
-	       CameraFileType type, CameraFile * file, void *user_data)
+get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
+	       CameraFileType type, CameraFile *file, void *user_data)
 {
 	Camera *camera = user_data;
 	unsigned char *data = NULL;
@@ -954,7 +953,7 @@ pretty_number (int number, char *buffer)
 }
 
 static int
-camera_summary (Camera *camera, CameraText * summary)
+camera_summary (Camera *camera, CameraText *summary)
 {
 	char a[20], b[20];
 	char *model;
@@ -1048,7 +1047,7 @@ camera_summary (Camera *camera, CameraText * summary)
 /****************************************************************************/
 
 static int
-camera_about (Camera *camera, CameraText * about)
+camera_about (Camera *camera, CameraText *about)
 {
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_about()");
 
@@ -1066,7 +1065,7 @@ camera_about (Camera *camera, CameraText * about)
 /****************************************************************************/
 
 static int
-delete_file_func (CameraFilesystem * fs, const char *folder, const char *filename, void *data)
+delete_file_func (CameraFilesystem *fs, const char *folder, const char *filename, void *data)
 {
 	Camera *camera = data;
 	char path[300], thumbname[300];
@@ -1224,7 +1223,7 @@ get_last_picture (Camera *camera, char *directory, char *filename)
 
 
 static int
-put_file_func (CameraFilesystem * fs, const char *folder, CameraFile * file, void *data)
+put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void *data)
 {
 	Camera *camera = data;
 	char destpath[300], destname[300], dir[300], dcf_root_dir[10];
@@ -1331,7 +1330,7 @@ put_file_func (CameraFilesystem * fs, const char *folder, CameraFile * file, voi
 /****************************************************************************/
 
 static int
-camera_get_config (Camera *camera, CameraWidget ** window)
+camera_get_config (Camera *camera, CameraWidget **window)
 {
 	CameraWidget *t, *section;
 	char power_stats[48], firm[64];
@@ -1433,7 +1432,7 @@ camera_get_config (Camera *camera, CameraWidget ** window)
 }
 
 static int
-camera_set_config (Camera *camera, CameraWidget * window)
+camera_set_config (Camera *camera, CameraWidget *window)
 {
 	CameraWidget *w;
 	char *wvalue;
@@ -1495,7 +1494,7 @@ camera_set_config (Camera *camera, CameraWidget * window)
 }
 
 static int
-get_info_func (CameraFilesystem * fs, const char *folder, const char *filename,
+get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileInfo * info, void *data)
 {
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "canon get_info_func() "
@@ -1525,8 +1524,7 @@ get_info_func (CameraFilesystem * fs, const char *folder, const char *filename,
 }
 
 static int
-make_dir_func (CameraFilesystem *fs, const char *folder, const char *name,
-	       void *data)
+make_dir_func (CameraFilesystem *fs, const char *folder, const char *name, void *data)
 {
 	Camera *camera = data;
 	char path[2048];
@@ -1545,8 +1543,7 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *name,
 }
 
 static int
-remove_dir_func (CameraFilesystem *fs, const char *folder, const char *name,
-		 void *data)
+remove_dir_func (CameraFilesystem *fs, const char *folder, const char *name, void *data)
 {
 	Camera *camera = data;
 	char path[2048];
@@ -1560,7 +1557,7 @@ remove_dir_func (CameraFilesystem *fs, const char *folder, const char *name,
 	r = psa50_directory_operations (camera, path, DIR_REMOVE);
 	if (r < 0)
 		return (r);
-								
+
 	return (GP_OK);
 }
 
@@ -1593,16 +1590,17 @@ camera_init (Camera *camera)
 	/* Set up the CameraFilesystem */
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
 	gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL, camera);
-	gp_filesystem_set_file_funcs (camera->fs, get_file_func,
-				      delete_file_func, camera);
+	gp_filesystem_set_file_funcs (camera->fs, get_file_func, delete_file_func, camera);
 	gp_filesystem_set_folder_funcs (camera->fs, put_file_func, NULL,
 					make_dir_func, remove_dir_func, camera);
 
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));
 	if (!camera->pl)
 		return (GP_ERROR_NO_MEMORY);
-	memset(camera->pl, 0, sizeof (CameraPrivateLibrary));
+	memset (camera->pl, 0, sizeof (CameraPrivateLibrary));
 	camera->pl->first_init = 1;
+	camera->pl->seq_tx = 1;
+	camera->pl->seq_rx = 1;
 
 	if (gp_setting_get ("canon", "debug", buf) != GP_OK)
 		camera->pl->debug = 1;
@@ -1655,7 +1653,8 @@ camera_init (Camera *camera)
 			if (camera->pl->speed == 0)
 				camera->pl->speed = 9600;
 
-			gp_debug_printf (GP_DEBUG_LOW, "canon", "Camera transmission speed : %i\n",
+			gp_debug_printf (GP_DEBUG_LOW, "canon",
+					 "Camera transmission speed : %i\n",
 					 camera->pl->speed);
 			camera->pl->canon_comm_method = CANON_SERIAL_RS232;
 			break;

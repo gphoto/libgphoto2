@@ -110,7 +110,7 @@ void
 debug_message (Camera *camera, const char *msg, ...)
 {
 	va_list args;
-        char buf[4096];
+	char buf[4096];
 
 	/* We could stuff these instrution into a 
 	 *      if (camera->pl->debug) { .... }
@@ -118,11 +118,11 @@ debug_message (Camera *camera, const char *msg, ...)
 	 * because we're using the official log message 
 	 * mechanism anyway.
 	 */
-        va_start (args, msg);
-        vsnprintf (buf, sizeof(buf), msg, args);
-        va_end (args);
+	va_start (args, msg);
+	vsnprintf (buf, sizeof (buf), msg, args);
+	va_end (args);
 
-        gp_log (GP_LOG_DEBUG, "canon", "%s", buf);
+	gp_log (GP_LOG_DEBUG, "canon", "%s", buf);
 }
 
 /****************************************************************************

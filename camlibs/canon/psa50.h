@@ -80,6 +80,9 @@ struct _CameraPrivateLibrary
 	int slow_send;   /* to send data via serial with a usleep(1) 
 					  * between each byte 1 = yes ; 0 = no */ 
 
+	unsigned char seq_tx;
+	unsigned char seq_rx;
+
 /*
  * Directory access may be rather expensive, so we cache some information.
  * The first variable in each block indicates whether the block is valid.

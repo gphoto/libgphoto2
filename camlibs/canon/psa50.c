@@ -66,8 +66,8 @@ int psa50_send_frame (Camera *camera, const unsigned char *pkt, int len);
 unsigned char *psa50_recv_frame (Camera *camera, int *len);
 void intatpos (unsigned char *block, int pos, int integer);
 unsigned char *psa50_get_file_serial (Camera *camera, const char *name, int *length);
-int psa50_put_file_usb (Camera *camera, CameraFile * file, char *destname, char *destpath);
-int psa50_put_file_serial (Camera *camera, CameraFile * file, char *destname, char *destpath);
+int psa50_put_file_usb (Camera *camera, CameraFile *file, char *destname, char *destpath);
+int psa50_put_file_serial (Camera *camera, CameraFile *file, char *destname, char *destpath);
 
 
 #define MAX_TRIES 10
@@ -168,10 +168,6 @@ psa50_recv_frame (Camera *camera, int *len)
 #define PKT_UPLOAD_EOT  3
 
 
-static unsigned char seq_tx = 1;
-static unsigned char seq_rx = 1;
-
-
 static int
 psa50_send_packet (Camera *camera, unsigned char type,
 		   unsigned char seq, unsigned char *pkt, int len)
@@ -224,7 +220,7 @@ psa50_recv_packet (Camera *camera, unsigned char *type, unsigned char *seq, int 
 		if (length + PKT_HDR_LEN > raw_length - 2) {
 			gp_debug_printf (GP_DEBUG_LOW, "canon", "ERROR: invalid length\n");
 			/*fprintf(stderr,"Sending NACK\n");
-			   psa50_send_packet(PKT_NACK,seq_rx++,camera->pl->psa50_eot+PKT_HDR_LEN,0); */
+			   psa50_send_packet(PKT_NACK,camera->pl->seq_rx++,camera->pl->psa50_eot+PKT_HDR_LEN,0); */
 			camera->pl->receive_error = ERROR_RECEIVED;
 			return NULL;
 		}
@@ -290,13 +286,13 @@ psa50_wait_for_ack (Camera *camera)
 		pkt = psa50_recv_packet (camera, &type, &seq, &len);
 		if (!pkt)
 			return 0;
-		if (seq == seq_tx && type == PKT_ACK) {
+		if (seq == camera->pl->seq_tx && type == PKT_ACK) {
 			if (pkt[2] == PKTACK_NACK) {
 				gp_debug_printf (GP_DEBUG_LOW, "canon",
 						 "ERROR: NACK received\n");
 				return -1;
 			}
-			seq_tx++;
+			camera->pl->seq_tx++;
 			return 1;
 		}
 		old_seq = '\0';
@@ -334,7 +330,7 @@ psa50_wait_for_ack (Camera *camera)
 		gp_debug_printf (GP_DEBUG_LOW, "canon",
 				 "ERROR: ACK format or sequence error, retrying\n");
 		gp_debug_printf (GP_DEBUG_LOW, "canon", "Sending NACK\n");
-		psa50_send_packet (camera, PKT_NACK, seq_rx++,
+		psa50_send_packet (camera, PKT_NACK, camera->pl->seq_rx++,
 				   camera->pl->psa50_eot + PKT_HDR_LEN, 0);
 		camera->pl->receive_error = ERROR_RECEIVED;
 
@@ -408,11 +404,11 @@ psa50_send_msg (Camera *camera, unsigned char mtype, unsigned char dir, va_list 
 			psa50_send_packet (camera, PKT_MSG, 0x1, pkt2,
 					   total - UPLOAD_DATA_BLOCK);
 			if (!psa50_send_packet
-			    (camera, PKT_UPLOAD_EOT, seq_tx,
+			    (camera, PKT_UPLOAD_EOT, camera->pl->seq_tx,
 			     camera->pl->psa50_eot + PKT_HDR_LEN, 1))
 				return 0;
 			if (!psa50_send_packet
-			    (camera, PKT_UPLOAD_EOT, seq_tx,
+			    (camera, PKT_UPLOAD_EOT, camera->pl->seq_tx,
 			     camera->pl->psa50_eot + PKT_HDR_LEN, 1))
 				return 0;
 
@@ -428,7 +424,8 @@ psa50_send_msg (Camera *camera, unsigned char mtype, unsigned char dir, va_list 
 			if (!psa50_send_packet (camera, PKT_MSG, 0, pkt, total))
 				return 0;
 			if (!psa50_send_packet
-			    (camera, PKT_EOT, seq_tx, camera->pl->psa50_eot + PKT_HDR_LEN, 1))
+			    (camera, PKT_EOT, camera->pl->seq_tx,
+			     camera->pl->psa50_eot + PKT_HDR_LEN, 1))
 				return 0;
 			good_ack = psa50_wait_for_ack (camera);
 			if (good_ack == -1) {
@@ -442,7 +439,7 @@ psa50_send_msg (Camera *camera, unsigned char mtype, unsigned char dir, va_list 
 				if (try == 2) {
 					//is the camera still there?
 					if (!psa50_send_packet
-					    (camera, PKT_EOT, seq_tx,
+					    (camera, PKT_EOT, camera->pl->seq_tx,
 					     camera->pl->psa50_eot + PKT_HDR_LEN, 0))
 						return 0;
 					good_ack = psa50_wait_for_ack (camera);
@@ -557,12 +554,12 @@ psa50_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, int *tot
 			/* in case of error we don't want to stop as the camera will send
 			   the 1st packet of the sequence again */
 			if (camera->pl->receive_error == ERROR_RECEIVED) {
-				seq_rx = seq;
-				psa50_send_packet (camera, PKT_NACK, seq_rx,
+				camera->pl->seq_rx = seq;
+				psa50_send_packet (camera, PKT_NACK, camera->pl->seq_rx,
 						   camera->pl->psa50_eot + PKT_HDR_LEN, 0);
 				camera->pl->receive_error = ERROR_ADDRESSED;
 			} else {
-				if (seq == seq_rx)
+				if (seq == camera->pl->seq_rx)
 					break;
 				gp_debug_printf (GP_DEBUG_LOW, "canon",
 						 "ERROR: out of sequence\n");
@@ -618,7 +615,8 @@ psa50_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, int *tot
 		if (camera->pl->uploading == 1 && camera->pl->model == CANON_PS_A50)
 			camera->pl->slow_send = 1;
 		if (!psa50_send_packet
-		    (camera, PKT_ACK, seq_rx++, camera->pl->psa50_eot + PKT_HDR_LEN, 0)) {
+		    (camera, PKT_ACK, camera->pl->seq_rx++,
+		     camera->pl->psa50_eot + PKT_HDR_LEN, 0)) {
 			if (camera->pl->uploading == 1 && camera->pl->model == CANON_PS_A50)
 				camera->pl->slow_send = 0;
 			return NULL;
@@ -669,11 +667,11 @@ psa50_serial_dialogue (Camera *camera, unsigned char mtype, unsigned char dir, i
 		/* while uploading we receive 2 ACKs and 1 confirmation message
 		 * The first ACK has already been received if we are here */
 		if (camera->pl->uploading == 1) {
-			seq_tx--;
+			camera->pl->seq_tx--;
 			good_ack = psa50_recv_msg (camera, mtype, dir ^ DIR_REVERSE, len);
 			if (!good_ack)
 				return NULL;
-			if (good_ack[0] == seq_tx && good_ack[1] == 0x5) {
+			if (good_ack[0] == camera->pl->seq_tx && good_ack[1] == 0x5) {
 				gp_debug_printf (GP_DEBUG_LOW, "canon",
 						 "ACK received waiting for the confirmation message\n");
 				good_ack =
@@ -690,7 +688,7 @@ psa50_serial_dialogue (Camera *camera, unsigned char mtype, unsigned char dir, i
 			return good_ack;
 		if (camera->pl->receive_error == NOERROR) {
 			gp_debug_printf (GP_DEBUG_LOW, "canon", "Resending message\n");
-			seq_tx--;
+			camera->pl->seq_tx--;
 		}
 		if (camera->pl->receive_error == FATAL_ERROR)
 			break;
@@ -1512,7 +1510,7 @@ psa50_ready (Camera *camera)
 				/* First case, the serial speed of the camera is the same as
 				 * ours, so let's try to send a ping packet : */
 				if (!psa50_send_packet
-				    (camera, PKT_EOT, seq_tx,
+				    (camera, PKT_EOT, camera->pl->seq_tx,
 				     camera->pl->psa50_eot + PKT_HDR_LEN, 0))
 					return GP_ERROR;
 				good_ack = psa50_wait_for_ack (camera);
@@ -1533,7 +1531,7 @@ psa50_ready (Camera *camera)
 						}
 					}
 					if (!psa50_send_packet
-					    (camera, PKT_EOT, seq_tx,
+					    (camera, PKT_EOT, camera->pl->seq_tx,
 					     camera->pl->psa50_eot + PKT_HDR_LEN, 0))
 						return GP_ERROR;
 					good_ack = psa50_wait_for_ack (camera);
@@ -1676,8 +1674,8 @@ psa50_ready (Camera *camera)
 				gp_camera_status (camera, _("Bad EOT"));
 				return GP_ERROR;
 			}
-			seq_tx = 0;
-			seq_rx = 1;
+			camera->pl->seq_tx = 0;
+			camera->pl->seq_rx = 1;
 			if (!psa50_send_frame (camera, "\x00\x05\x00\x00\x00\x00\xdb\xd1", 8)) {
 				gp_camera_status (camera, _("Communication error 2"));
 				return GP_ERROR;
@@ -1723,7 +1721,7 @@ psa50_ready (Camera *camera)
 
 			}
 			for (try = 1; try < MAX_TRIES; try++) {
-				psa50_send_packet (camera, PKT_EOT, seq_tx,
+				psa50_send_packet (camera, PKT_EOT, camera->pl->seq_tx,
 						   camera->pl->psa50_eot + PKT_HDR_LEN, 0);
 				if (!psa50_wait_for_ack (camera)) {
 					gp_camera_status (camera,
@@ -1832,11 +1830,11 @@ psa50_disk_info (Camera *camera, const char *name, int *capacity, int *available
 
 	if (!msg) {
 		psa50_error_type (camera);
-		return 0; /* FALSE */
+		return 0;	/* FALSE */
 	}
 	if (len < 12) {
-		GP_DEBUG("ERROR: truncated message");
-		return 0; /* FALSE */
+		GP_DEBUG ("ERROR: truncated message");
+		return 0;	/* FALSE */
 	}
 	cap = get_int (msg + 4);
 	ava = get_int (msg + 8);
@@ -1848,7 +1846,7 @@ psa50_disk_info (Camera *camera, const char *name, int *capacity, int *available
 	GP_DEBUG ("psa50_disk_info: capacity %i kb, available %i kb",
 		  cap > 0 ? (cap / 1024) : 0, ava > 0 ? (ava / 1024) : 0);
 
-	return 1; /* TRUE */
+	return 1;		/* TRUE */
 }
 
 
@@ -2277,7 +2275,7 @@ psa50_get_thumbnail (Camera *camera, const char *name, int *length)
 				size = get_int (msg + 12);
 				if (get_int (msg + 8) != expect || expect + size > total
 				    || size > total_file_size - 20) {
-					GP_DEBUG("ERROR: doesn't fit");
+					GP_DEBUG ("ERROR: doesn't fit");
 					return NULL;
 				}
 				memcpy (data + expect, msg + 20, size);
@@ -2285,7 +2283,7 @@ psa50_get_thumbnail (Camera *camera, const char *name, int *length)
 				gp_camera_progress (camera,
 						    total ? (expect / (float) total) : 1.);
 				if ((expect == total) != get_int (msg + 16)) {
-					GP_DEBUG("ERROR: end mark != end of data");
+					GP_DEBUG ("ERROR: end mark != end of data");
 					return NULL;
 				}
 				if (expect == total) {
@@ -2339,10 +2337,9 @@ psa50_get_thumbnail (Camera *camera, const char *name, int *length)
 			exifdat.header = data;
 			exifdat.data = data + 12;
 
-			GP_DEBUG ("Got thumbnail, extracting it with the "
-				  "EXIF lib.");
+			GP_DEBUG ("Got thumbnail, extracting it with the " "EXIF lib.");
 			if (exif_parse_data (&exifdat) > 0) {
-				GP_DEBUG("Parsed exif data.");
+				GP_DEBUG ("Parsed exif data.");
 				data = exif_get_thumbnail (&exifdat);	// Extract Thumbnail
 				if (data == NULL) {
 					int f;
@@ -2430,7 +2427,7 @@ psa50_delete_file (Camera *camera, const char *name, const char *dir)
  *
  */
 int
-psa50_put_file_usb (Camera *camera, CameraFile * file, char *destname, char *destpath)
+psa50_put_file_usb (Camera *camera, CameraFile *file, char *destname, char *destpath)
 {
 	gp_camera_message (camera, _("Not implemented!"));
 	return GP_ERROR_NOT_SUPPORTED;
@@ -2444,7 +2441,7 @@ psa50_put_file_usb (Camera *camera, CameraFile * file, char *destname, char *des
 #define HDR_FIXED_LEN 30
 #define DATA_BLOCK 1536
 int
-psa50_put_file_serial (Camera *camera, CameraFile * file, char *destname, char *destpath)
+psa50_put_file_serial (Camera *camera, CameraFile *file, char *destname, char *destpath)
 {
 	unsigned char *msg;
 	char filename[64];
@@ -2510,7 +2507,7 @@ psa50_put_file_serial (Camera *camera, CameraFile * file, char *destname, char *
  *
  */
 int
-psa50_put_file (Camera *camera, CameraFile * file, char *destname, char *destpath)
+psa50_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath)
 {
 
 	switch (camera->pl->canon_comm_method) {
