@@ -5,8 +5,10 @@ canon-api.html
 scan
 html
 sgml
+tmpl
 canon-scan.c
 canon-scan
+canon-symbols.txt
 canon-decl.txt
 canon-decl-list.txt
 canon-unused.txt
