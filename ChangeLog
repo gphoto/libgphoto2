@@ -1,3 +1,7 @@
+2001-10-28 Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* packaging/rpm/package.spec.in: cleaned up file lists, moved .a and .la to -devel
+	
 2001-10-31 Dan Fandrich <dan@coneharvesters.com>
 
 	* camlibs/agfa/Makefile.am
