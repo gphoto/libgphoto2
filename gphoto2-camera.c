@@ -1299,9 +1299,9 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
  **/
 int
 gp_camera_file_set_info (Camera *camera, const char *folder, 
-			 const char *file, CameraFileInfo *info)
+			 const char *file, CameraFileInfo info)
 {
-	CHECK_NULL (camera && info && folder && file);
+	CHECK_NULL (camera && folder && file);
 	CHECK_INIT (camera);
 
 	CHECK_RESULT_OPEN_CLOSE (camera,

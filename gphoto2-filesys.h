@@ -93,7 +93,7 @@ int gp_filesystem_free	 (CameraFilesystem *fs);
 int gp_filesystem_append        (CameraFilesystem *fs, const char *folder,
 			         const char *filename);
 int gp_filesystem_set_info_noop (CameraFilesystem *fs, const char *folder,
-				 CameraFileInfo *info);
+				 CameraFileInfo info);
 int gp_filesystem_set_file_noop (CameraFilesystem *fs, const char *folder,
 				 CameraFile *file);
 int gp_filesystem_reset         (CameraFilesystem *fs);
@@ -121,18 +121,22 @@ int gp_filesystem_list_folders   (CameraFilesystem *fs, const char *folder,
 				  CameraList *list);
 
 /* File information */
-typedef int (*CameraFilesystemInfoFunc) (CameraFilesystem *fs,
-					 const char *folder,
-					 const char *filename,
-					 CameraFileInfo *info, void *data);
+typedef int (*CameraFilesystemSetInfoFunc) (CameraFilesystem *fs,
+					    const char *folder,
+					    const char *filename,
+					    CameraFileInfo info, void *data);
+typedef int (*CameraFilesystemGetInfoFunc) (CameraFilesystem *fs,
+					    const char *folder,
+					    const char *filename,
+					    CameraFileInfo *info, void *data);
 int gp_filesystem_set_info_funcs (CameraFilesystem *fs,
-				  CameraFilesystemInfoFunc get_info_func,
-				  CameraFilesystemInfoFunc set_info_func,
+				  CameraFilesystemGetInfoFunc get_info_func,
+				  CameraFilesystemSetInfoFunc set_info_func,
 				  void *data);
 int gp_filesystem_get_info       (CameraFilesystem *fs, const char *folder,
 				  const char *filename, CameraFileInfo *info);
 int gp_filesystem_set_info       (CameraFilesystem *fs, const char *folder,
-				  const char *filename, CameraFileInfo *info);
+				  const char *filename, CameraFileInfo info);
 
 /* Files */
 typedef int (*CameraFilesystemGetFileFunc)    (CameraFilesystem *fs,
