@@ -1,5 +1,11 @@
 2001-10-16  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	Bug found by Fredrik <fredrik@krixor.xy.org>:
+
+	* doc/api/Makefile.am: Don't if-out everything.
+
+2001-10-16  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	Bug found by Colin Marquardt <colin@marquardt-home.de>:
 
 	* doc/api/Makefile.am: Don't generate documentation if not

@@ -28,6 +28,7 @@ sgml:
 html:
 	if ! test -d html ; then mkdir html ; fi
 	-cd html && gtkdoc-mkhtml $(DOC_MODULE) ../$(DOC_MAIN_SGML_FILE)
+endif
 
 clean-local:
 	rm -f *~ *.bak *.hierarchy *.signals *.args *-unused.txt
@@ -35,6 +36,7 @@ clean-local:
 maintainer-clean-local: clean
 	rm -rf sgml html $(DOC_MODULE)-decl-list.txt $(DOC_MODULE)-decl.txt 
 
+if ENABLE_GTK_DOC
 install-data-local:
 	$(INSTALL) -d -m 0755 $(TARGET_DIR)
 	$(INSTALL_DATA) $(srcdir)/html/*.html $(TARGET_DIR)
