@@ -1,3 +1,8 @@
+2001-10-29 Marcus Meissner <marcus@jet.franken.de>
+
+	* camlibs/jd11/jd11.c: Added Quark Probe 99, Argus DC-100 and DC-2000
+	  as compatible models. Reported by Russ Burdick.
+
 2001-10-28 Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* TESTERS: added list of volunteer testers to the source distribution

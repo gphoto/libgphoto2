@@ -51,7 +51,6 @@ int camera_abilities (CameraAbilitiesList *list)
 {
 	CameraAbilities a;
 
-	strcpy(a.model, "Jenoptik JD11");
 	a.status		= GP_DRIVER_STATUS_TESTING;
 	a.port			= GP_PORT_SERIAL;
 	a.speed[0]		= 115200;
@@ -60,8 +59,32 @@ int camera_abilities (CameraAbilitiesList *list)
 	a.file_operations	= GP_FILE_OPERATION_PREVIEW;
 	a.folder_operations	= GP_FOLDER_OPERATION_DELETE_ALL;
 
+	strcpy(a.model, "Jenoptik JD11");
 	gp_abilities_list_append(list, a);
 
+	/* Reported to be just a rebranded version by Russ Burdick
+	 * <grub@extrapolation.net> */
+	strcpy(a.model, "Quark Probe 99");
+	gp_abilities_list_append(list, a);
+
+	/* 'Argus DC-100' looks the same, see:
+	 * http://www.aaadigitalcameras.com/argus_digital_vga_compact_camera.html
+	 * but not reported yet.
+	 */
+	strcpy(a.model, "Argus DC-100");
+	gp_abilities_list_append(list, a);
+	/* 'Argus DC-2000' is the same (or uses the same software), check
+	 * http://www.arguscamera.com/tech_supp/camoper.htm
+	 */
+	strcpy(a.model, "Argus DC-2000");
+	gp_abilities_list_append(list, a);
+
+	/* The I/O Magic MagicImage 420 looks similar, but has a USB connector,
+	 * so it is probably a different beast. Leave commented out until
+	 * we know otherwise.
+	 * strcpy(a.model, "I/O Magic MagicImage 420");
+	 * gp_abilities_list_append(list, a);
+	 */
 	return (GP_OK);
 }
 
