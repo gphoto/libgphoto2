@@ -29,7 +29,7 @@
 #include <sys/stat.h>
 #include <termios.h>
 #include <time.h>
-#include <ctype.h>
+//#include <ctype.h>
 
 #include <gphoto2.h>
 
@@ -53,9 +53,10 @@
 #endif
 
 #include "util.h"
-#include "serial.h"
-#include "psa50.h"
+#include "library.h"
 #include "canon.h"
+#include "serial.h"
+#include "usb.h"
 
 /* Global variable to set debug level.                        */
 /* Defined levels so far :                                    */
@@ -272,108 +273,6 @@ update_disk_cache (Camera *camera)
 	return 1;
 }
 
-/**
- * is_thumbnail:
- * @name: name of file to examine
- * Test whether the given @name corresponds to a thumbnail (.THM).
- **/
-static int
-is_thumbnail (const char *name)
-{
-	const char *pos;
-	int res = 0;
-
-	pos = strchr (name, '.');
-	if (pos)
-		res = (!strcmp (pos, ".THM"));
-
-	GP_DEBUG ("is_thumbnail(%s) == %i", name, res);
-	return (res);
-}
-
-/**
- * is_image:
- * @name: name of file to examine
- *
- * Test whether the given @name corresponds to an image (.JPG or .CRW).
- **/
-static int
-is_image (const char *name)
-{
-	const char *pos;
-	int res = 0;
-
-	pos = strchr (name, '.');
-	if (pos) {
-		res = (!strcmp (pos, ".JPG"));
-		if (!res)
-			res = (!strcmp (pos, ".CRW"));
-	}
-
-	GP_DEBUG ("is_image(%s) == %i", name, res);
-	return (res);
-}
-
-/**
- * is_jpeg:
- * @name: name of file to examine
- *
- * Test whether the given @name corresponds to a JPEG image (.JPG).
- **/
-static int
-is_jpeg (const char *name)
-{
-	const char *pos;
-	int res = 0;
-
-	pos = strchr (name, '.');
-	if (pos)
-		res = (!strcmp (pos, ".JPG"));
-
-	GP_DEBUG ("is_jpeg(%s) == %i", name, res);
-	return (res);
-}
-
-/**
- * is_crw:
- * @name: name of file to examine
- *
- * Test whether the name given corresponds to a raw CRW image (.CRW).
- **/
-static int
-is_crw (const char *name)
-{
-	const char *pos;
-	int res = 0;
-
-	pos = strchr (name, '.');
-	if (pos)
-		res = (!strcmp (pos, ".CRW"));
-
-	GP_DEBUG ("is_crw(%s) == %i", name, res);
-	return (res);
-}
-
-/*
- * Test whether the name given corresponds
- * to a movie (.AVI)
- */
-static int
-is_movie (const char *name)
-{
-	const char *pos;
-	int res = 0;
-
-	pos = strchr (name, '.');
-	if (pos)
-		res = (!strcmp (pos, ".AVI"));
-
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "is_movie(%s) == %i", name, res);
-	return (res);
-}
-
-
-
 /* This function is only used by A5 */
 
 static int
@@ -423,15 +322,6 @@ recurse (Camera *camera, const char *name)
 	return 1;
 }
 
-
-static int
-comp_dir (const void *a, const void *b)
-{
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "comp_dir()");
-
-	return strcmp (((const struct canon_dir *) a)->name,
-		       ((const struct canon_dir *) b)->name);
-}
 
 
 /* This function is only used by A50 */
@@ -605,10 +495,6 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list, void
  * gphoto library interface calls
  *
  ****************************************************************************/
-
-
-#define JPEG_END        0xFFFFFFD9
-#define JPEG_ESC        0xFFFFFFFF
 
 static int
 canon_get_picture (Camera *camera, char *filename, char *path, int thumbnail,

@@ -9,8 +9,9 @@ INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/libgphoto2
 
 libgphoto2_canon_la_SOURCES =\
  canon.c canon.h\
- psa50.c psa50.h\
+ library.c library.h\
  serial.c serial.h \
+ usb.c usb.h \
  crc.c crc.h \
  util.c util.h
 

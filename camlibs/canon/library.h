@@ -2,10 +2,13 @@
  * psa50.h - Canon PowerShot A50 "native" operations.
  *
  * Written 1999 by Wolfgang G. Reissnegger and Werner Almesberger
+ *
+ * $Id$
+ *
  */
 
-#ifndef PSA50_H
-#define PSA50_H
+#ifndef _LIBRARY_H
+#define _LIBRARY_H
 
 /* Defines for error handling */
 #define NOERROR		0
@@ -119,46 +122,6 @@ typedef unsigned long u32;
 #endif
 #endif
 
-#define CANON_USB_FUNCTION_GET_FILE		1
-#define CANON_USB_FUNCTION_IDENTIFY_CAMERA	2
-#define CANON_USB_FUNCTION_GET_TIME		3
-#define CANON_USB_FUNCTION_SET_TIME		4
-#define CANON_USB_FUNCTION_MKDIR		5
-#define CANON_USB_FUNCTION_CAMERA_CHOWN		6
-#define CANON_USB_FUNCTION_RMDIR		7
-#define CANON_USB_FUNCTION_DISK_INFO		8
-#define CANON_USB_FUNCTION_FLASH_DEVICE_IDENT	9
-#define CANON_USB_FUNCTION_POWER_STATUS		10
-#define CANON_USB_FUNCTION_GET_DIRENT		11
-#define CANON_USB_FUNCTION_DELETE_FILE		12
-#define CANON_USB_FUNCTION_SET_ATTR		13
-
-struct canon_usb_cmdstruct 
-{
-	int num;
-	char *description;
-	char cmd1, cmd2;
-	int cmd3;
-	int return_length;
-};
-
-static const struct canon_usb_cmdstruct canon_usb_cmd[] = {
-	{CANON_USB_FUNCTION_GET_FILE,		"Get file",		0x01, 0x11, 0x202,	0x40},
-	{CANON_USB_FUNCTION_IDENTIFY_CAMERA,	"Identify camera",	0x01, 0x12, 0x201,	0x9c},
-	{CANON_USB_FUNCTION_GET_TIME,		"Get time",		0x03, 0x12, 0x201,	0x60},
-	{CANON_USB_FUNCTION_SET_TIME,		"Set time",		0x04, 0x12, 0x201,	0x54},
-	{CANON_USB_FUNCTION_MKDIR,		"Make directory",	0x05, 0x11, 0x201,	0x54},
-	{CANON_USB_FUNCTION_CAMERA_CHOWN,	"Change camera owner",	0x05, 0x12, 0x201,	0x54},
-	{CANON_USB_FUNCTION_RMDIR,		"Remove directory",	0x06, 0x11, 0x201,	0x54},
-	{CANON_USB_FUNCTION_DISK_INFO,		"Disk info request",	0x09, 0x11, 0x201,	0x5c},
-	{CANON_USB_FUNCTION_FLASH_DEVICE_IDENT,	"Flash device ident",	0x0a, 0x11, 0x202,	0x40},
-	{CANON_USB_FUNCTION_POWER_STATUS,	"Power supply status",	0x0a, 0x12, 0x201,	0x58},
-	{CANON_USB_FUNCTION_GET_DIRENT,		"Get directory entrys",	0x0b, 0x11, 0x202,	0x40},
-	{CANON_USB_FUNCTION_DELETE_FILE,	"Delete file",		0x0d, 0x11, 0x201,	0x54},
-	{CANON_USB_FUNCTION_SET_ATTR,		"Set file attribute",	0x0e, 0x11, 0x201,	0x54},
-	{ 0 }
-};
-
 
 /*
  * All functions returning a pointer have malloc'ed the data. The caller must
@@ -202,6 +165,5 @@ int psa50_set_time(Camera *camera);
 int psa50_directory_operations(Camera *camera, const char *path, int action);
 int psa50_get_owner_name(Camera *camera);
 int psa50_set_owner_name(Camera *camera, const char *name);
-void psa50_error_type(Camera *camera);
 
-#endif
+#endif /* _LIBRARY_H */
