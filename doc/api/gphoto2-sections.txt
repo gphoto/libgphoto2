@@ -89,6 +89,7 @@ gp_camera_get_port_speed
 gp_camera_set_port_speed
 
 gp_camera_init
+gp_camera_exit
 
 CameraFilePath
 CameraCaptureType
@@ -210,20 +211,30 @@ gp_file_get_type
 gp_file_set_type
 
 GP_MIME_AVI
+GP_MIME_BMP
 GP_MIME_CRW
 GP_MIME_JPEG
-GP_MIME_UNKNOWN
-GP_MIME_PPM
-GP_MIME_BMP
-GP_MIME_TIFF
-GP_MIME_QUICKTIME
-GP_MIME_WAV
 GP_MIME_PGM
+GP_MIME_PNG
+GP_MIME_PPM
+GP_MIME_QUICKTIME
 GP_MIME_RAW
+GP_MIME_TIFF
+GP_MIME_UNKNOWN
+GP_MIME_WAV
+
 gp_file_get_mime_type
 gp_file_set_mime_type
 gp_file_detect_mime_type
 gp_file_adjust_name_for_mime_type
+
+gp_file_convert
+gp_file_copy
+gp_file_get_last_chunk
+gp_file_set_color_table
+gp_file_set_conversion_method
+gp_file_set_header
+gp_file_set_width_and_height
 
 gp_file_get_data_and_size
 gp_file_set_data_and_size
@@ -275,6 +286,7 @@ gp_filesystem_remove_dir
 
 gp_filesystem_get_info
 gp_filesystem_set_info
+gp_filesystem_set_info_noop
 
 gp_filesystem_number
 gp_filesystem_name
