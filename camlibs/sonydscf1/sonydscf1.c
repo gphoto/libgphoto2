@@ -20,7 +20,7 @@
 
 gp_port *dev;
 
-extern int glob_debug;
+int glob_debug = GP_DEBUG_HIGH;
 char glob_camera_model[64];
 static int all_pic_num = -1;
 

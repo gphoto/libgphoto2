@@ -1,5 +1,10 @@
 2001-09-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/sonydscf1/sonydscf1.c:
+	* libgphoto2/debug.c: glob_debug is now static in libgphoto2
+
+2001-09-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* frontends/command-line/main.c: glob_debug is now static in libgphoto2
 
 2001-09-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
