@@ -59,9 +59,11 @@
 #define PDC700_DEL	0x09
 #define PDC700_CAPTURE  0x0a
 
-#define PDC700_FIRST	0x00
+#define PDC700_FAIL	0x00
 #define PDC700_DONE	0x01
 #define PDC700_LAST	0x02
+
+#define RETRIES 5
 
 typedef enum _PDCConf PDCConf;
 enum _PDCConf {
@@ -224,7 +226,7 @@ pdc700_read (Camera *camera, unsigned char *cmd,
 		return (GP_ERROR_CORRUPTED_DATA);
 	}
 
-	/* Will other packets follow? */
+	/* Will other packets follow? Has the transaction been successful? */
 	*status = b[1];
 
 	/*
@@ -255,12 +257,25 @@ static int
 pdc700_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 		 unsigned char *buf, unsigned int *buf_len)
 {
-	unsigned char status, b[2048], sequence_number;
-	unsigned int b_len;
+	unsigned char status, b[2048], n;
+	unsigned int b_len, r;
 	unsigned int target = *buf_len;
+	int result;
 
-	CR (pdc700_send (camera, cmd, cmd_len));
-	CR (pdc700_read (camera, cmd, b, &b_len, &status, &sequence_number));
+	status = PDC700_DONE;
+	for (r = 0; r < RETRIES; r++) {
+		if (status == PDC700_FAIL)
+			GP_DEBUG ("Retrying (%i)...", r);
+		CR (pdc700_send (camera, cmd, cmd_len));
+		CR (pdc700_read (camera, cmd, b, &b_len, &status, &n));
+		if (status != PDC700_FAIL)
+			break;
+	}
+	if (status == PDC700_FAIL) {
+		gp_camera_set_error (camera, _("The camera did not accept the "
+				     "command."));
+		return (GP_ERROR);
+	}
 
 	/* Copy over the data */
 	*buf_len = b_len;
@@ -273,13 +288,26 @@ pdc700_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 	if ((cmd[3] == PDC700_THUMB) || (cmd[3] == PDC700_PIC)) {
 
 		/* Get those other packets */
-		while (status != PDC700_LAST) {
-			cmd[4] = PDC700_DONE;
-			cmd[5] = sequence_number;
-			GP_DEBUG ("Fetching sequence %i...", sequence_number);
+		r = 0;
+		while ((status != PDC700_LAST) && (r < RETRIES)) {
+			GP_DEBUG ("Fetching sequence %i...", n);
+			cmd[4] = status;
+			cmd[5] = n;
 			CR (pdc700_send (camera, cmd, 7));
-			CR (pdc700_read (camera, cmd, b, &b_len,
-						&status, &sequence_number));
+
+			/*
+			 * Read data. On error (either we or the camera),
+			 * try again.
+			 */
+			result = pdc700_read (camera, cmd, b, &b_len,
+					      &status, &n);
+			if ((result < 0) || (status == PDC700_FAIL)) {
+				r++;
+				continue;
+			}
+
+			/* Read succeeded. Reset error counter */
+			r = 0;
 
 			/*
 			 * Sanity check: We should never read more bytes than
@@ -299,9 +327,13 @@ pdc700_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 					    (float) *buf_len / (float) target);
 		}
 
+		/* Check if anything went wrong */
+		if (status != PDC700_LAST)
+			return (GP_ERROR_CORRUPTED_DATA);
+
 		/* Acknowledge last packet */
 		cmd[4] = PDC700_LAST;
-		cmd[5] = sequence_number;
+		cmd[5] = n;
 		CR (pdc700_send (camera, cmd, 7));
 	}
 
@@ -581,7 +613,7 @@ pdc700_pic (Camera *camera, unsigned int n,
 	/* Get picture data */
 	GP_DEBUG ("Getting picture %i...", n);
 	cmd[3] = (thumb) ? PDC700_THUMB : PDC700_PIC;
-	cmd[4] = PDC700_FIRST;
+	cmd[4] = 0; /* No idea what that byte is for */
 	cmd[5] = n;
 	cmd[6] = n >> 8;
 	r = pdc700_transmit (camera, cmd, 8, *data, size);

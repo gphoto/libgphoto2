@@ -1,0 +1,4 @@
+2001-11-28  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* pdc700.c: Rename PDC700_FIRST into PDC700_FAIL. Try to implement
+	  some error recovery strategy.
