@@ -161,6 +161,21 @@ typedef int (*CameraManualFunc)  (Camera *camera, CameraText *text);
 typedef int (*CameraAboutFunc)   (Camera *camera, CameraText *text);
 
 /**
+ * CameraPrePostFunc:
+ * @camera: a #Camera
+ *
+ * Implement this function in the camera driver if the camera needs to
+ * be initialized before or reset the after each access from libgphoto2.
+ * For example, you would probably set the speed to the highest one 
+ * right before downloading an image, and reset it to the default speed 
+ * afterwards so that other programs will not be affected by this speed
+ * change.
+ *
+ * Return value: a gphoto2 error code
+ **/
+typedef int (*CameraPrePostFunc) (Camera *camera);
+
+/**
  * CameraFunctions:
  *
  * Those functions are optionally. Depending on the features of the protocol,
@@ -168,6 +183,11 @@ typedef int (*CameraAboutFunc)   (Camera *camera, CameraText *text);
  * what functions you provide on #camera_init.
  **/
 typedef struct {
+
+	/* Those will be called before and after each operation */
+	CameraPrePostFunc pre_func;
+	CameraPrePostFunc post_func;
+
 	CameraExitFunc exit;
 
 	/* Configuration */
