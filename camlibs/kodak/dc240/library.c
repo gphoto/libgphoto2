@@ -705,7 +705,7 @@ int dc240_get_status (Camera *camera, DC240StatusTable *table, GPContext *contex
     if (retval == GP_OK) {
 	gp_file_get_data_and_size (file, &fdata, &fsize);
 	if (fsize != 256) {
-	    GP_DEBUG ("wrong status packet size ! Size is %d", fsize);
+	    GP_DEBUG ("wrong status packet size ! Size is %ld", fsize);
 	}
 	if (fdata [0] != 0x01) { /* see 2.6 for why 0x01 */
 	    GP_DEBUG ("not a status table. Is %d", fdata [0]);
@@ -748,7 +748,7 @@ static int dc240_get_directory_list (Camera *camera, CameraList *list, const cha
     /* Conversion below should be endian neutral. */
     num_of_entries = be16atoh(&fdata [0]) + 1;
     total_size = 2 + (num_of_entries * 20);
-    GP_DEBUG ("number of file entries : %d, size = %d", num_of_entries, fsize);
+    GP_DEBUG ("number of file entries : %d, size = %ld", num_of_entries, fsize);
     for (x = 2; x < total_size; x += 20) {
         if ((fdata[x] != '.') && (attrib == (unsigned char)fdata[x+11]))  {
             /* Files have attrib 0x00, Folders have attrib 0x10 */
