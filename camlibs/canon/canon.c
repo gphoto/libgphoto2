@@ -178,6 +178,7 @@ const struct canonCamModelData models[] = {
 	{"Canon:EOS 300D (normal mode)",	CANON_EOS_300D, 0x04A9, 0x3084, CAP_SUP, S10M, S32K, S2M, NULL},
 	{"Canon:EOS Digital Rebel (normal mode)",CANON_EOS_300D,0x04A9, 0x3084, CAP_SUP, S10M, S32K, S2M, NULL},
 	{"Canon:EOS Kiss Digital (normal mode)",CANON_EOS_300D, 0x04A9, 0x3084, CAP_SUP, S10M, S32K, S2M, NULL},
+	{"Canon:PowerShot A80 (normal mode)",CANON_PS_A80,      0x04A9, 0x309A, CAP_SUP,  S99M, S32K, S2M, NULL},
 
 	{NULL}
 	/* *INDENT-ON* */

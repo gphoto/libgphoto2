@@ -1,3 +1,6 @@
+2003-10-10 Olivier Crete <tester@tester.ca>
+	* library.c: Add Canon A80
+
 2003-09-20  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
 	* canon.c, canon.h, usb.c: Added support for 
