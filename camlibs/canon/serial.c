@@ -53,6 +53,13 @@
 #include "util.h"
 #include "crc.h"
 
+#ifndef MAX
+# define MAX(a, b) ((a) > (b) ? (a) : (b))
+#endif
+#ifndef MIN
+# define MIN(a, b) ((a) < (b) ? (a) : (b))
+#endif
+
 void
 serial_flush_input (GPPort *gdev)
 {
