@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto\n"
-"POT-Creation-Date: 2002-01-26 21:31+0100\n"
+"POT-Creation-Date: 2002-05-28 23:25+0200\n"
 "PO-Revision-Date: 2000-06-27 16:33+0200\n"
 "Last-Translator: Yuri Syrota <rasta@renome.rovno.ua>\n"
 "Language-Team: Ukrainian <ru@li.org>\n"
@@ -43,47 +43,52 @@ msgstr "Друкувати"
 msgid "read"
 msgstr "Створити"
 
-#: libgphoto2_port/gphoto2-port.c:504
+#. Check if we read as many bytes as expected
+#: libgphoto2_port/gphoto2-port.c:441 libgphoto2_port/gphoto2-port.c:478
+msgid "check_int"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:578
 msgid "update"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:550
+#: libgphoto2_port/gphoto2-port.c:624
 msgid "get_pin"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:568
+#: libgphoto2_port/gphoto2-port.c:676
 msgid "set_pin"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:583
+#: libgphoto2_port/gphoto2-port.c:691
 msgid "send_break"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:596
+#: libgphoto2_port/gphoto2-port.c:704
 msgid "flush"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:612
+#: libgphoto2_port/gphoto2-port.c:720
 msgid "find_device"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:624
+#: libgphoto2_port/gphoto2-port.c:732
 msgid "find_device_by_class"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:638
+#: libgphoto2_port/gphoto2-port.c:746
 msgid "clear_halt"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:658
+#: libgphoto2_port/gphoto2-port.c:766
 msgid "msg_write"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:678
+#: libgphoto2_port/gphoto2-port.c:786
 msgid "msg_read"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:738
+#: libgphoto2_port/gphoto2-port.c:846
 msgid "No error description available"
 msgstr ""
 
@@ -191,7 +196,7 @@ msgstr "Не вдалось отримати перегляд"
 #, c-format
 msgid ""
 "Could not claim interface %d (%m). Make sure no other program or kernel "
-"module (i.e. dc2xx) is using the device and you have read/write access to "
+"module (e.g. dc2xx) is using the device and you have read/write access to "
 "the device."
 msgstr ""
 
@@ -205,108 +210,117 @@ msgstr ""
 msgid "Could not close USB port (%m)."
 msgstr ""
 
-#: usb/libusb.c:278
+#: usb/libusb.c:294
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr ""
 
-#: usb/libusb.c:300
+#: usb/libusb.c:316
 #, fuzzy, c-format
 msgid "Could not set altsetting %d/%d (%m)"
 msgstr "Не вдалось в╕дновити #%i"
 
-#: usb/libusb.c:374
+#: usb/libusb.c:391
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr ""
 
-#: usb/libusb.c:419
+#: usb/libusb.c:439
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
 "is connected to the computer."
 msgstr ""
 
-#: usb/libusb.c:524
+#: usb/libusb.c:547
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
 "sure this device is connected to the computer."
 msgstr ""
 
-#: serial/unix.c:190
+#: serial/unix.c:214
 #, fuzzy, c-format
 msgid "Could not lock device '%s'"
 msgstr "Не вдалось отримати перегляд"
 
-#: serial/unix.c:199
+#: serial/unix.c:223
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr ""
 
-#: serial/unix.c:202
+#: serial/unix.c:226
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr ""
 
-#: serial/unix.c:224
+#: serial/unix.c:249
 #, c-format
 msgid "Device '%s' could not be unlocked."
 msgstr ""
 
-#: serial/unix.c:236
+#: serial/unix.c:261
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr ""
 
-#: serial/unix.c:240
+#: serial/unix.c:265
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr ""
 
-#: serial/unix.c:307
+#: serial/unix.c:332
 #, c-format
 msgid "Serial Port %i"
 msgstr ""
 
-#: serial/unix.c:389
+#: serial/unix.c:417
 #, fuzzy, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Помилка: не вдалось в╕дкрити %s"
 
-#: serial/unix.c:407
+#: serial/unix.c:435
 #, fuzzy, c-format
 msgid "Could not close '%s' (%m)."
 msgstr ""
 "Не вдалося в╕дкрити:\n"
 "%s"
 
-#: serial/unix.c:452
+#: serial/unix.c:488
 #, fuzzy, c-format
 msgid "Could not write to port (%m)"
 msgstr "Не вдалось в╕дновити #%i"
 
-#: serial/unix.c:539
+#: serial/unix.c:560
+msgid "Parity error."
+msgstr ""
+
+#: serial/unix.c:564
+#, c-format
+msgid "Unexpected parity response sequence 0xff 0x%02x."
+msgstr ""
+
+#: serial/unix.c:607
 #, c-format
 msgid "Unknown pin %i."
 msgstr ""
 
-#: serial/unix.c:561
+#: serial/unix.c:629
 #, fuzzy, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Не вдалось в╕дновити #%i"
 
-#: serial/unix.c:594
+#: serial/unix.c:662
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr ""
 
-#: serial/unix.c:617
+#: serial/unix.c:685
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr ""
 
-#: serial/unix.c:726
+#: serial/unix.c:796
 #, fuzzy, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Не вдалось отримати к╕лькост╕ зображень"
