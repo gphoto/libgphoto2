@@ -410,15 +410,15 @@ int gp_set_setting (char *key, char *value) {
 /* Front-end interaction functions (libraries calls these!)
    ---------------------------------------------------------------------------- */
 
-int gp_update_status (char *status) {
+int gp_status (char *status) {
 
-	interface_update_status(status);
+	interface_status(status);
 	return(GP_OK);
 }
 
-int gp_update_progress (float percentage) {
+int gp_progress (float percentage) {
 
-	interface_update_progress(percentage);
+	interface_progress(percentage);
 	return(GP_OK);
 }
 
