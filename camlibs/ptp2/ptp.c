@@ -88,7 +88,14 @@ ptp_usb_sendreq (PTPParams* params, PTPContainer* req)
 	PTPUSBBulkContainer usbreq;
 
 	/* build appropriate USB container */
-	usbreq.length=htod32(PTP_USB_BULK_REQ_LEN);
+	/*
+	   BTW: at now there are no requests withmore than 3 params, and
+	   some stupid cameras (CANON S45) hangs on some requests if there
+	   are more params than desired although documentation says that
+	   unused parameters have to be set to 0x00000000.
+	   That's why we set length to only three params.
+	*/
+	usbreq.length=htod32(PTP_USB_BULK_REQ_LEN-2*sizeof(uint32_t));
 	usbreq.type=htod16(PTP_USB_CONTAINER_COMMAND);
 	usbreq.code=htod16(req->Code);
 	usbreq.trans_id=htod32(req->Transaction_ID);
@@ -98,8 +105,8 @@ ptp_usb_sendreq (PTPParams* params, PTPContainer* req)
 	usbreq.payload.params.param4=htod32(req->Param4);
 	usbreq.payload.params.param5=htod32(req->Param5);
 	/* send it to responder */
-	ret=params->write_func((unsigned char *)&usbreq,PTP_USB_BULK_REQ_LEN,
-				params->data);
+	ret=params->write_func((unsigned char *)&usbreq,
+		PTP_USB_BULK_REQ_LEN-2*sizeof(uint32_t), params->data);
 	if (ret!=PTP_RC_OK) {
 		ret = PTP_ERROR_IO;
 		ptp_error (params,
