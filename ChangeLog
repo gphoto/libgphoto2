@@ -8,6 +8,12 @@
 
 2001-11-27  Hans Ulrich Niedermann <hun@n-dimensional.de>
 
+	* HACKING: we prefer patches against CVS and camlibs should use
+	  their own ChangeLog files
+	* libgphoto2/gphoto2-file.h: added note about CRW (Canon RaW)
+
+2001-11-27  Hans Ulrich Niedermann <hun@n-dimensional.de>
+
 	* camlibs/canon/canon.c: removed G2 from serial detection list
 	* camlibs/canon/canon.c: split canon_int_ready into usb and serial part
 	* camlibs/canon/library.c: cleaned up the "switch off" stuff
