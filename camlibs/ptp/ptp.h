@@ -200,10 +200,13 @@ struct _PTPParams {
 
 // ptp functions
 
-short                           
+short
 ptp_opensession(PTPParams* params, PTPReq* databuf, int session);
-short                           
+short
 ptp_closesession(PTPParams* params, PTPReq* databuf);
+short
+ptp_getobjecthandles(PTPParams* params, PTPReq* databuf,
+			PTPObjectHandles* objecthandles);
 
 /* no more yet ;) */
 
