@@ -809,14 +809,14 @@ canon_usb_identify (Camera *camera, GPContext *context)
 	for (i = 0; models[i].id_str != NULL; i++) {
 		if (models[i].usb_vendor && models[i].usb_product &&
 		    !strcmp (models[i].id_str, a.model)) {
-			GP_DEBUG ("canon_usb_identify: model names match '%s'", models[i].id_str);
+			GP_DEBUG ("canon_usb_identify: model name match '%s'", models[i].id_str);
 			gp_context_status (context, _("Detected a '%s'."), models[i].id_str);
 			camera->pl->md = (struct canonCamModelData *) &models[i];
 			return GP_OK;
 		}
 	}
 
-	gp_context_error (context, "Could not identify camera based on name id %s", models[i].id_str);
+	gp_context_error (context, "Could not identify camera based on name '%s'", a.model);
 
 	return GP_ERROR_MODEL_NOT_FOUND;
 }
