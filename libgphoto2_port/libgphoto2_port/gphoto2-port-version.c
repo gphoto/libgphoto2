@@ -34,7 +34,16 @@ const char **gp_port_library_version(GPVersionVerbosity verbose)
 			"no USB",
 #endif
 #ifdef HAVE_SERIAL
-			"serial",
+			"serial "
+#elif HAVE_BAUDBOY
+			"baudboy locking",
+#elif HAVE_TTYLOCK
+			"ttylock locking",
+#elif HAVE_LOCKDEV
+			"lockdev locking",
+#else
+			"without locking",
+#endif
 #else
 			"no serial",
 #endif
@@ -52,6 +61,21 @@ const char **gp_port_library_version(GPVersionVerbosity verbose)
 			"serial (for serial cameras)",
 #else
 			"no serial (for serial cameras)",
+#endif
+#ifdef HAVE_BAUDBOY
+			"baudboy (serial port locking)",
+#else
+			"no baudboy (serial port locking)",
+#endif
+#ifdef HAVE_TTYLOCK
+			"ttylock (serial port locking)",
+#else
+			"no ttylock (serial port locking)",
+#endif
+#ifdef HAVE_LOCKDEV
+			"lockdev (serial port locking)",
+#else
+			"no lockdev (serial port locking)",
 #endif
 			NULL
 		};
