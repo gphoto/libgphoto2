@@ -161,7 +161,9 @@ camera_abilities (CameraAbilitiesList *list)
 	for (i = 0; models[i].id_str; i++) {
 		memset (&a, 0, sizeof (a));
 
-		if ((UPLOAD_BOOL || (models[i].usb_capture_support == CAP_EXP)) && 
+		// For now, flag EOS 20D as experimental.
+		if ((UPLOAD_BOOL || (models[i].usb_capture_support == CAP_EXP)
+		     || models[i].model == CANON_CLASS_6) && 
 		    (models[i].usb_vendor && models[i].usb_product)) {
 			a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
 		} else {
