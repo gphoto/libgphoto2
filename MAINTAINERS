@@ -38,6 +38,9 @@ camlibs/digita:
 camlibs/dimera:
 	Dan Fandrich <dan@coneharvesters.com>
 
+camlibs/gsmart:
+	Till Adam <till@adam-lilienthal.de>
+
 camlibs/jamcam:
 	Chris Pinkham <cpinkham@infi.net>
 
