@@ -667,7 +667,7 @@ cmd1 | cmd2 |  cmd3 | Argument(eg.)                                   Response L
 0x0B   0x11   0x202 | 0x1 "D:\DCIM" 0x00 0x00 0x00                                  L | Get directory (0x1 = max depth of recursion)
 0x0D   0x11   0x201 | "D:\DCIM\100CANON" 0x00 "IMG_0002.JPG" 0x00                0x54 | Delete file
 0x0E   0x11   0x201 | 0x00000021 "D:\DCIM\100CANON" 0x00 "IMG_0002.JPG" 0x00     0x54 | Set file attribute
-0x0F   0x12   0x201 | none                                                      0x380 | Get camera photo abilities?
+0x1F   0x12   0x201 | none                                                      0x380 | Get camera photo abilities?
 0x20   0x12   0x201 | none                                                       0x54 | Lock keys, turn off LCD
 
 L means that the program reads 0x40 from bulk in, checks for a word at

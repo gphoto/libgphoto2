@@ -70,7 +70,7 @@ static const struct canon_usb_cmdstruct canon_usb_cmd[] = {
 	{CANON_USB_FUNCTION_GET_DIRENT,		"Get directory entrys",		0x0b, 0x11, 0x202,	0x40},
 	{CANON_USB_FUNCTION_DELETE_FILE,	"Delete file",			0x0d, 0x11, 0x201,	0x54},
 	{CANON_USB_FUNCTION_SET_ATTR,		"Set file attribute",		0x0e, 0x11, 0x201,	0x54},
-	{CANON_USB_FUNCTION_GET_PIC_ABILITIES,	"Get picture abilities",	0x0f, 0x12, 0x201,	0x384},
+	{CANON_USB_FUNCTION_GET_PIC_ABILITIES,	"Get picture abilities",	0x1f, 0x12, 0x201,	0x384},
 	{CANON_USB_FUNCTION_KEYLOCK,		"Lock keys and turn off LCD",	0x20, 0x12, 0x201,	0x54},
 	{ 0 }
 };
