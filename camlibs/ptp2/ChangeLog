@@ -1,3 +1,7 @@
+2004-04-18  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* library.c: Nikon Coolpix 3200 as reported.
+
 2004-04-13  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* library.c: Added Kodak CX7430. Close patch #934142.

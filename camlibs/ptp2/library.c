@@ -303,6 +303,8 @@ static struct {
 	{"Nikon:Coolpix 5400 (PTP mode)", 0x04b0, 0x0119},
 	/* Nikon Coolpix 3700: T. Ehlers, 18 Jan 2004 */
 	{"Nikon:Coolpix 3700 (PTP mode)", 0x04b0, 0x011d},
+	/* Nikon Coolpix 3200 */
+	{"Nikon:Coolpix 3200 (PTP mode)", 0x04b0, 0x0121},
 	/* Nikon Coolpix SQ: M. Holzbauer, 07 Jul 2003 */
 	{"Nikon:Coolpix SQ (PTP mode)",   0x04b0, 0x0202},
 	/* Nikon Coolpix 2000 */
