@@ -772,6 +772,14 @@ gp_port_serial_check_speed (GPPort *dev)
         tio.c_cc[VMIN] = 1;
         tio.c_cc[VTIME] = 0;
 
+	if (dev->settings.serial.parity != GP_PORT_SERIAL_PARITY_OFF) {
+	    tio.c_iflag &= ~IGNPAR;
+	    tio.c_iflag |= INPCK | PARMRK ;
+	    tio.c_cflag |= PARENB;
+	    if (dev->settings.serial.parity == GP_PORT_SERIAL_PARITY_ODD)
+		tio.c_cflag |= PARODD;
+	}
+
         cfsetispeed (&tio, gp_port_serial_baudconv (dev->settings.serial.speed));
         cfsetospeed (&tio, gp_port_serial_baudconv (dev->settings.serial.speed));
 

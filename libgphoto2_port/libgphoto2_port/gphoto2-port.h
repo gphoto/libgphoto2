@@ -42,13 +42,28 @@ extern "C" {
 #define FALSE (1==0)
 #endif
 
+/**
+ * Use Parity. Enable/Disable, and Odd/Even.
+ */
+
+typedef enum _GPPortSerialParity GPPortSerialParity;
+enum _GPPortSerialParity {
+    GP_PORT_SERIAL_PARITY_OFF = 0,
+    GP_PORT_SERIAL_PARITY_EVEN,
+    GP_PORT_SERIAL_PARITY_ODD
+};
+
+
 #define GP_PORT_MAX_BUF_LEN 4096             /* max length of receive buffer */
 
 typedef struct _GPPortSettingsSerial GPPortSettingsSerial;
 struct _GPPortSettingsSerial {
-	char port[128];
-	int speed;
-	int bits, parity, stopbits;
+	char port[128];		/** The portname (/dev/ttyX)*/
+	int speed;		/** The baudrate of the device. */
+	int bits;		/** How many bits data. */
+	GPPortSerialParity parity;	/** parity data, see GP_PORT_SERIAL_PARITY_ 
+				  defines */
+	int stopbits;		/** How many stop bits are used. */
 };
 
 typedef struct _GPPortSettingsUSB GPPortSettingsUSB;

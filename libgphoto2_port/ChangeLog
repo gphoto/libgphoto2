@@ -1,3 +1,10 @@
+2002-04-16  Marcus Meissner <marcus@jet.franken.de>
+
+	* libgphoto_port/gphoto2-port.h, serial/unix.c:
+	  Handle parity, introduced new enum GPPortSerialParity, 
+	  switched one element of the structure from int to enum 
+	  (enums are ints, so it should remain binary compatible).
+
 2002-03-23  Dan Fandrich <dan@coneharvesters.com>
 
 	* m4/byteorder.m4: Added support for cross-compilation.
