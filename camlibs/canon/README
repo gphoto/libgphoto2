@@ -15,7 +15,7 @@ following models:
  - PowerShot A10 (not tested)
  - PowerShot A20 (not tested)
  - PowerShot Pro90 IS (not tested)
- - EOS D30 (not tested)
+ - EOS D30
 
 The support of the following cameras is mostly there as they were supported
 in gphoto 0.4.x but an API change broke the support as they handle files a 
