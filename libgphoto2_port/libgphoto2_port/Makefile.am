@@ -1,6 +1,7 @@
 INCLUDES = 						\
 	-I$(top_srcdir)					\
-	-DIOLIBS=\"$(libdir)/gphoto2_port/$(VERSION)\"
+	-DIOLIBS=\"$(libdir)/gphoto2_port/$(VERSION)\"	\
+	-DLOCALEDIR=\"$(datadir)/locale\"
 
 ## What is this for?
 CFLAGS = @CFLAGS@ -g

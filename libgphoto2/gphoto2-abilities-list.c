@@ -84,6 +84,14 @@ gp_abilities_list_new (CameraAbilitiesList **list)
 {
 	CHECK_NULL (list);
 
+	/*
+	 * We do this here because everybody needs to call this function
+	 * first before accessing a camera. Pretty ugly, but I don't know
+	 * an other way without introducing a global initialization
+	 * function...
+	 */
+	bindtextdomain (PACKAGE, LOCALEDIR);
+
 	CHECK_MEM (*list = malloc (sizeof (CameraAbilitiesList)));
 	memset (*list, 0, sizeof (CameraAbilitiesList));
 
