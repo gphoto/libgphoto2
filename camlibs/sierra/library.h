@@ -25,7 +25,6 @@ int sierra_build_packet (Camera *camera, char type, char subtype, int data_lengt
 
 /* Communications functions */
 int sierra_set_speed		(Camera *camera, int speed);
-int sierra_delete_picture	(Camera *camera, int picture_number);
 int sierra_end_session		(Camera *camera);
 int sierra_write_ack		(Camera *camera);
 int sierra_write_nak		(Camera *camera);
@@ -38,6 +37,7 @@ int sierra_get_string_register	(Camera *camera, int reg, int file_number,
 int sierra_folder_set		(Camera *camera, const char *folder);
 int sierra_file_count		(Camera *camera);
 int sierra_delete		(Camera *camera, int picture_number);
+int sierra_delete_all           (Camera *camera);
 int sierra_capture		(Camera *camera, int capture_type, 
 				 CameraFilePath *filepath);
 int sierra_capture_preview 	(Camera *camera, CameraFile *file);

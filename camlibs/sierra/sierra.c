@@ -39,81 +39,81 @@ int camera_id (CameraText *id)
 }
 
 SierraCamera sierra_cameras[] = {
-	/* Camera Model,    USB(vendor id, product id, in endpoint, out endpoint) */ 
-	{"Agfa ePhoto 307", 	0, 0, 0, 0 },
-	{"Agfa ePhoto 780", 	0, 0, 0, 0 },
-	{"Agfa ePhoto 780C", 	0, 0, 0, 0 },
-	{"Agfa ePhoto 1280", 	0, 0, 0, 0 },
-	{"Agfa ePhoto 1680", 	0, 0, 0, 0 },
-	{"Apple QuickTake 200", 0, 0, 0, 0 },
-	{"Chinon ES-1000", 	0, 0, 0, 0 },
-	{"Epson PhotoPC 500", 	0, 0, 0, 0 },
-	{"Epson PhotoPC 550", 	0, 0, 0, 0 },
-	{"Epson PhotoPC 600", 	0, 0, 0, 0 },
-	{"Epson PhotoPC 700", 	0, 0, 0, 0 },
-	{"Epson PhotoPC 800", 	0, 0, 0, 0 },
-	{"Epson PhotoPC 3000z", 0x4b8, 0x403, 0x83, 0x04},
-	{"Nikon CoolPix 100", 	0, 0, 0, 0 },
-	{"Nikon CoolPix 300", 	0, 0, 0, 0 },
-	{"Nikon CoolPix 700", 	0, 0, 0, 0 },
-	{"Nikon CoolPix 800", 	0, 0, 0, 0 },
-        {"Nikon CoolPix 880",	0x04b0, 0x0103, 0x83, 0x04},
-        {"Nikon CoolPix 900", 	0, 0, 0, 0 },
-	{"Nikon CoolPix 900S", 	0, 0, 0, 0 },
-	{"Nikon CoolPix 910", 	0, 0, 0, 0 },
-	{"Nikon CoolPix 950", 	0, 0, 0, 0 },
-	{"Nikon CoolPix 950S", 	0, 0, 0, 0 },
-	{"Nikon CoolPix 990",	0x04b0, 0x0102, 0x83, 0x04},
-	{"Olympus D-100Z", 	0, 0, 0, 0 },
-	{"Olympus D-200L", 	0, 0, 0, 0 },
-	{"Olympus D-220L", 	0, 0, 0, 0 },
-	{"Olympus D-300L", 	0, 0, 0, 0 },
-	{"Olympus D-320L", 	0, 0, 0, 0 },
-	{"Olympus D-330R", 	0, 0, 0, 0 },
-	{"Olympus D-340L", 	0, 0, 0, 0 },
-	{"Olympus D-340R", 	0, 0, 0, 0 },
-	{"Olympus D-360L", 	0, 0, 0, 0 },
-	{"Olympus D-400L Zoom", 0, 0, 0, 0 },
-	{"Olympus D-450Z", 	0, 0, 0, 0 },
-	{"Olympus D-460Z", 	0, 0, 0, 0 },
-	{"Olympus D-500L", 	0, 0, 0, 0 },
-	{"Olympus D-600L", 	0, 0, 0, 0 },
-	{"Olympus D-600XL", 	0, 0, 0, 0 },
-	{"Olympus D-620L", 	0, 0, 0, 0 },
-	{"Olympus C-400", 	0, 0, 0, 0 },
-	{"Olympus C-400L", 	0, 0, 0, 0 },
-	{"Olympus C-410", 	0, 0, 0, 0 },
-	{"Olympus C-410L", 	0, 0, 0, 0 },
-	{"Olympus C-420", 	0, 0, 0, 0 },
-	{"Olympus C-420L", 	0, 0, 0, 0 },
-	{"Olympus C-800", 	0, 0, 0, 0 },
-	{"Olympus C-800L", 	0, 0, 0, 0 },
-	{"Olympus C-820", 	0, 0, 0, 0 },
-	{"Olympus C-820L", 	0, 0, 0, 0 },
-	{"Olympus C-830L", 	0, 0, 0, 0 },
-	{"Olympus C-840L", 	0, 0, 0, 0 },
-	{"Olympus C-900 Zoom", 	0, 0, 0, 0 },
-	{"Olympus C-900L Zoom", 0, 0, 0, 0 },
-	{"Olympus C-1000L", 	0, 0, 0, 0 },
-	{"Olympus C-1400L", 	0, 0, 0, 0 },
-	{"Olympus C-1400XL", 	0, 0, 0, 0 },
-	{"Olympus C-2000Z", 	0, 0, 0, 0 },
-	{"Olympus C-2020Z",	0, 0, 0, 0 },
-        {"Olympus C-2040Z", 	0x07b4, 0x105, 0x83, 0x04},
-        {"Olympus C-2500Z", 	0, 0, 0, 0 },
-	{"Olympus C-3000Z", 	0x07b4, 0x100, 0x83, 0x04},
-	{"Olympus C-3030Z", 	0x07b4, 0x100, 0x83, 0x04},
-	{"Panasonic Coolshot KXl-600A", 0, 0, 0, 0 },
-	{"Panasonic Coolshot NV-DCF5E", 0, 0, 0, 0 },
-	{"Polaroid PDC 640", 	0, 0, 0, 0 },
-	{"Sanyo DSC-X300", 	0, 0, 0, 0 },
-	{"Sanyo DSC-X350", 	0, 0, 0, 0 },
-	{"Sanyo VPC-G200", 	0, 0, 0, 0 },
-	{"Sanyo VPC-G200EX", 	0, 0, 0, 0 },
-	{"Sanyo VPC-G210", 	0, 0, 0, 0 },
-	{"Sanyo VPC-G250", 	0, 0, 0, 0 },
-	{"Sierra Imaging SD640",0, 0, 0, 0 },
-	{"", 0, 0}
+	/* Camera Model,    USB(vendor id, product id, in endpoint, out endpoint, USB wrapper protocol) */ 
+	{"Agfa ePhoto 307", 	0, 0, 0, 0, 0 },
+	{"Agfa ePhoto 780", 	0, 0, 0, 0, 0 },
+	{"Agfa ePhoto 780C", 	0, 0, 0, 0, 0 },
+	{"Agfa ePhoto 1280", 	0, 0, 0, 0, 0 },
+	{"Agfa ePhoto 1680", 	0, 0, 0, 0, 0 },
+	{"Apple QuickTake 200", 0, 0, 0, 0, 0 },
+	{"Chinon ES-1000", 	0, 0, 0, 0, 0 },
+	{"Epson PhotoPC 500", 	0, 0, 0, 0, 0 },
+	{"Epson PhotoPC 550", 	0, 0, 0, 0, 0 },
+	{"Epson PhotoPC 600", 	0, 0, 0, 0, 0 },
+	{"Epson PhotoPC 700", 	0, 0, 0, 0, 0 },
+	{"Epson PhotoPC 800", 	0, 0, 0, 0, 0 },
+	{"Epson PhotoPC 3000z", 0x4b8, 0x403, 0x83, 0x04, 0},
+	{"Nikon CoolPix 100", 	0, 0, 0, 0, 0 },
+	{"Nikon CoolPix 300", 	0, 0, 0, 0, 0 },
+	{"Nikon CoolPix 700", 	0, 0, 0, 0, 0 },
+	{"Nikon CoolPix 800", 	0, 0, 0, 0, 0 },
+        {"Nikon CoolPix 880",	0x04b0, 0x0103, 0x83, 0x04, 0},
+        {"Nikon CoolPix 900", 	0, 0, 0, 0, 0 },
+	{"Nikon CoolPix 900S", 	0, 0, 0, 0, 0 },
+	{"Nikon CoolPix 910", 	0, 0, 0, 0, 0 },
+	{"Nikon CoolPix 950", 	0, 0, 0, 0, 0 },
+	{"Nikon CoolPix 950S", 	0, 0, 0, 0, 0 },
+	{"Nikon CoolPix 990",	0x04b0, 0x0102, 0x83, 0x04, 0},
+	{"Olympus D-100Z", 	0, 0, 0, 0, 0 },
+	{"Olympus D-200L", 	0, 0, 0, 0, 0 },
+	{"Olympus D-220L", 	0, 0, 0, 0, 0 },
+	{"Olympus D-300L", 	0, 0, 0, 0, 0 },
+	{"Olympus D-320L", 	0, 0, 0, 0, 0 },
+	{"Olympus D-330R", 	0, 0, 0, 0, 0 },
+	{"Olympus D-340L", 	0, 0, 0, 0, 0 },
+	{"Olympus D-340R", 	0, 0, 0, 0, 0 },
+	{"Olympus D-360L", 	0, 0, 0, 0, 0 },
+	{"Olympus D-400L Zoom", 0, 0, 0, 0, 0 },
+	{"Olympus D-450Z", 	0, 0, 0, 0, 0 },
+	{"Olympus D-460Z", 	0, 0, 0, 0, 0 },
+	{"Olympus D-500L", 	0, 0, 0, 0, 0 },
+	{"Olympus D-600L", 	0, 0, 0, 0, 0 },
+	{"Olympus D-600XL", 	0, 0, 0, 0, 0 },
+	{"Olympus D-620L", 	0, 0, 0, 0, 0 },
+	{"Olympus C-400", 	0, 0, 0, 0, 0 },
+	{"Olympus C-400L", 	0, 0, 0, 0, 0 },
+	{"Olympus C-410", 	0, 0, 0, 0, 0 },
+	{"Olympus C-410L", 	0, 0, 0, 0, 0 },
+	{"Olympus C-420", 	0, 0, 0, 0, 0 },
+	{"Olympus C-420L", 	0, 0, 0, 0, 0 },
+	{"Olympus C-800", 	0, 0, 0, 0, 0 },
+	{"Olympus C-800L", 	0, 0, 0, 0, 0 },
+	{"Olympus C-820", 	0, 0, 0, 0, 0 },
+	{"Olympus C-820L", 	0, 0, 0, 0, 0 },
+	{"Olympus C-830L", 	0, 0, 0, 0, 0 },
+	{"Olympus C-840L", 	0, 0, 0, 0, 0 },
+	{"Olympus C-900 Zoom", 	0, 0, 0, 0, 0 },
+	{"Olympus C-900L Zoom", 0, 0, 0, 0, 0 },
+	{"Olympus C-1000L", 	0, 0, 0, 0, 0 },
+	{"Olympus C-1400L", 	0, 0, 0, 0, 0 },
+	{"Olympus C-1400XL", 	0, 0, 0, 0, 0 },
+	{"Olympus C-2000Z", 	0, 0, 0, 0, 0 },
+	{"Olympus C-2020Z",	0, 0, 0, 0, 0 },
+        {"Olympus C-2040Z", 	0x07b4, 0x105, 0x83, 0x04, 1},
+        {"Olympus C-2500Z", 	0, 0, 0, 0, 0 },
+	{"Olympus C-3000Z", 	0x07b4, 0x100, 0x83, 0x04, 0},
+	{"Olympus C-3030Z", 	0x07b4, 0x100, 0x83, 0x04, 0},
+	{"Panasonic Coolshot KXl-600A", 0, 0, 0, 0, 0 },
+	{"Panasonic Coolshot NV-DCF5E", 0, 0, 0, 0, 0 },
+	{"Polaroid PDC 640", 	0, 0, 0, 0, 0  },
+	{"Sanyo DSC-X300", 	0, 0, 0, 0, 0 },
+	{"Sanyo DSC-X350", 	0, 0, 0, 0, 0 },
+	{"Sanyo VPC-G200", 	0, 0, 0, 0, 0 },
+	{"Sanyo VPC-G200EX", 	0, 0, 0, 0, 0 },
+	{"Sanyo VPC-G210", 	0, 0, 0, 0, 0 },
+	{"Sanyo VPC-G250", 	0, 0, 0, 0, 0 },
+	{"Sierra Imaging SD640",0, 0, 0, 0, 0 },
+	{"", 0, 0, 0, 0, 0 }
 };
 
 int camera_abilities (CameraAbilitiesList *list) 
@@ -139,7 +139,7 @@ int camera_abilities (CameraAbilitiesList *list)
 					GP_OPERATION_CONFIG;
 		a->file_operations   = 	GP_FILE_OPERATION_DELETE | 
 					GP_FILE_OPERATION_PREVIEW;
-		a->folder_operations = 	GP_FOLDER_OPERATION_NONE;
+		a->folder_operations = 	GP_FOLDER_OPERATION_DELETE_ALL;
 		a->usb_vendor  = sierra_cameras[x].usb_vendor;
 		a->usb_product = sierra_cameras[x].usb_product;
 		gp_abilities_list_append (list, a);
@@ -173,6 +173,7 @@ int camera_init (Camera *camera)
 	camera->functions->file_get 		= camera_file_get;
 	camera->functions->file_get_preview 	= camera_file_get_preview;
 	camera->functions->file_delete 		= camera_file_delete;
+	camera->functions->folder_delete_all    = camera_folder_delete_all;
 	camera->functions->capture_preview	= camera_capture_preview;
 	camera->functions->capture 		= camera_capture;
 	camera->functions->get_config		= camera_get_config;
@@ -185,6 +186,7 @@ int camera_init (Camera *camera)
 	camera->camlib_data = fd;
 
 	fd->first_packet = 1;
+	fd->usb_wrap = 0;
 
 	switch (camera->port->type) {
 	case GP_PORT_SERIAL:
@@ -211,6 +213,7 @@ int camera_init (Camera *camera)
 				product = sierra_cameras[x].usb_product;
 				inep = sierra_cameras[x].usb_inep;
 				outep = sierra_cameras[x].usb_outep;
+				fd->usb_wrap = sierra_cameras[x].usb_wrap;
 			}
 		}
 
@@ -262,7 +265,7 @@ int camera_init (Camera *camera)
 		fd->speed = camera->port->speed;
 	}
 	
-	if (camera->port->type == GP_PORT_USB)
+	if (camera->port->type == GP_PORT_USB && !fd->usb_wrap)
 		gp_port_usb_clear_halt (fd->dev, GP_PORT_USB_ENDPOINT_IN);
 
 	/* FIXME??? What's that for? */
@@ -611,6 +614,7 @@ int camera_file_get_generic (Camera *camera, CameraFile *file,
 	    	gp_file_append (file, tmp_file->data, tmp_file->size);
 	}
 
+	gp_file_free (tmp_file);
 	return (camera_stop (camera));
 }
 
@@ -632,7 +636,8 @@ int camera_file_get_info (Camera *camera, const char *folder,
 		return (file_number);
 	
 	/* Set the current picture number */
-	CHECK_STOP (camera, sierra_set_int_register (camera, 4, file_number));
+	CHECK_STOP (camera, sierra_set_int_register (camera, 4, 
+				                     file_number + 1));
 
 	/* Get the size of the current image */
 	CHECK_STOP (camera, sierra_get_int_register (camera, 12, &l));
@@ -649,6 +654,21 @@ int camera_file_get_info (Camera *camera, const char *folder,
 	else
 		strcpy (info->preview.type, "image/jpeg");
 	info->preview.size = l;
+
+	return (camera_stop (camera));
+}
+
+int camera_folder_delete_all (Camera *camera, const char *folder)
+{
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", 
+			 "*** sierra_folder_delete_all");
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
+
+	CHECK (camera_start (camera));
+
+	CHECK (sierra_delete_all (camera));
+
+	//FIXME: Update the gphoto filesystem?
 
 	return (camera_stop (camera));
 }

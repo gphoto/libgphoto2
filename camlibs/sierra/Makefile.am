@@ -3,7 +3,10 @@ camlib_LTLIBRARIES = libgphoto2_sierra.la
 
 INCLUDES = -I$(top_srcdir)/include
 
-libgphoto2_sierra_la_SOURCES = sierra.c sierra.h library.c library.h
+libgphoto2_sierra_la_SOURCES =\
+ sierra.c sierra.h\
+ library.c library.h\
+ sierra-usbwrap.c sierra-usbwrap.h
 
 libgphoto2_sierra_la_LDFLAGS =\
  -avoid-version\

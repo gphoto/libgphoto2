@@ -52,7 +52,7 @@
  00 yy zz...	set int register to value zz...
  01 yy		get int register yy
 
- 02 01 00
+ 02 01 00	delete all
  02 02 00	capture image
  02 03 00
  02 04 00	end session
