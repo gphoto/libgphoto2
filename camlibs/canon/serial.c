@@ -284,8 +284,13 @@ canon_serial_recv_frame (Camera *camera, int *len)
 		}
 		*p++ = c;
 	}
-	if (camera->pl->dump_packets == 1)
-		dump_hex (camera, "RECV", buffer, p - buffer);
+
+	/* If you don't want to see the data dumped, change the frontend to
+	 * set a lower debug level
+	 */
+	gp_log (GP_LOG_DATA, "canon", "RECV (without CANON_FBEG and CANON_FEND bytes)");
+	gp_log_data ("canon", buffer, p - buffer);
+	
 	if (len)
 		*len = p - buffer;
 	return buffer;
