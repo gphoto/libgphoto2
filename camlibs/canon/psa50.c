@@ -1218,7 +1218,7 @@ psa50_set_file_attributes (Camera *camera, const char *file, const char *dir,
 	int len, payload_length;
 
 	GP_DEBUG ("psa50_set_file_attributes() "
-		  "called for '%s'/'%s', attributes 0x%x", attrs);
+		  "called for '%s' '%s', attributes 0x%x", dir, file, attrs);
 
 	attr[0] = attr[1] = attr[2] = 0;
 	attr[3] = attrs;
