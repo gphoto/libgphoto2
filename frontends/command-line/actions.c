@@ -129,6 +129,82 @@ list_files_action (const char *folder)
 }
 
 int
+print_info_action (const char *folder, const char *filename)
+{
+	CameraFileInfo info;
+
+	CR (gp_camera_file_get_info (glob_camera, folder, filename, &info,
+				     glob_context));
+
+	printf (_("Information on file '%s' (folder '%s'):\n"),
+		filename, folder);
+	printf (_("File:\n"));
+	if (info.file.fields == GP_FILE_INFO_NONE)
+		printf (_("  None available.\n"));
+	else {
+		if (info.file.fields & GP_FILE_INFO_NAME)
+			printf (_("  Name:        '%s'\n"), info.file.name);
+		if (info.file.fields & GP_FILE_INFO_TYPE)
+			printf (_("  Mime type:   '%s'\n"), info.file.type);
+		if (info.file.fields & GP_FILE_INFO_SIZE)
+			printf (_("  Size:        %i byte(s)\n"), info.file.size);
+		if (info.file.fields & GP_FILE_INFO_WIDTH)
+			printf (_("  Width:       %i pixel(s)\n"), info.file.width);
+		if (info.file.fields & GP_FILE_INFO_HEIGHT)
+			printf (_("  Height:      %i pixel(s)\n"), info.file.height);
+		if (info.file.fields & GP_FILE_INFO_STATUS)
+			printf (_("  Downloaded:  %s\n"),
+				(info.file.status == GP_FILE_STATUS_DOWNLOADED) ? _("yes") : _("no"));
+		if (info.file.fields & GP_FILE_INFO_PERMISSIONS) {
+			printf (_("  Permissions: "));
+			if ((info.file.permissions & GP_FILE_PERM_READ) &&
+			    (info.file.permissions & GP_FILE_PERM_DELETE))
+				printf (_("read/delete"));
+			else if (info.file.permissions & GP_FILE_PERM_READ)
+				printf (_("read"));
+			else if (info.file.permissions & GP_FILE_PERM_DELETE)
+				printf (_("delete"));
+			else
+				printf (_("none"));
+			printf ("\n");
+		}
+		if (info.file.fields & GP_FILE_INFO_MTIME)
+			printf (_("  Time:        %s"),
+				asctime (localtime (&info.file.mtime)));
+	}
+	printf (_("Thumbnail:\n"));
+	if (info.preview.fields == GP_FILE_INFO_NONE)
+		printf (_("  None available.\n"));
+	else {
+		if (info.preview.fields & GP_FILE_INFO_TYPE)
+			printf (_("  Mime type:   '%s'\n"), info.preview.type);
+		if (info.preview.fields & GP_FILE_INFO_SIZE)
+			printf (_("  Size:        %i byte(s)\n"), info.preview.size);
+		if (info.preview.fields & GP_FILE_INFO_WIDTH)
+			printf (_("  Width:       %i pixel(s)\n"), info.preview.width);
+		if (info.preview.fields & GP_FILE_INFO_HEIGHT)
+			printf (_("  Height:      %i pixel(s)\n"), info.preview.height);
+		if (info.preview.fields & GP_FILE_INFO_STATUS)
+			printf (_("  Downloaded:  %s\n"),
+				(info.preview.status == GP_FILE_STATUS_DOWNLOADED) ? _("yes") : _("no"));
+	}
+	printf (_("Audio data:\n"));
+	if (info.audio.fields == GP_FILE_INFO_NONE)
+		printf (_("  None available.\n"));
+	else {
+		if (info.audio.fields & GP_FILE_INFO_TYPE)
+			printf (_("  Mime type:  '%s'\n"), info.audio.type);
+		if (info.audio.fields & GP_FILE_INFO_SIZE)
+			printf (_("  Size:       %i byte(s)\n"), info.audio.size);
+		if (info.audio.fields & GP_FILE_INFO_STATUS)
+			printf (_("  Downloaded: %s\n"),
+				(info.audio.status == GP_FILE_STATUS_DOWNLOADED) ? _("yes") : _("no"));
+	}
+
+	return (GP_OK);
+}
+
+int
 print_file_action (const char *folder, const char *filename)
 {
 	static int x=0;

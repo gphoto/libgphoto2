@@ -1,3 +1,8 @@
+2002-02-10  Lutz Müller <lutz@users.sourceforge.net>
+
+	* frontends/command-line/actions.[c,h]:
+	* frontends/command-line/main.c: Implement --show-info.
+
 2002-02-09  Fredrik <fredrik@krixor.xy.org>
 
 	* frontends/command-line/foreach.c: Fix bug where new

@@ -109,6 +109,7 @@ OPTION_CALLBACK(config);
 #ifdef HAVE_EXIF
 OPTION_CALLBACK(show_exif);
 #endif
+OPTION_CALLBACK(show_info);
 OPTION_CALLBACK(help);
 OPTION_CALLBACK(version);
 OPTION_CALLBACK(shell);
@@ -218,6 +219,7 @@ Option option[] = {
 #ifdef HAVE_EXIF
 {"", "show-exif", "range",   N_("Show EXIF information"), show_exif, 0},
 #endif
+{"", "show-info", "range",   N_("Show info"), show_info, 0},
 {"",  "summary",        "",  N_("Summary of camera status"), summary,        0},
 {"",  "manual",         "",  N_("Camera driver manual"),     manual,         0},
 {"",  "about",          "",  N_("About the camera driver"),  about,          0},
@@ -675,6 +677,21 @@ OPTION_CALLBACK(config)
 	return (GP_OK);
 }
 #endif
+
+OPTION_CALLBACK(show_info)
+{
+	CR (set_globals ());
+
+	/*
+	 * If the user specified the file directly (and not a range),
+	 * directly dump info.
+	 */
+	if (strchr (arg, '.'))
+		return (print_info_action (glob_folder, arg));
+
+	return (for_each_file_in_range (glob_folder, print_info_action,
+					glob_flags, arg));
+}
 
 #ifdef HAVE_EXIF
 OPTION_CALLBACK(show_exif)

@@ -25,6 +25,7 @@
 typedef int FileAction    (const char *folder, const char *filename);
 int print_file_action     (const char *folder, const char *filename);
 int print_exif_action     (const char *folder, const char *filename);
+int print_info_action     (const char *folder, const char *filename);
 int save_file_action      (const char *folder, const char *filename);
 int save_thumbnail_action (const char *folder, const char *filename);
 int save_raw_action       (const char *folder, const char *filename);
