@@ -1,4 +1,9 @@
 2001-11-03 Marcus Meissner <marcus@jet.franken.de>
+
+	* camlibs/template/template.c: Make it compile with current libraries.
+	  Added NLS macros, missing functions, etc.
+
+2001-11-03 Marcus Meissner <marcus@jet.franken.de>
 	
 	* camlibs/agfa/agfa.c
 	* camlibs/barbie/barbie.c

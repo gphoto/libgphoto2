@@ -22,6 +22,20 @@
 #include <gphoto2-library.h>
 #include <gphoto2-result.h>
 
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define N_(String) (String)
+#  endif
+#else
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
 int
 camera_id (CameraText *id) 
 {
@@ -40,7 +54,7 @@ camera_abilities (CameraAbilitiesList *list)
 	a.port     = GP_PORT_SERIAL | GP_PORT_USB;
 	a.speed[0] = 0;
 	a.operations        = 	GP_OPERATION_CAPTURE_PREVIEW | 
-				GP_CAPTURE_VIDEO | GP_CAPTURE_IMAGE;
+				GP_CAPTURE_IMAGE;
 	a.file_operations   = 	GP_FILE_OPERATION_DELETE | 
 				GP_FILE_OPERATION_PREVIEW;
 	a.folder_operations = 	GP_FOLDER_OPERATION_NONE;
@@ -142,7 +156,7 @@ camera_capture_preview (Camera *camera, CameraFile *file)
 }
 
 static int
-camera_capture (Camera *camera, int capture_type, CameraFilePath *path)
+camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path)
 {
 	/*
 	 * Capture an image and tell libgphoto2 where to find it by filling
@@ -195,6 +209,17 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	return (GP_OK);
 }
+static int
+set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
+	       CameraFileInfo *info, void *data)
+{
+	Camera *camera = data;
+
+	/* Set the file info here from <info> */
+
+	return (GP_OK);
+}
+
 
 static int
 folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
@@ -223,9 +248,10 @@ camera_init (Camera *camera)
 {
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;
-        camera->functions->config_get           = camera_config_get;
-        camera->functions->config_set           = camera_config_set;
+        camera->functions->get_config           = camera_config_get;
+        camera->functions->set_config           = camera_config_set;
         camera->functions->capture              = camera_capture;
+        camera->functions->capture_preview      = camera_capture_preview;
         camera->functions->summary              = camera_summary;
         camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;
