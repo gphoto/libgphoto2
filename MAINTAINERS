@@ -122,6 +122,9 @@ camlibs/stv0680:
 	Carsten Weinholz <cweinholz@users.sourceforge.net>
 	Marcus Meissner <marcus@jet.franken.de>
 
+camlibs/sx330z:
+	Dominik Kuhlen <kinimod@users.sourceforge.net>
+
 --------------------------------------------------------------------------------
 				   FRONTENDS
 --------------------------------------------------------------------------------
