@@ -1,3 +1,7 @@
+2002-07-27  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* configure.in: new package name: libgphoto2
+
 2002-07-25  Christophe Barbé <christophe.barbe@ufies.org>
 
    po files from Stefan Bj|rnelund <stefanb@update.uu.se>
