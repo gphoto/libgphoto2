@@ -55,6 +55,7 @@ do
   echo processing $dir
   (cd $dir; \
   aclocalinclude="$ACLOCAL_FLAGS"; \
+  echo "Running aclocal $aclocalinclude"; \
   aclocal $aclocalinclude; \
   autoheader; automake --add-missing --gnu $am_opt; autoconf)
 done
