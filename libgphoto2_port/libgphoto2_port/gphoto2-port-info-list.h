@@ -39,6 +39,10 @@ struct _GPPortInfo {
 
 #include <gphoto2-port.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 /* Internals are private */
 typedef struct _GPPortInfoList GPPortInfoList;
 
@@ -58,5 +62,9 @@ int gp_port_info_list_get_info (GPPortInfoList *list, int n, GPPortInfo *info);
 
 /* DEPRECATED */
 typedef GPPortInfo gp_port_info;
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* __GPHOTO2_PORT_INFO_LIST_H__ */
