@@ -242,7 +242,7 @@ struct _CameraPrivateLibrary
 	int first_init;  /* first use of camera   1 = yes 0 = no */
 	int uploading;   /* 1 = yes ; 0 = no */
 	int slow_send;   /* to send data via serial with a usleep(1) 
-					  * between each byte 1 = yes ; 0 = no */ 
+			  * between each byte 1 = yes ; 0 = no */ 
 
 	unsigned char seq_tx;
 	unsigned char seq_rx;
