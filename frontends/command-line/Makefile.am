@@ -8,9 +8,8 @@ CFLAGS = @CFLAGS@ -g
 
 INCLUDES =						\
 	-DGPHOTO2_LOCALEDIR=\""$(datadir)/locale"\"	\
-	-I$(top_srcdir)/include				\
+	-I$(top_srcdir)/libgphoto2_port/libgphoto2_port	\
 	-I$(top_srcdir)/libgphoto2			\
-	-I$(top_srcdir)					\
 	$(AA_CFLAGS)
 
 if HAVE_CDK
