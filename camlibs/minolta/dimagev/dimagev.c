@@ -19,6 +19,8 @@
 *                                                                     *
 **********************************************************************/
 
+/* $Id$ */
+
 #include "dimagev.h"
 
 int camera_id (CameraText *id) {
@@ -234,6 +236,28 @@ int camera_file_get (Camera *camera, CameraFile *file, char *folder, char *filen
 int camera_file_get_preview (Camera *camera, CameraFile *file,
 			     char *folder, char *filename) {
 
+	dimagev_t *dimagev;
+	int file_number=0;
+
+	dimagev = camera->camlib_data;
+
+	file_number = gp_filesystem_number(dimagev->fs, folder, filename);
+
+	if ( dimagev->debug != 0 ) {
+		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "file number is %d", file_number);
+	}
+
+	if ( dimagev_get_thumbnail(dimagev, file_number + 1, file) == GP_ERROR ) {
+		if ( dimagev->debug != 0 ) {
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_file_get_preview::unable to retireve image file");
+		}
+		return GP_ERROR;
+	}
+
+	snprintf(file->type, 63, "image/tiff");
+	snprintf(file->name, 63, "tn-%s", filename);
+
+	return GP_OK;
 	return (GP_OK);
 }
 
