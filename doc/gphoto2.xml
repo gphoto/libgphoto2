@@ -1,4 +1,27 @@
 <?xml version='1.0' ?>
+
+<!-- =================================================================
+About this file:
+
+ - It is written in Docbook XML
+
+ - You're best off using an XML editor for this file
+
+ - If you have installed the Docbook XML DTDs properly, 
+   you can do syntax checks
+
+ - You can view this file directly using any XML+CSS capable browser. 
+   Examples are Mozilla, Galeon, Opera.
+
+ - If you need more information about Docbook and XML, have a look at
+   http://docbook.org/ and http://nwalsh.com/
+
+ - We use Tim Waugh's xmlto to process this file within the build
+   system, but you're free to use any other adequate processing tool,
+   of course :-)
+
+================================================================= -->
+
 <?xml-stylesheet type="text/css" href="docbook-xml.css"?>
 
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
