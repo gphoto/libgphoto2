@@ -98,7 +98,7 @@ camera.
 
 
 Line 0000 is always the same (or should be -- see next section). 
-The first block of 8 bytes seems to be amarker signifying the configuration 
+The first block of 8 bytes seems to be a marker signifying the configuration 
 block. The second eight-byte block may, it will become later apparent, refer 
 to some data about the block itself -- its type and its memory
 location, perhaps. This would seem paradoxical since one can not know the
@@ -170,8 +170,9 @@ However, the smallest possible unit which can be downloaded is apparently of
 size 0x100=256 bytes. A strange inconsistency. 
 
 Finally, for the seventh column there is at this time no obvious 
-interpretation. Perhaps it has to do with brightness, contrast, or such. But 
-the connection is not obvious. 
+interpretation. Perhaps it has to do with brightness, contrast, or gamma factor.
+The assumption that it has something to do with the gamma factor is here built
+into the code, and that assumption does seem to improve the photos. 
 
 A DATA CORRUPTION PROBLEM
 
@@ -216,3 +217,41 @@ missing bytes at the bottom right of the photo -- most definitely without
 downloading them. Perhaps the 8 lines of "junk" at the beginning are
 supposed to be stuck back somewhere in the middle, in a manner most
 mysterious. Who knows? 
+
+
+UPDATES and REVISIONS:
+
+This section is intended to give further explanations of some things which 
+are otherwise mentioned briefly, in the ChangeLog.
+
+1. 2004-05-18 ID number of Emprex PDC3800 contributed by Hisham Muhammad 
+<hisham@apple2.com>.
+
+2. 2004-06-09 Compatibility with gtkam ensured; method of adjusting the gamma
+setting of a photo introduced, based upon photo's config data. 
+
+3. 2004-09-04 The Vivitar Vivicam 55 has the same USB ID as the Emprex PDC3800
+and presumably is therefore the same camera. Turned out that the camera is 
+very finicky about initialization. Extensive efforts to make this camera 
+actually to work resulted in major revisions to the init sequence. Special 
+credit to Sebastien Soilen <sebastien@soilen.net> for sustained, patient, and 
+thorough testing. 
+
+4. 2004-10-26 Support for two new cameras with new ID of 0x093a:0x10e, which use 
+two new resolution settings, of 352x288 and 176x144. The new codes for these 
+resolution settings are:
+
+352x288, uncompressed	0x02 or 0x82
+352x288, compressed 	0x22 or 0xa2
+176x144, uncompressed    0x0 or 0x80
+176x144, compressed 	0x20 or 0xa0
+
+Credits to 
+
+Scott MacKenzie <irrational@poboxes.com> for reporting his camera and for 
+submitting the patch which makes it work.
+Nils Naumann <nau@gmx.net> for reporting his camera 24 hours after Scott, 
+and for testing Scott's patch. 
+
+
+
