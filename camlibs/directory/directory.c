@@ -30,6 +30,7 @@
 #include <gphoto2-setting.h>
 #include <gphoto2-library.h>
 #include <gphoto2-port.h>
+#include <gphoto2-port-log.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -64,6 +65,7 @@ static const struct {
 };
 
 //#define DEBUG
+#define GP_MODULE "directory"
 
 static const char *
 get_mime_type (const char *filename)
@@ -393,9 +395,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 #ifdef DEBUG
 	id = gp_context_progress_start (context, 500., "Getting file...");
+	GP_DEBUG ("Progress id: %i", id);
 	for (i = 0; i < 500; i++) {
 		gp_context_progress_update (context, id, i + 1);
-		if (gp_context_chancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
+		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
 			return (GP_ERROR_CANCEL);
 		usleep (10);
 	}
