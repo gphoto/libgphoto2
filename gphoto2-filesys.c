@@ -261,6 +261,7 @@ append_file (CameraFilesystem *fs, int x, CameraFile *file)
 	fs->folder[x].file[fs->folder[x].count - 1].info_dirty = 1;
 	fs->folder[x].file[fs->folder[x].count - 1].raw = NULL;
 	fs->folder[x].file[fs->folder[x].count - 1].preview = NULL;
+	fs->folder[x].file[fs->folder[x].count - 1].audio = NULL;
 	fs->folder[x].file[fs->folder[x].count - 1].normal = file;
 	gp_file_ref (file);
 
@@ -473,6 +474,7 @@ gp_filesystem_append (CameraFilesystem *fs, const char *folder,
 	fs->folder[x].file[fs->folder[x].count - 1].preview = NULL;
 	fs->folder[x].file[fs->folder[x].count - 1].normal = NULL;
 	fs->folder[x].file[fs->folder[x].count - 1].raw = NULL;
+	fs->folder[x].file[fs->folder[x].count - 1].audio = NULL;
 
 	/*
 	 * If people manually add files, they probably know the contents of
@@ -1209,9 +1211,12 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 	}
 
 	CHECK_RESULT (gp_file_new (&tmp));
+	gp_file_set_name (tmp, filename);
+	gp_file_set_type (tmp, type);
 	result = fs->get_file_func (fs, folder, filename, type, tmp,
 				    fs->file_data);
 	if (result != GP_OK) {
+		gp_log (GP_LOG_DEBUG, "gphoto2-fs", "Failed to get file.");
 		gp_file_unref (tmp);
 		return (result);
 	}

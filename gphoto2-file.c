@@ -24,6 +24,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <gphoto2-port-log.h>
+
 #include "gphoto2-result.h"
 
 static int glob_session_file = 0;
@@ -427,6 +429,8 @@ gp_file_adjust_name_for_mime_type (CameraFile *file)
 
 	CHECK_NULL (file);
 
+	gp_log (GP_LOG_DEBUG, "gphoto2-file", "Adjusting file name for "
+		"mime type '%s'...", file->mime_type);
 	for (x = 0; table[x]; x += 2)
 		if (!strcmp (file->mime_type, table[x])) {
 
@@ -437,6 +441,8 @@ gp_file_adjust_name_for_mime_type (CameraFile *file)
 			strcat (file->name, table[x + 1]);
 			break;
 		}
+	gp_log (GP_LOG_DEBUG, "gphoto2-file", "Name adjusted to '%s'.",
+		file->name);
 	
 	return (GP_OK);
 }
