@@ -17,6 +17,7 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
+
 #include <gphoto2-library.h>
 #include <gphoto2-core.h>
 #include <stdlib.h>
@@ -198,7 +199,8 @@ pdc320_size (CameraPort *port, int n)
 			/*
 			 * Do we need to dump some bytes here before trying
 			 * again?
-			 */
+                         * Yes, but how many is not known for the PDC 320.
+			 */                         
 			continue;
 		}
 
@@ -403,4 +405,5 @@ camera_init (Camera *camera)
 
 	return (result);
 }
+
 
