@@ -66,6 +66,7 @@ int agfa_get_thumb(struct agfa_device *dev, const char *filename,
 int agfa_get_pic_size(struct agfa_device *dev, const char *filename);
 int agfa_get_pic(struct agfa_device *dev, const char *filename, 
 		   unsigned char *data,int size);
+int agfa_capture(struct agfa_device *dev, const char *path);
 
 
 /* usb.c */

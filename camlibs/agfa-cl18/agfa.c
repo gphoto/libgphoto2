@@ -65,7 +65,7 @@ int camera_abilities(CameraAbilitiesList *list) {
        a->port       = GP_PORT_USB;
        a->usb_vendor = models[i].idVendor;
        a->usb_product= models[i].idProduct;
-       a->operations        = 	GP_OPERATION_NONE;
+       a->operations        = 	GP_OPERATION_CAPTURE_IMAGE;
        a->folder_operations = 	GP_FOLDER_OPERATION_NONE;
        a->file_operations   = 	GP_FILE_OPERATION_PREVIEW | 
 				GP_FILE_OPERATION_DELETE;
@@ -95,8 +95,9 @@ int camera_init(Camera *camera) {
     camera->functions->summary      = camera_summary;
     camera->functions->manual       = camera_manual;
     camera->functions->about        = camera_about;
-    camera->functions->file_delete       = camera_file_delete;
-
+    camera->functions->file_delete  = camera_file_delete;
+    camera->functions->capture      = camera_capture;
+   
     gp_debug_printf (GP_DEBUG_LOW, "agfa", "Initializing the camera\n");
 
     dev = malloc(sizeof(*dev));
@@ -310,6 +311,19 @@ int camera_about(Camera *camera, CameraText *about) {
     strcpy(about->text, _("Agfa CL18\nVince Weaver <vince@deater.net>\n"));
 
     return GP_OK;
+}
+
+
+    /* Below contributed by Ben Hague <benhague@btinternet.com> */
+int camera_capture (Camera *camera, int capture_type, CameraFilePath *path)
+{
+    struct agfa_device *dev=camera->camlib_data;
+
+    /* Capture image/preview/video and return it in 'file'. Don't store it
+       anywhere on your camera! If your camera does store the image,
+       delete it manually here. */
+       
+    return (agfa_capture(dev,path));
 }
 
 

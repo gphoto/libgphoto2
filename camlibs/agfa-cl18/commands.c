@@ -71,6 +71,38 @@ int agfa_get_status(struct agfa_device *dev, int *taken,
     return 0;
 }
 
+    /* Below contributed by Ben Hague <benhague@btinternet.com> */
+
+int agfa_capture(struct agfa_device *dev, const char *path) {
+    /*FIXME: Not fully implemented according to the gphoto2 spec.*/
+    /*Should also save taken picture, and then delete it from the camera*/
+    /*but when I try to do that it just hangs*/
+        
+    struct agfa_command cmd;
+    int ret,taken;
+      
+    printf("Agfa take a picture\n");
+    build_command(&cmd, AGFA_TAKEPIC2,0);
+    ret = agfa_send(dev, &cmd, sizeof(cmd));
+    build_command(&cmd, AGFA_TAKEPIC1,0);
+    ret = agfa_send(dev, &cmd, sizeof(cmd));
+    build_command(&cmd, AGFA_TAKEPIC3,0);
+    ret = agfa_send(dev, &cmd, sizeof(cmd));
+    build_command(&cmd, AGFA_TAKEPIC2,0);
+    ret = agfa_send(dev, &cmd, sizeof(cmd));
+    
+    /*Not sure if this delay is necessary, but it was used in the windows driver*/
+    /*delay(20); */
+    /*Again, three times in windows driver*/
+    ret = agfa_photos_taken(dev,&taken);
+    ret = agfa_photos_taken(dev,&taken);
+    ret = agfa_photos_taken(dev,&taken);
+    /*This seems to do some kind of reset, but does cause the camera to start responding again*/
+    build_command(&cmd,AGFA_GET_NAMES, 0);
+    ret = agfa_send(dev, &cmd, sizeof(cmd));
+    return 0;
+}
+
 
 int agfa_photos_taken(struct agfa_device *dev, int *taken) {
    
