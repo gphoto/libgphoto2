@@ -48,18 +48,18 @@ struct {
    unsigned short idProduct;
    char serial;
 } models[] = {
-        {"Agfa ePhoto CL18",0x06bd,0x0403,0},
-        {"Mustek gSmart 350",0x055f,0xa350,0},
-        {"RCA CDS1005",0x0784,0x0100,0},
+        {"Agfa:ePhoto CL18",0x06bd,0x0403,0},
+        {"Mustek:gSmart 350",0x055f,0xa350,0},
+        {"RCA:CDS1005",0x0784,0x0100,0},
    
-        {"Generic SoundVision Clarity2",0x0919,0x100,0},
-        {"CoolCam CP086",0x0919,0x100,0},
-        {"FujiFilm @xia ix-100",0x0919,0x0100,0},
-        {"Media-Tech mt-406",0x0919,0x0100,0},
-        {"Oregon Scientific DShot II",0x0919,0x0100,0},
-        {"Scott APX 30",0x0919,0x0100,0},
-        {"StarCam CP086",0x0919,0x100,0},
-        {"Tiger Fast Flicks",0x0919,0x0100,0},   
+        {"Generic SoundVision:Clarity2",0x0919,0x100,0},
+        {"CoolCam:CP086",0x0919,0x100,0},
+        {"FujiFilm:@xia ix-100",0x0919,0x0100,0},
+        {"Media-Tech:mt-406",0x0919,0x0100,0},
+        {"Oregon Scientific:DShot II",0x0919,0x0100,0},
+        {"Scott:APX 30",0x0919,0x0100,0},
+        {"StarCam:CP086",0x0919,0x100,0},
+        {"Tiger:Fast Flicks",0x0919,0x0100,0},   
         {NULL,0,0,0}
 };
 
