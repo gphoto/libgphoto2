@@ -19,12 +19,12 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <config.h>
+#include "pattrec.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <gphoto2-result.h>
-
-#include "pattrec.h"
 
 #define RED 0
 #define GREEN 1
