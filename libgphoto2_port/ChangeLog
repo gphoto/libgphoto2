@@ -18,6 +18,10 @@
 
 	* m4/documentation.m4: Fix checks for xmlto-[html,pdf,man,ps].
 
+2002-06-11  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* m4/packaging.m4: package dependency on libusb only if required
+
 2002-06-06  Lutz Müller <lutz@users.sourceforge.net>
 
 	Patch by Patrick Mansfield <patman@aracnet.com>:
