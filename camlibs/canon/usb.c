@@ -302,14 +302,13 @@ canon_usb_init (Camera *camera, GPContext *context)
 		if ( c_res == NULL ) {
 			GP_DEBUG ( "canon_usb_init: \"get picture abilities\" failed; continuing anyway." );
 		}
-		else if ( bytes_read == 0x474 ) {
+		else if ( bytes_read == 0x424 ) {
 			GP_DEBUG ( "canon_usb_init: Got the expected number of bytes back from \"get picture abilities.\"" );
 		} else {
-			gp_context_error ( context,
+			gp_context_message ( context,
 					   _("canon_usb_init: "
 					     "Unexpected return of %i bytes (expected %i) from \"get picture abilities.\""),
-					   bytes_read, 0x334 );
-			return GP_ERROR_CORRUPTED_DATA;
+					   bytes_read, 0x424 );
 		}
 		res = canon_int_get_battery(camera, NULL, NULL, context);
 		if (res != GP_OK) {
@@ -599,8 +598,8 @@ canon_usb_get_body_id (Camera *camera, GPContext *context)
 					    &bytes_read, NULL, 0);
 		if ( c_res == NULL )
 			return GP_ERROR_OS_FAILURE;
-		else if (bytes_read == 0x58) {
-			int body_id = le32atoh ( c_res+0x54 );
+		else if (bytes_read == 0x8) {
+			int body_id = le32atoh ( c_res+0x4 );
 			GP_DEBUG ("canon_usb_get_body_id: Got the expected number of bytes back.");
 			if ( camera->pl->md->usb_product == 0x3044 )
 				/* EOS D30 is a special case */
@@ -621,8 +620,8 @@ canon_usb_get_body_id (Camera *camera, GPContext *context)
 					    &bytes_read, NULL, 0);
 		if ( c_res == NULL )
 			return GP_ERROR_OS_FAILURE;
-		else if (bytes_read == 0x58) {
-			int body_id = le32atoh ( c_res+0x54 );
+		else if (bytes_read == 0x8) {
+			int body_id = le32atoh ( c_res+0x4 );
 			GP_DEBUG ("canon_usb_get_body_id: Got the expected number of bytes back.");
 			GP_DEBUG ("canon_usb_get_body_id: body ID is %010d", body_id );
 			return ( body_id );
