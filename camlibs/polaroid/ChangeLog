@@ -1,3 +1,7 @@
+2003-01-14  Marcus Meissner <marcus@jet.franken.de>
+		
+	* pdc320.c, pdc640.c, pdc700.c: Translate some strings.
+
 2002-11-17  Marcus Meissner <marcus@jet.franken.de>
 
 	* pdc700.c: Do not cast bween time_t* and int*.
