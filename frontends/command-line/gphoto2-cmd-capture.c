@@ -109,8 +109,9 @@ gp_cmd_capture_preview (Camera *camera, CameraFile *file)
 		} else
 #endif
 		{
+			/* Silently skip the preview */
 			aa_close (context);
-			return (GP_ERROR_NOT_SUPPORTED);
+			return (GP_OK);
 		}
 
 		aa_renderpalette (context, palette, params, 0, 0,
