@@ -1,6 +1,6 @@
 Makefile.in
 .libs
 .deps
-.so
+*.so
 *.lo
 *.la
