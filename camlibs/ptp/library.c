@@ -274,8 +274,6 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	for (i = 0; i < camera->pl->params.handles.n; i++) {
 		CPR (camera, ptp_getobjectinfo(&camera->pl->params,
 		&camera->pl->params.handles, i, &objectinfo));
-		if (objectinfo.ObjectFormat & 0x0800 == 0x0000) return
-			(GP_OK);
 		ptp_getobjectfilename (&objectinfo, filename);
 		CR (gp_list_append (list, filename, NULL));
 	}
@@ -307,6 +305,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		CPR (camera, ptp_getobjectinfo(&camera->pl->params,
 		&camera->pl->params.handles, image_id, &ptp_objectinfo));
 		fdata=malloc(ptp_objectinfo.ObjectCompressedSize);
+		if (objectinfo.ObjectFormat & 0x0800 == 0x0000) return
+			(GP_OK);
 		CPR (camera, ptp_getobject(&camera->pl->params,
 		&camera->pl->params.handles, &ptp_objectinfo, image_id, fdata));
 		CHECK (camera, gp_file_set_data_and_size (file, fdata,
@@ -317,6 +317,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		CPR (camera, ptp_getobjectinfo(&camera->pl->params,
 		&camera->pl->params.handles, image_id, &ptp_objectinfo));
 		fdata=malloc(ptp_objectinfo.ThumbCompressedSize);
+		if (objectinfo.ObjectFormat & 0x0800 == 0x0000) return
+			(GP_OK);
 		CPR (camera, ptp_getthumb(&camera->pl->params,
 		&camera->pl->params.handles, &ptp_objectinfo, image_id, fdata));
 		CHECK (camera, gp_file_set_data_and_size (file, fdata,
