@@ -1,5 +1,10 @@
 2001-12-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* frontends/command-line/main.c: Show file-specific progress on
+	  upload, too.
+
+2001-12-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2/gphoto2-camera.h: Add a note about
 	  gp_camera_progress being deprecated.
 

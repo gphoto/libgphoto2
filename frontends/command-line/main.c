@@ -903,6 +903,24 @@ OPTION_CALLBACK (delete_all_pictures)
         return (GP_OK);
 }
 
+static int
+upload_progress_func (CameraFile *file, float percentage, void *data)
+{
+	const char *name;
+
+	if (glob_quiet)
+		return (GP_OK);
+
+	CHECK_RESULT (gp_file_get_name (file, &name));
+	if (strlen (name))
+		printf ("Uploading '%s': %02.01f\r", name, percentage * 100.);
+	else
+		printf ("Uploading: %02.01f\r", percentage * 100.);
+	fflush (stdout);
+
+	return (GP_OK);
+}
+
 OPTION_CALLBACK (upload_picture)
 {
         CameraFile *file;
@@ -919,7 +937,9 @@ OPTION_CALLBACK (upload_picture)
 		return (res);
 	}
 
+	gp_file_set_progress_func (file, upload_progress_func, NULL);
         res = gp_camera_folder_put_file (glob_camera, glob_folder, file);
+	gp_file_set_progress_func (file, NULL, NULL);
         gp_file_unref (file);
 
         return (res);
