@@ -619,7 +619,7 @@ int gp_widget_get_parent (CameraWidget *widget, CameraWidget **parent)
 	if (!widget || !parent)
 		return (GP_ERROR_BAD_PARAMETERS);
 
-	parent = widget->parent;
+	*parent = widget->parent;
 
 	return (GP_OK);
 }
