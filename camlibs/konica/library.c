@@ -44,91 +44,91 @@ gboolean error_happened (k_return_status_t return_status)
 {
         switch (return_status) {
 		case K_PROGRAM_ERROR:
-			gp_message ("Program error!");
+			gp_camera_message (NULL, "Program error!");
 			return (TRUE);
                 case K_L_IO_ERROR:
-                        gp_message ("IO error!");
+                        gp_camera_message (NULL, "IO error!");
                         return (TRUE);
                 case K_L_TRANSMISSION_ERROR:
-                        gp_message ("Transmission error!\n");
+                        gp_camera_message (NULL, "Transmission error!\n");
                         return (TRUE);
                 case K_L_SUCCESS:
                         return (FALSE);
                 case K_SUCCESS:
                         return (FALSE);
                 case K_ERROR_FOCUSING_ERROR:
-                        gp_message ("Focussing error!");
+                        gp_camera_message (NULL, "Focussing error!");
                 case K_ERROR_IRIS_ERROR:
-                        gp_message ("Iris error!");
+                        gp_camera_message (NULL, "Iris error!");
                         return (TRUE);
                 case K_ERROR_STROBE_ERROR:
-                        gp_message ("Strobe error!");
+                        gp_camera_message (NULL, "Strobe error!");
                         return (TRUE);
                 case K_ERROR_EEPROM_CHECKSUM_ERROR:
-                        gp_message ("Eeprom checksum error!");
+                        gp_camera_message (NULL, "Eeprom checksum error!");
                         return (TRUE);
                 case K_ERROR_INTERNAL_ERROR1:
-                        gp_message ("Internal error (1)!");
+                        gp_camera_message (NULL, "Internal error (1)!");
                         return (TRUE);
                 case K_ERROR_INTERNAL_ERROR2:
-                        gp_message ("Internal error (2)!");
+                        gp_camera_message (NULL, "Internal error (2)!");
                         return (TRUE);
                 case K_ERROR_NO_CARD_PRESENT:
-                        gp_message ("No card present!");
+                        gp_camera_message (NULL, "No card present!");
                         return (TRUE);
                 case K_ERROR_CARD_NOT_SUPPORTED:
-                        gp_message ("Card not supported!");
+                        gp_camera_message (NULL, "Card not supported!");
                         return (TRUE);
                 case K_ERROR_CARD_REMOVED_DURING_ACCESS:
-                        gp_message ("Card removed during access!");
+                        gp_camera_message (NULL, "Card removed during access!");
                         return (TRUE);
                 case K_ERROR_IMAGE_NOT_PROTECTED_DOES_NOT_EXIST:
-                        gp_message ("Image not protected (does not exist)!");
+                        gp_camera_message (NULL, "Image not protected (does not exist)!");
                         return (TRUE);
                 case K_ERROR_CARD_CAN_NOT_BE_WRITTEN:
-                        gp_message ("Card can not be written!");
+                        gp_camera_message (NULL, "Card can not be written!");
                         return (TRUE);
                 case K_ERROR_CARD_IS_WRITE_PROTECTED:
-                        gp_message ("Card is write protected!");
+                        gp_camera_message (NULL, "Card is write protected!");
                         return (TRUE);
                 case K_ERROR_NO_SPACE_LEFT_ON_CARD:
-                        gp_message ("ERROR!\n");
+                        gp_camera_message (NULL, "ERROR!\n");
                         return (TRUE);
                 case K_ERROR_NO_PICTURE_ERASED_AS_IMAGE_PROTECTED:
-                        gp_message ("No picture erased as image protected!");
+                        gp_camera_message (NULL, "No picture erased as image protected!");
                         return (TRUE);
                 case K_ERROR_LIGHT_TOO_DARK:
-                        gp_message ("Light too dark!");
+                        gp_camera_message (NULL, "Light too dark!");
                         return (TRUE);
                 case K_ERROR_AUTOFOCUS_ERROR:
-                        gp_message ("Autofocus error!");
+                        gp_camera_message (NULL, "Autofocus error!");
                         return (TRUE);
                 case K_ERROR_SYSTEM_ERROR:
-                        gp_message ("System Error!");
+                        gp_camera_message (NULL, "System Error!");
                         return (TRUE);
                 case K_ERROR_ILLEGAL_PARAMETER:
-                        gp_message ("Illegal parameter!");
+                        gp_camera_message (NULL, "Illegal parameter!");
                         return (TRUE);
                 case K_ERROR_COMMAND_CANNOT_BE_CANCELLED:
-                        gp_message ("Command cannot be cancelled!");
+                        gp_camera_message (NULL, "Command cannot be cancelled!");
                         return (TRUE);
                 case K_ERROR_IMAGE_NUMBER_NOT_VALID:
-                        gp_message ("Image number not valid!");
+                        gp_camera_message (NULL, "Image number not valid!");
                         return (TRUE);
                 case K_ERROR_UNSUPPORTED_COMMAND:
-                        gp_message ("Unsupported command!");
+                        gp_camera_message (NULL, "Unsupported command!");
                         return (TRUE);
                 case K_ERROR_OTHER_COMMAND_EXECUTING:
-                        gp_message ("Other command executing!");
+                        gp_camera_message (NULL, "Other command executing!");
                         return (TRUE);
                 case K_ERROR_COMMAND_ORDER_ERROR:
-                        gp_message ("Command order error!");
+                        gp_camera_message (NULL, "Command order error!");
                         return (TRUE);
                 case K_ERROR_UNKNOWN_ERROR:
-                        gp_message ("Unknown error!");
+                        gp_camera_message (NULL, "Unknown error!");
                         return (TRUE);
                 case K_ERROR_NOT_YET_DISCOVERED:
-                        gp_message ("This is an unknown error message!\n");
+                        gp_camera_message (NULL, "This is an unknown error message!\n");
                         return (TRUE);
                 default:
                         return (TRUE);
@@ -179,7 +179,7 @@ int camera_abilities (CameraAbilities *abilities, int *count)
 }
 
 
-int camera_init (CameraInit *init)
+int camera_init (Camera *camera, CameraInit *init)
 {
 	gint i, j;
 	CameraPortSettings port_settings;
@@ -224,7 +224,26 @@ int camera_init (CameraInit *init)
 	gboolean bit_flag_use_hw_flow_control;
 	guint speed;
 
-	if (init->debug == 1) debug_flag = TRUE;
+	/* First, set up all the function pointers */
+	camera->functions->id 		= camera_id;
+	camera->functions->abilities 	= camera_abilities;
+	camera->functions->init 	= camera_init;
+	camera->functions->exit 	= camera_exit;
+	camera->functions->folder_list  = camera_folder_list;
+	camera->functions->folder_set 	= camera_folder_set;
+	camera->functions->file_count 	= camera_file_count;
+	camera->functions->file_get 	= camera_file_get;
+	camera->functions->file_get_preview =  camera_file_get_preview;
+	camera->functions->file_put 	= camera_file_put;
+	camera->functions->file_delete 	= camera_file_delete;
+	camera->functions->config_get   = camera_config_get;
+	camera->functions->config_set   = camera_config_set;
+	camera->functions->capture 	= camera_capture;
+	camera->functions->summary	= camera_summary;
+	camera->functions->manual 	= camera_manual;
+	camera->functions->about 	= camera_about;
+
+	if (camera->debug == 1) debug_flag = TRUE;
 	if (debug_flag) printf ("*** Entering camera_init.\n");
 	else debug_flag = FALSE;
 	for (i = 0; i < 2; i++) {
@@ -282,7 +301,7 @@ int camera_init (CameraInit *init)
 		return (GP_OK);
 	}
 	if (i == 10) {
-		gp_message ("Could not communicate with camera!");
+		gp_camera_message (NULL, "Could not communicate with camera!");
 		return (GP_ERROR);
 	}
 	/************************************************/
@@ -351,7 +370,7 @@ int camera_init (CameraInit *init)
 			 (speed !=  38400) &&
 			 (speed !=  57600) &&
 			 (speed != 115200))) {
-			gp_message ("Unsupported speed!");
+			gp_camera_message (NULL, "Unsupported speed!");
 			return (GP_ERROR);
 		}
 		/***********************************/
@@ -374,25 +393,25 @@ int camera_init (CameraInit *init)
 }
 
 
-int camera_exit ()
+int camera_exit (Camera *camera)
 {
 	return (GP_OK);
 }
 
 
-int camera_folder_list (char *folder_name, CameraFolderInfo *list)
+int camera_folder_list (Camera *camera, char *folder_name, CameraFolderInfo *list)
 {
 	return (GP_OK);
 }
 
 
-int camera_folder_set (char *folder_name)
+int camera_folder_set (Camera *camera, char *folder_name)
 {
 	return (GP_OK);
 }
 
 
-int camera_file_count ()
+int camera_file_count (Camera *camera)
 {
 	guint self_test_result;
 	k_power_level_t power_level;
@@ -444,7 +463,7 @@ int camera_file_count ()
 }
 
 
-int camera_file_get (int file_number, CameraFile *file)
+int camera_file_get (Camera *camera, CameraFile *file, int file_number)
 {
 	gulong image_id; 
 	guint exif_size;
@@ -471,7 +490,7 @@ int camera_file_get (int file_number, CameraFile *file)
 }
 
 
-int camera_file_get_preview (int file_number, CameraFile *preview)
+int camera_file_get_preview (Camera *camera, CameraFile *preview, int file_number)
 {
 	gulong image_id; 
 	guint exif_size;
@@ -499,13 +518,13 @@ int camera_file_get_preview (int file_number, CameraFile *preview)
 }
 
 
-int camera_file_put (CameraFile *file)
+int camera_file_put (Camera *camera, CameraFile *file)
 {
 	return (GP_ERROR);
 }
 
 
-int camera_file_delete (int file_number)
+int camera_file_delete (Camera *camera, int file_number)
 {
 	gulong image_id; 
 	guint exif_size;
@@ -525,7 +544,7 @@ int camera_file_delete (int file_number)
 }
 
 
-int camera_summary (CameraText *summary)
+int camera_summary (Camera *camera, CameraText *summary)
 {
 	gchar *model = NULL;
 	gchar *serial_number = NULL;
@@ -615,7 +634,7 @@ int camera_summary (CameraText *summary)
 }
 
 
-int camera_about (CameraText *about) 
+int camera_about (Camera *camera, CameraText *about) 
 {
 	strcpy (about->text, 
 		"Konica library\n"
@@ -625,14 +644,14 @@ int camera_about (CameraText *about)
 }
 
 
-int camera_config_get (CameraWidget *window)
+int camera_config_get (Camera *camera, CameraWidget *window)
 {
 	printf ("Not yet implemented...\n");
 	return (GP_ERROR);
 }
 
 
-int camera_config_set (CameraSetting *conf, int count)
+int camera_config_set (Camera *camera, CameraSetting *conf, int count)
 {
 	printf ("Not yet implemented...\n");
 	return (GP_ERROR);

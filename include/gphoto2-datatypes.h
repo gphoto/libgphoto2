@@ -122,8 +122,6 @@ typedef struct {
 		/* if serial==1, baud rates that this camera	 */
 		/* supports. terminate list with a zero 	 */
 
-	int capture;
-		/* Camera can do a capture (take picture) 	 */
 
 	int config;
 		/* Camera can be configures remotely 		 */
@@ -136,6 +134,10 @@ typedef struct {
 
 	int file_put;
 		/* Camera can receive files			 */
+
+	int capture;
+		/* Camera can do a capture (take picture) 	 */
+
 } CameraAbilities;
 
 typedef struct {
@@ -159,6 +161,9 @@ typedef struct {
 	char*		data;
 		/* Image data */
 
+		/* For chunk-based transfers */
+	int		bytes_read;
+
 } CameraFile;
 
 typedef struct {
@@ -173,3 +178,67 @@ typedef struct {
 typedef struct {
 	char text[32*1024];
 } CameraText;
+
+/* Define some prototype function pointers to camera functions */
+struct Camera;
+
+typedef int (*c_id)		 (char *);
+typedef int (*c_abilities)	 (CameraAbilities*,int*);
+typedef int (*c_init)		 (struct Camera*, CameraInit*);
+typedef int (*c_exit)		 (struct Camera*);
+typedef int (*c_folder_list)	 (struct Camera*, char*, CameraFolderInfo*);
+typedef int (*c_folder_set)	 (struct Camera*, char*);
+typedef int (*c_file_count)	 (struct Camera*);
+typedef int (*c_file_get)	 (struct Camera*, CameraFile*, int);
+typedef int (*c_file_get_preview)(struct Camera*, CameraFile*, int);
+typedef int (*c_file_put)	 (struct Camera*, CameraFile*);
+typedef int (*c_capture)	 (struct Camera*, CameraFile*, CameraCaptureInfo *);
+typedef int (*c_file_delete)	 (struct Camera*, int);
+typedef int (*c_file_lock)	 (struct Camera*, int);
+typedef int (*c_file_unlock)	 (struct Camera*, int);
+typedef int (*c_config_get)	 (struct Camera*, CameraWidget*);
+typedef int (*c_config_set)	 (struct Camera*, CameraSetting*, int);
+typedef int (*c_summary)	 (struct Camera*, CameraText*);
+typedef int (*c_manual)		 (struct Camera*, CameraText*);
+typedef int (*c_about)		 (struct Camera*, CameraText*);
+
+/* Function pointers to the current library functions */
+typedef struct {
+	c_id			id;
+	c_abilities		abilities;
+	c_init			init;
+	c_exit			exit;
+	c_folder_list		folder_list;
+	c_folder_set		folder_set;
+	c_file_count		file_count;
+	c_file_get		file_get;
+	c_file_get_preview	file_get_preview;
+	c_file_put		file_put;
+	c_file_delete		file_delete;
+	c_file_lock		file_lock;
+	c_file_unlock		file_unlock;
+	c_config_get		config_get;
+	c_config_set		config_set;
+	c_capture		capture;
+	c_summary		summary;
+	c_manual		manual;
+	c_about			about;
+} CameraFunctions;
+
+/* The Camera structure */
+struct Camera {
+	char		model[128];
+
+	int 		debug;
+	int		number;
+	char		folder[1024];
+	void*		library_handle;
+
+	CameraAbilities *abilities;
+	CameraFunctions *functions;
+
+	void 		*camlib_data;
+	void 		*frontend_data;
+};
+
+typedef struct Camera Camera;

@@ -107,24 +107,20 @@
 
 #define PICTURE_SIZE(n1, n2, n3, n4)	(n1*(n2+n3)+n4)
 
+typedef struct {
+        gpio_device *dev;
+        gpio_device_settings settings;
+        int debug;
+} BarbieStruct;
+
 /* Utility functions */
-void	barbie_packet_dump(int direction, char *buf, int size);
-int	barbie_write_command(char *command, int size);
-int	barbie_read_response(char *response, int size);
-char*	barbie_read_data(char *cmd, int cmd_size, int get_firmware, int *size);
+void	barbie_packet_dump  (BarbieStruct *b, int direction, char *buf, int size);
+int	barbie_write_command(BarbieStruct *b, char *command, int size);
+int	barbie_read_response(BarbieStruct *b, char *response, int size);
+char*	barbie_read_data    (BarbieStruct *b, char *cmd, int cmd_size, int get_firmware, int *size);
 
-char*	barbie_read_firmware();
-char*	barbie_read_picture(int picture_number, int get_thumbnail, int *size);
+char*	barbie_read_firmware(BarbieStruct *b);
+char*	barbie_read_picture (BarbieStruct *b, int picture_number, int get_thumbnail, int *size);
+int	barbie_exchange     (BarbieStruct *b, char *cmd, int cmd_size, char *resp, int resp_size);
+int	barbie_ping         (BarbieStruct *b);
 
-int	barbie_exchange (char *cmd, int cmd_size, char *resp, int resp_size);
-int	barbie_ping();
-
-/* Required gPhoto functions */
-int 		barbie_initialize(void);
-struct Image*	barbie_get_preview(void);
-int 		barbie_delete_picture(int index);
-int 		barbie_take_picture(void);
-int 		barbie_number_of_pictures(void);
-int 		barbie_configure(void);
-char*		barbie_summary(void);
-char*		barbie_description(void);

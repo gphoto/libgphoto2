@@ -56,7 +56,7 @@ struct canon_info
 };
 
 
-extern struct canon_info camera;
+extern struct canon_info camera_data;
 extern char psa50_id[]; /* ditto @@@ */
 int A5;
 

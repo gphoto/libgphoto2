@@ -16,7 +16,7 @@ SHELL = /bin/sh
 
 srcdir = .
 top_srcdir = ../..
-prefix = /usr/local
+prefix = /opt/gphoto2
 exec_prefix = ${prefix}
 
 bindir = ${exec_prefix}/bin
@@ -57,8 +57,8 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-host_alias = i586-pc-linux-gnu
-host_triplet = i586-pc-linux-gnu
+host_alias = i686-pc-linux-gnu
+host_triplet = i686-pc-linux-gnu
 AS = @AS@
 CC = gcc
 CPP = gcc -E
@@ -68,8 +68,8 @@ LIBGPHOTO2_INCLUDEDIR = -I${includedir}
 LIBGPHOTO2_LIBDIR = -L${libdir}
 LIBGPHOTO2_LIBS = -lgphoto2
 LIBGPHOTO2_VERSION = 1.90
-LIBGPIO_CONFIG = /usr/bin/gpio-config
-LIBS = -ldl  -L/usr/local/lib -lgpio
+LIBGPIO_CONFIG = /usr/local/bin/gpio-config
+LIBS = -ldl  -L/usr/local/lib -lgpio -L/usr/local/lib -lusb
 LIBTOOL = $(SHELL) $(top_builddir)/libtool
 LN_S = ln -s
 MAINT = #
@@ -78,13 +78,13 @@ NM = /usr/bin/nm -B
 OBJDUMP = @OBJDUMP@
 PACKAGE = gphoto2
 RANLIB = ranlib
-SUBDIRS_CAMLIBS = 
+SUBDIRS_CAMLIBS =  barbie directory fujitsu konica panasonic digita canon
 VERSION = 1.90
 
 camlibdir = $(prefix)/lib/gphoto2
 camlib_LTLIBRARIES = libgphoto2_canon.la
 
-CFLAGS = -g -O2 -I/usr/local/include/gpio `gtk-config --cflags` `gpio-config --cflags` -g -Wall
+CFLAGS = -g -O2 -I/usr/local/include/gpio -I/usr/local/include -I/usr/local/include `gtk-config --cflags` `gpio-config --cflags` -g -Wall
 LDFLAGS =  -g `gpio-config --libs`
 INCLUDES = -I$(top_srcdir)/include
 

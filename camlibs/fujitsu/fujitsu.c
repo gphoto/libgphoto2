@@ -8,16 +8,9 @@
 
 #define TIMEOUT	   2000
 
-int 		glob_debug	=0;
-int		glob_folders	=0;
-int		glob_speed	=0;
-gpio_device*	glob_dev;
-char		glob_folder[128];
+void debug_print(FujitsuData *fd, char *message) {
 
-
-void debug_print(char *message) {
-
-	if (glob_debug) {
+	if (fd->debug) {
 		printf("fujitsu: ");
 		printf(message);
 		printf("\n");
@@ -100,8 +93,6 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 	int x=0;
 	CameraAbilities a;
 
-	debug_print("getting camera abilities");
-
 	/* Fill in a template */
 	strcpy(a.model, "");
 	a.port     = GP_PORT_SERIAL;
@@ -127,21 +118,42 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 	return (GP_OK);
 }
 
-int camera_init (CameraInit *init) {
+int camera_init (Camera *camera, CameraInit *init) {
 
 	char *p;
-
 	int l, value=0;
 	gpio_device_settings settings;
+	FujitsuData *fd;
 
-	glob_debug = init->debug;
+	/* First, set up all the function pointers */
+	camera->functions->id 		= camera_id;
+	camera->functions->abilities 	= camera_abilities;
+	camera->functions->init 	= camera_init;
+	camera->functions->exit 	= camera_exit;
+	camera->functions->folder_list  = camera_folder_list;
+	camera->functions->folder_set 	= camera_folder_set;
+	camera->functions->file_count 	= camera_file_count;
+	camera->functions->file_get 	= camera_file_get;
+	camera->functions->file_get_preview =  camera_file_get_preview;
+	camera->functions->file_put 	= camera_file_put;
+	camera->functions->file_delete 	= camera_file_delete;
+	camera->functions->config_get   = camera_config_get;
+	camera->functions->config_set   = camera_config_set;
+	camera->functions->capture 	= camera_capture;
+	camera->functions->summary	= camera_summary;
+	camera->functions->manual 	= camera_manual;
+	camera->functions->about 	= camera_about;
 
-	debug_print("Initializing camera");
+	fd = (FujitsuData*)malloc(sizeof(FujitsuData));	
+	camera->camlib_data = fd;
 
-	glob_dev = NULL;
+	fd->first_packet = 1;
+	fd->debug = camera->debug;
 
-	glob_dev = gpio_new(GPIO_DEVICE_SERIAL);
-	if (!glob_dev)
+	debug_print(fd, "Initializing camera");
+
+	fd->dev = gpio_new(GPIO_DEVICE_SERIAL);
+	if (!camera)
 		return (GP_ERROR);
 
         strcpy(settings.serial.port, init->port_settings.path);
@@ -149,50 +161,52 @@ int camera_init (CameraInit *init) {
 	settings.serial.bits 	 = 8;
 	settings.serial.parity 	 = 0;
 	settings.serial.stopbits = 1;
-	gpio_set_settings(glob_dev, settings);
-	gpio_set_timeout(glob_dev, TIMEOUT);
+	gpio_set_settings(fd->dev, settings);
+	gpio_set_timeout(fd->dev, TIMEOUT);
 
-	if (gpio_open(glob_dev)==GPIO_ERROR) {
+	if (gpio_open(fd->dev)==GPIO_ERROR) {
 		gp_message("Can not open the port");
 		return (GP_ERROR);
 	}
 
-	if (fujitsu_ping(glob_dev)==GP_ERROR) {
+	if (fujitsu_ping(camera)==GP_ERROR) {
 		gp_message("Can not talk to camera");
 		return (GP_ERROR);
 	}
 
-	if (fujitsu_set_speed(glob_dev, init->port_settings.speed)==GP_ERROR) {
+	if (fujitsu_set_speed(camera, init->port_settings.speed)==GP_ERROR) {
 		gp_message("Can not set the serial port speed");
 		return (GP_ERROR);
 	}
 
-	if (fujitsu_get_int_register(glob_dev, 1, &value)==GP_ERROR) {
+	if (fujitsu_get_int_register(camera, 1, &value)==GP_ERROR) {
 		gp_message("Could not communicate with camera after speed change");
 		return (GP_ERROR);
 	}
 
-	fujitsu_set_int_register(glob_dev, 83, -1);
+	fujitsu_set_int_register(camera, 83, -1);
 
-	gpio_set_timeout(glob_dev, 50);
-	if (fujitsu_set_string_register(glob_dev, 84, "\\", 1)==GP_ERROR)
-		glob_folders = 0;
+	gpio_set_timeout(fd->dev, 50);
+	if (fujitsu_set_string_register(camera, 84, "\\", 1)==GP_ERROR)
+		fd->folders = 0;
 	   else
-		glob_folders = 1;
+		fd->folders = 1;
 
-	if (glob_folders)
-		debug_print("Camera supports folders");
-	gpio_set_timeout(glob_dev, TIMEOUT);
-	glob_speed = init->port_settings.speed;
+	if (fd->folders)
+		debug_print(fd, "Camera supports folders");
+	gpio_set_timeout(fd->dev, TIMEOUT);
+	fd->speed = init->port_settings.speed;
 
-if (camera_stop()==GP_ERROR)
+if (camera_stop(camera)==GP_ERROR)
 return (GP_ERROR);
 	return (GP_OK);
 }
 
-int camera_start() {
+int camera_start(Camera *camera) {
 
-	if (fujitsu_set_speed(glob_dev, glob_speed)==GP_ERROR) {
+	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
+
+	if (fujitsu_set_speed(camera, fd->speed)==GP_ERROR) {
 		gp_message("Can not set the serial port speed");
 		return (GP_ERROR);
 	}
@@ -200,9 +214,11 @@ int camera_start() {
 	return (GP_OK);
 }
 
-int camera_stop() {
+int camera_stop(Camera *camera) {
 
-	if (fujitsu_set_speed(glob_dev, -1)==GP_ERROR) {
+	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
+
+	if (fujitsu_set_speed(camera, -1)==GP_ERROR) {
 		gp_message("Can not set the serial port speed");
 		return (GP_ERROR);
 	}
@@ -210,68 +226,78 @@ int camera_stop() {
 	return (GP_OK);
 }
 
-int camera_exit () {
+int camera_exit (Camera *camera) {
 
-	debug_print("Exiting camera");
+	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
+
+	debug_print(fd, "Exiting camera");
 
 /* obsoleted by start/stop
-	if (fujitsu_end_session(glob_dev)==GP_ERROR) {
+	if (fujitsu_end_session(camera)==GP_ERROR) {
 		gp_message("Can not end camera session");
 		return (GP_ERROR);		
 	}
 */
 
+	free(fd);
+
 	return (GP_OK);
 }
 
-int camera_folder_list(char *folder_name, CameraFolderInfo *list) {
+int camera_folder_list(Camera *camera, char *folder_name, CameraFolderInfo *list) {
 
-	debug_print("Listing folders");
+	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
 
-	if (!glob_folders) /* camera doesn't support folders */
+	debug_print(fd, "Listing folders");
+
+	if (!fd->folders) /* camera doesn't support folders */
 		return (0);
 
 	return (0);
 }
 
-int camera_folder_set(char *folder_name) {
+int camera_folder_set(Camera *camera, char *folder_name) {
 
 	char buf[4096];
+	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
 
 	sprintf(buf, "Setting folder to %s", folder_name);
-	debug_print(buf);
+	debug_print(fd, buf);
 
-	strcpy(glob_folder, folder_name);
+	strcpy(fd->folder, folder_name);
 
 	return (GP_OK);
 }
 
-int camera_file_count () {
+int camera_file_count (Camera *camera) {
 
 	int value;
+	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
 
-if (camera_start()==GP_ERROR)
+if (camera_start(camera)==GP_ERROR)
 return (GP_ERROR);
 
-	debug_print("Counting files");
+	debug_print(fd, "Counting files");
 
-	if (fujitsu_get_int_register(glob_dev, 10, &value)==GP_ERROR) {
+	if (fujitsu_get_int_register(camera, 10, &value)==GP_ERROR) {
                 gp_message("Could not get number of files on camera.");
                 return (GP_ERROR);
         }
 
-if (camera_stop()==GP_ERROR)
+if (camera_stop(camera)==GP_ERROR)
 return (GP_ERROR);
 
 	return (value);
 }
 
-int camera_file_get_generic (int file_number, CameraFile *file, int thumbnail) {
+int camera_file_get_generic (Camera *camera, CameraFile *file, 
+	int file_number, int thumbnail) {
 
 	char buf[4096];
 	int length, regl, regd;
+	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
 
-if (camera_start()==GP_ERROR)
+if (camera_start(camera)==GP_ERROR)
 return (GP_ERROR);
 
 	if (thumbnail) {
@@ -283,16 +309,16 @@ return (GP_ERROR);
 		regl = 12;
 		regd = 14;
 	}
-	debug_print(buf);
+	debug_print(fd, buf);
 
 	/* Set the current picture number */
-	if (fujitsu_set_int_register(glob_dev, 4, file_number+1)==GP_ERROR) {
+	if (fujitsu_set_int_register(camera, 4, file_number+1)==GP_ERROR) {
 		gp_message("Can not set current image");
 		return (GP_ERROR);
 	}
 
 	/* Get the size of the current picture number */
-	if (fujitsu_get_int_register(glob_dev, regl, &length)==GP_ERROR) {
+	if (fujitsu_get_int_register(camera, regl, &length)==GP_ERROR) {
 		gp_message("Can not get current image length");
 		return (GP_ERROR);
 	}
@@ -300,118 +326,120 @@ return (GP_ERROR);
 	/* Fill in the file structure */
 	
 	strcpy(file->type, "image/jpg");
-	file->size = length;
-
-	/* Allocate the picture */
-	file->data = (char *)malloc(sizeof(char)*(length+16));
-	if (!file->data) {
-		debug_print("Could not allocate picture space");
-		return (GP_ERROR);
-	}
 
 	/* Get the picture filename */
-	if (fujitsu_get_string_register(glob_dev, 79, file->name, &length)==GP_ERROR) {
+	if (fujitsu_get_string_register(camera, 79, NULL, file->name, &length)==GP_ERROR) {
 		gp_message("Can not get picture filename");
 		return (GP_ERROR);
 	}
 
 	/* In case the register doesn't have the filename, use this one */
 	if (length == 0)
-		sprintf(file->name, "fujitsu%03i.jpg", file_number);
+		sprintf(file->name, "fujitsu%03i.jpg", file_number+1);
 
 	/* Get the picture data */
-	if (fujitsu_get_string_register(glob_dev, regd, file->data, &length)==GP_ERROR) {
+	if (fujitsu_get_string_register(camera, regd, file, NULL, NULL)==GP_ERROR) {
 		gp_message("Can not get picture");
 		return (GP_ERROR);
 	}
 
-if (camera_stop()==GP_ERROR)
+if (camera_stop(camera)==GP_ERROR)
 return (GP_ERROR);
 
 	return (GP_OK);
 }
 
-int camera_file_get (int file_number, CameraFile *file) {
+int camera_file_get (Camera *camera, CameraFile *file, int file_number) {
 
-	return (camera_file_get_generic(file_number, file, 0));
+	return (camera_file_get_generic(camera, file, file_number, 0));
 }
 
-int camera_file_get_preview (int file_number, CameraFile *preview) {
+int camera_file_get_preview (Camera *camera, CameraFile *file, int file_number) {
 
-	return (camera_file_get_generic(file_number, preview, 1));
+	return (camera_file_get_generic(camera, file, file_number, 1));
 }
 
-int camera_file_put (CameraFile *file) {
+int camera_file_put (Camera *camera, CameraFile *file) {
 
-	debug_print("Putting file on camera");
+	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
+
+	debug_print(fd, "Putting file on camera");
 
 	return (GP_ERROR);
 }
 
-int camera_file_delete (int file_number) {
+int camera_file_delete (Camera *camera, int file_number) {
 
 	int ret;
 	char buf[4096];
+	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
 
-if (camera_start()==GP_ERROR)
+if (camera_start(camera)==GP_ERROR)
 return (GP_ERROR);
 
 	sprintf(buf, "Deleting file #%i", file_number);
-	debug_print(buf);
+	debug_print(fd, buf);
 
-	ret = fujitsu_delete(glob_dev, file_number+1);
+	ret = fujitsu_delete(camera, file_number+1);
 
-if (camera_stop()==GP_ERROR)
+if (camera_stop(camera)==GP_ERROR)
 return (GP_ERROR);
 
 	return (ret);
 }
 
-int camera_config_get (CameraWidget *window) {
+int camera_config_get (Camera *camera, CameraWidget *window) {
 
-	debug_print("Building configuration window");
+	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
+
+	debug_print(fd, "Building configuration window");
 
 	return (GP_ERROR);
 }
 
-int camera_config_set (CameraSetting *setting, int count) {
+int camera_config_set (Camera *camera, CameraSetting *setting, int count) {
 
-if (camera_start()==GP_ERROR)
+	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
+
+if (camera_start(camera)==GP_ERROR)
 return (GP_ERROR);
 
-	debug_print("Setting configuration values");
+	debug_print(fd, "Setting configuration values");
 
-if (camera_stop()==GP_ERROR)
+if (camera_stop(camera)==GP_ERROR)
 return (GP_ERROR);
 
 	return (GP_OK);
 }
 
-int camera_capture (CameraFile *file, CameraCaptureInfo *info) {
+int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 
-	debug_print("Capturing image");
+	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
+
+	debug_print(fd, "Capturing image");
 
 	return (GP_ERROR);
 }
 
-int camera_summary (CameraText *summary) {
+int camera_summary (Camera *camera, CameraText *summary) {
 
 	char buf[1024*32];
 	int value;
 	char t[1024];
+	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
 
-if (camera_start()==GP_ERROR)
+if (camera_start(camera)==GP_ERROR)
 return (GP_ERROR);
 
-	debug_print("Getting camera summary");
+	debug_print(fd, "Getting camera summary");
 	strcpy(buf, "");
 
 	/* Get all the string-related info */
-	if (fujitsu_get_string_register(glob_dev, 22, t, &value)!=GP_ERROR)
+	if (fujitsu_get_string_register(camera, 22, NULL, t, &value)!=GP_ERROR)
 		sprintf(buf, "%sCamera ID       : %s\n", buf, t);
-	if (fujitsu_get_string_register(glob_dev, 25, t, &value)!=GP_ERROR)
+	if (fujitsu_get_string_register(camera, 25, NULL, t, &value)!=GP_ERROR)
 		sprintf(buf, "%sSerial Number   : %s\n", buf, t);
-	if (fujitsu_get_int_register(glob_dev, 1, &value)!=GP_ERROR) {
+	if (fujitsu_get_int_register(camera, 1, &value)!=GP_ERROR) {
 		switch(value) {
 			case 1:	strcpy(t, "Standard");
 				break;
@@ -424,14 +452,14 @@ return (GP_ERROR);
 		}
 		sprintf(buf, "%sResolution      : %s\n", buf, t);
 	}
-	if (fujitsu_get_int_register(glob_dev, 3, &value)!=GP_ERROR) {
+	if (fujitsu_get_int_register(camera, 3, &value)!=GP_ERROR) {
 		if (value == 0)
 			strcpy(t, "Auto");
 		   else
 			sprintf(t, "%i microseconds", value);
 		sprintf(buf, "%sShutter Speed   : %s\n", buf, t);
 	}
-	if (fujitsu_get_int_register(glob_dev, 5, &value)!=GP_ERROR) {
+	if (fujitsu_get_int_register(camera, 5, &value)!=GP_ERROR) {
 		switch(value) {
 			case 1:	strcpy(t, "Low");
 				break;
@@ -444,7 +472,7 @@ return (GP_ERROR);
 		}
 		sprintf(buf, "%sAperture        : %s\n", buf, t);
 	}
-	if (fujitsu_get_int_register(glob_dev, 6, &value)!=GP_ERROR) {	
+	if (fujitsu_get_int_register(camera, 6, &value)!=GP_ERROR) {	
 		switch(value) {
 			case 1:	strcpy(t, "Color");
 				break;
@@ -456,7 +484,7 @@ return (GP_ERROR);
 		sprintf(buf, "%sColor Mode      : %s\n", buf, t);
 	}
 
-	if (fujitsu_get_int_register(glob_dev, 7, &value)!=GP_ERROR) {	
+	if (fujitsu_get_int_register(camera, 7, &value)!=GP_ERROR) {	
 		switch(value) {
 			case 0: strcpy(t, "Auto");
 				break;
@@ -473,7 +501,7 @@ return (GP_ERROR);
 		}
 		sprintf(buf, "%sFlash Mode      : %s\n", buf, t);
 	}
-	if (fujitsu_get_int_register(glob_dev, 19, &value)!=GP_ERROR) {	
+	if (fujitsu_get_int_register(camera, 19, &value)!=GP_ERROR) {	
 		switch(value) {
 			case 0: strcpy(t, "Normal");
 				break;
@@ -490,7 +518,7 @@ return (GP_ERROR);
 		}
 		sprintf(buf, "%sBright/Contrast : %s\n", buf, t);
 	}
-	if (fujitsu_get_int_register(glob_dev, 20, &value)!=GP_ERROR) {	
+	if (fujitsu_get_int_register(camera, 20, &value)!=GP_ERROR) {	
 		switch(value) {
 			case 0: strcpy(t, "Auto");
 				break;
@@ -507,7 +535,7 @@ return (GP_ERROR);
 		}
 		sprintf(buf, "%sWhite Balance   : %s\n", buf, t);
 	}
-	if (fujitsu_get_int_register(glob_dev, 33, &value)!=GP_ERROR) {	
+	if (fujitsu_get_int_register(camera, 33, &value)!=GP_ERROR) {	
 		switch(value) {
 			case 1: strcpy(t, "Macro");
 				break;
@@ -522,43 +550,47 @@ return (GP_ERROR);
 	}
 
 	/* Get all the integer information */
-	if (fujitsu_get_int_register(glob_dev, 10, &value)!=GP_ERROR)
+	if (fujitsu_get_int_register(camera, 10, &value)!=GP_ERROR)
 		sprintf(buf, "%sFrames Taken    : %i\n", buf, value);
-	if (fujitsu_get_int_register(glob_dev, 11, &value)!=GP_ERROR)
+	if (fujitsu_get_int_register(camera, 11, &value)!=GP_ERROR)
 		sprintf(buf, "%sFrames Left     : %i\n", buf, value);
-	if (fujitsu_get_int_register(glob_dev, 16, &value)!=GP_ERROR)
+	if (fujitsu_get_int_register(camera, 16, &value)!=GP_ERROR)
 		sprintf(buf, "%sBattery Life    : %i\n", buf, value);
-	if (fujitsu_get_int_register(glob_dev, 23, &value)!=GP_ERROR)
+	if (fujitsu_get_int_register(camera, 23, &value)!=GP_ERROR)
 		sprintf(buf, "%sAutoOff (host)  : %i seconds\n", buf, value);
-	if (fujitsu_get_int_register(glob_dev, 24, &value)!=GP_ERROR)
+	if (fujitsu_get_int_register(camera, 24, &value)!=GP_ERROR)
 		sprintf(buf, "%sAutoOff (field) : %i seconds\n", buf, value);
-	if (fujitsu_get_int_register(glob_dev, 28, &value)!=GP_ERROR)
+	if (fujitsu_get_int_register(camera, 28, &value)!=GP_ERROR)
 		sprintf(buf, "%sMemory Left	: %i bytes\n", buf, value);
-	if (fujitsu_get_int_register(glob_dev, 35, &value)!=GP_ERROR)
+	if (fujitsu_get_int_register(camera, 35, &value)!=GP_ERROR)
 		sprintf(buf, "%sLCD Brightness  : %i (1-7)\n", buf, value);
-	if (fujitsu_get_int_register(glob_dev, 38, &value)!=GP_ERROR)
+	if (fujitsu_get_int_register(camera, 38, &value)!=GP_ERROR)
 		sprintf(buf, "%sLCD AutoOff	: %i seconds\n", buf, value);
 
 	strcpy(summary->text, buf);
 
-if (camera_stop()==GP_ERROR)
+if (camera_stop(camera)==GP_ERROR)
 return (GP_ERROR);
 
 	return (GP_OK);
 }
 
-int camera_manual (CameraText *manual) {
+int camera_manual (Camera *camera, CameraText *manual) {
 
-	debug_print("Getting camera manual");
+	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
+
+	debug_print(fd, "Getting camera manual");
 
 	strcpy(manual->text, "Manual Not Available");
 
 	return (GP_OK);
 }
 
-int camera_about (CameraText *about) {
+int camera_about (Camera *camera, CameraText *about) {
 
-	debug_print("Getting 'about' information");
+	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
+
+	debug_print(fd, "Getting 'about' information");
 
 	strcpy(about->text, 
 "Fujitsu SPARClite library

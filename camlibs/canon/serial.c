@@ -28,7 +28,7 @@
 
 /****  new stuff ********/
 #include <gpio/gpio.h>
-extern struct Model *Camera;  
+extern struct Model *camera_model;  
 int gpio_usb_find_device(int idvendor, int idproduct, struct usb_device **device);
 int gpio_usb_msg_write(gpio_device *dev, int value, char *bytes, int size);
 int gpio_usb_msg_read(gpio_device *dev, int value, char *bytes, int size);
@@ -128,9 +128,9 @@ int canon_serial_init(const char *devname)
   case CANON_USB:
 #ifdef GPIO_USB
     
-    if (gpio_usb_find_device(Camera->idVendor,
-			     Camera->idProduct, &udev)) {
-      printf("found '%s' @ %d/%d\n", Camera->name,
+    if (gpio_usb_find_device(camera_model->idVendor,
+			     camera_model->idProduct, &udev)) {
+      printf("found '%s' @ %d/%d\n", camera_model->name,
 	     udev->bus->busnum, udev->devicenum);
     }
     else

@@ -70,8 +70,8 @@ AC_ARG_WITH(drivers,
   [                         drivers may be separated with commas; ]
   [                         'all' compiles all drivers; ]
   [                         possible drivers are: ]
-  [                           barbie, digita, directory, fujitsu, ]
-  [                           konica, panasonic ],
+  [                           barbie, canon, digita, directory, ]
+  [			      fujitsu, konica, panasonic ],
   drivers="$withval", drivers="all")
 if test "$drivers" = "all"; then
   for i in $camlibs; do
@@ -107,6 +107,7 @@ camlibs/directory/Makefile \
 camlibs/panasonic/Makefile \
 camlibs/konica/Makefile \
 camlibs/digita/Makefile \
+camlibs/canon/Makefile \
 frontends/Makefile \
 frontends/command-line/Makefile \
 frontends/libgphoto2_frontend/Makefile \

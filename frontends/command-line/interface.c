@@ -3,19 +3,19 @@
 
 #include <gphoto2.h>
 
-int gp_interface_status (char *status) {
+int gp_interface_status (Camera *camera, char *status) {
 
 	printf("Status: %s\n", status);
 	return (GP_OK);
 }
 
-int gp_interface_message (char *message) {
+int gp_interface_message (Camera *camera, char *message) {
 
 	printf("Message: %s\n", message);
 	return (GP_OK);
 }
 
-int gp_interface_confirm (char *message) {
+int gp_interface_confirm (Camera *camera, char *message) {
 
 	char c;
 
@@ -26,10 +26,10 @@ int gp_interface_confirm (char *message) {
 	return ((c=='y') || (c=='Y'));
 }
 
-int gp_interface_progress (float percentage) {
+int gp_interface_progress (Camera *camera, CameraFile *file, float percentage) {
 
 	if (percentage >= 0) {
-		printf("Percent completed: %02.01f\r", percentage*100);
+		printf("Percent completed: %02.01f\r", percentage);
 		fflush(stdout);
 	}
 	return (GP_OK);

@@ -10,13 +10,13 @@
    ---------------------------------------------------------------- */
 
 /* Displays the current status on an operation in the camera */
-	int gp_interface_status (char *status);
+	int gp_interface_status (Camera *camera, char *status);
 
 /* Displays a percentage done in the current operation */
-	int gp_interface_progress (float percentage);
+	int gp_interface_progress (Camera *camera, CameraFile *file, float percentage);
 
 /* Displays a message (error, very important info) */
-	int gp_interface_message (char *message);
+	int gp_interface_message (Camera *camera, char *message);
 
 /* Displays a configuration */
-	int gp_interface_confirm (char *message);
+	int gp_interface_confirm (Camera *camera, char *message);
