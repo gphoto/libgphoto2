@@ -1,5 +1,11 @@
 2002-06-17  Lutz Müller <lutz@users.sourceforge.net>
 
+	Patch by Arnaud Launay <asl@launay.org>, slightly modified:
+
+	* configure.in: Check for usb_busses in -lusb.
+
+2002-06-17  Lutz Müller <lutz@users.sourceforge.net>
+
 	* Makefile.am: Remove 'autogen.sh' from EXTRA_DIST - people 
 	  that compile our tarballs don't need it.
 

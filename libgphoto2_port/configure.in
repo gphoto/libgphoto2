@@ -239,12 +239,14 @@ if $try_usb; then
 	if test -n "${LIBUSB_CONFIG}"; then
 		CPPFLAGS_save="$CPPFLAGS"
 		CPPFLAGS="$CPPFLAGS `libusb-config --cflags`"
-		AC_CHECK_HEADER(usb.h,
+		AC_CHECK_HEADER(usb.h,[
+			AC_CHECK_LIB(usb,usb_busses,[
 			usb_msg="yes"
 			IOLIB_SUBDIRS="$IOLIB_SUBDIRS usb"
 			USB_LIBS="`libusb-config --libs`"
 			USB_CFLAGS="`libusb-config --cflags`"
-                        LIBUSB_VER="`libusb-config --version`")
+                        LIBUSB_VER="`libusb-config --version`"],[
+			usb_msg="no (available version too old)"])])
 		CPPFLAGS="$CPPFLAGS_save"
 	fi
 
