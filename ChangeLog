@@ -1,3 +1,9 @@
+2003-02-21  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* doc/Makefile.am: renamed man pages
+	* doc/gphoto2.3,doc/gphoto2_port.3: removed
+	* doc/libgphoto2.3,doc/libgphoto2_port.3: added
+
 2003-02-01  Patrick Mansfield <patmans@users.sourceforge.net>
 
 	*  TESTERS: Added Valentin Rusu as a tester for the Epson PhotoPC 850z
