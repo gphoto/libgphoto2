@@ -196,10 +196,10 @@ static struct {
 	{"Sony DSC P30", 0x054c, 0x004e},
 	{"Sony DSC P50",  0x054c, 0x004e},
 	{"HP PhotoSmart 318", 0x03f0, 0x6302},
+	{"HP PhotoSmart 715", 0x03f0, 0x6402},
 
 	// we're looking for vendor/product IDs of following:
 	{"HP PhotoSmart 612", 0x0000, 0x0000},
-	{"HP PhotoSmart 715", 0x0000, 0x0000},
 	// more comming soon :)
 	{NULL, 0, 0}
 };
