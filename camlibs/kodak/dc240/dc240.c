@@ -93,7 +93,7 @@ camera_abilities (CameraAbilitiesList *list)
 static int
 camera_exit (Camera *camera, GPContext *context) 
 {
-	dc240_close (camera);
+	dc240_close (camera, context);
 	
 	return (GP_OK);
 }
@@ -104,7 +104,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 {
 	Camera *camera = data;
 
-	return (dc240_get_folders (camera, list, folder));
+	return (dc240_get_folders (camera, list, folder, context));
 }
 
 static int
@@ -113,7 +113,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 {
 	Camera *camera = data;
 
-	return (dc240_get_filenames (camera, list, folder));
+	return (dc240_get_filenames (camera, list, folder, context));
 }
 
 static int
@@ -126,10 +126,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
 		return (dc240_file_action (camera, DC240_ACTION_IMAGE, file,
-					   folder, filename));
+					   folder, filename, context));
 	case GP_FILE_TYPE_PREVIEW:
 		return (dc240_file_action (camera, DC240_ACTION_PREVIEW, file,
-					   folder, (char*) filename));
+					   folder, (char*) filename, context));
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
@@ -142,7 +142,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	Camera *camera = data;
 
 	return (dc240_file_action (camera, DC240_ACTION_DELETE, NULL, folder, 
-    				   filename));
+    				   filename, context));
 }
 
 static int
@@ -155,7 +155,7 @@ camera_capture (Camera *camera, CameraCaptureType type,
 		return (GP_ERROR_NOT_SUPPORTED);
 
 	/* Capture the image */
-	result = dc240_capture (camera, path);
+	result = dc240_capture (camera, path, context);
 	if (result < 0)
 		return (result);
 
@@ -175,7 +175,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
     int retval;
     DC240StatusTable table;
     
-    retval = dc240_get_status (camera, &table);
+    retval = dc240_get_status (camera, &table, context);
     if (retval == GP_OK) {
 	sprintf (buf, _("Model: Kodak %s\n"), dc240_convert_type_to_camera(table.cameraType));
 	sprintf (temp, _("Firmware version: %d.%02d\n"), table.fwVersInt, table.fwVersDec);

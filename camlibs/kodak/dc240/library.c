@@ -204,7 +204,6 @@ static int dc240_wait_for_completion (Camera *camera) {
 	default:
 	    done = 1;
 	}
-	gp_camera_progress(camera, 0.0);
     }
     
     if (x==25) {
@@ -243,7 +242,6 @@ static int dc240_wait_for_busy_completion (Camera *camera)
 		done = 1;
 	    }
 	}
-	gp_camera_progress(camera, 0.0);
     }
     
     if (x == BUSY_RETRIES)
@@ -255,7 +253,7 @@ static int dc240_wait_for_busy_completion (Camera *camera)
 
 static int dc240_packet_exchange (Camera *camera, CameraFile *file,
                            char *cmd_packet, char *path_packet,
-                           int *size, int block_size) 
+                           int *size, int block_size, GPContext *context) 
 {
     /* Reads in multi-packet data, appending it to the "file". */
     char check_sum;
@@ -264,6 +262,7 @@ static int dc240_packet_exchange (Camera *camera, CameraFile *file,
     int x=0, retries=0;
     float t;
     char packet[HPBS+2];
+    unsigned int id;
 
     if (*size > 0) {
         /* Known size to begin with */
@@ -293,9 +292,10 @@ read_data_write_again:
 	}
     }
 
+    id = gp_context_progress_start (context, num_packets, _("Getting data..."));
     while (x < num_packets) {
 read_data_read_again:
-        gp_camera_progress(camera, (float)x/(float)num_packets);
+	gp_context_progress_update (context, id, x);
 
         /* Read the response/data */
         retval = dc240_packet_read(camera, packet, block_size+2);
@@ -313,6 +313,7 @@ read_data_read_again:
                 goto read_data_read_again;
             }
         }
+	gp_context_progress_stop (context, id);
 
 	/* Validate checksum */
 	check_sum = 0;
@@ -392,18 +393,18 @@ int dc240_open (Camera *camera)
     return retval;
 }
 
-int dc240_close (Camera *camera) 
+int dc240_close (Camera *camera, GPContext *context) 
 {
     char *p = dc240_packet_new(0x97);
     int retval, size = -1;
 
-    retval = dc240_packet_exchange(camera, NULL, p, NULL, &size, -1);
+    retval = dc240_packet_exchange(camera, NULL, p, NULL, &size, -1, context);
 
     free(p);
     return retval;
 }
 
-static int dc240_get_file_size (Camera *camera, const char *folder, const char *filename, int thumb) {
+static int dc240_get_file_size (Camera *camera, const char *folder, const char *filename, int thumb, GPContext *context) {
 
     CameraFile *f;
     char *p1, *p2;
@@ -416,7 +417,7 @@ static int dc240_get_file_size (Camera *camera, const char *folder, const char *
     gp_file_new(&f);
     p1 = dc240_packet_new(0x91);
     p2 = dc240_packet_new_path(folder, filename);
-    if (dc240_packet_exchange(camera, f, p1, p2, &size, 256) < 0)
+    if (dc240_packet_exchange(camera, f, p1, p2, &size, 256, context) < 0)
         size = 0;
     else {
 	gp_file_get_data_and_size (f, &fdata, &fsize);
@@ -656,7 +657,7 @@ static int dc240_load_status_data_to_table (const int8_t *fdata, DC240StatusTabl
   Return the camera status table.
   See 5.1.29
  */
-int dc240_get_status (Camera *camera, DC240StatusTable *table) 
+int dc240_get_status (Camera *camera, DC240StatusTable *table, GPContext *context) 
 {
     CameraFile *file;
     char *p = dc240_packet_new(0x7F);
@@ -667,7 +668,7 @@ int dc240_get_status (Camera *camera, DC240StatusTable *table)
 
     gp_file_new (&file);
     GP_DEBUG ("enter dc240_get_status() \n");
-    retval = dc240_packet_exchange(camera, file, p, NULL, &size, 256);
+    retval = dc240_packet_exchange(camera, file, p, NULL, &size, 256, context);
 
     if (retval == GP_OK) {
 	gp_file_get_data_and_size (file, &fdata, &fsize);
@@ -687,7 +688,7 @@ int dc240_get_status (Camera *camera, DC240StatusTable *table)
 }
 
 static int dc240_get_directory_list (Camera *camera, CameraList *list, const char *folder,
-                             unsigned char attrib) {
+                             unsigned char attrib, GPContext *context) {
 
     CameraFile *file;
     int x, y=0, z, size=256;
@@ -701,7 +702,7 @@ static int dc240_get_directory_list (Camera *camera, CameraList *list, const cha
     int total_size = 0; /* total useful size of the listing */
 
     gp_file_new(&file);
-    ret = dc240_packet_exchange(camera, file, p1, p2, &size, 256);
+    ret = dc240_packet_exchange(camera, file, p1, p2, &size, 256, context);
     if (ret < 0) {
         return ret;
     }
@@ -743,18 +744,20 @@ static int dc240_get_directory_list (Camera *camera, CameraList *list, const cha
     return (GP_OK);
 }
 
-int dc240_get_folders (Camera *camera, CameraList *list, const char *folder) {
+int dc240_get_folders (Camera *camera, CameraList *list, const char *folder,
+		       GPContext *context) {
 
-    return (dc240_get_directory_list(camera, list, folder, 0x10));
+    return (dc240_get_directory_list(camera, list, folder, 0x10, context));
 }
 
-int dc240_get_filenames (Camera *camera, CameraList *list, const char *folder) {
+int dc240_get_filenames (Camera *camera, CameraList *list, const char *folder,
+			 GPContext *context) {
 
-    return (dc240_get_directory_list(camera, list, folder, 0x00));
+    return (dc240_get_directory_list(camera, list, folder, 0x00, context));
 }
 
 int dc240_file_action (Camera *camera, int action, CameraFile *file,
-                       const char *folder, const char *filename) {
+                       const char *folder, const char *filename, GPContext *context) {
 
     int size=0, thumb=0, retval=GP_OK;
     char *cmd_packet, *path_packet;
@@ -768,15 +771,15 @@ int dc240_file_action (Camera *camera, int action, CameraFile *file,
         thumb = 1;
         /* no break on purpose */
     case DC240_ACTION_IMAGE:
-        if ((size = dc240_get_file_size(camera, folder, filename, thumb)) < 0) {
+        if ((size = dc240_get_file_size(camera, folder, filename, thumb, context)) < 0) {
             retval = GP_ERROR;
             break;
         }
-        retval = dc240_packet_exchange(camera, file, cmd_packet, path_packet, &size, HPBS);
+        retval = dc240_packet_exchange(camera, file, cmd_packet, path_packet, &size, HPBS, context);
         break;
     case DC240_ACTION_DELETE:
         size = -1;
-        retval = dc240_packet_exchange(camera, file, cmd_packet, path_packet, &size, -1);
+        retval = dc240_packet_exchange(camera, file, cmd_packet, path_packet, &size, -1, context);
         break;
     default:
         return (GP_ERROR);
@@ -799,7 +802,7 @@ int dc240_file_action (Camera *camera, int action, CameraFile *file,
   name.
   See also 5.1.19
  */
-int dc240_capture (Camera *camera, CameraFilePath *path) 
+int dc240_capture (Camera *camera, CameraFilePath *path, GPContext *context) 
 {
     CameraFile *file;
     int size = 256;
@@ -815,7 +818,7 @@ int dc240_capture (Camera *camera, CameraFilePath *path)
 	return ret;
     }
 
-    gp_camera_status (camera, "Waiting for completion...");
+    gp_context_status (context, "Waiting for completion...");
     ret = dc240_wait_for_completion(camera);
     if (ret != GP_OK) {
 	return ret;
@@ -831,7 +834,7 @@ int dc240_capture (Camera *camera, CameraFilePath *path)
      */
     gp_file_new(&file);
     p = dc240_packet_new(0x4C); /* 5.1.19 Send last taken image name */
-    ret = dc240_packet_exchange(camera, file, p, NULL, &size, 256);
+    ret = dc240_packet_exchange(camera, file, p, NULL, &size, 256, context);
     free(p);
     if (ret != GP_OK) {
 	path->name[0] = 0;
