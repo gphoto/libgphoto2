@@ -281,6 +281,7 @@ static struct {
 	{"Sony:DSC-P31 (PTP mode)",   0x054c, 0x004e}, 
 	{"Sony:DSC-P32 (PTP mode)",   0x054c, 0x004e}, 
 	{"Sony:DSC-P41 (PTP mode)",   0x054c, 0x004e}, 
+	{"Sony:DSC-P43 (PTP mode)",   0x054c, 0x004e}, 
 	{"Sony:DSC-P50 (PTP mode)",   0x054c, 0x004e},
 	{"Sony:DSC-P52 (PTP mode)",   0x054c, 0x004e},
 	{"Sony:DSC-P72 (PTP mode)",   0x054c, 0x004e},
@@ -319,6 +320,8 @@ static struct {
 	{"Nikon:Coolpix 3700 (PTP mode)", 0x04b0, 0x011d},
 	/* Nikon Coolpix 3200 */
 	{"Nikon:Coolpix 3200 (PTP mode)", 0x04b0, 0x0121},
+	/* Nikon Coolpix 2200 */
+	{"Nikon:Coolpix 2200 (PTP mode)", 0x04b0, 0x0122},
 	/* Nikon Coolpix SQ: M. Holzbauer, 07 Jul 2003 */
 	{"Nikon:Coolpix SQ (PTP mode)",   0x04b0, 0x0202},
 	/* lars marowski bree, 16.8.2004 */
