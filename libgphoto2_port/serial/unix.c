@@ -246,11 +246,13 @@ gp_port_serial_lock (GPPort *dev, const char *path)
 #endif
 
 #ifndef __HAVE_LOCKING
-#warning No locking library found. 
-#warning You will run into problems if you use
-#warning gphoto2 with a serial (RS232) camera in 
-#warning combination with Konqueror (KDE) or Nautilus (GNOME).
-#warning This will *not* concern USB cameras.
+# ifdef __GCC__
+#  warning No locking library found. 
+#  warning You will run into problems if you use
+#  warning gphoto2 with a serial (RS232) camera in 
+#  warning combination with Konqueror (KDE) or Nautilus (GNOME).
+#  warning This will *not* concern USB cameras.
+# endif
 #endif
 
 	return (GP_OK);
@@ -667,7 +669,9 @@ gp_port_serial_get_pin (GPPort *dev, GPPin pin, GPLevel *level)
         }
         *level = j & bit;
 #else
-#warning ACCESSING PINS IS NOT IMPLEMENTED FOR NON-TERMIOS SYSTEMS!
+# ifdef __GCC__
+#  warning ACCESSING PINS IS NOT IMPLEMENTED FOR NON-TERMIOS SYSTEMS!
+# endif
 #endif
 
         return (GP_OK);
@@ -699,7 +703,9 @@ gp_port_serial_set_pin (GPPort *dev, GPPin pin, GPLevel level)
 		return GP_ERROR_IO;
 	}
 #else
-#warning ACCESSING PINS IS NOT IMPLEMENTED FOR NON-TERMIOS SYSTEMS!
+# ifdef __GCC__
+#  warning ACCESSING PINS IS NOT IMPLEMENTED FOR NON-TERMIOS SYSTEMS!
+# endif
 #endif
 
         return GP_OK;
@@ -722,7 +728,9 @@ gp_port_serial_flush (GPPort *dev, int direction)
 		return (GP_ERROR_IO);
 	}
 #else
-#warning SERIAL FLUSH NOT IMPLEMENTED FOR NON TERMIOS SYSTEMS!
+# ifdef __GCC__
+#  warning SERIAL FLUSH NOT IMPLEMENTED FOR NON TERMIOS SYSTEMS!
+# endif
 #endif
 
 	return (GP_OK);
@@ -934,7 +942,9 @@ gp_port_serial_send_break (GPPort *dev, int duration)
         tcsendbreak (dev->pl->fd, duration / 310);
         tcdrain (dev->pl->fd);
 #else
-#warning SEND BREAK NOT IMPLEMENTED FOR NON TERMIOS SYSTEMS!
+# ifdef __GCC__
+#  warning SEND BREAK NOT IMPLEMENTED FOR NON TERMIOS SYSTEMS!
+# endif
 #endif
 
         return GP_OK;

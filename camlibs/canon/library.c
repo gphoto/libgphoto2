@@ -66,8 +66,10 @@
 #include "usb.h"
 
 #ifndef HAVE_SNPRINTF
-#warning You do not seem to have a snprintf() function. Using sprintf instead.
-#warning Note that this leads to SECURITY RISKS!
+# ifdef __GCC__
+#  warning You do not seem to have a snprintf() function. Using sprintf instead.
+#  warning Note that this leads to SECURITY RISKS!
+# endif
 #define snprintf(buf,size,format,arg) sprintf(buf,format,arg)
 #endif
 

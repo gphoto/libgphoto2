@@ -76,7 +76,9 @@ void gp_log_data (const char *domain, const char *data, unsigned int size);
         gp_log(level, GP_MODULE "/" __FILE__, __VA_ARGS__)
 
 #else
-#warning Disabling GP_LOG because variadic macros are not allowed
+# ifdef __GCC__
+#  warning Disabling GP_LOG because variadic macros are not allowed
+# endif
 #define GP_LOG (void) 
 #endif
 
@@ -100,7 +102,9 @@ void gp_log_data (const char *domain, const char *data, unsigned int size);
         gp_log(GP_LOG_DEBUG, GP_MODULE "/" __FILE__, __VA_ARGS__)
 
 #else
-#warning Disabling GP_DEBUG because variadic macros are not allowed
+# ifdef __GCC__
+#  warning Disabling GP_DEBUG because variadic macros are not allowed
+# endif
 #define GP_DEBUG (void) 
 #endif
 

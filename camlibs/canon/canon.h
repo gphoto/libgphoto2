@@ -11,7 +11,9 @@
 #define _CANON_H
 
 #ifdef CANON_EXPERIMENTAL_UPLOAD
-#warning COMPILING WITH EXPERIMENTAL UPLOAD FEATURE
+# ifdef __GCC__
+#  warning COMPILING WITH EXPERIMENTAL UPLOAD FEATURE
+# endif
 #endif
 
 /* Battery status values:
