@@ -266,7 +266,7 @@ OPTION_CALLBACK(abilities) {
         printf("File preview (thumbnail) support : %s\n",
                 abilities.file_operations | GP_FILE_OPERATION_PREVIEW? "yes":"no");
         printf("File upload support              : %s\n",
-                abilities.folder_operations | GP_FOLDER_OPERATION_PUT? "yes":"no");
+                abilities.folder_operations | GP_FOLDER_OPERATION_PUT_FILE? "yes":"no");
 
         return (GP_OK);
 }
@@ -678,7 +678,7 @@ OPTION_CALLBACK(upload_picture) {
         if ((result = set_globals()) != GP_OK)
                 return (result);
 
-        if (!(glob_camera->abilities->folder_operations & GP_FOLDER_OPERATION_PUT)) {
+        if (!(glob_camera->abilities->folder_operations & GP_FOLDER_OPERATION_PUT_FILE)) {
                 cli_error_print("Camera doesn't support uploading pictures");
                 return (GP_ERROR_NOT_SUPPORTED);
         }

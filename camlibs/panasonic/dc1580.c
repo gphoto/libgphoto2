@@ -427,7 +427,7 @@ int camera_abilities (CameraAbilitiesList *list) {
                 a->capture[0].type = GP_CAPTURE_NONE;
                 a->config       = 0;
                 a->file_operations  = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
-                a->folder_operations = GP_FOLDER_OPERATION_PUT;
+                a->folder_operations = GP_FOLDER_OPERATION_PUT_FILE;
 
                 if (gp_abilities_list_append(list, a) == GP_ERROR)
                         return GP_ERROR;

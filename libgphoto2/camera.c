@@ -347,13 +347,35 @@ int gp_camera_file_info_get (Camera *camera, CameraFileInfo *info,
         if (camera->functions->file_info_get == NULL)
                 return (GP_ERROR_NOT_SUPPORTED);
 	
-	if (strlen (folder) == 0)
-		return (GP_ERROR_DIRECTORY_NOT_FOUND);
-
-	if (strlen (file) == 0)
-		return (GP_ERROR_FILE_NOT_FOUND);
-
         memset(info, 0, sizeof(CameraFileInfo));
+
+	/* If the camera doesn't support file_info_get, we simply get	*/
+	/* the preview and the file and look for ourselves...		*/
+	if (camera->functions->file_info_get == NULL) {
+		CameraFile *cfile;
+
+		cfile = gp_file_new ();
+
+		/* Get the file */
+		info->file.fields = GP_FILE_INFO_NONE;
+		if (gp_camera_file_get (camera, cfile, folder, file) == GP_OK) {
+			info->file.fields |= GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
+			info->file.size = cfile->size;
+			strcpy (info->file.type, cfile->type);
+		}
+
+		/* Get the preview */
+		info->preview.fields = GP_FILE_INFO_NONE;
+		if (gp_camera_file_get_preview (camera, cfile, folder, file) == GP_OK) {
+			info->preview.fields |= GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
+			info->preview.size = cfile->size;
+			strcpy (info->preview.type, cfile->type);
+		}
+
+		gp_file_unref (cfile);
+
+		return (GP_OK);
+	}
 
         return (camera->functions->file_info_get (camera, info, folder, file));
 }

@@ -109,7 +109,7 @@ int camera_abilities(CameraAbilitiesList *list)
         a->speed[5]   = 0;
         a->capture[0].type    = GP_CAPTURE_NONE;
         a->config     = 1;
-	a->folder_operations = GP_FOLDER_OPERATION_PUT;
+	a->folder_operations = GP_FOLDER_OPERATION_PUT_FILE;
         a->file_operations = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
         gp_abilities_list_append(list, a);
         i++;
@@ -141,7 +141,7 @@ int camera_abilities(CameraAbilitiesList *list)
         a->speed[5]   = 0;
         a->capture[0].type    = GP_CAPTURE_NONE;
         a->config = 1;
-	a->folder_operations = GP_FOLDER_OPERATION_PUT;
+	a->folder_operations = GP_FOLDER_OPERATION_PUT_FILE;
 	a->file_operations = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
         gp_abilities_list_append(list, a);
         i++;

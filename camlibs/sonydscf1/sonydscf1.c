@@ -44,7 +44,7 @@ int camera_abilities (CameraAbilitiesList *list) {
         a->capture[0].type = GP_CAPTURE_NONE;
         a->config   = 1;
         a->file_operations = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
-        a->folder_operations = GP_FOLDER_OPERATION_PUT;
+        a->folder_operations = GP_FOLDER_OPERATION_PUT_FILE;
         gp_abilities_list_append(list, a);
         // printf("<-camera_abilities\n");
         return (GP_OK);

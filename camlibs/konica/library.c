@@ -135,7 +135,7 @@ camera_abilities (CameraAbilitiesList* list)
 			a->capture[0].type = GP_CAPTURE_NONE;
 //			a->capture	= GP_CAPTURE_IMAGE | GP_CAPTURE_PREVIEW;
 			a->config	= 1;
-			a->file_operations = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW | GP_FILE_OPERATION_CONFIG | GP_FILE_OPERATION_INFO;
+			a->file_operations = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW | GP_FILE_OPERATION_CONFIG;
 			a->folder_operations = GP_FOLDER_OPERATION_CONFIG | GP_FOLDER_OPERATION_DELETE_ALL;
 			gp_abilities_list_append (list, a);
 		}
