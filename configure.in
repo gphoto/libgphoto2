@@ -402,11 +402,12 @@ AC_ARG_WITH(readline, [  --without-readline        Don't use readline],
 )
 if $try_readline; then
         AC_CHECK_HEADER(readline/readline.h,[
-                have_readline=true
-                rl_msg=yes
-                AC_DEFINE(HAVE_RL)
-		RL_LIBS=-lreadline
-		RL_CFLAGS=""])
+		AC_CHECK_LIB(readline, rl_completion_matches, [
+			have_readline=true
+                	rl_msg=yes
+                	AC_DEFINE(HAVE_RL)
+			RL_LIBS=-lreadline
+			RL_CFLAGS=""])])
 else
         rl_msg="no (not requested)"
 fi
