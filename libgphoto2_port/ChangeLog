@@ -1,3 +1,7 @@
+2002-01-13  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* configure.in: Added "ja" to ALL_LINGUAS to fix broken "make dist"
+	
 2002-01-31  Lutz Müller <lutz@users.sourceforge.net>
 
 	* libgphoto2_port/gphoto-port.[c,h]: The buffer that is sent using
@@ -22,7 +26,7 @@
 	* libgphoto2_port/gphoto2-port.h: Put #ifdef HAVE_CONFIG_H around
 	  include
 
-2002-01-12  Hans Ulrich Niedermann <gp@n-dimensional.de>
+2002-01-13  Hans Ulrich Niedermann <gp@n-dimensional.de>
 	
 	* libgphoto2_port/gphoto2-port.[ch]: renamed "class" parameter to "mainclass"
 	  to allow for compilation of C++ programs with libgphoto2_port
