@@ -38,7 +38,7 @@ int gp_file_open (CameraFile *file, char *filename) {
 
 	FILE *fp;
 	char *name;
-	long size;
+	long size, size_read;
 
 	gp_file_clean(file);
 
@@ -52,12 +52,15 @@ int gp_file_open (CameraFile *file, char *filename) {
 	file->data = (char*)malloc(sizeof(char)*size);
 	if (!file->data)
 		return (GP_ERROR);
-	fread(file->data, (size_t)sizeof(char), (size_t)size, fp);
+	size_read = fread(file->data, (size_t)sizeof(char), (size_t)size, fp);
 	if (ferror(fp)) {
 		gp_file_clean(file);
 		return (GP_ERROR);
 	}
 	fclose(fp);
+
+	file->size = size_read;
+	file->data[size_read] = 0;
 
 	name = strrchr(filename, '/');
 	if (name)
