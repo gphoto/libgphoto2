@@ -158,7 +158,7 @@ struct _GPPortPrivateLibrary {
 	int baudrate; /* Current speed */
 };
 
-static int gp_port_serial_set_baudrate (GPPort *dev, int baudrate);
+static int gp_port_serial_check_baudrate (GPPort *dev);
 
 GPPortType
 gp_port_library_type () 
@@ -318,6 +318,9 @@ gp_port_serial_init (GPPort *dev)
 		return (GP_ERROR_NO_MEMORY);
 	memset (dev->pl, 0, sizeof (GPPortPrivateLibrary));
 
+	/* Default speed is 9600 */
+	dev->pl->baudrate = 9600;
+
 #if HAVE_TERMIOS_H
         if (tcgetattr (dev->pl->fd, &term_old) < 0) {
                 perror("tcgetattr2");
@@ -420,7 +423,7 @@ gp_port_serial_close (GPPort *dev)
 }
 
 static int
-gp_port_serial_write(GPPort *dev, char *bytes, int size)
+gp_port_serial_write (GPPort *dev, char *bytes, int size)
 {
         int len, ret;
 
@@ -429,9 +432,7 @@ gp_port_serial_write(GPPort *dev, char *bytes, int size)
 		CHECK (gp_port_serial_open (dev));
 
 	/* Make sure we are operating at the specified speed */
-	if (dev->pl->baudrate != dev->settings.serial.speed)
-		CHECK (gp_port_serial_set_baudrate (dev,
-						dev->settings.serial.speed));
+	CHECK (gp_port_serial_check_baudrate (dev));
 
         len = 0;
         while (len < size) {
@@ -481,9 +482,7 @@ gp_port_serial_read (GPPort *dev, char *bytes, int size)
 		CHECK (gp_port_serial_open (dev));
 
 	/* Make sure we are operating at the specified speed */
-	if (dev->pl->baudrate != dev->settings.serial.speed)
-		CHECK (gp_port_serial_set_baudrate (dev,
-						dev->settings.serial.speed));
+	CHECK (gp_port_serial_check_baudrate (dev));
 
         FD_ZERO (&readfs);
         FD_SET (dev->pl->fd, &readfs);
@@ -696,7 +695,7 @@ gp_port_serial_baudconv (int baudrate)
 }
 
 static int
-gp_port_serial_set_baudrate (GPPort *dev, int baudrate)
+gp_port_serial_check_baudrate (GPPort *dev)
 {
 #ifdef OS2
 	ULONG rc;
@@ -709,22 +708,25 @@ gp_port_serial_set_baudrate (GPPort *dev, int baudrate)
 #endif
 #endif
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-port-serial",
-		"Setting baudrate to %d...", baudrate);
-
 	/*
 	 * We need an open device in order to set the speed. If there is no
 	 * open device, postpone setting of speed.
 	 */
-	dev->pl->baudrate = baudrate;
 	if (!dev->pl->fd)
 		return (GP_OK);
+
+	/* If baudrate is up to date, do nothing */
+	if (dev->pl->baudrate == dev->settings.serial.speed)
+		return (GP_OK);
+
+	gp_log (GP_LOG_DEBUG, "gphoto2-port-serial",
+		"Setting baudrate to %d...", dev->settings.serial.speed);
 
 #ifdef OS2
 	rc = DosDevIOCtl (dev->pl->fd,       /* Device handle               */
 			  0x0001,            /* Serial-device control       */
 			  0x0043,            /* Sets bit rate               */
-			  (PULONG) &baudrate,/* Points at bit rate          */
+			  (PULONG) &(dev->settings.serial.speed),
 			  sizeof(baudrate),  /* Max. size of parameter list */
 			  &ulParmLen,        /* Size of parameter packet    */
 			  NULL,              /* No data packet              */
@@ -736,7 +738,7 @@ gp_port_serial_set_baudrate (GPPort *dev, int baudrate)
 #ifdef HAVE_TERMIOS_H
         if (tcgetattr(dev->pl->fd, &tio) < 0) {
 		gp_port_set_error (dev, _("Could not set the baudrate to %d"),
-				   baudrate);
+				   dev->settings.serial.speed);
                 return GP_ERROR_IO_SERIAL_SPEED;
         }
         tio.c_cflag = (tio.c_cflag & ~CSIZE) | CS8;
@@ -759,8 +761,8 @@ gp_port_serial_set_baudrate (GPPort *dev, int baudrate)
         tio.c_cc[VMIN] = 1;
         tio.c_cc[VTIME] = 0;
 
-        cfsetispeed (&tio, gp_port_serial_baudconv (baudrate));
-        cfsetospeed (&tio, gp_port_serial_baudconv (baudrate));
+        cfsetispeed (&tio, gp_port_serial_baudconv (dev->settings.serial.speed));
+        cfsetospeed (&tio, gp_port_serial_baudconv (dev->settings.serial.speed));
 
         if (tcsetattr (dev->pl->fd, TCSANOW, &tio) < 0) {
                 perror("tcsetattr");
@@ -775,8 +777,8 @@ gp_port_serial_set_baudrate (GPPort *dev, int baudrate)
                 perror("ioctl(TIOCGETP)");
                 return GP_ERROR_IO_SERIAL_SPEED;
         }
-        ttyb.sg_ispeed = baudrate;
-        ttyb.sg_ospeed = baudrate;
+        ttyb.sg_ispeed = dev->settings.serial.speed;
+        ttyb.sg_ospeed = dev->settings.serial.speed;
         ttyb.sg_flags = 0;
 
         if (ioctl(dev->pl->fd, TIOCSETP, &ttyb) < 0) {
@@ -786,26 +788,19 @@ gp_port_serial_set_baudrate (GPPort *dev, int baudrate)
 #endif
 #endif
 
+	dev->pl->baudrate = dev->settings.serial.speed;
         return GP_OK;
 }
 
 static int
 gp_port_serial_update (GPPort *dev)
 {
-	unsigned int baudrate;
-
 	memcpy (&dev->settings, &dev->settings_pending, sizeof (dev->settings));
 
-	/* 
-	 * If the requested speed is 0, this means that we should
-	 * use a default speed.
+	/*
+	 * The speed is set prior the next read or write operation
+	 * (if needed)
 	 */
-	baudrate = dev->settings.serial.speed;
-	if (!baudrate)
-		baudrate = 9600;
-
-	/* Set the baudrate */
-	CHECK (gp_port_serial_set_baudrate (dev, baudrate));
 
 	return GP_OK;
 }

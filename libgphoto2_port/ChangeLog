@@ -1,5 +1,11 @@
 2001-11-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* serial/unix.c: Try to fix logic of speed setting: Now check before
+	  each read/write operation if the current speed is the requested one.
+	  If not, change it and remember it in dev->pl->baudrate.
+
+2001-11-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2_port/Makefile.am: @IOLIB_CFLAGS@ doesn't exist any more.
 
 2001-11-23  Lutz Müller <urc8@rz.uni-karlsruhe.de>
