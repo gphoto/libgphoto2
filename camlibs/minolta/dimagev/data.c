@@ -447,7 +447,7 @@ int dimagev_set_date(dimagev_t *dimagev) {
 	}
 
 	if ( dimagev->debug != 0 ) {
-		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Setting clock to %02d/%02d/%02d %02d:%02d:%02d\n", this_time->tm_year, ( this_time->tm_mon + 1 ), this_time->tm_mday, this_time->tm_hour, this_time->tm_min, this_time->tm_sec);
+		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Setting clock to %02d/%02d/%02d %02d:%02d:%02d\n", this_time->tm_year % 100, ( this_time->tm_mon + 1 ), this_time->tm_mday, this_time->tm_hour, this_time->tm_min, this_time->tm_sec);
 	}
 
 	dimagev->data->date_valid = 1;
