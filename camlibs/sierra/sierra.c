@@ -728,12 +728,11 @@ put_file_func (CameraFilesystem * fs, const char *folder, CameraFile * file, voi
 }
 
 #ifdef UNUSED_CODE
-// FIXME: Is this function still usefull ?
 static void dump_register (Camera *camera, GPContext *context)
 {
 	int ret, value, i;
 	const char *description[] = {
-		"?",				//   0
+		"?",				/* 0 */
 		"resolution",
 		"date",
 		"shutter speed",
@@ -743,7 +742,7 @@ static void dump_register (Camera *camera, GPContext *context)
 		"flash mode",
 		"?",
 		"?",
-		"frames taken",			//  10
+		"frames taken",			/* 10 */
 		"frames left",
 		"size of current image",
 		"size of thumbnail of current image",
@@ -753,7 +752,7 @@ static void dump_register (Camera *camera, GPContext *context)
 		"?",
 		"?",
 		"brightness/contrast",
-		"white balance",		//  20
+		"white balance",		/* 20 */
 		"?",
 		"camera id",
 		"auto off (host)",
@@ -763,7 +762,7 @@ static void dump_register (Camera *camera, GPContext *context)
 		"?",
 		"memory left",
 		"?",
-		"?",				//  30
+		"?",				/* 30 */
 		"?",
 		"?",
 		"lens mode",
@@ -773,31 +772,31 @@ static void dump_register (Camera *camera, GPContext *context)
 		"?",
 		"lcd auto off",
 		"?",
-		"?",				//  40
+		"?",				/* 40 */
 		"?", "?", "?", "?", "?", "?", "?", "?", "?",
-		"?",				//  50
+		"?",				/* 50 */
 		"?", "?", "?", "?", "?", "?", "?", "?", "?",
-		"?",				//  60
+		"?",				/* 60 */
 		"?", "?", "?", "?", "?", "?", "?", "?", "?",
-		"spot metering mode",		//  70
+		"spot metering mode",		/* 70 */
 		"?",
 		"zoom",
 		"?", "?", "?", "?", "?", "?", 
 		"current filename",
-		"?",				//  80
+		"?",				/* 80 */
 		"?", "?",
 		"number of folders in current folder/folder number",
 		"current folder name",
 		"?", "?", "?", "?", "?",
-		"?",				//  90
+		"?",				/* 90 */
 		"?", "?", "?", "?", "?", "?", "?", "?", "?",
-		"?", 				// 100
+		"?", 				/* 100 */
 		"?", "?", "?", "?", "?", "?", "?", "?", "?",
-		"?", 				// 110
+		"?", 				/* 110 */
 		"?", "?", "?", "?", "?", "?", "?", "?", "?",
-		"?",				// 120
+		"?",				/* 120 */
 		"?", "?", "?", "?", "?", "?", "?", "?", "?",
-		"?"				// 130
+		"?"				/* 130 */
 	};
 		
 
@@ -901,9 +900,10 @@ camera_get_config_olympus (Camera *camera, CameraWidget **window, GPContext *con
 	/* Color Mode */
         ret = sierra_get_int_register (camera, 6, &value, context);
         if (ret >= 0) {
-
-		// Those values are for a C-2020 Z. If your model differs, we
-		// have to distinguish models here...
+		/*
+		 * Those values are for a C-2020 Z. If your model differs,
+		 * we have to distinguish models here.
+		 */
 		gp_widget_new (GP_WIDGET_RADIO, _("Color Mode"), &child);
 		gp_widget_add_choice (child, _("Normal"));
 		gp_widget_add_choice (child, _("Black/White"));
@@ -1817,7 +1817,6 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 static int
 camera_get_config_default (Camera *camera, CameraWidget **window, GPContext *context)
 {
-	// This really should change in the near future...
 	return camera_get_config_olympus (camera, window, context);
 }
 
@@ -1825,7 +1824,6 @@ camera_get_config_default (Camera *camera, CameraWidget **window, GPContext *con
 static int
 camera_set_config_default (Camera *camera, CameraWidget *window, GPContext *context)
 {
-	// This really should change in the near futur...
 	return camera_set_config_olympus (camera, window, context);
 }
 

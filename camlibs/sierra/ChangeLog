@@ -1,3 +1,6 @@
+2003-09-13  Patrick Mansfield <patmans@users.sourceforge.net>
+	* epson-desc.c sierra.c: get rid of C++ style comments.
+
 2003-08-30  Patrick Mansfield <patmans@users.sourceforge.net>
 	* olympus-desc.c, sierra.c, sierra-desc.h: Add specific values
 	  for the Olympus 3000z, based on input from Till Kamppeter

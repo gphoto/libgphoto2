@@ -507,18 +507,11 @@ static const RegisterDescriptorType ep3000z_reg_103[] = {
 static CameraRegisterType ep3000z_pic_regs[] =  {
 	/* camera prefix, register number, size of register */
 	CAM_REG_TYPE_INIT (ep3000z, 01, 4, CAM_DESC_DEFAULT, 0), /* resolution/size */
-	//CAM_REG_TYPE_INIT (ep3000z, 03, 4, CAM_DESC_DEFAULT, 0), /* shutter */
 	CAM_REG_TYPE_INIT (ep3000z, 05, 4, CAM_DESC_DEFAULT, 0), /* aperature (f-stop) */
 	CAM_REG_TYPE_INIT (ep3000z, 06, 4, CAM_DESC_DEFAULT, 0), /* color mode */
 	CAM_REG_TYPE_INIT (ep3000z, 07, 4, CAM_DESC_DEFAULT, 0), /* flash */
 	CAM_REG_TYPE_INIT (ep3000z, 20, 4, CAM_DESC_DEFAULT, 0), /* white balance */
 	CAM_REG_TYPE_INIT (ep3000z, 33, 4, CAM_DESC_DEFAULT, 0), /* focus mode */
-	//CAM_REG_TYPE_INIT (ep3000z,103, 4, CAM_DESC_DEFAULT, 0), /* focus position */
-	//CAM_REG_TYPE_INIT (ep3000z, 69, 8, CAM_DESC_DEFAULT, 0), /* exposure compensation */
-	//CAM_REG_TYPE_INIT (ep3000z, 70, 4, CAM_DESC_DEFAULT, 0), /* exposure metering */
-	//CAM_REG_TYPE_INIT (ep3000z, 71, 8, CAM_DESC_DEFAULT, 0), /* optical zoom */
-	//CAM_REG_TYPE_INIT (ep3000z, 72, 4, CAM_DESC_DEFAULT, 0), /* digital zoom + lense +  AE lock */
-	//CAM_REG_TYPE_INIT (ep3000z, 85, 4, CAM_DESC_DEFAULT, 0), /* ISO Speed, read only  */
 };
 
 /*
@@ -527,13 +520,8 @@ static CameraRegisterType ep3000z_pic_regs[] =  {
 static const CameraRegisterType ep3000z_cam_regs[] = {
 	CAM_REG_TYPE_INIT (ep3000z, 53, 4, CAM_DESC_DEFAULT, 0), /* date-time */
 	CAM_REG_TYPE_INIT (ep3000z, 02, 4, CAM_DESC_DEFAULT, 0), /* date-time */
-	//CAM_REG_TYPE_INIT (ep3000z, 34, 4, CAM_DESC_SUBACTION, 
-	//		  SIERRA_ACTION_LCD_MODE), /* lcd mode */
-	//CAM_REG_TYPE_INIT (ep3000z, 35, 4, CAM_DESC_DEFAULT, 0), /* LCD brightness */
-	//CAM_REG_TYPE_INIT (ep3000z, 38, 4, CAM_DESC_DEFAULT, 0), /* LCD auto shutoff */
 	CAM_REG_TYPE_INIT (ep3000z, 24, 4, CAM_DESC_DEFAULT, 0), /* Camera power save */
 	CAM_REG_TYPE_INIT (ep3000z, 23, 4, CAM_DESC_DEFAULT, 0), /* Host power save */
-	//CAM_REG_TYPE_INIT (ep3000z, 41, 4, CAM_DESC_DEFAULT, 0), /* time format, read only */
 };
 
 static const CameraRegisterSetType ep3000z_desc[] = {
