@@ -114,9 +114,12 @@ for_each_subfolder (const char *folder, folder_action faction,
 			prefix[l] = '\0';
 		sprintf(subfolder, "%s/%s", prefix, name);
 
-		if (recurse) 
-			for_each_subfolder (subfolder, faction, iaction, 
+		if (recurse) {
+			res = for_each_subfolder (subfolder, faction, iaction, 
 					    recurse);
+			if (res != GP_OK)
+				return (res);
+		}
 	}
 
 	return (GP_OK);

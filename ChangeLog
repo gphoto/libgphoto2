@@ -1,3 +1,11 @@
+2002-02-06  Fredrik <fredrik@krixor.xy.org>
+
+	* frontends/command-line/foreach.c: Check return values
+	  of recursive calls to for_each_subfolder(). Fixes bug
+	  where errors was not detected if they occured in
+	  subfolders of subfolders when doing recursive actions
+	  (like -P).
+
 2002-02-06  Colin Marquardt  <colin@marquardt-home.de>
 
 	* CHANGES (Module): Add info about new chinese translation.
