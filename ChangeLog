@@ -1,5 +1,10 @@
 2001-10-16  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2/gphoto2-result.[c,h]: GP_ERROR_NOT_SUPPORTED now in
+	  libgphoto2_port.
+
+2001-10-16  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2/camera.c:
 	* camlibs/konica/library.c:
 	* camlibs/kodak/dc240/dc240.c:
