@@ -146,7 +146,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	return (GP_OK);
 }
 
-int camera_capture_preview (Camera *camera, CameraFile *file)
+static int camera_capture_preview (Camera *camera, CameraFile *file)
 {
 	char *data;
 	int result;
