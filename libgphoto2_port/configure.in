@@ -292,5 +292,5 @@ Configuration (libgphoto2_port)
 
 	USB support:          $usb_msg
 
-	Build documenation:   $gtkdoc_msg
+	Build documentation:  $gtkdoc_msg
 "
