@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2001-03-30 10:32-0800\n"
+"POT-Creation-Date: 2001-03-31 11:03-0800\n"
 "PO-Revision-Date: 2001-03-21 21:59-08:00\n"
 "Last-Translator: Colin Marquardt <colin@marquardt-home.de>\n"
 "Language-Team: German <de@li.org>\n"
@@ -358,7 +358,7 @@ msgid "CompactFlash Card"
 msgstr ""
 
 #. DC120Data *dd = camera->camlib_data;
-#: camlibs/kodak/dc120/dc120.c:313 camlibs/kodak/dc3200/dc3200.c:370
+#: camlibs/kodak/dc120/dc120.c:313 camlibs/kodak/dc3200/dc3200.c:372
 msgid "No summary information yet"
 msgstr ""
 
@@ -401,7 +401,7 @@ msgstr ""
 msgid "camera inactive for > 9 seconds, re-initing.\n"
 msgstr ""
 
-#: camlibs/kodak/dc3200/dc3200.c:377
+#: camlibs/kodak/dc3200/dc3200.c:379
 msgid ""
 "Known problems:\n"
 "\n"
@@ -414,7 +414,7 @@ msgid ""
 "state, and will most likely need to be reinitialized."
 msgstr ""
 
-#: camlibs/kodak/dc3200/dc3200.c:394
+#: camlibs/kodak/dc3200/dc3200.c:396
 msgid ""
 "Kodak DC3200 Driver\n"
 "Donn Morrison <dmorriso@gulf.uvic.ca>\n"
@@ -422,11 +422,11 @@ msgid ""
 "Questions and comments appreciated."
 msgstr ""
 
-#: camlibs/kodak/dc3200/dc3200.c:403
+#: camlibs/kodak/dc3200/dc3200.c:405
 msgid "This is not an error..."
 msgstr ""
 
-#: camlibs/kodak/dc3200/dc3200.c:405
+#: camlibs/kodak/dc3200/dc3200.c:407
 msgid "This is a dc3200 specific error."
 msgstr ""
 

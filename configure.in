@@ -1,13 +1,13 @@
 dnl Process this file with autoconf to produce a configure script.
 
 PACKAGE=gphoto
-VERSION=2.0beta1
+VERSION=2.0beta2
 libdir=${prefix}/lib/gphoto2
 cargs=$@
 
 AC_INIT(include/gphoto2.h)
 AM_CONFIG_HEADER(config.h)
-AM_INIT_AUTOMAKE(gphoto, 2.0beta1)
+AM_INIT_AUTOMAKE(gphoto, 2.0beta2)
 AM_MAINTAINER_MODE
 
 dnl Checks for programs.
@@ -153,6 +153,7 @@ camlibs/dimera/Makefile \
 camlibs/sierra/Makefile \
 camlibs/directory/Makefile \
 camlibs/panasonic/Makefile \
+camlibs/panasonic/l859/Makefile \
 camlibs/konica/Makefile \
 camlibs/digita/Makefile \
 camlibs/canon/Makefile \

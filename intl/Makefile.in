@@ -105,7 +105,8 @@ INCLUDES = -I.. -I. -I$(top_srcdir)/intl
 
 all: all-@USE_INCLUDED_LIBINTL@
 all-yes: libintl.$la libintl.h charset.alias ref-add.sed ref-del.sed
-all-no: all-no-@BUILD_INCLUDED_LIBINTL@
+#all-no: all-no-@BUILD_INCLUDED_LIBINTL@
+all-no: all-no-no
 all-no-yes: libgnuintl.$la
 all-no-no:
 
