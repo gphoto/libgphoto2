@@ -40,6 +40,7 @@ camlibs/polaroid/pdc320.c
 camlibs/polaroid/pdc640.c
 camlibs/polaroid/pdc700.c
 camlibs/ptp2/library.c
+camlibs/ptp2/ptp.c
 camlibs/ptp2/test_ptp.c
 camlibs/ricoh/library.c
 camlibs/ricoh/ricoh.c
