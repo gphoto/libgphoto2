@@ -5,6 +5,7 @@
  * Copyright (c) 1999-2000 VA Linux Systems
  */
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
 #include <fcntl.h>

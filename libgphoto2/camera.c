@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <string.h>
 #include <gpio.h>
 #include <gphoto2.h>
@@ -463,11 +464,8 @@ int gp_camera_about (Camera *camera, CameraText *about)
 
 char *gp_camera_result_as_string (Camera *camera, int result)
 {
-	if (camera == NULL)
-		return (GP_ERROR_BAD_PARAMETERS);
-
 	/* Camlib error? */
-	if (-result >= 100) {
+	if (-result >= 100 && (camera != NULL)) {
 		if (camera->functions->result_as_string == NULL)
 			return _("Error description not available");
 		return (camera->functions->result_as_string (camera, result));

@@ -17,6 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA   
  */
 
+#include <stdlib.h>
+#include <stdio.h>
 #include <gphoto2.h>
 #include <gpio.h>
 
@@ -151,10 +153,13 @@ printf("STV: pinging camera\n");
 	switch(ret) {
 	case CMD_IO_ERROR:
 		printf("ping failed\n");
-		return GP_ERROR;
+		return GP_ERROR_IO;
 	case CMD_OK:
 		printf("ping ok\n");
 		return GP_OK;
+	default:
+		//Should not be reached.
+		return GP_ERROR;
 	}
 }
 
@@ -169,12 +174,15 @@ printf("STV: getting file count\n");
 
 	switch(ret) {
 	case CMD_IO_ERROR:
-		printf("IO error!\n", response[1]);
-		return GP_ERROR;
+		printf("IO error!\n");
+		return GP_ERROR_IO;
 	case CMD_OK:
 		printf("GFI OK, count = %d\n", response[1]);
 		*count = response[1];
 		return GP_OK;
+	default:
+		//Should not be reached.
+		return GP_ERROR;
 	}
 }
 
@@ -183,14 +191,14 @@ int stv0680_get_image(struct stv0680_s *device, int image_no,
 {
 	unsigned char response[CMD_GET_IMAGE_RLEN], header[64];
 	unsigned char *raw;
-	int h,w,i;
+	int h,w;
 	int ret;
 
 	ret = stv0680_try_cmd(device, CMD_GET_IMAGE, 0x00, image_no, 0x00,
 			      response, sizeof(response), CMD_RETRIES);
 
 	if(ret == CMD_IO_ERROR)
-		return GP_ERROR;
+		return GP_ERROR_IO;
 
 	w = response[4] << 8 | response[5];
 	h = response[6] << 8 | response[7];
@@ -234,14 +242,14 @@ int stv0680_get_image_preview(struct stv0680_s *device, int image_no,
 {
 	unsigned char response[CMD_GET_IMAGE_RLEN], header[64];
 	unsigned char *raw;
-	int h,w,i;
+	int h,w;
 	int ret;
 
 	ret = stv0680_try_cmd(device, CMD_GET_PREVIEW, 0x00, image_no, 0x00,
 			      response, sizeof(response), CMD_RETRIES);
 
 	if(ret == CMD_IO_ERROR)
-		return GP_ERROR;
+		return GP_ERROR_IO;
 
 	w = response[4] << 8 | response[5];
 	h = response[6] << 8 | response[7];

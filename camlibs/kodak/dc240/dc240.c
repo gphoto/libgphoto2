@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <gphoto2.h>
@@ -100,8 +101,8 @@ int camera_init (Camera *camera, CameraInit *init) {
         settings.usb.interface  = 0;
         settings.usb.altsetting = 0;
         break;
-    default:
 #endif
+    default:
         return (GP_ERROR);
     }
 

@@ -75,7 +75,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 	camera->functions->result_as_string = camera_result_as_string;
 
 	if((device = malloc(sizeof(struct stv0680_s))) == NULL) {
-		return GP_ERROR;
+		return GP_ERROR_NO_MEMORY;
 	}
 
 	camera->camlib_data = device;
@@ -123,10 +123,11 @@ int camera_folder_list	(Camera *camera, CameraList *list, char *folder) {
 int camera_file_list (Camera *camera, CameraList *list, char *folder) {
 
 	struct stv0680_s *device = camera->camlib_data;
-	int i, count;
+	int i, count, result;
 
-	if(stv0680_file_count(device, &count) != GP_OK)
-		return GP_ERROR;
+	result = stv0680_file_count(device, &count);
+	if (result != GP_OK)
+		return result;
 
 	gp_filesystem_populate(device->fs, "/", "image%02i.pnm", count);
 
@@ -142,45 +143,47 @@ int camera_file_get (Camera *camera, CameraFile *file,
 		     char *folder, char *filename) { 
 
 	struct stv0680_s *device = camera->camlib_data;
-	int image_no, count;
+	int image_no, count, result;
 
 	strcpy(file->name, filename);
 	strcpy(file->type, "image/pnm");
 
-	if(stv0680_file_count(device, &count) != GP_OK)
-		return GP_ERROR;
+	result = stv0680_file_count(device, &count);
+	if (result != GP_OK)
+		return result;
 
 	gp_filesystem_populate(device->fs, "/", "image%02i.pnm", count);
 
 	image_no = gp_filesystem_number(device->fs, folder, filename);
 
-	if(image_no == GP_ERROR_FILE_NOT_FOUND)
-		return GP_ERROR_FILE_NOT_FOUND;
+	if(image_no < 0)
+		return image_no;
 
-	return stv0680_get_image(device, image_no, &file->data, &file->size);
+	return stv0680_get_image(device, image_no, &file->data, (int*) &file->size);
 }
 
 int camera_file_get_preview (Camera *camera, CameraFile *file,
 			     char *folder, char *filename) {
 
 	struct stv0680_s *device = camera->camlib_data;
-	int image_no, count;
+	int image_no, count, result;
 
 	strcpy(file->name, filename);
 	strcpy(file->type, "image/pnm");
 
-	if(stv0680_file_count(device, &count) != GP_OK)
-		return GP_ERROR;
+	result = stv0680_file_count(device, &count);
+	if (result != GP_OK)
+		return result;
 
 	gp_filesystem_populate(device->fs, "/", "image%02i.pnm", count);
 
 	image_no = gp_filesystem_number(device->fs, folder, filename);
 
-	if(image_no == GP_ERROR_FILE_NOT_FOUND)
-		return GP_ERROR_FILE_NOT_FOUND;
+	if(image_no < 0)
+		return image_no;
 
 	return stv0680_get_image_preview(device, image_no,
-					&file->data, &file->size);
+					&file->data, (int*) &file->size);
 }
 
 int camera_file_put (Camera *camera, CameraFile *file, char *folder) {
