@@ -458,7 +458,7 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 			 const char *file, CameraFileInfo *info)
 {
 	int result = GP_OK;
-	const char *type;
+	const char *mime_type;
 	const char *data;
 	long int size;
 
@@ -471,32 +471,22 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 	if (!camera->functions->file_get_info) {
 		CameraFile *cfile;
 
-		CHECK_RESULT (gp_file_new (&cfile));
-
-		/* Get the file */
+		/* It takes too long to get the file */
 		info->file.fields = GP_FILE_INFO_NONE;
-//		if (gp_camera_file_get_file (camera, folder, file, cfile) 
-//		    == GP_OK) {
-//			info->file.fields |= GP_FILE_INFO_SIZE | 
-//					     GP_FILE_INFO_TYPE;
-//			info->file.size = cfile->size;
-//			strcpy (info->file.type, cfile->type);
-//		}
 
 		/* Get the preview */
 		info->preview.fields = GP_FILE_INFO_NONE;
-		if (gp_camera_file_get_preview (camera, folder, file, cfile) 
-		    == GP_OK) {
+		CHECK_RESULT (gp_file_new (&cfile));
+		if (gp_camera_file_get (camera, folder, file,
+					GP_FILE_TYPE_PREVIEW, cfile)== GP_OK) {
 			info->preview.fields |= GP_FILE_INFO_SIZE | 
 						GP_FILE_INFO_TYPE;
 			gp_file_get_data_and_size (cfile, &data, &size);
 			info->preview.size = size;
-			gp_file_get_type (cfile, &type);
-			strcpy (info->preview.type, type);
+			gp_file_get_mime_type (cfile, &mime_type);
+			strcpy (info->preview.type, mime_type);
 		}
-
 		CHECK_RESULT (gp_file_unref (cfile));
-
 	} else
 		result = camera->functions->file_get_info (camera, folder,
 							   file, info);
@@ -522,8 +512,8 @@ gp_camera_file_set_info (Camera *camera, const char *folder,
 }
 
 int 
-gp_camera_file_get_file (Camera *camera, const char *folder, 
-			 const char *file, CameraFile *camera_file)
+gp_camera_file_get (Camera *camera, const char *folder, const char *file,
+		    CameraFileType type, CameraFile *camera_file)
 {
 	CHECK_NULL (camera && folder && file && camera_file);
 
@@ -536,25 +526,8 @@ gp_camera_file_get_file (Camera *camera, const char *folder,
 	if (strlen (file) == 0)
 		return (GP_ERROR_FILE_NOT_FOUND);
 
-	CHECK_RESULT (gp_file_clean (camera_file));
-
-        return (camera->functions->file_get(camera, folder, file, 
-					    camera_file));
-}
-
-int
-gp_camera_file_get_preview (Camera *camera, const char *folder, 
-			    const char *file, CameraFile *camera_file)
-{
-	CHECK_NULL (camera && file && folder && camera_file);
-
-        if (camera->functions->file_get_preview == NULL)
-                return (GP_ERROR_NOT_SUPPORTED);
-
-	CHECK_RESULT (gp_file_clean (camera_file));
-
-        return (camera->functions->file_get_preview (camera, folder, file, 
-						     camera_file));
+        return (camera->functions->file_get (camera, folder, file, type,
+					     camera_file));
 }
 
 int
