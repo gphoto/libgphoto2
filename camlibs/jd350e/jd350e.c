@@ -66,26 +66,13 @@ int camera_abilities (CameraAbilitiesList *list)
 	return (GP_OK);
 }
 
-static int camera_exit (Camera *camera) {
-
-	struct jd350e_s *device = camera->camlib_data;
-
-	if (device) {
-		free (device);
-		camera->camlib_data = NULL;
-	}
-
-	return (GP_OK);
-}
-
 static int file_list_func (CameraFilesystem *fs, const char *folder,
 			   CameraList *list, void *data) 
 {
 	Camera *camera = data;
-	struct jd350e_s *device = camera->camlib_data;
 	int count, result;
 
-	result =  jd350e_file_count(device, &count);
+	result =  jd350e_file_count(camera->port, &count);
 	if (result != GP_OK)
 		return result;
 
@@ -99,7 +86,6 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 			  CameraFile *file, void *user_data)
 {
 	Camera *camera = user_data;
-	struct jd350e_s *device = camera->camlib_data;
 	int image_no, result;
 	char *data;
 	long int size;
@@ -111,16 +97,16 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 
 	switch (type) {
 	case GP_FILE_TYPE_RAW:
-		result =  jd350e_get_image_raw (device, image_no, &data,
+		result =  jd350e_get_image_raw (camera->port, image_no, &data,
 					    (int*) &size);
 		break;
 	case GP_FILE_TYPE_NORMAL:
-		result =  jd350e_get_image_full (device, image_no, &data,
+		result =  jd350e_get_image_full (camera->port, image_no, &data,
 					    (int*) &size);
 		break;
 	case GP_FILE_TYPE_PREVIEW:
-		result =  jd350e_get_image_preview (device, image_no, &data,
-						    (int*) &size);
+		result =  jd350e_get_image_preview (camera->port, image_no,
+						&data, (int*) &size);
 		break;
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
@@ -134,14 +120,6 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	gp_file_set_data_and_size (file, data, size);
 
 	return (GP_OK);
-}
-
-static int camera_capture (Camera *camera, int capture_type,
-			   CameraFilePath *path)
-{
-	/* XXX implement */
-
-	return (GP_ERROR_NOT_SUPPORTED);
 }
 
 static int camera_summary (Camera *camera, CameraText *summary) 
@@ -192,23 +170,13 @@ static const char* camera_result_as_string (Camera *camera, int result)
 int camera_init (Camera *camera) 
 {
         gp_port_settings settings;
-        struct jd350e_s *device;
 	int ret;
 
         /* First, set up all the function pointers */
-        camera->functions->exit                 = camera_exit;
         camera->functions->summary              = camera_summary;
         camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;
-	camera->functions->capture		= camera_capture;
         camera->functions->result_as_string     = camera_result_as_string;
-
-        if((device = malloc(sizeof(struct jd350e_s))) == NULL) {
-                return GP_ERROR_NO_MEMORY;
-        }
-	device->gpiod = camera->port;
-
-        camera->camlib_data = device;
 
         /* Configure port */
         gp_port_timeout_set(camera->port, 1000);
@@ -227,11 +195,7 @@ int camera_init (Camera *camera)
 	gp_filesystem_set_file_funcs  (camera->fs, get_file_func, NULL, camera);
 
         /* test camera */
-        ret = jd350e_ping(device);
-	if (ret < 0) {
-		free (device);
-		camera->camlib_data = NULL;
-	}
+        ret = jd350e_ping(camera->port);
 
 	return (ret);
 }

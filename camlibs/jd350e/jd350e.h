@@ -20,9 +20,5 @@
 #ifndef JD350E_H
 #define JD350E_H
 
-struct jd350e_s {
-	gp_port *gpiod;
-};
-
 #endif
 

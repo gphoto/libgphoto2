@@ -20,13 +20,10 @@
 #ifndef LIBRARY_H
 #define LIBRARY_H
 
-int  jd350e_ping(struct jd350e_s *device);
-int  jd350e_file_count(struct jd350e_s *device, int *count);
-int  jd350e_get_image_raw(struct jd350e_s *device, int image_no, char **data,
-		      int *size);
-int  jd350e_get_image_full(struct jd350e_s *device, int image_no, char **data,
-		      int *size);
-int  jd350e_get_image_preview(struct jd350e_s *device, int image_no,
-				char **data, int *size);
+int  jd350e_ping              (GPPort *);
+int  jd350e_file_count        (GPPort *, int *count);
+int  jd350e_get_image_raw     (GPPort *, int image_no, char **data, int *size);
+int  jd350e_get_image_full    (GPPort *, int image_no, char **data, int *size);
+int  jd350e_get_image_preview (GPPort *, int image_no, char **data, int *size);
 
 #endif

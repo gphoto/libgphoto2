@@ -78,7 +78,7 @@ static unsigned char  jd350e_checksum(const unsigned char *data, int start, int 
 	return sum;
 }
 
-static int jd350e_cmd(struct jd350e_s *device, unsigned char cmd, 
+static int jd350e_cmd(GPPort *device, unsigned char cmd, 
 		unsigned char cmd_len,
 		unsigned char data1, unsigned char data2, unsigned char data3,
 		unsigned char data4, 
@@ -97,12 +97,12 @@ static int jd350e_cmd(struct jd350e_s *device, unsigned char cmd,
 
 	// write to device
 	printf("Writing packet to device [0x%X...]\n",cmd);
-	if((ret = gp_port_write(device->gpiod, packet, cmd_len)) != GP_OK)
+	if((ret = gp_port_write(device, packet, cmd_len)) != GP_OK)
 		return  jd350e_remap_gp_port_error(ret);
 
 	printf("Reading Command Echo\n");
 	// read response echo
-	if((ret = gp_port_read(device->gpiod, &rhdr, 1)) != 1)
+	if((ret = gp_port_read(device, &rhdr, 1)) != 1)
 		return  jd350e_remap_gp_port_error(ret);
 
 	printf("Validating Echo [0x%X]\n",rhdr);
@@ -114,7 +114,7 @@ static int jd350e_cmd(struct jd350e_s *device, unsigned char cmd,
 
 	printf("Read Response\n");
 	// read response
-	if((ret = gp_port_read(device->gpiod, response, response_len)) != response_len)
+	if((ret = gp_port_read(device, response, response_len)) != response_len)
 		return  jd350e_remap_gp_port_error(ret);
 
 	printf("Validating Response [0x%X...0x%X]\n",
@@ -128,7 +128,7 @@ static int jd350e_cmd(struct jd350e_s *device, unsigned char cmd,
 	return CMD_OK;
 }
 
-static int jd350e_try_cmd(struct jd350e_s *device, unsigned char cmd, unsigned char cmd_len,
+static int jd350e_try_cmd(GPPort *device, unsigned char cmd, unsigned char cmd_len,
 		unsigned char data1, unsigned char data2, unsigned char data3,
 		unsigned char data4, 
 		unsigned char *response, unsigned response_len,
@@ -154,7 +154,7 @@ static int jd350e_try_cmd(struct jd350e_s *device, unsigned char cmd, unsigned c
 	return CMD_IO_ERROR;
 }
 
-int  jd350e_ping(struct jd350e_s *device)
+int  jd350e_ping(GPPort *device)
 {
 	int ret;
 	printf("JD350e: pinging camera\n");
@@ -173,7 +173,7 @@ int  jd350e_ping(struct jd350e_s *device)
 	}
 }
 
-int  jd350e_file_count(struct jd350e_s *device, int *count)
+int  jd350e_file_count(GPPort *device, int *count)
 {
 	unsigned char response[CMD_GET_FILE_INFO_RLEN];
 	int ret;
@@ -203,7 +203,7 @@ int  jd350e_file_count(struct jd350e_s *device, int *count)
 	}
 }
 
-static int jd350e_get_image(struct jd350e_s *device, int image_no, int subcmd,
+static int jd350e_get_image(GPPort *device, int image_no, int subcmd,
 			char **data, int *size, int w, int h, int interpolate)
 {
 	unsigned char set_image_no_response[CMD_SET_IMAGE_NUMBER_RLEN], 
@@ -274,7 +274,7 @@ static int jd350e_get_image(struct jd350e_s *device, int image_no, int subcmd,
 	return GP_OK;
 }
 
-int  jd350e_get_image_full(struct jd350e_s *device, int image_no,
+int  jd350e_get_image_full(GPPort *device, int image_no,
 		        char **data, int *size)
 {
 	image_no++;
@@ -283,7 +283,7 @@ int  jd350e_get_image_full(struct jd350e_s *device, int image_no,
 	jd350e_get_image(device,image_no,CMD_GET_IMAGE,data,size,640,480,1);	
 }
 
-int  jd350e_get_image_raw(struct jd350e_s *device, int image_no,
+int  jd350e_get_image_raw(GPPort *device, int image_no,
 		        char **data, int *size)
 {
 	image_no++;
@@ -292,7 +292,7 @@ int  jd350e_get_image_raw(struct jd350e_s *device, int image_no,
 	jd350e_get_image(device,image_no,CMD_GET_IMAGE,data,size,640,480,0);	
 }
 
-int  jd350e_get_image_preview(struct jd350e_s *device, int image_no,
+int  jd350e_get_image_preview(GPPort *device, int image_no,
 			char **data, int *size)
 {
 	image_no++;
