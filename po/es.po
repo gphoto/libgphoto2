@@ -3553,7 +3553,7 @@ msgid ""
 msgstr ""
 "Controlador Sipix StyleCam Blink\n"
 "Vincent Sanders <vince@kyllikki.org>\n"
-"Marcus Meissner <marcus@jet.franken.de>."
+"Marcus Meissner <marcus@jet.franken.de>.\n"
 
 #: camlibs/sonydscf1/sonydscf1.c:132
 msgid ""
