@@ -1,3 +1,43 @@
+2001-08-21  Stephane Castejon <scastejo@club-internet.fr>
+
+	Correct following bugs in the sierra driver :
+	* Could not retrieve movies from the cameras (got the image having
+   	the same base name instead).  Same behaviour for movie thumbnails,
+	* After correction of problem 1, got movie thumbnails that do 
+	not fit the JPEG format.
+ 	* After correction of problem 1 & 2, part of some movie thumbnails had a 
+   	very bad quality! The phenomenon was aleatory.
+
+	In camlibs/sierra/library.c,h :
+	* Rewrite the sierra_read_packet routine : now it downloads movie thumbnails
+	correctly (third bug).
+	* Correction in the sierra_capture routine to make it generic regarding name
+	of the folder the captured image is stored in.
+	* Move update_fs_for_folder and sierra_change_folder from sierra.c
+	to here.
+	* Plus various other minor changes to try to be consistent between the
+	different routines (when do we need to retry, error codes).
+	Still work to be done there.
+	* Add gp_filesystem_delete_all at the beginning of update_fs_for_folder.
+	* Start documenting routines.
+
+	In camlibs/sierra/sierra.c :
+	* Add call to sierra_change_folder in camera_file_get_generic,
+	camera_file_get_info, camera_folder_delete_all, camera_file_delete.
+	Remove sierra_folder_set from camera_start (then delete the routine
+	since it is not used anymore).
+	* Correct camera_file_get_generic to handle movie thumbnails
+	correctly.
+	* Correction in camera_file_get_generic regarding the properties
+	(type and name) of the return file : it is always jpeg for thumbnails.
+	* Move update_fs_for_folder and sierra_change_folder to library.c.
+	* Remove formatting of the filesystem from camera_folder_delete_all : it
+	is now performed by sierra_update_fs_for_folder.
+	* Add a camera specific error code GP_ERROR_BAD_CONDITION which is raised 
+	when a picture cannot be captured (for instance if the lens protection was 
+	not removed, or the memory card is full).
+	* Start documenting routines.
+
 2001-08-20  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
 
 	* doc/OVERVIEW: Cruft, not up to date, incorrect. Removed.
