@@ -16,6 +16,8 @@ HTML_DIR=$(datadir)/gphoto2/html
 
 TARGET_DIR=$(HTML_DIR)/$(DOC_MODULE)
 
+all-local: html
+
 scan:
 	cd $(srcdir) && gtkdoc-scan --module=$(DOC_MODULE) --source-dir=$(DOC_SOURCE_DIR)
 
