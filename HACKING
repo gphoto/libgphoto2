@@ -1,0 +1,39 @@
+If you want to hack on gphoto2 (or a camera driver for gphoto2), please follow some rules to make our work easier:
+
+camlib
+------
+
+Camera libraries are often very sensitive to changes. Therefore, before you commit any changes, double check with the author that your changes won't break the driver.
+
+If you want to write a driver for gphoto2, the easiest way to do so would be to copy over the contents of camlibs/template and fill in your code.
+
+Use something like CHECK_RESULT (see for example libgphoto2/filesys.c).
+
+Let's say you write a driver called sillycam. Please set up a file called sillycam.c containing all gphoto2-specific code (like camera_init) and another two files called library.c and library.h containing the "magic", that is all gp_port_[read,write] functions and the basic logic of the communication. This makes it easier for us to adapt your code if anything should change in the gphoto2-API.
+
+Use the port provided by camera->port.
+
+Use the filesystem provided by camera->fs and set up the callbacks so that libgphoto2 can cache listings and file-information.
+
+
+libgphoto2
+----------
+
+If you add code, use the coding style of that file. This is, code like
+
+int
+my_func (int arg)
+{
+	int var, res;
+
+	res = gp_some_action (var);
+	if (res < 0) {
+		gp_debug_printf (GP_DEBUG_HIGH, "core", "Error happened!");
+		return (res);
+	}
+
+	return (GP_OK);
+}
+
+Please always check the return value of gp_-functions! We defined some handy macros all over the place (like CHECK_RESULT) - by using those, you'll avoid lots of if {} else {}.
+
