@@ -24,8 +24,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "../include/gphoto2-port.h"
+
+#include <gphoto2-port.h>
+#include <gphoto2-port-debug.h>
 #include "library.h"
+
+extern int glob_debug_level;
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -45,22 +49,6 @@ gp_port_info     device_list[256];
 int              device_count;
 
 int initialized = 0;
-
-/* Toggle to turn on/off debugging */
-int              glob_debug_level=0;
-
-void gp_port_debug_printf (int target_debug_level, int debug_level, char *format, ...)
-{
-        va_list arg;
-        if ((debug_level > 0)&&(debug_level >= target_debug_level)) {
-
-                fprintf(stderr, "gp_port: ");
-                va_start(arg, format);
-                vfprintf(stderr, format, arg);
-                va_end(arg);
-                fprintf(stderr, "\n");
-        }
-}
 
 #define GP_ERR_RES(num,str) \
     if (result == num) \
@@ -114,7 +102,7 @@ int gp_port_init(int debug)
         gp_port_debug_printf(GP_DEBUG_LOW, glob_debug_level, "Initializing...");
         /* Enumerate all the available devices */
         device_count = 0;
-        glob_debug_level = debug;
+	gp_port_debug_set_level (debug);
 	initialized = 1;
         return (gp_port_library_list(device_list, &device_count));
 }

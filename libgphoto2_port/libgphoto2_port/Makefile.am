@@ -10,6 +10,7 @@ LDFLAGS = @LDFLAGS@ -g -ldl
 lib_LTLIBRARIES = libgphoto2_port.la
 libgphoto2_port_la_LDFLAGS = -version-info @LIBGPPORT_VERSION_INFO@
 libgphoto2_port_la_SOURCES = \
-			gp_port.c \
-			library.c library.h \
-			portability.c
+	gp_port.c \
+	debug.c \
+	library.c library.h \
+	portability.c

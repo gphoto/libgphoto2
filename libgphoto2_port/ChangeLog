@@ -1,5 +1,13 @@
 2001-10-04  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* include/Makefile.am
+	* include/gphoto2-port-debug.h
+	* libgphoto2_port/Makefile.am
+	* libgphoto2_port/debug.c: New files
+	* libgphoto2_port/gp_port.c: Move debugging stuff out of here.
+
+2001-10-04  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* include/gphoto2-port.h:
 	* libgphoto2_port/gp_port.c: Revert the result_as_description thing
 
