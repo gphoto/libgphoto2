@@ -21,7 +21,7 @@
 
 /* $Id$ */
 
-#include "config.h"
+//#include "config.h"
 
 #if defined HAVE_UNISTD_H
 #include <unistd.h>
@@ -93,8 +93,8 @@
    can contain NULLs, and classic C strings won't work.
 */
 typedef struct {
-	unsigned int length;
-	unsigned char buffer[1024];
+        unsigned int length;
+        unsigned char buffer[1024];
 } dimagev_packet;
 
 /* This struct represents the information returned by the DIMAGEV_INQUIRY
@@ -103,11 +103,11 @@ typedef struct {
    always "L1", which was apparently the development name for the Dimage V.
 */
 typedef struct {
-	unsigned char vendor[8];
-	unsigned char model[8];
-	unsigned char hardware_rev[4];
-	unsigned char firmware_rev[4];
-	unsigned char have_storage;
+        unsigned char vendor[8];
+        unsigned char model[8];
+        unsigned char hardware_rev[4];
+        unsigned char firmware_rev[4];
+        unsigned char have_storage;
 } dimagev_info_t;
 
 /* This struct represents the information returned by the DIMAGEV_GET_STATUS
@@ -134,14 +134,14 @@ typedef struct {
    memory is not so expensive as to spend that much effort shifting bits.
 */
 typedef struct {
-	unsigned char battery_level;
-	unsigned int number_images;
-	unsigned int minimum_images_can_take;
-	unsigned char busy;
-	unsigned char flash_charging;
-	unsigned char lens_status;
-	unsigned char card_status;
-	unsigned char id_number;
+        unsigned char battery_level;
+        unsigned int number_images;
+        unsigned int minimum_images_can_take;
+        unsigned char busy;
+        unsigned char flash_charging;
+        unsigned char lens_status;
+        unsigned char card_status;
+        unsigned char id_number;
 } dimagev_status_t;
 
 /* This struct represents the information returned by the DIMAGEV_GET_DATA
@@ -162,48 +162,48 @@ typedef struct {
    8  | valid |              Camera and Card ID number                |
       |---------------------------------------------------------------|
 
-	  hmode: "host mode" e.g. if the PC or camera is in control.
-	  OR: Exposure correction data field is valid - used only for SET command.
-	  Date: The date information is valid - used only for SET command.
-	  Self: True if camera is in self-timer mode.
-	  Flash: 00 == Auto, 01 == Force Flash, 10==No Flash, 11 == Invalid
-	  Quality: Compression setting, 1 == Fine, 0 == Standard
-	  Record mode: When setting, 1 == turn on LCD viewfinder.
-	               When getting, 1 == switch in record mode.
+          hmode: "host mode" e.g. if the PC or camera is in control.
+          OR: Exposure correction data field is valid - used only for SET command.
+          Date: The date information is valid - used only for SET command.
+          Self: True if camera is in self-timer mode.
+          Flash: 00 == Auto, 01 == Force Flash, 10==No Flash, 11 == Invalid
+          Quality: Compression setting, 1 == Fine, 0 == Standard
+          Record mode: When setting, 1 == turn on LCD viewfinder.
+                       When getting, 1 == switch in record mode.
       Camera Clock: BCD two-digit values for times. Hours are military 0-23.
-	  Exposure correction data: sets exposure correction, from -127 to 128.
-	  valid: Used to set "valid" for memory cards.
-	  Camera and Card ID: used when switching cards.
+          Exposure correction data: sets exposure correction, from -127 to 128.
+          valid: Used to set "valid" for memory cards.
+          Camera and Card ID: used when switching cards.
 */
 typedef struct {
-	unsigned char host_mode;
-	unsigned char exposure_valid;
-	unsigned char date_valid;
-	unsigned char self_timer_mode;
-	unsigned char flash_mode;
-	unsigned char quality_setting;
-	unsigned char play_rec_mode;
-	unsigned char year;
-	unsigned char month;
-	unsigned char day;
-	unsigned char hour;
-	unsigned char minute;
-	unsigned char second;
-	unsigned char exposure_correction;
-	unsigned char valid;
-	unsigned char id_number;
+        unsigned char host_mode;
+        unsigned char exposure_valid;
+        unsigned char date_valid;
+        unsigned char self_timer_mode;
+        unsigned char flash_mode;
+        unsigned char quality_setting;
+        unsigned char play_rec_mode;
+        unsigned char year;
+        unsigned char month;
+        unsigned char day;
+        unsigned char hour;
+        unsigned char minute;
+        unsigned char second;
+        unsigned char exposure_correction;
+        unsigned char valid;
+        unsigned char id_number;
 } dimagev_data_t;
 
 /* This struct is used as the camera->camlib_data value in this library. */
 typedef struct {
-	int size;   
-	int debug;
-	gpio_device *dev;
-	gpio_device_settings settings;
-	dimagev_data_t *data;
-	dimagev_status_t *status;
-	dimagev_info_t *info;
-	CameraFilesystem *fs;
+        int size;
+        int debug;
+        gpio_device *dev;
+        gpio_device_settings settings;
+        dimagev_data_t *data;
+        dimagev_status_t *status;
+        dimagev_info_t *info;
+        CameraFilesystem *fs;
 } dimagev_t;
 
 /* These functions are in packet.c */
