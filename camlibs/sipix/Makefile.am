@@ -1,4 +1,6 @@
-camlib_LTLIBRARIES = libgphoto2_sipix.la
+camlib_LTLIBRARIES = 					\
+	libgphoto2_sipix_blink2.la			\
+	libgphoto2_sipix_web2.la
 
 EXTRA_DIST = web2.html
 
@@ -9,7 +11,10 @@ INCLUDES = \
 
 
 
-libgphoto2_sipix_la_SOURCES = sipix.c web2.c web2.h
+libgphoto2_sipix_blink2_la_SOURCES = blink2.c blink2.h
+libgphoto2_sipix_web2_la_SOURCES = web2.c web2.h
 
-libgphoto2_sipix_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la
-libgphoto2_sipix_la_LDFLAGS = -module -avoid-version
+libgphoto2_sipix_blink2_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la
+libgphoto2_sipix_blink2_la_LDFLAGS = -module -avoid-version
+libgphoto2_sipix_web2_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la
+libgphoto2_sipix_web2_la_LDFLAGS = -module -avoid-version

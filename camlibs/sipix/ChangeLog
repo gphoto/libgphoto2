@@ -1,3 +1,11 @@
+2003-05-20  Marcus Meissner <marcus@jet.franken.de>
+	
+	* blink2.[ch]: New SiPix Blink2 driver. Downloads
+	  unprocessed JPEG for now (needs a bit work).
+
+	* Makefile.am: reorganized file layout.
+	
+
 2002-04-12  Marcus Meissner <marcus@jet.franken.de>
 	
 	* *: First version of SiPix Web2 driver:
