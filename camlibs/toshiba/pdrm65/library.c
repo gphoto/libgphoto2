@@ -78,8 +78,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 {
 	int ret = GP_OK;
 	Camera *camera = data;
-	
-	//ret = pdrm65_get_all_pictures(camera->port);
+	ret = pdrm65_get_pict(camera->port,filename,file);
 	/*
 	 * Get the file from the camera. Use gp_file_set_mime_type,
 	 * gp_file_set_data_and_size, etc.
