@@ -1235,7 +1235,7 @@ gp_filesystem_scan (CameraFilesystem *fs, const char *folder,
 	CR (count = gp_list_count (&list));
 	for (x = 0; x < count; x++) {
 		CR (gp_list_get_name (&list, x, &name));
-		strncpy (path, folder, sizeof (folder));
+		strncpy (path, folder, sizeof (path));
 		if (path[strlen (path) - 1] != '/')
 			strncat (path, "/", sizeof (path));
 		strncat (path, name, sizeof (path));
