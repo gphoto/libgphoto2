@@ -285,7 +285,7 @@ int camera_file_delete (Camera *camera, char *folder, char *filename) {
 	return (retval);
 }
 
-int camera_config_get (Camera *camera) {
+int camera_config (Camera *camera) {
 
 /*	DC120Data *dd = camera->camlib_data; */
 
