@@ -66,14 +66,6 @@
 #include "serial.h"
 #include "usb.h"
 
-#ifndef HAVE_SNPRINTF
-# ifdef __GCC__
-#  warning You do not seem to have a snprintf() function. Using sprintf instead.
-#  warning Note that this leads to SECURITY RISKS!
-# endif
-#define snprintf(buf,size,format,arg) sprintf(buf,format,arg)
-#endif
-
 #ifndef HAVE_TM_GMTOFF
 /* required for time conversions in camera_summary() */
 extern long int timezone;
