@@ -1,5 +1,5 @@
 camlib_LTLIBRARIES = libgphoto2_adc65.la
-EXTRADIST = README TODO Changelog
+EXTRA_DIST = README TODO Changelog
 
 INCLUDES =						\
         -I$(top_srcdir)/intl				\
