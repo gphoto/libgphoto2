@@ -1,8 +1,6 @@
 camlibdir = $(prefix)/lib/gphoto2
 camlib_LTLIBRARIES = libgphoto2_panasonic_dc1000.la libgphoto2_panasonic_dc1580.la
 
-CFLAGS = @CFLAGS@ -g `gpio-config --cflags`
-LDFLAGS = @LDFLAGS@ -g `gpio-config --libs`
 INCLUDES = -I$(top_srcdir)/include
 
 libgphoto2_panasonic_dc1000_la_SOURCES = dc1000.c dc1000.h dc.c dc.h

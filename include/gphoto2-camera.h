@@ -15,6 +15,8 @@ int gp_camera_new 	  (Camera **camera, int camera_number, CameraPortInfo *port);
 int gp_camera_new_by_name (Camera **camera, char *camera_name, CameraPortInfo *port);
 
 int gp_camera_free (Camera *camera);
+
+int gp_camera_session (Camera *camera);
 	
 int gp_camera_folder_list (Camera *camera, CameraList *list, char *folder);
 int gp_camera_file_list   (Camera *camera, CameraList *list, char *folder);

@@ -7,6 +7,8 @@
 
 CameraFile* gp_file_new ();
 
+int gp_file_session (CameraFile *file);
+
 int gp_file_save (CameraFile *file, char *filename);
 int gp_file_open (CameraFile *file, char *filename);
 

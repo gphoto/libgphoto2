@@ -3,6 +3,8 @@
 #include <string.h>
 #include <gphoto2.h>
 
+#include "globals.h"
+
 CameraFile* gp_file_new () {
 
         /*
@@ -17,6 +19,7 @@ CameraFile* gp_file_new () {
         f->data = NULL;
         f->size = 0;
         f->bytes_read = 0;
+	f->session = glob_session_file++;
 
         return(f);
 }
@@ -30,6 +33,11 @@ int gp_file_free (CameraFile *file) {
         gp_file_clean(file);
         free(file);
         return(GP_OK);
+}
+
+int gp_file_session (CameraFile *file) {
+
+	return (file->session);
 }
 
 int gp_file_append (CameraFile *file, char *data, int size) {

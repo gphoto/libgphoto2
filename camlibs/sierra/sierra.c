@@ -136,7 +136,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 
 	int value=0, x=0;
 #ifdef GPIO_USB
-	int vendor, product, inep, outep;
+	int vendor=0, product=0, inep=0, outep=0;
 #endif
 	gpio_device_settings settings;
 	SierraData *fd;

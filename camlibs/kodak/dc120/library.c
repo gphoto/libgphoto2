@@ -1,4 +1,6 @@
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <gphoto2.h>
 
 #include "dc120.h"
@@ -21,7 +23,7 @@ int dc120_packet_write (DC120Data *dd, char *packet, int size, int read_response
 
 	/* Writes the packet and returns the result */
 
-	int x=0, index=0, error=0;
+	int x=0;
 	char in[2];
 
 write_again:
@@ -64,7 +66,7 @@ int dc120_packet_read_data (DC120Data *dd, CameraFile *file, char *cmd_packet, i
 	/* Reads in multi-packet data, appending it to the "file". */
 
 	int num_packets=1, num_bytes, retval;
-	int x=0, index=0, retries=0;
+	int x=0, retries=0;
 	float t;
 	char packet[2048], p[8];
 
@@ -436,9 +438,7 @@ int dc120_capture (DC120Data *dd, CameraFile *file) {
 	CameraList *list;
 	CameraListEntry *entry;
 	char *cmd_packet = dc120_packet_new(0x77);
-	char p[8];
-	int retval, count;
-	int done=0, x=0;
+	int count;
 
 	/* Take the picture to Flash memory */
 	gp_camera_message (NULL, "Taking picture...");

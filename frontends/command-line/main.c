@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
+#include <string.h>
 
 #ifdef WIN32
 #include <io.h>
@@ -60,6 +61,7 @@ int  set_globals();
    and it is very flexible.
 
    How to add a command-line option:
+*/
 
 /* 1) Add a forward-declaration here                                    */
 /*    ----------------------------------------------------------------- */
@@ -515,7 +517,7 @@ int print_files(char *subfolder, image_action iaction, int reverse) {
 	for (x=0; x<gp_list_count(&filelist); x++) {
 		entry = gp_list_entry(&filelist, x);
 		sprintf(buf, "%i", x+1);
-		printf("#%-05s %s\n", buf, entry->name);
+		printf("#%-5s %s\n", buf, entry->name);
 	}
 	return (GP_OK);
 }
@@ -753,18 +755,21 @@ int save_picture_action(char *folder, char *filename) {
 		
 	if (save_picture_to_file(folder, filename, 0) == GP_ERROR)
 		return (GP_ERROR);		
+	return (GP_OK);
 }
 
 int save_thumbnail_action(char *folder, char *filename) {
 	
 	if (save_picture_to_file(folder, filename, 1) == GP_ERROR)
 		return (GP_ERROR);
+	return (GP_OK);
 }
 
 int delete_picture_action(char *folder, char *filename) {
 	
 	if (gp_camera_file_delete(glob_camera, folder, filename) == GP_ERROR)
 		return (GP_ERROR);		
+	return (GP_OK);
 }
 
 /*
@@ -1168,7 +1173,7 @@ int execute_options (int argc, char **argv) {
 
 void usage () {
 
-        int x=0, y=0;
+        int x=0;
         char buf[128], s[5], l[24], a[16];
 
 	/* Standard licensing stuff */
@@ -1203,7 +1208,7 @@ void usage () {
 			sprintf(a, "%s", option[x].argument);
 		   else
 			sprintf(a, " ");
-		sprintf(buf, " %-04s %s %s", s, l, a);
+		sprintf(buf, " %-4s %s %s", s, l, a);
 		printf("%-38s %s\n", buf, option[x].description);
 		x++;
 	}

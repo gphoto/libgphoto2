@@ -1,8 +1,8 @@
 camlibdir = $(prefix)/lib/gphoto2
 camlib_LTLIBRARIES = libgphoto2_konica.la
 
-CFLAGS = @CFLAGS@ -g `gpio-config --cflags` -Wall `glib-config --cflags`
-LDFLAGS = @LDFLAGS@ -g `gpio-config --libs` -g `glib-config --libs`
+CFLAGS = @CFLAGS@ `glib-config --cflags`
+LDFLAGS = @LDFLAGS@ `glib-config --libs`
 EXTRA_DIST = ChangeLog EXPERTS
 INCLUDES = -I$(top_srcdir)/include
 

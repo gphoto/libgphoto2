@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <string.h>
 #include <gphoto2.h>
 #include <gpio.h>
@@ -212,7 +213,7 @@ int camera_file_list (Camera *camera, CameraList *list, char *folder) {
 int camera_file_action (Camera *camera, int action, CameraFile *file, char *folder, char *filename) {
 
 	DC120Data *dd = camera->camlib_data;
-	int picnum, album_num=-1, from_card;
+	int picnum=0, album_num=-1, from_card=0;
 	char buf[32];
 
 	picnum = gp_filesystem_number(dd->fs, folder, filename);
@@ -257,7 +258,7 @@ int camera_file_get_preview (Camera *camera, CameraFile *file,
 
 int camera_file_put (Camera *camera, CameraFile *file, char *folder) {
 
-	DC120Data *dd = camera->camlib_data;
+/*	DC120Data *dd = camera->camlib_data; */
 
 	return (GP_ERROR);
 }
@@ -277,14 +278,14 @@ int camera_file_delete (Camera *camera, char *folder, char *filename) {
 
 int camera_config_get (Camera *camera, CameraWidget *window) {
 
-	DC120Data *dd = camera->camlib_data;
+/*	DC120Data *dd = camera->camlib_data; */
 
 	return (GP_ERROR);
 }
 
 int camera_config_set (Camera *camera, CameraSetting *conf, int count) {
 
-	DC120Data *dd = camera->camlib_data;
+/*	DC120Data *dd = camera->camlib_data; */
 
 	return (GP_ERROR);
 }
@@ -298,21 +299,21 @@ int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 
 int camera_summary (Camera *camera, CameraText *summary) {
 
-	DC120Data *dd = camera->camlib_data;
+/*	DC120Data *dd = camera->camlib_data; */
 
 	return (GP_OK);
 }
 
 int camera_manual (Camera *camera, CameraText *manual) {
 
-	DC120Data *dd = camera->camlib_data;
+/* 	DC120Data *dd = camera->camlib_data; */
 
 	return (GP_OK);
 }
 
 int camera_about (Camera *camera, CameraText *about) {
 
-	DC120Data *dd = camera->camlib_data;
+/*	DC120Data *dd = camera->camlib_data; */
 
 	strcpy(about->text, 
 "Kodak DC120 Camera Library

@@ -128,7 +128,6 @@ int camera_file_list(Camera *camera, CameraList *list, char *folder) {
 	GPIO_DIR d;
 	GPIO_DIRENT de;
 	char buf[1024], f[1024];
-	int count=0;
 
 	if ((d = GPIO_OPENDIR(folder))==NULL)
 		return (GP_ERROR);
@@ -139,7 +138,7 @@ int camera_file_list(Camera *camera, CameraList *list, char *folder) {
 	 else
 		strcpy(f, folder);
 
-	while (de = GPIO_READDIR(d)) {
+	while ((de = GPIO_READDIR(d))) {
 		if ((strcmp(GPIO_FILENAME(de), "." )!=0) &&
 		    (strcmp(GPIO_FILENAME(de), "..")!=0)) {
 			sprintf(buf, "%s%s", f, GPIO_FILENAME(de));
@@ -157,7 +156,7 @@ int camera_folder_list(Camera *camera, CameraList *list, char *folder) {
 	GPIO_DIRENT de;
 	char buf[1024], f[1024];
 	char *dirname;
-	int count=0, view_hidden=1;
+	int view_hidden=1;
 
 	if (gp_setting_get("directory", "hidden", buf)==GP_OK)
 		view_hidden = atoi(buf);
@@ -170,7 +169,7 @@ int camera_folder_list(Camera *camera, CameraList *list, char *folder) {
 	 else
 		strcpy(f, folder);
 
-	while (de = GPIO_READDIR(d)) {
+	while ((de = GPIO_READDIR(d))) {
 		if ((strcmp(GPIO_FILENAME(de), "." )!=0) &&
 		    (strcmp(GPIO_FILENAME(de), "..")!=0)) {
 			sprintf(buf, "%s%s", f, GPIO_FILENAME(de));

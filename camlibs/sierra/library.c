@@ -435,7 +435,7 @@ int sierra_set_speed (Camera *camera, int speed) {
 
 int sierra_set_int_register (Camera *camera, int reg, int value) {
 
-	int l=0, r=0;
+	int r=0;
 	char p[4096];
 	char buf[4096];
 	SierraData *fd = (SierraData*)camera->camlib_data;
@@ -482,7 +482,7 @@ int sierra_set_int_register (Camera *camera, int reg, int value) {
 
 int sierra_get_int_register (Camera *camera, int reg, int *value) {
 
-	int l=0, r=0, write_nak=0;
+	int r=0, write_nak=0;
 	char packet[4096];
 	char buf[4096];
 	SierraData *fd = (SierraData*)camera->camlib_data;
