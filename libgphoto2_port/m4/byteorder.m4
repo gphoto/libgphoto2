@@ -137,6 +137,7 @@ fi
 ])
 
 
+[
 if test "$HAVE_LE32TOH" != "1"; then
  cat >> "$1" << EOF
 /* The byte swapping macros have the form: */
@@ -208,7 +209,6 @@ cat >> "$1" << EOF
 
 EOF
 
-[
 case "${host_cpu}" in
  i[3456]86)
   cat >> "$1" << EOF
