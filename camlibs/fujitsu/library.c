@@ -6,7 +6,7 @@
 
 int glob_first_packet = 1;
 
-#define		QUICKSLEEP	5000
+#define		QUICKSLEEP	50000
 
 void fujitsu_dump_packet (char *packet) {
 
