@@ -107,7 +107,10 @@ is_crw (const char *name)
 	return (res);
 }
 
-/*
+/**
+ * is_movie:
+ * @name: name of file to examine
+ *
  * Test whether the name given corresponds
  * to a movie (.AVI)
  */
@@ -121,7 +124,7 @@ is_movie (const char *name)
 	if (pos)
 		res = (!strcmp (pos, ".AVI"));
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "is_movie(%s) == %i", name, res);
+	GP_DEBUG ("is_movie(%s) == %i", name, res);
 	return (res);
 }
 
