@@ -1,4 +1,5 @@
 libgphoto2_konica.la
+libgphoto2_konica_qm150.la
 *.lo
 .libs
 .deps
