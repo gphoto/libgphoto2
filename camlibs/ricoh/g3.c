@@ -180,7 +180,7 @@ camera_abilities (CameraAbilitiesList *list)
 
 	memset(&a, 0, sizeof(a));
 	strcpy(a.model, "Ricoh:Caplio G3");
-	a.status	= GP_DRIVER_STATUS_EXPERIMENTAL;
+	a.status	= GP_DRIVER_STATUS_TESTING;
 	a.port		= GP_PORT_USB;
 	a.usb_vendor	= 0x5ca;
 	a.usb_product	= 0x2204;
@@ -188,6 +188,12 @@ camera_abilities (CameraAbilitiesList *list)
 	a.file_operations   = 	GP_FILE_OPERATION_NONE;
 	a.folder_operations = 	GP_FOLDER_OPERATION_NONE;
 	gp_abilities_list_append(list, a);
+
+	strcpy(a.model, "Ricoh:Caplio RR30");
+	a.usb_vendor	= 0x5ca;
+	a.usb_product	= 0x2202;
+	gp_abilities_list_append(list, a);
+
 	return (GP_OK);
 }
 
