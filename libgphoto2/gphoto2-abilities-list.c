@@ -52,6 +52,8 @@
 #  define N_(String) (String)
 #endif
 
+#define GP_MODULE "gphoto2-abilities-list"
+
 #define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 #define CHECK_MEM(m)         {if (!(m)) return (GP_ERROR_NO_MEMORY);}
@@ -538,6 +540,29 @@ gp_abilities_list_detect (CameraAbilitiesList *list,
 	return (GP_OK);
 }
 
+
+/**
+ * remove_colon_from_string:
+ * @str: a char * string
+ *
+ * Remove first colon from string, if any. Replace it by a space.
+ **/
+static int 
+remove_colon_from_string (char *str)
+{
+	char *ch;
+	printf("===========================\n");
+	printf("COLON-Fixing \"%s\"\n", str);
+	ch = strchr(str, ':');
+	if (ch) {
+		*ch = ' ';
+		printf("COLON-Fixed: \"%s\"\n", str);
+	} else {
+		printf("NOT COLON-Fixed: \"%s\"\n", str);
+	}
+}
+
+
 /**
  * gp_abilities_list_append:
  * @list: a #CameraAbilitiesList
@@ -563,9 +588,16 @@ gp_abilities_list_append (CameraAbilitiesList *list, CameraAbilities abilities)
 				sizeof (CameraAbilities) * (list->count + 1));
 	CHECK_MEM (new_abilities);
 	list->abilities = new_abilities;
-
+	
 	memcpy (&(list->abilities [list->count]), &abilities,
 		sizeof (CameraAbilities));
+
+	/* FIXME: We replace the colon by a space in the model string
+	 *        This keeps backward compatibility until we have
+	 *        thought of and implemented something better.
+	 */
+	remove_colon_from_string(list->abilities[list->count].model);
+
 	list->count++;
 
 	return (GP_OK);
@@ -659,7 +691,6 @@ gp_abilities_list_lookup_id (CameraAbilitiesList *list, const char *id)
 int
 gp_abilities_list_lookup_model (CameraAbilitiesList *list, const char *model)
 {
-	char m[1024], *c;
 	int x;
 
 	CHECK_NULL (list && model);
@@ -667,16 +698,6 @@ gp_abilities_list_lookup_model (CameraAbilitiesList *list, const char *model)
 	for (x = 0; x < list->count; x++) {
 		if (!strcasecmp (list->abilities[x].model, model))
 			return (x);
-
-		/* Check if the "old-style" model (without colon) fits */
-		memset (m, 0, sizeof (m));
-		strncpy (m, list->abilities[x].model, sizeof (m) - 1);
-		c = strchr (m, ':');
-		if (c) {
-			memmove (c, c + 1, strlen (m) - (c - m));
-			if (!strcasecmp (model, m))
-				return x;
-		}
 	}
 
 	gp_log (GP_LOG_ERROR, "gphoto2-abilities-list", _("Could not find "
