@@ -123,7 +123,7 @@ int pdrm65_select_file(GPPort *port, int current_pic)
 	char in_buf[1024];
 	
 	//sprintf(&out_buf[6],"%o",current_pic);
-	gp_port_write(port, out_buf, 12);bigfoot:/export/home    /home                   nfs     defaults        0 0
+	gp_port_write(port, out_buf, 12);
 
 	gp_port_read (port, in_buf, 1);
 	
@@ -185,8 +185,7 @@ int pdrm65_get_pict(GPPort *port, const char *pic_number, CameraFile *file)
 		GP_DEBUG("Size of image = %d, data_remaining = %d", sizeof(image), data_remaining);
 		//Get EXIF Header information for this packet
 		gp_port_read(port, in_buf, 64);
-		memcpy(image+data_remaining, &in_buf[4], bigfoot:/export/home    /home                   nfs     defaults        0 0
-60);
+		memcpy(image+data_remaining, &in_buf[4],60);
 				
 		if ((pic_size - data_remaining) > JPEG_CHUNK)
 		{
@@ -199,7 +198,7 @@ int pdrm65_get_pict(GPPort *port, const char *pic_number, CameraFile *file)
 			gp_port_read(port, pic_buf, (pic_size - data_remaining));
 			memcpy(image+(pic_size-data_remaining+60), in_buf, (pic_size - data_remaining));
 			data_remaining += (pic_size - data_remaining + 60 );
-		}bigfoot:/export/home    /home                   nfs     defaults        0 0
+		}
 
 		gp_port_read(port, in_buf, 6);
 		gp_port_write(port, &ok, 1);
