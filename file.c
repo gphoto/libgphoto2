@@ -49,7 +49,7 @@ int gp_file_open (CameraFile *file, char *filename) {
 	size = ftell(fp);
 	rewind(fp);
 
-	file->data = (char*)malloc(sizeof(char)*size);
+	file->data = (char*)malloc(sizeof(char)*(size + 1));
 	if (!file->data)
 		return (GP_ERROR);
 	size_read = fread(file->data, (size_t)sizeof(char), (size_t)size, fp);
@@ -60,13 +60,13 @@ int gp_file_open (CameraFile *file, char *filename) {
 	fclose(fp);
 
 	file->size = size_read;
-	file->data[size_read] = 0;
+	file->data[size_read] = 0; 
 
 	name = strrchr(filename, '/');
 	if (name)
-		strcpy(file->name, name);
+		strcpy(file->name, name + 1);
 	   else
-		strcpy(file->name, "");
+		strcpy(file->name, filename);
 
 	return (GP_OK);
 }

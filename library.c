@@ -146,8 +146,13 @@ int load_cameras() {
 
 	glob_camera_id_count = 0;
 
-       /* Look for available camera libraries */
+	/* Look for available camera libraries */
         d = opendir(CAMLIBS);
+	if (!d) {
+		fprintf(stderr, "core: couldn't open %s\n", CAMLIBS);
+		return GP_ERROR;
+	}
+
         do {
            /* Read each entry */
            de = readdir(d);
@@ -176,10 +181,10 @@ int load_cameras() {
 				memcpy(&glob_camera[x], &glob_camera[y], sizeof(t));
 				memcpy(&glob_camera[y], &t, sizeof(t));
 
-				memcpy(&a, &glob_camera_abilities[x], sizeof(t));
+				memcpy(&a, &glob_camera_abilities[x], sizeof(a));
 				memcpy(&glob_camera_abilities[x], &glob_camera_abilities[y],
-					sizeof(t));
-				memcpy(&glob_camera_abilities[y], &a, sizeof(t));
+					sizeof(a));
+				memcpy(&glob_camera_abilities[y], &a, sizeof(a));
 			}
 		}
 	}
