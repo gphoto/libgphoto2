@@ -145,52 +145,6 @@ retreiving information about a file, etc.
 @file: 
 @audio: 
 
-<!-- ##### STRUCT CameraFileInfoFile ##### -->
-<para>
-
-</para>
-
-@fields: 
-@type: 
-@permissions: 
-@name: 
-@size: 
-@width: 
-@height: 
-@status: 
-@time: 
-
-<!-- ##### STRUCT CameraFileInfoPreview ##### -->
-<para>
-
-</para>
-
-@fields: 
-@type: 
-@size: 
-@width: 
-@height: 
-@status: 
-
-<!-- ##### STRUCT CameraFileInfoAudio ##### -->
-<para>
-
-</para>
-
-@fields: 
-@type: 
-@size: 
-@status: 
-
-<!-- ##### STRUCT CameraFileInfo ##### -->
-<para>
-
-</para>
-
-@preview: 
-@file: 
-@audio: 
-
 <!-- ##### FUNCTION gp_filesystem_new ##### -->
 <para>
 
@@ -247,6 +201,32 @@ retreiving information about a file, etc.
 @Returns: 
 
 
+<!-- ##### USER_FUNCTION CameraFilesystemGetInfoFunc ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@filename: 
+@info: 
+@data: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION CameraFilesystemSetInfoFunc ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@filename: 
+@info: 
+@data: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gp_filesystem_set_info_funcs ##### -->
 <para>
 
@@ -278,6 +258,18 @@ retreiving information about a file, etc.
 
 @fs: 
 @folder: 
+@data: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION CameraFilesystemDirFunc ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@name: 
 @data: 
 @Returns: 
 
@@ -384,6 +376,28 @@ retreiving information about a file, etc.
 
 @fs: 
 @folder: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_make_dir ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_remove_dir ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@name: 
 @Returns: 
 
 

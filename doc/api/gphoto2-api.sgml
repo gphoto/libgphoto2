@@ -1,6 +1,7 @@
 <!doctype book PUBLIC "-//Davenport//DTD DocBook V3.0//EN" [
 <!entity hash "#">
 <!entity gphoto2-filesys        SYSTEM "sgml/gphoto2-filesys.sgml">
+<!entity gphoto2-file		SYSTEM "sgml/gphoto2-file.sgml">
 <!entity gphoto2-widget         SYSTEM "sgml/gphoto2-widget.sgml">
 <!entity gphoto2-camera         SYSTEM "sgml/gphoto2-camera.sgml">
 <!entity gphoto2-result         SYSTEM "sgml/gphoto2-result.sgml">
@@ -88,6 +89,7 @@ locking of serial ports. GPhoto2 currently supports
 	&gphoto2-widget;
 	&gphoto2-list;
 	&gphoto2-abilities-list;
+	&gphoto2-file;
       </sect1>
 
   </chapter>

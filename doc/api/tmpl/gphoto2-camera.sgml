@@ -537,6 +537,28 @@ Error reporting can be performed using #gp_camera_set_error and #gp_camera_get_e
 @Returns: 
 
 
+<!-- ##### FUNCTION gp_camera_folder_make_dir ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_folder_remove_dir ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@name: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gp_camera_file_get ##### -->
 <para>
 

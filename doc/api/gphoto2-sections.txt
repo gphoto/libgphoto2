@@ -100,9 +100,10 @@ gp_camera_set_config
 
 gp_camera_folder_list_files
 gp_camera_folder_list_folders
-
 gp_camera_folder_put_file
 gp_camera_folder_delete_all
+gp_camera_folder_make_dir
+gp_camera_folder_remove_dir
 
 gp_camera_file_get
 gp_camera_file_delete
@@ -186,6 +187,22 @@ gp_list_sort
 </SECTION>
 
 <SECTION>
+<FILE>gphoto2-file</FILE>
+<TITLE>CameraFile</TITLE>
+CameraFile
+
+gp_file_new
+gp_file_append
+gp_file_get_name
+gp_file_set_name
+gp_file_get_type
+gp_file_get_mime_type
+gp_file_adjust_name_for_mime_type
+gp_file_set_data_and_size
+
+</SECTION>
+
+<SECTION>
 <FILE>gphoto2-filesys</FILE>
 <TITLE>CameraFilesystem</TITLE>
 CameraFilesystem
@@ -199,11 +216,6 @@ CameraFileInfoPreview
 CameraFileInfoFile
 CameraFileInfo
 
-CameraFileInfoFile
-CameraFileInfoPreview
-CameraFileInfoAudio
-CameraFileInfo
-
 gp_filesystem_new
 gp_filesystem_free
 
@@ -211,11 +223,13 @@ CameraFilesystemGetFileFunc
 CameraFilesystemDeleteFileFunc
 gp_filesystem_set_file_funcs
 
-CameraFilesystemInfoFunc
+CameraFilesystemGetInfoFunc
+CameraFilesystemSetInfoFunc
 gp_filesystem_set_info_funcs
 
 CameraFilesystemPutFileFunc
 CameraFilesystemDeleteAllFunc
+CameraFilesystemDirFunc
 gp_filesystem_set_folder_funcs
 
 CameraFilesystemListFunc
@@ -228,6 +242,8 @@ gp_filesystem_get_file
 gp_filesystem_put_file
 gp_filesystem_delete_file
 gp_filesystem_delete_all
+gp_filesystem_make_dir
+gp_filesystem_remove_dir
 
 gp_filesystem_get_info
 gp_filesystem_set_info
