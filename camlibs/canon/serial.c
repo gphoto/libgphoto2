@@ -85,7 +85,7 @@ canon_serial_get_cts (GPPort *gdev)
 {
 	int level;
 
-	gp_port_pin_get (gdev, PIN_CTS, &level);
+	gp_port_get_pin (gdev, PIN_CTS, &level);
 	return (level);
 }
 
