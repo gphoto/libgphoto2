@@ -249,11 +249,171 @@ About this file:
     <para>FIXME: We need examples using <acronym>RS232</acronym>
       cameras, gtkam and the gphoto2 shell.</para>
 
-    <section>
+    <section id="using_gtkam">
       <title>Using gtkam</title>
-      <simpara>FIXME: add gtkam docs</simpara>
+      <simpara>FIXME: gtkam docs under construction. Please report errors, omissions, and constructive suggestions to michael.rensing@shaw.ca</simpara>
+      <abstract>
+      <simpara>gtkam is a graphical front end for the gphoto2 library. It does
+ not communicate directly with the camera, but uses gphoto2 to do
+ so. As a result, it is necessary to have gphoto2 installed and running
+ correctly before gtkam will work.</simpara></abstract>
+      <section>
+	<title>Installation</title>
+	<abstract>
+	  <simpara></simpara>
+	</abstract>
+      </section>
+
+      <section>
+	<title>Commands</title>
+	<variablelist>
+	  <varlistentry>
+	    <term><guimenu>File</guimenu></term>
+	    <listitem>
+	      <simpara>Menu item</simpara>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term><guimenuitem>Save Selected Photos...</guimenuitem></term>
+	    <listitem>
+	      <simpara>Opens the dialog for saving the selected photos.</simpara>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term><guisubmenu>Delete Photos</guisubmenu></term>
+	    <listitem>
+	      <variablelist>
+		<varlistentry>
+		  <term><guimenuitem>Selected</guimenuitem></term>
+		  <listitem>
+		    <simpara>Selected Deletes the photos that have been selected from the camera.</simpara>
+		  </listitem>
+		</varlistentry>
+		<varlistentry>
+		  <term><guimenuitem>All</guimenuitem></term>
+		  <listitem>
+		    <simpara>Deletes all photos in the camera</simpara>
+		  </listitem>
+		</varlistentry>
+	      </variablelist>
+	    </listitem>
+	  </varlistentry> 
+
+<!--Trying to get a sensible markup system going up to here. After this is just placeholders.-->
+
+	  <varlistentry>
+	    <term>Create</term>
+	    <listitem>
+	      <simpara></simpara></listitem></varlistentry> 
+
+	  <varlistentry>
+	    <term>Remove</term>
+	    <listitem>
+	      <simpara></simpara></listitem></varlistentry>
+ <varlistentry>
+	    <term>
+Upload File</term>
+	    <listitem>
+	      <simpara></simpara></listitem></varlistentry>
+ <varlistentry>
+	    <term>
+Select</term>
+	    <listitem>
+	      <simpara></simpara></listitem></varlistentry>
+ <varlistentry>
+	    <term>
+All </term>
+	    <listitem>
+	      <simpara></simpara></listitem></varlistentry>
+ <varlistentry>
+	    <term>
+Inverse</term>
+	    <listitem>
+	      <simpara></simpara></listitem></varlistentry>
+ <varlistentry>
+	    <term>
+None</term>
+	    <listitem>
+	      <simpara></simpara></listitem></varlistentry>
+ <varlistentry>
+	    <term>
+Camera</term>
+	    <listitem>
+	      <simpara></simpara></listitem></varlistentry>
+ <varlistentry>
+	    <term>
+Select Camera...</term>
+	    <listitem>
+	      <simpara></simpara></listitem></varlistentry>
+ <varlistentry>
+	    <term>
+Capture...</term>
+	    <listitem>
+	      <simpara></simpara></listitem></varlistentry>
+ <varlistentry>
+	    <term>
+Configure</term>
+	    <listitem>
+	      <simpara></simpara></listitem></varlistentry>
+ <varlistentry>
+	    <term>
+Information</term>
+	    <listitem>
+	      <simpara></simpara></listitem></varlistentry>
+ <varlistentry>
+	    <term>
+Manual</term>
+	    <listitem>
+	      <simpara></simpara></listitem></varlistentry>
+ <varlistentry>
+	    <term>
+About the Driver...</term>
+	    <listitem>
+	      <simpara></simpara></listitem></varlistentry>
+ <varlistentry>
+	    <term>
+Help</term>
+	    <listitem>
+	      <simpara></simpara></listitem></varlistentry>
+ <varlistentry>
+	    <term>
+Debug... </term>
+	    <listitem>
+	      <simpara>
+Opens the logging window which allows the user to select the
+ type of messages to log. 
+Error causes the logging of any error messages 
+Verbose
+Debug
+Data
+Save As... opens a dialog to allow the user to save the
+ information logged in the debug window.
+Close Closes the debug window</simpara></listitem></varlistentry>
+ <varlistentry>
+	    <term>
+About...</term>
+	    <listitem>
+	      <simpara>
+Opens the about gtKam window. This gives the current version,
+ and tells you that:
+gtKam was written by:
+- Scott Fritzinger &lt;scottf@unr.edu&gt;,
+- Lutz Mueller &lt;urc8@rz.uni-carlsruhe.de&gt;,
+- and many others
+gtKam uses libgphoto2, a library to access a multitude of digital
+ cameras. More information is available at http://www.gphoto.net.
+Enjoy the wonderful world of gphoto!</simpara></listitem></varlistentry></variablelist>
+
+      <simplelist>
+	<member><command>File</command></member>
+	<member><command>Folder</command></member>
+	<member><command>Select</command></member>
+	<member>Camera</member>
+	<member>Help</member>
+      </simplelist>
     </section>
 
+      </section>
     <section id="using-gphoto2">
       <title>Using the <command>gphoto2</command> command line
 	interface (<acronym>CLI</acronym>)</title>
