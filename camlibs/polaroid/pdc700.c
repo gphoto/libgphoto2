@@ -227,10 +227,14 @@ pdc700_read (Camera *camera, unsigned char *cmd,
 	/* Will other packets follow? */
 	*status = b[1];
 
-	/* Then follows the sequence number (number of next packet if any)
-	 * only in case of picture transmission */
-	if (sequence_number)
+	/*
+	 * In case of PDC700_PIC or PDC700_THUMB, a sequence number 
+	 * (number of next packet) will follow.
+	 */
+	if ((cmd[3] == PDC700_THUMB) || (cmd[3] == PDC700_PIC))
 		*sequence_number = b[2];
+	else
+		sequence_number = NULL;
 
 	/* Check the checksum */
 	for (checksum = i = 0; i < *b_len - 1; i++)
@@ -256,15 +260,17 @@ pdc700_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 	unsigned int target = *buf_len;
 
 	CR (pdc700_send (camera, cmd, cmd_len));
-	CR (pdc700_read (camera, cmd, b, &b_len, &status,
-			 (cmd[4] == PDC700_FIRST) ? &sequence_number : NULL));
+	CR (pdc700_read (camera, cmd, b, &b_len, &status, &sequence_number));
 
 	/* Copy over the data */
 	*buf_len = b_len;
 	memcpy (buf, b, b_len);
 
-	/* Check if other packets are to follow */
-	if (cmd[4] == PDC700_FIRST) {
+	/*
+	 * Other packets will follow only in case of PDC700_THUMB or
+	 * PDC700_PIC.
+	 */
+	if ((cmd[3] == PDC700_THUMB) || (cmd[3] == PDC700_PIC)) {
 
 		/* Get those other packets */
 		while (status != PDC700_LAST) {
@@ -424,8 +430,6 @@ pdc700_info (Camera *camera, PDCInfo *info)
 	int buf_len;
 	unsigned char buf[2048];
 	unsigned char cmd[5];
-
-	//pdc700_config (camera, PDC_CONF_WHAT_IS_02, 0);
 
 	cmd[3] = PDC700_INFO;
 	CR (pdc700_transmit (camera, cmd, 5, buf, &buf_len));

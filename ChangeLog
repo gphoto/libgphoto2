@@ -1,5 +1,12 @@
 2001-11-15  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	Patch from Greg Ingram <ingram@symsys.com>, slightly reworked:
+
+	* camlibs/polaroid/pdc700.c: Make the assumption that we need to 
+	  deal with multiple packets only on PDC700_PIC and PDC700_THUMB.
+
+2001-11-15  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* MAINTAINERS: Move camlibs/ptp up to regain alphabetical order.
 
 2001-11-15  Mariusz Woloszyn <emsi@ipartners.pl>
