@@ -256,6 +256,7 @@ static struct {
 	{"Kodak:DX7440", 0x040a, 0x057d, 0},
 	{"Kodak:DX7590", 0x040a, 0x057f, 0},
 	{"Kodak:CX6445", 0x040a, 0x0584, 0},
+	{"Kodak:CX7525", 0x040a, 0x0586, 0},
 
 	/* HP PTP cameras */
 	{"HP:PhotoSmart 812 (PTP mode)", 0x03f0, 0x4202, 0},
