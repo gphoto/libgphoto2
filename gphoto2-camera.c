@@ -65,6 +65,11 @@
 #define CHECK_RESULT_OPEN_CLOSE(c,result) {int r; CHECK_OPEN (c); r = (result); if (r < 0) {CHECK_CLOSE (c); gp_camera_status ((c), ""); gp_camera_progress ((c), 0.0); return (r);}; CHECK_CLOSE (c);}
 
 struct _CameraPrivateCore {
+
+	/* Some information about the port */
+	char port_name[1024];
+	char port_path[1024];
+
 	CameraStatusFunc   status_func;
 	void              *status_data;
 
@@ -108,15 +113,6 @@ gp_camera_new (Camera **camera)
 	if (!*camera) 
 		return (GP_ERROR_NO_MEMORY);
 	memset (*camera, 0, sizeof (Camera));
-
-        /* Initialize the members */
-        (*camera)->port_info = malloc (sizeof(GPPortInfo));
-	if (!(*camera)->port_info) {
-		gp_camera_free (*camera);
-		return (GP_ERROR_NO_MEMORY);
-	}
-	memset ((*camera)->port_info, 0, sizeof (GPPortInfo));
-	(*camera)->port_info->type = GP_PORT_NONE;
 
         (*camera)->functions = malloc(sizeof(CameraFunctions));
 	if (!(*camera)->functions) {
@@ -242,7 +238,6 @@ gp_camera_set_port (Camera *camera, GPPortInfo *info)
 	 */
 	CHECK_RESULT (gp_camera_unset_port (camera));
 	CHECK_RESULT (gp_port_new (&camera->port, info->type));
-	memcpy (camera->port_info, info, sizeof (GPPortInfo));
 
 	switch (camera->port->type) {
 	case GP_PORT_SERIAL:
@@ -253,6 +248,11 @@ gp_camera_set_port (Camera *camera, GPPortInfo *info)
 	default:
 		break;
 	}
+
+	strncpy (camera->pc->port_path, info->path,
+		 sizeof (camera->pc->port_path));
+	strncpy (camera->pc->port_name, info->name,
+		 sizeof (camera->pc->port_name));
 
 	return (GP_OK);
 }
@@ -302,7 +302,7 @@ gp_camera_get_port_path (Camera *camera, const char **port_path)
 {
 	CHECK_NULL (camera && port_path);
 
-	*port_path = camera->port_info->path;
+	*port_path = camera->pc->port_path;
 
 	return (GP_OK);
 }
@@ -352,7 +352,7 @@ gp_camera_get_port_name (Camera *camera, const char **port_name)
 {
 	CHECK_NULL (camera && port_name);
 
-	*port_name = camera->port_info->name;
+	*port_name = camera->pc->port_name;
 
 	return (GP_OK);
 }
@@ -388,7 +388,6 @@ gp_camera_set_port_speed (Camera *camera, int speed)
 		return (GP_ERROR_BAD_PARAMETERS);
 	}
 
-	camera->port_info->speed = speed;
 	CHECK_RESULT (gp_port_settings_get (camera->port, &settings));
 	settings.serial.speed = speed;
 	CHECK_RESULT (gp_port_settings_set (camera->port, settings));
@@ -653,11 +652,6 @@ gp_camera_free (Camera *camera)
 	if (camera->fs) {
 		gp_filesystem_free (camera->fs);
 		camera->fs = NULL;
-	}
-
-        if (camera->port_info) {
-                free (camera->port_info);
-		camera->port_info = NULL;
 	}
 
         if (camera->functions) {
