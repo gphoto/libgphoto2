@@ -43,7 +43,9 @@
 
 #if HAVE_TERMIOS_H
 #include <termios.h>
+#ifndef CRTSCTS
 #define CRTSCTS  020000000000
+#endif
 #else
 #if HAVE_SYS_IOCTL_H
 #include <sys/ioctl.h>
@@ -312,7 +314,7 @@ gp_port_serial_open (GPPort *dev)
 			return (result);
 	}
 
-#ifdef __FreeBSD__
+#if defined(__FreeBSD__) || defined(__APPLE__)
         dev->pl->fd = open (port, O_RDWR | O_NOCTTY | O_NONBLOCK);
 #elif OS2
         fd = open (port, O_RDWR | O_BINARY);
@@ -627,7 +629,7 @@ gp_port_serial_set_baudrate (GPPort *dev, int baudrate)
         tio.c_cflag = (tio.c_cflag & ~CSIZE) | CS8;
 
         /* Set into raw, no echo mode */
-#if defined(__FreeBSD__) || defined(__NetBSD__)
+#if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__APPLE__)
         tio.c_iflag &= ~(IGNBRK | IGNCR | INLCR | ICRNL |
                          IXANY | IXON | IXOFF | INPCK | ISTRIP);
 #else

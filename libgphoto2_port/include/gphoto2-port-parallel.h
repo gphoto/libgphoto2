@@ -17,6 +17,14 @@
 #define	GP_PORT_PARALLEL_RANGE_HIGH	0
 #endif
 
+/* Darwin */
+#ifdef __APPLE__
+/* ????????????? */
+#define GP_PORT_PARALLEL_PREFIX 		NULL
+#define	GP_PORT_PARALLEL_RANGE_LOW		0
+#define	GP_PORT_PARALLEL_RANGE_HIGH	0
+#endif
+
 /* Solaris */
 #ifdef sun
 #  ifdef i386 

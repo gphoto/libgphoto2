@@ -21,6 +21,14 @@
 #define GP_PORT_SERIAL_RANGE_HIGH	32
 #endif
 
+/* Darwin */
+#if defined(__APPLE__)
+/* Does this many any sense on a Mac??? */
+#define GP_PORT_SERIAL_PREFIX	"/dev/tty.modem"
+#define GP_PORT_SERIAL_RANGE_LOW	0
+#define GP_PORT_SERIAL_RANGE_HIGH	0
+#endif
+
 /* Solaris */
 #ifdef sun
 #define GP_PORT_SERIAL_PREFIX "/dev/tty%c"

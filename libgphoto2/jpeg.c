@@ -23,10 +23,13 @@
 #include <gphoto2-library.h>
 #include "jpeg.h"
 
-// call example:nullpictureabort(picture,"Picture");
+// call example:nullpictureabort(picture,"Picture",0);
 #define nullpointerabort(pointer,name,val) \
-    if (pointer==NULL) { printf(name " does not exist\n"); \
-        return val; }
+    if (pointer==NULL) { printf(name " does not exist\n"); return val; }
+
+// call example:nullpictureabortvoid(picture,"Picture");
+#define nullpointerabortvoid(pointer,name) \
+    if (pointer==NULL) { printf(name " does not exist\n"); return; }
 
 #define CHECK_RESULT(result)       {int r = (result); if (r < 0) return (r);}
 
@@ -54,7 +57,7 @@ chunk *chunk_new_filled(int length, char *data)
 
 void chunk_destroy(chunk *mychunk)
 {
-    nullpointerabort(mychunk, "Chunk",);
+    nullpointerabortvoid(mychunk, "Chunk");
     mychunk->size=0;
     free(mychunk->data);
     free(mychunk);
@@ -65,7 +68,7 @@ void chunk_print(chunk *mychunk)
 {
     int x;
 //    printf("Size=%i\n", mychunk->size);
-    nullpointerabort(mychunk, "Chunk",);
+    nullpointerabortvoid(mychunk, "Chunk");
     for (x=0; x<mychunk->size; x++)
         printf("%hX ", mychunk->data[x]);
     printf("\n");
@@ -136,7 +139,7 @@ void gp_jpeg_destroy(jpeg *myjpeg)
 void gp_jpeg_add_marker(jpeg *myjpeg, chunk *picture, int start, int end)
 {
     int length;
-    nullpointerabort(picture, "Picture",);
+    nullpointerabortvoid(picture, "Picture");
     length=(int)(end-start+1);
 //    printf("Add marker #%i starting from %i and ending at %i for a length of %i\n", myjpeg->count, start, end, length);
     myjpeg->marker[myjpeg->count] = chunk_new(length);
@@ -149,7 +152,7 @@ void gp_jpeg_add_marker(jpeg *myjpeg, chunk *picture, int start, int end)
 void gp_jpeg_add_chunk(jpeg *myjpeg, chunk *source)
 { /* Warning! This points to the added chunk instead of deleting it! */
     printf("Entered gp_jpeg_add_chunk\n");
-    nullpointerabort(source, "Chunk to add",);
+    nullpointerabortvoid(source, "Chunk to add");
     myjpeg->marker[myjpeg->count]=source;
     myjpeg->count++;
 }
@@ -159,7 +162,7 @@ void gp_jpeg_parse(jpeg *myjpeg, chunk *picture)
     int position=0;
     int lastposition;
     char id;
-    nullpointerabort(picture,"Picture",);
+    nullpointerabortvoid(picture,"Picture");
     if (picture->data[0]!=0xff)
         {
             gp_jpeg_findactivemarker(&id, &position, picture);
@@ -248,7 +251,7 @@ chunk *gp_jpeg_makeSsSeAhAl(int huffset1, int huffset2, int huffset3)
 void gp_jpeg_print_quantization_table(jpeg_quantization_table *table)
 {
     int x;
-    nullpointerabort(table, "Quantization table",);
+    nullpointerabortvoid(table, "Quantization table");
     for (x=0; x<64; x++)
     {
         if (x && ((x%8)==0))

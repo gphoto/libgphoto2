@@ -48,19 +48,24 @@ typedef struct {
 
 /* yummy. :) */
 
+#include <sys/types.h>
 #include <dirent.h>
 #include <dlfcn.h>
 #include <sys/param.h>
 #include <sys/stat.h>
-#include <sys/types.h>
 #include <unistd.h>
 
 /* Sleep functionality */
-#define	GP_SYSTEM_SLEEP(_ms)		usleep(_ms*1000)
+#define	GP_SYSTEM_SLEEP(_ms)		usleep((_ms)*1000)
 
 /* Dynamic library functions */
 #define GP_SYSTEM_DLOPEN(_filename)		dlopen(_filename, RTLD_LAZY)
+#ifdef __APPLE__
+/* Hack to fix problem of Darwin prepending underscores to symbols */
+#define GP_SYSTEM_DLSYM(_handle, _funcname)	dlsym(_handle, "_" _funcname)
+#else
 #define GP_SYSTEM_DLSYM(_handle, _funcname)	dlsym(_handle, _funcname)
+#endif
 #define GP_SYSTEM_DLCLOSE(_handle)	        dlclose(_handle)
 #define GP_SYSTEM_DLERROR()		        dlerror()
 
