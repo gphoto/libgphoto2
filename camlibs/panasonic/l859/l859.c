@@ -354,8 +354,6 @@ int camera_id (CameraText *id) {
 int camera_abilities (CameraAbilitiesList *list) {
 
 	CameraAbilities a;
-	memset (&a, 0, sizeof(a));
-
 	GP_DEBUG ("Camera Abilities");
 
 	memset(&a, 0, sizeof(a));

@@ -37,9 +37,8 @@ int camera_id (CameraText *id)
 int camera_abilities (CameraAbilitiesList *list) 
 {
 	CameraAbilities a;
-	memset (&a, 0, sizeof(a));
 
-	memset(&a, 0, sizeof(a));
+	memset (&a, 0, sizeof(a));
 	strcpy(a.model, "Kodak DC3200");
 	a.port     = GP_PORT_SERIAL;
 	a.speed[0] = 9600;

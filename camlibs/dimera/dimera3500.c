@@ -21,6 +21,9 @@
  *
  * History:
  * $Log$
+ * Revision 1.35  2002/01/02 14:49:41  hun
+ * Removed redundant memset()s introduced by me :-(
+ *
  * Revision 1.34  2002/01/02 00:29:10  hun
  * Added missing initialization of CameraAbilities struct. This fixes corrupt
  * abilities reported to libphoto2.
@@ -192,11 +195,10 @@ int camera_abilities (CameraAbilitiesList *list) {
 
 	int x=0;
 	CameraAbilities a;
-	memset (&a, 0, sizeof(a));
 
 	while (models[x]) {
 
-		memset(&a, 0, sizeof(a));
+		memset (&a, 0, sizeof(a));
 		strcpy(a.model, models[x]);
 		a.status = GP_DRIVER_STATUS_PRODUCTION;
 		a.port     = GP_PORT_SERIAL;
