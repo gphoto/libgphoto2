@@ -124,10 +124,8 @@ int canon_usb_probe(gpio_device *gdev, int i)
 
 	if (gpio_usb_find_device(gdev, camera_to_usb[i].idVendor,
 							 camera_to_usb[i].idProduct) == GPIO_OK) {
-/* NOTE: busnum and devicenum are not in latest libusb.   -Scott
-		printf("found '%s' @ %d/%d\n", camera_to_usb[i].name,
-			   gdev->usb_device->bus->busnum, gdev->usb_device->devicenum);
-*/
+		printf("found '%s' @ %s/%s\n", camera_to_usb[i].name,
+			   gdev->usb_device->bus->dirname, gdev->usb_device->filename);
 		return 1;
 	}
 
