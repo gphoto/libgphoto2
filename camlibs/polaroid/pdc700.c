@@ -55,6 +55,8 @@
 #define PDC700_PICINFO	0x05
 #define PDC700_THUMB	0x06
 #define PDC700_PIC	0x07
+#define PDC700_DEL	0x09
+#define PDC700_CAPTURE  0x0a
 
 
 #define PDC700_FIRST	0x00
@@ -63,7 +65,7 @@
 
 typedef struct _PDCDate PDCDate;
 struct _PDCDate {
-	unsigned char year, month, day;
+	unsigned char year, month, day; /* Years since 1980 */
 	unsigned char hour, minute, second;
 };
 
@@ -74,12 +76,20 @@ enum _PDCQuality {
 	PDC_QUALITY_SUPERFINE = 2
 };
 
+typedef enum _PDCFlash PDCFlash;
+enum _PDCFlash {
+	PDC_FLASH_AUTO = 0,
+	PDC_FLASH_ON   = 1,
+	PDC_FLASH_OFF  = 2
+};
+
 typedef struct _PDCInfo PDCInfo;
 struct _PDCInfo {
 	unsigned int num_taken, num_free;
 	char version[6];
 	PDCDate date;
 	PDCQuality quality;
+	PDCFlash flash;
 };
 
 typedef struct _PDCPicInfo PDCPicInfo;
@@ -342,11 +352,18 @@ pdc700_info (Camera *camera, PDCInfo *info)
 	CHECK_RESULT (pdc700_transmit (camera, cmd, 5, buf, &buf_len));
 
 	/*
-	 * buf[0-7]: We don't know. The following has been seen:
-	 * 01 12 04 01 00 0a 01 00
-	 * 01 20 04 02 01 05 01 00
-	 * 01 20 04 02 01 05 00 00
+	 * buf[0-6]: We don't know. The following has been seen:
+	 * 01 12 04 01 00 0a 01
+	 * 01 20 04 02 01 05 01
+	 * 01 20 04 02 01 05 00
 	 */
+
+	/* Flash (make sure we know it) */
+	info->flash = buf[7];
+	if (info->flash < 0 || info->flash > 2) {
+		GP_DEBUG ("Unknown flash setting: %i", info->flash);
+		info->flash = PDC_FLASH_AUTO;
+	}
 
 	/* Protocol version */
 	strncpy (info->version, &buf[8], 6);
@@ -392,6 +409,18 @@ pdc700_info (Camera *camera, PDCInfo *info)
 }
 
 static int
+pdc700_capture (Camera *camera)
+{
+        unsigned char cmd[5], buf[1024];
+        unsigned int buf_len;
+
+        cmd[3] = PDC700_CAPTURE;
+        CHECK_RESULT (pdc700_transmit (camera, cmd, 5, buf, &buf_len));
+
+        return (GP_OK);
+};
+
+static int
 pdc700_pic (Camera *camera, unsigned int n,
 	    unsigned char **data, unsigned int *size, unsigned char thumb)
 {
@@ -417,6 +446,24 @@ pdc700_pic (Camera *camera, unsigned int n,
 		free (*data);
 		return (r);
 	}
+
+	return (GP_OK);
+}
+
+static int
+pdc700_delete (Camera *camera, unsigned int n)
+{
+	unsigned char cmd[6], buf[1024];
+	unsigned int buf_len;
+
+	cmd[3] = PDC700_DEL;
+	cmd[4] = n;
+	CHECK_RESULT (pdc700_transmit (camera, cmd, 6, buf, &buf_len));
+
+	/*
+	 * We get three bytes back but don't know the meaning of those.
+	 * Perhaps some error codes with regard to read-only images?
+	 */
 
 	return (GP_OK);
 }
@@ -450,8 +497,9 @@ camera_abilities (CameraAbilitiesList *list)
 		a.speed[1] = 19200;
 		a.speed[2] = 38400;
 		a.speed[3] = 57600;
-		a.operations        = GP_OPERATION_NONE;
-		a.file_operations   = GP_FILE_OPERATION_NONE;
+		a.operations        = GP_OPERATION_CAPTURE_IMAGE;
+		a.file_operations   = GP_FILE_OPERATION_DELETE |
+				      GP_FILE_OPERATION_PREVIEW;
 		a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
 
 		CHECK_RESULT (gp_abilities_list_append (list, a));
@@ -493,6 +541,45 @@ pdc700_expand (unsigned char *src, unsigned char *dst)
 }
 
 static int
+camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path)
+{
+	int count;
+	char buf[1024];
+
+	CHECK_RESULT (pdc700_capture (camera));
+
+	/*
+	 * We don't get any info back. However, we need to tell the
+	 * CameraFilesystem that there is one additional picture.
+	 */
+	CHECK_RESULT (count = gp_filesystem_count (camera->fs, "/"));
+	snprintf (buf, sizeof (buf), "PDC700%04i.jpg", count + 1);
+	CHECK_RESULT (gp_filesystem_append (camera->fs, "/", buf));
+
+	/* Now tell the frontend where to look for the image */
+	strncpy (path->folder, "/", sizeof (path->folder));
+	strncpy (path->name, buf, sizeof (path->name));
+
+	return (GP_OK);
+}
+
+static int
+del_file_func (CameraFilesystem *fs, const char *folder, const char *file,
+	       void *data)
+{
+	Camera *camera = data;
+	int n;
+
+	/* We need picture numbers starting with 1 */
+	CHECK_RESULT (n = gp_filesystem_number (fs, folder, file));
+	n++;
+
+	CHECK_RESULT (pdc700_delete (camera, n));
+
+	return (GP_OK);
+}
+
+static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename, 
 	       CameraFileType type, CameraFile *file, void *user_data)
 {
@@ -502,7 +589,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	const char header[] = "P6\n80 60\n255\n";
 	unsigned char *data = NULL, *ppm;
 
-#if 1
+#if 0
 	if (type == GP_FILE_TYPE_RAW)
 		return (GP_ERROR_NOT_SUPPORTED);
 #endif
@@ -542,7 +629,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		break;
 
 	case GP_FILE_TYPE_RAW:
-#if 0
+#if 1
 		CRF (gp_file_set_data_and_size (file, data, size), data);
 		CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_RAW));
 		break;
@@ -571,20 +658,22 @@ camera_summary (Camera *camera, CameraText *about)
 {
 	static const char *quality[] = {N_("normal"), N_("fine"),
 					N_("superfine")};
+	static const char *flash[] = {N_("auto"), N_("on"), N_("off")};
 	PDCInfo info;
 
 	CHECK_RESULT (pdc700_info (camera, &info));
 
 	sprintf (about->text, _(
-		"Date: %02i/%02i/%02i %02i:%02i:%02i\n"
+		"Date: %i/%02i/%02i %02i:%02i:%02i\n"
 		"Pictures taken: %i\n"
 		"Free pictures: %i\n"
 		"Software version: %s\n"
-		"Image quality: %s"),
-		info.date.year, info.date.month, info.date.day,
+		"Image quality: %s\n"
+		"Flash setting: %s"),
+		info.date.year + 1980, info.date.month, info.date.day,
 		info.date.hour, info.date.minute, info.date.second,
 		info.num_taken, info.num_free, info.version,
-		quality[info.quality]);
+		quality[info.quality], flash[info.flash]);
 
 	return (GP_OK);
 }
@@ -633,13 +722,15 @@ camera_init (Camera *camera)
 	int speeds[] = {9600, 57600, 19200, 38400};
 
         /* First, set up all the function pointers */
-	camera->functions->summary	= camera_summary;
-        camera->functions->about        = camera_about;
+	camera->functions->capture = camera_capture;
+	camera->functions->summary = camera_summary;
+        camera->functions->about   = camera_about;
 
 	/* Now, tell the filesystem where to get lists and info */
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
 	gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL, camera);
-	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
+	gp_filesystem_set_file_funcs (camera->fs, get_file_func,
+				      del_file_func, camera);
 
 	/* Check if the camera is really there */
 	CHECK_RESULT (gp_port_get_settings (camera->port, &settings));

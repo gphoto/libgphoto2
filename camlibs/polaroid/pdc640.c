@@ -652,6 +652,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		CHECK_RESULT (pdc640_getpic (camera, n, 1, 0, &data, &size));
 		CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_PPM));
 		break;
+	default:
+		return (GP_ERROR_NOT_SUPPORTED);
 	}
 
 	CHECK_RESULT (gp_file_set_data_and_size (file, data, size));
