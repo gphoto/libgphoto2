@@ -1,5 +1,9 @@
 2002-01-29  Lutz Müller <lutz@users.sourceforge.net>
 
+	* configure.in: Tell users where to get additional libraries.
+
+2002-01-29  Lutz Müller <lutz@users.sourceforge.net>
+
 	* Makefile.am
 	* configure.in
 	* libgphoto2/Makefile.am
