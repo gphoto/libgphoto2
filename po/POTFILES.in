@@ -1,4 +1,3 @@
-camlibs/agfa/agfa.c
 camlibs/barbie/barbie.c
 camlibs/canon/canon.c
 camlibs/canon/library.c
@@ -41,6 +40,7 @@ camlibs/sierra/olympus-desc.c
 camlibs/sierra/nikon-desc.c
 camlibs/sonydscf1/sonydscf1.c
 camlibs/sonydscf55/camera.c
+camlibs/soundvision/soundvision.c
 camlibs/stv0680/library.c
 camlibs/stv0680/stv0680.c
 libgphoto2/gphoto2-camera.c
