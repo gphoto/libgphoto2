@@ -67,12 +67,15 @@ int fujitsu_set_int_register (gpio_device *dev, int reg, int value) {
 	sprintf(buf, "Setting register #%i to %i", reg, value);
 	debug_print(buf);
 
-        p = fujitsu_build_packet(TYPE_COMMAND, SUBTYPE_COMMAND_FIRST,3);
+        p = fujitsu_build_packet(TYPE_COMMAND, SUBTYPE_COMMAND_FIRST,6);
 
         /* Fill in the data */
         p[3] = 0x00;
         p[4] = reg;
-        p[5] = value;
+	p[5]=(value)     & 0xff;
+	p[6]=(value>>8)  & 0xff;
+	p[7]=(value>>16) & 0xff;
+	p[8]=(value>>24) & 0xff;
 
         l = fujitsu_process_packet(p);
 

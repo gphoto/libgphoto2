@@ -119,21 +119,33 @@ int camera_init (CameraInit *init) {
 	}
 
 	if (fujitsu_ping(glob_dev)==GP_ERROR) {
-		interface_message("Can not establish communications with the camera");
+		interface_message("Can not talk to camera");
 		return (GP_ERROR);
 	}
 
-	if (fujitsu_set_int_register(glob_dev, 17, 5)==GP_ERROR) {
+	if (fujitsu_set_int_register(glob_dev, 17, 2)==GP_ERROR) {
 		interface_message("Can not set the serial port speed");
 		return (GP_ERROR);
 	}
 
+//	if (init->speed)
+//		settings.serial.speed = init->port_settings.speed;
+//	   else
+//		settings.serial.speed = 115200;
+//	gpio_set_settings(glob_dev, settings);
+	sleep(1);
+
+	if (fujitsu_set_int_register(glob_dev, 1, 2)==GP_ERROR) {
+		interface_message("Can not set camera quality");
+		return (GP_ERROR);
+	}
+
 /*
-	if (init->speed)
-		settings.serial.speed = init->port_settings.speed;
-	   else
-		settings,serial.speed = 115200;
-*/	
+	if (fujitsu_ping(glob_dev)==GP_ERROR) {
+		interface_message("Can not talk to camera after speed change");
+		return (GP_ERROR);
+	}
+*/
 
 	return (GP_OK);
 }
