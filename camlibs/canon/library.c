@@ -135,9 +135,10 @@ camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 		   " mode. It also supports a small number of Canon digital camcorders\n"
 		   " with still image capability.\n"
 		   "It includes code for communicating over a serial port or USB connection,\n"
-		   " but not (yet) over IEEE 1394 (Firewire().\n"
+		   " but not (yet) over IEEE 1394 (Firewire).\n"
 		   "It is designed to work with over 70 models as old as the PowerShot A5\n"
-		   " and Pro70 of 1998 and as new as the PowerShot A510 of 2005.\n"
+		   " and Pro70 of 1998 and as new as the PowerShot A510 and EOS 350D of\n"
+		   " 2005.\n"
 		   "It has not been verified against the EOS 1D or EOS 1Ds.\n"
 		   "For the A50, using 115200 bps may effectively be slower than using 57600\n"
 		   "If you experience a lot of serial transmission errors, try to have your\n"
@@ -543,7 +544,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 				gp_filesystem_get_info (fs, folder, filename, &info, context);
 				if (info.file.status == GP_FILE_STATUS_NOT_DOWNLOADED)
-					attr |= CANON_ATTR_DOWNLOADED;
+					attr &= ~CANON_ATTR_DOWNLOADED;
 				if ((info.file.permissions & GP_FILE_PERM_DELETE) == 0)
 					attr |= CANON_ATTR_WRITE_PROTECTED;
 				canon_int_set_file_attributes (camera, filename,
@@ -849,13 +850,14 @@ camera_about (Camera *camera, CameraText *about, GPContext *context)
 
 	strcpy (about->text,
 		_("Canon PowerShot series driver by\n"
-		  "Wolfgang G. Reissnegger,\n"
-		  "Werner Almesberger,\n"
-		  "Edouard Lafargue,\n"
-		  "Philippe Marzouk,\n"
+		  " Wolfgang G. Reissnegger,\n"
+		  " Werner Almesberger,\n"
+		  " Edouard Lafargue,\n"
+		  " Philippe Marzouk,\n"
 		  "A5 additions by Ole W. Saastad\n"
-		  "Holger Klemm\n"
-		  "Stephen H. Westin")
+		  "Additional enhancements by\n"
+		  " Holger Klemm\n"
+		  " Stephen H. Westin")
 		);
 
 	return GP_OK;
