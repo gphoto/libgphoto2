@@ -219,6 +219,7 @@ int
 gp_exit (void)
 {
 	CHECK_RESULT (gp_abilities_list_free (glob_abilities_list));
+	glob_abilities_list = NULL;
 
         return (GP_OK);
 }
