@@ -1,3 +1,10 @@
+2003-01-10  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* canon.[ch]: removed CANON_EXPERIMENTAL_CAPTURE #ifdefs
+	* usb.[ch]: removed CANON_EXPERIMENTAL_CAPTURE #ifdefs
+	* library.[ch]: removed CANON_EXPERIMENTAL_CAPTURE #ifdefs
+	* canon.[ch], serial.c: new serial detection code (with dedicated ID strings)
+	
 2002-11-20  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
 	* canon.[ch]: support for PowerShot G3 (A. Marinichev)
