@@ -140,7 +140,15 @@ static struct {
 		 	jd350e,
 			BAYER_TILE_BGGR,
 			&rotate180,
-			"stylo%04i.ppm"
+			"trust%04i.ppm"
+		}
+	},
+	/* http://www.meade.com/sportsoptics/catalog/captureview/index.html */
+	{"GrandTek:ScopeCam", 0x797, 0x801c, {
+		 	jd350e,
+			BAYER_TILE_BGGR,
+			&rotate180,
+			"scope%04i.ppm"
 		}
 	},
 	{NULL,}
