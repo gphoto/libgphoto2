@@ -194,18 +194,15 @@ pdc320_delete (CameraPort *port)
    find out how many bytes to read. 
  * Now, let's see how many bytes it reads before it times out. : )
  */
+/*	CHECK_RESULT (gp_port_read (port, buf, 1));
 	CHECK_RESULT (gp_port_read (port, buf, 1));
 	CHECK_RESULT (gp_port_read (port, buf, 1));
-	CHECK_RESULT (gp_port_read (port, buf, 1));
-
+*/
+	CHECK_RESULT (gp_port_read (port, buf, 3));	
 #if 0
 	if ((buf[0] != 0x08) ||
 	    (buf[1] != 0xf7) ||
-	    (buf[2] != 0xff) ||
-	    (buf[3] != 0x09) ||
-	    (buf[4] != 0xf6) ||
-	    (buf[5] != 0xff) ||
-	    (buf[6] != 0x00))
+	    (buf[2] != 0xff))
 		return (GP_ERROR_CORRUPTED_DATA);
 #endif
 
@@ -475,13 +472,14 @@ camera_init (Camera *camera)
 	else
 		settings.serial.speed = 115200;
 	CHECK_RESULT (gp_port_settings_set (camera->port, settings));
-	CHECK_RESULT (gp_port_timeout_set (camera->port, 15000));
+	CHECK_RESULT (gp_port_timeout_set (camera->port, 30000));
 
 	/* Check if the camera is really there */
 	CHECK_RESULT (pdc320_init (camera->port));
 
 	return (GP_OK);
 }
+
 
 
 
