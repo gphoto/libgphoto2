@@ -44,6 +44,11 @@ The installation procedure should be quite simple:
 	libexif - EXIF tag support
 	    <URL:http://www.sourceforge.net/projects/libexif>
 
+   Please check the output of the configure script for whether all
+   desired libraries have been detected correctly. E.g., you might
+   have to add the path where libusb-config resides to your PATH
+   before running configure.
+
 2) make install
 
    This installs the software and documentation into the proper
