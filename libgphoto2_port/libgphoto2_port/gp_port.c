@@ -253,7 +253,7 @@ gp_port_write (GPPort *dev, char *data, int size)
 	CHECK_SUPP (_("write"), dev->ops->write);
 	retval = dev->ops->write (dev, data, size);
 	CHECK_RESULT (retval);
-	if (retval != size)
+	if ((dev->type != GP_PORT_SERIAL) && (retval != size))
 		gp_log (GP_LOG_DEBUG, "gphoto2-port", "Could only write %i "
 			"out of %i byte(s)", retval, size);
 
@@ -277,7 +277,6 @@ gp_port_read (GPPort *dev, char *data, int size)
 		gp_log (GP_LOG_DEBUG, "gphoto2-port", "Could only read %i "
 			"out of %i byte(s)", retval, size);
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-port", "%5i byte(s) read", retval);
 	gp_log_data ("gphoto2-port", data, retval);
 
 	return (retval);
