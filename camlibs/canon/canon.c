@@ -199,7 +199,7 @@ const struct canonCamModelData models[] = {
 
 	/* 3080 is in MacOS Info.plist, but I don't know what it is
 	 * --swestin. */
-	{"Canon:Unknown 4",		CANON_CLASS_5,	0x04A9, 0x3081, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:Unknown 4",		CANON_CLASS_5,	0x04A9, 0x3080, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:Optura 10",		CANON_CLASS_5,	0x04A9, 0x3081, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
 	{"Canon:EOS 10D",		CANON_CLASS_4,	0x04A9, 0x3083, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
