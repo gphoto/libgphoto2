@@ -109,7 +109,7 @@ int camera_init (Camera *camera) {
         gp_port_open(b->dev);
 
         /* Create the filesystem */
-        b->fs = gp_filesystem_new();
+        gp_filesystem_new(&b->fs);
         dev = b->dev;
         return (GP_OK);
 }
@@ -242,6 +242,7 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 {
         int count, x;
         SonyStruct *b = (SonyStruct*)camera->camlib_data;
+	const char *name;
         F1ok();
         /*if(F1ok())
            return(GP_ERROR);*/
@@ -249,8 +250,10 @@ int camera_folder_list_files (Camera *camera, const char *folder,
         /* Populate the filesystem */
         gp_filesystem_populate(b->fs, "/", "PSN%05i.jpg", count);
 
-        for (x=0; x<gp_filesystem_count(b->fs, folder); x++)
-                gp_list_append (list, gp_filesystem_name(b->fs, folder, x));
+        for (x=0; x<gp_filesystem_count(b->fs, folder); x++) {
+		gp_filesystem_name(b->fs, folder, x, &name);
+                gp_list_append (list, name, NULL);
+	}
 
         return GP_OK;
 }

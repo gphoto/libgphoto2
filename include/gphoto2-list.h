@@ -21,20 +21,30 @@
 #ifndef __GPHOTO2_LIST_H__
 #define __GPHOTO2_LIST_H__
 
-typedef struct {
+#define MAX_ENTRIES 1024
+
+typedef struct _CameraListEntry CameraListEntry;
+struct _CameraListEntry {
 	char name [128];
 	char value [128];
-} CameraListEntry;
+};
 
-typedef struct {
+typedef struct _CameraList CameraList;
+struct _CameraList {
 	int  count;
-	CameraListEntry entry [1024];
-} CameraList;
+	CameraListEntry entry [MAX_ENTRIES];
+};
 
-CameraList*		gp_list_new	(void);
-int			gp_list_free	(CameraList *list);
-int			gp_list_count	(CameraList *list);
-int			gp_list_append	(CameraList *list, char *name);
-CameraListEntry*	gp_list_entry	(CameraList *list, int entry_number);
+int     gp_list_new  (CameraList **list);
+int     gp_list_free (CameraList *list);
+
+int	gp_list_count	(CameraList *list);
+int	gp_list_append	(CameraList *list, const char *name, const char *value);
+
+int gp_list_get_name  (CameraList *list, int index, const char **name);
+int gp_list_get_value (CameraList *list, int index, const char **value);
+
+int gp_list_set_name  (CameraList *list, int index, const char *name);
+int gp_list_set_value (CameraList *list, int index, const char *value);
 
 #endif /* __GPHOTO2_LIST_H__ */

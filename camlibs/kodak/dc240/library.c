@@ -451,7 +451,7 @@ static int dc240_get_directory_list (DC240Data *dd, CameraList *list, const char
                 buf[z] = 0;                         /* NULL terminate */
                 // size = 0;
             }
-            gp_list_append(list, buf);
+            gp_list_append(list, buf, NULL);
             y++;
         }
         x += 20;

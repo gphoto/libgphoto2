@@ -130,7 +130,7 @@ int camera_init (Camera *camera) {
 	}
 
 	/* Everything went OK. Save the data*/
-	dd->fs = gp_filesystem_new();
+	gp_filesystem_new(&dd->fs);
 	camera->camlib_data = dd;
 
 	return (GP_OK);
@@ -162,8 +162,8 @@ int camera_folder_list_folders (Camera *camera, const char *folder,
 	char buf[32];
 
 	if (strcmp(folder, "/")==0) {
-		gp_list_append(list, dc120_folder_memory);
-		gp_list_append(list, dc120_folder_card);
+		gp_list_append(list, dc120_folder_memory, NULL);
+		gp_list_append(list, dc120_folder_card, NULL);
 		return (GP_OK);
 	}
 
@@ -187,10 +187,10 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 			      CameraList *list) 
 {
 	DC120Data *dd = camera->camlib_data;
-	CameraListEntry *entry;
 	char buf[32];
 	int retval = GP_OK;
 	int x;
+	const char *name;
 
 	/* Chop trailing slash */
 	if (folder[strlen(folder)-1] == '/')
@@ -214,8 +214,8 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 	/* Use the filesystem helpers to maintain picture list */
 	if (retval == GP_OK) {
 		for (x=0; x<gp_list_count(list); x++) {
-			entry = gp_list_entry(list, x);
-			gp_filesystem_append(dd->fs, folder, entry->name);
+			gp_list_get_name (list, x, &name);
+			gp_filesystem_append(dd->fs, folder, name);
 		}
 	}
 

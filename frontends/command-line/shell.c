@@ -234,10 +234,10 @@ int
 shell_ls (char *arg)
 {
 	CameraList list;
-	CameraListEntry *entry;
 	char buf[1024], tmp_folder[1024];
 	int x, y=1, res;
 	int arg_count = shell_arg_count(arg);
+	const char *name;
 
 	if (arg_count) {
 		/* shell_arg(arg, 0, arg_dir); */
@@ -259,11 +259,11 @@ shell_ls (char *arg)
 		printf ("%i\n", gp_list_count(&list));
 
 	for (x = 1; x <= gp_list_count (&list); x++) {
-		entry = gp_list_entry (&list, x - 1);
+		gp_list_get_name (&list, x - 1, &name);
 		if (glob_quiet)
-			printf ("%s\n", entry->name);
+			printf ("%s\n", name);
 		else {
-			sprintf (buf, "%s/", entry->name);
+			sprintf (buf, "%s/", name);
 			printf ("%-20s", buf);
 			if (y++ % 4 == 0)
 				printf("\n");
@@ -278,11 +278,11 @@ shell_ls (char *arg)
 		printf("%i\n", gp_list_count(&list));
 
 	for (x = 1; x <= gp_list_count (&list); x++) {
-		entry = gp_list_entry (&list, x - 1);
+		gp_list_get_name (&list, x - 1, &name);
 		if (glob_quiet)
-			printf ("%s\n", entry->name);
+			printf ("%s\n", name);
 		   else {
-			printf ("%-20s", entry->name);
+			printf ("%-20s", name);
 			if (y++ % 4 == 0)
 				printf("\n");
 		}

@@ -211,21 +211,18 @@ OPTION_CALLBACK(auto_detect) {
     int x;
     int status;
     CameraList* list;
-    CameraListEntry* entry;
+    const char *name, *value;
 
-    list = gp_list_new();
-    if (!list)
-        return GP_ERROR_NO_MEMORY;
-
-    status = gp_autodetect(list);
+    status = gp_autodetect(&list);
     if (status != GP_OK)
         return status;
 
     printf("%-30s %-16s\n", "Model", "Port");
     printf("----------------------------------------------------------\n");
     for (x=0; x<gp_list_count(list); x++) {
-        entry = gp_list_entry(list, x);
-        printf("%-30s %-16s\n", entry->name, entry->value);
+	    gp_list_get_name  (list, x, &name);
+	    gp_list_get_value (list, x, &value);
+	    printf("%-30s %-16s\n", name, value);
     }
 
     gp_list_free(list);

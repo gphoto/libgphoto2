@@ -450,7 +450,7 @@ camera_init (Camera* camera)
 	/* Store some data we constantly need. */
 	konica_data = g_new (konica_data_t, 1);
 	camera->camlib_data = konica_data;
-	konica_data->filesystem = gp_filesystem_new ();
+	gp_filesystem_new (&konica_data->filesystem);
 	konica_data->device = device;
 	konica_data->image_id_long = image_id_long;
 

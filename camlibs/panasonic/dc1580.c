@@ -513,10 +513,10 @@ int camera_init (Camera *camera)
         }
 
         /* allocate memory for camera filesystem struct */
-        if ((dsc->fs = gp_filesystem_new()) == NULL) {
+        if ((ret = gp_filesystem_new(&dsc->fs)) != GP_OK) {
                 dsc_errorprint(EDSCSERRNO, __FILE__, "camera_init", __LINE__);
                 free(dsc);
-                return GP_ERROR;
+                return ret;
         }
 
         return dsc2_connect(dsc, camera->port->speed);
@@ -555,6 +555,7 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 
         dsc_t   *dsc = (dsc_t *)camera->camlib_data;
         int     count, i;
+	const char *name;
 
 	count = dsc2_getindex (dsc);
 	if (count < 0)
@@ -562,8 +563,10 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 
         gp_filesystem_populate (dsc->fs, "/", DSC_FILENAMEFMT, count);
 
-        for (i = 0; i < count; i++)
-                gp_list_append (list, gp_filesystem_name (dsc->fs, "/", i));
+        for (i = 0; i < count; i++) {
+		gp_filesystem_name (dsc->fs, "/", i, &name);
+                gp_list_append (list, name, NULL);
+	}
 
         return GP_OK;
 }

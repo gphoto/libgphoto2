@@ -15,8 +15,7 @@ int
 for_each_subfolder (char *folder, folder_action faction, 
 		    image_action iaction, int recurse)
 {
-	CameraList		folderlist;
-	CameraListEntry		*entry;
+	CameraList folderlist;
 
 	char	prefix[1024], subfolder[1024];
 	int	i, res;
@@ -37,8 +36,10 @@ for_each_subfolder (char *folder, folder_action faction,
 		printf ("%i\n", gp_list_count(&folderlist));
 	
 	for (i = 0; i < gp_list_count(&folderlist); i++) {
-		entry = gp_list_entry(&folderlist, i);
-		sprintf(subfolder, "%s/%s", prefix, entry->name);
+		const char *name;
+
+		gp_list_get_name (&folderlist, i, &name);
+		sprintf(subfolder, "%s/%s", prefix, name);
 
 		res = faction (subfolder, iaction, recurse);
 		if (res != GP_OK)
@@ -55,9 +56,9 @@ for_each_subfolder (char *folder, folder_action faction,
 int
 for_each_image (char *folder, image_action iaction, int reverse)
 {
-	CameraList 	filelist;
-	CameraListEntry *entry;
+	CameraList filelist;
 	int i, res;
+	const char *name;
 
 	res = gp_camera_folder_list_files (glob_camera, folder, &filelist);
 	if (res != GP_OK)
@@ -65,15 +66,15 @@ for_each_image (char *folder, image_action iaction, int reverse)
 
 	if (reverse) {
 		for (i = gp_list_count (&filelist) - 1; 0 <= i; i--) {
-			entry = gp_list_entry (&filelist, i);
-			res = iaction (folder, entry->name);
+			gp_list_get_name (&filelist, i, &name);
+			res = iaction (folder, (char*)name);
 			if (res != GP_OK)
 				return (res);
 		}
 	} else {
 		for (i = 0; i < gp_list_count (&filelist); i++) {
-			entry = gp_list_entry (&filelist, i);
-			res = iaction (folder, entry->name);
+			gp_list_get_name (&filelist, i, &name);
+			res = iaction (folder, (char*)name);
 			if (res != GP_OK)
 				return (res);
 		}
@@ -90,9 +91,8 @@ for_each_image_in_range (char *folder, char *range, image_action action,
 	char	index[MAX_IMAGE_NUMBER];
 	int 	i, max = 0;
 	int	res;
-
+	const char *name;
 	CameraList 	filelist;
-	CameraListEntry *entry;
 
 	memset(index, 0, MAX_IMAGE_NUMBER);
 	
@@ -120,16 +120,16 @@ for_each_image_in_range (char *folder, char *range, image_action action,
 	if (reverse) {
 		for (i = max; 0 <= i; i--)
 			if (index[i]) {
-				entry = gp_list_entry (&filelist, i);
-				res = action (folder, entry->name);
+				gp_list_get_name (&filelist, i, &name);
+				res = action (folder, (char*)name);
 				if (res != GP_OK)
 					return (res);
 			}
 	} else 
 		for (i = 0; i <= max; i++)
 			if (index[i]) {
-				entry = gp_list_entry (&filelist, i);
-				res = action (folder, entry->name);
+				gp_list_get_name (&filelist, i, &name);
+				res = action (folder, (char*)name);
 				if (res != GP_OK)
 					return (res);
 			}

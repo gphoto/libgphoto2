@@ -14,7 +14,7 @@ main (int argc, char **argv)
 	CHECK (gp_init (GP_DEBUG_HIGH));
 
 	printf ("*** Creating file system...\n");
-	fs = gp_filesystem_new ();
+	CHECK (gp_filesystem_new (&fs));
 
 	printf ("*** Adding a file...\n");
 	CHECK (gp_filesystem_append (fs, "/", "my.file"));

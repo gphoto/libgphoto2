@@ -172,7 +172,7 @@ int camera_folder_list_files (Camera *camera, const char *folder,
     for(i=0; i < dev->num_pictures; i++) {
        strncpy(temp_file,dev->file_list+(13*i),12);
        temp_file[12]=0;
-       gp_list_append (list, temp_file);
+       gp_list_append (list, temp_file, NULL);
     }
     return GP_OK;
 }

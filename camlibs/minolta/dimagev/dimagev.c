@@ -124,9 +124,9 @@ int camera_init (Camera *camera)
 	dimagev->settings.serial.parity = 0;
 	dimagev->settings.serial.stopbits = 1;
 
-	if ( ( dimagev->fs = gp_filesystem_new()) == NULL ) {
+	if (( ret = gp_filesystem_new(&dimagev->fs)) < GP_OK ) {
 		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to allocate filesystem");
-		return GP_ERROR;
+		return (ret);
 	}
 
 	gp_port_settings_set(dimagev->dev, dimagev->settings);
@@ -210,6 +210,7 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 			      CameraList *list) 
 {
 	dimagev_t *dimagev;
+	const char *name;
 	int i=0;
 
 	dimagev = camera->camlib_data;
@@ -226,7 +227,8 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 		
 
 	for ( i = 0 ; i < dimagev->status->number_images ; i++ ) {
-		gp_list_append(list, gp_filesystem_name(dimagev->fs, "/", i));
+		gp_filesystem_name(dimagev->fs, "/", i, &name);
+		gp_list_append(list, name, NULL);
 	}
 
 	return GP_OK;

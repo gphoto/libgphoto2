@@ -28,7 +28,7 @@
 /* You don't really want to know what's inside, do you? */
 typedef struct _CameraFilesystem CameraFilesystem;
 
-CameraFilesystem* gp_filesystem_new	 ();
+int               gp_filesystem_new	 (CameraFilesystem **fs);
 int		  gp_filesystem_free	 (CameraFilesystem *fs);
 int 		  gp_filesystem_populate (CameraFilesystem *fs, 
 					  const char *folder, char *format, 
@@ -46,8 +46,9 @@ int               gp_filesystem_delete_all (CameraFilesystem *fs,
 
 int 		  gp_filesystem_count	 (CameraFilesystem *fs, 
 					  const char *folder);
-char*		  gp_filesystem_name     (CameraFilesystem *fs, 
-					  const char *folder, int filenumber);
+int		  gp_filesystem_name     (CameraFilesystem *fs, 
+					  const char *folder, int filenumber,
+					  const char **filename);
 int		  gp_filesystem_number   (CameraFilesystem *fs, 
 					  const char *folder, 
 					  const char *filename);

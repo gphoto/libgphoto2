@@ -173,17 +173,17 @@ int camera_folder_list_folders (Camera *camera, const char *folder,
 
                 found = 0;
                 for (i1 = 0; i1 < gp_list_count(list); i1++) {
-                        CameraListEntry *entry;
+			const char *name;
 
-                        entry = gp_list_entry(list, i1);
-                        if (!strcmp(entry->name, path)) {
+			gp_list_get_name (list, i1, &name);
+                        if (!strcmp(name, path)) {
                                 found = 1;
                                 break;
                         }
                 }
 
                 if (!found)
-                        gp_list_append(list, path);
+                        gp_list_append(list, path, NULL);
         }
 
         return GP_OK;
@@ -217,7 +217,7 @@ int camera_folder_list_files (Camera *camera, const char *folder,
                 if (strcmp(dev->file_list[i].fn.path, folder))
                         continue;
 
-                gp_list_append (list, dev->file_list[i].fn.dosname);
+                gp_list_append (list, dev->file_list[i].fn.dosname, NULL);
         }
 
         return GP_OK;

@@ -106,7 +106,7 @@ int camera_init (Camera *camera)
 	gp_port_open(device->gpiod);
 
 	/* create camera filesystem */
-	device->fs = gp_filesystem_new();
+	gp_filesystem_new(&device->fs);
 
 	/* test camera */
 	return stv0680_ping(device);
@@ -138,6 +138,7 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 {
 	struct stv0680_s *device = camera->camlib_data;
 	int i, count, result;
+	const char *name;
 
 	result = stv0680_file_count(device, &count);
 	if (result != GP_OK)
@@ -145,9 +146,10 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 
 	gp_filesystem_populate(device->fs, "/", "image%02i.pnm", count);
 
-	for(i = 0; i < gp_filesystem_count(device->fs, folder); ++i)
-		gp_list_append(list,
-			       gp_filesystem_name(device->fs, folder, i));
+	for(i = 0; i < gp_filesystem_count(device->fs, folder); ++i) {
+		gp_filesystem_name(device->fs, folder, i, &name);
+		gp_list_append(list, name, NULL);
+	}
 
 	return (GP_OK);
 }

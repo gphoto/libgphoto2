@@ -463,10 +463,10 @@ int camera_init (Camera *camera) {
 	}
 
 	/* allocate memory for camera filesystem struct */
-	if ((dsc->fs = gp_filesystem_new()) == NULL) {
+	if ((ret = gp_filesystem_new(&dsc->fs)) < 0) {
 		l859_debug("Unable to allocate memory for camera filesystem");
 		free(dsc);
-		return GP_ERROR;
+		return ret;
 	}
 
 	return l859_connect(dsc, camera->port->speed);
@@ -521,7 +521,7 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 	l859_debug("Camera List Files");
 
 	gp_filesystem_free(dsc->fs);
-	dsc->fs = gp_filesystem_new();
+	gp_filesystem_new(&dsc->fs);
 
 	if (l859_sendcmd(dsc, 0xa0) != GP_OK)
 		return GP_ERROR;
@@ -571,7 +571,7 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 		l859_debug("Filename: %s.", filename);
 
 		gp_filesystem_append(dsc->fs, "/", filename);
-		gp_list_append (list, filename);
+		gp_list_append (list, filename, NULL);
 /*		l859_debug("Num %i Filename %s", num, gp_filesystem_name (dsc->fs, "/", num)); */
 
 		num = num + 1;

@@ -322,7 +322,7 @@ int camera_init (Camera *camera)
 
 	/* We are in "/" */
 	strcpy (fd->folder, "/");
-	fd->fs = gp_filesystem_new ();
+	CHECK_STOP_FREE (camera, gp_filesystem_new (&fd->fs));
 	CHECK_STOP_FREE (camera, sierra_update_fs_for_folder (camera, "/"));
 
 	CHECK_STOP_FREE (camera, camera_stop (camera));

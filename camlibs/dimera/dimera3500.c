@@ -21,6 +21,12 @@
  *
  * History:
  * $Log$
+ * Revision 1.5  2001/08/22 18:09:41  lutz
+ * 2001-08-22  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ *
+ *         * */*: Small parameter changes to make gphoto2 API more consistent.
+ *         More to follow.
+ *
  * Revision 1.4  2001/08/18 00:03:05  lutz
  * 2001-08-17  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
  *
@@ -232,7 +238,7 @@ int camera_init (Camera *camera) {
 	}
 
 	/* Create the filesystem */
-	cam->fs = gp_filesystem_new();
+	gp_filesystem_new(&cam->fs);
 
 	debuglog("Resetting camera");
 	if ( mesa_reset(cam->dev) != GP_OK )
@@ -278,12 +284,15 @@ int camera_folder_list_folders(Camera *camera, const char *folder, CameraList *l
 int camera_folder_list_files(Camera *camera, const char *folder, CameraList *list) {
 	int x;
 	DimeraStruct *cam = (DimeraStruct*)camera->camlib_data;
+	const char *name;
 
 	/* Update filesystem in case images were added */
 	populate_filesystem(cam->dev, cam->fs);
 
-	for (x=0; x<gp_filesystem_count(cam->fs, folder); x++)
-		gp_list_append(list, gp_filesystem_name(cam->fs, folder, x));
+	for (x=0; x<gp_filesystem_count(cam->fs, folder); x++) {
+		gp_filesystem_name (cam->fs, folder, x, &name);
+		gp_list_append(list, name, NULL);
+	}
 	return GP_OK;
 }
 

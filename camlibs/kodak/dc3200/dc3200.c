@@ -99,7 +99,7 @@ int camera_init (Camera *camera)
 	}
 
 	/* Everything went OK. Save the data*/
-	dd->fs = gp_filesystem_new();
+	gp_filesystem_new(&dd->fs);
 
 	return (dc3200_keep_alive(dd));
 }
@@ -241,7 +241,7 @@ int camera_folder_list_folders (Camera *camera, const char *folder,
 		filename[12] = 0;
 		
 		/* append dir to the list */
-		gp_list_append(list, filename);
+		gp_list_append(list, filename, NULL);
 		
 		ptr_data_buff += 20;
 		i += 20;
@@ -306,7 +306,7 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 		}
 
 		/* append file to the list */
-		gp_list_append(list, filename);
+		gp_list_append(list, filename, NULL);
 		
 		ptr_data_buff += 20;
 		i += 20;

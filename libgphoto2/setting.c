@@ -87,7 +87,8 @@ int gp_setting_set (char *id, char *key, char *value)
         return (GP_OK);
 }
 
-int verify_settings (char *settings_file)
+static int
+verify_settings (char *settings_file)
 {
 	FILE *f;
 	char buf[1024];

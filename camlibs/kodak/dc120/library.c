@@ -251,7 +251,7 @@ int dc120_get_albums (DC120Data *dd, int from_card, CameraList *list) {
 	for (x=0; x<8; x++) {
 		f = &file->data[x*15];
 		if (strlen(f)>0)
-			gp_list_append(list, f);
+			gp_list_append(list, f, NULL);
 	}
 
 	gp_file_free(file);
@@ -287,7 +287,7 @@ int dc120_get_filenames (DC120Data *dd, int from_card, int album_number, CameraL
 		strncpy(buf, f, 7);
 		buf[7] = 0;
 		strcat(buf, ".kdc");
-		gp_list_append(list, buf);
+		gp_list_append(list, buf, NULL);
 		x += 20;
 	}
 
@@ -437,7 +437,6 @@ int dc120_file_action (DC120Data *dd, int action, int from_card, int album_numbe
 int dc120_capture (DC120Data *dd, CameraFile *file) {
 
 	CameraList *list;
-	CameraListEntry *entry;
 	char *cmd_packet = dc120_packet_new(0x77);
 	int count;
 
@@ -451,11 +450,10 @@ int dc120_capture (DC120Data *dd, CameraFile *file) {
 		return (GP_ERROR);
 
 	/* Get the last picture in the Flash memory */
-	list = gp_list_new();
+	gp_list_new(&list);
 	dc120_get_filenames (dd, 0, 0, list);
 	count = gp_list_count(list);
-	entry = gp_list_entry(list, count-1);
-	strcpy(file->name, entry->name);
+	gp_list_set_name (list, count - 1, file->name);
 
 	/* Download it */
 	dc120_file_action (dd, DC120_ACTION_IMAGE, 0, 0, count, file);
