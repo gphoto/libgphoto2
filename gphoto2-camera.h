@@ -241,6 +241,7 @@ int gp_camera_get_port_speed    (Camera *camera);
 
 /* Initialization */
 int gp_camera_init               (Camera *camera);
+int gp_camera_exit               (Camera *camera);
 
 /* Operations on cameras */
 int gp_camera_ref   		 (Camera *camera);
