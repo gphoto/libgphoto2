@@ -3874,7 +3874,7 @@ msgstr ""
 
 #: camlibs/soundvision/soundvision.c:325
 #, c-format
-msgid "Firmware Revision: %8s"
+msgid "Firmware Revision: %8s\n"
 msgstr "Firmware-Revision: %8s\n"
 
 #: camlibs/soundvision/soundvision.c:333
