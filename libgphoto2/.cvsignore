@@ -9,3 +9,4 @@ stamp-h
 stamp-h.in
 config.h
 config.h.in
+_stdint.h
