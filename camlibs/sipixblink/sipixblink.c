@@ -57,7 +57,7 @@ camera_abilities (CameraAbilitiesList *list)
 	CameraAbilities a;
 
 	memset(&a, 0, sizeof(a));
-	strcpy(a.model, "Sipix Blink");
+	strcpy(a.model, "Sipix:Blink");
 	a.status		= GP_DRIVER_STATUS_EXPERIMENTAL;
 	a.port			= GP_PORT_USB;
 	a.usb_vendor		= 0x0851;
