@@ -1,6 +1,8 @@
 <?xml version='1.0' ?>
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
- "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+<?xml-stylesheet type="text/css" href="docbook-xml.css"?>
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
 
 <!-- just to make all references to the name consistent -->
 <!ENTITY docname "The gPhoto2 Manual">
@@ -410,7 +412,7 @@ Saving file as MVI_5418.AVI                                                     
 	  to <acronym>USB</acronym> devices on your Linux system:
         </para>
 
-        <orderedlist>
+        <orderedlist numeration="loweralpha">
 
           <listitem id="usbdevfs">
             <simpara>
@@ -636,7 +638,9 @@ Saving file as MVI_5418.AVI                                                     
           <listitem>
             <para>
               Make the script file you just created and possibly adapted
-              <filename>/etc/hotplug/usb/usbcam</filename>
+              (<filename>/etc/hotplug/usb/usbcam</filename>,
+	      <emphasis>not</emphasis>
+	      <filename>/etc/hotplug/usb/usbcam.whatever</filename>!)
               executable:
             </para>
 	    <screen>
@@ -670,11 +674,11 @@ Saving file as MVI_5418.AVI                                                     
               <xref linkend="libgphoto2"/> frontend and enjoy:
             </para>
             <screen>
-<prompt>[user@home ~]$ </prompt><command>gphoto2</command> <parameter>--list-ports</parameter>
-<prompt>[user@home ~]$ </prompt><command>gphoto2</command> <parameter>--auto-detect</parameter>
-<prompt>[user@home ~]$ </prompt><command>gphoto2</command> <parameter>--summary</parameter>
-<prompt>[user@home ~]$ </prompt><command>gphoto2</command> <parameter>--list-files</parameter>
-<prompt>[user@home ~]$ </prompt><command>gphoto2</command> <parameter>--get-all-images</parameter>
+<prompt>[user@home ~]$ </prompt><command>gphoto2 <parameter>--list-ports</parameter></command>
+<prompt>[user@home ~]$ </prompt><command>gphoto2 <parameter>--auto-detect</parameter></command>
+<prompt>[user@home ~]$ </prompt><command>gphoto2 <parameter>--summary</parameter></command>
+<prompt>[user@home ~]$ </prompt><command>gphoto2 <parameter>--list-files</parameter></command>
+<prompt>[user@home ~]$ </prompt><command>gphoto2 <parameter>--get-all-images</parameter></command>
 	    </screen>
           </listitem>
 
@@ -744,7 +748,7 @@ Saving file as MVI_5418.AVI                                                     
         </para>
 
         <screen>
-          <prompt>[me@home ~]$ </prompt><command>gphoto2</command> <parameter>--camera</parameter> <parameter>"<replaceable>Canon PowerShot G2</replaceable>"</parameter> <parameter>--list-files</parameter>
+          <prompt>[user@home ~]$ </prompt><command>gphoto2 <parameter>--camera</parameter> <parameter>"<replaceable>Canon PowerShot G2</replaceable>"</parameter> <parameter>--list-files</parameter></command>
         </screen>
 
       </section>
@@ -1737,6 +1741,12 @@ Saving file as MVI_5418.AVI                                                     
 	    produce.
 	  </simpara>
         </listitem>
+      </varlistentry>
+      <varlistentry>
+	<term><ulink url="http://digikam.sourceforge.net/">http://digikam.sourceforge.net/</ulink></term>
+	<listitem>
+	  <simpara>Digikam is a standalon KDE frontend.</simpara>
+	</listitem>
       </varlistentry>
       <varlistentry>
 	<term><ulink url="http://www.teaser.fr/~hfiguiere/linux/digicam.html">http://www.teaser.fr/~hfiguiere/linux/digicam.html</ulink></term>
