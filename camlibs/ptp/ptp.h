@@ -22,6 +22,7 @@
 #define __PTP_H__
 
 #include <stdarg.h>
+#include <time.h>
 #include <gphoto2-endian.h>
 
 // PTP datalayer byteorder
@@ -36,7 +37,6 @@
 #define PTP_REQ_HDR_LEN                 (2*sizeof(uint32_t)+2*sizeof(uint16_t))
 #define PTP_REQ_DATALEN			16384
 
-typedef struct _PTPReq PTPReq;
 struct _PTPReq {
 	uint32_t len;
 	uint16_t type;
@@ -44,6 +44,7 @@ struct _PTPReq {
 	uint32_t trans_id;
 	char data[PTP_REQ_DATALEN];
 };
+typedef struct _PTPReq PTPReq;
 
 // Container types
 
@@ -135,7 +136,6 @@ struct _PTPReq {
 
 // PTP device info structure (returned by GetDevInfo)
 
-typedef struct _PTPDeviceInfo PTPDedviceInfo;
 struct _PTPDeviceInfo {
 	uint16_t StaqndardVersion;
 	uint32_t VendorExtensionID;
@@ -152,20 +152,20 @@ struct _PTPDeviceInfo {
 	char	*DeviceVersionl;
 	char	*SerialNumber;
 };
+typedef struct _PTPDeviceInfo PTPDeviceInfo;
 
 
 // PTP objecthandles structure (returned by GetObjectHandles)
 
-typedef struct _PTPObjectHandles PTPObjectHandles;
 struct _PTPObjectHandles {
 	uint32_t n;
 	uint32_t handler[(PTP_REQ_DATALEN-sizeof(uint32_t))/sizeof(uint32_t)];
 };
+typedef struct _PTPObjectHandles PTPObjectHandles;
 
 
 // PTP objectinfo structure (returned by GetObjectInfo)
 
-typedef struct _PTPObjectInfo PTPObjectInfo;
 struct _PTPObjectInfo {
 	uint32_t StorageID;
 	uint16_t ObjectFormat;
@@ -187,6 +187,7 @@ struct _PTPObjectInfo {
 	time_t	ModificationDate;
 	char	*Keywords;
 };
+typedef struct _PTPObjectInfo PTPObjectInfo;
 
 #define MAXFILENAMELEN			255
 
@@ -252,7 +253,6 @@ typedef short (* PTPIOWriteFunc) (unsigned char *bytes, unsigned int size,
 typedef void (* PTPErrorFunc) (void *data, const char *format, va_list args);
 typedef void (* PTPDebugFunc) (void *data, const char *format, va_list args);
 
-typedef struct _PTPParams PTPParams;
 struct _PTPParams {
 	/* data layer byteorder */
 	uint8_t	byteorder;
@@ -274,6 +274,7 @@ struct _PTPParams {
 
 	PTPObjectInfo * objectinfo;
 };
+typedef struct _PTPParams PTPParams;
 
 
 // ptp functions

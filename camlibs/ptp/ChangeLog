@@ -1,3 +1,11 @@
+2002-01-09 Dan Fandrich <dan@coneharvesters.com>
+
+	* library.c:
+	* ptp.c:
+	* ptp.h: Moved include of time.h to ptp.h to get time_t definition
+	  Moved typedef lines after their dependent definitions.
+	  Fixed spelling of PTPDeviceInfo.
+
 2002-01-09 Mariusz Woloszyn
 	* Started ptp fs implementation
 

@@ -25,7 +25,6 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
-#include <time.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -233,7 +232,7 @@ ptp_transaction (PTPParams* params, PTPReq* req, uint16_t code,
 #if 0
 // Do GetDevInfo (we may use it for some camera_about)
 uint16_t
-ptp_getdevinfo (PTPParams* params, PTPDedviceInfo* devinfo)
+ptp_getdevinfo (PTPParams* params, PTPDeviceInfo* devinfo)
 {
 }
 #endif
