@@ -1,0 +1,8 @@
+Son Nov 10 21:19:16 2002  Till Adam  <till@adam-lilienthal.de>
+ * import into gphoto cvs
+
+Sam Nov 02 20:09:06 2002  Till Adam  <till@adam-lilienthal.de>
+ * implement -n, -L and -P
+
+Fri Oct 25 17:32:26 2002  Till Adam  <till@adam-lilienthal.de>
+ * start of camlib 
