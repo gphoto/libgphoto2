@@ -317,14 +317,48 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 				return GP_ERROR;
 
 			break;
-		default:
-			GP_DEBUG ("Locking camera keys and turning off LCD using 'normal' locking code...");
-
+		case CANON_PS_S45:
+			/* Special case: doesn't implement "get
+                           picture abilities", but isn't an EOS
+                           camera, so we have to use the "normal" key
+                           lock command. Since the S45 is a relatively
+                           new model (in Jan. 2003), I suspect that we
+                           will find more cameras in the future that
+                           work this way. */
+			GP_DEBUG ("Locking camera keys and turning off LCD using special-case S45 locking code...");
 			c_res = canon_usb_dialogue (camera,
 						    CANON_USB_FUNCTION_GENERIC_LOCK_KEYS,
 						    &bytes_read, NULL, 0);
 			if (bytes_read == 0x4) {
-				GP_DEBUG ("canon_usb_lock_keys: Got the expected number of bytes back, unfortuntely we don't know what they mean.");
+				GP_DEBUG ("canon_usb_lock_keys: Got the expected number of bytes back, unfortunately we don't know what they mean.");
+			} else {
+				gp_context_error (context,
+						  "canon_usb_lock_keys: "
+						  "Unexpected amount of data returned (%i bytes, expected %i)",
+						  bytes_read, 0x4);
+				return GP_ERROR;
+			}
+			break;
+		default:
+			GP_DEBUG ("Locking camera keys and turning off LCD using 'normal' locking code...");
+
+			c_res = canon_usb_dialogue (camera,
+						    CANON_USB_FUNCTION_GET_PIC_ABILITIES,
+						    &bytes_read, NULL, 0);
+			if ( bytes_read == 0x334 ) {
+				GP_DEBUG ( "canon_usb_lock_keys: Got the expected number of bytes back from \"get picture abilities.\"" );
+			} else {
+				gp_context_error ( context,
+						   "canon_usb_lock_keys: "
+						   "Unexpected return of %i bytes (expected %i) from \"get picture abilities.\"",
+						   bytes_read, 0x334 );
+				return GP_ERROR;
+			}
+			c_res = canon_usb_dialogue (camera,
+						    CANON_USB_FUNCTION_GENERIC_LOCK_KEYS,
+						    &bytes_read, NULL, 0);
+			if (bytes_read == 0x4) {
+				GP_DEBUG ("canon_usb_lock_keys: Got the expected number of bytes back, unfortunately we don't know what they mean.");
 			} else {
 				gp_context_error (context,
 						  "canon_usb_lock_keys: "
@@ -434,7 +468,7 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length )
 
 	/* clearing the receive buffer could be done right before the gp_port_read()
 	 * but by clearing it here we eliminate the possibility that a caller thinks
-	 * data in this buffer is a result of this particular canon_usb_dialogue() call
+	 * data in this buffer is a result of this particular canon_usb_capture_dialogue() call
 	 * if we return error but this is not checked for... good or bad I don't know.
 	 */
 	memset (buffer, 0x00, sizeof (buffer));
@@ -534,14 +568,14 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length )
 
 	status = gp_port_read (camera->port, buffer, read_bytes1);
 	if (status != read_bytes1) {
-		GP_DEBUG ("canon_usb_dialogue: read 1 failed! (returned %i, expected %i)",
+		GP_DEBUG ("canon_usb_capture_dialogue: read 1 failed! (returned %i, expected %i)",
 			  status, read_bytes1);
 		return NULL;
 	}
 
 	status = gp_port_read (camera->port, buffer + 0x40, read_bytes2);
 	if (status != read_bytes2) {
-		GP_DEBUG ("canon_usb_dialogue: read 2 failed! "
+		GP_DEBUG ("canon_usb_capture_dialogue: read 2 failed! "
 			  "(returned %i, expected %i)", status, read_bytes2);
 		return NULL;
 	}
@@ -558,7 +592,7 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length )
 		if ( status == 0x10 )	     /* Did we get the full packet? */
 			break;
 	}
-	GP_DEBUG ( "canon_usb_capture_dialogue: first interrupt packet took %i tries\n", n_tries );
+	GP_DEBUG ( "canon_usb_capture_dialogue: first interrupt packet took %d tries\n", n_tries );
 
 	// Between here, we might need to field one or two
 	// messages if we asked for the image or the thumbnail
@@ -571,7 +605,7 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length )
 		if ( status == 0x10 )	     /* Did we get the full packet? */
 			break;
 	}
-	GP_DEBUG ( "canon_usb_capture_dialogue: second interrupt packet took %i tries\n", n_tries );
+	GP_DEBUG ( "canon_usb_capture_dialogue: second interrupt packet took %d tries\n", n_tries );
 
 	*return_length = 0x1c;
 	return buffer + 0x50;

@@ -404,8 +404,8 @@ canon_int_get_battery (Camera *camera, int *pwr_status, int *pwr_source, GPConte
 	if (pwr_source)
 		*pwr_source = msg[7];
 
-	GP_DEBUG ("canon_int_get_battery: Status: %02x / Source: %02x\n", msg[4],
-		  msg[7]);
+	GP_DEBUG ("canon_int_get_battery: Status: %02x (%s) / Source: %02x (%s)\n",
+		  msg[4], (msg[4]&0x4?"OK":"BAD"), msg[7], (msg[7]&0x20?"BATTERY":"AC") );
 
 	return GP_OK;
 }
