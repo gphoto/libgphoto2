@@ -1,3 +1,8 @@
+#ifndef __COMMAND_H__
+#define __COMMAND_H__
+
+#include "common.h"
+
 void	F1setfd P__((int));
 int	F1getfd  P__((void));
 int	F1reset P__((void));
@@ -23,3 +28,4 @@ int F1ffs P__((void));
 
 long     F1fwrite P__((u_char *, int, u_char ));
 
+#endif /* __COMMAND_H__ */

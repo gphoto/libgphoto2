@@ -1,4 +1,9 @@
+#include <config.h>
+#include "sonydscf1.h"
+
+#include <stdio.h>
 #include <string.h>
+
 #include <gphoto2.h>
 
 #ifdef ENABLE_NLS
@@ -16,26 +21,17 @@
 #  define N_(String) (String)
 #endif
 
-#include "sonydscf1.h"
+#include "command.h"
+#include "chotplay.h"
 
 gp_port *dev;
 
 int glob_debug = GP_DEBUG_HIGH;
-char glob_camera_model[64];
-static int all_pic_num = -1;
 
 int camera_id (CameraText *id) {
 
         strcpy(id->text, "sonydscf1-bvl");
 
-        return (GP_OK);
-}
-
-int camera_debug_set (int onoff) {
-
-        if(onoff)
-          printf("Setting debugging to on\n");
-        glob_debug=onoff;
         return (GP_OK);
 }
 
@@ -62,41 +58,20 @@ int camera_abilities (CameraAbilitiesList *list) {
         return (GP_OK);
 }
 
-int camera_exit (Camera *camera) {
+static int camera_exit (Camera *camera) {
         if(F1ok())
            return(GP_ERROR);
         return (F1fclose());
 }
 
-int camera_folder_list_folders (Camera *camera, const char *folder,
-                                CameraList *list)
+static int get_file_func (CameraFilesystem *fs, const char *folder,
+			  const char *filename, CameraFileType type,
+			  CameraFile *file, void *user_data)
 {
-       /* printf("sony dscf1: folderlist\n");*/
-        return (GP_OK);
-}
-
-int camera_folder_set(Camera *camera, const char *folder_name)
-{
-/*                printf("sony dscf1: folder set\n");*/
-        printf("folder: %s\n",folder_name);
-        return (GP_OK);
-}
-
-int camera_file_count (Camera *camera)
-{
-        if(!F1ok())
-           return (GP_ERROR);
-
-        return (F1howmany());
-}
-
-int camera_file_get (Camera *camera, const char *folder, const char *filename,
-                     CameraFileType type, CameraFile *file)
-{
+	Camera *camera = user_data;
         int num;
 	long int size;
 	char *data = NULL;
-        SonyStruct *b = (SonyStruct*)camera->camlib_data;
         printf("folder: %s, file: %s\n", folder, filename);
         if(!F1ok())
            return (GP_ERROR);
@@ -105,16 +80,14 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 	gp_file_set_mime_type (file, "image/jpeg");
 
         /* Retrieve the number of the photo on the camera */
-        num = gp_filesystem_number(b->fs, "/", filename);
+	num = gp_filesystem_number(camera->fs, "/", filename);
 
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
-		size = get_picture (num, &data, JPEG, 0, 
-				    camera_file_count (camera));
+		size = get_picture (num, &data, JPEG, 0, F1howmany());
 		break;
 	case GP_FILE_TYPE_PREVIEW:
-		size = get_picture (num, &data, JPEG_T, TRUE,
-				    camera_file_count (camera));
+		size = get_picture (num, &data, JPEG_T, TRUE, F1howmany());
 		break;
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
@@ -128,22 +101,22 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
         return GP_OK;
 }
 
-int camera_file_delete (Camera *camera, const char *folder ,
-                        const char *filename)
+static int camera_file_delete (Camera *camera, const char *folder,
+			       const char *filename)
 {
         int max, num;
-        SonyStruct *b = (SonyStruct*)camera->camlib_data;
-        num = gp_filesystem_number(b->fs, "/", filename);
-        max = gp_filesystem_count(b->fs,folder)  ;
+        num = gp_filesystem_number(camera->fs, "/", filename);
+        max = gp_filesystem_count(camera->fs,folder)  ;
         printf("sony dscf1: file delete: %d\n",num);
         if(!F1ok())
            return (GP_ERROR);
         delete_picture(num,max);
+	gp_filesystem_delete (camera->fs, folder, filename);
         return(GP_OK);
         /*return (F1deletepicture(file_number));*/
 }
 
-int camera_summary (Camera *camera, CameraText *summary)
+static int camera_summary (Camera *camera, CameraText *summary)
 {
         /*printf("->camera summary");*/
         int i;
@@ -153,7 +126,7 @@ int camera_summary (Camera *camera, CameraText *summary)
         return (F1newstatus(1, summary->text));
 }
 
-int camera_manual (Camera *camera, CameraText *manual)
+static int camera_manual (Camera *camera, CameraText *manual)
 {
                 /*printf("sony dscf1: manual\n");*/
         strcpy(manual->text, _("Manual Not Available"));
@@ -161,7 +134,7 @@ int camera_manual (Camera *camera, CameraText *manual)
         return (GP_OK);
 }
 
-int camera_about (Camera *camera, CameraText *about)
+static int camera_about (Camera *camera, CameraText *about)
 {
         strcpy(about->text,
 _("Sony DSC-F1 Digital Camera Support\nM. Adam Kendall <joker@penguinpub.com>\nBased on the chotplay CLI interface from\nKen-ichi Hayashi\nGphoto2 port by Bart van Leeuwen <bart@netage.nl>"));
@@ -169,23 +142,18 @@ _("Sony DSC-F1 Digital Camera Support\nM. Adam Kendall <joker@penguinpub.com>\nB
         return (GP_OK);
 }
 
-int camera_folder_list_files (Camera *camera, const char *folder,
-                              CameraList *list)
+static int file_list_func (CameraFilesystem *fs, const char *folder,
+			   CameraList *list, void *data)
 {
-        int count, x;
-        SonyStruct *b = (SonyStruct*)camera->camlib_data;
-	const char *name;
+//	Camera *camera = data;
+        int count;
         F1ok();
         /*if(F1ok())
            return(GP_ERROR);*/
         count = F1howmany();
-        /* Populate the filesystem */
-        gp_filesystem_populate(b->fs, "/", "PSN%05i.jpg", count);
 
-        for (x=0; x<gp_filesystem_count(b->fs, folder); x++) {
-		gp_filesystem_name(b->fs, folder, x, &name);
-                gp_list_append (list, name, NULL);
-	}
+        /* Populate the list */
+        gp_list_populate(list, "PSN%05i.jpg", count);
 
         return GP_OK;
 }
@@ -193,7 +161,6 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 int camera_init (Camera *camera) {
         gp_port_settings settings;
         SonyStruct *b;
-        int ret;
 
         if(glob_debug)
         {
@@ -202,39 +169,31 @@ int camera_init (Camera *camera) {
         }
 
         camera->functions->exit         = camera_exit;
-        camera->functions->folder_list_folders  = camera_folder_list_folders;
-        camera->functions->folder_list_files    = camera_folder_list_files;
-        //camera->functions->folder_set   = camera_folder_set;
-        //camera->functions->file_count   = camera_file_count;
-        camera->functions->file_get     = camera_file_get;
         camera->functions->file_delete  = camera_file_delete;
-//        camera->functions->capture      = camera_capture;
+//	camera->functions->capture      = camera_capture;
         camera->functions->summary      = camera_summary;
         camera->functions->manual       = camera_manual;
         camera->functions->about        = camera_about;
 
         b = (SonyStruct*)malloc(sizeof(SonyStruct));
         camera->camlib_data = b;
+	b->dev = camera->port;
 
-        if ((ret = gp_port_new(&(b->dev), GP_PORT_SERIAL)) < 0) {
-            return (ret);
-        }
-
+	//FIXME: This won't work with several frontends. NO GLOBALS PLEASE!
+	dev = camera->port;
 
         gp_port_timeout_set(b->dev, 5000);
         strcpy(settings.serial.port, camera->port_info->path);
-
         settings.serial.speed   = camera->port_info->speed;
         settings.serial.bits    = 8;
         settings.serial.parity  = 0;
         settings.serial.stopbits= 1;
-
         gp_port_settings_set(b->dev, settings);
-        gp_port_open(b->dev);
 
-        /* Create the filesystem */
-        gp_filesystem_new(&b->fs);
-        dev = b->dev;
+	/* Set up the filesystem */
+	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
+	gp_filesystem_set_file_func (camera->fs, get_file_func, camera);
+
         return (GP_OK);
 }
 
