@@ -2,6 +2,8 @@
 
 	* INSTALL: added CDPATH warning, "make rpm" works again
 	* configure.in: added CDPATH warning
+	* configure.in: 2.0.1dev5, added comment to AC_DEFINE
+	* configure.in: hopefully fixed readline detection when -lncurses needed
 	
 2002-05-07  Lutz Müller <lutz@users.sourceforge.net>
 
