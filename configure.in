@@ -192,9 +192,10 @@ dnl ********
 GP_BUILD_DOCS()dnl
 
 dnl ************************************************************
-dnl initialize packaging RPMs
+dnl initialize packaging
 dnl ************************************************************
-GPKG_CHECK_RPM()dnl
+GPKG_CHECK_RPM()dnl Check wether to package for a system using RPM
+GPKG_CHECK_LINUX()dnl Check wether to package for a linux system
 
 dnl ---------------------------------------------------------------------------
 dnl pkg-config: pkg-config is a tool to simplify checks for libraries and
