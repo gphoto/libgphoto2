@@ -1,0 +1,6 @@
+2002-09-21  Marcus Meissner <marcus@jet.franken.de>
+	
+	* Imported SiPix StyleCam Blink driver from 
+	  Vincent Sanders <vince@kyllikki.org>
+
+	* Cleaned it up and made it work, still dumps compressed images.
