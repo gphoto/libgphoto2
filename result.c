@@ -72,3 +72,25 @@ gp_result_as_string (int result)
 	
 	return _("Unknown error");
 }
+
+#define RES_DES(r,str) {if (result == (r)) return (N_(str));}
+
+char *
+gp_result_as_description (int result)
+{
+	RES_DES (GP_ERROR_IO,
+		 "Please use the debug option and send the "
+		 "output to gphoto-devel@gphoto.org");
+	RES_DES (GP_ERROR_MODEL_NOT_FOUND,
+		 "The model you specified doesn't seem "
+		 "to be supported by this version of libgphoto2. Please "
+		 "verify that the model you indicated is supported by "
+		 "libgphoto2.");
+	RES_DES (GP_ERROR_PATH_NOT_ABSOLUTE,
+		 "All paths need to start with '/'. "
+		 "Please make sure you followed this rule.");
+
+	return (gp_port_result_as_description (result));
+}
+
+#undef RES_DES
