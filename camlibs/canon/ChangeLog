@@ -1,3 +1,31 @@
+2001-11-29  Fredrik <fredrik@krixor.xy.org>
+
+	* usb.c, usb.h:
+	  Implemented canon_usb_keylock() which locks the
+	  cameras keys and turns off the LCD.
+
+	* usb.c:
+	  Changed a read of 0x44 bytes to two, one of 0x40
+	  and one of 0x4 bytes. This seems to fix the problems
+	  we have had with initialization only working every
+	  second time for some cameras.
+
+	  Changed canon_usb_dialogue() to return the number of
+	  bytes the caller is interested in rather than the
+	  total number of bytes read from the camera for
+	  "non-long" reads.
+
+	* canon.c:
+	  Move some more code from canon_int_ready() to
+	  canon_int_serial_ready().
+
+	  Don't show init errors with gp_camera_status(), use
+	  gp_camera_set_error() for that.
+
+	  Updated canon_int_usb_ready() to call new
+	  canon_usb_keylock() and also do things in a slightly
+	  different order.
+
 2001-11-27  Hans Ulrich Niedermann <hun@n-dimensional.de>
 
 	* README: added note about CRW (raw) support
