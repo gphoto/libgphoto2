@@ -36,6 +36,12 @@ static void           *debug_func_data = NULL;
 static unsigned int debug_history_size = 0;
 static char        *debug_history   = NULL;
 
+#ifndef HAVE_VSNPRINTF
+#warning You do not seem to have a vsnprintf() function. Using vsprintf instead.
+#warning Note that this leads to SECURITY RISKS!
+#define vsnprintf(buf,size,format,arg) vsprintf(buf,format,arg)
+#endif
+
 void
 gp_port_debug_set_level (int level)
 {
@@ -69,6 +75,8 @@ gp_port_debug_set_func (GPPortDebugFunc func, void *data)
  * If you want to make it faster, use a static buffer instead of
  * dynamically malloc'ing the result - and don't forget to check
  * the size parameter if the hexdump fit into that static buffer.
+ *
+ * Note that the hexdump stuff works only with ASCII based character sets.
  */
 
 /*
@@ -168,7 +176,8 @@ gp_port_debug_print_data (int level, const char *bytes, int size)
 		HEXDUMP_COMPLETE_LINE;
 	}
 	curline[0] = '\0';
-	gp_port_debug_printf (level, "%s", result);
+	gp_port_debug_printf (level, "Hexdump of %i = 0x%x bytes follows:\n%s",
+			      size, size, result);
 	free (result);
 }
 
@@ -179,11 +188,7 @@ gp_port_debug_printf (int level, char *format, ...)
 	va_list arg;
 
 	va_start (arg, format);
-#if HAVE_VSNPRINTF
 	vsnprintf (buffer, sizeof (buffer), format, arg);
-#else
-	vsprintf (buffer, format, arg);
-#endif
 	va_end (arg);
 
 	if (debug_level >= level) {
@@ -246,7 +251,11 @@ gp_port_debug_history_set_size (unsigned int size)
 {
 	char *new_debug_history;
 
-	new_debug_history = realloc (debug_history, sizeof (char) * size);
+	if (!debug_history)
+		new_debug_history = malloc (sizeof (char) * size);
+	else
+		new_debug_history = realloc (debug_history,
+					     sizeof (char) * size);
 
 	if (!new_debug_history)
 		return (GP_ERROR_IO_MEMORY);

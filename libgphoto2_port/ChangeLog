@@ -1,5 +1,12 @@
 2001-10-06  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	Suggestions from Hans Ulrich Niedermann <hun@n-dimensional.de>:
+
+	* libgphoto2_port/debug.c: #warn the user #ifndef HAVE_VSNPRINTF and
+	use a #define at the beginning instead of #ifdefs in the code.
+
+2001-10-06  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* include/gphoto2-port-debug.h
 	* libgphoto2_port/debug.c (gp_port_debug_history_get_size): New.
 	(gp_port_debug_printf): Append the msg to the history after calling
