@@ -356,7 +356,7 @@ static int camera_capture (Camera *camera, CameraCaptureType type,
        /* Might be last on Agfa.  Who knows.  Craziness.        */
     if (camera->pl->num_pictures<1) return GP_ERROR;
       
-    sprintf(path->name,camera->pl->file_list);
+    strcpy (path->name,camera->pl->file_list);
     strcpy (path->folder, "/");
 	  
 	  

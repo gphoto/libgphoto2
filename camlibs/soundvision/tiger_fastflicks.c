@@ -93,7 +93,7 @@ int tiger_upload_file(CameraPrivateLibrary *dev,
     memcpy(our_data+4,data,size);
    
    
-    GP_DEBUG("File: %s Size=%i\n",filename,size);
+    GP_DEBUG("File: %s Size=%ld\n",filename,size);
 /*  for(result=0;result<our_size;result++) {
        printf("%x ",our_data[result]);
     }
