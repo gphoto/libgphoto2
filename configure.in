@@ -282,12 +282,14 @@ AC_ARG_WITH(exif-prefix, [  --with-exif-prefix=PREFIX Location of libexif],[
 	exif_prefix="$withval"]) 
 if $try_exif; then
 	if $have_pkgconfig; then
-		AC_MSG_CHECKING([for libexif])
+		AC_MSG_CHECKING([for libexif using pkg-config])
 		if ${PKG_CONFIG} --exists libexif > /dev/null 2>&1; then
 			EXIF_CFLAGS=`$PKG_CONFIG --cflags libexif`
 			EXIF_LIBS=`$PKG_CONFIG --libs libexif`
 			have_exif=true
-			exif_msg=yes
+			libexif_version=`${PKG_CONFIG} --modversion libexif`
+			libexif_prefix=`${PKG_CONFIG} --variable=prefix libexif`
+			exif_msg="yes (version ${libexif_version} from ${libexif_prefix})"
 			AC_DEFINE(HAVE_EXIF,1,[whether we use libexif])
 		fi
 		AC_MSG_RESULT($exif_msg)
@@ -298,14 +300,14 @@ if $try_exif; then
 			EXIF_CFLAGS="-I$exif_prefix/include -I$exif_prefix/include/libexif"
 			EXIF_LIBS="-L$exif_prefix/lib -lexif"
 			have_exif=true
-			exif_msg=yes
+			exif_msg="yes (unknown version from standard location)" 
 			AC_DEFINE(HAVE_EXIF,1,[whether we use libexif])])
 	fi
         if $have_exif; then
                 CPPFLAGS_save="$CPPFLAGS"
                 CPPFLAGS=$EXIF_CFLAGS
                 AC_CHECK_HEADER([exif-ifd.h], [
-                        exif_msg="yes (>= 0.5.4)"
+                        exif_msg="${exif_msg}, (>= 0.5.4)"
                         AC_DEFINE(HAVE_EXIF_0_5_4,1,[whether we use a version of libexif greater than 0.5.3])])
                 CPPFLAGS="$CPPFLAGS_save"
         fi
