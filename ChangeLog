@@ -1,5 +1,9 @@
 2001-11-01 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2/gphoto2-filesys.c: Fix bug (folder deletion)
+
+2001-11-01 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	Patch from Chris <adapt@ihug.co.nz>:
 
 	* frontends/command-line/main.c: Don't gp_file_free twice

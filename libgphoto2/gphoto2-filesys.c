@@ -859,7 +859,7 @@ gp_filesystem_remove_dir (CameraFilesystem *fs, const char *folder,
 		return (GP_ERROR_FILE_EXISTS);
 
 	/* Search the folder */
-	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
+	CHECK_RESULT (x = gp_filesystem_folder_number (fs, path));
 
 	/* Remove the directory */
 	CHECK_RESULT (fs->remove_dir_func (fs, folder, name, fs->folder_data));
