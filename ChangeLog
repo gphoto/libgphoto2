@@ -1,3 +1,7 @@
+2001-10-03  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* camlibs/kodak/CAMERAS: added latest Kodak DX models.
+
 2001-10-03  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* frontends/command-line/main.c: Print out additional information
