@@ -1220,7 +1220,7 @@ int camera_config_set (Camera *camera, CameraWidget *window)
 		gp_widget_value_get (widget_self_timer, &c);
 		if (strcmp (c, "Self Timer (only next picture)") == 0) focus_self_timer++;
 		else if (strcmp (c, "Normal") == 0);
-		else g_assert_not_reached ();
+		else g_warning (_("Value '%s' invalid. Valid values are 'Self Timer (only next picture)' and 'Normal'"), c);
 		if ((result = k_set_preference (konica_data->device, K_PREFERENCE_FOCUS_SELF_TIMER, focus_self_timer)) != GP_OK) return (result);
 	}
 
