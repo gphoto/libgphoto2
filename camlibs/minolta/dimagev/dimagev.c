@@ -254,8 +254,10 @@ int camera_file_get_preview (Camera *camera, CameraFile *file,
 		return GP_ERROR;
 	}
 
-	snprintf(file->type, 63, "image/tiff");
-	snprintf(file->name, 63, "tn-%s", filename);
+	/* The Dimage V always uses EXIF/JPEG for images, RGB for previews. */
+	snprintf(file->type, 63, "image/ppm");
+	/* Always name the image 0, for predictablity reasons. */
+	snprintf(file->name, 63, DIMAGEV_THUMBNAIL_FMT, 0);
 
 	return GP_OK;
 	return (GP_OK);
