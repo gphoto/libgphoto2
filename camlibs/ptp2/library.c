@@ -1984,7 +1984,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       GPContext *context)
 {
 	Camera *camera = data;
-	char * image=NULL;
+	unsigned char * image=NULL;
 	uint32_t object_id;
 	uint32_t size;
 	uint32_t storage;
@@ -2006,10 +2006,41 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	GP_DEBUG ("Getting file.");
 	switch (type) {
 
-	case	GP_FILE_TYPE_EXIF:
-		/* Ups... no easy way to obtain plain EXIF information */
-		return (GP_ERROR_NOT_SUPPORTED);
+	case	GP_FILE_TYPE_EXIF: {
+		uint32_t offset;
+		uint32_t maxbytes;
 
+		/* Check if we have partial downloads. Otherwise we can just hope
+		 * upstream downloads the whole image to get EXIF data. */
+		if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_GetPartialObject))
+			return (GP_ERROR_NOT_SUPPORTED);
+		/* could also use Canon partial downloads */
+		CPR (context, ptp_getpartialobject (&camera->pl->params,
+			camera->pl->params.handles.Handler[object_id],
+			0, 10, &image));
+
+		if (!((image[0] == 0xff) && (image[1] == 0xd8))) {	/* SOI */
+			free (image);
+			return (GP_ERROR_NOT_SUPPORTED);
+		}
+		if (!((image[2] == 0xff) && (image[3] == 0xe1))) {	/* App0 */
+			free (image);
+			return (GP_ERROR_NOT_SUPPORTED);
+		}
+		if (0 != strncmp(image+6, "Exif", 4)) {
+			free (image);
+			return (GP_ERROR_NOT_SUPPORTED);
+		}
+		offset = 2;
+		maxbytes = (image[4] << 8 ) + image[5];
+		free (image);
+		image = NULL;
+		CPR (context, ptp_getpartialobject (&camera->pl->params,
+			camera->pl->params.handles.Handler[object_id],
+			offset, maxbytes, &image));
+		CR (gp_file_set_data_and_size (file, image, maxbytes));
+		break;
+	}
 	case	GP_FILE_TYPE_PREVIEW:
 		/* If thumb size is 0 then there is no thumbnail at all... */
 		if((size=oi->ThumbCompressedSize)==0) return (GP_ERROR_NOT_SUPPORTED);

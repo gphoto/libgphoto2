@@ -1,5 +1,10 @@
 2005-01-24  Marcus Meissner  <marcus@jet.franken.de>
 
+	* ptp.c, ptp.h, library.c:
+	Implemented EXIF reading by using GetPartialObject.
+
+2005-01-24  Marcus Meissner  <marcus@jet.franken.de>
+
 	* library.c, ptp.c, ptp.h:
         Merged Nikon property dumping patch from
 	Steve Harris <steve@totl.net>

@@ -769,6 +769,8 @@ uint16_t ptp_getobjectinfo	(PTPParams *params, uint32_t handle,
 
 uint16_t ptp_getobject		(PTPParams *params, uint32_t handle,
 				char** object);
+uint16_t ptp_getpartialobject	(PTPParams* params, uint32_t handle, uint32_t offset,
+				uint32_t maxbytes, char** object);
 uint16_t ptp_getthumb		(PTPParams *params, uint32_t handle,
 				char** object);
 

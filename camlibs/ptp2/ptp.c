@@ -297,7 +297,8 @@ ptp_usb_getresp (PTPParams* params, PTPContainer* resp)
  **/
 static uint16_t
 ptp_transaction (PTPParams* params, PTPContainer* ptp, 
-		uint16_t flags, unsigned int sendlen, char** data, unsigned int *recvlen)
+		uint16_t flags, unsigned int sendlen, char** data,
+		unsigned int *recvlen)
 {
 	if ((params==NULL) || (ptp==NULL)) 
 		return PTP_ERROR_BADPARAM;
@@ -567,6 +568,16 @@ ptp_getobjecthandles (PTPParams* params, uint32_t storage,
 	return ret;
 }
 
+/**
+ * ptp_getobjectinfo:
+ * params:	PTPParams*
+ *		handle			- Object handle
+ *		objectinfo		- pointer to objectinfo that is returned
+ *
+ * Get objectinfo structure for handle from device.
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
 uint16_t
 ptp_getobjectinfo (PTPParams* params, uint32_t handle,
 			PTPObjectInfo* objectinfo)
@@ -587,6 +598,17 @@ ptp_getobjectinfo (PTPParams* params, uint32_t handle,
 	return ret;
 }
 
+/**
+ * ptp_getobject:
+ * params:	PTPParams*
+ *		handle			- Object handle
+ *		object			- pointer to data area
+ *
+ * Get object 'handle' from device and store the data in newly
+ * allocated 'object'.
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
 uint16_t
 ptp_getobject (PTPParams* params, uint32_t handle, char** object)
 {
@@ -601,7 +623,47 @@ ptp_getobject (PTPParams* params, uint32_t handle, char** object)
 	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, object, &len);
 }
 
+/**
+ * ptp_getpartialobject:
+ * params:	PTPParams*
+ *		handle			- Object handle
+ *		offset			- Offset into object
+ *		maxbytes		- Maximum of bytes to read
+ *		object			- pointer to data area
+ *
+ * Get object 'handle' from device and store the data in newly
+ * allocated 'object'. Start from offset and read at most maxbytes.
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
+uint16_t
+ptp_getpartialobject (PTPParams* params, uint32_t handle, uint32_t offset,
+			uint32_t maxbytes, char** object)
+{
+	PTPContainer ptp;
+	int len;
 
+	PTP_CNT_INIT(ptp);
+	ptp.Code=PTP_OC_GetPartialObject;
+	ptp.Param1=handle;
+	ptp.Param2=offset;
+	ptp.Param3=maxbytes;
+	ptp.Nparam=3;
+	len=0;
+	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, object, &len);
+}
+
+/**
+ * ptp_getthumb:
+ * params:	PTPParams*
+ *		handle			- Object handle
+ *		object			- pointer to data area
+ *
+ * Get thumb for object 'handle' from device and store the data in newly
+ * allocated 'object'.
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
 uint16_t
 ptp_getthumb (PTPParams* params, uint32_t handle,  char** object)
 {
