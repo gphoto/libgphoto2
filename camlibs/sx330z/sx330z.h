@@ -141,4 +141,7 @@ int sx330z_get_data(Camera *camera,GPContext *context, const char* filename,
  */
 int sx330z_delete_file(Camera *camera,GPContext *context,const char *filename);
 
-
+/*
+ *  Exit camera
+ */
+int camera_exit(Camera *camera, GPContext *context);
