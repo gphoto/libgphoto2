@@ -838,7 +838,7 @@ spca50x_flash_close (CameraPrivateLibrary *pl, GPContext *context)
 
 	}
 
-	if (!pl->dirty_flash && pl->brige == BRIDGE_SPCA500) { 
+	if (!pl->dirty_flash && pl->bridge == BRIDGE_SPCA500) { 
 		/* check if we need to free the file info buffers */
 		free_files(pl);
 	}
