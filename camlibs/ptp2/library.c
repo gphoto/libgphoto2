@@ -141,7 +141,7 @@ static struct {
 	{PTP_RC_UnknownVendorCode, 	N_("PTP Unknown Vendor Code")},
 	{PTP_RC_CaptureAlreadyTerminated,
 					N_("PTP Capture Already Terminated")},
-	{PTP_RC_DeviceBusy, 		N_("PTP Device Bus")},
+	{PTP_RC_DeviceBusy, 		N_("PTP Device Busy")},
 	{PTP_RC_InvalidParentObject, 	N_("PTP Invalid Parent Object")},
 	{PTP_RC_InvalidDevicePropFormat, N_("PTP Invalid Device Prop Format")},
 	{PTP_RC_InvalidDevicePropValue, N_("PTP Invalid Device Prop Value")},
