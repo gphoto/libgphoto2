@@ -672,10 +672,15 @@ gsmart_reset (CameraPrivateLibrary * lib)
 		 * Cant hurt, I guess. */
 		CHECK (gp_port_usb_msg_write
 		       (lib->gpdev, 0x02, 0x0000, 0x07, NULL, 0));
-	} else if (lib->bridge == GSMART_BRIDGE_SPCA504A
-		   || lib->bridge == GSMART_BRIDGE_SPCA504B) {
+	} else if (lib->bridge == GSMART_BRIDGE_SPCA504A) {
 		CHECK (gp_port_usb_msg_write
 		       (lib->gpdev, 0x02, 0x0000, 0x0003, NULL, 0));
+	} else if (lib->bridge == GSMART_BRIDGE_SPCA504B) {
+		CHECK (gp_port_usb_msg_write(lib->gpdev, 0, 1, 
+					GSMART_REG_AutoPbSize, NULL, 0));
+		CHECK (gp_port_usb_msg_write(lib->gpdev, 0, 0, 
+					0x0d04, NULL, 0));
+		CHECK (gp_port_usb_msg_write(lib->gpdev, 0x1e, 0, 0, NULL, 0));
 	}
 	sleep (1);
 	return GP_OK;
