@@ -25,7 +25,7 @@
  * one, please contact me so that we can get this stuff up and running.
  */
 
-#include <config.h>
+#include "config.h"
 
 #include <gphoto2-library.h>
 

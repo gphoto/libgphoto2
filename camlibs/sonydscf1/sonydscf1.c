@@ -1,4 +1,4 @@
-#include <config.h>
+#include "config.h"
 #include "sonydscf1.h"
 
 #include <stdio.h>

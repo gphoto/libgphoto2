@@ -1,7 +1,7 @@
 /* gphoto2-port-portability.c
  */
 
-#include <config.h>
+#include "config.h"
 #include <stdio.h>
 #include <gphoto2-port.h>
 #include <gphoto2-port-result.h>

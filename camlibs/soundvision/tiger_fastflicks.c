@@ -16,7 +16,7 @@
 /* here and be pointed to in the soundvision.c file.  You just have to */
 /* track down the traces and test them out.                            */
 
-#include <config.h>
+#include "config.h"
 
 #include <stdio.h>
 #include <errno.h>

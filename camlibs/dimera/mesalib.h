@@ -12,7 +12,6 @@
 #ifndef MESALIB_H
 #define MESALIB_H
 
-#include <config.h>
 #include <_stdint.h>
 #include <gphoto2-port.h>
 

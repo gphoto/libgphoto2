@@ -19,7 +19,7 @@
 *                                                                     *
 **********************************************************************/
 
-#include <config.h>
+#include "config.h"
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>

@@ -21,7 +21,7 @@
 
 /* $Id$ */
 
-#include <config.h>
+#include "config.h"
 
 #include "dimagev.h"
 

@@ -19,8 +19,6 @@
 #ifndef NLS_H
 #define NLS_H
 
-#include <config.h>
-
 #ifdef ENABLE_NLS
 #  include <libintl.h>
 #  undef _
@@ -41,10 +39,3 @@
 #endif
 
 #endif				/* NLS_H */
-
-/*
- * Local Variables:
- * c-file-style:"linux"
- * indent-tabs-mode:t
- * End:
- */

@@ -9,7 +9,7 @@
  *                                                  *
  ****************************************************/
 
-#include <config.h>
+#include "config.h"
 #include "library.h"
 
 #include <stdlib.h>

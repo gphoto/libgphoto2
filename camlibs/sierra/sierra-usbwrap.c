@@ -35,7 +35,7 @@
  * Set it to ON.  This disables the USB mass-storage support.
  */
 
-#include <config.h>
+#include "config.h"
 #include "sierra-usbwrap.h"
 
 #include <string.h>

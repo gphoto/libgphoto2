@@ -30,7 +30,7 @@ source files
 Every source file (file_name.c) should have the following layout:
 
 /* Licence, author, etc. */
-#include <config.h>
+#include "config.h"
 #include "file_name.h"
 
 #include <std*.h> (i.e. stdlib, stdio, string, etc.)

@@ -19,7 +19,7 @@
 *									  GDB
 * $Id$
 */
-#include <config.h>
+#include "config.h"
 
 #include "mesalib.h"
 

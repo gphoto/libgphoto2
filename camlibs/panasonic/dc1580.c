@@ -20,7 +20,7 @@
         CoolPix 600 library for gPhoto1.
 */
 
-#include <config.h>
+#include "config.h"
 
 #include <stdlib.h>
 #include <stdarg.h>

@@ -19,7 +19,7 @@
  *
  */
 
-#include <config.h>
+#include "config.h"
 
 #include "mesalib.h"
 #include "dimeratab.h"

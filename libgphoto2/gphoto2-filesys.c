@@ -21,7 +21,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <config.h>
+#include "config.h"
 #include "gphoto2-filesys.h"
 
 #include <stdlib.h>
