@@ -1,5 +1,9 @@
 camlibs/barbie/barbie.c
 camlibs/canon/canon.c
+camlibs/canon/library.c
+camlibs/canon/serial.c
+camlibs/canon/usb.c
+camlibs/canon/util.c
 camlibs/digita/digita.c
 camlibs/dimera/dimera3500.c
 camlibs/directory/directory.c
