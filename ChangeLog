@@ -1,8 +1,14 @@
+2004-05-01 Theodore Kilgore <kilgota@auburn.edu>
+
+	* configure.in: Hook up camlibs/mars
+
+
 2004-04-08  Raymond Penners  <raymond@dotsphinx.com>
 
 	* camlibs/sonydscf55: Merged in patch from Alberto Garlassi:
 	serial communication fixes on fast CPUs, and the native file names
 	are now used (instead of using the hardcoded "dsc%05d.jpg").
+
 
 2004-01-06 Marcus Meissner <marcus@jet.franken.de>
 

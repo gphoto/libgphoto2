@@ -190,7 +190,7 @@ AC_SUBST(camlibdir)
 dnl ---------------------------------------------------------------------------
 dnl Camera drivers
 dnl ---------------------------------------------------------------------------
-camlibs='agfa-cl20 aox barbie canon casio digita dimera directory fuji gsmart300 jamcam jd11 kodak konica largan minolta mustek panasonic pccam300 pccam600 polaroid ptp2 ricoh samsung sierra sipix smal sonydscf1 sonydscf55 soundvision spca50x sq905 stv0674 stv0680 sx330z toshiba'
+camlibs='agfa-cl20 aox barbie canon casio digita dimera directory fuji gsmart300 jamcam jd11 kodak konica largan mars minolta mustek panasonic pccam300 pccam600 polaroid ptp2 ricoh samsung sierra sipix smal sonydscf1 sonydscf55 soundvision spca50x sq905 stv0674 stv0680 sx330z toshiba'
 AC_SUBST(SUBDIRS_CAMLIBS)
 for i in $camlibs; do
   d=`echo $i | $TR a-z- A-Z_`
@@ -204,7 +204,7 @@ AC_ARG_WITH(drivers,
   [                            possible drivers are: ]
   [                            agfa-cl20, aox, barbie, canon, casio, digita, dimera,]
   [                            directory, fuji, gsmart300, jamcam,] 
-  [                            jd11, kodak, konica, mustek, largan,]
+  [                            jd11, kodak, konica, mustek, largan, mars,]
   [                            minolta, panasonic, pccam300, pccam600,]
   [                            polaroid, ptp2, ricoh, samsung, smal,]
   [                            sierra, sipix, sonydscf1, sonydscf55,]
@@ -377,7 +377,7 @@ dnl Configure libgphoto2-port
 dnl ---------------------------------------------------------------------------
 AC_CONFIG_SUBDIRS(libgphoto2_port)
 
-AC_OUTPUT([
+AC_OUTPUT([ 
 README
 Makefile
 camlibs/Makefile
@@ -403,6 +403,7 @@ camlibs/konica/Makefile
 camlibs/konica/localization/Makefile
 camlibs/largan/Makefile
 camlibs/largan/lmini/Makefile
+camlibs/mars/Makefile
 camlibs/minolta/Makefile
 camlibs/minolta/dimagev/Makefile
 camlibs/mustek/Makefile
