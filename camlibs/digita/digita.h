@@ -110,6 +110,7 @@ struct erase_file {
 	struct filename fn;
 };
 
+/* gphoto2 header magic. this is also CameraPrivateLibrary */
 struct _CameraPrivateLibrary {
 	GPPort *gpdev;
 
@@ -120,10 +121,10 @@ struct _CameraPrivateLibrary {
 	int portspeed;
 
 	int deviceframesize;
-};
 
-extern int (*digita_send)(CameraPrivateLibrary *dev, void *buffer, int buflen);
-extern int (*digita_read)(CameraPrivateLibrary *dev, void *buffer, int buflen);
+	int (*send)(CameraPrivateLibrary *dev, void *buffer, int buflen);
+	int (*read)(CameraPrivateLibrary *dev, void *buffer, int buflen);
+};
 
 /* commands.c */
 int digita_get_storage_status(CameraPrivateLibrary *dev, int *taken,

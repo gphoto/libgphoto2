@@ -3,7 +3,7 @@
  *
  *  USB digita support
  *
- * Copyright 1999-2000, Johannes Erdfelt <jerdfelt@valinux.com>
+ * Copyright 1999-2001 Johannes Erdfelt
  */
 
 #include <stdlib.h>
@@ -11,9 +11,9 @@
 #include <errno.h>
 #include <string.h>
 
-#include "digita.h"
-
 #include <gphoto2-port.h>
+
+#include "digita.h"
 
 static int digita_usb_read(CameraPrivateLibrary *dev, void *buffer, int len)
 {
@@ -35,8 +35,8 @@ int digita_usb_open(CameraPrivateLibrary *dev, Camera *camera)
 	settings.usb.interface = 0;
 	settings.usb.altsetting = 0;
 
-	digita_send = digita_usb_send;
-	digita_read = digita_usb_read;
+	dev->send = digita_usb_send;
+	dev->read = digita_usb_read;
 
 	gp_port_set_settings(dev->gpdev, settings);
 
