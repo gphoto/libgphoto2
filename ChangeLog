@@ -1,3 +1,14 @@
+2002-06-13  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* doc/figures/Makefile.am: don't build images we don't even use
+	* doc/Makefile.am:
+	  - clean pdf and ps files if generated
+	  - install pdf and ps manuals
+	  - create figures before building manual
+	  - made pdf and ps manual creation work when srcdir != builddir
+	  - added symlink in manual/ to enable people to view manual in src tree
+	  - use $(AMTAR) and install only the png and html files for the html manual
+
 2002-06-13  Lutz Müller <lutz@users.sourceforge.net>
 
 	Patch by Arnaud Launay <asl@launay.org>, slightly corrected:
