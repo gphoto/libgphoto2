@@ -37,6 +37,10 @@ Special thanks also to Tim Sampson <tim@columbia-staver.co.uk>, who made the
 support for spca500 based cams (such as the gsmart mini) possible by boldly
 trying out my untested alpha versions.
 
+Adam Pribyl <covex@ahoj.fsik.cvut.cz> helped debugging the lowest resolution
+of the gsmart mini and had to put his cam in the fridge (!) several times in
+the process. Brave man. ;)
+
 Very special thanks to Piotr Pawlow <pp@siedziba.pl> for adding avi index
 functionality and fixing a few bugs.
 
@@ -46,3 +50,4 @@ Torfinn Ingolfsen <torfinn.ingolfsen@broadpark.no>
 Mikael Nilsson <mini@nada.kth.se>
 Miah Gregory <mace@darksilence.net>
 Soenke Reimers <soenke.reimers@freenet.de>
+Gerd Flaig <gefla@pond.sub.org>

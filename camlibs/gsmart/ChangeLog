@@ -1,3 +1,10 @@
+Sam Dez 07 21:04:46 2002  Till Adam  <till@adam-lilienthal.de>
+
+ * the lowest res of the mini is a different format, cope with that
+ * fix cases where the number of frames advertised by one of the fat pages of 
+   an avi exceed the total number of frames it has 
+   (Reported by Gerd Flaig <gefla@pond.sub.org>)
+
 Tue Nov 05 12:17:30 2002  Till Adam  <till@adam-lilienthal.de>
 
  * return unssuported for avi downloading and small and large image
@@ -32,7 +39,7 @@ Tue Oct 08 22:14:04 2002  Till Adam  <till@adam-lilienthal.de>
 2002-10-03  Lutz Müller <lutz@users.sourceforge.net>
 
 	* Makefile.am: -I$(top_builddir)/libgphoto2
-
+	
 Sam Aug 31 20:15:03 2002  Till Adam  <till@adam-lilienthal.de>
 
  * return name in the file_info as well. Fixes kamera kio-slave

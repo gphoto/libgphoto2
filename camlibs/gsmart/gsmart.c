@@ -145,7 +145,7 @@ gsmart_get_image (CameraPrivateLibrary * lib, u_int8_t ** buf,
 		  unsigned int *len, struct GsmartFile *g_file)
 {
 	u_int8_t *p, *lp_jpg;
-	u_int8_t qIndex;
+	u_int8_t qIndex, format;
 	u_int32_t start;
 	u_int8_t *mybuf;
 	int size, o_size, file_size;
@@ -165,6 +165,7 @@ gsmart_get_image (CameraPrivateLibrary * lib, u_int8_t ** buf,
 		o_size = size = (p[5] & 0xff) * 0x100 + (p[6] & 0xff);
 	}
 	qIndex = p[7] & 0x07;
+	format = 0x21;
 
 	/* align */
 	if (size % 64 != 0)
@@ -190,13 +191,16 @@ gsmart_get_image (CameraPrivateLibrary * lib, u_int8_t ** buf,
 					      0x70FF - index, 0x01, NULL, 0));
 		sleep (1);
 		CHECK (gp_port_read (lib->gpdev, mybuf, size));
+		/* the smallest ones are in a different format */
+		if ( (p[20] & 0xff) == 2)
+			format=0x22;
 	}
 	/* now build a jpeg */
 	lp_jpg = malloc (file_size);
 	if (!lp_jpg)
 		return GP_ERROR_NO_MEMORY;
 	create_jpeg_from_data (lp_jpg, mybuf, qIndex, g_file->width,
-			       g_file->height, 0x21, o_size, &file_size, 0);
+			       g_file->height, format, o_size, &file_size, 0);
 
 	free (mybuf);
 	lp_jpg = realloc (lp_jpg, file_size);
@@ -211,7 +215,7 @@ gsmart_get_avi (CameraPrivateLibrary * lib, u_int8_t ** buf,
 		unsigned int *len, struct GsmartFile *g_file)
 {
 	int i, j, length;
-	int frame_count = 0, frames_per_fat = 0;
+	int frame_count = 0, frames_per_fat = 0, fn = 0;
 	int size = 0;
 	int frame_width, frame_height;
 	int file_size;
@@ -299,7 +303,11 @@ gsmart_get_avi (CameraPrivateLibrary * lib, u_int8_t ** buf,
 	 * each frame. Add the jpeg to the avi and write an index entry.  */
 	for (i = g_file->fat_start; i <= g_file->fat_end; i++) {
 		frames_per_fat = ((p[49] & 0xFF) * 0x100 + (p[48] & 0xFF));
-		if (frames_per_fat > 60 || frames_per_fat == 0)
+
+		/* frames per fat might be lying, so double check how
+		   many frames were already processed */
+		if (frames_per_fat > 60 || frames_per_fat == 0 
+		    || fn + frames_per_fat > frame_count)
 			break;
 
 		for (j = 0; j < frames_per_fat; j++) {
@@ -308,7 +316,7 @@ gsmart_get_avi (CameraPrivateLibrary * lib, u_int8_t ** buf,
 				(p[50 + j * 3] & 0xFF);
 
 			memcpy (avi, GsmartAviFrameHeader,
-				GSMART_AVI_FRAME_HEADER_LENGTH);
+					GSMART_AVI_FRAME_HEADER_LENGTH);
 
 			avi += GSMART_AVI_FRAME_HEADER_LENGTH;
 			start_of_frame = avi;
@@ -334,6 +342,7 @@ gsmart_get_avi (CameraPrivateLibrary * lib, u_int8_t ** buf,
 			put_dword (index_item + 12, frame_size);
 			memcpy (avi_index_ptr, index_item, 16);
 			avi_index_ptr += 16;
+			fn++;
 		}
 		p += FLASH_PAGE_SIZE;
 	}
@@ -377,10 +386,14 @@ gsmart_request_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
 		/* the spca500 stores the quality in p[20], the rest of them
 		 * in [p40].  We need to check for the smallest resolution of
 		 * the mini, since resolution does not have thumbnails.
-		 * Download the full image instead. */
-		if (lib->bridge == GSMART_BRIDGE_SPCA500
-		    && (g_file->fat[20] & 0xFF) == 0) {
-			return (gsmart_get_image (lib, buf, len, g_file));
+		 * Download the full image instead.
+		 * Low:    320x240                2
+		 * Middle: 640x480                0
+		 * High:  1024x768 (interpolated) 1*/
+		if (lib->bridge == GSMART_BRIDGE_SPCA500 
+  		    && (g_file->fat[20] & 0xFF) == 2) { 
+  			return (gsmart_get_image (lib, buf, len, g_file));
+ 
 		} else {
 			return (gsmart_get_image_thumbnail
 				(lib, buf, len, g_file));
