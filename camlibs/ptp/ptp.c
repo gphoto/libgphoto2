@@ -18,16 +18,24 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <config.h>
+#include <stdlib.h>
 #include "ptp.h"
 
-#define CR(p) {PTPResult r = (p); if (r != PTP_OK) return (r);}
-
 PTPResult
-ptp_do_something (PTPParams params, unsigned char c1, unsigned char *c2)
+ptp_sendreq(PTPParams* params, ptp_req* databuf, short code)
 {
-	CR (params.io_write (&c1, 1, params.io_data));
-	CR (params.io_read (&c1, 1, params.io_data));
+	PTPResult ret;
+	ptp_req* req=(databuf==NULL)?
+		malloc(sizeof(ptp_req)):databuf;
+	
+	req->len = PTP_REQ_LEN;
+	req->type = PTP_TYPE_REQ;
+	req->code = code;
+	req->trans_id = params->id;
+	params->id++;
 
-	return (PTP_OK);
+	ret=params->io_write (req, PTP_REQ_LEN, params->io_data);
+	if (databuf==NULL) free (req);
+	return ret;
 }
+
