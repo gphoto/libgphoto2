@@ -3,6 +3,8 @@
  *
  * Written 1999 by Wolfgang G. Reissnegger and Werner Almesberger
  *
+ * $Id$
+ *
  */
 
 #ifndef _CANON_H

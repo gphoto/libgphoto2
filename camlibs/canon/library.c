@@ -11,6 +11,8 @@
  * This file contains all the "glue code" required to use the canon
  * driver with libgphoto2.
  *
+ * $Id$
+ *
  ****************************************************************************/
 
 
