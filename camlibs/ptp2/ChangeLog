@@ -1,3 +1,7 @@
+2004-04-13  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* library.c: Added Kodak CX7430. Close patch #934142.
+
 2004-04-07  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* library.c: Added HP PhotoSmart 945 (T. Jelbert)
