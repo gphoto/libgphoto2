@@ -204,7 +204,7 @@ struct _CameraPrivateLibrary
 	char firmwrev[4]; /* Firmware revision */
 	unsigned char psa50_eot[8];
 
-	int receive_error;
+	int receive_error; /* status of transfer on serial connection */
 	int first_init;  /* first use of camera   1 = yes 0 = no */
 	int uploading;   /* 1 = yes ; 0 = no */
 	int slow_send;   /* to send data via serial with a usleep(1) 
@@ -225,6 +225,8 @@ struct _CameraPrivateLibrary
 	int cached_ready;       /* whether the camera is ready to rock */
 	long image_key, thumb_length, image_length; /* For immediate download of captured image */
 	int capture_step;		     /* To record progress in interrupt reads from capture */
+	int keys_locked; /* whether the keys are currently locked out */
+	unsigned int xfer_length;	     /* Length of max transfer for download */
 
 /*
  * Directory access may be rather expensive, so we cached some information.
