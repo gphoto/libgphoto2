@@ -11,6 +11,7 @@ gphoto2 command-line interface:
    * Fixed broken --delete-all-images. Also, recursion is now the
       default for downloading but _not_ for deleting.
    * Localization for Simplified Chinese.
+   * Progress bar à la e2fsck
 
 --------------------------------------------------------------------------------
 gphoto2-2.0beta4
