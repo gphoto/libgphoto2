@@ -238,7 +238,7 @@ camera_init (Camera *camera, GPContext *context)
 		if (result >= GP_OK)
 			break;
 	}
-	if (i == 4)
+	if (i == 5)
 		return (result);
 
 	return (GP_OK);

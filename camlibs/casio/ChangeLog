@@ -1,3 +1,7 @@
+2003-01-08  Lutz Müller <lutz@users.sourceforge.net>
+
+	* casio-qv.c (camera_init): Cosmetic change.
+
 2002-10-03  Lutz Müller <lutz@users.sourceforge.net>
 
 	* Makefile.am: -I$(top_builddir)/libgphoto2
