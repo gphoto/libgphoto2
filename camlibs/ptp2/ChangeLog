@@ -1,3 +1,19 @@
+2005-03-20  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* library.c: Merged in most of the code from:
+	ptpcanon 0.0.2
+		 http://jalkapallo.org/superkolik/canon.html
+	Capture 1.0.3
+		 http://sf.net/projects/capture/
+	into generic PTP property handling.
+
+	Added camera prepare und unprepare capture handling.
+	Using a gphoto widget based toggle currently.
+
+	Disabled by using EXPERIMENTAL_CANON_CAPTURE, since
+	it does not save the capture image to the FlashCard yet.
+
+
 2005-03-17  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* Added Kodak CX7525 ( as reported).
