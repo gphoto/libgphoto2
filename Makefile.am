@@ -11,6 +11,10 @@ SUBDIRS = libgphoto2_port libgphoto2 camlibs tests po packaging doc
 
 doc_DATA = AUTHORS COPYING README CHANGES NEWS
 
+# we use just ONE .PHONY target in order not to confuse automake
+
+.PHONY: rpm cvs-tags source-code-check
+
 ########################################################################
 # source code check maintenance task
 #
@@ -21,7 +25,6 @@ doc_DATA = AUTHORS COPYING README CHANGES NEWS
 #
 #   The output is meant to be read and interpreted by human programmers.
 
-.PHONY: source-code-check
 source-code-check:
 	@echo "######## Finding // comments"
 	find . -type f -name '*.[ch]' -exec egrep -H '(^//|[^:]//)' {} \;
@@ -41,6 +44,7 @@ source-code-check:
 ACLOCAL_AMFLAGS = -I libgphoto2_port/m4
 AUTOMAKE_OPTIONS = gnu
 
+
 ########################################################################
 # The following rules are only interesting if you want to create
 # distribution packages (as source tarballs or system specific packages)
@@ -48,20 +52,24 @@ AUTOMAKE_OPTIONS = gnu
 if ENABLE_RPM
 
 # create RPM packages
-.PHONY: rpm
 rpm: Makefile
 	$(MAKE) dist
 	$(MAKE) -C packaging/rpm rpm
 	@echo "The RPM packages should now be found in packaging/rpm/RPMS"
 
+else
+rpm:
+	@echo "Dummy $@ target"
 endif
 
 if MAINTAINER_MODE
 
 # add CVS tags - used only by the project maintainer to tag the files of a
 # released version
-.PHONY: cvs-tags
 cvs-tags: Makefile
 	@echo cvs tag "@PACKAGE@-$$(echo '@VERSION@' | sed -e 's/\./_/g' -e 's/rc/-rc/g')"
 
+else
+cvs-tags:
+	@echo "Dummy $@ target"
 endif
