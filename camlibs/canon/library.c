@@ -124,6 +124,8 @@ models[] =
 	, {
 	"Canon PowerShot G2", 0x04A9, 0x3055, 0}
 	, {
+	"Canon PowerShot S40", 0x4A9, 0x3056, 0}
+	, {
 	"Canon PowerShot S30", 0x4A9, 0x3057, 0}
 	, {
 	NULL, 0, 0, 0}
@@ -895,6 +897,9 @@ camera_summary (Camera *camera, CameraText *summary)
 			break;
 		case CANON_PS_S30:
 			model = "Canon Powershot S30";
+			break;
+		case CANON_PS_S40:
+			model = "Canon Powershot S40";
 			break;
 		case CANON_PS_G1:
 			model = "Canon Powershot G1";

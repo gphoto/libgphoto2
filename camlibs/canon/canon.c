@@ -696,6 +696,10 @@ canon_int_usb_ready (Camera *camera)
 		gp_camera_status (camera, "Detected a Powershot S30");
 		camera->pl->model = CANON_PS_S30;
 		return GP_OK;
+	} else if (!strcmp ("Canon PowerShot S40", camera->pl->ident)) {
+		gp_camera_status (camera, "Detected a Powershot S40");
+		camera->pl->model = CANON_PS_S40;
+		return GP_OK;
 	} else if (!strcmp ("Canon PowerShot G1", camera->pl->ident)) {
 		gp_camera_status (camera, "Detected a Powershot G1");
 		camera->pl->model = CANON_PS_G1;
