@@ -172,7 +172,7 @@ OPTION_CALLBACK(about);
 OPTION_CALLBACK(make_dir);
 OPTION_CALLBACK(remove_dir);
 OPTION_CALLBACK(authors);
-OPTION_CALLBACK(licence);
+OPTION_CALLBACK(license);
 
 /* 2) Add an entry in the option table                          */
 /*    ----------------------------------------------------------------- */
@@ -245,7 +245,7 @@ Option option[] = {
 {"",  "about",          "",  N_("About the camera driver"),  about,   0},
 {"",  "shell",          "",  N_("gPhoto shell"),             shell,   0},
 {"",  "authors",        "",  N_("Authors"),                  authors, 0},
-{"",  "licence",        "",  N_("Licence"),                  licence, 0},
+{"",  "license",        "",  N_("License"),                  license, 0},
 
 /* End of list                  */
 {"" , "", "", "", NULL, 0}
@@ -291,7 +291,7 @@ static ForEachFlags glob_flags = FOR_EACH_FLAGS_RECURSE;
 /*    cli_debug_print(char *format, ...) to display debug output. Use   */
 /*    cli_error_print(char *format, ...) to display error output.       */
 
-OPTION_CALLBACK(licence)
+OPTION_CALLBACK(license)
 {
 	FILE *f;
 	char buf[1024];
