@@ -162,7 +162,7 @@ camera_about (Camera *camera, CameraText *about, GPContext *context)
 	strcpy (about->text,
 		_("gsmart300 library \n"
 		  "Till Adam <till@adam-lilienthal.de>\n"
-		  "Jérôme Lodewyck <jerome.lodewyck@ens.fr>\n"
+		  "Jerome Lodewyck <jerome.lodewyck@ens.fr>\n"
 		  "Support for Mustek gSmart 300 digital cameras\n"
 		  "based on several other gphoto2 camlib modules and "
 		  "the specifications kindly provided by Mustek.\n" "\n"));
