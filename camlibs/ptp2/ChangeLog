@@ -1,3 +1,8 @@
+2003-10-14 Marcus Meissner 
+	
+	* library.c: Fixed progress max value to be 100, or we get Inf/Nan
+	  or division by 0...
+
 2003-10-10 Olivier Crete <tester@tester.ca>
 	* library.c: Add Canon A80
 

@@ -1213,7 +1213,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 	((PTPData *) camera->pl->params.data)->context = context;
 
 	/* Get file handles array for filesystem */
-	id = gp_context_progress_start (context, 0, _("Initializing Camera"));
+	id = gp_context_progress_start (context, 100, _("Initializing Camera"));
 	/* be paranoid!!! */
 	memset (&camera->pl->params.handles, 0, sizeof(PTPObjectHandles));
 	/* get objecthandles of all objects from all stores */
@@ -1260,7 +1260,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 		}
 #endif
 		gp_context_progress_update (context, id,
-		(90*i)/camera->pl->params.handles.n);
+		10+(90*i)/camera->pl->params.handles.n);
 	}
 	gp_context_progress_stop (context, id);
 
