@@ -620,6 +620,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			free (data);
 			return (GP_ERROR_NO_MEMORY);
 		}
+		GP_DEBUG ("Expanding %i bytes to %i bytes", size, ppm_size);
 		pdc700_expand (data, ppm);
 		free (data);
 		CRF (gp_file_append (file, header, strlen (header)), ppm);
