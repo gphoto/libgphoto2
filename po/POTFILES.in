@@ -37,6 +37,8 @@ camlibs/ricoh/ricoh.c
 camlibs/samsung/samsung.c
 camlibs/sierra/sierra.c
 camlibs/sierra/library.c
+camlibs/sierra/olympus-desc.c
+camlibs/sierra/nikon-desc.c
 camlibs/sonydscf1/sonydscf1.c
 camlibs/sonydscf55/camera.c
 camlibs/stv0680/library.c
