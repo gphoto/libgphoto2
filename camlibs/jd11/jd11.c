@@ -1,5 +1,5 @@
 /*
- * Jenoptik JD11 Driver
+ * Jenoptik JD11 Camera Driver
  * Copyright (C) 1999-2001 Marcus Meissner <marcus@jet.franken.de>
  * 
  * This program is free software; you can redistribute it and/or modify
