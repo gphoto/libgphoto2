@@ -39,6 +39,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 
         //*count = 1;
         CameraAbilities a;
+	memset (&a, 0, sizeof(a));
 
         /* Fill in each camera model's abilities */
         /* Make separate entries for each conneciton type (usb, serial, etc...)

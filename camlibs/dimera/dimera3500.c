@@ -21,6 +21,10 @@
  *
  * History:
  * $Log$
+ * Revision 1.34  2002/01/02 00:29:10  hun
+ * Added missing initialization of CameraAbilities struct. This fixes corrupt
+ * abilities reported to libphoto2.
+ *
  * Revision 1.33  2001/12/31 21:29:25  lutz
  * 2001-12-31  Lutz Müller <urc8@rz.uni-karlsruhe.de>
  *
@@ -188,6 +192,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 
 	int x=0;
 	CameraAbilities a;
+	memset (&a, 0, sizeof(a));
 
 	while (models[x]) {
 

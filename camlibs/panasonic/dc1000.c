@@ -344,6 +344,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 
 	CameraAbilities a;
         int             result;
+	memset (&a, 0, sizeof(a));
 
 	memset(&a, 0, sizeof(a));
 	strcpy(a.model, "Panasonic DC1000");

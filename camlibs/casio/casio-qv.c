@@ -65,8 +65,11 @@ camera_abilities (CameraAbilitiesList *list)
 	CameraAbilities a;
 
 	for (i = 0; models[i].model; i++) {
+
 		if (!models[i].public)
 			continue;
+
+		memset(&a,0,sizeof(a));
 
 		memset(&a, 0, sizeof(a));
 		strcpy (a.model, models[i].model);

@@ -47,6 +47,7 @@ camera_abilities (CameraAbilitiesList *list)
         CameraAbilities a;
 
         while (models[x]) {
+		memset (&a, 0, sizeof(a));
 
                 /* Fill in the appropriate flags/data */
 		memset(&a, 0, sizeof(a));
