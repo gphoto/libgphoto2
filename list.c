@@ -40,6 +40,31 @@ gp_list_new (CameraList **list)
 
 	memset (*list, 0, sizeof (CameraList));
 
+	(*list)->ref_count = 1;
+
+	return (GP_OK);
+}
+
+int
+gp_list_ref (CameraList *list)
+{
+	CHECK_NULL (list);
+
+	list->ref_count++;
+
+	return (GP_OK);
+}
+
+int
+gp_list_unref (CameraList *list)
+{
+	CHECK_NULL (list);
+
+	list->ref_count--;
+
+	if (!list->ref_count)
+		gp_list_free (list);
+
 	return (GP_OK);
 }
 
