@@ -19,6 +19,9 @@ List of work that still has to be done on this driver:
 
  - make thumbnail download work on serial cameras
 
+ - handle thumbnails and sound annotations in a more generic way to
+   reuse the code
+
  - extend file attributes from 1 octet to 2 octets
 
  - introduce use capabilities everywhere
@@ -26,14 +29,14 @@ List of work that still has to be done on this driver:
  - the canon_int* functions often shouldn't use gphoto2 structures
    the canon_usb* and canon_serial* should even less
 
- - handle rotated images correctly (how)
+ - deleting files
+
+ - handle rotated images correctly (how?)
 
  - A5 support is completely broken, with the new filename based API, the 
    directory caching mecanism must be completely revisited.
 
  - make sure serial cameras work with new CameraFS based code
-
- - deleting files [done -hun]
 
  - make CameraFilesystem distinguish between files and folders [done -hun]
 
