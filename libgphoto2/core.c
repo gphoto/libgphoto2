@@ -627,8 +627,12 @@ int gp_abilities_list_dump (CameraAbilitiesList *list)
 
 int gp_abilities_list_append (CameraAbilitiesList *list, CameraAbilities *abilities)
 {
-        list->abilities = (CameraAbilities**)realloc(list->abilities,
-                sizeof(CameraAbilities*)*(list->count+1));
+	if (!list->abilities)
+	        list->abilities = (CameraAbilities**)malloc(
+			sizeof(CameraAbilities*));
+	   else
+	        list->abilities = (CameraAbilities**)realloc(list->abilities,
+	                sizeof(CameraAbilities*)*(list->count+1));
         if (!list->abilities)
                 return (GP_ERROR);
 

@@ -39,7 +39,10 @@ int gp_file_append (CameraFile *file, char *data, int size) {
         if (size < 0)
                 return (GP_ERROR);
 
-        file->data = (char*)realloc(file->data, sizeof(char) * (file->size + size));
+	if (!file->data)
+	        file->data = (char*)malloc(sizeof(char) * (size));
+	   else
+	        file->data = (char*)realloc(file->data, sizeof(char) * (file->size + size));
         memcpy(&file->data[file->size], data, size);
 
         file->bytes_read = size;
