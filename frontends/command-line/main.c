@@ -306,16 +306,9 @@ OPTION_CALLBACK (abilities)
         printf("Abilities for camera:            : %s\n",
                 abilities.model);
         printf("Serial port support              : %s\n",
-                SERIAL_SUPPORTED(abilities.port)? "yes":"no");
-        printf("Parallel port support            : %s\n",
-                PARALLEL_SUPPORTED(abilities.port)? "yes":"no");
+		(abilities.port & GP_PORT_SERIAL)? "yes":"no");
         printf("USB support                      : %s\n",
-                USB_SUPPORTED(abilities.port)? "yes":"no");
-        printf("IEEE1394 support                 : %s\n",
-                IEEE1394_SUPPORTED(abilities.port)? "yes":"no");
-        printf("Network support                  : %s\n",
-                NETWORK_SUPPORTED(abilities.port)? "yes":"no");
-
+		(abilities.port & GP_PORT_USB)? "yes":"no");
         if (abilities.speed[0] != 0) {
         printf("Transfer speeds supported        :\n");
                 do {

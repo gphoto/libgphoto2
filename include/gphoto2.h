@@ -1,12 +1,24 @@
-/*      Header file for gPhoto 0.5-Dev
-
-        Author: Scott Fritzinger <scottf@unr.edu>
-
-        This library is covered by the LGPL.
-*/
-
-#ifndef GPHOTO2_H
-#define GPHOTO2_H 1
+/* gphoto2.h: Convenience header for gphoto2
+ *
+ * Copyright (C) 2001 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details. 
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+#ifndef __GPHOTO2_H__
+#define __GPHOTO2_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -25,15 +37,12 @@ extern "C" {
 #define CAMLIBS "."
 #endif
 
-#define SERIAL_SUPPORTED(p)     (p & (1 << 0))
-#define PARALLEL_SUPPORTED(p)   (p & (1 << 1))
-#define USB_SUPPORTED(p)        (p & (1 << 2))
-#define IEEE1394_SUPPORTED(p)   (p & (1 << 3))
-#define NETWORK_SUPPORTED(p)    (p & (1 << 4))
-
 #include <gphoto2-port.h>
+#include <gphoto2-port-log.h>
+#include <gphoto2-port-result.h>
+
+#include <gphoto2-result.h>
 #include <gphoto2-camera.h>
-#include <gphoto2-debug.h>
 #include <gphoto2-file.h>
 #include <gphoto2-filesys.h>
 #include <gphoto2-library.h>
@@ -41,9 +50,12 @@ extern "C" {
 #include <gphoto2-setting.h>
 #include <gphoto2-widget.h>
 
+/* DEPRECATED */
+#include <gphoto2-debug.h>
+
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif
+#endif /* __GPHOTO2_H__ */
