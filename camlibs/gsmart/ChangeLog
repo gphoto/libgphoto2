@@ -1,3 +1,7 @@
+2002-10-03  Lutz Müller <lutz@users.sourceforge.net>
+
+	* Makefile.am: -I$(top_builddir)/libgphoto2
+
 Sam Aug 31 20:15:03 2002  Till Adam  <till@adam-lilienthal.de>
 
  * return name in the file_info as well. Fixes kamera kio-slave

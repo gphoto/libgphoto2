@@ -1,0 +1,4 @@
+2002-10-03  Lutz Müller <lutz@users.sourceforge.net>
+
+	* Makefile.am: -I$(top_builddir)/libgphoto2
+

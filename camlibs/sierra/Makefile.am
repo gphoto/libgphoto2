@@ -7,7 +7,7 @@ INCLUDES =                                              \
         -I$(top_srcdir)/intl				\
         -I$(top_srcdir)/libgphoto2_port/libgphoto2_port \
         -I$(top_srcdir)/libgphoto2			\
-	$(EXIF_CFLAGS)
+	-I$(top_builddir)/libgphoto2
 
 libgphoto2_sierra_la_SOURCES =\
  sierra.c sierra.h\

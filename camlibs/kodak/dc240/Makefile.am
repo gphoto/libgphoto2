@@ -6,7 +6,8 @@ camlib_LTLIBRARIES = libgphoto2_kodak_dc240.la
 INCLUDES =                                              \
         -I$(top_srcdir)/intl				\
         -I$(top_srcdir)/libgphoto2_port/libgphoto2_port \
-        -I$(top_srcdir)/libgphoto2
+        -I$(top_srcdir)/libgphoto2			\
+	-I$(top_builddir)/libgphoto2
 
 libgphoto2_kodak_dc240_la_SOURCES = dc240.c dc240.h library.c library.h
 libgphoto2_kodak_dc240_la_LDFLAGS = -module -avoid-version

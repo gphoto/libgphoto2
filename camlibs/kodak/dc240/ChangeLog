@@ -1,3 +1,7 @@
+2002-10-03  Lutz Müller <lutz@users.sourceforge.net>
+
+	* Makefile.am: -I$(top_builddir)/libgphoto2
+
 2002-08-23  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* library.c: use GP_MIME_JPEG constant instead of a string literal.

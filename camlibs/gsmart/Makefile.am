@@ -4,7 +4,8 @@ camlib_LTLIBRARIES = libgphoto2_gsmart.la
 INCLUDES =                                              \
         -I$(top_srcdir)/intl				\
         -I$(top_srcdir)/libgphoto2_port/libgphoto2_port \
-        -I$(top_srcdir)/libgphoto2
+        -I$(top_srcdir)/libgphoto2			\
+	-I$(top_builddir)/libgphoto2
 
 libgphoto2_gsmart_la_SOURCES = gsmart.c gsmart.h library.c \
                                gsmart-jpeg-header.h gsmart-registers.h

@@ -6,7 +6,8 @@ camlib_LTLIBRARIES = libgphoto2_stv0680.la
 INCLUDES =                                              \
         -I$(top_srcdir)/intl				\
         -I$(top_srcdir)/libgphoto2_port/libgphoto2_port \
-        -I$(top_srcdir)/libgphoto2
+        -I$(top_srcdir)/libgphoto2			\
+	-I$(top_builddir)/libgphoto2
 
 libgphoto2_stv0680_la_SOURCES = stv0680.c stv0680.h library.c library.h \
 			      bayer.c bayer.h sharpen.c sharpen.h \
