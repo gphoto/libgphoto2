@@ -136,6 +136,7 @@ int load_cameras() {
 
         DIR *d;
 	CameraChoice t;
+	CameraAbilities a;
 	
 	int x, y, z;
         struct dirent *de;
@@ -170,6 +171,11 @@ int load_cameras() {
 				memcpy(&t, &glob_camera[x], sizeof(t));
 				memcpy(&glob_camera[x], &glob_camera[y], sizeof(t));
 				memcpy(&glob_camera[y], &t, sizeof(t));
+
+				memcpy(&a, &glob_camera_abilities[x], sizeof(t));
+				memcpy(&glob_camera_abilities[x], &glob_camera_abilities[y],
+					sizeof(t));
+				memcpy(&glob_camera_abilities[y], &a, sizeof(t));
 			}
 		}
 	}
