@@ -1,5 +1,13 @@
 2002-06-28  Lutz Müller <lutz@users.sourceforge.net>
 
+	Patch by Selmeczi David <david@esr.elte.hu>:
+
+	* olympus-desc.c:
+	* nikon-desc.c: Prepare for translation.
+	* sierra.c: Use the new configuration dialog for more camera models.
+
+2002-06-28  Lutz Müller <lutz@users.sourceforge.net>
+
 	* sierra.h:
 	* library.[c,h]:
 	* sierra-desc.[c,h]: Fix includes.
