@@ -96,6 +96,20 @@
 #define SL_MOVIE_LARGE	(2048U * MEGABYTE)
 #define NO_USB  0
 
+/* Models with unknown USB ID's:
+  European name      North American                 Japanese             Intro date
+
+  EOS 350D           Digital Rebel XT               EOS Kiss Digital N   February 2005
+  IXUS 700           PowerShot SD500                IXY Digital 60       February 2005
+  IXUS 50            PowerShot SD400                IXY Digital 55       February 2005
+  PowerShot A520                                                         January 2005
+  PowerShot A510                                                         January 2005
+  Digital IXUS 40    PowerShot SD300                 IXY Digital 50      September 2004
+  PowerShot G6                                                           August 2004
+  Digital IXUS IIs   PowerShot SD110                      ???            February 2004
+  PowerShot Pro1                                                         February 2004
+  Digital IXUS i     PowerShot SD10 Digital ELPH    IXY Digital L        September 2003
+  */
 const struct canonCamModelData models[] = {
 	/* *INDENT-OFF* */
 	{"Canon:PowerShot A5",		CANON_CLASS_3,	NO_USB, NO_USB, CAP_NON, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, "DE300 Canon Inc."},
@@ -103,7 +117,7 @@ const struct canonCamModelData models[] = {
 	{"Canon:PowerShot A50",		CANON_CLASS_1,	NO_USB, NO_USB, CAP_NON, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, "Canon PowerShot A50"},
 	{"Canon:PowerShot Pro70",	CANON_CLASS_2,	NO_USB, NO_USB, CAP_NON, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, "Canon PowerShot Pro70"},
 	{"Canon:PowerShot S10",		CANON_CLASS_0,	0x04A9, 0x3041, CAP_NON, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, "Canon PowerShot S10"},
-
+	/* 3042 is a scanner, so it will never be added here. */
 	{"Canon:PowerShot S20",		CANON_CLASS_0,	0x04A9, 0x3043, CAP_NON, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, "Canon PowerShot S20"},
 	{"Canon:EOS D30",		CANON_CLASS_4,	0x04A9, 0x3044, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:PowerShot S100",	CANON_CLASS_0,	0x04A9, 0x3045, CAP_NON, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
@@ -121,14 +135,14 @@ const struct canonCamModelData models[] = {
 	{"Canon:PowerShot unknown 1",	CANON_CLASS_1,	0x04A9, 0x3050, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
 	/* Canon IXY DIGITAL 200 here? */
 	{"Canon:PowerShot S110",	CANON_CLASS_0,	0x04A9, 0x3051, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
-	{"Canon:DIGITAL IXUS v",	CANON_CLASS_0,	0x04A9, 0x3052, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:Digital IXUS v",	CANON_CLASS_1,	0x04A9, 0x3052, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
 
 	{"Canon:PowerShot G2",		CANON_CLASS_1,	0x04A9, 0x3055, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:PowerShot S40",		CANON_CLASS_1,	0x04A9, 0x3056, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:PowerShot S30",		CANON_CLASS_1,	0x04A9, 0x3057, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:PowerShot A40",		CANON_CLASS_1,	0x04A9, 0x3058, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:PowerShot A30",		CANON_CLASS_1,	0x04A9,	0x3059, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
-
+	/* 305b is the ZR45MC Digital Camcorder. */
 	/* 305c is in MacOS Info.plist, but I don't know what it is --swestin. */
 	{"Canon:PowerShot unknown 2",	CANON_CLASS_1,	0x04A9,	0x305c, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
 
@@ -138,7 +152,12 @@ const struct canonCamModelData models[] = {
 
 	{"Canon:PowerShot S200",	CANON_CLASS_1,	0x04A9, 0x3065, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:Digital IXUS v2",	CANON_CLASS_1,	0x04A9, 0x3065, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:PowerShot S330",	CANON_CLASS_1,	0x04A9, 0x3066, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:Digital IXUS 330",	CANON_CLASS_1,	0x04A9, 0x3066, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
+	/* 3067  MV550i Digital Video Camera */
+
+	/* Reported at http://www.linux-usb.org/usb.ids, we have 306E. */
+	/*{"Canon:PowerShot G3",	CANON_CLASS_1,	0x04A9, 0x3069, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},*/
 
 	/* 306a is in MacOS Info.plist, but I don't know what it is --swestin. */
 	{"Canon:Digital unknown 3",	CANON_CLASS_1,	0x04A9, 0x306a, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
@@ -169,22 +188,24 @@ const struct canonCamModelData models[] = {
 	{"Canon:PowerShot A300",	CANON_CLASS_4,	0x04A9, 0x3076, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:PowerShot S50 (normal mode)",	CANON_CLASS_4,	0x04A9, 0x3077, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:ZR70MC",		CANON_CLASS_5,	0x04A9, 0x3078, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:MV650i",		CANON_CLASS_5,	0x04A9, 0x3079, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
 	/* 307a is in MacOS Info.plist, but I don't know what it is
 	 * --swestin. */
 	{"Canon:PowerShot unknown 5",	CANON_CLASS_5,	0x04A9, 0x307a, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
 	/* MV630i is a DV camcorder */
 	{"Canon:MV630i",		CANON_CLASS_5,	0x04A9, 0x307b, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-	{"Canon:MV650i",		CANON_CLASS_5,	0x04A9, 0x3079, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-
 	{"Canon:Optura 20",		CANON_CLASS_5,	0x04A9, 0x307f, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+
+	/* 3080 is in MacOS Info.plist, but I don't know what it is
+	 * --swestin. */
+	{"Canon:Unknown 4",		CANON_CLASS_5,	0x04A9, 0x3081, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:Optura 10",		CANON_CLASS_5,	0x04A9, 0x3081, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
 	{"Canon:EOS 10D",		CANON_CLASS_4,	0x04A9, 0x3083, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:EOS 300D (normal mode)", CANON_CLASS_4,	0x04A9, 0x3084, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:EOS Digital Rebel (normal mode)",CANON_CLASS_4,	0x04A9, 0x3084, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:EOS Kiss Digital (normal mode)",CANON_CLASS_4,	0x04A9, 0x3084, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
-
 	/* PS G5 uses the same ProductID for PTP and Canon, with protocol autodetection */
 	{"Canon:PowerShot G5 (normal mode)", CANON_CLASS_5,	0x04A9, 0x3085, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
@@ -193,24 +214,39 @@ const struct canonCamModelData models[] = {
 
 	/* 0x3099 is the EOS 300D/Digital Rebel in PTP mode */
 	{"Canon:PowerShot A80 (normal mode)",   CANON_CLASS_4,  0x04A9, 0x309A, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	/* 0x309b is the Digital IXUS in PTP mode */
+	{"Canon:PowerShot S1 IS (normal mode)",   CANON_CLASS_5,  0x04A9, 0x309C, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
 	{"Canon:PowerShot S70 (normal mode)",   CANON_CLASS_5,  0x04A9, 0x30b1, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:PowerShot S60 (normal mode)",	CANON_CLASS_5,	0x04A9, 0x30b2, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:Digital IXUS 500 (normal mode)",CANON_CLASS_5,	0x04A9, 0x30b4, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:PowerShot S500 Digital ELPH (normal mode)",CANON_CLASS_5,	0x04A9, 0x30b4, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:IXY Digital 500 (normal mode)",	CANON_CLASS_5,	0x04A9, 0x30b4, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:PowerShot A75",			CANON_CLASS_5,	0x04A9, 0x30b5, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-	{"Canon:PowerShot A400",		CANON_CLASS_5,	0x04A9, 0x30b7,	CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:PowerShot A400",		CANON_CLASS_4,	0x04A9, 0x30b7,	CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:PowerShot A310",		CANON_CLASS_5,	0x04A9, 0x30b8, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:PowerShot A85 (normal mode)",	CANON_CLASS_5,	0x04A9, 0x30b9, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-	{"Canon:PowerShot S410 (normal mode)",	CANON_CLASS_5,	0x04A9, 0x30ba, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:PowerShot S410 Digital ELPH (normal mode)", CANON_CLASS_5,	0x04A9, 0x30ba, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:Digital IXUS 430 (normal mode)",CANON_CLASS_5,	0x04A9, 0x30ba, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:IXY Digital 430 (normal mode)",CANON_CLASS_5,	0x04A9, 0x30ba, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:PowerShot A95 (normal mode)",	CANON_CLASS_5,	0x04A9, 0x30bb, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-	{"Canon:PowerShot SD200 (normal mode)",	CANON_CLASS_5,	0x04A9, 0x30c0, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
 	/* 0x30bf is PowerShot SD300/Digital IXUS 40 in PTP mode */
 
+	/* 0x20c0 is PowerShot SD200 in PTP mode */
+	{"Canon:PowerShot SD200 (normal mode)",	CANON_CLASS_5,	0x04A9, 0x30c0, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:Digital IXUS 30 (normal mode)",	CANON_CLASS_5,	0x04A9, 0x30c0, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:IXY Digital 40 (normal mode)",	CANON_CLASS_5,	0x04A9, 0x30c0, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+
 	{"Canon:PowerShot SD20 (normal mode)",  CANON_CLASS_5,  0x04A9, 0x30c4, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:Digital IXUS i5 (normal mode)",  CANON_CLASS_5,  0x04A9, 0x30c4, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:IXY Digital L2 (normal mode)",  CANON_CLASS_5,  0x04A9, 0x30c4, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
+
+	/* Is 0x30e9 EOS 1D Mark II in Canon mode? */
+	/* 0x30ea is EOS 1D Mark II in PTP mode */
 
 	/*{"Canon:EOS 20D (normal mode)",		CANON_CLASS_6,	0x04A9, 0x30eb, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},*/
+	/* 0x30ec is EOS 20D in PTP mode */
 
 	{NULL}
 	/* *INDENT-ON* */
@@ -579,8 +615,13 @@ canon_int_get_battery (Camera *camera, int *pwr_status, int *pwr_source, GPConte
 
 	switch (camera->port->type) {
 		case GP_PORT_USB:
-			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_POWER_STATUS,
-						  &len, NULL, 0);
+			if ( camera->pl->md->model == CANON_CLASS_6 )
+				/* Newer protocol uses a different code, but with same response. */
+				msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_POWER_STATUS_2,
+							  &len, NULL, 0);
+			else
+				msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_POWER_STATUS,
+							  &len, NULL, 0);
 			if ( msg == NULL )
 				return GP_ERROR_OS_FAILURE;
 			break;
