@@ -1,5 +1,11 @@
 2001-12-11  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* frontends/command-line/Makefile.am: It seems we need to 
+	  LDADD libgphoto2_port.la here, too, although we LIBADDed it in
+	  libgphoto2/Makefile.am to libgphoto2.la?
+
+2001-12-11  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs: Remove references to GP_ERROR_IO_TIMEOUT - we use
 	  GP_ERROR_TIMEOUT instead.
 

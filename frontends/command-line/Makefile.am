@@ -39,8 +39,9 @@ gphoto2_SOURCES = 		\
 
 gphoto2_LDFLAGS = -export-dynamic
 
-gphoto2_LDADD =				\
-	../../libgphoto2/libgphoto2.la	\
-	$(CDK_LIBS) $(AA_LIBS)		\
-	$(JPEG_LIBS) 			\
+gphoto2_LDADD =						\
+	$(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la\
+	$(top_builddir)/libgphoto2/libgphoto2.la	\
+	$(CDK_LIBS) $(AA_LIBS)				\
+	$(JPEG_LIBS) 					\
 	$(INTLLIBS)
