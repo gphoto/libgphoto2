@@ -1,10 +1,25 @@
 CCFLAGS=-O2 -c -I.. -I..\..\include -I..\..\libgpio -Zmtd -Zcrtdll -Zbin-files -D__ST_MT_ERRNO_ -I. -DOS2 -DHAVE_TERMIOS_H
 CC=gcc
 
-all: ..\gpdirbrw.dll
+all: start \
+  dll \
+  end
+
+start:
+  @echo ****
+  @echo   Entering:      $(MAKEDIR)
+  @echo   using CCFLAGS: $(CCFLAGS)
+  @echo ****
+
+end:
+  @echo ****
+  @echo   Done: $(MAKEDIR)
+  @echo ****
+
+dll: ..\gpdirbrw.dll
 
 ..\..\obj\directory.o : directory.c directory.h
-   $(CC) -o $@ directory.c $(CCFLAGS)
+   @$(CC) -o $@ directory.c $(CCFLAGS)
 
-..\gpdirbrw.dll: ..\..\obj\directory.o
-   $(CC) -g -Wall -Zdll -Zcrtdll -o $@ $** directory.def -lwrap -Le:\emx\lib -lst\check -lgcc -LE:\NETLABS\GNOME\GPHOTO2\LIB -llibgphoto2 -llibgpio -ldl E:\NETLABS\GNOME\GPHOTO2\obj\interface.o -lpthreads -lpthrdrtl -lmt\c
+..\gpdirbrw.dll: ..\..\obj\directory.o ..\..\obj\main.o ..\..\obj\test.o ..\..\obj\script.o
+   @$(CC) -g -Wall -Zdll -Zcrtdll -o $@ $** directory.def -lwrap -Le:\emx\lib -lst\check -lgcc -LE:\NETLABS\GNOME\GPHOTO2\LIB -llibgphoto2 -llibgpio -ldl E:\NETLABS\GNOME\GPHOTO2\obj\interface.o -lpthreads -lpthrdrtl -lmt\c

@@ -2,30 +2,45 @@ CCFLAGS=-O2 -c -I.. -I..\include -I..\libgpio -Zmtd -Zcrtdll -Zbin-files -D__ST_
 CC=gcc
 MKLIB=ar r
 
-all: ..\lib\libgphoto2.a
-     @echo enter libgphoto2
+
+all: start \
+  lib \
+  end
+
+start:
+  @echo ****
+  @echo   Entering     : $(MAKEDIR)
+  @echo   using CCFLAGS: $(CCFLAGS)
+  @echo ****
+
+end:
+  @echo ****
+  @echo   Done: $(MAKEDIR)
+  @echo ****
+
+lib: ..\lib\libgphoto2.a
 
 ..\obj\core.o: core.c
-  $(CC) -o $@ $** $(CCFLAGS)
+  @$(CC) -o $@ $** $(CCFLAGS)
 
 ..\obj\exif.o: exif.c
-  $(CC) -o $@ $** $(CCFLAGS)
+  @$(CC) -o $@ $** $(CCFLAGS)
 
 ..\obj\file.o: file.c
-  $(CC) -o $@ $** $(CCFLAGS)
+  @$(CC) -o $@ $** $(CCFLAGS)
 
 ..\obj\library.o: library.c
-  $(CC) -o $@ $** $(CCFLAGS)
+  @$(CC) -o $@ $** $(CCFLAGS)
 
 ..\obj\settings.o: settings.c
-  $(CC) -o $@ $** $(CCFLAGS)
+  @$(CC) -o $@ $** $(CCFLAGS)
 
 ..\obj\util.o: util.c
-  $(CC) -o $@ $** $(CCFLAGS)
+  @$(CC) -o $@ $** $(CCFLAGS)
 
 ..\obj\widget.o: widget.c
-  $(CC) -o $@ $** $(CCFLAGS)
+  @$(CC) -o $@ $** $(CCFLAGS)
 
 ..\lib\libgphoto2.a: ..\obj\core.o ..\obj\exif.o ..\obj\file.o ..\obj\library.o ..\obj\settings.o ..\obj\util.o ..\obj\widget.o
-  $(MKLIB) $@ $**
+  @$(MKLIB) $@ $**
 
