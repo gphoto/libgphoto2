@@ -494,6 +494,7 @@ gsmart_get_image_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
 		CHECK (gp_port_read (lib->gpdev, mybuf, size));
 	}
 	*len = t_width * t_height * 3 + sizeof (pbm_header);
+	*len += 45;
 	*buf = malloc (*len);
 	if (!*buf)
 		return (GP_ERROR_NO_MEMORY);
@@ -722,7 +723,7 @@ gsmart_get_FATs (CameraPrivateLibrary * lib)
 	       (lib->gpdev, 0, 0, 0x0e19, (u_int8_t *) & lower, 1));
 	CHECK (gp_port_usb_msg_read
 	       (lib->gpdev, 0, 0, 0x0e20, (u_int8_t *) & upper, 1));
-
+	
 	fatscount = ((upper & 0xFF << 8) | (lower & 0xFF));
 
 	if (lib->fats)
