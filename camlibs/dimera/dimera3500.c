@@ -21,6 +21,10 @@
  *
  * History:
  * $Log$
+ * Revision 1.17  2001/08/30 21:59:08  dfandrich
+ * Fixed problem with saving raw images.  Stopped file name suffixes from
+ * needlessly changing.
+ *
  * Revision 1.16  2001/08/30 20:10:40  lutz
  * 2001-08-30  Lutz Müller <urc8@rz.uni-karlsruhe.de>
  *
@@ -32,7 +36,7 @@
  * Revision 1.15  2001/08/30 10:47:51  lutz
  * 2001-08-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
  *
- *         * camlibs/barbie/*: Use camera->port and camera->fs.
+ *         * camlibs/barbie/?*: Use camera->port and camera->fs.
  *         * camlibs/dimera/dimera3500.c
  *         (populate_filesystem): Removed.
  *         (camera_folder_list_folders): Removed. We don't support folders anyways
@@ -380,10 +384,9 @@ static int camera_file_get (Camera *camera, const char *folder, const char *file
 		break;
 	case GP_FILE_TYPE_RAW:
 		gp_file_set_mime_type (file, GP_MIME_RAW); 
+		gp_file_adjust_name_for_mime_type (file);
 		break;
 	}
-
-	gp_file_adjust_name_for_mime_type (file);
 
 	return GP_OK;
 }
@@ -571,6 +574,8 @@ static int camera_about (Camera *camera, CameraText *about) {
 
 
 
+/* Download a thumbnail image from the camera and return it in a malloced
+buffer with PGM headers */
 static u_int8_t *
 Dimera_Get_Thumbnail( int picnum, int *size, Camera *camera )
 {
@@ -603,6 +608,8 @@ Dimera_Get_Thumbnail( int picnum, int *size, Camera *camera )
 	return image;
 }
 
+/* Download a raw Bayer image from the camera and return it in a malloced
+buffer */
 static u_int8_t *
 Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
 		       int *width, int *height)
@@ -648,9 +655,12 @@ Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
 		*height = 480;
 		*width = 640;
 	}
+
+	*size = *height * *width;	/* 8 bits per pixel in raw CCD format */
+
 	update_status( "Downloading Image" );
 
-	rbuffer = (u_int8_t *)malloc( *height * *width );
+	rbuffer = (u_int8_t *)malloc( *size );
 	if ( rbuffer == NULL )
 	{
 		return NULL;
@@ -787,6 +797,8 @@ static unsigned calc_new_exposure(unsigned exposure, unsigned brightness) {
 }
 #endif
 
+/* Download a live image from the camera and return it in a malloced
+buffer with PGM headers */
 static u_int8_t *
 Dimera_Preview( int *size, Camera *camera )
 {
