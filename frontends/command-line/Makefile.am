@@ -51,7 +51,7 @@ gphoto2_LDADD =						\
 	$(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la\
 	$(top_builddir)/libgphoto2/libgphoto2.la	\
 	$(AA_LIBS)					\
-	$(JPEG_LIBS) 					\
+	$(JPEG_LIBS) $(PTHREAD_LIBS)			\
 	$(EXIF_LIBS) $(INTLLIBS) $(RL_LIBS)
 
 # Special rule for regenerating the man page from the XML file.

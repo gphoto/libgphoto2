@@ -22,5 +22,6 @@
 #undef HAVE_JPEG
 #undef HAVE_EXIF
 #undef HAVE_RL
+#undef HAVE_PTHREAD
 
 #undef DISABLE_DEBUGGING

@@ -77,20 +77,23 @@
 	}							\
 }
 
+
+static Camera *camera = NULL;
+
 /* Forward declarations */
-static int shell_cd            (const char *);
-static int shell_lcd           (const char *);
-static int shell_exit          (const char *);
-static int shell_get           (const char *);
-static int shell_get_thumbnail (const char *);
-static int shell_get_raw       (const char *);
-static int shell_del           (const char *);
-static int shell_help          (const char *);
-static int shell_ls            (const char *);
-static int shell_exit          (const char *);
-static int shell_show_info     (const char *);
+static int shell_cd            (Camera *, const char *);
+static int shell_lcd           (Camera *, const char *);
+static int shell_exit          (Camera *, const char *);
+static int shell_get           (Camera *, const char *);
+static int shell_get_thumbnail (Camera *, const char *);
+static int shell_get_raw       (Camera *, const char *);
+static int shell_del           (Camera *, const char *);
+static int shell_help          (Camera *, const char *);
+static int shell_ls            (Camera *, const char *);
+static int shell_exit          (Camera *, const char *);
+static int shell_show_info     (Camera *, const char *);
 #ifdef HAVE_EXIF
-static int shell_show_exif     (const char *);
+static int shell_show_exif     (Camera *, const char *);
 #endif
 
 #define MAX_FOLDER_LEN 1024
@@ -99,7 +102,7 @@ static int shell_show_exif     (const char *);
 static int shell_construct_path (const char *folder_orig, const char *rel_path,
 				 char *dest_folder, char *dest_filename);
 
-typedef int (* ShellFunction) (const char *arg);
+typedef int (* ShellFunction) (Camera *camera, const char *arg);
 
 typedef struct _ShellFunctionTable ShellFunctionTable;
 struct _ShellFunctionTable {
@@ -273,8 +276,7 @@ shell_path_generator (const char *text, int state)
 		x = 0;
 
 	/* First search for matching file */
-	r = gp_camera_folder_list_files (glob_camera, folder,
-					 &list, glob_context);
+	r = gp_camera_folder_list_files (camera, folder, &list, glob_context);
 	if (r < 0)
 		return (NULL);
 	file_count = gp_list_count (&list);
@@ -310,8 +312,7 @@ shell_path_generator (const char *text, int state)
 	}
 
 	/* Ok, we listed all matching files. Now, list matching folders. */
-	r = gp_camera_folder_list_folders (glob_camera, folder,
-					   &list, glob_context);
+	r = gp_camera_folder_list_folders (camera, folder, &list, glob_context);
 	if (r < 0)
 		return (NULL);
 	folder_count = gp_list_count (&list);
@@ -381,10 +382,13 @@ shell_completion_function (const char *text, int start, int end)
 #endif /* HAVE_RL */
 
 int
-shell_prompt (void)
+shell_prompt (Camera *c)
 {
 	int x;
 	char cmd[1024], arg[1024], *line;
+
+	/* The stupid readline functions need that global variable. */
+	camera = c;
 
 #ifdef HAVE_RL
 	rl_attempted_completion_function = shell_completion_function;
@@ -427,7 +431,7 @@ shell_prompt (void)
 		}
 
 		/* Execute the command */
-		CHECK_CONT (func[x].function (arg));
+		CHECK_CONT (func[x].function (camera, arg));
 	}
 
 	return (GP_OK);
@@ -511,8 +515,8 @@ shell_construct_path (const char *folder_orig, const char *rel_path,
         return (GP_OK);
 }
 
-int
-shell_lcd (const char *arg)
+static int
+shell_lcd (Camera *camera, const char *arg)
 {
 	char new_cwd[MAX_FOLDER_LEN];
 	int arg_count = shell_arg_count (arg);
@@ -538,8 +542,8 @@ shell_lcd (const char *arg)
 	return (GP_OK);
 }
 
-int
-shell_cd (const char *arg)
+static int
+shell_cd (Camera *camera, const char *arg)
 {
 	char folder[MAX_FOLDER_LEN];
 	CameraList list;
@@ -558,7 +562,7 @@ shell_cd (const char *arg)
 	/* Get the new folder value */
 	shell_construct_path (glob_folder, arg, folder, NULL);
 
-	CHECK (gp_camera_folder_list_folders (glob_camera, folder, &list,
+	CHECK (gp_camera_folder_list_folders (camera, folder, &list,
 					      glob_context));
 	strcpy (glob_folder, folder);
 	printf (_("Remote directory now '%s'."), glob_folder);
@@ -567,8 +571,8 @@ shell_cd (const char *arg)
 	return (GP_OK);
 }
 
-int
-shell_ls (const char *arg)
+static int
+shell_ls (Camera *camera, const char *arg)
 {
 	CameraList list;
 	char buf[1024], folder[MAX_FOLDER_LEN];
@@ -582,7 +586,7 @@ shell_ls (const char *arg)
 		strcpy (folder, glob_folder);
 	}
 
-	CHECK (gp_camera_folder_list_folders (glob_camera, folder, &list,
+	CHECK (gp_camera_folder_list_folders (camera, folder, &list,
 					      glob_context));
 
 	if (glob_quiet)
@@ -600,7 +604,7 @@ shell_ls (const char *arg)
 		}
 	}
 
-	CHECK (gp_camera_folder_list_files (glob_camera, folder, &list,
+	CHECK (gp_camera_folder_list_files (camera, folder, &list,
 					    glob_context));
 
 	if (glob_quiet)
@@ -623,112 +627,94 @@ shell_ls (const char *arg)
 }
 
 static int
-shell_get_common (const char *args, CameraFileType type)
+shell_file_action (Camera *camera, GPContext *context, const char *folder,
+		   const char *args, FileAction action)
 {
 	char arg[1024];
 	unsigned int x;
 	char dest_folder[MAX_FOLDER_LEN], dest_filename[MAX_FILE_LEN];
+	ActionParams ap;
+
+	memset (&ap, 0, sizeof (ActionParams));
+	ap.camera = camera;
+	ap.context = context;
+	ap.folder = dest_folder; 
 
 	for (x = 0; x < shell_arg_count (args); x++) {
-
 		CHECK (shell_arg (args, x, arg));
-		CHECK (shell_construct_path (glob_folder, arg,
+		CHECK (shell_construct_path (folder, arg,
 					     dest_folder, dest_filename));
-		CHECK (save_file_to_file (dest_folder, dest_filename, type));
+		CHECK (action (&ap, dest_filename));
 	}
-
-	return (GP_OK);		
+	
+	return (GP_OK);      
 }
 
-int
-shell_get_thumbnail (const char *arg)
+static int
+shell_get_thumbnail (Camera *camera, const char *arg)
 {
-	CHECK (shell_get_common (arg, GP_FILE_TYPE_PREVIEW));
+	CHECK (shell_file_action (camera, glob_context, glob_folder, arg,
+				  save_thumbnail_action));
 
 	return (GP_OK);
 }
 
-int
-shell_get (const char *arg)
+static int
+shell_get (Camera *camera, const char *arg)
 {
-
-	CHECK (shell_get_common (arg, GP_FILE_TYPE_NORMAL));
+	CHECK (shell_file_action (camera, glob_context, glob_folder, arg,
+				  save_file_action));
 
 	return (GP_OK);
 }
 
-int
-shell_get_raw (const char *arg)
+static int
+shell_get_raw (Camera *camera, const char *arg)
 {
-	CHECK (shell_get_common (arg, GP_FILE_TYPE_RAW));
+	CHECK (shell_file_action (camera, glob_context, glob_folder, arg,
+				  save_raw_action));
 
 	return (GP_OK);
 }
 
-int
-shell_del (const char *args)
+static int
+shell_del (Camera *camera, const char *arg)
 {
-        char arg[1024];
-	unsigned int x;
-	char dest_folder[MAX_FOLDER_LEN], dest_filename[MAX_FILE_LEN];
-
-	for (x = 0; x < shell_arg_count (args); x++) {
-
-		CHECK (shell_arg (args, x, arg));
-		CHECK (shell_construct_path (glob_folder, arg,
-					     dest_folder, dest_filename));
-		CHECK (gp_camera_file_delete (glob_camera, dest_folder,
-					      dest_filename, glob_context));
-	}
+	CHECK (shell_file_action (camera, glob_context, glob_folder, arg,
+				  delete_file_action));
 
 	return (GP_OK);
 }
 
 #ifdef HAVE_EXIF
 static int
-shell_show_exif (const char *arg)
+shell_show_exif (Camera *camera, const char *arg)
 {
-	char a[1024];
-	unsigned int x;
-	char dest_folder[MAX_FOLDER_LEN], dest_filename[MAX_FILE_LEN];
-
-	for (x = 0; x < shell_arg_count (arg); x++) {
-		CHECK (shell_arg (arg, x, a));
-		CHECK (shell_construct_path (glob_folder, a,
-					     dest_folder, dest_filename));
-		CHECK (print_exif_action (dest_folder, dest_filename));
-	}
+	CHECK (shell_file_action (camera, glob_context, glob_folder, arg,
+				  print_exif_action));
 
 	return (GP_OK);
 }
 #endif
 
 static int
-shell_show_info (const char *arg)
+shell_show_info (Camera *camera, const char *arg)
 {
-	char a[1024];
-	unsigned int x;
-	char dest_folder[MAX_FOLDER_LEN], dest_filename[MAX_FILE_LEN];
-
-	for (x = 0; x < shell_arg_count (arg); x++) {
-		CHECK (shell_arg (arg, x, a)); 
-		CHECK (shell_construct_path (glob_folder, a,
-					     dest_folder, dest_filename));
-		CHECK (print_info_action (dest_folder, dest_filename));
-	}
+	CHECK (shell_file_action (camera, glob_context, glob_folder, arg,
+				  print_info_action));
 
 	return (GP_OK);
 }
 
 int
-shell_exit (const char *arg)
+shell_exit (Camera *camera, const char *arg)
 {
 	shell_done = 1;
 	return (GP_OK);
 }
 
 static int
-shell_help_command (const char *arg)
+shell_help_command (Camera *camera, const char *arg)
 {
 	char arg_cmd[1024];
 	unsigned int x;
@@ -762,7 +748,7 @@ shell_help_command (const char *arg)
 }
 
 static int
-shell_help (const char *arg)
+shell_help (Camera *camera, const char *arg)
 {
 	unsigned int x;
 	int arg_count = shell_arg_count (arg);
@@ -771,7 +757,7 @@ shell_help (const char *arg)
 	 * If help on a command is requested, print the syntax of the command.
 	 */
 	if (arg_count > 0) {
-		CHECK (shell_help_command (arg));
+		CHECK (shell_help_command (camera, arg));
 		return (GP_OK);
 	}
 

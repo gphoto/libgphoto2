@@ -53,6 +53,27 @@ if test "$gettext_without_libintl" != "true" -a "$USE_NLS" = "yes"; then
 fi
 
 dnl ---------------------------------------------------------------------------
+dnl pthread: The gphoto2 shell (--shell) keeps up a connection to the 
+dnl          camera. Some cameras need to be sent keep-alive-messages
+dnl          in order to prevent a shut-down. This is what we need
+dnl          pthread for.
+dnl ---------------------------------------------------------------------------
+pthread_msg=no
+try_pthread=true
+AC_ARG_WITH(pthread, [  --without-pthread         Don't use pthread],
+        if test x$withval = xno; then
+                try_pthread=false
+        fi)
+if $try_pthread; then
+        AC_CHECK_HEADER(pthread.h, [
+                AC_DEFINE(HAVE_PTHREAD)
+                pthread_msg=yes
+                PTHREAD_LIBS="-lpthread"
+        ])
+fi
+AC_SUBST(PTHREAD_LIBS)
+
+dnl ---------------------------------------------------------------------------
 dnl Turn on debugging and all warnings when using gcc
 dnl ---------------------------------------------------------------------------
 if test "$ac_cv_prog_gcc" = "yes"; then
@@ -84,6 +105,7 @@ AC_HEADER_STDC
 AC_CHECK_HEADERS(unistd.h mcheck.h)
 AC_INLINE
 AC_CONST
+
 dnl ---------------------------------------------------------------------------
 dnl Check for libtool: lt_dlforeachfile has been introduced in 
 dnl		       libtool-1.4. However, there are still systems out
@@ -489,4 +511,5 @@ Configuration (libgphoto2):
 	pkg-config:                $pkgconfig_msg
 	EXIF support:              $exif_msg
 	readline support:          $rl_msg
+	pthread support:           $pthread_msg
 "

@@ -19,6 +19,7 @@
  */
 
 #include <config.h>
+#include "main.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -26,8 +27,13 @@
 #include <string.h>
 #include <unistd.h>
 #include <locale.h>
+
 #ifdef HAVE_RL
-#include <readline/readline.h>
+#  include <readline/readline.h>
+#endif
+
+#ifdef HAVE_PTHREAD
+#  include <pthread.h>
 #endif
 
 #ifndef DISABLE_DEBUGGING
@@ -37,10 +43,8 @@
 #endif
 
 #ifndef WIN32
-#include <signal.h>
+#  include <signal.h>
 #endif
-
-#include "main.h"
 
 #include "actions.h"
 #include "foreach.h"
@@ -49,7 +53,7 @@
 #include "shell.h"
 
 #ifdef HAVE_CDK
-#include "gphoto2-cmd-config.h"
+#  include "gphoto2-cmd-config.h"
 #endif
 
 #ifdef HAVE_AA
@@ -87,6 +91,14 @@
 #endif
 
 #define CR(result) {int r = (result); if (r < 0) return (r);}
+
+#define GP_USB_HOTPLUG_SCRIPT "usbcam"
+#define GP_USB_HOTPLUG_MATCH_VENDOR_ID          0x0001
+#define GP_USB_HOTPLUG_MATCH_PRODUCT_ID         0x0002
+
+#define GP_USB_HOTPLUG_MATCH_DEV_CLASS          0x0080
+#define GP_USB_HOTPLUG_MATCH_DEV_SUBCLASS       0x0100
+#define GP_USB_HOTPLUG_MATCH_DEV_PROTOCOL       0x0200
 
 /* Takes the current globals, and sets up the gPhoto lib with them */
 static int set_globals (void);
@@ -270,6 +282,9 @@ int glob_usbid[5];
 
 Camera    *glob_camera  = NULL;
 GPContext *glob_context = NULL;
+
+static ForEachParams foreach_params;
+static ActionParams  action_params;
 
 int  glob_debug;
 int  glob_shell=0;
@@ -732,7 +747,7 @@ OPTION_CALLBACK(shell)
 
         glob_shell = 1;
 
-        return (shell_prompt ());
+        return (shell_prompt (glob_camera));
 }
 
 OPTION_CALLBACK (use_folder)
@@ -766,7 +781,7 @@ OPTION_CALLBACK (no_recurse)
 OPTION_CALLBACK (list_folders)
 {
         CR (set_globals ());
-	CR (for_each_folder (glob_folder, list_folders_action, glob_flags));
+	CR (for_each_folder (&foreach_params, list_folders_action));
 
 	return (GP_OK);
 }
@@ -791,10 +806,10 @@ OPTION_CALLBACK(show_info)
 	 * directly dump info.
 	 */
 	if (strchr (arg, '.'))
-		return (print_info_action (glob_folder, arg));
+		return (print_info_action (&action_params, arg));
 
-	return (for_each_file_in_range (glob_folder, print_info_action,
-					glob_flags, arg));
+	return (for_each_file_in_range (&foreach_params, print_info_action,
+					arg));
 }
 
 #ifdef HAVE_EXIF
@@ -807,17 +822,17 @@ OPTION_CALLBACK(show_exif)
 	 * directly dump EXIF information.
 	 */
 	if (strchr (arg, '.'))
-		return (print_exif_action (glob_folder, arg));
+		return (print_exif_action (&action_params, arg));
 
-	return (for_each_file_in_range (glob_folder, print_exif_action,
-					 glob_flags, arg));
+	return (for_each_file_in_range (&foreach_params, print_exif_action,
+					arg));
 }
 #endif
 
 OPTION_CALLBACK (list_files)
 {
         CR (set_globals ());
-        CR (for_each_folder (glob_folder, list_files_action, glob_flags));
+        CR (for_each_folder (&foreach_params, list_files_action));
 
 	return (GP_OK);
 }
@@ -932,16 +947,16 @@ save_camera_file_to_file (CameraFile *file, CameraFileType type)
 }
 
 int
-save_file_to_file (const char *folder, const char *filename,
-		      CameraFileType type)
+save_file_to_file (Camera *camera, GPContext *context, const char *folder,
+		   const char *filename, CameraFileType type)
 {
         int res;
 
         CameraFile *file;
 
         CR (gp_file_new (&file));
-        CR (gp_camera_file_get (glob_camera, folder, filename, type,
-                                          file, glob_context));
+        CR (gp_camera_file_get (camera, folder, filename, type,
+                                          file, context));
 
         if (glob_stdout) {
                 const char *data;
@@ -981,24 +996,25 @@ get_file_common (char *arg, CameraFileType type )
 	 * get that file.
 	 */
         if (strchr (arg, '.'))
-                return (save_file_to_file (glob_folder, arg, type));
+                return (save_file_to_file (glob_camera, glob_context,
+					   glob_folder, arg, type));
 
         switch (type) {
         case GP_FILE_TYPE_PREVIEW:
-		return for_each_file_in_range (glob_folder,
-				save_thumbnail_action, glob_flags, arg);
+		return for_each_file_in_range (&foreach_params,
+				save_thumbnail_action, arg);
         case GP_FILE_TYPE_NORMAL:
-                return for_each_file_in_range (glob_folder,
-				save_file_action, glob_flags, arg);
+                return for_each_file_in_range (&foreach_params,
+				save_file_action, arg);
         case GP_FILE_TYPE_RAW:
-                return for_each_file_in_range (glob_folder,
-				save_raw_action, glob_flags, arg);
+                return for_each_file_in_range (&foreach_params,
+				save_raw_action, arg);
 	case GP_FILE_TYPE_AUDIO:
-		return for_each_file_in_range (glob_folder,
-				save_audio_action, glob_flags, arg);
+		return for_each_file_in_range (&foreach_params,
+				save_audio_action, arg);
 	case GP_FILE_TYPE_EXIF:
-		return for_each_file_in_range (glob_folder,
-				save_exif_action, glob_flags, arg);
+		return for_each_file_in_range (&foreach_params,
+				save_exif_action, arg);
         default:
                 return (GP_ERROR_NOT_SUPPORTED);
         }
@@ -1006,43 +1022,39 @@ get_file_common (char *arg, CameraFileType type )
 
 OPTION_CALLBACK (get_file)
 {
-        return get_file_common(arg, GP_FILE_TYPE_NORMAL);
+        return get_file_common (arg, GP_FILE_TYPE_NORMAL);
 }
 
 OPTION_CALLBACK (get_all_files)
 {
-        cli_debug_print("Getting all files");
-
         CR (set_globals ());
-        CR (for_each_file (glob_folder, save_file_action, glob_flags));
+        CR (for_each_file (&foreach_params, save_file_action));
 
 	return (GP_OK);
 }
 
 OPTION_CALLBACK (get_thumbnail)
 {
-        return (get_file_common(arg, GP_FILE_TYPE_PREVIEW));
+        return (get_file_common (arg, GP_FILE_TYPE_PREVIEW));
 }
 
 OPTION_CALLBACK(get_all_thumbnails)
 {
-        cli_debug_print("Getting all thumbnails");
-
         CR (set_globals ());
-        CR (for_each_file (glob_folder, save_thumbnail_action, glob_flags));
+        CR (for_each_file (&foreach_params, save_thumbnail_action));
 
 	return (GP_OK);
 }
 
 OPTION_CALLBACK (get_raw_data)
 {
-        return (get_file_common(arg, GP_FILE_TYPE_RAW));
+        return (get_file_common (arg, GP_FILE_TYPE_RAW));
 }
 
 OPTION_CALLBACK (get_all_raw_data)
 {
         CR (set_globals ());
-        CR (for_each_file (glob_folder, save_raw_action, glob_flags));
+        CR (for_each_file (&foreach_params, save_raw_action));
 
 	return (GP_OK);
 }
@@ -1055,30 +1067,34 @@ OPTION_CALLBACK (get_audio_data)
 OPTION_CALLBACK (get_all_audio_data)
 {
 	CR (set_globals ());
-	CR (for_each_file (glob_folder, save_audio_action, glob_flags));
+	CR (for_each_file (&foreach_params, save_audio_action));
 
 	return (GP_OK);
 }
 
 OPTION_CALLBACK (delete_file)
 {
-        cli_debug_print("Deleting file(s) %s", arg);
-
-        CR (set_globals ());
+	CR (set_globals ());
 
 	if (strchr (arg, '.'))
-		return (delete_file_action (glob_folder, arg));
+		return (delete_file_action (&action_params, arg));
 
-	return for_each_file_in_range (glob_folder, delete_file_action,
-				       glob_flags, arg);
+	return (for_each_file_in_range (&foreach_params, delete_file_action,
+					arg));
 }
 
 OPTION_CALLBACK (delete_all_files)
 {
-	cli_debug_print("Deleting all files in '%s'", glob_folder);
+	ForEachParams fp;
+
+	memset (&fp, 0, sizeof (ForEachParams));
+	fp.camera = glob_camera;
+	fp.context = glob_context;
+	fp.folder = glob_folder;
+	fp.flags = glob_flags;
 
 	CR (set_globals ());
-	CR (for_each_folder (glob_folder, delete_all_action, glob_flags));
+	CR (for_each_folder (&fp, delete_all_action));
 
 	return (GP_OK);
 }
@@ -1250,6 +1266,75 @@ OPTION_CALLBACK (about)
 /* Set/init global variables                                    */
 /* ------------------------------------------------------------ */
 
+#ifdef HAVE_PTHREAD
+
+typedef struct _ThreadData ThreadData;
+struct _ThreadData {
+	Camera *camera;
+	unsigned int timeout;
+	CameraTimeoutFunc func;
+};
+
+static void
+thread_cleanup_func (void *data)
+{
+	ThreadData *td = data;
+
+	free (td);
+}
+
+static void *
+thread_func (void *data)
+{
+	ThreadData *td = data;
+	time_t t, last;
+
+	pthread_cleanup_push (thread_cleanup_func, td);
+
+	last = time (NULL);
+	while (1) {
+		t = time (NULL);
+		if (t - last > td->timeout) {
+			td->func (td->camera, NULL);
+			last = t;
+		}
+		pthread_testcancel ();
+	}
+
+	pthread_cleanup_pop (1);
+}
+
+static unsigned int
+start_timeout_func (Camera *camera, unsigned int timeout,
+		    CameraTimeoutFunc func, void *data)
+{
+	pthread_t tid;
+	ThreadData *td;
+
+	td = malloc (sizeof (ThreadData));
+	if (!td)
+		return 0;
+	memset (td, 0, sizeof (ThreadData));
+	td->camera = camera;
+	td->timeout = timeout;
+	td->func = func;
+
+	pthread_create (&tid, NULL, thread_func, td);
+
+	return (tid);
+}
+
+static void
+stop_timeout_func (Camera *camera, unsigned int id, void *data)
+{
+	pthread_t tid = id;
+
+	pthread_cancel (tid);
+	pthread_join (tid, NULL);
+}
+
+#endif
+
 static int
 set_globals (void)
 {
@@ -1270,6 +1355,10 @@ set_globals (void)
 
         cli_debug_print ("Setting globals...");
         CR (gp_camera_new (&glob_camera));
+#ifdef HAVE_PTHREAD
+	gp_camera_set_timeout_funcs (glob_camera, start_timeout_func,
+				     stop_timeout_func, NULL);
+#endif
 
 	CR (gp_abilities_list_new (&al));
 	CR (gp_abilities_list_load (al, glob_context));
@@ -1398,6 +1487,13 @@ set_globals (void)
 	 */
 	if (!strncmp (glob_port, "serial:", 7))
 	        CR (gp_camera_set_port_speed (glob_camera, glob_speed));
+
+	memset (&foreach_params, 0, sizeof (ForEachParams));
+	memset (&action_params,  0, sizeof (ActionParams));
+	foreach_params.camera  = action_params.camera  = glob_camera;
+	foreach_params.context = action_params.context = glob_context;
+	foreach_params.folder  = action_params.folder  = glob_folder;
+	foreach_params.flags   =                         glob_flags;
 
         return (GP_OK);
 }
@@ -1834,10 +1930,6 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n"));
 		}
 	}
 
-#ifdef OS2
-//       printf(_("\nErrors occuring beyond this point are 'expected' on OS/2\ninvestigation pending\n"));
-#endif
-
 	/* Clean up */
 	if (glob_camera) {
 		gp_camera_unref (glob_camera);
@@ -1850,10 +1942,3 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n"));
 
         return (EXIT_SUCCESS);
 }
-
-/*
- * Local Variables:
- * c-file-style:"linux"
- * indent-tabs-mode:t
- * End:
- */

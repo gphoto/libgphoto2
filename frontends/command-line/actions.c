@@ -54,36 +54,34 @@
 #define CRU(result,file) {int r=(result); if (r<0) {gp_file_unref(file);return r;}}
 
 int
-delete_all_action (const char *folder)
+delete_all_action (ActionParams *p)
 {
-	cli_debug_print ("Deleting all files in '%s'", folder);
-
-	return gp_camera_folder_delete_all (glob_camera, folder, glob_context);
+	return (gp_camera_folder_delete_all (p->camera, p->folder, p->context));
 }
 
 int
-list_folders_action (const char *folder)
+list_folders_action (ActionParams *p)
 {
 	CameraList list;
 	int count;
 	const char *name;
 	unsigned int i;
 
-	CR (gp_camera_folder_list_folders (glob_camera, folder, &list,
-					   glob_context));
+	CR (gp_camera_folder_list_folders (p->camera, p->folder, &list,
+					   p->context));
 	CR (count = gp_list_count (&list));
 	switch (count) {
         case 0:
-                printf (_("There are no folders in folder '%s'."), folder);
+                printf (_("There are no folders in folder '%s'."), p->folder);
                 printf ("\n");
                 break;
         case 1:
-                printf (_("There is one folder in folder '%s':"), folder);
+                printf (_("There is one folder in folder '%s':"), p->folder);
                 printf ("\n");
                 break;
         default:
                 printf (_("There are %i folders in folder '%s':"),
-			 count, folder);
+			 count, p->folder);
                 printf ("\n");
                 break;
 	}
@@ -96,48 +94,49 @@ list_folders_action (const char *folder)
 }
 
 int
-list_files_action (const char *folder)
+list_files_action (ActionParams *p)
 {
 	CameraList list;
 	int count;
 	const char *name;
 	unsigned int i;
 
-	CR (gp_camera_folder_list_files (glob_camera, folder, &list,
-					 glob_context));
+	CR (gp_camera_folder_list_files (p->camera, p->folder, &list,
+					 p->context));
 	CR (count = gp_list_count (&list));
 	switch (count) {
 	case 0:
-		printf (_("There are no files in folder '%s'."), folder);
+		printf (_("There are no files in folder '%s'."), p->folder);
 		printf ("\n");
 		break;
 	case 1:
-		printf (_("There is one file in folder '%s':"), folder);
+		printf (_("There is one file in folder '%s':"), p->folder);
 		printf ("\n");
 		break;
 	default:
-		printf (_("There are %i files in folder '%s':"), count, folder);
+		printf (_("There are %i files in folder '%s':"), count,
+			p->folder);
 		printf ("\n");
 		break;
 	}
 	for (i = 0; i < count; i++) {
 		CR (gp_list_get_name (&list, i, &name));
-		CR (print_file_action (folder, name));
+		CR (print_file_action (p, name));
 	}
 
 	return (GP_OK);
 }
 
 int
-print_info_action (const char *folder, const char *filename)
+print_info_action (ActionParams *p, const char *filename)
 {
 	CameraFileInfo info;
 
-	CR (gp_camera_file_get_info (glob_camera, folder, filename, &info,
-				     glob_context));
+	CR (gp_camera_file_get_info (p->camera, p->folder, filename, &info,
+				     p->context));
 
 	printf (_("Information on file '%s' (folder '%s'):\n"),
-		filename, folder);
+		filename, p->folder);
 	printf (_("File:\n"));
 	if (info.file.fields == GP_FILE_INFO_NONE)
 		printf (_("  None available.\n"));
@@ -205,7 +204,7 @@ print_info_action (const char *folder, const char *filename)
 }
 
 int
-print_file_action (const char *folder, const char *filename)
+print_file_action (ActionParams *p, const char *filename)
 {
 	static int x=0;
 
@@ -213,7 +212,8 @@ print_file_action (const char *folder, const char *filename)
 		printf ("\"%s\"\n", filename);
 	else {
 		CameraFileInfo info;
-		if (gp_camera_file_get_info(glob_camera, folder, filename, &info, NULL) == GP_OK) {
+		if (gp_camera_file_get_info (p->camera, p->folder, filename,
+					     &info, NULL) == GP_OK) {
 		    printf("#%-5i %-27s", x+1, filename);
 		    if (info.file.fields & GP_FILE_INFO_PERMISSIONS) {
 			printf("%s%s",
@@ -237,39 +237,45 @@ print_file_action (const char *folder, const char *filename)
 }
 
 int
-save_file_action (const char *folder, const char *filename)
+save_file_action (ActionParams *p, const char *filename)
 {
-	return (save_file_to_file(folder, filename, GP_FILE_TYPE_NORMAL));
+	return (save_file_to_file (p->camera, p->context, p->folder, filename,
+				   GP_FILE_TYPE_NORMAL));
 }
 
 int
-save_exif_action (const char *folder, const char *filename)
+save_exif_action (ActionParams *p, const char *filename)
 {
-	return (save_file_to_file (folder, filename, GP_FILE_TYPE_EXIF));
+	return (save_file_to_file (p->camera, p->context, p->folder, filename,
+				   GP_FILE_TYPE_EXIF));
 }
 
 int
-save_thumbnail_action (const char *folder, const char *filename)
+save_thumbnail_action (ActionParams *p, const char *filename)
 {
-	return (save_file_to_file (folder, filename, GP_FILE_TYPE_PREVIEW));
+	return (save_file_to_file (p->camera, p->context, p->folder, filename,
+				   GP_FILE_TYPE_PREVIEW));
 }
 
 int
-save_raw_action (const char *folder, const char *filename)
+save_raw_action (ActionParams *p, const char *filename)
 {
-	return (save_file_to_file (folder, filename, GP_FILE_TYPE_RAW));
+	return (save_file_to_file (p->camera, p->context, p->folder, filename,
+				   GP_FILE_TYPE_RAW));
 }
 
 int
-save_audio_action (const char *folder, const char *filename)
+save_audio_action (ActionParams *p, const char *filename)
 {
-	return (save_file_to_file (folder, filename, GP_FILE_TYPE_AUDIO));
+	return (save_file_to_file (p->camera, p->context, p->folder, filename,
+				   GP_FILE_TYPE_AUDIO));
 }
 
 int
-delete_file_action (const char *folder, const char *filename)
+delete_file_action (ActionParams *p, const char *filename)
 {
-	return (gp_camera_file_delete(glob_camera, folder, filename, glob_context));
+	return (gp_camera_file_delete (p->camera, p->folder, filename,
+				       p->context));
 }
 
 #ifdef HAVE_EXIF
@@ -303,7 +309,7 @@ print_hline (void)
 #endif
 
 int
-print_exif_action (const char *folder, const char *filename)
+print_exif_action (ActionParams *p, const char *filename)
 {
 #ifdef HAVE_EXIF
         CameraFile *file;
@@ -312,8 +318,8 @@ print_exif_action (const char *folder, const char *filename)
         ExifData *ed;
 
         CR (gp_file_new (&file));
-        CRU (gp_camera_file_get (glob_camera, folder, filename,
-				GP_FILE_TYPE_EXIF, file, glob_context), file);
+        CRU (gp_camera_file_get (p->camera, p->folder, filename,
+				 GP_FILE_TYPE_EXIF, file, p->context), file);
         CRU (gp_file_get_data_and_size (file, &data, &size), file);
         ed = exif_data_new_from_data (data, size);
         gp_file_unref (file);

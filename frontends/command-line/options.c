@@ -47,6 +47,9 @@
 
 #define CR(result) {int r = (result); if (r < 0) return r;}
 
+#define SHORT_OPTION  "-"
+#define LONG_OPTION   "--"
+
 int option_is_present (char *op, int argc, char **argv) {
         /* checks to see if op is in the command-line. it will */
         /* check for both short and long option-formats for op */

@@ -9,6 +9,5 @@ extern int  		glob_quiet;
 extern int		glob_option_count;
 extern int  		glob_stdout;
 extern int  		glob_stdout_size;
-extern Camera*		glob_camera;
 extern Option 		option[];
 extern GPContext       *glob_context;

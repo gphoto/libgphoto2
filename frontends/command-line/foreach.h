@@ -21,6 +21,7 @@
 #ifndef __FOREACH_H__
 #define __FOREACH_H__
 
+#include <gphoto2-camera.h>
 #include <gphoto2-list.h>
 
 #include "actions.h"
@@ -31,11 +32,17 @@ enum _ForEachFlags {
 	FOR_EACH_FLAGS_REVERSE = 1 << 1
 };
 
-int for_each_folder         (const char *folder, FolderAction action,
-			     ForEachFlags flags);
-int for_each_file           (const char *folder, FileAction action,
-			     ForEachFlags flags);
-int for_each_file_in_range  (const char *folder, FileAction action,
-			     ForEachFlags flags, char *range);
+typedef struct _ForEachParams ForEachParams;
+struct _ForEachParams {
+	Camera *camera;
+	GPContext *context;
+	const char *folder;
+	ForEachFlags flags;
+};
+
+int for_each_folder         (ForEachParams *, FolderAction action);
+int for_each_file           (ForEachParams *, FileAction action);
+int for_each_file_in_range  (ForEachParams *, FileAction action,
+			     char *range);
 
 #endif /* __FOREACH_H__ */

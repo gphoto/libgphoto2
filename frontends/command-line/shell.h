@@ -21,6 +21,8 @@
 #ifndef __SHELL_H__
 #define __SHELL_H__
 
-int shell_prompt (void);
+#include <gphoto2-camera.h>
+
+int shell_prompt (Camera *camera);
 
 #endif /* __SHELL_H__ */

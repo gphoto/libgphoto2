@@ -21,22 +21,32 @@
 #ifndef __ACTIONS_H__
 #define __ACTIONS_H__
 
+#include <gphoto2-camera.h>
+#include <gphoto2-context.h>
+
+typedef struct _ActionParams ActionParams;
+struct _ActionParams {
+	Camera *camera;
+	GPContext *context;
+	const char *folder;
+};
+
 /* Image actions */
-typedef int FileAction    (const char *folder, const char *filename);
-int print_file_action     (const char *folder, const char *filename);
-int print_exif_action     (const char *folder, const char *filename);
-int print_info_action     (const char *folder, const char *filename);
-int save_file_action      (const char *folder, const char *filename);
-int save_thumbnail_action (const char *folder, const char *filename);
-int save_raw_action       (const char *folder, const char *filename);
-int save_audio_action     (const char *folder, const char *filename);
-int save_exif_action      (const char *folder, const char *filename);
-int delete_file_action    (const char *folder, const char *filename);
+typedef int FileAction    (ActionParams *params, const char *filename);
+int print_file_action     (ActionParams *params, const char *filename);
+int print_exif_action     (ActionParams *params, const char *filename);
+int print_info_action     (ActionParams *params, const char *filename);
+int save_file_action      (ActionParams *params, const char *filename);
+int save_thumbnail_action (ActionParams *params, const char *filename);
+int save_raw_action       (ActionParams *params, const char *filename);
+int save_audio_action     (ActionParams *params, const char *filename);
+int save_exif_action      (ActionParams *params, const char *filename);
+int delete_file_action    (ActionParams *params, const char *filename);
 
 /* Folder actions */
-typedef int FolderAction  (const char *folder);
-int delete_all_action     (const char *folder);
-int list_files_action     (const char *folder);
-int list_folders_action   (const char *folder);
+typedef int FolderAction  (ActionParams *params);
+int delete_all_action     (ActionParams *params);
+int list_files_action     (ActionParams *params);
+int list_folders_action   (ActionParams *params);
 
 #endif /* __ACTIONS_H__ */
