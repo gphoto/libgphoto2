@@ -23,9 +23,11 @@ doc_DATA = AUTHORS COPYING README CHANGES NEWS
 
 .PHONY: source-code-check
 source-code-check:
-	@echo "Finding // comments"
+	@echo "######## Finding // comments"
 	find . -type f -name '*.[ch]' -exec egrep -H '(^//|[^:]//)' {} \;
-	@echo "Finding explicit libintl.h references"
+	@echo "######## Finding remainders of Arnaud's comment replacement"
+	find . -type f -name '*.[ch]' -exec egrep -H 'http:/\*' {} \;
+	@echo "######## Finding explicit libintl.h references"
 	find . -type f -name '*.[ch]' -exec egrep -H '^#.*include.*libintl\.h' {} \;
 
 ########################################################################
