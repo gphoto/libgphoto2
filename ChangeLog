@@ -1,5 +1,9 @@
 2002-08-08  Lutz Müller <lutz@users.sourceforge.net>
 
+	* configure.in: Create camlibs/gsmart/Makefile.
+
+2002-08-08  Lutz Müller <lutz@users.sourceforge.net>
+
 	* configure.in
 	* camlibs/gsmart: New driver by Till Adam <till@adam-lilienthal.de>.
 

@@ -291,6 +291,7 @@ camlibs/digita/Makefile
 camlibs/dimera/Makefile
 camlibs/directory/Makefile
 camlibs/fuji/Makefile
+camlibs/gsmart/Makefile
 camlibs/jamcam/Makefile
 camlibs/jd11/Makefile
 camlibs/kodak/Makefile
