@@ -231,9 +231,9 @@ gp_port_serial_lock (GPPort *dev, const char *path)
 	}
 #else
 #warning No locking library found. 
-#warning You will run into problems if you 
-#warning use gphoto2 in combination with
-#warning Konqueror (KDE) or Nautilus (GNOME).
+#warning You will run into problems if you use
+#warning gphoto2 with a serial (RS232) camera in 
+#warning combination with Konqueror (KDE) or Nautilus (GNOME).
 #endif
 
 	return (GP_OK);
