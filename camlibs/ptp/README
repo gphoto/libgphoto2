@@ -1,7 +1,7 @@
 This is libptp2!
 
 This library is under developement yet.
-It's designet to use with gphoto2, but can be easily used with any other
+It's designed to use with gphoto2, but can be easily used with any other
 software.
 
 There is a sample test_ptp.c code which shows how to use libptp2 without
