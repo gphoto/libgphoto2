@@ -55,7 +55,7 @@ int camera_abilities (CameraAbilitiesList *list)
 
 	memset(&a,0,sizeof(a));
 
-	a.status		= GP_DRIVER_STATUS_TESTING;
+	a.status		= GP_DRIVER_STATUS_PRODUCTION;
 	a.port			= GP_PORT_SERIAL;
 	a.speed[0]		= 115200;
 	a.speed[1]		= 0;
@@ -88,7 +88,7 @@ int camera_abilities (CameraAbilitiesList *list)
 	 * appears to be the same. (Not 100% sure.)
 	 * http://www.iomagic.com/support/digitalcameras/magicimage420/magicimage420main.htm
 	 */
-	strcpy(a.model, "I/O Magic MagicImage 420");
+	strcpy(a.model, "IOMagic MagicImage 420");
 	gp_abilities_list_append(list, a);
 	return (GP_OK);
 }
@@ -169,15 +169,11 @@ static int camera_manual (Camera *camera, CameraText *manual)
 	strcpy(manual->text, 
 	_(
 	"The JD11 camera works rather well with this driver.\n"
-	"It gets a bit confused if some data is left over on the serial line,\n"
-	"and will report I/O errors on startup. Just switch the camera off and\n"
-	"on again and it will no longer do that.\n"
 	"An RS232 interface @ 115 kbit is required for image transfer.\n"
 	"The driver allows you to get\n\n"
 	"   - thumbnails (64x48 PGM format)\n"
 	"   - full images (640x480 PPM format)\n"
-	"No color correction and no interpolation is applied as of this time.\n"
-	"\n\n")); 
+	)); 
 
 	return (GP_OK);
 }
@@ -312,4 +308,3 @@ int camera_init (Camera *camera)
         ret = jd11_ping(camera->port);
 	return (ret);
 }
-

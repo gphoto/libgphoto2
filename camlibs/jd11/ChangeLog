@@ -1,3 +1,9 @@
+2002-01-04  Marcus Meissner <marcus@jet.franken.de>
+	
+	* jd11.c: Cleaned up comments, say it is ready for
+	  production use.
+	  jd11.html: Added final note on colors.
+
 2001-12-29  Marcus Meissner <marcus@jet.franken.de>
 	
 	* serial.[ch], jd11.c: Use new gp_file_progress.
