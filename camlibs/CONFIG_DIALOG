@@ -1,4 +1,11 @@
 
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+The syntax has changed again. Please consult the template, the
+directory driver or the konica library for examples.
+
+Please ignore the text below...
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
 /* Widget Data Structures
    --------------------------------------------------------------- */
 typedef enum {
