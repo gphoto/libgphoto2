@@ -17,10 +17,15 @@ CameraWidget* gp_widget_new(CameraWidgetType type, char *label) {
 	w->type = type;
 	strcpy(w->label, label);
 	
+	/* set the value to nothing */
+	strcpy(w->value, "");
+
 	/* for now, for ease of mem management, pre-alloc 64 children pointers */
 	memset(w->children, 0, sizeof(CameraWidget*)*64);	
+
 	w->children_count = 0;
 
+	/* clear out the choices */
 	for (x=0; x<32; x++)
 		strcpy(w->choice[x], "");
 	w->choice_count = 0;
@@ -68,6 +73,20 @@ char *gp_widget_label(CameraWidget *widget) {
 	return (widget->label);
 }
 
+/* Set and unset the value of a widget 						*/
+/* --------------------------------------------------------------------------	*/
+
+int gp_widget_value_set (CameraWidget *widget, char *value) {
+
+	strcpy(widget->value, value);
+
+	return (GP_OK);
+}
+
+char *gp_widget_value_get (CameraWidget *widget) {
+
+	return (widget->value);
+}
 
 /* Attach/Retrieve widgets to/from a parent widget				*/
 /* --------------------------------------------------------------------------	*/
@@ -113,7 +132,7 @@ int gp_widget_child_count(CameraWidget *parent) {
 	return (parent->children_count);
 }
 
-CameraWidget*   gp_widget_child(CameraWidget *parent, int child_number) {
+CameraWidget* gp_widget_child(CameraWidget *parent, int child_number) {
 
 	/* Return if they can't have any children */
 	if ((parent->type != GP_WIDGET_WINDOW) && (parent->type != GP_WIDGET_SECTION))
@@ -122,11 +141,27 @@ CameraWidget*   gp_widget_child(CameraWidget *parent, int child_number) {
 	return (parent->children[child_number]);
 }
 
+CameraWidget* gp_widget_child_by_label (CameraWidget *widget, char *label) {
+
+	int x;
+	CameraWidget *child;
+
+	if (strcmp(widget->label, label)==0)
+		return (widget);
+
+	for (x=0; x<widget->children_count; x++) {
+		child = gp_widget_child_by_label(widget->children[x],label);
+		if (child)
+			return (child);
+	}
+
+	return (NULL);
+}
 
 /* Set/get the value of the range widget 					*/
 /* --------------------------------------------------------------------------	*/
 
-int gp_widget_range_set (CameraWidget *range, float min, float max, float increment, float value) {
+int gp_widget_range_set (CameraWidget *range, float min, float max, float increment) {
 
 	if (range->type != GP_WIDGET_RANGE)
 		return (GP_ERROR);
@@ -134,12 +169,11 @@ int gp_widget_range_set (CameraWidget *range, float min, float max, float increm
 	range->min = min;
 	range->max = max;
 	range->increment = increment;
-	range->value = value;
 
 	return (GP_OK);
 }
 
-int gp_widget_range_get (CameraWidget *range, float *min, float *max, float *increment, float *value) {
+int gp_widget_range_get (CameraWidget *range, float *min, float *max, float *increment) {
 
 	if (range->type != GP_WIDGET_RANGE)
 		return (GP_ERROR);
@@ -147,67 +181,20 @@ int gp_widget_range_get (CameraWidget *range, float *min, float *max, float *inc
 	*min = range->min;
 	*max = range->max;
 	*increment = range->increment;
-	*value = range->value;
 
 	return (GP_OK);
-}
-
-/* Set/get the value of a toggle button						*/
-/* --------------------------------------------------------------------------	*/
-
-int gp_widget_toggle_set (CameraWidget *toggle, int active) {
-
-	if (toggle->type != GP_WIDGET_TOGGLE)
-		return (GP_ERROR);
-
-	toggle->value = active;
-
-	return (GP_OK);
-
-}
-
-int gp_widget_toggle_get (CameraWidget *toggle) {
-
-	if (toggle->type != GP_WIDGET_TOGGLE)
-		return (GP_ERROR);
-
-	return ((int)toggle->value);
-}
-
-/* Set/get the value of the text widget 					*/
-/* --------------------------------------------------------------------------	*/
-
-int gp_widget_text_set (CameraWidget *text, char *string) {
-
-	if (text->type != GP_WIDGET_TEXT)
-		return (GP_ERROR);
-
-	strcpy(text->value_string, string);
-
-	return (GP_OK);
-}
-
-char *gp_widget_text_get (CameraWidget *text) {
-
-	if (text->type != GP_WIDGET_TEXT)
-		return (NULL);
-
-	return (text->value_string);
 }
 
 /* Retrieve and set choices for menus/radio buttons 				*/
 /* --------------------------------------------------------------------------	*/
 
-int gp_widget_choice_add (CameraWidget *widget, char *choice, int active) {
+int gp_widget_choice_add (CameraWidget *widget, char *choice) {
 
 	if ((widget->type != GP_WIDGET_RADIO) &&
 	    (widget->type != GP_WIDGET_MENU))
 		return (GP_ERROR);
 
 	strncpy(widget->choice[widget->choice_count], choice, 64);
-	if (active)
-		widget->value = widget->choice_count;
-
 	widget->choice_count += 1;
 
 
@@ -233,16 +220,6 @@ char *gp_widget_choice (CameraWidget *widget, int choice_number) {
 		return (NULL);
 
 	return (widget->choice[choice_number]);
-}
-
-	/* Get the active value in the choices */
-char* gp_widget_choice_active(CameraWidget *widget) {
-
-	if ((widget->type != GP_WIDGET_RADIO) &&
-	    (widget->type != GP_WIDGET_MENU))
-		return (NULL);
-
-	return (widget->choice[(int)widget->value]);
 }
 
 /* Debugging output								*/
