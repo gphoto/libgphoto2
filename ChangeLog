@@ -4,8 +4,14 @@
 	* libgphoto2_port/doc/Makefile.am: sourced out doc generation to
 	  DocRules.am
 	* libgphoto2_port/doc/DocRules.am: new file
+	* configure.in
+	* libgphoto2_port/configure.in
 	* libgphoto2_port/m4/documentation.m4: disable building docs by
 	  default 
+	* libgphoto2_port/autogen.sh: added debug output
+	* autogen.sh: added debug output & cleaned up a bit
+	* configure.in: upped version to dev1 to map build errors to the
+	  changes I just introduced
 
 2001-11-18  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
