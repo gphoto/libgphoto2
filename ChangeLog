@@ -1,3 +1,8 @@
+2001-10-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2/gphoto2-abilities-list.[c,h]: Simplified, expose fewer
+	functions.
+
 2001-10-12 Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* libgphoto2_port/libgphoto2_port/gp_port.c: more detailed debug output for *_write and *_read
