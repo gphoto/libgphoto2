@@ -1,0 +1,5 @@
+2001-12-05  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* l859/l859.c: Fixed a typo that failed to initialize camera. See
+	bug 483903.
+

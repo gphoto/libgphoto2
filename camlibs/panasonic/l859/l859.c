@@ -485,7 +485,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 			  const char *filename, CameraFileType type,
 			  CameraFile *file, void *data) {
 
-	Camera *camera = camera;
+	Camera *camera = data;
 	int		index;
 	int		size;
 	int		i;
