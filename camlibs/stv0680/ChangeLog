@@ -1,3 +1,7 @@
+2001-04-10  Marcus Meissner <marcus@jet.franken.de>
+	
+	* stv0680.c: Set the speed on camera_init for serial cameras.
+
 2001-04-05  Marcus Meissner <marcus@jet.franken.de>
 	
 	* library.[ch], stv680.c: Store image data directly in CameraFile,

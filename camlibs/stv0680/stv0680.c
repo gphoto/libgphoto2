@@ -279,6 +279,7 @@ int camera_init (Camera *camera, GPContext *context)
 	switch(camera->port->type) {
 	case GP_PORT_SERIAL:		
         	gp_port_set_timeout(camera->port, 1000);
+		settings.serial.speed = 115200;
         	settings.serial.bits = 8;
         	settings.serial.parity = 0;
         	settings.serial.stopbits = 1;
