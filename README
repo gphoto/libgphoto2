@@ -10,6 +10,7 @@ If you miss a feature, would like to report success or failure, or have any
 questions, please don't hesitate to contact our mailing list.
 
 
+
 What is libgphoto2?
 -------------------
 
@@ -18,15 +19,16 @@ digital cameras.
 
 For more information on gphoto, see
 
-        http://www.gphoto.org
+        http://www.gphoto.org/
 
 There, you can also get information on mailing lists, supported cameras,
 and availability of gphoto2. Another source of information is
 
-        http://www.sourceforge.org/projects/gphoto
+        http://sourceforge.net/projects/gphoto
 
 where you can access our CVS server to fetch the source code of
 gphoto2, gtkam and GnoCam (see below).
+
 
 
 What is libgphoto2 not?
@@ -47,8 +49,11 @@ device, be it a camera or a disk connected via USB to your computer. As there
 are already drivers for this protocol out there, you don't need an additional
 library like libgphoto2. The list of camera that use USB Mass Storage is getting
 longer everyday, so we won't publish it.
+
 For a more up to date list, you can consult 
+
 	http://www.teaser.fr/~hfiguiere/linux/digicam.html
+
 Your operating system will tell you about that because it is likely to recognise
 the device as a SCSI disk that you can mount (for Linux 'dmesg' will tell you).
 Again, those cameras *cannot* be accessed through libgphoto2. Some of them can
@@ -68,8 +73,9 @@ Here is a short incomplete list of camera that use this protocol:
 PTP camera unknown to libgphoto2 can be detected as a generic PTP camera and
 will work as is.
 
-You still may try jPhoto <http://jphoto.sourceforge.net/> for ptp cameras
+You still may try jPhoto <URL:http://jphoto.sourceforge.net/> for ptp cameras
 alternatively if libgphoto2 fails.
+
 
 
 Platforms
@@ -80,6 +86,7 @@ Additionally, there is a port for OS/2 available. libgphoto2 has _not_ (yet?)
 been ported to any operating system from MicroSoft.
 
 
+
 How to set up libgphoto2
 ------------------------
 
@@ -88,7 +95,7 @@ The gPhoto2 Manual.
 
 It is available at the following places:
 
- - At the gphoto website: http://gphoto.org/
+ - At the gphoto website: http://www.gphoto.org/
 
  - In the CVS module gphoto2-manual
 
@@ -97,6 +104,7 @@ hotplugging.
 
 If you run into problems, you may also consult the FAQ (also included
 in The gPhoto2 Manual).
+
 
 
 Frontends
@@ -109,6 +117,7 @@ for a short description.
 For the GUI lovers, there are for example gtkam (GTK based), and
 GnoCam (GNOME). Additionally, there are plugins for other programs
 available like kio_gphoto (KDE - Konqueror).
+
 
 
 Reporting Bugs
