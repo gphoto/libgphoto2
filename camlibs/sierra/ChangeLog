@@ -1,3 +1,8 @@
+2003-08-30  Patrick Mansfield <patmans@users.sourceforge.net>
+	* olympus-desc.c, sierra.c, sierra-desc.h: Add specific values
+	  for the Olympus 3000z, based on input from Till Kamppeter
+	  <till.kamppeter@gmx.net>.
+
 2003-08-26  Patrick Mansfield <patmans@users.sourceforge.net>
 	* library.c: Fix so on receipt of an unknown packet and a read of
 	  zero bytes, we don't loop forever.

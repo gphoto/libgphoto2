@@ -147,8 +147,14 @@ static struct {
 	{"Olympus", "C-2100UZ", SIERRA_MODEL_CAM_DESC, 0x07b4, 0x100, 0,
 					&oly3040_cam_desc},
 	{"Olympus", "C-2500L",     SIERRA_MODEL_OLYMPUS,   0, 0, 0 },
+	/*
+	 * Note: The 3000z can't be auto selected, as it has the same USB
+	 * id as the 2040 (and others, but the others are still using the
+	 * the 3040 desc), so you have to set the camera "model" via the
+	 * front end (gtkam or gphoto2 command line) in order to use it.
+	 */
 	{"Olympus", "C-3000Z", 	SIERRA_MODEL_CAM_DESC,	0x07b4, 0x100, 0,
-							&oly3040_cam_desc},
+							&oly3000z_cam_desc},
 	{"Olympus", "C-3020Z", SIERRA_MODEL_CAM_DESC,  0x07b4, 0x105,
 					SIERRA_WRAP_USB, &oly3040_cam_desc},
 	{"Olympus", "C-3030Z", SIERRA_MODEL_CAM_DESC,	0x07b4, 0x100, 0,

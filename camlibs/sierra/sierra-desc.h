@@ -130,10 +130,22 @@ typedef struct CameraDesc {
 	const SierraFlags flags;
 } CameraDescType;
 
+/*
+ * oly-desc.c:
+ */
 extern const CameraDescType sierra_default_cam_desc;
 extern const CameraDescType oly3040_cam_desc;
+extern const CameraDescType oly3000z_cam_desc;
+
+/*
+ * nikon-desc.c:
+ */
 extern const CameraDescType cp880_cam_desc;
 extern const CameraDescType cp995_cam_desc;
+
+/*
+ * epson-desc.c:
+ */
 extern const CameraDescType ep3000z_cam_desc;
 
 #endif /* __SIERRA_DESC_H__ */

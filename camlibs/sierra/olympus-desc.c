@@ -1,6 +1,9 @@
 /* olympus_desc.c:
  *
- * Olympus-specific code: David Selmeczi <david@esr.elte.hu>
+ * Olympus 3040 specific code (most of this file):
+ * 	David Selmeczi <david@esr.elte.hu>
+ * Olympus 3000z code, based on data from:
+ * 	Till Kamppeter <till.kamppeter@gmx.net>
  * Original code:
  *  Copyright © 2002 Patrick Mansfield <patman@aracnet.com>
  *
@@ -30,7 +33,7 @@
 #include "sierra-desc.h"
 
 /*
- * Camera descriptor for Olympus C-3040Z (and possibly others).
+ * Camera descriptor for Olympus C-3040Z, 3000Z (and somday maybe others).
  */
 
 /*
@@ -184,7 +187,7 @@ static const RegisterDescriptorType oly3040_reg_03[] = {
 #endif
 
 /*
- * Register 5: aperature settings. Works only in A or M mode
+ * Olympus 3040 Register 5: aperature settings. Works only in A or M mode
  * In A mode, shutter speed is compensated
  */
 static const ValueNameType oly3040_reg_05_val_names[] = {
@@ -211,6 +214,38 @@ static const RegisterDescriptorType oly3040_reg_05[] = {
 		GP_WIDGET_MENU, GP_REG_NO_MASK, 
 		"aperature", N_("Aperature Settings"),
 		VAL_NAME_INIT (oly3040_reg_05_val_names)
+	}
+};
+
+/*
+ * Olympus 3000z Register 5: aperature settings. Unknown if this comment
+ * applies: Works only in A or M mode In A mode, shutter speed is
+ * compensated
+ */
+static const ValueNameType oly3000z_reg_05_val_names[] = {
+	{ { 0 }, N_("Auto") },
+	{ { 1 }, "F2.2" },
+	{ { 2 }, "F2.5" },
+	{ { 3 }, "F2.8" },
+	{ { 4 }, "F3.2" },
+	{ { 5 }, "F3.6" },
+	{ { 6 }, "F4.0" },
+	{ { 7 }, "F4.5" },
+	{ { 8 }, "F5.0" },
+	{ { 9 }, "F5.6" },
+	{ { 10 }, "F6.3" },
+	{ { 11 }, "F7.0" },
+	{ { 12 }, "F8.0" },
+	{ { 13 }, "F9.0" },
+	{ { 14 }, "F10.0" },
+	{ { 15 }, "F11.0" },
+	{ { 16 }, "F2.0" }, /* Odd */
+};
+static const RegisterDescriptorType oly3000z_reg_05[] = { 
+	{
+		GP_WIDGET_MENU, GP_REG_NO_MASK, 
+		"aperature", N_("Aperature Settings"),
+		VAL_NAME_INIT (oly3000z_reg_05_val_names)
 	}
 };
 
@@ -250,7 +285,7 @@ static const RegisterDescriptorType oly3040_reg_07[] = {
 };
 
 /*
- * Register 20: white balance.
+ * Olympus 3040: Register 20: white balance.
  */
 static const ValueNameType oly3040_reg_20_val_names[] = {
 	{ { 0x00 }, N_("Auto") },
@@ -267,6 +302,24 @@ static const RegisterDescriptorType oly3040_reg_20[] = {
 	}
 };
 
+/*
+ * Olympus 3000z: Register 20: white balance. Only difference seems to be
+ * that cloudy is 0x04, not 0xff.
+ */
+static const ValueNameType oly3000z_reg_20_val_names[] = {
+	{ { 0x00 }, N_("Auto") },
+	{ { 0x01 }, N_("Daylight") },
+	{ { 0x02 }, N_("Fluorescent") },
+	{ { 0x03 }, N_("Tungsten") },
+	{ { 0x04 }, N_("Cloudy") },
+};
+static const RegisterDescriptorType oly3000z_reg_20[] = { 
+	{
+		GP_WIDGET_RADIO, GP_REG_NO_MASK,
+		"whitebalance", N_("White Balance"),
+		VAL_NAME_INIT (oly3000z_reg_20_val_names)
+	}
+};
 
 /*
  * Register 33: focus mode.
@@ -506,9 +559,9 @@ static const RegisterDescriptorType oly3040_reg_41[] = {
 
 
 /*
- * All of the register used to modify picture settings. The register value
- * received from the camera is stored into this data area, so it cannot be
- * a const.
+ * Olympus 3040: All of the register used to modify picture settings. The
+ * register value received from the camera is stored into this data area,
+ * so it cannot be a const.
  */
 static CameraRegisterType oly3040_pic_regs[] =  {
 	/* camera prefix, register number, size of register */
@@ -518,6 +571,27 @@ static CameraRegisterType oly3040_pic_regs[] =  {
 	CAM_REG_TYPE_INIT (oly3040, 06, 4, CAM_DESC_DEFAULT, 0), /* color mode */
 	CAM_REG_TYPE_INIT (oly3040, 07, 4, CAM_DESC_DEFAULT, 0), /* flash */
 	CAM_REG_TYPE_INIT (oly3040, 20, 4, CAM_DESC_DEFAULT, 0), /* white balance */
+	CAM_REG_TYPE_INIT (oly3040, 33, 4, CAM_DESC_DEFAULT, 0), /* focus mode */
+	CAM_REG_TYPE_INIT (oly3040,103, 4, CAM_DESC_DEFAULT, 0), /* focus position */
+	CAM_REG_TYPE_INIT (oly3040, 69, 8, CAM_DESC_DEFAULT, 0), /* exposure compensation */
+	CAM_REG_TYPE_INIT (oly3040, 70, 4, CAM_DESC_DEFAULT, 0), /* exposure metering */
+	CAM_REG_TYPE_INIT (oly3040, 71, 8, CAM_DESC_DEFAULT, 0), /* optical zoom */
+	CAM_REG_TYPE_INIT (oly3040, 72, 4, CAM_DESC_DEFAULT, 0), /* digital zoom + lense +  AE lock */
+	CAM_REG_TYPE_INIT (oly3040, 85, 4, CAM_DESC_DEFAULT, 0), /* ISO Speed, read only  */
+};
+
+/*
+ * Olympus 3000z: All of the register used to modify picture settings.
+ * Note that most of these are the same as the 3040.
+ */
+static CameraRegisterType oly3000z_pic_regs[] =  {
+	/* camera prefix, register number, size of register */
+	CAM_REG_TYPE_INIT (oly3040, 01, 4, CAM_DESC_DEFAULT, 0), /* resolution/size */
+	CAM_REG_TYPE_INIT (oly3040, 03, 4, CAM_DESC_DEFAULT, 0), /* shutter */
+	CAM_REG_TYPE_INIT (oly3000z, 05, 4, CAM_DESC_DEFAULT, 0), /* aperature (f-stop) */
+	CAM_REG_TYPE_INIT (oly3040, 06, 4, CAM_DESC_DEFAULT, 0), /* color mode */
+	CAM_REG_TYPE_INIT (oly3040, 07, 4, CAM_DESC_DEFAULT, 0), /* flash */
+	CAM_REG_TYPE_INIT (oly3000z, 20, 4, CAM_DESC_DEFAULT, 0), /* white balance */
 	CAM_REG_TYPE_INIT (oly3040, 33, 4, CAM_DESC_DEFAULT, 0), /* focus mode */
 	CAM_REG_TYPE_INIT (oly3040,103, 4, CAM_DESC_DEFAULT, 0), /* focus position */
 	CAM_REG_TYPE_INIT (oly3040, 69, 8, CAM_DESC_DEFAULT, 0), /* exposure compensation */
@@ -547,6 +621,20 @@ static const CameraRegisterSetType oly3040_desc[] = {
 			SIZE_ADDR (CameraRegisterType, oly3040_pic_regs)
 		},
 		{ 
+			N_("Camera Settings"), 
+			SIZE_ADDR (CameraRegisterType, oly3040_cam_regs)
+		},
+};
+
+static const CameraRegisterSetType oly3000z_desc[] = {
+		{ 
+			N_("Picture Settings"), 
+			SIZE_ADDR (CameraRegisterType, oly3000z_pic_regs)
+		},
+		{ 
+			/*
+			 * Assumed that these are all the same as the 3040
+			 */
 			N_("Camera Settings"), 
 			SIZE_ADDR (CameraRegisterType, oly3040_cam_regs)
 		},
@@ -589,6 +677,8 @@ N_(
 );
 
 const CameraDescType oly3040_cam_desc = { oly3040_desc, oly3040_manual,
+	SIERRA_EXT_PROTO, };
+const CameraDescType oly3000z_cam_desc = { oly3000z_desc, oly3040_manual,
 	SIERRA_EXT_PROTO, };
 const CameraDescType sierra_default_cam_desc = { oly3040_desc, default_manual,
 	0, };
