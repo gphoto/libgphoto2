@@ -1,4 +1,4 @@
-#include <dlfcn.h>
+	#include <dlfcn.h>
 #include <dirent.h>
 #include <fcntl.h>
 #include <stdlib.h>
@@ -369,11 +369,10 @@ int gp_file_unlock (int file_number) {
 
 int gp_config_get (CameraWidget *window) {
 
-	/*
-	strcpy(config_dialog_name, LIB/library_name.config);
-	*/
+	if (glob_c.config_get == NULL)
+		return (GP_ERROR);
 
-	return(GP_OK);
+	return(glob_c.config_get(window));
 }
 
 int gp_config_set (CameraSetting *setting, int count) {
