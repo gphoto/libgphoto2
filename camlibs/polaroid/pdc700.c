@@ -65,6 +65,20 @@
 #define PDC700_DONE	0x01
 #define PDC700_LAST	0x02
 
+typedef struct _PDCDate PDCDate;
+struct _PDCDate {
+	unsigned char year, month, day;
+	unsigned char hour, minute, second;
+};
+
+typedef struct _PDCInfo PDCInfo;
+struct _PDCInfo {
+	unsigned int num_taken, num_free;
+	char version[8];
+	PDCDate date;
+};
+	
+
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 #define CHECK_RESULT_FREE(result, data) {int r = (result); if (r < 0) {free (data); return (r);}}
 
@@ -222,7 +236,7 @@ pdc700_picinfo (Camera *camera, int n, int *size_thumb, int *size_pic)
 }
 
 static int
-pdc700_info (Camera *camera, int *num, int *num_free, const char **version)
+pdc700_info (Camera *camera, PDCInfo *info)
 {
 	int status, buf_len;
 	unsigned char buf[2048];
@@ -233,20 +247,20 @@ pdc700_info (Camera *camera, int *num, int *num_free, const char **version)
 	if (status != PDC700_DONE)
 		return (GP_ERROR_CORRUPTED_DATA);
 
-	/*
-	 *  0 -  7: ?
-	 *  8 - 13: Some version
-	 * 14 - 15: ?
-	 * 16 - 17: Number of pictures
-	 * 18 - 19: Number of pictures that can be taken
-	 * 20 - 64: ?
-	 */
-	if (version)
-		*version = &buf[8];
-	if (num)
-		*num = buf[16] | (buf[17] << 8);
-	if (num_free)
-		*num_free = buf[18] | (buf[19] << 8);
+	/* Protocol version */
+	strncpy (info->version, &buf[8], 8);
+
+	/* Pictures */
+	info->num_taken = buf[16] | (buf[17] << 8);
+	info->num_free = buf[18] | (buf[19] << 8);
+
+	/* Date */
+	info->date.year   = buf[20];
+	info->date.month  = buf[21];
+	info->date.day    = buf[22];
+	info->date.hour   = buf[23];
+	info->date.minute = buf[24];
+	info->date.second = buf[25];
 
 	return (GP_OK);
 }
@@ -376,14 +390,18 @@ camera_about (Camera *camera, CameraText *about)
 static int
 camera_summary (Camera *camera, CameraText *about)
 {
-	int num, num_free;
-	const char *version;
+	PDCInfo info;
 
-	CHECK_RESULT (pdc700_info (camera, &num, &num_free, &version));
+	CHECK_RESULT (pdc700_info (camera, &info));
 
-	sprintf (about->text, _("There are %i pictures on the camera. "
-		 "There is place for another %i one(s).\n"
-		 "Software version: %s."), num, num_free, version);
+	sprintf (about->text, _(
+		"Date: %i/%i/%i %i:%i:%i\n"
+		"Pictures taken: %i\n"
+		"Free pictures: %i\n"
+		"Software version: %s"),
+		info.date.year, info.date.month, info.date.day,
+		info.date.hour, info.date.minute, info.date.second,
+		info.num_taken, info.num_free, info.version);
 
 	return (GP_OK);
 }
@@ -392,12 +410,12 @@ static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data)
 {
-	int num;
 	Camera *camera = data;
+	PDCInfo info;
 
 	/* Fill the list */
-	CHECK_RESULT (pdc700_info (camera, &num, NULL, NULL));
-	gp_list_populate (list, "PDC700%04i.jpg", num);
+	CHECK_RESULT (pdc700_info (camera, &info));
+	gp_list_populate (list, "PDC700%04i.jpg", info.num_taken);
 
 	return (GP_OK);
 }
