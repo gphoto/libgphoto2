@@ -70,7 +70,7 @@ dnl Find out which drivers to compile
 
 dnl Add the sonydscf1 back in!
 
-camlibs='barbie canon directory sierra konica panasonic digita'
+camlibs='barbie canon directory sierra konica panasonic digita kodak'
 AC_SUBST(SUBDIRS_CAMLIBS)
 for i in $camlibs; do
   d=`echo $i | $TR a-z A-Z`
@@ -82,7 +82,7 @@ AC_ARG_WITH(drivers,
   [                            drivers may be separated with commas; ]
   [                            'all' compiles all drivers; ]
   [                            possible drivers are: ]
-  [                            barbie, canon, digita, directory, ]
+  [                            barbie, canon, digita, directory, kodak, ]
   [                            konica, panasonic, sierra sonydscf1 ],
   drivers="$withval", drivers="all")
 if test "$drivers" = "all"; then
@@ -122,6 +122,8 @@ camlibs/digita/Makefile \
 camlibs/canon/Makefile \
 camlibs/sonydscf1/Makefile \
 camlibs/template/Makefile \
+camlibs/kodak/Makefile \
+camlibs/kodak/dc120/Makefile \
 frontends/Makefile \
 frontends/command-line/Makefile \
 frontends/libgphoto2_frontend/Makefile \

@@ -424,13 +424,15 @@ int for_each_subfolder(char *folder, folder_action faction,
 		strcat(prefix, folder);
 	else
 		strcat(prefix, glob_folder);
+/* don't append
 	if (prefix[strlen(prefix) - 1] != '/')
 		strcat(prefix, "/");
+*/
 	gp_camera_folder_list(glob_camera, &folderlist, prefix);
 	
 	for (i = 0; i < gp_list_count(&folderlist); i++) {
 		entry = gp_list_entry(&folderlist, i);
-		sprintf(subfolder, "%s%s", prefix, entry->name);
+		sprintf(subfolder, "%s/%s", prefix, entry->name);
 		if (faction(subfolder, iaction, recurse) == GP_ERROR) 
 			return (GP_ERROR);
 		if (recurse) 

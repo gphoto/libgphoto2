@@ -170,6 +170,9 @@
 	/* Populate the filesystem for a given number of files */
 	int gp_filesystem_populate (CameraFilesystem *fs, char *folder, char *format, int count);
 
+	/* Append a file to the filesystem folder */
+	int gp_filesystem_append (CameraFilesystem *fs, char *folder, char *filename);
+
 	/* Delete a file from the filesystem */
 	int gp_filesystem_delete (CameraFilesystem *fs, char *folder, char *filename);
 

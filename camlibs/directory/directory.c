@@ -273,7 +273,7 @@ int camera_file_delete (Camera *camera, char *folder, char *filename) {
 
 int camera_config_get (Camera *camera, CameraWidget *window) {
 
-	CameraWidget *t;
+	CameraWidget *t, *section;
 	char buf[256];
 
 	t = gp_widget_new(GP_WIDGET_TOGGLE, "View hidden (dot) directories");
@@ -281,11 +281,10 @@ int camera_config_get (Camera *camera, CameraWidget *window) {
 	gp_widget_value_set(t, buf);
 	gp_widget_append(window, t);
 
-#if 0
-/* use this as an example */
-	CameraWidget *t, *section;
+	if (!camera->debug)
+		return GP_OK;
 
-	printf("Building configuration window");
+	/* Example. shows when debugging is on */
 
 	/* Create a new section for "Quality" */
 	section = gp_widget_new(GP_WIDGET_SECTION, "Quality");
@@ -325,7 +324,6 @@ int camera_config_get (Camera *camera, CameraWidget *window) {
 		gp_widget_choice_add(t, "Normal");
 		gp_widget_choice_add(t, "Macro");
 		gp_widget_value_set(t, "Macro");
-#endif
 
 	return (GP_OK);
 }
