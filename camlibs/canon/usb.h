@@ -17,7 +17,8 @@
 
 int canon_usb_init (Camera *camera, GPContext *context);
 int canon_usb_camera_init (Camera *camera, GPContext *context);
-int canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath);
+int canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath, 
+	        GPContext *context);
 unsigned char *canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length, 
 		const char *payload, int payload_length);
 int canon_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **data, 
@@ -32,6 +33,7 @@ int canon_usb_ready (Camera *camera);
 int canon_usb_identify (Camera *camera, GPContext *context);
 
 #define USB_BULK_READ_SIZE 0x3000
+#define USB_BULK_WRITE_SIZE 0xC000
 
 #define CANON_USB_FUNCTION_GET_FILE		1
 #define CANON_USB_FUNCTION_IDENTIFY_CAMERA	2
