@@ -36,12 +36,12 @@ if test "$gettext_without_libintl" != "true" -a "$USE_NLS" = "yes"; then
 fi
 
 dnl ---------------------------------------------------------------------------
-dnl Turn on debugging and all warnings
+dnl Turn on debugging and all warnings when using gcc
 dnl ---------------------------------------------------------------------------
-CFLAGS="$CFLAGS -g -Wall -Wmissing-declarations -Wmissing-prototypes"
-LDFLAGS="$LDFLAGS -g -Wall"
-AC_SUBST(CFLAGS)
-AC_SUBST(LDFLAGS)
+if test "$ac_cv_prog_gcc" = "yes"; then
+	CFLAGS="$CFLAGS -g -Wall -Wmissing-declarations -Wmissing-prototypes"
+	LDFLAGS="$LDFLAGS -g -Wall"
+fi
 
 dnl Solaris hack for grep and tr
 changequote(, )dnl
