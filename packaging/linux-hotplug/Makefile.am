@@ -1,4 +1,4 @@
-EXTRA_DIST = usbcam.console usbcam.group usbcam.user
+EXTRA_DIST = usbcam.console usbcam.group usbcam.user usbcam.x11-app
 
 # no need to build or install the following on non-linux systems
 if HAVE_LINUX
