@@ -60,6 +60,7 @@ struct {
    	unsigned short idProduct;
 } models[] = {
         {"Concord EyeQMini", GP_DRIVER_STATUS_EXPERIMENTAL, 0x03e8, 0x2182},
+        {"Concord EyeQMini", GP_DRIVER_STATUS_EXPERIMENTAL, 0x03e8, 0x2180},	
 	{NULL,0,0}
 };
 
@@ -168,6 +169,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	unsigned char *p_data = NULL;
 	unsigned char *output = NULL;     
 	int len;
+	int header_len;
 	char header[128];	
 	unsigned char gtable[256];
 
@@ -179,8 +181,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		n = k; 
 		w = 320;
 		h = 240;
-	}
-	if ( (k >= num_lo_pics) ) { 
+	} else {
 		n = k - num_lo_pics;
 		w = 640;	
 		h = 480;
@@ -222,7 +223,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			GP_DEBUG("size of data = %i\n", sizeof(data));
 			GP_DEBUG("size of p_data = %i\n", sizeof(p_data));
 			/* And now create a ppm file, with our own header */
-			int  header_len = snprintf(header, 127, 
+			header_len = snprintf(header, 127, 
 				"P6\n" 
 				"# CREATOR: gphoto2, aox library\n" 
 				"%d %d\n" 
