@@ -1,5 +1,11 @@
 2001-10-18  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* frontends/command-line/main.c: Port to gp_log
+	* libgphoto2/gphoto2-debug.[c,h]: Clean up even more.
+	* po/POTFILES.in: Add frontends/command-line/main.c
+
+2001-10-18  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/digita/digita.c: Fix compile warnings ("static ..."). Use
 	  camera->fs.
 
