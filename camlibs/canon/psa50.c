@@ -1708,6 +1708,10 @@ unsigned char *psa50_get_thumbnail(Camera *camera, const char *name,int *length)
                 msg = psa50_usb_dialogue(camera, 0x01,0x11,0x202,&len,newstr,name_len);
                 gp_debug_printf(GP_DEBUG_LOW,"canon","File length: %x\n",len);
                 file = malloc(len);
+                if (!file) {
+                  perror("malloc");
+                  return NULL;
+                }
                 memcpy(file,msg,len);
                 *length=len;
                 break;
