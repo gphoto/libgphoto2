@@ -8,12 +8,23 @@ The installation procedure should be quite simple:
 
 0) If you got your source tree from CVS (and not from a .tar.gz
    tarball), you have to run ./autogen.sh instead of ./configure in 
-   step 1).
+   step 1).  In this case, you will need to have the following software
+   installed:
+	autoconf
+	automake
+	libtool (ver. >= 1.4)
 
 1) ./configure --prefix=/usr --sysconfdir=/etc
 	or any other options (try --help)
 
    If you have difficulties building on FreeBSD, try --disable-nls.
+
+   The following software components are optional, and will improve the
+   command-line client's functionality if present:
+	gettext (ver. >= 0.10.35) -- internationalization using shared library
+	cdk (ver. >= 4.9.10) -- camera configuration dialogs
+	aalib -- picture preview
+	jpeglib -- JPEG picture preview
 
 2) make install
 
