@@ -70,6 +70,7 @@ struct model models[] = {
 	{ "Canon Digital IXUS", 	0x04A9, 0x3047, 0 },
 	{ "Canon IXY DIGITAL", 		0x04A9, 0x3046, 0 },
 	{ "Canon PowerShot S100", 	0x04A9, 0x3045, 0 },
+	{ "Canon PowerShot S110",	0x04A9, 0x3051, 0 },
 	{ "Canon Digital IXUS 300", 	0x04A9, 0x304D, 0 },
 	{ "Canon IXY DIGITAL 300", 	0x04A9, 0x304B, 0 },
 	{ "Canon PowerShot S300", 	0x04A9, 0x304C, 0 },
