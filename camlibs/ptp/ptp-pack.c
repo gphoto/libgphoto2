@@ -88,7 +88,7 @@ ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, PTPReq *req)
 	int i;
 	uint8_t filenamelen;
 	uint8_t capturedatelen;
-	char *capture_date="20020101T010101"; //FIXME
+	char *capture_date="20020101T010101"; // XXX Fake date
 
 	memset (req, 0, sizeof(PTPReq));
 	htod32a(&req->data[PTP_oi_StorageID],oi->StorageID);
@@ -113,7 +113,11 @@ ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, PTPReq *req)
 		req->data[PTP_oi_Filename+i*2]=oi->Filename[i];
 	}
 
-	// FIXME: fake date!!!
+	/*
+	 *XXX Fake date.
+	 * for example Kodak sets Capture date on the basis of EXIF data.
+	 * Spec says that this field is from perspective of Initiator.
+	 */
 	capturedatelen=strlen(capture_date);
 	htod8a(&req->data[PTP_oi_Filename+(filenamelen+1)*2],
 		capturedatelen+1);
@@ -128,7 +132,8 @@ ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, PTPReq *req)
 	}
 
 	// XXX this function should return dataset length
-	return 144;
+
+	return 144; // 144 is enough :)
 }
 
 static inline void
@@ -176,7 +181,8 @@ ptp_unpack_OI (PTPParams *params, PTPReq *req, PTPObjectInfo *oi)
 
 	// subset of ISO 8601, without '.s' tenths of second and
 	// time zone
-	
+	{
+	if (capturedatelen<16) return;
 	strncpy (tmp, capture_date, 4);
 	tmp[4] = 0;
 	tm.tm_year=atoi (tmp) - 1900;
@@ -196,6 +202,7 @@ ptp_unpack_OI (PTPParams *params, PTPReq *req, PTPObjectInfo *oi)
 	tmp[2] = 0;
 	tm.tm_sec = atoi (tmp);
 	oi->CaptureDate=mktime (&tm);
+	}
 	
 	free(capture_date);
 }

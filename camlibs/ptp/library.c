@@ -623,15 +623,25 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 
 	// get parent folder id
 	find_folder_handle(folder,parent,data);
+	/* in Kodak DX3500 (probably others),
+	 * you have to specify store, so we use
+	 * same as parent folder, or 0x00020001 if root.
+	 * FIXME!
+	 */
+	if ( parent != PTP_HANDLER_ROOT ) {
+		int n = handle_to_n(parent,camera);
+		store = camera->pl->params.objectinfo[n].StorageID;
+	} else
+		store=0x00020001; // FIXME
+
 	/* if you desire to put file to root folder, you have to use 
 	 * 0xffffffff instead of 0x00000000 (which means responder decide).
 	 */
 	if (parent==PTP_HANDLER_ROOT) parent=PTP_HANDLER_SPECIAL;
-	store=0x00020001; // FIXME: BUG in Kodak DX3500, you have to specify
-			  // store
 	oi.Filename=(char *)filename;
 	oi.ObjectFormat=get_mimetype(camera, file);
 	oi.ObjectCompressedSize=size;
+	gp_file_get_mtime(file, &oi.CaptureDate);
 	CPR (context, ptp_ek_sendfileobjectinfo (&camera->pl->params,
 		&store, &parent, &handle, &oi));
 	fdata=malloc(size+PTP_REQ_HDR_LEN);
@@ -743,7 +753,6 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 	 */
 	if (parent==PTP_HANDLER_ROOT) parent=PTP_HANDLER_SPECIAL;
 
-	// any store (responder decides)
 	store=0x00020001;  // FIXME
 	
 	oi.Filename=(char *)foldername;

@@ -91,7 +91,6 @@ ptp_sendreq (PTPParams* params, PTPReq* databuf, uint16_t code)
 	req->type = htod16(PTP_TYPE_REQ);
 	req->code = htod16(code);
 	req->trans_id = htod32(params->transaction_id);
-//	params->transaction_id++;
 
 	ret=params->write_func ((unsigned char *) req, PTP_REQ_LEN,
 				 params->data);
