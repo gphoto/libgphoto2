@@ -1,45 +1,25 @@
-CCFLAGS=-O2 -c -I.. -I..\..\libgphoto2_port\include -I..\..\include -Zmtd -Zcrtdll -Zbin-files -D__ST_MT_ERRNO_ -I. -DOS2 -DHAVE_TERMIOS_H
-CC=gcc
+BASEPATH=..\..
 
 all: start \
   cmdline \
   end
 
-start:
-  @echo ****
-  @echo   Entering: $(MAKEDIR)
-  @echo ****
+!include $(BASEPATH)\os2mak.inc
 
-end:
-  @echo ****
-  @echo   Done: $(MAKEDIR)
-  @echo ****
+OBJS=$(OBJPATH)\interface.o \
+     $(OBJPATH)\script.o \
+     $(OBJPATH)\main.o \
+     $(OBJPATH)\test.o \
+     $(OBJPATH)\actions.o \
+     $(OBJPATH)\shell.o \
+     $(OBJPATH)\foreach.o \
+     $(OBJPATH)\options.o \
+     $(OBJPATH)\range.o
 
-cmdline: ..\..\gphoto2.exe
+cmdline: $(BASEPATH)\gphoto2.exe
 
-..\..\obj\interface.o: interface.c
-  @$(CC) -o $@ $** $(CCFLAGS)
+.c{$(OBJPATH)}.o:
+  @$(CC) -o $(OBJPATH)\$(@B).o $< $(CCFLAGS)
 
-..\..\obj\main.o: main.c
-  @$(CC) -o $@ $** $(CCFLAGS)
-
-..\..\obj\test.o: test.c
-  @$(CC) -o $@ $** $(CCFLAGS)
-
-..\..\obj\shell.o: shell.c
-  @$(CC) -o $@ $** $(CCFLAGS)
-
-..\..\obj\range.o: range.c
-  @$(CC) -o $@ $** $(CCFLAGS)
-
-..\..\obj\actions.o: actions.c
-  @$(CC) -o $@ $** $(CCFLAGS)
-
-..\..\obj\options.o: options.c
-  @$(CC) -o $@ $** $(CCFLAGS)
-
-..\..\obj\foreach.o: foreach.c
-  @$(CC) -o $@ $** $(CCFLAGS)
-
-..\..\gphoto2.exe: ..\..\obj\interface.o ..\..\obj\script.o ..\..\obj\main.o ..\..\obj\test.o ..\..\obj\actions.o ..\..\obj\shell.o ..\..\obj\foreach.o ..\..\obj\options.o  ..\..\obj\range.o
-  @$(CC) -O2 $** -o $@ -Zmtd -Zcrtdll -L..\..\lib -Zbin-files -llibgphoto2 -llibgphoto2_port -ldllib
+$(BASEPATH)\gphoto2.exe: $(OBJS)
+  @$(LINK) $** -o $@ $(EXELINKFLAGS) $(LIBS)

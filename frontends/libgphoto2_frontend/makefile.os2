@@ -1,22 +1,12 @@
-CCFLAGS=-O2 -c -I.. -I..\..\libgphoto2_port\include -I..\..\include -Zmtd -Zcrtdll -Zbin-files -D__ST_MT_ERRNO_ -I. -DOS2 -DHAVE_TERMIOS_H
-CC=gcc
+BASEPATH=..\..
 
 all: start \
   lib \
   end
 
-start:
-  @echo ****
-  @echo   Entering:      $(MAKEDIR)
-  @echo   using CCFLAGS: $(CCFLAGS)
-  @echo ****
+!include $(BASEPATH)\OS2MAK.INC
 
-end:
-  @echo ****
-  @echo   Done: $(MAKEDIR)
-  @echo ****
+lib: $(OBJPATH)\script.o
 
-lib: ..\..\obj\script.o
-
-..\..\obj\script.o: script.c
+$(OBJPATH)\script.o: script.c
   @$(CC) -o $@ $** $(CCFLAGS)

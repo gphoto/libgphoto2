@@ -1,79 +1,41 @@
-CCFLAGS=-O2 -c -I.. -I..\include -I..\libgphoto2_port\include -Zmtd -Zcrtdll -Zbin-files -D__ST_MT_ERRNO_ -I. -DOS2 -DHAVE_TERMIOS_H
-CC=gcc
-MKLIB=ar r
+BASEPATH=..
 
-.c.obj:
-  $(CC) $< $(CCFLAGS)
+.c.o:
+  $(CC) -o $@ $< $(CCFLAGS)
 
 all: start \
   dll\
   lib \
   end
 
-dll: ..\gphoto2.dll
+!include $(BASEPATH)\OS2MAK.INC
 
-start:
-  @echo ****
-  @echo   Entering     : $(MAKEDIR)
-  @echo   using CCFLAGS: $(CCFLAGS)
-  @echo ****
+dll: $(BASEPATH)\gphoto2.dll
 
-end:
-  @echo ****
-  @echo   Done: $(MAKEDIR)
-  @echo ****
+lib: $(BASEPATH)\lib\libgphoto2.a
 
-lib: ..\lib\libgphoto2.a
+OBJS=core.o \
+     exif.o \
+     file.o \
+     filesys.o \
+     library.o \
+     settings.o \
+     util.o \
+     widget.o \
+     lists.o \
+     camera.o \
+     frontend.o \
+     port.o
 
-..\obj\core.o: core.c
-  @$(CC) -o $@ $** $(CCFLAGS)
 
-..\obj\exif.o: exif.c
-  @$(CC) -o $@ $** $(CCFLAGS)
-
-..\obj\file.o: file.c
-  @$(CC) -o $@ $** $(CCFLAGS)
-
-..\obj\filesys.o: filesys.c
-  @$(CC) -o $@ $** $(CCFLAGS)
-
-..\obj\port.o: port.c
-  @$(CC) -o $@ $** $(CCFLAGS)
-
-#.\obj\fs.o: fs.c
-# @$(CC) -o $@ $** $(CCFLAGS)
-
-..\obj\library.o: library.c
-  @$(CC) -o $@ $** $(CCFLAGS)
-
-..\obj\lists.o: lists.c
-  @$(CC) -o $@ $** $(CCFLAGS)
-
-..\obj\settings.o: settings.c
-  @$(CC) -o $@ $** $(CCFLAGS)
-
-..\obj\util.o: util.c
-  @$(CC) -o $@ $** $(CCFLAGS)
-
-..\obj\widget.o: widget.c
-  @$(CC) -o $@ $** $(CCFLAGS)
-
-..\obj\camera.o: camera.c
-  @$(CC) -o $@ $** $(CCFLAGS)
-
-..\obj\frontend.o: frontend.c
-  @$(CC) -o $@ $** $(CCFLAGS)
-
-..\lib\libgphoto2.a: ..\obj\core.o ..\obj\exif.o ..\obj\file.o ..\obj\filesys.o ..\obj\library.o ..\obj\settings.o ..\obj\util.o ..\obj\widget.o ..\obj\lists.o ..\obj\camera.o ..\obj\frontend.o ..\obj\port.o
-#..\obj\fs.o
-  @implib gphoto2.lib ..\gphoto2.dll
+$(BASEPATH)\lib\libgphoto2.a: $(OBJS)
+  @implib gphoto2.lib $(BASEPATH)\gphoto2.dll
   @emximp -o $@ gphoto2.lib
 
-gphoto2.def: ..\obj\core.o ..\obj\exif.o ..\obj\file.o ..\obj\filesys.o ..\obj\library.o ..\obj\settings.o ..\obj\util.o ..\obj\widget.o ..\obj\lists.o ..\obj\camera.o ..\obj\frontend.o ..\obj\port.o
-   @copy gphoto2.df gphoto2.def
-   @emxexp $** >> gphoto2.def
+gphoto2.def: $(OBJS)
+   @$(MAKEDEF)
 
-..\gphoto2.dll: gphoto2.def ..\obj\core.o ..\obj\exif.o ..\obj\file.o ..\obj\filesys.o ..\obj\library.o ..\obj\settings.o ..\obj\util.o ..\obj\widget.o ..\obj\lists.o ..\obj\camera.o ..\obj\frontend.o ..\obj\port.o
-  @$(CC) -Wall -Zmtd -Zdll -Zcrtdll -Zbin-files -o $@ $** -L..\lib -ldllib -llibgphoto2_port
+$(BASEPATH)\gphoto2.dll: gphoto2.def $(OBJS)
+  @$(LINK) $(DLLLINKFLAGS) -o $@ $** $(LIBS)
 
 

@@ -1,33 +1,29 @@
-CCFLAGS=-O2 -c -I.. -I..\..\include -I..\..\libgphoto2_port\include -Zmtd -Zcrtdll -Zbin-files -D__ST_MT_ERRNO_ -I. -DOS2 -DHAVE_TERMIOS_H
-CC=gcc
+BASEPATH=..\..
 
 all: start \
-  dll \
+  dll1000 \
+  dll1580 \
   end
 
-start:
-  @echo ****
-  @echo   Entering:      $(MAKEDIR)
-  @echo   using CCFLAGS: $(CCFLAGS)
-  @echo ****
+!include $(BASEPATH)\OS2MAK.INC
 
-end:
-  @echo ****
-  @echo   Done: $(MAKEDIR)
-  @echo ****
+dll1000: ..\gpdc1000.dll
+dll1580: ..\gpdc1580.dll
 
-dll: ..\gppanson.dll
+OBJS1000=dc.o  dc1000.o
+OBJS1580=dc.o  dc1580.o
 
-dc.o : dc.c
-   $(CC) -o $@ dc.c $(CCFLAGS)
+.c.o:
+   @$(CC) -o $@ $< $(CCFLAGS)
 
-dc1580.o : dc1580.c
-   $(CC) -o $@ dc1580.c $(CCFLAGS)
+dc1000.def: dc1000.o
+   @$(MAKEDEF)
 
+..\gpdc1000.dll: $(OBJS1000) dc1000.def
+   @$(LINK) $(DLLLINKFLAGS) -o $@ $** $(LIBS)
 
-panasonic.def: dc1580.o
-   copy panasonic.df panasonic.def
-   emxexp $** >> panasonic.def
+dc1580.def: dc1580.o
+   @$(MAKEDEF)
 
-..\gppanson.dll: dc.o panasonic.def dc1580.o
-   $(CC) -g -Wall -Zdll -Zcrtdll -o $@ $** -lwrap -lgcc -L..\..\LIB -llibgphoto2 -llibgphoto2_port -ldllib
+..\gpdc1580.dll: $(OBJS1580) dc1580.def
+   @$(LINK) $(DLLLINKFLAGS) -o $@ $** $(LIBS)

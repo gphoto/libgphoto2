@@ -1,7 +1,7 @@
 LIBRARY GPDIRECT
 EXPORTS
 
-; From ..\..\obj\directory.o
+; From directory.o
   "extension"
   "is_image"
   "camera_id"

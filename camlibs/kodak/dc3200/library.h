@@ -71,7 +71,7 @@ int dc3200_keep_alive(DC3200Data *dd);
 int dc3200_clear_read_buffer(DC3200Data *dd);
 
 int dump_buffer(unsigned char * buffer, int len, char *title, int bytesperline);
-ulong bytes_to_l(int a, int b, int c, int d);
+unsigned long bytes_to_l(int a, int b, int c, int d);
 
 #define LIBRARY_H_INCLUDED
 #endif

@@ -1,7 +1,4 @@
-CCFLAGS=-O2 -c -I.. -I..\include -Zmtd -Zcrtdll -Zbin-files -D__ST_MT_ERRNO_ -I. -DOS2 -DHAVE_TERMIOS_H -Iinclude
-CC=gcc
-MKLIB=ar r
-
+BASEPATH=..
 
 all: start \
   dll \
@@ -9,18 +6,7 @@ all: start \
   serial\
   end
 
-start:
-  @echo ****
-  @echo   Entering:      $(MAKEDIR)
-  @echo   using CCFLAGS: $(CCFLAGS)
-  @echo ****
-  @if not exist obj md obj
-
-end:
-  @echo ****
-  @echo   Done: $(MAKEDIR)
-  @echo ****
-
+!include $(BASEPATH)\OS2MAK.INC
 
 serial:
   @cd serial
@@ -37,26 +23,23 @@ parallel:
 #  @nmake /nologo -f makefile.os2
 #  @cd..
 
-lib: ..\lib\libgphoto2_port.a
+lib: $(BASEPATH)\lib\libgphoto2_port.a
 
-dll: ..\lgp2port.dll
+dll: $(BASEPATH)\lgp2port.dll
 
-obj\portability.o: libgphoto2_port\portability.c
-  @$(CC) -o $@ $** $(CCFLAGS)
+OBJS=gp_port.o \
+     portability.o \
+     library.o
 
-obj\gp_port.o: libgphoto2_port\gp_port.c
-  @$(CC) -o $@ $** $(CCFLAGS) -DGP_PORT_SUPPORTED_SERIAL
+{libgphoto2_port}.c.o:
+  @$(CC) -o $(@B).o $< $(CCFLAGS) -DGP_PORT_SUPPORTED_SERIAL
 
-obj\library.o: libgphoto2_port\library.c
-  @$(CC) -o $@ $** $(CCFLAGS)
-
-..\lib\libgphoto2_port.a: ..\lgp2port.dll
-  @implib lgp2port.lib ..\lgp2port.dll
+$(BASEPATH)\lib\libgphoto2_port.a: $(BASEPATH)\lgp2port.dll
+  @implib lgp2port.lib $(BASEPATH)\lgp2port.dll
   @emximp -o $@ lgp2port.lib
 
-lgp2port.def: obj\gp_port.o obj\portability.o obj\library.o
-   @copy lgp2port.df lgp2port.def
-   @emxexp $** >> lgp2port.def
+lgp2port.def: $(OBJS)
+   @$(MAKEDEF)
 
-..\lgp2port.dll: lgp2port.def obj\gp_port.o obj\portability.o obj\library.o
-  @$(CC) -Zmtd -Wall -Zdll -Zcrtdll -Zbin-files -o $@ $** -L..\..\lib -ldllib
+$(BASEPATH)\lgp2port.dll: $(OBJS) lgp2port.def
+  @$(LINK) $(DLLLINKFLAGS) -o $@ $** $(LIBS)

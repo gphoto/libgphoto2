@@ -1,39 +1,25 @@
-CCFLAGS=-O2 -c -I.. -I..\..\include -I..\..\libgphoto2_port\include -Zmtd -Zcrtdll -Zbin-files -D__ST_MT_ERRNO_ -I. -DOS2 -DHAVE_TERMIOS_H  -DEBUG
-CC=gcc
+BASEPATH=..\..
+
 
 all: start \
   dll \
   end
 
-start:
-  @echo ****
-  @echo   Entering:      $(MAKEDIR)
-  @echo   using CCFLAGS: $(CCFLAGS)
-  @echo ****
+!include $(BASEPATH)\os2mak.inc
 
-end:
-  @echo ****
-  @echo   Done: $(MAKEDIR)
-  @echo ****
+dll: $(CAMLIBS)\gpdigita.dll
 
-dll: ..\gpdigita.dll
+OBJS=digita.o \
+     digita.def \
+     serial.o \
+     commands.o \
+     usb.o
 
-digita.o : digita.c digita.h
-   @$(CC) -o $@ digita.c $(CCFLAGS)
-
-serial.o : serial.c
-   @$(CC) -o $@ serial.c $(CCFLAGS)
-
-usb.o : usb.c
-   @$(CC) -o $@ usb.c $(CCFLAGS)
-
-commands.o : commands.c
-   @$(CC) -o $@ commands.c $(CCFLAGS)
-
+.c.o:
+   @$(CC) -o $@ $< $(CCFLAGS)
 
 digita.def: digita.o
-   @copy digita.df digita.def
-   @emxexp $** >> digita.def
+   @$(MAKEDEF)
 
-..\gpdigita.dll: digita.o digita.def serial.o commands.o usb.o
-   @$(CC) -g -Wall -Zdll -Zcrtdll -o $@ $** -lwrap -lgcc -L..\..\LIB -llibgphoto2 -llibgphoto2_port -ldllib -lsocket -lgiserial
+$(CAMLIBS)\gpdigita.dll: $(OBJS)
+   @$(LINK) $(DLLLINKFLAGS) -o $@ $** $(LIBS) -lsocket -lgiserial -L..\..\lib

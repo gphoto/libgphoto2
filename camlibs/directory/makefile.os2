@@ -1,30 +1,21 @@
-CCFLAGS=-O2 -c -I.. -I..\..\include -I..\..\libgphoto2_port\include -Zmtd -Zcrtdll -Zbin-files -D__ST_MT_ERRNO_ -I. -DOS2 -DHAVE_TERMIOS_H
-CC=gcc
+BASEPATH=..\..
 
 all: start \
   dll \
   end
 
-start:
-  @echo ****
-  @echo   Entering:      $(MAKEDIR)
-  @echo   using CCFLAGS: $(CCFLAGS)
-  @echo ****
+!include $(BASEPATH)\OS2MAK.INC
 
-end:
-  @echo ****
-  @echo   Done: $(MAKEDIR)
-  @echo ****
+dll: $(CAMLIBS)\gpdirbrw.dll
 
-dll: ..\gpdirbrw.dll
+OBJS=directory.o
 
-..\..\obj\directory.o : directory.c directory.h
-   @$(CC) -o $@ directory.c $(CCFLAGS)
+.c.o:
+   @$(CC) -o $@ $< $(CCFLAGS)
 
-directory.def: ..\..\obj\directory.o
-   @copy directory.df directory.def
-   @emxexp $** >> directory.def
+directory.def: directory.o
+   @$(MAKEDEF)
 
-..\gpdirbrw.dll: ..\..\obj\directory.o directory.def
-   @$(CC) -g -Wall -Zdll -Zcrtdll -o $@ $** -lwrap -lgcc -L..\..\lib -llibgphoto2 -llibgphoto2_port -ldllib
+$(CAMLIBS)\gpdirbrw.dll: $(OBJS) directory.def
+   @$(CC) $(DLLLINKFLAGS) -o $@ $** $(LIBS)
 
