@@ -194,8 +194,12 @@ int camera_config_get (CameraWidget *window) {
 
 
 
-old
 --------=-=-=-=------------------ - - - -   -     ------------------------
+don't reference below here. this was only a spec. :P
+--------=-=-=-=------------------ - - - -   -     ------------------------
+
+Old Specification
+-----------------
 
 This is simply a draft for the configuration dialog spec for the camera
 libraries. Please ask questions if something doesn't jive or sucks.

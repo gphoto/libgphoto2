@@ -10,6 +10,7 @@
 /*					data.			*/	
 /*		CameraSetting*		allocated enough for	*/
 /*					for 'count' entries.	*/
+/*		CameraWidget*		allocated a window.	*/
 
 int camera_id 			(char *id);
 	/* Copies a unique library ID into 'id' 		*/
@@ -80,17 +81,10 @@ int camera_file_delete 		(int file_number);
 	/* Deletes a picture from the current folder on the	*/
 	/* camera. 						*/
 
-int camera_config_get		(char *filename);
-	/* Copies in the filename of the configuration dialog	*/
-	/* to use. This allows libraries to have multiple 	*/
-	/* configuration dialogs for different cameras.		*/
-
-int camera_config_query		(char *label, char *value);
-	/* Queries the camera library about a particular	*/
-	/* configuration label. the library will copy the 	*/
-	/* current camera value into 'value'.			*/
-	/* The 'label' will be one of the labels in the		*/
-	/* configuration dialog file.				*/
+int camera_config_get		(CameraWidget *window);
+	/* Builds the configuration window interface using the	*/
+	/* gp_widget_* functions. This is a toolkit independent	*/
+	/* widget set that is very generic and easy to use.	*/
 
 int camera_config_set		(CameraSetting *conf,
 				 int count);

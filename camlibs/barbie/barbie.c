@@ -21,7 +21,7 @@ char packet_1[4]                = {0x02, 0x01, 0x01, 0x03};
 char packet_2[5]                = {0x02, 0x01, 0x01, 0x01, 0x03};
 
 char glob_camera_model[64];
-int  glob_debug = 1;
+int  glob_debug = 0;
 
 /* Utility Functions
    =======================================================================
@@ -29,6 +29,9 @@ int  glob_debug = 1;
 
 void barbie_packet_dump(int direction, char *buf, int size) {
 	int x;
+
+	if (!glob_debug)
+		return;
 
 	if (direction == 0)
 		printf("barbie: \tRead  Packet (%i): ", size);
@@ -256,9 +259,9 @@ int camera_id (char *id) {
 	return (GP_OK);
 }
 
-int camera_debug_set (int onoff) {
+int camera_debug_set (int value) {
 
-	glob_debug=onoff;
+	glob_debug=value;
 
 	return (GP_OK);
 }
@@ -303,7 +306,6 @@ int camera_init(CameraInit *init) {
 	}
 	dev = gpio_new(GPIO_DEVICE_SERIAL);
 	gpio_set_timeout(dev, 5000);
-printf("port: %s\n", init->port_settings.port);
 	strcpy(settings.serial.port, init->port_settings.port);
 
 	settings.serial.speed	= 57600;

@@ -105,14 +105,10 @@
 	/* ============================================================================== */
 
 	/* Retrieve and set configuration options for the camera */
-	int gp_config_get (char *config_dialog_filename);
+	int gp_config_get (CameraWidget *window);
 
-	/* Retrieve current camera settings for the 'label' in the configuration dialog */
-	int gp_config_query (char *label, char *value);
-
-	/* Send "key=value" pairs to the library, delimited by '\n' */
+	/* Send configuration settings to the camera library */
 	int gp_config_set (CameraSetting *setting, int count);
-
 
 	/* Miscellaneous functions */
 	/* ============================================================================== */

@@ -54,7 +54,6 @@ int load_library (char *camera_name) {
 		glob_c.file_lock = dlsym(lh, "camera_file_lock");
 		glob_c.file_unlock = dlsym(lh, "camera_file_unlock");
 		glob_c.config_get = dlsym(lh, "camera_config_get");
-		glob_c.config_query = dlsym(lh, "camera_config_query");
 		glob_c.config_set = dlsym(lh, "camera_config_set");
 		glob_c.capture = dlsym(lh, "camera_capture");
 		glob_c.summary = dlsym(lh, "camera_summary");

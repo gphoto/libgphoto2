@@ -39,6 +39,51 @@ typedef enum {
 	GP_PORT_SOCKET
 } CameraPortType;
 
+typedef enum {
+	WIDGET_WINDOW,
+	WIDGET_PAGE,
+	WIDGET_TEXT,
+	WIDGET_RANGE,
+	WIDGET_TOGGLE,
+	WIDGET_RADIO,
+	WIDGET_MENU,
+	WIDGET_BUTTON,
+	WIDGET_NONE
+} CameraWidgetType;
+
+struct CameraWidget;
+
+#define CameraWidgetCallback(_a) int (*_a) (CameraWidget *widget)
+
+typedef struct {
+
+	/* Publicly accessible
+	   ------------------------------ */
+	CameraWidgetType type;
+	char		 label[32];
+
+	/* Current value of the widget */
+	char		 value_string[32];
+	float		 value_number;
+
+
+	/* For Radio and Menu */
+	char 		 choice[32];
+
+	/* For Range */
+	float		 min;
+	float 		 max;
+	float		 step;
+
+	/* Function Callback */
+	int 		(*callback)(struct CameraWidget *widget);
+	/* Private (don't access)
+	   ------------------------------ */
+	struct CameraWidget *children;
+	int 		     children_count;
+
+} CameraWidget;
+
 typedef gpio_device_info CameraPortInfo;
 
 typedef struct {

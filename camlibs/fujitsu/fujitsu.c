@@ -125,12 +125,7 @@ int camera_file_delete (int file_number) {
 	return (GP_ERROR);
 }
 
-int camera_config_get (char *filename) {
-
-        return GP_ERROR;
-}
-
-int camera_config_query (char *label, char *value) {
+int camera_config_get (CameraWidget *window) {
 
         return GP_ERROR;
 }

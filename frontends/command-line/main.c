@@ -342,6 +342,9 @@ OPTION_CALLBACK(list_folders) {
 
 	if (set_globals() == GP_ERROR)
 		return (GP_ERROR);
+	if (!glob_quiet)
+		printf("Folders on camera:\n");
+	printf("/\n");
 
 	list_folders_rec("/");
 
@@ -640,9 +643,8 @@ int verify_options (int argc, char **argv) {
 	/* Make sure required options are present */
 	for (x=0; x<option_count; x++) {
 	   if (option[x].required) {
-		if (!option_is_present(option[x].short_id, argc, argv) &&
-		    !option_is_present(option[x].long_id, argc, argv)) {
-			printf("\n\tOption %s%s is required.",
+		if (option_is_present(option[x].short_id, argc, argv)==GP_ERROR) {
+			printf("Option %s%s is required.\n",
 			 strlen(option[x].short_id)>0? SHORT_OPTION:LONG_OPTION,
 			 strlen(option[x].short_id)>0? option[x].short_id:option[x].long_id);
 			return (GP_ERROR);
