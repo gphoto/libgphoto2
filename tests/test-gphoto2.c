@@ -1,4 +1,3 @@
-#include <gphoto2-core.h>
 #include <gphoto2-camera.h>
 
 #include <stdio.h>
@@ -10,12 +9,9 @@ main (int argc, char *argv [])
 {
 	CameraText text;
 	Camera *camera;
+	CameraAbilitiesList *al;
 	CameraAbilities abilities;
-
-	/*
-	 * You don't have to initialize libgphoto2 anymore. We do that
-	 * internally.
-	 */
+	int m;
 
 	/*
 	 * You'll probably want to access your camera. You will first have
@@ -29,7 +25,11 @@ main (int argc, char *argv [])
 	 * gphoto2 knows which library to use.
 	 */
 	printf ("Setting model...\n");
-	CHECK (gp_camera_abilities_by_name ("Directory Browse", &abilities));
+	CHECK (gp_abilities_list_new (&al));
+	CHECK (gp_abilities_list_load (al));
+	CHECK (m = gp_abilities_list_lookup_model (al, "Directory Browse"));
+	CHECK (gp_abilities_list_get_abilities (al, m, &abilities));
+	CHECK (gp_abilities_list_free (al));
 	CHECK (gp_camera_set_abilities (camera, abilities));
 
 	/*
@@ -39,11 +39,11 @@ main (int argc, char *argv [])
 	CHECK (gp_camera_init (camera));
 
 	/*
-	 * At this point, you can do whatever you want. Here, we get
-	 * a summary and print it. You could get files, capture images...
+	 * At this point, you can do whatever you want.
+	 * You could get files, capture images...
 	 */
-	printf ("Getting summary...\n");
-	CHECK (gp_camera_get_summary (camera, &text));
+	printf ("Getting information about the driver...\n");
+	CHECK (gp_camera_get_about (camera, &text));
 	printf ("%s\n", text.text);
 
 	/*
@@ -53,12 +53,6 @@ main (int argc, char *argv [])
 	 */
 	printf ("Unrefing camera...\n");
 	CHECK (gp_camera_unref (camera));
-
-	/*
-	 * And when you don't need gphoto2 any more, exit.
-	 */
-	printf ("Exiting gphoto2...\n");
-	CHECK (gp_exit ());
 
 	return (0);
 }
