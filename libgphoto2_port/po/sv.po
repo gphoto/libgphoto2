@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port 2.0\n"
-"POT-Creation-Date: 2002-12-01 20:50+0100\n"
+"POT-Creation-Date: 2003-02-17 14:00+0100\n"
 "PO-Revision-Date: 2002-07-24 08:54+0200\n"
 "Last-Translator: Stefan Björnelund <Stefanb@Update.UU.SE>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -15,13 +15,13 @@ msgstr ""
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:266
+#: libgphoto2_port/gphoto2-port-info-list.c:268
 #, c-format
 msgid "Could not load any io-library because '%s' could not be opened (%m)"
 msgstr ""
 "Kunde inte ladda något io-bibliotek eftersom '%s' inte kunde öppnas (%m)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:460
+#: libgphoto2_port/gphoto2-port-info-list.c:462
 msgid "Generic Port"
 msgstr "Generell Port"
 
@@ -182,86 +182,86 @@ msgstr "medd_läs"
 msgid "No error description available"
 msgstr "Ingen felbeskrivning tillgänglig"
 
-#: serial/unix.c:214
+#: serial/unix.c:226
 #, c-format
 msgid "Could not lock device '%s'"
 msgstr "Kunde inte låsa enhet '%s'"
 
-#: serial/unix.c:223
+#: serial/unix.c:236
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr "Enheten '%s' är låst av pid %d"
 
-#: serial/unix.c:226
+#: serial/unix.c:239
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr "Enheten '%s' kunden inte låsas (dev_lock returnerade %d)"
 
-#: serial/unix.c:249
+#: serial/unix.c:273
 #, c-format
 msgid "Device '%s' could not be unlocked."
 msgstr "Enheten '%s' kunde inte låsas upp."
 
-#: serial/unix.c:261
+#: serial/unix.c:285
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr "Enheten '%s' kunde inte låsas upp eftersom den är låsta av pid %d."
 
-#: serial/unix.c:265
+#: serial/unix.c:289
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr "Enheten '%s' kunde inte låsas upp (dev_lock returnerade %d)"
 
-#: serial/unix.c:332
+#: serial/unix.c:365
 #, c-format
 msgid "Serial Port %i"
 msgstr "Serieport %i"
 
-#: serial/unix.c:417
+#: serial/unix.c:456
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Misslyckades att öppna '%s' (%m)."
 
-#: serial/unix.c:435
+#: serial/unix.c:474
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Kunde inte stänga '%s' (%m)."
 
-#: serial/unix.c:488
+#: serial/unix.c:527
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "Kunde inte skriva till port (%m)"
 
-#: serial/unix.c:560
+#: serial/unix.c:599
 msgid "Parity error."
 msgstr "Partiets fel"
 
-#: serial/unix.c:564
+#: serial/unix.c:603
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Oväntat partiets svarsekvens 0xff 0x%02x."
 
-#: serial/unix.c:607
+#: serial/unix.c:646
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Okänd pin %i."
 
-#: serial/unix.c:629
+#: serial/unix.c:668
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Kunde inte hämta nivån av pin %i (%m)."
 
-#: serial/unix.c:662
+#: serial/unix.c:703
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "Kunde inte sätta nivån av pin %i till %i (%m)."
 
-#: serial/unix.c:685
+#: serial/unix.c:728
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "Kunde inte spola ut '%s' (%m)."
 
-#: serial/unix.c:796
+#: serial/unix.c:841
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Kunde inte sätta bit-hhastigheten till %d"

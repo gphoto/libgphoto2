@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port\n"
-"POT-Creation-Date: 2002-11-26 18:09+0100\n"
+"POT-Creation-Date: 2003-02-17 14:00+0100\n"
 "PO-Revision-Date: 2002-11-21 13:11+0800\n"
 "Last-Translator: Wang Li <charles@linux.net.cn>\n"
 "Language-Team: zh_CN <i18n-translation@list.linux.net.cn>\n"
@@ -13,12 +13,12 @@ msgstr ""
 "Content-Type: text/plain; charset=gb2312\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:266
+#: libgphoto2_port/gphoto2-port-info-list.c:268
 #, c-format
 msgid "Could not load any io-library because '%s' could not be opened (%m)"
 msgstr "由于无法打开‘%s’(%m)所以无法装入任何 io 库"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:460
+#: libgphoto2_port/gphoto2-port-info-list.c:462
 msgid "Generic Port"
 msgstr "通用端口"
 
@@ -179,86 +179,86 @@ msgstr "读消息"
 msgid "No error description available"
 msgstr "没有可用的错误描述"
 
-#: serial/unix.c:214
+#: serial/unix.c:226
 #, c-format
 msgid "Could not lock device '%s'"
 msgstr "无法锁定设备‘%s’"
 
-#: serial/unix.c:223
+#: serial/unix.c:236
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr "设备‘%s’已经被进行号为 %d 的进程锁定"
 
-#: serial/unix.c:226
+#: serial/unix.c:239
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr "无法锁定设备‘%s’(dev_lock 返回 %d)"
 
-#: serial/unix.c:249
+#: serial/unix.c:273
 #, c-format
 msgid "Device '%s' could not be unlocked."
 msgstr "无法解锁设备‘%s’。"
 
-#: serial/unix.c:261
+#: serial/unix.c:285
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr "由于设备‘%s’已被进程号为 %d 的进程锁定，所以无法锁定。"
 
-#: serial/unix.c:265
+#: serial/unix.c:289
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr "无法解锁设备‘%s’(dev_unlock 返回 %d)"
 
-#: serial/unix.c:332
+#: serial/unix.c:365
 #, c-format
 msgid "Serial Port %i"
 msgstr "串口 %i"
 
-#: serial/unix.c:417
+#: serial/unix.c:456
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "打开‘%s’(%m)失败。"
 
-#: serial/unix.c:435
+#: serial/unix.c:474
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "无法关闭‘%s’(%m)。"
 
-#: serial/unix.c:488
+#: serial/unix.c:527
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "无法写端口 (%m)"
 
-#: serial/unix.c:560
+#: serial/unix.c:599
 msgid "Parity error."
 msgstr "奇偶错误。"
 
-#: serial/unix.c:564
+#: serial/unix.c:603
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "意外的奇偶应答序列 0xff 0x%02x。"
 
-#: serial/unix.c:607
+#: serial/unix.c:646
 #, c-format
 msgid "Unknown pin %i."
 msgstr "未知插脚 %i。"
 
-#: serial/unix.c:629
+#: serial/unix.c:668
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "无法获取插脚 %i 的级别 (%m)。"
 
-#: serial/unix.c:662
+#: serial/unix.c:703
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "无法将插脚 %i 的级别设置为 %i (%m)。"
 
-#: serial/unix.c:685
+#: serial/unix.c:728
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "无法刷新‘%s’(%m)。"
 
-#: serial/unix.c:796
+#: serial/unix.c:841
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "无法设置将波特率设置为 %d"
