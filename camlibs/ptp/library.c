@@ -168,7 +168,8 @@ static struct {
 	unsigned short usb_product;
 } models[] = {
 //	{"Kodak DC-240 (PTP)",  0x040a, 0x0121}, /* Special firmware */
-/*	{"Kodak DC-4800", 0x040a, 0x0160},
+	{"Kodak DC-4800", 0x040a, 0x0160},
+/*
 	{"Kodak DC-3215", 0x040a, 0x0525},
 	{"Kodak DX-3500", 0x040a, 0x0500},
 	{"Kodak DX-3600", 0x040a, 0x0510},
