@@ -884,13 +884,14 @@ delete_file_func (CameraFilesystem *fs, const char *folder, const char *file,
 static int
 camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
-	strcpy (about->text, _("Download program for Polaroid Fun Flash 640. "
+	strcpy (about->text, _("Download program for GrandTek 98x based cameras. "
 		"Originally written by Chris Byrne <adapt@ihug.co.nz>, "
-		"and adapted for gphoto2 by Lutz Müller "
+		"and adapted for gphoto2 by Lutz Mueller "
 		"<urc8@rz.uni-karlsruhe.de>."
 		"Protocol enhancements and postprocessing "
 		" for Jenoptik JD350e by Michael Trawny "
-		"<trawny99@users.sourceforge.net>."));
+		"<trawny99@users.sourceforge.net>."
+		"Bugfixes by Marcus Meissner <marcus@jet.franken.de>."));
 
 	return (GP_OK);
 }
