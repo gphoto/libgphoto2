@@ -1,0 +1,206 @@
+#include "dimagev.h"
+
+
+/* This is the parent function, who calls most of the functions below.
+   It returns GP_ERROR if it cannot get the camera data, and GP_OK otherwise.
+   The subroutines will print out more detained information should they fail. */
+int dimagev_get_camera_status(dimagev_t *dimagev) {
+	dimagev_packet *p, *raw;
+	unsigned char char_buffer;
+
+	/* Check the device. */
+	if ( dimagev->dev == NULL ) {
+		if ( dimagev->debug != 0 ) {
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_status::device not valid");
+		}
+		return GP_ERROR;
+	}
+
+	/* Let's say hello and get the current status. */
+	if ( ( p = dimagev_make_packet(DIMAGEV_GET_STATUS, 1, 0)) == NULL ) {
+		if ( dimagev->debug != 0 ) {
+			perror("dimagev_get_camera_status::unable to allocate packet");
+		}
+		return GP_ERROR;
+	}
+
+	if ( gpio_write(dimagev->dev, p->buffer, p->length) == GPIO_ERROR ) {
+		if ( dimagev->debug != 0 ) {
+			perror("dimagev_get_camera_status::unable to write packet");
+		}
+		return GP_ERROR;
+	} else if ( gpio_read(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
+		if ( dimagev->debug != 0 ) {
+			perror("dimagev_get_camera_status::no response from camera");
+		}
+		return GP_ERROR;
+	}
+
+	free(p);
+
+	switch ( char_buffer ) {
+		case DIMAGEV_ACK:
+			break;
+		case DIMAGEV_NAK:
+			if ( dimagev->debug != 0 ) {
+				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_status::camera did not acknowledge transmission");
+			}
+			return GP_ERROR;
+			break;
+		case DIMAGEV_CAN:
+			if ( dimagev->debug != 0 ) {
+				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_status::camera cancels transmission");
+			}
+			return GP_ERROR;
+			break;
+		default:
+			if ( dimagev->debug != 0 ) {
+				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_status::camera responded with unknown value %x", char_buffer);
+			}
+			return GP_ERROR;
+			break;
+	}
+
+	if ( ( p = dimagev_read_packet(dimagev) ) == NULL ) {
+		if ( dimagev->debug != 0 ) {
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_status::unable to read packet");
+		}
+		return GP_ERROR;
+	}
+
+	char_buffer = DIMAGEV_EOT;
+	if ( gpio_write(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
+		if ( dimagev->debug != 0 ) {
+			perror("dimagev_get_camera_status::unable to send EOT");
+		}
+		return GP_ERROR;
+	}
+		
+	if ( gpio_read(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
+		if ( dimagev->debug != 0 ) {
+			perror("dimagev_get_camera_status::no response from camera");
+		}
+		return GP_ERROR;
+	}
+
+	switch ( char_buffer ) {
+		case DIMAGEV_ACK:
+			break;
+		case DIMAGEV_NAK:
+			if ( dimagev->debug != 0 ) {
+				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_status::camera did not acknowledge transmission");
+			}
+			return GP_ERROR;
+			break;
+		case DIMAGEV_CAN:
+			if ( dimagev->debug != 0 ) {
+				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_status::camera cancels transmission");
+			}
+			return GP_ERROR;
+			break;
+		default:
+			if ( dimagev->debug != 0 ) {
+				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_status::camera responded with unknown value %x", char_buffer);
+			}
+			return GP_ERROR;
+			break;
+	}
+
+	if ( dimagev->debug != 0 ) {
+		dimagev_dump_packet(p);
+	}
+
+	if ( ( raw = dimagev_strip_packet(p) ) == NULL ) {
+		if ( dimagev->debug != 0 ) {
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_status::unable to strip data packet");
+		}
+		return GP_ERROR;
+	}
+	
+	if ( ( dimagev->status = dimagev_import_camera_status(raw->buffer) ) == NULL ) {
+		if ( dimagev->debug != 0 ) {
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_status::unable to read camera status");
+		}
+		return GP_ERROR;
+	}
+
+	return GP_OK;
+}
+
+dimagev_status_t *dimagev_import_camera_status(unsigned char *raw_data) {
+	dimagev_status_t *processed_data;
+
+	if ( raw_data == NULL ) {
+		return NULL;
+	}
+	
+	if ( ( processed_data = malloc(sizeof(dimagev_status_t)) ) == NULL ) {
+		return NULL;
+	}
+
+	processed_data->battery_level = raw_data[0];
+	processed_data->number_images = ( raw_data[1] * 256 ) + ( raw_data[2] );
+	processed_data->minimum_images_can_take = ( raw_data[3] * 256 ) + ( raw_data[4] );
+	processed_data->busy = ( raw_data[5] & 0x40 ) >> 6;
+	processed_data->flash_charging = ( raw_data[5] & 0x10 ) >> 4;
+	processed_data->lens_status = ( raw_data[5] & 0x0c ) >> 2 ;
+	processed_data->card_status = ( raw_data[5] & 0x03 );
+	processed_data->id_number = raw_data[6];
+
+	return processed_data;
+}
+
+void dimagev_dump_camera_status(dimagev_status_t *status) {
+
+	if ( status == NULL ) {
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "Unable to dump NULL status");
+		return;
+	}
+
+	gp_debug_printf(GP_DEBUG_LOW, "dimagev", "========= Begin Camera Status =========");
+	gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Battery level: %d", status->battery_level);
+	gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Number of images: %d", status->number_images);
+	gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Minimum images remaining: %d", status->minimum_images_can_take);
+	gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Busy: %s ( %d )", status->busy ? "Busy" : "Not Busy", status->busy);
+	gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Flash charging: %s ( %d )", status->flash_charging ? "Charging" : "Ready", status->flash_charging);
+
+	gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Lens status: ");
+	switch ( status->lens_status ) {
+		case 0:
+			gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Normal ( 0 )");
+			break;
+		case 1: case 2:
+			gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Lens direction does not match flash light ( %d )", status->lens_status );
+			break;
+		case 3:
+			gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Lens is not attached ( 3 )");
+			break;
+		default:
+			gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Bad value for lens status ( %d )", status->lens_status);
+			break;
+	}
+
+	gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Card status: ");
+	switch ( status->card_status ) {
+		case 0:
+			gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Normal ( 0 )");
+			break;
+		case 1:
+			gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Full ( 1 )");
+			break;
+		case 2:
+			gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Write-protected ( 2 )");
+			break;
+		case 3:
+			gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Card not valid for this camera ( 3 )");
+			break;
+		default:
+			gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Invalid value for card status ( %d )\n", status->card_status);
+			break;
+	}
+
+	gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Card ID Data: %02x", status->id_number);
+	gp_debug_printf(GP_DEBUG_LOW, "dimagev", "========== End Camera Status ==========");
+
+	return;
+}

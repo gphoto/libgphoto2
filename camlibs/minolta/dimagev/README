@@ -1,0 +1,22 @@
+This is a fresh driver for the Minolta DImage V camera, which has since been
+discontinued. This driver contains no code form my earlier efforts.
+
+The assistance of Minolta was very helpful in writing this driver; I was given
+a copy of the specification and told that I could "share it with the Linux
+community". I am interpreting this "sharing" as the GNU GPL. Minolta takes no
+respondsibility for the information they provided me, which is perfectly fair.
+Please see the file COPYING for more information.
+
+This library is far from complete. There are plenty of places where better
+sanity checking could be done, such as ensuring that the media is write-enabled
+before trying to capture an image. I will continue to work on it until I buy a
+newer camera.
+
+Notes on specific functions:
+    The capture function takes a picture, downloads it, and then deletes it.
+    This image is always named dv00000.jpg, since that holds with the naming
+    convention for the rest of the pictures, and simultaneously cannot be a
+    valid name for an image retrieved from the camera.
+
+
+--Gus Hartmann
