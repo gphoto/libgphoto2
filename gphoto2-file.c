@@ -46,6 +46,9 @@ struct _CameraFile {
         int bytes_read;
         int ref_count;
 
+	CameraFileProgressFunc func;
+	void *func_data;
+
         unsigned char *red_table, *blue_table, *green_table;
         int red_size, blue_size, green_size;
         char header [128];
@@ -270,6 +273,28 @@ gp_file_open (CameraFile *file, const char *filename)
 		     sizeof (file->mime_type));
 
         return (GP_OK);
+}
+
+int
+gp_file_set_progress_func (CameraFile *file, CameraFileProgressFunc func,
+			   void *data)
+{
+	CHECK_NULL (file);
+
+	file->func = func;
+	file->func_data = data;
+
+	return (GP_OK);
+}
+
+int
+gp_file_progress (CameraFile *file, float percentage)
+{
+	CHECK_NULL (file);
+
+	if (!file->func)
+		return (GP_OK);
+	return (file->func (file, percentage, file->func_data));
 }
 
 int
