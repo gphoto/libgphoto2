@@ -255,11 +255,14 @@ int gp_camera_exit (Camera *camera)
 	if (camera == NULL)
 		return (GP_ERROR_BAD_PARAMETERS);
 
-        if (camera->functions->exit == NULL)
-                return(GP_ERROR_NOT_SUPPORTED);
+	if (camera->functions == NULL)
+		return (GP_ERROR);
 
-        ret = camera->functions->exit(camera);
-        close_library(camera);
+        if (camera->functions->exit == NULL)
+                return (GP_ERROR_NOT_SUPPORTED);
+
+        ret = camera->functions->exit (camera);
+        close_library (camera);
 
         return (ret);
 }
