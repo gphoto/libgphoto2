@@ -21,7 +21,9 @@
 #ifndef __GPHOTO2_RESULT_H__
 #define __GPHOTO2_RESULT_H__
 
+#ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
 
 /* Additional error codes are defined here */
 #include <gphoto2-port-result.h>

@@ -1,3 +1,9 @@
+2002-01-13 Dan Fandrich <dan@coneharvesters.com>
+
+	* libgphoto2/gphoto2-library.h
+	* libgphoto2/gphoto2-list.h
+	* libgphoto2/gphoto2-result.h: Put #ifdef HAVE_CONFIG_H around include
+
 2002-01-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	Finished the GPContext stuff - changes all over the place. Basically,
@@ -5068,4 +5074,3 @@
 	libgphoto2/settings.c, libgphoto2/settings.h, libgphoto2/util.c,
 	libgphoto2/util.h, frontends/command-line/gphoto2: gPhoto2: digital
 	camera access libraries and application
-
