@@ -20,6 +20,15 @@
  *			Rewrite of Dimera_Get_Full_Image()		  GDB
  *
  * History:
+ * $Log$
+ * Revision 1.3  2001/06/28 22:03:42  dfandrich
+ * Integrated Brian Beattie's patch to use mesa_read_row instead of
+ * mesa_read_image for picture downloading.  Hopefully, this will
+ * allow downloading on newer cameras.
+ *
+ *		2001/06/06 - Added serial baud rate setting.		  Dan
+ *			     Improved camera_summary.
+ *
  *		2001/03/10 - Port to gphoto2				  Dan
  *
  *		2000/09/06 - Rewrite of Dimera_Get_Full_Image()		  GDB
@@ -35,6 +44,7 @@
 #include "mesalib.h"
 #include "dimeratab.h"
 
+/* Legacy macros */
 /*#define ERROR( s ) { \
 	fprintf( stderr, "%s: %s\n", __FUNCTION__, s ); \
 	error_dialog( s ); }*/
@@ -467,7 +477,7 @@ int camera_manual (Camera *camera, CameraText *manual) {
 	"  Poor image quality or problems communicating are\n"
 	"often caused by a low battery.\n"
 	"  Images captured remotely on this camera are stored\n"
-	"in a temporary location and not in the flash card.\n"
+	"in temporary RAM and not in the flash memory card.\n"
 	"  Exposure control when capturing all images is\n"
 	"automatically set by the capture preview function.\n"
 	);
@@ -478,8 +488,8 @@ int camera_manual (Camera *camera, CameraText *manual) {
 int camera_about (Camera *camera, CameraText *about) {
 	strcpy(about->text,
 		"gPhoto2 Mustek VDC 3500/Relisys Dimera 3500\n"
-		"Version 0.5 -- This software was created with\n"
-		"the help of proprietary information belonging\n"
+		"This software was created with the\n"
+		"help of proprietary information belonging\n"
 		"to StarDot Technologies.\n"
 		"Author:\n"
 		"Brian Beattie http://www.beattie-home.net\n"
@@ -487,7 +497,8 @@ int camera_about (Camera *camera, CameraText *about) {
 		"Chuck Homic <chuck@vvisions.com>\n"
 		"     Converting raw camera images to RGB\n"
 		"Dan Fandrich <dan@coneharvesters.com>\n"
-		"     Information on protocol, raw image format, gphoto2 port\n"
+		"     Information on protocol, raw image format,\n"
+		"     gphoto2 port\n"
 		);
 	return GP_OK;
 }
@@ -684,6 +695,9 @@ Dimera_Get_Full_Image( int picnum, int *size, Camera *camera )
 
 	gp_frontend_progress(camera, NULL, 0 );
 
+	/* due to reports of mesa_read_image not working for some cameras */
+	/* this is changed to use mesa_read_row */
+#if 0
 	for ( ia.row = 4, b = rbuffer; ia.row < (height + 4) ;
 			ia.row += ia.row_cnt, b += s )
 	{
@@ -698,10 +712,11 @@ Dimera_Get_Full_Image( int picnum, int *size, Camera *camera )
 			if ( (s == GP_ERROR_TIMEOUT || s == GP_ERROR_CORRUPTED_DATA) && --retry > 0)
 			{
 				update_status( "Retransmitting" );
-				printf("Dimera_Get_Full_Image: retrans\n");
+				gp_debug_printf(GP_DEBUG_LOW, "dimera", "Dimera_Get_Full_Image: retrans"); 
 				continue;
 			}
-			printf("Dimera_Get_Full_Image: read error %d (retry %d)\n",s,retry);
+			gp_debug_printf(GP_DEBUG_LOW, "dimera",
+				"Dimera_Get_Full_Image: read error %d (retry %d)",s,retry);
 				/* retry count exceeded, or other error */
 			free( rbuffer );
 			*size = 0;
@@ -709,6 +724,34 @@ Dimera_Get_Full_Image( int picnum, int *size, Camera *camera )
 		}
 		gp_frontend_progress(camera, NULL, 100 * ia.row / (height + 4) );
 	}
+#else
+	for ( ia.row = 4, b = rbuffer; ia.row < (height + 4) ;
+			ia.row++, b += s )
+	{
+		update_status( "Downloading Image" );
+		for ( retry = 10;; )
+		{
+
+			s = mesa_read_row( cam->dev, b, &ia );
+			if( s > 0)
+				break;
+
+			if ( (s == GP_ERROR_TIMEOUT || s == GP_ERROR_CORRUPTED_DATA) && --retry > 0)
+			{
+				update_status( "Retransmitting" );
+				gp_debug_printf(GP_DEBUG_LOW, "dimera", "Dimera_Get_Full_Image: retrans"); 
+				continue;
+			}
+			gp_debug_printf(GP_DEBUG_LOW, "dimera",
+				"Dimera_Get_Full_Image: read error %d (retry %d)",s,retry);
+				/* retry count exceeded, or other error */
+			free( rbuffer );
+			*size = 0;
+			return 0;
+		}
+		gp_frontend_progress(camera, NULL, 100 * ia.row / (height + 4) );
+	}
+#endif
 	final_image = Dimera_convert_raw( rbuffer, height, width, size );
 	free( rbuffer );
 	return final_image;
