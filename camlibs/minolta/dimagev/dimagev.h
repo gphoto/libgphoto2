@@ -240,4 +240,4 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file);
 int dimagev_delete_picture(dimagev_t *dimagev, int file_number);
 int dimagev_delete_all(dimagev_t *dimagev);
 int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file);
-unsigned char *dimagev_ycbcr_to_ppm(unsigned char *ycbcr, int size);
+unsigned char *dimagev_ycbcr_to_ppm(unsigned char *ycbcr);
