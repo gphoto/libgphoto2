@@ -630,6 +630,7 @@ sierra_transmit_ack (Camera *camera, char *packet, GPContext *context)
 {
 	int r = 0;
 	unsigned char buf[4096];
+	GPPortSettings s;
 
 	while (1) {
 		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
@@ -648,8 +649,31 @@ sierra_transmit_ack (Camera *camera, char *packet, GPContext *context)
 				"by camera. Please contact "
 				"<gphoto-devel@gphoto.org>."));
 			return GP_ERROR;
-		case SIERRA_PACKET_SESSION_ERROR:
+
 		case SIERRA_PACKET_SESSION_END:
+			if (++r > 2) {
+				gp_context_error (context, _("Could not "
+					"transmit packet even after several "
+					"retries."));
+				return (GP_ERROR);
+			}
+			
+			/*
+                         * The camera has ended this session and
+                         * reverted the speed back to 19200. Imitate this
+                         * speed change and retry at 19200.
+                         */
+                        switch (camera->port->type) { 
+                        case GP_PORT_SERIAL: 
+                                CHECK (gp_port_get_settings (camera->port, &s));                                s.serial.speed = 19200;
+                                CHECK (gp_port_set_settings (camera->port, s));
+                                break;
+                        default:
+                                break;
+                        }
+			continue;
+
+		case SIERRA_PACKET_SESSION_ERROR:
 		case SIERRA_PACKET_WRONG_SPEED:
 			if (++r > 2) {
 				gp_context_error (context, _("Could not "
@@ -874,6 +898,7 @@ int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *con
 {
 	int r = 0;
 	unsigned char packet[4096], buf[4096];
+	GPPortSettings s;
 
 	CHECK (sierra_build_packet (camera, SIERRA_PACKET_COMMAND, 0, 2, packet));
 
@@ -906,6 +931,29 @@ int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *con
 			return GP_OK;
 
 		case SIERRA_PACKET_SESSION_END:
+			if (++r > 2) {
+				gp_context_error (context, _("Too many "
+						"retries failed."));
+				return (GP_ERROR);
+			}
+
+			/*
+			 * The camera has ended this session and
+			 * reverted the speed back to 19200. Imitate this
+			 * speed change and retry at 19200.
+			 */
+			switch (camera->port->type) {
+			case GP_PORT_SERIAL:
+				CHECK (gp_port_get_settings (camera->port, &s));
+				s.serial.speed = 19200;
+				CHECK (gp_port_set_settings (camera->port, s));
+				break;
+			default:
+				break;
+			}
+			CHECK (sierra_write_packet (camera, packet));
+			break;
+				
 		case SIERRA_PACKET_SESSION_ERROR:
 		case SIERRA_PACKET_WRONG_SPEED:
 			if (++r > 2) {

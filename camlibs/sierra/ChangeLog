@@ -1,3 +1,7 @@
+2002-05-21  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c: Yet another try to handle SIERRA_PACKET_SESSION_END.
+
 2002-05-14  Lutz Müller <lutz@users.sourceforge.net>
 
 	* library.c: Try to handle the strange 0x8c error.
