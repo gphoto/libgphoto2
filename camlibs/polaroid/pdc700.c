@@ -100,7 +100,7 @@ struct _PDCPicInfo {
  * (3rd one) and the last one (checksum).
  */
 static int
-calc_checksum (unsigned char *cmd, int len)
+calc_checksum (unsigned char *cmd, unsigned int len)
 {
 	int i;
 	unsigned char checksum;
@@ -112,7 +112,7 @@ calc_checksum (unsigned char *cmd, int len)
 }
 
 static int
-pdc700_send (Camera *camera, unsigned char *cmd, int cmd_len)
+pdc700_send (Camera *camera, unsigned char *cmd, unsigned int cmd_len)
 {
 	/* Finish the command and send it */
 	cmd[0] = 0x40;
@@ -126,8 +126,8 @@ pdc700_send (Camera *camera, unsigned char *cmd, int cmd_len)
 
 static int
 pdc700_read (Camera *camera, unsigned char *cmd,
-	     unsigned char *b, int *b_len,
-	     char *status, char *sequence_number)
+	     unsigned char *b, unsigned int *b_len,
+	     unsigned char *status, unsigned char *sequence_number)
 {
 	unsigned char header[3], checksum;
 	unsigned int i;
@@ -179,7 +179,7 @@ pdc700_read (Camera *camera, unsigned char *cmd,
 }
 
 static int
-pdc700_transmit (Camera *camera, unsigned char *cmd, int cmd_len,
+pdc700_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 		 unsigned char *buf, unsigned int *buf_len)
 {
 	unsigned char status, b[2048], sequence_number;
@@ -386,7 +386,7 @@ pdc700_info (Camera *camera, PDCInfo *info)
 
 static int
 pdc700_pic (Camera *camera, unsigned int n,
-	    unsigned char **data, unsigned int *size, int thumb)
+	    unsigned char **data, unsigned int *size, unsigned char thumb)
 {
 	unsigned char cmd[8];
 	int r;
@@ -453,7 +453,7 @@ camera_abilities (CameraAbilitiesList *list)
 	return (GP_OK);
 }
 
-static int
+static void
 pdc700_expand (unsigned char *src, unsigned char *dst)
 {
 	int Y, Y2, U, V;
@@ -483,8 +483,6 @@ pdc700_expand (unsigned char *src, unsigned char *dst)
 
 			src += 4;
 		}
-
-	return (GP_OK);
 }
 
 static int
@@ -528,7 +526,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			free (data);
 			return (GP_ERROR_NO_MEMORY);
 		}
-		CRFF (pdc700_expand (data, ppm), data, ppm);
+		pdc700_expand (data, ppm);
 		free (data);
 		CRF (gp_file_append (file, header, sizeof (header)), ppm);
 		CRF (gp_file_append (file, ppm, ppm_size), ppm);
