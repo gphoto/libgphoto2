@@ -27,7 +27,7 @@ Notes
 -----
 The cameras always delete the last file on them, no matter what file number is
 passed to it for deletion. It is impossible to delete a specific image or
-movie on the camera. 
+movie on the camera.
 
 Webcam mode
 -----------
@@ -41,7 +41,7 @@ Authors
 -------
 Till Adam <till@adam-lilienthal>
 based on the work of others and with help from a lot of people listed below.
-The initial support for the Mustek gsmart mini 2 was based on the sources 
+The initial support for the Mustek gsmart mini 2 was based on the sources
 of the windows driver kindly provided by Mustek.
 
 Ian MacArthur <ian@imm.uklinux.net>
@@ -50,7 +50,7 @@ support for spca500 based cams with flash storage.
 
 This camlib is the result of merging several others that were created before
 it was clear how they relate to each other. The thank you sections of the old
-READMEs are listed here in no particular order. 
+READMEs are listed here in no particular order.
 
 Post merge thanks
 -----------------
@@ -58,7 +58,7 @@ A lot of people helped with testing the merged camlib. Most of them are listed
 above anyway, so I wont list them again.
 
 Big thanks to Richard Curnow <rc@rc0.org.uk> who fixed several bug in the
-gsmart mini support. His patches went in during the merge. 
+gsmart mini support. His patches went in during the merge.
 
 Hartmut Henkel <hartmut_henkel@gmx.de> helped debug a crash with thumbnails.
 Rupert Levene <r.levene@lancaster.ac.uk> helped debug the merged camlib.
@@ -86,7 +86,7 @@ of the gsmart mini and had to put his cam in the fridge (!) several times in
 the process. Brave man. ;)
 
 Michel Xhaard <mxhaard@free.fr> helped add support for the Maxell Max Pocket
-with patches and testing. Thanks a lot. 
+with patches and testing. Thanks a lot.
 
 Very special thanks to Piotr Pawlow <pp@siedziba.pl> for adding avi index
 functionality and fixing a few bugs.
@@ -114,5 +114,3 @@ risking his cam so yours works on linux ;).
 Thanks also to Martyn Ranyard <ranyardm@lineone.net> for testing and reporting
 success with the nisis Quickpix Qp3. He also helped debug the beginnings of
 avi support.
-
-

@@ -60,7 +60,7 @@ int
 spca50x_get_firmware_revision (CameraPrivateLibrary *lib)
 {
 
-	CHECK (gp_port_usb_msg_read (lib->gpdev, 0x20, 0x0, 0x0, 
+	CHECK (gp_port_usb_msg_read (lib->gpdev, 0x20, 0x0, 0x0,
 				&(lib->fw_rev), 1));
 	return GP_OK;
 }
@@ -73,8 +73,8 @@ spca50x_detect_storage_type (CameraPrivateLibrary *lib)
 
 	for (i=0;i<3;i++)
 	{
-		CHECK (gp_port_usb_msg_read (lib->gpdev, 0x28, 0x0000, 
-					i, &buf[i], 0x01)); 
+		CHECK (gp_port_usb_msg_read (lib->gpdev, 0x28, 0x0000,
+					i, &buf[i], 0x01));
 	}
 
 	if (buf[0]) lib->storage_media_mask |= SPCA50X_SDRAM;
@@ -101,9 +101,9 @@ spca50x_reset (CameraPrivateLibrary * lib)
 		CHECK (gp_port_usb_msg_write
 		       (lib->gpdev, 0x02, 0x0000, 0x0003, NULL, 0));
 	} else if (lib->fw_rev == 2) {
-		CHECK (gp_port_usb_msg_write(lib->gpdev, 0, 1, 
+		CHECK (gp_port_usb_msg_write(lib->gpdev, 0, 1,
 					SPCA50X_REG_AutoPbSize, NULL, 0));
-		CHECK (gp_port_usb_msg_write(lib->gpdev, 0, 0, 
+		CHECK (gp_port_usb_msg_write(lib->gpdev, 0, 0,
 					0x0d04, NULL, 0));
 		CHECK (gp_port_usb_msg_write(lib->gpdev, 0x1e, 0, 0, NULL, 0));
 	}
@@ -162,7 +162,7 @@ create_jpeg_from_data (uint8_t * dst, uint8_t * src, int qIndex, int w,
 
 	start = dst;
 	/* copy the header from the template */
-	memcpy (dst, SPCA50xJPGDefaultHeaderPart1, 
+	memcpy (dst, SPCA50xJPGDefaultHeaderPart1,
 			SPCA50X_JPG_DEFAULT_HEADER_PART1_LENGTH);
 
 	/* modify quantization table */
@@ -173,18 +173,18 @@ create_jpeg_from_data (uint8_t * dst, uint8_t * src, int qIndex, int w,
 
 	/* copy Huffman table */
 	if (!omit_huffman_table) {
-	    memcpy (dst, SPCA50xJPGDefaultHeaderPart2, 
+	    memcpy (dst, SPCA50xJPGDefaultHeaderPart2,
 			    SPCA50X_JPG_DEFAULT_HEADER_PART2_LENGTH);
 	    dst += SPCA50X_JPG_DEFAULT_HEADER_PART2_LENGTH;
 	}
-	memcpy (dst, SPCA50xJPGDefaultHeaderPart3, 
+	memcpy (dst, SPCA50xJPGDefaultHeaderPart3,
 			SPCA50X_JPG_DEFAULT_HEADER_PART3_LENGTH);
 
 	/* modify the image width, height */
-	*(dst + 8) = w & 0xFF;	//Image width low byte
-	*(dst + 7) = w >> 8 & 0xFF;	//Image width high byte
-	*(dst + 6) = h & 0xFF;	//Image height low byte
-	*(dst + 5) = h >> 8 & 0xFF;	//Image height high byte
+	*(dst + 8) = w & 0xFF;		/* Image width low byte */
+	*(dst + 7) = w >> 8 & 0xFF;	/* Image width high byte */
+	*(dst + 6) = h & 0xFF;		/* Image height low byte */
+	*(dst + 5) = h >> 8 & 0xFF;	/* Image height high byte */
 
 	/* set the format */
 	*(dst + 11) = format;

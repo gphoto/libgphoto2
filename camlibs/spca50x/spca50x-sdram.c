@@ -62,7 +62,7 @@ static int spca50x_mode_set_download (CameraPrivateLibrary * lib);
 static int spca50x_download_data (CameraPrivateLibrary * lib, uint32_t start,
 				 unsigned int size, uint8_t * buf);
 static int spca50x_get_FATs (CameraPrivateLibrary * lib, int dramtype);
-static int spca50x_sdram_get_file_count_and_fat_count 
+static int spca50x_sdram_get_file_count_and_fat_count
                             (CameraPrivateLibrary * lib, int dramtype);
 static int spca50x_get_avi_thumbnail (CameraPrivateLibrary * lib,
 				     uint8_t ** buf, unsigned int *len,
@@ -78,19 +78,19 @@ static inline uint8_t *put_dword (uint8_t * ptr, uint32_t value);
 
 
 static int
-spca50x_sdram_get_fat_page (CameraPrivateLibrary * lib, int index, 
+spca50x_sdram_get_fat_page (CameraPrivateLibrary * lib, int index,
 		            int dramtype, uint8_t *p)
 {
 	switch (dramtype) {
 		case 4:	/* 128 Mbit */
 			CHECK (spca50x_download_data
-					(lib, 0x7fff80 - 
+					(lib, 0x7fff80 -
 					 index * 0x80,
 					 SPCA50X_FAT_PAGE_SIZE, p));
 			break;
 		case 3:	/* 64 Mbit */
 			CHECK (spca50x_download_data
-					(lib, 0x3fff80 - 
+					(lib, 0x3fff80 -
 					 index * 0x80,
 					 SPCA50X_FAT_PAGE_SIZE, p));
 			break;
@@ -102,7 +102,7 @@ spca50x_sdram_get_fat_page (CameraPrivateLibrary * lib, int index,
 }
 
 static int
-spca50x_sdram_get_file_count_and_fat_count (CameraPrivateLibrary * lib, 
+spca50x_sdram_get_file_count_and_fat_count (CameraPrivateLibrary * lib,
 		                            int dramtype)
 {
 	uint8_t theFat[256];
@@ -120,21 +120,21 @@ spca50x_sdram_get_file_count_and_fat_count (CameraPrivateLibrary * lib,
 				 (uint8_t *) & lib->num_files_on_sdram, 1));
 		LE32TOH (lib->num_files_on_sdram);
 
-		// get fatscount 
+		/*  get fatscount */
 		CHECK (gp_port_usb_msg_write
 				(lib->gpdev, 0x05, 0x0000, 0x0008, NULL, 0));
 		sleep (1);
 		CHECK (gp_port_usb_msg_read
-				(lib->gpdev, 0, 0, 0x0e19, 
+				(lib->gpdev, 0, 0, 0x0e19,
 				 (uint8_t *) & lower, 1));
 		CHECK (gp_port_usb_msg_read
-				(lib->gpdev, 0, 0, 0x0e20, 
+				(lib->gpdev, 0, 0, 0x0e20,
 				 (uint8_t *) & upper, 1));
 
 		lib->num_fats = ((upper & 0xFF << 8) | (lower & 0xFF));
 	} else {
 		while (1) {
-			CHECK (spca50x_sdram_get_fat_page (lib, lib->num_fats, 
+			CHECK (spca50x_sdram_get_fat_page (lib, lib->num_fats,
 					            dramtype, theFat));
 			if (theFat[0] == 0xFF)
 				break;
@@ -225,10 +225,10 @@ spca50x_get_image (CameraPrivateLibrary * lib, uint8_t ** buf,
 	if (lib->bridge == BRIDGE_SPCA500) {
 		o_size = size = (p[5] & 0xff) * 0x100 + (p[6] & 0xff) * 0x10000;
 		qIndex = p[7] & 0x0f;
-	} else { 
+	} else {
 		o_size = size =
-				(p[13] & 0xff) * 0x10000 
-				+ (p[12] & 0xff) * 0x100 
+				(p[13] & 0xff) * 0x10000
+				+ (p[12] & 0xff) * 0x100
 				+ (p[11] & 0xff);
 		if (lib->fw_rev == 1) {
 			qIndex = p[7] & 0x0f;
@@ -306,7 +306,7 @@ spca50x_get_avi (CameraPrivateLibrary * lib, uint8_t ** buf,
 		return GP_ERROR_NOT_SUPPORTED;
 
 	p = g_file->fat;
-	
+
 	if (lib->fw_rev == 2)
 		qIndex = p[10] & 0x0f;
 	else
@@ -318,7 +318,7 @@ spca50x_get_avi (CameraPrivateLibrary * lib, uint8_t ** buf,
 	start = (p[1] & 0xff) + (p[2] & 0xff) * 0x100;
 	start *= 128;
 
-	/* Frame w and h and qIndex dont change, so just use the values 
+	/* Frame w and h and qIndex dont change, so just use the values
 	 * of the first frame */
 	frame_width = (p[8] & 0xFF) * 16;
 	frame_height = (p[9] & 0xFF) * 16;
@@ -367,7 +367,7 @@ spca50x_get_avi (CameraPrivateLibrary * lib, uint8_t ** buf,
 
 	/* prepare index item */
 	put_dword (index_item, 0x63643030);	/* 00dc */
-	put_dword (index_item + 4, 0x10);	// KEYFRAME
+	put_dword (index_item + 4, 0x10);	/*  KEYFRAME */
 
 	/* copy the header from the template */
 	memcpy (avi, SPCA50xAviHeader, SPCA50X_AVI_HEADER_LENGTH);
@@ -375,11 +375,11 @@ spca50x_get_avi (CameraPrivateLibrary * lib, uint8_t ** buf,
 	/* put the width and height into the riff header */
 	put_dword(avi + 0x40, frame_width);
 	put_dword(avi + 0x44, frame_height);
-	
+
 	/* and at 0xb0 and 0xb4 */
 	put_dword(avi + 0xb0, frame_width);
 	put_dword(avi + 0xb4, frame_height);
-	
+
 	avi += SPCA50X_AVI_HEADER_LENGTH;
 
 	/* Reset to the first fat */
@@ -387,13 +387,13 @@ spca50x_get_avi (CameraPrivateLibrary * lib, uint8_t ** buf,
 	data = mybuf;
 
 	/* Iterate over fats and frames in each fat and build a jpeg for
-	 * each frame. Add the jpeg to the avi and write an index entry.  */
+	 * each frame. Add the jpeg to the avi and write an index entry. */
 	for (i = g_file->fat_start; i <= g_file->fat_end; i++) {
 		frames_per_fat = ((p[49] & 0xFF) * 0x100 + (p[48] & 0xFF));
 
 		/* frames per fat might be lying, so double check how
 		   many frames were already processed */
-		if (frames_per_fat > 60 || frames_per_fat == 0 
+		if (frames_per_fat > 60 || frames_per_fat == 0
 		    || fn + frames_per_fat > frame_count)
 			break;
 
@@ -477,10 +477,10 @@ spca50x_sdram_request_thumbnail (CameraPrivateLibrary * lib, uint8_t ** buf,
 		 * Low:    320x240                2
 		 * Middle: 640x480                0
 		 * High:  1024x768 (interpolated) 1*/
-		if (lib->bridge == BRIDGE_SPCA500 
-  		    && (g_file->fat[20] & 0xFF) == 2) { 
+		if (lib->bridge == BRIDGE_SPCA500
+  		    && (g_file->fat[20] & 0xFF) == 2) {
   			return (spca50x_get_image (lib, buf, len, g_file));
- 
+
 		} else {
 			return (spca50x_get_image_thumbnail
 				(lib, buf, len, g_file));
@@ -503,7 +503,7 @@ spca50x_get_avi_thumbnail (CameraPrivateLibrary * lib, uint8_t ** buf,
 	/* FIXME */
 	if (lib->bridge == BRIDGE_SPCA500)
 		return GP_ERROR_NOT_SUPPORTED;
-	
+
 	p = g_file->fat;
 
 	/* get the position in memory where the image is */
@@ -652,15 +652,15 @@ spca50x_sdram_get_info (CameraPrivateLibrary * lib)
 		CHECK (gp_port_usb_msg_write
 		       (lib->gpdev, 0x00, 0x0001, SPCA50X_REG_AutoPbSize, NULL,
 			0));
-		
+
 		CHECK (gp_port_usb_msg_read
 		       (lib->gpdev, 0, 0, SPCA50X_REG_DramType,
-			(uint8_t *) & dramtype, 1));	
+			(uint8_t *) & dramtype, 1));
 		dramtype &= 0xFF;
 	}
 
 	CHECK (spca50x_sdram_get_file_count_and_fat_count (lib, dramtype));
-		
+
 	if (lib->num_files_on_sdram > 0) {
 		CHECK (spca50x_get_FATs (lib, dramtype));
 
@@ -681,7 +681,7 @@ spca50x_sdram_get_info (CameraPrivateLibrary * lib)
 	lib->size_free =
 		16 * 1024 * 1024 - 0x2800 * SPCA50X_FAT_PAGE_SIZE - lib->size_used;
 	lib->dirty_sdram = 0;
-	
+
 	return GP_OK;
 }
 
@@ -861,7 +861,7 @@ spca50x_get_FATs (CameraPrivateLibrary * lib, int dramtype)
 					SPCA50X_FILE_TYPE_AVI;
 			}
 			lib->files[file_index].fat = p;
-			lib->files[file_index].fat_start = index;	
+			lib->files[file_index].fat_start = index;
 			lib->files[file_index].fat_end = index;
 			lib->files[file_index].name = strdup (buf);
 			if (lib->bridge == BRIDGE_SPCA504) {

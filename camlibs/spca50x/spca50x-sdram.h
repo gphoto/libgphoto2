@@ -35,8 +35,8 @@ int spca50x_sdram_get_file_info (CameraPrivateLibrary * lib, unsigned int index,
 			  struct SPCA50xFile **file);
 int spca50x_sdram_request_file (CameraPrivateLibrary * lib, uint8_t ** buf,
 			 unsigned int *len, unsigned int number, int *type);
-int spca50x_sdram_request_thumbnail (CameraPrivateLibrary * lib, 
-		uint8_t ** buf, unsigned int *len, 
+int spca50x_sdram_request_thumbnail (CameraPrivateLibrary * lib,
+		uint8_t ** buf, unsigned int *len,
 		unsigned int number, int *type);
 
 #endif /* __SPCA50X_SDRAM_H__ */

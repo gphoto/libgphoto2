@@ -1,7 +1,7 @@
 /****************************************************************/
 /* library.c - Gphoto2 library for cameras with sunplus spca50x */
 /*             chips                                            */
-/* Copyright (C) 2002, 2003 Till Adam                                 */
+/* Copyright (C) 2002, 2003 Till Adam                           */
 /*                                                              */
 /* Author: Till Adam <till@adam-lilienthal.de>                  */
 /*                                                              */
@@ -89,38 +89,38 @@ static struct
 models[] =
 {
 	/* firmware version 1 cams. */
-	{"Mustek:gSmart mini", 0x055f, 0xc220, 
+	{"Mustek:gSmart mini", 0x055f, 0xc220,
 		BRIDGE_SPCA500, SPCA50X_SDRAM },
-	{"Mustek:gSmart mini 2", 0x055f, 0xc420, 
-		BRIDGE_SPCA504, SPCA50X_SDRAM }, 
-	{"Mustek:gSmart mini 3", 0x055f, 0xc520, 
+	{"Mustek:gSmart mini 2", 0x055f, 0xc420,
+		BRIDGE_SPCA504, SPCA50X_SDRAM },
+	{"Mustek:gSmart mini 3", 0x055f, 0xc520,
 		BRIDGE_SPCA504, SPCA50X_SDRAM },
 	{"So.:Show 301", 0x0ec7, 0x1008,
-		BRIDGE_SPCA504, SPCA50X_SDRAM }, 
+		BRIDGE_SPCA504, SPCA50X_SDRAM },
 	{"Aiptek:Pencam", 0x04fc, 0x504a,
 		BRIDGE_SPCA504, SPCA50X_SDRAM | SPCA50X_FLASH },
-	{"Medion:MD 5319", 0x04fc, 0x504a, 
+	{"Medion:MD 5319", 0x04fc, 0x504a,
 		BRIDGE_SPCA504, SPCA50X_SDRAM | SPCA50X_FLASH },
 	{"nisis:Quickpix Qp3", 0x04fc, 0x504a,
 		BRIDGE_SPCA504, SPCA50X_SDRAM | SPCA50X_FLASH },
 	{"Trust:Spyc@m 500F FLASH", 0x04fc, 0x504a,
 		BRIDGE_SPCA504, SPCA50X_SDRAM | SPCA50X_FLASH },
 	/* The firmware 2 cams. Those can autodetect their storage type */
-	{"Aiptek:1.3 mega PocketCam", 0x04fc, 0x504b, 
+	{"Aiptek:1.3 mega PocketCam", 0x04fc, 0x504b,
 		BRIDGE_SPCA504, 0 },
-	{"Maxell:Max Pocket", 0x04fc, 0x504b, 
+	{"Maxell:Max Pocket", 0x04fc, 0x504b,
 		BRIDGE_SPCA504, 0 },
-	{"Aiptek:Smart Megacam", 0x04fc, 0x504b, 
+	{"Aiptek:Smart Megacam", 0x04fc, 0x504b,
 		BRIDGE_SPCA504, 0 },
 	{"Benq:DC1300", 0x04a5, 0x3003,
 	        BRIDGE_SPCA504, 0 },
 	/* Some other 500a cams with flash */
 	{"Trust:Familycam 300", 0x084d, 0x0003,
-		BRIDGE_SPCA500, SPCA50X_FLASH},	
+		BRIDGE_SPCA500, SPCA50X_FLASH},
 	{"D-Link:DSC 350+", 0x084d, 0x0003,
 		BRIDGE_SPCA500, SPCA50X_FLASH},
         {"Minton:S-Cam F5", 0x084d, 0x0003,
-	        BRIDGE_SPCA500, SPCA50X_FLASH},	
+	        BRIDGE_SPCA500, SPCA50X_FLASH},
 	{NULL, 0, 0, 0, 0}
 };
 
@@ -143,10 +143,10 @@ camera_abilities (CameraAbilitiesList *list)
 		memset (&a, 0, sizeof (a));
 		strcpy (a.model, ptr);
 		a.port = GP_PORT_USB;
-		a.speed[0] = 0;	
+		a.speed[0] = 0;
 		a.status = GP_DRIVER_STATUS_TESTING;
-		 		
-		a.file_operations = GP_FILE_OPERATION_PREVIEW 
+
+		a.file_operations = GP_FILE_OPERATION_PREVIEW
 			          | GP_FILE_OPERATION_DELETE;
 
 		a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
@@ -155,7 +155,7 @@ camera_abilities (CameraAbilitiesList *list)
 		a.usb_product = models[x].usb_product;
 
 		if (models[x].bridge == BRIDGE_SPCA504) {
-			// FIXME which cams can do it?
+			/* FIXME which cams can do it? */
 			if (a.usb_product == 0xc420
 			 || a.usb_product == 0xc520)
 				a.operations = GP_OPERATION_CAPTURE_IMAGE;
@@ -207,7 +207,7 @@ camera_capture (Camera *camera, CameraCaptureType type,
 		CHECK (spca50x_sdram_get_info (camera->pl));
 		CHECK (spca50x_sdram_get_file_info
 			(camera->pl, camera->pl->num_files_on_sdram - 1, &file));
-	
+
 		/* Add new image name to file list */
 		/* NOTE: these lines moved from below */
 		strncpy (path->name, file->name, sizeof (path->name) - 1);
@@ -216,7 +216,7 @@ camera_capture (Camera *camera, CameraCaptureType type,
 	/* Now tell the frontend where to look for the image */
 	strncpy (path->folder, "/", sizeof (path->folder) - 1);
 	path->folder[sizeof (path->folder) - 1] = '\0';
-	
+
 	CHECK (gp_filesystem_append
 	       (camera->fs, path->folder, path->name, context));
 	return GP_OK;
@@ -229,7 +229,7 @@ camera_exit (Camera *camera, GPContext *context)
 	if (camera->pl) {
 		if (cam_has_flash (camera->pl) || cam_has_card (camera->pl))
 			spca50x_flash_close (camera->pl, context);
-		
+
 		if (camera->pl->fats) {
 			free (camera->pl->fats);
 			camera->pl->fats = NULL;
@@ -261,16 +261,16 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 			_("FLASH:\n Files: %d\n"), flash_file_count);
 		strcat (summary->text, tmp);
 	}
-	
+
 	/* possibly get # pics, mem free, etc. if needed */
 	if (cam_has_sdram(camera->pl) && camera->pl->dirty_sdram) {
 		CHECK (spca50x_sdram_get_info (camera->pl));
 
 		snprintf (tmp, sizeof (tmp),
 				_("SDRAM:\n Files: %d\n  Images: %4d\n  Movies: %4d\nSpace used: %8d\nSpace free: %8d\n"),
-				camera->pl->num_files_on_sdram, 
+				camera->pl->num_files_on_sdram,
 				camera->pl->num_images,
-				camera->pl->num_movies, 
+				camera->pl->num_movies,
 				camera->pl->size_used,
 				camera->pl->size_free);
 		strcat (summary->text, tmp);
@@ -319,8 +319,8 @@ file_list_func (CameraFilesystem *fs, const char *folder,
 		CHECK (spca50x_flash_get_TOC(camera->pl, &filecount));
 		for (i=0; i<filecount; i++)
 		{
-			CHECK(spca50x_flash_get_file_name (camera->pl, i, 
-						temp_file));	
+			CHECK(spca50x_flash_get_file_name (camera->pl, i,
+						temp_file));
 			gp_list_append (list, temp_file, NULL);
 		}
 	}
@@ -353,23 +353,23 @@ get_file_func (CameraFilesystem *fs, const char *folder,
 	       gp_filesystem_number (camera->fs, folder, filename, context));
 
 	if (cam_has_flash(camera->pl) || cam_has_card(camera->pl) ) {
-		CHECK (spca50x_flash_get_filecount 
+		CHECK (spca50x_flash_get_filecount
 					(camera->pl, &flash_file_count));
 	}
-		 	 
+
 	switch (type) {
-		case GP_FILE_TYPE_NORMAL:	
+		case GP_FILE_TYPE_NORMAL:
 			if ( number < flash_file_count) {
-				CHECK (spca50x_flash_get_file (camera->pl, 
-							context, &data, &size, 
-							number, 0));		
+				CHECK (spca50x_flash_get_file (camera->pl,
+							context, &data, &size,
+							number, 0));
 				CHECK (gp_file_set_mime_type
 						(file, GP_MIME_JPEG));
 
 			} else {
 				CHECK (spca50x_sdram_request_file
-						(camera->pl, &data, &size, 
-						 number-flash_file_count, 
+						(camera->pl, &data, &size,
+						 number-flash_file_count,
 						 &filetype));
 				if (filetype == SPCA50X_FILE_TYPE_IMAGE) {
 					CHECK (gp_file_set_mime_type
@@ -382,16 +382,16 @@ get_file_func (CameraFilesystem *fs, const char *folder,
 			break;
 		case GP_FILE_TYPE_PREVIEW:
 		       	 if ( number < flash_file_count) {
-				CHECK (spca50x_flash_get_file (camera->pl, 
-							context, &data, &size, 
+				CHECK (spca50x_flash_get_file (camera->pl,
+							context, &data, &size,
 							number, 1));
-				CHECK (gp_file_set_mime_type (file, 
+				CHECK (gp_file_set_mime_type (file,
 							GP_MIME_BMP));
 
 			} else {
 				CHECK (spca50x_sdram_request_thumbnail
-						(camera->pl, &data, &size, 
-						 number-flash_file_count, 
+						(camera->pl, &data, &size,
+						 number-flash_file_count,
 						 &filetype));
 				if (filetype == SPCA50X_FILE_TYPE_IMAGE) {
 					CHECK (gp_file_set_mime_type
@@ -432,13 +432,13 @@ get_info_func (CameraFilesystem *fs, const char *folder,
 	       gp_filesystem_number (camera->fs, folder, filename, context));
 
 	if (cam_has_flash(camera->pl) || cam_has_card(camera->pl) ) {
-		CHECK (spca50x_flash_get_TOC(camera->pl, 
+		CHECK (spca50x_flash_get_TOC(camera->pl,
 					&flash_file_count));
 	}
 	if (n < flash_file_count) {
-		CHECK (spca50x_flash_get_file_name(camera->pl, 
+		CHECK (spca50x_flash_get_file_name(camera->pl,
 					n, name));
-		strncpy (info->file.name, name, 
+		strncpy (info->file.name, name,
 				sizeof (info->file.name));
 
 		CHECK (spca50x_flash_get_file_dimensions(
@@ -448,9 +448,9 @@ get_info_func (CameraFilesystem *fs, const char *folder,
 		info->file.height = h;
 		info->preview.width = w/8;
 		info->preview.height = h/8;
-	} 
+	}
 	if (cam_has_sdram (camera->pl) && n >= flash_file_count ){
-		CHECK (spca50x_sdram_get_file_info (camera->pl, 
+		CHECK (spca50x_sdram_get_file_info (camera->pl,
 					n-flash_file_count, &file));
 		strncpy (info->file.name, filename, sizeof (info->file.name));
 		if (file->mime_type == SPCA50X_FILE_TYPE_IMAGE) {
@@ -467,9 +467,9 @@ get_info_func (CameraFilesystem *fs, const char *folder,
 
 	}
 	info->file.fields =
-		GP_FILE_INFO_NAME | GP_FILE_INFO_TYPE 
+		GP_FILE_INFO_NAME | GP_FILE_INFO_TYPE
 		| GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT;
-	
+
 	info->file.mtime = 0;
 	info->file.fields |= GP_FILE_INFO_MTIME;
 
@@ -492,13 +492,13 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	       gp_filesystem_number (camera->fs, folder, filename, context));
 
 	if (cam_has_flash(camera->pl) || cam_has_card(camera->pl) ) {
-		CHECK (spca50x_flash_get_filecount 
+		CHECK (spca50x_flash_get_filecount
 					(camera->pl, &flash_file_count));
 	}
 	if (n < flash_file_count) {
 		return spca500_flash_delete_file (camera->pl, n);
 	}
-	
+
 	CHECK (c = gp_filesystem_count (camera->fs, folder, context));
 	if (n + 1 != c) {
 		const char *name;
@@ -524,7 +524,7 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 		CHECK (spca50x_sdram_delete_all (camera->pl));
 	if (cam_has_flash(camera->pl) || cam_has_card(camera->pl) )
 		CHECK (spca50x_flash_delete_all (camera->pl, context));
-	
+
 	return GP_OK;
 }
 
@@ -533,8 +533,8 @@ camera_init (Camera *camera, GPContext *context)
 {
 	int ret;
 	int x = 0;
-	char *model;	
-	
+	char *model;
+
 	GPPortSettings settings;
 	CameraAbilities abilities;
 
@@ -566,7 +566,7 @@ camera_init (Camera *camera, GPContext *context)
 			return (GP_ERROR);
 			break;
 	}
-	
+
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));
 	if (!camera->pl)
 		return (GP_ERROR_NO_MEMORY);
@@ -583,13 +583,13 @@ camera_init (Camera *camera, GPContext *context)
 		if (abilities.usb_vendor == models[x].usb_vendor
 		 && abilities.usb_product == models[x].usb_product) {
 			camera->pl->bridge = models[x].bridge;
-			camera->pl->storage_media_mask = 
+			camera->pl->storage_media_mask =
 				models[x].storage_media_mask;
 			break;
 		}
 		model = models[++x].model;
 	}
-	
+
 	CHECK (spca50x_get_firmware_revision (camera->pl));
 	if (camera->pl->fw_rev > 1) {
 		CHECK (spca50x_detect_storage_type (camera->pl));
@@ -607,7 +607,7 @@ camera_init (Camera *camera, GPContext *context)
 
 		return (ret);
 	}
-	
+
 	/* Set up the CameraFilesystem */
 	CHECK (gp_filesystem_set_list_funcs
 	       (camera->fs, file_list_func, NULL, camera));

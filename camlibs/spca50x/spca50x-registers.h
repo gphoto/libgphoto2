@@ -28,9 +28,9 @@
 #define __SPCA50X_REGISTERS_H__
 
 
-/* ---- Register ----  */
+/* ---- Register ---- */
 #define SPCA50X_REG_CamMode		0x2000
-/* ---- CamMode Value ----  */
+/* ---- CamMode Value ---- */
 typedef enum
 {
 	SPCA50X_CamMode_Idle = 0,
@@ -42,7 +42,7 @@ typedef enum
 SPCA50xCamMode;
 
 #define SPCA50X_REG_PbSrc		0x2301
-/* ---- PbSrc Value ----  */
+/* ---- PbSrc Value ---- */
 #define SPCA50X_DramUsb	                0x13
 
 #define SPCA50X_REG_AutoPbSize		0x2306
@@ -51,7 +51,7 @@ SPCA50xCamMode;
 
 #define SPCA50X_REG_ImageType		0x270c
 
-#define SPCA50X_REG_SdramSizeL		0x2710	/* Size [7:0]  */
+#define SPCA50X_REG_SdramSizeL		0x2710	/* Size [7:0] */
 #define SPCA50X_REG_SdramSizeM		0x2711	/* Size [15:8] */
 #define SPCA50X_REG_SdramSizeH		0x2712	/* Size [21:16] */
 
@@ -66,7 +66,7 @@ SPCA50xCamMode;
 #define SPCA50X_REG_MemHeightH		0x2723
 
 #define SPCA50X_REG_Trigger		0x27a1
-/*  ---- Trigger bit Value ----  */
+/*  ---- Trigger bit Value ---- */
 #define SPCA50X_TrigDramFifo	2
 
 #define SPCA50X_REG_JFIF			0x2884
