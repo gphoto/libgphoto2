@@ -699,7 +699,7 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 		/* Get the preview */
 		info->preview.fields = GP_FILE_INFO_NONE;
 		CHECK_RESULT (gp_file_new (&cfile));
-		CHECK_OPEN (camera);
+//		CHECK_OPEN (camera);
 		if (gp_camera_file_get (camera, folder, file,
 					GP_FILE_TYPE_PREVIEW, cfile)== GP_OK) {
 			info->preview.fields |= GP_FILE_INFO_SIZE | 
@@ -710,7 +710,7 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 			strncpy (info->preview.type, mime_type,
 				 sizeof (info->preview.type));
 		}
-		CHECK_CLOSE (camera);
+//		CHECK_CLOSE (camera);
 		CHECK_RESULT (gp_file_unref (cfile));
 	} else
 		CHECK_RESULT_OPEN_CLOSE (camera,
@@ -764,7 +764,7 @@ gp_camera_file_get (Camera *camera, const char *folder, const char *file,
 		return (GP_ERROR_DIRECTORY_NOT_FOUND);
 	if (strlen (file) == 0)
 		return (GP_ERROR_FILE_NOT_FOUND);
-
+   
 	CHECK_OPEN (camera);
 	result = gp_filesystem_get_file (camera->fs, folder, file, type,
 					 camera_file);
