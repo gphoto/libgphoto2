@@ -102,6 +102,9 @@ struct camera_to_usb {
 	/* http://www.umax.de/digicam/AstraPix320S.htm, VGA */
 
 	{ "Fuji IX-1",                  0x0553, 0x0202, 0 }, /* Unconfirmed */
+
+	/* Added for the konica e-mini by Roland Marcus Rutschmann<Rutschmann@gmx.de>*/
+	{ "Konica e-mini",              0x04c8, 0x0722 },
 };
 
 int camera_id (CameraText *id) 
