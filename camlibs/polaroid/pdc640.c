@@ -440,3 +440,66 @@ camera_init (Camera *camera)
 
 	return (GP_OK);
 }
+
+/* The following code was in an email from Karl Grill
+   I imagine it is for converting the raw camera data into a usable image.
+#include <stdio.h>
+#include <stdlib.h>
+
+ FILE *f;
+ int bitcount=0;
+ int byteno=-1;
+ unsigned char mybyte;
+
+ int getbit(int number)
+ {int a, b;
+  a=number>>3;
+  b=number &7;
+  while(byteno<a) {mybyte=fgetc(f); byteno++;}
+  return ( (mybyte >>b) &1 );
+ }
+int main(int argc, char ** argv)
+{
+ unsigned short width;
+ unsigned short height;
+ int numbytes;
+ int bytes_read;
+ int i,j,k;
+ char compression;
+ int what;
+ int a,b;
+ int d, e, x, l;
+
+ if(argc!=2) exit(1);
+ f=fopen(argv[1], "r");
+ if (!f) exit(1);
+ fread(&width, 2, 1, f);
+ fread(&height, 2, 1, f);
+ fread(&numbytes, 4, 1, f);
+ fread(&compression, 1, 1, f);
+ fread(& what, 4, 1, f);
+ printf("P5 %d %d 255\n", width, height);
+ bytes_read=0;
+ for(i=0; i<height; i++)
+  {
+   while( byteno<bitcount/8) {a=fgetc(f);byteno++;}
+   b=fgetc(f);bitcount+=16;
+   byteno+=1;
+   putchar(a);
+   putchar(b);
+   for(j=0; j<width-2; j++)
+    {k=0;
+     while (getbit(bitcount)) {k++; bitcount++;}
+     bitcount++;
+     for(l=0,d=1,e=0,x=0; l<k; l++, d<<=1)
+      { if (e=getbit(bitcount++)) x+=d;
+      }
+     if(!e) x+=1-d;
+     putchar ( (j & 1) ? (b+=x) : (a+=x) );
+    }
+   bitcount= (bitcount+15)&0xfffffff0;
+ }
+ fprintf(stderr, "%d %d \n",numbytes, bitcount >>3);
+ exit(0);
+}
+ */
