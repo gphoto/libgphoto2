@@ -1333,8 +1333,6 @@ camera_init (Camera* camera)
                 break;
         case GP_PORT_USB:
 
-                /* Find the camera */
-                CHECK (gp_port_usb_find_device (camera->port, vendor, product));
                 /* Set up the device */
                 settings.usb.inep      = inep;
                 settings.usb.outep     = outep;

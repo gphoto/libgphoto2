@@ -1316,9 +1316,10 @@ int camera_init (Camera *camera)
                         return (GP_ERROR_MODEL_NOT_FOUND);
                 }
 
-                CHECK_FREE (camera, gp_port_usb_find_device (camera->port, 
-                                                        vendor, product));
-
+		/*
+		 * We don't need to find the device - that has already been
+		 * done by libgphoto2.
+		 */
                 settings.usb.inep       = inep;
                 settings.usb.outep      = outep;
                 settings.usb.config     = 1;

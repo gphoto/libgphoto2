@@ -299,13 +299,6 @@ camera_init (Camera *camera)
 	switch (camera->port->type) {
 	case GP_PORT_USB:
 
-		/* Find the device */
-		ret = gp_port_usb_find_device (camera->port,
-					       camera->abilities->usb_vendor,
-					       camera->abilities->usb_product);
-		if (ret < 0)
-			return (ret);
-
 		settings.usb.inep = 0x83;
 		settings.usb.outep = 0x02;
 		settings.usb.config = 0;

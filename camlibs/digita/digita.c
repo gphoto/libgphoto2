@@ -46,12 +46,16 @@ int camera_id(CameraText *id)
         return GP_OK;
 }
 
-static char *models[] = {
-        "Kodak DC220",
-        "Kodak DC260",
-        "Kodak DC265",
-        "Kodak DC290",
-        NULL
+static struct {
+	char *model;
+	int usb_vendor;
+	int usb_product;
+} models [] = {
+	{"Kodak DC220", 0x040A, 0x0100 },
+	{"Kodak DC260", 0x040A, 0x0110 },
+	{"Kodak DC265", 0x040A, 0x0111 },
+	{"Kodak DC290", 0x040A, 0x0112 },
+	{NULL, 0, 0}
 };
 
 int camera_abilities(CameraAbilitiesList *list)
@@ -59,9 +63,9 @@ int camera_abilities(CameraAbilitiesList *list)
         int i;
         CameraAbilities *a;
 
-        for (i = 0; models[i]; i++) {
-                gp_abilities_new(&a);
-                strcpy(a->model, models[i]);
+        for (i = 0; models[i].model; i++) {
+                gp_abilities_new (&a);
+                strcpy(a->model, models[i].model);
                 a->port       = GP_PORT_SERIAL | GP_PORT_USB;
                 a->speed[0]   = 57600;
                 a->speed[1]   = 0;
@@ -69,8 +73,10 @@ int camera_abilities(CameraAbilitiesList *list)
 		a->folder_operations = 	GP_FOLDER_OPERATION_NONE;
                 a->file_operations   = 	GP_FILE_OPERATION_PREVIEW | 
 					GP_FILE_OPERATION_DELETE;
+		a->usb_vendor  = models[i].usb_vendor;
+		a->usb_product = models[i].usb_product;
 
-                gp_abilities_list_append(list, a);
+                gp_abilities_list_append (list, a);
         }
 
         return GP_OK;
@@ -391,13 +397,14 @@ int camera_init(Camera *camera)
                 return GP_ERROR;
         }
         memset((void *)dev, 0, sizeof(*dev));
+	dev->gpdev = camera->port;
 
         switch (camera->port->type) {
         case GP_PORT_USB:
-                ret = digita_usb_open(dev, camera);
+                ret = digita_usb_open (dev, camera);
                 break;
         case GP_PORT_SERIAL:
-                ret = digita_serial_open(dev, camera);
+                ret = digita_serial_open (dev, camera);
                 break;
         default:
                 fprintf(stderr, "Unknown port type %d\n", camera->port->type);
@@ -406,6 +413,7 @@ int camera_init(Camera *camera)
 
         if (ret < 0) {
                 fprintf(stderr, "Couldn't open digita device\n");
+		free (dev);
                 return GP_ERROR;
         }
 

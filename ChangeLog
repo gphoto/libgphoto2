@@ -1,3 +1,27 @@
+2001-08-31  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* camlibs/agfa-cl18/agfa.c: Remove gp_port_usb_find_device, that's in
+	libgphoto2/camera.c now.
+	* camlibs/canon/canon.c: Move the declaration of the models struct here.
+	* camlibs/canon/canon.h: The models struct is no longer needed here.
+	* camlibs/psa50.[c,h]: cs->gdev is now camera->port.
+	* camlibs/canon/serial.[c,h]
+	(canon_usb_probe): Removed. Now in libgphoto2/camera.c
+	(canon_serial_init): Don't create/free a port here. Use camera->port.
+	(canon_serial_close): Removed. No longer needed. Handled by libgphoto2
+	(canon_serial_restore): Same here.
+	* digita/commands.c: Indicate usb product/vendor in the abilities
+	so that gphoto2 can autodetect. Use camera->port.
+	* camlibs/digita/serial.c: Don't create/free the port here. Handled by
+	libgphoto2
+	* camlibs/digita/usb.c: No probe, no port creation (->libgphoto2)
+	* camlibs/directory/directory.c: Declare lots of functions static.
+	* camlibs/kodak/dc240/library.[c,h]:
+	* camlibs/kodak/dc240/dc240.[c,h]: Use camera->port
+	* camlibs/konica/library.c: No gp_port_usb_find_device here.
+	* libgphoto2/camera.c (gp_camera_init): In case of USB,
+	find the device. That removes redundancy in the camera libraries.
+
 2001-08-30  Dan Fandrich <dan@coneharvesters.com>
 	* libgphoto2/file.c:
 	* include/gphoto2-file.h:

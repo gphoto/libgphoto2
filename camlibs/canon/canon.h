@@ -22,13 +22,6 @@ typedef struct {
 	int debug;
 } CanonDataStruct;
 
-struct model {
-	char *name;
-	unsigned short idVendor;
-	unsigned short idProduct;
-	char serial;
-} models[];
-
 
 /****************************************************************************
  *

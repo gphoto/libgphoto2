@@ -15,7 +15,3 @@
 
 #define HPBS            1024*1
 
-typedef struct {
-	gp_port *dev;
-        /* anything else? :P */
-} DC240Data;

@@ -173,16 +173,12 @@ static int digita_serial_read(struct digita_device *dev, void *_buffer, int len)
 
 int digita_serial_open(struct digita_device *dev, Camera *camera)
 {
-        int ret;
         gp_port_settings settings;
         struct beacon beacon;
         struct beacon_ack beacon_ack;
         struct beacon_comp beacon_comp;
 
-        if ((ret = gp_port_new(&(dev->gpdev), GP_PORT_SERIAL)) < 0)
-            return (ret);
-
-        strcpy(settings.serial.port,camera->port_info->path);
+        strcpy (settings.serial.port,camera->port_info->path);
 
         settings.serial.speed = 9600;
         settings.serial.bits = 8;

@@ -11,20 +11,20 @@
 
 
 
-int   dc240_open         (DC240Data *dd);
-int   dc240_close        (DC240Data *dd);
+int   dc240_open         (Camera *camera);
+int   dc240_close        (Camera *camera);
 
-int   dc240_set_speed    (DC240Data *dd, int speed);
+int   dc240_set_speed    (Camera *camera, int speed);
 
-int   dc240_status       (DC240Data *dd);
+int   dc240_status       (Camera *camera);
 
-int   dc240_get_folders  (DC240Data *dd, CameraList *list, const char *folder);
-int   dc240_get_filenames(DC240Data *dd, CameraList *list, const char *folder);
+int   dc240_get_folders  (Camera *camera, CameraList *list, const char *folder);
+int   dc240_get_filenames(Camera *camera, CameraList *list, const char *folder);
 
-int   dc240_file_action	 (DC240Data *dd, int action, CameraFile *file,
+int   dc240_file_action	 (Camera *camera, int action, CameraFile *file,
                           const char *folder, const char *filename);
 
-int   dc240_capture	 (DC240Data *dd, CameraFilePath *path);
-int   dc240_packet_set_size (DC240Data *dd, short int size);
+int   dc240_capture	 (Camera *camera, CameraFilePath *path);
+int   dc240_packet_set_size (Camera *camera, short int size);
 
 #endif /*__DC240_LIBRARY_H__*/

@@ -150,17 +150,19 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	return (GP_OK);
 }
 
-int camera_exit (Camera *camera)
+static int
+camera_exit (Camera *camera)
 {
         DirectoryStruct *d = (DirectoryStruct*)camera->camlib_data;
 
-        free(d);
+        free (d);
 
         return (GP_OK);
 }
 
-int camera_file_get_info (Camera *camera, const char *folder, const char *file,
-                          CameraFileInfo *info)
+static int
+camera_file_get_info (Camera *camera, const char *folder, const char *file,
+		      CameraFileInfo *info)
 {
         int result;
         char buf [1024];
@@ -197,8 +199,9 @@ int camera_file_get_info (Camera *camera, const char *folder, const char *file,
         return (GP_OK);
 }
 
-int camera_file_set_info (Camera *camera, const char *folder, const char *file,
-                          CameraFileInfo *info)
+static int
+camera_file_set_info (Camera *camera, const char *folder, const char *file,
+		      CameraFileInfo *info)
 {
         int retval;
         char *path_old;
@@ -292,8 +295,9 @@ directory_folder_set (Camera *camera, const char *folder_name)
         return (folder_index (camera));
 }
 
-int camera_file_get (Camera *camera, const char *folder, const char *filename,
-		     CameraFileType type, CameraFile *file)
+static int
+camera_file_get (Camera *camera, const char *folder, const char *filename,
+		 CameraFileType type, CameraFile *file)
 {
         /**********************************/
         /* file_number now starts at 0!!! */
@@ -316,7 +320,8 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
         return (GP_OK);
 }
 
-int camera_get_config (Camera *camera, CameraWidget **window)
+static int
+camera_get_config (Camera *camera, CameraWidget **window)
 {
         CameraWidget *widget;
         char buf[256];
@@ -333,7 +338,8 @@ int camera_get_config (Camera *camera, CameraWidget **window)
         return (GP_OK);
 }
 
-int camera_set_config (Camera *camera, CameraWidget *window)
+static int
+camera_set_config (Camera *camera, CameraWidget *window)
 {
         CameraWidget *widget;
         char buf[256];
@@ -349,7 +355,8 @@ int camera_set_config (Camera *camera, CameraWidget *window)
         return (GP_OK);
 }
 
-int camera_summary (Camera *camera, CameraText *summary)
+static int
+camera_summary (Camera *camera, CameraText *summary)
 {
         DirectoryStruct *d = (DirectoryStruct*)camera->camlib_data;
 
@@ -358,21 +365,24 @@ int camera_summary (Camera *camera, CameraText *summary)
         return (GP_OK);
 }
 
-int camera_manual (Camera *camera, CameraText *manual)
+static int
+camera_manual (Camera *camera, CameraText *manual)
 {
         strcpy(manual->text, "The Directory Browse \"camera\" lets you index\nphotos on your hard drive. The folder list on the\nleft contains the folders on your hard drive,\nbeginning at the root directory (\"/\").");
 
         return (GP_OK);
 }
 
-int camera_about (Camera *camera, CameraText *about)
+static int
+camera_about (Camera *camera, CameraText *about)
 {
         strcpy(about->text, "Directory Browse Mode\nScott Fritzinger <scottf@unr.edu>");
 
         return (GP_OK);
 }
 
-int camera_init (Camera *camera)
+int
+camera_init (Camera *camera)
 {
         int i = 0;
         DirectoryStruct *d;

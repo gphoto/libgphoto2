@@ -58,7 +58,12 @@
 
 int canon_debug_driver = 9;
 
-struct model models[] = {
+static struct {
+	char *name;
+	unsigned short idVendor;
+	unsigned short idProduct;
+	char serial;
+} models[] = {
 	{ "Canon PowerShot A5", 	0, 0, 1 },
 	{ "Canon PowerShot A5 Zoom", 	0, 0, 1},
 	{ "Canon PowerShot A50", 	0, 0, 1},
@@ -197,7 +202,6 @@ int camera_exit(Camera *camera)
                  break;
 	}
 	
-	canon_serial_close(cs->gdev);
 	free(cs);
 	return GP_OK;
 }
