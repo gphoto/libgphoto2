@@ -58,6 +58,19 @@ dnl Replace `main' with a function in -libs:
 AC_CHECK_LIB(ibs, main)
 
 dnl ---------------------------------------------------------------------------
+dnl Debugging: The following will just #ifdef out the --debug option in 
+dnl	       gphoto2, the command-line frontend. It has no effect
+dnl	       on libgphoto2. Actually, it affects only about 20 LOC in
+dnl	       frontends/command-line/main.c, so I don't know if it's really
+dnl	       worth the effort. But people missed it...
+dnl ---------------------------------------------------------------------------
+AC_ARG_ENABLE(debugging,
+	[  --disable-debugging     do not include debugging code],
+		[if test "$enableval" = "no"; then
+			AC_DEFINE(DISABLE_DEBUGGING)
+		fi])
+
+dnl ---------------------------------------------------------------------------
 dnl Checks for header files.
 dnl ---------------------------------------------------------------------------
 AC_HEADER_DIRENT

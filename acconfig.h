@@ -16,3 +16,5 @@
 #undef HAVE_CDK
 #undef HAVE_AA
 #undef HAVE_JPEG
+
+#undef DISABLE_DEBUGGING

@@ -1,5 +1,10 @@
 2001-12-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* configure.in:
+	* acconfig.h: Put the --disable-debugging option back in.
+
+2001-12-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* configure.in: Fix no-ltdl.h case.
 
 2001-12-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
