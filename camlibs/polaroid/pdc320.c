@@ -467,11 +467,11 @@ camera_init (Camera *camera)
 	}
 
 	/* Open the port and check if the camera is there */
-	gp_port_settings_get (camera->port, &settings);
+	gp_port_get_settings (camera->port, &settings);
 	if (!settings.serial.speed)
 		settings.serial.speed = 115200;
-	gp_port_settings_set (camera->port, settings);
-	gp_port_timeout_set (camera->port, 30000);
+	gp_port_set_settings (camera->port, settings);
+	gp_port_set_timeout (camera->port, 30000);
 
 	/* Check if the camera is really there */
 	result = pdc320_init (camera->port);

@@ -458,7 +458,7 @@ int sierra_set_speed (Camera *camera, int speed)
 
 	camera->pl->first_packet = 1;
 
-	gp_port_settings_get (camera->port, &settings);
+	gp_port_get_settings (camera->port, &settings);
 
 	switch (speed) {
 	case 9600:
@@ -493,7 +493,7 @@ int sierra_set_speed (Camera *camera, int speed)
 
 	CHECK (sierra_set_int_register (camera, 17, speed));
 
-	CHECK (gp_port_settings_set (camera->port, settings));
+	CHECK (gp_port_set_settings (camera->port, settings));
 
 	GP_SYSTEM_SLEEP(10);
 	return GP_OK;
