@@ -18,13 +18,6 @@
  * Boston, MA 02111-1307, USA.
  */
 
-/*
- * 2001/08/31 Lutz Müller <lutz@users.sourceforge.net>
- *
- * I cannot test this stuff - I simply don't have this camera. If you have
- * one, please contact me so that we can get this stuff up and running.
- */
-
 #include "config.h"
 
 #include <gphoto2-library.h>
@@ -34,6 +27,7 @@
 #include <string.h>
 
 #include "casio-qv-commands.h"
+#include "camtojpeg.h"
 
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 
@@ -97,14 +91,18 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 {
 	Camera *camera = user_data;
 	int n;
+	unsigned char attr;
 	unsigned char *data = NULL;
 	long int size = 0;
+	unsigned char *cam = NULL;
+	long int camSize = 0;
 
 	/* Get the number of the picture from the filesystem */
 	CHECK_RESULT (n = gp_filesystem_number (camera->fs, folder, filename,
 					        context));
 
 	/* Prepare the transaction */
+	CHECK_RESULT (QVpicattr (camera, n, &attr));
 	CHECK_RESULT (QVshowpic (camera, n));
 	CHECK_RESULT (QVsetpic (camera));
 
@@ -116,7 +114,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		break;
 	case GP_FILE_TYPE_NORMAL:
 	default:
-		CHECK_RESULT (QVgetpic (camera, &data, &size));
+		CHECK_RESULT (QVgetCAMpic (camera, &cam, &camSize, attr&2));
+		CHECK_RESULT ((attr&2 ? QVfinecamtojpeg : QVcamtojpeg)(cam, camSize, &data, &size));
 		break;
 	}
 
@@ -147,7 +146,7 @@ camera_summary (Camera *camera, CameraText *about, GPContext *context)
 	CHECK_RESULT (QVrevision (camera, &revision));
 
 	sprintf (about->text, "Battery level: %.1f Volts. "
-			      "Revision: %i.", battery, (int) revision);
+			      "Revision: %08x.", battery, (int) revision);
 
 	return (GP_OK);
 }
@@ -161,7 +160,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 	/* Fill the list */
 	CHECK_RESULT (num = QVnumpic (camera));
-	gp_list_populate (list, "CASIO_QV_%04i.jpg", num);
+	gp_list_populate (list, "CASIO_QV_%03i.jpg", num);
 
 	return (GP_OK);
 }
@@ -191,6 +190,36 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 }
 
 static int
+camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
+{
+        CameraWidget *child;
+        float battery;
+	char status[2];
+        char t[1024];
+
+        gp_widget_new (GP_WIDGET_WINDOW, "Camera Configuration", window);
+
+        CHECK_RESULT (QVbattery (camera, &battery));
+	gp_widget_new (GP_WIDGET_TEXT, "Battery", &child);
+        snprintf(t,sizeof(t),"%.1f V",battery);
+	gp_widget_set_value (child, t);
+        gp_widget_append (*window, child);
+
+	CHECK_RESULT (QVstatus (camera, status));
+	gp_widget_new (GP_WIDGET_RADIO, "Brightness", &child);
+        gp_widget_add_choice (child, "Too bright");
+        gp_widget_add_choice (child, "Too dark");
+        gp_widget_add_choice (child, "OK");
+        if (status[0]&0x80) strcpy (t, "Too bright");
+        else if (status[0]&0x40) strcpy (t, "Too dark");
+	else strcpy (t, "OK");                
+        gp_widget_set_value (child, t);
+        gp_widget_append (*window, child);
+
+        return (GP_OK);
+}
+
+static int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		GPContext *context)
 {
@@ -214,11 +243,13 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 int
 camera_init (Camera *camera, GPContext *context) 
 {
+	int result = GP_OK;
 	gp_port_settings settings;
 
         /* First, set up all the function pointers */
-	camera->functions->summary	= camera_summary;
+        camera->functions->get_config   = camera_config_get;
 	camera->functions->capture      = camera_capture;
+	camera->functions->summary	= camera_summary;
         camera->functions->about        = camera_about;
 
 	/* Now, tell the filesystem where to get lists and info */
@@ -226,16 +257,19 @@ camera_init (Camera *camera, GPContext *context)
 	gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL, camera);
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
 
-	/* Check if the camera is really there */
 	CHECK_RESULT (gp_port_get_settings (camera->port, &settings));
-	CHECK_RESULT (gp_port_set_timeout (camera->port, 1000));
-	/* speed is hardcoded to 9600 as per the protocol */
+	/* 1000 is not enough for some operations */
+	CHECK_RESULT (gp_port_set_timeout (camera->port, 2000));
+	/* protocol always starts with 9600 */
 	settings.serial.speed = 9600;
 	CHECK_RESULT (gp_port_set_settings (camera->port, settings));
+	/* power up interface */
 	gp_port_set_pin (camera->port, GP_PIN_RTS, GP_LEVEL_HIGH);
 	gp_port_set_pin (camera->port, GP_PIN_DTR, GP_LEVEL_LOW);
 	gp_port_set_pin (camera->port, GP_PIN_CTS, GP_LEVEL_LOW);
-	CHECK_RESULT (QVping (camera));
+	/* There may be one junk character at this point, but QVping */
+	/* takes care of that. */
+	result = QVping (camera);
 
-	return GP_OK;
+	return (result);
 }

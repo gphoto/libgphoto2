@@ -40,6 +40,7 @@ int QVbattery  (Camera *camera, float *battery);
 
 int QVrevision (Camera *camera, long int *revision);
 int QVnumpic   (Camera *camera);
+int QVstatus   (Camera *camera, char *status);
 
 int QVdelete   (Camera *camera, int n);
 int QVpicattr  (Camera *camera, int n, unsigned char *attr);
@@ -48,7 +49,7 @@ int QVsetpic   (Camera *camera);
 int QVsize     (Camera *camera, long int *size);
 
 int QVgetthumb (Camera *camera, unsigned char **data, unsigned long int *size);
-int QVgetpic   (Camera *camera, unsigned char **data, unsigned long int *size);
+int QVgetCAMpic(Camera *camera, unsigned char **data, unsigned long int *size, int fine);
 
 int QVcapture  (Camera *camera);
 

@@ -102,17 +102,22 @@ static int
 QVsend (Camera *camera, unsigned char *cmd, int cmd_len,
 			       unsigned char *buf, int buf_len)
 {
-	unsigned char c, checksum;
-	int i;
+	unsigned char c;
+	int checksum;
+	const unsigned char *cmd_end;
+
+	/* The camera does not insist on a ping each command, but */
+	/* sometimes it hangs up without one.                     */
+	CR (QVping (camera));
 
 	/* Write the request and calculate the checksum */
 	CR (gp_port_write (camera->port, cmd, cmd_len));
-	for (i = 0, checksum = 0; i < cmd_len; i++)
-		checksum += cmd[i];
+	for (cmd_end = cmd+cmd_len, checksum = 0; cmd < cmd_end; ++cmd)
+		checksum += *cmd;
 
 	/* Read the checksum */
 	CR (gp_port_read (camera->port, &c, 1));
-	if (c != ~checksum)
+	if (c != (unsigned char)(~checksum))
 		return (GP_ERROR_CORRUPTED_DATA);
 
 	/* Send ACK */
@@ -129,17 +134,24 @@ QVsend (Camera *camera, unsigned char *cmd, int cmd_len,
 static int
 QVblockrecv (Camera *camera, unsigned char **buf, unsigned long int *buf_len)
 {
+	/* XXX - does the caller know to free *buf in case of an error? */
 	unsigned char c;
-	unsigned char buffer[2];
-	int pos = 0, size, retries = 0, i;
-	unsigned char sum;
+	int retries, pos;
 
-	/* Send DC2 */
-	CR (gp_port_write (camera->port, &c, 1));
-
+	retries = 0;
 	*buf = NULL;
 	*buf_len = 0;
+	pos = 0;
+
+	/* Send DC2 */
+	c = DC2;
+	CR (gp_port_write (camera->port, &c, 1));
+
 	while (1) {
+		unsigned char buffer[2];
+		int size, i;
+		int sum;
+		unsigned char *new;
 
 		/* Read STX */
 		CR (gp_port_read (camera->port, &c, 1));
@@ -159,28 +171,32 @@ QVblockrecv (Camera *camera, unsigned char **buf, unsigned long int *buf_len)
 		sum = buffer[0] + buffer[1];
 
 		/* Allocate the memory */
-		if (!*buf)
-			buf = malloc (sizeof (char) * size);
-		else
-			buf = realloc (buf, sizeof (char) * (*buf_len + size));
-		if (!buf)
+		new = (unsigned char*)realloc (*buf, sizeof (char) * (*buf_len + size));
+		if (new == (unsigned char*)0) {
+			if (*buf != (unsigned char*)0) free(*buf);
 			return (GP_ERROR_NO_MEMORY);
+		}
+		*buf = new;
 		*buf_len += size;
 
 		/* Get the sector */
 		CR (gp_port_read (camera->port, *buf + pos, size));
 		for (i = 0; i < size; i++)
-			sum += *buf[i + pos];
+			sum += (*buf)[i + pos];
 
 		/* Get EOT or ETX and the checksum */
 		CR (gp_port_read (camera->port, buffer, 2));
 		sum += buffer[0];
 
 		/* Verify the checksum */
-		if (sum != ~buffer[1]) {
+		if ((unsigned char)(~sum) != buffer[1]) {
+			retries++;
 			c = NAK;
 			CR (gp_port_write (camera->port, &c, 1));
-			continue;
+			if (retries > CASIO_QV_RETRIES)
+				return (GP_ERROR_CORRUPTED_DATA);
+			else
+				continue;
 		}	
 
 		/* Acknowledge and prepare for next packet */
@@ -261,12 +277,14 @@ QVnumpic (Camera *camera)
 int
 QVpicattr (Camera *camera, int n, unsigned char *picattr)
 {
-	unsigned char cmd[2];
+	unsigned char cmd[4];
 	unsigned char b;
 
 	cmd[0] = 'D';
 	cmd[1] = 'Y';
-	CR (QVsend (camera, cmd, 2, &b, 1));
+        cmd[2] = STX;
+        cmd[3] = n+1;
+	CR (QVsend (camera, cmd, 4, &b, 1));
 	*picattr = b;
 
 	return (GP_OK);
@@ -279,7 +297,7 @@ QVshowpic (Camera *camera, int n)
 
 	cmd[0] = 'D';
 	cmd[1] = 'A';
-	cmd[2] = n;
+	cmd[2] = n+1;
 	CR (QVsend (camera, cmd, 3, NULL, 0));
 
 	return (GP_OK);
@@ -298,12 +316,12 @@ QVsetpic (Camera *camera)
 }
 
 int
-QVgetpic (Camera *camera, unsigned char **data, unsigned long int *size)
+QVgetCAMpic (Camera *camera, unsigned char **data, unsigned long int *size, int fine)
 {
 	unsigned char cmd[2];
 
 	cmd[0] = 'M';
-	cmd[1] = 'G';
+	cmd[1] = fine ? 'g' : 'G';
 	CR (QVsend (camera, cmd, 2, NULL, 0));
 	CR (QVblockrecv (camera, data, size));
 
@@ -330,7 +348,7 @@ QVdelete (Camera *camera, int n)
 
 	cmd[0] = 'D';
 	cmd[1] = 'F';
-	cmd[2] = n;
+	cmd[2] = n+1;
 	cmd[3] = 0xff;
 	CR (QVsend (camera, cmd, 4, NULL, 0));
 
@@ -361,4 +379,17 @@ QVcapture (Camera *camera)
 	CR (QVsend (camera, cmd, 2, NULL, 0));
 
 	return (GP_OK);
+}
+
+int
+QVstatus (Camera *camera, char *status)
+{
+        unsigned char cmd[3];
+        
+        cmd[0] = 'D';
+        cmd[1] = 'S';
+        cmd[2] = STX;
+        CR (QVsend (camera, cmd, 3, status, 2));
+
+        return (GP_OK);
 }

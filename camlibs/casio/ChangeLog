@@ -1,5 +1,11 @@
 2004-04-06  Lutz Mueller <lutz@users.sourceforge.net>
 
+	* cam2jpgtab.h: New.
+	* casio-qv.c: According to Michael Haardt <michael@moria.de>, the
+	  driver now downloads images.
+
+2004-04-06  Lutz Mueller <lutz@users.sourceforge.net>
+
 	* camtojpeg.[c,h]
 	* jpegtab_f.h: New file submitted by Michael Haardt
 	  <michael@moria.de>.
