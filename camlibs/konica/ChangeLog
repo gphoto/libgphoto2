@@ -1,3 +1,8 @@
+2002-11-05  Lutz MÜller <lutz@users.sourceforge.net>
+
+	* Makefile.am
+	* localization/Makefile.am: Install files in a $(PACKAGE) subdir.
+
 2002-07-11  Lutz Müller <lutz@users.sourceforge.net>
 
 	* library.c: Add a couple of 'gp_context_idle's.
