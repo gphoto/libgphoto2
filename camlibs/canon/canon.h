@@ -139,7 +139,8 @@ typedef enum {
 	CANON_PS_UNK2,
 	CANON_PS_UNK3,
 	CANON_PS_UNK4,
-	CANON_PS_UNK5
+	CANON_PS_UNK5,
+	CANON_PS_S400
 } canonCamModel;
 
 /**
@@ -436,7 +437,8 @@ typedef enum {
  */
 #define IS_EOS(cam) ( ((cam)==CANON_EOS_D30) \
                       || ((cam)==CANON_EOS_D60) \
-                      || ((cam)==CANON_PS_S230 ) )
+                      || ((cam)==CANON_PS_S230) \
+                      || ((cam)==CANON_PS_S400) )
 
 /*
  * All functions returning a pointer have malloc'ed the data. The caller must
