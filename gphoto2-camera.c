@@ -33,6 +33,7 @@
 #include <ltdl.h>
 #endif
 
+#include "gphoto2-context.h"
 #include "gphoto2-result.h"
 #include "gphoto2-library.h"
 #include "gphoto2-port-log.h"
@@ -212,6 +213,9 @@
 	if (!(c)->pc->lh)						\
 		CR((c), gp_camera_init(c));				\
 }
+
+/* This will vanish soon... */
+static GPContext *context = NULL;
 
 struct _CameraPrivateCore {
 
@@ -1130,7 +1134,7 @@ gp_camera_capture (Camera *camera, CameraCaptureType type,
 
 	gp_camera_status (camera, "Capturing image...");
 	CHECK_RESULT_OPEN_CLOSE (camera,
-		camera->functions->capture (camera, type, path));
+		camera->functions->capture (camera, type, path, context));
 	gp_camera_status (camera, "");
 	gp_camera_progress (camera, 0.0);
 
@@ -1197,7 +1201,7 @@ gp_camera_folder_list_files (Camera *camera, const char *folder,
 
 	gp_camera_status (camera, _("Listing files in '%s'..."), folder);
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_list_files (camera->fs,
-							folder, list));
+							folder, list, context));
 	gp_camera_status (camera, "");
 
 	CR (camera, gp_list_sort (list));
@@ -1228,7 +1232,7 @@ gp_camera_folder_list_folders (Camera *camera, const char* folder,
 
 	gp_camera_status (camera, _("Listing folders in '%s'..."), folder);
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_list_folders (
-						camera->fs, folder, list));
+					camera->fs, folder, list, context));
 	gp_camera_status (camera, "");
 
 	CR (camera, gp_list_sort (list));
@@ -1256,7 +1260,7 @@ gp_camera_folder_delete_all (Camera *camera, const char *folder)
 
 	gp_camera_status (camera, _("Deleting all files in '%s'..."), folder);
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_delete_all (camera->fs,
-								folder));
+							folder, context));
 	gp_camera_status (camera, "");
 
 	CAMERA_UNUSED (camera);
@@ -1284,7 +1288,7 @@ gp_camera_folder_put_file (Camera *camera, const char *folder, CameraFile *file)
 
 	gp_camera_status (camera, _("Uploading file into '%s'..."), folder);
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_put_file (camera->fs,
-							folder, file));
+						folder, file, context));
 	gp_camera_status (camera, "");
 
 	CAMERA_UNUSED (camera);
@@ -1324,7 +1328,8 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 	CHECK_OPEN (camera);
 	gp_camera_status (camera, _("Getting info for '%s' in folder '%s'..."),
 			  file, folder);
-	result = gp_filesystem_get_info (camera->fs, folder, file, info);
+	result = gp_filesystem_get_info (camera->fs, folder, file, info,
+					 context);
 	gp_camera_status (camera, "");
 	gp_camera_progress (camera, 0.0);
 	CHECK_CLOSE (camera);
@@ -1385,8 +1390,8 @@ gp_camera_file_set_info (Camera *camera, const char *folder,
 	CHECK_NULL (camera && folder && file);
 	CHECK_INIT (camera);
 
-	CHECK_RESULT_OPEN_CLOSE (camera,
-		gp_filesystem_set_info (camera->fs, folder, file, info));
+	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_set_info (camera->fs,
+						folder, file, info, context));
 
 	CAMERA_UNUSED (camera);
 	return (GP_OK);
@@ -1429,7 +1434,7 @@ gp_camera_file_get (Camera *camera, const char *folder, const char *file,
 	gp_camera_status (camera, _("Getting '%s' from folder '%s'..."),
 			  file, folder);
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_get_file (camera->fs,
-				folder, file, type, camera_file));
+				folder, file, type, camera_file, context));
 	gp_camera_status (camera, "");
 	gp_camera_progress (camera, 0.0);
 
@@ -1459,7 +1464,7 @@ gp_camera_file_delete (Camera *camera, const char *folder, const char *file)
 	gp_camera_status (camera, _("Deleting '%s' from folder '%s'..."),
 			  file, folder);
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_delete_file (
-						camera->fs, folder, file));
+					camera->fs, folder, file, context));
 	gp_camera_status (camera, "");
 
 	CAMERA_UNUSED (camera);
@@ -1486,7 +1491,7 @@ gp_camera_folder_make_dir (Camera *camera, const char *folder,
 	gp_camera_status (camera, _("Creating folder '%s' in folder '%s'..."),
 			  name, folder);
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_make_dir (camera->fs,
-							folder, name));
+						folder, name, context));
 	gp_camera_status (camera, "");
 
 	CAMERA_UNUSED (camera);
@@ -1513,7 +1518,7 @@ gp_camera_folder_remove_dir (Camera *camera, const char *folder,
 	gp_camera_status (camera, _("Removing folder '%s' from folder '%s'..."),
 			  name, folder);
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_remove_dir (camera->fs,
-								folder, name));
+						folder, name, context));
 	gp_camera_status (camera, "");
 
 	CAMERA_UNUSED (camera);

@@ -120,6 +120,9 @@ gp_context_unref (GPContext *context)
 void
 gp_context_idle (GPContext *context)
 {
+	if (!context)
+		return;
+
 	if (context->idle_func)
 		context->idle_func (context, context->idle_func_data);
 }
@@ -127,6 +130,9 @@ gp_context_idle (GPContext *context)
 void
 gp_context_progress (GPContext *context, float percentage)
 {
+	if (!context)
+		return;
+
 	if (context->progress_func)
 		context->progress_func (context, percentage,
 					context->progress_func_data);
@@ -136,6 +142,9 @@ void
 gp_context_error (GPContext *context, const char *format, ...)
 {
 	va_list args;
+
+	if (!context)
+		return;
 
 	if (context->error_func) {
 		va_start (args, format);
@@ -149,6 +158,9 @@ void
 gp_context_status (GPContext *context, const char *format, ...)
 {
 	va_list args;
+
+	if (!context)
+		return;
 
 	if (context->status_func) {
 		va_start (args, format);
@@ -173,6 +185,9 @@ gp_context_question (GPContext *context, const char *format, ...)
 {
 	GPContextFeedback feedback;
 	va_list args;
+
+	if (!context)
+		return (GP_CONTEXT_FEEDBACK_OK);
 
 	if (context->question_func) {
 		va_start (args, format);
