@@ -1,6 +1,7 @@
 /* agfa-cl20.c
  *
- * Copyright (C) 2002-2003 by Dennis Poeml, http://cl20.poeml.de/
+ * Copyright (C) 2002-2003 by Philipp Poeml and Dennis Noordsij,
+ *                            http://cl20.poeml.de/
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

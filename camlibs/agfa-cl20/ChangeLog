@@ -7,4 +7,5 @@
 	* Makefile.am, README, STATUS, *.txt, agfa-cl20.c:
 		Imported from http://cl20.poeml.de
 
-	Written by Dennis Poeml et.al.
+	Written by Philipp Poeml (poml_at_poeml.de), Dennis Noordsij
+	(dennis.noordsij_at_wiral.com)
