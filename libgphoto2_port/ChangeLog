@@ -1,3 +1,8 @@
+2001-11-11  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* configure.in: Look for usb.h in locations specified by
+	  libusb-config.
+
 2001-10-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* usb/libusb.c: memset port->pl to 0 so that we can later detect

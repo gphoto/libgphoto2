@@ -176,18 +176,25 @@ AC_ARG_WITH(usb, [  --without-usb   Don't compile in USB support],
 )
 if $try_usb; then
 	AC_PATH_PROG(LIBUSB_CONFIG,libusb-config)
-	AC_CHECK_HEADER(usb.h,
-		if test -n "${LIBUSB_CONFIG}"; then
+	if test -n "${LIBUSB_CONFIG}"; then
+		CPPFLAGS_save="$CPPFLAGS"
+		CPPFLAGS="$CPPFLAGS `libusb-config --cflags`"
+		AC_CHECK_HEADER(usb.h,
 			usb_msg=yes
 			IOLIB_SUBDIRS="$IOLIB_SUBDIRS usb"
 			IOLIB_LDFLAGS="$IOLIB_LDFLAGS `libusb-config --libs` -lgphoto2_port_usb"
-			IOLIB_CFLAGS="$IOLIB_CFLAGS `libusb-config --cflags`"
-		else
+			IOLIB_CFLAGS="$IOLIB_CFLAGS `libusb-config --cflags`",
 			AC_MSG_WARN([
-*** Could not find libusb-config. Please verify your libusb installation.
+*** You need the libusb library for USB support
+*** http://download.sourceforge.net/libusb/libusb-0.1.4.tar.gz
+]))
+		CPPFLAGS="$CPPFLAGS_save"
+	else
+		AC_MSG_WARN([
+*** You need the libusb library for USB support
+*** http://download.sourceforge.net/libusb/libusb-0.1.4.tar.gz
 ])
-		fi
-	)
+	fi
 else 
 	AC_MSG_WARN([ 
 *** You need the libusb library for USB support
