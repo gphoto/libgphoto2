@@ -1,3 +1,10 @@
+2002-06-28  Selmeczi David <david@esr.elte.hu>
+
+	* olympus-desc.c: New.
+	* Makefile.am: Add above file.
+	* sierra-desc.h: Reference to olympus-desc.c
+	* sierra.c: Use new configuration dialog for the 3040Z.
+
 2002-06-27  Lutz Müller <lutz@users.sourceforge.net>
 
 	* sierra-usbwrap.c: I missed one < GP_OK.

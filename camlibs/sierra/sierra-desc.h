@@ -122,3 +122,4 @@ typedef struct CameraRegisterSet {
 } CameraRegisterSetType;
 
 extern const CameraRegisterSetType cp880_desc[];
+extern const CameraRegisterSetType oly3040_desc[];

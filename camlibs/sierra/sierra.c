@@ -70,7 +70,8 @@ static SierraCamera sierra_cameras[] = {
 	{"Nikon CoolPix 300", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Nikon CoolPix 700", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Nikon CoolPix 800", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
-        {"Nikon CoolPix 880",	SIERRA_MODEL_CAM_DESC,	0x04b0, 0x0103, 0, cp880_desc},
+        {"Nikon CoolPix 880",	SIERRA_MODEL_CAM_DESC,	0x04b0, 0x0103, 0,
+							cp880_desc},
         {"Nikon CoolPix 900", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Nikon CoolPix 900S", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Nikon CoolPix 910", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
@@ -116,10 +117,13 @@ static SierraCamera sierra_cameras[] = {
         {"Olympus C-2040Z", 	SIERRA_MODEL_OLYMPUS,	0x07b4, 0x105, 1},
 	{"Olympus C-2100UZ",    SIERRA_MODEL_OLYMPUS,	0x07b4, 0x100, 0},
 	{"Olympus C-2500L",     SIERRA_MODEL_OLYMPUS,   0, 0, 0 },
-	{"Olympus C-2500Z", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 }, /* Does this model exist? */
+/* Does this model really exist?
+ *	{"Olympus C-2500Z", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+ */
 	{"Olympus C-3000Z", 	SIERRA_MODEL_OLYMPUS,	0x07b4, 0x100, 0},
 	{"Olympus C-3030Z", 	SIERRA_MODEL_OLYMPUS,	0x07b4, 0x100, 0},
-	{"Olympus C-3040Z",     SIERRA_MODEL_OLYMPUS,   0x07b4, 0x105, 1},
+	{"Olympus C-3040Z",     SIERRA_MODEL_CAM_DESC,  0x07b4, 0x105, 1,
+							oly3040_desc},
 	{"Panasonic Coolshot NV-DCF5E", SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Polaroid PDC 640", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Polaroid PDC 2300Z",	SIERRA_MODEL_DEFAULT,   0, 0, 0 },
@@ -1831,17 +1835,23 @@ camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 	case SIERRA_MODEL_OLYMPUS:
 	default:
 		strcpy (manual->text, 
-			_("Some notes about Olympus cameras (and others?):\n"
-			  "(1) Camera Configuration:\n"
-			  "    A value of 0 will take the default one (auto).\n"
-			  "(2) Olympus C-3040Z (and possibly also the C-2040Z\n"
-			  "    and others) have a USB PC Control mode. In order\n"
-			  "    to use this mode, the camera must be switched \n"
-			  "    into 'USB PC control mode'. To get to the menu \n"
-			  "    for switching modes, open the memory card access\n"
-			  "    door and then press and hold both of the menu \n"
-			  "    buttons until the camera control menu appears.\n"
-			  "    Set it to ON."));
+		  _("Some notes about Olympus cameras (and others?):\n"
+		    "(1) Camera Configuration:\n"
+		    "    A value of 0 will take the default one (auto).\n"
+		    "(2) Olympus C-3040Z (and possibly also the C-2040Z\n"
+		    "    and others) have a USB PC Control mode. In order\n"
+		    "    to use this mode, the camera must be switched \n"
+		    "    into 'USB PC control mode'. To get to the menu \n"
+		    "    for switching modes, turn on the camera, open \n"
+		    "    the memory card access door and then press and \n"
+		    "    hold both of the menu and LCD buttons until the \n"
+		    "    camera control menu appears. Set it to ON. \n"
+		    "(3) If you switch the 'LCD mode' to 'Monitor' or \n"
+		    "    'Normal', don't forget to switch it back to 'Off' \n"
+		    "    before disconnectig. Otherwise you cannot use \n"
+		    "    the camera's buttons. If you end up with this \n"
+		    "    state, you should reconnect the camera to the \n"
+		    "    PC and switch LCD to 'Off'."));
 		break;
 	}
 
