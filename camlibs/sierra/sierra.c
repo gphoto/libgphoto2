@@ -1956,17 +1956,9 @@ int camera_init (Camera *camera, GPContext *context)
 
         /* FIXME??? What's that for? */
         ret = sierra_get_int_register (camera, 1, &value, context);
-        if (ret != GP_OK) {
-		gp_log (GP_LOG_DEBUG, "sierra", "Could not get register 1: %s",
-			gp_camera_get_error (camera));
-	}
 
         /* FIXME??? What's that for? "Resetting folder system"? */
         ret = sierra_set_int_register (camera, 83, -1, context);
-        if (ret != GP_OK) {
-		gp_log (GP_LOG_DEBUG, "sierra", "Could not set register 83 "
-			"to -1: %s", gp_camera_get_error (camera));
-	}
 
         CHECK_STOP_FREE (camera, gp_port_set_timeout (camera->port, 50));
 

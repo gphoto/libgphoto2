@@ -8,7 +8,7 @@
 #include "shell.h"
 
 #define CHECK(result) {int r=(result);if(r<0) return(r);}
-#define CHECK_CONT(result) {int r=(result);if(r<0){printf ("*** Error ('%s') ***\n", gp_result_as_string (result));printf ("%s\n", gp_camera_get_error (glob_camera));}}
+#define CHECK_CONT(result) {int r=(result);if(r<0){printf ("*** Error ('%s') ***\n", gp_result_as_string (result));}}
 
 /* Valid shell commands */
 shell_function func[] = {

@@ -128,6 +128,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	GP_SYSTEM_DIR dir;
 	GP_SYSTEM_DIRENT de;
 	char buf[1024], f[1024];
+	unsigned int id, n;
 
 	dir = GP_SYSTEM_OPENDIR ((char*) folder);
 	if (!dir)
@@ -139,7 +140,20 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	else
 		strcpy (f, folder);
 
+	/* Count the files */
+	n = 0;
+	while (GP_SYSTEM_READDIR (dir))
+		n++;
+
+	GP_SYSTEM_CLOSEDIR (dir);
+	dir = GP_SYSTEM_OPENDIR (folder);
+	if (!dir)
+		return (GP_ERROR);
+	id = gp_context_progress_start (context, n, _("Listing files in "
+				"'%s'..."), folder);
+	n = 0;
 	while ((de = GP_SYSTEM_READDIR(dir))) {
+		gp_context_progress_update (context, id, n + 1);
 		if (strcmp(GP_SYSTEM_FILENAME(de), "." ) &&
 		    strcmp(GP_SYSTEM_FILENAME(de), "..")) {
 			sprintf (buf, "%s%s", f, GP_SYSTEM_FILENAME (de));
@@ -147,7 +161,9 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 				gp_list_append (list, GP_SYSTEM_FILENAME (de),
 						NULL);
 		}
+		n++;
 	}
+	gp_context_progress_stop (context, id);
 
 	return (GP_OK);
 }
@@ -161,6 +177,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	char buf[1024], f[1024];
 	const char *dirname;
 	int view_hidden=1;
+	unsigned int id, n;
 
 	if (gp_setting_get ("directory", "hidden", buf) == GP_OK)
 		view_hidden = atoi (buf);
@@ -174,7 +191,21 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		sprintf (f, "%s%c", folder, '/');
 	else
 		strcpy (f, folder);
+
+	/* Count the files */
+	n = 0;
+	while (GP_SYSTEM_READDIR (dir))
+		n++;
+
+	GP_SYSTEM_CLOSEDIR (dir);
+	dir = GP_SYSTEM_OPENDIR (folder);
+	if (!dir)
+		return (GP_ERROR);
+	id = gp_context_progress_start (context, n, _("Listing folders in "
+					"'%s'..."), folder);
+	n = 0;
 	while ((de = GP_SYSTEM_READDIR (dir))) {
+		gp_context_progress_update (context, id, n + 1);
 		if ((strcmp (GP_SYSTEM_FILENAME (de), "." ) != 0) &&
 		    (strcmp (GP_SYSTEM_FILENAME (de), "..") != 0)) {
 			sprintf (buf, "%s%s", f, GP_SYSTEM_FILENAME (de));
@@ -190,7 +221,9 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 							NULL);
 			}
 		}
-	} 
+		n++;
+	}
+	gp_context_progress_stop (context, id);
 
 	return (GP_OK);
 }
@@ -199,7 +232,6 @@ static int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 		      CameraFileInfo *info, void *data, GPContext *context)
 {
-	Camera *camera = data;
 	char path[1024], link[1024];
 	char *name;
 	const char *mime_type;
@@ -210,13 +242,13 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	else
 		snprintf (path, sizeof (path), "%s/%s", folder, file);
 	if (lstat (path, &statbuf) != 0) {
-		gp_camera_set_error (camera, _("Could not get information "
+		gp_context_error (context, _("Could not get information "
 			"about '%s' in '%s' (%m)."), file, folder);
 		return (GP_ERROR);
 	}
 	if (S_ISLNK (statbuf.st_mode)) {
 		if (readlink (path, link, sizeof (link) < 0)) {
-			gp_camera_set_error (camera, _("Could not follow the "
+			gp_context_error (context, _("Could not follow the "
 				"link '%s' in '%s' (%m)."), file, folder);
 			return (GP_ERROR);
 		}
@@ -264,7 +296,6 @@ static int
 set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	       CameraFileInfo info, void *data, GPContext *context)
 {
-	Camera *camera = data;
 	int retval;
 	char path_old[1024], path_new[1024], path[1024];
 
@@ -282,7 +313,7 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 		else
 			snprintf (path, sizeof (path), "%s/%s", folder, file);
 		if (utime (path, &utimbuf) != 0) {
-			gp_camera_set_error (camera, _("Could not change "
+			gp_context_error (context, _("Could not change "
 				"time of file '%s' in '%s' (%m)."),
 				file, folder);
 			return (GP_ERROR);

@@ -71,9 +71,8 @@ set_config (CmdConfig *cmd_config)
 		msg[1] = "";
 		msg[2] = N_("Could not set configuration:");
 		msg[3] = (char*) gp_result_as_string (result);
-		msg[4] = (char*) gp_camera_get_error (cmd_config->camera);
 		question = newCDKDialog (cmd_config->screen, CENTER, CENTER,
-					 msg, 5, buttons, 2,
+					 msg, 4, buttons, 2,
 					 COLOR_PAIR (2) | A_REVERSE,
 					 TRUE, TRUE, FALSE);
 		if (!question)

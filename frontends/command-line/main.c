@@ -1377,7 +1377,6 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n"));
                 exit (EXIT_FAILURE);
         }
 
-	gp_camera_set_error (glob_camera, NULL);
 	result = execute_options (argc, argv);
         if (result < 0) {
 		switch (result) {

@@ -1,3 +1,8 @@
+2002-01-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2/gphoto2-camera.[c,h]: Remove last references
+	  to gp_camera_[get,set] error.
+
 2002-01-13  Colin Marquardt  <colin@marquardt-home.de>
 
 	* configure.in: Add fr to ALL_LINGUAS.
