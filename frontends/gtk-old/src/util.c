@@ -5,6 +5,7 @@
 #include <sys/types.h>
 
 #include <gphoto2.h>
+#include "callbacks.h"
 #include "util.h"
 
 void ok_click (GtkWidget *dialog) {
@@ -32,16 +33,22 @@ int wait_for_hide (GtkWidget *dialog,
         gtk_widget_show_all(dialog);
         while (cont) {
 		/* because the window manager could destroy the window */
-		if(!GTK_IS_OBJECT(dialog))
+		if(!GTK_IS_OBJECT(dialog)) {
+			debug_print("window manager destroyed");
 			return 0;
+		}
 		if (GTK_WIDGET_VISIBLE(dialog))
 			gtk_main_iteration();
 		else
 			cont = 0;
 	}
         if (strcmp("CANCEL",
-           (char*)gtk_object_get_data(GTK_OBJECT(dialog), "button"))==0)
+           (char*)gtk_object_get_data(GTK_OBJECT(dialog), "button"))==0) {
+		debug_print("clicked cancel");
+		gtk_widget_destroy(dialog);
                 return 0;
+	}
+	debug_print("clicked ok");
         return 1;
 }
 

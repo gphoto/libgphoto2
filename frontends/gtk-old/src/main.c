@@ -7,6 +7,9 @@
 # include <config.h>
 #endif
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include <gtk/gtk.h>
 #include <gphoto2.h>
 
@@ -32,7 +35,6 @@ main (int argc, char *argv[])
 	gtk_set_locale ();
 	gtk_init (&argc, &argv);
 
-
 	if (argc > 1) {
 		if (strcmp(argv[1], "-d")==0)
 			gp_gtk_debug = 1;
@@ -57,6 +59,9 @@ main (int argc, char *argv[])
 	if (gp_setting_get("camera", buf)==GP_OK) {
 		/* Set the camera model label */
 	}
+
+	getcwd(buf, 1024);
+	gp_setting_set("cwd", buf);
 
 	gtk_signal_connect (GTK_OBJECT(gp_gtk_main_window), "delete_event",
 		GTK_SIGNAL_FUNC(main_quit), NULL);

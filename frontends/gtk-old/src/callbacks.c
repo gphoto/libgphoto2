@@ -85,8 +85,25 @@ int main_quit(GtkWidget *widget, gpointer data) {
 /* File operations */
 /* ----------------------------------------------------------- */
 
+void append_photo(CameraFile *file) {
+	debug_print("append photo");
+
+}
+
 void open_photo() {
+	
+	GtkWidget *filesel;
+	char buf[1024];
+
 	debug_print("open photo");
+
+	filesel = gtk_file_selection_new("Open a photo");
+	gp_setting_get("cwd", buf);
+	gtk_file_selection_set_filename(GTK_FILE_SELECTION(filesel), buf);
+
+	if (wait_for_hide(filesel, GTK_FILE_SELECTION(filesel)->ok_button,
+	    GTK_FILE_SELECTION(filesel)->cancel_button)==0)
+		return;
 }
 
 void open_directory() {
@@ -307,7 +324,7 @@ void camera_select_update_camera(GtkWidget *entry, gpointer data) {
 }
 
 void camera_select() {
-	GtkWidget *window, *ok, *cancel, *camera, *port, *speed, *label;
+	GtkWidget *window, *ok, *cancel, *camera, *port, *speed;
 	GList *camera_list;
 	int num_cameras, x;
 	char buf[1024];
@@ -358,12 +375,8 @@ void camera_select() {
 		gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(speed)->entry), buf);
 
 camera_select_again:
-	if (wait_for_hide(window, ok, cancel) == 0) {
-		debug_print("clicked cancel!");
+	if (wait_for_hide(window, ok, cancel) == 0)
 		return;
-	}
-
-	debug_print("clicked ok!");
 
 	idle(); /* let GTK catch up */
 
@@ -408,9 +421,6 @@ camera_select_again:
 		goto camera_select_again;
 
 	/* Clean up */
-	label = (GtkWidget*) lookup_widget(gp_gtk_main_window, "camera_label");
-	gtk_label_set_text(GTK_LABEL(label), camera_name);
-
 	gtk_widget_destroy(window);
 }
 

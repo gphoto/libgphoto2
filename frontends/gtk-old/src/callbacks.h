@@ -1,6 +1,8 @@
 #include <gtk/gtk.h>
 
 int main_quit(GtkWidget *widget, gpointer data);
+void debug_print (char *message);
+
 
 /* General callbacks */
 /* ------------------------------------------------------*/
