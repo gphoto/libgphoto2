@@ -838,7 +838,7 @@ gp_port_set_error (GPPort *port, const char *format, ...)
 		va_start (args, format);
 		vsnprintf (port->pc->error, sizeof (port->pc->error),
 			   _(format), args);
-		gp_logv (GP_LOG_ERROR, "gphoto2-port", format, args);
+		gp_log (GP_LOG_ERROR, "gphoto2-port", "%s", port->pc->error);
 		va_end (args);
 	} else
 		port->pc->error[0] = '\0';
