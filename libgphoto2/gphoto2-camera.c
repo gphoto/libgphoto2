@@ -30,7 +30,6 @@
 #include <stdio.h>
 
 #include "gphoto2-result.h"
-#include "gphoto2-core.h"
 #include "gphoto2-library.h"
 #include "gphoto2-port-core.h"
 #include "gphoto2-port-log.h"
@@ -106,12 +105,6 @@ gp_camera_new (Camera **camera)
 
 	CHECK_NULL (camera);
 
-	/*
-	 * Be nice to frontend-writers and call some core function to make
-	 * sure libgphoto2 is initialized...
-	 */
-	CHECK_RESULT (gp_camera_count ());
-
         *camera = malloc (sizeof (Camera));
 	if (!*camera) 
 		return (GP_ERROR_NO_MEMORY);
@@ -141,33 +134,6 @@ gp_camera_new (Camera **camera)
 	}
 
         return(GP_OK);
-}
-
-/* DEPRECATED */
-int gp_camera_set_model (Camera *, const char *);
-int
-gp_camera_set_model (Camera *camera, const char *model)
-{
-	CameraAbilities abilities;
-
-	CHECK_NULL (camera && model);
-
-	CHECK_RESULT (gp_camera_abilities_by_name (model, &abilities));
-	CHECK_RESULT (gp_camera_set_abilities (camera, abilities));
-
-	return (GP_OK);
-}
-
-/* DEPRECATED */
-int gp_camera_get_model (Camera *, const char **);
-int
-gp_camera_get_model (Camera *camera, const char **model)
-{
-	CHECK_NULL (camera && model);
-
-	*model = camera->pc->a.model;
-
-	return (GP_OK);
 }
 
 /**
@@ -724,40 +690,50 @@ gp_camera_init (Camera *camera)
 	 */
 	if (strcasecmp (camera->pc->a.model, "Directory Browse") &&
 	    !strcmp ("", camera->pc->a.model)) {
+		CameraAbilitiesList *al;
+		int m;
 
 		gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Neither "
 			"port nor model set. Trying auto-detection...");
 
 		/* Call auto-detect and choose the first camera */
-		CRS (camera, gp_autodetect (&list));
+		gp_abilities_list_new (&al);
+		gp_abilities_list_load (al);
+		gp_abilities_list_detect (al, &list);
 		if (!gp_list_count (&list)) {
-			gp_log (GP_LOG_ERROR, "gphoto2-camera", _("Could not "
-				"detect any camera"));
+			gp_abilities_list_free (al);
+			gp_camera_set_error (camera, _("Could not detect "
+					     "any camera"));
 			return (GP_ERROR_MODEL_NOT_FOUND);
 		}
 
-		CRS (camera, gp_list_get_name  (&list, 0, &model));
-		CRS (camera, gp_camera_abilities_by_name (model, &a));
+		gp_list_get_name  (&list, 0, &model);
+		m = gp_abilities_list_lookup_model (al, model);
+		gp_abilities_list_get_abilities (al, m, &a);
+		gp_abilities_list_free (al);
 		CRS (camera, gp_camera_set_abilities (camera, a));
 		CRS (camera, gp_list_get_value (&list, 0, &port));
 		CRS (camera, gp_camera_set_port_path (camera, port));
 	}
-		
-	/* If we don't have a port at this point, return error */
-	if (!camera->port) {
-		gp_camera_status (camera, "");
-		return (GP_ERROR_UNKNOWN_PORT);
-	}
 
-	/* In case of USB, find the device */
-	switch (camera->port->type) {
-	case GP_PORT_USB:
-		CRS (camera, gp_port_usb_find_device (camera->port,
-				camera->pc->a.usb_vendor,
-				camera->pc->a.usb_product));
-		break;
-	default:
-		break;
+	if (strcasecmp (camera->pc->a.model, "Directory Browse")) {
+
+		/* If we don't have a port at this point, return error */
+		if (!camera->port) {
+			gp_camera_status (camera, "");
+			return (GP_ERROR_UNKNOWN_PORT);
+		}
+
+		/* In case of USB, find the device */
+		switch (camera->port->type) {
+		case GP_PORT_USB:
+			CRS (camera, gp_port_usb_find_device (camera->port,
+					camera->pc->a.usb_vendor,
+					camera->pc->a.usb_product));
+			break;
+		default:
+			break;
+		}
 	}
 
 	/* Load the library. */

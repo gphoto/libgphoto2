@@ -25,7 +25,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "gphoto2-core.h"
 #include "gphoto2-result.h"
 #include "gphoto2-port-log.h"
 #include "gphoto2-library.h"

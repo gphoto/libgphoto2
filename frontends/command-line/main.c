@@ -244,23 +244,22 @@ OPTION_CALLBACK(use_stdout_size) {
 OPTION_CALLBACK (auto_detect)
 {
         int x, count;
-        CameraList* list;
+        CameraList list;
+	CameraAbilitiesList *al;
         const char *name, *value;
 
-        CHECK_RESULT (gp_list_new (&list));
-        CHECK_RESULT (gp_autodetect (list));
-        CHECK_RESULT (count = gp_list_count (list));
+	gp_abilities_list_new (&al);
+	gp_abilities_list_load (al);
+	gp_abilities_list_detect (al, &list);
+        CHECK_RESULT (count = gp_list_count (&list));
 
         printf("%-30s %-16s\n", "Model", "Port");
         printf("----------------------------------------------------------\n");
         for (x = 0; x < count; x++) {
-                CHECK_RESULT (gp_list_get_name  (list, x, &name));
-                CHECK_RESULT (gp_list_get_value (list, x, &value));
+                CHECK_RESULT (gp_list_get_name  (&list, x, &name));
+                CHECK_RESULT (gp_list_get_value (&list, x, &value));
                 printf("%-30s %-16s\n", name, value);
         }
-
-        /* We don't need to check for error here. */
-        gp_list_free (list);
 
         return GP_OK;
 }

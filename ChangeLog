@@ -1,5 +1,14 @@
 2001-10-23 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2/gphoto2-core.[c,h]: Removed. All functions redirected
+	  to gphoto2-abilities-list. Caching of this list should be done 
+	  in the frontend.
+	* frontends/command-line/main.c: Don't use gp_autodetect.
+	* libgphoto2/setting.c: Move some initialization stuff from 
+	  gphoto2-core to here.
+
+2001-10-23 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs: Remove every reference to gp_camera_result_as_string
 	  including camera->functions->result_as_string. It was mostly
 	  unused anyways.
