@@ -563,10 +563,13 @@ k_get_io_capability (GPPort *p, GPContext *c,
 
 	CHECK_NULL (bit_rates && bit_flags);
 
+	GP_DEBUG ("Getting IO capabilities...");
 	CRF (c, l_send_receive (p, c, sb, 4, &rb, &rbs, 0, NULL, NULL), rb);
+	GP_DEBUG ("Got IO capabilities: bit rates 0x%x 0x%x, bit flags "
+		  "0x%x 0x%x.", rb[5], rb[4], rb[7], rb[6]);
 
 	*bit_rates = (rb[5] << 8) | rb[4];
-	*bit_flags = (rb[6] << 8) | rb[5];
+	*bit_flags = (rb[7] << 8) | rb[6];
 
         free (rb);
         return (GP_OK);
@@ -1314,5 +1317,6 @@ k_cancel (GPPort *p, GPContext *c, KCommand* command)
 	CRF (c, l_send_receive (p, c, sb, 4, &rb, &rbs, 0, NULL, NULL), rb);
 	*command = (rb[5] << 8) | rb[4];
         free (rb);
+	GP_DEBUG ("Cancelled command 0x%x.", *command);
         return (GP_OK);
 }
