@@ -167,15 +167,15 @@ static struct {
 	unsigned short usb_vendor;
 	unsigned short usb_product;
 } models[] = {
-	{"Kodak DC-240 (PTP)",  0x40a, 0x121}, /* Special firmware */
-	{"Kodak DC-4800", 0x40a, 0x160},
-	{"Kodak DX-3500", 0x40a, 0x500},
-	{"Kodak DX-3600", 0x40a, 0x510},
-	{"Kodak DX-3900", 0x40a, 0x170},
+	{"Kodak DC-240 (PTP)",  0x040a, 0x0121}, /* Special firmware */
+	{"Kodak DC-4800", 0x040a, 0x0160},
+	{"Kodak DX-3500", 0x040a, 0x0500},
+	{"Kodak DX-3600", 0x040a, 0x0510},
+	{"Kodak DX-3900", 0x040a, 0x0170},
 	{"Kodak MC3", 0, 0},
 	{"Sony DSC-P5", 0, 0},
-	{"Sony DSC-F707", 0, 0},
-	{"HP PhotoSmart 318", 0x3f0, 0x6302},
+	{"Sony DSC-F707", 0x054c, 0x004e},
+	{"HP PhotoSmart 318", 0x03f0, 0x6302},
 	{NULL, 0, 0}
 };
 
@@ -358,7 +358,6 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	int i;
 	char filename[MAXFILENAMELEN];
 
-
 	for (i = 0; i < camera->pl->params.handles.n; i++) {
 		CPR (camera, ptp_getobjectinfo(&camera->pl->params,
 		camera->pl->params.handles.handler[i], &objectinfo));
@@ -366,6 +365,14 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		CR (gp_list_append (list, filename, NULL));
 	}
 
+	return (GP_OK);
+}
+
+static int
+folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
+		void *data)
+{
+	//CR (gp_list_append (list, "", NULL));
 	return (GP_OK);
 }
 
@@ -576,7 +583,7 @@ camera_init (Camera *camera)
 
 	/* Configure the CameraFilesystem */
 	CR (gp_filesystem_set_list_funcs (camera->fs, file_list_func,
-					  NULL, camera));
+					  folder_list_func, camera));
 	CR (gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL,
 					  camera));
 	CR (gp_filesystem_set_file_funcs (camera->fs, get_file_func,
