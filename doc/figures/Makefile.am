@@ -8,16 +8,11 @@ figuredir = @HTML_DIR@/figures
 
 if ENABLE_FIGURES
 
-#all-local: \
-#	architecture.jpg libgphoto2-api.jpg libgphoto2-camlib.jpg libgphoto2_port.jpg gphotofs.jpg \
-#	architecture.png libgphoto2-api.png libgphoto2-camlib.png libgphoto2_port.png gphotofs.png \
-#	architecture.pdf libgphoto2-api.pdf libgphoto2-camlib.pdf libgphoto2_port.pdf gphotofs.pdf \
-#	architecture.ps  libgphoto2-api.ps  libgphoto2-camlib.ps  libgphoto2_port.ps  gphotofs.ps  \
-#	architecture.eps libgphoto2-api.eps libgphoto2-camlib.eps libgphoto2_port.eps gphotofs.eps
-
 figure_DATA = \
+	architecture.png libgphoto2-api.png libgphoto2-camlib.png libgphoto2_port.png gphotofs.png
+
+noinst_DATA = \
 	architecture.eps libgphoto2-api.eps libgphoto2-camlib.eps libgphoto2_port.eps gphotofs.eps \
-	architecture.png libgphoto2-api.png libgphoto2-camlib.png libgphoto2_port.png gphotofs.png \
 	architecture.jpg libgphoto2-api.jpg libgphoto2-camlib.jpg libgphoto2_port.jpg gphotofs.jpg
 
 %.eps: %.fig
@@ -34,12 +29,5 @@ figure_DATA = \
 
 %.jpg: %.fig
 	fig2dev -L jpeg -m 1.5 $< $@
-
-%.pdf: %.ps
-
-else
-
-all-local:
-	@echo "Dummy target $@"
 
 endif
