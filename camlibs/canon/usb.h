@@ -16,6 +16,7 @@
  ****************************************************************************/
 
 int canon_usb_init (Camera *camera);
+int canon_usb_camera_init (Camera *camera);
 int canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath);
 unsigned char *canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length, 
 		const char *payload, int payload_length);
