@@ -981,6 +981,17 @@ int sierra_sub_action (Camera *camera, SierraAction action, int sub_action,
 	GP_DEBUG ("sierra_sub_action: action %d, sub action %d", action,
 		  sub_action);
 	CHECK (sierra_transmit_ack (camera, buf, context));
+	GP_DEBUG ("Waiting for acknowledgement...");
+	CHECK (sierra_read_packet_wait (camera, buf, context));
+
+	switch (buf[0]) {
+		case SIERRA_PACKET_ENQ:
+		return (GP_OK);
+	default:
+		gp_context_error (context, _("Received unexpected answer "
+		"(%i). Please contact <gphoto-devel@gphoto.org>."), buf[0]);
+		return (GP_ERROR);
+	}
 
 	return GP_OK;
 }
@@ -1331,21 +1342,15 @@ sierra_capture (Camera *camera, CameraCaptureType type,
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 
+	/*
+	 * Raise the timeout before the capture, since it can take longer,
+	 * the shutter speed alone could push us over 10 seconds.
+	 */
+	CHECK (gp_port_get_timeout (camera->port, &timeout));
+	CHECK (gp_port_set_timeout (camera->port, 20000)); /* 20 seconds */
 	/* Send to the camera the capture request and wait
 	   for the completion */
 	CHECK (sierra_action (camera, SIERRA_ACTION_CAPTURE, context));
-
-	/*
-	 * Raise the timeout before the next command, since the capture
-	 * comes back as complete, but the camera is still saving the
-	 * image (at least for the Nikon coolpix 880).
-	 */
-	CHECK (gp_port_get_timeout (camera->port, &timeout));
-	CHECK (gp_port_set_timeout (camera->port, 10000)); /* 10 seconds */
-	/* After picture is taken, register 4 is set to current picture */
-	GP_DEBUG ("Getting picture number.");
-	CHECK (sierra_get_int_register (camera, 4, &n, context));
-
 	CHECK (gp_port_set_timeout (camera->port, timeout));
 	/*
 	 * We need to tell the frontend where the new image can be found. 

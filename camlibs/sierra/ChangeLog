@@ -1,3 +1,10 @@
+2002-11-10  Patrick Mansfield <patmans@users.sourceforge.net>
+	* library.c: Per patch and details from C.A. Marby
+	  <marby@lhasa.harvard.edu>, fix bugs with capture: fix a bug I
+	  introduced, put back the read after action of a SIERRA_PACKET_ENQ.
+	  Move the timeout increase before the capture, and increase the
+	  timeout to 20 seconds.
+
 2002-11-05  Lutz Müller <lutz@users.sourceforge.net>
 
 	* sierra.c: The 2100UZ seems to use oly3040_cam_desc (reported by
