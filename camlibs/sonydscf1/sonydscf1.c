@@ -147,7 +147,7 @@ _("Sony DSC-F1 Digital Camera Support\nM. Adam Kendall <joker@penguinpub.com>\nB
 static int file_list_func (CameraFilesystem *fs, const char *folder,
 			   CameraList *list, void *data)
 {
-//	Camera *camera = data;
+/*	Camera *camera = data; */
         int count;
         F1ok();
         /*if(F1ok())
@@ -168,7 +168,7 @@ int camera_init (Camera *camera) {
         camera->functions->manual       = camera_manual;
         camera->functions->about        = camera_about;
 
-	//FIXME: This won't work with several frontends. NO GLOBALS PLEASE!
+	/* FIXME: This won't work with several frontends. NO GLOBALS PLEASE! */
 	dev = camera->port;
 
 	/* Configure the port */
