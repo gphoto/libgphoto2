@@ -901,32 +901,32 @@ int psa50_set_owner_name(const char *name)
  */
 time_t psa50_get_time(void)
 {
-  unsigned char *msg;
-  int len;
-  time_t date;
-
-
-  switch (canon_comm_method) {
-  case CANON_USB:
-    len=0x10;
-    msg = psa50_usb_dialogue(0x03,0x12,0x201,&len,0,0);
-    break;
-  case CANON_SERIAL_RS232:
-  default:
-    msg=psa50_serial_dialogue(0x03,0x12,&len,NULL);
-    break;
-  }
-
-  if (!msg) {
+	unsigned char *msg;
+	int len;
+	time_t date;
+	
+	
+	switch (canon_comm_method) {
+	 case CANON_USB:
+		len=0x10;
+		msg = psa50_usb_dialogue(0x03,0x12,0x201,&len,0,0);
+		break;
+	 case CANON_SERIAL_RS232:
+	 default:
+		msg=psa50_serial_dialogue(0x03,0x12,&len,NULL);
+		break;
+	}
+	
+	if (!msg) {
     psa50_error_type();
-    return 0;
-  }
-
-  /* Beware, this is very dirty, and might fail one day, if time_t
-     is not a 4-byte value anymore. */
-  memcpy(&date,msg+4,4);
-
-  return byteswap32(date);
+		return 0;
+	}
+	
+	/* Beware, this is very dirty, and might fail one day, if time_t
+	 is not a 4-byte value anymore. */
+	memcpy(&date,msg+4,4);
+	
+	return byteswap32(date);
 }
 
 int psa50_set_time(void)

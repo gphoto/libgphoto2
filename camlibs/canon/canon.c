@@ -1212,13 +1212,13 @@ int camera_file_count(Camera *camera)
   }
 	
 	
-  switch (camera_data.model) {
-  case CANON_PS_A5:
-  case CANON_PS_A5_ZOOM:
-    return cached_images/2; /* Odd is pictures even is thumbs */
-  default:
+	switch (camera_data.model) {
+	 case CANON_PS_A5:
+	 case CANON_PS_A5_ZOOM:
+		return cached_images/2; /* Odd is pictures even is thumbs */
+	 default:
         return cached_images;
-  }
+	}
 };
 #endif
 
@@ -1229,102 +1229,102 @@ int camera_file_count(Camera *camera)
  */
 int camera_init(Camera *camera, CameraInit *init)
 {
-        char fname[1024];
-        FILE *conf;
-        CanonDataStruct *cs;
-
-        /* First, set up all the function pointers */
-        camera->functions->id                = camera_id;
-        camera->functions->abilities         = camera_abilities;
-        camera->functions->init      = camera_init;
-        camera->functions->exit      = camera_exit;
-        camera->functions->folder_list = camera_folder_list;
-        camera->functions->file_list = camera_file_list;
-        camera->functions->file_get  = camera_file_get;
-        camera->functions->file_get_preview =  camera_file_get_preview;
-        camera->functions->file_put  = camera_file_put;
-        camera->functions->file_delete = camera_file_delete;
-        camera->functions->config_get = camera_config_get;
-        camera->functions->config_set = camera_config_set;
-        camera->functions->capture   = camera_capture;
-        camera->functions->summary   = camera_summary;
-        camera->functions->manual    = camera_manual;
-        camera->functions->about     = camera_about;
-
-        cs = (CanonDataStruct*)malloc(sizeof(CanonDataStruct));
-        camera->camlib_data = cs;
-
-        gphoto2_debug = init->debug;
-        fprintf(stderr,"canon_initialize()\n");
-
-        camera_data.speed = init->port_settings.speed;
-        /* Default speed */
-        if (camera_data.speed == 0)
-            camera_data.speed = 9600;
-
-  setFileName(fname);
-  if ((conf = fopen(fname, "r"))) {
-    char buf[256];
-    char *sp, *vp;
-    while ((sp = fgets(buf, sizeof(buf)-1, conf)) != NULL)
-      {
-       if (*sp == '#' || *sp == '*')
-         continue;
-       sp = strtok(buf, " \t\r\n");
-       if (!sp)
-         continue;    /* skip blank lines */
-       vp = strtok(NULL, " \t\r\n");
-       if (!vp)
-         {
-            printf("No value for %s - ignored\n", sp);
-            continue;
-         }
-
-            if (camera->debug == 1) {
-                if (strncmp(vp, "0", 1) == 0)
-                    canon_debug_driver = 0;
-                if (strncmp(vp, "1", 1) == 0)
-                    canon_debug_driver = 1;
-                if (strncmp(vp, "1", 1) == 0)
-                    canon_debug_driver = 1;
-                if (strncmp(vp, "2", 1) == 0)
-                    canon_debug_driver = 2;
-                if (strncmp(vp, "3", 1) == 0)
-                    canon_debug_driver = 3;
-                if (strncmp(vp, "4", 1) == 0)
-                    canon_debug_driver = 4;
-                if (strncmp(vp, "5", 1) == 0)
-                    canon_debug_driver = 5;
-                if (strncmp(vp, "6", 1) == 0)
-                    canon_debug_driver = 6;
-                if (strncmp(vp, "7", 1) == 0)
-                    canon_debug_driver = 7;
-                if (strncmp(vp, "8", 1) == 0)
-                    canon_debug_driver = 8;
-                if (strncmp(vp, "9", 1) == 0)
-                    canon_debug_driver = 9;
-                fprintf(stderr,"Debug level: %i\n",canon_debug_driver);
-            }
+	char fname[1024];
+	FILE *conf;
+	CanonDataStruct *cs;
+	
+	/* First, set up all the function pointers */
+	camera->functions->id                = camera_id;
+	camera->functions->abilities         = camera_abilities;
+	camera->functions->init      = camera_init;
+	camera->functions->exit      = camera_exit;
+	camera->functions->folder_list = camera_folder_list;
+	camera->functions->file_list = camera_file_list;
+	camera->functions->file_get  = camera_file_get;
+	camera->functions->file_get_preview =  camera_file_get_preview;
+	camera->functions->file_put  = camera_file_put;
+	camera->functions->file_delete = camera_file_delete;
+	camera->functions->config_get = camera_config_get;
+	camera->functions->config_set = camera_config_set;
+	camera->functions->capture   = camera_capture;
+	camera->functions->summary   = camera_summary;
+	camera->functions->manual    = camera_manual;
+	camera->functions->about     = camera_about;
+	
+	cs = (CanonDataStruct*)malloc(sizeof(CanonDataStruct));
+	camera->camlib_data = cs;
+	
+	gphoto2_debug = init->debug;
+	fprintf(stderr,"canon_initialize()\n");
+	
+	camera_data.speed = init->port_settings.speed;
+	/* Default speed */
+	if (camera_data.speed == 0)
+	  camera_data.speed = 9600;
+	
+	setFileName(fname);
+	if ((conf = fopen(fname, "r"))) {
+		char buf[256];
+		char *sp, *vp;
+		while ((sp = fgets(buf, sizeof(buf)-1, conf)) != NULL)
+			{
+				if (*sp == '#' || *sp == '*')
+				  continue;
+				sp = strtok(buf, " \t\r\n");
+				if (!sp)
+				  continue;    /* skip blank lines */
+				vp = strtok(NULL, " \t\r\n");
+				if (!vp)
+					{
+						printf("No value for %s - ignored\n", sp);
+						continue;
+					}
+				
+				if (camera->debug == 1) {
+					if (strncmp(vp, "0", 1) == 0)
+					  canon_debug_driver = 0;
+					if (strncmp(vp, "1", 1) == 0)
+					  canon_debug_driver = 1;
+					if (strncmp(vp, "1", 1) == 0)
+					  canon_debug_driver = 1;
+					if (strncmp(vp, "2", 1) == 0)
+					  canon_debug_driver = 2;
+					if (strncmp(vp, "3", 1) == 0)
+					  canon_debug_driver = 3;
+					if (strncmp(vp, "4", 1) == 0)
+					  canon_debug_driver = 4;
+					if (strncmp(vp, "5", 1) == 0)
+					  canon_debug_driver = 5;
+					if (strncmp(vp, "6", 1) == 0)
+					  canon_debug_driver = 6;
+					if (strncmp(vp, "7", 1) == 0)
+					  canon_debug_driver = 7;
+					if (strncmp(vp, "8", 1) == 0)
+					  canon_debug_driver = 8;
+					if (strncmp(vp, "9", 1) == 0)
+					  canon_debug_driver = 9;
+					fprintf(stderr,"Debug level: %i\n",canon_debug_driver);
+				}
 				canon_debug_driver = 1;
-        }
+			}
         fclose(conf);
-  }
-  switch (init->port_settings.type) { 
-  case GP_PORT_USB:
-      debug_message("GPhoto tells us that we should use a USB link.\n");
-      canon_comm_method = CANON_USB;
-      break;
-  case GP_PORT_SERIAL:
-  default:
-      debug_message("GPhoto tells us that we should use a RS232 link.\n");
-      canon_comm_method = CANON_SERIAL_RS232;
-      break;
-  }
-
-  if (canon_comm_method == CANON_SERIAL_RS232)
+	}
+	switch (init->port_settings.type) { 
+	 case GP_PORT_USB:
+		debug_message("GPhoto tells us that we should use a USB link.\n");
+		canon_comm_method = CANON_USB;
+		break;
+	 case GP_PORT_SERIAL:
+	 default:
+		debug_message("GPhoto tells us that we should use a RS232 link.\n");
+		canon_comm_method = CANON_SERIAL_RS232;
+		break;
+	}
+	
+	if (canon_comm_method == CANON_SERIAL_RS232)
       debug_message("Camera transmission speed : %i\n", camera_data.speed);
-
-  return !canon_serial_init(init->port_settings.path);
+	
+	return !canon_serial_init(init->port_settings.path);
 }
 
 
@@ -1362,23 +1362,54 @@ int camera_summary(Camera *camera, CameraText *summary)
 {
     char a[20],b[20];
     char *model;
+	int pwr_source, pwr_status;
+	char power_stats[48], cde[16];
 
     /*clear_readiness();*/
     if (!update_disk_cache()) return GP_ERROR;
-    pretty_number(cached_capacity,a);
+    
+	pretty_number(cached_capacity,a);
     pretty_number(cached_available,b);
-    model = "Canon Powershot";
+    
+	model = "Canon Powershot";
     switch (camera_data.model) {
-    case CANON_PS_A5:      model = "Canon Powershot A5"; break;
-    case CANON_PS_A5_ZOOM: model = "Canon Powershot A5 Zoom"; break;
-    case CANON_PS_A50:     model = "Canon Powershot A50"; break;
-    case CANON_PS_A70:     model = "Canon Powershot A70"; break;
-    case CANON_PS_S10:     model = "Canon Powershot S10"; break;
-    case CANON_PS_S20:     model = "Canon Powershot S20"; break;
-        case CANON_PS_S100:    model = "Canon Powershot S100 / Digital IXUS"; break;
+	 case CANON_PS_A5:      model = "Canon Powershot A5"; break;
+	 case CANON_PS_A5_ZOOM: model = "Canon Powershot A5 Zoom"; break;
+	 case CANON_PS_A50:     model = "Canon Powershot A50"; break;
+	 case CANON_PS_A70:     model = "Canon Powershot A70"; break;
+	 case CANON_PS_S10:     model = "Canon Powershot S10"; break;
+	 case CANON_PS_S20:     model = "Canon Powershot S20"; break;
+	 case CANON_PS_S100:    model = "Canon Powershot S100 / Digital IXUS"; break;
     }
-    sprintf(summary->text,"%s\nDrive %s\n%11s bytes total\n%11s bytes available\n",
-      model,cached_drive,a,b);
+
+	canon_get_batt_status(&pwr_status, &pwr_source);
+	switch (pwr_source) {
+	 case CAMERA_ON_AC:
+		strcpy(power_stats, "AC adapter ");
+		break;
+	 case CAMERA_ON_BATTERY:
+		strcpy(power_stats, "on battery ");
+		break;
+	 default:
+		sprintf(power_stats,"unknown (%i",pwr_source);
+		break;
+	}
+	
+	switch (pwr_status) {
+	 case CAMERA_POWER_OK:
+		strcat(power_stats, "(power OK)");
+		break;
+	 case CAMERA_POWER_BAD:
+		strcat(power_stats, "(power low)");
+		break;
+	 default:
+		strcat(power_stats,cde);
+		sprintf(cde," - %i)",pwr_status);
+		break;
+	}
+	
+    sprintf(summary->text,"%s\n%s\nDrive %s\n%11s bytes total\n%11s bytes available\n",
+      model, power_stats,cached_drive,a,b);
     return GP_OK;
 }
 
@@ -1524,7 +1555,7 @@ int camera_config_get(Camera *camera, CameraWidget *window)
 		camtime = psa50_get_time();
 		camtm = gmtime(&camtime);
 	}
-
+	
 	/* set the window label to something more specific */
 	strcpy(window->label, "Canon PowerShot series");
 	
