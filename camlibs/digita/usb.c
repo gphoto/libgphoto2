@@ -43,6 +43,7 @@ static int digita_usb_send(CameraPrivateLibrary *dev, void *buffer, int len)
 int digita_usb_open(CameraPrivateLibrary *dev, Camera *camera)
 {
 	GPPortSettings settings;
+	unsigned char buffer[128];
 
 	settings.usb.inep = 0x81;
 	settings.usb.outep = 0x02;
@@ -54,6 +55,10 @@ int digita_usb_open(CameraPrivateLibrary *dev, Camera *camera)
 	dev->read = digita_usb_read;
 
 	gp_port_set_settings(dev->gpdev, settings);
+
+	/* Mop up anything still pending */
+	while (gp_port_read(dev->gpdev, buffer, sizeof(buffer)) > 0)
+		;
 
 	return GP_OK;
 }
