@@ -1,4 +1,10 @@
+2002-03-11  Lutz Müller <lutz@users.sourceforge.net>
+
+	* frontends/command-line/globals.h:
+	* frontends/command-line/main.c: 1 global variable less.
+
 2002-03-11  Mariusz Woloszyn
+
 	* frontends/command-line/main.c: you can now specify --filename
 	  while uploading, thx to Lutz.
 

@@ -246,7 +246,7 @@ Option option[] = {
 
 int  glob_option_count;
 char glob_port[128];
-char glob_model[64];
+static char glob_model[64];
 char glob_folder[1024];
 char glob_owd[1024];
 char glob_cwd[1024];
@@ -261,8 +261,7 @@ GPContext *glob_context = NULL;
 int  glob_debug;
 int  glob_shell=0;
 int  glob_quiet=0;
-int  glob_filename_override=0;
-char glob_filename[128];
+static char glob_filename[128];
 int  glob_stdout=0;
 int  glob_stdout_size=0;
 char glob_cancel = 0;
@@ -520,9 +519,6 @@ OPTION_CALLBACK(filename)
         cli_debug_print("Setting filename to %s", arg);
 
         strncpy (glob_filename, arg, sizeof (glob_filename) - 1);
-        glob_filename[sizeof (glob_filename) - 1] = 0;
-        
-        glob_filename_override = 1;
 
         return (GP_OK);
 }
@@ -763,7 +759,7 @@ save_camera_file_to_file (CameraFile *file, CameraFileType type)
         strcpy (ofile, "");
         strcpy (ofolder, "");
 
-        if (glob_filename_override) {
+        if (strcmp (glob_filename, "")) {
                 if (strchr (glob_filename, '/')) {              /* Check if they specified an output dir */
                         f = strrchr(glob_filename, '/');
                         strcpy(buf, f+1);                       /* Get the filename */
@@ -1008,7 +1004,7 @@ OPTION_CALLBACK (upload_file)
 	}
 
 	/* Check if the user specified a filename */
-	if (glob_filename_override) {
+	if (strcmp (glob_filename, "")) {
 		res = gp_file_set_name (file, glob_filename);
 		if (res < 0) {
 			gp_file_unref (file);
@@ -1501,9 +1497,10 @@ init_globals (void)
 {
         glob_option_count = 0;
 
-        strcpy (glob_model, "");
+	memset (glob_model, 0, sizeof (glob_model));
+	memset (glob_filename, 0, sizeof (glob_filename));
+
         strcpy (glob_port, "");
-        strcpy (glob_filename, "gphoto");
         strcpy (glob_folder, "/");
         if (!getcwd (glob_owd, 1023))
                 strcpy (glob_owd, "./");
@@ -1513,7 +1510,6 @@ init_globals (void)
         glob_speed = 0;
         glob_debug = 0;
         glob_quiet = 0;
-        glob_filename_override = 0;
 
 	glob_context = gp_context_new ();
 	gp_context_set_cancel_func    (glob_context, ctx_cancel_func,   NULL);
