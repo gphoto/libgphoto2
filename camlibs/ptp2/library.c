@@ -376,6 +376,7 @@ static struct {
 	{"Canon:PowerShot A85 (PTP mode)",      0x04a9, 0x30be},
 	{"Canon:Digital IXUS 430 (PTP mode)",   0x04a9, 0x30ba},
  	{"Canon:PowerShot S410 (PTP mode)",     0x04a9, 0x30ba},
+ 	{"Canon:PowerShot A95 (PTP mode)",      0x04a9, 0x30bb},
  	{"Canon:EOS 1D Mark II (PTP mode)",     0x04a9, 0x30ea},
 
 	/* Konica-Minolta PTP cameras */
@@ -385,7 +386,7 @@ static struct {
 	{"Fuji:FinePix S7000 (PictBridge mode)",0x04cb, 0x0142},	
 
 	/* Ricoh Caplio GX */
-	{"Ricoh:Caplio GX",                     0x05ca, 0x0325},	
+	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325},	
 
 	/* more coming soon :) */
 	{NULL, 0, 0}
