@@ -1,3 +1,9 @@
+2004-08-11  Marcus Meissner  <meissner@suse.de>
+
+	* g3.c: Get the mtime out of NLST, so we get the
+	  correct time without EXIF download. (might be off
+	  some hours).
+	
 2004-08-09  Marcus Meissner  <meissner@suse.de>
 	
 	* g3.c: fixed buffer handling, we were overwriting

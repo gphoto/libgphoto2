@@ -707,6 +707,9 @@ out:
 	return ret;
 }
 
+/* for DOS FAT -> UNIX time conversion */
+static int day_n[] = { 0,31,59,90,120,151,181,212,243,273,304,334,0,0,0,0 };
+
 static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data, GPContext *context)
@@ -714,6 +717,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	Camera *camera = data;
 	char *buf = NULL, *reply = NULL, *cmd;
 	int ret = GP_OK;
+	unsigned char *ubuf;
 
 	cmd = malloc(6 + strlen(folder) + 1);
 	strcpy(cmd, "-NLST ");
@@ -729,9 +733,12 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		if (ret < GP_OK) goto out;
 		gp_log(GP_LOG_DEBUG, "g3" , "reply %s", reply);
 
+		ubuf = (unsigned char*)buf;
 		for (n=0;n < len/32;n++) {
 			if (buf[n*32+11] == 0x20) {
+				CameraFileInfo  info;
 				char xfn[13];
+				int date, time, month, year;
 
 				strcpy(xfn, buf+n*32);
 				xfn[8] = '.';
@@ -740,6 +747,52 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 				ret = gp_filesystem_append (fs, folder, xfn, context);
 				if (ret < GP_OK) goto out;
+
+				/* we also get parts of fs info for free, so just set it */
+				info.file.fields =
+						GP_FILE_INFO_NAME |
+						GP_FILE_INFO_SIZE |
+						GP_FILE_INFO_MTIME;
+				info.file.size =(ubuf[n*32+28]<<24)|
+						(ubuf[n*32+29]<<16)|
+						(ubuf[n*32+30]<< 8)|
+						(ubuf[n*32+31]    );
+				strcpy(info.file.name,xfn);
+				if (!strcmp(xfn+9,"JPG") || !strcmp(xfn+9,"jpg")) {
+					strcpy(info.file.type,GP_MIME_JPEG);
+					info.file.fields |= GP_FILE_INFO_TYPE;
+				}
+
+				if (!strcmp(xfn+9,"AVI") || !strcmp(xfn+9,"avi")) {
+					strcpy(info.file.type,GP_MIME_AVI);
+					info.file.fields |= GP_FILE_INFO_TYPE;
+				}
+
+				if (!strcmp(xfn+9,"WAV") || !strcmp(xfn+9,"wav")) {
+					strcpy(info.file.type,GP_MIME_WAV);
+					info.file.fields |= GP_FILE_INFO_TYPE;
+				}
+
+				if (!strcmp(xfn+9,"MTA") || !strcmp(xfn+9,"mta")) {
+					strcpy(info.file.type,"text/plain");
+					info.file.fields |= GP_FILE_INFO_TYPE;
+				}
+				info.preview.fields = 0;
+				date = (ubuf[n*32+16]) | (ubuf[n*32+17]<<8);
+				time = (ubuf[n*32+14]) | (ubuf[n*32+15]<<8);
+
+				/* from kernel fs/fat/, time_dos2unix. */
+        			month = ((date >> 5) - 1) & 15;
+				year = date >> 9;
+				info.file.mtime =
+					(time & 31)*2+60*((time >> 5) & 63)+
+					(time >> 11)*3600+86400*((date & 31)-1+
+					day_n[month]+(year/4)+year*365-
+					((year & 3) == 0 && month < 2 ? 1 : 0)+
+					3653);
+
+				ret = gp_filesystem_set_info_noop(fs, folder, info, context);
+ 
 			}
 		}
 	} else {
