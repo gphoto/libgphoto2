@@ -9,7 +9,7 @@ INCLUDES =                                              \
 
 libgphoto2_sony_dscf1_la_SOURCES = \
 	command.c getuint.c chotplay.c sonydscf1.c sonydscf1.h \
-	command.h getuint.h chotplay.h pmp.h config.h common.h
+	command.h getuint.h chotplay.h pmp.h common.h
 
 libgphoto2_sony_dscf1_la_LDFLAGS = -module -avoid-version
 libgphoto2_sony_dscf1_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la 
