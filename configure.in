@@ -22,7 +22,7 @@ AC_SUBST(BUILD_INCLUDED_LIBINTL)
 dnl USE_INCLUDED_LIBINTL=no
 dnl AC_SUBST(USE_INCLUDED_LIBINTL)
 
-ALL_LINGUAS="da de fr hu it ja no ru sl sv uk"
+ALL_LINGUAS="da de fr hu it ja no ru sl sv uk zh_CN"
 AM_GNU_GETTEXT
 
 AC_CHECK_FUNC(gettext, gettext_without_libintl=true)
