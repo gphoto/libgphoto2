@@ -43,10 +43,10 @@ int dimagev_get_camera_status(dimagev_t *dimagev) {
 		return GP_ERROR_IO;
 	}
 
-	if ( gp_port_write(dimagev->dev, p->buffer, p->length) == GP_ERROR ) {
+	if ( gp_port_write(dimagev->dev, p->buffer, p->length) < GP_OK ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_status::unable to write packet");
 		return GP_ERROR_IO;
-	} else if ( gp_port_read(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
+	} else if ( gp_port_read(dimagev->dev, &char_buffer, 1) < GP_OK ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_status::no response from camera");
 		return GP_ERROR_IO;
 	}
@@ -76,12 +76,12 @@ int dimagev_get_camera_status(dimagev_t *dimagev) {
 	}
 
 	char_buffer = DIMAGEV_EOT;
-	if ( gp_port_write(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
+	if ( gp_port_write(dimagev->dev, &char_buffer, 1) < GP_OK ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_status::unable to send EOT");
 		return GP_ERROR_IO;
 	}
 		
-	if ( gp_port_read(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
+	if ( gp_port_read(dimagev->dev, &char_buffer, 1) < GP_OK ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_status::no response from camera");
 		return GP_ERROR_IO;
 	}
@@ -190,7 +190,7 @@ void dimagev_dump_camera_status(dimagev_status_t *status) {
 			gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Card not valid for this camera ( 3 )");
 			break;
 		default:
-			gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Invalid value for card status ( %d )\n", status->card_status);
+			gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Invalid value for card status ( %d )", status->card_status);
 			break;
 	}
 

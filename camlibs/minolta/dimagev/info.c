@@ -32,7 +32,7 @@ int dimagev_get_camera_info(dimagev_t *dimagev) {
 
 	/* Check the device. */
 	if ( dimagev->dev == NULL ) {
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_info::device not valid\n");
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_info::device not valid");
 		return GP_ERROR_BAD_PARAMETERS;
 	}
 
@@ -47,10 +47,10 @@ int dimagev_get_camera_info(dimagev_t *dimagev) {
 		return GP_ERROR_IO;
 	}
 
-	if ( gp_port_write(dimagev->dev, p->buffer, p->length) == GP_ERROR ) {
+	if ( gp_port_write(dimagev->dev, p->buffer, p->length) < GP_OK ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_info::unable to write packet");
 		return GP_ERROR_IO;
-	} else if ( gp_port_read(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
+	} else if ( gp_port_read(dimagev->dev, &char_buffer, 1) < GP_OK ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_info::no response from camera");
 		return GP_ERROR_IO;
 	}
@@ -61,31 +61,31 @@ int dimagev_get_camera_info(dimagev_t *dimagev) {
 		case DIMAGEV_ACK:
 			break;
 		case DIMAGEV_NAK:
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_info::camera did not acknowledge transmission\n");
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_info::camera did not acknowledge transmission");
 			return GP_ERROR_IO;
 			break;
 		case DIMAGEV_CAN:
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_info::camera cancels transmission\n");
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_info::camera cancels transmission");
 			return GP_ERROR_IO;
 			break;
 		default:
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_info::camera responded with unknown value %x\n", char_buffer);
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_info::camera responded with unknown value %x", char_buffer);
 			return GP_ERROR_IO;
 			break;
 	}
 
 	if ( ( p = dimagev_read_packet(dimagev) ) == NULL ) {
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_info::unable to read packet\n");
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_info::unable to read packet");
 		return GP_ERROR_IO;
 	}
 
 	char_buffer = DIMAGEV_EOT;
-	if ( gp_port_write(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
+	if ( gp_port_write(dimagev->dev, &char_buffer, 1) < GP_OK ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_info::unable to send EOT");
 		return GP_ERROR_IO;
 	}
 		
-	if ( gp_port_read(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
+	if ( gp_port_read(dimagev->dev, &char_buffer, 1) < GP_OK ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_info::no response from camera");
 		return GP_ERROR_IO;
 	}
@@ -94,26 +94,26 @@ int dimagev_get_camera_info(dimagev_t *dimagev) {
 		case DIMAGEV_ACK:
 			break;
 		case DIMAGEV_NAK:
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_info::camera did not acknowledge transmission\n");
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_info::camera did not acknowledge transmission");
 			return GP_ERROR_IO;
 			break;
 		case DIMAGEV_CAN:
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_info::camera cancels transmission\n");
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_info::camera cancels transmission");
 			return GP_ERROR_IO;
 			break;
 		default:
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_info::camera responded with unknown value %x\n", char_buffer);
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_info::camera responded with unknown value %x", char_buffer);
 			return GP_ERROR_IO;
 			break;
 	}
 
 	if ( ( raw = dimagev_strip_packet(p) ) == NULL ) {
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_info::unable to strip data packet\n");
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_info::unable to strip data packet");
 		return GP_ERROR_NO_MEMORY;
 	}
 
 	if ( ( dimagev->info = dimagev_import_camera_info(raw->buffer) ) == NULL ) {
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_info::unable to read camera info\n");
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_info::unable to read camera info");
 		return GP_ERROR;
 	}
 

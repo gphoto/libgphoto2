@@ -43,7 +43,7 @@ int dimagev_delete_picture(dimagev_t *dimagev, int file_number) {
 
 		dimagev->data->host_mode = 1;
 
-		if ( dimagev_send_data(dimagev) == GP_ERROR ) {
+		if ( dimagev_send_data(dimagev) < GP_OK ) {
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::unable to set host mode");
 			return GP_ERROR_IO;
 		}
@@ -59,10 +59,10 @@ int dimagev_delete_picture(dimagev_t *dimagev, int file_number) {
 		return GP_ERROR_NO_MEMORY;
 	}
 
-	if ( gp_port_write(dimagev->dev, p->buffer, p->length) == GP_ERROR ) {
+	if ( gp_port_write(dimagev->dev, p->buffer, p->length) < GP_OK ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::unable to send set_data packet");
 		return GP_ERROR_IO;
-	} else if ( gp_port_read(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
+	} else if ( gp_port_read(dimagev->dev, &char_buffer, 1) < GP_OK ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::no response from camera");
 		return GP_ERROR_IO;
 	}
@@ -73,15 +73,15 @@ int dimagev_delete_picture(dimagev_t *dimagev, int file_number) {
 		case DIMAGEV_ACK:
 			break;
 		case DIMAGEV_NAK:
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::camera did not acknowledge transmission\n");
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::camera did not acknowledge transmission");
 			return GP_ERROR_IO;
 			break;
 		case DIMAGEV_CAN:
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::camera cancels transmission\n");
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::camera cancels transmission");
 			return GP_ERROR_IO;
 			break;
 		default:
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::camera responded with unknown value %x\n", char_buffer);
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::camera responded with unknown value %x", char_buffer);
 			return GP_ERROR_IO;
 			break;
 	}
@@ -105,12 +105,12 @@ int dimagev_delete_picture(dimagev_t *dimagev, int file_number) {
 	}
 
 	char_buffer=DIMAGEV_EOT;
-	if ( gp_port_write(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
+	if ( gp_port_write(dimagev->dev, &char_buffer, 1) < GP_OK ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::unable to send ACK");
 		return GP_ERROR_IO;
 	}
 
-	if ( gp_port_read(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
+	if ( gp_port_read(dimagev->dev, &char_buffer, 1) < GP_OK ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::no response from camera");
 		return GP_ERROR_IO;
 	}
@@ -119,15 +119,15 @@ int dimagev_delete_picture(dimagev_t *dimagev, int file_number) {
 		case DIMAGEV_ACK:
 			break;
 		case DIMAGEV_NAK:
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::camera did not acknowledge transmission\n");
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::camera did not acknowledge transmission");
 			return GP_ERROR_IO;
 			break;
 		case DIMAGEV_CAN:
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::camera cancels transmission\n");
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::camera cancels transmission");
 			return GP_ERROR_IO;
 			break;
 		default:
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::camera responded with unknown value %x\n", char_buffer);
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::camera responded with unknown value %x", char_buffer);
 			return GP_ERROR_IO;
 			break;
 	}
@@ -155,7 +155,7 @@ int dimagev_delete_all(dimagev_t *dimagev) {
 
 		dimagev->data->host_mode = 1;
 
-		if ( dimagev_send_data(dimagev) == GP_ERROR ) {
+		if ( dimagev_send_data(dimagev) < GP_OK ) {
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_all::unable to set host mode");
 			return GP_ERROR_IO;
 		}
@@ -169,10 +169,10 @@ int dimagev_delete_all(dimagev_t *dimagev) {
 		return GP_ERROR_IO;
 	}
 
-	if ( gp_port_write(dimagev->dev, p->buffer, p->length) == GP_ERROR ) {
+	if ( gp_port_write(dimagev->dev, p->buffer, p->length) < GP_OK ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_all::unable to send set_data packet");
 		return GP_ERROR_IO;
-	} else if ( gp_port_read(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
+	} else if ( gp_port_read(dimagev->dev, &char_buffer, 1) < GP_OK ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_all::no response from camera");
 		return GP_ERROR_IO;
 	}
@@ -183,15 +183,15 @@ int dimagev_delete_all(dimagev_t *dimagev) {
 		case DIMAGEV_ACK:
 			break;
 		case DIMAGEV_NAK:
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_all::camera did not acknowledge transmission\n");
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_all::camera did not acknowledge transmission");
 			return GP_ERROR_IO;
 			break;
 		case DIMAGEV_CAN:
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_all::camera cancels transmission\n");
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_all::camera cancels transmission");
 			return GP_ERROR_IO;
 			break;
 		default:
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_all::camera responded with unknown value %x\n", char_buffer);
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_all::camera responded with unknown value %x", char_buffer);
 			return GP_ERROR_IO;
 			break;
 	}
@@ -215,12 +215,12 @@ int dimagev_delete_all(dimagev_t *dimagev) {
 	}
 
 	char_buffer=DIMAGEV_EOT;
-	if ( gp_port_write(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
+	if ( gp_port_write(dimagev->dev, &char_buffer, 1) < GP_OK ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_all::unable to send ACK");
 		return GP_ERROR_IO;
 	}
 
-	if ( gp_port_read(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
+	if ( gp_port_read(dimagev->dev, &char_buffer, 1) < GP_OK ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_all::no response from camera");
 		return GP_ERROR_IO;
 	}
@@ -229,15 +229,15 @@ int dimagev_delete_all(dimagev_t *dimagev) {
 		case DIMAGEV_ACK:
 			break;
 		case DIMAGEV_NAK:
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_all::camera did not acknowledge transmission\n");
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_all::camera did not acknowledge transmission");
 			return GP_ERROR_IO;
 			break;
 		case DIMAGEV_CAN:
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_all::camera cancels transmission\n");
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_all::camera cancels transmission");
 			return GP_ERROR_IO;
 			break;
 		default:
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_all::camera responded with unknown value %x\n", char_buffer);
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_all::camera responded with unknown value %x", char_buffer);
 			return GP_ERROR_IO;
 			break;
 	}

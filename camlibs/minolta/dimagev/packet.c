@@ -105,26 +105,26 @@ dimagev_packet *dimagev_read_packet(dimagev_t *dimagev) {
 		return NULL;
 	}
 
-	if ( gp_port_read(dimagev->dev, p->buffer, 4) == GP_ERROR ) {
+	if ( gp_port_read(dimagev->dev, p->buffer, 4) < GP_OK ) {
 		perror("dimagev_read_packet::unable to read packet header");
 		return NULL;
 	}
 
 	p->length = ( p->buffer[2] * 256 ) + ( p->buffer[3] );
 
-	if ( gp_port_read(dimagev->dev, &(p->buffer[4]), ( p->length - 4)) == GP_ERROR ) {
+	if ( gp_port_read(dimagev->dev, &(p->buffer[4]), ( p->length - 4)) < GP_OK ) {
 		perror("dimagev_read_packet::unable to read packet body");
 		return NULL;
 	}
 
 	/* Now we *should* have a packet. Let's do a sanity check. */
-	if ( dimagev_verify_packet(p) == GP_ERROR ) {
+	if ( dimagev_verify_packet(p) < GP_OK ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_read_packet::got an invalid packet");
 		free(p);
 		
 		/* Send a NAK */
 		char_buffer = DIMAGEV_NAK;
-		if ( gp_port_write(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
+		if ( gp_port_write(dimagev->dev, &char_buffer, 1) < GP_OK ) {
 		perror("dimagev_read_packet::unable to send NAK");
 		return NULL;
 	}
