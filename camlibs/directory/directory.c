@@ -103,7 +103,7 @@ int camera_abilities (CameraAbilitiesList *list)
         a.speed[0] = 0;
 
         a.operations = GP_OPERATION_CONFIG;
-        a.file_operations = GP_FILE_OPERATION_NONE;
+        a.file_operations = GP_FILE_OPERATION_PREVIEW;
         a.folder_operations = GP_FOLDER_OPERATION_MAKE_DIR |
 			      GP_FOLDER_OPERATION_REMOVE_DIR |
 			      GP_FOLDER_OPERATION_PUT_FILE;
@@ -317,22 +317,21 @@ static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *data)
 {
-        /**********************************/
-        /* file_number now starts at 0!!! */
-        /**********************************/
+        char path[1024];
 
-        char buf[1024];
-        int result;
+	if (strlen (folder) == 1)
+		snprintf (path, sizeof (path), "/%s", filename);
+	else
+		snprintf (path, sizeof (path), "%s/%s", folder, filename);
 
-	if (type != GP_FILE_TYPE_NORMAL)
+	switch (type) {
+	case GP_FILE_TYPE_NORMAL:
+		return (gp_file_open (file, path));
+	case GP_FILE_TYPE_PREVIEW:
+		return (gp_file_open (file, path));
+	default:
 		return (GP_ERROR_NOT_SUPPORTED);
-
-        sprintf(buf, "%s/%s", folder, filename);
-
-        if ((result = gp_file_open(file, buf)) != GP_OK)
-                return (result);
-
-        return (GP_OK);
+	}
 }
 
 static int
