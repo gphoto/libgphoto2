@@ -18,10 +18,7 @@ application. Vide library.c to see how to use libptp2.
 If you'd like to write an application using this code, please let me know.
 Sorry, no docs yet :(
 
-To compile test_ptp.c type:
-cc -g -O2 -Wall -I../../libgphoto2 -I/usr/local/include test_ptp.c  -lusb ptp.o -o test_ptp
-
-or something similar :)
+test_ptp.c compiles as ptp_test so don't get mistaken ;)
 
 
 ===================
@@ -108,8 +105,8 @@ The ptp driver should detect that camera by interface class as "USB PTP
 Class Camera" and allow downloading the pictures and do other stuff exactly
 the same way as if it would be detected by product and vendor ID.
 
-If you're not Linux user try compiling test_ptp.
-test_ptp --list-devices will search through all usb devices looking for a
+If you're not Linux user try compiling ptp_test.
+ptp_test --list-devices will search through all usb devices looking for a
 PTP one.
 
 

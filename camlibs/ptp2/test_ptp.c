@@ -8,6 +8,7 @@
 #include <usb.h>
 #include "ptp.h"
 
+
 typedef struct _PTP_USB PTP_USB;
 struct _PTP_USB {
 	usb_dev_handle* handle;
@@ -15,6 +16,15 @@ struct _PTP_USB {
 	int outep;
 	int intep;
 };
+
+
+void talk (struct usb_device*, int , int , int );
+void init_ptp_usb (PTPParams*, PTP_USB*, struct usb_device*);
+void init_usb(void);
+void usage(char* progname);
+void help(char* progname);
+void list_devices(void);
+
 
 static short
 ptp_read_func (unsigned char *bytes, unsigned int size, void *data)
@@ -60,6 +70,7 @@ ptp_check_int (unsigned char *bytes, unsigned int size, void *data)
 	if (result==0) result = usb_bulk_read(ptp_usb->handle, ptp_usb->intep, bytes, size, 3000);
 	return (result);
 }
+
 
 void talk (struct usb_device *dev, int inep, int outep, int eventep) {
 char buf[65535];
@@ -156,9 +167,19 @@ init_usb()
 }
 
 void
-usage()
+usage(char* progname)
 {
-	printf("USAGE\n");
+	printf("USAGE: %s [OPTION]\n\n",progname);
+}
+
+void
+help(char* progname)
+{
+	printf("USAGE: %s [OPTION]\n\n",progname);
+	printf("Options:\n"
+	"	-l, --list-devices	List all PTP devices\n"
+	"	-h, --help		Print this help message\n"
+	"\n");
 }
 
 void
@@ -215,11 +236,12 @@ list_devices()
 			ptp_usb.intep=intep;
 			init_ptp_usb(&ptp_params, &ptp_usb, dev);
 			ret=ptp_getdeviceinfo (&ptp_params, &deviceinfo);
-			if (ret!=PTP_RC_OK) return;
-			printf("%s\n",deviceinfo.Model);
+			if (ret==PTP_RC_OK) {
+				printf("%s\n",deviceinfo.Model);
+			}
 		}
 	}
-	if (!found) printf("Not found\n");
+	if (!found) printf("Found no PTP devices\n");
 }
 
 
@@ -242,7 +264,7 @@ main(int argc, char ** argv)
 	
 		switch (opt) {
 		case 'h':
-			usage();
+			help(argv[0]);
 			break;
 		case 'l':
 			list_devices();
@@ -254,6 +276,6 @@ main(int argc, char ** argv)
 			break;
 		}
 	}
-	if (argc==1) usage();
+	if (argc==1) usage(argv[0]);
 	return 0;
 }

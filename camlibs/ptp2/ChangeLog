@@ -1,4 +1,10 @@
 2003-04-25 Mariusz Woloszyn
+	* Makefile.am: added ptp_test as noinst_PROGRAMS
+	* README: changed references to test_ptp to ptp_test
+	* test_ptp.c: added some functions prototypes (to avoid warnings),
+	  reconstructed usage() plus some cosmetic changes
+
+2003-04-25 Mariusz Woloszyn
 	* library.c: romved dups in cameras declaration, cosmetic --about
 	  changes
 
