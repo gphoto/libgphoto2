@@ -183,7 +183,7 @@ static struct {
 	 */
 	{"Kodak DC240 (PTP mode)",  0x040a, 0x0121},
 	/*
-	 * Old DC-4800 firmware reported cutom interface class, so we have
+	 * Old DC-4800 firmware reported custom interface class, so we have
 	 * to detect it by product/vendor IDs
 	 */
 	{"Kodak DC4800", 0x040a, 0x0160},
