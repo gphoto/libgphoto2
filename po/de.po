@@ -3830,7 +3830,7 @@ msgstr "sx330z ist nur-USB"
 #: libgphoto2/gphoto2-abilities-list.c:273
 #, c-format
 msgid "Loading camera drivers from '%s'..."
-msgstr "Lade Kamertreiber von »%s«..."
+msgstr "Lade Kameratreiber von »%s«..."
 
 #: libgphoto2/gphoto2-abilities-list.c:261
 #, c-format
