@@ -1,5 +1,7 @@
 2002-04-07  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
+	* frontends/command-line/main.c: added option --usb-usermap-script
+	  name which lets user specify the name of the hotplug usb script
 	* doc/gphoto2.txt: added notice about unplugging cam and creating
 	  /etc/hotplug/usb if necessary
 
