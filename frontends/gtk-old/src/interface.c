@@ -810,7 +810,7 @@ create_main_window (void)
 
   about_gphoto1 = gtk_menu_item_new_with_label ("");
   tmp_key = gtk_label_parse_uline (GTK_LABEL (GTK_BIN (about_gphoto1)->child),
-                                   _("About _gPhoto..."));
+                                   _("About _gtKam..."));
   gtk_widget_add_accelerator (about_gphoto1, "activate_item", help1_menu_accels,
                               tmp_key, 0, 0);
   gtk_widget_ref (about_gphoto1);

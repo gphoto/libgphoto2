@@ -1326,9 +1326,10 @@ void camera_show_about() {
 
 void help_about() {
 
+
 	debug_print("help about");
 
-	gp_camera_message(NULL, _("gPhoto2 (v1.90)- Cross-platform digital camera library.\nCopyright (C) 2000 Scott Fritzinger <scottf@unr.edu>\nLicensed under the Library GNU Public License (LGPL)."));
+	gp_camera_message(NULL, _("gtKam was written by:\nScott Fritzinger <scottf@unr.edu>\n\ngtKam uses the gPhoto2 libraries.\nMore information is available at\nhttp://www.gphoto.net"));
 }
 
 void help_authors() {

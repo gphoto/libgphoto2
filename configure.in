@@ -1,12 +1,12 @@
 dnl Process this file with autoconf to produce a configure script.
 
-PACKAGE=gphoto2
-VERSION=0.1
+PACKAGE=gphoto
+VERSION=2.0pre1
 libdir=${prefix}/lib/gphoto2
 
 AC_INIT(include/gphoto2.h)
 AM_CONFIG_HEADER(config.h)
-AM_INIT_AUTOMAKE(gphoto2, 1.90)
+AM_INIT_AUTOMAKE(gphoto, 2.0pre1)
 AM_MAINTAINER_MODE
 
 dnl Checks for programs.
@@ -47,8 +47,8 @@ if test -n "${LIBGPIO_CONFIG}"; then
 else
   AC_MSG_ERROR([
 ***
-*** libgpio is required
-*** Available from gPhoto's SourceForge CVS, module 'libgpio'.
+*** libgpio is required. Available from gPhoto's SourceForge CVS.
+*** Check http://www.gphoto.net/download.html for details.
 ***])
   exit 1
 fi

@@ -1116,7 +1116,7 @@ void usage () {
 
 	/* Standard licensing stuff */
 	printf(
-	"\ngPhoto2 (v%s) - Cross-platform digital camera library.\n"
+	"\ngPhoto (v%s) - Cross-platform digital camera library.\n"
 	"Copyright (C) 2000 Scott Fritzinger\n"
 #ifdef OS2
         "OS/2 port by Bart van Leeuwen\n"
