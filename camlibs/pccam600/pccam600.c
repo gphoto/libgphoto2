@@ -52,11 +52,6 @@
 #  define N_(String) (String)
 #endif
 
-#define REPORT_ERROR(context,function,text,data1,data2)\
-{                                                           \
-  gp_context_error (context, _(function ":" text),data1,data2); \
-  return (GP_ERROR);                                        \
-}
 /*
  *waits until the status value is 0 or 8. 
  *if status == 0xb0 or 0x40 we will wait some more
@@ -130,8 +125,9 @@ int pccam600_get_file_list(GPPort *port, GPContext *context){
   if (nr_of_blocks == 0){
     gp_log(GP_LOG_DEBUG,"pccam600 library: pccam600_get_file_list",
 	   "nr_of_blocks is 0");
-    REPORT_ERROR(context,"pccam600_init","Expected > %d blocks got %d",
+    gp_context_error(context,_("pccam600_init:Expected > %d blocks got %d"),
 		 0,nr_of_blocks); 
+    return GP_ERROR;
   }
   return nr_of_blocks / 2;
 }
@@ -140,10 +136,12 @@ int pccam600_get_file(GPPort *port, GPContext *context, int index){
   unsigned char response[4];
   int ret,nr_of_blocks;
   index = index + 2;
-  if (index < 2) 
-    REPORT_ERROR(context,
-		 "pccam600_get_file","got index %d but expected index > %d",
+  if (index < 2)  {
+    gp_context_error(context,
+		 _("pccam600_get_file:got index %d but expected index > %d"),
 		 index,2);
+    return GP_ERROR;
+  }
   gp_port_set_timeout(port,200000);
   ret = gp_port_usb_msg_read(port,0x08,index,0x1001,response,0x04);
   gp_port_set_timeout(port,3000);
@@ -156,8 +154,9 @@ int pccam600_get_file(GPPort *port, GPContext *context, int index){
   if (nr_of_blocks == 0){
     gp_log(GP_LOG_DEBUG,
 	   "pccam600 library: pccam600_get_file","nr_of_msg is 0");
-    REPORT_ERROR(context,"pccam600_init","Expected > %d blocks got %d",
+    gp_context_error(context,_("pccam600_init:Expected > %d blocks got %d"),
 		 0,nr_of_blocks); 
+    return GP_ERROR;
   }
   return nr_of_blocks / 2;
 }
@@ -179,10 +178,12 @@ int pccam600_close(GPPort *port, GPContext *context){
   int ret;
   gp_port_set_timeout(port,500);
   ret = gp_port_usb_msg_write(port,0x08,0x00,0xf0,NULL,0x00);
-  if (ret < 0) 
-    REPORT_ERROR(context,
-		 "pccam600_close","return value was %d instead of %d",
+  if (ret < 0) {
+    gp_context_error(context,
+		 _("pccam600_close:return value was %d instead of %d"),
 		 ret,0);
+    return GP_ERROR;
+  }
   pccam600_wait_for_status(port);
   return GP_OK;
 }
@@ -213,8 +214,9 @@ int pccam600_init(GPPort *port, GPContext *context){
   nr_of_blocks = 512 / nr_of_blocks;
   gp_log(GP_LOG_DEBUG,"pccam600 library: init","nr_of_blocks %d",nr_of_blocks);
   if (nr_of_blocks == 0){
-    REPORT_ERROR(context,"pccam600_init","Expected %d blocks got %d",
+    gp_context_error(context,_("pccam600_init:Expected %d blocks got %d"),
 		 64,nr_of_blocks); 
+    return GP_ERROR;
   }
   gp_port_set_timeout(port,500);
   for (i = 0; i<nr_of_blocks; i++){
@@ -223,9 +225,10 @@ int pccam600_init(GPPort *port, GPContext *context){
       gp_log(GP_LOG_DEBUG,
 	     "pccam600 library: init"," gp_port_read returned %d:",
 	     ret);
-      REPORT_ERROR(context,"pccam600 init",
-		   "Unexpected error: gp_port_read returned %d instead of %d",
+      gp_context_error(context,_("pccam600 init:"
+		   "Unexpected error: gp_port_read returned %d instead of %d"),
 		   ret,0);
+      return GP_ERROR;
     }
   }
   return GP_OK;
