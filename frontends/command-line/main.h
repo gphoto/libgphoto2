@@ -41,10 +41,10 @@ void 	cli_debug_print(char *format, ...);
 #endif
 void 	cli_error_print(char *format, ...);
 
-int	save_picture_to_file (const char *folder, const char *filename,
+int	save_file_to_file (const char *folder, const char *filename,
 			      CameraFileType type);
 
-int 	get_picture_common (char *arg, CameraFileType type);
+int 	get_file_common (char *arg, CameraFileType type);
 
 /*
  * Local Variables:

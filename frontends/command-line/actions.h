@@ -22,18 +22,18 @@
 #define __ACTIONS_H__
 
 /* Image actions */
-typedef int image_action  (const char *folder, const char *filename);
+typedef int FileAction    (const char *folder, const char *filename);
 int print_file_action     (const char *folder, const char *filename);
 int print_exif_action     (const char *folder, const char *filename);
-int save_picture_action   (const char *folder, const char *filename);
+int save_file_action      (const char *folder, const char *filename);
 int save_thumbnail_action (const char *folder, const char *filename);
 int save_raw_action       (const char *folder, const char *filename);
 int save_audio_action     (const char *folder, const char *filename);
 int save_exif_action      (const char *folder, const char *filename);
-int delete_picture_action (const char *folder, const char *filename);
+int delete_file_action    (const char *folder, const char *filename);
 
 /* Folder actions */
-typedef int folder_action (const char *folder);
+typedef int FolderAction  (const char *folder);
 int delete_all_action     (const char *folder);
 int list_files_action     (const char *folder);
 int list_folders_action   (const char *folder);

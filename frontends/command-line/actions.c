@@ -161,36 +161,36 @@ print_file_action (const char *folder, const char *filename)
 }
 
 int
-save_picture_action (const char *folder, const char *filename)
+save_file_action (const char *folder, const char *filename)
 {
-	return (save_picture_to_file(folder, filename, GP_FILE_TYPE_NORMAL));
+	return (save_file_to_file(folder, filename, GP_FILE_TYPE_NORMAL));
 }
 
 int
 save_exif_action (const char *folder, const char *filename)
 {
-	return (save_picture_to_file (folder, filename, GP_FILE_TYPE_EXIF));
+	return (save_file_to_file (folder, filename, GP_FILE_TYPE_EXIF));
 }
 
 int
 save_thumbnail_action (const char *folder, const char *filename)
 {
-	return (save_picture_to_file (folder, filename, GP_FILE_TYPE_PREVIEW));
+	return (save_file_to_file (folder, filename, GP_FILE_TYPE_PREVIEW));
 }
 
 int
 save_raw_action (const char *folder, const char *filename)
 {
-	return (save_picture_to_file (folder, filename, GP_FILE_TYPE_RAW));
+	return (save_file_to_file (folder, filename, GP_FILE_TYPE_RAW));
 }
 
 int
 save_audio_action (const char *folder, const char *filename)
 {
-	return (save_picture_to_file (folder, filename, GP_FILE_TYPE_AUDIO));
+	return (save_file_to_file (folder, filename, GP_FILE_TYPE_AUDIO));
 }
 
-int delete_picture_action (const char *folder, const char *filename)
+int delete_file_action (const char *folder, const char *filename)
 {
 	return (gp_camera_file_delete(glob_camera, folder, filename, glob_context));
 }

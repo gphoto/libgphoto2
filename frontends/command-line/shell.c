@@ -325,7 +325,7 @@ shell_get_common (char *args, CameraFileType type)
 			strcpy (tmp_folder, glob_folder);
 		}
 
-		CHECK (save_picture_to_file (tmp_folder, tmp_filename, type));
+		CHECK (save_file_to_file (tmp_folder, tmp_filename, type));
 	}
 
 	return (GP_OK);		

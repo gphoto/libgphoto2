@@ -131,18 +131,18 @@ OPTION_CALLBACK(use_stdout);
 OPTION_CALLBACK(use_stdout_size);
 OPTION_CALLBACK(list_folders);
 OPTION_CALLBACK(list_files);
-OPTION_CALLBACK(num_pictures);
-OPTION_CALLBACK(get_picture);
-OPTION_CALLBACK(get_all_pictures);
+OPTION_CALLBACK(num_files);
+OPTION_CALLBACK(get_file);
+OPTION_CALLBACK(get_all_files);
 OPTION_CALLBACK(get_thumbnail);
 OPTION_CALLBACK(get_all_thumbnails);
 OPTION_CALLBACK(get_raw_data);
 OPTION_CALLBACK(get_all_raw_data);
 OPTION_CALLBACK(get_audio_data);
 OPTION_CALLBACK(get_all_audio_data);
-OPTION_CALLBACK(delete_picture);
-OPTION_CALLBACK(delete_all_pictures);
-OPTION_CALLBACK(upload_picture);
+OPTION_CALLBACK(delete_file);
+OPTION_CALLBACK(delete_all_files);
+OPTION_CALLBACK(upload_file);
 OPTION_CALLBACK(capture_image);
 OPTION_CALLBACK(capture_preview);
 OPTION_CALLBACK(capture_movie);
@@ -194,18 +194,18 @@ Option option[] = {
 {"L", "list-files",     "", N_("List files in folder"),   list_files,     0},
 {"m", "mkdir", N_("name"),  N_("Create a directory"),     make_dir,       0},
 {"r", "rmdir", N_("name"),  N_("Remove a directory"),     remove_dir,     0},
-{"n", "num-images", "",           N_("Display number of pictures"),     num_pictures,   0},
-{"p", "get-image", "range",       N_("Get pictures given in range"),    get_picture,    0},
-{"P", "get-all-images","",        N_("Get all pictures from folder"),   get_all_pictures,0},
+{"n", "num-files", "",           N_("Display number of files"),     num_files,   0},
+{"p", "get-file", "range",       N_("Get files given in range"),    get_file,    0},
+{"P", "get-all-files","",        N_("Get all files from folder"),   get_all_files,0},
 {"t", "get-thumbnail",  "range",  N_("Get thumbnails given in range"),  get_thumbnail,  0},
 {"T", "get-all-thumbnails","",    N_("Get all thumbnails from folder"), get_all_thumbnails,0},
 {"r", "get-raw-data", "range",    N_("Get raw data given in range"),    get_raw_data, 0},
 {"", "get-all-raw-data", "",      N_("Get all raw data from folder"),   get_all_raw_data, 0},
 {"", "get-audio-data", "range",   N_("Get audio data given in range"),  get_audio_data, 0},
 {"", "get-all-audio-data", "",    N_("Get all audio data from folder"), get_all_audio_data, 0},
-{"d", "delete-picture", "range",  N_("Delete pictures given in range"), delete_picture, 0},
-{"D", "delete-all-images","",     N_("Delete all pictures in folder"), delete_all_pictures,0},
-{"u", "upload-image", "filename", N_("Upload a picture to camera"),    upload_picture, 0},
+{"d", "delete-file", "range",  N_("Delete files given in range"), delete_file, 0},
+{"D", "delete-all-files","",     N_("Delete all files in folder"), delete_all_files,0},
+{"u", "upload-file", "filename", N_("Upload a file to camera"),    upload_file, 0},
 {"" , "capture-preview", "", N_("Capture a quick preview"), capture_preview, 0},
 {"" , "capture-image",  "",  N_("Capture an image"),        capture_image,   0},
 {"" , "capture-movie",  "",  N_("Capture a movie "),        capture_movie,   0},
@@ -214,7 +214,7 @@ Option option[] = {
 {"" , "config",		"",  N_("Configure"),               config,          0},
 #endif
 #ifdef HAVE_EXIF
-{"", "show-exif", "filename", N_("Show EXIF information"), show_exif, 0},
+{"", "show-exif", "range",   N_("Show EXIF information"), show_exif, 0},
 #endif
 {"",  "summary",        "",  N_("Summary of camera status"), summary,        0},
 {"",  "manual",         "",  N_("Camera driver manual"),     manual,         0},
@@ -669,7 +669,7 @@ OPTION_CALLBACK(show_exif)
 	if (strchr (arg, '.'))
 		return (print_exif_action (glob_folder, arg));
 
-	return (for_each_image_in_range (glob_folder, print_exif_action,
+	return (for_each_file_in_range (glob_folder, print_exif_action,
 					 glob_flags, arg));
 }
 #endif
@@ -682,12 +682,12 @@ OPTION_CALLBACK (list_files)
 	return (GP_OK);
 }
 
-OPTION_CALLBACK (num_pictures)
+OPTION_CALLBACK (num_files)
 {
         int count;
         CameraList list;
 
-        cli_debug_print ("Counting pictures");
+        cli_debug_print ("Counting files");
 
         CR (set_globals ());
         CR (gp_camera_folder_list_files (glob_camera, glob_folder,
@@ -697,7 +697,7 @@ OPTION_CALLBACK (num_pictures)
         if (glob_quiet)
                 printf ("%i\n", count);
            else
-                printf (_("Number of pictures in folder %s: %i\n"),
+                printf (_("Number of files in folder %s: %i\n"),
                         glob_folder, count);
 
         return (GP_OK);
@@ -791,7 +791,7 @@ save_camera_file_to_file (CameraFile *file, CameraFileType type)
 }
 
 int
-save_picture_to_file (const char *folder, const char *filename,
+save_file_to_file (const char *folder, const char *filename,
 		      CameraFileType type)
 {
         int res;
@@ -824,12 +824,12 @@ save_picture_to_file (const char *folder, const char *filename,
 
 
 /*
-  get_picture_common() - parse range, download specified images, or their
+  get_file_common() - parse range, download specified files, or their
         thumbnails according to thumbnail argument, and save to files.
 */
 
 int
-get_picture_common (char *arg, CameraFileType type )
+get_file_common (char *arg, CameraFileType type )
 {
         cli_debug_print("Getting %s", arg);
 
@@ -840,47 +840,47 @@ get_picture_common (char *arg, CameraFileType type )
 	 * get that file.
 	 */
         if (strchr (arg, '.'))
-                return (save_picture_to_file (glob_folder, arg, type));
+                return (save_file_to_file (glob_folder, arg, type));
 
         switch (type) {
         case GP_FILE_TYPE_PREVIEW:
-		return for_each_image_in_range (glob_folder,
+		return for_each_file_in_range (glob_folder,
 				save_thumbnail_action, glob_flags, arg);
         case GP_FILE_TYPE_NORMAL:
-                return for_each_image_in_range (glob_folder,
-				save_picture_action, glob_flags, arg);
+                return for_each_file_in_range (glob_folder,
+				save_file_action, glob_flags, arg);
         case GP_FILE_TYPE_RAW:
-                return for_each_image_in_range (glob_folder,
+                return for_each_file_in_range (glob_folder,
 				save_raw_action, glob_flags, arg);
 	case GP_FILE_TYPE_AUDIO:
-		return for_each_image_in_range (glob_folder,
+		return for_each_file_in_range (glob_folder,
 				save_audio_action, glob_flags, arg);
 	case GP_FILE_TYPE_EXIF:
-		return for_each_image_in_range (glob_folder,
+		return for_each_file_in_range (glob_folder,
 				save_exif_action, glob_flags, arg);
         default:
                 return (GP_ERROR_NOT_SUPPORTED);
         }
 }
 
-OPTION_CALLBACK (get_picture)
+OPTION_CALLBACK (get_file)
 {
-        return get_picture_common(arg, GP_FILE_TYPE_NORMAL);
+        return get_file_common(arg, GP_FILE_TYPE_NORMAL);
 }
 
-OPTION_CALLBACK (get_all_pictures)
+OPTION_CALLBACK (get_all_files)
 {
-        cli_debug_print("Getting all pictures");
+        cli_debug_print("Getting all files");
 
         CR (set_globals ());
-        CR (for_each_image (glob_folder, save_picture_action, glob_flags));
+        CR (for_each_file (glob_folder, save_file_action, glob_flags));
 
 	return (GP_OK);
 }
 
 OPTION_CALLBACK (get_thumbnail)
 {
-        return (get_picture_common(arg, GP_FILE_TYPE_PREVIEW));
+        return (get_file_common(arg, GP_FILE_TYPE_PREVIEW));
 }
 
 OPTION_CALLBACK(get_all_thumbnails)
@@ -888,53 +888,53 @@ OPTION_CALLBACK(get_all_thumbnails)
         cli_debug_print("Getting all thumbnails");
 
         CR (set_globals ());
-        CR (for_each_image (glob_folder, save_thumbnail_action, glob_flags));
+        CR (for_each_file (glob_folder, save_thumbnail_action, glob_flags));
 
 	return (GP_OK);
 }
 
 OPTION_CALLBACK (get_raw_data)
 {
-        return (get_picture_common(arg, GP_FILE_TYPE_RAW));
+        return (get_file_common(arg, GP_FILE_TYPE_RAW));
 }
 
 OPTION_CALLBACK (get_all_raw_data)
 {
         CR (set_globals ());
-        CR (for_each_image (glob_folder, save_raw_action, glob_flags));
+        CR (for_each_file (glob_folder, save_raw_action, glob_flags));
 
 	return (GP_OK);
 }
 
 OPTION_CALLBACK (get_audio_data)
 {
-	return (get_picture_common (arg, GP_FILE_TYPE_AUDIO));
+	return (get_file_common (arg, GP_FILE_TYPE_AUDIO));
 }
 
 OPTION_CALLBACK (get_all_audio_data)
 {
 	CR (set_globals ());
-	CR (for_each_image (glob_folder, save_audio_action, glob_flags));
+	CR (for_each_file (glob_folder, save_audio_action, glob_flags));
 
 	return (GP_OK);
 }
 
-OPTION_CALLBACK (delete_picture)
+OPTION_CALLBACK (delete_file)
 {
-        cli_debug_print("Deleting picture(s) %s", arg);
+        cli_debug_print("Deleting file(s) %s", arg);
 
         CR (set_globals ());
 
 	if (strchr (arg, '.'))
-		return (delete_picture_action (glob_folder, arg));
+		return (delete_file_action (glob_folder, arg));
 
-	return for_each_image_in_range (glob_folder, delete_picture_action,
+	return for_each_file_in_range (glob_folder, delete_file_action,
 					glob_flags, arg);
 }
 
-OPTION_CALLBACK (delete_all_pictures)
+OPTION_CALLBACK (delete_all_files)
 {
-	cli_debug_print("Deleting all pictures in '%s'", glob_folder);
+	cli_debug_print("Deleting all files in '%s'", glob_folder);
 
 	CR (set_globals ());
 	CR (for_each_folder (glob_folder, delete_all_action, glob_flags));
@@ -942,12 +942,12 @@ OPTION_CALLBACK (delete_all_pictures)
 	return (GP_OK);
 }
 
-OPTION_CALLBACK (upload_picture)
+OPTION_CALLBACK (upload_file)
 {
         CameraFile *file;
         int res;
 
-        cli_debug_print("Uploading picture");
+        cli_debug_print("Uploading file");
 
         CR (set_globals ());
 
@@ -1463,7 +1463,7 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n"));
 	 * Recursion is too dangerous for deletion. Only turn it on if
 	 * explicitely specified.
 	 */
-	if ((option_is_present ("delete-all-images", argc, argv) == GP_OK) ||
+	if ((option_is_present ("delete-all-files", argc, argv) == GP_OK) ||
 	    (option_is_present ("D", argc, argv) == GP_OK)) {
 		if (option_is_present ("recurse", argc, argv) == GP_OK)
 			glob_flags |= FOR_EACH_FLAGS_RECURSE;

@@ -55,7 +55,7 @@
 #define GP_MODULE "frontend"
 
 int
-for_each_folder (const char *folder, folder_action action, ForEachFlags flags)
+for_each_folder (const char *folder, FolderAction action, ForEachFlags flags)
 {
 	CameraList list;
 	int	i, count;
@@ -95,14 +95,14 @@ for_each_folder (const char *folder, folder_action action, ForEachFlags flags)
 }
 
 int
-for_each_image (const char *folder, image_action action, ForEachFlags flags)
+for_each_file (const char *folder, FileAction action, ForEachFlags flags)
 {
 	CameraList list;
 	int i, count;
 	const char *name;
 	char path[1024];
 
-	/* Iterate on all images */
+	/* Iterate on all files */
 	CR (gp_camera_folder_list_files (glob_camera, folder, &list,
 					 glob_context));
 	CR (count = gp_list_count (&list));
@@ -129,7 +129,7 @@ for_each_image (const char *folder, image_action action, ForEachFlags flags)
 			if (path[strlen (path) - 1] != '/')
 				strncat (path, "/", sizeof (path));
 			strncat (path, name, sizeof (path));
-			CR (for_each_image (path, action, flags));
+			CR (for_each_file (path, action, flags));
 		}
 	}
 
@@ -204,10 +204,10 @@ get_path_for_id (const char *base_folder, ForEachFlags flags,
                                          filename);
                 switch (r) {
                 case GP_ERROR_FRONTEND_BAD_ID:
-                        gp_context_error (glob_context, _("Bad image number. "
+                        gp_context_error (glob_context, _("Bad file number. "
                                 "You specified %i, but there are only %i "
                                 "files available in '%s' or its subfolders. "
-                                "Please obtain a valid image number from "
+                                "Please obtain a valid file number from "
                                 "a file listing first."), id + 1, base_id,
                                 base_folder);
                         return (GP_ERROR_BAD_PARAMETERS);
@@ -230,17 +230,17 @@ get_path_for_id (const char *base_folder, ForEachFlags flags,
 				return (GP_ERROR_BAD_PARAMETERS);
 			case 1:
 				gp_context_error (glob_context, 
-					_("Bad image number. "
+					_("Bad file number. "
 					"You specified %i, but there is only "
 					"1 file available in '%s'."), id + 1,
 					base_folder);
 				return (GP_ERROR_BAD_PARAMETERS);
 			default:
 				gp_context_error (glob_context,
-					_("Bad image number. "
+					_("Bad file number. "
 					"You specified %i, but there are only "
 					"%i files available in '%s'."
-					"Please obtain a valid image number "
+					"Please obtain a valid file number "
 					"from a file listing first."), id + 1,
 					gp_list_count (&list), base_folder);
 				return (GP_ERROR_BAD_PARAMETERS);
@@ -253,7 +253,7 @@ get_path_for_id (const char *base_folder, ForEachFlags flags,
 }
 
 int
-for_each_image_in_range (const char *folder, image_action action,
+for_each_file_in_range (const char *folder, FileAction action,
 			 ForEachFlags flags, char *range)
 {
 	char	index[MAX_IMAGE_NUMBER];

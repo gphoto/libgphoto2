@@ -31,11 +31,11 @@ enum _ForEachFlags {
 	FOR_EACH_FLAGS_REVERSE = 1 << 1
 };
 
-int for_each_folder         (const char *folder, folder_action action,
+int for_each_folder         (const char *folder, FolderAction action,
 			     ForEachFlags flags);
-int for_each_image          (const char *folder, image_action action,
+int for_each_file           (const char *folder, FileAction action,
 			     ForEachFlags flags);
-int for_each_image_in_range (const char *folder, image_action action,
+int for_each_file_in_range  (const char *folder, FileAction action,
 			     ForEachFlags flags, char *range);
 
 #endif /* __FOREACH_H__ */
