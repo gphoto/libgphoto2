@@ -85,11 +85,7 @@ camera_abilities (CameraAbilitiesList *list)
 static int
 camera_exit (Camera *camera, GPContext *context)
 {
-	if (camera->pl) {
-		ricoh_bye (camera, context);
-		free (camera->pl);
-		camera->pl = NULL;
-	}
+	ricoh_bye (camera, context);
 
 	return GP_OK;
 }
@@ -207,7 +203,6 @@ camera_init (Camera *camera, GPContext *context)
 	GPPortSettings settings;
 	unsigned int speed, i;
 	int result;
-	RicohModel model;
 
 	/* Try to contact the camera */
 	CR (gp_port_set_timeout (camera->port, 5000));
@@ -241,16 +236,8 @@ camera_init (Camera *camera, GPContext *context)
 		CR (ricoh_set_speed (camera, context, speeds[i].rspeed));
 		settings.serial.speed = speed;
 		CR (gp_port_set_settings (camera->port, settings));
-		CR (ricoh_ping (camera, context, &model));
+		CR (ricoh_ping (camera, context, NULL));
 	}
-
-	camera->pl = malloc (sizeof (CameraPrivateLibrary));
-	if (!camera->pl)
-		return (GP_ERROR_NO_MEMORY);
-	memset (camera->pl, 0, sizeof (CameraPrivateLibrary));
-
-	/* save the mode the camera is in */
-	CR (ricoh_get_mode (camera, context, &(camera->pl->mode)));
 
 	/* setup the function calls */
 	camera->functions->exit = camera_exit;

@@ -462,12 +462,12 @@ ricoh_get_pic (Camera *camera, GPContext *context, unsigned int n,
 {
 	unsigned char p[2], cmd, buf[0xff], len;
 	unsigned int r;
+	RicohMode mode;
 
 	/* Put camera into play mode, if not already */
-	if(camera->pl->mode != RICOH_MODE_PLAY) {
+	CR (ricoh_get_mode (camera, context, &mode));
+	if (mode != RICOH_MODE_PLAY)
 	    CR (ricoh_set_mode (camera, context, RICOH_MODE_PLAY));
-	    camera->pl->mode = RICOH_MODE_PLAY;
-	}
 
 	/* Send picture number */
 	p[0] = n >> 0;

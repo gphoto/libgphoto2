@@ -55,11 +55,6 @@ enum _RicohMode {
 	RICOH_MODE_RECORD = 0x01
 };
 
-struct _CameraPrivateLibrary
-{
-	RicohMode mode;		/* 0 = play, 1 = record */
-};
-
 int ricoh_get_mode  (Camera *camera, GPContext *context, RicohMode *mode);
 int ricoh_set_mode  (Camera *camera, GPContext *context, RicohMode  mode);
 

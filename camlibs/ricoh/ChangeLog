@@ -1,5 +1,11 @@
 2002-03-14  Lutz Müller <lutz@users.sourceforge.net>
 
+	* ricoh.[c,h]
+	* library.c: Remove CameraPrivateLibrary. Sure, that introduces 
+	  some communication overhead, but the code is cleaner this way.
+
+2002-03-14  Lutz Müller <lutz@users.sourceforge.net>
+
 	Submitted by <cliff@vixen.snipe444.org>. I fixed indentation.
 
 	* ricoh.[c,h]
