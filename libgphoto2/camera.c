@@ -615,14 +615,12 @@ gp_camera_folder_delete_all (Camera *camera, const char *folder)
         result = camera->functions->folder_delete_all (camera, folder);
 	CHECK_CLOSE (camera);
 	if (result != GP_OK)
-		CHECK_RESULT_OPEN_CLOSE (camera, delete_one_by_one (camera,
-								    folder));
+		CHECK_RESULT (delete_one_by_one (camera, folder));
 
 	/* Sanity check: All pictures deleted? */
 	CHECK_RESULT (gp_camera_folder_list_files (camera, folder, &list));
 	if (gp_list_count (&list) > 0)
-		CHECK_RESULT_OPEN_CLOSE (camera, delete_one_by_one (camera,
-								    folder));
+		CHECK_RESULT (delete_one_by_one (camera, folder));
 
 	GP_DEBUG ("LEAVE: gp_camera_folder_delete_all");
 	return (GP_OK);

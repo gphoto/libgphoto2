@@ -1,11 +1,16 @@
+2001-09-25  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2/jpeg.h: Fix a warning
+	* libgphoto2/camera.c: Fix locking problem in
+	gp_camera_folder_delete_all.
 
 2001-09-24  Nathan Stenzel <nathanstenzel@users.sourceforge.net>
 
-    * camlibs/polaroid/pdc320.h:
-    * camlibs/polaroid/pdc320.c: now uses jpeg.c and jpeg.h
-    * libgphoto2/jpeg.h:
-    * libgphoto2/jpeg.c: Can now create and write jpeg files
-    (except for actual encoding of compressed data)
+	* camlibs/polaroid/pdc320.h:
+	* camlibs/polaroid/pdc320.c: now uses jpeg.c and jpeg.h
+	* libgphoto2/jpeg.h:
+	* libgphoto2/jpeg.c: Can now create and write jpeg files
+	(except for actual encoding of compressed data)
 
 2001-09-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
