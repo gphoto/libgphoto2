@@ -74,10 +74,12 @@ pdc320_init (CameraPort *port)
 	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "*** PDC320_INIT ***");
 	CHECK_RESULT (gp_port_write (port, PDC320_INIT, sizeof (PDC320_INIT)));
 	CHECK_RESULT (gp_port_read (port, buf, 3));
+#if 0
 	if ((buf[0] != 0x00) || //0x0f?
 	    (buf[1] != 0xfa) ||
 	    (buf[2] != 0xff))
 		return (GP_ERROR_CORRUPTED_DATA);
+#endif
 
 	CHECK_RESULT (pdc320_id (port, NULL));
 
@@ -105,10 +107,12 @@ pdc320_num (CameraPort *port)
 	CHECK_RESULT (gp_port_read (port, buf, 4));
 	num = buf[0];
 
+#if 0
 	if ((buf[1] != 0x01) ||
 	    (buf[2] != 0xfc) ||
 	    (buf[3] != 0xfe))
 		return (GP_ERROR_CORRUPTED_DATA);
+#endif
 
 	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "The camera contains %i "
 			 "files.", num);
@@ -124,6 +128,7 @@ pdc320_delete (CameraPort *port)
 	CHECK_RESULT (gp_port_write (port, PDC320_DEL, sizeof (PDC320_DEL)));
 	CHECK_RESULT (gp_port_read (port, buf, 7));
 
+#if 0
 	if ((buf[0] != 0x08) ||
 	    (buf[1] != 0xf7) ||
 	    (buf[2] != 0xff) ||
@@ -132,6 +137,7 @@ pdc320_delete (CameraPort *port)
 	    (buf[5] != 0xff) ||
 	    (buf[6] != 0x00))
 		return (GP_ERROR_CORRUPTED_DATA);
+#endif
 
 	return (GP_OK);
 }
@@ -148,8 +154,10 @@ pdc320_size (CameraPort *port, int n)
 
 	size = (buf[1] << 24) + (buf[2] << 16) + (buf[3] << 8) + buf[4];
 
+#if 0
 	if ((buf[0] != 0x06))
 		return (GP_ERROR_CORRUPTED_DATA);
+#endif
 
 	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Image %i has size %i.",
 			 n, size);
