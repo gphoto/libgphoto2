@@ -216,7 +216,7 @@ gp_port_new (gp_port **dev, gp_port_type type)
 		/* Set some default settings */
 		settings.usb.inep = 0x81;
 		settings.usb.outep = 0x02;
-		settings.usb.ocnfig = 1;
+		settings.usb.config = 1;
 		settings.usb.interface = 0;
 		settings.usb.altsetting = 0;
 		gp_port_settings_set (*dev, settings);
