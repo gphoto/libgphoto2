@@ -1,0 +1,1201 @@
+2000-07-27 00:38  scottf
+
+	* frontends/gtk/configure.in: changed name of gtk from project5 to
+	gphoto2_gtk2 for now
+
+2000-07-27 00:37  scottf
+
+	* frontends/gtk/: install-sh, missing, mkinstalldirs: remove intl
+	directory
+
+2000-07-27 00:35  scottf
+
+	* frontends/gtk/: aclocal.m4, config.h.in, configure,
+	po/Makefile.in.in, po/cat-id-tbl.c, po/project5.pot,
+	po/stamp-cat-id, src/Makefile.am: removed unnecessary files
+
+2000-07-27 00:25  scottf
+
+	* frontends/gtk/src/: tree_list_util.c, tree_list_util.h: added
+	missing files to the gtk frontend
+
+2000-07-26 22:46  scottf
+
+	* camlibs/digita/digita.c: fixed small bug in digita abilities code
+	(incremented pointer location, not value for some reason :P)
+
+2000-07-26 22:44  scottf
+
+	* camlibs/template/template.c: corrected template directory's port
+	ability
+
+2000-07-26 22:42  scottf
+
+	* camlibs/: canon/.cvsignore, konica/.cvsignore: mod'd cvsignore
+	files
+
+2000-07-26 22:41  scottf
+
+	* camlibs/digita/digita.c, camlibs/digita/digita.h,
+	camlibs/digita/serial.c, camlibs/digita/usb.c,
+	frontends/command-line/Makefile.am, frontends/command-line/main.c,
+	include/gphoto2-datatypes.h, include/gphoto2.h: added digita
+	library and command-line patch from Johannes
+
+2000-07-26 21:33  scottf
+
+	* camlibs/: canon/Makefile, canon/Makefile.in, konica/Makefile.in:
+	removed Makefile[.in] from canon and konica libs
+
+2000-07-26 21:06  scottf
+
+	* docs/: .cvsignore, camlib_devel.lyx, camlib_devel.sgml,
+	camlib_devel.txt, frontend_devel.lyx, frontend_devel.sgml,
+	frontend_devel.txt: starting to write the docs. outlined structure
+
+2000-07-26 20:43  scottf
+
+	* docs/: camlib_devel.lyx, camlib_devel.sgml, frontend_devel.lyx,
+	frontend_devel.sgml: adding skeletons for the docs
+
+2000-07-26 20:26  scottf
+
+	* docs/: camlib_devel.txt, frontend_devel.txt: starting developer
+	documentation
+
+2000-07-26 20:22  scottf
+
+	* frontends/gtk/src/Makefile.am: small Makefile.am change to gtk
+
+2000-07-26 19:55  scottf
+
+	* frontends/gtk-old/files.list: removed files.list
+
+2000-07-26 14:36  scottf
+
+	* frontends/gtk/autogen.sh: added autogen.sh
+
+2000-07-26 14:34  scottf
+
+	* frontends/gtk/: ABOUT-NLS, AUTHORS, COPYING, ChangeLog, INSTALL,
+	Makefile.am, NEWS, README, acconfig.h, aclocal.m4, config.h.in,
+	configure, configure.in, install-sh, missing, mkinstalldirs,
+	stamp-h.in, pixmaps/camera.xpm, pixmaps/close_image.xpm,
+	pixmaps/configure.xpm, pixmaps/delete_images.xpm, pixmaps/exit.xpm,
+	pixmaps/fliph.xpm, pixmaps/flipv.xpm, pixmaps/folder.xpm,
+	pixmaps/get_index.xpm, pixmaps/get_index_empty.xpm,
+	pixmaps/get_selected_images.xpm, pixmaps/no_thumbnail.xpm,
+	pixmaps/open_image.xpm, pixmaps/print_image.xpm,
+	pixmaps/refresh.xpm, pixmaps/resize.xpm, pixmaps/rotc.xpm,
+	pixmaps/save_current_image.xpm, po/ChangeLog, po/Makefile.in.in,
+	po/POTFILES.in, po/cat-id-tbl.c, po/project5.pot, po/stamp-cat-id,
+	src/Makefile.am, src/callbacks.c, src/callbacks.h, src/interface.c,
+	src/interface.h, src/main.c, src/support.c, src/support.h: added
+	new gtk inteface beginning code
+
+2000-07-26 14:25  scottf
+
+	* frontends/gtk-old/: po/.cvsignore, src/.cvsignore: whoops. fixed
+	cvsignore in gtk-old
+
+2000-07-26 14:24  scottf
+
+	* camlibs/: canon/.cvsignore, konica/.cvsignore,
+	konica/localization/data_english.c30,
+	konica/localization/data_french.c30, panasonic/.cvsignore: updated
+	all .cvsignore files
+
+2000-07-26 14:21  scottf
+
+	* frontends/gtk-old/: .cvsignore, po/.cvsignore, src/.cvsignore:
+	updated .cvsignore files
+
+2000-07-26 14:14  scottf
+
+	* configure.in, camlibs/barbie/barbie.c, camlibs/canon/Makefile,
+	camlibs/canon/Makefile.am, camlibs/canon/Makefile.in,
+	camlibs/directory/directory.c, camlibs/konica/konica.c,
+	camlibs/konica/konica.h, camlibs/konica/library.c,
+	camlibs/konica/lowlevel.c, camlibs/konica/lowlevel.h,
+	frontends/command-line/main.c, frontends/gtk-old/src/callbacks.c,
+	frontends/gtk-old/src/globals.h, frontends/gtk-old/src/interface.c,
+	frontends/gtk-old/src/interface.h, frontends/gtk-old/src/main.c,
+	include/gphoto2-core.h, include/gphoto2-datatypes.h,
+	include/gphoto2.h, libgphoto2/core.c, libgphoto2/library.c: updated
+	gtk-old interface to new object-oriented API
+
+2000-07-25 16:58  ole
+
+	* camlibs/canon/Makefile.am: Fix libgphoto2_canon_la_LDFLAGS
+
+2000-07-25 14:26  scottf
+
+	* include/gphoto2-core.h, include/gphoto2-datatypes.h,
+	libgphoto2/core.c: added gp_camera_free(). added some error
+	checking
+
+2000-07-25 14:03  scottf
+
+	* configure.in, camlibs/barbie/barbie.c, camlibs/barbie/barbie.h,
+	camlibs/canon/Makefile, camlibs/canon/canon.c,
+	camlibs/canon/psa50.c, camlibs/canon/psa50.h,
+	camlibs/canon/serial.c, camlibs/digita/digita.c,
+	camlibs/directory/directory.c, camlibs/directory/directory.h,
+	camlibs/fujitsu/fujitsu.c, camlibs/fujitsu/fujitsu.h,
+	camlibs/fujitsu/library.c, camlibs/fujitsu/library.h,
+	camlibs/konica/library.c, camlibs/panasonic/dc1580.c,
+	camlibs/template/template.c, frontends/command-line/interface.c,
+	frontends/command-line/main.c, include/gphoto2-core.h,
+	include/gphoto2-datatypes.h, include/gphoto2-interface.h,
+	include/gphoto2-library.h, libgphoto2/core.c, libgphoto2/core.h,
+	libgphoto2/file.c, libgphoto2/globals.h, libgphoto2/library.c,
+	libgphoto2/library.h: moved to object-oriented Camera* design
+
+2000-07-25 13:02  scottf
+
+	* camlibs/canon/: Makefile, Makefile.am, Makefile.in, Protocol,
+	README, canon.c, canon.h, crc.c, crc.h, mkpatch, psa50.c, psa50.h,
+	serial.c, serial.h, util.c, util.h, ps350/COPYING, ps350/README,
+	ps350/SerialIn, ps350/compu1, ps350/compu3, ps350/compu3c,
+	ps350/compu3d, ps350/compu3e-4, ps350/compu3f, ps350/compu5,
+	ps350/compu6, ps350/notes.txt, ps350/ps350chk.c, ps350/ps350init,
+	ps350/ps350proto.txt, ps350/renamejpg.c: added canon lib\!\!
+
+2000-07-24 13:43  scottf
+
+	* configure.in: added comma :P
+
+2000-07-24 03:47  simpson2
+
+	* makefile.os2, camlibs/makefile.os2,
+	camlibs/directory/directory.def, camlibs/directory/makefile.os2,
+	frontends/command-line/main.c, frontends/command-line/makefile.os2,
+	include/gphoto2.h, include/gphotoos2.h, libgphoto2/library.c,
+	libgphoto2/makefile.os2: bvl: Made some linebreak statments, and
+	ifdef correction on behalf of the      OS/2 port
+
+2000-07-22 14:47  scottf
+
+	* camlibs/: directory/directory.c, fujitsu/fujitsu.c: minor
+	config_set/get bug fix
+
+2000-07-22 14:34  scottf
+
+	* camlibs/fujitsu/fujitsu.c, frontends/gtk-old/src/callbacks.c,
+	include/gphoto2-core.h, include/gphoto2-datatypes.h,
+	libgphoto2/core.c, libgphoto2/widget.c: added dynamic configuration
+	support.
+
+2000-07-21 21:59  scottf
+
+	* frontends/gtk-old/src/callbacks.c, frontends/gtk-old/src/util.c,
+	include/gphoto2-core.h, include/gphoto2-datatypes.h,
+	libgphoto2/widget.c: fixed nasty recursive gp_widget_free bug.
+	blech.
+
+2000-07-21 20:06  scottf
+
+	* camlibs/fujitsu/fujitsu.c, frontends/gtk-old/src/callbacks.c,
+	include/gphoto2-datatypes.h, libgphoto2/widget.c: reworked widget
+	system a little. added more functions
+
+2000-07-21 16:14  scottf
+
+	* frontends/gtk-old/src/callbacks.c, libgphoto2/widget.c: adding
+	configuration support to GTK frontend
+
+2000-07-21 14:55  scottf
+
+	* camlibs/fujitsu/fujitsu.c, frontends/command-line/test.c,
+	frontends/gtk-old/src/callbacks.c, include/gphoto2-core.h,
+	include/gphoto2-datatypes.h, libgphoto2/core.c,
+	libgphoto2/widget.c: widget system is now working\! adding support
+	to GTK frontend
+
+2000-07-21 14:15  scottf
+
+	* acconfig.h, configure.in, camlibs/Makefile.am,
+	camlibs/konica/Makefile.in, camlibs/panasonic/dc.c,
+	camlibs/panasonic/dc.h, camlibs/panasonic/dc1580.c,
+	camlibs/panasonic/dc1580.h, frontends/command-line/.cvsignore,
+	libgphoto2/file.c, libgphoto2/library.c: added a bunch of patchs
+	from Johannes and Mariusz
+
+2000-07-21 14:15  scottf
+
+	* camlibs/digita/: .cvsignore, Makefile.am, commands.c, digita.c,
+	digita.h, serial.c, usb.c: adding .cvsignor for digita driver dir
+
+2000-07-19 21:55  scottf
+
+	* camlibs/directory/directory.c: added more image file types to
+	directory browse lib
+
+2000-07-19 21:43  scottf
+
+	* camlibs/fujitsu/fujitsu.c, frontends/gtk-old/src/callbacks.c:
+	added more cameras to the supported camera list
+
+2000-07-19 21:37  scottf
+
+	* camlibs/barbie/barbie.c: renamed the camera models
+
+2000-07-19 21:20  scottf
+
+	* camlibs/barbie/barbie.c, camlibs/directory/directory.c,
+	camlibs/fujitsu/fujitsu.c, camlibs/konica/library.c,
+	camlibs/panasonic/dc1580.c, camlibs/template/template.c,
+	frontends/command-line/main.c, include/gphoto2-core.h,
+	include/gphoto2-datatypes.h, include/gphoto2-library.h,
+	libgphoto2/core.c, libgphoto2/core.h: changed _manual, _about, and
+	_summary to use CameraText to guarantee 32k of text space
+
+2000-07-19 20:59  scottf
+
+	* camlibs/barbie/barbie.c, camlibs/directory/directory.c,
+	camlibs/fujitsu/fujitsu.c, camlibs/konica/library.c,
+	camlibs/panasonic/dc1580.c, frontends/command-line/main.c,
+	include/gphoto2-datatypes.h, libgphoto2/util.c: changed
+	abilities.(serial, parallel, usb, ...) to just ORing of
+	abilities.port
+
+2000-07-19 20:36  scottf
+
+	* camlibs/barbie/barbie.c, camlibs/directory/directory.c,
+	camlibs/fujitsu/fujitsu.c, camlibs/panasonic/dc1580.c,
+	camlibs/template/template.c, include/gphoto2-core.h,
+	include/gphoto2-datatypes.h, include/gphoto2-library.h,
+	libgphoto2/core.c, libgphoto2/core.h: updated camera_capture
+	prototype
+
+2000-07-19 20:23  scottf
+
+	* camlibs/barbie/barbie.c, camlibs/directory/directory.c,
+	camlibs/fujitsu/fujitsu.c, camlibs/konica/library.c,
+	camlibs/panasonic/dc1580.c, camlibs/template/template.c,
+	frontends/libgphoto2_frontend/cache.c, include/gphoto2-datatypes.h,
+	include/gphoto2-library.h, libgphoto2/core.c, libgphoto2/file.c:
+	converted over to using mime types in CameraFile->type
+
+2000-07-19 20:07  scottf
+
+	* configure.in, camlibs/konica/COPYING, camlibs/konica/ChangeLog,
+	camlibs/konica/EXPERTS, camlibs/konica/Makefile.am,
+	camlibs/konica/Makefile.in, camlibs/konica/README,
+	camlibs/konica/TODO, camlibs/konica/konica.c,
+	camlibs/konica/konica.h, camlibs/konica/library.c,
+	camlibs/konica/lowlevel.c, camlibs/konica/lowlevel.h: added konica
+	library. thanx Lutz\!
+
+2000-07-19 19:24  scottf
+
+	* camlibs/fujitsu/fujitsu.c, camlibs/fujitsu/library.c,
+	frontends/gtk-old/src/callbacks.c,
+	frontends/gtk-old/src/interface.c, libgphoto2/core.c,
+	libgphoto2/library.c, libgphoto2/util.c: fixed camera abilities
+	bug. finishing gtk frontend. fixed minor bug in fujitsu lib
+
+2000-07-19 18:58  scottf
+
+	* camlibs/fujitsu/fujitsu.c: added camera_stop to the end of _init
+
+2000-07-19 18:45  scottf
+
+	* camlibs/fujitsu/README: updated README
+
+2000-07-19 18:44  scottf
+
+	* camlibs/fujitsu/library.c: hell. removed all usleeps and it's
+	much quicker now. errors are recovered (if they ever pop up)
+
+2000-07-19 18:41  scottf
+
+	* camlibs/fujitsu/fujitsu.c: removed guts of camera_exit. not
+	needed now.
+
+2000-07-19 18:39  scottf
+
+	* camlibs/fujitsu/fujitsu.c: wrapped folder_set and file_count in
+	start/stop functions
+
+2000-07-19 18:36  scottf
+
+	* camlibs/fujitsu/fujitsu.c, frontends/gtk-old/src/callbacks.c:
+	gtk-old is working. good to go\!
+
+2000-07-19 18:30  scottf
+
+	* camlibs/fujitsu/library.c: scaled percentage value
+
+2000-07-19 18:28  scottf
+
+	* camlibs/fujitsu/library.c: reduced timeout. faster now.
+
+2000-07-19 18:27  scottf
+
+	* camlibs/fujitsu/: fujitsu.c, library.c: error recovery is a good
+	thing. now nak's incomplete packets and reads again
+
+2000-07-19 18:00  scottf
+
+	* camlibs/fujitsu/library.c: increased timeout to let camera catch
+	up
+
+2000-07-19 17:56  scottf
+
+	* camlibs/fujitsu/fujitsu.c: hacked around idle camera bug. camera
+	didn't like sitting idle between operations.
+
+2000-07-19 16:53  scottf
+
+	* camlibs/fujitsu/fujitsu.c, camlibs/fujitsu/library.c,
+	frontends/command-line/main.c, frontends/gtk-old/AUTHORS,
+	frontends/gtk-old/MANUAL, frontends/gtk-old/src/callbacks.c,
+	frontends/gtk-old/src/callbacks.h,
+	frontends/gtk-old/src/gtkiconlist.c,
+	frontends/gtk-old/src/gtkitementry.c,
+	frontends/gtk-old/src/interface.c,
+	frontends/gtk-old/src/interface.h, frontends/gtk-old/src/util.c,
+	frontends/gtk-old/src/util.h: almost done on new gtk-old interface.
+	fixing fujitsu library bugs.
+
+2000-07-19 15:07  scottf
+
+	* camlibs/directory/directory.c: fixed preview naming bug
+
+2000-07-19 13:08  scottf
+
+	* libgphoto2/file.c: null terminater the file->data in gp_file_open
+
+2000-07-19 11:35  scottf
+
+	* frontends/gtk-old/src/: callbacks.c, callbacks.h, interface.c:
+	finished the save dialog. just need to save now
+
+2000-07-19 11:04  scottf
+
+	* frontends/gtk-old/acinclude.m4: added DOCDIC macro to build
+	(thanks Ole)
+
+2000-07-19 11:03  scottf
+
+	* frontends/gtk-old/pixmaps/refresh.xpm: added refresh button
+
+2000-07-18 20:08  scottf
+
+	* frontends/gtk-old/src/: callbacks.c, interface.c, interface.h,
+	util.c, util.h: finishing up gtk-old. adding saving functionality.
+
+2000-07-18 17:28  scottf
+
+	* frontends/gtk-old/src/: callbacks.c, gtkiconlist.lo, interface.c:
+	how'd that object file get in there? whoops. it was me. :P
+
+2000-07-18 17:22  scottf
+
+	* COPYING: Put in copy of LGPL
+
+2000-07-18 17:21  scottf
+
+	* camlibs/directory/directory.c: added manual and summary to
+	directory lib
+
+2000-07-18 17:08  scottf
+
+	* frontends/gtk-old/: AUTHORS, acconfig.h, configure.in,
+	src/callbacks.c, src/interface.c, src/interface.h: added help menu
+	items
+
+2000-07-18 16:22  scottf
+
+	* include/gphoto2.h: removed gpio.h reference from gphoto2.h
+	(didn't need it)
+
+2000-07-18 16:17  scottf
+
+	* frontends/gtk-old/: COPYING, INSTALL: whoops. needed to add
+	COPYING file and INSTALL :P
+
+2000-07-18 16:17  scottf
+
+	* frontends/gtk-old/: Makefile.am, src/callbacks.c: updated COPYING
+	file and INSTALL
+
+2000-07-18 16:12  scottf
+
+	* camlibs/fujitsu/library.c, camlibs/template/template.c,
+	include/gphoto2.h: finished replacing <gpio/gpio.h> with <gpio.h>
+
+2000-07-18 16:10  scottf
+
+	* camlibs/barbie/barbie.c, camlibs/fujitsu/fujitsu.c,
+	camlibs/panasonic/dc.h, frontends/gtk-old/MANUAL,
+	frontends/gtk-old/Makefile.am, frontends/gtk-old/src/callbacks.c,
+	frontends/gtk-old/src/interface.c, libgphoto2/Makefile.am,
+	libgphoto2/core.c: replaced all #include <gpio/gpio.h> with
+	#include <gpio.h> for portability (so other non-development
+	oriented platforms can compile without installing)
+
+2000-07-18 15:31  scottf
+
+	* frontends/gtk-old/.cvsignore: added cvsignore to gtk-old
+
+2000-07-18 14:38  scottf
+
+	* AUTHORS: minor AUTHORS change.
+
+2000-07-18 14:38  scottf
+
+	* frontends/gtk-old/configure.in,
+	frontends/gtk-old/src/callbacks.c,
+	frontends/gtk-old/src/interface.c,
+	frontends/gtk-old/src/interface.h, libgphoto2/file.c: added AUTHORS
+	file to install.
+
+2000-07-18 14:13  scottf
+
+	* .cvsignore, AUTHORS, Makefile.am, acconfig.h, configure.in,
+	camlibs/.cvsignore, camlibs/Makefile.am, camlibs/NOTES,
+	camlibs/barbie/.cvsignore, camlibs/directory/.cvsignore,
+	camlibs/fujitsu/.cvsignore, frontends/.cvsignore,
+	frontends/command-line/.cvsignore, frontends/command-line/main.c,
+	frontends/gtk-old/configure.in, frontends/gtk-old/src/callbacks.c,
+	frontends/gtk-old/src/interface.c,
+	frontends/libgphoto2_frontend/.cvsignore, include/.cvsignore,
+	libgphoto2/Makefile.am: added patch for --get-picture (correctly
+	reports error message now) from Mariusz. patched cvsignore patch
+	from Johannes.
+
+2000-07-18 13:25  scottf
+
+	* camlibs/panasonic/dc.c, camlibs/panasonic/dc.h,
+	camlibs/panasonic/dc1580.c, camlibs/panasonic/dc1580.h,
+	frontends/command-line/main.c, libgphoto2/core.c: updated
+	panansonic library. Thanx Mariusz
+
+2000-07-17 19:28  scottf
+
+	* frontends/gtk-old/src/: callbacks.c, callbacks.h, gtkiconlist.c,
+	gtkiconlist.h: fixed nasty bug with gtkiconlist. not thread safe.
+
+2000-07-17 16:44  scottf
+
+	* frontends/gtk-old/src/: callbacks.c, callbacks.h, interface.c:
+	rearranged toolbar. added refresh button. removed index buttons.
+
+2000-07-17 12:46  ole
+
+	* libgphoto2/core.c: Added #ifdef's for GPIO_USB, GPIO_IEEE1394 and
+	GPIO_NETWORK
+
+2000-07-17 12:43  ole
+
+	* frontends/command-line/main.c: Replaced conflicting delacaration
+	of 'daemon' in unistd.h with 'daemonmode'
+
+2000-07-17 12:26  scottf
+
+	* include/gphotoos2.h: edited gphotoos2.h.
+
+2000-07-17 12:11  scottf
+
+	* configure.in, makefile.os2, camlibs/makefile.os2,
+	camlibs/directory/directory.c, camlibs/directory/directory.def,
+	camlibs/directory/makedll.cmd, camlibs/directory/makefile.os2,
+	camlibs/fujitsu/fujitsu.c, camlibs/panasonic/dc1580.c,
+	frontends/command-line/main.c, frontends/command-line/makefile.os2,
+	include/gphoto2.h, include/gphotoos2.h, libgphoto2/library.c,
+	libgphoto2/makefile.os2: added os2 support. Thank Bart a lot, OS2
+	users :)
+
+2000-07-17 11:54  scottf
+
+	* camlibs/panasonic/: dc.c, dc1580.c: small workaround for uint8_t
+	and uint32_t (#defines)
+
+2000-07-17 11:45  scottf
+
+	* camlibs/: Makefile.am, panasonic/Makefile.am, panasonic/dc.c,
+	panasonic/dc.h, panasonic/dc1580.c, panasonic/dc1580.h: Added
+	panasonic library. Thanx Mariusz.
+
+2000-07-14 21:27  scottf
+
+	* frontends/gtk-old/src/: callbacks.c, callbacks.h, globals.h,
+	interface.c, main.c: added file deletion to gtk-old. now icon list
+	updates on resizing (neat). only a couple things left :)
+
+2000-07-14 19:08  scottf
+
+	* frontends/gtk-old/src/: callbacks.c, gtkiconlist.c,
+	gtkitementry.c, interface.c: selecting thumbnails works (small hack
+	in gtkiconlist.c)
+
+2000-07-14 17:55  scottf
+
+	* frontends/gtk-old/src/: callbacks.c, callbacks.h, globals.h,
+	interface.c, interface.h, main.c: wow. folder listing is working
+	nicely. added new progress window (percent and message included
+	with cancel button).
+
+2000-07-14 17:53  scottf
+
+	* libgphoto2/core.c: core will now sort the folder list before
+	passing it back to the front-end (how nice ;)
+
+2000-07-14 15:32  scottf
+
+	* camlibs/directory/directory.c: fixed getting multiple indexes
+	error
+
+2000-07-14 15:14  scottf
+
+	* camlibs/barbie/barbie.c, camlibs/directory/directory.c,
+	camlibs/fujitsu/fujitsu.c, camlibs/fujitsu/fujitsu.h,
+	camlibs/fujitsu/library.c, camlibs/fujitsu/library.h,
+	camlibs/template/template.c, frontends/command-line/main.c,
+	frontends/command-line/test.c, frontends/gtk-old/src/main.c,
+	include/gphoto2-core.h, include/gphoto2-datatypes.h,
+	include/gphoto2-library.h, libgphoto2/core.c, libgphoto2/core.h,
+	libgphoto2/library.c, libgphoto2/util.c, libgphoto2/util.h: remove
+	camera_debug_set function, moved to CameraInit flag
+
+2000-07-13 20:06  scottf
+
+	* frontends/gtk-old/src/callbacks.c: whoops. file_get changed to
+	file_get_preview in the indexing function :P MUCH faster now.
+	sheesh.
+
+2000-07-13 20:01  scottf
+
+	* frontends/gtk-old/src/: callbacks.c, gtkiconlist.c,
+	gtkiconlist.h, interface.c, util.c, util.h: indexing is working.
+	camera folder browsing is working. directory browse works (will
+	index any directory)
+
+2000-07-13 16:33  scottf
+
+	* libgphoto2/: core.c, library.c: fixed previous sorting error
+	(forgot to sort the camera abilities with the camera list). blech
+	blech blech
+
+2000-07-13 16:09  scottf
+
+	* libgphoto2/library.c: camera list is now sorted
+
+2000-07-13 16:01  scottf
+
+	* camlibs/directory/directory.c, include/gphoto2-datatypes.h: sped
+	up directory browse functionality overall
+
+2000-07-13 16:00  scottf
+
+	* frontends/gtk-old/src/: callbacks.c, callbacks.h, interface.c,
+	main.c: folder browsing and setting now working
+
+2000-07-13 15:09  scottf
+
+	* camlibs/directory/directory.c: fixed crashing from NULL pointer
+
+2000-07-13 13:37  scottf
+
+	* camlibs/barbie/barbie.c, camlibs/directory/directory.c,
+	frontends/gtk-old/pixmaps/folder.xpm,
+	frontends/gtk-old/src/callbacks.c,
+	frontends/gtk-old/src/callbacks.h,
+	frontends/gtk-old/src/interface.c, include/gphoto2-library.h:
+	removed <gphotos> camerafolderlist entry requirement (was silly)
+
+2000-07-13 13:29  scottf
+
+	* frontends/gtk-old/pixmaps/: camera.xpm, folder.xpm,
+	no_thumbnail.xpm: whoops. forgot pixmaps
+
+2000-07-13 13:29  scottf
+
+	* frontends/gtk-old/src/: callbacks.c, callbacks.h, interface.c,
+	main.c: adding folder tree on left
+
+2000-07-12 20:55  scottf
+
+	* frontends/gtk-old/src/: callbacks.c, gtkiconlist.c,
+	gtkiconlist.h, gtkiconlist.lo, gtkitementry.c, gtkitementry.h,
+	interface.c: added icon list from gtkiconlist and some beginning
+	index code (not much)
+
+2000-07-12 17:45  scottf
+
+	* camlibs/fujitsu/fujitsu.c, frontends/command-line/main.c,
+	frontends/gtk-old/src/Makefile.am,
+	frontends/gtk-old/src/callbacks.c,
+	frontends/gtk-old/src/interface.c: starting thumbnail index.
+	gdk-pixbuf rocks.
+
+2000-07-12 17:44  scottf
+
+	* libgphoto2/settings.c: fixed load_settings bug that let null
+	values crash the core (blech)
+
+2000-07-11 19:33  scottf
+
+	* camlibs/barbie/barbie.c, camlibs/directory/directory.c,
+	frontends/command-line/main.c, frontends/command-line/test.c,
+	include/gphoto2-core.h, include/gphoto2-datatypes.h,
+	libgphoto2/core.c, libgphoto2/core.h, libgphoto2/library.c: done
+	for the day
+
+2000-07-11 19:33  scottf
+
+	* frontends/gtk-old/src/: callbacks.c, callbacks.h, main.c, util.c:
+	camera changes go smoothly.
+
+2000-07-11 19:32  scottf
+
+	* camlibs/fujitsu/: fujitsu.c, library.c: fixed detection of
+	folders
+
+2000-07-11 18:19  scottf
+
+	* camlibs/fujitsu/fujitsu.c: fixed timing issues (slowed down
+	read/write)
+
+2000-07-11 18:00  scottf
+
+	* frontends/gtk-old/src/: Makefile.am, callbacks.c, globals.h,
+	interface.c, interface.h, main.c, util.c: camera info/manual/about
+	working. doesn't init() at start-up (waits for camera-related
+	function
+
+2000-07-11 17:26  scottf
+
+	* camlibs/fujitsu/fujitsu.c: fixed get_int_register bug (no ack)
+
+2000-07-11 16:06  scottf
+
+	* camlibs/fujitsu/: fujitsu.c, library.c: added 460Z to list of
+	supported cameras
+
+2000-07-11 15:32  scottf
+
+	* camlibs/fujitsu/: fujitsu.c, library.c: fixed camera_exit bug
+
+2000-07-11 14:31  scottf
+
+	* frontends/gtk-old/src/: callbacks.c, globals.h, interface.c,
+	main.c: camera selection dialog working
+
+2000-07-10 19:16  scottf
+
+	* frontends/gtk-old/src/: callbacks.c, callbacks.h, globals.h,
+	interface.c, main.c, util.c, util.h: diggin in to the old gtk
+	interface. camera/selection working (well, sort of)
+
+2000-07-10 17:52  scottf
+
+	* DAEMON, frontends/command-line/main.c: added daemon description,
+	and flag for command-line
+
+2000-07-10 15:08  scottf
+
+	* frontends/command-line/Makefile.am,
+	frontends/command-line/interface.c, frontends/command-line/main.c,
+	frontends/gtk-old/src/interface.c,
+	frontends/gtk-old/src/interface.h,
+	frontends/libgphoto2_frontend/cache.c,
+	frontends/libgphoto2_frontend/gphoto2-frontend.h,
+	frontends/libgphoto2_frontend/helpers.c,
+	frontends/libgphoto2_frontend/image.c,
+	frontends/libgphoto2_frontend/script.c,
+	include/gphoto2-interface.h, libgphoto2/core.c: renamed interface_*
+	to gp_interface_*. changed command-line numbering to begin at 1
+
+2000-07-10 10:27  scottf
+
+	* frontends/libgphoto2_frontend/: Makefile.am, cache.c, cache.h,
+	gphoto2-frontend.h, helpers.h, image.c, image.h, script.c: adding
+	gPhoto scripting
+
+2000-07-08 13:20  ole
+
+	* libgphoto2/: .cvsignore, Makefile.am: Shut up, cvs...
+
+2000-07-08 12:41  ole
+
+	* configure.in: Added check for gpio and LIBGPHOTO_* globals
+
+2000-07-08 11:36  ole
+
+	* libgphoto2/: Makefile.am, libgphoto2Conf.sh.in: Added
+	configuration file for using libgphoto2 in GNOME applications
+
+2000-07-07 18:58  scottf
+
+	* frontends/gtk-old/src/: util.c, util.h: whoops. needed to remove
+	old gPhoto ref's
+
+2000-07-07 18:54  scottf
+
+	* frontends/gtk-old/src/Makefile.am: final commit for the day
+
+2000-07-07 18:52  scottf
+
+	* frontends/gtk-old/src/: callbacks.c, callbacks.h, interface.c,
+	main.c, util.c, util.h: added util.[ch]
+
+2000-07-07 18:19  scottf
+
+	* frontends/gtk-old/configure.in,
+	frontends/gtk-old/src/Makefile.am,
+	frontends/gtk-old/src/interface.c,
+	frontends/gtk-old/src/interface.h, frontends/gtk-old/src/main.c,
+	libgphoto2/Makefile.am: linked libgphoto2 to libgpio.
+
+2000-07-07 17:57  scottf
+
+	* Makefile.am, configure.in, gphoto2-config.in,
+	frontends/gtk-old/src/Makefile.am, frontends/gtk-old/src/main.c:
+	added gphoto2-config script to make adding frontends and libraries
+	easier
+
+2000-07-07 17:28  scottf
+
+	* frontends/gtk-old/: AUTHORS, ChangeLog, Makefile.am, NEWS,
+	README, acconfig.h, autogen.sh, configure.in, files.list,
+	gphoto2-gtk.glade, gphoto2-gtk.glade.bak, stamp-h.in,
+	pixmaps/close_image.xpm, pixmaps/configure.xpm,
+	pixmaps/delete_images.xpm, pixmaps/exit.xpm, pixmaps/fliph.xpm,
+	pixmaps/flipv.xpm, pixmaps/get_index.xpm,
+	pixmaps/get_index_empty.xpm, pixmaps/get_selected_images.xpm,
+	pixmaps/open_image.xpm, pixmaps/print_image.xpm,
+	pixmaps/resize.xpm, pixmaps/rotc.xpm,
+	pixmaps/save_current_image.xpm, po/ChangeLog, po/POTFILES.in,
+	src/Makefile.am, src/callbacks.c, src/callbacks.h, src/interface.c,
+	src/interface.h, src/main.c, src/support.c, src/support.h: Adding
+	older gtk interface to frontends
+
+2000-07-06 17:33  scottf
+
+	* camlibs/fujitsu/fujitsu.c, camlibs/fujitsu/fujitsu.h,
+	camlibs/fujitsu/library.c, include/gphoto2-library.h: added DC1
+	error checking to fujitsu library
+
+2000-07-06 16:59  scottf
+
+	* camlibs/fujitsu/fujitsu.c, camlibs/fujitsu/library.c,
+	frontends/command-line/main.c, include/gphoto2-library.h: fujitsu
+	camera summary working.
+
+2000-07-06 15:27  scottf
+
+	* camlibs/fujitsu/fujitsu.c, camlibs/fujitsu/fujitsu.h,
+	camlibs/fujitsu/library.c, frontends/command-line/interface.c,
+	frontends/command-line/main.c: fujitsu library working nicely. 99%
+	functional.
+
+2000-07-05 20:11  scottf
+
+	* camlibs/fujitsu/fujitsu.c, camlibs/fujitsu/fujitsu.h,
+	camlibs/fujitsu/library.c, frontends/command-line/main.c: fujitsu
+	lib 90% working.
+
+2000-07-05 12:55  scottf
+
+	* configure.in: minor changes. version change.
+
+2000-07-03 19:16  scottf
+
+	* camlibs/fujitsu/: fujitsu.c, fujitsu.h, library.c:
+	reading/writing int32 registers supported (fujitsu)
+
+2000-07-03 14:58  scottf
+
+	* camlibs/fujitsu/fujitsu.c, camlibs/fujitsu/fujitsu.h,
+	camlibs/fujitsu/library.c, frontends/command-line/main.c: working
+	on fujitsu. fixed debug output in command-line
+
+2000-06-30 20:23  scottf
+
+	* camlibs/fujitsu/: README, fujitsu.c, library.c: done for the
+	week. fujitsu still being worked on
+
+2000-06-30 13:43  scottf
+
+	* camlibs/fujitsu/: fujitsu.c, fujitsu.h, library.c, library.h:
+	continuing adding fujitsu lib.
+
+2000-06-30 13:24  scottf
+
+	* camlibs/fujitsu/: Makefile.am, fujitsu.c, fujitsu.h, library.c,
+	library.h: renamed gphoto.[ch] to library.[ch]
+
+2000-06-29 20:01  scottf
+
+	* camlibs/fujitsu/: fujitsu.c, fujitsu.h: fujitsu's camera_init is
+	working
+
+2000-06-29 16:07  scottf
+
+	* camlibs/fujitsu/Makefile.am, camlibs/fujitsu/fujitsu.c,
+	include/gphoto2-core.h, include/gphoto2-datatypes.h,
+	libgphoto2/util.c, libgphoto2/widget.c: starting fujitsu library.
+	fixed widget errors.
+
+2000-06-29 15:36  scottf
+
+	* libgphoto2/widget.c: added gp_widget_* code
+
+2000-06-29 14:01  scottf
+
+	* libgphoto2/: Makefile.am, interface.c, interface.h, widget.c,
+	widget.h: rename interface.[ch] to widget.[ch]
+
+2000-06-29 13:56  scottf
+
+	* camlibs/CONFIG_DIALOG, camlibs/NOTES, camlibs/barbie/barbie.c,
+	camlibs/directory/directory.c, camlibs/fujitsu/fujitsu.c,
+	camlibs/template/template.c, frontends/command-line/main.c,
+	include/gphoto2-core.h, include/gphoto2-datatypes.h,
+	include/gphoto2-library.h, libgphoto2/core.c, libgphoto2/core.h,
+	libgphoto2/library.c: transferred another image. adding
+	configuration dialog widgets. command-line is usable (yay)
+
+2000-06-29 13:47  scottf
+
+	* camlibs/barbie/barbie.c: fixed init bug.
+
+2000-06-29 13:19  scottf
+
+	* libgphoto2/: Makefile.am, interface.c, interface.h: adding
+	beginning of toolkit-independent interface code
+
+2000-06-28 14:17  scottf
+
+	* camlibs/CONFIG_DIALOG, libgphoto2/file.c, libgphoto2/file.h:
+	whoops. added file.[ch] in libgphoto2/. added another spec to the
+	CONFIG_DIALOG file
+
+2000-06-27 19:48  scottf
+
+	* camlibs/NOTES, camlibs/barbie/barbie.c,
+	camlibs/directory/directory.c, camlibs/fujitsu/fujitsu.c,
+	camlibs/template/template.c, include/gphoto2-core.h,
+	include/gphoto2-library.h, libgphoto2/core.h, libgphoto2/library.c:
+	added camera_config_query function. touched up API.
+
+2000-06-27 19:44  scottf
+
+	* camlibs/CONFIG_DIALOG: Added configuration dialog spec
+
+2000-06-27 18:09  scottf
+
+	* camlibs/barbie/barbie.c, camlibs/directory/directory.c,
+	camlibs/fujitsu/fujitsu.c, camlibs/template/template.c,
+	frontends/command-line/main.c, include/gphoto2-datatypes.h,
+	include/gphoto2-interface.h, include/gphoto2-library.h,
+	libgphoto2/core.c, libgphoto2/core.h, libgphoto2/library.c: renamed
+	camera_config to camera_config_set and added camera_config_get to
+	facilitate multiple configuration dialogs. added error checking to
+	the front-end.
+
+2000-06-27 17:48  scottf
+
+	* camlibs/barbie/barbie.c, camlibs/directory/directory.c,
+	frontends/command-line/interface.c, frontends/command-line/main.c,
+	frontends/command-line/test.c, include/gphoto2-core.h,
+	include/gphoto2-interface.h, libgphoto2/core.c: rename gp_update_*
+	to just gp_*. added image upload functionality to command-line
+	front-end. note to self: my slow camera sucks ass
+
+2000-06-27 15:02  scottf
+
+	* frontends/command-line/main.c: added -n/--num-pictures
+	functionality to command-line
+
+2000-06-27 14:54  scottf
+
+	* frontends/libgphoto2_frontend/: Makefile, Makefile.in, cache.lo,
+	cache.o, helpers.lo, helpers.o, image.lo, image.o,
+	libgphoto2_util.la: crap. removed object files. i suck.
+
+2000-06-27 14:52  scottf
+
+	* frontends/command-line/main.c,
+	frontends/libgphoto2_frontend/cache.lo,
+	frontends/libgphoto2_frontend/cache.o,
+	frontends/libgphoto2_frontend/helpers.lo,
+	frontends/libgphoto2_frontend/helpers.o,
+	frontends/libgphoto2_frontend/image.lo,
+	frontends/libgphoto2_frontend/image.o, include/gphoto2-datatypes.h,
+	libgphoto2/core.c: added delete_picture function to command-line.
+	worked on command-line options system. fixed directory browse bug.
+
+2000-06-26 20:28  scottf
+
+	* camlibs/barbie/barbie.c, camlibs/directory/directory.c,
+	frontends/command-line/main.c, include/gphoto2-core.h: added
+	--get-picture functionality to command-line. first successful
+	download...
+
+2000-06-26 18:29  scottf
+
+	* camlibs/barbie/barbie.c, camlibs/directory/directory.c,
+	camlibs/fujitsu/fujitsu.c, camlibs/template/template.c,
+	frontends/command-line/main.c,
+	frontends/libgphoto2_frontend/Makefile,
+	frontends/libgphoto2_frontend/Makefile.am,
+	frontends/libgphoto2_frontend/Makefile.in,
+	frontends/libgphoto2_frontend/cache.lo,
+	frontends/libgphoto2_frontend/cache.o,
+	frontends/libgphoto2_frontend/helpers.lo,
+	frontends/libgphoto2_frontend/helpers.o,
+	frontends/libgphoto2_frontend/image.lo,
+	frontends/libgphoto2_frontend/image.o,
+	frontends/libgphoto2_frontend/libgphoto2_util.la,
+	include/gphoto2-core.h, include/gphoto2-datatypes.h,
+	include/gphoto2-library.h, libgphoto2/core.c, libgphoto2/core.h,
+	frontends/command-line/main.c: added list/set folders to
+	command-line options
+
+2000-06-26 13:37  scottf
+
+	* frontends/command-line/Makefile.am: (hopefully) last change for
+	renaming of libgphoto2_util
+
+2000-06-26 13:36  scottf
+
+	* configure.in: whoops. changed configure.in to reflect
+	libgphoto2_util renaming
+
+2000-06-26 13:35  scottf
+
+	* frontends/: Makefile.am, command-line/Makefile.am: changed
+	libgphoto2_util references to libgphoto2_frontend
+
+2000-06-26 13:34  scottf
+
+	* frontends/libgphoto2_frontend/: Makefile, Makefile.am,
+	Makefile.in, cache.c, cache.h, cache.lo, cache.o, helpers.c,
+	helpers.h, helpers.lo, helpers.o, image.c, image.h, image.lo,
+	image.o, libgphoto2_util.la: renamed libgphoto2_util to
+	libgphoto2_frontend
+
+2000-06-23 20:48  scottf
+
+	* configure.in, camlibs/barbie/barbie.c,
+	camlibs/directory/directory.c, camlibs/fujitsu/fujitsu.c,
+	camlibs/template/template.c, frontends/command-line/main.c,
+	include/gphoto2-datatypes.h, libgphoto2/util.c: readded
+	serial/usb/parallel/ieee1394 flags in CameraAbilities struct. works
+	much nicer
+
+2000-06-23 19:39  scottf
+
+	* camlibs/barbie/barbie.c, camlibs/fujitsu/fujitsu.c,
+	camlibs/template/template.c, frontends/command-line/Makefile.am,
+	frontends/command-line/main.c, include/gphoto2-core.h,
+	include/gphoto2-datatypes.h, include/gphoto2.h, libgphoto2/core.c:
+	*added listing of cameras/port to front-end. *added gpio wrapper
+	for device_count/info
+
+2000-06-22 19:05  scottf
+
+	* camlibs/barbie/barbie.c, camlibs/directory/directory.c,
+	camlibs/fujitsu/fujitsu.c, camlibs/template/template.c,
+	frontends/command-line/main.c, frontends/command-line/main.h,
+	frontends/command-line/test.c, include/gphoto2-core.h,
+	include/gphoto2-datatypes.h, libgphoto2/core.c, libgphoto2/util.c:
+	reworked abilities (again). more abstract.
+
+2000-06-22 15:57  scottf
+
+	* camlibs/barbie/barbie.c, camlibs/directory/directory.c,
+	camlibs/fujitsu/fujitsu.c, camlibs/template/template.c,
+	include/gphoto2-datatypes.h, include/gphoto2-library.h,
+	libgphoto2/util.c: removed cancel and lock abilities for now.
+	updated library API to reflect the changes. Need to figure out a
+	way to consolidate specialized features.
+
+2000-06-22 15:46  scottf
+
+	* camlibs/barbie/barbie.c, camlibs/directory/directory.c,
+	camlibs/fujitsu/fujitsu.c, camlibs/template/template.c,
+	include/gphoto2-core.h, include/gphoto2-datatypes.h,
+	include/gphoto2-library.h, libgphoto2/core.c, libgphoto2/core.h,
+	libgphoto2/util.c: changed camera_config call. Removed
+	CameraConfigSetting in place of an array of CameraSetting's.
+
+2000-06-22 13:06  scottf
+
+	* AUTHORS, INSTALL, README, camlibs/NOTES,
+	camlibs/barbie/Makefile.am, camlibs/barbie/barbie.c,
+	camlibs/directory/Makefile.am, camlibs/directory/directory.c,
+	camlibs/fujitsu/Makefile.am, camlibs/fujitsu/fujitsu.c,
+	camlibs/template/Makefile.am, camlibs/template/template.c,
+	frontends/command-line/main.c, frontends/command-line/test.c,
+	include/gphoto2-core.h, include/gphoto2-datatypes.h,
+	include/gphoto2-library.h, libgphoto2/Makefile.am,
+	libgphoto2/core.c, libgphoto2/core.h, libgphoto2/library.c,
+	libgphoto2/library.h, libgphoto2/util.c, libgphoto2/util.h:
+	*revamped CameraAbilities (no more reset/sleep) *making
+	command-line functional *adding error-checking *removed
+	camera_open/close *added camera_debug_set to get more verbose
+	output *other misc.
+
+2000-06-21 18:20  scottf
+
+	* include/gphoto2-library.h, libgphoto2/core.c: adding
+	documentation to API
+
+2000-06-21 17:09  scottf
+
+	* NOTES, camlibs/directory/directory.c,
+	frontends/command-line/main.c, frontends/command-line/main.h,
+	include/gphoto2-core.h, libgphoto2/core.c, libgphoto2/library.c:
+	improving command-line parser. debug checking and more verbose
+	output
+
+2000-06-21 12:55  scottf
+
+	* libgphoto2/: Makefile.am, core.c, exif.c, globals.h, library.c,
+	settings.c: clean-up in the exif lib. -Wall is damn grumpy.
+
+2000-06-21 11:34  scottf
+
+	* camlibs/barbie/barbie.c, libgphoto2/Makefile.am,
+	libgphoto2/exif.c, libgphoto2/exif.h: added exif lib
+
+2000-06-20 18:01  scottf
+
+	* frontends/command-line/main.c: aesthetic changes to command-line
+	parser
+
+2000-06-20 17:43  scottf
+
+	* frontends/command-line/: Makefile.am, main.c, main.h, test.c,
+	test.h: added command-line option parser. weird but neat.
+
+2000-06-20 15:48  scottf
+
+	* frontends/command-line/: main.c, main.h: whoops. re-added
+	main.c/h
+
+2000-06-20 15:47  scottf
+
+	* frontends/command-line/Makefile.am: command-line parsing routines
+	added. rearranging of code
+
+2000-06-20 14:36  scottf
+
+	* frontends/command-line/: Makefile.am, main.c, main.h, test.c,
+	test.h: starting command-line interface. moving files.
+
+2000-06-20 13:28  scottf
+
+	* include/gphoto2-core.h, include/gphoto2-datatypes.h,
+	include/gphoto2-library.h, libgphoto2/core.c, libgphoto2/core.h,
+	libgphoto2/library.c: added camera_file_put() to camera API
+
+2000-06-20 13:28  scottf
+
+	* camlibs/: barbie/barbie.c, directory/directory.c,
+	fujitsu/fujitsu.c, template/Makefile.am, template/README,
+	template/template.c, template/template.h: added template directory
+	for new camera libraries
+
+2000-06-19 15:41  scottf
+
+	* camlibs/barbie/barbie.c, camlibs/directory/directory.c,
+	camlibs/fujitsu/fujitsu.c, frontends/command-line/main.c,
+	include/gphoto2-core.h, include/gphoto2-datatypes.h,
+	include/gphoto2-library.h, libgphoto2/core.c, libgphoto2/core.h,
+	libgphoto2/library.c: folder listing has changed. now more
+	optimized for serial connections
+
+2000-06-19 14:24  scottf
+
+	* camlibs/NOTES, camlibs/barbie/barbie.c,
+	camlibs/directory/directory.c, camlibs/fujitsu/fujitsu.c,
+	include/Makefile.am, include/gphoto2-datatypes.h,
+	include/gphoto2-library.h, include/gphoto2.h,
+	libgphoto2/Makefile.am, libgphoto2/core.c, libgphoto2/core.h,
+	libgphoto2/library.c, libgphoto2/library.h: added camera library
+	id's. enumerated camera differently (abilities per-camera now).
+
+2000-06-19 12:32  scottf
+
+	* frontends/command-line/gphoto2, include/gphoto2-core.h,
+	include/gphoto2-datatypes.h, include/gphoto2-interface.h,
+	include/gphoto2-library.h: finished renaming include files
+
+2000-06-19 12:31  scottf
+
+	* configure.in, camlibs/barbie/barbie.c, frontends/Makefile.am,
+	frontends/command-line/Makefile.am, frontends/command-line/gphoto2,
+	frontends/command-line/main.c, include/gphoto-core.h,
+	include/gphoto-datatypes.h, include/gphoto-interface.h,
+	include/gphoto-library.h, libgphoto2/core.c: renamed include files.
+	fixed compile problems with libgphoto2_util.
+
+2000-06-19 12:20  scottf
+
+	* frontends/Makefile.am: finish renaming libgphoto2_util
+
+2000-06-19 12:06  scottf
+
+	* libgphoto2/: Makefile.am, cache.c, cache.h, core.c, helpers.c,
+	helpers.h: moving around files
+
+2000-06-19 12:01  scottf
+
+	* frontends/: Makefile.am, command-line/Makefile.am: added
+	beginining of gphoto2 utility library for frontends
+
+2000-06-16 14:48  scottf
+
+	* AUTHORS, COPYING, ChangeLog, INSTALL, Makefile.am, NEWS, NOTES,
+	OVERVIEW, README, TODO, autogen.sh, configure.in,
+	include/gphoto-core.h, include/gphoto-datatypes.h,
+	include/gphoto-interface.h, camlibs/Makefile.am,
+	camlibs/barbie/Makefile.am, camlibs/barbie/README,
+	camlibs/directory/Makefile.am, camlibs/directory/directory.c,
+	camlibs/directory/directory.h, include/Makefile.am,
+	include/gphoto-library.h, include/gphoto2.h,
+	camlibs/barbie/barbie.c, camlibs/barbie/barbie.h,
+	camlibs/barbie/compile, camlibs/barbie/main.c,
+	camlibs/fujitsu/Makefile.am, camlibs/fujitsu/README,
+	camlibs/fujitsu/fujitsu.c, camlibs/fujitsu/fujitsu.h,
+	libgphoto2/cache.c, libgphoto2/cache.h, libgphoto2/core.c,
+	frontends/Makefile.am, frontends/command-line/Makefile.am,
+	frontends/command-line/interface.c,
+	frontends/command-line/interface.h, frontends/command-line/main.c,
+	frontends/command-line/main.h, libgphoto2/Makefile.am,
+	libgphoto2/TODO, libgphoto2/core.h, libgphoto2/helpers.c,
+	libgphoto2/helpers.h, libgphoto2/library.c, libgphoto2/library.h,
+	libgphoto2/settings.c, libgphoto2/settings.h, libgphoto2/util.c,
+	libgphoto2/util.h, frontends/command-line/gphoto2: Initial revision
+
+2000-06-16 14:48  scottf
+
+	* AUTHORS, COPYING, ChangeLog, INSTALL, Makefile.am, NEWS, NOTES,
+	OVERVIEW, README, TODO, autogen.sh, configure.in,
+	include/gphoto-core.h, include/gphoto-datatypes.h,
+	include/gphoto-interface.h, camlibs/Makefile.am,
+	camlibs/barbie/Makefile.am, camlibs/barbie/README,
+	camlibs/directory/Makefile.am, camlibs/directory/directory.c,
+	camlibs/directory/directory.h, include/Makefile.am,
+	include/gphoto-library.h, include/gphoto2.h,
+	camlibs/barbie/barbie.c, camlibs/barbie/barbie.h,
+	camlibs/barbie/compile, camlibs/barbie/main.c,
+	camlibs/fujitsu/Makefile.am, camlibs/fujitsu/README,
+	camlibs/fujitsu/fujitsu.c, camlibs/fujitsu/fujitsu.h,
+	libgphoto2/cache.c, libgphoto2/cache.h, libgphoto2/core.c,
+	frontends/Makefile.am, frontends/command-line/Makefile.am,
+	frontends/command-line/interface.c,
+	frontends/command-line/interface.h, frontends/command-line/main.c,
+	frontends/command-line/main.h, libgphoto2/Makefile.am,
+	libgphoto2/TODO, libgphoto2/core.h, libgphoto2/helpers.c,
+	libgphoto2/helpers.h, libgphoto2/library.c, libgphoto2/library.h,
+	libgphoto2/settings.c, libgphoto2/settings.h, libgphoto2/util.c,
+	libgphoto2/util.h, frontends/command-line/gphoto2: gPhoto2: digital
+	camera access libraries and application
+
