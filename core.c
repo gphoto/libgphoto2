@@ -64,10 +64,18 @@ static char *result_string[] = {
         /* GP_ERROR_FILE_NOT_FOUND      */      N_("File not found")
 };
 
+static int have_initted = 0;
+
 int gp_init (int debug)
 {
         char buf[1024];
         int x;
+
+	if (have_initted) {
+		gp_debug_printf(GP_DEBUG_LOW, "core",
+			"Attempt to init gphoto2 a second time");
+		return GP_ERROR;
+	}
 
         glob_debug = debug;
 
@@ -109,7 +117,14 @@ int gp_init (int debug)
                 gp_debug_printf(GP_DEBUG_LOW, "core", "Initializing the gPhoto IO library (libgpio)");
         }
 
+	have_initted = 1;
         return (GP_OK);
+}
+
+int 
+gp_is_initialized (void)
+{
+	return have_initted;
 }
 
 int gp_exit ()
