@@ -31,7 +31,7 @@ gp_gamma_correct_triple (unsigned char *table_red,
 			 unsigned char *table_blue,
 			 unsigned char *data, unsigned int size)
 {
-	int x;
+	unsigned int x;
 
 	for (x = 0; x < (size * 3); x += 3) {
 		data[x + 0] = table_red  [data[x + 0]];
@@ -52,7 +52,7 @@ gp_gamma_correct_single (unsigned char *table, unsigned char *data,
 int
 gp_gamma_fill_table (unsigned char *table, double g)
 {
-	int x;
+	unsigned int x;
 
 	for (x = 0; x < 256; x++)
 		table[x] = 255 * pow ((double) x/255., g);
