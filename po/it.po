@@ -4,13 +4,12 @@
 # Marco Colombo <m.colombo@ed.ac.uk>, 2005.
 # Daniele Medri <madrid@linux.it>, 2000.
 #
-# FIXME: vendor???
 msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2 2.1.5\n"
 "Report-Msgid-Bugs-To: <gphoto-translation@lists.sourceforge.net>\n"
 "POT-Creation-Date: 2005-02-08 12:57+0100\n"
-"PO-Revision-Date: 2005-02-07 20:36+0000\n"
+"PO-Revision-Date: 2005-02-18 14:09+0000\n"
 "Last-Translator: Marco Colombo <m.colombo@ed.ac.uk>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
 "MIME-Version: 1.0\n"
@@ -33,6 +32,10 @@ msgid ""
 "Number of hi-res PICs = %i\n"
 "Number of PICs = %i\n"
 msgstr ""
+"La fotocamera USB ha un chipset Aox.\n"
+"Numero di foto in bassa risoluzione: %i\n"
+"Numero di foto in alta risoluzione:  %i\n"
+"Numero di foto: %i\n"
 
 #: camlibs/aox/library.c:119
 msgid ""
@@ -124,10 +127,12 @@ msgstr ""
 msgid ""
 "canon_int_list_dir: Reached end of packet while examining the first dirent"
 msgstr ""
+"canon_int_list_dir: fine del pacchetto raggiunta mentre si esaminava la "
+"prima voce di directory"
 
 #: camlibs/canon/canon.c:1898
 msgid "canon_int_list_dir: truncated directory entry encountered"
-msgstr ""
+msgstr "canon_int_list_dir: incontrata una voce di directory troncata"
 
 #: camlibs/canon/canon.c:2210
 msgid "File protected."
@@ -135,11 +140,11 @@ msgstr "File protetto."
 
 #: camlibs/canon/canon.c:2281
 msgid "Could not extract JPEG thumbnail from data: Data is not JFIF"
-msgstr "Impossibile estrarre miniatura JPED dai dati: i dati non sono JFIF"
+msgstr "Impossibile estrarre miniatura JPEG dai dati: i dati non sono JFIF"
 
 #: camlibs/canon/canon.c:2306
 msgid "Could not extract JPEG thumbnail from data: No beginning/end"
-msgstr ""
+msgstr "Impossibile estrarre miniatura JPEG dai dati: inizio/fine mancante"
 
 #: camlibs/canon/canon.h:144 camlibs/canon/canon.h:158
 #, c-format
@@ -316,6 +321,8 @@ msgid ""
 "Could not upload, no free folder name available!\n"
 "999CANON folder name exists and has an AUT_9999.JPG picture in it."
 msgstr ""
+"Impossibile fare il caricamento, nessun nome di cartella disponibile!\n"
+"La cartella 999CANON esiste e contiene un'immagine AUT_9999.JPG."
 
 #: camlibs/canon/library.c:1111 camlibs/canon/library.c:1217
 msgid "Could not create \\DCIM directory."
@@ -409,10 +416,12 @@ msgstr "Tipo di porta %i = 0x%x non gestito. Initializzazione impossibile."
 msgid "Battery exhausted, camera off."
 msgstr "Batteria esaurita, fotocamera spenta."
 
+# FIXME UPSTREAM: missing final '.'
 #: camlibs/canon/serial.c:702
 msgid "ERROR: unexpected message"
-msgstr "ERRORE: messaggio inatteso"
+msgstr "ERRORE: messaggio inatteso."
 
+# FIXME UPSTREAM: missing final '.'
 #: camlibs/canon/serial.c:712
 msgid "ERROR: message overrun"
 msgstr ""
@@ -439,7 +448,7 @@ msgstr "Caricamento del file in corso..."
 
 #: camlibs/canon/serial.c:1053 camlibs/digita/digita.c:256
 msgid "Getting file..."
-msgstr ""
+msgstr "Lettura del file in corso..."
 
 #: camlibs/canon/serial.c:1123
 msgid ""
@@ -486,7 +495,7 @@ msgstr "Reimpostazione del protocollo in corso..."
 
 #: camlibs/canon/serial.c:1313
 msgid "Camera OK.\n"
-msgstr ""
+msgstr "Fotocamera OK.\n"
 
 #: camlibs/canon/serial.c:1326
 msgid "Looking for camera ..."
@@ -512,7 +521,7 @@ msgstr "Risposta non riconosciuta"
 #: camlibs/canon/serial.c:1378
 #, c-format
 msgid "Detected a \"%s\" aka \"%s\""
-msgstr ""
+msgstr "Rilevata una \"%s\" ovvero \"%s\""
 
 #: camlibs/canon/serial.c:1386
 #, c-format
@@ -553,7 +562,7 @@ msgstr "Connesso alla fotocamera"
 
 #: camlibs/canon/serial.c:1504
 msgid "ERROR: a fatal error condition was detected, can't continue "
-msgstr ""
+msgstr "ERRORE: rilevata condizione di errore fatale, impossibile continuare "
 
 #: camlibs/canon/serial.c:1520
 #, c-format
@@ -562,7 +571,7 @@ msgstr "ERRORE: %d è troppo grande"
 
 #: camlibs/canon/serial.c:1530
 msgid "Getting thumbnail..."
-msgstr ""
+msgstr "Lettura miniatura..."
 
 # FIXME: femminile?
 #: camlibs/canon/usb.c:82
@@ -582,14 +591,13 @@ msgid "Camera was woken up"
 msgstr ""
 
 #: camlibs/canon/usb.c:111
-#, fuzzy
 msgid "Unknown (some kind of error)"
-msgstr "Errore sconosciuto nella libreria della fotocamera"
+msgstr "Sconosciuto (qualche tipo di errore)"
 
 #: camlibs/canon/usb.c:112
 #, c-format
 msgid "Initial camera response '%c' unrecognized"
-msgstr ""
+msgstr "Risposta iniziale '%c' della fotocamera non riconosciuta"
 
 #: camlibs/canon/usb.c:126
 #, c-format
@@ -655,6 +663,8 @@ msgid ""
 "canon_usb_unlock_keys: Unexpected amount of data returned (%i bytes, "
 "expected %i)"
 msgstr ""
+"canon_usb_unlock_keys: quantità inattesa di dati restituiti (%i byte, attesi "
+"%i)"
 
 #: camlibs/canon/usb.c:510
 #, c-format
@@ -727,6 +737,8 @@ msgid ""
 "canon_usb_set_file_attributes: canon_usb_dialogue returned error status 0x%"
 "08x from camera"
 msgstr ""
+"canon_usb_set_file_attributes: canon_usb_dialogue ha restituito lo stato di "
+"errore 0x%08x dalla fotocamera"
 
 #: camlibs/canon/usb.c:1492
 #, c-format
@@ -1267,7 +1279,7 @@ msgid ""
 msgstr ""
 
 #: camlibs/gsmart300/library.c:199
-#, fuzzy, c-format
+#, c-format
 msgid "Unsupported port type: %d. This driver only works with USBcameras.\n"
 msgstr ""
 "Tipo di porta non gestito: %d. Questo driver funziona solo con fotocamere "
@@ -1408,6 +1420,10 @@ msgid ""
 "Camera Library for the Kodak DC120 camera.\n"
 "(by popular demand)."
 msgstr ""
+"Libreria per la fotocamera Kodak DC120\n"
+"Scott Fritzinger <scottf@gphoto.net>\n"
+"Libreria per la fotocamera Kodak DC120.\n"
+"(a grande richiesta)."
 
 #: camlibs/kodak/dc120/library.c:122 camlibs/kodak/dc210/library.c:441
 #: camlibs/kodak/dc240/library.c:316 camlibs/panasonic/dc1000.c:422
@@ -1559,7 +1575,7 @@ msgstr "Nessuno"
 
 #: camlibs/kodak/dc210/dc210.c:269 camlibs/kodak/dc210/dc210.c:422
 msgid "Red eye flash"
-msgstr ""
+msgstr "Riduzione occhi rossi"
 
 #: camlibs/kodak/dc210/dc210.c:271 camlibs/kodak/dc210/dc210.c:275
 #: camlibs/konica/library.c:683 camlibs/konica/library.c:690
@@ -1664,6 +1680,8 @@ msgid ""
 "Camera Library for the Kodak DC215 Zoom camera.\n"
 "Michael Koltan <koltan@gmx.de>\n"
 msgstr ""
+"Libreria per la fotocamera Kodak DC215 Zoom.\n"
+"Michael Koltan <koltan@gmx.de>\n"
 
 #: camlibs/kodak/dc210/library.c:349
 msgid "Waiting..."
@@ -1724,6 +1742,11 @@ msgid ""
 "Camera Library for the Kodak DC240, DC280, DC3400 and DC5000 cameras.\n"
 "Rewritten and updated for gPhoto2."
 msgstr ""
+"Libreria per la fotocamera Kodak DC240\n"
+"Scott Fritzinger <scottf@gphoto.net> e Hubert Figuiere <hfiguiere@teaser."
+"fr>\n"
+"Libreria per le fotocamere Kodak DC240, DC280, DC3400 e DC5000.\n"
+"Riscritto e aggiornato per gPhoto2."
 
 #: camlibs/kodak/dc240/library.c:573
 msgid "Weak"
@@ -1735,11 +1758,11 @@ msgstr ""
 
 #: camlibs/kodak/dc240/library.c:581 camlibs/kodak/dc240/library.c:596
 msgid "Invalid"
-msgstr ""
+msgstr "Non valido"
 
 #: camlibs/kodak/dc240/library.c:588
 msgid "Not used"
-msgstr ""
+msgstr "Non usato"
 
 #: camlibs/kodak/dc240/library.c:591
 msgid "In use"
@@ -1800,6 +1823,8 @@ msgid ""
 "Your USB camera is a Kodak EZ200.\n"
 "Number of PICs = %i\n"
 msgstr ""
+"La fotocamera USB è una Kodak EZ200.\n"
+"Numero di immagini: %i\n"
 
 #: camlibs/kodak/ez200/library.c:124
 msgid ""
@@ -1867,7 +1892,7 @@ msgstr "Immagine protetta."
 
 #: camlibs/konica/konica.c:104
 msgid "Light too dark."
-msgstr ""
+msgstr "Troppo poca luce."
 
 #: camlibs/konica/konica.c:107
 msgid "Autofocus error."
@@ -1887,11 +1912,11 @@ msgstr "Il comando non può essere annullato."
 
 #: camlibs/konica/konica.c:119
 msgid "Localization data too long."
-msgstr ""
+msgstr "Dati di localizzazione troppo lunghi."
 
 #: camlibs/konica/konica.c:122
 msgid "Localization data corrupt."
-msgstr ""
+msgstr "Dati di localizzazione danneggiati."
 
 #: camlibs/konica/konica.c:125
 msgid "Unsupported command."
@@ -2000,11 +2025,11 @@ msgstr ""
 #: camlibs/konica/library.c:704 camlibs/konica/library.c:915
 #: camlibs/konica/qm150.c:769
 msgid "Auto Off Time"
-msgstr ""
+msgstr "Tempo di spegnimento automatico"
 
 #: camlibs/konica/library.c:711 camlibs/konica/library.c:923
 msgid "Slide Show Interval"
-msgstr ""
+msgstr "Intervallo presentazione"
 
 #: camlibs/konica/library.c:718 camlibs/konica/library.c:932
 #: camlibs/konica/qm150.c:777 camlibs/ricoh/library.c:495
@@ -2089,12 +2114,12 @@ msgstr "Impostazioni persistenti"
 #: camlibs/konica/library.c:1026 camlibs/konica/qm150.c:858
 #: camlibs/konica/qm150.c:868
 msgid "On, red-eye reduction"
-msgstr ""
+msgstr "Acceso, riduzione occhi rossi"
 
 #: camlibs/konica/library.c:784 camlibs/konica/library.c:796
 #: camlibs/konica/qm150.c:860 camlibs/konica/qm150.c:875
 msgid "Auto, red-eye reduction"
-msgstr ""
+msgstr "Automatico, riduzione occhi rossi"
 
 #: camlibs/konica/library.c:811 camlibs/konica/library.c:1045
 #: camlibs/konica/qm150.c:941
@@ -2153,7 +2178,7 @@ msgstr ""
 
 #: camlibs/konica/qm150.c:252
 msgid "This preview doesn't exist."
-msgstr ""
+msgstr "Questa anteprima non esiste."
 
 #: camlibs/konica/qm150.c:284
 msgid "Data has been corrupted."
@@ -2338,7 +2363,7 @@ msgstr "GG/MM/AAAA"
 #: camlibs/konica/qm150.c:1162
 #, c-format
 msgid "YYYY/MM/DD"
-msgstr ""
+msgstr "AAAA/MM/GG"
 
 #: camlibs/konica/qm150.c:1166
 #, c-format
@@ -2398,6 +2423,10 @@ msgid ""
 "\n"
 "Handles Largan Lmini camera.\n"
 msgstr ""
+"Driver per Largan\n"
+"Hubert Figuiere <hfiguiere@teaser.fr>\n"
+"\n"
+"Gestisce la fotocamera Largan Lmini.\n"
 
 #: camlibs/mars/library.c:112
 #, c-format
@@ -2436,6 +2465,8 @@ msgid ""
 "Mars MR97310 camera library\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
 msgstr ""
+"Libreria per la fotocamera Mars MR97310\n"
+"Theodore Kilgore <kilgota@auburn.edu>\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:270
 #, c-format
@@ -2488,7 +2519,7 @@ msgstr "No"
 #: camlibs/sierra/sierra.c:1544 camlibs/sierra/sierra.c:1551
 #: camlibs/sierra/sierra.c:1756
 msgid "Fine"
-msgstr ""
+msgstr "Fine"
 
 #: camlibs/minolta/dimagev/dimagev.c:305 camlibs/sierra/sierra.c:861
 #: camlibs/sierra/sierra.c:868 camlibs/sierra/sierra.c:1197
@@ -2602,30 +2633,34 @@ msgid ""
 "Gus Hartmann <gphoto@gus-the-cat.org>\n"
 "Special thanks to Minolta for the spec."
 msgstr ""
+"Libreria per la fotocamera Minolta Dimage V\n"
+"%s\n"
+"Gus Hartmann <gphoto@gus-the-cat.org>\n"
+"Un ringraziamento speciale a Minolta per le specifiche."
 
 #: camlibs/mustek/core.c:575
 msgid "FlashLight : Auto (RedEye Reduction)"
-msgstr ""
+msgstr "Flash: automatico (riduzione occhi rossi)"
 
 #: camlibs/mustek/core.c:577
 msgid "FlashLight : Auto"
-msgstr ""
+msgstr "Flash: automatico"
 
 #: camlibs/mustek/core.c:579
 msgid "FlashLight : On (RedEye Reduction)"
-msgstr ""
+msgstr "Flash: acceso (riduzione occhi rossi)"
 
 #: camlibs/mustek/core.c:581
 msgid "FlashLight : On"
-msgstr ""
+msgstr "Flash: acceso"
 
 #: camlibs/mustek/core.c:583
 msgid "FlashLight : Off"
-msgstr ""
+msgstr "Flash: spento"
 
 #: camlibs/mustek/core.c:585
 msgid "FlashLight : undefined"
-msgstr ""
+msgstr "Flash: non definito"
 
 #: camlibs/mustek/mdc800.c:232
 msgid "Summary for Mustek MDC800:\n"
@@ -2666,6 +2701,10 @@ msgid ""
 "Ported to gphoto2 by Marcus Meissner <marcus@jet.franken.de>\n"
 "Supports Serial and USB Protocol."
 msgstr ""
+"Libreria di gPhoto2 per Mustek MDC-800\n"
+"Henning Zabel <henning@uni-paderborn.de>\n"
+"Portato su gphoto2 da Marcus Meissner <marcus@jet.franken.de>\n"
+"Gestisce i protocolli seriale e USB."
 
 #: camlibs/panasonic/coolshot/coolshot.c:264
 msgid "coolshot library v"
@@ -2722,6 +2761,12 @@ msgid ""
 "Fredrik Roubert <roubert@df.lth.se> and\n"
 "Galen Brooks <galen@nine.com>."
 msgstr ""
+"Libreria di gPhoto per Panasonic DC1000\n"
+"Mariusz Zynel <mariusz@mizar.org>\n"
+"\n"
+"Basato sul programma dc1000 scritto da\n"
+"Fredrik Roubert <roubert@df.lth.se> e\n"
+"Galen Brooks <galen@nine.com>."
 
 #: camlibs/panasonic/dc1580.c:526
 #, c-format
@@ -2737,6 +2782,12 @@ msgid ""
 "Fredrik Roubert <roubert@df.lth.se> and\n"
 "Galen Brooks <galen@nine.com>."
 msgstr ""
+"Libreria di gPhoto per Panasonic DC1580\n"
+"Mariusz Zynel <mariusz@mizar.org>\n"
+"\n"
+"Basato sul programma dc1000 scritto da\n"
+"Fredrik Roubert <roubert@df.lth.se> e\n"
+"Galen Brooks <galen@nine.com>."
 
 #: camlibs/panasonic/l859/l859.c:503
 #, c-format
@@ -3063,7 +3114,7 @@ msgstr ""
 
 #: camlibs/ptp2/library.c:132
 msgid "PTP Object Write Protected"
-msgstr ""
+msgstr "PTP Oggetto protetto da scrittura"
 
 #: camlibs/ptp2/library.c:133
 msgid "PTP Store Read Only"
@@ -3107,7 +3158,7 @@ msgstr ""
 
 #: camlibs/ptp2/library.c:145
 msgid "PTP Capture Already Terminated"
-msgstr ""
+msgstr "PTP Cattura già completata"
 
 #: camlibs/ptp2/library.c:146
 msgid "PTP Device Busy"
@@ -3159,7 +3210,7 @@ msgstr "PTP Errore di I/O"
 
 #: camlibs/ptp2/library.c:160
 msgid "PTP Error: bad parameter"
-msgstr ""
+msgstr "PTP Errore: parametro non corretto"
 
 #: camlibs/ptp2/library.c:161
 msgid "PTP Protocol error, data expected"
@@ -3224,7 +3275,7 @@ msgstr ""
 #: camlibs/ptp2/library.c:1229
 #, c-format
 msgid "unexpected datatype %i"
-msgstr ""
+msgstr "tipo di dati %i inatteso"
 
 #: camlibs/ptp2/library.c:1238 camlibs/ptp2/ptp.c:1975
 #: camlibs/sierra/olympus-desc.c:490
@@ -3428,7 +3479,7 @@ msgstr ""
 
 #: camlibs/ptp2/ptp.c:1486
 msgid "PTP: Object Write Protected"
-msgstr ""
+msgstr "PTP: Oggetto protetto da scrittura"
 
 #: camlibs/ptp2/ptp.c:1487
 msgid "PTP: Store Read Only"
@@ -3534,11 +3585,9 @@ msgstr "PTP: Errore di protocollo, dati attesi"
 msgid "PTP: Protocol error, response expected"
 msgstr "PTP: Errore di protocollo, risposta attesa"
 
-# FIXME UPSTREAM: ':' missing
 #: camlibs/ptp2/ptp.c:1534
-#, fuzzy
 msgid "Undefined PTP Property"
-msgstr "PTP: Proprietà non definita"
+msgstr "Proprietà PTP non definita"
 
 #: camlibs/ptp2/ptp.c:1535
 msgid "Battery Level"
@@ -4125,14 +4174,13 @@ msgstr ""
 
 #: camlibs/ptp2/ptp.c:1922
 msgid "RAW"
-msgstr ""
+msgstr "RAW"
 
 #: camlibs/ptp2/ptp.c:1923
 msgid "RAW + JPEG Basic"
 msgstr ""
 
 #: camlibs/ptp2/ptp.c:1925
-#, fuzzy
 msgid "Incadescent"
 msgstr "Incandescente"
 
@@ -4145,7 +4193,7 @@ msgstr "Predefinito"
 #: camlibs/sierra/sierra.c:1270 camlibs/sierra/sierra.c:1473
 #: camlibs/sierra/sierra.c:1482 camlibs/sierra/sierra.c:1709
 msgid "Red-eye Reduction"
-msgstr ""
+msgstr "Riduzione occhi rossi"
 
 #: camlibs/ptp2/ptp.c:1934
 msgid "Red-eye Reduction + Slow Sync"
@@ -4185,24 +4233,24 @@ msgstr ""
 #: camlibs/ptp2/ptp.c:1947 camlibs/sierra/nikon-desc.c:459
 #: camlibs/sierra/olympus-desc.c:627
 msgid "Matrix"
-msgstr ""
+msgstr "Matrice"
 
 #: camlibs/ptp2/ptp.c:1948 camlibs/sierra/nikon-desc.c:458
 #: camlibs/sierra/olympus-desc.c:626
 msgid "Spot"
-msgstr ""
+msgstr "Spot"
 
 #: camlibs/ptp2/ptp.c:1954
 msgid "Portrait"
-msgstr ""
+msgstr "Ritratto"
 
 #: camlibs/ptp2/ptp.c:1955
 msgid "Landscape"
-msgstr ""
+msgstr "Paesaggio"
 
 #: camlibs/ptp2/ptp.c:1957
 msgid "Sports"
-msgstr ""
+msgstr "Sport"
 
 #: camlibs/ptp2/ptp.c:1958
 msgid "Night Landscape"
@@ -4310,12 +4358,12 @@ msgstr ""
 #: camlibs/ricoh/g3.c:513
 #, c-format
 msgid "Camera time: %s %s\n"
-msgstr ""
+msgstr "Orario fotocamera: %s %s\n"
 
 #: camlibs/ricoh/g3.c:519
 #, c-format
 msgid "Camera ID: %s\n"
-msgstr ""
+msgstr "ID Fotocamera: %s\n"
 
 #: camlibs/ricoh/g3.c:525
 #, c-format
@@ -4573,6 +4621,8 @@ msgstr "Si è verificato un errore sconosciuto. Contattare %s."
 msgid ""
 "The filename's length must not exceed 12 characters ('%s' has %i characters)."
 msgstr ""
+"La lunghezza del nome del file non può superare 12 caratteri (\"%s\" ha %i "
+"caratteri)."
 
 #: camlibs/samsung/samsung.c:243
 msgid ""
@@ -4612,7 +4662,7 @@ msgstr "Impostazioni del flash"
 #: camlibs/sierra/epson-desc.c:171 camlibs/sierra/sierra.c:1500
 #: camlibs/sierra/sierra.c:1507 camlibs/sierra/sierra.c:1727
 msgid "Custom"
-msgstr ""
+msgstr "Personalizzato"
 
 #: camlibs/sierra/epson-desc.c:193 camlibs/sierra/olympus-desc.c:560
 msgid "Host power save (seconds)"
@@ -4696,7 +4746,7 @@ msgstr ""
 
 #: camlibs/sierra/library.c:295
 msgid "Cannot retrieve the battery capacity"
-msgstr ""
+msgstr "Impossibile recuperare la capacità della batteria"
 
 #: camlibs/sierra/library.c:301
 #, c-format
@@ -4798,7 +4848,7 @@ msgstr "B/N"
 #: camlibs/sierra/nikon-desc.c:203 camlibs/sierra/olympus-desc.c:397
 #: camlibs/sierra/olympus-desc.c:414
 msgid "Anti-redeye"
-msgstr ""
+msgstr "Riduzione occhi rossi"
 
 #: camlibs/sierra/nikon-desc.c:204
 msgid "Slow-sync"
@@ -4869,7 +4919,7 @@ msgstr ""
 
 #: camlibs/sierra/nikon-desc.c:460
 msgid "Spot-AF"
-msgstr ""
+msgstr "Spot-AF"
 
 #: camlibs/sierra/nikon-desc.c:465 camlibs/sierra/olympus-desc.c:632
 msgid "Exposure Metering"
@@ -5227,7 +5277,7 @@ msgstr "%sProduttore: %s\n"
 #: camlibs/sierra/sierra.c:1888
 #, c-format
 msgid "%sCamera ID: %s\n"
-msgstr ""
+msgstr "%sID Fotocamera: %s\n"
 
 #: camlibs/sierra/sierra.c:1890
 #, c-format
@@ -5237,7 +5287,7 @@ msgstr "%sNumero di serie: %s\n"
 #: camlibs/sierra/sierra.c:1892
 #, c-format
 msgid "%sSoftware Rev.: %s\n"
-msgstr ""
+msgstr "%sRevisione software: %s\n"
 
 #: camlibs/sierra/sierra.c:1897 camlibs/sierra/sierra.c:1900
 #, c-format
@@ -5337,7 +5387,7 @@ msgid ""
 msgstr ""
 "SiPix Web2\n"
 "Marcus Meissner <marcus@jet.franken.de>\n"
-"Driver per acceere alla fotocamera SiPix Web2."
+"Driver per accedere alla fotocamera SiPix Web2."
 
 #: camlibs/smal/smal.c:168
 msgid ""
@@ -5438,6 +5488,8 @@ msgid ""
 "FLASH:\n"
 " Files: %d\n"
 msgstr ""
+"FLASH:\n"
+" File: %d\n"
 
 #: camlibs/spca50x/library.c:278
 #, c-format
@@ -5519,7 +5571,7 @@ msgstr ""
 
 #: camlibs/stv0680/library.c:354 camlibs/stv0680/library.c:388
 msgid "Bad exposure (not enough light probably)"
-msgstr ""
+msgstr "Cattiva esposizione (probabilmente non abbastanza luce)"
 
 #: camlibs/stv0680/library.c:518
 msgid "Information for STV0680 based camera:\n"
@@ -5633,7 +5685,7 @@ msgstr ""
 #: camlibs/sx330z/library.c:139
 #, c-format
 msgid "Getting information on %i files..."
-msgstr ""
+msgstr "Lettura informazioni su %i file in corso..."
 
 #: camlibs/sx330z/library.c:253
 msgid ""
@@ -5743,6 +5795,8 @@ msgstr "Il percorso \"%s\" non è assoluto."
 #, c-format
 msgid "Could not append folder '%s' as this folder already exists."
 msgstr ""
+"Impossibile accodare la cartella \"%s\", dato che questa cartella esiste di "
+"già."
 
 #: libgphoto2/gphoto2-filesys.c:577
 #, c-format
@@ -5857,6 +5911,8 @@ msgstr ""
 #: libgphoto2/gphoto2-filesys.c:2346
 msgid "Read-only file attributes like width and height can not be changed."
 msgstr ""
+"Attributi di sola lettura del file, come larghezza e altezza, non possono "
+"essere modificati."
 
 #: libgphoto2/gphoto2-result.c:44
 msgid "Corrupted data"
@@ -5884,7 +5940,7 @@ msgstr "La directory esiste"
 
 #: libgphoto2/gphoto2-result.c:50
 msgid "I/O in progress"
-msgstr ""
+msgstr "I/O in avanzamento"
 
 #: libgphoto2/gphoto2-result.c:51
 msgid "Path not absolute"
@@ -5901,6 +5957,7 @@ msgstr "La fotocamera non ha potuto completare l'operazione"
 #: libgphoto2/gphoto2-result.c:54
 msgid "OS error in camera communication"
 msgstr ""
+"Errore del sistema operativo durante la comunicazione con la fotocamera"
 
 #: libgphoto2/gphoto2-result.c:79
 msgid "Unknown camera library error"
@@ -5910,53 +5967,54 @@ msgstr "Errore sconosciuto nella libreria della fotocamera"
 msgid "Unknown error"
 msgstr "Errore sconosciuto"
 
-#~ msgid "Could not find any driver for '%s' / '%s'"
-#~ msgstr "Impossibile trovare alcun driver per \"%s\" / \"%s\""
+#, fuzzy
+msgid "Could not find any driver for '%s' / '%s'"
+msgstr "Impossibile trovare alcun driver per \"%s\""
 
 #, fuzzy
-#~ msgid "Camera settings"
-#~ msgstr "Impostazioni fotocamera"
+msgid "Camera settings"
+msgstr "Impostazioni fotocamera"
 
 #, fuzzy
-#~ msgid "No thumbnail could be found for %s"
-#~ msgstr "Nessun file audio è stato trovato per %s"
+msgid "No thumbnail could be found for %s"
+msgstr "Nessun file audio è stato trovato per %s"
 
 #, fuzzy
-#~ msgid ""
-#~ "Expected %i, got %i. Please report this error to <gphoto-devel@lists."
-#~ "sourceforge.net>."
-#~ msgstr "Previsto %i, ricevuto %i. Segnalare questo errore a %s."
+msgid ""
+"Expected %i, got %i. Please report this error to <gphoto-devel@lists."
+"sourceforge.net>."
+msgstr "Previsto %i, ricevuto %i. Segnalare questo errore a %s."
 
 #, fuzzy
-#~ msgid ""
-#~ "Expected %i bytes, got %i. Please report this error to <gphoto-"
-#~ "devel@lists.sourceforge.net>."
-#~ msgstr "Previsti %i byte, ricevuti %i. Segnalare questo errore a %s."
+msgid ""
+"Expected %i bytes, got %i. Please report this error to <gphoto-devel@lists."
+"sourceforge.net>."
+msgstr "Previsti %i byte, ricevuti %i. Segnalare questo errore a %s."
 
 #, fuzzy
-#~ msgid ""
-#~ "Communication error even after 2 retries. Please contact <gphoto-"
-#~ "devel@lists.sourceforge.net>."
-#~ msgstr "Errore di comunicazione anche dopo 2 tentativi. Contattare %s."
+msgid ""
+"Communication error even after 2 retries. Please contact <gphoto-devel@lists."
+"sourceforge.net>."
+msgstr "Errore di comunicazione anche dopo 2 tentativi. Contattare %s."
 
 #, fuzzy
-#~ msgid "Could not identify camera based on name \"%s\""
-#~ msgstr "Impossibile leggere il nome del disco: %s"
+msgid "Could not identify camera based on name \"%s\""
+msgstr "Impossibile leggere il nome del disco: %s"
 
 #, fuzzy
-#~ msgid "Driver Configuration"
-#~ msgstr "Configurazione fotocamera"
+msgid "Driver Configuration"
+msgstr "Configurazione fotocamera"
 
 #, fuzzy
-#~ msgid "Not implemented!"
-#~ msgstr "Manuale non ancora implementato"
+msgid "Not implemented!"
+msgstr "Manuale non ancora implementato"
 
-# FIXME UPSTREAM: space before 'This'
-#~ msgid "Unsupported port type: %d.This driver only works with USBcameras.\n"
-#~ msgstr ""
-#~ "Tipo di porta non gestito: %d. Questo driver funziona solo con fotocamere "
-#~ "USB.\n"
+#, fuzzy
+msgid "Unsupported port type: %d.This driver only works with USBcameras.\n"
+msgstr ""
+"Tipo di porta non gestito: %d. Questo driver funziona solo con fotocamere "
+"USB.\n"
 
-# FIXME UPSTREAM
-#~ msgid "Incadesent"
-#~ msgstr "Incadescente"
+#, fuzzy
+msgid "Incadesent"
+msgstr "Incandescente"
