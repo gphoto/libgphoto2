@@ -57,6 +57,9 @@ gp_cmd_capture_preview (Camera *camera, CameraFile *file)
 	aa_context *c;
 	aa_renderparams *params;
 
+	/* We don't want status messages on our screen */
+	gp_camera_set_status_func (camera, NULL, NULL);
+
 	c = aa_autoinit (&aa_defparams);
 	if (!c)
 		return (GP_ERROR);
@@ -153,7 +156,7 @@ gp_cmd_capture_preview (Camera *camera, CameraFile *file)
 			aa_scrwidth (c), aa_scrheight (c));
 		aa_flush (c);
 		
-		event = aa_getevent (c, 1);
+		event = aa_getevent (c, 0);
 		switch (event) {
 		case 105:
 			/* i */
@@ -184,6 +187,7 @@ gp_cmd_capture_preview (Camera *camera, CameraFile *file)
 			aa_resize (c);
 			aa_flush (c);
 			break;
+		case AA_NONE:
 		case 32:
 			/* Space */
 			result = gp_camera_capture_preview (camera, file);
