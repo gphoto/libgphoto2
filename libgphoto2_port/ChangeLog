@@ -1,3 +1,10 @@
+2003-12-11  Lutz Mueller <lutz@users.sourceforge.net>
+
+	Patch by Andreas Burmester <a.burmester@hamburg.de>:
+
+	* serial/unix.c: Do not verify the speed change if we set the 
+	  speed to 0.
+
 2003-08-16  Patrick Mansfield <patmans@users.sourceforge.net>
 
 	* usb/libusb.c: change the mass storage check to output a debug

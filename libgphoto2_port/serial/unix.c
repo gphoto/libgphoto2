@@ -888,15 +888,20 @@ gp_port_serial_check_speed (GPPort *dev)
 	 * Verify if the speed change has been successful.
 	 * This is needed because some Solaris systems just ignore unsupported
 	 * speeds (like 115200) instead of complaining.
+	 *
+	 * Only perform the check if we really changed to some speed.
 	 */
-	if (tcgetattr (dev->pl->fd, &tio)) {
-		GP_DEBUG ("Error on 'tcgetattr'.");
-		return (GP_ERROR_IO_SERIAL_SPEED);
-	}
-	if ((cfgetispeed (&tio) != speed) || (cfgetospeed (&tio) != speed)) {
-		GP_DEBUG ("Cannot set baudrate to %d...",
-			  dev->settings.serial.speed);
-		return (GP_ERROR_NOT_SUPPORTED);
+	if (speed != B0) {
+		if (tcgetattr (dev->pl->fd, &tio)) {
+			GP_DEBUG ("Error on 'tcgetattr'.");
+			return (GP_ERROR_IO_SERIAL_SPEED);
+		}
+		if ((cfgetispeed (&tio) != speed) ||
+		    (cfgetospeed (&tio) != speed)) {
+			GP_DEBUG ("Cannot set baudrate to %d...",
+				  dev->settings.serial.speed);
+			return (GP_ERROR_NOT_SUPPORTED);
+		}
 	}
 
 #else /* !HAVE_TERMIOS_H */
