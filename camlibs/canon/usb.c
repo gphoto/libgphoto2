@@ -472,11 +472,11 @@ canon_usb_unlock_keys (Camera *camera, GPContext *context)
 			break;
 		default:
 			/* Your camera model does not need unlocking, cannot do unlocking or
-			 * we don't know how to unlock it's keys. If unlocking works when
-			 * using the Windows software with your camera, please contact
-			 * <gphoto-devel@gphoto.net>
+			 * we don't know how to unlock it's keys. 
 			 */
-			GP_DEBUG ("canon_usb_unlock_keys: Not unlocking the kind of camera you have.");
+			GP_DEBUG ("canon_usb_unlock_keys: Not unlocking the kind of camera you have.\n"
+				  "If unlocking works when using the Windows software with your camera,\n"
+				  "please contact %s.", MAIL_GPHOTO_DEVEL);
 			break;
 	}
 
