@@ -799,6 +799,8 @@ int camera_config_get (Camera *camera, CameraWidget **window)
 
         gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_config_get ***");
 	g_return_val_if_fail (camera != NULL, GP_ERROR);
+	g_return_val_if_fail (window != NULL, GP_ERROR);
+	g_return_val_if_fail (*window == NULL, GP_ERROR);
 
 	/* Get the current settings. */
 	konica_data = (konica_data_t *) camera->camlib_data;
@@ -1009,15 +1011,18 @@ int camera_config_get (Camera *camera, CameraWidget **window)
  
 int camera_config_set (Camera *camera, CameraWidget *window)
 {
-	CameraWidget *section, *widget_focus, *widget_self_timer, *widget;
-	guchar year, month, day, hour, minute, second;
+	CameraWidget*	section;
+	CameraWidget*	widget_focus;
+	CameraWidget*	widget_self_timer;
+	CameraWidget*	widget;
+	guchar 		year, month, day, hour, minute, second;
 	k_date_format_t date_format = K_DATE_FORMAT_YEAR_MONTH_DAY;
 	k_tv_output_format_t tv_output_format = K_TV_OUTPUT_FORMAT_HIDE;
-        gint j = 0;
-        guchar *data;
-        gulong data_size;
-	guchar focus_self_timer = 0;
-        konica_data_t *konica_data;
+        gint 		j = 0;
+        guchar*		data;
+        gulong 		data_size;
+	guchar 		focus_self_timer = 0;
+        konica_data_t*	konica_data;
 
         gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_config_set ***");
 	g_return_val_if_fail (camera != NULL, GP_ERROR);
@@ -1028,51 +1033,53 @@ int camera_config_set (Camera *camera, CameraWidget *window)
         /************************/
         /* Persistent Settings  */
         /************************/
-	section = gp_widget_child_by_label (window, "Persistent Settings");
+	g_assert ((section = gp_widget_child_by_label (window, "Persistent Settings")) != NULL);
 
 	/* Date & Time */
-	widget = gp_widget_child_by_label (section, "Date & Time");
-	if (gp_widget_changed (widget)) {
-		year = atoi (strtok (gp_widget_value_get (widget), "/"));
-		month = atoi (strtok (NULL, "/"));
-		day = atoi (strtok (NULL, "/"));
-		hour = atoi (strtok (NULL, " "));
-		minute = atoi (strtok (NULL, ":"));
-		second = atoi (strtok (NULL, ":"));
-		if (error_happened (camera, k_set_date_and_time (konica_data->device, year, month, day, hour, minute, second))) return (GP_ERROR);
-	}
+	g_assert ((widget = gp_widget_child_by_label (section, "Date & Time")) != NULL);
+//FIXME: Something's wrong here.
+//	if (gp_widget_changed (widget)) {
+//		year = atoi (strtok (gp_widget_value_get (widget), "/"));
+//		month = atoi (strtok (NULL, "/"));
+//		day = atoi (strtok (NULL, "/"));
+//		hour = atoi (strtok (NULL, " "));
+//		minute = atoi (strtok (NULL, ":"));
+//		second = atoi (strtok (NULL, ":"));
+//		if (error_happened (camera, k_set_date_and_time (konica_data->device, year, month, day, hour, minute, second))) return (GP_ERROR);
+//	}
 
 	/* Beep */
-	widget = gp_widget_child_by_label (section, "Beep");
+	g_assert ((widget = gp_widget_child_by_label (section, "Beep")) != NULL);
 	if (gp_widget_changed (widget)) {
 		if (strcmp (gp_widget_value_get (widget), "Off") == 0) j = 0;
-		else j = 1;
+		else if (strcmp (gp_widget_value_get (widget), "On") == 0) j = 1;
+		else g_assert_not_reached ();
 		if (error_happened (camera, k_set_preference (konica_data->device, K_PREFERENCE_BEEP, j))) return (GP_ERROR);
 	}
 
 	/* Self Timer Time */
-	widget = gp_widget_child_by_label (section, "Self Timer Time");
+	g_assert ((widget = gp_widget_child_by_label (section, "Self Timer Time")) != NULL);
 	if (gp_widget_changed (widget)) {
 		if (error_happened (camera, k_set_preference (konica_data->device, K_PREFERENCE_SELF_TIMER_TIME, (guint) atoi (gp_widget_value_get (widget))))) 
 			return (GP_ERROR);
 	}
 
 	/* Auto Off Time */
-	widget = gp_widget_child_by_label (section, "Auto Off Time");
+	g_assert ((widget = gp_widget_child_by_label (section, "Auto Off Time")) != NULL);
 	if (gp_widget_changed (widget)) {
 		if (error_happened (camera, k_set_preference (konica_data->device, K_PREFERENCE_AUTO_OFF_TIME, (guint) atoi (gp_widget_value_get (widget))))) 
 			return (GP_ERROR);
 	}
 
 	/* Slide Show Interval */
-	widget = gp_widget_child_by_label (section, "Slide Show Interval");
+	g_assert ((widget = gp_widget_child_by_label (section, "Slide Show Interval")) != NULL);
 	if (gp_widget_changed (widget)) {
 		if (error_happened (camera, k_set_preference (konica_data->device, K_PREFERENCE_SLIDE_SHOW_INTERVAL, (guint) atoi (gp_widget_value_get (widget))))) 
 			return (GP_ERROR);
 	}
 
 	/* Resolution */
-	widget = gp_widget_child_by_label (section, "Resolution");
+	g_assert ((widget = gp_widget_child_by_label (section, "Resolution")) != NULL);
 	if (gp_widget_changed (widget)) {
 		if (strcmp (gp_widget_value_get (widget), "High (1152 x 872)") == 0) j = 1;
                 else if (strcmp (gp_widget_value_get (widget), "Low (576 x 436)") == 0) j = 3;
@@ -1083,10 +1090,10 @@ int camera_config_set (Camera *camera, CameraWidget *window)
         /****************/
         /* Localization */
         /****************/
-	section = gp_widget_child_by_label (section, "Localization");
+	g_assert ((section = gp_widget_child_by_label (window, "Localization")) != NULL);
 
 	/* Localization File */
-	widget = gp_widget_child_by_label (section, "Localization File");
+	g_assert ((widget = gp_widget_child_by_label (section, "Localization File")) != NULL);
 	if (gp_widget_changed (widget)) {
 	        if (strcmp (gp_widget_value_get (widget), "") != 0) {
                 	data = NULL;
@@ -1108,7 +1115,7 @@ int camera_config_set (Camera *camera, CameraWidget *window)
 	}
 
 	/* TV Output Format */
-	widget = gp_widget_child_by_label (section, "TV Output Format");
+	g_assert ((widget = gp_widget_child_by_label (section, "TV Output Format")) != NULL);
 	if (gp_widget_changed (widget)) {
 		if (strcmp (gp_widget_value_get (widget), "NTSC") == 0) tv_output_format = K_TV_OUTPUT_FORMAT_NTSC;
 		else if (strcmp (gp_widget_value_get (widget), "PAL") == 0) tv_output_format = K_TV_OUTPUT_FORMAT_PAL;
@@ -1118,7 +1125,7 @@ int camera_config_set (Camera *camera, CameraWidget *window)
 	}
 
 	/* Date Format */
-	widget = gp_widget_child_by_label (section, "Date Format");
+	g_assert ((widget = gp_widget_child_by_label (section, "Date Format")) != NULL);
 	if (gp_widget_changed (widget)) {
 		if (strcmp (gp_widget_value_get (widget), "Month/Day/Year") == 0) date_format = K_DATE_FORMAT_MONTH_DAY_YEAR;
                 else if (strcmp (gp_widget_value_get (widget), "Day/Month/Year") == 0) date_format = K_DATE_FORMAT_DAY_MONTH_YEAR;
@@ -1130,10 +1137,10 @@ int camera_config_set (Camera *camera, CameraWidget *window)
         /********************************/
         /* Session-persistent Settings  */
         /********************************/
-	section = gp_widget_child_by_label (window, "Session-persistent Settings");
+	g_assert ((section = gp_widget_child_by_label (window, "Session-persistent Settings")) != NULL);
 
 	/* Flash */
-	widget = gp_widget_child_by_label (section, "Flash");
+	g_assert ((widget = gp_widget_child_by_label (section, "Flash")) != NULL);
 	if (gp_widget_changed (widget)) {
 		if (strcmp (gp_widget_value_get (widget), "Off") == 0) j = 0;
 		else if (strcmp (gp_widget_value_get (widget), "On") == 0) j = 1;
@@ -1145,22 +1152,22 @@ int camera_config_set (Camera *camera, CameraWidget *window)
 	}
 
 	/* Exposure */
-	widget = gp_widget_child_by_label (section, "Exposure");
+	g_assert ((widget = gp_widget_child_by_label (section, "Exposure")) != NULL);
 	if (gp_widget_changed (widget)) {
 		if (error_happened (camera, k_set_preference (konica_data->device, K_PREFERENCE_EXPOSURE, (guint) atoi (gp_widget_value_get (widget))))) 
 			return (GP_ERROR);
 	}
 
 	/* Focus will be set together with self timer. */
-	widget_focus = gp_widget_child_by_label (section, "Focus");
+	g_assert ((widget_focus = gp_widget_child_by_label (section, "Focus")) != NULL);
 
         /************************/
         /* Volatile Settings    */
         /************************/
-	section = gp_widget_child_by_label (section, "Volatile Settings");
+	g_assert ((section = gp_widget_child_by_label (window, "Volatile Settings")) != NULL);
 
 	/* Self Timer (and focus) */
-	widget_self_timer = gp_widget_child_by_label (section, "Self Timer");
+	g_assert ((widget_self_timer = gp_widget_child_by_label (section, "Self Timer")) != NULL);
 	if (gp_widget_changed (widget_focus) && gp_widget_changed (widget_self_timer)) {
 		if (strcmp (gp_widget_value_get (widget_focus), "Auto") == 0) focus_self_timer = 2;
 		else if (strcmp (gp_widget_value_get (widget_focus), "Fixed") == 0) focus_self_timer = 0;
@@ -1178,13 +1185,13 @@ int camera_config_set (Camera *camera, CameraWidget *window)
 
 int camera_config (Camera *camera)
 {
-	CameraWidget *window;
+	CameraWidget*	window = NULL;
 
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_config ***");
 	if (camera_config_get (camera, &window) == GP_OK) {
 
 	        /* Prompt the user with the config window. */
 	        if (gp_frontend_prompt (camera, window) == GP_PROMPT_CANCEL) {
-	                gp_widget_free (window);
 	                return (GP_OK);
 	        }
 		return (camera_config_set (camera, window));
