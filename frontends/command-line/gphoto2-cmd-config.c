@@ -24,7 +24,7 @@
 #include <time.h>
 
 #include <gphoto2-widget.h>
-#include <cdk/cdk.h>
+#include <cdk.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
