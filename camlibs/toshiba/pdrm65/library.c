@@ -1,6 +1,6 @@
 /* template.c
  *
- * Copyright © 2001 Lutz Müller <lutz@users.sourceforge.net>
+ * Copyright  2001 Lutz Mller <lutz@users.sourceforge.net>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,7 +18,8 @@
  * Boston, MA 02111-1307, USA.
  */
 #include "config.h"
-
+#include "pdrm65.h"
+#include <string.h>
 #include <gphoto2-library.h>
 #include <gphoto2-result.h>
 
@@ -70,7 +71,7 @@ camera_abilities (CameraAbilitiesList *list)
 static int
 camera_exit (Camera *camera, GPContext *context) 
 {
-	return (GP_OK);
+	return (GP_ERROR_NOT_SUPPORTED);
 }
 
 static int
@@ -78,14 +79,16 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *data,
 	       GPContext *context)
 {
+	int ret = GP_OK;
 	Camera *camera = data;
-
+	
+	//ret = pdrm65_get_all_pictures(camera->port);
 	/*
 	 * Get the file from the camera. Use gp_file_set_mime_type,
 	 * gp_file_set_data_and_size, etc.
 	 */
 
-	return (GP_OK);
+	return (ret);
 }
 
 static int
@@ -99,7 +102,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	 * gp_file_get_name, etc.
 	 */
 
-	return (GP_OK);
+	return (GP_ERROR_NOT_SUPPORTED);
 }
 
 static int
@@ -110,7 +113,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 
 	/* Delete the file from the camera. */
 
-	return (GP_OK);
+	return (GP_ERROR_NOT_SUPPORTED);
 }
 
 static int
@@ -124,7 +127,7 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 	 * such a functionality, just don't implement this function.
 	 */
 
-	return (GP_OK);
+	return (GP_ERROR_NOT_SUPPORTED);
 }
 
 static int
@@ -134,7 +137,7 @@ camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 
 	/* Append your sections and widgets here. */
 
-	return (GP_OK);
+	return (GP_ERROR_NOT_SUPPORTED);
 }
 
 static int
@@ -144,7 +147,7 @@ camera_config_set (Camera *camera, CameraWidget *window, GPContext *context)
 	 * Check if the widgets' values have changed. If yes, tell the camera.
 	 */
 
-	return (GP_OK);
+	return (GP_ERROR_NOT_SUPPORTED);
 }
 
 static int
@@ -157,7 +160,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	 * disk. If your camera does, please delete it from the camera.
 	 */
 
-	return (GP_OK);
+	return (GP_ERROR_NOT_SUPPORTED);
 }
 
 static int
@@ -169,7 +172,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	 * out the path.
 	 */
 
-	return (GP_OK);
+	return (GP_ERROR_NOT_SUPPORTED);
 }
 
 static int
@@ -180,7 +183,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 	 * state of the camera (like pictures taken, etc.).
 	 */
 
-	return (GP_OK);
+	return (GP_ERROR_NOT_SUPPORTED);
 }
 
 static int
@@ -191,18 +194,18 @@ camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 	 * to use the camera or the driver, this is the place to do.
 	 */
 
-	return (GP_OK);
+	return (GP_ERROR_NOT_SUPPORTED);
 }
 
 static int
 camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
-	strcpy (about->text, _("Library Name\n"
-			       "YOUR NAME <email@somewhere.com>\n"
-			       "Quick description of the library.\n"
-			       "No more than 5 lines if possible."));
+	strcpy (about->text, _("Toshiba PDR-M65\n"
+			       "Sean Bruno <sean.bruno@dsl-only.net>\n"
+			       "Library for the Toshiba PDR-M65\n"
+			       "USB interface."));
 
-	return (GP_OK);
+	return (GP_ERROR_NOT_SUPPORTED);
 }
 
 static int
@@ -213,7 +216,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	/* Get the file info here and write it into <info> */
 
-	return (GP_OK);
+	return (GP_ERROR_NOT_SUPPORTED);
 }
 static int
 set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
@@ -223,7 +226,7 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 
 	/* Set the file info here from <info> */
 
-	return (GP_OK);
+	return (GP_ERROR_NOT_SUPPORTED);
 }
 
 
@@ -235,7 +238,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 	/* List your folders here */
 
-	return (GP_OK);
+	return (GP_ERROR_NOT_SUPPORTED);
 }
 
 static int
@@ -243,16 +246,17 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data, GPContext *context)
 {
 	Camera *camera = data;
-
+	int ret = GP_OK;
 	/* List your files here */
-
-	return (GP_OK);
+	ret = pdrm65_get_filenames(camera->port, list);
+	return (ret);
 }
 
 int
 camera_init (Camera *camera, GPContext *context) 
 {
-        /* First, set up all the function pointers */
+        int ret = GP_OK;
+	/* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;
         camera->functions->get_config           = camera_config_get;
         camera->functions->set_config           = camera_config_set;
@@ -282,6 +286,7 @@ camera_init (Camera *camera, GPContext *context)
 	 * Once you have configured the port, you should check if a 
 	 * connection to the camera can be established.
 	 */
-
-	return (GP_OK);
+	ret = pdrm65_init(camera->port);
+	
+	return (ret);
 }
