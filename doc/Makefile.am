@@ -1,25 +1,16 @@
 SUBDIRS = api figures
 
 # distribute manual Portable Document Format (PDF) if possible
-if XMLTOPDF
-manual_pdf = gphoto2.pdf
-else
+# manual_pdf = gphoto2.pdf
 manual_pdf =
-endif
 
 # distribute manual in PostScript (PS) format if possible
-if XMLTOPS
-manual_ps = gphoto2.ps
-else
+# manual_ps = gphoto2.ps
 manual_ps =
-endif
 
 # build HTML manual if possible
-if XMLTOHTML
 manual_html = manual
-else
-manual_html =
-endif
+# manual_html =
 
 EXTRA_DIST = DAEMON build_OS2.txt 					\
 	camlib_devel.lyx 						\
@@ -71,6 +62,10 @@ endif
 ########################################################################
 
 
+.PHONY: clean-local-manual
+.PHONY: install-data-local-manual
+.PHONY: dist-hook-manual
+
 
 ########################################################################
 if XMLTOHTML
@@ -87,20 +82,18 @@ manual: gphoto2.xml
 	touch "$@"
 
 clean_local_manual = clean-local-manual
-.PHONY: clean-local-manual
 clean-local-manual:
 	rm -rf "$(manual_dir)/"
 
 install_data_local_manual = install-data-local-manual
-.PHONY: install-data-local-manual
 install-data-local-manual:
 	$(INSTALL) -d -m 0755 $(DESTDIR)$(TARGET_DIR)
 	$(INSTALL_DATA) ./$(manual_dir)/*.html $(DESTDIR)$(TARGET_DIR)
 
 dist_hook_manual = dist-hook-manual
-.PHONY: dist-hook-manual
 dist-hook-manual:
-	(cd $(srcdir) ; tar cvf - $(manual_dir) | (cd $(distdir); tar xf -)
+	(cd $(srcdir) ; tar cvf - $(manual_dir)) | (cd $(distdir); tar xf -)
+endif
 ########################################################################
 
 
