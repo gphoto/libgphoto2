@@ -97,8 +97,8 @@ static struct {
 	{PTP_RC_SelfTestFailed, 	N_("PTP Self Test Failed")},
 	{PTP_RC_PartialDeletion, 	N_("PTP Partial Deletion")},
 	{PTP_RC_StoreNotAvailable, 	N_("PTP Store Not Available")},
-	{PTP_RC_SpecyficationByFormatUnsupported,
-				N_("PTP Specification By Format Unsupported")}, /* spelling */
+	{PTP_RC_SpecificationByFormatUnsupported,
+				N_("PTP Specification By Format Unsupported")},
 	{PTP_RC_NoValidObjectInfo, 	N_("PTP No Valid Object Info")},
 	{PTP_RC_InvalidCodeFormat, 	N_("PTP Invalid Code Format")},
 	{PTP_RC_UnknownVendorCode, 	N_("PTP Unknown Vendor Code")},

@@ -108,7 +108,7 @@ struct _PTPReq {
 #define PTP_RC_SelfTestFailed           0x2011
 #define PTP_RC_PartialDeletion          0x2012
 #define PTP_RC_StoreNotAvailable        0x2013
-#define PTP_RC_SpecyficationByFormatUnsupported         0x2014
+#define PTP_RC_SpecificationByFormatUnsupported         0x2014
 #define PTP_RC_NoValidObjectInfo        0x2015
 #define PTP_RC_InvalidCodeFormat        0x2016
 #define PTP_RC_UnknownVendorCode        0x2017
