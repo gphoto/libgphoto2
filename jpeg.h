@@ -19,13 +19,13 @@
 
 #ifndef __GPHOTO2_JPEG_H__
 #define __GPHOTO2_JPEG_H__
-enum jpegmarker {
+typedef enum {
     JPEG_START=0xD8,        JPEG_COMMENT=0xFE,      JPEG_APPO=0xE0,
     JPEG_QUANTIZATION=0xDB, JPEG_HUFFMAN=0xC4,      JPEG_SOFC0=0xC0,
     JPEG_SSSEAHAL=0xDA,     JPEG_EOI=0xD9
-};
+} jpegmarker;
 
-const JPEG_MARKERS[] = {
+const jpegmarker JPEG_MARKERS[] = {
     JPEG_START,             JPEG_COMMENT,           JPEG_APPO,
     JPEG_QUANTIZATION,      JPEG_HUFFMAN,           JPEG_SOFC0,
     JPEG_SSSEAHAL,          JPEG_EOI
