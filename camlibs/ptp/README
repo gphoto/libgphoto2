@@ -2,22 +2,4 @@ This is libptp2!
 
 This library is under developement yet.
 
-Attached example program allows downloading pictures from camera.
-To build download  and instal libusb (libusb.sf.net), then type:
-make
-
-After proper building you can use example program as follows:
-./dx3500 vendorID ProductID
-
-To obtain vendorID and ProductID read your dmesg.
-For example:
-
-# dmesg
-(...)
-Product: KODAK DX3500 Digital Camera
-usb.c: unhandled interfaces on device
-usb.c: USB device 65 (vend/prod 0x40a/0x500) is not claimed by any active driver
-
-vendorID=0x40a, productID=0x500;
-
 Enjoy!

@@ -96,7 +96,6 @@ ptp_sendreq (PTPParams* params, PTPReq* databuf, uint16_t code)
 		ptp_error (params,
 		"request code 0x%4x sending req error", le16toh(code));
 	}
-	// returned value is little endian
 	return ret;
 }
 
@@ -119,7 +118,6 @@ ptp_senddata (PTPParams* params, PTPReq* req, uint16_t code,
 		ptp_error (params,
 		"request code 0x%4x sending data error", le16toh(code));
 	}
-	// returned value is little endian
 	return ret;
 }
 
@@ -145,7 +143,6 @@ ptp_getdata (PTPParams* params, PTPReq* req, uint16_t code,
 	if (ret!=PTP_RC_OK) 
 		ptp_error (params,
 		"request code 0x%4.4x getting data error 0x%4.4x", le16toh(code), le16toh(ret));
-	// returned value is in little endian 
 	return ret;
 }
 
@@ -172,7 +169,6 @@ ptp_getresp (PTPParams* params, PTPReq* databuf, uint16_t code)
 		ptp_error (params,
 		"request code 0x%4x getting resp error 0x%4x", le16toh(code), le16toh(ret));
 	if (databuf==NULL) free (req);
-	// returned value is little endian
 	return ret;
 }
 
@@ -235,8 +231,8 @@ ptp_getdevinfo (PTPParams* params, PTPDedviceInfo* devinfo)
 #endif
 
 /**
- * WARNING all ptp_ functions take integer parameters
- * in little endian byte order!
+ * all ptp_ functions should take integer parameters
+ * in host byte order!
  **/
 
 /**

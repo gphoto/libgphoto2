@@ -167,8 +167,8 @@ static struct {
 	unsigned short usb_vendor;
 	unsigned short usb_product;
 } models[] = {
-	{"Kodak DC-240 (PTP)",  0x040a, 0x0121}, /* Special firmware */
-	{"Kodak DC-4800", 0x040a, 0x0160},
+//	{"Kodak DC-240 (PTP)",  0x040a, 0x0121}, /* Special firmware */
+/*	{"Kodak DC-4800", 0x040a, 0x0160},
 	{"Kodak DC-3215", 0x040a, 0x0525},
 	{"Kodak DX-3500", 0x040a, 0x0500},
 	{"Kodak DX-3600", 0x040a, 0x0510},
@@ -178,7 +178,7 @@ static struct {
 	{"Sony DSC-P5", 0, 0},
 	{"Sony DSC-F707", 0x054c, 0x004e},
 	{"HP PhotoSmart 318", 0x03f0, 0x6302},
-	{NULL, 0, 0}
+*/	{NULL, 0, 0}
 };
 
 static struct {
@@ -258,7 +258,6 @@ ptp_read_func (unsigned char *bytes, unsigned int size, void *data)
 	 * read. libptp doesn't need that.
 	 */
 	result = gp_port_read (camera->port, bytes, size);
-	// returned value is little endian
 	if (result==0) result = gp_port_read (camera->port, bytes, size);
 	if (result >= 0)
 		return (PTP_RC_OK);
@@ -277,7 +276,6 @@ ptp_write_func (unsigned char *bytes, unsigned int size, void *data)
 	 * write. libptp doesn't need that.
 	 */
 	result = gp_port_write (camera->port, bytes, size);
-	// returned value is little endian
 	if (result >= 0)
 		return (PTP_RC_OK);
 	else
@@ -415,7 +413,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if ((ptp_objectinfo.ObjectFormat & 0x0800) == 0) return (GP_OK);
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
-		size=le32toh(ptp_objectinfo.ObjectCompressedSize);
+		size=ptp_objectinfo.ObjectCompressedSize;
 		fdata=malloc(size+PTP_REQ_HDR_LEN);
 		CPR_free (camera, ptp_getobject(&camera->pl->params,
 			camera->pl->params.handles.handler[image_id],
@@ -429,7 +427,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		break;
 
 	case GP_FILE_TYPE_PREVIEW:
-		size=le32toh(ptp_objectinfo.ThumbCompressedSize);
+		size=ptp_objectinfo.ThumbCompressedSize;
 		fdata=malloc(size+PTP_REQ_HDR_LEN);
 		CPR_free (camera, ptp_getthumb(&camera->pl->params,
 			camera->pl->params.handles.handler[image_id],
@@ -501,22 +499,22 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 */
 	info->file.fields = GP_FILE_INFO_SIZE|GP_FILE_INFO_TYPE;
 
-	info->file.size   = le32toh(oi.ObjectCompressedSize);
+	info->file.size   = oi.ObjectCompressedSize;
 	strcpy_mime (info->file.type, oi.ObjectFormat);
 
-	if ((le16toh(oi.ObjectFormat) & 0x0800) != 0) {
+	if ((oi.ObjectFormat & 0x0800) != 0) {
 		info->preview.fields = GP_FILE_INFO_SIZE|GP_FILE_INFO_WIDTH
 				|GP_FILE_INFO_HEIGHT|GP_FILE_INFO_TIME|GP_FILE_INFO_TYPE;
 		strcpy_mime(info->preview.type, oi.ThumbFormat);
-		info->preview.size   = le32toh(oi.ThumbCompressedSize);
-		info->preview.width  = le32toh(oi.ThumbPixWidth);
-		info->preview.height = le32toh(oi.ThumbPixHeight);
+		info->preview.size   = oi.ThumbCompressedSize;
+		info->preview.width  = oi.ThumbPixWidth;
+		info->preview.height = oi.ThumbPixHeight;
 
 		info->file.fields = info->file.fields|GP_FILE_INFO_WIDTH|GP_FILE_INFO_HEIGHT|
 				GP_FILE_INFO_TIME;
 
-		info->file.width  = le32toh(oi.ImagePixWidth);
-		info->file.height = le32toh(oi.ImagePixHeight);
+		info->file.width  = oi.ImagePixWidth;
+		info->file.height = oi.ImagePixHeight;
 		info->file.time = ptp_getobjectcapturedate (&oi);
 	}
 
@@ -537,10 +535,10 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 
 	// blackmagic, obtain ObjectHandle of upper folder
 	// XXX 0xffffffff=root filesystem
-	parent=htole32(0x00000000);
+	parent=0x00000000;
 
 	// any store (responder decides)
-	store=htole32(0xffffffff);
+	store=0xffffffff;
 	
 	ptp_setobjectfilename(&oi, foldername);
 
@@ -594,10 +592,10 @@ camera_init (Camera *camera)
 	CR (gp_port_set_settings (camera->port, settings));
 
 	/* Establish a connection to the camera */
-	ret=ptp_opensession (&camera->pl->params, htole32(1));
+	ret=ptp_opensession (&camera->pl->params, 1);
 	while (ret==PTP_RC_InvalidTransactionID) {
 		camera->pl->params.transaction_id+=10;
-		ret=ptp_opensession (&camera->pl->params, htole32(1));
+		ret=ptp_opensession (&camera->pl->params, 1);
 	}
 	if (ret!=PTP_RC_SessionAlreadyOpened && ret!=PTP_RC_OK) {
 		report_result(camera, ret);
