@@ -238,12 +238,12 @@ gp_port_open (gp_port *dev)
 {
         int retval = 0;
 
-	gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level, 
-			      "Opening port...");
-
 	/* I don't know what to report here... */
 	if (!dev)
 		return (GP_OK);
+
+	gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
+			      "Opening port...");
 
         /* Try to open device */
         retval = dev->ops->open (dev);
@@ -270,12 +270,12 @@ gp_port_close (gp_port *dev)
 {
         int retval = 0;
 
-	gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
-			      "Closing port...");
-
 	/* I don't know what to report here... */
         if (!dev)
 		return (GP_OK);
+
+	gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
+			      "Closing port...");
 
         retval = dev->ops->close(dev);
         dev->device_fd = 0;
