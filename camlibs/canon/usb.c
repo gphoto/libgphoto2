@@ -292,8 +292,9 @@ int canon_usb_get_body_id (Camera *camera, GPContext *context);
 int
 canon_usb_init (Camera *camera, GPContext *context)
 {
-	unsigned char buffer[0x44];
-	int res, id_retry, i, camstat, read_bytes;
+	/* unsigned char buffer[0x44]; */
+	int res, id_retry, i, camstat; 
+	/* int read_bytes; */
 	GPPortSettings settings;
 
 	GP_DEBUG ("Initializing the (USB) camera.\n");
