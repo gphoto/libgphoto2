@@ -641,7 +641,7 @@ camera_capture (Camera* camera, CameraCaptureType type, CameraFilePath* path,
 				"mode to capture image."));
 		else if (!nbr_images)
 			gp_context_error(context, _("No space available "
-				"to capture new image. You must delete some"
+				"to capture new image. You must delete some "
 				"images."));
 		else
 			gp_context_error(context, _("Can't capture new image. "
