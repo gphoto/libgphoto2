@@ -11,6 +11,8 @@
 #undef HAVE_LC_MESSAGES
 #undef HAVE_STPCPY
 
+#undef HAVE_TM_GMTOFF
+
 #undef HAVE_LTDL
 
 #undef HAVE_CDK
