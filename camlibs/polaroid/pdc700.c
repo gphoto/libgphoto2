@@ -509,7 +509,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
 		CRF (gp_file_set_data_and_size (file, data, size), data);
-		CHECK_RESULT (gp_file_set_name (file, filename));
 		CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_JPEG));
 		break;
 	case GP_FILE_TYPE_PREVIEW:
@@ -532,9 +531,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		CRF (gp_file_append (file, header, sizeof (header)), ppm);
 		CRF (gp_file_append (file, ppm, ppm_size), ppm);
 		free (ppm);
-		CHECK_RESULT (gp_file_set_name (file, filename));
 		CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_PPM));
-		CHECK_RESULT (gp_file_adjust_name_for_mime_type (file));
 		break;
 
 	case GP_FILE_TYPE_RAW:
