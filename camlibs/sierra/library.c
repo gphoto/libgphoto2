@@ -739,8 +739,8 @@ sierra_init (Camera *camera, GPContext *context)
 	 * 19200.
 	 */
 	CHECK (gp_port_get_settings (camera->port, &settings));
-	if (settings->serial->speed != 19200) {
-		settings->serial->speed = 19200;
+	if (settings.serial.speed != 19200) {
+		settings.serial.speed = 19200;
 		CHECK (gp_port_set_settings (camera->port, settings));
 	}
 
