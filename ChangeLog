@@ -1,5 +1,10 @@
 2002-06-19  Lutz Müller <lutz@users.sourceforge.net>
 
+	* configure.in: Make the check for cdk.h search in $ac_default_prefix.
+	  Make checks for libjpeg, libexif, libcdk, etc. consistent.
+
+2002-06-19  Lutz Müller <lutz@users.sourceforge.net>
+
 	Suggestion from Hans Ulrich Niedermann <gp@n-dimensional.de>:
 
 	* autogen.sh: Remove the call to configure.

@@ -250,15 +250,12 @@ have_cdk=false
 AC_ARG_WITH(cdk,        [  --without-cdk             Don't use cdk],
 	if test x$withval = xno; then
 		try_cdk=false
+		cdk_msg="no (not requested)"
 	fi
 )
-if test "x$prefix" = xNONE; then
-	cdk_prefix=$ac_default_prefix
-else
-	cdk_prefix=$prefix
-fi
-AC_ARG_WITH(cdk-prefix, [  --with-cdk-prefix=PREFIX  Location of cdk],
-	cdk_prefix="$withval")
+cdk_prefix=$ac_default_prefix
+AC_ARG_WITH(cdk-prefix, [  --with-cdk-prefix=PREFIX  Location of cdk], [
+	cdk_prefix="$withval"])
 if $try_cdk; then
 	CPPFLAGS_save="$CPPFLAGS"
 	CPPFLAGS="-I$cdk_prefix/include -I$cdk_prefix/include/cdk $CPPFLAGS"
@@ -276,8 +273,6 @@ if $try_cdk; then
 		LDFLAGS="$LDFLAGS_save"]
 	)
 	CPPFLAGS="$CPPFLAGS_save"
-else
-	cdk_msg="no (not requested)"
 fi
 AM_CONDITIONAL(HAVE_CDK, $have_cdk)
 AC_SUBST(CDK_CFLAGS)
@@ -340,6 +335,7 @@ have_pkgconfig=false
 AC_ARG_WITH(pkgconfig, [  --without-pkgconfig       Don't use pkg-config],[
 	if test x$withval = xno; then
 		try_pkgconfig=false
+		pkgconfig_msg="no (not requested)"
 	fi])
 if $try_pkgconfig; then
 	AC_PATH_PROG(PKG_CONFIG,pkg-config)
@@ -347,8 +343,6 @@ if $try_pkgconfig; then
 		have_pkgconfig=true
 		pkgconfig_msg="yes"
 	fi
-else
-	pkgconfig_msg="no (not requested)"
 fi
 
 dnl ---------------------------------------------------------------------------
@@ -364,6 +358,7 @@ have_exif=false
 AC_ARG_WITH(exif, [  --without-exif            Don't use libexif],[
 	if test x$withval = xno; then
 		try_exif=false
+		exif_msg="no (not requested)"
 	fi])
 if test "x$prefix" = xNONE; then
 	exif_prefix=$ac_default_prefix
@@ -393,8 +388,6 @@ if $try_exif; then
 			exif_msg=yes
 			AC_DEFINE(HAVE_EXIF,,[whether we use libexif])])
 	fi
-else
-	exif_msg="no (not requested)"
 fi
 AM_CONDITIONAL(HAVE_EXIF, $have_exif)
 AC_SUBST(EXIF_CFLAGS)
@@ -448,39 +441,28 @@ AC_ARG_WITH(readline, [  --without-readline        Don't use readline],
         fi
 )
 if $try_readline; then
-        # First check for readline header.
-        AC_CHECK_HEADER(readline/readline.h,,[try_readline=false])
-fi
-if $try_readline; then
-	# save libraries, so readline does not get into the libgphoto.
-	gp_save_LIBS="$LIBS"
-        # Now check whether we can link against readline without ncurses.
-        AC_CHECK_LIB(readline, rl_completion_append_character, [
-		have_readline=true
-               	rl_msg="yes (doesn' require explicit -lncurses)"
-       		RL_LIBS="-lreadline"
-        	RL_CFLAGS=""])
-        if $have_readline; then
-		AC_CHECK_LIB(readline, rl_completion_matches,,[
-			have_readline=false
-			rl_msg="no (available version too old)"
-			RL_LIBS=""
-			RL_CFLAGS=""])
-	else
-		# Check whether we can link against readline with ncurses
-		# we use another function to avoid the configure caching
-		# to kick in.
-                AC_CHECK_LIB(readline, rl_completion_matches, [
-                    have_readline=true
-                    rl_msg="yes (requires explicit -lncurses)"
-             	    RL_LIBS="-lreadline -lncurses"
-       		    RL_CFLAGS=""],[
-		    rl_msg="no (couldn't link against it or version too old)"],[-lncurses])
-        fi
-	LIBS="$gp_save_LIBS"
-fi
-if $have_readline; then
-        AC_DEFINE(HAVE_RL,,[whether we use the readline library])
+	AC_CHECK_HEADER(readline/readline.h, [
+	    AC_CHECK_LIB(readline, rl_completion_append_character, [
+		AC_CHECK_LIB(readline, rl_completion_matches, [
+		    have_readline=true
+		    rl_msg="yes (doesn' require explicit -lncurses)"
+		    RL_LIBS="-lreadline"
+		    RL_CFLAGS=""
+		    AC_DEFINE(HAVE_RL,,[whether we use readline])
+		], [rl_msg="no (available version too old)"])
+	    ], [
+	        LDFLAGS_save="$LDFLAGS"
+		LDFLAGS="-lncurses"
+		AC_CHECK_LIB(readline, rl_completion_matches, [
+		    have_readline=true
+		    rl_msg="yes (requires explicit -lncurses)"
+		    RL_LIBS="-lreadline -lncurses"
+		    RL_CFLAGS=""
+		    AC_DEFINE(HAVE_RL,,[whether we use readline])
+		], [rl_msg="no (couldn't link against it or version too old"])
+		LDFLAGS="$LDFLAGS_save"
+	    ])
+	])
 fi
 AM_CONDITIONAL(HAVE_RL, $have_readline)
 AC_SUBST(RL_LIBS)
