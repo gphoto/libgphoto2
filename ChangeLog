@@ -1,4 +1,10 @@
-2001-11-20  Hans Ulrich Niedermann <hun@n-dimensional.de>
+2001-11-25  Hans Ulrich Niedermann <hun@n-dimensional.de>
+
+	* camlibs/canon/{canon,library}.[ch]: renamed files according to rules
+	* camlibs/canon/doc/: added developers' docs
+	* po/POTFILES.in: reflect changes in canon file set
+
+2001-11-24  Hans Ulrich Niedermann <hun@n-dimensional.de>
 
 	* configure.in: hopefully really correct checks for libdl and libintl
 
