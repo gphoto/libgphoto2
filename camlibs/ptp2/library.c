@@ -2803,6 +2803,13 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       GPContext *context)
 {
 	Camera *camera = data;
+	/* Note that "image" points to unsigned chars whereas all the other
+	 * functions which set image return pointers to chars.
+	 * However, we calculate a number of unsigned values in this function, 
+	 * so we cannot make it signed either.
+	 * Therefore, we have a number of casts, which is ok, as the casted
+	 * pointers are just generic pointers to "data" anyway.
+	 * If you do not like that, feel free to clean up the datatypes. */
 	unsigned char * image=NULL;
 	uint32_t object_id;
 	uint32_t size;
@@ -2836,7 +2843,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		/* could also use Canon partial downloads */
 		CPR (context, ptp_getpartialobject (&camera->pl->params,
 			camera->pl->params.handles.Handler[object_id],
-			0, 10, &image));
+			0, 10, (char **)((void *)&image)));
 
 		if (!((image[0] == 0xff) && (image[1] == 0xd8))) {	/* SOI */
 			free (image);
@@ -2856,7 +2863,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		image = NULL;
 		CPR (context, ptp_getpartialobject (&camera->pl->params,
 			camera->pl->params.handles.Handler[object_id],
-			offset, maxbytes, &image));
+			offset, maxbytes, (char **)((void *)&image)));
 		CR (gp_file_set_data_and_size (file, image, maxbytes));
 		break;
 	}
@@ -2865,7 +2872,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		if((size=oi->ThumbCompressedSize)==0) return (GP_ERROR_NOT_SUPPORTED);
 		CPR (context, ptp_getthumb(&camera->pl->params,
 			camera->pl->params.handles.Handler[object_id],
-			&image));
+			(char **)((void *)&image)));
 		CR (gp_file_set_data_and_size (file, image, size));
 		/* XXX does gp_file_set_data_and_size free() image ptr upon
 		   failure?? */
@@ -2883,7 +2890,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		size=oi->ObjectCompressedSize;
 		CPR (context, ptp_getobject(&camera->pl->params,
 			camera->pl->params.handles.Handler[object_id],
-			&image));
+			(char **)((void *)&image)));
 		CR (gp_file_set_data_and_size (file, image, size));
 		/* XXX does gp_file_set_data_and_size free() image ptr upon
 		   failure?? */
