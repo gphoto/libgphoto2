@@ -27,6 +27,7 @@
 
 #include <gphoto2-result.h>
 #include <gphoto2-port-debug.h>
+#include <gphoto2-port.h>
 
 static int glob_debug = GP_DEBUG_NONE;
 
