@@ -279,7 +279,6 @@ gsmart_get_avi (CameraPrivateLibrary * lib, u_int8_t ** buf,
 	int frame_width, frame_height;
 	int file_size;
 	int index_size;
-	int omit_escape = 0;
 	u_int32_t frame_size = 0;
 	u_int32_t total_frame_size = 0;
 	u_int32_t start = 0;
@@ -289,16 +288,18 @@ gsmart_get_avi (CameraPrivateLibrary * lib, u_int8_t ** buf,
 	u_int8_t index_item[16];
 
 	/* FIXME */
-	if (lib->bridge == GSMART_BRIDGE_SPCA500 
-	 || lib->bridge == GSMART_BRIDGE_SPCA504B)
+	if (lib->bridge == GSMART_BRIDGE_SPCA500)
 		return GP_ERROR_NOT_SUPPORTED;
 
+	p = g_file->fat;
+	
 	if (lib->bridge == GSMART_BRIDGE_SPCA504B)
-		omit_escape = 1;
+		qIndex = p[10] & 0x07;
+	else
+		qIndex = p[7] & 0x07;
 
 	avi = mybuf = start_of_file = data = NULL;
 
-	p = g_file->fat;
 	/* get the position in memory where the movie is */
 	start = (p[1] & 0xff) + (p[2] & 0xff) * 0x100;
 	start *= 128;
@@ -307,7 +308,6 @@ gsmart_get_avi (CameraPrivateLibrary * lib, u_int8_t ** buf,
 	 * of the first frame */
 	frame_width = (p[8] & 0xFF) * 16;
 	frame_height = (p[9] & 0xFF) * 16;
-	qIndex = p[7] & 0x07;
 
 	/* Each movie consists of a number of frames, and can have more than
 	 * one fat page. Iterate over all fat pages for this movie and count
@@ -388,7 +388,7 @@ gsmart_get_avi (CameraPrivateLibrary * lib, u_int8_t ** buf,
 			/* jpeg starts here */
 			create_jpeg_from_data (avi, data, qIndex, frame_width,
 					       frame_height, 0x22, frame_size,
-					       &length, 1, omit_escape);
+					       &length, 1, 0);
 
 			data += (frame_size + 7) & 0xfffffff8;
 			avi += length;
@@ -876,7 +876,6 @@ gsmart_get_FATs (CameraPrivateLibrary * lib)
 					  ++lib->num_images);
 				lib->files[file_index].mime_type =
 					GSMART_FILE_TYPE_IMAGE;
-				lib->files[file_index].fat_end = index;
 			} else if ((type == 0x08) || (type == 0x03)) {
 				/* its the start of an avi */
 				snprintf (buf, 13, "Movie%03d.avi",
@@ -885,7 +884,8 @@ gsmart_get_FATs (CameraPrivateLibrary * lib)
 					GSMART_FILE_TYPE_AVI;
 			}
 			lib->files[file_index].fat = p;
-			lib->files[file_index].fat_start = index;
+			lib->files[file_index].fat_start = index;	
+			lib->files[file_index].fat_end = index;
 			lib->files[file_index].name = strdup (buf);
 			if (lib->bridge == GSMART_BRIDGE_SPCA504A
 			    || lib->bridge == GSMART_BRIDGE_SPCA504B) {
