@@ -25,6 +25,7 @@
 
 #ifndef __GSMART_H__
 #define __GSMART_H__
+#include <_stdint.h>
 #include <gphoto2-camera.h>
 
 #define FLASH_PAGE_SIZE 0x100
@@ -40,7 +41,7 @@ struct GsmartFile
 	int height;
 	int fat_start;
 	int fat_end;
-	u_int8_t *fat;
+	uint8_t *fat;
 	int mime_type;
 };
 
@@ -61,7 +62,7 @@ struct _CameraPrivateLibrary
 	int num_fats;
 	int size_used;
 	int size_free;
-	u_int8_t *fats;
+	uint8_t *fats;
 	struct GsmartFile *files;
 };
 
@@ -73,9 +74,9 @@ int gsmart_delete_all (CameraPrivateLibrary * lib);
 int gsmart_get_file_info (CameraPrivateLibrary * lib, unsigned int index,
 			  struct GsmartFile **file);
 int gsmart_get_firmware_revision (CameraPrivateLibrary *lib);
-int gsmart_request_file (CameraPrivateLibrary * lib, u_int8_t ** buf,
+int gsmart_request_file (CameraPrivateLibrary * lib, uint8_t ** buf,
 			 unsigned int *len, unsigned int number, int *type);
-int gsmart_request_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
+int gsmart_request_thumbnail (CameraPrivateLibrary * lib, uint8_t ** buf,
 			      unsigned int *len, unsigned int number, int *type);
 
 

@@ -2,13 +2,13 @@
 #define __GSMART_AVI_HEADER_H
 
 #define GSMART_AVI_FRAME_HEADER_LENGTH	8
-u_int8_t GsmartAviFrameHeader[GSMART_AVI_FRAME_HEADER_LENGTH] = {   
+uint8_t GsmartAviFrameHeader[GSMART_AVI_FRAME_HEADER_LENGTH] = {   
 	0x30, 0x30, 0x64, 0x63, // 00dc
 	0x00, 0x00, 0x00, 0x00 // size of frame
 };
 
 #define GSMART_AVI_HEADER_LENGTH 224
-u_int8_t GsmartAviHeader[GSMART_AVI_HEADER_LENGTH] = {   
+uint8_t GsmartAviHeader[GSMART_AVI_HEADER_LENGTH] = {   
 	/* -- RIFF HEADER -- */
 	0x52, 0x49, 0x46, 0x46, // 0x00; RIFF  
 	0x00, 0x00, 0x00, 0x00, // 0x04; number of bytes following

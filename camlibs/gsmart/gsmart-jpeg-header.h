@@ -11,7 +11,7 @@
 #define GSMART_JPG_DEFAULT_HEADER_PART3_LENGTH 33
 #define GSMART_JPG_DEFAULT_HEADER_LENGTH 589
 
-u_int8_t GsmartJPGDefaultHeaderPart1[GSMART_JPG_DEFAULT_HEADER_PART1_LENGTH] = {   
+uint8_t GsmartJPGDefaultHeaderPart1[GSMART_JPG_DEFAULT_HEADER_PART1_LENGTH] = {   
 	//SOI(Start of Image)
 	0xFF,0xD8,
 	//DQT(Define Quantization Table)
@@ -28,7 +28,7 @@ u_int8_t GsmartJPGDefaultHeaderPart1[GSMART_JPG_DEFAULT_HEADER_PART1_LENGTH] = {
 	0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,
 	0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22
 };
-u_int8_t GsmartJPGDefaultHeaderPart2[GSMART_JPG_DEFAULT_HEADER_PART2_LENGTH] = {   
+uint8_t GsmartJPGDefaultHeaderPart2[GSMART_JPG_DEFAULT_HEADER_PART2_LENGTH] = {   
 	//DHT(Define Huffman Table)
 	0xFF,0xC4,
 	0x01,0xA2,
@@ -63,7 +63,7 @@ u_int8_t GsmartJPGDefaultHeaderPart2[GSMART_JPG_DEFAULT_HEADER_PART2_LENGTH] = {
  *  5 - 6 : Image Height(H Byte,L Byte)
  *  7 - 8 : Image Width(H Byte,L Byte)
  */
-u_int8_t GsmartJPGDefaultHeaderPart3[GSMART_JPG_DEFAULT_HEADER_PART3_LENGTH] = {
+uint8_t GsmartJPGDefaultHeaderPart3[GSMART_JPG_DEFAULT_HEADER_PART3_LENGTH] = {
 	//SOFn(Start of Frame)
 	0xFF,0xC0,
 	0x00,0x11,
@@ -74,7 +74,7 @@ u_int8_t GsmartJPGDefaultHeaderPart3[GSMART_JPG_DEFAULT_HEADER_PART3_LENGTH] = {
 	0x03,0x01,0x00,0x02,0x11,0x03,0x11,0x00,0x3F,0x00
 };
 
-u_int8_t GsmartQTable[20][64]=
+uint8_t GsmartQTable[20][64]=
 {
 	// index 0, Q50
 	{  16, 11, 12, 14, 12, 10, 16, 14, 13, 14, 18, 17, 16, 19, 24, 40,
@@ -177,7 +177,7 @@ u_int8_t GsmartQTable[20][64]=
 	  124,124,124,124,124,124,124,124,124,124,124,124,124,124,124,124 }
 };
 
-u_int8_t GsmartOriginal_QTable_4NF_M[18][64]=		//not Z-Z
+uint8_t GsmartOriginal_QTable_4NF_M[18][64]=		//not Z-Z
 {
 	// index 0, Q50
 	{  16, 11, 10, 16, 24, 40, 51, 61, 12, 12, 14, 19, 26, 58, 60, 55,

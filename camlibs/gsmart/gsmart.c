@@ -58,31 +58,31 @@
 static int gsmart_mode_set_idle (CameraPrivateLibrary * lib);
 static int gsmart_is_idle (CameraPrivateLibrary * lib);
 static int gsmart_mode_set_download (CameraPrivateLibrary * lib);
-static int gsmart_download_data (CameraPrivateLibrary * lib, u_int32_t start,
-				 unsigned int size, u_int8_t * buf);
+static int gsmart_download_data (CameraPrivateLibrary * lib, uint32_t start,
+				 unsigned int size, uint8_t * buf);
 static int gsmart_get_FATs (CameraPrivateLibrary * lib);
 static int gsmart_get_file_count_and_fat_count (CameraPrivateLibrary * lib);
 static int yuv2rgb (int y, int u, int v, int *r, int *g, int *b);
-static void create_jpeg_from_data (u_int8_t * dst, u_int8_t * src, int qIndex,
-				   int w, int h, u_int8_t format,
+static void create_jpeg_from_data (uint8_t * dst, uint8_t * src, int qIndex,
+				   int w, int h, uint8_t format,
 				   int original_size, int *size,
 				   int omit_huffman_table, int omit_escape);
-static inline u_int8_t *put_dword (u_int8_t * ptr, u_int32_t value);
+static inline uint8_t *put_dword (uint8_t * ptr, uint32_t value);
 static int gsmart_get_avi_thumbnail (CameraPrivateLibrary * lib,
-				     u_int8_t ** buf, unsigned int *len,
+				     uint8_t ** buf, unsigned int *len,
 				     struct GsmartFile *g_file);
 static int gsmart_get_image_thumbnail (CameraPrivateLibrary * lib,
-				       u_int8_t ** buf, unsigned int *len,
+				       uint8_t ** buf, unsigned int *len,
 				       struct GsmartFile *g_file);
-static int gsmart_get_avi (CameraPrivateLibrary * lib, u_int8_t ** buf,
+static int gsmart_get_avi (CameraPrivateLibrary * lib, uint8_t ** buf,
 			   unsigned int *len, struct GsmartFile *g_file);
-static int gsmart_get_image (CameraPrivateLibrary * lib, u_int8_t ** buf,
+static int gsmart_get_image (CameraPrivateLibrary * lib, uint8_t ** buf,
 			     unsigned int *len, struct GsmartFile *g_file);
 
 int
 gsmart_get_file_count_and_fat_count (CameraPrivateLibrary * lib)
 {
-	u_int8_t theFat504B[256];
+	uint8_t theFat504B[256];
 
 	lib->num_fats = 0;
 
@@ -100,13 +100,13 @@ gsmart_get_file_count_and_fat_count (CameraPrivateLibrary * lib)
 			lib->num_fats++;
 		}
 	} else {
-		u_int8_t lower, upper;
+		uint8_t lower, upper;
 
 		CHECK (gp_port_usb_msg_write (lib->gpdev, 0x5, 0, 0, NULL, 0));
 		sleep (1);
 		CHECK (gp_port_usb_msg_read
 		       (lib->gpdev, 0, 0, 0xe15,
-			(u_int8_t *) & lib->num_files, 1));
+			(uint8_t *) & lib->num_files, 1));
 		LE32TOH (lib->num_files);
 
 		/* get fatscount */
@@ -120,9 +120,9 @@ gsmart_get_file_count_and_fat_count (CameraPrivateLibrary * lib)
 			sleep (1.0);
 
 		CHECK (gp_port_usb_msg_read
-		       (lib->gpdev, 0, 0, 0x0e19, (u_int8_t *) & lower, 1));
+		       (lib->gpdev, 0, 0, 0x0e19, (uint8_t *) & lower, 1));
 		CHECK (gp_port_usb_msg_read
-		       (lib->gpdev, 0, 0, 0x0e20, (u_int8_t *) & upper, 1));
+		       (lib->gpdev, 0, 0, 0x0e20, (uint8_t *) & upper, 1));
 
 		lib->num_fats = ((upper & 0xFF << 8) | (lower & 0xFF));
 		LE32TOH (lib->num_fats);
@@ -136,7 +136,7 @@ int
 gsmart_delete_file (CameraPrivateLibrary * lib, unsigned int index)
 {
 	struct GsmartFile *g_file;
-	u_int16_t fat_index;
+	uint16_t fat_index;
 
 	CHECK (gsmart_get_file_info (lib, index, &g_file));
 
@@ -174,7 +174,7 @@ gsmart_delete_all (CameraPrivateLibrary * lib)
 }
 
 int
-gsmart_request_file (CameraPrivateLibrary * lib, u_int8_t ** buf,
+gsmart_request_file (CameraPrivateLibrary * lib, uint8_t ** buf,
 		     unsigned int *len, unsigned int number, int *type)
 {
 	struct GsmartFile *g_file;
@@ -189,13 +189,13 @@ gsmart_request_file (CameraPrivateLibrary * lib, u_int8_t ** buf,
 }
 
 int
-gsmart_get_image (CameraPrivateLibrary * lib, u_int8_t ** buf,
+gsmart_get_image (CameraPrivateLibrary * lib, uint8_t ** buf,
 		  unsigned int *len, struct GsmartFile *g_file)
 {
-	u_int8_t *p, *lp_jpg;
-	u_int8_t qIndex, format;
-	u_int32_t start;
-	u_int8_t *mybuf;
+	uint8_t *p, *lp_jpg;
+	uint8_t qIndex, format;
+	uint32_t start;
+	uint8_t *mybuf;
 	int size, o_size, file_size;
 	int omit_escape = 0;
 
@@ -218,7 +218,7 @@ gsmart_get_image (CameraPrivateLibrary * lib, u_int8_t ** buf,
 		omit_escape = 1;
 		qIndex = p[10] & 0x07;
 	} else {		/* if (lib->bridge == GSMART_BRIDGE_SPCA500) */
-		o_size = size = (p[5] & 0xff) * 0x100 + (p[6] & 0xff);
+		o_size = size = (p[5] & 0xff) * 0x100 + (p[6] & 0xff) * 0x10000;
 		qIndex = p[7] & 0x07;
 	}
 	format = 0x21;
@@ -270,7 +270,7 @@ gsmart_get_image (CameraPrivateLibrary * lib, u_int8_t ** buf,
 }
 
 int
-gsmart_get_avi (CameraPrivateLibrary * lib, u_int8_t ** buf,
+gsmart_get_avi (CameraPrivateLibrary * lib, uint8_t ** buf,
 		unsigned int *len, struct GsmartFile *g_file)
 {
 	int i, j, length;
@@ -279,13 +279,13 @@ gsmart_get_avi (CameraPrivateLibrary * lib, u_int8_t ** buf,
 	int frame_width, frame_height;
 	int file_size;
 	int index_size;
-	u_int32_t frame_size = 0;
-	u_int32_t total_frame_size = 0;
-	u_int32_t start = 0;
-	u_int8_t *p, *mybuf, *avi, *start_of_file, *start_of_frame, *data;
-	u_int8_t qIndex;
-	u_int8_t *avi_index, *avi_index_ptr;
-	u_int8_t index_item[16];
+	uint32_t frame_size = 0;
+	uint32_t total_frame_size = 0;
+	uint32_t start = 0;
+	uint8_t *p, *mybuf, *avi, *start_of_file, *start_of_frame, *data;
+	uint8_t qIndex;
+	uint8_t *avi_index, *avi_index_ptr;
+	uint8_t index_item[16];
 
 	/* FIXME */
 	if (lib->bridge == GSMART_BRIDGE_SPCA500)
@@ -435,7 +435,7 @@ gsmart_get_avi (CameraPrivateLibrary * lib, u_int8_t ** buf,
 }
 
 int
-gsmart_request_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
+gsmart_request_thumbnail (CameraPrivateLibrary * lib, uint8_t ** buf,
 			  unsigned int *len, unsigned int number, int *type)
 {
 	struct GsmartFile *g_file;
@@ -467,13 +467,13 @@ gsmart_request_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
 
 
 static int
-gsmart_get_avi_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
+gsmart_get_avi_thumbnail (CameraPrivateLibrary * lib, uint8_t ** buf,
 			  unsigned int *len, struct GsmartFile *g_file)
 {
-	u_int8_t *p, *lp_jpg;
-	u_int8_t qIndex;
-	u_int32_t start;
-	u_int8_t *mybuf;
+	uint8_t *p, *lp_jpg;
+	uint8_t qIndex;
+	uint32_t start;
+	uint8_t *mybuf;
 	int size, o_size, file_size;
 	int w, h;
 
@@ -526,17 +526,17 @@ gsmart_get_avi_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
 
 
 static int
-gsmart_get_image_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
+gsmart_get_image_thumbnail (CameraPrivateLibrary * lib, uint8_t ** buf,
 			    unsigned int *len, struct GsmartFile *g_file)
 {
 	unsigned int size;
-	u_int8_t *p;
-	u_int32_t start;
-	u_int8_t *mybuf = NULL;
-	u_int8_t *tmp;
+	uint8_t *p;
+	uint32_t start;
+	uint8_t *mybuf = NULL;
+	uint8_t *tmp;
 	unsigned int t_width, t_height;
-	u_int8_t *yuv_p;
-	u_int8_t *rgb_p;
+	uint8_t *yuv_p;
+	uint8_t *rgb_p;
 	int headerlength;
 
 	p = g_file->fat;
@@ -616,9 +616,9 @@ int
 gsmart_get_info (CameraPrivateLibrary * lib)
 {
 	unsigned int index;
-	u_int8_t *p;
-	u_int32_t start_page, end_page;
-	u_int8_t file_type;
+	uint8_t *p;
+	uint32_t start_page, end_page;
+	uint8_t file_type;
 
 	GP_DEBUG ("* gsmart_get_info");
 	CHECK (gsmart_get_file_count_and_fat_count (lib));
@@ -659,7 +659,7 @@ gsmart_get_file_info (CameraPrivateLibrary * lib, unsigned int index,
 int
 gsmart_get_firmware_revision (CameraPrivateLibrary * lib)
 {
-	u_int8_t firmware = 0;
+	uint8_t firmware = 0;
 
 	CHECK (gp_port_usb_msg_read (lib->gpdev, 0x20, 0x0, 0x0, &firmware, 1));
 	return firmware;
@@ -713,7 +713,7 @@ gsmart_is_idle (CameraPrivateLibrary * lib)
 	int mode;
 
 	CHECK (gp_port_usb_msg_read
-	       (lib->gpdev, 0, 0, GSMART_REG_CamMode, (u_int8_t *) & mode, 1));
+	       (lib->gpdev, 0, 0, GSMART_REG_CamMode, (uint8_t *) & mode, 1));
 	return mode == GSMART_CamMode_Idle ? 1 : 0;
 }
 
@@ -727,12 +727,12 @@ gsmart_mode_set_download (CameraPrivateLibrary * lib)
 }
 
 static int
-gsmart_download_data (CameraPrivateLibrary * lib, u_int32_t start,
-		      unsigned int size, u_int8_t * buf)
+gsmart_download_data (CameraPrivateLibrary * lib, uint32_t start,
+		      unsigned int size, uint8_t * buf)
 {
 
-	u_int8_t foo;
-	u_int8_t vlcAddressL, vlcAddressM, vlcAddressH;
+	uint8_t foo;
+	uint8_t vlcAddressL, vlcAddressM, vlcAddressH;
 
 	if (!gsmart_is_idle (lib))
 		gsmart_mode_set_idle (lib);
@@ -751,13 +751,13 @@ gsmart_download_data (CameraPrivateLibrary * lib, u_int32_t start,
 
 	CHECK (gp_port_usb_msg_read
 	       (lib->gpdev, 0, 0, GSMART_REG_VlcAddressL,
-		(u_int8_t *) & vlcAddressL, 1));
+		(uint8_t *) & vlcAddressL, 1));
 	CHECK (gp_port_usb_msg_read
 	       (lib->gpdev, 0, 0, GSMART_REG_VlcAddressM,
-		(u_int8_t *) & vlcAddressM, 1));
+		(uint8_t *) & vlcAddressM, 1));
 	CHECK (gp_port_usb_msg_read
 	       (lib->gpdev, 0, 0, GSMART_REG_VlcAddressH,
-		(u_int8_t *) & vlcAddressH, 1));
+		(uint8_t *) & vlcAddressH, 1));
 
 	foo = start & 0xFF;
 	CHECK (gp_port_usb_msg_write
@@ -793,11 +793,11 @@ gsmart_download_data (CameraPrivateLibrary * lib, u_int32_t start,
 static int
 gsmart_get_FATs (CameraPrivateLibrary * lib)
 {
-	u_int8_t dramtype, type;
+	uint8_t dramtype, type;
 	unsigned int index = 0;
 	unsigned int file_index = 0;
-	u_int8_t *p = NULL;
-	u_int8_t buf[14];
+	uint8_t *p = NULL;
+	uint8_t buf[14];
 
 	/* Reset image and movie counter */
 	lib->num_images = lib->num_movies = 0;
@@ -828,7 +828,7 @@ gsmart_get_FATs (CameraPrivateLibrary * lib)
 			0));
 		CHECK (gp_port_usb_msg_read
 		       (lib->gpdev, 0, 0, GSMART_REG_DramType,
-			(u_int8_t *) & dramtype, 1));
+			(uint8_t *) & dramtype, 1));
 
 		dramtype &= 0xFF;
 
@@ -951,14 +951,14 @@ yuv2rgb (int y, int u, int v, int *_r, int *_g, int *_b)
 }
 
 static void
-create_jpeg_from_data (u_int8_t * dst, u_int8_t * src, int qIndex, int w,
-		       int h, u_int8_t format, int o_size, int *size,
+create_jpeg_from_data (uint8_t * dst, uint8_t * src, int qIndex, int w,
+		       int h, uint8_t format, int o_size, int *size,
 		       int omit_huffman_table, int omit_escape)
 {
 
 	int i = 0;
-	u_int8_t *start;
-	u_int8_t value;
+	uint8_t *start;
+	uint8_t value;
 
 	start = dst;
 	/* copy the header from the template */
@@ -1009,8 +1009,8 @@ create_jpeg_from_data (u_int8_t * dst, u_int8_t * src, int qIndex, int w,
 	*size = dst - start;
 }
 
-static inline u_int8_t *
-put_dword (u_int8_t * ptr, u_int32_t value)
+static inline uint8_t *
+put_dword (uint8_t * ptr, uint32_t value)
 {
 	ptr[0] = (value & 0xff);
 	ptr[1] = (value & 0xff00) >> 8;
