@@ -95,6 +95,7 @@ typedef enum {
  * @CANON_PS_S410: Digital IXUS 430
  * @CANON_PS_S500: Digital IXUS 500
  * @CANON_PS_S45: PowerShot S45
+ * @CANON_PS_S60: PowerShot S60
  * @CANON_PS_G3: PowerShot G3
  * @CANON_PS_G5: PowerShot G5
  * @CANON_PS_S230: PowerShot S230, Digital IXUS v3
@@ -164,6 +165,7 @@ typedef enum {
 	/* other cameras */
 	CANON_PS_S400,
 	CANON_PS_S410,
+	CANON_PS_S60,
 	CANON_PS_S500,
 	CANON_PS_SD100,
 	CANON_EOS_300D,
