@@ -171,6 +171,7 @@ struct gp_port {
         void *library_handle;
 
         int debug_level;
+        int previously_opened;
 };
 
 /* Core functions

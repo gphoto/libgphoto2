@@ -184,6 +184,7 @@ gp_port_new (gp_port **dev, gp_port_type type)
         }
 
         (*dev)->debug_level = glob_debug_level;
+        (*dev)->previously_opened = 0;
 
         (*dev)->type = type;
         (*dev)->device_fd = 0;

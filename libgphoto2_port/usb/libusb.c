@@ -124,12 +124,14 @@ int gp_port_usb_open(gp_port *dev)
 	if (!dev->device_handle)
 		return GP_ERROR_IO_OPEN;
 
-	ret = usb_set_configuration (dev->device_handle,
-				     dev->settings.usb.config);
-	if (ret < 0) {
-		fprintf(stderr, "gp_port_usb_open: could not set config %d: "
-			"%s\n", dev->settings.usb.config, strerror (errno));
-		return GP_ERROR_IO_OPEN;
+	if (! dev->previously_opened) {
+		ret = usb_set_configuration (dev->device_handle,
+					     dev->settings.usb.config);
+		if (ret < 0) {
+			fprintf(stderr, "gp_port_usb_open: could not set config %d: "
+				"%s\n", dev->settings.usb.config, strerror (errno));
+			return GP_ERROR_IO_OPEN;
+		}
 	}
 
 	ret = usb_claim_interface (dev->device_handle,
@@ -140,15 +142,18 @@ int gp_port_usb_open(gp_port *dev)
 		return GP_ERROR_IO_OPEN;
 	}
 
-	ret = usb_set_altinterface (dev->device_handle,
-				    dev->settings.usb.altsetting);
-	if (ret < 0) {
-		fprintf (stderr, "gp_port_usb_open: could not set intf %d/%d: "
-			 "%s\n", dev->settings.usb.interface,
-			 dev->settings.usb.altsetting, strerror (errno));
-		return GP_ERROR_IO_OPEN;
+	if (! dev->previously_opened) {
+		ret = usb_set_altinterface (dev->device_handle,
+					    dev->settings.usb.altsetting);
+		if (ret < 0) {
+			fprintf (stderr, "gp_port_usb_open: could not set intf %d/%d: "
+				 "%s\n", dev->settings.usb.interface,
+				 dev->settings.usb.altsetting, strerror (errno));
+			return GP_ERROR_IO_OPEN;
+		}
 	}
 
+	dev->previously_opened = 1;
 	return GP_OK;
 }
 
