@@ -226,6 +226,9 @@ struct _CameraFilesystem {
 	void *folder_data;
 };
 
+#undef  MIN
+#define MIN(a, b)  (((a) < (b)) ? (a) : (b))
+
 #define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CR(result)           {int r = (result); if (r < 0) return (r);}
 #define CHECK_MEM(m)         {if (!(m)) return (GP_ERROR_NO_MEMORY);}
@@ -865,8 +868,9 @@ gp_filesystem_list_folders (CameraFilesystem *fs, const char *folder,
 			    CameraList *list, GPContext *context)
 {
 	int x, y, j, offset, count;
-	char buf[128];
+	char buf[1024];
 	const char *name;
+	unsigned int len;
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-filesystem",
 		"Listing folders in '%s'...", folder);
@@ -874,6 +878,11 @@ gp_filesystem_list_folders (CameraFilesystem *fs, const char *folder,
 	CHECK_NULL (fs && folder && list);
 	CC (context);
 	CA (folder, context);
+
+	/* Guard against trailing slashes */
+	len = strlen (folder);
+	if ((len > 1) && (folder[len - 1] == '/'))
+		len--;
 
 	gp_list_reset (list);
 
@@ -888,38 +897,38 @@ gp_filesystem_list_folders (CameraFilesystem *fs, const char *folder,
 		CR (count = gp_list_count (list));
 		for (y = 0; y < count; y++) {
 			CR (gp_list_get_name (list, y, &name));
-			strcpy (buf, folder);
-			if (strlen (folder) != 1)
-				strcat (buf, "/");
-			strcat (buf, name);
+			memset (buf, 0, sizeof (buf));
+			strncpy (buf, folder, MIN (sizeof (buf), len));
+			if (buf[strlen (buf) - 1] != '/')
+				strncat (buf, "/", sizeof (buf));
+			strncat (buf, name, sizeof (buf));
 			CR (append_folder (fs, buf, context));
 		}
 		gp_list_reset (list);
 	}
 
 	for (x = 0; x < fs->count; x++)
-		if (!strncmp (fs->folder[x].name, folder, strlen (folder))) {
+		if (!strncmp (fs->folder[x].name, folder, len)) {
 			
 			/*
 			 * Is this really a subfolder (and not the folder
 			 * itself)?
 			 */
-			if (strlen (fs->folder[x].name) <= strlen (folder))
+			if (strlen (fs->folder[x].name) <= len)
 				continue;
 
 			/*
 			 * Is this really a direct subfolder (and not a 
 			 * subsubfolder)?
 			 */
-			for (j = strlen (folder) + 1; 
-			     fs->folder[x].name[j] != '\0'; j++)
+			for (j = len + 1; fs->folder[x].name[j] != '\0'; j++)
 				if (fs->folder[x].name[j] == '/')
 					break;
 			if (j == strlen (fs->folder[x].name)) {
 				if (!strcmp (folder, "/"))
 					offset = 1;
 				else
-					offset = strlen (folder) + 1;
+					offset = len + 1;
 				CR (gp_list_append (list,
 						fs->folder[x].name + offset,
 						NULL));
@@ -1048,7 +1057,7 @@ gp_filesystem_make_dir (CameraFilesystem *fs, const char *folder,
 	CR (x = gp_filesystem_folder_number (fs, folder, context));
 
 	strncpy (path, folder, sizeof (path));
-	if (strlen (folder) > 1)
+	if (path[strlen (path) - 1] != '/')
 		strncat (path, "/", sizeof (path));
 	strncat (path, name, sizeof (path));
 
@@ -1079,7 +1088,7 @@ gp_filesystem_remove_dir (CameraFilesystem *fs, const char *folder,
 	 * that is to be removed.
 	 */
 	strncpy (path, folder, sizeof (path));
-	if (strlen (folder) > 1)
+	if (path[strlen (path) - 1] != '/')
 		strncat (path, "/", sizeof (path));
 	strncat (path, name, sizeof (path));
 	CR (gp_filesystem_list_folders (fs, path, &list, context));
@@ -1248,10 +1257,10 @@ gp_filesystem_scan (CameraFilesystem *fs, const char *folder,
 	CR (count = gp_list_count (&list));
 	for (x = 0; x < count; x++) {
 		CR (gp_list_get_name (&list, x, &name));
-		strcpy (path, folder);
-		if (strcmp (path, "/"))
-			strcat (path, "/");
-		strcat (path, name);
+		strncpy (path, folder, sizeof (folder));
+		if (path[strlen (path) - 1] != '/')
+			strncat (path, "/", sizeof (path));
+		strncat (path, name, sizeof (path));
 		CR (gp_filesystem_scan (fs, path, filename, context));
 	}
 
