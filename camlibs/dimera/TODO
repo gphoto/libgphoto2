@@ -2,9 +2,9 @@ $Id$
 
 Outstanding items in the gphoto2 dimera driver:
 
-- make exposure, auto_exposure, auto_flash user-modifiable config options
 - make sure multiple, simultaneous requests are handled properly and
 disallowed where necessary (e.g. downloading image)
+- add delete file function
 
 Bugs:
 

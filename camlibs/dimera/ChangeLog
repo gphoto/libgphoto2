@@ -1,3 +1,7 @@
+2003-01-14  Dan Fandrich <dan@coneharvesters.com>
+
+	* dimera3500.c: Made exposure and flash settings configurable.
+
 2002-11-17  Marcus Meissner <marcus@jet.franken.de>
 	
 	* dimera3500.c: Fixed 64bit problems.

@@ -66,17 +66,17 @@
 #define MAX_EXPOSURE	(50000/4)
 #define MIN_EXPOSURE	1
 
-static char     Dimera_thumbhdr[] =
-"P5\n# Dimera 3500 Thumbnail\n64 48\n255\n";
+static const char Dimera_thumbhdr[] =
+"P5\n# Dimera 3500 Thumbnail written by gphoto2\n64 48\n255\n";
 
-static char     Dimera_viewhdr[] = 
-"P5\n# Dimera 3500 Viewfinder\n128 96\n15\n";
+static const char Dimera_viewhdr[] = 
+"P5\n# Dimera 3500 Viewfinder written by gphoto2\n128 96\n15\n";
 
-static char     Dimera_finehdr[] =
-"P6\n# Dimera 3500 Image\n640 480\n255\n";
+static const char Dimera_finehdr[] =
+"P6\n# Dimera 3500 Image written by gphoto2\n640 480\n255\n";
 
-static char     Dimera_stdhdr[] =
-"P6\n# Dimera 3500 Image\n320 240\n255\n";
+static const char Dimera_stdhdr[] =
+"P6\n# Dimera 3500 Image written by gphoto2\n320 240\n255\n";
 
 /* Forward references */
 
@@ -99,7 +99,7 @@ struct _CameraPrivateLibrary {
 };
 
 
-static char *models[] = {
+static const char *models[] = {
         "Mustek:VDC-3500",
         "Relisys:Dimera 3500",
         "Trust:DC-3500",
@@ -133,7 +133,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 		a.speed[5] = 76800;
 		a.speed[6] = 115200;
 		a.speed[7] = 0;
-		a.operations = GP_OPERATION_CAPTURE_IMAGE;
+		a.operations = GP_OPERATION_CAPTURE_IMAGE | GP_OPERATION_CONFIG;
 		a.file_operations  = GP_FILE_OPERATION_PREVIEW;
 		a.folder_operations = GP_FOLDER_OPERATION_NONE;
 
@@ -426,8 +426,8 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
 	"  often caused by a low battery.\n"
 	"* Images captured remotely on this camera are stored\n"
 	"  in temporary RAM and not in the flash memory card.\n"
-	"* Exposure control when capturing all images is\n"
-	"  automatically set by the capture preview function.\n"
+	"* Exposure control when capturing images can be\n"
+	"  configured manually or set to automatic mode.\n"
 	"* Image quality is currently lower than it could be.\n"
 	));
 
@@ -760,10 +760,84 @@ Dimera_Preview( long *size, Camera *camera, GPContext *context )
 	return image;
 }
 
+static int
+camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
+{
+	CameraWidget *t, *section;
+	char str[16];
+
+	GP_DEBUG ("camera_get_config()");
+
+	gp_widget_new (GP_WIDGET_WINDOW, _("Driver Configuration"), window);
+
+	gp_widget_new (GP_WIDGET_SECTION, _("Exposure"), &section);
+	gp_widget_append (*window, section);
+
+	gp_widget_new (GP_WIDGET_TOGGLE, _("Automatic exposure adjustment on preview"), &t);
+	gp_widget_set_value (t, &camera->pl->auto_exposure);
+	gp_widget_append (section, t);
+
+	gp_widget_new (GP_WIDGET_TEXT, _("Exposure level on preview"), &t);
+	sprintf(str, "%d", camera->pl->exposure);
+	gp_widget_set_value (t, str);
+	gp_widget_append (section, t);
+
+	gp_widget_new (GP_WIDGET_SECTION, _("Flash"), &section);
+	gp_widget_append (*window, section);
+
+	gp_widget_new (GP_WIDGET_TOGGLE, _("Automatic flash on capture"), &t);
+	gp_widget_set_value (t, &camera->pl->auto_flash);
+	gp_widget_append (section, t);
+
+	return GP_OK;
+}
+
+static int
+camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
+{
+	CameraWidget *w;
+	char *wvalue;
+	int val;
+	char str[16];
+
+	GP_DEBUG ("camera_set_config()");
+
+	gp_widget_get_child_by_label (window, _("Exposure level on preview"), &w);
+	if (gp_widget_changed (w)) {
+		gp_widget_get_value (w, &wvalue);
+		camera->pl->exposure = MAX(MIN_EXPOSURE,MIN(MAX_EXPOSURE,atoi(wvalue)));
+		gp_setting_set ("dimera3500", "exposure", wvalue);
+		GP_DEBUG ("set exposure");
+	}
+
+	gp_widget_get_child_by_label (window, _("Automatic exposure adjustment on preview"), &w);
+	if (gp_widget_changed (w)) {
+		gp_widget_get_value (w, &val);
+		camera->pl->auto_exposure = val;
+		sprintf(str, "%d", val);
+		gp_setting_set ("dimera3500", "auto_exposure", str);
+		GP_DEBUG ("set auto_exposure");
+	}
+
+	gp_widget_get_child_by_label (window, _("Automatic flash on capture"), &w);
+	if (gp_widget_changed (w)) {
+		gp_widget_get_value (w, &val);
+		camera->pl->auto_flash = val;
+		sprintf(str, "%d", val);
+		gp_setting_set ("dimera3500", "auto_flash", str);
+		GP_DEBUG ("set auto_flash");
+	}
+
+	GP_DEBUG ("done configuring driver.");
+
+	return GP_OK;
+}
+
 int camera_init (Camera *camera, GPContext *context) {
 
 	GPPortSettings settings;
         int ret, selected_speed;
+        char buf[1024];
 
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;
@@ -772,6 +846,8 @@ int camera_init (Camera *camera, GPContext *context) {
         camera->functions->summary              = camera_summary;
         camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;
+        camera->functions->get_config           = camera_get_config;
+        camera->functions->set_config           = camera_set_config;
 
 	/* Get the settings and remember the selected speed */
 	gp_port_get_settings (camera->port, &settings);
@@ -786,13 +862,22 @@ int camera_init (Camera *camera, GPContext *context) {
 	}
 
         /* Set the default exposure */
-	camera->pl->exposure = DEFAULT_EXPOSURE;
+        if (gp_setting_get ("dimera3500", "exposure", buf) == GP_OK)
+            camera->pl->exposure = atoi(buf);
+        else
+            camera->pl->exposure = DEFAULT_EXPOSURE;
 
-        /* Enable automatic exposure setting for capture preview mode */
-        camera->pl->auto_exposure = 1;
+        /* Set automatic exposure enable setting for capture preview mode */
+        if (gp_setting_get ("dimera3500", "auto_exposure", buf) == GP_OK)
+            camera->pl->auto_exposure = atoi(buf);
+        else
+            camera->pl->auto_exposure = 1;
 
-        /* Use flash, if necessary, when capturing picture */
-	camera->pl->auto_flash = 1;
+        /* Set flag to use flash, if necessary, when capturing picture */
+        if (gp_setting_get ("dimera3500", "auto_flash", buf) == GP_OK)
+            camera->pl->auto_flash = atoi(buf);
+        else
+            camera->pl->auto_flash = 1;
 
         GP_DEBUG("Opening port");
         if ( (ret = mesa_port_open(camera->port)) != GP_OK)
