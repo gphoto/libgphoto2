@@ -105,18 +105,11 @@ struct camera_to_usb {
 	/* ALDI (german discounter) version */
 	{ "Pencam:TEVION MD 9456",	0x0553, 0x0202, 0 },
 
-	/* SiPix Stylecam looks like stv0680, but reportedly is not  */
-	/* (has USB id 0xd64/0x1001) */
 	/* http://www.umax.de/digicam/AstraPen_SL.htm.
 	 * There is an additional 100K (CIF), 300K (VGA) tag after the name. */
 	{ "UMAX:AstraPen",              0x0553, 0x0202, 0 }, /* SV and SL */
 
-	/* The Umax AstraPix 320S is a SiPix Stylecam clone, reported by Marius
-	 * Schaefer. */
-	/* http://www.umax.de/digicam/AstraPix320S.htm, VGA */
-
 	{ "Fuji:IX-1",                  0x0553, 0x0202, 0 }, /* Unconfirmed */
-
 	/* Added for the konica e-mini by Roland Marcus Rutschmann<Rutschmann@gmx.de>*/
 	{ "Konica:e-mini",              0x04c8, 0x0722, 0 },
 
