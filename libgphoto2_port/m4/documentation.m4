@@ -139,10 +139,6 @@ dnl ------------------------------------------------------------------------
 manual_msg="no (http://cyberelk.net/tim/xmlto/)"
 try_xmlto=true
 have_xmlto=false
-have_xmltohtml=false
-have_xmltoman=false
-have_xmltopdf=false
-have_xmltops=false
 AC_ARG_WITH(xmlto, [  --without-xmlto           Don't use xmlto],[
 	if test x$withval = xno; then
 		try_xmlto=false
@@ -152,16 +148,23 @@ if $try_xmlto; then
 	if test -n "${XMLTO}"; then
 		have_xmlto=true
 		manual_msg="yes"
+        else
+                # in case anybody runs $(XMLTO) somewhere, we return false
+                XMLTO=false
 	fi
 fi
 
 AM_CONDITIONAL(XMLTO, $have_xmlto)
 
+
 doc_formats_list='man html ps pdf'
+
+# initialize have_xmlto* to false
 for i in $doc_formats_list; do
-  d=`echo $i | $TR a-z A-Z`
+  d=`echo $i | $TR A-Z a-z`
   eval "have_xmlto$d=false"
 done
+
 AC_MSG_CHECKING(checking doc formats)
 AC_ARG_WITH(doc_formats,
   [  --with-doc-formats=<list>   create doc with format in <list>; ]
@@ -169,19 +172,26 @@ AC_ARG_WITH(doc_formats,
   [                            possible formats are: ]
   [                            man, html, ps, pdf ],
   doc_formats="$withval", doc_formats="man html")
+
 if test "$doc_formats" = "all"; then
-  doc_formats=$doc_formats_list;
+  doc_formats=$doc_formats_list
 else
   doc_formats=`echo $doc_formats | sed 's/,/ /g'`
 fi
-for i in $doc_formats; do
-  if test -n "`echo $doc_formats_list | $GREP -E \"(^| )$i( |\$)\"`"; then
-    eval "have_xmlto$i=true"
-  else
-    AC_ERROR(Unknown doc format $i!)
-  fi
-done
-AC_MSG_RESULT($doc_formats)
+
+# set have_xmlto* to true if requested and possible
+if $have_xmlto; then
+  for i in $doc_formats; do
+    if test -n "`echo $doc_formats_list | $GREP -E \"(^| )$i( |\$)\"`"; then
+      eval "have_xmlto$i=true"
+    else
+      AC_ERROR(Unknown doc format $i!)
+    fi
+  done
+  AC_MSG_RESULT($doc_formats)
+else
+  AC_MSG_RESULT([deactivated (requires xmlto)])
+fi
 
 AM_CONDITIONAL(XMLTOHTML,$have_xmltohtml)
 AM_CONDITIONAL(XMLTOMAN,$have_xmltoman)
@@ -189,28 +199,30 @@ AM_CONDITIONAL(XMLTOPDF,$have_xmltopdf)
 AM_CONDITIONAL(XMLTOPS,$have_xmltops)
 
 # create list of supported formats
+AC_MSG_CHECKING([for manual formats to re­create])
 xxx=""
 manual_html=""
 manual_pdf=""
 manual_ps=""
-if test "x$XMLTOHTML_FALSE" = "x#"; then
-        xxx="${xxx} html"
+if $have_xmltohtml; then
         manual_html=manual
+        xxx="${xxx} html($manual_html)"
 fi
-if test "x$XMLTOMAN_FALSE" = "x#"; then
+if $have_xmltoman; then
         xxx="${xxx} man"
 fi
-if test "x$XMLTOPDF_FALSE" = "x#"; then
-        xxx="${xxx} pdf"
+if $have_xmltopdf; then
         manual_pdf=gphoto2.pdf
+        xxx="${xxx} pdf($manual_pdf)"
 fi
-if test "x$XMLTOPS_FALSE" = "x#"; then 
-        xxx="${xxx} ps"
-        manual_pdf=gphoto2.ps
+if $have_xmltops; then 
+        manual_ps=gphoto2.ps
+        xxx="${xxx} ps($manual_ps)"
 fi
 AC_SUBST(manual_html)
 AC_SUBST(manual_pdf)
 AC_SUBST(manual_ps)
+AC_MSG_RESULT($xxx)
 
 if test "x$xxx" != "x"
 then
