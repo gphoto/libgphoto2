@@ -1,3 +1,6 @@
+2004-01-05 Mariusz Woloszyn
+	* ptp.c: sync with libptp2 code.
+
 2004-01-04  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* ptp.c: Added Canon Digital IXUS i as reported.

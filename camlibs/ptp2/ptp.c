@@ -152,7 +152,7 @@ ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
 		ret = PTP_ERROR_IO;
 /*		ptp_error (params,
 		"PTP: request code 0x%04x sending data error 0x%04x",
-			ptp->Code,ret);*/
+			ptp->Code,ret); */
 	}
 	return ret;
 }
@@ -253,9 +253,9 @@ ptp_usb_getresp (PTPParams* params, PTPContainer* resp)
 /* major PTP functions */
 
 /* Transaction data phase description */
-#define PTP_DP_NODATA		0x0000	/* No Data Phase */
+#define PTP_DP_NODATA		0x0000	/* no data phase */
 #define PTP_DP_SENDDATA		0x0001	/* sending data */
-#define PTP_DP_GETDATA		0x0002	/* geting data */
+#define PTP_DP_GETDATA		0x0002	/* receiving data */
 #define PTP_DP_DATA_MASK	0x00ff	/* data phase mask */
 
 /* Number of PTP Request phase parameters */
