@@ -5,6 +5,9 @@
 #include "dc120.h"
 #include "library.h"
 
+char *dc120_folder_memory = "Internal Memory";
+char *dc120_folder_card   = "CompactFlash Card";
+
 int camera_id (CameraText *id) {
 
 	strcpy(id->text, "kodak-dc120");
@@ -143,10 +146,11 @@ int camera_exit (Camera *camera) {
 int camera_folder_list	(Camera *camera, CameraList *list, char *folder) {
 
 	DC120Data *dd = camera->camlib_data;
+	char buf[32];
 
 	if (strcmp(folder, "/")==0) {
-		gp_list_append(list, "Built-In", GP_LIST_FOLDER);
-		gp_list_append(list, "Card", GP_LIST_FOLDER);
+		gp_list_append(list, dc120_folder_memory, GP_LIST_FOLDER);
+		gp_list_append(list, dc120_folder_card, GP_LIST_FOLDER);
 		return (GP_OK);
 	}
 
@@ -154,11 +158,13 @@ int camera_folder_list	(Camera *camera, CameraList *list, char *folder) {
 	if (folder[strlen(folder)-1] == '/')
 		folder[strlen(folder)-1] = 0;
 
-	if (strcmp(folder, "/Build-In")==0)
+	sprintf(buf, "/%s", dc120_folder_memory);
+	if (strcmp(folder, buf)==0)
 		/* From memory */
 		return (dc120_get_albums(dd, 0, list));
 
-	if (strcmp(folder, "/Card")==0)
+	sprintf(buf, "/%s", dc120_folder_card);
+	if (strcmp(folder, buf)==0)
 		/* From cf card */
 		return (dc120_get_albums(dd, 1, list));
 
@@ -169,23 +175,27 @@ int camera_file_list (Camera *camera, CameraList *list, char *folder) {
 
 	DC120Data *dd = camera->camlib_data;
 	CameraListEntry *entry;
-	int retval = GP_ERROR;
+	char buf[32];
+	int retval = GP_OK;
 	int x;
 
 	/* Chop trailing slash */
 	if (folder[strlen(folder)-1] == '/')
 		folder[strlen(folder)-1] = 0;
 
-	if (strcmp(folder, "/Built-In")==0)
+	sprintf(buf, "/%s", dc120_folder_memory);
+	if (strcmp(folder, buf)==0)
 		/* From memory */
 		retval = dc120_get_filenames(dd, 0, 0, list);
 
-	if (strcmp(folder, "/Card")==0)
+	sprintf(buf, "/%s", dc120_folder_card);
+	if (strcmp(folder, buf)==0)
 		/* From cf card */
 		retval = dc120_get_filenames(dd, 1, 0, list);
 
-	if (strncmp(folder, "/Card/ALBUM", 11)==0)
-		retval = dc120_get_filenames(dd, 1, folder[12] - '0', list);
+	sprintf(buf, "/%s/ALBUM", dc120_folder_card);
+	if (strncmp(folder, buf, strlen(dc120_folder_card)+7)==0)
+		retval = dc120_get_filenames(dd, 1, folder[strlen(dc120_folder_card)+8] - '0', list);
 
 	/* Save the order of the pics (wtf: no filename access on dc120???) */
 	/* Use the filesystem helpers to maintain picture list */
@@ -195,6 +205,7 @@ int camera_file_list (Camera *camera, CameraList *list, char *folder) {
 			gp_filesystem_append(dd->fs, folder, entry->name);
 		}
 	}
+
 	return (retval);
 }
 
@@ -202,27 +213,34 @@ int camera_file_get_common (Camera *camera, CameraFile *file, char *folder, char
 	int get_preview) {
 
 	DC120Data *dd = camera->camlib_data;
-	int picnum, album_num, from_card;
+	int picnum, album_num=-1, from_card;
+	char buf[32];
 
 	picnum = gp_filesystem_number(dd->fs, folder, filename);
 
 	if (picnum == GP_ERROR)
 		return (GP_ERROR);
-
-	if (strcmp(folder, "/Built-In")==0) {
+	
+	sprintf(buf, "/%s", dc120_folder_memory);
+	if (strcmp(folder, buf)==0) {
 		from_card = 0;
 		album_num = 0;
 	}
 
-	if (strcmp(folder, "/Card")==0) {
+	sprintf(buf, "/%s", dc120_folder_card);
+	if (strcmp(folder, buf)==0) {
 		from_card = 1;
 		album_num = 0;
 	}
 
-	if (strncmp(folder, "/Card/ALBUM", 11)==0) {
-		from_card = 1;
+	sprintf(buf, "/%s/ALBUM", dc120_folder_card);
+	if (strncmp(folder, buf, strlen(dc120_folder_card)+7)==0) {
+		from_card = 1; 
 		album_num = folder[12] - '0';
 	}
+
+	if (album_num == -1)
+		return (GP_ERROR);
 
 	return (dc120_get_file(dd, get_preview, from_card, album_num, picnum+1, file));
 }
