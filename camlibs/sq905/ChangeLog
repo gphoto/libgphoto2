@@ -1,8 +1,14 @@
+2003-07-12  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* library.c
+	* sq905.[c,h]: New code by Theodore Kilgore
+	  <kilgota@banach.math.auburn.edu>
+
 2003-07-07  Lutz Mueller <lutz@users.sourceforge.net>
 
 	* library.c
 	* sq905.c: Got some more feedback from Theodore Kilgore
-	  <kilgota@banach.math.auburn.edu
+	  <kilgota@banach.math.auburn.edu>
 
 2003-06-30  Lutz Mueller <lutz@users.sourceforge.net>
 

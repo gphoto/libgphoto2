@@ -3,15 +3,18 @@
 
 #include <libgphoto2_port/gphoto2-port.h>
 
-typedef char SQConfig[0x4000];
+typedef unsigned char SQData;
 
-unsigned int sq_config_get_num_pic (SQConfig data);
-unsigned int sq_config_get_width   (SQConfig data, unsigned int n);
-unsigned int sq_config_get_height  (SQConfig data, unsigned int n);
-unsigned int sq_config_get_comp    (SQConfig data, unsigned int n);
+int sq_reset             (GPPort *port);
+int sq_init              (GPPort *port, SQData *data);
 
-int sq_init  (GPPort *port, SQConfig data);
-int sq_reset (GPPort *port);
-int sq_read  (GPPort *port, unsigned char *buf, unsigned int buf_len);
+/* Those functions don't need data transfer with the camera */
+int sq_get_num_pics      (SQData *data); 
+int sq_get_comp_ratio    (SQData *data, int n);
+int sq_get_picture_width (SQData *data, int n);
 
-#endif /* __SQ905_H__ */
+unsigned char *sq_read_data         (GPPort *port, char *data, int size);
+unsigned char *sq_read_picture_data (GPPort *port, char *data, int size);
+
+#endif
+
