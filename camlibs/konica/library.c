@@ -59,13 +59,13 @@ static gchar* konica_results[] = {
 
 
 
-gchar* models_qm100[] = {"Konica Q-EZ", "Konica Q-M100", "Konica Q-M100V", "HP PhotoSmart C20", "HP PhotoSmart C30", NULL};
+static gchar* models_qm100[] = {"Konica Q-EZ", "Konica Q-M100", "Konica Q-M100V", "HP PhotoSmart C20", "HP PhotoSmart C30", NULL};
 
 
-gchar* models_qm200[] = {"Konica Q-M200", "HP PhotoSmart C200",	"HP PhotoSmart 215", "HP PhotoSmart 315", NULL};
+static gchar* models_qm200[] = {"Konica Q-M200", "HP PhotoSmart C200",	"HP PhotoSmart 215", "HP PhotoSmart 315", NULL};
 
 
-gchar** models[2] = {models_qm100, models_qm200};
+static gchar** models[2] = {models_qm100, models_qm200};
 
 
 /**************/

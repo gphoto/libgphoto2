@@ -7,7 +7,7 @@
 
 extern char packet_1[];
 
-char *models[] = {
+static char *models[] = {
 	"Barbie",
 	"Nick Click",
 	"WWF",

@@ -31,7 +31,7 @@ int camera_id(CameraText *id)
         return GP_OK;
 }
 
-char *models[] = {
+static char *models[] = {
         "Kodak DC220",
         "Kodak DC260",
         "Kodak DC265",
