@@ -166,8 +166,7 @@ canon_int_switch_camera_off (Camera *camera)
 		case GP_PORT_USB:
 			GP_DEBUG ("Not trying to shut down USB camera...");
 			break;
-		case GP_PORT_NONE:
-		GP_PORT_DEFAULT
+		GP_PORT_DEFAULT_RETURN()
 	}
 	clear_readiness (camera);
 }
