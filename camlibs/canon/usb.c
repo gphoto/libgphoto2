@@ -804,7 +804,7 @@ canon_usb_identify (Camera *camera, GPContext *context)
 		     models[i].usb_product == a.usb_product)) {
 			GP_DEBUG ("canon_usb_identify: USB product and vendor ID matches '%s'",
 				  models[i].id_str);
-			gp_camera_status (camera, "Detected a %s", models[i].id_str);
+			gp_context_status (context, _("Detected a '%s'."), models[i].id_str);
 			camera->pl->md = (struct canonCamModelData *) &models[i];
 			return GP_OK;
 		}

@@ -29,11 +29,11 @@ int canon_serial_send_frame (Camera *camera, const unsigned char *pkt, int len);
 unsigned char *canon_serial_recv_frame (Camera *camera, int *len);
 void canon_serial_error_type(Camera *camera);
 
-unsigned char * canon_serial_dialogue (Camera *camera, unsigned char mtype, unsigned char dir, int *len, ...);
+unsigned char * canon_serial_dialogue (Camera *camera, GPContext *context, unsigned char mtype, unsigned char dir, int *len, ...);
 int canon_serial_send_packet (Camera *camera, unsigned char type, unsigned char seq, unsigned char *pkt, int len);
 unsigned char *canon_serial_recv_packet (Camera *camera, unsigned char *type, unsigned char *seq, int *len);
 int canon_serial_wait_for_ack (Camera *camera);
-unsigned char *canon_serial_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, int *total);
+unsigned char *canon_serial_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, int *total, GPContext *context);
 
 unsigned char *canon_serial_get_file (Camera *camera, const char *name, int *length, GPContext *context);
 int canon_serial_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath, GPContext *context);

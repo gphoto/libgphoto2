@@ -250,7 +250,7 @@ canon_int_directory_operations (Camera *camera, const char *path, int action,
 				return GP_ERROR;
 			break;
 		case GP_PORT_SERIAL:
-			msg = canon_serial_dialogue (camera, type, 0x11, &len, path,
+			msg = canon_serial_dialogue (camera, context, type, 0x11, &len, path,
 						     strlen (path) + 1, NULL);
 			if (!msg) {
 				canon_serial_error_type (camera);
@@ -304,7 +304,7 @@ canon_int_identify_camera (Camera *camera, GPContext *context)
 				return GP_ERROR;
 			break;
 		case GP_PORT_SERIAL:
-			msg = canon_serial_dialogue (camera, 0x01, 0x12, &len, NULL);
+			msg = canon_serial_dialogue (camera, context, 0x01, 0x12, &len, NULL);
 			if (!msg) {
 				gp_debug_printf (GP_DEBUG_LOW, "canon",
 						 "canon_int_identify_camera: " "msg error");
@@ -357,7 +357,7 @@ canon_int_get_battery (Camera *camera, int *pwr_status, int *pwr_source, GPConte
 				return GP_ERROR;
 			break;
 		case GP_PORT_SERIAL:
-			msg = canon_serial_dialogue (camera, 0x0a, 0x12, &len, NULL);
+			msg = canon_serial_dialogue (camera, context, 0x0a, 0x12, &len, NULL);
 			if (!msg) {
 				canon_serial_error_type (camera);
 				return GP_ERROR;
@@ -433,7 +433,7 @@ canon_int_set_file_attributes (Camera *camera, const char *file, const char *dir
 
 			break;
 		case GP_PORT_SERIAL:
-			msg = canon_serial_dialogue (camera, 0xe, 0x11, &len, attr, 4, dir,
+			msg = canon_serial_dialogue (camera, context, 0xe, 0x11, &len, attr, 4, dir,
 						     strlen (dir) + 1, file, strlen (file) + 1,
 						     NULL);
 			if (!msg) {
@@ -474,14 +474,12 @@ canon_int_set_owner_name (Camera *camera, const char *name, GPContext *context)
 	unsigned char *msg;
 	int len;
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_int_set_owner_name() "
-			 "called, name = '%s'", name);
+	GP_DEBUG ("canon_int_set_owner_name() called, name = '%s'", name);
 	if (strlen (name) > 30) {
-		gp_debug_printf (GP_DEBUG_LOW, "canon",
-				 "canon_int_set_owner_name: Name too long (%i chars), "
-				 "max is 30 characters!", strlen (name));
-		gp_camera_status (camera, _("Name too long, max is 30 characters!"));
-		return GP_OK;
+		gp_context_error (context, _("Name '%s' (%i characters) "
+			"too long (%i chars), maximal 30 characters are "
+			"allowed."), name, strlen (name));
+		return GP_ERROR;
 	}
 
 	switch (camera->port->type) {
@@ -492,7 +490,7 @@ canon_int_set_owner_name (Camera *camera, const char *name, GPContext *context)
 				return GP_ERROR;
 			break;
 		case GP_PORT_SERIAL:
-			msg = canon_serial_dialogue (camera, 0x05, 0x12, &len, name,
+			msg = canon_serial_dialogue (camera, context, 0x05, 0x12, &len, name,
 						     strlen (name) + 1, NULL);
 			if (!msg) {
 				canon_serial_error_type (camera);
@@ -543,7 +541,7 @@ canon_int_get_time (Camera *camera, GPContext *context)
 				return GP_ERROR;
 			break;
 		case GP_PORT_SERIAL:
-			msg = canon_serial_dialogue (camera, 0x03, 0x12, &len, NULL);
+			msg = canon_serial_dialogue (camera, context, 0x03, 0x12, &len, NULL);
 			if (!msg) {
 				canon_serial_error_type (camera);
 				return GP_ERROR;
@@ -620,7 +618,7 @@ canon_int_set_time (Camera *camera, time_t date, GPContext *context)
 				return GP_ERROR;
 			break;
 		case GP_PORT_SERIAL:
-			msg = canon_serial_dialogue (camera, 0x04, 0x12, &len, payload,
+			msg = canon_serial_dialogue (camera, context, 0x04, 0x12, &len, payload,
 						     sizeof (payload), NULL);
 			if (!msg) {
 				canon_serial_error_type (camera);
@@ -695,7 +693,7 @@ canon_int_get_disk_name (Camera *camera, GPContext *context)
 			}
 			break;
 		case GP_PORT_SERIAL:
-			msg = canon_serial_dialogue (camera, 0x0a, 0x11, &len, NULL);
+			msg = canon_serial_dialogue (camera, context, 0x0a, 0x11, &len, NULL);
 			if (!msg) {
 				canon_serial_error_type (camera);
 				return NULL;
@@ -756,7 +754,7 @@ canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, i
 				return GP_ERROR;
 			break;
 		case GP_PORT_SERIAL:
-			msg = canon_serial_dialogue (camera, 0x09, 0x11, &len, name,
+			msg = canon_serial_dialogue (camera, context, 0x09, 0x11, &len, name,
 						     strlen (name) + 1, NULL);
 			if (!msg) {
 				canon_serial_error_type (camera);
@@ -1383,7 +1381,7 @@ old_canon_int_get_thumbnail (Camera *camera, const char *name, int *length)
 			}
 
 			payload_length = strlen (name) + 1;
-			msg = canon_serial_dialogue (camera, 0x1, 0x11, &total_file_size,
+			msg = canon_serial_dialogue (camera, context, 0x1, 0x11, &total_file_size,
 						     "\x01\x00\x00\x00\x00", 5,
 						     &payload_length, 1, "\x00", 2,
 						     name, strlen (name) + 1, NULL);
@@ -1542,7 +1540,7 @@ canon_int_delete_file (Camera *camera, const char *name, const char *dir, GPCont
 
 			break;
 		case GP_PORT_SERIAL:
-			msg = canon_serial_dialogue (camera, 0xd, 0x11, &len, dir,
+			msg = canon_serial_dialogue (camera, context, 0xd, 0x11, &len, dir,
 						     strlen (dir) + 1, name, strlen (name) + 1,
 						     NULL);
 			if (!msg) {

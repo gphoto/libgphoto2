@@ -151,7 +151,7 @@ check_readiness (Camera *camera, GPContext *context)
 		camera->pl->cached_ready = 1;
 		return 1;
 	}
-	gp_camera_status (camera, _("Camera unavailable"));
+	gp_context_error (context, _("Camera unavailable"));
 	return 0;
 }
 
@@ -162,7 +162,7 @@ canon_int_switch_camera_off (Camera *camera, GPContext *context)
 
 	switch (camera->port->type) {
 		case GP_PORT_SERIAL:
-			gp_camera_status (camera, _("Switching Camera Off"));
+			gp_context_status (context, _("Switching Camera Off"));
 			canon_serial_off (camera);
 			break;
 		case GP_PORT_USB:
@@ -289,10 +289,10 @@ canon_get_picture (Camera *camera, char *filename, char *path, int thumbnail,
 			GP_DEBUG ("Picture number %i", picture_number);
 
 			if (!picture_number || picture_number > cached_images) {
-				gp_camera_status (camera, _("Invalid index"));
+				gp_context_status (context, _("Invalid index"));
 				return GP_ERROR;
 			}
-			gp_camera_status (camera, cached_paths[picture_number]);
+			gp_context_status (context, cached_paths[picture_number]);
 			if (!check_readiness (camera, context)) {
 				return GP_ERROR;
 			}
@@ -312,7 +312,7 @@ canon_get_picture (Camera *camera, char *filename, char *path, int thumbnail,
 			/* clear_readiness(); */
 #ifdef OBSOLETE
 			if (!update_dir_cache (camera)) {
-				gp_camera_status (camera,
+				gp_context_status (context,
 						  _("Could not obtain directory listing"));
 				return GP_ERROR;
 			}
@@ -544,7 +544,7 @@ old_get_file_func (CameraFilesystem *fs, const char *folder, const char *filenam
 #ifdef OBSOLETE
 	/* update file cache (if necessary) first */
 	if (!update_dir_cache (camera)) {
-		gp_camera_status (camera, _("Could not obtain directory listing"));
+		gp_context_status (context, _("Could not obtain directory listing"));
 		return GP_ERROR;
 	}
 
@@ -802,7 +802,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 
 #ifdef OBSOLETE
 	if (!update_dir_cache (camera)) {
-		gp_camera_status (camera, _("Could not obtain directory listing"));
+		gp_context_status (context, _("Could not obtain directory listing"));
 		return GP_ERROR;
 	}
 #endif
@@ -869,7 +869,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 
 #ifdef OBSOLETE
 	if (!update_dir_cache (camera)) {
-		gp_camera_status (camera, _("Could not obtain directory listing"));
+		gp_context_status (context, _("Could not obtain directory listing"));
 		return GP_ERROR;
 	}
 #endif
@@ -1039,12 +1039,12 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	if (gp_widget_changed (w)) {
 		gp_widget_get_value (w, &wvalue);
 		if (!check_readiness (camera, context)) {
-			gp_camera_status (camera, _("Camera unavailable"));
+			gp_context_status (context, _("Camera unavailable"));
 		} else {
 			if (canon_int_set_owner_name (camera, wvalue, context) == GP_OK)
-				gp_camera_status (camera, _("Owner name changed"));
+				gp_context_status (context, _("Owner name changed"));
 			else
-				gp_camera_status (camera, _("could not change owner name"));
+				gp_context_status (context, _("could not change owner name"));
 		}
 	}
 
@@ -1052,12 +1052,12 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	if (gp_widget_changed (w)) {
 		gp_widget_get_value (w, &wvalue);
 		if (!check_readiness (camera, context)) {
-			gp_camera_status (camera, _("Camera unavailable"));
+			gp_context_status (context, _("Camera unavailable"));
 		} else {
 			if (canon_int_set_time (camera, time(NULL), context) == GP_OK) {
-				gp_camera_status (camera, _("time set"));
+				gp_context_status (context, _("time set"));
 			} else {
-				gp_camera_status (camera, _("could not set time"));
+				gp_context_status (context, _("could not set time"));
 			}
 		}
 	}
