@@ -23,8 +23,30 @@
 #include <string.h>
 
 #include <gphoto2-library.h>
+#include <gphoto2-port-log.h>
 
 #include "ricoh.h"
+
+#define GP_MODULE "ricoh"
+
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define N_(String) (String)
+#  endif 
+#else
+#  define textdomain(String) (String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory) (Domain)
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
 
 #define CR(result) {int r=(result); if (r<0) return r;}
 
@@ -33,6 +55,7 @@ static struct {
 } models[] = {
 	{"Ricoh RDC-300"},
 	{"Ricoh RDC-300Z"},
+	{"Ricoh RDC-4300"},
 	{NULL}
 };
 
@@ -68,6 +91,48 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	return (GP_OK);
 }
 
+static int
+get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
+	       CameraFileType type, CameraFile *file, void *user_data,
+	       GPContext *context)
+{
+	Camera *camera = user_data;
+	int n;
+	unsigned int size;
+	unsigned char *data;
+
+	CR (n = gp_filesystem_number (fs, folder, filename, context));
+	n++;
+
+	switch (type) {
+	case GP_FILE_TYPE_NORMAL:
+		CR (ricoh_get_pic (camera, context, n, &data, &size));
+		break;
+	default:
+		return (GP_ERROR_NOT_SUPPORTED);
+	}
+
+	gp_file_set_data_and_size (file, data, size);
+	gp_file_set_mime_type (file, GP_MIME_JPEG);
+
+	return (GP_OK);
+}
+
+static int
+del_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
+	       void *user_data, GPContext *context)
+{
+	Camera *camera = user_data;
+	int n;
+
+	CR (n = gp_filesystem_number (fs, folder, filename, context));
+	n++;
+
+	CR (ricoh_del_pic (camera, context, n));
+
+	return (GP_OK);
+}
+
 int
 camera_id (CameraText *id)
 {
@@ -76,11 +141,63 @@ camera_id (CameraText *id)
 	return (GP_OK);
 }
 
+static struct {
+	unsigned int speed;
+	RicohSpeed rspeed;
+} speeds[] = {
+	{  2400, RICOH_SPEED_2400},
+	{115200, RICOH_SPEED_115200},
+	{  4800, RICOH_SPEED_4800},
+	{ 19200, RICOH_SPEED_19200},
+	{ 38400, RICOH_SPEED_38400},
+	{ 57600, RICOH_SPEED_57600},
+	{     0, 0}
+};
+
 int
 camera_init (Camera *camera, GPContext *context)
 {
+	GPPortSettings settings;
+	unsigned int speed, i;
+	int result;
+
+	/* Try to contact the camera */
+	CR (gp_port_get_settings (camera->port, &settings));
+	speed = (settings.serial.speed ? settings.serial.speed : 115200);
+	for (i = 0; speeds[i].speed; i++) {
+		GP_DEBUG ("Trying speed %i...", speeds[i].speed);
+		settings.serial.speed = speeds[i].speed;
+		CR (gp_port_set_settings (camera->port, settings));
+		result = ricoh_ping (camera, NULL, NULL);
+		if (result == GP_OK)
+			break;
+	}
+
+	/* Contact made? If not, report error. */
+	if (!speeds[i].speed) {
+		gp_context_error (context, _("Could not contact camera."));
+		return (GP_ERROR);
+	}
+
+	/* Contact made. Do we need to change the speed? */
+	if (settings.serial.speed != speed) {
+		for (i = 0; speeds[i].speed; i++)
+			if (speeds[i].speed == speed)
+				break;
+		if (!speeds[i].speed) {
+			gp_context_error (context, _("Speed %i is not "
+				"supported!"), speed);
+			return (GP_ERROR);
+		}
+		CR (ricoh_set_speed (camera, context, speeds[i].rspeed));
+		CR (gp_port_set_settings (camera->port, settings));
+		CR (ricoh_ping (camera, context, NULL));
+	}
+
 	CR (gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL,
 					  camera));
+	CR (gp_filesystem_set_file_funcs (camera->fs, get_file_func,
+					  del_file_func, camera));
 
 	return (GP_OK);
 }

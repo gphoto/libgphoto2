@@ -26,12 +26,46 @@
 #include <gphoto2-camera.h>
 #include <gphoto2-context.h>
 
-int ricoh_get_num  (Camera *camera, GPContext *context, unsigned int *n);
-int ricoh_get_size (Camera *camera, GPContext *context, unsigned int  n,
-		    unsigned long *size);
-int ricoh_get_date (Camera *camera, GPContext *context, unsigned int  n,
-		    time_t *date);
-int ricoh_del_pic  (Camera *camera, GPContext *context, unsigned int  n);
+typedef enum _RicohSpeed RicohSpeed;
+enum _RicohSpeed {
+	RICOH_SPEED_2400   = 0x00,
+	RICOH_SPEED_4800   = 0x01,
+	RICOH_SPEED_9600   = 0x02,
+	RICOH_SPEED_19200  = 0x03,
+	RICOH_SPEED_38400  = 0x04,
+	RICOH_SPEED_57600  = 0x05,
+	RICOH_SPEED_115200 = 0x07
+};
+
+int ricoh_set_speed (Camera *camera, GPContext *context, RicohSpeed speed);
+
+typedef enum _RicohModel RicohModel;
+enum _RicohModel {
+	RICOH_MODEL_300  = 0x0300,
+	RICOH_MODEL_300Z = 0x0301,
+	RICOH_MODEL_4300 = 0x0400
+};
+
+int ricoh_ping      (Camera *camera, GPContext *context, RicohModel *model);
+int ricoh_bye       (Camera *camera, GPContext *context);
+
+typedef enum _RicohMode RicohMode;
+enum _RicohMode {
+	RICOH_MODE_PLAY   = 0x00,
+	RICOH_MODE_RECORD = 0x01
+};
+
+int ricoh_get_mode  (Camera *camera, GPContext *context, RicohMode *mode);
+int ricoh_set_mode  (Camera *camera, GPContext *context, RicohMode  mode);
+
+int ricoh_get_num   (Camera *camera, GPContext *context, unsigned int *n);
+int ricoh_get_size  (Camera *camera, GPContext *context, unsigned int n,
+		     unsigned long *size);
+int ricoh_get_date  (Camera *camera, GPContext *context, unsigned int n,
+		     time_t *date);
+int ricoh_del_pic   (Camera *camera, GPContext *context, unsigned int n);
+int ricoh_get_pic   (Camera *camera, GPContext *context, unsigned int n,
+		     unsigned char **data, unsigned int *size);
 
 
 #endif /* __RICOH_H__ */

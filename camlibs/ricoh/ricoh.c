@@ -21,6 +21,7 @@
 #include <config.h>
 #include "ricoh.h"
 
+#include <stdlib.h>
 #include <string.h>
 
 #include <gphoto2-port-log.h>
@@ -55,7 +56,9 @@
 #  define N_(String) (String)
 #endif
 
-#define CR(result)                {int r=(result); if (r<0) return r;}
+#define CR(result)       {int r=(result); if (r<0) return r;}
+#define CRF(result,data) {int r=(result); if (r<0) {free (data); return r;}}
+
 #define C_CMD(context,cmd,target) 			\
 {							\
 	if (cmd != target) {				\
@@ -210,6 +213,47 @@ ricoh_recv (Camera *camera, GPContext *context, unsigned char *cmd,
 }
 
 int
+ricoh_get_mode (Camera *camera, GPContext *context, RicohMode *mode)
+{
+	unsigned char p[2], cmd, buf[0xff], len;
+
+	GP_DEBUG ("Getting mode...");
+
+	p[0] = 0x12;
+	p[1] = 0x00;
+	CR (ricoh_send (camera, context, 0x51, 0, p, 2));
+	CR (ricoh_recv (camera, context, &cmd, NULL, buf, &len));
+	C_CMD (context, cmd, 0x51);
+	C_LEN (context, len, 4);
+
+	/* No idea what buf[0] and buf[1] is for. */
+
+	/* Mode */
+	*mode = buf[2];
+
+	/* What is buf[3]? */
+
+	return (GP_OK);
+}
+
+int
+ricoh_set_mode (Camera *camera, GPContext *context, RicohMode mode)
+{
+	unsigned char p[2], cmd, buf[0xff], len;
+
+	GP_DEBUG ("Setting mode to %i...", mode);
+
+	p[0] = 0x12;
+	p[1] = mode;
+	CR (ricoh_send (camera, context, 0x50, 0, p, 2));
+	CR (ricoh_recv (camera, context, &cmd, NULL, buf, &len));
+	C_CMD (context, cmd, 0x50);
+	C_LEN (context, len, 0);
+
+	return (GP_OK);
+}
+
+int
 ricoh_get_size (Camera *camera, GPContext *context, unsigned int n,
 		unsigned long *size)
 {
@@ -292,6 +336,92 @@ ricoh_get_num (Camera *camera, GPContext *context, unsigned int *n)
 	C_LEN (context, len, 1);
 
 	*n = buf[0];
+
+	return (GP_OK);
+}
+
+int
+ricoh_set_speed (Camera *camera, GPContext *context, RicohSpeed speed)
+{
+	unsigned char p[1], cmd, buf[0xff], len;
+
+	p[0] = speed;
+	CR (ricoh_send (camera, context, 0x32, 0, p, 1));
+	CR (ricoh_recv (camera, context, &cmd, NULL, buf, &len));
+	C_CMD (context, cmd, 0x32);
+	C_LEN (context, len, 0);
+
+	return (GP_OK);
+}
+
+int
+ricoh_ping (Camera *camera, GPContext *context, RicohModel *model)
+{
+	unsigned char p[3], cmd, buf[0xff], len;
+
+	p[0] = 0x00;
+	p[1] = 0x00;
+	p[2] = 0x00;
+	CR (ricoh_send (camera, context, 0x31, 0, p, 3));
+	CR (ricoh_recv (camera, context, &cmd, NULL, buf, &len));
+	C_CMD (context, cmd, 0x31);
+	C_LEN (context, len, 6);
+
+	/* No idea what buf[0] and buf[1] contain. */
+
+	/* Model */
+	if (model)
+		*model = buf[2] << 8 | buf[3];
+
+	/* No idea what buf[4] and buf[5] contain. */
+
+	return (GP_OK);
+}
+
+int
+ricoh_bye (Camera *camera, GPContext *context)
+{
+	unsigned char cmd, buf[0xff], len;
+
+	CR (ricoh_send (camera, context, 0x37, 0, NULL, 0));
+	CR (ricoh_recv (camera, context, &cmd, NULL, buf, &len));
+	C_CMD (context, cmd, 0x37);
+	C_LEN (context, len, 0);
+
+	return (GP_OK);
+}
+
+int
+ricoh_get_pic (Camera *camera, GPContext *context, unsigned int n,
+	       unsigned char **data, unsigned int *size)
+{
+	unsigned char p[2], cmd, buf[0xff], len, r;
+
+	/* Put camera into play mode. */
+	CR (ricoh_set_mode (camera, context, RICOH_MODE_PLAY));
+
+	/* Send picture number */
+	p[0] = n >> 0;
+	p[1] = n >> 8;
+	CR (ricoh_send (camera, context, 0xa0, 0, p, 2));
+	CR (ricoh_recv (camera, context, &cmd, NULL, buf, &len));
+	C_CMD (context, cmd, 0xa0);
+	C_LEN (context, len, 18);
+
+	*size = buf[17] << 24 | buf[16] << 16 | buf[15] << 8 | buf[14];
+	*data = malloc (*size);
+	if (!*data)
+		return (GP_ERROR_NO_MEMORY);
+
+	/*
+	 * Receive data.
+	 * r ... number of bytes received
+	 */
+	for (r = 0; r < *size; r += len) {
+		CRF (ricoh_recv (camera, context, &cmd, NULL,
+				 *data + r, &len), data);
+		C_CMD (context, cmd, 0xa0);
+	}
 
 	return (GP_OK);
 }
