@@ -202,10 +202,10 @@ int camera_init (Camera *camera)
         camera->functions->about                = camera_about;
 	camera->functions->capture_preview	= camera_capture_preview;
 
-	gp_port_settings_get(camera->port, &settings);
+	gp_port_get_settings(camera->port, &settings);
 	switch(camera->port->type) {
 	case GP_PORT_SERIAL:		
-        	gp_port_timeout_set(camera->port, 1000);
+        	gp_port_set_timeout(camera->port, 1000);
         	settings.serial.bits = 8;
         	settings.serial.parity = 0;
         	settings.serial.stopbits = 1;
@@ -221,7 +221,7 @@ int camera_init (Camera *camera)
 		return (GP_ERROR_UNKNOWN_PORT);
 		break;
 	}
-	gp_port_settings_set(camera->port, settings);
+	gp_port_set_settings(camera->port, settings);
 
 	/* Set up the filesystem */
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
