@@ -185,7 +185,7 @@ ptp_write_func (unsigned char *bytes, unsigned int size, void *data)
 	if (result >= 0)
 		return (PTP_RC_OK);
 	else
-	return (translate_gp_result (result));
+		return (translate_gp_result (result));
 }
 
 static void
