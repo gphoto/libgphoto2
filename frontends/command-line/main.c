@@ -475,7 +475,7 @@ int get_picture_common(int num, int thumbnail) {
 
 OPTION_CALLBACK(get_picture) {
 
-	return (get_picture_common(atoi(arg)-1, 0));
+	return (get_picture_common(atoi(arg), 0));
 }
 
 OPTION_CALLBACK(get_thumbnail) {
@@ -485,7 +485,7 @@ OPTION_CALLBACK(get_thumbnail) {
 		return (GP_ERROR);
 	}
 
-	return (get_picture_common(atoi(arg)-1, 1));
+	return (get_picture_common(atoi(arg), 1));
 }
 
 OPTION_CALLBACK(delete_picture) {

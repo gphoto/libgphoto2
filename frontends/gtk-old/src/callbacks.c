@@ -10,10 +10,13 @@
 #include <gphoto2.h>
 
 #include "callbacks.h"
+#include "gtkiconlist.h"
 #include "interface.h"
 #include "support.h"
 #include "globals.h"
 #include "util.h"
+
+#include "../pixmaps/no_thumbnail.xpm"
 
 void debug_print (char *message) {
 	if (gp_gtk_debug)
@@ -425,11 +428,21 @@ camera_select_again:
 }
 
 void camera_index_thumbnails() {
+	
+	GtkWidget *icon_list, *icon, *pixmap;
+	GtkIconListItem *item;
+	char buf[1024];
+
 	debug_print("camera index thumbnails");
 
 	if (!gp_gtk_camera_init)
 		if (camera_set()==GP_ERROR) {return;}
 
+	icon_list = (GtkWidget*) lookup_widget(gp_gtk_main_window, "icons");
+
+	strcpy(buf,"A Thumbnail");
+	item = gtk_icon_list_add_from_data(GTK_ICON_LIST(icon_list),nothumbnail_xpm,buf,NULL);
+	gtk_entry_set_editable(GTK_ENTRY(item->entry), FALSE);
 }
 
 void camera_index_no_thumbnails() {

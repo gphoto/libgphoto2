@@ -130,7 +130,6 @@ int fujitsu_write_packet (gpio_device *dev, char *packet) {
 	}
 
 	fujitsu_dump_packet(packet);
-
 	r=0;
 	x=0;
 	while (x<length) {
@@ -426,6 +425,10 @@ int fujitsu_get_int_register (gpio_device *dev, int reg, int *value) {
 		if (fujitsu_read_packet(dev, buf)==GP_ERROR)
 			return (GP_ERROR);
 
+		/* DC1 = invalid register or value */
+		if (buf[0] == DC1)
+			return (GP_ERROR);
+
 		if (buf[0] == TYPE_DATA_END) {
 //			fujitsu_write_ack(dev);
 			r =((unsigned char)buf[4]) +
@@ -486,10 +489,13 @@ int fujitsu_set_string_register (gpio_device *dev, int reg, char *s, int length)
 				return (GP_ERROR);
 
 			c = (unsigned char)buf[0];
+			if (c == DC1)
+				return (GP_ERROR);
+
 			if (c == ACK)
 				done = 1;
 			   else	{
-				if ((c != DC1) && (c != NAK))
+				if (c != NAK)
 					return (GP_ERROR);
 			}
 
@@ -543,6 +549,8 @@ int fujitsu_get_string_register (gpio_device *dev, int reg, char *s, int *length
 	x=0; done=0;
 	while (!done) {
 		if (fujitsu_read_packet(dev, packet)==GP_ERROR)
+			return (GP_ERROR);
+		if (packet[0] == DC1)
 			return (GP_ERROR);
 		if (do_percent)
 			gp_progress((float)x/(float)(*length));
