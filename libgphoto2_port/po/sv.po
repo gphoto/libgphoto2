@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port 2.0\n"
-"POT-Creation-Date: 2002-11-22 13:57+0100\n"
+"POT-Creation-Date: 2002-12-01 20:50+0100\n"
 "PO-Revision-Date: 2002-07-24 08:54+0200\n"
 "Last-Translator: Stefan Björnelund <Stefanb@Update.UU.SE>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -279,8 +279,8 @@ msgid ""
 "access to the device."
 msgstr ""
 "Kunde inte göra anspråk på gränssnittet %d (%m). Kontrollera att inget annat "
-"program eller kernel-modul (d.v.s. dc2xx) använder enheten och att du du har "
-"skriv/läs rättingheter för enheten."
+"program eller kernel-modul (d.v.s. dc2xx eller stv680) använder enheten och "
+"att du du har skriv/läs rättingheter för enheten."
 
 #: usb/libusb.c:157
 #, c-format
