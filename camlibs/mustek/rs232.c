@@ -53,7 +53,7 @@ int mdc800_rs232_sendCommand(GPPort *port,char* command, char* buffer, int lengt
 	/* Send command */
 	for (i=0; i<6; i++)
 	{
-		if (gp_port_write (port, &command[i] ,1) != GP_OK)
+		if (gp_port_write (port, &command[i] ,1) < GP_OK)
 		{
 			printCError ("(mdc800_rs232_sendCommand) sending Byte %i fails!\n",i);
 			fault=1;
@@ -177,7 +177,7 @@ int mdc800_rs232_download (GPPort *port,char* buffer, int size)
 		checksum=0;
 		for (i=0; i<512; i++)
 			checksum=(checksum+(unsigned char) buffer [readen+i])%256;
-		if (gp_port_write (port,(char*) &checksum,1) != GP_OK)
+		if (gp_port_write (port,(char*) &checksum,1) < GP_OK)
 			return readen;
 		
 		if (!mdc800_rs232_receive (port,&DSC_checksum,1))

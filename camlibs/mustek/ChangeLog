@@ -1,3 +1,7 @@
+2002-07-30  Lutz Müller <lutz@users.sourceforge.net>
+
+	* rs232.c: Change != GP_OK to < GP_OK.
+
 2001-03-25  Marcus Meissner <marcus@jet.franken.de>
 	
 	* *: forward ported from gphoto 0.4.3.
