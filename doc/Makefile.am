@@ -10,15 +10,15 @@ SUBDIRS = api figures
 #
 
 # distribute manual Portable Document Format (PDF) if possible
-manual_pdf = @manual_pdf@
+manual_pdf = # @manual_pdf@
 
 # distribute manual in PostScript (PS) format if possible
-manual_ps = @manual_ps@
+manual_ps = # @manual_ps@
 
 # build HTML manual if possible
-manual_html = @manual_html@
+manual_html = # @manual_html@
 
-CLEAN_FILES = $(manual_pdf) $(manual_ps) figures-stamp
+# CLEAN_FILES = $(manual_pdf) $(manual_ps) figures-stamp
 
 MANUAL_SRC = gphoto2.xml faq.xml
 
@@ -28,8 +28,8 @@ EXTRA_DIST = DAEMON build_OS2.txt 					\
 	camlib_devel.sgml camlib_devel.txt camlib_devel-y.eps 		\
 	frontend_devel.lyx frontend_devel.sgml frontend_devel.txt 	\
 	gphoto2-cli.txt							\
-	gphoto2.xml faq.xml $(man_MANS) $(manual_pdf) $(manual_ps)	\
 	FAQ
+#	gphoto2.xml faq.xml $(man_MANS) $(manual_pdf) $(manual_ps)	\
 
 man_MANS = gphoto2.1 gphoto2.3 gphoto2_port.3
 
@@ -117,9 +117,9 @@ endif
 dist_hook_manual = dist-hook-manual
 dist-hook-manual: manual figures-stamp
 	$(INSTALL_DATA) manual/*.html $(distdir)/
-  if ENABLE_FIGURES
+if ENABLE_FIGURES
 	$(INSTALL_DATA) figures/*.png $(distdir)/manual/
-  endif
+endif
 endif
 ########################################################################
 
