@@ -1,5 +1,9 @@
 2001-10-01  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/konica: Rejoice, we no longer have a glib dependency!
+
+2001-10-01  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/konica/konica.[c,h]:
 	* camlibs/konica/library.c: Moving towards glib-free code...
 

@@ -20,7 +20,6 @@
 
 #include <gphoto2-result.h>
 #include <gphoto2-debug.h>
-#include <glib.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -43,8 +42,9 @@
 /* Not an ESC quote */
 #define EOT	0x04
 
-#define CHECK(r)      {int ret = (r); if (ret < 0) return (ret);}
-#define CHECK_NULL(r) {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
+#define CHECK(r)        {int ret = (r); if (ret < 0) return (ret);}
+#define CHECK_NULL(r)   {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
+#define CHECK_FREE(r,f) {int ret = (r); if (ret < 0) {free (f); return (ret);}}
 
 int 
 l_init (gp_port* device)
@@ -223,7 +223,7 @@ l_send (gp_port* device, unsigned char *send_buffer,
 	/* the checksum byte(s).				*/
 	/********************************************************/
 	sbs = send_buffer_size + 5;
-	sb = g_new (guchar, sbs);
+	sb = malloc (sizeof (char) * sbs);
 	sb[0] = STX;
 	sb[1] = send_buffer_size;
 	sb[2] = send_buffer_size >> 8;
@@ -240,7 +240,7 @@ l_send (gp_port* device, unsigned char *send_buffer,
 			(*send_buffer == NACK) ||
 			(*send_buffer == ETB ) ||
 			(*send_buffer == ESC )) {
-			sb = g_renew (guchar, sb, ++sbs);
+			sb = realloc (sb, ++sbs * sizeof (char));
 			sb[  i] = ESC;
 			sb[++i] = ~*send_buffer;
 		} else  sb[  i] =  *send_buffer;
@@ -257,46 +257,36 @@ l_send (gp_port* device, unsigned char *send_buffer,
 		(checksum == NACK) || 
 		(checksum == ETB ) ||
 		(checksum == ESC )) {
-		sb = g_renew (guchar, sb, ++sbs);
+		sb = realloc (sb, ++sbs * sizeof (char));
 		sb[sbs - 2] = ESC;
 		sb[sbs - 1] = ~checksum;
 	} else  sb[sbs - 1] =  checksum;
 	for (i = 0; ; i++) {
-		/************************/
+
 		/* Write data as above.	*/
-		/************************/
-		if ((result = gp_port_write (device, sb, sbs)) != GP_OK) {
-			g_free (sb);
-			return (result);
-		}
-		if ((result = gp_port_read (device, &c, 1)) < 1) {
-			g_free (sb);
-			return (result);
-		}
+		CHECK_FREE (gp_port_write (device, sb, sbs), sb);
+		CHECK_FREE (gp_port_read (device, &c, 1), sb);
 		switch (c) {
 		case ACK:
-			/******************************************************/
-			/* ACK received. We can proceed.                      */
-			/******************************************************/
-			g_free (sb);
-			/****************/
+
+			/* ACK received. We can proceed. */
+			free (sb);
+
 			/* Write EOT.	*/
-			/****************/
 			c = EOT;
-			if ((result = gp_port_write (device, &c, 1)) != GP_OK) return (result);
+			CHECK (gp_port_write (device, &c, 1));
 			return (GP_OK);
+
 		case NACK:
-			/******************************************************/
-			/* NACK received. We'll try up to three times.        */
-			/******************************************************/
+
+			/* NACK received. We'll try up to three times. */
 			if (i == 2) {
-				g_free (sb);
+				free (sb);
 				return (GP_ERROR_CORRUPTED_DATA);
 			} else break;
 		default:
-			/******************************************************/
-			/* Should not happen.                                 */
-			/******************************************************/
+
+			/* Should not happen. */
 			return (GP_ERROR_CORRUPTED_DATA);
 		}
 	}
@@ -304,10 +294,11 @@ l_send (gp_port* device, unsigned char *send_buffer,
 
 
 static int 
-l_receive (gp_port* device, guchar** rb, guint* rbs, guint timeout)
+l_receive (gp_port* device, unsigned char **rb, unsigned int *rbs,
+	   unsigned int timeout)
 {
 	unsigned char c, d;
-	gboolean error_flag;
+	int error_flag;
 	unsigned int i, j, rbs_internal;
 	unsigned char checksum;
 	int result;
@@ -388,11 +379,14 @@ l_receive (gp_port* device, guchar** rb, guint* rbs, guint timeout)
 			CHECK (l_esc_read (device, &d));
 			checksum += d;
 			rbs_internal = (d << 8) | c;
-			if (*rbs == 0) *rb = g_new (guchar, rbs_internal);
-			else *rb = g_renew (guchar, *rb, *rbs + rbs_internal);
+			if (*rbs == 0)
+				*rb = malloc (rbs_internal * sizeof (char));
+			else
+				*rb = realloc (*rb,
+					sizeof (char) * (*rbs + rbs_internal));
 
 			/* Read 'rbs_internal' bytes data plus ESC quotes. */
-			error_flag = FALSE;
+			error_flag = 0;
 			for (i = 0; i < rbs_internal; i++) {
 				result = l_esc_read (device, &((*rb)[*rbs + i]));
 				switch (result) {
@@ -403,7 +397,7 @@ l_receive (gp_port* device, guchar** rb, guint* rbs, guint timeout)
 					/* plus ESC quotes and reject the     */
 					/* packet.                            */
 					/**************************************/
-					error_flag = TRUE;
+					error_flag = 1;
         	                        break;
 				case GP_OK:
 
@@ -450,7 +444,7 @@ l_receive (gp_port* device, guchar** rb, guint* rbs, guint timeout)
 						CHECK (gp_port_read (device,
 								     &d, 1));
 					}
-					error_flag = TRUE;
+					error_flag = 1;
 					break;
 				}
 			}

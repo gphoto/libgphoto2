@@ -3,8 +3,6 @@ SUBDIRS = localization
 camlibdir = $(prefix)/lib/gphoto2
 camlib_LTLIBRARIES = libgphoto2_konica.la
 
-CFLAGS = @CFLAGS@ `glib-config --cflags`
-LDFLAGS = @LDFLAGS@ `glib-config --libs`
 EXTRA_DIST = EXPERTS
 
 INCLUDES =\

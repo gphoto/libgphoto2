@@ -23,7 +23,6 @@
 #include <gphoto2-frontend.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <glib.h>
 #include <string.h>
 #include <time.h>
 
@@ -49,7 +48,7 @@
 #define CHECK(r)      {int ret = (r); if (ret < 0) return (ret);}
 #define CHECK_NULL(r) {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 
-static gchar* konica_results[] = {
+static char *konica_results[] = {
 /* FOCUSING_ERROR               */ N_("Focusing error"),
 /* IRIS_ERROR                   */ N_("Iris error"),
 /* STROBE_ERROR                 */ N_("Strobe error"),
@@ -78,7 +77,7 @@ static gchar* konica_results[] = {
 };
 
 static struct {
-        const gchar *model;
+        const char *model;
         int image_id_long;
         int vendor;
         int product;
@@ -112,7 +111,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
         unsigned int i;
         unsigned char *information_buffer = NULL;
         unsigned int exif_size, information_buffer_size;
-        gboolean protected;
+        int protected;
         unsigned long image_id;
         char filename[1024];
         int result;
@@ -132,7 +131,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
                         kd->image_id_long, i + 1, &image_id, &exif_size,
                         &protected, &information_buffer,
                         &information_buffer_size);
-                g_free (information_buffer);
+                free (information_buffer);
                 information_buffer = NULL;
                 CHECK (result);
 
@@ -366,8 +365,8 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
         Camera *camera = data;
         KonicaData *kd = camera->camlib_data;
         char tmp[7];
-        gboolean protected;
-        gulong image_id;
+        int protected;
+        unsigned long image_id;
 
         gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering set_info_func "
                                                  "***");
@@ -405,7 +404,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
         unsigned long image_id;
         unsigned int information_buffer_size, exif_size;
         unsigned char *information_buffer = NULL;
-        gboolean protected;
+        int protected;
 
         gp_debug_printf (GP_DEBUG_LOW, "konica", "*** ENTER: get_info_func "
                                                  "***");
@@ -414,7 +413,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
                         gp_filesystem_number (camera->fs, folder, file),
                         &image_id, &exif_size, &protected,
                         &information_buffer, &information_buffer_size));
-        g_free (information_buffer);
+        free (information_buffer);
 
         info->preview.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
         info->preview.size = information_buffer_size;
@@ -445,7 +444,7 @@ camera_exit (Camera* camera)
 }
 
 static int
-camera_folder_delete_all (Camera* camera, const gchar* folder)
+camera_folder_delete_all (Camera* camera, const char* folder)
 {
         unsigned int not_erased = 0;
         char tmp[1024];
@@ -470,8 +469,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
                CameraFileType type, CameraFile *file, void *data)
 {
         Camera *camera = data;
-        gulong          image_id;
-        gchar*          image_id_string;
+        unsigned long image_id;
+	char image_id_string[] = {0, 0, 0, 0, 0, 0, 0};
         KonicaData *kd = camera->camlib_data;
         unsigned char *fdata = NULL;
         long int size;
@@ -481,22 +480,21 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
         if (strcmp (folder, "/"))
                 return (GP_ERROR_DIRECTORY_NOT_FOUND);
 
-        /* Check if we can get the image id from the filename. */
-        image_id_string = g_strndup (filename, 6);
-        image_id = atol (image_id_string);
-        g_free (image_id_string);
+	/* Check if we can get the image id from the filename. */
+	strncpy (image_id_string, filename, 6);
+	image_id = atol (image_id_string);
 
         /* Get the image. */
         switch (type) {
         case GP_FILE_TYPE_PREVIEW:
                 CHECK (k_get_image (camera->port, kd->image_id_long, image_id,
                                     K_THUMBNAIL, (unsigned char **) &fdata,
-                                    (guint *) &size));
+                                    (unsigned int *) &size));
                 break;
         case GP_FILE_TYPE_NORMAL:
                 CHECK (k_get_image (camera->port, kd->image_id_long, image_id,
                                     K_IMAGE_EXIF, (unsigned char **) &fdata,
-                                    (guint *) &size));
+                                    (unsigned int *) &size));
                 break;
         default:
                 return (GP_ERROR_NOT_SUPPORTED);
@@ -509,7 +507,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 }
 
 static int
-camera_file_delete (Camera* camera, const gchar* folder, const gchar* filename)
+camera_file_delete (Camera* camera, const char *folder, const char *filename)
 {
         char tmp[] = {0, 0, 0, 0, 0, 0, 0};
         unsigned long image_id;
@@ -579,7 +577,8 @@ camera_capture_preview (Camera* camera, CameraFile* file)
         unsigned char *data = NULL;
         long int size;
 
-        CHECK (k_get_preview (camera->port, TRUE, &data, (guint*) &size));
+        CHECK (k_get_preview (camera->port, TRUE,
+			      &data, (unsigned int *) &size));
         CHECK (gp_file_set_data_and_size (file, data, size));
         CHECK (gp_file_set_mime_type (file, GP_MIME_JPEG));
 
@@ -594,8 +593,7 @@ camera_capture (Camera* camera, int type, CameraFilePath* path)
 	int exif_size;
 	unsigned char *information_buffer = NULL;
 	unsigned int information_buffer_size;
-	gboolean protected;
-	char *tmp;
+	int protected;
 
 	CHECK_NULL (camera && path);
 
@@ -610,18 +608,12 @@ camera_capture (Camera* camera, int type, CameraFilePath* path)
                 &exif_size, &information_buffer, &information_buffer_size,
                 &protected));
 
-        g_free (information_buffer);
-        tmp = g_strdup_printf ("%06i.jpeg", (int) image_id);
-        strcpy (path->name, tmp);
-        g_free (tmp);
-        strcpy (path->folder, "/");
+        free (information_buffer);
 
+	sprintf (path->name, "%06i.jpeg", (int) image_id);
+        strcpy (path->folder, "/");
         CHECK (gp_filesystem_append (camera->fs, path->folder, path->name));
 
-        gp_debug_printf (GP_DEBUG_LOW, "konica",
-                         "*** filename: %s", path->name);
-        gp_debug_printf (GP_DEBUG_LOW, "konica",
-                         "*** Leaving camera_capture ***");
         return (GP_OK);
 }
 
@@ -973,14 +965,14 @@ camera_set_config (Camera *camera, CameraWidget *window)
                         result = localization_file_read (camera, c,
                                                          &data, &data_size);
                         if (result != GP_OK) {
-                                g_free (data);
+                                free (data);
                                 return (result);
                         }
 
                         /* Go! */
                         result = k_localization_data_put (camera->port,
                                                           data, data_size);
-                        g_free (data);
+                        free (data);
                         CHECK (result);
                 }
         }
@@ -997,7 +989,7 @@ camera_set_config (Camera *camera, CameraWidget *window)
                         else if (!strcmp (c, _("Do not display TV menu")))
                                 tv_output_format = K_TV_OUTPUT_FORMAT_HIDE;
                         else
-                                g_assert_not_reached ();
+				return (GP_ERROR);
                         CHECK (k_localization_tv_output_format_set (
                                         camera->port, tv_output_format));
                 }
@@ -1015,7 +1007,7 @@ camera_set_config (Camera *camera, CameraWidget *window)
                         else if (!strcmp (c, _("Year/Month/Day")))
                                 date_format = K_DATE_FORMAT_YEAR_MONTH_DAY;
                         else
-                                g_assert_not_reached ();
+				return (GP_ERROR);
                         CHECK (k_localization_date_format_set (camera->port,
                                                        date_format));
                 }
@@ -1195,18 +1187,18 @@ localization_file_read (Camera *camera, const char *file_name,
                 }
         } while (f != EOF);
         fclose (file);
-        /*********************************/
+
         /* Calculate and check checksum. */
-        /*********************************/
         checksum = 0;
-        g_warning (_("Checksum not implemented!"));
+	gp_debug_printf (GP_DEBUG_HIGH, "core", "Checksum not implemented!");
         /*FIXME: There's a checksum at (*data)[100]. I could not
           figure out how it is calculated. */
-        /*********************************************/
+
         /* Calculate and check frame check sequence. */
-        /*********************************************/
         fcs = 0;
-        g_warning (_("Frame check sequence not implemented!"));
+
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "Frame check sequence "
+			 "not implemented!");
         /* FIXME: There's a frame check sequence at (*data)[108]
            and (*data)[109]. I could not figure out how it is
            calculated. */
@@ -1219,7 +1211,7 @@ int
 camera_init (Camera* camera)
 {
         int i;
-        gboolean image_id_long;
+        int image_id_long;
         int inep, outep;
         KonicaData *kd;
         gp_port_settings settings;
@@ -1283,7 +1275,7 @@ camera_init (Camera* camera)
         }
 
         /* Store some data we constantly need. */
-        kd = g_new (KonicaData, 1);
+        kd = malloc (sizeof (KonicaData));
         camera->camlib_data = kd;
         kd->image_id_long = image_id_long;
 

@@ -19,7 +19,6 @@
  */
 
 #include <gphoto2.h>
-#include <glib.h>
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -110,7 +109,7 @@ k_init (gp_port* device)
 }
 
 int
-k_erase_image (gp_port* device, gboolean image_id_long, unsigned long image_id)
+k_erase_image (gp_port* device, int image_id_long, unsigned long image_id)
 {
         /************************************************/
         /* Command to erase one image.                  */
@@ -158,7 +157,7 @@ k_erase_image (gp_port* device, gboolean image_id_long, unsigned long image_id)
 }
 
 
-gint
+int
 k_format_memory_card (gp_port* device)
 {
         /************************************************/
@@ -191,7 +190,8 @@ k_format_memory_card (gp_port* device)
 }
 
 
-gint k_erase_all (gp_port* device, guint* number_of_images_not_erased)
+int
+k_erase_all (gp_port* device, unsigned int *number_of_images_not_erased)
 {
         /************************************************/
         /* Command to erase all images in the camera,   */
@@ -231,8 +231,8 @@ gint k_erase_all (gp_port* device, guint* number_of_images_not_erased)
 
 
 int
-k_set_protect_status (gp_port *device, gboolean image_id_long,
-		      unsigned long image_id, gboolean protected)
+k_set_protect_status (gp_port *device, int image_id_long,
+		      unsigned long image_id, int protected)
 {
         /************************************************/
         /* Command to set the protect status of one     */
@@ -289,12 +289,12 @@ k_set_protect_status (gp_port *device, gboolean image_id_long,
 
 int
 k_get_image (
-        gp_port*        device,
-        gboolean        image_id_long,
-        unsigned long          image_id,
+        gp_port *device,
+        int image_id_long,
+        unsigned long image_id,
 	KImageType image_type,
-        unsigned char**        image_buffer,
-        guint*          image_buffer_size)
+        unsigned char **image_buffer,
+        unsigned int *image_buffer_size)
 {
         /************************************************/
         /* Commands to get an image from the camera.    */
@@ -330,7 +330,7 @@ k_get_image (
         unsigned char sb[] = {0x00, 0x88, 0x00, 0x00, 0x02, 0x00, 0x00,
 		       0x00, 0x00, 0x00};
         unsigned char *rb = NULL;
-        guint rbs;
+        unsigned int rbs;
 
 	CHECK_NULL (image_buffer && image_buffer_size);
 
@@ -366,14 +366,14 @@ k_get_image (
 
 int
 k_get_image_information (
-        gp_port*        device,
-        gboolean        image_id_long,
-        unsigned long          image_number,
-        unsigned long*         image_id,
-        guint*          exif_size,
-        gboolean*       protected,
-        unsigned char**        information_buffer,
-        guint*          information_buffer_size)
+        gp_port *device,
+        int image_id_long,
+        unsigned long image_number,
+        unsigned long *image_id,
+        unsigned int *exif_size,
+        int *protected,
+        unsigned char **information_buffer,
+        unsigned int *information_buffer_size)
 {
         /************************************************/
         /* Command to get the information about an      */
@@ -446,8 +446,8 @@ k_get_image_information (
 }
 
 int
-k_get_preview (gp_port* device, gboolean thumbnail,
-	       unsigned char** image_buffer, guint* image_buffer_size)
+k_get_preview (gp_port* device, int thumbnail,
+	       unsigned char **image_buffer, unsigned int *image_buffer_size)
 {
         /************************************************/
         /* Command to get the preview from the camera.  */
@@ -527,17 +527,17 @@ k_get_io_capability (gp_port *device,
 
 int
 k_get_information (
-        gp_port*        device,
-        gchar**         model,
-        gchar**         serial_number,
-        unsigned char*         hardware_version_major,
-        unsigned char*         hardware_version_minor,
-        unsigned char*         software_version_major,
-        unsigned char*         software_version_minor,
-        unsigned char*         testing_software_version_major,
-        unsigned char*         testing_software_version_minor,
-        gchar**         name,
-        gchar**         manufacturer)
+        gp_port *device,
+        char **model,
+        char **serial_number,
+        unsigned char *hardware_version_major,
+        unsigned char *hardware_version_minor,
+        unsigned char *software_version_major,
+        unsigned char *software_version_minor,
+        unsigned char *testing_software_version_major,
+        unsigned char *testing_software_version_minor,
+        char **name,
+        char **manufacturer)
 {
         /************************************************/
         /* Command to get some information about the    */
@@ -636,7 +636,7 @@ k_get_information (
         /* 0xXX: Byte 29 of manufacturer                */
         /************************************************/
         unsigned char sb[] = {0x10, 0x90, 0x00, 0x00};
-        guint   i, j;
+        unsigned int i, j;
         unsigned char *rb = NULL;
         unsigned int rbs;
 
@@ -650,14 +650,17 @@ k_get_information (
 	
 	/* Model */
 	for (i = 0; i < 4; i++) if (rb[8 + i] == 0) break;
-	*model = g_new0 (gchar, i + 1);
-	for (j = 0; j < i; j++) (*model)[j] = rb[8 + j];
+	*model = malloc (sizeof (char) * (i + 1));
+	for (j = 0; j < i; j++)
+		(*model)[j] = rb[8 + j];
+	(*model)[j] = 0;
 
 	/* Serial Number */
 	for (i = 0; i < 10; i++) if (rb[12 + i] == 0) break;
-	*serial_number = g_new0 (gchar, i + 1);
+	*serial_number = malloc (sizeof (char) * (i + 1));
 	for (j = 0; j < i; j++)
 		(*serial_number)[j] = rb[12 + j];
+	(*serial_number)[j] = 0;
 
 	/* Versions */
 	*hardware_version_major         = rb[22];
@@ -669,13 +672,17 @@ k_get_information (
 
 	/* Name */
 	for (i = 0; i < 22; i++) if (rb[28 + i] == 0) break;
-	*name = g_new0 (gchar, i + 1);
-	for (j = 0; j < i; j++) (*name)[j] = rb[28 + j];
+	*name = malloc (sizeof (char) * (i + 1));
+	for (j = 0; j < i; j++)
+		(*name)[j] = rb[28 + j];
+	(*name)[j] = 0;
 
 	/* Manufacturer */
 	for (i = 0; i < 30; i++) if (rb[50 + i] == 0) break;
-	*manufacturer = g_new0 (gchar, i + 1);
-	for (j = 0; j < i; j++) (*manufacturer)[j] = rb[50 + j];
+	*manufacturer = malloc (sizeof (char) * (i + 1));
+	for (j = 0; j < i; j++)
+		(*manufacturer)[j] = rb[50 + j];
+	(*manufacturer)[j] = 0;
 
         free (rb);
         return (GP_OK);
@@ -1088,13 +1095,13 @@ k_reset_preferences (gp_port *device)
 
 int
 k_take_picture (
-        gp_port*        device,
-        gboolean        image_id_long,
-        unsigned long*         image_id,
-        guint*          exif_size,
-        unsigned char**        information_buffer,
-        guint*          information_buffer_size,
-        gboolean*       protected)
+        gp_port *device,
+        int image_id_long,
+        unsigned long *image_id,
+        unsigned int *exif_size,
+        unsigned char **information_buffer,
+        unsigned int *information_buffer_size,
+        int *protected)
 {
         /************************************************/
         /* Command to take a picture.                   */

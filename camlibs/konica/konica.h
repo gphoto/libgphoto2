@@ -260,24 +260,24 @@ int k_format_memory_card (gp_port *device);
 
 int k_take_picture (
 	gp_port *device,
-	gboolean image_id_long,
+	int image_id_long,
 	unsigned long *image_id, 
 	unsigned int *exif_size,
 	unsigned char **information_buffer, 
 	unsigned int *information_buffer_size,
-	gboolean *protected);
+	int *protected);
 
 
-int k_get_preview (gp_port *device, gboolean thumbnail,
+int k_get_preview (gp_port *device, int thumbnail,
 		   unsigned char **image_buffer,
 		   unsigned int *image_buffer_size);
 
 
-int k_set_protect_status (gp_port *device, gboolean image_id_long,
-			  unsigned long image_id, gboolean protected);
+int k_set_protect_status (gp_port *device, int image_id_long,
+			  unsigned long image_id, int protected);
 
 
-int k_erase_image (gp_port *device, gboolean image_id_long,
+int k_erase_image (gp_port *device, int image_id_long,
 		   unsigned long image_id);
 
 
@@ -335,17 +335,17 @@ int k_get_information (
 
 int k_get_image_information (
 	gp_port *device,
-	gboolean image_id_long,
+	int image_id_long,
 	unsigned long image_number,
 	unsigned long *image_id, 
 	unsigned int *exif_size, 
-	gboolean *protected, 
+	int *protected, 
 	unsigned char **information_buffer,
 	unsigned int *information_buffer_size);
 
 int k_get_image (
 	gp_port *device,
-	gboolean image_id_long,
+	int image_id_long,
 	unsigned long image_id, 
 	KImageType image_type, 
 	unsigned char **image_buffer, 
