@@ -218,7 +218,7 @@ canon_usb_init (Camera *camera)
 	/* Set the new settings */
 	res = gp_port_set_settings (camera->port, settings);
 	if (res != GP_OK) {
-		gp_camera_set_error (camera, "Could not apply USB settings");
+		gp_camera_set_error (camera, _("Could not apply USB settings"));
 		return res;
 	}
 
