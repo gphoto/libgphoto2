@@ -1,3 +1,6 @@
+2002-06-17  Mariusz Woloszyn <emsi@ipartners.pl>
+	* doc/FAQ: Added "gphoto2 does not work..." general question
+
 2002-06-15  Lutz Müller <lutz@users.sourceforge.net>
 
 	* configure.in: Fix readline error message.

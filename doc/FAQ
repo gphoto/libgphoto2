@@ -50,6 +50,20 @@ A: You have to set up the permissions on your USB device correctly.
 
 ========================================================================
 
+Q: gphoto2 does not work, the driver reports some error messages.
+   What shall I do?
+
+A: First of all make sure, that you have only one instance of gphoto2
+   installed on your system. Unless you know what you're doing you should
+   remove all gphoto2 installation, then you may do (as root):
+   rm -rf /usr/local/lib/gphoto2*
+   rm -rf /usr/lib/gphoto2*
+   (above applyes specialy if you used package and CVS version)
+   After that install newest gphoto2 and test whether it works now.
+   If not, see below.
+
+========================================================================
+
 Q: My Canon PowerShot G1/Pro 90 IS doesn't work with gphoto2 when using
    the AC adapter. What should I do?
   
