@@ -8,6 +8,8 @@
 #ifndef _CANON_UTIL_H
 #define _CANON_UTIL_H
 
+#include <_byteorder.h>
+
 /****************************************************************************
  *
  * prototypes
@@ -15,9 +17,6 @@
  ****************************************************************************/
 
 void dump_hex(Camera *camera,const char *msg, const unsigned char *buf, int len);
-
-void intatpos (unsigned char *block, int pos, int integer);
-unsigned int get_int (const unsigned char *p);
 
 int is_thumbnail (const char *name);
 int is_image (const char *name);

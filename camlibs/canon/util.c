@@ -26,28 +26,6 @@
 #include "library.h"
 
 /**
- * intatpos:
- * @block: byte block we are to write the integer into
- * @pos: position in byte block where we are to write to
- * @integer: the int number we are to write into the block
- *
- * Utility function used by canon_usb_dialogue
- * FIXME: What about endianness?
- **/
-void
-intatpos (unsigned char *block, int pos, int integer)
-{
-	*(unsigned *) (block + pos) = integer;
-}
-
-
-unsigned int
-get_int (const unsigned char *p)
-{
-	return p[0] | (p[1] << 8) | (p[2] << 16) | (p[3] << 24);
-}
-
-/**
  * is_thumbnail:
  * @name: name of file to examine
  * Test whether the given @name corresponds to a thumbnail (.THM).

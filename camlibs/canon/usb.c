@@ -163,7 +163,7 @@ canon_usb_camera_init (Camera *camera)
 	}
 
 	/* just check if (int) buffer[0] says 0x4 or not, log a warning if it doesn't. */
-	read_bytes = get_int (buffer);
+	read_bytes = le32atoh (buffer);
 	if (read_bytes != 4)
 		GP_DEBUG ("canon_usb_camera_init() camera says to read %i more bytes, ",
 			  "we wold have expected 4 - overriding since some cameras are "
@@ -445,13 +445,13 @@ canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length,
 	 */
 
 	memset (packet, 0x00, sizeof (packet));	/* zero block */
-	intatpos (packet, 0x0, 0x10 + payload_length);
+	htole32a (packet, 0x10 + payload_length);
 	packet[0x40] = 0x2;
 	packet[0x44] = cmd1;
 	packet[0x47] = cmd2;
-	intatpos (packet, 0x04, cmd3);
-	intatpos (packet, 0x4c, 0x12345678);	/* fake serial number */
-	intatpos (packet, 0x48, 0x10 + payload_length);
+	htole32a (packet + 0x04, cmd3);
+	htole32a (packet + 0x4c, 0x12345678);	/* fake serial number */
+	htole32a (packet + 0x48, 0x10 + payload_length);
 
 	msgsize = 0x50 + payload_length;	/* TOTAL msg size */
 
@@ -564,7 +564,7 @@ canon_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **data,
 		return GP_ERROR;
 	}
 
-	total_data_size = *(unsigned *) (lpacket + 0x6);
+	total_data_size = le32atoh (lpacket + 0x6);
 
 	if (max_data_size && (total_data_size > max_data_size)) {
 		gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_usb_long_dialogue: "
@@ -650,8 +650,8 @@ canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, int 
 	sprintf (payload, "12111111%s", name);
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_usb_get_file: payload %s", payload);
 	payload_length = strlen (payload) + 1;
-	intatpos (payload, 0x0, 0x0);	// get picture
-	intatpos (payload, 0x4, USB_BULK_READ_SIZE);
+	htole32a (payload, 0x0);	// get picture
+	htole32a (payload + 0x4, USB_BULK_READ_SIZE);
 
 	if (camera->pl->model == CANON_PS_S10 || camera->pl->model == CANON_PS_S20
 	    || camera->pl->model == CANON_PS_S30 || camera->pl->model == CANON_PS_S40
@@ -699,8 +699,8 @@ canon_usb_get_thumbnail (Camera *camera, const char *name, unsigned char **data,
 			 "payload %s", payload);
 	payload_length = strlen (payload) + 1;
 
-	intatpos (payload, 0x0, 0x1);	// get thumbnail
-	intatpos (payload, 0x4, USB_BULK_READ_SIZE);
+	htole32a (payload, 0x1);	// get thumbnail
+	htole32a (payload + 0x4, USB_BULK_READ_SIZE);
 
 	/* 0 is to not show status */
 	res = canon_usb_long_dialogue (camera, CANON_USB_FUNCTION_GET_FILE, data, length,

@@ -360,7 +360,6 @@ canon_int_get_time (Camera *camera)
 {
 	unsigned char *msg;
 	int len;
-	int t;
 	time_t date;
 
 	GP_DEBUG ("canon_int_get_time()");
@@ -385,12 +384,7 @@ canon_int_get_time (Camera *camera)
 	if (len != 0x10)
 		return GP_ERROR;
 
-	/* XXX will fail when sizeof(int) != 4. Should use u_int32_t or
-	 * something instead. Investigate portability issues.
-	 */
-	memcpy (&t, msg + 4, 4);
-
-	date = (time_t) byteswap32 (t);
+	date = (time_t) le32atoh (msg+4);
 
 	/* XXX should strip \n at the end of asctime() return data */
 	GP_DEBUG ("Camera time: %s ", asctime (gmtime (&date)));
@@ -564,8 +558,8 @@ canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, i
 		GP_DEBUG ("ERROR: truncated message");
 		return GP_ERROR;
 	}
-	cap = get_int (msg + 4);
-	ava = get_int (msg + 8);
+	cap = le32atoh (msg + 4);
+	ava = le32atoh (msg + 8);
 	if (capacity)
 		*capacity = cap;
 	if (available)
@@ -830,12 +824,10 @@ canon_int_list_directory (Camera *camera, struct canon_dir **result_dir, const c
 				!((dir[entrys].attrs & CANON_ATTR_NON_RECURS_ENT_DIR) != 0x0);
 
 			/* the size is located at offset 2 and is 4 bytes long */
-			memcpy ((unsigned char *) &dir[entrys].size, pos + 2, 4);
-			dir[entrys].size = byteswap32 (dir[entrys].size);	/* re-order little/big endian */
+			dir[entrys].size = le32atoh (pos+2);
 
 			/* the date is located at offset 6 and is 4 bytes long */
-			memcpy ((unsigned char *) &dir[entrys].date, pos + 6, 4);
-			dir[entrys].date = byteswap32 (dir[entrys].date);	/* re-order little/big endian */
+			dir[entrys].date = le32atoh (pos+6);
 
 			/* if there is a date, make filedate_str be the ascii representation
 			 * without newline at the end
@@ -973,7 +965,7 @@ canon_int_get_thumbnail (Camera *camera, const char *name, int *length)
 				return NULL;
 			}
 
-			total = get_int (msg + 4);
+			total = le32atoh (msg + 4);
 			if (total > 2000000) {	/* 2 MB thumbnails ? unlikely ... */
 				GP_DEBUG ("ERROR: %d is too big", total);
 				return NULL;
@@ -987,11 +979,11 @@ canon_int_get_thumbnail (Camera *camera, const char *name, int *length)
 				*length = total;
 
 			while (msg) {
-				if (total_file_size < 20 || get_int (msg)) {
+				if (total_file_size < 20 || le32atoh (msg)) {
 					return NULL;
 				}
-				size = get_int (msg + 12);
-				if (get_int (msg + 8) != expect || expect + size > total
+				size = le32atoh (msg + 12);
+				if (le32atoh (msg + 8) != expect || expect + size > total
 				    || size > total_file_size - 20) {
 					GP_DEBUG ("ERROR: doesn't fit");
 					return NULL;
@@ -1000,7 +992,7 @@ canon_int_get_thumbnail (Camera *camera, const char *name, int *length)
 				expect += size;
 				gp_camera_progress (camera,
 						    total ? (expect / (float) total) : 1.);
-				if ((expect == total) != get_int (msg + 16)) {
+				if ((expect == total) != le32atoh (msg + 16)) {
 					GP_DEBUG ("ERROR: end mark != end of data");
 					return NULL;
 				}

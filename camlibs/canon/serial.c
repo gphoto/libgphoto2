@@ -957,11 +957,11 @@ canon_serial_get_file (Camera *camera, const char *name, int *length)
 		return NULL;
 	}
 	while (msg) {
-		if (len < 20 || get_int (msg)) {
+		if (len < 20 || le32atoh (msg)) {
 			break;
 		}
 		if (!file) {
-			total = get_int (msg + 4);
+			total = le32atoh (msg + 4);
 			if (camera->pl->model == CANON_PS_S20
 			    || camera->pl->model == CANON_PS_G1
 			    || camera->pl->model == CANON_PS_S10) {
@@ -983,15 +983,15 @@ canon_serial_get_file (Camera *camera, const char *name, int *length)
 			if (length)
 				*length = total;
 		}
-		size = get_int (msg + 12);
-		if (get_int (msg + 8) != expect || expect + size > total || size > len - 20) {
+		size = le32atoh (msg + 12);
+		if (le32atoh (msg + 8) != expect || expect + size > total || size > len - 20) {
 			gp_debug_printf (GP_DEBUG_LOW, "canon", "ERROR: doesn't fit\n");
 			break;
 		}
 		memcpy (file + expect, msg + 20, size);
 		expect += size;
 		gp_camera_progress (camera, total ? (expect / (float) total) : 1.);
-		if ((expect == total) != get_int (msg + 16)) {
+		if ((expect == total) != le32atoh (msg + 16)) {
 			GP_DEBUG ("ERROR: end mark != end of data");
 			break;
 		}

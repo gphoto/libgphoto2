@@ -164,16 +164,6 @@ struct _CameraPrivateLibrary
 #define DIR_REMOVE 1
 
 
-typedef unsigned long u32;
-#ifndef byteswap32
-#ifdef __sparc
-#define byteswap32(val) ({ u32 x = val; x = (x << 24) | ((x << 8) & 0xff0000) | ((x >> 8) & 0xff00) | (x >> 24); x; })
-#else
-#define byteswap32(val) val
-#endif
-#endif
-
-
 /*
  * All functions returning a pointer have malloc'ed the data. The caller must
  * free() it when done.
