@@ -21,6 +21,8 @@ Source: http://www.gphoto.org/dist/@PACKAGE@-@VERSION@.tar.gz
 Url: http://www.gphoto.org/
 ExcludeArch: s390 s390x
 Provides: libgphoto2
+Provides: libgphoto2_port
+Requires: libgphoto2_port
 # absolute requirements
 PreReq: hotplug >= 2001_04_24-13
 PreReq: /sbin/ldconfig, grep, fileutils
@@ -29,8 +31,9 @@ BuildRequires: libusb-devel >= 0.0.5
 BuildRequires: findutils perl
 # the following requirements are optional
 # FIXME: They should be deactivated if not detected on the building system
-BuildRequires: gtk-doc
-BuildRequires: transfig
+@ENABLE_GTK_DOC_TRUE@BuildRequires: gtk-doc
+@ENABLE_FIGURES_TRUE@BuildRequires: transfig
+@XMLTO_TRUE@BuildRequires: xmlto >= 0.0.8
 
 ####################################
 %description
@@ -52,6 +55,7 @@ Other (GUI) frontends are available seperately.
 Summary: Headers and libraries to compile against the libgphoto2 library.
 Requires: %{name} = %{version}
 Provides: libgphoto2-devel
+Provides: libgphoto2_port-devel
 Group: Development/Libraries
 
 ####################################
@@ -102,6 +106,7 @@ install -d -m755 %{buildroot}/etc/hotplug/usb/
 install -m755 packaging/linux-hotplug/usbcam.console %{buildroot}/etc/hotplug/usb/usbcam
 
 cp -a %{buildroot}%{_docdir}/%{name}-%{version}/html html
+cp -a %{buildroot}%{_docdir}/libgphoto2_port-0.5.0/html/api/gphoto2-port html/api
 find html -name '*.sgml' | xargs rm
 
 
@@ -136,6 +141,7 @@ rm -rf "${RPM_BUILD_ROOT}"
 %defattr(-,root,root)
 %doc doc/gphoto2.txt doc/gphoto2-cli.txt doc/FAQ
 %doc AUTHORS README COPYING
+%doc html/manual
 %{_bindir}/gphoto2
 /etc/hotplug/usb/usbcam
 %{_datadir}/gphoto2
@@ -145,9 +151,7 @@ rm -rf "${RPM_BUILD_ROOT}"
 %{_libdir}/gphoto2/*/*.so
 %{_libdir}/*.so.*
 %{_mandir}/man1/gphoto2.1*
-%doc packaging/linux-hotplug/usbcam.console
-%doc packaging/linux-hotplug/usbcam.user
-%doc packaging/linux-hotplug/usbcam.group
+%doc packaging/linux-hotplug
 
 ####################################
 %post
@@ -181,19 +185,28 @@ fi
 ####################################
 %files devel
 %defattr(-,root,root)
-%doc html
+%doc html/api
 %{_bindir}/gphoto2-config
 %{_bindir}/gphoto2-port-config
-%{_mandir}/man3/gphoto2.3*
+%{_mandir}/man3/gphoto2*.3*
 %{_includedir}/gphoto2
+%{_libdir}/*.a
 %{_libdir}/*.la
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/*
+
 
 ########################################################################
 # ChangeLog
 ########################################################################
 %changelog
+* Tue May 28 2002 Hans Ulrich Niedermann <gp@n-dimensional.de> 2.0.1dev8-1
+- comment out requirements if not used (gtk-doc, transfig)
+- provide libgphoto2_port - for future compatibility
+- fixed handling of misc HTML docs (API docs and docbook-generated manual)
+- install linux-hotplug scripts into a directory of that name
+- added gphoto2_port(3) man page
+
 * Sat May 18 2002 Hans Ulrich Niedermann <gp@n-dimensional.de> 2.0.1dev6-1
 - added API HTML docs to the -devel package
 - added man page gphoto2(3), require hotplug >= 2001_04_24-13
