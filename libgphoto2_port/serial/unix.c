@@ -315,11 +315,14 @@ gp_port_library_list (GPPortInfoList *list)
 		CHECK (gp_port_info_list_append (list, info));
         }
 
-	/* Generic support */
+	/*
+	 * Generic support. Append it to the list without checking for
+	 * return values, because this entry will not be counted.
+	 */
 	info.type = GP_PORT_SERIAL;
 	strncpy (info.path, "^serial", sizeof (info.path));
 	memset (info.name, 0, sizeof (info.name));
-	CHECK (gp_port_info_list_append (list, info));
+	gp_port_info_list_append (list, info);
 
         return (GP_OK);
 }
