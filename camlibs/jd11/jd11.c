@@ -84,6 +84,10 @@ int camera_abilities (CameraAbilitiesList *list)
 	strcpy(a.model, "Argus DC-2000");
 	gp_abilities_list_append(list, a);
 
+	/* http://www.digitaldreamco.com/shop/digital2000.html */
+	strcpy(a.model, "Digitaldream DIGITAL 2000");
+	gp_abilities_list_append(list, a);
+
 	/* The I/O Magic MagicImage 420 has a black cover, but otherwise
 	 * appears to be the same. (Not 100% sure.)
 	 * http://www.iomagic.com/support/digitalcameras/magicimage420/magicimage420main.htm
