@@ -189,9 +189,11 @@ const struct canonCamModelData models[] = {
 	{"Canon:PowerShot G5 (normal mode)", CANON_CLASS_5,	0x04A9, 0x3085, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
 	/* Canon MVX3i / Optura Xi uses 308d in PTP mode; 3089 in Canon mode? */
+	/* Canon MVX10i / Optura 300 uses 3095 in PTP mode. */
 
 	/* 0x3099 is the EOS 300D/Digital Rebel in PTP mode */
-	{"Canon:PowerShot A80 (normal mode)",	CANON_CLASS_1,	0x04A9, 0x309A, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:PowerShot A80 (normal mode)",	CANON_CLASS_4,	0x04A9, 0x309A, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+
 	{"Canon:PowerShot S60 (normal mode)",	CANON_CLASS_5,	0x04A9, 0x30b2, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:Digital IXUS 500 (normal mode)",CANON_CLASS_5,	0x04A9, 0x30b4, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:PowerShot A75",			CANON_CLASS_5,	0x04A9, 0x30b5, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
@@ -201,8 +203,8 @@ const struct canonCamModelData models[] = {
 	{"Canon:PowerShot S410 (normal mode)",	CANON_CLASS_5,	0x04A9, 0x30ba, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:Digital IXUS 430 (normal mode)",CANON_CLASS_5,	0x04A9, 0x30ba, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:PowerShot A95 (normal mode)",	CANON_CLASS_5,	0x04A9, 0x30bb, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-	{"Canon:PowerShot SD20 (normal mode)",CANON_CLASS_5,    0x04A9, 0x30c4, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
-	{"Canon:EOS 20D (normal mode)",		CANON_CLASS_4,	0x04A9, 0x30eb, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:PowerShot SD20 (normal mode)",  CANON_CLASS_5,  0x04A9, 0x30c4, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:EOS 20D (normal mode)",		CANON_CLASS_6,	0x04A9, 0x30eb, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
 	{NULL}
 	/* *INDENT-ON* */
@@ -823,7 +825,7 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, int *length,
 			return GP_ERROR;
 
 		/* Lock keys here for D30/D60 */
-		if ( IS_EOS(camera->pl->md->model) ) {
+		if ( camera->pl->md->model == CANON_CLASS_4 ) {
 			if(canon_usb_lock_keys(camera,context) < 0) {
 				gp_context_error (context, _("lock keys failed."));
 				return GP_ERROR_CORRUPTED_DATA;
@@ -1043,7 +1045,7 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 			return GP_ERROR;
 
 		/* Lock keys here for D30/D60 */
-		if ( IS_EOS(camera->pl->md->model) ) {
+		if ( camera->pl->md->model == CANON_CLASS_4 ) {
 			if(canon_usb_lock_keys(camera,context) < 0) {
 				gp_context_error (context, _("lock keys failed."));
 				return GP_ERROR_CORRUPTED_DATA;
