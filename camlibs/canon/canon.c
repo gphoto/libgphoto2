@@ -107,7 +107,7 @@ int camera_abilities(CameraAbilitiesList *list)
         a->speed[3]   = 57600;
         a->speed[4]   = 115200;
         a->speed[5]   = 0;
-        a->capture    = GP_CAPTURE_NONE;
+        a->capture[0].type    = GP_CAPTURE_NONE;
         a->config     = GP_CONFIG_CAMERA;
         a->file_delete = 1;
         a->file_preview = 1;
@@ -121,7 +121,7 @@ int camera_abilities(CameraAbilitiesList *list)
         a = gp_abilities_new();
         strcpy(a->model, models_USB[i]);
         a->port = GP_PORT_USB;
-        a->capture    = GP_CAPTURE_NONE;
+        a->capture[0].type    = GP_CAPTURE_NONE;
         a->config     = GP_CONFIG_CAMERA;
         a->file_delete = 1;
         a->file_preview = 1;
@@ -141,7 +141,7 @@ int camera_abilities(CameraAbilitiesList *list)
         a->speed[3]   = 57600;
         a->speed[4]   = 115200;
         a->speed[5]   = 0;
-        a->capture    = GP_CAPTURE_NONE;
+        a->capture[0].type    = GP_CAPTURE_NONE;
         a->config     = GP_CONFIG_CAMERA;
         a->file_delete = 1;
         a->file_preview = 1;
@@ -1441,11 +1441,18 @@ int camera_config_set (Camera *camera, CameraWidget *window)
 
 /****************************************************************************/
 	
-int camera_capture(Camera *camera, CameraFile *file, CameraCaptureInfo *info)
+int camera_capture(Camera *camera, CameraFilePath *path, CameraCaptureSetting *setting)
 {
-	gp_debug_printf(GP_DEBUG_LOW,"canon","camera_capture()");
-	
-    return GP_ERROR_NOT_SUPPORTED;
+  gp_debug_printf(GP_DEBUG_LOW,"canon","camera_capture()");
+  
+  return GP_ERROR_NOT_SUPPORTED;
+}
+
+int camera_capture_preview(Camera *camera, CameraFile *file)
+{
+  gp_debug_printf(GP_DEBUG_LOW,"canon","camera_capture_preview()");
+  
+  return GP_ERROR_NOT_SUPPORTED;
 }
 
 int camera_file_config_get (Camera *camera, CameraWidget **window,
