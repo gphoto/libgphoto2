@@ -1,3 +1,8 @@
+2002-01-11 Marcus Meissner <marcus@jet.franken.de>
+	
+	* Makefile.am: Moved ptp-pack.c from SOURCES to EXTRA_DIST, since
+	  it cannot be compiled stand alone.
+
 2002-01-10 Dan Fandrich <dan@coneharvesters.com>
 
 	* Makefile.am: Added ptp-pack.c
