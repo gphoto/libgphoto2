@@ -257,7 +257,7 @@ int
 gp_port_write(gp_port *dev, char *bytes, int size)
 {
 	gp_port_debug_printf (GP_DEBUG_MEDIUM, dev->debug_level,
-			      "gp_port_write: %05i bytes", size);
+			      "gp_port_write: %05i byte(s)", size);
 	gp_port_debug_print_data (GP_DEBUG_HIGH, dev->debug_level, bytes, size);
 
 	return (dev->ops->write (dev, bytes, size));
@@ -269,10 +269,13 @@ gp_port_read (gp_port *dev, char *bytes, int size)
         int retval;
 
         retval = dev->ops->read (dev, bytes, size);
+	if (retval < 0)
+		return (retval);
 
 	gp_port_debug_printf (GP_DEBUG_MEDIUM, dev->debug_level,
-			      "gp_port_read: %05i bytes", size);
-	gp_port_debug_print_data (GP_DEBUG_HIGH, dev->debug_level, bytes, size);
+			      "gp_port_read: %05i byte(s)", retval);
+	gp_port_debug_print_data (GP_DEBUG_HIGH, dev->debug_level,
+				  bytes, retval);
 
         return (retval);
 }

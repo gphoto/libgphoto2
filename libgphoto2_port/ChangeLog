@@ -1,5 +1,10 @@
 2001-10-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2_port/gp_port.c: Print what we received only if we received
+	something...
+
+2001-10-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	Patch from Hans Ulrich Niedermann <hun@n-dimensional.de>, slightly
 	adapted:
 
