@@ -185,7 +185,7 @@ int camera_summary (Camera *camera, CameraText *summary) {
 
 int camera_manual (Camera *camera, CameraText *manual) {
                 printf("sony dscf1: manual\n");
-        strcpy(manual, "Manual Not Available");
+        strcpy(manual->text, "Manual Not Available");
 
         return (GP_OK);
 }
@@ -202,4 +202,3 @@ int camera_about (Camera *camera, CameraText *about) {
 
         return (GP_OK);
 }
-

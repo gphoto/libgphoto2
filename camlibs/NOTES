@@ -1,22 +1,3 @@
-* template for CameraAbilities:
-
-	strcpy(abilities[]->model, "Camera Model Name");
-	abilities[]->serial    = ;
-	abilities[]->usb       = ;
-	abilities[]->parallel  = ;
-	abilities[]->ieee1394  = ;
-
-	abilities[]->serial_baud[0] = 9600;
-	abilities[]->serial_baud[1] = 0;
-
-	abilities[]->cancel    = ;
-	abilities[]->capture   = ;
-	abilities[]->config    = ;
-	abilities[]->delete_file  = ;
-	abilities[]->file_preview = ;
-	abilities[]->file_put  = ;
-	abilities[]->lock      = ;
-
 * Interfaces should wait to close the configuration dialog until gp_config_set returns.
   If GP_OK is returned, close the window.
   If GP_ERROR is returned, it is expected that the camera libraries have already notified

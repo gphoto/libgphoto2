@@ -52,6 +52,7 @@ int camera_init(Camera *camera, CameraInit *init) {
 	camera->functions->init 	= camera_init;
 	camera->functions->exit 	= camera_exit;
 	camera->functions->folder_list  = camera_folder_list;
+	camera->functions->file_list    = camera_file_list;
 	camera->functions->folder_set 	= camera_folder_set;
 	camera->functions->file_count 	= camera_file_count;
 	camera->functions->file_get 	= camera_file_get;
@@ -101,20 +102,30 @@ int camera_exit(Camera *camera) {
 	return GP_OK;
 }
 
-int camera_folder_list (Camera *camera, char *folder_name, CameraFolderList *list) {
+int camera_file_list (Camera *camera, char *folder_name, CameraList *list) {
 
 	int count, x;
 	BarbieStruct *b = (BarbieStruct*)camera->camlib_data;
 
+	if (strcmp(folder_name, "/")!=0)
+		return (GP_ERROR);
+
 	count = camera_file_count(camera);
 
 	/* Populate the filesystem */
-	gp_filesystem_populate(b->fs, "mattel%02i.ppm", count);
+	gp_filesystem_populate(b->fs, "/", "mattel%02i.ppm", count);
 
-	for (x=0; x<gp_filesystem_count(b->fs); x++)
-		gp_folder_list_append(list, gp_filesystem_name(b->fs, x), 0);
+	for (x=0; x<gp_filesystem_count(b->fs, folder_name); x++) 
+		gp_list_append(list, gp_filesystem_name(b->fs, folder_name, x), GP_LIST_FILE);
 
-	return 0;
+	return GP_OK;
+}
+
+int camera_folder_list (Camera *camera, char *folder_name, CameraList *list) {
+
+	/* there are never any subfolders */
+
+	return GP_OK;
 }
 
 int camera_folder_set (Camera *camera, char *folder_name) {
@@ -158,7 +169,7 @@ int camera_file_get (Camera *camera, CameraFile *file, char *filename) {
 	strcpy(file->type, "image/ppm");
 
 	/* Retrieve the number of the photo on the camera */
-	num = gp_filesystem_number(b->fs, filename);
+	num = gp_filesystem_number(b->fs, "/", filename);
 
 	file->data = barbie_read_picture(b, num, 0, &size);
 	if (!file->data)
@@ -183,7 +194,7 @@ int camera_file_get_preview (Camera *camera, CameraFile *file, char *filename) {
 	strcpy(file->type, "image/ppm");
 
 	/* Retrieve the number of the photo on the camera */
-	num = gp_filesystem_number(b->fs, filename);
+	num = gp_filesystem_number(b->fs, "/", filename);
 
 	file->data = barbie_read_picture(b, num, 1, &size);;
 	if (!file->data)

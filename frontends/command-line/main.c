@@ -84,6 +84,7 @@ OPTION_CALLBACK(debug);
 OPTION_CALLBACK(use_folder);
 OPTION_CALLBACK(recurse);
 OPTION_CALLBACK(list_folders);
+OPTION_CALLBACK(list_files);
 OPTION_CALLBACK(num_pictures);
 OPTION_CALLBACK(get_picture);
 OPTION_CALLBACK(get_all_pictures);
@@ -129,6 +130,7 @@ Option option[] = {
 {"f", "folder",		"folder",	"Specify camera folder (default=\"/\")",use_folder,0},
 {"R", "recurse",	"",		"Recursively descend through folders",recurse,	0},
 {"l", "list-folders",	"",		"List folders in folder",	list_folders,	0},
+{"L", "list-files",	"",		"List files in folder",		list_files,	0},
 {"n", "num-pictures",	"",		"Display number of pictures",	num_pictures,	0},
 {"p", "get-picture",	"range", 	"Get pictures given in range", 	get_picture,	0},
 {"P", "get-all-pictures","", 		"Get all pictures from folder", get_all_pictures,0},
@@ -156,6 +158,7 @@ char glob_port[128];
 char glob_model[64];
 char glob_folder[128];
 int  glob_speed;
+int  glob_num=1;
 
 Camera         *glob_camera=NULL;
 CameraAbilities glob_abilities;
@@ -393,7 +396,7 @@ typedef int folder_action(char *subfolder);
 	Image numbering is 0-based. Should return GP_OK or GP_ERROR.
 */
 
-typedef int image_action(int num);
+typedef int image_action(char *filename);
 
 /*
   for_each_subfolder() - call action() for every subfolder in 'folder' and, if
@@ -405,8 +408,8 @@ typedef int image_action(int num);
 
 int for_each_subfolder(char *folder, folder_action action, int recurse) {
 	
-	CameraFolderList	folderlist;
-	CameraFolderListEntry	*entry;
+	CameraList		folderlist;
+	CameraListEntry		*entry;
 
 	int	count = 0;
 	char	prefix[1024], subfolder[1024];
@@ -427,16 +430,13 @@ int for_each_subfolder(char *folder, folder_action action, int recurse) {
 	
 	gp_camera_folder_list(glob_camera, prefix, &folderlist);
 			
-	for (i = 0; i < gp_folder_list_count(folderlist); i++) {
-		entry = gp_folder_list_entry(folderlist, i);
-		/* folder_list now returns a listing of all files/folders in the folder */
-		if (entry->is_folder) {
-			sprintf(subfolder, "%s%s", prefix, entry->name);
-			if (action(subfolder) == GP_ERROR) 
-				return (GP_ERROR);
-			if (recurse) 
-				for_each_subfolder(subfolder, action, recurse);
-		}
+	for (i = 0; i < gp_list_count(&folderlist); i++) {
+		entry = gp_list_entry(&folderlist, i);
+		sprintf(subfolder, "%s%s", prefix, entry->name);
+		if (action(subfolder) == GP_ERROR) 
+			return (GP_ERROR);
+		if (recurse) 
+			for_each_subfolder(subfolder, action, recurse);
 	}
 
 	return (GP_OK);
@@ -454,7 +454,9 @@ int for_each_image(char *folder, image_action action, int recurse) {
 	
 	int	count = 0;
 	int	i;
-	
+	CameraList filelist;
+	CameraListEntry *entry;
+
 	if (folder != NULL && 0 < strlen(folder))
 		if (gp_camera_folder_set(glob_camera, folder) == GP_ERROR) {
 			cli_error_print("Can not find folder \"%s\"", folder);
@@ -467,10 +469,14 @@ int for_each_image(char *folder, image_action action, int recurse) {
 		cli_error_print("Could not get number of pictures on camera");
 		return (GP_ERROR);
 	}
-	
-	for (i = 0; i < count; i++) 
-		if (action(i) == GP_ERROR)
+
+	gp_camera_file_list(glob_camera, folder, &filelist);
+
+	for (i = 0; i < gp_list_count(&filelist); i++) {
+		entry = gp_list_entry(&filelist, i);
+		if (action(entry->name) == GP_ERROR)
 			return (GP_ERROR);
+	}
 	
 	if (recurse) {
 		
@@ -501,10 +507,42 @@ OPTION_CALLBACK(list_folders) {
 		return (GP_ERROR);
 
 	if (!glob_quiet)
-		printf("Subfolders of: %s\n", glob_folder);
+		printf("Subfolders of %s:\n", glob_folder);
 
 	return for_each_subfolder(glob_folder, print_folder, glob_recurse); 
 }
+
+OPTION_CALLBACK(list_files) {
+
+	int print_files(char *subfolder) {
+		CameraList filelist;
+		CameraListEntry *entry;
+		int x;
+		char buf[64];
+
+		if (!glob_quiet)
+			printf("Files in %s:\n", subfolder);
+
+		gp_camera_file_list(glob_camera, subfolder, &filelist);
+		for (x=0; x<gp_list_count(&filelist); x++) {
+			entry = gp_list_entry(&filelist, x);
+			sprintf(buf, "%i", x+1);
+			printf("#%-05s %s\n", buf, entry->name);
+		}
+		return (GP_OK);
+	}
+	
+	if (set_globals() == GP_ERROR)
+		return (GP_ERROR);
+
+	print_files(glob_folder);
+
+	if (!glob_recurse)
+		return (GP_OK);
+
+	return for_each_subfolder(glob_folder, print_files, glob_recurse); 
+}
+
 
 OPTION_CALLBACK(num_pictures) {
 
@@ -630,6 +668,9 @@ int for_each_image_in_range(char *range, image_action action) {
 	char	index[MAX_IMAGE_NUMBER];
 	int 	i, count = 0, max = 0;
 
+	CameraList filelist;
+	CameraListEntry *entry;
+
 	memset(index, 0, MAX_IMAGE_NUMBER);
 	
 	if (parse_range(range, index) == GP_ERROR) {
@@ -651,9 +692,12 @@ int for_each_image_in_range(char *range, image_action action) {
 		return (GP_ERROR);
 	}
 
+	gp_camera_file_list(glob_camera, glob_folder, &filelist);
+
 	for (i = 0; i <= max; i++)
 		if (index[i]) {
-			if (action(i) == GP_ERROR)
+			entry = gp_list_entry(&filelist, i);
+			if (action(entry->name) == GP_ERROR)
 				return (GP_ERROR);
 		}
 		
@@ -675,22 +719,22 @@ int save_picture_to_file(char *filename, int thumbnail) {
 
 	if (thumbnail) {
 		if (gp_camera_file_get_preview(glob_camera, file, filename) == GP_ERROR) {
-			cli_error_print("Can not get preview #%i.", num+1);
+			cli_error_print("Can not get preview for %s.", filename);
 			return (GP_ERROR);
 		}
 	 } else {
 		if (gp_camera_file_get(glob_camera, file, filename) == GP_ERROR) {
-			cli_error_print("Can not get picture #%i.", num+1);
+			cli_error_print("Can not get picture %s", filename);
 			return (GP_ERROR);
 		}
 	}
 	if ((glob_filename_override)&&(strlen(glob_filename)>0))
-		sprintf(out_filename, glob_filename, num+1);
+		sprintf(out_filename, glob_filename, glob_num++);
 	   else
 		strcpy(out_filename, filename);
 
 	if (!glob_quiet)
-		printf("Saving %s #%i as %s\n", thumbnail ? "preview" : "image", num+1, out_filename);
+		printf("Saving %s as %s\n", thumbnail ? "preview" : "image", out_filename);
 	if (gp_file_save(file, out_filename) == GP_ERROR) 
 		cli_error_print("Can not save %s as %s", thumbnail ? "preview" : "image", out_filename);
 
