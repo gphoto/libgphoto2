@@ -40,6 +40,9 @@
 #define CMD_GET_PREVIEW		0x84
 #define CMD_GET_PREVIEW_RLEN	0x10
 
+#define CMD_GET_PICS            0x8d
+#define CMD_GET_PICS_RLEN       0x08
+
 #define CMD_GET_IMAGE_INFO	0x8f
 #define CMD_GET_IMAGE_INFO_RLEN	0x10
 #define CMD_CAPTURE_IMAGE	0x09
@@ -188,23 +191,29 @@ int stv0680_file_count(GPPort *device, int *count)
 	unsigned char response[CMD_GET_FILE_INFO_RLEN];
 	int ret;
 
-printf("STV: getting file count\n");
-
 	switch (device->type) {
+	case GP_PORT_USB: {
+		unsigned char getpics[CMD_GET_PICS_RLEN];
 
-		case GP_PORT_USB:
-			if ((ret = gp_port_usb_msg_read(device, CMD_GET_FILE_INFO, 0x00, 0x00,
-				response, sizeof(response)) < 0))
-				
-				ret = stv0680_remap_gp_port_error(ret);
-			
-			break;
-
-		default:
-		case GP_PORT_SERIAL:
-			ret = stv0680_try_cmd(device, CMD_GET_FILE_INFO, 0x00, 0x00, 0x00,
-				response, sizeof(response), CMD_RETRIES);
-			break;
+		if ((ret = gp_port_usb_msg_read(device,CMD_GET_PICS,0x00,0x00,
+			getpics, sizeof(getpics)) >= 0)) {
+			*count = (getpics[2]<<8)|getpics[3];
+			return GP_OK;
+		}
+		/* Try old method */
+		if ((ret = gp_port_usb_msg_read(device,CMD_GET_FILE_INFO,0x00,0x00,
+			response,sizeof(response))) >= 0) {
+		    *count = response[1]+(response[0]<<8);
+		    return GP_OK;
+		} else
+		    ret = stv0680_remap_gp_port_error(ret);
+		break;
+	}
+	default:
+	case GP_PORT_SERIAL:
+		ret = stv0680_try_cmd(device, CMD_GET_FILE_INFO, 0x00, 0x00, 0x00,
+			response, sizeof(response), CMD_RETRIES);
+		break;
 	}
 
 	switch(ret) {
@@ -213,7 +222,7 @@ printf("STV: getting file count\n");
 		return GP_ERROR_IO;
 	case CMD_OK:
 		printf("GFI OK, count = %d\n", response[1]);
-		*count = response[1];
+		*count = (response[0]<<8)|response[1];
 		return GP_OK;
 	default:
 		//Should not be reached.
@@ -271,7 +280,6 @@ int stv0680_get_image(GPPort *device, int image_no,
 	strcpy(*data, header);
 
 	gp_bayer_decode (raw, w, h, *data + strlen(header), BAYER_TILE_GBRG_INTERLACED);
-
 	free(raw);
 
 	*size *= 3;
@@ -414,8 +422,3 @@ int stv0680_capture_preview(GPPort *device, char **data, int *size)
 
 	return GP_OK;
 }
-
-
-
-
-
