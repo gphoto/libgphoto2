@@ -69,7 +69,7 @@ static const struct {
 	{NULL, NULL}
 };
 
-#define DEBUG
+//#define DEBUG
 #define GP_MODULE "directory"
 
 static const char *
