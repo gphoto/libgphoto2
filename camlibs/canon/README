@@ -1,4 +1,36 @@
-This driver is for Canon cameras. It works with the following models:
+========================================================================
+About this driver
+=================
+
+This driver is for Canon cameras. It underwent a fairly complete rewrite
+around 2002-01-01, so we list camera support for both the old and the
+new driver here. Note that the old driver is not being developed any
+more. The new driver will take over all functions as its successor.
+
+
+========================================================================
+Cameras supported
+=================
+
+The new driver works with the following models:
+
+ - PowerShot A50 (not tested)
+ - PowerShot S10 (not tested)
+ - PowerShot S20 (not tested)
+ - PowerShot S30 (not tested, under development)
+ - PowerShot S40 (not tested, under development)
+ - PowerShot S100 / Digital IXUS (not tested)
+ - PowerShot IXY Digital (not tested)
+ - PowerShot S300 / Digital IXUS 300 (not tested)
+ - PowerShot IXY Digital 300  (not tested)
+ - PowerShot G1 (not tested)
+ - PowerShot G2
+ - PowerShot A10 (not tested)
+ - PowerShot A20 (not tested)
+ - PowerShot Pro90 IS (not tested)
+ - EOS D30 (not tested)
+
+The old driver worked with the following models:
 
  - PowerShot A50
  - PowerShot S10
@@ -16,6 +48,10 @@ This driver is for Canon cameras. It works with the following models:
  - PowerShot Pro90 IS (not tested)
  - EOS D30
 
+This old driver can be checked into your CVS source tree by changing
+to camlibs/canon and running "cvs update -r Before_GPFileSystem"
+there.
+
 The support of the following cameras is mostly there as they were supported
 in gphoto 0.4.x but an API change broke the support as they handle files a 
 little differently. If you are interested in fixing it mail 
@@ -24,14 +60,37 @@ gphoto-devel@gphoto.net or philm@users.sourceforge.net :
  - PowerShot A5
  - PowerShot A5 Zoom
   
-
  It doesn't  work with the  PowerShot  350. However, the  PS350 uses a
 vaguely similar protocol, so some parts of the sources can probably be
 shared.
 
-The driver caches a lot of information. If the camera status changes
+The old driver cached a lot of information. If the camera status changes
 during a session or if the driver gets stuck for some other reason,
-the caches can be manually flushed using "Configure camera".
+the caches could be manually flushed using "Configure camera".
+
+
+========================================================================
+Features supported
+==================
+
+- RS-232 serial cameras (currently not tested)
+- USB cameras (well tested)
+- List all folders and image and movie files on the camera
+  Optionally list all other files, too
+- Download all file types from the camera as they are, i.e. without 
+  any transformation. This includes CRW (Canon RaW) files, which are
+  not processed to a standard format yet.
+- Download thumbnail for all file types where thumbnails are available
+  for
+- Delete files. Handles single files and files which have an
+  associated thumbnail file which is also removed. (broken)
+- Download sound annotations to images (not tested)
+
+The following features are probably or surely not working (yet :-)
+
+- Create and Delete folders (not tested, but worked in the past)
+- Upload files to camera (not tested, but worked in the past)
+- Capture images controlled by the computer (still to be implemented)
 
 We are currently working on support for the raw file format the Canon
 cameras use (CRW -Canon RaW files). See
@@ -44,6 +103,7 @@ or
 for details on the file format.
 
 
+========================================================================
 Change history
 ==============
 
