@@ -58,7 +58,7 @@ char  gp_jpeg_findff(int *location, chunk *picture);
 char  gp_jpeg_findactivemarker(char *id, int *location, chunk *picture);
 char *gp_jpeg_markername(int c);
 
-jpeg *gp_jpeg_new();
+jpeg *gp_jpeg_new        (void);
 void  gp_jpeg_destroy    (jpeg *myjpeg);
 void  gp_jpeg_add_marker (jpeg *myjpeg, chunk *picture, int start, int end);
 void  gp_jpeg_add_chunk  (jpeg *myjpeg, chunk *source);
