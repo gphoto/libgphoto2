@@ -1,3 +1,7 @@
+2002-07-04  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c: (camera_capture): Fix bug.
+
 2002-05-06  Lutz Müller <lutz@users.sourceforge.net>
 
 	* library.c: ping the camera every minute to prevent shutdown.

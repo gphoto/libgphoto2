@@ -599,9 +599,8 @@ camera_capture (Camera* camera, CameraCaptureType type, CameraFilePath* path,
 	gp_file_new (&file);
 	gp_file_set_name (file, info.file.name);
 	gp_file_set_mime_type (file, GP_MIME_JPEG);
-	gp_file_set_type (file, GP_FILE_TYPE_PREVIEW);
+	gp_file_set_type (file, GP_FILE_TYPE_EXIF);
 	gp_file_set_data_and_size (file, buffer, buffer_size);
-	free (buffer);
 	gp_filesystem_set_file_noop (camera->fs, path->folder, file, context);
 	gp_file_unref (file);
 
