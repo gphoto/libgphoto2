@@ -30,8 +30,8 @@ ALL_LINGUAS=""
 AM_GNU_GETTEXT
 
 dnl Turn on debugging and catch GNU features incompatible with ANSI C.
-CFLAGS="$CFLAGS -g -Wall -ansi"
-LDFLAGS="$LDFLAGS -g -Wall -ansi"
+CFLAGS="$CFLAGS -g -Wall"
+LDFLAGS="$LDFLAGS -g -Wall"
 
 dnl Checks for header files.
 AC_HEADER_DIRENT
