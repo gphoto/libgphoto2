@@ -45,6 +45,9 @@
 #include <gphoto2.h>
 #include <gpio.h>
 
+/* There should be a better way to do this. */
+#include "../../../libgphoto2/exif.h"
+
 /* These are the repsonse codes. */
 #define DIMAGEV_STX 0x02
 #define DIMAGEV_ETX 0x03
