@@ -1,3 +1,8 @@
+2001-11-27  Hans Ulrich Niedermann <hun@n-dimensional.de>
+
+	* canon.[ch]: added conversion routinges between CameraFS and
+	  Canon file paths
+
 2001-11-29  Fredrik <fredrik@krixor.xy.org>
 
 	* usb.c, usb.h:
