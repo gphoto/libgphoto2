@@ -4,10 +4,6 @@ List of work that still has to be done on this driver:
 
  - switch the camera on again when application exits
 
- - make misc. models work on A/C adapter (e.g. G1, Pro 90 IS)
-
- - make image capturing work
-
  - make file upload work with different file types and names
 
  - handle thumbnails and sound annotations in a more generic way to
@@ -31,6 +27,10 @@ List of work that still has to be done on this driver:
 ========================================================================
 List of work that has already been done:
 ========================================================================
+
+ - make misc. models work on A/C adapter (e.g. G1, Pro 90 IS) [done -swestin]
+
+ - make image capturing work [done -swestin]
 
  - make sure thumbnail download work on serial cameras 
    [done according to Philippe -hun]
