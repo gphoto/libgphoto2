@@ -1806,7 +1806,7 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 				 * that is not an error for serial cameras
 				 * (at least the A50 adds five zero bytes at the end)
 				 */
-				for (temp_ch = pos; temp_ch < end_of_data && *temp_ch; temp_ch++) ;	/* do nothing */
+				for (temp_ch = pos; (temp_ch < end_of_data) && (!*temp_ch); temp_ch++) ;	/* do nothing */
 
 				if (temp_ch == end_of_data) {
 					GP_DEBUG ("canon_int_list_dir: "
