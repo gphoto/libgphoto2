@@ -540,7 +540,7 @@ int get_picture_common(char *arg, int thumbnail) {
         if (set_globals() != GP_OK)
                 return (GP_ERROR);
 
-        if (thumbnail && !glob_abilities.file_preview) {
+        if (thumbnail && !glob_camera->abilities->file_preview) {
                 cli_error_print("Camera doesn't support picture thumbnails");
                 return (GP_ERROR);
         }
@@ -583,7 +583,7 @@ OPTION_CALLBACK(get_all_thumbnails) {
         if (set_globals() != GP_OK)
                 return (GP_ERROR);
 
-        if (!glob_abilities.file_preview) {
+        if (!glob_camera->abilities->file_preview) {
                 cli_error_print("Camera doesn't support picture thumbnails");
                 return (GP_ERROR);
         }
@@ -598,7 +598,7 @@ OPTION_CALLBACK(delete_picture) {
         if (set_globals() != GP_OK)
                 return (GP_ERROR);
 
-        if (!glob_abilities.file_delete) {
+        if (!glob_camera->abilities->file_delete) {
                 cli_error_print("Camera can not delete pictures");
                 return (GP_ERROR);
         }
@@ -613,7 +613,7 @@ OPTION_CALLBACK(delete_all_pictures) {
         if (set_globals() != GP_OK)
                 return (GP_ERROR);
 
-        if (!glob_abilities.file_delete) {
+        if (!glob_camera->abilities->file_delete) {
                 cli_error_print("Camera can not delete pictures");
                 return (GP_ERROR);
         }
@@ -632,7 +632,7 @@ OPTION_CALLBACK(upload_picture) {
         if (set_globals() != GP_OK)
                 return (GP_ERROR);
 
-        if (!glob_abilities.file_put) {
+        if (!glob_camera->abilities->file_put) {
                 cli_error_print("Camera doesn't support uploading pictures");
                 return (GP_ERROR);
         }
@@ -765,20 +765,20 @@ OPTION_CALLBACK(about) {
 int set_globals () {
         /* takes all the settings and sets up the gphoto lib */
 
-        if (strlen(glob_model) == 0) {
-                cli_error_print("Must specify a camera model using \"%scamera model\"",LONG_OPTION);
-                return (GP_ERROR);
-        }
+//	if (strlen(glob_model) == 0) {
+//		cli_error_print("Must specify a camera model using \"%scamera model\"",LONG_OPTION);
+//		return (GP_ERROR);
+//	}
 
         if ((strlen(glob_port) == 0)&&(strcmp(glob_model, "Directory Browse")!=0)) {
                 cli_error_print("Must specify a camera port using \"%sport path\"",LONG_OPTION);
                 return (GP_ERROR);
         }
 
-        if (gp_camera_abilities_by_name(glob_model, &glob_abilities) != GP_OK) {
-                cli_error_print("Could not find camera \"%s\".\nUse \"--list-cameras\" to see available camera models", glob_model);
-                return (GP_ERROR);
-        }
+//	if (gp_camera_abilities_by_name(glob_model, &glob_abilities) != GP_OK) {
+//		cli_error_print("Could not find camera \"%s\".\nUse \"--list-cameras\" to see available camera models", glob_model);
+//	      return (GP_ERROR);
+//	}
 
         if (gp_camera_new(&glob_camera) != GP_OK) {
                 cli_error_print("Can not create camera data");
