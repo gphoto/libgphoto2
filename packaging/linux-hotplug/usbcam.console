@@ -9,7 +9,7 @@
 # Note that for this script to work, you'll need all of the following:
 # a) a line in the file /etc/hotplug/usermap that corresponds to the 
 #    camera you are using. You can get the correct lines for all cameras 
-#    supported by gphoto2 by running "gphoto2 --print-usb-usermap".
+#    supported by libgphoto2 by running "print-usb-usermap".
 # b) a setup using pam_console creates the respective lock files
 #    containing the name of the respective user. You can check for that
 #    by executing "echo `cat /var/{run,lock}/console.lock`" and 
