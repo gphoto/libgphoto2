@@ -21,6 +21,24 @@
 
 #include "dimagev.h"
 
+/* This function takes an array of unsigned chars, as well as the length, and
+   creates a dimagev_packet ready for sending to the camera. Packets must be
+   of the form below:
+
+                                    bytes
+     --------------------------------------------------------------------
+	 |  0  |  1  |  2  |  3  |   4 through ( n-4)     | n-3 | n-2 | n-1 |
+     --------------------------------------------------------------------
+     | STX | Seq |  Length   |      Payload           | Checksum  | ETX |
+     --------------------------------------------------------------------
+
+	 STX and ETX are defined in dimage.h; their values are 0x02 and 0x03.
+	 Seq is the sequence number; start at zero.
+	 Payload is the good stuff.
+	 Checksum is the sum of all bytes 0 through ( n-4 ) mod 65536.
+
+	 A packet must be at least eight bytes, with at least one byte of payload.
+*/
 dimagev_packet *dimagev_make_packet(unsigned char *buffer, unsigned int length, unsigned int seq) {
 	unsigned int i=0, checksum=0;
 	dimagev_packet *p;
@@ -172,7 +190,7 @@ unsigned char dimagev_decimal_to_bcd(unsigned char decimal) {
 	} else {
 		tensdigit = decimal / 10;
 		bcd = tensdigit * 16;
-		bcd += tensdigit % 10;
+		bcd += decimal % 10;
 		return bcd;
 	}
 }
