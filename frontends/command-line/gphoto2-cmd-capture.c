@@ -31,10 +31,29 @@
 #include <jpeglib.h>
 #endif
 
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define N_(String) (String)
+#  endif
+#else
+#  define textdomain(String) (String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory) (Domain)
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
 int
 gp_cmd_capture_preview (Camera *camera, CameraFile *file)
 {
-	int result, event;
+	int result, event, contrast, bright;
 	aa_context *c;
 	aa_renderparams *params;
 	aa_palette palette;
@@ -44,6 +63,8 @@ gp_cmd_capture_preview (Camera *camera, CameraFile *file)
 		return (GP_ERROR);
 	aa_autoinitkbd (c, 0);
 	params = aa_getrenderparams ();
+	contrast = params->contrast;
+	bright = params->bright;
 	aa_hidecursor (c);
 
 	result = gp_camera_capture_preview (camera, file);
@@ -135,6 +156,31 @@ gp_cmd_capture_preview (Camera *camera, CameraFile *file)
 		
 		event = aa_getevent (c, 1);
 		switch (event) {
+		case 105:
+			/* i */
+			params->inversion = 1 - params->inversion;
+			break;
+		case 300:
+			/* Up arrow */
+			params->bright = MIN (255, params->bright + 1);
+			break;
+		case 301:
+			/* Down arrow */
+			params->bright = MAX (0, params->bright - 1);
+			break;
+		case 302:
+			/* Left arrow */
+			params->contrast = MAX (0, params->contrast - 1);
+			break;
+		case 303:
+			/* Right arrow */
+			params->contrast = MIN (255, params->contrast + 1);
+			break;
+		case 114:
+			/* r */
+			params->bright = bright;
+			params->contrast = contrast;
+			break;
 		case AA_RESIZE:
 			aa_resize (c);
 			aa_flush (c);
@@ -150,6 +196,7 @@ gp_cmd_capture_preview (Camera *camera, CameraFile *file)
 		case 305:
 			/* ESC */
 			aa_close (c);
+			gp_camera_set_error (camera, _("Operation cancelled"));
 			return (GP_ERROR);
 		default:
 			aa_close (c);

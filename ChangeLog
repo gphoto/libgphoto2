@@ -1,3 +1,8 @@
+2001-10-16 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* frontends/command-line/gphoto2-cmd-capture.c: Adjust brighness
+	  and contrast with arrow keys
+
 2001-10-26 Dan Fandrich <dan@coneharvesters.com>
 
 	* libgphoto2_port/include/gphoto2-portability.h:
