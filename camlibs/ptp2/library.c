@@ -275,6 +275,7 @@ static struct {
 	{"Canon:PowerShot A70 (PTP)",  0x04a9, 0x3073},
 		/* A60 and A70 are PTP also */
 	{"Canon:PowerShot A60 (PTP)",  0x04a9, 0x3074},
+	{"Canon:PowerShot G5 (PTP mode)", 0x04a9, 0x3085},
 
 	/* more coming soon :) */
 	{NULL, 0, 0}
