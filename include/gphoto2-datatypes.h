@@ -204,6 +204,9 @@ struct CameraWidget;
 typedef struct CameraWidget {
 	CameraWidgetType type;
 	char    label[32];
+
+	/* Pointer to the parent */
+	struct CameraWidget *parent;
 	
 	/* Current value of the widget */
         char   *value_string;

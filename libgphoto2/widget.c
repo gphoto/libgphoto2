@@ -244,6 +244,7 @@ int gp_widget_append(CameraWidget *parent, CameraWidget *child) {
 
 	parent->children[parent->children_count] = child;
 	parent->children_count += 1;
+	child->parent = parent;
 	
 	return (GP_OK);
 }
@@ -264,6 +265,7 @@ int gp_widget_prepend(CameraWidget *parent, CameraWidget *child) {
 	/* Prepend the child */
 	parent->children[0] = child;
 	parent->children_count += 1;
+	child->parent = parent;
 
 	return (GP_OK);
 }
@@ -318,6 +320,17 @@ CameraWidget* gp_widget_child_by_id (CameraWidget *widget, int id) {
 	}
 
 	return (NULL);
+}
+
+CameraWidget* gp_widget_root (CameraWidget *widget) {
+
+	if (!widget) 
+		return NULL;
+
+	if (widget->parent) 
+		return gp_widget_root (widget->parent);
+	else
+		return (widget);
 }
 
 /* Set/get the value of the range widget 					*/
