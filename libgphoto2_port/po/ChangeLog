@@ -1,3 +1,10 @@
+2002-01-16  Colin Marquardt  <colin@marquardt-home.de>
+
+	* fr.po (Message): Update from Jérôme:
+	                   - Traduction de GTKam terminée ;
+                           - Changement d'imagette en vignette, plus joli ; 
+                           - Nettoyage dû au développement.
+
 2002-01-13  Colin Marquardt  <colin@marquardt-home.de>
 
 	* de.po: Update.

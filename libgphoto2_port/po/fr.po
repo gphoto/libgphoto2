@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2002-01-14 22:31+0100\n"
+"POT-Creation-Date: 2002-01-16 21:50+0100\n"
 "PO-Revision-Date: 2002-01-15 22:30MET\n"
 "Last-Translator: Jérôme Fenal <jerome@fenal.org>\n"
 "Language-Team: Français <traduc@traduc.org>\n"
@@ -254,7 +254,8 @@ msgstr "Impossible de déverrouiller le device '%s'."
 #: serial/unix.c:236
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
-msgstr "Le device '%s' ne peut être déverrouillé car vérouillé par processus %d."
+msgstr ""
+"Le device '%s' ne peut être déverrouillé car vérouillé par processus %d."
 
 #: serial/unix.c:240
 #, c-format
@@ -305,4 +306,3 @@ msgstr "Impossible de vider '%s' (%m.)"
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Impossible de configurer le débit à %d"
-
