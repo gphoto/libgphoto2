@@ -1,3 +1,7 @@
+2001-11-27  gettextize  <bug-gnu-utils@gnu.org>
+
+	* Makefile.in.in: Upgrade to gettext-0.10.40.
+
 2001-11-23  Colin Marquardt  <colin@marquardt-home.de>
 
 	* de.po (Message): All command line help table entries are now
