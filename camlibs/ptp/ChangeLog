@@ -1,3 +1,7 @@
 2001-12-02  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* library.c: Fix warning
+
+2001-12-02  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* library.c: Fixed vendor/product if of HP PhotoSmart 318.

@@ -394,17 +394,6 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	return (GP_OK);
 }
 
-static int
-put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
-	       void *data)
-{
-	Camera *camera = data;
-
-	camera = NULL;
-
-	return (GP_ERROR);
-}
-
 int
 camera_init (Camera *camera)
 {
