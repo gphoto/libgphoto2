@@ -1,176 +1,20 @@
 #include "dimagev.h"
 
-int dimagev_host_mode(dimagev_t *dimagev, int newmode) {
-	dimagev_packet *p;
-	unsigned char *export_data, char_buffer;
-
-
-	if ( dimagev == NULL ) {
-		if ( dimagev->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_capture::unable to use NULL dimagev_t");
-		}
-		return GP_ERROR;
-	}
-
-	dimagev->data->host_mode = newmode;
-
-	if ( ( export_data = dimagev_export_camera_data(dimagev->data) ) == NULL ) {
-		if ( dimagev->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_capture::unable to export camera data");
-		}
-		return GP_ERROR;
-	}
-
-	if ( dimagev->debug != 0 ) {
-		dimagev_dump_camera_data(dimagev->data);
-	}
-
-	if ( ( p = dimagev_make_packet(DIMAGEV_SET_DATA, 1, 0) ) == NULL ) {
-		if ( dimagev->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_capture::unable to create set_data packet");
-		}
-		return GP_ERROR;
-	}
-
-	if ( gpio_write(dimagev->dev, p->buffer, p->length) == GPIO_ERROR ) {
-		if ( dimagev->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_capture::unable to send set_data packet");
-		}
-		return GP_ERROR;
-	} else if ( gpio_read(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
-		if ( dimagev->debug != 0 ) {
-			perror("dimagev_get_camera_data::no response from camera");
-		}
-		return GP_ERROR;
-	}
-		
-	free(p);
-
-	switch ( char_buffer ) {
-		case DIMAGEV_ACK:
-			break;
-		case DIMAGEV_NAK:
-			if ( dimagev->debug != 0 ) {
-				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_capture::camera did not acknowledge transmission\n");
-			}
-			return GP_ERROR;
-			break;
-		case DIMAGEV_CAN:
-			if ( dimagev->debug != 0 ) {
-				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_capture::camera cancels transmission\n");
-			}
-			return GP_ERROR;
-			break;
-		default:
-			if ( dimagev->debug != 0 ) {
-				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_capture::camera responded with unknown value %x\n", char_buffer);
-			}
-			return GP_ERROR;
-			break;
-	}
-
-	if ( ( p = dimagev_make_packet(export_data, 9, 1) ) == NULL ) {
-		if ( dimagev->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_capture::unable to create set_data packet");
-		}
-		return GP_ERROR;
-	}
-
-	if ( dimagev->debug != 0 ) {
-		dimagev_dump_packet(p);
-	}
-
-	if ( gpio_write(dimagev->dev, p->buffer, p->length) == GPIO_ERROR ) {
-		if ( dimagev->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_capture::unable to send data packet");
-		}
-		return GP_ERROR;
-	}
-		
-	if ( gpio_read(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
-		if ( dimagev->debug != 0 ) {
-			perror("dimagev_get_camera_data::no response from camera");
-		}
-		return GP_ERROR;
-	}
-
-	switch ( char_buffer ) {
-		case DIMAGEV_ACK:
-			break;
-		case DIMAGEV_NAK:
-			if ( dimagev->debug != 0 ) {
-				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_data::camera did not acknowledge transmission\n");
-			}
-			return GP_ERROR;
-			break;
-		case DIMAGEV_CAN:
-			if ( dimagev->debug != 0 ) {
-				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_data::camera cancels transmission\n");
-			}
-			return GP_ERROR;
-			break;
-		default:
-			if ( dimagev->debug != 0 ) {
-				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_data::camera responded with unknown value %x\n", char_buffer);
-			}
-			return GP_ERROR;
-			break;
-	}
-
-
-	char_buffer = DIMAGEV_EOT;
-	if ( gpio_write(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
-		if ( dimagev->debug != 0 ) {
-			perror("dimagev_get_camera_data::unable to send EOT");
-		}
-		return GP_ERROR;
-	}
-		
-	if ( gpio_read(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
-		if ( dimagev->debug != 0 ) {
-			perror("dimagev_get_camera_data::no response from camera");
-		}
-		return GP_ERROR;
-	}
-
-	switch ( char_buffer ) {
-		case DIMAGEV_ACK:
-			break;
-		case DIMAGEV_NAK:
-			if ( dimagev->debug != 0 ) {
-				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_data::camera did not acknowledge transmission\n");
-			}
-			return GP_ERROR;
-			break;
-		case DIMAGEV_CAN:
-			if ( dimagev->debug != 0 ) {
-				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_data::camera cancels transmission\n");
-			}
-			return GP_ERROR;
-			break;
-		default:
-			if ( dimagev->debug != 0 ) {
-				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_data::camera responded with unknown value %x\n", char_buffer);
-			}
-			return GP_ERROR;
-			break;
-	}
-
-	sleep(1);
-
-	return GP_OK;
-}
-
 int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 	int length, total_packets, i;
 	dimagev_packet *p, *r;
 	unsigned char char_buffer, command_buffer[8];
 
-	if ( dimagev_host_mode(dimagev, 1) == GP_ERROR ) {
-		if ( dimagev->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::unable to set host mode");
+	if ( dimagev->data->host_mode != 1 ) {
+
+		dimagev->data->host_mode = 1;
+
+		if ( dimagev_send_data(dimagev) == GP_ERROR ) {
+			if ( dimagev->debug != 0 ) {
+				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::unable to set host mode");
+			}
+			return GP_ERROR;
 		}
-		return GP_ERROR;
 	}
 
 	gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::file_number is %d", file_number);
@@ -330,9 +174,11 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 	}
 
 	/* Now set the camera back into local mode. */
-	if ( dimagev_host_mode(dimagev, 0) == GP_ERROR ) {
+	dimagev->data->host_mode = 0;
+
+	if ( dimagev_send_data(dimagev) == GP_ERROR ) {
 		if ( dimagev->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::unable to leave host mode");
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::unable to set host mode");
 		}
 		return GP_ERROR;
 	}
@@ -351,7 +197,18 @@ int dimagev_delete_picture(dimagev_t *dimagev, int file_number) {
 		return GP_ERROR;
 	}
 
-	dimagev_host_mode(dimagev, 1);
+	if ( dimagev->data->host_mode != 1 ) {
+
+		dimagev->data->host_mode = 1;
+
+		if ( dimagev_send_data(dimagev) == GP_ERROR ) {
+			if ( dimagev->debug != 0 ) {
+				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::unable to set host mode");
+			}
+			return GP_ERROR;
+		}
+	}
+
 
 	/* First make the command packet. */
 	command_buffer[0] = 0x05;
@@ -463,7 +320,18 @@ int dimagev_delete_picture(dimagev_t *dimagev, int file_number) {
 			break;
 	}
 
-	dimagev_host_mode(dimagev, 0);
+	if ( dimagev->data->host_mode != 0 ) {
+
+		dimagev->data->host_mode = 0;
+
+		if ( dimagev_send_data(dimagev) == GP_ERROR ) {
+			if ( dimagev->debug != 0 ) {
+				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::unable to set host mode");
+			}
+			return GP_ERROR;
+		}
+	}
+
 
 	return GP_OK;
 }

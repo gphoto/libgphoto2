@@ -111,7 +111,14 @@ int camera_exit (Camera *camera) {
 		return GP_ERROR;
 	}
 
-	dimagev_host_mode(dimagev, 0);
+	dimagev->data->host_mode = 0;
+
+	if ( dimagev_send_data(dimagev) == GP_ERROR ) {
+		if ( dimagev->debug != 0 ) {
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::unable to set host mode");
+		}
+		return GP_ERROR;
+	}
 
 	if ( dimagev->dev != NULL ) {
 		gpio_close(dimagev->dev);
@@ -242,6 +249,9 @@ int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 		return GP_ERROR;
 	}
 
+	printf("Preparing to check status\n");
+	fflush(stdout);
+
 	/* Now check how many pictures are taken, and return the last one. */
 	if ( dimagev_get_camera_status(dimagev) ) {
 		if ( dimagev->debug != 0 ) {
@@ -249,6 +259,9 @@ int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 		}
 		return GP_ERROR;
 	}
+
+	printf("Preparing to retrieve image\n");
+	fflush(stdout);
 
 	if ( dimagev_get_picture(dimagev, ( dimagev->status->number_images ), file ) == GP_ERROR ) {
 		if ( dimagev->debug != 0 ) {
@@ -263,12 +276,19 @@ int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 	snprintf(file->name, 63, DIMAGEV_FILENAME_FMT, 0);
 	
 	/* Now delete it. */
+	/* If deletion fails, don't bother returning an error, just print an error */
+
+	printf("Now going to delete picture %d\n", dimagev->status->number_images);
+	fflush(stdout);
 	
+	sleep(1);
+
 	if ( dimagev_delete_picture(dimagev, dimagev->status->number_images ) == GP_ERROR ) {
 		if ( dimagev->debug != 0 ) {
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_capture::unable to delete new image");
 		}
-		return GP_ERROR;
+		printf("Unable to delete image. Please delete image %d\n", dimagev->status->number_images);
+/*		return GP_ERROR;*/
 	}
 
 	return GP_OK;

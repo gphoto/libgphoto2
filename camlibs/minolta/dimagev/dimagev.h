@@ -156,6 +156,7 @@ unsigned char dimagev_bcd_to_decimal(unsigned char bcd);
 int dimagev_packet_sequence(dimagev_packet *p);
 
 /* These functions are in data.c */
+int dimagev_send_data(dimagev_t *dimagev);
 int dimagev_get_camera_data(dimagev_t *dimagev);
 dimagev_data_t *dimagev_import_camera_data(unsigned char *raw_data);
 unsigned char *dimagev_export_camera_data(dimagev_data_t *good_data);
@@ -175,7 +176,6 @@ void dimagev_dump_camera_info(dimagev_info_t *info);
 int dimagev_shutter(dimagev_t *dimagev);
 
 /* These functions are in util.c */
-int dimagev_host_mode(dimagev_t *dimagev, int newmode);
 int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file);
 int dimagev_delete_picture(dimagev_t *dimagev, int file_number);
 int dimagev_delete_all(dimagev_t *dimagev);

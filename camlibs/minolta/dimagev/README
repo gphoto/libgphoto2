@@ -23,7 +23,11 @@ Notes on specific functions:
     The capture function takes a picture, downloads it, and then deletes it.
     This image is always named dv00000.jpg, since that holds with the naming
     convention for the rest of the pictures, and simultaneously cannot be a
-    valid name for an image retrieved from the camera.
+    valid name for an image retrieved from the camera. Sometimes the deletion
+	of an image will faile after it has been retreieved; since reporting this
+	error would mean the entire capture process failed, I merely print a
+	message indicating which image needs to be deleted. This is, in my
+	opinion, preferable to losing the picture entirely.
 
 
 --Gus Hartmann, <gphoto-dimagev@gus-the-cat.org>
