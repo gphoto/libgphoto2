@@ -1,3 +1,7 @@
+2001-09-12  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2/core.c: Add some CHECK_INITs.
+
 2001-09-10  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* libgphoto2_port/usb/libusb.c (gp_port_usb_find_device_lib): if

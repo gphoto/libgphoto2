@@ -305,12 +305,16 @@ gp_camera_count (void)
 int
 gp_camera_name (int camera_number, const char **camera_name)
 {
+	CHECK_INIT;
+
         return (gp_abilities_list_get_model (gal, camera_number, camera_name));
 }
 
 int
 gp_camera_abilities (int camera_number, CameraAbilities *abilities)
 {
+	CHECK_INIT;
+
         return (gp_abilities_list_get_abilities (gal, camera_number,abilities));
 }
 
@@ -319,6 +323,8 @@ gp_camera_abilities_by_name (const char *camera_name,
                              CameraAbilities *abilities)
 {
         int x;
+
+	CHECK_INIT;
 
         CHECK_RESULT (x = gp_abilities_list_lookup_model (gal, camera_name));
         return (gp_camera_abilities (x, abilities));
