@@ -236,9 +236,9 @@ gp_file_open (CameraFile *file, char *filename)
 
         name = strrchr (filename, '/');
         if (name)
-                strcpy(file->name, name + 1);
+                strncpy (file->name, name + 1, sizeof (file->name));
            else
-                strcpy(file->name, filename);
+                strncpy (file->name, filename, sizeof (file->name));
 
         /* MIME lookup */
         dot = strrchr (filename, '.');
@@ -262,7 +262,8 @@ gp_file_open (CameraFile *file, char *filename)
             /*
              * Damn, no filename suffix...
              */
-            strcpy(file->mime_type, "image/unknown");
+            strncpy (file->mime_type, "image/unknown",
+		     sizeof (file->mime_type));
 
         return (GP_OK);
 }
@@ -348,7 +349,7 @@ gp_file_set_name (CameraFile *file, const char *name)
 {
 	CHECK_NULL (file && name);
 
-	strcpy (file->name, name);
+	strncpy (file->name, name, sizeof (file->name));
 
 	return (GP_OK);
 }
@@ -358,7 +359,7 @@ gp_file_set_mime_type (CameraFile *file, const char *mime_type)
 {
 	CHECK_NULL (file && mime_type);
 
-	strcpy (file->mime_type, mime_type);
+	strncpy (file->mime_type, mime_type, sizeof (file->mime_type));
 
 	return (GP_OK);
 }
@@ -427,7 +428,7 @@ gp_file_set_header (CameraFile *file, const char *header)
 {
 	CHECK_NULL (file && header);
 
-	strcpy (file->header, header);
+	strncpy (file->header, header, sizeof (file->header));
 
 	return (GP_OK);
 }

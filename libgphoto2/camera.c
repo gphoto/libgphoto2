@@ -87,7 +87,7 @@ gp_camera_set_model (Camera *camera, const char *model)
 {
 	CHECK_NULL (camera && model);
 
-	strcpy (camera->model, model);
+	strncpy (camera->model, model, sizeof (camera->model));
 	
 	return (GP_OK);
 }
@@ -114,8 +114,10 @@ gp_camera_set_port_path (Camera *camera, const char *port_path)
 	for (x = 0; x < count; x++)
 		if ((gp_port_info_get (x, &info) == GP_OK) &&
 		    (!strcmp (port_path, info.path))) {
-			strcpy (camera->port->path, info.path);
-			strcpy (camera->port->name, info.name);
+			strncpy (camera->port->path, info.path,
+				 sizeof (camera->port->path));
+			strncpy (camera->port->name, info.name,
+				 sizeof (camera->port->name));
 			return (GP_OK);
 		}
 
@@ -144,8 +146,10 @@ gp_camera_set_port_name (Camera *camera, const char *port_name)
 	for (x = 0; x < count; x++)
 		if ((gp_port_info_get (x, &info) == GP_OK) &&
 		    (!strcmp (port_name, info.name))) {
-			strcpy (camera->port->path, info.path);
-			strcpy (camera->port->name, info.name);
+			strncpy (camera->port->path, info.path,
+				 sizeof (camera->port->path));
+			strncpy (camera->port->name, info.name,
+				 sizeof (camera->port->name));
 			return (GP_OK);
 		}
 	
@@ -551,7 +555,8 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 			gp_file_get_data_and_size (cfile, &data, &size);
 			info->preview.size = size;
 			gp_file_get_mime_type (cfile, &mime_type);
-			strcpy (info->preview.type, mime_type);
+			strncpy (info->preview.type, mime_type,
+				 sizeof (info->preview.type));
 		}
 		CHECK_RESULT (gp_file_unref (cfile));
 	} else
@@ -560,7 +565,7 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 
 	/* We don't trust the camera libraries */
 	info->file.fields |= GP_FILE_INFO_NAME;
-	strcpy (info->file.name, file);
+	strncpy (info->file.name, file, sizeof (info->file.name));
 	info->preview.fields &= ~GP_FILE_INFO_NAME; 
 
 	return (result);
