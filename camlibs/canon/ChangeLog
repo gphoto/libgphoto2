@@ -8,6 +8,12 @@
 	  Moved canon_int_usb_ready() to usb.c and renamed
 	  it to canon_usb_ready().
 
+	* library.c: Don't say we are switching off camera if
+	  USB, since we are not.
+
+	* usb.c: Make canon_usb_keylock() not try to keylock
+	  EOS D30 cameras, they seem to do keylocking different.
+
 2001-12-01  Fredrik <fredrik@krixor.xy.org>
 
 	* usb.c, usb.h:
