@@ -173,11 +173,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       GPContext *context)
 {
 	Camera *camera = user_data;
-	int result, i;
+	int result;
 	int havefirst = 0;
 	unsigned char buffer[SDSC_BLOCKSIZE], first[SDSC_BLOCKSIZE];
-	long int size;
-	unsigned char *data;
+	long int size, curread;
 	unsigned int pid;
 
 	if (type != GP_FILE_TYPE_NORMAL)
@@ -206,38 +205,31 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	 * filename (8.3 DOS format and \0)
 	 * filesize (as ascii number) and \0
 	 */
-	/* Extract the size of the file and allocate the memory */
+	/* Extract the size of the file */
 	sscanf(buffer+12,"%ld",&size);
-	data = malloc (size + (3 * SDSC_BLOCKSIZE));
-	if (!data)
-		return (GP_ERROR_NO_MEMORY);
 	/* Put the camera into image mode */
 	CHECK_RESULT (SDSC_send (camera->port, SDSC_BINARY));
 	CHECK_RESULT (SDSC_send (camera->port, SDSC_START));
 
 	pid = gp_context_progress_start(context,size,_("Downloading image..."));
 
+	curread = 0;
 	/* Read data */
-	for (i = 0; ; i++) {
+	while (1) {
 		/* Read data and check for EOF */
 		result = SDSC_receive (camera->port, buffer, SDSC_BLOCKSIZE);
 		if (result == SDSC_ERROR_EOF)
 			break;
-		else if (result < 0) {
-			free (data);
-			return (result);
-		}
-	        gp_context_progress_update(context, pid, i*SDSC_BLOCKSIZE);
-		if (gp_context_cancel(context) == GP_CONTEXT_FEEDBACK_CANCEL) {
-		    free(data);
+		if (result < 0)
+			return result;
+		gp_file_append(file,buffer,SDSC_BLOCKSIZE);
+		curread += SDSC_BLOCKSIZE;
+	        gp_context_progress_update(context, pid, curread);
+		if (gp_context_cancel(context) == GP_CONTEXT_FEEDBACK_CANCEL)
 		    return GP_ERROR_CANCEL;
-		}
-		/* Copy the data */
-		memcpy (data + (i * SDSC_BLOCKSIZE), buffer, SDSC_BLOCKSIZE);
 		CHECK_RESULT (SDSC_send (camera->port, SDSC_BINARY));
 	}
 	gp_context_progress_stop(context, pid);
-	CHECK_RESULT (gp_file_set_data_and_size (file, data, size));
 	CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_JPEG));
 	return (GP_OK);
 }
