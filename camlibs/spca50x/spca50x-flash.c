@@ -804,9 +804,9 @@ spca50x_flash_get_file (CameraPrivateLibrary *lib, GPContext *context,
 	}
 
 	if (lib->fw_rev == 1) {
-		align_to = 0x400;
+		align_to = 0x4000;
 	} else {
-		align_to = 0x200;
+		align_to = 0x2000;
 	}
 	/* align */
 	if (file_size % align_to != 0)
