@@ -1438,7 +1438,7 @@ canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, int 
 				  "Supplied file name '%s' does not fit in payload buffer.", name);
 			return GP_ERROR_BAD_PARAMETERS;
 		}
-		htole32a (payload, 0x1);	/* get picture */
+		htole32a (payload, 0x0);	/* get picture */
 		strncpy ( payload+offset, name, sizeof(payload)-offset-1 );
 		payload[offset + strlen (payload+offset)] = 0;
 		payload_length = offset + strlen (payload+offset) + 2;
