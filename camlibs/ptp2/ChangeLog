@@ -1,3 +1,5 @@
+2003-03-29 Mariusz Woloszyn
+	* ptp.c: fixed a memcopy size bug
 2003-03-27 Mariusz Woloszyn
         * library.c: added HP PhotoSmart 320
 2003-01-08 Mariusz Woloszyn
