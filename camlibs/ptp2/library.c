@@ -293,6 +293,9 @@ static struct {
 		/* 0x3070 is S230 in normal (canon) mode */
 	{"Canon:Digital IXUS v3 (PTP mode)", 0x04a9, 0x3071},
 		/* it's the same as S230 */
+
+	{"Canon:Digital IXUS 2 (PTP mode)",  0x04a9, 0x3072},
+
 	{"Canon:PowerShot A70 (PTP)",        0x04a9, 0x3073},
 		/* A60 and A70 are PTP also */
 	{"Canon:PowerShot A60 (PTP)",        0x04a9, 0x3074},
@@ -603,18 +606,23 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 static int
 camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 {
-	snprintf (summary->text, sizeof (summary->text),
+	int n;
+	n = snprintf (summary->text, sizeof (summary->text),
 		_("Model: %s\n"
 		"  device version: %s\n"
 		"  serial number:  %s\n"
 		"Vendor extension ID: 0x%08x\n"
-		"Vendor extension description: %s\n"),
+		"Vendor extension description: %s\n"
+	),
 		camera->pl->params.deviceinfo.Model,
 		camera->pl->params.deviceinfo.DeviceVersion,
 		camera->pl->params.deviceinfo.SerialNumber,
 		camera->pl->params.deviceinfo.VendorExtensionID,
 		camera->pl->params.deviceinfo.VendorExtensionDesc);
+	if (n>=sizeof(summary->text))
+		return GP_OK;
 
+	
 	return (GP_OK);
 }
 
@@ -641,7 +649,11 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		window);
 	gp_widget_new (GP_WIDGET_SECTION, _("Power (readonly)"), &section);
 	gp_widget_append (*window, section);
-	if (dpd.FormFlag==PTP_DPFF_Enumeration){
+	switch (dpd.FormFlag) {
+	case PTP_DPFF_Enumeration: {
+		uint16_t i;
+		char tmp[64];
+
 		GP_DEBUG ("Number of values %i",
 			dpd.FORM.Enum.NumberOfValues);
 		gp_widget_new (GP_WIDGET_TEXT, _("Number of values"),&widget);
@@ -650,14 +662,10 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		gp_widget_append (section,widget);
 		gp_widget_new (GP_WIDGET_TEXT, _("Supported values"),&widget);
 		value[0]='\0';
-		{
-		uint16_t i;
-		char tmp[64];
 		for (i=0;i<dpd.FORM.Enum.NumberOfValues;i++){
 			snprintf (tmp,6,"|%.3i|",
 			*(uint8_t *)dpd.FORM.Enum.SupportedValue[i]);
 			strncat(value,tmp,6);
-			}
 		}
 		gp_widget_set_value (widget,value);
 		gp_widget_append (section,widget);
@@ -665,6 +673,23 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		snprintf (value,255,"%i",*(uint8_t *)dpd.CurrentValue);
 		gp_widget_set_value (widget,value);
 		gp_widget_append (section,widget);
+		break;
+	}
+	case PTP_DPFF_Range: {
+		float value_float;
+                fprintf (stderr,", within range: %d - %d, stepping %d\n", *(uint8_t*)dpd.FORM.Range.MinimumValue, *(uint8_t*)dpd.FORM.Range.MaximumValue, *(uint8_t*)dpd.FORM.Range.StepSize);
+		gp_widget_new (GP_WIDGET_RANGE, _("Power (readonly)"), &widget);
+		gp_widget_append (section,widget);
+		gp_widget_set_range (widget, *(uint8_t*)dpd.FORM.Range.MinimumValue, *(uint8_t*)dpd.FORM.Range.MaximumValue, *(uint8_t*)dpd.FORM.Range.StepSize);
+        	/* this is a write only capability */
+        	value_float = *(uint8_t *)dpd.CurrentValue;
+        	gp_widget_set_value (widget, &value_float);
+        	gp_widget_changed(widget);
+                break;
+	}
+        case PTP_DPFF_None:
+		break;
+	default: break;
 	}
 	ptp_free_devicepropdesc(&dpd);
 	return GP_OK;
@@ -1031,8 +1056,12 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return (GP_ERROR_BAD_PARAMETERS);
 
 	oi=&camera->pl->params.objectinfo[object_id];
-	info->file.fields = GP_FILE_INFO_SIZE|GP_FILE_INFO_TYPE|GP_FILE_INFO_MTIME;
 
+	info->file.fields = GP_FILE_INFO_SIZE|GP_FILE_INFO_TYPE|GP_FILE_INFO_MTIME;
+	if (oi->Filename) {
+		strcpy(info->file.name, oi->Filename);
+		info->file.fields |= GP_FILE_INFO_NAME;
+	}
 	info->file.size   = oi->ObjectCompressedSize;
 	strcpy_mime (info->file.type, oi->ObjectFormat);
 	info->file.mtime = oi->ModificationDate;
