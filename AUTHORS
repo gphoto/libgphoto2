@@ -51,3 +51,6 @@ gPhoto2 port of the Sony DSC-F55 library
 
 Marcus Meissner <marcus@jet.franken.de>
 Jenoptik JD11 library, cleanups in the stv680 library.
+
+Lutz Müller <lutz@users.sourceforge.net>
+Konica driver, various clean-up all over the place
