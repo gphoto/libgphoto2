@@ -181,6 +181,9 @@ int camera_init (CameraInit *init) {
 		debug_print("Camera supports folders");
 	gpio_set_timeout(glob_dev, TIMEOUT);
 	glob_speed = init->port_settings.speed;
+
+if (camera_stop()==GP_ERROR)
+return (GP_ERROR);
 	return (GP_OK);
 }
 
