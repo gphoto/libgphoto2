@@ -419,11 +419,12 @@ OPTION_CALLBACK(print_usb_usermap) {
 		CHECK_RESULT (gp_abilities_list_get_abilities (al, x, &a));
 		if (a.usb_vendor && a.usb_product) {
 			printf (GP_USB_HOTPLUG_SCRIPT "               "
-			       "0x0000      0x%04x   0x%04x    0x0000       "
-			       "0x0000       0x00         0x00            "
-			       "0x00            0x00            0x00               "
-			       "0x00               0x00000000\n",
-			       a.usb_vendor, a.usb_product);
+				"0x%04x      0x%04x   0x%04x    0x0000       "
+				"0x0000       0x00         0x00            "
+				"0x00            0x00            0x00               "
+				"0x00               0x00000000\n",
+				GP_USB_HOTPLUG_MATCH_VENDOR_ID | GP_USB_HOTPLUG_MATCH_PRODUCT_ID,
+				a.usb_vendor, a.usb_product);
 		}
         }
 	CHECK_RESULT (gp_abilities_list_free (al));
@@ -1334,3 +1335,9 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n"));
         return (EXIT_SUCCESS);
 }
 
+/*
+ * Local Variables:
+ * c-file-style:"linux"
+ * indent-tabs-mode:t
+ * End:
+ */

@@ -8,6 +8,8 @@
 #define MAX_IMAGE_NUMBER                1024
 
 #define GP_USB_HOTPLUG_SCRIPT "usbcam"
+#define GP_USB_HOTPLUG_MATCH_VENDOR_ID  0x0001
+#define GP_USB_HOTPLUG_MATCH_PRODUCT_ID 0x0002
 
 #ifdef WIN32
 #include <io.h>
@@ -34,3 +36,10 @@ int	save_picture_to_file (const char *folder, const char *filename,
 			      CameraFileType type);
 
 int 	get_picture_common (char *arg, CameraFileType type);
+
+/*
+ * Local Variables:
+ * c-file-style:"linux"
+ * indent-tabs-mode:t
+ * End:
+ */
