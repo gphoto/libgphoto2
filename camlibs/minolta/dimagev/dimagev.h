@@ -195,10 +195,9 @@ typedef struct {
 } dimagev_data_t;
 
 /* This struct is used as the camera->camlib_data value in this library. */
-typedef struct {
+typedef struct _CameraPrivateLibrary {
         int size;
-        gp_port *dev;
-        gp_port_settings settings;
+        GPPort *dev;
         dimagev_data_t *data;
         dimagev_status_t *status;
         dimagev_info_t *info;

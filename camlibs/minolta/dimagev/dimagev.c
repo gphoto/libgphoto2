@@ -76,39 +76,33 @@ int camera_abilities (CameraAbilitiesList *list)
 
 static int camera_exit (Camera *camera) 
 {
-	dimagev_t *dimagev;
-
-	dimagev = camera->camlib_data;
-
 	/* Set the camera back into a normal mode. */
+	if (camera->pl) {
 
-	if ( ( dimagev == NULL ) || ( dimagev->data == NULL ) ) {
-		return GP_ERROR_BAD_PARAMETERS;
+		if (camera->pl->data) {
+			camera->pl->data->host_mode = (unsigned char) 0;
+
+			/* This will also send the host mode of zero. */
+			if ( dimagev_set_date(camera->pl) < GP_OK ) {
+				gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to set camera to system time");
+				return GP_ERROR_IO;
+			}
+			free (camera->pl->data);
+			camera->pl->data = NULL;
+		}
+
+		if (camera->pl->status) {
+			free (camera->pl->status);
+			camera->pl->status = NULL;
+		}
+
+		if (camera->pl->info) {
+			free (camera->pl->info);
+			camera->pl->info = NULL;
+		}
+
+		free (camera->pl);
 	}
-
-	dimagev->data->host_mode = (unsigned char) 0;
-
-	/* This will also send the host mode of zero. */
-	if ( dimagev_set_date(dimagev) < GP_OK ) {
-		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to set camera to system time");
-		return GP_ERROR_IO;
-	}
-
-	if ( dimagev->data != NULL ) {
-		free(dimagev->data);
-	}
-
-	if ( dimagev->status != NULL ) {
-		free(dimagev->status);
-	}
-
-/*
-	if ( dimagev->info != NULL ) {
-		free(dimagev->info);
-	}
-*/
-
-	free(dimagev);
 
 	return GP_OK;
 }
@@ -117,17 +111,14 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 			   CameraList *list, void *data) 
 {
 	Camera *camera = data;
-	dimagev_t *dimagev;
 	int ret;
 
-	dimagev = camera->camlib_data;
-
-	if ( dimagev_get_camera_status(dimagev) < GP_OK ) {
+	if ( dimagev_get_camera_status(camera->pl) < GP_OK ) {
 		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_file_list::unable to get camera status");
 		return GP_ERROR_IO;
 	}
 
-	if ((ret = gp_list_populate(list, DIMAGEV_FILENAME_FMT, dimagev->status->number_images)) < GP_OK ) {
+	if ((ret = gp_list_populate(list, DIMAGEV_FILENAME_FMT, camera->pl->status->number_images)) < GP_OK ) {
 		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_file_list::unable to populate list");
 		return ret;
 	}
@@ -140,7 +131,6 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 			  CameraFile *file, void *data) 
 {
 	Camera *camera = data;
-	dimagev_t *dimagev = camera->camlib_data;
 	int file_number=0, result;
 	char buffer[128];
 
@@ -152,7 +142,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	case GP_FILE_TYPE_NORMAL:
 		gp_file_set_mime_type (file, GP_MIME_JPEG);
 		gp_file_set_name (file, filename);
-		result = dimagev_get_picture (dimagev, file_number + 1, file);
+		result = dimagev_get_picture (camera->pl, file_number + 1, file);
 		break;
 	case GP_FILE_TYPE_PREVIEW:
 		gp_file_set_mime_type (file, GP_MIME_PPM);
@@ -162,7 +152,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 		sprintf(buffer, DIMAGEV_THUMBNAIL_FMT, ( file_number + 1) );
 #endif 
 		gp_file_set_name (file, buffer);
-		result = dimagev_get_thumbnail (dimagev, file_number + 1, file);
+		result = dimagev_get_thumbnail (camera->pl, file_number + 1, file);
 		break;
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
@@ -181,46 +171,39 @@ static int delete_file_func (CameraFilesystem *fs, const char *folder,
 			     const char *filename, void *data) 
 {
 	Camera *camera = data;
-	dimagev_t *dimagev;
 	int file_number=0, ret;
-
-	dimagev = camera->camlib_data;
 
 	file_number = gp_filesystem_number(camera->fs, folder, filename);
 	if (file_number < 0)
 		return (file_number);
 
-	ret = dimagev_delete_picture(dimagev, (file_number + 1 ));
+	ret = dimagev_delete_picture(camera->pl, (file_number + 1 ));
 
 	return (ret);
 }
 
 static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path) 
 {
-	dimagev_t *dimagev;
-
-	dimagev=camera->camlib_data;
-
 	if (type != GP_CAPTURE_IMAGE)
 		return (GP_ERROR_NOT_SUPPORTED);
 
-	if ( dimagev_shutter(dimagev) < GP_OK ) {
+	if ( dimagev_shutter(camera->pl) < GP_OK ) {
 		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_capture::unable to open shutter");
 		return GP_ERROR_IO;
 	}
 
 	/* Now check how many pictures are taken, and return the last one. */
-	if ( dimagev_get_camera_status(dimagev) != 0 ) {
+	if ( dimagev_get_camera_status(camera->pl) != 0 ) {
 		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_capture::unable to get camera status");
 		return GP_ERROR_IO;
 	}
 
 #if defined HAVE_SNPRINTF
 	snprintf(path->folder, sizeof(path->folder), "/");
-	snprintf(path->name, sizeof(path->name), DIMAGEV_FILENAME_FMT, dimagev->status->number_images);
+	snprintf(path->name, sizeof(path->name), DIMAGEV_FILENAME_FMT, camera->pl->status->number_images);
 #else
 	sprintf(path->folder, "/");
-	sprintf(path->name, DIMAGEV_FILENAME_FMT, dimagev->status->number_images);
+	sprintf(path->name, DIMAGEV_FILENAME_FMT, camera->pl->status->number_images);
 #endif
 
 	/* Tell the CameraFilesystem about this picture */
@@ -233,50 +216,43 @@ static int put_file_func (CameraFilesystem *fs, const char *folder,
 			  CameraFile *file, void *data) 
 {
 	Camera *camera = data;
-	dimagev_t *dimagev;
 
-	dimagev = camera->camlib_data;
-
-	return dimagev_put_file(dimagev, file);
+	return dimagev_put_file(camera->pl, file);
 }
 
 static int delete_all_func (CameraFilesystem *fs, const char *folder,
 			    void *data) 
 {
 	Camera *camera = data;
-	dimagev_t *dimagev = camera->camlib_data;
 	int ret;
 
-	ret = dimagev_delete_all(dimagev);
+	ret = dimagev_delete_all(camera->pl);
 
 	return (ret);
 }
 
 static int camera_summary (Camera *camera, CameraText *summary) 
 {
-	dimagev_t *dimagev;
 	int i = 0, count = 0;
 
-	dimagev = camera->camlib_data;
-
-	if ( dimagev_get_camera_status(dimagev) < GP_OK ) {
+	if ( dimagev_get_camera_status(camera->pl) < GP_OK ) {
 		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_summary::unable to get camera status");
 		return GP_ERROR_IO;
 	}
 
-	if ( dimagev_get_camera_data(dimagev) < GP_OK ) {
+	if ( dimagev_get_camera_data(camera->pl) < GP_OK ) {
 		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_summary::unable to get camera data");
 		return GP_ERROR_IO;
 	}
 
-	if ( dimagev_get_camera_info(dimagev) < GP_OK ) {
+	if ( dimagev_get_camera_info(camera->pl) < GP_OK ) {
 		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_summary::unable to get camera info");
 		return GP_ERROR_IO;
 	}
 
-	dimagev_dump_camera_status(dimagev->status);
-	dimagev_dump_camera_data(dimagev->data);
-	dimagev_dump_camera_info(dimagev->info);
+	dimagev_dump_camera_status(camera->pl->status);
+	dimagev_dump_camera_data(camera->pl->data);
+	dimagev_dump_camera_info(camera->pl->info);
 
 	/* Now put all of the information into a reasonably formatted string. */
 	/* i keeps track of the length. */
@@ -289,8 +265,8 @@ static int camera_summary (Camera *camera, CameraText *summary)
 #endif
 		_("Model:\t\t\tMinolta Dimage V (%s)\n"
 		"Hardware Revision:\t%s\nFirmware Revision:\t%s\n"),
-		dimagev->info->model, dimagev->info->hardware_rev,
-		dimagev->info->firmware_rev);
+		camera->pl->info->model, camera->pl->info->hardware_rev,
+		camera->pl->info->firmware_rev);
 
 	if ( i > 0 ) {
 		count += i;
@@ -314,24 +290,24 @@ static int camera_summary (Camera *camera, CameraText *summary)
 		"Card ID:\t\t%d\n"
 		"Flash Mode:\t\t"),
 
-		( dimagev->data->host_mode != (unsigned char) 0 ? _("Remote") : _("Local") ),
-		( dimagev->data->exposure_valid != (unsigned char) 0 ? _("Yes") : _("No") ),
-		(signed char)dimagev->data->exposure_correction,
-		( dimagev->data->date_valid != (unsigned char) 0 ? _("Yes") : _("No") ),
-		( dimagev->data->year < (unsigned char) 70 ? 2000 + (int) dimagev->data->year : 1900 + (int) dimagev->data->year ),
-		dimagev->data->month, dimagev->data->day, dimagev->data->hour,
-		dimagev->data->minute, dimagev->data->second,
-		( dimagev->data->self_timer_mode != (unsigned char) 0 ? _("Yes") : _("No")),
-		( dimagev->data->quality_setting != (unsigned char) 0 ? _("Fine") : _("Standard") ),
-		( dimagev->data->play_rec_mode != (unsigned char) 0 ? _("Record") : _("Play") ),
-		( dimagev->data->valid != (unsigned char) 0 ? _("Yes") : _("No")), dimagev->data->id_number );
+		( camera->pl->data->host_mode != (unsigned char) 0 ? _("Remote") : _("Local") ),
+		( camera->pl->data->exposure_valid != (unsigned char) 0 ? _("Yes") : _("No") ),
+		(signed char)camera->pl->data->exposure_correction,
+		( camera->pl->data->date_valid != (unsigned char) 0 ? _("Yes") : _("No") ),
+		( camera->pl->data->year < (unsigned char) 70 ? 2000 + (int) camera->pl->data->year : 1900 + (int) camera->pl->data->year ),
+		camera->pl->data->month, camera->pl->data->day, camera->pl->data->hour,
+		camera->pl->data->minute, camera->pl->data->second,
+		( camera->pl->data->self_timer_mode != (unsigned char) 0 ? _("Yes") : _("No")),
+		( camera->pl->data->quality_setting != (unsigned char) 0 ? _("Fine") : _("Standard") ),
+		( camera->pl->data->play_rec_mode != (unsigned char) 0 ? _("Record") : _("Play") ),
+		( camera->pl->data->valid != (unsigned char) 0 ? _("Yes") : _("No")), camera->pl->data->id_number );
 
 	if ( i > 0 ) {
 		count += i;
 	}
 
 	/* Flash is a special case, a switch is needed. */
-	switch ( dimagev->data->flash_mode ) {
+	switch ( camera->pl->data->flash_mode ) {
 		case 0:
 #if defined HAVE_SNPRINTF
 			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count,
@@ -362,7 +338,7 @@ static int camera_summary (Camera *camera, CameraText *summary)
 #else
 			i = sprintf(&(summary->text[count]),
 #endif
-				_("Invalid Value ( %d )\n"), dimagev->data->flash_mode);
+				_("Invalid Value ( %d )\n"), camera->pl->data->flash_mode);
 			break;
 	}
 
@@ -382,11 +358,11 @@ static int camera_summary (Camera *camera, CameraText *summary)
 		"Busy:\t\t\t%s\n"
 		"Flash Charging:\t\t%s\n"
 		"Lens Status:\t\t"),
-		( dimagev->status->battery_level ? _("Not Full") : _("Full") ),
-		dimagev->status->number_images,
-		dimagev->status->minimum_images_can_take,
-		( dimagev->status->busy ? _("Busy") : _("Idle") ),
-		( dimagev->status->flash_charging ? _("Charging") : _("Ready") )
+		( camera->pl->status->battery_level ? _("Not Full") : _("Full") ),
+		camera->pl->status->number_images,
+		camera->pl->status->minimum_images_can_take,
+		( camera->pl->status->busy ? _("Busy") : _("Idle") ),
+		( camera->pl->status->flash_charging ? _("Charging") : _("Ready") )
 
 	);
 
@@ -395,7 +371,7 @@ static int camera_summary (Camera *camera, CameraText *summary)
 	}
 
 	/* Lens status is another switch. */
-	switch ( dimagev->status->lens_status ) {
+	switch ( camera->pl->status->lens_status ) {
 		case 0:
 			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, _("Normal\n"));
 			break;
@@ -406,7 +382,7 @@ static int camera_summary (Camera *camera, CameraText *summary)
 			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, _("Lens is not connected\n"));
 			break;
 		default:
-			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, _("Bad value for lens status %d\n"), dimagev->status->lens_status);
+			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, _("Bad value for lens status %d\n"), camera->pl->status->lens_status);
 			break;
 	}
 
@@ -420,7 +396,7 @@ static int camera_summary (Camera *camera, CameraText *summary)
 		count += i;
 	}
 
-	switch ( dimagev->status->card_status ) {
+	switch ( camera->pl->status->card_status ) {
 		case 0:
 			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, _("Normal"));
 			break;
@@ -434,7 +410,7 @@ static int camera_summary (Camera *camera, CameraText *summary)
 			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, _("Unsuitable card"));
 			break;
 		default:
-			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, _("Bade value for card status %d"), dimagev->status->card_status);
+			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, _("Bade value for card status %d"), camera->pl->status->card_status);
 			break;
 	}
 	
@@ -470,7 +446,7 @@ _("Minolta Dimage V Camera Library\n%s\nGus Hartmann <gphoto@gus-the-cat.org>\nS
 
 int camera_init (Camera *camera) 
 {
-        dimagev_t *dimagev = NULL;
+	GPPortSettings settings;
 
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;
@@ -481,35 +457,37 @@ int camera_init (Camera *camera)
 
         gp_debug_printf(GP_DEBUG_LOW, "dimagev", "initializing the camera");
 
-        if ( ( dimagev = (dimagev_t*) malloc(sizeof(dimagev_t))) == NULL ) {
-                gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to allocate dimagev_t");
-                return GP_ERROR_NO_MEMORY;
-        }
+	camera->pl = malloc (sizeof (CameraPrivateLibrary));
+	if (!camera->pl)
+		return (GP_ERROR_NO_MEMORY);
+	memset (camera->pl, 0, sizeof (CameraPrivateLibrary));
+	camera->pl->dev = camera->port;
 
-        camera->camlib_data = dimagev;
-	dimagev->dev = camera->port;
+	/* Configure the port */
+        gp_port_timeout_set(camera->port, 5000);
+	gp_port_settings_get(camera->port, &settings);
+        settings.serial.speed = 38400;
+        settings.serial.bits = 8;
+        settings.serial.parity = 0;
+        settings.serial.stopbits = 1;
+        gp_port_settings_set(camera->port, settings);
 
-	/* configure the port */
-        gp_port_timeout_set(dimagev->dev, 5000);
-	gp_port_settings_get(camera->port, &(dimagev->settings));
-        dimagev->settings.serial.speed = 38400;
-        dimagev->settings.serial.bits = 8;
-        dimagev->settings.serial.parity = 0;
-        dimagev->settings.serial.stopbits = 1;
-        gp_port_settings_set(dimagev->dev, dimagev->settings);
-
-        if  ( dimagev_get_camera_data(dimagev) < GP_OK ) {
+        if  ( dimagev_get_camera_data(camera->pl) < GP_OK ) {
                 gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to get current camera data");
+		free (camera->pl);
+		camera->pl = NULL;
                 return GP_ERROR_IO;
         }
 
-        if  ( dimagev_get_camera_status(dimagev) < GP_OK ) {
+        if  ( dimagev_get_camera_status(camera->pl) < GP_OK ) {
                 gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to get current camera status");
+		free (camera->pl);
+		camera->pl = NULL;
                 return GP_ERROR_IO;
         }
 
         /* Let's make this non-fatal. An incorrect date doesn't affect much. */
-        if ( dimagev_set_date(dimagev) < GP_OK ) {
+        if ( dimagev_set_date(camera->pl) < GP_OK ) {
                 gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to set camera to system time");
         }
 

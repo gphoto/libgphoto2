@@ -103,13 +103,13 @@
 }
 
 int
-k_init (gp_port* device)
+k_init (GPPort *device)
 {
         return (l_init (device));
 }
 
 int
-k_erase_image (gp_port* device, int image_id_long, unsigned long image_id)
+k_erase_image (GPPort *device, int image_id_long, unsigned long image_id)
 {
         /************************************************/
         /* Command to erase one image.                  */
@@ -158,7 +158,7 @@ k_erase_image (gp_port* device, int image_id_long, unsigned long image_id)
 
 
 int
-k_format_memory_card (gp_port* device)
+k_format_memory_card (GPPort *device)
 {
         /************************************************/
         /* Command to format the memory card.           */
@@ -191,7 +191,7 @@ k_format_memory_card (gp_port* device)
 
 
 int
-k_erase_all (gp_port* device, unsigned int *number_of_images_not_erased)
+k_erase_all (GPPort *device, unsigned int *number_of_images_not_erased)
 {
         /************************************************/
         /* Command to erase all images in the camera,   */
@@ -231,7 +231,7 @@ k_erase_all (gp_port* device, unsigned int *number_of_images_not_erased)
 
 
 int
-k_set_protect_status (gp_port *device, int image_id_long,
+k_set_protect_status (GPPort *device, int image_id_long,
 		      unsigned long image_id, int protected)
 {
         /************************************************/
@@ -289,7 +289,7 @@ k_set_protect_status (gp_port *device, int image_id_long,
 
 int
 k_get_image (
-        gp_port *device,
+        GPPort *device,
         int image_id_long,
         unsigned long image_id,
 	KImageType image_type,
@@ -366,7 +366,7 @@ k_get_image (
 
 int
 k_get_image_information (
-        gp_port *device,
+        GPPort *device,
         int image_id_long,
         unsigned long image_number,
         unsigned long *image_id,
@@ -446,7 +446,7 @@ k_get_image_information (
 }
 
 int
-k_get_preview (gp_port* device, int thumbnail,
+k_get_preview (GPPort *device, int thumbnail,
 	       unsigned char **image_buffer, unsigned int *image_buffer_size)
 {
         /************************************************/
@@ -486,7 +486,7 @@ k_get_preview (gp_port* device, int thumbnail,
 }
 
 int
-k_get_io_capability (gp_port *device,
+k_get_io_capability (GPPort *device,
 		     KBitRate *bit_rates, KBitFlag *bit_flags)
 {
         /************************************************/
@@ -527,7 +527,7 @@ k_get_io_capability (gp_port *device,
 
 int
 k_get_information (
-        gp_port *device,
+        GPPort *device,
         char **model,
         char **serial_number,
         unsigned char *hardware_version_major,
@@ -689,7 +689,7 @@ k_get_information (
 }
 
 int
-k_get_status (gp_port* device, KStatus *status)
+k_get_status (GPPort *device, KStatus *status)
 {
         /************************************************/
         /* Command to get the status of the camera.     */
@@ -838,7 +838,7 @@ k_get_status (gp_port* device, KStatus *status)
 }
 
 int
-k_get_date_and_time (gp_port *device, KDate *date)
+k_get_date_and_time (GPPort *device, KDate *date)
 {
         /************************************************/
         /* Command to get the date and time from the    */
@@ -880,7 +880,7 @@ k_get_date_and_time (gp_port *device, KDate *date)
 };
 
 int
-k_get_preferences (gp_port *device, KPreferences *preferences)
+k_get_preferences (GPPort *device, KPreferences *preferences)
 {
         /************************************************/
         /* Command to get the preferences from the      */
@@ -922,7 +922,7 @@ k_get_preferences (gp_port *device, KPreferences *preferences)
 }
 
 int
-k_set_io_capability (gp_port *device, KBitRate bit_rate, KBitFlag bit_flags)
+k_set_io_capability (GPPort *device, KBitRate bit_rate, KBitFlag bit_flags)
 {
         /************************************************/
         /* Command to set the IO capability of the      */
@@ -960,7 +960,7 @@ k_set_io_capability (gp_port *device, KBitRate bit_rate, KBitFlag bit_flags)
 
 
 int
-k_set_date_and_time (gp_port *device, KDate date)
+k_set_date_and_time (GPPort *device, KDate date)
 {
         /************************************************/
         /* Command to set date and time of the camera.  */
@@ -1001,7 +1001,7 @@ k_set_date_and_time (gp_port *device, KDate date)
 
 
 int
-k_set_preference (gp_port *device, KPreference preference, unsigned int value)
+k_set_preference (GPPort *device, KPreference preference, unsigned int value)
 {
         /************************************************/
         /* Command to set a preference of the camera.   */
@@ -1065,7 +1065,7 @@ k_set_preference (gp_port *device, KPreference preference, unsigned int value)
 }
 
 int
-k_reset_preferences (gp_port *device)
+k_reset_preferences (GPPort *device)
 {
         /************************************************/
         /* Command to reset the preferences of the      */
@@ -1095,7 +1095,7 @@ k_reset_preferences (gp_port *device)
 
 int
 k_take_picture (
-        gp_port *device,
+        GPPort *device,
         int image_id_long,
         unsigned long *image_id,
         unsigned int *exif_size,
@@ -1158,7 +1158,7 @@ k_take_picture (
 }
 
 int
-k_localization_tv_output_format_set (gp_port *device,
+k_localization_tv_output_format_set (GPPort *device,
 				     KTVOutputFormat tv_output_format)
 {
         /************************************************/
@@ -1212,7 +1212,7 @@ k_localization_tv_output_format_set (gp_port *device,
 }
 
 int
-k_localization_date_format_set (gp_port* device, KDateFormat date_format)
+k_localization_date_format_set (GPPort *device, KDateFormat date_format)
 {
         /************************************************/
         /* Command for various localization issues.     */
@@ -1265,7 +1265,7 @@ k_localization_date_format_set (gp_port* device, KDateFormat date_format)
 }
 
 int
-k_localization_data_put (gp_port* device,
+k_localization_data_put (GPPort *device,
 			 unsigned char *data, unsigned long data_size)
 {
         /************************************************/
@@ -1385,7 +1385,7 @@ k_localization_data_put (gp_port* device,
 }
 
 int
-k_cancel (gp_port* device, KCommand* command)
+k_cancel (GPPort *device, KCommand* command)
 {
         /************************************************/
         /* Command to cancel a command.                 */

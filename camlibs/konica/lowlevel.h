@@ -44,7 +44,7 @@ int l_init (gp_port* device);
  *			that, depending on command and return
  *			status, other bytes will follow.
  */
-int l_send_receive (gp_port *device,
+int l_send_receive (GPPort *device,
 	unsigned char *send_buffer, unsigned int send_buffer_size,
 	unsigned char **receive_buffer, unsigned int *receive_buffer_size,
 	unsigned int timeout,

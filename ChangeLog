@@ -1,5 +1,10 @@
 2001-10-20 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/minolta/dimagev/dimagev.[c,h]: Prepare for removal of
+	  camera->camlib_data. Fix memory leaks (in case of errors).
+
+2001-10-20 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/digita:
 	* camlibs/dimera: Prepare for elimination of camera->camlib_data.
 	* camlibs/konica: Some additional debugging messages

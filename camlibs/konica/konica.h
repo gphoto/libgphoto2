@@ -226,7 +226,7 @@ typedef enum
  * for image IDs (qm100, unsigned int), the other one uses four
  * (qm200, unsigned long).
  */
-int k_init (gp_port *device);
+int k_init (GPPort *device);
 
 typedef enum
 {
@@ -251,15 +251,15 @@ typedef enum
 	K_BIT_FLAG_HW_FLOW_CTRL = 1 << 4
 } KBitFlag;
 
-int k_get_io_capability (gp_port *, KBitRate *bit_rates, KBitFlag *bit_flags);
-int k_set_io_capability (gp_port *, KBitRate  bit_rate,  KBitFlag  bit_flags);
+int k_get_io_capability (GPPort *, KBitRate *bit_rates, KBitFlag *bit_flags);
+int k_set_io_capability (GPPort *, KBitRate  bit_rate,  KBitFlag  bit_flags);
 
-int k_erase_all (gp_port *device, unsigned int *number_of_images_not_erased);
+int k_erase_all (GPPort *device, unsigned int *number_of_images_not_erased);
 
-int k_format_memory_card (gp_port *device);
+int k_format_memory_card (GPPort *device);
 
 int k_take_picture (
-	gp_port *device,
+	GPPort *device,
 	int image_id_long,
 	unsigned long *image_id, 
 	unsigned int *exif_size,
@@ -268,28 +268,28 @@ int k_take_picture (
 	int *protected);
 
 
-int k_get_preview (gp_port *device, int thumbnail,
+int k_get_preview (GPPort *device, int thumbnail,
 		   unsigned char **image_buffer,
 		   unsigned int *image_buffer_size);
 
 
-int k_set_protect_status (gp_port *device, int image_id_long,
+int k_set_protect_status (GPPort *device, int image_id_long,
 			  unsigned long image_id, int protected);
 
 
-int k_erase_image (gp_port *device, int image_id_long,
+int k_erase_image (GPPort *device, int image_id_long,
 		   unsigned long image_id);
 
 
-int k_reset_preferences (gp_port *device);
+int k_reset_preferences (GPPort *device);
 
 typedef struct {
 	unsigned char year, month, day;
 	unsigned char hour, minute, second;
 } KDate;
 
-int k_get_date_and_time (gp_port *device, KDate *date);
-int k_set_date_and_time (gp_port *device, KDate  date);
+int k_get_date_and_time (GPPort *device, KDate *date);
+int k_set_date_and_time (GPPort *device, KDate  date);
 
 typedef struct {
 	unsigned int shutoff_time;
@@ -298,8 +298,8 @@ typedef struct {
 	unsigned int slide_show_interval;
 } KPreferences;
 
-int k_get_preferences (gp_port *device, KPreferences *preferences);
-int k_set_preference  (gp_port *device, KPreference   preference,
+int k_get_preferences (GPPort *device, KPreferences *preferences);
+int k_set_preference  (GPPort *device, KPreference   preference,
 					unsigned int value);
 
 typedef struct {
@@ -317,11 +317,11 @@ typedef struct {
 	unsigned char total_pictures, total_strobes;
 } KStatus;
 
-int k_get_status (gp_port *device, KStatus *status);
+int k_get_status (GPPort *device, KStatus *status);
 
 
 int k_get_information (
-	gp_port *device,
+	GPPort *device,
 	char **model,
 	char **serial_number,
 	unsigned char *hardware_version_major,
@@ -334,7 +334,7 @@ int k_get_information (
 	char **manufacturer);
 
 int k_get_image_information (
-	gp_port *device,
+	GPPort *device,
 	int image_id_long,
 	unsigned long image_number,
 	unsigned long *image_id, 
@@ -344,7 +344,7 @@ int k_get_image_information (
 	unsigned int *information_buffer_size);
 
 int k_get_image (
-	gp_port *device,
+	GPPort *device,
 	int image_id_long,
 	unsigned long image_id, 
 	KImageType image_type, 
@@ -352,13 +352,13 @@ int k_get_image (
 	unsigned int *image_buffer_size);
 
 /* Localization */
-int k_localization_tv_output_format_set (gp_port *device,
+int k_localization_tv_output_format_set (GPPort *device,
 					 KTVOutputFormat tv_output_format);
-int k_localization_date_format_set      (gp_port *device,
+int k_localization_date_format_set      (GPPort *device,
 					 KDateFormat date_format);
-int k_localization_data_put             (gp_port *device,
+int k_localization_data_put             (GPPort *device,
 					 unsigned char *data,
 					 unsigned long data_size);
 
-int k_cancel (gp_port *device, KCommand *command);
+int k_cancel (GPPort *device, KCommand *command);
 

@@ -47,7 +47,7 @@
 #define CHECK_FREE(r,f) {int ret = (r); if (ret < 0) {free (f); return (ret);}}
 
 int 
-l_init (gp_port* device)
+l_init (GPPort *device)
 {
 	unsigned char c;
 	int i, result;
@@ -88,7 +88,7 @@ l_init (gp_port* device)
 }
 
 static int 
-l_esc_read (gp_port* device, unsigned char *c)
+l_esc_read (GPPort *device, unsigned char *c)
 {
 	CHECK_NULL (device && c);
 
@@ -126,7 +126,7 @@ l_esc_read (gp_port* device, unsigned char *c)
 
 
 static int
-l_send (gp_port* device, unsigned char *send_buffer,
+l_send (GPPort *device, unsigned char *send_buffer,
 	unsigned int send_buffer_size)
 {
 	unsigned char c;
@@ -294,7 +294,7 @@ l_send (gp_port* device, unsigned char *send_buffer,
 
 
 static int 
-l_receive (gp_port* device, unsigned char **rb, unsigned int *rbs,
+l_receive (GPPort *device, unsigned char **rb, unsigned int *rbs,
 	   unsigned int timeout)
 {
 	unsigned char c, d;
@@ -532,7 +532,7 @@ l_receive (gp_port* device, unsigned char **rb, unsigned int *rbs,
 
 int 
 l_send_receive (
-	gp_port*	device,
+	GPPort *device,
 	unsigned char *send_buffer, unsigned int send_buffer_size, 
 	unsigned char **receive_buffer, unsigned int *receive_buffer_size,
 	unsigned int timeout,
