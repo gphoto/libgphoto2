@@ -2,7 +2,7 @@
 /* spca50x-registers.h - Gphoto2 library for cameras with a     */
 /*                       Sunplus spca50x chip                   */
 /*                                                              */
-/* Copyright (C) 2002 Till Adam                                 */
+/* Copyright © 2002, 2003 Till Adam                             */
 /*                                                              */
 /* Author: Till Adam <till@adam-lilienthal.de>                  */
 /*                                                              */

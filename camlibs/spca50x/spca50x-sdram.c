@@ -2,7 +2,7 @@
 /* spca50x_sdram.c - Gphoto2 library for cameras with sunplus   */
 /*             spca50x chips                                    */
 /*                                                              */
-/* Copyright © 2002 Till Adam                                   */
+/* Copyright © 2002, 2003 Till Adam                             */
 /*                                                              */
 /* Author: Till Adam <till@adam-lilienthal.de>                  */
 /*                                                              */
