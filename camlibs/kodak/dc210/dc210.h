@@ -198,7 +198,7 @@ int dc210_get_picture_number (Camera *camera, const char * filename);
 int dc210_take_picture (Camera * camera, GPContext *context);
 int dc210_capture       (Camera *camera, CameraFilePath *path, GPContext *context);
 
-int dc210_download_last_picture (Camera * camera, CameraFile *file, GPContext *context);
+int dc210_download_last_picture (Camera * camera, CameraFile *file, dc210_picture_type type, GPContext *context);
 int dc210_download_picture_by_name (Camera * camera, CameraFile *file, const char *filename, dc210_picture_type type, GPContext *context);
 
 int dc210_delete_picture (Camera * camera, unsigned int picno);

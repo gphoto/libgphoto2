@@ -1,3 +1,14 @@
+2002-10-25  Michael Koltan <koltan@gmx.de>
+
+	* Rewrote the initialization procedure
+	  again to use the speed parameter
+	  set by gphoto2
+
+	* Allowed timeout errors when 
+	  capturing a picture; that's for Koen, who
+	  has strange communication drops in his
+	  setup
+
 2002-10-20  Michael Koltan <koltan@gmx.de>
 
 	* Improved error recovery on package read

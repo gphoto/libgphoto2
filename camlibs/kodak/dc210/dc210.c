@@ -462,10 +462,11 @@ static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePat
 
 static int camera_capture_preview (Camera* camera, CameraFile* file, GPContext *context){
 
+        /* this function is to slow; don't export it */
 	int fatal_error = 0;
 
 	if (dc210_take_picture(camera, context) == GP_ERROR) return GP_ERROR;
-	if (dc210_download_last_picture(camera, file, context) == GP_ERROR) fatal_error = 1;
+	if (dc210_download_last_picture(camera, file, DC210_FULL_PICTURE, context) == GP_ERROR) fatal_error = 1;
 	if (dc210_delete_last_picture(camera) == GP_ERROR) fatal_error = 1;
 
 	if (fatal_error) return GP_ERROR;
@@ -641,6 +642,8 @@ static int camera_about (Camera *camera, CameraText *about, GPContext *context)
 
 int camera_init (Camera *camera, GPContext *context) {
 
+	DC210_DEBUG("Initialising camera.\n");
+
         /* First, set up all the function pointers */
 	camera->functions->get_config = camera_get_config;
 	camera->functions->set_config = camera_set_config;
@@ -658,7 +661,6 @@ int camera_init (Camera *camera, GPContext *context) {
 				      delete_file_func, camera);
 
 	if (dc210_init_port (camera) == GP_ERROR) return GP_ERROR;
-	if (dc210_set_speed (camera, 115200) == GP_ERROR) return GP_ERROR;
 	if (dc210_open_card (camera) == GP_ERROR) return GP_ERROR;
 
         return (GP_OK);
