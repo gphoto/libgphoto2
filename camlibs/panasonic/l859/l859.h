@@ -28,6 +28,7 @@
 struct _CameraPrivateLibrary {
 	char buf[L859_BUFSIZE];
 	int  size;
+	int  speed;
 };
 
 /* L859 Command Codes */
