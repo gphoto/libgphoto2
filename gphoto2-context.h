@@ -30,11 +30,11 @@ GPContext *gp_context_new (void);
 void gp_context_ref   (GPContext *context);
 void gp_context_unref (GPContext *context);
 
-typedef enum _GPContextFeedback GPContextFeedback;
 enum _GPContextFeedback {
 	GP_CONTEXT_FEEDBACK_OK,
 	GP_CONTEXT_FEEDBACK_CANCEL
 };
+typedef enum _GPContextFeedback GPContextFeedback;
 
 /* Functions */
 typedef void (* GPContextIdleFunc)     (GPContext *context, void *data);
