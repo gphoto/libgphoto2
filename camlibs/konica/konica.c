@@ -60,7 +60,7 @@ GP_RESULT (unsigned char byte1, unsigned char byte2)
         case 0x0382:
                 return (KONICA_ERROR_NO_SPACE_LEFT_ON_CARD);
         case 0x0390:
-                return (KONICA_ERROR_NO_IMAGE_ERASED_AS_IMAGE_PROTECTED);
+                return (KONICA_ERROR_IMAGE_PROTECTED);
         case 0x0401:
                 return (KONICA_ERROR_LIGHT_TOO_DARK);
         case 0x0402:

@@ -175,6 +175,7 @@ camlibs/kodak/dc120/Makefile
 camlibs/kodak/dc240/Makefile
 camlibs/kodak/dc3200/Makefile
 camlibs/konica/Makefile
+camlibs/konica/localization/Makefile
 camlibs/minolta/Makefile
 camlibs/minolta/dimagev/Makefile
 camlibs/panasonic/Makefile

@@ -1,11 +1,28 @@
-/*************************/
-/* Included header files */
-/*************************/
-#include <gphoto2.h>
+/* library.c
+ *
+ * Copyright (C) 2001 Lutz Müller
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details. 
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+#include <gphoto2-library.h>
+#include <gphoto2-core.h>
+#include <gphoto2-frontend.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <glib.h>
-#include <zlib.h>
 #include <string.h>
 #include <time.h>
 
@@ -29,61 +46,59 @@
 
 #define CHECK(r) {gint ret = (r); if (ret < 0) return (ret);}
 
-/*************/
-/* Variables */
-/*************/
 static gchar* konica_results[] = {
-	/* KONICA_ERROR_FOCUSING_ERROR				*/	N_("Focusing error"),
-	/* KONICA_ERROR_IRIS_ERROR				*/	N_("Iris error"),
-	/* KONICA_ERROR_STROBE_ERROR				*/	N_("Strobe error"),
-	/* KONICA_ERROR_EEPROM_CHECKSUM_ERROR			*/	N_("EEPROM checksum error"),
-	/* KONICA_ERROR_INTERNAL_ERROR1				*/	N_("Internal error (1)"),
-	/* KONICA_ERROR_INTERNAL_ERROR2				*/	N_("Internal error (2)"),
-	/* KONICA_ERROR_NO_CARD_PRESENT				*/	N_("No card present"),
-	/* KONICA_ERROR_CARD_NOT_SUPPORTED			*/	N_("Card not supported"),
-	/* KONICA_ERROR_CARD_REMOVED_DURING_ACCESS		*/	N_("Card removed during access"),
-	/* KONICA_ERROR_IMAGE_NUMBER_NOT_VALID			*/	N_("Image number not valid"),
-	/* KONICA_ERROR_CARD_CAN_NOT_BE_WRITTEN			*/	N_("Card cannot be written"),
-	/* KONICA_ERROR_CARD_IS_WRITE_PROTECTED			*/	N_("Card is write protected"),
-	/* KONICA_ERROR_NO_SPACE_LEFT_ON_CARD			*/	N_("No space left on card"),
-	/* KONICA_ERROR_NO_IMAGE_ERASED_AS_IMAGE_PROTECTED	*/	N_("No image erased as image protected"),
-	/* KONICA_ERROR_LIGHT_TOO_DARK				*/	N_("Light too dark"),
-	/* KONICA_ERROR_AUTOFOCUS_ERROR				*/	N_("Autofocus error"),
-	/* KONICA_ERROR_SYSTEM_ERROR				*/	N_("System error"),
-	/* KONICA_ERROR_ILLEGAL_PARAMETER			*/	N_("Illegal parameter"),
-	/* KONICA_ERROR_COMMAND_CANNOT_BE_CANCELLED		*/	N_("Command cannot be cancelled"),
-	/* KONICA_ERROR_LOCALIZATION_DATA_EXCESS		*/	N_("Localization data excess"),
-	/* KONICA_ERROR_LOCALIZATION_DATA_CORRUPT		*/	N_("Localization data corrupt"),
-	/* KONICA_ERROR_UNSUPPORTED_COMMAND			*/	N_("Unsupported command"),
-	/* KONICA_ERROR_OTHER_COMMAND_EXECUTING			*/	N_("Other command executing"),
-	/* KONICA_ERROR_COMMAND_ORDER_ERROR			*/	N_("Command order error"),
-	/* KONICA_ERROR_UNKNOWN_ERROR				*/	N_("Unknown error")
+/* FOCUSING_ERROR		*/ N_("Focusing error"),
+/* IRIS_ERROR			*/ N_("Iris error"),
+/* STROBE_ERROR			*/ N_("Strobe error"),
+/* EEPROM_CHECKSUM_ERROR	*/ N_("EEPROM checksum error"),
+/* INTERNAL_ERROR1		*/ N_("Internal error (1)"),
+/* INTERNAL_ERROR2		*/ N_("Internal error (2)"),
+/* NO_CARD_PRESENT		*/ N_("No card present"),
+/* CARD_NOT_SUPPORTED		*/ N_("Card not supported"),
+/* CARD_REMOVED_DURING_ACCESS	*/ N_("Card removed during access"),
+/* IMAGE_NUMBER_NOT_VALID	*/ N_("Image number not valid"),
+/* CARD_CAN_NOT_BE_WRITTEN	*/ N_("Card cannot be written"),
+/* CARD_IS_WRITE_PROTECTED	*/ N_("Card is write protected"),
+/* NO_SPACE_LEFT_ON_CARD	*/ N_("No space left on card"),
+/* IMAGE_PROTECTED		*/ N_("No image erased as image protected"),
+/* LIGHT_TOO_DARK		*/ N_("Light too dark"),
+/* AUTOFOCUS_ERROR		*/ N_("Autofocus error"),
+/* SYSTEM_ERROR			*/ N_("System error"),
+/* ILLEGAL_PARAMETER		*/ N_("Illegal parameter"),
+/* COMMAND_CANNOT_BE_CANCELLED	*/ N_("Command cannot be cancelled"),
+/* LOCALIZATION_DATA_EXCESS	*/ N_("Localization data excess"),
+/* LOCALIZATION_DATA_CORRUPT	*/ N_("Localization data corrupt"),
+/* UNSUPPORTED_COMMAND		*/ N_("Unsupported command"),
+/* OTHER_COMMAND_EXECUTING	*/ N_("Other command executing"),
+/* COMMAND_ORDER_ERROR		*/ N_("Command order error"),
+/* UNKNOWN_ERROR		*/ N_("Unknown error")
 };
 
 static struct {
 	const gchar *model;
-	gboolean image_id_long;
-	gint vendor;
-	gint product;
-	gint inep;
-	gint outep;
+	int image_id_long;
+	int vendor;
+	int product;
+	int inep;
+	int outep;
 } konica_cameras[] = {
-	{"Konica Q-EZ",        FALSE, 0,      0,      0,    0   },
-	{"Konica Q-M100",      FALSE, 0,      0,      0,    0   },
-	{"Konica Q-M100V",     FALSE, 0,      0,      0,    0   },
-	{"Konica Q-M200",      TRUE,  0,      0,      0,    0   },
-	{"HP PhotoSmart C20",  FALSE, 0,      0,      0,    0   },
-	{"HP PhotoSmart C30",  FALSE, 0,      0,      0,    0   },
-	{"HP PhotoSmart C200", TRUE,  0,      0,      0,    0   },
-	{NULL,                 FALSE, 0,      0,      0,    0   }
+	{"Konica Q-EZ",        0, 0, 0, 0, 0},
+	{"Konica Q-M100",      0, 0, 0, 0, 0},
+	{"Konica Q-M100V",     0, 0, 0, 0, 0},
+	{"Konica Q-M200",      1, 0, 0, 0, 0},
+	{"HP PhotoSmart C20",  0, 0, 0, 0, 0},
+	{"HP PhotoSmart C30",  0, 0, 0, 0, 0},
+	{"HP PhotoSmart C200", 1, 0, 0, 0, 0},
+	{NULL,                 0, 0, 0, 0, 0}
 };
 
 typedef struct {
-	gboolean image_id_long;
+	int image_id_long;
 } KonicaData;
 			
 
-gboolean localization_file_read (Camera* camera, gchar* file_name, guchar** data, gulong* data_size);
+static int localization_file_read (Camera* camera, const char* file_name,
+				   unsigned char** data, long int* data_size);
 
 
 static int
@@ -611,10 +626,13 @@ camera_get_config (Camera* camera, CameraWidget** window)
 	CameraWidget *section;
 	KStatus status;
 	KPreferences preferences;
-	gint	year_4_digits;
+	int	year_4_digits;
 	struct tm	tm_struct;
 	time_t		t;
-	gfloat value_float;
+	float value_float;
+	const char *name;
+	GP_SYSTEM_DIR d;
+	GP_SYSTEM_DIRENT de;
 
         gp_debug_printf (GP_DEBUG_LOW, "konica", "*** ENTER: "
 			 "camera_get_config ***");
@@ -708,8 +726,16 @@ camera_get_config (Camera* camera, CameraWidget** window)
         gp_widget_append (*window, section);
 
         /* Language */
-        gp_widget_new (GP_WIDGET_TEXT, _("Localization File"), &widget);
-        gp_widget_append (section, widget);
+	d = GP_SYSTEM_OPENDIR (LOCALIZATION);
+	if (d) {
+	        gp_widget_new (GP_WIDGET_MENU, _("Language"), &widget);
+	        gp_widget_append (section, widget);
+		while ((de = GP_SYSTEM_READDIR (d))) {
+			name = GP_SYSTEM_FILENAME (de);
+			if (GP_SYSTEM_IS_FILE (name))
+				gp_widget_add_choice (widget, name);
+		}
+	}
 
 	/* TV output format */
 	gp_widget_new (GP_WIDGET_RADIO, _("TV Output Format"), &widget);
@@ -816,8 +842,8 @@ camera_set_config (Camera *camera, CameraWidget *window)
 	KTVOutputFormat tv_output_format = K_TV_OUTPUT_FORMAT_HIDE;
 	guint		beep = 0;
         gint 		j = 0;
-        guchar*		data;
-        gulong 		data_size;
+        unsigned char  *data;
+        long int	data_size;
 	guchar 		focus_self_timer = 0;
 	gint		i;
 	gfloat		f;
@@ -905,24 +931,23 @@ camera_set_config (Camera *camera, CameraWidget *window)
 	gp_widget_get_child_by_label (window, _("Localization"), &section);
 
 	/* Localization File */
-	gp_widget_get_child_by_label (section, _("Localization File"), &widget);
+	gp_widget_get_child_by_label (section, _("Language"), &widget);
 	if (gp_widget_changed (widget)) {
 		gp_widget_get_value (widget, &c);
-	        if (strcmp (c, "") != 0) {
-                	data = NULL;
-			data_size = 0;
+                data = NULL;
+		data_size = 0;
 
-			/* Read localization file */
-			if (!localization_file_read (camera, c, &data, &data_size)) {
-				g_free (data);
-				return (GP_ERROR);
-			}
-	
-			/* Go! */
-			result = k_localization_data_put (camera->port, data, data_size);
+		/* Read localization file */
+		result = localization_file_read (camera, c, &data, &data_size);
+		if (result != GP_OK) {
 			g_free (data);
-			CHECK (result);
+			return (result);
 		}
+
+		/* Go! */
+		result = k_localization_data_put (camera->port, data,data_size);
+		g_free (data);
+		CHECK (result);
 	}
 
 	/* TV Output Format */
@@ -1035,32 +1060,33 @@ camera_result_as_string (Camera* camera, gint result)
 }
 
 
-gboolean localization_file_read (Camera *camera, gchar *file_name, guchar **data, gulong *data_size)
+int
+localization_file_read (Camera *camera, const char *file_name,
+			unsigned char **data, long int *data_size)
 {
 	FILE *file;
 	gulong j;
 	gchar f;
 	guchar c[] = "\0\0";
 	gulong line_number;
-	KonicaData *konica_data;
 	guchar checksum;
 	gulong fcs;
 	guint d;
-	gchar *message;
+	char path[1024];
 
-	g_return_val_if_fail (camera != NULL, FALSE);
-	g_return_val_if_fail (file_name != NULL, FALSE);
-	g_return_val_if_fail (data != NULL, FALSE);
-	g_return_val_if_fail (*data == NULL, FALSE);
-	g_return_val_if_fail (data_size != NULL, FALSE);
+	strcpy (path, LOCALIZATION);
+	strcat (path, "/");
+	strcat (path, file_name);
+	file = fopen (path, "r");
+	if (!file)
+		return (GP_ERROR_FILE_NOT_FOUND);
 
-	konica_data = (KonicaData *) camera->camlib_data;
-	if ((file = fopen (file_name, "r")) == NULL) {
-		gp_frontend_message (camera, _("Could not open requested localization file!"));
-		return (FALSE);
-	}
+	/* Allocate the memory */
 	*data_size = 0;
-	*data = g_new (guchar, 65536);
+	*data = malloc (sizeof (char) * 65536);
+	if (!*data)
+		return (GP_ERROR_NO_MEMORY);
+
 	j = 0; 
 	line_number = 1;
         do {
@@ -1096,25 +1122,21 @@ gboolean localization_file_read (Camera *camera, gchar *file_name, guchar **data
 			    (f != '9') && (f != 'A') && (f != 'B') &&
 			    (f != 'C') && (f != 'D') && (f != 'E') &&
 			    (f != 'F')) {
-				message = g_strdup_printf (
-					_("Error in localization file!\n"
-					"\"%c\" in line %i is not allowed."), 
-					f,
-					(gint) line_number);
-				gp_frontend_message (camera, message);
-				g_free (message);
+				gp_debug_printf (GP_DEBUG_LOW, "konica",
+						 "Error in localization "
+						 "file: '%c' in line %i is "
+						 "not allowed.", f,
+						 (int) line_number);
 				fclose (file);
-				return (FALSE);
+				return (GP_ERROR_CORRUPTED_DATA);
 			}
 			c[j] = f;
 			if (j == 1) {
 				if (sscanf (&c[0], "%X", &d) != 1) {
-					gp_frontend_message (
-						camera,
-						_("There seems to be an error in"
-						" the localization file."));
-						fclose (file);
-						return (FALSE);
+					gp_debug_printf (GP_DEBUG_LOW,
+							 "konica", "Error in "
+							 "localization file.");
+					return (GP_ERROR_CORRUPTED_DATA);
 				}
 				(*data)[*data_size] = d;
 				(*data_size)++;
