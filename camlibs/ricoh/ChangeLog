@@ -1,5 +1,15 @@
 2002-07-16  Lutz Müller <lutz@users.sourceforge.net>
 
+	* ricoh.c: Simplify by using macros.
+
+2002-07-16  Lutz Müller <lutz@users.sourceforge.net>
+
+	Patch by Martin Fischer <martin.fischer@inka.de>:
+
+	* ricoh.c (ricoh_set_date): Fix.
+
+2002-07-16  Lutz Müller <lutz@users.sourceforge.net>
+
 	* library.c: The camera needs to be in record mode to set settings.
 
 2002-07-16  Lutz Müller <lutz@users.sourceforge.net>

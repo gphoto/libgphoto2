@@ -365,40 +365,6 @@ ricoh_transmit (Camera *camera, GPContext *context, unsigned char cmd,
         return (GP_OK);
 }
 
-/* query what mode(play/record) the camera is in */
-int
-ricoh_get_mode (Camera *camera, GPContext *context, RicohMode *mode)
-{
-	unsigned char p[1], buf[0xff], len;
-
-	GP_DEBUG ("Getting mode...");
-
-	p[0] = 0x12;
-	CR (ricoh_transmit (camera, context, 0x51, p, 1, buf, &len));
-	C_LEN (context, len, 1);
-
-	/* Mode */
-	if (mode)
-		*mode = buf[0];
-
-	return (GP_OK);
-}
-
-int
-ricoh_set_mode (Camera *camera, GPContext *context, RicohMode mode)
-{
-	unsigned char p[2], buf[0xff], len;
-
-	GP_DEBUG ("Setting mode to %i...", mode);
-
-	p[0] = 0x12;
-	p[1] = mode;
-	CR (ricoh_transmit (camera, context, 0x50, p, 2, buf, &len));
-	C_LEN (context, len, 0);
-
-	return (GP_OK);
-}
-
 int
 ricoh_get_pic_size (Camera *camera, GPContext *context, unsigned int n,
 		    unsigned long *size)
@@ -662,7 +628,7 @@ ricoh_get_date (Camera *camera, GPContext *context, time_t *date)
 	struct tm time;
 
 	p[0] = 0x0a;
-	CR (ricoh_transmit (camera, context, 'Q', p, 1, buf, &len));
+	CR (ricoh_transmit (camera, context, 0x51, p, 1, buf, &len));
 
 	/* the camera only supplies 2 digits for year, so I will
 	 * make the assumption that if less than 90, then it is
@@ -683,7 +649,7 @@ ricoh_get_date (Camera *camera, GPContext *context, time_t *date)
 #ifdef HEX
 #  undef HEX
 #endif
-#define HEX(x) ((x/10)<<4)+(x%10)
+#define HEX(x) (((x)/10)<<4)+((x)%10)
 
 int
 ricoh_set_date (Camera *camera, GPContext *context, time_t time)
@@ -692,7 +658,14 @@ ricoh_set_date (Camera *camera, GPContext *context, time_t time)
 	struct tm *t;
 
 	p[0] = 0x0a;
+
+	/* Call localtime() to get 'extern long timezone' */
 	t = localtime (&time);
+	time += timezone;
+	t = localtime (&time);
+	GP_DEBUG ("ricoh_set_date: converted time to localtime %s "
+		  "(timezone is %i)", asctime (t), timezone);
+
 	p[1] = HEX (t->tm_year / 100 + 19);
 	p[2] = HEX (t->tm_year % 100);
 	p[3] = HEX (t->tm_mon + 1);
@@ -713,7 +686,7 @@ ricoh_get_cam_mem (Camera *camera, GPContext *context, int *size)
 
 	p[0] = 0x00;
 	p[1] = 0x05;
-	CR (ricoh_transmit (camera, context, 'Q', p, 2, buf, &len));
+	CR (ricoh_transmit (camera, context, 0x51, p, 2, buf, &len));
 	C_LEN (context, len, 4);
 
 	if (size)
@@ -730,7 +703,7 @@ ricoh_get_cam_amem (Camera *camera, GPContext *context, int *size)
 
 	p[0] = 0x00;
 	p[1] = 0x06;
-	CR (ricoh_transmit (camera, context, 'Q', p, 2, buf, &len));
+	CR (ricoh_transmit (camera, context, 0x51, p, 2, buf, &len));
 	C_LEN (context, len, 4);
 
 	if (size)
@@ -748,6 +721,7 @@ ricoh_get_##name (Camera *camera, GPContext *context,			\
 									\
 	p[0] = (code);							\
 	CR (ricoh_transmit (camera, context, 0x51, p, 1, buf, &len));	\
+	C_LEN (context, len, 1);					\
 	if (value)							\
 		*value = buf[0];					\
 	return (GP_OK);							\
@@ -762,6 +736,7 @@ ricoh_set_##name (Camera *camera, GPContext *context,			\
 	p[0] = (code);							\
 	p[1] = (unsigned char) value;					\
 	CR (ricoh_transmit (camera, context, 0x50, p, 2, buf, &len));	\
+	C_LEN (context, len, 0);					\
 									\
 	return (GP_OK);							\
 }
@@ -773,6 +748,7 @@ RICOH_GET_SET_VALUE(flash,      RicohFlash,      0x06)
 RICOH_GET_SET_VALUE(rec_mode,   RicohRecMode,    0x07)
 RICOH_GET_SET_VALUE(compression,RicohCompression,0x08)
 RICOH_GET_SET_VALUE(resolution, RicohResolution, 0x09)
+RICOH_GET_SET_VALUE(mode,       RicohMode,       0x12)
 RICOH_GET_SET_VALUE(macro,      RicohMacro,      0x16)
 
 int
@@ -782,7 +758,7 @@ ricoh_get_copyright (Camera *camera, GPContext *context, const char **copyright)
 	static char buf[1024];
 
 	p[0] = 0x0f;
-	CR (ricoh_transmit (camera, context, 'Q', p, 1, buf, &len));
+	CR (ricoh_transmit (camera, context, 0x51, p, 1, buf, &len));
 
 	if (copyright && *copyright) {
 		*copyright = buf;
