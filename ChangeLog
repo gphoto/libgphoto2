@@ -1,5 +1,11 @@
 2002-06-19  Lutz Müller <lutz@users.sourceforge.net>
 
+	Suggestion from Hans Ulrich Niedermann <gp@n-dimensional.de>:
+
+	* autogen.sh: Remove the call to configure.
+
+2002-06-19  Lutz Müller <lutz@users.sourceforge.net>
+
 	Suggestion from Arnaud Launay <asl@launay.org>:
 
 	* configure.in: Let users specify where to look for libjpeg
