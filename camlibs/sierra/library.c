@@ -133,8 +133,12 @@ int sierra_list_files (Camera *camera, const char *folder, CameraList *list, GPC
 
 	GP_DEBUG ("Listing files in folder '%s'", folder);
 
-	CHECK (sierra_get_int_register (camera, 51, &i, context));
-	if (i == 1) {
+	/*
+	 * This is a non-fatal check if a memory card is present. Some
+	 * cameras don't understand this command and error out here.
+	 */
+	r = sierra_get_int_register (camera, 51, &i, NULL);
+	if ((r >= 0) && (i == 1)) {
 		gp_context_error (context, _("No memory card present"));
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
@@ -1290,7 +1294,7 @@ int
 sierra_capture (Camera *camera, CameraCaptureType type,
 		CameraFilePath *filepath, GPContext *context)
 {
-	int n, len = 0;
+	int n, len = 0, r;
 	char filename[128];
 	const char *folder;
 	int timeout;
@@ -1301,8 +1305,12 @@ sierra_capture (Camera *camera, CameraCaptureType type,
 	if (type != GP_CAPTURE_IMAGE)
 		return (GP_ERROR_NOT_SUPPORTED);
 
-	CHECK (sierra_get_int_register (camera, 51, &n, context));
-	if (n == 1) {
+	/*
+	 * This is a non-fatal check if a memory card is present. Some
+	 * cameras don't understand this command and error out here.
+	 */
+	r = sierra_get_int_register (camera, 51, &n, context);
+	if ((r >= 0) && (n == 1)) {
 		gp_context_error (context, _("No memory card present"));
 		return (GP_ERROR_NOT_SUPPORTED);
 	}

@@ -1769,66 +1769,61 @@ camera_set_config_default (Camera *camera, CameraWidget *window, GPContext *cont
 
 
 static int
-camera_summary (Camera *camera, CameraText *summary, GPContext *context) 
+camera_summary (Camera *camera, CameraText *summary, GPContext *c) 
 {
 	char buf[1024*32];
-	int value, ret;
+	int v, r;
 	char t[1024];
 
 	GP_DEBUG ("*** sierra camera_summary");
 
-	CHECK (camera_start (camera, context));
+	CHECK (camera_start (camera, c));
 
 	strcpy(buf, "");
 
-	/* At least on PhotoPC 3000z, if no card is present near all retrieved
-	   info are either unreadable or invalid... */
-	if (sierra_get_int_register(camera, 51, &value, context) >= 0)
-		if (value == 1) {
-			strcpy (buf, _("Note: no memory card present, some"
-				       " values may be invalid\n"));
-			strcpy (summary->text, buf);
-		}
+	/*
+	 * This is a non-fatal check if a memory card is present. Some
+	 * cameras don't understand this command and error out here.
+	 *
+	 * At least on PhotoPC 3000z, if no card is present near all
+	 * retrieved info are either unreadable or invalid...
+	 */
+	r = sierra_get_int_register(camera, 51, &v, c);
+	if ((r >= 0) && (v == 1)) {
+		strcpy (buf, _("Note: no memory card present, some"
+			       " values may be invalid\n"));
+		strcpy (summary->text, buf);
+	}
 
 	/* Get all the string-related info */
-	ret = sierra_get_string_register (camera, 27, 0, NULL, t, &value, context);
-	if (ret >= 0)
+	if (sierra_get_string_register (camera, 27, 0, NULL, t, &v, c) >= 0)
 		sprintf (buf, _("%sCamera Model: %s\n"), buf, t);
-	
-	ret = sierra_get_string_register (camera, 48, 0, NULL, t, &value, context);
-	if (ret >= 0)
+	if (sierra_get_string_register (camera, 48, 0, NULL, t, &v, c) >= 0)
 		sprintf (buf, _("%sManufacturer: %s\n"), buf, t);
-
-	ret = sierra_get_string_register (camera, 22, 0, NULL, t, &value, context);
-	if (ret >= 0)
+	if (sierra_get_string_register (camera, 22, 0, NULL, t, &v, c) >= 0)
 		sprintf (buf, _("%sCamera ID: %s\n"), buf, t);
-
-	ret = sierra_get_string_register (camera, 25, 0, NULL, t, &value, context);
-	if (ret >= 0)
+	if (sierra_get_string_register (camera, 25, 0, NULL, t, &v, c) >= 0)
 		sprintf (buf, _("%sSerial Number: %s\n"), buf, t);
-
-	ret = sierra_get_string_register (camera, 26, 0, NULL, t, &value, context);
-	if (ret >= 0)
+	if (sierra_get_string_register (camera, 26, 0, NULL, t, &v, c) >= 0)
 		sprintf (buf, _("%sSoftware Rev.: %s\n"), buf, t);
 
 	/* Get all the integer information */
-	if (sierra_get_int_register(camera, 40, &value, context) >= 0)
-		sprintf (buf, _("%sFrames Taken: %i\n"), buf, value);
-	if (sierra_get_int_register(camera, 11, &value, context) >= 0)
-		sprintf (buf, _("%sFrames Left: %i\n"), buf, value);
-	if (sierra_get_int_register(camera, 16, &value, context) >= 0)
-		sprintf (buf, _("%sBattery Life: %i\n"), buf, value);
-	if (sierra_get_int_register(camera, 28, &value, context) >= 0)
-		sprintf (buf, _("%sMemory Left: %i bytes\n"), buf, value);
+	if (sierra_get_int_register(camera, 40, &v, c) >= 0)
+		sprintf (buf, _("%sFrames Taken: %i\n"), buf, v);
+	if (sierra_get_int_register(camera, 11, &v, c) >= 0)
+		sprintf (buf, _("%sFrames Left: %i\n"), buf, v);
+	if (sierra_get_int_register(camera, 16, &v, c) >= 0)
+		sprintf (buf, _("%sBattery Life: %i\n"), buf, v);
+	if (sierra_get_int_register(camera, 28, &v, c) >= 0)
+		sprintf (buf, _("%sMemory Left: %i bytes\n"), buf, v);
 
 	/* Get date */
-	if (sierra_get_int_register (camera, 2, &value, context) >= 0)
-		sprintf (buf, _("%sDate: %s"), buf, 
-			 ctime ((time_t*) &value));
+	if (sierra_get_int_register (camera, 2, &v, c) >= 0)
+		sprintf (buf, _("%sDate: %s"), buf, ctime ((time_t *) &v));
 
 	strcpy (summary->text, buf);
 
-	return (camera_stop (camera, context));
+	return (camera_stop (camera, c));
 }
 
 static int
