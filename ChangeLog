@@ -1,5 +1,13 @@
 2001-08-17  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
 
+	* configure.in: Add libgphoto-2.0.pc
+	* libgphoto2/Makefile.am: Remove the old GNOME configuration stuff. 
+	GNOME uses pkgconfig now:
+	* libgphoto2/libgphoto2Conf.sh.in: Removed
+	* libgphoto2/libgphoto-2.0.pc.in: New
+	
+2001-08-17  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
+
 	* tests/*: New
 	* configure.in:
 	* Makefile.am: Add tests to SUBDIRS and generate the Makefile

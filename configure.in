@@ -155,38 +155,39 @@ else
 fi
 AC_SUBST(HTML_DIR)
 
-AC_OUTPUT(\
-Makefile \
-camlibs/Makefile \
-camlibs/agfa-cl18/Makefile \
-camlibs/barbie/Makefile \
-camlibs/dimera/Makefile \
-camlibs/sierra/Makefile \
-camlibs/directory/Makefile \
-camlibs/panasonic/Makefile \
-camlibs/panasonic/l859/Makefile \
-camlibs/konica/Makefile \
-camlibs/digita/Makefile \
-camlibs/canon/Makefile \
-camlibs/sonydscf1/Makefile \
-camlibs/template/Makefile \
-camlibs/kodak/Makefile \
-camlibs/kodak/dc120/Makefile \
-camlibs/kodak/dc240/Makefile \
-camlibs/kodak/dc3200/Makefile \
-camlibs/minolta/Makefile \
-camlibs/minolta/dimagev/Makefile \
-camlibs/sonydscf1/Makefile \
-camlibs/stv0680/Makefile \
-frontends/Makefile \
-frontends/command-line/Makefile \
-tests/Makefile \
-include/Makefile \
-libgphoto2/Makefile \
-gphoto2-config \
-intl/Makefile \
-po/Makefile.in \
-doc/Makefile \
+AC_OUTPUT([
+Makefile
+camlibs/Makefile
+camlibs/agfa-cl18/Makefile
+camlibs/barbie/Makefile
+camlibs/dimera/Makefile
+camlibs/sierra/Makefile
+camlibs/directory/Makefile
+camlibs/panasonic/Makefile
+camlibs/panasonic/l859/Makefile
+camlibs/konica/Makefile
+camlibs/digita/Makefile
+camlibs/canon/Makefile
+camlibs/sonydscf1/Makefile
+camlibs/template/Makefile
+camlibs/kodak/Makefile
+camlibs/kodak/dc120/Makefile
+camlibs/kodak/dc240/Makefile
+camlibs/kodak/dc3200/Makefile
+camlibs/minolta/Makefile
+camlibs/minolta/dimagev/Makefile
+camlibs/sonydscf1/Makefile
+camlibs/stv0680/Makefile
+frontends/Makefile
+frontends/command-line/Makefile
+tests/Makefile
+include/Makefile
+libgphoto2/Makefile
+libgphoto2/libgphoto-2.0.pc
+gphoto2-config
+intl/Makefile
+po/Makefile.in
+doc/Makefile
 doc/api/Makefile
-)
+])
 
