@@ -1967,12 +1967,13 @@ int get_jpeg_data(const char *data, int data_size, char **jpeg_data, int *jpeg_s
 	return ret_status;
 }
 
-int camera_init (Camera *camera, GPContext *context) 
+int
+camera_init (Camera *camera, GPContext *context) 
 {
         int value=0;
         int x=0, ret;
         int vendor=0, product=0, usb_wrap=0;
-	GPPortSettings settings;
+	GPPortSettings s;
 	CameraAbilities a;
 
         /* First, set up all the function pointers */
@@ -2016,17 +2017,20 @@ int camera_init (Camera *camera, GPContext *context)
 		break;
 	}
 	
-	CHECK_FREE (camera, gp_port_get_settings (camera->port, &settings));
+	CHECK_FREE (camera, gp_port_get_settings (camera->port, &s));
         switch (camera->port->type) {
         case GP_PORT_SERIAL:
 
-		/* Remember the speed */
-		camera->pl->speed = settings.serial.speed;
+		/*
+		 * Remember the speed. If no speed is given, we assume
+		 * people want to use the highest one (i.e. 115200).
+		 */
+		camera->pl->speed = s.serial.speed ? s.serial.speed : 115200;
 
-                settings.serial.speed    = 19200;
-                settings.serial.bits     = 8;
-                settings.serial.parity   = 0;
-                settings.serial.stopbits = 1;
+                s.serial.speed    = 19200;
+                s.serial.bits     = 8;
+                s.serial.parity   = 0;
+                s.serial.stopbits = 1;
 
                 break;
 
@@ -2051,7 +2055,7 @@ int camera_init (Camera *camera, GPContext *context)
                 return (GP_ERROR_UNKNOWN_PORT);
         }
 
-        CHECK_FREE (camera, gp_port_set_settings (camera->port, settings));
+        CHECK_FREE (camera, gp_port_set_settings (camera->port, s));
         CHECK_FREE (camera, gp_port_set_timeout (camera->port, TIMEOUT));
 
 	/* Send initialization sequence */

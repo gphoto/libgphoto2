@@ -1,3 +1,7 @@
+2002-05-22  Lutz Müller <lutz@users.sourceforge.net>
+
+	* sierra.c: If the requested speed is 0, we set it to 115200.
+
 2002-05-21  Lutz Müller <lutz@users.sourceforge.net>
 
 	* sierra.c
