@@ -16,6 +16,7 @@ LDFLAGS = @LDFLAGS@ -g
 
 INCLUDES =						\
 	-DGPHOTO2_LOCALEDIR=\""$(datadir)/locale"\"	\
+	-DDOC_DIR=\""@DOC_DIR@"\"			\
 	-I$(top_srcdir)/libgphoto2_port/libgphoto2_port	\
 	-I$(top_srcdir)/libgphoto2			\
 	$(CDK_CFLAGS)					\

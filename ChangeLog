@@ -1,5 +1,10 @@
 2002-03-11  Lutz Müller <lutz@users.sourceforge.net>
 
+	* frontends/command-line/Makefile.am:
+	* frontends/command-line/main.c: Add --authors and --licence.
+
+2002-03-11  Lutz Müller <lutz@users.sourceforge.net>
+
 	* configure.in: Check for rl_completion_matches.
 
 2002-03-11  Lutz Müller <lutz@users.sourceforge.net>

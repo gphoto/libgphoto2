@@ -164,6 +164,8 @@ OPTION_CALLBACK(manual);
 OPTION_CALLBACK(about);
 OPTION_CALLBACK(make_dir);
 OPTION_CALLBACK(remove_dir);
+OPTION_CALLBACK(authors);
+OPTION_CALLBACK(licence);
 
 /* 2) Add an entry in the option table                          */
 /*    ----------------------------------------------------------------- */
@@ -230,10 +232,12 @@ Option option[] = {
 {"", "show-exif", "range",   N_("Show EXIF information"), show_exif, 0},
 #endif
 {"", "show-info", "range",   N_("Show info"), show_info, 0},
-{"",  "summary",        "",  N_("Summary of camera status"), summary,        0},
-{"",  "manual",         "",  N_("Camera driver manual"),     manual,         0},
-{"",  "about",          "",  N_("About the camera driver"),  about,          0},
-{"",  "shell",          "",  N_("gPhoto shell"),             shell,          0},
+{"",  "summary",        "",  N_("Summary of camera status"), summary, 0},
+{"",  "manual",         "",  N_("Camera driver manual"),     manual,  0},
+{"",  "about",          "",  N_("About the camera driver"),  about,   0},
+{"",  "shell",          "",  N_("gPhoto shell"),             shell,   0},
+{"",  "authors",        "",  N_("Authors"),                  authors, 0},
+{"",  "licence",        "",  N_("Licence"),                  licence, 0},
 
 /* End of list                  */
 {"" , "", "", "", NULL, 0}
@@ -278,13 +282,53 @@ static ForEachFlags glob_flags = FOR_EACH_FLAGS_RECURSE;
 /*    cli_debug_print(char *format, ...) to display debug output. Use   */
 /*    cli_error_print(char *format, ...) to display error output.       */
 
+OPTION_CALLBACK(licence)
+{
+	FILE *f;
+	char buf[1024];
+	size_t size;
 
-OPTION_CALLBACK(help) {
+	f = fopen (DOC_DIR "/COPYING", "rb");
+	if (!f) {
+		gp_context_error (glob_context, _("Could not open "
+			"'" DOC_DIR "/COPYING'. Please verify your "
+			"installation."));
+		return (GP_ERROR_FILE_NOT_FOUND);
+	}
 
-        cli_debug_print("Displaying usage");
+	while ((size = fread (buf, 1, 1024, f)))
+		fwrite (buf, 1, size, stdout);
 
-        usage();
-        exit(EXIT_SUCCESS);
+	fclose (f);
+	return (GP_OK);
+}
+
+OPTION_CALLBACK(authors)
+{
+	FILE *f;
+	char buf[1024];
+	size_t size;
+
+	f = fopen (DOC_DIR "/AUTHORS", "rb");
+	if (!f) {
+		gp_context_error (glob_context, _("Could not open " 
+			"'" DOC_DIR "/COPYING'. Please verify your "
+			"installation."));
+		return (GP_ERROR_FILE_NOT_FOUND);
+	}
+
+	while ((size = fread (buf, 1, 1024, f)))
+		fwrite (buf, 1, size, stdout);
+
+	fclose (f);
+	return (GP_OK);
+}
+
+OPTION_CALLBACK(help)
+{
+        usage ();
+        exit (EXIT_SUCCESS);
+
         return GP_OK;
 }
 
