@@ -394,6 +394,8 @@ OPTION_CALLBACK (debug)
         glob_debug = GP_DEBUG_HIGH;
         cli_debug_print("Turning on debug mode");
 
+	gp_debug_set_level (GP_DEBUG_HIGH);
+
         return (GP_OK);
 }
 
@@ -942,8 +944,6 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n");
                 exit(EXIT_FAILURE);
         }
 
-        /* Initialize gPhoto core */
-        gp_init(glob_debug);
         gp_frontend_register(gp_interface_status, gp_interface_progress,
                 gp_interface_message, gp_interface_confirm, NULL);
         if ((result = execute_options(argc, argv)) != GP_OK) {
