@@ -1,5 +1,10 @@
 2001-10-12  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* include
+	* libgphoto2: More renaming in order to make gtk-doc happy.
+
+2001-10-12  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* include/gphoto2-widget.h
 	* include/gphoto2-filesys.h: Moved to ...
 	* libgphoto2/gphoto2-widget.h

@@ -49,6 +49,12 @@ typedef struct {
 	CameraFilesystemFile *file;
 } CameraFilesystemFolder;
 
+/**
+ * CameraFilesystem:
+ *
+ * The internals of the #CameraFilesystem are only visible to gphoto2. You
+ * can only access them using the functions provided by gphoto2.
+ **/
 struct _CameraFilesystem {
 	int count;
 	CameraFilesystemFolder *folder;

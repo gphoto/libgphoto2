@@ -8,10 +8,10 @@ CFLAGS= @CFLAGS@ \
 libgphoto2_la_LDFLAGS = -version-info 0:0:0
 libgphoto2_la_SOURCES = 	\
 	abilities.c		\
-	abilities-list.c	\
+	gphoto2-abilities-list.c\
 	bayer.c bayer.h		\
 	camera.c		\
-	core.c			\
+	gphoto2-core.c		\
 	debug.c			\
 	exif.c exif.h		\
 	file.c			\
@@ -26,7 +26,9 @@ libgphoto2_la_SOURCES = 	\
 libgphoto2_la_LIBADD = -lm
 
 libgphoto2includedir = $(prefix)/include/gphoto2
-libgphoto2include_HEADERS =		\
+libgphoto2include_HEADERS =	\
+	gphoto2-abilities-list.h\
+	gphoto2-core.h		\
 	gphoto2-filesys.h	\
 	gphoto2-widget.h
 

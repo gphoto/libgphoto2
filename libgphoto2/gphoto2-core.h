@@ -24,20 +24,14 @@
 #include <gphoto2-list.h>
 #include <gphoto2-abilities.h>
 
-/* Initialization is done automatically. */
-int gp_exit           (void);
+int gp_core_autodetect (CameraList *list);
 
-int  gp_autodetect (CameraList *list);
-
-/* Retrieve the number of available cameras */
+/* Don't use - those are DEPRECATED! */
+int gp_exit (void);
+int gp_autodetect (CameraList *);
 int gp_camera_count (void);
-
-/* Retrieve the name of a particular camera */
-int gp_camera_name  (int camera_number, const char **camera_name);
-
-/* Retreive abilities for a given camera */
-int gp_camera_abilities         (int camera_number, CameraAbilities *abilities);
-int gp_camera_abilities_by_name (const char *camera_name,
-				 CameraAbilities *abilities);
+int gp_camera_name  (int, const char **);
+int gp_camera_abilities (int, CameraAbilities *);
+int gp_camera_abilities_by_name (const char *, CameraAbilities *);
 
 #endif /* __GPHOTO2_CORE_H__ */

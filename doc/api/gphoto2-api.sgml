@@ -1,16 +1,89 @@
 <!doctype book PUBLIC "-//Davenport//DTD DocBook V3.0//EN" [
-<!entity gphoto2-widget SYSTEM "sgml/widget.sgml">
+<!entity hash "#">
+<!entity gphoto2-filesys SYSTEM "sgml/gphoto2-filesys.sgml">
+<!entity gphoto2-widget  SYSTEM "sgml/gphoto2-widget.sgml">
+<!entity gphoto2-core    SYSTEM "sgml/gphoto2-core.sgml">
+<!entity gphoto2-camera  SYSTEM "sgml/gphoto2-camera.sgml">
+<!entity gphoto2-setting SYSTEM "sgml/gphoto2-setting.sgml">
 ]>
 
-<book>
+<book id="index">
   <bookinfo>
     <title>GPhoto2 API Reference Manual</title>
   </bookinfo>
-  
-  <chapter id="gphoto2-camera-configuration">
-    <title>Camera Configuration</title>
-      &gphoto2-widget;
-  </chapter>
-</book
->
 
+  <chapter id="gphoto2"
+    <title>GPhoto2 Overview</title>
+    <para>
+GPhoto2 is a library for accessing a wide range of digital cameras.
+It works on many UNIX-like platforms. GPhoto2 is released under the GNU
+Library General Public License (GNU LGPL), which allows for flexible 
+licensing of client applications. GPhoto2 is written entirely in C and 
+has an object-oriented architecture that makes it easy for other 
+programming languages to access GPhoto2.
+    </para>
+    <para>
+GPhoto2 doesn't depend on any external library. However, it is 
+strongly recommended that you have some library installed that handles
+locking of serial ports. GPhoto2 currently supports
+<variablelist>
+  <varlistentry>
+    <term>baudboy.h</term>
+    <listitem>
+      <para>BaudBoy, a library used on Red-Hat systems,</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>ttylock.h</term>
+    <listitem>
+      <para>
+        ttyLock, a header file provided by several locking libraries
+	(i.e. BaudBoy and LockDev), and
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>lockdev.h</term>
+    <listitem>
+      <para>
+        LockDev, a library available for several systems including
+	Red-Hat and Debian
+      </para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+ 
+    </para>
+  </chapter>
+
+  <chapter id="gphoto2base" role="no-toc">
+    <title>GPhoto2 Core Reference</title>
+      <para>
+        GPhoto2's core provides some utility functions.
+      </para>
+
+&gphoto2-core;
+&gphoto2-setting;
+
+  </chapter>
+
+  <chapter id="gphoto2objects" role="no-toc">
+    <title>GPhoto2 Objects</title>
+
+      <sect1 id="FrontendObjects">
+        <title>Objects used by front-ends</title>
+	&gphoto2-camera;
+      </sect1>
+
+      <sect1 id="BackendObjects">
+	<title>Objects used by camera drivers</title>
+	&gphoto2-filesys;
+      </sect1>
+
+      <sect1 id="GeneralPurposeObjects">
+	<title>Objects used by both frontends and camera drivers</title>
+	&gphoto2-widget;
+      </sect1>
+
+  </chapter>
+</book>
