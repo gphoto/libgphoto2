@@ -84,12 +84,6 @@
  **/
 #define GP_ERROR_PATH_NOT_ABSOLUTE   -111
 
-/**
- * GP_ERROR_LOW_BATTERY:
- *
- * The battery capacity is too low to realize the requested operation.
- **/
-#define GP_ERROR_LOW_BATTERY         -112
 
 const char *gp_result_as_string      (int result);
 
