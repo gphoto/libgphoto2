@@ -1,3 +1,8 @@
+2001-12-29  Marcus Meissner <marcus@jet.franken.de>
+	
+	* serial.[ch], jd11.c: Use new gp_file_progress.
+	* jd11.c: Initialize CameraAbilities struct with zeroes.
+
 2001-12-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* serial.c: Include <bayer.h>, not "libgphoto2/bayer.h"
