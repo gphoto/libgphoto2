@@ -10,19 +10,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <gphoto2.h>
+#include "library.h"
 #include "lowlevel.h"
 #include "konica.h"
-
-
-/******************************************************************************/
-/* Static Variables					                      */
-/******************************************************************************/
-
-/*****************************************/
-/* image_id_int will be true if image_id */
-/* expected and sent is two bytes long.  */
-/*****************************************/
-static gboolean image_id_int;
 
 
 /******************************************************************************/
@@ -31,7 +21,7 @@ static gboolean image_id_int;
 k_return_status_t K_RETURN_STATUS (l_return_status_t l_return_status);
 
 
-k_return_status_t return_status_translation (gchar byte1, gchar byte2);
+k_return_status_t return_status_translation (guchar byte1, guchar byte2);
 
 
 /******************************************************************************/
@@ -50,8 +40,10 @@ k_return_status_t K_RETURN_STATUS (l_return_status_t l_return_status)
 }
 
 
-k_return_status_t return_status_translation (gchar byte1, gchar byte2)
+k_return_status_t return_status_translation (guchar byte1, guchar byte2)
 {
+	gchar buffer[1024];
+
 	switch ((byte2 << 8 ) | byte1) {
 	case 0x0000:
 		return (K_SUCCESS);
@@ -102,28 +94,36 @@ k_return_status_t return_status_translation (gchar byte1, gchar byte2)
 	case 0x0fff:
 		return (K_ERROR_UNKNOWN_ERROR);
 	default:
-		return (K_ERROR_NOT_YET_DISCOVERED);
+		sprintf (
+			buffer, 
+			"The camera has just sent an error that has not"
+			"yet been discovered. Please report the following"
+			"to the maintainer of this driver with some"
+			"additional information how you got this error.\n"
+			" - Byte 1: %i\n"
+			" - Byte 2: %i\n"
+			"Thank you very much!\n",
+			byte1,
+			byte2);
+		gp_camera_message (NULL, buffer);
+		return (K_PROGRAM_ERROR);
 	}
 }
 
 
-k_return_status_t k_init (
-	gboolean image_id_long, 
-	CameraPortInfo port_settings, 
-	gboolean debug_flag) 
+k_return_status_t k_init (konica_data_t *konica_data)
 {
-	image_id_int = !image_id_long;
-	return (K_RETURN_STATUS (l_init (port_settings, debug_flag)));
+	return (K_RETURN_STATUS (l_init (konica_data)));
 }
 
 
-k_return_status_t k_exit () 
+k_return_status_t k_exit (konica_data_t *konica_data) 
 {
-	return (K_RETURN_STATUS (l_exit ()));
+	return (K_RETURN_STATUS (l_exit (konica_data)));
 }
 
 
-k_return_status_t k_erase_image (gulong image_id)
+k_return_status_t k_erase_image (konica_data_t *konica_data, gulong image_id)
 {
 	/************************************************/
 	/* Command to erase one image.		 	*/
@@ -154,16 +154,22 @@ k_return_status_t k_erase_image (gulong image_id)
 	guchar *rb = NULL;
 	guint rbs;
 
-	if (image_id_int) {
+	if (!konica_data->image_id_long) {
 		sb[6] = image_id;
 		sb[7] = image_id >> 8;
-		l_return_status = l_send_receive (sb, 8, &rb, &rbs);
+		l_return_status = l_send_receive (
+			konica_data,
+			sb, 8, 
+			&rb, &rbs);
 	} else {
 		sb[6] = image_id >> 16;
 		sb[7] = image_id >> 24;
 		sb[8] = image_id;
 		sb[9] = image_id >> 8;
-		l_return_status = l_send_receive (sb, 10, &rb, &rbs);
+		l_return_status = l_send_receive (
+			konica_data, 
+			sb, 10, 
+			&rb, &rbs);
 	}
 	if (l_return_status != L_SUCCESS) {
 		g_free (rb); 
@@ -176,7 +182,7 @@ k_return_status_t k_erase_image (gulong image_id)
 }
 
 
-k_return_status_t k_format_memory_card ()
+k_return_status_t k_format_memory_card (konica_data_t *konica_data)
 {
 	/************************************************/
 	/* Command to format the memory card.		*/
@@ -202,7 +208,7 @@ k_return_status_t k_format_memory_card ()
 	guchar *rb = NULL;
 	guint rbs;
 
-	l_return_status = l_send_receive (sb, 6, &rb, &rbs);
+	l_return_status = l_send_receive (konica_data, sb, 6, &rb, &rbs);
 	if (l_return_status != L_SUCCESS) {
 		g_free (rb); 
 		return K_RETURN_STATUS (l_return_status);
@@ -214,7 +220,9 @@ k_return_status_t k_format_memory_card ()
 }
 
 
-k_return_status_t k_erase_all (guint *number_of_images_not_erased)
+k_return_status_t k_erase_all (
+	konica_data_t *konica_data, 
+	guint *number_of_images_not_erased)
 {
 	/************************************************/
 	/* Command to erase all images in the camera, 	*/
@@ -247,12 +255,12 @@ k_return_status_t k_erase_all (guint *number_of_images_not_erased)
 	g_return_val_if_fail (
 		number_of_images_not_erased != NULL, 
 		K_PROGRAM_ERROR);
-	l_return_status = l_send_receive (sb, 6, &rb, &rbs);
+	l_return_status = l_send_receive (konica_data, sb, 6, &rb, &rbs);
 	if (l_return_status != L_SUCCESS) {
 		g_free (rb);
 		return K_RETURN_STATUS (l_return_status);
 	} else {
-		k_return_status = (rb[3] << 8 ) | rb[2];
+		k_return_status = return_status_translation (rb[2], rb[3]);
 		if (k_return_status == K_SUCCESS) 
 			*number_of_images_not_erased = (rb[5] << 8) | rb[4];
 		g_free (rb);
@@ -261,7 +269,10 @@ k_return_status_t k_erase_all (guint *number_of_images_not_erased)
 }
 
 
-k_return_status_t k_set_protect_status (gulong image_id, gboolean protected)
+k_return_status_t k_set_protect_status (
+	konica_data_t *konica_data, 
+	gulong image_id, 
+	gboolean protected)
 {
 	/************************************************/
 	/* Command to set the protect status of one 	*/
@@ -297,18 +308,24 @@ k_return_status_t k_set_protect_status (gulong image_id, gboolean protected)
 	guchar *rb = NULL;
 	guint rbs;
 
-	if (image_id_int) {
+	if (!konica_data->image_id_long) {
 		if (protected) sb[8] = 0x01;
 		sb[6] = image_id;
 		sb[7] = image_id >> 8;
-		l_return_status = l_send_receive (sb, 10, &rb, &rbs);
+		l_return_status = l_send_receive (
+			konica_data, 
+			sb, 10, 
+			&rb, &rbs);
 	} else {
 		if (protected) sb[10] = 0x01;
 		sb[6] = image_id >> 16;
 		sb[7] = image_id >> 24;
 		sb[8] = image_id;
 		sb[9] = image_id >> 8;
-		l_return_status = l_send_receive (sb, 12, &rb, &rbs);
+		l_return_status = l_send_receive (
+			konica_data, 
+			sb, 12, 
+			&rb, &rbs);
 	}
 	if (l_return_status != L_SUCCESS) {
 		g_free (rb); 
@@ -322,6 +339,7 @@ k_return_status_t k_set_protect_status (gulong image_id, gboolean protected)
 
 
 k_return_status_t k_get_image (
+	konica_data_t *konica_data,
 	gulong image_id, 
 	k_image_type_t image_type, 
 	guchar **image_buffer, 
@@ -379,16 +397,24 @@ k_return_status_t k_get_image (
 		sb[0] = 0x30;
 		break;
 	}
-	if (image_id_int) {
+	if (!konica_data->image_id_long) {
 		sb[6] = image_id;
 		sb[7] = image_id >> 8;
-		l_return_status = l_send_receive_receive (sb, 8, image_buffer, image_buffer_size, &rb, &rbs, 2000);
+		l_return_status = l_send_receive_receive (
+			konica_data, 
+			sb, 8, 
+			image_buffer, image_buffer_size, 
+			&rb, &rbs, 2000);
 	} else {
 		sb[6] = image_id >> 16;
 		sb[7] = image_id >> 24;
 		sb[8] = image_id;
 		sb[9] = image_id >> 8;
-		l_return_status = l_send_receive_receive (sb, 10, image_buffer, image_buffer_size, &rb, &rbs, 2000);
+		l_return_status = l_send_receive_receive (
+			konica_data,
+			sb, 10, 
+			image_buffer, image_buffer_size, 
+			&rb, &rbs, 2000);
 	}
 	if (l_return_status != L_SUCCESS) {
 		g_free (rb); 
@@ -402,12 +428,13 @@ k_return_status_t k_get_image (
 
 
 k_return_status_t k_get_image_information (
-	gulong			  image_number,
-	gulong			 *image_id, 
-	guint 			 *exif_size, 
-	gboolean		 *protected, 
-	guchar 			**information_buffer, 
-	guint			 *information_buffer_size)
+	konica_data_t *konica_data,
+	gulong image_number,
+	gulong *image_id, 
+	guint *exif_size, 
+	gboolean *protected, 
+	guchar **information_buffer, 
+	guint *information_buffer_size)
 {
 	/************************************************/
 	/* Command to get the information about an 	*/
@@ -458,10 +485,14 @@ k_return_status_t k_get_image_information (
 	g_return_val_if_fail (information_buffer != NULL, K_PROGRAM_ERROR);
 	g_return_val_if_fail (*information_buffer == NULL, K_PROGRAM_ERROR);
 	g_return_val_if_fail (information_buffer_size != NULL, K_PROGRAM_ERROR);
-        if (image_id_int) {
+        if (!konica_data->image_id_long) {
 		sb[6] = image_number;
 		sb[7] = image_number >> 8;
-		l_return_status = l_send_receive_receive (sb, 8, information_buffer, information_buffer_size, &rb, &rbs, 1000);
+		l_return_status = l_send_receive_receive (
+			konica_data, 
+			sb, 8, 
+			information_buffer, information_buffer_size, 
+			&rb, &rbs, 1000);
 		if (l_return_status != L_SUCCESS) 
 			return K_RETURN_STATUS (l_return_status);
 		k_return_status = return_status_translation (rb[2], rb[3]);
@@ -475,7 +506,11 @@ k_return_status_t k_get_image_information (
 		sb[7] = image_number >> 24;
 		sb[8] = image_number;
 		sb[9] = image_number >> 8;
-		l_return_status = l_send_receive_receive (sb, 10, information_buffer, information_buffer_size, &rb, &rbs, 1000);
+		l_return_status = l_send_receive_receive (
+			konica_data, 
+			sb, 10, 
+			information_buffer, information_buffer_size, 
+			&rb, &rbs, 1000);
 		if (l_return_status != L_SUCCESS) 
 			return K_RETURN_STATUS (l_return_status);
 		k_return_status = return_status_translation (rb[2], rb[3]);
@@ -490,7 +525,11 @@ k_return_status_t k_get_image_information (
 }
 
 
-k_return_status_t k_get_preview (gboolean thumbnail, guchar **image_buffer, guint *image_buffer_size)
+k_return_status_t k_get_preview (
+	konica_data_t *konica_data,
+	gboolean thumbnail, 
+	guchar **image_buffer, 
+	guint *image_buffer_size)
 {
 	/************************************************/
 	/* Command to get the preview from the camera.	*/
@@ -523,7 +562,11 @@ k_return_status_t k_get_preview (gboolean thumbnail, guchar **image_buffer, guin
         g_return_val_if_fail (*image_buffer == NULL, K_PROGRAM_ERROR);
         g_return_val_if_fail (image_buffer_size != NULL, K_PROGRAM_ERROR);
 	if (thumbnail) sb[4] = 0x01;
-	l_return_status = l_send_receive_receive (sb, 6, image_buffer, image_buffer_size, &rb, &rbs, 5000);
+	l_return_status = l_send_receive_receive (
+		konica_data, 
+		sb, 6, 
+		image_buffer, image_buffer_size, 
+		&rb, &rbs, 5000);
 	if (l_return_status != L_SUCCESS) {
 		g_free (rb); 
 		return K_RETURN_STATUS (l_return_status);
@@ -536,6 +579,7 @@ k_return_status_t k_get_preview (gboolean thumbnail, guchar **image_buffer, guin
 
 
 k_return_status_t k_get_io_capability (
+	konica_data_t *konica_data,
 	gboolean *bit_rate_300,
 	gboolean *bit_rate_600,
 	gboolean *bit_rate_1200,
@@ -593,7 +637,7 @@ k_return_status_t k_get_io_capability (
 	g_return_val_if_fail (bit_flag_parity_on != NULL, K_PROGRAM_ERROR);
 	g_return_val_if_fail (bit_flag_parity_odd != NULL, K_PROGRAM_ERROR);
 	g_return_val_if_fail (bit_flag_hw_flow_control != NULL, K_PROGRAM_ERROR);
-	l_return_status = (l_send_receive (sb, 4, &rb, &rbs));
+	l_return_status = (l_send_receive (konica_data, sb, 4, &rb, &rbs));
 	if (l_return_status != L_SUCCESS) {
 		g_free (rb);
 		return K_RETURN_STATUS (l_return_status);
@@ -623,6 +667,7 @@ k_return_status_t k_get_io_capability (
 
 
 k_return_status_t k_get_information (
+	konica_data_t *konica_data,
 	gchar **model, 
 	gchar **serial_number,
 	guchar *hardware_version_major, 
@@ -751,7 +796,7 @@ k_return_status_t k_get_information (
         g_return_val_if_fail (*name == NULL, K_PROGRAM_ERROR);
         g_return_val_if_fail (manufacturer != NULL, K_PROGRAM_ERROR);
         g_return_val_if_fail (*manufacturer == NULL, K_PROGRAM_ERROR);
-	l_return_status = l_send_receive (sb, 4, &rb, &rbs);
+	l_return_status = l_send_receive (konica_data, sb, 4, &rb, &rbs);
 	if (l_return_status != L_SUCCESS) {
 		g_free (rb);
 		return K_RETURN_STATUS (l_return_status);
@@ -800,28 +845,29 @@ k_return_status_t k_get_information (
 
 
 k_return_status_t k_get_status (
-	guint 			*self_test_result, 
-	k_power_level_t 	*power_level,
-	k_power_source_t  	*power_source,
-	k_card_status_t 	*card_status, 
-	k_display_t	 	*display, 
-	guint 			*card_size,
-	guint 			*pictures, 
-	guint 			*pictures_left, 
-	guchar 			*year, 
-	guchar 			*month, 
-	guchar 			*day,
-	guchar 			*hour,
-	guchar 			*minute,
-	guchar 			*second,
-	guint 			*io_setting_bit_rate,
-	guint 			*io_setting_flags,
-	guchar	 		*flash,
-	guchar		 	*quality,
-	guchar	 		*focus,
-	guchar 			*exposure,
-	guint 			*total_pictures,
-	guint 			*total_strobes)
+	konica_data_t *konica_data,
+	guint *self_test_result, 
+	k_power_level_t *power_level,
+	k_power_source_t *power_source,
+	k_card_status_t *card_status, 
+	k_display_t *display, 
+	guint *card_size,
+	guint *pictures, 
+	guint *pictures_left, 
+	guchar *year, 
+	guchar *month, 
+	guchar *day,
+	guchar *hour,
+	guchar *minute,
+	guchar *second,
+	guint *io_setting_bit_rate,
+	guint *io_setting_flags,
+	guchar *flash,
+	guchar *resolution,
+	guchar *focus,
+	guchar *exposure,
+	guint *total_pictures,
+	guint *total_strobes)
 {
 	/************************************************/
 	/* Command to get the status of the camera.	*/
@@ -875,7 +921,7 @@ k_return_status_t k_get_status (
 	/* 0xXX: Byte 0 of bit flags			*/
 	/* 0xXX: Byte 1 of bit flags			*/
 	/* 0xXX: Flash					*/
-	/* 0xXX: Quality				*/
+	/* 0xXX: Resolution				*/
 	/* 0xXX: Focus					*/
 	/* 0xXX: Exposure				*/
 	/* 0xXX: Byte 0 of total pictures		*/
@@ -906,12 +952,12 @@ k_return_status_t k_get_status (
         g_return_val_if_fail (io_setting_bit_rate != NULL, K_PROGRAM_ERROR);
         g_return_val_if_fail (io_setting_flags != NULL, K_PROGRAM_ERROR);
         g_return_val_if_fail (flash != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (quality != NULL, K_PROGRAM_ERROR);
+        g_return_val_if_fail (resolution != NULL, K_PROGRAM_ERROR);
         g_return_val_if_fail (focus != NULL, K_PROGRAM_ERROR);
         g_return_val_if_fail (exposure != NULL, K_PROGRAM_ERROR);
         g_return_val_if_fail (total_pictures != NULL, K_PROGRAM_ERROR);
         g_return_val_if_fail (total_strobes != NULL, K_PROGRAM_ERROR);
-	l_return_status = l_send_receive (sb, 6, &rb, &rbs);
+	l_return_status = l_send_receive (konica_data, sb, 6, &rb, &rbs);
 	if (l_return_status != L_SUCCESS) {
 		g_free (rb);
 		return K_RETURN_STATUS (l_return_status);
@@ -978,7 +1024,7 @@ k_return_status_t k_get_status (
 			*io_setting_bit_rate	= (rb[23] << 8) | rb[22];
 			*io_setting_flags	= (rb[25] << 8) | rb[24];
 			*flash			= rb[26];
-			*quality		= rb[27];
+			*resolution		= rb[27];
 			*focus			= rb[28];
 			*exposure		= rb[29];
 			*total_pictures		= (rb[31] << 8) | rb[30];
@@ -991,6 +1037,7 @@ k_return_status_t k_get_status (
 
 
 k_return_status_t k_get_date_and_time (
+	konica_data_t *konica_data,
 	guchar *year, 
 	guchar *month, 
 	guchar *day, 
@@ -1032,7 +1079,7 @@ k_return_status_t k_get_date_and_time (
         g_return_val_if_fail (hour != NULL, K_PROGRAM_ERROR);
         g_return_val_if_fail (minute != NULL, K_PROGRAM_ERROR);
         g_return_val_if_fail (second != NULL, K_PROGRAM_ERROR);
-	l_return_status = l_send_receive (sb, 4, &rb, &rbs);
+	l_return_status = l_send_receive (konica_data, sb, 4, &rb, &rbs);
 	if (l_return_status != L_SUCCESS) {
 		g_free (rb); 
 		return K_RETURN_STATUS (l_return_status);
@@ -1053,6 +1100,7 @@ k_return_status_t k_get_date_and_time (
 
 
 k_return_status_t k_get_preferences (
+	konica_data_t *konica_data,
 	guint *shutoff_time, 
 	guint *self_timer_time, 
 	guint *beep, 
@@ -1092,7 +1140,7 @@ k_return_status_t k_get_preferences (
 	g_return_val_if_fail (self_timer_time != NULL, K_PROGRAM_ERROR);
 	g_return_val_if_fail (beep != NULL, K_PROGRAM_ERROR);
 	g_return_val_if_fail (slide_show_interval != NULL, K_PROGRAM_ERROR);
-	l_return_status = l_send_receive (sb, 4, &rb, &rbs);
+	l_return_status = l_send_receive (konica_data, sb, 4, &rb, &rbs);
 	if (l_return_status != L_SUCCESS) {
 		g_free (rb);
 		return K_RETURN_STATUS (l_return_status);
@@ -1111,6 +1159,7 @@ k_return_status_t k_get_preferences (
 
 
 k_return_status_t k_set_io_capability (
+	konica_data_t *konica_data,
 	guint bit_rate, 
 	gboolean bit_flag_7_or_8_bits,
 	gboolean bit_flag_stop_2_bits,
@@ -1180,7 +1229,7 @@ k_return_status_t k_set_io_capability (
 	}
 	sb[6] = (bit_flag_7_or_8_bits | (bit_flag_stop_2_bits << 1) | (bit_flag_parity_on << 2) | (bit_flag_parity_odd << 3) | 
 		(bit_flag_use_hw_flow_control << 4));
-	l_return_status = l_send_receive (sb, 8, &rb, &rbs);
+	l_return_status = l_send_receive (konica_data, sb, 8, &rb, &rbs);
 	if (l_return_status != L_SUCCESS) {
 		g_free (rb); 
 		return K_RETURN_STATUS (l_return_status);
@@ -1193,6 +1242,7 @@ k_return_status_t k_set_io_capability (
 
 
 k_return_status_t k_set_date_and_time (
+	konica_data_t *konica_data,
 	guchar year, 
 	guchar month, 
 	guchar day, 
@@ -1233,7 +1283,7 @@ k_return_status_t k_set_date_and_time (
         sb[7] = hour;
         sb[8] = minute;
         sb[9] = second;
-        l_return_status = l_send_receive (sb, 10, &rb, &rbs);
+        l_return_status = l_send_receive (konica_data, sb, 10, &rb, &rbs);
 	if (l_return_status != L_SUCCESS) {
 		g_free (rb); 
 		return K_RETURN_STATUS (l_return_status);
@@ -1245,7 +1295,9 @@ k_return_status_t k_set_date_and_time (
 }
 
 
-k_return_status_t k_set_preference (k_preference_t preference, guint value)
+k_return_status_t k_set_preference (
+	konica_data_t *konica_data,
+	k_preference_t preference, guint value)
 {
 	/************************************************/
 	/* Command to set a preference of the camera.	*/
@@ -1270,7 +1322,7 @@ k_return_status_t k_set_preference (k_preference_t preference, guint value)
 	guint rbs;
         
 	switch (preference) {
-		case K_PREFERENCE_QUALITY:
+		case K_PREFERENCE_RESOLUTION:
 			sb[4] = 0x00;
 			sb[5] = 0xc0;
 			break;
@@ -1304,7 +1356,7 @@ k_return_status_t k_set_preference (k_preference_t preference, guint value)
 	}
         sb[6] = value;
         sb[7] = value >> 8;
-        l_return_status = l_send_receive (sb, 8, &rb, &rbs);
+        l_return_status = l_send_receive (konica_data, sb, 8, &rb, &rbs);
 	if (l_return_status != L_SUCCESS) {
 		g_free (rb); 
 		return K_RETURN_STATUS (l_return_status);
@@ -1316,7 +1368,7 @@ k_return_status_t k_set_preference (k_preference_t preference, guint value)
 }
 
 
-k_return_status_t k_reset_preferences ()
+k_return_status_t k_reset_preferences (konica_data_t *konica_data)
 {
 	/************************************************/
 	/* Command to reset the preferences of the	*/
@@ -1339,7 +1391,7 @@ k_return_status_t k_reset_preferences ()
 	guchar *rb = NULL;
 	guint rbs;
 
-        l_return_status = l_send_receive (sb, 4, &rb, &rbs);
+        l_return_status = l_send_receive (konica_data, sb, 4, &rb, &rbs);
 	if (l_return_status != L_SUCCESS) {
 		g_free (rb); 
 		return K_RETURN_STATUS (l_return_status);
@@ -1352,11 +1404,12 @@ k_return_status_t k_reset_preferences ()
 
 
 k_return_status_t k_take_picture (
-	gulong 			 *image_id, 
-	guint 			 *exif_size, 
-	unsigned char 		**information_buffer, 
-	unsigned int 		 *information_buffer_size, 
-	gboolean		 *protected)
+	konica_data_t *konica_data,
+	gulong *image_id, 
+	guint *exif_size, 
+	unsigned char **information_buffer, 
+	unsigned int *information_buffer_size, 
+	gboolean *protected)
 {
 	/************************************************/
 	/* Command to take a picture.			*/
@@ -1399,14 +1452,18 @@ k_return_status_t k_take_picture (
         g_return_val_if_fail (protected != NULL, K_PROGRAM_ERROR);
         g_return_val_if_fail (information_buffer != NULL, K_PROGRAM_ERROR);
         g_return_val_if_fail (*information_buffer == NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (information_buffer_size != NULL, K_PROGRAM_ERROR);	l_return_status = l_send_receive_receive (sb, 6, information_buffer, information_buffer_size, &rb, &rbs, 60000);
+        g_return_val_if_fail (information_buffer_size != NULL, K_PROGRAM_ERROR);	l_return_status = l_send_receive_receive (
+		konica_data, 
+		sb, 6, 
+		information_buffer, information_buffer_size, 
+		&rb, &rbs, 60000);
 	if (l_return_status != L_SUCCESS) {
 		g_free (rb);
 		return K_RETURN_STATUS (l_return_status);
 	} else {
 		k_return_status = return_status_translation (rb[2], rb[3]);
 		if (k_return_status == K_SUCCESS) {
-			if (image_id_int) {
+			if (!konica_data->image_id_long) {
 		                *image_id = 0x00 | 0x00 | (rb[5] << 8) | rb[4];
 		                *exif_size = (rb[7] << 8) | rb[6];
 				*protected = (rb[8] != 0x00); 
@@ -1422,7 +1479,9 @@ k_return_status_t k_take_picture (
 }
 
 
-k_return_status_t k_put_localization_file (char *file_name)
+k_return_status_t k_put_localization_file (
+	konica_data_t *konica_data,
+	char *file_name)
 {
 	/************************************************/
 	/* Command to send a localization file to the	*/
@@ -1607,7 +1666,10 @@ k_return_status_t k_put_localization_file (char *file_name)
 		sb[13] = i >> 8;
 		if (i + 128 == 65536) sb[14] = 1;
 		for (j = 0; j < 128; j++) sb[14 + j] = data[i + j];
-		l_return_status = l_send_receive (sb, 144, &rb, &rbs);
+		l_return_status = l_send_receive (
+			konica_data, 
+			sb, 144, 
+			&rb, &rbs);
 		if (l_return_status != L_SUCCESS) {
 			g_free (rb);
 			return (K_RETURN_STATUS (l_return_status));
@@ -1621,7 +1683,7 @@ k_return_status_t k_put_localization_file (char *file_name)
 	/* packets have been transmitted.	*/
 	/****************************************/
 	sb[4] = 1;
-	l_return_status = l_send_receive (sb, 8, &rb, &rbs);
+	l_return_status = l_send_receive (konica_data, sb, 8, &rb, &rbs);
 	if (l_return_status != L_SUCCESS) {
 		g_free (rb); 
 		return K_RETURN_STATUS (l_return_status);
@@ -1634,7 +1696,7 @@ k_return_status_t k_put_localization_file (char *file_name)
 	/* localization is done.		*/
 	/****************************************/
 	sb[4] = 2;
-	l_return_status = l_send_receive (sb, 8, &rb, &rbs);
+	l_return_status = l_send_receive (konica_data, sb, 8, &rb, &rbs);
 	if (l_return_status != L_SUCCESS) {
 		g_free (rb); 
 		return K_RETURN_STATUS (l_return_status);
@@ -1645,7 +1707,9 @@ k_return_status_t k_put_localization_file (char *file_name)
 }
 
 
-k_return_status_t k_cancel (k_command_t *command)
+k_return_status_t k_cancel (
+	konica_data_t *konica_data,
+	k_command_t *command)
 {
 	/************************************************/
 	/* Command to cancel a command.			*/
@@ -1671,7 +1735,10 @@ k_return_status_t k_cancel (k_command_t *command)
 	guint rbs;
 
 	g_return_val_if_fail (command != NULL, K_PROGRAM_ERROR);
-        l_return_status = l_send_receive (sb, 4, &rb, &rbs);
+        l_return_status = l_send_receive (
+		konica_data,
+		sb, 4, 
+		&rb, &rbs);
 	if (l_return_status != L_SUCCESS) {
 		g_free (rb);
 		return K_RETURN_STATUS (l_return_status);

@@ -65,9 +65,9 @@ typedef enum {
 	K_RESET_PREFERENCES		= 0x90c1,
 	K_TAKE_PICTURE			= 0x9100,
 	K_PUT_LOCALIZATION_FILE		= 0x9200, 
-	K_CANCEL				= 0x9e00
-	// ?					= 0x9e10,
-	// ?					= 0x9e20,
+	K_CANCEL			= 0x9e00
+	// ?				= 0x9e10,
+	// ?				= 0x9e20,
 } k_command_t;
 
 
@@ -81,7 +81,7 @@ typedef enum {
 /*								*/
 /*	b:	0			1			*/
 /* aa:	----------------------------------------------------	*/
-/* 00	|	quality			flash			*/
+/* 00	|	resolution		flash			*/
 /* 01	|	exposure		focus / self timer	*/
 /* 10	|	self timer time		auto off time		*/
 /* 11	|	slide show interval	beep			*/
@@ -90,12 +90,12 @@ typedef enum {
 /* A short explanation of the values of the preferences: 	*/
 /*								*/
 /*								*/
-/* QUALITY (default: 2)						*/
+/* RESOLUTION (default: 2)					*/
 /* Only the low order byte is processed.			*/
-/*  - 0: medium quality (same as 2)				*/
-/*  - 1: high quality	(1152 x 872)				*/
-/*  - 2: medium quality (1152 x 872)				*/
-/*  - 3: low quality	( 576 x 436)				*/
+/*  - 0: medium resolution (same as 2)				*/
+/*  - 1: high resolution (1152 x 872)				*/
+/*  - 2: medium resolution (1152 x 872)				*/
+/*  - 3: low resolution	( 576 x 436)				*/
 /* Other values are accepted as well, produce however strange	*/
 /* results on the display, as the camera will calculate the 	*/
 /* remaining pictures on the basis of this value. Those values	*/
@@ -185,7 +185,7 @@ typedef enum {
 /*  - 1 to 255: on						*/
 /****************************************************************/
 typedef enum {
-	K_PREFERENCE_QUALITY,
+	K_PREFERENCE_RESOLUTION,
 	K_PREFERENCE_EXPOSURE,
 	K_PREFERENCE_SELF_TIMER_TIME,
 	K_PREFERENCE_SLIDE_SHOW_INTERVAL,
@@ -236,8 +236,7 @@ typedef enum {
 	K_ERROR_UNSUPPORTED_COMMAND,
 	K_ERROR_OTHER_COMMAND_EXECUTING,
 	K_ERROR_COMMAND_ORDER_ERROR,
-	K_ERROR_UNKNOWN_ERROR,
-	K_ERROR_NOT_YET_DISCOVERED
+	K_ERROR_UNKNOWN_ERROR
 } k_return_status_t;
 
 
@@ -283,16 +282,14 @@ typedef enum {
 /* for image IDs (qm100, unsigned int), the other one uses four */
 /* (qm200, unsigned long).                                      */
 /****************************************************************/
-k_return_status_t k_init (
-	gboolean image_id_long, 
-	CameraPortInfo port_settings, 
-	gboolean debug_flag);
+k_return_status_t k_init (konica_data_t *konica_data);
 
 
-k_return_status_t k_exit (void);
+k_return_status_t k_exit (konica_data_t *konica_data);
 
 
 k_return_status_t k_get_io_capability (
+	konica_data_t *konica_data,
 	gboolean *bit_rate_300,
 	gboolean *bit_rate_600,
 	gboolean *bit_rate_1200,
@@ -311,6 +308,7 @@ k_return_status_t k_get_io_capability (
 
 
 k_return_status_t k_set_io_capability (
+	konica_data_t *konica_data,
 	guint bit_rate,
 	gboolean bit_flag_7_or_8_bits,
 	gboolean bit_flag_stop_2_bits,
@@ -319,13 +317,16 @@ k_return_status_t k_set_io_capability (
 	gboolean bit_flag_use_hw_flow_control);
 
 
-k_return_status_t k_erase_all (guint *number_of_images_not_erased);
+k_return_status_t k_erase_all (
+        konica_data_t *konica_data,
+	guint *number_of_images_not_erased);
 
 
-k_return_status_t k_format_memory_card (void);
+k_return_status_t k_format_memory_card (konica_data_t *konica_data);
 
 
 k_return_status_t k_take_picture (
+        konica_data_t *konica_data,
 	gulong *image_id, 
 	guint *exif_size,
 	guchar **information_buffer, 
@@ -334,24 +335,34 @@ k_return_status_t k_take_picture (
 
 
 k_return_status_t k_get_preview (
+        konica_data_t *konica_data,
 	gboolean thumbnail, 
 	guchar **image_buffer, 
 	guint *image_buffer_size);
 
 
-k_return_status_t k_set_preference (k_preference_t preference, guint value);
+k_return_status_t k_set_preference (
+        konica_data_t *konica_data,
+	k_preference_t preference, 
+	guint value);
 
 
-k_return_status_t k_set_protect_status (gulong image_id, gboolean protected);
+k_return_status_t k_set_protect_status (
+        konica_data_t *konica_data,
+	gulong image_id, 
+	gboolean protected);
 
 
-k_return_status_t k_erase_image (gulong image_id);
+k_return_status_t k_erase_image (
+        konica_data_t *konica_data,
+	gulong image_id);
 
 
-k_return_status_t k_reset_preferences (void);
+k_return_status_t k_reset_preferences (konica_data_t *konica_data);
 
 
 k_return_status_t k_get_date_and_time (
+        konica_data_t *konica_data,
 	guchar *year, 
 	guchar *month, 
 	guchar *day, 
@@ -361,6 +372,7 @@ k_return_status_t k_get_date_and_time (
 
 
 k_return_status_t k_set_date_and_time (
+        konica_data_t *konica_data,
 	guchar year, 
 	guchar month, 
 	guchar day, 
@@ -370,6 +382,7 @@ k_return_status_t k_set_date_and_time (
 
 
 k_return_status_t k_get_preferences (
+        konica_data_t *konica_data,
 	guint *shutoff_time, 
 	guint *self_timer_time, 
 	guint *beep, 
@@ -377,6 +390,7 @@ k_return_status_t k_get_preferences (
 
 
 k_return_status_t k_get_status (
+        konica_data_t *konica_data,
 	guint *self_test_result, 
 	k_power_level_t	*power_level,
 	k_power_source_t *power_source,
@@ -394,7 +408,7 @@ k_return_status_t k_get_status (
 	guint *io_setting_bit_rate,
 	guint *io_setting_flags,
 	guchar *flash,
-	guchar *quality,
+	guchar *resolution,
 	guchar *focus,
 	guchar *exposure,
 	guint *total_pictures,
@@ -402,6 +416,7 @@ k_return_status_t k_get_status (
 
 
 k_return_status_t k_get_information (
+        konica_data_t *konica_data,
 	gchar **model,
 	gchar **serial_number,
 	guchar *hardware_version_major,
@@ -415,6 +430,7 @@ k_return_status_t k_get_information (
 
 
 k_return_status_t k_get_image_information (
+        konica_data_t *konica_data,
 	gulong image_number,
 	gulong *image_id, 
 	guint *exif_size, 
@@ -424,16 +440,24 @@ k_return_status_t k_get_image_information (
 
 
 k_return_status_t k_get_image (
+        konica_data_t *konica_data,
 	gulong image_id, 
 	k_image_type_t image_type, 
 	guchar **image_buffer, 
 	guint *image_buffer_size);
 
 
-k_return_status_t k_set_protect_status (gulong image_id, gboolean protected);
+k_return_status_t k_set_protect_status (
+        konica_data_t *konica_data,
+	gulong image_id, 
+	gboolean protected);
 
 
-k_return_status_t k_put_localization_file (char *file_name);
+k_return_status_t k_put_localization_file (
+        konica_data_t *konica_data,
+	char *file_name);
 
 
-k_return_status_t k_cancel (k_command_t *command);
+k_return_status_t k_cancel (
+        konica_data_t *konica_data,
+	k_command_t *command);

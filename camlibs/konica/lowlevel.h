@@ -39,12 +39,10 @@ typedef enum {
 /****************************************************************/
 /* Prototypes							*/
 /****************************************************************/
-l_return_status_t l_init (
-	CameraPortInfo port_settings, 
-	gboolean debug_flag);
+l_return_status_t l_init (konica_data_t *konica_data);
 
 
-l_return_status_t l_exit (void);
+l_return_status_t l_exit (konica_data_t *konica_data);
 
 
 /****************************************************************/
@@ -67,17 +65,19 @@ l_return_status_t l_exit (void);
 /*			status, other bytes will follow.	*/
 /****************************************************************/
 l_return_status_t l_send_receive (
-	guchar  *send_buffer,
-	guint    send_buffer_size,
+	konica_data_t *konica_data,
+	guchar *send_buffer,
+	guint send_buffer_size,
         guchar **receive_buffer, 
-        guint   *receive_buffer_size);
+        guint *receive_buffer_size);
 
 
 l_return_status_t l_send_receive_receive (
-	guchar  *send_buffer,
-	guint    send_buffer_size,
+	konica_data_t *konica_data,
+	guchar *send_buffer,
+	guint send_buffer_size,
         guchar **image_buffer, 
-        guint   *image_buffer_size, 
+        guint *image_buffer_size, 
         guchar **receive_buffer, 
-        guint   *receive_buffer_size, 
-	guint    timeout);
+        guint *receive_buffer_size, 
+	guint timeout);

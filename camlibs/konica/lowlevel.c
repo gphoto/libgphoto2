@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <gpio/gpio.h>
 #include <gphoto2.h>
+#include "library.h"
 #include "lowlevel.h"
 
 
@@ -31,26 +32,19 @@
 
 
 /******************************************************************************/
-/* Static Variables	                                                      */
-/******************************************************************************/
-static gpio_device *device;
-
-
-static gboolean l_debug_flag = FALSE;
-
-
-/******************************************************************************/
 /* Prototypes							              */
 /******************************************************************************/
-l_return_status_t l_esc_read (guchar *c);
+l_return_status_t l_esc_read (konica_data_t *konica_data, guchar *c);
 
 
 l_return_status_t l_send (
+	konica_data_t *konica_data, 
 	unsigned char *send_buffer, 
 	unsigned int send_buffer_size);
 
 
 l_return_status_t l_receive (
+	konica_data_t *konica_data,
 	unsigned char **rb, 
 	unsigned int *rbs, 
 	guint timeout);
@@ -59,38 +53,41 @@ l_return_status_t l_receive (
 /******************************************************************************/
 /* Functions						                      */
 /******************************************************************************/
-l_return_status_t l_init (CameraPortInfo port_settings, gboolean debug_flag)
+l_return_status_t l_init (konica_data_t *konica_data)
 {
 	guchar c;
 	gint i;
 	gpio_device_settings settings;
 
-	l_debug_flag = debug_flag;
-	device = gpio_new (GPIO_DEVICE_SERIAL);
-	gpio_set_timeout (device, DEFAULT_TIMEOUT);
-	strcpy (settings.serial.port, port_settings.path);
-	settings.serial.speed = port_settings.speed;
+	konica_data->device = gpio_new (GPIO_DEVICE_SERIAL);
+	gpio_set_timeout (konica_data->device, DEFAULT_TIMEOUT);
+	strcpy (settings.serial.port, konica_data->port_settings.path);
+	settings.serial.speed = konica_data->port_settings.speed;
 	settings.serial.bits = 8;
 	settings.serial.parity = 0;
 	settings.serial.stopbits = 1;
-	gpio_set_settings(device, settings);
-	if (gpio_open(device) == GPIO_ERROR) return L_IO_ERROR;
+	gpio_set_settings(konica_data->device, settings);
+	if (gpio_open(konica_data->device) == GPIO_ERROR) return L_IO_ERROR;
 	for (i = 0; ; i++) {
 		/****************/
 		/* Write ENQ. 	*/
 		/****************/
-		if (gpio_write (device, "\5", 1) == GPIO_ERROR) 
+		if (gpio_write (konica_data->device, "\5", 1) == GPIO_ERROR) 
 			return L_IO_ERROR;
-		if (l_debug_flag) printf ("Sent:\n   5\n");
-		if (gpio_read (device, &c, 1) < 1) {
+		if (konica_data->debug_flag) printf ("Sent:\n   5\n");
+		if (gpio_read (konica_data->device, &c, 1) < 1) {
 			/******************************************************/
 			/* We didn't receive anything. We'll try up to five   */
 			/* time.                                              */
 			/******************************************************/
-			if (i == 4) return (L_IO_ERROR);
+			if (i == 4) {
+			        gpio_close (konica_data->device);
+				gpio_free (konica_data->device);
+				return (L_IO_ERROR);
+			}
 			continue;
 		}
-		if (l_debug_flag) printf ("Received:\n%4i\n", c);
+		if (konica_data->debug_flag) printf ("Received:\n%4i\n", c);
 		switch (c) {
 		case ACK:
 			/******************************************************/
@@ -102,10 +99,10 @@ l_return_status_t l_init (CameraPortInfo port_settings, gboolean debug_flag)
 			/* The camera seems to be sending something. We'll    */
 			/* dump all bytes we get and try again.               */
 			/******************************************************/
-			if (l_debug_flag) printf ("Received:\n");
-			while (gpio_read (device, &c, 1) > 0)
-				if (l_debug_flag) printf ("%4i", c);
-			if (l_debug_flag) printf ("\n");
+			if (konica_data->debug_flag) printf ("Received:\n");
+			while (gpio_read (konica_data->device, &c, 1) > 0)
+				if (konica_data->debug_flag) printf ("%4i", c);
+			if (konica_data->debug_flag) printf ("\n");
 			i--;
 			break;
 		}
@@ -113,18 +110,18 @@ l_return_status_t l_init (CameraPortInfo port_settings, gboolean debug_flag)
 }
 
 
-l_return_status_t l_exit ()
+l_return_status_t l_exit (konica_data_t *konica_data)
 {
-	if (gpio_close (device) == GPIO_ERROR) return (L_IO_ERROR);
-	if (gpio_free (device) == GPIO_ERROR) return (L_IO_ERROR);
+	if (gpio_close (konica_data->device) == GPIO_ERROR) return (L_IO_ERROR);
+	if (gpio_free (konica_data->device) == GPIO_ERROR) return (L_IO_ERROR);
 	return L_SUCCESS;
 }
 
 
-l_return_status_t l_esc_read (guchar *c)
+l_return_status_t l_esc_read (konica_data_t *konica_data, guchar *c)
 {
-	if (gpio_read (device, c, 1) < 1) return L_IO_ERROR;
-	if (l_debug_flag) printf ("%4i", *c);
+	if (gpio_read (konica_data->device, c, 1) < 1) return L_IO_ERROR;
+	if (konica_data->debug_flag) printf ("%4i", *c);
 	/**********************************************************************/
 	/* STX, ETX, ENQ, ACK, XOFF, XON, NACK, and ETB have to be masked by  */
 	/* ESC. If we receive one of those (except ETX and ETB) without mask, */
@@ -140,22 +137,26 @@ l_return_status_t l_esc_read (guchar *c)
 	/**********************************************************************/
 	if ((*c == STX ) || (*c == ETX) || (*c == ENQ ) || (*c == ACK) || 
 	    (*c == XOFF) || (*c == XON) || (*c == NACK) || (*c == ETB)) {
-		if (l_debug_flag) printf ("****");
+		if (konica_data->debug_flag) printf ("****");
 		if ((*c == ETX) || (*c == ETB)) return (L_TRANSMISSION_ERROR);
 	} else if (*c == ESC) {
-		if (gpio_read (device, c, 1) < 1) return L_IO_ERROR;
-		if (l_debug_flag) printf ("%4i", *c);
+		if (gpio_read (konica_data->device, c, 1) < 1) 
+			return L_IO_ERROR;
+		if (konica_data->debug_flag) printf ("%4i", *c);
 		*c = (~*c & 0xff);
 		if ((*c != STX ) && (*c != ETX ) && (*c != ENQ) && 
 		    (*c != ACK ) && (*c != XOFF) && (*c != XON) && 
 		    (*c != NACK) && (*c != ETB ) && (*c != ESC))
-			if (l_debug_flag) printf ("****");
+			if (konica_data->debug_flag) printf ("****");
 	}
 	return (L_SUCCESS);
 }
 
 
-l_return_status_t l_send (guchar *send_buffer, guint send_buffer_size)
+l_return_status_t l_send (
+	konica_data_t *konica_data, 
+	guchar *send_buffer, 
+	guint send_buffer_size)
 {
 	guchar c;
 	guint i, j;
@@ -171,14 +172,15 @@ l_return_status_t l_send (guchar *send_buffer, guint send_buffer_size)
 		/****************/
 		/* Write ENQ.	*/
 		/****************/
-		if (gpio_write (device, "\5", 1) == GPIO_ERROR) 
+		if (gpio_write (konica_data->device, "\5", 1) == GPIO_ERROR) 
 			return (L_IO_ERROR);
-		if (l_debug_flag) printf ("Sent:\n   5\n");
+		if (konica_data->debug_flag) printf ("Sent:\n   5\n");
 		/****************/
 		/* Read.	*/
 		/****************/
-		if (gpio_read (device, &c, 1) < 1) return (L_IO_ERROR);
-		if (l_debug_flag) printf ("Received:\n%4i\n", c);
+		if (gpio_read (konica_data->device, &c, 1) < 1) 
+			return (L_IO_ERROR);
+		if (konica_data->debug_flag) printf ("Received:\n%4i\n", c);
 		switch (c) {
 		case ACK:
 			/****************************************/
@@ -204,10 +206,10 @@ l_return_status_t l_send (guchar *send_buffer, guint send_buffer_size)
 			/* Write NACK.	*/
 			/****************/
 			c = NACK;
-			if (gpio_write (device, &c, 1) == GPIO_ERROR) 
+			if (gpio_write (konica_data->device, &c, 1) == GPIO_ERROR) 
 				return (L_IO_ERROR);
 			for (;;) {
-				if (gpio_read (device, &c, 1) < 1) 
+				if (gpio_read (konica_data->device, &c, 1) < 1) 
 					return (L_IO_ERROR);
 				switch (c) {
 				case ENQ: 
@@ -293,20 +295,20 @@ l_return_status_t l_send (guchar *send_buffer, guint send_buffer_size)
 		/************************/
 		/* Write data as above.	*/
 		/************************/
-		if (gpio_write (device, sb, sbs) == GPIO_ERROR) {
+		if (gpio_write (konica_data->device, sb, sbs) == GPIO_ERROR) {
 			g_free (sb);
 			return (L_IO_ERROR);
 		}
-		if (l_debug_flag) {
+		if (konica_data->debug_flag) {
 			printf ("Sent:\n");
 			for (j = 0; j < sbs; j++) printf ("%4i", sb[j]);
 			printf ("\n");
 		}
-		if (gpio_read (device, &c, 1) < 1) {
+		if (gpio_read (konica_data->device, &c, 1) < 1) {
 			g_free (sb);
 			return L_IO_ERROR;
 		}
-		if (l_debug_flag) printf ("Received:\n%4i\n", c);
+		if (konica_data->debug_flag) printf ("Received:\n%4i\n", c);
 		switch (c) {
 		case ACK:
 			/******************************************************/
@@ -317,9 +319,9 @@ l_return_status_t l_send (guchar *send_buffer, guint send_buffer_size)
 			/* Write EOT.	*/
 			/****************/
 			c = EOT;
-			if (gpio_write (device, &c, 1) == GPIO_ERROR) 
+			if (gpio_write (konica_data->device, &c, 1) == GPIO_ERROR) 
 				return (L_IO_ERROR);
-			if (l_debug_flag) printf ("Sent:\n   4\n");
+			if (konica_data->debug_flag) printf ("Sent:\n   4\n");
 			return (L_SUCCESS);
 		case NACK:
 			/******************************************************/
@@ -339,7 +341,11 @@ l_return_status_t l_send (guchar *send_buffer, guint send_buffer_size)
 }
 
 
-l_return_status_t l_receive (guchar **rb, guint *rbs, guint timeout)
+l_return_status_t l_receive (
+	konica_data_t *konica_data, 
+	guchar **rb, 
+	guint *rbs, 
+	guint timeout)
 {
 	guchar c, d;
 	gboolean error_flag;
@@ -348,10 +354,10 @@ l_return_status_t l_receive (guchar **rb, guint *rbs, guint timeout)
 	l_return_status_t return_status;
 
 	for (i = 0; ; ) {
-		gpio_set_timeout (device, timeout);  
-		if (gpio_read (device, &c, 1) < 1) return (L_IO_ERROR);
-		if (l_debug_flag) printf ("Received:\n%4i\n", c);
-		gpio_set_timeout (device, DEFAULT_TIMEOUT);
+		gpio_set_timeout (konica_data->device, timeout);  
+		if (gpio_read (konica_data->device, &c, 1) < 1) return (L_IO_ERROR);
+		if (konica_data->debug_flag) printf ("Received:\n%4i\n", c);
+		gpio_set_timeout (konica_data->device, DEFAULT_TIMEOUT);
 		switch (c) {
 		case ENQ:
 			/******************************************************/
@@ -384,9 +390,9 @@ l_return_status_t l_receive (guchar **rb, guint *rbs, guint timeout)
 			/* error).                                            */
 			/******************************************************/
 			for (;;) {
-				if (gpio_read (device, &c, 1) < 0)
+				if (gpio_read (konica_data->device, &c, 1) < 0)
 					return (L_TRANSMISSION_ERROR); 
-				if (l_debug_flag) 
+				if (konica_data->debug_flag) 
 					printf ("Received:\n%4i\n", c);
 				if (c == ENQ) break;
 			}
@@ -397,13 +403,13 @@ l_return_status_t l_receive (guchar **rb, guint *rbs, guint timeout)
 	/**************/
 	/* Write ACK. */
 	/**************/
-	if (gpio_write (device, "\6", 1) == GPIO_ERROR) 
+	if (gpio_write (konica_data->device, "\6", 1) == GPIO_ERROR) 
 		return (L_IO_ERROR);
-	if (l_debug_flag) printf ("Sent:\n   6\n");
+	if (konica_data->debug_flag) printf ("Sent:\n   6\n");
 	for (*rbs = 0; ; ) {
 		for (j = 0; ; j++) {
-			if (gpio_read (device, &c, 1) < 1) return (L_IO_ERROR);
-			if (l_debug_flag) printf ("Received:\n%4i", c);
+			if (gpio_read (konica_data->device, &c, 1) < 1) return (L_IO_ERROR);
+			if (konica_data->debug_flag) printf ("Received:\n%4i", c);
 			switch (c) {
 			case STX:
 				/**********************************************/
@@ -420,10 +426,10 @@ l_return_status_t l_receive (guchar **rb, guint *rbs, guint timeout)
 			/* Read 2 bytes for size (low order byte, high order  */
 			/* byte) plus ESC quotes.                             */
 			/******************************************************/
-			return_status = l_esc_read (&c);
+			return_status = l_esc_read (konica_data, &c);
 			if (return_status != L_SUCCESS) return (return_status);
 			checksum = c;
-			return_status = l_esc_read (&d);
+			return_status = l_esc_read (konica_data, &d);
 			if (return_status != L_SUCCESS) return (return_status);
 			checksum += d;
 			rbs_internal = (d << 8) | c;
@@ -434,7 +440,9 @@ l_return_status_t l_receive (guchar **rb, guint *rbs, guint timeout)
 			/******************************************************/
 			error_flag = FALSE;
 			for (i = 0; i < rbs_internal; i++) {
-				return_status = l_esc_read (&((*rb)[*rbs + i]));
+				return_status = l_esc_read (
+					konica_data, 
+					&((*rb)[*rbs + i]));
 				switch (return_status) {
 				case L_IO_ERROR: 
 					return (L_IO_ERROR);
@@ -457,9 +465,9 @@ l_return_status_t l_receive (guchar **rb, guint *rbs, guint timeout)
 				if (error_flag) break;
 			}
 			if (!error_flag) {
-				if (gpio_read (device, &d, 1) < 1) 
+				if (gpio_read (konica_data->device, &d, 1) < 1) 
 					return (L_IO_ERROR);
-				if (l_debug_flag) printf ("%4i", c);
+				if (konica_data->debug_flag) printf ("%4i", c);
 				switch (d) {
 				case ETX:
 					/**************************************/
@@ -484,9 +492,11 @@ l_return_status_t l_receive (guchar **rb, guint *rbs, guint timeout)
 					/**************************************/
 					while ((d != ETX) && (d != ETB)) {
 						if (gpio_read (
-							device, &d, 1) < 1) 
+							konica_data->device, 
+							&d, 
+							1) < 1) 
 							return (L_IO_ERROR);
-						if (l_debug_flag) 
+						if (konica_data->debug_flag) 
 							printf ("%4i", c);
 					}
 					error_flag = TRUE;
@@ -497,17 +507,18 @@ l_return_status_t l_receive (guchar **rb, guint *rbs, guint timeout)
 			/******************************************************/
 			/* Read 1 byte for checksum plus ESC quotes.          */
 			/******************************************************/
-			return_status = l_esc_read (&c);
-			if (l_debug_flag) printf ("\n");
+			return_status = l_esc_read (konica_data, &c);
+			if (konica_data->debug_flag) printf ("\n");
 			if (return_status != L_SUCCESS) return (return_status);
 			if ((c == checksum) && (!error_flag)) {
 				*rbs += rbs_internal;
 				/****************/
 				/* Write ACK.	*/
 				/****************/
-				if (gpio_write (device, "\6", 1) == GPIO_ERROR) 
+				if (gpio_write (konica_data->device, "\6", 1) == GPIO_ERROR) 
 					return (L_IO_ERROR);
-				if (l_debug_flag) printf ("Sent:\n   6\n");
+				if (konica_data->debug_flag) 
+					printf ("Sent:\n   6\n");
 				break;
 			} else {
 				/**********************************************/
@@ -520,14 +531,16 @@ l_return_status_t l_receive (guchar **rb, guint *rbs, guint timeout)
 				/* Write NACK.	*/
 				/****************/
 				c = NACK;
-				if (gpio_write (device, &c, 1) == GPIO_ERROR) 
+				if (gpio_write (konica_data->device, &c, 1) == GPIO_ERROR) 
 					return (L_IO_ERROR);
-				if (l_debug_flag) printf ("Sent:\n  15\n");
+				if (konica_data->debug_flag) 
+					printf ("Sent:\n  15\n");
 				continue;
 			}
 		}
-		if (gpio_read (device, &c, 1) < 1) return (L_IO_ERROR);
-		if (l_debug_flag) printf ("Received:\n%4i\n", c);
+		if (gpio_read (konica_data->device, &c, 1) < 1) 
+			return (L_IO_ERROR);
+		if (konica_data->debug_flag) printf ("Received:\n%4i\n", c);
 		switch (c) {
 			case EOT:
 				/**********************************************/
@@ -560,8 +573,10 @@ l_return_status_t l_receive (guchar **rb, guint *rbs, guint timeout)
 			/****************/
 			/* Read ENQ.	*/
 			/****************/
-			if (gpio_read (device, &c, 1) < 1) return (L_IO_ERROR);
-			if (l_debug_flag) printf ("Received:\n%4i\n", c);
+			if (gpio_read (konica_data->device, &c, 1) < 1) 
+				return (L_IO_ERROR);
+			if (konica_data->debug_flag) 
+				printf ("Received:\n%4i\n", c);
 			switch (c) {
 			case ENQ:
 				/**********************************************/
@@ -577,9 +592,9 @@ l_return_status_t l_receive (guchar **rb, guint *rbs, guint timeout)
 			/****************/
 			/* Write ACK.	*/
 			/****************/
-			if (gpio_write (device, "\6", 1) == GPIO_ERROR) 
+			if (gpio_write (konica_data->device, "\6", 1) == GPIO_ERROR) 
 				return (L_IO_ERROR);
-			if (l_debug_flag) printf ("Sent:\n   6\n");
+			if (konica_data->debug_flag) printf ("Sent:\n   6\n");
 			break;
 		default:
 			/******************************************************/
@@ -593,22 +608,30 @@ l_return_status_t l_receive (guchar **rb, guint *rbs, guint timeout)
 
 
 l_return_status_t l_send_receive (
+	konica_data_t *konica_data,
 	guchar *send_buffer, 
 	guint send_buffer_size, 
 	guchar **receive_buffer, 
 	guint *receive_buffer_size)
 {
+	l_return_status_t return_status;
+
 	/****************/
 	/* Send data.	*/
 	/****************/
-	l_return_status_t return_status = l_send (
+	return_status = l_send (
+		konica_data, 
 		send_buffer, 
 		send_buffer_size);
 	if (return_status != L_SUCCESS) return (return_status);
 	/********************************/
 	/* Receive control data.	*/
 	/********************************/
-	return_status = l_receive (receive_buffer, receive_buffer_size, 2000);
+	return_status = l_receive (
+		konica_data, 
+		receive_buffer, 
+		receive_buffer_size, 
+		2000);
 	if (return_status != L_SUCCESS) return (return_status);
 	if (((*receive_buffer)[0] != send_buffer[0]) || 
 	    ((*receive_buffer)[1] != send_buffer[1])) {
@@ -622,6 +645,7 @@ l_return_status_t l_send_receive (
 
 
 l_return_status_t l_send_receive_receive (
+	konica_data_t *konica_data,
 	guchar  *send_buffer, 
 	guint    send_buffer_size, 
 	guchar **image_buffer, 
@@ -630,22 +654,30 @@ l_return_status_t l_send_receive_receive (
         guint   *receive_buffer_size,
 	guint    timeout)
 {
+	l_return_status_t return_status;
+
 	/****************/
 	/* Send data.	*/
 	/****************/
-        l_return_status_t return_status = l_send (
+        return_status = l_send (
+		konica_data,
 		send_buffer, 
 		send_buffer_size);
         if (return_status != L_SUCCESS) return (return_status);
 	/************************/
         /* Receive data.	*/
 	/************************/
-        return_status = l_receive (image_buffer, image_buffer_size, timeout);
+        return_status = l_receive (
+		konica_data,
+		image_buffer, 
+		image_buffer_size, 
+		timeout);
         if (return_status != L_SUCCESS) return (return_status);
 	/********************************/
 	/* Receive control data.	*/
 	/********************************/
         return_status = l_receive (
+		konica_data,
 		receive_buffer, 
 		receive_buffer_size, 
 		DEFAULT_TIMEOUT);
