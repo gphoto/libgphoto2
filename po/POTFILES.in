@@ -42,3 +42,5 @@ frontends/command-line/main.c
 frontends/command-line/gphoto2-cmd-config.c
 frontends/command-line/gphoto2-cmd-capture.c
 frontends/command-line/options.c
+frontends/command-line/range.c
+frontends/command-line/actions.c
