@@ -192,7 +192,7 @@ msgstr "Dispositivo '%s' está travado pelo pid %d"
 #: serial/unix.c:226
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
-msgstr "Dispositivo não pode ser travado (dev_lock retornou %d)"
+msgstr "Dispositivo '%s' não pode ser travado (dev_lock retornou %d)"
 
 #: serial/unix.c:249
 #, c-format
@@ -256,7 +256,7 @@ msgstr "Não foi possível ajustar o nivel do pin de %i para %i"
 #: serial/unix.c:685
 #, c-format
 msgid "Could not flush '%s' (%m)."
-msgstr "Não foi possível descarregar"
+msgstr "Não foi possível descarregar '%s' (%m)."
 
 #: serial/unix.c:796
 #, c-format
@@ -297,7 +297,7 @@ msgstr "Não foi possível ajustar a configuração %d/%d (%m)"
 #: usb/libusb.c:316
 #, c-format
 msgid "Could not set altsetting %d/%d (%m)"
-msgstr "Não foi possível ajustar a configuração alternativa"
+msgstr "Não foi possível ajustar a configuração alternativa %d/%d (%m)"
 
 #: usb/libusb.c:391
 #, c-format
