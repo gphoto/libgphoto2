@@ -26,5 +26,20 @@ cmdline: ..\..\gphoto2.exe
 ..\..\obj\test.o: test.c
   @$(CC) -o $@ $** $(CCFLAGS)
 
-..\..\gphoto2.exe: ..\..\obj\interface.o ..\..\obj\script.o ..\..\obj\main.o ..\..\obj\test.o ..\..\lib\libgphoto2.a ..\..\lib\libgpio.a
-  @$(CC) -O2 $** -o $@ -Zbin-files -Zcrtdll -Zmtd -s -L..\..\lib -llibgphoto2 -llibgpio -ldl -lpthreads -lpthrdrtl
+..\..\obj\shell.o: shell.c
+  @$(CC) -o $@ $** $(CCFLAGS)
+
+..\..\obj\range.o: range.c
+  @$(CC) -o $@ $** $(CCFLAGS)
+
+..\..\obj\actions.o: actions.c
+  @$(CC) -o $@ $** $(CCFLAGS)
+
+..\..\obj\options.o: options.c
+  @$(CC) -o $@ $** $(CCFLAGS)
+
+..\..\obj\foreach.o: foreach.c
+  @$(CC) -o $@ $** $(CCFLAGS)
+
+..\..\gphoto2.exe: ..\..\obj\interface.o ..\..\obj\script.o ..\..\obj\main.o ..\..\obj\test.o ..\..\lib\libgphoto2.a ..\..\lib\libgpio.a ..\..\obj\actions.o ..\..\obj\shell.o ..\..\obj\foreach.o ..\..\obj\options.o  ..\..\obj\range.o
+  @$(CC) -O2 $** -o $@ -Zbin-files -Zcrtdll -Zmtd -s -L..\..\lib -llibgphoto2 -llibgpio -ldllib -lmt\emx
