@@ -572,8 +572,10 @@ int camera_file_get_generic (Camera *camera, CameraFile *file,
 		strcpy (file->type, "image/jpeg");
 	else {
 		//FIXME: Do it better...
-		if (strcmp (filename + 8, ".MOV") == 0)
+		if (strstr (filename, ".MOV") != NULL)
 			strcpy (file->type, "video/quicktime");
+		else if (strstr (filename, ".TIF") != NULL)
+			strcpy (file->type, "image/tiff");
 		else
 			strcpy (file->type, "image/jpeg");
 	}
@@ -649,18 +651,28 @@ int camera_file_get_info (Camera *camera, const char *folder,
 	/* Get the size of the current image */
 	CHECK_STOP (camera, sierra_get_int_register (camera, 12, &l));
 	info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
-	strcpy (info->file.type, "image/jpeg");
 	info->file.size = l;
+
+	/* Type of image? */
+	if (strstr (filename, ".MOV") != NULL)
+		strcpy (info->file.type, "video/quicktime");
+	else if (strstr (filename, ".TIF") != NULL)
+		strcpy (info->file.type, "image/tiff");
+	else
+		strcpy (info->file.type, "image/jpeg");
 
 	/* Get the size of the current thumbnail */
 	CHECK_STOP (camera, sierra_get_int_register (camera, 13, &l));
 	info->preview.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
-	//FIXME: Do it better...
-	if (strcmp (filename + 8, ".MOV") == 0)
+	info->preview.size = l;
+	
+	/* Type of thumbnail? */
+	if (strstr (filename, ".MOV") == NULL)
 		strcpy (info->preview.type, "video/quicktime");
+	else if (strstr (filename, ".TIF") == NULL)
+		strcpy (info->preview.type, "image/tiff");
 	else
 		strcpy (info->preview.type, "image/jpeg");
-	info->preview.size = l;
 
 	return (camera_stop (camera));
 }
