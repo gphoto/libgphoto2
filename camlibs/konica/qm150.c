@@ -286,10 +286,10 @@ k_getdata (int image_no, int type, unsigned int len, void *data,
 		}
 		if ((len - bytes_read) > DATA_BUFFER) {
 			memcpy((char *)buffer, buf, xret);
-			buffer = (unsigned int)buffer + DATA_BUFFER;
+			buffer += DATA_BUFFER;
 		} else {
 			memcpy((char *)buffer, buf, (len - bytes_read));
-			buffer = (unsigned int)buffer + len - bytes_read;
+			buffer += len - bytes_read;
 		}
 
 		/* acknowledge the packet */
@@ -749,7 +749,7 @@ camera_get_config (Camera* camera, CameraWidget** window, GPContext *context)
 	 * but UNIX timestamp start the 1 January 1970 at 00:00
 	 * so we calculate the UNIX timestamp with the camera's one
 	 */
-	(int)timestamp += (8*365 + 2*366)*24*3600-3600;
+	timestamp += (8*365 + 2*366)*24*3600-3600;
 
 	/* Window creation */
 	gp_widget_new (GP_WIDGET_WINDOW, _("Konica Configuration"), window);
