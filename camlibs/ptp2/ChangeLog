@@ -1,3 +1,6 @@
+2003-08-29 Mariusz Woloszyn
+	* library.c: allow downloading thumbnail of nonimage objects,
+	  however only in case that the ThumbCompressedSize is greater than 0
 2003-08-28 Mariusz Woloszyn
 	* library.c: added Canon IXUS 400, thanks to Till Kamppeter
 2003-08-28 Mariusz Woloszyn

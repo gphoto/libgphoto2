@@ -873,7 +873,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	case	GP_FILE_TYPE_PREVIEW:
 		/* Don't allow to get thumb of nonimage objects! */
-		if ((oi->ObjectFormat & 0x0800) == 0) return (GP_ERROR_NOT_SUPPORTED);
+		// Redundant???
+//		if ((oi->ObjectFormat & 0x0800) == 0) return (GP_ERROR_NOT_SUPPORTED);
 		/* if no thumb, for some reason */
 		if((size=oi->ThumbCompressedSize)==0) return (GP_ERROR_NOT_SUPPORTED);
 		CPR (context, ptp_getthumb(&camera->pl->params,
