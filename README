@@ -29,13 +29,14 @@ and availability of gphoto2. Another source of information is
 
         http://www.sourceforge.org/projects/gphoto
 
-where you can access our CVS server to fetch the source code of libgpio,
+where you can access our CVS server to fetch the source code of
 gphoto2, gtkam and GnoCam (see below).
 
 Requirements
 ------------
 
-gphoto2 depends on libgpio which is distributed separately. 
+The konica driver depends on glib. If you do not need this driver, use the
+"--with-drivers=xxx" flag to avoid the glib dependency.
 
 Platforms
 ---------
