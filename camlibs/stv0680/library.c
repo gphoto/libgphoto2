@@ -27,8 +27,8 @@
 #include "library.h"
 /*#include "sharpen.h"*/
 #include "bayer.h"
-#include "libgphoto2/pattrec.h"
-#include "libgphoto2/bayer.h"
+#include <pattrec.h>
+#include "../../libgphoto2/bayer.h"
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
