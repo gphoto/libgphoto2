@@ -60,7 +60,9 @@ int camera_abilities (CameraAbilitiesList *list) {
 }
 
 int camera_init (Camera *camera) {
-	dimagev_t *dimagev = NULL;
+
+        int ret;
+        dimagev_t *dimagev = NULL;
 
 	/* First, set up all the function pointers */
 	camera->functions->id 		= camera_id;
@@ -87,9 +89,9 @@ int camera_init (Camera *camera) {
 	camera->camlib_data = dimagev;
 
 	/* Now open a port. */
-	if ( ( dimagev->dev = gp_port_new(GP_PORT_SERIAL) ) == NULL ) {
+	if (( ret = gp_port_new(&(dimagev->dev), GP_PORT_SERIAL)) < 0 ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_init::unable to allocate gp_port_dev");
-		return GP_ERROR;
+		return ret;
 	}
 
 	gp_port_timeout_set(dimagev->dev, 5000);

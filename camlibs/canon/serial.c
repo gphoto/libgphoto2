@@ -156,6 +156,7 @@ err:
 int canon_serial_init(Camera *camera, const char *devname)
 {
 	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
+        int ret;
 #ifdef GP_PORT_SUPPORTED_USB
 	int i;
     char msg[65536];
@@ -171,11 +172,9 @@ int canon_serial_init(Camera *camera, const char *devname)
 	switch (canon_comm_method) {
 	 case CANON_USB:
 #ifdef GP_PORT_SUPPORTED_USB
-		cs->gdev = gp_port_new(GP_PORT_USB);
-		if (!cs->gdev) {
-			return -1;
-		}
-		
+		if ((ret = gp_port_new(&(cs->gdev), GP_PORT_USB) != GP_OK)
+			return ret;
+
 		for (i = 0; i < sizeof(camera_to_usb) / sizeof(struct camera_to_usb); i++) {
 			fprintf(stderr, "canon: %s, %s\n", camera->model,
 					camera_to_usb[i].name);
@@ -197,11 +196,11 @@ int canon_serial_init(Camera *camera, const char *devname)
 		 canon_read = canon_usb_read; */
 		
 		gp_port_settings_set(cs->gdev, settings);
-		if (gp_port_open(cs->gdev) < 0) {
+		if (gp_port_open(cs->gdev) != GP_OK) {
 			fprintf(stderr,"Camera used by other USB device!\n");
 			//exit(1);
 			return -1;
-        }
+                }
 		
         gp_port_usb_msg_read(cs->gdev,0x55,msg,1);
         //      fprintf(stderr,"%c\n",msg[0]);
@@ -230,11 +229,9 @@ int canon_serial_init(Camera *camera, const char *devname)
 		
 		gp_debug_printf(GP_DEBUG_LOW,"canon","canon_init_serial(): Using serial port on %s\n", devname);
 		
-		cs->gdev = gp_port_new(GP_PORT_SERIAL);
-		
-		if (!cs->gdev) {
-			return -1;
-		}
+		if ((ret = gp_port_new(&(cs->gdev), GP_PORT_SERIAL)) != GP_OK)
+			return ret;
+
 		strcpy(settings.serial.port, devname);
 		settings.serial.speed = 9600;
 		settings.serial.bits = 8;

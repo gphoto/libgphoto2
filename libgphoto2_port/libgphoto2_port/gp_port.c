@@ -60,6 +60,10 @@ void gp_port_debug_printf (int target_debug_level, int debug_level, char *format
         }
 }
 
+#define GP_ERR_RES(num,str) \
+    if (result == num) \
+    return (N_(str));
+
 char *gp_port_result_as_string (int result) {
 
     /* gp_port error range is -1 .. -99 */
@@ -67,22 +71,34 @@ char *gp_port_result_as_string (int result) {
     if ((result < -99) || (result > 0))
         return (N_("Unknown error"));
 
-    switch (result) {
-    case 0:
-        return (N_("No error"));
-        break;
-    case -1:
-        return (N_("Generic error"));
-        break;
-    case -2:
-        return (N_("There was a timeout reading from or writing to the port"));
-        break;
-    default:
-        break;
-    }
+    GP_ERR_RES( 0,  "No error");
+    GP_ERR_RES(-1,  "Unspecified error");
+    GP_ERR_RES(-2,  "There was a timeout reading from or writing to the port");
+    GP_ERR_RES(-3,  "The serial port is not supported");
+    GP_ERR_RES(-4,  "The USB port is not supported");
+    GP_ERR_RES(-5,  "The parallel port is not supported");
+    GP_ERR_RES(-6,  "The network port is not supported");
+    GP_ERR_RES(-7,  "The IEEE1394 port is not supported");
+    GP_ERR_RES(-8,  "Unknown port");
+    GP_ERR_RES(-9,  "Out of memory");
+    GP_ERR_RES(-10, "Error loading a required library");
+    GP_ERR_RES(-11, "Error initializing the port");
+    GP_ERR_RES(-12, "Error opening the port");
+    GP_ERR_RES(-13, "Timeout reading from or writing to the port");
+    GP_ERR_RES(-14, "Error reading from the port");
+    GP_ERR_RES(-15, "Error writing to the port");
+    GP_ERR_RES(-16, "Error closing the port");
+    GP_ERR_RES(-17, "Error updating the port settings");
+    GP_ERR_RES(-18, "Error with the port");
+    GP_ERR_RES(-19, "Error setting the serial port speed");
+    GP_ERR_RES(-20, "Error sending a break to the serial port");
+    GP_ERR_RES(-21, "Error clearing a halt condition on the USB port");
+    GP_ERR_RES(-22, "Could not find the requested device on the USB port");
 
     return (N_("Unknown error"));
 }
+
+#undef GP_ERR_RES
 
 /*
    Required library functions
@@ -113,10 +129,9 @@ int gp_port_info_get(int device_number, gp_port_info *info)
         return GP_OK;
 }
 
-gp_port *gp_port_new(gp_port_type type)
+int gp_port_new(gp_port **dev, gp_port_type type)
         /* Create a new IO device */
 {
-        gp_port *dev;
         gp_port_settings settings;
         char buf[1024];
 
@@ -125,54 +140,54 @@ gp_port *gp_port_new(gp_port_type type)
         switch(type) {
         case GP_PORT_SERIAL:
 #ifndef GP_PORT_SUPPORTED_SERIAL
-            return NULL;
+            return GP_ERROR_IO_SUPPORTED_SERIAL;
 #endif
             break;
         case GP_PORT_USB:
 #ifndef GP_PORT_SUPPORTED_USB
-            return NULL;
+            return GP_ERROR_IO_SUPPORTED_USB;
 #endif
             break;
         case GP_PORT_PARALLEL:
 #ifndef GP_PORT_SUPPORTED_PARALLEL
-            return NULL;
+            return GP_ERROR_IO_SUPPORTED_PARALLEL;
 #endif
             break;
         case GP_PORT_NETWORK:
 #ifndef GP_PORT_SUPPORTED_NETWORK
-            return NULL;
+            return GP_ERROR_IO_SUPPORTED_NETWORK;
 #endif
             break;
         case GP_PORT_IEEE1394:
 #ifndef GP_PORT_SUPPORTED_IEEE1394
-            return NULL;
+            return GP_ERROR_IO_SUPPORTED_IEEE1394;
 #endif
             break;
         default:
-            return NULL;
+            return GP_ERROR_IO_UNKNOWN_PORT;
         }
 
-        dev = (gp_port *) malloc(sizeof(gp_port));
-        if (!dev) {
-                gp_port_debug_printf(GP_DEBUG_LOW, glob_debug_level, "Can not allocate device!");
-                return NULL;
+        *dev = (gp_port *) malloc(sizeof(gp_port));
+        if (!(*dev)) {
+            gp_port_debug_printf(GP_DEBUG_LOW, glob_debug_level, "Can not allocate device!");
+            return (GP_ERROR_IO_MEMORY);
         }
-	memset(dev, 0, sizeof(gp_port));
+	memset(*dev, 0, sizeof(gp_port));
 
-        if (gp_port_library_load(dev, type)) {
-                /* whoops! that type of device isn't supported */
-                gp_port_debug_printf(GP_DEBUG_LOW, glob_debug_level, "Device type not supported! (%i)", type);
-                free(dev);
-                return NULL;
+        if (gp_port_library_load(*dev, type)) {
+            /* whoops! that type of device isn't supported */
+            gp_port_debug_printf(GP_DEBUG_LOW, glob_debug_level, "Device library can't be loaded! (%i)", type);
+            free(*dev);
+            return (GP_ERROR_IO_LIBRARY);
         }
 
-	dev->debug_level = glob_debug_level;
+	(*dev)->debug_level = glob_debug_level;
 
-        dev->type = type;
-        dev->device_fd = 0;
-	dev->ops->init(dev);
+        (*dev)->type = type;
+        (*dev)->device_fd = 0;
+	(*dev)->ops->init(*dev);
 
-        switch (dev->type) {
+        switch ((*dev)->type) {
         case GP_PORT_SERIAL:
             sprintf(buf, GP_PORT_SERIAL_PREFIX, GP_PORT_SERIAL_RANGE_LOW);
             strcpy(settings.serial.port, buf);
@@ -181,30 +196,31 @@ gp_port *gp_port_new(gp_port_type type)
             settings.serial.bits = 8;
             settings.serial.parity = 0;
             settings.serial.stopbits = 1;
-            gp_port_settings_set(dev, settings);
-            gp_port_timeout_set(dev, 500);
+            gp_port_settings_set(*dev, settings);
+            gp_port_timeout_set(*dev, 500);
             break;
         case GP_PORT_PARALLEL:
             sprintf(buf, GP_PORT_SERIAL_PREFIX, GP_PORT_SERIAL_RANGE_LOW);
             strcpy(settings.parallel.port, buf);
             break;
         case GP_PORT_NETWORK:
-            gp_port_timeout_set(dev, 50000);
+            gp_port_timeout_set(*dev, 50000);
             break;
         case GP_PORT_USB:
-            gp_port_timeout_set(dev, 5000);
+            gp_port_timeout_set(*dev, 5000);
             break;
         case GP_PORT_IEEE1394:
             /* blah ? */
             break;
         default:
             /* ERROR! */
+            return GP_ERROR_IO_UNKNOWN_PORT;
             break;
         }
 
         gp_port_debug_printf(GP_DEBUG_LOW, glob_debug_level, "Created device successfully...");
 
-        return (dev);
+        return (GP_OK);
 }
 
 int gp_port_debug_set (gp_port *dev, int debug_level)
@@ -292,7 +308,7 @@ int gp_port_write(gp_port *dev, char *bytes, int size)
 	}
         retval =  dev->ops->write(dev, bytes, size);
 
-	if (retval == GP_ERROR_TIMEOUT)
+	if (retval == GP_ERROR_IO_TIMEOUT)
 		gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level, "gp_port_write: write timeout");
 	if (retval == GP_ERROR)
 		gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level, "gp_port_write: write error");
@@ -323,7 +339,7 @@ int gp_port_read(gp_port *dev, char *bytes, int size)
 		free(buf);
 	}
 
-	if (retval == GP_ERROR_TIMEOUT)
+	if (retval == GP_ERROR_IO_TIMEOUT)
 		gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level, "gp_port_read: read timeout");
 	if (retval == GP_ERROR)
 		gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level, "gp_port_read: read error");

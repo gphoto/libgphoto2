@@ -31,11 +31,34 @@
 /* Return values */
 /* Note: This lib should be allocated return values of 0 to -99 */
 
-#define GP_OK		        0
+#define GP_OK		                 0
 
-#define	GP_ERROR               -1
-#define GP_ERROR_TIMEOUT       -2
+#define	GP_ERROR                        -1
+#define GP_ERROR_TIMEOUT                -2
+#define GP_ERROR_IO_SUPPORTED_SERIAL    -3
+#define GP_ERROR_IO_SUPPORTED_USB       -4
+#define GP_ERROR_IO_SUPPORTED_PARALLEL  -5
+#define GP_ERROR_IO_SUPPORTED_NETWORK   -6
+#define GP_ERROR_IO_SUPPORTED_IEEE1394  -7
+#define GP_ERROR_IO_UNKNOWN_PORT        -8
 
+#define GP_ERROR_IO_MEMORY              -9
+#define GP_ERROR_IO_LIBRARY             -10
+
+#define GP_ERROR_IO_INIT                -11
+#define GP_ERROR_IO_OPEN                -12
+#define GP_ERROR_IO_TIMEOUT             -13
+#define GP_ERROR_IO_READ                -14
+#define GP_ERROR_IO_WRITE               -15
+#define GP_ERROR_IO_CLOSE               -16
+#define GP_ERROR_IO_UPDATE              -17
+#define GP_ERROR_IO_PIN                 -18
+
+#define GP_ERROR_IO_SERIAL_SPEED        -19
+#define GP_ERROR_IO_SERIAL_BREAK        -20
+
+#define GP_ERROR_IO_USB_CLEAR_HALT      -21
+#define GP_ERROR_IO_USB_FIND            -22
 
 /* Debugging definitions for init */
 #define GP_DEBUG_NONE		0
@@ -84,8 +107,8 @@ typedef union {
 } gp_port_settings;
 
 enum {
-        GP_PORT_USB_IN_ENDPOINT,
-	GP_PORT_USB_OUT_ENDPOINT
+        GP_PORT_USB_ENDPOINT_IN,
+	GP_PORT_USB_ENDPOINT_OUT
 };
 
 struct gp_port;
@@ -178,7 +201,7 @@ struct gp_port {
 				unsuccessful: GP_ERROR
 		*/
 
-gp_port *gp_port_new		(gp_port_type type);
+        int gp_port_new		(gp_port **dev, gp_port_type type);
 		/* Create a new device of type "type"
 			return values:
 				  successful: valid gp_port struct

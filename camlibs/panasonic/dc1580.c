@@ -440,6 +440,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 
 int camera_init (Camera *camera) {
 
+        int ret;
         dsc_t           *dsc = NULL;
 
         dsc_print_status(camera, "Initializing camera %s", camera->model);
@@ -473,7 +474,10 @@ int camera_init (Camera *camera) {
 
         camera->camlib_data = dsc;
 
-        dsc->dev = gp_port_new(GP_PORT_SERIAL);
+        if ((ret = gp_port_new(&(dsc->dev), GP_PORT_SERIAL)) < 0) {
+            free (dsc);
+            return (ret);
+        }
 
         gp_port_timeout_set(dsc->dev, 5000);
         strcpy(dsc->settings.serial.port, camera->port->path);

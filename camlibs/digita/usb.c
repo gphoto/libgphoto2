@@ -56,13 +56,12 @@ err:
 int digita_usb_open(struct digita_device *dev, Camera *camera)
 {
 	gp_port_settings settings;
-	int i;
+	int i, ret;
 
 	fprintf(stderr, "digita: user selected %s\n", camera->model);
 
-	dev->gpdev = gp_port_new(GP_PORT_USB);
-	if (!dev->gpdev)
-		return -1;
+        if ((ret = gp_port_new(&(dev->gpdev), GP_PORT_USB)) < 0)
+            return (ret);
 
 	for (i = 0; i < sizeof(camera_to_usb) / sizeof(struct camera_to_usb); i++) {
 		fprintf(stderr, "digita: %s, %s\n", camera->model, camera_to_usb[i].name);

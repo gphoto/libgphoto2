@@ -147,7 +147,7 @@ camera_abilities (CameraAbilitiesList* list)
 gint 
 camera_init (Camera* camera)
 {
-	gint 		i, j;
+	gint 		i, j, ret;
 	guint 		test_bit_rate[10] 	= { 9600, 115200, 57600, 38400, 19200,  4800,  2400,  1200,   600,    300};
 	guint 		bit_rate[10] 		= {  300,    600,  1200,  2400,  4800,  9600, 19200, 38400, 57600, 115200};
 	gboolean 	bit_rate_supported[10] 	= {FALSE,  FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,  FALSE}; 
@@ -188,7 +188,8 @@ camera_init (Camera* camera)
 	camera->functions->result_as_string	= camera_result_as_string;
 
         /* Create device. */
-        device = gp_port_new (GP_PORT_SERIAL);
+        if ((ret = gp_port_new(&device, GP_PORT_SERIAL)) < 0)
+            return (ret);
 
 	/* Store some data we constantly need. */
 	konica_data = g_new (konica_data_t, 1);

@@ -54,7 +54,8 @@ int camera_abilities (CameraAbilitiesList *list) {
 int camera_init (Camera *camera) {
 
 	gp_port_settings gpiod_settings;
-	struct stv0680_s *device;
+        int ret;
+        struct stv0680_s *device;
 
 	/* First, set up all the function pointers */
 	camera->functions->id 		= camera_id;
@@ -81,8 +82,10 @@ int camera_init (Camera *camera) {
 	camera->camlib_data = device;
 
 	/* open and configure serial port */
-	device->gpiod = gp_port_new(GP_PORT_SERIAL);
-	gp_port_timeout_set(device->gpiod, 1000);
+        if ((ret = gp_port_new(&(device->gpiod), GP_PORT_SERIAL)) < 0)
+            return (ret);
+
+        gp_port_timeout_set(device->gpiod, 1000);
 
 	strcpy(gpiod_settings.serial.port, camera->port->path);
 	gpiod_settings.serial.speed = camera->port->speed;

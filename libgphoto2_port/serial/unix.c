@@ -163,12 +163,12 @@ int gp_port_serial_init (gp_port *dev) {
 #if HAVE_TERMIOS_H
         if (tcgetattr(dev->device_fd, &term_old) < 0) {
                 perror("tcgetattr");
-                return GP_ERROR;
+                return GP_ERROR_IO_INIT;
         }
 #else
         if (ioctl(dev->device_fd, TIOCGETP, &term_old) < 0) {
                 perror("ioctl(TIOCGETP)");
-                return GP_ERROR;
+                return GP_ERROR_IO_INIT;
         }
 #endif
         return GP_OK;
@@ -190,7 +190,7 @@ int gp_port_serial_open(gp_port * dev)
         if (dev->device_fd == -1) {
                 fprintf(stderr, "gp_port_serial_open: failed to open ");
                 perror(dev->settings.serial.port);
-                return GP_ERROR;
+                return GP_ERROR_IO_OPEN;
         }
 
 /*      if (ioctl (dev->device_fd, TIOCMBIC, &RTS) <0) {
@@ -204,7 +204,7 @@ int gp_port_serial_close(gp_port * dev)
 {
         if (close(dev->device_fd) == -1) {
                 perror("gp_port_serial_close: tried closing device file descriptor");
-                return GP_ERROR;
+                return GP_ERROR_IO_CLOSE;
         }
         return GP_OK;
 }
@@ -224,7 +224,7 @@ int gp_port_serial_write(gp_port * dev, char *bytes, int size)
                                 break;
                         default:
                                 perror("gp_port_serial_write");
-                                return GP_ERROR;
+                                return GP_ERROR_IO_WRITE;
                         }
                 len += ret;
         }
@@ -266,21 +266,21 @@ int gp_port_serial_read(gp_port * dev, char *bytes, int size)
 /*                return GP_ERROR_TIMEOUT; */
 /*              } */
                 if (0 == rc) {
-                        return GP_ERROR_TIMEOUT;
+                        return GP_ERROR_IO_TIMEOUT;
                 }
                 if (FD_ISSET(dev->device_fd, &readfs)) {
                         int now = read(dev->device_fd, bytes, size - readen);
 
                         if (now < 0) {
                                 perror("gp_port_serial_read (read fails)");
-                                return GP_ERROR;
+                                return GP_ERROR_IO_READ;
                         } else {
                                 bytes += now;
                                 readen += now;
                         }
                 } else {
                         perror("gp_port_serial_read (tty timeout)");
-                        return GP_ERROR;
+                        return GP_ERROR_IO_TIMEOUT;
                 }
         }
         return readen;
@@ -314,12 +314,12 @@ int gp_port_serial_get_pin(gp_port * dev, int pin)
                         bit = TIOCM_RNG;
                         break;
                 default:
-                        return GP_ERROR;
+                        return GP_ERROR_IO_PIN;
         }
 
         if (ioctl(dev->device_fd, TIOCMGET, &j) < 0) {
                 perror("gp_port_serial_status (Getting hardware status bits)");
-                return GP_ERROR;
+                return GP_ERROR_IO_PIN;
         }
         return (j & bit);
 }
@@ -354,7 +354,7 @@ int gp_port_serial_set_pin(gp_port * dev, int pin, int level)
                         bit = TIOCM_RNG;
                         break;
                 default:
-                        return GP_ERROR;
+                        return GP_ERROR_IO_PIN;
         }
 
         switch(level) {
@@ -365,13 +365,13 @@ int gp_port_serial_set_pin(gp_port * dev, int pin, int level)
                         request = TIOCMBIC;
                         break;
                 default:
-                        return GP_ERROR;
+                        return GP_ERROR_IO_PIN;
         }
 
         if (ioctl (dev->device_fd, request, &bit) <0) {
-        perror("ioctl(TIOCMBI[CS])");
-        return GP_ERROR;
-    }
+            perror("ioctl(TIOCMBI[CS])");
+            return GP_ERROR_IO_PIN;
+        }
 
         return GP_OK;
 }
@@ -385,10 +385,10 @@ int gp_port_serial_update(gp_port * dev)
         memcpy(&dev->settings, &dev->settings_pending, sizeof(dev->settings));
 
         if (dev->device_fd != 0) {
-                if (gp_port_serial_close(dev) == GP_ERROR)
-                        return GP_ERROR;
-                if (gp_port_serial_open(dev) == GP_ERROR)
-                        return GP_ERROR;
+                if (gp_port_serial_close(dev))
+                        return GP_ERROR_IO_CLOSE;
+                if (gp_port_serial_open(dev))
+                        return GP_ERROR_IO_OPEN;
 
                 return gp_port_serial_set_baudrate(dev);
         }
@@ -408,7 +408,7 @@ int gp_port_serial_set_baudrate(gp_port * dev)
 
         if (tcgetattr(dev->device_fd, &tio) < 0) {
                 perror("tcgetattr");
-                return GP_ERROR;
+                return GP_ERROR_IO_SERIAL_SPEED;
         }
         tio.c_cflag = (tio.c_cflag & ~CSIZE) | CS8;
 
@@ -435,18 +435,18 @@ int gp_port_serial_set_baudrate(gp_port * dev)
 
         if (tcsetattr(dev->device_fd, TCSANOW, &tio) < 0) {
                 perror("tcsetattr");
-                return GP_ERROR;
+                return GP_ERROR_IO_SERIAL_SPEED;
         }
         if (fcntl(dev->device_fd, F_SETFL, 0) < 0) {    /* clear O_NONBLOCK */
                 perror("fcntl F_SETFL");
-                return -1;
+                return GP_ERROR_IO_SERIAL_SPEED;
         }
 #else
         struct sgttyb ttyb;
 
         if (ioctl(dev->device_fd, TIOCGETP, &ttyb) < 0) {
                 perror("ioctl(TIOCGETP)");
-                return GP_ERROR;
+                return GP_ERROR_IO_SERIAL_SPEED;
         }
         ttyb.sg_ispeed = dev->settings.serial.speed;
         ttyb.sg_ospeed = dev->settings.serial.speed;
@@ -454,7 +454,7 @@ int gp_port_serial_set_baudrate(gp_port * dev)
 
         if (ioctl(dev->device_fd, TIOCSETP, &ttyb) < 0) {
                 perror("ioctl(TIOCSETP)");
-                return GP_ERROR;
+                return GP_ERROR_IO_SERIAL_SPEED;
         }
 #endif
 
@@ -524,6 +524,7 @@ int gp_port_serial_send_break (gp_port *dev, int duration) {
         tcdrain(dev->device_fd);
 #else
         /* ioctl */
+        return GP_ERROR_IO_SERIAL_BREAK;
 #endif
-        return 0;
+        return GP_OK;
 }

@@ -116,20 +116,20 @@ int gp_port_usb_open(gp_port *dev)
         udev = dev->device_handle;
         dev->device_handle = usb_open(udev);
 	if (!dev->device_handle)
-		return GP_ERROR;
+		return GP_ERROR_IO_OPEN;
 
 	ret = usb_set_configuration(dev->device_handle, dev->settings.usb.config);
 	if (ret < 0) {
 		fprintf(stderr, "gp_port_usb_open: could not set config %d: %s\n",
 			dev->settings.usb.config, strerror(errno));
-		return GP_ERROR;
+		return GP_ERROR_IO_OPEN;
 	}
 
 	ret = usb_claim_interface(dev->device_handle, dev->settings.usb.interface);
 	if (ret < 0) {
 		fprintf(stderr, "gp_port_usb_open: could not claim intf %d: %s\n",
 			dev->settings.usb.interface, strerror(errno));
-		return GP_ERROR;
+		return GP_ERROR_IO_OPEN;
 	}
 
 	ret = usb_set_altinterface(dev->device_handle, dev->settings.usb.altsetting);
@@ -137,7 +137,7 @@ int gp_port_usb_open(gp_port *dev)
 		fprintf(stderr, "gp_port_usb_open: could not set intf %d/%d: %s\n",
 			dev->settings.usb.interface,
 			dev->settings.usb.altsetting, strerror(errno));
-		return GP_ERROR;
+		return GP_ERROR_IO_OPEN;
 	}
 
 	return GP_OK;
@@ -168,21 +168,22 @@ int gp_port_usb_clear_halt_lib(gp_port * dev, int ep)
 	int ret=0;
 
 	switch (ep) {
-		case GP_PORT_USB_IN_ENDPOINT :
+		case GP_PORT_USB_ENDPOINT_IN :
 			ret=usb_clear_halt(dev->device_handle, dev->settings.usb.inep);
 			break;
-		case GP_PORT_USB_OUT_ENDPOINT :
+		case GP_PORT_USB_ENDPOINT_OUT :
 			ret=usb_clear_halt(dev->device_handle, dev->settings.usb.outep);
 			break;
 		default:
 			fprintf(stderr,"gp_port_usb_clear_halt: bad EndPoint argument\n");
-			return GP_ERROR;
+			return GP_ERROR_IO_USB_CLEAR_HALT;
 	}
-	return (ret ? GP_ERROR : GP_OK);
+	return (ret ? GP_ERROR_IO_USB_CLEAR_HALT : GP_OK);
 }
 
 int gp_port_usb_write(gp_port * dev, char *bytes, int size)
 {
+        int ret;
         if (GP_PORT_USB_DEBUG) {
             int i;
 
@@ -192,8 +193,11 @@ int gp_port_usb_write(gp_port * dev, char *bytes, int size)
             printf("\n");
         }
 
-        return usb_bulk_write(dev->device_handle, dev->settings.usb.outep,
-			      bytes, size, dev->timeout);
+        ret = usb_bulk_write(dev->device_handle, dev->settings.usb.outep,
+                           bytes, size, dev->timeout);
+        if (ret < 0)
+            return (GP_ERROR_IO_WRITE);
+        return (ret);
 }
 
 int gp_port_usb_read(gp_port * dev, char *bytes, int size)
@@ -203,7 +207,7 @@ int gp_port_usb_read(gp_port * dev, char *bytes, int size)
 	ret = usb_bulk_read(dev->device_handle, dev->settings.usb.inep,
 			     bytes, size, dev->timeout);
 	if (ret < 0)
-		return GP_ERROR;
+		return GP_ERROR_IO_READ;
 
         if (GP_PORT_USB_DEBUG) {
             int i;
@@ -256,5 +260,5 @@ int gp_port_usb_find_device_lib(gp_port * d, int idvendor, int idproduct)
 		}
 	}
 
-	return GP_ERROR;
+	return GP_ERROR_IO_USB_FIND;
 }

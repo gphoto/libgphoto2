@@ -43,6 +43,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 
 int camera_init (Camera *camera) {
 
+    int ret;
     gp_port_settings settings;
     DC240Data *dd;
 
@@ -72,8 +73,7 @@ int camera_init (Camera *camera) {
 
     switch (camera->port->type) {
     case GP_PORT_SERIAL:
-        dd->dev = gp_port_new(GP_PORT_SERIAL);
-        if (!dd->dev) {
+        if ((ret = gp_port_new(&(dd->dev), GP_PORT_SERIAL)) < 0) {
             free(dd);
             return (GP_ERROR);
         }
@@ -84,8 +84,7 @@ int camera_init (Camera *camera) {
         settings.serial.stopbits = 1;
         break;
     case GP_PORT_USB:
-        dd->dev = gp_port_new(GP_PORT_USB);
-        if (!dd->dev) {
+        if ((ret = gp_port_new(&(dd->dev), GP_PORT_USB)) < 0) {
             free(dd);
             return (GP_ERROR);
         }

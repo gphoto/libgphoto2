@@ -185,7 +185,7 @@ read_packet_again:
 
 	done = 0;
 	if (fd->type == GP_PORT_USB)
-		gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_IN_ENDPOINT);
+		gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_ENDPOINT_IN);
 	while (!done && (r++<RETRIES)) {
 
 		switch (fd->type) {
@@ -234,7 +234,7 @@ read_packet_again:
 			sierra_dump_packet(camera, packet);
 
 			if (fd->type == GP_PORT_USB)
-				gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_IN_ENDPOINT);
+				gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_ENDPOINT_IN);
 
 			return (sierra_valid_packet(camera, packet));
 		}
@@ -252,7 +252,7 @@ read_packet_again:
 
 	sierra_dump_packet(camera, packet);
 	if (fd->type == GP_PORT_USB)
-		gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_IN_ENDPOINT);
+		gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_ENDPOINT_IN);
 	return (GP_OK);
 
 }
@@ -317,12 +317,12 @@ int sierra_write_ack(Camera *camera) {
 	buf[0] = ACK;
 	if (sierra_write_packet(camera, buf)==GP_OK) {
 		if (fd->type == GP_PORT_USB)
-	                gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_IN_ENDPOINT);
+	                gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_ENDPOINT_IN);
 		return (GP_OK);
 	}
 	sierra_debug_print(fd, "Could not write ACK");
 	if (fd->type == GP_PORT_USB)
-                gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_IN_ENDPOINT);
+                gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_ENDPOINT_IN);
 	return (GP_ERROR);
 }
 
@@ -336,13 +336,13 @@ int sierra_write_nak(Camera *camera) {
 	buf[0] = NAK;
 	if (sierra_write_packet(camera, buf)==GP_OK) {
 		if (fd->type == GP_PORT_USB)
-	                gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_IN_ENDPOINT);
+	                gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_ENDPOINT_IN);
 		return (GP_OK);
 	}
 
 	sierra_debug_print(fd, "Could not write NAK");
 	if (fd->type == GP_PORT_USB)
-                gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_IN_ENDPOINT);
+                gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_ENDPOINT_IN);
 	return (GP_ERROR);
 }
 

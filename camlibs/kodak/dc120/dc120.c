@@ -46,6 +46,7 @@ int camera_init (Camera *camera) {
 
 	gp_port_settings settings;
 	DC120Data *dd;
+        int ret;
 
 	if (!camera)
 		return (GP_ERROR);
@@ -71,10 +72,9 @@ int camera_init (Camera *camera) {
 	camera->functions->manual 	= camera_manual;
 	camera->functions->about 	= camera_about;
 
-	dd->dev = gp_port_new(GP_PORT_SERIAL);
-	if (!dd->dev) {
+        if ((ret= gp_port_new(&(dd->dev), GP_PORT_SERIAL)) < 0) {
 		free(dd);
-		return (GP_ERROR);
+		return (ret);
 	}
 
 	strcpy(settings.serial.port, camera->port->path);

@@ -55,6 +55,7 @@ int camera_init(Camera *camera) {
 
 	gp_port_settings settings;
 	BarbieStruct *b;
+        int ret;
 
 	/* First, set up all the function pointers */
 	camera->functions->id 		= camera_id;
@@ -74,7 +75,9 @@ int camera_init(Camera *camera) {
 	b = (BarbieStruct*)malloc(sizeof(BarbieStruct));
 	camera->camlib_data = b;
 
-	b->dev = gp_port_new(GP_PORT_SERIAL);
+        if ((ret = gp_port_new(&(b->dev), GP_PORT_SERIAL)) < 0) {
+            return (ret);
+        }
 	gp_port_timeout_set(b->dev, 5000);
 	strcpy(settings.serial.port, camera->port->path);
 
