@@ -6,10 +6,46 @@
 #include "settings.h"
 #include "globals.h"
 
+int verify_settings (char *settings_file) {
+
+	FILE *f;
+	char buf[1024];
+	int x, equals;
+
+	if ((f=fopen(settings_file, "r"))==NULL) {
+		perror("Loading Settings");
+		return(0);
+	}
+
+	rewind(f);
+	while (!feof(f)) {
+		strcpy(buf, "");
+		fgets(buf, 1023, f);
+		buf[strlen(buf)] = 0;
+		if (strlen(buf)>2) {
+			equals = 0;
+			for (x=0; x<strlen(buf); x++)
+				if (buf[x] == '=')
+					equals++;
+printf("checking \"%s\" (%i)\n", buf, equals);
+
+			if (equals < 2) {
+				fclose (f);
+				printf("Incorrect settings format. resetting\n");
+				unlink(settings_file);
+				return (GP_ERROR);
+			}
+		}
+	}
+	fclose (f);
+
+	return (GP_OK);
+}
+
 int load_settings () {
 
 	FILE *f;
-	char buf[1024], *c;
+	char buf[1024], *id, *key, *value;
 
 	glob_setting_count = 0;
 #ifdef WIN32
@@ -19,10 +55,14 @@ int load_settings () {
 	sprintf(buf, "%s/.gphoto/settings", getenv("HOME"));
 #endif
 
+	if (verify_settings(buf) == GP_ERROR)
+		/* verify_settings will unlink and recreate the settings file */
+		return (GP_OK);
+printf("here\n");
 	if (glob_debug)
 		printf("core: Loading settings from file \"%s\"\n", buf);
 
-	if ((f=fopen(buf, "a+"))==NULL) {
+	if ((f=fopen(buf, "r"))==NULL) {
 		perror("Loading Settings");
 		return(0);
 	}
@@ -31,16 +71,20 @@ int load_settings () {
 		strcpy(buf, "");
 		fgets(buf, 1023, f);
 		if (strlen(buf)>2) {
-			buf[strlen(buf)-1] = '\0';
-			c = strtok(buf, "=");
-			if (c) {
-				strcpy(glob_setting[glob_setting_count].key, c);
-				c = strtok(NULL, "\0");
-				if (c)
-					strcpy(glob_setting[glob_setting_count++].value,c);
-				   else
-					strcpy(glob_setting[glob_setting_count++].value,"");
-			}
+		     buf[strlen(buf)-1] = '\0';
+		     id = strtok(buf, "=");
+printf("id=%s\n", id);
+		     strcpy(glob_setting[glob_setting_count].id,id);
+		     key = strtok(NULL, "=");
+printf("key=%s\n", key);
+		     strcpy(glob_setting[glob_setting_count].key,key);
+		     value = strtok(NULL, "\0");
+printf("value=%s\n", value);
+
+			if (value)
+				strcpy(glob_setting[glob_setting_count++].value, value);
+			   else
+				strcpy(glob_setting[glob_setting_count++].value, "");
 		}
 	}
 	if (glob_debug)
@@ -67,6 +111,8 @@ int save_settings () {
 	}
 	rewind(f);
 	while (x < glob_setting_count) {
+		fwrite(glob_setting[x].id, strlen(glob_setting[x].id),1,f);
+		fputc('=', f);
 		fwrite(glob_setting[x].key, strlen(glob_setting[x].key),1,f);
 		fputc('=', f);
 		fwrite(glob_setting[x].value, strlen(glob_setting[x].value),1,f);
@@ -83,7 +129,7 @@ int dump_settings () {
 	int x;
 	printf("core: All settings:\n");
 	for (x=0; x<glob_setting_count; x++)
-		printf("core:\t\"%s\" = \"%s\"\n",
+		printf("core:\t (%s) \"%s\" = \"%s\"\n", glob_setting[x].id,
 			glob_setting[x].key,glob_setting[x].value);
 	if (glob_setting_count == 0)
 		printf("core:\tNone\n");

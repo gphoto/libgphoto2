@@ -9,6 +9,7 @@ typedef struct {
 
 typedef struct {
 	/* key = value settings */
+	char id[256];
 	char key[256];
 	char value[256];
 } Setting;
