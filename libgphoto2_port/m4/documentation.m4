@@ -70,10 +70,13 @@ AC_ARG_WITH(fig2dev, [  --without-fig2dev         Don't use fig2dev],[
 		try_fig2dev=false
 	fi])
 if $try_fig2dev; then
-	AC_CHECK_PROG(have_fig2dev,fig2dev,true,false)
+	AC_PATH_PROG(FIG2DEV,fig2dev)
+	if test -n "${FIG2DEV}"; then
+		have_fig2dev=true
+	fi
 fi
 if $have_fig2dev; then
-        fig2dev -L ps > /dev/null <<EOF
+        ${FIG2DEV} -L ps > /dev/null <<EOF
 #FIG 3.2
 Landscape
 Center
@@ -96,20 +99,20 @@ dnl gtk-doc: We use gtk-doc for building our documentation. However, we
 dnl          require the user to explicitely request the build.
 dnl ---------------------------------------------------------------------------
 try_gtkdoc=false
+gtkdoc_msg="no (not requested)"
+have_gtkdoc=false
 AC_ARG_ENABLE(docs, [  --enable-docs             Use gtk-doc to build documentation [default=no]],[
 	if test x$enableval = xyes; then
 		try_gtkdoc=true
 	fi])
 if $try_gtkdoc; then
-	AC_CHECK_PROG(have_gtkdoc,gtkdoc-mkdb,true,false)
-	if $have_gtkdoc; then
+	AC_PATH_PROG(GTKDOC,gtkdoc-mkdb)
+	if test -n "${GTKDOC}"; then
+		have_gtkdoc=true
 		gtkdoc_msg="yes"
 	else
 		gtkdoc_msg="no (http://www.gtk.org/rdp/download.html)"
 	fi
-else
-	have_gtkdoc=false
-	gtkdoc_msg="no (not requested)"
 fi
 AM_CONDITIONAL(ENABLE_GTK_DOC, $have_gtkdoc)
 
@@ -145,19 +148,23 @@ AC_ARG_WITH(xmlto, [  --without-xmlto           Don't use xmlto],[
 		try_xmlto=false
 	fi])
 if $try_xmlto; then
-	AC_CHECK_PROG(have_xmlto,xmlto,true,false)
+	AC_PATH_PROG(XMLTO,xmlto)
+	if test -n "${XMLTO}"; then
+		have_xmlto=true
+		manual_msg="yes"
+	fi
 fi
 if $have_xmlto; then
-	if xmlto --help | grep html > /dev/null 2>&1; then
+	if ${XMLTO} --help | grep html > /dev/null 2>&1; then
 		have_xmltohtml=true
 	fi
-	if xmlto --help | grep man > /dev/null 2>&1; then
+	if ${XMLTO} --help | grep man > /dev/null 2>&1; then
 		have_xmltoman=true
 	fi
-	if xmlto --help | grep pdf > /dev/null 2>&1; then
+	if ${XMLTO} --help | grep pdf > /dev/null 2>&1; then
 		have_xmltopdf=true
 	fi
-	if xmlto --help | grep ps > /dev/null 2>&1; then
+	if ${XMLTO} --help | grep ps > /dev/null 2>&1; then
 		have_xmltops=true
 	fi
 fi

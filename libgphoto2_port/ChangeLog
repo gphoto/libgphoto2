@@ -1,3 +1,8 @@
+2002-06-12  Lutz Müller <lutz@users.sourceforge.net>
+
+	* m4/documentation.m4: People reported problems with AC_CHECK_PROG.
+	  Let's try AC_PATH_PROG instead.
+
 2002-06-11  Lutz Müller <lutz@users.sourceforge.net>
 
 	* m4/documentation.m4: Fix checks for xmlto-[html,pdf,man,ps].
