@@ -20,7 +20,6 @@
 
 #include "library.h"
 #include "sierra.h"
-#include "../../libgphoto2/exif.h"
 
 #define TIMEOUT	   2000
 
@@ -31,15 +30,20 @@
 int camera_start(Camera *camera);
 int camera_stop(Camera *camera);
 int sierra_change_folder (Camera *camera, const char *folder);
+int get_jpeg_data(const char *data, int data_size, char **jpeg_data, int *jpeg_size);
 
-int camera_id (CameraText *id) 
-{
-	strcpy(id->text, "sierra");
+/* Useful markers */
+const char JPEG_SOI_MARKER[]  = { (char)0xFF, (char)0xD8, '\0' };
+const char JPEG_SOF_MARKER[]  = { (char)0xFF, (char)0xD9, '\0' };
+const char JPEG_APP1_MARKER[] = { (char)0xFF, (char)0xE1, '\0' };
+const char TIFF_SOI_MARKER[]  = { (char)0x49, (char)0x49, (char)0x2A, (char)0x00, (char)0x08, '\0' };
 
-	return (GP_OK);
-}
+/* Error descriptions */
+static char *result_string[] = {
+   /* GP_ERROR_BAD_CONDITION   -1000 */ N_("Bad conditions")
+};
 
-SierraCamera sierra_cameras[] = {
+static SierraCamera sierra_cameras[] = {
 	/* Camera Model,    USB(vendor id, product id, in endpoint, out endpoint, USB wrapper protocol) */ 
 	{"Agfa ePhoto 307", 	0, 0, 0, 0, 0 },
 	{"Agfa ePhoto 780", 	0, 0, 0, 0, 0 },
@@ -117,6 +121,14 @@ SierraCamera sierra_cameras[] = {
 	{"", 0, 0, 0, 0, 0 }
 };
 
+
+int camera_id (CameraText *id) 
+{
+	strcpy(id->text, "sierra");
+
+	return (GP_OK);
+}
+
 int camera_abilities (CameraAbilitiesList *list) 
 {
 	int x;
@@ -144,63 +156,6 @@ int camera_abilities (CameraAbilitiesList *list)
 		a->usb_vendor  = sierra_cameras[x].usb_vendor;
 		a->usb_product = sierra_cameras[x].usb_product;
 		gp_abilities_list_append (list, a);
-	}
-
-	return (GP_OK);
-}
-
-int update_fs_for_folder (Camera *camera, const char *folder)
-{
-	SierraData *fd = (SierraData*)camera->camlib_data;
-	int i, j, count, bsize;
-	char buf[1024], new_folder[1024];
-
-	gp_filesystem_append (fd->fs, folder, NULL);
-
-	/* List the files */
-	if (fd->folders)
-		CHECK (sierra_change_folder (camera, folder));
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** counting files in '%s'"
-			 "...", folder);
-	CHECK (sierra_get_int_register (camera, 10, &count));
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** found %i files", count);
-	for (i = 0; i < count; i++) {
-		CHECK (sierra_set_int_register (camera, 4, i + 1));
-		gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** getting filename "
-				 "of picture %i...", i);
-		CHECK (sierra_get_string_register (camera, 79, 0, NULL,
-						   buf, &bsize));
-		if (bsize <= 0)
-			sprintf (buf, "P101%04i.JPG", i);
-		gp_filesystem_append (fd->fs, folder, buf);
-	}
-
-	/* List the folders */
-	if (fd->folders) {
-		CHECK (sierra_change_folder (camera, folder));
-		gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** counting folders "
-				 "in '%s'...", folder);
-		CHECK (sierra_get_int_register (camera, 83, &count));
-		gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** found %i folders",
-				 count);
-		for (i = 0; i < count; i++) {
-			CHECK (sierra_change_folder (camera, folder));
-			CHECK (sierra_set_int_register (camera, 83, i + 1));
-			bsize = 1024;
-			gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** getting "
-					 "name of folder %i...", i + 1);
-			CHECK (sierra_get_string_register (camera, 84, 0, 
-							   NULL, buf, &bsize));
-
-			/* Remove trailing spaces */
-			for (j = strlen (buf) - 1; j >= 0 && buf[j] == ' '; j--)
-				buf[j] = '\0';
-			strcpy (new_folder, folder);
-			if (strcmp (folder, "/"))
-				strcat (new_folder, "/");
-			strcat (new_folder, buf);
-			update_fs_for_folder (camera, new_folder);
-		}
 	}
 
 	return (GP_OK);
@@ -241,6 +196,7 @@ int camera_init (Camera *camera)
 	camera->functions->summary		= camera_summary;
 	camera->functions->manual 		= camera_manual;
 	camera->functions->about 		= camera_about;
+	camera->functions->result_as_string	= camera_result_as_string;
 
 	fd = (SierraData*)malloc(sizeof(SierraData));	
 	camera->camlib_data = fd;
@@ -367,7 +323,7 @@ int camera_init (Camera *camera)
 	/* We are in "/" */
 	strcpy (fd->folder, "/");
 	fd->fs = gp_filesystem_new ();
-	CHECK_STOP_FREE (camera, update_fs_for_folder (camera, "/"));
+	CHECK_STOP_FREE (camera, sierra_update_fs_for_folder (camera, "/"));
 
 	CHECK_STOP_FREE (camera, camera_stop (camera));
 
@@ -376,50 +332,6 @@ int camera_init (Camera *camera)
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "************************"); 
 
 	return (GP_OK);
-}
-
-int sierra_change_folder (Camera *camera, const char *folder)
-{	
-	SierraData *fd = (SierraData*)camera->camlib_data;
-	int st = 0,i = 1;
-	char target[128];
-
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** sierra_change_folder");
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
-
-	if (!fd->folders)
-		return GP_OK;
-	if (!folder || !camera)
-		return GP_ERROR_BAD_PARAMETERS;
-
-	if (folder[0]) {
-		strncpy(target, folder, sizeof(target)-1);
-		target[sizeof(target)-1]='\0';
-		if (target[strlen(target)-1] != '/') strcat(target, "/");
-	} else
-		strcpy(target, "/");
-
-	if (target[0] != '/')
-		i = 0;
-	else {
-		CHECK (sierra_set_string_register (camera, 84, "\\", 1));
-	}
-	st = i;
-	for (; target[i]; i++) {
-		if (target[i] == '/') {
-			target[i] = '\0';
-			if (st == i - 1)
-				break;
-			CHECK (sierra_set_string_register (camera, 84, 
-				target + st, strlen (target + st)));
-
-			st = i + 1;
-			target[i] = '/';
-		}
-	}
-	strcpy (fd->folder, folder);
-
-	return GP_OK;
 }
 
 int camera_start (Camera *camera)
@@ -431,9 +343,7 @@ int camera_start (Camera *camera)
 	if (fd->type != GP_PORT_SERIAL)
 		return (GP_OK);
 	
-	CHECK (sierra_set_speed (camera, fd->speed));
-
-	return (sierra_folder_set (camera, fd->folder));
+	return sierra_set_speed (camera, fd->speed);
 }
 
 int camera_stop (Camera *camera) 
@@ -488,48 +398,24 @@ int camera_folder_list_folders (Camera *camera, const char *folder,
 	return (gp_filesystem_list_folders (fd->fs, folder, list));
 }
 
-int sierra_folder_set (Camera *camera, const char *folder) 
+static int camera_file_get_generic (Camera *camera, CameraFile *file, 
+				    const char *folder, const char *filename, 
+				    int thumbnail) 
 {
-	char tf[4096];
-	SierraData *fd = (SierraData*)camera->camlib_data;
-
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** sierra_folder_set");
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
-
-	if (!fd->folders) {
-		if (strcmp ("/", folder) != 0)
-			return (GP_ERROR_DIRECTORY_NOT_FOUND);
-		else
-			return (GP_OK);
-	}
-
-	if (folder[0] != '/')
-		strcat (tf, folder);
-	else
-		strcpy (tf, folder);
-
-	if (tf[strlen (fd->folder) - 1] != '/')
-	       strcat (tf, "/");
-
-	/* TODO: check whether the selected folder is valid.
-		 It should be done after implementing camera_lock/unlock pair */
-	
-	return (sierra_change_folder (camera, tf));
-}
-
-int camera_file_get_generic (Camera *camera, CameraFile *file, 
-			     const char *folder, const char *filename, 
-			     int thumbnail) 
-{
-	int regl, regd, file_number;
+        int regl, regd, file_number;
 	SierraData *fd = (SierraData*)camera->camlib_data;
 	CameraFile *tmp_file;
+	char *jpeg_data, *wrk_s;
+	int jpeg_size;
 
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** sierra_file_get_generic");
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** filename: %s", filename);
 
 	CHECK (camera_start (camera));
+
+	/* Set the working folder */
+	CHECK (sierra_change_folder (camera, folder));
 
 	/* Get the file number from the CameraFileSystem */
 	file_number = gp_filesystem_number (fd->fs, folder, filename);
@@ -548,6 +434,7 @@ int camera_file_get_generic (Camera *camera, CameraFile *file,
 
 	/* Creation of a temporary file */
 	tmp_file = gp_file_new ();
+	strcpy (tmp_file->name, filename);
 	if (!tmp_file)
 		return (GP_ERROR);
 
@@ -556,52 +443,54 @@ int camera_file_get_generic (Camera *camera, CameraFile *file,
 							file_number + 1, 
 							tmp_file, NULL, NULL));
 
-	if (tmp_file->data[0] == (char)0xFF && 
-	    tmp_file->data[1] == (char)0xD8) {
-
-		/* OK : this is a complete JPEG file */
-		gp_file_append (file, tmp_file->data, tmp_file->size);
-		strcpy (file->type, "image/jpeg");
-
-	} else if (tmp_file->data[0] == (char)0xFF && 
-		   tmp_file->data[1] == (char)0xE1) {
-
-		/* 
-		 * This is EXIF data. We'll build a valid JPEG file.
-		 * This happens for example with the Epson 3000z.
-		 */
-		exifparser exifdat;
-
-		exifdat.header    = (char*) malloc ((size_t)tmp_file->size+2);
-		exifdat.header[0] = 0xFF;
-		exifdat.header[1] = 0xD8;
-		memcpy (exifdat.header + 2, tmp_file->data, 
-			(size_t)tmp_file->size);
-		exifdat.data = exifdat.header + 12;
-  
-		exif_parse_data (&exifdat);
-		file->data = exif_get_thumbnail_and_size (&exifdat, 
-							  &file->size);
-
-		free (exifdat.header);
-		strcpy (file->type, "image/jpeg");
-
-	} else if ((tmp_file->data[1] == 0x49) &&
-		   (tmp_file->data[2] == 0x2A) &&
-		   (tmp_file->data[3] == 0x00) &&
-		   (tmp_file->data[4] == 0x08)){
+	/* Data postprocessing */
+	if (thumbnail) {
 		
-		/* This is a TIFF file */
-		gp_file_append (file, tmp_file->data, tmp_file->size);
-		strcpy (file->type, "image/tiff");
+		/* Thumbnails are always JPEG file (as far as we know...) */
+		strcpy (file->type, "image/jpeg");
+		/* Corrects the file name to reflect that */
+		if ( (wrk_s = rindex(file->name, '.')) ) {
+		     *wrk_s = '\0';
+		     strcat(file->name, ".JPG");
+		}
 
-	} else {
+		/* Some camera (e.g. Epson 3000z) send the EXIF application data
+		   as thumbnail of a picture. The JPEG file need to be extracted.
+		   Equally for movies, the JPEG thumbnail is contained within a
+		   .MOV file. It needs to be extracted. */
+	   
+		/* Extract the thumbnail from the data sent by the camera */
+		get_jpeg_data(tmp_file->data, tmp_file->size, &jpeg_data, &jpeg_size);
 
-	    	/* This is probably a video. */
-	    	gp_file_append (file, tmp_file->data, tmp_file->size);
-		strcpy (file->type, "video/quicktime");
+		if (jpeg_data) {
+			/* Append data to the output file. Free temporary variable */
+			gp_file_append (file, jpeg_data, jpeg_size);
+			free(jpeg_data);
+		}
+		else {
+			/* No valid JPEG data found */
+			gp_file_free (tmp_file);
+			return GP_ERROR_CORRUPTED_DATA;
+		}
 	}
-	strcpy (tmp_file->name, filename);
+	else {
+		gp_file_append (file, tmp_file->data, tmp_file->size);
+
+		/* Check the file type */
+		if ( memcmp(tmp_file->data, TIFF_SOI_MARKER, 5) == 0 ) {
+			/* This is a TIFF file */
+			strcpy (file->type, "image/tiff");
+		}
+		else if ( memcmp(tmp_file->data, JPEG_SOI_MARKER, 2) == 0 ) {
+			/* This is a TIFF file */
+			strcpy (file->type, "image/jpeg");
+		}
+		else {
+			/* This is probably a video. */
+			gp_file_append (file, tmp_file->data, tmp_file->size);
+			strcpy (file->type, "video/quicktime");
+		}
+	}
 
 	gp_file_free (tmp_file);
 
@@ -619,6 +508,9 @@ int camera_file_get_info (Camera *camera, const char *folder,
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** filename: %s", filename);
 
 	CHECK (camera_start (camera));
+
+	/* Set the working folder */
+	CHECK (sierra_change_folder (camera, folder));
 
 	/* Get the file number from the CameraFileSystem */
 	file_number = gp_filesystem_number (fd->fs, folder, filename);
@@ -656,13 +548,14 @@ int camera_file_get_info (Camera *camera, const char *folder,
 
 int camera_folder_delete_all (Camera *camera, const char *folder)
 {
-	SierraData *fd = (SierraData*)camera->camlib_data;
-
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", 
 			 "*** sierra_folder_delete_all");
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
 
 	CHECK (camera_start (camera));
+
+	/* Set the working folder */
+	CHECK (sierra_change_folder (camera, folder));
 
 	CHECK_STOP (camera, sierra_delete_all (camera));
 
@@ -677,8 +570,7 @@ int camera_folder_delete_all (Camera *camera, const char *folder)
 	 * handle this case.
 	 */
 
-	CHECK_STOP (camera, gp_filesystem_format (fd->fs));
-	CHECK_STOP (camera, update_fs_for_folder (camera, "/"));
+	CHECK_STOP (camera, sierra_update_fs_for_folder (camera, "/"));
 	
 	return (camera_stop (camera));
 }
@@ -708,6 +600,9 @@ int camera_file_delete (Camera *camera, const char *folder,
 
 	CHECK (camera_start (camera));
 
+	/* Set the working folder */
+	CHECK (sierra_change_folder (camera, folder));
+
 	file_number = gp_filesystem_number (fd->fs, folder, filename);
 
 	CHECK_STOP (camera, sierra_delete (camera, file_number + 1));
@@ -719,15 +614,11 @@ int camera_file_delete (Camera *camera, const char *folder,
 
 int camera_capture (Camera *camera, int capture_type, CameraFilePath *path) 
 {
-	SierraData *fd = (SierraData*)camera->camlib_data;
-
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_capture");
 
 	CHECK (camera_start (camera));
 
 	CHECK_STOP (camera, sierra_capture (camera, capture_type, path));
-	CHECK_STOP (camera, gp_filesystem_append (fd->fs, path->folder, 
-						  path->name));
 
 	return (camera_stop (camera));
 }
@@ -1466,3 +1357,64 @@ int camera_about (Camera *camera, CameraText *about)
 	return (GP_OK);
 }
 
+/**
+ * camera_result_as_string:
+ * @camera: camera data structure
+ * @result: error code to be described
+ *
+ * Return error description for camera specific error.
+ *
+ * Returns: a string
+ */
+char* camera_result_as_string(Camera *camera, int result)
+{
+	/* Do we have an error description? */
+	if ((-result - 1000) < (int) (sizeof (result_string) / 
+				      sizeof (*result_string)))
+		return _(result_string[-result - 1000]);
+
+   /* Should never occur... */
+	return _("Unknown error");
+}
+
+/**
+ * get_jpeg_data:
+ * @data: input data table
+ * @data_size: table size
+ * @jpeg_data: return JPEG data table (NULL if no valid data is found).
+ *             To be free by the the caller.
+ * @jpeg_size: return size of the jpeg_data table.
+ *
+ * Extract JPEG data form the provided input data (looking for the SOI
+ * and SOF markers in the input data table)
+ *
+ * Returns: error code (either GP_OK or GP_ERROR_CORRUPTED_DATA)
+ */
+int get_jpeg_data(const char *data, int data_size, char **jpeg_data, int *jpeg_size)
+{
+	int i, ret_status;
+	const char *soi_marker = NULL, *sof_marker = NULL;
+
+	for(i=0 ; i<data_size ; i++) {
+		if (memcmp(data+i, JPEG_SOI_MARKER, 2) == 0)
+			soi_marker = data + i;
+		if (memcmp(data+i, JPEG_SOF_MARKER, 2) == 0)
+			sof_marker = data + i;
+	}
+   
+	if (soi_marker && sof_marker) {
+		/* Valid JPEG data have been found : build the output table */
+		*jpeg_size = sof_marker - soi_marker + 2;
+		*jpeg_data = (char*) calloc(*jpeg_size, sizeof(char));
+		memcpy(*jpeg_data, soi_marker, *jpeg_size);
+		ret_status = GP_OK;
+	}
+	else {
+		/* Cannot find valid JPEG data */
+		*jpeg_size = 0;
+		*jpeg_data = NULL;
+		ret_status = GP_ERROR_CORRUPTED_DATA;
+	}
+
+	return ret_status;
+}
