@@ -40,11 +40,11 @@ int gp_abilities_dump (CameraAbilities *abilities) {
         gp_debug_printf(GP_DEBUG_LOW, "core", "Configuration  support                : %s",
                 abilities->config == 0? "no":"yes");
 	gp_debug_printf(GP_DEBUG_LOW, "core", "Delete files on camera support        : %s", 
-		abilities->file_delete == 0? "no":"yes");
+		abilities->file_operations & GP_FILE_OPERATION_DELETE? "no":"yes");
 	gp_debug_printf(GP_DEBUG_LOW, "core", "File preview (thumbnail) support      : %s", 
-		abilities->file_preview == 0? "no":"yes");
+		abilities->file_operations & GP_FILE_OPERATION_PREVIEW? "no":"yes");
 	gp_debug_printf(GP_DEBUG_LOW, "core", "File upload support                   : %s", 
-		abilities->file_put == 0? "no":"yes");
+		abilities->folder_operations & GP_FOLDER_OPERATION_PUT? "no":"yes");
 
 	return (GP_OK);
 }
@@ -56,9 +56,8 @@ int gp_abilities_clear (CameraAbilities *abilities) {
 	abilities->speed[0] = 0;
 	abilities->capture[0].type = GP_CAPTURE_NONE;
 	abilities->config = 0;
-	abilities->file_delete = 0;
-	abilities->file_preview = 0;
-	abilities->file_put = 0;
+	abilities->file_operations = GP_FILE_OPERATION_NONE;
+	abilities->folder_operations = GP_FOLDER_OPERATION_NONE;
 
 	return (GP_OK);
 }
