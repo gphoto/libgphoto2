@@ -1,19 +1,18 @@
-This driver  is  for the Canon   PowerShot series. It  works  with the
-following models:
+This driver is for Canon cameras. It works with the following models:
 
  - PowerShot A50
  - PowerShot S10
  - PowerShot S20
  - PowerShot S30 (under development)
  - PowerShot S40 (under development)
- - PowerShot S100/ Digital IXUS
+ - PowerShot S100 / Digital IXUS
  - PowerShot IXY Digital
  - PowerShot S300 / Digital IXUS 300
  - PowerShot IXY Digital 300  (not tested)
  - PowerShot G1
  - PowerShot G2
- - PowerShot A10 (not tested)
- - PowerShot A20 
+ - PowerShot A10 (works, but images apparently need some processing)
+ - PowerShot A20
  - PowerShot Pro90 IS (not tested)
  - EOS D30
 
