@@ -420,6 +420,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	char image_id_string[] = {0, 0, 0, 0, 0, 0, 0};
         unsigned char *fdata = NULL;
         long int size;
+	CameraFileInfo info;
 
         if (strlen (filename) != 11)
                 return (GP_ERROR_FILE_NOT_FOUND);
@@ -430,15 +431,21 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	strncpy (image_id_string, filename, 6);
 	image_id = atol (image_id_string);
 
+	/* Get information about the image */
+	CHECK (camera, gp_filesystem_get_info (camera->fs, folder,
+					filename, &info, context), context);
+
         /* Get the image. */
         switch (type) {
         case GP_FILE_TYPE_PREVIEW:
+		size = 2048;
                 CHECK (camera, k_get_image (camera->port, context,
 			camera->pl->image_id_long,
 			image_id, K_THUMBNAIL, (unsigned char **) &fdata,
 			(unsigned int *) &size), context);
                 break;
         case GP_FILE_TYPE_NORMAL:
+		size = info.file.size;
                 CHECK (camera, k_get_image (camera->port, context,
 			camera->pl->image_id_long,
 			image_id, K_IMAGE_EXIF, (unsigned char **) &fdata,

@@ -130,7 +130,7 @@ k_check (GPContext *c, const char *rb)
         case 0x0c03:
 		gp_context_error (c, _("Command order error."));
 		return (GP_ERROR);
-        case 0x0fff:
+        case 0x0ffff:
 		gp_context_error (c, _("Unknown error."));
 		return (GP_ERROR);
         default:
@@ -138,7 +138,7 @@ k_check (GPContext *c, const char *rb)
 			"error that has not yet been discovered. Please "
 			"report the following to <gphoto-devel@gphoto.org> "
 			"with additional information how you got this error: "
-			"(%i,%i). Thank you very much!"), rb[2], rb[3]);
+			"(0x%x,0x%x). Thank you very much!"), rb[2], rb[3]);
 		return (GP_ERROR);
         }
 }
@@ -158,13 +158,13 @@ k_check (GPContext *c, const char *rb)
 }
 
 int
-k_init (GPPort *device, GPContext *c)
+k_init (GPPort *p, GPContext *c)
 {
-        return (l_init (device));
+        return (l_init (p, c));
 }
 
 int
-k_erase_image (GPPort *device, GPContext *c,
+k_erase_image (GPPort *p, GPContext *c,
 	       int image_id_long, unsigned long image_id)
 {
         /************************************************/
@@ -174,9 +174,9 @@ k_erase_image (GPPort *device, GPContext *c,
         /* 0x80: Byte 1 of command identifier           */
         /* 0x00: Reserved                               */
         /* 0x00: Reserved                               */
-        /* 0xXX: Byte 0 of device ID                    */
+        /* 0xXX: Byte 0 of p ID                    */
         /*              0x02: Flash memory card         */
-        /* 0xXX: Byte 1 of device ID                    */
+        /* 0xXX: Byte 1 of p ID                    */
         /*              0x00: Flash memory card         */
         /* 0xXX: Byte 3 of image ID (QM200 only)        */
         /* 0xXX: Byte 4 of image ID (QM200 only)        */
@@ -197,14 +197,14 @@ k_erase_image (GPPort *device, GPContext *c,
         if (!image_id_long) {
                 sb[6] = image_id;
                 sb[7] = image_id >> 8;
-		CRF (c, l_send_receive (device, sb, 8, &rb, &rbs,
+		CRF (c, l_send_receive (p, c, sb, 8, &rb, &rbs,
 							0, NULL, NULL), rb);
         } else {
                 sb[6] = image_id >> 16;
                 sb[7] = image_id >> 24;
                 sb[8] = image_id;
                 sb[9] = image_id >> 8;
-		CRF (c, l_send_receive (device, sb, 10, &rb, &rbs,
+		CRF (c, l_send_receive (p, c, sb, 10, &rb, &rbs,
 							0, NULL, NULL), rb);
         }
 
@@ -214,7 +214,7 @@ k_erase_image (GPPort *device, GPContext *c,
 
 
 int
-k_format_memory_card (GPPort *device, GPContext *c)
+k_format_memory_card (GPPort *p, GPContext *c)
 {
         /************************************************/
         /* Command to format the memory card.           */
@@ -223,9 +223,9 @@ k_format_memory_card (GPPort *device, GPContext *c)
         /* 0x80: Byte 1 of command identifier           */
         /* 0x00: Reserved                               */
         /* 0x00: Reserved                               */
-        /* 0xXX: Byte 0 of device ID                    */
+        /* 0xXX: Byte 0 of p ID                    */
         /*              0x02: Flash memory card         */
-        /* 0xXX: Byte 1 of device ID                    */
+        /* 0xXX: Byte 1 of p ID                    */
         /*              0x00: Flash memory card         */
         /*                                              */
         /* Return values:                               */
@@ -238,7 +238,7 @@ k_format_memory_card (GPPort *device, GPContext *c)
         unsigned char *rb = NULL;
         unsigned int rbs;
 
-	CRF (c, l_send_receive (device, sb, 6, &rb, &rbs, 0, NULL, NULL), rb);
+	CRF (c, l_send_receive (p, c, sb, 6, &rb, &rbs, 0, NULL, NULL), rb);
 
         free (rb);
         return (GP_OK);
@@ -246,7 +246,7 @@ k_format_memory_card (GPPort *device, GPContext *c)
 
 
 int
-k_erase_all (GPPort *device, GPContext *c,
+k_erase_all (GPPort *p, GPContext *c,
 	     unsigned int *number_of_images_not_erased)
 {
         /************************************************/
@@ -257,9 +257,9 @@ k_erase_all (GPPort *device, GPContext *c,
         /* 0x80: Byte 1 of command identifier           */
         /* 0x00: Reserved                               */
         /* 0x00: Reserved                               */
-        /* 0xXX: Byte 0 of device ID                    */
+        /* 0xXX: Byte 0 of p ID                    */
         /*              0x02: Flash memory card         */
-        /* 0xXX: Byte 1 of device ID                    */
+        /* 0xXX: Byte 1 of p ID                    */
         /*              0x00: Flash memory card         */
         /*                                              */
         /* Return values:                               */
@@ -277,7 +277,7 @@ k_erase_all (GPPort *device, GPContext *c,
 
 	CHECK_NULL (number_of_images_not_erased);
 
-	CRF (c, l_send_receive (device, sb, 6, &rb, &rbs, 0, NULL, NULL), rb);
+	CRF (c, l_send_receive (p, c, sb, 6, &rb, &rbs, 0, NULL, NULL), rb);
 
 	*number_of_images_not_erased = (rb[5] << 8) | rb[4];
         free (rb);
@@ -286,7 +286,7 @@ k_erase_all (GPPort *device, GPContext *c,
 
 
 int
-k_set_protect_status (GPPort *device, GPContext *c, int image_id_long,
+k_set_protect_status (GPPort *p, GPContext *c, int image_id_long,
 		      unsigned long image_id, int protected)
 {
         /************************************************/
@@ -297,9 +297,9 @@ k_set_protect_status (GPPort *device, GPContext *c, int image_id_long,
         /* 0x80: Byte 1 of command identifier           */
         /* 0x00: Reserved                               */
         /* 0x00: Reserved                               */
-        /* 0xXX: Byte 0 of device ID                    */
+        /* 0xXX: Byte 0 of p ID                    */
         /*              0x02: Flash memory card         */
-        /* 0xXX: Byte 1 of device ID                    */
+        /* 0xXX: Byte 1 of p ID                    */
         /*              0x00: Flash memory card         */
         /* 0xXX: Byte 3 of image ID (QM200 only)        */
         /* 0xXX: Byte 4 of image ID (QM200 only)        */
@@ -325,7 +325,7 @@ k_set_protect_status (GPPort *device, GPContext *c, int image_id_long,
                 if (protected) sb[8] = 0x01;
                 sb[6] = image_id;
                 sb[7] = image_id >> 8;
-		CRF (c, l_send_receive (device, sb, 10, &rb, &rbs,
+		CRF (c, l_send_receive (p, c, sb, 10, &rb, &rbs,
 						0, NULL, NULL), rb);
         } else {
                 if (protected) sb[10] = 0x01;
@@ -333,7 +333,7 @@ k_set_protect_status (GPPort *device, GPContext *c, int image_id_long,
                 sb[7] = image_id >> 24;
                 sb[8] = image_id;
                 sb[9] = image_id >> 8;
-		CRF (c, l_send_receive (device, sb, 12, &rb, &rbs,
+		CRF (c, l_send_receive (p, c, sb, 12, &rb, &rbs,
 						0, NULL, NULL), rb);
         }
 
@@ -344,12 +344,12 @@ k_set_protect_status (GPPort *device, GPContext *c, int image_id_long,
 
 int
 k_get_image (
-        GPPort *device, GPContext *c,
+        GPPort *p, GPContext *c,
         int image_id_long,
         unsigned long image_id,
 	KImageType image_type,
-        unsigned char **image_buffer,
-        unsigned int *image_buffer_size)
+        unsigned char **ib,
+        unsigned int *ibs)
 {
         /************************************************/
         /* Commands to get an image from the camera.    */
@@ -361,9 +361,9 @@ k_get_image (
         /* 0x88: Byte 1 of command identifier           */
         /* 0x00: Reserved                               */
         /* 0x00: Reserved                               */
-        /* 0xXX: Byte 0 of device ID                    */
+        /* 0xXX: Byte 0 of p ID                    */
         /*              0x02: Flash memory card         */
-        /* 0xXX: Byte 1 of device ID                    */
+        /* 0xXX: Byte 1 of p ID                    */
         /*              0x00: Flash memory card         */
         /* 0xXX: Byte 3 of image ID (QM200 only)        */
         /* 0xXX: Byte 4 of image ID (QM200 only)        */
@@ -386,7 +386,7 @@ k_get_image (
         unsigned char *rb = NULL;
         unsigned int rbs;
 
-	CHECK_NULL (image_buffer && image_buffer_size);
+	CHECK_NULL (ib && ibs);
 
 	sb[0] = image_type;
 	sb[1] = 0x88;
@@ -397,15 +397,15 @@ k_get_image (
         if (!image_id_long) {
                 sb[6] = image_id;
                 sb[7] = image_id >> 8;
-		CRF (c, l_send_receive (device, sb, 8, &rb, &rbs, 5000,
-					image_buffer, image_buffer_size), rb);
+		CRF (c, l_send_receive (p, c, sb, 8, &rb, &rbs, 5000,
+					ib, ibs), rb);
         } else {
                 sb[6] = image_id >> 16;
                 sb[7] = image_id >> 24;
                 sb[8] = image_id;
                 sb[9] = image_id >> 8;
-		CRF (c, l_send_receive (device, sb, 10, &rb, &rbs, 5000,
-					image_buffer, image_buffer_size), rb);
+		CRF (c, l_send_receive (p, c, sb, 10, &rb, &rbs, 5000,
+					ib, ibs), rb);
         }
 
         free (rb);
@@ -415,14 +415,14 @@ k_get_image (
 
 int
 k_get_image_information (
-        GPPort *device, GPContext *c,
+        GPPort *p, GPContext *c,
         int image_id_long,
         unsigned long image_number,
         unsigned long *image_id,
         unsigned int *exif_size,
         int *protected,
-        unsigned char **information_buffer,
-        unsigned int *information_buffer_size)
+        unsigned char **ib,
+        unsigned int *ibs)
 {
         /************************************************/
         /* Command to get the information about an      */
@@ -432,9 +432,9 @@ k_get_image_information (
         /* 0x88: Byte 1 of command identifier           */
         /* 0x00: Reserved                               */
         /* 0x00: Reserved                               */
-        /* 0xXX: Byte 0 of device ID                    */
+        /* 0xXX: Byte 0 of p ID                    */
         /*              0x02: Flash memory card         */
-        /* 0xXX: Byte 1 of device ID                    */
+        /* 0xXX: Byte 1 of p ID                    */
         /*              0x00: Flash memory card         */
         /* 0xXX: Byte 3 of image number (QM200 only)    */
         /* 0xXX: Byte 4 of image number (QM200 only)    */
@@ -466,14 +466,14 @@ k_get_image_information (
         unsigned char *rb = NULL;
         unsigned int rbs;
 
-	CHECK_NULL (image_id && exif_size && protected && information_buffer &&
-		    information_buffer_size);
+	CHECK_NULL (image_id && exif_size && protected && ib &&
+		    ibs);
 
         if (!image_id_long) {
                 sb[6] = image_number;
                 sb[7] = image_number >> 8;
-		CRF (c, l_send_receive (device, sb, 8, &rb, &rbs, 1000,
-			information_buffer, information_buffer_size), rb);
+		CRF (c, l_send_receive (p, c, sb, 8, &rb, &rbs, 1000,
+			ib, ibs), rb);
 		*image_id = (unsigned long) ((rb[5] << 8) | rb[4]);
 		*exif_size = (rb[7] << 8) | rb[6];
 		*protected = (rb[8] != 0x00);
@@ -482,8 +482,8 @@ k_get_image_information (
                 sb[7] = image_number >> 24;
                 sb[8] = image_number;
                 sb[9] = image_number >> 8;
-		CRF (c, l_send_receive (device, sb, 10, &rb, &rbs, 1000,
-			information_buffer, information_buffer_size), rb);
+		CRF (c, l_send_receive (p, c, sb, 10, &rb, &rbs, 1000,
+			ib, ibs), rb);
 		*image_id = (rb[5] << 24) | (rb[4] << 16) |
 			    (rb[7] << 8 ) |  rb[6];
 		*exif_size = (rb[9] << 8) | rb[8];
@@ -495,8 +495,8 @@ k_get_image_information (
 }
 
 int
-k_get_preview (GPPort *device, GPContext *c, int thumbnail,
-	       unsigned char **image_buffer, unsigned int *image_buffer_size)
+k_get_preview (GPPort *p, GPContext *c, int thumbnail,
+	       unsigned char **ib, unsigned int *ibs)
 {
         /************************************************/
         /* Command to get the preview from the camera.  */
@@ -523,19 +523,18 @@ k_get_preview (GPPort *device, GPContext *c, int thumbnail,
         unsigned char *rb = NULL;
         unsigned int rbs;
 
-	CHECK_NULL (image_buffer && image_buffer_size);
+	CHECK_NULL (ib && ibs);
 
         if (thumbnail)
 		sb[4] = 0x01;
-        CRF (c, l_send_receive (device, sb, 6, &rb, &rbs, 5000,
-				      image_buffer, image_buffer_size), rb);
+        CRF (c, l_send_receive (p, c, sb, 6, &rb, &rbs, 5000, ib, ibs), rb);
 
         free (rb);
         return (GP_OK);
 }
 
 int
-k_get_io_capability (GPPort *device, GPContext *c,
+k_get_io_capability (GPPort *p, GPContext *c,
 		     KBitRate *bit_rates, KBitFlag *bit_flags)
 {
         /************************************************/
@@ -564,7 +563,7 @@ k_get_io_capability (GPPort *device, GPContext *c,
 
 	CHECK_NULL (bit_rates && bit_flags);
 
-	CRF (c, l_send_receive (device, sb, 4, &rb, &rbs, 0, NULL, NULL), rb);
+	CRF (c, l_send_receive (p, c, sb, 4, &rb, &rbs, 0, NULL, NULL), rb);
 
 	*bit_rates = (rb[5] << 8) | rb[4];
 	*bit_flags = (rb[6] << 8) | rb[5];
@@ -574,7 +573,7 @@ k_get_io_capability (GPPort *device, GPContext *c,
 }
 
 int
-k_get_information (GPPort *device, GPContext *c, KInformation *info)
+k_get_information (GPPort *p, GPContext *c, KInformation *info)
 {
         /************************************************/
         /* Command to get some information about the    */
@@ -678,7 +677,7 @@ k_get_information (GPPort *device, GPContext *c, KInformation *info)
 
 	CHECK_NULL (info);
 
-	CRF (c, l_send_receive (device, sb, 4, &rb, &rbs, 0, NULL, NULL), rb);
+	CRF (c, l_send_receive (p, c, sb, 4, &rb, &rbs, 0, NULL, NULL), rb);
 
 	memset (info, 0, sizeof (KInformation));
 	strncpy (info->model,         &rb[ 8],  4);
@@ -697,7 +696,7 @@ k_get_information (GPPort *device, GPContext *c, KInformation *info)
 }
 
 int
-k_get_status (GPPort *device, GPContext *c, KStatus *status)
+k_get_status (GPPort *p, GPContext *c, KStatus *status)
 {
         /************************************************/
         /* Command to get the status of the camera.     */
@@ -765,7 +764,7 @@ k_get_status (GPPort *device, GPContext *c, KStatus *status)
 
 	CHECK_NULL (status);
 
-        CRF (c, l_send_receive (device, sb, 6, &rb, &rbs, 0, NULL, NULL), rb);
+        CRF (c, l_send_receive (p, c, sb, 6, &rb, &rbs, 0, NULL, NULL), rb);
 	
 	status->self_test_result = (rb[5] << 8) | rb[4];
 	status->power_level      = rb[6];
@@ -795,7 +794,7 @@ k_get_status (GPPort *device, GPContext *c, KStatus *status)
 }
 
 int
-k_get_date_and_time (GPPort *device, GPContext *c, KDate *date)
+k_get_date_and_time (GPPort *p, GPContext *c, KDate *date)
 {
         /************************************************/
         /* Command to get the date and time from the    */
@@ -823,7 +822,7 @@ k_get_date_and_time (GPPort *device, GPContext *c, KDate *date)
         unsigned char *rb = NULL;
         unsigned int rbs;
 
-        CRF (c, l_send_receive (device, sb, 4, &rb, &rbs, 0, NULL, NULL), rb);
+        CRF (c, l_send_receive (p, c, sb, 4, &rb, &rbs, 0, NULL, NULL), rb);
 	date->year   = rb[4];
 	date->month  = rb[5];
 	date->day    = rb[6];
@@ -836,7 +835,7 @@ k_get_date_and_time (GPPort *device, GPContext *c, KDate *date)
 };
 
 int
-k_get_preferences (GPPort *device, GPContext *c,
+k_get_preferences (GPPort *p, GPContext *c,
 		   KPreferences *preferences)
 {
         /************************************************/
@@ -867,7 +866,7 @@ k_get_preferences (GPPort *device, GPContext *c,
         unsigned char *rb = NULL;
         unsigned int rbs;
 
-        CRF (c, l_send_receive (device, sb, 4, &rb, &rbs, 0, NULL, NULL), rb);
+        CRF (c, l_send_receive (p, c, sb, 4, &rb, &rbs, 0, NULL, NULL), rb);
 	preferences->shutoff_time           = rb[4];
 	preferences->self_timer_time        = rb[5];
 	preferences->beep                   = rb[6];
@@ -878,7 +877,7 @@ k_get_preferences (GPPort *device, GPContext *c,
 }
 
 int
-k_set_io_capability (GPPort *device, GPContext *c,
+k_set_io_capability (GPPort *p, GPContext *c,
 		     KBitRate bit_rate, KBitFlag bit_flags)
 {
         /************************************************/
@@ -913,7 +912,7 @@ k_set_io_capability (GPPort *device, GPContext *c,
         sb[6] = bit_flags >> 0;
 	sb[7] = bit_flags >> 8;
 
-	CRF (c, l_send_receive (device, sb, 8, &rb, &rbs, 0, NULL, NULL), rb);
+	CRF (c, l_send_receive (p, c, sb, 8, &rb, &rbs, 0, NULL, NULL), rb);
 
         free (rb);
         return (GP_OK);
@@ -921,7 +920,7 @@ k_set_io_capability (GPPort *device, GPContext *c,
 
 
 int
-k_set_date_and_time (GPPort *device, GPContext *c, KDate date)
+k_set_date_and_time (GPPort *p, GPContext *c, KDate date)
 {
         /************************************************/
         /* Command to set date and time of the camera.  */
@@ -957,14 +956,14 @@ k_set_date_and_time (GPPort *device, GPContext *c, KDate date)
         sb[7] = date.hour;
         sb[8] = date.minute;
         sb[9] = date.second;
-	CRF (c, l_send_receive (device, sb, 10, &rb, &rbs, 0, NULL, NULL), rb);
+	CRF (c, l_send_receive (p, c, sb, 10, &rb, &rbs, 0, NULL, NULL), rb);
         free (rb);
         return (GP_OK);
 }
 
 
 int
-k_set_preference (GPPort *device, GPContext *c,
+k_set_preference (GPPort *p, GPContext *c,
 		  KPreference preference, unsigned int value)
 {
         /* Return values:                               */
@@ -984,13 +983,13 @@ k_set_preference (GPPort *device, GPContext *c,
 	sb[5] = preference >> 8;
 	sb[6] = value >> 0;
 	sb[7] = value >> 8;
-	CRF (c, l_send_receive (device, sb, 8, &rb, &rbs, 0, NULL, NULL), rb);
+	CRF (c, l_send_receive (p, c, sb, 8, &rb, &rbs, 0, NULL, NULL), rb);
         free (rb);
         return (GP_OK);
 }
 
 int
-k_reset_preferences (GPPort *device, GPContext *c)
+k_reset_preferences (GPPort *p, GPContext *c)
 {
         /************************************************/
         /* Command to reset the preferences of the      */
@@ -1011,7 +1010,7 @@ k_reset_preferences (GPPort *device, GPContext *c)
         unsigned char *rb = NULL;
         unsigned int rbs;
 
-	CRF (c, l_send_receive (device, sb, 4, &rb, &rbs, 0, NULL, NULL), rb);
+	CRF (c, l_send_receive (p, c, sb, 4, &rb, &rbs, 0, NULL, NULL), rb);
         free (rb);
         return (GP_OK);
 }
@@ -1019,12 +1018,12 @@ k_reset_preferences (GPPort *device, GPContext *c)
 
 int
 k_take_picture (
-        GPPort *device, GPContext *c,
+        GPPort *p, GPContext *c,
         int image_id_long,
         unsigned long *image_id,
         unsigned int *exif_size,
-        unsigned char **information_buffer,
-        unsigned int *information_buffer_size,
+        unsigned char **ib,
+        unsigned int *ibs,
         int *protected)
 {
         /************************************************/
@@ -1034,8 +1033,8 @@ k_take_picture (
         /* 0x91: Byte 1 of command identifier           */
         /* 0x00: Reserved                               */
         /* 0x00: Reserved                               */
-        /* 0x02: Byte 0 of device ID                    */
-        /* 0x00: Byte 1 of device ID                    */
+        /* 0x02: Byte 0 of p ID                    */
+        /* 0x00: Byte 1 of p ID                    */
         /*                                              */
         /* The data (thumbnail) will be received first, */
         /* followed by the return values.               */
@@ -1061,11 +1060,10 @@ k_take_picture (
         unsigned char *rb = NULL;
         unsigned int rbs;
 
-	CHECK_NULL (image_id && exif_size && protected && information_buffer &&
-		    information_buffer_size);
+	CHECK_NULL (image_id && exif_size && protected && ib &&
+		    ibs);
 
-	CRF (c, l_send_receive (device, sb, 6, &rb, &rbs, 60000,
-		      information_buffer, information_buffer_size), rb);
+	CRF (c, l_send_receive (p, c, sb, 6, &rb, &rbs, 60000, ib, ibs), rb);
 
 	if (!image_id_long) {
 		*image_id = 0x00 | 0x00 | (rb[5] << 8) | rb[4];
@@ -1082,7 +1080,7 @@ k_take_picture (
 }
 
 int
-k_localization_tv_output_format_set (GPPort *device, GPContext *c,
+k_localization_tv_output_format_set (GPPort *p, GPContext *c,
 				     KTVOutputFormat tv_output_format)
 {
         /************************************************/
@@ -1117,13 +1115,13 @@ k_localization_tv_output_format_set (GPPort *device, GPContext *c,
         unsigned int rbs;
 
 	sb[6] = tv_output_format;
-        CRF (c, l_send_receive (device, sb, 8, &rb, &rbs, 0, NULL, NULL), rb);
+        CRF (c, l_send_receive (p, c, sb, 8, &rb, &rbs, 0, NULL, NULL), rb);
         free (rb);
         return (GP_OK);
 }
 
 int
-k_localization_date_format_set (GPPort *device, GPContext *c,
+k_localization_date_format_set (GPPort *p, GPContext *c,
 				KDateFormat date_format)
 {
         /************************************************/
@@ -1158,7 +1156,7 @@ k_localization_date_format_set (GPPort *device, GPContext *c,
         unsigned int rbs;
 
 	sb[6] = date_format;
-        CRF (c, l_send_receive (device, sb, 8, &rb, &rbs, 0, NULL, NULL), rb);
+        CRF (c, l_send_receive (p, c, sb, 8, &rb, &rbs, 0, NULL, NULL), rb);
         free (rb);
         return (GP_OK);
 }
@@ -1166,7 +1164,7 @@ k_localization_date_format_set (GPPort *device, GPContext *c,
 #define PACKET_SIZE 1024
 
 int
-k_localization_data_put (GPPort *device, GPContext *c,
+k_localization_data_put (GPPort *p, GPContext *c,
 			 unsigned char *data, unsigned long data_size)
 {
         /************************************************/
@@ -1260,7 +1258,7 @@ k_localization_data_put (GPPort *device, GPContext *c,
 		 */
 		if (i + PACKET_SIZE > 65536)
 			sb[14] = 0x01;
-                result = l_send_receive (device, sb, PACKET_SIZE + 16,
+                result = l_send_receive (p, c, sb, PACKET_SIZE + 16,
 					 &rb, &rbs, 0, NULL, NULL);
                 if (result == GP_OK) {
 			if ((rb[3] == 0x0b) && (rb[2] == 0x00)) {
@@ -1288,7 +1286,7 @@ k_localization_data_put (GPPort *device, GPContext *c,
 }
 
 int
-k_cancel (GPPort *device, GPContext *c, KCommand* command)
+k_cancel (GPPort *p, GPContext *c, KCommand* command)
 {
         /************************************************/
         /* Command to cancel a command.                 */
@@ -1313,7 +1311,7 @@ k_cancel (GPPort *device, GPContext *c, KCommand* command)
 
 	CHECK_NULL (command);
 
-	CRF (c, l_send_receive (device, sb, 4, &rb, &rbs, 0, NULL, NULL), rb);
+	CRF (c, l_send_receive (p, c, sb, 4, &rb, &rbs, 0, NULL, NULL), rb);
 	*command = (rb[5] << 8) | rb[4];
         free (rb);
         return (GP_OK);

@@ -22,8 +22,9 @@
 #define __KONICA_LOWLEVEL_H__
 
 #include <gphoto2-port.h>
+#include <gphoto2-context.h>
 
-int l_init (gp_port* device);
+int l_init (GPPort *, GPContext *);
 
 /*
  * Some comments on the structure of send_buffer, image_buffer,
@@ -44,7 +45,7 @@ int l_init (gp_port* device);
  *			that, depending on command and return
  *			status, other bytes will follow.
  */
-int l_send_receive (GPPort *device,
+int l_send_receive (GPPort *, GPContext *,
 	unsigned char *send_buffer, unsigned int send_buffer_size,
 	unsigned char **receive_buffer, unsigned int *receive_buffer_size,
 	unsigned int timeout,

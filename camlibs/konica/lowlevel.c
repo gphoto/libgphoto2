@@ -28,6 +28,27 @@
 #include <gphoto2-result.h>
 #include <gphoto2-port-log.h>
 
+#include "konica.h"
+
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define N_(String) (String)
+#  endif 
+#else
+#  define textdomain(String) (String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory) (Domain)
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
 #define GP_MODULE "konica"
 
 #define DEFAULT_TIMEOUT	500
@@ -51,14 +72,14 @@
 #define CHECK_FREE(r,f) {int ret = (r); if (ret < 0) {free (f); return (ret);}}
 
 static int
-l_ping_rec (GPPort *device, unsigned int level)
+l_ping_rec (GPPort *p, unsigned int level)
 {
 	unsigned char c;
 
 	/* Write ENQ and read the response. */
 	c = ENQ;
-	CHECK (gp_port_write (device, &c, 1));
-	CHECK (gp_port_read (device, &c, 1));
+	CHECK (gp_port_write (p, &c, 1));
+	CHECK (gp_port_read (p, &c, 1));
 	switch (c) {
 	case ACK:
 		return (GP_OK);
@@ -69,7 +90,7 @@ l_ping_rec (GPPort *device, unsigned int level)
 		 * make sure we don't recurse forever.
 		 */
 		if (level < 30)
-			return (l_ping_rec (device, level + 1));
+			return (l_ping_rec (p, level + 1));
 		else
 			return (GP_ERROR_CORRUPTED_DATA);
 	case ENQ:
@@ -84,9 +105,9 @@ l_ping_rec (GPPort *device, unsigned int level)
 
 		/* Write NACK.  */
 		c = NACK;
-		CHECK (gp_port_write (device, &c, 1));
+		CHECK (gp_port_write (p, &c, 1));
 		for (;;) {
-			CHECK (gp_port_read (device, &c, 1));
+			CHECK (gp_port_read (p, &c, 1));
 			switch (c) {
 			case ENQ:
 
@@ -112,33 +133,33 @@ l_ping_rec (GPPort *device, unsigned int level)
 		 * simply ignore it and try again (but make
 		 * sure that we don't loop forever).
 		 */
-		CHECK (gp_port_flush (device, 0));
-		CHECK (gp_port_flush (device, 1));
+		CHECK (gp_port_flush (p, 0));
+		CHECK (gp_port_flush (p, 1));
 		if (level > 50)
 			return (GP_ERROR_CORRUPTED_DATA);
 		else
-			return (l_ping_rec (device, level + 1));
+			return (l_ping_rec (p, level + 1));
 	}
 
 	return (GP_OK);
 }
 
 static int
-l_ping (GPPort *device)
+l_ping (GPPort *p)
 {
-	return (l_ping_rec (device, 0));
+	return (l_ping_rec (p, 0));
 }
 
 int 
-l_init (GPPort *device)
+l_init (GPPort *p, GPContext *c)
 {
 	unsigned int i;
 	int result = GP_OK;
-	CHECK_NULL (device);
+	CHECK_NULL (p);
 
-	CHECK (gp_port_set_timeout (device, DEFAULT_TIMEOUT));
+	CHECK (gp_port_set_timeout (p, DEFAULT_TIMEOUT));
 	for (i = 0; i < 3; i++) {
-		result = l_ping (device);
+		result = l_ping (p);
 		if (result != GP_ERROR_TIMEOUT)
 			break;
 	}
@@ -146,11 +167,11 @@ l_init (GPPort *device)
 }
 
 static int 
-l_esc_read (GPPort *device, unsigned char *c)
+l_esc_read (GPPort *p, unsigned char *c)
 {
-	CHECK_NULL (device && c);
+	CHECK_NULL (p && c);
 
-	CHECK (gp_port_read (device, c, 1));
+	CHECK (gp_port_read (p, c, 1));
 
 	/*
 	 * STX, ETX, ENQ, ACK, XOFF, XON, NACK, and ETB have to be masked by
@@ -171,7 +192,7 @@ l_esc_read (GPPort *device, unsigned char *c)
 		if ((*c == ETX) || (*c == ETB))
 			return (GP_ERROR_CORRUPTED_DATA);
 	} else if (*c == ESC) {
-		CHECK (gp_port_read (device, c, 1));
+		CHECK (gp_port_read (p, c, 1));
 		*c = (~*c & 0xff);
 		if ((*c != STX ) && (*c != ETX ) && (*c != ENQ) &&
 		    (*c != ACK ) && (*c != XOFF) && (*c != XON) &&
@@ -183,7 +204,7 @@ l_esc_read (GPPort *device, unsigned char *c)
 
 
 static int
-l_send (GPPort *device, unsigned char *send_buffer,
+l_send (GPPort *p, unsigned char *send_buffer,
 	unsigned int send_buffer_size)
 {
 	unsigned char c;
@@ -196,10 +217,10 @@ l_send (GPPort *device, unsigned char *send_buffer,
 	unsigned int sbs;
 	int i = 0;
 
-	CHECK_NULL (device && send_buffer);
+	CHECK_NULL (p && send_buffer);
 
 	/* We need to ping the camera first */
-	CHECK (l_ping (device));
+	CHECK (l_ping (p));
 
 	/********************************************************/
 	/* We will write:			 		*/
@@ -255,8 +276,8 @@ l_send (GPPort *device, unsigned char *send_buffer,
 	for (i = 0; ; i++) {
 
 		/* Write data as above.	*/
-		CHECK_FREE (gp_port_write (device, sb, sbs), sb);
-		CHECK_FREE (gp_port_read (device, &c, 1), sb);
+		CHECK_FREE (gp_port_write (p, sb, sbs), sb);
+		CHECK_FREE (gp_port_read (p, &c, 1), sb);
 		switch (c) {
 		case ACK:
 
@@ -265,7 +286,7 @@ l_send (GPPort *device, unsigned char *send_buffer,
 
 			/* Write EOT.	*/
 			c = EOT;
-			CHECK (gp_port_write (device, &c, 1));
+			CHECK (gp_port_write (p, &c, 1));
 			return (GP_OK);
 
 		case NACK:
@@ -285,21 +306,23 @@ l_send (GPPort *device, unsigned char *send_buffer,
 
 
 static int 
-l_receive (GPPort *device, unsigned char **rb, unsigned int *rbs,
+l_receive (GPPort *p, GPContext *context,
+	   unsigned char **rb, unsigned int *rbs,
 	   unsigned int timeout)
 {
 	unsigned char c, d;
 	int error_flag;
-	unsigned int i, j, rbs_internal;
+	unsigned int i, j, rbs_internal, id;
 	unsigned char checksum;
 	int result;
+	KCommand command;
 
-	CHECK_NULL (device && rb && rbs);
+	CHECK_NULL (p && rb && rbs);
 
 	for (i = 0; ; ) {
-		CHECK (gp_port_set_timeout (device, timeout));
-		CHECK (gp_port_read (device, &c, 1));
-		CHECK (gp_port_set_timeout (device, DEFAULT_TIMEOUT));
+		CHECK (gp_port_set_timeout (p, timeout));
+		CHECK (gp_port_read (p, &c, 1));
+		CHECK (gp_port_set_timeout (p, DEFAULT_TIMEOUT));
 		switch (c) {
 		case ENQ:
 
@@ -333,7 +356,7 @@ l_receive (GPPort *device, unsigned char **rb, unsigned int *rbs,
 			 * error).
 			 */
 			for (;;) {
-				CHECK (gp_port_read (device, &c, 1));
+				CHECK (gp_port_read (p, &c, 1));
 				if (c == ENQ)
 					break;
 			}
@@ -343,11 +366,14 @@ l_receive (GPPort *device, unsigned char **rb, unsigned int *rbs,
 			break;
 	}
 
+	/* Start progress */
+	id = gp_context_progress_start (context, *rbs, _("Downloading..."));
+
 	/* Write ACK. */
-	CHECK (gp_port_write (device, "\6", 1));
+	CHECK (gp_port_write (p, "\6", 1));
 	for (*rbs = 0; ; ) {
 		for (j = 0; ; j++) {
-			CHECK (gp_port_read (device, &c, 1));
+			CHECK (gp_port_read (p, &c, 1));
 			switch (c) {
 			case STX:
 
@@ -365,9 +391,9 @@ l_receive (GPPort *device, unsigned char **rb, unsigned int *rbs,
 			 * Read 2 bytes for size (low order byte, high order
 			 * byte) plus ESC quotes.
 			 */
-			CHECK (l_esc_read (device, &c));
+			CHECK (l_esc_read (p, &c));
 			checksum = c;
-			CHECK (l_esc_read (device, &d));
+			CHECK (l_esc_read (p, &d));
 			checksum += d;
 			rbs_internal = (d << 8) | c;
 			if (*rbs == 0)
@@ -388,7 +414,7 @@ while (read < rbs_internal) {
 	 */
 	GP_DEBUG ("Reading %i bytes (%i of %i already read)...", 
 		  rbs_internal - read, read, rbs_internal);
-	result = gp_port_read (device, &((*rb)[*rbs + read]),
+	result = gp_port_read (p, &((*rb)[*rbs + read]),
 			       rbs_internal - read);
 	if (result < 0) {
 		error_flag = 1;
@@ -408,7 +434,7 @@ while (read < rbs_internal) {
 			break;
 		} else if (*c == ESC) {
 			if (i == read + r - 1) {
-				CHECK (gp_port_read (device,
+				CHECK (gp_port_read (p,
 						&((*rb)[*rbs + read + r]), 1));
 				r++;
 			}
@@ -430,7 +456,7 @@ while (read < rbs_internal) {
 	read += r;
 }}
 			if (!error_flag) {
-				CHECK (gp_port_read (device, &d, 1));
+				CHECK (gp_port_read (p, &d, 1));
 				switch (d) {
 				case ETX:
 
@@ -461,7 +487,7 @@ while (read < rbs_internal) {
 					 * reject the packet.
 					 */
 					while ((d != ETX) && (d != ETB)) {
-						CHECK (gp_port_read (device,
+						CHECK (gp_port_read (p,
 								     &d, 1));
 					}
 					error_flag = 1;
@@ -471,12 +497,12 @@ while (read < rbs_internal) {
 			checksum += d;
 
 			/* Read 1 byte for checksum plus ESC quotes. */
-			CHECK (l_esc_read (device, &c));
+			CHECK (l_esc_read (p, &c));
 			if ((c == checksum) && (!error_flag)) {
 				*rbs += rbs_internal;
 
 				/* Write ACK. */
-				CHECK (gp_port_write (device, "\6", 1));
+				CHECK (gp_port_write (p, "\6", 1));
 				break;
 
 			} else {
@@ -493,11 +519,11 @@ while (read < rbs_internal) {
 
 				/* Write NACK. */
 				c = NACK;
-				CHECK (gp_port_write (device, &c, 1));
+				CHECK (gp_port_write (p, &c, 1));
 				continue;
 			}
 		}
-		CHECK (gp_port_read (device, &c, 1));
+		CHECK (gp_port_read (p, &c, 1));
 		switch (c) {
 			case EOT:
 
@@ -521,12 +547,13 @@ while (read < rbs_internal) {
 		case ETX:
 
 			/* We are all done. */
+			gp_context_progress_stop (context, id);
 			return (GP_OK);
 
 		case ETB:
 
 			/* We expect more data. Read ENQ. */
-			CHECK (gp_port_read (device, &c, 1));
+			CHECK (gp_port_read (p, &c, 1));
 			switch (c) {
 			case ENQ:
 
@@ -539,8 +566,17 @@ while (read < rbs_internal) {
 				return (GP_ERROR_CORRUPTED_DATA);
 			}
 
+			if (gp_context_cancel (context) ==
+						GP_CONTEXT_FEEDBACK_CANCEL) {
+				GP_DEBUG ("Trying to cancel operation...");
+				CHECK (k_cancel (p, context, &command));
+				GP_DEBUG ("Operation 0x%x cancelled.",
+					  command);
+				return (GP_ERROR_CANCEL);
+			}
+
 			/* Write ACK. */
-			CHECK (gp_port_write (device, "\6", 1));
+			CHECK (gp_port_write (p, "\6", 1));
 			break;
 
 		default:
@@ -548,12 +584,13 @@ while (read < rbs_internal) {
 			/* Should not happen. */
 			return (GP_ERROR_CORRUPTED_DATA);
 		}
+		gp_context_progress_update (context, id, *rbs);
 	}
 }
 
 int 
 l_send_receive (
-	GPPort *device,
+	GPPort *p, GPContext *c,
 	unsigned char *send_buffer, unsigned int send_buffer_size, 
 	unsigned char **receive_buffer, unsigned int *receive_buffer_size,
 	unsigned int timeout,
@@ -563,10 +600,12 @@ l_send_receive (
 		timeout = DEFAULT_TIMEOUT;
 
 	/* Send data. */
-	CHECK (l_send (device, send_buffer, send_buffer_size));
+	CHECK (l_send (p, send_buffer, send_buffer_size));
 
         /* Receive data. */
-	CHECK (l_receive (device, receive_buffer, receive_buffer_size,
+	if (image_buffer_size)
+		*receive_buffer_size = *image_buffer_size;
+	CHECK (l_receive (p, c, receive_buffer, receive_buffer_size,
 			  timeout));
 
 	/* Check if we've received the control data. */
@@ -581,7 +620,7 @@ l_send_receive (
 	*receive_buffer = NULL;
 	
 	/* Receive control data. */
-	CHECK (l_receive (device, receive_buffer, receive_buffer_size,
+	CHECK (l_receive (p, c, receive_buffer, receive_buffer_size,
 			  DEFAULT_TIMEOUT));
 
 	/* Sanity check: Did we receive the right control data? */
