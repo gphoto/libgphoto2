@@ -1,8 +1,3 @@
-2002-01-19  Lutz Müller <lutz@users.sourceforge.net>
-
-	* library.c (read_packet): If we receive NAK, do not try to read
-	  additional data and directly try again.
-
 2002-01-17  Lutz Müller <lutz@users.sourceforge.net>
 
 	* library.c: Improved debugging messages. I hope I didn't break
