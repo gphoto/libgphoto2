@@ -79,7 +79,7 @@ int dimagev_verify_packet(dimagev_packet *p) {
 	/* All packets must start with DIMAGEV_STX and end with DIMAGEV_ETX. It's an easy check. */
 	if ( ( p->buffer[0] != DIMAGEV_STX ) || ( p->buffer[(p->length - 1)] != DIMAGEV_ETX ) ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_verify_packet::packet missing STX and/or ETX");
-		return GP_ERROR;
+		return GP_ERROR_CORRUPTED_DATA;
 	}
 
 	correct_checksum = (p->buffer[(p->length - 3)] * 256) + p->buffer[(p->length - 2)];
@@ -90,7 +90,7 @@ int dimagev_verify_packet(dimagev_packet *p) {
 
 	if ( current_checksum != correct_checksum ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_verify_packet::checksum bytes were %02x%02x, checksum was %d, should be %d", p->buffer[( p->length - 3) ], p->buffer[ ( p->length -2 ) ], current_checksum, correct_checksum);
-		return GP_ERROR;
+		return GP_ERROR_CORRUPTED_DATA;
 	} else {
 		return GP_OK;
 	}

@@ -1,6 +1,6 @@
 /**********************************************************************
 *       Minolta Dimage V digital camera communication library         *
-*               Copyright (C) 2000 Gus Hartmann                       *
+*               Copyright (C) 2000,2001 Gus Hartmann                  *
 *                                                                     *
 *    This program is free software; you can redistribute it and/or    *
 *    modify it under the terms of the GNU General Public License as   *
@@ -37,7 +37,7 @@ int dimagev_shutter(dimagev_t *dimagev) {
 	/* Check the device. */
 	if ( dimagev->dev == NULL ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::device not valid");
-		return GP_ERROR;
+		return GP_ERROR_BAD_PARAMETERS;
 	}
 
 	/* Verify that we can write to the memory card. */
@@ -62,19 +62,19 @@ int dimagev_shutter(dimagev_t *dimagev) {
 	/* Let's say hello and get the current status. */
 	if ( ( p = dimagev_make_packet(DIMAGEV_SHUTTER, 1, 0)) == NULL ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::unable to allocate packet");
-		return GP_ERROR;
+		return GP_ERROR_NO_MEMORY;
 	}
 
 	if ( gp_port_write(dimagev->dev, p->buffer, p->length) == GP_ERROR ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::unable to write packet");
-		return GP_ERROR;
+		return GP_ERROR_IO;
 	}
 
 	sleep(1);
 	
 	if ( gp_port_read(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::no response from camera");
-		return GP_ERROR;
+		return GP_ERROR_IO;
 	}
 
 	free(p);
@@ -86,15 +86,15 @@ int dimagev_shutter(dimagev_t *dimagev) {
 			break;
 		case DIMAGEV_NAK:
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::camera did not acknowledge transmission");
-			return GP_ERROR;
+			return GP_ERROR_IO;
 			break;
 		case DIMAGEV_CAN:
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::camera cancels transmission");
-			return GP_ERROR;
+			return GP_ERROR_IO;
 			break;
 		default:
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::camera responded with unknown value %x\n", char_buffer);
-			return GP_ERROR;
+			return GP_ERROR_IO;
 			break;
 	}
 
@@ -102,7 +102,7 @@ int dimagev_shutter(dimagev_t *dimagev) {
 
 	if ( ( p = dimagev_read_packet(dimagev) ) == NULL ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::unable to read packet\n");
-		return GP_ERROR;
+		return GP_ERROR_IO;
 	}
 
 	if ( ( raw = dimagev_strip_packet(p) ) == NULL ) {
@@ -122,12 +122,12 @@ int dimagev_shutter(dimagev_t *dimagev) {
 	char_buffer = DIMAGEV_EOT;
 	if ( gp_port_write(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::unable to send EOT");
-		return GP_ERROR;
+		return GP_ERROR_IO;
 	}
 		
 	if ( gp_port_read(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::no response from camera");
-		return GP_ERROR;
+		return GP_ERROR_IO;
 	}
 
 	switch ( char_buffer ) {
@@ -135,15 +135,15 @@ int dimagev_shutter(dimagev_t *dimagev) {
 			break;
 		case DIMAGEV_NAK:
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::camera did not acknowledge transmission");
-			return GP_ERROR;
+			return GP_ERROR_IO;
 			break;
 		case DIMAGEV_CAN:
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::camera cancels transmission");
-			return GP_ERROR;
+			return GP_ERROR_IO;
 			break;
 		default:
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::camera responded with unknown value %x", char_buffer);
-			return GP_ERROR;
+			return GP_ERROR_IO;
 			break;
 	}
 
