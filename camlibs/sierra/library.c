@@ -631,10 +631,9 @@ int sierra_ping (Camera *camera)
 
 int sierra_set_speed (Camera *camera, int speed, GPContext *context) 
 {
-	gp_port_settings settings;
+	GPPortSettings settings;
 
-	GP_DEBUG ("* sierra_set_speed");
-	GP_DEBUG ("* speed: %i", speed);
+	GP_DEBUG ("Setting speed to %i...", speed);
 
 	camera->pl->first_packet = 1;
 
@@ -671,8 +670,8 @@ int sierra_set_speed (Camera *camera, int speed, GPContext *context)
 		return GP_ERROR_IO_SERIAL_SPEED;
 	}
 
+	gp_context_status (context, _("Setting speed to %i baud..."), speed);
 	CHECK (sierra_set_int_register (camera, 17, speed, context));
-
 	CHECK (gp_port_set_settings (camera->port, settings));
 
 	GP_SYSTEM_SLEEP(10);
@@ -743,16 +742,12 @@ int sierra_set_int_register (Camera *camera, int reg, int value, GPContext *cont
 	char p[4096];
 	char buf[4096];
 	int ret;
+	unsigned int id;
 
-	GP_DEBUG ("* sierra_set_int_register");
-	GP_DEBUG ("* register: %i", reg);
-	GP_DEBUG ("* value:    %i", value);
+	GP_DEBUG ("Setting int register %i to %i...", reg, value);
 
-	if (value < 0) {
-		CHECK (sierra_build_packet (camera, TYPE_COMMAND, 0, 2, p));
-	} else {
-		CHECK (sierra_build_packet (camera, TYPE_COMMAND, 0, 6, p));
-	}
+	CHECK (sierra_build_packet (camera, TYPE_COMMAND, 0,
+				    (value < 0) ? 2 : 6, p));
 
 	/* Fill in the data */
 	p[4] = 0x00;
@@ -764,17 +759,27 @@ int sierra_set_int_register (Camera *camera, int reg, int value, GPContext *cont
 		p[9] = (value>>24) & 0xff;
 	}
 
+	id = gp_context_progress_start (context, RETRIES,
+					_("Transmitting data..."));
 	for (r = 0; r < RETRIES; r++) {
 
 		CHECK (sierra_write_packet (camera, p));
 
 		ret = sierra_read_packet (camera, buf);
-		if (ret == GP_ERROR_TIMEOUT)
+		if (ret == GP_ERROR_TIMEOUT) {
+			if (r == RETRIES - 1)
+				GP_DEBUG ("Transmission timed out.");
+			else
+				GP_DEBUG ("Transmission timed out "
+					  "- retrying...");
 			continue;
+		}
 		CHECK (ret);
 
-		if (buf[0] == ACK)
-			return GP_OK;
+		if (buf[0] == ACK) {
+			GP_DEBUG ("Transmission successful.");
+			break;
+		}
 
 		/* DC1 = invalid register or value */
 		if (buf[0] == DC1) {
@@ -783,11 +788,22 @@ int sierra_set_int_register (Camera *camera, int reg, int value, GPContext *cont
 				"<gphoto-devel@gphoto.org>."), reg);
 			return GP_ERROR_BAD_PARAMETERS;
 		}
+
+		gp_context_progress_update (context, id, r + 1);
+		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
+			return (GP_ERROR_CANCEL);
+	}
+	gp_context_progress_stop (context, id);
+
+	if (r == RETRIES) {
+
+		/* Set to default speed, don't care about the return value */
+		sierra_set_speed (camera, -1, context);
+
+		return (GP_ERROR_IO);
 	}
 
-	sierra_set_speed (camera, -1, context);
-
-	return GP_ERROR_IO;
+	return (GP_OK);
 }
 
 int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *context) 
