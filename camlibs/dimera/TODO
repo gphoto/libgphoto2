@@ -4,7 +4,6 @@ Outstanding items in the gphoto2 dimera driver:
 
 - make exposure, auto_exposure, auto_flash user-modifiable config options
 - may need to put /temp.ppm into file list
-- use gettext to allow internationalized strings
 
 Bugs:
 
