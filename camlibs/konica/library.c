@@ -758,17 +758,17 @@ int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info)
 		gp_frontend_message (camera, "Your camera does not support capturing videos.");
 		return (GP_ERROR);
 
-//	case GP_CAPTURE_PREVIEW:
+	case GP_CAPTURE_PREVIEW:
 
 		/* Get the preview. */
-//		if (error_happened (camera, k_get_preview (
-//			konica_data->device, 
-//			TRUE,
-//			(guchar**) &file->data,
-//			(guint*) &file->size))) return (GP_ERROR);
-//		strcpy (file->type, "image/jpg");
+		if (error_happened (camera, k_get_preview (
+			konica_data->device, 
+			TRUE,
+			(guchar**) &file->data,
+			(guint*) &file->size))) return (GP_ERROR);
+		strcpy (file->type, "image/jpg");
 
-//		return (GP_OK);
+		return (GP_OK);
 
 	default:
 		return (GP_ERROR);

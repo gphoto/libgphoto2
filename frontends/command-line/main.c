@@ -85,6 +85,7 @@ OPTION_CALLBACK(delete_all_pictures);
 OPTION_CALLBACK(upload_picture);
 OPTION_CALLBACK(capture_image);
 OPTION_CALLBACK(capture_movie);
+OPTION_CALLBACK(capture_preview);
 OPTION_CALLBACK(summary);
 OPTION_CALLBACK(manual);
 OPTION_CALLBACK(about);
@@ -133,6 +134,7 @@ Option option[] = {
 {"u", "upload-picture",	"filename",	"Upload a picture to camera", 	upload_picture, 0},
 {"" , "capture-image",  "",		"Capture an image and download",capture_image,  0},
 {"" , "capture-movie",  "duration",	"Capture a movie and download", capture_movie,  0},
+{"" , "capture-preview","",		"Capture a preview and download",capture_preview,0},
 {"",  "summary",	"",		"Summary of camera status",	summary,	0},
 {"",  "manual",		"",		"Camera driver manual",		manual,		0},
 {"",  "about",		"",		"About the camera driver",	about,		0},
@@ -699,6 +701,11 @@ OPTION_CALLBACK(capture_image) {
 OPTION_CALLBACK(capture_movie) {
 
 	return (capture_generic(GP_CAPTURE_VIDEO, atoi(arg)));
+}
+
+OPTION_CALLBACK(capture_preview) {
+
+	return (capture_generic(GP_CAPTURE_PREVIEW, 0));
 }
 
 OPTION_CALLBACK(summary) {

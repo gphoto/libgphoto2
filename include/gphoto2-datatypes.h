@@ -47,7 +47,8 @@ typedef enum {
 /* Capture Type */
 typedef enum {
 	GP_CAPTURE_IMAGE	= 1 << 0,
-	GP_CAPTURE_VIDEO	= 1 << 1
+	GP_CAPTURE_VIDEO	= 1 << 1,
+	GP_CAPTURE_PREVIEW	= 1 << 2
 } CameraCaptureType;
 
 /* Widget types */
