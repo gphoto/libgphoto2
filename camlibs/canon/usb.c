@@ -137,8 +137,7 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 	i = gp_port_usb_msg_read (camera->port, 0x04, 0x1, 0, msg, 0x58);
 	if (i != 0x58) {
 		gp_context_error (context,
-				  _("Step #2 of initialization failed for"
-				    " PowerShot camera! (returned %i, expected %i) "
+				  _("Step #2 of initialization failed! (returned %i, expected %i) "
 				    "Camera not operational"), i, 0x58);
 		if ( i < 0 )
 			return GP_ERROR_OS_FAILURE;
@@ -158,7 +157,7 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 		i = gp_port_usb_msg_read (camera->port, 0x04, 0x4, 0, msg, 0x50);
 		if (i != 0x50) {
 			gp_context_error (context,
-					  _("EOS Step #3 of initialization failed! "
+					  _("Step #3 of initialization failed! "
 					    "(returned %i, expected %i) "
 					    "Camera not operational"), i, 0x50);
 			if ( i < 0 )
@@ -208,7 +207,7 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 		else {
 			if (i != 0x40) {
 				gp_context_error (context,
-						  _("Step #4.1 failed! "
+						  _("Step #4 failed! "
 						    "(returned %i, expected %i) Camera not operational"), i,
 						  0x40);
 				if ( i < 0 )
@@ -227,8 +226,32 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 		i = gp_port_read (camera->port, buffer, 4);
 		if (i != 4)
 			GP_DEBUG ("canon_usb_camera_init() "
-				  "Step #4.2 of initialization failed! (returned %i, expected %i) "
+				  "Step #5 of initialization failed! (returned %i, expected %i) "
 				  "Camera might still work though. Continuing.", i, 4);
+		if ( camera->pl->md->model != CANON_CLASS_6 ) {
+			read_bytes = 0;
+			do {
+				GP_DEBUG ( "canon_usb_camera_init() read_bytes=0x%x", read_bytes );
+				i = gp_port_check_int_fast ( camera->port, buffer, 0x10 );
+				if ( i > 0 )
+					read_bytes += i;
+			} while ( read_bytes < 0x10 && i >= 0 );
+			if ( read_bytes < 0x10 ) {
+				GP_DEBUG ( "canon_usb_camera_init() interrupt read returned only %d bytes, status=%d", read_bytes, i );
+				if ( i < 0 )
+					return GP_ERROR_OS_FAILURE;
+				else
+					return GP_ERROR_CORRUPTED_DATA;
+			}
+			else if ( i < 0 ) {
+				GP_DEBUG ( "canon_usb_camera_init() interrupt read failed, status=%d", i );
+				return GP_ERROR_CORRUPTED_DATA;
+			}
+			else if ( i > 0x10 )
+				GP_DEBUG ( "canon_usb_camera_init() interrupt read %d bytes, expected 16", read_bytes );
+			else
+				GP_DEBUG ( "canon_usb_camera_init() interrupt read OK" );
+		}
 
 	}
 
@@ -412,7 +435,7 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 		case CANON_CLASS_3:
 			/* Previous default; I doubt that any new
 			 * cameras will work this way. */
-			GP_DEBUG ("Locking camera keys and turning off LCD using 'normal' locking code...");
+			GP_DEBUG ("canon_usb_lock_keys: Locking camera and turning off LCD using 'normal' locking code...");
 
 			c_res = canon_usb_dialogue (camera,
 						    CANON_USB_FUNCTION_GET_PIC_ABILITIES,
@@ -446,7 +469,7 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 			break;
 
 		case CANON_CLASS_4:
-			GP_DEBUG ("Locking camera keys and turning off LCD using 'EOS' locking code...");
+			GP_DEBUG ("canon_usb_lock_keys: Locking camera and turning off LCD using 'EOS' locking code...");
 
 			memset (payload, 0, sizeof (payload));
 			payload[0] = 0x06;
@@ -475,7 +498,7 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
                            Jan. 2003), I suspect that we will find
                            more cameras in the future that work this
                            way. */
-			GP_DEBUG ("Locking camera keys and turning off LCD using class 5 locking code...");
+			GP_DEBUG ("canon_usb_lock_keys: Locking camera and turning off LCD using class 5 locking code...");
 			c_res = canon_usb_dialogue (camera,
 						    CANON_USB_FUNCTION_GENERIC_LOCK_KEYS,
 						    &bytes_read, NULL, 0);
