@@ -1,3 +1,8 @@
+2001-12-29  Marcus Meissner <marcus@jet.franken.de>
+	
+	* MAINTAINERS: Added myself to stv680 entry.
+	* AUTHORS: Added myself.
+
 2001-12-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* frontends/command-line/main.c: Show file-specific progress on
