@@ -69,9 +69,14 @@
  * respective USB IDs and a flag denoting RS232 serial support.
  *
  * Some cameras are sold under different names in different regions,
- * but are technically the same. So we treat them the same from a
- * technical point of view, but also add the other model name to
- * avoid unnecessary questions from users.
+ * but are technically the same. We treat them the same from a
+ * technical point of view. To avoid unnecessary questions from users,
+ * we add the other names to the camera list after the primary name,
+ * such that their camera name occurs in the list of supported
+ * cameras.
+ *
+ * Note that at least some serial cameras require a certain name for
+ * correct detection.
  **/
 
 #define S32K	(32 * 1024)
