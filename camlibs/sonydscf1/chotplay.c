@@ -261,7 +261,7 @@ long get_file(char *name, char **data, int format, int verbose)
   u_long filelen;
   u_long total = 0;
   long len,memcpylen;
-  char *ptr;
+  char *ptr = NULL;
   u_char buf[0x400];
   u_char jpeg_comment[256];
 
