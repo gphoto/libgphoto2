@@ -1,3 +1,10 @@
+2001-11-22  Colin Marquardt  <colin@marquardt-home.de>
+
+	* libgphoto2_port/libgphoto2_port/gphoto2-port.c (gp_port_write):
+ 	    Patch from Bill Marr <marr@shianet.org>:
+	    Fix bug whereby hexadecimal output is erroneously 
+            shown in decimal format.
+
 2001-11-22  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* configure.in:
