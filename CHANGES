@@ -7,6 +7,10 @@ drivers (camlibs):
      - added support for G5, Optura 20
      - re-added support for A300 and S50
 
+   * PTP driver:
+     - enhanced Canon Capture support.
+     - added id for Canon Digital IXUS i.
+
 packaging:
 
    * linux hotplug scripts:
