@@ -2,7 +2,7 @@ dnl Process this file with autoconf to produce a configure script.
 
 AC_INIT(libgphoto2/gphoto2.h)
 AM_CONFIG_HEADER(libgphoto2/config.h)
-AM_INIT_AUTOMAKE(gphoto2, 2.0beta4dev6)
+AM_INIT_AUTOMAKE(gphoto2, 2.0beta4dev7)
 AM_MAINTAINER_MODE
 AC_LIBTOOL_DLOPEN
 
@@ -344,6 +344,7 @@ echo "
 Configuration (libgphoto2):
 
 	Source code location:      ${srcdir}
+	Version:                   ${VERSION}
 	Compiler:                  ${CC}
 
 	Build documenation:        $enable_docs
