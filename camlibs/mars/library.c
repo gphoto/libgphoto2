@@ -60,8 +60,8 @@ struct {
    	unsigned short idProduct;
 } models[] = {
         {"Aiptek PenCam VGA+", GP_DRIVER_STATUS_EXPERIMENTAL, 0x08ca, 0x0111},
-        {"Emprex PCD3800", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f},
-       	{NULL,0,0}
+ 	{"Emprex PCD3600", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f},
+ 	{NULL,0,0}
 };
 
 int
@@ -90,7 +90,7 @@ camera_abilities (CameraAbilitiesList *list)
 		else
 			a.operations = GP_OPERATION_CAPTURE_IMAGE;
        		a.folder_operations = GP_FOLDER_OPERATION_NONE;
-       		a.file_operations   = GP_FILE_OPERATION_NONE; 
+       		a.file_operations   = GP_FILE_OPERATION_PREVIEW; 
        		gp_abilities_list_append (list, a);
     	}
     	return GP_OK;
@@ -101,10 +101,40 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
 	int num_pics;
 	num_pics = mars_get_num_pics(camera->pl->info);
+	switch(num_pics) {
+	case 1:
+    	sprintf (summary->text,_("Mars MR97310 camera.\n" 
+			"There is %i photo in it. \n"), num_pics);  
+	break;
+	default:
     	sprintf (summary->text,_("Mars MR97310 camera.\n" 
 			"There are %i photos in it. \n"), num_pics);  
+	}	
+
     	return GP_OK;
 }
+
+
+static int camera_manual (Camera *camera, CameraText *manual, GPContext *context) 
+{
+	strcpy(manual->text, 
+	_(
+	"This driver supports cameras with Mars MR97310 chip\n"
+	"and should work with gtkam.\n"
+	"The driver allows you to get\n"
+	"   - thumbnails for gtkam\n"
+	"   - full images (640x480 or 320x240PPM format)\n"
+	"The camera does not support deletion of photos, nor uploading\n"
+	"of data. This driver does not support the optional photo\n" 
+	"compression mode.\n" 
+	"If present on the camera, video clip frames are downloaded \n"
+	"as consecutive still photos.\n"
+	)); 
+
+	return (GP_OK);
+}
+
+
 
 
 static int
@@ -135,18 +165,21 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 {
     	Camera *camera = user_data; 
     	int w, h = 0, b = 0, comp_ratio, k;
+	int x, y, c;
     	unsigned char *data; 
     	unsigned char  *ppm;
 	unsigned char *p_data = NULL;
 	unsigned char gtable[256];
 	char *ptr;
 	int size = 0;
+	float gamma_factor;
 
     	GP_DEBUG ("Downloading pictures!\n");
 
     	/* Get the number of the photo on the camera */
 	k = gp_filesystem_number (camera->fs, "/", filename, context); 
-
+//	gamma_factor = malloc(k);
+//	if (!gamma_factor) return GP_ERROR_NO_MEMORY;
     	/* Resolution must be checked for each individual picture. */
     	comp_ratio = mars_get_comp_ratio (camera->pl->info, k);
     	w = mars_get_picture_width (camera->pl->info, k);
@@ -174,11 +207,12 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		mars_read_picture_data (camera, camera->pl->info, 
 					    camera->port, data, b, k);
 		break;
-/*
+
 	case GP_FILE_TYPE_PREVIEW:
-		mars_read_picture_data (camera->port, data, b);
+		mars_read_picture_data (camera, camera->pl->info,
+					    camera->port, data, b, k);
 		break;
-*/
+
 	default:
 		free (p_data);
 		free (data);
@@ -187,6 +221,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	switch (comp_ratio) {
 	case 3:
+		/* FIXME: This function right now does nothing in particular */
 		mars_decompress (data, p_data, b, w, h);
 		free (data);
 		break; 	
@@ -212,12 +247,29 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	GP_DEBUG ("size = %i\n", size);
 
 	gp_bayer_decode (p_data, w , h , ptr, BAYER_TILE_RGGB);
-	gp_gamma_fill_table (gtable, .50);
+	gamma_factor = 1. - (float)mars_get_gamma(camera->pl->info, k)/256.;
+	if( (gamma_factor < .3 ) ) gamma_factor = .3;
+	if( (gamma_factor > .5 ) ) gamma_factor = .5;
+	gp_gamma_fill_table (gtable, gamma_factor );
 	gp_gamma_correct_single (gtable, ptr, w * h);
+
 	/*
-	 * gamma of .50 arrived at by experinentation. Maybe could be 
-	 * improved? 
+	 * gamma of .50 arrived at by experimentation. Maybe could be 
+	 * improved? Well, here is a guess for improvement.
 	 */
+	
+	if (GP_FILE_TYPE_PREVIEW==type) {
+		for (y=0; y<h/8; y++) {
+			for (x=0; x<w/8; x++) {
+				for (c=0; c<3; c++) {
+					ptr[(y*w/8+x)*3 +c] = ptr[(y*8*w+x*8)*3 +c];
+				}
+			}
+		}
+	}
+	
+	
+	 
         gp_file_set_mime_type (file, GP_MIME_PPM);
         gp_file_set_name (file, filename); 
 	gp_file_set_data_and_size (file, ppm, size);
@@ -247,6 +299,7 @@ camera_init(Camera *camera, GPContext *context)
 	int ret = 0;
 
 	/* First, set up all the function pointers */
+        camera->functions->manual	= camera_manual;
 	camera->functions->summary      = camera_summary;
 	camera->functions->about        = camera_about;
 	camera->functions->exit	    = camera_exit;
