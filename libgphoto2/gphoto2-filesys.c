@@ -112,12 +112,12 @@ get_exif_mtime (const unsigned char *data, unsigned long size)
         }
 
         e->data[4] = e->data[ 7] = e->data[10] = e->data[13] = e->data[16] = 0;
-        ts.tm_year = atoi (data) - 1900;
-        ts.tm_mon  = atoi (data + 5);
-        ts.tm_mday = atoi (data + 8);
-        ts.tm_hour = atoi (data + 11);
-        ts.tm_min  = atoi (data + 14);
-        ts.tm_sec  = atoi (data + 17);
+        ts.tm_year = atoi (e->data) - 1900;
+        ts.tm_mon  = atoi (e->data + 5);
+        ts.tm_mday = atoi (e->data + 8);
+        ts.tm_hour = atoi (e->data + 11);
+        ts.tm_min  = atoi (e->data + 14);
+        ts.tm_sec  = atoi (e->data + 17);
         exif_data_unref (ed);
 
         t = mktime (&ts);
