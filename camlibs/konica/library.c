@@ -190,7 +190,10 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		gp_filesystem_set_info_noop (camera->fs, folder, info, context);
 		gp_filesystem_set_file_noop (camera->fs, folder, file, context);
 		gp_file_unref (file);
+
 		gp_context_progress_update (context, id, i + 1);
+		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
+			return (GP_ERROR_CANCEL);
         }
 	gp_context_progress_stop (context, id);
 
