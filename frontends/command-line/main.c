@@ -449,8 +449,11 @@ int for_each_image(char *folder, image_action action, int recurse) {
 
 	for (i = 0; i < gp_list_count(&filelist); i++) {
 		entry = gp_list_entry(&filelist, i);
-		if (action(folder, entry->name) == GP_ERROR)
+printf("folder=%s filename=%s\n", folder, entry->name);
+		if (action(folder, entry->name) == GP_ERROR) {
+printf("error!\n");
 			return (GP_ERROR);
+		}
 	}
 	
 	if (recurse) {
@@ -471,9 +474,9 @@ OPTION_CALLBACK(list_folders) {
 	int print_folder(char *subfolder) {
 		/* print paths relative to glob_folder */
 		if (strcmp(glob_folder, "/") != 0)
-			printf("%s\n", subfolder + strlen(glob_folder) + 1);
+			printf("\"%s\"\n", subfolder + strlen(glob_folder) + 1);
 		else
-			printf("%s\n", subfolder + strlen(glob_folder));
+			printf("\"%s\"\n", subfolder + strlen(glob_folder));
 			
 		return (GP_OK);
 	}
@@ -482,7 +485,7 @@ OPTION_CALLBACK(list_folders) {
 		return (GP_ERROR);
 
 	if (!glob_quiet)
-		printf("Subfolders of %s:\n", glob_folder);
+		printf("Subfolders of \"%s\":\n", glob_folder);
 
 	return for_each_subfolder(glob_folder, print_folder, glob_recurse); 
 }

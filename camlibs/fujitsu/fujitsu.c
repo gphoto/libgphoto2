@@ -24,67 +24,66 @@ int camera_id (CameraText *id) {
 	return (GP_OK);
 }
 
-
-char *models[] = {
-	"Agfa ePhoto 307",
-	"Agfa ePhoto 780",
-	"Agfa ePhoto 780C",
-	"Agfa ePhoto 1280",
-	"Agfa ePhoto 1680",
-	"Apple QuickTake 150",
-	"Apple QuickTake 200",
-	"Chinon ES-1000",
-	"Epson PhotoPC 500",
-	"Epson PhotoPC 550",
-	"Epson PhotoPC 600",
-	"Epson PhotoPC 700",
-	"Epson PhotoPC 800",
-	"Nikon CoolPix 100",
-	"Nikon CoolPix 300",
-	"Nikon CoolPix 700",
-	"Nikon CoolPix 800",
-	"Nikon CoolPix 900",
-	"Nikon CoolPix 900S",
-	"Nikon CoolPix 950",
-	"Nikon CoolPix 950S",
-	"Olympus D-100Z",
-	"Olympus D-200L",
-	"Olympus D-220L",
-	"Olympus D-300L",
-	"Olympus D-320L",
-	"Olympus D-330R",
-	"Olympus D-340L",
-	"Olympus D-340R",
-	"Olympus D-360L",
-	"Olympus D-400L Zoom",
-	"Olympus D-450Z",
-	"Olympus D-460Z",
-	"Olympus D-500L",
-	"Olympus D-600L",
-	"Olympus D-620L",
-	"Olympus C-400L",
-	"Olympus C-410L",
-	"Olympus C-800L",
-	"Olympus C-820L",
-	"Olympus C-830L",
-	"Olympus C-840L",
-	"Olympus C-900 Zoom",
-	"Olympus C-900L Zoom",
-	"Olympus C-1000L",
-	"Olympus C-1400L",
-	"Olympus C-2000Z",
-	"Olympus C-2500Z",
-	"Olympus C-3030Z",
-	"Panasonic Coolshot KXl-600A",
-	"Panasonic Cardshot NV-DCF5E",
-	"Polaroid PDC 640",
-	"Sanyo DSC-X300",
-	"Sanyo DSC-X350",
-	"Sanyo VPC-G200",
-	"Sanyo VPC-G200EX",
-	"Sanyo VPC-G210",
-	"Sanyo VPC-G250",
-	"Sierra Imaging SD640",
+FujitsuCamera *cameras = {
+	{"Agfa ePhoto 307", 0, 0 },
+	{"Agfa ePhoto 780", 0, 0 },
+	{"Agfa ePhoto 780C", 0, 0 },
+	{"Agfa ePhoto 1280", 0, 0 },
+	{"Agfa ePhoto 1680", 0, 0 },
+	{"Apple QuickTake 150", 0, 0 },
+	{"Apple QuickTake 200", 0, 0 },
+	{"Chinon ES-1000", 0, 0 },
+	{"Epson PhotoPC 500", 0, 0 },
+	{"Epson PhotoPC 550", 0, 0 },
+	{"Epson PhotoPC 600", 0, 0 },
+	{"Epson PhotoPC 700", 0, 0 },
+	{"Epson PhotoPC 800", 0, 0 },
+	{"Nikon CoolPix 100", 0, 0 },
+	{"Nikon CoolPix 300", 0, 0 },
+	{"Nikon CoolPix 700", 0, 0 },
+	{"Nikon CoolPix 800", 0, 0 },
+	{"Nikon CoolPix 900", 0, 0 },
+	{"Nikon CoolPix 900S", 0, 0 },
+	{"Nikon CoolPix 950", 0, 0 },
+	{"Nikon CoolPix 950S", 0, 0 },
+	{"Olympus D-100Z", 0, 0 },
+	{"Olympus D-200L", 0, 0 },
+	{"Olympus D-220L", 0, 0 },
+	{"Olympus D-300L", 0, 0 },
+	{"Olympus D-320L", 0, 0 },
+	{"Olympus D-330R", 0, 0 },
+	{"Olympus D-340L", 0, 0 },
+	{"Olympus D-340R", 0, 0 },
+	{"Olympus D-360L", 0, 0 },
+	{"Olympus D-400L Zoom", 0, 0 },
+	{"Olympus D-450Z", 0, 0 },
+	{"Olympus D-460Z", 0, 0 },
+	{"Olympus D-500L", 0, 0 },
+	{"Olympus D-600L", 0, 0 },
+	{"Olympus D-620L", 0, 0 },
+	{"Olympus C-400L", 0, 0 },
+	{"Olympus C-410L", 0, 0 },
+	{"Olympus C-800L", 0, 0 },
+	{"Olympus C-820L", 0, 0 },
+	{"Olympus C-830L", 0, 0 },
+	{"Olympus C-840L", 0, 0 },
+	{"Olympus C-900 Zoom", 0, 0 },
+	{"Olympus C-900L Zoom", 0, 0 },
+	{"Olympus C-1000L", 0, 0 },
+	{"Olympus C-1400L", 0, 0 },
+	{"Olympus C-2000Z", 0, 0 },
+	{"Olympus C-2500Z", 0, 0 },
+	{"Olympus C-3030Z", 0, 0 },
+	{"Panasonic Coolshot KXl-600A", 0, 0 },
+	{"Panasonic Coolshot NV-DCF5E", 0, 0 },
+	{"Polaroid PDC 640", 0, 0 },
+	{"Sanyo DSC-X300", 0, 0 },
+	{"Sanyo DSC-X350", 0, 0 },
+	{"Sanyo VPC-G200", 0, 0 },
+	{"Sanyo VPC-G200EX", 0, 0 },
+	{"Sanyo VPC-G210", 0, 0 },
+	{"Sanyo VPC-G250", 0, 0 },
+	{"Sierra Imaging SD640", 0, 0 },
 	NULL
 };
 
@@ -93,9 +92,9 @@ int camera_abilities (CameraAbilitiesList *list) {
 	int x=0;
 	CameraAbilities *a;
 
-	while (models[x]) {
+	while (cameras[x]) {
 		a = gp_abilities_new();
-		strcpy(a->model, models[x]);
+		strcpy(a->model, cameras[x]->model);
 		a->port     = GP_PORT_SERIAL | GP_PORT_USB;
 		a->speed[0] = 9600;
 		a->speed[1] = 19200;
@@ -108,6 +107,8 @@ int camera_abilities (CameraAbilitiesList *list) {
 		a->file_delete  = 1;
 		a->file_preview = 1;
 		a->file_put = 0;
+		a->usb_product = cameras[x]->usb_product;
+		a->usb_vendor  = cameras[x]->usb_vendor;
 		gp_abilities_list_append(list, a);
 
 		x++;
@@ -484,16 +485,15 @@ int camera_file_get_generic (Camera *camera, CameraFile *file,
 if (camera_start(camera)==GP_ERROR)
 return (GP_ERROR);
 
-
 	/* Get the file number from the CameraFileSystem */
 	file_number = gp_filesystem_number(fd->fs, folder, filename);
 
 	if (thumbnail) {
-		sprintf(buf, "Getting file preview #%i", file_number);
+		sprintf(buf, "Getting thumbnail \"%s\" (#%i)", filename, file_number+1);
 		regl = 13;
 		regd = 15;
 	}  else {
-		sprintf(buf, "Getting file #%i", file_number);
+		sprintf(buf, "Getting photo \"%s\" (#%i)", filename, file_number+1);
 		regl = 12;
 		regd = 14;
 	}
@@ -549,6 +549,8 @@ return (GP_ERROR);
 	fujitsu_debug_print(fd, buf);
 
 	ret = fujitsu_delete(camera, file_number+1);
+	if (ret == GPIO_OK)
+		gp_filesystem_delete(fd->fs, folder, filename);
 
 if (camera_stop(camera)==GP_ERROR)
 return (GP_ERROR);

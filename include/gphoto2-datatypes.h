@@ -143,6 +143,11 @@ typedef struct {
 	int capture;
 		/* Camera can do a capture			 */
 
+	int usb_vendor;
+	int usb_product;
+		/* Vendor and product id's for USB cameras 	 */
+		/* Terminated with a 0 for both			 */
+
 	/* Don't touch below. for core use */
 	char library[1024];
 	char id[64];

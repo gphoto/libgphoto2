@@ -169,6 +169,7 @@ int fujitsu_write_packet (Camera *camera, char *packet) {
 int fujitsu_read_packet (Camera *camera, char *packet) {
 
 	int x, y, r=0, ret, done, length=0;
+	int blocksize, bytes_read;
 	char buf[4096], msg[4096];
 	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
 
@@ -180,62 +181,77 @@ read_packet_again:
 
 //	usleep(QUICKSLEEP);
 
-	/* For USB support */
-#ifdef GPIO_USB
-	if (fd->type == GP_PORT_USB) {
-		ret = gpio_read(fd->dev, packet, 2070);
-		gpio_usb_clear_halt(fd->dev);
-		fujitsu_dump_packet(camera, packet);
-		return ret;
-	}
-#endif
-
 	done = 0;
+	if (fd->type == GP_PORT_USB)
+		gpio_usb_clear_halt(fd->dev);
 	while (!done && (r++<RETRIES)) {
-		ret = gpio_read(fd->dev, packet, 1);
-		if (ret == GPIO_ERROR) {
+
+		switch (fd->type) {
+#ifdef GPIO_USB
+		   case GP_PORT_USB:
+			blocksize = 256;
+			break;
+#endif
+		   case GP_PORT_SERIAL:
+			blocksize = 1;
+			break;
+		   default:
+			return (GP_ERROR);
+		}
+		bytes_read = gpio_read(fd->dev, packet, blocksize);
+		if (bytes_read == GPIO_ERROR) {
 			fujitsu_debug_print(fd, "  read error (packet type)");
 			return (GP_ERROR);
 		}
 		if (fujitsu_valid_type(packet[0])==GP_OK)
 			done = 1;
-	}
-	if (r>RETRIES) {
-		fujitsu_debug_print(fd, "  read error (too many retries on packet type)");
-		return (GP_ERROR);
-	}
-
-	if ((packet[0] == TYPE_COMMAND) ||
-	    (packet[0] == TYPE_DATA) ||
-	    (packet[0] == TYPE_DATA_END)) {
-		if (gpio_read(fd->dev, &packet[1], 3)==GPIO_ERROR) {
-			fujitsu_debug_print(fd, "  read error (header)");
+		if (r>RETRIES) {
+			fujitsu_debug_print(fd, "  read error (too many retries on packet type)");
 			return (GP_ERROR);
 		}
-                length = ((unsigned char)packet[2]) +
-			 ((unsigned char)packet[3]  * 256);
-		length += 6;
-	} else {
-		fujitsu_dump_packet(camera, packet);
-		return (fujitsu_valid_packet(camera, packet));
-	}
 
-	for (y=4; y < length; y++) {
-		ret = gpio_read(fd->dev, &packet[y], 1);
-		if (ret == GPIO_TIMEOUT) {
-			sprintf(msg, "   timeout! (%i)\n", y);
-			fujitsu_debug_print(fd, msg);
-			fujitsu_write_nak(camera);
-			goto read_packet_again;
+		/* Determine the packet type */
+		if ((packet[0] == TYPE_COMMAND) ||
+		    (packet[0] == TYPE_DATA) ||
+		    (packet[0] == TYPE_DATA_END)) {
+			/* It's a response/command packet */
+			if (fd->type == GP_PORT_SERIAL) {
+				bytes_read = gpio_read(fd->dev, &packet[1], 3);
+				if (bytes_read == GPIO_ERROR) {
+					fujitsu_debug_print(fd, "  read error (header)");
+					return (GP_ERROR);
+				}
+				bytes_read = 4;
+			}
+			/* Determine the packet length */
+        	        length = ((unsigned char)packet[2]) +
+				 ((unsigned char)packet[3]  * 256);
+			length += 6;
+		} else {
+			/* It's a single byte response. dump and validate */
+			fujitsu_dump_packet(camera, packet);
+			return (fujitsu_valid_packet(camera, packet));
 		}
 
-		if (ret ==GPIO_ERROR) {
-			fujitsu_debug_print(fd, "  read error (data)");
-			return (GP_ERROR);
+		for (y=bytes_read; y < length; y+=blocksize) {
+			ret = gpio_read(fd->dev, &packet[y], blocksize);
+			if (ret == GPIO_TIMEOUT) {
+				sprintf(msg, "   timeout! (%i)\n", y);
+				fujitsu_debug_print(fd, msg);
+				fujitsu_write_nak(camera);
+				goto read_packet_again;
+			}
+
+			if (ret ==GPIO_ERROR) {
+				fujitsu_debug_print(fd, "  read error (data)");
+				return (GP_ERROR);
+			}
 		}
 	}
 
 	fujitsu_dump_packet(camera, packet);
+	if (fd->type == GP_PORT_USB)
+		gpio_usb_clear_halt(fd->dev);
 
 	return (GP_OK);
 
@@ -586,17 +602,17 @@ int fujitsu_get_string_register (Camera *camera, int reg, int file_number,
         }
 	switch (reg) {
 		case 14:
-		        /* Get the size of the current thumbnail */
-
+		        /* Get the size of the current image */
 	        	if (fujitsu_get_int_register(camera, 12, &l)==GP_ERROR) {
 	        	        gp_camera_message(camera, "Can not get current image length");
 	        	        return (GP_ERROR);
 		        }
+
 			break;
 		case 15:
-		        /* Get the size of the current picture */
-	        	if (fujitsu_get_int_register(camera, 12, &l)==GP_ERROR) {
-	        	        gp_camera_message(camera, "Can not get current image length");
+		        /* Get the size of the current thumbnail */
+	        	if (fujitsu_get_int_register(camera, 13, &l)==GP_ERROR) {
+	        	        gp_camera_message(camera, "Can not get thumbnail image length");
 	        	        return (GP_ERROR);
 		        }
 			break;
@@ -695,6 +711,8 @@ int fujitsu_delete(Camera *camera, int picture_number) {
 		fujitsu_debug_print(fd, "too many NAKs from camera");
 		return (GP_ERROR);
 	}
+
+	usleep(QUICKSLEEP);
 
 	return (GP_OK);
 }
