@@ -1,3 +1,8 @@
+2004-04-05  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* aox.c (aox_get_picture_size): Declare variables first 
+	for C89 compliance.
+
 2004-03-05 Theodore Kilgore <kilgota@auburn.edu>
 
 	* library.c: Different names needed for two USB ids.
