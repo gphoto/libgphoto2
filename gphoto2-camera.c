@@ -65,7 +65,6 @@
 struct _CameraPrivateCore {
 
 	/* Some information about the port */
-	GPPortInfo info;
 	unsigned int speed;
 
 	CameraStatusFunc   status_func;
@@ -131,6 +130,13 @@ gp_camera_new (Camera **camera)
 		return (result);
 	}
 
+	/* Create the port */
+	result = gp_port_new (&(*camera)->port);
+	if (result < 0) {
+		gp_camera_free (*camera);
+		return (result);
+	}
+
         return(GP_OK);
 }
 
@@ -180,25 +186,12 @@ gp_camera_get_abilities (Camera *camera, CameraAbilities *abilities)
 	return (GP_OK);
 }
 
-static int
-gp_camera_unset_port (Camera *camera)
-{
-	CHECK_NULL (camera);
-
-	if (camera->port) {
-		CHECK_RESULT (gp_port_free (camera->port));
-		camera->port = NULL;
-	}
-
-	return (GP_OK);
-}
-
 int
 gp_camera_get_port_info (Camera *camera, GPPortInfo *info)
 {
 	CHECK_NULL (camera && info);
 
-	memcpy (info, &camera->pc->info, sizeof (GPPortInfo));
+	CHECK_RESULT (gp_port_get_info (camera->port, info));
 
 	return (GP_OK);
 }
@@ -206,28 +199,11 @@ gp_camera_get_port_info (Camera *camera, GPPortInfo *info)
 int
 gp_camera_set_port_info (Camera *camera, GPPortInfo info)
 {
-	GPPortSettings settings;
-
 	CHECK_NULL (camera);
 
-	/*
-	 * We need to create a new port because the port could have
-	 * changed from a SERIAL to an USB one...
-	 */
-	CHECK_RESULT (gp_camera_unset_port (camera));
-	CHECK_RESULT (gp_port_new (&camera->port, info.type));
-
-	switch (camera->port->type) {
-	case GP_PORT_SERIAL:
-		CHECK_RESULT (gp_port_settings_get (camera->port, &settings));
-		strcpy (settings.serial.port, info.path);
-		CHECK_RESULT (gp_port_settings_set (camera->port, settings));
-		break;
-	default:
-		break;
-	}
-
-	memcpy (&camera->pc->info, &info, sizeof (GPPortInfo));
+	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Setting port info for "
+		"port '%s' at '%s'...", info.name, info.path);
+	CHECK_RESULT (gp_port_set_info (camera->port, info));
 
 	return (GP_OK);
 }
@@ -255,13 +231,13 @@ gp_camera_set_port_speed (Camera *camera, int speed)
 	CHECK_NULL (camera);
 
 	if (!camera->port) {
-		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("You need to set "
+		gp_camera_set_error (camera, _("You need to set "
 			"a port prior trying to set the speed"));
 		return (GP_ERROR_BAD_PARAMETERS);
 	}
 
 	if (camera->port->type != GP_PORT_SERIAL) {
-		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("You can specify "
+		gp_camera_set_error (camera, _("You can specify "
 			"a speed only with serial ports"));
 		return (GP_ERROR_BAD_PARAMETERS);
 	}
@@ -1165,7 +1141,7 @@ gp_camera_file_get (Camera *camera, const char *folder, const char *file,
 
 	CHECK_NULL (camera && folder && file && camera_file);
 
-	CHECK_RESULT (gp_file_clean (file));
+	CHECK_RESULT (gp_file_clean (camera_file));
 
 	/* Did we get reasonable foldername/filename? */
 	if (strlen (folder) == 0)
