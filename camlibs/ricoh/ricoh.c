@@ -566,3 +566,20 @@ ricoh_get_cam_id (Camera *camera, GPContext *context, char *cam_id)
 
 	return (GP_OK);
 }
+
+int
+ricoh_take_pic (Camera *camera, GPContext *context)
+{
+	unsigned char p[1], cmd, buf[0xff], len;
+	RicohMode mode;
+
+	/* Put camera into record mode, if not already */
+	CR (ricoh_get_mode (camera, context, &mode));
+	if (mode != RICOH_MODE_RECORD)
+		CR (ricoh_set_mode (camera, context, RICOH_MODE_RECORD));
+
+	p[0] = 0x01;
+	CR (ricoh_send (camera, context, 0x60, 0x00, p, 1));
+
+	return (GP_OK);
+}

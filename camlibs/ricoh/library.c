@@ -73,8 +73,8 @@ camera_abilities (CameraAbilitiesList *list)
 		strcpy (a.model, models[i].model);
 		a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
 		a.port = GP_PORT_SERIAL;
-		a.operations = GP_OPERATION_NONE;
-		a.file_operations = GP_FILE_OPERATION_NONE;
+		a.operations = GP_OPERATION_CAPTURE_IMAGE;
+		a.file_operations = GP_FILE_OPERATION_DELETE;
 		a.folder_operations = GP_FOLDER_OPERATION_NONE;
 		CR (gp_abilities_list_append (list, a));
 	}
@@ -184,6 +184,26 @@ camera_summary (Camera *camera, CameraText *about, GPContext *context)
 	return (GP_OK);
 }
 
+static int
+camera_capture (Camera *camera, CameraCaptureType type,
+		CameraFilePath *path, GPContext *context)
+{
+	unsigned int n;
+
+	if (type != GP_CAPTURE_IMAGE)
+		return (GP_ERROR_NOT_SUPPORTED);
+
+	CR (ricoh_get_num (camera, context, &n));
+	CR (ricoh_take_pic (camera, context));
+
+	sprintf (path->name, "rdc%04i.jpg", n + 1);
+	strcpy (path->folder, "/");
+	CR (gp_filesystem_append (camera->fs, path->folder,
+				  path->name, context));
+
+	return (GP_OK);
+}
+
 static struct {
 	unsigned int speed;
 	RicohSpeed rspeed;
@@ -242,6 +262,7 @@ camera_init (Camera *camera, GPContext *context)
 	/* setup the function calls */
 	camera->functions->exit = camera_exit;
 	camera->functions->summary = camera_summary;
+	camera->functions->capture = camera_capture;
 	CR (gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL,
 					  camera));
 	CR (gp_filesystem_set_file_funcs (camera->fs, get_file_func,

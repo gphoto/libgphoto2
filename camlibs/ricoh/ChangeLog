@@ -1,6 +1,13 @@
 2002-03-14  Lutz Müller <lutz@users.sourceforge.net>
 
 	* ricoh.[c,h]
+	* library.c: This driver supports GP_FILE_OPERATION_DELETE and
+	  GP_OPERATION_CAPTURE_IMAGE. Support for
+	  configuration is still missing. Awaiting patches...
+
+2002-03-14  Lutz Müller <lutz@users.sourceforge.net>
+
+	* ricoh.[c,h]
 	* library.c: Remove CameraPrivateLibrary. Sure, that introduces 
 	  some communication overhead, but the code is cleaner this way.
 
