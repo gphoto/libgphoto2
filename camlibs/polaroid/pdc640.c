@@ -81,70 +81,70 @@ static struct {
 	int vendor,product;
 	struct _CameraPrivateLibrary	pl;
 } models[] = {
-	{"Polaroid:Fun Flash 640", 0, 0, {
+	{"Polaroid Fun Flash 640", 0, 0, {
 		 	pdc640,
 			BAYER_TILE_RGGB,
 			NULL, // add postprocessor here!
 			"pdc640%04i.ppm"
 		}
 	},
-	{"Novatech:Digital Camera CC30", 0, 0, {
+	{"Novatech Digital Camera CC30", 0, 0, {
 		 	pdc640,
 			BAYER_TILE_RGGB,
 			NULL, // add postprocessor here!
 			"pdc640%04i.ppm"
 		}
 	},
-	{"Jenoptik:JD350 entrance", 0x5da, 0x1006, {
+	{"Jenoptik JD350 entrance", 0x5da, 0x1006, {
 		 	jd350e,
 			BAYER_TILE_BGGR,
 			&jd350e_postprocessing,
 			"jd350e%04i.ppm"
 		}
 	},
-	{"Jenoptik:JD350 video", 0xd96, 0x0000, {
+	{"Jenoptik JD350 video", 0xd96, 0x0000, {
 		 	jd350e,
 			BAYER_TILE_BGGR,
 			&jd350e_postprocessing,
 			"jd350v%04i.ppm"
 		}
 	},
-	{"ScanHex:SX-35", 0x797, 0x8901, {
+	{"ScanHex SX-35", 0x797, 0x8901, {
 		 	jd350e,
 			BAYER_TILE_BGGR,
 			&jd350e_postprocessing,
 			"jd350v%04i.ppm"
 		}
 	},
-	{"ScanHex:SX-35", 0x797, 0x8909, {
+	{"ScanHex SX-35", 0x797, 0x8909, {
 		 	jd350e,
 			BAYER_TILE_BGGR,
 			&jd350e_postprocessing,
 			"jd350v%04i.ppm"
 		}
 	},
-	{"ScanHex:SX-35", 0x797, 0x8911, {
+	{"ScanHex SX-35", 0x797, 0x8911, {
 		 	jd350e,
 			BAYER_TILE_BGGR,
 			&jd350e_postprocessing,
 			"jd350v%04i.ppm"
 		}
 	},
-	{"ScanHex:SX-35", 0x84d, 0x1001, {
+	{"ScanHex SX-35", 0x84d, 0x1001, {
 		 	jd350e,
 			BAYER_TILE_BGGR,
 			&jd350e_postprocessing,
 			"jd350v%04i.ppm"
 		}
 	},
-	{"Typhoon:StyloCam", 0x797, 0x801a, {
+	{"Typhoon StyloCam", 0x797, 0x801a, {
 		 	jd350e,
 			BAYER_TILE_BGGR,
 			&flip_vertical,
 			"stylo%04i.ppm"
 		}
 	},
-	{"Trust:PowerC@m 350FS", 0x6d6, 0x002e, {
+	{"Trust PowerC@m 350FS", 0x6d6, 0x002e, {
 		 	jd350e,
 			BAYER_TILE_RGGB,
 			&trust350fs_postprocessing,
@@ -152,7 +152,7 @@ static struct {
 		}
 	},
 	/* http://www.meade.com/sportsoptics/catalog/captureview/index.html */
-	{"GrandTek:ScopeCam", 0x797, 0x801c, {
+	{"GrandTek ScopeCam", 0x797, 0x801c, {
 		 	jd350e,
 			BAYER_TILE_BGGR,
 			&jd350e_postprocessing_and_flip,
@@ -161,7 +161,7 @@ static struct {
 	},
 	/* http://www.sipixdigital.com/cameras/stylecam/ */
 	/* Ids glanced from downloaded driver / .inf file. */
-	{"SiPix:Stylecam", 0xd64, 0x1001, {
+	{"SiPix Stylecam", 0xd64, 0x1001, {
 		 	jd350e,
 			BAYER_TILE_BGGR,
 			&flip_both,
@@ -171,17 +171,17 @@ static struct {
 	/* http://www.umax.de/digicam/AstraPix320S.htm */
 	/* reportedly has same ids as SiPix StyleCam and also
 	 * looks identical. */
-	{"UMAX:AstraPix 320s", 0xd64, 0x1001, {
+	{"UMAX AstraPix 320s", 0xd64, 0x1001, {
 		 	jd350e,
 			BAYER_TILE_BGGR,
-			&flip_vertical,
+			&flip_both,
 			"astra%04i.ppm"
 		}
 	},
 
 	/* http://www.dlink.com/products/usb/dsc350/ */
 	/* ids from driver download */
-	{"D-Link:DSC 350F", 0xd64, 0x1021, {
+	{"D-Link DSC 350F", 0xd64, 0x1021, {
 		 	jd350e,
 			BAYER_TILE_BGGR,
 			&flip_vertical,

@@ -1,3 +1,12 @@
+2003-09-15  Marcus Meissner <marcus@jet.franken.de>
+	
+	Reported by Andreas Kies:
+
+	* pdc640.c: Remove :, since ability.mode again
+	  contains names without :, or we do not find
+	  our cameras.
+	  Use flip_both for UMAX AstraPix.
+
 2003-05-15  Lutz Mueller <lutz@users.sourceforge.net>
 
 	Patch by Drew Sullivan <drew@pentagon.ss.org>:
