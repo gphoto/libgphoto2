@@ -169,11 +169,11 @@ camera_abilities (CameraAbilitiesList* list)
         for (i = 0; konica_cameras [i].model; i++) {
 		a.status = GP_DRIVER_STATUS_PRODUCTION;
                 strcpy (a.model, konica_cameras [i].model);
-                if (konica_cameras [i].vendor) {
+		a.usb_vendor  = konica_cameras [i].vendor;
+		a.usb_product = konica_cameras [i].product;
+                if (konica_cameras [i].vendor)
                         a.port = GP_PORT_USB;
-                        a.usb_vendor  = konica_cameras [i].vendor;
-                        a.usb_product = konica_cameras [i].product;
-                } else {
+                else {
                         a.port = GP_PORT_SERIAL;
                         a.speed[0]     = 300;
                         a.speed[1]     = 600;
