@@ -1,10 +1,10 @@
-typedef struct {
+struct _CameraPrivateLibrary {
 	int folders;
 	int speed;
 	int first_packet;
 	int usb_wrap;  /* 0: packets sent "raw", 1: see sierra-usbwrap.h */
 	char folder[128];
-} SierraData;
+};
 
 typedef struct {
 	char model[64];

@@ -28,15 +28,13 @@
 	typedef uint32_t u_int32_t;
 #endif
 
-typedef struct {
-	gp_port		        *dev;
-	gp_port_settings 	settings;
-	char			*buf;
-	int			size;
-} l859_t;
-
 #define L859_BLOCKSIZE    0x74
 #define L859_BUFSIZE      0x74
+
+struct _CameraPrivateLibrary {
+	char buf[L859_BUFSIZE];
+	int  size;
+};
 
 /* L859 Command Codes */
 #define L859_CMD_CONNECT        0x2a

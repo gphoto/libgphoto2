@@ -26,9 +26,9 @@
 
 #define CHECK_STOP(camera,result) {int res; res = result; if (res < 0) {gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** operation failed!"); camera_stop (camera); return (res);}}
 
-#define CHECK_STOP_FREE(camera,result) {int res; SierraData *fd = camera->camlib_data; res = result; if (res < 0) {gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** operation failed!"); camera_stop (camera); free (fd); camera->camlib_data = NULL; return (res);}}
+#define CHECK_STOP_FREE(camera,result) {int res; res = result; if (res < 0) {gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** operation failed!"); camera_stop (camera); free (camera->pl); camera->pl = NULL; return (res);}}
 
-#define CHECK_FREE(camera,result) {int res; SierraData *fd = camera->camlib_data; res = result; if (res < 0) {gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** operation failed!"); free (fd); camera->camlib_data = NULL; return (res);}}
+#define CHECK_FREE(camera,result) {int res; res = result; if (res < 0) {gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** operation failed!"); free (camera->pl); camera->pl = NULL; return (res);}}
 
 int camera_start(Camera *camera);
 int camera_stop(Camera *camera);
@@ -247,8 +247,6 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 int camera_start (Camera *camera)
 {
-	SierraData *fd = (SierraData*)camera->camlib_data;
-
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_start");
 
 	/*
@@ -257,7 +255,8 @@ int camera_start (Camera *camera)
 	 */
 	switch (camera->port->type) {
 	case GP_PORT_SERIAL:
-		CHECK_STOP (camera, sierra_set_speed (camera, fd->speed));
+		CHECK_STOP (camera, sierra_set_speed (camera,
+						      camera->pl->speed));
 		return (GP_OK);
 	case GP_PORT_USB:
 		CHECK_STOP (camera, gp_port_timeout_set (camera->port, 5000));
@@ -289,14 +288,11 @@ int camera_stop (Camera *camera)
 static int
 camera_exit (Camera *camera) 
 {
-	SierraData *fd;
-	
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_exit");
 
-	if (camera->camlib_data) {
-		fd = camera->camlib_data;
-		free (fd);
-		camera->camlib_data = NULL;
+	if (camera->pl) {
+		free (camera->pl);
+		camera->pl = NULL;
 	}
 
 	return (GP_OK);
@@ -1268,12 +1264,6 @@ int camera_init (Camera *camera)
         int x=0, ret;
         int vendor=0, product=0, inep=0, outep=0;
 	GPPortSettings settings;
-        SierraData *fd;
-
-
-        gp_debug_printf (GP_DEBUG_LOW, "sierra", "*******************");
-        gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_init ***");
-        gp_debug_printf (GP_DEBUG_LOW, "sierra", "*******************");
 
         if (!camera)
                 return (GP_ERROR_BAD_PARAMETERS);
@@ -1289,11 +1279,12 @@ int camera_init (Camera *camera)
         camera->functions->about                = camera_about;
         camera->functions->result_as_string     = camera_result_as_string;
 
-        fd = calloc (1, sizeof (SierraData));   
-        camera->camlib_data = fd;
+	camera->pl = calloc (1, sizeof (CameraPrivateLibrary));
+	if (!camera->pl)
+		return (GP_ERROR_NO_MEMORY);
 
-        fd->first_packet = 1;
-        fd->usb_wrap = 0;
+	camera->pl->first_packet = 1;
+	camera->pl->usb_wrap = 0;
 
 	CHECK_FREE (camera, gp_port_settings_get (camera->port, &settings));
         switch (camera->port->type) {
@@ -1314,14 +1305,15 @@ int camera_init (Camera *camera)
                                 product = sierra_cameras[x].usb_product;
                                 inep = sierra_cameras[x].usb_inep;
                                 outep = sierra_cameras[x].usb_outep;
-                                fd->usb_wrap = sierra_cameras[x].usb_wrap;
+                                camera->pl->usb_wrap =
+						sierra_cameras[x].usb_wrap;
                         }
                 }
 
                 /* Couldn't find the usb information */
                 if ((vendor == 0) && (product == 0)) {
-                        free (fd);
-                        camera->camlib_data = NULL;
+                        free (camera->pl);
+                        camera->pl = NULL;
                         return (GP_ERROR_MODEL_NOT_FOUND);
                 }
 
@@ -1338,14 +1330,14 @@ int camera_init (Camera *camera)
 
         default:
 
-                free (fd);
-                camera->camlib_data = NULL;
+                free (camera->pl);
+                camera->pl = NULL;
                 return (GP_ERROR_UNKNOWN_PORT);
         }
 
         CHECK_FREE (camera, gp_port_settings_set (camera->port, settings));
         CHECK_FREE (camera, gp_port_timeout_set (camera->port, TIMEOUT));
-        fd->speed = camera->port_info->speed;
+        camera->pl->speed = camera->port_info->speed;
 
         /* Establish a connection */
         CHECK_FREE (camera, camera_start (camera));
@@ -1371,11 +1363,11 @@ int camera_init (Camera *camera)
         /* Folder support? */
         ret = sierra_set_string_register (camera, 84, "\\", 1);
         if (ret != GP_OK) {
-                fd->folders = 0;
+                camera->pl->folders = 0;
                 gp_debug_printf (GP_DEBUG_LOW, "sierra", 
                                  "*** folder support: no");
         } else {
-                fd->folders = 1;
+		camera->pl->folders = 1;
                 gp_debug_printf (GP_DEBUG_LOW, "sierra",
                                  "*** folder support: yes");
         }
@@ -1383,7 +1375,7 @@ int camera_init (Camera *camera)
         CHECK_STOP_FREE (camera, gp_port_timeout_set (camera->port, TIMEOUT));
 
         /* We are in "/" */
-        strcpy (fd->folder, "/");
+        strcpy (camera->pl->folder, "/");
         CHECK_STOP_FREE (camera, gp_filesystem_set_list_funcs (camera->fs,
 				file_list_func, folder_list_func, camera));
         CHECK_STOP_FREE (camera, gp_filesystem_set_info_funcs (camera->fs,

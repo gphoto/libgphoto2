@@ -65,7 +65,6 @@ static int sierra_is_single_byte_packet(char b)
 
 int sierra_change_folder (Camera *camera, const char *folder)
 {	
-	SierraData *fd;
 	int st = 0,i = 1;
 	char target[128];
 
@@ -76,13 +75,11 @@ int sierra_change_folder (Camera *camera, const char *folder)
 
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
 
-	fd = camera->camlib_data;
-
 	/*
 	 * Do not issue the command if the camera doesn't support folders 
 	 * or if the folder is the current working folder
 	 */
-	if (!fd->folders || !strcmp (fd->folder, folder))
+	if (!camera->pl->folders || !strcmp (camera->pl->folder, folder))
 		return GP_OK;
 
 	if (folder[0]) {
@@ -110,7 +107,7 @@ int sierra_change_folder (Camera *camera, const char *folder)
 			target[i] = '/';
 		}
 	}
-	strcpy (fd->folder, folder);
+	strcpy (camera->pl->folder, folder);
 
 	return GP_OK;
 }
@@ -141,12 +138,11 @@ int sierra_list_files (Camera *camera, const char *folder, CameraList *list)
 
 int sierra_list_folders (Camera *camera, const char *folder, CameraList *list)
 {
-	SierraData *fd = camera->camlib_data;
 	int i, j, count, bsize;
 	char buf[1024];
 
 	/* List the folders only if the camera supports them */
-	if (!fd->folders)
+	if (!camera->pl->folders)
 		return (GP_OK);
 
 	CHECK (sierra_change_folder (camera, folder));
@@ -175,8 +171,7 @@ int sierra_list_folders (Camera *camera, const char *folder, CameraList *list)
 int sierra_write_packet (Camera *camera, char *packet)
 {
 	int x, ret, r, checksum=0, length;
-	SierraData *fd = (SierraData*)camera->camlib_data;
-	
+
 	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_write_packet");
 
 	/* Determing packet length */
@@ -200,7 +195,7 @@ int sierra_write_packet (Camera *camera, char *packet)
 
 	/* USB */
 	if (camera->port->type == GP_PORT_USB) {
-		if (fd->usb_wrap)
+		if (camera->pl->usb_wrap)
 			return (usb_wrap_write_packet (camera->port, packet, 
 						       length));
 		else
@@ -254,7 +249,6 @@ int sierra_read_packet (Camera *camera, char *packet)
 {
 	int y, r = 0, ret_status = GP_ERROR_IO, done = 0, length;
 	int blocksize = 1, bytes_read;
-	SierraData *fd = (SierraData*)camera->camlib_data;
 
 	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_read_packet");
 
@@ -285,12 +279,12 @@ int sierra_read_packet (Camera *camera, char *packet)
 
 		/* Clear the USB bus
 		   (what about the SERIAL bus : do we need to flush it?) */
-		if (camera->port->type == GP_PORT_USB && !fd->usb_wrap)
+		if (camera->port->type == GP_PORT_USB && !camera->pl->usb_wrap)
 			gp_port_usb_clear_halt(camera->port, GP_PORT_USB_ENDPOINT_IN);
 
 
 		/* Read data through the bus */
-		if (camera->port->type == GP_PORT_USB && fd->usb_wrap)
+		if (camera->port->type == GP_PORT_USB && camera->pl->usb_wrap)
 			bytes_read = usb_wrap_read_packet (camera->port, packet, blocksize);
 		else
 			bytes_read = gp_port_read (camera->port, packet, blocksize);
@@ -358,7 +352,7 @@ int sierra_read_packet (Camera *camera, char *packet)
 		}
 	}
 
-	if (camera->port->type == GP_PORT_USB && !fd->usb_wrap)
+	if (camera->port->type == GP_PORT_USB && !camera->pl->usb_wrap)
 		gp_port_usb_clear_halt(camera->port, GP_PORT_USB_ENDPOINT_IN);
 
 	gp_debug_printf(GP_DEBUG_HIGH, "sierra", "* sierra_read_packet return '%s'",
@@ -370,19 +364,17 @@ int sierra_read_packet (Camera *camera, char *packet)
 int sierra_build_packet (Camera *camera, char type, char subtype, 
 			 int data_length, char *packet) 
 {
-	SierraData *fd = (SierraData*)camera->camlib_data;
-
 	packet[0] = type;
 	switch (type) {
 	case TYPE_COMMAND:
 		if (camera->port->type == GP_PORT_USB)
 				/* USB cameras don't care about first packets */
-			fd->first_packet = 0;
-		if (fd->first_packet)
+			camera->pl->first_packet = 0;
+		if (camera->pl->first_packet)
 			packet[1] = SUBTYPE_COMMAND_FIRST;
 		else
 			packet[1] = SUBTYPE_COMMAND;
-		fd->first_packet = 0;
+		camera->pl->first_packet = 0;
 		break;
 	case TYPE_DATA:
 	case TYPE_DATA_END:
@@ -402,14 +394,13 @@ int sierra_build_packet (Camera *camera, char type, char subtype,
 int sierra_write_ack (Camera *camera) 
 {
 	char buf[4096];
-	SierraData *fd = (SierraData*)camera->camlib_data;
 	int ret;
 
 	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_write_ack");
 	
 	buf[0] = ACK;
 	ret = sierra_write_packet (camera, buf);
-	if (camera->port->type == GP_PORT_USB && !fd->usb_wrap)
+	if (camera->port->type == GP_PORT_USB && !camera->pl->usb_wrap)
 		gp_port_usb_clear_halt (camera->port, GP_PORT_USB_ENDPOINT_IN);
 	return (ret);
 }
@@ -417,14 +408,13 @@ int sierra_write_ack (Camera *camera)
 int sierra_write_nak (Camera *camera) 
 {
 	char buf[4096];
-	SierraData *fd = (SierraData*)camera->camlib_data;
 	int ret;
 
 	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_write_nack");
 
 	buf[0] = NAK;
 	ret = sierra_write_packet (camera, buf);
-	if (camera->port->type == GP_PORT_USB && !fd->usb_wrap)
+	if (camera->port->type == GP_PORT_USB && !camera->pl->usb_wrap)
 		gp_port_usb_clear_halt(camera->port, GP_PORT_USB_ENDPOINT_IN);
 	return (ret);
 }
@@ -468,12 +458,11 @@ int sierra_ping (Camera *camera)
 int sierra_set_speed (Camera *camera, int speed) 
 {
 	gp_port_settings settings;
-	SierraData *fd = (SierraData*)camera->camlib_data;
 
 	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_set_speed");
 	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* speed: %i", speed);
 
-	fd->first_packet = 1;
+	camera->pl->first_packet = 1;
 
 	gp_port_settings_get (camera->port, &settings);
 
@@ -946,21 +935,15 @@ int sierra_capture (Camera *camera, CameraCaptureType type,
 	int picnum, length;
 	char packet[4096];
 	char buf[128];
-	SierraData *fd;
 	const char *folder;
 
 	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_capture");
 
 	/* Various preliminary checks */
-	if (!camera)
-		return (GP_ERROR_BAD_PARAMETERS);
-	if (filepath == NULL) 
+	if (!camera || !filepath)
 		return (GP_ERROR_BAD_PARAMETERS);
 	if (type != GP_CAPTURE_IMAGE)
 		return (GP_ERROR_NOT_SUPPORTED);
-
-	/* Get camera specific data */
-	fd = camera->camlib_data;
 
 	/* Build and send to the camera the capture request */
 	CHECK (sierra_build_packet (camera, TYPE_COMMAND, 0, 3, packet));

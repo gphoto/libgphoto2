@@ -67,31 +67,31 @@ static void l859_debug(char *format, ...) {
 /*
  * l859_sendcmd - Send command to camera
  */
-static int l859_sendcmd(l859_t *dsc, u_int8_t cmd) {
+static int l859_sendcmd(Camera *camera, u_int8_t cmd) {
 
 	l859_debug("Sending command: 0x%02x.", cmd);
 
-	memset(dsc->buf, 0, 1);
-	dsc->buf[0] = cmd;
+	memset(camera->pl->buf, 0, 1);
+	camera->pl->buf[0] = cmd;
 
-	return gp_port_write(dsc->dev, dsc->buf, 1);
+	return gp_port_write(camera->port, camera->pl->buf, 1);
 
 }
 
 /*
  * l859_retrcmd - Packet received from camera
  */
-static int l859_retrcmd(l859_t *dsc) {
+static int l859_retrcmd(Camera *camera) {
 
 	int     s;
 
-	if ((s = gp_port_read(dsc->dev, dsc->buf, 116)) == GP_ERROR)
+	if ((s = gp_port_read(camera->port, camera->pl->buf, 116)) == GP_ERROR)
 		return GP_ERROR;
 
 	if (s != 116)
 		return GP_ERROR;
 
-	dsc->size = 116;
+	camera->pl->size = 116;
 
 	l859_debug("Retrieved Data");
 
@@ -101,19 +101,20 @@ static int l859_retrcmd(l859_t *dsc) {
 /*
  * l859_connect - try hand shake with camera and establish connection
  */
-static int l859_connect(l859_t *dsc, int speed) {
+static int l859_connect(Camera *camera, int speed) {
 
+	GPPortSettings settings;
 	u_int8_t	bps;
 
 	l859_debug("Connecting to a camera.");
 
-	l859_sendcmd(dsc, L859_CMD_CONNECT);
-	if (l859_retrcmd(dsc) == GP_ERROR) {
-		if (l859_sendcmd(dsc, L859_CMD_RESET) != GP_OK)
+	l859_sendcmd(camera, L859_CMD_CONNECT);
+	if (l859_retrcmd(camera) == GP_ERROR) {
+		if (l859_sendcmd(camera, L859_CMD_RESET) != GP_OK)
 			return GP_ERROR;
-		if (l859_sendcmd(dsc, L859_CMD_CONNECT)!= GP_OK)
+		if (l859_sendcmd(camera, L859_CMD_CONNECT)!= GP_OK)
 			return GP_ERROR;
-		if (l859_retrcmd(dsc) == GP_ERROR)
+		if (l859_retrcmd(camera) == GP_ERROR)
 			return GP_ERROR;
 	}
 
@@ -133,20 +134,20 @@ static int l859_connect(l859_t *dsc, int speed) {
 
 	if (bps != L859_CMD_SPEED_DEFAULT) {
 
-		if (l859_sendcmd(dsc, bps) != GP_OK)
+		if (l859_sendcmd(camera, bps) != GP_OK)
 			return GP_ERROR;
 
-		dsc->settings.serial.speed = speed;
-		if (gp_port_settings_set(dsc->dev, dsc->settings) != GP_OK)
-			return GP_ERROR;
+		gp_port_settings_get(camera->port, &settings);
+		settings.serial.speed = speed;
+		gp_port_settings_set(camera->port, settings);
 
-		if (l859_retrcmd(dsc) == GP_ERROR)
+		if (l859_retrcmd(camera) == GP_ERROR)
 			return GP_ERROR;
 	}
 
-	if (l859_sendcmd(dsc, L859_CMD_INIT) != GP_OK)
+	if (l859_sendcmd(camera, L859_CMD_INIT) != GP_OK)
 		return GP_ERROR;
-	if (l859_retrcmd(dsc) == GP_ERROR)
+	if (l859_retrcmd(camera) == GP_ERROR)
 		return GP_ERROR;
 
 	l859_debug("Camera connected successfully.");
@@ -157,13 +158,13 @@ static int l859_connect(l859_t *dsc, int speed) {
 /*
  * l859_disconnect - reset camera, free buffers and close files
  */
-static int l859_disconnect(l859_t *dsc) {
+static int l859_disconnect(Camera *camera) {
 
 	l859_debug("Disconnecting the camera.");
 
-	if (l859_sendcmd(dsc, L859_CMD_RESET) != GP_OK)
+	if (l859_sendcmd(camera, L859_CMD_RESET) != GP_OK)
 		return GP_ERROR;
-	if (gp_port_read(dsc->dev, dsc->buf, 1) == GP_ERROR)
+	if (gp_port_read(camera->port, camera->pl->buf, 1) == GP_ERROR)
                 return GP_ERROR;
 
 	l859_debug("Camera disconnected.");
@@ -174,7 +175,7 @@ static int l859_disconnect(l859_t *dsc) {
 /*
  *l859_delete - delete image #index from camera memory
  */
-static int l859_delete(l859_t *dsc, u_int8_t index) {
+static int l859_delete(Camera *camera, u_int8_t index) {
 
 	int		value0;
 	int		value1;
@@ -189,31 +190,31 @@ static int l859_delete(l859_t *dsc, u_int8_t index) {
 	value3 = (value0 - value1 - value2) / 100;
 	value2 = value2 / 10;
 
-	if (l859_sendcmd(dsc, L859_CMD_DELETE_1) != GP_OK)
+	if (l859_sendcmd(camera, L859_CMD_DELETE_1) != GP_OK)
 		return GP_ERROR;
-	if (l859_retrcmd(dsc) == GP_ERROR)
+	if (l859_retrcmd(camera) == GP_ERROR)
 		return GP_ERROR;
-	if (l859_sendcmd(dsc, 0xa0 + value1) != GP_OK)
+	if (l859_sendcmd(camera, 0xa0 + value1) != GP_OK)
 		return GP_ERROR;
-	if (l859_retrcmd(dsc) == GP_ERROR)
+	if (l859_retrcmd(camera) == GP_ERROR)
 		return GP_ERROR;
-	if (l859_sendcmd(dsc, 0xb0 + value2) != GP_OK)
+	if (l859_sendcmd(camera, 0xb0 + value2) != GP_OK)
 		return GP_ERROR;
-	if (l859_retrcmd(dsc) == GP_ERROR)
+	if (l859_retrcmd(camera) == GP_ERROR)
 		return GP_ERROR;
-	if (l859_sendcmd(dsc, 0xc0 + value3) != GP_OK)
+	if (l859_sendcmd(camera, 0xc0 + value3) != GP_OK)
 		return GP_ERROR;
-	if (l859_retrcmd(dsc) == GP_ERROR)
+	if (l859_retrcmd(camera) == GP_ERROR)
 		return GP_ERROR;
-	if (l859_sendcmd(dsc, L859_CMD_DELETE_2) != GP_OK)
+	if (l859_sendcmd(camera, L859_CMD_DELETE_2) != GP_OK)
 		return GP_ERROR;
-	if (l859_retrcmd(dsc) == GP_ERROR)
+	if (l859_retrcmd(camera) == GP_ERROR)
 		return GP_ERROR;
-	if (l859_sendcmd(dsc, L859_CMD_DELETE_3) != GP_OK)
+	if (l859_sendcmd(camera, L859_CMD_DELETE_3) != GP_OK)
 		return GP_ERROR;
-	if (l859_retrcmd(dsc) == GP_ERROR)
+	if (l859_retrcmd(camera) == GP_ERROR)
 		return GP_ERROR;
-	if (l859_sendcmd(dsc, L859_CMD_DELETE_ACK) != GP_OK)
+	if (l859_sendcmd(camera, L859_CMD_DELETE_ACK) != GP_OK)
 		return GP_ERROR;
 
 	l859_debug("Image %i deleted.", index);
@@ -224,7 +225,7 @@ static int l859_delete(l859_t *dsc, u_int8_t index) {
 /*
  * l859_selectimage - select image to download, return its size
  */
-static int l859_selectimage(l859_t *dsc, u_int8_t index) {
+static int l859_selectimage(Camera *camera, u_int8_t index) {
 
 	int			size = 0;
 	u_int8_t	byte1 = 0;
@@ -243,26 +244,26 @@ static int l859_selectimage(l859_t *dsc, u_int8_t index) {
 	value3 = (value0 - value1 - value2) / 100;
 	value2 = value2 / 10;
 
-	if (l859_sendcmd(dsc, 0xa0 + value1) != GP_OK)
+	if (l859_sendcmd(camera, 0xa0 + value1) != GP_OK)
 		return GP_ERROR;
-	if (l859_retrcmd(dsc) == GP_ERROR)
+	if (l859_retrcmd(camera) == GP_ERROR)
 		return GP_ERROR;
-	if (l859_sendcmd(dsc, 0xb0 + value2) != GP_OK)
+	if (l859_sendcmd(camera, 0xb0 + value2) != GP_OK)
 		return GP_ERROR;
-	if (l859_retrcmd(dsc) == GP_ERROR)
+	if (l859_retrcmd(camera) == GP_ERROR)
 		return GP_ERROR;
-	if (l859_sendcmd(dsc, 0xc0 + value3) != GP_OK)
+	if (l859_sendcmd(camera, 0xc0 + value3) != GP_OK)
 		return GP_ERROR;
-	if (l859_retrcmd(dsc) == GP_ERROR)
+	if (l859_retrcmd(camera) == GP_ERROR)
 		return GP_ERROR;
-	if (l859_sendcmd(dsc, L859_CMD_IMAGE) != GP_OK)
+	if (l859_sendcmd(camera, L859_CMD_IMAGE) != GP_OK)
 		return GP_ERROR;
-	if (l859_retrcmd(dsc) == GP_ERROR)
+	if (l859_retrcmd(camera) == GP_ERROR)
 		return GP_ERROR;
 
-	byte1 = dsc->buf[5];
-	byte2 = dsc->buf[6];
-	byte3 = dsc->buf[7];
+	byte1 = camera->pl->buf[5];
+	byte2 = camera->pl->buf[6];
+	byte3 = camera->pl->buf[7];
 
 	size = (byte1 * 256 * 256) + (byte2 * 256) + byte3;
 
@@ -275,7 +276,7 @@ static int l859_selectimage(l859_t *dsc, u_int8_t index) {
  * l859_selectimage_preview - select preview image to download,
  * return its size
  */
-static int l859_selectimage_preview(l859_t *dsc, u_int8_t index) {
+static int l859_selectimage_preview(Camera *camera, u_int8_t index) {
 
 	int			size = 0;
 	u_int8_t	byte1 = 0;
@@ -294,26 +295,26 @@ static int l859_selectimage_preview(l859_t *dsc, u_int8_t index) {
 	value3 = (value0 - value1 - value2) / 100;
 	value2 = value2 / 10;
 
-	if (l859_sendcmd(dsc, 0xa0 + value1) != GP_OK)
+	if (l859_sendcmd(camera, 0xa0 + value1) != GP_OK)
 		return GP_ERROR;
-	if (l859_retrcmd(dsc) == GP_ERROR)
+	if (l859_retrcmd(camera) == GP_ERROR)
 		return GP_ERROR;
-	if (l859_sendcmd(dsc, 0xb0 + value2) != GP_OK)
+	if (l859_sendcmd(camera, 0xb0 + value2) != GP_OK)
 		return GP_ERROR;
-	if (l859_retrcmd(dsc) == GP_ERROR)
+	if (l859_retrcmd(camera) == GP_ERROR)
 		return GP_ERROR;
-	if (l859_sendcmd(dsc, 0xc0 + value3) != GP_OK)
+	if (l859_sendcmd(camera, 0xc0 + value3) != GP_OK)
 		return GP_ERROR;
-	if (l859_retrcmd(dsc) == GP_ERROR)
+	if (l859_retrcmd(camera) == GP_ERROR)
 		return GP_ERROR;
-	if (l859_sendcmd(dsc, L859_CMD_PREVIEW) != GP_OK)
+	if (l859_sendcmd(camera, L859_CMD_PREVIEW) != GP_OK)
 		return GP_ERROR;
-	if (l859_retrcmd(dsc) == GP_ERROR)
+	if (l859_retrcmd(camera) == GP_ERROR)
 		return GP_ERROR;
 
-	byte1 = dsc->buf[5];
-	byte2 = dsc->buf[6];
-	byte3 = dsc->buf[7];
+	byte1 = camera->pl->buf[5];
+	byte2 = camera->pl->buf[6];
+	byte3 = camera->pl->buf[7];
 
 	size = (byte1 * 256 * 256) + (byte2 * 256) + byte3;
 
@@ -327,19 +328,19 @@ static int l859_selectimage_preview(l859_t *dsc, u_int8_t index) {
  * l859_readimageblock - read #block block (116 bytes) of an
  * image into buf
  */
-static int l859_readimageblock(l859_t *dsc, int block, char *buffer) {
+static int l859_readimageblock(Camera *camera, int block, char *buffer) {
 
 	int     index;
 
 	l859_debug("Reading image block: %i.", block);
 
-	if (l859_sendcmd(dsc, L859_CMD_ACK) != GP_OK)
+	if (l859_sendcmd(camera, L859_CMD_ACK) != GP_OK)
 		return GP_ERROR;
-	if (l859_retrcmd(dsc) == GP_ERROR)
+	if (l859_retrcmd(camera) == GP_ERROR)
 		return GP_ERROR;
 
 	for (index = 3; index < 116; index++) {
-		buffer[index - 3] = dsc->buf[index];
+		buffer[index - 3] = camera->pl->buf[index];
 	}
 
 	l859_debug("Block: %i read in.", block);
@@ -387,15 +388,12 @@ int camera_abilities (CameraAbilitiesList *list) {
 
 static int camera_exit (Camera *camera) {
 
-	l859_t	*dsc = (l859_t *)camera->camlib_data;
-
 	l859_debug("Camera Exit");
 
-	if (dsc) {
-		l859_disconnect(dsc);
-		free(dsc->buf);
-		free(dsc);
-		camera->camlib_data = NULL;
+	if (camera->pl) {
+		l859_disconnect(camera);
+		free(camera->pl);
+		camera->pl = NULL;
 	}
 
 	return (GP_OK);
@@ -405,7 +403,6 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 			   CameraList *list, void *data) {
 
 	Camera *camera = data;
-	l859_t		*dsc = (l859_t *)camera->camlib_data;
 	int			num = 0;
 	int			width;
 	int			year;
@@ -421,38 +418,38 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 
 	l859_debug("Camera List Files");
 
-	if (l859_sendcmd(dsc, 0xa0) != GP_OK)
+	if (l859_sendcmd(camera, 0xa0) != GP_OK)
 		return GP_ERROR;
-	if (l859_retrcmd(dsc) == GP_ERROR)
+	if (l859_retrcmd(camera) == GP_ERROR)
 		return GP_ERROR;
-	if (l859_sendcmd(dsc, 0xb0) != GP_OK)
+	if (l859_sendcmd(camera, 0xb0) != GP_OK)
 		return GP_ERROR;
-	if (l859_retrcmd(dsc) == GP_ERROR)
+	if (l859_retrcmd(camera) == GP_ERROR)
 		return GP_ERROR;
-	if (l859_sendcmd(dsc, 0xc0) != GP_OK)
+	if (l859_sendcmd(camera, 0xc0) != GP_OK)
 		return GP_ERROR;
-	if (l859_retrcmd(dsc) == GP_ERROR)
+	if (l859_retrcmd(camera) == GP_ERROR)
 		return GP_ERROR;
-	if (l859_sendcmd(dsc, L859_CMD_PREVIEW) != GP_OK)
+	if (l859_sendcmd(camera, L859_CMD_PREVIEW) != GP_OK)
 		return GP_ERROR;
-	if (l859_retrcmd(dsc) == GP_ERROR)
+	if (l859_retrcmd(camera) == GP_ERROR)
 		return GP_ERROR;
 
-	while (dsc->buf[13] == num) {
+	while (camera->pl->buf[13] == num) {
 
-		byte1 = dsc->buf[8];
-		byte2 = dsc->buf[9];
+		byte1 = camera->pl->buf[8];
+		byte2 = camera->pl->buf[9];
 		width = (byte1 * 256) + byte2;
-		byte1 = dsc->buf[22];
+		byte1 = camera->pl->buf[22];
 		year = byte1 + 1900;
-		month = dsc->buf[23];
-		day = dsc->buf[24];
-		hour = dsc->buf[25];
-		minute = dsc->buf[26];
+		month = camera->pl->buf[23];
+		day = camera->pl->buf[24];
+		hour = camera->pl->buf[25];
+		minute = camera->pl->buf[26];
 
-		byte1 = dsc->buf[5];
-		byte2 = dsc->buf[6];
-		byte3 = dsc->buf[7];
+		byte1 = camera->pl->buf[5];
+		byte2 = camera->pl->buf[6];
+		byte3 = camera->pl->buf[7];
 		size = (byte1 * 256 * 256) + (byte2 * 256) + byte3;
 
 		// Check for no images
@@ -472,9 +469,9 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 /*		l859_debug("Num %i Filename %s", num, filename); */
 
 		num = num + 1;
-		if (l859_sendcmd(dsc, L859_CMD_PREVIEW_NEXT) != GP_OK)
+		if (l859_sendcmd(camera, L859_CMD_PREVIEW_NEXT) != GP_OK)
 			return GP_ERROR;
-		if (l859_retrcmd(dsc) == GP_ERROR)
+		if (l859_retrcmd(camera) == GP_ERROR)
 			return GP_ERROR;
 
 	}
@@ -489,7 +486,6 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 			  CameraFile *file, void *data) {
 
 	Camera *camera = camera;
-	l859_t	*dsc = (l859_t *)camera->camlib_data;
 	int		index;
 	int		size;
 	int		i;
@@ -506,10 +502,10 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
-		size = l859_selectimage(dsc, index);
+		size = l859_selectimage(camera, index);
 		break;
 	case GP_FILE_TYPE_PREVIEW:
-		size = l859_selectimage_preview(dsc, index);
+		size = l859_selectimage_preview(camera, index);
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
@@ -518,13 +514,13 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 
 	for (i = 0, s = 0; s < size; i++) {
 
-		if (l859_sendcmd(dsc, L859_CMD_ACK) != GP_OK)
+		if (l859_sendcmd(camera, L859_CMD_ACK) != GP_OK)
 			return GP_ERROR;
-		if (l859_retrcmd(dsc) == GP_ERROR)
+		if (l859_retrcmd(camera) == GP_ERROR)
 			return GP_ERROR;
 
 		for (bufIndex = 3; bufIndex < 115 && s < size; bufIndex++) {
-			buffer[bufIndex - 3] = dsc->buf[bufIndex];
+			buffer[bufIndex - 3] = camera->pl->buf[bufIndex];
 			s += 1;
 		}
 		l859_debug("Packet Size: %i Data Size: %i", bufIndex - 3, s);
@@ -545,7 +541,6 @@ static int delete_file_func (CameraFilesystem *fs, const char *folder,
 			     const char *filename, void *data) {
 
 	Camera *camera = data;
-	l859_t	*dsc = (l859_t *)camera->camlib_data;
 	int		index;
 	int		result;
 
@@ -556,7 +551,7 @@ static int delete_file_func (CameraFilesystem *fs, const char *folder,
 	if (index < 0)
 		return (index);
 
-	result = l859_delete (dsc, index);
+	result = l859_delete (camera, index);
 	if (result < 0)
 		return (result);
 
@@ -569,15 +564,14 @@ static int delete_all_func (CameraFilesystem *fs, const char *folder,
 			    void *data) {
 
 	Camera *camera = data;
-	l859_t	*dsc = (l859_t *)camera->camlib_data;
 
 	l859_debug("Delete all images");
 
-	if (l859_sendcmd(dsc, L859_CMD_DELETE_ALL) != GP_OK)
+	if (l859_sendcmd(camera, L859_CMD_DELETE_ALL) != GP_OK)
 		return GP_ERROR;
-	if (l859_retrcmd(dsc) == GP_ERROR)
+	if (l859_retrcmd(camera) == GP_ERROR)
 		return GP_ERROR;
-	if (l859_sendcmd(dsc, L859_CMD_DELETE_ACK) != GP_OK)
+	if (l859_sendcmd(camera, L859_CMD_DELETE_ACK) != GP_OK)
 		return GP_ERROR;
 
 	l859_debug("Delete all images done.");
@@ -626,7 +620,7 @@ static int camera_about (Camera *camera, CameraText *about) {
 int camera_init (Camera *camera) {
 
         int             ret;
-        l859_t  *dsc = NULL;
+	GPPortSettings settings;
 
         l859_debug("Camera Init %s", camera->model);
 
@@ -636,29 +630,18 @@ int camera_init (Camera *camera) {
         camera->functions->manual  = camera_manual;
 	camera->functions->about   = camera_about;
 
-        /* first of all allocate memory for a dsc struct */
-        if ((dsc = (l859_t*)malloc(sizeof(l859_t))) == NULL) {
-                l859_debug("Unable to allocate memory for data structure");
-                return GP_ERROR_NO_MEMORY;
-        }
+        gp_port_timeout_set(camera->port, 2000);
+	gp_port_settings_get(camera->port, &settings);
+	settings.serial.speed      = 9600; /* hand shake speed */
+	settings.serial.bits       = 8;
+	settings.serial.parity     = 0;
+	settings.serial.stopbits   = 1;
+        gp_port_settings_set(camera->port, settings);
 
-        camera->camlib_data = dsc;
-	dsc->dev = camera->port;
-
-        gp_port_timeout_set(dsc->dev, 2000);
-	gp_port_settings_get(dsc->dev, &dsc->settings);
-        dsc->settings.serial.speed      = 9600; /* hand shake speed */
-        dsc->settings.serial.bits       = 8;
-        dsc->settings.serial.parity     = 0;
-        dsc->settings.serial.stopbits   = 1;
-        gp_port_settings_set(dsc->dev, dsc->settings);
-
-        /* allocate memory for a dsc read/write buffer */
-        if ((dsc->buf = (char *)malloc(sizeof(char)*(L859_BUFSIZE))) == NULL) {
-                l859_debug("Unable to allocate memory for read/write buffer");
-                free(dsc);
-                return GP_ERROR;
-        }
+        /* allocate memory for a read/write buffer */
+	camera->pl = malloc (sizeof (CameraPrivateLibrary));
+	if (!camera->pl)
+		return (GP_ERROR_NO_MEMORY);
 
 	/* Set up the filesystem */
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
@@ -667,11 +650,10 @@ int camera_init (Camera *camera) {
 	gp_filesystem_set_folder_funcs (camera->fs, NULL, delete_all_func,
 					camera);
 
-        ret = l859_connect(dsc, camera->port_info->speed);
+        ret = l859_connect(camera, camera->port_info->speed);
 	if (ret < 0) {
-		free (dsc->buf);
-		free (dsc);
-		camera->camlib_data = NULL;
+		free (camera->pl);
+		camera->pl = NULL;
 	}
 
 	return (ret);
