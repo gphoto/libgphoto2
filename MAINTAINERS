@@ -1,0 +1,21 @@
+Below are the addresses of persons working on specific parts of gphoto2.
+If you have specific questions (like why doesn't my HP C20 answer with 0x20
+if I send 0xff as described in whatever/file.c), those are the guys to ask.
+
+libgphoto2_port:
+	Scott Fritzinger <scottf@unr.edu>
+
+libgphoto2:
+	Scott Fritzinger <scottf@unr.edu>
+
+camlibs/canon:
+	Philippe Marzouk <pmarzouk@wanadoo.fr>
+
+camlibs/digita:
+	Johannes Erdfelt <johannes@erdfelt.com>
+
+camlibs/konica:
+	Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+Bug reports on sourceforge:
+	Hubert Figuiere <hfiguiere@teaser.fr>
