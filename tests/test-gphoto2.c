@@ -10,23 +10,56 @@ main (int argc, char *argv [])
 	CameraText text;
 	Camera *camera;
 
+	/*
+	 * First, initialize gphoto2. gphoto2 will load every camera library,
+	 * check for the supported cameras, and unload it again. After
+	 * this has been done, gphoto2 has a list supported camera models 
+	 * in memory.
+	 */
 	printf ("Initializing gphoto2...\n");
 	CHECK (gp_init (GP_DEBUG_NONE));
 
+	/*
+	 * You'll probably want to access your camera. You will first have
+	 * to create a camera (that is, allocating the memory).
+	 */
 	printf ("Creating camera...\n");
 	CHECK (gp_camera_new (&camera));
 
-	strcpy (camera->model, "Directory Browse");
+	/*
+	 * Before you initialize the camera, set the model so that
+	 * gphoto2 knows which library to use.
+	 */
+	printf ("Setting model...\n");
+	CHECK (gp_camera_set_model (camera, "Directory Browse"));
 
+	/*
+	 * Now, initialize the camera (establish a connection).
+	 */
 	printf ("Initializing camera...\n");
 	CHECK (gp_camera_init (camera));
 
+	/*
+	 * At this point, you can do whatever you want. Here, we get
+	 * a summary and print it. You could get files, capture images...
+	 */
 	printf ("Getting summary...\n");
 	CHECK (gp_camera_get_summary (camera, &text));
 	printf ("%s\n", text.text);
 
+	/*
+	 * Don't forget to clean up when you don't need the camera any
+	 * more. Please use unref instead of destroy - you'll never know
+	 * if some part of the program still needs the camera.
+	 */
 	printf ("Unrefing camera...\n");
 	CHECK (gp_camera_unref (camera));
+
+	/*
+	 * And when you don't need gphoto2 any more, exit.
+	 */
+	printf ("Exiting gphoto2...\n");
+	CHECK (gp_exit ());
 
 	return (0);
 }

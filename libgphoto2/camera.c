@@ -83,6 +83,26 @@ gp_camera_new (Camera **camera)
 }
 
 int
+gp_camera_set_model (Camera *camera, const char *model)
+{
+	CHECK_NULL (camera && model);
+
+	strcpy (camera->model, model);
+	
+	return (GP_OK);
+}
+
+int
+gp_camera_get_model (Camera *camera, const char **model)
+{
+	CHECK_NULL (camera && model);
+
+	*model = camera->model;
+
+	return (GP_OK);
+}
+
+int
 gp_camera_ref (Camera *camera)
 {
 	CHECK_NULL (camera);

@@ -160,6 +160,8 @@ struct _Camera {
 
 /* Create a new camera device */
 int gp_camera_new               (Camera **camera);
+int gp_camera_set_model         (Camera *camera, const char *model);
+int gp_camera_get_model         (Camera *camera, const char **model);
 
 /************************************************************************
  * Part I:                                                              *

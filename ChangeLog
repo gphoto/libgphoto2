@@ -1,5 +1,13 @@
 2001-08-26  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* include/gphoto2-camera.h:
+	* libgphoto2/camera.c: Add gp_camera_[set,get]_model. Please use
+	those functions instead of directly accessing camera->model.
+	* libgphoto2/core.c: On exit, set glob_abilities_list = NULL
+	* tests/test-gphoto2.c: Add lots of documentation.
+
+2001-08-26  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/dimera/dimera3500.c: explicitly set the conversion method
 	to GP_FILE_CONVERSION_METHOD_CHUCK.
 	* camlibs/digita/digita.c: Move the conversion raw -> ppm to ...
