@@ -1,3 +1,8 @@
+2002-11-18  Lutz Müller <lutz@users.sourceforge.net>
+
+	* localization/Makefile.am: Install files in a $(PACKAGE)/$(VERSION)
+	  subdir.
+
 2002-11-17  Marcus Meissner <marcus@jet.franken.de>
 	
 	* library.c: Got rid of some broken long*/int*/time_t* casts.
