@@ -196,7 +196,7 @@ camera_init (Camera *camera, GPContext *context)
 			break;
 		default:
 			gp_context_error (context,
-					  _("Unsupported port type: %d."
+					  _("Unsupported port type: %d. "
 					    "This driver only works with USB"
 					    "cameras.\n"), camera->port->type);
 			return (GP_ERROR);
