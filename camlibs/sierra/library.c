@@ -78,6 +78,16 @@
 
 #define GP_MODULE "sierra"
 
+typedef enum _SierraAction SierraAction;
+enum _SierraAction {
+	SIERRA_ACTION_DELETE_ALL = 0x01,
+	SIERRA_ACTION_CAPTURE    = 0x02,
+	SIERRA_ACTION_END        = 0x04,
+	SIERRA_ACTION_PREVIEW    = 0x05,
+	SIERRA_ACTION_DELETE     = 0x07,
+	SIERRA_ACTION_UPLOAD     = 0x0b
+};
+
 int sierra_change_folder (Camera *camera, const char *folder, GPContext *context)
 {	
 	int st = 0,i = 1;
@@ -201,7 +211,7 @@ int sierra_list_folders (Camera *camera, const char *folder, CameraList *list,
 int sierra_get_picture_folder (Camera *camera, char **folder)
 {
 	int i;
-	CameraList *list;
+	CameraList list;
 	const char *name = NULL;
 
 	GP_DEBUG ("* sierra_get_picture_folder");
@@ -218,16 +228,14 @@ int sierra_get_picture_folder (Camera *camera, char **folder)
 
 	/* It is assumed that the camera conforms with the JEIDA standard .
 	   Thus, look for the picture folder into the /DCIM directory */
-	CHECK( gp_list_new(&list) );
-	CHECK( gp_filesystem_list_folders(camera->fs, "/DCIM", list, NULL) );
-	for(i=0 ; i < gp_list_count(list) ; i++) {
-		CHECK( gp_list_get_name(list, i, &name) );
+	CHECK (gp_filesystem_list_folders (camera->fs, "/DCIM", &list, NULL) );
+	for(i=0 ; i < gp_list_count (&list) ; i++) {
+		CHECK (gp_list_get_name (&list, i, &name) );
 		GP_DEBUG ("* check folder %s", name);
 		if (isdigit(name[0]) && isdigit(name[1]) && isdigit(name[2]))
 			break;
 		name = NULL;
 	}
-	//CHECK( gp_list_free(list) );
 
 	if (name) {
 		*folder = (char*) calloc(strlen(name)+7, sizeof(char));
@@ -528,6 +536,73 @@ sierra_read_packet (Camera *camera, char *packet, GPContext *context)
 }
 
 static int
+sierra_read_packet_wait (Camera *camera, char *buf, GPContext *context)
+{
+	int res, r = 0;
+
+	while (1) {
+		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
+			return (GP_ERROR_CANCEL);
+
+		res = sierra_read_packet (camera, buf, context);
+		if (res == GP_ERROR_TIMEOUT) {
+			r++;
+			if (r >= RETRIES) {
+				gp_context_error (context, _("Transmission "
+					"of packet timed out even after "
+					"%i retries. Please contact "
+					"<gphoto-devel@gphoto.org>."), r);
+				return GP_ERROR;
+			}
+			GP_DEBUG ("Retrying...");
+			GP_SYSTEM_SLEEP (QUICKSLEEP);
+			continue;
+		}
+
+		CHECK (res);
+		return (GP_OK);
+	}
+}
+
+static int
+sierra_transmit_ack (Camera *camera, char *packet, GPContext *context)
+{
+	int r = 0;
+	char buf[4096];
+
+	while (1) {
+		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
+			return (GP_ERROR_CANCEL);
+
+		/* Write packet and read the answer */
+		CHECK (sierra_write_packet (camera, packet));
+		CHECK (sierra_read_packet_wait (camera, buf, context));
+
+		switch (buf[0]) {
+		case ACK:
+			GP_DEBUG ("Transmission successful.");
+			return GP_OK;
+		case DC1:
+			gp_context_error (context, _("Packet got rejected "
+				"by camera. Please contact "
+				"<gphoto-devel@gphoto.org>."));
+			return GP_ERROR;
+		default:
+			r++;
+			if (r >= RETRIES) {
+				gp_context_error (context, _("Could not "
+					"transmit packet (error code %i). "
+					"Please contact "
+					"<gphoto-devel@gphoto.org>."), buf[0]);
+				return (GP_ERROR);
+			}
+			GP_DEBUG ("Did not receive ACK. Retrying...");
+			continue;
+		}
+	}
+}
+
+static int
 sierra_build_packet (Camera *camera, char type, char subtype,
 		     int data_length, char *packet) 
 {
@@ -574,8 +649,7 @@ sierra_write_ack (Camera *camera)
 
 int sierra_ping (Camera *camera, GPContext *context) 
 {
-	int ret, r = 0;
-	char buf[4096];
+	char buf[4096], packet[4096];
 
 	GP_DEBUG ("* sierra_ping");
 
@@ -584,27 +658,20 @@ int sierra_ping (Camera *camera, GPContext *context)
 		return (GP_OK);
 	}
 	
-	buf[0] = NUL;
-	for (r = 0; r < RETRIES; r++) {
+	packet[0] = NUL;
 
-		ret = sierra_write_packet (camera, buf);
-		if (ret == GP_ERROR_TIMEOUT)
-			continue;
-		if (ret != GP_OK)
-			return ret;;
+	CHECK (sierra_write_packet (camera, packet));
+	CHECK (sierra_read_packet_wait (camera, buf, context));
 
-		ret = sierra_read_packet (camera, buf, context);
-		if (ret == GP_ERROR_TIMEOUT)
-			continue;
-		if (ret != GP_OK)
-			return ret;
-      
-		if (buf[0] == NAK)
-			return GP_OK;
-		else
-			return GP_ERROR_CORRUPTED_DATA;
+	switch (buf[0]) {
+	case NAK:
+		return (GP_OK);
+	default:
+		gp_context_error (context, _("Got unexpected result "
+			"%i. Please contact "
+			"<gphoto-devel@gphoto.org>."), buf[0]);
+		return GP_ERROR;
 	}
-	return GP_ERROR_IO;
 }
 
 int sierra_set_speed (Camera *camera, int speed, GPContext *context) 
@@ -655,71 +722,38 @@ int sierra_set_speed (Camera *camera, int speed, GPContext *context)
 	return GP_OK;
 }
 
-/**
- * sierra_write_action_command_and_wait:
- * @camera : camera data stucture
- * @action_code : action code of the command to be sent
- *     
- * Send an action command to the camera (i.e. a command that
- * is not related to registers). Wait for the Action Complete
- * Notification.
- *
- * Returns: error code
- *     - GP_OK if the operation is successful,
- *     - GP_ERROR if the camera returns an 'Enable to
- *       Execute Command' status,
- *     - GP_ERROR_CORRUPTED_DATA if the received data are invalid,
- *     - GP_ERROR_IO_* on other IO error.
- */
 static int
-sierra_write_action_command_and_wait (Camera *camera, int action_code,
-				      GPContext *context)
+sierra_action (Camera *camera, SierraAction action, GPContext *context)
 {
-	int r, ret;
 	char buf[4096];
 
-	/* Build and send the command packet */
+	/* Build the command packet */
 	CHECK (sierra_build_packet (camera, TYPE_COMMAND, 0, 3, buf));
 	buf[4] = 0x02;
-	buf[5] = action_code;
+	buf[5] = action;
 	buf[6] = 0x00;
-	CHECK (sierra_write_packet (camera, buf));
 
-	/* Wait for the Action Complete Notification */
-	for (r = 0; r < RETRIES; r++) {
-		
-		ret = sierra_read_packet (camera, buf, context);
-		if (ret == GP_OK) {
-			switch ((unsigned char)buf[0]) {
-			case ENQ:
-			case TRM:
-				return GP_OK;
-			case NAK:
-			case ACK:
-				continue;
-			case DC1:
-				/* Unable to execute the command */
-				gp_context_error (context, _("The camera "
-					"is not able to execute this command. "
-					"Please report this error to "
-					"<gphoto-devel@gphoto.org>."));
-				return GP_ERROR;
-			default:
-				return GP_ERROR_CORRUPTED_DATA;
-			}
-		}
-	}
+	GP_DEBUG ("Telling camera to execute action...");
+	CHECK (sierra_transmit_ack (camera, buf, context));
 
-	return GP_ERROR_IO;
+	GP_DEBUG ("Waiting for acknowledgement...");
+	CHECK (sierra_read_packet_wait (camera, buf, context));
+	switch (buf[0]) {
+	case ENQ:
+		return (GP_OK);
+	default:
+		gp_context_error (context, _("Received unexpected answer "
+			"(%i). Please contact <gphoto-devel@gphoto.org>."),
+			buf[0]);
+		return (GP_ERROR);
+	} 
+
+	return GP_OK;
 }
 
 int sierra_set_int_register (Camera *camera, int reg, int value, GPContext *context) 
 {
-	int r=0;
 	char p[4096];
-	char buf[4096];
-	int ret;
-	unsigned int id;
 
 	GP_DEBUG ("Setting int register %i to %i...", reg, value);
 
@@ -736,49 +770,8 @@ int sierra_set_int_register (Camera *camera, int reg, int value, GPContext *cont
 		p[9] = (value>>24) & 0xff;
 	}
 
-	id = gp_context_progress_start (context, RETRIES,
-					_("Transmitting data..."));
-	for (r = 0; r < RETRIES; r++) {
-
-		CHECK (sierra_write_packet (camera, p));
-
-		ret = sierra_read_packet (camera, buf, context);
-		if (ret == GP_ERROR_TIMEOUT) {
-			if (r == RETRIES - 1)
-				GP_DEBUG ("Transmission timed out.");
-			else
-				GP_DEBUG ("Transmission timed out "
-					  "- retrying...");
-			continue;
-		}
-		CHECK (ret);
-
-		if (buf[0] == ACK) {
-			GP_DEBUG ("Transmission successful.");
-			break;
-		}
-
-		/* DC1 = invalid register or value */
-		if (buf[0] == DC1) {
-			gp_context_error (context, _("Could not set "
-				"int register %i. Please contact "
-				"<gphoto-devel@gphoto.org>."), reg);
-			return GP_ERROR_BAD_PARAMETERS;
-		}
-
-		gp_context_progress_update (context, id, r + 1);
-		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
-			return (GP_ERROR_CANCEL);
-	}
-	gp_context_progress_stop (context, id);
-
-	if (r == RETRIES) {
-
-		/* Set to default speed, don't care about the return value */
-		sierra_set_speed (camera, -1, context);
-
-		return (GP_ERROR_IO);
-	}
+	/* Send packet */
+	CHECK (sierra_transmit_ack (camera, p, context));
 
 	return (GP_OK);
 }
@@ -788,7 +781,6 @@ int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *con
 	int r = 0, write_nak = 0;
 	char packet[4096];
 	char buf[4096];
-	int ret;
 
 	GP_DEBUG ("* sierra_get_int_register");
 	GP_DEBUG ("* register: %i", reg);
@@ -805,34 +797,29 @@ int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *con
 		else
 			CHECK (sierra_write_packet (camera, packet));
 
-		ret = sierra_read_packet (camera, buf, context);
-		if (ret == GP_ERROR_TIMEOUT)
-			continue;
-		CHECK (ret);
-
-		/* DC1 = invalid register or value */
-		if (buf[0] == DC1) {
+		CHECK (sierra_read_packet_wait (camera, buf, context));
+		switch (buf[0]) {
+		case DC1:
 			gp_context_error (context, _("Could not get "
 				"register %i. Please contact "
 				"<gphoto-devel@gphoto.org>."), reg);
-			return GP_ERROR_BAD_PARAMETERS;
-		}
-
-		if (buf[0] == TYPE_DATA_END) {
-			ret = sierra_write_ack(camera);
-			r = ((unsigned char)buf[4]) +
-				((unsigned char)buf[5] * 256) +
-				((unsigned char)buf[6] * 65536) +
-				((unsigned char)buf[7] * 16777216);
+			return GP_ERROR;
+		case TYPE_DATA_END:
+			r = ((unsigned char) buf[4]) +
+			    ((unsigned char) buf[5] * 256) +
+			    ((unsigned char) buf[6] * 65536) +
+			    ((unsigned char) buf[7] * 16777216);
 			*value = r;
-			GP_DEBUG ("Wrote ACK. Returning '%s'.", gp_result_as_string (ret));
-			return ret;
-		}
-
-		if (buf[0] == ENQ)
+			CHECK (sierra_write_ack (camera));
 			return GP_OK;
+		case ENQ:
+			return GP_OK;
+		default:
 
-		write_nak = 1;
+			/* Try again */
+			write_nak = 1;
+			break;
+		}
 	}
 
 	return GP_ERROR_IO;
@@ -841,11 +828,10 @@ int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *con
 int sierra_set_string_register (Camera *camera, int reg, const char *s, long int length, GPContext *context) 
 {
 
-	char packet[4096], buf[4096];
+	char packet[4096];
 	char type;
-	unsigned char c;
 	long int x=0;
-	int seq=0, size=0, done, r, ret, do_percent;
+	int seq=0, size=0, do_percent;
 	unsigned int id = 0;
 
 	GP_DEBUG ("* sierra_set_string_register");
@@ -886,41 +872,10 @@ int sierra_set_string_register (Camera *camera, int reg, const char *s, long int
 			x += size;
 		}
 
-		r = 0; done = 0;
-		while ((r++ < RETRIES) && (!done)) {
-
-			ret = sierra_write_packet (camera, packet);
-			if (ret == GP_ERROR_TIMEOUT)
-				continue;
-			CHECK (ret);
-
-			ret = sierra_read_packet (camera, buf, context);
-			if (ret == GP_ERROR_TIMEOUT)
-				continue;
-			CHECK (ret);
-
-			c = (unsigned char)buf[0];
-			if (c == DC1) {
-				gp_context_error (context, _("Could not "
-					"set string register %i. Please "
-					"contact <gphoto-devel@gphoto.org>."),
-					reg);
-				return GP_ERROR_BAD_PARAMETERS;
-			} else if (c == ACK) {
-				done = 1;
-				if (do_percent)
-					gp_context_progress_update (context, id, x);
-			}
-
-			else	{
-				if (c != NAK)
-					return GP_ERROR_IO;
-			}
-
-		}
-		if (r > RETRIES) {
-			return GP_ERROR_IO;
-		}
+		/* Transmit packet */
+		CHECK (sierra_transmit_ack (camera, packet, context));
+		if (do_percent)
+			gp_context_progress_update (context, id, x);
 	}
 	if (do_percent)
 		gp_context_progress_stop (context, id);
@@ -959,11 +914,14 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 
 		/* Read one packet */
 		CHECK (sierra_read_packet (camera, packet, context));
-		if (packet[0] == DC1) {
+		switch (packet[0]) {
+		case DC1:
 			gp_context_error (context, _("Could not get "
 				"string register %i. Please contact "
 				"<gphoto-devel@gphoto.org>."), reg);
-			return GP_ERROR_BAD_PARAMETERS;
+			return GP_ERROR;
+		default:
+			break;
 		}
 		CHECK (sierra_write_ack (camera));
 
@@ -987,120 +945,23 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 
 int sierra_delete_all (Camera *camera, GPContext *context)
 {
-	char packet[4096], buf[4096], r, done, ret;
+	CHECK (sierra_action (camera, SIERRA_ACTION_DELETE_ALL, context));
 
-	GP_DEBUG ("* sierra_delete_all");
-
-	CHECK (sierra_build_packet (camera, TYPE_COMMAND, 0, 3, packet));
-
-	packet[4] = 0x02;
-	packet[5] = 0x01;
-	packet[6] = 0x00;
-
-	/* Send the command delete all */
-	CHECK (sierra_write_packet (camera, packet));
-
-	/* Read command acknowledgement */
-	CHECK (sierra_read_packet (camera, buf, context));
-	if (buf[0] != ACK)
-		return GP_ERROR_CORRUPTED_DATA;
-
-	/* Wait for the action complete notification */
-	r = 0, done = 0;
-	while ( !done && r < RETRIES ) {
-
-		GP_SYSTEM_SLEEP (QUICKSLEEP);
-
-		ret = sierra_read_packet (camera, buf, context);
-		if (ret == GP_OK) {
-			done = 1;
-			ret  = (buf[0] == ENQ) ? GP_OK : GP_ERROR_CORRUPTED_DATA;
-		}
-	}
-
-	return ret;
+	return GP_OK;
 }
 
 int sierra_delete (Camera *camera, int picture_number, GPContext *context) 
 {
-	char packet[4096], buf[4096];
-	int r, done, ret;
-
-	GP_DEBUG ("* sierra_delete");
-	GP_DEBUG ("* picture: %i", picture_number);
-
+	/* Tell the camera which picture to delete and execute command. */
 	CHECK (sierra_set_int_register (camera, 4, picture_number, context));
-
-	CHECK (sierra_build_packet (camera, TYPE_COMMAND, 0, 3, packet));
-
-	packet[4] = 0x02;
-	packet[5] = 0x07;
-	packet[6] = 0x00;
-
-	r = 0; done = 0;
-	while ((!done) && (r++<RETRIES)) {
-
-		ret = sierra_write_packet (camera, packet);
-		if (ret == GP_ERROR_TIMEOUT)
-			continue;
-		CHECK (ret);
-
-		ret = sierra_read_packet (camera, buf, context);
-		if (ret == GP_ERROR_TIMEOUT)
-			continue;
-		CHECK (ret);
-
-		done = (buf[0] == NAK)? 0 : 1;
-
-		if (done) {
-			/* read in the ENQ */
-			if (sierra_read_packet (camera, buf, context) != GP_OK)
-				return ((buf[0] == ENQ)? GP_OK : GP_ERROR_IO);
-			
-		}
-	}
-	if (r > RETRIES)
-		return (GP_ERROR_IO);
-
-	GP_SYSTEM_SLEEP(QUICKSLEEP);
+	CHECK (sierra_action (camera, SIERRA_ACTION_DELETE, context));
 
 	return (GP_OK);
 }
 
 int sierra_end_session (Camera *camera, GPContext *context) 
 {
-	char packet[4096], buf[4096];
-	unsigned char c;
-	int r, done;
-
-	GP_DEBUG ("* sierra_end_session");
-
-	CHECK (sierra_build_packet (camera, TYPE_COMMAND, 0, 3, packet));
-	packet[4] = 0x02;
-	packet[5] = 0x04;
-	packet[6] = 0x00;
-
-	r = 0; done = 0;
-	while ((!done) && (r++<RETRIES)) {
-		CHECK (sierra_write_packet (camera, packet));
-		CHECK (sierra_read_packet (camera, buf, context));
-
-		c = (unsigned char)buf[0];
-		if (c == TRM)
-			return (GP_OK);
-
-		done = (c == NAK)? 0 : 1;
-
-		if (done) {
-
-			/* read in the ENQ */
-			CHECK (sierra_read_packet (camera, buf, context));
-			c = (unsigned char)buf[0];
-			return ((c == ENQ)? GP_OK : GP_ERROR_IO);
-		}
-	}
-	if (r > RETRIES)
-		return (GP_ERROR_IO);
+	CHECK (sierra_action (camera, SIERRA_ACTION_END, context));
 
 	return (GP_OK);
 }
@@ -1111,7 +972,7 @@ int sierra_capture_preview (Camera *camera, CameraFile *file, GPContext *context
 
 	/* Send to the camera the capture request and wait
 	   for the completion */
-	CHECK (sierra_write_action_command_and_wait(camera, 5, context));
+	CHECK (sierra_action (camera, SIERRA_ACTION_PREVIEW, context));
 
 	/* Retrieve the preview and set the MIME type */
 	CHECK (sierra_get_int_register (camera, 12, &size, context));
@@ -1136,7 +997,7 @@ int sierra_capture (Camera *camera, CameraCaptureType type,
 
 	/* Send to the camera the capture request and wait
 	   for the completion */
-	CHECK (sierra_write_action_command_and_wait(camera, 2, context));
+	CHECK (sierra_action (camera, SIERRA_ACTION_CAPTURE, context));
 
 	/* After picture is taken, register 4 is set to current picture */
 	GP_DEBUG ("Getting picture number...");
@@ -1181,7 +1042,7 @@ int sierra_upload_file (Camera *camera, CameraFile *file, GPContext *context)
 
 	/* Send command to order the transfer into NVRAM and wait
 	   for the completion */
-	CHECK (sierra_write_action_command_and_wait (camera, 11, context));
+	CHECK (sierra_action (camera, SIERRA_ACTION_UPLOAD, context));
 
 	return GP_OK;
 }
@@ -1198,9 +1059,14 @@ int sierra_get_pic_info (Camera *camera, unsigned int n,
 	unsigned char buf[1024];
 	unsigned int buf_len = 0;
 
-	CHECK (sierra_get_string_register (camera, 47, n, NULL, buf, &buf_len, context));
-	if (buf_len != 32)
+	CHECK (sierra_get_string_register (camera, 47, n, NULL, buf,
+					   &buf_len, context));
+	if (buf_len != 32) {
+		gp_context_error (context, _("Expected 32 bytes, got %i. "
+			"Please contact <gphoto-devel@gphoto.org>."), buf_len);
 		return (GP_ERROR_CORRUPTED_DATA);
+	}
+
 	pic_info->size_file      = get_int (buf);
 	pic_info->size_preview   = get_int (buf + 4);
 	pic_info->size_audio     = get_int (buf + 8);
@@ -1210,12 +1076,12 @@ int sierra_get_pic_info (Camera *camera, unsigned int n,
 	pic_info->animation_type = get_int (buf + 28);
 
 	/* Make debugging easier */
-	GP_DEBUG ("File size: %d", pic_info->size_file);
-	GP_DEBUG ("Preview size: %i", pic_info->size_preview);
-	GP_DEBUG ("Audio size: %i", pic_info->size_audio);
-	GP_DEBUG ("Resolution: %i", pic_info->resolution);
-	GP_DEBUG ("Locked: %i", pic_info->locked);
-	GP_DEBUG ("Date: %i", pic_info->date);
+	GP_DEBUG ("File size: %d",      pic_info->size_file);
+	GP_DEBUG ("Preview size: %i",   pic_info->size_preview);
+	GP_DEBUG ("Audio size: %i",     pic_info->size_audio);
+	GP_DEBUG ("Resolution: %i",     pic_info->resolution);
+	GP_DEBUG ("Locked: %i",         pic_info->locked);
+	GP_DEBUG ("Date: %i",           pic_info->date);
 	GP_DEBUG ("Animation type: %i", pic_info->animation_type);
 
 	return (GP_OK);

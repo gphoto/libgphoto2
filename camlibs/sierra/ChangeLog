@@ -1,3 +1,7 @@
+2002-01-29  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c: Cleanup.
+
 2002-01-27  Lutz Müller <lutz@users.sourceforge.net>
 
 	* sierra.c: %s/== GP_OK/>= 0. Fixes camera_config (for example).
