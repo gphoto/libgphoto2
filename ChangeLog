@@ -1,3 +1,8 @@
+2002-08-01  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* libgphoto2/gphoto2-list.c (exchange): changed strcpy with memcpy
+	that prevents unterminated strings overflow.
+
 2002-09-01  Lutz Müller <lutz@users.sourceforge.net>
 
 	* MAINTAINERS: Arnaud is now responsible for autogen.sh. Added 

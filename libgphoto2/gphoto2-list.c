@@ -165,12 +165,15 @@ exchange (CameraList *list, int x, int y)
 	char name  [128];
 	char value [128];
 
-	strcpy (name,  list->entry[x].name);
-	strcpy (value, list->entry[x].value);
-	strcpy (list->entry[x].name,  list->entry[y].name);
-	strcpy (list->entry[x].value, list->entry[y].value);
-	strcpy (list->entry[y].name,  name);
-	strcpy (list->entry[y].value, value);
+	/* here we use memcpy to avoid unterminated strings *
+	 * stored in the list. 128 is hardcoded. use a constant *
+	 * for cleaness */
+	memcpy (name,  list->entry[x].name, 128);
+	memcpy (value, list->entry[x].value, 128);
+	memcpy (list->entry[x].name,  list->entry[y].name, 128);
+	memcpy (list->entry[x].value, list->entry[y].value, 128);
+	memcpy (list->entry[y].name,  name, 128);
+	memcpy (list->entry[y].value, value, 128);
 }
 
 /**
