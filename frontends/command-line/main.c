@@ -252,13 +252,11 @@ OPTION_CALLBACK(abilities) {
                         x++;
                 } while (abilities.speed[x]!=0);
         }
-        printf("Capture from computer support    : %s\n",
-                abilities.capture == 0? "no":"yes");
         printf("Capture choices                  :\n");
         x=0;
-        while (abilities.capture_setting[x].type != GP_CAPTURE_NONE) {
+        while (abilities.capture[x].type != GP_CAPTURE_NONE) {
         printf("                                 : %s\n",
-               abilities.capture_setting[x].name);
+               abilities.capture[x].name);
                 x++;
         }
         printf("Configuration support            : %s\n",
@@ -653,7 +651,6 @@ OPTION_CALLBACK(delete_all_pictures) {
 
         /* If the camera supports deleting all the files */
         if (glob_camera->abilities->file_delete_all) {
-            printf("##################\n");
             result = gp_camera_file_delete_all (glob_camera, glob_folder);
             /* If that went OK, return. Otherwise, do it 1 by 1 */
             if (result == GP_OK)

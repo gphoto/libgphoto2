@@ -29,19 +29,16 @@ int gp_abilities_dump (CameraAbilities *abilities) {
 			x++;
 		} while (abilities->speed[x]!=0);
 	}
-	gp_debug_printf(GP_DEBUG_LOW, "core", "Capture from computer support         : %s", 
-		abilities->capture == 0? "no":"yes");
-        if (abilities->capture > 0) {
+
         gp_debug_printf(GP_DEBUG_LOW, "core", "Capture choices                       :");
-                x=0;
-                while (abilities->capture_setting[x].type != GP_CAPTURE_NONE) {
+        x=0;
+        while (abilities->capture[x].type != GP_CAPTURE_NONE) {
         gp_debug_printf(GP_DEBUG_LOW, "core", "                                      : %s",
-                                   abilities->capture_setting[x].name);
-                        x++;
-                }
+                        abilities->capture[x].name);
+                x++;
         }
         gp_debug_printf(GP_DEBUG_LOW, "core", "Configuration  support                : %s",
-		abilities->config == 0? "no":"yes");
+                abilities->config == 0? "no":"yes");
 	gp_debug_printf(GP_DEBUG_LOW, "core", "Delete files on camera support        : %s", 
 		abilities->file_delete == 0? "no":"yes");
 	gp_debug_printf(GP_DEBUG_LOW, "core", "File preview (thumbnail) support      : %s", 
@@ -57,7 +54,7 @@ int gp_abilities_clear (CameraAbilities *abilities) {
 	strcpy(abilities->model, "");
 	abilities->port = 0;
 	abilities->speed[0] = 0;
-	abilities->capture = GP_CAPTURE_NONE;
+	abilities->capture[0].type = GP_CAPTURE_NONE;
 	abilities->config = 0;
 	abilities->file_delete = 0;
 	abilities->file_preview = 0;
