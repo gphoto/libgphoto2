@@ -723,6 +723,8 @@ gp_port_serial_check_speed (GPPort *dev)
 	 * On IRIX, we need to set the baudrate after closing and
 	 * reopening.
 	 */
+	if (!dev->settings.serial.speed)
+		return (GP_OK);
 #else
 	/* If baudrate is up to date, do nothing */
 	if (dev->pl->baudrate == dev->settings.serial.speed)
