@@ -116,10 +116,10 @@ int gp_widget_value_set (CameraWidget *widget, void *value) {
 
         switch (widget->type) {
         case GP_WIDGET_WINDOW:
-            return (GP_ERROR);
+            return (GP_ERROR_BAD_PARAMETERS);
             break;
         case GP_WIDGET_SECTION:
-            return (GP_ERROR);
+            return (GP_ERROR_BAD_PARAMETERS);
             break;
         case GP_WIDGET_TEXT:
             if (widget->value_string) {
@@ -132,7 +132,7 @@ int gp_widget_value_set (CameraWidget *widget, void *value) {
             }
             widget->value_string = strdup((char*)value);
             if (!widget->value_string)
-                return (GP_ERROR);
+                return (GP_ERROR_BAD_PARAMETERS);
             break;
         case GP_WIDGET_RANGE:
             if (widget->value_float != *((float*)value)) {
@@ -157,7 +157,7 @@ int gp_widget_value_set (CameraWidget *widget, void *value) {
             }
             widget->value_string = strdup((char*)value);
             if (!widget->value_string)
-                return (GP_ERROR);
+                return (GP_ERROR_BAD_PARAMETERS);
             break;
         case GP_WIDGET_MENU:
             if (widget->value_string) {
@@ -170,11 +170,11 @@ int gp_widget_value_set (CameraWidget *widget, void *value) {
             }
             widget->value_string = strdup((char*)value);
             if (!widget->value_string)
-                return (GP_ERROR);
+                return (GP_ERROR_BAD_PARAMETERS);
             break;
 
         case GP_WIDGET_BUTTON:
-            return (GP_ERROR);
+            return (GP_ERROR_BAD_PARAMETERS);
             break;
         case GP_WIDGET_DATE:
             if (widget->value_int != *((int*)value)) {
@@ -183,7 +183,7 @@ int gp_widget_value_set (CameraWidget *widget, void *value) {
             }
             break;
         default:
-            return (GP_ERROR);
+            return (GP_ERROR_BAD_PARAMETERS);
         }
 
 	return (GP_OK);
@@ -193,10 +193,10 @@ int gp_widget_value_get (CameraWidget *widget, void *value) {
 
         switch (widget->type) {
         case GP_WIDGET_WINDOW:
-            return (GP_ERROR);
+            return (GP_ERROR_BAD_PARAMETERS);
             break;
         case GP_WIDGET_SECTION:
-            return (GP_ERROR);
+            return (GP_ERROR_BAD_PARAMETERS);
             break;
         case GP_WIDGET_TEXT:
             *((char**)value) = widget->value_string;
@@ -214,13 +214,13 @@ int gp_widget_value_get (CameraWidget *widget, void *value) {
             *((char**)value) = widget->value_string;
             break;
         case GP_WIDGET_BUTTON:
-            return (GP_ERROR);
+            return (GP_ERROR_BAD_PARAMETERS);
             break;
         case GP_WIDGET_DATE:
             *((int*)value) = widget->value_int;
             break;
         default:
-            return (GP_ERROR);
+            return (GP_ERROR_BAD_PARAMETERS);
         }
 
 	return (GP_OK);
@@ -233,7 +233,7 @@ int gp_widget_append(CameraWidget *parent, CameraWidget *child) {
 
 	/* Return if they can't have any children */
         if ((parent->type != GP_WIDGET_WINDOW) && (parent->type != GP_WIDGET_SECTION))
-		return (GP_ERROR);
+		return (GP_ERROR_BAD_PARAMETERS);
 
 	parent->children[parent->children_count] = child;
 	parent->children_count += 1;
@@ -248,7 +248,7 @@ int gp_widget_prepend(CameraWidget *parent, CameraWidget *child) {
 	
 	/* Return if they can't have any children */
 	if ((parent->type != GP_WIDGET_WINDOW) && (parent->type != GP_WIDGET_SECTION))
-		return (GP_ERROR);
+		return (GP_ERROR_BAD_PARAMETERS);
 
 	/* Shift down 1 */
 	for (x=parent->children_count; x>0; x--)
@@ -302,7 +302,7 @@ CameraWidget* gp_widget_child_by_label (CameraWidget *widget, char *label) {
 int gp_widget_range_set (CameraWidget *range, float min, float max, float increment) {
 
 	if (range->type != GP_WIDGET_RANGE)
-		return (GP_ERROR);
+		return (GP_ERROR_BAD_PARAMETERS);
 
 	range->min = min;
 	range->max = max;
@@ -314,7 +314,7 @@ int gp_widget_range_set (CameraWidget *range, float min, float max, float increm
 int gp_widget_range_get (CameraWidget *range, float *min, float *max, float *increment) {
 
 	if (range->type != GP_WIDGET_RANGE)
-		return (GP_ERROR);
+		return (GP_ERROR_BAD_PARAMETERS);
 
 	*min = range->min;
 	*max = range->max;
@@ -330,7 +330,7 @@ int gp_widget_choice_add (CameraWidget *widget, char *choice) {
 
 	if ((widget->type != GP_WIDGET_RADIO) &&
 	    (widget->type != GP_WIDGET_MENU))
-		return (GP_ERROR);
+		return (GP_ERROR_BAD_PARAMETERS);
 
 	strncpy(widget->choice[widget->choice_count], choice, 64);
 	widget->choice_count += 1;
@@ -343,7 +343,7 @@ int gp_widget_choice_count (CameraWidget *widget) {
 
 	if ((widget->type != GP_WIDGET_RADIO) &&
 	    (widget->type != GP_WIDGET_MENU))
-		return (GP_ERROR);
+		return (GP_ERROR_BAD_PARAMETERS);
 
 	return (widget->choice_count);
 }

@@ -53,7 +53,7 @@ int gp_file_session (CameraFile *file) {
 int gp_file_append (CameraFile *file, char *data, int size) {
 
         if (size < 0)
-                return (GP_ERROR);
+                return (GP_ERROR_BAD_PARAMETERS);
 
 	if (!file->data)
 	        file->data = (char*)malloc(sizeof(char) * (size));
@@ -113,7 +113,7 @@ int gp_file_open (CameraFile *file, char *filename) {
 
         file->data = (char*)malloc(sizeof(char)*(size + 1));
         if (!file->data)
-                return (GP_ERROR);
+                return (GP_ERROR_BAD_PARAMETERS);
         size_read = fread(file->data, (size_t)sizeof(char), (size_t)size, fp);
         if (ferror(fp)) {
                 gp_file_clean(file);

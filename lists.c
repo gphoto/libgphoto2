@@ -111,7 +111,7 @@ int gp_abilities_list_append (CameraAbilitiesList *list, CameraAbilities *abilit
 	        list->abilities = (CameraAbilities**)realloc(list->abilities,
 	                sizeof(CameraAbilities*)*(list->count+1));
         if (!list->abilities)
-                return (GP_ERROR);
+                return (GP_ERROR_NO_MEMORY);
 
         list->abilities[list->count] = abilities;
         list->count += 1;
