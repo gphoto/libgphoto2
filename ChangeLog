@@ -1,3 +1,9 @@
+2001-11-30  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2:
+	* doc/api: Move documentation out of the header files into the
+	  templates
+
 2001-11-29  Hans Ulrich Niedermann <hun@n-dimensional.de>
 
 	* README: Added paragraph about reporting bugs (using LANG=C)
