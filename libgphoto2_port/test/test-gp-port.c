@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <gphoto2-port.h>
-#include <gphoto2-port-debug.h>
 #include <gphoto2-port-result.h>
 
 int
