@@ -64,6 +64,7 @@ char *models[] = {
 	"Olympus D-360L",
 	"Olympus D-400L Zoom",
 	"Olympus D-450Z",
+	"Olympus D-460Z",
 	"Olympus D-500L",
 	"Olympus D-600L",
 	"Olympus D-620L",

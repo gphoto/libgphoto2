@@ -285,7 +285,7 @@ int fujitsu_ping(gpio_device *dev) {
 	int r=0;
 	char buf[4096];
 
-        buf[0] = 0x00;
+        buf[0] = NUL;
 
 	while (r++ < RETRIES) {
 		debug_print("pinging the camera");
@@ -295,7 +295,7 @@ int fujitsu_ping(gpio_device *dev) {
 		if (fujitsu_read_packet(dev, buf)==GP_ERROR)
 			return (GP_ERROR);
 
-		if (buf[0] == 0x15) {
+		if (buf[0] == NAK) {
 			debug_print("ping succeeded");
 			return (GP_OK);
 		}
