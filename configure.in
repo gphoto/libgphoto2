@@ -148,10 +148,9 @@ dnl ---------------------------------------------------------------------------
 AC_MSG_CHECKING(where to install camlibs)
 AC_ARG_WITH(camlibdir,
   [  --with-camlibdir=<path>   install camlibs in directory <path> ],
-  camlibdir="$withval", camlibdir='${libdir}/gphoto2')
+  camlibdir="$withval", camlibdir="${libdir}/gphoto2")
 AC_MSG_RESULT("$camlibdir")
 AC_SUBST(camlibdir)
-AC_DEFINE_UNQUOTED(CAMLIBDIR,"`eval 'echo $camlibdir'`",[where to install camlibs])
 
 dnl ---------------------------------------------------------------------------
 dnl Camera drivers
