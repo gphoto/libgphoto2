@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <gphoto2.h>
@@ -132,8 +133,11 @@ int camera_abilities (CameraAbilitiesList *list) {
 
 int camera_init (Camera *camera, CameraInit *init) {
 
-	int value=0, x=0, count;
+	int value=0, count;
+#ifdef GPIO_USB
+	int x=0;
 	int vendor=0, product=0, inep=0, outep=0;
+#endif
 	gpio_device_settings settings;
 	SierraData *fd;
 
@@ -180,6 +184,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 			settings.serial.parity 	 = 0;
 			settings.serial.stopbits = 1;
 			break;
+#ifdef GPIO_USB
 		case GP_PORT_USB:
 			/* lookup the USB information */
 			while (strlen(sierra_cameras[x].model)>0) {			
@@ -217,6 +222,7 @@ int camera_init (Camera *camera, CameraInit *init) {
         		settings.usb.interface 	= 0;
         		settings.usb.altsetting = 0;
 			break;
+#endif
 		default:
 			sierra_debug_print(fd, "Invalid Device");
 			free (fd);
@@ -253,9 +259,11 @@ int camera_init (Camera *camera, CameraInit *init) {
 			}
 			fd->speed = init->port.speed;
 			break;
+#ifdef GPIO_USB
 		case GP_PORT_USB:
 			gpio_usb_clear_halt(fd->dev, GPIO_USB_IN_ENDPOINT);
 			break;
+#endif
 		default:
 			break;
 	}
