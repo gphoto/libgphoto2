@@ -1,0 +1,10 @@
+# lsusb-v
+###################################################################
+# This file contains the output of lsusb -v for the cameras 
+# supported by this driver
+#
+# The purpose is to have a comprehensive database in which to find 
+# distinguishing properties for cameras with the same ProductID but 
+# different features
+###################################################################
+
