@@ -1,5 +1,10 @@
 2001-10-04  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2/debug.c: Move debugging stuff to libgphoto2_port so
+	that those messages get saved, too.
+
+2001-10-04  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/konica/library.c: const
 	* frontents/command-line/main.c: Print out last debugging messages
 	on error
