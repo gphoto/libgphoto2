@@ -163,6 +163,7 @@ struct gp_port {
 #else
         void *device_handle;
 #endif
+	void *device;
         int timeout; /* in milli seconds */
 
         void *library_handle;

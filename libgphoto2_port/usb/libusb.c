@@ -111,35 +111,41 @@ int gp_port_usb_open(gp_port *dev)
         if (dev->debug_level)
             printf ("gp_port_usb_open() called\n");
 
-        /* Open the device using the previous usb_handle returned by find_device */
-        udev = dev->device_handle;
-	if (!dev->device_handle) {
-		fprintf(stderr, "gp_port_usb_open: dev->device_handle is NULL\n");
+        /*
+	 * Open the device using the previous usb_handle returned by
+	 * find_device
+	 */
+        udev = dev->device;
+	if (!udev) {
+		fprintf(stderr, "gp_port_usb_open: dev->device is NULL\n");
 		return GP_ERROR_IO_OPEN;	
 	}
-        dev->device_handle = usb_open(udev);
+        dev->device_handle = usb_open (udev);
 	if (!dev->device_handle)
 		return GP_ERROR_IO_OPEN;
 
-	ret = usb_set_configuration(dev->device_handle, dev->settings.usb.config);
+	ret = usb_set_configuration (dev->device_handle,
+				     dev->settings.usb.config);
 	if (ret < 0) {
-		fprintf(stderr, "gp_port_usb_open: could not set config %d: %s\n",
-			dev->settings.usb.config, strerror(errno));
+		fprintf(stderr, "gp_port_usb_open: could not set config %d: "
+			"%s\n", dev->settings.usb.config, strerror (errno));
 		return GP_ERROR_IO_OPEN;
 	}
 
-	ret = usb_claim_interface(dev->device_handle, dev->settings.usb.interface);
+	ret = usb_claim_interface (dev->device_handle,
+				   dev->settings.usb.interface);
 	if (ret < 0) {
-		fprintf(stderr, "gp_port_usb_open: could not claim intf %d: %s\n",
-			dev->settings.usb.interface, strerror(errno));
+		fprintf (stderr, "gp_port_usb_open: could not claim intf %d: "
+			 "%s\n", dev->settings.usb.interface, strerror (errno));
 		return GP_ERROR_IO_OPEN;
 	}
 
-	ret = usb_set_altinterface(dev->device_handle, dev->settings.usb.altsetting);
+	ret = usb_set_altinterface (dev->device_handle,
+				    dev->settings.usb.altsetting);
 	if (ret < 0) {
-		fprintf(stderr, "gp_port_usb_open: could not set intf %d/%d: %s\n",
-			dev->settings.usb.interface,
-			dev->settings.usb.altsetting, strerror(errno));
+		fprintf (stderr, "gp_port_usb_open: could not set intf %d/%d: "
+			 "%s\n", dev->settings.usb.interface,
+			 dev->settings.usb.altsetting, strerror (errno));
 		return GP_ERROR_IO_OPEN;
 	}
 
@@ -151,11 +157,12 @@ int gp_port_usb_close(gp_port *dev)
         if (dev->debug_level)
             printf ("gp_port_usb_close() called\n");
 
-	if (usb_close(dev->device_handle) < 0)
-		fprintf(stderr, "gp_port_usb_close: %s\n",
-			strerror(errno));
-
-	dev->device_handle = NULL;
+	if (dev->device_handle) {
+		if (usb_close (dev->device_handle) < 0)
+			fprintf (stderr, "gp_port_usb_close: %s\n",
+				 strerror (errno));
+		dev->device_handle = NULL;
+	}
 
 	return GP_OK;
 }
@@ -261,7 +268,7 @@ int gp_port_usb_find_device_lib(gp_port * d, int idvendor, int idproduct)
 			if ((dev->descriptor.idVendor == idvendor) &&
 			    (dev->descriptor.idProduct == idproduct)) {
                                 if (d)
-                                    d->device_handle = dev;
+                                    d->device = dev;
 				return GP_OK;
 			}
 		}
