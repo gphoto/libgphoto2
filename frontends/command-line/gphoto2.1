@@ -48,6 +48,9 @@ gphoto2 \- command-line gPhoto2 client
 .PP
 gPhoto2 is a cross-platform digital camera library, and \fBgphoto2\fR is a command-line client for it.
 
+.PP
+In the following options, picture numbers begin at 1.
+
 .TP
 \fB--debug\fR
 Turn on debugging.
@@ -98,7 +101,7 @@ Specify serial transfer speed.
 
 .TP
 \fB--camera\fR \fIMODEL\fR
-Specify camera model.
+Specify camera model. Most model names contain spaces: remember to enclose the name in quotes so that the shell knows it is one parameter. For example: \fB\fB--camera\fR "Kodak DC240"\fR.
 
 .TP
 \fB--filename\fR \fIFILENAME\fR

@@ -144,6 +144,9 @@
        <command>gphoto2</command> is a command-line client for
        it.</para>
 
+      <para>Where an option takes a range of files, thumbnails, or
+       other data, they are numbered beginning at 1.</para>
+
       <variablelist>
 	<varlistentry>
 	  <term><option>--debug</option></term>
@@ -232,7 +235,11 @@
 	<varlistentry>
 	  <term><option>--camera</option> <replaceable>MODEL</replaceable></term>
 	  <listitem>
-	    <para>Specify camera model.</para>
+	    <para>Specify camera model.  Most model names contain
+	     spaces: remember to enclose the name in quotes so that
+	     the shell knows it is one parameter.  For example:
+	     <userinput><option>--camera</option> "Kodak
+	     DC240"</userinput>.</para>
 	  </listitem>
 	</varlistentry>
 

@@ -1,3 +1,9 @@
+2002-02-13  Tim Waugh <twaugh@redhat.com>
+
+	* frontends/command-line/gphoto2.xml: Mention that files are
+	numbered from 1, and that quotes should be used for camera models.
+	* frontends/command-line/gphoto2.1: Regenerated.
+
 2002-02-13  Lutz Müller <lutz@users.sourceforge.net>
 
 	* libgphoto2/Makefile.am:
