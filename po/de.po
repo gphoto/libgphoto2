@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2003-06-05 11:13+0200\n"
+"POT-Creation-Date: 2003-06-05 22:03+0200\n"
 "PO-Revision-Date: 2003-01-12 12:07+0100\n"
 "Last-Translator: \n"
 "Language-Team:  <de@li.org>\n"
@@ -420,11 +420,11 @@ msgstr ""
 msgid "Camera not ready, get_battery failed: %s"
 msgstr "Kamera nicht bereit, get_battery-Anfrage fehlgeschlagen: %s"
 
-#: camlibs/canon/usb.c:1208
+#: camlibs/canon/usb.c:1018
 msgid "Receiving data..."
 msgstr "Empfange Daten..."
 
-#: camlibs/canon/usb.c:1710
+#: camlibs/canon/usb.c:1520
 msgid ""
 "File was too big. You may have to turn your camera off and back on before "
 "uploading more files."
@@ -432,7 +432,7 @@ msgstr ""
 "Datei war zu groß. Möglicherweise müssen Sie ihre Kamera aus- und wieder "
 "einschalten, um weitere Dateien hochzuladen."
 
-#: camlibs/canon/usb.c:1972
+#: camlibs/canon/usb.c:1782
 #, c-format
 msgid "Detected a '%s'."
 msgstr "Erkannte eine »%s«."

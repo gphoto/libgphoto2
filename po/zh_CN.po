@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2003-06-05 11:13+0200\n"
+"POT-Creation-Date: 2003-06-05 22:03+0200\n"
 "PO-Revision-Date: 2002-11-21 11:02+0800\n"
 "Last-Translator: Wang Li <charles@linux.net.cn>\n"
 "Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
@@ -487,18 +487,18 @@ msgid "Camera not ready, get_battery failed: %s"
 msgstr "相机未就绪，多个“鉴别相机”请求均失败：%s"
 
 # camlibs/canon/usb.c:640
-#: camlibs/canon/usb.c:1208
+#: camlibs/canon/usb.c:1018
 msgid "Receiving data..."
 msgstr "正在接收数据..."
 
-#: camlibs/canon/usb.c:1710
+#: camlibs/canon/usb.c:1520
 msgid ""
 "File was too big. You may have to turn your camera off and back on before "
 "uploading more files."
 msgstr "文件太大。你可能需要将相机关闭再打开，才能上传更多文件。"
 
 # camlibs/canon/usb.c:871
-#: camlibs/canon/usb.c:1972
+#: camlibs/canon/usb.c:1782
 #, c-format
 msgid "Detected a '%s'."
 msgstr "已监测到一个“%s”。"

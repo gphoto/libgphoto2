@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2003-06-05 11:13+0200\n"
+"POT-Creation-Date: 2003-06-05 22:03+0200\n"
 "PO-Revision-Date: 2002-11-21 11:01-0300\n"
 "Last-Translator: Fabian Mandelbaum <fabman@mandrakesoft.com>\n"
 "Language-Team: Castellano <traduc@traduc.org>\n"
@@ -417,11 +417,11 @@ msgstr ""
 "La cámara no está lista, fallaron los intentos múltiples de pedido de "
 "identificación de la cámara: %s"
 
-#: camlibs/canon/usb.c:1208
+#: camlibs/canon/usb.c:1018
 msgid "Receiving data..."
 msgstr "Recibiendo datos..."
 
-#: camlibs/canon/usb.c:1710
+#: camlibs/canon/usb.c:1520
 msgid ""
 "File was too big. You may have to turn your camera off and back on before "
 "uploading more files."
@@ -429,7 +429,7 @@ msgstr ""
 "El archivo era muy grande. Puede tener que apagar su cámara y volver a "
 "encenderla antes de transferir más archivos."
 
-#: camlibs/canon/usb.c:1972
+#: camlibs/canon/usb.c:1782
 #, c-format
 msgid "Detected a '%s'."
 msgstr "Se detectó '%s'."
