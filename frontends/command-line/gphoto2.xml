@@ -187,14 +187,14 @@
 	<varlistentry>
 	  <term><option>--usb-usermap-script</option> <replaceable>NAME</replaceable></term>
 	  <listitem>
-	    <para>Specify name of hotplug usb script used in the output of <option>--print-usb-usermap</option>.</para>
+	    <para>Use <replaceable>NAME</replaceable> as the hotplug usb script used in the output of <option>--print-usb-usermap</option>. Default is "usbcam".</para>
 	  </listitem>
 	</varlistentry>
 
 	<varlistentry>
 	  <term><option>--print-usb-usermap</option></term>
 	  <listitem>
-	    <para>Create output for usb.usermap.</para>
+	    <para>Create output for <filename>usb.usermap</filename>. The script name in the output is specified with the <option>--usb-usermap-script</option> option.</para>
 	  </listitem>
 	</varlistentry>
 
