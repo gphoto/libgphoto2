@@ -15,3 +15,90 @@
 	abilities[]->delete_file  = ;
 	abilities[]->file_preview = ;
 	abilities[]->lock      = ;
+
+* Config dialog widgets:
+
+Notebook page:
+	label:		(string) Descriptive label displayed on notebook tab
+				 default="Page #"
+
+	example:
+	<page label="General Settings">
+		<... other widgets ...>
+	</page>
+
+Text input:
+	label:		(string) Descriptive label displayed beside widget
+	value:		(string) (optional) Initial text in the text area
+				 default=""
+	example:
+	<text label="Camera" value="Olmpus D-220L"/>
+
+Range input:
+	label:		(string) Descriptive label displayed beside widget
+	min:		(int)	 Minimum range value
+	max:		(int)	 Maximum range value
+	value:		(string) (optional) Initial value of the range
+				 default = min
+
+	example:
+	<range label="Timeout" min="0" max="255" value="127"/>
+
+Toggle input:
+	label:		(string) Descriptive label displayed beside widget
+	value:		(int)	 (optional) Initial value of the range, 0 = off, 1 = on
+				 default = 0
+
+	example:
+	<toggle label="Enable Flash" value="1"/>
+
+Radio buttons:
+	label:		(string) Descriptive label displayed beside widget (used to group buttons)
+	choice:		(string) The individual choices in the radio button array
+	value:		(int)	 (optional) Initial value of the range, 0 = off, 1 = on
+				 default = 0
+	
+	example:
+	<radio label="Image Quality" choice="High" value="1"/>
+	<radio label="Image Quality" choice="Medium"/>
+	<radio label="Image Quality" choice="Low"/>
+
+Drop-down menu:
+	label:		(string) Descriptive label displayed beside widget (used to group entries)
+	choice:		(string) The individual choices in the radio button array
+	value:		(int)	 (optional) Initial value 1 = selected, 0 = not selected
+				 default = 0
+	example:
+	<menu label="Port" choice="Serial Port 1" value="1"/>
+	<menu label="Port" choice="Serial Port 2"/>
+	<menu label="Port" choice="Serial Port 3"/>
+	<menu label="Port" choice="Serial Port 4"/>
+
+Button input:
+	label:	  	(string) Descriptive label displayed on button
+	callback: 	(string) Name of a function in library to call when pressed.
+				 Function prototype is: int function();
+				 Returns GP_OK or GP_ERROR.
+
+	example:
+	<button label="Take Picture" callback="camera_take_picture"/>
+
+The "if" statement (maybe):
+	Available variables:
+		camera
+		port
+	* preceed variables with a ! to signal NOT
+
+	<if camera="Olympus D-220L" port="usb">
+		<... display D-220L-specific stuff here ...>
+	</if>
+
+	<if camera="!Nikon 990">
+		<... display stuff that shouldn't be displayed with Nikon 990 ...>
+	</if>
+
+* Interfaces should wait to close the configuration dialog until gp_config_set returns.
+  If GP_OK is returned, close the window.
+  If GP_ERROR is returned, it is expected that the camera libraries have already notified
+  the user of an error by using gp_message(). Leave the window open so they can make the necessary
+  changes.

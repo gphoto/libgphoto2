@@ -27,6 +27,7 @@ typedef int (*c_file_delete)	(int);
 typedef int (*c_file_lock)	(int);
 typedef int (*c_file_unlock)	(int);
 typedef int (*c_config_get)	(char*);
+typedef int (*c_config_query)	(char*, char*);
 typedef int (*c_config_set)	(CameraSetting*, int);
 typedef int (*c_capture)	(int);
 typedef int (*c_summary)	(char*);
@@ -50,6 +51,7 @@ typedef struct {
 	c_file_lock		file_lock;
 	c_file_unlock		file_unlock;
 	c_config_get		config_get;
+	c_config_query		config_query;
 	c_config_set		config_set;
 	c_capture		capture;
 	c_summary		summary;

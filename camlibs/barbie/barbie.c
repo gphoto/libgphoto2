@@ -414,6 +414,11 @@ int camera_config_get (char *filename) {
 	return GP_ERROR;
 }
 
+int camera_config_query (char *label, char *value) {
+
+	return GP_ERROR;
+}
+
 int camera_config_set (CameraSetting *setting, int count) {
 
 	return GP_OK;

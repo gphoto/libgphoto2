@@ -107,41 +107,12 @@
 	/* Retrieve and set configuration options for the camera */
 	int gp_config_get (char *config_dialog_filename);
 
-	/* The config dialog will be stored in a plainttext file. The filename is
-	   returned to the gphoto-core, which will pass it to the front-end. 
-	   The format is still under discussion. XML leads the way though intpotential
-	   formats. we need a draft though.
-
-	   Something like (note: my XML is awful, so no standards here) :
-		<page name="Port/Speed">
-			<menu name="Port" value="/dev/ttyS0">
-			<menu name="Port" value="/dev/ttyS1">
-			<menu name="Port" value="/dev/ttyS2">
-			<menu name="Port" value="/dev/ttyS3">
-			- or -
-			<text name="Other Port">
-		</page>
-		<page name="General">
-			<text name="Camera Name">
-			<label value="Quality">
-			<radio name="Quality" value="High">
-			<radio name="Quality" value="Normal">
-			<radio name="Quality" value="Low">
-		</page>
-		<page name="Flash/Lens">
-			<label value="Lens Mode">
-			<radio name="Mode" value="Macro">
-			<radio name="Mode" value="Normal">
-			<group name="Flash">
-				<radio name="Flash" value="Flash">
-				<radio name="Flash" value="No Flash">
-				<checkbox name="Red-eye Reduction">
-			</group>
-		</page>
-	*/
+	/* Retrieve current camera settings for the 'label' in the configuration dialog */
+	int gp_config_query (char *label, char *value);
 
 	/* Send "key=value" pairs to the library, delimited by '\n' */
 	int gp_config_set (CameraSetting *setting, int count);
+
 
 	/* Miscellaneous functions */
 	/* ============================================================================== */
