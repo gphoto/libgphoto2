@@ -21,9 +21,11 @@
 #include <config.h>
 
 #include <string.h>
+#include <stdlib.h>
 
 #include <gphoto2-library.h>
 #include <gphoto2-port.h>
+#include <gphoto2-port-log.h>
 
 #include "fuji.h"
 
@@ -45,6 +47,8 @@
 #  define _(String) (String)
 #  define N_(String) (String)
 #endif
+
+#define GP_MODULE "fuji"
 
 #define CR(result) {int r = (result); if (r < 0) return (r);}
 
@@ -68,6 +72,40 @@ static struct {
 	{"Toshiba PDR-M1"},
 	{NULL}
 };
+
+struct _CameraPrivateLibrary {
+	unsigned char cmds[0xff];
+};
+
+struct {
+        FujiCmd command;
+        const char *name;
+} Commands[] = {
+        {FUJI_CMD_PIC_GET,              "get picture"},
+        {FUJI_CMD_PIC_GET_THUMB,        "get thumbnail"},
+        {FUJI_CMD_SPEED,                "change speed"},
+        {FUJI_CMD_VERSION,              "get version"},
+        {FUJI_CMD_PIC_NAME,             "get name of picture"},
+        {FUJI_CMD_PIC_COUNT,            "get number of pictures"},
+        {FUJI_CMD_PIC_SIZE,             "get size of picture"},
+        {FUJI_CMD_PIC_DEL,              "delete picture"},
+        {FUJI_CMD_TAKE,                 "capture picture"},
+        {FUJI_CMD_CHARGE_FLASH,         "charge flash"},
+        {FUJI_CMD_CMDS_VALID,           "list valid commands"},
+        {FUJI_CMD_PREVIEW,              "capture preview"},
+        {0, NULL}};
+
+static const char *
+cmd_get_name (FujiCmd command)
+{
+	unsigned int i;
+
+	for (i = 0; Commands[i].name; i++)
+		if (Commands[i].command == command)
+			break;
+
+	return (Commands[i].name);
+}
 
 int
 camera_id (CameraText *id)
@@ -125,11 +163,17 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	/* Count the pictures on the camera */
 	CR (fuji_pic_count (camera, &n, context));
 
-	/* Get the name of each file */
-	for (i = 1; i <= n; i++) {
-		CR (fuji_pic_name (camera, i, &name, context));
-		CR (gp_list_append (list, name, NULL));
-	}
+	/*
+	 * If the camera supports file names, get the name of each file. 
+	 * If not, make up a dummy list.
+	 */
+	if (camera->pl->cmds[FUJI_CMD_PIC_NAME]) {
+		for (i = 1; i <= n; i++) {
+			CR (fuji_pic_name (camera, i, &name, context));
+			CR (gp_list_append (list, name, NULL));
+		}
+	} else
+		CR (gp_list_populate (list, "FUJI%04i.jpg", n));
 
 	return (GP_OK);
 }
@@ -191,6 +235,17 @@ struct {
 	{FUJI_SPEED_9600, 0}
 };
 
+static int
+camera_exit (Camera *camera, GPContext *context)
+{
+	if (camera->pl) {
+		free (camera->pl);
+		camera->pl = NULL;
+	}
+
+	return (GP_OK);
+}
+
 int
 camera_init (Camera *camera, GPContext *context)
 {
@@ -200,6 +255,12 @@ camera_init (Camera *camera, GPContext *context)
 
 	/* Setup all function pointers */
 	camera->functions->about = camera_about;
+	camera->functions->exit  = camera_exit;
+
+	/* We need to store some data */
+	camera->pl = malloc (sizeof (CameraPrivateLibrary));
+	if (!camera->pl)
+		return (GP_ERROR_NO_MEMORY);
 
 	/* Set up the port, but remember the current speed. */
 	CR (gp_port_set_timeout (camera->port, 1000));
@@ -248,6 +309,13 @@ camera_init (Camera *camera, GPContext *context)
 			CR (fuji_ping (camera, context));
 		}
 	}
+
+	/* What commands does this camera support? */
+	CR (fuji_get_cmds (camera, camera->pl->cmds, context));
+	GP_DEBUG ("Your camera supports the following command(s):");
+	for (i = 0; i < 0xff; i++)
+		if (camera->pl->cmds[i])
+			GP_DEBUG (" - 0x%02x: '%s'", i, cmd_get_name (i));
 
 	return (GP_OK);
 }

@@ -481,25 +481,41 @@ fuji_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 	/* Send the command */
 	retries = 0;
 	while (1) {
+
+		/* Give the user the possibility to cancel. */
+		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
+			return (GP_ERROR_CANCEL);
+
 		CR (fuji_send (camera, cmd, cmd_len, 1, context));
 
-		/* Receive ACK */
+		/* Receive ACK (hopefully) */
 		CR (gp_port_read (camera->port, &c, 1));
-		if (c == ACK)
+		switch (c) {
+		case ACK:
 			break;
-		else if (c == NAK) {
+		case NAK:
+
+			/* Camera didn't like the command */
 			if (++retries > 2) {
 				gp_context_error (context, _("Camera rejected "
 					"the command."));
 				return (GP_ERROR);
 			}
-		} else {
+			continue;
+
+		case EOT:
+
+			/* Camera got fed up and reset itself. */
+			gp_context_error (context, _("Camera reset itself."));
+			return (GP_ERROR);
+
+		default:
 			gp_context_error (context, _("Camera sent unexpected "
 				"byte 0x%02x."), c);
 			return (GP_ERROR_CORRUPTED_DATA);
 		}
-		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
-			return (GP_ERROR_CANCEL);
+
+		break;
 	}
 
 	/* Read the response */
@@ -530,6 +546,19 @@ fuji_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 int
 fuji_get_cmds (Camera *camera, unsigned char *cmds, GPContext *context)
 {
+	unsigned char cmd[4], buf[1024];
+	unsigned int i, buf_len;
+
+	cmd[0] = 0;
+	cmd[1] = FUJI_CMD_CMDS_VALID;
+	cmd[2] = 0;
+	cmd[3] = 0;
+	CR (fuji_transmit (camera, cmd, 4, buf, &buf_len, context));
+
+	memset (cmds, 0, 0xff);
+	for (i = 0; i < buf_len; i++)
+		cmds[buf[i]] = 1;
+
 	return (GP_OK);
 }
 
