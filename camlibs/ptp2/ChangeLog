@@ -1,3 +1,5 @@
+2003-03-27 Mariusz Woloszyn
+        * library.c: added HP PhotoSmart 320
 2003-01-08 Mariusz Woloszyn
 	* ptp.c: cosmetic
 	* ptp-pack.c: fixed a bug in ptp_unpack_DI(), totallen could be

@@ -218,6 +218,7 @@ static struct {
 
 	/* HP PTP cameras */
 	{"HP:PhotoSmart 318 (PTP mode)", 0x03f0, 0x6302},
+	{"HP:PhotoSmart 320 (PTP mode)", 0x03f0, 0x6602},
 	{"HP:PhotoSmart 612 (PTP mode)", 0x03f0, 0x6302},
 	{"HP:PhotoSmart 715 (PTP mode)", 0x03f0, 0x6402},
 	{"HP:PhotoSmart 850 (PTP mode)", 0x03f0, 0x4302},
