@@ -8,6 +8,19 @@ libgphoto2_port:
 libgphoto2:
 	Scott Fritzinger <scottf@unr.edu>
 
+--------------------------------------------------------------------------------
+				     PORTS
+--------------------------------------------------------------------------------
+
+OS/2:
+	Bart van Leeuwen <bart_van_leeuwen@netage.nl>
+*BSD:
+	Dan Fandrich <dan@coneharvesters.com>
+
+--------------------------------------------------------------------------------
+				 CAMERA DRIVERS
+--------------------------------------------------------------------------------
+
 camlibs/agfa:
 	Vince Weaver <vince@deater.net>
 
@@ -66,19 +79,21 @@ camlibs/stv0680:
 	Carsten Weinholz <cweinholz@users.sourceforge.net>
 	Marcus Meissner <marcus@jet.franken.de>
 
-Bug reports on sourceforge:
-	Hubert Figuiere <hfiguiere@teaser.fr>
-
+--------------------------------------------------------------------------------
 				   FRONTENDS
-				   ---------
+--------------------------------------------------------------------------------
+
+digikam (http://digikam.sourceforge.net):
+	KDE frontend
+	Renchi Raju <renchi@green.tam.uiuc.edu>
 
 kamera (?):
 	KDE integration (konqueror)
 	Ilya Konstantinov <future@shiny.co.il>
 
-gtkam (?):
+gtkam (http://www.topfrose.de):
 	Simple GTK front-end.
-	?
+	Lutz Müller <lutz@users.sourceforge.net>
 
 GnoCam (http://www.uni-karlsruhe.de/~urc8/GnoCam):
 	GNOME integration (nautilus)
@@ -92,4 +107,18 @@ SANE (?):
 	If configured with --with-gphoto2.
 	Pete Fales <psfales@lucent.com>
 
+--------------------------------------------------------------------------------
+				    SUPPORT
+--------------------------------------------------------------------------------
 
+Bug reports:
+	Hubert Figuiere <hfiguiere@teaser.fr>
+
+Releases:
+	Christophe Barbé <christophe.barbe.ml@online.fr>
+
+Packaging (RPM):
+	Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+Translation:
+	Colin Marquardt <colin@marquardt-home.de>
