@@ -526,9 +526,9 @@ pretty_number (int number, char *buffer)
 	if (thousands_sep == '\0')
 		thousands_sep = '\'';
 #else
-	const char thousands_sep = '\''
+	const char thousands_sep = '\'';
 #endif
-		len = 0;
+	len = 0;
 
 	tmp = number;
 	do {
