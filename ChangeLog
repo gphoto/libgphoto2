@@ -1,5 +1,9 @@
 2001-08-21  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2/camera.c (gp_camera_file_get_info): Fix logic.
+
+2001-08-21  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2/camera.c:
 	* libgphoto2/core.c:
 	* libgphoto2/widget.c: Introduce CHECK_NULL and CHECK_RESULT for
