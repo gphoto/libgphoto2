@@ -159,7 +159,7 @@ typedef PTPResult (* PTPIOReadFunc)  (PTPReq *bytes,
 				      unsigned int size, void *data);
 typedef PTPResult (* PTPIOWriteFunc) (PTPReq *bytes,
 				      unsigned int size, void *data);
-typedef void (* PTPError) (char *errmsg);
+typedef void (* PTPError) (char *errmsg,...);
 
 typedef struct _PTPParams PTPParams;
 struct _PTPParams {

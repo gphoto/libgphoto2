@@ -21,10 +21,6 @@
 #include <stdlib.h>
 #include "ptp.h"
 
-#ifdef DEBUG
-#include <stdio.h>
-#endif
-
 PTPResult
 ptp_sendreq(PTPParams* params, PTPReq* databuf, short code)
 {
@@ -162,7 +158,7 @@ ptp_GetDevInfo(PTPParams* params, PTPReq* databuf)
 		(req->type!=PTP_TYPE_DATA) || (req->code!=PTP_OC_GetDevInfo)) {
 		params->ptp_error("ptp_getdevinfo getting data");
 #ifdef DEBUG
-		fprintf(stderr,"GetDevInfo data returned:\nlen=0x%8.8x "
+		params->ptp_error("GetDevInfo data returned:\nlen=0x%8.8x "
 			"type=0x%4.4x code=0x%4.4x ID=0x%8.8x\n",
 			req->len, req->type, req->code, req->trans_id);
 #endif
@@ -176,7 +172,7 @@ ptp_GetDevInfo(PTPParams* params, PTPReq* databuf)
 		(resp->type!=PTP_TYPE_RESP) || (resp->code!=PTP_RC_OK)) {
 		params->ptp_error("ptp_getdevinfo getting resp:");
 #ifdef DEBUG
-		fprintf(stderr,"GetDevInfo resp:\nlen=0x%8.8x type=0x%4.4x "
+		params->ptp_error("GetDevInfo resp:\nlen=0x%8.8x type=0x%4.4x "
 			"code=0x%4.4x ID=0x%8.8x\n",
 			resp->len, resp->type, resp->code, resp->trans_id);
 #endif
