@@ -90,6 +90,7 @@
 #define ESC 0x10
 #define ETB 0x17 /* End of transmission block */
 #define NAK 0x15
+#define PERR 0xff
 
 #define FUJI_ACK 0x00
 #define FUJI_NAK 0x01
@@ -436,6 +437,7 @@ fuji_recv (Camera *camera, unsigned char *buf, unsigned int *buf_len,
 	/* Read the data. Unescape it. Calculate the checksum. */
 	for (i = 0; i < *buf_len; i++) {
 		CR (gp_port_read (camera->port, buf + i, 1));
+		if (buf[i]==PERR) CR (gp_port_read (camera->port, buf + i, 1));
 		if (buf[i] == ESC) {
 			CR (gp_port_read (camera->port, buf + i, 1));
 			if (buf[i] != ESC) {
@@ -508,6 +510,7 @@ fuji_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 
 		/* Receive ACK (hopefully) */
 		CR (gp_port_read (camera->port, &c, 1));
+		if (c==PERR) CR (gp_port_read (camera->port, &c, 1));
 		switch (c) {
 		case ACK:
 			break;
@@ -552,7 +555,7 @@ fuji_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 			retries++;
 			while (gp_port_read (camera->port, &c, 1) >= 0);
 			if (++retries > 2)
-				return (r);
+			    return (r);
 			GP_DEBUG ("Retrying...");
 			c = NAK;
 			CR (gp_port_write (camera->port, &c, 1));
@@ -695,7 +698,8 @@ fuji_pic_get_thumb (Camera *camera, unsigned int i, unsigned char **data,
 	cmd[4] = i;
 	cmd[5] = (i >> 8);
 
-	CRF (fuji_transmit (camera, cmd, 6, *data, size, context), data);
+	CRF (fuji_transmit (camera, cmd, 6, *data, size, context), *data);
+	GP_DEBUG("rec'd thumb \n");
 
 	return (GP_OK);
 }
@@ -710,7 +714,9 @@ fuji_pic_get (Camera *camera, unsigned int i, unsigned char **data,
 	 * First, get the size of the picture and allocate the necessary
 	 * memory.
 	 */
-	CR (fuji_pic_size (camera, i, size, context));
+	/*CR (fuji_pic_size (camera, i, size, context));*/
+	if (fuji_pic_size (camera, i, size, context)<0) *size=66000;
+
 	*data = malloc (sizeof (char) * *size);
 	if (!*data) {
 		gp_context_error (context, _("Could not allocate "
@@ -725,7 +731,8 @@ fuji_pic_get (Camera *camera, unsigned int i, unsigned char **data,
 	cmd[4] = i;
 	cmd[5] = (i >> 8);
 
-	CRF (fuji_transmit (camera, cmd, 6, *data, size, context), data);
+	CRF (fuji_transmit (camera, cmd, 6, *data, size, context), *data);
+	GP_DEBUG("Got %d",*size);
 
 	return (GP_OK);
 }
@@ -1290,7 +1297,7 @@ static int download_picture(int n,int thumb,CameraFile *file,CameraPrivateLibrar
 
 static int fuji_free_memory (void)
 {
-	cmd0 (0, 0x1B);
+	cmd0 (0, FUJI_CMD_FREE_MEM);
 	return answer[5] + (answer[6]<<8) + (answer[7]<<16) + (answer[8]<<24);
 }
 

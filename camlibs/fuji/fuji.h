@@ -26,8 +26,8 @@
 
 typedef enum _FujiCmd FujiCmd;
 enum _FujiCmd {
-	FUJI_CMD_PIC_GET	= 0x00,
-	FUJI_CMD_PIC_GET_THUMB  = 0x02,
+	FUJI_CMD_PIC_GET	= 0x02,
+	FUJI_CMD_PIC_GET_THUMB  = 0x00,
 	FUJI_CMD_SPEED		= 0x07,
         FUJI_CMD_VERSION        = 0x09,
 	FUJI_CMD_PIC_NAME	= 0x0a,
@@ -39,7 +39,7 @@ enum _FujiCmd {
 	FUJI_CMD_UNKNOWN5	= 0x13,
         FUJI_CMD_PIC_SIZE       = 0x17,
         FUJI_CMD_PIC_DEL        = 0x19,
-	FUJI_CMD_UNKNOWN9	= 0x1b,
+	FUJI_CMD_FREE_MEM	= 0x1b,
 	FUJI_CMD_UNKNOWN10	= 0x20,
 	FUJI_CMD_UNKNOWN11	= 0x22,
         FUJI_CMD_TAKE           = 0x27,
