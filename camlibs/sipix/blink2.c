@@ -23,6 +23,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef HAVE_LIBJPEG
+# include <jpeglib.h>
+#endif
+
 #include <gphoto2-library.h>
 #include <gphoto2-port-log.h>
 #include <gphoto2-result.h>
@@ -59,6 +63,26 @@ blink2_getnumpics(
     return GP_OK;
 }
 
+#ifdef HAVE_LIBJPEG
+/* for the jpeg decompressor source manager. */
+static void _jpeg_init_source(j_decompress_ptr cinfo) { }
+
+static boolean _jpeg_fill_input_buffer(j_decompress_ptr cinfo) {
+    fprintf(stderr,"(), should not get here.\n");
+    return FALSE;
+}
+
+static void _jpeg_skip_input_data(j_decompress_ptr cinfo,long num_bytes) {
+    fprintf(stderr,"(%ld), should not get here.\n",num_bytes);
+}
+
+static boolean _jpeg_resync_to_restart(j_decompress_ptr cinfo, int desired) {
+    fprintf(stderr,"(desired=%d), should not get here.\n",desired);
+    return FALSE;
+}
+static void _jpeg_term_source(j_decompress_ptr cinfo) { }
+#endif
+
 static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data, GPContext *context)
@@ -86,7 +110,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		if (xbuf[8*(i+1)])
 			sprintf( name, "image%04d.avi", i);
 		else
-			sprintf( name, "image%04d.jpg", i);
+			sprintf( name, "image%04d.pnm", i);
 		gp_list_append( list, name, NULL);
 	}
 	free(xbuf);
@@ -153,8 +177,111 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	}
         gp_file_set_name (file, filename);
         switch (type) {
-        case GP_FILE_TYPE_RAW:
-        case GP_FILE_TYPE_NORMAL: {
+        case GP_FILE_TYPE_NORMAL:
+#ifdef HAVE_LIBJPEG
+{
+		char *convline,*convline2,*rawline;
+		unsigned char	*jpegdata;
+		unsigned int start, len, i, pitch;
+		int curread, ret;
+		struct jpeg_decompress_struct	dinfo;
+		struct jpeg_source_mgr		xjsm;
+		struct jpeg_error_mgr		jerr;
+
+		memset( buf, 0, sizeof(buf));
+		if (addrs[image_no].type)
+        		gp_file_set_mime_type (file, GP_MIME_AVI);
+		else
+        		gp_file_set_mime_type (file, GP_MIME_JPEG);
+		start = addrs[image_no].start;
+		len = addrs[image_no].len;
+		jpegdata = (unsigned char*)malloc (len*8);
+		if (!jpegdata) {
+			result = GP_ERROR_NO_MEMORY;
+			break;
+		}
+		buf[0] = (start >> 24) & 0xff;
+		buf[1] = (start >> 16) & 0xff;
+		buf[2] = (start >>  8) & 0xff;
+		buf[3] =  start        & 0xff;
+		buf[4] = (len >> 24) & 0xff;
+		buf[5] = (len >> 16) & 0xff;
+		buf[6] = (len >>  8) & 0xff;
+		buf[7] =  len        & 0xff;
+		result = gp_port_usb_msg_write (camera->port,BLINK2_GET_MEMORY,0x03,0,buf,8);
+		if (result < GP_OK)
+			break;
+		len	*= 8;
+		curread  = 0;
+		do {
+			int res;
+			res = gp_port_read (camera->port, jpegdata+curread, len );
+			if (res < GP_OK) {
+				result = GP_OK;
+				break;
+			}
+			curread += res;
+		} while (curread<=len);
+
+		memset( &dinfo, 0, sizeof(dinfo));
+		xjsm.next_input_byte	= jpegdata;
+		xjsm.bytes_in_buffer	= len;
+		xjsm.init_source	= _jpeg_init_source;
+		xjsm.fill_input_buffer	= _jpeg_fill_input_buffer;
+		xjsm.skip_input_data	= _jpeg_skip_input_data;
+		xjsm.resync_to_restart	= _jpeg_resync_to_restart;
+		xjsm.term_source	= _jpeg_term_source;
+		dinfo.err		= jpeg_std_error(&jerr);
+		jpeg_create_decompress(&dinfo);
+		dinfo.src		= &xjsm;
+		ret = jpeg_read_header(&dinfo,TRUE);
+		if (ret != JPEG_HEADER_OK)
+			break;
+		dinfo.out_color_space = JCS_RGB;
+		jpeg_start_decompress(&dinfo);
+
+		pitch = (dinfo.output_width*dinfo.output_components+3)&~3;
+
+		rawline = malloc(pitch);
+		convline = malloc(dinfo.output_width*2*3);
+		convline2 = malloc(dinfo.output_width*2*2*3);
+		if (ret != JPEG_HEADER_OK)
+			return GP_ERROR;
+		{
+			char foo[30];
+			sprintf(foo,"P6\n%d %d 255\n",dinfo.output_width, dinfo.output_height*2);
+			gp_file_append (file, foo, strlen(foo));
+		}
+		for (i = 0; i < dinfo.output_height ; i++ ) {
+			int j;
+			jpeg_read_scanlines(&dinfo,(JSAMPARRAY)&rawline,1);
+
+			memcpy(convline+((dinfo.output_width/16-1)*16+8)*3, rawline+((dinfo.output_width/16-1)*16+8)*3, 8*3);
+			memcpy(convline+pitch/2, rawline, 8*3);
+			for (j=0;j<(dinfo.output_width/16-1);j++) {
+				if ((j&1) == 0)
+					memcpy(convline+((j/2)*16)*3,rawline+(j*16+8)*3,16*3);
+				else
+					memcpy(convline+pitch/2+((j/2)*16+8)*3,rawline+(j*16+8)*3,16*3);
+			}
+			for (j=0;j<dinfo.output_width*2;j++) {
+				memcpy(convline2+ j*2*3   , convline+j*3,3);
+				memcpy(convline2+(j*2+1)*3, convline+j*3,3);
+			}
+			gp_file_append (file, convline2, pitch*2);
+		}
+		free(convline2);
+		free(convline);
+		free(rawline);
+		free(jpegdata);
+        	gp_file_set_mime_type (file, GP_MIME_PPM);
+		jpeg_destroy_decompress(&dinfo);
+		break;
+	}
+#else
+	/* fall through to raw mode if no libjpeg */
+#endif
+        case GP_FILE_TYPE_RAW: {
 		char buf2[4096];
 		unsigned int start, len;
 		int curread;
@@ -210,7 +337,7 @@ camera_abilities (CameraAbilitiesList *list)
 	CameraAbilities a;
 
 	memset(&a, 0, sizeof(a));
-	strcpy(a.model, "SiPix:Blink 2");
+	strcpy(a.model,	"SiPix:Blink 2");
 	a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
 	a.port     		= GP_PORT_USB;
 	a.speed[0] 		= 0;

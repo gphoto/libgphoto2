@@ -3,7 +3,7 @@ camlib_LTLIBRARIES = 					\
 	libgphoto2_sipix_blink2.la			\
 	libgphoto2_sipix_web2.la
 
-EXTRA_DIST = web2.html blink.txt
+EXTRA_DIST = web2.html blink.txt xjpeg.c
 
 INCLUDES = \
         -I$(top_srcdir)/intl				\

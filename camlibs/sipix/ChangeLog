@@ -1,3 +1,10 @@
+2003-06-22  Marcus Meissner <marcus@jet.franken.de>
+	
+	* blink2.c: SiPix Blink2 now downloads viewable
+	  images.
+	* xjpeg.c: Small tool to view jpeg tags with contents, not
+	  compiled.
+
 2003-05-20  Marcus Meissner <marcus@jet.franken.de>
 	
 	* blink2.[ch]: New SiPix Blink2 driver. Downloads
