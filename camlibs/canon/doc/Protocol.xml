@@ -79,8 +79,8 @@
             <row><entry>PowerShot S10</entry><entry>27-Aug-99</entry><entry>yes</entry></row>
             <row><entry>PowerShot S20</entry><entry>06-Jan-00</entry><entry>yes</entry></row>
             <row><entry>EOS D30</entry><entry>17-May-00</entry><entry>yes</entry></row>
-            <row><entry><simplelist type="vert"><member>PowerShot S100</member>
-		  <member>Digital Elph IXY Digital</member>
+            <row><entry><simplelist type="vert"><member>PowerShot S100 Digital Elph</member>
+		  <member>IXY Digital</member>
 		  <member>Digital IXUS</member></simplelist>
 	      </entry><entry>17-May-00</entry><entry>yes</entry></row>
             <row><entry>PowerShot G1</entry><entry>18-Sep-00</entry><entry>yes</entry></row>
@@ -317,9 +317,9 @@
         <para>28 Jan 2003: Convert DocBook XML, expand USB information</para>
 	<literallayout>
 	$Log$
-	Revision 1.10  2005/03/14 22:52:22  swestin
-	Syntax corrections.
-	More info on EOS 20D.
+	Revision 1.11  2005/03/17 18:12:01  swestin
+	Minor fix to "Models Covered" table.
+	Added a model or two to the table of initial responses.
 
 	Revision 1.9  2005/03/09 17:07:39  swestin
 	Tidied up table of known models.
@@ -974,8 +974,8 @@ xx &lt;directory_name&gt; 00 00 00
             <tbody>
               <row><entry>G1, Pro90 IS, Digital IXUS</entry><entry>00 05 07 00</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
               <row><entry>S10, S20</entry><entry>01 00 02 00</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
-              <row><entry>G2, D30, D60, 300D, IXUS v, A10, IXUS 300</entry><entry>01 00 05 03</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
-              <row><entry>G3, A60, A70, A75, A80, A300, A400, S45, S50, S230</entry><entry>01 06 15 83</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
+              <row><entry>G2, D30, D60, 300D, S110, A10, IXUS 300</entry><entry>01 00 05 03</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
+              <row><entry>G3, A60, A70, A75, A80, A300, A400, S45, S50, S230, S400</entry><entry>01 06 15 83</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
               <row><entry>20D</entry><entry>01 06 15 83</entry><entry><emphasis>0x80000175</emphasis></entry><entry>0x800 (2048)</entry><entry>0x10000 (65536)</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
               <row><entry>Optura 200 MC camcorder</entry><entry>03 05 04 81</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
               <row><entry>S200, S330, A30</entry><entry>03 05 15 81</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
