@@ -2,7 +2,7 @@
 # Copyright © 2000 Free Software Foundation, Inc.
 # Andreas Hyden <a.hyden@cyberpoint.se> 2000.
 # Stefan Björnelund <stefanb@Update.UU.SE>, 2002.
-# Sverker Wiberg <sverkerw@du.uab.ericsson.se>, 2002.
+# Sverker Wiberg <sverkerw@update.uu.se>, 2002.
 #
 msgid ""
 msgstr ""
