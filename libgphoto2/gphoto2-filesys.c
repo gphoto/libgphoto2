@@ -74,8 +74,10 @@ typedef struct {
 	CameraFilesystemFile *file;
 } CameraFilesystemFolder;
 
-static time_t gp_filesystem_get_exif_mtime (CameraFilesystem *, const char *,
-					    const char *);
+static time_t gp_filesystem_get_exif_mtime   (CameraFilesystem *, const char *,
+					      const char *);
+static int    gp_filesystem_get_exif_preview (CameraFilesystem *, const char *,
+					      const char *, GPContext *);
 
 
 /**
@@ -1273,7 +1275,7 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 			const char *filename, CameraFileType type,
 			CameraFile *file, GPContext *context)
 {
-	int x, y;
+	int x, y, r;
 	time_t t = 0;
 
 	CHECK_NULL (fs && folder && file && filename);
@@ -1323,8 +1325,16 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 		return (GP_ERROR);
 	}
 
-	CR (fs->get_file_func (fs, folder, filename, type, file,
-			       fs->file_data, context));
+	r = fs->get_file_func (fs, folder, filename, type, file,
+			       fs->file_data, context);
+	if ((type == GP_FILE_TYPE_PREVIEW) &&
+	    (r == GP_ERROR_NOT_SUPPORTED)) {
+
+		/* Try EXIF data */
+		CR (gp_filesystem_get_exif_preview (fs, folder, filename,
+						    context));
+	} else
+		CR (r);
 
 	/* We don't trust the camera drivers */
 	CR (gp_file_set_type (file, type));
@@ -1374,6 +1384,50 @@ gp_filesystem_set_info_funcs (CameraFilesystem *fs,
 	fs->get_info_func = get_info_func;
 	fs->set_info_func = set_info_func;
 	fs->info_data = data;
+
+	return (GP_OK);
+}
+
+static int
+gp_filesystem_get_exif_preview (CameraFilesystem *fs, const char *folder,
+				const char *filename, GPContext *context)
+{
+	CameraFile *file;
+	ExifData *ed;
+	int r;
+	const char *data = NULL;
+	unsigned long int size = 0;
+
+	gp_file_new (&file);
+	r = gp_filesystem_get_file (fs, folder, filename, GP_FILE_TYPE_EXIF,
+				    file, context);
+	if (r < 0) {
+		GP_DEBUG ("Could not get EXIF data of '%s' in folder '%s'.",
+			  filename, folder);
+		gp_file_unref (file);
+		return (r);
+	}
+
+	gp_file_get_data_and_size (file, &data, &size);
+	ed = exif_data_new_from_data (data, size);
+	gp_file_unref (file);
+	if (!ed) {
+		GP_DEBUG ("Could not parse EXIF data of '%s' in folder '%s'.",
+			  filename, folder);
+		return GP_ERROR_CORRUPTED_DATA;
+	}
+
+	if (ed->data) {
+		file = NULL;
+		gp_file_new (&file);
+		gp_file_set_data_and_size (file, ed->data, ed->size);
+		gp_file_set_type (file, GP_FILE_TYPE_PREVIEW);
+		gp_file_set_name (file, filename);
+		gp_file_detect_mime_type (file);
+		gp_filesystem_set_file_noop (fs, folder, file, context);
+		gp_file_unref (file);
+	}
+	exif_data_unref (ed);
 
 	return (GP_OK);
 }
