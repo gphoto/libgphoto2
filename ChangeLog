@@ -1,5 +1,10 @@
 2001-10-01  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/konica/localization/Makefile.am: EXTRA_DIST the localization
+	data to get the stuff included in the dist tarball.
+
+2001-10-01  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/konica: Rejoice, we no longer have a glib dependency!
 
 2001-10-01  Lutz Müller <urc8@rz.uni-karlsruhe.de>

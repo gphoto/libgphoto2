@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2001-10-01 03:34-0700\n"
+"POT-Creation-Date: 2001-10-01 23:21+0200\n"
 "PO-Revision-Date: 2001-03-21 21:59-08:00\n"
 "Last-Translator: Colin Marquardt <colin@marquardt-home.de>\n"
 "Language-Team: German <de@li.org>\n"
@@ -23,7 +23,7 @@ msgid ""
 "Firmware Version: %s"
 msgstr ""
 
-#: camlibs/barbie/barbie.c:158 camlibs/konica/library.c:632
+#: camlibs/barbie/barbie.c:158 camlibs/konica/library.c:624
 msgid "No manual available."
 msgstr ""
 
@@ -439,143 +439,143 @@ msgid "This is a dc3200 specific error."
 msgstr ""
 
 #. FOCUSING_ERROR
-#: camlibs/konica/library.c:53
+#: camlibs/konica/library.c:52
 #, fuzzy
 msgid "Focusing error"
 msgstr "Kein Fehler."
 
 #. IRIS_ERROR
-#: camlibs/konica/library.c:54
+#: camlibs/konica/library.c:53
 #, fuzzy
 msgid "Iris error"
 msgstr "Generischer Fehler."
 
 #. STROBE_ERROR
-#: camlibs/konica/library.c:55
+#: camlibs/konica/library.c:54
 #, fuzzy
 msgid "Strobe error"
 msgstr "Kein Fehler."
 
 #. EEPROM_CHECKSUM_ERROR
-#: camlibs/konica/library.c:56
+#: camlibs/konica/library.c:55
 msgid "EEPROM checksum error"
 msgstr ""
 
 #. INTERNAL_ERROR1
-#: camlibs/konica/library.c:57
+#: camlibs/konica/library.c:56
 msgid "Internal error (1)"
 msgstr ""
 
 #. INTERNAL_ERROR2
-#: camlibs/konica/library.c:58
+#: camlibs/konica/library.c:57
 msgid "Internal error (2)"
 msgstr ""
 
 #. NO_CARD_PRESENT
-#: camlibs/konica/library.c:59
+#: camlibs/konica/library.c:58
 msgid "No card present"
 msgstr ""
 
 #. CARD_NOT_SUPPORTED
-#: camlibs/konica/library.c:60
+#: camlibs/konica/library.c:59
 msgid "Card not supported"
 msgstr ""
 
 #. CARD_REMOVED_DURING_ACCESS
-#: camlibs/konica/library.c:61
+#: camlibs/konica/library.c:60
 msgid "Card removed during access"
 msgstr ""
 
 #. IMAGE_NUMBER_NOT_VALID
-#: camlibs/konica/library.c:62
+#: camlibs/konica/library.c:61
 msgid "Image number not valid"
 msgstr ""
 
 #. CARD_CAN_NOT_BE_WRITTEN
-#: camlibs/konica/library.c:63
+#: camlibs/konica/library.c:62
 msgid "Card cannot be written"
 msgstr ""
 
 #. CARD_IS_WRITE_PROTECTED
-#: camlibs/konica/library.c:64
+#: camlibs/konica/library.c:63
 msgid "Card is write protected"
 msgstr ""
 
 #. NO_SPACE_LEFT_ON_CARD
-#: camlibs/konica/library.c:65
+#: camlibs/konica/library.c:64
 msgid "No space left on card"
 msgstr ""
 
 #. IMAGE_PROTECTED
-#: camlibs/konica/library.c:66
+#: camlibs/konica/library.c:65
 msgid "No image erased as image protected"
 msgstr ""
 
 #. LIGHT_TOO_DARK
-#: camlibs/konica/library.c:67
+#: camlibs/konica/library.c:66
 msgid "Light too dark"
 msgstr ""
 
 #. AUTOFOCUS_ERROR
-#: camlibs/konica/library.c:68
+#: camlibs/konica/library.c:67
 msgid "Autofocus error"
 msgstr ""
 
 #. SYSTEM_ERROR
-#: camlibs/konica/library.c:69
+#: camlibs/konica/library.c:68
 msgid "System error"
 msgstr ""
 
 #. ILLEGAL_PARAMETER
-#: camlibs/konica/library.c:70
+#: camlibs/konica/library.c:69
 #, fuzzy
 msgid "Illegal parameter"
 msgstr "Ungültige Parameter"
 
 #. COMMAND_CANNOT_BE_CANCELLED
-#: camlibs/konica/library.c:71
+#: camlibs/konica/library.c:70
 msgid "Command cannot be cancelled"
 msgstr ""
 
 #. LOCALIZATION_DATA_EXCESS
-#: camlibs/konica/library.c:72
+#: camlibs/konica/library.c:71
 msgid "Localization data excess"
 msgstr ""
 
 #. LOCALIZATION_DATA_CORRUPT
-#: camlibs/konica/library.c:73
+#: camlibs/konica/library.c:72
 msgid "Localization data corrupt"
 msgstr ""
 
 #. UNSUPPORTED_COMMAND
-#: camlibs/konica/library.c:74
+#: camlibs/konica/library.c:73
 #, fuzzy
 msgid "Unsupported command"
 msgstr "Operation nicht unterstützt"
 
 #. OTHER_COMMAND_EXECUTING
-#: camlibs/konica/library.c:75
+#: camlibs/konica/library.c:74
 msgid "Other command executing"
 msgstr ""
 
 #. COMMAND_ORDER_ERROR
-#: camlibs/konica/library.c:76
+#: camlibs/konica/library.c:75
 msgid "Command order error"
 msgstr ""
 
 #. UNKNOWN_ERROR
-#: camlibs/konica/library.c:77 camlibs/konica/library.c:1089
-#: camlibs/konica/library.c:1101 camlibs/sierra/sierra.c:1223
+#: camlibs/konica/library.c:76 camlibs/konica/library.c:1081
+#: camlibs/konica/library.c:1093 camlibs/sierra/sierra.c:1223
 #: libgphoto2/result.c:58 libgphoto2/result.c:73
 msgid "Unknown error"
 msgstr "Unbekannter Fehler"
 
-#: camlibs/konica/library.c:460
+#: camlibs/konica/library.c:459
 #, c-format
 msgid "%i pictures could not be deleted because they are protected!"
 msgstr ""
 
-#: camlibs/konica/library.c:561
+#: camlibs/konica/library.c:559
 #, c-format
 msgid ""
 "Model: %s\n"
@@ -587,7 +587,7 @@ msgid ""
 "Manufacturer: %s\n"
 msgstr ""
 
-#: camlibs/konica/library.c:644
+#: camlibs/konica/library.c:636
 msgid ""
 "Konica library\n"
 "Lutz Müller <urc8@rz.uni-karlsruhe.de>\n"
@@ -595,7 +595,7 @@ msgid ""
 msgstr ""
 
 #. Create the window.
-#: camlibs/konica/library.c:674
+#: camlibs/konica/library.c:666
 #, fuzzy
 msgid "Konica Configuration"
 msgstr "Kamera-Konfiguration"
@@ -603,150 +603,150 @@ msgstr "Kamera-Konfiguration"
 #. **********************
 #. Persistent Settings
 #. **********************
-#: camlibs/konica/library.c:679 camlibs/konica/library.c:891
+#: camlibs/konica/library.c:671 camlibs/konica/library.c:883
 #, fuzzy
 msgid "Persistent Settings"
 msgstr "Bildeinstellungen"
 
 #. Date
-#: camlibs/konica/library.c:683 camlibs/konica/library.c:895
+#: camlibs/konica/library.c:675 camlibs/konica/library.c:887
 msgid "Date and Time"
 msgstr ""
 
 #. Beep
-#: camlibs/konica/library.c:697 camlibs/konica/library.c:909
+#: camlibs/konica/library.c:689 camlibs/konica/library.c:901
 msgid "Beep"
 msgstr ""
 
-#: camlibs/konica/library.c:699 camlibs/konica/library.c:706
-#: camlibs/konica/library.c:797 camlibs/konica/library.c:806
-#: camlibs/konica/library.c:1036 camlibs/sierra/sierra.c:787
+#: camlibs/konica/library.c:691 camlibs/konica/library.c:698
+#: camlibs/konica/library.c:789 camlibs/konica/library.c:798
+#: camlibs/konica/library.c:1028 camlibs/sierra/sierra.c:787
 #: camlibs/sierra/sierra.c:793 camlibs/sierra/sierra.c:1054
 msgid "On"
 msgstr "An"
 
-#: camlibs/konica/library.c:700 camlibs/konica/library.c:703
-#: camlibs/konica/library.c:796 camlibs/konica/library.c:803
-#: camlibs/konica/library.c:912 camlibs/konica/library.c:1034
+#: camlibs/konica/library.c:692 camlibs/konica/library.c:695
+#: camlibs/konica/library.c:788 camlibs/konica/library.c:795
+#: camlibs/konica/library.c:904 camlibs/konica/library.c:1026
 #: camlibs/sierra/sierra.c:672 camlibs/sierra/sierra.c:681
 #: camlibs/sierra/sierra.c:788 camlibs/sierra/sierra.c:791
 #: camlibs/sierra/sierra.c:976 camlibs/sierra/sierra.c:1056
 msgid "Off"
 msgstr "Aus"
 
-#: camlibs/konica/library.c:709
+#: camlibs/konica/library.c:701
 msgid "Shall the camera beep when taking a picture?"
 msgstr ""
 
 #. Self Timer Time
-#: camlibs/konica/library.c:713 camlibs/konica/library.c:921
+#: camlibs/konica/library.c:705 camlibs/konica/library.c:913
 msgid "Self Timer Time"
 msgstr ""
 
 #. Auto Off Time
-#: camlibs/konica/library.c:720 camlibs/konica/library.c:929
+#: camlibs/konica/library.c:712 camlibs/konica/library.c:921
 msgid "Auto Off Time"
 msgstr ""
 
 #. Slide Show Interval
-#: camlibs/konica/library.c:727 camlibs/konica/library.c:937
+#: camlibs/konica/library.c:719 camlibs/konica/library.c:929
 msgid "Slide Show Interval"
 msgstr ""
 
 #. Resolution
-#: camlibs/konica/library.c:734 camlibs/konica/library.c:946
+#: camlibs/konica/library.c:726 camlibs/konica/library.c:938
 #: camlibs/sierra/sierra.c:571 camlibs/sierra/sierra.c:900
 msgid "Resolution"
 msgstr "Auflösung"
 
-#: camlibs/konica/library.c:736 camlibs/konica/library.c:744
-#: camlibs/konica/library.c:951
+#: camlibs/konica/library.c:728 camlibs/konica/library.c:736
+#: camlibs/konica/library.c:943
 msgid "Low (576 x 436)"
 msgstr ""
 
-#: camlibs/konica/library.c:737 camlibs/konica/library.c:747
+#: camlibs/konica/library.c:729 camlibs/konica/library.c:739
 msgid "Medium (1152 x 872)"
 msgstr ""
 
-#: camlibs/konica/library.c:738 camlibs/konica/library.c:741
-#: camlibs/konica/library.c:949
+#: camlibs/konica/library.c:730 camlibs/konica/library.c:733
+#: camlibs/konica/library.c:941
 msgid "High (1152 x 872)"
 msgstr ""
 
 #. **************
 #. Localization
 #. **************
-#: camlibs/konica/library.c:754 camlibs/konica/library.c:962
+#: camlibs/konica/library.c:746 camlibs/konica/library.c:954
 msgid "Localization"
 msgstr ""
 
 #. Localization File
-#: camlibs/konica/library.c:760 camlibs/konica/library.c:965
+#: camlibs/konica/library.c:752 camlibs/konica/library.c:957
 msgid "Language"
 msgstr ""
 
-#: camlibs/konica/library.c:767 camlibs/konica/library.c:776
-#: camlibs/konica/library.c:784 camlibs/konica/library.c:968
-#: camlibs/konica/library.c:992 camlibs/konica/library.c:1010
+#: camlibs/konica/library.c:759 camlibs/konica/library.c:768
+#: camlibs/konica/library.c:776 camlibs/konica/library.c:960
+#: camlibs/konica/library.c:984 camlibs/konica/library.c:1002
 msgid "None selected"
 msgstr ""
 
 #. TV output format
-#: camlibs/konica/library.c:771 camlibs/konica/library.c:989
+#: camlibs/konica/library.c:763 camlibs/konica/library.c:981
 msgid "TV Output Format"
 msgstr ""
 
-#: camlibs/konica/library.c:773 camlibs/konica/library.c:993
+#: camlibs/konica/library.c:765 camlibs/konica/library.c:985
 msgid "NTSC"
 msgstr ""
 
-#: camlibs/konica/library.c:774 camlibs/konica/library.c:995
+#: camlibs/konica/library.c:766 camlibs/konica/library.c:987
 msgid "PAL"
 msgstr ""
 
-#: camlibs/konica/library.c:775 camlibs/konica/library.c:997
+#: camlibs/konica/library.c:767 camlibs/konica/library.c:989
 msgid "Do not display TV menu"
 msgstr ""
 
 #. Date format
-#: camlibs/konica/library.c:779 camlibs/konica/library.c:1007
+#: camlibs/konica/library.c:771 camlibs/konica/library.c:999
 msgid "Date Format"
 msgstr ""
 
-#: camlibs/konica/library.c:781 camlibs/konica/library.c:1011
+#: camlibs/konica/library.c:773 camlibs/konica/library.c:1003
 msgid "Month/Day/Year"
 msgstr ""
 
-#: camlibs/konica/library.c:782 camlibs/konica/library.c:1013
+#: camlibs/konica/library.c:774 camlibs/konica/library.c:1005
 msgid "Day/Month/Year"
 msgstr ""
 
-#: camlibs/konica/library.c:783 camlibs/konica/library.c:1015
+#: camlibs/konica/library.c:775 camlibs/konica/library.c:1007
 msgid "Year/Month/Day"
 msgstr ""
 
 #. ******************************
 #. Session-persistent Settings
 #. ******************************
-#: camlibs/konica/library.c:789 camlibs/konica/library.c:1027
+#: camlibs/konica/library.c:781 camlibs/konica/library.c:1019
 msgid "Session-persistent Settings"
 msgstr ""
 
 #. Flash
-#: camlibs/konica/library.c:794 camlibs/konica/library.c:1031
+#: camlibs/konica/library.c:786 camlibs/konica/library.c:1023
 #, fuzzy
 msgid "Flash"
 msgstr "Blitzmodus"
 
-#: camlibs/konica/library.c:798 camlibs/konica/library.c:809
-#: camlibs/konica/library.c:1038
+#: camlibs/konica/library.c:790 camlibs/konica/library.c:801
+#: camlibs/konica/library.c:1030
 #, fuzzy
 msgid "On, red-eye reduction"
 msgstr "Rote-Augen-Vermeidung"
 
-#: camlibs/konica/library.c:799 camlibs/konica/library.c:815
-#: camlibs/konica/library.c:830 camlibs/konica/library.c:833
-#: camlibs/konica/library.c:1040 camlibs/konica/library.c:1069
+#: camlibs/konica/library.c:791 camlibs/konica/library.c:807
+#: camlibs/konica/library.c:822 camlibs/konica/library.c:825
+#: camlibs/konica/library.c:1032 camlibs/konica/library.c:1061
 #: camlibs/sierra/sierra.c:572 camlibs/sierra/sierra.c:578
 #: camlibs/sierra/sierra.c:611 camlibs/sierra/sierra.c:617
 #: camlibs/sierra/sierra.c:670 camlibs/sierra/sierra.c:677
@@ -756,44 +756,44 @@ msgstr "Rote-Augen-Vermeidung"
 msgid "Auto"
 msgstr "Auto"
 
-#: camlibs/konica/library.c:800 camlibs/konica/library.c:812
+#: camlibs/konica/library.c:792 camlibs/konica/library.c:804
 #, fuzzy
 msgid "Auto, red-eye reduction"
 msgstr "Rote-Augen-Vermeidung"
 
 #. Exposure
-#: camlibs/konica/library.c:820 camlibs/konica/library.c:1048
+#: camlibs/konica/library.c:812 camlibs/konica/library.c:1040
 msgid "Exposure"
 msgstr ""
 
 #. Focus
-#: camlibs/konica/library.c:827 camlibs/konica/library.c:1056
+#: camlibs/konica/library.c:819 camlibs/konica/library.c:1048
 #, fuzzy
 msgid "Focus"
 msgstr "Immer"
 
-#: camlibs/konica/library.c:829 camlibs/konica/library.c:836
+#: camlibs/konica/library.c:821 camlibs/konica/library.c:828
 msgid "Fixed"
 msgstr ""
 
 #. **********************
 #. Volatile Settings
 #. **********************
-#: camlibs/konica/library.c:843 camlibs/konica/library.c:1061
+#: camlibs/konica/library.c:835 camlibs/konica/library.c:1053
 #, fuzzy
 msgid "Volatile Settings"
 msgstr "Kameraeinstellungen"
 
 #. Self Timer
-#: camlibs/konica/library.c:847 camlibs/konica/library.c:1064
+#: camlibs/konica/library.c:839 camlibs/konica/library.c:1056
 msgid "Self Timer"
 msgstr ""
 
-#: camlibs/konica/library.c:849 camlibs/konica/library.c:1074
+#: camlibs/konica/library.c:841 camlibs/konica/library.c:1066
 msgid "Self Timer (only next picture)"
 msgstr ""
 
-#: camlibs/konica/library.c:850 camlibs/konica/library.c:857
+#: camlibs/konica/library.c:842 camlibs/konica/library.c:849
 #: camlibs/minolta/dimagev/dimagev.c:462 camlibs/sierra/sierra.c:640
 #: camlibs/sierra/sierra.c:647 camlibs/sierra/sierra.c:701
 #: camlibs/sierra/sierra.c:708 camlibs/sierra/sierra.c:763
@@ -802,20 +802,12 @@ msgstr ""
 msgid "Normal"
 msgstr "Normal"
 
-#: camlibs/konica/library.c:853
+#: camlibs/konica/library.c:845
 msgid "Self Timer (next picture only)"
 msgstr ""
 
-#: camlibs/konica/library.c:1188
+#: camlibs/konica/library.c:1180
 msgid "Localization file too long!"
-msgstr ""
-
-#: camlibs/konica/library.c:1202
-msgid "Checksum not implemented!"
-msgstr ""
-
-#: camlibs/konica/library.c:1209
-msgid "Frame check sequence not implemented!"
 msgstr ""
 
 #: camlibs/minolta/dimagev/dimagev.c:327
