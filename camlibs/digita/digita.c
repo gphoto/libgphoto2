@@ -35,10 +35,7 @@ int camera_abilities(CameraAbilities *abilities, int *count)
 	*count = 1;
 
 	strcpy(abilities[0].model, "Kodak DC260");
-	abilities[0].serial	= 1;
-	abilities[0].parallel	= 0;
-	abilities[0].usb	= 1;
-	abilities[0].ieee1394	= 0;
+	abilities[0].port	= GP_PORT_SERIAL | GP_PORT_USB;
 	abilities[0].speed[0]	= 57600;
 	abilities[0].speed[1]	= 0;
 	abilities[0].capture	= 1;
@@ -46,6 +43,18 @@ int camera_abilities(CameraAbilities *abilities, int *count)
 	abilities[0].file_delete = 1;
 	abilities[0].file_preview = 1;
 	abilities[0].file_put = 0;
+
+	*count++;
+	memcpy(&abilities[1], &abilities[0], sizeof(abilities[0]));
+	strcpy(abilities[1].model, "Kodak DC265");
+
+	*count++;
+	memcpy(&abilities[2], &abilities[0], sizeof(abilities[0]));
+	strcpy(abilities[2].model, "Kodak DC290");
+
+	*count++;
+	memcpy(&abilities[3], &abilities[0], sizeof(abilities[0]));
+	strcpy(abilities[3].model, "Kodak DC220");
 
 	return GP_OK;
 }
@@ -81,14 +90,10 @@ int camera_init(Camera *camera, CameraInit *init)
 		gpio_open(dev->gpdev);
 	}
 
-	dev = digita_usb_open();
-
-/*
-	if (camera_type == GPHOTO_CAMERA_USB)
-		dev = digita_usb_open();
+	if (!strcmp(init->port_settings.path, "usb"))
+		dev = digita_usb_open(camera);
 	else
-		dev = digita_serial_open();
-*/
+		dev = digita_serial_open(camera);
 
 	return dev ? GP_OK : GP_ERROR;
 }
@@ -158,7 +163,7 @@ static char *digita_file_get(int index, int thumbnail, int *size)
 	}
 	memset(data, 0, buflen);
 
-	gp_progress(0.00);
+	gp_camera_progress(NULL, NULL, 0.00);
 
 	if (digita_get_file_data(dev, thumbnail, &fn, &tag, data) < 0) {
 		printf("digita_get_picture: digita_get_file_data failed\n");
@@ -178,7 +183,7 @@ static char *digita_file_get(int index, int thumbnail, int *size)
 	len = ntohl(tag.filesize);
 	pos = ntohl(tag.length);
 	while (pos < len) {
-		gp_progress((float)pos / (float)len);
+		gp_camera_progress(NULL, NULL, (float)pos / (float)len);
 		tag.offset = htonl(pos);
 		if ((len - pos) > GFD_BUFSIZE)
 			tag.length = htonl(GFD_BUFSIZE);
@@ -192,7 +197,7 @@ static char *digita_file_get(int index, int thumbnail, int *size)
 		pos += ntohl(tag.length);
 	}
 
-	gp_progress(1.00);
+	gp_camera_progress(NULL, NULL, 1.00);
 
 	return data;
 }
@@ -227,13 +232,15 @@ int camera_file_get_preview(Camera *camera, CameraFile *file, int index)
 	unsigned int *ints, width, height;
 	char ppmhead[64];
 
-	data = digita_file_get(index, 0, &buflen);
+	data = digita_file_get(index, 1, &buflen);
 	if (!data)
 		return GP_ERROR;
 
 	ints = (unsigned int *)data;
 	width = ntohl(ints[2]);
 	height = ntohl(ints[1]);
+
+	fprintf(stderr, "digita: height: %d, width: %d\n", height, width);
 
 	sprintf(ppmhead, ppmheadfmt, height - 1, width - 1);
 

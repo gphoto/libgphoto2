@@ -682,7 +682,7 @@ int save_picture_to_file(int num, int thumbnail) {
 	if (!glob_quiet)
 		printf("Saving %s #%i as %s\n", thumbnail ? "preview" : "image", num+1, filename);
 	if (gp_file_save(file, filename) == GP_ERROR) 
-		error_print("Can not save %s as ", thumbnail ? "preview" : "image", filename);
+		error_print("Can not save %s as %s", thumbnail ? "preview" : "image", filename);
 
 	gp_file_free(file);
 

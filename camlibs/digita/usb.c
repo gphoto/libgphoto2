@@ -32,29 +32,58 @@ static int digita_usb_send(struct digita_device *dev, void *buffer, int len)
 #endif
 }
 
+struct camera_to_usb {
+  char *name;
+  unsigned short idVendor;
+  unsigned short idProduct;
+} camera_to_usb[] = {
+  { "Kodak DC220", 0x040A, 0x0100 },
+  { "Kodak DC260", 0x040A, 0x0110 },
+  { "Kodak DC265", 0x040A, 0x0111 },
+  { "Kodak DC290", 0x040A, 0x0112 },
+};
+
 #ifdef GPIO_USB
-int digita_usb_probe(struct usb_device **udev)
+int digita_usb_probe(Camera *camera, struct usb_device **udev)
 {
-	if (gpio_usb_find_device(0x040A, 0x0110, udev)) {
-		printf("found '%s' @ %s/%s\n", "Kodak DC260",
+	int i;
+
+	fprintf(stderr, "digita: user selected %s\n", camera->model);
+
+	for (i = 0; i < sizeof(camera_to_usb) / sizeof(struct camera_to_usb);
+	     i++) {
+		fprintf(stderr, "digita: %s, %s\n", camera->model,
+			camera_to_usb[i].name);
+
+		if (!strcmp(camera->model, camera_to_usb[i].name))
+			break;
+	}
+
+	if (i >= sizeof(camera_to_usb) / sizeof(struct camera_to_usb))
+		goto err;
+
+	if (gpio_usb_find_device(camera_to_usb[i].idVendor,
+				 camera_to_usb[i].idProduct, udev)) {
+		printf("found '%s' @ %s/%s\n", camera_to_usb[i].name,
 			(*udev)->bus->dirname, (*udev)->filename);
 		return 1;
 	}
 
+err:
 	fprintf(stderr, "unable to find any compatible USB cameras\n");
 
 	return 0;
 }
 #endif
 
-struct digita_device *digita_usb_open(void)
+struct digita_device *digita_usb_open(Camera *camera)
 {
 #ifdef GPIO_USB
 	struct digita_device *dev;
 	gpio_device_settings settings;
 	struct usb_device *udev;
 
-	if (!digita_usb_probe(&udev))
+	if (!digita_usb_probe(camera, &udev))
 		return NULL;
 
 	dev = malloc(sizeof(*dev));

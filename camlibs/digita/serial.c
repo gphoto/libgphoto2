@@ -164,7 +164,7 @@ static int digita_serial_read(struct digita_device *dev, void *_buffer, int len)
 	return received;
 }
 
-struct digita_device *digita_serial_open(void)
+struct digita_device *digita_serial_open(Camera *camera)
 {
 	struct digita_device *dev;
 	gpio_device_settings settings;

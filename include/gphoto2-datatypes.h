@@ -105,14 +105,10 @@ typedef struct {
 	char model[128];
 
 		/* can the library support the following: */
-	int port;
 
-	int serial;
-	int parallel;
-	int usb;
-	int ieee1394;
-	int network;
-		/* set to 1 if supported, 0 if not.		 */
+	int port;
+		/* an OR of GP_PORT_* for whatever devices the	 */
+		/* the library can use.				 */
 
 	int speed[64];
 		/* if serial==1, baud rates that this camera	 */

@@ -1,6 +1,8 @@
 #ifndef DIGITA_H
 #define DIGITA_H
 
+#include <gphoto2.h>
+
 #include <gpio/gpio.h>
 
 struct digita_device {
@@ -131,10 +133,10 @@ int digita_get_file_data(struct digita_device *dev, int thumbnail,
 int digita_delete_picture(struct digita_device *dev, struct filename *filename);
 
 /* serial.c */
-struct digita_device *digita_serial_open(void);
+struct digita_device *digita_serial_open(Camera *camera);
 
 /* usb.c */
-struct digita_device *digita_usb_open(void);
+struct digita_device *digita_usb_open(Camera *camera);
 
 #endif
 

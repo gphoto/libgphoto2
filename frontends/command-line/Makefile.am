@@ -10,5 +10,7 @@ gphoto2_SOURCES = \
 		interface.c interface.h \
 		test.c test.h
 
+gphoto2_LDFLAGS = -export-dynamic
+
 gphoto2_LDADD = ../../libgphoto2/libgphoto2.la \
 		../libgphoto2_frontend/libgphoto2_frontend.la

@@ -5,6 +5,9 @@
         This library is covered by the LGPL.
 */
 
+#ifndef GPHOTO2_H
+#define GPHOTO2_H
+
 #ifdef OS2
 #include <gphotoos2.h>
 #include <gpio.h>
@@ -16,3 +19,5 @@
 #include <gphoto2-core.h>
 #include <gphoto2-library.h>
 #include <gphoto2-interface.h>
+
+#endif
