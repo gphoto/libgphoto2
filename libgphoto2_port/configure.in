@@ -190,8 +190,8 @@ if $try_usb; then
 	)
 else 
 	AC_MSG_WARN([ 
-*** You need Johannes Erdfelt's libusb library for USB support
-*** http://download.sourceforge.net/libusb/libusb-0.1.2.tar.gz
+*** You need the libusb library for USB support
+*** http://download.sourceforge.net/libusb/libusb-0.1.4.tar.gz
 ])
 fi
 
