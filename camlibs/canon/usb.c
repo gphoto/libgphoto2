@@ -233,7 +233,7 @@ canon_usb_init (Camera *camera, GPContext *context)
 	}
 	if (res != GP_OK) {
 		gp_context_error (context, _("Camera not ready, "
-			 		       "multiple identify camera requests failed: %s"),
+			 		       "multiple 'Identify camera' requests failed: %s"),
 				     gp_result_as_string (res));
 		return GP_ERROR;
 	}
