@@ -57,10 +57,12 @@
 
 #define GP_MODULE "libgphoto2"
 
-typedef struct {
+typedef struct _CameraFilesystemFile {
 	char name [128];
 	int info_dirty;
 	CameraFileInfo info;
+	struct _CameraFilesystemFile *lru_prev;
+	struct _CameraFilesystemFile *lru_next;
 	CameraFile *preview;
 	CameraFile *normal;
 	CameraFile *raw;
@@ -174,6 +176,10 @@ gp_filesystem_get_exif_mtime (CameraFilesystem *fs, const char *folder,
 struct _CameraFilesystem {
 	int count;
 	CameraFilesystemFolder *folder;
+
+	CameraFilesystemFile *lru_first;
+	CameraFilesystemFile *lru_last;
+	unsigned long int lru_size;
 
 	CameraFilesystemGetInfoFunc get_info_func;
 	CameraFilesystemSetInfoFunc set_info_func;
@@ -410,18 +416,23 @@ append_file (CameraFilesystem *fs, int x, CameraFile *file)
 	return (GP_OK);
 }
 
+static int gp_filesystem_lru_clear (CameraFilesystem *fs);
+
 /**
  * gp_filesystem_reset:
  * @fs: a #CameraFilesystem
  *
  * Resets the filesystem. All cached information including the folder tree
- * will get lost and will be queried again on demand. 
+ * will get lost and will be queried again on demand.
  *
  * Return value: a gphoto2 error code.
  **/
 int
 gp_filesystem_reset (CameraFilesystem *fs)
 {
+
+	CR (gp_filesystem_lru_clear (fs));
+
 	CR (delete_all_folders (fs, "/", NULL));
 	CR (delete_all_files (fs, 0));
 
@@ -1687,6 +1698,234 @@ gp_filesystem_get_info (CameraFilesystem *fs, const char *folder,
 	return (GP_OK);
 }
 
+static int
+gp_filesystem_lru_clear (CameraFilesystem *fs)
+{
+	int n = 0;
+	CameraFilesystemFile *ptr, *prev;
+
+	GP_DEBUG ("Clearing fscache LRU list...");
+
+	if (fs->lru_first == NULL) {
+		GP_DEBUG ("fscache LRU list already empty", n);
+		return (GP_OK);
+	}
+
+	ptr = prev = fs->lru_first;
+	while (ptr != NULL) {
+		n++;
+		if (ptr->lru_prev != prev) {
+			GP_DEBUG ("fscache LRU list corrupted (%i)", n);
+			return (GP_ERROR);
+		}
+		prev = ptr;
+		ptr = ptr->lru_next;
+
+		prev->lru_prev = NULL;
+		prev->lru_next = NULL;
+	}
+
+	fs->lru_first = NULL;
+	fs->lru_last = NULL;
+	fs->lru_size = 0;
+
+	GP_DEBUG ("fscache LRU list cleared (removed %i items)", n);
+
+	return (GP_OK);
+}
+
+static int
+gp_filesystem_lru_remove_one (CameraFilesystem *fs, CameraFilesystemFile *item)
+{
+	if (item->lru_prev == NULL) {
+		return (GP_ERROR);
+	}
+
+	if (fs->lru_last == item) {
+		if (fs->lru_first == item) {
+
+	/* case 1 : ITEM is the only one in the list */
+
+			fs->lru_last  = NULL;
+			fs->lru_first = NULL;
+			/* the list is now empty */
+		} else {
+
+	/* case 2 : ITEM is the last in the list */
+
+			fs->lru_last = item->lru_prev;
+		}
+	} else if (fs->lru_first == item) {
+
+	/* case 3 : ITEM is the first in the list */
+
+		fs->lru_first = item->lru_next;
+	} else {
+
+	/* case 4 : ITEM is in the middle of the list */
+
+		item->lru_prev->lru_next = item->lru_next;
+	}
+
+	/* clear the pointers */
+	item->lru_prev = NULL;
+	item->lru_next = NULL;
+
+	return (GP_OK);
+}
+
+static int
+gp_filesystem_lru_free (CameraFilesystem *fs)
+{
+	CameraFilesystemFile *ptr;
+	const char *data;
+	unsigned long int size;
+
+	CHECK_NULL (fs && fs->lru_first);
+
+	ptr = fs->lru_first;
+
+	GP_DEBUG ("Freeing cached data for file %s...", ptr->name);
+
+	/* remove it from the list */
+	fs->lru_first = ptr->lru_next;
+	if (fs->lru_first) {
+		fs->lru_first->lru_prev = fs->lru_first;
+	} else {
+		fs->lru_last = NULL;
+	}
+
+	/* free its content */
+	if (ptr->normal) {
+		CR( gp_file_get_data_and_size (ptr->normal, &data, &size));
+		fs->lru_size -= size;
+		gp_file_unref (ptr->normal);
+		ptr->normal = NULL;
+	}
+	if (ptr->raw) {
+		CR( gp_file_get_data_and_size (ptr->raw, &data, &size));
+		fs->lru_size -= size;
+		gp_file_unref (ptr->raw);
+		ptr->raw = NULL;
+	}
+	if (ptr->audio) {
+		CR( gp_file_get_data_and_size (ptr->audio, &data, &size));
+		fs->lru_size -= size;
+		gp_file_unref (ptr->audio);
+		ptr->audio = NULL;
+	}
+
+	return (GP_OK);
+
+}
+static int
+
+gp_filesystem_lru_update (CameraFilesystem *fs, const char *folder,
+			     CameraFile *file, GPContext *context)
+{
+	CameraFileType type;
+	CameraFile *oldfile;
+	const char *filename;
+	const char *data;
+	unsigned long int size;
+	int x, y;
+
+	CHECK_NULL (fs && folder && file);
+
+	CR (gp_file_get_name (file, &filename));
+	CR (gp_file_get_type (file, &type));
+
+	CR( gp_file_get_data_and_size (file, &data, &size));
+/* The following is a simple case which is used to test the LRU */
+#if 0
+	while (fs->lru_size + size > 600000) {
+		GP_DEBUG ("Freeing cached data before adding new data (cache=%ld, new=%ld)",
+		  fs->lru_size, size);
+		CR (gp_filesystem_lru_free (fs));
+	}
+#endif
+
+	GP_DEBUG ("Adding file '%s' from folder '%s' to the fscache LRU list (type %i)...",
+		  filename, folder, type);
+
+	/* Search folder and file */
+	CR (x = gp_filesystem_folder_number (fs, folder, context));
+	CR (y = gp_filesystem_number (fs, folder, filename, context));
+
+	/* if the file is already in the lru, we first remove it */
+	if (fs->folder[x].file[y].lru_prev != NULL) {
+
+		switch (type) {
+		case GP_FILE_TYPE_PREVIEW: oldfile = fs->folder[x].file[y].preview; break;
+		case GP_FILE_TYPE_NORMAL:  oldfile = fs->folder[x].file[y].normal;  break;
+		case GP_FILE_TYPE_RAW:     oldfile = fs->folder[x].file[y].raw;     break;
+		case GP_FILE_TYPE_AUDIO:   oldfile = fs->folder[x].file[y].audio;   break;
+		case GP_FILE_TYPE_EXIF:    oldfile = fs->folder[x].file[y].exif;    break;
+		default:
+			gp_context_error (context, _("Unknown file type %i."), type);
+			return (GP_ERROR);
+		}
+		if (oldfile) {
+			CR( gp_file_get_data_and_size (oldfile, &data, &size));
+			fs->lru_size -= size;
+		}
+
+		CR (gp_filesystem_lru_remove_one(fs, &fs->folder[x].file[y]));
+	}
+
+	/* then add the file at the end of the LRU */
+	if (fs->lru_first == NULL) {
+		fs->lru_first = &fs->folder[x].file[y];
+		fs->lru_last = &fs->folder[x].file[y];
+		/* for the first item, prev point it itself to show that the item
+		 * is in the list */
+		fs->folder[x].file[y].lru_prev = &fs->folder[x].file[y];
+	} else {
+		fs->folder[x].file[y].lru_prev = fs->lru_last;
+		fs->lru_last->lru_next = &fs->folder[x].file[y];
+		fs->lru_last = &fs->folder[x].file[y];
+	}
+
+	CR( gp_file_get_data_and_size (file, &data, &size));
+	fs->lru_size += size;
+
+	GP_DEBUG ("File '%s' from folder '%s' added in fscache LRU list.",
+		  filename, folder);
+
+	return (GP_OK);
+
+}
+
+static int
+gp_filesystem_lru_check (CameraFilesystem *fs)
+{
+	int n=0;
+	CameraFilesystemFile *ptr, *prev;
+
+	GP_DEBUG ("Checking fscache LRU list integrity...");
+
+	if (fs->lru_first == NULL) {
+		GP_DEBUG ("fscache LRU list empty", n);
+		return (GP_OK);
+	}
+
+	ptr = prev = fs->lru_first;
+	while (ptr != NULL) {
+		n++;
+		if (ptr->lru_prev != prev) {
+			GP_DEBUG ("fscache LRU list corrupted (%i)", n);
+			return (GP_ERROR);
+		}
+		prev = ptr;
+		ptr = ptr->lru_next;
+	}
+
+	GP_DEBUG ("fscache LRU list ok with %i items (%ld bytes)", n, fs->lru_size);
+
+	return (GP_OK);
+
+}
+
 /**
  * gp_filesystem_set_file_noop:
  * @fs: a #CameraFilesystem
@@ -1726,6 +1965,14 @@ gp_filesystem_set_file_noop (CameraFilesystem *fs, const char *folder,
 	/* Search folder and file */
 	CR (x = gp_filesystem_folder_number (fs, folder, context));
 	CR (y = gp_filesystem_number (fs, folder, filename, context));
+
+	/* If we add a significant amount of data in the cache, we put (or
+	 * move) a reference to this file in the LRU linked list. */
+	if (!((type == GP_FILE_TYPE_PREVIEW) || (type == GP_FILE_TYPE_EXIF))) {
+		CR (gp_filesystem_lru_update (fs, folder, file, context));
+	}
+
+	CR (gp_filesystem_lru_check (fs));
 
 	switch (type) {
 	case GP_FILE_TYPE_PREVIEW:
