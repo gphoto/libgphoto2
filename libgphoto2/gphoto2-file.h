@@ -21,6 +21,12 @@
 #ifndef __GPHOTO2_FILE_H__
 #define __GPHOTO2_FILE_H__
 
+#include <time.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 #define GP_MIME_WAV       "audio/wav"
 #define GP_MIME_RAW       "image/x-raw"
 #define GP_MIME_PNG       "image/png"
@@ -54,24 +60,29 @@ int gp_file_free           (CameraFile *file);
 int gp_file_open           (CameraFile *file, const char *filename);
 int gp_file_save           (CameraFile *file, const char *filename);
 int gp_file_clean          (CameraFile *file);
+int gp_file_copy           (CameraFile *destination, CameraFile *source);
 
-int gp_file_set_name       (CameraFile *file, const char *name);
-int gp_file_set_mime_type  (CameraFile *file, const char *mime_type);
-int gp_file_set_type       (CameraFile *file, CameraFileType type);
+int gp_file_set_name       (CameraFile *file, const char  *name);
+int gp_file_get_name       (CameraFile *file, const char **name);
+
+int gp_file_set_mime_type  (CameraFile *file, const char  *mime_type);
+int gp_file_get_mime_type  (CameraFile *file, const char **mime_type);
+
+int gp_file_set_type       (CameraFile *file, CameraFileType  type);
+int gp_file_get_type       (CameraFile *file, CameraFileType *type);
+
+int gp_file_set_mod_time   (CameraFile *file, time_t  mod_time);
+int gp_file_get_mod_time   (CameraFile *file, time_t *mod_time);
 
 int gp_file_detect_mime_type          (CameraFile *file);
 int gp_file_adjust_name_for_mime_type (CameraFile *file);
 
-int gp_file_get_name       (CameraFile *file, const char **name);
-int gp_file_get_mime_type  (CameraFile *file, const char **mime_type);
-int gp_file_get_type       (CameraFile *file, CameraFileType *type);
-
-int gp_file_append            (CameraFile*, const char *data,  int size);
-int gp_file_get_last_chunk    (CameraFile*, char **data, long int *size);
-int gp_file_set_data_and_size (CameraFile*, char *data, long int size);
-int gp_file_get_data_and_size (CameraFile*, const char **data, long int *size);
-
-int gp_file_copy           (CameraFile *destination, CameraFile *source);
+int gp_file_append            (CameraFile*, const char *data,
+			       unsigned long int size);
+int gp_file_set_data_and_size (CameraFile*,       char *data,
+			       unsigned long int size);
+int gp_file_get_data_and_size (CameraFile*, const char **data,
+			       unsigned long int *size);
 
 /* Conversion */
 
@@ -97,6 +108,9 @@ int gp_file_set_conversion_method (CameraFile *file,
 				   CameraFileConversionMethod method);
 
 int gp_file_convert (CameraFile *file, const char *mime_type);
-	
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* __GPHOTO2_FILE_H__ */

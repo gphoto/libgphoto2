@@ -1,3 +1,7 @@
+2002-01-16  Lutz Müller <lutz@users.sourceforge.net>
+
+	* libgphoto2/gphoto2-file.[c,h] (gp_file_[get,set]_mod_time): New.
+
 2002-01-16  Colin Marquardt  <colin@marquardt-home.de>
 
 	*  libgphoto2_port/po/fr.po: Update from Jérôme.

@@ -42,10 +42,12 @@ struct _CameraFile {
         CameraFileType type;
         char mime_type [64];
         char name [64];
-        long int size;
+        unsigned long int size;
         unsigned char *data;
         int bytes_read;
         int ref_count;
+
+	time_t mod_time;
 
         unsigned char *red_table, *blue_table, *green_table;
         int red_size, blue_size, green_size;
@@ -106,14 +108,11 @@ gp_file_unref (CameraFile *file)
 }
 
 int
-gp_file_append (CameraFile *file, const char *data, int size)
+gp_file_append (CameraFile *file, const char *data, unsigned long int size)
 {
         char *t;
 
 	CHECK_NULL (file);
-
-        if (size < 0)
-                return (GP_ERROR_BAD_PARAMETERS);
 
         if (!file->data)
 		file->data = malloc (sizeof(char) * (size));
@@ -132,7 +131,8 @@ gp_file_append (CameraFile *file, const char *data, int size)
 }
 
 int
-gp_file_set_data_and_size (CameraFile *file, char *data, long int size)
+gp_file_set_data_and_size (CameraFile *file, char *data,
+			   unsigned long int size)
 {
 	CHECK_NULL (file);
 
@@ -146,28 +146,8 @@ gp_file_set_data_and_size (CameraFile *file, char *data, long int size)
 }
 
 int
-gp_file_get_last_chunk (CameraFile *file, char **data, long int *size)
-{
-	CHECK_NULL (file && data && size);
-
-        if (file->bytes_read == 0) {
-                /* chunk_add was never called. return safely. */
-                *data = NULL;
-                *size = 0;
-                return (GP_ERROR);
-        }
-
-        /* They must free the returned data! */
-        *data = malloc(file->bytes_read);
-        memcpy (*data, &file->data[file->size - file->bytes_read],
-		file->bytes_read);
-        *size = file->bytes_read;
-
-        return (GP_OK);
-}
-
-int
-gp_file_get_data_and_size (CameraFile *file, const char **data, long int *size)
+gp_file_get_data_and_size (CameraFile *file, const char **data,
+			   unsigned long int *size)
 {
 	CHECK_NULL (file && data && size);
 
@@ -639,4 +619,24 @@ gp_file_convert (CameraFile *file, const char *mime_type)
 
 	else
 		return (GP_ERROR_NOT_SUPPORTED);
+}
+
+int
+gp_file_get_mod_time (CameraFile *file, time_t *mod_time)
+{
+	CHECK_NULL (file && mod_time);
+
+	*mod_time = file->mod_time;
+
+	return (GP_OK);
+}
+
+int
+gp_file_set_mod_time (CameraFile *file, time_t mod_time)
+{
+	CHECK_NULL (file);
+
+	file->mod_time = mod_time;
+
+	return (GP_OK);
 }
