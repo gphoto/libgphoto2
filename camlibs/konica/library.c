@@ -198,8 +198,8 @@ int camera_init (Camera *camera, CameraInit *init)
 	gpio_device *device;
 
 	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_init ***");
-	g_return_val_if_fail (camera != NULL, GP_ERROR);
-	g_return_val_if_fail (init != NULL, GP_ERROR);
+	g_return_val_if_fail (camera 	!= NULL, GP_ERROR);
+	g_return_val_if_fail (init 	!= NULL, GP_ERROR);
 
 	/* First, set up all the function pointers. */
 	camera->functions->id 			= camera_id;
@@ -381,27 +381,30 @@ int camera_exit (Camera *camera)
 {
         konica_data_t *konica_data;
 
-        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_exit ***");
 	g_return_val_if_fail (camera != NULL, GP_ERROR);
 
         konica_data = (konica_data_t *) camera->camlib_data;
-	if (error_happened (camera, k_exit (konica_data->device))) return (GP_ERROR);
-        if (gpio_free (konica_data->device) == GPIO_ERROR) return (GP_ERROR);
+	g_return_val_if_fail (!error_happened (camera, k_exit (konica_data->device)), GP_ERROR);
+	g_return_val_if_fail (gp_filesystem_free (konica_data->filesystem) 	== GP_OK, GP_ERROR);
+        g_return_val_if_fail (gpio_free (konica_data->device) 			== GP_OK, GP_ERROR);
 	return (GP_OK);
 }
 
 
-int camera_folder_list (Camera *camera, CameraList *list, char *folder)
+int 
+camera_folder_list (Camera* camera, CameraList* list, gchar* folder)
 {
-        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_folder_list ***");
-	g_return_val_if_fail (camera != NULL, GP_ERROR);
+	g_return_val_if_fail (camera 	!= NULL, GP_ERROR);
+	g_return_val_if_fail (list 	!= NULL, GP_ERROR);
+	g_return_val_if_fail (folder 	!= NULL, GP_ERROR);
 
 	/* The camera does not support folders. */
 	return (GP_OK);
 }
 
 
-int camera_file_list (Camera *camera, CameraList *list, char *folder)
+int 
+camera_file_list (Camera* camera, CameraList* list, gchar* folder)
 {
 	guint self_test_result;
 	k_power_level_t power_level;
@@ -435,9 +438,9 @@ int camera_file_list (Camera *camera, CameraList *list, char *folder)
 	gchar*		filename;
 
         gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_file_list ***");
-	g_return_val_if_fail (camera != NULL, GP_ERROR);
-	g_return_val_if_fail (list != NULL, GP_ERROR);
-	g_return_val_if_fail (folder != NULL, GP_ERROR);
+	g_return_val_if_fail (camera 	!= NULL, GP_ERROR);
+	g_return_val_if_fail (list 	!= NULL, GP_ERROR);
+	g_return_val_if_fail (folder 	!= NULL, GP_ERROR);
 
 	konica_data = (konica_data_t *) camera->camlib_data;
 	if (error_happened (camera, k_get_status (
@@ -479,114 +482,118 @@ int camera_file_list (Camera *camera, CameraList *list, char *folder)
 	                &exif_size,
 	                &protected,
 	                &information_buffer,
-	                &information_buffer_size))) filename = g_strdup_printf ("%6i.jpeg", (int) image_id);
+	                &information_buffer_size))) filename = g_strdup_printf ("%06i.jpeg", (int) image_id);
 		else filename = g_strdup ("??????.jpg");
-		gp_list_append (list, filename, GP_LIST_FILE);
 		g_free (information_buffer);
 		information_buffer = NULL;
+		g_return_val_if_fail (gp_list_append (list, filename, GP_LIST_FILE) == GP_OK, GP_ERROR);
+		gp_filesystem_append (konica_data->filesystem, "/", filename);
 	}
 
 	return (GP_OK);
 }
 
 
-int camera_file_get_generic (Camera* camera, CameraFile* file, gchar* folder, gchar* filename, k_image_type_t image_type)
+int 
+camera_file_get_generic (Camera* camera, CameraFile* file, gchar* folder, gchar* filename, k_image_type_t image_type)
 {
 	gulong 		image_id;
 	gchar		image_id_string[] = {0, 0, 0, 0, 0, 0, 0};
 	konica_data_t*	konica_data;
 	gchar*		tmp;
 
+	g_return_val_if_fail (camera	!= NULL, GP_ERROR);
+	g_return_val_if_fail (file	!= NULL, GP_ERROR);
+	g_return_val_if_fail (folder	!= NULL, GP_ERROR);
+	g_return_val_if_fail (filename	!= NULL, GP_ERROR);
+
 	konica_data = (konica_data_t *) camera->camlib_data;
 
 	/* Check if we can get the image id from the filename. */
-	if (filename[0] == '?') return (GP_ERROR);
+	g_return_val_if_fail (filename[0] != '?', GP_ERROR);
 	memcpy (image_id_string, filename, 6);
 	image_id = atol (image_id_string);
 	
 	/* Get the image. */
-        if (error_happened (camera, k_get_image (
+        g_return_val_if_fail (!error_happened (camera, k_get_image (
                 konica_data->device,
                 konica_data->image_id_long,
                 image_id,
                 image_type,
                 (guchar **) &file->data,
-                (guint *) &file->size))) return (GP_ERROR);
+                (guint *) &file->size)), GP_ERROR);
 
         strcpy (file->type, "image/jpg");
 	if (image_type == K_THUMBNAIL) {
-		tmp = g_strdup_printf ("%6i-thumbnail.jpg", (int) image_id);
+		tmp = g_strdup_printf ("%06i-thumbnail.jpg", (int) image_id);
 		strcpy (file->name, tmp);
 		g_free (tmp);
+	} else {
+		strcpy (file->name, filename);
 	}
 	return (GP_OK);
 }
 
 
-int camera_file_get (
-	Camera *camera, 
-	CameraFile *file, 
-	char *folder, 
-	char *filename)
+int 
+camera_file_get (Camera* camera, CameraFile* file, gchar* folder, gchar* filename)
 {
         gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_file_get ***");
-        g_return_val_if_fail (camera != NULL, GP_ERROR);
-        g_return_val_if_fail (file != NULL, GP_ERROR);
-        g_return_val_if_fail (folder != NULL, GP_ERROR);
-	g_return_val_if_fail (filename != NULL, GP_ERROR);
+        g_return_val_if_fail (camera 	!= NULL, GP_ERROR);
+        g_return_val_if_fail (file 	!= NULL, GP_ERROR);
+        g_return_val_if_fail (folder 	!= NULL, GP_ERROR);
+	g_return_val_if_fail (filename 	!= NULL, GP_ERROR);
 
 	return (camera_file_get_generic (camera, file, folder, filename, K_IMAGE_EXIF));
 }
 
 
-int camera_file_get_preview (Camera* camera, CameraFile* file, gchar* folder, gchar* filename)
+int 
+camera_file_get_preview (Camera* camera, CameraFile* file, gchar* folder, gchar* filename)
 {
         gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_file_get_preview ***");
-        g_return_val_if_fail (camera != NULL, GP_ERROR);
-        g_return_val_if_fail (file != NULL, GP_ERROR);
-        g_return_val_if_fail (folder != NULL, GP_ERROR);
-        g_return_val_if_fail (filename != NULL, GP_ERROR);
+        g_return_val_if_fail (camera 	!= NULL, GP_ERROR);
+        g_return_val_if_fail (file 	!= NULL, GP_ERROR);
+        g_return_val_if_fail (folder 	!= NULL, GP_ERROR);
+        g_return_val_if_fail (filename 	!= NULL, GP_ERROR);
 
 	return (camera_file_get_generic (camera, file, folder, filename, K_THUMBNAIL));
 }
 
 
-int camera_file_put (Camera *camera, CameraFile *file, char *folder)
+int 
+camera_file_put (Camera* camera, CameraFile* file, char* folder)
 {
         gp_debug_printf (GP_DEBUG_LOW, "konica", "*** camera_file_put ***");
+	g_return_val_if_fail (camera	!= NULL, GP_ERROR);
+	g_return_val_if_fail (file	!= NULL, GP_ERROR);
+	g_return_val_if_fail (folder	!= NULL, GP_ERROR);
 
 	/* The camera does not support putting files. */
 	return (GP_ERROR);
 }
 
 
-int camera_file_delete (Camera *camera, char *folder, char *filename)
+int 
+camera_file_delete (Camera* camera, gchar* folder, gchar* filename)
 {
-	gulong image_id; 
-	guint exif_size;
-	gboolean protected;
-	guchar *information_buffer = NULL;
-	guint information_buffer_size;
-	konica_data_t *konica_data;
-	gulong image_number;
+	gulong 		image_id; 
+	gchar		image_id_string[] = {0, 0, 0, 0, 0, 0, 0};
+	konica_data_t*	konica_data;
 
         gp_debug_printf (GP_DEBUG_LOW, "konica", "*** camera_file_delete ***");
-        g_return_val_if_fail (camera != NULL, GP_ERROR);
-        g_return_val_if_fail (folder != NULL, GP_ERROR);
-        g_return_val_if_fail (filename != NULL, GP_ERROR);
+        g_return_val_if_fail (camera 	!= NULL, GP_ERROR);
+        g_return_val_if_fail (folder 	!= NULL, GP_ERROR);
+        g_return_val_if_fail (filename 	!= NULL, GP_ERROR);
 
 	konica_data = (konica_data_t *) camera->camlib_data;
-        image_number = gp_filesystem_number (konica_data->filesystem, folder, filename) + 1;
-	if (error_happened (camera, k_get_image_information (
-		konica_data->device,
-		konica_data->image_id_long,
-		image_number, 
-		&image_id, 
-		&exif_size, 
-		&protected, 
-		&information_buffer, 
-		&information_buffer_size))) return (GP_ERROR);
-	if (error_happened (camera, k_erase_image (konica_data->device, konica_data->image_id_long, image_id))) return (GP_ERROR);
+
+	/* Check if we can get the image id from the filename. */
+	g_return_val_if_fail (filename[0] != '?', GP_ERROR);
+	memcpy (image_id_string, filename, 6);
+	image_id = atol (image_id_string);
+	
+	g_return_val_if_fail (!error_happened (camera, k_erase_image (konica_data->device, konica_data->image_id_long, image_id)), GP_ERROR);
 	return (GP_OK);
 }
 
