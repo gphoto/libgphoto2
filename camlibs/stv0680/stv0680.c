@@ -49,6 +49,7 @@ struct camera_to_usb {
 } camera_to_usb[] = {
 	{ "STM USB Dual-mode camera",   0x0553, 0x0202 },
 	{ "IOMagic MagicImage 400",     0x0553, 0x0202 },
+	/* http://www.iomagic.com/support/digitalcameras/magicimage400/magicimage400manual.htm */
 	{ "Hawking DC120 Pocketcam",    0x0553, 0x0202 },
 	{ "Aiptek PenCam Trio",         0x0553, 0x0202 },
 	{ "Micromaxx Digital Camera",   0x0553, 0x0202 },
@@ -74,7 +75,7 @@ int camera_abilities (CameraAbilitiesList *list)
 	for (i = 0; i < sizeof(camera_to_usb) / sizeof(struct camera_to_usb); i++) {
 
 		strcpy(a.model, camera_to_usb[i].name);
-		a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
+		a.status = GP_DRIVER_STATUS_TESTING;
 
 		if (!camera_to_usb[i].idVendor) {
 			a.port     = GP_PORT_SERIAL;
