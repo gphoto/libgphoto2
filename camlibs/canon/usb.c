@@ -240,6 +240,12 @@ canon_usb_keylock (Camera *camera)
 
 	GP_DEBUG ("canon_usb_keylock()");
 
+	/* Check for cameras that do not need this command */
+	if (camera->pl->model == CANON_PS_S100) {
+		GP_DEBUG ("Your camera model does not need the keylock.");
+		return GP_OK;
+	}
+
 	c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_KEYLOCK, &bytes_read, NULL, 0);
 	if (bytes_read == 0x4) {
 		GP_DEBUG ("Got the expected number of bytes back, "
