@@ -143,20 +143,21 @@ int gp_camera_unref (Camera *camera)
 	return (GP_OK);
 }
 
-int gp_camera_free(Camera *camera)
+int gp_camera_free (Camera *camera)
 {
         if (camera == NULL)
                 return (GP_ERROR_BAD_PARAMETERS);
 
-        gp_camera_exit(camera);
+        gp_camera_exit (camera);
      
         if (camera->port)
-                free(camera->port);
+                free (camera->port);
         if (camera->abilities) 
-                free(camera->abilities);
+                free (camera->abilities);
         if (camera->functions) 
-                free(camera->functions);
-            
+                free (camera->functions);
+        
+	free (camera);
         return (GP_OK);
 }
 
