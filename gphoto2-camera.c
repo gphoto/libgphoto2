@@ -59,24 +59,33 @@
 
 #define CHECK_NULL(r)              {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 
-#define CAMERA_UNUSED(c)						\
+#define CAMERA_UNUSED(c,ctx)						\
 {									\
 	(c)->pc->used--;						\
 	if (!(c)->pc->used) {						\
 		if ((c)->pc->exit_requested)				\
-			gp_camera_exit ((c));				\
+			gp_camera_exit ((c), (ctx));			\
 		if (!(c)->pc->ref_count)				\
 			gp_camera_free (c);				\
 	}								\
 }
 
-#define CR(c,result)							\
+#define CR(c,result,ctx)						\
 {									\
 	int r = (result);						\
 									\
 	if (r < 0) {							\
+									\
+		/* libgphoto2_port doesn't have a GPContext */		\
+		if (r > -100)						\
+			gp_context_error ((ctx), _("An error occurred "	\
+				"in the io-library ('%s'): %s"),	\
+				gp_port_result_as_string (r),		\
+				(c) ? gp_port_get_error ((c)->port) : 	\
+				      "No additional information "	\
+				      "available.");			\
 		if (c)							\
-			CAMERA_UNUSED(c);				\
+			CAMERA_UNUSED((c),(ctx));			\
 		return (r);						\
 	}								\
 }
@@ -110,37 +119,35 @@
  */
 
 #ifdef HAVE_MULTI
-#define CHECK_OPEN(c)							\
+#define CHECK_OPEN(c,ctx)						\
 {									\
 	int r;								\
 									\
 	if (strcmp ((c)->pc->a.model,"Directory Browse")) {		\
 		r = gp_port_open ((c)->port);				\
 		if (r < 0) {						\
-			gp_camera_status ((c), "");			\
-			CAMERA_UNUSED (c);				\
+			CAMERA_UNUSED (c,ctx);				\
 			return (r);					\
 		}							\
 	}								\
 	if ((c)->functions->pre_func) {					\
-		r = (c)->functions->pre_func (c);			\
+		r = (c)->functions->pre_func (c,ctx);			\
 		if (r < 0) {						\
 			gp_camera_status ((c), "");			\
-			CAMERA_UNUSED (c);                              \
+			CAMERA_UNUSED (c,ctx);				\
 			return (r);					\
 		}							\
 	}								\
 }
 #else
-#define CHECK_OPEN(c)							\
+#define CHECK_OPEN(c,ctx)						\
 {                                                                       \
 	int r;								\
 									\
 	if ((c)->functions->pre_func) {                                 \
-		r = (c)->functions->pre_func (c);                       \
+		r = (c)->functions->pre_func (c,ctx);                   \
 		if (r < 0) {                                            \
-			gp_camera_status ((c), "");                     \
-			CAMERA_UNUSED (c);                              \
+			CAMERA_UNUSED (c,ctx);				\
 			return (r);                                     \
 		}                                                       \
 	}                                                               \
@@ -148,74 +155,66 @@
 #endif
 
 #ifdef HAVE_MULTI
-#define CHECK_CLOSE(c)							\
+#define CHECK_CLOSE(c,ctx)						\
 {									\
 	int r;								\
 									\
 	if (strcmp ((c)->pc->a.model,"Directory Browse"))		\
 		gp_port_close ((c)->port);				\
 	if ((c)->functions->post_func) {				\
-		r = (c)->functions->post_func (c);			\
+		r = (c)->functions->post_func (c,ctx);			\
 		if (r < 0) {						\
-			gp_camera_status ((c), "");			\
-			CAMERA_UNUSED (c);				\
+			CAMERA_UNUSED (c,ctx);				\
 			return (r);					\
 		}							\
 	}								\
 }
 #else
-#define CHECK_CLOSE(c)                                                  \
+#define CHECK_CLOSE(c,ctx)                                              \
 {                                                                       \
 	int r;								\
 									\
 	if ((c)->functions->post_func) {                                \
-		r = (c)->functions->post_func (c);                      \
+		r = (c)->functions->post_func (c,ctx);                  \
 		if (r < 0) {                                            \
-			gp_camera_status ((c), "");                     \
-			CAMERA_UNUSED (c);				\
+			CAMERA_UNUSED (c,ctx);				\
 			return (r);                                     \
-		}                                                       \
+		}							\
 	}                                                               \
 }
 #endif
 
-#define CRS(c,res)							\
+#define CRS(c,res,ctx)							\
 {									\
 	int r = (res);							\
 									\
 	if (r < 0) {							\
-		gp_camera_status ((c), "");				\
-		CAMERA_UNUSED (c);                              	\
+		CAMERA_UNUSED (c,ctx);                              	\
 		return (r);						\
 	}								\
 }
 
-#define CHECK_RESULT_OPEN_CLOSE(c,result)				\
+#define CHECK_RESULT_OPEN_CLOSE(c,result,ctx)				\
 {									\
 	int r;								\
 									\
-	CHECK_OPEN (c);							\
+	CHECK_OPEN (c,ctx);						\
 	r = (result);							\
 	if (r < 0) {							\
-		CHECK_CLOSE (c);					\
+		CHECK_CLOSE (c,ctx);					\
 		gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Operation failed!");\
-		gp_camera_status ((c), "");				\
-		gp_camera_progress ((c), 0.0);				\
-		CAMERA_UNUSED (c);                              	\
+		CAMERA_UNUSED (c,ctx);                              	\
 		return (r);						\
 	}								\
-	CHECK_CLOSE (c);						\
+	CHECK_CLOSE (c,ctx);						\
 }
 
-#define CHECK_INIT(c)							\
+#define CHECK_INIT(c,ctx)						\
 {									\
 	(c)->pc->used++;						\
 	if (!(c)->pc->lh)						\
-		CR((c), gp_camera_init(c));				\
+		CR((c), gp_camera_init (c, ctx), ctx);			\
 }
-
-/* This will vanish soon... */
-static GPContext *context = NULL;
 
 struct _CameraPrivateCore {
 
@@ -224,9 +223,6 @@ struct _CameraPrivateCore {
 
 	CameraStatusFunc   status_func;
 	void              *status_data;
-
-	CameraProgressFunc progress_func;
-	void              *progress_data;
 
 	CameraMessageFunc  message_func;
 	void              *message_data;
@@ -263,7 +259,7 @@ struct _CameraPrivateCore {
  * Return value: a gphoto2 error code.
  **/
 int
-gp_camera_exit (Camera *camera)
+gp_camera_exit (Camera *camera, GPContext *context)
 {
 	CHECK_NULL (camera);
 
@@ -284,7 +280,7 @@ gp_camera_exit (Camera *camera)
 #ifdef HAVE_MULTI
 		gp_port_open (camera->port);
 #endif
-		camera->functions->exit (camera);
+		camera->functions->exit (camera, context);
 		gp_port_close (camera->port);
 	}
 	memset (camera->functions, 0, sizeof (CameraFunctions));
@@ -382,9 +378,12 @@ gp_camera_set_abilities (Camera *camera, CameraAbilities abilities)
 
 	CHECK_NULL (camera);
 
-	/* If the camera is currently initialized, terminate that connection */
+	/*
+	 * If the camera is currently initialized, terminate that connection.
+	 * We don't care if we are successful or not.
+	 */
 	if (camera->pc->lh)
-		gp_camera_exit (camera);
+		gp_camera_exit (camera, NULL);
 
 	memcpy (&camera->pc->a, &abilities, sizeof (CameraAbilities));
 
@@ -415,7 +414,7 @@ gp_camera_get_port_info (Camera *camera, GPPortInfo *info)
 {
 	CHECK_NULL (camera && info);
 
-	CR (camera, gp_port_get_info (camera->port, info));
+	CR (camera, gp_port_get_info (camera->port, info), NULL);
 
 	return (GP_OK);
 }
@@ -425,13 +424,16 @@ gp_camera_set_port_info (Camera *camera, GPPortInfo info)
 {
 	CHECK_NULL (camera);
 
-	/* If the camera is currently initialized, terminate that connection */
+	/*
+	 * If the camera is currently initialized, terminate that connection.
+	 * We don't care if we are successful or not.
+	 */
 	if (camera->pc->lh)
-		gp_camera_exit (camera);
+		gp_camera_exit (camera, NULL);
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Setting port info for "
 		"port '%s' at '%s'...", info.name, info.path);
-	CR (camera, gp_port_set_info (camera->port, info));
+	CR (camera, gp_port_set_info (camera->port, info), NULL);
 
 	return (GP_OK);
 }
@@ -470,13 +472,16 @@ gp_camera_set_port_speed (Camera *camera, int speed)
 		return (GP_ERROR_BAD_PARAMETERS);
 	}
 
-	/* If the camera is currently initialized, terminate that connection */
+	/*
+	 * If the camera is currently initialized, terminate that connection.
+	 * We don't care if we are successful or not.
+	 */
 	if (camera->pc->lh)
-		gp_camera_exit (camera);
+		gp_camera_exit (camera, NULL);
 
-	CR (camera, gp_port_get_settings (camera->port, &settings));
+	CR (camera, gp_port_get_settings (camera->port, &settings), NULL);
 	settings.serial.speed = speed;
-	CR (camera, gp_port_set_settings (camera->port, settings));
+	CR (camera, gp_port_set_settings (camera->port, settings), NULL);
 	camera->pc->speed = speed;
 
 	return (GP_OK);
@@ -499,39 +504,14 @@ gp_camera_get_port_speed (Camera *camera)
 }
 
 /**
- * gp_camera_set_progress_func:
- * @camera: a #Camera
- * @func: a #CameraProgressFunc
- * @data:
- *
- * Sets the function that will be used to display the progress in case of
- * operations that can take some time (like file download). Typically, this
- * function will be called by the frontend after #gp_camera_new in order to
- * redirect progress information to the status bar.
- *
- * Return value: a gphoto2 error code
- **/
-int
-gp_camera_set_progress_func (Camera *camera, CameraProgressFunc func,
-			     void *data)
-{
-	CHECK_NULL (camera);
-
-	camera->pc->progress_func = func;
-	camera->pc->progress_data = data;
-
-	return (GP_OK);
-}
-
-/**
  * gp_camera_set_status_func:
  * @camera: a #Camera
  * @func: a #CameraStatusFunc
  * @data:
  *
  * Sets the function that will be used to display status messages. Status
- * messages are displayed before operations that can take some time, often
- * in combination with progress information. Typically, a frontend would 
+ * messages are displayed before operations that can take some time.
+ * Typically, a frontend would 
  * call this function after #gp_camera_new in order to redirect status 
  * messages to the status bar.
  *
@@ -648,35 +628,6 @@ gp_camera_message (Camera *camera, const char *format, ...)
 }
 
 /**
- * gp_camera_progress:
- * @camera: a #Camera:
- * @percentage: a percentage
- *
- * Informs frontends of the progress of an operation. Typically, this
- * function is used by camera drivers during operations that take some
- * time but that can be monitored.
- *
- * Return value: a gphoto2 error code
- **/
-int
-gp_camera_progress (Camera *camera, float percentage)
-{
-	CHECK_NULL (camera);
-
-	if ((percentage < 0.) || (percentage > 1.)) {
-		gp_camera_set_error (camera, _("Wrong percentage: %f"),
-				     percentage);
-		return (GP_ERROR_BAD_PARAMETERS);
-	}
-
-	if (camera->pc->progress_func)
-		camera->pc->progress_func (camera, percentage,
-					   camera->pc->progress_data);
-
-	return (GP_OK);
-}
-
-/**
  * gp_camera_ref:
  * @camera: a #Camera
  *
@@ -743,9 +694,12 @@ gp_camera_free (Camera *camera)
 
 	gp_log (GP_LOG_DEBUG, "gp-camera", "Freeing camera...");
 
-	/* If the camera is currently initialized, close the connection */
+	/*
+	 * If the camera is currently initialized, close the connection.
+	 * We don't care if we are successful or not.
+	 */
 	if (camera->port && camera->pc && camera->pc->lh)
-		gp_camera_exit (camera);
+		gp_camera_exit (camera, NULL);
 
 	/* We don't care if anything goes wrong */
 	if (camera->port) {
@@ -792,7 +746,7 @@ gp_camera_free (Camera *camera)
  * Return value: a gphoto2 error code
  **/
 int
-gp_camera_init (Camera *camera)
+gp_camera_init (Camera *camera, GPContext *context)
 {
         CameraList list;
 	CameraAbilities a;
@@ -803,12 +757,6 @@ gp_camera_init (Camera *camera)
 	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Initializing camera...");
 
 	CHECK_NULL (camera);
-
-	if (!strcmp (camera->pc->a.model, ""))
-		gp_camera_status (camera, _("Initializing camera..."));
-	else
-		gp_camera_status (camera, _("Initializing '%s'..."),
-				  camera->pc->a.model);
 
 	/*
 	 * Reset the exit_requested flag. If this flag is set, 
@@ -833,10 +781,10 @@ gp_camera_init (Camera *camera)
 
 		/* Call auto-detect and choose the first camera */
 		gp_abilities_list_new (&al);
-		gp_abilities_list_load (al);
+		gp_abilities_list_load (al, context);
 		gp_port_info_list_new (&il);
 		gp_port_info_list_load (il);
-		gp_abilities_list_detect (al, il, &list);
+		gp_abilities_list_detect (al, il, &list, context);
 		if (!gp_list_count (&list)) {
 			gp_abilities_list_free (al);
 			gp_port_info_list_free (il);
@@ -849,31 +797,29 @@ gp_camera_init (Camera *camera)
 		m = gp_abilities_list_lookup_model (al, model);
 		gp_abilities_list_get_abilities (al, m, &a);
 		gp_abilities_list_free (al);
-		CRS (camera, gp_camera_set_abilities (camera, a));
-		CRS (camera, gp_list_get_value (&list, 0, &port));
+		CRS (camera, gp_camera_set_abilities (camera, a), context);
+		CRS (camera, gp_list_get_value (&list, 0, &port), context);
 		p = gp_port_info_list_lookup_path (il, port);
 		gp_port_info_list_get_info (il, p, &info);
 		gp_port_info_list_free (il);
-		CRS (camera, gp_camera_set_port_info (camera, info));
+		CRS (camera, gp_camera_set_port_info (camera, info), context);
 	}
 
 	if (strcasecmp (camera->pc->a.model, "Directory Browse")) {
 		switch (camera->port->type) {
 		case GP_PORT_NONE:
-			gp_camera_set_error (camera, _("You have to set the "
-				"port prior initialization of the camera"));
-			gp_camera_status (camera, "");
+			gp_context_error (context, _("You have to set the "
+				"port prior initialization of the camera."));
 			return (GP_ERROR_UNKNOWN_PORT);
 		case GP_PORT_USB:
 			if (gp_port_usb_find_device (camera->port,
 					camera->pc->a.usb_vendor,
-					camera->pc->a.usb_product)!=GP_OK)
-					{
+					camera->pc->a.usb_product) != GP_OK) {
 				CRS (camera, gp_port_usb_find_device_by_class
 					(camera->port,
 					camera->pc->a.usb_class,
 					camera->pc->a.usb_subclass,
-					camera->pc->a.usb_protocol));
+					camera->pc->a.usb_protocol), context);
 					}
 			break;
 		default:
@@ -890,7 +836,8 @@ gp_camera_init (Camera *camera)
 	camera->pc->lh = GP_SYSTEM_DLOPEN (camera->pc->a.library);
 #endif
 	if (!camera->pc->lh) {
-		gp_camera_status (camera, "");
+		gp_context_error (context, _("Could not load required "
+			"camera driver '%s'."), camera->pc->a.library);
 		return (GP_ERROR_LIBRARY);
 	}
 
@@ -907,7 +854,9 @@ gp_camera_init (Camera *camera)
 		GP_SYSTEM_DLCLOSE (camera->pc->lh);
 #endif
 		camera->pc->lh = NULL;
-		gp_camera_status (camera, "");
+		gp_context_error (context, _("Camera driver '%s' is "
+			"missing the 'camera_init' function."), 
+			camera->pc->a.library);
 		return (GP_ERROR_LIBRARY);
 	}
 
@@ -920,12 +869,11 @@ gp_camera_init (Camera *camera)
 			GP_SYSTEM_DLCLOSE (camera->pc->lh);
 #endif
 			camera->pc->lh = NULL;
-			gp_camera_status (camera, "");
 			return (result);
 		}
 	}
 
-	result = init_func (camera);
+	result = init_func (camera, context);
 	if (result < 0) {
 		gp_port_close (camera->port);
 #ifdef HAVE_LTDL
@@ -935,7 +883,6 @@ gp_camera_init (Camera *camera)
 #endif
 		camera->pc->lh = NULL;
 		memset (camera->functions, 0, sizeof (CameraFunctions));
-		gp_camera_status (camera, "");
 		return (result);
 	}
 
@@ -944,7 +891,6 @@ gp_camera_init (Camera *camera)
 	gp_port_close (camera->port);
 #endif
 
-	gp_camera_status (camera, "");
 	return (GP_OK);
 }
 
@@ -959,24 +905,22 @@ gp_camera_init (Camera *camera)
  * Return value: a gphoto2 error code
  **/
 int
-gp_camera_get_config (Camera *camera, CameraWidget **window)
+gp_camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 {
 	CHECK_NULL (camera);
-	CHECK_INIT (camera);
+	CHECK_INIT (camera, context);
 
 	if (!camera->functions->get_config) {
-		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("This camera does "
-			"not offer any configuration options"));
-		CAMERA_UNUSED (camera);
+		gp_context_error (context, _("This camera does "
+			"not offer any configuration options."));
+		CAMERA_UNUSED (camera, context);
                 return (GP_ERROR_NOT_SUPPORTED);
 	}
 
-	gp_camera_status (camera, _("Getting configuration..."));
-	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->get_config (camera,
-								   window));
-	gp_camera_status (camera, "");
+	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->get_config (
+					camera, window, context), context);
 
-	CAMERA_UNUSED (camera);
+	CAMERA_UNUSED (camera, context);
 	return (GP_OK);
 }
 
@@ -992,24 +936,22 @@ gp_camera_get_config (Camera *camera, CameraWidget **window)
  * Return value: a gphoto2 error code
  **/
 int
-gp_camera_set_config (Camera *camera, CameraWidget *window)
+gp_camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 {
 	CHECK_NULL (camera && window);
-	CHECK_INIT (camera);
+	CHECK_INIT (camera, context);
 
 	if (!camera->functions->set_config) {
-		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("This camera does "
-			"not support setting configuration options"));
-		CAMERA_UNUSED (camera);
+		gp_context_error (context, _("This camera does "
+			"not support setting configuration options."));
+		CAMERA_UNUSED (camera, context);
                 return (GP_ERROR_NOT_SUPPORTED);
 	}
 
-	gp_camera_status (camera, _("Setting configuration..."));
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->set_config (camera,
-								   window));
-	gp_camera_status (camera, "");
+						window, context), context);
 
-	CAMERA_UNUSED (camera);
+	CAMERA_UNUSED (camera, context);
 	return (GP_OK);
 }
 
@@ -1025,24 +967,22 @@ gp_camera_set_config (Camera *camera, CameraWidget *window)
  * Return value: a gphoto2 error code
  **/
 int
-gp_camera_get_summary (Camera *camera, CameraText *summary)
+gp_camera_get_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
 	CHECK_NULL (camera && summary);
-	CHECK_INIT (camera);
+	CHECK_INIT (camera, context);
 
 	if (!camera->functions->summary) {
-		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("This camera does "
-			"not support summaries"));
-		CAMERA_UNUSED (camera);
+		gp_context_error (context, _("This camera does "
+				  "not support summaries."));
+		CAMERA_UNUSED (camera, context);
                 return (GP_ERROR_NOT_SUPPORTED);
 	}
 
-	gp_camera_status (camera, _("Getting summary..."));
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->summary (camera,
-								summary));
-	gp_camera_status (camera, "");
+						summary, context), context);
 
-	CAMERA_UNUSED (camera);
+	CAMERA_UNUSED (camera, context);
 	return (GP_OK);
 }
 
@@ -1057,22 +997,22 @@ gp_camera_get_summary (Camera *camera, CameraText *summary)
  * Return value: a gphoto2 error code
  **/
 int
-gp_camera_get_manual (Camera *camera, CameraText *manual)
+gp_camera_get_manual (Camera *camera, CameraText *manual, GPContext *context)
 {
 	CHECK_NULL (camera && manual);
-	CHECK_INIT (camera);
+	CHECK_INIT (camera, context);
 
 	if (!camera->functions->manual) {
-		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("This camera "
-			"does not offer a manual"));
-		CAMERA_UNUSED (camera);
+		gp_context_error (context, _("This camera "
+			"does not offer a manual."));
+		CAMERA_UNUSED (camera, context);
                 return (GP_ERROR_NOT_SUPPORTED);
 	}
 
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->manual (camera,
-								    manual));
+						manual, context), context);
 
-	CAMERA_UNUSED (camera);
+	CAMERA_UNUSED (camera, context);
 	return (GP_OK);
 }
 
@@ -1087,22 +1027,22 @@ gp_camera_get_manual (Camera *camera, CameraText *manual)
  * Return value: a gphoto2 error code
  **/
 int
-gp_camera_get_about (Camera *camera, CameraText *about)
+gp_camera_get_about (Camera *camera, CameraText *about, GPContext *context)
 {
 	CHECK_NULL (camera && about);
-	CHECK_INIT (camera);
+	CHECK_INIT (camera, context);
 
 	if (!camera->functions->about) {
-		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("This camera does "
-			"not provide information about the driver"));
-		CAMERA_UNUSED (camera);
+		gp_context_error (context, _("This camera does "
+			"not provide information about the driver."));
+		CAMERA_UNUSED (camera, context);
                 return (GP_ERROR_NOT_SUPPORTED);
 	}
 
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->about (camera,
-								   about));
+						about, context), context);
 
-	CAMERA_UNUSED (camera);
+	CAMERA_UNUSED (camera, context);
 	return (GP_OK);
 }
 
@@ -1120,25 +1060,21 @@ gp_camera_get_about (Camera *camera, CameraText *about)
  **/
 int
 gp_camera_capture (Camera *camera, CameraCaptureType type,
-		   CameraFilePath *path)
+		   CameraFilePath *path, GPContext *context)
 {
 	CHECK_NULL (camera && path);
-	CHECK_INIT (camera);
+	CHECK_INIT (camera, context);
 
 	if (!camera->functions->capture) {
-		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("This camera can "
-			"not capture"));
-		CAMERA_UNUSED (camera);
+		gp_context_error (context, _("This camera can not capture."));
+		CAMERA_UNUSED (camera, context);
                 return (GP_ERROR_NOT_SUPPORTED);
 	}
 
-	gp_camera_status (camera, "Capturing image...");
-	CHECK_RESULT_OPEN_CLOSE (camera,
-		camera->functions->capture (camera, type, path, context));
-	gp_camera_status (camera, "");
-	gp_camera_progress (camera, 0.0);
+	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->capture (camera,
+						type, path, context), context);
 
-	CAMERA_UNUSED (camera);
+	CAMERA_UNUSED (camera, context);
 	return (GP_OK);
 }
 
@@ -1154,27 +1090,24 @@ gp_camera_capture (Camera *camera, CameraCaptureType type,
  * Return value: a gphoto2 error code
  **/
 int
-gp_camera_capture_preview (Camera *camera, CameraFile *file)
+gp_camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 {
 	CHECK_NULL (camera && file);
-	CHECK_INIT (camera);
+	CHECK_INIT (camera, context);
 
-	CR (camera, gp_file_clean (file));
+	CR (camera, gp_file_clean (file), context);
 
 	if (!camera->functions->capture_preview) {
-		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("This camera can "
-			"not capture previews"));
-		CAMERA_UNUSED (camera);
+		gp_context_error (context, _("This camera can "
+			"not capture previews."));
+		CAMERA_UNUSED (camera, context);
                 return (GP_ERROR_NOT_SUPPORTED);
 	}
 
-	gp_camera_status (camera, "Capturing preview...");
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->capture_preview (
-								camera, file));
-	gp_camera_status (camera, "");
-	gp_camera_progress (camera, 0.0);
+					camera, file, context), context);
 
-	CAMERA_UNUSED (camera);
+	CAMERA_UNUSED (camera, context);
 	return (GP_OK);
 }
 
@@ -1190,22 +1123,20 @@ gp_camera_capture_preview (Camera *camera, CameraFile *file)
  **/
 int
 gp_camera_folder_list_files (Camera *camera, const char *folder, 
-			     CameraList *list)
+			     CameraList *list, GPContext *context)
 {
 	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Listing files in '%s'...",
 		folder);
 
 	CHECK_NULL (camera && folder && list);
-	CHECK_INIT (camera);
-	CR (camera, gp_list_reset (list));
+	CHECK_INIT (camera, context);
+	CR (camera, gp_list_reset (list), context);
 
-	gp_camera_status (camera, _("Listing files in '%s'..."), folder);
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_list_files (camera->fs,
-							folder, list, context));
-	gp_camera_status (camera, "");
+					folder, list, context), context);
 
-	CR (camera, gp_list_sort (list));
-	CAMERA_UNUSED (camera);
+	CR (camera, gp_list_sort (list), context);
+	CAMERA_UNUSED (camera, context);
         return (GP_OK);
 }
 
@@ -1221,22 +1152,20 @@ gp_camera_folder_list_files (Camera *camera, const char *folder,
  **/
 int
 gp_camera_folder_list_folders (Camera *camera, const char* folder, 
-			       CameraList *list)
+			       CameraList *list, GPContext *context)
 {
 	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Listing folders in '%s'...",
 		folder);
 
 	CHECK_NULL (camera && folder && list);
-	CHECK_INIT (camera);
-	CR (camera, gp_list_reset (list));
+	CHECK_INIT (camera, context);
+	CR (camera, gp_list_reset (list), context);
 
-	gp_camera_status (camera, _("Listing folders in '%s'..."), folder);
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_list_folders (
-					camera->fs, folder, list, context));
-	gp_camera_status (camera, "");
+				camera->fs, folder, list, context), context);
 
-	CR (camera, gp_list_sort (list));
-	CAMERA_UNUSED (camera);
+	CR (camera, gp_list_sort (list), context);
+	CAMERA_UNUSED (camera, context);
         return (GP_OK);
 }
 
@@ -1250,20 +1179,19 @@ gp_camera_folder_list_folders (Camera *camera, const char* folder,
  * Return value: a gphoto2 error code
  **/
 int
-gp_camera_folder_delete_all (Camera *camera, const char *folder)
+gp_camera_folder_delete_all (Camera *camera, const char *folder,
+			     GPContext *context)
 {
 	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Deleting all files in "
 		"'%s'...", folder);
 
 	CHECK_NULL (camera && folder);
-	CHECK_INIT (camera);
+	CHECK_INIT (camera, context);
 
-	gp_camera_status (camera, _("Deleting all files in '%s'..."), folder);
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_delete_all (camera->fs,
-							folder, context));
-	gp_camera_status (camera, "");
+						folder, context), context);
 
-	CAMERA_UNUSED (camera);
+	CAMERA_UNUSED (camera, context);
 	return (GP_OK);
 }
 
@@ -1278,20 +1206,19 @@ gp_camera_folder_delete_all (Camera *camera, const char *folder)
  * Return value: a gphoto2 error code
  **/
 int
-gp_camera_folder_put_file (Camera *camera, const char *folder, CameraFile *file)
+gp_camera_folder_put_file (Camera *camera, const char *folder,
+			   CameraFile *file, GPContext *context)
 {
 	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Uploading file into '%s'...",
 		folder);
 
 	CHECK_NULL (camera && folder && file);
-	CHECK_INIT (camera);
+	CHECK_INIT (camera, context);
 
-	gp_camera_status (camera, _("Uploading file into '%s'..."), folder);
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_put_file (camera->fs,
-						folder, file, context));
-	gp_camera_status (camera, "");
+					folder, file, context), context);
 
-	CAMERA_UNUSED (camera);
+	CAMERA_UNUSED (camera, context);
 	return (GP_OK);
 }
 
@@ -1308,7 +1235,8 @@ gp_camera_folder_put_file (Camera *camera, const char *folder, CameraFile *file)
  **/
 int
 gp_camera_file_get_info (Camera *camera, const char *folder, 
-			 const char *file, CameraFileInfo *info)
+			 const char *file, CameraFileInfo *info,
+			 GPContext *context)
 {
 	int result = GP_OK;
 	const char *mime_type;
@@ -1320,22 +1248,17 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 		"in '%s'...", file, folder);
 
 	CHECK_NULL (camera && folder && file && info);
-	CHECK_INIT (camera);
+	CHECK_INIT (camera, context);
 
 	memset (info, 0, sizeof (CameraFileInfo));
 
 	/* Check first if the camera driver supports the filesystem */
-	CHECK_OPEN (camera);
-	gp_camera_status (camera, _("Getting info for '%s' in folder '%s'..."),
-			  file, folder);
+	CHECK_OPEN (camera, context);
 	result = gp_filesystem_get_info (camera->fs, folder, file, info,
 					 context);
-	gp_camera_status (camera, "");
-	gp_camera_progress (camera, 0.0);
-	CHECK_CLOSE (camera);
+	CHECK_CLOSE (camera, context);
 	if (result != GP_ERROR_NOT_SUPPORTED) {
-		gp_camera_status (camera, "");
-		CAMERA_UNUSED (camera);
+		CAMERA_UNUSED (camera, context);
 		return (result);
 	}
 
@@ -1349,9 +1272,9 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 
 	/* Get the preview */
 	info->preview.fields = GP_FILE_INFO_NONE;
-	CRS (camera, gp_file_new (&cfile));
-	if (gp_camera_file_get (camera, folder, file,
-				GP_FILE_TYPE_PREVIEW, cfile)== GP_OK) {
+	CRS (camera, gp_file_new (&cfile), context);
+	if (gp_camera_file_get (camera, folder, file, GP_FILE_TYPE_PREVIEW,
+						cfile, context) == GP_OK) {
 		info->preview.fields |= GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
 		gp_file_get_data_and_size (cfile, &data, &size);
 		info->preview.size = size;
@@ -1360,15 +1283,13 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 			 sizeof (info->preview.type));
 	}
 	gp_file_unref (cfile);
-	gp_camera_status (camera, "");
-	gp_camera_progress (camera, 0.0);
 
 	/* We don't trust the camera libraries */
 	info->file.fields |= GP_FILE_INFO_NAME;
 	strncpy (info->file.name, file, sizeof (info->file.name));
 	info->preview.fields &= ~GP_FILE_INFO_NAME;
 
-	CAMERA_UNUSED (camera);
+	CAMERA_UNUSED (camera, context);
 	return (GP_OK);
 }
 
@@ -1385,15 +1306,16 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
  **/
 int
 gp_camera_file_set_info (Camera *camera, const char *folder, 
-			 const char *file, CameraFileInfo info)
+			 const char *file, CameraFileInfo info,
+			 GPContext *context)
 {
 	CHECK_NULL (camera && folder && file);
-	CHECK_INIT (camera);
+	CHECK_INIT (camera, context);
 
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_set_info (camera->fs,
-						folder, file, info, context));
+					folder, file, info, context), context);
 
-	CAMERA_UNUSED (camera);
+	CAMERA_UNUSED (camera, context);
 	return (GP_OK);
 }
 
@@ -1411,34 +1333,31 @@ gp_camera_file_set_info (Camera *camera, const char *folder,
  **/
 int 
 gp_camera_file_get (Camera *camera, const char *folder, const char *file,
-		    CameraFileType type, CameraFile *camera_file)
+		    CameraFileType type, CameraFile *camera_file,
+		    GPContext *context)
 {
 	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Getting file '%s' in "
 		"folder '%s'...", file, folder);
 
 	CHECK_NULL (camera && folder && file && camera_file);
-	CHECK_INIT (camera);
+	CHECK_INIT (camera, context);
 
-	CR (camera, gp_file_clean (camera_file));
+	CR (camera, gp_file_clean (camera_file), context);
 
 	/* Did we get reasonable foldername/filename? */
 	if (strlen (folder) == 0) {
-		CAMERA_UNUSED (camera);
+		CAMERA_UNUSED (camera, context);
 		return (GP_ERROR_DIRECTORY_NOT_FOUND);
 	}
 	if (strlen (file) == 0) {
-		CAMERA_UNUSED (camera);
+		CAMERA_UNUSED (camera, context);
 		return (GP_ERROR_FILE_NOT_FOUND);
 	}
   
-	gp_camera_status (camera, _("Getting '%s' from folder '%s'..."),
-			  file, folder);
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_get_file (camera->fs,
-				folder, file, type, camera_file, context));
-	gp_camera_status (camera, "");
-	gp_camera_progress (camera, 0.0);
+			folder, file, type, camera_file, context), context);
 
-	CAMERA_UNUSED (camera);
+	CAMERA_UNUSED (camera, context);
 	return (GP_OK);
 }
 
@@ -1453,21 +1372,19 @@ gp_camera_file_get (Camera *camera, const char *folder, const char *file,
  * Return value: a gphoto2 error code
  **/
 int
-gp_camera_file_delete (Camera *camera, const char *folder, const char *file)
+gp_camera_file_delete (Camera *camera, const char *folder, const char *file,
+		       GPContext *context)
 {
 	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Deleting file '%s' in "
 		"folder '%s'...", file, folder);
 
 	CHECK_NULL (camera && folder && file);
-	CHECK_INIT (camera);
+	CHECK_INIT (camera, context);
 
-	gp_camera_status (camera, _("Deleting '%s' from folder '%s'..."),
-			  file, folder);
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_delete_file (
-					camera->fs, folder, file, context));
-	gp_camera_status (camera, "");
+				camera->fs, folder, file, context), context);
 
-	CAMERA_UNUSED (camera);
+	CAMERA_UNUSED (camera, context);
 	return (GP_OK);
 }
 
@@ -1483,18 +1400,15 @@ gp_camera_file_delete (Camera *camera, const char *folder, const char *file)
  **/
 int
 gp_camera_folder_make_dir (Camera *camera, const char *folder,
-			   const char *name)
+			   const char *name, GPContext *context)
 {
 	CHECK_NULL (camera && folder && name);
-	CHECK_INIT (camera);
+	CHECK_INIT (camera, context);
 
-	gp_camera_status (camera, _("Creating folder '%s' in folder '%s'..."),
-			  name, folder);
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_make_dir (camera->fs,
-						folder, name, context));
-	gp_camera_status (camera, "");
+					folder, name, context), context);
 
-	CAMERA_UNUSED (camera);
+	CAMERA_UNUSED (camera, context);
 	return (GP_OK);
 }
 
@@ -1510,18 +1424,15 @@ gp_camera_folder_make_dir (Camera *camera, const char *folder,
  **/
 int
 gp_camera_folder_remove_dir (Camera *camera, const char *folder,
-			     const char *name)
+			     const char *name, GPContext *context)
 {
 	CHECK_NULL (camera && folder && name);
-	CHECK_INIT (camera);
+	CHECK_INIT (camera, context);
 
-	gp_camera_status (camera, _("Removing folder '%s' from folder '%s'..."),
-			  name, folder);
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_remove_dir (camera->fs,
-						folder, name, context));
-	gp_camera_status (camera, "");
+					folder, name, context), context);
 
-	CAMERA_UNUSED (camera);
+	CAMERA_UNUSED (camera, context);
 	return (GP_OK);
 }
 
@@ -1592,3 +1503,11 @@ gp_camera_get_error (Camera *camera)
 	return (N_("No error description available"));
 }
 
+int gp_camera_progress (Camera *camera, float percentage);
+int
+gp_camera_progress (Camera *camera, float percentage)
+{
+	gp_log (GP_LOG_DEBUG, "camera", "gp_camera_progress is deprecated. "
+		"Please use gp_context_progress_update. Thank you!");
+	return (GP_OK);
+}

@@ -73,13 +73,6 @@ int gp_file_get_data_and_size (CameraFile*, const char **data, long int *size);
 
 int gp_file_copy           (CameraFile *destination, CameraFile *source);
 
-/* Progress reporting */
-typedef int (* CameraFileProgressFunc)
-			      (CameraFile *file, float percentage, void *data);
-int gp_file_set_progress_func (CameraFile *file, CameraFileProgressFunc func,
-			       void *data);
-int gp_file_progress          (CameraFile *file, float percentage);
-
 /* Conversion */
 
 /*
