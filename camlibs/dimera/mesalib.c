@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2000, Brian Beattie <beattie@aracnet.com>
+* Copyright (C) 2000-2001, Brian Beattie <beattie@aracnet.com>, et. al.
 *
 *	This software was created with the help of proprietary
 *      information belonging to StarDot Technologies
@@ -138,8 +138,7 @@ mesa_send_command( gp_port *port, u_int8_t *cmd, int n, int ackTimeout )
 {
 	u_int8_t	c;
 
-	if ( gp_port_write( port, cmd, n ) != GP_OK )
-		return GP_ERROR_IO;
+	CHECK (gp_port_write( port, cmd, n ));
 
 	if ( mesa_read( port, &c, 1, ackTimeout, 0 ) != 1 )
 	{
@@ -159,7 +158,6 @@ int
 mesa_port_open( gp_port *port, char const *device )
 {
 	gp_port_settings settings;
-	int ret;
 
 	debuglog("mesa_port_open()");
 	gp_port_timeout_set(port, 5000);
@@ -170,12 +168,7 @@ mesa_port_open( gp_port *port, char const *device )
 	settings.serial.parity  = 0;
 	settings.serial.stopbits= 1;
 
-	if ((ret = gp_port_settings_set(port, settings)) != GP_OK) {
-		debuglog("mesa_port_open(): error selecting port settings");
-		return ret;
-	}
-
-	return GP_OK;
+	return gp_port_settings_set(port, settings);
 }
 
 /* Close the serial port (now done by gphoto2 itself) */
@@ -239,10 +232,7 @@ mesa_set_speed( gp_port *port, int speed )
 	default:
 		return GP_ERROR_BAD_PARAMETERS;
 	}
-	if ( mesa_send_command( port, b, sizeof( b ), 10 ) != GP_OK )
-	{
-		return GP_ERROR;
-	}
+	CHECK (mesa_send_command( port, b, sizeof( b ), 10 ));
 
 	gp_port_settings_get(port, &settings);
 	settings.serial.speed = speed;
@@ -260,16 +250,12 @@ mesa_version( gp_port *port, char *version_string)
 
 	b = MESA_VERSION;
 
-	if ( mesa_send_command( port, &b, 1, 10 ) != GP_OK )
-	{
-		return GP_ERROR;
-	}
+	CHECK (mesa_send_command( port, &b, 1, 10 ));
 
 	if ( ( i = mesa_read( port, r, sizeof( r ), 10, 0 ) ) != sizeof( r ) )
 	{
 		return GP_ERROR_TIMEOUT;
 	}
-
 
 	gp_debug_printf(GP_DEBUG_LOW, "dimera", 
 	 "mesa_version: %02x:%02x:%02x\n", r[0], r[1], r[2] );
@@ -288,10 +274,7 @@ mesa_transmit_test( gp_port *port )
 
 	b = XMIT_TEST;
 
-	if ( mesa_send_command( port, &b, 1, 10 ) != GP_OK )
-	{
-		return GP_ERROR;
-	}
+	CHECK (mesa_send_command( port, &b, 1, 10 ));
 
 	if ( mesa_read( port, r, sizeof( r ), 10, 0 ) != sizeof( r ) )
 	{
@@ -315,10 +298,7 @@ mesa_ram_test( gp_port *port )
 
 	b = RAM_TEST;
 
-	if ( mesa_send_command( port, &b, 1, 100 ) != GP_OK )
-	{
-		return GP_ERROR;
-	}
+	CHECK (mesa_send_command( port, &b, 1, 100 ));
 
 	if ( mesa_read( port, &r, 1, 10, 0 ) != 1 )
 	{
@@ -381,10 +361,7 @@ mesa_read_row( gp_port *port, u_int8_t *r, struct mesa_image_arg *s )	/*GDB*/
 	b[7] = s->repeat;						/*GDB*/
 	b[8] = s->repeat>>8;						/*GDB*/
 
-	if ( mesa_send_command( port, b, sizeof( b ), 10 ) != GP_OK )
-	{
-		return GP_ERROR;
-	}
+	CHECK (mesa_send_command( port, b, sizeof( b ), 10 ));
 
 /*	return ( mesa_read( port, r, n, 10, 0 ));			  GDB*/
 	if ( mesa_read( port, r, bytes, 10, 0 ) != bytes )		/*GDB*/
@@ -429,7 +406,7 @@ mesa_snap_image( gp_port *port, u_int16_t exposure )
 	b[0] = SNAP_IMAGE;
 	b[1] = exposure;
 	b[2] = exposure >> 8;
-	return ( mesa_send_command( port, b, sizeof( b ), timeout ) );
+	return mesa_send_command( port, b, sizeof( b ), timeout );
 }
 
 /* return black levels, overwrites image memory */
@@ -440,12 +417,9 @@ mesa_black_levels( gp_port *port, u_int8_t r[2] )
 
 	b = SND_BLACK;
 
-	if ( mesa_send_command( port, &b, 1, 10 ) != GP_OK )
-	{
-		return GP_ERROR;
-	}
+	CHECK (mesa_send_command( port, &b, 1, 10 ));
 
-	return ( mesa_read( port, r, 2, 10, 0 ) );
+	return mesa_read( port, r, 2, 10, 0 );
 }
 
 /*
@@ -519,10 +493,7 @@ mesa_snap_view( gp_port *port, u_int8_t *r, unsigned int hi_res,
 	b[5] = exposure >> 8;
 	b[6] = download;
 
-	if ( mesa_send_command( port, b, sizeof( b ), timeout ) != GP_OK )
-	{
-		return GP_ERROR;
-	}
+	CHECK (mesa_send_command( port, b, sizeof( b ), timeout ));
 
 	if ( bytes != 0 )
 	{
@@ -561,7 +532,7 @@ mesa_set_stopbits( gp_port *port, unsigned int bits )
 	b[0] = XTRA_STP_BIT;
 	b[1] = bits;
 
-	return ( mesa_send_command( port, b, sizeof( b ), 10 ) );
+	return mesa_send_command( port, b, sizeof( b ), 10 );
 }
 
 /* download viewfinder image ( see mesa_snap_view ) */
@@ -598,10 +569,7 @@ mesa_download_view( gp_port *port, u_int8_t *r, u_int8_t download )
 	b[0] = SND_VIEW;
 	b[1] = download;
 
-	if ( mesa_send_command( port, b, sizeof( b ), 10 ) != GP_OK )
-	{
-		return GP_ERROR;
-	}
+	CHECK (mesa_send_command( port, b, sizeof( b ), 10 ));
 
 	if ( bytes != 0 )
 	{
@@ -644,7 +612,7 @@ mesa_snap_picture( gp_port *port, u_int16_t exposure )
 	b[1] = exposure;
 	b[2] = exposure>>8;
 
-	return ( mesa_send_command( port, b, sizeof( b ), timeout ) );
+	return mesa_send_command( port, b, sizeof( b ), timeout );
 }
 
 /* Get the camera chipset identification */
@@ -655,10 +623,7 @@ mesa_send_id( gp_port *port, struct mesa_id *id )
 
 	b = SND_ID;
 
-	if ( mesa_send_command( port, &b, 1, 10 ) != GP_OK )
-	{
-		return GP_ERROR;
-	}
+	CHECK (mesa_send_command( port, &b, 1, 10 ));
 
 	if ( mesa_read( port, r, sizeof( r ), 10, 0 ) != sizeof( r ) )
 	{
@@ -690,8 +655,7 @@ mesa_modem_check( gp_port *port )
 	b[1] = 'T';
 	b[2] = '\r';
 
-	if ( gp_port_write( port, b, sizeof( b ) ) != GP_OK )
-		return GP_ERROR_IO;
+	CHECK (gp_port_write( port, b, sizeof( b ) ));
 
 	/* Expect at least one byte */
 	if ( mesa_read( port, b, 1, 5, 0 ) < 1 )
@@ -750,10 +714,7 @@ mesa_read_image( gp_port *port, u_int8_t *r, struct mesa_image_arg *s )
 	b[12] = s->inc3;
 	b[13] = s->inc4;
 
-	if ( mesa_send_command( port, b, sizeof( b ), 10 ) != GP_OK )
-	{
-		return GP_ERROR;
-	}
+	CHECK (mesa_send_command( port, b, sizeof( b ), 10 ));
 
 	if ( mesa_read( port, r, bytes, 10, 0 ) != bytes )
 	{
@@ -795,10 +756,7 @@ mesa_recv_test( gp_port *port, u_int8_t r[6] )
 	b[0] = RCV_TEST;
 	memcpy( &b[1], r, 6 );
 
-	if ( mesa_send_command( port, b, sizeof( b ), 10 ) != GP_OK )
-	{
-		return GP_ERROR;
-	}
+	CHECK (mesa_send_command( port, b, sizeof( b ), 10 ));
 
 	if ( mesa_read( port, r, 6, 10, 0 ) != 6 )
 	{
@@ -820,10 +778,7 @@ mesa_get_image_count( gp_port *port )
 
 	b = IMAGE_CNT;
 
-	if ( mesa_send_command( port, &b, 1, 10 ) != GP_OK )
-	{
-		return GP_ERROR;
-	}
+	CHECK (mesa_send_command( port, &b, 1, 10 ));
 
 	if ( mesa_read( port, r, sizeof( r ), 10, 0 ) != sizeof( r ) )
 	{
@@ -843,7 +798,7 @@ mesa_load_image( gp_port *port, int image )
 	b[1] = image;
 	b[2] = image >> 8;
 
-	return ( mesa_send_command( port, b, sizeof( b ), 1000 ) );
+	return mesa_send_command( port, b, sizeof( b ), 1000 );
 }
 
 /*
@@ -857,12 +812,9 @@ mesa_eeprom_info( gp_port *port, int long_read, u_int8_t info[MESA_EEPROM_SZ] )
 
 	b = EEPROM_INFO;
 
-	if ( mesa_send_command( port, &b, 1, 10 ) != GP_OK )
-	{
-		return GP_ERROR;
-	}
+	CHECK (mesa_send_command( port, &b, 1, 10 ));
 
-	return ( mesa_read( port, info, long_read ? 49 : 33, 10, 0 ) );
+	return mesa_read( port, info, long_read ? 49 : 33, 10, 0 );
 }
 
 /*
@@ -880,10 +832,7 @@ mesa_read_thumbnail( gp_port *port, int picture, u_int8_t *image )
 	b[1] = picture&255;
 	b[2] = (picture>>8)&255;
 
-	if ( mesa_send_command( port, b, sizeof( b ), 10 ) != GP_OK )
-	{
-		return GP_ERROR;
-	}
+	CHECK (mesa_send_command( port, b, sizeof( b ), 10 ));
 
 	if ( mesa_read( port, b, 3, 10, 0 ) != 3 )
 	{
@@ -924,10 +873,7 @@ mesa_read_features( gp_port *port, struct mesa_feature *f )
 
 	b = FEATURES;
 
-	if ( mesa_send_command( port, &b, 1, 10 ) != GP_OK )
-	{
-		return GP_ERROR;
-	}
+	CHECK (mesa_send_command( port, &b, 1, 10 ));
 
 	return ( mesa_read( port, (u_int8_t *)f, sizeof( *f ), 10, 0 ) );
 }
@@ -937,15 +883,15 @@ int
 mesa_battery_check( gp_port *port )
 {
 	struct mesa_feature	f;
-	int			l, r;
+	int			l, r, rc;
 
-	if ( mesa_read_features( port, &f ) != sizeof( f ))
+	if ( (rc = mesa_read_features( port, &f )) != sizeof( f ))
 	{
-		return GP_ERROR;
+		return rc;
 	}
 
 	if ( (f.feature_bits_hi & BAT_VALID) == 0 )
-		return GP_ERROR;
+		return GP_ERROR_MODEL_NOT_FOUND;
 
 	/* (df) Does BAT_DIGITAL need to be checked here? */
 
@@ -968,10 +914,7 @@ mesa_read_image_info( gp_port *port, int i, struct mesa_image_info *info )
 	b[1] = i & 255;
 	b[2] = (i >> 8)&255;
 
-	if ( mesa_send_command( port, b, sizeof( b ), 10 ) != GP_OK )
-	{
-		return GP_ERROR;
-	}
+	CHECK (mesa_send_command( port, b, sizeof( b ), 10 ));
 
 	if ( mesa_read( port, r, sizeof( r ), 10, 0 ) != sizeof( r ) )
 	{
