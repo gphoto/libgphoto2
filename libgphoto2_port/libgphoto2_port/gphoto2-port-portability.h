@@ -62,9 +62,9 @@ typedef struct {
 #define GP_SYSTEM_DLOPEN(_filename)		dlopen(_filename, RTLD_LAZY)
 #if defined(__APPLE__) || defined(__OpenBSD__)
 	/* Darwin and OpenBSD prepend underscores to symbols */
-	#define GP_SYSTEM_DLSYM(_handle, _funcname)	dlsym(_handle, "_" _funcname)
+#define GP_SYSTEM_DLSYM(_handle, _funcname)	dlsym(_handle, "_" _funcname)
 #else
-	#define GP_SYSTEM_DLSYM(_handle, _funcname)	dlsym(_handle, _funcname)
+#define GP_SYSTEM_DLSYM(_handle, _funcname)	dlsym(_handle, _funcname)
 #endif
 #define GP_SYSTEM_DLCLOSE(_handle)	        dlclose(_handle)
 #define GP_SYSTEM_DLERROR()		        dlerror()
