@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <gphoto2.h>
+#include "library.h"
 #include "lowlevel.h"
 #include "konica.h"
 
@@ -17,85 +18,70 @@
 /**************/
 /* Prototypes */
 /**************/
-k_return_status_t K_RETURN_STATUS (l_return_status_t l_return_status);
-
-
-k_return_status_t return_status_translation (guchar byte1, guchar byte2);
+gint GP_RESULT (guchar byte1, guchar byte2);
 
 
 /*************/
 /* Functions */
 /*************/
-k_return_status_t K_RETURN_STATUS (l_return_status_t l_return_status)
-{
-	switch (l_return_status) {
-	case L_IO_ERROR:
-		return (K_L_IO_ERROR);
-	case L_TRANSMISSION_ERROR:
-		return (K_L_TRANSMISSION_ERROR);
-	default:
-		return (K_SUCCESS);
-	}
-}
-
-
-k_return_status_t return_status_translation (guchar byte1, guchar byte2)
+gint 
+GP_RESULT (guchar byte1, guchar byte2)
 {
 	gchar buffer[1024];
 
 	switch ((byte2 << 8 ) | byte1) {
 	case 0x0000:
-		return (K_SUCCESS);
+		return (GP_OK);
 	case 0x0101:
-		return (K_ERROR_FOCUSING_ERROR);
+		return (KONICA_ERROR_FOCUSING_ERROR);
 	case 0x0102:
-		return (K_ERROR_IRIS_ERROR);
+		return (KONICA_ERROR_IRIS_ERROR);
 	case 0x0201:
-		return (K_ERROR_STROBE_ERROR);
+		return (KONICA_ERROR_STROBE_ERROR);
 	case 0x0203:
-		return (K_ERROR_EEPROM_CHECKSUM_ERROR);
+		return (KONICA_ERROR_EEPROM_CHECKSUM_ERROR);
 	case 0x0205:
-		return (K_ERROR_INTERNAL_ERROR1);
+		return (KONICA_ERROR_INTERNAL_ERROR1);
 	case 0x0206:
-		return (K_ERROR_INTERNAL_ERROR2);
+		return (KONICA_ERROR_INTERNAL_ERROR2);
 	case 0x0301:
-		return (K_ERROR_NO_CARD_PRESENT);
+		return (KONICA_ERROR_NO_CARD_PRESENT);
 	case 0x0311:
-		return (K_ERROR_CARD_NOT_SUPPORTED);
+		return (KONICA_ERROR_CARD_NOT_SUPPORTED);
 	case 0x0321:
-		return (K_ERROR_CARD_REMOVED_DURING_ACCESS);
+		return (KONICA_ERROR_CARD_REMOVED_DURING_ACCESS);
 	case 0x0340:
-		return (K_ERROR_IMAGE_NUMBER_NOT_VALID);
+		return (KONICA_ERROR_IMAGE_NUMBER_NOT_VALID);
 	case 0x0341:
-		return (K_ERROR_CARD_CAN_NOT_BE_WRITTEN);
+		return (KONICA_ERROR_CARD_CAN_NOT_BE_WRITTEN);
 	case 0x0381:
-		return (K_ERROR_CARD_IS_WRITE_PROTECTED);
+		return (KONICA_ERROR_CARD_IS_WRITE_PROTECTED);
 	case 0x0382:
-		return (K_ERROR_NO_SPACE_LEFT_ON_CARD);
+		return (KONICA_ERROR_NO_SPACE_LEFT_ON_CARD);
 	case 0x0390:
-		return (K_ERROR_NO_PICTURE_ERASED_AS_IMAGE_PROTECTED);
+		return (KONICA_ERROR_NO_IMAGE_ERASED_AS_IMAGE_PROTECTED);
 	case 0x0401:
-		return (K_ERROR_LIGHT_TOO_DARK);
+		return (KONICA_ERROR_LIGHT_TOO_DARK);
 	case 0x0402:
-		return (K_ERROR_AUTOFOCUS_ERROR);
+		return (KONICA_ERROR_AUTOFOCUS_ERROR);
 	case 0x0501:
-		return (K_ERROR_SYSTEM_ERROR);
+		return (KONICA_ERROR_SYSTEM_ERROR);
 	case 0x0800:
-		return (K_ERROR_ILLEGAL_PARAMETER);
+		return (KONICA_ERROR_ILLEGAL_PARAMETER);
 	case 0x0801:
-		return (K_ERROR_COMMAND_CANNOT_BE_CANCELLED);
+		return (KONICA_ERROR_COMMAND_CANNOT_BE_CANCELLED);
 	case 0x0b00:
-		return (K_ERROR_LOCALIZATION_DATA_EXCESS);
+		return (KONICA_ERROR_LOCALIZATION_DATA_EXCESS);
 	case 0x0bff:
-		return (K_ERROR_LOCALIZATION_DATA_CORRUPT);
+		return (KONICA_ERROR_LOCALIZATION_DATA_CORRUPT);
 	case 0x0c01:
-		return (K_ERROR_UNSUPPORTED_COMMAND);
+		return (KONICA_ERROR_UNSUPPORTED_COMMAND);
 	case 0x0c02:
-		return (K_ERROR_OTHER_COMMAND_EXECUTING);
+		return (KONICA_ERROR_OTHER_COMMAND_EXECUTING);
 	case 0x0c03:
-		return (K_ERROR_COMMAND_ORDER_ERROR);
+		return (KONICA_ERROR_COMMAND_ORDER_ERROR);
 	case 0x0fff:
-		return (K_ERROR_UNKNOWN_ERROR);
+		return (KONICA_ERROR_UNKNOWN_ERROR);
 	default:
 		sprintf (
 			buffer, 
@@ -109,24 +95,27 @@ k_return_status_t return_status_translation (guchar byte1, guchar byte2)
 			byte1,
 			byte2);
 		gp_frontend_message (NULL, buffer);
-		return (K_PROGRAM_ERROR);
+		return (GP_ERROR);
 	}
 }
 
 
-k_return_status_t k_init (gpio_device *device)
+gint 
+k_init (gpio_device* device)
 {
-	return (K_RETURN_STATUS (l_init (device)));
+	return (l_init (device));
 }
 
 
-k_return_status_t k_exit (gpio_device *device) 
+gint 
+k_exit (gpio_device* device) 
 {
-	return (K_RETURN_STATUS (l_exit (device)));
+	return (l_exit (device));
 }
 
 
-k_return_status_t k_erase_image (gpio_device *device, gboolean image_id_long, gulong image_id)
+gint 
+k_erase_image (gpio_device* device, gboolean image_id_long, gulong image_id)
 {
 	/************************************************/
 	/* Command to erase one image.		 	*/
@@ -152,35 +141,29 @@ k_return_status_t k_erase_image (gpio_device *device, gboolean image_id_long, gu
 	/************************************************/
 	guchar sb[] = {0x00, 0x80, 0x00, 0x00, 0x02, 
 		       0x00, 0x00, 0x00, 0x00, 0x00};
-	l_return_status_t l_return_status;
-	k_return_status_t k_return_status;
-	guchar *rb = NULL;
-	guint rbs;
+	gint	result;
+	guchar*	rb = NULL;
+	guint 	rbs;
 
-        g_return_val_if_fail (device != NULL, K_PROGRAM_ERROR); 
 	if (!image_id_long) {
 		sb[6] = image_id;
 		sb[7] = image_id >> 8;
-		l_return_status = l_send_receive (device, sb, 8, &rb, &rbs);
+		result = l_send_receive (device, sb, 8, &rb, &rbs);
 	} else {
 		sb[6] = image_id >> 16;
 		sb[7] = image_id >> 24;
 		sb[8] = image_id;
 		sb[9] = image_id >> 8;
-		l_return_status = l_send_receive (device, sb, 10, &rb, &rbs);
+		result = l_send_receive (device, sb, 10, &rb, &rbs);
 	}
-	if (l_return_status != L_SUCCESS) {
-		g_free (rb); 
-		return K_RETURN_STATUS (l_return_status);
-	} else {
-		k_return_status = return_status_translation (rb[2], rb[3]);
-		g_free (rb);
-		return k_return_status;
-	}
+	if (result == GP_OK) result = GP_RESULT (rb [2], rb [3]);
+	g_free (rb); 
+	return (result);
 }
 
 
-k_return_status_t k_format_memory_card (gpio_device *device)
+gint 
+k_format_memory_card (gpio_device* device)
 {
 	/************************************************/
 	/* Command to format the memory card.		*/
@@ -200,25 +183,19 @@ k_return_status_t k_format_memory_card (gpio_device *device)
 	/* 0xXX: Byte 0 of return status		*/
 	/* 0xXX: Byte 1 of return status		*/
 	/************************************************/
-	guchar sb[] = {0x10, 0x80, 0x00, 0x00, 0x02, 0x00}; 
-	l_return_status_t l_return_status;
-	k_return_status_t k_return_status;
-	guchar *rb = NULL;
-	guint rbs;
+	guchar 	sb[] = {0x10, 0x80, 0x00, 0x00, 0x02, 0x00}; 
+	gint 	result;
+	guchar*	rb = NULL;
+	guint 	rbs;
 
-	l_return_status = l_send_receive (device, sb, 6, &rb, &rbs);
-	if (l_return_status != L_SUCCESS) {
-		g_free (rb); 
-		return K_RETURN_STATUS (l_return_status);
-	} else {
-		k_return_status = return_status_translation (rb[2], rb[3]);
-		g_free (rb);
-		return k_return_status;
-	}
+	result = l_send_receive (device, sb, 6, &rb, &rbs);
+	if (result == GP_OK) result = GP_RESULT (rb[2], rb[3]);
+	g_free (rb); 
+	return (result);
 }
 
 
-k_return_status_t k_erase_all (gpio_device *device, guint *number_of_images_not_erased)
+gint k_erase_all (gpio_device* device, guint* number_of_images_not_erased)
 {
 	/************************************************/
 	/* Command to erase all images in the camera, 	*/
@@ -242,30 +219,24 @@ k_return_status_t k_erase_all (gpio_device *device, guint *number_of_images_not_
 	/* 0xXX: Byte 0 of number of images not erased	*/
 	/* 0xXX: Byte 1 of number of images not erased	*/
 	/************************************************/
-	unsigned char sb[] = {0x20, 0x80, 0x00, 0x00, 0x02, 0x00}; 
-	l_return_status_t l_return_status;
-	k_return_status_t k_return_status;
-	guchar *rb = NULL;
-	guint rbs;
+	guchar 	sb[] = {0x20, 0x80, 0x00, 0x00, 0x02, 0x00}; 
+	gint 	result;
+	guchar*	rb = NULL;
+	guint 	rbs;
 	
-        g_return_val_if_fail (device != NULL, K_PROGRAM_ERROR); 
-	g_return_val_if_fail (number_of_images_not_erased != NULL, K_PROGRAM_ERROR);
+	g_return_val_if_fail (number_of_images_not_erased, GP_ERROR_BAD_PARAMETERS);
 
-	l_return_status = l_send_receive (device, sb, 6, &rb, &rbs);
-	if (l_return_status != L_SUCCESS) {
-		g_free (rb);
-		return K_RETURN_STATUS (l_return_status);
-	} else {
-		k_return_status = return_status_translation (rb[2], rb[3]);
-		if (k_return_status == K_SUCCESS) 
-			*number_of_images_not_erased = (rb[5] << 8) | rb[4];
-		g_free (rb);
-		return k_return_status;
+	result = l_send_receive (device, sb, 6, &rb, &rbs);
+	if (result == GP_OK) {
+		result = GP_RESULT (rb[2], rb[3]);
+		if (result == GP_OK) *number_of_images_not_erased = (rb[5] << 8) | rb[4];
 	}
+	g_free (rb);
+	return (result);
 }
 
 
-k_return_status_t k_set_protect_status (gpio_device *device, gboolean image_id_long, gulong image_id, gboolean protected)
+gint k_set_protect_status (gpio_device *device, gboolean image_id_long, gulong image_id, gboolean protected)
 {
 	/************************************************/
 	/* Command to set the protect status of one 	*/
@@ -294,45 +265,39 @@ k_return_status_t k_set_protect_status (gpio_device *device, gboolean image_id_l
 	/* 0xXX: Byte 0 of return status		*/
 	/* 0xXX: Byte 1 of return status		*/
 	/************************************************/
-	guchar sb[] = {0x30, 0x80, 0x00, 0x00, 0x02, 0x00, 
+	guchar 	sb[] = {0x30, 0x80, 0x00, 0x00, 0x02, 0x00, 
 		       0x00, 0x00, 0x00, 0x00, 0x00, 0x00}; 
-	l_return_status_t l_return_status;
-	k_return_status_t k_return_status;
-	guchar *rb = NULL;
-	guint rbs;
+	gint 	result;
+	guchar*	rb = NULL;
+	guint 	rbs;
 
-        g_return_val_if_fail (device != NULL, K_PROGRAM_ERROR); 
 	if (!image_id_long) {
 		if (protected) sb[8] = 0x01;
 		sb[6] = image_id;
 		sb[7] = image_id >> 8;
-		l_return_status = l_send_receive (device, sb, 10, &rb, &rbs);
+		result = l_send_receive (device, sb, 10, &rb, &rbs);
 	} else {
 		if (protected) sb[10] = 0x01;
 		sb[6] = image_id >> 16;
 		sb[7] = image_id >> 24;
 		sb[8] = image_id;
 		sb[9] = image_id >> 8;
-		l_return_status = l_send_receive (device, sb, 12, &rb, &rbs);
+		result = l_send_receive (device, sb, 12, &rb, &rbs);
 	}
-	if (l_return_status != L_SUCCESS) {
-		g_free (rb); 
-		return K_RETURN_STATUS (l_return_status);
-	} else {
-		k_return_status = return_status_translation (rb[2], rb[3]);
-		g_free (rb);
-		return k_return_status;
-	}
+	if (result == GP_OK) result = GP_RESULT (rb [2], rb [3]);
+	g_free (rb); 
+	return (result);
 }
 
 
-k_return_status_t k_get_image (
-	gpio_device *device, 
-	gboolean image_id_long,
-	gulong image_id, 
-	k_image_type_t image_type, 
-	guchar **image_buffer, 
-	guint *image_buffer_size)
+gint 
+k_get_image (
+	gpio_device*	device, 
+	gboolean 	image_id_long,
+	gulong 		image_id, 
+	k_image_type_t 	image_type, 
+	guchar**	image_buffer, 
+	guint*		image_buffer_size)
 {
 	/************************************************/
 	/* Commands to get an image from the camera.	*/
@@ -367,15 +332,13 @@ k_return_status_t k_get_image (
 	/************************************************/
 	guchar sb[] = {0x00, 0x88, 0x00, 0x00, 0x02, 
 		       0x00, 0x00, 0x00, 0x00, 0x00};
-	l_return_status_t l_return_status;
-	k_return_status_t k_return_status;
+	gint result;
 	guchar *rb = NULL;
 	guint rbs;
 
-        g_return_val_if_fail (device != NULL, K_PROGRAM_ERROR); 
-	g_return_val_if_fail (image_buffer != NULL, K_PROGRAM_ERROR);
-	g_return_val_if_fail (*image_buffer == NULL, K_PROGRAM_ERROR);
-	g_return_val_if_fail (image_buffer_size != NULL, K_PROGRAM_ERROR);
+	g_return_val_if_fail (image_buffer, 		GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (!*image_buffer, 		GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (image_buffer_size, 	GP_ERROR_BAD_PARAMETERS);
 
         switch (image_type) {
 	case K_THUMBNAIL:
@@ -391,34 +354,30 @@ k_return_status_t k_get_image (
 	if (!image_id_long) {
 		sb[6] = image_id;
 		sb[7] = image_id >> 8;
-		l_return_status = l_send_receive_receive (device, sb, 8, image_buffer, image_buffer_size, &rb, &rbs, 2000);
+		result = l_send_receive_receive (device, sb, 8, image_buffer, image_buffer_size, &rb, &rbs, 5000);
 	} else {
 		sb[6] = image_id >> 16;
 		sb[7] = image_id >> 24;
 		sb[8] = image_id;
 		sb[9] = image_id >> 8;
-		l_return_status = l_send_receive_receive (device, sb, 10, image_buffer, image_buffer_size, &rb, &rbs, 2000);
+		result = l_send_receive_receive (device, sb, 10, image_buffer, image_buffer_size, &rb, &rbs, 5000);
 	}
-	if (l_return_status != L_SUCCESS) {
-		g_free (rb); 
-		return K_RETURN_STATUS (l_return_status);
-	} else {
-		k_return_status = return_status_translation (rb[2], rb[3]);
-		g_free (rb);
-		return (k_return_status);
-	}
+	if (result == GP_OK) result = GP_RESULT (rb[2], rb[3]);
+	g_free (rb); 
+	return (result);
 }
 
 
-k_return_status_t k_get_image_information (
-	gpio_device *device,
-	gboolean image_id_long,
-	gulong image_number,
-	gulong *image_id, 
-	guint *exif_size, 
-	gboolean *protected, 
-	guchar **information_buffer, 
-	guint *information_buffer_size)
+gint 
+k_get_image_information (
+	gpio_device* 	device,
+	gboolean 	image_id_long,
+	gulong 		image_number,
+	gulong*		image_id, 
+	guint*		exif_size, 
+	gboolean*	protected, 
+	guchar**	information_buffer, 
+	guint*		information_buffer_size)
 {
 	/************************************************/
 	/* Command to get the information about an 	*/
@@ -457,53 +416,52 @@ k_return_status_t k_get_image_information (
 	/*		0x01: protected			*/
 	/* 0x00: Byte 1 of protect status		*/
 	/************************************************/
-	guchar sb[] = {0x20, 0x88, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00};
-	l_return_status_t l_return_status;
-	k_return_status_t k_return_status;
-	guchar *rb = NULL;
-	guint rbs;
+	guchar 	sb[] = {0x20, 0x88, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00};
+	gint 	result;
+	guchar*	rb = NULL;
+	guint 	rbs;
 
-        g_return_val_if_fail (device != NULL, K_PROGRAM_ERROR); 
-	g_return_val_if_fail (image_id != NULL, K_PROGRAM_ERROR);
-	g_return_val_if_fail (exif_size != NULL, K_PROGRAM_ERROR); 
-	g_return_val_if_fail (protected != NULL, K_PROGRAM_ERROR);
-	g_return_val_if_fail (information_buffer != NULL, K_PROGRAM_ERROR);
-	g_return_val_if_fail (*information_buffer == NULL, K_PROGRAM_ERROR);
-	g_return_val_if_fail (information_buffer_size != NULL, K_PROGRAM_ERROR);
+	g_return_val_if_fail (image_id, 		GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (exif_size, 		GP_ERROR_BAD_PARAMETERS); 
+	g_return_val_if_fail (protected, 		GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (information_buffer, 	GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (!*information_buffer, 	GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (information_buffer_size, 	GP_ERROR_BAD_PARAMETERS);
 
         if (!image_id_long) {
 		sb[6] = image_number;
 		sb[7] = image_number >> 8;
-		l_return_status = l_send_receive_receive (device, sb, 8, information_buffer, information_buffer_size, &rb, &rbs, 1000);
-		if (l_return_status != L_SUCCESS) 
-			return K_RETURN_STATUS (l_return_status);
-		k_return_status = return_status_translation (rb[2], rb[3]);
-		if (k_return_status == K_SUCCESS) {
-			*image_id = (gulong) ((rb[5] << 8) | rb[4]);
-			*exif_size = (rb[7] << 8) | rb[6];
-			*protected = (rb[8] != 0x00);
+		result = l_send_receive_receive (device, sb, 8, information_buffer, information_buffer_size, &rb, &rbs, 1000);
+		if (result == GP_OK) {
+			result = GP_RESULT (rb[2], rb[3]);
+			if (result == GP_OK) {
+				*image_id = (gulong) ((rb[5] << 8) | rb[4]);
+				*exif_size = (rb[7] << 8) | rb[6];
+				*protected = (rb[8] != 0x00);
+			}
 		}
 	} else {
 		sb[6] = image_number >> 16;
 		sb[7] = image_number >> 24;
 		sb[8] = image_number;
 		sb[9] = image_number >> 8;
-		l_return_status = l_send_receive_receive (device, sb, 10, information_buffer, information_buffer_size, &rb, &rbs, 1000);
-		if (l_return_status != L_SUCCESS) 
-			return K_RETURN_STATUS (l_return_status);
-		k_return_status = return_status_translation (rb[2], rb[3]);
-		if (k_return_status == K_SUCCESS) {
-			*image_id = (rb[5] << 24) | (rb[4] << 16) | (rb[7] << 8) | rb[6];
-			*exif_size = (rb[9] << 8) | rb[8];
-			*protected = (rb[10] != 0x00);
+		result = l_send_receive_receive (device, sb, 10, information_buffer, information_buffer_size, &rb, &rbs, 1000);
+		if (result == GP_OK) {
+			result = GP_RESULT (rb[2], rb[3]);
+			if (result == GP_OK) {
+				*image_id = (rb[5] << 24) | (rb[4] << 16) | (rb[7] << 8) | rb[6];
+				*exif_size = (rb[9] << 8) | rb[8];
+				*protected = (rb[10] != 0x00);
+			}
 		}
 	}
 	g_free (rb);
-	return (k_return_status);
+	return (result);
 }
 
 
-k_return_status_t k_get_preview (gpio_device *device, gboolean thumbnail, guchar **image_buffer, guint *image_buffer_size)
+gint 
+k_get_preview (gpio_device* device, gboolean thumbnail, guchar** image_buffer, guint* image_buffer_size)
 {
 	/************************************************/
 	/* Command to get the preview from the camera.	*/
@@ -526,46 +484,40 @@ k_return_status_t k_get_preview (gpio_device *device, gboolean thumbnail, guchar
 	/* 0xXX: Byte 0 of return status		*/
 	/* 0xXX: Byte 1 of return status		*/
 	/************************************************/
-	guchar sb[] = {0x40, 0x88, 0x00, 0x00, 0x00, 0x00};
-	l_return_status_t l_return_status;
-	k_return_status_t k_return_status;
-	guchar *rb = NULL;
-	guint rbs;
+	guchar 	sb[] = {0x40, 0x88, 0x00, 0x00, 0x00, 0x00};
+	gint 	result;
+	guchar*	rb = NULL;
+	guint 	rbs;
 
-        g_return_val_if_fail (device != NULL, K_PROGRAM_ERROR); 
-        g_return_val_if_fail (image_buffer != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (*image_buffer == NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (image_buffer_size != NULL, K_PROGRAM_ERROR);
+        g_return_val_if_fail (image_buffer, 		GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (!*image_buffer, 		GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (image_buffer_size, 	GP_ERROR_BAD_PARAMETERS);
+	
 	if (thumbnail) sb[4] = 0x01;
-	l_return_status = l_send_receive_receive (device, sb, 6, image_buffer, image_buffer_size, &rb, &rbs, 5000);
-	if (l_return_status != L_SUCCESS) {
-		g_free (rb); 
-		return K_RETURN_STATUS (l_return_status);
-	} else {
-		k_return_status = return_status_translation (rb[2], rb[3]);
-		g_free (rb);
-		return k_return_status;
-	}
+	result = l_send_receive_receive (device, sb, 6, image_buffer, image_buffer_size, &rb, &rbs, 5000);
+	if (result == GP_OK) result = GP_RESULT (rb[2], rb[3]);
+	g_free (rb); 
+	return (result);
 }
 
 
-k_return_status_t k_get_io_capability (
-	gpio_device *device,
-	gboolean *bit_rate_300,
-	gboolean *bit_rate_600,
-	gboolean *bit_rate_1200,
-	gboolean *bit_rate_2400,
-	gboolean *bit_rate_4800,
-	gboolean *bit_rate_9600,
-	gboolean *bit_rate_19200,
-	gboolean *bit_rate_38400,
-	gboolean *bit_rate_57600,
-	gboolean *bit_rate_115200, 
-	gboolean *bit_flag_8_bits,
-	gboolean *bit_flag_stop_2_bits,
-	gboolean *bit_flag_parity_on,
-	gboolean *bit_flag_parity_odd,
-	gboolean *bit_flag_hw_flow_control)
+gint k_get_io_capability (
+	gpio_device* 	device,
+	gboolean* 	bit_rate_300,
+	gboolean* 	bit_rate_600,
+	gboolean* 	bit_rate_1200,
+	gboolean* 	bit_rate_2400,
+	gboolean* 	bit_rate_4800,
+	gboolean* 	bit_rate_9600,
+	gboolean* 	bit_rate_19200,
+	gboolean* 	bit_rate_38400,
+	gboolean* 	bit_rate_57600,
+	gboolean* 	bit_rate_115200, 
+	gboolean* 	bit_flag_8_bits,
+	gboolean* 	bit_flag_stop_2_bits,
+	gboolean* 	bit_flag_parity_on,
+	gboolean* 	bit_flag_parity_odd,
+	gboolean* 	bit_flag_hw_flow_control)
 {
 	/************************************************/
 	/* Command to get the IO capability from the 	*/
@@ -587,35 +539,31 @@ k_return_status_t k_get_io_capability (
 	/* 0xXX: Byte 0 of supported flags		*/
 	/* 0xXX: Byte 1 of supported flags		*/
 	/************************************************/
-	guchar sb[] = {0x00, 0x90, 0x00, 0x00};
-	l_return_status_t l_return_status;
-	k_return_status_t k_return_status;
-	guchar *rb = NULL;
-	guint rbs;
+	guchar 	sb[] = {0x00, 0x90, 0x00, 0x00};
+	gint 	result;
+	guchar* rb = NULL;
+	guint 	rbs;
 
-        g_return_val_if_fail (device != NULL, K_PROGRAM_ERROR); 
-	g_return_val_if_fail (bit_rate_300 != NULL, K_PROGRAM_ERROR);
-	g_return_val_if_fail (bit_rate_600 != NULL, K_PROGRAM_ERROR);
-	g_return_val_if_fail (bit_rate_1200 != NULL, K_PROGRAM_ERROR);
-	g_return_val_if_fail (bit_rate_2400 != NULL, K_PROGRAM_ERROR);
-	g_return_val_if_fail (bit_rate_4800 != NULL, K_PROGRAM_ERROR);
-	g_return_val_if_fail (bit_rate_9600 != NULL, K_PROGRAM_ERROR);
-	g_return_val_if_fail (bit_rate_19200 != NULL, K_PROGRAM_ERROR);
-	g_return_val_if_fail (bit_rate_38400 != NULL, K_PROGRAM_ERROR);
-	g_return_val_if_fail (bit_rate_57600 != NULL, K_PROGRAM_ERROR);
-	g_return_val_if_fail (bit_rate_115200 != NULL, K_PROGRAM_ERROR);
-	g_return_val_if_fail (bit_flag_8_bits != NULL, K_PROGRAM_ERROR);
-	g_return_val_if_fail (bit_flag_stop_2_bits != NULL, K_PROGRAM_ERROR);
-	g_return_val_if_fail (bit_flag_parity_on != NULL, K_PROGRAM_ERROR);
-	g_return_val_if_fail (bit_flag_parity_odd != NULL, K_PROGRAM_ERROR);
-	g_return_val_if_fail (bit_flag_hw_flow_control != NULL, K_PROGRAM_ERROR);
-	l_return_status = (l_send_receive (device, sb, 4, &rb, &rbs));
-	if (l_return_status != L_SUCCESS) {
-		g_free (rb);
-		return K_RETURN_STATUS (l_return_status);
-	} else {
-		k_return_status = return_status_translation (rb[2], rb[3]);
-		if (k_return_status == K_SUCCESS) {
+	g_return_val_if_fail (bit_rate_300, 		GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (bit_rate_600, 		GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (bit_rate_1200, 		GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (bit_rate_2400, 		GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (bit_rate_4800, 		GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (bit_rate_9600, 		GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (bit_rate_19200, 		GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (bit_rate_38400, 		GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (bit_rate_57600, 		GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (bit_rate_115200, 		GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (bit_flag_8_bits, 		GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (bit_flag_stop_2_bits, 	GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (bit_flag_parity_on, 	GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (bit_flag_parity_odd, 	GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (bit_flag_hw_flow_control, GP_ERROR_BAD_PARAMETERS);
+	
+	result = (l_send_receive (device, sb, 4, &rb, &rbs));
+	if (result == GP_OK) {
+		result = GP_RESULT (rb[2], rb[3]);
+		if (result == GP_OK) {
 			*bit_rate_300    = ((rb[4] ^ (1 << 0)) && ~rb[4]);
 			*bit_rate_600    = ((rb[4] ^ (1 << 1)) && ~rb[4]);
 			*bit_rate_1200   = ((rb[4] ^ (1 << 2)) && ~rb[4]);
@@ -632,24 +580,25 @@ k_return_status_t k_get_io_capability (
 			*bit_flag_parity_odd   = ((rb[6] ^ (1 << 3)) && ~rb[6]);
 			*bit_flag_hw_flow_control= ((rb[6] ^ (1 << 4)) && ~rb[6]);
 		}
-		g_free (rb);
-		return k_return_status;
 	}
+	g_free (rb);
+	return result;
 }
 
 
-k_return_status_t k_get_information (
-	gpio_device *device,
-	gchar **model, 
-	gchar **serial_number,
-	guchar *hardware_version_major, 
-	guchar *hardware_version_minor, 
-	guchar *software_version_major, 
-	guchar *software_version_minor,
-	guchar *testing_software_version_major,
-	guchar *testing_software_version_minor,
-	gchar **name,
-	gchar **manufacturer) 
+gint 
+k_get_information (
+	gpio_device* 	device,
+	gchar**		model, 
+	gchar**		serial_number,
+	guchar*		hardware_version_major, 
+	guchar*		hardware_version_minor, 
+	guchar*		software_version_major, 
+	guchar*		software_version_minor,
+	guchar*		testing_software_version_major,
+	guchar*		testing_software_version_minor,
+	gchar**		name,
+	gchar**		manufacturer) 
 {
 	/************************************************/
 	/* Command to get some information about the  	*/
@@ -747,35 +696,31 @@ k_return_status_t k_get_information (
 	/* 0xXX: Byte 28 of manufacturer		*/
 	/* 0xXX: Byte 29 of manufacturer		*/
 	/************************************************/
-	guchar sb[] = {0x10, 0x90, 0x00, 0x00};
-	guint i, j;
-	l_return_status_t l_return_status;
-	k_return_status_t k_return_status;
-	guchar *rb = NULL;
-	guint rbs;
+	guchar 	sb[] = {0x10, 0x90, 0x00, 0x00};
+	guint 	i, j;
+	gint 	result;
+	guchar*	rb = NULL;
+	guint 	rbs;
 
-        g_return_val_if_fail (device != NULL, K_PROGRAM_ERROR);
- 	g_return_val_if_fail (model != NULL, K_PROGRAM_ERROR);
-	g_return_val_if_fail (*model == NULL, K_PROGRAM_ERROR);
-	g_return_val_if_fail (serial_number != NULL, K_PROGRAM_ERROR);
-	g_return_val_if_fail (*serial_number == NULL, K_PROGRAM_ERROR);
-	g_return_val_if_fail (hardware_version_major != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (hardware_version_minor != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (software_version_major != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (software_version_minor != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (testing_software_version_major != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (testing_software_version_minor != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (name != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (*name == NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (manufacturer != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (*manufacturer == NULL, K_PROGRAM_ERROR);
-	l_return_status = l_send_receive (device, sb, 4, &rb, &rbs);
-	if (l_return_status != L_SUCCESS) {
-		g_free (rb);
-		return K_RETURN_STATUS (l_return_status);
-	} else {
-		k_return_status = return_status_translation (rb[2], rb[3]);
-		if (k_return_status == K_SUCCESS) {
+ 	g_return_val_if_fail (model, 				GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (!*model, 				GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (serial_number, 			GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (!*serial_number, 			GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (hardware_version_major, 		GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (hardware_version_minor, 		GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (software_version_major, 		GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (software_version_minor, 		GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (testing_software_version_major, 	GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (testing_software_version_minor, 	GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (name, 				GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (!*name, 				GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (manufacturer, 			GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (!*manufacturer, 			GP_ERROR_BAD_PARAMETERS);
+	
+	result = l_send_receive (device, sb, 4, &rb, &rbs);
+	if (result == GP_OK) {
+		result = GP_RESULT (rb[2], rb[3]);
+		if (result == GP_OK) {
 			/****************/
 			/* Model	*/
 			/****************/
@@ -811,36 +756,37 @@ k_return_status_t k_get_information (
 			*manufacturer = g_new0 (gchar, i + 1);
 			for (j = 0; j < i; j++) (*manufacturer)[j] = rb[50 + j];
 		}
-		g_free (rb);
-		return k_return_status;
 	}
+	g_free (rb);
+	return result;
 }
 
 
-k_return_status_t k_get_status (
-	gpio_device *device,
-	guint *self_test_result, 
-	k_power_level_t *power_level,
-	k_power_source_t *power_source,
-	k_card_status_t *card_status, 
-	k_display_t *display, 
-	guint *card_size,
-	guint *pictures, 
-	guint *pictures_left, 
-	guchar *year, 
-	guchar *month, 
-	guchar *day,
-	guchar *hour,
-	guchar *minute,
-	guchar *second,
-	guint *io_setting_bit_rate,
-	guint *io_setting_flags,
-	guchar *flash,
-	guchar *resolution,
-	guchar *focus,
-	guchar *exposure,
-	guint *total_pictures,
-	guint *total_strobes)
+gint 
+k_get_status (
+	gpio_device*		device,
+	guint*			self_test_result, 
+	k_power_level_t*	power_level,
+	k_power_source_t*	power_source,
+	k_card_status_t*	card_status, 
+	k_display_t*		display, 
+	guint*			card_size,
+	guint*			pictures, 
+	guint*			pictures_left, 
+	guchar*			year, 
+	guchar*			month, 
+	guchar*			day,
+	guchar*			hour,
+	guchar*			minute,
+	guchar*			second,
+	guint*			io_setting_bit_rate,
+	guint*			io_setting_flags,
+	guchar*			flash,
+	guchar*			resolution,
+	guchar*			focus,
+	guchar*			exposure,
+	guint*			total_pictures,
+	guint*			total_strobes)
 {
 	/************************************************/
 	/* Command to get the status of the camera.	*/
@@ -902,43 +848,38 @@ k_return_status_t k_get_status (
 	/* 0xXX: Byte 0 of total strobes		*/
 	/* 0xXX: Byte 1 of total strobes		*/
 	/************************************************/
-	guchar sb[] = {0x20, 0x90, 0x00, 0x00, 0x00, 0x00};
-	l_return_status_t l_return_status;
-	k_return_status_t k_return_status;
-	guchar *rb = NULL;
-	guint rbs;
+	guchar 	sb[] = {0x20, 0x90, 0x00, 0x00, 0x00, 0x00};
+	gint 	result;
+	guchar*	rb = NULL;
+	guint 	rbs;
 
-        g_return_val_if_fail (device != NULL, K_PROGRAM_ERROR); 
-	g_return_val_if_fail (self_test_result != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (power_level != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (power_source != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (card_status != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (display != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (card_size != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (pictures != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (pictures_left != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (year != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (month != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (day != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (hour != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (minute != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (second != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (io_setting_bit_rate != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (io_setting_flags != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (flash != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (resolution != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (focus != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (exposure != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (total_pictures != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (total_strobes != NULL, K_PROGRAM_ERROR);
+	g_return_val_if_fail (self_test_result, 	GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (power_level, 		GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (power_source, 		GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (card_status, 		GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (display, 			GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (card_size, 		GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (pictures, 		GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (pictures_left, 		GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (year, 			GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (month, 			GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (day, 			GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (hour, 			GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (minute, 			GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (second, 			GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (io_setting_bit_rate, 	GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (io_setting_flags, 	GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (flash, 			GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (resolution, 		GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (focus, 			GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (exposure, 		GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (total_pictures, 		GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (total_strobes, 		GP_ERROR_BAD_PARAMETERS);
 
-	l_return_status = l_send_receive (device, sb, 6, &rb, &rbs);
-	if (l_return_status != L_SUCCESS) {
-		g_free (rb);
-		return K_RETURN_STATUS (l_return_status);
-	} else {
-		k_return_status = return_status_translation (rb[2], rb[3]);
-		if (k_return_status == K_SUCCESS) {
+	result = l_send_receive (device, sb, 6, &rb, &rbs);
+	if (result == GP_OK) {
+		result = GP_RESULT (rb[2], rb[3]);
+		if (result == GP_OK) {
 			*self_test_result	= (rb[5] << 8) | rb[4];
 			switch (rb[6]) {
 				case 0x00: 
@@ -1005,20 +946,21 @@ k_return_status_t k_get_status (
 			*total_pictures		= (rb[31] << 8) | rb[30];
 			*total_strobes		= (rb[33] << 8) | rb[32];
 		}
-		g_free (rb);
-		return (k_return_status);
 	}
+	g_free (rb);
+	return (result);
 }
 
 
-k_return_status_t k_get_date_and_time (
-	gpio_device *device,
-	guchar *year, 
-	guchar *month, 
-	guchar *day, 
-	guchar *hour, 
-	guchar *minute, 
-	guchar *second) 
+gint 
+k_get_date_and_time (
+	gpio_device*	device,
+	guchar*		year, 
+	guchar*		month, 
+	guchar*		day, 
+	guchar*		hour, 
+	guchar*		minute, 
+	guchar*		second) 
 {
 	/************************************************/
 	/* Command to get the date and time from the	*/
@@ -1042,27 +984,22 @@ k_return_status_t k_get_date_and_time (
 	/* 0xXX: Minute					*/
 	/* 0xXX: Second					*/
 	/************************************************/
-	guchar sb[] = {0x30, 0x90, 0x00, 0x00};
-	l_return_status_t l_return_status;
-	k_return_status_t k_return_status;
-	guchar *rb = NULL;
-	guint rbs;
+	guchar 	sb[] = {0x30, 0x90, 0x00, 0x00};
+	gint 	result;
+	guchar*	rb = NULL;
+	guint 	rbs;
 
-        g_return_val_if_fail (device != NULL, K_PROGRAM_ERROR); 
-        g_return_val_if_fail (year != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (month != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (day != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (hour != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (minute != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (second != NULL, K_PROGRAM_ERROR);
+        g_return_val_if_fail (year, 	GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (month, 	GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (day, 	GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (hour, 	GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (minute, 	GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (second, 	GP_ERROR_BAD_PARAMETERS);
 
-	l_return_status = l_send_receive (device, sb, 4, &rb, &rbs);
-	if (l_return_status != L_SUCCESS) {
-		g_free (rb); 
-		return K_RETURN_STATUS (l_return_status);
-	} else {
-		k_return_status = return_status_translation (rb[2], rb[3]);
-		if (k_return_status == K_SUCCESS) {
+	result = l_send_receive (device, sb, 4, &rb, &rbs);
+	if (result == GP_OK) {
+		result = GP_RESULT (rb[2], rb[3]);
+		if (result == GP_OK) {
 			*year	= rb[4];
 			*month	= rb[5];
 			*day	= rb[6];
@@ -1070,18 +1007,19 @@ k_return_status_t k_get_date_and_time (
 			*minute	= rb[8];
 			*second	= rb[9];
 		}
-		g_free (rb);
-		return (k_return_status);
 	}
+	g_free (rb);
+	return (result);
 };
 
 
-k_return_status_t k_get_preferences (
-	gpio_device *device,
-	guint *shutoff_time, 
-	guint *self_timer_time, 
-	guint *beep, 
-	guint *slide_show_interval) 
+gint 
+k_get_preferences (
+	gpio_device*	device,
+	guint*		shutoff_time, 
+	guint*		self_timer_time, 
+	guint*		beep, 
+	guint*		slide_show_interval) 
 {
 	/************************************************/
 	/* Command to get the preferences from the	*/
@@ -1107,43 +1045,40 @@ k_return_status_t k_get_preferences (
 	/* 0xXX: Byte 0 of slide show interval		*/
 	/* 0xXX: Byte 1 of slide show interval		*/
 	/************************************************/
-	unsigned char sb[] = {0x40, 0x90, 0x00, 0x00};
-	l_return_status_t l_return_status;
-	k_return_status_t k_return_status;
-	guchar *rb = NULL;
-	guint rbs;
+	guchar 	sb[] = {0x40, 0x90, 0x00, 0x00};
+	gint	result;
+	guchar*	rb = NULL;
+	guint 	rbs;
 
-        g_return_val_if_fail (device != NULL, K_PROGRAM_ERROR);
-       	g_return_val_if_fail (shutoff_time != NULL, K_PROGRAM_ERROR);
-	g_return_val_if_fail (self_timer_time != NULL, K_PROGRAM_ERROR);
-	g_return_val_if_fail (beep != NULL, K_PROGRAM_ERROR);
-	g_return_val_if_fail (slide_show_interval != NULL, K_PROGRAM_ERROR);
-	l_return_status = l_send_receive (device, sb, 4, &rb, &rbs);
-	if (l_return_status != L_SUCCESS) {
-		g_free (rb);
-		return K_RETURN_STATUS (l_return_status);
-	} else {
-		k_return_status = return_status_translation (rb[2], rb[3]);
-		if (k_return_status == K_SUCCESS) {
+       	g_return_val_if_fail (shutoff_time, 		GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (self_timer_time, 		GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (beep, 			GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (slide_show_interval, 	GP_ERROR_BAD_PARAMETERS);
+	
+	result = l_send_receive (device, sb, 4, &rb, &rbs);
+	if (result == GP_OK) {
+		result = GP_RESULT (rb[2], rb[3]);
+		if (result == GP_OK) {
 			*shutoff_time		= rb[4];
 			*self_timer_time	= rb[5];
 			*beep			= rb[6];
 			*slide_show_interval	= rb[7];
 		}
-		g_free (rb);
-		return k_return_status;
 	}
+	g_free (rb);
+	return (result);
 }
 
 
-k_return_status_t k_set_io_capability (
-	gpio_device *device,
-	guint bit_rate, 
-	gboolean bit_flag_7_or_8_bits,
-	gboolean bit_flag_stop_2_bits,
-	gboolean bit_flag_parity_on,
-	gboolean bit_flag_parity_odd,
-	gboolean bit_flag_use_hw_flow_control)
+gint 
+k_set_io_capability (
+	gpio_device*	device,
+	guint 		bit_rate, 
+	gboolean 	bit_flag_7_or_8_bits,
+	gboolean 	bit_flag_stop_2_bits,
+	gboolean 	bit_flag_parity_on,
+	gboolean 	bit_flag_parity_odd,
+	gboolean 	bit_flag_use_hw_flow_control)
 {
 	/************************************************/
 	/* Command to set the IO capability of the	*/
@@ -1164,13 +1099,11 @@ k_return_status_t k_set_io_capability (
 	/* 0xXX: Byte 0 of return status		*/
 	/* 0xXX: Byte 1 of return status		*/
 	/************************************************/
-	guchar sb[] = {0x80, 0x90, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-	l_return_status_t l_return_status;
-	k_return_status_t k_return_status;
-	guchar *rb = NULL;
-	guint rbs;
+	guchar 	sb[] = {0x80, 0x90, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+	gint 	result;
+	guchar*	rb = NULL;
+	guint 	rbs;
 	
-        g_return_val_if_fail (device != NULL, K_PROGRAM_ERROR);
 	switch (bit_rate) {
 		case 300:
 			sb[4] = (1 << 0);
@@ -1203,31 +1136,19 @@ k_return_status_t k_set_io_capability (
 			sb[5] = (1 << 1);
 			break;
 		default:
-			return (K_UNSUPPORTED_BITRATE);
+			return (GP_ERROR);
 			break;
 	}
-	sb[6] = (bit_flag_7_or_8_bits | (bit_flag_stop_2_bits << 1) | (bit_flag_parity_on << 2) | (bit_flag_parity_odd << 3) | 
-		(bit_flag_use_hw_flow_control << 4));
-	l_return_status = l_send_receive (device, sb, 8, &rb, &rbs);
-	if (l_return_status != L_SUCCESS) {
-		g_free (rb); 
-		return K_RETURN_STATUS (l_return_status);
-	} else {
-		k_return_status = return_status_translation (rb[2], rb[3]);
-		g_free (rb);
-		return k_return_status;
-	}
+	sb[6] = (bit_flag_7_or_8_bits | (bit_flag_stop_2_bits << 1) | (bit_flag_parity_on << 2) | (bit_flag_parity_odd << 3) | (bit_flag_use_hw_flow_control << 4));
+	result = l_send_receive (device, sb, 8, &rb, &rbs);
+	if (result == GP_OK) result = GP_RESULT (rb[2], rb[3]);
+	g_free (rb);
+	return (result);
 }
 
 
-k_return_status_t k_set_date_and_time (
-	gpio_device *device,
-	guchar year, 
-	guchar month, 
-	guchar day, 
-	guchar hour, 
-	guchar minute, 
-	guchar second)
+gint 
+k_set_date_and_time (gpio_device* device, guchar year, guchar month, guchar day, guchar hour, guchar minute, guchar second)
 {
 	/************************************************/
 	/* Command to set date and time of the camera.	*/
@@ -1249,12 +1170,10 @@ k_return_status_t k_set_date_and_time (
 	/* 0xXX: Byte 0 of return status		*/
 	/* 0xXX: Byte 1 of return status		*/
 	/************************************************/
-        guchar sb[] = {0xb0, 0x90, 0x00, 0x00, 0x00, 
-		       0x00, 0x00, 0x00, 0x00, 0x00};
-	l_return_status_t l_return_status;
-	k_return_status_t k_return_status;
-	guchar *rb = NULL;
-	guint rbs;
+        guchar 	sb[] = {0xb0, 0x90, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+	gint 	result;
+	guchar*	rb = NULL;
+	guint 	rbs;
 
         sb[4] = year;
         sb[5] = month;
@@ -1262,21 +1181,15 @@ k_return_status_t k_set_date_and_time (
         sb[7] = hour;
         sb[8] = minute;
         sb[9] = second;
-        l_return_status = l_send_receive (device, sb, 10, &rb, &rbs);
-	if (l_return_status != L_SUCCESS) {
-		g_free (rb); 
-		return K_RETURN_STATUS (l_return_status);
-	} else {
-		k_return_status = return_status_translation (rb[2], rb[3]);
-		g_free (rb);
-		return k_return_status;
-	}
+        result = l_send_receive (device, sb, 10, &rb, &rbs);
+	if (result == GP_OK) result = GP_RESULT (rb[2], rb[3]);
+	g_free (rb);
+	return (result);
 }
 
 
-k_return_status_t k_set_preference (
-	gpio_device *device,
-	k_preference_t preference, guint value)
+gint 
+k_set_preference (gpio_device* device, k_preference_t preference, guint value)
 {
 	/************************************************/
 	/* Command to set a preference of the camera.	*/
@@ -1294,13 +1207,11 @@ k_return_status_t k_set_preference (
 	/* 0xXX: Byte 0 of return status		*/
 	/* 0xXX: Byte 1 of return status		*/
 	/************************************************/
-        guchar sb[] = {0xc0, 0x90, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-	l_return_status_t l_return_status;
-	k_return_status_t k_return_status;
-	guchar *rb = NULL;
-	guint rbs;
+        guchar 	sb[] = {0xc0, 0x90, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+	gint 	result;
+	guchar*	rb = NULL;
+	guint 	rbs;
         
-        g_return_val_if_fail (device != NULL, K_PROGRAM_ERROR);
 	switch (preference) {
 		case K_PREFERENCE_RESOLUTION:
 			sb[4] = 0x00;
@@ -1336,19 +1247,15 @@ k_return_status_t k_set_preference (
 	}
         sb[6] = value;
         sb[7] = value >> 8;
-        l_return_status = l_send_receive (device, sb, 8, &rb, &rbs);
-	if (l_return_status != L_SUCCESS) {
-		g_free (rb); 
-		return K_RETURN_STATUS (l_return_status);
-	} else {
-		k_return_status = return_status_translation (rb[2], rb[3]);
-		g_free (rb);
-		return (k_return_status);
-	}
+        result = l_send_receive (device, sb, 8, &rb, &rbs);
+	if (result == GP_OK) result = GP_RESULT (rb[2], rb[3]);
+	g_free (rb);
+	return (result);
 }
 
 
-k_return_status_t k_reset_preferences (gpio_device *device)
+gint 
+k_reset_preferences (gpio_device* device)
 {
 	/************************************************/
 	/* Command to reset the preferences of the	*/
@@ -1365,33 +1272,27 @@ k_return_status_t k_reset_preferences (gpio_device *device)
 	/* 0xXX: Byte 0 of return status		*/
 	/* 0xXX: Byte 1 of return status		*/
 	/************************************************/
-        guchar sb[] = {0xc1, 0x90, 0x00, 0x00};
-	l_return_status_t l_return_status;
-	k_return_status_t k_return_status;
-	guchar *rb = NULL;
-	guint rbs;
+        guchar 	sb[] = {0xc1, 0x90, 0x00, 0x00};
+	gint 	result;
+	guchar*	rb = NULL;
+	guint 	rbs;
 
-	g_return_val_if_fail (device != NULL, K_PROGRAM_ERROR);
-        l_return_status = l_send_receive (device, sb, 4, &rb, &rbs);
-	if (l_return_status != L_SUCCESS) {
-		g_free (rb); 
-		return K_RETURN_STATUS (l_return_status);
-	} else {
-		k_return_status = return_status_translation (rb[2], rb[3]);
-		g_free (rb);
-		return (k_return_status);
-	}
+        result = l_send_receive (device, sb, 4, &rb, &rbs);
+	if (result == GP_OK) result = GP_RESULT (rb[2], rb[3]);
+	g_free (rb);
+	return (result);
 }
 
 
-k_return_status_t k_take_picture (
-	gpio_device *device,
-	gboolean image_id_long,
-	gulong *image_id, 
-	guint *exif_size, 
-	unsigned char **information_buffer, 
-	unsigned int *information_buffer_size, 
-	gboolean *protected)
+gint 
+k_take_picture (
+	gpio_device*	device,
+	gboolean 	image_id_long,
+	gulong*		image_id, 
+	guint*		exif_size, 
+	guchar**	information_buffer, 
+	guint*		information_buffer_size, 
+	gboolean*	protected)
 {
 	/************************************************/
 	/* Command to take a picture.			*/
@@ -1423,26 +1324,22 @@ k_return_status_t k_take_picture (
 	/*		0x01: protected			*/
 	/* 0x00: Byte 1 of protect status		*/
 	/************************************************/
-        guchar sb[] = {0x00, 0x91, 0x00, 0x00, 0x02, 0x00};
-	l_return_status_t l_return_status;
-	k_return_status_t k_return_status;
-	guchar *rb = NULL;
-	guint rbs;
+        guchar 	sb[] = {0x00, 0x91, 0x00, 0x00, 0x02, 0x00};
+	gint 	result;
+	guchar*	rb = NULL;
+	guint 	rbs;
 
-	g_return_val_if_fail (device != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (image_id != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (exif_size != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (protected != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (information_buffer != NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (*information_buffer == NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (information_buffer_size != NULL, K_PROGRAM_ERROR);
-	l_return_status = l_send_receive_receive (device, sb, 6, information_buffer, information_buffer_size, &rb, &rbs, 60000);
-	if (l_return_status != L_SUCCESS) {
-		g_free (rb);
-		return K_RETURN_STATUS (l_return_status);
-	} else {
-		k_return_status = return_status_translation (rb[2], rb[3]);
-		if (k_return_status == K_SUCCESS) {
+        g_return_val_if_fail (image_id, 		GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (exif_size, 		GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (protected, 		GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (information_buffer, 	GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (!*information_buffer, 	GP_ERROR_BAD_PARAMETERS);
+        g_return_val_if_fail (information_buffer_size, 	GP_ERROR_BAD_PARAMETERS);
+	
+	result = l_send_receive_receive (device, sb, 6, information_buffer, information_buffer_size, &rb, &rbs, 60000);
+	if (result == GP_OK) {
+		result = GP_RESULT (rb[2], rb[3]);
+		if (result == GP_OK) {
 			if (!image_id_long) {
 		                *image_id = 0x00 | 0x00 | (rb[5] << 8) | rb[4];
 		                *exif_size = (rb[7] << 8) | rb[6];
@@ -1453,13 +1350,14 @@ k_return_status_t k_take_picture (
 				*protected = (rb[10] != 0x00); 
 			}
 		}
-		g_free (rb);
-		return (k_return_status);
-        }
+	}
+	g_free (rb);
+	return (result);
 }
 
 
-k_return_status_t k_localization_tv_output_format_set (gpio_device *device, k_tv_output_format_t tv_output_format)
+gint 
+k_localization_tv_output_format_set (gpio_device* device, k_tv_output_format_t tv_output_format)
 {
         /************************************************/
         /* Command for various localization issues.     */
@@ -1488,13 +1386,11 @@ k_return_status_t k_localization_tv_output_format_set (gpio_device *device, k_tv
         /* 0xXX: Byte 0 of return status                */
         /* 0xXX: Byte 1 of return status                */
         /************************************************/
-        guchar sb[] = {0x00, 0x92, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00};
-        l_return_status_t l_return_status;
-        k_return_status_t k_return_status;
-        guchar *rb = NULL;
-        guint rbs;
+        guchar 	sb[] = {0x00, 0x92, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00};
+        gint 	result;
+        guchar*	rb = NULL;
+        guint 	rbs;
 
-        g_return_val_if_fail (device != NULL, K_PROGRAM_ERROR);
         switch (tv_output_format) {
         case K_TV_OUTPUT_FORMAT_NTSC:
                 sb[6] = 0x00;
@@ -1506,20 +1402,17 @@ k_return_status_t k_localization_tv_output_format_set (gpio_device *device, k_tv
                 sb[6] = 0x02;
                 break;
 	default: 
-		return (K_PROGRAM_ERROR);
+		return (GP_ERROR_BAD_PARAMETERS);
         }
-        l_return_status = l_send_receive (device, sb, 8, &rb, &rbs);
-        if (l_return_status != L_SUCCESS) {
-                g_free (rb);
-                return K_RETURN_STATUS (l_return_status);
-        }
-        k_return_status = return_status_translation (rb[2], rb[3]);
+        result = l_send_receive (device, sb, 8, &rb, &rbs);
+        if (result == GP_OK) result = GP_RESULT (rb[2], rb[3]);
         g_free (rb);
-        return (k_return_status);
+        return (result);
 }
 
 
-k_return_status_t k_localization_date_format_set (gpio_device *device, k_date_format_t date_format)
+gint 
+k_localization_date_format_set (gpio_device* device, k_date_format_t date_format)
 {
         /************************************************/
         /* Command for various localization issues.     */
@@ -1548,13 +1441,11 @@ k_return_status_t k_localization_date_format_set (gpio_device *device, k_date_fo
         /* 0xXX: Byte 0 of return status                */
         /* 0xXX: Byte 1 of return status                */
         /************************************************/
-        guchar sb[] = {0x00, 0x92, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00};
-        l_return_status_t l_return_status;
-        k_return_status_t k_return_status;
-        guchar *rb = NULL;
-        guint rbs;
+        guchar 	sb[] = {0x00, 0x92, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00};
+        gint 	result;
+        guchar*	rb = NULL;
+        guint 	rbs;
 
-        g_return_val_if_fail (device != NULL, K_PROGRAM_ERROR);
 	switch (date_format) {
 	case K_DATE_FORMAT_MONTH_DAY_YEAR:
 		sb[6] = 0x00;
@@ -1566,20 +1457,17 @@ k_return_status_t k_localization_date_format_set (gpio_device *device, k_date_fo
 		sb[6] = 0x02;
 		break;
 	default:
-		return (K_PROGRAM_ERROR);
+		return (GP_ERROR_BAD_PARAMETERS);
 	}
-        l_return_status = l_send_receive (device, sb, 8, &rb, &rbs);
-        if (l_return_status != L_SUCCESS) {
-                g_free (rb);
-                return K_RETURN_STATUS (l_return_status);
-        }
-        k_return_status = return_status_translation (rb[2], rb[3]);
+        result = l_send_receive (device, sb, 8, &rb, &rbs);
+        if (result == GP_OK) result = GP_RESULT (rb[2], rb[3]);
         g_free (rb);
-        return (k_return_status);
+        return (result);
 }
 
 
-k_return_status_t k_localization_data_put (gpio_device *device, guchar *data, gulong data_size)
+gint 
+k_localization_data_put (gpio_device* device, guchar* data, gulong data_size)
 {
 	/************************************************/
         /* Command for various localization issues.     */
@@ -1619,17 +1507,16 @@ k_return_status_t k_localization_data_put (gpio_device *device, guchar *data, gu
 	/* 0xXX: Byte 0 of return status		*/
 	/* 0xXX: Byte 1 of return status		*/
 	/************************************************/
-	l_return_status_t l_return_status;
-	k_return_status_t k_return_status;
-	guchar *rb = NULL;
-	guint rbs;
-	gulong i, j;
-	guint packet_size = 1024;
-	guchar sb[16 + packet_size];
+	gint 		result;
+	guchar*		rb = NULL;
+	guint 		rbs;
+	gulong 		i, j;
+	static guint 	packet_size = 1024;
+	guchar 		sb[16 + packet_size];
 
-	g_return_val_if_fail (device != NULL, K_PROGRAM_ERROR);
-	g_return_val_if_fail (data_size >= 512, K_PROGRAM_ERROR);
-	g_return_val_if_fail (data != NULL, K_PROGRAM_ERROR);
+	g_return_val_if_fail (data_size >= 512, GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (data, 		GP_ERROR_BAD_PARAMETERS);
+	
 	sb[0] = 0x00;
 	sb[1] = 0x92;
 	sb[2] = 0x00;
@@ -1667,31 +1554,28 @@ k_return_status_t k_localization_data_put (gpio_device *device, guchar *data, gu
 		/* camera reports K_ERROR_LOCALIZATION_DATA_CORRUPT.	*/
 		/********************************************************/
 		if (i + packet_size > 65536) sb[14] = 0x01;
-		l_return_status = l_send_receive (device, sb, packet_size + 16, &rb, &rbs);
-		if (l_return_status != L_SUCCESS) {
-			g_free (rb);
-			return (K_RETURN_STATUS (l_return_status));
-		}
-		k_return_status = return_status_translation (rb[2], rb[3]);
+		result = l_send_receive (device, sb, packet_size + 16, &rb, &rbs);
+		if (result == GP_OK) result = GP_RESULT (rb[2], rb[3]);
 		g_free (rb);
-		switch (k_return_status) {
-		case K_SUCCESS:
+		switch (result) {
+		case GP_OK:
 			/* Everything is fine. Continue sending packets. However, make sure we don't loop forever. */
-			if (i > 131072) return (K_PROGRAM_ERROR);
+			if (i > 131072) return (GP_ERROR_BAD_PARAMETERS);
 			break;
-		case K_ERROR_LOCALIZATION_DATA_EXCESS:
+		case KONICA_ERROR_LOCALIZATION_DATA_EXCESS:
 			/* The camera does no longer want to receive localization data. We are done. */
-			return (K_SUCCESS);
+			return (GP_OK);
 		default:
 			/* Something went wrong. */
-			return (k_return_status);
+			return (result);
 		}
 		i += packet_size;
 	}
 }
 
 
-k_return_status_t k_cancel (gpio_device *device, k_command_t *command)
+gint 
+k_cancel (gpio_device* device, k_command_t* command)
 {
 	/************************************************/
 	/* Command to cancel a command.			*/
@@ -1710,22 +1594,18 @@ k_return_status_t k_cancel (gpio_device *device, k_command_t *command)
 	/* 0xXX: Byte 0 of cancelled command		*/
 	/* 0xXX: Byte 1 of cancelled command		*/
 	/************************************************/
-        guchar sb[] = {0x00, 0x9e, 0x00, 0x00};
-	l_return_status_t l_return_status;
-	k_return_status_t k_return_status;
-	guchar *rb = NULL;
-	guint rbs;
+        guchar 	sb[] = {0x00, 0x9e, 0x00, 0x00};
+	gint 	result;
+	guchar*	rb = NULL;
+	guint 	rbs;
 
-        g_return_val_if_fail (device != NULL, K_PROGRAM_ERROR); 
-	g_return_val_if_fail (command != NULL, K_PROGRAM_ERROR);
-        l_return_status = l_send_receive (device, sb, 4, &rb, &rbs);
-	if (l_return_status != L_SUCCESS) {
-		g_free (rb);
-		return K_RETURN_STATUS (l_return_status);
-	} else {
-		k_return_status = return_status_translation (rb[2], rb[3]);
-		if (k_return_status == K_SUCCESS) 
-			*command = (rb[5] << 8) | rb[4];
-		return (k_return_status);
+	g_return_val_if_fail (command, GP_ERROR_BAD_PARAMETERS);
+	
+        result = l_send_receive (device, sb, 4, &rb, &rbs);
+	if (result == GP_OK) {
+		result = GP_RESULT (rb[2], rb[3]);
+		if (result == GP_OK) *command = (rb[5] << 8) | rb[4];
 	}
+	g_free (rb);
+	return (result);
 }

@@ -17,7 +17,7 @@
 /***************/
 /* Definitions */
 /***************/
-#define DEFAULT_TIMEOUT	200
+#define DEFAULT_TIMEOUT	1000
 #define STX	0x02	/****************/
 #define ETX	0x03	/*		*/
 #define ENQ	0x05	/*		*/
@@ -33,30 +33,33 @@
 /**************/
 /* Prototypes */
 /**************/
-l_return_status_t l_esc_read (gpio_device *device, guchar *c);
+gint l_esc_read (gpio_device* device, guchar* c);
 
 
-l_return_status_t l_send (gpio_device *device, unsigned char *send_buffer, unsigned int send_buffer_size);
+gint l_send (gpio_device* device, guchar* send_buffer, guint send_buffer_size);
 
 
-l_return_status_t l_receive (gpio_device *device, unsigned char **rb, unsigned int *rbs, guint timeout);
+gint l_receive (gpio_device* device, guchar** rb, guint* rbs, guint timeout);
 
 
 /*************/
 /* Functions */
 /*************/
-l_return_status_t l_init (gpio_device *device)
+gint 
+l_init (gpio_device* device)
 {
-	guchar c;
-	gint i;
+	guchar 	c;
+	gint 	i;
+
+	g_return_val_if_fail (device, GP_ERROR_BAD_PARAMETERS);
 
 	gpio_set_timeout (device, DEFAULT_TIMEOUT);
-	if (gpio_open (device) == GPIO_ERROR) return L_IO_ERROR;
+	if (gpio_open (device) == GPIO_ERROR) return GP_ERROR_IO;
 	for (i = 0; ; i++) {
 		/****************/
 		/* Write ENQ. 	*/
 		/****************/
-		if (gpio_write (device, "\5", 1) == GPIO_ERROR) return L_IO_ERROR;
+		if (gpio_write (device, "\5", 1) == GPIO_ERROR) return GP_ERROR_IO;
 		if (gpio_read (device, &c, 1) < 1) {
 			/******************************************************/
 			/* We didn't receive anything. We'll try up to five   */
@@ -64,7 +67,7 @@ l_return_status_t l_init (gpio_device *device)
 			/******************************************************/
 			if (i == 4) {
 			        gpio_close (device);
-				return (L_IO_ERROR);
+				return (GP_ERROR_IO);
 			}
 			continue;
 		}
@@ -73,7 +76,7 @@ l_return_status_t l_init (gpio_device *device)
 			/******************************************************/
 			/* ACK received. We can proceed.                      */
 			/******************************************************/
-			return (L_SUCCESS);
+			return (GP_OK);
 		default:
 			/******************************************************/
 			/* The camera seems to be sending something. We'll    */
@@ -87,16 +90,22 @@ l_return_status_t l_init (gpio_device *device)
 }
 
 
-l_return_status_t l_exit (gpio_device *device)
+gint 
+l_exit (gpio_device* device)
 {
-	if (gpio_close (device) == GPIO_ERROR) return (L_IO_ERROR);
-	return L_SUCCESS;
+	g_return_val_if_fail (device, GP_ERROR_BAD_PARAMETERS);
+	
+	if (gpio_close (device) == GPIO_ERROR) return (GP_ERROR_IO);
+	return (GP_OK);
 }
 
 
-l_return_status_t l_esc_read (gpio_device *device, guchar *c)
+gint 
+l_esc_read (gpio_device* device, guchar* c)
 {
-	if (gpio_read (device, c, 1) < 1) return L_IO_ERROR;
+	g_return_val_if_fail (device, GP_ERROR_BAD_PARAMETERS);
+
+	if (gpio_read (device, c, 1) < 1) return GP_ERROR_IO;
 	/**********************************************************************/
 	/* STX, ETX, ENQ, ACK, XOFF, XON, NACK, and ETB have to be masked by  */
 	/* ESC. If we receive one of those (except ETX and ETB) without mask, */
@@ -112,36 +121,39 @@ l_return_status_t l_esc_read (gpio_device *device, guchar *c)
 	/**********************************************************************/
 	if ((*c == STX ) || (*c == ETX) || (*c == ENQ ) || (*c == ACK) || (*c == XOFF) || (*c == XON) || (*c == NACK) || (*c == ETB)) {
 		gp_debug_printf (GP_DEBUG_HIGH, "konica", "Wrong ESC masking!");
-		if ((*c == ETX) || (*c == ETB)) return (L_TRANSMISSION_ERROR);
+		if ((*c == ETX) || (*c == ETB)) return (GP_ERROR_CORRUPTED_DATA);
 
 	} else if (*c == ESC) {
-		if (gpio_read (device, c, 1) < 1) return L_IO_ERROR;
+		if (gpio_read (device, c, 1) < 1) return GP_ERROR_IO;
 		*c = (~*c & 0xff);
 		if ((*c != STX ) && (*c != ETX ) && (*c != ENQ) && (*c != ACK ) && (*c != XOFF) && (*c != XON) && (*c != NACK) && (*c != ETB ) && (*c != ESC))
 			gp_debug_printf (GP_DEBUG_HIGH, "konica", "Wrong ESC masking!");
 	}
-	return (L_SUCCESS);
+	return (GP_OK);
 }
 
 
-l_return_status_t l_send (gpio_device *device, guchar *send_buffer, guint send_buffer_size)
+gint 
+l_send (gpio_device* device, guchar* send_buffer, guint send_buffer_size)
 {
-	guchar c;
-	guchar checksum;
+	guchar 	c;
+	guchar 	checksum;
 	/**********************************************************************/
 	/*  sb: A pointer to the buffer that we will send.                    */
 	/* sbs: Its size.		                                      */
 	/**********************************************************************/
-	guchar *sb; 	
-	guint   sbs;
-	gint i;
+	guchar*	sb; 	
+	guint	sbs;
+	gint 	i;
+
+	g_return_val_if_fail (device, GP_ERROR_BAD_PARAMETERS);
 
 	i = 0;
 	for (;;) {
 		/****************/
 		/* Write ENQ.	*/
 		/****************/
-		if (gpio_write (device, "\5", 1) == GPIO_ERROR) return (L_IO_ERROR);
+		if (gpio_write (device, "\5", 1) == GPIO_ERROR) return (GP_ERROR_IO);
 		/****************/
 		/* Read.	*/
 		/****************/
@@ -150,7 +162,7 @@ l_return_status_t l_send (gpio_device *device, guchar *send_buffer, guint send_b
 			/* Let's try for a couple of times. */
 			/************************************/
 			i++;
-			if (i == 5) return (L_IO_ERROR);
+			if (i == 5) return (GP_ERROR_IO);
 			continue;
 		}
 		switch (c) {
@@ -177,11 +189,9 @@ l_return_status_t l_send (gpio_device *device, guchar *send_buffer, guint send_b
 			/* Write NACK.	*/
 			/****************/
 			c = NACK;
-			if (gpio_write (device, &c, 1) == GPIO_ERROR) 
-				return (L_IO_ERROR);
+			if (gpio_write (device, &c, 1) == GPIO_ERROR) return (GP_ERROR_IO);
 			for (;;) {
-				if (gpio_read (device, &c, 1) < 1) 
-					return (L_IO_ERROR);
+				if (gpio_read (device, &c, 1) < 1) return (GP_ERROR_IO);
 				switch (c) {
 				case ENQ: 
 					/**************************************/
@@ -197,7 +207,7 @@ l_return_status_t l_send (gpio_device *device, guchar *send_buffer, guint send_b
 					/**************************************/
 					/* This should not happen.            */
 					/**************************************/
-					return (L_TRANSMISSION_ERROR);
+					return (GP_ERROR_CORRUPTED_DATA);
 				}
 				break;
 			}
@@ -268,11 +278,11 @@ l_return_status_t l_send (gpio_device *device, guchar *send_buffer, guint send_b
 		/************************/
 		if (gpio_write (device, sb, sbs) == GPIO_ERROR) {
 			g_free (sb);
-			return (L_IO_ERROR);
+			return (GP_ERROR_IO);
 		}
 		if (gpio_read (device, &c, 1) < 1) {
 			g_free (sb);
-			return L_IO_ERROR;
+			return GP_ERROR_IO;
 		}
 		switch (c) {
 		case ACK:
@@ -284,37 +294,40 @@ l_return_status_t l_send (gpio_device *device, guchar *send_buffer, guint send_b
 			/* Write EOT.	*/
 			/****************/
 			c = EOT;
-			if (gpio_write (device, &c, 1) == GPIO_ERROR) return (L_IO_ERROR);
-			return (L_SUCCESS);
+			if (gpio_write (device, &c, 1) == GPIO_ERROR) return (GP_ERROR_IO);
+			return (GP_OK);
 		case NACK:
 			/******************************************************/
 			/* NACK received. We'll try up to three times.        */
 			/******************************************************/
 			if (i == 2) {
 				g_free (sb);
-				return (L_TRANSMISSION_ERROR);
+				return (GP_ERROR_CORRUPTED_DATA);
 			} else break;
 		default:
 			/******************************************************/
 			/* Should not happen.                                 */
 			/******************************************************/
-			return (L_TRANSMISSION_ERROR);
+			return (GP_ERROR_CORRUPTED_DATA);
 		}
 	}
 }
 
 
-l_return_status_t l_receive (gpio_device *device, guchar **rb, guint *rbs, guint timeout)
+gint 
+l_receive (gpio_device* device, guchar** rb, guint* rbs, guint timeout)
 {
-	guchar c, d;
-	gboolean error_flag;
-	guint i, j, rbs_internal;
-	unsigned char checksum;
-	l_return_status_t return_status;
+	guchar 		c, d;
+	gboolean 	error_flag;
+	guint 		i, j, rbs_internal;
+	guchar 		checksum;
+	gint 		result;
+
+	g_return_val_if_fail (device, GP_ERROR_BAD_PARAMETERS);
 
 	for (i = 0; ; ) {
 		gpio_set_timeout (device, timeout);  
-		if (gpio_read (device, &c, 1) < 1) return (L_IO_ERROR);
+		if (gpio_read (device, &c, 1) < 1) return (GP_ERROR_IO);
 		gpio_set_timeout (device, DEFAULT_TIMEOUT);
 		switch (c) {
 		case ENQ:
@@ -337,7 +350,7 @@ l_return_status_t l_receive (gpio_device *device, guchar **rb, guint *rbs, guint
 				/* we can not get the camera back to working  */
 				/* correctly.                                 */
 				/**********************************************/
-				return (L_TRANSMISSION_ERROR);
+				return (GP_ERROR_CORRUPTED_DATA);
 			}
 			i++;
 			break;
@@ -348,7 +361,7 @@ l_return_status_t l_receive (gpio_device *device, guchar **rb, guint *rbs, guint
 			/* error).                                            */
 			/******************************************************/
 			for (;;) {
-				if (gpio_read (device, &c, 1) < 0) return (L_TRANSMISSION_ERROR); 
+				if (gpio_read (device, &c, 1) < 0) return (GP_ERROR_CORRUPTED_DATA); 
 				if (c == ENQ) break;
 			}
 			break;
@@ -358,10 +371,10 @@ l_return_status_t l_receive (gpio_device *device, guchar **rb, guint *rbs, guint
 	/**************/
 	/* Write ACK. */
 	/**************/
-	if (gpio_write (device, "\6", 1) == GPIO_ERROR) return (L_IO_ERROR);
+	if (gpio_write (device, "\6", 1) == GPIO_ERROR) return (GP_ERROR_IO);
 	for (*rbs = 0; ; ) {
 		for (j = 0; ; j++) {
-			if (gpio_read (device, &c, 1) < 1) return (L_IO_ERROR);
+			if (gpio_read (device, &c, 1) < 1) return (GP_ERROR_IO);
 			switch (c) {
 			case STX:
 				/**********************************************/
@@ -378,11 +391,11 @@ l_return_status_t l_receive (gpio_device *device, guchar **rb, guint *rbs, guint
 			/* Read 2 bytes for size (low order byte, high order  */
 			/* byte) plus ESC quotes.                             */
 			/******************************************************/
-			return_status = l_esc_read (device, &c);
-			if (return_status != L_SUCCESS) return (return_status);
+			result = l_esc_read (device, &c);
+			if (result != GP_OK) return (result);
 			checksum = c;
-			return_status = l_esc_read (device, &d);
-			if (return_status != L_SUCCESS) return (return_status);
+			result = l_esc_read (device, &d);
+			if (result != GP_OK) return (result);
 			checksum += d;
 			rbs_internal = (d << 8) | c;
 			if (*rbs == 0) *rb = g_new (guchar, rbs_internal);
@@ -392,11 +405,11 @@ l_return_status_t l_receive (gpio_device *device, guchar **rb, guint *rbs, guint
 			/******************************************************/
 			error_flag = FALSE;
 			for (i = 0; i < rbs_internal; i++) {
-				return_status = l_esc_read (device, &((*rb)[*rbs + i]));
-				switch (return_status) {
-				case L_IO_ERROR: 
-					return (L_IO_ERROR);
-				case L_TRANSMISSION_ERROR:
+				result = l_esc_read (device, &((*rb)[*rbs + i]));
+				switch (result) {
+				case GP_ERROR_IO: 
+					return (GP_ERROR_IO);
+				case GP_ERROR_CORRUPTED_DATA:
 					/**************************************/
 					/* We already received ETX or ETB.    */
 					/* Later, we'll read the checksum     */
@@ -405,7 +418,7 @@ l_return_status_t l_receive (gpio_device *device, guchar **rb, guint *rbs, guint
 					/**************************************/
 					error_flag = TRUE;
         	                        break;
-				case L_SUCCESS:
+				case GP_OK:
 					/**************************************/
 					/* We can proceed.                    */
 					/**************************************/
@@ -415,7 +428,7 @@ l_return_status_t l_receive (gpio_device *device, guchar **rb, guint *rbs, guint
 				if (error_flag) break;
 			}
 			if (!error_flag) {
-				if (gpio_read (device, &d, 1) < 1) return (L_IO_ERROR);
+				if (gpio_read (device, &d, 1) < 1) return (GP_ERROR_IO);
 				switch (d) {
 				case ETX:
 					/**************************************/
@@ -439,7 +452,7 @@ l_return_status_t l_receive (gpio_device *device, guchar **rb, guint *rbs, guint
 					/* reject the packet.                 */
 					/**************************************/
 					while ((d != ETX) && (d != ETB)) {
-						if (gpio_read (device, &d, 1) < 1) return (L_IO_ERROR);
+						if (gpio_read (device, &d, 1) < 1) return (GP_ERROR_IO);
 					}
 					error_flag = TRUE;
 					break;
@@ -449,14 +462,14 @@ l_return_status_t l_receive (gpio_device *device, guchar **rb, guint *rbs, guint
 			/******************************************************/
 			/* Read 1 byte for checksum plus ESC quotes.          */
 			/******************************************************/
-			return_status = l_esc_read (device, &c);
-			if (return_status != L_SUCCESS) return (return_status);
+			result = l_esc_read (device, &c);
+			if (result != GP_OK) return (result);
 			if ((c == checksum) && (!error_flag)) {
 				*rbs += rbs_internal;
 				/****************/
 				/* Write ACK.	*/
 				/****************/
-				if (gpio_write (device, "\6", 1) == GPIO_ERROR) return (L_IO_ERROR);
+				if (gpio_write (device, "\6", 1) == GPIO_ERROR) return (GP_ERROR_IO);
 				break;
 			} else {
 				/**********************************************/
@@ -464,17 +477,17 @@ l_return_status_t l_receive (gpio_device *device, guchar **rb, guint *rbs, guint
 				/* camera will send us the data at the most   */
 				/* three times.                               */
 				/**********************************************/
-				if (j == 2) return (L_TRANSMISSION_ERROR);
+				if (j == 2) return (GP_ERROR_CORRUPTED_DATA);
 				/****************/
 				/* Write NACK.	*/
 				/****************/
 				c = NACK;
-				if (gpio_write (device, &c, 1) == GPIO_ERROR) return (L_IO_ERROR);
+				if (gpio_write (device, &c, 1) == GPIO_ERROR) return (GP_ERROR_IO);
 				continue;
 			}
 		}
 		if (gpio_read (device, &c, 1) < 1) 
-			return (L_IO_ERROR);
+			return (GP_ERROR_IO);
 		switch (c) {
 			case EOT:
 				/**********************************************/
@@ -485,7 +498,7 @@ l_return_status_t l_receive (gpio_device *device, guchar **rb, guint *rbs, guint
 				/**********************************************/
 				/* Should not happen.                         */
 				/**********************************************/
-				return (L_TRANSMISSION_ERROR);
+				return (GP_ERROR_CORRUPTED_DATA);
 		}
 		/**************************************************************/
 		/* Depending on d, we will either continue to receive data or */
@@ -499,7 +512,7 @@ l_return_status_t l_receive (gpio_device *device, guchar **rb, guint *rbs, guint
 			/******************************************************/
 			/* We are all done.				      */
 			/******************************************************/
-			return (L_SUCCESS);
+			return (GP_OK);
 		case ETB:
 			/******************************************************/
 			/* We expect more data.                               */
@@ -507,8 +520,7 @@ l_return_status_t l_receive (gpio_device *device, guchar **rb, guint *rbs, guint
 			/****************/
 			/* Read ENQ.	*/
 			/****************/
-			if (gpio_read (device, &c, 1) < 1) 
-				return (L_IO_ERROR);
+			if (gpio_read (device, &c, 1) < 1) return (GP_ERROR_IO);
 			switch (c) {
 			case ENQ:
 				/**********************************************/
@@ -519,83 +531,85 @@ l_return_status_t l_receive (gpio_device *device, guchar **rb, guint *rbs, guint
 				/**********************************************/
 				/* Should not happen.                         */
 				/**********************************************/
-				return (L_TRANSMISSION_ERROR);
+				return (GP_ERROR_CORRUPTED_DATA);
 			}
 			/****************/
 			/* Write ACK.	*/
 			/****************/
 			if (gpio_write (device, "\6", 1) == GPIO_ERROR) 
-				return (L_IO_ERROR);
+				return (GP_ERROR_IO);
 			break;
 		default:
 			/******************************************************/
 			/* Should not happen.                                 */
 			/******************************************************/
-			return (L_TRANSMISSION_ERROR);
+			return (GP_ERROR_CORRUPTED_DATA);
 		}
 	}
 
 }
 
 
-l_return_status_t l_send_receive (gpio_device *device, guchar *send_buffer, guint send_buffer_size, guchar **receive_buffer, guint *receive_buffer_size)
+gint 
+l_send_receive (gpio_device* device, guchar* send_buffer, guint send_buffer_size, guchar** receive_buffer, guint* receive_buffer_size)
 {
-	l_return_status_t return_status;
+	gint result;
 
 	/****************/
 	/* Send data.	*/
 	/****************/
-	return_status = l_send (device, send_buffer, send_buffer_size);
-	if (return_status != L_SUCCESS) return (return_status);
+	result = l_send (device, send_buffer, send_buffer_size);
+	if (result != GP_OK) return (result);
 	/********************************/
 	/* Receive control data.	*/
 	/********************************/
-	return_status = l_receive (device, receive_buffer, receive_buffer_size, 3000);
-	if (return_status != L_SUCCESS) return (return_status);
+	result = l_receive (device, receive_buffer, receive_buffer_size, 3000);
+	if (result != GP_OK) return (result);
 	if (((*receive_buffer)[0] != send_buffer[0]) || 
 	    ((*receive_buffer)[1] != send_buffer[1])) {
 		gp_debug_printf (GP_DEBUG_HIGH, "konica", "Error: Commands differ! %i %i != %i %i.\n", 
 			(*receive_buffer)[0], (*receive_buffer)[1], 
 			send_buffer[0], send_buffer[1]); 
-		return (L_TRANSMISSION_ERROR);
+		return (GP_ERROR_CORRUPTED_DATA);
 	}
-	else return (return_status);
+	else return (result);
 }
 
 
-l_return_status_t l_send_receive_receive (
-	gpio_device *device,
-	guchar  *send_buffer, 
-	guint    send_buffer_size, 
-	guchar **image_buffer, 
-	guint   *image_buffer_size, 
-	guchar **receive_buffer, 
-        guint   *receive_buffer_size,
-	guint    timeout)
+gint 
+l_send_receive_receive (
+	gpio_device*	device,
+	guchar*		send_buffer, 
+	guint		send_buffer_size, 
+	guchar**	image_buffer, 
+	guint*		image_buffer_size, 
+	guchar**	receive_buffer, 
+        guint*		receive_buffer_size,
+	guint		timeout)
 {
-	l_return_status_t return_status;
+	gint result;
 
 	/****************/
 	/* Send data.	*/
 	/****************/
-        return_status = l_send (device, send_buffer, send_buffer_size);
-        if (return_status != L_SUCCESS) return (return_status);
+        result = l_send (device, send_buffer, send_buffer_size);
+        if (result != GP_OK) return (result);
 	/************************/
         /* Receive data.	*/
 	/************************/
-        return_status = l_receive (device, image_buffer, image_buffer_size, timeout);
-        if (return_status != L_SUCCESS) return (return_status);
+        result = l_receive (device, image_buffer, image_buffer_size, timeout);
+        if (result != GP_OK) return (result);
 	/********************************/
 	/* Receive control data.	*/
 	/********************************/
-        return_status = l_receive (device, receive_buffer, receive_buffer_size, DEFAULT_TIMEOUT);
-	if (return_status != L_SUCCESS) return (return_status);
+        result = l_receive (device, receive_buffer, receive_buffer_size, DEFAULT_TIMEOUT);
+	if (result != GP_OK) return (result);
 	if (((*receive_buffer)[0] != send_buffer[0]) || 
 	    ((*receive_buffer)[1] != send_buffer[1])) {
 		gp_debug_printf (GP_DEBUG_HIGH, "konica", "Error: Commands differ! %i %i != %i %i.\n", 
 			(*receive_buffer)[0], (*receive_buffer)[1], 
 			send_buffer[0], send_buffer[1]); 
-		return (L_TRANSMISSION_ERROR);
+		return (GP_ERROR_CORRUPTED_DATA);
 	}
-	return (return_status);
+	return (result);
 }

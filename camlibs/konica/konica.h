@@ -196,49 +196,6 @@ typedef enum {
 } k_preference_t;
 
 
-/****************************************************************/
-/* The following is a list of return states that the camera	*/
-/* will send (third and fourth byte, see above). The ones 	*/
-/* before K_SUCCESS have been added to make programming         */
-/* easier - they are _not_ sent by the camera.			*/
-/*								*/
-/* The list is by no means complete - I added an item each time	*/
-/* I discovered a new return state.				*/
-/****************************************************************/
-typedef enum {
-	K_L_IO_ERROR,
-	K_L_TRANSMISSION_ERROR,
-	K_UNSUPPORTED_BITRATE,
-	K_PROGRAM_ERROR,
-	K_SUCCESS,
-	K_ERROR_FOCUSING_ERROR,
-	K_ERROR_IRIS_ERROR,
-	K_ERROR_STROBE_ERROR,
-	K_ERROR_EEPROM_CHECKSUM_ERROR,
-	K_ERROR_INTERNAL_ERROR1,
-	K_ERROR_INTERNAL_ERROR2,
-	K_ERROR_NO_CARD_PRESENT,
-	K_ERROR_CARD_NOT_SUPPORTED,
-	K_ERROR_CARD_REMOVED_DURING_ACCESS,
-	K_ERROR_IMAGE_NUMBER_NOT_VALID,
-	K_ERROR_CARD_CAN_NOT_BE_WRITTEN,
-	K_ERROR_CARD_IS_WRITE_PROTECTED,
-	K_ERROR_NO_SPACE_LEFT_ON_CARD,
-	K_ERROR_NO_PICTURE_ERASED_AS_IMAGE_PROTECTED,
-	K_ERROR_LIGHT_TOO_DARK,
-	K_ERROR_AUTOFOCUS_ERROR,
-	K_ERROR_SYSTEM_ERROR,
-	K_ERROR_ILLEGAL_PARAMETER,
-	K_ERROR_COMMAND_CANNOT_BE_CANCELLED,
-	K_ERROR_LOCALIZATION_DATA_EXCESS,
-	K_ERROR_LOCALIZATION_DATA_CORRUPT,
-	K_ERROR_UNSUPPORTED_COMMAND,
-	K_ERROR_OTHER_COMMAND_EXECUTING,
-	K_ERROR_COMMAND_ORDER_ERROR,
-	K_ERROR_UNKNOWN_ERROR
-} k_return_status_t;
-
-
 typedef enum {
 	K_POWER_LEVEL_LOW, 
 	K_POWER_LEVEL_NORMAL,
@@ -295,13 +252,13 @@ typedef enum {
 /* for image IDs (qm100, unsigned int), the other one uses four */
 /* (qm200, unsigned long).                                      */
 /****************************************************************/
-k_return_status_t k_init (gpio_device *device);
+gint k_init (gpio_device *device);
 
 
-k_return_status_t k_exit (gpio_device *device);
+gint k_exit (gpio_device *device);
 
 
-k_return_status_t k_get_io_capability (
+gint k_get_io_capability (
 	gpio_device *device,
 	gboolean *bit_rate_300,
 	gboolean *bit_rate_600,
@@ -320,7 +277,7 @@ k_return_status_t k_get_io_capability (
 	gboolean *bit_flag_hw_flow_control);
 
 
-k_return_status_t k_set_io_capability (
+gint k_set_io_capability (
 	gpio_device *device,
 	guint bit_rate,
 	gboolean bit_flag_7_or_8_bits,
@@ -330,13 +287,13 @@ k_return_status_t k_set_io_capability (
 	gboolean bit_flag_use_hw_flow_control);
 
 
-k_return_status_t k_erase_all (gpio_device *device, guint *number_of_images_not_erased);
+gint k_erase_all (gpio_device *device, guint *number_of_images_not_erased);
 
 
-k_return_status_t k_format_memory_card (gpio_device *device);
+gint k_format_memory_card (gpio_device *device);
 
 
-k_return_status_t k_take_picture (
+gint k_take_picture (
 	gpio_device *device,
 	gboolean image_id_long,
 	gulong *image_id, 
@@ -346,22 +303,22 @@ k_return_status_t k_take_picture (
 	gboolean *protected);
 
 
-k_return_status_t k_get_preview (gpio_device *device, gboolean thumbnail, guchar **image_buffer, guint *image_buffer_size);
+gint k_get_preview (gpio_device *device, gboolean thumbnail, guchar **image_buffer, guint *image_buffer_size);
 
 
-k_return_status_t k_set_preference (gpio_device *device, k_preference_t preference, guint value);
+gint k_set_preference (gpio_device *device, k_preference_t preference, guint value);
 
 
-k_return_status_t k_set_protect_status (gpio_device *device, gboolean image_id_long, gulong image_id, gboolean protected);
+gint k_set_protect_status (gpio_device *device, gboolean image_id_long, gulong image_id, gboolean protected);
 
 
-k_return_status_t k_erase_image (gpio_device *device, gboolean image_id_long, gulong image_id);
+gint k_erase_image (gpio_device *device, gboolean image_id_long, gulong image_id);
 
 
-k_return_status_t k_reset_preferences (gpio_device *device);
+gint k_reset_preferences (gpio_device *device);
 
 
-k_return_status_t k_get_date_and_time (
+gint k_get_date_and_time (
         gpio_device *device,
 	guchar *year, 
 	guchar *month, 
@@ -371,7 +328,7 @@ k_return_status_t k_get_date_and_time (
 	guchar *second);
 
 
-k_return_status_t k_set_date_and_time (
+gint k_set_date_and_time (
 	gpio_device *device,
 	guchar year, 
 	guchar month, 
@@ -381,7 +338,7 @@ k_return_status_t k_set_date_and_time (
 	guchar second);
 
 
-k_return_status_t k_get_preferences (
+gint k_get_preferences (
 	gpio_device *device,
 	guint *shutoff_time, 
 	guint *self_timer_time, 
@@ -389,7 +346,7 @@ k_return_status_t k_get_preferences (
 	guint *slide_show_interval);
 
 
-k_return_status_t k_get_status (
+gint k_get_status (
 	gpio_device *device,
 	guint *self_test_result, 
 	k_power_level_t	*power_level,
@@ -415,7 +372,7 @@ k_return_status_t k_get_status (
 	guint *total_strobes);
 
 
-k_return_status_t k_get_information (
+gint k_get_information (
 	gpio_device *device,
 	gchar **model,
 	gchar **serial_number,
@@ -429,7 +386,7 @@ k_return_status_t k_get_information (
 	gchar **manufacturer);
 
 
-k_return_status_t k_get_image_information (
+gint k_get_image_information (
 	gpio_device *device,
 	gboolean image_id_long,
 	gulong image_number,
@@ -440,7 +397,7 @@ k_return_status_t k_get_image_information (
 	guint *information_buffer_size);
 
 
-k_return_status_t k_get_image (
+gint k_get_image (
 	gpio_device *device,
 	gboolean image_id_long,
 	gulong image_id, 
@@ -449,17 +406,17 @@ k_return_status_t k_get_image (
 	guint *image_buffer_size);
 
 
-k_return_status_t k_set_protect_status (gpio_device *device, gboolean image_id_long, gulong image_id, gboolean protected);
+gint k_set_protect_status (gpio_device *device, gboolean image_id_long, gulong image_id, gboolean protected);
 
 
-k_return_status_t k_localization_tv_output_format_set (gpio_device *device, k_tv_output_format_t tv_output_format);
+gint k_localization_tv_output_format_set (gpio_device *device, k_tv_output_format_t tv_output_format);
 
 
-k_return_status_t k_localization_date_format_set (gpio_device *device, k_date_format_t date_format);
+gint k_localization_date_format_set (gpio_device *device, k_date_format_t date_format);
 
 
-k_return_status_t k_localization_data_put (gpio_device *device, guchar *data, gulong data_size);
+gint k_localization_data_put (gpio_device *device, guchar *data, gulong data_size);
 
 
-k_return_status_t k_cancel (gpio_device *device, k_command_t *command);
+gint k_cancel (gpio_device *device, k_command_t *command);
 
