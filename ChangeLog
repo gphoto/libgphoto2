@@ -1,10 +1,21 @@
+2001-10-24 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* configure.in
+	* acconfig.h: Check for CDK
+	* frontends/command-line/Makefile.am
+	* frontends/command-line/gphoto2-cmd-config.[c,h]: New
+	* frontends/command-line/main.c: Hook up --config
+
+2001-10-24 Hans Ulrich Niedermann <gp@n-dimensional.de>
+
 2001-10-25  Colin Marquardt  <colin@marquardt-home.de>
 
 	* (Repository): s/retreiv/retriev/g
 
 2001-10-24 Hans Ulrich Niedermann <gp@n-dimensional.de>
 
-	* camlibs/jamcam/library.h: removed completely unnecessary compiler warning
+	* camlibs/jamcam/library.h: removed completely unnecessary compiler
+	  warning
 	* camlibs/sonydscf1/command.c: added #include <string.h> and
 	hopefully fixed calls to strndup 
 	* frontends/command-line/main.c: added debug output of guessed
