@@ -179,10 +179,6 @@ int canon_int_set_owner_name(Camera *camera, const char *name);
 char *canon2gphotopath(char *path);
 char *gphoto2canonpath(char *path);
 
-/* not sure whether these belong here :-) */
-int canon_int_serial_ready (Camera *camera);
-int canon_int_usb_ready (Camera *camera);
-
 /* for the macros abbreviating gp_log* */
 #define GP_MODULE "canon"
 

@@ -1,3 +1,13 @@
+2001-12-04  Fredrik <fredrik@krixor.xy.org>
+	
+	* canon.c: Improved debug output in canon_int_get_time().
+
+	* canon.c, canon.h, serial.c, serial.h, usb.c, usb.h:
+	  Moved canon_int_serial_ready() to serial.c and renamed
+	  it to canon_serial_ready().
+	  Moved canon_int_usb_ready() to usb.c and renamed
+	  it to canon_usb_ready().
+
 2001-12-01  Fredrik <fredrik@krixor.xy.org>
 
 	* usb.c, usb.h:
