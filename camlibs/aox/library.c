@@ -59,8 +59,8 @@ struct {
    	unsigned short idVendor;
    	unsigned short idProduct;
 } models[] = {
-        {"Concord EyeQMini", GP_DRIVER_STATUS_EXPERIMENTAL, 0x03e8, 0x2182},
-        {"Concord EyeQMini", GP_DRIVER_STATUS_EXPERIMENTAL, 0x03e8, 0x2180},	
+        {"Concord EyeQMini_1", GP_DRIVER_STATUS_EXPERIMENTAL, 0x03e8, 0x2182},
+        {"Concord EyeQMini_2", GP_DRIVER_STATUS_EXPERIMENTAL, 0x03e8, 0x2180},	
 	{NULL,0,0}
 };
 
