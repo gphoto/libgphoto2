@@ -1048,9 +1048,9 @@ _put_AUINT8_as_CHAR_ARRAY(CameraWidget *widget, PTPPropertyValue *propval) {
 	fprintf (stderr, "value is %s\n", value);
 	memset(propval,0,sizeof(PTPPropertyValue));
 	/* add \0 ? */
-	propval->a.v = malloc(strlen(value)*sizeof(PTPPropertyValue));
-	propval->a.count = strlen(value);
-	for (i=0;i<strlen(value);i++)
+	propval->a.v = malloc((strlen(value)+1)*sizeof(PTPPropertyValue));
+	propval->a.count = strlen(value)+1;
+	for (i=0;i<strlen(value)+1;i++)
 		propval->a.v[i].u8 = value[i];
 	return (GP_OK);
 }
