@@ -284,7 +284,7 @@ if $try_usb; then
 				USB_LIBS="`$LIBUSB_CONFIG --libs`"
 				USB_CFLAGS="`$LIBUSB_CONFIG --cflags`"
                         	LIBUSB_VER="`$LIBUSB_CONFIG --version`"],[
-				usb_msg="no (available version too old)"])
+				usb_msg="no (available libusb version too old)"])
 			LDFLAGS="$LDFLAGS_orig"])
 		CPPFLAGS="$CPPFLAGS_save"
 	fi
