@@ -214,8 +214,10 @@ int camera_folder_list_folders (Camera *camera, const char *folder,
 	i = 0;
 
 	while(i < data_len) {
+		dump_buffer(ptr_data_buff, 20, "list", 20);
+	
 		/* directories have 0x10 in their attribute */
-		if(ptr_data_buff[11] & 0x10) {
+		if(!(ptr_data_buff[11] & 0x10)) {
 			ptr_data_buff += 20;
 			i += 20;
 			continue;
@@ -282,8 +284,8 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 	i = 0;
 	
 	while(i < data_len) {
-		/* directories have 0x10 in their attribute */
-		if(!(ptr_data_buff[11] & 0x10)) {
+		/* files don't have 0x10 in their attribute */
+		if(ptr_data_buff[11] & 0x10) {
 			ptr_data_buff += 20;
 			i += 20;
 			continue;
@@ -297,7 +299,7 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 		/* copy extension, last 3 bytes*/
 		strncat(filename, ptr_data_buff+8, 3);
 		
-		if(!strstr(filename, "JPG") && !strstr(filename, "jpg")) {
+		if(!strstr(filename, ".JPG") && !strstr(filename, ".jpg")) {
 			ptr_data_buff += 20;
 			i += 20;
 			continue;
