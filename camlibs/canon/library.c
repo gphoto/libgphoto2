@@ -70,7 +70,13 @@
 #define snprintf(buf,size,format,arg) sprintf(buf,format,arg)
 #endif
 
+#ifndef HAVE_TM_GMTOFF
+/* required for time conversions in camera_summary() */
+extern long int timezone;
+#endif
+
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
+
 
 int
 camera_id (CameraText *id)
@@ -552,7 +558,8 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 	int pwr_source, pwr_status;
 	int res;
 	char disk_str[128], power_str[128], time_str[128];
-	time_t camera_time, camera_utc_time;
+	time_t camera_time, local_time, tmp_time;
+	struct tm *tm;
 	double time_diff;
 	char formatted_camera_time[20];
 
@@ -591,10 +598,24 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 			  gp_result_as_string (res));
 	}
 
+	canon_int_set_time (camera, time (NULL), context);
 	res = canon_int_get_time (camera, &camera_time, context);
-	camera_utc_time = mktime (gmtime (&camera_time));
+
+	/* it's hard to get local time with DST portably... */
+	tmp_time = time (NULL);
+	tm = localtime (&tmp_time);
+#ifdef HAVE_TM_GMTOFF
+	local_time = tmp_time + tm->tm_gmtoff;
+	GP_DEBUG ("camera_summary: converted %i to localtime %i (tm_gmtoff is %i)", 
+		  tmp_time, local_time, tm->tm_gmtoff);
+#else
+	local_time = tmp_time - timezone;
+	GP_DEBUG ("camera_summary: converted %i to localtime %i (timezone is %i)",
+		  tmp_time, local_time, timezone);
+#endif
+
 	if (res == GP_OK) {
-		time_diff = difftime (camera_utc_time, time (NULL));
+		time_diff = difftime (camera_time, local_time);
 
 		strftime (formatted_camera_time, sizeof (formatted_camera_time),
 			  "%Y-%m-%d %H:%M:%S", gmtime (&camera_time));

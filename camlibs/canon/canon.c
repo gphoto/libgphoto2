@@ -769,20 +769,24 @@ canon_int_set_time (Camera *camera, time_t date, GPContext *context)
 	GP_DEBUG ("canon_int_set_time: %i=0x%x %s", (unsigned int) date, (unsigned int) date,
 		  asctime (localtime (&date)));
 
-	/* call localtime() just to get 'extern long timezone' set */
+	/* call localtime() just to get 'extern long timezone' / tm->tm_gmtoff set.
+	 *
+	 * this handles DST too (at least if HAVE_TM_GMTOFF), if you are in UTC+1
+	 * tm_gmtoff is 3600 and if you are in UTC+1+DST tm_gmtoff is 7200 (if your
+	 * DST is one hour of course).
+	 */
 	tm = localtime (&date);
 
-	/* convert to local UNIX timestamp since canon cameras know nothing about timezones */
-	/* XXX what about DST? do we need to check for that here? */
+	/* convert to local UNIX time since canon cameras know nothing about timezones */
 
 #ifdef HAVE_TM_GMTOFF
 	new_date = date + tm->tm_gmtoff;
-	GP_DEBUG ("canon_int_set_time: converted to UTC %i (tm_gmtoff is %i)", new_date,
-		  tm->tm_gmtoff);
+	GP_DEBUG ("canon_int_set_time: converted %i to localtime %i (tm_gmtoff is %i)",
+		  date, new_date, tm->tm_gmtoff);
 #else
 	new_date = date - timezone;
-	GP_DEBUG ("canon_int_set_time: converted to UTC %i (timezone is %i)", new_date,
-		  timezone);
+	GP_DEBUG ("canon_int_set_time: converted %i to localtime %i (timezone is %i)",
+		  date, new_date, timezone);
 #endif
 
 	memset (payload, 0, sizeof (payload));

@@ -1,3 +1,12 @@
+2002-04-08  Fredrik <fredrik@krixor.xy.org>
+
+	* canon.c: better comments, fixed two UTC to localtime
+	  typos in debug messages, better debug messages in
+	  canon_int_set_time().
+
+	* library.c: fixed reporting of camera time difference in
+	  camera_summary() which did not handle DST.
+
 2002-03-29  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
 	* library.c: merged in USB upload patch by Matthias Kramm 
