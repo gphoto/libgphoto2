@@ -10,8 +10,6 @@
 # seems to be quite advisable if your automake is not already version 
 # 1.6) then call this file with AUTOMAKE_SUFFIX set to "-1.6".
 
-# FIXME: The software versions / links are quite outdated.
-
 DIE=0
 srcdir=`dirname $0`
 test -z "$srcdir" && srcdir=.
@@ -23,29 +21,31 @@ PROJECT=gphoto2
     echo
     echo "You must have autoconf installed to compile $PROJECT."
     echo "Download the appropriate package for your distribution,"
-    echo "or get the source tarball at ftp://ftp.gnu.org/pub/gnu/"
+    echo "or get the source tarball at ftp://ftp.gnu.org/gnu/autoconf/"
     DIE=1
 }
 
 (libtool --version) < /dev/null > /dev/null 2>&1 || {
     echo
     echo "You must have libtool installed to compile $PROJECT."
-    echo "Get ftp://ftp.gnu.org/pub/gnu/libtool-1.2.tar.gz"
-    echo "(or a newer version if it is available)"
+    echo "Download the appropriate package for your distribution,"
+    echo "or get the source tarball at ftp://ftp.gnu.org/gnu/libtool/"
     DIE=1
 }
 
 (automake${AUTOMAKE_SUFFIX} --version) < /dev/null > /dev/null 2>&1 || {
     echo
     echo "You must have automake installed to compile $PROJECT."
-    echo "Get ftp://ftp.gnu.org/pub/gnu/automake-1.3.tar.gz"
-    echo "(or a newer version if it is available)"
+    echo "Download the appropriate package for your distribution,"
+    echo "or get the source tarball at ftp://ftp.gnu.org/gnu/automake/"
     DIE=1
 }
 
 (gettextize --version) < /dev/null > /dev/null 2>&1 || {
     echo
     echo "You must have gettext installed to compile $PROJECT."
+    echo "Download the appropriate package for your distribution,"
+    echo "or get the source tarball at ftp://ftp.gnu.org/gnu/gettext/"
     DIE=1
 }
 
@@ -75,6 +75,8 @@ do
 (
     echo processing "$dir"
     cd "$dir"
+    # FIXME: perhaps we should delete stuff cleanly instead of
+    #        overwriting with --force
     echo "Running gettextize --force --copy $gettext_opt"
     gettextize --force --copy $gettext_opt
     if test -f po/Makevars.template
@@ -86,6 +88,7 @@ do
     echo "Running aclocal${AUTOMAKE_SUFFIX} $ACLOCAL_FLAGS"
     aclocal${AUTOMAKE_SUFFIX} $ACLOCAL_FLAGS
     echo "Running autoheader${AUTOCONF_SUFFIX}"
+    # FIXME: where does config.h.in come from? and libgphoto2/config.h.in?
     autoheader${AUTOCONF_SUFFIX}
     echo "Running automake${AUTOMAKE_SUFFIX} --add-missing --gnu $am_opt"
     automake${AUTOMAKE_SUFFIX} --add-missing --gnu $am_opt
