@@ -293,6 +293,12 @@ gp_port_library_list (GPPortInfoList *list)
 		CHECK (gp_port_info_list_append (list, info));
         }
 
+	/* Generic support */
+	info.type = GP_PORT_SERIAL;
+	strncpy (info.path, "^serial", sizeof (info.path));
+	strncpy (info.name, "Generic Serial Port", sizeof (info.name));
+	CHECK (gp_port_info_list_append (list, info));
+
         return (GP_OK);
 }
 

@@ -211,6 +211,15 @@ AC_SUBST(USB_LIBS)
 
 AC_SUBST(IOLIB_SUBDIRS)
 
+dnl **********
+dnl GNU regex?
+dnl **********
+AC_CHECK_FUNC(re_compile_pattern, AC_DEFINE(HAVE_GNU_REGEX))
+
+dnl ****************************************
+dnl What libraries do other programs need if 
+dnl they want to use libgphoto2_port?
+dnl ****************************************
 GPPORT_LIBDIR='-L${libdir}'
 GPPORT_INCLUDEDIR='-I${includedir}/gphoto2'
 GPPORT_LIBS="-lgphoto2_port"

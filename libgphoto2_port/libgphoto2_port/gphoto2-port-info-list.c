@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <regex.h>
 
 #include <gphoto2-port-result.h>
 #include <gphoto2-port-library.h>
@@ -59,6 +60,7 @@ struct _GPPortInfoList {
 };
 
 #define CHECK_NULL(x) {if (!(x)) return (GP_ERROR_BAD_PARAMETERS);}
+#define CR(x)         {int r=(x);if (r<0) return (r);}
 
 /**
  * gp_port_info_list_new:
@@ -112,7 +114,7 @@ gp_port_info_list_free (GPPortInfoList *list)
  * Appends an entry to the @list. This function is typically called by
  * an io-driver on #gp_port_library_list.
  *
- * Return value: a gphoto2 error code
+ * Return value: The index of the new entry or a gphoto2 error code
  **/
 int
 gp_port_info_list_append (GPPortInfoList *list, GPPortInfo info)
@@ -134,7 +136,7 @@ gp_port_info_list_append (GPPortInfoList *list, GPPortInfo info)
 
 	memcpy (&(list->info[list->count - 1]), &info, sizeof (GPPortInfo));
 
-	return (GP_OK);
+	return (list->count - 1);
 }
 
 /**
@@ -262,21 +264,86 @@ gp_port_info_list_count (GPPortInfoList *list)
  * @list: a #GPPortInfoList
  * @path: a path
  *
- * Looks for an entry in the list with the supplied @path.
+ * Looks for an entry in the list with the supplied @path. If no exact match
+ * can be found, a regex search will be performed in the hope some driver
+ * claimed ports like "serial:*".
  *
  * Return value: The index of the entry or a gphoto2 error code
  **/
 int
 gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 {
-	int i;
+	int i, result;
+	regex_t reb;
+#if HAVE_GNU_REGEX
+	const char *rv;
+#else
+	regmatch_t match;
+#endif
 
 	CHECK_NULL (list && path);
 
+	/* Exact match? */
 	for (i = 0; i < list->count; i++)
 		if (!strcmp (list->info[i].path, path))
 			return (i);
-	
+
+	/* Regex match? */
+	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list",
+		"Starting regex search for '%s'...", path);
+	for (i = 0; i < list->count; i++) {
+		gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list",
+			"Trying '%s'...", list->info[i].path);
+
+		/* Compile the pattern */
+#if HAVE_GNU_REGEX
+		reb.allocated = 0;
+		reb.buffer = NULL;
+		reb.fastmap = NULL;
+		reb.translate = 0;
+		reb.no_sub = 0;
+		rv = re_compile_pattern (list->info[i].path,
+					 sizeof (list->info[i].path), &reb);
+		if (rv) {
+			gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list",
+				"%s", rv);
+			continue;
+		}
+#else
+		result = regcomp (&reb, list->info[i].path, REG_ICASE);
+		if (result) {
+			char buf[1024];
+			if (regerror (result, &reb, buf, sizeof (buf)))
+				gp_log (GP_LOG_ERROR, "gphoto2-port-info-list",
+					"%s", buf);
+			else
+				gp_log (GP_LOG_ERROR, "gphoto2-port-info-list",
+					"regcomp failed");
+			return (GP_ERROR_UNKNOWN_PORT);
+		}
+#endif
+
+		/* Try to match */
+#if HAVE_GNU_REGEX
+		result = re_match (&reb, path, strlen (path), 0, NULL);
+		if (result < 0) {
+			gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list",
+				"re_match failed (%i)", result);
+			continue;
+		}
+#else
+		if (!regexec (&reb, path, 1, &match, 0)) {
+			gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list",
+				"regexec failed");
+			continue;
+		}
+#endif
+		CR (result = gp_port_info_list_append (list, list->info[i]));
+		strncpy (list->info[result].path, path,
+			 sizeof (list->info[result].path));
+		return (result);
+	}
+
 	return (GP_ERROR_UNKNOWN_PORT);
 }
 

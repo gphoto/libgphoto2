@@ -17,3 +17,5 @@
 #undef HAVE_BAUDBOY
 #undef HAVE_TTYLOCK
 #undef HAVE_LOCKDEV
+
+#undef HAVE_GNU_REGEX

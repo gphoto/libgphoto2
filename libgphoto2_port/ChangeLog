@@ -1,3 +1,11 @@
+2001-11-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* configure.in: Check for GNU regex
+	* acconfig.h: HAVE_GNU_REGEX
+	* serial:
+	* libgphoto2_port: First try to implement a regex match. Doesn't work
+	  yet.
+
 2001-11-29  Hans Ulrich Niedermann <hun@n-dimensional.de>
 
 	* libgphoto2_port/m4/packaging.m4: added packaging macro
