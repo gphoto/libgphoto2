@@ -33,10 +33,11 @@ Notes on specific functions:
 	system time. If it fails, the init function can still suceed; I do not
 	believe that failing to set the clock should mean failure to initialize.
 
-	At long last, the preview thumbnails mostly work. The images are generally
-	good, although there is some bad data occasionally. The files appear as
-	PPM "rawbits" data, and generally one can at least determine if the image
-	is worth downloading by looking at the thumbnail. The distortion that
-	sometimes appears int the thumbnails does *not* occur in the actual images.
+	At long last, the preview thumbnails finally work! The strange distortions
+	that were occuring previously have been eliminated, and I have been able
+	to retrieve accurate thumbnails reliably for the last several hundred
+	images. This puts this driver as the first that I know of that handles
+	the Dimage V thumbnail format; there were other programs to connect, but
+	all (including my earlier attempts) just gave up on the retrieved data.
 
 --Gus Hartmann, <gphoto-dimagev@gus-the-cat.org>
