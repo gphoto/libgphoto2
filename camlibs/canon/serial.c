@@ -28,7 +28,6 @@
 
 
 /****  new stuff ********/
-#include <gphoto2-port.h>
 struct camera_to_usb {
 	  char *name;
 	  unsigned short idVendor;
