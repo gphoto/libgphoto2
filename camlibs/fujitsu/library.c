@@ -140,7 +140,7 @@ int camera_init (CameraInit *init) {
 	if (!glob_dev)
 		return (GP_ERROR);
 
-        strcpy(settings.serial.port, init->port_settings.port);
+        strcpy(settings.serial.port, init->port_settings.path);
 	settings.serial.speed 	 = 19200;
 	settings.serial.bits 	 = 8;
 	settings.serial.parity 	 = 0;

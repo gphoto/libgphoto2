@@ -83,12 +83,13 @@ int fujitsu_valid_packet (char *packet) {
 			 ((unsigned char)packet[3] * 256);
 		length += 6;
 	} else {
-		switch(packet[0]) {
+		switch((unsigned char)packet[0]) {
 			case NUL:
 			case ENQ:
 			case ACK:
 			case DC1:
 			case NAK:
+			case TRM:
 				return (GP_OK);
 				break;
 			default:
@@ -580,6 +581,7 @@ int fujitsu_delete(gpio_device *dev, int picture_number) {
 int fujitsu_end_session(gpio_device *dev) {
 
 	char packet[4096], buf[4096];
+	unsigned char c;
 	int r, done;
 
 	fujitsu_build_packet(TYPE_COMMAND, 0, 3, packet);
@@ -595,13 +597,18 @@ int fujitsu_end_session(gpio_device *dev) {
 		if (fujitsu_read_packet(dev, buf)==GP_ERROR)
 			return (GP_ERROR);
 
-		done = (buf[0] == NAK)? 0 : 1;
+		c = (unsigned char)buf[0];
+		if (c==TRM)
+			return (GP_OK);
+
+		done = (c == NAK)? 0 : 1;
 
 		if (done) {
 			/* read in the ENQ */
 			if (fujitsu_read_packet(dev, buf)==GP_ERROR)
-				return ((buf[0]==ENQ)? GP_OK : GP_ERROR);
-			
+				return (GP_ERROR);
+			c = (unsigned char)buf[0];
+			return ((c==ENQ)? GP_OK : GP_ERROR);
 		}
 	}
 	if (r > RETRIES) {
