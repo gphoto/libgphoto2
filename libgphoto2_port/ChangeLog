@@ -1,5 +1,10 @@
 2002-01-09 Dan Fandrich <dan@coneharvesters.com>
 
+	* m4/byteorder.m4: Added support for NetBSD swap macros.
+	* m4/Makefile.am: Added byteorder.m4 to file list
+
+2002-01-09 Dan Fandrich <dan@coneharvesters.com>
+
 	* libgphoto2_port/gphoto2-port-log.h: Conditionally use C99 variadic
 	  macros
 

@@ -78,6 +78,7 @@ dnl OpenBSD
 AC_HAVE_SYMBOL(swap32,sys/endian.h,
  [cat >> "$1" << EOF
 /* swap32 and swap16 are defined in sys/endian.h */
+
 EOF],
 
  [
@@ -88,6 +89,22 @@ dnl Linux GLIBC
 #include <byteswap.h>
 #define swap16(x) bswap_16(x)
 #define swap32(x) bswap_32(x)
+
+EOF],
+
+   [
+dnl NetBSD
+  	AC_HAVE_SYMBOL(bswap32,sys/endian.h,
+    dnl We're already including sys/endian.h if this test succeeds
+  	 [cat >> "$1" << EOF
+/* Define generic byte swapping functions */
+EOF
+	if test "$HAVE_LE32TOH" != "1"; then
+		echo '#include <sys/endian.h>'>> "$1"
+	fi
+cat >> "$1" << EOF
+#define swap16(x) bswap16(x)
+#define swap32(x) bswap32(x)
 
 EOF],
 
@@ -103,7 +120,7 @@ dnl FreeBSD
 EOF],
 
   	 [
-  	dnl OS X
+dnl OS X
   	AC_HAVE_SYMBOL(NXSwapLong,machine/byte_order.h,
   	 [cat >> "$1" << EOF
 /* Define generic byte swapping functions */
@@ -123,16 +140,17 @@ EOF],
 				    ((x) >> 24) & 0x000000ffUL))
 
 EOF
-else
+	else
  cat >> "$1" << EOF
 /* Use these as generic byteswapping macros on this little endian system */
 #define swap16(x)		ntohs(x)
 #define swap32(x)		ntohl(x)
 
 EOF
-fi
+	fi
 ])
-  	])
+  	  ])
+    ])
   ])
 ])
 
