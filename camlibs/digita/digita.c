@@ -71,7 +71,7 @@ static struct {
 	{"Kodak DC260", 0x040A, 0x0110 },
 	{"Kodak DC265", 0x040A, 0x0111 },
 	{"Kodak DC290", 0x040A, 0x0112 },
-	{"HP PhotoSmart 618", 0x03F0, 0x4102 },
+	{"HP PhotoSmart C500/618/912", 0x03F0, 0x4102 },
 };
 
 int camera_abilities(CameraAbilitiesList *list)
