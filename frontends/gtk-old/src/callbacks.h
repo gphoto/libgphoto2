@@ -30,6 +30,9 @@ void select_all();
 void select_inverse();
 void select_none();
 
+/* Folder operations */
+void folder_set (GtkWidget *tree_item, gpointer data);
+
 /* Camera operations */
 void camera_select();
 void camera_index_thumbnails();

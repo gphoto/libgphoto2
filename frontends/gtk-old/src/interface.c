@@ -74,13 +74,14 @@ GtkWidget*
 create_main_window (void)
 {
 /* __main */
-  /* widget labels: "camera_label" "camera_tree" "progress bar" "icons"
-		    "status_bar" "notebook"
+  /* widget labels: "folder_tree" "progress bar" "icons" "status_bar" "notebook"
+		    "camera_tree" "camera_pixmap" "camera_tree"
   */
 
   GtkWidget *main_window;
   GtkWidget *vbox1;
-  GtkWidget *notebook;
+  GtkWidget *hbox;
+  GtkWidget *pixmap;
   GtkWidget *label;
   GtkWidget *menubar1;
   guint tmp_key;
@@ -109,23 +110,6 @@ create_main_window (void)
   GtkWidget *edit1;
   GtkWidget *edit1_menu;
   GtkAccelGroup *edit1_menu_accels;
-  GtkWidget *flip1;
-  GtkWidget *flip1_menu;
-  GtkAccelGroup *flip1_menu_accels;
-  GtkWidget *horizontal1;
-  GtkWidget *vertical1;
-  GtkWidget *rotate1;
-  GtkWidget *rotate1_menu;
-  GtkAccelGroup *rotate1_menu_accels;
-  GtkWidget *_90_degrees1;
-  GtkWidget *_180_degrees1;
-  GtkWidget *_270_degrees1;
-  GtkWidget *size1;
-  GtkWidget *size1_menu;
-  GtkAccelGroup *size1_menu_accels;
-  GtkWidget *scale1;
-  GtkWidget *scale_half1;
-  GtkWidget *scale_double1;
   GtkWidget *select1;
   GtkWidget *select1_menu;
   GtkAccelGroup *select1_menu_accels;
@@ -177,11 +161,6 @@ create_main_window (void)
   GtkWidget *download_button;
   GtkWidget *delete_button;
   GtkWidget *label2;
-  GtkWidget *rotate_button;
-  GtkWidget *flip_horizontal_button;
-  GtkWidget *flip_vertical_button;
-  GtkWidget *scale_button;
-  GtkWidget *label4;
   GtkWidget *configure_button;
   GtkWidget *label5;
   GtkWidget *exit_button;
@@ -190,6 +169,7 @@ create_main_window (void)
   GtkWidget *scrolledwindow1;
   GtkWidget *viewport1;
   GtkWidget *tree1;
+  GtkWidget *tree_item;
   GtkWidget *progress_bar;
   GtkWidget *scrolledwindow2;
   GtkWidget *viewport2;
@@ -433,148 +413,6 @@ create_main_window (void)
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (edit1), edit1_menu);
   edit1_menu_accels = gtk_menu_ensure_uline_accel_group (GTK_MENU (edit1_menu));
-
-  flip1 = gtk_menu_item_new_with_label ("");
-  tmp_key = gtk_label_parse_uline (GTK_LABEL (GTK_BIN (flip1)->child),
-                                   _("_Flip"));
-  gtk_widget_add_accelerator (flip1, "activate_item", edit1_menu_accels,
-                              tmp_key, 0, 0);
-  gtk_widget_ref (flip1);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "flip1", flip1,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (flip1);
-  gtk_container_add (GTK_CONTAINER (edit1_menu), flip1);
-
-  flip1_menu = gtk_menu_new ();
-  gtk_widget_ref (flip1_menu);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "flip1_menu", flip1_menu,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM (flip1), flip1_menu);
-  flip1_menu_accels = gtk_menu_ensure_uline_accel_group (GTK_MENU (flip1_menu));
-
-  horizontal1 = gtk_menu_item_new_with_label ("");
-  tmp_key = gtk_label_parse_uline (GTK_LABEL (GTK_BIN (horizontal1)->child),
-                                   _("_Horizontal"));
-  gtk_widget_add_accelerator (horizontal1, "activate_item", flip1_menu_accels,
-                              tmp_key, 0, 0);
-  gtk_widget_ref (horizontal1);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "horizontal1", horizontal1,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (horizontal1);
-  gtk_container_add (GTK_CONTAINER (flip1_menu), horizontal1);
-
-  vertical1 = gtk_menu_item_new_with_label ("");
-  tmp_key = gtk_label_parse_uline (GTK_LABEL (GTK_BIN (vertical1)->child),
-                                   _("_Vertical"));
-  gtk_widget_add_accelerator (vertical1, "activate_item", flip1_menu_accels,
-                              tmp_key, 0, 0);
-  gtk_widget_ref (vertical1);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "vertical1", vertical1,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (vertical1);
-  gtk_container_add (GTK_CONTAINER (flip1_menu), vertical1);
-
-  rotate1 = gtk_menu_item_new_with_label ("");
-  tmp_key = gtk_label_parse_uline (GTK_LABEL (GTK_BIN (rotate1)->child),
-                                   _("_Rotate"));
-  gtk_widget_add_accelerator (rotate1, "activate_item", edit1_menu_accels,
-                              tmp_key, 0, 0);
-  gtk_widget_ref (rotate1);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "rotate1", rotate1,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (rotate1);
-  gtk_container_add (GTK_CONTAINER (edit1_menu), rotate1);
-
-  rotate1_menu = gtk_menu_new ();
-  gtk_widget_ref (rotate1_menu);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "rotate1_menu", rotate1_menu,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM (rotate1), rotate1_menu);
-  rotate1_menu_accels = gtk_menu_ensure_uline_accel_group (GTK_MENU (rotate1_menu));
-
-  _90_degrees1 = gtk_menu_item_new_with_label (_("90 degrees"));
-  gtk_widget_ref (_90_degrees1);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "_90_degrees1", _90_degrees1,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (_90_degrees1);
-  gtk_container_add (GTK_CONTAINER (rotate1_menu), _90_degrees1);
-  gtk_widget_add_accelerator (_90_degrees1, "activate", accel_group,
-                              GDK_r, GDK_SHIFT_MASK,
-                              GTK_ACCEL_VISIBLE);
-
-  _180_degrees1 = gtk_menu_item_new_with_label (_("180 degrees"));
-  gtk_widget_ref (_180_degrees1);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "_180_degrees1", _180_degrees1,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (_180_degrees1);
-  gtk_container_add (GTK_CONTAINER (rotate1_menu), _180_degrees1);
-
-  _270_degrees1 = gtk_menu_item_new_with_label (_("270 degrees"));
-  gtk_widget_ref (_270_degrees1);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "_270_degrees1", _270_degrees1,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (_270_degrees1);
-  gtk_container_add (GTK_CONTAINER (rotate1_menu), _270_degrees1);
-
-  size1 = gtk_menu_item_new_with_label ("");
-  tmp_key = gtk_label_parse_uline (GTK_LABEL (GTK_BIN (size1)->child),
-                                   _("_Size"));
-  gtk_widget_add_accelerator (size1, "activate_item", edit1_menu_accels,
-                              tmp_key, 0, 0);
-  gtk_widget_ref (size1);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "size1", size1,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (size1);
-  gtk_container_add (GTK_CONTAINER (edit1_menu), size1);
-
-  size1_menu = gtk_menu_new ();
-  gtk_widget_ref (size1_menu);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "size1_menu", size1_menu,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM (size1), size1_menu);
-  size1_menu_accels = gtk_menu_ensure_uline_accel_group (GTK_MENU (size1_menu));
-
-  scale1 = gtk_menu_item_new_with_label ("");
-  tmp_key = gtk_label_parse_uline (GTK_LABEL (GTK_BIN (scale1)->child),
-                                   _("_Scale"));
-  gtk_widget_add_accelerator (scale1, "activate_item", size1_menu_accels,
-                              tmp_key, 0, 0);
-  gtk_widget_ref (scale1);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "scale1", scale1,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (scale1);
-  gtk_container_add (GTK_CONTAINER (size1_menu), scale1);
-  gtk_widget_add_accelerator (scale1, "activate", accel_group,
-                              GDK_s, GDK_SHIFT_MASK,
-                              GTK_ACCEL_VISIBLE);
-
-  scale_half1 = gtk_menu_item_new_with_label ("");
-  tmp_key = gtk_label_parse_uline (GTK_LABEL (GTK_BIN (scale_half1)->child),
-                                   _("Scale _Half"));
-  gtk_widget_add_accelerator (scale_half1, "activate_item", size1_menu_accels,
-                              tmp_key, 0, 0);
-  gtk_widget_ref (scale_half1);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "scale_half1", scale_half1,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (scale_half1);
-  gtk_container_add (GTK_CONTAINER (size1_menu), scale_half1);
-  gtk_widget_add_accelerator (scale_half1, "activate", accel_group,
-                              GDK_h, GDK_SHIFT_MASK,
-                              GTK_ACCEL_VISIBLE);
-
-  scale_double1 = gtk_menu_item_new_with_label ("");
-  tmp_key = gtk_label_parse_uline (GTK_LABEL (GTK_BIN (scale_double1)->child),
-                                   _("Scale _Double"));
-  gtk_widget_add_accelerator (scale_double1, "activate_item", size1_menu_accels,
-                              tmp_key, 0, 0);
-  gtk_widget_ref (scale_double1);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "scale_double1", scale_double1,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (scale_double1);
-  gtk_container_add (GTK_CONTAINER (size1_menu), scale_double1);
-  gtk_widget_add_accelerator (scale_double1, "activate", accel_group,
-                              GDK_d, GDK_SHIFT_MASK,
-                              GTK_ACCEL_VISIBLE);
 
   select1 = gtk_menu_item_new_with_label ("");
   tmp_key = gtk_label_parse_uline (GTK_LABEL (GTK_BIN (select1)->child),
@@ -1061,61 +899,6 @@ create_main_window (void)
   gtk_widget_show (label2);
   gtk_toolbar_append_widget (GTK_TOOLBAR (toolbar1), label2, NULL, NULL);
 
-  tmp_toolbar_icon = create_pixmap (main_window, "rotc.xpm");
-  rotate_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar1),
-                                GTK_TOOLBAR_CHILD_BUTTON,
-                                NULL,
-                                _("button10"),
-                                NULL, NULL,
-                                tmp_toolbar_icon, NULL, NULL);
-  gtk_widget_ref (rotate_button);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "rotate_button", rotate_button,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (rotate_button);
-
-  tmp_toolbar_icon = create_pixmap (main_window, "fliph.xpm");
-  flip_horizontal_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar1),
-                                GTK_TOOLBAR_CHILD_BUTTON,
-                                NULL,
-                                _("button12"),
-                                NULL, NULL,
-                                tmp_toolbar_icon, NULL, NULL);
-  gtk_widget_ref (flip_horizontal_button);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "flip_horizontal_button", flip_horizontal_button,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (flip_horizontal_button);
-
-  tmp_toolbar_icon = create_pixmap (main_window, "flipv.xpm");
-  flip_vertical_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar1),
-                                GTK_TOOLBAR_CHILD_BUTTON,
-                                NULL,
-                                _("button13"),
-                                NULL, NULL,
-                                tmp_toolbar_icon, NULL, NULL);
-  gtk_widget_ref (flip_vertical_button);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "flip_vertical_button", flip_vertical_button,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (flip_vertical_button);
-
-  tmp_toolbar_icon = create_pixmap (main_window, "resize.xpm");
-  scale_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar1),
-                                GTK_TOOLBAR_CHILD_BUTTON,
-                                NULL,
-                                _("button14"),
-                                NULL, NULL,
-                                tmp_toolbar_icon, NULL, NULL);
-  gtk_widget_ref (scale_button);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "scale_button", scale_button,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (scale_button);
-
-  label4 = gtk_label_new (_("       "));
-  gtk_widget_ref (label4);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "label4", label4,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (label4);
-  gtk_toolbar_append_widget (GTK_TOOLBAR (toolbar1), label4, NULL, NULL);
-
   tmp_toolbar_icon = create_pixmap (main_window, "configure.xpm");
   configure_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar1),
                                 GTK_TOOLBAR_CHILD_BUTTON,
@@ -1149,26 +932,12 @@ create_main_window (void)
 	GTK_SIGNAL_FUNC(main_quit), NULL);
   gtk_widget_show (exit_button);
 
-  notebook = gtk_notebook_new();
-  gtk_widget_ref (notebook);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "notebook", notebook,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (notebook);
-  gtk_box_pack_start (GTK_BOX (vbox1), notebook, TRUE, TRUE, 0);
-
-  label = gtk_label_new("Index");
-  gtk_widget_ref (label);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "label", label,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (label);
-
   hpaned1 = gtk_hpaned_new ();
   gtk_widget_ref (hpaned1);
   gtk_object_set_data_full (GTK_OBJECT (main_window), "hpaned1", hpaned1,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (hpaned1);
-  gtk_notebook_append_page(GTK_NOTEBOOK(notebook), hpaned1, label);
-//  gtk_box_pack_start (GTK_BOX (vbox1), hpaned1, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox1), hpaned1, TRUE, TRUE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (hpaned1), 2);
   gtk_paned_set_position (GTK_PANED (hpaned1), 200);
 
@@ -1197,10 +966,41 @@ create_main_window (void)
 
   tree1 = gtk_tree_new ();
   gtk_widget_ref (tree1);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "camera_tree", tree1,
+  gtk_object_set_data_full (GTK_OBJECT (main_window), "folder_tree", tree1,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (tree1);
   gtk_container_add (GTK_CONTAINER (viewport1), tree1);
+  gtk_tree_set_selection_mode(GTK_TREE(tree1), GTK_SELECTION_BROWSE);
+
+  tree_item = gtk_tree_item_new ();
+  gtk_widget_ref (tree_item);
+  gtk_object_set_data_full (GTK_OBJECT (main_window), "camera_tree", tree_item,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_object_set_data (GTK_OBJECT (tree_item), "path", (gpointer)"/");
+  gtk_signal_connect(GTK_OBJECT(tree_item), "select", GTK_SIGNAL_FUNC(folder_set),NULL);
+  gtk_widget_show (tree_item);
+  gtk_tree_append(GTK_TREE(tree1), tree_item);
+
+  hbox = gtk_hbox_new(FALSE, 3);
+  gtk_widget_ref (hbox);
+  gtk_object_set_data_full (GTK_OBJECT (main_window), "hbox", hbox,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (hbox);
+  gtk_container_add(GTK_CONTAINER(tree_item), hbox);
+
+  pixmap = create_pixmap (main_window, "camera.xpm");
+  gtk_widget_ref (pixmap);
+  gtk_object_set_data_full (GTK_OBJECT (main_window), "camera_pixmap", pixmap,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (pixmap);
+  gtk_box_pack_start (GTK_BOX(hbox), pixmap, FALSE, FALSE, 0);
+
+  label = gtk_label_new("No Camera Selected");
+  gtk_widget_ref (label);
+  gtk_object_set_data_full (GTK_OBJECT (main_window), "camera_label", label,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (label);
+  gtk_box_pack_start (GTK_BOX(hbox), label, FALSE, FALSE, 0);
 
   progress_bar = gtk_progress_bar_new ();
   gtk_widget_ref (progress_bar);
@@ -1270,30 +1070,6 @@ create_main_window (void)
                       NULL);
   gtk_signal_connect (GTK_OBJECT (exit1), "activate",
                       GTK_SIGNAL_FUNC (on_exit_activate),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (horizontal1), "activate",
-                      GTK_SIGNAL_FUNC (on_flip_horizontal_activate),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (vertical1), "activate",
-                      GTK_SIGNAL_FUNC (on_flip_vertical_activate),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (_90_degrees1), "activate",
-                      GTK_SIGNAL_FUNC (on_90_degrees_activate),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (_180_degrees1), "activate",
-                      GTK_SIGNAL_FUNC (on_180_degrees_activate),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (_270_degrees1), "activate",
-                      GTK_SIGNAL_FUNC (on_270_degrees_activate),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (scale1), "activate",
-                      GTK_SIGNAL_FUNC (on_scale_activate),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (scale_half1), "activate",
-                      GTK_SIGNAL_FUNC (on_scale_half_activate),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (scale_double1), "activate",
-                      GTK_SIGNAL_FUNC (on_scale_double_activate),
                       NULL);
   gtk_signal_connect (GTK_OBJECT (all1), "activate",
                       GTK_SIGNAL_FUNC (on_select_all_activate),
@@ -1440,7 +1216,7 @@ create_confirm_window (void)
 
   vbox4 = gtk_vbox_new (FALSE, 7);
   gtk_widget_ref (vbox4);
-  gtk_object_set_data_full (GTK_OBJECT (confirm_window), "vbox4", vbox4,
+  gtk_object_set_data_full (GTK_OBJECT (confirm_window), "vbox", vbox4,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (vbox4);
   gtk_container_add (GTK_CONTAINER (confirm_window), vbox4);
@@ -1457,14 +1233,14 @@ create_confirm_window (void)
   gtk_object_set_data_full (GTK_OBJECT (confirm_window), "hsep", hsep,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (hsep);
-  gtk_box_pack_start (GTK_BOX (vbox4), hsep, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (vbox4), hsep, FALSE, FALSE, 0);
 
   hbox2 = gtk_hbox_new (TRUE, 5);
   gtk_widget_ref (hbox2);
   gtk_object_set_data_full (GTK_OBJECT (confirm_window), "hbox2", hbox2,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (hbox2);
-  gtk_box_pack_start (GTK_BOX (vbox4), hbox2, FALSE, TRUE, 0);
+  gtk_box_pack_end (GTK_BOX (vbox4), hbox2, FALSE, TRUE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (hbox2), 5);
 
   button19 = gtk_button_new_with_label (_("Yes"));

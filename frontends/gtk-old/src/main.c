@@ -9,6 +9,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <gtk/gtk.h>
 #include <gphoto2.h>
@@ -25,6 +26,7 @@ int	   gp_gtk_camera_init=0;
 int
 main (int argc, char *argv[])
 {
+	GtkWidget *label;
 	char buf[1024];
 
 #ifdef ENABLE_NLS
@@ -48,19 +50,17 @@ main (int argc, char *argv[])
 	add_pixmap_directory (PACKAGE_DATA_DIR "/pixmaps");
 	add_pixmap_directory (PACKAGE_SOURCE_DIR "/pixmaps");
 
-	/*
-	 * The following code was added by Glade to create one of each component
-	 * (except popup menus), just so that you see something after building
-	 * the project. Delete any components that you don't want shown initially.
-	 */
 	gp_gtk_main_window = create_main_window ();
 	gtk_widget_show (gp_gtk_main_window);
 
 	if (gp_setting_get("camera", buf)==GP_OK) {
 		/* Set the camera model label */
+		label = (GtkWidget*) lookup_widget(gp_gtk_main_window, "camera_label");
+		gtk_label_set_text(GTK_LABEL(label), buf);
 	}
 
 	getcwd(buf, 1024);
+	strcat(buf, "/");
 	gp_setting_set("cwd", buf);
 
 	gtk_signal_connect (GTK_OBJECT(gp_gtk_main_window), "delete_event",

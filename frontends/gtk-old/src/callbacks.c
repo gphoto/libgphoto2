@@ -37,7 +37,7 @@ int camera_set() {
 	/* Takes the settings 'camera', 'port', and 'speed' and
 	   sets it to the current camera */
 
-	GtkWidget *message, *message_label;
+	GtkWidget *message, *message_label, *camera_label;
 	CameraPortSettings ps;
 	char camera[1024], port[1024], speed[1024];
 
@@ -69,11 +69,12 @@ int camera_set() {
 		return (GP_ERROR);
 	}
 
+	camera_label = (GtkWidget*) lookup_widget(gp_gtk_main_window, "camera_label");
+	gtk_label_set_text(GTK_LABEL(camera_label), camera);
 	gtk_widget_destroy(message);
 
 	gp_gtk_camera_init = 1;
 	return (GP_OK);
-
 }
 
 int main_quit(GtkWidget *widget, gpointer data) {
@@ -196,6 +197,20 @@ void select_inverse() {
 
 void select_none() {
 	debug_print("select none");
+
+}
+
+/* Folder Callbacks */
+/* ----------------------------------------------------------- */
+
+void folder_set (GtkWidget *tree_item, gpointer data) {
+
+	char buf[1024];
+	char *path = (char*)gtk_object_get_data(GTK_OBJECT(tree_item), "path");
+
+	sprintf(buf, "camera folder path = %s", path);
+	debug_print(buf);
+printf("%s \n", buf);
 
 }
 
@@ -451,9 +466,9 @@ void camera_index_thumbnails() {
 
 	GTK_ICON_LIST(icon_list)->is_editable = FALSE;
 	for (x=0; x<10; x++) {
-		sprintf(buf,"Photo #%i", x);
+		sprintf(buf,"File #%i", x);
 		item = gtk_icon_list_add_from_data(GTK_ICON_LIST(icon_list),
-			nothumbnail_xpm,buf,NULL);
+			no_thumbnail_xpm,buf,NULL);
 	}
 	resize=1;
 }
