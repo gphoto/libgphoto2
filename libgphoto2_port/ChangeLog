@@ -1,3 +1,9 @@
+2002-05-30  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* m4/documentation.m4: fixed fig2dev test,
+		hack: assume xmlto cannot do pdf and ps even if it claims to, 
+		added output message
+
 2002-05-28  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* doc/DocRules.am: API docs belong to API_DIR

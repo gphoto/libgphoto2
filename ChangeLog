@@ -1,3 +1,17 @@
+2002-05-30  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* configure.in: 2.0.1dev9, as we have a manual now
+	* configure.in: added manual doc message, named API doc msg like
+		that, reformatted messages a little 
+	* doc/Makefile.am: build manual only if possible,
+		clean manual only if building possible
+	* doc/gphoto2.xml: 
+		- add "QuickStart" chapter
+		- improved existing setup chapter
+		- added first part of developer (API) documentation
+		- added chapter on ideas for the future
+		- added appendix with resources
+	
 2002-05-26  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* doc/gphoto2.xml: added gphoto2_port(3) man page
