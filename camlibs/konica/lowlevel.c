@@ -424,7 +424,7 @@ while (read < rbs_internal) {
 		} else if (*c == ESC) {
 			if (i == read + r - 1) {
 				CHECK (gp_port_read (device,
-						&((*rb)[*rbs + i + 1]), 1));
+						&((*rb)[*rbs + read + r]), 1));
 				r++;
 			}
 			*c = (~*(c + 1) & 0xff);
@@ -435,7 +435,7 @@ while (read < rbs_internal) {
 				error_flag = 1;
 				break;
 			}
-			memmove (c + 1, c + 2, read + r - i);
+			memmove (c + 1, c + 2, read + r - i - 2);
 			r--;
 		}
 		checksum += (*rb)[*rbs + i];

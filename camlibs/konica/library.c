@@ -535,7 +535,7 @@ static int
 camera_capture_preview (Camera* camera, CameraFile* file)
 {
         unsigned char *data = NULL;
-        long int size;
+        long int size = 0;
 
         CHECK (camera, k_get_preview (camera->port, TRUE,
 			      &data, (unsigned int *) &size));

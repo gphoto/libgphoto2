@@ -1,3 +1,7 @@
+2001-12-11  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* lowlevel.c: Fix bug introduced with last patch.
+
 2001-12-09  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* lowlevel.c: Do not read one byte after another - that makes
