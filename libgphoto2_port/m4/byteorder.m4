@@ -1,6 +1,6 @@
 dnl AC_NEED_BYTEORDER_H ( HEADER-TO-GENERATE )
 dnl $Id$
-dnl Copyright 2001 by Dan Fandrich <dan@coneharvesters.com>
+dnl Copyright 2001-2002 by Dan Fandrich <dan@coneharvesters.com>
 dnl This file may be copied and used freely without restrictions.  No warranty
 dnl is expressed or implied.
 dnl
@@ -33,6 +33,14 @@ $4
 dnl Create a header file that defines extended byte swapping macros
 AC_DEFUN(AC_NEED_BYTEORDER_H,
 [
+changequote(, )dnl
+ac_dir=`echo $1|sed 's%/[^/][^/]*$%%'`
+changequote([, ])dnl
+if test "$ac_dir" != "$1" && test "$ac_dir" != .; then
+  # The file is in a subdirectory.
+  test ! -d "$ac_dir" && mkdir "$ac_dir"
+fi
+
 cat > "$1" << EOF
 /* This file is generated automatically by configure */
 /* It is valid only for the system type ${host} */
@@ -89,6 +97,7 @@ dnl Linux GLIBC
 #include <byteswap.h>
 #define swap16(x) bswap_16(x)
 #define swap32(x) bswap_32(x)
+#define swap64(x) bswap_64(x)
 
 EOF],
 
@@ -105,6 +114,7 @@ EOF
 cat >> "$1" << EOF
 #define swap16(x) bswap16(x)
 #define swap32(x) bswap32(x)
+#define swap64(x) bswap64(x)
 
 EOF],
 
@@ -116,6 +126,15 @@ dnl FreeBSD
 #include <sys/types.h>
 #define swap16(x) __byte_swap_word(x)
 #define swap32(x) __byte_swap_long(x)
+/* No optimized 64 bit byte swapping macro is available */
+#define swap64(x) ((uint64_t)(((uint64_t)(x) << 56) & 0xff00000000000000ULL | \\
+			      ((uint64_t)(x) << 40) & 0x00ff000000000000ULL | \\
+			      ((uint64_t)(x) << 24) & 0x0000ff0000000000ULL | \\
+			      ((uint64_t)(x) << 8)  & 0x000000ff00000000ULL | \\
+			      ((x) >> 8)  & 0x00000000ff000000ULL | \\
+			      ((x) >> 24) & 0x0000000000ff0000ULL | \\
+			      ((x) >> 40) & 0x000000000000ff00ULL | \\
+			      ((x) >> 56) & 0x00000000000000ffULL))
 
 EOF],
 
@@ -127,6 +146,7 @@ dnl OS X
 #include <machine/byte_order.h>
 #define swap16(x) NXSwapShort(x)
 #define swap32(x) NXSwapLong(x)
+#define swap64(x) NXSwapLongLong(x)
 
 EOF],
          [
@@ -138,6 +158,14 @@ EOF],
 				    ((uint32_t)(x) << 8)  & 0x00ff0000UL | \\
 				    ((x) >> 8)  & 0x0000ff00UL | \\
 				    ((x) >> 24) & 0x000000ffUL))
+#define swap64(x) ((uint64_t)(((uint64_t)(x) << 56) & 0xff00000000000000ULL | \\
+			      ((uint64_t)(x) << 40) & 0x00ff000000000000ULL | \\
+			      ((uint64_t)(x) << 24) & 0x0000ff0000000000ULL | \\
+			      ((uint64_t)(x) << 8)  & 0x000000ff00000000ULL | \\
+			      ((x) >> 8)  & 0x00000000ff000000ULL | \\
+			      ((x) >> 24) & 0x0000000000ff0000ULL | \\
+			      ((x) >> 40) & 0x000000000000ff00ULL | \\
+			      ((x) >> 56) & 0x00000000000000ffULL))
 
 EOF
 	else
@@ -145,6 +173,15 @@ EOF
 /* Use these as generic byteswapping macros on this little endian system */
 #define swap16(x)		ntohs(x)
 #define swap32(x)		ntohl(x)
+/* No optimized 64 bit byte swapping macro is available */
+#define swap64(x) ((uint64_t)(((uint64_t)(x) << 56) & 0xff00000000000000ULL | \\
+			      ((uint64_t)(x) << 40) & 0x00ff000000000000ULL | \\
+			      ((uint64_t)(x) << 24) & 0x0000ff0000000000ULL | \\
+			      ((uint64_t)(x) << 8)  & 0x000000ff00000000ULL | \\
+			      ((x) >> 8)  & 0x00000000ff000000ULL | \\
+			      ((x) >> 24) & 0x0000000000ff0000ULL | \\
+			      ((x) >> 40) & 0x000000000000ff00ULL | \\
+			      ((x) >> 56) & 0x00000000000000ffULL))
 
 EOF
 	fi
@@ -194,10 +231,16 @@ EOF
 #define le16toh(x)      swap16(x)
 #define le32toh(x)      swap32(x)
 
+#define htobe64(x)      (x)
+#define be64toh(x)      (x)
+
 #define HTOLE16(x)      (x) = htole16(x)
 #define HTOLE32(x)      (x) = htole32(x)
 #define LE16TOH(x)      (x) = le16toh(x)
 #define LE32TOH(x)      (x) = le32toh(x)
+
+#define HTOBE64(x)      (void) (x)
+#define BE64TOH(x)      (void) (x)
 
 EOF
  else
@@ -216,6 +259,13 @@ EOF
 #define LE16TOH(x)      (void) (x)
 #define LE32TOH(x)      (void) (x)
 #define LE64TOH(x)      (void) (x)
+
+/* These don't have standard aliases */
+#define htobe64(x)      swap64(x)
+#define be64toh(x)      swap64(x)
+
+#define HTOBE64(x)      (x) = htobe64(x)
+#define BE64TOH(x)      (x) = be64toh(x)
 
 EOF
  fi
@@ -240,13 +290,17 @@ case "${host_cpu}" in
 /* so use the optimized macros above to do this job */
 #define be16atoh(x)     be16toh(*(uint16_t*)(x))
 #define be32atoh(x)     be32toh(*(uint32_t*)(x))
+#define be64atoh(x)     be64toh(*(uint64_t*)(x))
 #define le16atoh(x)     le16toh(*(uint16_t*)(x))
 #define le32atoh(x)     le32toh(*(uint32_t*)(x))
+#define le64atoh(x)     le64toh(*(uint64_t*)(x))
 
 #define htobe16a(a,x)   *(uint16_t*)(a) = htobe16(x)
 #define htobe32a(a,x)   *(uint32_t*)(a) = htobe32(x)
+#define htobe64a(a,x)   *(uint64_t*)(a) = htobe64(x)
 #define htole16a(a,x)   *(uint16_t*)(a) = htole16(x)
 #define htole32a(a,x)   *(uint32_t*)(a) = htole32(x)
+#define htole64a(a,x)   *(uint64_t*)(a) = htole64(x)
 
 EOF
   ;;
@@ -262,13 +316,27 @@ EOF
 /* Non-optimized but portable macros */
 #define be16atoh(x)     ((uint16_t)(((x)[0]<<8)|(x)[1]))
 #define be32atoh(x)     ((uint32_t)(((x)[0]<<24)|((x)[1]<<16)|((x)[2]<<8)|(x)[3]))
+#define be64atoh(x)     ((uint64_t)(((x)[0]<<56)|((x)[1]<<48)|((x)[2]<<40)| \\
+        ((x)[3]<<32)|((x)[4]<<24)|((x)[5]<<16)|((x)[6]<<8)|(x)[7]))
 #define le16atoh(x)     ((uint16_t)(((x)[1]<<8)|(x)[0]))
 #define le32atoh(x)     ((uint32_t)(((x)[3]<<24)|((x)[2]<<16)|((x)[1]<<8)|(x)[0]))
+#define le64atoh(x)     ((uint64_t)(((x)[7]<<56)|((x)[6]<<48)|((x)[5]<<40)| \\
+        ((x)[4]<<32)|((x)[3]<<24)|((x)[2]<<16)|((x)[1]<<8)|(x)[0]))
 
-#define htobe16a(a,x)   (a)[0]=(uint8_t)((x)>>8), (a)[1]=(x)&0xff
-#define htobe32a(a,x)   (a)[0]=(uint8_t)((x)>>24), (a)[1]=(uint8_t)((x)>>16), (a)[2]=(uint8_t)((x)>>8), (a)[3]=(x)&0xff
-#define htole16a(a,x)   (a)[1]=(uint8_t)((x)>>8), (a)[0]=(x)&0xff
-#define htole32a(a,x)   (a)[3]=(uint8_t)((x)>>24), (a)[2]=(uint8_t)((x)>>16), (a)[1]=(uint8_t)((x)>>8), (a)[0]=(x)&0xff
+#define htobe16a(a,x)   (a)[0]=(uint8_t)((x)>>8), (a)[1]=(uint8_t)(x)
+#define htobe32a(a,x)   (a)[0]=(uint8_t)((x)>>24), (a)[1]=(uint8_t)((x)>>16), \\
+        (a)[2]=(uint8_t)((x)>>8), (a)[3]=(uint8_t)(x)
+#define htobe64a(a,x)   (a)[0]=(uint8_t)((x)>>56), (a)[1]=(uint8_t)((x)>>48), \\
+        (a)[2]=(uint8_t)((x)>>40), (a)[3]=(uint8_t)((x)>>32), \\
+        (a)[4]=(uint8_t)((x)>>24), (a)[5]=(uint8_t)((x)>>16), \\
+        (a)[6]=(uint8_t)((x)>>8), (a)[7]=(uint8_t)(x)
+#define htole16a(a,x)   (a)[1]=(uint8_t)((x)>>8), (a)[0]=(uint8_t)(x)
+#define htole32a(a,x)   (a)[3]=(uint8_t)((x)>>24), (a)[2]=(uint8_t)((x)>>16), \\
+        (a)[1]=(uint8_t)((x)>>8), (a)[0]=(uint8_t)(x)
+#define htole64a(a,x)   (a)[7]=(uint8_t)((x)>>56), (a)[6]=(uint8_t)((x)>>48), \\
+        (a)[5]=(uint8_t)((x)>>40), (a)[4]=(uint8_t)((x)>>32), \\
+        (a)[3]=(uint8_t)((x)>>24), (a)[2]=(uint8_t)((x)>>16), \\
+        (a)[1]=(uint8_t)((x)>>8), (a)[0]=(uint8_t)(x)
 
 EOF
   ;;

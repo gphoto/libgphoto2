@@ -1,6 +1,6 @@
 dnl AC_NEED_STDINT_H ( HEADER-TO-GENERATE )
 dnl $Id$
-dnl Copyright 2001 by Dan Fandrich <dan@coneharvesters.com>
+dnl Copyright 2001-2002 by Dan Fandrich <dan@coneharvesters.com>
 dnl This file may be copied and used freely without restrictions.  No warranty
 dnl is expressed or implied.
 dnl
@@ -31,9 +31,19 @@ fi
 
 dnl Look for a header file that defines size-specific integer types
 AC_DEFUN(AC_NEED_STDINT_H,
-[AC_CHECK_DEFINED_TYPE(uint8_t,
+[
+changequote(, )dnl
+ac_dir=`echo "$1"|sed 's%/[^/][^/]*$%%'`
+changequote([, ])dnl
+if test "$ac_dir" != "$1" && test "$ac_dir" != .; then
+  # The file is in a subdirectory.
+  test ! -d "$ac_dir" && mkdir "$ac_dir"
+fi
+
+AC_CHECK_DEFINED_TYPE(uint8_t,
 stdint.h,
-[cat > "$1" <<EOF
+[
+cat > "$1" <<EOF
 /* This file is generated automatically by configure */
 #include <stdint.h>
 EOF],
@@ -59,8 +69,21 @@ sys/types.h,
 typedef u_int8_t uint8_t;
 typedef u_int16_t uint16_t;
 typedef u_int32_t uint32_t;
+EOF
+
+AC_CHECK_DEFINED_TYPE(u_int64_t,
+sys/types.h,
+[cat >> "$1" <<EOF
+typedef u_int64_t uint64_t;
 #endif /*!__STDINT_H*/
 EOF],
+[cat >> "$1" <<EOF
+/* 64-bit types are not available on this system */
+/* typedef u_int64_t uint64_t; */
+#endif /*!__STDINT_H*/
+EOF]),
+
+],
 [AC_MSG_WARN([I can't find size-specific integer definitions on this system])
 if test -e "$1" ; then
 	rm -f "$1"
