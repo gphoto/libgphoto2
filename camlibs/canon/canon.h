@@ -114,6 +114,7 @@ typedef enum {
  * @CANON_PS_S50: PowerShot S50
  * @CANON_PS_S400: PowerShot S400, Digital IXUS 400
  * @CANON_PS_SD100: PowerShot SD100, Digital IXUS II
+ * @CANON_PS_A400: PowerShot A400
  *
  * Enumeration of all camera types currently supported.
  *
@@ -148,6 +149,7 @@ typedef enum {
 	CANON_PS_A200,
 	CANON_PS_A300,
 	CANON_PS_A310,
+	CANON_PS_A400,
 	CANON_PS_S50,
 	CANON_PS_S45,
 	CANON_PS_G3,
