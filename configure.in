@@ -198,3 +198,12 @@ doc/Makefile
 doc/api/Makefile
 ])
 
+echo "
+
+Configuration (libgphoto2):
+
+	Source code location: ${srcdir}
+	Compiler:             ${CC}
+
+	Build documenation:   $enable_gtk_doc
+"

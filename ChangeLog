@@ -1,5 +1,9 @@
 2001-10-10  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* configure.in: Give some feedback (gtk-doc: yes/no?)
+
+2001-10-10  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2/filesys.c: Documented.
 
 2001-10-10  Lutz Müller <urc8@rz.uni-karlsruhe.de>
