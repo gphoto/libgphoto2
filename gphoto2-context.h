@@ -99,7 +99,7 @@ void         gp_context_progress_update (GPContext *context, unsigned int id,
 void         gp_context_progress_stop   (GPContext *context, unsigned int id);
 
 #ifdef __cplusplus
-extern "C" {
+}
 #endif /* __cplusplus */
 
 #endif /* __GPHOTO2_CONTEXT_H__ */

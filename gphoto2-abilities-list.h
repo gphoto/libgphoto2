@@ -105,7 +105,7 @@ int gp_abilities_list_get_abilities (CameraAbilitiesList *list, int index,
 				     CameraAbilities *abilities);
 
 #ifdef __cplusplus
-extern "C" {
+}
 #endif /* __cplusplus */
 
 #endif /* __GPHOTO2_ABILITIES_LIST_H__ */
