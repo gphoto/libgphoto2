@@ -165,6 +165,8 @@ const struct canonCamModelData models[] = {
 	{"Canon:Digital IXUS 400",      CANON_PS_S400,		0x04A9, 0x3075, CAP_SUP, S99M, S32K, S2M, NULL},
 	{"Canon:PowerShot S400",        CANON_PS_S400,		0x04A9, 0x3075, CAP_SUP, S99M, S32K, S2M, NULL},
 
+	{"Canon:PowerShot A300",        CANON_PS_A300,          0x04A9, 0x3076, CAP_SUP, S99M, S32K, S2M, NULL},
+
 	/* 3078 and 307a are in MacOS Info.plist, but I don't know
 	 * what they are --swestin. */
 	{"Canon:PowerShot unknown 4",		CANON_PS_UNK4,	0x04A9, 0x3078, CAP_SUP, S10M, S32K, S2M, NULL},
