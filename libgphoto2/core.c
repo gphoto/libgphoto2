@@ -152,15 +152,21 @@ int gp_port_info(int port_number, CameraPortInfo *info) {
 		case GPIO_DEVICE_PARALLEL:
 			info->type = GP_PORT_PARALLEL;
 			break;
-		case GPIO_DEVICE_USB:
+#ifdef GPIO_USB
+	        case GPIO_DEVICE_USB:
 			info->type = GP_PORT_USB;
 			break;
-		case GPIO_DEVICE_IEEE1394:
+#endif
+#ifdef GPIO_IEEE1394
+	        case GPIO_DEVICE_IEEE1394:
 			info->type = GP_PORT_IEEE1394;
 			break;
-		case GPIO_DEVICE_NETWORK:
+#endif			
+#ifdef GPIO_NETWORK
+	        case GPIO_DEVICE_NETWORK:
 			info->type = GP_PORT_NETWORK;
 			break;
+#endif
 		default:
 			info->type = GP_PORT_NONE;
 	}
