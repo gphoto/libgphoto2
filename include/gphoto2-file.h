@@ -23,12 +23,13 @@
 
 #define GP_MIME_RAW       "image/x-raw"
 #define GP_MIME_PNG       "image/png"
-#define GP_MIME_PNM       "image/pnm"
-#define GP_MIME_PPM       "image/ppm"
+#define GP_MIME_PGM       "image/x-portable-graymap"
+#define GP_MIME_PPM       "image/x-portable-pixmap"
 #define GP_MIME_JPEG      "image/jpeg"
 #define GP_MIME_TIFF      "image/tiff"
 #define GP_MIME_BMP       "image/bmp"
 #define GP_MIME_QUICKTIME "video/quicktime"
+#define GP_MIME_AVI       "video/x-msvideo"
 
 typedef enum {
 	GP_FILE_TYPE_PREVIEW,
