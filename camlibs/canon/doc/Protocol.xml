@@ -16,7 +16,7 @@
   <!-- ================================================================================ -->
 
   <title><phrase role="strong">Canon PowerShot Series Transfer
- Protocol Specifications</phrase> Wednesday, January 5, 2005</title>
+ Protocol Specifications</phrase> $Date$</title>
 
   <chapter id="chap.Intro">
     <title>Introduction</title>
@@ -161,10 +161,16 @@
         <para>28 Jan 2003: Convert DocBook XML, expand USB information</para>
 	<literallayout>
 	$Log$
+	Revision 1.7  2005/03/04 20:46:51  swestin
+	Rewrote a bit on the response packet in initialization.
+	Tightened borders on all tables.
+	Added A400 to list of camera models for which we know the initialization
+	  response.
+
 	Revision 1.6  2005/01/15 21:00:24  swestin
 	Fixed inclusion of CVS log info in document.
 	Added more info on response packet in camera initialization.
-
+	
 	Revision 1.5  2005/01/04 17:17:11  swestin
 	Fixed various typographical errors.
 	Added info observed from EOS 300D.
@@ -400,6 +406,7 @@ xx 00 xx xx ...
       <table frame="none">
         <title>Sequence numbers observed in serial streams</title>
         <tgroup cols="4" align="left" colsep="1" rowsep="1">
+	  <?dbhtml cellspacing="0" ?>
           <thead>
             <row><entry>&lt;mtype&gt;</entry><entry>&lt;dir&gt;</entry><entry>&lt;fffb&gt;</entry><entry>Operation</entry></row>
           </thead>
@@ -590,6 +597,7 @@ xx &lt;directory_name&gt; 00 00 00
 
         <table id="tbl.FileAtt"><title>File attributes</title>
           <tgroup cols="2" align="left" colsep="1" rowsep="1">
+	  <?dbhtml cellspacing="0" ?>
             <tbody>
               <row><entry>bit0 (0x01)</entry><entry>Set if this file is protected from deletion</entry></row>
               <row><entry>bit4 (0x10)</entry><entry>Set if this directory contains an item but was not recursively entered
@@ -780,20 +788,10 @@ xx &lt;directory_name&gt; 00 00 00
 00000050 00 FD 00 00 00 FD 00 00                         ........
         </programlisting>
 
-	<para>The bytes 0x40-0x43 seem to vary from camera to
-	camera: the S20 here has 01&nbsp;00&nbsp;02&nbsp;00. The
-	PowerShot G2 has 01&nbsp;00&nbsp;05&nbsp;03, just the same as
-	the EOS D30, D60, and 300D. The EOS 20D and PowerShot A75 have
-	01&nbsp;06&nbsp;15&nbsp;83. These bytes might identify which
-	version of the protocol is used.</para>
-
-	<para>The USB vendor and product ID are contained in bytes
-	0x44-0x47 of this packet: here 0x04A93043 for vendor 0x04a9,
-	product 0x3043 identifies this as a PowerShot S20.</para>
-
-        <para>The bytes 0x48-0x57 also vary from camera to camera. I
-        think they are 4-byte integers, and suspect that they specify
-        maximum transfer sizes in some way.</para>
+	<para>The bytes 0x40-0x43 seem to vary from camera to camera:
+	the S20 here has 01&nbsp;00&nbsp;02&nbsp;00. These bytes might
+	identify which version of the protocol is used. The following
+	table summarizes our observations to date.</para>
 
         <table id="tbl.InitPacketStuff"><title>Unknown contents of response packet</title>
           <tgroup cols="6" align="right" colsep="1" rowsep="1">
@@ -806,11 +804,19 @@ xx &lt;directory_name&gt; 00 00 00
               <row><entry>G1</entry><entry>00 05 07 00</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
               <row><entry>S20</entry><entry>01 00 02 00</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
               <row><entry>G2, D30, D60, 300D, IXUS v</entry><entry>01 00 05 03</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
-              <row><entry>A60, A75, A80, A300, S50</entry><entry>01 06 15 83</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
+              <row><entry>A60, A75, A80, A300, A400, S50</entry><entry>01 06 15 83</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
               <row><entry>20D</entry><entry>01 06 15 83</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>0x10000 (65536)</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
             </tbody>
           </tgroup>
         </table>
+
+	<para>The USB vendor and product ID are contained in bytes
+	0x44-0x47 of this packet: here 0x04A93043 for vendor 0x04a9,
+	product 0x3043 identifies this as a PowerShot S20.</para>
+
+        <para>The bytes 0x48-0x57 also vary from camera to camera. I
+        think they are 4-byte integers, and suspect that they specify
+        maximum transfer sizes in some way.</para>
 
         </listitem>
         <listitem>
@@ -1123,6 +1129,7 @@ do {
       <title>Summary of available (known) commands</title>
       <table frame="topbot"><title>Storage Control Commands (cmd2=0x11)</title>
         <tgroup cols="5" align="left" colsep="1" rowsep="1">
+	  <?dbhtml cellspacing="0" ?>
           <thead>
             <row><entry>cmd1</entry><entry>cmd3</entry><entry>Argument(e.g.)</entry><entry>Response Length</entry><entry>Operation</entry></row>
           </thead>
@@ -1159,6 +1166,7 @@ do {
       </table>
       <table frame="topbot"><title>Camera Control Commands (cmd2=0x12)</title>
         <tgroup cols="5" align="left" colsep="1" rowsep="1">
+	  <?dbhtml cellspacing="0" ?>
           <thead>
             <row><entry>cmd1</entry><entry>cmd3</entry><entry>Argument(e.g.)</entry><entry>Response Length</entry><entry>Operation</entry></row>
           </thead>
@@ -1926,6 +1934,7 @@ do {
 
       <table frame="topbot"><title>Remote Camera Control Codes</title>
         <tgroup cols="4" align="left" colsep="1" rowsep="1">
+	  <?dbhtml cellspacing="0" ?>
           <thead>
             <row><entry>Subcommand</entry><entry>Sample Parameters</entry><entry>Reply Length</entry><entry>Function</entry></row>
           </thead>
@@ -2603,6 +2612,7 @@ do {
 
         <table frame="topbot" id="table.OldEosCustom"><title>EOS Custom Functions</title>
           <tgroup cols="3" align="left" colsep="1" rowsep="1">
+	  <?dbhtml cellspacing="0" ?>
             <thead>
               <row><entry>Code</entry><entry>Function</entry><entry>Values</entry></row>
             </thead>
@@ -3039,6 +3049,7 @@ do {
 
       <table frame="topbot"><title>Fields in &ldquo;camera photo abilities&ldquo; response</title>
         <tgroup cols="3" align="left" colsep="1" rowsep="1">
+	  <?dbhtml cellspacing="0" ?>
           <thead>
             <row><entry>offset</entry><entry>bytes</entry><entry>value</entry></row>
           </thead>
@@ -3068,6 +3079,7 @@ struct {
       <table frame="topbot">
         <title>PowerShot G2 image formats reported</title>
         <tgroup cols="4" align="left" colsep="1" rowsep="1">
+	  <?dbhtml cellspacing="0" ?>
           <thead>
             <row><entry>Height</entry><entry>Width</entry><entry>Compression</entry><entry>Name</entry></row>
           </thead>
@@ -3304,6 +3316,7 @@ struct {
       <title>Summary of available (known) commands in new protocol</title>
       <table frame="topbot"><title>New Storage Control Commands (cmd2=0x11)</title>
         <tgroup cols="5" align="left" colsep="1" rowsep="1">
+	  <?dbhtml cellspacing="0" ?>
           <thead>
             <row><entry>cmd1</entry><entry>cmd3</entry><entry>Argument(e.g.)</entry><entry>Response Length</entry><entry>Operation</entry></row> </thead>
           <tbody>
@@ -3328,6 +3341,7 @@ struct {
 
       <table frame="topbot"><title>New Camera Control Commands (cmd2=0x12)</title>
         <tgroup cols="5" align="left" colsep="1" rowsep="1">
+	  <?dbhtml cellspacing="0" ?>
           <thead>
             <row><entry>cmd1</entry><entry>cmd3</entry><entry>Argument(e.g.)</entry><entry>Response Length</entry><entry>Operation</entry></row>
           </thead>
@@ -3948,6 +3962,7 @@ struct {
       <table frame="topbot">
         <title>Custom function values for EOS 20D</title>
         <tgroup cols="3" colsep="1" rowsep="1">
+	  <?dbhtml cellspacing="0" ?>
 	<colspec align="right"/>
 	<colspec align="center"/>
 	<colspec align="left" colwidth="20em"/>
@@ -4240,6 +4255,7 @@ struct {
 
       <table frame="topbot"><title>Fields in &ldquo;photo abilities&ldquo; response</title>
         <tgroup cols="3" align="left" colsep="1" rowsep="1">
+	  <?dbhtml cellspacing="0" ?>
           <thead>
             <row><entry>offset</entry><entry>bytes</entry><entry>value</entry></row>
           </thead>
@@ -4267,6 +4283,7 @@ struct {
       <table frame="topbot">
         <title>EOS 20D image formats reported</title>
         <tgroup cols="4" align="left" colsep="1" rowsep="1">
+	  <?dbhtml cellspacing="0" ?>
           <thead>
             <row><entry>Height</entry><entry>Width</entry><entry>Compression</entry><entry>Name</entry></row>
           </thead>
