@@ -429,7 +429,7 @@ camera_file_list (Camera* camera, CameraList* list, gchar* folder)
 	                &exif_size,
 	                &protected,
 	                &information_buffer,
-	                &information_buffer_size) == GP_OK) filename = g_strdup_printf ("%06i.jpeg", (int) image_id);
+	                &information_buffer_size) == GP_OK) filename = g_strdup_printf ("%06i.jpg", (int) image_id);
 		else filename = g_strdup ("??????.jpg");
 		g_free (information_buffer);
 		information_buffer = NULL;
