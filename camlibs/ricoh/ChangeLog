@@ -1,3 +1,14 @@
+2003-10-10  Marcus Meissner <marcus@jet.franken.de>
+	
+	* g3.txt, g3.c, Makefile.am: 
+	
+	  Added new Ricoh Caplio G3 driver.
+
+	  Lots of thanks to Klaus Singvogel for lending
+	  me his camera over the weekend.
+
+	  Status: Directory Listing and download of images works.
+
 2002-10-03  Lutz Müller <lutz@users.sourceforge.net>
 
 	* Makefile.am: -I$(top_builddir)/libgphoto2
