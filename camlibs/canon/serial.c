@@ -1349,3 +1349,10 @@ canon_serial_ready (Camera *camera)
  * End of file: serial.c
  *
  ****************************************************************************/
+
+/*
+ * Local Variables:
+ * c-file-style:"linux"
+ * indent-tabs-mode:t
+ * End:
+ */

@@ -815,3 +815,10 @@ canon_usb_identify (Camera *camera)
 
 	return GP_ERROR_MODEL_NOT_FOUND;
 }
+
+/*
+ * Local Variables:
+ * c-file-style:"linux"
+ * indent-tabs-mode:t
+ * End:
+ */

@@ -90,3 +90,10 @@ static const struct canon_usb_cmdstruct canon_usb_cmd[] = {
  * End of file: usb.h
  *
  ****************************************************************************/
+
+/*
+ * Local Variables:
+ * c-file-style:"linux"
+ * indent-tabs-mode:t
+ * End:
+ */
