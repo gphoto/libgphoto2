@@ -1,4 +1,5 @@
-int is_library (char *library_filename);
-int load_library (char *camera_name);
 int load_cameras();
-int close_library ();
+int is_library (char *library_filename);
+
+int load_library (Camera *camera, char *camera_name);
+int close_library (Camera *camera);

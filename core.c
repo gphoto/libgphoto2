@@ -1,4 +1,4 @@
-	#include <dlfcn.h>
+#include <dlfcn.h>
 #include <dirent.h>
 #include <fcntl.h>
 #include <stdlib.h>
@@ -23,42 +23,18 @@
 
 	int		glob_debug=0;
 
-	CameraPortSettings glob_port_settings;
-
-	/* Currently Selected camera/folder */
-	/* ------------------------------------------------ */
-			/* currently selected camera number */
-	int 		glob_camera_number = -1;
-			/* currently selected folder path */
-	char 		glob_folder_path[512];
-
 	/* Camera List */
 	/* ------------------------------------------------ */
-			/* total cameras found 		*/
 	int		glob_camera_count = 0;
-			/* camera/library list 		*/
 	CameraChoice	glob_camera[512];
-			/* camera abilities 		*/
 	CameraAbilities glob_camera_abilities[512];
-			/* camera library id's 		*/
 	char		*glob_camera_id[512];
-			/* number of camera library id's*/
 	int		glob_camera_id_count = 0;
 
 	/* Currently loaded settings */
 	/* ------------------------------------------------ */
-			/* number of settings found 	*/
 	int		glob_setting_count = 0; 
-			/* setting key/value list   	*/
 	Setting		glob_setting[512];  
-
-
-	/* Current loaded library's handle */
-	/* ------------------------------------------------ */
-			/* current library handle    	*/
-	void 		*glob_library_handle; 
-			/* pointer to current camera function set */
-	Camera   	glob_c;
 
 /* Core functions (for front-ends)
    ---------------------------------------------------------------- */
@@ -71,12 +47,9 @@ int gp_init (int debug) {
 	glob_debug = debug;
 
 	/* Initialize the globals */
-	glob_camera_number   = 0;
 	glob_camera_count    = 0;
-	glob_setting_count   = 0;
-	glob_library_handle  = NULL;
-	strcpy(glob_folder_path, "/");
 	glob_camera_id_count = 0;
+	glob_setting_count   = 0;
 
 	for(x=0; x<512; x++)
 		glob_camera_id[x] = (char *)malloc(sizeof(char)*64);
@@ -94,7 +67,7 @@ int gp_init (int debug) {
 		printf("core: Initializing gpio:\n");
 
 	if (gpio_init() == GPIO_ERROR) {
-		gp_message("ERROR: Can not initialize libgpio");
+		gp_camera_message(NULL, "ERROR: Can not initialize libgpio");
 		return (GP_ERROR);
 	}
 
@@ -129,7 +102,6 @@ int gp_exit () {
 	for(x=0; x<512; x++)
                 free(glob_camera_id[x]);
 
-	gp_camera_exit();
 	return (GP_OK);
 }
 
@@ -209,20 +181,30 @@ int gp_camera_abilities_by_name (char *camera_name, CameraAbilities *abilities) 
 
 }
 
-int gp_camera_set (int camera_number, CameraPortSettings *settings) {
+int gp_camera_new (Camera **camera, int camera_number, CameraPortSettings *settings) {
 
 	CameraInit ci;
+
+	*camera = (Camera*)malloc(sizeof(Camera));
 
 	if (camera_number >= glob_camera_count)
 		return (GP_ERROR);
 
-	if (glob_library_handle != NULL)
-		gp_camera_exit();
-	glob_library_handle = NULL;
-	if (load_library(glob_camera[camera_number].name)==GP_ERROR)
-		return (GP_ERROR);
-	glob_camera_number = camera_number;
+	/* Initialize the members */
+	strcpy((*camera)->model, glob_camera[camera_number].name);
+	strcpy((*camera)->folder, "/");
+	(*camera)->debug      = glob_debug;
+	(*camera)->number     = camera_number;
+	(*camera)->abilities  = (CameraAbilities*)malloc(sizeof(CameraAbilities));
+	(*camera)->functions  = (CameraFunctions*)malloc(sizeof(CameraFunctions));
+	(*camera)->library_handle  = NULL;
+	(*camera)->camlib_data     = NULL;
+	(*camera)->frontend_data   = NULL;
 
+	if (load_library(*camera, glob_camera[camera_number].name)==GP_ERROR)
+		return (GP_ERROR);
+
+	/* Initialize the camera library */
 	if (glob_debug)
 		printf("core: Initializing \"%s\" (%s)...\n", 
 			glob_camera[camera_number].name,
@@ -230,59 +212,55 @@ int gp_camera_set (int camera_number, CameraPortSettings *settings) {
 	strcpy(ci.model, glob_camera[camera_number].name);
 	memcpy(&ci.port_settings, settings, sizeof(ci.port_settings));
 
-	ci.debug = glob_debug;
-
-	if (gp_camera_init(&ci)==GP_ERROR)
+	if (gp_camera_init(*camera, &ci)==GP_ERROR)
 		return (GP_ERROR);
-
-
 
 	return(GP_OK);
 }
 
-int gp_camera_set_by_name (char *camera_name, CameraPortSettings *settings) {
+int gp_camera_new_by_name (Camera **camera, char *camera_name, CameraPortSettings *settings) {
 
 	int x=0;
 
 	while (x < glob_camera_count) {
 		if (strcmp(glob_camera[x].name, camera_name)==0)
-			return (gp_camera_set(x, settings));
+			return (gp_camera_new(camera, x, settings));
 		x++;
 	}
 
 	return (GP_ERROR);
 }
 
-int gp_camera_init (CameraInit *init) {
+int gp_camera_init (Camera *camera, CameraInit *init) {
 
-	if (glob_c.init == NULL)
+	if (camera->functions->init == NULL)
 		return(GP_ERROR);
 
-	return(glob_c.init(init));
+	return(camera->functions->init(camera, init));
 }
 
-int gp_camera_exit () {
+int gp_camera_exit (Camera *camera) {
 
 	int ret;
 
-	if (glob_c.exit == NULL)
+	if (camera->functions->exit == NULL)
 		return(GP_ERROR);
 
-	ret = glob_c.exit();
-	close_library();
+	ret = camera->functions->exit(camera);
+	close_library(camera);
 
 	return (ret);
 }
 
-int gp_folder_list(char *folder_path, CameraFolderInfo *list) {
+int gp_camera_folder_list(Camera *camera, char *folder_path, CameraFolderInfo *list) {
 
 	CameraFolderInfo t;
 	int x, y, z, count;
 
-	if (glob_c.folder_list == NULL)
+	if (camera->functions->folder_list == NULL)
 		return (GP_ERROR);
 
-	count = glob_c.folder_list(folder_path, list);
+	count = camera->functions->folder_list(camera, folder_path, list);
 
 	if (count == GP_ERROR)
 		return (GP_ERROR);
@@ -302,79 +280,69 @@ int gp_folder_list(char *folder_path, CameraFolderInfo *list) {
 	return(count);
 }
 
-int gp_folder_set (char *folder_path) {
+int gp_camera_folder_set (Camera *camera, char *folder_path) {
 
-	if (glob_c.folder_set == NULL)
+	if (camera->functions->folder_set == NULL)
 		return (GP_ERROR);
 
-	if (glob_c.folder_set(folder_path) == GP_ERROR)
+	if (camera->functions->folder_set(camera, folder_path) == GP_ERROR)
 		return (GP_ERROR);
 
-	strcpy(glob_folder_path, folder_path);
+	strcpy(camera->folder, folder_path);
 	return(GP_OK);
 }
 
-int gp_file_count () {
+int gp_camera_file_count (Camera *camera) {
 
-	if (glob_c.file_count == NULL)
+	if (camera->functions->file_count == NULL)
 		return (GP_ERROR);
 
-	return(glob_c.file_count());
+	return(camera->functions->file_count(camera));
 }
 
-int gp_file_get (int file_number, CameraFile *file) {
+int gp_camera_file_get (Camera *camera, CameraFile *file, int file_number) {
 
-	if (glob_c.file_get == NULL)
+	if (camera->functions->file_get == NULL)
 		return (GP_ERROR);
 
 	gp_file_clean(file);
-	return (glob_c.file_get(file_number, file));
+
+	return (camera->functions->file_get(camera, file, file_number));
 }
 
-int gp_file_get_preview (int file_number, CameraFile *preview) {
+int gp_camera_file_get_preview (Camera *camera, CameraFile *file, int file_number) {
 
-	if (glob_c.file_get_preview == NULL)
+	if (camera->functions->file_get_preview == NULL)
 		return (GP_ERROR);
 
-	gp_file_clean(preview);
-	return (glob_c.file_get_preview(file_number, preview));
+	gp_file_clean(file);
+
+	return (camera->functions->file_get_preview(camera, file, file_number));
 }
 
-int gp_file_put (CameraFile *file) {
+int gp_camera_file_put (Camera *camera, CameraFile *file) {
 
-	if (glob_c.file_put == NULL)
+	if (camera->functions->file_put == NULL)
 		return (GP_ERROR);
 
-	return (glob_c.file_put(file));
+	return (camera->functions->file_put(camera, file));
 }
 
+int gp_camera_file_delete (Camera *camera, int file_number) {
 
-int gp_file_delete (int file_number) {
-
-	if (glob_c.file_delete == NULL)
+	if (camera->functions->file_delete == NULL)
 		return (GP_ERROR);
-	return (glob_c.file_delete(file_number));
+	return (camera->functions->file_delete(camera, file_number));
 }
 
-int gp_file_lock (int file_number) {
-
-	return (GP_ERROR);
-}
-
-int gp_file_unlock (int file_number) {
-
-	return (GP_ERROR);
-}
-
-
-int gp_config_get (CameraWidget *window) {
+int gp_camera_config_get (Camera *camera, CameraWidget *window) {
 
 	int ret;
 
-	if (glob_c.config_get == NULL)
+	if (camera->functions->config_get == NULL)
 		return (GP_ERROR);
 
-	ret = glob_c.config_get(window);
+	ret = camera->functions->config_get(camera, window);
 
 	if (glob_debug)
 		gp_widget_dump(window);
@@ -382,7 +350,7 @@ int gp_config_get (CameraWidget *window) {
 	return (ret);
 }
 
-int gp_config_set (CameraSetting *setting, int count) {
+int gp_camera_config_set (Camera *camera, CameraSetting *setting, int count) {
 
 	int x;
 
@@ -392,48 +360,50 @@ int gp_config_set (CameraSetting *setting, int count) {
 			printf("core: \"%s\" = \"%s\"\n", setting[x].name, setting[x].value);
 	}
 
-	if (glob_c.config_set == NULL)
+	if (camera->functions->config_set == NULL)
 		return (GP_ERROR);
 
-	return(glob_c.config_set(setting, count));
+	return(camera->functions->config_set(camera, setting, count));
 }
 
-int gp_capture (CameraFile *f, CameraCaptureInfo *info) {
+int gp_camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 
-	if (glob_c.capture == NULL)
+	if (camera->functions->capture == NULL)
 		return (GP_ERROR);
 
-	return(glob_c.capture(f, info));
+	gp_file_clean(file);
+
+	return(camera->functions->capture(camera, file, info));
 }
 
-int gp_summary (CameraText *summary) {
+int gp_camera_summary (Camera *camera, CameraText *summary) {
 
-	if (glob_c.summary == NULL)
+	if (camera->functions->summary == NULL)
 		return (GP_ERROR);
 
-	return(glob_c.summary(summary));
+	return(camera->functions->summary(camera, summary));
 }
 
-int gp_manual (CameraText *manual) {
+int gp_camera_manual (Camera *camera, CameraText *manual) {
 
-	if (glob_c.manual == NULL)
+	if (camera->functions->manual == NULL)
 		return (GP_ERROR);
 
-	return(glob_c.manual(manual));
+	return(camera->functions->manual(camera, manual));
 }
 
-int gp_about (CameraText *about) {
+int gp_camera_about (Camera *camera, CameraText *about) {
 
-	if (glob_c.about == NULL)
+	if (camera->functions->about == NULL)
 		return (GP_ERROR);
 
-	return(glob_c.about(about));
+	return(camera->functions->about(camera, about));
 }
 
 /* Configuration file functions (for front-ends and libraries)
    ---------------------------------------------------------------------------- */
 
-int gp_setting_get (char *key, char *value) {
+int gp_setting_get (char *id, char *key, char *value) {
 
 	int x;
 
@@ -447,7 +417,7 @@ int gp_setting_get (char *key, char *value) {
 	return(GP_ERROR);
 }
 
-int gp_setting_set (char *key, char *value) {
+int gp_setting_set (char *id, char *key, char *value) {
 
 	int x;
 
@@ -473,25 +443,26 @@ int gp_setting_set (char *key, char *value) {
 /* Front-end interaction functions (libraries calls these!)
    ---------------------------------------------------------------------------- */
 
-int gp_status (char *status) {
+int gp_camera_status (Camera *camera, char *status) {
 
-	gp_interface_status(status);
+	gp_interface_status(camera, status);
 	return(GP_OK);
 }
 
-int gp_progress (float percentage) {
+int gp_camera_progress (Camera *camera, CameraFile *file, float percentage) {
 
-	gp_interface_progress(percentage);
+	gp_interface_progress(camera, file, percentage);
+
 	return(GP_OK);
 }
 
-int gp_message (char *message) {
+int gp_camera_message (Camera *camera, char *message) {
 
-	gp_interface_message(message);
+	gp_interface_message(camera, message);
 	return(GP_OK);
 }
 
-int gp_confirm (char *message) {
+int gp_camera_confirm (Camera *camera, char *message) {
 
-	return(gp_interface_confirm(message));
+	return(gp_interface_confirm(camera, message));
 }

@@ -1,13 +1,6 @@
-extern	int		glob_debug;
-
-extern	CameraPortSettings glob_port_settings;
-
-	/* Currently Selected camera/folder */
+	/* Debug setting */
 	/* ------------------------------------------------ */
-			/* currently selected camera number */
-extern	int 		glob_camera_number;
-			/* currently selected folder path */
-extern	char 		glob_folder_path[512];
+extern	int		glob_debug;
 
 	/* Camera List */
 	/* ------------------------------------------------ */
@@ -28,11 +21,3 @@ extern	int		glob_camera_id_count;
 extern	int		glob_setting_count; 
 			/* setting key/value list   	*/
 extern	Setting		glob_setting[512];  
-
-
-	/* Current loaded library's handle */
-	/* ------------------------------------------------ */
-			/* current library handle    	*/
-extern	void 		*glob_library_handle; 
-			/* pointer to current camera function set */
-extern	Camera   	glob_c;

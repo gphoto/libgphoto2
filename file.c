@@ -18,8 +18,51 @@ CameraFile* gp_file_new () {
 	strcpy(f->name, "");
 	f->data = NULL;
 	f->size = 0;
+	f->bytes_read = 0;
 
 	return(f);
+}
+
+int gp_file_free (CameraFile *file) {
+
+	/*
+	frees a CameraFile from memory
+	*/
+
+	gp_file_clean(file);
+	free(file);
+	return(GP_OK);
+}
+
+int gp_file_append (CameraFile *file, char *data, int size) {
+
+	if (size < 0)
+		return (GP_ERROR);
+
+	file->data = (char*)realloc(file->data, sizeof(char) * (file->size + size));
+	memcpy(&file->data[file->size], data, size);
+
+	file->bytes_read = size;
+	file->size += size;
+
+	return (GP_OK);
+}
+
+int gp_file_get_last_chunk (CameraFile *file, char **data, int *size) {
+
+	if (file->bytes_read == 0) {
+		/* chunk_add was never called. return safely. */
+		*data = NULL;
+		*size = 0;
+		return (GP_ERROR);
+	}
+
+	/* They must free the returned data data! */
+	*data = (char*)malloc(file->bytes_read);
+	memcpy(*data, &file->data[file->size - file->bytes_read], file->bytes_read);
+	*size = file->bytes_read;
+
+	return (GP_OK);
 }
 
 int gp_file_save (CameraFile *file, char *filename) {
@@ -37,7 +80,7 @@ int gp_file_save (CameraFile *file, char *filename) {
 int gp_file_open (CameraFile *file, char *filename) {
 
 	FILE *fp;
-	char *name;
+	char *name, *dot;
 	long size, size_read;
 
 	gp_file_clean(file);
@@ -68,6 +111,13 @@ int gp_file_open (CameraFile *file, char *filename) {
 	   else
 		strcpy(file->name, filename);
 
+/* needs MIME lookup!! */
+	dot = strrchr(filename, '.');
+	if (dot)
+		sprintf(file->type, "image/%s", dot);
+	   else
+		strcpy(file->type, "image/unknown");
+
 	return (GP_OK);
 }
 
@@ -83,16 +133,6 @@ int gp_file_clean (CameraFile *file) {
 	strcpy(file->name, "");
 	file->data = NULL;
 	file->size = 0;
-	return(GP_OK);
-}
-
-int gp_file_free (CameraFile *file) {
-
-	/*
-	frees a CameraFile from memory
-	*/
-
-	gp_file_clean(file);
-	free(file);
+	file->bytes_read = 0;
 	return(GP_OK);
 }
