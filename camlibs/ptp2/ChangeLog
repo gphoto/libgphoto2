@@ -5,6 +5,8 @@
 2004-11-29  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: D70 PTP mode has 0x406 id.
+	* library.c: Kodak LS473 should be 743 (typo fixed)
+		     the CX4210 should have product id 0x560 instead of 0x565
 
 2004-11-29  Marcus Meissner  <marcus@jet.franken.de>
 	
