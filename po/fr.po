@@ -23,6 +23,10 @@ msgid ""
 "     Email us at cl20@poeml.de    \n"
 " Visit us at http://cl20.poeml.de "
 msgstr ""
+"agfa_cl20\n"
+"L'équipe du pilote Linux Agfa CL20 !\n"
+"    Ecrivez nous à cl20@poeml.de    \n"
+" Venez sur http://cl20.poeml.de "
 
 #: camlibs/barbie/barbie.c:149
 #, c-format
@@ -136,22 +140,23 @@ msgstr "Impossible d'extraire la vignette JPEG des données: pas de début/fin"
 #: camlibs/canon/canon.h:200 camlibs/canon/canon.h:214
 #, c-format
 msgid "NULL parameter \"%s\" in %s line %i"
-msgstr ""
+msgstr "Paramètre NULL \"%s\" dans %s ligne %i"
 
 #: camlibs/canon/canon.h:397
 #, c-format
 msgid ""
 "Don't know how to handle camera->port->type value %i aka 0x%xin %s line %i."
 msgstr ""
+"Ne sait pas comment gérer la valeur camera->port->type %i, càd 0x%xin %s ligne %i."
 
 #: camlibs/canon/crc.c:237
 #, c-format
 msgid "FATAL ERROR: initial CRC value for length %d unknown\n"
-msgstr ""
+msgstr "ERREUR FATALE: Valeur CRC initiale pour la longueur %d inconnue\n"
 
 #: camlibs/canon/crc.c:250
 msgid "unable to guess initial CRC value\n"
-msgstr ""
+msgstr "Incapable de déterminer la valeur CRC initiale\n"
 
 #: camlibs/canon/crc.c:277
 #, c-format
@@ -159,6 +164,8 @@ msgid ""
 "warning: CRC not checked (add len %d, value 0x%04x) "
 "#########################\n"
 msgstr ""
+"Attention: CRC non vérifié (ajout longueur %d, valeur 0x%04x) "
+"#########################\n"
 
 #: camlibs/canon/library.c:134
 msgid ""
@@ -213,7 +220,7 @@ msgstr "Impossible de trouver un fichier audio pour %s"
 #: camlibs/canon/library.c:561 camlibs/canon/library.c:599
 #, c-format
 msgid "%s is a file type for which no thumbnail is provided"
-msgstr ""
+msgstr "%s est un type de fichier pour lequel il n'est pas proposé de vignette"
 
 #: camlibs/canon/library.c:769
 #, c-format
@@ -450,34 +457,37 @@ msgid ""
 "canon_serial_get_dirents: canon_serial_dialogue failed to fetch directory "
 "entries"
 msgstr ""
+"canon_serial_get_dirents: canon_serial_dialogue n'a pas réussi à obtenir "
+"les entrées du répertoire"
 
 #: camlibs/canon/serial.c:1131
 #, c-format
 msgid ""
 "canon_serial_get_dirents: Initial dirent packet too short (only %i bytes)"
 msgstr ""
+"canon_serial_get_dirents: paquet dirent initial trop petit (seulement %i octets)"
 
 #: camlibs/canon/serial.c:1151
 #, c-format
 msgid "canon_serial_get_dirents: Could not allocate %i bytes of memory"
-msgstr ""
+msgstr "canon_serial_get_dirents: impossible d'allouer %i octets de mémoire"
 
 #: camlibs/canon/serial.c:1171
 msgid "canon_serial_get_dirents: Failed to read another directory entry"
-msgstr ""
+msgstr "canon_serial_get_dirents: impossible de lire une autre entrée répertoire"
 
 #: camlibs/canon/serial.c:1189
 msgid "canon_serial_get_dirents: Truncated directory entry received"
-msgstr ""
+msgstr "canon_serial_get_dirents: entrée répertoire tronquée reçue"
 
 #: camlibs/canon/serial.c:1216
 msgid "canon_serial_get_dirents: Too many dirents, we must be looping."
-msgstr ""
+msgstr "canon_serial_get_dirents: trop d'entrées, nous devons boucler."
 
 #: camlibs/canon/serial.c:1226
 #, c-format
 msgid "canon_serial_get_dirents: Could not resize dirent buffer to %i bytes"
-msgstr ""
+msgstr "canon_serial_get_dirents: impossible de modifier la taille du buffer dirent à %i octets"
 
 #: camlibs/canon/serial.c:1295
 msgid "Error changing speed."
@@ -592,7 +602,7 @@ msgstr "Inconnu (une sorte d'erreur))"
 #: camlibs/canon/usb.c:111
 #, c-format
 msgid "Initial camera response %c/'%s' unrecognized)"
-msgstr ""
+msgstr "Réponse initiale de l'appareil  %c/'%s' non reconnue)"
 
 #: camlibs/canon/usb.c:123
 #, c-format
@@ -600,6 +610,8 @@ msgid ""
 "Step #2 of initialization failed for PowerShot camera! (returned %i, "
 "expected %i) Camera not operational"
 msgstr ""
+"Passage n°2 de l'initialisation en erreur pour l'appareil PowerShot ! (retourné %i, "
+"attendu %i). Appareil non opérationnel"
 
 #: camlibs/canon/usb.c:135
 #, c-format
@@ -607,6 +619,8 @@ msgid ""
 "EOS Step #3 of initialization failed! (returned %i, expected %i) Camera not "
 "operational"
 msgstr ""
+"Passage n°3 de l'initialisation de l'EOS en erreur ! (retourne %i, attendu %i). "
+"Appareil non opérationnel."
 
 #: camlibs/canon/usb.c:149
 #, c-format
@@ -614,6 +628,8 @@ msgid ""
 "Step #2 of initialization failed for EOS camera! (returned %i, expected %i) "
 "Camera not operational"
 msgstr ""
+"Passage n°2 de l'initialisation en erreur pour l'appareil EOS ! (retourné %i, attendu %i) "
+"Appareil non opérationnel."
 
 #: camlibs/canon/usb.c:164
 #, c-format
@@ -621,11 +637,13 @@ msgid ""
 "Step #3 of initialization failed! (returned %i, expected %i) Camera not "
 "operational"
 msgstr ""
+"Passage n°3 de l'initialisation en erreur ! (retourné %i, attendu %i) "
+"Appareil non opérationnel."
 
 #: camlibs/canon/usb.c:195
 #, c-format
 msgid "Step #4.1 failed! (returned %i, expected %i) Camera not operational"
-msgstr ""
+msgstr "Passage n°4.1 en erreur ! (retourné %i, attendu %i) Appareil non opérationnel"
 
 #: camlibs/canon/usb.c:262 camlibs/sipix/blink.c:1068
 #: camlibs/stv0674/stv0674.c:254
@@ -636,22 +654,20 @@ msgstr "Ne peut appliquer les propriétés USB"
 #, c-format
 msgid "Camera not ready, multiple 'Identify camera' requests failed: %s"
 msgstr ""
-"Appareil pas prêt, les requêtes d'identification de l'appareil ont échoué : %"
-"s"
+"Appareil pas prêt, les requêtes d'identification de l'appareil ont échoué : %s"
 
 #: camlibs/canon/usb.c:295
 #, c-format
 msgid "Camera not ready, get_battery failed: %s"
 msgstr ""
-"Appareil pas prêt, les requêtes d'identification de l'appareil ont échoué : %"
-"s"
+"Appareil pas prêt, les requêtes d'identification de l'appareil ont échoué : %s"
 
 #: camlibs/canon/usb.c:351 camlibs/canon/usb.c:377 camlibs/canon/usb.c:426
 #, c-format
 msgid ""
-"canon_usb_lock_keys: Unexpected amount of data returned (%i bytes, expected %"
-"i)"
+"canon_usb_lock_keys: Unexpected amount of data returned (%i bytes, expected %i)"
 msgstr ""
+"canon_usb_lock_keys: somme de donnée renvoyée inattendue (%i octets, attendus %i)"
 
 #: camlibs/canon/usb.c:414
 #, c-format
@@ -659,6 +675,8 @@ msgid ""
 "canon_usb_lock_keys: Unexpected return of %i bytes (expected %i) from \"get "
 "picture abilities.\""
 msgstr ""
+"canon_usb_lock_keys: retour inattendu de %i octets (attendus %i) de \"get "
+"picture abilities.\""
 
 #: camlibs/canon/usb.c:470
 #, c-format
@@ -666,12 +684,15 @@ msgid ""
 "canon_usb_unlock_keys: Unexpected amount of data returned (%i bytes, "
 "expected %i)"
 msgstr ""
+"canon_usb_unlock_keys: somme de données renvoyée inattendue (%i octets, "
+"attendus %i)"
 
 #: camlibs/canon/usb.c:521
 #, c-format
 msgid ""
 "canon_usb_poll_interrupt_pipe: interrupt read failed after %i tries, \"%s\""
 msgstr ""
+"canon_usb_poll_interrupt_pipe: lecture interrompue après %i essais, \"%s\""
 
 #: camlibs/canon/usb.c:574
 #, c-format
@@ -679,45 +700,48 @@ msgid ""
 "canon_usb_poll_interrupt_multiple: interrupt read failed after %i tries, \"%s"
 "\""
 msgstr ""
+"canon_usb_poll_interrupt_multiple: lecture interrompue après %i essais, \"%s\""
 
 #: camlibs/canon/usb.c:672
 #, c-format
 msgid ""
 "canon_usb_capture_dialogue: bogus length 0x%04x for thumbnail size packet"
 msgstr ""
+"canon_usb_capture_dialogue: longueur anormale de 0x%04x pour la taille de paquet de vignette"
 
 #: camlibs/canon/usb.c:683
 #, c-format
 msgid ""
 "canon_usb_capture_dialogue: bogus length 0x%04x for full image size packet"
 msgstr ""
+"canon_usb_capture_dialogue: longueur anormale de 0x%04x pour la taille du paquet de l'image complète"
 
 #: camlibs/canon/usb.c:703
 msgid "canon_usb_capture_dialogue: first interrupt read out of sequence"
-msgstr ""
+msgstr "canon_usb_capture_dialogue: première lecture de l'interruption désynchronisée"
 
 #: camlibs/canon/usb.c:711
 msgid "canon_usb_capture_dialogue: second interrupt read out of sequence"
-msgstr ""
+msgstr "canon_usb_capture_dialogue: seconde lecture de l'interruption désynchronisée"
 
 #: camlibs/canon/usb.c:721
 #, c-format
 msgid ""
 "canon_usb_capture_dialogue: photographic failure signaled, code = 0x%08x"
-msgstr ""
+msgstr "canon_usb_capture_dialogue: problème photographique signalé, code = 0x%08x"
 
 #: camlibs/canon/usb.c:739
 msgid "canon_usb_capture_dialogue: third EOS interrupt read out of sequence"
-msgstr ""
+msgstr "canon_usb_capture_dialogue: troisième lecture de l'interruption EOS désynchronisée"
 
 #: camlibs/canon/usb.c:766
 msgid "canon_usb_capture_dialogue: fourth EOS interrupt read out of sequence"
-msgstr ""
+msgstr "canon_usb_capture_dialogue: quatrième lecture de l'interruption EOS désynchronisée"
 
 #: camlibs/canon/usb.c:921
 #, c-format
 msgid "canon_usb_dialogue: payload too big, won't fit into buffer (%i > %i)"
-msgstr ""
+msgstr "canon_usb_dialogue: charge trop élevée, ne tiendra pas dans le buffer (%i > %i)"
 
 #: camlibs/canon/usb.c:1075
 msgid "Receiving data..."
@@ -726,7 +750,7 @@ msgstr "Réception des données..."
 #: camlibs/canon/usb.c:1356 camlibs/canon/usb.c:1431 camlibs/canon/usb.c:1452
 #, c-format
 msgid "Out of memory: %d bytes needed."
-msgstr ""
+msgstr "Manque de mémoire: %d octets nécessaires."
 
 #: camlibs/canon/usb.c:1442
 #, c-format
@@ -1895,14 +1919,13 @@ msgid "Unknown error."
 msgstr "Erreur inconnue."
 
 #: camlibs/konica/konica.c:137
-#, fuzzy, c-format
 msgid ""
 "The camera has just sent an error that has not yet been discovered. Please "
 "report the following to %s with additional information how you got this "
 "error: (0x%x,0x%x). Thank you very much!"
 msgstr ""
 "L'appareil vient de retourner une erreur inconnue. Merci d'en informer "
-"l'équipe de développement <gphoto-devel@lists.sourceforge.net> en expliquant "
+"l'équipe de développement %s en expliquant "
 "le moyen de reproduire cette erreur : (0x%x,0x%x). Merci d'avance !"
 
 #: camlibs/konica/library.c:158 camlibs/pccam300/library.c:125
@@ -2848,7 +2871,6 @@ msgstr ""
 " email: <pbk@odense.kollegienet.dk>\n"
 
 #: camlibs/polaroid/pdc320.c:455
-#, fuzzy
 msgid ""
 "Download program for several Polaroid cameras. Originally written by Peter "
 "Desnoyers <pjd@fred.cambridge.ma.us>, and adapted for gphoto2 by Nathan "
@@ -2856,7 +2878,7 @@ msgid ""
 "sf.net>.\n"
 "Polaroid 640SE testing was done by Michael Golden <naugrim@juno.com>."
 msgstr ""
-"Téléchargé le programme pour quelques appareils photos Polaroïd. "
+"Programme de chargement pour quelques appareils photos Polaroïd. "
 "Originellement écrit par Peter Desnoyers <pjd@fred.cambridge.ma.us>, et "
 "adapté pour GPhoto2 par Nathan Stenzel <nathanstenzel@user.sourceforge.net> "
 "et Lutz Müeller <lutz@users.sf.net>. \n"
@@ -2869,7 +2891,6 @@ msgid "Model: %x, %x, %x, %x"
 msgstr "Modèle : %x, %x, %x, %x"
 
 #: camlibs/polaroid/pdc640.c:887
-#, fuzzy
 msgid ""
 "Download program for GrandTek 98x based cameras. Originally written by Chris "
 "Byrne <adapt@ihug.co.nz>, and adapted for gphoto2 by Lutz Mueller "
@@ -2877,7 +2898,7 @@ msgid ""
 "JD350e by Michael Trawny <trawny99@users.sourceforge.net>.Bugfixes by Marcus "
 "Meissner <marcus@jet.franken.de>."
 msgstr ""
-"Programme de récupération pour les appareils photos basés sur le GrandTek "
+"Programme de chargement pour les appareils photos basés sur le GrandTek "
 "98x. Originellement écrit par Chris Byrne <adapt@ihug.co.nz>, et adapté pour "
 "gphoto2 par Lutz Müeller <lutz@users.sf.net>. Améliorations du protocole et "
 "traitement post-opératoire pour les Jenoptik JD350e par Michael Trawny "
@@ -2984,13 +3005,12 @@ msgstr ""
 "l'information sur l'image %i."
 
 #: camlibs/polaroid/pdc700.c:916
-#, fuzzy, c-format
 msgid ""
 "%i bytes of an unknown image format have been received. Please write to %s "
 "and ask for assistance."
 msgstr ""
-"%i octets d'une image de format inconnu reçus. Merci d'écrire à <gphoto- "
-"devel@lists.sourceforge.net> pour une assistance."
+"%i octets d'une image de format inconnu reçus. Merci d'écrire à %s "
+"pour une assistance."
 
 #: camlibs/polaroid/pdc700.c:941
 msgid ""
@@ -3414,84 +3434,70 @@ msgid "PTP: Protocol error, response expected"
 msgstr "PTP: Erreur de protocole, réponse attendue"
 
 #: camlibs/ricoh/g3.c:254
-#, fuzzy
 msgid "Downloading movie..."
-msgstr "Téléchargement du fichier..."
+msgstr "Téléchargement de la vidéo..."
 
 #: camlibs/ricoh/g3.c:260
-#, fuzzy
 msgid "Downloading audio..."
-msgstr "Téléchargement..."
+msgstr "Téléchargement audio..."
 
 #: camlibs/ricoh/g3.c:275
-#, fuzzy
 msgid "Downloading EXIF data..."
-msgstr "Téléchargement des données..."
+msgstr "Téléchargement des données EXIF..."
 
 #: camlibs/ricoh/g3.c:277 camlibs/ricoh/g3.c:296
-#, fuzzy, c-format
 msgid "No EXIF data available for %s."
-msgstr "Indisponible : %s"
+msgstr "Pas de données EXIF disponibles : %s"
 
 #: camlibs/ricoh/g3.c:381
-#, fuzzy
 msgid "Could not delete file."
-msgstr "Impossible de trouver le fichier '%s'."
+msgstr "Impossible d'effacer le fichier."
 
 #: camlibs/ricoh/g3.c:408
-#, fuzzy
 msgid "Could not remove directory."
-msgstr "Impossible de supprimer le dossier %s."
+msgstr "Impossible de supprimer le répertoire."
 
 #: camlibs/ricoh/g3.c:435
-#, fuzzy
 msgid "Could not create directory."
-msgstr "Impossible de créer le dossier %s."
+msgstr "Impossible de créer le répertoire."
 
 #: camlibs/ricoh/g3.c:454
-#, fuzzy, c-format
 msgid "Version: %s\n"
-msgstr "Version : "
+msgstr "Version : %s\n"
 
 #: camlibs/ricoh/g3.c:459
-#, fuzzy, c-format
 msgid "RTC Status: %d\n"
-msgstr "État de la carte :\t\t"
+msgstr "Status RTC : %d\n"
 
 #: camlibs/ricoh/g3.c:465
-#, fuzzy, c-format
 msgid "Camera time: %s %s\n"
-msgstr "%sIdentifiant appareil: %s\n"
+msgstr "Date de l'appareil: %s %s\n"
 
 #: camlibs/ricoh/g3.c:471
-#, fuzzy, c-format
 msgid "Camera ID: %s\n"
-msgstr "%sIdentifiant appareil: %s\n"
+msgstr "Identification appareil: %s\n"
 
 #: camlibs/ricoh/g3.c:477
-#, fuzzy
 msgid "No SD Card inserted.\n"
-msgstr "Type de capture non géré."
+msgstr "Pas de carte SD insérée.\n"
 
 #: camlibs/ricoh/g3.c:480
-#, fuzzy, c-format
 msgid "SD Card ID: %s\n"
-msgstr "%sIdentifiant appareil: %s\n"
+msgstr "Identifiant carte SD: %s\n"
 
 #: camlibs/ricoh/g3.c:488
-#, fuzzy, c-format
 msgid "Photos on camera: %d\n"
-msgstr "Mémoire dans l'appareil : %d Mbit.\n"
+msgstr "Photos sur l'appareil : %d.\n"
 
 #: camlibs/ricoh/g3.c:494
 #, c-format
 msgid "SD memory: %d MB total, %d MB free.\n"
-msgstr ""
+msgstr "Mémoire SD: %d MB total, %d MB libre.\n"
 
 #: camlibs/ricoh/g3.c:501
 #, c-format
 msgid "Internal memory: %d MB total, %d MB free.\n"
-msgstr ""
+msgstr "Mémoire interne: %d MB total, %d MB libre.\n"
 
 #: camlibs/ricoh/g3.c:511
 msgid ""
@@ -3500,6 +3506,10 @@ msgid ""
 "Reverse engineered using USB Snoopy, looking\n"
 "at the firmware update image and wild guessing.\n"
 msgstr ""
+"Ricoh Caplio G3.\n"
+"Marcus Meissner <marcus@jet.franken.de>\n"
+"Rétro-conception en utilisant USB Snoopy, analyse\n"
+"de l'image de mise à jour du firmware et essais sauvages.\n"
 
 #: camlibs/ricoh/library.c:215
 msgid ""
@@ -3681,74 +3691,54 @@ msgid "Speed %i is not supported!"
 msgstr "La vitesse %i n'est pas gérée !"
 
 #: camlibs/ricoh/ricoh.c:66
-#, fuzzy, c-format
 msgid "Expected %i, got %i. Please report this error to %s."
 msgstr ""
-"%i octets attendus, %i reçus. Merci de contacter <gphoto-devel@lists."
-"sourceforge.net>."
+"%i attendus, %i reçus. Merci de contacter %s."
 
 #: camlibs/ricoh/ricoh.c:75
-#, fuzzy, c-format
 msgid "Expected %i bytes, got %i. Please report this error to %s."
 msgstr ""
-"%i octets attendus, %i reçus. Merci de contacter <gphoto-devel@lists."
-"sourceforge.net>."
+"%i octets attendus, %i reçus. Merci de contacter %s."
 
 #: camlibs/ricoh/ricoh.c:172 camlibs/ricoh/ricoh.c:186
-#, fuzzy, c-format
 msgid "We expected 0x%x but received 0x%x. Please contact %s."
 msgstr ""
-"Résultat inattendu 0x%x, reçu 0x%x. Merci de contacter <gphoto-devel@gphoto."
-"org>."
+"Nous attendions 0x%x, mais nous avons reçu 0x%x. Merci de contacter %s."
 
 #: camlibs/ricoh/ricoh.c:215
-#, fuzzy, c-format
 msgid "Bad characters (0x%x, 0x%x). Please contact %s."
 msgstr ""
-"Mauvais caractères (0x%x, 0x%x). Merci de contacter <gphoto-devel@gphoto."
-"org>."
+"Mauvais caractères (0x%x, 0x%x). Merci de contacter %s."
 
 #: camlibs/ricoh/ricoh.c:256 camlibs/ricoh/ricoh.c:325
-#, fuzzy, c-format
 msgid "Camera busy. If the problem persists, please contact %s."
 msgstr ""
-"L'appareil est occupé. Si le problème persiste, merci de contacter <gphoto-"
-"devel@lists.sourceforge.net>."
+"L'appareil est occupé. Si le problème persiste, merci de contacter %s."
 
 #: camlibs/ricoh/ricoh.c:291
-#, fuzzy, c-format
 msgid "Timeout even after 2 retries. Please contact %s."
 msgstr ""
-"Délai d'attente dépassé même après 2 tentatives. Contactez <gphoto-"
-"devel@gphoto.org>."
+"Délai d'attente dépassé même après 2 tentatives. Contactez %s."
 
 #: camlibs/ricoh/ricoh.c:307
-#, fuzzy, c-format
 msgid "Communication error even after 2 retries. Please contact %s."
 msgstr ""
-"Délai d'attente dépassé même après 2 tentatives. Contactez <gphoto-"
-"devel@lists.sourceforge.net>."
+"Délai d'attente dépassé même après 2 tentatives. Contactez %s."
 
 #: camlibs/ricoh/ricoh.c:339
-#, fuzzy, c-format
 msgid "Camera is in wrong mode. Please contact %s."
 msgstr ""
-"L'appareil n'est pas dans le bon mode. Contactez <gphoto-devel@lists."
-"sourceforge.net>."
+"L'appareil n'est pas dans le bon mode. Contactez %s."
 
 #: camlibs/ricoh/ricoh.c:348
-#, fuzzy, c-format
 msgid "Camera did not accept the parameters. Please contact %s."
 msgstr ""
-"L'appareil n'a pas accepté les paramètres. Contactez <gphoto-devel@lists."
-"sourceforge.net>."
+"L'appareil n'a pas accepté les paramètres. Contactez %s."
 
 #: camlibs/ricoh/ricoh.c:354
-#, fuzzy, c-format
 msgid "An unknown error occurred. Please contact %s."
 msgstr ""
-"Une erreur inconnue est survenue. Contactez <gphoto-devel@lists.sourceforge."
-"net>."
+"Une erreur inconnue est survenue. Contactez %s."
 
 #: camlibs/ricoh/ricoh.c:816
 #, c-format
@@ -3893,7 +3883,6 @@ msgid "Camera Settings"
 msgstr "Réglages de l'appareil"
 
 #: camlibs/sierra/epson-desc.c:289
-#, fuzzy
 msgid ""
 "Some notes about Epson cameras:\n"
 "- Some parameters are not controllable remotely:\n"
@@ -3911,7 +3900,7 @@ msgstr ""
 "  * la configuration personnalisée de la balance des blancs\n"
 "- La configuration a été retro-conçue avec un appareil\n"
 "  PhotoPC 3000z, au cas où le vôtre se comporterait différemment,\n"
-"  Merci  de contacter par mail : <gphoto-devel@lists.sourceforge.net> (en "
+"  Merci de contacter la liste de développement par mail (en "
 "anglais)\n"
 
 #: camlibs/sierra/library.c:144 camlibs/sierra/library.c:1353
@@ -3942,55 +3931,43 @@ msgid "The first byte received (0x%x) is not valid."
 msgstr "Le premier octet reçu (0x%x) n'est pas valide."
 
 #: camlibs/sierra/library.c:714
-#, fuzzy, c-format
 msgid ""
 "Transmission of packet timed out even after %i retries. Please contact %s."
 msgstr ""
-"La transmission du paquet a échoué après %i essais. Merci de contacter "
-"<gphoto-devel@lists.sourceforge.net>."
+"La transmission du paquet a échoué après %i essais. Merci de contacter %s."
 
 #: camlibs/sierra/library.c:748 camlibs/sierra/library.c:772
 msgid "Could not transmit packet even after several retries."
 msgstr "Impossible de transmettre des paquets malgré plusieurs tentatives."
 
 #: camlibs/sierra/library.c:763
-#, fuzzy, c-format
 msgid "Packet got rejected by camera. Please contact %s."
 msgstr ""
-"Paquet rejeté par l'appareil photo. Merci de contacter <gphoto-devel@gphoto."
-"org>."
+"Paquet rejeté par l'appareil photo. Merci de contacter %s."
 
 #: camlibs/sierra/library.c:790
-#, fuzzy, c-format
 msgid "Could not transmit packet (error code %i). Please contact %s."
 msgstr ""
-"Impossible de transmettre le paquet (code erreur %i). Merci de contacter "
-"<gphoto-devel@lists.sourceforge.net>."
+"Impossible de transmettre le paquet (code erreur %i). Merci de contacter %s."
 
 #: camlibs/sierra/library.c:882
 msgid "Transmission timed out even after 2 retries. Giving up..."
 msgstr "La transmission du paquet a échoué après 2 essais. On en reste là ..."
 
 #: camlibs/sierra/library.c:901
-#, fuzzy, c-format
 msgid "Got unexpected result 0x%x. Please contact %s."
 msgstr ""
-"Résultat inattendu 0x%x. Merci de contacter <gphoto-devel@lists.sourceforge."
-"net>."
+"Résultat inattendu 0x%x. Merci de contacter %s."
 
 #: camlibs/sierra/library.c:999
-#, fuzzy, c-format
 msgid "Received unexpected answer (%i). Please contact %s."
 msgstr ""
-"Réponse inattendue reçue (%i). Merci de contacter <gphoto-devel@lists."
-"sourceforge.net>."
+"Réponse inattendue reçue (%i). Merci de contacter %s."
 
 #: camlibs/sierra/library.c:1061
-#, fuzzy, c-format
 msgid "Could not get register %i. Please contact %s."
 msgstr ""
-"Impossible d'obtenir le registre entier %i. Merci de contacter <gphoto-"
-"devel@gphoto.org>."
+"Impossible d'obtenir le registre entier %i. Merci de contacter %s."
 
 #: camlibs/sierra/library.c:1081 camlibs/sierra/library.c:1101
 msgid "Too many retries failed."
@@ -4001,26 +3978,20 @@ msgid "Sending data..."
 msgstr "Envoi des données..."
 
 #: camlibs/sierra/library.c:1202
-#, fuzzy, c-format
 msgid ""
 "recursive calls are not supported by the sierra driver! Please contact %s."
 msgstr ""
-"Les appels récursifs ne sont pas gérées par le pilote sierra ! Contactez "
-"<gphoto-devel@lists.sourceforge.net>."
+"Les appels récursifs ne sont pas gérées par le pilote sierra ! Contactez %s."
 
 #: camlibs/sierra/library.c:1251
-#, fuzzy, c-format
 msgid "Could not get string register %i. Please contact %s."
 msgstr ""
-"Impossible d'obtenir le registre chaîne %i. Merci de contacter <gphoto-"
-"devel@gphoto.org>."
+"Impossible d'obtenir le registre chaîne %i. Merci de contacter %s."
 
 #: camlibs/sierra/library.c:1484
-#, fuzzy, c-format
 msgid "Expected 32 bytes, got %i. Please contact %s."
 msgstr ""
-"32 octets attendus, %i reçus. Merci de contacter <gphoto-devel@lists."
-"sourceforge.net>."
+"32 octets attendus, %i reçus. Merci de contacter %s."
 
 #: camlibs/sierra/nikon-desc.c:128 camlibs/sierra/olympus-desc.c:144
 msgid "Shutter Speed microseconds (0 auto)"
@@ -4203,7 +4174,6 @@ msgstr ""
 "        paramétrer la vitesse d'obturation.\n"
 
 #: camlibs/sierra/nikon-desc.c:619
-#, fuzzy
 msgid ""
 "Nikon Coolpix 995:\n"
 "    Camera configuration (preferences) for this\n"
@@ -4217,7 +4187,7 @@ msgstr ""
 "Nikon Coolpix 995:\n"
 "    La configuration de l'appareil (préférences) pour\n"
 "    cet appareil est incomplète, contactez les\n"
-"    développeurs de gphoto à gphoto-devel@gphoto.net\n"
+"    développeurs de gphoto par mail\n"
 "    si vous désirez contribuer à ce pilote.\n"
 "\n"
 "    La récupération des images doit fonctionner correctement.\n"
@@ -4306,7 +4276,6 @@ msgstr ""
 "    et remettre LCD à Off."
 
 #: camlibs/sierra/olympus-desc.c:666
-#, fuzzy
 msgid ""
 "Default sierra driver:\n"
 "\n"
@@ -4334,7 +4303,7 @@ msgstr ""
 "    que les paramètres de configuration sont complets\n"
 "    pour votre appareil, ou pouvez contribuer du code \n"
 "    pour supporter une configuration complète,\n"
-"    veuillez contacter gphoto-devel@gphoto.net\n"
+"    veuillez contacter les développeurs par mail\n"
 
 #: camlibs/sierra/sierra.c:685 camlibs/soundvision/soundvision.c:411
 msgid "The file to be uploaded has a null length"
@@ -4586,7 +4555,6 @@ msgid "No camera manual available.\n"
 msgstr "Manuel de l'appareil non disponible.\n"
 
 #: camlibs/sierra/sierra.c:1908
-#, fuzzy, c-format
 msgid ""
 "Some notes about Epson cameras:\n"
 "- Some parameters are not controllable remotely:\n"
@@ -4604,8 +4572,7 @@ msgstr ""
 "  * la configuration personnalisée de la balance des blancs\n"
 "- La configuration a été retro-conçue avec un appareil\n"
 "  PhotoPC 3000z, au cas où le vôtre se comporterait différemment,\n"
-"  Merci  de contacter par mail : <gphoto-devel@lists.sourceforge.net> (en "
-"anglais)\n"
+"  Merci  de contacter par mail : %s (en anglais)\n"
 
 #: camlibs/sierra/sierra.c:1920
 msgid ""
@@ -5148,14 +5115,12 @@ msgid "sysctl call failed ('%m')."
 msgstr "Erreur lors de l'appel à sysctl() ('%m')."
 
 #: libgphoto2/gphoto2-filesys.c:1945
-#, fuzzy, c-format
 msgid "sysconf call failed ('%m')."
-msgstr "Erreur lors de l'appel à sysctl() ('%m')."
+msgstr "Erreur lors de l'appel à sysconf ('%m')."
 
 #: libgphoto2/gphoto2-filesys.c:1953
-#, fuzzy, c-format
 msgid "swapctl call failed ('%m')."
-msgstr "Erreur lors de l'appel à sysctl() ('%m')."
+msgstr "Erreur lors de l'appel à swapctl ('%m')."
 
 #: libgphoto2/gphoto2-filesys.c:2298
 msgid "The filesystem doesn't support setting file information"
@@ -5208,170 +5173,3 @@ msgstr "Erreur inconnue de la bibliothèque de l'appareil"
 #: libgphoto2/gphoto2-result.c:82
 msgid "Unknown error"
 msgstr "Erreur inconnue"
-
-#~ msgid "PTP Undefined Property"
-#~ msgstr "PTP propriété non définie"
-
-#~ msgid "Battery Level"
-#~ msgstr "Niveau de la batterie"
-
-#~ msgid "Functional Mode"
-#~ msgstr "Mode d'opération"
-
-#~ msgid "Compression Setting"
-#~ msgstr "Configuration de la compression"
-
-#~ msgid "RGB Gain"
-#~ msgstr "Gain RVB"
-
-#~ msgid "F-Number"
-#~ msgstr "Numéro-F"
-
-#~ msgid "Focal Length"
-#~ msgstr "Longueur de focal"
-
-#~ msgid "Focus Distance"
-#~ msgstr "Position du focus"
-
-#~ msgid "Exposure Metering Mode"
-#~ msgstr "Mode de mesure de l'exposition"
-
-#~ msgid "Exposure Time"
-#~ msgstr "Temps d'exposition"
-
-#~ msgid "Exposure Program Mode"
-#~ msgstr "Mode du programme d'exposition"
-
-#~ msgid "Exposure Index (film speed ISO)"
-#~ msgstr "Index d'exposition (vitesse ISO du film)"
-
-#~ msgid "Exposure Bias Compensation"
-#~ msgstr "Compensation de l'exposition"
-
-#~ msgid "Date Time"
-#~ msgstr "Date heure"
-
-#~ msgid "Pre-Capture Delay"
-#~ msgstr "Délai de pré-capture"
-
-#~ msgid "Still Capture Mode"
-#~ msgstr "Mode de capture continue"
-
-#~ msgid "Contrast"
-#~ msgstr "Contraste"
-
-#~ msgid "Effect Mode"
-#~ msgstr "Mode d'effet"
-
-# Translation thanks to Martin Kroeker. [Colin]
-#~ msgid "Focus Metering Mode"
-#~ msgstr "Mode de mesure du focus"
-
-#~ msgid "Upload URL"
-#~ msgstr "URL d'envoi"
-
-#~ msgid "Artist"
-#~ msgstr "Artiste"
-
-#~ msgid "Copyright Info"
-#~ msgstr "Info Copyright"
-
-#~ msgid "EK Color Temperature"
-#~ msgstr "Température de la couleur EK"
-
-#~ msgid "EK Date Time Stamp Format"
-#~ msgstr "Format de date EK"
-
-#~ msgid "EK Beep Mode"
-#~ msgstr "Mode beep EK"
-
-#~ msgid "EK Power Saving"
-#~ msgstr "Économie d'énergie EK"
-
-#~ msgid "EK UI Language"
-#~ msgstr "Langue interface EK"
-
-#~ msgid "No thumbnail could be found for %s"
-#~ msgstr "Impossible de trouver une vignette pour %s"
-
-#~ msgid "gsmart library v"
-#~ msgstr "Bibliothèque gsmart v"
-
-#~ msgid ""
-#~ "\n"
-#~ "Till Adam <till@adam-lilienthal.de>\n"
-#~ "Support for the Mustek gSmart mini series of digital cameras based on "
-#~ "several other gphoto2 camlib modules and the windows driver source kindly "
-#~ "provided by Mustek.\n"
-#~ "\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Till Adam <till@adam-lilienthal.de>\n"
-#~ "Support pour la mini-série d'appareils photos  Mustek gSmart basé sur "
-#~ "divers autres modules d'appareils gphoto2 et les sources du pilote "
-#~ "windows gentiment passées par Mustek.\n"
-#~ "\n"
-
-#, fuzzy
-#~ msgid "Written by Mariusz Woloszyn <emsi@ipartners.pl>. Enjoy!"
-#~ msgstr ""
-#~ "Pilote PTP2\n"
-#~ "(c) 2001-2003 par Mariusz Woloszyn <emsi@ipartners.pl>.\n"
-#~ "Bonne chance !"
-
-#~ msgid "Sorry, this function not implemented..."
-#~ msgstr "Désolé, cette fonction n'est pas implémentée..."
-
-#~ msgid "Sorry, nothing to configure..."
-#~ msgstr "Désolé, rien à configurer..."
-
-#~ msgid "Sorry, taking pictures is not implemented..."
-#~ msgstr "Désolé, la prise de vues n'est pas implémentée..."
-
-#~ msgid "Couldn't open camera.\n"
-#~ msgstr "Impossible d'ouvrir l'appareil.\n"
-
-#~ msgid "Error opening camera\n"
-#~ msgstr "Problème à l'ouverture de l'appareil\n"
-
-#~ msgid "Picture number is too large.\n"
-#~ msgstr "Numéro d'image trop grand.\n"
-
-#~ msgid ""
-#~ "Sony DSC-F1 Digital Camera Support\n"
-#~ "M. Adam Kendall <joker@penguinpub.com>\n"
-#~ "\n"
-#~ "Based on the chotplay CLI interface from\n"
-#~ "Ken-ichi Hayashi\n"
-#~ "\n"
-#~ "This lib may not work. YMMV\n"
-#~ msgstr ""
-#~ "Support des appareils numériques Sony DSC-F1\n"
-#~ "M. Adam Kendall <joker@penguinpub.com>\n"
-#~ "\n"
-#~ "Basé sur l'interface ligne de commande chotplay\n"
-#~ "de Ken-ichi Hayashi\n"
-#~ "\n"
-#~ "Ce pilote peut ne pas fonctionner, vous avez été averti.\n"
-
-#~ msgid "Error opening camera.\n"
-#~ msgstr "Problème à l'ouverture de l'appareil.\n"
-
-#~ msgid ""
-#~ "spca504_flash camlib\n"
-#~ " Authors: Till Adam\n"
-#~ " <till@adam-lilienthal.de>\n"
-#~ "based on work by Matthias Krauss\n"
-#~ "and Mark A. Zimmerman <mark@foresthaven.com>"
-#~ msgstr ""
-#~ "Pilote spca504_flash\n"
-#~ " Auteur: Till Adam\n"
-#~ " <till@adam-lilienthal.de>\n"
-#~ "basé sur du code par Matthias Krauss\n"
-#~ "et Mark A. Zimmerman <mark@foresthaven.com>"
-
-#~ msgid "create"
-#~ msgstr "créer"
-
-#~ msgid "remove"
-#~ msgstr "enlever"
