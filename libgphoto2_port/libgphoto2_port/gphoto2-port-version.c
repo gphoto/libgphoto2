@@ -47,6 +47,11 @@ const char **gp_port_library_version(GPVersionVerbosity verbose)
 #else
 			"no serial",
 #endif
+#ifdef HAVE_LTDL
+			"ltdl",
+#else
+			"no ltdl",
+#endif
 			NULL
 		};
 	static const char *verb[] =
@@ -76,6 +81,11 @@ const char **gp_port_library_version(GPVersionVerbosity verbose)
 			"lockdev (serial port locking)",
 #else
 			"no lockdev (serial port locking)",
+#endif
+#ifdef HAVE_LTDL
+			"ltdl (hopefully with non-buggy libltdl :-)",
+#else
+			"no ltdl (working around bugg libltdl, eh? :-)",
 #endif
 			NULL
 		};
