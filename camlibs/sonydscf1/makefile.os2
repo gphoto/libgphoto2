@@ -1,41 +1,24 @@
-CCFLAGS=-O2 -c -I.. -I..\..\include -I..\..\libgphoto2_port\include -Zmtd -Zcrtdll -Zbin-files -D__ST_MT_ERRNO_ -I. -DOS2 -DHAVE_TERMIOS_H  -DEBUG
-CC=gcc
+BASEPATH=..\..
 
 all: start \
   dll \
   end
 
-start:
-  @echo ****
-  @echo   Entering:      $(MAKEDIR)
-  @echo   using CCFLAGS: $(CCFLAGS)
-  @echo ****
+!include $(BASEPATH)\os2mak.inc
 
-end:
-  @echo ****
-  @echo   Done: $(MAKEDIR)
-  @echo ****
+dll: $(CAMLIBS)\gpdscf1.dll
 
-dll: ..\gpdscf1.dll
+OBJS=sonydscf1.o \
+     command.o \
+     chotplay.o \
+     getuint.o
 
-sonydscf1.o : sonydscf1.c sonydscf1.h
-   @$(CC) -o $@ sonydscf1.c $(CCFLAGS)
-
-command.o : command.c
-   @$(CC) -o $@ command.c $(CCFLAGS)
-
-tty.o : tty.c
-   @$(CC) -o $@ tty.c $(CCFLAGS)
-
-chotplay.o : chotplay.c
-   @$(CC) -o $@ chotplay.c $(CCFLAGS)
-
-getuint.o : getuint.c
-   @$(CC) -o $@ getuint.c $(CCFLAGS)
+.c.o:
+   @$(CC) -o $@ $< $(CCFLAGS)
 
 sonydscf1.def: sonydscf1.o
-   @copy sonydscf1.df sonydscf1.def
-   @emxexp $** >> sonydscf1.def
+   @$(MAKEDEF)
 
-..\gpdscf1.dll: sonydscf1.o sonydscf1.def command.o chotplay.o getuint.o
-   @$(CC) -g -Wall -Zdll -Zcrtdll -o $@ $** -lwrap -lgcc -L..\..\LIB -llibgphoto2 -llibgphoto2_port -ldllib
+$(CAMLIBS)\gpdscf1.dll: $(OBJS) sonydscf1.def
+   $(LINK) $(DLLLINKFLAGS) -o $@ $** $(LIBS)
+

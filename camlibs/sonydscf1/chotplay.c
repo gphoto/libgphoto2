@@ -2,10 +2,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
+#include <gphoto2.h>
 extern int errno;
 
 #define BINARYFILEMODE
-#define DONTCAREUID
 
 #ifdef BINARYFILEMODE
 #include <fcntl.h>  /* for setmode() */
@@ -25,6 +25,8 @@ extern int errno;
 #include "command.h"
 #include <termios.h>
 #include "pmp.h"
+#include <io.h>
+
 #define MAX_PICTURE_NUM 200
 
 u_char picture_index[MAX_PICTURE_NUM];
@@ -41,67 +43,8 @@ u_char picture_rotate[MAX_PICTURE_NUM];
 #endif
 extern int      optind, opterr;
 extern char     *optarg;
-
-#define OUTFILENAME_JPG "%s_%03d.jpg"
-#define OUTFILENAME_JPG0 "F1_%03d.jpg"
-
-#define OUTFILENAME_PMP "%s_%03d.pmp"
-#define OUTFILENAME_PMP0 "psn%05d.pmp"
-
-#define OUTFILENAME_PMX "pidx%03d.pmx"
-
-#define OUTFILENAME_PMF "pic_inf.pmf"
-
-static int     format = JPEG;
 static int      verbose = 0;
-#ifdef DOS
-static unsigned short  speed = 0;
-#else
-static int     speed = 0;
-#endif
-
 static  int     errflg = 0;
-static  int     all_pic_num = -1;
-
-#ifndef DONTCAREUID
-static  uid_t   uid, euid;
-static  gid_t   gid, egid;
-static  int     uidswapped = 0;
-#endif
-
-void usage()
-{
-  static        char    *usagestr[] =  {
-    "chotplay (Ver 0.06) (c)1996,1997 Gadget (Palmtop PC) mailing list\n",
-    "                    Programmed by Ken-ichi HAYASHI\n",
-    "\t -h             : show this usage.\n",
-    "\t -n             : print how many pictures in DSC-F1.\n",
-    "\t -o filename    : set output filename.\n",
-    "\t -g num         : get a picture data in DSC-F1.\n",
-    "\t -a             : get all picture data in DSC-F1.\n",
-    "\t -A             : get all picture data in DSC-F1. but,\n",
-    "\t                  don't care index information.\n",
-    "\t -F format      : picture format.[JPEG PMP pmx jpeg]\n",
-    "\t                  (use with -a or -g).\n",
-    "\t -f             : get 'pic_inf.pmf' file.\n",
-    "\t -s num         : start picture number.(use with -a)\n",
-    "\t -e num         : end picture number.(use with -a)\n",
-    "\t -I             : show informations about all picture\n",
-    "\t -z             : show informations about DSC-F1\n",
-    "\t -v             : verbose mode(use with -a or -g)\n",
-    "\t -d num         : delete picture in DSC-F1.\n",
-    "\t -S speed       : serial speed. [normal middle high]\n",
-#ifndef X68
-    "\t -D ttydevice   : set tty(cua) device.\n",
-#endif
-    (char *)NULL,
-  };
-  char  **p;
-
-  p = usagestr;
-  while (*p)
-    fprintf(stderr, *p++);
-}
 
 #if 0
 void Exit(code)
@@ -115,11 +58,7 @@ void Exit(code)
 }
 #endif
 
-int
-write_file(buf, len, outfp)
-     u_char     *buf;
-     int        len;
-     FILE       *outfp;
+int write_file(u_char *buf, int len, FILE *outfp)
 {
   int i, l;
   int result;
@@ -141,10 +80,7 @@ write_file(buf, len, outfp)
 }
 
 
-int
-make_jpeg_comment(buf, jpeg_comment)
-     u_char *buf;
-     u_char *jpeg_comment;
+int make_jpeg_comment(u_char *buf, u_char *jpeg_comment)
 {
   int i, cur = 0;
   int reso, shutter;
@@ -250,31 +186,32 @@ make_jpeg_comment(buf, jpeg_comment)
   return cur;
 }
 
-int
-get_picture_information(pmx_num, outit)
-     int *pmx_num;
-     int outit;
+int get_picture_information(int *pmx_num, int outit)
 {
-  u_char buf[PMF_MAXSIZ];
+  u_char buforg[PMF_MAXSIZ];
   char name[64];
   long len;
   int i,n;
   int j, k;
   FILE  *outfp;
+  int fh;
+  int offset=0;
+  char *buf = &buforg;
 
   sprintf(name, "/PIC_CAM/PIC00000/PIC_INF.PMF");
   F1ok();
   len = F1getdata(name, buf, 0);
 
-  n = buf[24] * 256 + buf[25];  /* max file number + 1 */
   n = buf[26] * 256 + buf[27]; /* how many files */
-  *pmx_num = buf[30];
   *pmx_num = buf[31];  /* ??? */
+
+  if(n ==10)
+     buf++;
 
   k = 0;
   for(i = 0 ; i < (int) *pmx_num ; i++){
-    for(j = 0 ; j < buf[0x20 + 4 * i + 3]; j++){
-      picture_thumbnail_index[k] = (j << 8) | buf[0x20 + 4 * i] ;
+    for(j = 0 ; j < buforg[0x20 + 4 * i + 3]; j++){
+      picture_thumbnail_index[k] = (j << 8) | buforg[0x20 + 4 * i] ;
       k++;
     }
   }
@@ -284,16 +221,6 @@ get_picture_information(pmx_num, outit)
     picture_protect[i] = buf[0x420 + 0x10 * i + 14];
   }
 
-  if(outit == 1){
-    outfp = fopen(OUTFILENAME_PMF, WMODE);
-    if (outfp == NULL){
-      fprintf(stderr, "can't open outfile(%s).\n", OUTFILENAME_PMF);
-      errflg ++;
-    }else{
-      write_file(buf, len, outfp);
-      fclose(outfp);
-    }
-  }
   if(outit == 2){
       fprintf(stdout," No:Internal name:Thumbnail name(Nth):Rotate:Protect\n");
     for(i = 0 ; i < n ; i++){
@@ -329,18 +256,11 @@ get_picture_information(pmx_num, outit)
   return(n);
 }
 
-long
-get_file(name, data /*fp*/, format, verbose)
-     char *name;
-/*     FILE *fp;   for output  */
-     char **data;
-     int format;
-     int verbose;
+long get_file(char *name, char **data, int format, int verbose)
 {
   u_long filelen;
   u_long total = 0;
-  long len,memcpylen,t;
-  long result;
+  long len,memcpylen;
   char *ptr;
   u_char buf[0x400];
   u_char jpeg_comment[256];
@@ -386,13 +306,6 @@ get_file(name, data /*fp*/, format, verbose)
     ptr = memcpy(ptr,buf,memcpylen);
     ptr +=memcpylen;
 
-    /*if(result != len){
-      perror("chotplay");
-      F1fclose();
-      if(fp != stdout);
-       fclose(fp);
-      Exit(2);
-    } */
   }
 
   F1fclose();
@@ -401,14 +314,7 @@ get_file(name, data /*fp*/, format, verbose)
   return(total);
 }
 
-long
-get_thumbnail(name, data, format, verbose, n)
-     char *name;
-     char **data;
-     //FILE *fp;   for output
-     int format;
-     int verbose;
-     int n;
+long get_thumbnail(char *name, char **data, int format, int verbose, int n)
 {
   u_long filelen;
   u_long total = 0;
@@ -417,7 +323,7 @@ get_thumbnail(name, data, format, verbose, n)
   u_char buf[0x1000];
   u_char *p;
   char *ptr;
-
+  printf("name %s,%d\n",name,n);
   p = buf;
 
   F1ok();
@@ -463,11 +369,7 @@ get_thumbnail(name, data, format, verbose, n)
   return(total);
 }
 
-void
-get_date_info(name, outfilename ,newfilename)
-     char *name;
-     char *outfilename;
-     char *newfilename;
+void get_date_info(char *name, char *outfilename ,char *newfilename)
 {
   char *p, *q;
   int year = 0;
@@ -511,7 +413,7 @@ get_date_info(name, outfilename ,newfilename)
       case 'M':
         q = q + sprintf(q, "%02d", minute);
         break;
-      case 'S':
+       case 'S':
         q = q + sprintf(q, "%02d", second);
         break;
       case 'T':
@@ -549,37 +451,22 @@ get_date_info(name, outfilename ,newfilename)
 
 }
 
-/*void
-get_picture(n, outfilename, format, ignore, all_pic_num)
-     int        n;
-     char *outfilename;
-     int  format;
-     int ignore;
-     int all_pic_num;*/
-long
-get_picture(n, data, format, ignore, all_pic_num)
-     int        n;
-     char **data;
-     int  format;
-     int ignore;
-     int all_pic_num;
+long get_picture(int n, char **data, int format, int ignore, int all_pic_num)
 {
   long  len;
   char name[64];
   char name2[64];
-  FILE  *outfp;
-  char filename[MAXPATHLEN];
   int i;
 
-  all_pic_num = get_picture_information(&i, 0);
+  all_pic_num = get_picture_information(&i,0);
 
 retry:
 
   if (all_pic_num < n) {
     fprintf(stderr, "picture number %d is too large. %d\n",all_pic_num,n);
     errflg ++;
-    return;
-  }
+    return(GP_ERROR);
+   }
 
   switch(format){
   case PMX:
@@ -587,21 +474,23 @@ retry:
     break;
   case JPEG_T:
     sprintf(name, "/PIC_CAM/PIC00000/PIDX%03d.PMX",
-            (picture_thumbnail_index[n - 1] & 0xff));
+            (picture_thumbnail_index[n] & 0xff));
     break;
   case JPEG:
   case PMP:
   default:
     if(ignore)
-      sprintf(name, "/PIC_CAM/PIC00000/PSN%05d.PMP", n - 1);
+      sprintf(name, "/PIC_CAM/PIC00000/PSN%05d.PMP", n);
     else
-      sprintf(name, "/PIC_CAM/PIC00000/PSN%05d.PMP", picture_index[n - 1]);
+      sprintf(name, "/PIC_CAM/PIC00000/PSN%05d.PMP", picture_index[n]);
     break;
   }
   if(ignore)
-    sprintf(name2, "/PIC_CAM/PIC00000/PSN%05d.PMP", n - 1);
+    sprintf(name2, "/PIC_CAM/PIC00000/PSN%05d.PMP", n );
   else
-    sprintf(name2, "/PIC_CAM/PIC00000/PSN%05d.PMP", picture_index[n - 1]);
+    sprintf(name2, "/PIC_CAM/PIC00000/PSN%05d.PMP", picture_index[n]);
+
+  printf("name %s, name2 %s, %d\n",name,name2,n);
 
   if(verbose)
     switch(format){
@@ -618,41 +507,9 @@ retry:
       break;
     }
 
-/*  outfp = stdout;*/
-
-  /*if (outfilename) {
-    if(((format == JPEG) || (format == PMP) || (format == JPEG_T))
-       &&  strchr(outfilename, '%')){
-      get_date_info(name2, outfilename, filename);
-      outfp = fopen(filename, WMODE);
-      if (outfp == NULL){
-        fprintf(stderr, "can't open outfile(%s).\n", filename);
-        errflg ++;
-        return;
-      }
-    }else{
-      outfp = fopen(outfilename, WMODE);
-      if (outfp == NULL){
-        fprintf(stderr, "can't open outfile(%s).\n", outfilename);
-        errflg ++;
-        return;
-      }
-    }
-  }
-#ifdef BINARYFILEMODE
-  if(outfp == stdout){
-#ifdef WIN32
-        _setmode(_fileno(stdout), _O_BINARY);
-#else
-        setmode(fileno(stdout), O_BINARY);
-#endif
-  }
-#endif
-*/
-
   if(format == JPEG_T)
     len = get_thumbnail(name, data, format, verbose,
-                        0xff & (picture_thumbnail_index[n -1] >> 8));
+                        0xff & (picture_thumbnail_index[n] >> 8));
   else
     len = get_file(name, data, format, verbose);
   if(len == 0 ) {
@@ -664,63 +521,10 @@ retry:
   if (len < 0)
     errflg ++;
 
-  /*if (outfp != stdout)
-    fclose(outfp);*/
    return(len);
 }
 
-void
-get_all_pictures(start, end, outfilename, format, ignore)
-     int        start;
-     int        end;
-     char       *outfilename;
-     int format;
-     int ignore;
-{
-  int   i;
-  char  fname[MAXPATHLEN];
-
-  if (all_pic_num < start || all_pic_num < end) {
-    fprintf(stderr, "picture number %d is too large. %d,%d\n",all_pic_num,start,end);
-    errflg ++;
-    return;
-  }
-  if (start > end) {
-    int tmp;
-    tmp = end;
-    end = start;
-    start = tmp;
-  }
-
-  for (i = start; i <= end; i++) {
-    switch(format){
-    case PMX:
-      sprintf(fname, OUTFILENAME_PMX, i-1);
-      break;
-    case PMP:
-      if (outfilename)
-        sprintf(fname, OUTFILENAME_PMP, outfilename, picture_index[i-1]);
-      else
-        sprintf(fname, OUTFILENAME_PMP0, picture_index[i-1]);
-      break;
-    case JPEG:
-    case JPEG_T:
-    default:
-      if (outfilename)
-        sprintf(fname, OUTFILENAME_JPG, outfilename, i);
-      else
-        sprintf(fname, OUTFILENAME_JPG0, i);
-      break;
-    }
-    fprintf(stderr, "Fetching picture number %d, storing it as: %s\n",i,fname);
-    get_picture(i, fname, format, ignore);
-  }
-}
-
-void
-delete_picture(n, all_pic_num)
-     int        n;
-     int        all_pic_num;
+void delete_picture(int n, int all_pic_num)
 {
   if (all_pic_num < n) {
     fprintf(stderr, "picture number %d is too large. %d\n",all_pic_num,n);
@@ -734,242 +538,7 @@ delete_picture(n, all_pic_num)
     return;
   }
 
-  if (F1deletepicture(picture_index[n -1]) < 0)
+  if (F1deletepicture(picture_index[n]) < 0)
     errflg ++;
 }
 
-#ifndef DONTCAREUID
-void
-daemonuid()
-{
-  if (uidswapped) {
-#ifdef HAVE_SETREUID
-    setreuid(uid, euid);
-    setregid(gid, egid);
-#else
-//    setuid(uid);
-//    seteuid(euid);
-//    setgid(gid);
-//    setegid(egid);
-#endif
-    uidswapped = 0;
-  }
-}
-
-void
-useruid()
-{
-  if (!uidswapped) {
-#ifdef HAVE_SETREUID
-    setregid(egid, gid);
-    setreuid(euid, uid);
-#else
-    setgid(egid);
-    setegid(gid);
-    setuid(euid);
-    seteuid(uid);
-#endif
-    uidswapped = 1;
-  }
-}
-#endif
-
-#if 0
-int
-main(argc, argv)
-     int        argc;
-     char       **argv;
-{
-  char  *devpath = NULL;
-  char  *outfilename = NULL;
-  int   start_picture = 1;
-  int   end_picture = MAX_PICTURE_NUM;
-  int   c;
-  int i;
-
-#ifndef DONTCAREUID
-  uid = getuid();
-  euid = geteuid();
-  gid = getgid();
-  egid = getegid();
-  useruid();
-#endif
-
-  devpath = getenv("CHOTPLAYTTY");
-
-  if(devpath == NULL){
-    devpath = malloc(sizeof(char) * (strlen(RSPORT) +1));
-    if(devpath == NULL) {
-      fprintf(stderr, "can't malloc\n");
-      exit(1);
-    }
-    strcpy(devpath, RSPORT);
-  }
-
-  for(i = 0 ; i < argc; i++){
-    if(strcmp("-D", argv[i]) == 0){
-      devpath = argv[i+1];
-      break;
-    }
-    if(strcmp("-h", argv[i]) == 0){
-      usage();
-      exit(-1);
-    }
-  }
-
-  if (devpath) {
-#ifndef DONTCAREUID
-    daemonuid();
-#endif
-    F1setfd(opentty(devpath));
-#ifndef DONTCAREUID
-    useruid();
-#endif
-  }
-  if (F1getfd() < 0)
-    Exit(1);
-
-  while ((c = getopt(argc, argv, "D:ro:g:naAs:e:d:vF:fS:Izh")) != EOF) {
-    switch(c) {
-    case 'S':
-      switch(optarg[0]){
-      case 'l':
-      case '5':
-#if defined(WIN32) || defined(OS2) || defined(BSD) || defined(DOS)
-        speed = B38400;
-#else
-        speed = B38400;
-#endif
-        break;
-      case 't':
-      case '4':
-#if defined(WIN32) || defined(OS2) || defined(BSD) || defined(DOS)
-        speed = B38400;
-#else
-        speed = B38400;
-#endif
-        break;
-      case 'h':
-      case '3':
-        speed = B38400;
-        break;
-      case 'm':
-      case '2':
-        speed = B19200;
-        break;
-      case 'n':
-      case '1':
-        speed = B9600;
-        break;
-      default:
-        speed = DEFAULTBAUD;
-        break;
-      }
-      changespeed(F1getfd(), speed);
-#ifdef WIN32    /* for IrDA.. */
-        Sleep(1500);
-#endif
-      break;
-    case 'o':
-      outfilename = optarg;
-      break;
-    case 'g':
-      all_pic_num = get_picture_information(&i, 0);
-      if(format == PMX)
-        all_pic_num = i;
-      get_picture(atoi(optarg), outfilename, format, 0);
-      break;
-    case 'r':
-      F1reset();
-      exit(0);
-      break;
-    case 'n':
-      F1ok();
-      all_pic_num = F1howmany();
-      printf("pictures = %d\n", all_pic_num);
-      break;
-    case 'z':
-      F1ok();
-      F1status(1);
-      break;
-    case 'I':
-      F1ok();
-      all_pic_num = get_picture_information(&i, 2);
-      break;
-    case 'a':
-      all_pic_num = get_picture_information(&i, 0);
-      if(format == PMX)
-        all_pic_num = i;
-      if(all_pic_num < end_picture)
-        end_picture = all_pic_num;
-      get_all_pictures(start_picture, end_picture, outfilename, format, 0);
-      end_picture = MAX_PICTURE_NUM;
-      break;
-    case 'A':
-      all_pic_num = get_picture_information(&i, 0);
-      if(format == PMX)
-        all_pic_num = i;
-      if(all_pic_num < end_picture)
-        end_picture = all_pic_num;
-      get_all_pictures(start_picture, end_picture, outfilename, format, 1);
-      end_picture = MAX_PICTURE_NUM;
-      break;
-    case 's':
-      start_picture = atoi(optarg);
-      break;
-    case 'e':
-      end_picture = atoi(optarg);
-      break;
-    case 'v':
-      verbose = 1;
-      break;
-    case 'd':
-      F1ok();
-      all_pic_num = get_picture_information(&i, 0);
-      delete_picture(atoi(optarg));
-      all_pic_num = get_picture_information(&i, 0);
-      break;
-    case 'f':
-      F1ok();
-      all_pic_num = get_picture_information(&i, 1);
-      break;
-/*    case 'Z':
-      F1ok();
-      all_pic_num = get_picture_information(&i, 0);
-      F1test(atoi(optarg));
-      all_pic_num = get_picture_information(&i, 0);
-      break;
-*/
-    case 'D':
-      break; /* do nothing */
-    case 'F':
-      {
-        switch(optarg[0]){
-        case 'j':
-          format = JPEG_T;
-          break;
-        case 'J':
-          format = JPEG;
-          break;
-        case 'p':
-          format = PMX;
-          break;
-        case 'P':
-          format = PMP;
-          break;
-        default:
-          format = JPEG;
-          break;
-        }
-      }
-      break;
-    default:
-      usage();
-      Exit(-1);
-    }
-  }
-
-  Exit (errflg ? 1 : 0);
-  return(255);
-}
-#endif

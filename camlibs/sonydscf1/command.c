@@ -9,18 +9,13 @@
 #include <unistd.h>
 #endif
 
-#define closetty(fd)            close(fd)
+#define dprintf(x) printf x
 
 #include <gphoto2.h>
 
 extern gp_port *dev;
 
 
-/*#ifdef  0*/
-/*# define dprintf(x)     fprintf x*/
-/*#else*/
-# define dprintf(x)
-/*#endif             */
 
 static int      F1fd = -1;
 static u_char address = 0;
@@ -32,25 +27,7 @@ static int pic_num2 = 0;
 static int year, month, date;
 static int hour, minutes;
 
-void
-F1setfd(fd)
-     int        fd;
-{
-  dprintf((stderr, "F1fd = %x\n", fd));
-  F1fd = fd;
-}
-
-int
-F1getfd()
-{
-  return F1fd;
-}
-
-/*------------------------------------------------------------*/
-
-void
-wbyte(c)
-     u_char     c;
+void wbyte(u_char c)
 {
   char temp[2];
   dprintf((stderr, "> %02x\n", c));
@@ -63,8 +40,7 @@ wbyte(c)
   }
 }
 
-u_char
-rbyte()
+u_char rbyte()
 {
   u_char        c[2];
 
@@ -79,9 +55,7 @@ rbyte()
 }
 
 inline void
-wstr(p, len)
-     u_char     *p;
-     int        len;
+wstr(u_char *p, int len)
 {
   dprintf((stderr, "> len=%d\n", len));
   //if (writetty(F1fd, p, len) < 0) {
@@ -91,10 +65,7 @@ wstr(p, len)
   }
 }
 
-inline void
-rstr(p, len)
-     u_char     *p;
-     int        len;
+inline void rstr(u_char *p, int len)
 {
 
   dprintf((stderr, "< len=%d\n", len));
@@ -105,10 +76,7 @@ rstr(p, len)
   }
 }
 
-u_char checksum(addr, cp, len)
-     unsigned char addr;
-     unsigned char *cp;
-     int len;
+u_char checksum(u_char addr, u_char *cp, int len)
 {
   int ret = addr;
   while(len --)
@@ -116,10 +84,7 @@ u_char checksum(addr, cp, len)
   return(0x100 -(ret & 0xff) );
 }
 
-void
-sendcommand(p, len)
-     u_char     *p;
-     int        len;
+void sendcommand(u_char *p, int len)
 {
   wbyte(BOFRAME);
   wbyte(sendaddr[address]);
@@ -130,8 +95,7 @@ sendcommand(p, len)
   if(address >7 ) address = 0;
 }
 
-void
-Abort()
+void Abort()
 {
   u_char buf[4];
   buf[0] = BOFRAME;
@@ -141,10 +105,7 @@ Abort()
   wstr(buf, 4);
 }
 
-int
-recvdata(p, len)
-     u_char     *p;
-     int        len;
+int recvdata(u_char *p, int len)
 {
   u_char s, t;
   int sum;
@@ -201,9 +162,7 @@ recvdata(p, len)
 /*------------------------------------------------------------*/
 
 
-char F1newstatus(verbose, return_buf)
-int verbose;
-char* return_buf;
+char F1newstatus(int verbose, char *return_buf)
 {
   u_char buf[34];
   int i;
@@ -259,8 +218,7 @@ char* return_buf;
 }
 
 
-int F1status(verbose)
-int verbose;
+int F1status(int verbose)
 {
 
   u_char buf[34];
@@ -309,16 +267,13 @@ int verbose;
   return (buf[2]);              /*ok*/
 }
 
-int
-F1howmany()
+int F1howmany()
 {
   F1status(0);
   return(pic_num);
 }
 
-int
-F1fopen(name)
-     char *name;
+int F1fopen(char *name)
 {
   u_char buf[64];
   int len;
@@ -339,8 +294,7 @@ F1fopen(name)
   return(buf[3]);
 }
 
-int
-F1fclose()
+int F1fclose()
 {
   u_char buf[4];
 
@@ -361,10 +315,7 @@ F1fclose()
   return (buf[2]);              /* ok == 0 */
 }
 
-long
-F1fread(data, len)
-     u_char *data;
-     long len;
+long F1fread(u_char *data, long len)
 {
 
   long len2;
@@ -415,13 +366,8 @@ F1fread(data, len)
   return(i);
 }
 
-long
-F1fseek(offset, base)
-     long offset;
-     int base;
+long F1fseek(long offset, int base)
 {
-  int i = 0;
-
   u_char buf[10];
 
   buf[0] = 0x02;
@@ -447,11 +393,7 @@ F1fseek(offset, base)
   return(buf[2]);
 }
 
-long
-F1fwrite(data, len, b) /* this function not work well  */
-     u_char *data;
-     long len;
-     u_char b;
+long F1fwrite(u_char *data, long len, u_char b) /* this function not work well  */
 {
 
   long i = 0;
@@ -507,13 +449,10 @@ F1fwrite(data, len, b) /* this function not work well  */
   return(i);
 }
 
-
-u_long
-F1finfo(name)
-     char *name;
+u_long F1finfo(char *name)
 {
   u_char buf[64];
-  int len,i;
+  int len;
   u_long flen;
 
   buf[0] = 0x02;
@@ -546,11 +485,7 @@ F1finfo(name)
   return(flen);
 }
 
-long
-F1getdata(name, data, verbose)
-     char *name;
-     u_char *data;
-     int verbose;
+long F1getdata(char *name, u_char *data, int verbose)
 {
   long filelen;
   long total = 0;
@@ -585,9 +520,7 @@ F1getdata(name, data, verbose)
   return(total);
 }
 
-int
-F1deletepicture(n)
-int n;
+int F1deletepicture(int n)
 {
   u_char buf[4];
   buf[0] = 0x02;
@@ -603,44 +536,7 @@ int n;
   return(0);
 }
 
-
-int
-F1ffs()     /* free file space ??? */
-{
-  u_char buf[82];
-  int i, j;
-  buf[0] = 0x02;
-  buf[1] = 0x01;
-  sendcommand(buf, 2);
-  i = recvdata(buf, 80);
-  if((buf[0] != 0x02) || (buf[1] != 0x01) || (buf[2] != 0)){
-    Abort();
-    fprintf(stderr,"abort(%02x %02x %02x)\n", buf[0], buf[1], buf[2]);
-    return(-1);
-  }
-
-  fprintf(stderr,"read %d byte\n", i);
-  for(j = 32 ; j < i ; j++){
-    if(j % 16 == 0)  fprintf(stderr, "\n");
-    fprintf(stderr, "%02x ", buf[j]);
-  }
-  fprintf(stderr, "\n");
-
-  return(0);
-}
-
-void Exit(code)
-     int code;
-{
-  if (!(F1getfd() < 0)){
-    F1reset();
-    closetty(F1getfd());
-  }
-  exit(code);
-}
-
-int
-F1ok()
+int F1ok()
 {
   int retrycount = RETRY;
   u_char buf[64];
@@ -665,8 +561,7 @@ F1ok()
   return 0;                     /*ng*/
 }
 
-int
-F1reset()
+int F1reset()
 {
   u_char buf[3];
  retryreset:
@@ -682,3 +577,12 @@ F1reset()
   return (int) buf[2];          /*ok*/
 }
 
+void Exit(code)
+     int code;
+{
+  /*if (!(F1getfd() < 0)){
+    F1reset();
+    closetty(F1getfd());
+  } */
+  exit(code);
+}
