@@ -1,0 +1,306 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2002-01-04 11:08+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: libgphoto2_port/gphoto2-port.c:56
+#, c-format
+msgid "The operation '%s' is not supported by this device"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:57
+msgid "The port has not yet been initialized"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:272
+msgid "open"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:295
+msgid "close"
+msgstr ""
+
+#. Check if we wrote all bytes
+#: libgphoto2_port/gphoto2-port.c:373
+msgid "write"
+msgstr ""
+
+#. Check if we read as many bytes as expected
+#: libgphoto2_port/gphoto2-port.c:405
+msgid "read"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:504
+msgid "update"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:550
+msgid "get_pin"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:568
+msgid "set_pin"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:583
+msgid "send_break"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:596
+msgid "flush"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:612
+msgid "find_device"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:624
+msgid "find_device_by_class"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:638
+msgid "clear_halt"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:658
+msgid "msg_write"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:678
+msgid "msg_read"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:738
+msgid "No error description available"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-info-list.c:279
+#, c-format
+msgid "Could not load any io-library because '%s' could not be opened (%m)"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-info-list.c:473
+msgid "Generic Port"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-result.c:58
+msgid "No error"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-result.c:59
+msgid "Unspecified error"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-result.c:60
+msgid "I/O problem"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-result.c:61
+msgid "Bad parameters"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-result.c:62
+msgid "Unsupported operation"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-result.c:63
+msgid "Timeout reading from or writing to the port"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-result.c:65
+msgid "Serial port not supported"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-result.c:67
+msgid "USB port not supported"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-result.c:68
+msgid "Unknown port"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-result.c:69
+msgid "Out of memory"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-result.c:70
+msgid "Error loading a library"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-result.c:71
+msgid "Error initializing the port"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-result.c:72
+msgid "Error reading from the port"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-result.c:73
+msgid "Error writing to the port"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-result.c:74
+msgid "Error updating the port settings"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-result.c:75
+msgid "Error setting the serial port speed"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-result.c:77
+msgid "Error clearing a halt condition on the USB port"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-result.c:79
+msgid "Could not find the requested device on the USB port"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-result.c:81
+msgid "Could not claim the USB device"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-result.c:83
+msgid "Could not lock the device"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-result.c:85
+msgid "Unknown error"
+msgstr ""
+
+#: usb/libusb.c:125
+#, c-format
+msgid "Could not open USB device (%m)."
+msgstr ""
+
+#: usb/libusb.c:132
+#, c-format
+msgid ""
+"Could not claim interface %d (%m). Make sure no other program or kernel "
+"module (i.e. dc2xx) is using the device and you have read/write access to "
+"the device."
+msgstr ""
+
+#: usb/libusb.c:151
+#, c-format
+msgid "Could not release interface %d (%m)."
+msgstr ""
+
+#: usb/libusb.c:158
+#, c-format
+msgid "Could not close USB port (%m)."
+msgstr ""
+
+#: usb/libusb.c:274
+#, c-format
+msgid "Could not set config %d/%d (%m)"
+msgstr ""
+
+#: usb/libusb.c:296
+#, c-format
+msgid "Could not set interface %d/%d (%m)"
+msgstr ""
+
+#: usb/libusb.c:332
+#, c-format
+msgid "The supplied vendor or product id (%i,%i) is not valid."
+msgstr ""
+
+#: usb/libusb.c:351
+#, c-format
+msgid ""
+"Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
+"is connected to the computer."
+msgstr ""
+
+#: usb/libusb.c:434
+#, c-format
+msgid ""
+"Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
+"sure this device is connected to the computer."
+msgstr ""
+
+#: serial/unix.c:183
+#, c-format
+msgid "Could not lock device '%s'"
+msgstr ""
+
+#: serial/unix.c:192
+#, c-format
+msgid "Device '%s' is locked by pid %d"
+msgstr ""
+
+#: serial/unix.c:195
+#, c-format
+msgid "Device '%s' could not be locked (dev_lock returned %d)"
+msgstr ""
+
+#: serial/unix.c:217
+#, c-format
+msgid "Device '%s' could not be unlocked."
+msgstr ""
+
+#: serial/unix.c:229
+#, c-format
+msgid "Device '%s' could not be unlocked as it is locked by pid %d."
+msgstr ""
+
+#: serial/unix.c:233
+#, c-format
+msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
+msgstr ""
+
+#: serial/unix.c:300
+#, c-format
+msgid "Serial Port %i"
+msgstr ""
+
+#: serial/unix.c:382
+#, c-format
+msgid "Failed to open '%s' (%m)."
+msgstr ""
+
+#: serial/unix.c:400
+#, c-format
+msgid "Could not close '%s' (%m)."
+msgstr ""
+
+#: serial/unix.c:445
+#, c-format
+msgid "Could not write to port (%m)"
+msgstr ""
+
+#: serial/unix.c:532
+#, c-format
+msgid "Unknown pin %i."
+msgstr ""
+
+#: serial/unix.c:554
+#, c-format
+msgid "Could not get level of pin %i (%m)."
+msgstr ""
+
+#: serial/unix.c:587
+#, c-format
+msgid "Could not set level of pin %i to %i (%m)."
+msgstr ""
+
+#: serial/unix.c:610
+#, c-format
+msgid "Could not flush '%s' (%m)."
+msgstr ""
+
+#: serial/unix.c:719
+#, c-format
+msgid "Could not set the baudrate to %d"
+msgstr ""
