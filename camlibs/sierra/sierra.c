@@ -544,25 +544,12 @@ int camera_file_get_generic (Camera *camera, CameraFile *file,
 	}
 
 	/* Fill in the file structure */
-	if (thumbnail) 
-		strcpy (file->type, "image/jpeg");
-	else {
-		//FIXME: Do it better...
-		if (strstr (filename, ".MOV") != NULL)
-			strcpy (file->type, "video/quicktime");
-		else if (strstr (filename, ".TIF") != NULL)
-			strcpy (file->type, "image/tiff");
-		else
-			strcpy (file->type, "image/jpeg");
-	}
 	strcpy (file->name, filename);
 
 	/* Creation of a temporary file */
 	tmp_file = gp_file_new ();
 	if (!tmp_file)
 		return (GP_ERROR);
-
-	strcpy (tmp_file->name, filename);
 
 	/* Get the picture data */
 	CHECK_STOP (camera, sierra_get_string_register (camera, regd,
@@ -576,6 +563,7 @@ int camera_file_get_generic (Camera *camera, CameraFile *file,
 
 		/* OK : this is a complete JPEG file */
 		gp_file_append (file, tmp_file->data, tmp_file->size);
+		strcpy (file->type, "image/jpeg");
 
 	} else if (tmp_file->data[0] == (char)0xFF && 
 		   tmp_file->data[1] == (char)0xE1) {
@@ -595,10 +583,24 @@ int camera_file_get_generic (Camera *camera, CameraFile *file,
 							  &file->size);
 
 		free (exifdat.header);
+		strcpy (file->type, "image/jpeg");
+
+	} else if ((tmp_file->data[1] == 0x49) &&
+		   (tmp_file->data[2] == 0x2A) &&
+		   (tmp_file->data[3] == 0x00) &&
+		   (tmp_file->data[4] == 0x08)){
+		
+		/* This is a TIFF file */
+		gp_file_append (file, tmp_file->data, tmp_file->size);
+		strcpy (file->type, "image/tiff");
+
 	} else {
+
 	    	/* This is probably a video. */
 	    	gp_file_append (file, tmp_file->data, tmp_file->size);
+		strcpy (file->type, "video/quicktime");
 	}
+	strcpy (tmp_file->name, filename);
 
 	gp_file_free (tmp_file);
 
