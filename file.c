@@ -200,6 +200,7 @@ gp_file_open (CameraFile *file, char *filename)
          * extension. Better hack would be to use library that examine
          * file content instead, like gnome-vfs mime handling, or
          * gnome-mime, whatever.
+         * See also the GP_MIME_* definitions.
          */
         static char *mime_table[] = {
             "jpg",  "jpeg",
@@ -396,7 +397,8 @@ gp_file_adjust_name_for_mime_type (CameraFile *file)
 		GP_MIME_RAW,  "raw",
 		GP_MIME_JPEG, "jpg",
 		GP_MIME_PNG,  "png",
-		GP_MIME_PNM,  "pnm",
+		GP_MIME_PPM,  "ppm",
+		GP_MIME_PGM,  "pgm",
 		GP_MIME_TIFF, "tif", NULL};
 
 	CHECK_NULL (file);
@@ -495,6 +497,7 @@ gp_file_set_conversion_method (CameraFile *file,
 	return (GP_OK);
 }
 
+/* Chuck Homic's Bayer conversion routine, originally for the Dimera 3500 */
 static int
 gp_file_conversion_chuck (CameraFile *file, unsigned char *data)
 {
@@ -608,40 +611,6 @@ gp_file_conversion_johannes (CameraFile *file, unsigned char *data)
 }
 
 static int
-gp_file_raw_to_pnm (CameraFile *file)
-{
-	unsigned char *new_data, *b;
-	long int new_size;
-	int result;
-
-	CHECK_NULL (file);
-
-	new_size = (file->width * file->height * 3) + strlen (file->header);
-	CHECK_MEM (new_data = malloc (sizeof (char) * new_size));
-
-	strcpy (new_data, file->header);
-
-	b = new_data + strlen (file->header);
-	switch (file->method) {
-	case GP_FILE_CONVERSION_METHOD_CHUCK:
-		result = gp_file_conversion_chuck (file, b);
-		break;
-	default:
-		result = GP_ERROR_NOT_SUPPORTED;
-		break;
-	}
-	if (result != GP_OK) {
-		free (new_data);
-		return (result);
-	}
-
-	CHECK_RESULT (gp_file_set_data_and_size (file, new_data, new_size));
-	CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_PNM));
-	
-	return (GP_OK);
-}
-
-static int
 gp_file_raw_to_ppm (CameraFile *file)
 {
 	unsigned char *new_data, *b;
@@ -659,6 +628,9 @@ gp_file_raw_to_ppm (CameraFile *file)
 	switch (file->method) {
 	case GP_FILE_CONVERSION_METHOD_JOHANNES:
 		result = gp_file_conversion_johannes (file, b);
+		break;
+	case GP_FILE_CONVERSION_METHOD_CHUCK:
+		result = gp_file_conversion_chuck (file, b);
 		break;
 	default:
 		result = GP_ERROR_NOT_SUPPORTED;
@@ -681,10 +653,6 @@ gp_file_convert (CameraFile *file, const char *mime_type)
 	CHECK_NULL (file && mime_type);
 
 	if (!strcmp (file->mime_type, GP_MIME_RAW) &&
-	    !strcmp (mime_type, GP_MIME_PNM))
-		return (gp_file_raw_to_pnm (file));
-
-	else if (!strcmp (file->mime_type, GP_MIME_RAW) &&
 		 !strcmp (mime_type, GP_MIME_PPM))
 		return (gp_file_raw_to_ppm (file));
 
