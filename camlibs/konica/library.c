@@ -455,8 +455,8 @@ camera_file_list (Camera* camera, CameraList* list, gchar* folder)
 	                &exif_size,
 	                &protected,
 	                &information_buffer,
-	                &information_buffer_size) == GP_OK) filename = g_strdup_printf ("%06i.jpg", (int) image_id);
-		else filename = g_strdup ("??????.jpg");
+	                &information_buffer_size) == GP_OK) filename = g_strdup_printf ("%06i.jpeg", (int) image_id);
+		else filename = g_strdup ("??????.jpeg");
 		g_free (information_buffer);
 		information_buffer = NULL;
 		if ((result = gp_list_append (list, filename, GP_LIST_FILE)) != GP_OK) return (result);
@@ -496,9 +496,9 @@ camera_file_get_generic (Camera* camera, CameraFile* file, gchar* folder, gchar*
 	/* Get the image. */
 	if ((result = k_get_image (kd->device, kd->image_id_long, image_id, image_type, (guchar **) &file->data, (guint *) &file->size)) != GP_OK) return (result);
 
-	strcpy (file->type, "image/jpg");
+	strcpy (file->type, "image/jpeg");
 	if (image_type == K_THUMBNAIL) {
-		tmp = g_strdup_printf ("%06i-thumbnail.jpg", (int) image_id);
+		tmp = g_strdup_printf ("%06i-thumbnail.jpeg", (int) image_id);
 		strcpy (file->name, tmp);
 		g_free (tmp);
 	} else {
@@ -648,8 +648,8 @@ camera_capture (Camera* camera, CameraFile* file, CameraCaptureInfo* info)
 			(guchar **) &file->data, 
 			(guint *) &file->size);
 		if (result == GP_OK) {
-			strcpy (file->type, "image/jpg");
-			strcpy (file->name, "image.jpg");
+			strcpy (file->type, "image/jpeg");
+			strcpy (file->name, "image.jpeg");
 		} else return (result);
 
 		/* Delete this image. */
@@ -666,8 +666,8 @@ camera_capture (Camera* camera, CameraFile* file, CameraCaptureInfo* info)
 
 		/* Get the preview. */
 		if ((result = k_get_preview (konica_data->device, TRUE, (guchar**) &file->data, (guint*) &file->size)) == GP_OK) {
-			strcpy (file->type, "image/jpg");
-			strcpy (file->name, "preview.jpg");
+			strcpy (file->type, "image/jpeg");
+			strcpy (file->name, "preview.jpeg");
 		}
 		return (result);
 
