@@ -406,7 +406,7 @@ static int camera_file_get_generic (Camera *camera, CameraFile *file,
 	SierraData *fd = (SierraData*)camera->camlib_data;
 	CameraFile *tmp_file;
 	char *jpeg_data, *wrk_s;
-	int jpeg_size;
+	int jpeg_size, result;
 
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** sierra_file_get_generic");
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
@@ -430,18 +430,23 @@ static int camera_file_get_generic (Camera *camera, CameraFile *file,
 	}
 
 	/* Fill in the file structure */
-	strcpy (file->name, filename);
+	CHECK_STOP (camera, gp_file_set_name (file, filename));
 
 	/* Creation of a temporary file */
-	tmp_file = gp_file_new ();
-	strcpy (tmp_file->name, filename);
-	if (!tmp_file)
-		return (GP_ERROR);
+	CHECK_STOP (camera, gp_file_new (&tmp_file));
+	result = gp_file_set_name (tmp_file, filename);
+	if (result != GP_OK) {
+		gp_file_free (tmp_file);
+		camera_stop (camera);
+	}
 
 	/* Get the picture data */
-	CHECK_STOP (camera, sierra_get_string_register (camera, regd,
-							file_number + 1, 
-							tmp_file, NULL, NULL));
+	result = sierra_get_string_register (camera, regd, file_number + 1,
+					     tmp_file, NULL, NULL);
+	if (result != GP_OK) {
+		gp_file_free (tmp_file);
+		camera_stop (camera);
+	}
 
 	/* Data postprocessing */
 	if (thumbnail) {
@@ -470,6 +475,7 @@ static int camera_file_get_generic (Camera *camera, CameraFile *file,
 		else {
 			/* No valid JPEG data found */
 			gp_file_free (tmp_file);
+			camera_stop (camera);
 			return GP_ERROR_CORRUPTED_DATA;
 		}
 	}

@@ -217,11 +217,12 @@ int dc120_set_speed (DC120Data *dd, int speed) {
 
 int dc120_get_status (DC120Data *dd) {
 
-	CameraFile *file = gp_file_new();
+	CameraFile *file;
 	char *p = dc120_packet_new(0x7F);
  	int retval;
 	int size = 256;
 
+	gp_file_new (&file);
 	retval = dc120_packet_read_data(dd, file, p, &size, 256);
 
 	gp_file_free(file);
@@ -241,7 +242,7 @@ int dc120_get_albums (DC120Data *dd, int from_card, CameraList *list) {
 	if (from_card)
 		p[1] = 0x01;
 
-	file = gp_file_new();
+	gp_file_new(&file);
 
 	if (dc120_packet_read_data(dd, file, p, &size, 256)==GP_ERROR) {
 		gp_file_free(file);
@@ -274,7 +275,7 @@ int dc120_get_filenames (DC120Data *dd, int from_card, int album_number, CameraL
 	/* Set the album number */
 	p[4] = album_number;
 
-	file = gp_file_new();
+	gp_file_new(&file);
 	if (dc120_packet_read_data(dd, file, p, &size, 256)==GP_ERROR) {
 		gp_file_free(file);
 		free (p);
@@ -307,7 +308,7 @@ int dc120_get_file_preview (DC120Data *dd, CameraFile *file, int file_number, ch
 	*size = 15680;
 
 	/* Create a file for KDC data */
-	f = gp_file_new();
+	gp_file_new(&f);
 	if (dc120_packet_read_data(dd, f, cmd_packet, size, 1024)==GP_ERROR) {
 		gp_file_free(file);
 		return (GP_ERROR);
@@ -336,7 +337,7 @@ int dc120_get_file (DC120Data *dd, CameraFile *file, int file_number, char *cmd_
 	p[1] = cmd_packet[1];
 	p[4] = cmd_packet[4];
 
-	f = gp_file_new();
+	gp_file_new(&f);
 	*size = 0;
 	if (dc120_packet_read_data(dd, f, p, size, 256)==GP_ERROR) {
 		gp_file_free(file);

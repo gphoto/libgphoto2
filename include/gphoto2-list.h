@@ -23,23 +23,22 @@
 
 #define MAX_ENTRIES 1024
 
-typedef struct _CameraListEntry CameraListEntry;
-struct _CameraListEntry {
-	char name [128];
-	char value [128];
-};
-
 typedef struct _CameraList CameraList;
 struct _CameraList {
 	int  count;
-	CameraListEntry entry [MAX_ENTRIES];
+	struct {
+		char name  [128];
+		char value [128];
+	} entry [MAX_ENTRIES];
 };
 
 int     gp_list_new  (CameraList **list);
 int     gp_list_free (CameraList *list);
 
-int	gp_list_count	(CameraList *list);
-int	gp_list_append	(CameraList *list, const char *name, const char *value);
+int	gp_list_count	   (CameraList*);
+int	gp_list_append	   (CameraList*, const char *name, const char *value);
+int     gp_list_remove_all (CameraList*);
+int     gp_list_sort       (CameraList*);
 
 int gp_list_get_name  (CameraList *list, int index, const char **name);
 int gp_list_get_value (CameraList *list, int index, const char **value);

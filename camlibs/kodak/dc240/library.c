@@ -321,7 +321,7 @@ static int dc240_get_file_size (DC240Data *dd, const char *folder, const char *f
 
     offset = (thumb? 92:104);
 
-    f  = gp_file_new();
+    gp_file_new(&f);
     p1 = dc240_packet_new(0x91);
     p2 = dc240_packet_new_path(folder, filename);
     if (dc240_packet_exchange(dd, f, p1, p2, &size, 256) < 0)
@@ -402,10 +402,12 @@ int dc240_set_speed (DC240Data *dd, int speed) {
 
 int dc240_get_status (DC240Data *dd) {
 
-    CameraFile *file = gp_file_new();
+    CameraFile *file;
     char *p = dc240_packet_new(0x7F);
     int retval;
     int size = 256;
+
+    gp_file_new (&file);
 
     retval = dc240_packet_exchange(dd, file, p, NULL, &size, 256);
 
@@ -424,7 +426,7 @@ static int dc240_get_directory_list (DC240Data *dd, CameraList *list, const char
     char *p1 = dc240_packet_new(0x99);
     char *p2 = dc240_packet_new_path(folder, NULL);
 
-    file = gp_file_new();
+    gp_file_new(&file);
     if (dc240_packet_exchange(dd, file, p1, p2, &size, 256) < 0)
         return (GP_ERROR);
     free(p1);
@@ -548,7 +550,7 @@ int dc240_capture (DC240Data *dd, CameraFilePath *path)
     /*
      get the last picture taken location (good firmware developers)
      */
-    file = gp_file_new();
+    gp_file_new(&file);
     p = dc240_packet_new(0x4C); /* 5.1.19 Send last taken image name */
     ret = dc240_packet_exchange(dd, file, p, NULL, &size, 256);
     free(p);

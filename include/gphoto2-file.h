@@ -31,8 +31,7 @@ typedef struct {
 	int ref_count;
 } CameraFile;
 
-CameraFile *gp_file_new (void);
-
+int gp_file_new            (CameraFile **file);
 int gp_file_ref            (CameraFile *file);
 int gp_file_unref          (CameraFile *file);
 
@@ -44,7 +43,12 @@ int gp_file_save           (CameraFile *file, char *filename);
 int gp_file_clean          (CameraFile *file);
 int gp_file_free           (CameraFile *file);
 
+int gp_file_set_name       (CameraFile *file, const char *name);
+int gp_file_set_type       (CameraFile *file, const char *type);
+
 int gp_file_append         (CameraFile *file, char *data,  int size);
 int gp_file_get_last_chunk (CameraFile *file, char **data, int *size);
+
+int gp_file_copy           (CameraFile *destination, CameraFile *source);
 
 #endif /* __GPHOTO2_FILE_H__ */

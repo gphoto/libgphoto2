@@ -133,7 +133,9 @@ int camera_file_get_info (Camera *camera, const char *folder, const char *file,
         CameraFile *cam_file;
 
         sprintf (buf, "%s/%s", folder, file);
-        cam_file = gp_file_new ();
+        result = gp_file_new (&cam_file);
+	if (result != GP_OK)
+		return (result);
         result = gp_file_open (cam_file, buf);
         if (result != GP_OK) {
                 gp_file_free (cam_file);

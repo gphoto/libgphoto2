@@ -546,7 +546,7 @@ int save_picture_to_file(char *folder, char *filename, int thumbnail) {
 
         CameraFile *file;
 
-        file = gp_file_new();
+	gp_file_new (&file);
 
         if (thumbnail) {
                 res = gp_camera_file_get_preview (glob_camera, folder,
@@ -699,7 +699,7 @@ OPTION_CALLBACK(upload_picture) {
         CameraFile *file;
         int res;
 
-        file = gp_file_new();
+        gp_file_new (&file);
 
         cli_debug_print("Uploading picture");
 
@@ -735,7 +735,7 @@ int capture_generic (int type, char *name) {
                 return (result);
 
         if (type == GP_OPERATION_CAPTURE_PREVIEW) {
-                file = gp_file_new ();
+                gp_file_new (&file);
                 if ((result = gp_camera_capture_preview (glob_camera, file)) != GP_OK) {
                         cli_error_print("Could not capture the preview.");
                         return (result);

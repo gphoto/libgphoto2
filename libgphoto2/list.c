@@ -53,6 +53,16 @@ gp_list_free (CameraList *list)
 }
 
 int
+gp_list_remove_all (CameraList *list)
+{
+	CHECK_NULL (list);
+
+	list->count = 0;
+
+	return (GP_OK);
+}
+
+int
 gp_list_append (CameraList *list, const char *name, const char *value)
 {
 	CHECK_NULL (list);
@@ -68,6 +78,37 @@ gp_list_append (CameraList *list, const char *name, const char *value)
         list->count++;
 
         return (GP_OK);
+}
+
+static void
+exchange (CameraList *list, int x, int y)
+{
+	char name  [128];
+	char value [128];
+
+	strcpy (name,  list->entry[x].name);
+	strcpy (value, list->entry[x].value);
+	strcpy (list->entry[x].name,  list->entry[y].name);
+	strcpy (list->entry[x].value, list->entry[y].value);
+	strcpy (list->entry[y].name,  name);
+	strcpy (list->entry[y].value, value);
+}
+
+int
+gp_list_sort (CameraList *list)
+{
+	int x, y, z;
+
+	CHECK_NULL (list);
+
+	for (x = 0; x < list->count - 1; x++)
+		for (y = x + 1; y < list->count; y++) {
+			z = strcmp (list->entry[x].name, list->entry[y].name);
+			if (z > 0)
+				exchange (list, x, y);
+		}
+
+	return (GP_OK);
 }
 
 int

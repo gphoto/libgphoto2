@@ -1,3 +1,8 @@
+2001-08-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* include/gphoto2-file.h: Make gp_file_new return an error code.
+	* */*: Adjust everything for above change.
+
 2001-08-23  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2/list.c (gp_list_new): memset on *list instead of list.
