@@ -13,5 +13,5 @@ SUBDIRS = 			\
 	po 			\
 	doc
 
-gphotodocdir = $(prefix)/doc/gphoto2
-gphotodoc_DATA = AUTHORS COPYING
+docdir = @DOC_DIR@
+doc_DATA = AUTHORS COPYING README
