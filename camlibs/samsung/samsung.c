@@ -262,17 +262,6 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	return (GP_OK);
 }
 
-static const char *
-camera_result_as_string (Camera *camera, int result) 
-{
-	if (result >= 0)
-		return ("This is not an error...");
-	if (-result < 100)
-		return gp_result_as_string (result);
-
-	return ("An SDSC specific error occurred.");
-}
-
 int
 camera_init (Camera *camera) 
 {
@@ -281,7 +270,6 @@ camera_init (Camera *camera)
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;
         camera->functions->about                = camera_about;
-        camera->functions->result_as_string     = camera_result_as_string;
 
 	/* Now, tell the filesystem where to get lists and info */
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);

@@ -1493,12 +1493,6 @@ camera_folder_set_config (Camera *camera, const char *folder, CameraWidget * win
 	return GP_ERROR_NOT_SUPPORTED;
 }
 
-static const char *
-camera_result_as_string (Camera *camera, int result)
-{
-	return NULL;
-}
-
 /**
  * This routine initializes the serial/USB port and also load the
  * camera settings. Right now it is only the speed that is
@@ -1522,7 +1516,6 @@ camera_init (Camera *camera)
 	camera->functions->summary = camera_summary;
 	camera->functions->manual = camera_manual;
 	camera->functions->about = camera_about;
-	camera->functions->result_as_string = camera_result_as_string;
 
 	/* Set up the CameraFilesystem */
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);

@@ -33,9 +33,6 @@ static int sierra_valid_type (char b)
 	    (byte == TYPE_DATA) ||
 	    (byte == TYPE_DATA_END))
 		ret_status = GP_OK;
-	
-	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_valid_type return '%s'",
-			 gp_result_as_string(ret_status));
 
 	return ret_status;
 }
@@ -354,9 +351,6 @@ int sierra_read_packet (Camera *camera, char *packet)
 
 	if (camera->port->type == GP_PORT_USB && !camera->pl->usb_wrap)
 		gp_port_usb_clear_halt(camera->port, GP_PORT_USB_ENDPOINT_IN);
-
-	gp_debug_printf(GP_DEBUG_HIGH, "sierra", "* sierra_read_packet return '%s'",
-			gp_result_as_string(ret_status));
 
 	return ret_status;
 }

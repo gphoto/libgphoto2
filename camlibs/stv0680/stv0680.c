@@ -190,13 +190,6 @@ static int camera_about (Camera *camera, CameraText *about)
 	return (GP_OK);
 }
 
-static const char* camera_result_as_string (Camera *camera, int result) 
-{
-	if (result >= 0) return ("This is not an error...");
-	if (-result < 100) return gp_result_as_string (result);
-	return ("This is a template specific error.");
-}
-
 int camera_init (Camera *camera) 
 {
 	GPPortSettings settings;
@@ -206,7 +199,6 @@ int camera_init (Camera *camera)
         camera->functions->summary              = camera_summary;
         camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;
-        camera->functions->result_as_string     = camera_result_as_string;
 	camera->functions->capture_preview	= camera_capture_preview;
 
 	gp_port_settings_get(camera->port, &settings);

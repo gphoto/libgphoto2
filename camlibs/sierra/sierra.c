@@ -1,7 +1,28 @@
+/* sierra.c:
+ *
+ * Copyright (C) 2001 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details. 
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+#include <config.h>
+#include "sierra.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <gphoto2.h>
 #include <time.h>
 
 #ifdef ENABLE_NLS
@@ -11,24 +32,31 @@
 #  ifdef gettext_noop
 #    define N_(String) gettext_noop (String)
 #  else
-#    define _(String) (String)
 #    define N_(String) (String)
 #  endif
 #else
+#  define textdomain(String) (String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory) (Domain)
 #  define _(String) (String)
 #  define N_(String) (String)
 #endif
 
+#include <gphoto2-library.h>
+#include <gphoto2-port-log.h>
+#include <gphoto2-debug.h>
+
 #include "library.h"
-#include "sierra.h"
 
 #define TIMEOUT	   2000
 
-#define CHECK_STOP(camera,result) {int res; res = result; if (res < 0) {gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** operation failed!"); camera_stop (camera); return (res);}}
+#define CHECK_STOP(camera,result) {int res; res = result; if (res < 0) {camera_stop (camera); return (res);}}
 
-#define CHECK_STOP_FREE(camera,result) {int res; res = result; if (res < 0) {gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** operation failed!"); camera_stop (camera); free (camera->pl); camera->pl = NULL; return (res);}}
+#define CHECK_STOP_FREE(camera,result) {int res; res = result; if (res < 0) {camera_stop (camera); free (camera->pl); camera->pl = NULL; return (res);}}
 
-#define CHECK_FREE(camera,result) {int res; res = result; if (res < 0) {gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** operation failed!"); free (camera->pl); camera->pl = NULL; return (res);}}
+#define CHECK_FREE(camera,result) {int res; res = result; if (res < 0) {free (camera->pl); camera->pl = NULL; return (res);}}
 
 int camera_start(Camera *camera);
 int camera_stop(Camera *camera);
@@ -40,11 +68,6 @@ const char JPEG_SOI_MARKER[]  = { (char)0xFF, (char)0xD8, '\0' };
 const char JPEG_SOF_MARKER[]  = { (char)0xFF, (char)0xD9, '\0' };
 const char JPEG_APP1_MARKER[] = { (char)0xFF, (char)0xE1, '\0' };
 const char TIFF_SOI_MARKER[]  = { (char)0x49, (char)0x49, (char)0x2A, (char)0x00, (char)0x08, '\0' };
-
-/* Error descriptions */
-static char *result_string[] = {
-   /* GP_ERROR_BAD_CONDITION   -1000 */ N_("Bad conditions")
-};
 
 static SierraCamera sierra_cameras[] = {
 	/* Camera Model,    USB(vendor id, product id, in endpoint, out endpoint, USB wrapper protocol) */ 
@@ -1196,27 +1219,6 @@ camera_about (Camera *camera, CameraText *about)
 }
 
 /**
- * camera_result_as_string:
- * @camera: camera data structure
- * @result: error code to be described
- *
- * Return error description for camera specific error.
- *
- * Returns: a string
- */
-static const char *
-camera_result_as_string(Camera *camera, int result)
-{
-	/* Do we have an error description? */
-	if ((-result - 1000) < (int) (sizeof (result_string) / 
-				      sizeof (*result_string)))
-		return _(result_string[-result - 1000]);
-
-   /* Should never occur... */
-	return _("Unknown error");
-}
-
-/**
  * get_jpeg_data:
  * @data: input data table
  * @data_size: table size
@@ -1278,7 +1280,6 @@ int camera_init (Camera *camera)
         camera->functions->summary              = camera_summary;
         camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;
-        camera->functions->result_as_string     = camera_result_as_string;
 
 	camera->pl = calloc (1, sizeof (CameraPrivateLibrary));
 	if (!camera->pl)
@@ -1348,20 +1349,18 @@ int camera_init (Camera *camera)
         CHECK_FREE (camera, camera_start (camera));
 
         /* FIXME??? What's that for? */
+	gp_camera_set_error (camera, NULL);
         ret = sierra_get_int_register (camera, 1, &value);
-        if (ret != GP_OK) {
-                gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** Could not get "
-                                 "register 1: %s", 
-                                 gp_camera_get_result_as_string (camera, ret));
-        }
+        if (ret != GP_OK)
+		gp_log (GP_LOG_DEBUG, "sierra", "Could not get register 1: %s",
+			gp_camera_get_error (camera));
 
         /* FIXME??? What's that for? */
+	gp_camera_set_error (camera, NULL);
         ret = sierra_set_int_register (camera, 83, -1);
-        if (ret != GP_OK) {
-                gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** Could not set "
-                                 "register 83 to -1: %s", 
-                                 gp_camera_get_result_as_string (camera, ret));
-        }
+        if (ret != GP_OK)
+		gp_log (GP_LOG_DEBUG, "sierra", "Could not set register 83 "
+			"to -1: %s", gp_camera_get_error (camera));
 
         CHECK_STOP_FREE (camera, gp_port_timeout_set (camera->port, 50));
 

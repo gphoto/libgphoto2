@@ -324,13 +324,6 @@ static int camera_about (Camera *camera, CameraText *about)
 	return (GP_OK);
 }
 
-static const char* camera_result_as_string (Camera *camera, int result)
-{
-	if (result >= 0) return (_("This is not an error..."));
-	if (-result < 100) return gp_result_as_string (result);
-	return (_("This is a dc3200 specific error."));
-}
-
 int camera_init (Camera *camera) 
 {
 	int ret;
@@ -343,7 +336,6 @@ int camera_init (Camera *camera)
         camera->functions->exit                 = camera_exit;
         camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;
-        camera->functions->result_as_string     = camera_result_as_string;
 
 	/* Set up the CameraFilesystem */
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func,

@@ -218,14 +218,6 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	return (GP_OK);
 }
 
-static char *
-camera_result_as_string (Camera *camera, int result) 
-{
-	if (result >= 0) return ("This is not an error...");
-	if (-result < 100) return gp_result_as_string (result);
-	return ("This is a template specific error.");
-}
-
 int
 camera_init (Camera *camera) 
 {
@@ -237,7 +229,6 @@ camera_init (Camera *camera)
         camera->functions->summary              = camera_summary;
         camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;
-        camera->functions->result_as_string     = camera_result_as_string;
 
 	/* Now, tell the filesystem where to get lists, files and info */
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func,

@@ -1,3 +1,11 @@
+2001-10-23 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* camlibs: Remove every reference to gp_camera_result_as_string
+	  including camera->functions->result_as_string. It was mostly
+	  unused anyways.
+	* frontends/command-line/main.c: No history any more
+	* libgphoto2/gphoto2-camera.[c,h] (gp_camera_[get,set]_error): New
+
 2001-10-23 Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* camlibs/canon/util.c: made canon debug use gp_log. 
