@@ -298,13 +298,13 @@ pdc700_pic (Camera *camera, int n, unsigned char **data, int *size,
 	unsigned char cmd[8];
 	unsigned char buf[2048];
 	int len, status;
-	unsigned char sequence_num;
+	unsigned int target;
 	PDCPicInfo info;
 
 	/* Picture size? Allocate the memory */
 	CHECK_RESULT (pdc700_picinfo (camera, n, &info));
-	*data = malloc (sizeof (char) * ((thumb) ? info.thumb_size :
-						   info.pic_size));
+	target = thumb ? info.thumb_size : info.pic_size;
+	*data = malloc (sizeof (char) * target);
 	if (!*data)
 		return (GP_ERROR_NO_MEMORY);
 
@@ -313,27 +313,39 @@ pdc700_pic (Camera *camera, int n, unsigned char **data, int *size,
 	cmd[4] = PDC700_FIRST;
 	cmd[5] = n & 0xff;
 	cmd[6] = n >> 8;
+	gp_camera_progress (camera, 0.);
 	CHECK_RESULT_FREE (pdc700_read (camera, cmd, 8,
 					buf, &len, &status), *data);
-	sequence_num = buf[0];
 	memcpy (*data, buf + 1, len - 1);
 	*size = len - 1;
+	gp_camera_progress (camera, (float) *size / (float) target);
 
 	/* Get the following packets */
 	while (status != PDC700_LAST) {
 		cmd[4] = PDC700_DONE;
-		cmd[5] = sequence_num;
-		GP_DEBUG ("Fetching sequence %i...", sequence_num);
+		cmd[5] = buf[0]; /* Sequence number */;
+		GP_DEBUG ("Fetching sequence %i...", buf[0]);
 		CHECK_RESULT_FREE (pdc700_read (camera, cmd, 7,
 						buf, &len, &status), *data);
-		sequence_num = buf[0];
+
+		/*
+		 * Sanity check: We should never read more bytes than
+		 * targeted.
+		 */
+		if (*size + len - 1 > target) {
+			gp_camera_set_error (camera, _("The camera sent more "
+				"bytes than we expected (%i)"), target);
+			return (GP_ERROR_CORRUPTED_DATA);
+		}
+
 		memcpy (*data + *size, buf + 1, len - 1);
 		*size += len - 1;
+		gp_camera_progress (camera, (float) *size / (float) target);
 	}
 
 	/* Terminate transfer */
 	cmd[4] = PDC700_LAST;
-	cmd[5] = sequence_num;
+	cmd[5] = buf[0]; /* Sequence number */
 	CHECK_RESULT_FREE (pdc700_read (camera, cmd, 7, buf, &len, &status),
 			   *data);
 
