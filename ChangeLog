@@ -1,3 +1,8 @@
+2001-11-17  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* frontends/command-line/options.c: Mark some more strings for
+	  translation.
+
 2001-11-17  Hans Ulrich Niedermann <hun@n-dimensional.de>
 
 	* configure.in: changed package name from gphoto to gphoto2
