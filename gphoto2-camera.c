@@ -221,6 +221,8 @@
 
 #define CHECK_INIT(c,ctx)						\
 {									\
+	if ((c)->pc->used)						\
+		return (GP_ERROR_CAMERA_BUSY);				\
 	(c)->pc->used++;						\
 	if (!(c)->pc->lh)						\
 		CR((c), gp_camera_init (c, ctx), ctx);			\
