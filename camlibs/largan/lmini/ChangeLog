@@ -1,3 +1,8 @@
+2004-04-13  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* lmini.c (largan_get_pict): get the reply (patch by
+	Lee Olsen <lee (at) cruzio.com>)
+
 2003-05-01  matthschulz <matthschulz@gmx.net>
 
 	* lmini.c: more fixing 

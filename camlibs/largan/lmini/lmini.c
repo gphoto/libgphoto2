@@ -165,6 +165,10 @@ int largan_get_pict (Camera * camera, largan_pict_type type,
 	if (ret < 0) {
 		return ret;
 	}
+        ret = largan_recv_reply (camera, &reply, &code, NULL);
+	if (ret < 0) {
+		return ret;
+	}
 /* here we have to receive 7 bytes back 
  the 2nd contains 00 for thumbnail or 01 for original picture
  the 3rd contains the picturenumber for an original picture
