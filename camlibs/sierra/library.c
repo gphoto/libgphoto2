@@ -245,7 +245,7 @@ int sierra_write_packet (Camera *camera, char *packet)
  *
  * Returns: error code
  *     - GP_OK if the operation is successful (see description),
- *     - GP_ERROR_IO_UNKNOWN_PORT if no port was specified within
+ *     - GP_ERROR_UNKNOWN_PORT if no port was specified within
  *       the camera data structure,
  *     - GP_ERROR_CORRUPTED_DATA if the received data are invalid,
  *     - GP_ERROR_IO_* on other IO error.
@@ -266,7 +266,7 @@ int sierra_read_packet (Camera *camera, char *packet)
 		blocksize = 1;
 		break;
 	default:
-		ret_status = GP_ERROR_IO_UNKNOWN_PORT;
+		ret_status = GP_ERROR_UNKNOWN_PORT;
 		done = 1;
 	}
 

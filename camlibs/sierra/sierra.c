@@ -1340,7 +1340,7 @@ int camera_init (Camera *camera)
 
                 free (fd);
                 camera->camlib_data = NULL;
-                return (GP_ERROR_IO_UNKNOWN_PORT);
+                return (GP_ERROR_UNKNOWN_PORT);
         }
 
         CHECK_FREE (camera, gp_port_settings_set (camera->port, settings));
