@@ -18,9 +18,10 @@
 
 */
 
-#include <stdio.h>
-#include <errno.h>
-#include <gphoto2.h>
+#ifndef __L859_H__
+#define __L859_H__
+
+#include <gphoto2-camera.h>
 
 #define L859_BLOCKSIZE    0x74
 #define L859_BUFSIZE      0x74
@@ -49,4 +50,4 @@ struct _CameraPrivateLibrary {
 #define L859_CMD_DELETE_ALL     0xef
 #define L859_CMD_DELETE_ACK     0x15
 
-/* End of dc.h */
+#endif /* __L859_H__ */

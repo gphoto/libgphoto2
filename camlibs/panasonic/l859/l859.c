@@ -17,16 +17,12 @@
 	This is the Panasonic PV-L859 camera gPhoto library source code.
 
 */
+#include <config.h>
+#include "l859.h"
 
-#include <stdio.h>
 #include <stdlib.h>
-#include <stdarg.h>
-#include <sys/time.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <memory.h>
+#include <stdio.h>
 #include <string.h>
-#include <_stdint.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -42,7 +38,9 @@
 #  define N_(String) (String)
 #endif
 
-#include "l859.h"
+#include <gphoto2-endian.h>
+#include <gphoto2-port-log.h>
+#include <gphoto2-library.h>
 
 #ifndef __FILE__
 #  define __FILE__ "l859.c"
@@ -354,10 +352,8 @@ int camera_id (CameraText *id) {
 int camera_abilities (CameraAbilitiesList *list) {
 
 	CameraAbilities a;
-	GP_DEBUG ("Camera Abilities");
 
-	memset(&a, 0, sizeof(a));
-	strcpy(a.model, "Panasonic PV-L859");
+	memset (&a, 0, sizeof(a));
 	a.status = GP_DRIVER_STATUS_PRODUCTION;
 	a.port		= GP_PORT_SERIAL;
 	a.speed[0] 	= 9600;
@@ -366,11 +362,14 @@ int camera_abilities (CameraAbilitiesList *list) {
 	a.speed[3] 	= 115200;
 	a.speed[4] 	= 0;
 	a.operations        = GP_OPERATION_NONE;
-	a.file_operations   = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
+	a.file_operations   = GP_FILE_OPERATION_DELETE |
+			      GP_FILE_OPERATION_PREVIEW;
 	a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
 
-	if (gp_abilities_list_append(list, a) == GP_ERROR)
-		return GP_ERROR;
+	strncpy (a.model, "Panasonic PV-L691", sizeof (a.model));
+	gp_abilities_list_append (list, a);
+	strncpy (a.model, "Panasonic PV-L859", sizeof (a.model));
+	gp_abilities_list_append (list, a);
 
 	return GP_OK;
 }
