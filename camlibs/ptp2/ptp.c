@@ -111,7 +111,7 @@ ptp_usb_sendreq (PTPParams* params, PTPContainer* req)
 	if (ret!=PTP_RC_OK) {
 		ret = PTP_ERROR_IO;
 		ptp_error (params,
-			"PTP: request code 0x%4x sending req error 0x%.2x",
+			"PTP: request code 0x%04x sending req error 0x%02x",
 			req->Code,ret);
 	}
 	return ret;
@@ -138,7 +138,7 @@ ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
 	if (ret!=PTP_RC_OK) {
 		ret = PTP_ERROR_IO;
 		ptp_error (params,
-		"PTP: request code 0x%4x sending data error 0x%.2x",
+		"PTP: request code 0x%04x sending data error 0x%04x",
 			ptp->Code,ret);
 		return ret;
 	}
@@ -149,7 +149,7 @@ ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
 	if (ret!=PTP_RC_OK) {
 		ret = PTP_ERROR_IO;
 		ptp_error (params,
-		"PTP: request code 0x%4x sending data error 0x%.2x",
+		"PTP: request code 0x%04x sending data error 0x%04x",
 			ptp->Code,ret);
 	}
 	return ret;
@@ -199,7 +199,7 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp,
 	} while (0);
 	if (ret!=PTP_RC_OK) {
 		ptp_error (params,
-		"PTP: request code %4x container receive error %4x",
+		"PTP: request code 0x%04x getting data error 0x%04x",
 			ptp->Code, ret);
 		ret = PTP_ERROR_IO;
 	}
@@ -228,7 +228,7 @@ ptp_usb_getresp (PTPParams* params, PTPContainer* resp)
 	}
 	if (ret!=PTP_RC_OK) {
 		ptp_error (params,
-		"PTP: request code 0x%4x getting resp error 0x%4x",
+		"PTP: request code 0x%04x getting resp error 0x%04x",
 			resp->Code, ret);
 		return ret;
 	}
@@ -349,7 +349,7 @@ ptp_usb_event (PTPParams* params, PTPContainer* event, int wait)
 	if (ret!=PTP_RC_OK) {
 		ret = PTP_ERROR_IO;
 		ptp_error (params,
-			"PTP: reading event an error 0x%4x occured", ret);
+			"PTP: reading event an error 0x%04x occured", ret);
 		/* reading event error is nonfatal (for example timeout) */
 	} 
 	/* if we read anything over interrupt endpoint it must be an event */
@@ -426,7 +426,7 @@ ptp_opensession (PTPParams* params, uint32_t session)
 
 	ptp_debug(params,"PTP: Opening session");
 
-	/* SessonID field of the operation dataset should be set allways
+	/* SessonID field of the operation dataset should always
 	   be set to 0 for OpenSession request! */
 	params->session_id=0x00000000;
 	/* TransactionID should be set to 0 also! */

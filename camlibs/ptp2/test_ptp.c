@@ -46,6 +46,7 @@
 /* requested actions */
 #define ACT_LIST_DEVICES	01
 #define ACT_LIST_PROPERTIES	02
+#define ACT_SHOW_PROPERTY	03
 
 			
 typedef struct _PTP_USB PTP_USB;
@@ -66,6 +67,10 @@ void init_ptp_usb (PTPParams*, PTP_USB*, struct usb_device*);
 void list_devices(short force);
 void list_properties (int dev, int bus, short force);
 
+
+// one global variable (yes, I know it sucks)
+
+short verbose=0;
 
 // Device Property descriptions
 struct {
@@ -130,7 +135,10 @@ help(char* progname)
 	"	-l, --list-devices	List all PTP devices\n"
 	"	-p, --list-properties	List all PTP device properties "
 					"(e.g. focus mode)\n"
+
+	"	-s, --show-property	display the property\n"
 	"	-f, --force		force\n"
+	"	-v, --verbose		be verbosive (print more debug)\n"
 	"	-B, --bus=BUS-NUMBER	USB bus number\n"
 	"	-D, --dev=DEV-NUMBER	USB assigned device number\n"
 	"\n");
@@ -169,6 +177,16 @@ ptp_write_func (unsigned char *bytes, unsigned int size, void *data)
 		perror("usb_bulk_write");
 		return PTP_ERROR_IO;
 	}
+}
+
+void
+debug (void *data, const char *format, va_list args);
+void
+debug (void *data, const char *format, va_list args)
+{
+	if (!verbose) return;
+	vfprintf (stderr, format, args);
+	fprintf (stderr,"\n");
 }
 
 #if 0
@@ -256,7 +274,7 @@ init_ptp_usb (PTPParams* ptp_params, PTP_USB* ptp_usb, struct usb_device* dev)
 	ptp_params->write_func=ptp_write_func;
 	ptp_params->read_func=ptp_read_func;
 	ptp_params->error_func=NULL;
-	ptp_params->debug_func=NULL;
+	ptp_params->debug_func=debug;
 	ptp_params->sendreq_func=ptp_usb_sendreq;
 	ptp_params->senddata_func=ptp_usb_senddata;
 	ptp_params->getresp_func=ptp_usb_getresp;
@@ -363,7 +381,7 @@ list_devices(short force)
 			USB_CLASS_PTP)||force)
 		if (dev->descriptor.bDeviceClass!=USB_CLASS_HUB)
 		{
-			int n,ret;
+			int n;
 			struct usb_endpoint_descriptor *ep;
 			//int inep=0, outep=0, intep=0;
 			PTPDeviceInfo deviceinfo;
@@ -399,10 +417,15 @@ list_devices(short force)
 			find_endpoints(dev,&ptp_usb.inep,&ptp_usb.outep,
 				&ptp_usb.intep);
 			init_ptp_usb(&ptp_params, &ptp_usb, dev);
-			ret=ptp_getdeviceinfo (&ptp_params, &deviceinfo);
-			if (ret==PTP_RC_OK) {
-				printf("%s",deviceinfo.Model);
-			}
+			CR(ptp_opensession (&ptp_params,1),
+				"Could not open session!\n");
+			CR(ptp_getdeviceinfo (&ptp_params, &deviceinfo),
+				"Could not get device info!\n");
+
+			printf("%s",deviceinfo.Model);
+
+			CR(ptp_closesession(&ptp_params),
+				"Could not close session!\n");
 		}
 	}
 	if (!found) printf("\nFound no PTP devices");
@@ -429,7 +452,7 @@ list_properties (int busn, int devn, short force)
 	PTP_USB ptp_usb;
 	PTPDeviceInfo deviceinfo;
 	struct usb_device *dev;
-	const char* dpd;
+	const char* propdesc;
 	int i;
 
 	printf("Listing properties...\n");
@@ -445,19 +468,95 @@ list_properties (int busn, int devn, short force)
 	find_endpoints(dev,&ptp_usb.inep,&ptp_usb.outep,&ptp_usb.intep);
 
 	init_ptp_usb(&ptp_params, &ptp_usb, dev);
+	CR(ptp_opensession (&ptp_params,1),
+		"Could not open session!\n");
 	CR(ptp_getdeviceinfo (&ptp_params, &deviceinfo),"Could not get"
 		"device info\n");
-	printf("%s\n",deviceinfo.Model);
+	printf("Quering: %s\n",deviceinfo.Model);
 	for (i=0; i<deviceinfo.DevicePropertiesSupported_len;i++){
-		dpd=get_property_description(deviceinfo.
+		propdesc=get_property_description(deviceinfo.
 					DevicePropertiesSupported[i]);
-		if (dpd!=NULL) 
-			printf("%s\n",dpd);
+		if (propdesc!=NULL) 
+			printf("0x%04x : %s\n",deviceinfo.
+				DevicePropertiesSupported[i], propdesc);
 		else
-			printf("0x%04x\n",deviceinfo.
-					DevicePropertiesSupported[i]);
+			printf("0x%04x : 0x%04x\n",deviceinfo.
+				DevicePropertiesSupported[i], deviceinfo.
+				DevicePropertiesSupported[i]);
+	}
+	CR(ptp_closesession(&ptp_params), "Could not close session!\n");
+}
+
+void
+print_propcurval (PTPDevicePropDesc* dpd);
+void
+print_propcurval (PTPDevicePropDesc* dpd)
+{
+	switch (dpd->DataType) {
+		case PTP_DTC_INT8:
+		case PTP_DTC_UINT8:
+			printf("%hhi",*(char*)dpd->CurrentValue);
+			break;
+		case PTP_DTC_INT16:
+		case PTP_DTC_UINT16:
+			printf("%i",*(uint16_t*)dpd->CurrentValue);
+			break;
+		case PTP_DTC_INT32:
+		case PTP_DTC_UINT32:
+			printf("%i",*(uint32_t*)dpd->CurrentValue);
+			break;
+		case PTP_DTC_STR:
+			printf("%s",(char *)dpd->CurrentValue);
 	}
 }
+
+void
+show_property (int busn, int devn, uint16_t property, short force);
+void
+show_property (int busn, int devn, uint16_t property, short force)
+{
+	PTPParams ptp_params;
+	PTP_USB ptp_usb;
+	struct usb_device *dev;
+	PTPDevicePropDesc dpd;
+	const char* propdesc;
+
+#ifdef DEBUG
+	printf("dev %i\tbus %i\n",devn,busn);
+#endif
+	dev=find_device(busn,devn,force);
+	if (dev==NULL) {
+		fprintf(stderr,"could not find any device matching given "
+		"bus/dev numbers\n");
+		exit(-1);
+	}
+	find_endpoints(dev,&ptp_usb.inep,&ptp_usb.outep,&ptp_usb.intep);
+
+	init_ptp_usb(&ptp_params, &ptp_usb, dev);
+	CR(ptp_opensession (&ptp_params,1),
+		"Could not open session!\nTry to reset the camera.\n");
+	CR(ptp_getdeviceinfo (&ptp_params, &ptp_params.deviceinfo),
+		"Could not get device info\nTry to reset the camera.\n");
+	propdesc=get_property_description(property);
+	printf("Quering: %s\n"
+		"Checking for '%s'\n",ptp_params.deviceinfo.Model, propdesc);
+	if (!ptp_property_issupported(&ptp_params, property)){
+		fprintf(stderr,"The dvice does not support this property!\n");
+		CR(ptp_closesession(&ptp_params), "Could not close session!\n"
+			"Try to reset the camera.\n");
+		return;
+	}
+	memset(&dpd,0,sizeof(dpd));
+	CR(ptp_getdevicepropdesc(&ptp_params,property,&dpd),
+		"Could not get device property description!\n"
+		"Try to reset the camera.\n");
+	printf ("Current value is ");
+	print_propcurval(&dpd);
+	printf("\n");
+	CR(ptp_closesession(&ptp_params), "Could not close session!\n"
+	"Try to reset the camera.\n");
+}
+	
 
 /* main program  */
 
@@ -467,6 +566,7 @@ main(int argc, char ** argv)
 	int busn=0,devn=0;
 	int action=0;
 	short force=0;
+	uint16_t property=0;
 	/* parse options */
 	int option_index = 0,opt;
 	static struct option loptions[] = {
@@ -474,13 +574,15 @@ main(int argc, char ** argv)
 		{"dev",1,0,'D'},
 		{"bus",1,0,'B'},
 		{"force",0,0,'f'},
+		{"verbose",0,0,'v'},
 		{"list-devices",0,0,'l'},
 		{"list-properties",0,0,'p'},
+		{"show-property",1,0,'s'},
 		{0,0,0,0}
 	};
 	
 	while(1) {
-		opt = getopt_long (argc, argv, "hlpfD:B:", loptions, &option_index);
+		opt = getopt_long (argc, argv, "hlpfvs:D:B:", loptions, &option_index);
 		if (opt==-1) break;
 	
 		switch (opt) {
@@ -499,8 +601,15 @@ main(int argc, char ** argv)
 		case 'p':
 			action=ACT_LIST_PROPERTIES;
 			break;
+		case 's':
+			action=ACT_SHOW_PROPERTY;
+			property=strtol(optarg,NULL,16);
+			break;
 		case 'f':
 			force=~force;
+			break;
+		case 'v':
+			verbose=~verbose;
 			break;
 		case '?':
 			break;
@@ -520,6 +629,9 @@ main(int argc, char ** argv)
 			break;
 		case ACT_LIST_PROPERTIES:
 			list_properties(busn,devn,force);
+			break;
+		case ACT_SHOW_PROPERTY:
+			show_property(busn,devn,property,force);
 			break;
 	}
 

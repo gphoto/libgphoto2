@@ -579,10 +579,12 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 		_("Model: %s\n"
 		"  device version: %s\n"
 		"  serial number:  %s\n"
+		"Vendor extension ID: 0x%08x\n"
 		"Vendor extension description: %s\n"),
 		camera->pl->params.deviceinfo.Model,
 		camera->pl->params.deviceinfo.DeviceVersion,
 		camera->pl->params.deviceinfo.SerialNumber,
+		camera->pl->params.deviceinfo.VendorExtensionID,
 		camera->pl->params.deviceinfo.VendorExtensionDesc);
 
 	return (GP_OK);
@@ -1210,6 +1212,7 @@ camera_init (Camera *camera, GPContext *context)
 	GP_DEBUG ("  model: %s", camera->pl->params.deviceinfo.Model);
 	GP_DEBUG ("  device version: %s", camera->pl->params.deviceinfo.DeviceVersion);
 	GP_DEBUG ("  serial number: '%s'",camera->pl->params.deviceinfo.SerialNumber);
+	GP_DEBUG ("Vendor extension ID: 0x%08x",camera->pl->params.deviceinfo.VendorExtensionID);
 	GP_DEBUG ("Vendor extension description: %s",camera->pl->params.deviceinfo.VendorExtensionDesc);
 	GP_DEBUG ("Supported operations:");
 	for (i=0; i<camera->pl->params.deviceinfo.OperationsSupported_len; i++)
