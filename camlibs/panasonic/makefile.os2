@@ -1,4 +1,4 @@
-CCFLAGS=-O2 -c -I.. -I..\..\include -I..\..\libgpio -Zmtd -Zcrtdll -Zbin-files -D__ST_MT_ERRNO_ -I. -DOS2 -DHAVE_TERMIOS_H
+CCFLAGS=-O2 -c -I.. -I..\..\include -I..\..\libgpio\include -Zmtd -Zcrtdll -Zbin-files -D__ST_MT_ERRNO_ -I. -DOS2 -DHAVE_TERMIOS_H
 CC=gcc
 
 all: start \
@@ -29,5 +29,5 @@ panasonic.def: dc1580.o
    copy panasonic.df panasonic.def
    emxexp $** >> panasonic.def
 
-..\gppanson.dll: dc.o panasonic.def dc1580.o ..\..\obj\interface.o
-   $(CC) -g -Wall -Zdll -Zcrtdll -o $@ $** -lwrap -lst\check -lgcc -L..\..\LIB -llibgphoto2 -llibgpio -ldl -lpthreads -lpthrdrtl -lmt\c
+..\gppanson.dll: dc.o panasonic.def dc1580.o
+   $(CC) -g -Wall -Zdll -Zcrtdll -o $@ $** -lwrap -lgcc -L..\..\LIB -llibgphoto2 -llibgpio -ldllib
