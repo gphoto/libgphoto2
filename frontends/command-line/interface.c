@@ -14,15 +14,20 @@ status_func (Camera *camera, const char *status, void *data)
 	if (glob_quiet)
 		return;
 
-	if (*status) {
+	if (status && *status) {
 		fprintf (stderr, "Status: %s\n", status);
 		fflush(stdout);
 	} else {
+
 		/*
-		 * This is still not very clever - 
-		 * if you know any better, step forward.
+		 * gphoto2 tells us to clear the status. But it seems
+		 * people really want '\n' above (not '\r'), therefore
+		 * we can't clear the status. Hence, we don't do anything
+		 * here.
+		 *
+		 * If we would use '\r' above, we could overwrite an existing
+		 * status message by writing an empty line. But we don't.
 		 */
-		fprintf (stderr, "Status: OK (i.e. \"\")\n");
 	}
 }
 

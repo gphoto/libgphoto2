@@ -1108,9 +1108,6 @@ set_globals (void)
 	gp_camera_set_progress_func (glob_camera, progress_func, NULL);
 	gp_camera_set_message_func (glob_camera, message_func, NULL);
 
-        cli_debug_print ("Initializing camera...");
-        CHECK_RESULT (gp_camera_init (glob_camera));
-
         return (GP_OK);
 }
 

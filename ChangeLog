@@ -1,5 +1,15 @@
 2001-10-29 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* frontends/command-line/interface.c: Suppress empty status
+	  messages. Those indicate that we should _clear_ the status and 
+	  not print _anything_.
+	* frontends/command-line/main.c: No need for gp_camera_init 
+	  anymore
+	* libgphoto2/gphoto2-camera.c: Make sure the camera is 
+	  initialized.
+
+2001-10-29 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2/gphoto2-abilities-list.c: Additional debug message. Spews
 	  a lot of output, but people get segfaults when loading camera 
 	  libraries and we need to know on which library.
