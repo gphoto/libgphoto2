@@ -52,7 +52,7 @@
 #  define N_(String) (String)
 #endif
 
-#define REPORT_ERROR(context,function,text,data1,data2)     \                      
+#define REPORT_ERROR(context,function,text,data1,data2)\
 {                                                           \
   gp_context_error (context, _(function ":" text),data1,data2); \
   return (GP_ERROR);                                        \
