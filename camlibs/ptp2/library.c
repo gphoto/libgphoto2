@@ -306,6 +306,8 @@ static struct {
 	{"Sony:DSC-T3 (PTP mode)",    0x054c, 0x004e, 0},
 	{"Sony:DSC-U20 (PTP mode)",   0x054c, 0x004e, 0},
 	{"Sony:DSC-V1 (PTP mode)",    0x054c, 0x004e, 0},
+	{"Sony:DSC-W1 (PTP mode)",    0x054c, 0x004e, 0},
+	{"Sony:DSC-W12 (PTP mode)",   0x054c, 0x004e, 0},
 	{"Sony:MVC-CD300 (PTP mode)", 0x054c, 0x004e, 0},
 	{"Sony:MVC-CD500 (PTP mode)", 0x054c, 0x004e, 0},
 

@@ -1,3 +1,7 @@
+2005-02-09  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* library.c: added Sony DSC-W1 and DSC-W12.
+
 2005-01-25  Marcus Meissner  <marcus@jet.franken.de>
 
 	* ptp.c, ptp.h, library.c: 
