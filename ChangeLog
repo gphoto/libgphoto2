@@ -1,5 +1,9 @@
 2001-11-22  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2/gphoto2-camera.[c,h]: Expose gp_camera_exit to the world.
+
+2001-11-22  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* frontends/command-line/main.c: Mark more strings for translation
 
 2001-11-22  Colin Marquardt  <colin@marquardt-home.de>

@@ -167,7 +167,19 @@ struct _CameraPrivateCore {
 	int initialized;
 };
 
-static int
+/**
+ * gp_camera_exit:
+ * @camera: a #Camera
+ *
+ * Closes a connection to the camera and therefore gives other application
+ * the possibility to access the camera, too. It is recommended that you 
+ * call this function when you currently don't need the camera. The camera
+ * will get reinitialized by #gp_camera_init automatically if you try to 
+ * access the camera again.
+ *
+ * Return value: a gphoto2 error code.
+ **/
+int
 gp_camera_exit (Camera *camera)
 {
 	CHECK_NULL (camera);
@@ -182,12 +194,14 @@ gp_camera_exit (Camera *camera)
 		camera->functions->exit (camera);
 		gp_port_close (camera->port);
 	}
+	memset (camera->functions, 0, sizeof (CameraFunctions));
 
-	GP_SYSTEM_DLCLOSE (camera->pc->lh);
-	camera->pc->lh = NULL;
+	if (camera->pc->lh) {
+		GP_SYSTEM_DLCLOSE (camera->pc->lh);
+		camera->pc->lh = NULL;
+	}
 
 	gp_filesystem_reset (camera->fs);
-	memset (camera->functions, 0, sizeof (CameraFunctions));
 
 	return (GP_OK);
 }
@@ -251,7 +265,7 @@ gp_camera_new (Camera **camera)
  * @abilities: the #CameraAbilities to be set
  *
  * Sets the camera abilities. You need to call this function before
- * calling #gp_camera_init unless you want gphoto2 to autodetect 
+ * calling #gp_camera_init the first time unless you want gphoto2 to autodetect 
  * cameras and choose the first detected one. By setting the @abilities, you
  * tell gphoto2 what model the @camera is and what camera driver should 
  * be used for accessing the @camera. You can get @abilities by calling
@@ -326,7 +340,7 @@ gp_camera_set_port_info (Camera *camera, GPPortInfo info)
  * @camera: a #Camera
  * @speed: the speed
  *
- * Sets the speed. This function is typically used prior initialization 
+ * Sets the speed. This function is typically used prior first initialization 
  * using #gp_camera_init for debugging purposes. Normally, a camera driver
  * will try to figure out the current speed of the camera and set the speed
  * to the optimal one automatically. Note that this function only works with 
@@ -660,7 +674,9 @@ gp_camera_free (Camera *camera)
  * @camera should be set up using #gp_camera_set_port_path or
  * #gp_camera_set_port_name and #gp_camera_set_abilities. If that has been
  * omitted, gphoto2 tries to autodetect any cameras and chooses the first one
- * if any cameras are found.
+ * if any cameras are found. It is generally a good idea to call
+ * #gp_camera_exit after transactions have been completed in order to give
+ * other applications the chance to access the camera, too.
  *
  * Return value: a gphoto2 error code
  **/
