@@ -214,7 +214,7 @@ static unsigned char *psa50_recv_packet(unsigned char *type,unsigned char *seq,
 
 
 /**
- * Waits for an "ACK" from the camera_data.
+ * Waits for an "ACK" from the camera.
  *
  * Return values:
  *  1 : ACK received
@@ -274,7 +274,7 @@ static int psa50_wait_for_ack(void)
 }
 
 /**
- * Sends a message to the camera_data.
+ * Sends a message to the camera.
  *
  * See the "Protocol" file for an explanation of the various
  * elements needed to create a message.
@@ -344,7 +344,7 @@ static int psa50_send_msg(unsigned char mtype,unsigned char dir,
 
 
 /**
- * Receive a message from the camera_data.
+ * Receive a message from the camera.
  *
  * See the "Protocol" file for an explanation of the various
  * elements needed to handle a message.
@@ -484,7 +484,7 @@ static unsigned char *psa50_recv_msg(unsigned char mtype,unsigned char dir,
 
 /**
  * Higher level function: sends a message and waits for a
- * reply from the camera_data.
+ * reply from the camera.
  *
  * Arguments:
  *   mtype : type
@@ -862,6 +862,13 @@ int psa50_ready()
 	A5 = 0;
 	return 1;
       }
+		else if ((!strcmp("Canon DIGITAL IXUS",camera_data.ident)) 
+					|| (!strcmp("Canon PowerShot S100",camera_data.ident))) {
+			gp_camera_status(NULL, "Detected a Digital IXUS / Powershot S100");
+			camera_data.model = CANON_PS_S100;
+			A5=0;
+			return 1;
+		}
       else
 	{
 	  printf ("Unknown camera!\n");
@@ -977,10 +984,16 @@ int psa50_ready()
 	gp_camera_status(NULL, "Detected a Powershot S20");
 	camera_data.model = CANON_PS_S20;
 	A5 = 0;
-      } else {
-	gp_camera_status(NULL, "Detected a Powershot S10");
-	camera_data.model = CANON_PS_S10;
-	A5 = 0;
+	} else if ((!strcmp("Canon DIGITAL IXUS",psa50_id))
+		|| (!strcmp("Canon PowerShot S100",psa50_id)))
+ 		{
+			gp_camera_status(NULL, "Detected a Digital IXUS / Powershot S100");
+			camera_data.model = CANON_PS_S100;
+			A5=0; 
+	} else {
+			gp_camera_status(NULL, "Detected a Powershot S10");
+			camera_data.model = CANON_PS_S10;
+			A5 = 0;
       }
       
       //  5 seconds  delay should  be enough for   big flash cards.   By

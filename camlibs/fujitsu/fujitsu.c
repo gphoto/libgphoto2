@@ -165,22 +165,22 @@ int camera_init (Camera *camera, CameraInit *init) {
 	gpio_set_timeout(fd->dev, TIMEOUT);
 
 	if (gpio_open(fd->dev)==GPIO_ERROR) {
-		gp_message("Can not open the port");
+		gp_camera_message(camera, "Can not open the port");
 		return (GP_ERROR);
 	}
 
 	if (fujitsu_ping(camera)==GP_ERROR) {
-		gp_message("Can not talk to camera");
+		gp_camera_message(camera, "Can not talk to camera");
 		return (GP_ERROR);
 	}
 
 	if (fujitsu_set_speed(camera, init->port_settings.speed)==GP_ERROR) {
-		gp_message("Can not set the serial port speed");
+		gp_camera_message(camera, "Can not set the serial port speed");
 		return (GP_ERROR);
 	}
 
 	if (fujitsu_get_int_register(camera, 1, &value)==GP_ERROR) {
-		gp_message("Could not communicate with camera after speed change");
+		gp_camera_message(camera, "Could not communicate with camera after speed change");
 		return (GP_ERROR);
 	}
 
@@ -207,7 +207,7 @@ int camera_start(Camera *camera) {
 	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
 
 	if (fujitsu_set_speed(camera, fd->speed)==GP_ERROR) {
-		gp_message("Can not set the serial port speed");
+		gp_camera_message(camera, "Can not set the serial port speed");
 		return (GP_ERROR);
 	}
 
@@ -219,7 +219,7 @@ int camera_stop(Camera *camera) {
 	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
 
 	if (fujitsu_set_speed(camera, -1)==GP_ERROR) {
-		gp_message("Can not set the serial port speed");
+		gp_camera_message(camera, "Can not set the serial port speed");
 		return (GP_ERROR);
 	}
 
@@ -234,7 +234,7 @@ int camera_exit (Camera *camera) {
 
 /* obsoleted by start/stop
 	if (fujitsu_end_session(camera)==GP_ERROR) {
-		gp_message("Can not end camera session");
+		gp_camera_message(camera, "Can not end camera session");
 		return (GP_ERROR);		
 	}
 */
@@ -280,7 +280,7 @@ return (GP_ERROR);
 	debug_print(fd, "Counting files");
 
 	if (fujitsu_get_int_register(camera, 10, &value)==GP_ERROR) {
-                gp_message("Could not get number of files on camera.");
+                gp_camera_message(camera, "Could not get number of files on camera.");
                 return (GP_ERROR);
         }
 
@@ -313,13 +313,13 @@ return (GP_ERROR);
 
 	/* Set the current picture number */
 	if (fujitsu_set_int_register(camera, 4, file_number+1)==GP_ERROR) {
-		gp_message("Can not set current image");
+		gp_camera_message(camera, "Can not set current image");
 		return (GP_ERROR);
 	}
 
 	/* Get the size of the current picture number */
 	if (fujitsu_get_int_register(camera, regl, &length)==GP_ERROR) {
-		gp_message("Can not get current image length");
+		gp_camera_message(camera, "Can not get current image length");
 		return (GP_ERROR);
 	}
 
@@ -329,7 +329,7 @@ return (GP_ERROR);
 
 	/* Get the picture filename */
 	if (fujitsu_get_string_register(camera, 79, NULL, file->name, &length)==GP_ERROR) {
-		gp_message("Can not get picture filename");
+		gp_camera_message(camera, "Can not get picture filename");
 		return (GP_ERROR);
 	}
 
@@ -339,7 +339,7 @@ return (GP_ERROR);
 
 	/* Get the picture data */
 	if (fujitsu_get_string_register(camera, regd, file, NULL, NULL)==GP_ERROR) {
-		gp_message("Can not get picture");
+		gp_camera_message(camera, "Can not get picture");
 		return (GP_ERROR);
 	}
 

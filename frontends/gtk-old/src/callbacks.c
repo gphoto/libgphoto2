@@ -621,15 +621,20 @@ void camera_select_update_camera(GtkWidget *entry, gpointer data) {
 	for (x=0; x<num_ports; x++) {
 		append=0;
 		if (gp_port_info(x, &info)==GP_OK) {
-			if ((info.type == GP_PORT_SERIAL) && (a.serial))
+			if ((info.type == GP_PORT_SERIAL) && 
+				SERIAL_SUPPORTED(a.port))
 				append=1;
-			if ((info.type == GP_PORT_PARALLEL) && (a.parallel))
+			if ((info.type == GP_PORT_PARALLEL) &&
+				PARALLEL_SUPPORTED(a.port))
 				append=1;
-			if ((info.type == GP_PORT_IEEE1394) && (a.ieee1394))
+			if ((info.type == GP_PORT_IEEE1394) &&
+				IEEE1394_SUPPORTED(a.port))
 				append=1;
-			if ((info.type == GP_PORT_NETWORK) && (a.network))
+			if ((info.type == GP_PORT_NETWORK) &&
+				NETWORK_SUPPORTED(a.port))
 				append=1;
-			if ((info.type == GP_PORT_USB) && (a.usb))
+			if ((info.type == GP_PORT_USB) &&
+				USB_SUPPORTED(a.port))
 				append=1;
 			if (append) {
 				sprintf(buf, "%s (%s)", info.name, info.path);
@@ -664,7 +669,7 @@ void camera_select_update_camera(GtkWidget *entry, gpointer data) {
 
 	gtk_widget_set_sensitive(GTK_WIDGET(port), FALSE);
 	gtk_widget_set_sensitive(GTK_WIDGET(speed), FALSE);
-	if (a.serial || a.parallel || a.ieee1394 || a.network || a.usb)
+	if (a.port)
 		gtk_widget_set_sensitive(GTK_WIDGET(port), TRUE);
 }
 

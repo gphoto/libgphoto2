@@ -15,12 +15,12 @@
 
 /* Physical Connection Types */
 typedef enum {
-	GP_PORT_NONE		= 1 << 0,
-	GP_PORT_SERIAL		= 1 << 1,
-	GP_PORT_PARALLEL	= 1 << 2,
-	GP_PORT_USB		= 1 << 3,
-	GP_PORT_IEEE1394	= 1 << 4,
-	GP_PORT_NETWORK		= 1 << 5
+	GP_PORT_NONE		= 0,
+	GP_PORT_SERIAL		= 1 << 0,
+	GP_PORT_PARALLEL	= 1 << 1,
+	GP_PORT_USB		= 1 << 2,
+	GP_PORT_IEEE1394	= 1 << 3,
+	GP_PORT_NETWORK		= 1 << 4
 } CameraPortType;
 
 /* Some macros for determining what type of ports the camera supports */

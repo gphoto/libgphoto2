@@ -147,7 +147,7 @@ char glob_model[64];
 char glob_folder[128];
 int  glob_speed;
 
-Camera         *glob_camera;
+Camera         *glob_camera=NULL;
 CameraAbilities glob_abilities;
 
 int  glob_debug;
@@ -863,7 +863,6 @@ OPTION_CALLBACK(manual) {
         }
         printf("Camera Manual:\n%s\n", buf.text);
 
-
         return (GP_OK);
 }
 
@@ -1185,6 +1184,8 @@ e.g. SET CAMLIBS=C:\\GPHOTO2\\CAM\n");
         }
 
         /* Exit gPhoto core */
+       if (glob_camera)
+               gp_camera_free(glob_camera);
         gp_exit();
 
 	return (EXIT_SUCCESS);

@@ -90,40 +90,16 @@ char *models_serialandUSB[] = {
 
 int camera_id(char *id)
 {
-        strcpy(id, "canon");
+	strcpy(id, "canon");
 
-        return GP_OK;
-}
-
-int camera_file_put (Camera *camera, CameraFile *file)
-{
-
-	return GP_ERROR;
-}
-
-int camera_capture(Camera *camera, CameraFile *file, CameraCaptureInfo *info) 
-{
-
-	return GP_ERROR;
-}
-
-int camera_config_get (Camera *camera, CameraWidget *window)
-{
-
-	return GP_ERROR;
-}
-
-int camera_config_set (Camera *camera, CameraSetting *setting, int count)
-{
-
-	return GP_ERROR;
+	return GP_OK;
 }
 
 int camera_manual(Camera *camera, CameraText *manual)
 {
-        strcpy(manual->text, "Manual Not Available");
+	strcpy(manual->text, "Manual Not Available");
 
-        return GP_OK;
+	return GP_OK;
 }
 
 int camera_abilities(CameraAbilities *abilities, int *count)
@@ -133,7 +109,6 @@ int camera_abilities(CameraAbilities *abilities, int *count)
 	CameraAbilities a;
 
 	strcpy(a.model, "");
-	a.port 	     = GP_PORT_SERIAL | GP_PORT_USB;
 	a.speed[0]   = 9600;
 	a.speed[1]   = 19200;
 	a.speed[2]   = 38400;
@@ -147,6 +122,7 @@ int camera_abilities(CameraAbilities *abilities, int *count)
 	a.file_put = 0;
 
 	i=0;
+	a.port = GP_PORT_SERIAL | GP_PORT_USB;
 	while (i<NUM_SERIAL_USB) {
 		memcpy(&abilities[x], &a, sizeof(a));
 		strcpy(abilities[x].model, models_serialandUSB[i]);
@@ -155,7 +131,7 @@ int camera_abilities(CameraAbilities *abilities, int *count)
 	}
 	
 	i=0;
-	a.port	    = GP_PORT_USB;
+	a.port = GP_PORT_USB;
 	while (i<NUM_USB) {
 		memcpy(&abilities[x], &a, sizeof(a));
 		strcpy(abilities[x].model, models_USB[i]);
@@ -164,13 +140,14 @@ int camera_abilities(CameraAbilities *abilities, int *count)
 	}
 	
 	i=0;
-	a.port     = GP_PORT_SERIAL;
+	a.port = GP_PORT_SERIAL; 
 	while (i<NUM_SERIAL) {
 		memcpy(&abilities[x], &a, sizeof(a));
 		strcpy(abilities[x].model, models_serial[i]);
 		x++;
 		i++;
 	}
+
 
 	*count = x;
 
@@ -208,90 +185,95 @@ static int check_readiness(void)
 
 void switch_camera_off(void)
 {
-  psa50_off();
-  clear_readiness();
+	psa50_off();
+	clear_readiness();
 }
 
 int camera_exit(Camera *camera)
 {
+	CanonDataStruct *cs = (CanonDataStruct*)camera->camlib_data;
 	switch_camera_off();
+
+	free(cs);
 	return GP_OK;
 }
 
-int canon_get_batt_status(int *pwr_status, int *pwr_source) {
-  if (!check_readiness())
-    return -1;
+int canon_get_batt_status(int *pwr_status, int *pwr_source) 
+{
+	if (!check_readiness())
+		return -1;
 
-  return psa50_get_battery(pwr_status, pwr_source);
+	return psa50_get_battery(pwr_status, pwr_source);
 }
-
 #if 0
 static void canon_set_owner(GtkWidget *win,GtkWidget *owner)
 {
-    char *entry;
+	char *entry;
 
-    gp_camera_status(NULL, "Setting owner name.");
-    entry = gtk_entry_get_text(GTK_ENTRY(owner));
-    debug_message("New owner name: %s\n",entry);
-    psa50_set_owner_name(entry);
+	gp_camera_status(NULL, "Setting owner name.");
+	entry = gtk_entry_get_text(GTK_ENTRY(owner));
+	debug_message("New owner name: %s\n",entry);
+	psa50_set_owner_name(entry);
 }
 #endif
 
 char *camera_model_string()
 {
-  if (!check_readiness())
-    return "Camera unavailable";
+	if (!check_readiness())
+		return "Camera unavailable";
 
-  switch (camera_data.model) {
-  case CANON_PS_A5:
-    return "Powershot A5";
-  case CANON_PS_A5_ZOOM:
-    return "Powershot A5 Zoom";
-    case CANON_PS_A50:
-    return "Powershot A50";
-  case CANON_PS_A70:
-    return "Powershot Pro70";
-  case CANON_PS_S10:
-    return "Powershot S10";
-  case CANON_PS_S20:
-    return "Powershot S20";
-  default:
-    return "Unknown model !";
-  }
-
+	switch (camera_data.model) {
+		case CANON_PS_A5:
+			return "Powershot A5";
+		case CANON_PS_A5_ZOOM:
+			return "Powershot A5 Zoom";
+		case CANON_PS_A50:
+			return "Powershot A50";
+		case CANON_PS_A70:
+			return "Powershot Pro70";
+		case CANON_PS_S10:
+			return "Powershot S10";
+		case CANON_PS_S20:
+			return "Powershot S20";
+		case CANON_PS_S100:
+			return "Powershot S100 / DIGITAL IXUS";
+		default:
+			return "Unknown model !";
+	}
 }
 
 
 static int update_disk_cache(void)
 {
-    char root[10]; /* D:\ or such */
-    char *disk;
+	char root[10]; /* D:\ or such */
+	char *disk;
 
-    if (cached_disk) return 1;
-    if (!check_readiness()) return 0;
-    disk = psa50_get_disk();
-    if (!disk) {
-	gp_camera_status(NULL, "No response");
-	return 0;
-    }
-    strcpy(cached_drive,disk);
-    sprintf(root,"%s\\",disk);
-    if (!psa50_disk_info(root,&cached_capacity,&cached_available)) {
-	gp_camera_status(NULL, "No response");
-	return 0;
-    }
-    cached_disk = 1;
-    return 1;
+	if (cached_disk) return 1;
+	if (!check_readiness()) return 0;
+	disk = psa50_get_disk();
+	if (!disk) {
+		gp_camera_status(NULL, "No response");
+		return 0;
+	}
+	strcpy(cached_drive,disk);
+	sprintf(root,"%s\\",disk);
+	if (!psa50_disk_info(root,&cached_capacity,&cached_available)) {
+		gp_camera_status(NULL, "No response");
+		return 0;
+	}
+	cached_disk = 1;
+
+	return 1;
 }
 
 
 static int is_image(const char *name)
 {
-    const char *pos;
+	const char *pos;
 
-    pos = strchr(name,'.');
-    if (!pos) return 0;
-    return !strcmp(pos,".JPG");
+	pos = strchr(name,'.');
+	if (!pos) return 0;
+	return !strcmp(pos,".JPG");
 }
 
 /* This function is only used by A5 */
@@ -546,6 +528,7 @@ static int get_all(struct psa50_dir *entry) {
   for (; entry->name; entry++)
     if (!get_all(entry)) return 0;
   return 1; 
+
 }
 #endif
 
@@ -1003,7 +986,7 @@ static char *canon_get_picture(int picture_number, int thumbnail, int *size)
     char path[300];
     char attribs;
     char file[300], dir[300];
-    int size2,j;
+    int j;
     void *ptr;
 
 	
@@ -1056,8 +1039,6 @@ static char *canon_get_picture(int picture_number, int thumbnail, int *size)
 		if (!picture_number || picture_number > cached_images) {
 			gp_camera_status(NULL, "Invalid index");
 			free(image);
-/*	if (command_line_mode==1)
-	  psa50_end(); */
 			return NULL;
 		}
 		strcpy(path,cached_drive);
@@ -1071,23 +1052,9 @@ static char *canon_get_picture(int picture_number, int thumbnail, int *size)
 		if (thumbnail) {
 			ptr=image;
 			if ( (image = psa50_get_thumbnail(path,size)) == NULL) {
-/*	  if (command_line_mode == 1)
-	    psa50_end(); */
 				free(ptr);
 				return NULL;
 			}
-	/* we count the byte returned until the end of the jpeg data
-	   which is FF D9 */
-
-	/* 24/07/2000 (pm) I've commented out following code
-		do we really need that now that we use exif to parse data ?
-	*/
-
-/*		for(size2=1;size2<size;size2++)
-			if(image[size2]==JPEG_END) {
-				if(image[size2-1]==JPEG_ESC) break;
-	  		}
-			size = size2+1; */
 		}
 		else {
 			image = psa50_get_file(path,size);
@@ -1100,8 +1067,6 @@ static char *canon_get_picture(int picture_number, int thumbnail, int *size)
 			attribs = attribs & 0xdf; // 0xdf = !0x20
 			psa50_set_file_attributes(file,dir,attribs);
 		}
-/*      if (command_line_mode==1) 
-	psa50_end(); */
 		if (image) return image;
      	 //if(receive_error==FATAL_ERROR) clear_readiness();
 		free(image);
@@ -1143,10 +1108,11 @@ int camera_file_get(Camera *camera, CameraFile *file, int index)
 
 	return GP_OK;
 }
+
 int camera_file_get_preview(Camera *camera, CameraFile *preview, int index)
 {
 	char *data;
-	int buflen,j,i;
+	int buflen,j,i,size;
 	char attribs=0;
 	char path[300], filename[300];
 
@@ -1157,17 +1123,37 @@ int camera_file_get_preview(Camera *camera, CameraFile *preview, int index)
 
 	preview->data = data;
 	strcpy(preview->type, "image/jpeg");
+
+	/* we count the byte returned until the end of the jpeg data
+	   which is FF D9 */
+	/* It would be prettier to get that info from the exif tags	*/
+
+	for(size=1;size<buflen;size++)
+	if(data[size]==JPEG_END) {
+		if(data[size-1]==JPEG_ESC) break;
+	}
+	buflen = size+1; 
+
 	preview->size = buflen;
 
 	pick_nth(index,path,&attribs);
 	j = strrchr(path, '\\') - path;
 
 	i=0;
+	if (A5==0) {
+		filename[i++]='t';
+		filename[i++]='h';
+		filename[i++]='u';
+		filename[i++]='m';
+		filename[i++]='b';
+		filename[i++]='_';
+	}
 	while(path[j+1] != '\0') {
 		filename[i] = tolower(path[j+1]);
 		i++;
 		j++;
 	}
+
 	filename[i]='\0';
 
 	snprintf(preview->name, sizeof(preview->name), "%s",
@@ -1190,8 +1176,6 @@ int camera_file_count(Camera *camera)
   case CANON_PS_A5_ZOOM:
     return cached_images/2; /* Odd is pictures even is thumbs */
   default:
-/*	if (command_line_mode==1)
-		psa50_end(); */
 	return cached_images;
   } 
 };
@@ -1203,32 +1187,36 @@ int camera_file_count(Camera *camera)
  */
 int camera_init(Camera *camera, CameraInit *init)
 {
-  char fname[1024];
-  FILE *conf;
+	char fname[1024];
+	FILE *conf;
+	CanonDataStruct *cs;
 
-  /* First, set up all the function pointers */
-  camera->functions->id 		= camera_id;
-  camera->functions->abilities 	= camera_abilities;
-  camera->functions->init 	= camera_init;
-  camera->functions->exit 	= camera_exit;
-  camera->functions->folder_list= camera_folder_list;
-  camera->functions->folder_set = camera_folder_set;
-  camera->functions->file_count = camera_file_count;
-  camera->functions->file_get 	= camera_file_get;
-  camera->functions->file_get_preview =  camera_file_get_preview;
-  camera->functions->file_put 	= camera_file_put;
-  camera->functions->file_delete= camera_file_delete;
-  camera->functions->config_get = camera_config_get;
-  camera->functions->config_set = camera_config_set;
-  camera->functions->capture 	= camera_capture;
-  camera->functions->summary	= camera_summary;
-  camera->functions->manual 	= camera_manual;
-  camera->functions->about 	= camera_about;
+	/* First, set up all the function pointers */
+	camera->functions->id                = camera_id;
+	camera->functions->abilities         = camera_abilities;
+	camera->functions->init      = camera_init;
+	camera->functions->exit      = camera_exit;
+	camera->functions->folder_list= camera_folder_list;
+	camera->functions->folder_set = camera_folder_set;
+	camera->functions->file_count = camera_file_count;
+	camera->functions->file_get  = camera_file_get;
+	camera->functions->file_get_preview =  camera_file_get_preview;
+	camera->functions->file_put  = camera_file_put;
+	camera->functions->file_delete= camera_file_delete;
+	camera->functions->config_get = camera_config_get;
+	camera->functions->config_set = camera_config_set;
+	camera->functions->capture   = camera_capture;
+	camera->functions->summary   = camera_summary;
+	camera->functions->manual    = camera_manual;
+	camera->functions->about     = camera_about;
 
-  gphoto2_debug = init->debug;
-  fprintf(stderr,"canon_initialize()\n");
- /* Default speed */
-  camera_data.speed = 9600;
+	cs = (CanonDataStruct*)malloc(sizeof(CanonDataStruct));
+	camera->camlib_data = cs;
+
+	gphoto2_debug = init->debug;
+	fprintf(stderr,"canon_initialize()\n");
+	/* Default speed */
+	camera_data.speed = 9600;
 
   setFileName(fname);
   if ((conf = fopen(fname, "r"))) {
@@ -1360,11 +1348,10 @@ int camera_summary(Camera *camera, CameraText *summary)
     case CANON_PS_A70:     model = "Canon Powershot A70"; break;
     case CANON_PS_S10:     model = "Canon Powershot S10"; break;
     case CANON_PS_S20:     model = "Canon Powershot S20"; break; 
+	case CANON_PS_S100:    model = "Canon Powershot S100 / DIGITAL IXUS"; break;
     }
     sprintf(summary->text,"%s\nDrive %s\n%11s bytes total\n%11s bytes available\n",
       model,cached_drive,a,b);
-/*	if (!(camera_data.model == CANON_PS_A5 
-	      || camera_data.model == CANON_PS_A5_ZOOM) && command_line_mode==1) psa50_end(); */
     return GP_OK;
 }
 
@@ -1372,13 +1359,14 @@ int camera_summary(Camera *camera, CameraText *summary)
 
 int camera_about(Camera *camera, CameraText *about)
 {
-    strcpy(about->text, "Canon PowerShot series driver by\n"
-	    "Wolfgang G. Reissnegger,\n"
-            "Werner Almesberger,\n"
-	    "Edouard Lafargue,\n"
-	    "Philippe Marzouk,\n"
-            "A5 additions by Ole W. Saastad\n"
-	    );
+	strcpy(about->text,
+		"Canon PowerShot series driver by\n"
+		"Wolfgang G. Reissnegger,\n"
+		"Werner Almesberger,\n"
+		"Edouard Lafargue,\n"
+		"Philippe Marzouk,\n"
+		"A5 additions by Ole W. Saastad\n"
+	);
 
 	return GP_OK;
 }
@@ -1387,70 +1375,69 @@ int camera_about(Camera *camera, CameraText *about)
 
 int camera_file_delete(Camera *camera, int picture_number)
 { 
-  char path[300];
-  char file[300], dir[300], atrs;
-  int j;
+	char path[300];
+	char file[300], dir[300], atrs;
+	int j;
   
-  /*clear_readiness();*/
-  if (!check_readiness()) {
-    return 0;
-  }
-  if (!(camera_data.model == CANON_PS_A5 ||
-	camera_data.model == CANON_PS_A5_ZOOM)) { /* this is tested only on powershot A50 */
+	/*clear_readiness();*/
+	if (!check_readiness()) {
+		return 0;
+	}
+	if (!(camera_data.model == CANON_PS_A5 ||
+		camera_data.model == CANON_PS_A5_ZOOM)) { /* this is tested only on powershot A50 */
     
-    if (!update_dir_cache()) {
-      gp_camera_status(NULL, "Could not obtain directory listing");
-      return 0;
-    }
-	/* gphoto2 numbering starts at 0 but we start at 1 */
-	picture_number++;
-    if (!picture_number || picture_number > cached_images) {
-      gp_camera_status(NULL, "Invalid index");
-      /* psa50_end(); */
-      return 0;
-    }
-    strcpy(path,cached_drive);
-    atrs=0;
-    pick_nth(picture_number,path,&atrs);
-    gp_camera_status(NULL, path);
-    
-    j = strrchr(path, '\\') - path;
-    strncpy(dir,path,j);
-    dir[j]='\0';
-    strcpy(file, path+j+1);
+		if (!update_dir_cache()) {
+			gp_camera_status(NULL, "Could not obtain directory listing");
+			return 0;
+		}
 
-    if (psa50_delete_file(file,dir)) {
-      gp_camera_status(NULL, "error deleting file");
-      /* psa50_end(); */
-      return -1;
-    }
-    else {
-      /*		psa50_end(); */
-      cached_ready = 0; /*RAA: do smarter!*/
-      cached_disk = 0;
-      if (cached_dir) clear_dir_cache();
-      cached_dir = 0;
-      return 1;
-    }
-  }
-  return 0; 
+		/* gphoto2 numbering starts at 0 but we start at 1 */
+		picture_number++;
+		if (!picture_number || picture_number > cached_images) {
+			gp_camera_status(NULL, "Invalid index");
+			return 0;
+		}
+		strcpy(path,cached_drive);
+		atrs=0;
+		pick_nth(picture_number,path,&atrs);
+		gp_camera_status(NULL, path);
+   
+		j = strrchr(path, '\\') - path;
+		strncpy(dir,path,j);
+		dir[j]='\0';
+		strcpy(file, path+j+1);
+
+		if (psa50_delete_file(file,dir)) {
+			gp_camera_status(NULL, "error deleting file");
+			return -1;
+		}
+		else {
+			cached_ready = 0; /*RAA: do smarter!*/
+			cached_disk = 0;
+			if (cached_dir) clear_dir_cache();
+			cached_dir = 0;
+
+			return 1;
+		}
+	}
+	return 0; 
 }
 
-/****************************************************************************/
-/*
-static struct Image *canon_get_preview(void) { return NULL; }
-static int canon_take_picture(void) { return 0; };
-
-struct _Camera canon =
+int camera_file_put(Camera *camera, CameraFile *file)
 {
-    canon_initialize,
-    canon_get_picture,
-    canon_get_preview,
-    canon_delete_image,
-    canon_take_picture,
-    canon_number_of_pictures,
-    canon_configure,
-    canon_summary,
-    canon_description
-};
-*/
+	return GP_OK;
+}
+int camera_config_get(Camera *camera, CameraWidget *window)
+{
+	return GP_ERROR;
+}
+
+int camera_config_set(Camera *camera, CameraSetting *setting, int count)
+{
+	return GP_ERROR;
+}
+
+int camera_capture(Camera *camera, CameraFile *file, CameraCaptureInfo *info)
+{
+	return GP_ERROR;
+}

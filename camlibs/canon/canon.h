@@ -15,7 +15,12 @@
  *
  ****************************************************************************/
 
-
+typedef struct {
+	gpio_device *dev;
+	gpio_device_settings settings;
+	int speed;
+	int debug;
+} CanonDataStruct;
 
 
 

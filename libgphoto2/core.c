@@ -26,7 +26,7 @@
 	/* Camera List */
 	/* ------------------------------------------------ */
 	int		glob_camera_count = 0;
-	CameraChoice	glob_camera[512];
+	CameraChoice	glob_camera_list[512];
 	CameraAbilities glob_camera_abilities[512];
 	char		*glob_camera_id[512];
 	int		glob_camera_id_count = 0;
@@ -90,7 +90,7 @@ int gp_init (int debug) {
 		printf("core: List of cameras found:\n");
 		for (x=0; x<glob_camera_count; x++)
 		printf("core:\t\"%s\" uses %s\n", 
-			glob_camera[x].name, glob_camera[x].library);
+			glob_camera_list[x].name, glob_camera_list[x].library);
 		if (glob_camera_count == 0)
 			printf("core:\tNone\n");
 		printf("core: Initializing the gPhoto IO library (libgpio)\n");
@@ -156,7 +156,7 @@ int gp_camera_name (int camera_number, char *camera_name) {
 	if (camera_number > glob_camera_count)
 		return (GP_ERROR);
 
-	strcpy(camera_name, glob_camera[camera_number].name);
+	strcpy(camera_name, glob_camera_list[camera_number].name);
 	return (GP_OK);
 }
 
@@ -175,7 +175,7 @@ int gp_camera_abilities_by_name (char *camera_name, CameraAbilities *abilities) 
 
 	int x=0;
 	while (x < glob_camera_count) {
-		if (strcmp(glob_camera[x].name, camera_name)==0)
+		if (strcmp(glob_camera_list[x].name, camera_name)==0)
 			return (gp_camera_abilities(x, abilities));
 		x++;
 	}
@@ -194,7 +194,7 @@ int gp_camera_new (Camera **camera, int camera_number, CameraPortInfo *settings)
 	*camera = (Camera*)malloc(sizeof(Camera));
 
 	/* Initialize the members */
-	strcpy((*camera)->model, glob_camera[camera_number].name);
+	strcpy((*camera)->model, glob_camera_list[camera_number].name);
 	(*camera)->debug      = glob_debug;
 	(*camera)->port	      = (CameraPortInfo*)malloc(sizeof(CameraPortInfo));
 	(*camera)->abilities  = (CameraAbilities*)malloc(sizeof(CameraAbilities));
@@ -205,7 +205,7 @@ int gp_camera_new (Camera **camera, int camera_number, CameraPortInfo *settings)
 
 	memcpy((*camera)->port, settings, sizeof(CameraPortInfo));
 
-	if (load_library(*camera, glob_camera[camera_number].name)==GP_ERROR) {
+	if (load_library(*camera, glob_camera_list[camera_number].name)==GP_ERROR) {
 		gp_camera_free(*camera);
 		return (GP_ERROR);
 	}
@@ -213,9 +213,9 @@ int gp_camera_new (Camera **camera, int camera_number, CameraPortInfo *settings)
 	/* Initialize the camera library */
 	if (glob_debug)
 		printf("core: Initializing \"%s\" (%s)...\n", 
-			glob_camera[camera_number].name,
-			glob_camera[camera_number].library);
-	strcpy(ci.model, glob_camera[camera_number].name);
+			glob_camera_list[camera_number].name,
+			glob_camera_list[camera_number].library);
+	strcpy(ci.model, glob_camera_list[camera_number].name);
 	memcpy(&ci.port_settings, settings, sizeof(CameraPortInfo));
 
 	if (gp_camera_init(*camera, &ci)==GP_ERROR) {
@@ -246,7 +246,7 @@ int gp_camera_new_by_name (Camera **camera, char *camera_name, CameraPortInfo *s
 	int x=0;
 
 	while (x < glob_camera_count) {
-		if (strcmp(glob_camera[x].name, camera_name)==0)
+		if (strcmp(glob_camera_list[x].name, camera_name)==0)
 			return (gp_camera_new(camera, x, settings));
 		x++;
 	}

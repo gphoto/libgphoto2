@@ -19,11 +19,8 @@ int is_library(char *library_filename) {
 #else
         sprintf(buf, "%s/%s", CAMLIBS, library_filename);
 #endif
-        if ((lh = dlopen(buf, RTLD_LAZY))==NULL) {
-	        if (glob_debug)
-        		perror("core:\tis_library");
+        if ((lh = dlopen(buf, RTLD_LAZY))==NULL)
                 return (GP_ERROR);
-        }
 
         dlclose(lh);
 
@@ -36,8 +33,8 @@ int load_library (Camera *camera, char *camera_name) {
         void *lh;
         int x;
         for (x=0; x<glob_camera_count; x++) {
-           if (strcmp(glob_camera[x].name, camera_name)==0) {
-                sprintf(buf, "%s/%s", CAMLIBS, glob_camera[x].library);
+           if (strcmp(glob_camera_list[x].name, camera_name)==0) {
+                sprintf(buf, "%s/%s", CAMLIBS, glob_camera_list[x].library);
                 if ((lh = dlopen(buf, RTLD_LAZY))==NULL) {
                         if (glob_debug)
                                 perror("core:\tload_library");
@@ -105,10 +102,10 @@ int load_camera_list (char *library_filename) {
 
         /* Copy over the camera name */
         for (x=glob_camera_count; x<glob_camera_count+count; x++) {
-                strcpy(glob_camera[x].name, glob_camera_abilities[x].model);
-                strcpy(glob_camera[x].library, library_filename);
+                strcpy(glob_camera_list[x].name, glob_camera_abilities[x].model);
+                strcpy(glob_camera_list[x].library, library_filename);
                 if (glob_debug)
-                        printf("core:\t camera model: %s\n", glob_camera[x].name);
+                        printf("core:\t camera model: %s\n", glob_camera_list[x].name);
         }
 
         glob_camera_count += count;
@@ -161,11 +158,11 @@ int load_cameras() {
         /* Sort the camera list */
         for (x=0; x<glob_camera_count-1; x++) {
                 for (y=x+1; y<glob_camera_count; y++) {
-                        z = strcmp(glob_camera[x].name, glob_camera[y].name);
+                        z = strcmp(glob_camera_list[x].name, glob_camera_list[y].name);
                         if (z > 0) {
-                                memcpy(&t, &glob_camera[x], sizeof(t));
-                                memcpy(&glob_camera[x], &glob_camera[y], sizeof(t));
-                                memcpy(&glob_camera[y], &t, sizeof(t));
+                                memcpy(&t, &glob_camera_list[x], sizeof(t));
+                                memcpy(&glob_camera_list[x], &glob_camera_list[y], sizeof(t));
+                                memcpy(&glob_camera_list[y], &t, sizeof(t));
 
                                 memcpy(&a, &glob_camera_abilities[x], sizeof(t));
                                 memcpy(&glob_camera_abilities[x], &glob_camera_abilities[y],
