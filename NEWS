@@ -1,4 +1,22 @@
 ------------------------------------------------------------------------
+libgphoto2-2.1.4
+------------------------------------------------------------------------
+
+On 2004-01-18, we are proud to release libgphoto2 2.1.4 to the world.
+
+libgphoto2 2.1.4 features support for more than 400 digital cameras.
+
+The changes since the 2.1.3 release are mostly bug fixes and support
+for new cameras, nothing major.
+
+See the CHANGES file for more details.
+
+Have fun with libgphoto2 and your pictures!
+
+The gphoto2 team.
+
+
+------------------------------------------------------------------------
 libgphoto2-2.1.3
 ------------------------------------------------------------------------
 
