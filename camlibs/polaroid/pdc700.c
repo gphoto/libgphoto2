@@ -1123,12 +1123,7 @@ camera_init (Camera *camera)
 		}
 		break;
 	case GP_PORT_USB:
-//FIXME: Those settings are probably wrong.
-		settings.usb.inep       = 0x83;
-		settings.usb.outep      = 0x04;
-		settings.usb.config     = 1;
-		settings.usb.interface  = 0;
-		settings.usb.altsetting = 0;
+		/* Use the defaults the core parsed */
 		CR (gp_port_set_settings (camera->port, settings));
 		CR (pdc700_init (camera));
 		break;

@@ -120,7 +120,7 @@ gp_port_usb_open (GPPort *port)
 	 * Open the device using the previous usb_handle returned by
 	 * find_device
 	 */
-        port->pl->dh = usb_open (port->pl->d);
+	port->pl->dh = usb_open (port->pl->d);
 	if (!port->pl->dh) {
 		gp_port_set_error (port, _("Could not open USB device (%m)."));
 		return GP_ERROR_IO;
@@ -136,7 +136,7 @@ gp_port_usb_open (GPPort *port)
 			port->settings.usb.interface);
 		return GP_ERROR_IO_USB_CLAIM;
 	}
-	
+
 	return GP_OK;
 }
 
@@ -239,7 +239,7 @@ gp_port_usb_msg_read_lib(GPPort *port, int request, int value, int index,
 		return GP_ERROR_BAD_PARAMETERS;
 
 	return usb_control_msg(port->pl->dh,
-		USB_TYPE_VENDOR | USB_RECIP_DEVICE | 0x80,
+		USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_IN,
 		request, value, index, bytes, size, port->timeout);
 }
 
@@ -281,7 +281,7 @@ gp_port_usb_update (GPPort *port)
 				"Changed usb.config from %d to %d",
 				port->settings.usb.config,
 				port->settings_pending.usb.config);
-			
+
 			/*
 			 * Copy at once if something else fails so that this
 			 * does not get re-applied
@@ -305,12 +305,27 @@ gp_port_usb_update (GPPort *port)
 				port->settings.usb.altsetting,
 				port->settings_pending.usb.altsetting);
 		}
-		
+
 		memcpy (&port->settings.usb, &port->settings_pending.usb,
 			sizeof (port->settings.usb));
 	}
-	
+
 	return GP_OK;
+}
+
+static int
+gp_port_usb_find_bulk(struct usb_device *dev, int config, int interface, int altsetting, int direction)
+{
+	struct usb_interface_descriptor *intf = &dev->config[config].interface[interface].altsetting[altsetting];
+	int i;
+
+	for (i = 0; i < intf->bNumEndpoints; i++) {
+		if ((intf->endpoint[i].bEndpointAddress & USB_ENDPOINT_DIR_MASK) == direction &&
+		    (intf->endpoint[i].bmAttributes & USB_ENDPOINT_TYPE_MASK) == USB_ENDPOINT_TYPE_BULK)
+			return intf->endpoint[i].bEndpointAddress & USB_ENDPOINT_ADDRESS_MASK;
+	}
+
+	return -1;
 }
 
 static int
@@ -338,12 +353,24 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 		for (dev = bus->devices; dev; dev = dev->next) {
 			if ((dev->descriptor.idVendor == idvendor) &&
 			    (dev->descriptor.idProduct == idproduct)) {
-                                    port->pl->d = dev;
-				    gp_log (GP_LOG_VERBOSE, "gphoto2-port-usb",
-					    "Looking for USB device "
-					    "(vendor 0x%x, product 0x%x)... found.", 
-					    idvendor, idproduct);
-				    return GP_OK;
+				port->pl->d = dev;
+
+				/* Use the first config, interface and altsetting we find */
+				/* Set the defaults */
+				port->settings.usb.config = dev->config[0].bConfigurationValue;
+				port->settings.usb.interface = dev->config[0].interface[0].altsetting[0].bInterfaceNumber;
+				port->settings.usb.altsetting = dev->config[0].interface[0].altsetting[0].bAlternateSetting;
+
+				port->settings.usb.inep = gp_port_usb_find_bulk(dev, 0, 0, 0, USB_ENDPOINT_IN);
+				port->settings.usb.outep = gp_port_usb_find_bulk(dev, 0, 0, 0, USB_ENDPOINT_OUT);
+
+				port->pl->d = dev;
+
+				gp_log (GP_LOG_VERBOSE, "gphoto2-port-usb",
+					"Looking for USB device "
+					"(vendor 0x%x, product 0x%x)... found.", 
+					idvendor, idproduct);
+				return GP_OK;
 			}
 		}
 	}
@@ -422,6 +449,14 @@ gp_port_usb_find_device_by_class_lib(GPPort *port, int class, int subclass, int 
 			if (!ret)
 				continue;
 
+			/* Set the defaults */
+			port->settings.usb.config = dev->config[config].bConfigurationValue;
+			port->settings.usb.interface = dev->config[config].interface[interface].altsetting[altsetting].bInterfaceNumber;
+			port->settings.usb.altsetting = dev->config[config].interface[interface].altsetting[altsetting].bAlternateSetting;
+
+			port->settings.usb.inep = gp_port_usb_find_bulk(dev, config, interface, altsetting, USB_ENDPOINT_IN);
+			port->settings.usb.outep = gp_port_usb_find_bulk(dev, config, interface, altsetting, USB_ENDPOINT_OUT);
+
 			port->pl->d = dev;
 			gp_log (GP_LOG_VERBOSE, "gphoto2-port-usb",
 				"Looking for USB device "
@@ -441,7 +476,7 @@ GPPortOperations *
 gp_port_library_operations (void)
 {
 	GPPortOperations *ops;
-	
+
 	ops = malloc (sizeof (GPPortOperations));
 	if (!ops)
 		return (NULL);

@@ -71,83 +71,83 @@ const char JPEG_APP1_MARKER[] = { (char)0xFF, (char)0xE1, '\0' };
 const char TIFF_SOI_MARKER[]  = { (char)0x49, (char)0x49, (char)0x2A, (char)0x00, (char)0x08, '\0' };
 
 static SierraCamera sierra_cameras[] = {
-	/* Camera Model, Sierra Model, USB(vendor id, product id, in endpoint, 
-	   out endpoint, USB wrapper protocol) */ 
-	{"Agfa ePhoto 307", 	SIERRA_MODEL_DEFAULT, 	0, 0, 0, 0, 0 },
-	{"Agfa ePhoto 780", 	SIERRA_MODEL_DEFAULT, 	0, 0, 0, 0, 0 },
-	{"Agfa ePhoto 780C", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
-	{"Agfa ePhoto 1280", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
-	{"Agfa ePhoto 1680", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
-	{"Apple QuickTake 200", SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
-	{"Chinon ES-1000", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
-	{"Epson PhotoPC 500", 	SIERRA_MODEL_EPSON,	0, 0, 0, 0, 0 },
-	{"Epson PhotoPC 550", 	SIERRA_MODEL_EPSON,	0, 0, 0, 0, 0 },
-	{"Epson PhotoPC 600", 	SIERRA_MODEL_EPSON,	0, 0, 0, 0, 0 },
-	{"Epson PhotoPC 700", 	SIERRA_MODEL_EPSON,	0, 0, 0, 0, 0 },
-	{"Epson PhotoPC 800", 	SIERRA_MODEL_EPSON,	0, 0, 0, 0, 0 },
-	{"Epson PhotoPC 3000z", SIERRA_MODEL_EPSON,	0x4b8, 0x403, 0x83, 0x04, 0},
-	{"Nikon CoolPix 100", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
-	{"Nikon CoolPix 300", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
-	{"Nikon CoolPix 700", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
-	{"Nikon CoolPix 800", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
-        {"Nikon CoolPix 880",	SIERRA_MODEL_DEFAULT,	0x04b0, 0x0103, 0x83, 0x04, 0},
-        {"Nikon CoolPix 900", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
-	{"Nikon CoolPix 900S", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
-	{"Nikon CoolPix 910", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
-	{"Nikon CoolPix 950", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
-	{"Nikon CoolPix 950S", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
-	{"Nikon CoolPix 990",	SIERRA_MODEL_DEFAULT,	0x04b0, 0x0102, 0x83, 0x04, 0},
-	{"Olympus D-100Z", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus D-200L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus D-220L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus D-300L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus D-320L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus D-330R", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus D-340L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus D-340R", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus D-360L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus D-400L Zoom", SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus D-450Z", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus D-460Z", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus D-500L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus D-600L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus D-600XL", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus D-620L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus C-400", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus C-400L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus C-410", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus C-410L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus C-420", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus C-420L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus C-800", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus C-800L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus C-820", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus C-820L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus C-830L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus C-840L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus C-900 Zoom", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus C-900L Zoom", SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus C-1000L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus C-1400L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus C-1400XL", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus C-2000Z", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-	{"Olympus C-2020Z",	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
-        {"Olympus C-2040Z", 	SIERRA_MODEL_OLYMPUS,	0x07b4, 0x105, 0x83, 0x04, 1},
-	{"Olympus C-2100UZ",    SIERRA_MODEL_OLYMPUS,	0x07b4, 0x100, 0x83, 0x04, 0},
-	{"Olympus C-2500L",     SIERRA_MODEL_OLYMPUS,   0, 0, 0, 0, 0 },
-	{"Olympus C-2500Z", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 }, /* Does this model exist? */
-	{"Olympus C-3000Z", 	SIERRA_MODEL_OLYMPUS,	0x07b4, 0x100, 0x83, 0x04, 0},
-	{"Olympus C-3030Z", 	SIERRA_MODEL_OLYMPUS,	0x07b4, 0x100, 0x83, 0x04, 0},
-	{"Panasonic Coolshot NV-DCF5E", SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
-	{"Polaroid PDC 640", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0  },
-	{"Sanyo DSC-X300", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
-	{"Sanyo DSC-X350", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
-	{"Sanyo VPC-G200", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
-	{"Sanyo VPC-G200EX", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
-	{"Sanyo VPC-G210", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
-	{"Sanyo VPC-G250", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
-	{"Sierra Imaging SD640",SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
-	{"", 			SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 }
+	/* Camera Model, Sierra Model, USB(vendor id, product id,
+	   USB wrapper protocol) */ 
+	{"Agfa ePhoto 307", 	SIERRA_MODEL_DEFAULT, 	0, 0, 0 },
+	{"Agfa ePhoto 780", 	SIERRA_MODEL_DEFAULT, 	0, 0, 0 },
+	{"Agfa ePhoto 780C", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
+	{"Agfa ePhoto 1280", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
+	{"Agfa ePhoto 1680", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
+	{"Apple QuickTake 200", SIERRA_MODEL_DEFAULT,	0, 0, 0 },
+	{"Chinon ES-1000", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
+	{"Epson PhotoPC 500", 	SIERRA_MODEL_EPSON,	0, 0, 0 },
+	{"Epson PhotoPC 550", 	SIERRA_MODEL_EPSON,	0, 0, 0 },
+	{"Epson PhotoPC 600", 	SIERRA_MODEL_EPSON,	0, 0, 0 },
+	{"Epson PhotoPC 700", 	SIERRA_MODEL_EPSON,	0, 0, 0 },
+	{"Epson PhotoPC 800", 	SIERRA_MODEL_EPSON,	0, 0, 0 },
+	{"Epson PhotoPC 3000z", SIERRA_MODEL_EPSON,	0x4b8, 0x403, 0},
+	{"Nikon CoolPix 100", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
+	{"Nikon CoolPix 300", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
+	{"Nikon CoolPix 700", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
+	{"Nikon CoolPix 800", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
+        {"Nikon CoolPix 880",	SIERRA_MODEL_DEFAULT,	0x04b0, 0x0103, 0},
+        {"Nikon CoolPix 900", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
+	{"Nikon CoolPix 900S", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
+	{"Nikon CoolPix 910", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
+	{"Nikon CoolPix 950", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
+	{"Nikon CoolPix 950S", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
+	{"Nikon CoolPix 990",	SIERRA_MODEL_DEFAULT,	0x04b0, 0x0102, 0},
+	{"Olympus D-100Z", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus D-200L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus D-220L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus D-300L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus D-320L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus D-330R", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus D-340L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus D-340R", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus D-360L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus D-400L Zoom", SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus D-450Z", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus D-460Z", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus D-500L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus D-600L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus D-600XL", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus D-620L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus C-400", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus C-400L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus C-410", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus C-410L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus C-420", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus C-420L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus C-800", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus C-800L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus C-820", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus C-820L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus C-830L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus C-840L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus C-900 Zoom", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus C-900L Zoom", SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus C-1000L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus C-1400L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus C-1400XL", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus C-2000Z", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus C-2020Z",	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+        {"Olympus C-2040Z", 	SIERRA_MODEL_OLYMPUS,	0x07b4, 0x105, 1},
+	{"Olympus C-2100UZ",    SIERRA_MODEL_OLYMPUS,	0x07b4, 0x100, 0},
+	{"Olympus C-2500L",     SIERRA_MODEL_OLYMPUS,   0, 0, 0 },
+	{"Olympus C-2500Z", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 }, /* Does this model exist? */
+	{"Olympus C-3000Z", 	SIERRA_MODEL_OLYMPUS,	0x07b4, 0x100, 0},
+	{"Olympus C-3030Z", 	SIERRA_MODEL_OLYMPUS,	0x07b4, 0x100, 0},
+	{"Panasonic Coolshot NV-DCF5E", SIERRA_MODEL_DEFAULT,	0, 0, 0 },
+	{"Polaroid PDC 640", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
+	{"Sanyo DSC-X300", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
+	{"Sanyo DSC-X350", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
+	{"Sanyo VPC-G200", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
+	{"Sanyo VPC-G200EX", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
+	{"Sanyo VPC-G210", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
+	{"Sanyo VPC-G250", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
+	{"Sierra Imaging SD640",SIERRA_MODEL_DEFAULT,	0, 0, 0 },
+	{"", 			SIERRA_MODEL_DEFAULT,	0, 0, 0 }
 };
 
 
@@ -1869,7 +1869,7 @@ int camera_init (Camera *camera)
 {
         int value=0;
         int x=0, ret;
-        int vendor=0, product=0, inep=0, outep=0, usb_wrap=0;
+        int vendor=0, product=0, usb_wrap=0;
 	GPPortSettings settings;
 	CameraAbilities a;
 
@@ -1895,8 +1895,6 @@ int camera_init (Camera *camera)
 		if (!strcmp (sierra_cameras[x].model, a.model)) {
 			camera->pl->model = sierra_cameras[x].sierra_model;
 			vendor = sierra_cameras[x].usb_product;
-			inep = sierra_cameras[x].usb_inep;
-			outep = sierra_cameras[x].usb_outep;
                         usb_wrap = sierra_cameras[x].usb_wrap;
                }
 	}
@@ -1949,15 +1947,7 @@ int camera_init (Camera *camera)
 			camera->pl->usb_wrap = usb_wrap;
 		}
 
-		/*
-		 * We don't need to find the device - that has already been
-		 * done by libgphoto2.
-		 */
-                settings.usb.inep       = inep;
-                settings.usb.outep      = outep;
-                settings.usb.config     = 1;
-                settings.usb.interface  = 0;
-                settings.usb.altsetting = 0;
+		/* Use the defaults the core parsed */
                 break;
 
         default:

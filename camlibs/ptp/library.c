@@ -584,11 +584,8 @@ camera_init (Camera *camera)
 	/* Configure the port */
 	CR (gp_port_set_timeout (camera->port, 3000));
 	CR (gp_port_get_settings (camera->port, &settings));
-	settings.usb.inep = 0x01;
-	settings.usb.outep = 0x01;
-	settings.usb.config = 1;
-	settings.usb.interface = 0;
-	settings.usb.altsetting = 0;
+
+	/* Use the defaults the core parsed */
 	CR (gp_port_set_settings (camera->port, settings));
 
 	/* Establish a connection to the camera */

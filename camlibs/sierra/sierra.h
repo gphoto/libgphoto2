@@ -19,8 +19,6 @@ typedef struct {
 	SierraModel sierra_model;
 	int  usb_vendor;
 	int  usb_product;
-	int  usb_inep;
-	int  usb_outep;
 	int  usb_wrap;
 } SierraCamera;
 

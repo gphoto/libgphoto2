@@ -92,17 +92,15 @@ static struct {
         int image_id_long;
         int vendor;
         int product;
-        int inep;
-        int outep;
 } konica_cameras[] = {
-        {"Konica Q-EZ",        0, 0, 0, 0, 0},
-        {"Konica Q-M100",      0, 0, 0, 0, 0},
-        {"Konica Q-M100V",     0, 0, 0, 0, 0},
-        {"Konica Q-M200",      1, 0, 0, 0, 0},
-        {"HP PhotoSmart C20",  0, 0, 0, 0, 0},
-        {"HP PhotoSmart C30",  0, 0, 0, 0, 0},
-        {"HP PhotoSmart C200", 1, 0, 0, 0, 0},
-        {NULL,                 0, 0, 0, 0, 0}
+        {"Konica Q-EZ",        0, 0, 0},
+        {"Konica Q-M100",      0, 0, 0},
+        {"Konica Q-M100V",     0, 0, 0},
+        {"Konica Q-M200",      1, 0, 0},
+        {"HP PhotoSmart C20",  0, 0, 0},
+        {"HP PhotoSmart C30",  0, 0, 0},
+        {"HP PhotoSmart C200", 1, 0, 0},
+        {NULL,                 0, 0, 0}
 };
 
 struct _CameraPrivateLibrary {
@@ -1181,7 +1179,6 @@ int
 camera_init (Camera* camera)
 {
         int i, speed;
-        int inep, outep;
         GPPortSettings settings;
 	CameraAbilities a;
 
@@ -1203,8 +1200,6 @@ camera_init (Camera* camera)
                         break;
         if (!konica_cameras [i].model)
                 return (GP_ERROR_MODEL_NOT_FOUND);
-        inep          = konica_cameras [i].inep;
-        outep         = konica_cameras [i].outep;
 
 	/* Store some data we constantly need. */
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));
@@ -1234,13 +1229,7 @@ camera_init (Camera* camera)
 
                 break;
         case GP_PORT_USB:
-
-                /* Set up the device */
-                settings.usb.inep      = inep;
-                settings.usb.outep     = outep;
-                settings.usb.config    = 1;
-                settings.usb.interface = 0;
-                settings.usb.altsetting = 0;
+		/* Use the defaults the core parsed */
                 CHECK (camera, gp_port_set_settings (camera->port, settings));
 
                 /* Initiate the connection */

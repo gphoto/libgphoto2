@@ -270,12 +270,11 @@ int camera_init(Camera *camera) {
 
     switch (camera->port->type) {
        case GP_PORT_USB:
-	    settings.usb.inep = 0x83;
-	    settings.usb.outep = 0x02;
-	    settings.usb.config = 0;
- 	    settings.usb.interface = 0;
-	    settings.usb.altsetting = 0;
+            ret=gp_port_get_settings(camera->port,&settings);
+            if (ret<0) return ret;
  
+            /* Use the defaults the core parsed */
+
             ret=gp_port_set_settings(camera->port,settings);
             if (ret<0) return ret;
        

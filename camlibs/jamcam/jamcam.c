@@ -321,11 +321,7 @@ int camera_init (Camera *camera)
 		settings.serial.stopbits = 1;
 		break;
 	case GP_PORT_USB:
-		settings.usb.inep        = 0x81;
-		settings.usb.outep       = 0x02;
-		settings.usb.config      = 1;
-		settings.usb.interface   = 0;
-		settings.usb.altsetting  = 0;
+		/* Use the defaults the core parsed */
 		break;
 	default:
 		fprintf(stderr, "Unknown port type: %d\n", camera->port->type );
