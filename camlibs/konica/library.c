@@ -714,13 +714,16 @@ camera_file_config_get (Camera* camera, CameraWidget** window, gchar* folder, gc
 	guchar*		information_buffer = NULL;
 	guint		information_buffer_size;
 	gint		result;
-	gint		value_int = 0;
+	gint		value_int;
 	
 	g_return_val_if_fail (camera,   GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (window,   GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (!*window,	GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (folder,   GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (file,	GP_ERROR_BAD_PARAMETERS);
+
+	/* Our cameras don't support folders. */
+	g_return_val_if_fail (!strcmp (folder, "/"), GP_ERROR_FILE_NOT_FOUND);
 	
 	/* Get some information about the picture. */
 	konica_data = (konica_data_t*) camera->camlib_data;
@@ -735,6 +738,7 @@ camera_file_config_get (Camera* camera, CameraWidget** window, gchar* folder, gc
 	*window = gp_widget_new (GP_WIDGET_WINDOW, file);
 	widget = gp_widget_new (GP_WIDGET_TOGGLE, "Protect");
 	if (protected) value_int = 1;
+	else value_int = 0;
 	gp_widget_value_set (widget, &value_int);
 	gp_widget_append (*window, widget);
 
@@ -755,6 +759,9 @@ camera_file_config_set (Camera* camera, CameraWidget* window, gchar* folder, gch
 	g_return_val_if_fail (window,   GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (folder,   GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (file, 	GP_ERROR_BAD_PARAMETERS);
+
+	/* Our cameras don't support folders. */
+	g_return_val_if_fail (!strcmp (folder, "/"), GP_ERROR_FILE_NOT_FOUND);
 	
 	/* Some information we need. */
 	konica_data = (konica_data_t*) camera->camlib_data;
@@ -781,6 +788,9 @@ camera_folder_config_get (Camera* camera, CameraWidget** window, gchar* folder)
 	g_return_val_if_fail (window, 	GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (!*window,	GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (folder,	GP_ERROR_BAD_PARAMETERS);
+
+	/* Our cameras don't support folders. */
+	g_return_val_if_fail (!strcmp (folder, "/"), GP_ERROR_FILE_NOT_FOUND);
 
 	/* Construct the window. */
 	*window = gp_widget_new (GP_WIDGET_WINDOW, folder);
