@@ -599,9 +599,16 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	}
 
 	if (!ptp_operation_issupported(&camera->pl->params,
-		PTP_OC_InitiateCapture)) return GP_ERROR_NOT_SUPPORTED;
+		PTP_OC_InitiateCapture))
+		return GP_ERROR_NOT_SUPPORTED;
 
+	/* A capture may take longer than the standard 8 seconds. The G5 for instance
+	 * does, or in dark rooms ...
+	 * Even 16 seconds might not be enough. (Marcus)
+	 */
+	CR (gp_port_set_timeout (camera->port, 16000));
 	CPR(context,ptp_initiatecapture(&camera->pl->params, 0x00000000, 0x00000000));
+	CR (gp_port_set_timeout (camera->port, 8000));
 	while (ptp_usb_event_wait (&camera->pl->params, &event)!=PTP_RC_OK);
 	if (event.Code==PTP_EC_ObjectAdded) {
 		while (ptp_usb_event_wait (&camera->pl->params, &event)!=PTP_RC_OK);

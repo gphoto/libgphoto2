@@ -1,3 +1,7 @@
+2003-09-17  Marcus Meissner <marcus@jet.franken.de>
+
+	* library.c: Increase timeout for capture. A G5 needs longer than 8 seconds...
+
 2003-09-12 Mariusz Woloszyn
 	* library.c: fixed a minor bug that caused error while deleting
 	  folders not in storage subfolder (removed trailing '/' in folder
