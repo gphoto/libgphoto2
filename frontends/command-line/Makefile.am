@@ -10,7 +10,8 @@ INCLUDES =						\
 	-DGPHOTO2_LOCALEDIR=\""$(datadir)/locale"\"	\
 	-I$(top_srcdir)/include				\
 	-I$(top_srcdir)/libgphoto2			\
-	-I$(top_srcdir)
+	-I$(top_srcdir)					\
+	$(AA_CFLAGS)
 
 if HAVE_CDK
 CDK_FILES = gphoto2-cmd-config.c gphoto2-cmd-config.h
@@ -18,8 +19,15 @@ else
 CDK_FILES =
 endif
 
+if HAVE_AA
+AA_FILES = gphoto2-cmd-capture.c gphoto2-cmd-capture.h
+else
+AA_FILES =
+endif
+
 LDFLAGS = @LDFLAGS@ -g 
 gphoto2_SOURCES = 		\
+	$(AA_FILES)		\
 	$(CDK_FILES)		\
 	actions.c actions.h 	\
 	foreach.c foreach.h 	\
@@ -32,4 +40,7 @@ gphoto2_SOURCES = 		\
 
 gphoto2_LDFLAGS = -export-dynamic
 
-gphoto2_LDADD = ../../libgphoto2/libgphoto2.la $(CDK_LIBS)
+gphoto2_LDADD =				\
+	../../libgphoto2/libgphoto2.la	\
+	$(CDK_LIBS) $(AA_LIBS)		\
+	$(JPEG_LIBS)

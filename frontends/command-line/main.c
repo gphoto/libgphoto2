@@ -25,6 +25,10 @@
 #include "gphoto2-cmd-config.h"
 #endif
 
+#if HAVE_AA
+#include "gphoto2-cmd-capture.h"
+#endif
+
 #include "gphoto2-port-info-list.h"
 #include "gphoto2-port-log.h"
 #include "gphoto2-setting.h"
@@ -872,40 +876,27 @@ int
 capture_generic (int type, char *name)
 {
         CameraFilePath path;
-        CameraFile* file;
         char *pathsep;
         int result;
 
         CHECK_RESULT (set_globals ());
 
-        if (type == GP_OPERATION_CAPTURE_PREVIEW) {
-                CHECK_RESULT (gp_file_new (&file));
-                result = gp_camera_capture_preview (glob_camera, file);
-                if (result != GP_OK) {
-                        cli_error_print("Could not capture the preview.");
-                        return (result);
-                }
-                CHECK_RESULT (save_camera_file_to_file (file,
-                                                        GP_FILE_TYPE_NORMAL));
-                gp_file_free (file);
-        } else {
-                result =  gp_camera_capture (glob_camera, type, &path);
-                if (result != GP_OK) {
-                        cli_error_print("Could not capture.");
-                        return (result);
-                }
+	result =  gp_camera_capture (glob_camera, type, &path);
+	if (result != GP_OK) {
+		cli_error_print("Could not capture.");
+		return (result);
+	}
 
-                if (strcmp(path.folder, "/") == 0)
-                                pathsep = "";
-                        else
-                                pathsep = "/";
+	if (strcmp(path.folder, "/") == 0)
+		pathsep = "";
+	else
+		pathsep = "/";
 
-                if (glob_quiet)
-                        printf ("%s%s%s\n", path.folder, pathsep, path.name);
-                else
-                        printf ("New file is in location %s%s%s on the camera\n",
-                                path.folder, pathsep, path.name);
-        }
+	if (glob_quiet)
+		printf ("%s%s%s\n", path.folder, pathsep, path.name);
+	else
+		printf ("New file is in location %s%s%s on the camera\n",
+			path.folder, pathsep, path.name);
 
         return (GP_OK);
 }
@@ -913,7 +904,7 @@ capture_generic (int type, char *name)
 
 OPTION_CALLBACK (capture_image)
 {
-        return (capture_generic (GP_OPERATION_CAPTURE_IMAGE, arg));
+	return (capture_generic (GP_OPERATION_CAPTURE_IMAGE, arg));
 }
 
 OPTION_CALLBACK (capture_movie)
@@ -928,7 +919,31 @@ OPTION_CALLBACK (capture_sound)
 
 OPTION_CALLBACK (capture_preview)
 {
-        return (capture_generic (GP_OPERATION_CAPTURE_PREVIEW, arg));
+	CameraFile *file;
+	int result;
+
+	CHECK_RESULT (set_globals ());
+
+	CHECK_RESULT (gp_file_new (&file));
+#if HAVE_AA
+	result = gp_cmd_capture_preview (glob_camera, file);
+#else
+	result = gp_camera_capture_preview (glob_camera, file);
+#endif
+	if (result < 0) {
+		gp_file_free (file);
+		return (result);
+	}
+
+	result = save_camera_file_to_file (file, GP_FILE_TYPE_NORMAL);
+	if (result < 0) {
+		gp_file_free (file);
+		return (result);
+	}
+
+	gp_file_free (file);
+
+	return (GP_OK);
 }
 
 OPTION_CALLBACK(summary)

@@ -165,6 +165,62 @@ fi
 AM_CONDITIONAL(HAVE_CDK, $have_cdk)
 AC_SUBST(CDK_LIBS)
 
+dnl ****
+dnl jpeg
+dnl ****
+jpeg_msg=no
+try_jpeg=true
+have_jpeg=false
+AC_ARG_WITH(jpeg, [  --without-jpeg    Don't use jpeg],
+	if test x$withval = xno; then
+		try_jpeg=false
+	fi
+)
+if $try_jpeg; then
+	AC_MSG_CHECKING([for jpeglib.h])
+	AC_TRY_CPP([
+#include <stdio.h>
+#undef PACKAGE
+#undef VERSION
+#undef HAVE_STDDEF_H
+#undef HAVE_STDLIB_H
+#include <jpeglib.h>],
+		jpeg_msg=yes,
+		jpeg_msg=no)
+	AC_MSG_RESULT($jpeg_msg)
+	if test "$jpeg_msg" = yes; then
+		have_jpeg=true
+		AC_DEFINE(HAVE_JPEG)
+		JPEG_LIBS="-ljpeg"
+	fi
+fi
+AM_CONDITIONAL(HAVE_JPEG, $have_jpeg)
+AC_SUBST(JPEG_LIBS)
+
+dnl *****
+dnl aalib
+dnl *****
+aa_msg=no
+try_aa=true
+have_aa=false
+AC_ARG_WITH(aalib, [  --without-aalib   Don't use aalib],
+	if text x$withval = xno; then
+		try_aa=false
+	fi
+)
+if $try_aa; then
+	AC_CHECK_HEADER(aalib.h,
+		have_aa=true
+		aa_msg=yes
+		AC_DEFINE(HAVE_AA)
+		AA_CFLAGS="`aalib-config --cflags`"
+		AA_LIBS="`aalib-config --libs`"
+	)
+fi
+AM_CONDITIONAL(HAVE_AA, $have_aa)
+AC_SUBST(AA_LIBS)
+AC_SUBST(AA_CFLAGS)
+
 AC_OUTPUT([
 Makefile
 gphoto.spec
@@ -218,4 +274,6 @@ Configuration (libgphoto2):
 
 	Build documenation:        $enable_gtk_doc
 	Config. support (gphoto2): $cdk_msg
+	Preview support (gphoto2): $aa_msg
+	JPEG support:              $jpeg_msg
 "

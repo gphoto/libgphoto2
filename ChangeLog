@@ -1,3 +1,11 @@
+2001-10-26 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* configure.in: Check for jpeglib and aalib.
+	* frontends/command-line/main.c
+	* frontends/command-line/Makefile.am
+	* frontends/command-line/gphoto2-cmd-capture.[c,h]: New. Display 
+	  the preview prior saving it.
+
 2001-10-24 Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* gphoto.spec.in: hotplug dependency is a prereq not a requires
