@@ -20,6 +20,7 @@
 
 #include "library.h"
 #include "sierra.h"
+#include "../../libgphoto2/exif.h"
 
 #define TIMEOUT	   2000
 
@@ -49,6 +50,7 @@ SierraCamera sierra_cameras[] = {
 	{"Epson PhotoPC 600", 	0, 0, 0, 0 },
 	{"Epson PhotoPC 700", 	0, 0, 0, 0 },
 	{"Epson PhotoPC 800", 	0, 0, 0, 0 },
+	{"Epson PhotoPC 3000z", 0x4b8, 0x403, 0x83, 0x04},
 	{"Nikon CoolPix 100", 	0, 0, 0, 0 },
 	{"Nikon CoolPix 300", 	0, 0, 0, 0 },
 	{"Nikon CoolPix 700", 	0, 0, 0, 0 },
@@ -466,7 +468,7 @@ int camera_folder_list_folders (Camera *camera, const char *folder,
 				CameraList *list) 
 {
 	SierraData *fd = (SierraData*)camera->camlib_data;
-	int count, i, bsize, ret;
+	int count, i, j, bsize, ret;
 	char buf[1024];
 
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", 
@@ -506,8 +508,8 @@ int camera_folder_list_folders (Camera *camera, const char *folder,
 			break;
 
 		/* remove trailing spaces */
-		for (i = strlen (buf)-1; i >= 0 && buf[i] == ' '; i--)
-			buf[i]='\0';
+		for (j = strlen (buf)-1; j >= 0 && buf[j] == ' '; j--)
+			buf[j]='\0';
 
 		/* append the folder name on to the folder list */
 		gp_list_append (list, buf, GP_LIST_FOLDER);
@@ -551,6 +553,7 @@ int camera_file_get_generic (Camera *camera, CameraFile *file,
 {
 	int regl, regd, file_number;
 	SierraData *fd = (SierraData*)camera->camlib_data;
+	CameraFile *tmp_file;
 
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** sierra_file_get_generic");
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
@@ -583,9 +586,45 @@ int camera_file_get_generic (Camera *camera, CameraFile *file,
 	}
 	strcpy (file->name, filename);
 
+	/* Creation of a temporary file */
+	if ((tmp_file = gp_file_new()) == NULL)
+	   return (GP_ERROR);
+	strcpy(tmp_file->name, filename);
+
 	/* Get the picture data */
-	CHECK (sierra_get_string_register (camera, regd, file_number + 1, file,
-					  NULL, NULL));
+	CHECK (sierra_get_string_register (camera, regd, file_number + 1, 
+					   tmp_file, NULL, NULL));
+
+	/* Some camera (e.g. Epson 3000z) send only the Exif data
+	   as thumbnail. A valid Jpeg file needs to be built */
+	if (tmp_file->data[0] == (char)0xFF && 
+	    tmp_file->data[1] == (char)0xD8) {
+
+		/* OK : this is a complete JPEG file */
+		gp_file_append (file, tmp_file->data, tmp_file->size);
+
+	} else if (tmp_file->data[0] == (char)0xFF && 
+		   tmp_file->data[1] == (char)0xE1) {
+
+		/* The JPEG file needs to be built */
+		exifparser exifdat;
+
+		exifdat.header    = (char*) malloc ((size_t)tmp_file->size+2);
+		exifdat.header[0] = 0xFF;
+		exifdat.header[1] = 0xD8;
+		memcpy (exifdat.header + 2, tmp_file->data, 
+			(size_t)tmp_file->size);
+		exifdat.data = exifdat.header + 12;
+  
+		exif_parse_data (&exifdat);
+		file->data = exif_get_thumbnail_and_size (&exifdat, 
+							  &file->size);
+
+		free (exifdat.header);
+	} else {
+		//FIXME: What happens here?
+	}
+
 	return (camera_stop (camera));
 }
 
