@@ -7,6 +7,9 @@ libgphoto2:
 gphoto2 command-line interface:
    * EXIF support (extra tags that contain information about the image
 		produced by most digital cameras).
+   * Fixed broken --delete-all-images. Also, recursion is now the
+		default for downloading but _not_ for deleting.
+
 
 --------------------------------------------------------------------------------
 gphoto2-2.0beta4
