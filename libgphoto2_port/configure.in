@@ -5,7 +5,7 @@ AM_CONFIG_HEADER(config.h)
 
 LIBGPPORT_MAJOR_VERSION=0
 LIBGPPORT_MINOR_VERSION=0
-LIBGPPORT_MICRO_VERSION=3
+LIBGPPORT_MICRO_VERSION=4
 LIBGPPORT_VERSION=$LIBGPPORT_MAJOR_VERSION.$LIBGPPORT_MINOR_VERSION.$LIBGPPORT_MICRO_VERSION
 LIBGPPORT_VERSION_INFO=`expr $LIBGPPORT_MAJOR_VERSION + $LIBGPPORT_MINOR_VERSION`:$LIBGPPORT_MICRO_VERSION:$LIBGPPORT_MINOR_VERSION
 
@@ -24,6 +24,7 @@ dnl Checks for programs.
 AC_PROG_CC
 AC_PROG_CPP
 AM_PROG_LIBTOOL
+AC_PROG_INSTALL
 
 dnl The following is a hack to get gphoto2 to build on gettext-0.10.35
 dnl systems - BUILD_INCLUDED_LIBINTL is set only in gettext-0.10.37 which is
@@ -196,26 +197,8 @@ AC_SUBST(IOLIB_CFLAGS)
 dnl ********
 dnl gtk-doc?
 dnl ********
-AC_CHECK_PROG(GTKDOC, gtkdoc-mkdb, true, false)
-AM_CONDITIONAL(HAVE_GTK_DOC, $GTKDOC) 
-AC_SUBST(HAVE_GTK_DOC)
-AC_ARG_ENABLE(gtk-doc, [  --enable-gtk-doc  Use gtk-doc to build documentation [default=auto]], enable_gtk_doc="$enableval", enable_gtk_doc=auto)
-if test x$enable_gtk_doc = xauto ; then
-    if test x$GTKDOC = xtrue ; then
-        enable_gtk_doc=yes
-    else
-        enable_gtk_doc=no 
-    fi
-fi
-AM_CONDITIONAL(ENABLE_GTK_DOC, test x$enable_gtk_doc = xyes)
-AC_ARG_WITH(html-dir, [  --with-html-dir=PATH path to installed docs ])
-
-if test "x$with_html_dir" = "x" ; then
-    HTML_DIR='${datadir}/gphoto2/html'
-else
-    HTML_DIR=$with_html_dir
-fi
-AC_SUBST(HTML_DIR)
+GP_CHECK_DOC_DIR()dnl
+GP_CHECK_GTK_DOC()dnl
 
 AC_OUTPUT([
 libgphoto2_port.spec
@@ -232,6 +215,7 @@ intl/Makefile
 po/Makefile.in
 test/Makefile
 doc/Makefile
+m4/Makefile
 ])
 
 echo "
