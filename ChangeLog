@@ -1,3 +1,10 @@
+2001-11-18  Hans Ulrich Niedermann <hun@n-dimensional.de>
+
+	* doc/api/Makefile.am
+	* libgphoto2_port/doc/Makefile.am: sourced out doc generation to
+	  DocRules.am
+	* libgphoto2_port/doc/DocRules.am: new file
+
 2001-11-18  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	Patch from Ole Aamot <Ole.Aamot@nr.no>:
