@@ -1,3 +1,8 @@
+2003-05-05  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* configure.in: removed ptp driver (now replaced by ptp2)
+	* MAINTAINERS: ptp -> ptp2
+
 2003-02-26  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* configure.in: added toshiba/pdrm11 to build

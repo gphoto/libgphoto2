@@ -90,7 +90,7 @@ camlibs/polaroid/pdc640.c:
 camlibs/polaroid/pdc700.c:
 	Greg Ingram <ingram@symsys.com>
 
-camlibs/ptp:
+camlibs/ptp2:
 	Mariusz Woloszyn <emsi@ipartners.pl>
 
 camlibs/samsung:

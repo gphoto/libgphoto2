@@ -169,7 +169,7 @@ AC_SUBST(camlibdir)
 dnl ---------------------------------------------------------------------------
 dnl Camera drivers
 dnl ---------------------------------------------------------------------------
-camlibs='barbie benq canon casio digita dimera directory fuji gsmart gsmart300 jamcam jd11 kodak konica largan minolta mustek panasonic pccam300 pccam600 polaroid ptp ptp2 ricoh samsung sierra sipix sipixblink smal sonydscf1 sonydscf55 soundvision spca504_flash spca50x stv0674 stv0680 sx330z toshiba'
+camlibs='barbie benq canon casio digita dimera directory fuji gsmart gsmart300 jamcam jd11 kodak konica largan minolta mustek panasonic pccam300 pccam600 polaroid ptp2 ricoh samsung sierra sipix sipixblink smal sonydscf1 sonydscf55 soundvision spca504_flash spca50x stv0674 stv0680 sx330z toshiba'
 AC_SUBST(SUBDIRS_CAMLIBS)
 for i in $camlibs; do
   d=`echo $i | $TR a-z A-Z`
@@ -185,7 +185,7 @@ AC_ARG_WITH(drivers,
   [                            directory, fuji, gsmart, gsmart300, jamcam,] 
   [                            jd11, kodak, konica, mustek, largan,]
   [                            minolta, panasonic, pccam300, pccam600,]
-  [                            polaroid, ptp, ptp2, ricoh, samsung, smal,]
+  [                            polaroid, ptp2, ricoh, samsung, smal,]
   [                            sierra, sipix, sonydscf1, sonydscf55,]
   [                            soundvision, spca504_flash, spca50x, stv0680, sx330z ],
   drivers="$withval", drivers="all")
@@ -381,7 +381,6 @@ camlibs/panasonic/coolshot/Makefile
 camlibs/pccam300/Makefile
 camlibs/pccam600/Makefile
 camlibs/polaroid/Makefile
-camlibs/ptp/Makefile
 camlibs/ptp2/Makefile
 camlibs/ricoh/Makefile
 camlibs/samsung/Makefile
