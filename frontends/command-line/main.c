@@ -67,6 +67,7 @@ OPTION_CALLBACK(quiet);
 OPTION_CALLBACK(debug);
 OPTION_CALLBACK(list_folders);
 OPTION_CALLBACK(use_folder);
+OPTION_CALLBACK(num_pictures);
 OPTION_CALLBACK(get_picture);
 OPTION_CALLBACK(get_thumbnail);
 OPTION_CALLBACK(delete_picture);
@@ -100,6 +101,7 @@ Option option[] = {
 {"",  "list-folders",	"",		"List all folders on the camera",list_folders,	0},
 {"a", "abilities",	"",		"Display camera abilities",	abilities, 	0},
 {"f", "folder",		"folder",	"Specify camera folder (default=\"/\")",use_folder,0},
+{"n", "num-pictures",	"",		"Display number of pictures",	num_pictures,	0},
 {"p", "get-picture",	"#", 		"Get picture # from camera", 	get_picture,	0},
 {"t", "get-thumbnail",	"#", 		"Get thumbnail # from camera",	get_thumbnail,	0},
 {"d", "delete-picture",	"#",		"Delete picture # from camera", delete_picture, 0},
@@ -137,8 +139,7 @@ char glob_filename[128];
 
 OPTION_CALLBACK(help) {
 
-	if (glob_debug)
-		debug_print("Displaying usage", "");
+	debug_print("Displaying usage", "");
 	
 	usage();
 	exit(EXIT_SUCCESS);
@@ -146,8 +147,7 @@ OPTION_CALLBACK(help) {
 
 OPTION_CALLBACK(test) {
 
-	if (glob_debug)
-		debug_print("Testing gPhoto Installation", "");
+	debug_print("Testing gPhoto Installation", "");
 
 	test_gphoto();
 	exit(EXIT_SUCCESS);
@@ -209,8 +209,7 @@ OPTION_CALLBACK(list_cameras) {
 	int x, n;
 	char buf[64];
 
-	if (glob_debug)
-		debug_print("Listing Cameras", "");
+	debug_print("Listing Cameras", "");
 
 	if ((n = gp_camera_count())==GP_ERROR)
 		error_print("Could not retrieve the number of supported cameras!", "");
@@ -256,8 +255,7 @@ OPTION_CALLBACK(list_ports) {
 
 OPTION_CALLBACK(filename) {
 
-	if (glob_debug)
-		debug_print("Setting filename to %s", arg);
+	debug_print("Setting filename to %s", arg);
 
 	strcpy(glob_filename, arg);
 
@@ -266,8 +264,7 @@ OPTION_CALLBACK(filename) {
 
 OPTION_CALLBACK(port) {
 
-	if (glob_debug)
-		debug_print("Setting port to %s", arg);
+	debug_print("Setting port to %s", arg);
 
 	strcpy(glob_port, arg);
 
@@ -276,8 +273,7 @@ OPTION_CALLBACK(port) {
 
 OPTION_CALLBACK(speed) {
 
-	if (glob_debug)
-		debug_print("Setting speed to %s", arg);
+	debug_print("Setting speed to %s", arg);
 
 	glob_speed = atoi(arg);
 
@@ -286,8 +282,7 @@ OPTION_CALLBACK(speed) {
 
 OPTION_CALLBACK(model) {
 
-	if (glob_debug)
-		debug_print("Setting camera model to %s", arg);
+	debug_print("Setting camera model to %s", arg);
 
 	strcpy(glob_model, arg);
 
@@ -304,8 +299,7 @@ OPTION_CALLBACK(debug) {
 
 OPTION_CALLBACK(quiet) {
 
-	if (glob_debug)
-		debug_print("Setting to quiet mode", "");
+	debug_print("Setting to quiet mode", "");
 
 	glob_quiet=1;
 
@@ -355,8 +349,7 @@ OPTION_CALLBACK(list_folders) {
 
 OPTION_CALLBACK(use_folder) {
 
-	if (glob_debug)
-		debug_print("Setting folder to %s", arg);
+	debug_print("Setting folder to %s", arg);
 
 	strcpy(glob_folder, arg);
 
@@ -369,12 +362,10 @@ int get_picture_common(int num, int thumbnail) {
 	int count=0;
 	char filename[1024];
 
-	if (glob_debug) {
-		if (thumbnail)
-			debug_print("Getting thumbnail", "");
-		   else
-			debug_print("Getting picture", "");
-	}
+	if (thumbnail)
+		debug_print("Getting thumbnail", "");
+	   else
+		debug_print("Getting picture", "");
 
 	if (set_globals() == GP_ERROR)
 		return (GP_ERROR);
@@ -412,6 +403,30 @@ int get_picture_common(int num, int thumbnail) {
 	return (GP_OK);
 }
 
+OPTION_CALLBACK(num_pictures) {
+
+	int count;
+
+	debug_print("Deleting picture", "");
+
+	if (set_globals() == GP_ERROR)
+		return (GP_ERROR);
+
+	count = gp_file_count();
+	
+	if (count == GP_ERROR) {
+		error_print("Picture number is too large.\nRemember that numbering begins at zero (0)", "");
+		return (GP_ERROR);
+	}
+
+	if (glob_quiet)
+		printf("%i\n", count);
+	   else
+		printf("Number of pictures in folder %s: %i\n", glob_folder, count);
+
+	return (GP_OK);
+}
+
 OPTION_CALLBACK(get_picture) {
 
 	return (get_picture_common(atoi(arg), 0));
@@ -427,8 +442,7 @@ OPTION_CALLBACK(delete_picture) {
 	int num = atoi(arg);
 	int count;
 
-	if (glob_debug)
-		debug_print("Deleting picture", "");
+	debug_print("Deleting picture", "");
 
 	if (set_globals() == GP_ERROR)
 		return (GP_ERROR);
@@ -535,8 +549,7 @@ int verify_options (int argc, char **argv) {
 	which = 0;
 
 	for (x=1; x<argc; x++) {
-		if (glob_debug) 
-			debug_print("checking \"%s\": \n", argv[x]);
+		debug_print("checking \"%s\": \n", argv[x]);
 		match = 0;
 		missing_arg = 0;
 		for (y=0; y<option_count; y++) {
@@ -669,9 +682,11 @@ void usage () {
 
 void debug_print(char *message, char *str) {
 
-	printf("cli: ");
-	printf(message, str);
-	printf("\n");
+	if (glob_debug) {
+		printf("cli: ");
+		printf(message, str);
+		printf("\n");
+	}
 }
 
 void error_print(char *message, char *str) {
