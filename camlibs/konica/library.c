@@ -776,26 +776,28 @@ int camera_about (Camera *camera, CameraText *about)
 
 int camera_config_get (Camera *camera, CameraWidget **window)
 {
-        CameraWidget *widget, *section;
-        guint shutoff_time, self_timer_time, beep, slide_show_interval;
-        guint self_test_result;
-        k_power_level_t power_level;
-        k_power_source_t power_source;
-        k_card_status_t card_status;
-        k_display_t display;
-        guint card_size;
-        guint pictures = 0;
-        guint pictures_left;
-        guchar year, month, day, hour, minute, second;
-        guint io_setting_bit_rate, io_setting_flags;
-        guchar flash;
-        guchar resolution;
-        guchar focus_self_timer;
-        guchar exposure;
-        guint total_pictures;
-        guint total_strobes;
-	konica_data_t *konica_data;
-	gchar *buffer;
+        CameraWidget*	widget;
+	CameraWidget*	section;
+        guint 		shutoff_time, self_timer_time, beep, slide_show_interval;
+        guint 		self_test_result;
+        k_power_level_t 	power_level;
+        k_power_source_t 	power_source;
+        k_card_status_t 	card_status;
+        k_display_t 	display;
+        guint 		card_size;
+        guint 		pictures = 0;
+        guint 		pictures_left;
+        guchar 		year, month, day, hour, minute, second;
+        guint 		io_setting_bit_rate, io_setting_flags;
+        guchar 		flash;
+        guchar 		resolution;
+        guchar 		focus_self_timer;
+        guchar 		exposure;
+        guint 		total_pictures;
+        guint 		total_strobes;
+	konica_data_t*	konica_data;
+	gchar*		buffer;
+	gint		year_4_digits;
 
         gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_config_get ***");
 	g_return_val_if_fail (camera != NULL, GP_ERROR);
@@ -847,7 +849,9 @@ int camera_config_get (Camera *camera, CameraWidget **window)
 	/* Date */
 	widget = gp_widget_new (GP_WIDGET_DATE, "Date & Time");
 	gp_widget_append (section, widget);
-	buffer = g_strdup_printf ("%i/%i/%i %i:%i:%i", year, month, day, hour, minute, second);
+	if (year > 80) year_4_digits = year + 1900;
+	else year_4_digits = year + 2000;
+	buffer = g_strdup_printf ("%i/%i/%i %i:%i:%i", year_4_digits, month, day, hour, minute, second);
 	gp_widget_value_set (widget, buffer);
 	g_free (buffer);
 
