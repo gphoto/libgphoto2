@@ -1,5 +1,1 @@
-*.sed
-*.c
-*.h
-charset.alias
 Makefile

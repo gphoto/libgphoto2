@@ -203,7 +203,7 @@ static void *mempcpy PARAMS ((void *dest, const void *src, size_t n));
    However it does not specify the exact format.  Neither do SUSV2 and
    ISO C 99.  So we can use this feature only on selected systems (e.g.
    those using GNU C Library).  */
-#ifdef _LIBC
+#if defined _LIBC || (defined __GNU_LIBRARY__ && __GNU_LIBRARY__ >= 2)
 # define HAVE_LOCALE_NULL
 #endif
 
@@ -370,6 +370,18 @@ __libc_rwlock_define_initialized (, _nl_state_lock)
 # define ENABLE_SECURE __libc_enable_secure
 # define DETERMINE_SECURE
 #else
+# ifndef HAVE_GETUID
+#  define getuid() 0
+# endif
+# ifndef HAVE_GETGID
+#  define getgid() 0
+# endif
+# ifndef HAVE_GETEUID
+#  define geteuid() getuid()
+# endif
+# ifndef HAVE_GETEGID
+#  define getegid() getgid()
+# endif
 static int enable_secure;
 # define ENABLE_SECURE (enable_secure == 1)
 # define DETERMINE_SECURE \
@@ -505,6 +517,7 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 	  /* We cannot get the current working directory.  Don't signal an
 	     error but simply return the default string.  */
 	  FREE_BLOCKS (block_list);
+	  __libc_rwlock_unlock (_nl_state_lock);
 	  __set_errno (saved_errno);
 	  return (plural == 0
 		  ? (char *) msgid1
@@ -584,7 +597,7 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 
       if (domain != NULL)
 	{
-	  retval = _nl_find_msg (domain, msgid1, &retlen);
+	  retval = _nl_find_msg (domain, binding, msgid1, &retlen);
 
 	  if (retval == NULL)
 	    {
@@ -592,8 +605,8 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 
 	      for (cnt = 0; domain->successor[cnt] != NULL; ++cnt)
 		{
-		  retval = _nl_find_msg (domain->successor[cnt], msgid1,
-					 &retlen);
+		  retval = _nl_find_msg (domain->successor[cnt], binding,
+					 msgid1, &retlen);
 
 		  if (retval != NULL)
 		    {
@@ -662,8 +675,9 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 
 char *
 internal_function
-_nl_find_msg (domain_file, msgid, lengthp)
+_nl_find_msg (domain_file, domainbinding, msgid, lengthp)
      struct loaded_l10nfile *domain_file;
+     struct binding *domainbinding;
      const char *msgid;
      size_t *lengthp;
 {
@@ -673,7 +687,7 @@ _nl_find_msg (domain_file, msgid, lengthp)
   size_t resultlen;
 
   if (domain_file->decided == 0)
-    _nl_load_domain (domain_file);
+    _nl_load_domain (domain_file, domainbinding);
 
   if (domain_file->data == NULL)
     return NULL;
@@ -752,6 +766,16 @@ _nl_find_msg (domain_file, msgid, lengthp)
   resultlen = W (domain->must_swap, domain->trans_tab[act].length) + 1;
 
 #if defined _LIBC || HAVE_ICONV
+  if (domain->codeset_cntr
+      != (domainbinding != NULL ? domainbinding->codeset_cntr : 0))
+    {
+      /* The domain's codeset has changed through bind_textdomain_codeset()
+	 since the message catalog was initialized or last accessed.  We
+	 have to reinitialize the converter.  */
+      _nl_free_domain_conv (domain);
+      _nl_init_domain_conv (domain_file, domain, domainbinding);
+    }
+
   if (
 # ifdef _LIBC
       domain->conv != (__gconv_t) -1

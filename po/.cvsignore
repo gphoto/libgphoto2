@@ -1,7 +1,6 @@
 POTFILES
 Makefile.in
 Makefile
-cat-id-tbl.c
 gphoto.pot
 stamp-cat-id
 *.gmo

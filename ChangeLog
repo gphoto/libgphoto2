@@ -1,5 +1,13 @@
 2001-08-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* include/gphoto2-file.h: Add a note about the crappy API
+	* include/gphoto2-abilities-list.h:
+	* libgphoto2/abilities-list.c:
+	* libgphoto2/core.c: Don't access the CameraAbilitiesList directly
+	any more.
+
+2001-08-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	Another patch from Ilya Konstantinov <future@shiny.co.il>:
 
 	* libgphoto2/camera.c (gp_camera_new): Correctly initialize the speed
