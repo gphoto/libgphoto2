@@ -143,6 +143,9 @@ gp_port_new (gp_port **dev, gp_port_type type)
         gp_port_settings settings;
         char buf[1024];
 
+	if (!initialized)
+		gp_port_init (glob_debug_level);
+
         gp_port_debug_printf(GP_DEBUG_LOW, glob_debug_level, "Creating new device... ");
 
         switch(type) {
