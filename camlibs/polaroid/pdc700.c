@@ -53,6 +53,8 @@
 #  define N_(String) (String)
 #endif
 
+#define GP_MODULE "pdc700"
+
 #define PDC700_INIT	0x01
 #define PDC700_INFO	0x02
 
@@ -224,10 +226,14 @@ pdc700_picinfo (Camera *camera, int n, PDCPicInfo *info)
 	if (status != PDC700_DONE)
 		return (GP_ERROR_CORRUPTED_DATA);
 
+	/* Picture sizes */
 	info->pic_size = buf[4] | (buf[5] << 8) |
 			(buf[6] << 16) | (buf[7] << 24);
 	info->thumb_size = buf[18] | (buf[19] <<  8) | (buf[20] << 16) |
 			  (buf[21] << 24);
+	GP_DEBUG ("Size of picture: %i", info->pic_size);
+	GP_DEBUG ("Size of thumbnail: %i", info->thumb_size);
+
 	strncpy (info->version, &buf[23], 6);
 
 	return (GP_OK);
