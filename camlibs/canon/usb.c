@@ -61,7 +61,7 @@ canon_usb_camera_init (Camera *camera)
 {
 	unsigned char msg[0x58];
 	unsigned char buffer[0x44];
-	int i, read_bytes, *i_ptr;
+	int i, read_bytes;
 	char *camstat_str = "NOT RECOGNIZED";
 	unsigned char camstat;
 
@@ -70,11 +70,15 @@ canon_usb_camera_init (Camera *camera)
 	memset (msg, 0, sizeof (msg));
 	memset (buffer, 0, sizeof (buffer));
 
+	i = canon_usb_identify (camera);
+	if (i != GP_OK)
+		return i;
+
 	i = gp_port_usb_msg_read (camera->port, 0x0c, 0x55, 0, msg, 1);
 	if (i != 1) {
 		gp_camera_set_error (camera,
 				     "Could not establish initial contact with camera");
-		return GP_ERROR_IO_INIT;
+		return GP_ERROR_CORRUPTED_DATA;
 	}
 	camstat = msg[0];
 	switch (camstat) {
@@ -92,7 +96,7 @@ canon_usb_camera_init (Camera *camera)
 	if (camstat != 'A' && camstat != 'C') {
 		gp_camera_set_error (camera, "Initial camera response %c/'%s' unrecognized",
 				     camstat, camstat_str);
-		return GP_ERROR_IO_INIT;
+		return GP_ERROR_CORRUPTED_DATA;
 	}
 	GP_DEBUG ("canon_usb_camera_init() "
 		  "initial camera response: %c/'%s'", camstat, camstat_str);
@@ -102,7 +106,22 @@ canon_usb_camera_init (Camera *camera)
 		gp_camera_set_error (camera,
 				     "Step #2 of initialization failed! (returned %i, expected %i) "
 				     "Camera not operational", i, 0x58);
-		return GP_ERROR_IO_INIT;
+		return GP_ERROR_CORRUPTED_DATA;
+	}
+
+	if (camera->pl->model == CANON_EOS_D30) {
+		if (camstat == 'A') {
+			/* read another 0x50 bytes */
+			i = gp_port_usb_msg_read (camera->port, 0x04, 0x4, 0, msg, 0x50);
+			if (i != 0x50) {
+				gp_camera_set_error (camera,
+						     "EOS D30 Step #3 of initialization failed! "
+						     "(returned %i, expected %i) "
+						     "Camera not operational", i, 0x50);
+				return GP_ERROR_CORRUPTED_DATA;
+			}
+			return GP_OK;
+		}
 	}
 
 	i = gp_port_usb_msg_write (camera->port, 0x04, 0x11, 0, msg + 0x48, 0x10);
@@ -116,8 +135,7 @@ canon_usb_camera_init (Camera *camera)
 		  "PC sign on LCD should be lit now (if your camera has a PC sign)");
 
 	/* We expect to get 0x44 bytes here, but the camera is picky at this stage and
-	 * we must read 0x40 bytes, look at position 0 and read 0x4 (or whatever) bytes
-	 * more.
+	 * we must read 0x40 bytes and then read 0x4 bytes more.
 	 */
 	i = gp_port_read (camera->port, buffer, 0x40);
 	if ((i >= 4)
@@ -125,7 +143,7 @@ canon_usb_camera_init (Camera *camera)
 	    && (buffer[i - 2] == 0x00) && (buffer[i - 1] == 0x00)) {
 
 		/* We have some reports that sometimes the camera takes a long
-		 * time to respond to this read request and then comes back with
+		 * time to respond to the above read request and then comes back with
 		 * the 54 78 00 00 packet, instead of telling us to read four more
 		 * bytes which is the normal 54 78 00 00 packet.
 		 */
@@ -141,47 +159,29 @@ canon_usb_camera_init (Camera *camera)
 		gp_camera_set_error (camera, "Step #4.1 failed! "
 				     "(returned %i, expected %i) Camera not operational", i,
 				     0x40);
-		return GP_ERROR_IO_INIT;
+		return GP_ERROR_CORRUPTED_DATA;
 	}
 
-	i_ptr = (int *) buffer;
-	read_bytes = *i_ptr;
-	if (read_bytes) {
-		i = gp_port_read (camera->port, buffer, read_bytes);
-		if (i != read_bytes) {
-			GP_DEBUG ("canon_usb_camera_init() "
-				  "Step #4.2 of initialization failed! (returned %i, expected %i) "
-				  "Camera might still work though. Continuing.", i,
-				  read_bytes);
-		} else {
-			if ((i >= 4)
-			    && (buffer[i - 4] == 0x54) && (buffer[i - 3] == 0x78)
-			    && (buffer[i - 2] == 0x00) && (buffer[i - 1] == 0x00)) {
-				if (i != 4) {
-					/* Only log this message about anomality if we did not
-					 * get exactly four bytes back. We expect to get four
-					 * bytes (54 78 00 00) and don't have to log it if we do.
-					 */
-					GP_DEBUG ("canon_usb_camera_init() "
-						  "expected %i but got %i bytes with \"54 78 00 00\" "
-						  "at the end, so we just ignore the whole bunch",
-						  0x4, i);
-				}
-			} else {
-				/* I don't think we can ever get here and the camera will still work
-				 * anymore. That should be fixed by the other new code in this commit.
-				 * I'll leave it here as a comment for now, but change the behaviour
-				 * to return error instead.
-				 * GP_DEBUG("canon_usb_camera_init() "
-				 *       "Step #4 of initialization failed! (returned %i, expected %i) "
-				 *       "Camera might still work though. Continuing.", i, 0x44);
-				 */
-				gp_camera_set_error (camera,
-						     "Step #4 of initialization failed! "
-						     "(returned %i, expected %i) Camera not operational",
-						     i, read_bytes);
-				return GP_ERROR_IO_INIT;
-			}
+	/* just check if (int) buffer[0] says 0x4 or not, log a warning if it doesn't. */
+	read_bytes = get_int (buffer);
+	if (read_bytes != 4)
+		GP_DEBUG ("canon_usb_camera_init() camera says to read %i more bytes, ",
+			  "we wold have expected 4 - overriding since some cameras are "
+			  "known not to give correct numbers of bytes.", read_bytes);
+
+	i = gp_port_read (camera->port, buffer, 4);
+	if (i != 4) {
+		GP_DEBUG ("canon_usb_camera_init() "
+			  "Step #4.2 of initialization failed! (returned %i, expected %i) "
+			  "Camera might still work though. Continuing.", i, 4);
+	} else {
+		if (!((buffer[0] == 0x54) && (buffer[1] == 0x78)
+		      && (buffer[2] == 0x00) && (buffer[3] == 0x00))) {
+			gp_camera_set_error (camera,
+					     "Step #4 of initialization failed! "
+					     "Did not return the 54 78 00 00 bytes "
+					     "we expected.");
+			return GP_ERROR_CORRUPTED_DATA;
 		}
 	}
 
@@ -222,7 +222,27 @@ canon_usb_init (Camera *camera)
 		return res;
 	}
 
-	return canon_usb_camera_init (camera);
+	res = canon_usb_camera_init (camera);
+	if (res != GP_OK)
+		return res;
+
+	res = canon_int_identify_camera (camera);
+	if (res != GP_OK) {
+		gp_camera_set_error (camera, _("Camera not ready, "
+					       "identify camera request failed: %s"),
+				     gp_result_as_string (res));
+		return GP_ERROR;
+	}
+
+	res = canon_usb_lock_keys (camera);
+	if (res != GP_OK) {
+		gp_camera_set_error (camera, _("Camera not ready, "
+					       "could not lock camera keys: %s"),
+				     gp_result_as_string (res));
+		return res;
+	}
+
+	return GP_OK;
 }
 
 /**
@@ -297,9 +317,9 @@ canon_usb_unlock_keys (Camera *camera)
 			c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_EOS_UNLOCK_KEYS,
 						    &bytes_read, NULL, 0);
 			/* Should look at the bytes returned, but I don't know what they mean */
-			if (! c_res)
+			if (!c_res)
 				return GP_ERROR;
-				
+
 			break;
 		default:
 			/* Your camera model does not need unlocking, cannot do unlocking or
@@ -354,7 +374,7 @@ canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length,
 {
 	int msgsize, status, i;
 	char cmd1 = 0, cmd2 = 0, *funct_descr = "";
-	int cmd3 = 0, read_bytes = 0;
+	int cmd3 = 0, read_bytes = 0, read_bytes1 = 0, read_bytes2 = 0;
 	unsigned char packet[1024];	// used for sending data to camera
 	static unsigned char buffer[0x9c];	// used for receiving data from camera
 
@@ -389,8 +409,8 @@ canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length,
 				 "called for ILLEGAL function %i! Aborting.", canon_funct);
 		return NULL;
 	}
-	GP_DEBUG ("canon_usb_dialogue() cmd 0x%x 0x%x 0x%x (%s), payload = %i bytes",
-		  cmd1, cmd2, cmd3, funct_descr, payload_length);
+	GP_DEBUG ("canon_usb_dialogue() cmd 0x%x 0x%x 0x%x (%s)",
+		  cmd1, cmd2, cmd3, funct_descr);
 
 	if (read_bytes > sizeof (buffer)) {
 		/* If this message is ever printed, chances are that you just added
@@ -405,7 +425,7 @@ canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length,
 	}
 
 	if (payload_length) {
-		GP_DEBUG ("Got payload.");
+		GP_DEBUG ("Payload :");
 		gp_log_data ("canon", payload, payload_length);
 	}
 
@@ -449,13 +469,31 @@ canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length,
 	/* and, if this canon_funct is known to generate a response from the camera,
 	 * read this response back.
 	 */
-	status = gp_port_read (camera->port, buffer, read_bytes);
-	if (status != read_bytes) {
-		GP_DEBUG ("canon_usb_dialogue: read failed! "
-			  "(returned %i, expected %i)\n", status, read_bytes);
+
+	/* Divide read_bytes into two parts (two reads), one that is the highest
+	 * ammount of 0x40 byte blocks we can get, and one that is the modulus (the rest).
+	 * This is done because it is how the windows driver does it, and some cameras
+	 * (EOS D30 for example) seem to not like it if we were to read read_bytes
+	 * in a single read instead.
+	 */
+	read_bytes1 = read_bytes - (read_bytes % 0x40);
+	read_bytes2 = read_bytes - read_bytes1;
+
+	status = gp_port_read (camera->port, buffer, read_bytes1);
+	if (status != read_bytes1) {
+		GP_DEBUG ("canon_usb_dialogue: read 1 failed! "
+			  "(returned %i, expected %i)", status, read_bytes1);
 		return NULL;
 	}
 
+	if (read_bytes2) {
+		status = gp_port_read (camera->port, buffer + read_bytes1, read_bytes2);
+		if (status != read_bytes2) {
+			GP_DEBUG ("canon_usb_dialogue: read 2 failed! "
+				  "(returned %i, expected %i)", status, read_bytes2);
+			return NULL;
+		}
+	}
 
 	/* if cmd3 equals to 0x202, this is a command that returns L (long) data
 	 * and what we return here is the complete packet (ie. not skipping the
@@ -746,80 +784,48 @@ canon_usb_get_dirents (Camera *camera, unsigned char **dirent_data,
 int
 canon_usb_ready (Camera *camera)
 {
-	int res;
-
 	GP_DEBUG ("canon_usb_ready()");
 
-	res = canon_int_identify_camera (camera);
-	if (res != GP_OK) {
-		gp_camera_set_error (camera, "Camera not ready, "
-				     "identify camera request failed (returned %i)", res);
-		return GP_ERROR;
-	}
-	if (!strcmp ("Canon PowerShot S20", camera->pl->ident)) {
-		gp_camera_status (camera, "Detected a PowerShot S20");
-		camera->pl->model = CANON_PS_S20;
-	} else if (!strcmp ("Canon PowerShot S10", camera->pl->ident)) {
-		gp_camera_status (camera, "Detected a PowerShot S10");
-		camera->pl->model = CANON_PS_S10;
-	} else if (!strcmp ("Canon PowerShot S30", camera->pl->ident)) {
-		gp_camera_status (camera, "Detected a PowerShot S30");
-		camera->pl->model = CANON_PS_S30;
-	} else if (!strcmp ("Canon PowerShot S40", camera->pl->ident)) {
-		gp_camera_status (camera, "Detected a PowerShot S40");
-		camera->pl->model = CANON_PS_S40;
-	} else if (!strcmp ("Canon PowerShot G1", camera->pl->ident)) {
-		gp_camera_status (camera, "Detected a PowerShot G1");
-		camera->pl->model = CANON_PS_G1;
-	} else if (!strcmp ("Canon PowerShot G2", camera->pl->ident)) {
-		gp_camera_status (camera, "Detected a PowerShot G2");
-		camera->pl->model = CANON_PS_G2;
-	} else if ((!strcmp ("Canon DIGITAL IXUS", camera->pl->ident))
-		   || (!strcmp ("Canon IXY DIGITAL", camera->pl->ident))
-		   || (!strcmp ("Canon PowerShot S110", camera->pl->ident))
-		   || (!strcmp ("Canon PowerShot S100", camera->pl->ident))
-		   || (!strcmp ("Canon DIGITAL IXUS v", camera->pl->ident))) {
-		gp_camera_status (camera,
-				  "Detected a Digital IXUS series / IXY DIGITAL / PowerShot S100 series");
-		camera->pl->model = CANON_PS_S100;
-	} else if ((!strcmp ("Canon DIGITAL IXUS 300", camera->pl->ident))
-		   || (!strcmp ("Canon IXY DIGITAL 300", camera->pl->ident))
-		   || (!strcmp ("Canon PowerShot S300", camera->pl->ident))) {
-		gp_camera_status (camera,
-				  "Detected a Digital IXUS 300 / IXY DIGITAL 300 / PowerShot S300");
-		camera->pl->model = CANON_PS_S300;
-	} else if (!strcmp ("Canon PowerShot A10", camera->pl->ident)) {
-		gp_camera_status (camera, "Detected a PowerShot A10");
-		camera->pl->model = CANON_PS_A10;
-	} else if (!strcmp ("Canon PowerShot A20", camera->pl->ident)) {
-		gp_camera_status (camera, "Detected a PowerShot A20");
-		camera->pl->model = CANON_PS_A20;
-	} else if (!strcmp ("Canon EOS D30", camera->pl->ident)) {
-		gp_camera_status (camera, "Detected a EOS D30");
-		camera->pl->model = CANON_EOS_D30;
-	} else if (!strcmp ("Canon PowerShot Pro90 IS", camera->pl->ident)) {
-		gp_camera_status (camera, "Detected a PowerShot Pro90 IS");
-		camera->pl->model = CANON_PS_PRO90_IS;
-	} else {
-		gp_camera_set_error (camera, "Unknown camera! (%s)", camera->pl->ident);
-		return GP_ERROR;
-	}
+	/* XXX send a 'ping' packet and check that the camera is
+	 * still alive.
+	 */
 
-	res = canon_usb_lock_keys (camera);
+	return GP_OK;
+}
+
+int
+canon_usb_identify (Camera *camera)
+{
+	CameraAbilities a;
+	int i, res;
+
+	res = gp_camera_get_abilities (camera, &a);
 	if (res != GP_OK) {
-		gp_camera_set_error (camera, "Camera not ready, "
-				     "could not lock camera keys (returned %i)", res);
+		GP_DEBUG ("canon_usb_identify: Could not get camera abilities: %s",
+			  gp_result_as_string (res));
 		return res;
 	}
 
-	res = canon_int_get_time (camera);
-	if (res == GP_ERROR) {
-		gp_camera_set_error (camera, "Camera not ready, "
-				     "get time request failed (returned %i)", res);
-		return GP_ERROR;
+	if (a.model != NULL)
+		GP_DEBUG ("canon_usb_identify: Camera previously identified as "
+			  "model '%s' (%d)", a.model, camera->pl->model);
+
+	i = 0;
+	while (models[i].name != NULL) {
+		if (models[i].idVendor && models[i].idProduct &&
+		    (models[i].idVendor == a.usb_vendor &&
+		     models[i].idProduct == a.usb_product)) {
+			GP_DEBUG ("canon_usb_identify: USB product and vendor ID matches '%s'",
+				  models[i].name);
+			gp_camera_status (camera, "Detected a %s", models[i].name);
+			camera->pl->model = models[i].model;
+			return 0;
+		}
+		i++;
 	}
 
-	gp_camera_status (camera, _("Connected to camera"));
+	gp_camera_set_error (camera, "Could not identify camera based on USB id 0x%x/0x%x",
+			     a.usb_vendor, a.usb_product);
 
-	return GP_OK;
+	return GP_ERROR_MODEL_NOT_FOUND;
 }
