@@ -109,6 +109,8 @@ libgphoto2_dimagev_la_SOURCES = capture.c data.c delete.c dimagev.c dimagev.h 	d
 
 
 libgphoto2_dimagev_la_LDFLAGS = -version-info 0:0:0
+
+libgphoto2_dimagev_la_LIBADD = -lgphoto2
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../../config.h
 CONFIG_CLEAN_FILES = 
@@ -118,7 +120,7 @@ LTLIBRARIES =  $(camlib_LTLIBRARIES)
 DEFS = @DEFS@ -I. -I$(srcdir) -I../../..
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
-libgphoto2_dimagev_la_LIBADD = 
+libgphoto2_dimagev_la_DEPENDENCIES = 
 libgphoto2_dimagev_la_OBJECTS =  capture.lo data.lo delete.lo dimagev.lo \
 download.lo info.lo packet.lo status.lo util.lo
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
