@@ -83,8 +83,8 @@ gboolean error_happened (k_return_status_t return_status)
                 case K_ERROR_CARD_REMOVED_DURING_ACCESS:
                         gp_camera_message (NULL, "Card removed during access!");
                         return (TRUE);
-                case K_ERROR_IMAGE_NOT_PROTECTED_DOES_NOT_EXIST:
-                        gp_camera_message (NULL, "Image not protected (does not exist)!");
+                case K_ERROR_IMAGE_NUMBER_NOT_VALID:
+                        gp_camera_message (NULL, "Image number not valid!");
                         return (TRUE);
                 case K_ERROR_CARD_CAN_NOT_BE_WRITTEN:
                         gp_camera_message (NULL, "Card can not be written!");
@@ -112,9 +112,6 @@ gboolean error_happened (k_return_status_t return_status)
                         return (TRUE);
                 case K_ERROR_COMMAND_CANNOT_BE_CANCELLED:
                         gp_camera_message (NULL, "Command cannot be cancelled!");
-                        return (TRUE);
-                case K_ERROR_IMAGE_NUMBER_NOT_VALID:
-                        gp_camera_message (NULL, "Image number not valid!");
                         return (TRUE);
                 case K_ERROR_UNSUPPORTED_COMMAND:
                         gp_camera_message (NULL, "Unsupported command!");
@@ -438,6 +435,7 @@ int camera_file_count (Camera *camera)
 	guint total_pictures;
 	guint total_strobes;
 
+	if (debug_flag) printf ("*** Entering camera_file_count.\n");
 	if (error_happened (k_get_status (
 		&self_test_result, 
 		&power_level,
@@ -461,6 +459,7 @@ int camera_file_count (Camera *camera)
 		&exposure,
 		&total_pictures,
 		&total_strobes))) return (GP_ERROR);
+	if (debug_flag) printf ("*** Leaving camera_file_count.\n");
 	return ((int) pictures);
 }
 
@@ -473,6 +472,7 @@ int camera_file_get (Camera *camera, CameraFile *file, int file_number)
 	guchar *information_buffer = NULL;
 	guint information_buffer_size;
 
+	if (debug_flag) printf ("*** Entering camera_file_get.\n");
 	if (error_happened (k_get_image_information (
 		(gulong) (file_number + 1), 
 		&image_id, 
@@ -488,6 +488,7 @@ int camera_file_get (Camera *camera, CameraFile *file, int file_number)
 	strcpy(file->type, "image/jpg");
 	sprintf (file->name, "%i.jpg", (int) image_id);
 	g_free (information_buffer);
+	if (debug_flag) printf ("*** Leaving camera_file_get.\n");
 	return (GP_OK);
 }
 
@@ -500,6 +501,7 @@ int camera_file_get_preview (Camera *camera, CameraFile *preview, int file_numbe
 	guchar *information_buffer = NULL;
 	guint information_buffer_size;
 
+	if (debug_flag) printf ("*** Entering camera_file_get_preview.\n");
 	if (error_happened (k_get_image_information (
 		(gulong) (file_number + 1), 
 		&image_id, 
@@ -507,7 +509,6 @@ int camera_file_get_preview (Camera *camera, CameraFile *preview, int file_numbe
 		&protected, 
 		&information_buffer, 
 		&information_buffer_size))) return (GP_ERROR); 
-		return (0);
 	if (error_happened (k_get_image (
 		image_id, 
 		K_THUMBNAIL, 
@@ -516,6 +517,7 @@ int camera_file_get_preview (Camera *camera, CameraFile *preview, int file_numbe
 	strcpy(preview->type, "image/jpg");
 	sprintf (preview->name, "%i.jpg", (int) image_id);
 	g_free (information_buffer);
+	if (debug_flag) printf ("*** Leaving camera_file_get_preview.\n");
 	return (GP_OK);
 }
 
@@ -534,6 +536,7 @@ int camera_file_delete (Camera *camera, int file_number)
 	guchar *information_buffer = NULL;
 	guint information_buffer_size;
 
+	if (debug_flag) printf ("*** Entering camera_file_delete.\n");
 	if (error_happened (k_get_image_information (
 		file_number, 
 		&image_id, 
@@ -542,6 +545,7 @@ int camera_file_delete (Camera *camera, int file_number)
 		&information_buffer, 
 		&information_buffer_size))) return (GP_ERROR);
 	if (error_happened (k_erase_image (image_id))) return (GP_ERROR);
+	if (debug_flag) printf ("*** Leaving camera_file_delete.\n");
 	return (GP_OK);
 }
 

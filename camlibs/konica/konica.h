@@ -153,7 +153,7 @@ typedef enum {
 /*  - 1: on							*/
 /*  - 2: auto							*/
 /*  - 5: on, redeye						*/
-/*  - 6: on, auto						*/
+/*  - 6: auto, redeye						*/
 /* Other values are accepted as well, but will be changed to 2	*/
 /* at some point.						*/
 /*								*/
@@ -223,7 +223,7 @@ typedef enum {
 	K_ERROR_NO_CARD_PRESENT,
 	K_ERROR_CARD_NOT_SUPPORTED,
 	K_ERROR_CARD_REMOVED_DURING_ACCESS,
-	K_ERROR_IMAGE_NOT_PROTECTED_DOES_NOT_EXIST,
+	K_ERROR_IMAGE_NUMBER_NOT_VALID,
 	K_ERROR_CARD_CAN_NOT_BE_WRITTEN,
 	K_ERROR_CARD_IS_WRITE_PROTECTED,
 	K_ERROR_NO_SPACE_LEFT_ON_CARD,
@@ -233,7 +233,6 @@ typedef enum {
 	K_ERROR_SYSTEM_ERROR,
 	K_ERROR_ILLEGAL_PARAMETER,
 	K_ERROR_COMMAND_CANNOT_BE_CANCELLED,
-	K_ERROR_IMAGE_NUMBER_NOT_VALID,
 	K_ERROR_UNSUPPORTED_COMMAND,
 	K_ERROR_OTHER_COMMAND_EXECUTING,
 	K_ERROR_COMMAND_ORDER_ERROR,

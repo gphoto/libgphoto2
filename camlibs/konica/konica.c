@@ -74,7 +74,7 @@ k_return_status_t return_status_translation (gchar byte1, gchar byte2)
 	case 0x0321:
 		return (K_ERROR_CARD_REMOVED_DURING_ACCESS);
 	case 0x0340:
-		return (K_ERROR_IMAGE_NOT_PROTECTED_DOES_NOT_EXIST);
+		return (K_ERROR_IMAGE_NUMBER_NOT_VALID);
 	case 0x0341:
 		return (K_ERROR_CARD_CAN_NOT_BE_WRITTEN);
 	case 0x0381:
@@ -93,8 +93,6 @@ k_return_status_t return_status_translation (gchar byte1, gchar byte2)
 		return (K_ERROR_ILLEGAL_PARAMETER);
 	case 0x0801:
 		return (K_ERROR_COMMAND_CANNOT_BE_CANCELLED);
-	case 0x0810:
-		return (K_ERROR_IMAGE_NUMBER_NOT_VALID);
 	case 0x0c01:
 		return (K_ERROR_UNSUPPORTED_COMMAND);
 	case 0x0c02:
