@@ -37,86 +37,87 @@
 
 #define NIBBLE(_i)    (((_i) < 10) ? '0' + (_i) : 'A' + (_i) - 10)
 
-void dump_hex(Camera *camera, const char *msg, const unsigned char *buf, int len)
+void
+dump_hex (Camera *camera, const char *msg, const unsigned char *buf, int len)
 {
-//	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
-    int i;
-    int nlocal;
-    const unsigned char *pc;
-    char *out;
-    const unsigned char *start;
-    char c;
-    char line[100];
-	
- //   if (cs->debug > 8) { // Only  printout with max. debug level (9)
-		start = buf;
-      
+//      struct canon_info *cs = (struct canon_info*)camera->camlib_data;
+	int i;
+	int nlocal;
+	const unsigned char *pc;
+	char *out;
+	const unsigned char *start;
+	char c;
+	char line[100];
+
+	//   if (cs->debug > 8) { // Only  printout with max. debug level (9)
+	start = buf;
+
 #if 0
-		if (len > 160) {
-			fprintf(stderr,"dump n:%d --> 160\n", len);
-			len = 160;
-		}
+	if (len > 160) {
+		fprintf (stderr, "dump n:%d --> 160\n", len);
+		len = 160;
+	}
 #endif
-      
-		fprintf(stderr,"%s: (%d bytes)\n", msg, len);
-		while (len > 0) {
-			sprintf(line, "%08x: ", buf - start);
-			out = line + 10;
-			
-			for (i = 0, pc = buf, nlocal = len; i < 16; i++, pc++) {
-				if (nlocal > 0) {
-					c = *pc;
-		  
-					*out++ = NIBBLE((c >> 4) & 0xF);
-					*out++ = NIBBLE(c & 0xF);
-		  
-					nlocal--;
-				} else {
-					*out++ = ' ';
-					*out++ = ' ';
-				}
-	      
+
+	fprintf (stderr, "%s: (%d bytes)\n", msg, len);
+	while (len > 0) {
+		sprintf (line, "%08x: ", buf - start);
+		out = line + 10;
+
+		for (i = 0, pc = buf, nlocal = len; i < 16; i++, pc++) {
+			if (nlocal > 0) {
+				c = *pc;
+
+				*out++ = NIBBLE ((c >> 4) & 0xF);
+				*out++ = NIBBLE (c & 0xF);
+
+				nlocal--;
+			} else {
+				*out++ = ' ';
 				*out++ = ' ';
 			}
-	  
-			*out++ = '-';
+
 			*out++ = ' ';
-	  
-			for (i = 0, pc = buf, nlocal = len;
-				 (i < 16) && (nlocal > 0);
-				 i++, pc++, nlocal--) {
-				c = *pc;
-				
-				if ((c < ' ') || (c >= 126)) {
-					c = '.';
-				}
-				
-				*out++ = c;
+		}
+
+		*out++ = '-';
+		*out++ = ' ';
+
+		for (i = 0, pc = buf, nlocal = len;
+		     (i < 16) && (nlocal > 0); i++, pc++, nlocal--) {
+			c = *pc;
+
+			if ((c < ' ') || (c >= 126)) {
+				c = '.';
 			}
-	  
-			*out++ = 0;
-	  
-			fprintf(stderr,"%s\n", line);
-			
-			buf += 16;
-			len -= 16;
-		}				/* end while */
-     /* } end 'if debug' */
+
+			*out++ = c;
+		}
+
+		*out++ = 0;
+
+		fprintf (stderr, "%s\n", line);
+
+		buf += 16;
+		len -= 16;
+	}			/* end while */
+	/* } end 'if debug' */
 }				/* end dump */
 
-void debug_message(Camera *camera, const char * msg, ...)
+void
+debug_message (Camera *camera, const char *msg, ...)
 {
-	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
+	struct canon_info *cs = (struct canon_info *) camera->camlib_data;
 	va_list ap;
-  
+
 
 	if (cs->debug) {
-		va_start(ap, msg);
-		vfprintf(stderr,msg, ap);
-		va_end(ap);
+		va_start (ap, msg);
+		vfprintf (stderr, msg, ap);
+		va_end (ap);
 	}
 }
-    
+
 /****************************************************************************
  *
  * End of file: util.c
