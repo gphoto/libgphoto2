@@ -468,12 +468,10 @@ gp_filesystem_append (CameraFilesystem *fs, const char *folder,
 					(fs->folder[x].count + 1)));
 	fs->folder[x].file = new;
 	fs->folder[x].count++;
+	memset (&(fs->folder[x].file[fs->folder[x].count - 1]), 0,
+		sizeof (CameraFilesystemFile));
 	strcpy (fs->folder[x].file[fs->folder[x].count - 1].name, filename);
 	fs->folder[x].file[fs->folder[x].count - 1].info_dirty = 1;
-	fs->folder[x].file[fs->folder[x].count - 1].preview = NULL;
-	fs->folder[x].file[fs->folder[x].count - 1].normal = NULL;
-	fs->folder[x].file[fs->folder[x].count - 1].raw = NULL;
-	fs->folder[x].file[fs->folder[x].count - 1].audio = NULL;
 
 	/*
 	 * If people manually add files, they probably know the contents of
