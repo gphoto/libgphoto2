@@ -1,3 +1,9 @@
+2005-02-12  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* configure.in: fix shell syntax error I introduced
+	  in 2002-11 and no one noticed except for the Debian
+	  packagers
+
 2005-01-17  Colin Marquardt  <colin@marquardt-home.de>
 
 	* po/ja.po: Update thanks to Takeshi AIHANA.

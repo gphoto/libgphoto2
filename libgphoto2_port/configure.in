@@ -174,8 +174,9 @@ if $have_serial; then
 	IOLIB_SUBDIRS="$IOLIB_SUBDIRS serial"
 fi
 case "$serial_msg" in
-	yes*) AC_DEFINE(HAVE_SERIAL,1,[Whether you have serial support enabled])
-	*     ;;
+yes*)
+	AC_DEFINE(HAVE_SERIAL,1,[Whether you have serial support enabled])
+	;;
 esac
 
 dnl -----------------------------------------
@@ -300,8 +301,9 @@ if $try_usb; then
 	fi
 fi
 case "$usb_msg" in
-	yes*) AC_DEFINE(HAVE_USB,1,[Whether you have USB support enabled])
-	*     ;;
+yes*)
+	AC_DEFINE(HAVE_USB,1,[Whether you have USB support enabled])
+	;;
 esac
 
 AC_SUBST(USB_CFLAGS)
