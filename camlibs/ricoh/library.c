@@ -394,13 +394,13 @@ static struct {
 	const char *v;							\
 	unsigned int i;							\
 									\
-        CR (gp_widget_get_child_by_name (w, Name, &w));			\
+        CR (gp_widget_get_child_by_name (wi, Name, &w));		\
 	if (gp_widget_changed (w)) {					\
 		CR (gp_widget_get_value (w, &v));			\
 		for (i = 0; i < N_ELEMENTS (ricoh_##n##s); i++)		\
 			if (!strcmp (v, _(ricoh_##n##s[i].name)))	\
 				break;					\
-		CR (ricoh_set_##n (c, co, ricoh_##n##s[i].n));	\
+		CR (ricoh_set_##n (c, co, ricoh_##n##s[i].n));		\
 	}								\
 }
 
