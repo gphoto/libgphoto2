@@ -308,7 +308,7 @@ int dimagev_send_data(dimagev_t *dimagev) {
 			break;
 	}
 
-	sleep(1);
+	sleep(3);
 
 	return GP_OK;
 }
