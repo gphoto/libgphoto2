@@ -111,10 +111,7 @@ gp_abilities_list_free (CameraAbilitiesList *list)
 {
 	CHECK_NULL (list);
 
-	if (list->abilities) {
-		free (list->abilities);
-		list->abilities = NULL;
-	}
+	CHECK_RESULT (gp_abilities_list_reset (list));
 
 	free (list);
 
@@ -557,6 +554,28 @@ gp_abilities_list_append (CameraAbilitiesList *list, CameraAbilities abilities)
 	memcpy (&(list->abilities [list->count]), &abilities,
 		sizeof (CameraAbilities));
 	list->count++;
+
+	return (GP_OK);
+}
+
+/**
+ * gp_abilities_list_reset:
+ * @list: a #CameraAbilitiesList
+ *
+ * Resets the list.
+ *
+ * Return value: a gphoto2 error code
+ **/
+int
+gp_abilities_list_reset (CameraAbilitiesList *list)
+{
+	CHECK_NULL (list);
+
+	if (list->abilities) {
+		free (list->abilities);
+		list->abilities = NULL;
+	}
+	list->count = 0;
 
 	return (GP_OK);
 }

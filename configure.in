@@ -7,7 +7,7 @@ AM_MAINTAINER_MODE
 AC_LIBTOOL_DLOPEN
 
 dnl ---------------------------------------------------------------------------
-dnl Versioning (libgphoto2-(AGE.)CURRENT.REVISION):
+dnl Versioning:
 dnl  - AGE (Micro):      Increment if any interfaces have been added; set to 0
 dnl                      if any interfaces have been removed. Removal has 
 dnl                      precedence over adding, so set to 0 if both happened.
@@ -16,7 +16,7 @@ dnl                      0 if you incremented CURRENT.
 dnl  - CURRENT (Major):  Increment if the interface has additions, changes,
 dnl                      removals.
 dnl ---------------------------------------------------------------------------
-LIBGPHOTO2_AGE=1
+LIBGPHOTO2_AGE=2
 LIBGPHOTO2_REVISION=0
 LIBGPHOTO2_CURRENT=2
 AC_SUBST(LIBGPHOTO2_AGE)
