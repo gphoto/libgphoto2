@@ -6,6 +6,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <gpio/gpio.h>
 #include <gphoto2.h>
 
 #ifdef HAVE_CONFIG_H
@@ -106,7 +107,11 @@ int gp_init () {
 			glob_camera[x].name, glob_camera[x].library);
 		if (glob_camera_count == 0)
 			printf("core:\tNone\n");
+		printf("core: Initializing the gPhoto IO library (libgpio)\n");
 	}
+	if (gpio_init()==GPIO_ERROR)
+		return (GP_ERROR);
+	
 
 	return (GP_OK);
 }
@@ -126,6 +131,16 @@ int gp_debug_set (int value) {
 	glob_debug = value;
 
 	return (GP_OK);
+}
+
+int gp_port_count() {
+
+	return (gpio_get_device_count());
+}
+
+int gp_port_info(int port_number, CameraPortInfo *info) {
+
+	return (gpio_get_device_info(port_number, info));
 }
 
 int gp_camera_count () {
