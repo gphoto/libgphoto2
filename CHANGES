@@ -1,3 +1,8 @@
+gphoto2 command-line interface:
+   * optional readline support
+
+--------------------------------------------------------------------------------
+gphoto2 2.0
 
 gphoto2 command-line interface:
    * Added gphoto2 manpage.
