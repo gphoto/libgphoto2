@@ -34,6 +34,12 @@ PROJECT=libgphoto2_port
 	DIE=1
 }
 
+(gettextize --version) < /dev/null > /dev/null 2>&1 || {
+    echo
+    echo "You must have gettext installed to compile $PROJECT."
+    DIE=1
+}
+
 if test "$DIE" -eq 1; then
 	exit 1
 fi
@@ -54,6 +60,7 @@ for dir in $srcdir
 do 
   echo processing $dir
   (cd $dir; \
+  gettextize --force --copy; \
   aclocalinclude="$ACLOCAL_FLAGS"; \
   echo "Running aclocal $aclocalinclude"; \
   aclocal $aclocalinclude; \
