@@ -598,7 +598,7 @@ msgstr "Verzeichnis existiert bereits"
 
 #: camlibs/directory/directory.c:312 camlibs/directory/directory.c:343
 msgid "View hidden directories"
-msgstr ""
+msgstr "Zeige versteckte Verzeichnisse"
 
 #: camlibs/kodak/dc120/dc120.c:25
 msgid "Internal Memory"

@@ -1312,12 +1312,10 @@ gp_camera_set_error (Camera *camera, const char *format, ...)
 const char *
 gp_camera_get_error (Camera *camera)
 {
-	CHECK_NULL (camera);
-
-	if (strlen (camera->pc->error))
+	if (camera && strlen (camera->pc->error))
 		return (camera->pc->error);
 
-	if (camera->port)
+	if (camera && camera->port)
 		return (gp_port_get_error (camera->port));
 
 	return (N_("No error description available"));

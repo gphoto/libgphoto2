@@ -1,5 +1,13 @@
 2001-11-17  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* frontends/command-line: Fix translation. You use N_(...) to _mark_ a
+	  string for translation. In order to convert it, you need to call
+	  _(...). That is, call gp_camera_get_error in order to get a string
+	  and after that, convert this string using _(...) before displaying
+	  it.
+
+2001-11-17  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/ptp/ptp.[c,h]: Hide some internals
 	* frontends/command-line/main.c: Fix translation by calling
 	  setlocale (LC_ALL, "") (?).
