@@ -58,7 +58,8 @@ static char *result_string[] = {
         /* GP_ERROR_NOT_SUPPORTED       -106 */ N_("Unsupported operation"),
         /* GP_ERROR_DIRECTORY_NOT_FOUND -107 */ N_("Directory not found"),
         /* GP_ERROR_FILE_NOT_FOUND      -108 */ N_("File not found"),
-	/* GP_ERROR_DIRECTORY_EXISTS    -109 */ N_("Directory exists")
+	/* GP_ERROR_DIRECTORY_EXISTS    -109 */ N_("Directory exists"),
+        /* GP_ERROR_NO_CAMERA_FOUND     -110 */ N_("No cameras were detected")
 };
 
 static int have_initted = 0;
@@ -126,6 +127,38 @@ int gp_exit ()
 
         return (GP_OK);
 }
+
+int gp_autodetect (CameraList *list)
+{
+    int x=0;
+    int status;
+    int found=0;
+    int vendor, product;
+    gp_port *dev;
+
+    status = gp_port_new(&dev, GP_PORT_USB);
+    if (status != GP_OK)
+        return status;
+
+    for (x=0; x<glob_abilities_list->count; x++) {
+        vendor = glob_abilities_list->abilities[x]->usb_vendor;
+        product = glob_abilities_list->abilities[x]->usb_product;
+        if (vendor) {
+            if (gp_port_usb_find_device(dev, vendor, product)==GP_OK) {
+                gp_list_append(list, glob_abilities_list->abilities[x]->model, GP_LIST_CAMERA);
+                strcpy(list->entry[list->count-1].value, "usb:");
+                found = 1;
+            }
+        }
+    }
+
+    gp_port_free(dev);
+
+    if (found)
+        return GP_OK;
+    return GP_ERROR_NO_CAMERA_FOUND;
+}
+
 
 void gp_debug_printf (int level, char *id, char *format, ...)
 {

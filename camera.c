@@ -164,7 +164,10 @@ int gp_camera_init (Camera *camera)
 {
 	int x;
         int result;
+        int status;
         gp_port_info info;
+        CameraList *list;
+        CameraListEntry *entry;
 
 	if (camera == NULL) 
 		return (GP_ERROR_BAD_PARAMETERS);
@@ -194,10 +197,20 @@ int gp_camera_init (Camera *camera)
 		/* If the port hasn't been indicated, try to figure it 	*/
 		/* out (USB only). 					*/
 		if (strcmp (camera->port->path, "") == 0) {
-			gp_frontend_message (NULL, _("Auto-probe for port has "
-					     "not yet been implemented! "
-					     "Please specify a port!"));
-			return (GP_ERROR_BAD_PARAMETERS);
+                    /* Create a new list */
+                    list = gp_list_new();
+                    if (!list)
+                        return (GP_ERROR_NO_MEMORY);
+                    /* Call auto-detect */
+                    status = gp_autodetect(list);
+                    /* Error out if no models were auto-detected */
+                    if (status != GP_OK)
+                        return (GP_ERROR_BAD_PARAMETERS);
+                    /* Retrieve the first auto-detected camera */
+                    entry = gp_list_entry(list, 0);
+                    strcpy(camera->model, entry->name);
+                    strcpy(camera->port->path, entry->value);
+                    gp_list_free(list);
 		}
 	
 	        /* Set the port type from the path in case the 	*/
@@ -215,10 +228,20 @@ int gp_camera_init (Camera *camera)
 	/* If the model hasn't been indicated, try to figure it out 	*/
 	/* through probing. 						*/
 	if (strcmp (camera->model, "") == 0) {
-		gp_frontend_message (NULL, _("Auto-probe for model has not "
-				     "yet been implemented! Please specify "
-				     "a model!"));
-		return (GP_ERROR_BAD_PARAMETERS);
+            /* Create a new list */
+            list = gp_list_new();
+            if (!list)
+                return (GP_ERROR_NO_MEMORY);
+            /* Call auto-detect */
+            status = gp_autodetect(list);
+            /* Error out if no models were auto-detected */
+            if (status != GP_OK)
+                return (GP_ERROR_BAD_PARAMETERS);
+            /* Retrieve the first auto-detected camera */
+            entry = gp_list_entry(list, 0);
+            strcpy(camera->model, entry->name);
+            strcpy(camera->port->path, entry->value);
+            gp_list_free(list);
 	}
 
 	/* Fill in camera abilities. */
