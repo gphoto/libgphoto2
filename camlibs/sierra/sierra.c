@@ -381,6 +381,7 @@ camera_start (Camera *camera, GPContext *context)
 		CHECK (sierra_ping (camera, context));
 
 		/* If needed, change speed. */
+		CHECK (gp_port_get_settings (camera->port, &settings));
 		if (camera->pl->speed != settings.serial.speed)
 			CHECK (sierra_set_speed (camera, camera->pl->speed,
 						 context));

@@ -1,3 +1,8 @@
+2002-04-26  Lutz Müller <lutz@users.sourceforge.net>
+
+	* sierra.c (camera_start): Forgot a gp_port_get_settings before
+	  checking settings.serial.speed. Shouldn't affect anything though...
+
 2002-04-17  Lutz Müller <lutz@users.sourceforge.net>
 
 	Patch by Ilya Konstantinov <anonymous1@future.shiny.co.il>:
