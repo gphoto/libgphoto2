@@ -188,7 +188,6 @@ pdc320_delete (CameraPort *port)
 static int
 pdc320_size (Camera *camera, int n)
 {
-	CameraPort port = camera->port;
 	int size, i;
 	unsigned char buf[256];
 	unsigned char cmd[] = PDC320_SIZE;
@@ -199,24 +198,27 @@ pdc320_size (Camera *camera, int n)
 	for (i = 0; i <= RETRIES; i++) {
 
 		/* Write the command */
-		CHECK_RESULT (gp_port_write (port, cmd, sizeof (cmd)));
+		CHECK_RESULT (gp_port_write (camera->port, cmd, sizeof (cmd)));
 
 		/* Read one byte and check if we can continue */
-		CHECK_RESULT (gp_port_read (port, buf, 1));
+		CHECK_RESULT (gp_port_read (camera->port, buf, 1));
 		if (buf[0] != ACK) {
-			/*			
-			if (camera->model==PDC640SE) {
-				CHECK_RESULT (gp_port_read (port, buf, buf[0]+2));
-				CHECK_RESULT (pdc320_init(port));
-			} else if (camera->model==PDC320) {
-			// I have no clue else than to flush the whole buffer
-			}
-			*/
 			/*
 			 * Do we need to dump some bytes here before trying
 			 * again?
                          * Yes, but how many is not known for the PDC 320.
 			 */                         
+
+//			if (camera->model==PDC640SE) {
+                        if (camera->model[10]=='F') {
+				CHECK_RESULT (gp_port_read (camera->port, buf, buf[0]+2));
+				CHECK_RESULT (pdc320_init(camera->port));
+//			} else if (camera->model==PDC320) {
+                        } else if (camera->model[10]=='6') {
+			// I have no clue else than to flush the whole buffer
+			// gp_port_flush(camera->port, direction) ??? What is the direction bit about?
+			// it uses dev->ops->flush(dev, direction) which seems to only be valid with serial devices
+			}
 			continue;
 		}
 
@@ -224,7 +226,7 @@ pdc320_size (Camera *camera, int n)
 		 * Ok, everything is fine. Read 6 bytes containing the size
 		 * and return.
 		 */
-		CHECK_RESULT (gp_port_read (port, buf, 6));
+		CHECK_RESULT (gp_port_read (camera->port, buf, 6));
 		size = (buf[0] << 24) + (buf[1] << 16) + (buf[2] << 8) + buf[3];
 		gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Image %i has size "
 				 "%i.", n, size);
@@ -237,7 +239,6 @@ pdc320_size (Camera *camera, int n)
 static int
 pdc320_pic (Camera *camera, int n, unsigned char **data, int *size)
 {
-	CameraPort port = camera->port;
 	unsigned char cmd[] = PDC320_PIC;
 	unsigned char buf[2048];
 	int remaining, f1, f2, i, len, checksum;
@@ -253,7 +254,7 @@ pdc320_pic (Camera *camera, int n, unsigned char **data, int *size)
 	cmd[5] = n;
 	cmd[7] = 0xff - n;
 
-	CHECK_RESULT_FREE (gp_port_write (port, cmd, sizeof (cmd)), *data);
+	CHECK_RESULT_FREE (gp_port_write (camera->port, cmd, sizeof (cmd)), *data);
 	
 	len = *size;
 	for (i = 0; i < *size; i += 2000) {
@@ -264,7 +265,7 @@ pdc320_pic (Camera *camera, int n, unsigned char **data, int *size)
 
 		/* Read the frame number */
 		usleep (10000);
-		CHECK_RESULT_FREE (gp_port_read (port, buf, 5), *data);
+		CHECK_RESULT_FREE (gp_port_read (camera->port, buf, 5), *data);
 		f1 = (buf[1] << 8) + buf[2];
 		f2 = (buf[3] << 8) + buf[4];
 		gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Reading frame %d "
@@ -272,10 +273,10 @@ pdc320_pic (Camera *camera, int n, unsigned char **data, int *size)
 
 		/* Read the actual data */
 		usleep(1000);
-		CHECK_RESULT_FREE (gp_port_read (port, *data + i, len), *data);
+		CHECK_RESULT_FREE (gp_port_read (camera->port, *data + i, len), *data);
 		
 		/* Read the checksum */
-		CHECK_RESULT_FREE (gp_port_read (port, buf, 2), *data);
+		CHECK_RESULT_FREE (gp_port_read (camera->port, buf, 2), *data);
 		checksum = (buf[0] << 8) + buf[1];
 	}
 
@@ -422,6 +423,8 @@ camera_init (Camera *camera)
 
 	return (result);
 }
+
+
 
 
 
