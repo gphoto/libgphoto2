@@ -4,3 +4,5 @@ libgphoto2_canon.la
 .deps
 Makefile
 Makefile.in
+*.patch
+protocol.xml
