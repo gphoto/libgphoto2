@@ -1,3 +1,14 @@
+2002-04-27  Ilya Konstantinov <gphoto@future.shiny.co.il>
+
+	* sierra.c (camera_start, camera_init): Send the
+	  initialization sequence only on init. Olympus C-860L
+	  stops communications when receiving an initialization
+	  sequence after some communications have already occured.
+	
+	* library.h, library.c (sierra_ping -> sierra_init):
+	  This function isn't really a "ping", since it can be used
+	  only on startup.
+
 2002-04-26  Lutz Müller <lutz@users.sourceforge.net>
 
 	* sierra.c (camera_start): Forgot a gp_port_get_settings before
@@ -5,7 +16,7 @@
 
 2002-04-17  Lutz Müller <lutz@users.sourceforge.net>
 
-	Patch by Ilya Konstantinov <anonymous1@future.shiny.co.il>:
+	Patch by Ilya Konstantinov <gphoto@future.shiny.co.il>:
 
 	* library.c: break on timeout.
 
