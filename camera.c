@@ -152,6 +152,7 @@ gp_camera_unset_port (Camera *camera)
 static int
 gp_camera_set_port (Camera *camera, CameraPortInfo *info)
 {
+	gp_port_settings settings;
 	CHECK_NULL (camera);
 
 	/*
@@ -161,6 +162,16 @@ gp_camera_set_port (Camera *camera, CameraPortInfo *info)
 	CHECK_RESULT (gp_camera_unset_port (camera));
 	CHECK_RESULT (gp_port_new (&camera->port, info->type));
 	memcpy (camera->port_info, info, sizeof (CameraPortInfo));
+
+	switch (camera->port->type) {
+	case GP_PORT_SERIAL:
+		CHECK_RESULT (gp_port_settings_get (camera->port, &settings));
+		strcpy (settings.serial.port, info->path);
+		CHECK_RESULT (gp_port_settings_set (camera->port, settings));
+		break;
+	default:
+		break;
+	}
 
 	return (GP_OK);
 }
@@ -304,7 +315,6 @@ gp_camera_free (Camera *camera)
 int
 gp_camera_init (Camera *camera)
 {
-	int result;
         CameraList list;
 	const char *model, *port;
 	CameraLibraryInitFunc init_func;
@@ -361,16 +371,7 @@ gp_camera_init (Camera *camera)
 
 	init_func = GP_SYSTEM_DLSYM (camera->library_handle, "camera_init");
 
-	/*
-	 * Don't open the port here - this has to be done by the
-	 * camera library.
-	 *
-	 * Ok, we are nice to camera driver writers - close the port, but
-	 * ignore errors.
-	 */
-	result = init_func (camera);
-	gp_port_close (camera->port);
-	CHECK_RESULT (result);
+	CHECK_RESULT_OPEN_CLOSE (camera, init_func (camera));
 
 	GP_DEBUG ("LEAVE: gp_camera_init");
 	return (GP_OK);
