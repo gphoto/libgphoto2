@@ -1,0 +1,54 @@
+#!/bin/bash
+# $Id$
+#
+# /etc/hotplug/usb/usbcam
+#
+# Sets up newly plugged in USB camera so that just one certain user
+
+USER=root
+
+# can access it from user space. (Replace root by the user you want
+# to have access to the cameras.)
+
+# It then runs the X11 application (gtkam is used as an example)
+
+X11_APP=/usr/bin/gtkam
+
+# on the X11 display (:0 should work on most single user workstations)
+
+DISPLAY=:0
+
+# in the directory (~$USER is just the user's home directory)
+
+DIRECTORY=~$USER
+
+#
+# Note that for this script to work, you'll need all of the following:
+# a) a line in the file /etc/hotplug/usermap that corresponds to the 
+#    camera you are using. You can get the correct lines for all cameras 
+#    supported by libgphoto2 by running "print-usb-usermap".
+# b) run your camera software as the user given above
+# c) a Linux kernel supporting hotplug and usbdevfs
+# d) the hotplug package (http://linux-hotplug.sourceforge.net/)
+# e) su
+# f) env
+# g) X11
+#
+# In the usermap file, the first field "usb module" should be named 
+# "usbcam" like this script.
+#
+# Script written by Trevor Woerner but slightly adapted for inclusion
+# into libgphoto2. 
+
+SU=/bin/su
+ENV=/usr/bin/env
+
+if [ "${ACTION}" = "add" ] && [ -f "${DEVICE}" ]
+then
+	chmod a-rwx ${DEVICE}
+	chown ${USER} ${DEVICE}
+	chmod u+rw ${DEVICE}
+
+	cd ${HOME}
+	${SU} ${USER} -c "${ENV} DISPLAY=${DISPLAY} HOME=${HOME} ${X11_APP}"
+fi
