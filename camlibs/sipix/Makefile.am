@@ -4,6 +4,7 @@ camlib_LTLIBRARIES = libgphoto2_sipix.la
 EXTRA_DIST = web2.html
 
 INCLUDES = \
+        -I$(top_srcdir)/intl				\
 	-I$(top_srcdir)/libgphoto2_port/libgphoto2_port \
         -I$(top_srcdir)/libgphoto2
 

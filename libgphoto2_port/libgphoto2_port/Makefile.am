@@ -1,5 +1,6 @@
 INCLUDES = 						\
 	-I$(top_srcdir)					\
+	-I$(top_srcdir)/intl				\
 	-DIOLIBS=\"$(libdir)/gphoto2_port/$(VERSION)\"	\
 	-DLOCALEDIR=\"$(datadir)/locale\"
 

@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.50)
 AC_INIT(libgphoto2_port/gphoto2-port.c)
-AM_CONFIG_HEADER(libgphoto2_port/config.h)
+AM_CONFIG_HEADER(config.h)
 
 dnl ---------------------------------------------------------------------------
 dnl Versioning (libgphoto2_port-(AGE.)CURRENT.REVISION):

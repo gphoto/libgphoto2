@@ -7,6 +7,7 @@ EXTRA_DIST = EXPERTS konica.df makefile.os2
 
 INCLUDES =\
  -DLOCALIZATION=\"$(datadir)/gphoto2/konica\"		\
+ -I$(top_srcdir)/intl					\
  -I$(top_srcdir)/libgphoto2				\
  -I$(top_srcdir)/libgphoto2_port/libgphoto2_port
 
