@@ -30,7 +30,7 @@
 #include "gphoto2-endian.h"
 #include "mesalib.h"
 
-#define debuglog(s) gp_debug_printf(GP_DEBUG_LOW, "dimera", "%s", (s))
+#define debuglog(e) gp_debug_printf(GP_DEBUG_LOW, "dimera", "%s", (e))
 
 #ifdef CONVERT_PIXELS
 static const uint16_t	pixelTable[256] = {

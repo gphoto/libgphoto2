@@ -21,6 +21,9 @@
  *
  * History:
  * $Log$
+ * Revision 1.38  2002/01/04 23:15:55  dfandrich
+ * Renamed macro arguments to avoid luser compilers replacing %s
+ *
  * Revision 1.37  2002/01/04 23:06:05  dfandrich
  * Eliminated // comments for compatibility with pre-C99 compilers.
  *
@@ -131,10 +134,10 @@
 /*#define ERROR( s ) { \
 	fprintf( stderr, "%s: %s\n", __FUNCTION__, s ); \
 	error_dialog( s ); }*/
-#define ERROR(s) gp_debug_printf(GP_DEBUG_LOW, "dimera", "%s", (s))
-#define debuglog(s) gp_debug_printf(GP_DEBUG_LOW, "dimera", "%s", (s))
+#define ERROR(e) gp_debug_printf(GP_DEBUG_LOW, "dimera", "%s", (e))
+#define debuglog(e) gp_debug_printf(GP_DEBUG_LOW, "dimera", "%s", (e))
 
-#define update_status(s) ERROR(s)
+#define update_status(e) ERROR(e)
 
 #define max(a,b) ((a) > (b) ? (a) : (b))
 #define min(a,b) ((a) < (b) ? (a) : (b))
@@ -164,7 +167,7 @@ static char     Dimera_stdhdr[] =
 /* Forward references */
 
 static uint8_t *
-Dimera_Get_Full_Image (int picnum, int *size, int *width, int *height,
+Dimera_Get_Full_Image (int picnum, long *size, int *width, int *height,
 			Camera *camera, CameraFile *file);
 
 static uint8_t *
@@ -282,7 +285,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder, const char *
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
 	case GP_FILE_TYPE_RAW:
-		data = Dimera_Get_Full_Image (num, (int*) &size,
+		data = Dimera_Get_Full_Image (num, &size,
 					      &width, &height, camera, file);
 		break;
 	case GP_FILE_TYPE_PREVIEW:
@@ -578,7 +581,7 @@ Dimera_Get_Thumbnail( int picnum, int *size, Camera *camera )
 /* Download a raw Bayer image from the camera and return it in a malloced
 buffer */
 static uint8_t *
-Dimera_Get_Full_Image (int picnum, int *size, int *width, int *height,
+Dimera_Get_Full_Image (int picnum, long *size, int *width, int *height,
 			Camera *camera, CameraFile *file)
 {
 	static struct mesa_image_arg	ia;
