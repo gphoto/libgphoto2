@@ -1507,7 +1507,8 @@ canon_int_put_file (Camera *camera, CameraFile *file, char *destname, char *dest
 {
 	switch (camera->port->type) {
 		case GP_PORT_USB:
-			return canon_usb_put_file (camera, file, destname, destpath);
+			return canon_usb_put_file (camera, file, destname, destpath, 
+						      context);
 			break;
 		case GP_PORT_SERIAL:
 			return canon_serial_put_file (camera, file, destname, destpath,
