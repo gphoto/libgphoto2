@@ -47,7 +47,7 @@ int agfa_capture(CameraPrivateLibrary *dev, CameraFilePath *path) {
     /*This seems to do some kind of reset, but does cause the camera to start responding again*/
     ret=soundvision_send_command(SOUNDVISION_GET_NAMES, 0, dev);
 
-    return (GP_OK);
+    return GP_OK;
 }
 
    /* Seems to work OK though sometimes camera is left in */
@@ -56,7 +56,7 @@ int agfa_capture(CameraPrivateLibrary *dev, CameraFilePath *path) {
    /* to implement this */
 int agfa_delete_picture(CameraPrivateLibrary *dev, const char *filename) {
    
-    uint32_t ret,temp,taken; 
+    int32_t ret,temp,taken; 
     uint8_t data[4],*buffer;
     uint32_t size=4,buflen;
    
@@ -152,6 +152,6 @@ int agfa_delete_picture(CameraPrivateLibrary *dev, const char *filename) {
     ret = soundvision_read(dev, data, size);        
     if (ret<0) return ret; 
    
-    return 0;
+    return GP_OK;
 
 }

@@ -20,11 +20,12 @@
 #include <gphoto2-endian.h>
 
 #include "soundvision.h"
+#include "commands.h"
 
 #define GP_MODULE "soundvision"
 
     /* Regular commands always 8 bytes long */
-uint32_t soundvision_send_command(uint32_t command, uint32_t argument, 
+int32_t soundvision_send_command(uint32_t command, uint32_t argument, 
 				  CameraPrivateLibrary *dev) {
 
     uint8_t cmd[12];
@@ -40,7 +41,7 @@ uint32_t soundvision_send_command(uint32_t command, uint32_t argument,
 }
 
     /* Filenames are always 12 bytes long */
-uint32_t soundvision_send_file_command(const char *filename, 
+int32_t soundvision_send_file_command(const char *filename, 
 				       CameraPrivateLibrary *dev) {
     
     uint8_t file_cmd[16];
@@ -55,7 +56,7 @@ uint32_t soundvision_send_file_command(const char *filename,
 }
 
     /* USB-only */
-uint32_t soundvision_read(CameraPrivateLibrary *dev, void *buffer, int len) {
+int32_t soundvision_read(CameraPrivateLibrary *dev, void *buffer, int len) {
 
     return gp_port_read(dev->gpdev, buffer, len);
 }
@@ -67,14 +68,14 @@ int soundvision_reset(CameraPrivateLibrary *dev) {
     ret=soundvision_send_command(SOUNDVISION_RESET,0,dev);
     if (ret<0) return ret;
    
-    return (GP_OK);
+    return GP_OK;
 }
 
 int soundvision_get_revision(CameraPrivateLibrary *dev, char *revision) {
  
     int ret;
     char version[8];
-    uint32_t temp;
+    /* uint32_t temp; */
    
     ret = soundvision_send_command(SOUNDVISION_DONE_TRANSACTION,0,dev);
    
@@ -89,13 +90,10 @@ int soundvision_get_revision(CameraPrivateLibrary *dev, char *revision) {
     ret=soundvision_reset(dev);
     if (ret<0) return ret;
    
-//    ret = soundvision_read(dev, &temp, sizeof(temp));        
-//    if (ret<0) return ret;    
+/*    ret = soundvision_read(dev, &temp, sizeof(temp));        
+    if (ret<0) return ret;    */
     
-    
-   
-   
-    return 0;
+    return GP_OK;
 }
 
 
@@ -104,7 +102,7 @@ int soundvision_get_status(CameraPrivateLibrary *dev, int *taken,
         int *available, int *rawcount) {
 
     uint8_t ss[0x60];
-    uint32_t ret;
+    int32_t ret;
 
    
     ret=soundvision_send_command(SOUNDVISION_STATUS, 0, dev);
@@ -122,12 +120,13 @@ int soundvision_get_status(CameraPrivateLibrary *dev, int *taken,
        
     soundvision_reset(dev); 
    
-    return (GP_OK);
+    return GP_OK;
 }
 
 int soundvision_photos_taken(CameraPrivateLibrary *dev) {
    
-    uint32_t ret,numpics;
+    int32_t ret;
+    uint32_t numpics;
 
     ret=soundvision_send_command(SOUNDVISION_GET_NUM_PICS, 0, dev);
 
@@ -149,7 +148,7 @@ int soundvision_photos_taken(CameraPrivateLibrary *dev) {
 int soundvision_get_file_list(CameraPrivateLibrary *dev) {
 
     char *buffer;
-    uint32_t ret, taken, buflen;
+    int32_t ret, taken, buflen;
 
     
     /* It seems we need to do a "reset" packet before reading names?? */
@@ -207,7 +206,8 @@ int soundvision_get_file_list(CameraPrivateLibrary *dev) {
 
 int soundvision_get_thumb_size(CameraPrivateLibrary *dev, const char *filename) {
  
-    uint32_t ret,temp,size; 
+    int32_t ret,temp;
+    uint32_t size; 
    
     ret=soundvision_send_command(SOUNDVISION_GET_THUMB_SIZE,0,dev);
     if (ret<0) return ret;
@@ -229,7 +229,7 @@ int soundvision_get_thumb_size(CameraPrivateLibrary *dev, const char *filename) 
 int soundvision_get_thumb(CameraPrivateLibrary *dev, const char *filename,
 		   unsigned char *data,int size) {
 
-    uint32_t ret,temp; 
+    int32_t ret,temp; 
    
     ret = soundvision_send_command(SOUNDVISION_GET_THUMB,0,dev);
     if (ret<0) return ret;
@@ -260,7 +260,8 @@ int soundvision_get_thumb(CameraPrivateLibrary *dev, const char *filename,
 
 int soundvision_get_pic_size(CameraPrivateLibrary *dev, const char *filename) {
  
-    uint32_t ret,temp,size; 
+    int32_t ret,temp;
+    uint32_t size; 
    
     ret=soundvision_send_command(SOUNDVISION_GET_PIC_SIZE,0,dev);
     if (ret<0) return ret;
@@ -282,7 +283,7 @@ int soundvision_get_pic_size(CameraPrivateLibrary *dev, const char *filename) {
 int soundvision_get_pic(CameraPrivateLibrary *dev, const char *filename,
 		   unsigned char *data,int size) {
    
-    uint32_t ret,temp; 
+    int32_t ret,temp; 
    
     ret = soundvision_send_command(SOUNDVISION_GET_PIC,0,dev);
     if (ret<0) return ret;
@@ -311,7 +312,7 @@ int soundvision_get_pic(CameraPrivateLibrary *dev, const char *filename,
    /* to implement this */
 int soundvision_delete_picture(CameraPrivateLibrary *dev, const char *filename) {
    
-    uint32_t ret,temp,taken; 
+    int32_t ret,temp,taken; 
     uint8_t data[4],*buffer;
     uint32_t size=4,buflen;
    
@@ -407,6 +408,6 @@ int soundvision_delete_picture(CameraPrivateLibrary *dev, const char *filename) 
     ret = soundvision_read(dev, data, size);        
     if (ret<0) return ret; 
    
-    return 0;
+    return GP_OK;
 
 }

@@ -242,7 +242,7 @@ static int camera_capture (Camera *camera, CameraCaptureType type,
      */
     if (camera->pl->device_type==SOUNDVISION_AGFACL18)     
        return (agfa_capture(camera->pl,path));
-    return 0;
+    return GP_ERROR_NOT_SUPPORTED;
 }
 
 

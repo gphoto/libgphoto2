@@ -2,12 +2,12 @@
 #define commands_H
  
 
-uint32_t soundvision_send_command(uint32_t command, uint32_t argument,
+int32_t soundvision_send_command(uint32_t command, uint32_t argument,
 	                                 CameraPrivateLibrary *dev);
 
-uint32_t soundvision_send_file_command(const char *filename,
+int32_t soundvision_send_file_command(const char *filename,
                                               CameraPrivateLibrary *dev);
     
-uint32_t soundvision_read(CameraPrivateLibrary *dev, void *buffer, int len);
+int32_t soundvision_read(CameraPrivateLibrary *dev, void *buffer, int len);
 
 #endif

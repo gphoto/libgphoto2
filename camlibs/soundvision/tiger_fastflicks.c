@@ -50,7 +50,7 @@ int tiger_upload_file(CameraPrivateLibrary *dev, const char *filename) {
        /* as it is impossible to test w/o the camera            */
 int tiger_delete_picture(CameraPrivateLibrary *dev, const char *filename) {
    
-    uint32_t ret,temp,taken,ascii_status[2]; 
+    int32_t ret,temp,taken,ascii_status[2]; 
    
     ret = soundvision_send_command(SOUNDVISION_START_TRANSACTION,0,dev);
     if (ret<0) return ret;
@@ -72,7 +72,7 @@ int tiger_delete_picture(CameraPrivateLibrary *dev, const char *filename) {
    
     taken=soundvision_photos_taken(dev);
 
-      return 0;
+    return GP_OK;
 
 }
 
