@@ -66,7 +66,6 @@ int load_camera_list (char *library_filename) {
         /* check to see if this library has been loaded */
 	load_camera_id = (c_id)GPIO_DLSYM(lh, "camera_id");
 	load_camera_id(&id);
-
 	gp_debug_printf(GP_DEBUG_LOW, "core", "\t library id: %s", id.text);
 
         for (x=0; x<glob_abilities_list->count; x++) {
