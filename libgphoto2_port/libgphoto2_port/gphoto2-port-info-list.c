@@ -295,12 +295,10 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 
 	CHECK_NULL (list && path);
 
-#if 0
 	/* Exact match? */
 	for (i = 0; i < list->count; i++)
 		if (!strcmp (list->info[i].path, path))
 			return (i);
-#endif
 
 	/* Regex match? */
 	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list",

@@ -1,3 +1,8 @@
+2001-11-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2_port/gphoto2-port-info-list.c: Oh god, I checked in a
+	  #if 0 that I used for debugging purposes. Sorry, guys....
+
 2001-11-29  Fredrik <fredrik@krixor.xy.org>
 
 	* libgphoto2_port/gphoto2-port-portability.h: OpenBSD also prepends
