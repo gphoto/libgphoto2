@@ -252,16 +252,16 @@ int camera_capture (CameraFile *file, CameraCaptureInfo *info) {
 	return (GP_ERROR);
 }
 
-int camera_summary (char *summary) {
+int camera_summary (CameraText *summary) {
 
-	sprintf(summary, "Current directory:\n%s", dir_directory);
+	sprintf(summary->text, "Current directory:\n%s", dir_directory);
 
 	return (GP_OK);
 }
 
-int camera_manual (char *manual) {
+int camera_manual (CameraText *manual) {
 
-	strcpy(manual, 
+	strcpy(manual->text, 
 "The Directory Browse \"camera\" lets you index
 photos on your hard drive. The folder list on the
 left contains the folders on your hard drive,
@@ -271,9 +271,9 @@ beginning at the root directory (\"/\").
 	return (GP_OK);
 }
 
-int camera_about (char *about) {
+int camera_about (CameraText *about) {
 
-	strcpy(about,
+	strcpy(about->text,
 "Directory Browse Mode
 Scott Fritzinger <scottf@unr.edu>");
 

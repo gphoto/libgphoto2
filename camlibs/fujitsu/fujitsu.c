@@ -388,7 +388,7 @@ int camera_capture (CameraFile *file, CameraCaptureInfo *info) {
 	return (GP_ERROR);
 }
 
-int camera_summary (char *summary) {
+int camera_summary (CameraText *summary) {
 
 	char buf[1024*32];
 	int value;
@@ -533,7 +533,7 @@ return (GP_ERROR);
 	if (fujitsu_get_int_register(glob_dev, 38, &value)!=GP_ERROR)
 		sprintf(buf, "%sLCD AutoOff	: %i seconds\n", buf, value);
 
-	strcpy(summary, buf);
+	strcpy(summary->text, buf);
 
 if (camera_stop()==GP_ERROR)
 return (GP_ERROR);
@@ -541,20 +541,20 @@ return (GP_ERROR);
 	return (GP_OK);
 }
 
-int camera_manual (char *manual) {
+int camera_manual (CameraText *manual) {
 
 	debug_print("Getting camera manual");
 
-	strcpy(manual, "Manual Not Available");
+	strcpy(manual->text, "Manual Not Available");
 
 	return (GP_OK);
 }
 
-int camera_about (char *about) {
+int camera_about (CameraText *about) {
 
 	debug_print("Getting 'about' information");
 
-	strcpy(about, 
+	strcpy(about->text, 
 "Fujitsu SPARClite library
 Scott Fritzinger <scottf@unr.edu>
 Support for Fujitsu-based digital cameras

@@ -392,7 +392,7 @@ int gp_capture (CameraFile *f, CameraCaptureInfo *info) {
 	return(glob_c.capture(f, info));
 }
 
-int gp_summary (char *summary) {
+int gp_summary (CameraText *summary) {
 
 	if (glob_c.summary == NULL)
 		return (GP_ERROR);
@@ -400,7 +400,7 @@ int gp_summary (char *summary) {
 	return(glob_c.summary(summary));
 }
 
-int gp_manual (char *manual) {
+int gp_manual (CameraText *manual) {
 
 	if (glob_c.manual == NULL)
 		return (GP_ERROR);
@@ -408,7 +408,7 @@ int gp_manual (char *manual) {
 	return(glob_c.manual(manual));
 }
 
-int gp_about (char *about) {
+int gp_about (CameraText *about) {
 
 	if (glob_c.about == NULL)
 		return (GP_ERROR);

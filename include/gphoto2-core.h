@@ -111,16 +111,13 @@
 	/* ============================================================================== */
 
 	/* Retrieves camera status (number of pictures, charge, etc...) */
-	/* "summary" should be allocated to 32k */
-	int gp_summary (char *summary);
+	int gp_summary (CameraText *summary);
 
 	/* Retrieves usage of the camera library (config settings, problems, etc) */
-	/* "manual" should be allocated to 32k */
-	int gp_manual (char *manual);
+	int gp_manual (CameraText *manual);
 
 	/* Retrieves information about the camera library (author, version, etc) */
-	/* "about" should be allocated to 32k */
-	int gp_about (char *about);
+	int gp_about (CameraText *about);
 
 	/* Widget functions */
 	/* ============================================================================== */

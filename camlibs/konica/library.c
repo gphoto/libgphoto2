@@ -525,7 +525,7 @@ int camera_file_delete (int file_number)
 }
 
 
-int camera_summary (char *summary)
+int camera_summary (CameraText *summary)
 {
 	gchar *model = NULL;
 	gchar *serial_number = NULL;
@@ -568,7 +568,7 @@ int camera_summary (char *summary)
 		&minute, 
 		&second))) return (GP_ERROR);
 	else {
-		sprintf (summary, 
+		sprintf (summary->text, 
 			"About the camera:\n"
 			"  Model: %s\n"
 			"  Serial Number: %s,\n"
@@ -615,9 +615,9 @@ int camera_summary (char *summary)
 }
 
 
-int camera_about (char *about) 
+int camera_about (CameraText *about) 
 {
-	strcpy (about, 
+	strcpy (about->text, 
 		"Konica library\n"
 		"Lutz Müller <urc8@rz.uni-karlsruhe.de>\n"
 		"Support for Konica and HP cameras.");
@@ -637,4 +637,3 @@ int camera_config_set (CameraSetting *conf, int count)
 	printf ("Not yet implemented...\n");
 	return (GP_ERROR);
 }
-

@@ -569,47 +569,47 @@ OPTION_CALLBACK(upload_picture) {
 
 OPTION_CALLBACK(summary) {
 
-	char buf[1024*32];
+	CameraText buf;
 
 	if (set_globals() == GP_ERROR)
 		return (GP_ERROR);
 
-	if (gp_summary(buf)==GP_ERROR) {
+	if (gp_summary(&buf)==GP_ERROR) {
 		error_print("Could not get camera summary");
 		return (GP_ERROR);
 	}
-	printf("Camera Summary:\n%s\n", buf);
+	printf("Camera Summary:\n%s\n", buf.text);
 
 	return (GP_OK);
 }
 OPTION_CALLBACK(manual) {
 
-	char buf[1024*32];
+	CameraText buf;
 
 	if (set_globals() == GP_ERROR)
 		return (GP_ERROR);
 
-	if (gp_manual(buf)==GP_ERROR) {
+	if (gp_manual(&buf)==GP_ERROR) {
 		error_print("Could not get camera manual");
 		return (GP_ERROR);
 	}
-	printf("Camera Manual:\n%s\n", buf);
+	printf("Camera Manual:\n%s\n", buf.text);
 
 	return (GP_OK);
 }
 
 OPTION_CALLBACK(about) {
 
-	char buf[1024*32];
+	CameraText buf;
 
 	if (set_globals() == GP_ERROR)
 		return (GP_ERROR);
 
-	if (gp_about(buf)==GP_ERROR) {
+	if (gp_about(&buf)==GP_ERROR) {
 		error_print("Could not get camera manual");
 		return (GP_ERROR);
 	}
-	printf("About the library:\n%s\n", buf);
+	printf("About the library:\n%s\n", buf.text);
 
 	return (GP_OK);
 }

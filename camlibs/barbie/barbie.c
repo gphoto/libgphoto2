@@ -438,7 +438,7 @@ int camera_capture (CameraFile *file, CameraCaptureInfo *info) {
 	return (GP_ERROR);
 }	
 
-int camera_summary (char *summary) {
+int camera_summary (CameraText *summary) {
 
 	int num;
 	char *firm;
@@ -446,7 +446,7 @@ int camera_summary (char *summary) {
 	num = camera_file_count();
 	firm = barbie_read_firmware();
 
-	sprintf(summary, 
+	sprintf(summary->text, 
 "Number of pictures: %i
 Firmware Version: %s", num,firm);
 
@@ -455,15 +455,15 @@ Firmware Version: %s", num,firm);
 	return GP_OK;
 }
 
-int camera_manual (char *manual) {
+int camera_manual (CameraText *manual) {
 
-	strcpy(manual, "No manual available.");
+	strcpy(manual->text, "No manual available.");
 
 	return GP_OK;
 }
-int camera_about (char *about) {
+int camera_about (CameraText *about) {
 
-	strcpy(about,
+	strcpy(about->text,
 "Barbie/HotWheels/WWF
 Scott Fritzinger <scottf@unr.edu>
 Andreas Meyer <ahm@spies.com>

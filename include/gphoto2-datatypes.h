@@ -170,3 +170,7 @@ typedef struct {
 	char name[32];
 	char value[32];
 } CameraSetting;
+
+typedef struct {
+	char text[32*1024];
+} CameraText;

@@ -102,23 +102,23 @@ int camera_capture (CameraFile *file, CameraCaptureInfo *info) {
 	return (GP_ERROR);
 }
 
-int camera_summary (char *summary) {
+int camera_summary (CameraText *summary) {
 
-	strcpy(summary, "Summary Not Available");
-
-	return (GP_OK);
-}
-
-int camera_manual (char *manual) {
-
-	strcpy(manual, "Manual Not Available");
+	strcpy(summary->text, "Summary Not Available");
 
 	return (GP_OK);
 }
 
-int camera_about (char *about) {
+int camera_manual (CameraText *manual) {
 
-	strcpy(about, 
+	strcpy(manual->text, "Manual Not Available");
+
+	return (GP_OK);
+}
+
+int camera_about (CameraText *about) {
+
+	strcpy(about->text, 
 "Library Name
 YOUR NAME <email@somewhere.com>
 Quick description of the library.

@@ -97,15 +97,15 @@ int camera_capture 		(CameraFile *f, CameraCaptureInfo *info);
 /* For each of the following functions, the char* buffers	*/
 /* passed in are 32k large.					*/
 
-int camera_summary 		(char *summary);
+int camera_summary 		(CameraText *summary);
 	/* Returns information about the current status of the	*/
 	/* camera, such as pictures taken/left, battery		*/
 	/* percent, etc...					*/
 
-int camera_manual 		(char *manual);
+int camera_manual 		(CameraText *manual);
 	/* Returns information on using the camera library.	*/
 
-int camera_about 		(char *about);
+int camera_about 		(CameraText *about);
 	/* Returns information about the camera library.	*/
 	/* Includes author's name, email, models supported,	*/
 	/* and anything else library-specific.			*/
