@@ -1,3 +1,7 @@
+2002-07-16  Lutz Müller <lutz@users.sourceforge.net>
+
+	* Makefile.am: Don't use glib.
+
 2002-03-21  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* library.c (jamcam_file_count): Patch by Thor Ablestar <thor@irk.ru>

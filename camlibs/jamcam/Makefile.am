@@ -1,10 +1,6 @@
 camlibdir = $(libdir)/gphoto2/$(VERSION)
 camlib_LTLIBRARIES = libgphoto2_jamcam.la
 
-CFLAGS = @CFLAGS@ `glib-config --cflags`
-LDFLAGS = @LDFLAGS@ -lm `glib-config --libs`
-EXTRA_DIST =
-
 INCLUDES =                                              \
         -I$(top_srcdir)/libgphoto2_port/libgphoto2_port \
         -I$(top_srcdir)/libgphoto2
