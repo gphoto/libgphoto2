@@ -824,7 +824,7 @@ int dc240_file_action (Camera *camera, int action, CameraFile *file,
 
     if ((filename) && (file)) {
 	gp_file_set_name (file, filename);
-	gp_file_set_mime_type (file, "image/jpeg");
+	gp_file_set_mime_type (file, GP_MIME_JPEG);
     }
 
     return (retval);
