@@ -643,10 +643,7 @@ static void
 debug_func (GPLogLevel level, const char *domain, const char *format,
 	    va_list args, void *data)
 {
-	if (level == GP_LOG_ERROR)
-		fprintf (stderr, _("%s(ERROR): "), domain);
-	else
-		fprintf (stderr, "%s(%i): ", domain, level);
+	fprintf (stderr, "%s(%i): ", domain, level);
 	vfprintf (stderr, format, args);
 	fprintf (stderr, "\n");
 }
