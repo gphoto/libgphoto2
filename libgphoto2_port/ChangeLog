@@ -1,3 +1,8 @@
+2001-09-14  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2_port/gp_port.c: Set some default settings in case of
+	GP_PORT_USB, too.
+
 2001-09-02  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* include/gphoto2-portability.h:

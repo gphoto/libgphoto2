@@ -192,33 +192,42 @@ gp_port_new (gp_port **dev, gp_port_type type)
 
         switch ((*dev)->type) {
         case GP_PORT_SERIAL:
-            sprintf(buf, GP_PORT_SERIAL_PREFIX, GP_PORT_SERIAL_RANGE_LOW);
-            strcpy(settings.serial.port, buf);
-            /* set some defaults */
-            settings.serial.speed = 9600;
-            settings.serial.bits = 8;
-            settings.serial.parity = 0;
-            settings.serial.stopbits = 1;
-            gp_port_settings_set(*dev, settings);
-            gp_port_timeout_set(*dev, 500);
-            break;
+		sprintf(buf, GP_PORT_SERIAL_PREFIX, GP_PORT_SERIAL_RANGE_LOW);
+		strcpy(settings.serial.port, buf);
+
+		/* Set some default settings */
+		settings.serial.speed = 9600;
+		settings.serial.bits = 8;
+		settings.serial.parity = 0;
+		settings.serial.stopbits = 1;
+		gp_port_settings_set (*dev, settings);
+
+		gp_port_timeout_set (*dev, 500);
+		break;
         case GP_PORT_PARALLEL:
-            sprintf(buf, GP_PORT_SERIAL_PREFIX, GP_PORT_SERIAL_RANGE_LOW);
-            strcpy(settings.parallel.port, buf);
-            break;
+		sprintf (buf, GP_PORT_SERIAL_PREFIX, GP_PORT_SERIAL_RANGE_LOW);
+		strcpy (settings.parallel.port, buf);
+		break;
         case GP_PORT_NETWORK:
-            gp_port_timeout_set(*dev, 50000);
-            break;
+		gp_port_timeout_set (*dev, 50000);
+		break;
         case GP_PORT_USB:
-            gp_port_timeout_set(*dev, 5000);
-            break;
+
+		/* Set some default settings */
+		settings.usb.inep = 0x81;
+		settings.usb.outep = 0x02;
+		settings.usb.ocnfig = 1;
+		settings.usb.interface = 0;
+		settings.usb.altsetting = 0;
+		gp_port_settings_set (*dev, settings);
+
+		gp_port_timeout_set (*dev, 5000);
+		break;
         case GP_PORT_IEEE1394:
-            /* blah ? */
-            break;
+		/* blah ? */
+		break;
         default:
-            /* ERROR! */
-            return GP_ERROR_IO_UNKNOWN_PORT;
-            break;
+		return GP_ERROR_IO_UNKNOWN_PORT;
         }
 
         gp_port_debug_printf(GP_DEBUG_LOW, glob_debug_level, "Created device successfully...");
