@@ -264,6 +264,12 @@ static struct {
 	{"Nikon:Coolpix 3500 (PTP mode)", 0x04b0, 0x0111},
 	/* Nikon Coolpix 885: S. Anderson, 19 nov 2002 */
 	{"Nikon:Coolpix 885 (PTP mode)",  0x04b0, 0x0112},
+	/* Nikon Coolpix 5000, Firmware v1.7 or later */
+	{"Nikon:Coolpix 5000 (PTP mode)", 0x04b0, 0x0113},
+	/* Nikon Coolpix 3100 */
+	{"Nikon:Coolpix 3100 (PTP mode)", 0x04b0, 0x0115},
+	/* Nikon Coolpix 2100 */
+	{"Nikon:Coolpix 2100 (PTP mode)", 0x04b0, 0x0117},
 	/* Nikon Coolpix 5400: T. Kaproncai, 25 Jul 2003 */
 	{"Nikon:Coolpix 5400 (PTP mode)", 0x04b0, 0x0119},
 	/* Nikon Coolpix SQ: M. Holzbauer, 07 Jul 2003 */
