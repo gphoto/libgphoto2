@@ -10,10 +10,6 @@
 #ifndef _CANON_H
 #define _CANON_H
 
-#ifdef CANON_EXPERIMENTAL_CAPTURE
-#warning COMPILING WITH EXPERIMENTAL CAPTURE FEATURE
-#endif
-
 #ifdef CANON_EXPERIMENTAL_UPLOAD
 #warning COMPILING WITH EXPERIMENTAL UPLOAD FEATURE
 #endif
@@ -84,13 +80,33 @@ typedef enum {
 		return GP_ERROR_BAD_PARAMETERS; \
 	}
 
+
+/**
+ * State of capture support
+ */
+typedef enum {
+	CAP_NON = 0, /* no support */
+	CAP_SUP,     /* supported */
+	CAP_EXP      /* experimental support */
+} canonCaptureSupport;
+
+/**
+ * Whether camera supports serial connections or not
+ */
+typedef enum {
+	SER_NO = 0,
+	SERIAL
+} canonSerialSupport;
+
+
 struct canonCamModelData
 {
 	char *id_str;
 	canonCamModel model;
 	unsigned short usb_vendor;
 	unsigned short usb_product;
-	char serial_support;
+	canonSerialSupport serial_support;
+	canonCaptureSupport usb_capture_support;
 	unsigned int max_picture_size;
 	unsigned int max_thumbnail_size;
 };
@@ -115,11 +131,9 @@ struct _CameraPrivateLibrary
 	unsigned char seq_tx;
 	unsigned char seq_rx;
 
-#ifdef CANON_EXPERIMENTAL_CAPTURE
 	int capturing; /* whether we are capturing or not
 			  hack to speed up usb_dialogue 
 			  when not capturing [no sleep(2)] */
-#endif /* CANON_EXPERIMENTAL_CAPTURE */
 
 	/* driver settings
 	 * leave these as int, as gp_widget_get_value sets them as int!
@@ -203,12 +217,10 @@ char *canon_int_get_disk_name(Camera *camera, GPContext *context);
 int canon_int_get_battery(Camera *camera, int *pwr_status, int *pwr_source, GPContext *context);
 
 
-#ifdef CANON_EXPERIMENTAL_CAPTURE
 /*
  *
  */
 int canon_int_capture_image (Camera *camera, CameraFilePath *path, GPContext *context);
-#endif
 
 /*
  *

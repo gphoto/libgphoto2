@@ -85,12 +85,6 @@ extern long int timezone;
 # define FALSE (0!=0)
 #endif
 
-#ifdef CANON_EXPERIMENTAL_CAPTURE
-#define CAPTURE_BOOL TRUE
-#else
-#define CAPTURE_BOOL FALSE
-#endif
-
 #ifdef CANON_EXPERIMENTAL_UPLOAD
 #define UPLOAD_BOOL TRUE
 #else
@@ -133,7 +127,7 @@ camera_abilities (CameraAbilitiesList *list)
 	for (i = 0; models[i].id_str; i++) {
 		memset (&a, 0, sizeof (a));
 
-		if ((CAPTURE_BOOL || UPLOAD_BOOL) && 
+		if ((UPLOAD_BOOL || (models[i].usb_capture_support == CAP_EXP)) && 
 		    (models[i].usb_vendor && models[i].usb_product)) {
 			a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
 		} else {
@@ -147,7 +141,7 @@ camera_abilities (CameraAbilitiesList *list)
 			a.usb_vendor = models[i].usb_vendor;
 			a.usb_product = models[i].usb_product;
 		}
-		if (models[i].serial_support) {
+		if (models[i].serial_support == SERIAL) {
 			a.port |= GP_PORT_SERIAL;
 			a.speed[0] = 9600;
 			a.speed[1] = 19200;
@@ -157,10 +151,11 @@ camera_abilities (CameraAbilitiesList *list)
 			a.speed[5] = 0;
 		}
 		a.operations = GP_OPERATION_CONFIG;
-#ifdef CANON_EXPERIMENTAL_CAPTURE
-		a.operations |= GP_OPERATION_CAPTURE_IMAGE |
-			GP_OPERATION_CAPTURE_PREVIEW;
-#endif
+
+		if (models[i].usb_capture_support != CAP_NON) {
+			a.operations |= GP_OPERATION_CAPTURE_IMAGE;
+		}
+
 		a.folder_operations =
 #ifdef CANON_EXPERIMENTAL_UPLOAD
 			GP_FOLDER_OPERATION_PUT_FILE 
@@ -234,8 +229,6 @@ camera_exit (Camera *camera, GPContext *context)
 	return GP_OK;
 }
 
-#ifdef CANON_EXPERIMENTAL_CAPTURE
-
 static int
 camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 {
@@ -249,13 +242,6 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		GPContext *context)
 {
 	GP_DEBUG ("canon_capture() called");
-
-	GP_DEBUG ("CANON REMOTE CAPTURE IS EXPERIMENTAL CODE, WORK IN PROGRESS "
-		  "AND MAYBE NOT WORKING AT ALL. NOT FOR THE FAINT OF HEART.");
-
-	/* As this is experimental code anyway, we don't test for the
-	 * camera here. And if we wanted to, there would be another
-	 * place better suited (in camera_init()). */
 
 	if (type != GP_CAPTURE_IMAGE) {
 		return GP_ERROR_NOT_SUPPORTED;
@@ -271,8 +257,6 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	camera->pl->capturing = FALSE;
 	return GP_OK;
 }
-
-#endif /* CANON_EXPERIMENTAL_CAPTURE */
 
 static int
 canon_get_batt_status (Camera *camera, int *pwr_status, int *pwr_source, GPContext *context)
@@ -1344,11 +1328,8 @@ camera_init (Camera *camera, GPContext *context)
 
 	/* First, set up all the function pointers */
 	camera->functions->exit = camera_exit;
-#ifdef CANON_EXPERIMENTAL_CAPTURE
-	/* we should only set this if the camera supports it */
-	camera->functions->capture_preview = camera_capture_preview;
 	camera->functions->capture = camera_capture;
-#endif /* CANON_EXPERIMENTAL_CAPTURE */
+	camera->functions->capture_preview = NULL;
 	camera->functions->get_config = camera_get_config;
 	camera->functions->set_config = camera_set_config;
 	camera->functions->summary = camera_summary;
@@ -1376,10 +1357,8 @@ camera_init (Camera *camera, GPContext *context)
 	camera->pl->seq_tx = 1;
 	camera->pl->seq_rx = 1;
 
-#ifdef CANON_EXPERIMENTAL_CAPTURE
 	/* we are currently not capturing, are we? */
 	camera->pl->capturing = FALSE;
-#endif
 
 	/* default to false, i.e. list only known file types, use DCIF filenames */
 	camera->pl->list_all_files = FALSE;

@@ -82,10 +82,15 @@ Features supported
 
 - Upload files to camera for serial cameras
 
+- Capture images controlled by the computer
+  (code courtesy of Emile Snyder and Stephen H. Westin)
+  Most consumer class cameras should be supported. Work on the
+  EOS D30/D60 is going on.
+
 The following features are still experimental and not completely
 working yet. Run configure with CFLAGS set to 
 
-   "-DCANON_EXPERIMENTAL_CAPTURE -DCANON_EXPERIMENTAL_UPLOAD"
+   "-DCANON_EXPERIMENTAL_UPLOAD"
 
 (or just one of them, if you want to test only one) to activate
 them. Beware that this is work in progress, and no guarantees are
@@ -93,12 +98,6 @@ given at all, i.e. even less than the no guarantees we give for the
 rest of the driver. 
 
 NOTE: This may CAUSE DAMAGE TO THE CAMERA!
-
-- Capture images controlled by the computer (CANON_EXPERIMENTAL_CAPTURE)
-  (code courtesy of Emile Snyder)
-  Emile Snyder has implemented most of the remote capture functionality,
-  but not everything is understood about these commands yet and some
-  camera models have their own will about how well these things work.
 
 - Upload files to camera for USB cameras (CANON_EXPERIMENTAL_UPLOAD)
   (code courtesy of Matthias Kramm)
@@ -123,7 +122,8 @@ Known Bugs
 ==========
 
 * The PowerShot G1 and PowerShot 90 IS do not work properly when
-  operating with the AC power adapter
+  operating with the AC power adapter. 
+  The same is true for the PowerShot G2 with newer firmware versions.
 * Shutting off the camera and rewaking it is not implemented
 
 
