@@ -8,23 +8,16 @@
 This is brief protocol description of the STV 680 chip.
 <p>It has been gleaned from work:
 <ul>
-<li>
-Bart Hartger &lt;bart@etpmod.phys.tue.nl>&nbsp; (original investigations)</li>
+<li> Bart Hartger &lt;bart@etpmod.phys.tue.nl&gt; (original investigations)</li>
+<li> Adam Harrison &lt;adam@antispin.org&gt; (gphoto2 driver)</li>
+<li> Kevin Sisson &lt;kjsisson@bellsouth.net&gt; (stv / pencam tools)</li>
 
-<li>
-Adam Harrison &lt;adam@antispin.org>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-(gphoto2 driver)</li>
-
-<li>
-Marcus Meissner &lt;marcus@jet.frankende>&nbsp; (more investigations, information
-cleanup)</li>
+<li> Marcus Meissner &lt;marcus@jet.franken.de&gt; (more investigations, information cleanup)</li>
 </ul>
 
 <p><br>The camera has just 1 USB Endpoint (Bulk, 0x82) over which all data
 is being read.
 <br>It is controlled by sending USB control messages.
-<br>&nbsp;
-<br>&nbsp;
 <table BORDER COLS=4 WIDTH="100%" NOSAVE >
 <tr>
 <td>Code</td>
@@ -121,7 +114,7 @@ is being read.
 <tr>
 <td>0x14</td>
 
-<td>0x0 - disable 50hz banding&nbsp;
+<td>0x0 - disable 50hz banding
 <br>0x100 - enable 50hz banding</td>
 
 <td>none</td>
@@ -196,7 +189,7 @@ b[7] - supported modes bitmask
 <td>none</td>
 
 <td>16 byte
-<br>Images is b[0..1] MSB&nbsp;</td>
+<br>Images is b[0..1] MSB</td>
 
 <td>Get File Info?</td>
 </tr>
