@@ -4,7 +4,7 @@ CFLAGS= @CFLAGS@ \
 	-g \
 	-Wall \
 	-I$(top_srcdir)/include \
-	-DCAMLIBS=\"$(pkglibdir)\" \
+	-DCAMLIBS=\"$(prefix)/lib/gphoto2\" \
 	-DDOCDIR=\"$(prefix)/doc/gphoto2\" \
 	`gpio-config --cflags`
 
