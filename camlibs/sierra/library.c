@@ -144,14 +144,33 @@ int sierra_list_files (Camera *camera, const char *folder, CameraList *list, GPC
 	/* Then, we count the files */
 	GP_DEBUG ("Counting files in '%s'...", folder);
 	CHECK (sierra_get_int_register (camera, 10, &count, context));
-	GP_DEBUG ("... done. Found %i files.", count);
+	GP_DEBUG ("... done. Found %i file(s).", count);
+
+	/* No files? Then, we are done. */
+	if (!count)
+		return (GP_OK);
 
 	/*
-	 * Finally, we get the filename of each file. Not that some cameras
+	 * Get the filename of the first picture. Note that some cameras
 	 * that don't support filenames return 8 blanks instead of 
-	 * reporting an error.
+	 * reporting an error. If this is indeed the case, just fill
+	 * the list with dummy entries and return.
 	 */
-	for (i = 0; i < count; i++) {
+	GP_DEBUG ("Getting filename of first file...");
+	CHECK (sierra_set_int_register (camera, 4, 1, context));
+	CHECK (sierra_get_string_register (camera, 79, 0, NULL,
+					   filename, &len, context));
+	if ((len <= 0) || !strcmp (filename, "        ")) {
+		CHECK (gp_list_populate (list, "P101%04i.JPG", count));
+		return (GP_OK);
+	}
+
+	/*
+	 * The camera supports filenames. Append the first one to the list
+	 * and get the remaining ones.
+	 */
+	CHECK (gp_list_append (list, filename, NULL));
+	for (i = 1; i < count; i++) {
 		GP_DEBUG ("Getting filename of file %i...", i + 1);
 		CHECK (sierra_set_int_register (camera, 4, i + 1, context));
 		CHECK (sierra_get_string_register (camera, 79, 0, NULL,

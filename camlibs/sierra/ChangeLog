@@ -1,5 +1,12 @@
 2002-02-05  Lutz Müller <lutz@users.sourceforge.net>
 
+	* library.c (sierra_list_files): For cameras that don't support
+	  filenames, it is useless to try to get a filename for each 
+	  file. Just try on the first one. If this fails, come up with 
+	  dummy filenames for each file.
+
+2002-02-05  Lutz Müller <lutz@users.sourceforge.net>
+
 	* library.c (sierra_read_packet): Hopefully this fixes problems
 	  with serial cameras: TYPE_DATA[_END] identifies packets of more
 	  than one byte.
