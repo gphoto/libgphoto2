@@ -30,6 +30,10 @@
 #include <gphoto2-abilities-list.h>
 #include <gphoto2-camera.h>
 
+#define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
+#define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
+#define CHECK_INIT           {if (!gp_is_initialized ()) CHECK_RESULT (gp_init (GP_DEBUG_NONE));}
+
 /* Debug level */
 int             glob_debug = 0;
 
@@ -169,10 +173,11 @@ load_cameras (void)
 	return GP_OK;
 }
 
-int gp_init (int debug)
+int
+gp_init (int debug)
 {
         char buf[1024];
-        int x, ret;
+        int x;
 
 	gp_debug_printf (GP_DEBUG_LOW, "core", "Initializing GPhoto with "
 			 "debug level %i...", debug);
@@ -183,7 +188,7 @@ int gp_init (int debug)
 		return (GP_OK);
 
         /* Initialize the globals */
-        glob_abilities_list = gp_abilities_list_new();
+        glob_abilities_list = gp_abilities_list_new ();
 
         /* Make sure the directories are created */
 	gp_debug_printf (GP_DEBUG_LOW, "core", "Creating $HOME/.gphoto");
@@ -196,9 +201,7 @@ int gp_init (int debug)
         (void)GP_SYSTEM_MKDIR (buf);
 
         gp_debug_printf (GP_DEBUG_LOW, "core", "Initializing IO library...");
-        ret = gp_port_init (debug);
-	if (ret != GP_OK)
-		return (ret);
+	CHECK_RESULT (gp_port_init (debug));
 
         /* Load settings */
         gp_debug_printf (GP_DEBUG_LOW, "core", "Trying to load settings...");
@@ -228,7 +231,7 @@ gp_is_initialized (void)
 int
 gp_exit (void)
 {
-        gp_abilities_list_free (glob_abilities_list);
+	CHECK_RESULT (gp_abilities_list_free (glob_abilities_list));
 
         return (GP_OK);
 }
@@ -236,20 +239,15 @@ gp_exit (void)
 int
 gp_autodetect (CameraList *list)
 {
-	int x = 0, result;
+	int x = 0;
 	int vendor, product;
 	gp_port *dev;
-	
-	if (!list)
-		return (GP_ERROR_BAD_PARAMETERS);
-	
-	/* Be nice to frontend-writers... */
-	if (!gp_is_initialized ())
-		if ((result = gp_init (GP_DEBUG_NONE)) != GP_OK)
-			return (result);
 
-	if ((result = gp_port_new (&dev, GP_PORT_USB)) != GP_OK)
-		return (result);
+	CHECK_NULL (list);
+	CHECK_INIT;
+
+	if (gp_port_new (&dev, GP_PORT_USB) != GP_OK)
+		return (GP_ERROR_NO_CAMERA_FOUND);
 
 	list->count = 0;
 	for (x = 0; x < glob_abilities_list->count; x++) {
@@ -293,12 +291,7 @@ gp_debug_printf (int level, char *id, char *format, ...)
 int
 gp_camera_count (void)
 {
-	int result;
-	
-	/* Be nice to frontend-writers... */
-	if (!gp_is_initialized ())
-		if ((result = gp_init (GP_DEBUG_NONE)) != GP_OK)
-			return (result);
+	CHECK_INIT;
 
 	return (glob_abilities_list->count);
 }
@@ -306,9 +299,6 @@ gp_camera_count (void)
 int
 gp_camera_name (int camera_number, char *camera_name)
 {
-	if (glob_abilities_list == NULL)
-		return (GP_ERROR_MODEL_NOT_FOUND);
-
 	if (camera_number > glob_abilities_list->count)
 		return (GP_ERROR_MODEL_NOT_FOUND);
 
@@ -320,6 +310,8 @@ gp_camera_name (int camera_number, char *camera_name)
 int
 gp_camera_abilities (int camera_number, CameraAbilities *abilities)
 {
+	CHECK_NULL (abilities);
+
 	memcpy (abilities, glob_abilities_list->abilities[camera_number],
 		sizeof(CameraAbilities));
 	
