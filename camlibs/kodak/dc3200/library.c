@@ -383,7 +383,7 @@ int dc3200_get_data(Camera *camera, u_char **data, u_long *data_len, int command
 			/* update gphoto2 frontend */
 			if(command == CMD_GET_FILE || command == CMD_GET_PREVIEW)
 			{
-				pid = gp_context_progress_start(camera->pl->context,(int)*data_len,_("Downloading image..."));
+				pid = gp_context_progress_start(camera->pl->context,(int)*data_len,_("%s"), filename);
 				gp_context_progress_update(camera->pl->context, pid, ptr_data - *data);
 				if(gp_context_cancel(camera->pl->context) == GP_CONTEXT_FEEDBACK_CANCEL) {
 					free(*data);
