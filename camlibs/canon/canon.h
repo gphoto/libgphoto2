@@ -237,6 +237,20 @@ int canon_int_directory_operations(Camera *camera, const char *path, int action,
 int canon_int_identify_camera(Camera *camera, GPContext *context);
 int canon_int_set_owner_name(Camera *camera, const char *name, GPContext *context);
 
+/*
+ * introduced for capturing
+ */
+int
+canon_int_get_picture_abilities (Camera *camera, GPContext *context);
+int
+canon_int_pack_control_subcmd (unsigned char *payload, int subcmd,
+			       int word0, int word1,
+			       char *desc);
+int
+canon_int_do_control_command (Camera *camera, int subcmd, int a, int b);
+
+
+
 /* path conversion - needs drive letter, and can therefor not be moved to util.c */
 const char *canon2gphotopath(Camera *camera, const char *path);
 const char *gphoto2canonpath(Camera *camera, const char *path, GPContext *context);
