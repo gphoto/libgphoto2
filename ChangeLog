@@ -1,5 +1,9 @@
 2001-08-31  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2/camera.c: Add debugging messages
+
+2001-08-31  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/agfa-cl18/agfa.c: Remove gp_port_usb_find_device, that's in
 	libgphoto2/camera.c now.
 	* camlibs/canon/canon.c: Move the declaration of the models struct here.
