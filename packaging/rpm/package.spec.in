@@ -9,11 +9,13 @@
 #
 ########################################################################
 
+%define debug_package %{nil}
+
 ####################################
 Summary: Software for accessing digital cameras
 Name: @PACKAGE@
 Version: @VERSION@
-Release: 1
+Release: 2
 License: LGPL
 Group: Applications/Multimedia
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
@@ -32,8 +34,8 @@ BuildRequires: findutils perl
 
 # the following requirements are optional
 @ENABLE_GTK_DOC_TRUE@BuildRequires: gtk-doc
-@RPM_LIBUSB_DEVEL_TRUE@Requires: libusb >= 0.0.5
-@RPM_LIBUSB_DEVEL_TRUE@BuildRequires: libusb-devel >= 0.0.5
+@RPM_LIBUSB_DEVEL_TRUE@Requires: libusb >= 0.1.8
+@RPM_LIBUSB_DEVEL_TRUE@BuildRequires: libusb-devel >= 0.1.8
 
 ####################################
 %description
@@ -108,7 +110,10 @@ find $RPM_BUILD_ROOT -name '*.la' | \
 @ENABLE_GTK_DOC_TRUE@find html -name '*.sgml' | xargs rm
 
 
-%find_lang %{name}
+%find_lang @GETTEXT_PACKAGE@
+# FIXME: Update this manually as long as libgphoto2_port has a
+#        different build system.
+%find_lang libgphoto2_port-0
 
 # build file list
 find %{buildroot} -type f -or -type l \
@@ -121,7 +126,7 @@ egrep -v '\.so(\.[0-9]+)*$' \
 	< %{name}-%{version}.all.files > %{name}-%{version}.no-so.files
 
 # extract files for devel package
-egrep '(-config|\.h|\.la|\.a|\.pc)$' \
+egrep '(-config|\.h|\.la|\.a|\.pc|\.3)$' \
 	< %{name}-%{version}.no-so.files > %{name}-%{version}.devel.files
 egrep -v '(-config|\.h|\.la|\.a|\.pc|\.3)$' \
 	< %{name}-%{version}.no-so.files > %{name}-%{version}.no-devel.files
@@ -152,6 +157,9 @@ fi
 
 cat %{name}-%{version}.{so,doc,misc,i18n}.files \
 	> %{name}-%{version}.files
+
+# HACK
+touch debugfiles.list
 
 exit 0
 
@@ -208,6 +216,10 @@ fi
 # ChangeLog
 ########################################################################
 %changelog
+* Thu Jun 20 2002 Hans Ulrich Niedermann <gp@n-dimensional.de> 2.1.4head
+- hack in correct find_lang arguments
+- fix misc. nagging little things preventing "rpmbuild -ta" from working
+
 * Thu Jun 20 2002 Hans Ulrich Niedermann <gp@n-dimensional.de> 2.1.0rc3-1
 - only --enable-docs and copy API docs if GTK_DOC found
 - use --with-doc-formats from local ./configure call
