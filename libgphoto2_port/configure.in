@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT(libgphoto2_port/gp_port.c)
+AC_INIT(libgphoto2_port/gphoto2-port.c)
 AM_CONFIG_HEADER(include/config.h)
 
 LIBGPPORT_MAJOR_VERSION=0
@@ -50,9 +50,7 @@ AC_CHECK_HEADERS(sys/param.h termios.h sgetty.h ttold.h ioctl-types.h \
 	endian.h byteswap.h asm/io.h)
 
 dnl Checks for library functions.
-AC_FUNC_STRFTIME
-AC_CHECK_FUNCS(strdup strndup strerror snprintf vsnprintf)
-AC_CHECK_FUNCS(strftime localtime)
+AC_CHECK_FUNCS(strerror snprintf vsnprintf)
 
 dnl Check if TIOCM_RTS is included in one of several possible files
 AC_TRY_COMPILE([#include <termios.h>], [int foo = TIOCM_RTS;],
@@ -67,11 +65,34 @@ AC_TRY_COMPILE([#include <sys/ioctl.h>], [int foo = TIOCM_RTS;],
 GPPORT_LIBDIR='-L${libdir}'
 GPPORT_INCLUDEDIR='-I${includedir}/gphoto2'
 GPPORT_LIBS="-lgphoto2_port"
+AC_SUBST(GPPORT_LIBDIR)
+AC_SUBST(GPPORT_LIBS)
+AC_SUBST(GPPORT_INCLUDEDIR)
 
-dnl Compile in serial support
-IOLIB_SUBDIRS="serial"
-IOLIB_LDFLAGS="-Lserial -lgphoto2_port_serial"
-IOLIB_CFLAGS="-DGP_PORT_SUPPORTED_SERIAL"
+dnl ******
+dnl serial
+dnl ******
+serial_msg=yes
+have_serial=true
+baudboy_msg=no
+ttylock_msg=no
+lockdev_msg=no
+try_baudboy_msg=true
+try_ttylock=true
+try_lockdev=true
+AC_ARG_WITH(serial, [  --without-serial  Don't compile in SERIAL support],
+	if test x$withval = xno; then
+		have_serial=false
+		serial_msg=no
+		try_baudboy=false
+		try_ttylock=false
+		try_lockdev=false
+	fi
+)
+if $have_serial; then
+	IOLIB_SUBDIRS="$IOLIB_SUBDIRS serial"
+	IOLIB_LDFLAGS="$IOLIB_LDFLAGS -Lserial -lgphoto2_port_serial"
+fi
 
 dnl -----------------------------------------
 dnl Serial port locking: We try to use either
@@ -79,23 +100,17 @@ dnl  (1) baudboy.h
 dnl  (2) ttylock.h
 dnl  (3) lockdev.h
 dnl -----------------------------------------
-baudboy_msg=no
-ttylock_msg=no
-lockdev_msg=no
-try_baudboy_msg=true
-try_ttylock=true
-try_lockdev=true
-AC_ARG_WITH(baudboy, [  --without-baudboy       Use baudboy library],
+AC_ARG_WITH(baudboy, [  --without-baudboy       Don't use baudboy library],
 	if test x$withval = xno; then
 		try_baudboy=false
 	fi
 )
-AC_ARG_WITH(ttylock, [  --without-ttylock       Use ttylock library],
+AC_ARG_WITH(ttylock, [  --without-ttylock       Don't use ttylock library],
 	if test x$withval = xno; then
 		try_ttylock=false
 	fi
 )
-AC_ARG_WITH(lockdev, [  --without-lockdev       Use lockdev library],
+AC_ARG_WITH(lockdev, [  --without-lockdev       Don't use lockdev library],
 	if test x$withval = xno; then
 		try_lockdev=false
 	fi
@@ -149,23 +164,37 @@ if $try_lockdev; then
 fi
 AC_SUBST(SERIAL_LDFLAGS)
 
-dnl Compile in usb support
-AC_PATH_PROG(LIBUSB_CONFIG,libusb-config)
-if test -n "${LIBUSB_CONFIG}"; then
-  IOLIB_SUBDIRS="$IOLIB_SUBDIRS usb"
-  IOLIB_LDFLAGS="$IOLIB_LDFLAGS `libusb-config --libs` -lgphoto2_port_usb"
-  IOLIB_CFLAGS="$IOLIB_CFLAGS -DGP_PORT_SUPPORTED_USB `libusb-config --cflags`"
-else
-  AC_MSG_WARN([
-
+dnl ******
+dnl libusb
+dnl ******
+usb_msg=no
+try_usb=true
+AC_ARG_WITH(usb, [  --without-usb   Don't compile in USB support],
+	if test x$withval = xno; then
+		try_usb=false
+	fi
+)
+if $try_usb; then
+	AC_PATH_PROG(LIBUSB_CONFIG,libusb-config)
+	AC_CHECK_HEADER(usb.h,
+		if test -n "${LIBUSB_CONFIG}"; then
+			usb_msg=yes
+			IOLIB_SUBDIRS="$IOLIB_SUBDIRS usb"
+			IOLIB_LDFLAGS="$IOLIB_LDFLAGS `libusb-config --libs` -lgphoto2_port_usb"
+			IOLIB_CFLAGS="$IOLIB_CFLAGS `libusb-config --cflags`"
+		else
+			AC_MSG_WARN([
+*** Could not find libusb-config. Please verify your libusb installation.
+])
+		fi
+	)
+else 
+	AC_MSG_WARN([ 
 *** You need Johannes Erdfelt's libusb library for USB support
 *** http://download.sourceforge.net/libusb/libusb-0.1.2.tar.gz
 ])
 fi
 
-AC_SUBST(GPPORT_LIBDIR)
-AC_SUBST(GPPORT_LIBS)
-AC_SUBST(GPPORT_INCLUDEDIR)
 AC_SUBST(IOLIB_SUBDIRS)
 AC_SUBST(IOLIB_LDFLAGS)
 AC_SUBST(IOLIB_CFLAGS)
@@ -198,10 +227,14 @@ Configuration
 	Source code location: ${srcdir}
 	Compiler:             ${CC}
 
-	Locking mechanism:
+	SERIAL support:       $serial_msg
+
+	Locking mechanism (for serial ports):
 	Use baudboy:          $baudboy_msg
 	Use ttylock:          $ttylock_msg
 	Use lockdev:          $lockdev_msg
+
+	USB support:          $usb_msg
 
 	Build documenation:   $enable_gtk_doc
 "
