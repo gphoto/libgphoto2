@@ -75,6 +75,7 @@ void gp_widget_dump_rec (CameraWidget *widget, int depth) {
 	int x;
 	char buf[1024];
 
+	printf("core: ");
 	for (x=0; x<depth*2; x++)
 		printf(" ");
 	printf("%s\n", widget->label);
@@ -85,7 +86,8 @@ void gp_widget_dump_rec (CameraWidget *widget, int depth) {
 
 int gp_widget_dump(CameraWidget *widget) {
 
-	gp_widget_dump_rec(widget, 1);
+	printf("core: Dumping widget \"%s\" and children:", widget->label);
+	gp_widget_dump_rec(widget, 0);
 
 	return (GP_OK);
 }
