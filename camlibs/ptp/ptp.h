@@ -102,12 +102,12 @@
 #define PTP_REQ_DATALEN                 16384
 #define PTP_REQ_LEN                     30
 #define PTP_REQ_HDR_LEN                 (2*sizeof(int)+2*sizeof(short))
-#define PTP_RESP_LEN                    sizeof(struct ptp_req)
+#define PTP_RESP_LEN                    sizeof(PTPReq)
 
 // PTP request/response type
 
-typedef struct _ptp_req ptp_req;
-struct _ptp_req {
+typedef struct _PTPReq PTPReq;
+struct _PTPReq {
 	int len;
 	short type;
 	short code;
@@ -118,16 +118,16 @@ struct _ptp_req {
 
 // PTP objecthandles structure (returned by GetObjectHandles)
 
-typedef struct _ptp_objecthandles ptp_objecthandles;
-struct _ptp_objecthandles {
+typedef struct _PTPObjectHandles PTPObjectHandles;
+struct _PTPObjectHandles {
 	int n;
 	int handler[(PTP_REQ_DATALEN-sizeof(int))/sizeof(int)];
 };
 
 // PTP objectinfo structure (returned by GetObjectInfo)
 
-typedef struct _ptp_objectinfo ptp_objectinfo;
-struct _ptp_objectinfo {
+typedef struct _PTPObjectInfo PTPObjectInfo;
+struct _PTPObjectInfo {
 	int StorageID;
 	short ObjectFormat;
 	short ProtectionStatus;
@@ -155,15 +155,17 @@ enum _PTPResult {
 	PTP_ERROR
 };
 
-typedef PTPResult (* PTPIOReadFunc)  (ptp_req *bytes,
+typedef PTPResult (* PTPIOReadFunc)  (PTPReq *bytes,
 				      unsigned int size, void *data);
-typedef PTPResult (* PTPIOWriteFunc) (ptp_req *bytes,
+typedef PTPResult (* PTPIOWriteFunc) (PTPReq *bytes,
 				      unsigned int size, void *data);
+typedef void (* PTPError) (char *errmsg);
 
 typedef struct _PTPParams PTPParams;
 struct _PTPParams {
 	PTPIOReadFunc io_read;
 	PTPIOWriteFunc io_write;
+	PTPError ptp_error;
 	int id;			// Transaction ID
 	void *io_data;
 };
