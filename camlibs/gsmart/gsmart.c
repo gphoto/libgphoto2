@@ -589,6 +589,13 @@ gsmart_get_file_info (CameraPrivateLibrary * lib, unsigned int index,
 }
 
 int
+gsmart_get_firmware_revision (CameraPrivateLibrary *lib)
+{
+	u_int8_t firmware = 0;
+	CHECK (gp_port_usb_msg_read (lib->gpdev, 0x20, 0x0, 0x0, &firmware, 1));
+	return firmware;
+}
+int
 gsmart_reset (CameraPrivateLibrary * lib)
 {
 	GP_DEBUG ("* gsmart_reset");
