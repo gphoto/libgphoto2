@@ -120,7 +120,7 @@ gp_port_operations *gp_port_library_operations () {
 #  ifdef __linux__
 #    define LOCK_DIR        "/var/lock"
 #  else
-#    ifdef SVR4
+#    if defined (SVR4) || defined (__SVR4) || defined (__SVR4__)
 #      define LOCK_DIR        "/var/spool/locks"
 #    else
 #      define LOCK_DIR        "/var/spool/lock"
