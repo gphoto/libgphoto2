@@ -4,7 +4,8 @@ bin_PROGRAMS = gphoto2
 
 CFLAGS = @CFLAGS@ -I$(top_srcdir)/include
 
-gphoto2_SOURCES = gphoto2.c gphoto2.h \
+gphoto2_SOURCES = \
+		main.c main.h \
 		interface.c interface.h \
 		test.c test.h
 
