@@ -21,6 +21,7 @@
 
 if [ "${ACTION}" = "add" ] && [ -f "${DEVICE}" ]
 then
+    chmod g-rw "${DEVICE}"
     chgrp camera "${DEVICE}"
     chmod g+rw "${DEVICE}"
 fi

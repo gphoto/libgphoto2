@@ -24,7 +24,7 @@ USER=root
 
 if [ "${ACTION}" = "add" ] && [ -f "${DEVICE}" ]
 then
-    chmod 0000 "${DEVICE}"
+    chmod u-rw "${DEVICE}"
     chown "${USER}" "${DEVICE}"
-    chmod 0600 "${DEVICE}"
+    chmod u+rw "${DEVICE}"
 fi
