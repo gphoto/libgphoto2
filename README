@@ -10,7 +10,6 @@ If you miss a feature, would like to report success or failure, or have any
 questions, please don't hesitate to contact our mailing list.
 
 
-
 What is gphoto2?
 ----------------
 
@@ -72,6 +71,7 @@ and needs some testing. Here is a short list of camera that use this protocol:
 You may try jPhoto <http://jphoto.sourceforge.net/> for ptp cameras
 alternatively if gphoto fails.
 
+
 Platforms
 ---------
 
@@ -111,21 +111,19 @@ gphoto2. When you encounter something that does not work, please do
 the following: 
 
 1. Find out whether this is a known problem.
+
 2. Reproduce the problem with debug output enabled and the language
    set to English, so that the development team will understand the
    messages. You can do this by running:
 
-      LANG=C gtkam
+      env LC_ALL=C gtkam
 
    if you're using the gtkam frontend or running:
 
-      LANG=C gphoto2 --debug <options>
+      env LC_ALL=C gphoto2 --debug <options>
 
-   using the gphoto2 command line interface. The csh freaks use
+   using the gphoto2 command line interface.
 
-      env LANG=C gphoto2 --debug <options
-
-   instead.
 3. Report the problem on the mailing list with the corresponding debug
    output if it is small. If it is more than a few kilobytes, please
    don't post the complete debug output on the list.
