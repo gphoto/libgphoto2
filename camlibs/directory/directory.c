@@ -480,7 +480,8 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 static int
 camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 {
-        strcpy(manual->text, "The Directory Browse \"camera\" lets you index\nphotos on your hard drive. The folder list on the\nleft contains the folders on your hard drive,\nbeginning at the root directory (\"/\").");
+        strcpy (manual->text, _("The Directory Browse \"camera\" lets "
+		"you index photos on your hard drive."));
 
         return (GP_OK);
 }
