@@ -23,18 +23,38 @@
 
 #include <gphoto2-abilities.h>
 
-typedef struct {
-	int count;
-	CameraAbilities **abilities;
-} CameraAbilitiesList;
+typedef struct _CameraAbilitiesList CameraAbilitiesList;
 
 int gp_abilities_list_new    (CameraAbilitiesList **list);
 int gp_abilities_list_free   (CameraAbilitiesList *list);
 
-int gp_abilities_list_dump   (CameraAbilitiesList *list);
+int gp_abilities_list_dump      (CameraAbilitiesList *list);
+int gp_abilities_list_dump_libs (CameraAbilitiesList *list);
+
 int gp_abilities_list_append (CameraAbilitiesList *list, CameraAbilities *);
 
 int gp_abilities_list_count  (CameraAbilitiesList *list);
 int gp_abilities_list_sort   (CameraAbilitiesList *list);
+
+int gp_abilities_list_lookup_id   (CameraAbilitiesList *list, const char *id);
+int gp_abilities_list_set_id      (CameraAbilitiesList *list, int index, 
+				   const char *id);
+
+int gp_abilities_list_set_library (CameraAbilitiesList *list, int index,
+				   const char *library);
+int gp_abilities_list_get_library (CameraAbilitiesList *list, int index,
+				   const char **library);
+
+int gp_abilities_list_lookup_model (CameraAbilitiesList *list, const char *m);
+int gp_abilities_list_get_model    (CameraAbilitiesList *list, int index,
+				    const char **model);
+
+int gp_abilities_list_get_vendor_and_product (CameraAbilitiesList *list,
+					      int index,
+					      int *usb_vendor,
+					      int *usb_product);
+
+int gp_abilities_list_get_abilities (CameraAbilitiesList *list, int index,
+				     CameraAbilities *abilities);
 
 #endif /* __GPHOTO2_ABILITIES_LIST_H__ */
