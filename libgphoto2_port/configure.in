@@ -33,7 +33,7 @@ BUILD_INCLUDED_LIBINTL=no
 AC_SUBST(BUILD_INCLUDED_LIBINTL)
 
 dnl Languages
-ALL_LINGUAS=""
+ALL_LINGUAS="de"
 AM_GNU_GETTEXT
 
 dnl Turn on debugging and catch GNU features incompatible with ANSI C.

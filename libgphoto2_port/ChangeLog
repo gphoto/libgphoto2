@@ -1,3 +1,7 @@
+2001-11-17  Colin Marquardt  <colin@marquardt-home.de>
+
+	* configure.in (Module): Added 'de' to ALL_LINGUAS.
+
 2001-11-11  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* configure.in: Look for usb.h in locations specified by
