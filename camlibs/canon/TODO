@@ -3,19 +3,41 @@ List of work that still has to be done on this driver:
 ========================================================================
 
  - switch the camera keys and buttons off while connected
+   and on again when disconnected
 
- - make misc. models work on A/C adapter (e.g. G1, 90 IS)
+ - make misc. models work on A/C adapter (e.g. G1, Pro 90 IS)
 
  - make file upload work
 
- - make downloading raw images work
+ - make thumbnail download work in 100% of cases
 
- - FOLDERS : folders are not supported on the A50 (users have no control on
-   the directory where images are stored on the compact flash) so for the
-   moment the internal directory structure is hidden to gphoto2.
+ - set attributes after successful download
+
+ - getting other info on file (resolution and stuff)
+
+ - setting attributes in general
+
+ - extend file attributes from 1 octet to 2 octets
+
+ - use capabilities everywhere
+
+ - the canon_int* functions often shouldn't use gphoto2 structures
+   the canon_usb* and canon_serial* should even less
 
  - A5 support is completely broken, with the new filename based API, the 
    directory caching mecanism must be completely revisited.
+
+ - make sure serial cameras work with new CameraFS based code
+
+ - deleting files [done -hun]
+
+ - make CameraFilesystem distinguish between files and folders [done -hun]
+
+ - FOLDERS : folders are not supported on the A50 (users have no control on
+   the directory where images are stored on the compact flash) so for the
+   moment the internal directory structure is hidden to gphoto2. [done -hun]
+
+ - make downloading raw images work [done -hun]
 
 ========================================================================
 Old stuff that is already done was moved down a bit by hun:
