@@ -1,4 +1,4 @@
-libgphoto2 CVS
+libgphoto2 2.1.1
 
    * separated libgphoto2 sources from gphoto2 command line interface
 
@@ -10,12 +10,15 @@ drivers (camlibs):
 
    * Canon driver: 
      - added support for Canon PowerShot A100, Canon PowerShot A200,
-       Canon PowerShot S45, Canon PowerShot S230
+       Canon PowerShot S45, Canon PowerShot S230, Canon Digital IXUS v3,
+       Canon PowerShot G3
      - fixed Canon EOS D60 unlocking
 
    * PTP driver:
      - fixed some bugs
      - added support for Nikon D100
+     - added support for Canon PowerShot S45, Canon PowerShot S230, 
+       Canon Digital IXUS v3, Canon PowerShot G3 in PTP mode
 
    * added support for Mustek gSmart mini, Mustek gSmart mini 2, Mustek gSmart
        mini 3 and So. Show 301

@@ -68,7 +68,8 @@ typedef enum {
 	CANON_PS_A100,
 	CANON_PS_A200,
 	CANON_PS_S45,
-	CANON_PS_S230
+	CANON_PS_S230,
+	CANON_PS_G3
 } canonCamModel;
 
 #define CON_CHECK_PARAM_NULL(param) \

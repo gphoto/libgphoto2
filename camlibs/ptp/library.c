@@ -222,12 +222,14 @@ static struct {
 	 */
 	{"Canon PowerShot S45 (PTP mode)", 0x04a9, 0x306d},
 		/* 0x306c is S45 in normal (canon) mode */
+	{"Canon PowerShot G3 (PTP mode)", 0x04a9, 0x306f},
+		/* 0x306e is G3 in normal (canon) mode */
 	{"Canon PowerShot S230 (PTP mode)", 0x04a9, 0x3071},
 		/* 0x3070 is S230 in normal (canon) mode */
 	{"Canon Digital IXUS v3 (PTP mode)",  0x04a9, 0x3071},
 		/* it's the same as S230 */
 
-	/* more comming soon :) */
+	/* more coming soon :) */
 	{NULL, 0, 0}
 };
 

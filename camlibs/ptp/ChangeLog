@@ -1,4 +1,9 @@
+2002-11-20  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* library.c: several Canon cameras have a PTP mode
+
 2002-10-16 Stephen H. Westin
+	
 	* library.c: Nikon D100 has a PTP mode
 
 2002-10-03  Lutz Müller <lutz@users.sourceforge.net>
