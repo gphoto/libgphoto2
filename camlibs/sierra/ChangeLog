@@ -1,5 +1,10 @@
 2002-05-25  Lutz Müller <lutz@users.sourceforge.net>
 
+	* sierra.c (camera_init): Check if the computer supports high speeds
+	  (i.e. 115200).
+
+2002-05-25  Lutz Müller <lutz@users.sourceforge.net>
+
 	* library.c (sierra_check_connection): GP_ERROR_IO_READ is fine, too.
 
 2002-05-24  Lutz Müller <lutz@users.sourceforge.net>

@@ -2020,16 +2020,30 @@ camera_init (Camera *camera, GPContext *context)
         switch (camera->port->type) {
         case GP_PORT_SERIAL:
 
+		s.serial.bits     = 8;
+		s.serial.parity   = 0;
+		s.serial.stopbits = 1;
+
 		/*
 		 * Remember the speed. If no speed is given, we assume
 		 * people want to use the highest one (i.e. 115200).
+		 * However, not all machines support every speed. Check that.
 		 */
-		camera->pl->speed = s.serial.speed ? s.serial.speed : 115200;
+		if (s.serial.speed)
+			camera->pl->speed = s.serial.speed;
+		else {
+			unsigned int speeds[] = {115200, 57600, 38400, 0}, i;
+			
+			for (i = 0; speeds[i]; i++) {
+				s.serial.speed = speeds[i];
+				if (gp_port_set_settings (camera->port, s) >= 0)
+					break;
+			}
+			camera->pl->speed = (speeds[i] ? speeds[i] : 19200);
+		}
 
-                s.serial.speed    = 19200;
-                s.serial.bits     = 8;
-                s.serial.parity   = 0;
-                s.serial.stopbits = 1;
+		/* The camera defaults to 19200. */
+                s.serial.speed = 19200;
 
                 break;
 
