@@ -66,7 +66,7 @@ camera_abilities (CameraAbilitiesList *list)
 }
 
 static int
-camera_exit (Camera *camera) 
+camera_exit (Camera *camera, GPContext *context) 
 {
 	return (GP_OK);
 }
@@ -126,7 +126,7 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 }
 
 static int
-camera_config_get (Camera *camera, CameraWidget **window) 
+camera_config_get (Camera *camera, CameraWidget **window, GPContext *context) 
 {
 	gp_widget_new (GP_WIDGET_WINDOW, "Camera Configuration", window);
 
@@ -136,7 +136,7 @@ camera_config_get (Camera *camera, CameraWidget **window)
 }
 
 static int
-camera_config_set (Camera *camera, CameraWidget *window) 
+camera_config_set (Camera *camera, CameraWidget *window, GPContext *context) 
 {
 	/*
 	 * Check if the widgets' values have changed. If yes, tell the camera.
@@ -146,7 +146,7 @@ camera_config_set (Camera *camera, CameraWidget *window)
 }
 
 static int
-camera_capture_preview (Camera *camera, CameraFile *file)
+camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 {
 	/*
 	 * Capture a preview and return the data in the given file (again,
@@ -159,7 +159,8 @@ camera_capture_preview (Camera *camera, CameraFile *file)
 }
 
 static int
-camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path)
+camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
+		GPContext *context)
 {
 	/*
 	 * Capture an image and tell libgphoto2 where to find it by filling
@@ -170,7 +171,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path)
 }
 
 static int
-camera_summary (Camera *camera, CameraText *summary) 
+camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
 	/*
 	 * Fill out the summary with some information about the current 
@@ -181,7 +182,7 @@ camera_summary (Camera *camera, CameraText *summary)
 }
 
 static int
-camera_manual (Camera *camera, CameraText *manual) 
+camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 {
 	/*
 	 * If you would like to tell the user some information about how 
@@ -192,7 +193,7 @@ camera_manual (Camera *camera, CameraText *manual)
 }
 
 static int
-camera_about (Camera *camera, CameraText *about) 
+camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
 	strcpy (about->text, _("Library Name\n"
 			       "YOUR NAME <email@somewhere.com>\n"
@@ -247,7 +248,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 }
 
 int
-camera_init (Camera *camera) 
+camera_init (Camera *camera, GPContext *context) 
 {
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;
