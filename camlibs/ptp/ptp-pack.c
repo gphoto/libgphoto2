@@ -78,7 +78,7 @@ ptp_unpack_string(PTPParams *params, PTPReq *req, uint16_t offset, uint8_t *len)
 		string[i]=(char)dtoh16a(&req->data[offset+i*2+1]);
 	}
 	// be paranoid! :)
-	string[*len+1]=0;
+	string[*len-1]=0;
 	return (string);
 }
 
