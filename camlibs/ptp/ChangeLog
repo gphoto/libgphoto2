@@ -1,3 +1,7 @@
+2002-01-16  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c: No time for previews...
+
 2002-01-16 Mariusz WOloszyn
 	* ptp-pack.c:     added fake date packing
 	* ptp.c:  Fixed ptp_ek_sendfileobjectinfo to use packed structures

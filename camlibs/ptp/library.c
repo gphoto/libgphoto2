@@ -680,7 +680,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	if ((oi->ObjectFormat & 0x0800) != 0) {
 		info->preview.fields = GP_FILE_INFO_SIZE|GP_FILE_INFO_WIDTH
-				|GP_FILE_INFO_HEIGHT|GP_FILE_INFO_TIME|GP_FILE_INFO_TYPE;
+				|GP_FILE_INFO_HEIGHT|GP_FILE_INFO_TYPE;
 		strcpy_mime(info->preview.type, oi->ThumbFormat);
 		info->preview.size   = oi->ThumbCompressedSize;
 		info->preview.width  = oi->ThumbPixWidth;
