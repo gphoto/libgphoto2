@@ -91,6 +91,9 @@
 #define ETB 0x17 /* End of transmission block */
 #define NAK 0x15
 
+#define FUJI_ACK 0x00
+#define FUJI_NAK 0x01
+
 #if 0
 
 #define FUJI_GET_PICCOUNT	0x0b
@@ -784,7 +787,14 @@ fuji_set_speed (Camera *camera, FujiSpeed speed, GPContext *context)
 	CLEN (buf_len, 1);
 
 	/* Check the response */
-	if (buf[0] != 0) {
+	switch (buf[0]) {
+	case FUJI_ACK:
+		break;
+	case FUJI_NAK:
+		gp_context_error (context, _("The camera does not "
+			"support speed %i."), speed);
+		return (GP_ERROR_NOT_SUPPORTED);
+	default:
 		gp_context_error (context, _("Could not set speed to "
 			"%i (camera responded with %i)."), speed, buf[0]);
 		return (GP_ERROR);

@@ -257,9 +257,11 @@ pre_func (Camera *camera, GPContext *context)
 {
 	int r;
 	unsigned int i;
+	GPPortSettings settings;
 
 	GP_DEBUG ("Initializing connection...");
 
+	CR (gp_port_get_settings (camera->port, &settings));
 	CR (fuji_ping (camera, context));
 	if (!camera->pl->speed) {
 
@@ -269,6 +271,13 @@ pre_func (Camera *camera, GPContext *context)
 			if (r >= 0)
 				break;
 		}
+
+		/*
+		 * Change the port's speed and check if the camera is
+		 * still there.
+		 */
+		settings.serial.speed = Speeds[i].bit_rate;
+		CR (gp_port_set_settings (camera->port, settings));
 		CR (fuji_ping (camera, context));
 
 	} else {
@@ -286,6 +295,13 @@ pre_func (Camera *camera, GPContext *context)
 		/* Change the speed if necessary. */
 		if (camera->pl->speed != Speeds[i].bit_rate) {
 			CR (fuji_set_speed (camera, Speeds[i].speed, context));
+
+			/*
+			 * Change the port's speed and check if the camera is 
+			 * still there.
+			 */
+			settings.serial.speed = Speeds[i].bit_rate;
+			CR (gp_port_set_settings (camera->port, settings));
 			CR (fuji_ping (camera, context));
 		}
 	}

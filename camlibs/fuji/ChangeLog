@@ -1,3 +1,8 @@
+2002-04-19  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c: If we tell the camera to switch to another speed, we
+	  need to change the port's speed, too.
+
 2002-04-18  Lutz Müller <lutz@users.sourceforge.net>
 
 	* library.c
