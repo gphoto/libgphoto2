@@ -65,7 +65,8 @@ gp_debug_printf (int level, const char *id, const char *format, ...)
 
 	if (!port_func_set)
 		port_func_set = gp_log_add_func (
-			GP_LOG_DEBUG | GP_LOG_ERROR, gp_port_func, NULL);
+			GP_LOG_DATA | GP_LOG_DEBUG | GP_LOG_ERROR,
+			gp_port_func, NULL);
 
 	va_start (arg, format);
 #if HAVE_VSNPRINTF
