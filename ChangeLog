@@ -1,5 +1,12 @@
 2001-10-03  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* frontends/command-line/main.c: Print out additional information
+	on error.
+	* include/gphoto2-result.h:
+	* libgphoto2/result.c (gp_result_as_description): New.
+
+2001-10-03  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2/camera.c: Check the result of gp_port_open.
 
 2001-10-01  Lutz Müller <urc8@rz.uni-karlsruhe.de>

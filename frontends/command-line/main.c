@@ -949,7 +949,8 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n");
         if ((result = execute_options(argc, argv)) != GP_OK) {
                 printf ("gPhoto2 reported the error '%s'\n",
                         gp_camera_get_result_as_string (glob_camera, result));
-                exit(EXIT_FAILURE);
+		printf ("%s\n", gp_result_as_description (result));
+                exit (EXIT_FAILURE);
         }
 
 #ifdef OS2
