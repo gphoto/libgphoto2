@@ -1,3 +1,21 @@
+2001-11-20  Gilles Grandou <gilles@grandou.net>
+
+	* camlibs/sierra.[c,h]:
+	  - intoduced camera classes, in order to customise behaviour for
+	    various specific cameras.
+	  - camera_init(): initialize model class in private library area,
+	    initialize set_config and get_config function pointers.
+	  - camera_get/set_config(): changed to address specific camera
+	    classes. Currents one has been renamed for olympus cams, a new
+	    one targeted to Epson cameras has been introduced. The default
+	    set is pointing to Olympus for compatibility with current
+	    code, but this should change in the future.
+	  - camera_summary(): detect missing memory card. tested on Epson
+	    3000z. added some info in summary.
+	  - camera_manual(): added custom message for Epson cameras.
+	    Current is targeted to Olympus ones. Default still display
+	    Olympus message for compatibility.
+
 2001-11-20  Hans Ulrich Niedermann <hun@n-dimensional.de>
 
 	* HACKING: covertly introducing important policy changes :-)

@@ -1,4 +1,12 @@
+
+typedef enum {
+	SIERRA_MODEL_DEFAULT,   
+	SIERRA_MODEL_EPSON,
+	SIERRA_MODEL_OLYMPUS
+} SierraModel;
+
 struct _CameraPrivateLibrary {
+	SierraModel model;
 	int folders;
 	int speed;
 	int first_packet;
@@ -8,6 +16,7 @@ struct _CameraPrivateLibrary {
 
 typedef struct {
 	char model[64];
+	SierraModel sierra_model;
 	int  usb_vendor;
 	int  usb_product;
 	int  usb_inep;

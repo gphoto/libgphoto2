@@ -71,81 +71,82 @@ const char JPEG_APP1_MARKER[] = { (char)0xFF, (char)0xE1, '\0' };
 const char TIFF_SOI_MARKER[]  = { (char)0x49, (char)0x49, (char)0x2A, (char)0x00, (char)0x08, '\0' };
 
 static SierraCamera sierra_cameras[] = {
-	/* Camera Model,    USB(vendor id, product id, in endpoint, out endpoint, USB wrapper protocol) */ 
-	{"Agfa ePhoto 307", 	0, 0, 0, 0, 0 },
-	{"Agfa ePhoto 780", 	0, 0, 0, 0, 0 },
-	{"Agfa ePhoto 780C", 	0, 0, 0, 0, 0 },
-	{"Agfa ePhoto 1280", 	0, 0, 0, 0, 0 },
-	{"Agfa ePhoto 1680", 	0, 0, 0, 0, 0 },
-	{"Apple QuickTake 200", 0, 0, 0, 0, 0 },
-	{"Chinon ES-1000", 	0, 0, 0, 0, 0 },
-	{"Epson PhotoPC 500", 	0, 0, 0, 0, 0 },
-	{"Epson PhotoPC 550", 	0, 0, 0, 0, 0 },
-	{"Epson PhotoPC 600", 	0, 0, 0, 0, 0 },
-	{"Epson PhotoPC 700", 	0, 0, 0, 0, 0 },
-	{"Epson PhotoPC 800", 	0, 0, 0, 0, 0 },
-	{"Epson PhotoPC 3000z", 0x4b8, 0x403, 0x83, 0x04, 0},
-	{"Nikon CoolPix 100", 	0, 0, 0, 0, 0 },
-	{"Nikon CoolPix 300", 	0, 0, 0, 0, 0 },
-	{"Nikon CoolPix 700", 	0, 0, 0, 0, 0 },
-	{"Nikon CoolPix 800", 	0, 0, 0, 0, 0 },
-        {"Nikon CoolPix 880",	0x04b0, 0x0103, 0x83, 0x04, 0},
-        {"Nikon CoolPix 900", 	0, 0, 0, 0, 0 },
-	{"Nikon CoolPix 900S", 	0, 0, 0, 0, 0 },
-	{"Nikon CoolPix 910", 	0, 0, 0, 0, 0 },
-	{"Nikon CoolPix 950", 	0, 0, 0, 0, 0 },
-	{"Nikon CoolPix 950S", 	0, 0, 0, 0, 0 },
-	{"Nikon CoolPix 990",	0x04b0, 0x0102, 0x83, 0x04, 0},
-	{"Olympus D-100Z", 	0, 0, 0, 0, 0 },
-	{"Olympus D-200L", 	0, 0, 0, 0, 0 },
-	{"Olympus D-220L", 	0, 0, 0, 0, 0 },
-	{"Olympus D-300L", 	0, 0, 0, 0, 0 },
-	{"Olympus D-320L", 	0, 0, 0, 0, 0 },
-	{"Olympus D-330R", 	0, 0, 0, 0, 0 },
-	{"Olympus D-340L", 	0, 0, 0, 0, 0 },
-	{"Olympus D-340R", 	0, 0, 0, 0, 0 },
-	{"Olympus D-360L", 	0, 0, 0, 0, 0 },
-	{"Olympus D-400L Zoom", 0, 0, 0, 0, 0 },
-	{"Olympus D-450Z", 	0, 0, 0, 0, 0 },
-	{"Olympus D-460Z", 	0, 0, 0, 0, 0 },
-	{"Olympus D-500L", 	0, 0, 0, 0, 0 },
-	{"Olympus D-600L", 	0, 0, 0, 0, 0 },
-	{"Olympus D-600XL", 	0, 0, 0, 0, 0 },
-	{"Olympus D-620L", 	0, 0, 0, 0, 0 },
-	{"Olympus C-400", 	0, 0, 0, 0, 0 },
-	{"Olympus C-400L", 	0, 0, 0, 0, 0 },
-	{"Olympus C-410", 	0, 0, 0, 0, 0 },
-	{"Olympus C-410L", 	0, 0, 0, 0, 0 },
-	{"Olympus C-420", 	0, 0, 0, 0, 0 },
-	{"Olympus C-420L", 	0, 0, 0, 0, 0 },
-	{"Olympus C-800", 	0, 0, 0, 0, 0 },
-	{"Olympus C-800L", 	0, 0, 0, 0, 0 },
-	{"Olympus C-820", 	0, 0, 0, 0, 0 },
-	{"Olympus C-820L", 	0, 0, 0, 0, 0 },
-	{"Olympus C-830L", 	0, 0, 0, 0, 0 },
-	{"Olympus C-840L", 	0, 0, 0, 0, 0 },
-	{"Olympus C-900 Zoom", 	0, 0, 0, 0, 0 },
-	{"Olympus C-900L Zoom", 0, 0, 0, 0, 0 },
-	{"Olympus C-1000L", 	0, 0, 0, 0, 0 },
-	{"Olympus C-1400L", 	0, 0, 0, 0, 0 },
-	{"Olympus C-1400XL", 	0, 0, 0, 0, 0 },
-	{"Olympus C-2000Z", 	0, 0, 0, 0, 0 },
-	{"Olympus C-2020Z",	0, 0, 0, 0, 0 },
-        {"Olympus C-2040Z", 	0x07b4, 0x105, 0x83, 0x04, 1},
-	{"Olympus C-2100UZ",    0x07b4, 0x100, 0x83, 0x04, 0},
-        {"Olympus C-2500Z", 	0, 0, 0, 0, 0 },
-	{"Olympus C-3000Z", 	0x07b4, 0x100, 0x83, 0x04, 0},
-	{"Olympus C-3030Z", 	0x07b4, 0x100, 0x83, 0x04, 0},
-	{"Panasonic Coolshot NV-DCF5E", 0, 0, 0, 0, 0 },
-	{"Polaroid PDC 640", 	0, 0, 0, 0, 0  },
-	{"Sanyo DSC-X300", 	0, 0, 0, 0, 0 },
-	{"Sanyo DSC-X350", 	0, 0, 0, 0, 0 },
-	{"Sanyo VPC-G200", 	0, 0, 0, 0, 0 },
-	{"Sanyo VPC-G200EX", 	0, 0, 0, 0, 0 },
-	{"Sanyo VPC-G210", 	0, 0, 0, 0, 0 },
-	{"Sanyo VPC-G250", 	0, 0, 0, 0, 0 },
-	{"Sierra Imaging SD640",0, 0, 0, 0, 0 },
-	{"", 0, 0, 0, 0, 0 }
+	/* Camera Model, Sierra Model, USB(vendor id, product id, in endpoint, 
+	   out endpoint, USB wrapper protocol) */ 
+	{"Agfa ePhoto 307", 	SIERRA_MODEL_DEFAULT, 	0, 0, 0, 0, 0 },
+	{"Agfa ePhoto 780", 	SIERRA_MODEL_DEFAULT, 	0, 0, 0, 0, 0 },
+	{"Agfa ePhoto 780C", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
+	{"Agfa ePhoto 1280", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
+	{"Agfa ePhoto 1680", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
+	{"Apple QuickTake 200", SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
+	{"Chinon ES-1000", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
+	{"Epson PhotoPC 500", 	SIERRA_MODEL_EPSON,	0, 0, 0, 0, 0 },
+	{"Epson PhotoPC 550", 	SIERRA_MODEL_EPSON,	0, 0, 0, 0, 0 },
+	{"Epson PhotoPC 600", 	SIERRA_MODEL_EPSON,	0, 0, 0, 0, 0 },
+	{"Epson PhotoPC 700", 	SIERRA_MODEL_EPSON,	0, 0, 0, 0, 0 },
+	{"Epson PhotoPC 800", 	SIERRA_MODEL_EPSON,	0, 0, 0, 0, 0 },
+	{"Epson PhotoPC 3000z", SIERRA_MODEL_EPSON,	0x4b8, 0x403, 0x83, 0x04, 0},
+	{"Nikon CoolPix 100", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
+	{"Nikon CoolPix 300", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
+	{"Nikon CoolPix 700", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
+	{"Nikon CoolPix 800", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
+        {"Nikon CoolPix 880",	SIERRA_MODEL_DEFAULT,	0x04b0, 0x0103, 0x83, 0x04, 0},
+        {"Nikon CoolPix 900", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
+	{"Nikon CoolPix 900S", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
+	{"Nikon CoolPix 910", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
+	{"Nikon CoolPix 950", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
+	{"Nikon CoolPix 950S", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
+	{"Nikon CoolPix 990",	SIERRA_MODEL_DEFAULT,	0x04b0, 0x0102, 0x83, 0x04, 0},
+	{"Olympus D-100Z", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus D-200L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus D-220L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus D-300L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus D-320L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus D-330R", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus D-340L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus D-340R", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus D-360L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus D-400L Zoom", SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus D-450Z", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus D-460Z", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus D-500L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus D-600L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus D-600XL", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus D-620L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus C-400", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus C-400L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus C-410", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus C-410L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus C-420", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus C-420L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus C-800", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus C-800L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus C-820", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus C-820L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus C-830L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus C-840L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus C-900 Zoom", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus C-900L Zoom", SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus C-1000L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus C-1400L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus C-1400XL", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus C-2000Z", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus C-2020Z",	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+        {"Olympus C-2040Z", 	SIERRA_MODEL_OLYMPUS,	0x07b4, 0x105, 0x83, 0x04, 1},
+	{"Olympus C-2100UZ",    SIERRA_MODEL_OLYMPUS,	0x07b4, 0x100, 0x83, 0x04, 0},
+        {"Olympus C-2500Z", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus C-3000Z", 	SIERRA_MODEL_OLYMPUS,	0x07b4, 0x100, 0x83, 0x04, 0},
+	{"Olympus C-3030Z", 	SIERRA_MODEL_OLYMPUS,	0x07b4, 0x100, 0x83, 0x04, 0},
+	{"Panasonic Coolshot NV-DCF5E", SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
+	{"Polaroid PDC 640", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0  },
+	{"Sanyo DSC-X300", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
+	{"Sanyo DSC-X350", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
+	{"Sanyo VPC-G200", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
+	{"Sanyo VPC-G200EX", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
+	{"Sanyo VPC-G210", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
+	{"Sanyo VPC-G250", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
+	{"Sierra Imaging SD640",SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
+	{"", 			SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 }
 };
 
 
@@ -602,6 +603,7 @@ put_file_func (CameraFilesystem * fs, const char *folder, CameraFile * file, voi
 	return (camera_stop (camera));
 }
 
+// FIXME: Is this function still usefull ?
 static void dump_register (Camera *camera)
 {
 	int ret, value, i;
@@ -685,17 +687,16 @@ static void dump_register (Camera *camera)
 }
 
 static int
-camera_get_config (Camera *camera, CameraWidget **window)
+camera_get_config_olympus (Camera *camera, CameraWidget **window)
 {
 	CameraWidget *child;
 	CameraWidget *section;
 	char t[1024];
 	int ret, value;
 
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_get_config");
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_get_config_olympus");
 
 	CHECK (camera_start (camera));
-	dump_register (camera);
 
 	gp_widget_new (GP_WIDGET_WINDOW, _("Camera Configuration"), window);
 	gp_widget_new (GP_WIDGET_SECTION, _("Picture Settings"), &section);
@@ -1022,7 +1023,7 @@ camera_get_config (Camera *camera, CameraWidget **window)
 }
 
 static int
-camera_set_config (Camera *camera, CameraWidget *window)
+camera_set_config_olympus (Camera *camera, CameraWidget *window)
 {
 	CameraWidget *child;
 	char *value;
@@ -1256,6 +1257,447 @@ camera_set_config (Camera *camera, CameraWidget *window)
 	return (camera_stop (camera));
 }
 
+
+static int
+camera_get_config_epson (Camera *camera, CameraWidget **window)
+{
+	CameraWidget *child;
+	CameraWidget *section;
+	char t[1024];
+	int ret, value;
+
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_get_config_epson");
+
+	CHECK (camera_start (camera));
+
+	gp_widget_new (GP_WIDGET_WINDOW, _("Camera Configuration"), window);
+
+	gp_widget_new (GP_WIDGET_SECTION, _("Shot Settings"), &section);
+	gp_widget_append (*window, section);
+
+	/* Aperture */
+        ret = sierra_get_int_register (camera, 5, &value);
+        if (ret == GP_OK) {
+		gp_widget_new (GP_WIDGET_RADIO, _("Aperture"), &child);
+		gp_widget_add_choice (child, _("F2"));
+		gp_widget_add_choice (child, _("F2.3"));
+		gp_widget_add_choice (child, _("F2.8"));
+		gp_widget_add_choice (child, _("F4"));
+		gp_widget_add_choice (child, _("F5.6"));
+		gp_widget_add_choice (child, _("F8"));
+		gp_widget_add_choice (child, _("auto"));
+                switch (value) {
+		case 0: strcpy (t, _("F2"));
+			break;
+                case 1: strcpy (t, _("F2.3"));
+			break;
+                case 2: strcpy (t, _("F2.8"));
+			break;
+                case 3: strcpy (t, _("F4"));    
+			break;
+		case 4: strcpy (t, _("F5.6"));  
+			break;
+		case 5: strcpy (t, _("F8"));    
+			break;
+		case 6: strcpy (t, _("auto"));  
+			break;
+                default:
+			sprintf(t, _("%i (unknown)"), value);
+			gp_widget_add_choice (child, t);
+                }
+		gp_widget_set_value (child, t);
+		gp_widget_append (section, child);
+        }
+
+	/* Flash Mode */
+	ret = sierra_get_int_register (camera, 7, &value);
+        if (ret == GP_OK) {
+		gp_widget_new (GP_WIDGET_RADIO, _("Flash Mode"), &child);
+		gp_widget_add_choice (child, _("Auto"));
+		gp_widget_add_choice (child, _("Force"));
+		gp_widget_add_choice (child, _("Off"));
+		gp_widget_add_choice (child, _("Red-eye Reduction"));
+		gp_widget_add_choice (child, _("Slow Sync"));
+                switch (value) {
+                case 0: strcpy (t, _("Auto"));
+                        break;
+                case 1: strcpy (t, _("Force"));
+                        break;
+                case 2: strcpy (t, _("Off"));
+                        break;
+                case 3: strcpy (t, _("Red-eye Reduction"));
+                        break;
+                case 4: strcpy (t, _("Slow Sync"));
+                        break;
+                default:
+                        sprintf (t, _("%i (unknown)"), value);
+			gp_widget_add_choice (child, t);
+                }
+		gp_widget_set_value (child, t);
+		gp_widget_append (section, child);
+        }
+
+	/* White Balance */
+        ret = sierra_get_int_register (camera, 20, &value);
+        if (ret == GP_OK) {
+		gp_widget_new (GP_WIDGET_RADIO, _("White Balance"), &child);
+		gp_widget_add_choice (child, _("Auto"));
+		gp_widget_add_choice (child, _("Fixed"));
+		gp_widget_add_choice (child, _("Custom"));
+
+                switch (value) {
+                case 0: strcpy (t, _("Auto"));
+                        break;
+                case 1: strcpy (t, _("Fixed"));
+                        break;
+                case 225: strcpy (t, _("Custom"));
+                        break;
+                default:
+                        sprintf (t, _("%i (unknown)"), value);
+			gp_widget_add_choice (child, t);
+                }
+		gp_widget_set_value (child, t);
+		gp_widget_append (section, child);
+        }
+
+	gp_widget_new (GP_WIDGET_SECTION, _("Picture Settings"), &section);
+	gp_widget_append (*window, section);
+
+	/* Lens Mode */
+        ret = sierra_get_int_register (camera, 33, &value);
+        if (ret == GP_OK) {
+		gp_widget_new (GP_WIDGET_RADIO, _("Lens Mode"), &child);
+		gp_widget_add_choice (child, _("Macro"));
+		gp_widget_add_choice (child, _("Normal"));
+                switch (value) {
+                case 1: strcpy (t, _("Macro"));
+                        break;
+                case 2: strcpy (t, _("Normal"));
+                        break;
+                default:
+                        sprintf (t, _("%i (unknown)"), value);
+			gp_widget_add_choice (child, t);
+                }
+		gp_widget_set_value (child, t);
+		gp_widget_append (section, child);
+        }
+
+	/* Resolution */
+	ret = sierra_get_int_register (camera, 1, &value);
+        if (ret == GP_OK) {
+		gp_widget_new (GP_WIDGET_RADIO, _("Resolution"), &child);
+		gp_widget_add_choice (child, _("Standard"));
+		gp_widget_add_choice (child, _("Fine"));
+		gp_widget_add_choice (child, _("SuperFine"));
+		gp_widget_add_choice (child, _("HyPict"));
+		
+                switch (value) {
+		case 1: strcpy (t, _("Standard"));
+			break;
+                case 2: strcpy (t, _("Fine"));
+			break;
+                case 3: strcpy (t, _("SuperFine"));
+			break;
+                case 34: strcpy (t, _("HyPict"));
+			break;
+                default:
+			sprintf (t, _("%i (unknown)"), value);
+			gp_widget_add_choice (child, t);
+                }
+		gp_widget_set_value (child, t);
+		gp_widget_append (section, child);
+        }
+
+	/* Color Mode */
+	ret = sierra_get_int_register (camera, 6, &value);
+	if (ret == GP_OK) {
+		gp_widget_new (GP_WIDGET_RADIO, _("Color Mode"), &child);
+		gp_widget_add_choice (child, _("color"));
+		gp_widget_add_choice (child, _("black & white"));
+		switch (value) {
+		case 1: strcpy (t, _("color"));
+			break;
+		case 2: strcpy (t, _("black & white"));
+			break;
+		default:
+			sprintf (t, _("%i (unknown)"), value);
+			gp_widget_add_choice (child, t);
+		}
+		gp_widget_set_value (child, t);
+		gp_widget_append (section, child);
+	}
+
+	gp_widget_new (GP_WIDGET_SECTION, _("Camera Settings"), &section);
+	gp_widget_append (*window, section);
+
+	/* Auto Off (host) */
+	ret = sierra_get_int_register (camera, 23, &value);
+	if (ret == GP_OK) {
+		
+		gp_widget_new (GP_WIDGET_RANGE, _("Auto Off (host) "
+				       "(in seconds)"), &child);
+		gp_widget_set_info (child, _("How long will it take until the "
+				    "camera powers off when connected to the "
+				    "computer?"));
+		gp_widget_set_range (child, 0, 255, 1);
+		gp_widget_set_value (child, &value);
+		gp_widget_append (section, child);
+	}
+
+	/* Auto Off (field) */
+	ret = sierra_get_int_register (camera, 24, &value);
+	if (ret == GP_OK) {
+
+		gp_widget_new (GP_WIDGET_RANGE, _("Auto Off (field) "
+				       "(in seconds)"), &child);
+		gp_widget_set_info (child, _("How long will it take until the "
+				    "camera powers off when not connected to "
+				    "the computer?"));
+		gp_widget_set_range (child, 0, 255, 1);
+		gp_widget_set_value (child, &value);
+		gp_widget_append (section, child);
+	}
+
+	/* Language */
+	ret = sierra_get_int_register (camera, 53, &value);
+        if (ret == GP_OK) {
+		gp_widget_new (GP_WIDGET_RADIO, _("Language"), &child);
+		gp_widget_add_choice (child, _("Korean"));
+		gp_widget_add_choice (child, _("English"));
+		gp_widget_add_choice (child, _("French"));
+		gp_widget_add_choice (child, _("German"));
+		gp_widget_add_choice (child, _("Italian"));
+		gp_widget_add_choice (child, _("Japanese"));
+		gp_widget_add_choice (child, _("Spanish"));
+		gp_widget_add_choice (child, _("Portugese"));
+                switch (value) {
+                case 1: strcpy (t, _("Korean"));
+                        break;
+                case 3: strcpy (t, _("English"));
+                        break;
+                case 4: strcpy (t, _("French"));
+                        break;
+                case 5: strcpy (t, _("German"));
+                        break;
+                case 6: strcpy (t, _("Itialian"));
+                        break;
+		case 7: strcpy (t, _("Japanese"));
+			break;
+		case 8: strcpy (t, _("Spanish"));
+			break;
+		case 9: strcpy (t, _("Portugese"));
+			break;
+                default:
+                        sprintf (t, _("%i (unknown)"), value);
+			gp_widget_add_choice (child, t);
+                }
+		gp_widget_set_value (child, t);
+		gp_widget_append (section, child);
+        }
+
+	/* Date & Time */
+	ret = sierra_get_int_register (camera, 2, &value);
+	if (ret == GP_OK) {
+		gp_widget_new (GP_WIDGET_DATE, _("Date & Time"), &child);
+		gp_widget_set_value (child, &value);
+		gp_widget_append (section, child);
+	}
+
+	return (camera_stop (camera));
+}
+
+static int
+camera_set_config_epson (Camera *camera, CameraWidget *window)
+{
+	CameraWidget *child;
+	char *value;
+	int i = 0;
+
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_set_config_epson");
+
+	CHECK (camera_start (camera));
+
+	/* Aperture */
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting aperture");
+	if ((gp_widget_get_child_by_label (window, _("Aperture"), &child) 
+	     == GP_OK) && gp_widget_changed (child)) {
+		gp_widget_get_value (child, &value);
+		if (strcmp (value, _("F2")) == 0) {
+			i = 0;
+		} else if (strcmp (value, _("F2.3")) == 0) {
+			i = 1;
+		} else if (strcmp (value, _("F2.8")) == 0) {
+			i = 2;
+		} else if (strcmp (value, _("F4")) == 0) {
+			i = 3;
+		} else if (strcmp (value, _("F5.6")) == 0) {
+			i = 4;
+		} else if (strcmp (value, _("F8")) == 0) {
+			i = 5;
+		} else if (strcmp (value, _("auto")) == 0) {
+			i = 6;			
+		} else
+			return (GP_ERROR_NOT_SUPPORTED);
+		CHECK_STOP (camera, sierra_set_int_register (camera, 5, i));
+	}
+
+	/* Flash Mode */
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting flash mode");
+	if ((gp_widget_get_child_by_label (window, _("Flash Mode"), &child)
+	     == GP_OK) && gp_widget_changed (child)) {
+		gp_widget_get_value (child, &value);
+		if (strcmp (value, _("Auto")) == 0) {
+			i = 0;
+		} else if (strcmp (value, _("Force")) == 0) {
+			i = 1;
+		} else if (strcmp (value, _("Off")) == 0) {
+			i = 2;
+		} else if (strcmp (value, _("Red-eye Reduction")) == 0) {
+			i = 3;
+		} else if (strcmp (value, _("Slow Sync")) == 0) {
+			i = 4;
+		} else
+			return (GP_ERROR_NOT_SUPPORTED);
+		CHECK_STOP (camera, sierra_set_int_register (camera, 7, i));
+	}
+
+	/* White Balance */
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting white balance");
+	if ((gp_widget_get_child_by_label (window, _("White Balance"), &child)
+	     == GP_OK) && gp_widget_changed (child)) {
+		gp_widget_get_value (child, &value);
+		if (strcmp (value, _("Auto")) == 0) {
+			i = 0;
+		} else if (strcmp (value, _("Fixed")) == 0) {
+			i = 1;
+		} else if (strcmp (value, _("Custom")) == 0) {
+			i = 225;
+		} else
+			return (GP_ERROR_NOT_SUPPORTED);
+		CHECK_STOP (camera, sierra_set_int_register (camera, 20, i));
+	}
+
+	/* Lens Mode */
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting lens mode");
+	if ((gp_widget_get_child_by_label (window, _("Lens Mode"), &child)
+		== GP_OK) &&
+	    gp_widget_changed (child)) {
+		gp_widget_get_value (child, &value);
+                if (strcmp (value, _("Macro")) == 0) {
+			i = 1;
+		} else if (strcmp (value, _("Normal")) == 0) {
+			i = 2;
+		} else
+			return (GP_ERROR_NOT_SUPPORTED);
+		CHECK_STOP (camera, sierra_set_int_register (camera, 33, i));
+        }
+
+	/* Resolution */
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting resolution");
+	if ((gp_widget_get_child_by_label (window, _("Resolution"), &child)
+	     == GP_OK) && gp_widget_changed (child)) {
+		gp_widget_get_value (child, &value);
+		if (strcmp (value, _("Standard")) == 0) {
+			i = 1;
+		} else if (strcmp (value, _("Fine")) == 0) {
+			i = 2;
+		} else if (strcmp (value, _("SuperFine")) == 0) {
+			i = 3;
+		} else if (strcmp (value, _("HyPict")) == 0) {
+			i = 34;
+		} else
+			return (GP_ERROR_NOT_SUPPORTED);
+		CHECK_STOP (camera, sierra_set_int_register (camera, 1, i));
+	}
+	
+	/* Color Mode */
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting color mode");
+	if ((gp_widget_get_child_by_label (window, _("Color Mode"), &child)
+	     == GP_OK) && gp_widget_changed (child)) {
+		gp_widget_get_value (child, &value);
+		if (strcmp (value, _("color")) == 0) {
+			i = 1;
+		} else if (strcmp (value, _("black & white")) == 0) {
+			i = 2;
+		} else
+			return (GP_ERROR_NOT_SUPPORTED);
+		CHECK_STOP (camera, sierra_set_int_register (camera, 6, i));
+	}
+
+        /* Auto Off (host) */
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting auto off (host)");
+	if ((gp_widget_get_child_by_label (window, _("Auto Off (host) "
+					  "(in seconds)"), &child) == GP_OK) &&
+	    gp_widget_changed (child)) {
+		gp_widget_get_value (child, &i);
+                CHECK_STOP (camera, sierra_set_int_register (camera, 23, i));
+        }
+
+        /* Auto Off (field) */
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", 
+			 "*** setting auto off (field)");
+	if ((gp_widget_get_child_by_label (window, _("Auto Off (field) "
+		"(in seconds)"), &child) == GP_OK) &&
+	    gp_widget_changed (child)) {
+		gp_widget_get_value (child, &i);
+		CHECK_STOP (camera, sierra_set_int_register (camera, 24, i));
+	}
+
+	/* Language */
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting language");
+	if ((gp_widget_get_child_by_label (window, _("Language"), &child)
+	     == GP_OK) && gp_widget_changed (child)) {
+		gp_widget_get_value (child, &value);
+		if (strcmp (value, _("Korean")) == 0) {
+			i = 1;
+		} else if (strcmp (value, _("English")) == 0) {
+			i = 3;
+		} else if (strcmp (value, _("French")) == 0) {
+			i = 4;
+		} else if (strcmp (value, _("German")) == 0) {
+			i = 5;
+		} else if (strcmp (value, _("Italian")) == 0) {
+			i = 6;
+		} else if (strcmp (value, _("Japanese")) == 0) {
+			i = 7;
+		} else if (strcmp (value, _("Spanish")) == 0) {
+			i = 8;
+		} else if (strcmp (value, _("Porugese")) == 0) {
+			i = 9;
+		} else
+			return (GP_ERROR_NOT_SUPPORTED);
+		CHECK_STOP (camera, sierra_set_int_register (camera, 53, i));
+	}
+
+	/* Date & Time */
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting date");
+	if ((gp_widget_get_child_by_label (window, _("Date & Time"), &child)
+		== GP_OK) &&
+	    gp_widget_changed (child)) {
+		gp_widget_get_value (child, &i);
+		CHECK_STOP (camera, sierra_set_int_register (camera, 2, i));
+	}
+
+	return (camera_stop (camera));
+}
+
+
+static int
+camera_get_config_default (Camera *camera, CameraWidget **window)
+{
+	// This really should change in the near future...
+	return camera_get_config_olympus (camera, window);
+}
+
+
+static int
+camera_set_config_default (Camera *camera, CameraWidget *window)
+{
+	// This really should change in the near futur...
+	return camera_set_config_olympus (camera, window);
+}
+
+
 static int
 camera_summary (Camera *camera, CameraText *summary) 
 {
@@ -1267,9 +1709,26 @@ camera_summary (Camera *camera, CameraText *summary)
 
 	CHECK (camera_start (camera));
 
+	/* At least on PhotoPC 3000z, if no card is present near all retrieved
+	   info are either unreadable or invalid... */
+	if (sierra_get_int_register(camera, 51, &value) == GP_OK)
+		if (value == 1) {
+			strcpy (buf, _("NO MEMORY CARD PRESENT\n"));
+			strcpy (summary->text, buf);
+			return (camera_stop(camera));
+		}
+
 	strcpy(buf, "");
 
 	/* Get all the string-related info */
+	ret = sierra_get_string_register (camera, 27, 0, NULL, t, &value);
+	if (ret == GP_OK)
+		sprintf (buf, _("%sCamera Model    : %s\n"), buf, t);
+	
+	ret = sierra_get_string_register (camera, 48, 0, NULL, t, &value);
+	if (ret == GP_OK)
+		sprintf (buf, _("%sManufacturer    : %s\n"), buf, t);
+
 	ret = sierra_get_string_register (camera, 22, 0, NULL, t, &value);
 	if (ret == GP_OK)
 		sprintf (buf, _("%sCamera ID       : %s\n"), buf, t);
@@ -1307,17 +1766,35 @@ camera_manual (Camera *camera, CameraText *manual)
 {
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_manual");
 
-	strcpy (manual->text, _("Some notes:\n"
-		"(1) Camera Configuration:\n"
-		"    A value of 0 will take the default one (auto).\n"
-		"(2) Olympus C-3040Z (and possibly also the C-2040Z\n"
-		"    and others) have a USB PC Control mode. In order\n"
-		"    to use this mode, the camera must be switched \n"
-		"    into 'USB PC control mode'. To get to the menu \n"
-		"    for switching modes, open the memory card access\n"
-		"    door and then press and hold both of the menu \n"
-		"    buttons until the camera control menu appears.\n"
-		"    Set it to ON."));
+	switch (camera->pl->model) {
+	case SIERRA_MODEL_EPSON:
+		strcpy (manual->text,
+			_("Some notes about Epson cameras:\n"
+			  "- Some parameters are not controlable remotely\n"
+			  "  * zoom\n"
+			  "  * focus\n"
+			  "  * custom white balance setup\n"
+			  "- Configuration has been reverse-engineered with\n"
+			  "  a PhotoPC 3000z, if your camera acts differently\n"
+			  "  please send a mail to gphoto-devel@gphoto.org\n"));
+		break;
+	case SIERRA_MODEL_OLYMPUS:
+	default:
+		strcpy (manual->text, 
+			_("Some notes about Olympus cameras (and others?):\n"
+			  "(1) Camera Configuration:\n"
+			  "    A value of 0 will take the default one (auto).\n"
+			  "(2) Olympus C-3040Z (and possibly also the C-2040Z\n"
+			  "    and others) have a USB PC Control mode. In order\n"
+			  "    to use this mode, the camera must be switched \n"
+			  "    into 'USB PC control mode'. To get to the menu \n"
+			  "    for switching modes, open the memory card access\n"
+			  "    door and then press and hold both of the menu \n"
+			  "    buttons until the camera control menu appears.\n"
+			  "    Set it to ON."));
+		break;
+	}
+
 	return (GP_OK);
 }
 
@@ -1385,7 +1862,7 @@ int camera_init (Camera *camera)
 {
         int value=0;
         int x=0, ret;
-        int vendor=0, product=0, inep=0, outep=0;
+        int vendor=0, product=0, inep=0, outep=0, usb_wrap=0;
 	GPPortSettings settings;
 	CameraAbilities a;
 
@@ -1393,8 +1870,6 @@ int camera_init (Camera *camera)
         camera->functions->exit                 = camera_exit;
         camera->functions->capture_preview      = camera_capture_preview;
         camera->functions->capture              = camera_capture;
-        camera->functions->get_config           = camera_get_config;
-        camera->functions->set_config           = camera_set_config;
         camera->functions->summary              = camera_summary;
         camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;
@@ -1403,9 +1878,45 @@ int camera_init (Camera *camera)
 	if (!camera->pl)
 		return (GP_ERROR_NO_MEMORY);
 
+	camera->pl->model = SIERRA_MODEL_DEFAULT;
 	camera->pl->first_packet = 1;
 	camera->pl->usb_wrap = 0;
 
+	/* Retrieve Camera information from name */
+	gp_camera_get_abilities (camera, &a);
+	for (x = 0; strlen (sierra_cameras[x].model) > 0; x++) {
+		if (!strcmp (sierra_cameras[x].model, a.model)) {
+			camera->pl->model = sierra_cameras[x].sierra_model;
+			vendor = sierra_cameras[x].usb_product;
+			inep = sierra_cameras[x].usb_inep;
+			outep = sierra_cameras[x].usb_outep;
+                        usb_wrap = sierra_cameras[x].usb_wrap;
+               }
+	}
+
+        /* First, set up all the function pointers */
+        camera->functions->exit                 = camera_exit;
+        camera->functions->capture_preview      = camera_capture_preview;
+        camera->functions->capture              = camera_capture;
+        camera->functions->summary              = camera_summary;
+        camera->functions->manual               = camera_manual;
+        camera->functions->about                = camera_about;
+
+	switch (camera->pl->model) {
+	case SIERRA_MODEL_EPSON:
+		camera->functions->get_config = camera_get_config_epson;
+		camera->functions->set_config = camera_set_config_epson;
+		break;
+	case SIERRA_MODEL_OLYMPUS:
+		camera->functions->get_config = camera_get_config_olympus;
+		camera->functions->set_config = camera_set_config_olympus;
+		break;
+	default:
+		camera->functions->get_config = camera_get_config_default;
+		camera->functions->set_config = camera_set_config_default;
+		break;
+	}
+	
 	CHECK_FREE (camera, gp_port_get_settings (camera->port, &settings));
         switch (camera->port->type) {
         case GP_PORT_SERIAL:
@@ -1422,25 +1933,14 @@ int camera_init (Camera *camera)
 
         case GP_PORT_USB:
 
-                /* Lookup the USB information */
-		gp_camera_get_abilities (camera, &a);
-                for (x = 0; strlen (sierra_cameras[x].model) > 0; x++) {
-                        if (!strcmp (sierra_cameras[x].model, a.model)) {
-                                vendor = sierra_cameras[x].usb_vendor;
-                                product = sierra_cameras[x].usb_product;
-                                inep = sierra_cameras[x].usb_inep;
-                                outep = sierra_cameras[x].usb_outep;
-                                camera->pl->usb_wrap =
-						sierra_cameras[x].usb_wrap;
-                        }
-                }
-
-                /* Couldn't find the usb information */
+                /* Test if we have usb information */
                 if ((vendor == 0) && (product == 0)) {
                         free (camera->pl);
                         camera->pl = NULL;
                         return (GP_ERROR_MODEL_NOT_FOUND);
-                }
+                } else {
+			camera->pl->usb_wrap = usb_wrap;
+		}
 
 		/*
 		 * We don't need to find the device - that has already been
