@@ -52,7 +52,7 @@ camlibs/jd11:
 	Marcus Meissner <marcus@jet.franken.de>
 
 camlibs/konica:
-	Lutz Müller <urc8@rz.uni-karlsruhe.de>
+	Lutz Müller <lutz@users.sf.net>
 
 camlibs/kodak/dc120:
 	Scott Fritzinger <scottf@unr.edu>
@@ -147,7 +147,7 @@ gtkam (http://www.topfrose.de):
 
 GnoCam (http://www.uni-karlsruhe.de/~urc8/GnoCam):
 	GNOME integration (nautilus)
-	Lutz Müller <urc8@rz.uni-karlsruhe.de>
+	Lutz Müller <lutz@users.sf.net>
 
 QtKam (?):
 	Front-end for KDE

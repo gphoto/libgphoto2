@@ -941,7 +941,7 @@ camera_about (Camera *camera, CameraText *about, GPContext *context)
 	strcpy (about->text, _("Download program for Polaroid DC700 camera. "
 		"Originally written by Ryan Lantzer "
 		"<rlantzer@umr.edu> for gphoto-4.x. Adapted for gphoto2 by "
-		"Lutz Mueller <urc8@rz.uni-karlsruhe.de>."));
+		"Lutz Mueller <lutz@users.sf.net>."));
 
 	return (GP_OK);
 }

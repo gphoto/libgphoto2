@@ -3,7 +3,7 @@
  * Copyright © 2000 Scott Fritzinger
  *
  * Contributions:
- * 	Lutz Müller <urc8@rz.uni-karlsruhe.de> (2001)
+ * 	Lutz Müller <lutz@users.sf.net> (2001)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

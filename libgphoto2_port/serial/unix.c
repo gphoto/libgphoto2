@@ -1,6 +1,6 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 8; tab-width: 8 -*- */
 /*
- * Copyright © 2001 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ * Copyright © 2001 Lutz Müller <lutz@users.sf.net>
  * Copyright © 2000 Philippe Marzouk <pmarzouk@bigfoot.com>
  * Copyright © 2000 Edouard Lafargue <Edouard.Lafargue@bigfoot.com>
  * Copyright © 1999 Johannes Erdfelt <johannes@erdfelt.com>

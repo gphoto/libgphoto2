@@ -1926,7 +1926,7 @@ msgid ""
 "Support for all Konica and several HP cameras."
 msgstr ""
 "Konica kamera-biblioteket\n"
-"Lutz Müller <urc8@rz.uni-karlsruhe.de>\n"
+"Lutz Müller <lutz@users.sf.net>\n"
 "Stöd för alla Konica och flera HP kameror."
 
 #: camlibs/konica/library.c:651
@@ -2928,7 +2928,7 @@ msgstr ""
 msgid ""
 "Download program for Polaroid DC700 camera. Originally written by Ryan "
 "Lantzer <rlantzer@umr.edu> for gphoto-4.x. Adapted for gphoto2 by Lutz "
-"Mueller <urc8@rz.uni-karlsruhe.de>."
+"Mueller <lutz@users.sf.net>."
 msgstr ""
 
 #: camlibs/polaroid/pdc700.c:997
@@ -3821,7 +3821,7 @@ msgid ""
 "enhanced the port."
 msgstr ""
 "Samsung digimax 800k drivrutinen har skrivits av James Mckenzie "
-"<james@fishsoup.dhs.org> för gphoto. Lutz Müller <urc8@rz.uni-karlsruhe.de> "
+"<james@fishsoup.dhs.org> för gphoto. Lutz Müller <lutz@users.sf.net> "
 "konverterade den till gphoto2. Marcus Meïssner <marcus@jet.franken.de> "
 "fixade och förbättrade konverteringen."
 

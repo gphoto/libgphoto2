@@ -456,7 +456,7 @@ camera_about (Camera *camera, CameraText *about, GPContext *context)
 		"Originally written by Peter Desnoyers "
 		"<pjd@fred.cambridge.ma.us>, and adapted for gphoto2 by "
 		"Nathan Stenzel <nathanstenzel@users.sourceforge.net> and "
-		"Lutz Mueller <urc8@rz.uni-karlsruhe.de>.\n"
+		"Lutz Mueller <lutz@users.sf.net>.\n"
 		"Polaroid 640SE testing was done by Michael Golden "
 		"<naugrim@juno.com>."));
 	return (GP_OK);

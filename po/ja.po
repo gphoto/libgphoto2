@@ -2935,7 +2935,7 @@ msgstr ""
 msgid ""
 "Download program for Polaroid DC700 camera. Originally written by Ryan "
 "Lantzer <rlantzer@umr.edu> for gphoto-4.x. Adapted for gphoto2 by Lutz "
-"Mueller <urc8@rz.uni-karlsruhe.de>."
+"Mueller <lutz@users.sf.net>."
 msgstr ""
 
 #: camlibs/polaroid/pdc700.c:997

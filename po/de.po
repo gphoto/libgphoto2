@@ -1,6 +1,6 @@
 # German Translation.
 # Copyright © 2000-2002 Scott Fritzinger <scottf@unr.edu> et al.
-# Lutz Müller <urc8@rz.uni-karlsruhe.de>, 2000.
+# Lutz Müller <lutz@users.sf.net>, 2000.
 # Colin Marquardt <colin@marquardt-home.de>, 2001, 2002.
 #
 # [Please leave these here: öäüßÖÄÜ]
@@ -2878,7 +2878,7 @@ msgstr ""
 "Bibliothek zum Zugriff auf verschiedene Polaroid Kameras.\n"
 "Originalauthor Peter Desnoyers <pjd@fred.cambridge.ma.us>, angepaßt für "
 "gphoto2 durch Nathan Stenzel <nathanstenzel@users.sourceforge.net> und Lutz "
-"Müller <urc8@rz.uni-karlsruhe.de>.\n"
+"Müller <lutz@users.sf.net>.\n"
 "Polaroid 640SE Tests durch Michael Golden <naugrim@juno.com>."
 
 #: camlibs/polaroid/pdc320.c:485
@@ -2896,7 +2896,7 @@ msgid ""
 msgstr ""
 "Bibliothek zum Zugriff auf GrandTek 98x basierte Kameras.Original Author: "
 "Chris Byrne <adapt@ihug.co.nz>, Anpassung für gphoto2 durch Lutz Müller "
-"<urc8@rz.uni-karlsruhe.de>. Verbesserung im Protokoll und Bild "
+"<lutz@users.sf.net>. Verbesserung im Protokoll und Bild "
 "Nachbearbeitung für Jenoptik JD350e durch Michael Trawny <trawny99@users."
 "sourceforge.net>. Bugfixes von Marcus Meißner <marcus@jet.franken.de>."
 
@@ -3012,7 +3012,7 @@ msgstr ""
 msgid ""
 "Download program for Polaroid DC700 camera. Originally written by Ryan "
 "Lantzer <rlantzer@umr.edu> for gphoto-4.x. Adapted for gphoto2 by Lutz "
-"Mueller <urc8@rz.uni-karlsruhe.de>."
+"Mueller <lutz@users.sf.net>."
 msgstr ""
 "Bibliothek zum Zugriff auf die Polaroid DC700 Kamera. Originaler Author Ryan "
 "Lantzer <rlantzer@umr.edu> für gphoto 4.x. Angepaßt für gphoto2 durch Lutz "

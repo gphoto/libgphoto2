@@ -887,7 +887,7 @@ camera_about (Camera *camera, CameraText *about, GPContext *context)
 	strcpy (about->text, _("Download program for GrandTek 98x based cameras. "
 		"Originally written by Chris Byrne <adapt@ihug.co.nz>, "
 		"and adapted for gphoto2 by Lutz Mueller "
-		"<urc8@rz.uni-karlsruhe.de>."
+		"<lutz@users.sf.net>."
 		"Protocol enhancements and postprocessing "
 		" for Jenoptik JD350e by Michael Trawny "
 		"<trawny99@users.sourceforge.net>."

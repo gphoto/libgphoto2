@@ -1,7 +1,7 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 8; tab-width: 8 -*- */
 /* gphoto2-port.c
  * 
- * Copyright © 2001 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ * Copyright © 2001 Lutz Müller <lutz@users.sf.net>
  * Copyright © 1999 Scott Fritzinger <scottf@unr.edu>
  *
  * This library is free software; you can redistribute it and/or
