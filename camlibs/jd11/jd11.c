@@ -184,14 +184,16 @@ static int camera_config_get (Camera *camera, CameraWidget **window,
 	CameraWidget *widget,*section;
 	float value_float,red,green,blue;
 	int ret;
-	gp_widget_new (GP_WIDGET_WINDOW, "JD11 Configuration", window);
+	gp_widget_new (GP_WIDGET_WINDOW, _("JD11 Configuration"), window);
+	gp_widget_set_name (*window, "config");
 
 	gp_widget_new (GP_WIDGET_SECTION, _("Other Settings"), &section);
+	gp_widget_set_name (section, "othersettings");
 	gp_widget_append (*window, section);
-
 
        /* Bulb Exposure Time */
 	gp_widget_new (GP_WIDGET_RANGE, _("Bulb Exposure Time"), &widget);
+	gp_widget_set_name (widget, "exposuretime");
 	gp_widget_append (section, widget);
 	gp_widget_set_range (widget, 1, 9, 1);
 	/* this is a write only capability */
@@ -201,18 +203,21 @@ static int camera_config_get (Camera *camera, CameraWidget **window,
 
 	gp_widget_new (GP_WIDGET_SECTION, _("Color Settings"), &section);
 	gp_widget_append (*window, section);
+	gp_widget_set_name (section, "colorsettings");
 
 	ret = jd11_get_rgb(camera->port,&red,&green,&blue);
 	if (ret < GP_OK)
 	    return ret;
 	gp_widget_new (GP_WIDGET_RANGE, _("Red"), &widget);
 	gp_widget_append (section, widget);
+	gp_widget_set_name (widget, "red");
 	gp_widget_set_range (widget, 50, 150, 1);
 	red*=100.0;
 	gp_widget_set_value (widget, &red);
 	gp_widget_changed(widget);
 
 	gp_widget_new (GP_WIDGET_RANGE, _("Green"), &widget);
+	gp_widget_set_name (widget, "green");
 	gp_widget_append (section, widget);
 	gp_widget_set_range (widget, 50, 150, 1);
 	green*=100.0;
@@ -220,6 +225,7 @@ static int camera_config_get (Camera *camera, CameraWidget **window,
 	gp_widget_changed(widget);
 
 	gp_widget_new (GP_WIDGET_RANGE, _("Blue"), &widget);
+	gp_widget_set_name (widget, "blue");
 	gp_widget_append (section, widget);
 	gp_widget_set_range (widget, 50, 150, 1);
 	blue*=100.0;

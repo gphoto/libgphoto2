@@ -1,3 +1,7 @@
+2005-01-02  Marcus Meissner <marcus@jet.franken.de>
+
+	* jd11.c: Added names to the properties.
+
 2002-08-01  Marcus Meissner <meissner@suse.de>
 	
 	* jd11.c, serial.c: Fixed gp_port_write() retvalue checking.
