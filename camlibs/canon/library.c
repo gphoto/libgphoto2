@@ -130,12 +130,21 @@ camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 {
 	GP_DEBUG ("camera_manual()");
 
-	strcpy (manual->text,
-		_("For the A50, using 115200 may effectively be slower than using 57600\n"
-		  "If you experience a lot of serial transmission errors,"
-		  " try to have your computer as idle as possible\n"
-		  " (i.e. no disk activity)\n"
-			));
+	strncpy (manual->text,
+		 _("This is the driver for Canon PowerShot, Digital IXUS, IXY Digital,\n"
+		   " and EOS Digital cameras in their native (sometimes called \"normal\")\n"
+		   " mode. It also supports a small number of Canon digital camcorders\n"
+		   " with still image capability.\n"
+		   "It includes code for communicating over a serial port or USB connection,\n"
+		   " but not (yet) over IEEE 1394 (Firewire().\n"
+		   "It is designed to work with over 70 models as old as the PowerShot A5\n"
+		   " and Pro70 of 1998 and as new as the PowerShot SD20 of 2004.\n"
+		   "It has not been verified against the EOS 1D or EOS 1Ds.\n"
+		   "For the A50, using 115200 bps may effectively be slower than using 57600\n"
+		   "If you experience a lot of serial transmission errors, try to have your\n"
+		   " computer as idle as possible (i.e. no disk activity)\n"),
+		   sizeof ( CameraText )
+		);
 
 	return GP_OK;
 }
@@ -844,7 +853,10 @@ camera_about (Camera *camera, CameraText *about, GPContext *context)
 		  "Wolfgang G. Reissnegger,\n"
 		  "Werner Almesberger,\n"
 		  "Edouard Lafargue,\n"
-		  "Philippe Marzouk,\n" "A5 additions by Ole W. Saastad\n" "Holger Klemm\n")
+		  "Philippe Marzouk,\n"
+		  "A5 additions by Ole W. Saastad\n"
+		  "Holger Klemm\n"
+		  "Stephen H. Westin")
 		);
 
 	return GP_OK;
