@@ -1,54 +1,55 @@
+# translation of de.po to deutsch
 # translation of de.po to Deutsch
 # German Translation.
 # Copyright © 2000-2002 Scott Fritzinger <scottf@unr.edu> et al.
 #
 # [Please leave these here: öäüßÖÄÜ]
 # Colin Marquardt <colin@marquardt-home.de>, 2001, 2002.
-# Marcus Meissner <marcus@jet.franken.de>, 2003.
+# Marcus Meissner <marcus@jet.franken.de>, 2003, 2005.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-01-04 11:27+0100\n"
-"PO-Revision-Date: 2003-12-20 11:01+0100\n"
+"PO-Revision-Date: 2005-01-06 16:14+0100\n"
 "Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
-"Language-Team: Deutsch <de@li.org>\n"
+"Language-Team: deutsch <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.0.2\n"
 
 #: libgphoto2_port/gphoto2-port-info-list.c:178
-#, fuzzy, c-format
+#, c-format
 msgid "Could not load '%s': '%s'."
-msgstr "Konnte »%s« nicht schließen (%m)."
+msgstr "Konnte »%s« nicht laden (%s)."
 
 #: libgphoto2_port/gphoto2-port-info-list.c:186
 #, c-format
 msgid "Could not find some functions in '%s': '%s'."
-msgstr ""
+msgstr "Konnte einige Funktionen nicht in '%s' finden: '%s'."
 
 #: libgphoto2_port/gphoto2-port-info-list.c:198
 #: libgphoto2_port/gphoto2-port-info-list.c:322
 #, c-format
 msgid "'%s' already loaded"
-msgstr ""
+msgstr "'%s' bereits geladen"
 
 #: libgphoto2_port/gphoto2-port-info-list.c:207
-#, fuzzy, c-format
+#, c-format
 msgid "Could not load port driver list: '%s'."
-msgstr "Konnte Gerät »%s« nicht reservieren"
+msgstr "Konnte Port Treiberliste»%s« nicht laden."
 
 #: libgphoto2_port/gphoto2-port-info-list.c:214
 #, c-format
 msgid "Loaded '%s' ('%s') from '%s'."
-msgstr ""
+msgstr "Habe '%s' ('%s') von '%s' geladen."
 
 #: libgphoto2_port/gphoto2-port-info-list.c:253
 #, c-format
 msgid "Loading io-drivers from '%s'..."
-msgstr ""
+msgstr "Lade I/O Treiber von '%s'..."
 
 #: libgphoto2_port/gphoto2-port-info-list.c:268
 #, c-format
@@ -60,60 +61,60 @@ msgstr ""
 #: libgphoto2_port/gphoto2-port-info-list.c:300
 #, c-format
 msgid "'%s' is not a library (%s)"
-msgstr ""
+msgstr "'%s' ist keine Bibliothek (%s)."
 
 #: libgphoto2_port/gphoto2-port-info-list.c:310
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find some functions in '%s' (%s)"
-msgstr "Konnte »%s« nicht schließen (%m)."
+msgstr "Konnte einige Funktionen in »%s« nicht finden (%s)."
 
 #: libgphoto2_port/gphoto2-port-info-list.c:330
-#, fuzzy, c-format
+#, c-format
 msgid "Could not load list (%s)"
-msgstr "Konnte »%s« nicht schließen (%m)."
+msgstr "Konnte Liste nicht laden (%s)"
 
 #: libgphoto2_port/gphoto2-port-info-list.c:338
 #, c-format
 msgid "Loaded '%s' (%s) from '%s'"
-msgstr ""
+msgstr "Habe '%s' (%s) von %s geladen"
 
 #: libgphoto2_port/gphoto2-port-info-list.c:369
 #, c-format
 msgid "Counting entries (%i available)..."
-msgstr ""
+msgstr "Zähle Eintrage (%i vorhanden)..."
 
 #: libgphoto2_port/gphoto2-port-info-list.c:378
 #, c-format
 msgid "%i regular entries available."
-msgstr ""
+msgstr "%i reguläre Eintrage verf?gbar."
 
 #: libgphoto2_port/gphoto2-port-info-list.c:407
 #, c-format
 msgid "Looking for path '%s' (%i entries available)..."
-msgstr ""
+msgstr "Suche Pfad '%s' (%i Einträge vorhanden)..."
 
 #: libgphoto2_port/gphoto2-port-info-list.c:419
 #, c-format
 msgid "Starting regex search for '%s'..."
-msgstr ""
+msgstr "Starte Suche mit regulärem Ausdruck '%s'..."
 
 #: libgphoto2_port/gphoto2-port-info-list.c:425
 #, c-format
 msgid "Trying '%s'..."
-msgstr ""
+msgstr "Versuche '%s'..."
 
 #: libgphoto2_port/gphoto2-port-info-list.c:446
 msgid "regcomp failed"
-msgstr ""
+msgstr "regcomp fehlgeschlagen"
 
 #: libgphoto2_port/gphoto2-port-info-list.c:457
 #, c-format
 msgid "re_match failed (%i)"
-msgstr ""
+msgstr "re_match fehlgeschlagen (%i)"
 
 #: libgphoto2_port/gphoto2-port-info-list.c:465
 msgid "regexec failed"
-msgstr ""
+msgstr "regexec fehlgeschlagen"
 
 #: libgphoto2_port/gphoto2-port-info-list.c:472
 msgid "Generic Port"
@@ -122,12 +123,12 @@ msgstr "Generischer Port"
 #: libgphoto2_port/gphoto2-port-info-list.c:496
 #, c-format
 msgid "Looking up entry '%s'..."
-msgstr ""
+msgstr "Suche Eintrag '%s'..."
 
 #: libgphoto2_port/gphoto2-port-info-list.c:526
 #, c-format
 msgid "Getting info of entry %i (%i available)..."
-msgstr ""
+msgstr "Hole Informationen von Eintrag %i (%i vorhanden)..."
 
 #: libgphoto2_port/gphoto2-port-result.c:58
 msgid "No error"
@@ -224,131 +225,130 @@ msgstr "Der Port wurde noch nicht initialisiert."
 
 #: libgphoto2_port/gphoto2-port.c:91
 msgid "Creating new device..."
-msgstr ""
+msgstr "Lege neues Gerät an..."
 
 #: libgphoto2_port/gphoto2-port.c:171
-#, fuzzy, c-format
+#, c-format
 msgid "Could not load '%s' ('%s')."
-msgstr "Konnte »%s« nicht schließen (%m)."
+msgstr "Konnte »%s« nicht laden (%s)."
 
 #: libgphoto2_port/gphoto2-port.c:180
-#, fuzzy, c-format
+#, c-format
 msgid "Could not load '%s' ('%s')"
-msgstr "Konnte »%s« nicht schließen (%m)."
+msgstr "Konnte »%s« nicht laden (%s)."
 
 #: libgphoto2_port/gphoto2-port.c:195 libgphoto2_port/gphoto2-port.c:201
 #, c-format
 msgid "Could not find 'gp_port_library_operations' in '%s' ('%s')"
-msgstr ""
+msgstr "Konnte 'gp_port_library_operations' in '%s' nicht finden ('%s')"
 
 #: libgphoto2_port/gphoto2-port.c:276
 #, c-format
 msgid "Opening %s port..."
-msgstr ""
+msgstr "Öffne Port %s..."
 
 #: libgphoto2_port/gphoto2-port.c:298
 msgid "Closing port..."
-msgstr ""
+msgstr "Schließe Port..."
 
 #: libgphoto2_port/gphoto2-port.c:320
 msgid "Freeing port..."
-msgstr ""
+msgstr "Lösche Port..."
 
 #: libgphoto2_port/gphoto2-port.c:369
 #, c-format
 msgid "Writing %i=0x%x byte(s) to port..."
-msgstr ""
+msgstr "Schreibe %i=0x%x Byte(s) auf den Port..."
 
 #: libgphoto2_port/gphoto2-port.c:382
-#, fuzzy, c-format
+#, c-format
 msgid "Could only write %i out of %i byte(s)"
-msgstr "Konnte nicht auf Port schreiben (%m)"
+msgstr "Konnte nicht %i von %i Byte(s) schreiben"
 
 #: libgphoto2_port/gphoto2-port.c:403
 #, c-format
 msgid "Reading %i=0x%x bytes from port..."
-msgstr ""
+msgstr "Lese %i=0x%x byte(s) vom Port..."
 
 #: libgphoto2_port/gphoto2-port.c:414 libgphoto2_port/gphoto2-port.c:450
 #: libgphoto2_port/gphoto2-port.c:489 libgphoto2_port/gphoto2-port.c:811
 #, c-format
 msgid "Could only read %i out of %i byte(s)"
-msgstr ""
+msgstr "Konnte nur %i von %i Byte(s) lesen"
 
 #: libgphoto2_port/gphoto2-port.c:439
 #, c-format
 msgid "Reading %i=0x%x bytes from interrupt endpoint..."
-msgstr ""
+msgstr "Lese %i=0x%x Byte(s) vom Interrupt Endpoint"
 
 #: libgphoto2_port/gphoto2-port.c:499
 #, c-format
 msgid "Reading %i=0x%x bytes from interrupt endpoint (fast)..."
-msgstr ""
+msgstr "Lese %i=0x%x Byte(s) vom Interrupt Endpoint (schnell)..."
 
 #: libgphoto2_port/gphoto2-port.c:524
 #, c-format
 msgid "Setting timeout to %i millisecond(s)..."
-msgstr ""
+msgstr "Setze Timeout auf %i Millisekunden..."
 
 #: libgphoto2_port/gphoto2-port.c:560
 msgid "Getting timeout..."
-msgstr ""
+msgstr "Hole Timeout..."
 
 #: libgphoto2_port/gphoto2-port.c:564
 #, c-format
 msgid "Current timeout: %i milliseconds"
-msgstr ""
+msgstr "Derzeitger Timeout: %i Millisekunden"
 
 #: libgphoto2_port/gphoto2-port.c:586
 msgid "Setting settings..."
-msgstr ""
+msgstr "Setze Einstellungen..."
 
 #: libgphoto2_port/gphoto2-port.c:637
-#, fuzzy, c-format
+#, c-format
 msgid "Getting level of pin %i..."
-msgstr "Konnte Level von Pin %i nicht holen (%m)."
+msgstr "Hole Level von Pin %i..."
 
 #: libgphoto2_port/gphoto2-port.c:646
 #, c-format
 msgid "Level of pin %i: %i"
-msgstr ""
+msgstr "Level von Pin %i: %i"
 
 #: libgphoto2_port/gphoto2-port.c:672
 msgid "low"
-msgstr ""
+msgstr "niedrig"
 
 #: libgphoto2_port/gphoto2-port.c:673
 msgid "high"
-msgstr ""
+msgstr "hoch"
 
 #: libgphoto2_port/gphoto2-port.c:688
 #, c-format
 msgid "Setting pin %i (%s: '%s') to '%s'..."
-msgstr ""
+msgstr "Setze Pin %i (%s: '%s') auf '%s'..."
 
 #: libgphoto2_port/gphoto2-port.c:705
 #, c-format
 msgid "Sending break (%i milliseconds)..."
-msgstr ""
+msgstr "Sende Break (%i Millisekunden)..."
 
 #: libgphoto2_port/gphoto2-port.c:720
 msgid "Flushing port..."
-msgstr ""
+msgstr "Leere Port..."
 
 #: libgphoto2_port/gphoto2-port.c:761
-#, fuzzy
 msgid "Clear halt..."
-msgstr "clear_halt"
+msgstr "Lösche Halt..."
 
 #: libgphoto2_port/gphoto2-port.c:778
 #, c-format
 msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr ""
+msgstr "Schreibe Nachricht (request=0x%x, Wert=0x%x, Index=0x%x, Größe=%i=0x%x)..."
 
 #: libgphoto2_port/gphoto2-port.c:799
 #, c-format
 msgid "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr ""
+msgstr "Lese Nachricht (request=0x%x, Wert=0x%x, Index=0x%x, Größe=%i=0x%x)..."
 
 #: libgphoto2_port/gphoto2-port.c:806
 msgid "msg_read"
@@ -453,29 +453,28 @@ msgstr "Konnte USB-Gerät nicht öffnen (%m)."
 
 #: usb/libusb.c:196
 msgid "Camera is already in use."
-msgstr ""
+msgstr "Kamera ist bereits in Benutzung."
 
 #: usb/libusb.c:201
 msgid "Camera is supported by USB Storage driver."
-msgstr ""
+msgstr "Kamera wird durch USB Mass Storage Kerneltreiber unterst?zt."
 
 #: usb/libusb.c:205
 #, c-format
 msgid "Device has driver '%s' attached, detaching it now."
-msgstr ""
+msgstr "Gerät hat Kerneltreiber '%s' zugewiesen, löse Treiber jetzt."
 
 #: usb/libusb.c:208
 #, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
-msgstr ""
+msgstr "Konnte Kerneltreiber '%s' nicht vom Kamera Device lösen."
 
 #: usb/libusb.c:210
-#, fuzzy
 msgid "Could not query kernel driver of device."
-msgstr "Konnte das Gerät nicht alleinig reservieren"
+msgstr "Konnte den Kerneltreiber des Gerätes nicht abfragen."
 
 #: usb/libusb.c:217
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Could not claim interface %d (%m). Make sure no other program or kernel "
 "module (such as %s) is using the device and you have read/write access to "
@@ -483,7 +482,7 @@ msgid ""
 msgstr ""
 "Konnte Schnittstelle %d nicht reservieren (%m). Stellen Sie sicher, dass "
 "kein\n"
-"anderes Programm oder Kernelmodul (z.B. dc2xx oder stv680) das Gerät "
+"anderes Programm oder Kernelmodul (z.B. %s) das Gerät "
 "verwendet und Sie \n"
 "Lese- und Schreibrechte für das Gerät haben."
 
@@ -510,8 +509,7 @@ msgstr "Konnte Alternativ-Setting %d/%d nicht setzen (%m)"
 #: usb/libusb.c:497
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
-msgstr ""
-"Die angegebene Hersteller- oder Produkt-ID (0x%x,0x%x) ist nicht gültig."
+msgstr "Die angegebene Hersteller- oder Produkt-ID (0x%x,0x%x) ist nicht gültig."
 
 #: usb/libusb.c:529
 #, c-format
@@ -582,3 +580,4 @@ msgstr ""
 
 #~ msgid "msg_write"
 #~ msgstr "msg_write"
+
