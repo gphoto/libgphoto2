@@ -84,7 +84,7 @@ gp_port_info_list_new (GPPortInfoList **list)
 	 * We put this in here because everybody needs to call this function
 	 * before accessing ports...
 	 */
-	bindtextdomain (PACKAGE, LOCALEDIR);
+	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
 
 	*list = malloc (sizeof (GPPortInfoList));
 	if (!*list)
