@@ -1,3 +1,7 @@
+2005-01-22  Patrick Mansfield <patmans@users.sourceforge.net>
+	* sierra-desc.c, sierra-desc.h: Add code in case we ever need a
+	  GP_WIDGET_BUTTON/callback created, not currently used.
+
 2005-01-05  Patrick Mansfield <patmans@users.sourceforge.net>
 	* olympus-desc.c: Add other Olympus C750UZ camera settings, they
 	  were using the C3040 ones except for the zoom. Also use

@@ -85,6 +85,7 @@ typedef struct {
 		float range[3];	/* GP_WIDGET_RANGE these are
 				   min/max/stepping; if stepping is zero,
 				   a stepping of one is used. */
+		CameraWidgetCallback callback; /* GP_WIDGET_BUTTON */
 	} u;
 	/* 
 	 * Range uses no name - the name is implicitly the value. XXX Move name

@@ -97,6 +97,9 @@ camera_cam_desc_get_value (ValueNameType *val_name_p, CameraWidgetType widge,
 		 */
 		float_val = (*(int*) buff) * increment;
 		gp_widget_set_value (child, &float_val);
+	} else if (widge == GP_WIDGET_BUTTON) {
+		GP_DEBUG ("get button");
+		gp_widget_set_value (child, val_name_p->u.callback);
 	} else {
 		GP_DEBUG ("get value bad widget type %d", widge);
 		return (GP_ERROR);
@@ -116,7 +119,14 @@ camera_cam_desc_get_widget (Camera *camera, CameraRegisterType *reg_p,
 	RegisterDescriptorType *reg_desc_p;
 
 	GP_DEBUG ("register %d", reg_p->reg_number);
-	if (reg_p->reg_len == 4) {
+	if (reg_p->reg_len == 0) {
+		/*
+		 * This is 0 for GP_WIDGET_BUTTON (callbacks), since is no
+		 * register for call backs. Frontends "get" the value, and
+		 * call the function directly.
+		 */
+		ret = GP_OK;
+	} else if (reg_p->reg_len == 4) {
 		ret = sierra_get_int_register (camera, reg_p->reg_number,
 					       (int*) &reg_p->reg_value,
 					       context);
