@@ -10,6 +10,14 @@
 #ifndef _CANON_H
 #define _CANON_H
 
+#ifdef EXPERIMENTAL_CAPTURE
+#warning COMPILING WITH EXPERIMENTAL CAPTURE FEATURE
+#endif
+
+#ifdef EXPERIMENTAL_UPLOAD
+#warning COMPILING WITH EXPERIMENTAL UPLOAD FEATURE
+#endif
+
 /* Defines for error handling */
 #define NOERROR		0
 #define ERROR_RECEIVED	1
@@ -98,14 +106,21 @@ struct _CameraPrivateLibrary
 	unsigned char seq_tx;
 	unsigned char seq_rx;
 
+#ifdef EXPERIMENTAL_CAPTURE
 	int capturing; /* whether we are capturing or not
 			  hack to speed up usb_dialogue 
 			  when not capturing [no sleep(2)] */
+#endif /* EXPERIMENTAL_CAPTURE */
 
 	/* driver settings
 	 * leave these as int, as gp_widget_get_value sets them as int!
 	 */
 	int list_all_files; /* whether to list all files, not just know types */
+
+#ifdef EXPERIMENTAL_UPLOAD
+	int upload_keep_filename; /* 0=DCIF compatible filenames (AUT_*), 
+				     1=keep original filename */
+#endif /* EXPERIMENTAL_UPLOAD */
 
 	char *cached_drive;	/* usually something like C: */
 	int cached_ready;       /* whether the camera is ready to rock */
