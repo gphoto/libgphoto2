@@ -29,7 +29,15 @@ typedef struct {
 #ifndef DISABLE_DEBUGGING
 void 	cli_debug_print(char *format, ...);
 #else
+
+#ifdef __GNUC__
 #define cli_debug_print(format, args...) /**/
+#elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+#define cli_debug_print(...) /**/
+#else
+#define cli_debug_print (void)
+#endif
+
 #endif
 void 	cli_error_print(char *format, ...);
 
