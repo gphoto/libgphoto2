@@ -2,8 +2,6 @@
 *       Minolta Dimage V digital camera communication library         *
 *               Copyright (C) 2000 Gus Hartmann                       *
 *                                                                     *
-*    $Id$                                                             *
-*                                                                     *
 *    This program is free software; you can redistribute it and/or    *
 *    modify it under the terms of the GNU General Public License as   *
 *    published by the Free Software Foundation; either version 2 of   *
@@ -21,6 +19,7 @@
 *                                                                     *
 **********************************************************************/
 
+/* $Id$ */
 
 #include "config.h"
 
@@ -80,6 +79,13 @@
    the eight.three I can.
 */
 #define DIMAGEV_FILENAME_FMT "dv%05i.jpg"
+#define DIMAGEV_THUMBNAIL_FMT "thumb_dv%05i.ppm"
+
+/* These values are needed to convert Y:Cb:Cr image data into RGB. */
+/* Salt as needed. */
+#define CR_COEFF 0.114
+#define CB_COEFF 0.587
+#define Y_COEFF 0.299
 
 /* This struct basically is a NULL-safe string; image data and other buffers
    can contain NULLs, and classic C strings won't work.
@@ -234,3 +240,4 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file);
 int dimagev_delete_picture(dimagev_t *dimagev, int file_number);
 int dimagev_delete_all(dimagev_t *dimagev);
 int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file);
+unsigned char *dimagev_ycbcr_to_ppm(unsigned char *ycbcr, int size);
