@@ -152,10 +152,6 @@ gsmart_get_image (CameraPrivateLibrary * lib, u_int8_t ** buf,
 
 	p = g_file->fat;
 
-	if ((lib->bridge == GSMART_BRIDGE_SPCA500)
-	    && ((p[20] & 0xFF) != 0))
-		return GP_ERROR_NOT_SUPPORTED;
-
 	/* get the position in memory where the image is */
 	start = (p[1] & 0xff) + (p[2] & 0xff) * 0x100;
 	start *= 128;
@@ -466,10 +462,6 @@ gsmart_get_image_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
 	unsigned char pbm_header[16];
 
 	p = g_file->fat;
-
-	if ((lib->bridge == GSMART_BRIDGE_SPCA500)
-	    && ((p[20] & 0xFF) != 0))
-		return GP_ERROR_NOT_SUPPORTED;
 
 	start = (p[3] & 0xff) + (p[4] & 0xff) * 0x100;
 	start *= 128;
