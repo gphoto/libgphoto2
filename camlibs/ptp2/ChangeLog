@@ -1,3 +1,7 @@
+2003-08-05 Mariusz Woloszyn
+	* library.c: return thumbnauil when asked for GP_FILE_TYPE_EXIF if
+	  object is PTP_OFC_EXIF_JPEG, otherwise return 
+	  GP_ERROR_NOT_SUPPORTED
 2003-08-03 Mariusz Woloszyn
 	* library.c: PTP do not offer plain EXIF data; return
 	  GP_ERROR_NOT_SUPPORTED while downloading GP_FILE_TYPE_EXIF.

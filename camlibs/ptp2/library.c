@@ -871,11 +871,14 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	GP_DEBUG ("Getting file.");
 	switch (type) {
 
+	case	GP_FILE_TYPE_EXIF:
+		/* If file is PTP_OFC_EXIF_JPEG  - fetch thumbnail,
+		   otherwise return GP_ERROR_NOT_SUPPORTED */
+		if (oi->ObjectFormat!=PTP_OFC_EXIF_JPEG)
+			return (GP_ERROR_NOT_SUPPORTED);
+
 	case	GP_FILE_TYPE_PREVIEW:
-		/* Don't allow to get thumb of nonimage objects! */
-		// Redundant???
-//		if ((oi->ObjectFormat & 0x0800) == 0) return (GP_ERROR_NOT_SUPPORTED);
-		/* if no thumb, for some reason */
+		/* If thumb size is 0 then there is no thumbnail at all... */
 		if((size=oi->ThumbCompressedSize)==0) return (GP_ERROR_NOT_SUPPORTED);
 		CPR (context, ptp_getthumb(&camera->pl->params,
 			camera->pl->params.handles.Handler[object_id],
@@ -884,9 +887,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		/* XXX does gp_file_set_data_and_size free() image ptr upon
 		   failure?? */
 		break;
-
-	case	GP_FILE_TYPE_EXIF:
-		return (GP_ERROR_NOT_SUPPORTED);
 
 	default:
 		/* we do not allow downloading unknown type files as in most
