@@ -1,0 +1,22 @@
+BASEPATH=..\..
+
+all: start \
+  dll \
+  end
+
+!include $(BASEPATH)\os2mak.inc
+
+dll: $(CAMLIBS)\gpdimera.dll
+
+OBJS=dimera3500.o \
+     mesalib.o
+
+.c.o:
+   @$(CC) -o $@ $< $(CCFLAGS)
+
+dimera.def: dimera3500.o
+   @$(MAKEDEF)
+
+$(CAMLIBS)\gpdimera.dll: $(OBJS) dimera.def
+   $(LINK) $(DLLLINKFLAGS) -o $@ $** $(LIBS)
+
