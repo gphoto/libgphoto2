@@ -115,16 +115,12 @@ models[] =
 	{"Benq:DC1300", 0x04a5, 0x3003,
 	        BRIDGE_SPCA504, 0 },
 	/* Some other 500a cams with flash */
-	{"Trust Familycam 300", 0x084d, 0x0003,
+	{"Trust:Familycam 300", 0x084d, 0x0003,
 		BRIDGE_SPCA500, SPCA50X_FLASH},	
-	{"D-Link DSC 350+", 0x084d, 0x0003,
+	{"D-Link:DSC 350+", 0x084d, 0x0003,
 		BRIDGE_SPCA500, SPCA50X_FLASH},
-       // This is reported to work, but I can't reach the reporter and don't
-       // know the id's. Presumably this is also a 0x084d 0x0003 like the two
-       // above.
-    /*    {"Minton S-Cam F5", 0x084d, 0x0003,
-	        BRIDGE_SPCA500, SPCA50X_FLASH},	*/
-
+        {"Minton:S-Cam F5", 0x084d, 0x0003,
+	        BRIDGE_SPCA500, SPCA50X_FLASH},	
 	{NULL, 0, 0, 0, 0}
 };
 
