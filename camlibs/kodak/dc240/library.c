@@ -524,7 +524,7 @@ const char * dc240_get_memcard_status_str(char status)
 /*
   Feed manually the stucture from data.
  */
-static int dc240_load_status_data_to_table (const char *fdata, DC240StatusTable *table)
+static int dc240_load_status_data_to_table (const unsigned char *fdata, DC240StatusTable *table)
 {
     if (fdata [0] != 0x01) {
 	return GP_ERROR;
@@ -592,12 +592,12 @@ static int dc240_load_status_data_to_table (const char *fdata, DC240StatusTable 
   Return the camera status table.
   See 5.1.29
  */
-int dc240_get_status (Camera *camera, DC240StatusTable *table) {
-
+int dc240_get_status (Camera *camera, DC240StatusTable *table) 
+{
     CameraFile *file;
     char *p = dc240_packet_new(0x7F);
     int retval;
-    const char *fdata;
+    const unsigned char *fdata;
     long int fsize;
     int size = 256;
 

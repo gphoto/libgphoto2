@@ -1,3 +1,8 @@
+2001-12-20  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* library.c (dc240_load_status_data_to_table, dc240_get_status): 
+	changed fdata from char * to unsigned char * 
+
 2001-12-19  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* library.h: 
