@@ -1,0 +1,4 @@
+2001-12-31  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* dimera3500.c (capture_image): Tell the filesystem about the 
+	  new (ram) image.

@@ -21,6 +21,12 @@
  *
  * History:
  * $Log$
+ * Revision 1.33  2001/12/31 21:29:25  lutz
+ * 2001-12-31  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ *
+ *         * dimera3500.c (capture_image): Tell the filesystem about the
+ *           new (ram) image.
+ *
  * Revision 1.32  2001/12/30 18:19:07  jerdfelt
  * Zero out the CameraAbilities struct so we don't have garbage in fields
  * This should help fix some of the problems with the new USB class matching
@@ -367,10 +373,22 @@ static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePat
 		CHECK (mesa_snap_image( camera->port, camera->pl->exposure*4 ));
 	}
 
-	/* User must download special RAM_IMAGE_TEMPLATE file */
-	strcpy(path->folder, "/");
-	strcpy(path->name, RAM_IMAGE_TEMPLATE);
-	return ( GP_OK );
+	/*
+	 * At this point, the previous RAM_IMAGE_TEMPLATE file (if it existed)
+	 * has disappeared. Tell the CameraFilesystem. If it didn't exist, 
+	 * never mind (don't check return value).
+	 */
+	gp_filesystem_delete_file_noop (camera->fs, "/", RAM_IMAGE_TEMPLATE);
+
+	/*
+	 * User must download special RAM_IMAGE_TEMPLATE file.
+	 * Don't forget to tell the CameraFilesystem about it.
+	 */
+	strncpy (path->folder, "/", sizeof (path->folder));
+	strncpy (path->name, RAM_IMAGE_TEMPLATE, sizeof (path->name));
+	CHECK (gp_filesystem_append (camera->fs, path->folder, path->name));
+
+	return (GP_OK);
 }
 
 static int camera_capture_preview(Camera *camera, CameraFile *file) {
