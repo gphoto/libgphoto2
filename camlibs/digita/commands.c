@@ -170,7 +170,7 @@ int digita_get_file_data(CameraPrivateLibrary *dev, int thumbnail,
 		return -1;
 	}
 
-	memcpy(buffer, tbuf + sizeof(*gfdr), ntohl(gfdr->tag.length));
+	memcpy(buffer, tbuf + sizeof(*gfdr), ntohl(gfdr->tag.length) + (thumbnail ? 16 : 0));
 	memcpy(tag, &gfdr->tag, sizeof(*tag));
 
 	free(tbuf);
