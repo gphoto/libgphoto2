@@ -75,8 +75,6 @@ do
     automake --add-missing --gnu $am_opt;			\
     echo "Running autoconf";					\
     autoconf;							\
-    echo "Running ./configure";					\
-    ./configure "$@";						\
    )
 done
 

@@ -1,5 +1,9 @@
 2002-06-06  Lutz Müller <lutz@users.sourceforge.net>
 
+	* autogen.sh: No need for configuring the whole thing 3 times...
+
+2002-06-06  Lutz Müller <lutz@users.sourceforge.net>
+
 	* autogen.sh: Fix the order of processing libgphoto2_port and .
 
 2002-06-06  Lutz Müller <lutz@users.sourceforge.net>
