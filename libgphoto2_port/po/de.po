@@ -7,13 +7,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port\n"
-"POT-Creation-Date: 2002-05-28 23:25+0200\n"
-"PO-Revision-Date: 2002-06-13 23:59+0200\n"
-"Last-Translator: Colin Marquardt <colin@marquardt-home.de>\n"
-"Language-Team: German <de@li.org>\n"
+"POT-Creation-Date: 2002-11-12 01:02-0800\n"
+"PO-Revision-Date: 2002-11-12 01:03-0800\n"
+"Last-Translator: \n"
+"Language-Team:  <en@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 0.9.6\n"
 
 #: libgphoto2_port/gphoto2-port.c:56
 #, c-format
@@ -24,81 +25,78 @@ msgstr "Die Funktion »%s« wird von diesem Gerät nicht unterstützt."
 msgid "The port has not yet been initialized"
 msgstr "Der Port wurde noch nicht initialisiert."
 
-#: libgphoto2_port/gphoto2-port.c:272
+#: libgphoto2_port/gphoto2-port.c:278
 msgid "open"
 msgstr " öffnen"
 
-#: libgphoto2_port/gphoto2-port.c:295
+#: libgphoto2_port/gphoto2-port.c:301
 msgid "close"
 msgstr "schließen"
 
-#. Check if we wrote all bytes
-#: libgphoto2_port/gphoto2-port.c:373
+#: libgphoto2_port/gphoto2-port.c:376
 msgid "write"
 msgstr "schreiben"
 
-#. Check if we read as many bytes as expected
-#: libgphoto2_port/gphoto2-port.c:405
+#: libgphoto2_port/gphoto2-port.c:408
 msgid "read"
 msgstr "lesen"
 
-#. Check if we read as many bytes as expected
-#: libgphoto2_port/gphoto2-port.c:441 libgphoto2_port/gphoto2-port.c:478
+#: libgphoto2_port/gphoto2-port.c:444 libgphoto2_port/gphoto2-port.c:481
 msgid "check_int"
 msgstr "check_int"
 
-#: libgphoto2_port/gphoto2-port.c:578
+#: libgphoto2_port/gphoto2-port.c:581
 msgid "update"
 msgstr "auffrischen"
 
-#: libgphoto2_port/gphoto2-port.c:624
+#: libgphoto2_port/gphoto2-port.c:627
 msgid "get_pin"
 msgstr "get_pin"
 
-#: libgphoto2_port/gphoto2-port.c:676
+#: libgphoto2_port/gphoto2-port.c:679
 msgid "set_pin"
 msgstr "set_pin"
 
-#: libgphoto2_port/gphoto2-port.c:691
+#: libgphoto2_port/gphoto2-port.c:694
 msgid "send_break"
 msgstr "send_break"
 
-#: libgphoto2_port/gphoto2-port.c:704
+#: libgphoto2_port/gphoto2-port.c:707
 msgid "flush"
 msgstr "flush"
 
-#: libgphoto2_port/gphoto2-port.c:720
+#: libgphoto2_port/gphoto2-port.c:723
 msgid "find_device"
 msgstr "find_device"
 
-#: libgphoto2_port/gphoto2-port.c:732
+#: libgphoto2_port/gphoto2-port.c:735
 msgid "find_device_by_class"
 msgstr "find_device_by_class"
 
-#: libgphoto2_port/gphoto2-port.c:746
+#: libgphoto2_port/gphoto2-port.c:749
 msgid "clear_halt"
 msgstr "clear_halt"
 
-#: libgphoto2_port/gphoto2-port.c:766
+#: libgphoto2_port/gphoto2-port.c:769
 msgid "msg_write"
 msgstr "msg_write"
 
-#: libgphoto2_port/gphoto2-port.c:786
+#: libgphoto2_port/gphoto2-port.c:789
 msgid "msg_read"
 msgstr "msg_read"
 
-#: libgphoto2_port/gphoto2-port.c:846
+#: libgphoto2_port/gphoto2-port.c:849
 msgid "No error description available"
 msgstr "Keine Fehlerbeschreibung verfügbar."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:285
+#: libgphoto2_port/gphoto2-port-info-list.c:266
 #, c-format
 msgid "Could not load any io-library because '%s' could not be opened (%m)"
 msgstr ""
 "Konnte keinerlei I/O-Bibliothek laden weil »%s« nicht geöffnet werden konnte "
 "(%m)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:479
+#: libgphoto2_port/gphoto2-port-info-list.c:460
 msgid "Generic Port"
 msgstr "Generischer Port"
 
@@ -195,12 +193,12 @@ msgstr "Konnte USB-Gerät nicht öffnen (%m)."
 #, c-format
 msgid ""
 "Could not claim interface %d (%m). Make sure no other program or kernel "
-"module (e.g. dc2xx) is using the device and you have read/write access to "
-"the device."
+"module (e.g. dc2xx or stv680) is using the device and you have read/write "
+"access to the device."
 msgstr ""
 "Konnte Schnittstelle %d nicht reservieren (%m). Stellen Sie sicher, dass "
 "kein\n"
-"anderes Programm oder Kernelmodul (z.B. dc2xx) das Gerät verwendet und Sie \n"
+"anderes Programm oder Kernelmodul (z.B. dc2xx oder stv680) das Gerät verwendet und Sie \n"
 "Lese- und Schreibrechte für das Gerät haben."
 
 #: usb/libusb.c:157
@@ -226,8 +224,7 @@ msgstr "Konnte Alternativ-Setting %d/%d nicht setzen (%m)"
 #: usb/libusb.c:391
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
-msgstr ""
-"Die angegebene Hersteller- oder Produkt-ID (0x%x,0x%x) ist nicht gültig."
+msgstr "Die angegebene Hersteller- oder Produkt-ID (0x%x,0x%x) ist nicht gültig."
 
 #: usb/libusb.c:439
 #, c-format
@@ -343,3 +340,4 @@ msgstr "Konnte Baudrate nicht auf %d setzen"
 
 #~ msgid "Could not close device (%s)"
 #~ msgstr "Konnte Gerät nicht schließen (%s)"
+
