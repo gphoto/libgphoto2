@@ -347,7 +347,7 @@ camera_start (Camera *camera, GPContext *context)
 	unsigned int i;
 	SierraSpeed speed;
 
-	GP_DEBUG ("Establishing connection...");
+	GP_DEBUG ("Establishing connection");
 
 	switch (camera->port->type) {
 	case GP_PORT_SERIAL:
@@ -383,7 +383,7 @@ camera_start (Camera *camera, GPContext *context)
 int
 camera_stop (Camera *camera, GPContext *context) 
 {
-	GP_DEBUG ("Closing connection...");
+	GP_DEBUG ("Closing connection");
 
 	switch (camera->port->type) {
 	case GP_PORT_SERIAL:
@@ -399,7 +399,7 @@ camera_stop (Camera *camera, GPContext *context)
 static int
 camera_exit (Camera *camera, GPContext *context) 
 {
-	GP_DEBUG ("*** camera_exit");
+	GP_DEBUG ("sierra camera_exit");
 
 	if (camera->pl) {
 		free (camera->pl);
@@ -1762,7 +1762,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 	int value, ret;
 	char t[1024];
 
-	GP_DEBUG ("*** camera_summary");
+	GP_DEBUG ("*** sierra camera_summary");
 
 	CHECK (camera_start (camera, context));
 
@@ -1821,7 +1821,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 static int
 camera_manual (Camera *camera, CameraText *manual, GPContext *context) 
 {
-	GP_DEBUG ("*** camera_manual");
+	GP_DEBUG ("*** sierra camera_manual");
 
 	switch (camera->pl->model) {
 	case SIERRA_MODEL_CAM_DESC:
@@ -1871,7 +1871,7 @@ camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 static int
 camera_about (Camera *camera, CameraText *about, GPContext *context) 
 {
-	GP_DEBUG ("*** camera_about");
+	GP_DEBUG ("*** sierra camera_about");
 	
 	strcpy (about->text, 
 		_("sierra SPARClite library\n"
@@ -1975,7 +1975,7 @@ camera_init (Camera *camera, GPContext *context)
 		break;
 	case SIERRA_MODEL_CAM_DESC:
 		if (cam_desc == NULL) {
-			GP_DEBUG ("*** cam_desc NULL");
+			GP_DEBUG ("*** sierra cam_desc NULL");
                         return (GP_ERROR_MODEL_NOT_FOUND);
 		}
 		camera->pl->cam_desc = cam_desc;
@@ -2085,7 +2085,7 @@ camera_init (Camera *camera, GPContext *context)
 
         CHECK (camera_stop (camera, context));
 
-	GP_DEBUG ("****************** Initialization done!");
+	GP_DEBUG ("****************** sierra initialization OK");
 	return (GP_OK);
 }
 

@@ -1,3 +1,15 @@
+2002-08-xx  Patrick Mansfield <patmans@users.sourceforge.net>
+
+	* sierra-desc.c: set the widget info field.
+	* sierra.c: Change GP_DEBUG's to be more consistent.
+	* library.c: Do not call sierra_read_packet_wait after a
+	  sierra_transmit_ack, since it's called by sierra_transmit_ack.
+	  Add file name to progress bar in sierra_get_string_register.
+	  Add recursion protection to sierra_get_string_register.
+	  Increase the timeout temporarily for the next command after
+	  capture completes.
+	  Change GP_DEBUG's to be more consistent.
+
 2002-07-09  Gilles Grandou <gilles@grandou.net>
 
 	* epson-desc.c

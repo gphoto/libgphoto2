@@ -147,6 +147,15 @@ camera_cam_desc_get_widget (Camera *camera, CameraRegisterType *reg_p,
 		GP_DEBUG ("window name is %s", reg_desc_p->regs_long_name);
 		gp_widget_new (reg_desc_p->reg_widget_type, 
 			       _(reg_desc_p->regs_long_name), &child);
+		/*
+		 * Setting the info for the preference settings does not
+		 * make sense like it does for an icon button. This is
+		 * used as the tool-tip field (mouse over hint that pops
+		 * up after a second in gtkam).  We don't want this used
+		 * at all; setting it to space doesn't work well, so just
+		 * set it to the same as regs_long_name.
+		 */
+		gp_widget_set_info (child,  _(reg_desc_p->regs_long_name));
 		GP_DEBUG ("reg_value 0x%016llx", reg_p->reg_value);
 		for (vind = 0; vind < reg_desc_p->reg_val_name_cnt; vind++) {
 			camera_cam_desc_get_value (&reg_desc_p->regs_value_names[vind],

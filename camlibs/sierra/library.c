@@ -131,7 +131,7 @@ int sierra_list_files (Camera *camera, const char *folder, CameraList *list, GPC
 	int count, i, len = 0, r;
 	char filename[1024];
 
-	GP_DEBUG ("Listing files in folder '%s'...", folder);
+	GP_DEBUG ("Listing files in folder '%s'", folder);
 
 	CHECK (sierra_get_int_register (camera, 51, &i, context));
 	if (i == 1) {
@@ -157,7 +157,7 @@ int sierra_list_files (Camera *camera, const char *folder, CameraList *list, GPC
 	 * reporting an error. If this is indeed the case, just fill
 	 * the list with dummy entries and return.
 	 */
-	GP_DEBUG ("Getting filename of first file...");
+	GP_DEBUG ("Getting filename of first file");
 	r = sierra_get_string_register (camera, 79, 1, NULL, filename,
 					&len, context);
 	if ((r < 0) || (len <= 0) || !strcmp (filename, "        ")) {
@@ -202,7 +202,7 @@ int sierra_list_folders (Camera *camera, const char *folder, CameraList *list,
 		CHECK (sierra_change_folder (camera, folder, context));
 		CHECK (sierra_set_int_register (camera, 83, i + 1, context));
 		bsize = 1024;
-		GP_DEBUG ("*** getting name of folder %i...", i + 1);
+		GP_DEBUG ("*** getting name of folder %i", i + 1);
 		CHECK (sierra_get_string_register (camera, 84, 0, 
 						   NULL, buf, &bsize, context));
 
@@ -329,7 +329,7 @@ sierra_check_connection (Camera *camera, GPContext *context)
 	if (camera->port->type != GP_PORT_SERIAL)
 		return (GP_OK);
 
-	GP_DEBUG ("Checking if connection is still open...");
+	GP_DEBUG ("Checking if connection is still open");
 	while (1) {
 
 		/*
@@ -830,7 +830,7 @@ sierra_init (Camera *camera, GPContext *context)
 	int ret, r = 0;
 	GPPortSettings settings;
 
-	GP_DEBUG ("Sending initialization sequence to the camera...");
+	GP_DEBUG ("Sending initialization sequence to the camera");
 
 	/* Only serial connections need to be initialized. */
 	if (camera->port->type != GP_PORT_SERIAL)
@@ -942,7 +942,7 @@ sierra_set_speed (Camera *camera, SierraSpeed speed, GPContext *context)
 	 * Tell the camera about the new speed. Note that a speed change
 	 * automatically starts a new session.
 	 */
-	GP_DEBUG ("Setting speed to %i (%i bps)...", speed, bit_rate);
+	GP_DEBUG ("Setting speed to %i (%i bps)", speed, bit_rate);
 	camera->pl->first_packet = 1;
 	CHECK (sierra_set_int_register (camera, 17, speed, context));
 
@@ -961,26 +961,14 @@ int sierra_sub_action (Camera *camera, SierraAction action, int sub_action,
 {
 	char buf[4096];
 
-	/* Build the command packet */
 	CHECK (sierra_build_packet (camera, SIERRA_PACKET_COMMAND, 0, 3, buf));
 	buf[4] = 0x02;
 	buf[5] = action;
 	buf[6] = sub_action;
 
-	GP_DEBUG ("Telling camera to execute action...");
+	GP_DEBUG ("sierra_sub_action: action %d, sub action %d", action,
+		  sub_action);
 	CHECK (sierra_transmit_ack (camera, buf, context));
-
-	GP_DEBUG ("Waiting for acknowledgement...");
-	CHECK (sierra_read_packet_wait (camera, buf, context));
-	switch (buf[0]) {
-	case SIERRA_PACKET_ENQ:
-		return (GP_OK);
-	default:
-		gp_context_error (context, _("Received unexpected answer "
-			"(%i). Please contact <gphoto-devel@gphoto.org>."),
-			buf[0]);
-		return (GP_ERROR);
-	} 
 
 	return GP_OK;
 }
@@ -997,7 +985,7 @@ sierra_set_int_register (Camera *camera, int reg, int value,
 {
 	char p[4096];
 
-	GP_DEBUG ("Setting int register %i to %i...", reg, value);
+	GP_DEBUG ("sierra_set_int_register: register %i value %i", reg, value);
 
 	CHECK (sierra_build_packet (camera, SIERRA_PACKET_COMMAND, 0,
 				    (value < 0) ? 2 : 6, p));
@@ -1023,7 +1011,7 @@ int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *con
 	int r = 0;
 	unsigned char p[4096], buf[4096];
 
-	GP_DEBUG ("Getting integer value of register 0x%02x...", reg);
+	GP_DEBUG ("sierra_get_int_register: register 0x%02x...", reg);
 
 	/* Build and send the packet. */
 	CHECK (sierra_build_packet (camera, SIERRA_PACKET_COMMAND, 0, 2, p));
@@ -1036,7 +1024,7 @@ int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *con
 		/* Read the response */
 		CHECK (sierra_read_packet_wait (camera, buf, context));
 		GP_DEBUG ("Successfully read packet. Interpreting result "
-			  "(0x%02x)...", buf[0]);
+			  "(0x%02x)", buf[0]);
 		switch (buf[0]) {
 		case SIERRA_PACKET_INVALID:
 			gp_context_error (context, _("Could not get "
@@ -1052,7 +1040,7 @@ int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *con
 			GP_DEBUG ("Value of register 0x%02x: 0x%02x. ", reg, r);
 			CHECK (sierra_write_ack (camera, context));
 			GP_DEBUG ("Read value of register 0x%02x and wrote "
-				  "acknowledgement. Returning...", reg);
+				  "acknowledgement. Returning.", reg);
 			return GP_OK;
 
 		case SIERRA_PACKET_SESSION_END:
@@ -1104,9 +1092,7 @@ sierra_set_string_register (Camera *camera, int reg, const char *s,
 	int seq=0, size=0, do_percent;
 	unsigned int id = 0;
 
-	GP_DEBUG ("* sierra_set_string_register");
-	GP_DEBUG ("* register: %i", reg);
-	GP_DEBUG ("* value: %s", s);
+	GP_DEBUG ("sierra_set_string_register: reg %i, value '%s'", reg, s);
 
 	/* Make use of the progress bar when the packet is "large enough" */
 	if (length > MAX_DATA_FIELD_LENGTH) {
@@ -1159,13 +1145,20 @@ int sierra_get_string_register (Camera *camera, int reg, int fnumber,
 				unsigned int *b_len, GPContext *context)
 {
 	unsigned char p[4096];
+	const char *file_name;
 	unsigned int packlength, total = *b_len;
 	unsigned int id = 0;
 	int retries, r;
+	static int in_function = 0;
 
-	GP_DEBUG ("* sierra_get_string_register");
-	GP_DEBUG ("* register: %i", reg);
-	GP_DEBUG ("* file number: %i", fnumber);
+	GP_DEBUG ("sierra_get_string_register:  reg %i, file number %i",
+		  reg, fnumber);
+
+	if (in_function != 0) {
+		GP_DEBUG ("sierra_get_string_register called recursively!\n");
+		return GP_ERROR;
+	}
+	in_function = 1;
 
 	/* Set the current picture number */
 	if (fnumber >= 0)
@@ -1177,8 +1170,10 @@ int sierra_get_string_register (Camera *camera, int reg, int fnumber,
 	p[5] = reg;
 	CHECK (sierra_write_packet (camera, p, context));
 
-	if (file)
-		id = gp_context_progress_start (context, total, _("Downloading..."));
+	if (file) {
+		CHECK (gp_file_get_name(file, &file_name));
+		id = gp_context_progress_start (context, total, file_name);
+	}
 
 	/* Read all the data packets */
 	*b_len = 0;
@@ -1186,10 +1181,12 @@ int sierra_get_string_register (Camera *camera, int reg, int fnumber,
 	do {
 
 		/* Read one packet and retry on timeout. */
-		r = sierra_read_packet (camera, p, context);
+		r = sierra_read_packet (camera, p, context); 
 		if (r == GP_ERROR_TIMEOUT) {
-			if (++retries > RETRIES)
+			if (++retries > RETRIES) {
+				in_function = 0;
 				return (r);
+			}
 			GP_DEBUG ("Timeout! Retrying (%i of %i)...",
 				  retries, RETRIES);
 			CHECK (sierra_write_nak (camera, context));
@@ -1197,11 +1194,13 @@ int sierra_get_string_register (Camera *camera, int reg, int fnumber,
 		}
 		CHECK (r);
 
+		GP_DEBUG ("sierra_get_string_register p[0] is %d", p[0]);
 		switch (p[0]) {
 		case SIERRA_PACKET_INVALID:
 			gp_context_error (context, _("Could not get "
 				"string register %i. Please contact "
 				"<gphoto-devel@gphoto.org>."), reg);
+			in_function = 0;
 			return GP_ERROR;
 		default:
 			break;
@@ -1224,6 +1223,8 @@ int sierra_get_string_register (Camera *camera, int reg, int fnumber,
 	if (file)
 		gp_context_progress_stop (context, id);
 
+	GP_DEBUG ("sierra_get_string_register: completed OK");
+	in_function = 0;
 	return (GP_OK);
 }
 
@@ -1278,6 +1279,7 @@ sierra_capture (Camera *camera, CameraCaptureType type,
 	int n, len = 0;
 	char filename[128];
 	const char *folder;
+	int timeout;
 
 	GP_DEBUG ("* sierra_capture");
 
@@ -1295,10 +1297,18 @@ sierra_capture (Camera *camera, CameraCaptureType type,
 	   for the completion */
 	CHECK (sierra_action (camera, SIERRA_ACTION_CAPTURE, context));
 
+	/*
+	 * Raise the timeout before the next command, since the capture
+	 * comes back as complete, but the camera is still saving the
+	 * image (at least for the Nikon coolpix 880).
+	 */
+	CHECK (gp_port_get_timeout (camera->port, &timeout));
+	CHECK (gp_port_set_timeout (camera->port, 10000)); /* 10 seconds */
 	/* After picture is taken, register 4 is set to current picture */
-	GP_DEBUG ("Getting picture number...");
+	GP_DEBUG ("Getting picture number.");
 	CHECK (sierra_get_int_register (camera, 4, &n, context));
 
+	CHECK (gp_port_set_timeout (camera->port, timeout));
 	/*
 	 * We need to tell the frontend where the new image can be found. 
 	 * Unfortunatelly, we can only figure out the filename. Therefore,
@@ -1310,7 +1320,7 @@ sierra_capture (Camera *camera, CameraCaptureType type,
 	 * Not that some cameras that don't support filenames will return
 	 * 8 blanks instead of reporting an error.
 	 */
-	GP_DEBUG ("Getting filename of file %i...", n);
+	GP_DEBUG ("Getting filename of file %i.", n);
 	CHECK (sierra_get_string_register (camera, 79, 0, NULL,
 					   filename, &len, context));
 	if ((len <= 0) || !strcmp (filename, "        "))
@@ -1321,6 +1331,7 @@ sierra_capture (Camera *camera, CameraCaptureType type,
 	strncpy (filepath->folder, folder, sizeof (filepath->folder));
 	strncpy (filepath->name, filename, sizeof (filepath->name));
 
+	GP_DEBUG ("* sierra_capture completed OK");
 	return (GP_OK);
 }
 
@@ -1372,6 +1383,7 @@ int sierra_get_pic_info (Camera *camera, unsigned int n,
 	pic_info->animation_type = get_int (buf + 28);
 
 	/* Make debugging easier */
+	GP_DEBUG ("sierra_get_pic_info ");
 	GP_DEBUG ("File size: %d",      pic_info->size_file);
 	GP_DEBUG ("Preview size: %i",   pic_info->size_preview);
 	GP_DEBUG ("Audio size: %i",     pic_info->size_audio);
