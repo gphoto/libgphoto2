@@ -1,6 +1,11 @@
+2001-08-13  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* libgphoto2_port/usb/libusb.c (gp_port_usb_open): fix bug #438062: 
+	a NULL usb_device* was passed to usb_dev_handle.
+
 2001-08-12  Hubert Figuiere  <hfiguiere@teaser.fr>
 
-	* camlibs/kodak/dc240/library.c: (dc240_file_action) fix bug #440162
+	* camlibs/kodak/dc240/library.c (dc240_file_action): fix bug #440162
 
 2001-08-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 

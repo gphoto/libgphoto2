@@ -113,6 +113,10 @@ int gp_port_usb_open(gp_port *dev)
 
         /* Open the device using the previous usb_handle returned by find_device */
         udev = dev->device_handle;
+	if (!dev->device_handle) {
+		fprintf(stderr, "gp_port_usb_open: dev->device_handle is NULL\n");
+		return GP_ERROR_IO_OPEN;	
+	}
         dev->device_handle = usb_open(udev);
 	if (!dev->device_handle)
 		return GP_ERROR_IO_OPEN;
