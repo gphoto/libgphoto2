@@ -49,6 +49,8 @@
 
 #include "ptp.h"
 
+#define GP_MODULE "PTP"
+
 #define CR(result) {int r=(result);if(r<0) return (r);}
 
 static struct {
@@ -341,66 +343,66 @@ delete_file_func (CameraFilesystem *fs, const char *folder, const char *name,
 }
 
 static int
-set_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
-		CameraFileInfo *info, void *data)
-{
-//	Camera *camera = data;
-//	PTPObjectInfo objectinfo;
-//	int n;
-
-	return (GP_ERROR);
-}
-
-static int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileInfo *info, void *data)
 {
 	Camera *camera = data;
-	PTPObjectInfo objectinfo;
+	PTPObjectInfo oi;
 	int n;
 	char capture_date[MAXFILELEN];
 	struct tm tm;
 	char tmp[16];
 
-	n=gp_filesystem_number (fs, folder, filename);
+	CR (n = gp_filesystem_number (fs, folder, filename));
 	CPR (camera, ptp_getobjectinfo(&camera->pl->params,
-	&camera->pl->params.handles, n, &objectinfo));
+		     &camera->pl->params.handles, n, &oi));
+	GP_DEBUG ("ObjectInfo for '%s':");
+	GP_DEBUG ("  StorageID: %d", oi.StorageID);
+	GP_DEBUG ("  ObjectFormat: %d", oi.ObjectFormat);
+	GP_DEBUG ("  ObjectCompressedSize: %d", oi.ObjectCompressedSize);
+	GP_DEBUG ("  ThumbFormat: %d", oi.ThumbFormat);
+	GP_DEBUG ("  ThumbCompressedSize: %d", oi.ThumbCompressedSize);
+	GP_DEBUG ("  ThumbPixWidth: %d", oi.ThumbPixWidth);
+	GP_DEBUG ("  ThumbPixHeight: %d", oi.ThumbPixHeight);
+	GP_DEBUG ("  ImagePixWidth: %d", oi.ImagePixWidth);
+	GP_DEBUG ("  ImagePixHeight: %d", oi.ImagePixHeight);
+	GP_DEBUG ("  ImageBitDepth: %d", oi.ImageBitDepth);
+	GP_DEBUG ("  ParentObject: %d", oi.ParentObject);
+	GP_DEBUG ("  AssociationType: %d", oi.AssociationType);
+	GP_DEBUG ("  AssociationDesc: %d", oi.AssociationDesc);
+	GP_DEBUG ("  SequenceNumber: %d", oi.SequenceNumber);
 
 	info->preview.fields = GP_FILE_INFO_SIZE|GP_FILE_INFO_WIDTH
 				|GP_FILE_INFO_HEIGHT|GP_FILE_INFO_TIME;
 	info->file.fields = GP_FILE_INFO_SIZE|GP_FILE_INFO_WIDTH
 				|GP_FILE_INFO_HEIGHT|GP_FILE_INFO_TIME;
-	info->preview.size = objectinfo.ThumbCompressedSize;
-	info->preview.width = objectinfo.ThumbPixWidth;
-	info->preview.height = objectinfo.ThumbPixHeight;
-	info->file.size = objectinfo.ObjectCompressedSize;
-	info->file.width = objectinfo.ImagePixWidth;
-	info->file.height = objectinfo.ImagePixHeight;
+	info->preview.size   = oi.ThumbCompressedSize;
+	info->preview.width  = oi.ThumbPixWidth;
+	info->preview.height = oi.ThumbPixHeight;
+	info->file.size   = oi.ObjectCompressedSize;
+	info->file.width  = oi.ImagePixWidth;
+	info->file.height = oi.ImagePixHeight;
 
-	ptp_getobjectcapturedate (&objectinfo, capture_date);
-	strncpy(tmp,capture_date,4);
-	tmp[4]=0;
-	tm.tm_year=atoi(tmp)-1900;
-	strncpy(tmp,capture_date+4,2);
-	tmp[2]=0;
-	tm.tm_mon=atoi(tmp)-1;
-	strncpy(tmp,capture_date+6,2);
-	tmp[2]=0;
-	tm.tm_mday=atoi(tmp);
-	strncpy(tmp,capture_date+9,2);
-	tmp[2]=0;
-	tm.tm_hour=atoi(tmp);
-	strncpy(tmp,capture_date+11,2);
-	tmp[2]=0;
-	tm.tm_min=atoi(tmp);
-	strncpy(tmp,capture_date+13,2);
-	tmp[2]=0;
-	tm.tm_sec=atoi(tmp);
-	info->file.time=mktime(&tm);
-//	info->preview.time=mktime(&tm);		// ???
-
-
-
+	ptp_getobjectcapturedate (&oi, capture_date);
+	strncpy (tmp, capture_date, 4);
+	tmp[4] = 0;
+	tm.tm_year=atoi (tmp) - 1900;
+	strncpy (tmp, capture_date + 4, 2);
+	tmp[2] = 0;
+	tm.tm_mon = atoi (tmp) - 1;
+	strncpy (tmp, capture_date + 6, 2);
+	tmp[2] = 0;
+	tm.tm_mday = atoi (tmp);
+	strncpy (tmp, capture_date + 9, 2);
+	tmp[2] = 0;
+	tm.tm_hour = atoi (tmp);
+	strncpy (tmp, capture_date + 11, 2);
+	tmp[2] = 0;
+	tm.tm_min = atoi (tmp);
+	strncpy (tmp, capture_date + 13, 2);
+	tmp[2] = 0;
+	tm.tm_sec = atoi (tmp);
+	info->file.time = mktime (&tm);
 
 	return (GP_OK);
 }
@@ -454,8 +456,8 @@ camera_init (Camera *camera)
 	/* Configure the CameraFilesystem */
 	CR (gp_filesystem_set_list_funcs (camera->fs, file_list_func,
 					  NULL, camera));
-	CR (gp_filesystem_set_info_funcs (camera->fs, get_info_func,
-					  set_info_func, camera));
+	CR (gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL,
+					  camera));
 	CR (gp_filesystem_set_file_funcs (camera->fs, get_file_func,
 					  delete_file_func, camera));
 	CR (gp_filesystem_set_folder_funcs (camera->fs, NULL,
