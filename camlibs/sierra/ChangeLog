@@ -1,3 +1,8 @@
+2002-01-03  Marcus Meissner <marcus@jet.franken.de>
+	
+	* library.c: Replaced stack allocated CameraList by dynamic 
+	  allocated one, since this struct is huge.
+
 2002-12-10  Marcus Meissner <meissner@suse.de>
 
 	* sierra.c, sierra.h: replaced usb_wrap flag value by a generic

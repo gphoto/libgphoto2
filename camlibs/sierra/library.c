@@ -236,7 +236,7 @@ int sierra_list_folders (Camera *camera, const char *folder, CameraList *list,
 int sierra_get_picture_folder (Camera *camera, char **folder)
 {
 	int i;
-	CameraList list;
+	CameraList *list;
 	const char *name = NULL;
 
 	GP_DEBUG ("* sierra_get_picture_folder");
@@ -251,11 +251,13 @@ int sierra_get_picture_folder (Camera *camera, char **folder)
 		return GP_OK;
 	}
 
+	CHECK (gp_list_new (&list));
+
 	/* It is assumed that the camera conforms with the JEIDA standard .
 	   Thus, look for the picture folder into the /DCIM directory */
-	CHECK (gp_filesystem_list_folders (camera->fs, "/DCIM", &list, NULL) );
-	for(i=0 ; i < gp_list_count (&list) ; i++) {
-		CHECK (gp_list_get_name (&list, i, &name) );
+	CHECK (gp_filesystem_list_folders (camera->fs, "/DCIM", list, NULL) );
+	for(i=0 ; i < gp_list_count (list) ; i++) {
+		CHECK (gp_list_get_name (list, i, &name) );
 		GP_DEBUG ("* check folder %s", name);
 		if (isdigit(name[0]) && isdigit(name[1]) && isdigit(name[2]))
 			break;
@@ -266,10 +268,12 @@ int sierra_get_picture_folder (Camera *camera, char **folder)
 		*folder = (char*) calloc(strlen(name)+7, sizeof(char));
 		strcpy(*folder, "/DCIM/");
 		strcat(*folder, name);
+		gp_list_free (list);
 		return GP_OK;
-	}
-	else
+	} else {
+		gp_list_free (list);
 		return GP_ERROR_DIRECTORY_NOT_FOUND;
+	}
 }
 
 /**
