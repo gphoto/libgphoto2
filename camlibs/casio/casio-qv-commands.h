@@ -32,8 +32,11 @@ int QVrevision (Camera *camera, long int *revision);
 int QVnumpic   (Camera *camera);
 
 int QVdelete   (Camera *camera, int n);
-int QVpicattr  (Camera *camera, int n, unsigned char *picattr);
+int QVpicattr  (Camera *camera, int n, unsigned char *attr);
 int QVshowpic  (Camera *camera, int n);
+int QVsetpic   (Camera *camera);
+int QVgetpic   (Camera *camera, unsigned char *data, long int size);
+int QVsize     (Camera *camera, long int *size);
 
 int QVcapture  (Camera *camera);
 

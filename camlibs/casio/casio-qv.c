@@ -91,15 +91,27 @@ static int
 camera_file_get (Camera *camera, const char *folder, const char *filename, 
 		 CameraFileType type, CameraFile *file)
 {
-	int n, size;
-	unsigned char *data;
+	int n;
+	unsigned char *data = NULL;
+	long int size = 0;
 
 	/* Get the number of the picture from the filesystem */
 	CHECK_RESULT (n = gp_filesystem_number (camera->fs, folder, filename));
 
-	/* Get the file */
-	size = 0;
-	data = NULL;
+	/* Prepare the transaction */
+	CHECK_RESULT (QVshowpic (camera, n));
+	CHECK_RESULT (QVsetpic (camera));
+
+	switch (type) {
+	case GP_FILE_TYPE_RAW:
+		break;
+	case GP_FILE_TYPE_PREVIEW:
+		break;
+	case GP_FILE_TYPE_NORMAL:
+	default:
+		CHECK_RESULT (QVgetpic (camera, data, size));
+		break;
+	}
 
 	CHECK_RESULT (gp_file_set_data_and_size (file, data, size));
 	CHECK_RESULT (gp_file_set_name (file, filename));

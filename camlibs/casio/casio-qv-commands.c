@@ -20,8 +20,13 @@
 
 #include "casio-qv-commands.h"
 
+#define STX 0x02
+#define ETX 0x03
 #define ENQ 0x05
 #define ACK 0x06
+#define DC2 0x12
+#define NAK 0x15
+#define ETB 0x17
 
 #define CASIO_QV_RETRIES 5
 
@@ -73,6 +78,69 @@ QVsend (Camera *camera, unsigned char *cmd, int cmd_len,
 	/* Receive the answer */
 	if (buf_len)
 		CHECK_RESULT (gp_port_read (camera->port, buf, buf_len));
+
+	return (GP_OK);
+}
+
+static int
+QVblockrecv (Camera *camera, unsigned char *buf, int buf_size)
+{
+	unsigned char c;
+	unsigned char buffer[2];
+	int pos = 0, size, retries = 0, i;
+	unsigned char sum;
+
+	/* Send DC2 */
+	CHECK_RESULT (gp_port_write (camera->port, &c, 1));
+
+	while (1) {
+
+		/* Read STX */
+		CHECK_RESULT (gp_port_read (camera->port, &c, 1));
+		if (c != STX) {
+			retries++;
+			c = NAK;
+			CHECK_RESULT (gp_port_write (camera->port, &c, 1));
+			if (retries > CASIO_QV_RETRIES)
+				return (GP_ERROR_CORRUPTED_DATA);
+			else
+				continue;
+		}
+
+		/* Read sector size */
+		CHECK_RESULT (gp_port_read (camera->port, buffer, 2));
+		size = (buffer[0] << 8) | buffer[1];
+		sum = buffer[0] + buffer[1];
+
+		/* Get the sector */
+		CHECK_RESULT (gp_port_read (camera->port, buf + pos, size));
+		for (i = 0; i < size; i++)
+			sum += buf[i + pos];
+
+		/* Get EOT or ETX and the checksum */
+		CHECK_RESULT (gp_port_read (camera->port, buffer, 2));
+		sum += buffer[0];
+
+		/* Verify the checksum */
+		if (sum != ~buffer[1]) {
+			c = NAK;
+			CHECK_RESULT (gp_port_write (camera->port, &c, 1));
+			continue;
+		}	
+
+		/* Acknowledge and prepare for next packet */
+		c = ACK;
+		CHECK_RESULT (gp_port_write (camera->port, &c, 1));
+		pos += size;
+
+		/* Are we done? */
+		if (buffer[0] == ETX)
+			break;		/* Yes */
+		else if (buffer[0] == ETB)
+			continue;	/* No  */
+		else
+			return (GP_ERROR_CORRUPTED_DATA);
+	}
 
 	return (GP_OK);
 }
@@ -150,6 +218,31 @@ QVshowpic (Camera *camera, int n)
 }
 
 int
+QVsetpic (Camera *camera)
+{
+	unsigned char cmd[2];
+
+	cmd[0] = 'D';
+	cmd[1] = 'L';
+	CHECK_RESULT (QVsend (camera, cmd, 2, NULL, 0));
+
+	return (GP_OK);
+}
+
+int
+QVgetpic (Camera *camera, unsigned char *data, long int size)
+{
+	unsigned char cmd[2];
+
+	cmd[0] = 'M';
+	cmd[1] = 'G';
+	CHECK_RESULT (QVsend (camera, cmd, 2, NULL, 0));
+	CHECK_RESULT (QVblockrecv (camera, data, size));
+
+	return (GP_OK);
+}
+
+int
 QVdelete (Camera *camera, int n)
 {
 	unsigned char cmd[4];
@@ -159,6 +252,20 @@ QVdelete (Camera *camera, int n)
 	cmd[2] = n;
 	cmd[3] = 0xff;
 	CHECK_RESULT (QVsend (camera, cmd, 4, NULL, 0));
+
+	return (GP_OK);
+}
+
+int
+QVsize (Camera *camera, long int *size)
+{
+	unsigned char cmd[2];
+	unsigned char buf[4];
+
+	cmd[0] = 'E';
+	cmd[1] = 'M';
+	CHECK_RESULT (QVsend (camera, cmd, 2, buf, 4));
+	*size = (buf[0] << 24) | (buf[1] << 16) | (buf[2] << 8) | buf[3];
 
 	return (GP_OK);
 }
