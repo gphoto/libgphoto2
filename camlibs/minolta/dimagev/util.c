@@ -19,6 +19,8 @@
 *                                                                     *
 **********************************************************************/
 
+/* $Id$ */
+
 #include "dimagev.h"
 
 int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {

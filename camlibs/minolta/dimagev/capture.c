@@ -19,6 +19,8 @@
 *                                                                     *
 **********************************************************************/
 
+/* $Id$ */
+
 #include "dimagev.h"
 
 /* This function handles sending the camera command to take a new picture, and

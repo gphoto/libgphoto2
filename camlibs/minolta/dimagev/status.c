@@ -19,6 +19,8 @@
 *                                                                     *
 **********************************************************************/
 
+/* $Id$ */
+
 #include "dimagev.h"
 
 /* This is the parent function, who calls most of the functions below.

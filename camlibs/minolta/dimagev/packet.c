@@ -19,6 +19,8 @@
 *                                                                     *
 **********************************************************************/
 
+/* $Id$ */
+
 #include "dimagev.h"
 
 /* This function takes an array of unsigned chars, as well as the length, and
