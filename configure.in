@@ -115,8 +115,10 @@ dnl		       -ldl isn't needed.
 dnl ---------------------------------------------------------------------------
 AC_PROG_LIBTOOL
 have_ltdl=false
-ltdl_msg="no"
-try_ltdl=true
+dnl There is a show-stopper bug in libltdl. Contact
+dnl <lutz@users.sourceforge.net> for infos.
+ltdl_msg="no (default)"
+try_ltdl=false
 AC_ARG_WITH(ltdl, [  --without-ltdl            Don't use ltdl],[
         if test x$withval = xno; then
 		try_ltdl=false

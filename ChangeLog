@@ -1,5 +1,10 @@
 2002-06-14  Lutz Müller <lutz@users.sourceforge.net>
 
+	* configure.in: Given the pending release, it is safer to disable
+	  the use of the buggy libltdl.
+
+2002-06-14  Lutz Müller <lutz@users.sourceforge.net>
+
 	Suggested by Arnaud Launay <asl@launay.org>, slightly modified:
 
 	* configure.in: Simplify check for readline.
