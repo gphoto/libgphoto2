@@ -1,5 +1,12 @@
 2001-11-06  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	Chris Pinkham <cpinkham@corp.infi.net> decoded the thumbnails:
+
+	* camlibs/polaroid/pdc700.c: Convert the thumbnails from YUV 2:1:1
+	  to PPM.
+
+2001-11-06  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/polaroid/pdc700.c: Fix memmove (third parameter is # of
 	  bytes to be moved). Display version information in camera_summary.
 

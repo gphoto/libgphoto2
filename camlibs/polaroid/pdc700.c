@@ -88,7 +88,9 @@ struct _PDCPicInfo {
 	unsigned char flash;
 };
 
-#define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
+#define CHECK_RESULT(result) {int r=(result);if(r<0) return (r);}
+#define CRF(result,d)      {int r=(result);if(r<0) {free(d);return(r);}}
+#define CRFF(result,d1,d2) {int r=(result);if(r<0) {free(d1);free(d2);return(r);}}
 
 /*
  * Every command sent to the camera begins with 0x40 followed by two bytes
@@ -452,12 +454,48 @@ camera_abilities (CameraAbilitiesList *list)
 }
 
 static int
+pdc700_expand (unsigned char *src, unsigned char *dst)
+{
+	int Y, Y2, U, V;
+	int x, y;
+
+	for (y = 0; y < 60; y++)
+		for (x = 0; x < 80; x += 2) {
+			Y  = src[0]; Y  += 128;
+			U  = src[1]; U  -= 0;
+			Y2 = src[2]; Y2 += 128;
+			V  = src[3]; V  -= 0;
+
+			if ((Y  > -16) && (Y  < 16)) Y  = 0;
+			if ((Y2 > -16) && (Y2 < 16)) Y2 = 0;
+			if ((U  > -16) && (U  < 16)) U  = 0;
+			if ((V  > -16) && (V  < 16)) V  = 0;
+
+			dst[0] = Y + (1.402000 * V);
+			dst[1] = Y - (0.344136 * U) - (0.714136 * V);
+			dst[2] = Y + (1.772000 * U);
+			dst += 3;
+
+			dst[0] = Y2 + (1.402000 * V);
+			dst[1] = Y2 - (0.344136 * U) - (0.714136 * V);
+			dst[2] = Y2 + (1.772000 * U);
+			dst += 3;
+
+			src += 4;
+		}
+
+	return (GP_OK);
+}
+
+static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename, 
 	       CameraFileType type, CameraFile *file, void *user_data)
 {
 	Camera *camera = user_data;
-	int n, size;
-	unsigned char *data;
+	int n;
+	unsigned int size, ppm_size;
+	const char header[] = "P6\n80 60\n255\n";
+	unsigned char *data = NULL, *ppm;
 
 	if (type == GP_FILE_TYPE_RAW)
 		return (GP_ERROR_NOT_SUPPORTED);
@@ -468,10 +506,41 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	/* Get the file */
 	CHECK_RESULT (pdc700_pic (camera, n + 1, &data, &size, 
 				  (type == GP_FILE_TYPE_NORMAL) ? 0 : 1));
+	switch (type) {
+	case GP_FILE_TYPE_NORMAL:
+		CRF (gp_file_set_data_and_size (file, data, size), data);
+		CHECK_RESULT (gp_file_set_name (file, filename));
+		CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_JPEG));
+		break;
+	case GP_FILE_TYPE_PREVIEW:
 
-	CHECK_RESULT (gp_file_set_data_and_size (file, data, size));
-	CHECK_RESULT (gp_file_set_name (file, filename));
-	CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_JPEG));
+		/*
+		 * Image is a YUF 2:1:1 format: 4 bytes for each 2 pixels.
+		 * Y0 U0 Y1 V0 Y2 U2 Y3 V2 Y4 U4 Y5 V4 ....
+		 * So the first four bytes make up the first two pixels.
+		 * You use Y0, U0, V0 to get pixel0 then Y1, U0, V0 to get
+		 * pixel 2. Then onto the next 4-byte sequence.
+		 */
+		ppm_size = size * 3 / 2;
+		ppm = malloc (sizeof (char) * ppm_size);
+		if (!ppm) {
+			free (data);
+			return (GP_ERROR_NO_MEMORY);
+		}
+		CRFF (pdc700_expand (data, ppm), data, ppm);
+		free (data);
+		CRF (gp_file_append (file, header, sizeof (header)), ppm);
+		CRF (gp_file_append (file, ppm, ppm_size), ppm);
+		free (ppm);
+		CHECK_RESULT (gp_file_set_name (file, filename));
+		CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_PPM));
+		break;
+
+	case GP_FILE_TYPE_RAW:
+	default:
+		free (data);
+		return (GP_ERROR_NOT_SUPPORTED);
+	}
 
 	return (GP_OK);
 }
