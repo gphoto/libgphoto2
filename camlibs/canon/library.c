@@ -77,8 +77,12 @@ extern long int timezone;
 
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 
-#define TRUE (0==0)
-#define FALSE (0!=0)
+#ifndef TRUE
+# define TRUE (0==0)
+#endif
+#ifndef FALSE
+# define FALSE (0!=0)
+#endif
 
 #ifdef CANON_EXPERIMENTAL_CAPTURE
 #define CAPTURE_BOOL TRUE
