@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-
+AC_PREREQ(2.50)
 AC_INIT(libgphoto2/gphoto2.h)
 AM_CONFIG_HEADER(libgphoto2/config.h)
 AM_INIT_AUTOMAKE(gphoto2, 2.1.1dev1)
@@ -68,10 +68,17 @@ AC_ARG_WITH(pthread, [  --without-pthread         Don't use pthread],
         fi)
 if $try_pthread; then
         AC_CHECK_HEADER(pthread.h, [
-                AC_DEFINE(HAVE_PTHREAD,,[Define if we use pthread.h.])
-                pthread_msg=yes
-                PTHREAD_LIBS="-lpthread"
-        ])
+		AC_CHECK_LIB(pthread, pthread_exit, [
+		    AC_DEFINE(HAVE_PTHREAD,,[Define if we use pthread.h.])
+		    pthread_msg="yes (-lpthread)"
+		    PTHREAD_LIBS="-lpthread"],[
+		    AC_CHECK_LIB(c_r, pthread_create, [
+			AC_DEFINE(HAVE_PTHREAD,,[Define if we use pthread.h.])
+			pthread_msg="yes (-lc_r)"
+		        PTHREAD_LIBS="-lc_r"
+		    ])
+		])
+	])
 fi
 AC_SUBST(PTHREAD_LIBS)
 
