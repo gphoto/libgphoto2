@@ -1,3 +1,13 @@
+2001-08-28  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* camlibs/canon/psa50.c:
+	* camlibs/kodak/dc120/library.c:
+	* camlibs/minolta/dimagev/dimagev.c:
+	* camlibs/panasonic/dc1000.c:
+	* camlibs/panasonic/dc1580.c:
+	* camlibs/sonydscf1/sonydscf1.c: Remove direct accesses to the 
+	CameraFile struct.
+
 2001-08-27  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	Patch from Fabrice Bellet <Fabrice.Bellet@creatis.insa-lyon.fr>:

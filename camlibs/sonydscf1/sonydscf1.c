@@ -144,7 +144,9 @@ int camera_file_count (Camera *camera)
 int camera_file_get (Camera *camera, const char *folder, const char *filename,
                      CameraFileType type, CameraFile *file)
 {
-        int size, num;
+        int num;
+	long int size;
+	const char *data = NULL;
         SonyStruct *b = (SonyStruct*)camera->camlib_data;
         printf("folder: %s, file: %s\n", folder, filename);
         /*gp_frontend_progress(camera, NULL, 0.00);*/
@@ -159,20 +161,21 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
-		size = get_picture (num, &file->data, JPEG, 0, 
+		size = get_picture (num, &data, JPEG, 0, 
 				    camera_file_count (camera));
 		break;
 	case GP_FILE_TYPE_PREVIEW:
-		size = get_picture (num, &file->data, JPEG_T, TRUE,
+		size = get_picture (num, &data, JPEG_T, TRUE,
 				    camera_file_count (camera));
 		break;
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
 
-        if (!file->data)
+        if (!data)
                 return GP_ERROR;
-        file->size = size;
+
+	gp_file_set_data_and_size (file, data, size);
 
         return GP_OK;
 }

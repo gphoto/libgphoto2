@@ -1851,22 +1851,26 @@ int psa50_put_file_serial(Camera *camera, CameraFile *file, char *destname, char
         char block_len2[4];
         int sent=0;
         int i,j=0,len, hdr_len;
+	long int size;
+	const char *data, *name;
 
         cs->uploading = 1;
-        for(i=0;file->name[i];i++)
-          filename[i]=toupper(file->name[i]);
+	gp_file_get_name (file, &name);
+        for(i=0;name[i];i++)
+          filename[i]=toupper(name[i]);
         filename[i]='\0';
 
-        hdr_len = HDR_FIXED_LEN + strlen(file->name) + strlen(destpath);
+        hdr_len = HDR_FIXED_LEN + strlen(name) + strlen(destpath);
 
         gp_frontend_progress(camera, NULL, 0);
+	gp_file_get_data_and_size (file, &data, &size);
 
-        while(sent<file->size) {
+        while(sent<size) {
 
-                if(file->size < DATA_BLOCK)
-                  block_len = file->size;
-                else if ((file->size - sent < DATA_BLOCK))
-                  block_len = file->size - sent;
+                if(size < DATA_BLOCK)
+                  block_len = size;
+                else if ((size - sent < DATA_BLOCK))
+                  block_len = size - sent;
                 else
                   block_len = DATA_BLOCK;
 
@@ -1878,7 +1882,7 @@ int psa50_put_file_serial(Camera *camera, CameraFile *file, char *destname, char
                 }
 
                 for(i=0; i<DATA_BLOCK; i++) {
-                        buf[i] = file->data[j];
+                        buf[i] = data[j];
                         j++;
                 }
 
@@ -1892,7 +1896,7 @@ int psa50_put_file_serial(Camera *camera, CameraFile *file, char *destname, char
                 return GP_ERROR;
         }
                 sent += block_len;
-                gp_frontend_progress(camera, NULL, file->size ? (sent/(float) file->size)*100 : 100);
+                gp_frontend_progress(camera, NULL, size ? (sent/(float) size)*100 : 100);
         }
         cs->uploading = 0;
     return GP_OK;

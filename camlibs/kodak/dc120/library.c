@@ -238,6 +238,8 @@ int dc120_get_albums (DC120Data *dd, int from_card, CameraList *list) {
 	int size = 256;
 	char *f;
 	char *p = dc120_packet_new(0x44);
+	const char *file_data;
+	long int file_size;
 
 	if (from_card)
 		p[1] = 0x01;
@@ -248,9 +250,10 @@ int dc120_get_albums (DC120Data *dd, int from_card, CameraList *list) {
 		gp_file_free(file);
 		free (p);
 	}
+	gp_file_get_data_and_size (file, &file_data, &file_size);
 
 	for (x=0; x<8; x++) {
-		f = &file->data[x*15];
+		f = (char*)&file_data[x*15];
 		if (strlen(f)>0)
 			gp_list_append(list, f, NULL);
 	}
@@ -268,6 +271,8 @@ int dc120_get_filenames (DC120Data *dd, int from_card, int album_number, CameraL
 	int x=0, size=0;
 	char *p = dc120_packet_new(0x4A);
 	char buf[16];
+	const char *file_data;
+	long int file_size;
 
 	if (from_card)
 		p[1] = 0x01;
@@ -282,9 +287,10 @@ int dc120_get_filenames (DC120Data *dd, int from_card, int album_number, CameraL
 	}
 
 	/* extract the filenames from the packet data */
+	gp_file_get_data_and_size (file, &file_data, &file_size);
 	x=2;
 	while (x < size) {
-		f=&file->data[x];
+		f=(char*) &file_data[x];
 		strncpy(buf, f, 7);
 		buf[7] = 0;
 		strcat(buf, ".kdc");
@@ -304,6 +310,8 @@ int dc120_get_file_preview (DC120Data *dd, CameraFile *file, int file_number, ch
 	CameraFile *f;
 	int x;
 	char buf[16];
+	const char *f_data;
+	long int f_size;
 
 	*size = 15680;
 
@@ -316,10 +324,11 @@ int dc120_get_file_preview (DC120Data *dd, CameraFile *file, int file_number, ch
 	/* Convert to PPM file for now */
 	gp_file_append(file, "P3\n80 60\n255\n", 13);
 	for (x=0; x<14400; x+=3) {
+		gp_file_get_data_and_size (f, &f_data, &f_size);
 		sprintf(buf, "%i %i %i\n",
-			(unsigned char)f->data[x+1280],
-			(unsigned char)f->data[x+1281],
-			(unsigned char)f->data[x+1282]);
+			(unsigned char)f_data[x+1280],
+			(unsigned char)f_data[x+1281],
+			(unsigned char)f_data[x+1282]);
 		gp_file_append(file, buf, strlen(buf));
 	}
 
@@ -330,6 +339,8 @@ int dc120_get_file_preview (DC120Data *dd, CameraFile *file, int file_number, ch
 int dc120_get_file (DC120Data *dd, CameraFile *file, int file_number, char *cmd_packet, int *size) {
 
 	CameraFile *f;
+	const char *f_data;
+	long int f_size;
 	char *p = dc120_packet_new(0x4A);
 	int offset = 2 + (file_number-1) * 20 + 16;
 
@@ -343,10 +354,11 @@ int dc120_get_file (DC120Data *dd, CameraFile *file, int file_number, char *cmd_
 		gp_file_free(file);
 		return (GP_ERROR);
 	}
-	*size = (unsigned char)f->data[offset]     * 16777216 + 
-		(unsigned char)f->data[offset + 1] * 65536 +
-		(unsigned char)f->data[offset + 2] * 256 +
-		(unsigned char)f->data[offset + 3];
+	gp_file_get_data_and_size (f, &f_data, &f_size);
+	*size = (unsigned char)f_data[offset]     * 16777216 + 
+		(unsigned char)f_data[offset + 1] * 65536 +
+		(unsigned char)f_data[offset + 2] * 256 +
+		(unsigned char)f_data[offset + 3];
 
 	if (dc120_packet_read_data(dd, file, cmd_packet, size, 1024)==GP_ERROR)
 		return (GP_ERROR);
@@ -440,6 +452,7 @@ int dc120_capture (DC120Data *dd, CameraFile *file) {
 	CameraList *list;
 	char *cmd_packet = dc120_packet_new(0x77);
 	int count;
+	const char *name;
 
 	/* Take the picture to Flash memory */
 	gp_frontend_message (NULL, "Taking picture...");
@@ -454,7 +467,8 @@ int dc120_capture (DC120Data *dd, CameraFile *file) {
 	gp_list_new(&list);
 	dc120_get_filenames (dd, 0, 0, list);
 	count = gp_list_count(list);
-	gp_list_set_name (list, count - 1, file->name);
+	gp_file_get_name (file, &name);
+	gp_list_set_name (list, count - 1, name);
 
 	/* Download it */
 	dc120_file_action (dd, DC120_ACTION_IMAGE, 0, 0, count, file);

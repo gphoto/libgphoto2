@@ -238,6 +238,7 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 {
 	dimagev_t *dimagev;
 	int file_number=0, result;
+	char buffer[128];
 
 	dimagev = camera->camlib_data;
 
@@ -254,10 +255,11 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 	case GP_FILE_TYPE_PREVIEW:
 		gp_file_set_mime_type (file, "image/ppm");
 #if defined HAVE_SNPRINTF
-		snprintf(file->name, sizeof(file->name), DIMAGEV_THUMBNAIL_FMT, ( file_number + 1) );
+		snprintf(buffer, sizeof(buffer), DIMAGEV_THUMBNAIL_FMT, ( file_number + 1) );
 #else
-		sprintf(file->name, DIMAGEV_THUMBNAIL_FMT, ( file_number + 1) );
+		sprintf(buffer, DIMAGEV_THUMBNAIL_FMT, ( file_number + 1) );
 #endif 
+		gp_file_set_name (file, buffer);
 		result = dimagev_get_thumbnail (dimagev, file_number + 1, file);
 		break;
 	default:

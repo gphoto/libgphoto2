@@ -519,8 +519,12 @@ int camera_folder_put_file (Camera *camera, const char *folder,
 	dsc_t	*dsc = (dsc_t *)camera->camlib_data;
 	int	blocks, blocksize, i;
 	int	result;
-		
-	dsc_print_status(camera, _("Uploading image: %s."), file->name);	
+	const char *name;
+	const char *data;
+	long int size;
+	
+	gp_file_get_name (file, &name);
+	dsc_print_status(camera, _("Uploading image: %s."), name);	
 	
 /*	We can not figure out file type, at least by now.
 
@@ -529,28 +533,29 @@ int camera_folder_put_file (Camera *camera, const char *folder,
 		return GP_ERROR;		
 	}
 */	
-	if (file->size > DSC_MAXIMAGESIZE) {
+	gp_file_get_data_and_size (file, &data, &size);
+	if (size > DSC_MAXIMAGESIZE) {
 		dsc_print_message (camera, _("File size is %i bytes. "
 				   "The size of the largest file possible to "
-				   "upload is: %i bytes."), file->size, 
+				   "upload is: %i bytes."), size, 
 				   DSC_MAXIMAGESIZE);
 		return GP_ERROR;		
 	}
 
-	result = dsc1_setimageres (dsc, file->size);
+	result = dsc1_setimageres (dsc, size);
 	if (result != GP_OK)
 		return (result);
 	
 	gp_frontend_progress(camera, file, 0.00);
 	
-	blocks = (file->size - 1)/DSC_BLOCKSIZE + 1;
+	blocks = (size - 1)/DSC_BLOCKSIZE + 1;
 			
 	for (i = 0; i < blocks; i++) {
-		blocksize = file->size - i*DSC_BLOCKSIZE;
+		blocksize = size - i*DSC_BLOCKSIZE;
 		if (DSC_BLOCKSIZE < blocksize) 
 			blocksize = DSC_BLOCKSIZE;
 		result = dsc1_writeimageblock (dsc, i, 
-					       &file->data[i*DSC_BLOCKSIZE], 
+					       (char*)&data[i*DSC_BLOCKSIZE], 
 					       blocksize);
 		if (result != GP_OK)
 			return (result);
