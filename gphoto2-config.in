@@ -53,7 +53,7 @@ while test $# -gt 0; do
 	;;
 
     --cflags)
-       	echo -I@prefix@/include/gphoto2
+       	echo -I@prefix@/include/gphoto2 -I@prefix@/include
        	;;
 
     --libs)
