@@ -338,8 +338,10 @@ int canon_usb_unlock_keys(Camera *camera, GPContext *context);
 int canon_usb_get_dirents (Camera *camera, unsigned char **dirent_data, unsigned int *dirents_length, const char *path, GPContext *context);
 int canon_usb_list_all_dirs (Camera *camera, unsigned char **dirent_data,
 			     unsigned int *dirents_length, GPContext *context);
-int canon_usb_set_file_attributes (Camera *camera, unsigned short attr_bits,
-			       const char *pathname, GPContext *context);
+int canon_usb_set_file_attributes (Camera *camera,
+				   unsigned int attr_bits,
+				   const char *dir, const char *file,
+				   GPContext *context);
 int canon_usb_ready (Camera *camera);
 int canon_usb_identify (Camera *camera, GPContext *context);
 

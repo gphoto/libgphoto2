@@ -134,7 +134,7 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 	/* Get maximum download transfer length from camera, if
 	 * provided */
 	camera->pl->xfer_length = le32atoh (msg+0x4c);
-	if ( camera->pl->xfer_length < 0 )
+	if ( camera->pl->xfer_length == 0xFFFFFFFF )
 		camera->pl->xfer_length = USB_BULK_READ_SIZE; /* Use default */
 	GP_DEBUG ("canon_usb_camera_init() set transfer length to 0x%x",
 		  camera->pl->xfer_length );
@@ -1435,7 +1435,7 @@ canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, int 
 		htole32a (payload, 0x0);	/* get picture */
 		htole32a (payload + 0x4, camera->pl->xfer_length);
 		strncpy ( payload+offset, name, sizeof(payload)-offset );
-		payload_length = strlen (payload+offset) + 1;
+		payload_length = offset + strlen (payload+offset) + 1;
 		GP_DEBUG ( "canon_usb_get_file: payload 0x%08x:0x%08x:%s",
 			   le32atoh(payload), le32atoh(payload+4), payload+offset );
 	}
@@ -1652,32 +1652,30 @@ int canon_usb_set_file_time ( Camera *camera, char *camera_filename, time_t time
  *
  */
 int
-canon_usb_set_file_attributes (Camera *camera, unsigned short attr_bits,
-			       const char *pathname, GPContext *context)
+canon_usb_set_file_attributes (Camera *camera, unsigned int attr_bits,
+			       const char *dir, const char *file,
+			       GPContext *context)
 {
 	/* Pathname string plus 32-bit parameter plus two NULs. */
-	unsigned int payload_length = strlen(pathname) + 6;
-	unsigned char *payload = malloc ( payload_length );
+	unsigned int payload_length = 4 + strlen (dir) + 1 + strlen (file) + 2;
+	unsigned char *payload = calloc ( payload_length, sizeof ( unsigned char ) );
 	int bytes_read;
 	unsigned char *res;
 
 	GP_DEBUG ( "canon_usb_set_file_attributes()" );
-
+	GP_DEBUG ( "canon_usb_set_file_attributes(): payload is %d=0x%x bytes; string length is %d=0x%x",
+		   payload_length, payload_length, strlen(dir), strlen(dir) );
 	/* build payload :
 	 *
-	 * <attr bits> pathname 0x00 0x00
+	 * <attr bits> directory 0x00 file 0x00 0x00
 	 *
 	 * The attribute bits will be a 32-bit little-endian integer.
-	 * NOTE: the first 0x00 after dirname is the NULL byte terminating
-	 * the string, so payload_length is strlen(dirname) + 4 
 	 */
 	memset (payload, 0x00, payload_length);
-	memcpy (payload + 4, pathname, strlen (pathname));
+	memcpy (payload + 4, dir, strlen (dir));
+	memcpy (payload + 4 + strlen(dir) + 1, file, strlen (file) );
 	htole32a ( payload, (unsigned long)attr_bits );
 
-	/* 1024 * 1024 is max realistic data size, out of the blue.
-	 * 0 is to not show progress status
-	 */
 	res = canon_usb_dialogue ( camera, CANON_USB_FUNCTION_SET_ATTR, &bytes_read,
 				   payload, payload_length );
 	if ( res == NULL ) {
@@ -1688,12 +1686,10 @@ canon_usb_set_file_attributes (Camera *camera, unsigned short attr_bits,
 		return GP_ERROR_OS_FAILURE;
 	}
 	else if ( le32atoh ( res+0x50 ) != 0 ) {
-		gp_context_error (context,
-				  _("canon_usb_set_file_attributes: "
+		gp_context_message (context,
+				  _("Warning in canon_usb_set_file_attributes: "
 				  "canon_usb_dialogue returned error status 0x%08x from camera"),
 				  le32atoh ( res+0x50 ) );
-		free ( payload );
-		return GP_ERROR_CORRUPTED_DATA;
 	}
 
 	free ( payload );
@@ -1904,8 +1900,8 @@ canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *dest
 	/* Now we finish the job. */
 	canon_usb_set_file_time ( camera, filename, filestat.st_mtime, context );
 
-	canon_usb_set_file_attributes ( camera, (unsigned short)0,
-					filename, context );
+	canon_usb_set_file_attributes ( camera, (unsigned int)0,
+					destpath, destname, context );
 
 	if(size > 65572-filename_len) {
 	    gp_context_message(context, _("File was too big. You may have to turn your camera off and back on before uploading more files."));

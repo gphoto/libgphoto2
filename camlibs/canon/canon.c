@@ -1218,7 +1218,7 @@ int
 canon_int_set_file_attributes (Camera *camera, const char *file, const char *dir,
 			       canonDirentAttributeBits attrs, GPContext *context)
 {
-	unsigned char payload[300];
+	unsigned char *payload;
 	unsigned char *msg;
 	unsigned char attr[4];
 	int len, payload_length;
@@ -1231,25 +1231,12 @@ canon_int_set_file_attributes (Camera *camera, const char *file, const char *dir
 
 	switch (camera->port->type) {
 		case GP_PORT_USB:
-			if ((4 + strlen (dir) + 1 + strlen (file) + 1) > sizeof (payload)) {
-				GP_DEBUG ("canon_int_set_file_attributes: "
-					  "dir '%s' + file '%s' too long, "
-					  "won't fit in payload buffer.", dir, file);
-				return GP_ERROR_BAD_PARAMETERS;
-			}
+			payload_length = 4 + strlen (dir) + 1 + strlen (file) + 2;
+			payload = (unsigned char*) calloc ( payload_length, sizeof(unsigned char) );
 			/* create payload (yes, path and filename are two different strings
 			 * and not meant to be concatenated)
 			 */
-			memset (payload, 0, sizeof (payload));
-			memcpy (payload, attr, 4);
-			memcpy (payload + 4, dir, strlen (dir) + 1);
-			memcpy (payload + 4 + strlen (dir) + 1, file, strlen (file) + 1);
-			payload_length = 4 + strlen (dir) + 1 + strlen (file) + 1;
-			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_SET_ATTR, &len,
-						  payload, payload_length);
-			if ( msg == NULL )
-				return GP_ERROR_OS_FAILURE;
-
+			return canon_usb_set_file_attributes ( camera, attrs, dir, file, context );
 			break;
 		case GP_PORT_SERIAL:
 			msg = canon_serial_dialogue (camera, context, 0xe, 0x11, &len, attr, 4,
