@@ -77,20 +77,6 @@ typedef int (*CameraAboutFunc)   (Camera *camera, CameraText *text);
 /* Error reporting */
 typedef const char *(*CameraResultFunc) (Camera *camera, int result);
 
-/* DEPRECATED */
-typedef int (*c_folder_list_folders)    (Camera*, const char*, CameraList*);
-typedef int (*c_folder_list_files)      (Camera*, const char*, CameraList*);
-typedef int (*c_file_get_info)          (Camera*, const char*,
-					 const char*, CameraFileInfo*);
-typedef int (*c_file_set_info)          (Camera*, const char*,
-					 const char*, CameraFileInfo*);
-typedef int (*c_file_get)               (Camera*, const char*,
-		                         const char*, CameraFileType type,
-					 CameraFile*);
-
-typedef const char *(*c_result_as_string) (Camera*, int);
-
-
 typedef struct {
 	CameraExitFunc exit;
 
@@ -114,12 +100,6 @@ typedef struct {
 	/* Error reporting */
 	CameraResultFunc result_as_string;
 
-	/* DEPRECATED */
-	c_folder_list_folders   folder_list_folders;
-	c_folder_list_files     folder_list_files;
-	c_file_get_info         file_get_info;
-	c_file_set_info         file_set_info;
-	c_file_get              file_get;
 } CameraFunctions;
 
 /* Those are DEPRECATED */

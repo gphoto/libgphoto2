@@ -1024,33 +1024,18 @@ int
 gp_camera_folder_list_files (Camera *camera, const char *folder, 
 			     CameraList *list)
 {
-	int result;
-
 	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Listing files in '%s'...",
 		folder);
 
 	CHECK_NULL (camera && folder && list);
 	CHECK_RESULT (gp_list_reset (list));
 
-	/* Check first if the camera driver uses the filesystem */
-	CHECK_OPEN (camera);
-	result = gp_filesystem_list_files (camera->fs, folder, list);
-	CHECK_CLOSE (camera);
-//Remove this when camera drivers are updated to use camera->fs
-if (!list->count && !camera->functions->folder_list_files)
-return (result);
-if (list->count)
-	if (result != GP_ERROR_NOT_SUPPORTED)
-		return (result);
+	gp_camera_status (camera, _("Listing files in '%s'..."), folder);
+	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_list_files (camera->fs,
+							folder, list));
+	gp_camera_status (camera, "");
 
-	if (!camera->functions->folder_list_files)
-		return (GP_ERROR_NOT_SUPPORTED);
-
-	gp_list_reset (list);
-	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->folder_list_files (
-							camera, folder, list));
 	CHECK_RESULT (gp_list_sort (list));
-
         return (GP_OK);
 }
 
@@ -1068,35 +1053,18 @@ int
 gp_camera_folder_list_folders (Camera *camera, const char* folder, 
 			       CameraList *list)
 {
-	int result;
-
 	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Listing folders in '%s'...",
 		folder);
 
 	CHECK_NULL (camera && folder && list);
 	CHECK_RESULT (gp_list_reset (list));
 
-	/* Check first if the camera driver uses the filesystem */
-	CHECK_OPEN (camera);
-	result = gp_filesystem_list_folders (camera->fs, folder, list);
-	CHECK_CLOSE (camera);
-//Remove this when camera drivers are updated to use camera->fs
-if (!list->count && !camera->functions->folder_list_folders)
-return (result);
-if (list->count)
-	if (result != GP_ERROR_NOT_SUPPORTED)
-		return (result);
-
-	if (!camera->functions->folder_list_folders)
-		return (GP_ERROR_NOT_SUPPORTED);
-
-	gp_list_reset (list);
-
-	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->folder_list_folders(
-						camera, folder, list));
+	gp_camera_status (camera, _("Listing folders in '%s'..."), folder);
+	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_list_folders (
+						camera->fs, folder, list));
+	gp_camera_status (camera, "");
 
 	CHECK_RESULT (gp_list_sort (list));
-
         return (GP_OK);
 }
 
@@ -1117,8 +1085,10 @@ gp_camera_folder_delete_all (Camera *camera, const char *folder)
 
 	CHECK_NULL (camera && folder);
 
+	gp_camera_status (camera, _("Deleting all files in '%s'..."), folder);
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_delete_all (camera->fs,
 								folder));
+	gp_camera_status (camera, "");
 
 	return (GP_OK);
 }
@@ -1141,8 +1111,10 @@ gp_camera_folder_put_file (Camera *camera, const char *folder, CameraFile *file)
 
 	CHECK_NULL (camera && folder && file);
 
+	gp_camera_status (camera, _("Uploading file into '%s'..."), folder);
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_put_file (camera->fs,
 							folder, file));
+	gp_camera_status (camera, "");
 
 	return (GP_OK);
 }
@@ -1319,8 +1291,6 @@ int
 gp_camera_file_get (Camera *camera, const char *folder, const char *file,
 		    CameraFileType type, CameraFile *camera_file)
 {
-	int result;
-
 	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Getting file '%s' in "
 		"folder '%s'...", file, folder);
 
@@ -1331,26 +1301,17 @@ gp_camera_file_get (Camera *camera, const char *folder, const char *file,
 		return (GP_ERROR_DIRECTORY_NOT_FOUND);
 	if (strlen (file) == 0)
 		return (GP_ERROR_FILE_NOT_FOUND);
-   
-	CHECK_OPEN (camera);
-	gp_camera_status (camera, "Getting '%s' from folder '%s'...",
+  
+	gp_camera_status (camera, _("Getting '%s' from folder '%s'..."),
 			  file, folder);
-	result = gp_filesystem_get_file (camera->fs, folder, file, type,
-					 camera_file);
+	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_get_file (camera->fs,
+				folder, file, type, camera_file));
 	gp_camera_status (camera, "");
 	gp_camera_progress (camera, 0.0);
-	CHECK_CLOSE (camera);
-	if (result != GP_ERROR_NOT_SUPPORTED)
-		return (result);
 
-	if (camera->functions->file_get == NULL)
-		return (GP_ERROR_NOT_SUPPORTED); 
-
+	/* We don't trust the camera libraries */
 	CHECK_RESULT (gp_file_set_type (camera_file, type));
 	CHECK_RESULT (gp_file_set_name (camera_file, file));
-
-	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->file_get (camera,
-					folder, file, type, camera_file));
 
 	return (GP_OK);
 }
@@ -1432,8 +1393,11 @@ gp_camera_file_delete (Camera *camera, const char *folder, const char *file)
 
 	CHECK_NULL (camera && folder && file);
 
+	gp_camera_status (camera, _("Deleting '%s' from folder '%s'..."),
+			  file, folder);
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_delete_file (
 						camera->fs, folder, file));
+	gp_camera_status (camera, "");
 
 	return (GP_OK);
 }
