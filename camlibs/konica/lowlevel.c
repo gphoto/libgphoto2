@@ -456,11 +456,13 @@ while (read < rbs_internal) {
 			break;
 		} else if (*c == ESC) {
 			if (i == read + r - 1) {
-				CHECK (gp_port_read (p,
-						&((*rb)[*rbs + read + r]), 1));
-				r++;
+				/* ESC is last char of packet */
+				CHECK (gp_port_read (p, c, 1));
+			} else {
+				memmove (c, c + 1, read + r - i - 1);
+				r--;
 			}
-			*c = (~*(c + 1) & 0xff);
+			*c = ~*c & 0xff;
 			if ((*c != STX ) && (*c != ETX ) && (*c != ENQ) &&
 			    (*c != ACK ) && (*c != XOFF) && (*c != XON) &&
 			    (*c != NACK) && (*c != ETB ) && (*c != ESC)) {
@@ -468,8 +470,6 @@ while (read < rbs_internal) {
 				error_flag = 1;
 				break;
 			}
-			memmove (c + 1, c + 2, read + r - i - 2);
-			r--;
 		}
 		checksum += (*rb)[*rbs + i];
 	}

@@ -2,6 +2,12 @@
 
 	Patch by Andreas Burmester <a.burmester@hamburg.de>:
 
+	* lowlevel.c (l_receive): Don't write beyond allocated memory.
+
+2003-12-17  Lutz Mueller <lutz@users.sourceforge.net>
+
+	Patch by Andreas Burmester <a.burmester@hamburg.de>:
+
 	* konica.c (k_check): unsigned.
 
 2003-12-11  Lutz Mueller <lutz@users.sourceforge.net>
