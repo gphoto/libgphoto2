@@ -61,7 +61,7 @@
 #define CRS(c,res) {int r = (res); if (r < 0) {gp_camera_status ((c), ""); return (r);}}
 
 #define CHECK_RESULT_OPEN_CLOSE(c,result) {int r; CHECK_OPEN (c); r = (result); if (r < 0) {CHECK_CLOSE (c); gp_camera_status ((c), ""); gp_camera_progress ((c), 0.0); return (r);}; CHECK_CLOSE (c);}
-#define CHECK_INIT(c) {if (!(c)->pc->initialized) {CHECK_RESULT(gp_camera_init(c));}}
+#define CHECK_INIT(c) {if (!(c)->pc->lh) {CHECK_RESULT(gp_camera_init(c));}}
 
 struct _CameraPrivateCore {
 
@@ -89,6 +89,29 @@ struct _CameraPrivateCore {
 
 	int initialized;
 };
+
+static int
+gp_camera_exit (Camera *camera)
+{
+	CHECK_NULL (camera);
+
+	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Exiting camera ('%s')...",
+		camera->pc->a.model);
+
+	if (camera->functions->exit) {
+		gp_port_open (camera->port);
+		camera->functions->exit (camera);
+		gp_port_close (camera->port);
+	}
+
+	GP_SYSTEM_DLCLOSE (camera->pc->lh);
+	camera->pc->lh = NULL;
+
+	gp_filesystem_reset (camera->fs);
+	memset (camera->functions, 0, sizeof (CameraFunctions));
+
+	return (GP_OK);
+}
 
 /**
  * gp_camera_new:
@@ -165,6 +188,10 @@ gp_camera_set_abilities (Camera *camera, CameraAbilities abilities)
 
 	CHECK_NULL (camera);
 
+	/* If the camera is currently initialized, terminate that connection */
+	if (camera->pc->lh)
+		gp_camera_exit (camera);
+
 	memcpy (&camera->pc->a, &abilities, sizeof (CameraAbilities));
 
 	return (GP_OK);
@@ -203,6 +230,10 @@ int
 gp_camera_set_port_info (Camera *camera, GPPortInfo info)
 {
 	CHECK_NULL (camera);
+
+	/* If the camera is currently initialized, terminate that connection */
+	if (camera->pc->lh)
+		gp_camera_exit (camera);
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Setting port info for "
 		"port '%s' at '%s'...", info.name, info.path);
@@ -244,6 +275,10 @@ gp_camera_set_port_speed (Camera *camera, int speed)
 			"a speed only with serial ports"));
 		return (GP_ERROR_BAD_PARAMETERS);
 	}
+
+	/* If the camera is currently initialized, terminate that connection */
+	if (camera->pc->lh)
+		gp_camera_exit (camera);
 
 	CHECK_RESULT (gp_port_get_settings (camera->port, &settings));
 	settings.serial.speed = speed;
@@ -508,22 +543,19 @@ gp_camera_free (Camera *camera)
 {
 	CHECK_NULL (camera);
 
+	/* If the camera is currently initialized, close the connection */
+	if (camera->port && camera->pc && camera->pc->lh)
+		gp_camera_exit (camera);
+
 	/* We don't care if anything goes wrong */
 	if (camera->port) {
-		gp_port_open (camera->port);
-		if (camera->functions->exit)
-	        	camera->functions->exit (camera);
-		gp_port_close (camera->port);
 		gp_port_free (camera->port);
 		camera->port = NULL;
 	}
 
 	if (camera->pc) {
-		if (camera->pc->lh) {
-			GP_SYSTEM_DLCLOSE (camera->pc->lh);
-			camera->pc->lh = NULL;
-		}
 		free (camera->pc);
+		camera->pc = NULL;
 	}
 
 	if (camera->fs) {
@@ -560,6 +592,7 @@ gp_camera_init (Camera *camera)
 	CameraAbilities a;
 	const char *model, *port;
 	CameraLibraryInitFunc init_func;
+	int result;
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Initializing camera...");
 
@@ -640,13 +673,33 @@ gp_camera_init (Camera *camera)
 	/* Initialize the camera */
 	init_func = GP_SYSTEM_DLSYM (camera->pc->lh, "camera_init");
 	if (!init_func) {
+		GP_SYSTEM_DLCLOSE (camera->pc->lh);
+		camera->pc->lh = NULL;
 		gp_camera_status (camera, "");
 		return (GP_ERROR_LIBRARY);
 	}
-	CHECK_RESULT_OPEN_CLOSE (camera, init_func (camera));
 
-	/* Ok, the camera is initialized */
-	camera->pc->initialized = 1;
+	if (strcasecmp (camera->pc->a.model, "Directory Browse")) {
+		result = gp_port_open (camera->port);
+		if (result < 0) {
+			GP_SYSTEM_DLCLOSE (camera->pc->lh);
+			camera->pc->lh = NULL;
+			gp_camera_status (camera, "");
+			return (result);
+		}
+	}
+
+	result = init_func (camera);
+	if (result < 0) {
+		gp_port_close (camera->port);
+		GP_SYSTEM_DLCLOSE (camera->pc->lh);
+		camera->pc->lh = NULL;
+		gp_camera_status (camera, "");
+		return (result);
+	}
+
+	/* We don't care if that goes wrong */
+	gp_port_close (camera->port);
 
 	gp_camera_status (camera, "");
 	return (GP_OK);
