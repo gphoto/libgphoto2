@@ -51,7 +51,7 @@ typedef struct _PTPReq PTPReq;
 #define PTP_TYPE_REQ                    0x0001
 #define PTP_TYPE_DATA                   0x0002
 #define PTP_TYPE_RESP                   0x0003
-#define PTP_REQ_DATALEN                 16384
+#define PTP_TYPE_EVENT			0x0004
 
 // Operation Codes
 
