@@ -41,7 +41,7 @@ fi
 changequote([, ])dnl
 
 dnl Hack to handle .libs subdirectories with old libtool
-if test $objdir = ".libs"; then
+if test "X$objdir" = "X.libs"; then
 	echo ".libs subdirectory detected : \$dotlibs not defined"
 	dotlibs=""
 else
