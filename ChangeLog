@@ -1,5 +1,10 @@
 2001-10-06  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* include/gphoto2-debug.h
+	* libgphoto2/debug.c (gp_debug_history_get_size): New
+
+2001-10-06  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2/debug.c: Use the debug level from libgphoto2_port instead
 	of keeping an own global variable
 

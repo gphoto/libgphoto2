@@ -35,6 +35,7 @@ void gp_debug_set_func  (GPDebugFunc func, void *data);
 
 /* History */
 int         gp_debug_history_set_size (unsigned int size);
+int         gp_debug_history_get_size (void);
 const char *gp_debug_history_get      (void);
 
 #endif /* __GPHOTO2_DEBUG_H__ */
