@@ -381,9 +381,9 @@ OPTION_CALLBACK(recurse) {
 typedef int folder_action(char *subfolder);
 
 /*
-  image_action - function type that performs some action on num-th image
-  	in the currently selected folder. Invoked by for_each_image(). 
-	Image numbering is 0-based. Should return GP_OK or GP_ERROR.
+  image_action - function type that performs some action on image 'filename'
+  	in the 'folder'. Invoked by for_each_image(). Should return GP_OK or 
+	GP_ERROR.
 */
 
 typedef int image_action(char *folder, char *filename);
@@ -401,7 +401,6 @@ int for_each_subfolder(char *folder, folder_action action, int recurse) {
 	CameraList		folderlist;
 	CameraListEntry		*entry;
 
-	int	count = 0;
 	char	prefix[1024], subfolder[1024];
 	int	i;
 	
@@ -416,7 +415,6 @@ int for_each_subfolder(char *folder, folder_action action, int recurse) {
 	if (prefix[strlen(prefix) - 1] != '/')
 			strcat(prefix, "/");
 	
-	/* Maybe we should rather trim last / instead of appending it? */
 	gp_camera_folder_list(glob_camera, &folderlist, prefix);
 			
 	for (i = 0; i < gp_list_count(&folderlist); i++) {
@@ -433,34 +431,38 @@ int for_each_subfolder(char *folder, folder_action action, int recurse) {
 
 /*
   for_each_image() - call action() for every image in 'folder' and, if 'recurse'
-  	is non-zero, in all its subfolders, recursively. If 'folder' is NULL or 
-	an empty string the current folder set with -f/--folder is assumed. It 
-	is also assumed that camera is already initialized, that is, 
-	set_globals() was invoked. Returns GP_OK or GP_ERROR.
+  	is non-zero, in all its subfolders, recursively. If 'reverse' is non-zero 
+	images are processed in descending order. It is also assumed that camera 
+	is already initialized, that is, set_globals() was invoked. Returns GP_OK 
+	or GP_ERROR.
 */
 
-int for_each_image(char *folder, image_action action, int recurse) {
+int for_each_image(char *folder, image_action action, int recurse, int reverse) {
 	
-	int	i;
-	CameraList filelist;
+	CameraList 	filelist;
 	CameraListEntry *entry;
+	int		i;
 
 	gp_camera_file_list(glob_camera, &filelist, folder);
 
-	for (i = 0; i < gp_list_count(&filelist); i++) {
-		entry = gp_list_entry(&filelist, i);
-printf("folder=%s filename=%s\n", folder, entry->name);
-		if (action(folder, entry->name) == GP_ERROR) {
-printf("error!\n");
-			return (GP_ERROR);
+	if (reverse) {
+		for (i = gp_list_count(&filelist) - 1; 0 <= i; i--) {
+			entry = gp_list_entry(&filelist, i);
+			if (action(folder, entry->name) == GP_ERROR)
+				return (GP_ERROR);
 		}
-	}
+	} else 
+		for (i = 0; i < gp_list_count(&filelist); i++) {
+			entry = gp_list_entry(&filelist, i);
+			if (action(folder, entry->name) == GP_ERROR)
+				return (GP_ERROR);
+		}
 	
 	if (recurse) {
 		
 		int faction(char *subfolder) {
 			
-			return for_each_image(subfolder, action, 0);
+			return for_each_image(subfolder, action, 0, reverse);
 		}
 		
 		return for_each_subfolder(folder, faction, recurse);
@@ -633,17 +635,17 @@ int parse_range(const char *range, char *index) {
 
 /*
   for_each_image_in_range() - call action() for every image specified in 'range',
-  	in the current folder set by -f/--folder. It is assumed that camera is 
-	already initialized, that is, set_globals() was invoked. Returns GP_OK
-	or GP_ERROR.
+  	in the 'folder'. If 'reverse' is non-sero images are processed in 
+	descending order. It is assumed that camera is already initialized, that 
+	is, set_globals() was invoked. Returns GP_OK or GP_ERROR.
 */
 
-int for_each_image_in_range(char *folder, char *range, image_action action) {
+int for_each_image_in_range(char *folder, char *range, image_action action, int reverse) {
 	
 	char	index[MAX_IMAGE_NUMBER];
-	int 	i, count = 0, max = 0;
+	int 	i, max = 0;
 
-	CameraList filelist;
+	CameraList 	filelist;
 	CameraListEntry *entry;
 
 	memset(index, 0, MAX_IMAGE_NUMBER);
@@ -653,30 +655,38 @@ int for_each_image_in_range(char *folder, char *range, image_action action) {
 		return (GP_ERROR);
 	}
 
-	if (gp_camera_file_list(glob_camera, &filelist, glob_folder)==GP_ERROR)
+	if (gp_camera_file_list(glob_camera, &filelist, folder) == GP_ERROR)
 		return (GP_ERROR);
 
 	for (max = MAX_IMAGE_NUMBER - 1; !index[max]; max--) {}
 	
 	if (gp_list_count(&filelist) < max + 1) {
-		cli_error_print("Picture number %i is too large. Available %i picture(s).", max + 1, count);
+		cli_error_print("Picture number %i is too large. Available %i picture(s).", max + 1, gp_list_count(&filelist));
 		return (GP_ERROR);
 	}
-
-	for (i = 0; i <= max; i++)
-		if (index[i]) {
-			entry = gp_list_entry(&filelist, i);
-			if (action(folder, entry->name) == GP_ERROR)
-				return (GP_ERROR);
-		}
+	
+	if (reverse) {
+		for (i = max; 0 <= i; i--)
+			if (index[i]) {
+				entry = gp_list_entry(&filelist, i);
+				if (action(folder, entry->name) == GP_ERROR)
+					return (GP_ERROR);
+			}
+	} else 
+		for (i = 0; i <= max; i++)
+			if (index[i]) {
+				entry = gp_list_entry(&filelist, i);
+				if (action(folder, entry->name) == GP_ERROR)
+					return (GP_ERROR);
+			}
 		
 	return (GP_OK);
 }
 
 /*
-  save_picture_to_file() - download (num+1)-th image, or its thumbnail, from 
-  	the camera and save it into file. File name is given by --filename 
-	option or set by library. num is 0-based.
+  save_picture_to_file() - download image 'filename', or its thumbnail, from the 
+	'folder' on the camera and save it into file. File name is given by 
+	--filename option or set by library. 
 */
 
 int save_picture_to_file(char *folder, char *filename, int thumbnail) {
@@ -760,9 +770,9 @@ int get_picture_common(char *range, int thumbnail) {
 	}
 
 	if (thumbnail)
-		return for_each_image_in_range(glob_folder, range, save_thumbnail_action);
+		return for_each_image_in_range(glob_folder, range, save_thumbnail_action, 0);
 	else
-		return for_each_image_in_range(glob_folder, range, save_picture_action);
+		return for_each_image_in_range(glob_folder, range, save_picture_action, 0);
 }
 
 OPTION_CALLBACK(get_picture) {
@@ -777,8 +787,7 @@ OPTION_CALLBACK(get_all_pictures) {
 	if (set_globals() == GP_ERROR)
 		return (GP_ERROR);
 
-	return for_each_image(glob_folder, save_picture_action, glob_recurse);
-	/* NULL means current folder, set with -f/--folder */
+	return for_each_image(glob_folder, save_picture_action, glob_recurse, 0);
 }
 
 OPTION_CALLBACK(get_thumbnail) {
@@ -798,7 +807,7 @@ OPTION_CALLBACK(get_all_thumbnails) {
 		return (GP_ERROR);
 	}
 		
-	return for_each_image(glob_folder, save_thumbnail_action, glob_recurse);
+	return for_each_image(glob_folder, save_thumbnail_action, glob_recurse, 0);
 }
 
 OPTION_CALLBACK(delete_picture) {
@@ -813,7 +822,7 @@ OPTION_CALLBACK(delete_picture) {
 		return (GP_ERROR);
 	}
 
-	return for_each_image_in_range(glob_folder, arg, delete_picture_action);
+	return for_each_image_in_range(glob_folder, arg, delete_picture_action, 1);
 }
 
 OPTION_CALLBACK(delete_all_pictures) {
@@ -828,7 +837,7 @@ OPTION_CALLBACK(delete_all_pictures) {
 		return (GP_ERROR);
 	}
 		
-	return for_each_image(glob_folder, delete_picture_action, glob_recurse);
+	return for_each_image(glob_folder, delete_picture_action, glob_recurse, 1);
 }
 
 OPTION_CALLBACK(upload_picture) {
