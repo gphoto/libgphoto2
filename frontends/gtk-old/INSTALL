@@ -1,0 +1,10 @@
+To install gPhoto2 GTK, type the following commands:
+
+	# make
+	# make install
+
+  * "make install" must be run as root
+
+To run gPhoto2 GTK after installation:
+
+	# gphoto2_gtk
