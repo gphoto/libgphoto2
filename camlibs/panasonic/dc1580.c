@@ -463,7 +463,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 
 static int camera_exit (Camera *camera, GPContext *context) {
         
-        dsc_print_status(camera, _("Disconnecting camera."));
+        gp_context_status(context, _("Disconnecting camera."));
 
         dsc2_disconnect(camera);
 
@@ -523,7 +523,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
         int     index, i, size, blocks, result;
 	unsigned int id;
 
-        dsc_print_status(camera, _("Downloading %s."), filename);
+        gp_context_status(context, _("Downloading %s."), filename);
 
         /* index is the 0-based image number on the camera */
         CHECK (index = gp_filesystem_number(camera->fs, folder, filename, context));
@@ -572,7 +572,7 @@ static int put_file_func (CameraFilesystem *fs, const char *folder,
 	unsigned int id;
 
 	gp_file_get_name(file, &name);
-        dsc_print_status(camera, _("Uploading image: %s."), name);
+        gp_context_status(context, _("Uploading image: %s."), name);
 
 /*      We can not figure out file type, at least by now.
 
@@ -583,7 +583,7 @@ static int put_file_func (CameraFilesystem *fs, const char *folder,
 */
 	gp_file_get_data_and_size (file, &data, &size);
         if (size > DSC_MAXIMAGESIZE) {
-                dsc_print_message (camera, _("File size is %i bytes. "
+                gp_context_message (context, _("File size is %i bytes. "
 				   "The size of the largest file possible to "
 				   "upload is: %i bytes."), size, 
 				   DSC_MAXIMAGESIZE);
@@ -620,7 +620,7 @@ static int delete_file_func (CameraFilesystem *fs, const char *folder,
 	Camera *camera = data;
         int     index, result;
 
-        dsc_print_status(camera, _("Deleting image %s."), filename);
+        gp_context_status(context, _("Deleting image %s."), filename);
 
         /* index is the 0-based image number on the camera */
 	CHECK (index = gp_filesystem_number (camera->fs, folder, filename, context));
