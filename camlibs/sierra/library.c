@@ -454,17 +454,18 @@ sierra_read_packet (Camera *camera, char *packet, GPContext *context)
 		case NAK:
 		case TRM:
 		case TYPE_COMMAND:
+		case TYPE_DATA:
+		case TYPE_DATA_END:
 
 			/* Those are all single byte packets. */
 			if (camera->port->type == GP_PORT_USB &&
 			    !camera->pl->usb_wrap)
 				gp_port_usb_clear_halt (camera->port,
 						GP_PORT_USB_ENDPOINT_IN);
+
+			GP_DEBUG ("Packet read. Returning GP_OK.");
 			return (GP_OK);
 
-		case TYPE_DATA:
-		case TYPE_DATA_END:
-			break;
 		default:
 			if (camera->port->type == GP_PORT_USB &&
 			    !camera->pl->usb_wrap)
@@ -824,6 +825,7 @@ int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *con
 				((unsigned char)buf[6] * 65536) +
 				((unsigned char)buf[7] * 16777216);
 			*value = r;
+			GP_DEBUG ("Wrote ACK. Returning '%s'.", gp_result_as_string (ret));
 			return ret;
 		}
 

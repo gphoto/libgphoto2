@@ -1,3 +1,7 @@
+2002-01-27  Lutz Müller <lutz@users.sourceforge.net>
+
+	* sierra.c: %s/== GP_OK/>= 0. Fixes camera_config (for example).
+
 2002-01-22  Lutz Müller <lutz@users.sourceforge.net>
 
 	William Bader <william@nscs.fast.net> reported (partial) success
