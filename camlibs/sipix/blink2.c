@@ -360,6 +360,10 @@ camera_abilities (CameraAbilitiesList *list)
 	strcpy(a.model, "SiPix:Snap");
 	gp_abilities_list_append(list, a);
 
+	a.usb_product		= 0x1015;
+	strcpy(a.model, "SiPix:CAMeleon");
+	gp_abilities_list_append(list, a);
+
 	return (GP_OK);
 }
 
