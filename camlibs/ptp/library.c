@@ -53,7 +53,15 @@ static struct {
 	unsigned short usb_vendor;
 	unsigned short usb_product;
 } models[] = {
-	{"Kodak DX3500", 0x40b, 0x500},
+	{"Kodak DC-240 (PTP)",  0x40a, 0x121}, /* Special firmware */
+	{"Kodak DC-4800", 0x40a, 0x160},
+	{"Kodak DX-3500", 0x40b, 0x500},
+	{"Kodak DX-3600", 0, 0},
+	{"Kodak DX-3900", 0, 0},
+	{"Kodak MC3", 0, 0},
+	{"Sony DSC-P5", 0, 0},
+	{"Sony DSC-F707", 0, 0},
+	{"HP PhotoSmart 318", 0, 0},
 	{NULL, 0, 0}
 };
 
