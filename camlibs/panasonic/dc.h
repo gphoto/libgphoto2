@@ -43,6 +43,7 @@ typedef enum {
 typedef struct {
 	gpio_device		*dev;
 	gpio_device_settings 	settings;
+	CameraFilesystem	*fs;
 	char			*buf;
 	int			size;	
 	int			debug;
@@ -51,6 +52,8 @@ typedef struct {
 #define DSC_BLOCKSIZE	  0x400   /* amount of image data transfered in a single packet */
 #define DSC_BUFSIZE	  0x406   /* largest possible amount of data transfered in a single packet */
 #define DSC_MAXIMAGESIZE  0xfffff /* largest possible file that can be uploaded */
+#define DSC_FILENAMEFMT	  "dsc%04i.jpg" /* format of image file names */
+#define DSC_THUMBNAMEFMT  "dsc%04i-thumbnail.jpg" /* format of thumbnail file names */
 
 #define DSC_PAUSE	4 /* seconds to wait for camera to redraw screen */
 

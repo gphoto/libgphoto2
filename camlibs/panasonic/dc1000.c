@@ -357,8 +357,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 	camera->functions->init 		= camera_init;
 	camera->functions->exit 		= camera_exit;
 	camera->functions->folder_list  	= camera_folder_list;
-	camera->functions->folder_set 		= camera_folder_set;
-	camera->functions->file_count 		= camera_file_count;
+	camera->functions->file_list 		= camera_file_list;
 	camera->functions->file_get 		= camera_file_get;
 	camera->functions->file_get_preview 	= camera_file_get_preview;
 	camera->functions->file_put 		= camera_file_put;
@@ -408,6 +407,14 @@ int camera_init (Camera *camera, CameraInit *init) {
 		return GP_ERROR;
 	}
 	
+	/* allocate memory for camera filesystem struct */
+	if ((dsc->fs = gp_filesystem_new()) == NULL) {
+		if (camera->debug)
+			dsc_errorprint(EDSCSERRNO, __FILE__, "camera_init", __LINE__);
+		free(dsc);
+		return GP_ERROR;
+	}
+	
 	return dsc1_connect(dsc, init->port_settings.speed); 
 		/* connect with selected speed */
 }
@@ -424,43 +431,50 @@ int camera_exit (Camera *camera) {
 		gpio_close(dsc->dev);
 		gpio_free(dsc->dev);
 	}
+	if (dsc->fs)
+		gp_filesystem_free(dsc->fs);
+	
 	free(dsc);
 
 	return (GP_OK);
 }
 
-int camera_folder_list (Camera *camera, char *folder_name, CameraFolderInfo *list) {
+int camera_folder_list (Camera *camera, CameraList *list, char *folder) {
 
-	strcpy(list[0].name, "<photos>");
-	
-	return (GP_OK);
+	return GP_OK; 	/* folders are unsupported but it is OK */
 }
 
-int camera_folder_set (Camera *camera, char *folder_name) {
-
-	return (GP_OK);
-}
-
-int camera_file_count (Camera *camera) {
-
-	return dsc1_getindex((dsc_t *)camera->camlib_data);
-}
-
-int camera_file_get (Camera *camera, CameraFile *file, int file_number) {
-
-	/**********************************/
-	/* file_number now starts at 0!!! */
-	/**********************************/
+int camera_file_list (Camera *camera, CameraList *list, char *folder) {
 
 	dsc_t	*dsc = (dsc_t *)camera->camlib_data;
-	int	i, s, rsize, size;
+	int 	count, i;
+	
+	if ((count = dsc1_getindex(dsc)) == GP_ERROR)
+		return GP_ERROR;
+	
+	gp_filesystem_populate(dsc->fs, "/", DSC_FILENAMEFMT, count);
 
-	dsc_print_status(camera, "Downloading image #%i.", file_number + 1);
+	for (i = 0; i < count; i++) 
+		gp_list_append(list, gp_filesystem_name(dsc->fs, "/", i), GP_LIST_FILE);
 
-	if ((size = dsc1_selectimage(dsc, file_number + 1)) < 0)
+	return GP_OK;
+}
+
+int camera_file_get (Camera *camera, CameraFile *file, char *folder, char *filename) {
+
+	dsc_t	*dsc = (dsc_t *)camera->camlib_data;
+	int	index, size, rsize, i, s;
+
+	dsc_print_status(camera, "Downloading image %s.", filename);
+
+	/* index is the 0-based image number on the camera */
+	if ((index = gp_filesystem_number(dsc->fs, folder, filename)) == GP_ERROR)
+		return GP_ERROR;
+
+	if ((size = dsc1_selectimage(dsc, index + 1)) < 0)
 		return (GP_ERROR);
 	
-	sprintf(file->name, "dsc%04i.jpg", file_number + 1);
+	strcpy(file->name, filename);
 	strcpy(file->type, "image/jpg");
 
 	gp_camera_progress(camera, file, 0.00);
@@ -476,16 +490,12 @@ int camera_file_get (Camera *camera, CameraFile *file, int file_number) {
 	return (GP_OK);
 }
 
-int camera_file_get_preview (Camera *camera, CameraFile *preview, int file_number) {
+int camera_file_get_preview (Camera *camera, CameraFile *file, char *folder, char *filename) {
 
-	/**********************************/
-	/* file_number now starts at 0!!! */
-	/**********************************/
-	
 	return GP_ERROR;
 }
 
-int camera_file_put (Camera *camera, CameraFile *file) {
+int camera_file_put (Camera *camera, CameraFile *file, char *folder) {
 
 	dsc_t	*dsc = (dsc_t *)camera->camlib_data;
 	int	blocks, blocksize, i;
@@ -524,11 +534,18 @@ int camera_file_put (Camera *camera, CameraFile *file) {
 	return GP_OK;
 }
 
-int camera_file_delete (Camera *camera, int file_number) {
+int camera_file_delete (Camera *camera, char *folder, char *filename) {
 
-	dsc_print_status(camera, "Deleting image #%i.", file_number + 1);
-			
-	return dsc1_delete((dsc_t *)camera->camlib_data, file_number + 1);
+	dsc_t	*dsc = (dsc_t *)camera->camlib_data;
+	int	index;
+
+	dsc_print_status(camera, "Deleting image %s.", filename);
+
+	/* index is the 0-based image number on the camera */
+	if ((index = gp_filesystem_number(dsc->fs, folder, filename)) == GP_ERROR)
+		return GP_ERROR;
+
+	return dsc1_delete(dsc, index + 1);
 }
 
 int camera_config_get (Camera *camera, CameraWidget *window) {
