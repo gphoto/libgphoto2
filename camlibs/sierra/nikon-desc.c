@@ -263,7 +263,8 @@ static const RegisterDescriptorType cp880_reg_20[] = {
 
 #ifdef REG_30_FAILS
 /*
- * Register 30: LED mode, can't even read this on a cp880.
+ * Register 30: LED mode, write only. Writing 0 and 1 do nothing, 2
+ * retracts the lens and causes an error.
  */
 static const ValueNameType cp880_reg_30_val_names[] = {
 	{ { 0x00 }, N_("Off") },

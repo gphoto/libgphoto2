@@ -1,3 +1,7 @@
+2003-11-03  Patrick Mansfield <patmans@users.sourceforge.net>
+	* nikon-desc.c: update a comment about the behaviour of cp 880 and
+	  register 30.
+
 2003-09-17  Marcus Meissner <marcus@jet.franken.de>
 	
 	* library.c: we were closing a context id we never opened. Not good.
