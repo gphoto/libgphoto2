@@ -81,11 +81,11 @@ static struct
 models[] =
 {
 	{
-	"Mustek gSmart mini", 0x055f, 0xc220, GSMART_BRIDGE_SPCA500}
+	"Mustek:gSmart mini", 0x055f, 0xc220, GSMART_BRIDGE_SPCA500}
 	, {
-	"Mustek gSmart mini 2", 0x055f, 0xc420, GSMART_BRIDGE_SPCA504A}
+	"Mustek:gSmart mini 2", 0x055f, 0xc420, GSMART_BRIDGE_SPCA504A}
 	, {
-	"Mustek gSmart mini 3", 0x055f, 0xc520, GSMART_BRIDGE_SPCA504A}
+	"Mustek:gSmart mini 3", 0x055f, 0xc520, GSMART_BRIDGE_SPCA504A}
 	, {
 	"So. Show 301", 0x0ec7, 0x1008, GSMART_BRIDGE_SPCA504A}
 	, {

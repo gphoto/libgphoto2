@@ -63,40 +63,40 @@ int camera_abilities (CameraAbilitiesList *list)
 	a.file_operations	= GP_FILE_OPERATION_PREVIEW;
 	a.folder_operations	= GP_FOLDER_OPERATION_DELETE_ALL;
 
-	strcpy(a.model, "Jenoptik JD11");
+	strcpy(a.model, "Jenoptik:JD11");
 	gp_abilities_list_append(list, a);
 
 	/* http://www.digitalkamera.de/Kameras/PrakticaQD500-de.htm (german) */
-	strcpy(a.model, "Praktica QD500");
+	strcpy(a.model, "Praktica:QD500");
 	gp_abilities_list_append(list, a);
 
 	/* Reported to be just a rebranded version by Russ Burdick
 	 * <grub@extrapolation.net> */
 	/* from Gallantcom, http://www.gallantcom.com/prodfaq-probe99.htm */
-	strcpy(a.model, "Quark Probe 99");
+	strcpy(a.model, "Quark:Probe 99");
 	gp_abilities_list_append(list, a);
 
 	/* 'Argus DC-100' looks the same, see:
 	 * http://www.aaadigitalcameras.com/argus_digital_vga_compact_camera.html
 	 * but not reported yet.
 	 */
-	strcpy(a.model, "Argus DC-100");
+	strcpy(a.model, "Argus:DC-100");
 	gp_abilities_list_append(list, a);
 	/* 'Argus DC-2000' is the same (or uses the same software), check
 	 * http://www.arguscamera.com/tech_supp/camoper.htm
 	 */
-	strcpy(a.model, "Argus DC-2000");
+	strcpy(a.model, "Argus:DC-2000");
 	gp_abilities_list_append(list, a);
 
 	/* http://www.digitaldreamco.com/shop/digital2000.html */
-	strcpy(a.model, "Digitaldream DIGITAL 2000");
+	strcpy(a.model, "Digitaldream:DIGITAL 2000");
 	gp_abilities_list_append(list, a);
 
 	/* The I/O Magic MagicImage 420 has a black cover, but otherwise
 	 * appears to be the same. (Not 100% sure.)
 	 * http://www.iomagic.com/support/digitalcameras/magicimage420/magicimage420main.htm
 	 */
-	strcpy(a.model, "IOMagic MagicImage 420");
+	strcpy(a.model, "IOMagic:MagicImage 420");
 	gp_abilities_list_append(list, a);
 	return (GP_OK);
 }
