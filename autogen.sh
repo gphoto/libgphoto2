@@ -159,7 +159,7 @@ do
     find . -name '*.am' -print | 
 	while read file
 	do # remove all .in files with a corresponding .am file
-	    rm -f "$(sed s/\.am$/.in/g)"
+		rm -f $(echo "$file" | sed s/\.am\$/.in/g)
 	done
     rm -f depcomp install-sh missing mkinstalldirs
     rm -f stamp-h* libgphoto2/stamp-h*
