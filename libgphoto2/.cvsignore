@@ -10,3 +10,4 @@ stamp-h.in
 config.h
 config.h.in
 _stdint.h
+gphoto2-endian.h
