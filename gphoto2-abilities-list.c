@@ -244,10 +244,11 @@ gp_abilities_list_load (CameraAbilitiesList *list)
 /**
  * gp_abilities_list_detect:
  * @list: a #CameraAbilitiesList
+ * @info_list: a #GPPortInfoList
  * @l: a #CameraList
  *
  * Tries to detect any camera connected to the computer using the supplied
- * @list of supported cameras.
+ * @list of supported cameras and the supplied @info_list of ports.
  *
  * Return value: a gphoto2 error code
  **/
@@ -258,7 +259,6 @@ gp_abilities_list_detect (CameraAbilitiesList *list,
 	GPPortInfo info;
 	GPPort *port;
 	int i, x, count, v, p, info_count;
-	const char *m;
 
 	CHECK_NULL (list && info_list && l);
 
@@ -281,13 +281,15 @@ gp_abilities_list_detect (CameraAbilitiesList *list,
 				v = list->abilities[x].usb_vendor;
 				p = list->abilities[x].usb_product;
 				if ((gp_port_usb_find_device (port, v, p)
-								== GP_OK) &&
-				    (gp_abilities_list_get_model (list, x, &m)
-				     				== GP_OK)) {
+								== GP_OK)) {
 					gp_log (GP_LOG_DEBUG,
 						"gphoto2-abilities-list",
-						"Found '%s' (%i,%i)", m, v, p);
-					gp_list_append (l, m, info.path);
+						"Found '%s' (%i,%i)",
+						list->abilities[x].model,
+						v, p);
+					gp_list_append (l,
+						list->abilities[x].model,
+						info.path);
 				}
 			}
 			break;
@@ -304,20 +306,6 @@ gp_abilities_list_detect (CameraAbilitiesList *list,
 
 	gp_port_free (port);
 
-	return (GP_OK);
-}
-
-int
-gp_abilities_list_dump_libs (CameraAbilitiesList *list)
-{
-	int x;
-
-	CHECK_NULL (list);
-
-	for (x = 0; x < list->count; x++)
-		gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
-			"\t\"%s\" uses %s", list->abilities[x].model,
-			list->abilities[x].library);
 	return (GP_OK);
 }
 
@@ -406,30 +394,6 @@ gp_abilities_list_lookup_id (CameraAbilitiesList *list, const char *id)
 			return (x);
 
 	return (GP_ERROR);
-}
-
-/**
- * gp_abilities_list_get_model:
- * @list: a #CameraAbilitiesList
- * @index: index
- * @model:
- *
- * Retrieves the model of entry with given @index.
- *
- * Return value: a gphoto2 error code
- **/
-int
-gp_abilities_list_get_model (CameraAbilitiesList *list, int index,
-			     const char **model)
-{
-	CHECK_NULL (list && model);
-
-	if ((index < 0) || (index >= list->count))
-		return (GP_ERROR_BAD_PARAMETERS);
-
-	*model = list->abilities[index].model;
-
-	return (GP_OK);
 }
 
 /**
