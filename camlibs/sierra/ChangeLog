@@ -1,3 +1,7 @@
+2003-11-16  Patrick Mansfield <patmans@users.sourceforge.net>
+	* library.c, sierra.c: Enable progress checks, since the recursion
+	  cases have been removed from libgphoto2 and gtkam.
+
 2003-11-15  Patrick Mansfield <patmans@users.sourceforge.net>
 	* sierra.c: Make all ifdef's the same for recursion check and add
 	  a missing ifdef.
