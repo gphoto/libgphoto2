@@ -47,7 +47,10 @@ gp_debug_set_func (GPDebugFunc func, void *data)
 	debug_func      = func;
 	debug_func_data = data;
 
-	gp_port_debug_set_func (gp_port_func, data);
+	if (func)
+		gp_port_debug_set_func (gp_port_func, data);
+	else
+		gp_port_debug_set_func (NULL, NULL);
 }
 
 void
@@ -57,7 +60,11 @@ gp_debug_printf (int level, const char *id, const char *format, ...)
 	va_list arg;
 
 	va_start (arg, format);
+#if HAVE_VSNPRINTF
+	vsnprintf (buffer, sizeof (buffer), format, arg);
+#else
 	vsprintf (buffer, format, arg);
+#endif
 	va_end (arg);
 
 	gp_port_debug_history_append (buffer);
