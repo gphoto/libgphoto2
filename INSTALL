@@ -1,9 +1,32 @@
+########################################################################
+# $Id$
+#
+# This file describes how to install gphoto2.
+########################################################################
 
 The installation procedure should be quite simple:
 
 1) ./configure --prefix=/usr --sysconfdir=/etc
 	or any other options (try --help)
+
    If you have difficulties building on FreeBSD, try --disable-nls.
+
 2) make install
 
+   This installs the software and documentation into the proper
+   directories on your system. If you want to use your system's
+   package system instead, follow a) or b) instead.
 
+   a) make rpm
+
+      If you're running a RPM based system (e.g. Redhat Linux or SuSE
+      Linux), you can build RPM packages and install these. The
+      packages will be located in packaging/rpm/RPMS/.
+
+   b) make deb
+
+      (This is not implemented yet)
+
+      If you're running a DEB based system (e.g. Debian GNU/Linux),
+      you can build .deb packages and install these. The packages will
+      be located in FIXME. 
