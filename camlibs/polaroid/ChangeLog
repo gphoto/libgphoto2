@@ -1,6 +1,8 @@
 2003-04-17  Marcus Meissner <marcus@jet.franken.de>
 	
-	* pdc640.c: Added SiPix StyleCam (0x0d64/0x1001).
+	* pdc640.c: Added SiPix StyleCam (0x0d64/0x1001),
+	  UMAX AstraPix 320s (same) and DLINK DSC-350F
+	  (0xd64/0x1021).
 
 2003-03-02  Marcus Meissner <marcus@jet.franken.de>
 	

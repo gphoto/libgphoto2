@@ -160,6 +160,26 @@ static struct {
 			"style%04i.ppm"
 		}
 	},
+	/* http://www.umax.de/digicam/AstraPix320S.htm */
+	/* reportedly has same ids as SiPix StyleCam and also
+	 * looks identical. */
+	{"UMAX:AstraPix 320s", 0xd64, 0x1001, {
+		 	jd350e,
+			BAYER_TILE_BGGR,
+			&flip_vertical,
+			"astra%04i.ppm"
+		}
+	},
+
+	/* http://www.dlink.com/products/usb/dsc350/ */
+	/* ids from driver download */
+	{"D-Link:DSC 350F", 0xd64, 0x1021, {
+		 	jd350e,
+			BAYER_TILE_BGGR,
+			&flip_vertical,
+			"dlink%04i.ppm"
+		}
+	},
 	{NULL,}
 };
 
