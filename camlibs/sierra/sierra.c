@@ -25,22 +25,32 @@
 #include <string.h>
 #include <time.h>
 
-/*
- * Per Gilles' request, EXIF support disabled for now.
- */
-#ifdef HAVE_EXIF
-#undef HAVE_EXIF
-#endif
-
-#ifdef HAVE_EXIF
-#include <libexif/exif-data.h>
-#endif
-
 #include <gphoto2-library.h>
 #include <gphoto2-port-log.h>
 
 #include "sierra-desc.h"
 #include "library.h"
+
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define N_(String) (String)
+#  endif
+#else
+#  define textdomain(String) (String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory) (Domain)
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
+#define GP_MODULE "sierra"
 
 int get_jpeg_data(const char *data, int data_size, char **jpeg_data, int *jpeg_size);
 
@@ -399,11 +409,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	const char *data, *mime_type;
 	long int size;
 	SierraPicInfo info;
-#ifdef HAVE_EXIF
-	ExifData *exif_data;
-	unsigned char *buf = NULL;
-	unsigned int buf_len = 0;
-#endif
 
 	/*
 	 * Get the file number from the CameraFileSystem.
@@ -484,20 +489,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	case GP_FILE_TYPE_AUDIO:
 		CHECK (gp_file_set_mime_type (file, GP_MIME_WAV));
 		break;
-
-#ifdef HAVE_EXIF
-	case GP_FILE_TYPE_EXIF:
-		CHECK (gp_file_set_mime_type (file, GP_MIME_JPEG));
-
-		exif_data = exif_data_new_from_data (
-			       (const unsigned char *) data,
-			       (unsigned int) size);
-
-		exif_data_save_data (exif_data, &buf, &buf_len);
-		exif_data_unref (exif_data);
-		gp_file_set_data_and_size (file, buf, buf_len);
-		break;
-#endif
 
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);

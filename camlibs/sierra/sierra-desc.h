@@ -35,6 +35,9 @@
  * description (string).
  */
 
+#ifndef __SIERRA_DESC_H__
+#define __SIERRA_DESC_H__
+
 #define	SIZE_ADDR(type, var)	(sizeof(var)/sizeof(type)), (type*) var
 
 #define	VAL_NAME_INIT(name)	\
@@ -123,3 +126,5 @@ typedef struct CameraRegisterSet {
 
 extern const CameraRegisterSetType cp880_desc[];
 extern const CameraRegisterSetType oly3040_desc[];
+
+#endif /* __SIERRA_DESC_H__ */

@@ -1,3 +1,10 @@
+2002-06-28  Lutz Müller <lutz@users.sourceforge.net>
+
+	* sierra.h:
+	* library.[c,h]:
+	* sierra-desc.[c,h]: Fix includes.
+	* sierra.c: Remove cruft.
+
 2002-06-28  Selmeczi David <david@esr.elte.hu>
 
 	* olympus-desc.c: New.
