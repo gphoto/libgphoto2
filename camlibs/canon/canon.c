@@ -1611,7 +1611,8 @@ canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, i
 {
 	unsigned char *msg = NULL;
 	char name_local[128];
-	int len, cap, ava;
+	int len;		/* is set in both USB and SERIAL cases */
+	int cap=0, ava=0;	/* only set in USB case */
 
 	GP_DEBUG ("canon_int_get_disk_name_info() name '%s'", name);
 
@@ -1656,23 +1657,26 @@ canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, i
 	}
 
 	if (len < 0x0c) {
-		GP_DEBUG ("canon_int_get_disk_name_info: Unexpected amount of data returned "
-			  "(expected %i got %i)", 0x0c, len);
+		GP_DEBUG ("canon_int_get_disk_name_info: "
+			"Unexpected amount of data returned "
+			"(expected %i got %i)", 0x0c, len);
 		return GP_ERROR_CORRUPTED_DATA;
 	}
-
+	
 	/* Capacity and available are not NULL as verified above.
-	 * But cap and ava are only set for the USB case, so we have to check for that.
-	 * If you know the logic better, feel free to improve it. */
+	* But cap and ava are only set for the USB case, so we have to check for that.
+	* If you know the logic better, feel free to improve it. */
 	switch (camera->port->type) {
-		case GP_PORT_USB:
+		case GP_PORT_USB:			  
 			*capacity = cap;
 			*available = ava;
+			GP_DEBUG ("canon_int_get_disk_name_info: "
+				"capacity %i kb, available %i kb",
+		  		cap > 0 ? (cap / 1024) : 0,
+				ava > 0 ? (ava / 1024) : 0);
 			break;
+		GP_PORT_DEFAULT
 	}
-
-	GP_DEBUG ("canon_int_get_disk_name_info: capacity %i kb, available %i kb",
-		  cap > 0 ? (cap / 1024) : 0, ava > 0 ? (ava / 1024) : 0);
 
 	return GP_OK;
 }
