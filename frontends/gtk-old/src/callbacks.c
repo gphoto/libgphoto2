@@ -14,7 +14,7 @@
 #include "globals.h"
 #include "util.h"
 
-void debug (char *message) {
+void debug_print (char *message) {
 	if (gp_gtk_debug)
 		printf("%s\n", message);
 }
@@ -31,33 +31,33 @@ int main_quit(GtkWidget *widget, gpointer data) {
 /* ----------------------------------------------------------- */
 
 void open_photo() {
-	debug("open photo");
+	debug_print("open photo");
 }
 
 void open_directory() {
-	debug("open directory");
+	debug_print("open directory");
 }
 
 void save_opened_photo() {
-	debug("save opened photo");
+	debug_print("save opened photo");
 }
 
 void save_selected_photo() {
-	debug("save selected photo");
+	debug_print("save selected photo");
 }
 
 void export_gallery() {
-	debug("export gallery");
+	debug_print("export gallery");
 
 }
 
 void print_photo() {
-	debug("print photo");
+	debug_print("print photo");
 
 }
 
 void close_photo() {
-	debug("close photo");
+	debug_print("close photo");
 
 }
 
@@ -66,42 +66,42 @@ void close_photo() {
 /* ----------------------------------------------------------- */
 
 void flip_horizontal() {
-	debug("flip horizontal");
+	debug_print("flip horizontal");
 
 }
 
 void flip_vertical() {
-	debug("flip vertical");
+	debug_print("flip vertical");
 
 }
 
 void rotate_90() {
-	debug("rotate 90");
+	debug_print("rotate 90");
 
 }
 
 void rotate_180() {
-	debug("rotate 180");
+	debug_print("rotate 180");
 
 }
 
 void rotate_270() {
-	debug("rotate 270");
+	debug_print("rotate 270");
 
 }
 
 void size_scale() {
-	debug("size scale");
+	debug_print("size scale");
 
 }
 
 void size_half() {
-	debug("size half");
+	debug_print("size half");
 
 }
 
 void size_double() {
-	debug("size double");
+	debug_print("size double");
 
 }
 
@@ -110,17 +110,17 @@ void size_double() {
 /* ----------------------------------------------------------- */
 
 void select_all() {
-	debug("select all");
+	debug_print("select all");
 
 }
 
 void select_inverse() {
-	debug("select inverse");
+	debug_print("select inverse");
 
 }
 
 void select_none() {
-	debug("select none");
+	debug_print("select none");
 
 }
 
@@ -128,20 +128,66 @@ void select_none() {
 /* Camera operations */
 /* ----------------------------------------------------------- */
 
-void camera_select() {
-	GtkWidget *window, *ok, *cancel, *camera, *port;
-	GList *camera_list, *port_list;
-	CameraPortInfo info;
-	int num_cameras, num_ports, x;
-	char buf[1024];
-	
-	debug("camera select");
+void camera_select_update_port(GtkWidget *entry, gpointer data) {
 
-	/* Get the number of cameras */
-	if ((num_cameras = gp_camera_count())==GP_ERROR) {
-		gp_interface_message("Could not retrieve number of cameras");
+	GtkWidget *window, *speed;
+	CameraPortType type = GP_PORT_NONE;
+	char *t, *new_port, *path;
+	char buf[1024];
+
+	new_port = (char*)gtk_entry_get_text(GTK_ENTRY(entry));
+	if (strlen(new_port)==0)
+		return;
+
+	sprintf(buf, "Selected port: %s\n", new_port);
+	debug_print(buf);
+
+	window = (GtkWidget*)data;
+	speed  = (GtkWidget*)lookup_widget(window, "speed");
+	t      = (char*)gtk_object_get_data (GTK_OBJECT(window), new_port);
+	type   = (CameraPortType)atoi(t);
+
+	sprintf(buf, "%s path", new_port);
+	path = gtk_object_get_data(GTK_OBJECT(window), buf);
+
+	if (type == GP_PORT_SERIAL)
+		gtk_widget_set_sensitive(GTK_WIDGET(speed), TRUE);
+}
+
+void camera_select_update_camera(GtkWidget *entry, gpointer data) {
+
+	/* populate the speed list */
+	GtkWidget *window, *port, *speed;
+	GList *port_list, *speed_list;
+	CameraAbilities a;
+	CameraPortInfo info;
+	char *new_camera;
+	char buf[1024], buf1[1024];
+	int num_ports, x=0, append;
+
+	new_camera = (char*)gtk_entry_get_text(GTK_ENTRY(entry));
+	if (strlen(new_camera)==0)
+		return;
+
+	window = (GtkWidget*)data;
+	port   = (GtkWidget*)lookup_widget(window, "port");
+	speed  = (GtkWidget*)lookup_widget(window, "speed");
+
+	sprintf(buf, "Selected camera: %s\n", new_camera);
+	debug_print(buf);
+
+	if (gp_camera_abilities_by_name(new_camera, &a)==GP_ERROR) {
+		sprintf(buf, "Could not get abilities for %s\n", new_camera);
+		debug_print(buf);
 		return;
 	}
+
+	/* Do nothing if the device doesn't support any ports (ports ports) */
+	if (!a.serial && !a.parallel && !a.ieee1394 && !a.socket && !a.usb)
+		return;
+
+	/* Enable the port drop-down */
+	gtk_widget_set_sensitive(GTK_WIDGET(port), TRUE);
 
 	/* Get the number of ports */
 	if ((num_ports = gp_port_count())==GP_ERROR) {
@@ -149,12 +195,80 @@ void camera_select() {
 		return;
 	}
 
-	/* Create the dialog (thank you GLADE!) */
+	/* Free the old port list?? */
+
+	/* populate the port list */
+	port_list = g_list_alloc();
+	for (x=0; x<num_ports; x++) {
+		append=0;
+		if (gp_port_info(x, &info)==GP_OK) {
+			if ((info.type == GP_PORT_SERIAL) && (a.serial))
+				append=1;
+			if ((info.type == GP_PORT_PARALLEL) && (a.parallel))
+				append=1;
+			if ((info.type == GP_PORT_IEEE1394) && (a.ieee1394))
+				append=1;
+			if ((info.type == GP_PORT_SOCKET) && (a.socket))
+				append=1;
+			if ((info.type == GP_PORT_USB) && (a.usb))
+				append=1;
+			if (append) {
+				sprintf(buf, "%s (%s)", info.name, info.path);
+				port_list = g_list_append(port_list, strdup(buf));
+				/* Associate a path with this entry */
+				sprintf(buf1, "%s path", buf);
+				gtk_object_set_data(GTK_OBJECT(window), 
+					buf1, (gpointer)strdup(info.path));
+				/* Associate a type with this entry */
+				sprintf(buf1, "%i", info.type);
+				gtk_object_set_data(GTK_OBJECT(window), 
+					buf, (gpointer)strdup(buf1));
+			}
+		}  else {
+			gp_interface_message("Error retrieving the port list");
+		}
+	}
+	gtk_combo_set_popdown_strings(GTK_COMBO(port), port_list);
+
+	/* Free the old speed list?? */
+
+	/* Populate the speed list */
+	speed_list = g_list_alloc();
+	x=0;
+	while (a.speed[x] != 0) {
+		sprintf(buf, "%i", a.speed[x++]);
+		speed_list = g_list_append(speed_list, strdup(buf));
+	}
+	gtk_combo_set_popdown_strings(GTK_COMBO(speed), speed_list);
+
+	
+}
+
+void camera_select() {
+	GtkWidget *window, *ok, *cancel, *camera, *port, *speed;
+	GList *camera_list;
+	CameraPortSettings port_settings;
+	int num_cameras, x;
+	char buf[1024];
+	char *camera_name, *port_name, *port_path, *speed_name;
+	
+	debug_print("camera select");
+
+	/* Get the number of cameras */
+	if ((num_cameras = gp_camera_count())==GP_ERROR) {
+		gp_interface_message("Could not retrieve number of cameras");
+		return;
+	}
+
 	window = create_select_camera_window();
-	ok     = (GtkWidget*)lookup_widget(window,"ok");
-	cancel = (GtkWidget*)lookup_widget(window,"cancel");
+	ok     = (GtkWidget*)lookup_widget(window, "ok");
+	cancel = (GtkWidget*)lookup_widget(window, "cancel");
 	camera = (GtkWidget*)lookup_widget(window, "camera");
 	port   = (GtkWidget*)lookup_widget(window, "port");
+	speed  = (GtkWidget*)lookup_widget(window, "speed");
+
+	gtk_widget_set_sensitive(GTK_WIDGET(port), FALSE);
+	gtk_widget_set_sensitive(GTK_WIDGET(speed), FALSE);
 
 	/* populate the camera list */
 	camera_list = g_list_alloc();
@@ -166,82 +280,108 @@ void camera_select() {
 	}
 	gtk_combo_set_popdown_strings(GTK_COMBO(camera), camera_list);
 
-	/* populate the port list */
-	port_list = g_list_alloc();
-	for (x=0; x<num_ports; x++) {
-		if (gp_port_info(x, &info)==GP_OK) {
-			sprintf(buf, "%s (%s)", info.name, info.path);
-			port_list = g_list_append(port_list, strdup(buf));
-		}  else {
-			port_list = g_list_append(port_list, "ERROR");
-		}
-	}
-	gtk_combo_set_popdown_strings(GTK_COMBO(port), port_list);
+	/* Update the dialog if they change the camera */
+	gtk_signal_connect(GTK_OBJECT(GTK_COMBO(camera)->entry), "changed",
+		GTK_SIGNAL_FUNC (camera_select_update_camera), (gpointer)window);
 
-	/* populate the speed list from abilities */
+	/* Update the dialog if they change the port */
+	gtk_signal_connect(GTK_OBJECT(GTK_COMBO(port)->entry), "changed",
+		GTK_SIGNAL_FUNC (camera_select_update_port), (gpointer)window);
 
+	if (gp_get_setting("camera", buf)==GP_OK)
+		gtk_entry_set_text(GTK_ENTRY(camera), buf);
+camera_select_again:
 	if (wait_for_hide(window, ok, cancel) == 0) {
-		debug("clicked cancel!\n");
+		debug_print("clicked cancel!\n");
 		return;
 	}
-	
-	debug("clicked ok!\n");
+
+	debug_print("clicked ok!\n");
+
+	camera_name = (char*)gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(camera)->entry));
+	port_name   = (char*)gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(port)->entry));
+	speed_name  = (char*)gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(speed)->entry));
+
+	if (strlen(camera_name)==0) {
+		gp_message("You must choose a camera model");
+		goto camera_select_again;
+	}
+
+	if (strlen(port_name)==0) {
+		gp_message("You must choose a port");
+		goto camera_select_again;
+	}
+
+	if ((strlen(speed_name)==0)&&(GTK_WIDGET_SENSITIVE(speed))) {
+		gp_message("You must choose a port speed");
+		goto camera_select_again;
+	}
+
+	sprintf(buf, "%s path", port_name);
+	port_path = gtk_object_get_data(GTK_OBJECT(window), buf);
+
+	strcpy(port_settings.path, port_path);
+	port_settings.speed = atoi(speed_name);
+/*
+	if (gp_camera_set_by_name(
+	gp_setting_set("camera", (char*)gtk_
+*/
 	/* Set the camera */
 	/* Set the port */
 }
 
 void camera_index_thumbnails() {
-	debug("camera index thumbnails");
+	debug_print("camera index thumbnails");
 
 }
 
 void camera_index_no_thumbnails() {
-	debug("camera index no thumbnails");
+	debug_print("camera index no thumbnails");
 
 }
 
 void camera_download_thumbnails() {
-	debug("camera download thumbnails");
+	debug_print("camera download thumbnails");
 
 }
 
 void camera_download_photos() {
-	debug("camera download photos");
+	debug_print("camera download photos");
 
 }
 
 void camera_download_both() {
-	debug("camera download both");
+	debug_print("camera download both");
 
 }
 
 void camera_delete_selected() {
-	debug("camera delete selected");
+	debug_print("camera delete selected");
 
 }
 
 void camera_delete_all() {
-	debug("camera delete all");
+	debug_print("camera delete all");
 
 }
 
 void camera_configure() {
-	debug("camera configure");
+	debug_print("camera configure");
 
 }
 
 void camera_show_information() {
-	debug("camera information");
+	debug_print("camera information");
 
 }
 
 void camera_show_manual() {
-	debug("camera manual");
+	debug_print("camera manual");
 
 }
 
 void camera_show_about() {
-	debug("camera about");
+	debug_print("camera about");
 
 }
 
@@ -250,22 +390,22 @@ void camera_show_about() {
 /* ----------------------------------------------------------- */
 
 void help_about() {
-	debug("help about");
+	debug_print("help about");
 
 }
 
 void help_authors() {
-	debug("help authors");
+	debug_print("help authors");
 
 }
 
 void help_license() {
-	debug("help license");
+	debug_print("help license");
 
 }
 
 void help_manual() {
-	debug("help manual");
+	debug_print("help manual");
 
 }
 

@@ -18,8 +18,19 @@
 #include "callbacks.h"
 #include "interface.h"
 #include "support.h"
+#include "util.h"
 
 int gp_interface_message(char *message) {
+
+	GtkWidget *window, *label, *ok;
+
+	window = create_message_window();
+	label  = (GtkWidget*) lookup_widget(window, "message");
+        ok     = (GtkWidget*) lookup_widget(window, "close");
+
+	gtk_label_set_text(GTK_LABEL(label), message);
+
+	wait_for_hide(window, ok, NULL);
 
 	return (GP_OK);
 }
@@ -1311,7 +1322,7 @@ create_main_window (void)
 GtkWidget*
 create_message_window_long (void)
 {
-  /* widget labels:  "close" */
+  /* widget labels:  "message" "close" */
   GtkWidget *message_window_long;
   GtkWidget *vbox3;
   GtkWidget *scrolledwindow4;
@@ -1343,7 +1354,7 @@ create_message_window_long (void)
 
   message_window_text = gtk_text_new (NULL, NULL);
   gtk_widget_ref (message_window_text);
-  gtk_object_set_data_full (GTK_OBJECT (message_window_long), "message_window_text", message_window_text,
+  gtk_object_set_data_full (GTK_OBJECT (message_window_long), "message", message_window_text,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (message_window_text);
   gtk_container_add (GTK_CONTAINER (scrolledwindow4), message_window_text);
@@ -1426,7 +1437,7 @@ create_confirm_window (void)
 GtkWidget*
 create_message_window (void)
 {
-  /* widget labels:  "close" */
+  /* widget labels:  "message" "close" */
   GtkWidget *message_window;
   GtkWidget *vbox5;
   GtkWidget *label8;
@@ -1449,7 +1460,7 @@ create_message_window (void)
 
   label8 = gtk_label_new (_("No message."));
   gtk_widget_ref (label8);
-  gtk_object_set_data_full (GTK_OBJECT (message_window), "label8", label8,
+  gtk_object_set_data_full (GTK_OBJECT (message_window), "message", label8,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (label8);
   gtk_box_pack_start (GTK_BOX (vbox5), label8, TRUE, TRUE, 0);
@@ -1475,7 +1486,7 @@ create_message_window (void)
 GtkWidget*
 create_select_camera_window (void)
 {
-  /* widget labels:   "ok" "cancel" "camera" "port" */
+  /* widget labels:   "ok" "cancel" "camera" "port" "speed_label" "speed" */
 
   GtkWidget *select_camera_window;
   GtkWidget *vbox6;
@@ -1488,6 +1499,9 @@ create_select_camera_window (void)
   GtkWidget *label10;
   GtkWidget *port_combo;
   GtkWidget *combo_entry2;
+  GtkWidget *label11;
+  GtkWidget *speed_combo;
+  GtkWidget *combo_entry3;
   GtkWidget *hbox4;
   GtkWidget *button23;
   GtkWidget *button24;
@@ -1568,6 +1582,27 @@ create_select_camera_window (void)
   gtk_object_set_data_full (GTK_OBJECT (select_camera_window), "combo_entry2", combo_entry2,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (combo_entry2);
+
+  label11 = gtk_label_new (_("Select Speed:"));
+  gtk_widget_ref (label11);
+  gtk_object_set_data_full (GTK_OBJECT (select_camera_window), "speed_label", label11,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (label11);
+  gtk_box_pack_start (GTK_BOX (vbox8), label11, FALSE, FALSE, 0);
+  gtk_misc_set_alignment (GTK_MISC (label11), 0, 0.5);
+
+  speed_combo = gtk_combo_new ();
+  gtk_widget_ref (speed_combo);
+  gtk_object_set_data_full (GTK_OBJECT (select_camera_window), "speed", speed_combo,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (speed_combo);
+  gtk_box_pack_start (GTK_BOX (vbox8), speed_combo, FALSE, FALSE, 0);
+
+  combo_entry3 = GTK_COMBO (speed_combo)->entry;
+  gtk_widget_ref (combo_entry3);
+  gtk_object_set_data_full (GTK_OBJECT (select_camera_window), "combo_entry3", combo_entry3,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (combo_entry3);
 
   hbox4 = gtk_hbox_new (TRUE, 0);
   gtk_widget_ref (hbox4);

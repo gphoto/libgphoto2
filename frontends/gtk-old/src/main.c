@@ -16,6 +16,7 @@
 
 GtkWidget *main_window;
 int	   gp_gtk_debug=1;
+char	   gp_gtk_camera_model[1024];
 
 int
 main (int argc, char *argv[])
