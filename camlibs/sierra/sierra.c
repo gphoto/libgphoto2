@@ -13,11 +13,7 @@ int camera_stop(Camera *camera);
 
 void sierra_debug_print(SierraData *fd, char *message) {
 
-	if (fd->debug) {
-		printf("sierra: ");
-		printf(message);
-		printf("\n");
-	}
+	gp_debug_printf(GP_DEBUG_LOW, "sierra", message);
 }
 
 int camera_id (CameraText *id) {
@@ -346,10 +342,8 @@ int camera_start(Camera *camera) {
 	SierraData *fd = (SierraData*)camera->camlib_data;
 	
 	if (fd->type == GP_PORT_SERIAL) {
-		if (sierra_set_speed(camera, fd->speed)==GP_ERROR) {
-			gp_camera_message(camera, "Can not set the serial port speed");
+		if (sierra_set_speed(camera, fd->speed)==GP_ERROR)
 			return (GP_ERROR);
-		}
 		sierra_folder_set(camera, fd->folder);
 	}
 	return (GP_OK);
@@ -360,10 +354,8 @@ int camera_stop(Camera *camera) {
 	SierraData *fd = (SierraData*)camera->camlib_data;
 
 	if (fd->type == GP_PORT_SERIAL) {
-		if (sierra_set_speed(camera, -1)==GP_ERROR) {
-			gp_camera_message(camera, "Can not set the serial port speed");
+		if (sierra_set_speed(camera, -1)==GP_ERROR)
 			return (GP_ERROR);
-		}
 	}
 
 	return (GP_OK);
@@ -393,10 +385,8 @@ int camera_file_list(Camera *camera, CameraList *list, char *folder) {
 		return (GP_ERROR);
 
 	if (fd->folders) {
-		if (sierra_change_folder(camera, folder)) {
-			gp_camera_message(camera, "Can't change folder");
+		if (sierra_change_folder(camera, folder))
 			return (GP_ERROR);
-		}
 	}
 
 	count = sierra_file_count(camera);
@@ -505,28 +495,11 @@ int sierra_folder_set(Camera *camera, char *folder) {
 		 It should be done after implementing camera_lock/unlock pair */
 	
 	if (fd->folders) {
-		if (sierra_change_folder(camera, tf)) {
-			gp_camera_message(camera, "Can't change folder");
+		if (sierra_change_folder(camera, tf))
 			return (GP_ERROR);
-		}
 	}
 
 	return (GP_OK);
-}
-
-int sierra_file_count (Camera *camera) {
-
-	int value;
-	SierraData *fd = (SierraData*)camera->camlib_data;
-
-	sierra_debug_print(fd, "Counting files");
-
-	if (sierra_get_int_register(camera, 10, &value)==GP_ERROR) {
-                gp_camera_message(camera, "Could not get number of files on camera->");
-                return (GP_ERROR);
-        }
-
-	return (value);
 }
 
 int camera_file_get_generic (Camera *camera, CameraFile *file, 
@@ -558,10 +531,8 @@ return (GP_ERROR);
 	strcpy(file->name, filename);
 
 	/* Get the picture data */
-	if (sierra_get_string_register(camera, regd, file_number+1, file, NULL, NULL)==GP_ERROR) {
-		gp_camera_message(camera, "Can not get picture");
+	if (sierra_get_string_register(camera, regd, file_number+1, file, NULL, NULL)==GP_ERROR)
 		return (GP_ERROR);
-	}
 
 if (camera_stop(camera)==GP_ERROR)
 return (GP_ERROR);
@@ -642,7 +613,7 @@ int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 
 	sierra_debug_print(fd, "Capturing image");
 
-	return (GP_ERROR);
+	return(sierra_capture(camera, file));
 }
 
 int camera_summary (Camera *camera, CameraText *summary) {

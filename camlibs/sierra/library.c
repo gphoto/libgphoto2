@@ -2,6 +2,7 @@
 #include <string.h>
 #include <gphoto2.h>
 #include <gpio.h>
+#include <time.h>
 #include "sierra.h"
 #include "library.h"
 
@@ -236,7 +237,20 @@ read_packet_again:
 			sierra_dump_packet(camera, packet);
 			return (sierra_valid_packet(camera, packet));
 		}
+		ret = gpio_read(fd->dev, &packet[bytes_read], length-bytes_read);
+		switch (ret) {
+		   case GPIO_ERROR:
+			return (GP_ERROR);
+			break;
+		   case GPIO_TIMEOUT:
+			goto read_packet_again;
+			break;
+		   default:
+			/* We're fine! */
+		}
 
+#if 0   
+	/* Wow. it likes reading chunks. */
 		for (y=bytes_read; y < length; y+=blocksize) {
 			ret = gpio_read(fd->dev, &packet[y], blocksize);
 			if (ret == GPIO_TIMEOUT) {
@@ -251,6 +265,7 @@ read_packet_again:
 				return (GP_ERROR);
 			}
 		}
+#endif
 	}
 
 	sierra_dump_packet(camera, packet);
@@ -601,25 +616,20 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 	sierra_debug_print(fd, buf);
 
 	do_percent = 1;
-        if (sierra_set_int_register(camera, 4, file_number)==GP_ERROR) {
-                gp_camera_message(camera, "Can not set current image");
+        if (sierra_set_int_register(camera, 4, file_number)==GP_ERROR)
                 return (GP_ERROR);
-        }
+
 	switch (reg) {
 		case 14:
 		        /* Get the size of the current image */
-	        	if (sierra_get_int_register(camera, 12, &l)==GP_ERROR) {
-	        	        gp_camera_message(camera, "Can not get current image length");
+	        	if (sierra_get_int_register(camera, 12, &l)==GP_ERROR)
 	        	        return (GP_ERROR);
-		        }
 
 			break;
 		case 15:
 		        /* Get the size of the current thumbnail */
-	        	if (sierra_get_int_register(camera, 13, &l)==GP_ERROR) {
-	        	        gp_camera_message(camera, "Can not get thumbnail image length");
+	        	if (sierra_get_int_register(camera, 13, &l)==GP_ERROR)
 	        	        return (GP_ERROR);
-		        }
 			break;
 		case 44:
 		        /* Get the size of the current audio */
@@ -627,10 +637,8 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 		default:
 			do_percent = 0;
 	}
-        if (sierra_set_int_register(camera, 4, file_number)==GP_ERROR) {
-                gp_camera_message(camera, "Can not set current image");
+        if (sierra_set_int_register(camera, 4, file_number)==GP_ERROR)
                 return (GP_ERROR);
-        }
 	/* Send request */
 	sierra_build_packet(camera, TYPE_COMMAND, 0, 2, packet);
 	packet[4] = 0x04;
@@ -660,12 +668,14 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 		/* 1) Use gp_file_data_add to write a chunk of new data */
 		/*    to the CameraFile struct. This will automatcially */
 		/*    update file->size.				*/
+
 			gp_file_append(file, &packet[4], packlength);
 
 		/* 2) Call gp_camera_progress to let the front-end know */
 		/*    the current transfer status. The front-end has 	*/
 		/*    the option of reading the data that was just	*/
 		/*    transferred by using gp_file_chunk_get		*/
+
 			if (do_percent)
 			   gp_camera_progress(camera, file, (float)(100.0*(float)x/(float)(l)));
 		}
@@ -760,6 +770,90 @@ int sierra_end_session(Camera *camera) {
 		sierra_debug_print(fd, "too many NAKs from camera");
 		return (GP_ERROR);
 	}
+
+	return (GP_OK);
+}
+
+int sierra_file_count (Camera *camera) {
+ 
+        int value;
+        SierraData *fd = (SierraData*)camera->camlib_data;
+ 
+        sierra_debug_print(fd, "Counting files");
+ 
+        if (sierra_get_int_register(camera, 10, &value)==GP_ERROR)
+                return (GP_ERROR);
+ 
+        return (value);
+} 
+
+
+int sierra_capture (Camera *camera, CameraFile *file) {
+
+	SierraData *fd = (SierraData*)camera->camlib_data;
+	int r, done, retval;
+	char packet[4096], buf[8];	
+	unsigned char c;
+	int length;
+	struct tm *t;
+	time_t tt;
+		
+	sierra_build_packet(camera, TYPE_COMMAND, 0, 3, packet);
+	packet[4] = 0x02;
+	packet[5] = 0x05;
+	packet[6] = 0x00;
+
+	r=0; done=0;
+	while ((!done)&&(r++<RETRIES)) {
+		if (sierra_write_packet(camera, packet)==GP_ERROR)
+			return (GP_ERROR);
+	
+		if (sierra_read_packet(camera, buf)==GP_ERROR)
+			return (GP_ERROR);
+
+		c = (unsigned char)buf[0];
+		if (c==TRM)
+			return (GP_OK);
+
+		done = (c == NAK)? 0 : 1;
+
+		gp_camera_progress(camera, file, 0.0);
+	}
+	if (r >= RETRIES) {
+		sierra_debug_print(fd, "too many NAKs from camera");
+		return (GP_ERROR);
+	}
+	r = 0;done=0;
+	while ((!done)&&(r++<RETRIES)) {
+		/* read in the ENQ */
+		retval = gpio_read(fd->dev, buf, 1);
+		switch(retval) {
+		   case GPIO_ERROR:
+			return (GP_ERROR);
+			break;
+		   case GPIO_TIMEOUT:
+			break;
+		   default:
+			done = 1;
+		}
+		c = (unsigned char)buf[0];
+		gp_camera_progress(camera, file, 0.0);
+	}
+	if ((r >= RETRIES) || (c!=ENQ))
+		return (GP_ERROR);
+
+	
+	tt = time(&tt);
+	t = gmtime(&tt);
+
+	/* fix it :P */
+	if (t->tm_year < 1900)
+		t->tm_year += 1900;
+
+	sprintf(file->name, "%04i%02i%02i-%02i%02i%02i.jpg", 
+			t->tm_year, t->tm_mon, t->tm_mday, 
+			t->tm_hour, t->tm_min, t->tm_sec);
+ 	sierra_get_string_register (camera, 14, 0, file, NULL, &length);
 
 	return (GP_OK);
 }
