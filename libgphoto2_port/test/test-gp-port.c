@@ -19,7 +19,7 @@ main (int argc, char **argv)
 		exit (1);
 	}
 
-	ret = gp_port_timeout_set (dev, 500);
+	ret = gp_port_set_timeout (dev, 500);
 	if (ret < 0) {
 		printf ("Could not set timeout: %s\n",
 			gp_port_result_as_string (ret));
