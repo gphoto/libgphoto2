@@ -1,5 +1,8 @@
 gPhoto Daemon
 --------------------------------------------------------------------
+
+(note: this is a specification. it is not implemented!)
+
 The gPhoto daemon uses the following protocol description. It provides an
 interactive way for program to talk and use gPhoto without needing to
 have any sort of C bindings.
