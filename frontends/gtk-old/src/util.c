@@ -10,6 +10,21 @@
 #include "callbacks.h"
 #include "util.h"
 
+int exec_command (char *command, char *args) {
+
+	char buf[1024];
+	printf("running \"%s %s\"\n", command, args);
+
+	if (fork() == 0) {
+		execlp(command, command, args, NULL);
+		sprintf(buf, "Could not run the program \"%s\"", command);
+		gp_camera_message(NULL, buf);
+		exit(EXIT_FAILURE);
+	}
+
+	return (GP_OK);
+}
+
 int file_exists(char *filename) {
 
         FILE *f;

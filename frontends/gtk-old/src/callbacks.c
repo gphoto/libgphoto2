@@ -214,12 +214,13 @@ void toggle_sensitivity (GtkWidget *button, gpointer data) {
 void save_selected_photos() {
 
 	GtkWidget *icon_list, *window, *ok, *cancel, 
-		  *use_camera_filename, *save_photos, *save_thumbs, *prefix_entry;
+		  *use_camera_filename, *save_photos, *save_thumbs, *prefix_entry,
+		  *program;
 	GtkIconListItem *item;
 	CameraFile *f;
 	char msg[1024], fname[1024];
 	char *path, *prefix=NULL, *slash;
-	char *folder;
+	char *folder, *progname;
 	int num=0, x;
 
 	debug_print("save selected photo");
@@ -253,6 +254,7 @@ void save_selected_photos() {
 	use_camera_filename = (GtkWidget*)lookup_widget(window, "use_camera_filename");
 	save_photos = (GtkWidget*)lookup_widget(window, "save_photos");
 	save_thumbs = (GtkWidget*)lookup_widget(window, "save_thumbs");
+	program = (GtkWidget*)lookup_widget(window, "program");
 
 	if (num > 1) {
 		prefix_entry = (GtkWidget*)lookup_widget(window, "prefix");
@@ -306,15 +308,22 @@ void save_selected_photos() {
 				}
 			   }
 			}
+			progname = gtk_entry_get_text(GTK_ENTRY(program));
+
 			/* check for existing file */
 			if (file_exists(fname)) {
 				sprintf(msg, "%s already exists. Overwrite?", fname);
 				gtk_widget_hide(gp_gtk_progress_window);
-				if (gp_camera_confirm(gp_gtk_camera, msg))
+				if (gp_camera_confirm(gp_gtk_camera, msg)) {
 					gp_file_save(f, fname);
+					if (strlen(progname)>0)
+						exec_command(progname, fname);
+				}
 				gtk_widget_show(gp_gtk_progress_window);
 			} else {
 				gp_file_save(f, fname);
+				if (strlen(progname)>0)
+					exec_command(progname, fname);
 			}
 
 			gp_file_free(f);
@@ -353,13 +362,21 @@ void save_selected_photos() {
 					sprintf(fname, "%sthumb_%04i", path, x);
 			   }
 			}
+
+			progname = gtk_entry_get_text(GTK_ENTRY(program));
+
 			/* check for existing file */
 			if (file_exists(fname)) {
 				sprintf(msg, "%s already exists. Overwrite?", fname);
-				if (gp_camera_confirm(gp_gtk_camera, msg))
+				if (gp_camera_confirm(gp_gtk_camera, msg)) {
 					gp_file_save(f, fname);
+					if (strlen(progname)>0)
+						exec_command(progname, fname);
+				}
 			} else {
 				gp_file_save(f, fname);
+				if (strlen(progname)>0)
+					exec_command(progname, fname);
 			}
 			gp_file_free(f);
 		   }

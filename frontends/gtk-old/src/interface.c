@@ -119,7 +119,7 @@ create_save_window (int directory_only)
 {
 
   GtkWidget *save_window, *hbox, *frame, *photos, *thumbs, *override,
-	    *label, *prefix;
+	    *label, *prefix, *program;
   GtkTooltips *tooltip;
   GList *child;
   char buf[1024];
@@ -168,6 +168,32 @@ create_save_window (int directory_only)
   gtk_tooltips_set_tip (tooltip, thumbs, 
 	_("Thumbnails will be saved if this is checked."), NULL);
   gtk_box_pack_start(GTK_BOX(hbox), thumbs, TRUE, TRUE, 0);
+
+  hbox = gtk_hbox_new(FALSE, 0);
+  gtk_widget_ref(hbox);
+  gtk_object_set_data_full (GTK_OBJECT (save_window), "hboxblah", hbox,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show(hbox);
+  gtk_box_pack_start(GTK_BOX(GTK_FILE_SELECTION(save_window)->main_vbox),hbox,
+    TRUE, TRUE, 0);
+
+  label = gtk_label_new("Open image(s) with:");
+  gtk_widget_ref(label);
+  gtk_object_set_data_full (GTK_OBJECT (save_window), "labelblah", label,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show(label);
+  gtk_label_set_justify(GTK_LABEL(label), GTK_JUSTIFY_LEFT);
+  gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 0);
+
+  program = gtk_entry_new();
+  gtk_widget_ref(program);
+  gtk_object_set_data_full (GTK_OBJECT (save_window), "program", program,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show(program);
+  gtk_box_pack_start(GTK_BOX(hbox), program, TRUE, TRUE, 0);
+  tooltip = gtk_tooltips_new();
+  gtk_tooltips_set_tip (tooltip, program, 
+	_("Type in the name of the program's executable you want to run. Leave blank for none."), NULL);
 
   /* Create the filename override button */
   override = gtk_check_button_new_with_label("Use the filenames provided by the camera");
