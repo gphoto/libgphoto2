@@ -1,16 +1,289 @@
 <!-- ##### SECTION Title ##### -->
-widget
+gphoto-widget
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Widgets for GUI-independent access to camera configuration options.
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
+A GPWidget is a mechanism to access camera configuration options 
+without having to rely on a GUI. When a frontend requests a 
+configuration dialog through gp_*_config_get, the camera driver will
+do something like
+</para>
+<para>
+  <example>
+     <title>Creating a GPWidget</title>
+     <programlisting>
+       *window = gp_widget_new (GP_WIDGET_WINDOW, 
+                                _("Configuration for Model XY"));
+       return (GP_OK);
+     </programlisting>
+  </example>
+</para>
+<para>
+The frontend now traverses this widget and builds the configuration
+dialog.
+</para>
+<para>
+  <example>
+    <title>Traversing a GPWidget</title>
+    <programlisting>
+      int i, count, result;
+      GPWidgetType type;
 
+      count = gp_widget_count_children (window);
+      if (count < 0) 
+        return (count);
+      for (i = 0; i < count; i++) {
+        result = gp_widget_get_type (window, &type);
+        if (result < 0)
+          return (result);
+        switch (type) {
+        case GP_WIDGET_TYPE_WINDOW:
+          break;
+        default:
+          break;
+        }
+      }
+    </programlisting>
+  </example>
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
+
+
+<!-- ##### FUNCTION gp_widget_new ##### -->
+<para>
+
+</para>
+
+@type: 
+@label: 
+@widget: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_free ##### -->
+<para>
+
+</para>
+
+@widget: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_ref ##### -->
+<para>
+
+</para>
+
+@widget: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_unref ##### -->
+<para>
+
+</para>
+
+@widget: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_append ##### -->
+<para>
+
+</para>
+
+@parent: 
+@child: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_prepend ##### -->
+<para>
+
+</para>
+
+@parent: 
+@child: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_count_children ##### -->
+<para>
+
+</para>
+
+@parent: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_get_child ##### -->
+<para>
+
+</para>
+
+@parent: 
+@child_number: 
+@child: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_get_child_by_label ##### -->
+<para>
+
+</para>
+
+@parent: 
+@child_label: 
+@child: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_get_child_by_id ##### -->
+<para>
+
+</para>
+
+@parent: 
+@id: 
+@child: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_get_root ##### -->
+<para>
+
+</para>
+
+@widget: 
+@root: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_set_info ##### -->
+<para>
+
+</para>
+
+@widget: 
+@info: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_get_info ##### -->
+<para>
+
+</para>
+
+@widget: 
+@info: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_get_id ##### -->
+<para>
+
+</para>
+
+@widget: 
+@id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_get_type ##### -->
+<para>
+
+</para>
+
+@widget: 
+@type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_get_label ##### -->
+<para>
+
+</para>
+
+@widget: 
+@label: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_set_value ##### -->
+<para>
+
+</para>
+
+@widget: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_get_value ##### -->
+<para>
+
+</para>
+
+@widget: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_get_range ##### -->
+<para>
+
+</para>
+
+@range: 
+@low: 
+@high: 
+@increment: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_add_choice ##### -->
+<para>
+
+</para>
+
+@widget: 
+@choice: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_count_choices ##### -->
+<para>
+
+</para>
+
+@widget: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_get_choice ##### -->
+<para>
+
+</para>
+
+@widget: 
+@choice_number: 
+@choice: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_changed ##### -->
+<para>
+
+</para>
+
+@widget: 
+@Returns: 
+
 

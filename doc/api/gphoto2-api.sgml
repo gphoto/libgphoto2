@@ -1,5 +1,5 @@
 <!doctype book PUBLIC "-//Davenport//DTD DocBook V3.0//EN" [
-<!entity widget SYSTEM "sgml/widget.sgml">
+<!entity gphoto2-widget SYSTEM "sgml/widget.sgml">
 ]>
 
 <book>
@@ -9,7 +9,7 @@
   
   <chapter id="gphoto2-camera-configuration">
     <title>Camera Configuration</title>
-      &widget;
+      &gphoto2-widget;
   </chapter>
 </book
 >

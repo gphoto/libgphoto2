@@ -81,6 +81,11 @@ int tag_number
 exifparser *exifdat
 </FUNCTION>
 <FUNCTION>
+<NAME>exif_get_thumbnail_and_size</NAME>
+<RETURNS>unsigned char  *</RETURNS>
+exifparser *exifdat, long *size
+</FUNCTION>
+<FUNCTION>
 <NAME>gpe_get_comment</NAME>
 <RETURNS>int  </RETURNS>
 exifparser *exifdat, char *comment
@@ -536,4 +541,139 @@ CameraAbilities *abilities
 <NAME>gp_abilities_clear</NAME>
 <RETURNS>int  </RETURNS>
 CameraAbilities *abilities
+</FUNCTION>
+<FUNCTION>
+<NAME>gp_widget_new</NAME>
+<RETURNS>int  </RETURNS>
+CameraWidgetType type, const char *label,CameraWidget **widget
+</FUNCTION>
+<FUNCTION>
+<NAME>gp_widget_free</NAME>
+<RETURNS>int  </RETURNS>
+CameraWidget *widget
+</FUNCTION>
+<FUNCTION>
+<NAME>gp_widget_ref</NAME>
+<RETURNS>int  </RETURNS>
+CameraWidget *widget
+</FUNCTION>
+<FUNCTION>
+<NAME>gp_widget_unref</NAME>
+<RETURNS>int  </RETURNS>
+CameraWidget *widget
+</FUNCTION>
+<FUNCTION>
+<NAME>gp_widget_append</NAME>
+<RETURNS>int 	</RETURNS>
+CameraWidget *parent, CameraWidget *child
+</FUNCTION>
+<FUNCTION>
+<NAME>gp_widget_prepend</NAME>
+<RETURNS>int  </RETURNS>
+CameraWidget *parent, CameraWidget *child
+</FUNCTION>
+<FUNCTION>
+<NAME>gp_widget_count_children</NAME>
+<RETURNS>int  </RETURNS>
+CameraWidget *parent
+</FUNCTION>
+<FUNCTION>
+<NAME>gp_widget_get_child</NAME>
+<RETURNS>int 	</RETURNS>
+CameraWidget *parent, int child_number,CameraWidget **child
+</FUNCTION>
+<FUNCTION>
+<NAME>gp_widget_get_child_by_label</NAME>
+<RETURNS>int 	</RETURNS>
+CameraWidget *parent,const char *child_label,CameraWidget **child
+</FUNCTION>
+<FUNCTION>
+<NAME>gp_widget_get_child_by_id</NAME>
+<RETURNS>int 	</RETURNS>
+CameraWidget *parent, int id,CameraWidget **child
+</FUNCTION>
+<FUNCTION>
+<NAME>gp_widget_get_child_by_name</NAME>
+<RETURNS>int 	</RETURNS>
+CameraWidget *parent,const char *child_name,CameraWidget **child
+</FUNCTION>
+<FUNCTION>
+<NAME>gp_widget_get_root</NAME>
+<RETURNS>int 	</RETURNS>
+CameraWidget *widget,CameraWidget **root
+</FUNCTION>
+<FUNCTION>
+<NAME>gp_widget_set_value</NAME>
+<RETURNS>int 	</RETURNS>
+CameraWidget *widget, void *value
+</FUNCTION>
+<FUNCTION>
+<NAME>gp_widget_get_value</NAME>
+<RETURNS>int 	</RETURNS>
+CameraWidget *widget, void *value
+</FUNCTION>
+<FUNCTION>
+<NAME>gp_widget_set_name</NAME>
+<RETURNS>int  </RETURNS>
+CameraWidget *widget, const char  *name
+</FUNCTION>
+<FUNCTION>
+<NAME>gp_widget_get_name</NAME>
+<RETURNS>int  </RETURNS>
+CameraWidget *widget, const char **name
+</FUNCTION>
+<FUNCTION>
+<NAME>gp_widget_set_info</NAME>
+<RETURNS>int 	</RETURNS>
+CameraWidget *widget, const char  *info
+</FUNCTION>
+<FUNCTION>
+<NAME>gp_widget_get_info</NAME>
+<RETURNS>int 	</RETURNS>
+CameraWidget *widget, const char **info
+</FUNCTION>
+<FUNCTION>
+<NAME>gp_widget_get_id</NAME>
+<RETURNS>int 	</RETURNS>
+CameraWidget *widget, int *id
+</FUNCTION>
+<FUNCTION>
+<NAME>gp_widget_get_type</NAME>
+<RETURNS>int 	</RETURNS>
+CameraWidget *widget, CameraWidgetType *type
+</FUNCTION>
+<FUNCTION>
+<NAME>gp_widget_get_label</NAME>
+<RETURNS>int 	</RETURNS>
+CameraWidget *widget, const char **label
+</FUNCTION>
+<FUNCTION>
+<NAME>gp_widget_set_range</NAME>
+<RETURNS>int 	</RETURNS>
+CameraWidget *range,float  low, float  high, float  increment
+</FUNCTION>
+<FUNCTION>
+<NAME>gp_widget_get_range</NAME>
+<RETURNS>int 	</RETURNS>
+CameraWidget *range,float *low, float *high, float *increment
+</FUNCTION>
+<FUNCTION>
+<NAME>gp_widget_add_choice</NAME>
+<RETURNS>int 	</RETURNS>
+CameraWidget *widget, const char *choice
+</FUNCTION>
+<FUNCTION>
+<NAME>gp_widget_count_choices</NAME>
+<RETURNS>int 	</RETURNS>
+CameraWidget *widget
+</FUNCTION>
+<FUNCTION>
+<NAME>gp_widget_get_choice</NAME>
+<RETURNS>int 	</RETURNS>
+CameraWidget *widget, int choice_number,const char **choice
+</FUNCTION>
+<FUNCTION>
+<NAME>gp_widget_changed</NAME>
+<RETURNS>int 	</RETURNS>
+CameraWidget *widget
 </FUNCTION>

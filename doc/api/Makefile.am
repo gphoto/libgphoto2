@@ -7,10 +7,11 @@ DOC_SOURCE_DIR=$(top_srcdir)/libgphoto2
 CFLAGS="-I../.. `gphoto2-config --cflags`"
 LDFLAGS="`gphoto2-config --ldflags`"
 
+HTML_DIR=$(datadir)/gphoto2/html
 TARGET_DIR=$(HTML_DIR)/$(DOC_MODULE)
 
-tmpl_sources =			\
-	tmpl/widget.sgml
+tmpl_sources =				\
+	tmpl/libgphoto2.sgml	
 
 gphoto2_docdir = $(HTML_DIR)
 gphoto2_doc_DATA = 		\

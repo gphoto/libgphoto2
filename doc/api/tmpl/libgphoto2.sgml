@@ -1,0 +1,17 @@
+<!-- ##### SECTION Title #### -->
+libgphoto2
+
+<!-- ##### SECTION Short_Description ##### -->
+Library for accessing digital cameras.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+<filename>libgphoto2</filename> is the library that provides access 
+to a wide range of digital camera models. The library is GUI 
+independent.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+</para>
+
