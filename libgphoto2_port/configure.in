@@ -63,7 +63,7 @@ dnl ---------------------------------------------------------------------------
 ALL_LINGUAS="da de fr es it ja no ru sl sv uk zh_CN"
 # EVIL HACKS
 AC_MSG_CHECKING([for po/Makevars requiring evil hack])
-GETTEXT_PACKAGE="${PACKAGE}-${LIBGPHOTO2_CURRENT}"
+GETTEXT_PACKAGE="${PACKAGE}-${LIBGPHOTO2_PORT_CURRENT}"
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE",[The gettext domain we're using])
 AC_SUBST(GETTEXT_PACKAGE)
 if test -f po/Makevars.template
