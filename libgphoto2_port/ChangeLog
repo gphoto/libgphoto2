@@ -1,5 +1,20 @@
 2001-10-04  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* serial/unix.c: 
+	* usb/libusb.c: Fix includes
+
+2001-10-04  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* include/Makefile.am
+	* include/gphoto2-port-result.h
+	* libgphoto2_port/Makefile.am
+	* libgphoto2_port/result.c: New
+	* include/gphoto2-port-debug.h: Define debug levels here
+	* include/gphoto2-port.h: Clean up
+	* libgphoto2_port/debug.c: Check if history is big enough for message
+
+2001-10-04  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* include/Makefile.am
 	* include/gphoto2-port-debug.h
 	* libgphoto2_port/Makefile.am

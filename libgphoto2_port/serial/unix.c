@@ -58,8 +58,10 @@
 #  include <lockdev.h>
 #endif
 
-#include "../include/gphoto2-port-serial.h"
-#include "../include/gphoto2-port.h"
+#include <gphoto2-port-serial.h>
+#include <gphoto2-port-result.h>
+#include <gphoto2-port-debug.h>
+#include <gphoto2-port.h>
 
 #ifdef HAVE_TERMIOS_H
 static struct termios term_old;
