@@ -95,6 +95,10 @@ struct camera_to_usb {
 	{ "Yahoo!Cam",			0x0   , 0x0   , 1 },
 
 	{ "AEG Snap 300",               0x0553, 0x0202, 0 },
+
+	/* ALDI (german discounter) version */
+	{ "Pencam TEVION MD 9456",	0x0553, 0x0202, 0 },
+
 	/* SiPix Stylecam looks like stv0680, but reportedly is not  */
 	/* (has USB id 0xd64/0x1001) */
 	/* http://www.umax.de/digicam/AstraPen_SL.htm.
