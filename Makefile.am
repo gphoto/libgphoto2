@@ -23,6 +23,8 @@ libgphoto2_la_SOURCES = 	\
 	gphoto2-list.c		\
 	pattrec.c pattrec.h	\
 	gphoto2-result.c	\
+	gphoto2-version.c	\
+	gphoto2-version.h	\
 	gphoto2-setting.c	\
 	gphoto2-widget.c
 libgphoto2_la_LIBADD =					\
@@ -43,6 +45,7 @@ libgphoto2include_HEADERS =	\
 	gphoto2-list.h		\
 	gphoto2-result.h	\
 	gphoto2-setting.h	\
+	gphoto2-version.h	\
 	gphoto2-widget.h
 
 pkgconfigdir = $(libdir)/pkgconfig
