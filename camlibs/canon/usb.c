@@ -1157,24 +1157,26 @@ canon_usb_dialogue (Camera *camera, canonCommandIndex canon_funct, int *return_l
 		return NULL;
 	}
 
-	int reported_length = le32atoh (buffer);
-	if ( reported_length == 0 ) {
-		/* No length at start of packet. Did we read enough to
-		 * see the length later on? */
-		GP_DEBUG ( "canon_usb_dialogue: no length at start of packet." );
-		if ( read_bytes1 >= 0x50 ) {
-			reported_length = le32atoh (buffer+0x48);
-			GP_DEBUG ( "canon_usb_dialogue: got length from offset 0x48." );
+	if ( cmd3 != 0x202 ) {
+		int reported_length = le32atoh (buffer);
+		if ( reported_length == 0 ) {
+			/* No length at start of packet. Did we read enough to
+			 * see the length later on? */
+			GP_DEBUG ( "canon_usb_dialogue: no length at start of packet." );
+			if ( read_bytes1 >= 0x50 ) {
+				reported_length = le32atoh (buffer+0x48);
+				GP_DEBUG ( "canon_usb_dialogue: got length from offset 0x48." );
+			}
 		}
-	}
-	GP_DEBUG ("canon_usb_dialogue: camera reports 0x%x bytes (0x%x total)",
-		  reported_length, reported_length+0x40 );
+		GP_DEBUG ("canon_usb_dialogue: camera reports 0x%x bytes (0x%x total)",
+			  reported_length, reported_length+0x40 );
 
-	if ( reported_length > 0 && reported_length+0x40 != read_bytes ) {
-		GP_LOG ( GP_LOG_VERBOSE, _("canon_usb_dialogue:"
-					   " expected 0x%x bytes, but camera reports 0x%x"),
-			 read_bytes, reported_length+0x40 );
-		read_bytes = reported_length+0x40;
+		if ( reported_length > 0 && reported_length+0x40 != read_bytes ) {
+			GP_LOG ( GP_LOG_VERBOSE, _("canon_usb_dialogue:"
+						   " expected 0x%x bytes, but camera reports 0x%x"),
+				 read_bytes, reported_length+0x40 );
+			read_bytes = reported_length+0x40;
+		}
 	}
 
 	read_bytes2 = read_bytes - read_bytes1;
