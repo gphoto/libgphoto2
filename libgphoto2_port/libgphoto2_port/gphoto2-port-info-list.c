@@ -244,6 +244,20 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 }
 
 int
+gp_port_info_list_lookup_name (GPPortInfoList *list, const char *name)
+{
+	int i;
+
+	CHECK_NULL (list && name);
+
+	for (i = 0; i < list->count; i++)
+		if (!strcmp (list->info[i].name, name))
+			return (i);
+
+	return (GP_ERROR_UNKNOWN_PORT);
+}
+
+int
 gp_port_info_list_get_info (GPPortInfoList *list, int n, GPPortInfo *info)
 {
 	CHECK_NULL (list && info);

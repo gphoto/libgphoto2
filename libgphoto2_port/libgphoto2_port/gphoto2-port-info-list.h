@@ -45,6 +45,8 @@ int gp_port_info_list_load (GPPortInfoList *list);
 int gp_port_info_list_count (GPPortInfoList *list);
 
 int gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path);
+int gp_port_info_list_lookup_name (GPPortInfoList *list, const char *name);
+
 int gp_port_info_list_get_info (GPPortInfoList *list, int n, GPPortInfo *info);
 
 /* DEPRECATED */

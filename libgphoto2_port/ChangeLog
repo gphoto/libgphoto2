@@ -1,3 +1,10 @@
+2001-10-25  Fredrik <fredrik@krixor.xy.org>
+
+	* libgphoto2_port/gp_port.c: Write number of bytes we are going
+	  to read in debug message as this was not shown when the read
+	  failed.
+	  Fix bug when logging data in gp_port_usb_msg_read().
+
 2001-10-25  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2_port/gphoto2-port-core.[c,h]: Replaced by ...

@@ -280,8 +280,8 @@ gp_port_write (GPPort *dev, char *data, int size)
 {
 	int retval;
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-port", "Writing %i byte(s) to port...",
-		size);
+	gp_log (GP_LOG_DEBUG, "gphoto2-port", "Writing %i=0x%i byte(s) to port...",
+		size, size);
 
 	CHECK_NULL (dev && data);
 
@@ -303,7 +303,8 @@ gp_port_read (GPPort *dev, char *data, int size)
 {
         int retval;
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-port", "Reading from port...");
+	gp_log (GP_LOG_DEBUG, "gphoto2-port", "Reading %i=0x%x bytes from port...",
+		size, size);
 
 	CHECK_NULL (dev);
 
@@ -441,7 +442,7 @@ gp_port_flush (GPPort *dev, int direction)
 
 int gp_port_usb_find_device (GPPort *dev, int idvendor, int idproduct)
 {
-	gp_log (GP_LOG_DEBUG, "gphoto2-port", "Looking for (0x%x, 0x%x)...",
+	gp_log (GP_LOG_DEBUG, "gphoto2-port", "Looking for (vendor 0x%x, product 0x%x)...",
 		idvendor, idproduct);
 
 	CHECK_NULL (dev);
@@ -498,7 +499,11 @@ int gp_port_usb_msg_read (GPPort *dev, int request, int value, int index,
         retval = dev->ops->msg_read (dev, request, value, index, bytes, size);
 	CHECK_RESULT (retval);
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-port", bytes, retval);
+	if (retval != size)
+		gp_log (GP_LOG_DEBUG, "gphoto2-port", "Could only read %i "
+			"out of %i byte(s)", retval, size);
+
+	gp_log_data ("gphoto2-port", bytes, retval);
 
         return (retval);
 }
