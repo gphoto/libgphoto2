@@ -13,6 +13,9 @@ ${prefix}/bin directory.
 When you run gphoto2, you have to specify a command to execute and
 some options that describe how to execute it.
 
+Better instructions should be contained in the gphoto2(1) man page
+which is also contained in The gPhoto2 Manual.
+
 For detailed instructions on how to operate gphoto2, e.g. with serial
 cameras, see 
 
