@@ -2087,8 +2087,8 @@ camera_init (Camera *camera, GPContext *context)
         }
         CHECK_STOP_FREE (camera, gp_port_set_timeout (camera->port, TIMEOUT));
 
-        /* We are in "/" */
-        strcpy (camera->pl->folder, "/");
+        /* We start off not knowing where we are */
+        strcpy (camera->pl->folder, "");
         CHECK_STOP_FREE (camera, gp_filesystem_set_list_funcs (camera->fs,
 				file_list_func, folder_list_func, camera));
         CHECK_STOP_FREE (camera, gp_filesystem_set_info_funcs (camera->fs,
