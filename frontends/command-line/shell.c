@@ -35,15 +35,18 @@ int shell_prompt () {
 
 	while (!shell_done) {
 		cmd = NULL; arg = NULL; x=-1; found=0, i=0;
-		if (strlen(glob_cwd) > 25) {
-			strcpy(buf, "....");
-			strcat(buf, &glob_cwd[strlen(glob_cwd)-20]);
+		if (glob_quiet) {
+			printf("> ");
 		} else {
-			strcpy(buf, glob_cwd);
+			if (strlen(glob_cwd) > 25) {
+				strcpy(buf, "....");
+				strcat(buf, &glob_cwd[strlen(glob_cwd)-20]);
+			} else {
+				strcpy(buf, glob_cwd);
+			}
+			printf(shell_prompt_text, buf, glob_folder); /* Display prompt text */
 		}
-		printf(shell_prompt_text, buf, glob_folder); /* Display prompt text */
 		fflush(stdout);
-
 		fgets(buf, 1023, stdin);		/* Get the command/args */
 
 		len = strlen(buf);
