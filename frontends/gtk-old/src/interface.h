@@ -3,6 +3,7 @@
  */
 
 GtkWidget* create_main_window (void);
+GtkWidget* create_save_window (void);
 GtkWidget* create_confirm_window (void);
 GtkWidget* create_progress_window (void);
 GtkWidget* create_message_window (void);

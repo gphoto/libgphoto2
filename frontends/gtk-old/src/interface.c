@@ -103,6 +103,60 @@ void hide_progress_window (GtkWidget *widget, gpointer data) {
 	idle();
 }
 
+GtkWidget*
+create_save_window (void)
+{
+
+  GtkWidget *save_window, *hbox, *frame, *photos, *thumbs;
+  GtkTooltips *tooltip;
+  char buf[1024];
+
+  save_window = gtk_file_selection_new ("Save selected photos...");
+  gtk_object_set_data (GTK_OBJECT (save_window), "main_window", save_window);
+  gtk_window_set_title (GTK_WINDOW (save_window), _("gPhoto2"));
+  gtk_window_set_position (GTK_WINDOW (save_window), GTK_WIN_POS_CENTER);
+  gtk_window_set_default_size (GTK_WINDOW (save_window), 450, 400);
+  if (gp_setting_get("cwd", buf)==GP_OK)
+	  gtk_file_selection_set_filename(GTK_FILE_SELECTION(save_window),buf);
+
+  frame = gtk_frame_new("What to save:");
+  gtk_widget_ref(frame);
+  gtk_object_set_data_full (GTK_OBJECT (save_window), "frame", frame,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show(frame);
+  gtk_box_pack_start(GTK_BOX(GTK_FILE_SELECTION(save_window)->main_vbox), 
+	frame, FALSE, FALSE, 0);
+
+  hbox = gtk_hbox_new(TRUE, 5);
+  gtk_widget_ref(hbox);
+  gtk_object_set_data_full (GTK_OBJECT (save_window), "hbox", hbox,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show(hbox);
+  gtk_container_add(GTK_CONTAINER(frame), hbox);
+
+  photos = gtk_toggle_button_new_with_label("Save Photos");
+  gtk_widget_ref(photos);
+  gtk_object_set_data_full (GTK_OBJECT (save_window), "photos", photos,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show(photos);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(photos), TRUE);
+  tooltip = gtk_tooltips_new();
+  gtk_tooltips_set_tip (tooltip, photos, 
+	_("Photos will be saved if this button is pressed in."), NULL);
+  gtk_box_pack_start(GTK_BOX(hbox), photos, TRUE, TRUE, 0);
+
+  thumbs = gtk_toggle_button_new_with_label("Save Thumbnails");
+  gtk_widget_ref(thumbs);
+  gtk_object_set_data_full (GTK_OBJECT (save_window), "thumbs", thumbs,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show(thumbs);
+  tooltip = gtk_tooltips_new();
+  gtk_tooltips_set_tip (tooltip, thumbs, 
+	_("Thumbnails will be saved if this button is pressed in."), NULL);
+  gtk_box_pack_start(GTK_BOX(hbox), thumbs, TRUE, TRUE, 0);
+
+  return (save_window);
+}
 
 GtkWidget*
 create_main_window (void)
@@ -127,11 +181,13 @@ create_main_window (void)
   GtkWidget *open3;
 */
   GtkWidget *save1;
+/*
   GtkWidget *separator2;
   GtkWidget *export1;
   GtkWidget *export1_menu;
   GtkAccelGroup *export1_menu_accels;
   GtkWidget *html_gallery1;
+*/
   GtkWidget *separator5;
   GtkWidget *exit1;
   GtkWidget *edit1;
@@ -148,12 +204,14 @@ create_main_window (void)
   GtkAccelGroup *camera1_menu_accels;
   GtkWidget *select2;
   GtkWidget *separator6;
+/*
   GtkWidget *download_selected1;
   GtkWidget *download_selected1_menu;
   GtkAccelGroup *download_selected1_menu_accels;
   GtkWidget *thumbnails2;
   GtkWidget *photos1;
   GtkWidget *both1;
+*/
   GtkWidget *delete1;
   GtkWidget *delete1_menu;
   GtkAccelGroup *delete1_menu_accels;
@@ -263,6 +321,7 @@ create_main_window (void)
                               GDK_s, GDK_CONTROL_MASK,
                               GTK_ACCEL_VISIBLE);
 
+/* Will be added 
   separator2 = gtk_menu_item_new ();
   gtk_widget_ref (separator2);
   gtk_object_set_data_full (GTK_OBJECT (main_window), "separator2", separator2,
@@ -288,7 +347,6 @@ create_main_window (void)
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (export1), export1_menu);
   export1_menu_accels = gtk_menu_ensure_uline_accel_group (GTK_MENU (export1_menu));
-
   html_gallery1 = gtk_menu_item_new_with_label ("");
   tmp_key = gtk_label_parse_uline (GTK_LABEL (GTK_BIN (html_gallery1)->child),
                                    _("_HTML Gallery"));
@@ -299,7 +357,7 @@ create_main_window (void)
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (html_gallery1);
   gtk_container_add (GTK_CONTAINER (export1_menu), html_gallery1);
-
+*/
   separator5 = gtk_menu_item_new ();
   gtk_widget_ref (separator5);
   gtk_object_set_data_full (GTK_OBJECT (main_window), "separator5", separator5,
@@ -436,6 +494,7 @@ create_main_window (void)
   gtk_container_add (GTK_CONTAINER (camera1_menu), separator6);
   gtk_widget_set_sensitive (separator6, FALSE);
 
+/* 
   download_selected1 = gtk_menu_item_new_with_label ("");
   tmp_key = gtk_label_parse_uline (GTK_LABEL (GTK_BIN (download_selected1)->child),
                                    _("Download _Selected"));
@@ -495,6 +554,7 @@ create_main_window (void)
   gtk_widget_add_accelerator (both1, "activate", accel_group,
                               GDK_b, GDK_MOD1_MASK,
                               GTK_ACCEL_VISIBLE);
+*/
 
   delete1 = gtk_menu_item_new_with_label ("");
   tmp_key = gtk_label_parse_uline (GTK_LABEL (GTK_BIN (delete1)->child),
@@ -914,9 +974,11 @@ create_main_window (void)
   gtk_signal_connect (GTK_OBJECT (save1), "activate",
                       GTK_SIGNAL_FUNC (on_save_photo_activate),
                       NULL);
+/*
   gtk_signal_connect (GTK_OBJECT (html_gallery1), "activate",
                       GTK_SIGNAL_FUNC (on_html_gallery_activate),
                       NULL);
+*/
   gtk_signal_connect (GTK_OBJECT (exit1), "activate",
                       GTK_SIGNAL_FUNC (on_exit_activate),
                       NULL);
@@ -932,6 +994,7 @@ create_main_window (void)
   gtk_signal_connect (GTK_OBJECT (select2), "activate",
                       GTK_SIGNAL_FUNC (on_select_camera_activate),
                       NULL);
+/*
   gtk_signal_connect (GTK_OBJECT (thumbnails2), "activate",
                       GTK_SIGNAL_FUNC (on_download_thumbnails_activate),
                       NULL);
@@ -941,6 +1004,7 @@ create_main_window (void)
   gtk_signal_connect (GTK_OBJECT (both1), "activate",
                       GTK_SIGNAL_FUNC (on_download_both_activate),
                       NULL);
+*/
   gtk_signal_connect (GTK_OBJECT (selected_photos1), "activate",
                       GTK_SIGNAL_FUNC (on_delete_photos_activate),
                       NULL);

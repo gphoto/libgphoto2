@@ -187,7 +187,62 @@ void open_directory() {
 }
 
 void save_selected_photo() {
+
+	GtkWidget *icon_list, *window, *ok, *cancel, *hbox, *label, *prefix;
+	GtkIconListItem *item;
+	GList *child;
+	int num=0, x;
+
 	debug_print("save selected photo");
+
+	/* Count the number of icons selected */
+	icon_list = (GtkWidget*)lookup_widget(gp_gtk_main_window, "icons");
+	for (x=0; x<GTK_ICON_LIST(icon_list)->num_icons; x++) {
+		item = gtk_icon_list_get_nth(GTK_ICON_LIST(icon_list), x);
+		if (item->state == GTK_STATE_SELECTED)
+			num++;
+	}
+
+	if (num == 0) {
+		gp_message("Please select some photos to save first");
+		return;
+	}
+
+	window = create_save_window();
+	ok = GTK_FILE_SELECTION(window)->ok_button;
+	cancel = GTK_FILE_SELECTION(window)->cancel_button;
+
+	if (num > 1) {
+		gtk_widget_hide(GTK_FILE_SELECTION(window)->selection_entry);
+		gtk_widget_hide(GTK_FILE_SELECTION(window)->selection_text);
+		/* Hide the file selection */
+		/* get the main vbox children */
+		child = gtk_container_children(
+			GTK_CONTAINER(GTK_FILE_SELECTION(window)->main_vbox));
+		/* get the dir/file list box children */
+		child = gtk_container_children(
+			GTK_CONTAINER(child->next->next->data));
+		gtk_widget_hide(GTK_WIDGET(child->next->data));
+		hbox = gtk_hbox_new(FALSE, 5);
+		gtk_widget_show(hbox);
+		gtk_box_pack_start(GTK_BOX(GTK_FILE_SELECTION(window)->main_vbox),hbox,
+			TRUE, TRUE, 0);
+		gtk_box_reorder_child(GTK_BOX(GTK_FILE_SELECTION(window)->main_vbox),
+			hbox, 256);
+		label = gtk_label_new("Filename prefix:");
+		gtk_widget_show(label);
+		gtk_box_pack_start(GTK_BOX(hbox),label, FALSE, FALSE, 0);
+		prefix = gtk_entry_new();
+		gtk_widget_show(prefix);
+		gtk_box_pack_start(GTK_BOX(hbox), prefix, TRUE, TRUE, 0);
+	}
+
+	if (wait_for_hide(window, ok, cancel)==0)
+		return;
+
+	printf("selected: %s\n", gtk_file_selection_get_filename(GTK_FILE_SELECTION(window)));
+
+	gtk_widget_destroy(window);
 }
 
 void export_gallery() {

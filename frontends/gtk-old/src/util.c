@@ -87,7 +87,7 @@ int wait_for_hide (GtkWidget *dialog,
 	                        "clicked",
 	                        GTK_SIGNAL_FUNC(gtk_widget_hide),
 	                        GTK_OBJECT(dialog));
-        gtk_widget_show_all(dialog);
+        gtk_widget_show(dialog);
         while (cont) {
 		/* because the window manager could destroy the window */
 		if(!GTK_IS_OBJECT(dialog)) {
