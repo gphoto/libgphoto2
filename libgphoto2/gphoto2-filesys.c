@@ -1920,7 +1920,7 @@ gp_get_free_memory (GPContext *context, unsigned *free)
 #elif HAVE_SYSCTL && (__FreeBSD__ || __NetBSD__ || __OpenBSD__ || __APPLE__ )
 
 	int mib[2] = { CTL_HW, HW_PHYSMEM };
-	int value;
+	unsigned long value;
 	size_t valuelen = sizeof(value);
 	*free=0;
 	if (sysctl(mib, 2 , &value, &valuelen, NULL, 0) == -1) {
