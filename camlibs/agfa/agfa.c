@@ -49,6 +49,9 @@ struct {
    char serial;
 } models[] = {
         {"Agfa CL18",0x06bd,0x0403,0},
+        /* Fast Flicks camera, made by Tiger Electronics.                */
+        /* Support added by Dr. William Bland <wjb@abstractnonsense.com> */
+        {"Tiger Fast Flicks",0x0919,0x0100,0},
         {NULL,0,0,0}
 };
 
@@ -68,13 +71,20 @@ int camera_abilities(CameraAbilitiesList *list) {
     for(i=0; models[i].name; i++) {
        memset(&a, 0, sizeof(a));
        strcpy(a.model, models[i].name);
-       a.status = GP_DRIVER_STATUS_PRODUCTION;
+       if (i==1)
+          a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
+       else
+          a.status = GP_DRIVER_STATUS_PRODUCTION;
        a.port       = GP_PORT_USB;
        a.speed[0] = 0;
        a.usb_vendor = models[i].idVendor;
        a.usb_product= models[i].idProduct;
-       a.operations        = 	GP_OPERATION_CAPTURE_IMAGE;
+       if (i==1)
+	  a.operations     =    GP_OPERATION_NONE;
+       else
+          a.operations     = 	GP_OPERATION_CAPTURE_IMAGE;
        a.folder_operations = 	GP_FOLDER_OPERATION_NONE;
+       /* f_ops will (hopefully) be PUT_FILE for i==1 eventually */
        a.file_operations   = 	GP_FILE_OPERATION_PREVIEW | 
 				GP_FILE_OPERATION_DELETE;
 

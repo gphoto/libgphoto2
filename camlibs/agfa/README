@@ -1,8 +1,26 @@
-This directory contains drivers for cameras made by Agfa.
+This directory contains drivers for camerase that use the
+Sound Vision Inc (http://www.soundvisioninc.com)
+"V1 Low-Cost Dual Mode VGA Digital Camera"
+The agfa CL18 is actually an earlier design known as the "1307".
+
+Sound Vision licences the design to many companys, hence
+the wide variety of brands supported by this driver.
+
+Sound Vision refuses to release documentation, so this driver is based
+entirely on reverse-engineering USB transactions.
+
 
 List of Cameras known to work with this driver:
 
    Agfa ePhoto CL18
+   Tiger Fast Flicks
+
+Cameras that might work with the proper USB ID's
+
+   RCA CDS1005
+   Poloroid MP3
+   Eye Q3X Digital
+   Axia iX-100
 
 List of Agfa cameras handled by the Sierra gphoto2 driver:
 
