@@ -1,3 +1,22 @@
+----------------------------------------------------------------------------
+libgphoto2 2.1.3rcX
+
+   * builtin cache:
+     - use all available RAM on systems without memory size detection
+
+drivers (camlibs):
+
+   * Canon driver:
+     - fixed ProductID for PowerShot S45
+
+   * Smal driver:
+     - misc improvements
+
+   * PTP2 driver:
+     - added misc cameras
+     - thumbnail hacks (?)
+
+----------------------------------------------------------------------------
 libgphoto2 2.1.2
 
    * fixed nasty stack overflow/segfault bug
