@@ -24,7 +24,7 @@
 typedef struct _Camera Camera;
 
 #include <gphoto2-port.h>
-#include <gphoto2-port-core.h>
+#include <gphoto2-port-info-list.h>
 
 #include <gphoto2-widget.h>
 #include <gphoto2-list.h>
@@ -119,12 +119,11 @@ struct _Camera {
 
 /* Create a new camera device */
 int gp_camera_new               (Camera **camera);
+
 int gp_camera_set_abilities     (Camera *camera, CameraAbilities  abilities);
 int gp_camera_get_abilities	(Camera *camera, CameraAbilities *abilities);
-int gp_camera_set_port_name     (Camera *camera, const char  *port_name);
-int gp_camera_get_port_name     (Camera *camera, const char **port_name);
-int gp_camera_set_port_path     (Camera *camera, const char  *port_path);
-int gp_camera_get_port_path     (Camera *camera, const char **port_path);
+int gp_camera_set_port_info     (Camera *camera, GPPortInfo  info);
+int gp_camera_get_port_info     (Camera *camera, GPPortInfo *info);
 
 /*
  * You normally don't use that. If you do, you prevent the camera driver

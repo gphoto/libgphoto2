@@ -31,7 +31,6 @@
 
 #include "gphoto2-result.h"
 #include "gphoto2-library.h"
-#include "gphoto2-port-core.h"
 #include "gphoto2-port-log.h"
 
 #ifdef ENABLE_NLS
@@ -66,8 +65,7 @@
 struct _CameraPrivateCore {
 
 	/* Some information about the port */
-	char port_name[1024];
-	char port_path[1024];
+	GPPortInfo info;
 	unsigned int speed;
 
 	CameraStatusFunc   status_func;
@@ -195,10 +193,21 @@ gp_camera_unset_port (Camera *camera)
 	return (GP_OK);
 }
 
-static int
-gp_camera_set_port (Camera *camera, GPPortInfo *info)
+int
+gp_camera_get_port_info (Camera *camera, GPPortInfo *info)
+{
+	CHECK_NULL (camera && info);
+
+	memcpy (info, &camera->pc->info, sizeof (GPPortInfo));
+
+	return (GP_OK);
+}
+
+int
+gp_camera_set_port_info (Camera *camera, GPPortInfo info)
 {
 	GPPortSettings settings;
+
 	CHECK_NULL (camera);
 
 	/*
@@ -206,123 +215,19 @@ gp_camera_set_port (Camera *camera, GPPortInfo *info)
 	 * changed from a SERIAL to an USB one...
 	 */
 	CHECK_RESULT (gp_camera_unset_port (camera));
-	CHECK_RESULT (gp_port_new (&camera->port, info->type));
+	CHECK_RESULT (gp_port_new (&camera->port, info.type));
 
 	switch (camera->port->type) {
 	case GP_PORT_SERIAL:
 		CHECK_RESULT (gp_port_settings_get (camera->port, &settings));
-		strcpy (settings.serial.port, info->path);
+		strcpy (settings.serial.port, info.path);
 		CHECK_RESULT (gp_port_settings_set (camera->port, settings));
 		break;
 	default:
 		break;
 	}
 
-	strncpy (camera->pc->port_path, info->path,
-		 sizeof (camera->pc->port_path));
-	strncpy (camera->pc->port_name, info->name,
-		 sizeof (camera->pc->port_name));
-
-	return (GP_OK);
-}
-
-/**
- * gp_camera_set_port_path:
- * @camera: a #Camera
- * @port_path: a path
- *
- * Indicates which device should be used for accessing the @camera.
- * Alternatively, #gp_camera_set_port_name can be used.
- *
- * Return value: a gphoto2 error code
- **/
-int
-gp_camera_set_port_path (Camera *camera, const char *port_path)
-{
-	int x, count;
-	GPPortInfo info;
-
-	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Setting port path to '%s'...",
-		port_path);
-
-	CHECK_NULL (camera && port_path);
-
-	CHECK_RESULT (gp_camera_unset_port (camera));
-	CHECK_RESULT (count = gp_port_core_count ());
-	for (x = 0; x < count; x++)
-		if ((gp_port_core_get_info (x, &info) == GP_OK) &&
-		    (!strcmp (port_path, info.path)))
-			return (gp_camera_set_port (camera, &info));
-
-	gp_camera_set_error (camera, _("Could not find port '%s'"), port_path);
-	return (GP_ERROR_UNKNOWN_PORT); 
-}
-
-/**
- * gp_camera_get_port_path:
- * @camera: a #Camera
- * @port_path:
- *
- * Retrieves the path to the port the @camera is currently using.
- *
- * Return value: a gphoto2 error code.
- **/
-int
-gp_camera_get_port_path (Camera *camera, const char **port_path)
-{
-	CHECK_NULL (camera && port_path);
-
-	*port_path = camera->pc->port_path;
-
-	return (GP_OK);
-}
-
-/**
- * gp_camera_set_port_name:
- * @camera: a #Camera
- * @port_name: a name
- *
- * Indicates which device should be used for accessing the @camera.
- * Alternatively, #gp_camera_set_port_path can be used.
- *
- * Return value: a gphoto2 error code
- **/
-int
-gp_camera_set_port_name (Camera *camera, const char *port_name)
-{
-	int x, count;
-	GPPortInfo info;
-
-	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Setting port name to '%s'",
-		port_name);
-
-	CHECK_NULL (camera && port_name);
-
-	CHECK_RESULT (gp_camera_unset_port (camera));
-	CHECK_RESULT (count = gp_port_core_count ());
-	for (x = 0; x < count; x++)
-		if ((gp_port_core_get_info (x, &info) == GP_OK) &&
-		    (!strcmp (port_name, info.name)))
-			return (gp_camera_set_port (camera, &info));
-
-	return (GP_ERROR_UNKNOWN_PORT);
-}
-
-/**
- * gp_camera_get_port_name:
- * @camera: a #Camera
- * @port_name:
- *
- * Retrieves the name of the port the @camera is currently using.
- *
- * Return value: a gphoto2 error code
- **/
-int
-gp_camera_get_port_name (Camera *camera, const char **port_name)
-{
-	CHECK_NULL (camera && port_name);
-
-	*port_name = camera->pc->port_name;
+	memcpy (&camera->pc->info, &info, sizeof (GPPortInfo));
 
 	return (GP_OK);
 }
@@ -691,7 +596,9 @@ gp_camera_init (Camera *camera)
 	if (strcasecmp (camera->pc->a.model, "Directory Browse") &&
 	    !strcmp ("", camera->pc->a.model)) {
 		CameraAbilitiesList *al;
-		int m;
+		GPPortInfoList *il;
+		int m, p;
+		GPPortInfo info;
 
 		gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Neither "
 			"port nor model set. Trying auto-detection...");
@@ -699,9 +606,12 @@ gp_camera_init (Camera *camera)
 		/* Call auto-detect and choose the first camera */
 		gp_abilities_list_new (&al);
 		gp_abilities_list_load (al);
-		gp_abilities_list_detect (al, &list);
+		gp_port_info_list_new (&il);
+		gp_port_info_list_load (il);
+		gp_abilities_list_detect (al, il, &list);
 		if (!gp_list_count (&list)) {
 			gp_abilities_list_free (al);
+			gp_port_info_list_free (il);
 			gp_camera_set_error (camera, _("Could not detect "
 					     "any camera"));
 			return (GP_ERROR_MODEL_NOT_FOUND);
@@ -713,7 +623,10 @@ gp_camera_init (Camera *camera)
 		gp_abilities_list_free (al);
 		CRS (camera, gp_camera_set_abilities (camera, a));
 		CRS (camera, gp_list_get_value (&list, 0, &port));
-		CRS (camera, gp_camera_set_port_path (camera, port));
+		p = gp_port_info_list_lookup_path (il, port);
+		gp_port_info_list_get_info (il, p, &info);
+		gp_port_info_list_free (il);
+		CRS (camera, gp_camera_set_port_info (camera, info));
 	}
 
 	if (strcasecmp (camera->pc->a.model, "Directory Browse")) {

@@ -23,6 +23,7 @@
 
 #include <gphoto2-abilities.h>
 #include <gphoto2-list.h>
+#include <gphoto2-port-info-list.h>
 
 typedef struct _CameraAbilitiesList CameraAbilitiesList;
 
@@ -30,7 +31,8 @@ int gp_abilities_list_new    (CameraAbilitiesList **list);
 int gp_abilities_list_free   (CameraAbilitiesList *list);
 
 int gp_abilities_list_load   (CameraAbilitiesList *list);
-int gp_abilities_list_detect (CameraAbilitiesList *list, CameraList *l);
+int gp_abilities_list_detect (CameraAbilitiesList *list,
+			      GPPortInfoList *info_list, CameraList *l);
 
 int gp_abilities_list_dump_libs (CameraAbilitiesList *list);
 

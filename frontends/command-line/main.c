@@ -25,7 +25,7 @@
 #include "gphoto2-cmd-config.h"
 #endif
 
-#include "gphoto2-port-core.h"
+#include "gphoto2-port-info-list.h"
 #include "gphoto2-port-log.h"
 
 #ifdef ENABLE_NLS
@@ -256,11 +256,17 @@ OPTION_CALLBACK (auto_detect)
         int x, count;
         CameraList list;
 	CameraAbilitiesList *al;
+	GPPortInfoList *il;
         const char *name, *value;
 
 	gp_abilities_list_new (&al);
 	gp_abilities_list_load (al);
-	gp_abilities_list_detect (al, &list);
+	gp_port_info_list_new (&il);
+	gp_port_info_list_load (il);
+	gp_abilities_list_detect (al, il, &list);
+	gp_abilities_list_free (al);
+	gp_port_info_list_free (il);
+
         CHECK_RESULT (count = gp_list_count (&list));
 
         printf("%-30s %-16s\n", "Model", "Port");
@@ -415,10 +421,21 @@ OPTION_CALLBACK(print_usb_usermap) {
 
 OPTION_CALLBACK(list_ports)
 {
-        gp_port_info info;
-        int x, count;
+	GPPortInfoList *list;
+	GPPortInfo info;
+        int x, count, result;
 
-        CHECK_RESULT (count = gp_port_core_count ());
+	CHECK_RESULT (gp_port_info_list_new (&list));
+	result = gp_port_info_list_load (list);
+	if (result < 0) {
+		gp_port_info_list_free (list);
+		return (result);
+	}
+	count = gp_port_info_list_count (list);
+	if (count < 0) {
+		gp_port_info_list_free (list);
+		return (count);
+	}
 
         if (!glob_quiet) {
           printf("Devices found: %i\n", count);
@@ -426,8 +443,14 @@ OPTION_CALLBACK(list_ports)
                  "--------------------------------------------------------------\n");
         } else
           printf("%i\n", count);
-        for(x = 0; x < count; x++) {
-                CHECK_RESULT (gp_port_core_get_info (x, &info));
+
+	/* Now list the ports */
+	for (x = 0; x < count; x++) {
+		result = gp_port_info_list_get_info (list, x, &info);
+		if (result < 0) {
+			gp_port_info_list_free (list);
+			return (result);
+		}
                 printf ("%-32s %-32s\n", info.path, info.name);
         }
 
@@ -951,29 +974,37 @@ set_globals (void)
 {
 	CameraList list;
 	CameraAbilitiesList *al;
+	GPPortInfoList *il;
+	GPPortInfo info;
 	CameraAbilities abilities;
-	int model = 0, count;
-	const char *name;
+	int model = 0, port = 0, count;
+	const char *name, *value;
 
         /* takes all the settings and sets up the gphoto lib */
 
         cli_debug_print ("Setting globals...");
         CHECK_RESULT (gp_camera_new (&glob_camera));
+
 	CHECK_RESULT (gp_abilities_list_new (&al));
 	CHECK_RESULT (gp_abilities_list_load (al));
 
-	if (!strcmp ("", glob_model)) {
+	CHECK_RESULT (gp_port_info_list_new (&il));
+	CHECK_RESULT (gp_port_info_list_load (il));
 
-		/* No model specified */
-		CHECK_RESULT (gp_abilities_list_detect (al, &list));
+	/* If the user didn't specify a model, we'll look for one */
+	if (!strcmp ("", glob_model)) {
+		CHECK_RESULT (gp_abilities_list_detect (al, il, &list));
 		count = gp_list_count (&list);
 		CHECK_RESULT (count);
 		if (count == 1) {
 
 			/* Exactly one camera detected */
 			CHECK_RESULT (gp_list_get_name (&list, 0, &name));
+			CHECK_RESULT (gp_list_get_value (&list, 0, &value));
 			model = gp_abilities_list_lookup_model (al, name);
 			CHECK_RESULT (model);
+			port = gp_port_info_list_lookup_path (il, value);
+			CHECK_RESULT (port);
 
 		} else if (!count) {
 
@@ -988,28 +1019,40 @@ set_globals (void)
 			/* More than one camera detected */
 //FIXME: Let the user choose from the list!
 			CHECK_RESULT (gp_list_get_name (&list, 0, &name));
+			CHECK_RESULT (gp_list_get_value (&list, 0, &value));
 			model = gp_abilities_list_lookup_model (al, name);
 			CHECK_RESULT (model);
+			port = gp_port_info_list_lookup_path (il, value);
+			CHECK_RESULT (port);
 		}
 	} else {
-
-		/* We set the port not in case of "Directory Browse" */
-		if (strcmp (glob_model, "Directory Browse")) {
-			if (strcmp ("", glob_port))
-				CHECK_RESULT (gp_camera_set_port_path (
-						glob_camera, glob_port))
-			else {
-				
-				/* Let the user choose from a list */
-//FIXME: Implement
-			}
-		}
 		model = gp_abilities_list_lookup_model (al, glob_model);
 		CHECK_RESULT (model);
+		if (strcmp (glob_model, "Directory Browse")) {
+			if (strcmp ("", glob_port)) {
+				port = gp_port_info_list_lookup_path (il,
+								glob_port);
+				CHECK_RESULT (port);
+			} else {
+
+				/* Let the user choose from a list */
+//FIXME: Implement
+				return (GP_ERROR_UNKNOWN_PORT);
+			}
+		}
 	}
+
+	/* We set the port not in case of "Directory Browse" */
+	if (strcmp (glob_model, "Directory Browse")) {
+		CHECK_RESULT (gp_port_info_list_get_info (il, port, &info));
+		CHECK_RESULT (gp_camera_set_port_info (glob_camera, info));
+	}
+
 	CHECK_RESULT (gp_abilities_list_get_abilities (al, model, &abilities));
-	CHECK_RESULT (gp_abilities_list_free (al));
 	CHECK_RESULT (gp_camera_set_abilities (glob_camera, abilities));
+
+	gp_abilities_list_free (al);
+	gp_port_info_list_free (il);
 
 	/* 
 	 * Setting of speed only makes sense for serial ports. gphoto2 
