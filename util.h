@@ -1,1 +1,1 @@
-int gp_free_abilities (CameraAbilities *abilities);
+int gp_dump_abilities (CameraAbilities *abilities);

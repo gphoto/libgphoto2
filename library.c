@@ -44,8 +44,6 @@ int load_library (char *camera_name) {
 		glob_c.abilities = dlsym(lh, "camera_abilities");
 		glob_c.init = dlsym(lh, "camera_init");
 		glob_c.exit = dlsym(lh, "camera_exit");
-		glob_c.open = dlsym(lh, "camera_open");
-		glob_c.close = dlsym(lh, "camera_close");
 		glob_c.folder_list = dlsym(lh, "camera_folder_list");
 		glob_c.folder_set = dlsym(lh, "camera_folder_set");
 		glob_c.file_count = dlsym(lh, "camera_file_count");
@@ -119,7 +117,7 @@ int load_camera_list (char *library_filename) {
 	/* Copy over the camera name */
 	for (x=glob_camera_count; x<glob_camera_count+count; x++) {
 		strcpy(glob_camera[x].name, glob_camera_abilities[x].model);
-		strcpy(glob_camera[x].library, library_filename);		
+		strcpy(glob_camera[x].library, library_filename);
 		if (glob_debug)
 			printf("core:\t camera model: %s\n", glob_camera[x].name);
 	}
@@ -157,5 +155,12 @@ int load_cameras() {
                 }
            }
         } while (de);
+	return (GP_OK);
+}
+
+int close_library () {
+
+	dlclose(glob_library_handle);
+
 	return (GP_OK);
 }
