@@ -331,6 +331,10 @@ sierra_check_connection (Camera *camera, GPContext *context)
 	int r = 0, timeout;
 	unsigned char c;
 
+	/* Only serial cameras close the connection after some timeout. */
+	if (camera->port->type != GP_PORT_SERIAL)
+		return (GP_OK);
+
 	GP_DEBUG ("Checking if connection is still open...");
 	while (1) {
 
@@ -890,6 +894,10 @@ sierra_set_speed (Camera *camera, SierraSpeed speed, GPContext *context)
 {
 	GPPortSettings settings;
 	unsigned int i, bit_rate;
+
+	/* Only serial connections have different speeds. */
+	if (camera->port->type != GP_PORT_SERIAL)
+		return (GP_OK);
 
 	/*
 	 * Check that the requested speed is valid. We don't want to bug
