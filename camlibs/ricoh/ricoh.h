@@ -95,10 +95,15 @@ int ricoh_get_pic   (Camera *camera, GPContext *context, unsigned int n,
 
 int ricoh_take_pic  (Camera *camera, GPContext *context);
 
-int ricoh_get_cam_date  (Camera *camera, GPContext *context, time_t *time);
+int ricoh_get_date  (Camera *camera, GPContext *context, time_t *time);
+int ricoh_set_date  (Camera *camera, GPContext *context, time_t  time);
+
 int ricoh_get_cam_mem   (Camera *camera, GPContext *context, int *mem);
 int ricoh_get_cam_amem  (Camera *camera, GPContext *context, int *mem);
-int ricoh_get_cam_id    (Camera *camera, GPContext *context,
-			 const char **cam_id);
+
+int ricoh_get_copyright (Camera *camera, GPContext *context,
+		         const char **copyright);
+int ricoh_set_copyright (Camera *camera, GPContext *context,
+			 const char *copyright);
 
 #endif /* __RICOH_H__ */

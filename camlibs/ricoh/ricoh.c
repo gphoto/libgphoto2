@@ -495,26 +495,20 @@ ricoh_get_pic_memo (Camera *camera, GPContext *context, unsigned int n,
 int
 ricoh_del_pic (Camera *camera, GPContext *context, unsigned int n)
 {
-	unsigned char p[2], cmd, buf[0xff], len;
+	unsigned char p[2], buf[0xff], len;
 
 	GP_DEBUG ("Deleting picture %i...", n);
 
 	/* Put camera in delete mode */
-	CR (ricoh_send (camera, context, 0x97, 0, NULL, 0));
-	CR (ricoh_recv (camera, context, &cmd, NULL, buf, &len));
-	C_CMD (context, cmd, 0x97);
+	CR (ricoh_transmit (camera, context, 0x97, NULL, 0, buf, &len));
 	C_LEN (context, len, 0);
 
 	/* Find and send picture to delete */
 	p[0] = n >> 0;
 	p[1] = n >> 8;
-	CR (ricoh_send (camera, context, 0x93, 0, p, 2));
-	CR (ricoh_recv (camera, context, &cmd, NULL, buf, &len));
-	C_CMD (context, cmd, 0x93);
+	CR (ricoh_transmit (camera, context, 0x93, p, 2, buf, &len));
 	C_LEN (context, len, 0);
-	CR (ricoh_send (camera, context, 0x92, 0, p, 2));
-	CR (ricoh_recv (camera, context, &cmd, NULL, buf, &len));
-	C_CMD (context, cmd, 0x92);
+	CR (ricoh_transmit (camera, context, 0x92, p, 2, buf, &len));
 	C_LEN (context, len, 0);
 
 	return (GP_OK);
@@ -658,14 +652,13 @@ ricoh_get_pic (Camera *camera, GPContext *context, unsigned int n,
 	return (GP_OK);
 }
 
-/* get the date the camera is set to */
 int
-ricoh_get_cam_date (Camera *camera, GPContext *context, time_t *date)
+ricoh_get_date (Camera *camera, GPContext *context, time_t *date)
 {
 	unsigned char p[1], buf[0xff], len;
 	struct tm time;
 
-	p[0] = 0xa;
+	p[0] = 0x0a;
 	CR (ricoh_transmit (camera, context, 'Q', p, 1, buf, &len));
 
 	/* the camera only supplies 2 digits for year, so I will
@@ -679,9 +672,34 @@ ricoh_get_cam_date (Camera *camera, GPContext *context, time_t *date)
 	 time.tm_min =  ((buf[5] & 0xf0) >> 4) * 10 + (buf[5] & 0xf);
 	 time.tm_sec =  ((buf[6] & 0xf0) >> 4) * 10 + (buf[6] & 0xf);
 	 time.tm_isdst = -1;
-	 *date = mktime(&time);
+	 *date = mktime (&time);
 
 	 return (GP_OK);
+}
+
+#ifdef HEX
+#  undef HEX
+#endif
+#define HEX(x) ((x/10)<<4)+(x%10)
+
+int
+ricoh_set_date (Camera *camera, GPContext *context, time_t time)
+{
+	unsigned char p[8], buf[0xff], len;
+	struct tm *t;
+
+	p[0] = 0x0a;
+	t = localtime (&time);
+	p[1] = HEX (t->tm_year / 100 + 19);
+	p[2] = HEX (t->tm_year % 100);
+	p[3] = HEX (t->tm_mon + 1);
+	p[4] = HEX (t->tm_mday);
+	p[5] = HEX (t->tm_hour);
+	p[6] = HEX (t->tm_min);
+	p[7] = HEX (t->tm_sec);
+	CR (ricoh_transmit (camera, context, 0x50, p, 8, buf, &len));
+
+	return (GP_OK);
 }
 
 /* get the cameras memory size */
@@ -716,20 +734,31 @@ ricoh_get_cam_amem (Camera *camera, GPContext *context, int *size)
 	return (GP_OK);
 }
 
-/* get the camera ID aka copyright message */ 
 int
-ricoh_get_cam_id (Camera *camera, GPContext *context, const char **cam_id)
+ricoh_get_copyright (Camera *camera, GPContext *context, const char **copyright)
 {
 	unsigned char p[1], len;
 	static char buf[1024];
 
-	p[0] = 0xf;
+	p[0] = 0x0f;
 	CR (ricoh_transmit (camera, context, 'Q', p, 1, buf, &len));
 
-	if (cam_id && *cam_id) {
-		*cam_id = buf;
+	if (copyright && *copyright) {
+		*copyright = buf;
 		buf[len] = '\0';
 	}
+
+	return (GP_OK);
+}
+
+int
+ricoh_set_copyright (Camera *camera, GPContext *context, const char *copyright)
+{
+	unsigned char p[21], len, buf[0xff];
+
+	p[0] = 0x0f;
+	strncpy (p + 1, copyright, 20);
+	CR (ricoh_transmit (camera, context, 0x50, p, 21, buf, &len));
 
 	return (GP_OK);
 }

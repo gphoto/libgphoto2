@@ -89,7 +89,8 @@ camera_abilities (CameraAbilitiesList *list)
 		strcpy (a.model, models[i].model);
 		a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
 		a.port = GP_PORT_SERIAL;
-		a.operations = GP_OPERATION_CAPTURE_IMAGE;
+		a.operations = GP_OPERATION_CAPTURE_IMAGE |
+			       GP_OPERATION_CONFIG;
 		a.file_operations = GP_FILE_OPERATION_DELETE |
 				    GP_FILE_OPERATION_PREVIEW;
 		a.folder_operations = GP_FOLDER_OPERATION_NONE;
@@ -207,9 +208,7 @@ camera_summary (Camera *camera, CameraText *about, GPContext *context)
 	time_t camtime;
 	char model[128];
 	unsigned int i;
-	const char *cam_id;
 
-	CR (ricoh_get_cam_id   (camera, context, &cam_id));
 	CR (ricoh_get_cam_amem (camera, context, &avail_mem));
 	CR (ricoh_get_cam_mem  (camera, context, &total_mem));
 	CR (ricoh_get_cam_date (camera, context, &camtime));
@@ -225,10 +224,9 @@ camera_summary (Camera *camera, CameraText *about, GPContext *context)
 			  camera->pl->model);
 
 	sprintf (about->text, _("Model: %s\n"
-			        "Camera ID: %s\n"
 			        "Memory: %d byte(s) of %d available\n"
 			        "Camera time: %s\n"),
-		model, cam_id, avail_mem, total_mem, ctime (&camtime));
+		model, avail_mem, total_mem, ctime (&camtime));
 
 	return (GP_OK);
 }
@@ -249,6 +247,61 @@ camera_capture (Camera *camera, CameraCaptureType type,
 	strcpy (path->folder, "/");
 	CR (gp_filesystem_append (camera->fs, path->folder,
 				  path->name, context));
+
+	return (GP_OK);
+}
+
+static int
+camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
+{
+	CameraWidget *section, *widget;
+	const char *copyright;
+	time_t time;
+
+	CR (gp_widget_new (GP_WIDGET_WINDOW, _("Configuration"), window));
+
+	CR (gp_widget_new (GP_WIDGET_SECTION, _("General"), &section));
+	CR (gp_widget_append (*window, section));
+
+	/* Copyright */
+	CR (gp_widget_new (GP_WIDGET_TEXT, _("Copyright"), &widget));
+	CR (gp_widget_set_name (widget, "copyright"));
+	CR (gp_widget_set_info (widget, _("Copyright")));
+	CR (gp_widget_append (section, widget));
+	CR (ricoh_get_copyright (camera, context, &copyright));
+	CR (gp_widget_set_value (widget, copyright));
+
+	/* Date */
+	CR (gp_widget_new (GP_WIDGET_DATE, _("Date & Time"), &widget));
+	CR (gp_widget_set_name (widget, "date"));
+	CR (gp_widget_set_info (widget, _("Date & Time")));
+	CR (gp_widget_append (section, widget));
+	CR (ricoh_get_date (camera, context, &time));
+	CR (gp_widget_set_value (widget, &time));
+
+	return (GP_OK);
+}
+
+static int
+camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
+{
+	CameraWidget *widget;
+	const char *copyright;
+	time_t time;
+
+	/* Copyright */
+	CR (gp_widget_get_child_by_name (window, "copyright", &widget));
+	if (gp_widget_changed (widget)) {
+		CR (gp_widget_get_value (widget, &copyright));
+		CR (ricoh_set_copyright (camera, context, copyright));
+	}
+
+	/* Date */
+	CR (gp_widget_get_child_by_name (window, "date", &widget));
+	if (gp_widget_changed (widget)) {
+		CR (gp_widget_get_value (widget, &time));
+		CR (ricoh_set_date (camera, context, time));
+	}
 
 	return (GP_OK);
 }
@@ -324,6 +377,8 @@ camera_init (Camera *camera, GPContext *context)
 	camera->functions->summary = camera_summary;
 	camera->functions->capture = camera_capture;
 	camera->functions->about = camera_about;
+	camera->functions->get_config = camera_get_config;
+	camera->functions->set_config = camera_set_config;
 	
 	CR (gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL,
 					  camera));

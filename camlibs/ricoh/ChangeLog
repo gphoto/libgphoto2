@@ -1,5 +1,10 @@
 2002-06-20  Lutz Müller <lutz@users.sourceforge.net>
 
+	* ricoh.[c,h]
+	* library.c: First step towards support of settings.
+
+2002-06-20  Lutz Müller <lutz@users.sourceforge.net>
+
 	* ricoh.h:
 	* library.c: Support a couple of other models.
 
