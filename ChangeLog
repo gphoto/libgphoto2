@@ -1,3 +1,8 @@
+2003-11-19 Theodore Kilgore <kilgota@auburn.edu> 
+
+	* configure.in: Hook up camlibs/aox (driver by Theodore Kilgore).
+
+
 2003-11-16  Patrick Mansfield <patmans@users.sourceforge.net>
 
 	* libgphoto2 gphoto2-camera.c, gphoto2-result.c, gphoto2-result.h:
