@@ -26,7 +26,14 @@ my_func (int arg)
 {
 	int var, res;
 
+	/*
+	 * This is a multiline
+	 * comment. Use TAB for 
+	 * indentation!
+	 */
 	res = gp_some_action (var);
+
+	/* This is a simple one-line comment */
 	if (res < 0) {
 		gp_debug_printf (GP_DEBUG_HIGH, "core", "Error happened!");
 		return (res);
