@@ -1,6 +1,9 @@
 2004-08-15  Marcus Meissner  <meissner@suse.de>
 	
 	* library.c: Added Canon PowerShot A85.
+	* library.c: Added Kodak LS753 DX7630 CX7300 CX7220
+	   CX7330 CX7530 DX7440 CX6445 as reported on SourceForge
+	   http://sourceforge.net/tracker/index.php?func=detail&aid=982934&group_id=8874&atid=358874
 
 2004-08-15  Hubert Figuiere  <hfiguiere@teaser.fr>
 

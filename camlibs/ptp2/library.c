@@ -232,6 +232,7 @@ static struct {
 	   normal/retail versions of the same model */
 	{"Kodak:CX4300", 0x040a, 0x0566},
 	{"Kodak:CX4310", 0x040a, 0x0566},
+	{"Kodak:LS753",  0x040a, 0x0567},
 	{"Kodak:LS443",  0x040a, 0x0568},
 	{"Kodak:LS663",  0x040a, 0x0569},
 	{"Kodak:DX6340", 0x040a, 0x0570},
@@ -241,7 +242,14 @@ static struct {
 	{"Kodak:CX6200", 0x040a, 0x0574},
 	{"Kodak:DX6490", 0x040a, 0x0575},
 	{"Kodak:DX4530", 0x040a, 0x0576},
+	{"Kodak:DX7630", 0x040a, 0x0577},
+	{"Kodak:CX7300", 0x040a, 0x0578},
+	{"Kodak:CX7220", 0x040a, 0x0579},
+	{"Kodak:CX7330", 0x040a, 0x057a},
 	{"Kodak:CX7430", 0x040a, 0x057b},
+	{"Kodak:CX7530", 0x040a, 0x057c},
+	{"Kodak:DX7440", 0x040a, 0x057d},
+	{"Kodak:CX6445", 0x040a, 0x0584},
 
 	/* HP PTP cameras */
 	{"HP:PhotoSmart 812 (PTP mode)", 0x03f0, 0x4202},
