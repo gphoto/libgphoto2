@@ -133,7 +133,7 @@ ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, PTPReq *req)
 
 	// XXX this function should return dataset length
 
-	return 144; // 144 is enough :)
+	return (PTP_oi_Filename+(filenamelen+1)*2+(capturedatelen+1)*4);
 }
 
 static inline void
