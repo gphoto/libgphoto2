@@ -1,3 +1,9 @@
+========================================================================
+This file has been declared DEPRECATED as of 2001-11-27.
+Use ChangeLog instead.
+========================================================================
+
+
 2000-10-13	updated configuration dialog for new widget_value_get/set
     scottf	conventions
 
