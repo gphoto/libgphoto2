@@ -182,7 +182,7 @@ struct _PTPDeviceInfo {
 	uint16_t *ImageFormats;
 	char	*Manufacturer;
 	char	*Model;
-	char	*DeviceVersionl;
+	char	*DeviceVersion;
 	char	*SerialNumber;
 };
 typedef struct _PTPDeviceInfo PTPDeviceInfo;
@@ -353,6 +353,7 @@ struct _PTPParams {
 	/* internal structures used by ptp driver */
 	PTPObjectHandles handles;
 	PTPObjectInfo * objectinfo;
+	PTPDeviceInfo deviceinfo;
 };
 typedef struct _PTPParams PTPParams;
 
@@ -395,4 +396,7 @@ uint16_t ptp_ek_sendfileobjectinfo (PTPParams* params, uint32_t* store,
 				PTPObjectInfo* objectinfo);
 uint16_t ptp_ek_sendfileobject	(PTPParams* params, PTPReq* object,
 				uint32_t size);
+
+int ptp_operation_issupported	(PTPParams* params, uint16_t operation);
+
 #endif /* __PTP_H__ */

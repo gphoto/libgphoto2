@@ -583,7 +583,8 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	for (i = 0; i < params->handles.n; i++) {
 	if (params->objectinfo[i].ParentObject==parent)
 	if (params->objectinfo[i].ObjectFormat != PTP_OFC_Association)
-	if (params->objectinfo[i].StorageID == storage)
+	if (!ptp_operation_issupported(params,PTP_OC_GetStorageIDs)
+	   || (params->objectinfo[i].StorageID == storage))
 		CR (gp_list_append (list, params->objectinfo[i].Filename, NULL));
 	}
 
@@ -602,14 +603,22 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	/* add storage pseudofolders in root folder */
 	if (!strcmp(folder, "/")) {
 		PTPStorageIDs storageids;
-		CPR (context, ptp_getstorageids(params,
-		&storageids));
+		
+		if (ptp_operation_issupported(params,PTP_OC_GetStorageIDs)) {
+			CPR (context, ptp_getstorageids(params,
+				&storageids));
+		} else {
+			storageids.n = 1;
+			storageids.storage[0]=0xdeadbeef;
+		}
 		for (i=0; i<storageids.n; i++) {
 			char fname[MAXFILENAMELEN];
 			PTPStorageInfo storageinfo;
 			if ((storageids.storage[i]&0x0000ffff)==0) continue;
-			CPR (context, ptp_getstorageinfo(params,
-			storageids.storage[i], &storageinfo));
+			if (ptp_operation_issupported(params,PTP_OC_GetStorageIDs)) {
+				CPR (context, ptp_getstorageinfo(params,
+					storageids.storage[i], &storageinfo));
+			}
 			snprintf(fname, MAXFILENAMELEN, STORAGE_FOLDER_PREFIX"%8.8x",
 			storageids.storage[i]);
 			CR (gp_list_append (list, fname, NULL));
@@ -633,7 +642,8 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	find_folder_handle(folder,parent,data);
 	for (i = 0; i < params->handles.n; i++) {
 	if (params->objectinfo[i].ParentObject==parent)
-	if (params->objectinfo[i].StorageID == storage)
+	if ((!ptp_operation_issupported(params,PTP_OC_GetStorageIDs)) || 
+		(params->objectinfo[i].StorageID == storage))
 	if (params->objectinfo[i].ObjectFormat==PTP_OFC_Association &&
 		params->objectinfo[i].AssociationType==PTP_AT_GenericFolder)
 		CR (gp_list_append (list, params->objectinfo[i].Filename, NULL));
@@ -926,6 +936,8 @@ init_ptp_fs (Camera *camera, GPContext *context)
 	camera->pl->params.objectinfo =
 		(PTPObjectInfo*)malloc(sizeof(PTPObjectInfo)*
 		camera->pl->params.handles.n);
+	// XXX !!!
+	//memset (camera->pl->params.objectinfo,0,sizeof(PTPObjectInfo));
 	for (i = 0; i < camera->pl->params.handles.n; i++) {
 		CPR (context, ptp_getobjectinfo(&camera->pl->params,
 			camera->pl->params.handles.handler[i],
@@ -1004,6 +1016,13 @@ camera_init (Camera *camera, GPContext *context)
 
 	/* init internal ptp objectfiles (required for fs implementation) */
 	init_ptp_fs (camera, context);
+
+	CPR(context, ptp_getdeviceinfo(&camera->pl->params,
+	&camera->pl->params.deviceinfo));
+
+	GP_DEBUG ("Manufacturer: %s",camera->pl->params.deviceinfo.Manufacturer);
+	GP_DEBUG ("model: %s", camera->pl->params.deviceinfo.Model);
+	GP_DEBUG ("device version: %s", camera->pl->params.deviceinfo.DeviceVersion);
 
 	{
 	PTPEvent event;

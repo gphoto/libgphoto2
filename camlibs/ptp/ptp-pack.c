@@ -110,12 +110,12 @@ ptp_unpack_uint32_t_array(PTPParams *params, PTPReq *req, uint16_t offset, uint3
 static inline uint32_t
 ptp_unpack_uint16_t_array(PTPParams *params, PTPReq *req, uint16_t offset, uint16_t **array)
 {
-	uint32_t n, i=0;
+	uint32_t n, i=1;
 
 	n=dtoh32a(&req->data[offset]);
 	*array = malloc (n*sizeof(uint16_t));
-	while (n>i) {
-		(*array)[i]=dtoh16a(&req->data[offset+(sizeof(uint16_t)*(i+1))]);
+	while (n>=i) {
+		(*array)[i-1]=dtoh16a(&req->data[offset+(sizeof(uint16_t)*i)]);
 		i++;
 	}
 	return n;
@@ -134,7 +134,7 @@ static inline void
 ptp_unpack_DI (PTPParams *params, PTPReq *req, PTPDeviceInfo *di)
 {
 	uint8_t len, totallen;
-
+	
 	di->StaqndardVersion = dtoh16a(&req->data[PTP_di_StandardVersion]);
 	di->VendorExtensionID =
 		dtoh32a(&req->data[PTP_di_VendorExtensionID]);
@@ -149,27 +149,40 @@ ptp_unpack_DI (PTPParams *params, PTPReq *req, PTPDeviceInfo *di)
 	di->OperationsSupported_len = ptp_unpack_uint16_t_array(params, req,
 		PTP_di_OperationsSupported+totallen,
 		&di->OperationsSupported);
-	totallen=totallen+di->OperationsSupported_len+sizeof(uint32_t);
+	totallen=totallen+di->OperationsSupported_len*sizeof(uint16_t)+sizeof(uint32_t);
 	di->EventsSupported_len = ptp_unpack_uint16_t_array(params, req,
 		PTP_di_OperationsSupported+totallen,
 		&di->EventsSupported);
-	totallen=totallen+di->EventsSupported_len+sizeof(uint32_t);
+	totallen=totallen+di->EventsSupported_len*sizeof(uint16_t)+sizeof(uint32_t);
 	di->DevicePropertiesSupported_len =
 		ptp_unpack_uint16_t_array(params, req,
 		PTP_di_OperationsSupported+totallen,
 		&di->DevicePropertiesSupported);
-	totallen=totallen+di->DevicePropertiesSupported_len+sizeof(uint32_t);
+	totallen=totallen+di->DevicePropertiesSupported_len*sizeof(uint16_t)+sizeof(uint32_t);
 	di->CaptureFormats_len = ptp_unpack_uint16_t_array(params, req,
 		PTP_di_OperationsSupported+totallen,
 		&di->CaptureFormats);
-	totallen=totallen+di->CaptureFormats_len+sizeof(uint32_t);
+	totallen=totallen+di->CaptureFormats_len*sizeof(uint16_t)+sizeof(uint32_t);
 	di->ImageFormats_len = ptp_unpack_uint16_t_array(params, req,
 		PTP_di_OperationsSupported+totallen,
 		&di->ImageFormats);
-	totallen=totallen+di->ImageFormats_len+sizeof(uint32_t);
+	totallen=totallen+di->ImageFormats_len*sizeof(uint16_t)+sizeof(uint32_t);
 	di->Manufacturer = ptp_unpack_string(params, req,
 		PTP_di_OperationsSupported+totallen,
 		&len);
+	totallen+=len*2+1;
+	di->Model = ptp_unpack_string(params, req,
+		PTP_di_OperationsSupported+totallen,
+		&len);
+	totallen+=len*2+1;
+	di->DeviceVersion = ptp_unpack_string(params, req,
+		PTP_di_OperationsSupported+totallen,
+		&len);
+	totallen+=len*2+1;
+	di->SerialNumber = ptp_unpack_string(params, req,
+		PTP_di_OperationsSupported+totallen,
+		&len);
+
 }
 	
 // ObjectHandles array pack/unpack

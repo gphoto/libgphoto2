@@ -581,3 +581,17 @@ ptp_ek_sendfileobject (PTPParams* params, PTPReq* object, uint32_t size)
 		PTP_DP_SENDDATA | PTP_RQ_PARAM0, size, object);
 }
 
+
+/* devinfo testing functions */
+
+int
+ptp_operation_issupported(PTPParams* params, uint16_t operation)
+{
+	int i=0;
+
+	for (;i<params->deviceinfo.OperationsSupported_len;i++) {
+		if (params->deviceinfo.OperationsSupported[i]==operation)
+			return 1;
+	}
+	return 0;
+}
