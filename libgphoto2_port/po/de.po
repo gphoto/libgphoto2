@@ -7,7 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port\n"
-"POT-Creation-Date: 2003-07-27 13:04+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-09-05 23:02+0200\n"
 "PO-Revision-Date: 2002-11-12 01:03-0800\n"
 "Last-Translator: \n"
 "Language-Team:  <de@li.org>\n"
@@ -23,7 +24,7 @@ msgstr ""
 "Konnte keinerlei I/O-Bibliothek laden weil »%s« nicht geöffnet werden konnte "
 "(%m)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:462
+#: libgphoto2_port/gphoto2-port-info-list.c:472
 msgid "Generic Port"
 msgstr "Generischer Port"
 
@@ -316,7 +317,17 @@ msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr ""
 "Die angegebene Hersteller- oder Produkt-ID (0x%x,0x%x) ist nicht gültig."
 
-#: usb/libusb.c:439
+#: usb/libusb.c:417
+#, fuzzy, c-format
+msgid ""
+"USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
+"not function with gphoto2. Reference: %s"
+msgstr ""
+"Konnte USB-Gerät (Hersteller 0x%x, Produkt 0x%x) nicht finden. \n"
+"Stellen Sie sicher, dass das Gerät ordnungsgemäß an den Computer "
+"angeschlossen ist."
+
+#: usb/libusb.c:450
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
@@ -326,7 +337,7 @@ msgstr ""
 "Stellen Sie sicher, dass das Gerät ordnungsgemäß an den Computer "
 "angeschlossen ist."
 
-#: usb/libusb.c:547
+#: usb/libusb.c:558
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "

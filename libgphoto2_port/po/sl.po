@@ -5,7 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto\n"
-"POT-Creation-Date: 2003-07-27 13:04+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-09-05 23:02+0200\n"
 "PO-Revision-Date: 2002-01-04 19:28+0100\n"
 "Last-Translator: Andraz Tori <andraz.tori1@guest.arnes.si>\n"
 "Language-Team: Slovenian <translation-team-sl@lists.sourceforge.net>\n"
@@ -18,7 +19,7 @@ msgstr ""
 msgid "Could not load any io-library because '%s' could not be opened (%m)"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:462
+#: libgphoto2_port/gphoto2-port-info-list.c:472
 msgid "Generic Port"
 msgstr ""
 
@@ -308,14 +309,21 @@ msgstr "Ne morem dobiti #%i"
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr ""
 
-#: usb/libusb.c:439
+#: usb/libusb.c:417
+#, c-format
+msgid ""
+"USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
+"not function with gphoto2. Reference: %s"
+msgstr ""
+
+#: usb/libusb.c:450
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
 "is connected to the computer."
 msgstr ""
 
-#: usb/libusb.c:547
+#: usb/libusb.c:558
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "

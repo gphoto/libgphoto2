@@ -5,7 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port\n"
-"POT-Creation-Date: 2003-07-27 13:04+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-09-05 23:02+0200\n"
 "PO-Revision-Date: 2002-11-21 13:11+0800\n"
 "Last-Translator: Wang Li <charles@linux.net.cn>\n"
 "Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
@@ -18,7 +19,7 @@ msgstr ""
 msgid "Could not load any io-library because '%s' could not be opened (%m)"
 msgstr "由于无法打开‘%s’(%m)所以无法装入任何 io 库"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:462
+#: libgphoto2_port/gphoto2-port-info-list.c:472
 msgid "Generic Port"
 msgstr "通用端口"
 
@@ -303,14 +304,21 @@ msgstr "无法设定补充设置 %d/%d (%m)"
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr "给出的供应商或产品 id (0x%x、0x%x) 不合法。"
 
-#: usb/libusb.c:439
+#: usb/libusb.c:417
+#, fuzzy, c-format
+msgid ""
+"USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
+"not function with gphoto2. Reference: %s"
+msgstr "无法找到 USB 设备 (供应商 0x%x、产品 0x%x)。确信该设备已连接到计算机。"
+
+#: usb/libusb.c:450
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
 "is connected to the computer."
 msgstr "无法找到 USB 设备 (供应商 0x%x、产品 0x%x)。确信该设备已连接到计算机。"
 
-#: usb/libusb.c:547
+#: usb/libusb.c:558
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "

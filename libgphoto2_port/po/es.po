@@ -5,7 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port\n"
-"POT-Creation-Date: 2003-07-27 13:04+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-09-05 23:02+0200\n"
 "PO-Revision-Date: 2002-06-18 22:59-0300\n"
 "Last-Translator: Fabian Mandelbaum <fabman@mandrakesoft.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -20,7 +21,7 @@ msgstr ""
 "No se pudo cargar biblioteca de entrada/salida alguna porque '%s' no se pudo "
 "abrir (%m)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:462
+#: libgphoto2_port/gphoto2-port-info-list.c:472
 msgid "Generic Port"
 msgstr "Puerto genérico"
 
@@ -308,7 +309,16 @@ msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr ""
 "El fabricante o ID de producto proporcionado (0x%x, 0x%x) no es válido."
 
-#: usb/libusb.c:439
+#: usb/libusb.c:417
+#, fuzzy, c-format
+msgid ""
+"USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
+"not function with gphoto2. Reference: %s"
+msgstr ""
+"No se pudo encontrar el dispositivo USB (fabricante 0x%x, producto 0x%x). "
+"Debe asegurarse que este dispositivo está conectado a la computadora."
+
+#: usb/libusb.c:450
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
@@ -317,7 +327,7 @@ msgstr ""
 "No se pudo encontrar el dispositivo USB (fabricante 0x%x, producto 0x%x). "
 "Debe asegurarse que este dispositivo está conectado a la computadora."
 
-#: usb/libusb.c:547
+#: usb/libusb.c:558
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
