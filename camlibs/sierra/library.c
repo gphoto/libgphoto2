@@ -495,6 +495,12 @@ sierra_read_packet (Camera *camera, char *packet, GPContext *context)
 			return (GP_OK);
 		}
 
+		/* If the camera is not yet ready, retry. */
+		if (packet[0] == NAK) {
+			GP_DEBUG ("Camera did not acknowledge, retrying...");
+			continue;
+		}
+
 		/*
 		 * We've got a packet containing several bytes.
 		 * The data packet size is not known yet if the communication
