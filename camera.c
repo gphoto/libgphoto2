@@ -239,7 +239,6 @@ int gp_camera_init (Camera *camera)
         camera->abilities->file_delete_all = glob_abilities_list->abilities[x]->file_delete_all;
         camera->abilities->file_preview  = glob_abilities_list->abilities[x]->file_preview;
 	camera->abilities->file_put      = glob_abilities_list->abilities[x]->file_put;
-        camera->abilities->capture       = glob_abilities_list->abilities[x]->capture;
 	camera->abilities->config        = glob_abilities_list->abilities[x]->config;
 
 	/* Load the library. */
