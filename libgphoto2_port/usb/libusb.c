@@ -131,7 +131,8 @@ gp_port_usb_open (GPPort *port)
 	if (ret < 0) {
 		gp_port_set_error (port, _("Could not claim "
 			"interface %d (%m). Make sure no other program "
-			"or kernel module (i.e. dcxxx) is using the device."),
+			"or kernel module (i.e. dcxxx) is using the device "
+			"and you have read/write access to the device."),
 			port->settings.usb.interface);
 		return GP_ERROR_IO_USB_CLAIM;
 	}
@@ -338,9 +339,10 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 			if ((dev->descriptor.idVendor == idvendor) &&
 			    (dev->descriptor.idProduct == idproduct)) {
                                     port->pl->d = dev;
-				    gp_port_set_error (port, "Looking for USB device "
-						       "(vendor 0x%x, product 0x%x)... found.", 
-						       idvendor, idproduct);
+				    gp_log (GP_LOG_VERBOSE, "gphoto2-port-usb",
+					    "Looking for USB device "
+					    "(vendor 0x%x, product 0x%x)... found.", 
+					    idvendor, idproduct);
 				    return GP_OK;
 			}
 		}
