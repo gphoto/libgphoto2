@@ -253,7 +253,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		}
 		break;
 	default:
-		memcpy (p_data, data, buffersize);
+		for (m = 0; m < buffersize; m++) { p_data[m] = data[m]; }
 	}
 
 	/*

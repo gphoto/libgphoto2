@@ -1,5 +1,10 @@
 2003-10-29  Lutz Mueller <lutz@users.sourceforge.net>
 
+	* library.c: Substitute memcpy by for (...) { (...) } on 
+	  request of Theodore Kilgore <kilgota@banach.math.auburn.edu>.
+
+2003-10-29  Lutz Mueller <lutz@users.sourceforge.net>
+
 	* sq905.[c.h]: Patch by Thodore Kilgore
 	  <kilgota@banach.math.auburn.edu>: Introduce new SQ_MODEL_PRECISION.
 
