@@ -73,9 +73,11 @@ typedef enum {
  * @CANON_CLASS_2: like class 1, but doesn't support EXIF. Example: Pro 70.
  * @CANON_CLASS_3: like class 1, but can't delete image
  * @CANON_CLASS_4: supports lock/unlock. EOS D30 was first example; others
- *                 include D60, 10D, 300D, S230, S400.
+ *                 include D60, 10D, 300D, S230, S400. Doesn't support
+ *		   "get picture abilities".
  * @CANON_CLASS_5: supports lock, no unlock, but not "get picture abilities".
  *                 Examples: S45, G3.
+ * @CANON_CLASS_6: major protocol revision. 20D is only model yet seen.
  *
  * Enumeration of all camera types currently supported. Simplified so
  * that all cameras with similar behavior have the same code.
@@ -87,7 +89,8 @@ typedef enum {
 	CANON_CLASS_2,
 	CANON_CLASS_3,
 	CANON_CLASS_4,
-	CANON_CLASS_5
+	CANON_CLASS_5,
+	CANON_CLASS_6
 } canonCamClass;
 
 /**
@@ -368,20 +371,6 @@ typedef enum {
  *
  */
 #define GP_PORT_DEFAULT                GP_PORT_DEFAULT_RETURN(GP_ERROR_BAD_PARAMETERS)
-
-/**
- * IS_EOS
- * @cam: camera type from camera->pl->md->model
- *
- * Checks whether to treat camera as an EOS model; differences in key
- *  lock/unlock, no "get picture abilities", different interrupt
- *  sequence on remote capture.
- * @Returns: 1 if camera is treated as EOS, 0 if otherwise.
- *
- * Treat PS 230 as EOS just as a guess; I really don't know.
- *
- */
-#define IS_EOS(cam) ((cam)==CANON_CLASS_4)
 
 /*
  * All functions returning a pointer have malloc'ed the data. The caller must
