@@ -8,6 +8,7 @@
  *   Additions for PowerShot A5 by Ole W. Saastad
  *   (c) 2000 : Other additions  by Edouard Lafargue, Philippe Marzouk.
  *
+ * $Header$
  ****************************************************************************/
 
 

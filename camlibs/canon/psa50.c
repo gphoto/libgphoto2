@@ -4,6 +4,8 @@
  * Written 1999 by Wolfgang G. Reissnegger and Werner Almesberger
  * Additions 2000 by Philippe Marzouk and Edouard Lafargue
  * USB support, 2000, by Mikael Nyström
+ *
+ * $Header$
  */
 
 /**
@@ -1667,7 +1669,7 @@ unsigned char *psa50_get_file(Camera *camera, const char *name,int *length)
  */
 unsigned char *psa50_get_thumbnail(Camera *camera, const char *name,int *length)
 {
-//      struct canon_info *cs = (struct canon_info*)camera->camlib_data;
+    struct canon_info *cs = (struct canon_info*)camera->camlib_data;
     unsigned char *file = NULL;
     unsigned char *msg;
     char newstr[100];
@@ -1675,7 +1677,8 @@ unsigned char *psa50_get_thumbnail(Camera *camera, const char *name,int *length)
     unsigned char name_len;
     unsigned int total = 0,expect = 0,size;
     int len;
-
+    int i,j,in;
+    unsigned char *thumb;
 
     gp_frontend_progress(camera, NULL, 0);
     if(receive_error==FATAL_ERROR) {
@@ -1708,6 +1711,7 @@ unsigned char *psa50_get_thumbnail(Camera *camera, const char *name,int *length)
                   return NULL;
                 }
                 memcpy(file,msg,len);
+		total=len;
                 *length=len;
                 break;
          case CANON_SERIAL_RS232:
@@ -1760,30 +1764,69 @@ unsigned char *psa50_get_thumbnail(Camera *camera, const char *name,int *length)
                 break;
     }
 
-    exifdat.header=file;
-    exifdat.data=file+12;
+    switch(cs->model) {
+    case CANON_PS_A70: /* pictures are JFIF files */
+      /* we skip the first FF D8 */
+      i=3;
+      j=0;
+      in=0;
 
-    gp_debug_printf(GP_DEBUG_LOW,"canon","Got thumbnail, extracting it with the EXIF lib.\n");
-    if (exif_parse_data(&exifdat)>0){
-                gp_debug_printf(GP_DEBUG_LOW,"canon","Parsed exif data.\n");
-                file = exif_get_thumbnail(&exifdat); // Extract Thumbnail
-                if (file==NULL) {
-                        FILE *fp;
+      /* we want to drop the header to get the thumbnail */
 
-                        gp_debug_printf(GP_DEBUG_LOW,"canon","Thumbnail conversion error, saving data to \
+      thumb = malloc(total);
+      if (!thumb) {
+	perror("malloc");
+	break;
+      }
+
+      while(i<total) {
+	if (file[i]==JPEG_ESC) {
+	  if (file[i+1]==JPEG_BEG &&
+	      ((file[i+3]== JPEG_SOS) || ( file[i+3]== JPEG_A50_SOS))) {
+	    in=1;
+	  }
+	  else if (file[i+1]==JPEG_END) {
+	    in=0;
+	    thumb[j++]=file[i];
+	    thumb[j]=file[i+1];
+	    return thumb;
+	  }
+	}
+	
+	if (in==1)
+	  thumb[j++]=file[i];
+	i++;
+	
+      }
+      return NULL;
+      break;
+
+    default: /* Camera supports EXIF */
+      exifdat.header=file;
+      exifdat.data=file+12;
+
+      gp_debug_printf(GP_DEBUG_LOW,"canon","Got thumbnail, extracting it with the EXIF lib.\n");
+      if (exif_parse_data(&exifdat)>0){
+	gp_debug_printf(GP_DEBUG_LOW,"canon","Parsed exif data.\n");
+	file = exif_get_thumbnail(&exifdat); // Extract Thumbnail
+	if (file==NULL) {
+	  FILE *fp;
+	  
+	  gp_debug_printf(GP_DEBUG_LOW,"canon","Thumbnail conversion error, saving data to \
 canon-death-dump.dat\n");
-                        if ((fp=fopen("canon-death-dump.dat","w"))!=NULL){
-                                fwrite(file,1,total,fp);
-                                fclose(fp);
-                        }
-                        free(file);
-                        return NULL;
-                }
-                return file;
+	  if ((fp=fopen("canon-death-dump.dat","w"))!=NULL){
+	    fwrite(file,1,total,fp);
+	    fclose(fp);
+	  }
+	  free(file);
+	  return NULL;
+	}
+	return file;
+      }
+      return NULL;
+      break;
     }
-    return NULL;
 }
-
 int psa50_delete_file(Camera *camera, const char *name, const char *dir)
 {
 //      struct canon_info *cs = (struct canon_info*)camera->camlib_data;
