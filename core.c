@@ -49,18 +49,15 @@ CameraConfirm  gp_fe_confirm  = NULL;
 CameraPrompt   gp_fe_prompt   = NULL;
 
 static char *result_string[] = {
-        /* GP_OK                        */      N_("No error."),
-        /* GP_ERROR                     */      N_("Generic error."),
-        /* GP_ERROR_NONCRITICAL         */      N_("Noncritical error (deprecated error message!)"),
-        /* GP_ERROR_BAD_PARAMETERS      */      N_("Bad parameters"),
-        /* GP_ERROR_IO                  */      N_("I/O problem"),
-        /* GP_ERROR_CORRUPTED_DATA      */      N_("Corrupted data"),
-        /* GP_ERROR_FILE_EXISTS         */      N_("File exists"),
-        /* GP_ERROR_NO_MEMORY           */      N_("Insufficient memory"),
-        /* GP_ERROR_MODEL_NOT_FOUND     */      N_("Unknown model"),
-        /* GP_ERROR_NOT_SUPPORTED       */      N_("Unsupported operation"),
-        /* GP_ERROR_DIRECTORY_NOT_FOUND */      N_("Directory not found"),
-        /* GP_ERROR_FILE_NOT_FOUND      */      N_("File not found")
+        /* GP_ERROR_BAD_PARAMETERS      -100 */ N_("Bad parameters"),
+        /* GP_ERROR_IO                  -101 */ N_("I/O problem"),
+        /* GP_ERROR_CORRUPTED_DATA      -102 */ N_("Corrupted data"),
+        /* GP_ERROR_FILE_EXISTS         -103 */ N_("File exists"),
+        /* GP_ERROR_NO_MEMORY           -104 */ N_("Insufficient memory"),
+        /* GP_ERROR_MODEL_NOT_FOUND     -105 */ N_("Unknown model"),
+        /* GP_ERROR_NOT_SUPPORTED       -106 */ N_("Unsupported operation"),
+        /* GP_ERROR_DIRECTORY_NOT_FOUND -107 */ N_("Directory not found"),
+        /* GP_ERROR_FILE_NOT_FOUND      -108 */ N_("File not found")
 };
 
 static int have_initted = 0;
@@ -165,14 +162,25 @@ int gp_frontend_register(CameraStatus status, CameraProgress progress,
 char *gp_result_as_string (int result)
 {
         /* Really an error? */
-        if (result >= 0) return _("Unknown error");
+        if (result >= 0) 
+		return _("Unknown error");
+
+//FIXME: Get rid of the following as soon as there is a gp_port_result_as_string...
+	if (result == -1) return _("Generic error");
+	if (result == -2) return _("Timeout error");
+
+//FIXME: When fixing above, fix this, too.
+	/* IO-library error? */
+	if (-result < 100) 
+		return _("Unknown IO-library error");
 
         /* Camlib error? You should have called gp_camera_result_as_string... */
-        if (-result >= 100) return _("Unknown camera library error");
+        if (-result >= 1000) 
+		return _("Unknown camera library error");
 
         /* Do we have an error description? */
-        if (-result < (int) (sizeof (result_string) / sizeof (*result_string)))
-                return _(result_string[-result]);
+        if ((-result - 100) < (int) (sizeof (result_string) / sizeof (*result_string)))
+                return _(result_string[-result - 100]);
 
         return _("Unknown error");
 }

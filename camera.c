@@ -472,7 +472,7 @@ int gp_camera_about (Camera *camera, CameraText *about)
 char *gp_camera_result_as_string (Camera *camera, int result)
 {
 	/* Camlib error? */
-	if (-result >= 100 && (camera != NULL)) {
+	if (-result >= 1000 && (camera != NULL)) {
 		if (camera->functions->result_as_string == NULL)
 			return _("Error description not available");
 		return (camera->functions->result_as_string (camera, result));
