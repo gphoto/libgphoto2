@@ -1,5 +1,7 @@
 camlib_LTLIBRARIES = libgphoto2_ez200.la
 
+EXTRA_DIST = Protocol.txt
+
 INCLUDES =                              		\
         -I$(top_srcdir)/intl				\
         -I$(top_srcdir)/libgphoto2_port			\
