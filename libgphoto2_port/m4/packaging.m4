@@ -20,3 +20,14 @@ AM_CONDITIONAL(ENABLE_RPM, test "$RPMBUILD" != "/bin/false")
 # RPM packages or not.
 AM_CONDITIONAL(RPM_LIBUSB_DEVEL, rpm -q libusb-devel > /dev/null 2>&1)
 ])
+
+AC_DEFUN(GPKG_CHECK_LINUX,
+[
+	is_linux=/bin/false
+	case "$ac_cv_host" in 
+		*linux*)
+			is_linux=/bin/true
+			;;
+	esac
+	AM_CONDITIONAL(HAVE_LINUX, "$is_linux")
+])
