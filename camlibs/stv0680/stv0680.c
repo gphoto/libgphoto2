@@ -125,7 +125,7 @@ int camera_id (CameraText *id)
 int camera_abilities (CameraAbilitiesList *list) 
 {
 	CameraAbilities a;
-	int i;
+	unsigned int i;
 
 	/* 10/11/01/cw rewritten to add cameras via array */
 
@@ -237,10 +237,9 @@ static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePat
 static int camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 {
 	char *data;
-	int result;
-	long int size;
+	int size, result;
 
-	result = stv0680_capture_preview (camera->port, &data, (int*) &size);
+	result = stv0680_capture_preview (camera->port, &data, &size);
 	if (result < 0)
 		return result;
 
