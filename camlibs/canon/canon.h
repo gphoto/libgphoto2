@@ -190,7 +190,7 @@ int canon_int_set_owner_name(Camera *camera, const char *name);
 
 /* path conversion - needs drive letter, and can therefor not be moved to util.c */
 const char *canon2gphotopath(Camera *camera, const char *path);
-char *gphoto2canonpath(Camera *camera, char *path);
+const char *gphoto2canonpath(Camera *camera, const char *path);
 
 /* for the macros abbreviating gp_log* */
 #define GP_MODULE "canon"

@@ -701,8 +701,8 @@ canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, i
  * convert gphoto2 path  (e.g.   "/DCIM/116CANON/IMG_1240.JPG")
  * into canon style path (e.g. "D:\DCIM\116CANON\IMG_1240.JPG")
  */
-char *
-gphoto2canonpath (Camera *camera, char *path)
+const char *
+gphoto2canonpath (Camera *camera, const char *path)
 {
 	static char tmp[2000];
 	char *p;
