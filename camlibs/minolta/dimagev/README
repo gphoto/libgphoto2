@@ -17,7 +17,7 @@ code itself, but sometimes the real spec is nice so readers can find my bugs.
 This library is far from complete. There are plenty of places where better
 sanity checking could be done, such as ensuring that the media is write-enabled
 before trying to capture an image. I will continue to work on it until I buy a
-newer camera.
+newer camera ;>
 
 Notes on specific functions:
     The capture function takes a picture, downloads it, and then deletes it.
