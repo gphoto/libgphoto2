@@ -33,11 +33,11 @@ int GP_SYSTEM_MKDIR (char *dirname) {
 
 GP_SYSTEM_DIR GP_SYSTEM_OPENDIR (char *dirname) {
 
-        GPIOWINDIR *d;
+        GPPORTWINDIR *d;
         DWORD dr;
         int x;
         printf("blah2\n");
-        d = (GPIOWINDIR*)malloc(sizeof(GPIOWINDIR));
+        d = (GPPORTWINDIR*)malloc(sizeof(GPPORTWINDIR));
         d->handle = INVALID_HANDLE_VALUE;
         d->got_first = 0;
         strcpy(d->dir, dirname);
