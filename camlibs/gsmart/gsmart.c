@@ -78,7 +78,6 @@ gsmart_delete_file (CameraPrivateLibrary * lib, unsigned int index)
 	u_int16_t fat_index;
 
 	GP_DEBUG ("* gsmart_delete_file");
-
 	CHECK (gsmart_get_file_info (lib, index, &g_file));
 
 	fat_index = 0xD8000 - g_file->fat_start - 1;
@@ -105,8 +104,8 @@ gsmart_delete_all (CameraPrivateLibrary * lib)
 }
 
 int
-gsmart_request_file (CameraPrivateLibrary * lib, u_int8_t ** buf, unsigned int *len,
-		     unsigned int number)
+gsmart_request_file (CameraPrivateLibrary * lib, u_int8_t ** buf,
+		     unsigned int *len, unsigned int number)
 {
 	struct GsmartFile *g_file;
 	u_int8_t *p, *lp_jpg, *start_of_file;
@@ -134,8 +133,6 @@ gsmart_request_file (CameraPrivateLibrary * lib, u_int8_t ** buf, unsigned int *
 	o_size = size = (p[13] & 0xff) * 0x10000 + (p[12] & 0xff) * 0x100 + (p[11] & 0xff);
 	qIndex = p[7] & 0x07;
 	quality = p[40] & 0xff;
-
-	printf("size: %d or: %d\n", size, g_file->width * g_file->height / 2 * 4);
 
 	/* align */
 	if (size % 64 != 0)
@@ -187,7 +184,7 @@ gsmart_request_file (CameraPrivateLibrary * lib, u_int8_t ** buf, unsigned int *
 	*(lp_jpg++) = 0xD9;
 	free (mybuf);
 	file_size = lp_jpg - start_of_file;
-	start_of_file = realloc(start_of_file, file_size);
+	start_of_file = realloc (start_of_file, file_size);
 	*buf = start_of_file;
 	*len = file_size;
 
@@ -195,8 +192,8 @@ gsmart_request_file (CameraPrivateLibrary * lib, u_int8_t ** buf, unsigned int *
 }
 
 int
-gsmart_request_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf, unsigned int *len,
-			  unsigned int number)
+gsmart_request_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
+			  unsigned int *len, unsigned int number)
 {
 	struct GsmartFile *g_file;
 	unsigned int size;
@@ -227,7 +224,7 @@ gsmart_request_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf, unsigned 
 	size = g_file->width * g_file->height * 2 / 64;
 	t_width = g_file->width / 8;
 	t_height = g_file->height / 8;
-	sprintf (pbm_header, "P6 %d %d 255\n", t_width, t_height);
+	snprintf (pbm_header, sizeof (pbm_header), "P6 %d %d 255\n", t_width, t_height);
 
 	/* align */
 	if (size % 64 != 0)
@@ -297,7 +294,6 @@ gsmart_get_FATs (CameraPrivateLibrary * lib)
 	CHECK (gp_port_usb_msg_read (lib->gpdev, 0, 0, 0x0e20, (u_int8_t *) & upper, 1));
 
 	fatscount = ((upper & 0xFF << 8) | (lower & 0xFF));
-	GP_DEBUG ("fatscount: %d\n", fatscount);
 
 	if (lib->fats)
 		free (lib->fats);
@@ -332,7 +328,7 @@ gsmart_get_FATs (CameraPrivateLibrary * lib)
 			break;
 		type = p[0];
 		if (type == 0x00) {	/* its an image */
-			sprintf (buf, "Image%03d.jpg", ++lib->num_images);
+			snprintf (buf, 13, "Image%03d.jpg", ++lib->num_images);
 			lib->files[file_index].name = strdup (buf);
 			lib->files[file_index].fat_start = index;
 			lib->files[file_index].fat_end = index;
@@ -340,7 +336,7 @@ gsmart_get_FATs (CameraPrivateLibrary * lib)
 			lib->files[file_index].mime_type = FILE_TYPE_IMAGE;
 			file_index++;
 		} else if (type == 0x08) {	/* its the start of an avi */
-			sprintf (buf, "Movie%03d.avi", ++lib->num_movies);
+			snprintf (buf, 13, "Movie%03d.avi", ++lib->num_movies);
 			lib->files[file_index].name = strdup (buf);
 			lib->files[file_index].mime_type = FILE_TYPE_AVI;
 			lib->files[file_index].fat_start = index;

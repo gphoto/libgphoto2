@@ -140,8 +140,10 @@ camera_capture (Camera *camera, CameraCaptureType type,
 	CHECK (gsmart_get_file_info (camera->pl, camera->pl->num_files - 1, &file));
 
 	/* Now tell the frontend where to look for the image */
-	strncpy (path->folder, "/", sizeof (path->folder));
-	strncpy (path->name, file->name, sizeof (path->name));
+	strncpy (path->folder, "/", sizeof (path->folder) - 1);
+	path->folder[sizeof (path->folder) - 1] = '\0';
+	strncpy (path->name, file->name, sizeof (path->name) - 1);
+	path->name[sizeof (path->name) - 1] = '\0';
 
 	CHECK (gp_filesystem_append (camera->fs, path->folder, path->name, context));
 
@@ -176,10 +178,10 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 	if (camera->pl->dirty)
 		CHECK (gsmart_get_info (camera->pl));
 
-	sprintf (tmp,
-		 "Files: %d\n  Images: %4d\n  Movies: %4d\nSpace used: %8d\nSpace free: %8d\n",
-		 camera->pl->num_files, camera->pl->num_images,
-		 camera->pl->num_movies, camera->pl->size_used, camera->pl->size_free);
+	snprintf (tmp, sizeof (tmp),
+		  "Files: %d\n  Images: %4d\n  Movies: %4d\nSpace used: %8d\nSpace free: %8d\n",
+		  camera->pl->num_files, camera->pl->num_images,
+		  camera->pl->num_movies, camera->pl->size_used, camera->pl->size_free);
 	strcat (summary->text, tmp);
 
 	return (GP_OK);
@@ -231,7 +233,10 @@ camera_init (Camera *camera, GPContext *context)
 
 			break;
 		default:
-			fprintf (stderr, "Unsuported port type: %d\n", camera->port->type);
+			gp_context_error (context,
+					  _("Unsupported port type: %d."
+					    "This driver only works with USB"
+					    "cameras.\n"), camera->port->type);
 			return (GP_ERROR);
 			break;
 	}
@@ -246,7 +251,7 @@ camera_init (Camera *camera, GPContext *context)
 	ret = gsmart_reset (camera->pl);
 
 	if (ret < 0) {
-		fprintf (stderr, "* gsmart: Couldn't reset camera.\n");
+		gp_context_error (context, _("Could not reset camera.\n"));
 		free (camera->pl);
 		camera->pl = NULL;
 
