@@ -340,7 +340,7 @@ ptp_getobjecthandles (PTPParams* params, uint32_t storage,
 	*(int *)(req.data+8)=htod32(associationOH);
 
 	ret=ptp_transaction(params, &req, PTP_OC_GetObjectHandles,
-		PTP_DP_GETDATA | PTP_RQ_PARAM1, PTP_REQ_DATALEN, &oh);
+		PTP_DP_GETDATA | PTP_RQ_PARAM3, PTP_REQ_DATALEN, &oh);
 	ptp_unpack_OH(params, &oh, objecthandles);
 	return ret;
 }
