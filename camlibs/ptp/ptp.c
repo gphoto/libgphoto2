@@ -245,7 +245,7 @@ ptp_transaction (PTPParams* params, PTPReq* req, uint16_t code,
 
 // PTP Events wait for or check mode
 #define PTP_EVENT_CHECK			0x0000	// waits for
-#define PTP_EVENT_CHECK_FAST		0x0000	// checks
+#define PTP_EVENT_CHECK_FAST		0x0001	// checks
 
 static uint16_t
 ptp_event (PTPParams* params, PTPEvent* event, int wait)
