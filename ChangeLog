@@ -1,3 +1,20 @@
+2002-03-24  Lutz Müller <lutz@users.sourceforge.net>
+
+	Patch by Patrick Mansfield <patman@aracnet.com> (without ChangeLog
+	entry, therefore I am just quoting the e-mail):
+
+	* frontends/command-line/gphoto2-cmd-config.c: This patch fixes
+	  scaling when using the command line interface with
+	  a range widget with an increment value with non-zero decimal digits
+	  (like .5). (...) I also used the A_STANDOUT (like Cliff's patch)
+	  rather than "-" so negative numbers work correctly. Also included is
+	  a change to set page increment based on the range of
+	  values, so really large ranges can more easily be adjusted. The page
+	  increment is set so you can go through all values in 20 key strokes
+	  or fewer - this still doesn't work well, but it is better than
+	  trying to go from 0 -> 8000000 in chunks of 10. It is clunky in
+	  that the page increment is not always a multiple of the increment.
+
 2002-03-23  Lutz Müller <lutz@users.sourceforge.net>
 
 	Patch by Cliff Wright <cliff@snipe444.org> (comments quoted from 
