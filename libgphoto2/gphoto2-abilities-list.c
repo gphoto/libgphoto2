@@ -390,7 +390,7 @@ gp_abilities_list_lookup_id (CameraAbilitiesList *list, const char *id)
  * @index: index
  * @model:
  *
- * Retreives the model of entry with given @index.
+ * Retrieves the model of entry with given @index.
  *
  * Return value: a gphoto2 error code
  **/
@@ -439,7 +439,7 @@ gp_abilities_list_lookup_model (CameraAbilitiesList *list, const char *model)
  * @index: index
  * @abilities: #CameraAbilities
  *
- * Retreives the camera @abilities of entry with supplied @index. Typically,
+ * Retrieves the camera @abilities of entry with supplied @index. Typically,
  * you would call #gp_camera_set_abilities afterwards in order to prepare the
  * initialization of a camera.
  *

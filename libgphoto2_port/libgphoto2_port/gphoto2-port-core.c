@@ -153,7 +153,7 @@ gp_port_core_init (void)
 /**
  * gp_port_core_count:
  *
- * Counts the devices gphoto2-port can address. You can then retreive
+ * Counts the devices gphoto2-port can address. You can then retrieve
  * some information about each device using #gp_port_core_get_info.
  *
  * Return value: The number of devices or a gphoto2-port error code
@@ -172,7 +172,7 @@ gp_port_core_count (void)
  * @x: index
  * @info:
  *
- * Retreives information about a device. You can get the total number of
+ * Retrieves information about a device. You can get the total number of
  * available devices with #gp_port_core_count.
  *
  * Return value: a gphoto2-port error code

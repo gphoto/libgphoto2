@@ -266,7 +266,7 @@ gp_widget_set_name (CameraWidget *widget, const char *name)
  * @widget: a #CameraWidget
  * @id: 
  *
- * Retreives the unique id of the CameraWidget.
+ * Retrieves the unique id of the CameraWidget.
  *
  * Return value: a gphoto2 error code.
  **/
@@ -293,7 +293,7 @@ gp_widget_set_changed (CameraWidget *widget, int changed)
  * @widget: a #CameraWidget
  * @type:
  *
- * Retreives the type of the CameraWidget.
+ * Retrieves the type of the CameraWidget.
  *
  * Return value: a gphoto2 error code.
  **/
@@ -311,7 +311,7 @@ gp_widget_get_type (CameraWidget *widget, CameraWidgetType *type)
  * @widget: a #CameraWidget
  * @label:
  *
- * Retreives the label of the CameraWidget.
+ * Retrieves the label of the CameraWidget.
  *
  * Return value: a gphoto2 error code.
  **/
@@ -382,7 +382,7 @@ gp_widget_set_value (CameraWidget *widget, void *value)
  * @widget: a #CameraWidget
  * @value:
  *
- * Retreives the value of the CameraWidget.
+ * Retrieves the value of the CameraWidget.
  *
  * Return value: a gphoto2 error code.
  **/
@@ -497,7 +497,7 @@ gp_widget_count_children (CameraWidget *widget)
  * @child_number: the number of the child
  * @child:
  *
- * Retreives the child number @child_number of the parent.
+ * Retrieves the child number @child_number of the parent.
  *
  * Return value: a gphoto2 error code.
  **/
@@ -520,7 +520,7 @@ gp_widget_get_child (CameraWidget *widget, int child_number,
  * @label: the label of the child
  * @child:
  *
- * Retreives the child with label @label of the CameraWidget.
+ * Retrieves the child with label @label of the CameraWidget.
  *
  * Return value: a gphoto2 error code.
  **/
@@ -558,7 +558,7 @@ gp_widget_get_child_by_label (CameraWidget *widget, const char *label,
  * @id: the id of the child
  * @child:
  *
- * Retreives the child with id @id of the widget.
+ * Retrieves the child with id @id of the widget.
  *
  * Return value: a gphoto2 error code.
  **/
@@ -594,7 +594,7 @@ gp_widget_get_child_by_id (CameraWidget *widget, int id, CameraWidget **child)
  * @widget: a #CameraWidget
  * @name: the name of the child
  *
- * Retreives the child with name @name of the widget.
+ * Retrieves the child with name @name of the widget.
  *
  * Return value: a gphoto2 error code.
  **/
@@ -641,7 +641,7 @@ gp_widget_get_parent (CameraWidget *widget, CameraWidget **parent)
  * @widget: a #CameraWidget
  * @root:
  *
- * Retreives the root of the CameraWidget.
+ * Retrieves the root of the CameraWidget.
  *
  * Return value: a gphoto2 error code.
  **/
@@ -691,7 +691,7 @@ gp_widget_set_range (CameraWidget *range, float min, float max, float increment)
  * @max:
  * @increment:
  *
- * Retreives some range parameters of the CameraWidget.
+ * Retrieves some range parameters of the CameraWidget.
  *
  * Return value: a gphoto2 error code.
  **/
@@ -758,7 +758,7 @@ gp_widget_count_choices (CameraWidget *widget)
  * @choice_number:
  * @choice:
  *
- * Retreives the choice number @choice_number.
+ * Retrieves the choice number @choice_number.
  *
  * Return value: a gphoto2 error code
  **/

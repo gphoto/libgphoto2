@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2001-10-24 21:16+0200\n"
+"POT-Creation-Date: 2001-10-25 00:47+0200\n"
 "PO-Revision-Date: 2001-10-24 21:20+02:00\n"
 "Last-Translator: Colin Marquardt <colin@marquardt-home.de>\n"
 "Language-Team: German <de@li.org>\n"

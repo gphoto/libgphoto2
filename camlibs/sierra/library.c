@@ -915,7 +915,7 @@ int sierra_capture_preview (Camera *camera, CameraFile *file)
 	packet[5] = 0x05;
 	packet[6] = 0x00;
 
-	/* Capture the preview, retreive it and set the mime type */
+	/* Capture the preview, retrieve it and set the MIME type */
 	CHECK (do_capture (camera, packet));
 	CHECK (sierra_get_string_register (camera, 14, 0, file, NULL, NULL));
 	CHECK (gp_file_set_mime_type (file, "image/jpeg"));

@@ -168,7 +168,7 @@ gp_camera_set_abilities (Camera *camera, CameraAbilities abilities)
  * @camera: a #Camera
  * @abilities:
  *
- * Retreives the @abilities of the @camera. 
+ * Retrieves the @abilities of the @camera. 
  *
  * Return value: a gphoto2 error code
  **/
@@ -263,7 +263,7 @@ gp_camera_set_port_path (Camera *camera, const char *port_path)
  * @camera: a #Camera
  * @port_path:
  *
- * Retreives the path to the port the @camera is currently using.
+ * Retrieves the path to the port the @camera is currently using.
  *
  * Return value: a gphoto2 error code.
  **/
@@ -313,7 +313,7 @@ gp_camera_set_port_name (Camera *camera, const char *port_name)
  * @camera: a #Camera
  * @port_name:
  *
- * Retreives the name of the port the @camera is currently using.
+ * Retrieves the name of the port the @camera is currently using.
  *
  * Return value: a gphoto2 error code
  **/
@@ -373,7 +373,7 @@ gp_camera_set_port_speed (Camera *camera, int speed)
  * gp_camera_get_port_speed:
  * @camera: a #Camera
  *
- * Retreives the current speed.
+ * Retrieves the current speed.
  *
  * Return value: The current speed or a gphoto2 error code
  **/
@@ -762,7 +762,7 @@ gp_camera_init (Camera *camera)
  * @camera: a #Camera
  * @window:
  *
- * Retreives a configuration @window for the @camera. This window can be
+ * Retrieves a configuration @window for the @camera. This window can be
  * used for construction of a configuration dialog.
  *
  * Return value: a gphoto2 error code
@@ -791,7 +791,7 @@ gp_camera_get_config (Camera *camera, CameraWidget **window)
  * @camera: a #Camera
  * @window: a #CameraWidget
  *
- * Sets the configuration. Typically, a @window is retreived using
+ * Sets the configuration. Typically, a @window is retrieved using
  * #gp_camera_get_config and passed to this function in order to adjust
  * the settings on the camera.
  *
@@ -821,7 +821,7 @@ gp_camera_set_config (Camera *camera, CameraWidget *window)
  * @camera: a #Camera
  * @summary: a #CameraText
  *
- * Retreives a camera @summary. This summary typically contains information
+ * Retrieves a camera @summary. This summary typically contains information
  * like manufacturer, pictures taken, or generally information that is
  * not configurable.
  *
@@ -851,7 +851,7 @@ gp_camera_get_summary (Camera *camera, CameraText *summary)
  * @camera: a #Camera
  * @manual: a #CameraText
  *
- * Retreives the @manual for given @camera. This manual typically contains
+ * Retrieves the @manual for given @camera. This manual typically contains
  * information about using the camera.
  *
  * Return value: a gphoto2 error code
@@ -878,7 +878,7 @@ gp_camera_get_manual (Camera *camera, CameraText *manual)
  * @camera: a #Camera
  * @about: a #CameraText
  *
- * Retreives information about the camera driver. Typically, this information
+ * Retrieves information about the camera driver. Typically, this information
  * contains name and address of the author, acknowledgements, etc.
  *
  * Return value: a gphoto2 error code
@@ -1079,7 +1079,7 @@ gp_camera_folder_put_file (Camera *camera, const char *folder, CameraFile *file)
  * @folder: a folder
  * @window: a #CameraWidget
  *
- * Retreives the configuration @window of a @folder. This function is similar
+ * Retrieves the configuration @window of a @folder. This function is similar
  * to #gp_camera_get_config. The only difference is that it operates on a
  * folder.
  *
@@ -1140,7 +1140,7 @@ gp_camera_folder_set_config (Camera *camera, const char *folder,
  * @file: the name of the file
  * @info:
  *
- * Retreives information about a @file.
+ * Retrieves information about a @file.
  *
  * Return value: a gphoto2 error code
  **/
@@ -1362,7 +1362,7 @@ gp_camera_file_delete (Camera *camera, const char *folder, const char *file)
  * @format:
  * ...:
  *
- * Saves an error message that can later be retreived by #gp_camera_get_error.
+ * Saves an error message that can later be retrieved by #gp_camera_get_error.
  * Normally, you would call this function in a camera driver prior 
  * return in some error code. You don't want to call this function when 
  * simply passing errors upwards. In frontends, you call this function with
@@ -1404,7 +1404,7 @@ gp_camera_set_error (Camera *camera, const char *format, ...)
  * gp_camera_get_error:
  * @camera: a #Camera
  *
- * Retreives an error message. Typically, this function is called by 
+ * Retrieves an error message. Typically, this function is called by 
  * frontends in order to provide the user with additional information 
  * why an operation failed.
  *

@@ -1,3 +1,7 @@
+2001-10-25  Colin Marquardt  <colin@marquardt-home.de>
+
+	* (Repository): s/retreiv/retriev/g
+
 2001-10-24 Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* camlibs/jamcam/library.h: removed completely unnecessary compiler warning

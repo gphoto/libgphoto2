@@ -446,7 +446,7 @@ int kodak_dc210_get_thumbnail (DC210Data * dd, int picNum, CameraFile *file)
             }
         }
         
-        /* get to see if the thumbnail was retreived */
+        /* get to see if the thumbnail was retrieved */
         if (success)
         {
             kodak_dc210_command_complete(dd);

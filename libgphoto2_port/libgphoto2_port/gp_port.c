@@ -112,7 +112,7 @@ gp_port_new (GPPort **dev, GPPortType type)
 #ifndef GP_PORT_SUPPORTED_USB
 		gp_log (GP_LOG_ERROR, "gphoto2-port", _("libgphoto2_port "
 			"has been compiled without USB support. This probably "
-			"means you didn't have libusb installed prior "
+			"means you didn't have libusb installed prior to "
 			"compilation of gphoto2."));
 		return GP_ERROR_IO_SUPPORTED_USB;
 #endif
@@ -491,7 +491,7 @@ int gp_port_usb_msg_read (GPPort *dev, int request, int value, int index,
  * @format:
  * ...:
  *
- * Sets an error message that can later be retreived using #gp_port_get_error.
+ * Sets an error message that can later be retrieved using #gp_port_get_error.
  *
  * Return value: a gphoto2 error code
  **/
@@ -519,7 +519,7 @@ gp_port_set_error (GPPort *port, const char *format, ...)
  * gp_port_get_error:
  * @port: a #GPPort
  *
- * Retreives an error message from a @port. If you want to make sure that
+ * Retrieves an error message from a @port. If you want to make sure that
  * you get correct error messages, you need to call #gp_port_set_error with
  * an error message of %NULL each time before calling another port-related
  * function of which you want to check the return value.
