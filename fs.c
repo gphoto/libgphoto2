@@ -47,6 +47,7 @@ int gp_filesystem_populate (CameraFilesystem *fs, char *folder, char *format, in
 
 	for (x=0; x<fs->count; x++) {
 		if (strcmp(fs->folder[x]->name, folder) == 0) {
+			/* If folder already populated, free it */
 			for (y=0; y<fs->folder[x]->count; y++)
 				free (fs->folder[x]->file[y]);
 			free(fs->folder[x]);
