@@ -123,10 +123,10 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
 	strcpy(manual->text, 
 	_(
         "This driver supports cameras with Mars MR97310 chip (and direct\n"
-        "equivalents ??Pixart PACx07??) and should work with gtkam.\n"
+        "equivalents ??Pixart PACx07?\?) and should work with gtkam.\n"
 	"The driver allows you to get\n"
 	"   - thumbnails for gtkam\n"
-	"   - full images (640x480 or 320x240PPM format) (??352x288 & 176x144??)\n"
+	"   - full images (640x480 or 320x240PPM format) (??352x288 & 176x144?\?)\n"
 	"The camera does not support deletion of photos, nor uploading\n"
 	"of data. This driver does not support the optional photo\n" 
 	"compression mode.\n" 

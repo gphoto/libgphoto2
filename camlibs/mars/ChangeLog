@@ -1,3 +1,7 @@
+2004-12-22  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* library.c (camera_manual): fixed some trigraph issues.
+
 2004-10-26  Theodore Kilgore <kilgota@auburn.edu>
 	* library.c: ID for Haimei HE-501A, reported by
 		     Scott MacKenzie <irrational@poboxes.com>  

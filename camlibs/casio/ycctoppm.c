@@ -42,9 +42,9 @@ int QVycctoppm(const unsigned char *ycc, long int yccSize, int width, int height
   long cr, cb;
   long L;
   long r,g,b;
-  unsigned char *Y;
-  unsigned char *Cr;
-  unsigned char *Cb;
+  const unsigned char *Y;
+  const unsigned char *Cr;
+  const unsigned char *Cb;
 
   snprintf(header,sizeof(header),"P6\n%d %d\n255\n",width,height);
   headerSize=strlen(header);

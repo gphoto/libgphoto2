@@ -73,6 +73,7 @@ static int enigma13_about (Camera *camera, CameraText *about, GPContext *context
 }
 
 
+#if 0
 /*
  * This function probes the camera to get all the storages media
  * supported (sdram, flash, card)
@@ -93,6 +94,7 @@ static int enigma13_detect_storage_type (Camera *camera)
                         , buf[0], buf[1], buf[2]);
         return GP_OK;
 }
+#endif
 
 
 
@@ -141,6 +143,7 @@ static int enigma13_wait_for_ready(Camera *camera)
 
 
 
+#if 0
 /*
  * Get the number of images in cam
  * 
@@ -158,6 +161,7 @@ static int enigma13_get_filecount (Camera *camera, int *filecount)
         *filecount = response;
         return GP_OK;
 }
+#endif
 
 
 
