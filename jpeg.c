@@ -1,20 +1,27 @@
 /* This code was written by Nathan Stenzel for gphoto */
 /* GPL */
-/* It might be safe enough to put this into the Makefile now */
-
-/* jpeg_add_marker need to have the data copying code put in. memcpy? */
 
 #include <stdio.h>
 
 struct chunk{
-    long size;
+    int size;
     unsigned char *data;
 };
 
-chunk_new(struct chunk *mychunk, long length)
+chunk_new(struct chunk *mychunk, int length)
 {
     mychunk->size=length;
+    printf("New chunk of size %li\n", mychunk->size);
     mychunk->data = (char *)malloc(length);
+}
+
+chunk_print(struct chunk *mychunk)
+{
+    int x;
+    printf("Size=%li\n", mychunk->size);
+    for (x=0; x<mychunk->size; x++)
+        printf("%hX ", mychunk->data[x]);
+    printf("\n");
 }
 
 chunk_destroy(struct chunk *mychunk)
@@ -47,54 +54,113 @@ const char markers[] = {
     start, APPO, quantization, huffman, SsSeAhAl
 };
 
-char jpeg_findamarker(char *id, long *location, struct chunk picture, long start) {
-    long position;
+char jpeg_findff(int *location, struct chunk *picture) {
     char x;
-    for (position=start; position<picture.size; position++)
-        if (picture.data[position]==0xff)
+//printf("Entered jpeg_findamarker!!!!!!\n");
+    while(*location<picture->size)
+    {
+        printf("%hX ",picture->data[*location]);
+        if (picture->data[*location]==0xff)
         {
-        *id=picture.data[position+1];
-        *location=position;
+//        printf("return success!\n");
         return 1;
         }
+    (*location)++;
+    }
+//    printf("return failure!\n");
     return 0;
 }
 
-char jpeg_findactivemarker(char *id, long *location, struct chunk picture, long start) {
-    long position=start;
+char jpeg_findactivemarker(char *id, int *location, struct chunk *picture) {
+    int position=start;
     char temp=*id;
-    while(jpeg_findamarker(&temp, &position, picture, position))
-        if (temp) {
-            *id=temp;
-            *location=position;
+//    printf("Entered jpeg_findactivemarker!!!!!!!!\n");
+    while(jpeg_findff(location, picture))
+        if (picture->data[*location+1]) {
+            *id=picture->data[*location+1];
             return 1;
         }
     return 0;
 }
 
-void jpeg_add_marker(struct jpeg *myjpeg, struct chunk picture, long location)
+void jpeg_add_marker(struct jpeg *myjpeg, struct chunk *picture, int start, int end)
 {
-    long length;
-    long position = location;
-    char id=0;
-    if (jpeg_findactivemarker(&id, &position, picture, position))
-        length=position-location+1;
-        else
-        length=picture.size-location+1;
+    int length;
+    length=(int)(end-start+1);
+    printf("Add marker #%i starting from %li and ending at %li for a length of %li\n", myjpeg->count, start, end, length);
     chunk_new(&(myjpeg->marker[myjpeg->count]), length);
-// copy info to marker chunk here
-    memcpy(myjpeg->marker[myjpeg->count].data, picture.data+location, length);
-//    gp_debug_printf (GP_DEBUG_LOW, "jpeg.c", "JPEG marker 0xFF %c", picture.data[location+1]);
-    printf ("JPEG marker 0xFF %c", picture.data[location+1]);
+    printf("Read length is: %li\n", myjpeg->marker[myjpeg->count].size);
+    memcpy(myjpeg->marker[myjpeg->count].data, picture->data+start, length);
+    chunk_print(&(myjpeg->marker[myjpeg->count]));
     myjpeg->count++;
 }
 
-char jpeg_parse(struct jpeg *myjpeg, struct chunk picture)
+char jpeg_parse(struct jpeg *myjpeg, struct chunk *picture)
 {
-    long position=0;
+    int position=0;
+    int lastposition;
+    char index=0;
     char id;
-    while (jpeg_findactivemarker(&id, &position, picture, position))
-        jpeg_add_marker(myjpeg, picture, position);
-/* add the last marker now */
-    jpeg_add_marker(myjpeg, picture, position);
+    if (picture->data[0]!=0xff)
+        {
+            jpeg_findactivemarker(&id, &position, picture);
+            jpeg_add_marker(myjpeg,picture,0,position-1);
+            lastposition=position;
+            position=position++;
+        }
+        else
+        {
+        lastposition=position;
+        position+=2;
+        jpeg_findactivemarker(&id, &position, picture);
+        jpeg_add_marker(myjpeg,picture,0,position-1);
+        lastposition=position;
+        position+=2;
+        }
+    while (position<picture->size)
+        {
+            jpeg_findactivemarker(&id, &position, picture);
+            jpeg_add_marker(myjpeg,picture,lastposition,position-1);
+            lastposition=position;
+            position+=2;
+        }
 }
+
+char jpeg_print(struct jpeg *myjpeg)
+{
+int c,x;
+printf("There are %i markers\n", myjpeg->count);
+for (c=0; c < myjpeg->count; c++)
+    {
+    chunk_print(&myjpeg->marker[c]);
+    }
+}
+
+/* TEST CODE SECTION */
+/*
+char testdata[] ={ 0xff, 1,2,3,4,0xff,6,0xff,0xff,0xff,10,11 };
+
+int main()
+{
+struct chunk picture;
+struct jpeg myjpeg;
+char id;
+int location=0,x;
+jpeg_init(&myjpeg);
+picture.data=testdata;
+picture.size=sizeof(testdata);
+printf("testdata size is %i\n",picture.size);
+
+printf("Call jpeg_parse\n");
+jpeg_parse(&myjpeg,&picture);
+
+printf("\nPrint the jpeg table\n");
+jpeg_print(&myjpeg);
+printf("\n\nChunk contruction/deconstruction test\n");
+chunk_new(&picture,10);
+for (x=0; x<10; x++) picture.data[x]=x;
+for (x=0; x<10; x++) printf("%hX ",picture.data[x]);
+chunk_destroy(&picture);
+printf("\n");
+}
+*/
