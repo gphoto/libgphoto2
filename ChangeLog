@@ -1,5 +1,10 @@
 2001-10-22 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* frontends/command-line/main.c: Don't use gphoto2-core.h - use
+	  gphoto2-abilities-list.h.
+
+2001-10-22 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* frontends/command-line/main.c: Adjust to changes in
 	  gphoto2-port-log.h.
 

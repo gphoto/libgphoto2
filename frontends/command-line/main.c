@@ -268,17 +268,21 @@ OPTION_CALLBACK (auto_detect)
 OPTION_CALLBACK (abilities)
 {
         int x = 0;
+	CameraAbilitiesList *al;
         CameraAbilities abilities;
 
         if (!strlen (glob_model)) {
-                cli_error_print ("Must specify a camera model using \"%scamera model\"",LONG_OPTION);
+		cli_error_print (_("You need to specify a camera model"));
                 return (GP_ERROR_BAD_PARAMETERS);
         }
 
-        CHECK_RESULT (gp_camera_abilities_by_name (glob_model, &abilities));
+	CHECK_RESULT (gp_abilities_list_new (&al));
+	CHECK_RESULT (gp_abilities_list_load (al));
+	CHECK_RESULT (x = gp_abilities_list_lookup_model (al, glob_model));
+	CHECK_RESULT (gp_abilities_list_get_abilities (al, x, &abilities));
+	CHECK_RESULT (gp_abilities_list_free (al));
 
         /* Output a parsing friendly abilities table. Split on ":" */
-
         printf("Abilities for camera:            : %s\n",
                 abilities.model);
         printf("Serial port support              : %s\n",
@@ -324,38 +328,42 @@ OPTION_CALLBACK (abilities)
 OPTION_CALLBACK(list_cameras) {
 
         int x, n;
-        const char *buf;
-        CameraAbilities abilities;
+	CameraAbilitiesList *al;
+        CameraAbilities a;
 
         cli_debug_print("Listing Cameras");
 
-        CHECK_RESULT (n = gp_camera_count ());
+	CHECK_RESULT (gp_abilities_list_new (&al));
+	CHECK_RESULT (gp_abilities_list_load (al));
+        CHECK_RESULT (n = gp_abilities_list_count (al));
 
         if (glob_quiet)
-                printf("%i\n", n);
-           else
-                printf("Number of supported cameras: %i\nSupported cameras:\n", n);
+                printf ("%i\n", n);
+	else {
+                printf (_("Number of supported cameras: %i\n"), n);
+	   	printf (_("Supported cameras:\n"));
+	}
 
         for (x = 0; x < n; x++) {
-                CHECK_RESULT (gp_camera_name (x, &buf));
-                CHECK_RESULT (gp_camera_abilities (x, &abilities));
+		CHECK_RESULT (gp_abilities_list_get_abilities (al, x, &a));
 
                 if (glob_quiet)
-                        printf("%s\n", buf);
+                        printf("%s\n", a.model);
                 else
-                        switch (abilities.status) {
+                        switch (a.status) {
                         case GP_DRIVER_STATUS_TESTING:
-                                printf ("\t\"%s\" (TESTING)\n", buf);
+                                printf ("\t\"%s\" (TESTING)\n", a.model);
                                 break;
                         case GP_DRIVER_STATUS_EXPERIMENTAL:
-                                printf ("\t\"%s\" (EXPERIMENTAL)\n", buf);
+                                printf ("\t\"%s\" (EXPERIMENTAL)\n", a.model);
                                 break;
                         default:
                         case GP_DRIVER_STATUS_PRODUCTION:
-                                printf ("\t\"%s\"\n", buf);
+                                printf ("\t\"%s\"\n", a.model);
                                 break;
                         }
         }
+	CHECK_RESULT (gp_abilities_list_free (al));
 
         return (GP_OK);
 }
@@ -371,27 +379,27 @@ OPTION_CALLBACK(list_cameras) {
 OPTION_CALLBACK(print_usb_usermap) {
 
 	int x, n;
-        const char *buf;
-        CameraAbilities abilities;
+	CameraAbilitiesList *al;
+        CameraAbilities a;
 
         cli_debug_print("Listing Cameras");
 
-        CHECK_RESULT (n = gp_camera_count ());
+	CHECK_RESULT (gp_abilities_list_new (&al));
+	CHECK_RESULT (gp_abilities_list_load (al));
+	CHECK_RESULT (n = gp_abilities_list_count (al));
 
         for (x = 0; x < n; x++) {
-		CHECK_RESULT (gp_camera_name (x, &buf));
-		CHECK_RESULT (gp_camera_abilities (x, &abilities));
-
-		if ((abilities.usb_vendor != 0) && (abilities.usb_product != 0)) {
-			/* FIXME: could there be a usb_vendor or usb_product of 0? */
-			printf(GP_USB_HOTPLUG_SCRIPT "               "
+		CHECK_RESULT (gp_abilities_list_get_abilities (al, x, &a));
+		if (a.usb_vendor && a.usb_product) {
+			printf (GP_USB_HOTPLUG_SCRIPT "               "
 			       "0x0000      0x%04x   0x%04x    0x0000       "
 			       "0x0000       0x00         0x00            "
 			       "0x00            0x00            0x00               "
 			       "0x00               0x00000000\n",
-			       abilities.usb_vendor, abilities.usb_product);
+			       a.usb_vendor, a.usb_product);
 		}
         }
+	CHECK_RESULT (gp_abilities_list_free (al));
 
         return (GP_OK);
 }
@@ -938,6 +946,7 @@ set_globals (void)
 		CHECK_RESULT (model);
 		CHECK_RESULT (gp_abilities_list_get_abilities (al, model,
 							       &abilities));
+		CHECK_RESULT (gp_abilities_list_free (al));
 		CHECK_RESULT (gp_camera_set_abilities (glob_camera, abilities));
 	}
 
@@ -1023,10 +1032,11 @@ signal_exit (int signo)
         if (!glob_quiet)
                 printf("\nExiting gPhoto...\n");
 
-        /* Exit gPhoto core */
-        if (glob_camera)
-               gp_camera_free(glob_camera);
-        gp_exit();
+	/* If we've got a camera, unref it */
+        if (glob_camera) {
+		gp_camera_unref (glob_camera);
+		glob_camera = NULL;
+	}
 
         if (strlen(glob_owd)>0)
                 chdir(glob_owd);
@@ -1107,10 +1117,12 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n");
 //       printf("\nErrors occuring beyond this point are 'expected' on OS/2\ninvestigation pending\n");
 #endif
 
-        /* Exit gPhoto core */
-        if (glob_camera)
-               gp_camera_free(glob_camera);
-        gp_exit();
+	/* Unref existing cameras */
+	if (glob_camera) {
+		gp_camera_unref (glob_camera);
+		glob_camera = NULL;
+	}
+
         return (EXIT_SUCCESS);
 }
 
