@@ -1,3 +1,7 @@
+2002-11-01  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+	
+	* configure.in: 2.1.1dev9
+	
 2002-10-17  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
 	* libgphoto2/gphoto2-abilities-list.c: removed the fscking "can't load *.la" message
