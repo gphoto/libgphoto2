@@ -9,23 +9,24 @@
 
 
 /****************************************************************/
-/* Type Definitions						*/
-/****************************************************************/
-typedef enum {
-	QM100,
-	QM200} qmxxx_protocol_t;
-
-
-/****************************************************************/
 /* Variables                                                    */
 /****************************************************************/
 gboolean debug_flag = FALSE;
 
 
-char *models_qm100[] = {"Konica Q-EZ",	"Konica Q-M100", "HP PhotoSmart C20", "HP PhotoSmart C30", NULL};
+char *models_qm100[] = {
+	"Konica Q-EZ",	
+	"Konica Q-M100", 
+	"Konica Q-M100V",
+	"HP PhotoSmart C20", 
+	"HP PhotoSmart C30", 
+	NULL};
 
 
-char *models_qm200[] = {"Konica Q-M200", "HP PhotoSmart C200",	NULL};
+char *models_qm200[] = {
+	"Konica Q-M200", 
+	"HP PhotoSmart C200",	
+	NULL};
 
 
 char **models[2] = {models_qm100, models_qm200};
@@ -395,6 +396,7 @@ int camera_init (Camera *camera, CameraInit *init)
 
 int camera_exit (Camera *camera)
 {
+	if (error_happened (k_exit ())) return (GP_ERROR);
 	return (GP_OK);
 }
 
