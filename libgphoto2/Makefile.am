@@ -19,7 +19,7 @@ libgphoto2_la_SOURCES = 	\
 	gphoto2-result.c	\
 	gphoto2-setting.c	\
 	gphoto2-widget.c
-libgphoto2_la_LIBADD = -lm
+libgphoto2_la_LIBADD = -lm $(INTLLIBS)
 
 libgphoto2includedir = $(includedir)/gphoto2
 libgphoto2include_HEADERS =	\

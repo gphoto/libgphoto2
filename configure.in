@@ -4,6 +4,7 @@ AC_INIT(libgphoto2/gphoto2.h)
 AM_CONFIG_HEADER(libgphoto2/config.h)
 AM_INIT_AUTOMAKE(gphoto2, 2.0beta4dev2)
 AM_MAINTAINER_MODE
+AC_LIBTOOL_DLOPEN
 
 dnl Checks for programs.
 AC_PROG_CC
@@ -30,7 +31,7 @@ AC_CHECK_FUNC(gettext, gettext_without_libintl=true)
 # we may even require libintl.
 dnl AC_CHECK_LIB(intl, gettext, [LIBS="$LIBS -lintl"])
 if test "$gettext_without_libintl" != "true"; then
-        AC_CHECK_LIB(intl, gettext)
+        AC_CHECK_LIB(intl, gettext, [INTLLIBS="$INTLLIBS -lintl"])
 fi
 
 dnl Turn on debugging and all warnings

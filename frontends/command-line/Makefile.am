@@ -43,4 +43,5 @@ gphoto2_LDFLAGS = -export-dynamic
 gphoto2_LDADD =				\
 	../../libgphoto2/libgphoto2.la	\
 	$(CDK_LIBS) $(AA_LIBS)		\
-	$(JPEG_LIBS)
+	$(JPEG_LIBS) 			\
+	$(INTLLIBS)

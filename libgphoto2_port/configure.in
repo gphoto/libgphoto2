@@ -19,6 +19,7 @@ VERSION=$LIBGPPORT_VERSION
 
 AM_INIT_AUTOMAKE(libgphoto2_port, $VERSION)
 AM_MAINTAINER_MODE
+AC_LIBTOOL_DLOPEN
 
 dnl Checks for programs.
 AC_PROG_CC
@@ -45,7 +46,7 @@ AC_CHECK_FUNC(gettext, gettext_without_libintl=true)
 # we may even require libintl.
 dnl AC_CHECK_LIB(intl, gettext, [LIBS="$LIBS -lintl"])
 if test "$gettext_without_libintl" != "true"; then
-        AC_CHECK_LIB(intl, gettext)
+        AC_CHECK_LIB(intl, gettext, [INTLLIBS="$INTLLIBS -lintl"])
 fi
 
 dnl Turn on debugging and catch GNU features incompatible with ANSI C.

@@ -1,3 +1,12 @@
+2001-11-10 Dan Fandrich <dan@coneharvesters.com>
+	* configure.in
+	* frontends/command-line/Makefile.am
+	* libgphoto2/Makefile.am
+	* libgphoto2_port/configure.in
+	* libgphoto2_port/libgphoto2_port/Makefile.am: libtool won't generate
+	  shared dlopenable libraries when given -lintl and libintl is a
+	  static library.  Now, only use -lintl when linking other targets.
+
 2001-11-29  Hans Ulrich Niedermann <hun@n-dimensional.de>
 	* Makefile.am: enable RPM and CVS rules only when useful
 	* configure.in: init RPM packaging
