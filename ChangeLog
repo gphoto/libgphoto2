@@ -1,3 +1,8 @@
+2002-01-27 Dan Fandrich <dan@coneharvesters.com>
+
+	* frontends/command-line/gphoto2-cmd-capture.c: Fixed security problem
+	  in creating temporary file for JPEG preview.
+
 2002-01-27  Lutz Müller <lutz@users.sourceforge.net>
 
 	* libgphoto2/gphoto2-widget.c: Size of CameraWidget->[labelname] is

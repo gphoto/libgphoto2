@@ -30,6 +30,7 @@
 
 #if HAVE_JPEG
 #include <jpeglib.h>
+#include <unistd.h>
 #endif
 
 #ifdef ENABLE_NLS
@@ -91,12 +92,20 @@ gp_cmd_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		if (!strcmp (type, GP_MIME_JPEG)) {
 			struct jpeg_decompress_struct cinfo;
 			struct jpeg_error_mgr pub;
-			int i;
+			int i,fd;
 			unsigned char *dptr, **lptr, *lines[4];
 			FILE *f;
+			char tempname[64];
 
-			gp_file_save (file, "/tmp/gphoto.jpg");
-			f = fopen ("/tmp/gphoto.jpg", "r");
+			/* Create a unique temporary file to download into */
+			strcpy(tempname,"/tmp/gphoto.XXXXXX");
+			fd = mkstemp(tempname);
+			if (fd < 0)
+				return (GP_ERROR);
+			close(fd);
+
+			gp_file_save (file, tempname);
+			f = fopen (tempname, "rb");
 			if (!f) {
 				aa_close (c);
 				return (GP_ERROR);
@@ -149,6 +158,7 @@ gp_cmd_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			jpeg_destroy_decompress (&cinfo);
 
 			fclose (f);
+			unlink(tempname);
 		} else
 #endif
 		{
