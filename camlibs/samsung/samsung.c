@@ -262,7 +262,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	return (GP_OK);
 }
 
-static char *
+static const char *
 camera_result_as_string (Camera *camera, int result) 
 {
 	if (result >= 0)
@@ -277,7 +277,6 @@ int
 camera_init (Camera *camera) 
 {
 	gp_port_settings settings;
-	int result;
 
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;
@@ -291,6 +290,8 @@ camera_init (Camera *camera)
 	/* Some settings */
 	CHECK_RESULT (gp_port_settings_get (camera->port, &settings));
 	strcpy (settings.serial.port, camera->port_info->path);
+	if (camera->port_info->speed)
+		settings.serial.speed = camera->port_info->speed;
 	CHECK_RESULT (gp_port_settings_set (camera->port, settings));
 	CHECK_RESULT (gp_port_timeout_set (camera->port, SDSC_TIMEOUT));
 

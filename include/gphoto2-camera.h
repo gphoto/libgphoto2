@@ -75,7 +75,7 @@ typedef int (*c_file_get)               (Camera*, const char*,
 					 CameraFile*);
 typedef int (*c_file_delete)            (Camera*, const char*, const char*);
 
-typedef char *(*c_result_as_string)     (Camera*, int);
+typedef const char *(*c_result_as_string) (Camera*, int);
 
 
 typedef struct {
