@@ -282,7 +282,7 @@ int glob_usbid[5];
 Camera    *glob_camera  = NULL;
 GPContext *glob_context = NULL;
 
-static ForEachParams fparams;
+static ForEachParams fparams = {NULL, NULL, NULL, FOR_EACH_FLAGS_RECURSE};
 static ActionParams  aparams;
 
 int  glob_quiet=0;
@@ -1314,6 +1314,7 @@ set_globals (void)
 	int model = -1, port = -1, count, x;
 	const char *name, *value;
 	static int initialized = 0;
+	ForEachFlags flags;
 
 	if (initialized)
 		return (GP_OK);
@@ -1457,14 +1458,16 @@ set_globals (void)
 	if (!strncmp (glob_port, "serial:", 7))
 	        CR (gp_camera_set_port_speed (glob_camera, glob_speed));
 
+	/* fparams.flags could have been modified by the --norecurse option */
+	flags = fparams.flags;
 	memset (&fparams, 0, sizeof (ForEachParams));
+	fparams.flags   = flags;
 	memset (&aparams,  0, sizeof (ActionParams));
 	fparams.camera  = aparams.camera  = glob_camera;
 	fparams.context = aparams.context = glob_context;
 	fparams.folder  = aparams.folder  = glob_folder;
-	fparams.flags   = FOR_EACH_FLAGS_RECURSE;
 
-        return (GP_OK);
+	return (GP_OK);
 }
 
 static void
