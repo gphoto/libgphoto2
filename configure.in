@@ -142,5 +142,6 @@ frontends/libgphoto2_frontend/Makefile \
 include/Makefile \
 libgphoto2/Makefile \
 gphoto2-config \
-po/Makefile.in 
+intl/Makefile \
+po/Makefile.in
 )
