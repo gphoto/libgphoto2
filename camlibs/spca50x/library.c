@@ -99,6 +99,9 @@ models[] =
 		BRIDGE_SPCA504, SPCA50X_SDRAM },
 	{"Aiptek:Pencam", 0x04fc, 0x504a,
 		BRIDGE_SPCA504, SPCA50X_SDRAM | SPCA50X_FLASH },
+	/* same ids, different cam *sigh* */
+	{"Aiptek:Pencam without flash", 0x04fc, 0x504a,
+		BRIDGE_SPCA504, SPCA50X_SDRAM },
 	{"Medion:MD 5319", 0x04fc, 0x504a,
 		BRIDGE_SPCA504, SPCA50X_SDRAM | SPCA50X_FLASH },
 	{"nisis:Quickpix Qp3", 0x04fc, 0x504a,
@@ -594,12 +597,12 @@ camera_init (Camera *camera, GPContext *context)
 	if (camera->pl->fw_rev > 1) {
 		CHECK (spca50x_detect_storage_type (camera->pl));
 	}
+   
 	if (cam_has_flash(camera->pl) || cam_has_card(camera->pl) ) {
 		if (camera->pl->bridge == BRIDGE_SPCA504)
 			CHECK (spca50x_flash_init (camera->pl, context));
 	}
-
-
+	
 	if (camera->pl->bridge == BRIDGE_SPCA504) {
 		if (abilities.usb_vendor != 0x04fc 
        && abilities.usb_product != 0x504a )
