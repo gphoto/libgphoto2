@@ -54,7 +54,7 @@ static int
 g3_channel_read(GPPort *port, int *channel, char **buffer, int *len)
 {
 	unsigned char xbuf[0x800];
-	int ret;
+	int tocopy, ret, curlen;
 
 	ret = gp_port_read(port, xbuf, 0x800);
 	if (ret < GP_OK) { 
@@ -73,7 +73,18 @@ g3_channel_read(GPPort *port, int *channel, char **buffer, int *len)
 		*buffer = malloc(*len + 1);
 	else
 		*buffer = realloc(*buffer, *len + 1);
-	memcpy(*buffer, xbuf+8, *len);
+	tocopy = *len;
+	if (tocopy > 0x800-8) tocopy = 0x800-8;
+	memcpy(*buffer, xbuf+8, tocopy);
+	curlen = tocopy;
+	while (curlen < *len) {
+		ret = gp_port_read(port, *buffer + curlen, 0x800);
+		if (ret < GP_OK) {
+			gp_log(GP_LOG_ERROR, "g3", "read error in g3_channel_read\n");
+			return ret;
+		}
+		curlen += ret;
+	}
 	(*buffer)[*len] = 0x00;
 	return GP_OK;
 }
@@ -99,8 +110,15 @@ g3_channel_read_bytes(
 		int rest = expected;
 		if (rest > 65536) rest = 65536;
 
-		ret = gp_port_read(port, xbuf, (rest + 9 + 3) & ~3);
+		rest = (rest + 9 + 3) & ~3;
+		if (rest < 0x800) rest = 0x800;
+
+		ret = gp_port_read(port, xbuf, rest);
 		if (ret < GP_OK) {
+			gp_log(GP_LOG_ERROR, "g3", "read error in g3_channel_read\n");
+			return ret;
+		}
+		if (ret != rest) {
 			gp_log(GP_LOG_ERROR, "g3", "read error in g3_channel_read\n");
 			return ret;
 		}
@@ -309,6 +327,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (ret < GP_OK) goto out;
 	ret = g3_channel_read(camera->port, &channel, &reply, &len); /* reply */
 	if (ret < GP_OK) goto out;
+	gp_log(GP_LOG_DEBUG, "g3" , "reply %s", reply);
 	gp_file_set_data_and_size (file, buf, bytes);
 	buf = NULL; /* now owned by libgphoto2 filesystem */
 
@@ -561,21 +580,26 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		info->file.fields |= GP_FILE_INFO_MTIME;
 	}
 
-	sprintf(cmd, "-INFO %s/%s", folder,filename);
-	g3_ftp_command_and_reply(camera->port, cmd, &reply);
-	if (ret < GP_OK) goto out;
+	/* -INFO command only sometimes work on non jpeg/avi files */
+	if (	!strcmp(info->file.type,GP_MIME_JPEG) ||
+		!strcmp(info->file.type,GP_MIME_AVI)
+	) {
+		sprintf(cmd, "-INFO %s/%s", folder,filename);
+		g3_ftp_command_and_reply(camera->port, cmd, &reply);
+		if (ret < GP_OK) goto out;
 
-	/* 200 1330313 byte W=2048 H=1536 K=0 for -INFO */
-	if (sscanf(reply, "200 %d byte W=%d H=%d K=%d for -INFO", &bytes, &width, &height , &k)) {
-		if (width != 0 && height != 0) {
-			info->file.fields |= GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT;
-			info->file.height = height;
-			info->file.width = width;
+		/* 200 1330313 byte W=2048 H=1536 K=0 for -INFO */
+		if (sscanf(reply, "200 %d byte W=%d H=%d K=%d for -INFO", &bytes, &width, &height , &k)) {
+			if (width != 0 && height != 0) {
+				info->file.fields |= GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT;
+				info->file.height = height;
+				info->file.width = width;
+			}
+			info->file.fields |= GP_FILE_INFO_SIZE;
+			info->file.size = bytes;
+			if (k != 0)
+				gp_log(GP_LOG_ERROR, "g3", "k is %d for %s/%s\n", k, folder,filename);
 		}
-		info->file.fields |= GP_FILE_INFO_SIZE;
-		info->file.size = bytes;
-		if (k != 0)
-			gp_log(GP_LOG_ERROR, "g3", "k is %d for %s/%s\n", k, folder,filename);
 	}
 out:
 	if (reply) free(reply);
@@ -602,15 +626,31 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 {
 	Camera *camera = data;
 	char *buf = NULL, *reply = NULL;
-	char *cmd;
-	int ret = GP_OK;
+	char *cmd = NULL;
+	int ret = GP_OK, channel, len, rlen;
 
 	if (!strcmp("/",folder)) {
-		/* Lets hope they dont invent more. */
-		/* NLST gives us the default folder back, 
-		 * we could check that too.
+		/* Lets hope they dont invent other names. */
+
+		/* We check the folder we get, since we should
+		 * not add EXT0 without SD card.
 		 */
-		gp_list_append (list, "EXT0", NULL);
+		ret = g3_ftp_command_and_reply(camera->port, "-NLST /", &buf);
+		if (ret < GP_OK) goto out;
+		if (buf[0] != '1') {
+			ret = GP_ERROR_IO;
+			goto out;
+		}
+		ret = g3_channel_read(camera->port, &channel, &buf, &len); /* data. */
+		if (ret < GP_OK) goto out;
+		g3_channel_read(camera->port, &channel, &reply, &rlen); /* next reply  */
+		if (ret < GP_OK) goto out;
+		gp_log(GP_LOG_DEBUG, "g3" , "reply %s", reply);
+
+		if (!strcmp("/EXT0",buf))
+			gp_list_append (list, "EXT0", NULL);
+		
+		/* always add internal memory */
 		gp_list_append (list, "IROM", NULL);
 		return GP_OK;
 	}
@@ -619,15 +659,17 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	strcpy(cmd, "-NLST ");
 	strcat(cmd, folder);
 
-	ret = g3_ftp_command_and_reply(camera->port, cmd, (char**)&buf);
+	ret = g3_ftp_command_and_reply(camera->port, cmd, &buf);
+	free(cmd);cmd = NULL;
 	if (ret < GP_OK) goto out;
 	if (buf[0] == '1') { /* 1xx means another reply follows */
-		int n = 0, channel, len, rlen;
+		int n = 0;
 
 		ret = g3_channel_read(camera->port, &channel, &buf, &len); /* data. */
 		if (ret < GP_OK) goto out;
 		g3_channel_read(camera->port, &channel, &reply, &rlen); /* next reply  */
 		if (ret < GP_OK) goto out;
+		gp_log(GP_LOG_DEBUG, "g3" , "reply %s", reply);
 
 		for (n=0;n<len/32;n++) {
 			if (buf[n*32+11] == 0x10) {
@@ -637,7 +679,6 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 				if (ret != GP_OK) goto out;
 			}
 		}
-		/* special case / folder, since we don't get the size data records */
 	} else {
 		ret = GP_ERROR_IO;
 	}
@@ -667,6 +708,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		if (ret < GP_OK) goto out;
 		g3_channel_read(camera->port, &channel, &reply, &rlen); /* next reply  */
 		if (ret < GP_OK) goto out;
+		gp_log(GP_LOG_DEBUG, "g3" , "reply %s", reply);
 
 		for (n=0;n < len/32;n++) {
 			if (buf[n*32+11] == 0x20) {

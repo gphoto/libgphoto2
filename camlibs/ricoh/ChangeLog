@@ -1,3 +1,12 @@
+2003-11-17  Marcus Meissner <marcus@jet.franken.de>
+
+	* g3.c: 
+	  - Fixed camera access with removed SD card.
+	  - Handle more than 62 files in one directory.
+	  - Do not call -INFO for textfiles.
+	  - Try to read at least 0x800 byte to avoid confusing the
+	    remote USB stack.
+
 2003-10-10  Marcus Meissner <marcus@jet.franken.de>
 	
 	* g3.txt, g3.c, Makefile.am: 
