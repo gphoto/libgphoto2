@@ -181,7 +181,7 @@ static struct {
 	 * The very first PTP camera (with special firmware only), also
 	 * called "PTP Prototype", may report non PTP interface class
 	 */
-	{"Kodak DC-240 (PTP)",  0x040a, 0x0121},
+	{"Kodak DC-240 (PTP mode)",  0x040a, 0x0121},
 	/*
 	 * Old DC-4800 firmware reported cutom interface class, so we have
 	 * to detect it by product/vendor IDs
@@ -196,18 +196,18 @@ static struct {
 	{"Kodak DX-3900", 0x040a, 0x0170},
 	{"Kodak DX-4900", 0x040a, 0x0550},
 	{"Kodak MC3", 0x040a, 0x0400},
-	{"HP PhotoSmart 318", 0x03f0, 0x6302},
-	{"HP PhotoSmart 612", 0x03f0, 0x6302},
-	{"HP PhotoSmart 715",  0x03f0, 0x6402},
+	{"HP PhotoSmart 318 (PTP mode)", 0x03f0, 0x6302},
+	{"HP PhotoSmart 612 (PTP mode)", 0x03f0, 0x6302},
+	{"HP PhotoSmart 715 (PTP mode)",  0x03f0, 0x6402},
 	/* I got information that all SONY PTP cameras use the same
 	   product/vendor IDs */
-	{"Sony DSC-P5", 0x054c, 0x004e},
-	{"Sony DSC-F707V", 0x054c, 0x004e},
-	{"Sony DSC-P30", 0x054c, 0x004e},
-	{"Sony DSC-P50",  0x054c, 0x004e},
-	{"Sony DSC-S75",  0x054c, 0x004e},
-	{"Sony DSC-S85",  0x054c, 0x004e},
-	{"Sony MVC-CD300",  0x054c, 0x004e},
+	{"Sony DSC-P5 (PTP mode)", 0x054c, 0x004e},
+	{"Sony DSC-F707V (PTP mode)", 0x054c, 0x004e},
+	{"Sony DSC-P30 (PTP mode)", 0x054c, 0x004e},
+	{"Sony DSC-P50 (PTP mode)",  0x054c, 0x004e},
+	{"Sony DSC-S75 (PTP mode)",  0x054c, 0x004e},
+	{"Sony DSC-S85 (PTP mode)",  0x054c, 0x004e},
+	{"Sony MVC-CD300 (PTP mode)",  0x054c, 0x004e},
 
 	/* Nikon D100 has a PTP mode: westin 2002.10.16 */
 	{"Nikon DSC D100 (PTP mode)", 0x04b0, 0x0402},
