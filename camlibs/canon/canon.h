@@ -176,12 +176,12 @@ struct _CameraPrivateLibrary
 /**
  * Switches the camera on, detects the model and sets its speed
  */
-int canon_int_ready(Camera *camera);
+int canon_int_ready(Camera *camera, GPContext *context);
 
 /*
  * 
  */
-char *canon_int_get_disk_name(Camera *camera);
+char *canon_int_get_disk_name(Camera *camera, GPContext *context);
 
 /*
  *
@@ -198,22 +198,22 @@ int canon_int_get_disk_name_info(Camera *camera, const char *name,int *capacity,
  */
 int canon_int_list_directory (Camera *camera, const char *folder, CameraList *list, const int flags, GPContext *context);
 void canon_int_free_dir(Camera *camera, struct canon_dir *list);
-int canon_int_get_file(Camera *camera, const char *name, unsigned char **data, int *length);
-int canon_int_get_thumbnail(Camera *camera, const char *name, unsigned char **retdata, int *length);
-int canon_int_put_file(Camera *camera, CameraFile *file, char *destname, char *destpath);
+int canon_int_get_file(Camera *camera, const char *name, unsigned char **data, int *length, GPContext *context);
+int canon_int_get_thumbnail(Camera *camera, const char *name, unsigned char **retdata, int *length, GPContext *context);
+int canon_int_put_file(Camera *camera, CameraFile *file, char *destname, char *destpath, GPContext *context);
 int canon_int_set_file_attributes(Camera *camera, const char *file, const char *dir, unsigned char attrs);
 int canon_int_delete_file(Camera *camera, const char *name, const char *dir);
 int canon_serial_end(Camera *camera);
 int canon_serial_off(Camera *camera);
 time_t canon_int_get_time(Camera *camera);
 int canon_int_set_time(Camera *camera, time_t date);
-int canon_int_directory_operations(Camera *camera, const char *path, int action);
+int canon_int_directory_operations(Camera *camera, const char *path, int action, GPContext *context);
 int canon_int_identify_camera(Camera *camera);
 int canon_int_set_owner_name(Camera *camera, const char *name);
 
 /* path conversion - needs drive letter, and can therefor not be moved to util.c */
 const char *canon2gphotopath(Camera *camera, const char *path);
-const char *gphoto2canonpath(Camera *camera, const char *path);
+const char *gphoto2canonpath(Camera *camera, const char *path, GPContext *context);
 
 const char *canon_int_filename2thumbname (Camera *camera, const char *filename);
 

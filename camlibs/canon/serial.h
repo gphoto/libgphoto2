@@ -35,13 +35,13 @@ unsigned char *canon_serial_recv_packet (Camera *camera, unsigned char *type, un
 int canon_serial_wait_for_ack (Camera *camera);
 unsigned char *canon_serial_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, int *total);
 
-unsigned char *canon_serial_get_file (Camera *camera, const char *name, int *length);
-int canon_serial_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath);
-int canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data, unsigned int *dirents_length, const char *path);
+unsigned char *canon_serial_get_file (Camera *camera, const char *name, int *length, GPContext *context);
+int canon_serial_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath, GPContext *context);
+int canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data, unsigned int *dirents_length, const char *path, GPContext *context);
 
 
-int canon_serial_ready (Camera *camera);
-int canon_serial_get_thumbnail (Camera *camera, const char *name, unsigned char **data, int *length);
+int canon_serial_ready (Camera *camera, GPContext *context);
+int canon_serial_get_thumbnail (Camera *camera, const char *name, unsigned char **data, int *length, GPContext *context);
 
 #define MAX_TRIES 10
 

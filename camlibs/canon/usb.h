@@ -15,21 +15,21 @@
  *
  ****************************************************************************/
 
-int canon_usb_init (Camera *camera);
-int canon_usb_camera_init (Camera *camera);
+int canon_usb_init (Camera *camera, GPContext *context);
+int canon_usb_camera_init (Camera *camera, GPContext *context);
 int canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath);
 unsigned char *canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length, 
 		const char *payload, int payload_length);
 int canon_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **data, 
 		int *data_length, int max_data_size, const char *payload,
-		int payload_length, int display_status);
-int canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, int *length);
-int canon_usb_get_thumbnail (Camera *camera, const char *name, unsigned char **data, int *length);
-int canon_usb_lock_keys(Camera *camera);
+		int payload_length, int display_status, GPContext *context);
+int canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, int *length, GPContext *context);
+int canon_usb_get_thumbnail (Camera *camera, const char *name, unsigned char **data, int *length, GPContext *context);
+int canon_usb_lock_keys(Camera *camera, GPContext *context);
 int canon_usb_unlock_keys(Camera *camera);
-int canon_usb_get_dirents (Camera *camera, unsigned char **dirent_data, unsigned int *dirents_length, const char *path);
+int canon_usb_get_dirents (Camera *camera, unsigned char **dirent_data, unsigned int *dirents_length, const char *path, GPContext *context);
 int canon_usb_ready (Camera *camera);
-int canon_usb_identify (Camera *camera);
+int canon_usb_identify (Camera *camera, GPContext *context);
 
 #define USB_BULK_READ_SIZE 0x3000
 

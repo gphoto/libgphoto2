@@ -216,7 +216,8 @@ canon_int_filename2thumbname (Camera *camera, const char *filename)
  *
  */
 int
-canon_int_directory_operations (Camera *camera, const char *path, int action)
+canon_int_directory_operations (Camera *camera, const char *path, int action,
+				GPContext *context)
 {
 	unsigned char *msg;
 	int len, canon_usb_funct;
@@ -267,9 +268,8 @@ canon_int_directory_operations (Camera *camera, const char *path, int action)
 	}
 
 	if (msg[0] != 0x00) {
-		gp_camera_set_error (camera, "Could not %s directory %s",
-				     canon_usb_funct ==
-				     CANON_USB_FUNCTION_MKDIR ? "create" : "remove", path);
+		gp_context_error (context, "Could not %s directory %s.",
+			canon_usb_funct == CANON_USB_FUNCTION_MKDIR ? "create" : "remove", path);
 		return GP_ERROR;
 	}
 
@@ -648,7 +648,7 @@ canon_int_set_time (Camera *camera, time_t date)
  * Switches the camera on, detects the model and sets its speed.
  **/
 int
-canon_int_ready (Camera *camera)
+canon_int_ready (Camera *camera, GPContext *context)
 {
 	int res;
 
@@ -659,7 +659,7 @@ canon_int_ready (Camera *camera)
 			res = canon_usb_ready (camera);
 			break;
 		case GP_PORT_SERIAL:
-			res = canon_serial_ready (camera);
+			res = canon_serial_ready (camera, context);
 			break;
 		GP_PORT_DEFAULT
 	}
@@ -676,7 +676,7 @@ canon_int_ready (Camera *camera)
  * device. Usually "D:" or something like that.
  **/
 char *
-canon_int_get_disk_name (Camera *camera)
+canon_int_get_disk_name (Camera *camera, GPContext *context)
 {
 	unsigned char *msg;
 	int len, res;
@@ -687,7 +687,7 @@ canon_int_get_disk_name (Camera *camera)
 		case GP_PORT_USB:
 			res = canon_usb_long_dialogue (camera,
 						       CANON_USB_FUNCTION_FLASH_DEVICE_IDENT,
-						       &msg, &len, 1024, NULL, 0, 0);
+						       &msg, &len, 1024, NULL, 0, 0, context);
 			if (res != GP_OK) {
 				GP_DEBUG ("canon_int_get_disk_name: canon_usb_long_dialogue "
 					  "failed! returned %i", res);
@@ -793,7 +793,7 @@ canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, i
  * into canon style path (e.g. "D:\DCIM\116CANON\IMG_1240.JPG")
  */
 const char *
-gphoto2canonpath (Camera *camera, const char *path)
+gphoto2canonpath (Camera *camera, const char *path, GPContext *context)
 {
 	static char tmp[2000];
 	char *p;
@@ -805,7 +805,7 @@ gphoto2canonpath (Camera *camera, const char *path)
 
 	if (camera->pl->cached_drive == NULL) {
 		GP_DEBUG ("NULL camera->pl->cached_drive in gphoto2canonpath");
-		camera->pl->cached_drive = canon_int_get_disk_name(camera);
+		camera->pl->cached_drive = canon_int_get_disk_name(camera, context);
 		if (camera->pl->cached_drive == NULL) {
 			GP_DEBUG ("2nd NULL camera->pl->cached_drive in gphoto2canonpath");
 		}
@@ -908,7 +908,7 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 	unsigned int dirents_length;
 	unsigned char *dirent_data = NULL;
 	unsigned char *end_of_data, *temp_ch, *pos;
-	const char *canonfolder = gphoto2canonpath (camera, folder);
+	const char *canonfolder = gphoto2canonpath (camera, folder, context);
 	int list_files = ((flags & CANON_LIST_FILES) != 0);
 	int list_folders = ((flags & CANON_LIST_FOLDERS) != 0);
 
@@ -920,11 +920,11 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 	switch (camera->port->type) {
 		case GP_PORT_USB:
 			res = canon_usb_get_dirents (camera, &dirent_data, &dirents_length,
-						     canonfolder);
+						     canonfolder, context);
 			break;
 		case GP_PORT_SERIAL:
 			res = canon_serial_get_dirents (camera, &dirent_data, &dirents_length,
-							canonfolder);
+							canonfolder, context);
 			break;
 		GP_PORT_DEFAULT
 	}
@@ -934,7 +934,7 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 	end_of_data = dirent_data + dirents_length;
 
 	if (dirents_length < CANON_MINIMUM_DIRENT_SIZE) {
-		gp_camera_set_error (camera, "canon_int_list_dir: ERROR: "
+		gp_context_error (context, "canon_int_list_dir: ERROR: "
 				     "initial message too short (%i < minimum %i)",
 				     dirents_length, CANON_MINIMUM_DIRENT_SIZE);
 		free (dirent_data);
@@ -954,7 +954,7 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 	for (pos = dirent_data + CANON_DIRENT_NAME; pos < end_of_data && *pos != 0; pos++)
 		/* do nothing */ ;
 	if (pos == end_of_data || *pos != 0) {
-		gp_camera_set_error (camera, "canon_int_list_dir: "
+		gp_context_error (context, "canon_int_list_dir: "
 				     "Reached end of packet while "
 				     "examining the first dirent");
 		free (dirent_data);
@@ -1018,7 +1018,7 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 				  (pos - dirent_data), (pos - dirent_data),
 				  (end_of_data - dirent_data), (end_of_data - dirent_data),
 				  CANON_MINIMUM_DIRENT_SIZE);
-			gp_camera_set_error (camera,
+			gp_context_error (context, 
 					     "canon_int_list_dir: "
 					     "truncated directory entry encountered");
 			free (dirent_data);
@@ -1173,14 +1173,14 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 }
 
 int
-canon_int_get_file (Camera *camera, const char *name, unsigned char **data, int *length)
+canon_int_get_file (Camera *camera, const char *name, unsigned char **data, int *length, GPContext *context)
 {
 	switch (camera->port->type) {
 		case GP_PORT_USB:
-			return canon_usb_get_file (camera, name, data, length);
+			return canon_usb_get_file (camera, name, data, length, context);
 			break;
 		case GP_PORT_SERIAL:
-			*data = canon_serial_get_file (camera, name, length);
+			*data = canon_serial_get_file (camera, name, length, context);
 			if (*data)
 				return GP_OK;
 			return GP_ERROR;
@@ -1291,7 +1291,7 @@ canon_int_handle_exif_thumb (unsigned char *data, const unsigned int length,
  * Returns GPError.
  **/
 int 
-canon_int_get_thumbnail (Camera *camera, const char *name, unsigned char **retdata, int *length)
+canon_int_get_thumbnail (Camera *camera, const char *name, unsigned char **retdata, int *length, GPContext *context)
 {
 	int res;
 	unsigned char *data = NULL;
@@ -1303,10 +1303,10 @@ canon_int_get_thumbnail (Camera *camera, const char *name, unsigned char **retda
 
 	switch (camera->port->type) {
 		case GP_PORT_USB:
-			res = canon_usb_get_thumbnail (camera, name, &data, length);
+			res = canon_usb_get_thumbnail (camera, name, &data, length, context);
 			break;
 		case GP_PORT_SERIAL:
-			res = canon_serial_get_thumbnail (camera, name, &data, length);
+			res = canon_serial_get_thumbnail (camera, name, &data, length, context);
 			break;
 		GP_PORT_DEFAULT
 	}
@@ -1569,14 +1569,14 @@ canon_int_delete_file (Camera *camera, const char *name, const char *dir)
  *
  */
 int
-canon_int_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath)
+canon_int_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath, GPContext *context)
 {
 	switch (camera->port->type) {
 		case GP_PORT_USB:
 			return canon_usb_put_file (camera, file, destname, destpath);
 			break;
 		case GP_PORT_SERIAL:
-			return canon_serial_put_file (camera, file, destname, destpath);
+			return canon_serial_put_file (camera, file, destname, destpath, context);
 			break;
 		GP_PORT_DEFAULT
 	}

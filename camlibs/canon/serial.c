@@ -876,7 +876,7 @@ canon_serial_error_type (Camera *camera)
  *
  */
 int
-canon_serial_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath)
+canon_serial_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath, GPContext *context)
 {
 	unsigned char *msg;
 	char filename[64];
@@ -889,6 +889,7 @@ canon_serial_put_file (Camera *camera, CameraFile *file, char *destname, char *d
 	int i, j = 0, len, hdr_len;
 	long int size;
 	const char *data, *name;
+	unsigned int id;
 
 	camera->pl->uploading = 1;
 	gp_file_get_name (file, &name);
@@ -898,9 +899,9 @@ canon_serial_put_file (Camera *camera, CameraFile *file, char *destname, char *d
 
 	hdr_len = HDR_FIXED_LEN + strlen (name) + strlen (destpath);
 
-	gp_camera_progress (camera, 0);
 	gp_file_get_data_and_size (file, &data, &size);
 
+	id = gp_context_progress_start (context, size, _("Uploading file..."));
 	while (sent < size) {
 
 		if (size < DATA_BLOCK)
@@ -931,22 +932,22 @@ canon_serial_put_file (Camera *camera, CameraFile *file, char *destname, char *d
 			return GP_ERROR;
 		}
 		sent += block_len;
-		gp_camera_progress (camera, size ? (sent / (float) size) : 1.);
+		gp_context_progress_update (context, id, sent);
 	}
+	gp_context_progress_stop (context, id);
 	camera->pl->uploading = 0;
 	return GP_OK;
 }
 
 unsigned char *
-canon_serial_get_file (Camera *camera, const char *name, int *length)
+canon_serial_get_file (Camera *camera, const char *name, int *length, GPContext *context)
 {
 	unsigned char *file = NULL;
 	unsigned char *msg;
 	unsigned char name_len;
-	unsigned int total = 0, expect = 0, size;
+	unsigned int total = 0, expect = 0, size, id;
 	int len;
 
-	gp_camera_progress (camera, 0);
 	if (camera->pl->receive_error == FATAL_ERROR) {
 		gp_debug_printf (GP_DEBUG_LOW, "canon",
 				 "ERROR: can't continue a fatal error condition detected\n");
@@ -959,6 +960,8 @@ canon_serial_get_file (Camera *camera, const char *name, int *length)
 		canon_serial_error_type (camera);
 		return NULL;
 	}
+	id = gp_context_progress_start (context, le32atoh (msg + 4),
+					_("Getting file..."));
 	while (msg) {
 		if (len < 20 || le32atoh (msg)) {
 			break;
@@ -986,13 +989,15 @@ canon_serial_get_file (Camera *camera, const char *name, int *length)
 		}
 		memcpy (file + expect, msg + 20, size);
 		expect += size;
-		gp_camera_progress (camera, total ? (expect / (float) total) : 1.);
+		gp_context_progress_update (context, id, expect);
 		if ((expect == total) != le32atoh (msg + 16)) {
 			GP_DEBUG ("ERROR: end mark != end of data");
 			break;
 		}
-		if (expect == total)
+		if (expect == total) {
+			gp_context_progress_stop (context, id);
 			return file;
+		}
 		msg = canon_serial_recv_msg (camera, 0x1, 0x21, &len);
 	}
 	free (file);
@@ -1001,7 +1006,8 @@ canon_serial_get_file (Camera *camera, const char *name, int *length)
 
 int
 canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
-			  unsigned int *dirents_length, const char *path)
+			  unsigned int *dirents_length, const char *path,
+			  GPContext *context)
 {
 	unsigned char *p, *temp_ch, *data = NULL;
 	int mallocd_bytes, total_size;
@@ -1012,14 +1018,14 @@ canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
 	p = canon_serial_dialogue (camera, 0xb, 0x11, dirents_length, "", 1, path,
 				   strlen (path) + 1, "\x00", 2, NULL);
 	if (p == NULL) {
-		gp_camera_set_error (camera, "canon_serial_get_dirents: "
+		gp_context_error (context, "canon_serial_get_dirents: "
 				     "canon_serial_dialogue failed to fetch directory entrys");
 		return GP_ERROR;
 	}
 
 	/* In the RS232 implementation, we should never get less than 5 bytes */
 	if (*dirents_length < 5) {
-		gp_camera_set_error (camera, "canon_serial_get_dirents: "
+		gp_context_error (context, "canon_serial_get_dirents: "
 				     "Initial dirent packet too short (only %i bytes)",
 				     *dirents_length);
 		return GP_ERROR;
@@ -1037,7 +1043,7 @@ canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
 	mallocd_bytes = MAX (1024, *dirents_length - 5);
 	data = malloc (mallocd_bytes);
 	if (!data) {
-		gp_camera_set_error (camera, "canon_serial_get_dirents: "
+		gp_context_error (context, "canon_serial_get_dirents: "
 				     "Could not allocate %i bytes of memory", mallocd_bytes);
 		return GP_ERROR_NO_MEMORY;
 	}
@@ -1056,7 +1062,7 @@ canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
 		GP_DEBUG ("p[4] is %i", (int) p[4]);
 		p = canon_serial_recv_msg (camera, 0xb, 0x21, dirents_length);
 		if (p == NULL) {
-			gp_camera_set_error (camera, "canon_serial_get_dirents: "
+			gp_context_error (context, "canon_serial_get_dirents: "
 					     "Failed to read another directory entry");
 			free (data);
 			return GP_ERROR;
@@ -1071,7 +1077,7 @@ canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
 		 * don't count them when checking dirent size
 		 */
 		if (*dirents_length - 5 < CANON_MINIMUM_DIRENT_SIZE) {
-			gp_camera_set_error (camera, "canon_serial_get_dirents: "
+			gp_context_error (context, "canon_serial_get_dirents: "
 					     "Truncated directory entry received");
 			free (data);
 			return GP_ERROR;
@@ -1096,7 +1102,7 @@ canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
 			 * forever. 1024 * 1024 is picked out of the blue.
 			 */
 			if (mallocd_bytes > 1024 * 1024) {
-				gp_camera_set_error (camera, "canon_serial_get_dirents: "
+				gp_context_error (context, "canon_serial_get_dirents: "
 						     "Too many dirents, we must be looping.");
 				free (data);
 				return GP_ERROR;
@@ -1104,7 +1110,7 @@ canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
 
 			temp_ch = realloc (data, mallocd_bytes);
 			if (!temp_ch) {
-				gp_camera_set_error (camera,
+				gp_context_error (context,
 						     "canon_serial_get_dirents: "
 						     "Could not resize dirent buffer "
 						     "to %i bytes", mallocd_bytes);
@@ -1134,13 +1140,14 @@ canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
  * serial part of canon_int_ready
  **/
 int
-canon_serial_ready (Camera *camera)
+canon_serial_ready (Camera *camera, GPContext *context)
 {
 	unsigned char type, seq;
 	int good_ack, speed, try, len, i;
 	char *pkt;
 	int res;
 	char cam_id_str[2000];
+	unsigned int id;
 
 	GP_DEBUG ("canon_int_ready()");
 
@@ -1183,7 +1190,7 @@ canon_serial_ready (Camera *camera)
 				gp_camera_status (camera, _("Resetting protocol..."));
 				canon_serial_off (camera);
 				sleep (3);	/* The camera takes a while to switch off */
-				return canon_int_ready (camera);
+				return canon_int_ready (camera, context);
 			}
 			if (good_ack == -1) {
 				gp_debug_printf (GP_DEBUG_LOW, "canon", "Received a NACK !\n");
@@ -1203,7 +1210,6 @@ canon_serial_ready (Camera *camera)
 	/* Camera was off... */
 
 	gp_camera_status (camera, _("Looking for camera ..."));
-	gp_camera_progress (camera, 0);
 	if (camera->pl->receive_error == FATAL_ERROR) {
 		/* we try to recover from an error
 		   we go back to 9600bps */
@@ -1213,17 +1219,20 @@ canon_serial_ready (Camera *camera)
 		}
 		camera->pl->receive_error = NOERROR;
 	}
-	for (try = 1; try < MAX_TRIES; try++) {
-		gp_camera_progress (camera, (try / (float) MAX_TRIES));
+	id = gp_context_progress_start (context, MAX_TRIES, _("Trying to "
+		"contact camera..."));
+	for (try = 0; try < MAX_TRIES; try++) {
 		if (canon_serial_send
 		    (camera, "\x55\x55\x55\x55\x55\x55\x55\x55", 8, USLEEP1) < 0) {
-			gp_camera_status (camera, _("Communication error 1"));
+			gp_context_error (context, _("Communication error 1"));
 			return GP_ERROR;
 		}
 		pkt = canon_serial_recv_frame (camera, &len);
+		gp_context_progress_update (context, id, try + 1);
 		if (pkt)
 			break;
 	}
+	gp_context_progress_stop (context, id);
 	if (try == MAX_TRIES) {
 		gp_camera_status (camera, _("No response from camera"));
 		return GP_ERROR;
@@ -1254,7 +1263,7 @@ canon_serial_ready (Camera *camera)
 	}
 
 	if (models[i].id_str == NULL) {
-		gp_camera_set_error (camera, "Unknown model '%s'", cam_id_str);
+		gp_context_error (context, "Unknown model '%s'", cam_id_str);
 		return GP_ERROR_MODEL_NOT_FOUND;
 	}
 
@@ -1359,10 +1368,10 @@ canon_serial_ready (Camera *camera)
  * canon_get_thumbnail() routine. 
  **/
 int 
-canon_serial_get_thumbnail (Camera *camera, const char *name, unsigned char **data, int *length)
+canon_serial_get_thumbnail (Camera *camera, const char *name, unsigned char **data, int *length, GPContext *context)
 {
 	unsigned int expect = 0, size, payload_length, total_file_size;
-	unsigned int total = 0;
+	unsigned int total = 0, id;
 	unsigned char *msg;
 
 	CAM_CHECK_PARAM_NULL(length);
@@ -1371,7 +1380,7 @@ canon_serial_get_thumbnail (Camera *camera, const char *name, unsigned char **da
 	*data = NULL;
 
 	if (camera->pl->receive_error == FATAL_ERROR) {
-		gp_camera_set_error (camera, "ERROR: can't continue a fatal "
+		gp_context_error (context, "ERROR: can't continue a fatal "
 				     "error condition detected");
 		return GP_ERROR;
 	}
@@ -1389,7 +1398,7 @@ canon_serial_get_thumbnail (Camera *camera, const char *name, unsigned char **da
 	
 	total = le32atoh (msg + 4);
 	if (total > 2000000) {	/* 2 MB thumbnails ? unlikely ... */
-		gp_camera_set_error (camera, "ERROR: %d is too big", total);
+		gp_context_error (context, "ERROR: %d is too big", total);
 		return GP_ERROR;
 	}
 	*data = malloc (total);
@@ -1399,6 +1408,7 @@ canon_serial_get_thumbnail (Camera *camera, const char *name, unsigned char **da
 	}
 	*length = total;
 
+	id = gp_context_progress_start (context, total, _("Getting thumbnail..."));
 	while (msg) {
 		if (total_file_size < 20 || le32atoh (msg)) {
 			return GP_ERROR;
@@ -1411,8 +1421,7 @@ canon_serial_get_thumbnail (Camera *camera, const char *name, unsigned char **da
 		}
 		memcpy (*data + expect, msg + 20, size);
 		expect += size;
-		gp_camera_progress (camera,
-				    total ? (expect / (float) total) : 1.);
+		gp_context_progress_update (context, id, expect);
 		if ((expect == total) != le32atoh (msg + 16)) {
 			GP_DEBUG ("ERROR: end mark != end of data");
 			return GP_ERROR;
@@ -1425,6 +1434,7 @@ canon_serial_get_thumbnail (Camera *camera, const char *name, unsigned char **da
 		msg = canon_serial_recv_msg (camera, 0x1, 0x21,
 					     &total_file_size);
 	}
+	gp_context_progress_stop (context, id);
 	return GP_OK;
 }
 
