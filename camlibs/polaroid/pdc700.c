@@ -406,7 +406,7 @@ camera_init (Camera *camera)
 {
 	int result = GP_OK, i;
 	GPPortSettings settings;
-	int speeds[] = {9600, 57600, 19200, 38400, 115200};
+	int speeds[] = {9600, 57600, 19200, 38400};
 
         /* First, set up all the function pointers */
 	camera->functions->summary	= camera_summary;
@@ -420,7 +420,7 @@ camera_init (Camera *camera)
 	/* Check if the camera is really there */
 	CHECK_RESULT (gp_port_get_settings (camera->port, &settings));
 	CHECK_RESULT (gp_port_set_timeout (camera->port, 2000));
-	for (i = 0; i < 5; i++) {
+	for (i = 0; i < 4; i++) {
 		settings.serial.speed = speeds[i];
 		CHECK_RESULT (gp_port_set_settings (camera->port, settings));
 		result = pdc700_init (camera);
@@ -430,7 +430,7 @@ camera_init (Camera *camera)
 		if (result == GP_OK)
 			break;
 	}
-	if (i == 5)
+	if (i == 4)
 		return (result);
 
 	/* Set the speed to the highest one */
