@@ -546,7 +546,7 @@ int gp_widget_get_range (CameraWidget *range, float *min, float *max,
  *
  * Return value: GPhoto error code.
  **/
-int gp_widget_choice_add (CameraWidget *widget, const char *choice) 
+int gp_widget_add_choice (CameraWidget *widget, const char *choice) 
 {
 	if (!widget || !choice)
 		return (GP_ERROR_BAD_PARAMETERS);

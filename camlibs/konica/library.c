@@ -891,7 +891,6 @@ camera_get_config (Camera* camera, CameraWidget** window)
         gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_get_config ***");
 	g_return_val_if_fail (camera, 	GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (window, 	GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (!*window,	GP_ERROR_BAD_PARAMETERS);
 
 	/* Get the current settings. */
 	konica_data = (konica_data_t *) camera->camlib_data;
