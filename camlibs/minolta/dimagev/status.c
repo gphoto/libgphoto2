@@ -1,9 +1,30 @@
-#include "dimagev.h"
+/**********************************************************************
+*       Minolta Dimage V digital camera communication library         *
+*               Copyright (C) 2000 Gus Hartmann                       *
+*                                                                     *
+*    This program is free software; you can redistribute it and/or    *
+*    modify it under the terms of the GNU General Public License as   *
+*    published by the Free Software Foundation; either version 2 of   *
+*    the License, or (at your option) any later version.              *
+*                                                                     *
+*    This program is distributed in the hope that it will be useful,  *
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of   *
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    *
+*    GNU General Public License for more details.                     *
+*                                                                     *
+*    You should have received a copy of the GNU General Public        *
+*    License along with this program; if not, write to the Free       *
+*    Software Foundation, Inc., 59 Temple Place, Suite 330,           *
+*    Boston, MA 02111-1307 USA                                        *
+*                                                                     *
+**********************************************************************/
 
+#include "dimagev.h"
 
 /* This is the parent function, who calls most of the functions below.
    It returns GP_ERROR if it cannot get the camera data, and GP_OK otherwise.
-   The subroutines will print out more detained information should they fail. */
+   The subroutines will print out more detained information should they fail.
+*/
 int dimagev_get_camera_status(dimagev_t *dimagev) {
 	dimagev_packet *p, *raw;
 	unsigned char char_buffer;
@@ -127,6 +148,9 @@ int dimagev_get_camera_status(dimagev_t *dimagev) {
 	return GP_OK;
 }
 
+/* This function converts a few chars of data, such as is given by the camera
+   to indicate status, and massages it into a dimagev_status_t.
+*/
 dimagev_status_t *dimagev_import_camera_status(unsigned char *raw_data) {
 	dimagev_status_t *processed_data;
 
@@ -150,6 +174,9 @@ dimagev_status_t *dimagev_import_camera_status(unsigned char *raw_data) {
 	return processed_data;
 }
 
+/* This is a fairly simple dump function, using the GPIO debug funtions. It
+   just prints the current status to stderr in a reasonably readable format.
+*/
 void dimagev_dump_camera_status(dimagev_status_t *status) {
 
 	if ( status == NULL ) {
