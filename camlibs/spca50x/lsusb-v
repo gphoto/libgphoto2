@@ -10,6 +10,7 @@
 # different features
 #
 # Add data after the __DATA__ line.
+# Run this file with perl to create the lsusb output in extra files.
 # 
 ###################################################################
 
