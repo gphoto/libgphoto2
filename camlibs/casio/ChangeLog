@@ -1,3 +1,8 @@
+2004-03-23  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* casio-qv.c (camera_init): Patch by Michael Haardt
+	  <michael@moria.de>.
+
 2003-12-03  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* casio-qv.c (camera_init): hardcode speed to 9600 bauds

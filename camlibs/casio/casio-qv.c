@@ -214,7 +214,6 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 int
 camera_init (Camera *camera, GPContext *context) 
 {
-	int result = GP_OK, i;
 	gp_port_settings settings;
 
         /* First, set up all the function pointers */
@@ -233,7 +232,10 @@ camera_init (Camera *camera, GPContext *context)
 	/* speed is hardcoded to 9600 as per the protocol */
 	settings.serial.speed = 9600;
 	CHECK_RESULT (gp_port_set_settings (camera->port, settings));
-	result = QVping (camera);
+	gp_port_set_pin (camera->port, GP_PIN_RTS, GP_LEVEL_HIGH);
+	gp_port_set_pin (camera->port, GP_PIN_DTR, GP_LEVEL_LOW);
+	gp_port_set_pin (camera->port, GP_PIN_CTS, GP_LEVEL_LOW);
+	CHECK_RESULT (QVping (camera));
 
-	return (result);
+	return GP_OK;
 }
