@@ -29,7 +29,7 @@ sgml:
 
 html:
 	if ! test -d html ; then mkdir html ; fi
-	-cd html && gtkdoc-mkhtml $(DOC_MODULE) $(srcdir)/$(DOC_MAIN_SGML_FILE)
+	-cd $(srcdir)/html && gtkdoc-mkhtml $(DOC_MODULE) ../$(DOC_MAIN_SGML_FILE)
 
 install-data-local:
 	$(INSTALL) -d -m 0755 $(DESTDIR)$(TARGET_DIR)
