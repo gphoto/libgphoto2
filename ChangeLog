@@ -1,5 +1,10 @@
 2001-08-20  Lutz MÜller  <urc8@rz.uni-karlsruhe.de>
 
+	* libpghoto2/camera.c: Kill compile warning by declaring gp_camera_exit
+	static
+
+2001-08-20  Lutz MÜller  <urc8@rz.uni-karlsruhe.de>
+
 	* MAINTAINERS: New
 
 2001-08-20  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
