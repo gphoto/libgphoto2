@@ -24,6 +24,7 @@
 #define __GPHOTO2_FILESYS_H__
 
 #include <gphoto2-list.h>
+#include <gphoto2-file.h>
 
 typedef enum {
 	GP_FILE_INFO_NONE            = 0,
@@ -110,6 +111,19 @@ int gp_filesystem_get_info       (CameraFilesystem *fs, const char *folder,
 				  const char *filename, CameraFileInfo *info);
 int gp_filesystem_set_info       (CameraFilesystem *fs, const char *folder,
 				  const char *filename, CameraFileInfo *info);
+
+/* Files */
+typedef int (*CameraFilesystemGetFileFunc) (CameraFilesystem *fs,
+					    const char *folder,
+					    const char *filename,
+					    CameraFileType type,
+					    CameraFile *file, void *data);
+int gp_filesystem_set_file_func (CameraFilesystem *fs,
+				 CameraFilesystemGetFileFunc get_file_func,
+				 void *data);
+int gp_filesystem_get_file      (CameraFilesystem *fs, const char *folder,
+				 const char *filename, CameraFileType type,
+				 CameraFile *file);
 
 int gp_filesystem_dump         (CameraFilesystem *fs);
 

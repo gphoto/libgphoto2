@@ -26,11 +26,15 @@
 
 #include "gphoto2-core.h"
 #include "gphoto2-result.h"
+#include "gphoto2-file.h"
 
 typedef struct {
 	char name [128];
 	int info_dirty;
 	CameraFileInfo info;
+	CameraFile *preview;
+	CameraFile *normal;
+	CameraFile *raw;
 } CameraFilesystemFile;
 
 typedef struct {
@@ -52,6 +56,9 @@ struct _CameraFilesystem {
 	CameraFilesystemListFunc file_list_func;
 	CameraFilesystemListFunc folder_list_func;
 	void *list_data;
+
+	CameraFilesystemGetFileFunc get_file_func;
+	void *file_data;
 };
 
 #define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
@@ -79,6 +86,9 @@ gp_filesystem_new (CameraFilesystem **fs)
 	(*fs)->file_list_func = NULL;
 	(*fs)->folder_list_func = NULL;
 	(*fs)->list_data = NULL;
+
+	(*fs)->get_file_func = NULL;
+	(*fs)->file_data = NULL;
 
 	result = gp_filesystem_append_folder (*fs, "/");
 	if (result != GP_OK) {
@@ -251,6 +261,9 @@ gp_filesystem_append (CameraFilesystem *fs, const char *folder,
 	fs->folder[x].count++;
 	strcpy (fs->folder[x].file[fs->folder[x].count - 1].name, filename);
 	fs->folder[x].file[fs->folder[x].count - 1].info_dirty = 1;
+	fs->folder[x].file[fs->folder[x].count - 1].preview = NULL;
+	fs->folder[x].file[fs->folder[x].count - 1].normal = NULL;
+	fs->folder[x].file[fs->folder[x].count - 1].raw = NULL;
 
 	/*
 	 * If people manually add files, they probably know the contents of
@@ -521,8 +534,11 @@ gp_filesystem_delete (CameraFilesystem *fs, const char *folder,
 
 	if (filename) {
 
-		/* Search the file */
+		/* Search the file and get rid of cached files */
 		CHECK_RESULT (y = gp_filesystem_number (fs, folder, filename));
+		gp_file_unref (fs->folder[x].file[y].preview);
+		gp_file_unref (fs->folder[x].file[y].normal);
+		gp_file_unref (fs->folder[x].file[y].raw);
 
 		/* Move all files behind one position up */
 		for (; y < fs->folder[x].count - 1; y++)
@@ -583,19 +599,12 @@ gp_filesystem_format (CameraFilesystem *fs)
 
 	gp_debug_printf (GP_DEBUG_HIGH, "core", "Formatting file system...");
 
-        for (x = 0; x < fs->count; x++)
-		if (fs->folder[x].count)
-			free (fs->folder[x].file);
+	CHECK_RESULT (gp_filesystem_delete (fs, "/", NULL));
+	CHECK_RESULT (x = gp_filesystem_folder_number (fs, "/"));
 
-	if (fs->count)
-		free (fs->folder);
-	fs->count = 0;
-
-	/* 
-	 * Append the root folder so that list_[folders,files] will stop
-	 * there when recursively looking up parent folders.
-	 */
-	CHECK_RESULT (gp_filesystem_append_folder (fs, "/"));
+	/* Set dirty flag so that file_list and folder_list will be called */
+	fs->folder[x].files_dirty = 1;
+	fs->folder[x].folders_dirty = 1;
 
         return (GP_OK);
 }
@@ -706,6 +715,86 @@ gp_filesystem_set_list_funcs (CameraFilesystem *fs,
 	fs->file_list_func = file_list_func;
 	fs->folder_list_func = folder_list_func;
 	fs->list_data = data;
+
+	return (GP_OK);
+}
+
+int
+gp_filesystem_set_file_func (CameraFilesystem *fs,
+			     CameraFilesystemGetFileFunc get_file_func,
+			     void *data)
+{
+	CHECK_NULL (fs);
+
+	fs->get_file_func = get_file_func;
+	fs->file_data = data;
+
+	return (GP_OK);
+}
+
+int
+gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
+			const char *filename, CameraFileType type,
+			CameraFile *file)
+{
+	int x, y, result;
+	CameraFile *tmp;
+
+	CHECK_NULL (fs && folder && file && filename);
+
+	if (!fs->get_file_func)
+		return (GP_ERROR_NOT_SUPPORTED);
+
+	/* Search folder and file */
+	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
+	CHECK_RESULT (y = gp_filesystem_number (fs, folder, filename));
+
+	switch (type) {
+	case GP_FILE_TYPE_PREVIEW:
+		if (fs->folder[x].file[y].preview)
+			return (gp_file_copy (file,
+					fs->folder[x].file[y].preview));
+		break;
+	case GP_FILE_TYPE_NORMAL:
+		if (fs->folder[x].file[y].normal)
+			return (gp_file_copy (file,
+					fs->folder[x].file[y].normal));
+		break;
+	case GP_FILE_TYPE_RAW:
+		if (fs->folder[x].file[y].raw)
+			return (gp_file_copy (file,
+					fs->folder[x].file[y].raw));
+		break;
+	default:
+		return (GP_ERROR);
+	}
+
+	CHECK_RESULT (gp_file_new (&tmp));
+	result = fs->get_file_func (fs, folder, filename, type, tmp,
+				    fs->file_data);
+	if (result != GP_OK) {
+		gp_file_unref (tmp);
+		return (result);
+	}
+
+	switch (type) {
+	case GP_FILE_TYPE_PREVIEW:
+		fs->folder[x].file[y].preview = tmp;
+		break;
+	case GP_FILE_TYPE_NORMAL:
+		fs->folder[x].file[y].normal = tmp;
+		break;
+	case GP_FILE_TYPE_RAW:
+		fs->folder[x].file[y].raw = tmp;
+		break;
+	default:
+		gp_file_unref (tmp);
+		return (GP_ERROR);
+	}
+
+	CHECK_RESULT (gp_file_set_type (tmp, type));
+	CHECK_RESULT (gp_file_set_name (tmp, filename)); 
+	CHECK_RESULT (gp_file_copy (file, tmp));
 
 	return (GP_OK);
 }

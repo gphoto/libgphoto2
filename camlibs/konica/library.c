@@ -424,13 +424,14 @@ camera_folder_delete_all (Camera* camera, const gchar* folder)
 }
 
 static int 
-camera_file_get (Camera* camera, const gchar* folder, const gchar* filename,
-		 CameraFileType type, CameraFile *file)
+get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
+	       CameraFileType type, CameraFile *file, void *data)
 {
+	Camera *camera = data;
 	gulong 		image_id;
 	gchar*		image_id_string;
-	KonicaData*	kd;
-	char *data = NULL;
+	KonicaData *kd = camera->camlib_data;
+	unsigned char *fdata = NULL;
 	long int size;
 
 	if (strlen (filename) != 11)
@@ -439,12 +440,6 @@ camera_file_get (Camera* camera, const gchar* folder, const gchar* filename,
 		return (GP_ERROR_FILE_NOT_FOUND);
 	if (strcmp (folder, "/"))
 		return (GP_ERROR_DIRECTORY_NOT_FOUND);
-
-	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_file_get_generic ***");
-	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** folder: %s", folder);
-	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** file:   %s", filename);
-
-	kd = (KonicaData *) camera->camlib_data;
 
 	/* Check if we can get the image id from the filename. */
 	image_id_string = g_strndup (filename, 6);
@@ -455,23 +450,21 @@ camera_file_get (Camera* camera, const gchar* folder, const gchar* filename,
 	switch (type) {
 	case GP_FILE_TYPE_PREVIEW:
 		CHECK (k_get_image (camera->port, kd->image_id_long, image_id,
-				    K_THUMBNAIL, (guchar **) &data,
+				    K_THUMBNAIL, (guchar **) &fdata,
 				    (guint *) &size));
 		break;
 	case GP_FILE_TYPE_NORMAL:
 		CHECK (k_get_image (camera->port, kd->image_id_long, image_id,
-				    K_IMAGE_EXIF, (guchar **) &data,
+				    K_IMAGE_EXIF, (guchar **) &fdata,
 				    (guint *) &size));
 		break;
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
 
-	gp_file_set_data_and_size (file, data, size);
-	gp_file_set_name (file, filename);
-	gp_file_set_mime_type (file, "image/jpeg");
+	CHECK (gp_file_set_data_and_size (file, fdata, size));
+	CHECK (gp_file_set_mime_type (file, GP_MIME_JPEG));
 
-	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Leaving camera_file_get_generic ***");
 	return (GP_OK);
 }
 
@@ -1197,7 +1190,6 @@ camera_init (Camera* camera)
         /* First, set up all the function pointers. */
         camera->functions->exit                 = camera_exit;
         camera->functions->folder_delete_all    = camera_folder_delete_all;
-        camera->functions->file_get             = camera_file_get;
         camera->functions->file_delete          = camera_file_delete;
         camera->functions->get_config           = camera_get_config;
         camera->functions->set_config           = camera_set_config;
@@ -1261,6 +1253,7 @@ camera_init (Camera* camera)
                                       set_info_func, camera);
         gp_filesystem_set_list_funcs (camera->fs, file_list_func,
                                       NULL, camera);
+	gp_filesystem_set_file_func (camera->fs, get_file_func, camera);
 
         gp_debug_printf (GP_DEBUG_LOW, "konica", "*** EXIT: "
                          "camera_init ***");

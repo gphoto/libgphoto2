@@ -298,9 +298,10 @@ camera_exit (Camera *camera)
 }
 
 static int
-camera_file_get (Camera *camera, const char *folder, const char *filename,
-		 CameraFileType type, CameraFile *file)
+get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
+	       CameraFileType type, CameraFile *file, void *user_data)
 {
+	Camera *camera = user_data;
         int regl, regd, n;
 	char *jpeg_data = NULL;
 	int jpeg_size;
@@ -1268,7 +1269,6 @@ int camera_init (Camera *camera)
         
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;
-        camera->functions->file_get             = camera_file_get;
         camera->functions->file_delete          = camera_file_delete;
         camera->functions->folder_delete_all    = camera_folder_delete_all;
         camera->functions->capture_preview      = camera_capture_preview;
@@ -1383,6 +1383,8 @@ int camera_init (Camera *camera)
         CHECK_STOP_FREE (camera, gp_filesystem_set_info_funcs (camera->fs,
                                         get_info_func, set_info_func,
                                         camera));
+	CHECK_STOP_FREE (camera, gp_filesystem_set_file_func (camera->fs,
+					get_file_func, camera));
 
         gp_debug_printf (GP_DEBUG_LOW, "sierra", "************************");
         gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_init done ***");

@@ -754,19 +754,29 @@ int
 gp_camera_file_get (Camera *camera, const char *folder, const char *file,
 		    CameraFileType type, CameraFile *camera_file)
 {
+	int result;
+
 	GP_DEBUG ("ENTER: gp_camera_file_get");
 	CHECK_NULL (camera && folder && file && camera_file);
 
-        if (camera->functions->file_get == NULL)
-                return (GP_ERROR_NOT_SUPPORTED);
-	
 	/* Did we get reasonable foldername/filename? */
 	if (strlen (folder) == 0)
 		return (GP_ERROR_DIRECTORY_NOT_FOUND);
 	if (strlen (file) == 0)
 		return (GP_ERROR_FILE_NOT_FOUND);
 
+	CHECK_OPEN (camera);
+	result = gp_filesystem_get_file (camera->fs, folder, file, type,
+					 camera_file);
+	CHECK_CLOSE (camera);
+	if (result != GP_ERROR_NOT_SUPPORTED)
+		return (result);
+
+	if (camera->functions->file_get == NULL)
+		return (GP_ERROR_NOT_SUPPORTED); 
+
 	CHECK_RESULT (gp_file_set_type (camera_file, type));
+	CHECK_RESULT (gp_file_set_name (camera_file, file));
 
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->file_get (camera,
 					folder, file, type, camera_file));
