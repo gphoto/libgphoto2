@@ -12,7 +12,6 @@ SUBDIRS = 			\
 	intl 			\
 	libgphoto2 		\
 	camlibs 		\
-	frontends 		\
 	tests			\
 	po			\
 	packaging		\
