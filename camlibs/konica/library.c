@@ -235,13 +235,13 @@ camera_abilities (CameraAbilitiesList* list)
 }
 
 static int
-set_speed (Camera *camera, unsigned int speed, GPContext *context)
+set_speed (Camera *camera, int speed, GPContext *context)
 {
 	GPPortSettings settings;
 	KBitRate bit_rates;
 	KBitFlag bit_flags;
 	int i;
-	unsigned int speeds[] = {300, 600, 1200, 2400, 4800, 9600, 19200,
+	int speeds[] = {300, 600, 1200, 2400, 4800, 9600, 19200,
 				 38400, 57600, 115200};
 
 	C(gp_port_get_settings (camera->port, &settings));
@@ -446,7 +446,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
         unsigned long image_id;
 	char image_id_string[] = {0, 0, 0, 0, 0, 0, 0};
         unsigned char *fdata = NULL;
-        long int size;
+        unsigned int size;
 	CameraFileInfo info;
 	int r;
 
@@ -474,14 +474,14 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		r = k_get_image (camera->port, context,
 			camera->pl->image_id_long,
 			image_id, K_THUMBNAIL, (unsigned char **) &fdata,
-			(unsigned int *) &size);
+			&size);
                 break;
         case GP_FILE_TYPE_NORMAL:
 		size = info.file.size;
 		r = k_get_image (camera->port, context,
 			camera->pl->image_id_long,
 			image_id, K_IMAGE_EXIF, (unsigned char **) &fdata,
-			(unsigned int *) &size);
+			&size);
                 break;
         default:
 		r = GP_ERROR_NOT_SUPPORTED;
@@ -549,10 +549,9 @@ static int
 camera_capture_preview (Camera* camera, CameraFile* file, GPContext *context)
 {
         unsigned char *data = NULL;
-        long int size = 0;
+        unsigned int size = 0;
 
-        C(k_get_preview (camera->port, context, TRUE,
-			      &data, (unsigned int *) &size));
+        C(k_get_preview (camera->port, context, TRUE, &data, &size));
         C(gp_file_set_data_and_size (file, data, size));
         C(gp_file_set_mime_type (file, GP_MIME_JPEG));
 
@@ -877,8 +876,11 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
         /* Date & Time */
         gp_widget_get_child_by_label (section, _("Date and Time"), &widget);
         if (gp_widget_changed (widget)) {
+                time_t xtime;
+
                 gp_widget_get_value (widget, &i);
-                tm_struct = localtime ((time_t*) &i);
+                xtime = i;
+                tm_struct = localtime (&xtime);
                 date.year   = tm_struct->tm_year - 100;
                 date.month  = tm_struct->tm_mon;
                 date.day    = tm_struct->tm_mday;

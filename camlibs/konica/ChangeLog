@@ -1,3 +1,8 @@
+2002-11-17  Marcus Meissner <marcus@jet.franken.de>
+	
+	* library.c: Got rid of some broken long*/int*/time_t* casts.
+	  (would break 64bit on big endian).
+
 2002-11-05  Lutz MÜller <lutz@users.sourceforge.net>
 
 	* Makefile.am
