@@ -140,16 +140,15 @@ int camera_file_info_set (Camera *camera, CameraFileInfo *info, char *folder, ch
 
 	/* We really have to rename the poor file... */
 	path_old = malloc (strlen (folder) + 1 + strlen (file) + 1);
-	path_new = malloc (strlen (folder) + 1 + strlen (info->file.name));
+	path_new = malloc (strlen (folder) + 1 + strlen (info->file.name) + 1);
 	strcpy (path_old, folder);
 	strcpy (path_new, folder);
 	path_old [strlen (folder)] = '/';
 	path_new [strlen (folder)] = '/';
 	strcpy (path_old + strlen (folder) + 1, file);
 	strcpy (path_new + strlen (folder) + 1, info->file.name);
-	
-	/* If folder = "/", we have paths like "//folder/..." */
-	if (!strcmp (folder, "/"))
+
+	if (*(path_old + 1) == '/')
 		retval = rename (path_old + 1, path_new + 1);
 	else 
 		retval = rename (path_old, path_new);
@@ -168,6 +167,8 @@ int camera_file_info_set (Camera *camera, CameraFileInfo *info, char *folder, ch
 			return (GP_ERROR_IO);
 		case ENOMEM:
 			return (GP_ERROR_NO_MEMORY);
+		case ENOENT:
+			return (GP_ERROR_FILE_NOT_FOUND);
 		default:
 			return (GP_ERROR);
 		}
