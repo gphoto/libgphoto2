@@ -49,8 +49,8 @@ struct _CameraFilesystem {
 	CameraFilesystemInfoFunc set_info_func;
 	void *info_data;
 
-	CameraFilesystemFileListFunc file_list_func;
-	CameraFilesystemFolderListFunc folder_list_func;
+	CameraFilesystemListFunc file_list_func;
+	CameraFilesystemListFunc folder_list_func;
 	void *list_data;
 };
 
@@ -698,8 +698,8 @@ gp_filesystem_get_folder (CameraFilesystem *fs, const char *filename,
 
 int
 gp_filesystem_set_list_funcs (CameraFilesystem *fs,
-			      CameraFilesystemFileListFunc file_list_func,
-			      CameraFilesystemFolderListFunc folder_list_func,
+			      CameraFilesystemListFunc file_list_func,
+			      CameraFilesystemListFunc folder_list_func,
 			      void *data)
 {
 	CHECK_NULL (fs);

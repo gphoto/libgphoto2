@@ -1,5 +1,13 @@
 2001-08-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/template/*: Updated
+	* include/gphoto2-camera.h: Add a note about c_folder_list_folders and
+	c_folder_list_files not to be used. Same with [get,set]_info.
+	* include/gphoto2-filesys.h: Remove an uneeded typedef.
+	* libgphoto2/filesys.c: Here, too.
+
+2001-08-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	Dan Fandrich <dan@coneharvesters.com> found this bug:
 
 	* libgphoto2/camera.c (list_files, list_folders): If
