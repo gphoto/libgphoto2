@@ -1,3 +1,8 @@
+2002-01-27  Lutz Müller <lutz@users.sourceforge.net>
+
+	* libgphoto2/gphoto2-widget.c: Size of CameraWidget->[labelname] is
+	  now 256 instead of 32. Fixes long strings (esp. german translation).
+
 2002-01-26  Lutz Müller <lutz@users.sourceforge.net>
 
 	Patch by Hans Ulrich Niedermann <gp@n-dimensional.de> (slightly
