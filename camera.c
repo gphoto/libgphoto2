@@ -272,12 +272,24 @@ gp_camera_set_status_func (Camera *camera, CameraStatusFunc func,
 }
 
 int
+gp_camera_set_message_func (Camera *camera, CameraMessageFunc func,
+			    void *data)
+{
+	CHECK_NULL (camera);
+
+	camera->message_func = func;
+	camera->message_data = data;
+
+	return (GP_OK);
+}
+
+int
 gp_camera_status (Camera *camera, const char *format, ...)
 {
 	char buffer[1024];
 	va_list arg;
 
-	CHECK_NULL (camera);
+	CHECK_NULL (camera && format);
 
 	va_start (arg, format);
 #if HAVE_VSNPRINTF
@@ -289,6 +301,28 @@ gp_camera_status (Camera *camera, const char *format, ...)
 
 	if (camera->status_func)
 		camera->status_func (camera, buffer, camera->status_data);
+
+	return (GP_OK);
+}
+
+int
+gp_camera_message (Camera *camera, const char *format, ...)
+{
+	char buffer[2048];
+	va_list arg;
+
+	CHECK_NULL (camera && format);
+
+	va_start (arg, format);
+#if HAVE_VSNPRINTF
+	vsnprintf (buffer, sizeof (buffer), format, arg);
+#else
+	vsprintf (buffer, format, arg);
+#endif
+	va_end (arg);
+
+	if (camera->message_func)
+		camera->message_func (camera, buffer, camera->message_data);
 
 	return (GP_OK);
 }
