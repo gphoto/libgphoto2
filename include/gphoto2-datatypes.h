@@ -181,6 +181,7 @@ typedef struct {
 typedef struct {
 	CameraListType type;
 	char name[128];
+	char value[128];
 } CameraListEntry;
 
 typedef struct {
