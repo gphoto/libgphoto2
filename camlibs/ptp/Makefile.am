@@ -3,7 +3,7 @@ camlib_LTLIBRARIES = libgphoto2_ptp.la
 
 INCLUDES = -I$(top_srcdir)/libgphoto2
 
-libgphoto2_ptp_la_SOURCES = ptp.c ptp.h library.c
+libgphoto2_ptp_la_SOURCES = ptp.c ptp.h ptperr.h library.c
 
 libgphoto2_ptp_la_LDFLAGS =\
  -module -avoid-version\

@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2001-11-15 22:35+0100\n"
+"POT-Creation-Date: 2001-11-16 04:18-0800\n"
 "PO-Revision-Date: 2001-11-15 22:42+0100\n"
 "Last-Translator: Colin Marquardt <colin@marquardt-home.de>\n"
 "Language-Team: German <de@li.org>\n"
@@ -313,7 +313,7 @@ msgid "Communication error 1"
 msgstr "Kommunikationsfehler 1"
 
 #: camlibs/canon/psa50.c:1592 camlibs/canon/psa50.c:1596
-#: camlibs/dimera/dimera3500.c:1056
+#: camlibs/dimera/dimera3500.c:1059
 msgid "No response from camera"
 msgstr "Keine Antwort von Kamera"
 
@@ -380,32 +380,32 @@ msgstr ""
 "Digita\n"
 "Johannes Erdfelt <johannes@erdfelt.com>"
 
-#: camlibs/dimera/dimera3500.c:407
+#: camlibs/dimera/dimera3500.c:410
 msgid "Only root directory is supported"
 msgstr "Nur das Wurzelverzeichnis (»/«) ist unterstützt"
 
-#: camlibs/dimera/dimera3500.c:414 camlibs/dimera/dimera3500.c:601
+#: camlibs/dimera/dimera3500.c:417 camlibs/dimera/dimera3500.c:604
 msgid "Problem getting number of images"
 msgstr "Problem beim Holen der Anzahl der Bilder"
 
-#: camlibs/dimera/dimera3500.c:455
+#: camlibs/dimera/dimera3500.c:458
 msgid "Image type is not supported"
 msgstr "Bildtyp nicht unterstützt"
 
-#: camlibs/dimera/dimera3500.c:510 camlibs/dimera/dimera3500.c:750
+#: camlibs/dimera/dimera3500.c:513 camlibs/dimera/dimera3500.c:753
 msgid "Problem getting image information"
 msgstr "Problem beim Holen der Bildinformation"
 
-#: camlibs/dimera/dimera3500.c:541
+#: camlibs/dimera/dimera3500.c:544
 msgid "Capture type is not supported"
 msgstr "Aufnahmetyp nicht unterstützt"
 
-#: camlibs/dimera/dimera3500.c:621
+#: camlibs/dimera/dimera3500.c:624
 #, c-format
 msgid " (battery is %d%% full)"
 msgstr " (Batterie ist zu %d%% voll)"
 
-#: camlibs/dimera/dimera3500.c:625
+#: camlibs/dimera/dimera3500.c:628
 #, c-format
 msgid ""
 "Dimera 3500 ver. %s %d/%d %d:%d\n"
@@ -423,76 +423,76 @@ msgstr ""
 "Kamera wird %s-betrieben%s\n"
 
 #. Flash
-#: camlibs/dimera/dimera3500.c:636 camlibs/konica/library.c:782
+#: camlibs/dimera/dimera3500.c:639 camlibs/konica/library.c:782
 #: camlibs/konica/library.c:1022
 msgid "Flash"
 msgstr "Blitz"
 
-#: camlibs/dimera/dimera3500.c:636
+#: camlibs/dimera/dimera3500.c:639
 msgid "NO Flash"
 msgstr "Kein Blitz"
 
-#: camlibs/dimera/dimera3500.c:638
+#: camlibs/dimera/dimera3500.c:641
 msgid "Dual Iris"
 msgstr "Dual-Iris"
 
-#: camlibs/dimera/dimera3500.c:638
+#: camlibs/dimera/dimera3500.c:641
 msgid "NO Dual Iris"
 msgstr "Keine Dual-Iris"
 
-#: camlibs/dimera/dimera3500.c:640
+#: camlibs/dimera/dimera3500.c:643
 msgid "Resolution Switch"
 msgstr "Auflösungsumschaltung"
 
-#: camlibs/dimera/dimera3500.c:640
+#: camlibs/dimera/dimera3500.c:643
 msgid "NO Resolution Switch"
 msgstr "Keine Auflösungsumschaltung"
 
-#: camlibs/dimera/dimera3500.c:642
+#: camlibs/dimera/dimera3500.c:645
 msgid "NO Power Light"
 msgstr "Keine Powerlampe"
 
-#: camlibs/dimera/dimera3500.c:644
+#: camlibs/dimera/dimera3500.c:647
 msgid "ON"
 msgstr "An"
 
-#: camlibs/dimera/dimera3500.c:644
+#: camlibs/dimera/dimera3500.c:647
 msgid "OFF"
 msgstr "Aus"
 
-#: camlibs/dimera/dimera3500.c:646
+#: camlibs/dimera/dimera3500.c:649
 msgid "ready"
 msgstr "Bereit"
 
-#: camlibs/dimera/dimera3500.c:646
+#: camlibs/dimera/dimera3500.c:649
 msgid "NOT ready"
 msgstr "Nicht bereit"
 
-#: camlibs/dimera/dimera3500.c:648
+#: camlibs/dimera/dimera3500.c:651
 msgid "in fill mode"
 msgstr "Im Füllmodus"
 
-#: camlibs/dimera/dimera3500.c:648
+#: camlibs/dimera/dimera3500.c:651
 msgid "NOT in fill mode"
 msgstr "Nicht im Füllmodus"
 
-#: camlibs/dimera/dimera3500.c:650
+#: camlibs/dimera/dimera3500.c:653
 msgid "low (320x240)"
 msgstr "niedrig (320x240)"
 
-#: camlibs/dimera/dimera3500.c:650
+#: camlibs/dimera/dimera3500.c:653
 msgid "high (640x480)"
 msgstr "hoch (640x480)"
 
-#: camlibs/dimera/dimera3500.c:652
+#: camlibs/dimera/dimera3500.c:655
 msgid "externally"
 msgstr "extern"
 
-#: camlibs/dimera/dimera3500.c:652
+#: camlibs/dimera/dimera3500.c:655
 msgid "internally"
 msgstr "intern"
 
-#: camlibs/dimera/dimera3500.c:662
+#: camlibs/dimera/dimera3500.c:665
 msgid ""
 "  Image glitches or problems communicating are\n"
 "often caused by a low battery.\n"
@@ -510,7 +510,7 @@ msgstr ""
 "von der Aufnahmevorschau-Funktion gesetzt.\n"
 "  Die Bildqualität ist im Moment geringer als sie sein könnte.\n"
 
-#: camlibs/dimera/dimera3500.c:676
+#: camlibs/dimera/dimera3500.c:679
 msgid ""
 "gPhoto2 Mustek VDC-3500/Relisys Dimera 3500\n"
 "This software was created with the\n"
@@ -540,56 +540,65 @@ msgstr ""
 "     Informationen über Protokoll und Rohbildformat,\n"
 "     gphoto2-Portierung\n"
 
-#: camlibs/dimera/dimera3500.c:746
+#: camlibs/dimera/dimera3500.c:749
 msgid "Getting Image Info"
 msgstr "Lade Bild-Informationen"
 
-#: camlibs/dimera/dimera3500.c:764
+#: camlibs/dimera/dimera3500.c:767
 msgid "Loading Image"
 msgstr "Lade Bild"
 
-#: camlibs/dimera/dimera3500.c:768
+#: camlibs/dimera/dimera3500.c:771
 msgid "Problem reading image from flash"
 msgstr "Problem beim Lesen des Bildes vom Speicher"
 
 #. 8 bits per pixel in raw CCD format
-#: camlibs/dimera/dimera3500.c:781 camlibs/dimera/dimera3500.c:805
-#: camlibs/dimera/dimera3500.c:833
+#: camlibs/dimera/dimera3500.c:784 camlibs/dimera/dimera3500.c:808
+#: camlibs/dimera/dimera3500.c:836
 msgid "Downloading Image"
 msgstr "Lade Bild herunter"
 
-#: camlibs/dimera/dimera3500.c:786 camlibs/dimera/dimera3500.c:936
-#: camlibs/dimera/dimera3500.c:1004
+#: camlibs/dimera/dimera3500.c:789 camlibs/dimera/dimera3500.c:939
+#: camlibs/dimera/dimera3500.c:1007
 msgid "Out of memory"
 msgstr "Kein Speicherplatz vorhanden"
 
-#: camlibs/dimera/dimera3500.c:815 camlibs/dimera/dimera3500.c:843
+#: camlibs/dimera/dimera3500.c:818 camlibs/dimera/dimera3500.c:846
 msgid "Retransmitting"
 msgstr "Übertrage erneut"
 
-#: camlibs/dimera/dimera3500.c:824 camlibs/dimera/dimera3500.c:852
+#: camlibs/dimera/dimera3500.c:827 camlibs/dimera/dimera3500.c:855
 msgid "Problem downloading image"
 msgstr "Problem beim Herunterladen des Bildes"
 
-#: camlibs/dimera/dimera3500.c:951
+#: camlibs/dimera/dimera3500.c:954
 msgid "Problem taking live image"
 msgstr "Problem bei der Aufnahme eines Live-Bildes"
 
-#: camlibs/dimera/dimera3500.c:1023
+#: camlibs/dimera/dimera3500.c:1026
 msgid "Problem opening port"
 msgstr "Problem beim Öffnen des Ports"
 
-#: camlibs/dimera/dimera3500.c:1033
+#: camlibs/dimera/dimera3500.c:1036
 msgid "Problem resetting camera"
 msgstr "Problem beim Kamera-Reset"
 
-#: camlibs/dimera/dimera3500.c:1043
+#: camlibs/dimera/dimera3500.c:1046
 msgid "Problem setting camera communication speed"
 msgstr "Problem beim Setzen der Kameradatenrate"
 
-#: camlibs/dimera/dimera3500.c:1062
+#: camlibs/dimera/dimera3500.c:1065
 msgid "Looks like a modem, not a camera"
 msgstr "Sieht wie ein Modem aus, nicht wie eine Kamera"
+
+#: camlibs/directory/directory.c:311
+#, fuzzy
+msgid "Directory Browse"
+msgstr "Verzeichnis existiert bereits"
+
+#: camlibs/directory/directory.c:312 camlibs/directory/directory.c:343
+msgid "View hidden directories"
+msgstr ""
 
 #: camlibs/kodak/dc120/dc120.c:25
 msgid "Internal Memory"
@@ -829,7 +838,7 @@ msgstr "Dauerhafte Einstellungen"
 
 #. Date
 #: camlibs/konica/library.c:671 camlibs/konica/library.c:883
-#: camlibs/polaroid/pdc700.c:892 camlibs/polaroid/pdc700.c:958
+#: camlibs/polaroid/pdc700.c:896 camlibs/polaroid/pdc700.c:962
 msgid "Date and Time"
 msgstr "Datum und Zeit"
 
@@ -1373,16 +1382,16 @@ msgstr "Unerwarteten Header erhalten (%i)"
 msgid "Received unexpected response"
 msgstr "Unerwartete Antwort erhalten"
 
-#: camlibs/polaroid/pdc700.c:239
+#: camlibs/polaroid/pdc700.c:243
 msgid "Checksum error"
 msgstr "Prüfsummenfehler"
 
-#: camlibs/polaroid/pdc700.c:283
+#: camlibs/polaroid/pdc700.c:289
 #, c-format
 msgid "The camera sent more bytes than expected (%i)"
 msgstr "Die Kamera sendete mehr Bytes als erwartet (%i)"
 
-#: camlibs/polaroid/pdc700.c:367
+#: camlibs/polaroid/pdc700.c:373
 #, c-format
 msgid ""
 "Requested information about picture %i (= 0x%x), but got information about "
@@ -1391,7 +1400,7 @@ msgstr ""
 "Forderte Informationen über Bild %i (= 0x%x) an, erhielt jedoch "
 "Informationen über Bild %i"
 
-#: camlibs/polaroid/pdc700.c:799
+#: camlibs/polaroid/pdc700.c:803
 #, c-format
 msgid ""
 "%i bytes of an unknown image format have been received. Please write <gphoto-"
@@ -1400,19 +1409,19 @@ msgstr ""
 "%i Bytes eines unbekannten Bildformates erhalten. Bitte schreiben Sie an "
 "<gphoto-devel@gphoto.org> (auf Englisch) für Unterstützung."
 
-#: camlibs/polaroid/pdc700.c:864 camlibs/sierra/sierra.c:700
+#: camlibs/polaroid/pdc700.c:868 camlibs/sierra/sierra.c:700
 msgid "Camera Configuration"
 msgstr "Kamera-Konfiguration"
 
-#: camlibs/polaroid/pdc700.c:865
+#: camlibs/polaroid/pdc700.c:869
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: camlibs/polaroid/pdc700.c:880
+#: camlibs/polaroid/pdc700.c:884
 msgid "How long will it take until the camera powers off?"
 msgstr "Wie lange soll es dauern, bis die Kamera abschaltet?"
 
-#: camlibs/polaroid/pdc700.c:975
+#: camlibs/polaroid/pdc700.c:979
 #, c-format
 msgid ""
 "Date: %i/%02i/%02i %02i:%02i:%02i\n"
@@ -1445,10 +1454,11 @@ msgstr ""
 "Automat. Ausschalten: %i Minuten\n"
 "Stromquelle: %s"
 
-#: camlibs/polaroid/pdc700.c:1099
+#: camlibs/polaroid/pdc700.c:1103
 #, c-format
 msgid "The requested port type (%i) is not supported by this driver."
-msgstr "Der angeforderte Port-Typ (%i) wird von diesem Treiber nicht unterstützt."
+msgstr ""
+"Der angeforderte Port-Typ (%i) wird von diesem Treiber nicht unterstützt."
 
 #: camlibs/sierra/sierra.c:560
 msgid "The file to be uploaded has a null length"
@@ -2068,7 +2078,7 @@ msgstr ""
 msgid "Please specify a port."
 msgstr "Bitte geben Sie einen Port an."
 
-#: frontends/command-line/main.c:1290
+#: frontends/command-line/main.c:1289
 msgid "For debugging messages, please use the --debug option.\n"
 msgstr "Für Debug-Meldungen verwenden Sie bitte die Option »--debug«.\n"
 
