@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2002-06-13 23:51+0200\n"
-"PO-Revision-Date: 2002-03-12 16:00-0300\n"
+"POT-Creation-Date: 2002-06-18 23:09-0400\n"
+"PO-Revision-Date: 2002-06-18 22:37-0300\n"
 "Last-Translator: Fabian Mandelbaum <fabman@mandrakesoft.com>\n"
 "Language-Team: Castellano <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -94,9 +94,8 @@ msgid "Switching Camera Off"
 msgstr "Apagando la cámara"
 
 #: camlibs/canon/library.c:242
-#, fuzzy
 msgid "Error capturing image"
-msgstr "Error al borrar el archivo"
+msgstr "Error al capturar imagen"
 
 #: camlibs/canon/library.c:277
 #, c-format
@@ -280,7 +279,7 @@ msgstr "Lista de todos los archivos"
 
 #: camlibs/canon/library.c:1130 camlibs/canon/library.c:1181
 msgid "Keep filename on upload"
-msgstr ""
+msgstr "Mantener el nombre de archivo al transferir"
 
 #: camlibs/canon/library.c:1153
 msgid "Owner name changed"
@@ -436,6 +435,8 @@ msgid ""
 "File was too big. You may have to turn your camera off and back on before "
 "uploading more files."
 msgstr ""
+"El archivo era muy grande. Puede tener que apagar su cámara y volver a "
+"encenderla antes de transferir más archivos."
 
 #: camlibs/canon/usb.c:1034
 #, c-format
@@ -443,9 +444,8 @@ msgid "Detected a '%s'."
 msgstr "Se detectó '%s'."
 
 #: camlibs/digita/digita.c:331
-#, fuzzy
 msgid "Unsupported image type"
-msgstr "Cámaras soportadas:\n"
+msgstr "Tipo de imagen no soportado"
 
 #: camlibs/digita/digita.c:396
 msgid ""
@@ -725,60 +725,59 @@ msgstr ""
 "Modo Examinar el Directorio - escrito por Scott Fritzinger <scottf@unr.edu>."
 
 #: camlibs/directory/directory.c:562
-#, fuzzy, c-format
+#, c-format
 msgid "Could not delete file '%s' in folder '%s' (error code %i: %m)."
-msgstr "No se puede cambiar la fecha del archivo '%s' en '%s' (%m)."
+msgstr ""
+"No se puede borrar el archivo '%s' en la carpeta '%s' (código de error %i: %"
+"m)."
 
 #: camlibs/fuji/fuji.c:85
-#, fuzzy, c-format
+#, c-format
 msgid "The camera sent only %i byte(s), but we need at least %i."
-msgstr "La cámara envió más bytes que lo esperado (%i)"
+msgstr "La cámara sólo envió %i byte(s), pero se necesitan al menos %i."
 
 #: camlibs/fuji/fuji.c:126 camlibs/ricoh/library.c:242
-#, fuzzy
 msgid "Could not contact camera."
-msgstr "No se puede detectar cámara alguna"
+msgstr "No se puede conectar con la cámara."
 
 #: camlibs/fuji/fuji.c:188
-#, fuzzy, c-format
+#, c-format
 msgid "Received unexpected data (0x%02x, 0x%02x)."
-msgstr "Se recibió un encabezado no esperado (%i)"
+msgstr "Se recibieron datos esperados (0x%02x, 0x%02x)."
 
 #: camlibs/fuji/fuji.c:214
 #, c-format
 msgid "Wrong escape sequence: expected 0x%02x, got 0x%02x."
-msgstr ""
+msgstr "Secuencia de escape incorrecta: se esperaba 0x%02x, se recibió 0x%02x."
 
 #: camlibs/fuji/fuji.c:231
 #, c-format
 msgid "Bad data - got 0x%02x, expected 0x%02x."
-msgstr ""
+msgstr "Datos incorrectos - se recibió 0x%02x, se esperaba 0x%02x."
 
 #: camlibs/fuji/fuji.c:244
 #, c-format
 msgid "Bad data - got 0x%02x, expected 0x%02x or 0x%02x."
-msgstr ""
+msgstr "Datos incorrectos - se recibió 0x%02x, se esperaba 0x%02x o 0x%02x."
 
 #: camlibs/fuji/fuji.c:251
 #, c-format
 msgid "Bad checksum - got 0x%02x, expected 0x%02x."
-msgstr ""
+msgstr "Suma verificadora incorrecta - se recibió 0x%02x, se esperaba 0x%02x."
 
 #: camlibs/fuji/fuji.c:289 camlibs/fuji/fuji.c:728
-#, fuzzy
 msgid "Camera rejected the command."
-msgstr "La cámara no aceptó el comando."
+msgstr "La cámara rechazó el comando."
 
 #. Camera got fed up and reset itself.
 #: camlibs/fuji/fuji.c:298 camlibs/fuji/fuji.c:737
-#, fuzzy
 msgid "Camera reset itself."
-msgstr "Parámetros de la cámara"
+msgstr "La cámera se reinició sola."
 
 #: camlibs/fuji/fuji.c:302 camlibs/fuji/fuji.c:742
 #, c-format
 msgid "Camera sent unexpected byte 0x%02x."
-msgstr ""
+msgstr "La cámara envió un byte 0x%02x no esperado."
 
 #: camlibs/fuji/fuji.c:317 camlibs/konica/lowlevel.c:382
 #: camlibs/polaroid/pdc700.c:314 camlibs/sierra/library.c:1156
@@ -788,47 +787,50 @@ msgstr "Descargando..."
 #: camlibs/fuji/fuji.c:538
 #, c-format
 msgid "Could not allocate %i byte(s) for downloading the thumbnail."
-msgstr ""
+msgstr "No se pueden asignar %i byte(s) para descargar la diapositiva."
 
 #: camlibs/fuji/fuji.c:572
 #, c-format
 msgid "Could not allocate %i byte(s) for downloading the picture."
-msgstr ""
+msgstr "No se pueden asignar %i byte(s) para descargar la foto."
 
 #: camlibs/fuji/fuji.c:671
-#, fuzzy, c-format
+#, c-format
 msgid "The camera does not accept '%s' as filename."
-msgstr "La cámara no aceptó el comando."
+msgstr "La cámara no acepta '%s' como nombre de archivo."
 
 #: camlibs/fuji/fuji.c:675
 #, c-format
 msgid "Could not initialize upload (camera responded with 0x%02x)."
 msgstr ""
+"No se pudo inicializar la transferencia (la cámara respondió con 0x%02x)."
 
 #: camlibs/fuji/fuji.c:773
-#, fuzzy, c-format
+#, c-format
 msgid "The camera does not support speed %i."
-msgstr "Esta cámara no soporta resúmenes."
+msgstr "La cámara no soporta la velocidad %i."
 
 #: camlibs/fuji/fuji.c:777
 #, c-format
 msgid "Could not set speed to %i (camera responded with %i)."
-msgstr ""
+msgstr "No se pudo ajustar velocidad en %i (la cámara respondió con %i)."
 
 #: camlibs/fuji/library.c:153
 msgid ""
 "Matthew G. Martin\n"
 "Based on fujiplay by Thierry Bousch <bousch@topo.math.u-psud.fr>\n"
 msgstr ""
+"Matthew G. Martin\n"
+"Basado en fujiplay por Thierry Bousch <bousch@topo.math.u-psud.fr>\n"
 
 #: camlibs/fuji/library.c:317
-#, fuzzy, c-format
+#, c-format
 msgid "Bit rate %i is not supported."
-msgstr "Tipo de captura no soportado"
+msgstr "No se soporta la tasa de bits %i."
 
 #: camlibs/fuji/library.c:365
 msgid "Configuration for your FUJI camera"
-msgstr ""
+msgstr "Configuración para su cámara FUJI"
 
 #. Date & Time
 #: camlibs/fuji/library.c:370 camlibs/fuji/library.c:403
@@ -839,21 +841,19 @@ msgstr "Fecha y hora"
 #. ID
 #: camlibs/fuji/library.c:385 camlibs/fuji/library.c:418
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #: camlibs/fuji/library.c:438
-#, fuzzy
 msgid "Version: "
-msgstr "  Permisos: "
+msgstr "Versión: "
 
 #: camlibs/fuji/library.c:444
-#, fuzzy
 msgid "Model: "
-msgstr "Modelo"
+msgstr "Modelo: "
 
 #: camlibs/fuji/library.c:451
 msgid "Available memory: "
-msgstr ""
+msgstr "Memoria disponible: "
 
 #: camlibs/jamcam/jamcam.c:280
 msgid "jamcam library v"
@@ -1396,113 +1396,103 @@ msgstr "¡Archivo de localización muy largo!"
 
 #: camlibs/konica/konica.c:62
 msgid "Focusing error."
-msgstr ""
+msgstr "Error de focalización."
 
 #: camlibs/konica/konica.c:65
 msgid "Iris error."
-msgstr ""
+msgstr "Error del iris."
 
 #: camlibs/konica/konica.c:68
 msgid "Strobe error."
-msgstr ""
+msgstr "Error del estrosboscopio."
 
 #: camlibs/konica/konica.c:71
-#, fuzzy
 msgid "EEPROM checksum error."
-msgstr "Error de la suma de control"
+msgstr "Error de la suma de control de la EEPROM"
 
 #: camlibs/konica/konica.c:74
 msgid "Internal error (1)."
-msgstr ""
+msgstr "Error interno (1)."
 
 #: camlibs/konica/konica.c:77
 msgid "Internal error (2)."
-msgstr ""
+msgstr "Error interno (2)."
 
 #: camlibs/konica/konica.c:80
-#, fuzzy
 msgid "No card present."
-msgstr "Sin tarjeta"
+msgstr "No hay tarjeta alguna."
 
 #: camlibs/konica/konica.c:83
-#, fuzzy
 msgid "Card not supported."
-msgstr "Tipo de captura no soportado"
+msgstr "No se soporta la tarjeta."
 
 #: camlibs/konica/konica.c:86
 msgid "Card removed during access."
-msgstr ""
+msgstr "Se quitó la tarjeta durante el acceso."
 
 #: camlibs/konica/konica.c:89
 msgid "Image number not valid."
-msgstr ""
+msgstr "El número de la imagen no es válido."
 
 #: camlibs/konica/konica.c:92
-#, fuzzy
 msgid "Card can not be written."
-msgstr "La tarjeta no está formateada"
+msgstr "No se puede escribir la tarjeta."
 
 #: camlibs/konica/konica.c:95
-#, fuzzy
 msgid "Card is write protected."
-msgstr "Protegida contra escritura"
+msgstr "La tarjeta está protegida contra escritura."
 
 #: camlibs/konica/konica.c:98
 msgid "No space left on card."
-msgstr ""
+msgstr "No queda espacio en la tarjeta."
 
 #: camlibs/konica/konica.c:101
-#, fuzzy
 msgid "Image protected."
-msgstr "Archivo protegido."
+msgstr "Imagen protegida."
 
 #: camlibs/konica/konica.c:104
 msgid "Light too dark."
-msgstr ""
+msgstr "Luz muy obscura."
 
 #: camlibs/konica/konica.c:107
 msgid "Autofocus error."
-msgstr ""
+msgstr "Error de autofocus."
 
 #: camlibs/konica/konica.c:110
 msgid "System error."
-msgstr ""
+msgstr "Error del sistema."
 
 #: camlibs/konica/konica.c:113
 msgid "Illegal parameter."
-msgstr ""
+msgstr "Parámetro ilegal."
 
 #: camlibs/konica/konica.c:116
 msgid "Command can not be cancelled."
-msgstr ""
+msgstr "No se puede cancelar el comando."
 
 #: camlibs/konica/konica.c:119
-#, fuzzy
 msgid "Localization data too long."
-msgstr "¡Archivo de localización muy largo!"
+msgstr "Datos de localización muy largos."
 
 #: camlibs/konica/konica.c:122
-#, fuzzy
 msgid "Localization data corrupt."
-msgstr "Localización"
+msgstr "Datos de localización corruptos."
 
 #: camlibs/konica/konica.c:125
-#, fuzzy
 msgid "Unsupported command."
-msgstr "Cámaras soportadas:\n"
+msgstr "Comando no soportado."
 
 #: camlibs/konica/konica.c:128
 msgid "Other command executing."
-msgstr ""
+msgstr "Se está ejecutando otro comando."
 
 #: camlibs/konica/konica.c:131
 msgid "Command order error."
-msgstr ""
+msgstr "Error en el orden de los comandos."
 
 #: camlibs/konica/konica.c:134
-#, fuzzy
 msgid "Unknown error."
-msgstr "Error desconocido"
+msgstr "Error desconocido."
 
 #: camlibs/konica/konica.c:137
 #, c-format
@@ -1511,6 +1501,10 @@ msgid ""
 "report the following to <gphoto-devel@gphoto.org> with additional "
 "information how you got this error: (0x%x,0x%x). Thank you very much!"
 msgstr ""
+"La cámara acaba de enviar un error que todavía no ha sido descubierto. Por "
+"favor, reporte lo siguiente a <gphoto-devel@gphoto.org> con información "
+"adicional acerca de cómo obtuvo este error: (0x%x, 0x%x). ¡Muchísimas "
+"gracias!"
 
 #: camlibs/minolta/dimagev/dimagev.c:272
 #, c-format
@@ -1838,9 +1832,8 @@ msgid "Image Quality"
 msgstr "Calidad de imagen"
 
 #: camlibs/polaroid/pdc700.c:160
-#, fuzzy
 msgid "Image Size"
-msgstr "Tamaño de la imagen: %d\n"
+msgstr "Tamaño de la imagen"
 
 #: camlibs/polaroid/pdc700.c:161
 msgid "Flash Setting"
@@ -1924,13 +1917,12 @@ msgid "115200"
 msgstr "115200"
 
 #: camlibs/polaroid/pdc700.c:175
-#, fuzzy
 msgid "VGA (640x480)"
-msgstr "alta (640x480)"
+msgstr "VGA (640x480)"
 
 #: camlibs/polaroid/pdc700.c:175
 msgid "XGA (1024x768"
-msgstr ""
+msgstr "XGA (1024x768)"
 
 #: camlibs/polaroid/pdc700.c:229
 #, c-format
@@ -1983,7 +1975,7 @@ msgstr "¿Cuanto tiempo debería pasar hasta que la cámara se apague?"
 
 #: camlibs/polaroid/pdc700.c:999
 msgid "Image"
-msgstr ""
+msgstr "Imagen"
 
 #: camlibs/polaroid/pdc700.c:1110
 #, c-format
@@ -2025,181 +2017,175 @@ msgstr "Este controlador no soporta el tipo de puerto pedido (%i)."
 
 #: camlibs/ptp/library.c:90
 msgid "PTP Undefined Error"
-msgstr ""
+msgstr "PTP. Error no definido"
 
 #: camlibs/ptp/library.c:91
 msgid "PTP OK!"
-msgstr ""
+msgstr "PTP ¡Ok!"
 
 #: camlibs/ptp/library.c:92
 msgid "PTP General Error"
-msgstr ""
+msgstr "PTP. Error general"
 
 #: camlibs/ptp/library.c:93
 msgid "PTP Session Not Open"
-msgstr ""
+msgstr "PTP. Sesión no abierta"
 
 #: camlibs/ptp/library.c:94
 msgid "PTP Invalid Transaction ID"
-msgstr ""
+msgstr "PTP. ID de transacción no válido"
 
 #: camlibs/ptp/library.c:95
 msgid "PTP Operation Not Supported"
-msgstr ""
+msgstr "PTP. Operación no soportada"
 
 #: camlibs/ptp/library.c:96
-#, fuzzy
 msgid "PTP Parameter Not Supported"
-msgstr "Tipo de captura no soportado"
+msgstr "Parámetro PTP no soportado"
 
 #: camlibs/ptp/library.c:97
 msgid "PTP Incomplete Transfer"
-msgstr ""
+msgstr "PTP. Transferencia incompleta"
 
 #: camlibs/ptp/library.c:98
 msgid "PTP Invalid Storage ID"
-msgstr ""
+msgstr "PTP. ID de almacenamiento no válido"
 
 #: camlibs/ptp/library.c:99
 msgid "PTP Invalid Object Handle"
-msgstr ""
+msgstr "PTP. Manejador de objeto no válido"
 
 #: camlibs/ptp/library.c:100
 msgid "PTP Device Prop Not Supported"
-msgstr ""
+msgstr "PTP. No se soporta prop. del dispositivo"
 
 #: camlibs/ptp/library.c:101
 msgid "PTP Invalid Object Format Code"
-msgstr ""
+msgstr "PTP. Código de formato de objeto no válido"
 
 #: camlibs/ptp/library.c:102
 msgid "PTP Store Full"
-msgstr ""
+msgstr "PTP. Almacén completo"
 
 #: camlibs/ptp/library.c:103
-#, fuzzy
 msgid "PTP Object Write Protected"
-msgstr "Protegida contra escritura"
+msgstr "PTP. Objeto protegido contra escritura"
 
 #: camlibs/ptp/library.c:104
 msgid "PTP Store Read Only"
-msgstr ""
+msgstr "PTP. Almacén de sólo lectura"
 
 #: camlibs/ptp/library.c:105
 msgid "PTP Access Denied"
-msgstr ""
+msgstr "PTP. Acceso denegado"
 
 #: camlibs/ptp/library.c:106
 msgid "PTP No Thumbnail Present"
-msgstr ""
+msgstr "PTP. Sin diapositiva presente"
 
 #: camlibs/ptp/library.c:107
 msgid "PTP Self Test Failed"
-msgstr ""
+msgstr "PTP. Falló la auto-comprobación"
 
 #: camlibs/ptp/library.c:108
 msgid "PTP Partial Deletion"
-msgstr ""
+msgstr "PTP. Borrado parcial"
 
 #: camlibs/ptp/library.c:109
-#, fuzzy
 msgid "PTP Store Not Available"
-msgstr "  Ninguno disponible.\n"
+msgstr "PTP. Almacén no disponible"
 
 #: camlibs/ptp/library.c:111
 msgid "PTP Specification By Format Unsupported"
-msgstr ""
+msgstr "PTP. No se soporta especificación por formato"
 
 #: camlibs/ptp/library.c:112
 msgid "PTP No Valid Object Info"
-msgstr ""
+msgstr "PTP. No hay información válida del objeto"
 
 #: camlibs/ptp/library.c:113
 msgid "PTP Invalid Code Format"
-msgstr ""
+msgstr "PTP. Formato de código no válido"
 
 #: camlibs/ptp/library.c:114
-#, fuzzy
 msgid "PTP Unknown Vendor Code"
-msgstr "Modelo desconocido"
+msgstr "PTP. Código de fabricante desconocido"
 
 #: camlibs/ptp/library.c:116
 msgid "PTP Capture Already Terminated"
-msgstr ""
+msgstr "PTP. Ya terminó la captura"
 
 #: camlibs/ptp/library.c:117
 msgid "PTP Device Bus"
-msgstr ""
+msgstr "PTP. Bus del dispositivo"
 
 #: camlibs/ptp/library.c:118
 msgid "PTP Invalid Parent Object"
-msgstr ""
+msgstr "PTP. Objeto padre no válido"
 
 #: camlibs/ptp/library.c:119
 msgid "PTP Invalid Device Prop Format"
-msgstr ""
+msgstr "PTP. Formato de prop. del dispositivo no válido"
 
 #: camlibs/ptp/library.c:120
 msgid "PTP Invalid Device Prop Value"
-msgstr ""
+msgstr "PTP. Valor de prop. del dispositivo no válido"
 
 #: camlibs/ptp/library.c:121
 msgid "PTP Invalid Parameter"
-msgstr ""
+msgstr "PTP. Parámetro no válido"
 
 #: camlibs/ptp/library.c:122
 msgid "PTP Session Already Opened"
-msgstr ""
+msgstr "PTP. La sesión ya está abierta"
 
 #: camlibs/ptp/library.c:123
-#, fuzzy
 msgid "PTP Transaction Canceled"
-msgstr "Operación cancelada"
+msgstr "PTP. Transacción cancelada"
 
 #: camlibs/ptp/library.c:125
 msgid "PTP Specification Of Destination Unsupported"
-msgstr ""
+msgstr "PTP. No se soporta especificación del destino"
 
 #: camlibs/ptp/library.c:126
 msgid "PTP EK Filename Required"
-msgstr ""
+msgstr "PTP. Se necesita nombre de archivo EK"
 
 #: camlibs/ptp/library.c:127
 msgid "PTP EK Filename Conflicts"
-msgstr ""
+msgstr "PTP. Conflictos con nombre de archivo EK"
 
 #: camlibs/ptp/library.c:128
 msgid "PTP EK Filename Invalid"
-msgstr ""
+msgstr "PTP. Nombre de archivo EK no válido"
 
 #: camlibs/ptp/library.c:130
 msgid "PTP I/O error"
-msgstr ""
+msgstr "PTP. Error de E/S"
 
 #: camlibs/ptp/library.c:131
 msgid "PTP Error: bad parameter"
-msgstr ""
+msgstr "PTP. Error: parámetro incorrecto"
 
 #: camlibs/ptp/library.c:132
 msgid "PTP Protocol error, data expected"
-msgstr ""
+msgstr "PTP. Error de protocolo, se esperaban datos"
 
 #: camlibs/ptp/library.c:133
 msgid "PTP Protocol error, response expected"
-msgstr ""
+msgstr "PTP. Error de protocolo, se esperaba respuesta"
 
 #: camlibs/ptp/library.c:463
 msgid "Written by Mariusz Woloszyn <emsi@ipartners.pl>. Enjoy!"
-msgstr ""
+msgstr "Escrito por Mariusz Woloszyn <emsi@ipartners.pl>. ¡Disfrute!"
 
 #: camlibs/ptp/library.c:995
 msgid "PTP is implemented for USB cameras only."
-msgstr ""
+msgstr "PTP está implementado sólo para cámaras USB."
 
 #: camlibs/ricoh/library.c:164
-#, fuzzy
 msgid "Unknown"
-msgstr "Error desconocido"
+msgstr "Desconocido"
 
 #: camlibs/ricoh/library.c:177
 #, c-format
@@ -2209,50 +2195,55 @@ msgid ""
 "Memory: %d byte(s) of %d available\n"
 "Camera time: %s\n"
 msgstr ""
+"Modelo de cámara: %s\n"
+"ID de cámara: %s\n"
+"Memoria: %d byte(s) de %d disponibles\n"
+"Hora de la cámara: %s\n"
 
 #: camlibs/ricoh/library.c:252
-#, fuzzy, c-format
+#, c-format
 msgid "Speed %i is not supported!"
-msgstr "Tipo de captura no soportado"
+msgstr "¡No se soporta la velocidad %i!"
 
 #: camlibs/ricoh/ricoh.c:66
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Expected %i, got %i. Please report this error to <gphoto-devel@gphoto.org>."
 msgstr ""
-"32 bytes esperados, %i recibidos. Por favor, contactar a <gphoto-"
+"Se esperaba %i, se recibió %i. Por favor, reporte este error a <gphoto-"
 "devel@gphoto.org>."
 
 #: camlibs/ricoh/ricoh.c:75
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Expected %i bytes, got %i. Please report this error to <gphoto-devel@gphoto."
 "org>."
 msgstr ""
-"32 bytes esperados, %i recibidos. Por favor, contactar a <gphoto-"
+"%i bytes esperados, %i recibidos. Por favor, reporte este error a <gphoto-"
 "devel@gphoto.org>."
 
 #: camlibs/ricoh/ricoh.c:165 camlibs/ricoh/ricoh.c:179
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "We expected 0x%x but received 0x%x. Please contact <gphoto-devel@gphoto.org>."
 msgstr ""
-"Resultado inesperado %i. Por favor, contactar a <gphoto-devel@gphoto.org>."
+"Esperábamos 0x%x pero recibimos 0x%x. Por favor, contactar a <gphoto-"
+"devel@gphoto.org>."
 
 #: camlibs/ricoh/ricoh.c:208
-#, fuzzy, c-format
+#, c-format
 msgid "Bad characters (0x%x, 0x%x). Please contact <gphoto-devel@gphoto.org>."
 msgstr ""
-"Resultado inesperado %i. Por favor, contactar a <gphoto-devel@gphoto.org>."
+"Caracteres no válidos (0x%x, 0x%x). Por favor, contactar a <gphoto-"
+"devel@gphoto.org>."
 
 #: camlibs/ricoh/ricoh.c:250
-#, fuzzy
 msgid ""
 "Camera busy. If the problem persists, please contact <gphoto-devel@gphoto."
 "org>."
 msgstr ""
-"No se puede obtener el registro %i. Por favor, contactar a <gphoto-"
-"devel@gphoto.org>."
+"La cámara está ocupada. Si el problema persiste, por favor, contactar a "
+"<gphoto-devel@gphoto.org>."
 
 #. Translators: please write 'M"uller' and 'Mei"sner' (that
 #. is, with u-umlaut and eszett resp.) if your charset
@@ -2265,8 +2256,9 @@ msgid ""
 "enhanced the port."
 msgstr ""
 "El controlador para la Samsung digimax 800k fué escrito por James McKenzie "
-"<james@fishsoup.dhs.org>. Lutz Müller <lutz@users.sourceforge.net> lo portó "
-"a gphoto2. Marcus Meißner <marcus@jet.franken.de> lo corrigió y mejoró."
+"<james@fishsoup.dhs.org>. Lutz M\"uller <lutz@users.sourceforge.net> lo "
+"portó a gphoto2. Marcus Mei\"sner <marcus@jet.franken.de> lo corrigió y "
+"mejoró."
 
 #: camlibs/sierra/sierra.c:602
 msgid "The file to be uploaded has a null length"
@@ -2313,9 +2305,8 @@ msgid "%i (unknown)"
 msgstr "%i (desconocida)"
 
 #: camlibs/sierra/sierra.c:783 camlibs/sierra/sierra.c:1106
-#, fuzzy
 msgid "Shutter Speed (microseconds, 0 auto)"
-msgstr "Velocidad del obturador (microsegundos)"
+msgstr "Velocidad del obturador (microsegundos, 0 automática)"
 
 #: camlibs/sierra/sierra.c:795 camlibs/sierra/sierra.c:1115
 #: camlibs/sierra/sierra.c:1330 camlibs/sierra/sierra.c:1571
@@ -2750,7 +2741,7 @@ msgstr "No se puede obtener la cantidad de memoria disponible"
 
 #: camlibs/sierra/library.c:336
 msgid "Camera refused 3 times to keep a connection open."
-msgstr ""
+msgstr "La cámara se negó 3 veces a mantener una conexión abierta."
 
 #.
 #. * This byte is not valid. Dump everything that
@@ -2772,7 +2763,7 @@ msgstr ""
 
 #: camlibs/sierra/library.c:703 camlibs/sierra/library.c:727
 msgid "Could not transmit packet even after several retries."
-msgstr ""
+msgstr "No se pudo transmitir el paquete incluso después de varios intentos."
 
 #: camlibs/sierra/library.c:718
 msgid ""
@@ -2791,17 +2782,17 @@ msgstr ""
 "a <gphoto-devel@gphoto.org>."
 
 #: camlibs/sierra/library.c:837
-#, fuzzy
 msgid "Transmission timed out even after 2 retries. Giving up..."
 msgstr ""
-"La transmisión del paquete superó el tiempo de espera incluso luego de %i "
-"reintentos. Por favor, contacte a <gphoto-devel@gphoto.org>."
+"La transmisión superó el tiempo de espera incluso luego de 2 reintentos. "
+"Abandonando..."
 
 #: camlibs/sierra/library.c:856
-#, fuzzy, c-format
+#, c-format
 msgid "Got unexpected result 0x%x. Please contact <gphoto-devel@gphoto.org>."
 msgstr ""
-"Resultado inesperado %i. Por favor, contactar a <gphoto-devel@gphoto.org>."
+"Obtuve el resultado inesperado 0x%x. Por favor, contactar a <gphoto-"
+"devel@gphoto.org>."
 
 #: camlibs/sierra/library.c:954
 #, c-format
@@ -2820,7 +2811,7 @@ msgstr ""
 
 #: camlibs/sierra/library.c:1037 camlibs/sierra/library.c:1057
 msgid "Too many retries failed."
-msgstr ""
+msgstr "Fallaron demasiados intentos."
 
 #: camlibs/sierra/library.c:1090
 msgid "Sending data..."
@@ -2866,6 +2857,10 @@ msgid ""
 "Originally written by Mark Davies <mdavies@dial.pipex.com>\n"
 "gPhoto2 port by Raymond Penners <raymond@dotsphinx.com>"
 msgstr ""
+"Biblioteca gPhoto para las Sony DSC-F55/505\n"
+"Soporta Sony MSAC-SR1 y el Memory Stick que utiliza la DCR-PC100\n"
+"Escrita originalmente por Mark Davies <mdavies@dial.pipex.com>\n"
+"Portado a gPhoto2 por Raymond Penners <raymond@dotsphinx.com>"
 
 #: camlibs/stv0680/library.c:354 camlibs/stv0680/library.c:388
 msgid "Bad exposure (not enough light probably)"
@@ -3008,9 +3003,9 @@ msgid "You have to set the port prior initialization of the camera."
 msgstr "Debe configurar el puerto antes de la inicialización de la cámara."
 
 #: libgphoto2/gphoto2-camera.c:716
-#, fuzzy, c-format
+#, c-format
 msgid "Could not load required camera driver '%s' (%s)."
-msgstr "No se puede cargar el controlador necesario de la cámara '%s'."
+msgstr "No se puede cargar el controlador necesario de la cámara '%s' (%s)."
 
 #: libgphoto2/gphoto2-camera.c:725
 #, c-format
@@ -3150,18 +3145,18 @@ msgstr ""
 msgid "Read-only file attributes like width and height can not be changed."
 msgstr "Los atributos de sólo lectura no se pueden cambiar (ej: ancho y alto)."
 
-#: libgphoto2/gphoto2-abilities-list.c:206
-#: libgphoto2/gphoto2-abilities-list.c:301
+#: libgphoto2/gphoto2-abilities-list.c:181
+#: libgphoto2/gphoto2-abilities-list.c:276
 #, c-format
 msgid "Loading camera drivers from '%s'..."
 msgstr "Cargando los controladores para la cámara desde '%s'..."
 
-#: libgphoto2/gphoto2-abilities-list.c:289
+#: libgphoto2/gphoto2-abilities-list.c:264
 #, c-format
 msgid "Could not open '%s'"
 msgstr "No se puede abrir '%s'"
 
-#: libgphoto2/gphoto2-abilities-list.c:663
+#: libgphoto2/gphoto2-abilities-list.c:638
 #, c-format
 msgid "Could not find any driver for '%s'"
 msgstr "No se puede encontrar un controlador para '%s'"
@@ -3230,7 +3225,7 @@ msgstr "Lista los modelos de cámara soportados"
 
 #: frontends/command-line/main.c:209
 msgid "usb.usermap script (dflt=\"usbcam\")"
-msgstr ""
+msgstr "script usb.usermap (predet=\"usbcam\")"
 
 #: frontends/command-line/main.c:210
 msgid "Create output for usb.usermap"
@@ -3403,23 +3398,20 @@ msgid "gPhoto shell"
 msgstr "Intérprete gPhoto"
 
 #: frontends/command-line/main.c:259
-#, fuzzy
 msgid "Authors"
-msgstr "Automática"
+msgstr "Autores"
 
 #: frontends/command-line/main.c:260
-#, fuzzy
 msgid "License"
-msgstr "Modo de lente"
+msgstr "Licencia"
 
 #: frontends/command-line/main.c:309 frontends/command-line/main.c:330
-#, fuzzy
 msgid "Could not open '"
-msgstr "No se puede abrir '%s'"
+msgstr "No se puede abrir '"
 
 #: frontends/command-line/main.c:310 frontends/command-line/main.c:331
 msgid "/COPYING'. Please verify your installation."
-msgstr ""
+msgstr "/COPYING'. Por favor, verifique su instalación."
 
 #: frontends/command-line/main.c:393 frontends/command-line/main.c:398
 #, c-format
@@ -3584,6 +3576,8 @@ msgid ""
 "ALWAYS INCLUDE THE FOLLOWING LINE WHEN SENDING DEBUG MESSAGES TO THE MAILING "
 "LIST:"
 msgstr ""
+"SIEMPRE INCLUYA LA LÍNEA SIGUIENTE CUANDO ENVÍE MENSAJES DE DEPURACIÓN A LA "
+"LISTA DE DISTRIBUCIÓN DE CORREOS:"
 
 #: frontends/command-line/main.c:829
 #, c-format
@@ -3787,14 +3781,14 @@ msgid "Value: "
 msgstr "Valor: "
 
 #: frontends/command-line/options.c:193
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "gPhoto (v%s) - Cross-platform digital camera library.\n"
 "Copyright (C) 2000-2002 Scott Fritzinger and others\n"
 "%sLicensed under the Library GNU Public License (LGPL).\n"
 msgstr ""
 "gPhoto (v%s) - Biblioteca multi-plataforma de cámaras digitales.\n"
-"Copyright (C) 2000,2001 Scott Fritzinger y otros\n"
+"Copyright (C) 2000,2002 Scott Fritzinger y otros\n"
 "%s Publicada bajo la Licencia Pública General de Biblioteca GNU (LGPL).\n"
 
 #: frontends/command-line/options.c:199
@@ -3943,9 +3937,9 @@ msgid "  Mime type:   '%s'\n"
 msgstr "  Tipo MIME :  '%s'\n"
 
 #: frontends/command-line/actions.c:149 frontends/command-line/actions.c:181
-#, fuzzy, c-format
+#, c-format
 msgid "  Size:        %li byte(s)\n"
-msgstr "  Tamaño:      %i byte(s)\n"
+msgstr "  Tamaño:      %li byte(s)\n"
 
 #: frontends/command-line/actions.c:151 frontends/command-line/actions.c:183
 #, c-format
@@ -4001,9 +3995,9 @@ msgid "  Mime type:  '%s'\n"
 msgstr "  Tipo MIME : '%s'\n"
 
 #: frontends/command-line/actions.c:197
-#, fuzzy, c-format
+#, c-format
 msgid "  Size:       %li byte(s)\n"
-msgstr "  Tamaño:     %i byte(s)\n"
+msgstr "  Tamaño:     %li byte(s)\n"
 
 #: frontends/command-line/actions.c:199
 #, c-format
@@ -4042,6 +4036,9 @@ msgid ""
 "'%s' or its subfolders. Please obtain a valid file number from a file "
 "listing first."
 msgstr ""
+"Número de archivo incorrecto. Usted especificó %i, pero sólo hay %i archivos "
+"disponibles en '%s' o las sub-carpetas. Por favor, primero obtenga un número "
+"de archivo válido de un listado de archivos."
 
 #: frontends/command-line/foreach.c:255
 #, c-format
@@ -4049,6 +4046,8 @@ msgid ""
 "Bad file number. You specified %i, but there is only 1 file available in '%"
 "s'."
 msgstr ""
+"Número de archivo incorrecto. Usted especificó %i, pero sólo hay 1 archivo "
+"disponible en '%s'"
 
 #: frontends/command-line/foreach.c:262
 #, c-format
@@ -4056,144 +4055,137 @@ msgid ""
 "Bad file number. You specified %i, but there are only %i files available in "
 "'%s'.Please obtain a valid file number from a file listing first."
 msgstr ""
+"Número de archivo incorrecto. Usted especificó %i, pero sólo hay %i archivos "
+"disponibles en '%s'. Por favor, primero obtenga un número de archivo válido "
+"de un listado de archivos."
 
 #: frontends/command-line/shell.c:73
-#, fuzzy, c-format
+#, c-format
 msgid "*** Error (%i: '%s') ***"
-msgstr ""
-"*** Error ('%s') ***        \n"
-"\n"
+msgstr "*** Error (%i: '%s') ***"
 
 #: frontends/command-line/shell.c:115
 msgid "Change to a directory on the camera"
-msgstr ""
+msgstr "Cambiar a un directorio en la cámara"
 
 #: frontends/command-line/shell.c:116 frontends/command-line/shell.c:118
-#, fuzzy
 msgid "directory"
-msgstr "Eliminar un directorio"
+msgstr "directorio"
 
 #: frontends/command-line/shell.c:117
 msgid "Change to a directory on the local drive"
-msgstr ""
+msgstr "Cambiar a un directorio en el disco local"
 
 #: frontends/command-line/shell.c:119 frontends/command-line/shell.c:137
 #: frontends/command-line/shell.c:138
-#, fuzzy
 msgid "Exit the gPhoto shell"
-msgstr "Intérprete gPhoto"
+msgstr "Salir del intérprete gPhoto"
 
 #: frontends/command-line/shell.c:120
-#, fuzzy
 msgid "Download a file"
-msgstr "Descargando imagen..."
+msgstr "Descargar un archivo"
 
 #: frontends/command-line/shell.c:120 frontends/command-line/shell.c:123
 #: frontends/command-line/shell.c:125 frontends/command-line/shell.c:127
 #: frontends/command-line/shell.c:128 frontends/command-line/shell.c:131
 msgid "[directory/]filename"
-msgstr ""
+msgstr "[directorio/]archivo"
 
 #: frontends/command-line/shell.c:122
-#, fuzzy
 msgid "Download a thumbnail"
-msgstr "Descargando la diapositiva..."
+msgstr "Descargar una diapositiva"
 
 #: frontends/command-line/shell.c:124
-#, fuzzy
 msgid "Download raw data"
-msgstr "Descargando los datos..."
+msgstr "Descargar datos \"en crudo\""
 
 #: frontends/command-line/shell.c:128
-#, fuzzy
 msgid "Delete"
-msgstr "borrado"
+msgstr "Borrar"
 
 #: frontends/command-line/shell.c:133 frontends/command-line/shell.c:139
-#, fuzzy
 msgid "Displays command usage"
-msgstr "Mostrar la versión y salir"
+msgstr "Mostrar el uso de los comandos"
 
 #: frontends/command-line/shell.c:134 frontends/command-line/shell.c:139
 msgid "[command]"
-msgstr ""
+msgstr "[comando]"
 
 #: frontends/command-line/shell.c:135
 msgid "List the contents of the current directory"
-msgstr ""
+msgstr "Lista el contenido del directorio corriente"
 
 #: frontends/command-line/shell.c:136
-#, fuzzy
 msgid "[directory/]"
-msgstr "Eliminar un directorio"
+msgstr "[directorio/]"
 
 #: frontends/command-line/shell.c:418
-#, fuzzy
 msgid "Invalid command."
-msgstr "Cámaras soportadas:\n"
+msgstr "Comando no válido."
 
 #: frontends/command-line/shell.c:427
 #, c-format
 msgid "The command '%s' requires an argument."
-msgstr ""
+msgstr "El comando '%s' necesita un argumento."
 
 #: frontends/command-line/shell.c:480
-#, fuzzy
 msgid "Invalid path."
-msgstr "No válida"
+msgstr "Ruta no válida."
 
 #: frontends/command-line/shell.c:526
-#, fuzzy
 msgid "Could not find home directory."
-msgstr "No se puede encontrar la carpeta '%s'."
+msgstr "No se puede encontrar la carpeta principal."
 
 #: frontends/command-line/shell.c:534
-#, fuzzy, c-format
+#, c-format
 msgid "Could not change to local directory '%s'."
-msgstr "No se puede encontrar la carpeta '%s'."
+msgstr "No se puede cambiar al directorio local '%s'."
 
 #: frontends/command-line/shell.c:537
 #, c-format
 msgid "Local directory now '%s'."
-msgstr ""
+msgstr "Ahora el directorio local es '%s'."
 
 #: frontends/command-line/shell.c:568
-#, fuzzy, c-format
+#, c-format
 msgid "Remote directory now '%s'."
-msgstr "Eliminar un directorio"
+msgstr "Ahora el directorio remoto es '%s'."
 
 #: frontends/command-line/shell.c:729
 #, c-format
 msgid "Command '%s' not found. Use 'help' to get a list of available commands."
 msgstr ""
+"No se encontró el comando '%s'. Utilice 'help' para obtener una lista de los "
+"comandos disponibles."
 
 #. Print the command's syntax.
 #: frontends/command-line/shell.c:736
 #, c-format
 msgid "Help on \"%s\":"
-msgstr ""
+msgstr "Ayuda sobre \"%s\":"
 
 #: frontends/command-line/shell.c:738
-#, fuzzy
 msgid "Usage:"
-msgstr "Uso:\n"
+msgstr "Uso:"
 
 #: frontends/command-line/shell.c:742
 msgid "Description:"
-msgstr ""
+msgstr "Descripción:"
 
 #: frontends/command-line/shell.c:744
 msgid "* Arguments in brackets [] are optional"
-msgstr ""
+msgstr "* Los argumentos entre corchetes [] son opcionales"
 
 #. No command specified. Print command listing.
 #: frontends/command-line/shell.c:765
 msgid "Available commands:"
-msgstr ""
+msgstr "Comandos disponibles:"
 
 #: frontends/command-line/shell.c:770
 msgid "To get help on a particular command, type in 'help command-name'."
 msgstr ""
+"Para obtener ayuda sobre un comando en particular, ingrese 'help nombre-del-"
+"comando'."
 
 #~ msgid "Guessed port name. Using port '%s' from now on."
 #~ msgstr "Nombre del puerto adivinado. Usando puerto '%s' de ahora en más."
@@ -4201,9 +4193,8 @@ msgstr ""
 #~ msgid "Settings"
 #~ msgstr "Parámetros"
 
-#, fuzzy
 #~ msgid "No Manual Available"
-#~ msgstr "Razón desconocida"
+#~ msgstr "No está disponible el Manual"
 
 #~ msgid "%s(ERROR): "
 #~ msgstr "%s(ERROR): "
