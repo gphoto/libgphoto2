@@ -1,5 +1,9 @@
 2001-09-10  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/sierra/sierra.c (get_info_func): Fix copy & paste bug.
+
+2001-09-10  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2/core.c: Additional debugging stuff.
 
 2001-09-09  Lutz Müller <urc8@rz.uni-karlsruhe.de>

@@ -206,26 +206,27 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	CHECK_STOP (camera, sierra_change_folder (camera, folder));
 	CHECK_STOP (camera, sierra_set_int_register (camera, 4, n + 1));
 
+	info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
+	info->preview.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
+
 	/* Get the size of the current image */
 	CHECK_STOP (camera, sierra_get_int_register (camera, 12, &l));
-	info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
 	info->file.size = l;
 
 	/* Type of image? */
 	if (strstr (filename, ".MOV") != NULL) {
-		strcpy (info->file.type, "video/quicktime");
-		strcpy (info->preview.type, "image/jpeg");
+		strcpy (info->file.type, GP_MIME_QUICKTIME);
+		strcpy (info->preview.type, GP_MIME_JPEG);
 	} else if (strstr (filename, ".TIF") != NULL) {
-		strcpy (info->file.type, "image/tiff");
-		strcpy (info->file.type, "image/tiff");
+		strcpy (info->file.type, GP_MIME_TIFF);
+		strcpy (info->preview.type, GP_MIME_TIFF);
 	} else {
-		strcpy (info->file.type, "image/jpeg");
-		strcpy (info->file.type, "image/jpeg");
+		strcpy (info->file.type, GP_MIME_JPEG);
+		strcpy (info->preview.type, GP_MIME_JPEG);
 	}
 
 	/* Get the size of the current thumbnail */
 	CHECK_STOP (camera, sierra_get_int_register (camera, 13, &l));
-	info->preview.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
 	info->preview.size = l;
 
 	return (camera_stop (camera));
