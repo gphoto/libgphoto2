@@ -1,3 +1,7 @@
+2002-06-27  Lutz Müller <lutz@users.sourceforge.net>
+
+	* autogen.sh: We don't need this file.
+
 2002-06-21  Christophe Barbé <christophe.barbe@ufies.org>
 
    po files from Takeshi AIHANA <aihana@jcom.home.ne.jp>
