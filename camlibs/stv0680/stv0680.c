@@ -120,7 +120,7 @@ struct camera_to_usb {
 
 	/* According to Sonic Tsunami <mmcburn86@earthlink.net> */
 	/* http://www.timlex.com/cif.html */
-	{ "Timlex:CP075",		0x0553, 0x0202, 1 }
+	{ "Timlex:CP075",		0x0553, 0x0202, 1 },
 
 	{ "Creative:Go Mini",		0x041e, 0x4007, 1 }
 };
