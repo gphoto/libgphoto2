@@ -1,3 +1,7 @@
+2004-12-20  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* library.c: Added Sony DSC-F717. (bug #1087148)
+
 2004-12-16  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Added HP Photosmart R707 and M307.
