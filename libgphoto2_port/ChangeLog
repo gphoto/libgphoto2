@@ -1,3 +1,8 @@
+2002-03-19  Marcus Meissner <marcus@jet.franken.de>
+	
+	*  configure.in, acconfig.h: Fixed some warnings newer autoconf
+	   versions generate. Use AM_PROG_LIBTOOL.
+
 2002-03-14  Dan Fandrich <dan@coneharvesters.com>
 
 	*  m4/byteorder.m4
