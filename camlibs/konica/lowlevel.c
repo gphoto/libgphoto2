@@ -82,7 +82,7 @@ l_ping_rec (GPPort *p, unsigned int level)
 	c = ENQ;
 	CHECK (gp_port_write (p, &c, 1));
 	CHECK (gp_port_read (p, &c, 1));
-	switch © {
+	switch (c) {
 	case ACK:
 		return (GP_OK);
 	case NACK:
@@ -110,7 +110,7 @@ l_ping_rec (GPPort *p, unsigned int level)
 		CHECK (gp_port_write (p, &c, 1));
 		for (;;) {
 			CHECK (gp_port_read (p, &c, 1));
-			switch © {
+			switch (c) {
 			case ENQ:
 
 				/* The camera has not yet given up. */
@@ -288,7 +288,7 @@ l_send (GPPort *p, GPContext *context, unsigned char *send_buffer,
 		/* Write data as above.	*/
 		CHECK_FREE (gp_port_write (p, sb, sbs), sb);
 		CHECK_FREE (gp_port_read (p, &c, 1), sb);
-		switch © {
+		switch (c) {
 		case ACK:
 
 			/* ACK received. We can proceed. */
@@ -333,7 +333,7 @@ l_receive (GPPort *p, GPContext *context,
 		CHECK (gp_port_set_timeout (p, timeout));
 		CHECK (gp_port_read (p, &c, 1));
 		CHECK (gp_port_set_timeout (p, DEFAULT_TIMEOUT));
-		switch © {
+		switch (c) {
 		case ENQ:
 
 			/* ENQ received. We can proceed. */
@@ -388,7 +388,7 @@ l_receive (GPPort *p, GPContext *context,
 	for (*rbs = 0; ; ) {
 		for (j = 0; ; j++) {
 			CHECK (gp_port_read (p, &c, 1));
-			switch © {
+			switch (c) {
 			case STX:
 
 				/* STX received. We can proceed. */
@@ -546,7 +546,7 @@ while (read < rbs_internal) {
 			}
 		}
 		CHECK (gp_port_read (p, &c, 1));
-		switch © {
+		switch (c) {
 			case EOT:
 
 				/* EOT received. We can proceed. */
@@ -577,7 +577,7 @@ while (read < rbs_internal) {
 
 			/* We expect more data. Read ENQ. */
 			CHECK (gp_port_read (p, &c, 1));
-			switch © {
+			switch (c) {
 			case ENQ:
 
 				/* ENQ received. We can proceed. */

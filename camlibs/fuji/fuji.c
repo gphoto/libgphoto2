@@ -279,7 +279,7 @@ fuji_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 
 		/* Receive ACK (hopefully) */
 		CR (gp_port_read (camera->port, &c, 1));
-		switch © {
+		switch (c) {
 		case ACK:
 			break;
 		case NAK:
@@ -717,7 +717,7 @@ fuji_upload (Camera *camera, const unsigned char *data,
 
 			/* Receive ACK (hopefully) */
 			CR (gp_port_read (camera->port, &c, 1));
-			switch © {
+			switch (c) {
 			case ACK:
 				break;
 			case NAK:

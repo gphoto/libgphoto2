@@ -240,7 +240,7 @@ struct _CameraFilesystem {
 #define CA(f,c)							\
 {									\
 	if ((f)[0] != '/') {						\
-		gp_context_error (©,					\
+		gp_context_error ((c),					\
 			_("The path '%s' is not absolute."), (f));	\
 		return (GP_ERROR_PATH_NOT_ABSOLUTE);			\
 	}								\

@@ -447,7 +447,7 @@ gp_abilities_list_detect_usb (CameraAbilitiesList *list,
 		c = list->abilities[i].usb_class;
 		s = list->abilities[i].usb_subclass;
 		p = list->abilities[i].usb_protocol;
-		if © {
+		if (c) {
 			res = gp_port_usb_find_device_by_class(port, c, s, p);
 			if (res == GP_OK) {
 				gp_log(GP_LOG_DEBUG, __FILE__,

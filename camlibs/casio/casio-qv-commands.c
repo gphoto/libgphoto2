@@ -50,7 +50,7 @@ QVping (Camera *camera)
 
 		/* If we got ACK, everything is fine. */
 		if (result >= 0) {
-			switch © {
+			switch (c) {
 			case ACK:
 			case ENQ:
 				

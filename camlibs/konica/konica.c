@@ -150,7 +150,7 @@ k_check (GPContext *c, const char *rb)
 		free (rb);				\
 		return r;				\
 	}						\
-	r = k_check (©, rb);				\
+	r = k_check ((c), rb);				\
 	if (r < 0) {					\
 		free (rb);				\
 		return r;				\
