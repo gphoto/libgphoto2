@@ -270,6 +270,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	info->file.fields    = GP_FILE_INFO_NONE;
 	info->preview.fields = GP_FILE_INFO_NONE;
 	info->audio.fields   = GP_FILE_INFO_NONE;
+	info->file.permissions = GP_FILE_PERM_READ;
 
 	/* Name of image */
 	strncpy (info->file.name, filename, sizeof (info->file.name) - 1);
@@ -283,8 +284,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	CHECK (camera_start (camera, context));
 	CHECK_STOP (camera, sierra_change_folder (camera, folder, context));
 	memset (&i, 0, sizeof (SierraPicInfo));
-	sierra_get_pic_info (camera, n, &i, context);
-
+	CHECK_STOP (camera, sierra_get_pic_info (camera, n, &i, context));
 	/* Size of file */
 	if (i.size_file) {
 		info->file.fields |= GP_FILE_INFO_SIZE;
@@ -299,7 +299,6 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	/* Audio data? */
 	if (i.size_audio) {
-
 		/* Size */
 		info->audio.size = i.size_audio;
 		info->audio.fields |= GP_FILE_INFO_SIZE;
@@ -325,7 +324,6 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	/* Image protected? */
 	info->file.fields |= GP_FILE_INFO_PERMISSIONS;
-	info->file.permissions = GP_FILE_PERM_READ;
 	if (i.locked == SIERRA_LOCKED_NO)
 		info->file.permissions |= GP_FILE_PERM_DELETE;
 
@@ -444,8 +442,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	int jpeg_size;
 	const char *data, *mime_type;
 	long int size;
-	int download_size;
-	SierraPicInfo info; /* only for audio */
+	int download_size, audio_info[8], transferred;
 
 	/*
 	 * Get the file number from the CameraFileSystem.
@@ -481,10 +478,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	 * show up in any logs.
 	 *
 	 * Some cameras do not return anything useful for register 47, so
-	 * only use it for audio and hope that always works - so if a
-	 * camera can download audio, we are assuming it returns data for
-	 * register 47. If that assumption is ever wrong, try using
-	 * register 43 to get the audio size.
+	 * don't try to use it at all (via sierra_get_pic_info) here.
 	 */
 	download_size = 0;
 	switch (type) {
@@ -496,9 +490,12 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		sierra_get_size(camera, 12, n, &download_size, context);
 		break;
 	case GP_FILE_TYPE_AUDIO:
-		memset (&info, 0, sizeof (SierraPicInfo));
-		sierra_get_pic_info (camera, n, &info, context);
-		download_size = info.size_audio;
+		sierra_get_string_register (camera, 43, n, NULL,
+			(unsigned char *) &audio_info, &transferred, context);
+		if (transferred == 0) 
+			download_size = 0;
+		else
+			download_size = audio_info[0];
 		break;
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);

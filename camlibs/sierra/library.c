@@ -1276,7 +1276,8 @@ int sierra_get_string_register (Camera *camera, int reg, int fnumber,
 	if (file && total)
 		gp_context_progress_stop (context, id);
 
-	GP_DEBUG ("sierra_get_string_register: completed OK");
+	GP_DEBUG ("sierra_get_string_register: completed OK, *b_len %d",
+		  *b_len);
 	in_function = 0;
 	return GP_OK;
 }
@@ -1430,9 +1431,54 @@ int sierra_get_pic_info (Camera *camera, unsigned int n,
 {
 	unsigned char buf[1024];
 	unsigned int buf_len = 0;
+	int value, audio_info[8];
 
 	CHECK (sierra_get_string_register (camera, 47, n, NULL, buf,
 					   &buf_len, context));
+	if (buf_len == 0) {
+		/*
+		 * Many (older) serial cameras seem to return 0 bytes back
+		 * and effectively do not support register 47. Try using
+		 * other registers to get the data.
+		 *
+		 * Don't fail on error so unsupported or semi-broken
+		 * behaviour does not prevent downloads or other use.
+		 */
+		memset(pic_info, 0, sizeof(*pic_info));
+		if (sierra_get_size(camera, 12, n, &value, context) == GP_OK) {
+			pic_info->size_file = value;
+		}
+		if (sierra_get_size(camera, 13, n, &value, context) == GP_OK) {
+			pic_info->size_preview = value;
+		}
+		/*
+		 * If the following hangs any cameras, just delete this
+		 * code, and assume that cameras with audio will get audio
+		 * file information via reg 47.
+		 *
+		 * Note that the value variable as used here is number of
+		 * bytes transferred, not the returned data. Some
+		 * unsupported sierra commands return zero bytes.
+		 */
+		if ((sierra_get_string_register (camera, 43, n, NULL,
+				(unsigned char *) &audio_info, &value,
+				context) == GP_OK) && (value != 0)) {
+			pic_info->size_audio = audio_info[0];
+		}
+		if (sierra_get_int_register (camera, 39, &value, context)
+		    == GP_OK) {
+			pic_info->locked = value;
+		} else {
+			/*
+			 * Default to marking as locked (not-deletable).
+			 * It looks the file can still be deleted if the
+			 * file is not really locked.
+			 */
+			pic_info->locked = SIERRA_LOCKED_YES;
+		}
+		return (GP_OK);
+	}
+
 	if (buf_len != 32) {
 		gp_context_error (context, _("Expected 32 bytes, got %i. "
 			"Please contact <gphoto-devel@gphoto.org>."), buf_len);

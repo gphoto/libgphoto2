@@ -1,4 +1,11 @@
 2003-02-03  Patrick Mansfield <patmans@users.sourceforge.net>
+	
+	* library.c: Allow sierra_get_pic_info to always work even if
+	  register 47 return no data - use other registers to get the data. 
+	* sierra.c: Use register 43 to get audio, not sierra_get_pic_info,
+	  so register 47 is not used prior to downloading.
+
+2003-02-03  Patrick Mansfield <patmans@users.sourceforge.net>
 
 	Idea based on a patch in a bug report from Valentin Rusu
 	<sourceforge@valentinrusu.net>, this should also fix other cameras
