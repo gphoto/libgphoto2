@@ -297,6 +297,7 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 
 		/* Compile the pattern */
 #if HAVE_GNU_REGEX
+		re_syntax_options = RE_SYNTAX_POSIX_EXTENDED;
 		reb.allocated = 0;
 		reb.buffer = NULL;
 		reb.fastmap = NULL;
