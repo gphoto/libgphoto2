@@ -442,6 +442,8 @@ if $try_readline; then
         AC_CHECK_HEADER(readline/readline.h,,[try_readline=false])
 fi
 if $try_readline; then
+	# save libraries, so readline does not get into the libgphoto.
+	gp_save_LIBS="$LIBS"
         # Now check whether we can link against readline without ncurses.
         AC_CHECK_LIB(readline, rl_completion_append_character, [
 		have_readline=true
@@ -465,6 +467,7 @@ if $try_readline; then
        		    RL_CFLAGS=""],[
 		    rl_msg="no (couldn't link against it or version too old)"],[-lncurses])
         fi
+	LIBS="$gp_save_LIBS"
 fi
 if $have_readline; then
         AC_DEFINE(HAVE_RL,,[whether we use the readline library])
