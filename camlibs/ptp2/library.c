@@ -1063,9 +1063,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		/* we do not allow downloading unknown type files as in most
 		cases they are special file (like firmware or control) which
 		sometimes _cannot_ be downloaded. doing so we avoid errors.*/
-		if ((oi->ObjectFormat == PTP_OFC_Undefined) ||
-			(oi->ObjectFormat == PTP_OFC_Association))
+		if (oi->ObjectFormat == PTP_OFC_Association ||
+			(oi->ObjectFormat == PTP_OFC_Undefined &&
+				oi->ThumbFormat == PTP_OFC_Undefined))
 			return (GP_ERROR_NOT_SUPPORTED);
+
 		size=oi->ObjectCompressedSize;
 		CPR (context, ptp_getobject(&camera->pl->params,
 			camera->pl->params.handles.Handler[object_id],
