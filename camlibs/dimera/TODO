@@ -1,0 +1,8 @@
+$Id$
+
+Outstanding items in the gphoto2 dimera driver:
+
+- make exposure, auto_exposure, auto_flash user-modifyable config options
+- add serial port speed selection
+- may need to put temp.ppm into file list
+
