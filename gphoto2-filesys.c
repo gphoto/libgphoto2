@@ -485,6 +485,7 @@ gp_filesystem_append (CameraFilesystem *fs, const char *folder,
 	switch (x) {
 	case GP_ERROR_DIRECTORY_NOT_FOUND:
 		CR (append_folder (fs, folder, context));
+		break;
 	default:
 		CR (x);
 	}
