@@ -15,9 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA   
- *
- * 10/11/01/cw	Added support for STMicroelectronics USB Dual-mode camera
- *		(Aiptek PenCam Trio)  
  */
 
 #include <stdlib.h>
@@ -30,6 +27,7 @@
 #include "library.h"
 #include "bayer.h"
 #include "libgphoto2/pattrec.h"
+#include "libgphoto2/bayer.h"
 
 #define CMD_RETRIES		0x03
 
@@ -272,11 +270,7 @@ int stv0680_get_image(GPPort *device, int image_no,
 	*data = malloc((*size * 3) + strlen(header));
 	strcpy(*data, header);
 
-	bayer_unshuffle(w, h, raw, *data + strlen(header));
-	if(pattrec(w, h, *data + strlen(header)) != 0) {
-		// fallback in low memory conditions
-		bayer_demosaic(w, h, *data +strlen(header));
-	}
+	gp_bayer_decode (raw, w, h, *data + strlen(header), BAYER_TILE_GBRG_INTERLACED);
 
 	free(raw);
 
@@ -342,10 +336,10 @@ int stv0680_get_image_preview(GPPort *device, int image_no,
 	strcpy(*data, header);
 
 	bayer_unshuffle_preview(w<<scale, h<<scale, scale, raw, *data + strlen(header));
-	// if(pattrec(w, h, *data + strlen(header)) != 0) {
-	//	// fallback in low memory conditions
-	//	bayer_demosaic(w, h, *data +strlen(header));
-	//}
+	if(pattrec(w, h, *data + strlen(header)) != 0) {
+		// fallback in low memory conditions
+		bayer_demosaic(w, h, *data +strlen(header));
+	}
 
 	free(raw);
 
@@ -411,11 +405,7 @@ int stv0680_capture_preview(GPPort *device, char **data, int *size)
 	*data = malloc((*size * 3) + strlen(header));
 	strcpy(*data, header);
 
-	bayer_unshuffle(w, h, raw, *data + strlen(header));
-	if(pattrec(w, h, *data + strlen(header)) != 0) {
-		// fallback in low memory conditions
-		bayer_demosaic(w, h, *data + strlen(header));
-	}
+	gp_bayer_decode (raw, w, h, *data + strlen(header), BAYER_TILE_GBRG_INTERLACED);
 
 	free(raw);
 
@@ -424,3 +414,8 @@ int stv0680_capture_preview(GPPort *device, char **data, int *size)
 
 	return GP_OK;
 }
+
+
+
+
+
