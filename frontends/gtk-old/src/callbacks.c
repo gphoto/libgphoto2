@@ -960,24 +960,43 @@ void camera_delete_all() {
 	camera_delete_common(1);
 }
 
+void camera_configure_rec (CameraWidget *w, GtkWidget *page, GtkWidget *parent) {
+/*
+	child_count = gp_widget_child_count(window);
+	for (x=0; x<child_count; x++) {
+		c = gp_widget_child(window, x);
+		camera_configure_rec
+	}
+*/
+}
+
 void camera_configure() {
 
-	CameraWidget *window;
+	CameraWidget *w;
+	GtkWidget *window;
+	GSList *radio_list[256];
+	int x, child_count;
 
 	debug_print("camera configure");
 
 	if (!gp_gtk_camera_init)
 		if (camera_set()==GP_ERROR) {return;}
 
-	window = gp_widget_new(GP_WIDGET_WINDOW, "Camera Configuration");
-	if (gp_config_get(window)==GP_ERROR) {
+	w = gp_widget_new(GP_WIDGET_WINDOW, "Camera Configuration");
+	if (gp_config_get(w)==GP_ERROR) {
 		gp_message("Could not retrieve camera configuration information");
 		gp_widget_free(window);
 		return;
 	}
 
-	gp_widget_dump(window);
+//	if (gp_gtk_debug)
+		gp_widget_dump(window);
 
+	gtk_window_set_title(GTK_WINDOW(window), w->label);
+
+	camera_configure_rec(window, NULL, NULL);
+
+	gp_widget_free(window);
 }
 
 void camera_show_information() {
