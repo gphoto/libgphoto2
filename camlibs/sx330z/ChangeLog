@@ -1,3 +1,7 @@
+2004-01-07  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* library.c: Added Maginon SX-410z (reported by style(at)wtal.de)
+
 2003-06-02  Dominik Kuhlen <kinimod@users.sourceforge.net>
   * Fixed endianness problems (for BE platforms)
 
