@@ -2,7 +2,7 @@ dnl Process this file with autoconf to produce a configure script.
 
 AC_INIT(libgphoto2/gphoto2.h)
 AM_CONFIG_HEADER(libgphoto2/config.h)
-AM_INIT_AUTOMAKE(gphoto2, 2.0.1dev4)
+AM_INIT_AUTOMAKE(gphoto2, 2.0.1dev5)
 AM_MAINTAINER_MODE
 AC_LIBTOOL_DLOPEN
 
@@ -94,7 +94,7 @@ dnl ---------------------------------------------------------------------------
 AC_ARG_ENABLE(debugging,
 	[  --disable-debugging     do not include debugging code],
 		[if test "$enableval" = "no"; then
-			AC_DEFINE(DISABLE_DEBUGGING)
+			AC_DEFINE(DISABLE_DEBUGGING,,[do not include debugging code])
 		fi])
 
 dnl ---------------------------------------------------------------------------
@@ -120,7 +120,7 @@ AC_PROG_LIBTOOL
 no_libtool=true
 dnl AC_CHECK_LIB(ltdl, lt_dlforeachfile,
 dnl	AC_CHECK_HEADER(ltdl.h,
-dnl		AC_DEFINE(HAVE_LTDL)
+dnl		AC_DEFINE(HAVE_LTDL,,[whether we use libltdl])
 dnl		LTDL_LIBS="-lltdl"
 dnl		no_libtool=false
 dnl	)
@@ -150,7 +150,7 @@ AC_MSG_CHECKING([for tm_gmtoff in struct tm])
 AC_TRY_COMPILE([
 #include <sys/types.h>
 #include <$ac_cv_struct_tm>], [struct tm tm; tm.tm_gmtoff;],
-AC_DEFINE(HAVE_TM_GMTOFF)
+AC_DEFINE(HAVE_TM_GMTOFF,,[whether struct tm has tm_gmtoff field])
 AC_MSG_RESULT(yes),
 AC_MSG_RESULT(no)
 )
@@ -254,11 +254,11 @@ if $try_cdk; then
 		have_cdk=true
 		CDK_CFLAGS="-I$cdk_prefix/include -I$cdk_prefix/include/cdk"
 		CDK_LIBS="-L$cdk_prefix/lib -lcdk -lncurses"
-		AC_DEFINE(HAVE_CDK)
+		AC_DEFINE(HAVE_CDK,,[whether we have CDK])
 		LDFLAGS_save="$LDFLAGS"
 		LDFLAGS="$CDK_LIBS"
 		AC_CHECK_LIB(cdk, newCDKFScale, [cdk_msg="yes"], [
-			AC_DEFINE(HAVE_CDK_20010421)
+			AC_DEFINE(HAVE_CDK_20010421,,[whether we have old CDK])
 			cdk_msg="yes (but without fscale)"]
 		)
 		LDFLAGS="$LDFLAGS_save"]
@@ -297,7 +297,7 @@ if $try_jpeg; then
 	AC_MSG_RESULT($jpeg_msg)
 	if test "$jpeg_msg" = yes; then
 		have_jpeg=true
-		AC_DEFINE(HAVE_JPEG)
+		AC_DEFINE(HAVE_JPEG,,[whether we use libjpeg])
 		JPEG_LIBS="-ljpeg"
 	fi
 else
@@ -358,7 +358,7 @@ if $try_exif; then
 			EXIF_LIBS=`$PKG_CONFIG --libs libexif`
 			have_exif=true
 			exif_msg=yes
-			AC_DEFINE(HAVE_EXIF)
+			AC_DEFINE(HAVE_EXIF,,[whether we use libexif])
 		fi
 		AC_MSG_RESULT($exif_msg)
 	else
@@ -369,7 +369,7 @@ if $try_exif; then
 			EXIF_LIBS="-L$exif_prefix/lib -lexif"
 			have_exif=true
 			exif_msg=yes
-			AC_DEFINE(HAVE_EXIF)])
+			AC_DEFINE(HAVE_EXIF,,[whether we use libexif])])
 	fi
 else
 	exif_msg="no (not requested)"
@@ -396,7 +396,7 @@ if $try_aa; then
 	AC_CHECK_HEADER(aalib.h,[
 		have_aa=true
 		aa_msg=yes
-		AC_DEFINE(HAVE_AA)
+		AC_DEFINE(HAVE_AA,,[whether we use aalib])
 		AC_PATH_PROG(AALIB_CONFIG,aalib-config)
 		if test -n "${AALIB_CONFIG}"; then
 			AA_CFLAGS=`$AALIB_CONFIG --cflags`
