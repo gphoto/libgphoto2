@@ -128,6 +128,14 @@ if test x$enable_gtk_doc = xauto ; then
     fi
 fi
 AM_CONDITIONAL(ENABLE_GTK_DOC, test x$enable_gtk_doc = xyes)
+AC_ARG_WITH(html-dir, [  --with-html-dir=PATH path to installed docs ])
+
+if test "x$with_html_dir" = "x" ; then
+    HTML_DIR='${datadir}/gphoto2/html'
+else
+    HTML_DIR=$with_html_dir
+fi
+AC_SUBST(HTML_DIR)
 
 AC_OUTPUT(\
 Makefile \

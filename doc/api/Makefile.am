@@ -7,12 +7,12 @@ DOC_SOURCE_DIR=$(top_srcdir)/libgphoto2
 CFLAGS="-I../.. `gphoto2-config --cflags`"
 LDFLAGS="`gphoto2-config --ldflags`"
 
-TARGET_DIR=$(datadir)/$(DOC_MODULE)
+TARGET_DIR=$(HTML_DIR)/$(DOC_MODULE)
 
 tmpl_sources =			\
 	tmpl/widget.sgml
 
-gphoto2_docdir = $(datadir)/gphoto2
+gphoto2_docdir = $(HTML_DIR)
 gphoto2_doc_DATA = 		\
 	gphoto2-api.sgml	\
 	gphoto2-api.html
@@ -33,19 +33,14 @@ sgml/gphoto2-doc.bottom: $(tmpl_sources)
 	$(MAKE) sgml
 
 scan:
-	-(cd $(srcdir) \
-	&& env CFLAGS=$(CFLAGS) LDFLAGS=$(LDFLAGS) \
-		gtkdoc-scanobj --module=$(DOC_MODULE) \
-	&& gtkdoc-scan --module=$(DOC_MODULE) \
-		../../include/gphoto2-widget.h
+	gtkdoc-scan --module=$(DOC_MODULE) --source-dir=$(DOC_SOURCE_DIR)
 
 templates:
 	cd $(srcdir) && gtkdoc-mktmpl --module=$(DOC_MODULE)
 
 sgml:
 	cd $(srcdir) \
-	&& gtkdoc-mkdb --module=$(DOC_MODULE) \
-		--source-dir=$(top_srcdir)/libgphoto2
+	&& gtkdoc-mkdb --module=$(DOC_MODULE) --source-dir=$(DOC_SOURCE_DIR)
 
 html:
 	test -d $(srcdir)/html || mkdir $(srcdir)/html

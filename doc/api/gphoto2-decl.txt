@@ -1,5 +1,539 @@
+<TYPEDEF>
+<NAME>CameraChoice</NAME>
+typedef struct {
+	  /* The name of the camera model */
+	  char name[128];
+	  /* The filename of the camera library. */
+	  char library[128];
+} CameraChoice;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>Setting</NAME>
+typedef struct {
+	/* key = value settings */
+	char id[256];
+	char key[256];
+	char value[256];
+} Setting;
+</TYPEDEF>
+<ENUM>
+<NAME>EXIFDataType</NAME>
+typedef enum {
+        EXIF_NOTYPE     = 0,    /* placeholder */
+        EXIF_BYTE       = 1,    /* 8-bit unsigned integer */
+        EXIF_ASCII      = 2,    /* 8-bit bytes w/ last byte null */
+        EXIF_SHORT      = 3,    /* 16-bit unsigned integer */
+        EXIF_LONG       = 4,    /* 32-bit unsigned integer */
+        EXIF_RATIONAL   = 5,    /* 64-bit unsigned fraction */
+        EXIF_SBYTE      = 6,    /* !8-bit signed integer */
+        EXIF_UNDEFINED  = 7,    /* !8-bit untyped data */
+        EXIF_SSHORT     = 8,    /* !16-bit signed integer */
+        EXIF_SLONG      = 9,    /* !32-bit signed integer */
+        EXIF_SRATIONAL  = 10,   /* !64-bit signed fraction */
+        EXIF_FLOAT      = 11,   /* !32-bit IEEE floating point */
+        EXIF_DOUBLE     = 12    /* !64-bit IEEE floating point */
+} EXIFDataType;
+</ENUM>
+<TYPEDEF>
+<NAME>ExifData</NAME>
+typedef struct {
+    int tag;            // Tag ID, see exif_tags.h
+    EXIFDataType type;  // Tag data type, see exif_tags.h
+    int size;           // Length of the data, in bytes.
+    char *data;         // The data itself, not an offset
+    int num;     // When type is (s)rational, we
+    int den;   // store the value here...
+    int intval;
+} ExifData;
+</TYPEDEF>
+<VARIABLE>
+<NAME>exif_debug</NAME>
+extern int exif_debug; /* Non-zero for debug messages */
+</VARIABLE>
 <FUNCTION>
-<NAME>gp_widget_new</NAME>
-<RETURNS>int</RETURNS>
-CameraWidgetType type, const gchar *name
+<NAME>exif_parse_data</NAME>
+<RETURNS>int  </RETURNS>
+exifparser *exifdat
+</FUNCTION>
+<FUNCTION>
+<NAME>exif_get_field</NAME>
+<RETURNS>int  </RETURNS>
+ int tag_number, int ifd, exifparser *exifdat, ExifData *tag_data
+</FUNCTION>
+<FUNCTION>
+<NAME>exif_get_int_field</NAME>
+<RETURNS>int  </RETURNS>
+ int tag_number, int ifd, exifparser *exifdat
+</FUNCTION>
+<FUNCTION>
+<NAME>exif_get_ascii_field</NAME>
+<RETURNS>char  *</RETURNS>
+ int tag_number, int ifd, exifparser *exifdat
+</FUNCTION>
+<FUNCTION>
+<NAME>exif_get_tagname</NAME>
+<RETURNS>char  *</RETURNS>
+int tag_number
+</FUNCTION>
+<FUNCTION>
+<NAME>exif_get_thumbnail</NAME>
+<RETURNS>unsigned char  *</RETURNS>
+exifparser *exifdat
+</FUNCTION>
+<FUNCTION>
+<NAME>gpe_get_comment</NAME>
+<RETURNS>int  </RETURNS>
+exifparser *exifdat, char *comment
+</FUNCTION>
+<FUNCTION>
+<NAME>gpe_set_comment</NAME>
+<RETURNS>int  </RETURNS>
+exifparser *exifdat, char *comment
+</FUNCTION>
+<FUNCTION>
+<NAME>stat_exif</NAME>
+<RETURNS>int  </RETURNS>
+exifparser *exifdata
+</FUNCTION>
+<FUNCTION>
+<NAME>gpe_dump_exif</NAME>
+<RETURNS>int  </RETURNS>
+exifparser *exifdata
+</FUNCTION>
+<MACRO>
+<NAME>EXIF_InteroperabilityIndex</NAME>
+#define	EXIF_InteroperabilityIndex 0x1
+</MACRO>
+<MACRO>
+<NAME>EXIF_InteroperabilityVersion</NAME>
+#define	EXIF_InteroperabilityVersion    0x2
+</MACRO>
+<MACRO>
+<NAME>EXIF_RelatedImageFileFormat</NAME>
+#define	EXIF_RelatedImageFileFormat 0x1000
+</MACRO>
+<MACRO>
+<NAME>EXIF_RelatedImageWidth</NAME>
+#define	EXIF_RelatedImageWidth 0x1001
+</MACRO>
+<MACRO>
+<NAME>EXIF_RelatedImageLength</NAME>
+#define	EXIF_RelatedImageLength 0x1002
+</MACRO>
+<MACRO>
+<NAME>EXIF_NewSubFileType</NAME>
+#define EXIF_NewSubFileType              0xFE
+</MACRO>
+<MACRO>
+<NAME>EXIF_ImageWidth</NAME>
+#define EXIF_ImageWidth                  0x100
+</MACRO>
+<MACRO>
+<NAME>EXIF_ImageLength</NAME>
+#define EXIF_ImageLength                 0x101
+</MACRO>
+<MACRO>
+<NAME>EXIF_BitsPerSample</NAME>
+#define EXIF_BitsPerSample               0x102
+</MACRO>
+<MACRO>
+<NAME>EXIF_Compression</NAME>
+#define EXIF_Compression                 0x103
+</MACRO>
+<MACRO>
+<NAME>EXIF_PhotometricInterpretation</NAME>
+#define EXIF_PhotometricInterpretation   0x106
+</MACRO>
+<MACRO>
+<NAME>EXIF_FillOrder</NAME>
+#define EXIF_FillOrder                   0x10A
+</MACRO>
+<MACRO>
+<NAME>EXIF_DocumentName</NAME>
+#define EXIF_DocumentName                0x10D
+</MACRO>
+<MACRO>
+<NAME>EXIF_ImageDescription</NAME>
+#define EXIF_ImageDescription            0x10E
+</MACRO>
+<MACRO>
+<NAME>EXIF_Make</NAME>
+#define EXIF_Make                        0x10F
+</MACRO>
+<MACRO>
+<NAME>EXIF_Model</NAME>
+#define EXIF_Model                       0x110
+</MACRO>
+<MACRO>
+<NAME>EXIF_StripOffsets</NAME>
+#define EXIF_StripOffsets                0x111
+</MACRO>
+<MACRO>
+<NAME>EXIF_Orientation</NAME>
+#define EXIF_Orientation                 0x112
+</MACRO>
+<MACRO>
+<NAME>EXIF_SamplesPerPixel</NAME>
+#define EXIF_SamplesPerPixel             0x115
+</MACRO>
+<MACRO>
+<NAME>EXIF_RowsPerStrip</NAME>
+#define EXIF_RowsPerStrip                0x116
+</MACRO>
+<MACRO>
+<NAME>EXIF_StripByteCounts</NAME>
+#define EXIF_StripByteCounts             0x117
+</MACRO>
+<MACRO>
+<NAME>EXIF_XResolution</NAME>
+#define EXIF_XResolution                 0x11A
+</MACRO>
+<MACRO>
+<NAME>EXIF_YResolution</NAME>
+#define EXIF_YResolution                 0x11B
+</MACRO>
+<MACRO>
+<NAME>EXIF_PlanarConfiguration</NAME>
+#define EXIF_PlanarConfiguration         0x11C
+</MACRO>
+<MACRO>
+<NAME>EXIF_ResolutionUnit</NAME>
+#define EXIF_ResolutionUnit              0x128
+</MACRO>
+<MACRO>
+<NAME>EXIF_TransferFunction</NAME>
+#define EXIF_TransferFunction            0x12D
+</MACRO>
+<MACRO>
+<NAME>EXIF_Software</NAME>
+#define EXIF_Software                    0x131
+</MACRO>
+<MACRO>
+<NAME>EXIF_DateTime</NAME>
+#define EXIF_DateTime                    0x132
+</MACRO>
+<MACRO>
+<NAME>EXIF_Artist</NAME>
+#define EXIF_Artist                      0x13B
+</MACRO>
+<MACRO>
+<NAME>EXIF_WhitePoint</NAME>
+#define EXIF_WhitePoint                  0x13E
+</MACRO>
+<MACRO>
+<NAME>EXIF_PrimaryChromaticities</NAME>
+#define EXIF_PrimaryChromaticities       0x13F
+</MACRO>
+<MACRO>
+<NAME>EXIF_TransferRange</NAME>
+#define EXIF_TransferRange               0x156
+</MACRO>
+<MACRO>
+<NAME>EXIF_JPEGProc</NAME>
+#define EXIF_JPEGProc                    0x200
+</MACRO>
+<MACRO>
+<NAME>EXIF_JPEGInterchangeFormat</NAME>
+#define EXIF_JPEGInterchangeFormat       0x201
+</MACRO>
+<MACRO>
+<NAME>EXIF_JPEGInterchangeFormatLength</NAME>
+#define EXIF_JPEGInterchangeFormatLength 0x202
+</MACRO>
+<MACRO>
+<NAME>EXIF_YCbCrCoefficients</NAME>
+#define EXIF_YCbCrCoefficients           0x211
+</MACRO>
+<MACRO>
+<NAME>EXIF_YCbCrSubSampling</NAME>
+#define EXIF_YCbCrSubSampling            0x212
+</MACRO>
+<MACRO>
+<NAME>EXIF_YCbCrPositioning</NAME>
+#define EXIF_YCbCrPositioning            0x213
+</MACRO>
+<MACRO>
+<NAME>EXIF_ReferenceBlackWhite</NAME>
+#define EXIF_ReferenceBlackWhite         0x214
+</MACRO>
+<MACRO>
+<NAME>EXIF_CFARepeatPatternDim</NAME>
+#define EXIF_CFARepeatPatternDim        0x828D
+</MACRO>
+<MACRO>
+<NAME>EXIF_CFAPattern</NAME>
+#define EXIF_CFAPattern                 0x828E
+</MACRO>
+<MACRO>
+<NAME>EXIF_BatteryLevel</NAME>
+#define EXIF_BatteryLevel		0x828F
+</MACRO>
+<MACRO>
+<NAME>EXIF_Copyright</NAME>
+#define EXIF_Copyright                  0x8298
+</MACRO>
+<MACRO>
+<NAME>EXIF_ExposureTime</NAME>
+#define EXIF_ExposureTime               0x829A
+</MACRO>
+<MACRO>
+<NAME>EXIF_FNumber</NAME>
+#define EXIF_FNumber                    0x829D
+</MACRO>
+<MACRO>
+<NAME>EXIF_IPTC_NAA</NAME>
+#define EXIF_IPTC_NAA                   0x83BB
+</MACRO>
+<MACRO>
+<NAME>EXIF_ExifOffset</NAME>
+#define EXIF_ExifOffset                 0x8769
+</MACRO>
+<MACRO>
+<NAME>EXIF_InterColorProfile</NAME>
+#define EXIF_InterColorProfile          0x8773
+</MACRO>
+<MACRO>
+<NAME>EXIF_ExposureProgram</NAME>
+#define EXIF_ExposureProgram            0x8822
+</MACRO>
+<MACRO>
+<NAME>EXIF_SpectralSensitivity</NAME>
+#define EXIF_SpectralSensitivity        0x8824
+</MACRO>
+<MACRO>
+<NAME>EXIF_GPSInfo</NAME>
+#define EXIF_GPSInfo                    0x8825
+</MACRO>
+<MACRO>
+<NAME>EXIF_ISOSpeedRatings</NAME>
+#define EXIF_ISOSpeedRatings            0x8827
+</MACRO>
+<MACRO>
+<NAME>EXIF_OECF</NAME>
+#define EXIF_OECF                       0x8828
+</MACRO>
+<MACRO>
+<NAME>EXIF_ExifVersion</NAME>
+#define EXIF_ExifVersion                0x9000
+</MACRO>
+<MACRO>
+<NAME>EXIF_DateTimeOriginal</NAME>
+#define EXIF_DateTimeOriginal           0x9003
+</MACRO>
+<MACRO>
+<NAME>EXIF_DateTimeDigitized</NAME>
+#define EXIF_DateTimeDigitized          0x9004
+</MACRO>
+<MACRO>
+<NAME>EXIF_ComponentsConfiguration</NAME>
+#define EXIF_ComponentsConfiguration    0x9101
+</MACRO>
+<MACRO>
+<NAME>EXIF_CompressedBitsPerPixel</NAME>
+#define EXIF_CompressedBitsPerPixel     0x9102
+</MACRO>
+<MACRO>
+<NAME>EXIF_ShutterSpeedValue</NAME>
+#define EXIF_ShutterSpeedValue          0x9201
+</MACRO>
+<MACRO>
+<NAME>EXIF_ApertureValue</NAME>
+#define EXIF_ApertureValue              0x9202
+</MACRO>
+<MACRO>
+<NAME>EXIF_BrightnessValue</NAME>
+#define EXIF_BrightnessValue            0x9203
+</MACRO>
+<MACRO>
+<NAME>EXIF_ExposureBiasValue</NAME>
+#define EXIF_ExposureBiasValue          0x9204
+</MACRO>
+<MACRO>
+<NAME>EXIF_MaxApertureValue</NAME>
+#define EXIF_MaxApertureValue           0x9205
+</MACRO>
+<MACRO>
+<NAME>EXIF_SubjectDistance</NAME>
+#define EXIF_SubjectDistance            0x9206
+</MACRO>
+<MACRO>
+<NAME>EXIF_MeteringMode</NAME>
+#define EXIF_MeteringMode               0x9207
+</MACRO>
+<MACRO>
+<NAME>EXIF_LightSource</NAME>
+#define EXIF_LightSource                0x9208
+</MACRO>
+<MACRO>
+<NAME>EXIF_Flash</NAME>
+#define EXIF_Flash                      0x9209
+</MACRO>
+<MACRO>
+<NAME>EXIF_FocalLength</NAME>
+#define EXIF_FocalLength                0x920A
+</MACRO>
+<MACRO>
+<NAME>EXIF_MakerNote</NAME>
+#define EXIF_MakerNote                  0x927C
+</MACRO>
+<MACRO>
+<NAME>EXIF_UserComment</NAME>
+#define EXIF_UserComment                0x9286
+</MACRO>
+<MACRO>
+<NAME>EXIF_SubSecTime</NAME>
+#define EXIF_SubSecTime                 0x9290
+</MACRO>
+<MACRO>
+<NAME>EXIF_SubSecTimeOriginal</NAME>
+#define EXIF_SubSecTimeOriginal         0x9291
+</MACRO>
+<MACRO>
+<NAME>EXIF_SubSecTimeDigitized</NAME>
+#define EXIF_SubSecTimeDigitized        0x9292
+</MACRO>
+<MACRO>
+<NAME>EXIF_FlashPixVersion</NAME>
+#define EXIF_FlashPixVersion            0xA000
+</MACRO>
+<MACRO>
+<NAME>EXIF_ColorSpace</NAME>
+#define EXIF_ColorSpace                 0xA001
+</MACRO>
+<MACRO>
+<NAME>EXIF_ExifImageWidth</NAME>
+#define EXIF_ExifImageWidth             0xA002
+</MACRO>
+<MACRO>
+<NAME>EXIF_ExifImageLength</NAME>
+#define EXIF_ExifImageLength            0xA003
+</MACRO>
+<MACRO>
+<NAME>EXIF_InteroperabilityOffset</NAME>
+#define EXIF_InteroperabilityOffset     0xA005
+</MACRO>
+<MACRO>
+<NAME>EXIF_FlashEnergy</NAME>
+#define EXIF_FlashEnergy                0xA20B  # 0x920B in TIFF/EP
+</MACRO>
+<MACRO>
+<NAME>EXIF_SpatialFrequencyResponse</NAME>
+#define EXIF_SpatialFrequencyResponse   0xA20C  # 0x920C    -  -
+</MACRO>
+<MACRO>
+<NAME>EXIF_FocalPlaneXResolution</NAME>
+#define EXIF_FocalPlaneXResolution      0xA20E  # 0x920E    -  -
+</MACRO>
+<MACRO>
+<NAME>EXIF_FocalPlaneYResolution</NAME>
+#define EXIF_FocalPlaneYResolution      0xA20F  # 0x920F    -  -
+</MACRO>
+<MACRO>
+<NAME>EXIF_FocalPlaneResolutionUnit</NAME>
+#define EXIF_FocalPlaneResolutionUnit   0xA210  # 0x9210    -  -
+</MACRO>
+<MACRO>
+<NAME>EXIF_SubjectLocation</NAME>
+#define EXIF_SubjectLocation            0xA214  # 0x9214    -  -
+</MACRO>
+<MACRO>
+<NAME>EXIF_ExposureIndex</NAME>
+#define EXIF_ExposureIndex              0xA215  # 0x9215    -  -
+</MACRO>
+<MACRO>
+<NAME>EXIF_SensingMethod</NAME>
+#define EXIF_SensingMethod              0xA217  # 0x9217    -  -
+</MACRO>
+<MACRO>
+<NAME>EXIF_FileSource</NAME>
+#define EXIF_FileSource                 0xA300
+</MACRO>
+<MACRO>
+<NAME>EXIF_SceneType</NAME>
+#define EXIF_SceneType                  0xA301
+</MACRO>
+<VARIABLE>
+<NAME>glob_debug</NAME>
+extern	int	glob_debug;
+</VARIABLE>
+<VARIABLE>
+<NAME>glob_abilities_list</NAME>
+extern	CameraAbilitiesList *glob_abilities_list;
+</VARIABLE>
+<VARIABLE>
+<NAME>glob_setting_count</NAME>
+extern	int	glob_setting_count; 
+</VARIABLE>
+<VARIABLE>
+<NAME>glob_session_camera</NAME>
+extern  int	glob_session_camera;
+</VARIABLE>
+<VARIABLE>
+<NAME>glob_session_file</NAME>
+extern  int	glob_session_file;
+</VARIABLE>
+<VARIABLE>
+<NAME>gp_fe_status</NAME>
+extern	CameraStatus   gp_fe_status;
+</VARIABLE>
+<VARIABLE>
+<NAME>gp_fe_progress</NAME>
+extern	CameraProgress gp_fe_progress;
+</VARIABLE>
+<VARIABLE>
+<NAME>gp_fe_message</NAME>
+extern	CameraMessage  gp_fe_message;
+</VARIABLE>
+<VARIABLE>
+<NAME>gp_fe_confirm</NAME>
+extern	CameraConfirm  gp_fe_confirm; 
+</VARIABLE>
+<VARIABLE>
+<NAME>gp_fe_prompt</NAME>
+extern	CameraPrompt   gp_fe_prompt; 
+</VARIABLE>
+<FUNCTION>
+<NAME>load_cameras</NAME>
+<RETURNS>int  </RETURNS>
+
+</FUNCTION>
+<FUNCTION>
+<NAME>is_library</NAME>
+<RETURNS>int  </RETURNS>
+char *library_filename
+</FUNCTION>
+<FUNCTION>
+<NAME>load_library</NAME>
+<RETURNS>int  </RETURNS>
+Camera *camera
+</FUNCTION>
+<FUNCTION>
+<NAME>close_library</NAME>
+<RETURNS>int  </RETURNS>
+Camera *camera
+</FUNCTION>
+<FUNCTION>
+<NAME>save_settings</NAME>
+<RETURNS>int  </RETURNS>
+
+</FUNCTION>
+<FUNCTION>
+<NAME>load_settings</NAME>
+<RETURNS>int  </RETURNS>
+
+</FUNCTION>
+<FUNCTION>
+<NAME>dump_settings</NAME>
+<RETURNS>int  </RETURNS>
+
+</FUNCTION>
+<FUNCTION>
+<NAME>gp_abilities_dump</NAME>
+<RETURNS>int  </RETURNS>
+CameraAbilities *abilities
+</FUNCTION>
+<FUNCTION>
+<NAME>gp_abilities_clear</NAME>
+<RETURNS>int  </RETURNS>
+CameraAbilities *abilities
 </FUNCTION>
