@@ -1,3 +1,8 @@
+2002-03-21  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* library.c (jamcam_file_count): Patch by Thor Ablestar <thor@irk.ru>
+	  Fix the file count if the camera storage is full.
+
 2002-01-04  Chris Pinkham <cpinkham@infi.net>
 
 	* jamcam.c, library.c, library.h: updated code to use new

@@ -239,7 +239,7 @@ int jamcam_file_count (Camera *camera) {
 
 			jamcam_read_packet( camera, reply, 16 );
 
-			while( reply[0] != 0xff ) {
+			while( reply[0] = 'K' ) {
 				width  = (reply[5] * 256) + reply[4];
 				height = (reply[7] * 256) + reply[6];
 
