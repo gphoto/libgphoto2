@@ -63,24 +63,22 @@ int
 camera_abilities (CameraAbilitiesList *list) 
 {
 	int i;
-	CameraAbilities *a;
+	CameraAbilities a;
 
 	for (i = 0; models[i].model; i++) {
 		if (!models[i].public)
 			continue;
 
-		CHECK_RESULT (gp_abilities_new (&a));
-
-		strcpy (a->model, models[i].model);
-		a->status = GP_DRIVER_STATUS_EXPERIMENTAL;
-		a->port     = GP_PORT_SERIAL;
-		a->speed[0] = 9600;
-		a->speed[1] = 19200;
-		a->speed[2] = 38400;
-		a->speed[3] = 57600;
-		a->operations        = GP_OPERATION_NONE;
-		a->file_operations   = GP_FILE_OPERATION_NONE;
-		a->folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
+		strcpy (a.model, models[i].model);
+		a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
+		a.port     = GP_PORT_SERIAL;
+		a.speed[0] = 9600;
+		a.speed[1] = 19200;
+		a.speed[2] = 38400;
+		a.speed[3] = 57600;
+		a.operations        = GP_OPERATION_NONE;
+		a.file_operations   = GP_FILE_OPERATION_NONE;
+		a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
 
 		CHECK_RESULT (gp_abilities_list_append (list, a));
 	}

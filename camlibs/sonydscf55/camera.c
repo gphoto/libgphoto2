@@ -38,17 +38,16 @@ int camera_abilities(CameraAbilitiesList * list)
 		SONY_MODEL_MSAC_SR1
 	};
 	int i;
+	CameraAbilities a;
 
 	for (i = 0; i < sizeof(models) / sizeof(models[i]); i++) {
-		CameraAbilities *a;
-
-		gp_abilities_new(&a);
-		strcpy(a->model, models[i]);
-		a->port = GP_PORT_SERIAL;
-		a->speed[0] = 0;
-		a->operations = GP_OPERATION_NONE;
-		a->file_operations = GP_FILE_OPERATION_PREVIEW;
-		a->folder_operations = GP_FOLDER_OPERATION_NONE;
+		strcpy(a.model, models[i]);
+		a.status = GP_DRIVER_STATUS_PRODUCTION;
+		a.port = GP_PORT_SERIAL;
+		a.speed[0] = 0;
+		a.operations = GP_OPERATION_NONE;
+		a.file_operations = GP_FILE_OPERATION_PREVIEW;
+		a.folder_operations = GP_FOLDER_OPERATION_NONE;
 		gp_abilities_list_append(list, a);
 	}
 

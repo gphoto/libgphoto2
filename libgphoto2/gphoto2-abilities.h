@@ -23,14 +23,6 @@
 
 #include <gphoto2-port.h>
 
-#define SERIAL_SUPPORTED(p)     (p & (1 << 0))
-#define PARALLEL_SUPPORTED(p)   (p & (1 << 1))
-#define USB_SUPPORTED(p)        (p & (1 << 2))
-#define IEEE1394_SUPPORTED(p)   (p & (1 << 3))
-#define NETWORK_SUPPORTED(p)    (p & (1 << 4))
-
-typedef gp_port_type CameraPortType; /* GP_PORT_SERIAL, GP_PORT_USB, etc. */
-
 typedef enum {
 	GP_DRIVER_STATUS_PRODUCTION   = 0,
 	GP_DRIVER_STATUS_TESTING      = 1 << 0,
@@ -66,7 +58,7 @@ typedef struct {
 	CameraDriverStatus status;
 
 	/* Supported ports and speeds (latter terminated with a value of 0) */
-	CameraPortType port;
+	GPPortType port;
 	int speed [64];
 
 	/* Supported operations */
@@ -80,10 +72,5 @@ typedef struct {
 	char library [1024];
 	char id [1024];
 } CameraAbilities;
-
-int gp_abilities_new   (CameraAbilities **abilities);
-int gp_abilities_free  (CameraAbilities *abilities);
-int gp_abilities_dump  (CameraAbilities *abilities);
-int gp_abilities_clear (CameraAbilities *abilities);
 
 #endif /* __GPHOTO2_ABILITIES_H__ */

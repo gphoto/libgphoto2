@@ -363,25 +363,21 @@ int camera_id (CameraText *id) {
 
 int camera_abilities (CameraAbilitiesList *list) {
 
-	int ret;
-	CameraAbilities *a;
+	CameraAbilities a;
 
 	l859_debug("Camera Abilities");
 
-	ret = gp_abilities_new (&a);
-	if (ret != GP_OK)
-		return (ret);
-
-	strcpy(a->model, "Panasonic PV-L859");
-	a->port		= GP_PORT_SERIAL;
-	a->speed[0] 	= 9600;
-	a->speed[1] 	= 19200;
-	a->speed[2] 	= 57600;
-	a->speed[3] 	= 115200;
-	a->speed[4] 	= 0;
-	a->operations        = GP_OPERATION_NONE;
-	a->file_operations   = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
-	a->folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
+	strcpy(a.model, "Panasonic PV-L859");
+	a.status = GP_DRIVER_STATUS_PRODUCTION;
+	a.port		= GP_PORT_SERIAL;
+	a.speed[0] 	= 9600;
+	a.speed[1] 	= 19200;
+	a.speed[2] 	= 57600;
+	a.speed[3] 	= 115200;
+	a.speed[4] 	= 0;
+	a.operations        = GP_OPERATION_NONE;
+	a.file_operations   = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
+	a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
 
 	if (gp_abilities_list_append(list, a) == GP_ERROR)
 		return GP_ERROR;

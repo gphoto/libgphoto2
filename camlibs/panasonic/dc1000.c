@@ -340,22 +340,21 @@ int camera_id (CameraText *id) {
 
 int camera_abilities (CameraAbilitiesList *list) {
 
-	CameraAbilities *a;
+	CameraAbilities a;
         int             result;
 
-	CHECK (gp_abilities_new (&a));
-
-	strcpy(a->model, "Panasonic DC1000");
-	a->port		= GP_PORT_SERIAL;
-	a->speed[0] 	= 9600;
-	a->speed[1] 	= 19200;
-	a->speed[2] 	= 38400;
-	a->speed[3] 	= 57600;			
-	a->speed[4] 	= 115200;	
-	a->speed[5] 	= 0;	
-	a->operations        = GP_OPERATION_NONE;
-	a->file_operations   = GP_FILE_OPERATION_DELETE;
-	a->folder_operations = GP_FOLDER_OPERATION_PUT_FILE;
+	strcpy(a.model, "Panasonic DC1000");
+	a.status = GP_DRIVER_STATUS_PRODUCTION;
+	a.port		= GP_PORT_SERIAL;
+	a.speed[0] 	= 9600;
+	a.speed[1] 	= 19200;
+	a.speed[2] 	= 38400;
+	a.speed[3] 	= 57600;			
+	a.speed[4] 	= 115200;	
+	a.speed[5] 	= 0;	
+	a.operations        = GP_OPERATION_NONE;
+	a.file_operations   = GP_FILE_OPERATION_DELETE;
+	a.folder_operations = GP_FOLDER_OPERATION_PUT_FILE;
 
 	CHECK (gp_abilities_list_append(list, a));
 

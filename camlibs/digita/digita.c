@@ -61,20 +61,20 @@ static struct {
 int camera_abilities(CameraAbilitiesList *list)
 {
         int i;
-        CameraAbilities *a;
+        CameraAbilities a;
 
         for (i = 0; models[i].model; i++) {
-                gp_abilities_new (&a);
-                strcpy(a->model, models[i].model);
-                a->port       = GP_PORT_SERIAL | GP_PORT_USB;
-                a->speed[0]   = 57600;
-                a->speed[1]   = 0;
-                a->operations        = 	GP_OPERATION_NONE;
-		a->folder_operations = 	GP_FOLDER_OPERATION_NONE;
-                a->file_operations   = 	GP_FILE_OPERATION_PREVIEW | 
+                strcpy(a.model, models[i].model);
+		a.status = GP_DRIVER_STATUS_PRODUCTION;
+                a.port       = GP_PORT_SERIAL | GP_PORT_USB;
+                a.speed[0]   = 57600;
+                a.speed[1]   = 0;
+                a.operations        = 	GP_OPERATION_NONE;
+		a.folder_operations = 	GP_FOLDER_OPERATION_NONE;
+                a.file_operations   = 	GP_FILE_OPERATION_PREVIEW | 
 					GP_FILE_OPERATION_DELETE;
-		a->usb_vendor  = models[i].usb_vendor;
-		a->usb_product = models[i].usb_product;
+		a.usb_vendor  = models[i].usb_vendor;
+		a.usb_product = models[i].usb_product;
 
                 gp_abilities_list_append (list, a);
         }

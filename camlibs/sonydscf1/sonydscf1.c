@@ -38,21 +38,21 @@ int camera_id (CameraText *id) {
 int camera_abilities (CameraAbilitiesList *list) {
 
         //*count = 1;
-        CameraAbilities *a;
+        CameraAbilities a;
 
-        gp_abilities_new(&a);
         /* Fill in each camera model's abilities */
         /* Make separate entries for each conneciton type (usb, serial, etc...)
            if a camera supported multiple ways. */
-        strcpy(a->model, "Sony DSC-F1");
-        a->port=GP_PORT_SERIAL;
-        a->speed[0] = 9600;
-        a->speed[1] = 19200;
-        a->speed[2] = 38400;
-        a->operations        =  GP_OPERATION_NONE;
-        a->file_operations   =  GP_FILE_OPERATION_DELETE |
+        strcpy(a.model, "Sony DSC-F1");
+	a.status = GP_DRIVER_STATUS_PRODUCTION;
+        a.port=GP_PORT_SERIAL;
+        a.speed[0] = 9600;
+        a.speed[1] = 19200;
+        a.speed[2] = 38400;
+        a.operations        =  GP_OPERATION_NONE;
+        a.file_operations   =  GP_FILE_OPERATION_DELETE |
                                 GP_FILE_OPERATION_PREVIEW;
-        a->folder_operations =  GP_FOLDER_OPERATION_NONE;
+        a.folder_operations =  GP_FOLDER_OPERATION_NONE;
         gp_abilities_list_append(list, a);
 
         return (GP_OK);

@@ -1,12 +1,14 @@
 <!doctype book PUBLIC "-//Davenport//DTD DocBook V3.0//EN" [
 <!entity hash "#">
-<!entity gphoto2-filesys SYSTEM "sgml/gphoto2-filesys.sgml">
-<!entity gphoto2-widget  SYSTEM "sgml/gphoto2-widget.sgml">
-<!entity gphoto2-debug   SYSTEM "sgml/gphoto2-debug.sgml">
-<!entity gphoto2-camera  SYSTEM "sgml/gphoto2-camera.sgml">
-<!entity gphoto2-result  SYSTEM "sgml/gphoto2-result.sgml">
-<!entity gphoto2-setting SYSTEM "sgml/gphoto2-setting.sgml">
-<!entity gphoto2-list    SYSTEM "sgml/gphoto2-list.sgml">
+<!entity gphoto2-filesys        SYSTEM "sgml/gphoto2-filesys.sgml">
+<!entity gphoto2-widget         SYSTEM "sgml/gphoto2-widget.sgml">
+<!entity gphoto2-debug          SYSTEM "sgml/gphoto2-debug.sgml">
+<!entity gphoto2-camera         SYSTEM "sgml/gphoto2-camera.sgml">
+<!entity gphoto2-result         SYSTEM "sgml/gphoto2-result.sgml">
+<!entity gphoto2-library        SYSTEM "sgml/gphoto2-library.sgml">
+<!entity gphoto2-list           SYSTEM "sgml/gphoto2-list.sgml">
+<!entity gphoto2-abilities      SYSTEM "sgml/gphoto2-abilities.sgml">
+<!entity gphoto2-abilities-list SYSTEM "sgml/gphoto2-abilities-list.sgml">
 ]>
 
 <book id="index">
@@ -61,12 +63,14 @@ locking of serial ports. GPhoto2 currently supports
   <chapter id="gphoto2base" role="no-toc">
     <title>GPhoto2 Core Reference</title>
       <para>
-        GPhoto2's core provides some utility functions.
+        GPhoto2's core provides some utility functions and general 
+	datatypes.
       </para>
 
 &gphoto2-result;
 &gphoto2-debug;
-&gphoto2-setting;
+&gphoto2-abilities;
+&gphoto2-library;
 
   </chapter>
 
@@ -87,6 +91,7 @@ locking of serial ports. GPhoto2 currently supports
 	<title>Objects used by both frontends and camera drivers</title>
 	&gphoto2-widget;
 	&gphoto2-list;
+	&gphoto2-abilities-list;
       </sect1>
 
   </chapter>

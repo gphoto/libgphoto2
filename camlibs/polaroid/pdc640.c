@@ -539,18 +539,16 @@ int
 camera_abilities (CameraAbilitiesList *list)
 {
 	int i;
-	CameraAbilities *a;
+	CameraAbilities a;
 
 	for (i = 0; models[i].model; i++) {
-		CHECK_RESULT (gp_abilities_new (&a));
-
-		strcpy (a->model, models[i].model);
-		a->status = GP_DRIVER_STATUS_EXPERIMENTAL;
-		a->port = GP_PORT_SERIAL;
-		a->speed[0] = 0;
-		a->operations        = GP_OPERATION_NONE;
-		a->file_operations   = GP_FILE_OPERATION_DELETE;
-		a->folder_operations = GP_FOLDER_OPERATION_NONE;
+		strcpy (a.model, models[i].model);
+		a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
+		a.port = GP_PORT_SERIAL;
+		a.speed[0] = 0;
+		a.operations        = GP_OPERATION_NONE;
+		a.file_operations   = GP_FILE_OPERATION_DELETE;
+		a.folder_operations = GP_FOLDER_OPERATION_NONE;
 
 		CHECK_RESULT (gp_abilities_list_append (list, a));
 	}
@@ -651,9 +649,12 @@ camera_about (Camera *camera, CameraText *about)
 }
 
 static int
-camera_capture (Camera *camera, int capture_type, CameraFilePath *path)
+camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path)
 {
 	int num, numpic;
+
+	if (type != GP_CAPTURE_IMAGE)
+		return (GP_ERROR_NOT_SUPPORTED);
 
 	/* First get the current number of images */
 	CHECK_RESULT (pdc640_caminfo (camera->port, &numpic));
@@ -734,8 +735,8 @@ camera_init (Camera *camera)
 	int result;
 	gp_port_settings settings;
 
-	camera->functions->about      = camera_about;
-	camera->functions->capture      = camera_capture;
+	camera->functions->about   = camera_about;
+	camera->functions->capture = camera_capture;
 
 	/* Tell the filesystem where to get lists and info */
 	CHECK_RESULT (gp_filesystem_set_list_funcs (camera->fs, file_list_func,

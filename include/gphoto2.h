@@ -25,6 +25,12 @@ extern "C" {
 #define CAMLIBS "."
 #endif
 
+#define SERIAL_SUPPORTED(p)     (p & (1 << 0))
+#define PARALLEL_SUPPORTED(p)   (p & (1 << 1))
+#define USB_SUPPORTED(p)        (p & (1 << 2))
+#define IEEE1394_SUPPORTED(p)   (p & (1 << 3))
+#define NETWORK_SUPPORTED(p)    (p & (1 << 4))
+
 #include <gphoto2-port.h>
 #include <gphoto2-camera.h>
 #include <gphoto2-core.h>

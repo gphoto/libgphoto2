@@ -139,31 +139,31 @@ int
 camera_abilities (CameraAbilitiesList * list)
 {
 	int i;
-	CameraAbilities *a;
+	CameraAbilities a;
 
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_abilities()");
 
 	for (i = 0; models[i].name; i++) {
-		gp_abilities_new (&a);
-		strcpy (a->model, models[i].name);
-		a->port = 0;
+		a.status = GP_DRIVER_STATUS_PRODUCTION;
+		strcpy (a.model, models[i].name);
+		a.port = 0;
 		if (models[i].idProduct) {
-			a->port |= GP_PORT_USB;
-			a->usb_vendor = models[i].idVendor;
-			a->usb_product = models[i].idProduct;
+			a.port |= GP_PORT_USB;
+			a.usb_vendor = models[i].idVendor;
+			a.usb_product = models[i].idProduct;
 		}
 		if (models[i].serial) {
-			a->port |= GP_PORT_SERIAL;
-			a->speed[0] = 9600;
-			a->speed[1] = 19200;
-			a->speed[2] = 38400;
-			a->speed[3] = 57600;
-			a->speed[4] = 115200;
-			a->speed[5] = 0;
+			a.port |= GP_PORT_SERIAL;
+			a.speed[0] = 9600;
+			a.speed[1] = 19200;
+			a.speed[2] = 38400;
+			a.speed[3] = 57600;
+			a.speed[4] = 115200;
+			a.speed[5] = 0;
 		}
-		a->operations = GP_OPERATION_CONFIG;
-		a->folder_operations = GP_FOLDER_OPERATION_PUT_FILE;
-		a->file_operations = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
+		a.operations = GP_OPERATION_CONFIG;
+		a.folder_operations = GP_FOLDER_OPERATION_PUT_FILE;
+		a.file_operations = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
 		gp_abilities_list_append (list, a);
 	}
 

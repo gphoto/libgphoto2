@@ -33,18 +33,17 @@ camera_id (CameraText *id)
 int
 camera_abilities (CameraAbilitiesList *list) 
 {
-	CameraAbilities *a;
+	CameraAbilities a;
 
-	a = gp_abilities_new();
-
-	strcpy(a->model, "CAMERA MODEL");
-	a->port     = GP_PORT_SERIAL | GP_PORT_USB;
-	a->speed[0] = 0;
-	a->operations        = 	GP_OPERATION_CAPTURE_PREVIEW | 
+	strcpy(a.model, "CAMERA MODEL");
+	a.status = GP_DRIVER_STATUS_PRODUCTION;
+	a.port     = GP_PORT_SERIAL | GP_PORT_USB;
+	a.speed[0] = 0;
+	a.operations        = 	GP_OPERATION_CAPTURE_PREVIEW | 
 				GP_CAPTURE_VIDEO | GP_CAPTURE_IMAGE;
-	a->file_operations   = 	GP_FILE_OPERATION_DELETE | 
+	a.file_operations   = 	GP_FILE_OPERATION_DELETE | 
 				GP_FILE_OPERATION_PREVIEW;
-	a->folder_operations = 	GP_FOLDER_OPERATION_NONE;
+	a.folder_operations = 	GP_FOLDER_OPERATION_NONE;
 
 	gp_abilities_list_append(list, a);
 

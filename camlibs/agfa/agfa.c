@@ -60,17 +60,17 @@ int camera_id(CameraText *id) {
 int camera_abilities(CameraAbilitiesList *list) {
         
     int i;
-    CameraAbilities *a;
+    CameraAbilities a;
 
     for(i=0; models[i].name; i++) {
-       gp_abilities_new(&a);
-       strcpy(a->model, models[i].name);
-       a->port       = GP_PORT_USB;
-       a->usb_vendor = models[i].idVendor;
-       a->usb_product= models[i].idProduct;
-       a->operations        = 	GP_OPERATION_CAPTURE_IMAGE;
-       a->folder_operations = 	GP_FOLDER_OPERATION_NONE;
-       a->file_operations   = 	GP_FILE_OPERATION_PREVIEW | 
+       strcpy(a.model, models[i].name);
+       a.status = GP_DRIVER_STATUS_PRODUCTION;
+       a.port       = GP_PORT_USB;
+       a.usb_vendor = models[i].idVendor;
+       a.usb_product= models[i].idProduct;
+       a.operations        = 	GP_OPERATION_CAPTURE_IMAGE;
+       a.folder_operations = 	GP_FOLDER_OPERATION_NONE;
+       a.file_operations   = 	GP_FILE_OPERATION_PREVIEW | 
 				GP_FILE_OPERATION_DELETE;
 
        gp_abilities_list_append(list, a);

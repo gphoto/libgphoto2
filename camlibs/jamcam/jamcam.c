@@ -76,26 +76,26 @@ int camera_abilities (CameraAbilitiesList *list)
 {
 	int x = 0;
 	char *ptr;
-	CameraAbilities *a;
+	CameraAbilities a;
 
 	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* camera_abilities");
 
 	ptr = models[x].model;
 	while (ptr) {
-		gp_abilities_new( &a );
-		strcpy (a->model, ptr );
-		a->port     = GP_PORT_SERIAL | GP_PORT_USB;
-		a->speed[0] = 57600;
-		a->speed[1] = 0;
+		strcpy (a.model, ptr );
+		a.status = GP_DRIVER_STATUS_PRODUCTION;
+		a.port     = GP_PORT_SERIAL | GP_PORT_USB;
+		a.speed[0] = 57600;
+		a.speed[1] = 0;
 
 		/* fixme, need to set these operations lists to correct values */
-		a->operations        = 	GP_OPERATION_NONE;
-		a->file_operations   = 	GP_FILE_OPERATION_PREVIEW;
+		a.operations        = 	GP_OPERATION_NONE;
+		a.file_operations   = 	GP_FILE_OPERATION_PREVIEW;
 
-		a->folder_operations = 	GP_FOLDER_OPERATION_NONE;
+		a.folder_operations = 	GP_FOLDER_OPERATION_NONE;
 
-		a->usb_vendor = models[x].usb_vendor;
-		a->usb_product = models[x].usb_product;
+		a.usb_vendor = models[x].usb_vendor;
+		a.usb_product = models[x].usb_product;
 
 		gp_abilities_list_append (list, a);
 

@@ -135,29 +135,29 @@ int camera_id (CameraText *id)
 int camera_abilities (CameraAbilitiesList *list) 
 {
 	int x;
-	CameraAbilities *a;
+	CameraAbilities a;
 
 	for (x = 0; strlen (sierra_cameras[x].model) > 0; x++) {
-		gp_abilities_new (&a);
-		strcpy (a->model, sierra_cameras[x].model);
-		a->port     = GP_PORT_SERIAL;
+		strcpy (a.model, sierra_cameras[x].model);
+		a.status = GP_DRIVER_STATUS_PRODUCTION;
+		a.port     = GP_PORT_SERIAL;
 		if ((sierra_cameras[x].usb_vendor  > 0) &&
 		    (sierra_cameras[x].usb_product > 0))
-			a->port |= GP_PORT_USB;
-		a->speed[0] = 9600;
-		a->speed[1] = 19200;
-		a->speed[2] = 38400;
-		a->speed[3] = 57600;
-		a->speed[4] = 115200;
-		a->speed[5] = 0;
-		a->operations        = 	GP_OPERATION_CAPTURE_IMAGE |
+			a.port |= GP_PORT_USB;
+		a.speed[0] = 9600;
+		a.speed[1] = 19200;
+		a.speed[2] = 38400;
+		a.speed[3] = 57600;
+		a.speed[4] = 115200;
+		a.speed[5] = 0;
+		a.operations        = 	GP_OPERATION_CAPTURE_IMAGE |
 					GP_OPERATION_CAPTURE_PREVIEW |
 					GP_OPERATION_CONFIG;
-		a->file_operations   = 	GP_FILE_OPERATION_DELETE | 
+		a.file_operations   = 	GP_FILE_OPERATION_DELETE | 
 					GP_FILE_OPERATION_PREVIEW;
-		a->folder_operations = 	GP_FOLDER_OPERATION_DELETE_ALL;
-		a->usb_vendor  = sierra_cameras[x].usb_vendor;
-		a->usb_product = sierra_cameras[x].usb_product;
+		a.folder_operations = 	GP_FOLDER_OPERATION_DELETE_ALL;
+		a.usb_vendor  = sierra_cameras[x].usb_vendor;
+		a.usb_product = sierra_cameras[x].usb_product;
 		gp_abilities_list_append (list, a);
 	}
 

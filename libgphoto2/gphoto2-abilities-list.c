@@ -34,14 +34,29 @@
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 #define CHECK_MEM(m)         {if (!(m)) return (GP_ERROR_NO_MEMORY);}
 
+/**
+ * CameraAbilitiesList:
+ *
+ * A list of supported camera models including their abilities. The internals
+ * of this list are hidden - please use functions to access the list.
+ **/
 struct _CameraAbilitiesList {
 	int count;
-	CameraAbilities **abilities;
+	CameraAbilities *abilities;
 };
 
 static int gp_abilities_list_lookup_id (CameraAbilitiesList *, const char *);
 static int gp_abilities_list_sort      (CameraAbilitiesList *);
 
+/**
+ * gp_abilities_list_new:
+ * @list:
+ *
+ * Allocates the memory for a new abilities list. You would then call
+ * #gp_abilities_list_load in order to populate it.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_abilities_list_new (CameraAbilitiesList **list)
 {
@@ -55,17 +70,24 @@ gp_abilities_list_new (CameraAbilitiesList **list)
 	return (GP_OK);
 }
 
+/**
+ * gp_abilities_list_free:
+ * @list: a #CameraAbilitiesList
+ *
+ * Frees the @list.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_abilities_list_free (CameraAbilitiesList *list)
 {
-	int x;
-
 	CHECK_NULL (list);
 
-	/* TODO: OS/2 Port crashes here... maybe compiler setting */
+	if (list->abilities) {
+		free (list->abilities);
+		list->abilities = NULL;
+	}
 
-	for (x = 0; x < list->count; x++)
-		free (list->abilities [x]);
 	free (list);
 
 	return (GP_OK);
@@ -174,8 +196,8 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir)
 
 			/* Copy in the core-specific information */
 			for (x = old_count; x < new_count; x++) {
-				strcpy (list->abilities[x]->id, text.text);
-				strcpy (list->abilities[x]->library, buf);
+				strcpy (list->abilities[x].id, text.text);
+				strcpy (list->abilities[x].library, buf);
 			}
 		}
 	} while (de);
@@ -183,6 +205,15 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir)
 	return (GP_OK);
 }
 
+/**
+ * gp_abilities_list_load:
+ * @list: a #CameraAbilitiesList
+ *
+ * Scans the system for camera drivers. All supported camera models will then
+ * be added to the @list.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_abilities_list_load (CameraAbilitiesList *list)
 {
@@ -194,6 +225,16 @@ gp_abilities_list_load (CameraAbilitiesList *list)
 	return (GP_OK);
 }
 
+/**
+ * gp_abilities_list_detect:
+ * @list: a #CameraAbilitiesList
+ * @l: a #CameraList
+ *
+ * Tries to detect any camera connected to the computer using the supplied
+ * @list of supported cameras.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_abilities_list_detect (CameraAbilitiesList *list, CameraList *l)
 {
@@ -211,8 +252,8 @@ gp_abilities_list_detect (CameraAbilitiesList *list, CameraList *l)
 
 	gp_debug_printf (GP_DEBUG_LOW, "core", "Auto-detecting cameras...");
 	for (x = 0; x < count; x++) {
-		v = list->abilities[x]->usb_vendor;
-		p = list->abilities[x]->usb_product;
+		v = list->abilities[x].usb_vendor;
+		p = list->abilities[x].usb_product;
 		if ((gp_port_usb_find_device (dev, v, p)       == GP_OK) &&
 		    (gp_abilities_list_get_model (list, x, &m) == GP_OK)) {
 			gp_debug_printf (GP_DEBUG_LOW, "abilities-list", 
@@ -226,21 +267,6 @@ gp_abilities_list_detect (CameraAbilitiesList *list, CameraList *l)
 }
 
 int
-gp_abilities_list_dump (CameraAbilitiesList *list)
-{
-	int x;
-
-	CHECK_NULL (list);
-	
-	for (x = 0; x < list->count; x++) {
-		gp_debug_printf (GP_DEBUG_LOW, "core", "Camera #%i:", x);
-		gp_abilities_dump (list->abilities[x]);
-	}
-	
-	return (GP_OK);
-}
-
-int
 gp_abilities_list_dump_libs (CameraAbilitiesList *list)
 {
 	int x;
@@ -249,29 +275,52 @@ gp_abilities_list_dump_libs (CameraAbilitiesList *list)
 
 	for (x = 0; x < list->count; x++)
 		gp_debug_printf (GP_DEBUG_LOW, "core", "\t\"%s\" uses %s",
-				 list->abilities[x]->model,
-				 list->abilities[x]->library);
+				 list->abilities[x].model,
+				 list->abilities[x].library);
 	return (GP_OK);
 }
 
+/**
+ * gp_abilities_list_append:
+ * @list: a #CameraAbilitiesList
+ * @abilities: #CameraAbilities
+ *
+ * Appends the @abilities to the @list. This function is called by a camera
+ * library on #camera_abilities in order to inform gphoto2 about a supported
+ * camera model.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
-gp_abilities_list_append (CameraAbilitiesList *list, CameraAbilities *abilities)
+gp_abilities_list_append (CameraAbilitiesList *list, CameraAbilities abilities)
 {
-	CHECK_NULL (list && abilities);
+	CameraAbilities *new_abilities;
 
-	if (!list->abilities)
-		list->abilities = malloc (sizeof (CameraAbilities*));
+	CHECK_NULL (list);
+
+	if (!list->count)
+		new_abilities = malloc (sizeof (CameraAbilities));
 	else
-		list->abilities = realloc (list->abilities,
-				sizeof (CameraAbilities*) * (list->count + 1));
-	CHECK_MEM (list->abilities);
+		new_abilities = realloc (list->abilities,
+				sizeof (CameraAbilities) * (list->count + 1));
+	CHECK_MEM (new_abilities);
+	list->abilities = new_abilities;
 
-	list->abilities [list->count] = abilities;
+	memcpy (&(list->abilities [list->count]), &abilities,
+		sizeof (CameraAbilities));
 	list->count++;
 
 	return (GP_OK);
 }
 
+/**
+ * gp_abilities_list_count:
+ * @list: a #CameraAbilitiesList
+ *
+ * Counts the entries in the supplied @list.
+ *
+ * Return value: The number of entries or a gphoto2 error code
+ **/
 int
 gp_abilities_list_count (CameraAbilitiesList *list)
 {
@@ -283,18 +332,22 @@ gp_abilities_list_count (CameraAbilitiesList *list)
 static int
 gp_abilities_list_sort (CameraAbilitiesList *list)
 {
-	CameraAbilities *t;
+	CameraAbilities t;
 	int x, y;
 
 	CHECK_NULL (list);
 
 	for (x = 0; x < list->count - 1; x++)
 		for (y = x + 1; y < list->count; y++)
-			if (strcasecmp (list->abilities[x]->model,
-					list->abilities[y]->model) > 0) {
-				t = list->abilities[x];
-				list->abilities[x] = list->abilities[y];
-				list->abilities[y] = t;
+			if (strcasecmp (list->abilities[x].model,
+					list->abilities[y].model) > 0) {
+				memcpy (&t, &list->abilities[x],
+					sizeof (CameraAbilities));
+				memcpy (&list->abilities[x],
+					&list->abilities[y],
+					sizeof (CameraAbilities));
+				memcpy (&list->abilities[y], &t,
+					sizeof (CameraAbilities));
 			}
 
 	return (GP_OK);
@@ -308,26 +361,45 @@ gp_abilities_list_lookup_id (CameraAbilitiesList *list, const char *id)
 	CHECK_NULL (list && id);
 
 	for (x = 0; x < list->count; x++)
-		if (!strcmp (list->abilities[x]->id, id))
+		if (!strcmp (list->abilities[x].id, id))
 			return (x);
 
 	return (GP_ERROR);
 }
 
+/**
+ * gp_abilities_list_get_model:
+ * @list: a #CameraAbilitiesList
+ * @index: index
+ * @model:
+ *
+ * Retreives the model of entry with given @index.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_abilities_list_get_model (CameraAbilitiesList *list, int index,
 			     const char **model)
 {
 	CHECK_NULL (list && model);
 
-	if (index > list->count)
+	if ((index < 0) || (index >= list->count))
 		return (GP_ERROR_BAD_PARAMETERS);
 
-	*model = list->abilities[index]->model;
+	*model = list->abilities[index].model;
 
 	return (GP_OK);
 }
 
+/**
+ * gp_abilities_list_lookup_model
+ * @list: a #CameraAbilitiesList
+ * @model: a camera model
+ *
+ * Searches the @list for an entry of given @model.
+ *
+ * Return value: Index of entry or gphoto2 error code
+ **/
 int
 gp_abilities_list_lookup_model (CameraAbilitiesList *list, const char *model)
 {
@@ -336,12 +408,24 @@ gp_abilities_list_lookup_model (CameraAbilitiesList *list, const char *model)
 	CHECK_NULL (list && model);
 
 	for (x = 0; x < list->count; x++)
-		if (!strcasecmp (list->abilities[x]->model, model))
+		if (!strcasecmp (list->abilities[x].model, model))
 			return (x);
 
 	return (GP_ERROR_MODEL_NOT_FOUND);
 }
 
+/**
+ * gp_abilities_list_get_abilities:
+ * @list: a #CameraAbilitiesList
+ * @index: index
+ * @abilities: #CameraAbilities
+ *
+ * Retreives the camera @abilities of entry with supplied @index. Typically,
+ * you would call #gp_camera_set_abilities afterwards in order to prepare the
+ * initialization of a camera.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_abilities_list_get_abilities (CameraAbilitiesList *list, int index,
 				 CameraAbilities *abilities)
@@ -351,7 +435,7 @@ gp_abilities_list_get_abilities (CameraAbilitiesList *list, int index,
 	if (index < 0 || index >= list->count)
 		return (GP_ERROR_BAD_PARAMETERS);
 
-	memcpy (abilities, list->abilities[index], sizeof (CameraAbilities));
+	memcpy (abilities, &list->abilities[index], sizeof (CameraAbilities));
 
 	return (GP_OK);
 }

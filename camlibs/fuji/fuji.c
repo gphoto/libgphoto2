@@ -940,7 +940,7 @@ int camera_id (CameraText *id) {
 }
 
 int camera_abilities (CameraAbilitiesList *list) {
-	CameraAbilities *a;
+	CameraAbilities a;
 	int i;
 
 	DBG("Camera abilities");
@@ -949,19 +949,17 @@ int camera_abilities (CameraAbilitiesList *list) {
 	
 	while (models_serial[i]) {
 
-	  gp_abilities_new(&a);
+	  strcpy(a.model, models_serial[i]);
+	  a.port     = GP_PORT_SERIAL;
+	  a.speed[0] = 9600;
+	  a.speed[1] = 19200;
+	  a.speed[2] = 38400;
+	  a.speed[3] = 56700;
+	  a.speed[4] = 115200;
+	  a.speed[5] = 0;
 
-	  strcpy(a->model, models_serial[i]);
-	  a->port     = GP_PORT_SERIAL;
-	  a->speed[0] = 9600;
-	  a->speed[1] = 19200;
-	  a->speed[2] = 38400;
-	  a->speed[3] = 56700;
-	  a->speed[4] = 115200;
-	  a->speed[5] = 0;
-
-	  a->file_operations   =    GP_FILE_OPERATION_PREVIEW;
-	  a->operations        =  	GP_OPERATION_CAPTURE_IMAGE |
+	  a.file_operations   =    GP_FILE_OPERATION_PREVIEW;
+	  a.operations        =  	GP_OPERATION_CAPTURE_IMAGE |
 					GP_OPERATION_CAPTURE_PREVIEW |
 	    GP_OPERATION_CONFIG;
 

@@ -21,6 +21,15 @@
  *
  * History:
  * $Log$
+ * Revision 1.23  2001/10/16 22:38:57  lutz
+ * 2001-10-17  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ *
+ *         * README: no glib-dependency any more
+ *         * camlibs: gp_abilities_new doesn't exist any more
+ *         * doc/api: Even more documentation
+ *         * libgphoto2/gphoto2-abiltiies.h: Cleaned up.
+ *         * libgphoto2/gphoto2-abilities-list.c: Documented
+ *
  * Revision 1.22  2001/10/16 19:04:52  dfandrich
  * Using CHECK to propagate more error codes to callers.
  * Added support for i18n.
@@ -318,25 +327,24 @@ int camera_id (CameraText *id) {
 int camera_abilities (CameraAbilitiesList *list) {
 
 	int x=0;
-	CameraAbilities *a;
+	CameraAbilities a;
 
 	while (models[x]) {
 
-		gp_abilities_new(&a);
-
-		strcpy(a->model, models[x]);
-		a->port     = GP_PORT_SERIAL;
-		a->speed[0] = 9600;
-		a->speed[1] = 14400;
-		a->speed[2] = 19200;
-		a->speed[3] = 38400;
-		a->speed[4] = 57600;
-		a->speed[5] = 76800;
-		a->speed[6] = 115200;
-		a->speed[7] = 0;
-		a->operations = GP_OPERATION_CAPTURE_IMAGE;
-		a->file_operations  = GP_FILE_OPERATION_PREVIEW;
-		a->folder_operations = GP_FOLDER_OPERATION_NONE;
+		strcpy(a.model, models[x]);
+		a.status = GP_DRIVER_STATUS_PRODUCTION;
+		a.port     = GP_PORT_SERIAL;
+		a.speed[0] = 9600;
+		a.speed[1] = 14400;
+		a.speed[2] = 19200;
+		a.speed[3] = 38400;
+		a.speed[4] = 57600;
+		a.speed[5] = 76800;
+		a.speed[6] = 115200;
+		a.speed[7] = 0;
+		a.operations = GP_OPERATION_CAPTURE_IMAGE;
+		a.file_operations  = GP_FILE_OPERATION_PREVIEW;
+		a.folder_operations = GP_FOLDER_OPERATION_NONE;
 
 		gp_abilities_list_append(list, a);
 

@@ -1,3 +1,11 @@
+2001-10-17  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* README: no glib-dependency any more
+	* camlibs: gp_abilities_new doesn't exist any more
+	* doc/api: Even more documentation
+	* libgphoto2/gphoto2-abiltiies.h: Cleaned up.
+	* libgphoto2/gphoto2-abilities-list.c: Documented
+
 2001-10-16  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	Patch from Dan Fandrich <<dan@coneharvesters.com>:

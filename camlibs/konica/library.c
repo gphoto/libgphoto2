@@ -154,36 +154,36 @@ int
 camera_abilities (CameraAbilitiesList* list)
 {
         int i;
-        CameraAbilities *a;
+        CameraAbilities a;
 
         for (i = 0; konica_cameras [i].model; i++) {
-                gp_abilities_new (&a);
-                strcpy (a->model, konica_cameras [i].model);
+		a.status = GP_DRIVER_STATUS_PRODUCTION;
+                strcpy (a.model, konica_cameras [i].model);
                 if (konica_cameras [i].vendor) {
-                        a->port = GP_PORT_USB;
-                        a->usb_vendor  = konica_cameras [i].vendor;
-                        a->usb_product = konica_cameras [i].product;
+                        a.port = GP_PORT_USB;
+                        a.usb_vendor  = konica_cameras [i].vendor;
+                        a.usb_product = konica_cameras [i].product;
                 } else {
-                        a->port = GP_PORT_SERIAL;
-                        a->speed[0]     = 300;
-                        a->speed[1]     = 600;
-                        a->speed[2]     = 1200;
-                        a->speed[3]     = 2400;
-                        a->speed[4]     = 4800;
-                        a->speed[5]     = 9600;
-                        a->speed[6]     = 19200;
-                        a->speed[7]     = 38400;
-                        a->speed[8]     = 57600;
-                        a->speed[9]     = 115200;
-                        a->speed[10]    = 0;
+                        a.port = GP_PORT_SERIAL;
+                        a.speed[0]     = 300;
+                        a.speed[1]     = 600;
+                        a.speed[2]     = 1200;
+                        a.speed[3]     = 2400;
+                        a.speed[4]     = 4800;
+                        a.speed[5]     = 9600;
+                        a.speed[6]     = 19200;
+                        a.speed[7]     = 38400;
+                        a.speed[8]     = 57600;
+                        a.speed[9]     = 115200;
+                        a.speed[10]    = 0;
                 }
-                a->operations = GP_OPERATION_CONFIG |
-                                GP_OPERATION_CAPTURE_IMAGE |
-                                GP_OPERATION_CAPTURE_PREVIEW;
-                a->file_operations = GP_FILE_OPERATION_DELETE |
-                                     GP_FILE_OPERATION_PREVIEW;
-                a->folder_operations = GP_FOLDER_OPERATION_CONFIG |
-                                       GP_FOLDER_OPERATION_DELETE_ALL;
+                a.operations = GP_OPERATION_CONFIG |
+                               GP_OPERATION_CAPTURE_IMAGE |
+                               GP_OPERATION_CAPTURE_PREVIEW;
+                a.file_operations = GP_FILE_OPERATION_DELETE |
+                                    GP_FILE_OPERATION_PREVIEW;
+                a.folder_operations = GP_FOLDER_OPERATION_CONFIG |
+                                      GP_FOLDER_OPERATION_DELETE_ALL;
                 gp_abilities_list_append (list, a);
         }
 
@@ -586,7 +586,7 @@ camera_capture_preview (Camera* camera, CameraFile* file)
 }
 
 static int
-camera_capture (Camera* camera, int type, CameraFilePath* path)
+camera_capture (Camera* camera, CameraCaptureType type, CameraFilePath* path)
 {
         KonicaData *kd;
         unsigned long image_id;
@@ -598,7 +598,7 @@ camera_capture (Camera* camera, int type, CameraFilePath* path)
 	CHECK_NULL (camera && path);
 
 	/* We only support capturing of images */
-	if (type != GP_OPERATION_CAPTURE_IMAGE)
+	if (type != GP_CAPTURE_IMAGE)
 		return (GP_ERROR_NOT_SUPPORTED);
 
         kd = (KonicaData *) camera->camlib_data;

@@ -51,23 +51,22 @@ int camera_id (CameraText *id)
 
 int camera_abilities (CameraAbilitiesList *list) 
 {
-	CameraAbilities *a;
-
-	gp_abilities_new(&a);
+	CameraAbilities a;
 
 #if defined HAVE_STRNCPY
-	strncpy(a->model, "Minolta Dimage V", sizeof(a->model));
+	strncpy(a.model, "Minolta Dimage V", sizeof(a->model));
 #else
-	strcpy(a->model, "Minolta Dimage V");
+	strcpy(a.model, "Minolta Dimage V");
 #endif
-	a->port     = GP_PORT_SERIAL;
-	a->speed[0] = 38400;
-	a->speed[1] = 0;
-	a->operations        = 	GP_OPERATION_CAPTURE_IMAGE |
+	a.status = GP_DRIVER_STATUS_PRODUCTION;
+	a.port     = GP_PORT_SERIAL;
+	a.speed[0] = 38400;
+	a.speed[1] = 0;
+	a.operations        = 	GP_OPERATION_CAPTURE_IMAGE |
 				GP_OPERATION_CAPTURE_PREVIEW;
-	a->file_operations   = 	GP_FILE_OPERATION_DELETE | 
+	a.file_operations   = 	GP_FILE_OPERATION_DELETE | 
 				GP_FILE_OPERATION_PREVIEW;
-	a->folder_operations = 	GP_FOLDER_OPERATION_PUT_FILE | 
+	a.folder_operations = 	GP_FOLDER_OPERATION_PUT_FILE | 
 				GP_FOLDER_OPERATION_DELETE_ALL;
 
 	gp_abilities_list_append(list, a);
