@@ -132,10 +132,9 @@ camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 	strcpy (manual->text,
 		_("For the A50, 115200 may not be faster than 57600\n"
 		  "Folders are NOT supported\n"
-		  "if you experience a lot of transmission errors,"
+		  "if you experience a lot of serial transmission errors,"
 		  " try to have your computer as idle as possible\n"
-		  " (ie: no disk activity)\n"
-		  "Capture is experimental for EOS D30/D60"
+		  " (i.e. no disk activity)\n"
 			));
 
 	return GP_OK;
@@ -189,6 +188,7 @@ camera_abilities (CameraAbilitiesList *list)
 
 		if (models[i].usb_capture_support != CAP_NON) {
 			a.operations |= GP_OPERATION_CAPTURE_IMAGE;
+			a.operations |= GP_OPERATION_CAPTURE_PREVIEW;
 		}
 
 		a.folder_operations =
@@ -308,7 +308,9 @@ camera_exit (Camera *camera, GPContext *context)
  * @camera: the camera to affect
  * @context: context for error reporting
  *
- * Not implemented: currently does nothing.
+ * Triggers the camera to capture a new image. Discards the image and
+ * downloads its thumbnail to the host computer without storing it on
+ * the camera.
  *
  * Returns: GP_OK
  *
@@ -316,7 +318,19 @@ camera_exit (Camera *camera, GPContext *context)
 static int
 camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 {
-	GP_DEBUG ("canon_capture_preview() called, currently not implemented");
+	int size;
+	unsigned char *data;
+
+	GP_DEBUG ("canon_capture_preview() called");
+
+	if (canon_int_capture_preview (camera, &data, &size, context) != GP_OK) {
+		gp_context_error (context, _("Error capturing image"));
+		return GP_ERROR;
+	}
+	gp_file_set_data_and_size ( file, data, size );
+	gp_file_set_mime_type (file, GP_MIME_JPEG);	/* always */
+	/* Add an arbitrary file name so caller won't crash */
+	gp_file_set_name (file, "canon_preview.jpg");
 
 	return GP_OK;
 }
@@ -343,19 +357,16 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 
-	camera->pl->capturing = TRUE;
 	if (canon_int_capture_image (camera, path, context) != GP_OK) {
-		camera->pl->capturing = FALSE;
 		gp_context_error (context, _("Error capturing image"));
 		return GP_ERROR;
 	}
 
-	camera->pl->capturing = FALSE;
 	return GP_OK;
 }
 
 /**
- * camera_capture
+ * canon_get_batt_status
  * @camera: the camera to affect
  * @pwr_status: to receive power status from camera
  * @pwr_source: to receive power source from camera
@@ -1476,7 +1487,6 @@ camera_init (Camera *camera, GPContext *context)
 	camera->functions->exit = camera_exit;
 	camera->functions->capture = camera_capture;
 	camera->functions->capture_preview = camera_capture_preview;
-	camera->functions->capture_preview = NULL; /* not implemented yet */
 	camera->functions->get_config = camera_get_config;
 	camera->functions->set_config = camera_set_config;
 	camera->functions->summary = camera_summary;
@@ -1503,9 +1513,6 @@ camera_init (Camera *camera, GPContext *context)
 	camera->pl->first_init = 1;
 	camera->pl->seq_tx = 1;
 	camera->pl->seq_rx = 1;
-
-	/* we are currently not capturing, are we? */
-	camera->pl->capturing = FALSE;
 
 	/* default to false, i.e. list only known file types, use DCIF filenames */
 	camera->pl->list_all_files = FALSE;
