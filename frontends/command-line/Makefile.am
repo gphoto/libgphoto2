@@ -11,9 +11,6 @@ bin_PROGRAMS = gphoto2
 
 man_MANS = gphoto2.1
 
-CFLAGS = @CFLAGS@ -g
-LDFLAGS = @LDFLAGS@ -g
-
 INCLUDES =						\
 	-DGPHOTO2_LOCALEDIR=\""$(datadir)/locale"\"	\
 	-DDOC_DIR=\""@DOC_DIR@"\"			\
