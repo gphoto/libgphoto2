@@ -1,3 +1,7 @@
+2005-03-21  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* g3.c: Added Ricoh 5000G (sea&sea edition).
+
 2005-03-01  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* g3.c: Split RZ1 and R1 entries to avoid slashes.
