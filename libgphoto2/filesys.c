@@ -346,7 +346,7 @@ gp_filesystem_list_files (CameraFilesystem *fs, const char *folder,
 	/* If the folder is dirty, delete the contents and query the camera */
 	if (fs->folder[x].files_dirty && fs->file_list_func) {
 		/*
-		 * Declare the older clean so that we don't get called again
+		 * Declare the folder clean so that we don't get called again
 		 * and delete all files in it.
 		 */
 		fs->folder[x].files_dirty = 0; 
@@ -622,17 +622,25 @@ int
 gp_filesystem_number (CameraFilesystem *fs, const char *folder, 
 		      const char *filename)
 {
+	CameraList list;
         int x, y;
 
 	CHECK_NULL (fs && folder && filename);
 
 	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
-	
+
 	for (y = 0; y < fs->folder[x].count; y++)
 		if (!strcmp (fs->folder[x].file[y].name, filename))
 			return (y);
 
-        return (GP_ERROR_FILE_NOT_FOUND);
+	/* Ok, we didn't find the file. Is the folder dirty? */
+	if (!fs->folder[x].files_dirty)
+		return (GP_ERROR_FILE_NOT_FOUND);
+
+	/* The folder is dirty. List all files to make it clean */
+	CHECK_RESULT (gp_filesystem_list_files (fs, folder, &list));
+
+        return (gp_filesystem_number (fs, folder, filename));
 }
 
 static int

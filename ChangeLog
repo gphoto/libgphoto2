@@ -1,5 +1,12 @@
 2001-08-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	All work from Fabrice Bellet <Fabrice.Bellet@creatis.insa-lyon.fr>:
+
+	* libgphoto2/filesys.c (gp_filesystem_number): Check if the folder
+	is dirty (like in gp_filesystem_folder_number).
+
+2001-08-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/sierra/*:
 	* camlibs/directory/directory.c (camera_folder_list_folders),
 	(camera_folder_list_files), (camera_file_[get,set]_info): Removed.
