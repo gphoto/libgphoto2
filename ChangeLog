@@ -1,3 +1,11 @@
+2001-10-31 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2/bayer.c: Remove unused variable
+	* libgphoto2/gphoto2-camera.c: Use the library handle in order
+	  to check if the camera has been initialized. Make it possible
+	  to call gp_camera_set_[port_info,abilities] on an already
+	  initialized camera.
+
 2001-10-31 Dan Fandrich <dan@coneharvesters.com>
 
 	* camlibs/dimera/*.c: use renamed get/set functions, gp_camera_set_error
