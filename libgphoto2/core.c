@@ -40,6 +40,8 @@ int gp_init (int debug)
         char buf[1024];
         int x;
 
+printf("debug=%i\n", debug);
+
         glob_debug = debug;
 
         /* Initialize the globals */
@@ -97,12 +99,12 @@ void gp_debug_printf(int level, char *id, char *format, ...)
 	if (glob_debug == GP_DEBUG_NONE)
 		return;
 
-        if (level >= glob_debug) {
-		fprintf(stderr, "%s: ", id);
+	if (glob_debug >= level) {
+		fprintf(stdout, "%s: ", id);
 		va_start(arg, format);
-		vfprintf(stderr, format, arg);
+		vfprintf(stdout, format, arg);
 		va_end(arg);
-		fprintf(stderr, "\n");
+		fprintf(stdout, "\n");
 	}
 }
 

@@ -6,6 +6,7 @@ gphotohead_HEADERS= \
 		gphoto2-camera.h \
 		gphoto2-core.h \
 		gphoto2-datatypes.h \
+		gphoto2-dynamic.h \
 		gphoto2-file.h \
 		gphoto2-filesys.h \
 		gphoto2-library.h \

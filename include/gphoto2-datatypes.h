@@ -84,24 +84,15 @@ typedef enum {
 	GP_LIST_FILE
 } CameraListType;
 
-/* Function Pointers
-   ---------------------------------------------------------------- */
-struct Camera;
-struct CameraFile;
-struct CameraWidget;
-
-typedef int (*CameraStatus)		(struct Camera*, char*);
-typedef int (*CameraMessage)		(struct Camera*, char*);
-typedef int (*CameraConfirm)		(struct Camera*, char*);
-typedef int (*CameraProgress)		(struct Camera*, struct CameraFile*, float);
-typedef int (*CameraPrompt)		(struct Camera*, struct CameraWidget*);
-typedef int (*CameraWidgetCallback) 	(struct Camera*, struct CameraWidget*);
 
 
 /* Structures
    ---------------------------------------------------------------- */
 
 #define WIDGET_CHOICE_MAX	32
+
+struct Camera;
+struct CameraWidget;
 
 /* CameraWidget structure */
 typedef struct CameraWidget {
@@ -128,7 +119,7 @@ typedef struct CameraWidget {
 	int 		changed;
 	
 	/* Callback */
-	CameraWidgetCallback 	 callback;
+	int (*callback)(struct Camera*, struct CameraWidget*);
 
 } CameraWidget;
 
@@ -267,6 +258,8 @@ typedef struct {
 	char text[32*1024];
 } CameraText;
 
+struct Camera;
+
 /* Camera function pointers */
 typedef int (*c_id)		 (CameraText *);
 typedef int (*c_abilities)	 (CameraAbilitiesList *);
@@ -322,3 +315,12 @@ typedef struct Camera {
 } Camera;
 
 
+/* Function Pointers
+   ---------------------------------------------------------------- */
+
+typedef int (*CameraStatus)		(Camera*, char*);
+typedef int (*CameraMessage)		(Camera*, char*);
+typedef int (*CameraConfirm)		(Camera*, char*);
+typedef int (*CameraProgress)		(Camera*, CameraFile*, float);
+typedef int (*CameraPrompt)		(Camera*, CameraWidget*);
+typedef int (*CameraWidgetCallback) 	(Camera*, CameraWidget*);

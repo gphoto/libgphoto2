@@ -9,8 +9,7 @@
 #include <glib.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <gpio/gpio.h>
-#include <gphoto2/gphoto2.h>
+#include <gphoto2.h>
 #include "library.h"
 #include "lowlevel.h"
 

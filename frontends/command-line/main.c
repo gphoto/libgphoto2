@@ -165,7 +165,7 @@ int  glob_num=1;
 Camera         *glob_camera=NULL;
 CameraAbilities glob_abilities;
 
-int  glob_debug;
+int  glob_debug=0;
 int  glob_daemon=0;
 int  glob_quiet=0;
 int  glob_filename_override=0;
