@@ -45,6 +45,158 @@
 
     </section>
 
+    <section id="sec.CameraModels">
+      <title>Camera Models Covered</title>
+
+      <para>Here is a list of camera models we know about, those we
+	think we understand, and those we're still working on.  The
+	introduction dates come from <ulink
+	url="http://www.dpreview.com/">DPReview.com.</ulink> The list
+	is here to give you some sort of idea of how current this
+	document is. Notice that the PowerShot S and SD series cameras
+	are called that only in North America; they are generally
+	"Digital IXUS" something in Europe and most of Asia, and
+	"Digital IXY" something in Japan.  I suspect it all has to do
+	with trying to beat gray-market imports. Usually these
+	brothers under the skin will share a USB product ID, but some
+	early cameras (e.g. PowerShot 100 aka IXY Digital aka Digital
+	IXUS) have different ID's.
+      </para>
+
+      <table id="tbl.CameraModels"><title>File attributes</title>
+        <tgroup cols="3" align="left" colsep="1" rowsep="1">
+	  <?dbhtml cellspacing="0" ?>
+          <thead>
+            <row><entry>Camera model</entry><entry>Date of introduction</entry><entry>Known protocol?</entry></row>
+          </thead>
+          <tbody>
+            <row><entry>PowerShot 600</entry><entry>13-May-96</entry><entry>NO</entry></row>
+            <row><entry>PowerShot 350</entry><entry>16-Jul-97</entry><entry>NO</entry></row>
+            <row><entry>PowerShot Pro70</entry><entry>27-Mar-98</entry><entry>yes</entry></row>
+            <row><entry>PowerShot A5</entry><entry>27-Mar-98</entry><entry>yes</entry></row>
+            <row><entry>PowerShot A5 Zoom</entry><entry>18-Jan-99</entry><entry>yes</entry></row>
+            <row><entry>PowerShot A50</entry><entry>30-Mar-99</entry><entry>yes</entry></row>
+            <row><entry>PowerShot S10</entry><entry>27-Aug-99</entry><entry>yes</entry></row>
+            <row><entry>PowerShot S20</entry><entry>06-Jan-00</entry><entry>yes</entry></row>
+            <row><entry>EOS D30</entry><entry>17-May-00</entry><entry>yes</entry></row>
+            <row><entry><simplelist type="vert"><member>PowerShot S100</member>
+		  <member>Digital Elph IXY Digital</member>
+		  <member>Digital IXUS</member></simplelist>
+	      </entry><entry>17-May-00</entry><entry>yes</entry></row>
+            <row><entry>PowerShot G1</entry><entry>18-Sep-00</entry><entry>yes</entry></row>
+            <row><entry>Canon PowerShot Pro90 IS</entry><entry>06-Jan-01</entry><entry>yes</entry></row>
+            <row><entry>PowerShot A20</entry><entry>11-Jan-01</entry><entry>yes</entry></row>
+            <row><entry>PowerShot A10</entry><entry>11-Jan-01</entry><entry>yes</entry></row>
+            <row><entry>PowerShot S300</entry><entry>11-Jan-01</entry><entry>yes</entry></row>
+            <row><entry><simplelist type="vert"><member>PowerShot S110</member>
+		  <member>Digital IXUS v</member></simplelist>
+	      </entry><entry>10-Apr-01</entry><entry>yes</entry></row>
+            <row><entry>PowerShot G2</entry><entry>17-July-01</entry><entry>yes</entry></row>
+            <row><entry>EOS-1D</entry><entry>25-Aug-01</entry><entry>NO</entry></row>
+            <row><entry>PowerShot S30</entry><entry>02-Oct-01</entry><entry>yes</entry></row>
+            <row><entry>PowerShot S40</entry><entry>02-Oct-01</entry><entry>yes</entry></row>
+            <row><entry>PowerShot A30</entry><entry>22-Feb-02</entry><entry>yes</entry></row>
+            <row><entry>PowerShot A40</entry><entry>22-Feb-02</entry><entry>yes</entry></row>
+            <row><entry>EOS D60</entry><entry>22-Feb-02</entry><entry>yes</entry></row>
+            <row><entry>PowerShot A100</entry><entry>22-Feb-02</entry><entry>yes</entry></row>
+            <row><entry><simplelist type="vert"><member>PowerShot S200</member>
+		  <member>Digital IXUS v<superscript>2</superscript></member></simplelist>
+	      </entry><entry>13-Mar-02</entry><entry>yes</entry></row>
+            <row><entry><simplelist type="vert"><member>PowerShot S330 Digital ELPH</member>
+		  <member>Digital IXUS 330</member>
+		  </simplelist>
+		</entry><entry>13-Mar-02</entry><entry>yes</entry></row>
+            <row><entry>PowerShot A200</entry><entry>06-May-02</entry><entry>yes</entry></row>
+            <row><entry>PowerShot S45</entry><entry>16-Aug-02</entry><entry>yes</entry></row>
+            <row><entry><simplelist type="vert"><member>PowerShot S230 Digital ELPH</member>
+		  <member>Digital IXUS v<superscript>3</superscript></member></simplelist>
+	      </entry><entry>16-Aug-02</entry><entry>yes</entry></row>
+            <row><entry>PowerShot G3</entry><entry>19-Aug-02</entry><entry>yes</entry></row>
+            <row><entry>EOS 1Ds</entry><entry>24-Aug-02</entry><entry>NO</entry></row>
+            <row><entry>PowerShot A70</entry><entry>27-Feb-03</entry><entry>yes</entry></row>
+            <row><entry>PowerShot A60</entry><entry>27-Feb-03</entry><entry>yes</entry></row>
+            <row><entry>PowerShot S50</entry><entry>27-Feb-03</entry><entry>yes</entry></row>
+            <row><entry>PowerShot A300</entry><entry>27-Feb-03</entry><entry>yes</entry></row>
+            <row><entry>PowerShot S400</entry><entry>27-Feb-03</entry><entry>yes</entry></row>
+            <row><entry>EOS 10D</entry><entry>27-Feb-03</entry><entry>yes</entry></row>
+            <row><entry>PowerShot SD100</entry><entry>02-Apr-03</entry><entry>yes</entry></row>
+            <row><entry>PowerShot G5</entry><entry>02-May-03</entry><entry>yes</entry></row>
+
+            <row><entry>PowerShot A80</entry><entry>20-Aug-03</entry><entry>yes</entry></row>
+            <row><entry><simplelist type="vert"><member>EOS Digital Rebel</member>
+		  <member>EOS 300D</member>
+		  <member>Kiss Digital</member>
+		  </simplelist>
+		</entry><entry>20-Aug-03</entry><entry>yes</entry></row>
+            <row><entry><simplelist type="vert"><member>PowerShot SD10 Digital ELPH</member>
+		  <member>Digital IXUS i</member>
+		  </simplelist>
+		</entry><entry></entry>12-Sep-03<entry>NO</entry></row>
+            <row><entry>EOS-1D Mark II</entry><entry>29-Jan-04</entry><entry>NO</entry></row>
+            <row><entry><simplelist type="vert"><member>PowerShot S410</member>
+		  <member>Digital IXUS 430</member>
+		  <member>IXY Digital 430</member>
+		  </simplelist>
+		</entry><entry>09-Feb-04</entry><entry>yes</entry></row>
+            <row><entry><simplelist type="vert"><member>PowerShot S500</member>
+		  <member>Digital IXUS 500</member>
+		  <member>IXY Digital 500</member>
+		  </simplelist>
+		</entry><entry>09-Feb-04</entry><entry>yes</entry></row>
+            <row><entry><simplelist type="vert"><member>PowerShot SD110</member>
+		  <member>Digital IXUS IIs</member>
+		</simplelist>
+	      </entry><entry>09-Feb-04</entry><entry>NO</entry></row>
+            <row><entry>PowerShot A310</entry><entry>9-Feb-04</entry><entry>yes</entry></row>
+            <row><entry>PowerShot Pro1</entry><entry>9-Feb-04</entry><entry>NO</entry></row>
+            <row><entry>PowerShot S1 IS</entry><entry>9-Feb-04</entry><entry>yes</entry></row>
+            <row><entry>PowerShot A75</entry><entry>9-Feb-04</entry><entry>yes</entry></row>
+            <row><entry>PowerShot S60</entry><entry>10-May-04</entry><entry>yes</entry></row>
+            <row><entry>PowerShot A85</entry><entry>20-Jul-04</entry><entry>yes</entry></row>
+            <row><entry>PowerShot G6</entry><entry>19-Aug-04</entry><entry>NO</entry></row>
+            <row><entry>PowerShot A400</entry><entry>19-Aug-04</entry><entry>yes</entry></row>
+            <row><entry>EOS 20D</entry><entry>19-Aug-04</entry><entry>yes</entry></row>
+            <row><entry>PowerShot A95</entry><entry>19-Aug-04</entry><entry>yes</entry></row>
+            <row><entry>PowerShot S70</entry><entry>19-Aug-04</entry><entry>yes</entry></row>
+            <row><entry>EOS-1Ds Mark II</entry><entry>21-Sep-04</entry><entry>NO</entry></row>
+            <row><entry><simplelist type="vert"><member>Digital IXUS 40</member>
+		  <member>PowerShot SD300</member>
+		  <member>IXY Digital 50</member>
+		</simplelist>
+              </entry><entry>21-Sep-04</entry><entry>NO</entry></row>
+            <row><entry></entry><simplelist type="vert"><member>Digital IXUS 30</member>
+		  <member>PowerShot SD200</member>
+		  <member>IXY Digital 40</member>
+		</simplelist>
+              <entry>21-Sep-04</entry><entry>yes</entry></row>
+            <row><entry><simplelist type="vert"><member>Digital IXUS i5</member>
+		  <member>PowerShot SD20</member>
+		  <member>IXY Digital L2</member>
+		</simplelist>
+              </entry><entry>21-Sep-04</entry><entry>yes</entry></row>
+            <row><entry>PowerShot A510</entry><entry>20-Jan-05</entry><entry>NO</entry></row>
+            <row><entry>PowerShot A520</entry><entry>01-Feb-05</entry><entry>NO</entry></row>
+            <row><entry><simplelist type="vert"><member>PowerShot SD400</member>
+		  <member>IXUS 50</member>
+		  <member>IXY Digital 55</member>
+		</simplelist>
+		  </entry><entry>17-Feb-05</entry><entry>NO</entry></row>
+            <row><entry><simplelist type="vert"><member>PowerShot SD500</member>
+		  <member>IXUS 700</member>
+		  <member>IXY Digital 600</member>
+		</simplelist>
+		  </entry><entry>17-Feb-05</entry><entry>NO</entry></row>
+            <row><entry><simplelist type="vert"><member>Digital Rebel XT</member>
+		  <member>EOS 350D</member>
+		  <member>EOS Kiss Digital N</member>
+		</simplelist>
+		  </entry><entry>17-Feb-05</entry><entry>NO</entry></row>
+          </tbody>
+        </tgroup>
+      </table>
+
+    </section>
+
     <section id="sec.Contributors">
       <title>Contributors</title>
       <para>This document was written thanks to the efforts of:</para>
@@ -161,12 +313,18 @@
         <para>28 Jan 2003: Convert DocBook XML, expand USB information</para>
 	<literallayout>
 	$Log$
+	Revision 1.8  2005/03/08 20:38:40  swestin
+	Added section with list of known cameras.
+	More info on EOS 20D, in various places.
+	Details on EOS 300D's apparent oddball behavior during remote capture.
+	Added A400 info on initialization response packet.
+
 	Revision 1.7  2005/03/04 20:46:51  swestin
 	Rewrote a bit on the response packet in initialization.
 	Tightened borders on all tables.
 	Added A400 to list of camera models for which we know the initialization
 	  response.
-
+	
 	Revision 1.6  2005/01/15 21:00:24  swestin
 	Fixed inclusion of CVS log info in document.
 	Added more info on response packet in camera initialization.
@@ -772,7 +930,7 @@ xx &lt;directory_name&gt; 00 00 00
             char):</para>
           <para>&ldquo;A&rdquo; Camera was already active</para>
           <para>&ldquo;C&rdquo; Camera was woken up</para>
-          <para>&ldquo;I&rdquo; Unknown (some kind of error)</para>
+          <para>&ldquo;I&rdquo; Unknown (some kind of error; seen with a hotplug problem on Linux)</para>
           <para>&ldquo;E&rdquo; Unknown (some kind of error)</para>
         </listitem>
         <listitem>
@@ -801,11 +959,13 @@ xx &lt;directory_name&gt; 00 00 00
             <row><entry>Models</entry><entry>0x40</entry><entry>0x44</entry><entry>0x48</entry><entry>0x4C</entry><entry>0x50</entry><entry>0x54</entry></row>
           </thead>
             <tbody>
-              <row><entry>G1</entry><entry>00 05 07 00</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
-              <row><entry>S20</entry><entry>01 00 02 00</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
-              <row><entry>G2, D30, D60, 300D, IXUS v</entry><entry>01 00 05 03</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
-              <row><entry>A60, A75, A80, A300, A400, S50</entry><entry>01 06 15 83</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
+              <row><entry>S10, S20</entry><entry>01 00 02 00</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
+              <row><entry>G1, Pro90 IS, Digital IXUS</entry><entry>00 05 07 00</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
+              <row><entry>G2, D30, D60, 300D, IXUS v, A10, S30, IXUS 300</entry><entry>01 00 05 03</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
+              <row><entry>G3, A60, A70, A75, A80, A300, A400, S45, S50, S230, S400</entry><entry>01 06 15 83</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
               <row><entry>20D</entry><entry>01 06 15 83</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>0x10000 (65536)</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
+              <row><entry>S200, S330, A30</entry><entry>03 05 15 81</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
+              <row><entry>Optura 200 MC camcorder</entry><entry>03 05 04 81</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
             </tbody>
           </tgroup>
         </table>
@@ -907,7 +1067,7 @@ xx &lt;directory_name&gt; 00 00 00
 0000010: 00 00 00 00 00 00 00 00 - 00 00 00 00 00 00 00 00
 0000020: 00 00 00 00 00 00 00 00 - 00 00 00 00 00 00 00 00
 0000030: 00 00 00 00 00 00 00 00 - 00 00 00 00 00 00 00 00
-0000040: 02 00 00 00 <emphasis>UU</emphasis> 00 00 <emphasis>VV</emphasis> - <emphasis>xx xx xx xx SS SS SS SS</emphasis>
+0000040: 02 00 00 00 <emphasis>UU</emphasis> 00 <emphasis>cc VV</emphasis> - <emphasis>xx xx xx xx SS SS SS SS</emphasis>
 0000050: ... (payload/arguments)
         </programlisting>
 
@@ -917,6 +1077,10 @@ xx &lt;directory_name&gt; 00 00 00
         <para><emphasis>VV</emphasis> : cmd2 (byte)</para>
         <para><emphasis>xx xx xx xx</emphasis> : Length (again)</para>
         <para><emphasis>SS SS SS SS</emphasis> : sequence number (word)</para>
+	<para><emphasis>cc</emphasis> : ignored in old-style protocol.
+	  In the new protocol, this byte must
+	  contain 0x10 for commands with <emphasis>cmd3</emphasis>=0x201, 0x20
+	  for commands with <emphasis>cmd3</emphasis>=0x202.</para>
 
         <itemizedlist>
           <listitem><para>&ldquo;length&rdquo; is the length of the
@@ -1415,7 +1579,7 @@ do {
     <section id="sec.USBGetDirectory">
       <title>Get Directory</title>
 
-      <para>requesttype=0x0a</para>
+      <para>requesttype=0x0b</para>
 
       <para>Command: variable length (here 0x5b bytes)</para>
 
@@ -2140,6 +2304,9 @@ do {
               <listitem>
                 <para>For the D60, it seems to come within about 10ms
                   of the &ldquo;release shutter&rdquo; command.</para>
+              </listitem>
+              <listitem>
+                <para>For the 300D, response takes about 0.35 seconds.</para>
               </listitem>
             </itemizedlist>
           </listitem>
@@ -4000,8 +4167,11 @@ struct {
       <para>requesttype=0x21</para>
 
       <para>seen with EOS 20D; issued after <link
-      linkend="sec.USBnewPowerStatus">Power supply status</link> with
-      no operands.</para>
+      linkend="sec.USBnewPowerStatus">Power supply status,</link>
+	<link linkend="sec.USBnewIDCamera">Identify Camera,</link>
+	<link linkend="sec.USBnewUnk2">unknown command 2,</link>
+	or <link linkend="sec.USBnewGetCaptured">Get captured
+	image.</link></para>
 
       <para>Command: 0x54 bytes</para>
 
@@ -4306,8 +4476,10 @@ struct {
 
       <para>requesttype=0x25</para>
 
-      <para>Seen with EOS 20D. Seems to be repeated in long sequences;
-        perhaps some sort of a polling operation?</para>
+      <para>Seen with EOS 20D. Has a variable length: 0x59, 0x5D,
+        0x89, 0x95 bytes (first two are most common). Seems to be
+        repeated in long sequences; perhaps some sort of a polling
+        operation?</para>
 
       <para>Command: 0x59 bytes</para>
 
