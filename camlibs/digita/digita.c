@@ -34,6 +34,8 @@
 #endif
 #include <netinet/in.h>
 
+#define GP_MODULE "digita"
+
 #include <gphoto2.h>
 #include <gphoto2-port.h>
 
@@ -59,8 +61,6 @@
 #ifndef MIN
 # define MIN(a, b) ((a) < (b) ? (a) : (b))
 #endif
-
-#define GP_MODULE "digita"
 
 static struct {
 	char *model;
@@ -320,15 +320,15 @@ static int get_file_func(CameraFilesystem *fs, const char *folder,
 
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
-		fprintf(stderr, "Getting picture\n");
+		GP_DEBUG("digita/get_file_func: Getting picture");
 	        data = digita_file_get(camera, folder, filename, 0, &buflen, context);
 		break;
 	case GP_FILE_TYPE_PREVIEW:
-		fprintf(stderr, "Getting thumbnail\n");
+		GP_DEBUG("digita/get_file_func: Getting thumbnail");
 		data = digita_file_get(camera, folder, filename, 1, &buflen, context);
 		break;
 	default:
-		fprintf(stderr, "Unsupported image type\n");
+		gp_context_error(context, _("Unsupported image type"));
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 

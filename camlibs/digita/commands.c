@@ -35,6 +35,8 @@
 
 #include "digita.h"
 
+#define GP_MODULE "digita"
+
 #include <gphoto2-port.h>
 
 static void build_command(struct digita_command *cmd, int length, short command)
@@ -67,13 +69,13 @@ int digita_get_storage_status(CameraPrivateLibrary *dev, int *taken,
 
 	ret = dev->send(dev, &cmd, sizeof(cmd));
 	if (ret < 0) {
-		fprintf(stderr, "digita_get_storage_status: error sending command (ret = %d)\n", ret);
+		GP_DEBUG("digita_get_storage_status: error sending command (ret = %d)", ret);
 		return -1;
 	}
 
 	ret = dev->read(dev, (unsigned char *)&ss, sizeof(ss));
 	if (ret < 0) {
-		fprintf(stderr, "digita_get_storage_status: error getting count (ret = %d)\n", ret);
+		GP_DEBUG("digita_get_storage_status: error getting count (ret = %d)", ret);
 		return -1;
 	}
 
@@ -102,7 +104,7 @@ int digita_get_file_list(CameraPrivateLibrary *dev)
 	buflen = (taken * sizeof(struct file_item)) + sizeof(cmd) + 4;
 	buffer = malloc(buflen);
 	if (!buffer) {
-		fprintf(stderr, "digita_get_file_list: error allocating %d bytes\n", buflen);
+		GP_DEBUG("digita_get_file_list: error allocating %d bytes", buflen);
 		return -1;
 	}
 
@@ -111,13 +113,13 @@ int digita_get_file_list(CameraPrivateLibrary *dev)
 
 	ret = dev->send(dev, (void *)&gfl, sizeof(gfl));
 	if (ret < 0) {
-		fprintf(stderr, "digita_get_file_list: error sending command (ret = %d)\n", ret);
+		GP_DEBUG("digita_get_file_list: error sending command (ret = %d)", ret);
 		return -1;
 	}
 
 	ret = dev->read(dev, (void *)buffer, buflen);
 	if (ret < 0) {
-		fprintf(stderr, "digita_get_file_list: error receiving data (ret = %d)\n", ret);
+		GP_DEBUG("digita_get_file_list: error receiving data (ret = %d)", ret);
 		return -1;
 	}
 
@@ -126,7 +128,7 @@ int digita_get_file_list(CameraPrivateLibrary *dev)
 
 	dev->file_list = malloc(taken * sizeof(struct file_item));
 	if (!dev->file_list) {
-		fprintf(stderr, "digita_get_file_list: error allocating file_list memory (ret = %d)\n", ret);
+		GP_DEBUG("digita_get_file_list: error allocating file_list memory (ret = %d)", ret);
 		return -1;
 	}
 
@@ -154,7 +156,7 @@ int digita_get_file_data(CameraPrivateLibrary *dev, int thumbnail,
 
 	tbuf = malloc(GFD_BUFSIZE + sizeof(*gfdr));
 	if (!tbuf) {
-		fprintf(stderr, "digita_get_file_data: unable to allocate %d bytes\n",
+		GP_DEBUG("digita_get_file_data: unable to allocate %d bytes",
 			GFD_BUFSIZE + sizeof(*gfdr));
 
 		return -1;
@@ -163,18 +165,18 @@ int digita_get_file_data(CameraPrivateLibrary *dev, int thumbnail,
 
 	ret = dev->send(dev, &gfds, sizeof(gfds));
 	if (ret < 0) {
-		fprintf(stderr, "digita_get_file_data: error sending command (ret = %d)\n", ret);
+		GP_DEBUG("digita_get_file_data: error sending command (ret = %d)", ret);
 		return -1;
 	}
 
 	ret = dev->read(dev, gfdr, GFD_BUFSIZE + sizeof(*gfdr));
 	if (ret < 0) {
-		fprintf(stderr, "digita_get_file_data: error reading data (ret = %d)\n", ret);
+		GP_DEBUG("digita_get_file_data: error reading data (ret = %d)", ret);
 		return -1;
 	}
 
 	if (gfdr->cmd.result) {
-		fprintf(stderr, "digita_get_file_data: bad result (%d)\n", gfdr->cmd.result);
+		GP_DEBUG("digita_get_file_data: bad result (%d)", gfdr->cmd.result);
 		return gfdr->cmd.result;
 	}
 
@@ -199,13 +201,13 @@ int digita_delete_picture(CameraPrivateLibrary *dev, struct filename *filename)
 
 	ret = dev->send(dev, (unsigned char *)&ef, sizeof(ef));
 	if (ret < 0) {
-		fprintf(stderr, "error sending command (ret = %d)\n", ret);
+		GP_DEBUG("error sending command (ret = %d)", ret);
 		return -1;
 	}
 
 	ret = dev->read(dev, (unsigned char *)&response, sizeof(response));
 	if (ret < 0) {
-		fprintf(stderr, "error reading reply (ret = %d)\n", ret);
+		GP_DEBUG("error reading reply (ret = %d)", ret);
 		return -1;
 	}
 

@@ -36,6 +36,8 @@
 
 #include "digita.h"
 
+#define GP_MODULE "digita"
+
 #include <gphoto2-port.h>
 
 #define MAX_BEACON_RETRIES	5
@@ -240,7 +242,7 @@ int digita_serial_open(CameraPrivateLibrary *dev, Camera *camera)
 			/* garbage before or after */
 			ret = gp_port_read(dev->gpdev, (void *)buffer, 1);
 			if (ret < 0) {
-				fprintf(stderr, "couldn't read beacon (ret = %d)\n", ret);
+				GP_DEBUG("couldn't read beacon (ret = %d)", ret);
 				timeouts++;
 				continue;
 			}
@@ -254,27 +256,27 @@ int digita_serial_open(CameraPrivateLibrary *dev, Camera *camera)
 
 		ret = gp_port_read(dev->gpdev, (void *)(buffer + 1), BEACON_LEN - 1);
 		if (ret < 0) {
-			fprintf(stderr, "couldn't read beacon (ret = %d)\n", ret);
+			GP_DEBUG("couldn't read beacon (ret = %d)", ret);
 			continue;
 		}
 
 		if (buffer[0] != 0xA5 || buffer[1] != 0x5A) {
-			fprintf(stderr, "Invalid header for beacon 0x%02x 0x%02x\n", buffer[0], buffer[1]);
+			GP_DEBUG("Invalid header for beacon 0x%02x 0x%02x", buffer[0], buffer[1]);
 			continue;
 		}
 
 		csum = buffer[6];
 		buffer[6] = 0;
 		if (checksum(buffer, BEACON_LEN) != csum) {
-			fprintf(stderr, "Beacon checksum failed (calculated 0x%02x, received 0x%02x)\n",
+			GP_DEBUG("Beacon checksum failed (calculated 0x%02x, received 0x%02x)",
 				checksum(buffer, BEACON_LEN), csum);
 			continue;
 		}
 
 		memcpy((void *)&s, &buffer[2], 2);
-		fprintf(stderr, "Vendor: 0x%04x\n", ntohs(s));
+		GP_DEBUG("Vendor: 0x%04x", ntohs(s));
 		memcpy((void *)&s, &buffer[4], 2);
-		fprintf(stderr, "Product: 0x%04x\n", ntohs(s));
+		GP_DEBUG("Product: 0x%04x", ntohs(s));
 
 		/*
 		 * Send the beacon acknowledgement
@@ -294,7 +296,7 @@ int digita_serial_open(CameraPrivateLibrary *dev, Camera *camera)
 
 		ret = gp_port_write(dev->gpdev, (void *)buffer, BEACON_ACK_LENGTH);
 		if (ret < 0) {
-			fprintf(stderr, "couldn't write beacon (ret = %d)\n", ret);
+			GP_DEBUG("couldn't write beacon (ret = %d)", ret);
 			return -1;
 		}
 
@@ -303,12 +305,12 @@ int digita_serial_open(CameraPrivateLibrary *dev, Camera *camera)
 		 */
 		ret = gp_port_read(dev->gpdev, (void *)buffer, BEACON_COMP_LENGTH);
 		if (ret < 0) {
-			fprintf(stderr, "couldn't read beacon_comp (ret = %d)\n", ret);
+			GP_DEBUG("couldn't read beacon_comp (ret = %d)", ret);
 			continue;
 		}
 
 		if ((signed char)buffer[0] < 0) {
-			fprintf(stderr, "Bad status %d during beacon completion\n", (signed int)buffer[0]);
+			GP_DEBUG("Bad status %d during beacon completion", (signed int)buffer[0]);
 			continue;
 		}
 
@@ -316,7 +318,7 @@ int digita_serial_open(CameraPrivateLibrary *dev, Camera *camera)
 		dev->deviceframesize = ntohs(s);
 
 		memcpy((void *)&l, &buffer[2], sizeof(l));
-		fprintf(stderr, "negotiated %d\n", ntohl(l));
+		GP_DEBUG("negotiated %d", ntohl(l));
 		settings.serial.speed = ntohl(l);
 
 		usleep(100000);	/* Wait before */
