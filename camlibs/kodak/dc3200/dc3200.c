@@ -33,7 +33,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 	a->speed[3] = 57600;
 	a->speed[4] = 115200;
 	a->speed[5] = 0;
-	a->capture[0].type = GP_CAPTURE_NONE;
+	a->capture  = GP_CAPTURE_NONE;
 	a->config   = 0;
 	a->file_operations  = GP_FILE_OPERATION_PREVIEW;
 	a->folder_operations = GP_FOLDER_OPERATION_NONE;
@@ -167,7 +167,7 @@ int check_last_use(Camera *camera)
 	return GP_OK;
 }
 
-int camera_folder_list	(Camera *camera, CameraList *list, char *folder)
+int camera_folder_list_folders (Camera *camera, char *folder, CameraList *list)
 {
 	DC3200Data	*dd = camera->camlib_data;
 	u_char		*data = NULL;
@@ -234,7 +234,7 @@ int camera_folder_list	(Camera *camera, CameraList *list, char *folder)
 	return (dc3200_keep_alive(dd));
 }
 
-int camera_file_list (Camera *camera, CameraList *list, char *folder)
+int camera_folder_list_files (Camera *camera, char *folder, CameraList *list)
 {
 	DC3200Data	*dd = camera->camlib_data;
 	u_char		*data = NULL;
@@ -298,7 +298,7 @@ int camera_file_list (Camera *camera, CameraList *list, char *folder)
 	return (dc3200_keep_alive(dd));
 }
 
-int camera_file_get (Camera *camera, CameraFile *file, char *folder, char *filename)
+int camera_file_get (Camera *camera, char *folder, char *filename, CameraFile *file)
 {
 	DC3200Data	*dd = camera->camlib_data;
 	u_char		*data = NULL;
@@ -322,7 +322,7 @@ int camera_file_get (Camera *camera, CameraFile *file, char *folder, char *filen
 	return (dc3200_keep_alive(dd));
 }
 
-int camera_file_get_preview (Camera *camera, CameraFile *file, char *folder, char *filename)
+int camera_file_get_preview (Camera *camera, char *folder, char *filename, CameraFile *file)
 {
 	DC3200Data	*dd = camera->camlib_data;
 	u_char		*data = NULL;

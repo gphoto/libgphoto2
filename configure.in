@@ -50,32 +50,10 @@ AC_TYPE_SIZE_T
 dnl Checks for library functions.
 AC_CHECK_FUNCS(mkdir strdup strncpy strcpy snprintf sprintf)
 
-AC_PATH_PROG(LIBGPPORT_CONFIG,gphoto2-port-config)
-required_gphoto2_port_version=0.0.3
-USE_BUNDLED_GPPORT=1
-if test -n "${LIBGPPORT_CONFIG}"; then
-
-  echo checking for gphoto2-port - version == $required_gphoto2_port_version
-  gphoto2_port_version=`$LIBGPPORT_CONFIG --version | \
-           sed 's/\(.*\) \(.*\)/\2/'`
-  if test -n "${gphoto2_port_version}"; then
-  	if test "$required_gphoto2_port_version" = "$gphoto2_port_version" ; then
-		USE_BUNDLED_GPPORT=
-  	fi
-  fi
-fi
-  
-if test -n "${USE_BUNDLED_GPPORT}"; then
-  echo "Using the bundled gphoto2_port library"
-  LIBGPHOTO2_PORT_DIR="libgphoto2_port"
-  CFLAGS="$CFLAGS -I`pwd`/libgphoto2_port/include";
-  LIBS="$LIBS -L`pwd`/libgphoto2_port/libgphoto2_port/.libs -lgphoto2_port";
- else
-   echo "Using the already-installed gphoto2_port library"
-  LIBGPHOTO2_PORT_DIR=""
-  CFLAGS="$CFLAGS `$LIBGPPORT_CONFIG --cflags`"
-  LIBS="$LIBS `$LIBGPPORT_CONFIG --libs`"
-fi
+echo "Using the bundled gphoto2_port library"
+LIBGPHOTO2_PORT_DIR="libgphoto2_port"
+CFLAGS="$CFLAGS -I`pwd`/libgphoto2_port/include";
+LIBS="$LIBS -L`pwd`/libgphoto2_port/libgphoto2_port/.libs -lgphoto2_port";
 
 LIBGPHOTO2_INCLUDEDIR='-I${includedir}'
 LIBGPHOTO2_LIBDIR='-L${libdir}'
@@ -106,8 +84,8 @@ AC_ARG_WITH(drivers,
   [                            drivers may be separated with commas; ]
   [                            'all' compiles all drivers; ]
   [                            possible drivers are: ]
-  [                            barbie, canon, digita, directory, kodak, ]
-  [                            konica, minolta, panasonic, sierra, ]
+  [                            barbie, canon, digita, directory, ]
+  [                            kodak, konica, minolta, panasonic, sierra, ]
   [                            sonydscf1 stv0680 ],
   drivers="$withval", drivers="all")
 if test "$drivers" = "all"; then

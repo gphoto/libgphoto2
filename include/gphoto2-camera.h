@@ -48,8 +48,7 @@ int gp_camera_set_config	 (Camera *camera, CameraWidget  *window);
 int gp_camera_get_summary	 (Camera *camera, CameraText *summary);
 int gp_camera_get_manual	 (Camera *camera, CameraText *manual);
 int gp_camera_get_about		 (Camera *camera, CameraText *about);
-int gp_camera_capture 		 (Camera *camera, CameraFilePath *path, 
-				  CameraCaptureSetting *setting);
+int gp_camera_capture 		 (Camera *camera, int capture_type, CameraFilePath *path);
 int gp_camera_capture_preview 	 (Camera *camera, CameraFile *file);
 
 char *gp_camera_get_result_as_string (Camera *camera, int result);

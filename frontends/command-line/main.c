@@ -253,12 +253,14 @@ OPTION_CALLBACK(abilities) {
                 } while (abilities.speed[x]!=0);
         }
         printf("Capture choices                  :\n");
-        x=0;
-        while (abilities.capture[x].type != GP_CAPTURE_NONE) {
-        printf("                                 : %s\n",
-               abilities.capture[x].name);
-                x++;
-        }
+        if (abilities.capture & GP_CAPTURE_NONE)
+            printf("                                 : None\n");
+        if (abilities.capture & GP_CAPTURE_IMAGE)
+            printf("                                 : Image\n");
+        if (abilities.capture & GP_CAPTURE_VIDEO)
+            printf("                                 : Video\n");
+        if (abilities.capture & GP_CAPTURE_AUDIO)
+            printf("                                 : Audio\n");
         printf("Configuration support            : %s\n",
                 abilities.config == 0? "no":"yes");
         printf("Delete files on camera support   : %s\n",
@@ -715,26 +717,15 @@ int capture_generic (int type, char *name) {
         if ((result = set_globals()) != GP_OK)
                 return (result);
 
-        switch (type) {
-        case GP_CAPTURE_VIDEO:
-        case GP_CAPTURE_AUDIO:
-            col = strrchr(name, ':');
-            if (!col) {
-                printf("You need to specify a capture duration.\n");
-                return GP_ERROR;
+        if (type == GP_CAPTURE_PREVIEW) {
+            if ((result = gp_camera_capture_preview(glob_camera, file)) != GP_OK) {
+                cli_error_print("Could not capture the preview.");
+                return (result);
             }
-            *col++ = 0;
-            info.duration = -1;
-            info.duration = atoi(col);
-            if (info.duration == -1) {
-                printf("You need to specify a capture duration.\n");
-                return GP_ERROR;
-            }
-        case GP_CAPTURE_IMAGE:
-            info.type     = type;
-            strcpy(info.name, name);
-
-            if ((result = gp_camera_capture(glob_camera, &path, &info)) != GP_OK) {
+            save_camera_file_to_file(file, 0);
+            gp_file_free(file);
+        } else {
+            if ((result = gp_camera_capture(glob_camera, type, &path)) != GP_OK) {
                 cli_error_print("Could not capture.");
                 return (result);
             }
@@ -743,16 +734,8 @@ int capture_generic (int type, char *name) {
                 printf("%s/%s\n", path.folder, path.name);
             else
                 printf("New file is in location %s/%s on the camera\n", path.folder, path.name);
-            break;
-        default:
-            file = gp_file_new();
-            if ((result = gp_camera_capture_preview(glob_camera, file)) != GP_OK) {
-                cli_error_print("Could not capture the preview.");
-                return (result);
-            }
-            save_camera_file_to_file(file, 0);
-            gp_file_free(file);
         }
+
         return (GP_OK);
 }
 

@@ -1,10 +1,3 @@
-/* 	Header file for gPhoto 0.5-Dev
-
-	Author: Scott Fritzinger <scottf@unr.edu>
-
-	This library is covered by the LGPL.
-*/
-
 /* Constants
    ---------------------------------------------------------------- */
 
@@ -155,11 +148,9 @@ typedef struct {
 		/* This is an OR of 1 or more                    */
 		/* GP_FOLDER_OPERATION_* types                   */
 
-        CameraCaptureSetting capture[32];
-                /* Libraries set the type and should strcpy a    */
-                /* list of supported resolutions/types into the  */
-                /* name field. This list is terminated with an   */
-                /* entry of type GP_CAPTURE_NONE                 */
+        int capture;
+                /* What type of capturing this camera supports.  */
+                /* This is an OR of 1 or more GP_CAPTURE_* types */
 
 	int usb_vendor;
 	int usb_product;
@@ -333,32 +324,35 @@ typedef struct CameraWidget {
 struct Camera;
 
 /* Camera function pointers */
-typedef int (*c_id)		 (CameraText *);
-typedef int (*c_abilities)	 (CameraAbilitiesList *);
-typedef int (*c_init)		 (struct Camera*);
-typedef int (*c_exit)		 (struct Camera*);
-typedef int (*c_folder_list)	 (struct Camera*, CameraList*, char*);
-typedef int (*c_file_list)	 (struct Camera*, CameraList*, char*);
-typedef int (*c_file_info_get)	(struct Camera*, CameraFileInfo*, char*, char*);
-typedef int (*c_file_info_set)	(struct Camera*, CameraFileInfo*, char*, char*);
-typedef int (*c_file_get)	 (struct Camera*, CameraFile*, char*, char*);
-typedef int (*c_file_get_preview)(struct Camera*, CameraFile*, char*, char*);
-typedef int (*c_file_config_get) (struct Camera*, CameraWidget**, char*, char*);
-typedef int (*c_file_config_set) (struct Camera*, CameraWidget*, char*, char*);
-typedef int (*c_folder_config_get)(struct Camera*, CameraWidget**, char*);
-typedef int (*c_folder_config_set)(struct Camera*, CameraWidget*, char*);
-typedef int (*c_config_get)	 (struct Camera*, CameraWidget**);
-typedef int (*c_config_set)	 (struct Camera*, CameraWidget*);
-typedef int (*c_folder_put_file) (struct Camera*, CameraFile*, char*);
-typedef int (*c_file_delete)	 (struct Camera*, char*, char*);
-typedef int (*c_folder_delete_all) (struct Camera*, char*);
-typedef int (*c_capture)	 (struct Camera*, CameraFilePath*, CameraCaptureSetting*);
-typedef int (*c_capture_preview) (struct Camera*, CameraFile*);
-typedef int (*c_config)		 (struct Camera*);
-typedef int (*c_summary)	 (struct Camera*, CameraText*);
-typedef int (*c_manual)		 (struct Camera*, CameraText*);
-typedef int (*c_about)		 (struct Camera*, CameraText*);
-typedef char *(*c_result_as_string) (struct Camera*, int);
+typedef int (*c_id)		        (CameraText *);
+typedef int (*c_abilities)	        (CameraAbilitiesList *);
+typedef int (*c_init)		        (struct Camera*);
+typedef int (*c_exit)		        (struct Camera*);
+typedef int (*c_get_config)	        (struct Camera*, CameraWidget**);
+typedef int (*c_set_config)	        (struct Camera*, CameraWidget*);
+typedef int (*c_capture)	        (struct Camera*, int, CameraFilePath*);
+typedef int (*c_capture_preview)        (struct Camera*, CameraFile*);
+typedef int (*c_summary)	        (struct Camera*, CameraText*);
+typedef int (*c_manual)		        (struct Camera*, CameraText*);
+typedef int (*c_about)		        (struct Camera*, CameraText*);
+
+typedef int (*c_folder_list_folders)	(struct Camera*, char*, CameraList*);
+typedef int (*c_folder_list_files)      (struct Camera*, char*, CameraList*);
+typedef int (*c_folder_get_config)      (struct Camera*, char*, CameraWidget**);
+typedef int (*c_folder_set_config)      (struct Camera*, char*, CameraWidget*);
+typedef int (*c_folder_put_file)        (struct Camera*, char*, CameraFile*);
+typedef int (*c_folder_delete_all)      (struct Camera*, char*);
+
+typedef int (*c_file_get_info)	        (struct Camera*, char*, char*, CameraFileInfo*);
+typedef int (*c_file_set_info)	        (struct Camera*, char*, char*, CameraFileInfo*);
+typedef int (*c_file_get_config)        (struct Camera*, char*, char*, CameraWidget**);
+typedef int (*c_file_set_config)        (struct Camera*, char*, char*, CameraWidget*);
+typedef int (*c_file_get)	        (struct Camera*, char*, char*, CameraFile*);
+typedef int (*c_file_get_preview)       (struct Camera*, char*, char*, CameraFile*);
+
+typedef int (*c_file_delete)		(struct Camera*, char*, char*);
+
+typedef char *(*c_result_as_string)     (struct Camera*, int);
 
 /* Function pointers to the current library functions */
 typedef struct {
@@ -366,27 +360,29 @@ typedef struct {
 	c_abilities		abilities;
 	c_init			init;
 	c_exit			exit;
-	c_folder_list		folder_list;
-	c_file_list		file_list;
-        c_file_info_get         file_info_get;
-	c_file_info_set		file_info_set;
-        c_file_get		file_get;
-	c_file_get_preview	file_get_preview;
-	c_file_config_get	file_config_get;
-	c_file_config_set	file_config_set;
-	c_folder_config_get	folder_config_get;
-	c_folder_config_set	folder_config_set;
-	c_config_get		config_get;
-	c_config_set		config_set;
-	c_folder_put_file	folder_put_file;
-        c_file_delete		file_delete;
-        c_folder_delete_all     folder_delete_all;
-	c_config		config;
+        c_get_config		get_config;
+        c_set_config		set_config;
         c_capture		capture;
         c_capture_preview       capture_preview;
-	c_summary		summary;
+        c_summary		summary;
 	c_manual		manual;
 	c_about			about;
+
+        c_folder_list_folders	folder_list_folders;
+        c_folder_list_files	folder_list_files;
+        c_folder_get_config	folder_get_config;
+	c_folder_set_config	folder_set_config;
+        c_folder_put_file	folder_put_file;
+        c_folder_delete_all     folder_delete_all;
+
+        c_file_get_info         file_get_info;
+	c_file_set_info		file_set_info;
+        c_file_get_config	file_get_config;
+	c_file_set_config	file_set_config;
+        c_file_get_preview	file_get_preview;
+        c_file_get		file_get;
+        c_file_delete    	file_delete;
+
 	c_result_as_string	result_as_string;
 } CameraFunctions;
 

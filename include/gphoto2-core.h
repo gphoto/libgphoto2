@@ -1,11 +1,4 @@
-/* 	Header file for gPhoto2
-
-	Author: Scott Fritzinger <scottf@unr.edu>
-
-	This library is covered by the LGPL.
-*/
-
-int 	gp_init(int debug);  
+int 	gp_init(int debug);
 int	gp_is_initialized(void);
 int 	gp_exit();
 

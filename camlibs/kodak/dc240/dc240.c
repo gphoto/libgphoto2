@@ -30,8 +30,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 	a->speed[5] = 0;
         a->usb_vendor  = 0x040A;
         a->usb_product = 0x0120;
-	a->capture[0].type = GP_CAPTURE_NONE;
-//	a->capture  = GP_CAPTURE_IMAGE;
+	a->capture  = GP_CAPTURE_IMAGE;
 	a->config   = 0;
 	a->file_operations  = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
 	a->folder_operations = GP_FOLDER_OPERATION_NONE;
@@ -205,7 +204,7 @@ int camera_file_delete (Camera *camera, char *folder, char *filename) {
 }
 
 #if 0
-int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
+int camera_capture (Camera *camera, int capture_type, CameraFilePath *path) {
 
     DC240Data *dd = camera->camlib_data;
 

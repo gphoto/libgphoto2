@@ -40,7 +40,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 	a->port     = GP_PORT_SERIAL|GP_PORT_USB;
 	a->speed[0] = 115200;
 	a->speed[1] = 0;
-	a->capture[0].type  = GP_CAPTURE_NONE;
+	a->capture  = GP_CAPTURE_NONE;
 	a->config   = 0;
 	a->file_operations = GP_FILE_OPERATION_PREVIEW;
 	a->folder_operations = GP_FOLDER_OPERATION_NONE;
@@ -61,8 +61,8 @@ int camera_init (Camera *camera) {
 	camera->functions->abilities 		= camera_abilities;
 	camera->functions->init 		= camera_init;
 	camera->functions->exit 		= camera_exit;
-	camera->functions->folder_list  	= camera_folder_list;
-	camera->functions->file_list		= camera_file_list;
+	camera->functions->folder_list_folders 	= camera_folder_list_folders;
+	camera->functions->folder_list_files   	= camera_folder_list_files;
 	camera->functions->file_get 		= camera_file_get;
 	camera->functions->file_get_preview 	= camera_file_get_preview;
 	camera->functions->summary		= camera_summary;
@@ -111,14 +111,14 @@ int camera_exit (Camera *camera) {
 	return (GP_OK);
 }
 
-int camera_folder_list	(Camera *camera, CameraList *list, char *folder) {
+int camera_folder_list_folders (Camera *camera, char *folder, CameraList *list) {
 
 	/* stv0680 has no folder support */
 
 	return (GP_OK);
 }
 
-int camera_file_list (Camera *camera, CameraList *list, char *folder) {
+int camera_folder_list_files (Camera *camera, char *folder, CameraList *list) {
 
 	struct stv0680_s *device = camera->camlib_data;
 	int i, count, result;
@@ -137,8 +137,8 @@ int camera_file_list (Camera *camera, CameraList *list, char *folder) {
 	return (GP_OK);
 }
 
-int camera_file_get (Camera *camera, CameraFile *file, 
-		     char *folder, char *filename) { 
+int camera_file_get (Camera *camera, char *folder, char *filename,
+                     CameraFile *file ) {
 
 	struct stv0680_s *device = camera->camlib_data;
 	int image_no, count, result;
@@ -160,8 +160,8 @@ int camera_file_get (Camera *camera, CameraFile *file,
 	return stv0680_get_image(device, image_no, &file->data, (int*) &file->size);
 }
 
-int camera_file_get_preview (Camera *camera, CameraFile *file,
-			     char *folder, char *filename) {
+int camera_file_get_preview (Camera *camera, char *folder, char *filename,
+                             CameraFile *file) {
 
 	struct stv0680_s *device = camera->camlib_data;
 	int image_no, count, result;
@@ -184,14 +184,12 @@ int camera_file_get_preview (Camera *camera, CameraFile *file,
 					&file->data, (int*) &file->size);
 }
 
-#if 0
-int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
+int camera_capture (Camera *camera, int capture_type, CameraFilePath *path) {
 
 	/* XXX implement */
 
 	return (GP_ERROR_NOT_SUPPORTED);
 }
-#endif
 
 int camera_summary (Camera *camera, CameraText *summary) {
 

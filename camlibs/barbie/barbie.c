@@ -37,8 +37,8 @@ int camera_abilities (CameraAbilitiesList *list) {
 		a->port      = GP_PORT_SERIAL;
 		a->speed[0]  = 57600;
 		a->speed[1]  = 0;
-		a->capture[0].type = GP_CAPTURE_NONE;
-		a->config = 0;
+		a->capture   = GP_CAPTURE_NONE;
+		a->config    = 0;
 		a->file_operations = GP_FILE_OPERATION_PREVIEW;
 		a->folder_operations = GP_FOLDER_OPERATION_NONE;
 
@@ -169,7 +169,7 @@ int camera_file_get_preview (Camera *camera, char *folder, char *filename, Camer
 }
 
 #if 0
-int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
+int camera_capture (Camera *camera, int capture_type, CameraFilePath *path) {
 
 	char cmd[4], resp[4];
 	BarbieStruct *b = (BarbieStruct*)camera->camlib_data;

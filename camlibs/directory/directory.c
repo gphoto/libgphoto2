@@ -62,7 +62,7 @@ int camera_abilities (CameraAbilitiesList *list)
         a->port     = GP_PORT_NONE;
         a->speed[0] = 0;
 
-        a->capture[0].type = GP_CAPTURE_NONE;
+        a->capture = GP_CAPTURE_NONE;
         a->config    = 1;
         a->file_operations = GP_FILE_OPERATION_NONE;
 	a->folder_operations = GP_FOLDER_OPERATION_NONE;

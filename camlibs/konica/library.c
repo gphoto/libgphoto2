@@ -132,11 +132,7 @@ camera_abilities (CameraAbilitiesList* list)
 			a->speed[8]	= 57600;
 			a->speed[9]	= 115200;
 			a->speed[10]	= 0;
-			a->capture[0].type = GP_CAPTURE_PREVIEW;
-			strcpy (a->capture[0].name, "Capture Preview");
-			a->capture[1].type = GP_CAPTURE_IMAGE;
-			strcpy (a->capture[1].name, "Capture Image");
-			a->capture[2].type = GP_CAPTURE_NONE;
+			a->capture	= GP_CAPTURE_IMAGE | GP_CAPTURE_PREVIEW;
 			a->config	= 1;
 			a->file_operations = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW | GP_FILE_OPERATION_CONFIG;
 			a->folder_operations = GP_FOLDER_OPERATION_CONFIG | GP_FOLDER_OPERATION_DELETE_ALL;
@@ -172,23 +168,22 @@ camera_init (Camera* camera)
 	camera->functions->abilities 		= camera_abilities;
 	camera->functions->init 		= camera_init;
 	camera->functions->exit 		= camera_exit;
-	camera->functions->folder_list  	= camera_folder_list;
-	camera->functions->file_list		= camera_file_list;
-	camera->functions->file_get 		= camera_file_get;
-	camera->functions->file_get_preview 	= camera_file_get_preview;
-	camera->functions->file_delete 		= camera_file_delete;
-	camera->functions->file_info_get	= camera_file_info_get;
-	camera->functions->file_info_set	= camera_file_info_set;
-	camera->functions->file_config_get	= camera_file_config_get;
-	camera->functions->file_config_set	= camera_file_config_set;
-	camera->functions->folder_config_get	= camera_folder_config_get;
-	camera->functions->folder_config_set	= camera_folder_config_set;
+	camera->functions->folder_list_folders 	= camera_folder_list_folders;
+	camera->functions->folder_list_files   	= camera_folder_list_files;
+        camera->functions->folder_get_config	= camera_folder_get_config;
+	camera->functions->folder_set_config	= camera_folder_set_config;
 	camera->functions->folder_delete_all    = camera_folder_delete_all;
-	camera->functions->config_get		= camera_config_get;
-	camera->functions->config_set		= camera_config_set;
-	camera->functions->config 	  	= camera_config;
-	camera->functions->capture 		= camera_capture;
-	camera->functions->capture_preview	= camera_capture_preview;
+        camera->functions->file_get 		= camera_file_get;
+        camera->functions->file_get_preview 	= camera_file_get_preview;
+	camera->functions->file_delete 		= camera_file_delete;
+	camera->functions->file_get_info	= camera_file_get_info;
+	camera->functions->file_set_info	= camera_file_set_info;
+	camera->functions->file_get_config	= camera_file_get_config;
+	camera->functions->file_set_config	= camera_file_set_config;
+	camera->functions->get_config		= camera_get_config;
+	camera->functions->set_config		= camera_set_config;
+//	camera->functions->config 	  	= camera_config;
+//	camera->functions->capture 		= camera_capture;
 	camera->functions->summary		= camera_summary;
 	camera->functions->manual 		= camera_manual;
 	camera->functions->about 		= camera_about;
@@ -348,7 +343,7 @@ camera_exit (Camera* camera)
 
 
 gint
-camera_folder_list (Camera* camera, CameraList* list, gchar* folder)
+camera_folder_list_folders (Camera* camera, gchar* folder, CameraList* list)
 {
 	g_return_val_if_fail (camera, 	GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (list, 	GP_ERROR_BAD_PARAMETERS);
@@ -386,7 +381,7 @@ camera_folder_delete_all (Camera* camera, gchar* folder)
 
 
 gint 
-camera_file_list (Camera* camera, CameraList* list, gchar* folder)
+camera_folder_list_files (Camera* camera, gchar* folder, CameraList* list)
 {
 	guint 			self_test_result;
 	k_power_level_t 	power_level;
@@ -523,14 +518,14 @@ camera_file_get_generic (Camera* camera, CameraFile* file, gchar* folder, gchar*
 
 
 gint 
-camera_file_get (Camera* camera, CameraFile* file, gchar* folder, gchar* filename)
+camera_file_get (Camera* camera, gchar* folder, gchar* filename, CameraFile* file)
 {
 	return (camera_file_get_generic (camera, file, folder, filename, K_IMAGE_EXIF));
 }
 
 
 gint 
-camera_file_get_preview (Camera* camera, CameraFile* file, gchar* folder, gchar* filename)
+camera_file_get_preview (Camera* camera, gchar* folder, gchar* filename, CameraFile* file)
 {
 	return (camera_file_get_generic (camera, file, folder, filename, K_THUMBNAIL));
 }
@@ -637,7 +632,7 @@ camera_capture_preview (Camera* camera, CameraFile* file)
 }
 
 gint 
-camera_capture (Camera* camera, CameraFilePath* filepath, CameraCaptureSetting* setting) 
+camera_capture (Camera* camera, int capture_type, CameraFilePath* path)
 {
 	konica_data_t*	konica_data;
 	gulong 		image_id;
@@ -650,9 +645,8 @@ camera_capture (Camera* camera, CameraFilePath* filepath, CameraCaptureSetting* 
 
         gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_capture ***");
 	g_return_val_if_fail (camera, 	GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (filepath,	GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (setting, 	GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (setting->type == GP_CAPTURE_IMAGE, GP_ERROR_NOT_SUPPORTED);
+	g_return_val_if_fail (capture_type == GP_CAPTURE_IMAGE, GP_ERROR_NOT_SUPPORTED);
+	g_return_val_if_fail (path,	GP_ERROR_BAD_PARAMETERS);
 
         konica_data = (konica_data_t *) camera->camlib_data;
 
@@ -669,9 +663,9 @@ camera_capture (Camera* camera, CameraFilePath* filepath, CameraCaptureSetting* 
 	if (result != GP_OK) return (result);
 	
 	tmp = g_strdup_printf ("%6i.jpeg", (gint) image_id);
-	strcpy (filepath->name, "image.jpeg");
+	strcpy (path->name, "image.jpeg");
 	g_free (tmp);
-	strcpy (filepath->folder, "/");
+	strcpy (path->folder, "/");
 
 	return (GP_OK);
 }
@@ -701,7 +695,7 @@ camera_about (Camera* camera, CameraText* about)
 }
 
 gint
-camera_file_info_get (Camera* camera, CameraFileInfo* info, gchar* folder, gchar* file)
+camera_file_get_info (Camera* camera, gchar* folder, gchar* file, CameraFileInfo* info)
 {
 	konica_data_t* 	konica_data;
 	gulong		image_id;
@@ -744,14 +738,14 @@ camera_file_info_get (Camera* camera, CameraFileInfo* info, gchar* folder, gchar
 }
 
 gint
-camera_file_info_set (Camera* camera, CameraFileInfo* info, gchar* folder, gchar* file)
+camera_file_set_info (Camera* camera, gchar* folder, gchar* file, CameraFileInfo* info)
 {
 	//FIXME: Implement
 	return (GP_ERROR);
 }
 
 gint 
-camera_file_config_get (Camera* camera, CameraWidget** window, gchar* folder, gchar* file)
+camera_file_get_config (Camera* camera, gchar* folder, gchar* file, CameraWidget** window)
 {
 	CameraWidget*	widget;
 	konica_data_t*	konica_data;
@@ -769,7 +763,7 @@ camera_file_config_get (Camera* camera, CameraWidget** window, gchar* folder, gc
 	g_return_val_if_fail (folder,   GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (file,	GP_ERROR_BAD_PARAMETERS);
 
-	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_file_config_get ***");
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_file_get_config ***");
 	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Folder: %s", folder);
 	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** File: %s", file);
 
@@ -794,12 +788,12 @@ camera_file_config_get (Camera* camera, CameraWidget** window, gchar* folder, gc
 	gp_widget_append (*window, widget);
 
 	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Protected: %i", value_int);
-	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Leaving camera_file_config_get ***");
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Leaving camera_file_get_config ***");
 	return (GP_OK);
 }
 
 int
-camera_file_config_set (Camera* camera, CameraWidget* window, gchar* folder, gchar* file)
+camera_file_set_config (Camera* camera, gchar* folder, gchar* file, CameraWidget* window)
 {
 	CameraWidget* 	widget;
 	gint		result = GP_OK;
@@ -813,7 +807,7 @@ camera_file_config_set (Camera* camera, CameraWidget* window, gchar* folder, gch
 	g_return_val_if_fail (folder,   GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (file, 	GP_ERROR_BAD_PARAMETERS);
 
-	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_file_config_set ***");
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_file_set_config ***");
 	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Folder: %s", folder);
 	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** File: %s", file);
 
@@ -835,13 +829,13 @@ camera_file_config_set (Camera* camera, CameraWidget* window, gchar* folder, gch
 		result = k_set_protect_status (konica_data->device, konica_data->image_id_long, image_id, (value_int != 0));
 	}
 
-	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Leaving camera_file_config_set ***");
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Leaving camera_file_set_config ***");
 		
 	return (result);
 }
 
 int
-camera_folder_config_get (Camera* camera, CameraWidget** window, gchar* folder)
+camera_folder_get_config (Camera* camera, gchar* folder, CameraWidget** window)
 {
 	CameraWidget*	widget;
 
@@ -863,7 +857,7 @@ camera_folder_config_get (Camera* camera, CameraWidget** window, gchar* folder)
 }
 
 int
-camera_folder_config_set (Camera* camera, CameraWidget* window, gchar* folder)
+camera_folder_set_config (Camera* camera, gchar* folder, CameraWidget* window)
 {
 	g_return_val_if_fail (camera,   GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (window,   GP_ERROR_BAD_PARAMETERS);
@@ -873,7 +867,7 @@ camera_folder_config_set (Camera* camera, CameraWidget* window, gchar* folder)
 }
 
 int 
-camera_config_get (Camera* camera, CameraWidget** window)
+camera_get_config (Camera* camera, CameraWidget** window)
 {
         CameraWidget*	widget;
 	CameraWidget*	section;
@@ -901,7 +895,7 @@ camera_config_get (Camera* camera, CameraWidget** window)
 	gint		result;
 	gfloat		value_float;
 
-        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_config_get ***");
+        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_get_config ***");
 	g_return_val_if_fail (camera, 	GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (window, 	GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (!*window,	GP_ERROR_BAD_PARAMETERS);
@@ -1116,7 +1110,7 @@ camera_config_get (Camera* camera, CameraWidget** window)
 	return (GP_OK);
 }
  
-int camera_config_set (Camera *camera, CameraWidget *window)
+int camera_set_config (Camera *camera, CameraWidget *window)
 {
 	CameraWidget*	section;
 	CameraWidget*	widget_focus;
@@ -1136,7 +1130,7 @@ int camera_config_set (Camera *camera, CameraWidget *window)
 	struct tm*	tm_struct;
 	gint		result;
 
-        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_config_set ***");
+        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_set_config ***");
 	g_return_val_if_fail (camera, GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (window, GP_ERROR_BAD_PARAMETERS);
 
@@ -1309,14 +1303,14 @@ camera_config (Camera *camera)
 	gint		result;
 	CameraWidget*	window = NULL;
 
-	if ((result = camera_config_get (camera, &window)) == GP_OK) {
+	if ((result = camera_get_config (camera, &window)) == GP_OK) {
 
 	        /* Prompt the user with the config window. */
 	        if (gp_frontend_prompt (camera, window) == GP_PROMPT_CANCEL) {
 			gp_widget_unref (window);
 	                return (GP_OK);
 	        }
-		result = camera_config_set (camera, window);
+		result = camera_set_config (camera, window);
 		gp_widget_unref (window);
 		return (result);
 	} else {

@@ -334,7 +334,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 	a->speed[3] 	= 57600;			
 	a->speed[4] 	= 115200;	
 	a->speed[5] 	= 0;	
-	a->capture[0].type = GP_CAPTURE_NONE;
+	a->capture      = GP_CAPTURE_NONE;
 	a->config    	= 0;
 	a->file_operations  = GP_FILE_OPERATION_DELETE;
 	a->folder_operations = GP_FOLDER_OPERATION_PUT_FILE;
@@ -357,8 +357,8 @@ int camera_init (Camera *camera) {
 	camera->functions->abilities 		= camera_abilities;
 	camera->functions->init 		= camera_init;
 	camera->functions->exit 		= camera_exit;
-	camera->functions->folder_list  	= camera_folder_list;
-	camera->functions->file_list 		= camera_file_list;
+	camera->functions->folder_list_folders 	= camera_folder_list_folders;
+	camera->functions->folder_list_files   	= camera_folder_list_files;
 	camera->functions->file_get 		= camera_file_get;
 	camera->functions->folder_put_file	= camera_folder_put_file;
 	camera->functions->file_delete 		= camera_file_delete;
@@ -434,12 +434,12 @@ int camera_exit (Camera *camera) {
 	return (GP_OK);
 }
 
-int camera_folder_list (Camera *camera, CameraList *list, char *folder) {
+int camera_folder_list_folders (Camera *camera, char *folder, CameraList *list) {
 
 	return GP_OK; 	/* folders are unsupported but it is OK */
 }
 
-int camera_file_list (Camera *camera, CameraList *list, char *folder) {
+int camera_folder_list_files (Camera *camera, char *folder, CameraList *list) {
 
 	dsc_t	*dsc = (dsc_t *)camera->camlib_data;
 	int 	count, i;
@@ -455,7 +455,7 @@ int camera_file_list (Camera *camera, CameraList *list, char *folder) {
 	return GP_OK;
 }
 
-int camera_file_get (Camera *camera, CameraFile *file, char *folder, char *filename) {
+int camera_file_get (Camera *camera, char *folder, char *filename, CameraFile *file) {
 
 	dsc_t	*dsc = (dsc_t *)camera->camlib_data;
 	int	index, size, rsize, i, s;
@@ -485,7 +485,7 @@ int camera_file_get (Camera *camera, CameraFile *file, char *folder, char *filen
 	return (GP_OK);
 }
 
-int camera_folder_put_file (Camera *camera, CameraFile *file, char *folder) {
+int camera_folder_put_file (Camera *camera, char *folder, CameraFile *file) {
 
 	dsc_t	*dsc = (dsc_t *)camera->camlib_data;
 	int	blocks, blocksize, i;

@@ -20,7 +20,7 @@ extern "C" {
 #define CAMLIBS "."
 #endif
 
-#include <gphoto2-port/gphoto2-port.h>
+#include <gphoto2-port.h>
 #include <gphoto2-datatypes.h>
 #include <gphoto2-camera.h>
 #include <gphoto2-core.h>

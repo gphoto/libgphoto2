@@ -41,7 +41,7 @@ int camera_abilities (CameraAbilitiesList *list) {
         strcpy(a->model, "Sony DSC-F1");
         a->port=GP_PORT_SERIAL;
         a->speed[0] = 0;
-        a->capture[0].type = GP_CAPTURE_NONE;
+        a->capture = GP_CAPTURE_NONE;
         a->config   = 1;
         a->file_operations = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
         a->folder_operations = GP_FOLDER_OPERATION_PUT_FILE;
@@ -66,16 +66,16 @@ int camera_init (Camera *camera) {
         camera->functions->abilities    = camera_abilities;
         camera->functions->init         = camera_init;
         camera->functions->exit         = camera_exit;
-        camera->functions->folder_list  = camera_folder_list;
+        camera->functions->folder_list_folders = camera_folder_list_folders;
+        camera->functions->folder_list_files   = camera_folder_list_files;
+        camera->functions->folder_put_file = camera_folder_put_file;
 //	camera->functions->folder_set   = camera_folder_set;
 //	camera->functions->file_count   = camera_file_count;
         camera->functions->file_get     = camera_file_get;
         camera->functions->file_get_preview =  camera_file_get_preview;
-        camera->functions->folder_put_file = camera_folder_put_file;
-        camera->functions->file_list    = camera_file_list;
         camera->functions->file_delete  = camera_file_delete;
-        camera->functions->config_get   = camera_config_get;
-        camera->functions->config_set   = camera_config_set;
+        camera->functions->get_config   = camera_get_config;
+        camera->functions->set_config   = camera_set_config;
         camera->functions->summary      = camera_summary;
         camera->functions->manual       = camera_manual;
         camera->functions->about        = camera_about;
@@ -138,7 +138,7 @@ int camera_exit (Camera *camera) {
         return (F1fclose());
 }
 
-int camera_folder_list(Camera *camera, CameraList *list, char *folder_name) {
+int camera_folder_list_folders(Camera *camera, char *folder_name, CameraList *list) {
                 printf("sony dscf1: folderlist\n");
         return (GP_OK);
 }
@@ -157,7 +157,7 @@ int camera_file_count (Camera *camera) {
         return (F1howmany());
 }
 
-int camera_file_get (Camera *camera, CameraFile *file, char *folder, char *filename) {
+int camera_file_get (Camera *camera, char *folder, char *filename, CameraFile *file) {
 
         /**********************************/
         /* file_number now starts at 0!!! */
@@ -193,7 +193,7 @@ int camera_file_get (Camera *camera, CameraFile *file, char *folder, char *filen
 }
 
 
-int camera_file_get_preview (Camera *camera, CameraFile *preview, char *folder, char *filename) {
+int camera_file_get_preview (Camera *camera, char *folder, char *filename, CameraFile *preview) {
 
         /**********************************/
         /* file_number now starts at 0!!! */
@@ -206,24 +206,24 @@ int camera_file_get_preview (Camera *camera, CameraFile *preview, char *folder, 
         return (GP_OK);
 }
 
-int camera_folder_file_put (Camera *camera, CameraFile *file,char *folder) {
+int camera_folder_file_put (Camera *camera, char *folder, CameraFile *file) {
                 printf("sony dscf1: file put\n");
         return (GP_ERROR);
 }
 
-int camera_file_delete (Camera *camera,char *folder , char *filename) {
+int camera_file_delete (Camera *camera, char *folder , char *filename) {
         printf("sony dscf1: file delete\n");
         if(!F1ok())
            return (GP_ERROR);
         /*return (F1deletepicture(file_number));*/
 }
 
-int camera_config_get (Camera *camera, CameraWidget **window) {
+int camera_get_config (Camera *camera, CameraWidget **window) {
         printf("sony dscf1: config get\n");
         return GP_ERROR;
 }
 
-int camera_config_set (Camera *camera, CameraWidget *window) {
+int camera_set_config (Camera *camera, CameraWidget *window) {
                 printf("sony dscf1: config set\n");
         return (GP_ERROR);
 }
@@ -255,7 +255,7 @@ int camera_about (Camera *camera, CameraText *about) {
         return (GP_OK);
 }
 
-int camera_file_list (Camera *camera, CameraList *list, char *folder) {
+int camera_folder_list_files (Camera *camera, char *folder, CameraList *list) {
 
         int count, x;
         SonyStruct *b = (SonyStruct*)camera->camlib_data;
