@@ -1,3 +1,7 @@
+2003-08-26  Patrick Mansfield <patmans@users.sourceforge.net>
+	* library.c: Fix so on receipt of an unknown packet and a read of
+	  zero bytes, we don't loop forever.
+
 2003-06-14  Dan Fandrich <dan@coneharvesters.com>
 	* epson-desc.c, nikon-desc.c, olympus-desc.c, sierra-desc.c, sierra.c:
 	  include _stdint.h instead of stdint.h

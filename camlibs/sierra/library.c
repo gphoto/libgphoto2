@@ -589,7 +589,8 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 			 */
 			gp_context_error (context, _("The first byte "
 				"received (0x%x) is not valid."), packet[0]);
-			while (gp_port_read (camera->port, packet, 1) >= 0);
+			while (gp_port_read (camera->port, packet, 1) > 0)
+				;
 			if (camera->port->type == GP_PORT_USB &&
 			    !(camera->pl->flags & SIERRA_WRAP_USB))
 				gp_port_usb_clear_halt (camera->port,
