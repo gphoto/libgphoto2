@@ -21,7 +21,6 @@
 #include <sys/ioctl.h>
 
 #include <gphoto2.h>
-#include <gpio/gpio.h>
 
 #include "util.h"
 #include "psa50.h"
