@@ -171,8 +171,10 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		/* Give some feedback */
 		gp_context_progress_update (context, id, n + 1);
 		gp_context_idle (context);
-		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
+		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL) {
+			GP_SYSTEM_CLOSEDIR (dir);
 			return (GP_ERROR_CANCEL);
+		}
 
 		if (strcmp(GP_SYSTEM_FILENAME(de), "." ) &&
 		    strcmp(GP_SYSTEM_FILENAME(de), "..")) {
@@ -183,6 +185,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		}
 		n++;
 	}
+	GP_SYSTEM_CLOSEDIR (dir);
 	gp_context_progress_stop (context, id);
 
 	return (GP_OK);
@@ -252,9 +255,10 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		/* Give some feedback */
 		gp_context_progress_update (context, id, n + 1);
 		gp_context_idle (context);
-		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
+		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL) {
+			GP_SYSTEM_CLOSEDIR (dir);
 			return (GP_ERROR_CANCEL);
-
+		}
 		if ((strcmp (GP_SYSTEM_FILENAME (de), "." ) != 0) &&
 		    (strcmp (GP_SYSTEM_FILENAME (de), "..") != 0)) {
 			sprintf (buf, "%s%s", f, GP_SYSTEM_FILENAME (de));
@@ -272,6 +276,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		}
 		n++;
 	}
+	GP_SYSTEM_CLOSEDIR (dir);
 	gp_context_progress_stop (context, id);
 
 	return (GP_OK);
