@@ -139,60 +139,60 @@ OPTION_CALLBACK(remove_dir);
 Option option[] = {
 
 /* Settings needed for formatting output */
-{"",  "debug",          "",             "Turn on debugging",            debug,          0},
-{"q", "quiet",          "",             "Quiet output (default=verbose)",quiet,         0},
+{"",  "debug", "", N_("Turn on debugging"),              debug,         0},
+{"q", "quiet", "", N_("Quiet output (default=verbose)"), quiet,         0},
 
 /* Display and die actions */
 
-{"v", "version",        "",             "Display version and exit",     version,        0},
-{"h", "help",           "",             "Displays this help screen",    help,           0},
-{"",  "list-cameras",   "",             "List supported camera models", list_cameras,   0},
-{"",  "print-usb-usermap", "",         "Create output for usb.usermap", print_usb_usermap, 0},
-{"",  "list-ports",     "",             "List supported port devices",  list_ports,     0},
-{"",  "stdout",         "",             "Send file to stdout",          use_stdout,     0},
-{"",  "stdout-size",    "",             "Print filesize before data",   use_stdout_size,0},
-{"",  "auto-detect",    "",             "List auto-detected cameras",   auto_detect,    0},
+{"v", "version",     "", N_("Display version and exit"),     version,        0},
+{"h", "help",        "", N_("Displays this help screen"),    help,           0},
+{"",  "list-cameras","", N_("List supported camera models"), list_cameras,   0},
+{"",  "print-usb-usermap", "", N_("Create output for usb.usermap"), print_usb_usermap, 0},
+{"",  "list-ports",  "", N_("List supported port devices"),  list_ports,     0},
+{"",  "stdout",      "", N_("Send file to stdout"),          use_stdout,     0},
+{"",  "stdout-size", "", N_("Print filesize before data"),   use_stdout_size,0},
+{"",  "auto-detect", "", N_("List auto-detected cameras"),   auto_detect,    0},
 
 /* Settings needed for camera functions */
-{"" , "port",           "path",         "Specify port device",          port,           0},
-{"" , "speed",          "speed",        "Specify serial transfer speed",speed,          0},
-{"" , "camera",         "model",        "Specify camera model",         model,          0},
-{"" , "filename",       "filename",     "Specify a filename",           filename,       0},
+{"" , "port",     "path",     N_("Specify port device"),           port,     0},
+{"" , "speed",    "speed",    N_("Specify serial transfer speed"), speed,    0},
+{"" , "camera",   "model",    N_("Specify camera model"),          model,    0},
+{"" , "filename", "filename", N_("Specify a filename"),            filename, 0},
 
 /* Actions that depend on settings */
-{"a", "abilities",      "",             "Display camera abilities",     abilities,      0},
-{"f", "folder",         "folder",       "Specify camera folder (default=\"/\")",use_folder,0},
-{"R", "recurse",        "",             N_("Recursively descend through folders"),recurse,  0},
-{"l", "list-folders",   "",             "List folders in folder",       list_folders,   0},
-{"L", "list-files",     "",             "List files in folder",         list_files,     0},
-{"m", "mkdir", N_("name"), N_("Create a directory"), make_dir, 0},
-{"r", "rmdir", N_("name"), N_("Remove a directory"), remove_dir, 0},
-{"n", "num-images",   "",             "Display number of pictures",   num_pictures,   0},
-{"p", "get-image",    "range",        "Get pictures given in range",  get_picture,    0},
-{"P", "get-all-images","",            "Get all pictures from folder", get_all_pictures,0},
-{"t", "get-thumbnail",  "range",        "Get thumbnails given in range",get_thumbnail,  0},
-{"T", "get-all-thumbnails","",          "Get all thumbnails from folder",get_all_thumbnails,0},
-{"r", "get-raw-data", "range",      "Get raw data given in range", get_raw_data, 0},
-{"", "get-all-raw-data", "",        "Get all raw data from folder", get_all_raw_data, 0},
-{"", "get-audio-data", "range", N_("Get audio data given in range"), get_audio_data, 0},
-{"", "get-all-audio-data", "", N_("Get all audio data from folder"), get_all_audio_data, 0},
-{"d", "delete-picture", "range", N_("Delete pictures given in range"), delete_picture, 0},
-{"D", "delete-all-images","", N_("Delete all pictures in folder"), delete_all_pictures,0},
-{"u", "upload-image", "filename", N_("Upload a picture to camera"), upload_picture, 0},
+{"a", "abilities", "",       N_("Display camera abilities"), abilities,    0},
+{"f", "folder",    "folder", N_("Specify camera folder (default=\"/\")"),use_folder,0},
+{"R", "recurse", "",  N_("Recursively descend through folders"), recurse, 0},
+{"l", "list-folders",   "", N_("List folders in folder"), list_folders,   0},
+{"L", "list-files",     "", N_("List files in folder"),   list_files,     0},
+{"m", "mkdir", N_("name"),  N_("Create a directory"),     make_dir,       0},
+{"r", "rmdir", N_("name"),  N_("Remove a directory"),     remove_dir,     0},
+{"n", "num-images", "",           N_("Display number of pictures"),     num_pictures,   0},
+{"p", "get-image", "range",       N_("Get pictures given in range"),    get_picture,    0},
+{"P", "get-all-images","",        N_("Get all pictures from folder"),   get_all_pictures,0},
+{"t", "get-thumbnail",  "range",  N_("Get thumbnails given in range"),  get_thumbnail,  0},
+{"T", "get-all-thumbnails","",    N_("Get all thumbnails from folder"), get_all_thumbnails,0},
+{"r", "get-raw-data", "range",    N_("Get raw data given in range"),    get_raw_data, 0},
+{"", "get-all-raw-data", "",      N_("Get all raw data from folder"),   get_all_raw_data, 0},
+{"", "get-audio-data", "range",   N_("Get audio data given in range"),  get_audio_data, 0},
+{"", "get-all-audio-data", "",    N_("Get all audio data from folder"), get_all_audio_data, 0},
+{"d", "delete-picture", "range",  N_("Delete pictures given in range"), delete_picture, 0},
+{"D", "delete-all-images","",     N_("Delete all pictures in folder"), delete_all_pictures,0},
+{"u", "upload-image", "filename", N_("Upload a picture to camera"),    upload_picture, 0},
 {"" , "capture-preview", "", N_("Capture a quick preview"), capture_preview, 0},
-{"" , "capture-image",  "", N_("Capture an image"), capture_image,  0},
-{"" , "capture-movie",  "", N_("Capture a movie "), capture_movie,  0},
-{"" , "capture-sound",  "", N_("Capture an audio clip"), capture_sound, 0},
+{"" , "capture-image",  "",  N_("Capture an image"),        capture_image,   0},
+{"" , "capture-movie",  "",  N_("Capture a movie "),        capture_movie,   0},
+{"" , "capture-sound",  "",  N_("Capture an audio clip"),   capture_sound,   0},
 #if HAVE_CDK
-{"" , "config",		"", 		"Configure",			config,		0},
+{"" , "config",		"",  N_("Configure"),               config,          0},
 #endif
-{"",  "summary",        "",             "Summary of camera status",     summary,        0},
-{"",  "manual",         "",             "Camera driver manual",         manual,         0},
-{"",  "about",          "",             "About the camera driver",      about,          0},
-{"",  "shell",          "",             "gPhoto shell",                 shell,          0},
+{"",  "summary",        "",  N_("Summary of camera status"), summary,        0},
+{"",  "manual",         "",  N_("Camera driver manual"),     manual,         0},
+{"",  "about",          "",  N_("About the camera driver"),  about,          0},
+{"",  "shell",          "",  N_("gPhoto shell"),             shell,          0},
 
 /* End of list                  */
-{"" , "",               "",             "",                             NULL,           0}
+{"" , "", "", "", NULL, 0}
 };
 
 /* 3) Add any necessary global variables                                */

@@ -1,3 +1,7 @@
+2001-11-22  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* frontends/command-line/main.c: Mark more strings for translation
+
 2001-11-22  Colin Marquardt  <colin@marquardt-home.de>
 
 	* frontends/command-line/options.c: Make help descriptions
