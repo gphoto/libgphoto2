@@ -551,65 +551,40 @@ l_receive (gp_port* device, guchar** rb, guint* rbs, guint timeout)
 
 
 gint 
-l_send_receive (gp_port* device, guchar* send_buffer, guint send_buffer_size, guchar** receive_buffer, guint* receive_buffer_size)
-{
-	gint result;
-
-	/****************/
-	/* Send data.	*/
-	/****************/
-	result = l_send (device, send_buffer, send_buffer_size);
-	if (result != GP_OK) return (result);
-	/********************************/
-	/* Receive control data.	*/
-	/********************************/
-	result = l_receive (device, receive_buffer, receive_buffer_size, 3000);
-	if (result != GP_OK) return (result);
-	if (((*receive_buffer)[0] != send_buffer[0]) || 
-	    ((*receive_buffer)[1] != send_buffer[1])) {
-		gp_debug_printf (GP_DEBUG_HIGH, "konica", "Error: Commands differ! %i %i != %i %i.\n", 
-			(*receive_buffer)[0], (*receive_buffer)[1], 
-			send_buffer[0], send_buffer[1]); 
-		return (GP_ERROR_CORRUPTED_DATA);
-	}
-	else return (result);
-}
-
-
-gint 
-l_send_receive_receive (
+l_send_receive (
 	gp_port*	device,
 	guchar*		send_buffer, 
 	guint		send_buffer_size, 
-	guchar**	image_buffer, 
-	guint*		image_buffer_size, 
 	guchar**	receive_buffer, 
         guint*		receive_buffer_size,
-	guint		timeout)
+	guint		timeout, 
+	guchar**        image_buffer,
+	guint*          image_buffer_size)
 {
 	gint result;
 
-	/****************/
-	/* Send data.	*/
-	/****************/
+	if (timeout == 0) timeout = DEFAULT_TIMEOUT;
+
+	/* Send data. */
         result = l_send (device, send_buffer, send_buffer_size);
         if (result != GP_OK) return (result);
-	/************************/
-        /* Receive data.	*/
-	/************************/
-        result = l_receive (device, image_buffer, image_buffer_size, timeout);
+	
+        /* Receive data. */
+        result = l_receive (device, receive_buffer, receive_buffer_size, timeout);
         if (result != GP_OK) return (result);
-	/********************************/
-	/* Receive control data.	*/
-	/********************************/
+	
+	/* Check if we've received the control data. */
+	if (((*receive_buffer)[0] == send_buffer[0]) && ((*receive_buffer)[1] == send_buffer[1])) return (GP_OK);
+	*image_buffer = *receive_buffer; 
+	*image_buffer_size = *receive_buffer_size;
+	*receive_buffer = NULL;
+	
+	/* Receive control data. */
         result = l_receive (device, receive_buffer, receive_buffer_size, DEFAULT_TIMEOUT);
 	if (result != GP_OK) return (result);
-	if (((*receive_buffer)[0] != send_buffer[0]) || 
-	    ((*receive_buffer)[1] != send_buffer[1])) {
-		gp_debug_printf (GP_DEBUG_HIGH, "konica", "Error: Commands differ! %i %i != %i %i.\n", 
-			(*receive_buffer)[0], (*receive_buffer)[1], 
-			send_buffer[0], send_buffer[1]); 
-		return (GP_ERROR_CORRUPTED_DATA);
-	}
-	return (result);
+
+	/* Sanity check: Did we receive the right control data? */
+	g_return_val_if_fail (((*receive_buffer)[0] == send_buffer[0]) && ((*receive_buffer)[1] == send_buffer[1]), GP_ERROR_CORRUPTED_DATA);
+	
+	return (GP_OK);
 }

@@ -59,15 +59,7 @@ gint l_send_receive (
 	guchar*		send_buffer,
 	guint 		send_buffer_size,
         guchar**	receive_buffer, 
-        guint*		receive_buffer_size);
-
-
-gint l_send_receive_receive (
-	gp_port*	device,
-	guchar*		send_buffer,
-	guint 		send_buffer_size,
-        guchar**	image_buffer, 
-        guint*		image_buffer_size, 
-        guchar**	receive_buffer, 
         guint*		receive_buffer_size, 
-	guint 		timeout);
+	guint 		timeout, 
+	guchar**        image_buffer,
+	guint*          image_buffer_size);

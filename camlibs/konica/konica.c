@@ -27,64 +27,87 @@ gint GP_RESULT (guchar byte1, guchar byte2);
 gint 
 GP_RESULT (guchar byte1, guchar byte2)
 {
-	gchar buffer[1024];
-
 	switch ((byte2 << 8 ) | byte1) {
 	case 0x0000:
+		gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got GP_OK!");
 		return (GP_OK);
 	case 0x0101:
+		gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_FOCUSING_ERROR!");
 		return (KONICA_ERROR_FOCUSING_ERROR);
 	case 0x0102:
+		gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_IRIS_ERROR!");
 		return (KONICA_ERROR_IRIS_ERROR);
 	case 0x0201:
+		gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_STROBE_ERROR!");
 		return (KONICA_ERROR_STROBE_ERROR);
 	case 0x0203:
+		gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_EEPROM_CHECKSUM_ERROR!");
 		return (KONICA_ERROR_EEPROM_CHECKSUM_ERROR);
 	case 0x0205:
+		gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_INTERNAL_ERROR1!");
 		return (KONICA_ERROR_INTERNAL_ERROR1);
 	case 0x0206:
+		gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_INTERNAL_ERROR2!");
 		return (KONICA_ERROR_INTERNAL_ERROR2);
 	case 0x0301:
+		gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_NO_CARD_PRESENT!");
 		return (KONICA_ERROR_NO_CARD_PRESENT);
 	case 0x0311:
+		gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_CARD_NOT_SUPPORTED!");
 		return (KONICA_ERROR_CARD_NOT_SUPPORTED);
 	case 0x0321:
+		gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_CARD_REMOVED_DURING_ACCESS!");
 		return (KONICA_ERROR_CARD_REMOVED_DURING_ACCESS);
 	case 0x0340:
+		gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_IMAGE_NUMBER_NOT_VALID!");
 		return (KONICA_ERROR_IMAGE_NUMBER_NOT_VALID);
 	case 0x0341:
+		gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_CARD_CAN_NOT_BE_WRITTEN!");
 		return (KONICA_ERROR_CARD_CAN_NOT_BE_WRITTEN);
 	case 0x0381:
+		gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_CARD_IS_WIRTE_PROTECTED!");
 		return (KONICA_ERROR_CARD_IS_WRITE_PROTECTED);
 	case 0x0382:
+		gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_NO_SPACE_LEFT_ON_CARD!");
 		return (KONICA_ERROR_NO_SPACE_LEFT_ON_CARD);
 	case 0x0390:
+		gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_NO_IMAGE_ERASED_AS_IMAGE_PROTECTED!");
 		return (KONICA_ERROR_NO_IMAGE_ERASED_AS_IMAGE_PROTECTED);
 	case 0x0401:
+		gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_LIGHT_TOO_DARK!");
 		return (KONICA_ERROR_LIGHT_TOO_DARK);
 	case 0x0402:
+		gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_AUTOFOCUS_ERROR!");
 		return (KONICA_ERROR_AUTOFOCUS_ERROR);
 	case 0x0501:
+		gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_SYSTEM_ERROR!");
 		return (KONICA_ERROR_SYSTEM_ERROR);
 	case 0x0800:
+		gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_ILLEGAL_PARAMETER!");
 		return (KONICA_ERROR_ILLEGAL_PARAMETER);
 	case 0x0801:
+		gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_COMMAND_CANNOT_BE_CANCELLED!");
 		return (KONICA_ERROR_COMMAND_CANNOT_BE_CANCELLED);
 	case 0x0b00:
+		gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_LOCALIZATION_DATA_EXCESS!");
 		return (KONICA_ERROR_LOCALIZATION_DATA_EXCESS);
 	case 0x0bff:
+		gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_LOCALIZATION_DATA_CORRUPT!");
 		return (KONICA_ERROR_LOCALIZATION_DATA_CORRUPT);
 	case 0x0c01:
+		gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_UNSUPPORTED_COMMAND!");
 		return (KONICA_ERROR_UNSUPPORTED_COMMAND);
 	case 0x0c02:
+		gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_OTHER_COMMAND_EXECUTING!");
 		return (KONICA_ERROR_OTHER_COMMAND_EXECUTING);
 	case 0x0c03:
+		gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_COMMAND_ORDER_ERROR!");
 		return (KONICA_ERROR_COMMAND_ORDER_ERROR);
 	case 0x0fff:
+		gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_UNKNOWN_ERROR!");
 		return (KONICA_ERROR_UNKNOWN_ERROR);
 	default:
-		sprintf (
-			buffer, 
+		gp_debug_printf (GP_DEBUG_MEDIUM, "konica", 
 			"The camera has just sent an error that has not "
 			"yet been discovered. Please report the following "
 			"to the maintainer of this driver with some "
@@ -94,7 +117,6 @@ GP_RESULT (guchar byte1, guchar byte2)
 			"Thank you very much!\n",
 			byte1,
 			byte2);
-		gp_frontend_message (NULL, buffer);
 		return (GP_ERROR);
 	}
 }
@@ -148,13 +170,13 @@ k_erase_image (gp_port* device, gboolean image_id_long, gulong image_id)
 	if (!image_id_long) {
 		sb[6] = image_id;
 		sb[7] = image_id >> 8;
-		result = l_send_receive (device, sb, 8, &rb, &rbs);
+		result = l_send_receive (device, sb, 8, &rb, &rbs, 0, NULL, NULL);
 	} else {
 		sb[6] = image_id >> 16;
 		sb[7] = image_id >> 24;
 		sb[8] = image_id;
 		sb[9] = image_id >> 8;
-		result = l_send_receive (device, sb, 10, &rb, &rbs);
+		result = l_send_receive (device, sb, 10, &rb, &rbs, 0, NULL, NULL);
 	}
 	if (result == GP_OK) result = GP_RESULT (rb [2], rb [3]);
 	g_free (rb); 
@@ -188,7 +210,7 @@ k_format_memory_card (gp_port* device)
 	guchar*	rb = NULL;
 	guint 	rbs;
 
-	result = l_send_receive (device, sb, 6, &rb, &rbs);
+	result = l_send_receive (device, sb, 6, &rb, &rbs, 0, NULL, NULL);
 	if (result == GP_OK) result = GP_RESULT (rb[2], rb[3]);
 	g_free (rb); 
 	return (result);
@@ -226,7 +248,7 @@ gint k_erase_all (gp_port* device, guint* number_of_images_not_erased)
 	
 	g_return_val_if_fail (number_of_images_not_erased, GP_ERROR_BAD_PARAMETERS);
 
-	result = l_send_receive (device, sb, 6, &rb, &rbs);
+	result = l_send_receive (device, sb, 6, &rb, &rbs, 0, NULL, NULL);
 	if (result == GP_OK) {
 		result = GP_RESULT (rb[2], rb[3]);
 		if (result == GP_OK) *number_of_images_not_erased = (rb[5] << 8) | rb[4];
@@ -275,14 +297,14 @@ gint k_set_protect_status (gp_port *device, gboolean image_id_long, gulong image
 		if (protected) sb[8] = 0x01;
 		sb[6] = image_id;
 		sb[7] = image_id >> 8;
-		result = l_send_receive (device, sb, 10, &rb, &rbs);
+		result = l_send_receive (device, sb, 10, &rb, &rbs, 0, NULL, NULL);
 	} else {
 		if (protected) sb[10] = 0x01;
 		sb[6] = image_id >> 16;
 		sb[7] = image_id >> 24;
 		sb[8] = image_id;
 		sb[9] = image_id >> 8;
-		result = l_send_receive (device, sb, 12, &rb, &rbs);
+		result = l_send_receive (device, sb, 12, &rb, &rbs, 0, NULL, NULL);
 	}
 	if (result == GP_OK) result = GP_RESULT (rb [2], rb [3]);
 	g_free (rb); 
@@ -330,8 +352,7 @@ k_get_image (
 	/* 0xXX: Byte 0 of return status		*/
 	/* 0xXX: Byte 1 of return status		*/
 	/************************************************/
-	guchar sb[] = {0x00, 0x88, 0x00, 0x00, 0x02, 
-		       0x00, 0x00, 0x00, 0x00, 0x00};
+	guchar sb[] = {0x00, 0x88, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00};
 	gint result;
 	guchar *rb = NULL;
 	guint rbs;
@@ -354,13 +375,13 @@ k_get_image (
 	if (!image_id_long) {
 		sb[6] = image_id;
 		sb[7] = image_id >> 8;
-		result = l_send_receive_receive (device, sb, 8, image_buffer, image_buffer_size, &rb, &rbs, 5000);
+		result = l_send_receive (device, sb, 8, &rb, &rbs, 5000, image_buffer, image_buffer_size);
 	} else {
 		sb[6] = image_id >> 16;
 		sb[7] = image_id >> 24;
 		sb[8] = image_id;
 		sb[9] = image_id >> 8;
-		result = l_send_receive_receive (device, sb, 10, image_buffer, image_buffer_size, &rb, &rbs, 5000);
+		result = l_send_receive (device, sb, 10, &rb, &rbs, 5000, image_buffer, image_buffer_size);
 	}
 	if (result == GP_OK) result = GP_RESULT (rb[2], rb[3]);
 	g_free (rb); 
@@ -431,7 +452,7 @@ k_get_image_information (
         if (!image_id_long) {
 		sb[6] = image_number;
 		sb[7] = image_number >> 8;
-		result = l_send_receive_receive (device, sb, 8, information_buffer, information_buffer_size, &rb, &rbs, 1000);
+		result = l_send_receive (device, sb, 8, &rb, &rbs, 1000, information_buffer, information_buffer_size);
 		if (result == GP_OK) {
 			result = GP_RESULT (rb[2], rb[3]);
 			if (result == GP_OK) {
@@ -445,7 +466,7 @@ k_get_image_information (
 		sb[7] = image_number >> 24;
 		sb[8] = image_number;
 		sb[9] = image_number >> 8;
-		result = l_send_receive_receive (device, sb, 10, information_buffer, information_buffer_size, &rb, &rbs, 1000);
+		result = l_send_receive (device, sb, 10, &rb, &rbs, 1000, information_buffer, information_buffer_size);
 		if (result == GP_OK) {
 			result = GP_RESULT (rb[2], rb[3]);
 			if (result == GP_OK) {
@@ -494,7 +515,7 @@ k_get_preview (gp_port* device, gboolean thumbnail, guchar** image_buffer, guint
         g_return_val_if_fail (image_buffer_size, 	GP_ERROR_BAD_PARAMETERS);
 	
 	if (thumbnail) sb[4] = 0x01;
-	result = l_send_receive_receive (device, sb, 6, image_buffer, image_buffer_size, &rb, &rbs, 5000);
+	result = l_send_receive (device, sb, 6, &rb, &rbs, 5000, image_buffer, image_buffer_size);
 	if (result == GP_OK) result = GP_RESULT (rb[2], rb[3]);
 	g_free (rb); 
 	return (result);
@@ -560,7 +581,7 @@ gint k_get_io_capability (
 	g_return_val_if_fail (bit_flag_parity_odd, 	GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (bit_flag_hw_flow_control, GP_ERROR_BAD_PARAMETERS);
 	
-	result = (l_send_receive (device, sb, 4, &rb, &rbs));
+	result = (l_send_receive (device, sb, 4, &rb, &rbs, 0, NULL, NULL));
 	if (result == GP_OK) {
 		result = GP_RESULT (rb[2], rb[3]);
 		if (result == GP_OK) {
@@ -717,7 +738,7 @@ k_get_information (
         g_return_val_if_fail (manufacturer, 			GP_ERROR_BAD_PARAMETERS);
         g_return_val_if_fail (!*manufacturer, 			GP_ERROR_BAD_PARAMETERS);
 	
-	result = l_send_receive (device, sb, 4, &rb, &rbs);
+	result = l_send_receive (device, sb, 4, &rb, &rbs, 0, NULL, NULL);
 	if (result == GP_OK) {
 		result = GP_RESULT (rb[2], rb[3]);
 		if (result == GP_OK) {
@@ -876,7 +897,7 @@ k_get_status (
         g_return_val_if_fail (total_pictures, 		GP_ERROR_BAD_PARAMETERS);
         g_return_val_if_fail (total_strobes, 		GP_ERROR_BAD_PARAMETERS);
 
-	result = l_send_receive (device, sb, 6, &rb, &rbs);
+	result = l_send_receive (device, sb, 6, &rb, &rbs, 0, NULL, NULL);
 	if (result == GP_OK) {
 		result = GP_RESULT (rb[2], rb[3]);
 		if (result == GP_OK) {
@@ -996,7 +1017,7 @@ k_get_date_and_time (
         g_return_val_if_fail (minute, 	GP_ERROR_BAD_PARAMETERS);
         g_return_val_if_fail (second, 	GP_ERROR_BAD_PARAMETERS);
 
-	result = l_send_receive (device, sb, 4, &rb, &rbs);
+	result = l_send_receive (device, sb, 4, &rb, &rbs, 0, NULL, NULL);
 	if (result == GP_OK) {
 		result = GP_RESULT (rb[2], rb[3]);
 		if (result == GP_OK) {
@@ -1055,7 +1076,7 @@ k_get_preferences (
 	g_return_val_if_fail (beep, 			GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (slide_show_interval, 	GP_ERROR_BAD_PARAMETERS);
 	
-	result = l_send_receive (device, sb, 4, &rb, &rbs);
+	result = l_send_receive (device, sb, 4, &rb, &rbs, 0, NULL, NULL);
 	if (result == GP_OK) {
 		result = GP_RESULT (rb[2], rb[3]);
 		if (result == GP_OK) {
@@ -1139,7 +1160,7 @@ k_set_io_capability (
 			return (GP_ERROR_NOT_SUPPORTED);
 	}
 	sb[6] = (bit_flag_7_or_8_bits | (bit_flag_stop_2_bits << 1) | (bit_flag_parity_on << 2) | (bit_flag_parity_odd << 3) | (bit_flag_use_hw_flow_control << 4));
-	result = l_send_receive (device, sb, 8, &rb, &rbs);
+	result = l_send_receive (device, sb, 8, &rb, &rbs, 0, NULL, NULL);
 	if (result == GP_OK) result = GP_RESULT (rb[2], rb[3]);
 	g_free (rb);
 	return (result);
@@ -1180,7 +1201,7 @@ k_set_date_and_time (gp_port* device, guchar year, guchar month, guchar day, guc
         sb[7] = hour;
         sb[8] = minute;
         sb[9] = second;
-        result = l_send_receive (device, sb, 10, &rb, &rbs);
+        result = l_send_receive (device, sb, 10, &rb, &rbs, 0, NULL, NULL);
 	if (result == GP_OK) result = GP_RESULT (rb[2], rb[3]);
 	g_free (rb);
 	return (result);
@@ -1246,7 +1267,7 @@ k_set_preference (gp_port* device, k_preference_t preference, guint value)
 	}
         sb[6] = value;
         sb[7] = value >> 8;
-        result = l_send_receive (device, sb, 8, &rb, &rbs);
+        result = l_send_receive (device, sb, 8, &rb, &rbs, 0, NULL, NULL);
 	if (result == GP_OK) result = GP_RESULT (rb[2], rb[3]);
 	g_free (rb);
 	return (result);
@@ -1276,7 +1297,7 @@ k_reset_preferences (gp_port* device)
 	guchar*	rb = NULL;
 	guint 	rbs;
 
-        result = l_send_receive (device, sb, 4, &rb, &rbs);
+        result = l_send_receive (device, sb, 4, &rb, &rbs, 0, NULL, NULL);
 	if (result == GP_OK) result = GP_RESULT (rb[2], rb[3]);
 	g_free (rb);
 	return (result);
@@ -1335,7 +1356,7 @@ k_take_picture (
         g_return_val_if_fail (!*information_buffer, 	GP_ERROR_BAD_PARAMETERS);
         g_return_val_if_fail (information_buffer_size, 	GP_ERROR_BAD_PARAMETERS);
 	
-	result = l_send_receive_receive (device, sb, 6, information_buffer, information_buffer_size, &rb, &rbs, 60000);
+	result = l_send_receive (device, sb, 6, &rb, &rbs, 60000, information_buffer, information_buffer_size);
 	if (result == GP_OK) {
 		result = GP_RESULT (rb[2], rb[3]);
 		if (result == GP_OK) {
@@ -1403,7 +1424,7 @@ k_localization_tv_output_format_set (gp_port* device, k_tv_output_format_t tv_ou
 	default: 
 		return (GP_ERROR_BAD_PARAMETERS);
         }
-        result = l_send_receive (device, sb, 8, &rb, &rbs);
+        result = l_send_receive (device, sb, 8, &rb, &rbs, 0, NULL, NULL);
         if (result == GP_OK) result = GP_RESULT (rb[2], rb[3]);
         g_free (rb);
         return (result);
@@ -1458,7 +1479,7 @@ k_localization_date_format_set (gp_port* device, k_date_format_t date_format)
 	default:
 		return (GP_ERROR_BAD_PARAMETERS);
 	}
-        result = l_send_receive (device, sb, 8, &rb, &rbs);
+        result = l_send_receive (device, sb, 8, &rb, &rbs, 0, NULL, NULL);
         if (result == GP_OK) result = GP_RESULT (rb[2], rb[3]);
         g_free (rb);
         return (result);
@@ -1553,7 +1574,7 @@ k_localization_data_put (gp_port* device, guchar* data, gulong data_size)
 		/* camera reports K_ERROR_LOCALIZATION_DATA_CORRUPT.	*/
 		/********************************************************/
 		if (i + packet_size > 65536) sb[14] = 0x01;
-		result = l_send_receive (device, sb, packet_size + 16, &rb, &rbs);
+		result = l_send_receive (device, sb, packet_size + 16, &rb, &rbs, 0, NULL, NULL);
 		if (result == GP_OK) result = GP_RESULT (rb[2], rb[3]);
 		g_free (rb);
 		switch (result) {
@@ -1600,7 +1621,7 @@ k_cancel (gp_port* device, k_command_t* command)
 
 	g_return_val_if_fail (command, GP_ERROR_BAD_PARAMETERS);
 	
-        result = l_send_receive (device, sb, 4, &rb, &rbs);
+        result = l_send_receive (device, sb, 4, &rb, &rbs, 0, NULL, NULL);
 	if (result == GP_OK) {
 		result = GP_RESULT (rb[2], rb[3]);
 		if (result == GP_OK) *command = (rb[5] << 8) | rb[4];
