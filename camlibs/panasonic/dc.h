@@ -41,9 +41,7 @@ typedef enum {
 } dsc_quality_t;
 	
 typedef struct {
-	gp_port		*dev;
 	gp_port_settings 	settings;
-	CameraFilesystem	*fs;
 	char			*buf;
 	int			size;	
 } dsc_t;
@@ -75,17 +73,17 @@ static const char
 	r_prefix[13] = /* generic response prefix */
 	{ 'M', 'K', 'E', ' ', 'P', 'C', ' ', ' ', 'D', 'S', 'C', ' ' };
 
-int dsc1_sendcmd(dsc_t *dsc, u_int8_t cmd, void *data, int size);
+int dsc1_sendcmd(Camera *camera, u_int8_t cmd, void *data, int size);
 	/* Send command with 'data' of 'size' to DSC */
 
-int dsc1_retrcmd(dsc_t *dsc);
+int dsc1_retrcmd(Camera *camera);
 	/* Retrieve command and its data from DSC */
 
-int dsc1_setbaudrate(dsc_t *dsc, int speed);
+int dsc1_setbaudrate(Camera *camera, int speed);
 	/* Set baud rate of connection. Part of hand shake procedure 	*/
 	/* Returns GP_OK if succesful and GP_ERROR otherwise.		*/
 	
-int dsc1_getmodel(dsc_t *dsc);
+int dsc1_getmodel(Camera *camera);
 	/* Returns camera (sub)model, DSC1: DC1000, DSC2: DC1580, 	*/
 	/* 0: unknown, or GP_ERROR. Part of hand shake procedure. 	*/
 
@@ -98,10 +96,7 @@ const char *dsc_strerror(int error);
 char *dsc_msgprintf(char *format, ...);
 	/* Format message string. 					*/
 
-void dsc_debugprint(char *file, char *message);
-	/* Print debug information, including file name, to stderr.	*/
-	
-void dsc_errorprint(int error, char *file, char *function, int line);
+void dsc_errorprint(int error, char *file, int line);
 	/* Print information on error, including file name, function 	*/
 	/* name and line number.					*/
 
@@ -117,12 +112,24 @@ void dsc_print_message(Camera *camera, char *format, ...);
 
 /* Pre-procesor macros for verbose messaging and debugging */
 
-#define DEBUG_PRINT(ARGS) \
-	dsc_debugprint(__FILE__, dsc_msgprintf ARGS ); 
+#define DEBUG_PRINT_LOW(ARGS) \
+        gp_debug_printf(GP_DEBUG_LOW, "panasonic", "%s: %s", __FILE__, dsc_msgprintf ARGS );
 
-#define RETURN_ERROR(ERROR, FUNCTION) { \
-	dsc_errorprint(ERROR, __FILE__, #FUNCTION, __LINE__); \
-	return GP_ERROR; \
-	}
+#define DEBUG_PRINT_MEDIUM(ARGS) \
+        gp_debug_printf(GP_DEBUG_MEDIUM, "panasonic", "%s: %s", __FILE__, dsc_msgprintf ARGS );
+
+#define DEBUG_PRINT_HIGH(ARGS) \
+        gp_debug_printf(GP_DEBUG_HIGH, "panasonic", "%s: %s", __FILE__, dsc_msgprintf ARGS );
+
+#define RETURN_ERROR(ERROR) { \
+        dsc_errorprint(ERROR, __FILE__, __LINE__); \
+        return GP_ERROR; \
+        }
+        
+#define CHECK(OPERATION) \
+        if ((result = OPERATION) < 0) { \
+                dsc_errorprint(EDSCSERRNO, __FILE__, __LINE__); \
+                return result; \
+        }
 
 /* End of dc.h */
