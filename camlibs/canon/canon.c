@@ -917,8 +917,6 @@ static void canon_int_find_new_image ( Camera *camera, unsigned char *initial_st
 				strncpy ( path->name, new_entry + CANON_DIRENT_NAME,
 					  strlen ( new_entry + CANON_DIRENT_NAME ) );
 				strcpy ( path->folder, canon2gphotopath ( camera, path->folder ) );
-				free ( initial_state );
-				free ( final_state );
 				break;
 			}
 			else {
