@@ -101,15 +101,25 @@ Reporting Bugs
 --------------
 
 Every piece of software contains errors and flaws. So does
-gphoto2. When you encounter something that does not work, try to
-reproduce the problem with debug output enabled and the language set
-to English, so that the development team will understand the
-messages. You can do this by running:
+gphoto2. When you encounter something that does not work, please do
+the following: 
 
-    LANG=C gtkam
+1. Find out whether this is a known problem.
+2. Reproduce the problem with debug output enabled and the language
+   set to English, so that the development team will understand the
+   messages. You can do this by running:
 
-if you're using the gtkam frontend or running:
+      LANG=C gtkam
 
-    LANG=C gphoto2 --debug <options>
+   if you're using the gtkam frontend or running:
 
-using the gphoto2 command line interface.
+      LANG=C gphoto2 --debug <options>
+
+   using the gphoto2 command line interface. The csh freaks use
+
+      env LANG=C gphoto2 --debug <options
+
+   instead.
+3. Report the problem on the mailing list with the corresponding debug
+   output if it is small. If it is more than a few kilobytes, please
+   don't post the complete debug output on the list.
