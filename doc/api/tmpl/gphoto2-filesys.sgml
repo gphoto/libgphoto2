@@ -2,16 +2,18 @@
 CameraFilesystem
 
 <!-- ##### SECTION Short_Description ##### -->
-
+A virtual filesystem used for caching filesystem information
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+This is a virtual filesystem. It is used as a proxy between the frontends and
+the camera drivers in order to avoid unnecessary communication overhead and 
+prevent synchronization errors.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
-
+#CameraLibraryInitFunc
 </para>
 
 <!-- ##### STRUCT CameraFilesystem ##### -->

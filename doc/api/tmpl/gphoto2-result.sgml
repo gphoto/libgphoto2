@@ -2,16 +2,19 @@
 GPhoto2 error codes
 
 <!-- ##### SECTION Short_Description ##### -->
+GPhoto2 error codes and error reporting
 
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+This section covers gphoto2 error codes and a function to get a string 
+representation of those. Note that those error codes are supplementary to 
+the ones defined in gphoto2-port.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
-
+#gp_port_result_as_string
 </para>
 
 <!-- ##### MACRO GP_ERROR_CORRUPTED_DATA ##### -->
@@ -50,13 +53,6 @@ GPhoto2 error codes
 
 
 <!-- ##### MACRO GP_ERROR_DIRECTORY_NOT_FOUND ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO GP_ERROR_IO ##### -->
 <para>
 
 </para>

@@ -2,16 +2,55 @@
 CameraLibrary
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Functions implemented by camera drivers
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
+This section contains functions that have to be implemented by camera drivers.
+</para>
 
+<para>
+  <example>
+    <title>A minimal camera driver</title>
+    <programlisting>
+      int
+      #camera_id (#CameraText *id)
+      {
+          strncpy (id->text, sizeof (id->text), "Minimal driver");
+	  return (#GP_OK);
+      }
+
+      int
+      #camera_abilities (#CameraAbilitiesList *list)
+      {
+          #CameraAbilities a;
+
+	  strncpy (a.model, sizeof (a.model), "Minimal model");
+	  a.status = #GP_DRIVER_STATUS_PRODUCTION;
+	  a.port = #GP_PORT_NONE;
+	  a.operations = #GP_OPERATION_NONE;
+	  a.file_operations = #GP_FILE_OPERATION_NONE;
+	  a.folder_operations = #GP_FOLDER_OPERATION_NONE;
+	  #gp_abilities_list_append (list, a);
+
+	  return (#GP_OK);
+      }
+
+      int
+      #camera_init (Camera *camera)
+      {
+          return (#GP_OK);
+      }
+    </programlisting>
+  </example>
+  Above driver will get loaded correctly. In order to fill it with life, you 
+  would have to call additional functions in #camera_init like
+  #gp_filesystem_set_list_funcs.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
-
+#CameraFilesystem, #CameraAbilitiesList
 </para>
 
 <!-- ##### USER_FUNCTION CameraLibraryIdFunc ##### -->
