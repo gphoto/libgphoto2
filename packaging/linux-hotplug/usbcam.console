@@ -28,13 +28,13 @@ then
     # Idea and code from Nalin Dahyabhai <nalin@redhat.com>
     CONSOLEOWNER=""
     for conlock in \
-    	/var/run/console.lock \
-	/var/run/console/console.lock \
-	/var/lock/console.lock
+        /var/run/console.lock \
+        /var/run/console/console.lock \
+        /var/lock/console.lock
     do
         if [ -f "$conlock" ]; then
 	    CONSOLEOWNER=`cat $conlock`
-	fi
+        fi
     done
     if [ -n "$CONSOLEOWNER" ]
     then
