@@ -151,6 +151,13 @@ static struct {
 			"trust%04i.ppm"
 		}
 	},
+	{"Trust PowerC@m 350FT", 0x6d6, 0x002d, {
+			jd350e,
+			BAYER_TILE_RGGB,
+			&trust350fs_postprocessing,
+			"trust%04i.ppm"
+		}
+	},
 	/* http://www.meade.com/sportsoptics/catalog/captureview/index.html */
 	{"GrandTek ScopeCam", 0x797, 0x801c, {
 		 	jd350e,

@@ -1,3 +1,9 @@
+2003-12-28  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* pdc640.c: Martin Sarfy <sarfy@ics.muni.cz> reports that his camera
+	  (Trust 350FT PowerC@m FLASH, 0x6d6:0x2d) works using the driver
+	  for 0x6d6:0x2e.
+
 2003-09-15  Marcus Meissner <marcus@jet.franken.de>
 	
 	Reported by Andreas Kies:
