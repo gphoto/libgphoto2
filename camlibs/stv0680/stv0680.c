@@ -113,6 +113,9 @@ struct camera_to_usb {
 	/* Added for the konica e-mini by Roland Marcus Rutschmann<Rutschmann@gmx.de>*/
 	{ "Konica:e-mini",              0x04c8, 0x0722, 0 },
 
+	{ "Che-ez!:Babe",               0x0553, 0x0202, 0 },
+	{ "Che-ez!:SPYZ",               0x0553, 0x0202, 0 },
+
 	/* According to Sonic Tsunami <mmcburn86@earthlink.net> */
 	/* http://www.timlex.com/cif.html */
 	{ "Timlex:CP075",		0x0553, 0x0202, 1 }

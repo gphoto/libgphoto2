@@ -1,3 +1,8 @@
+2004-01-21  Marcus Meissner <marcus@jet.franken.de>
+
+	* stv0680.c: Added Che-ez! BABE and SPYZ as reported
+	  by shoota oohara - a4door at sourceforge.
+
 2003-02-28  Marcus Meissner <marcus@jet.franken.de>
 	
 	* stv0680.c: For USB consider this driver production ready.
