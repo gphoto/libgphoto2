@@ -8,19 +8,30 @@
 #include <fcntl.h>
 #include <usb.h>
 
-#include "ptp_usb.h"
+#include "ptp.h"
+
+#define PTP_REQ_HDR_LEN                 (2*sizeof(int)+2*sizeof(short))
+#define PTP_USB_TIMEOUT			1500
+
 
 struct usb_device *device;
 int vendor, product;
 
-PTPParams* ptp_params;
-PTP_USB ptp_usb;
+typedef struct _PTP_USB PTP_USB;
+struct _PTP_USB {
+	usb_dev_handle* handle;
+	int ep;
+};
 
-PTPResult
-ptp_read (PTPReq* req, unsigned int size, void *data); 
-PTPResult
-ptp_write (PTPReq* req, unsigned int size, void *data); 
-void error(char *x,...);
+
+PTP_USB ptp_usb;
+PTPParams* ptp_params;
+
+int
+ptp_read (char* req, unsigned int size, void *data); 
+int
+ptp_write (char* req, unsigned int size, void *data); 
+//void error(char *x,...);
 
 
 query (usb_dev_handle* handle) {
@@ -30,11 +41,11 @@ query (usb_dev_handle* handle) {
 	char filename[256];
 	char* object;
 
-	ptp_params->io_write = ptp_write;
-	ptp_params->io_read = ptp_read;
-	ptp_params->ptp_error=error;
-	ptp_params->io_data=&ptp_usb;
-	ptp_params->id=1;
+	ptp_params->write_func = ptp_write;
+	ptp_params->read_func = ptp_read;
+	ptp_params->error_func=NULL;
+	ptp_params->data=&ptp_usb;
+	ptp_params->transaction_id=1;
 
 	ptp_usb.handle=handle;
 	ptp_usb.ep=0x01;
@@ -112,35 +123,35 @@ int scan_bus (struct usb_bus* bus) {
 	}
 }
 
-PTPResult
-ptp_read (PTPReq* req, unsigned int size, void *data) 
+int
+ptp_read (char* req, unsigned int size, void *data) 
 {
 	PTP_USB *usb;
 	int ret;
 
 	usb=(PTP_USB*)data;
 
-	ret=usb_bulk_read(usb->handle, usb->ep, (char *)req,
+	ret=usb_bulk_read(usb->handle, usb->ep, req,
 		size, PTP_USB_TIMEOUT);
 
-	if (ret<0) return PTP_ERROR;
-	return PTP_OK;
+	if (ret<0) return PTP_RC_GeneralError;
+	return PTP_RC_OK;
 }
 
 
-PTPResult
-ptp_write (PTPReq* req, unsigned int size, void *data) 
+int
+ptp_write (char *req, unsigned int size, void *data) 
 {
 	PTP_USB *usb;
 	int ret;
 
 	usb=(PTP_USB*)data;
 
-	ret=usb_bulk_write(usb->handle, usb->ep, (char *)req,
+	ret=usb_bulk_write(usb->handle, usb->ep, req,
 		size, PTP_USB_TIMEOUT);
 
-	if (ret<0) return PTP_ERROR;
-	return PTP_OK;
+	if (ret<0) return PTP_RC_GeneralError;
+	return PTP_RC_OK;
 }
 
 void error(char *x,...) {

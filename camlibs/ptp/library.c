@@ -177,7 +177,14 @@ ptp_write_func (unsigned char *bytes, unsigned int size, void *data)
 	Camera *camera = data;
 	int result;
 
+	/*
+	 * gp_port_write returns (in case of success) the number of bytes
+	 * write. libptp doesn't need that.
+	 */
 	result = gp_port_write (camera->port, bytes, size);
+	if (result >= 0)
+		return (PTP_RC_OK);
+	else
 	return (translate_gp_result (result));
 }
 
@@ -384,7 +391,7 @@ camera_init (Camera *camera)
 	CR (gp_port_set_settings (camera->port, settings));
 
 	/* Establish a connection to the camera */
-	CPR (camera, ptp_opensession (&camera->pl->params));
+	CPR (camera, ptp_opensession (&camera->pl->params, 1));
 
 	/* Configure the CameraFilesystem */
 	CR (gp_filesystem_set_list_funcs (camera->fs, file_list_func,

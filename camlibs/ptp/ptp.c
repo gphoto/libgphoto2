@@ -211,13 +211,13 @@ ptp_getdevinfo(PTPParams* params, PTPDedviceInfo* devinfo)
  * Return values: Some PTP_RC_* code.
  **/
 short
-ptp_opensession(PTPParams* params)
+ptp_opensession(PTPParams* params, int session)
 {
 	short ret;
 	PTPReq* req=malloc(sizeof(PTPReq));
 	
 	memset(req, 0, PTP_RESP_LEN);
-	*(int *)(req->data)=1;
+	*(int *)(req->data)=session;
 	ret=ptp_sendreq(params, req, PTP_OC_OpenSession);
 	if (ret!=PTP_RC_OK) {
 		ptp_error (params, "ptp_opensession sending req");
