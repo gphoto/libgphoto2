@@ -129,11 +129,12 @@ usbcam script you are going to use.
       a generic "users" group will do - and use that group in
       usbcam.group.
 
-   Don't forget to make the script /etc/hotplug/usb/usbcam executable.
+3. Make your script /etc/hotplug/usb/usbcam executable.
 
-4. Plug in the camera and switch it on. The kernel will notice that
-   and, finding no kernel driver for the device, will ask hotplug to
-   do something about it.
+4. Plug in the camera and switch it on. If you already did so, please
+   unplug and/or switch off first. The kernel will now notice that
+   your camera has been connected and, hopefully finding no kernel
+   driver for the device, will ask hotplug to do something about it.
 
    Hotplug will then look into /etc/hotplug/usb.usermap and find that
    the "usbcam" script is to be called for the newly attached
