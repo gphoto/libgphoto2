@@ -1,3 +1,8 @@
+2002-02-21  Colin Marquardt  <colin@marquardt-home.de>
+
+	* configure.in: Removed zh_CN.GB2312 from ALL_LINGUAS. 
+	zh_CN.po is enough.
+
 2002-02-18  Colin Marquardt  <colin@marquardt-home.de>
 
 	* configure.in: Added zh_CN.GB2312 to ALL_LINGUAS.
