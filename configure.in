@@ -309,13 +309,17 @@ AC_ARG_WITH(aalib, [  --without-aalib         Don't use aalib],
 	fi
 )
 if $try_aa; then
-	AC_CHECK_HEADER(aalib.h,
+	AC_CHECK_HEADER(aalib.h,[
 		have_aa=true
 		aa_msg=yes
 		AC_DEFINE(HAVE_AA)
-		AA_CFLAGS="`aalib-config --cflags`"
-		AA_LIBS="`aalib-config --libs || echo ' -laa'`"
-	)
+		AC_PATH_PROG(AALIB_CONFIG,aalib-config)
+		if test -n "${AALIB_CONFIG}"; then
+			AA_CFLAGS=`$AALIB_CONFIG --cflags`
+			AA_LIBS=`$AALIB_CONFIG --libs`
+		else
+			AA_LIBS="-laa"
+		fi])
 fi
 AM_CONDITIONAL(HAVE_AA, $have_aa)
 AC_SUBST(AA_LIBS)
