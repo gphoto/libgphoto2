@@ -15,10 +15,19 @@
 	  canon_usb_camera_init() when camstat is 'A'. Simplified
 	  canon_usb_camera_init() in general.
 
-	* usb.c: Moved the code from canon_usb_ready() to
+	* usb.c:
+	  Moved the code from canon_usb_ready() to
 	  canon_usb_init() - canon_usb_ready() should send a
 	  'ping' packet to check if the camera is alive instead
 	  of doing stuff like identification and key locking.
+
+	* usb.c:
+	  Changed canon_usb_dialogue() to read responses in two
+	  passes - one that reads as much as possible that is
+	  divideable with 0x40 and then one that reads the
+	  expected number of bytes modulus 0x40. This is what
+	  the windows driver does and it appears some cameras
+	  (EOS D30) likes this better.
 
 2001-12-06  Fredrik <fredrik@krixor.xy.org>
 
