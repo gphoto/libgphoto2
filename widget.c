@@ -23,6 +23,8 @@
 #include <gphoto2.h>
 #include <gphoto2-widget.h>
 
+#define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
+
 struct _CameraWidget {
 	CameraWidgetType type;
 	char    label [32];
@@ -72,15 +74,15 @@ struct _CameraWidget {
  *
  * Return value: GPhoto error code.
  **/
-int gp_widget_new (CameraWidgetType type, const char *label, 
+int
+gp_widget_new (CameraWidgetType type, const char *label, 
 		   CameraWidget **widget) 
 {
 	int x;
 	static int i = 0;
 
-	if (!label || !widget) 
-		return (GP_ERROR_BAD_PARAMETERS);
-	
+	CHECK_NULL (label && widget);
+
 	*widget = (CameraWidget*) malloc (sizeof (CameraWidget));
 	memset (*widget, 0, sizeof (CameraWidget));
 
@@ -115,10 +117,10 @@ int gp_widget_new (CameraWidgetType type, const char *label,
  *
  * Return value: GPhoto error code.
  **/
-int gp_widget_free (CameraWidget *widget)
+int
+gp_widget_free (CameraWidget *widget)
 {
-	if (!widget)
-		return (GP_ERROR_BAD_PARAMETERS);
+	CHECK_NULL (widget);
 
 	/* Free children recursively */
 	if ((widget->type == GP_WIDGET_WINDOW) ||
@@ -130,7 +132,7 @@ int gp_widget_free (CameraWidget *widget)
 	}
 	    	
         if (widget->value_string)
-            free(widget->value_string);
+		free (widget->value_string);
 	free (widget);
 
 	return (GP_OK);
@@ -144,10 +146,10 @@ int gp_widget_free (CameraWidget *widget)
  *
  * Return value: GPhoto error code.
  **/
-int gp_widget_ref (CameraWidget *widget) 
+int
+gp_widget_ref (CameraWidget *widget) 
 {
-	if (!widget)
-		return (GP_ERROR_BAD_PARAMETERS);
+	CHECK_NULL (widget);
 
 	widget->ref_count += 1;
 
@@ -162,10 +164,10 @@ int gp_widget_ref (CameraWidget *widget)
  *
  * Return value: GPhoto error code.
  **/
-int gp_widget_unref (CameraWidget *widget) 
+int
+gp_widget_unref (CameraWidget *widget) 
 {
-	if (!widget)
-		return (GP_ERROR_BAD_PARAMETERS);
+	CHECK_NULL (widget);
 
 	widget->ref_count -= 1;
 
@@ -184,11 +186,11 @@ int gp_widget_unref (CameraWidget *widget)
  *
  * Return value: GPhoto error code.
  **/
-int gp_widget_get_info (CameraWidget *widget, const char **info)
+int
+gp_widget_get_info (CameraWidget *widget, const char **info)
 {
-	if (!widget || !info)
-		return (GP_ERROR_BAD_PARAMETERS);
-	
+	CHECK_NULL (widget && info);
+
 	*info = widget->info;
 	return (GP_OK);
 }
@@ -203,11 +205,11 @@ int gp_widget_get_info (CameraWidget *widget, const char **info)
  *
  * Return value: GPhoto error code.
  **/
-int gp_widget_set_info (CameraWidget *widget, const char *info)
+int
+gp_widget_set_info (CameraWidget *widget, const char *info)
 {
-	if (!widget || !info)
-		return (GP_ERROR_BAD_PARAMETERS);
-	
+	CHECK_NULL (widget && info);
+
 	strcpy (widget->info, info);
 	return (GP_OK);
 }
@@ -221,11 +223,11 @@ int gp_widget_set_info (CameraWidget *widget, const char *info)
  *
  * Return value: GPhoto error code.
  **/
-int gp_widget_get_name (CameraWidget *widget, const char **name)
+int
+gp_widget_get_name (CameraWidget *widget, const char **name)
 {
-	if (!widget || !name)
-		return (GP_ERROR_BAD_PARAMETERS);
-	
+	CHECK_NULL (widget && name);
+
 	*name = widget->name;
 	return (GP_OK);
 }
@@ -239,11 +241,11 @@ int gp_widget_get_name (CameraWidget *widget, const char **name)
  *
  * Return value: GPhoto error code.
  **/
-int gp_widget_set_name (CameraWidget *widget, const char *name)
+int
+gp_widget_set_name (CameraWidget *widget, const char *name)
 {
-	if (!widget || !name)
-		return (GP_ERROR_BAD_PARAMETERS);
-	
+	CHECK_NULL (widget && name);
+
 	strcpy (widget->name, name);
 	return (GP_OK);
 }
@@ -259,19 +261,19 @@ int gp_widget_set_name (CameraWidget *widget, const char *name)
  *
  * Return value: GPhoto error code.
  **/
-int gp_widget_get_id (CameraWidget *widget, int *id)
+int
+gp_widget_get_id (CameraWidget *widget, int *id)
 {
-	if (!widget || !id)
-		return (GP_ERROR_BAD_PARAMETERS);
+	CHECK_NULL (widget && id);
 
 	*id = widget->id;
 	return (GP_OK);
 }
 
-int gp_widget_set_changed (CameraWidget *widget, int changed)
+int
+gp_widget_set_changed (CameraWidget *widget, int changed)
 {
-	if (!widget)
-		return (GP_ERROR_BAD_PARAMETERS);
+	CHECK_NULL (widget);
 
 	widget->changed = changed;
 	return (GP_OK);
@@ -286,11 +288,11 @@ int gp_widget_set_changed (CameraWidget *widget, int changed)
  *
  * Return value: GPhoto error code.
  **/
-int gp_widget_get_type (CameraWidget *widget, CameraWidgetType *type) 
+int
+gp_widget_get_type (CameraWidget *widget, CameraWidgetType *type) 
 {
-	if (!widget || !type)
-		return (GP_ERROR_BAD_PARAMETERS);
-	
+	CHECK_NULL (widget && type);
+
 	*type = widget->type;
 	return (GP_OK);
 }
@@ -304,11 +306,11 @@ int gp_widget_get_type (CameraWidget *widget, CameraWidgetType *type)
  *
  * Return value: GPhoto error code.
  **/
-int gp_widget_get_label (CameraWidget *widget, const char **label) 
+int
+gp_widget_get_label (CameraWidget *widget, const char **label) 
 {
-	if (!widget || !label)
-		return (GP_ERROR_BAD_PARAMETERS);
-	
+	CHECK_NULL (widget && label);
+
 	*label = widget->label;
 	return (GP_OK);
 }
@@ -326,10 +328,10 @@ int gp_widget_get_label (CameraWidget *widget, const char **label)
  *
  * Return value: GPhoto error code.
  **/
-int gp_widget_set_value (CameraWidget *widget, void *value) 
+int
+gp_widget_set_value (CameraWidget *widget, void *value) 
 {
-	if (!widget || !value)
-		return (GP_ERROR_BAD_PARAMETERS);
+	CHECK_NULL (widget && value);
 
         switch (widget->type) {
 	case GP_WIDGET_BUTTON:
@@ -375,11 +377,11 @@ int gp_widget_set_value (CameraWidget *widget, void *value)
  *
  * Return value: GPhoto error code.
  **/
-int gp_widget_get_value (CameraWidget *widget, void *value) 
+int
+gp_widget_get_value (CameraWidget *widget, void *value) 
 {
-	if (!widget || !value)
-		return (GP_ERROR_BAD_PARAMETERS);
-	
+	CHECK_NULL (widget && value);
+
         switch (widget->type) {
 	case GP_WIDGET_BUTTON:
 		*(CameraWidgetCallback*)value = widget->callback;
@@ -412,10 +414,10 @@ int gp_widget_get_value (CameraWidget *widget, void *value)
  *
  * Return value: GPhoto error code.
  **/
-int gp_widget_append (CameraWidget *parent, CameraWidget *child) 
+int
+gp_widget_append (CameraWidget *parent, CameraWidget *child) 
 {
-	if (!parent || !child)
-		return (GP_ERROR_BAD_PARAMETERS);
+	CHECK_NULL (parent && child);
 
 	/* Return if they can't have any children */
         if ((parent->type != GP_WIDGET_WINDOW) && 
@@ -439,13 +441,13 @@ int gp_widget_append (CameraWidget *parent, CameraWidget *child)
  *
  * Return value: GPhoto error code.
  **/
-int gp_widget_prepend (CameraWidget *parent, CameraWidget *child) 
+int
+gp_widget_prepend (CameraWidget *parent, CameraWidget *child) 
 {
 	int x;
 
-	if (!parent || !child)
-		return (GP_ERROR_BAD_PARAMETERS);
-	
+	CHECK_NULL (parent && child);
+
 	/* Return if they can't have any children */
 	if ((parent->type != GP_WIDGET_WINDOW) && 
 	    (parent->type != GP_WIDGET_SECTION))
@@ -472,10 +474,10 @@ int gp_widget_prepend (CameraWidget *parent, CameraWidget *child)
  *
  * Return value: GPhoto error code or number of children
  **/
-int gp_widget_count_children (CameraWidget *widget) 
+int
+gp_widget_count_children (CameraWidget *widget) 
 {
-	if (!widget)
-		return (GP_ERROR_BAD_PARAMETERS);
+	CHECK_NULL (widget);
 
 	return (widget->children_count);
 }
@@ -490,11 +492,11 @@ int gp_widget_count_children (CameraWidget *widget)
  *
  * Return value: GPhoto error code.
  **/
-int gp_widget_get_child (CameraWidget *parent, int child_number, 
-			 CameraWidget **child) 
+int
+gp_widget_get_child (CameraWidget *parent, int child_number, 
+		     CameraWidget **child) 
 {
-	if (!parent || !child)
-		return (GP_ERROR_BAD_PARAMETERS);
+	CHECK_NULL (parent && child);
 
 	if (child_number >= parent->children_count)
 		return (GP_ERROR_BAD_PARAMETERS);
@@ -512,13 +514,13 @@ int gp_widget_get_child (CameraWidget *parent, int child_number,
  *
  * Return value: GPhoto error code.
  **/
-int gp_widget_get_child_by_label (CameraWidget *widget, const char *label, 
-				  CameraWidget **child)
+int
+gp_widget_get_child_by_label (CameraWidget *widget, const char *label, 
+			      CameraWidget **child)
 {
 	int x;
 
-	if (!widget || !label || !child)
-		return (GP_ERROR_BAD_PARAMETERS);
+	CHECK_NULL (widget && label && child);
 
 	if (strcmp (widget->label, label) == 0) {
 		*child = widget;
@@ -549,13 +551,12 @@ int gp_widget_get_child_by_label (CameraWidget *widget, const char *label,
  *
  * Return value: GPhoto error code.
  **/
-int gp_widget_get_child_by_id (CameraWidget *widget, int id, 
-			       CameraWidget **child) 
+int
+gp_widget_get_child_by_id (CameraWidget *widget, int id, CameraWidget **child) 
 {
 	int x;
 
-	if (!widget || !child)
-		return (GP_ERROR_BAD_PARAMETERS);
+	CHECK_NULL (widget && child);
 
 	if (widget->id == id) {
 		*child = widget;
@@ -586,15 +587,15 @@ int gp_widget_get_child_by_id (CameraWidget *widget, int id,
  *
  * Return value: GPhoto error code.
  **/
-int gp_widget_get_child_by_name (CameraWidget *widget, const char *name,
-			         CameraWidget **child)
+int
+gp_widget_get_child_by_name (CameraWidget *widget, const char *name,
+			     CameraWidget **child)
 {
 	int x;
 
-	if (!widget || !child)
-		return (GP_ERROR_BAD_PARAMETERS);
+	CHECK_NULL (widget && child);
 
-	if (strcmp(widget->name, name)==0) {
+	if (!strcmp (widget->name, name)) {
 		*child = widget;
 		return (GP_OK);
 	}
@@ -614,10 +615,10 @@ int gp_widget_get_child_by_name (CameraWidget *widget, const char *name,
 	return (GP_ERROR_BAD_PARAMETERS);
 }
 
-int gp_widget_get_parent (CameraWidget *widget, CameraWidget **parent)
+int
+gp_widget_get_parent (CameraWidget *widget, CameraWidget **parent)
 {
-	if (!widget || !parent)
-		return (GP_ERROR_BAD_PARAMETERS);
+	CHECK_NULL (widget && parent);
 
 	*parent = widget->parent;
 
@@ -633,10 +634,10 @@ int gp_widget_get_parent (CameraWidget *widget, CameraWidget **parent)
  *
  * Return value: GPhoto error code.
  **/
-int gp_widget_get_root (CameraWidget *widget, CameraWidget **root) 
+int
+gp_widget_get_root (CameraWidget *widget, CameraWidget **root) 
 {
-	if (!widget || !root)
-		return (GP_ERROR_BAD_PARAMETERS);
+	CHECK_NULL (widget && root);
 
 	if (widget->parent) 
 		return (gp_widget_get_root (widget->parent, root));
@@ -657,10 +658,12 @@ int gp_widget_get_root (CameraWidget *widget, CameraWidget **root)
  *
  * Return value: GPhoto error code.
  **/
-int gp_widget_set_range (CameraWidget *range, float min, float max, 
-			 float increment) 
+int
+gp_widget_set_range (CameraWidget *range, float min, float max, float increment)
 {
-	if (!range || (range->type != GP_WIDGET_RANGE))
+	CHECK_NULL (range);
+	
+	if (range->type != GP_WIDGET_RANGE)
 		return (GP_ERROR_BAD_PARAMETERS);
 
 	range->min = min;
@@ -681,11 +684,12 @@ int gp_widget_set_range (CameraWidget *range, float min, float max,
  *
  * Return value: GPhoto error code.
  **/
-int gp_widget_get_range (CameraWidget *range, float *min, float *max, 
-			 float *increment) 
+int
+gp_widget_get_range (CameraWidget *range, float *min, float *max, 
+		     float *increment) 
 {
-	if (!range || (range->type != GP_WIDGET_RANGE) || !min || !max || 
-	    !increment)
+	CHECK_NULL (range && min && max && increment);
+	if (range->type != GP_WIDGET_RANGE)
 		return (GP_ERROR_BAD_PARAMETERS);
 
 	*min = range->min;
@@ -704,11 +708,10 @@ int gp_widget_get_range (CameraWidget *range, float *min, float *max,
  *
  * Return value: GPhoto error code.
  **/
-int gp_widget_add_choice (CameraWidget *widget, const char *choice) 
+int
+gp_widget_add_choice (CameraWidget *widget, const char *choice) 
 {
-	if (!widget || !choice)
-		return (GP_ERROR_BAD_PARAMETERS);
-
+	CHECK_NULL (widget && choice);
 	if ((widget->type != GP_WIDGET_RADIO) &&
 	    (widget->type != GP_WIDGET_MENU))
 		return (GP_ERROR_BAD_PARAMETERS);
@@ -727,11 +730,10 @@ int gp_widget_add_choice (CameraWidget *widget, const char *choice)
  *
  * Return value: GPhoto error code or number of choices.
  **/
-int gp_widget_count_choices (CameraWidget *widget) 
+int
+gp_widget_count_choices (CameraWidget *widget) 
 {
-	if (!widget)
-		return (GP_ERROR_BAD_PARAMETERS);
-
+	CHECK_NULL (widget);
 	if ((widget->type != GP_WIDGET_RADIO) &&
 	    (widget->type != GP_WIDGET_MENU))
 		return (GP_ERROR_BAD_PARAMETERS);
@@ -749,12 +751,11 @@ int gp_widget_count_choices (CameraWidget *widget)
  *
  * Return value: GPhoto error code
  **/
-int gp_widget_get_choice (CameraWidget *widget, int choice_number, 
-			  const char **choice) 
+int
+gp_widget_get_choice (CameraWidget *widget, int choice_number, 
+		      const char **choice) 
 {
-	if (!widget || !choice) 
-		return (GP_ERROR_BAD_PARAMETERS);
-
+	CHECK_NULL (widget && choice);
 	if ((widget->type != GP_WIDGET_RADIO) &&
 	    (widget->type != GP_WIDGET_MENU))
 		return (GP_ERROR_BAD_PARAMETERS);
@@ -775,12 +776,12 @@ int gp_widget_get_choice (CameraWidget *widget, int choice_number,
  *
  * Return value: GPhoto error code or changed flag.
  **/
-int gp_widget_changed (CameraWidget *widget) 
+int
+gp_widget_changed (CameraWidget *widget) 
 {
         int val;
 
-	if (!widget)
-		return (GP_ERROR_BAD_PARAMETERS);
+	CHECK_NULL (widget);
 
         val = widget->changed;
         widget->changed = 0;
