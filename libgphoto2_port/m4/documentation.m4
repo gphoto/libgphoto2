@@ -70,7 +70,7 @@ if $try_fig2dev; then
 else
 	have_fig2dev=false
 fi
-AM_CONDITIONAL(ENABLE_TRANSFIG, $have_fig2dev)
+AM_CONDITIONAL(ENABLE_FIGURES, $have_fig2dev)
 
 dnl ---------------------------------------------------------------------------
 dnl gtk-doc: We use gtk-doc for building our documentation. However, we
