@@ -164,6 +164,7 @@ int camera_abilities (CameraAbilitiesList *list)
 	CameraAbilities a;
 
 	for (x = 0; strlen (sierra_cameras[x].model) > 0; x++) {
+		memset(&a, 0, sizeof(a));
 		strcpy (a.model, sierra_cameras[x].model);
 		a.status = GP_DRIVER_STATUS_PRODUCTION;
 		a.port     = GP_PORT_SERIAL;

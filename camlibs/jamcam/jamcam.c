@@ -83,6 +83,7 @@ int camera_abilities (CameraAbilitiesList *list)
 
 	ptr = models[x].model;
 	while (ptr) {
+		memset(&a, 0, sizeof(a));
 		strcpy (a.model, ptr );
 		a.status = GP_DRIVER_STATUS_PRODUCTION;
 		a.port     = GP_PORT_SERIAL | GP_PORT_USB;

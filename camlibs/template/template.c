@@ -49,6 +49,7 @@ camera_abilities (CameraAbilitiesList *list)
 {
 	CameraAbilities a;
 
+	memset(&a, 0, sizeof(a));
 	strcpy(a.model, "CAMERA MODEL");
 	a.status = GP_DRIVER_STATUS_PRODUCTION;
 	a.port     = GP_PORT_SERIAL | GP_PORT_USB;

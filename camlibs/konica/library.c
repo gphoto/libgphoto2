@@ -214,6 +214,7 @@ camera_abilities (CameraAbilitiesList* list)
         CameraAbilities a;
 
         for (i = 0; konica_cameras [i].model; i++) {
+		memset(&a, 0, sizeof(a));
 		a.status = GP_DRIVER_STATUS_PRODUCTION;
                 strcpy (a.model, konica_cameras [i].model);
 		a.usb_vendor  = konica_cameras [i].vendor;

@@ -78,6 +78,7 @@ int camera_abilities (CameraAbilitiesList *list)
 
 	for (i = 0; i < sizeof(camera_to_usb) / sizeof(struct camera_to_usb); i++) {
 
+		memset(&a, 0, sizeof(a));
 		strcpy(a.model, camera_to_usb[i].name);
 		a.status = GP_DRIVER_STATUS_TESTING;
 

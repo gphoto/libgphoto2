@@ -439,6 +439,7 @@ int camera_abilities (CameraAbilitiesList *list) {
         int     i = 0, result;
         
         while (models[i]) {
+		memset(&a, 0, sizeof(a));
 		a.status = GP_DRIVER_STATUS_PRODUCTION;
                 strcpy(a.model, models[i]);
                 a.port         = GP_PORT_SERIAL;

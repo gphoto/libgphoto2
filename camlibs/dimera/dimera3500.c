@@ -21,6 +21,11 @@
  *
  * History:
  * $Log$
+ * Revision 1.32  2001/12/30 18:19:07  jerdfelt
+ * Zero out the CameraAbilities struct so we don't have garbage in fields
+ * This should help fix some of the problems with the new USB class matching
+ * code people have reported
+ *
  * Revision 1.31  2001/12/06 01:45:49  dfandrich
  * 	* configure.in
  * 	* libgphoto2_port/m4/stdint.m4
@@ -180,6 +185,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 
 	while (models[x]) {
 
+		memset(&a, 0, sizeof(a));
 		strcpy(a.model, models[x]);
 		a.status = GP_DRIVER_STATUS_PRODUCTION;
 		a.port     = GP_PORT_SERIAL;

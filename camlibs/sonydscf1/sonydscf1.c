@@ -43,6 +43,7 @@ int camera_abilities (CameraAbilitiesList *list) {
         /* Fill in each camera model's abilities */
         /* Make separate entries for each conneciton type (usb, serial, etc...)
            if a camera supported multiple ways. */
+	memset(&a, 0, sizeof(a));
         strcpy(a.model, "Sony DSC-F1");
 	a.status = GP_DRIVER_STATUS_PRODUCTION;
         a.port=GP_PORT_SERIAL;

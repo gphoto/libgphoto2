@@ -68,6 +68,7 @@ camera_abilities (CameraAbilitiesList *list)
 		if (!models[i].public)
 			continue;
 
+		memset(&a, 0, sizeof(a));
 		strcpy (a.model, models[i].model);
 		a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
 		a.port     = GP_PORT_SERIAL;

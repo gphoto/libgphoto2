@@ -357,6 +357,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 
 	GP_DEBUG ("Camera Abilities");
 
+	memset(&a, 0, sizeof(a));
 	strcpy(a.model, "Panasonic PV-L859");
 	a.status = GP_DRIVER_STATUS_PRODUCTION;
 	a.port		= GP_PORT_SERIAL;

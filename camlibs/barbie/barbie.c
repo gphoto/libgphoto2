@@ -49,6 +49,7 @@ camera_abilities (CameraAbilitiesList *list)
         while (models[x]) {
 
                 /* Fill in the appropriate flags/data */
+		memset(&a, 0, sizeof(a));
                 strcpy(a.model, models[x]);
 		a.status = GP_DRIVER_STATUS_PRODUCTION;
                 a.port      = GP_PORT_SERIAL;

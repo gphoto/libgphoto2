@@ -53,6 +53,7 @@ int camera_abilities (CameraAbilitiesList *list)
 {
 	CameraAbilities a;
 
+	memset(&a, 0, sizeof(a));
 #if defined HAVE_STRNCPY
 	strncpy(a.model, "Minolta Dimage V", sizeof(a.model));
 #else

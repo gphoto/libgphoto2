@@ -968,6 +968,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 	
 	while (models_serial[i]) {
 
+	  memset(&a, 0, sizeof(a));
 	  strcpy(a.model, models_serial[i]);
 	  a.port     = GP_PORT_SERIAL;
 	  a.speed[0] = 9600;
