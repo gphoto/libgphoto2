@@ -348,6 +348,7 @@ static struct {
 	{"Canon:Digital IXUS i (PTP mode)",     0x04a9, 0x309b},
 	{"Canon:Digital IXUS 500 (PTP mode)",   0x04a9, 0x30b4},
 	{"Canon:PowerShot S500 (PTP mode)",   0x04a9, 0x30b4},
+	{"Canon:PowerShot A75 (PTP mode)",   0x04a9, 0x30b5},
 
 	{"Canon:Digital IXUS 430 (PTP mode)",   0x04a9, 0x30ba},
 	{"Canon:PowerShot S410 (PTP mode)",     0x04a9, 0x30ba},
