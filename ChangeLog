@@ -1,3 +1,7 @@
+2001-10-07 Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* configure.in: remove unnecessary variables at the beginning
+
 2001-10-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2/camera.c: Additional debugging messages
