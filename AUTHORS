@@ -1,6 +1,14 @@
 Scott Fritzinger <scottf@scs.unr.edu>
-GUI, HTML gallery, Live Cam! plugins
-Fujitsu chipset library
+Design, core implementation, Sierra Imaging library,
+Directory Browse library, Mattel library, command-line
+interface, gpio design
+
+Mariusz Zynel <mariusz@mizar.org>
+Panasonic DC1000/DC1580 library, comnmand-line interface,
+Solaris patches, bug fixing
+
+Johannes Erdfelt <johannes@erdfelt.com>
+Digita library, gpio USB support, bug fixes
 
 Werner Almesberger <almesber@lrc.di.epfl.ch>
 Canon A50 library
@@ -10,16 +18,6 @@ Additions for Canon PowerShot A5 support
 
 Wolfgang Reissnegger
 Canon A50 library
-
-Mariusz Zynel <mariusz@mizar.org>
-Panasonic DC1000/DC1580 library, additions to CLI,
-Solaris patches, bug fixing
-
-M. Adam Kendall <joker@penguinpub.com>
-Sony DSC-F1 library
-
-Mark Davies <mdavies@dial.pipex.com>
-Sony DSC-F55E library
 
 Philippe Marzouk <bullmali@afribone.net.ml>
 Canon thumbnail and deletion support
@@ -31,4 +29,13 @@ Ole Aamot <ole@gnu.org>
 GNOME configuration support
 
 Bart van Leeuwen <bart@netage.nl>
-OS/2 Port
+OS/2 Port, Sony DSC-F1 updates
+
+M. Adam Kendall <joker@penguinpub.com>
+Sony DSC-F1 library
+
+Mark Davies <mdavies@dial.pipex.com>
+Sony DSC-F55E library
+
+Beat Christen <spiff@longstreet.ch>
+gpio serial code
