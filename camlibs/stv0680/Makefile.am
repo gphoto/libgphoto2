@@ -7,4 +7,4 @@ libgphoto2_stv0680_la_SOURCES = stv0680.c stv0680.h library.c library.h bayer.c 
 
 libgphoto2_stv0680_la_LDFLAGS = -version-info 0:0:0
 
-libgphoto2_stv0680_la_LIBADD = -lgphoto2
+#libgphoto2_stv0680_la_LIBADD = -lgphoto2

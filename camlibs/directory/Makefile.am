@@ -7,4 +7,4 @@ libgphoto2_directory_la_SOURCES = directory.c directory.h
 
 libgphoto2_directory_la_LDFLAGS = -version-info 0:0:0
 
-libgphoto2_directory_la_LIBADD = -lgphoto2
+#libgphoto2_directory_la_LIBADD = -lgphoto2

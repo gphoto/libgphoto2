@@ -7,4 +7,4 @@ libgphoto2_kodak_dc120_la_SOURCES = dc120.c dc120.h library.c library.h
 
 libgphoto2_kodak_dc120_la_LDFLAGS = -version-info 0:0:0
 
-libgphoto2_kodak_dc120_la_LIBADD = -lgphoto2
+#libgphoto2_kodak_dc120_la_LIBADD = -lgphoto2

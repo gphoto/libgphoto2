@@ -10,4 +10,4 @@ libgphoto_sony_dscf1_la_SOURCES = tty.c command.c getuint.c \
 
 libgphoto_sony_dscf1_la_LDFLAGS = -version-info 0:0:0
 
-libgphoto_sony_dscf1_la_LIBADD = -lgphoto2
+#libgphoto_sony_dscf1_la_LIBADD = -lgphoto2
