@@ -1,3 +1,7 @@
+2003-05-17  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* configure.in: 2.1.2dev9, with CVS tags
+
 2003-05-12  Marcus Meissner <marcus@jet.franken.de>
 
 	* configure.in: disabled gsmart, benq, spca504_flash camlibs
