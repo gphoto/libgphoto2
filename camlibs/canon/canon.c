@@ -255,7 +255,9 @@ const struct canonCamModelData models[] = {
 	/* Is 0x30e9 EOS 1D Mark II in Canon mode? */
 	/* 0x30ea is EOS 1D Mark II in PTP mode */
 
+#ifdef CANON_EXPERIMENTAL_20D
 	{"Canon:EOS 20D (normal mode)",		CANON_CLASS_6,	0x04A9, 0x30eb, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+#endif
 	/* 0x30ec is EOS 20D in PTP mode */
 
 	{"Canon:EOS 350D (normal mode)",		CANON_CLASS_4,	0x04A9, 0x30ee, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
@@ -2247,16 +2249,36 @@ canon_int_delete_file (Camera *camera, const char *name, const char *dir, GPCont
 	switch (camera->port->type) {
 		case GP_PORT_USB:
 			memcpy (payload, dir, strlen (dir) + 1);
-			memcpy (payload + strlen (dir) + 1, name, strlen (name) + 1);
-			payload_length = strlen (dir) + strlen (name) + 2;
-			payload[payload_length++] = 0; /* Double NUL to end command */
-			if ( camera->pl->md->model == CANON_CLASS_6 )
-				/* Newer protocol uses a different code, but with same response. */
+			if ( camera->pl->md->model == CANON_CLASS_6 ) {
+				char *ptr = payload + strlen(dir);
+				char last_byte = dir[strlen(dir)-1];
+				/* Newer protocol uses a different
+				 * code and has different parameters:
+				 * - full path name together, rather than directory and file
+				 *   as separate strings
+				 * - 8 bytes of other stuff, starting at 0x20 in
+				 *   payload
+				 * - directory name (again)
+				 * - 2 null bytes */
+				if ( last_byte != '\\' && last_byte != '/' )
+					*ptr++ = '\\'; /* Need path separator between */
+				memcpy ( ptr, name, 0x30 - strlen(dir) - 1 );
+
+				memcpy ( payload + 0x30, dir, 0x30 );
+				payload_length = 0x30 + strlen(dir);
+				if ( last_byte != '\\' && last_byte != '/' )
+					payload[payload_length++] = '\\'; /* Need path separator at end of directory name */
+
 				msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_DELETE_FILE_2, &len,
 							  payload, payload_length);
-			else
+			}
+			else {
+				memcpy (payload + strlen (dir) + 1, name, strlen (name) + 1);
+				payload_length = strlen (dir) + strlen (name) + 2;
+				payload[payload_length++] = 0; /* Double NUL to end command */
 				msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_DELETE_FILE, &len,
 							  payload, payload_length);
+			}
 			if ( msg == NULL )
 				return GP_ERROR_OS_FAILURE;
 
