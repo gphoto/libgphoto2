@@ -426,8 +426,8 @@ fuji_recv (Camera *camera, unsigned char *buf, unsigned int *buf_len,
 					_("Wrong escape sequence."));
 				return (GP_ERROR_CORRUPTED_DATA);
 			}
-			check ^= buf[i];
 		}
+		check ^= buf[i];
 	}
 
 	/* Read the footer */
