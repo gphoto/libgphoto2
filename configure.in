@@ -43,17 +43,6 @@ if test "$ac_cv_prog_gcc" = "yes"; then
 	LDFLAGS="$LDFLAGS -g -Wall"
 fi
 
-dnl Solaris hack for grep and tr
-changequote(, )dnl
-if test -n "`echo $host_os | grep [sS]olaris`"; then
-  TR=/usr/xpg4/bin/tr
-  GREP=/usr/xpg4/bin/grep  
-else
-  TR=tr
-  GREP=grep
-fi
-changequote([, ])dnl
-
 dnl Replace `main' with a function in -libs:
 AC_CHECK_LIB(ibs, main)
 
@@ -119,6 +108,17 @@ AC_NEED_STDINT_H(libgphoto2/_stdint.h)
 
 dnl Create a header file containing NetBSD-style byte swapping macros
 AC_NEED_BYTEORDER_H(libgphoto2/gphoto2-endian.h)
+
+dnl Solaris hack for grep and tr
+[
+if test -n "`echo $host_os | grep '[sS]olaris'`"; then
+  TR=/usr/xpg4/bin/tr
+  GREP=/usr/xpg4/bin/grep  
+else
+  TR=tr
+  GREP=grep
+fi
+]
 
 dnl ---------------------------------------------------------------------------
 dnl Camera drivers
