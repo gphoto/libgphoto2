@@ -208,10 +208,12 @@ int camera_exit () {
 
 	debug_print("Exiting camera");
 
+/* obsoleted by start/stop
 	if (fujitsu_end_session(glob_dev)==GP_ERROR) {
 		gp_message("Can not end camera session");
 		return (GP_ERROR);		
 	}
+*/
 
 	return (GP_OK);
 }
