@@ -1,3 +1,11 @@
+2001-11-12 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* configure.in:
+	* libgphoto2/libgphoto-2.0.pc.in: Renamed to ...
+	* libgphoto2/libgphoto2.pc.in: ... this. It seems that people 
+	  really want our project to be called libgphoto2 and not libgphoto...
+	  Therefore, be consistent here, too.
+
 2001-11-11 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* frontends/command-line/main.c: Add a switch for GP_FILE_TYPE_AUDIO.

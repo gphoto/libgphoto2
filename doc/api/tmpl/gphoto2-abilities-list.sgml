@@ -4,7 +4,6 @@ CameraAbilitiesList
 <!-- ##### SECTION Short_Description ##### -->
 A list containing supported cameras and the features of those
 
-
 <!-- ##### SECTION Long_Description ##### -->
 <para>
 A #CameraAbilitiesList contains every camera model that is supported by gphoto2 together with the features of those camera models.
@@ -75,6 +74,7 @@ order to set up a #Camera, you need to call #gp_camera_set_abilities. The
 @GP_FILE_OPERATION_DELETE: 
 @GP_FILE_OPERATION_PREVIEW: 
 @GP_FILE_OPERATION_RAW: 
+@GP_FILE_OPERATION_AUDIO: 
 
 <!-- ##### ENUM CameraFolderOperation ##### -->
 <para>
