@@ -2,7 +2,7 @@
 #
 # $Id$
 #
-# RPM spec file for gphoto2
+# RPM spec file for @PACKAGE@
 #
 # TODO list concerning packaging
 # - review and coordinate RPM packaging for libgphoto2, gphoto2, gtkam
@@ -83,10 +83,8 @@ rm -rf "${RPM_BUILD_DIR}/%{name}-%{version}"
 %build
 %define __libtoolize :
 # FIXME: We should copy the disable- arguments here
-@ENABLE_GTK_DOC_TRUE@%configure --enable-docs --with-docs-dir=%{buildroot}%{_docdir}/%{name} --with-doc-formats=@doc_formats@
-@ENABLE_GTK_DOC_FALSE@%configure --with-docs-dir=%{buildroot}%{_docdir}/%{name} --with-doc-formats=@doc_formats@
-make
-# --with-html-dir=%{_docdir}/%{name}-%{version}/html
+#@ENABLE_GTK_DOC_TRUE@FIXMEPERCENTconfigure --enable-docs --with-docs-dir=%{buildroot}%{_docdir}/%{name}
+%configure --with-docs-dir=%{buildroot}%{_docdir}/%{name}
 make
 
 ####################################
@@ -112,48 +110,72 @@ find $RPM_BUILD_ROOT -name '*.la' | \
 
 # build file list
 find %{buildroot} -type f -or -type l \
-        | sed 's!^%{buildroot}!!' | sort > %{name}-%{version}.allfiles
+        | sed 's!^%{buildroot}!!' | sort > %{name}-%{version}.all.files
 
-grep '\.so$' < %{name}-%{version}.allfiles > %{name}-%{version}.sofiles
+# extract .so libs
+egrep '\.so(\.[0-9]+)*$' \
+	< %{name}-%{version}.all.files > %{name}-%{version}.so.files
+egrep -v '\.so(\.[0-9]+)*$' \
+	< %{name}-%{version}.all.files > %{name}-%{version}.no-so.files
 
-egrep '\.(la|a|h)$' < %{name}-%{version}.allfiles > %{name}-%{version}.devel-files
+# extract files for devel package
+egrep '(-config|\.h|\.la|\.a|\.pc)$' \
+	< %{name}-%{version}.no-so.files > %{name}-%{version}.devel.files
+egrep -v '(-config|\.h|\.la|\.a|\.pc|\.3)$' \
+	< %{name}-%{version}.no-so.files > %{name}-%{version}.no-devel.files
 
-# figure out list of documentation stuff
-#htmldir=$(grep '/html/' < "%{name}-%{version}.files" | sed 's/html\/.*/html/' | sort -u)
-#echo "%docdir ${htmldir}" > %{name}-%{version}.docfiles
+# extract doc files
+egrep '^%{_docdir}' \
+	< %{name}-%{version}.no-devel.files > %{name}-%{version}.doc.files
+egrep -v '^%{_docdir}' \
+	< %{name}-%{version}.no-devel.files > %{name}-%{version}.no-doc.files
 
+# extract i18n files
+egrep '^%{_datadir}/locale' \
+	< %{name}-%{version}.no-doc.files > %{name}-%{version}.i18n.files
+egrep -v '^%{_datadir}/locale' \
+	< %{name}-%{version}.no-doc.files > %{name}-%{version}.no-i18n.files
+
+# extract misc files for lib package
+egrep '^(%{_libdir}|%{_datadir})/libgphoto2' \
+	< %{name}-%{version}.no-i18n.files > %{name}-%{version}.misc.files
+egrep -v '^(%{_libdir}|%{_datadir})/libgphoto2' \
+	< %{name}-%{version}.no-i18n.files > %{name}-%{version}.rest.files \
+	|| echo "non-zero exit code is not fatal here"
+
+if [ -s %{name}-%{version}.rest.files ]
+then
+	cat %{name}-%{version}.rest.files
+fi
+
+sort %{name}-%{version}.{so,doc,misc}.files \
+	> %{name}-%{version}.files
+
+exit 0
 
 ####################################
 %clean
-rm -rf "${RPM_BUILD_ROOT}"
+# FIXME: Cleanup deactiveated for debugging
+# rm -rf "${RPM_BUILD_ROOT}"
 
 ########################################################################
 # file list and installation for main package
 ########################################################################
 
 ####################################
-%files -f %{name}.lang
+%files -f %{name}-%{version}.files -f %{name}.lang
 %defattr(-,root,root)
-%doc AUTHORS README COPYING CHANGES
-%{_datadir}/gphoto2
-%dir %{_libdir}/gphoto2_port
-%dir %{_libdir}/gphoto2_port/*
-%{_libdir}/gphoto2_port/*/*.so
-%{_libdir}/gphoto2/*/*.so
-%{_libdir}/*.so.*
-%{_mandir}/man1/gphoto2.1*
-%doc packaging/linux-hotplug
 
 ####################################
 %post
 
-# add supported cameras to /etc/hotplug/usb.usermap
-grep -v '^usbcam' /etc/hotplug/usb.usermap > /etc/hotplug/usb.usermap.tmp
-/usr/lib/gphoto2/print-usb-usermap >> /etc/hotplug/usb.usermap.tmp
-mv /etc/hotplug/usb.usermap.tmp /etc/hotplug/usb.usermap
-
 # register libraries
 /sbin/ldconfig
+
+# add supported cameras to /etc/hotplug/usb.usermap
+grep -v '^usbcam' /etc/hotplug/usb.usermap > /etc/hotplug/usb.usermap.tmp
+%{_libdir}/@PACKAGE@/print-usb-usermap >> /etc/hotplug/usb.usermap.tmp
+mv /etc/hotplug/usb.usermap.tmp /etc/hotplug/usb.usermap
 
 ####################################
 %postun
@@ -174,17 +196,9 @@ fi
 ########################################################################
 
 ####################################
-%files devel
+%files devel -f %{name}-%{version}.devel.files
 %defattr(-,root,root)
 @ENABLE_GTK_DOC_TRUE@%doc html/api
-%{_bindir}/gphoto2-config
-%{_bindir}/gphoto2-port-config
-%{_mandir}/man3/gphoto2*.3*
-%{_includedir}/gphoto2
-%{_libdir}/*.a
-%{_libdir}/*.la
-%{_libdir}/*.so
-%{_libdir}/pkgconfig/*
 
 
 ########################################################################
