@@ -30,7 +30,7 @@
 
 typedef struct {
 	unsigned int id;
-	GPLogLevels  levels;
+	GPLogLevel  level;
 	GPLogFunc    func;
 	void        *data;
 } LogFunc;
@@ -40,19 +40,19 @@ static unsigned int log_funcs_count = 0;
 
 /**
  * gp_log_add_func:
- * @levels: gphoto2 log levels
+ * @level: gphoto2 log level
  * @func: a #GPLogFunc
  * @data: data
  *
  * Adds a log function that will be called for each log message that is flagged
- * with a log level that appears in given log @levels. This function returns
+ * with a log level that appears in given log @level. This function returns
  * an id that you can use for removing the log function again (using
  * #gp_log_remove_func).
  *
  * Return value: an id or a gphoto2 error code
  **/
 int
-gp_log_add_func (GPLogLevels levels, GPLogFunc func, void *data)
+gp_log_add_func (GPLogLevel level, GPLogFunc func, void *data)
 {
 	LogFunc *new_log_funcs;
 
@@ -71,7 +71,7 @@ gp_log_add_func (GPLogLevels levels, GPLogFunc func, void *data)
 	log_funcs_count++;
 
 	log_funcs[log_funcs_count - 1].id = log_funcs_count;
-	log_funcs[log_funcs_count - 1].levels = levels;
+	log_funcs[log_funcs_count - 1].level = level;
 	log_funcs[log_funcs_count - 1].func = func;
 	log_funcs[log_funcs_count - 1].data = data;
 
@@ -207,35 +207,53 @@ gp_log_data (const char *domain, const char *data, unsigned int size)
 	free (result);
 }
 
+#undef HEXDUMP_COMPLETE_LINE
+#undef HEXDUMP_MIDDLE
+#undef HEXDUMP_LINE_WIDTH
+#undef HEXDUMP_INIT_Y
+#undef HEXDUMP_INIT_X
+#undef HEXDUMP_BLOCK_DISTANCE
+#undef HEXDUMP_OFFSET_WIDTH
+
+/**
+ * gp_logv:
+ * @level: gphoto2 log level
+ * @domain: the domain
+ * @format: the format
+ * @args: the va_list corresponding to @format
+ *
+ * Logs a message at the given log @level. You would normally use this
+ * function to log as yet unformatted strings. 
+ **/
 void
-gp_logv (GPLogLevels levels, const char *domain, const char *format,
+gp_logv (GPLogLevel level, const char *domain, const char *format,
 	 va_list args)
 {
 	int i;
 
 	for (i = 0; i < log_funcs_count; i++) {
-		if (log_funcs[i].levels & levels)
-			log_funcs[i].func (levels, domain, format, args,
+		if (log_funcs[i].level >= level)
+			log_funcs[i].func (level, domain, format, args,
 					   log_funcs[i].data);
 	}
 }
 
 /**
  * gp_log:
- * @levels: gphoto2 log levels
+ * @level: gphoto2 log level
  * @domain: the domain
  * @format: the format
  * @...:
  *
- * Logs a message at the given log @levels. You would normally use this
+ * Logs a message at the given log @level. You would normally use this
  * function to log strings.
  **/
 void
-gp_log (GPLogLevels levels, const char *domain, const char *format, ...)
+gp_log (GPLogLevel level, const char *domain, const char *format, ...)
 {
 	va_list args;
 
 	va_start (args, format);
-	gp_logv (levels, domain, format, args);
+	gp_logv (level, domain, format, args);
 	va_end (args);
 }
