@@ -982,6 +982,7 @@ create_main_window (void)
   gtk_object_set_data_full (GTK_OBJECT (main_window), "camera_tree", tree_item,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_object_set_data (GTK_OBJECT (tree_item), "path", (gpointer)"/");
+  gtk_object_set_data (GTK_OBJECT (tree_item), "folder", (gpointer)"/");
   gtk_signal_connect(GTK_OBJECT(tree_item), "select", 
 	GTK_SIGNAL_FUNC(folder_set),NULL);
   gtk_signal_connect(GTK_OBJECT(tree_item), "expand", 
