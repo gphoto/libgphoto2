@@ -67,6 +67,7 @@
  * 
  */
 
+#include <stdlib.h>
 #include "demosaic_sharpen.h"
 
 /* we define bayer as 
