@@ -95,10 +95,3 @@
 #define TIMEOUT		1000
 #define SLEEP_TIMEOUT 	50
 #define RETRIES		5
-
-typedef struct {
-	gp_port *dev;
-	Camera *camera;
-	CameraFilesystem *fs;
-	/* anything else? :P */
-} DC120Data;

@@ -55,23 +55,10 @@ int camera_abilities (CameraAbilitiesList *list) {
 	return (GP_OK);
 }
 
-static int camera_exit (Camera *camera) {
-
-	DC120Data *dd = camera->camlib_data;
-
-	if (dd) {
-		free (dd);
-		camera->camlib_data = NULL;
-	}
-
-	return (GP_OK);
-}
-
 static int folder_list_func (CameraFilesystem *fs, const char *folder,
 			     CameraList *list, void *data) 
 {
 	Camera *camera = data;
-	DC120Data *dd = camera->camlib_data;
 	char buf[32];
 
 	if (strcmp(folder, "/")==0) {
@@ -87,12 +74,12 @@ static int folder_list_func (CameraFilesystem *fs, const char *folder,
 	sprintf(buf, "/%s", dc120_folder_memory);
 	if (strcmp(folder, buf)==0)
 		/* From memory */
-		return (dc120_get_albums(dd, 0, list));
+		return (dc120_get_albums(camera, 0, list));
 
 	sprintf(buf, "/%s", dc120_folder_card);
 	if (strcmp(folder, buf)==0)
 		/* From cf card */
-		return (dc120_get_albums(dd, 1, list));
+		return (dc120_get_albums(camera, 1, list));
 	return (GP_ERROR);
 }
 
@@ -100,7 +87,6 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 			   CameraList *list, void *data) 
 {
 	Camera *camera = data;
-	DC120Data *dd = camera->camlib_data;
 	char buf[32];
 	int retval = GP_OK;
 
@@ -111,16 +97,16 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 	sprintf(buf, "/%s", dc120_folder_memory);
 	if (strcmp(folder, buf)==0)
 		/* From memory */
-		retval = dc120_get_filenames(dd, 0, 0, list);
+		retval = dc120_get_filenames(camera, 0, 0, list);
 
 	sprintf(buf, "/%s", dc120_folder_card);
 	if (strcmp(folder, buf)==0)
 		/* From cf card */
-		retval = dc120_get_filenames(dd, 1, 0, list);
+		retval = dc120_get_filenames(camera, 1, 0, list);
 
 	sprintf(buf, "/%s/ALBUM", dc120_folder_card);
 	if (strncmp(folder, buf, strlen(dc120_folder_card)+7)==0)
-		retval = dc120_get_filenames (dd, 1, folder[strlen (dc120_folder_card)+8] - '0', list);
+		retval = dc120_get_filenames (camera, 1, folder[strlen (dc120_folder_card)+8] - '0', list);
 
 	/* Save the order of the pics (wtf: no filename access on dc120???) */
 
@@ -130,12 +116,11 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 static int camera_file_action (Camera *camera, int action, CameraFile *file,
 			       const char *folder, const char *filename) 
 {
-	DC120Data *dd = camera->camlib_data;
 	int picnum=0, album_num=-1, from_card=0;
 	char buf[32];
 	char *dot;
 
-	picnum = gp_filesystem_number(dd->fs, folder, filename);
+	picnum = gp_filesystem_number(camera->fs, folder, filename);
 
 	if (picnum == GP_ERROR)
 		return (GP_ERROR);
@@ -170,7 +155,7 @@ static int camera_file_action (Camera *camera, int action, CameraFile *file,
 	if (file)
 		gp_file_set_name (file, filename);
 
-	return (dc120_file_action(dd, action, from_card, album_num, picnum+1, file));
+	return (dc120_file_action(camera, action, from_card, album_num, picnum+1, file));
 }
 
 static int get_file_func (CameraFilesystem *fs, const char *folder,
@@ -205,21 +190,9 @@ static int delete_file_func (CameraFilesystem *fs, const char *folder,
 
 #if 0
 int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path) {
-
-	DC120Data *dd = camera->camlib_data;
-
-	return (dc120_capture(dd, file));
+	return (dc120_capture(camera, file));
 }
 #endif
-
-static int camera_summary (Camera *camera, CameraText *summary) 
-{
-/*	DC120Data *dd = camera->camlib_data; */
-
-	strcpy(summary->text, _("No summary information yet"));
-
-	return (GP_OK);
-}
 
 static int camera_manual (Camera *camera, CameraText *manual) 
 {
@@ -247,21 +220,9 @@ static int camera_about (Camera *camera, CameraText *about)
 int camera_init (Camera *camera) {
 
         GPPortSettings settings;
-        DC120Data *dd;
 	int speed;
 
-        if (!camera)
-                return (GP_ERROR);
-
-        dd = (DC120Data*)malloc(sizeof(DC120Data));
-        if (!dd)
-                return (GP_ERROR_NO_MEMORY);
-	dd->camera = camera;
-	dd->dev = camera->port;
-
         /* First, set up all the function pointers */
-        camera->functions->exit         = camera_exit;
-        camera->functions->summary      = camera_summary;
         camera->functions->manual       = camera_manual;
         camera->functions->about        = camera_about;
 
@@ -286,19 +247,14 @@ int camera_init (Camera *camera) {
         /* Wait for it to update */
         GP_SYSTEM_SLEEP(1500);
 
-        if (dc120_set_speed (dd, speed) == GP_ERROR) {
-                free(dd);
+        if (dc120_set_speed (camera, speed) == GP_ERROR) {
                 return (GP_ERROR);
         }
 
         /* Try to talk after speed change */
-        if (dc120_get_status(dd) == GP_ERROR) {
-                free(dd);
+        if (dc120_get_status(camera) == GP_ERROR) {
                 return (GP_ERROR);
         }
-
-        /* Everything went OK. Save the data*/
-        camera->camlib_data = dd;
 
         return (GP_OK);
 }
