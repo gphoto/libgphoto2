@@ -6,10 +6,11 @@
 /*************************/
 /* Included header files */
 /*************************/
+#include <gphoto2.h>
 #include <glib.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <gphoto2.h>
+
 #include "library.h"
 #include "lowlevel.h"
 

@@ -1,13 +1,13 @@
 /*************************/
 /* Included header files */
 /*************************/
+#include <gphoto2.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <glib.h>
 #include <zlib.h>
 #include <string.h>
 #include <time.h>
-#include <gphoto2.h>
 #ifdef ENABLE_NLS
 #  include <libintl.h>
 #  undef _
@@ -750,10 +750,10 @@ camera_file_config_set (Camera* camera, CameraWidget* window, gchar* folder, gch
 {
 	CameraWidget* 	widget;
 	gint		result = GP_OK;
-	gchar		image_id_string[] = {0, 0, 0, 0, 0, 0, 0};
 	glong		image_id;
 	gint		value_int;
 	konica_data_t*	konica_data;
+	gchar*		image_id_string;
 
 	g_return_val_if_fail (camera,   GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (window,   GP_ERROR_BAD_PARAMETERS);
@@ -766,8 +766,9 @@ camera_file_config_set (Camera* camera, CameraWidget* window, gchar* folder, gch
 	/* Some information we need. */
 	konica_data = (konica_data_t*) camera->camlib_data;
 	g_return_val_if_fail (file[0] != '?', GP_ERROR);
-	memcpy (image_id_string, file, 6);
+	image_id_string = g_strndup (file, 6);
 	image_id = atol (image_id_string);
+	g_free (image_id_string);
 	
 	/* Protect status? */
 	g_return_val_if_fail (widget = gp_widget_child_by_label (window, _("Protect")), GP_ERROR_BAD_PARAMETERS);

@@ -6,10 +6,11 @@
 /*************************/
 /* Included Header Files */
 /*************************/
+#include <gphoto2.h>
 #include <glib.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <gphoto2.h>
+
 #include "library.h"
 #include "lowlevel.h"
 #include "konica.h"
