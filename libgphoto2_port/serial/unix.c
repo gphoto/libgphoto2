@@ -110,10 +110,10 @@ static struct sgttyb term_old;
 
 /* Darwin */
 #if defined(__APPLE__)
-/* Does this many any sense on a Mac??? */
-#define GP_PORT_SERIAL_PREFIX   "/dev/tty.modem"
-#define GP_PORT_SERIAL_RANGE_LOW        0
-#define GP_PORT_SERIAL_RANGE_HIGH       0
+/* This is the Keyspan USB serial adapter device (UNTESTED) */
+#define GP_PORT_SERIAL_PREFIX   "/dev/tty.KeyUSA28X%i"
+#define GP_PORT_SERIAL_RANGE_LOW        111
+#define GP_PORT_SERIAL_RANGE_HIGH       1112
 #endif
 
 /* Solaris */
@@ -209,7 +209,7 @@ gp_port_serial_lock (GPPort *dev)
 #warning No locking library found. 
 #warning You will run into problems if you 
 #warning use gphoto2 in combination with
-#warning Konqueror (KDE) or Nautils (GNOME).
+#warning Konqueror (KDE) or Nautilus (GNOME).
 
 	return (GP_OK);
 
