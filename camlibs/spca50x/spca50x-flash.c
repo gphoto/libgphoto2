@@ -54,7 +54,7 @@ static void
 free_files (CameraPrivateLibrary *pl)
 {
 	int i;
-	if (pl->files){
+	if (pl->files) {
 		for (i = 0; i < pl->num_files_on_flash; i++){
 			if(pl->files[i].thumb) free (pl->files[i].thumb);
 		}
@@ -838,7 +838,7 @@ spca50x_flash_close (CameraPrivateLibrary *pl, GPContext *context)
 
 	}
 
-	if (pl->dirty_flash == 0){ 
+	if (!pl->dirty_flash && pl->brige == BRIDGE_SPCA500) { 
 		/* check if we need to free the file info buffers */
 		free_files(pl);
 	}
