@@ -651,8 +651,11 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	}
 
 	if (!ptp_operation_issupported(&camera->pl->params,
-		PTP_OC_InitiateCapture))
+		PTP_OC_InitiateCapture)) {
+		gp_context_error(context,
+               	_("Sorry, your camera does not support generic capture"));
 		return GP_ERROR_NOT_SUPPORTED;
+	}
 
 	/* A capture may take longer than the standard 8 seconds.
 	 * The G5 for instance does, or in dark rooms ...
