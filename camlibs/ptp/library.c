@@ -211,8 +211,11 @@ static struct {
 
 	/* Nikon D100 has a PTP mode: westin 2002.10.16 */
 	{"Nikon DSC D100 (PTP mode)", 0x04b0, 0x0402},
-	/* Coolpix 5700: A. Tanenbaum, 29 Oct 2002 */
+	/* Nikon Coolpix 5700: A. Tanenbaum, 29 Oct 2002 */
 	{"Nikon Coolpix 5700 (PTP mode)", 0x04b0, 0x010d},
+	/* Nikon Coolpix 885: S. Anderson, 19 nov 2002 */
+	{"Nikon Coolpix 885 (PTP mode)", 0x04b0, 0x0112},
+
 
 	/* (at least some) newer Canon cameras can be switched between
 	 * PTP and "normal" (i.e. Canon) mode 
