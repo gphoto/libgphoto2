@@ -67,7 +67,8 @@ int camera_abilities (CameraAbilitiesList *list)
         a.operations = GP_OPERATION_CONFIG;
         a.file_operations = GP_FILE_OPERATION_NONE;
         a.folder_operations = GP_FOLDER_OPERATION_MAKE_DIR |
-			      GP_FOLDER_OPERATION_REMOVE_DIR;
+			      GP_FOLDER_OPERATION_REMOVE_DIR |
+			      GP_FOLDER_OPERATION_PUT_FILE;
 
         gp_abilities_list_append(list, a);
 
@@ -347,6 +348,23 @@ remove_dir_func (CameraFilesystem *fs, const char *folder, const char *name,
 	return (GP_SYSTEM_RMDIR (path));
 }
 
+static int
+put_file_func (CameraFilesystem *fs, const char *folder,
+	       CameraFile *file, void *data)
+{
+	char path[2048];
+	const char *name;
+
+	gp_file_get_name (file, &name);
+
+	strncpy (path, folder, sizeof (path));
+	if (strlen (folder) > 1)
+		strncat (path, "/", sizeof (path));
+	strncat (path, name, sizeof (path));
+
+	return (gp_file_save (file, path));
+}
+
 int
 camera_init (Camera *camera)
 {
@@ -366,7 +384,7 @@ camera_init (Camera *camera)
 	gp_filesystem_set_info_funcs (camera->fs, get_info_func,
 				      set_info_func, NULL);
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, NULL);
-	gp_filesystem_set_folder_funcs (camera->fs, NULL, NULL,
+	gp_filesystem_set_folder_funcs (camera->fs, put_file_func, NULL,
 					make_dir_func, remove_dir_func, NULL);
 
         return (GP_OK);
