@@ -255,7 +255,7 @@ gp_abilities_list_load (CameraAbilitiesList *list)
 int
 gp_abilities_list_detect (CameraAbilitiesList *list, CameraList *l)
 {
-	CameraPort *dev;
+	GPPort *dev;
 	int x, count, v, p;
 	const char *m;
 
