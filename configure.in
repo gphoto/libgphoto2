@@ -19,6 +19,7 @@ CFLAGS="$CFLAGS -g -Wall"
 LDFLAGS="$LDFLAGS -g -Wall"
 
 dnl Solaris hack for grep and tr
+changequote(, )dnl
 if test -n "`echo $host_os | grep [sS]olaris`"; then
   TR=/usr/xpg4/bin/tr
   GREP=/usr/xpg4/bin/grep  
@@ -26,6 +27,7 @@ else
   TR=tr
   GREP=grep
 fi
+changequote([, ])dnl
 
 dnl Checks for libraries.
 dnl Replace `main' with a function in -ldl:
