@@ -1,5 +1,16 @@
 2001-08-27  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* include/gphoto2-filesys.h:
+	* libgphoto2/filesys.c: Cache folders and files, too (that is, only
+	query them from the camera when needed.
+	* frontends/command-line/main.c: Don't require a port with
+	"Directory Browse".
+	* camlibs/konica/library.c: Use the new functions
+	* camlibs/directory/directory.[c,h]: Use the filesystem
+	* tests/test-filesys.c: Demonstrate the use of the new functions.
+
+2001-08-27  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/sierra/sierra.c: And correctly use the macros CHECK (won't
 	stop the camera) and CHECK_STOP (after the connection has been started).
 
