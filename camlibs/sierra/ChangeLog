@@ -1,3 +1,7 @@
+2003-06-14  Dan Fandrich <dan@coneharvesters.com>
+	* epson-desc.c, nikon-desc.c, olympus-desc.c, sierra-desc.c, sierra.c:
+	  include _stdint.h instead of stdint.h
+
 2003-05-28  Patrick Mansfield <patmans@users.sourceforge.net>
 
 	* epson-desc.c, nikon-desc.c, olympus-desc.c, and sierr.c
