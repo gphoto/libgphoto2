@@ -71,8 +71,8 @@ int gp_file_get_mime_type  (CameraFile *file, const char **mime_type);
 int gp_file_set_type       (CameraFile *file, CameraFileType  type);
 int gp_file_get_type       (CameraFile *file, CameraFileType *type);
 
-int gp_file_set_mod_time   (CameraFile *file, time_t  mod_time);
-int gp_file_get_mod_time   (CameraFile *file, time_t *mod_time);
+int gp_file_set_mtime   (CameraFile *file, time_t  mtime);
+int gp_file_get_mtime   (CameraFile *file, time_t *mtime);
 
 int gp_file_detect_mime_type          (CameraFile *file);
 int gp_file_adjust_name_for_mime_type (CameraFile *file);

@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/stat.h>
 
 #include <gphoto2-port-log.h>
 
@@ -47,7 +48,7 @@ struct _CameraFile {
         int bytes_read;
         int ref_count;
 
-	time_t mod_time;
+	time_t mtime;
 
         unsigned char *red_table, *blue_table, *green_table;
         int red_size, blue_size, green_size;
@@ -179,6 +180,8 @@ gp_file_open (CameraFile *file, const char *filename)
         char *name, *dot;
         long size, size_read;
         int  i;
+	struct stat s;
+
         /*
          * mime types that cannot be determined by the filename
          * extension. Better hack would be to use library that examine
@@ -251,6 +254,12 @@ gp_file_open (CameraFile *file, const char *filename)
              */
             strncpy (file->mime_type, GP_MIME_UNKNOWN,
 		     sizeof (file->mime_type));
+
+	if (stat (filename, &s) != -1) {
+		file->mtime = s.st_mtime;
+	} else {
+		file->mtime = time (NULL);
+	}
 
         return (GP_OK);
 }
@@ -622,21 +631,21 @@ gp_file_convert (CameraFile *file, const char *mime_type)
 }
 
 int
-gp_file_get_mod_time (CameraFile *file, time_t *mod_time)
+gp_file_get_mtime (CameraFile *file, time_t *mtime)
 {
-	CHECK_NULL (file && mod_time);
+	CHECK_NULL (file && mtime);
 
-	*mod_time = file->mod_time;
+	*mtime = file->mtime;
 
 	return (GP_OK);
 }
 
 int
-gp_file_set_mod_time (CameraFile *file, time_t mod_time)
+gp_file_set_mtime (CameraFile *file, time_t mtime)
 {
 	CHECK_NULL (file);
 
-	file->mod_time = mod_time;
+	file->mtime = mtime;
 
 	return (GP_OK);
 }
