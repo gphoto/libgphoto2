@@ -201,7 +201,7 @@ int stv0680_get_image_raw(GPPort *port, int image_no, char **data, int *size)
 	ret = stv0680_try_cmd(port, CMDID_UPLOAD_IMAGE, image_no,
 		(void*)&imghdr, sizeof(imghdr));
 	if(ret != GP_OK)
-		return ret;
+	    return ret;
 
 	w = (imghdr.width[0]  << 8) | imghdr.width[1];
 	h = (imghdr.height[0] << 8) | imghdr.height[1];
@@ -224,32 +224,35 @@ int stv0680_get_image_raw(GPPort *port, int image_no, char **data, int *size)
 int stv0680_get_image(GPPort *port, int image_no, char **data, int *size)
 {
 	struct stv680_image_header imghdr;
-	char header[64];
+	char header[200];
+	unsigned char buf[16];
 	unsigned char *raw, *bayerpre;
 	int h,w,ret,coarse,fine;
 
-	ret = stv0680_try_cmd(port, CMDID_UPLOAD_IMAGE, image_no,
+	/* Despite the documentation saying so, CMDID_UPLOAD_IMAGE does not
+	 * return an image_header. The first 8 byte are correct, but the
+	 * next 8 appear strange. So we call CMDID_GET_IMAGE_HEADER before. 
+	 */
+	ret = stv0680_try_cmd(port, CMDID_GET_IMAGE_HEADER, image_no,
 		(void*)&imghdr, sizeof(imghdr));
 	if(ret != GP_OK)
 		return ret;
-
+	ret = stv0680_try_cmd(port, CMDID_UPLOAD_IMAGE, image_no,
+		(void*)buf, sizeof(buf));
+	if(ret != GP_OK)
+		return ret;
 	w = (imghdr.width[0]  << 8) | imghdr.width[1];
 	h = (imghdr.height[0] << 8) | imghdr.height[1];
 	*size = (imghdr.size[0] << 24) | (imghdr.size[1] << 16) | 
 	    (imghdr.size[2]<<8) | imghdr.size[3];
 	fine = (imghdr.fine_exposure[0]<<8)|imghdr.fine_exposure[1];
 	coarse = (imghdr.coarse_exposure[0]<<8)|imghdr.coarse_exposure[1];
-#if 0
-	fprintf(stderr,"image flag %x\n",imghdr.flags);
-	fprintf(stderr,"sensor gain %d\n",imghdr.sensor_gain);
-	fprintf(stderr,"sensor clkdiv %d\n",imghdr.sensor_clkdiv);
-	fprintf(stderr,"avg pixel value %d\n",imghdr.avg_pixel_value);
-#endif
 	raw = malloc(*size);
+	sprintf(header, "P6\n# gPhoto2 stv0680 image\n#flags %x sgain %d sclkdiv %d avgpix %d fine %d coarse %d\n%d %d\n255\n", imghdr.flags, imghdr.sensor_gain, imghdr.sensor_clkdiv, imghdr.avg_pixel_value, fine, coarse , w, h);
+
 	if ((ret=gp_port_read(port, raw, *size))<0)
 	    return ret;
 
-	sprintf(header, "P6\n# gPhoto2 stv0680 image\n%d %d\n255\n", w, h);
 	*data = malloc((*size * 3) + strlen(header));
 	bayerpre = malloc((*size * 3));
 	strcpy(*data, header);
@@ -463,11 +466,9 @@ int stv0680_capture_preview(GPPort *port, char **data, int *size)
 	switch(gp_port_read(port, raw, *size)) {
 	case GP_ERROR_TIMEOUT:
 		printf("read timeout\n");
-		stv680_last_error(port);
 		break;
 	case GP_ERROR:
 		printf("IO error\n");
-		stv680_last_error(port);
 		break;
 	default:break;
 	}
