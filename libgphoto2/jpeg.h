@@ -38,7 +38,9 @@ typedef struct chunk{
     unsigned char *data;
 } chunk;
 
-void chunk_new(chunk *mychunk, int length);
+typedef char jpeg_quantization_table[64];
+
+chunk *chunk_new(int length);
 
 void chunk_print(chunk *mychunk);
 
@@ -46,7 +48,7 @@ void chunk_destroy(chunk *mychunk);
 
 typedef struct jpeg {
     int count;
-    struct chunk marker[20]; /* I think this should be big enough */
+    struct chunk *marker[20]; /* I think this should be big enough */
 }jpeg;
 
 void jpeg_init(jpeg *myjpeg);
@@ -64,5 +66,7 @@ void jpeg_parse(jpeg *myjpeg, chunk *picture);
 void jpeg_print(jpeg *myjpeg);
 
 char *jpeg_markername(int c);
+
+chunk *jpeg_make_SOFC (int width, int height, char vh1, char vh2, char vh3);
 
 #endif
