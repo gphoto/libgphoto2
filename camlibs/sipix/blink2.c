@@ -45,9 +45,13 @@
 #  define N_(String) (String)
 #endif
 
-#define BLINK2_GET_NUMPICS	0x08
-#define BLINK2_GET_DIR		0x0d
-#define BLINK2_GET_MEMORY	0x0a
+#define BLINK2_GET_NUMPICS		0x08
+#define BLINK2_GET_MEMORY		0x0a
+#define BLINK2_GET_DIR			0x0d
+#define BLINK2_INIT_CAPTURE		0x0e
+#define BLINK2_DELETE_ALL		0x12
+#define BLINK2_CHECK_CAPTURE_FINISH	0x16
+#define BLINK2_SET_EXPOSURE_COUNT	0x17
 
 static int
 blink2_getnumpics(
@@ -335,6 +339,52 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
         return (GP_OK);
 }
 
+static int
+delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
+                 GPContext *context)
+{
+	Camera *camera = data;
+	int ret;
+	char buf[1];
+
+	ret = gp_port_usb_msg_read( camera->port, BLINK2_DELETE_ALL, 0x03, 0, buf, 1);
+	if (ret < GP_OK)
+		return ret;
+        return (GP_OK);
+}
+
+static int
+camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
+                GPContext *context)
+{
+	int oldnumpics, numpics, ret;
+	char buf[1];
+	
+	ret = blink2_getnumpics (camera->port, context, &oldnumpics);
+	if (ret < GP_OK)
+		return ret;
+
+	ret = gp_port_usb_msg_read( camera->port, BLINK2_INIT_CAPTURE, 0x03, 0, buf, 1);
+	if (ret < GP_OK)
+		return ret;
+	do {
+		ret = gp_port_usb_msg_read( camera->port, BLINK2_CHECK_CAPTURE_FINISH, 0x03, 0, buf, 1);
+		if (ret < GP_OK)
+			return ret;
+		sleep(1);
+	} while (buf[1] == 0x00);
+
+	ret = blink2_getnumpics (camera->port, context, &numpics);
+	if (ret < GP_OK)
+		return ret;
+	if (numpics == oldnumpics)
+		return (GP_ERROR);
+        strcpy (path->folder,"/");
+        sprintf (path->name,"image%04d.pnm",numpics-1);
+        return (GP_OK);
+}
+
+
 int
 camera_abilities (CameraAbilitiesList *list) 
 {
@@ -347,9 +397,9 @@ camera_abilities (CameraAbilitiesList *list)
 	a.speed[0] 		= 0;
 	a.usb_vendor		= 0x0c77;
 	a.usb_product		= 0x1011;
-	a.operations		=  GP_OPERATION_NONE;
+	a.operations		=  GP_OPERATION_CAPTURE_IMAGE;
 	a.file_operations	=  GP_FILE_OPERATION_NONE;
-	a.folder_operations	=  GP_FOLDER_OPERATION_NONE;
+	a.folder_operations	=  GP_FOLDER_OPERATION_DELETE_ALL;
 	gp_abilities_list_append(list, a);
 
 	a.usb_product		= 0x1010;
@@ -377,8 +427,11 @@ camera_init (Camera *camera, GPContext *context)
 	int ret;
 	GPPortSettings settings;
 
+        camera->functions->capture              = camera_capture;
+
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
+	gp_filesystem_set_folder_funcs (camera->fs, NULL, delete_all_func, NULL, NULL, camera);
 	gp_port_get_settings( camera->port, &settings);
 	settings.usb.interface = 0;
 	settings.usb.altsetting = 0;
@@ -388,7 +441,6 @@ camera_init (Camera *camera, GPContext *context)
 	ret = gp_port_usb_msg_read( camera->port, 0x18, 0x03, 0, buf, 6);
 	if (ret < GP_OK)
 		return ret;
-
 	ret = gp_port_usb_msg_read( camera->port, 0x04, 0x03, 0, buf, 1);
 	if (ret < GP_OK)
 		return ret;

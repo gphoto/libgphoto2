@@ -1,9 +1,11 @@
 Blink2 Protocol
 
-Mostly control messages.
+Mostly control messages...
 
 Number of pictures:
 	control read 0x08, 0x03, 0x00	-> buf[2] (high, low byte)
+
+	Gets number of pictures.
 
 Get Dir:
 	control read 0x0d, 0x03, 0x00	-> buf[1] 
@@ -15,6 +17,10 @@ Get Dir:
 		buf[8*(i+1)+5 ... 7]	- 3 bytes start, MSB first
 		buf[8*(i+1)+13 ... 15]	- 3 bytes end, MSB first
 
+
+	Gets the directory entries.
+
+
 Get Memory:
 	Prepare buffer as:
 		buf[0..4]	start	(MSB first)
@@ -22,6 +28,8 @@ Get Memory:
 
 	control write 0x0a, 0x03, 0x00, buf[8]
 	bulk read (length)
+
+	Gets the memory (imagedata) as specified.
 
 
 Capture Picture:
@@ -31,3 +39,16 @@ Capture Picture:
 	while buf[0] == 0
 
 	Afterwards the image is in the camera memory.
+
+
+
+Delete All Images:
+	control read 0x12, 0x03, 0x00	-> buf[1]
+
+	All images on the camera are deleted.
+
+
+Delete Last Image:
+	control read 0x11, 0x03, 0x00	-> buf[1]
+
+	Last image on camera is deleted.
