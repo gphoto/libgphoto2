@@ -66,7 +66,8 @@
  * models:
  *
  * Contains list of all camera models currently supported with their
- * respective USB IDs and a flag denoting RS232 serial support.
+ * respective USB IDs and a serial ID String for cameras with RS232
+ * serial support.
  *
  * Some cameras are sold under different names in different regions,
  * but are technically the same. We treat them the same from a
@@ -75,9 +76,12 @@
  * such that their camera name occurs in the list of supported
  * cameras.
  *
- * Note that at least some serial cameras require a certain name for
- * correct detection.
- */
+ * Note:
+ * - at least some serial cameras require a certain name for correct
+ *   detection.
+ * - newer Canon cameras USB also support a PTP mode. see ptp/ptp2 camlibs.
+ * - no IEEE1394 cameras supported yet
+ **/
 
 #define S32K	(32 * 1024)
 #define S1M	(1024 * 1024)
@@ -119,6 +123,8 @@ const struct canonCamModelData models[] = {
 	{"Canon:PowerShot S200",	CANON_PS_S200,		0x04A9, 0x3065, CAP_SUP, S10M, S32K, NULL},
 	{"Canon:Digital IXUS v2",	CANON_PS_S200,		0x04A9, 0x3065, CAP_SUP, S10M, S32K, NULL},
 	{"Canon:Digital IXUS 330",	CANON_PS_S330,		0x04A9, 0x3066, CAP_SUP, S10M, S32K, NULL},
+	/* Canon MVX2i in some mode is 0x3067 - but it is not clear yet whether it uses our protocol */
+	/* Canon MVX2i in some mode is 0x306B - but it is not clear yet whether it uses our protocol */
 	{"Canon:PowerShot S45 (normal mode)",	CANON_PS_S45,	0x04A9, 0x306C, CAP_SUP, S99M, S32K, NULL},
         /* 0x306D is S45 in PTP mode */
 	{"Canon:PowerShot G3 (normal mode)",	CANON_PS_G3,	0x04A9, 0x306E, CAP_SUP, S99M, S32K, NULL},
