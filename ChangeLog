@@ -1,6 +1,8 @@
 2002-06-13  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* configure.in: 2.0.1dev13 (because of lots of build changes)
+	* doc/figures/Makefile.am: only install png images, but still build jpg and eps
+	* doc/Makefile.am: use $(XMLTO) instead of xmlto everywhere
 
 2002-06-12  Christophe Barbé <christophe.barbe@ufies.org>
 

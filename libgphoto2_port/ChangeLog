@@ -1,3 +1,11 @@
+2002-06-13  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* m4/documentation.m4:
+	  - set XMLTO to either xmlto (if present) or false (if not)
+	  - set have_xmltohtml and stuff instead of have_xmltoHTML and stuff
+	  - only set have_xmlto* to true if have_xmlto
+	  - output which formats we will create under which file/dir name
+
 2002-06-12  Lutz Müller <lutz@users.sourceforge.net>
 
 	* configure.in:
