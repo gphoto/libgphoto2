@@ -247,7 +247,7 @@ static struct {
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109},
 	/* Nikon Coolpix 3500: M. Meissner, 07 May 2003 */
-	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0111},
+	{"Nikon:Coolpix 3500 (PTP mode)", 0x04b0, 0x0111},
 	/* Nikon D100 has a PTP mode: westin 2002.10.16 */
 	{"Nikon:DSC D100 (PTP mode)", 0x04b0, 0x0402},
 	/* Nikon Coolpix 5700: A. Tanenbaum, 29 Oct 2002 */
