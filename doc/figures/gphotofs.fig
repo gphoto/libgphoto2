@@ -67,14 +67,6 @@ Single
 	 975 4200 2175 4200 2175 4500 975 4500 975 4200
 4 0 0 50 0 0 12 0.0000 4 180 1065 1050 4425 hotplug helper\001
 -6
-6 900 1050 6150 2400
-4 0 0 50 0 0 12 0.0000 4 180 5250 900 1425 The following is the result of a session of Lutz and Uli in the Wichtel.\001
-4 0 0 50 0 0 12 0.0000 4 180 4950 900 1650 We thought about what would be nice to have and came up with a\001
-4 0 0 50 0 0 12 0.0000 4 180 4980 900 1875 gphotofs which allows you to mount any camera in the filesystem.\001
-4 0 0 50 0 0 12 0.0000 4 180 5055 900 2100 Some prototype code has been written by Lutz, but there is nothing\001
-4 0 0 50 0 0 12 0.0000 4 180 600 900 2325 else yet\001
-4 0 0 50 0 0 12 0.0000 4 135 540 900 1200 NOTE:\001
--6
 6 1650 7050 4875 8175
 6 1800 7500 3150 7875
 6 1875 7500 3150 7800
@@ -98,6 +90,14 @@ Single
 2 2 0 1 0 11 55 0 20 0.000 0 0 -1 0 0 5
 	 1650 7050 4875 7050 4875 8175 1650 8175 1650 7050
 4 0 0 50 0 0 12 0.0000 4 180 1935 1725 7275 general architecture layer\001
+-6
+6 900 1050 6150 2400
+4 0 0 50 0 0 12 0.0000 4 180 5250 900 1425 The following is the result of a session of Lutz and Uli in the Wichtel.\001
+4 0 0 50 0 0 12 0.0000 4 180 4950 900 1650 We thought about what would be nice to have and came up with a\001
+4 0 0 50 0 0 12 0.0000 4 180 4980 900 1875 gphotofs which allows you to mount any camera in the filesystem.\001
+4 0 0 50 0 0 12 0.0000 4 180 5055 900 2100 Some prototype code has been written by Lutz, but there is nothing\001
+4 0 0 50 0 0 12 0.0000 4 180 4470 900 2325 else yet, especially nothing which actually does something.\001
+4 0 0 50 0 0 12 0.0000 4 135 540 900 1200 NOTE:\001
 -6
 2 1 0 1 0 7 50 0 -1 0.000 0 0 -1 1 0 2
 	0 0 1.00 60.00 120.00
