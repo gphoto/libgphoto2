@@ -27,8 +27,8 @@
 
 #ifndef __GSMART300_H__
 #define __GSMART300_H__
+#include <_stdint.h>
 #include <gphoto2-camera.h>
-#include <inttypes.h>
 
 #define FLASH_PAGE_SIZE_300 0x200
 #define GSMART_FILE_TYPE_IMAGE 0x00
