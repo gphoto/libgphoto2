@@ -461,7 +461,7 @@ camera_abilities (CameraAbilitiesList *list)
 		a.speed[0] = 0;
 		a.usb_vendor = models[i].usb_vendor;
 		a.usb_product= models[i].usb_product;
-		a.operations        = GP_CAPTURE_IMAGE; // | GP_OPERATION_CONFIG;
+		a.operations        = GP_CAPTURE_IMAGE | GP_OPERATION_CONFIG;
 		a.file_operations   = GP_FILE_OPERATION_PREVIEW |
 					GP_FILE_OPERATION_DELETE;
 		a.folder_operations = GP_FOLDER_OPERATION_PUT_FILE
@@ -575,17 +575,48 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 static int
 camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 {
-	CameraWidget *config;
+	CameraWidget *section, *widget;
 	PTPDevicePropDesc dpd;
+	char value[255];
 
+	memset(&dpd,0,sizeof(dpd));
 	ptp_getdevicepropdesc(&camera->pl->params,PTP_DPC_BatteryLevel,&dpd);
+	GP_DEBUG ("Data Type = 0x%.4x",dpd.DataType);
+	GP_DEBUG ("Get/Set = 0x%.2x",dpd.GetSet);
+	GP_DEBUG ("Form Flag = 0x%.2x",dpd.FormFlag);
+	if (dpd.DataType!=PTP_DTC_UINT8) return GP_OK;
+	GP_DEBUG ("Factory Default Value = %0.2x",*(uint8_t *)dpd.FactoryDefaultValue);
+	GP_DEBUG ("Current Value = %0.2x",*(uint8_t *)dpd.CurrentValue);
 
 	gp_widget_new (GP_WIDGET_WINDOW, _("Camera and Driver Configuration"),
 		window);
-	gp_widget_new (GP_WIDGET_TEXT, _("Power (readonly)"), &config);
-	gp_widget_set_value (config, "POWER");
-	gp_widget_append (*window,config);
-
+	gp_widget_new (GP_WIDGET_SECTION, _("Power (readonly)"), &section);
+	gp_widget_append (*window, section);
+	if (dpd.FormFlag==PTP_DPFF_Enumeration){
+		GP_DEBUG ("Number of values %i",
+			dpd.FORM.Enum.NumberOfValues);
+		gp_widget_new (GP_WIDGET_TEXT, "Number of values",&widget);
+		snprintf (value,255,"%i",dpd.FORM.Enum.NumberOfValues);
+		gp_widget_set_value (widget,value);
+		gp_widget_append (section,widget);
+		gp_widget_new (GP_WIDGET_TEXT, "Supported values",&widget);
+		value[0]='\0';
+		{
+		uint16_t i;
+		char tmp[64];
+		for (i=0;i<dpd.FORM.Enum.NumberOfValues;i++){
+			snprintf (tmp,6,"|%.3i|",
+			*(uint8_t *)dpd.FORM.Enum.SupportedValue[i]);
+			strncat(value,tmp,6);
+			}
+		}
+		gp_widget_set_value (widget,value);
+		gp_widget_append (section,widget);
+		gp_widget_new (GP_WIDGET_TEXT, "Current value",&widget);
+		snprintf (value,255,"%i",*(uint8_t *)dpd.CurrentValue);
+		gp_widget_set_value (widget,value);
+		gp_widget_append (section,widget);
+	}
 	return GP_OK;
 }
 

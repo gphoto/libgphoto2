@@ -1,3 +1,11 @@
+2003-03-03 Mariusz Woloszyn
+	* library.c: enabled getting config support;
+	  curently only getting batery level is supported;
+	* ptp-pack.c: "finished" Device Property Describing Dataset
+	  unpacking function ptp_unpack_DPD();
+	* ptp.h: changed PTP_DC_* to PTP_DTC_* (DTC stands for DataType Code);
+	  changed PTPDevicePropDesc fields name;
+	* ptp.c: added ptp_getdevicepropvalue() (not working properly yet);
 2003-04-01 Mariusz Woloszyn
 	* library.c: added Kodak CX4200 explicite support;
 	  added some get config code (it's not enabled, nor finished yet);

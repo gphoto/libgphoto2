@@ -709,19 +709,38 @@ ptp_initiatecapture (PTPParams* params, uint32_t storageid,
 
 uint16_t
 ptp_getdevicepropdesc (PTPParams* params, uint16_t propcode, 
-			PTPDevicePropDesc *devicepropertydesc)
+			PTPDevicePropDesc* devicepropertydesc)
 {
 	PTPContainer ptp;
 	uint16_t ret;
-	char *dpd=NULL;
+	char* dpd=NULL;
 
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_GetDevicePropDesc;
 	ptp.Param1=propcode;
 	ptp.Nparam=1;
 	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &dpd);
-	/* unpack */
+	ptp_unpack_DPD(params, dpd, devicepropertydesc);
 	free(dpd);
+	return ret;
+}
+
+uint16_t
+ptp_getdevicepropvalue (PTPParams* params, uint16_t propcode,
+			void* value)
+{
+	PTPContainer ptp;
+	uint16_t ret;
+	char* dpv=NULL;
+
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code=PTP_OC_GetDevicePropValue;
+	ptp.Param1=propcode;
+	ptp.Nparam=1;
+	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &dpv);
+	/* unpack */
+	free(dpv);
 	return ret;
 }
 

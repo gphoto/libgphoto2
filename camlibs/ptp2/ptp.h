@@ -394,36 +394,36 @@ struct _PTPDevicePropDesc {
 	void *		CurrentValue;
 	uint8_t		FormFlag;
 	union	{
-		PTPPropDescEnumForm	enumeration;
-		PTPPropDescRangeForm	range;
+		PTPPropDescEnumForm	Enum;
+		PTPPropDescRangeForm	Range;
 	} FORM;
 };
 typedef struct _PTPDevicePropDesc PTPDevicePropDesc;
 
-// Datatype Codes 
+// DataType Codes 
 
-#define PTP_DC_UNDEF	0x0000
-#define PTP_DC_INT8	0x0001
-#define PTP_DC_UINT8	0x0002
-#define PTP_DC_INT16	0x0003
-#define PTP_DC_UINT16	0x0004
-#define PTP_DC_INT32	0x0005
-#define PTP_DC_UINT32	0x0006
-#define PTP_DC_INT64	0x0007
-#define PTP_DC_UINT64	0x0008
-#define PTP_DC_INT128	0x0009
-#define PTP_DC_UINT128	0x000A
-#define PTP_DC_AINT8	0x4001
-#define PTP_DC_AUINT8	0x4002
-#define PTP_DC_AINT16	0x4003
-#define PTP_DC_AUINT16	0x4004
-#define PTP_DC_AINT32	0x4005
-#define PTP_DC_AUINT32	0x4006
-#define PTP_DC_AINT64	0x4007
-#define PTP_DC_AUINT64	0x4008
-#define PTP_DC_AINT128	0x4009
-#define PTP_DC_AUINT128	0x400A
-#define PTP_DC_STR	0xFFFF
+#define PTP_DTC_UNDEF		0x0000
+#define PTP_DTC_INT8		0x0001
+#define PTP_DTC_UINT8		0x0002
+#define PTP_DTC_INT16		0x0003
+#define PTP_DTC_UINT16		0x0004
+#define PTP_DTC_INT32		0x0005
+#define PTP_DTC_UINT32		0x0006
+#define PTP_DTC_INT64		0x0007
+#define PTP_DTC_UINT64		0x0008
+#define PTP_DTC_INT128		0x0009
+#define PTP_DTC_UINT128		0x000A
+#define PTP_DTC_AINT8		0x4001
+#define PTP_DTC_AUINT8		0x4002
+#define PTP_DTC_AINT16		0x4003
+#define PTP_DTC_AUINT16		0x4004
+#define PTP_DTC_AINT32		0x4005
+#define PTP_DTC_AUINT32		0x4006
+#define PTP_DTC_AINT64		0x4007
+#define PTP_DTC_AUINT64		0x4008
+#define PTP_DTC_AINT128		0x4009
+#define PTP_DTC_AUINT128	0x400A
+#define PTP_DTC_STR		0xFFFF
 
 // Device Properties Codes
 
@@ -459,6 +459,12 @@ typedef struct _PTPDevicePropDesc PTPDevicePropDesc;
 #define PTP_DPC_UploadURL		0x501D
 #define PTP_DPC_Artist			0x501E
 #define PTP_DPC_CopyrightInfo		0x501F
+
+// Device Property Form Flag
+
+#define PTP_DPFF_None			0x00
+#define PTP_DPFF_Range			0x01
+#define PTP_DPFF_Enumeration		0x02
 
 // Glue stuff starts here
 
@@ -565,6 +571,9 @@ uint16_t ptp_initiatecapture	(PTPParams* params, uint32_t storageid,
 
 uint16_t ptp_getdevicepropdesc	(PTPParams* params, uint16_t propcode,
 				PTPDevicePropDesc *devicepropertydesc);
+uint16_t ptp_getdevicepropvalue	(PTPParams* params, uint16_t propcode,
+				void* value);
+
 
 uint16_t ptp_ek_sendfileobjectinfo (PTPParams* params, uint32_t* store,
 				uint32_t* parenthandle, uint32_t* handle,

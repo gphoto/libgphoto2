@@ -58,7 +58,7 @@ dtoh32ap (PTPParams *params, unsigned char *a)
 #define htod16(x)	htod16p(params,x)
 #define htod32(x)	htod32p(params,x)
 
-#define dtoh8a(x)	*(uint8_t*)(x)
+#define dtoh8a(x)	(*(uint8_t*)(x))
 #define dtoh16a(a)	dtoh16ap(params,a)
 #define dtoh32a(a)	dtoh32ap(params,a)
 #define dtoh16(x)	dtoh16p(params,x)
@@ -404,16 +404,152 @@ ptp_unpack_OI (PTPParams *params, char* data, PTPObjectInfo *oi)
 	free(capture_date);
 }
 
+// Device Property pack/unpack
+
 #define PTP_dpd_DevicePropertyCode	0
 #define PTP_dpd_DataType		2
 #define PTP_dpd_GetSet			4
 #define PTP_dpd_FactoryDefaultValue	5
 
+// Custom Type Value Assignement macro frequently used below
+#define CTVA(type,func,target)  {					\
+		target = malloc(sizeof(type));				\
+		*(type *)target =					\
+			func(&data[PTP_dpd_FactoryDefaultValue+totallen]);\
+			totallen+=sizeof(type);				\
+}
+
+// Many Custom Types Vale Assignement macro frequently used below
+
+#define MCTVA(type,func,target,n) {					\
+		uint16_t i;						\
+		for (i=0;i<n;i++) {					\
+			target[i] = malloc(sizeof(type));		\
+			*(type *)target[i] =				\
+			func(&data[PTP_dpd_FactoryDefaultValue+totallen]);\
+			totallen+=sizeof(type);				\
+		}							\
+}
+
 static inline void
 ptp_unpack_DPD (PTPParams *params, char* data, PTPDevicePropDesc *dpd)
 {
+	uint8_t len;
+	int totallen=0;
 
 	dpd->DevicePropertyCode=dtoh16a(&data[PTP_dpd_DevicePropertyCode]);
 	dpd->DataType=dtoh16a(&data[PTP_dpd_DataType]);
 	dpd->GetSet=dtoh8a(&data[PTP_dpd_GetSet]);
+	dpd->FactoryDefaultValue = NULL;
+	dpd->CurrentValue = NULL;
+	switch (dpd->DataType) {
+		case PTP_DTC_INT8:
+			CTVA(int8_t,dtoh8a,dpd->FactoryDefaultValue);
+			CTVA(int8_t,dtoh8a,dpd->CurrentValue);
+			break;
+		case PTP_DTC_UINT8:
+			CTVA(uint8_t,dtoh8a,dpd->FactoryDefaultValue);
+			CTVA(uint8_t,dtoh8a,dpd->CurrentValue);
+			break;
+		case PTP_DTC_INT16:
+			CTVA(int16_t,dtoh16a,dpd->FactoryDefaultValue);
+			CTVA(int16_t,dtoh16a,dpd->CurrentValue);
+			break;
+		case PTP_DTC_UINT16:
+			CTVA(uint16_t,dtoh16a,dpd->FactoryDefaultValue);
+			CTVA(uint16_t,dtoh16a,dpd->CurrentValue);
+			break;
+		case PTP_DTC_INT32:
+			CTVA(int32_t,dtoh32a,dpd->FactoryDefaultValue);
+			CTVA(int32_t,dtoh32a,dpd->CurrentValue);
+			break;
+		case PTP_DTC_UINT32:
+			CTVA(uint32_t,dtoh32a,dpd->FactoryDefaultValue);
+			CTVA(uint32_t,dtoh32a,dpd->CurrentValue);
+			break;
+		/* XXX: other int types are unimplemented */
+		/* XXX: int arrays are unimplemented also */
+		case PTP_DTC_STR:
+			(char *)dpd->FactoryDefaultValue = ptp_unpack_string
+				(params,data,PTP_dpd_FactoryDefaultValue,&len);
+			totallen=len*2+1;
+			(char *)dpd->CurrentValue = ptp_unpack_string
+				(params, data, PTP_dpd_FactoryDefaultValue + 
+				totallen, &len);
+			totallen+=len*2+1;
+			break;
+	}
+	/* if totallen==0 then Data Type format is not supported by this
+	code or the Data Type is a string (with two empty strings as
+	values). In both cases Form Flag should be set to 0x00 and FORM is
+	not present. */
+	dpd->FormFlag=PTP_DPFF_None;
+	if (totallen==0) return;
+
+	dpd->FormFlag=dtoh8a(&data[PTP_dpd_FactoryDefaultValue+totallen]);
+	totallen+=sizeof(uint8_t);
+	switch (dpd->FormFlag) {
+		case PTP_DPFF_Range:
+		switch (dpd->DataType) {
+			case PTP_DTC_INT8:
+			CTVA(int8_t,dtoh8a,dpd->FORM.Range.MinimumValue);
+			CTVA(int8_t,dtoh8a,dpd->FORM.Range.MaximumValue);
+			CTVA(int8_t,dtoh8a,dpd->FORM.Range.StepSize);
+			break;
+			case PTP_DTC_UINT8:
+			CTVA(uint8_t,dtoh8a,dpd->FORM.Range.MinimumValue);
+			CTVA(uint8_t,dtoh8a,dpd->FORM.Range.MaximumValue);
+			CTVA(uint8_t,dtoh8a,dpd->FORM.Range.StepSize);
+			break;
+			case PTP_DTC_INT16:
+			CTVA(int16_t,dtoh16a,dpd->FORM.Range.MinimumValue);
+			CTVA(int16_t,dtoh16a,dpd->FORM.Range.MaximumValue);
+			CTVA(int16_t,dtoh16a,dpd->FORM.Range.StepSize);
+			break;
+			case PTP_DTC_UINT16:
+			CTVA(uint16_t,dtoh16a,dpd->FORM.Range.MinimumValue);
+			CTVA(uint16_t,dtoh16a,dpd->FORM.Range.MaximumValue);
+			CTVA(uint16_t,dtoh16a,dpd->FORM.Range.StepSize);
+			break;
+			case PTP_DTC_INT32:
+			CTVA(int32_t,dtoh32a,dpd->FORM.Range.MinimumValue);
+			CTVA(int32_t,dtoh32a,dpd->FORM.Range.MaximumValue);
+			CTVA(int32_t,dtoh32a,dpd->FORM.Range.StepSize);
+			break;
+			case PTP_DTC_UINT32:
+			CTVA(uint32_t,dtoh32a,dpd->FORM.Range.MinimumValue);
+			CTVA(uint32_t,dtoh32a,dpd->FORM.Range.MaximumValue);
+			CTVA(uint32_t,dtoh32a,dpd->FORM.Range.StepSize);
+			break;
+		/* XXX: other int types are unimplemented */
+		/* XXX: int arrays are unimplemented also */
+		}
+		case PTP_DPFF_Enumeration:
+#define N	dpd->FORM.Enum.NumberOfValues
+		N = dtoh16a(&data[PTP_dpd_FactoryDefaultValue+totallen]);
+		totallen+=sizeof(uint16_t);
+		dpd->FORM.Enum.SupportedValue = malloc(N*sizeof(void *));
+		switch (dpd->DataType) {
+			case PTP_DTC_INT8:
+			MCTVA(int8_t,dtoh8a,dpd->FORM.Enum.SupportedValue,N);
+			break;
+			case PTP_DTC_UINT8:
+			MCTVA(uint8_t,dtoh8a,dpd->FORM.Enum.SupportedValue,N);
+			break;
+			case PTP_DTC_INT16:
+			MCTVA(int16_t,dtoh16a,dpd->FORM.Enum.SupportedValue,N);
+			break;
+			case PTP_DTC_UINT16:
+			MCTVA(uint16_t,dtoh16a,dpd->FORM.Enum.SupportedValue,N);
+			break;
+			case PTP_DTC_INT32:
+			MCTVA(int32_t,dtoh16a,dpd->FORM.Enum.SupportedValue,N);
+			break;
+			case PTP_DTC_UINT32:
+			MCTVA(uint32_t,dtoh16a,dpd->FORM.Enum.SupportedValue,N);
+			break;
+		}
+	}
 }
+
+
