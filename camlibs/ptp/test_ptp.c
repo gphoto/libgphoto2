@@ -39,6 +39,18 @@ ptp_write_func (unsigned char *bytes, unsigned int size, void *data)
 
 }
 
+static short
+ptp_check_int (unsigned char *bytes, unsigned int size, void *data)
+{
+	int result;
+
+	result = usb_bulk_read(ptp_usb->handle, ptp_usb->intep, bytes, size, 3000);
+	if (result==0) result = b_bulk_read(ptp_usb->handle, ptp_usb->intep, bytes, size, 3000);
+	if (result >= 0)
+		return (PTP_RC_OK);
+	else
+		return (translate_gp_result (result));
+}
 
 void talk (struct usb_device *dev, int inep, int outep, int eventep) {
 char buf[65535];

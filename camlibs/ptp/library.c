@@ -337,6 +337,26 @@ ptp_write_func (unsigned char *bytes, unsigned int size, void *data)
 		return (translate_gp_result (result));
 }
 
+static short
+ptp_check_int (unsigned char *bytes, unsigned int size, void *data)
+{
+	Camera *camera = ((PTPData *)data)->camera;
+	int result;
+
+	/*
+	 * gp_port_check_int returns (in case of success) the number of bytes
+	 * read. libptp doesn't need that.
+	 */
+
+	result = gp_port_check_int (camera->port, bytes, size);
+	if (result==0) result = gp_port_check_int (camera->port, bytes, size);
+	if (result >= 0)
+		return (PTP_RC_OK);
+	else
+		return (translate_gp_result (result));
+}
+
+
 static void
 ptp_debug_func (void *data, const char *format, va_list args)
 {

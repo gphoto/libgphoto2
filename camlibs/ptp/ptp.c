@@ -176,6 +176,11 @@ ptp_getresp (PTPParams* params, PTPReq* databuf, uint16_t code)
 	return ret;
 }
 
+static uint16_t
+ptp_check_event (PTPParams* params, PTPReq* databuf)
+{
+}
+
 // major PTP functions
 
 // Transaction data phase description
@@ -217,7 +222,7 @@ ptp_transaction (PTPParams* params, PTPReq* req, uint16_t code,
 	if ((params==NULL) || (req==NULL)) 
 		return PTP_ERROR_BADPARAM;
 	params->transaction_id++;
-	// compute the request phase container length
+	// calculate the request phase container length
 	req->len=PTP_REQ_HDR_LEN+((flags>>8)*sizeof(uint32_t));
 	// send request
 	CHECK_PTP_RC(ptp_sendreq(params, req, code));
@@ -411,8 +416,8 @@ ptp_getthumb (PTPParams* params, uint32_t handle,
 /**
  * ptp_deleteobject:
  * params:	PTPParams*
- *		uint32_t handle		- object handle
- *		uint32_t ofc		- object format code
+ *		handle			- object handle
+ *		ofc			- object format code
  * 
  * Deletes desired objects.
  *
@@ -429,6 +434,34 @@ ptp_deleteobject (PTPParams* params, uint32_t handle,
 	return ptp_transaction(params, &req, PTP_OC_DeleteObject,
 	PTP_DP_NODATA | PTP_RQ_PARAM2, 0, NULL);
 }
+
+/**
+ * ptp_initiatecapture:
+ * params:	PTPParams*
+ *		storageid		- destination StorageID on Responder
+ *		ofc			- object format code
+ * 
+ * Causes device to initiate the capture of one or more ne data objects
+ * according to its current device properties, storing the data into store
+ * indicated by storageid. If storageid is 0x00000000, the object(s) will
+ * be stored in a store that is determined by the capturing device.
+ * The capturing of new data objects is an asynchronous operation.
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
+
+uint16_t
+ptp_initiatecapture (PTPParams* params, uint32_t storageid,
+			uint32_t ofc)
+{
+	PTPReq req;
+	*(uint32_t *)(req.data)=htod32(storageid);
+	*(uint32_t *)(req.data+4)=htod32(ofc);
+	
+	return ptp_transaction(params, &req, PTP_OC_InitiateCapture,
+	PTP_DP_NODATA | PTP_RQ_PARAM2, 0, NULL);
+}
+
 
 /**
  * ptp_ek_sendfileobjectinfo:

@@ -128,12 +128,29 @@ typedef struct _PTPReq PTPReq;
 #define PTP_RC_EK_FilenameConflicts	0xA002
 #define PTP_RC_EK_FilenameInvalid	0xA003
 
-// PTP extended ERROR codes
-
+// PTP driver extended ERROR codes
 #define PTP_ERROR_IO			0x02FF
 #define PTP_ERROR_DATA_EXPECTED		0x02FE
 #define PTP_ERROR_RESP_EXPECTED		0x02FD
 #define PTP_ERROR_BADPARAM		0x02FC
+
+// PTP Event Codes
+
+#define PTP_EC_Undefined		0x4000
+#define PTP_EC_CancelTransaction	0x4001
+#define PTP_EC_ObjectAdded		0x4000
+#define PTP_EC_ObjectRemoved		0x4000
+#define PTP_EC_StoreAdded		0x4000
+#define PTP_EC_StoreRemoved		0x4000
+#define PTP_EC_DevicePropChanged	0x4000
+#define PTP_EC_ObjectInfoChanged	0x4000
+#define PTP_EC_DeviceInfoChanged	0x4000
+#define PTP_EC_RequestObjectTransfer	0x4000
+#define PTP_EC_StoreFull		0x4000
+#define PTP_EC_DeviceReset		0x4000
+#define PTP_EC_StorageInfoChanged	0x4000
+#define PTP_EC_CaptureComplete		0x4000
+#define PTP_EC_UnreportedStatus		0x4000
 
 // PTP device info structure (returned by GetDevInfo)
 
@@ -305,6 +322,7 @@ struct _PTPParams {
 	/* Custom IO functions */
 	PTPIOReadFunc  read_func;
 	PTPIOWriteFunc write_func;
+	PTPIOReadFunc  intr_func;
 
 	/* Custom error and debug function */
 	PTPErrorFunc error_func;
@@ -325,31 +343,35 @@ typedef struct _PTPParams PTPParams;
 
 // ptp functions
 
-uint16_t ptp_opensession  (PTPParams *params, uint32_t session);
-uint16_t ptp_closesession (PTPParams *params);
+uint16_t ptp_opensession	(PTPParams *params, uint32_t session);
+uint16_t ptp_closesession	(PTPParams *params);
 
-uint16_t ptp_getstorageids (PTPParams* params, PTPStorageIDs* storageids);
-uint16_t ptp_getstorageinfo (PTPParams* params, uint32_t storageid,
-			PTPStorageInfo* storageinfo);
+uint16_t ptp_getstorageids	(PTPParams* params, PTPStorageIDs* storageids);
+uint16_t ptp_getstorageinfo 	(PTPParams* params, uint32_t storageid,
+				PTPStorageInfo* storageinfo);
 
-uint16_t ptp_getobjecthandles (PTPParams* params, uint32_t storage,
-			uint32_t objectformatcode, uint32_t associationOH,
-			PTPObjectHandles* objecthandles);
+uint16_t ptp_getobjecthandles 	(PTPParams* params, uint32_t storage,
+				uint32_t objectformatcode,
+				uint32_t associationOH,
+				PTPObjectHandles* objecthandles);
 
 uint16_t ptp_getobjectinfo	(PTPParams *params, uint32_t handle,
-			PTPObjectInfo* objectinfo);
+				PTPObjectInfo* objectinfo);
 
-uint16_t ptp_getobject	(PTPParams *params, uint32_t handle,
-			uint32_t size, PTPReq* object);
-uint16_t ptp_getthumb	(PTPParams *params, uint32_t handle,
-			uint32_t size, PTPReq* object);
+uint16_t ptp_getobject		(PTPParams *params, uint32_t handle,
+				uint32_t size, PTPReq* object);
+uint16_t ptp_getthumb		(PTPParams *params, uint32_t handle,
+				uint32_t size, PTPReq* object);
 
 uint16_t ptp_deleteobject	(PTPParams* params, uint32_t handle,
-			uint32_t ofc);
+				uint32_t ofc);
+
+uint16_t ptp_initiatecapture	(PTPParams* params, uint32_t storageid,
+				uint32_t ofc);
 
 uint16_t ptp_ek_sendfileobjectinfo (PTPParams* params, uint32_t* store,
-			uint32_t* parenthandle, uint32_t* handle,
-			PTPObjectInfo* objectinfo);
-uint16_t ptp_ek_sendfileobject (PTPParams* params, PTPReq* object,
-			uint32_t size);
+				uint32_t* parenthandle, uint32_t* handle,
+				PTPObjectInfo* objectinfo);
+uint16_t ptp_ek_sendfileobject	(PTPParams* params, PTPReq* object,
+				uint32_t size);
 #endif /* __PTP_H__ */
