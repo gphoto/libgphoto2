@@ -737,6 +737,8 @@ gp_camera_free (Camera *camera)
 {
 	CHECK_NULL (camera);
 
+	gp_log (GP_LOG_DEBUG, "gp-camera", "Freeing camera...");
+
 	/* If the camera is currently initialized, close the connection */
 	if (camera->port && camera->pc && camera->pc->lh)
 		gp_camera_exit (camera);
