@@ -21,7 +21,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <gphoto2-library.h>
-#include <gphoto2-core.h>
 #include "jpeg.h"
 
 // call example:nullpictureabort(picture,"Picture");

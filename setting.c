@@ -25,8 +25,8 @@
 #include <string.h>
 
 #include "gphoto2-result.h"
-#include "gphoto2-core.h"
 #include "gphoto2-debug.h"
+#include "gphoto2-port.h"
 
 typedef struct {
 	/* key = value settings */
@@ -50,11 +50,8 @@ int gp_setting_get (char *id, char *key, char *value)
 
 	CHECK_NULL (id && key);
 
-	/*
-	 * Be nice to frontend writers and make sure libgphoto2 is
-	 * initialized
-	 */
-	CHECK_RESULT (gp_camera_count ());
+	if (!glob_setting_count)
+		load_settings ();
 
         for (x=0; x<glob_setting_count; x++) {
                 if ((strcmp(glob_setting[x].id, id)==0) &&
@@ -132,6 +129,16 @@ int load_settings (void)
 {
 	FILE *f;
 	char buf[1024], *id, *key, *value;
+
+	/* Make sure the directories are created */
+	gp_debug_printf (GP_DEBUG_LOW, "core", "Creating $HOME/.gphoto");
+#ifdef WIN32
+	GetWindowsDirectory (buf, 1024);
+	strcat (buf, "\\gphoto");
+#else
+	sprintf (buf, "%s/.gphoto", getenv ("HOME"));
+#endif
+	(void)GP_SYSTEM_MKDIR (buf);
 
 	glob_setting_count = 0;
 #ifdef WIN32
