@@ -5,11 +5,11 @@
 EXTRA_DIST = makefile.os2				\
 	gphoto2-cmd-config.c gphoto2-cmd-config.h	\
 	gphoto2-cmd-capture.c gphoto2-cmd-capture.h	\
-	$(man1_MANS) gphoto2.xml
+	$(man_MANS) gphoto2.xml
 
 bin_PROGRAMS = gphoto2
 
-man1_MANS = gphoto2.1
+man_MANS = gphoto2.1
 
 CFLAGS = @CFLAGS@ -g
 LDFLAGS = @LDFLAGS@ -g
@@ -58,5 +58,5 @@ gphoto2_LDADD =						\
 # Special rule for regenerating the man page from the XML file.
 # This requires xmlto, which can be obtained from
 # <http://cyberelk.net/tim/xmlto/>.
-$(man1_MANS): gphoto2.xml
+$(man_MANS): gphoto2.xml
 	-xmlto man $<
