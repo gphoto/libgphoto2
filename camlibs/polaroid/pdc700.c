@@ -343,7 +343,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 	/* Fill the list */
 	CHECK_RESULT (pdc700_num (camera->port, &num, NULL));
-	gp_list_populate (list, "PDC700%04i.raw", num);
+	gp_list_populate (list, "PDC700%04i.jpg", num);
 
 	return (GP_OK);
 }
