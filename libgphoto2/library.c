@@ -13,15 +13,16 @@ int is_library(char *library_filename) {
         char buf[1024];
         void *lh;
 
-#if defined(OS2) || defined(WINDOWS)
+#if defined(OS2) || defined(WIN32)
         sprintf(buf, "%s\\%s", CAMLIBS, library_filename);
 #else
         sprintf(buf, "%s/%s", CAMLIBS, library_filename);
 #endif
-        if (GP_DLOPEN(lh, buf)==NULL)
+        
+		if ((lh = GPIO_DLOPEN(buf)) == NULL)
                 return (GP_ERROR);
 
-        GP_DLCLOSE(lh);
+        GPIO_DLCLOSE(lh);
 
         return (GP_OK);
 }
@@ -34,15 +35,15 @@ int load_library (Camera *camera, char *camera_name) {
         for (x=0; x<glob_abilities_list->count; x++) {
            if (strcmp(glob_abilities_list->abilities[x]->model, camera_name)==0) {
                 sprintf(buf, "%s/%s", CAMLIBS, glob_abilities_list->abilities[x]->library);
-                if (GP_DLOPEN(lh, buf)==NULL) {
+                if ((lh = GPIO_DLOPEN(buf))==NULL) {
                         if (glob_debug)
                                 perror("core:\tload_library");
                         return (GP_ERROR);
                 }
-                camera->library_handle 		= lh;
-		GP_DLSYM(camera->functions->id, lh, "camera_id");
-		GP_DLSYM(camera->functions->abilities, lh, "camera_abilities");
-		GP_DLSYM(camera->functions->init, lh, "camera_init");
+                camera->library_handle = lh;
+				camera->functions->id = (c_id)GPIO_DLSYM(lh, "camera_id");
+				camera->functions->abilities = (c_abilities)GPIO_DLSYM(lh, "camera_abilities");
+				camera->functions->init = (c_init)GPIO_DLSYM(lh, "camera_init");
 
                 return (GP_OK);
            }
@@ -56,23 +57,27 @@ int load_camera_list (char *library_filename) {
         /* 0 implies an error occurred */
 
         char buf[1024];
-	CameraText id;
+		CameraText id;
         void *lh;
         c_abilities load_camera_abilities;
         c_id load_camera_id;
         int x, old_count;
 
+#if defined(OS2) || defined(WIN32)
+		sprintf(buf, "%s\\%s", CAMLIBS, library_filename);
+#else
         sprintf(buf, "%s/%s", CAMLIBS, library_filename);
+#endif
 
         /* try to open the library */
-        if (GP_DLOPEN(lh, buf)==NULL) {
+        if ((lh = GPIO_DLOPEN(buf))==NULL) {
                 if (glob_debug)
                         perror("core:\tload_camera_list");
                 return 0;
         }
 
         /* check to see if this library has been loaded */
-	GP_DLSYM(load_camera_id, lh, "camera_id");
+	load_camera_id = (c_id)GPIO_DLSYM(lh, "camera_id");
 	load_camera_id(&id);
 
         if (glob_debug)
@@ -80,17 +85,17 @@ int load_camera_list (char *library_filename) {
 
         for (x=0; x<glob_abilities_list->count; x++) {
                 if (strcmp(glob_abilities_list->abilities[x]->id, id.text)==0) {
-                        GP_DLCLOSE(lh);
+                        GPIO_DLCLOSE(lh);
                         return (GP_ERROR);
                 }
         }
 
         /* load in the camera_abilities function */
-	GP_DLSYM(load_camera_abilities, lh, "camera_abilities");
+	load_camera_abilities = (c_abilities)GPIO_DLSYM(lh, "camera_abilities");
 	old_count = glob_abilities_list->count;
 
         if (load_camera_abilities(glob_abilities_list) == GP_ERROR) {
-                GP_DLCLOSE(lh);
+                GPIO_DLCLOSE(lh);
                 return 0;
         }
 
@@ -100,21 +105,22 @@ int load_camera_list (char *library_filename) {
 		strcpy(glob_abilities_list->abilities[x]->library, library_filename);
 	}
 
-        GP_DLCLOSE(lh);
+        GPIO_DLCLOSE(lh);
 
         return (x);
 }
 
 int load_cameras() {
 
-        DIR *d;
-        CameraAbilities *t;
+        GPIO_DIR d;
+        GPIO_DIRENT de;
+		CameraAbilities *t;
 
         int x, y, z;
-        struct dirent *de;
+        
 
         /* Look for available camera libraries */
-        d = opendir(CAMLIBS);
+        d = GPIO_OPENDIR(CAMLIBS);
         if (!d) {
                 fprintf(stderr, "core: couldn't open %s\n", CAMLIBS);
                 return GP_ERROR;
@@ -122,19 +128,19 @@ int load_cameras() {
 
         do {
            /* Read each entry */
-           de = readdir(d);
+           de = GPIO_READDIR(d);
            if (de) {
                 if (glob_debug)
-                   printf("core:\tis %s a library? ", de->d_name);
+                   printf("core:\tis %s a library? ", GPIO_FILENAME(de));
                 /* try to open the library */
-                if (is_library(de->d_name) == GP_OK) {
+                if (is_library(GPIO_FILENAME(de)) == GP_OK) {
                         if (glob_debug)
                                 printf("yes\n");
-                        load_camera_list(de->d_name);
+                        load_camera_list(GPIO_FILENAME(de));
                    } else {
                         if (glob_debug) {
                                 printf("no\n");
-				printf("core: reason: %s\n", GP_DLERROR());
+				printf("core: reason: %s\n", GPIO_DLERROR());
 			}
                 }
            }
@@ -163,7 +169,7 @@ int load_cameras() {
 
 int close_library (Camera *camera) {
 
-        GP_DLCLOSE(camera->library_handle);
+        GPIO_DLCLOSE(camera->library_handle);
 
         return (GP_OK);
 }

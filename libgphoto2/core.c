@@ -1,10 +1,11 @@
-#include <dirent.h>
 #include <fcntl.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#ifndef WIN32
 #include <unistd.h>
+#endif
 #include <gpio.h>
 #include <gphoto2.h>
 

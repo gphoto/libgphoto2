@@ -10,11 +10,13 @@
 
 #ifdef OS2
 #include <gphotoos2.h>
-#include <gpio.h>
-#else
-#include <gpio/gpio.h>
 #endif
 
+#ifdef WIN32
+#define CAMLIBS "."
+#endif
+
+#include <gpio.h>
 #include <gphoto2-datatypes.h>
 #include <gphoto2-core.h>
 #include <gphoto2-library.h>
