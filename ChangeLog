@@ -1,3 +1,9 @@
+2002-06-13  Lutz Müller <lutz@users.sourceforge.net>
+
+	Patch by Arnaud Launay <asl@launay.org>, slightly corrected:
+
+	* configure.in: Fix check for readline.
+
 2002-06-13  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* configure.in: 2.0.1dev13 (because of lots of build changes)
