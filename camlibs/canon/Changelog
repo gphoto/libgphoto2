@@ -1,5 +1,8 @@
 2000-08-22
-    phil        changed serial.c to the latest libusb from CVS (thanks Scott)
+    philm       changed serial.c to the latest libusb from CVS (thanks Scott)
+                Got serial upload working. it should work at 115200 for S10
+                and S20 but only 57600 for everyone else :-(. It is *very*
+                slow.
 2000-08-21 
     philm       deleted unused functions from canon.c (old configure box
                 and related functions).

@@ -75,7 +75,8 @@ int psa50_send_frame(Camera *camera, const unsigned char *pkt,int len)
         }
     }
     *p++ = CANON_FEND;
-    return !canon_serial_send(camera, buffer,p-buffer,USLEEP2);
+
+	return !canon_serial_send(camera, buffer,p-buffer,USLEEP2);
 }
 
 
@@ -339,7 +340,7 @@ static int psa50_send_msg(Camera *camera,unsigned char mtype,
 
     total = pos-pkt;
 	
-	if (mtype == 0x3 && dir == 0x11) {
+	if (mtype == 0x3 && dir == 0x11) { // uploading
 		pkt[MSG_LEN_LSB] = total & 0xff;
 		pkt[MSG_LEN_MSB] = total >> 8;
 		
@@ -1711,7 +1712,7 @@ int psa50_put_file_usb(Camera *camera, CameraFile *file, char *destname, char *d
  */
 
 #define HDR_FIXED_LEN 30
-#define DATA_BLOCK 512
+#define DATA_BLOCK 900
 int psa50_put_file_serial(Camera *camera, CameraFile *file, char *destname, char *destpath)
 {
 //	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
@@ -1722,6 +1723,7 @@ int psa50_put_file_serial(Camera *camera, CameraFile *file, char *destname, char
 	char offset2[4];
 	int block_len;
 	char block_len2[4];
+	int sent=0;
 	int i,j=0,len, hdr_len;
 //	int okay, good_ack;
 	
@@ -1730,24 +1732,39 @@ int psa50_put_file_serial(Camera *camera, CameraFile *file, char *destname, char
 	filename[i]='\0';
 
 	hdr_len = HDR_FIXED_LEN + strlen(file->name) + strlen(destpath);
-
-	block_len = 118;
 	
-	for(i=0;i<4;i++) {
-		offset2[i] = (offset >> (8*i)) & 0xff;
-        block_len2[i] = (block_len >> (8*i)) & 0xff;
-	}
+	while(sent<file->size) {
+		
+		if(file->size < DATA_BLOCK)
+		  block_len = file->size;
+		else if ((file->size - sent < DATA_BLOCK))
+		  block_len = file->size - sent;
+		else
+		  block_len = DATA_BLOCK;
+		
+		offset = sent;
+		fprintf(stderr,"offset: %i, sent: %i\n",offset,sent);
+		
+		for(i=0;i<4;i++) {
+			offset2[i] = (offset >> (8*i)) & 0xff;
+			block_len2[i] = (block_len >> (8*i)) & 0xff;
+		}
 
-	for(i=0; i<DATA_BLOCK; i++) {
-		buf[i] = file->data[j];
-		j++;
-	}
-
-	msg = psa50_serial_dialogue(camera,0x3,0x11,&len,"\x02\x00\x00\x00",4,
-			    offset2,4,block_len2,4,
-				destpath,strlen(destpath),destname,strlen(destname)+1,
-				"<PRE>\r\nCIFF_VERSION=1.00\r\n<IMG SRC=\"../../DCIM/621CANON/AUT_2103.JPG\">\r\n<IMG SRC=\"../../DCIM/621CANON/AUT_2104.JPG\">\r\n",118,
+		for(i=0; i<DATA_BLOCK; i++) {
+			buf[i] = file->data[j];
+			j++;
+		}
+	
+		msg = psa50_serial_dialogue(camera,0x3,0x11,&len,"\x02\x00\x00\x00",4,
+				offset2,4,block_len2,4,
+			    destpath,strlen(destpath),destname,strlen(destname)+1,
+				buf,block_len,
 				NULL);
+		
+		sent += block_len;
+		
+		fprintf(stderr,"Message sent!\n");
+	}
 	
 /* 
     for(i=0; i<PUT_BLOCK1; i++) {
@@ -1758,7 +1775,7 @@ int psa50_put_file_serial(Camera *camera, CameraFile *file, char *destname, char
 	if(!okay)
 	  return GP_ERROR;
 */ 
-	fprintf(stderr,"Message sent!\n");
+
 /*	
 	if (!psa50_send_packet(PKT_UPLOAD_EOT,seq_tx,psa50_eot+PKT_HDR_LEN,1)) 
 	  return 0;

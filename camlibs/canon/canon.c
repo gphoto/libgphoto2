@@ -940,11 +940,20 @@ int camera_file_delete(Camera *camera, char *folder, char *filename)
 
 int camera_file_put(Camera *camera, CameraFile *file, char *folder)
 {
+	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
     char destpath[300], destname[300];
 	int j;
 
+	if (cs->speed>57600 && 
+		(strcmp(camera->model,"Canon PowerShot A50") == 0
+		 || strcmp(camera->model, "Canon PowerShot Pro70") == 0)) {
+		gp_camera_message(camera,
+  "Speeds greater than 57600 are not supported for uploading to this camera");
+		return GP_ERROR;
+	}
+		
 	if (!check_readiness(camera)) {
-		return 0;
+		return GP_ERROR;
 	}
 	
 	strcpy(destname,file->name);
@@ -954,17 +963,14 @@ int camera_file_put(Camera *camera, CameraFile *file, char *folder)
         return GP_ERROR;
     }
 	
-	/* FIXME: Just a hack for testing purposes then we will have to
-	   find the suitable directory to create or to store in*/
-    sprintf(destpath,"D:\\DCIM\\CANONMSC\\");
-	sprintf(destname,"PLAY_00.MRK");
-	/* end of FIXME */
+	sprintf(destpath,"D:\\DCIM\\100CANON\\");
 	
 	j = strrchr(destpath,'\\') - destpath;
 	destpath[j] = '\0';
 	
 	if(!psa50_directory_operations(camera,destpath, DIR_CREATE)) 
 	  return GP_ERROR;
+	
 	psa50_delete_file(camera,destname,destpath);
 	
 	destpath[j] = '\\';

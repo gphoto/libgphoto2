@@ -304,16 +304,16 @@ int canon_serial_send(Camera *camera, const unsigned char *buf, int len, int sle
 	
     dump_hex(camera,"canon_serial_send()", buf, len);
 
-        /* the A50 does not like to get too much data in a row
+	    /* the A50 does not like to get too much data in a row at 115200
          * The S10 and S20 do not have this problem */
-    if (sleep>0 && cs->model == CANON_PS_A50) {
+    if (sleep>0 && cs->model == CANON_PS_A50 && cs->speed>57600) {
 		for(i=0;i<len;i++) {
-			gpio_write(cs->gdev,buf,1);
+			gpio_write(cs->gdev,(char*)buf,1);
 			buf++;
 			usleep(sleep);
 		}
     } else {
-		gpio_write(cs->gdev,buf,len);
+		gpio_write(cs->gdev,(char*)buf,len);
     }
 	
     return 0;

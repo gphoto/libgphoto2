@@ -8,6 +8,7 @@
  - Uploading : I'm working on it but there are problems. I will soon 
    include the preliminary support I got for people with S10 and S20 to test
    as it seems easier to get them working (s10sh does it).
+   (08/22/2000 - done for serial but slow)
  - The configuration dialog has to be made with the new toolkit independent
    functions provided by gphoto2. It should use gp_config_get and
    gp_config_set to retrieve and store its configuration information.
