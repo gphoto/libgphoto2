@@ -83,6 +83,7 @@
 #define S1M	(1024 * 1024)
 #define S2M	(2 * S1M)
 #define S10M	(10 * S1M)
+#define S99M	(99 * S1M)
 #define NO_USB  0
 
 const struct canonCamModelData models[] = {
@@ -118,12 +119,13 @@ const struct canonCamModelData models[] = {
 	{"Canon Digital IXUS v2",	CANON_PS_S200,		0x04A9, 0x3065, 0, S10M, S32K},
 	{"Canon Digital IXUS 330",	CANON_PS_S330,		0x04A9, 0x3066, 0, S10M, S32K},
 	{"Canon PowerShot S45",		CANON_PS_S45,		0x04A9, 0x306C, 0, S10M, S32K}, /* 0x306D is S45 in PTP mode */
-	{"Canon PowerShot S230",        CANON_PS_S230,          0x04A9, 0x3071, 0, S10M, S32K},
+	{"Canon PowerShot S230",        CANON_PS_S230,          0x04A9, 0x3070, 0, S99M, S32K}, /* 0x3071 is S230 in PTP mode */
 	{NULL}
 	/* *INDENT-ON* */
 };
 
 #undef NO_USB
+#undef S99M
 #undef S10M
 #undef S2M
 #undef S1M
