@@ -968,7 +968,7 @@ typedef int (*put_func)(CameraWidget *widget, PTPPropertyValue *propval);
 
 static int _get_AUINT8_as_CHAR_ARRAY(CameraWidget **widget, char *name, PTPDevicePropDesc *dpd) {
 	int	j;
-	char 	value[64];
+	char 	value[128];
 
 	gp_widget_new (GP_WIDGET_TEXT, _(name), widget);
 	if (dpd->DataType != PTP_DTC_AUINT8) {
