@@ -169,6 +169,7 @@ int camera_init (Camera *camera)
 
 	switch (camera->port->type) {
 	case GP_PORT_SERIAL:
+
 		ret = gp_port_new (&(fd->dev), GP_PORT_SERIAL);
 		if (ret != GP_OK) {
 			free (fd);
@@ -181,6 +182,7 @@ int camera_init (Camera *camera)
 		settings.serial.parity 	 = 0;
 		settings.serial.stopbits = 1;
 		break;
+
 	case GP_PORT_USB:
 
 		/* Lookup the USB information */
@@ -194,8 +196,10 @@ int camera_init (Camera *camera)
 		}
 
 		/* Couldn't find the usb information */
-		if ((vendor == 0) && (product == 0))
-			return (GP_ERROR);
+		if ((vendor == 0) && (product == 0)) {
+			free (fd);
+			return (GP_ERROR_MODEL_NOT_FOUND);
+		}
 
 		ret = gp_port_new (&(fd->dev), GP_PORT_USB);
 		if (ret != GP_OK) {
@@ -217,7 +221,9 @@ int camera_init (Camera *camera)
        		settings.usb.interface 	= 0;
        		settings.usb.altsetting = 0;
 		break;
+
 	default:
+
 		free (fd);
                 return (GP_ERROR_IO_UNKNOWN_PORT);
 	}
@@ -239,8 +245,8 @@ int camera_init (Camera *camera)
 		return (ret);
 	}
 
-	switch (camera->port->type) {
-	case GP_PORT_SERIAL:
+	/* If it is a serial camera, check if it's really there. */
+	if (camera->port->type == GP_PORT_SERIAL) {
 
 		ret = sierra_ping (camera);
 		if (ret != GP_OK) {
@@ -257,13 +263,10 @@ int camera_init (Camera *camera)
 		}
 
 		fd->speed = camera->port->speed;
-		break;
-	case GP_PORT_USB:
-		gp_port_usb_clear_halt (fd->dev, GP_PORT_USB_ENDPOINT_IN);
-		break;
-	default:
-		break;
 	}
+	
+	if (camera->port->type == GP_PORT_USB)
+		gp_port_usb_clear_halt (fd->dev, GP_PORT_USB_ENDPOINT_IN);
 
 	ret = sierra_get_int_register (camera, 1, &value);
 	if (ret != GP_OK) {
@@ -272,6 +275,7 @@ int camera_init (Camera *camera)
 		return (ret);
 	}
 
+	/* FIXME??? What's that for? */
 	ret = sierra_set_int_register (camera, 83, -1);
 	if (ret != GP_OK) {
 		gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** Could not set "
