@@ -136,7 +136,7 @@ int gp_file_open (CameraFile *file, char *filename) {
 /* needs MIME lookup!! */
         dot = strrchr(filename, '.');
         if (dot)
-                sprintf(file->type, "image/%s", dot);
+                sprintf(file->type, "image/%s", dot + 1);
            else
                 strcpy(file->type, "image/unknown");
 
