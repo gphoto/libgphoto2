@@ -120,6 +120,7 @@ const struct canonCamModelData models[] = {
 	{"Canon:EOS D60",		CANON_EOS_D60,		0x04A9, 0x3060, CAP_SUP, S10M, S32K, NULL},
 	{"Canon:PowerShot A100",	CANON_PS_A100,		0x04A9, 0x3061, CAP_SUP, S10M, S32K, NULL},
 	{"Canon:PowerShot A200",	CANON_PS_A200,		0x04A9, 0x3062, CAP_SUP, S10M, S32K, NULL},
+	{"Canon:PowerShot A300",	CANON_PS_A300,		0x04A9, 0x3076, CAP_SUP, S10M, S32K, NULL},
 	{"Canon:PowerShot S200",	CANON_PS_S200,		0x04A9, 0x3065, CAP_SUP, S10M, S32K, NULL},
 	{"Canon:Digital IXUS v2",	CANON_PS_S200,		0x04A9, 0x3065, CAP_SUP, S10M, S32K, NULL},
 	{"Canon:Digital IXUS 330",	CANON_PS_S330,		0x04A9, 0x3066, CAP_SUP, S10M, S32K, NULL},

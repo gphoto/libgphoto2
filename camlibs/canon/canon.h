@@ -81,6 +81,7 @@ typedef enum {
  * @CANON_EOS_D60: EOS D60
  * @CANON_PS_A100: PowerShot A100
  * @CANON_PS_A200: PowerShot A200
+ * @CANON_PS_A300: PowerShot A300
  * @CANON_PS_S200: PowerShot S200, Digital IXUS v2
  * @CANON_PS_S330: Digital IXUS 330
  * @CANON_PS_S45: PowerShot S45
@@ -118,6 +119,7 @@ typedef enum {
 	CANON_EOS_D60,
 	CANON_PS_A100,
 	CANON_PS_A200,
+	CANON_PS_A300,
 	CANON_PS_S45,
 	CANON_PS_S50,
 	CANON_PS_S230,
