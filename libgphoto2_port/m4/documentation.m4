@@ -75,9 +75,7 @@ dnl ---------------------------------------------------------------------------
 dnl gtk-doc: We use gtk-doc for building our documentation. However, we
 dnl          require the user to explicitely request the build.
 dnl ---------------------------------------------------------------------------
-gtkdoc_msg="no (not requested)"
 try_gtkdoc=false
-have_gtkdoc=false
 AC_ARG_ENABLE(docs, [  --enable-docs             Use gtk-doc to build documentation [default=no]],[
 	if test x$enableval = xyes; then
 		try_gtkdoc=true
@@ -89,6 +87,9 @@ if $try_gtkdoc; then
 	else
 		gtkdoc_msg="no (http://www.gtk.org/rdp/download.html)"
 	fi
+else
+	have_gtkdoc=false
+	gtkdoc_msg="no (not requested)"
 fi
 AM_CONDITIONAL(ENABLE_GTK_DOC, $have_gtkdoc)
 
