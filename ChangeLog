@@ -7,6 +7,9 @@
 	* configure.in: moved spec file to packaging/rpm/
 	* packaging/Makefile.am: added rpm/
 	* packaging/rpm/: new directory with Makefile.am and .cvsignore
+	* packaging/README.rpm: removed obsolete how-to-build-a-RPM docs
+	* packaging/rpm/README.rpm: added new this-is-how-our-RPM-works-internally docs
+	* libgphoto2_port/po/POTFILES.in: gphoto2-port.c, not gp_port.c
 
 2001-10-26 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
