@@ -65,6 +65,9 @@
  *   image.
  * @CANON_USB_FUNCTION_CONTROL_CAMERA: Remote camera control (with
  *   many subcodes)
+ * @CANON_USB_FUNCTION_POWER_STATUS_2: Command to query the camera for
+ *   its power status: battery vs. mains, and whether the battery is
+ *   low. Used in the "newer" protocol, e.g. with EOS 20D.
  * @CANON_USB_FUNCTION_UNKNOWN_FUNCTION: Don't know what this is for;
  *   it has been sighted in USB trace logs for an EOS D30, but not for
  *   a D60 or for any PowerShot camera.
@@ -110,6 +113,7 @@ typedef enum {
 	CANON_USB_FUNCTION_RETRIEVE_CAPTURE,
 	CANON_USB_FUNCTION_RETRIEVE_PREVIEW,
 	CANON_USB_FUNCTION_CONTROL_CAMERA,
+	CANON_USB_FUNCTION_POWER_STATUS_2,
 	CANON_USB_FUNCTION_UNKNOWN_FUNCTION,
 	CANON_USB_FUNCTION_EOS_GET_BODY_ID,
 	CANON_USB_FUNCTION_SET_FILE_TIME,
@@ -221,7 +225,10 @@ static const struct canon_usb_cmdstruct canon_usb_cmd[] = {
 	{CANON_USB_FUNCTION_DELETE_FILE,	"Delete file",			0x0d, 0x11, 0x201,	0x54},
 	{CANON_USB_FUNCTION_SET_ATTR,		"Set file attribute",		0x0e, 0x11, 0x201,	0x54},
 	{CANON_USB_FUNCTION_SET_FILE_TIME,	"Set file time",		0x0f, 0x11, 0x201,	0x54},
+	// Notice the overloaded command code 0x13: remote camera control
+        // in the original protocol, power status in the new protocol.
 	{CANON_USB_FUNCTION_CONTROL_CAMERA,	"Remote camera control",	0x13, 0x12, 0x201,      0x40},
+	{CANON_USB_FUNCTION_POWER_STATUS_2,	"Power supply status (new protocol)",	0x13, 0x12, 0x201,      0x58},
 	{CANON_USB_FUNCTION_RETRIEVE_CAPTURE,	"Download a captured image",	0x17, 0x12, 0x202,      0x40},
 	{CANON_USB_FUNCTION_RETRIEVE_PREVIEW,	"Download a captured preview",	0x18, 0x12, 0x202,      0x40},
 	{CANON_USB_FUNCTION_UNKNOWN_FUNCTION,	"Unknown function",		0x1a, 0x12, 0x201,	0x80},
@@ -233,7 +240,7 @@ static const struct canon_usb_cmdstruct canon_usb_cmd[] = {
 	{CANON_USB_FUNCTION_20D_UNKNOWN_1,	"Unknown EOS 20D function",	0x21, 0x12, 0x201,	0x54},
 	{CANON_USB_FUNCTION_20D_UNKNOWN_2,	"Unknown EOS 20D function",	0x22, 0x12, 0x201,	0x54},
 	{CANON_USB_FUNCTION_EOS_GET_BODY_ID_2,	"New EOS get body ID",		0x23, 0x12, 0x201,	0x54},
-	{CANON_USB_FUNCTION_GET_PIC_ABILITIES_2, "New get picture abilities",	0x24, 0x12, 0x201,	0x54},
+	{CANON_USB_FUNCTION_GET_PIC_ABILITIES_2, "New get picture abilities",	0x24, 0x12, 0x201,	0x474},
 	{CANON_USB_FUNCTION_20D_UNKNOWN_3,	"Unknown EOS 20D function",	0x25, 0x12, 0x201,	0x54},
 	{CANON_USB_FUNCTION_20D_RETRIEVE_CAPTURE_2, "New download a captured image", 0x26, 0x12, 0x202,	0x54},
 	{CANON_USB_FUNCTION_20D_UNKNOWN_4,	"Unknown EOS 20D function",	0x36, 0x12, 0x201,	0x54},
