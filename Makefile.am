@@ -11,7 +11,6 @@ EXTRA_DIST = HACKING MAINTAINERS acconfig.h autogen.sh \
 SUBDIRS = 			\
 	libgphoto2_port 	\
 	intl 			\
-	libexif			\
 	libgphoto2 		\
 	camlibs 		\
 	frontends 		\

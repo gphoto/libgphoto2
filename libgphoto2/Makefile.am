@@ -2,7 +2,8 @@ INCLUDES =						\
 	-I$(top_srcdir)					\
 	-I$(top_srcdir)/libgphoto2_port/libgphoto2_port	\
 	-DCAMLIBS=\"$(libdir)/gphoto2/$(VERSION)\"	\
-	-DLOCALEDIR=\"$(datadir)/locale\"
+	-DLOCALEDIR=\"$(datadir)/locale\"		\
+	$(EXIF_CFLAGS)
 
 lib_LTLIBRARIES = libgphoto2.la
 
@@ -23,9 +24,9 @@ libgphoto2_la_SOURCES = 	\
 	gphoto2-setting.c	\
 	gphoto2-widget.c
 libgphoto2_la_LIBADD =					\
-	$(top_builddir)/libexif/libexif.la		\
 	$(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la\
-	$(LTDL_LIBS)\
+	$(LTDL_LIBS)					\
+	$(EXIF_LIBS)					\
 	-lm $(INTLLIBS)
 
 libgphoto2includedir = $(includedir)/gphoto2

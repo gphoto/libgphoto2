@@ -261,6 +261,39 @@ AM_CONDITIONAL(HAVE_JPEG, $have_jpeg)
 AC_SUBST(JPEG_LIBS)
 
 dnl ---------------------------------------------------------------------------
+dnl libexif: The CameraFilesystem can use libexif for extracting thumbnails
+dnl	     out of EXIF data. Similarly, it can extract the mtime of
+dnl	     a file. 
+dnl	     libexif is available from
+dnl	     http://www.sourceforge.net/projects/libexif or
+dnl	     (as packages) from http://www.topfrose.de.
+dnl ---------------------------------------------------------------------------
+exif_msg="no (http://www.sourceforge.net/projects/libexif)"
+try_exif=true
+have_exif=false
+AC_ARG_WITH(exif, [  --without-exif          Don't use libexif],[
+	if test x$withval = xno; then
+		try_exif=false
+	fi])
+if $try_exif; then
+	AC_PATH_PROG(PKG_CONFIG,pkg-config)
+	if test -n "${PKG_CONFIG}"; then
+		AC_MSG_CHECKING([for libexif])
+		if ${PKG_CONFIG} --exists libexif > /dev/null 2>&1; then
+			EXIF_CFLAGS=`$PKG_CONFIG --cflags libexif`
+			EXIF_LIBS=`$PKG_CONFIG --libs libexif`
+			have_exif=true
+			exif_msg=yes
+			AC_DEFINE(HAVE_EXIF)
+		fi
+		AC_MSG_RESULT($exif_msg)
+	fi
+fi
+AM_CONDITIONAL(HAVE_EXIF, $have_exif)
+AC_SUBST(EXIF_CFLAGS)
+AC_SUBST(EXIF_LIBS)
+
+dnl ---------------------------------------------------------------------------
 dnl aalib: gphoto2 (the frontend) has been designed as a command-line tool.
 dnl	   However, life previews make only sense when you can actually 
 dnl        see the preview. This is where aalib fits in - it gives you the
@@ -326,7 +359,6 @@ camlibs/stv0680/Makefile
 frontends/Makefile
 frontends/command-line/Makefile
 tests/Makefile
-libexif/Makefile
 libgphoto2/Makefile
 libgphoto2/libgphoto2.pc
 gphoto2-config
@@ -352,4 +384,5 @@ Configuration (libgphoto2):
 	Config. support (gphoto2): $cdk_msg
 	Preview support (gphoto2): $aa_msg
 	JPEG support:              $jpeg_msg
+	EXIF support:		   $exif_msg
 "
