@@ -284,6 +284,7 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 			break;
 		case CANON_EOS_D30:
 		case CANON_EOS_D60:
+		case CANON_PS_S230:
 			memset (payload, 0, sizeof (payload));
 			payload[0] = 0x06;
 
@@ -330,6 +331,7 @@ canon_usb_unlock_keys (Camera *camera)
 	switch (camera->pl->md->model) {
 		case CANON_EOS_D30:
 		case CANON_EOS_D60:
+		case CANON_PS_S230:
 			c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_EOS_UNLOCK_KEYS,
 						    &bytes_read, NULL, 0);
 			/* Should look at the bytes returned, but I don't know what they mean */
