@@ -21,7 +21,7 @@
 
 /* $Id$ */
 
-//#include "config.h"
+#include <config.h>
 
 #if defined HAVE_UNISTD_H
 #include <unistd.h>
@@ -47,8 +47,7 @@
 #include <gphoto2.h>
 #include <gphoto2-port.h>
 
-/* There should be a better way to do this. */
-#include "../../../libgphoto2/exif.h"
+#include <exif.h>
 
 #define DIMAGEV_VERSION "$Revision$"
 
