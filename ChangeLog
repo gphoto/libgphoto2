@@ -1,4 +1,12 @@
-2002-02-13 Dan Fandrich <dan@coneharvesters.com>
+2002-02-14  Fredrik <fredrik@krixor.xy.org>
+
+	* frontends/command-line/main.c: Make at least a small attempt
+	  at quoting arguments which might need it when asking users
+	  to execute the same command again with --debug.
+
+	  Patch from Chris Halls.
+
+2002-02-13  Dan Fandrich <dan@coneharvesters.com>
 
 	* libgphoto2/gphoto2-abilities-list.h
 	* libgphoto2/gphoto2-camera.h

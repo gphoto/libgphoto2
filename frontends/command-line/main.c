@@ -1620,9 +1620,14 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n"));
 				 */
 				printf ("    env LANG=C gphoto2 --debug");
 				for (n = 1; n < argc; n++) {
-					printf(" %s",argv[n]);
+					if (argv[n][0] == '-')
+						printf(" %s",argv[n]);
+					else
+						printf(" \"%s\"",argv[n]);
 				}
 				printf ("\n\n");
+				printf ("Please make sure there is sufficient quoting "
+					"around the arguments.\n\n");
 			}
 #endif
 
