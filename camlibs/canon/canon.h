@@ -66,6 +66,33 @@ typedef enum {
 
 /**
  * canonCamModel
+ * @CANON_PS_A5: PowerShot A5
+ * @CANON_PS_A5_ZOOM: PowerShot A5 Zoom
+ * @CANON_PS_A50: PowerShot A50
+ * @CANON_PS_A70: PowerShot Pro70
+ * @CANON_PS_S10: PowerShot S10
+ * @CANON_PS_S20: PowerShot S20
+ * @CANON_EOS_D30: EOS D30
+ * @CANON_PS_S100: PowerShot S100, PowerShot S110, IXY DIGITAL,
+ *     Digital IXUS, DIGITAL IXUS v
+ * @CANON_PS_G1: PowerShot G1
+ * @CANON_PS_PRO90_IS: PowerShot Pro90 IS
+ * @CANON_PS_S300: PowerShot S300, Digital IXUS 300
+ * @CANON_PS_A20: PowerShot A20
+ * @CANON_PS_A10: PowerShot A10
+ * @CANON_PS_G2: PowerShot G2
+ * @CANON_PS_S40: PowerShot S40
+ * @CANON_PS_S30: PowerShot S30
+ * @CANON_PS_A40: PowerShot A40
+ * @CANON_PS_A30: PowerShot A30
+ * @CANON_EOS_D60: EOS D60
+ * @CANON_PS_A100: PowerShot A100
+ * @CANON_PS_A200: PowerShot A200
+ * @CANON_PS_S200: PowerShot S200, Digital IXUS v2
+ * @CANON_PS_S330: Digital IXUS 330
+ * @CANON_PS_S45: PowerShot S45
+ * @CANON_PS_G3: PowerShot G3
+ * @CANON_PS_S230: PowerShot S230, Digital IXUS v3
  *
  * Enumeration of all camera types currently supported.
  *

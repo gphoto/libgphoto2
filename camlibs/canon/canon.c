@@ -578,7 +578,10 @@ canon_int_do_control_command (Camera *camera, int subcmd, int a, int b)
 /**
  * canon_int_capture_image
  * @camera: camera to work with
- * @path: gets filled in with the filename of the captured image
+ * @path: gets filled in with the filename of the captured
+ *   image. Since we don't know how to get this information back from
+ *   Canon cameras, we insert "*UNKNOWN*" for both pathname and
+ *   filename.
  * @context: context for error reporting
  *
  * Directs the camera to capture an image (remote shutter release via
