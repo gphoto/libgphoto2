@@ -1,3 +1,8 @@
+2004-02-25 Theodore Kilgore <kilgota@auburn.edu>
+
+	* aox.c: Yet another portability fix.
+
+
 2004-02-24 Theodore Kilgore <kilgota@auburn.edu>
 
 	* aox.c: Portability improvements, credits to Mika Kousa,

@@ -89,8 +89,9 @@ int aox_get_picture_size  (GPPort *port, int lo, int hi, int n, int k)
 	GP_DEBUG("Running aox_get_picture_size\n");
 
 	unsigned char c[4];
-	memset (c,0,4);
         unsigned int size;
+	memset (c,0,4);
+
 
 	if ( ( (lo) && ( n ==k ) && (k ==0)) ) {
 	    	READ(port, 0x04, 0x1, 0x1, c, 2);	
