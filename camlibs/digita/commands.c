@@ -37,11 +37,12 @@
 
 static void build_command(struct digita_command *cmd, int length, short command)
 {
+	memset(cmd, sizeof(*cmd), 0);
+
 	/* Length is the sizeof the digita_command minus the length */
 	/*  parameter, plus whatever other data we send */
 	cmd->length = htonl(sizeof(struct digita_command) -
 		sizeof(unsigned int) + length);
-	cmd->unknown = cmd->status = 0;
 	cmd->command = htons(command);
 }
 
@@ -168,6 +169,11 @@ int digita_get_file_data(CameraPrivateLibrary *dev, int thumbnail,
 	if (ret < 0) {
 		fprintf(stderr, "digita_get_file_data: error reading data (ret = %d)\n", ret);
 		return -1;
+	}
+
+	if (gfdr->cmd.result) {
+		fprintf(stderr, "digita_get_file_data: bad result (%d)\n", gfdr->cmd.result);
+		return gfdr->cmd.result;
 	}
 
 	memcpy(buffer, tbuf + sizeof(*gfdr), ntohl(gfdr->tag.length) + (thumbnail ? 16 : 0));
