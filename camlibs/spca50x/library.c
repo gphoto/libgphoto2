@@ -604,8 +604,8 @@ camera_init (Camera *camera, GPContext *context)
 	}
 	
 	if (camera->pl->bridge == BRIDGE_SPCA504) {
-		if (abilities.usb_vendor != 0x04fc 
-       && abilities.usb_product != 0x504a )
+		if ( !( abilities.usb_vendor == 0x04fc 
+           && abilities.usb_product == 0x504a ) )
 			ret = spca50x_reset (camera->pl);
 	}
 
@@ -639,13 +639,11 @@ cam_has_sdram (CameraPrivateLibrary *pl)
 static int
 cam_has_flash (CameraPrivateLibrary *pl)
 {
-
 	return pl->storage_media_mask & SPCA50X_FLASH;
 }
 
 static int
 cam_has_card (CameraPrivateLibrary *pl)
 {
-
 	return pl->storage_media_mask & SPCA50X_CARD;
 }
