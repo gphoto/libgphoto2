@@ -1,5 +1,9 @@
 2001-10-17  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/directory/directory.c: Use camera->fs exclusively.
+
+2001-10-17  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/jd350e: Use camera->port directly. 
 
 2001-10-17  Lutz Müller <urc8@rz.uni-karlsruhe.de>

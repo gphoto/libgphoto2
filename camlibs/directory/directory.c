@@ -148,15 +148,15 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 }
 
 static int
-camera_file_get_info (Camera *camera, const char *folder, const char *file,
-		      CameraFileInfo *info)
+get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
+		      CameraFileInfo *info, void *data)
 {
         int result;
         char buf [1024];
         CameraFile *cam_file;
 	const char *name;
 	const char *mime_type;
-	const char *data;
+	const char *d;
 	long int size;
 
         sprintf (buf, "%s/%s", folder, file);
@@ -175,7 +175,7 @@ camera_file_get_info (Camera *camera, const char *folder, const char *file,
 
 	gp_file_get_name (cam_file, &name);
 	gp_file_get_mime_type (cam_file, &mime_type);
-	gp_file_get_data_and_size (cam_file, &data, &size);
+	gp_file_get_data_and_size (cam_file, &d, &size);
 
         strcpy (info->file.type, mime_type);
         strcpy (info->file.name, name);
@@ -187,8 +187,8 @@ camera_file_get_info (Camera *camera, const char *folder, const char *file,
 }
 
 static int
-camera_file_set_info (Camera *camera, const char *folder, const char *file,
-		      CameraFileInfo *info)
+set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
+	       CameraFileInfo *info, void *data)
 {
         int retval;
         char *path_old;
@@ -246,8 +246,8 @@ camera_file_set_info (Camera *camera, const char *folder, const char *file,
 }
 
 static int
-camera_file_get (Camera *camera, const char *folder, const char *filename,
-		 CameraFileType type, CameraFile *file)
+get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
+	       CameraFileType type, CameraFile *file, void *data)
 {
         /**********************************/
         /* file_number now starts at 0!!! */
@@ -324,9 +324,6 @@ camera_init (Camera *camera)
         char buf[256];
 
         /* First, set up all the function pointers */
-        camera->functions->file_get             = camera_file_get;
-        camera->functions->file_get_info        = camera_file_get_info;
-        camera->functions->file_set_info        = camera_file_set_info;
         camera->functions->get_config           = camera_get_config;
         camera->functions->set_config           = camera_set_config;
         camera->functions->manual               = camera_manual;
@@ -337,6 +334,9 @@ camera_init (Camera *camera)
 
         gp_filesystem_set_list_funcs (camera->fs, file_list_func,
                                       folder_list_func, NULL);
+	gp_filesystem_set_info_funcs (camera->fs, get_info_func,
+				      set_info_func, NULL);
+	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, NULL);
 
         return (GP_OK);
 }
