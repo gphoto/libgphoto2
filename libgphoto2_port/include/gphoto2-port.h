@@ -242,6 +242,8 @@ typedef GPPortOperations gp_port_operations;
 int         gp_port_set_error (GPPort *port, const char *format, ...);
 const char *gp_port_get_error (GPPort *port);
 
+#include "gphoto2-port-info-list.h"
+
 #endif /* _GP_PORT_H_ */
 
 

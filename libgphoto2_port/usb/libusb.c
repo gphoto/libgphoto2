@@ -56,7 +56,8 @@
 #  define N_(String) (String)
 #endif
 
-int gp_port_usb_list(gp_port_info *list, int *count);
+#define CHECK(result) {int r=(result); if (r<0) return (r);}
+
 int gp_port_usb_init(gp_port *dev);
 int gp_port_usb_exit(gp_port *dev);
 int gp_port_usb_open(gp_port *dev);
@@ -103,16 +104,17 @@ gp_port_operations *gp_port_library_operations () {
         return (ops);
 }
 
-int gp_port_library_list(gp_port_info *list, int *count)
+int
+gp_port_library_list (GPPortInfoList *list)
 {
+	GPPortInfo info;
 
-	list[*count].type = GP_PORT_USB;
-	strcpy(list[*count].name, "Universal Serial Bus");
-        strcpy(list[*count].path, "usb:");
-	/* list[*count].argument_needed = 0; */
-	*count += 1;
+	info.type = GP_PORT_USB;
+	strcpy (info.name, "Universal Serial Bus");
+        strcpy (info.path, "usb:");
+	CHECK (gp_port_info_list_append (list, info));
 
-	return GP_OK;
+	return (GP_OK);
 }
 
 int gp_port_usb_init(gp_port *dev)

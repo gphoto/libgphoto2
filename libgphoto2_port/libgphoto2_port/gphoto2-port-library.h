@@ -21,10 +21,11 @@
 #ifndef __GPHOTO2_PORT_LIBRARY_H__
 #define __GPHOTO2_PORT_LIBRARY_H__
 
-#include <gphoto2-port-core.h>
+#include <gphoto2-port-info-list.h>
+#include <gphoto2-port.h>
 
 typedef GPPortType (* GPPortLibraryType) (void);
-typedef int (* GPPortLibraryList)       (GPPortInfo *, int *);
+typedef int (* GPPortLibraryList)       (GPPortInfoList *list);
 
 typedef GPPortOperations *(* GPPortLibraryOperations) (void);
 
@@ -34,7 +35,7 @@ typedef GPPortOperations *(* GPPortLibraryOperations) (void);
  */
 
 GPPortType gp_port_library_type       (void);
-int gp_port_library_list       (GPPortInfo *info, int *count);
+int gp_port_library_list       (GPPortInfoList *list);
 
 GPPortOperations *gp_port_library_operations (void);
 

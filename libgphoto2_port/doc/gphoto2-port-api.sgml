@@ -1,7 +1,7 @@
 <!DOCTYPE BOOK PUBLIC "-//Davenport//DTD DocBook V3.0//EN" [
 <!entity hash "#">
-<!entity gphoto2-port-log  SYSTEM "sgml/gphoto2-port-log.sgml">
-<!entity gphoto2-port-core SYSTEM "sgml/gphoto2-port-core.sgml">
+<!entity gphoto2-port-log       SYSTEM "sgml/gphoto2-port-log.sgml">
+<!entity gphoto2-port-info-list SYSTEM "sgml/gphoto2-port-info-list.sgml">
 ]>
 
 <book id="index">
@@ -52,7 +52,7 @@
       </para>
 
       &gphoto2-port-log;
-      &gphoto2-port-core;
+      &gphoto2-port-info-list;
 
   </chapter>
 </book>

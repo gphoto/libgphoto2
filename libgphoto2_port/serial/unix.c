@@ -199,8 +199,9 @@ gp_port_serial_unlock (GPPort *dev)
 }
 
 int
-gp_port_library_list (gp_port_info *list, int *count)
+gp_port_library_list (GPPortInfoList *list)
 {
+	GPPortInfo info;
         char buf[1024], prefix[1024];
         int x, fd;
 #ifdef __linux
@@ -228,14 +229,14 @@ gp_port_library_list (gp_port_info *list, int *count)
 #endif
                 fd = open (buf, O_RDONLY | O_NDELAY);
                 if (fd != -1) {
-                        close(fd);
-                        list[*count].type = GP_PORT_SERIAL;
-                        strcpy(list[*count].path, "serial:");
-                        strcat(list[*count].path, buf);
+                        close (fd);
+			info.type = GP_PORT_SERIAL;
+                        strcpy(info.path, "serial:");
+                        strcat(info.path, buf);
                         sprintf(buf, "Serial Port %i", x);
-                        strcpy(list[*count].name, buf);
-                        /* list[*count].argument_needed = 0; */
-                        *count += 1;
+			snprintf (info.name, sizeof (info.name),
+				  "Serial Port %i", x);
+			CHECK (gp_port_info_list_append (list, info));
                 }
 #ifdef OS2
            }

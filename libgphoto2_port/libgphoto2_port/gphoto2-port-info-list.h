@@ -1,4 +1,4 @@
-/* gphoto2-port-core.h
+/* gphoto2-port-info-list.h:
  *
  * Copyright (C) 2001 Lutz Müller <urc8@rz.uni-karlsruhe.de>
  *
@@ -18,27 +18,36 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __GPHOTO2_PORT_CORE_H__
-#define __GPHOTO2_PORT_CORE_H__
+#ifndef __GPHOTO2_PORT_INFO_LIST_H__
+#define __GPHOTO2_PORT_INFO_LIST_H__
 
 #include <gphoto2-port.h>
 
 typedef struct {
-        GPPortType type;
-        char name[64];
-        char path[64];
+	GPPortType type;
+	char name[64];
+	char path[64];
 
-	/* Don't use this */
-	unsigned int speed;
-
-        char library_filename[1024];
+	/* Private */
+	char library_filename[1024];
 } GPPortInfo;
 
-int gp_port_core_count       (void);
-int gp_port_core_get_info    (unsigned int x, GPPortInfo *info);
-int gp_port_core_get_library (GPPortType type, const char **library);
+/* Internals are private */
+typedef struct _GPPortInfoList GPPortInfoList;
 
-/* Everything below is DEPRECATED! */
+int gp_port_info_list_new  (GPPortInfoList **list);
+int gp_port_info_list_free (GPPortInfoList *list);
+
+int gp_port_info_list_append (GPPortInfoList *list, GPPortInfo info);
+
+int gp_port_info_list_load (GPPortInfoList *list);
+
+int gp_port_info_list_count (GPPortInfoList *list);
+
+int gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path);
+int gp_port_info_list_get_info (GPPortInfoList *list, int n, GPPortInfo *info);
+
+/* DEPRECATED */
 typedef GPPortInfo gp_port_info;
 
-#endif /* __GPHOTO2_PORT_CORE_H__ */
+#endif /* __GPHOTO2_PORT_INFO_LIST_H__ */

@@ -28,7 +28,7 @@
 #include <string.h>
 
 #include "gphoto2-port-result.h"
-#include "gphoto2-port-core.h"
+#include "gphoto2-port-info-list.h"
 #include "gphoto2-port-library.h"
 #include "gphoto2-port-log.h"
 
@@ -59,16 +59,37 @@ struct _GPPortPrivateCore {
 static int
 gp_port_library_load (GPPort *device, GPPortType type)
 {
-	const char *library;
+	GPPortInfo info;
+	int count, result, i;
+	GPPortInfoList *list;
         GPPortLibraryOperations ops_func;
 
-	CHECK_RESULT (gp_port_core_get_library (type, &library));
+	CHECK_RESULT (gp_port_info_list_new (&list));
+	result = gp_port_info_list_load (list);
+	if (result < 0) {
+		gp_port_info_list_free (list);
+		return (result);
+	}
+	count = gp_port_info_list_count (list);
+	if (count < 0) {
+		gp_port_info_list_free (list);
+		return (count);
+	}
+	for (i = 0; i < count; i++) {
+		gp_port_info_list_get_info (list, i, &info);
+		if (info.type == type)
+			break;
+	}
+	gp_port_info_list_free (list);
+	if (i == count)
+		return (GP_ERROR_UNKNOWN_PORT);
 
 	/* Open the correct library */
-	device->pc->lh = GP_SYSTEM_DLOPEN (library);
+	device->pc->lh = GP_SYSTEM_DLOPEN (info.library_filename);
 	if (!device->pc->lh) {
 		gp_log (GP_LOG_ERROR, "gphoto2-port", "Could not load "
-			"'%s' ('%s')", library, GP_SYSTEM_DLERROR ());
+			"'%s' ('%s')", info.library_filename,
+			GP_SYSTEM_DLERROR ());
 		return (GP_ERROR_LIBRARY);
 	}
 
@@ -78,7 +99,7 @@ gp_port_library_load (GPPort *device, GPPortType type)
 	if (!ops_func) {
 		gp_log (GP_LOG_ERROR, "gphoto2-port", "Could not find "
 			"'gp_port_library_operations' in '%s' ('%s')",
-			library, GP_SYSTEM_DLERROR ());
+			info.library_filename, GP_SYSTEM_DLERROR ());
 		GP_SYSTEM_DLCLOSE (device->pc->lh);
 		device->pc->lh = NULL;
 		return (GP_ERROR_LIBRARY);
@@ -96,9 +117,6 @@ gp_port_new (GPPort **dev, GPPortType type)
 	int result;
 
 	CHECK_NULL (dev);
-
-	/* Make sure gphoto2-port-core is initialized */
-	gp_port_core_count ();
 
         gp_log (GP_LOG_DEBUG, "gphoto2-port", "Creating new device...");
 

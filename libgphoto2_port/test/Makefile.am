@@ -1,5 +1,8 @@
 
-INCLUDES = $(GPPORT_CFLAGS) -I$(top_srcdir)/include
+INCLUDES =			\
+	$(GPPORT_CFLAGS)	\
+	-I$(top_srcdir)/include	\
+	-I$(top_srcdir)/libgphoto2_port
 
 noinst_PROGRAMS = test-gp-port
 
