@@ -783,7 +783,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 					break;
 			buflen = size + 1;
 			gp_file_set_data_and_size (file, data, buflen);
-			gp_file_set_mime_type (file, "image/jpeg");	/* always */
+			gp_file_set_mime_type (file, GP_MIME_JPEG);	/* always */
 			strcpy (tempfilename, filename);
 			strcat (tempfilename, "\0");
 			strcpy (tempfilename + strlen ("IMG_XXXX"), ".JPG\0");
@@ -791,9 +791,14 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			break;
 		case GP_FILE_TYPE_NORMAL:
 			if (is_movie (filename))
-				gp_file_set_mime_type (file, "video/x-msvideo");
+				gp_file_set_mime_type (file, GP_MIME_AVI);
+			else if (is_image (filename))
+				gp_file_set_mime_type (file, GP_MIME_JPEG);
+			/* else if (is_crw (filename))
+			 * gp_file_set_mime_type (file, GP_MIME_CRW);
+			 */
 			else
-				gp_file_set_mime_type (file, "image/jpeg");
+				gp_file_set_mime_type (file, GP_MIME_UNKNOWN);
 			gp_file_set_data_and_size (file, data, buflen);
 			gp_file_set_name (file, filename);
 			break;
