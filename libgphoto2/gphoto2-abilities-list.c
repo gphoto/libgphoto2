@@ -309,8 +309,8 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 			if (!lh) {
 				size_t len;
 				len = strlen(buf);
-				if ((len >= 3) && 
-				    (buf[len-1] == 'a') && 
+				if ((len >= 3) &&
+				    (buf[len-1] == 'a') &&
 				    ((buf[len-2] == '.') ||
 				     ((buf[len-2] == 'l') && (buf[len-3] == '.'))
 					    )) {
