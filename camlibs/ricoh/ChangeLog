@@ -1,3 +1,8 @@
+2004-05-19  Marcus Meissner <marcus@jet.franken.de>
+
+	* g3.c: Martin Leopold reported the "Medion MD 6162"
+	  as working too.
+
 2004-01-30  Marcus Meissner <marcus@jet.franken.de>
 
 	* g3.c: Added Caplio 300G model as reported.
