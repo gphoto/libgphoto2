@@ -12,7 +12,6 @@ camlibs/directory/directory.c
 camlibs/fuji/fuji.c
 camlibs/fuji/library.c
 camlibs/gsmart300/library.c
-camlibs/gsmart/library.c
 camlibs/jamcam/jamcam.c
 camlibs/jamcam/library.c
 camlibs/jd11/jd11.c
@@ -46,7 +45,6 @@ camlibs/polaroid/pdc700.c
 camlibs/ptp2/library.c
 camlibs/ptp2/ptp.c
 camlibs/ptp2/ptpcam.c
-camlibs/ptp/library.c
 camlibs/ricoh/library.c
 camlibs/ricoh/ricoh.c
 camlibs/samsung/samsung.c
@@ -61,11 +59,9 @@ camlibs/sipix/blink.c
 camlibs/sipix/web2.c
 camlibs/smal/smal.c
 camlibs/smal/ultrapocket.c
-camlibs/sonydscf1/dsc_f1.c
 camlibs/sonydscf1/sonydscf1.c
 camlibs/sonydscf55/camera.c
 camlibs/soundvision/soundvision.c
-camlibs/spca504_flash/library.c
 camlibs/spca50x/library.c
 camlibs/stv0674/stv0674.c
 camlibs/stv0680/library.c
