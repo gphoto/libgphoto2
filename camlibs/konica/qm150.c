@@ -286,10 +286,10 @@ k_getdata (int image_no, int type, unsigned int len, void *data,
 		}
 		if ((len - bytes_read) > DATA_BUFFER) {
 			memcpy((char *)buffer, buf, xret);
-			(unsigned int)buffer += DATA_BUFFER;
+			buffer = (unsigned int)buffer + DATA_BUFFER;
 		} else {
 			memcpy((char *)buffer, buf, (len - bytes_read));
-			(unsigned int)buffer += len - bytes_read;
+			buffer = (unsigned int)buffer + len - bytes_read;
 		}
 
 		/* acknowledge the packet */
@@ -1150,7 +1150,7 @@ camera_summary (Camera *camera, CameraText *text, GPContext *context)
 
 	timestamp = (buf[TIMESTAMP_PTR] << 24) + (buf[TIMESTAMP_PTR+1] << 16)
 		+ (buf[TIMESTAMP_PTR+2] << 8) + buf[TIMESTAMP_PTR+3];
-	(unsigned int)timestamp += (8*365 + 2*366)*24*3600-3600;
+	timestamp = (unsigned int)timestamp + (8*365 + 2*366)*24*3600-3600;
 	tmp = *localtime(&timestamp);
 	switch (buf[DATE_FORMAT_PTR]) {
 		case 1:

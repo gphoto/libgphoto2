@@ -1,3 +1,9 @@
+2004-03-25  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* qm150.c (k_getdata): 
+	(camera_summary): fix C99 stuff for Solaris C compiler
+	See bug #923219.
+
 2003-12-17  Lutz Mueller <lutz@users.sourceforge.net>
 
 	Patch by Andreas Burmester <a.burmester@hamburg.de>:
