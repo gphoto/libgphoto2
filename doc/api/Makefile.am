@@ -11,6 +11,7 @@ DOC_SOURCE_DIR=$(top_srcdir)/libgphoto2
 
 EXTRA_DIST=gphoto2-api.sgml
 
+if ENABLE_GTK_DOC
 HTML_DIR=$(datadir)/gphoto2/html
 
 TARGET_DIR=$(HTML_DIR)/$(DOC_MODULE)
@@ -44,3 +45,4 @@ dist-hook:
 	(cd $(srcdir) ; tar cvf - html) | (cd $(distdir); tar xf -)
 
 .PHONY : html sgml templates scan
+endif
