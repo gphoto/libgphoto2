@@ -55,6 +55,11 @@ enum _RicohMode {
 	RICOH_MODE_RECORD = 0x01
 };
 
+struct _CameraPrivateLibrary
+{
+	RicohMode mode;		/* 0 = play, 1 = record */
+};
+
 int ricoh_get_mode  (Camera *camera, GPContext *context, RicohMode *mode);
 int ricoh_set_mode  (Camera *camera, GPContext *context, RicohMode  mode);
 
@@ -66,6 +71,10 @@ int ricoh_get_date  (Camera *camera, GPContext *context, unsigned int n,
 int ricoh_del_pic   (Camera *camera, GPContext *context, unsigned int n);
 int ricoh_get_pic   (Camera *camera, GPContext *context, unsigned int n,
 		     unsigned char **data, unsigned int *size);
+int ricoh_get_cam_date  (Camera *camera, GPContext *context, time_t *time);
+int ricoh_get_cam_mem   (Camera *camera, GPContext *context, int *mem);
+int ricoh_get_cam_amem  (Camera *camera, GPContext *context, int *mem);
+int ricoh_get_cam_id    (Camera *camera, GPContext *context, char *cam_id);
 
 
 #endif /* __RICOH_H__ */

@@ -56,8 +56,9 @@
 #  define N_(String) (String)
 #endif
 
-#define CR(result)       {int r=(result); if (r<0) return r;}
-#define CRF(result,data) {int r=(result); if (r<0) {free (data); return r;}}
+#define CR(result)       {int r_mac=(result); if (r_mac<0) return r_mac;}
+#define CRF(result,data) {int r_mac=(result); \
+  if (r_mac<0) {free (data); return r_mac;}}
 
 #define C_CMD(context,cmd,target) 			\
 {							\
@@ -75,7 +76,7 @@
 			"%i bytes, got %i. "		\
 			"Please report this error to "	\
 			"<gphoto-devel@gphoto.org>."),	\
-			len, target);			\
+			target, len);			\
 		return (GP_ERROR_CORRUPTED_DATA);	\
 	}						\
 }
@@ -85,7 +86,7 @@ ricoh_send (Camera *camera, GPContext *context, unsigned char cmd,
 	    unsigned char number,
 	    const unsigned char *data, unsigned char len)
 {
-	char buf[6];
+	unsigned char buf[6];
 	unsigned int i, w, crc = 0;
 
 	/* Write header */
@@ -106,13 +107,15 @@ ricoh_send (Camera *camera, GPContext *context, unsigned char cmd,
 	while (w < len) {
 		for (i = w; i < len; i++) {
 			crc = updcrc (data[i], crc);
-			if (data[i] == 0x10)
+			if (data[i] == 0x10) {
+				i++;
 				break;
+			}
 		}
-		CR (gp_port_write (camera->port, data + w, i - w + 1));
-		if (data[i] == 0x10)
+		CR (gp_port_write (camera->port, data + w, i - w));
+		if (data[i - 1] == 0x10)
 			CR (gp_port_write (camera->port, "\x10", 1));
-		w = i + 1;
+		w = i;
 	}
 
 	/* Write footer */
@@ -127,19 +130,17 @@ ricoh_send (Camera *camera, GPContext *context, unsigned char cmd,
 	return (GP_OK);
 }
 
-#if 0
 static int
 ricoh_send_ack (Camera *camera, GPContext *context)
 {
 	CR (gp_port_write (camera->port, "\x10\x06", 2));
 	return (GP_OK);
 }
-#endif
 
 static int
 ricoh_send_nack (Camera *camera, GPContext *context)
 {
-	CR (gp_port_write (camera->port, "\x10\x06", 2));
+	CR (gp_port_write (camera->port, "\x10\x15", 2));
 	return (GP_OK);
 }
 
@@ -147,91 +148,147 @@ static int
 ricoh_recv (Camera *camera, GPContext *context, unsigned char *cmd,
             unsigned char *number, unsigned char *data, unsigned char *len)
 {
-        char buf[6];
-	unsigned char r, i;
+        unsigned char buf[6];
+	unsigned char r, i, ii, last_dle;
 	unsigned int crc = 0;
 
-	/* Get header */
-	CR (gp_port_read (camera->port, buf, 2));
-	if (buf[0] != DLE)
-		return (GP_ERROR_CORRUPTED_DATA);
-	switch (buf[1]) {
-	case ACK:
-		return (GP_OK);
-	case STX:
-		break;
-	case NAK:
-	default:
-		return (GP_ERROR_CORRUPTED_DATA);
-	}
-	CR (gp_port_read (camera->port, cmd, 1));
-	CR (gp_port_read (camera->port, len, 1));
-	crc = updcrc (*cmd, crc);
-	crc = updcrc (*len, crc);
+	for (ii = 0; ; ii++) {
+		crc = 0;
 
-	/*
-	 * Get data (check for DLEs).
-	 * r ... number of bytes received
-	 */
-	r = 0;
-	while (r < *len) {
-		CR (gp_port_read (camera->port, data + r, *len - r));
-		for (i = r; i < *len; i++) {
-			crc = updcrc (data[i], crc);
-			if (data[i] == 0x10) {
-				if (data[i + 1] != 0x10)
-					return (GP_ERROR_CORRUPTED_DATA);
-				memmove (&data[i], &data[i + 1], *len - i - 1);
-				i++;
+		/*
+		 * Get header (DLE,STX). If we receive (DLE,ACK), just
+		 * drop that and read on.
+		 */
+		for (i = 0, buf[1] = ACK; i < 4; i++) {
+			CR (gp_port_read (camera->port, buf, 2));
+			if (buf[0] != DLE) {
+				gp_context_error (context, _("We expected "
+					"0x%x but received 0x%x. Please "
+					"contact <gphoto-devel@gphoto.org>."),
+						DLE, buf[0]);
+				return (GP_ERROR_CORRUPTED_DATA);
+			}
+			if (buf[1] != ACK)
+				break;
+		}
+		switch (buf[1]) {
+		case STX:
+			break;
+		case NAK:
+		default:
+			gp_context_error (context, _("We expected "
+				"0x%x but received 0x%x. Please "
+				"contact <gphoto-devel@gphoto.org>."),
+					STX, buf[1]);
+			return GP_ERROR_CORRUPTED_DATA;
+		}
+
+		CR (gp_port_read (camera->port, cmd, 1));
+		CR (gp_port_read (camera->port, len, 1));
+		crc = updcrc (*cmd, crc);
+		crc = updcrc (*len, crc);
+
+		/*
+		 * Get data (check for DLEs).
+		 * r ... number of bytes received
+		 */
+		r = 0;
+		last_dle = 0;
+		while (r < *len) {
+			CR (gp_port_read (camera->port, data + r, *len - r));
+			if (last_dle) {
+				r++;
+				last_dle = 0;
+			}
+			for (i = r; i < *len; i++) {
+				if (data[r] == DLE) {
+					if (i + 1 != *len &&
+					    data[r + 1] != DLE) {
+						gp_context_error (context,
+							_("Bad characters "
+							"(0x%x, 0x%x). Please "
+							"contact <gphoto-devel"
+							"@gphoto.org>."),
+							data[r], data[r + 1]);
+						return (GP_ERROR_CORRUPTED_DATA);
+					}
+					memmove (&data[r], &data[r +1],
+						 *len - i - 1);
+					i++;
+				}
+				crc = updcrc (data[r], crc);
+				if (i != *len)
+					r++;
+				else
+					last_dle = 1;
 			}
 		}
-	}
 
-        /* Get footer */
-        CR (gp_port_read (camera->port, buf, 6));
+		/* Get footer */
+		CR (gp_port_read (camera->port, buf, 6));
 
-        if ((buf[0] != DLE) ||
-            (buf[1] != ETX))
-                return (GP_ERROR_CORRUPTED_DATA);
+		if ((buf[0] != DLE) || (buf[1] != ETX && buf[1] != ETB))
+			return (GP_ERROR_CORRUPTED_DATA);
 
-        /* CRC correct? */
-        if ((buf[2] != crc >> 0) ||
-            (buf[3] |= crc >> 8) ||
-	    (buf[4] != *len + 2)) {
-                GP_DEBUG ("CRC error. Retrying...");
-		CR (ricoh_send_nack (camera, context));
-		CR (ricoh_recv (camera, context, cmd, number, data, len));
+		/* CRC correct? If not, retry. */
+		if ((buf[2] != (crc & 0xff)) ||
+		    (buf[3] != (crc >> 8 & 0xff)) ||
+		    (buf[4] != *len + 2)) {
+			GP_DEBUG ("CRC error. Retrying...");
+			CR (ricoh_send_nack (camera, context));
+			continue;
+		}
+
+		/* Acknowledge the packet. */
+		CR (ricoh_send_ack (camera, context));
+
+		/* If camera is busy, try again (but at most 4 times). */
+		if ((*len == 3) && (data[0] == 0x00) &&
+				   (data[1] == 0x04) &&
+				   (data[2] == 0xff)) {
+			if (ii >= 4) {
+				gp_context_error (context, _("Camera busy. "
+					"If the problem persists, please "
+					"contact <gphoto-devel@gphoto.org>."));
+				return (GP_ERROR);
+			}
+			continue;
+		}
+
+		/* Everything is ok. Break out of loop. */
+		break;
 	}
 
 	/* Sequence number */
 	if (number)
 		*number = buf[5];
-	else if (buf[5])
-		return (GP_ERROR_CORRUPTED_DATA);
 
-        return (GP_OK);
+	return (GP_OK);
 }
 
+/* query what mode(play/record) the camera is in */
 int
 ricoh_get_mode (Camera *camera, GPContext *context, RicohMode *mode)
 {
-	unsigned char p[2], cmd, buf[0xff], len;
+	unsigned char p[1], cmd, buf[0xff], len;
+	int i;
 
 	GP_DEBUG ("Getting mode...");
 
 	p[0] = 0x12;
-	p[1] = 0x00;
-	CR (ricoh_send (camera, context, 0x51, 0, p, 2));
-	CR (ricoh_recv (camera, context, &cmd, NULL, buf, &len));
-	C_CMD (context, cmd, 0x51);
-	C_LEN (context, len, 4);
+	for (i = 0; i < 4; i++) {
+		CR (ricoh_send (camera, context, 0x51, 0, p, 1));
+		CR (ricoh_recv (camera, context, &cmd, NULL, buf, &len));
+		C_CMD (context, cmd, 0x51);
+		if(len != 2)
+			break;
+	}
+	C_LEN (context, len, 3);
 
-	/* No idea what buf[0] and buf[1] is for. */
+	/* ignoring the return code(bytes 0,1) */
 
 	/* Mode */
 	*mode = buf[2];
-
-	/* What is buf[3]? */
 
 	return (GP_OK);
 }
@@ -248,7 +305,7 @@ ricoh_set_mode (Camera *camera, GPContext *context, RicohMode mode)
 	CR (ricoh_send (camera, context, 0x50, 0, p, 2));
 	CR (ricoh_recv (camera, context, &cmd, NULL, buf, &len));
 	C_CMD (context, cmd, 0x50);
-	C_LEN (context, len, 0);
+	C_LEN (context, len, 2);
 
 	return (GP_OK);
 }
@@ -325,17 +382,22 @@ int
 ricoh_get_num (Camera *camera, GPContext *context, unsigned int *n)
 {
 	unsigned char p[2], cmd, buf[0xff], len;
+	int i;
 
 	GP_DEBUG ("Getting number of pictures...");
 
 	p[0] = 0x00;
 	p[1] = 0x01;
-	CR (ricoh_send (camera, context, 0x51, 0, p, 2));
-	CR (ricoh_recv (camera, context, &cmd, NULL, buf, &len));
+	for (i = 0; i < 2; i++) {
+		CR (ricoh_send (camera, context, 0x51, 0, p, 2));
+		CR (ricoh_recv (camera, context, &cmd, NULL, buf, &len));
+		if (len == 4)
+			break;
+	}
 	C_CMD (context, cmd, 0x51);
-	C_LEN (context, len, 1);
+	C_LEN (context, len, 4);
 
-	*n = buf[0];
+	*n = buf[2];
 
 	return (GP_OK);
 }
@@ -349,7 +411,10 @@ ricoh_set_speed (Camera *camera, GPContext *context, RicohSpeed speed)
 	CR (ricoh_send (camera, context, 0x32, 0, p, 1));
 	CR (ricoh_recv (camera, context, &cmd, NULL, buf, &len));
 	C_CMD (context, cmd, 0x32);
-	C_LEN (context, len, 0);
+	C_LEN (context, len, 2);
+
+	/* Wait for camera to switch speed. */
+	sleep (1);
 
 	return (GP_OK);
 }
@@ -386,7 +451,7 @@ ricoh_bye (Camera *camera, GPContext *context)
 	CR (ricoh_send (camera, context, 0x37, 0, NULL, 0));
 	CR (ricoh_recv (camera, context, &cmd, NULL, buf, &len));
 	C_CMD (context, cmd, 0x37);
-	C_LEN (context, len, 0);
+	C_LEN (context, len, 2);
 
 	return (GP_OK);
 }
@@ -395,10 +460,14 @@ int
 ricoh_get_pic (Camera *camera, GPContext *context, unsigned int n,
 	       unsigned char **data, unsigned int *size)
 {
-	unsigned char p[2], cmd, buf[0xff], len, r;
+	unsigned char p[2], cmd, buf[0xff], len;
+	unsigned int r;
 
-	/* Put camera into play mode. */
-	CR (ricoh_set_mode (camera, context, RICOH_MODE_PLAY));
+	/* Put camera into play mode, if not already */
+	if(camera->pl->mode != RICOH_MODE_PLAY) {
+	    CR (ricoh_set_mode (camera, context, RICOH_MODE_PLAY));
+	    camera->pl->mode = RICOH_MODE_PLAY;
+	}
 
 	/* Send picture number */
 	p[0] = n >> 0;
@@ -419,9 +488,81 @@ ricoh_get_pic (Camera *camera, GPContext *context, unsigned int n,
 	 */
 	for (r = 0; r < *size; r += len) {
 		CRF (ricoh_recv (camera, context, &cmd, NULL,
-				 *data + r, &len), data);
-		C_CMD (context, cmd, 0xa0);
+				 *data + r, &len), *data);
+		C_CMD (context, cmd, 0xa2);
 	}
+
+	return (GP_OK);
+}
+
+/* get the date the camera is set to */
+int
+ricoh_get_cam_date (Camera *camera, GPContext *context, time_t *date)
+{
+	unsigned char p[1], cmd, buf[0xff], len;
+	struct tm time;
+
+	p[0] = 0xa;
+	CR (ricoh_send (camera, context, 'Q', 0, p, 1));
+	CR (ricoh_recv (camera, context, &cmd, NULL, buf, &len));
+
+	/* the camera only supplies 2 digits for year, so I will
+	 * make the assumption that if less than 90, then it is
+	 * year 2000 or greater */
+	 time.tm_year = ((buf[3] & 0xf0) >> 4) * 10 + (buf[3] & 0xf);
+	 if(time.tm_year < 90) time.tm_year += 100;
+	 time.tm_mon = ((buf[4] & 0xf0) >> 4) * 10 + (buf[4] & 0xf) - 1;
+	 time.tm_mday = ((buf[5] & 0xf0) >> 4) * 10 + (buf[5] & 0xf);
+	 time.tm_hour = ((buf[6] & 0xf0) >> 4) * 10 + (buf[6] & 0xf);
+	 time.tm_min = ((buf[7] & 0xf0) >> 4) * 10 + (buf[7] & 0xf);
+	 time.tm_sec = ((buf[8] & 0xf0) >> 4) * 10 + (buf[8] & 0xf);
+	 time.tm_isdst = -1;
+	 *date = mktime(&time);
+
+	 return (GP_OK);
+}
+
+/* get the cameras memory size */
+int
+ricoh_get_cam_mem (Camera *camera, GPContext *context, int *size)
+{
+	unsigned char p[2], cmd, buf[0xff], len;
+
+	p[0] = 0x00;
+	p[1] = 0x05;
+	CR (ricoh_send (camera, context, 'Q', 0, p, 2));
+	CR (ricoh_recv (camera, context, &cmd, NULL, buf, &len));
+	*size = buf[5] << 24 | buf[4] << 16 | buf[3] << 8 | buf[2];
+
+	return (GP_OK);
+}
+
+/* get the cameras available memory size */
+int
+ricoh_get_cam_amem (Camera *camera, GPContext *context, int *size)
+{
+	unsigned char p[2], cmd, buf[0xff], len;
+
+	p[0] = 0x00;
+	p[1] = 0x06;
+	CR (ricoh_send (camera, context, 'Q', 0, p, 2));
+	CR (ricoh_recv (camera, context, &cmd, NULL, buf, &len));
+	*size = buf[5] << 24 | buf[4] << 16 | buf[3] << 8 | buf[2];
+
+	return (GP_OK);
+}
+
+/* get the camera ID aka copyright message */ 
+int
+ricoh_get_cam_id (Camera *camera, GPContext *context, char *cam_id)
+{
+	unsigned char p[1], cmd, buf[0xff], len;
+
+	p[0] = 0xf;
+	CR (ricoh_send (camera, context, 'Q', 0, p, 1));
+	CR (ricoh_recv (camera, context, &cmd, NULL, buf, &len));
+	memmove (cam_id, buf + 2, len - 2);
+	cam_id[len - 2] = 0;
 
 	return (GP_OK);
 }

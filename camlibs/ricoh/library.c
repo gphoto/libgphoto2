@@ -20,6 +20,8 @@
 
 #include <config.h>
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include <gphoto2-library.h>
@@ -51,12 +53,13 @@
 #define CR(result) {int r=(result); if (r<0) return r;}
 
 static struct {
+	RicohModel id;
 	const char *model;
 } models[] = {
-	{"Ricoh RDC-300"},
-	{"Ricoh RDC-300Z"},
-	{"Ricoh RDC-4300"},
-	{NULL}
+	{RICOH_MODEL_300,  "Ricoh RDC-300"},
+	{RICOH_MODEL_300Z, "Ricoh RDC-300Z"},
+	{RICOH_MODEL_4300, "Ricoh RDC-4300"},
+	{0, NULL}
 };
 
 int
@@ -69,6 +72,7 @@ camera_abilities (CameraAbilitiesList *list)
 	for (i = 0; models[i].model; i++) {
 		strcpy (a.model, models[i].model);
 		a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
+		a.port = GP_PORT_SERIAL;
 		a.operations = GP_OPERATION_NONE;
 		a.file_operations = GP_FILE_OPERATION_NONE;
 		a.folder_operations = GP_FOLDER_OPERATION_NONE;
@@ -79,6 +83,18 @@ camera_abilities (CameraAbilitiesList *list)
 }
 
 static int
+camera_exit (Camera *camera, GPContext *context)
+{
+	if (camera->pl) {
+		ricoh_bye (camera, context);
+		free (camera->pl);
+		camera->pl = NULL;
+	}
+
+	return GP_OK;
+}
+
+static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data, GPContext *context)
 {
@@ -86,7 +102,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	unsigned int n;
 
 	CR (ricoh_get_num (camera, context, &n));
-	CR (gp_list_populate (list, "RDC%04i.jpg", n));
+	CR (gp_list_populate (list, "rdc%04i.jpg", n));
 
 	return (GP_OK);
 }
@@ -141,6 +157,37 @@ camera_id (CameraText *id)
 	return (GP_OK);
 }
 
+static int
+camera_summary (Camera *camera, CameraText *about, GPContext *context)
+{
+	unsigned int i;
+	int avail_mem, total_mem;
+	time_t camtime;
+	char cam_id[128];
+	RicohModel model;
+	const char *model_string = N_("Unknown");
+
+	CR (ricoh_ping (camera, context, &model));
+	for (i = 0; models[i].model; i++)
+		if (models[i].id == model)
+			break;
+	if (models[i].model)
+		model_string = models[i].model;
+	CR (ricoh_get_cam_id   (camera, context, cam_id));
+	CR (ricoh_get_cam_amem (camera, context, &avail_mem));
+	CR (ricoh_get_cam_mem  (camera, context, &total_mem));
+	CR (ricoh_get_cam_date (camera, context, &camtime));
+
+	sprintf(about->text, _("Camera model: %s\n"
+			       "Camera ID: %s\n"
+			       "Memory: %d byte(s) of %d available\n"
+			       "Camera time: %s\n"),
+		_(model_string), cam_id, avail_mem, total_mem,
+		ctime (&camtime));
+
+	return (GP_OK);
+}
+
 static struct {
 	unsigned int speed;
 	RicohSpeed rspeed;
@@ -160,8 +207,10 @@ camera_init (Camera *camera, GPContext *context)
 	GPPortSettings settings;
 	unsigned int speed, i;
 	int result;
+	RicohModel model;
 
 	/* Try to contact the camera */
+	CR (gp_port_set_timeout (camera->port, 5000));
 	CR (gp_port_get_settings (camera->port, &settings));
 	speed = (settings.serial.speed ? settings.serial.speed : 115200);
 	for (i = 0; speeds[i].speed; i++) {
@@ -190,10 +239,22 @@ camera_init (Camera *camera, GPContext *context)
 			return (GP_ERROR);
 		}
 		CR (ricoh_set_speed (camera, context, speeds[i].rspeed));
+		settings.serial.speed = speed;
 		CR (gp_port_set_settings (camera->port, settings));
-		CR (ricoh_ping (camera, context, NULL));
+		CR (ricoh_ping (camera, context, &model));
 	}
 
+	camera->pl = malloc (sizeof (CameraPrivateLibrary));
+	if (!camera->pl)
+		return (GP_ERROR_NO_MEMORY);
+	memset (camera->pl, 0, sizeof (CameraPrivateLibrary));
+
+	/* save the mode the camera is in */
+	CR (ricoh_get_mode (camera, context, &(camera->pl->mode)));
+
+	/* setup the function calls */
+	camera->functions->exit = camera_exit;
+	camera->functions->summary = camera_summary;
 	CR (gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL,
 					  camera));
 	CR (gp_filesystem_set_file_funcs (camera->fs, get_file_func,
