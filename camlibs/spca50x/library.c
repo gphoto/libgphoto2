@@ -552,7 +552,8 @@ camera_init (Camera *camera, GPContext *context)
 	gp_camera_get_abilities (camera, &abilities);
 	model = models[x].model;
 	while (model) {
-		if (!strcmp (model, abilities.model)) {
+		if (abilities.usb_vendor == models[x].usb_vendor
+		 && abilities.usb_product == models[x].usb_product) {
 			camera->pl->bridge = models[x].bridge;
 			camera->pl->storage_media_mask = 
 				models[x].storage_media_mask;
@@ -561,8 +562,6 @@ camera_init (Camera *camera, GPContext *context)
 		model = models[++x].model;
 	}
 	
-	
-	ret = spca50x_reset (camera->pl);
 	CHECK (spca50x_get_firmware_revision (camera->pl));
 	if (camera->pl->fw_rev > 1) {
 		CHECK (spca50x_detect_storage_type (camera->pl));
@@ -570,6 +569,7 @@ camera_init (Camera *camera, GPContext *context)
 	if (cam_has_flash(camera->pl) || cam_has_card(camera->pl) )
 		CHECK (spca50x_flash_init (camera->pl, context));
 	
+	ret = spca50x_reset (camera->pl);
 	if (ret < 0) {
 		gp_context_error (context, _("Could not reset camera.\n"));
 		free (camera->pl);
