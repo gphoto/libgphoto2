@@ -29,6 +29,7 @@
 #include <bayer.h>
 
 #include "jd350e.h"
+#include "dlink350f.h"
 
 #define GP_MODULE "pdc640"
 
@@ -192,7 +193,7 @@ static struct {
 	{"D-Link DSC 350F", 0xd64, 0x1021, {
 		 	dlink350f,
 			BAYER_TILE_BGGR,
-			&flip_vertical,
+			&dlink_dsc350f_postprocessing_and_flip_both,
 			"dlink%04i.ppm"
 		}
 	},
