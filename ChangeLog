@@ -1,5 +1,15 @@
 2001-10-04  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/konica/library.c: const
+	* frontents/command-line/main.c: Print out last debugging messages
+	on error
+	* include/gphoto2-debug.h:
+	* libgphoto2/debug.c: Remember history
+	* include/gphoto2-result.h:
+	* libgphoto2/result.c: Revert the result_as_description thing
+	
+2001-10-04  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2/result.c:
 	* libgphoto2/camera.c:
 	* include/gphoto2-camera.h:

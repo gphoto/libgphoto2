@@ -38,6 +38,5 @@
 #define GP_ERROR_PATH_NOT_ABSOLUTE   -111 /* Path not absolute          */
 
 const char *gp_result_as_string      (int result);
-const char *gp_result_as_description (int result);
 
 #endif /* __GPHOTO2_RESULT_H__ */
