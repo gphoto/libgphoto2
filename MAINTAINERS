@@ -50,6 +50,9 @@ camlibs/konica:
 camlibs/kodak/dc120:
 	Scott Fritzinger <scottf@unr.edu>
 
+camlibs/kodak/dc210:
+	Michael Koltan <koltan@gmx.de>
+
 camlibs/kodak/dc240:
 	Hubert Figuiere <hfiguiere@teaser.fr>
 

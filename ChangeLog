@@ -1,3 +1,7 @@
+2002-08-26  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* MAINTAINERS: Added Kodak DC210 maintainer.
+
 2002-08-23  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* configure.in: added largan/lmini driver
