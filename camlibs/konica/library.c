@@ -669,7 +669,7 @@ camera_get_config (Camera* camera, CameraWidget** window, GPContext *context)
         if (status.date.year > 80) year_4_digits = status.date.year + 1900;
         else year_4_digits = status.date.year + 2000;
         tm_struct.tm_year = year_4_digits - 1900;
-        tm_struct.tm_mon = status.date.month;
+        tm_struct.tm_mon = status.date.month - 1;
         tm_struct.tm_mday = status.date.day;
         tm_struct.tm_hour = status.date.hour;
         tm_struct.tm_min = status.date.minute;
@@ -883,7 +883,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
                 xtime = i;
                 tm_struct = localtime (&xtime);
                 date.year   = tm_struct->tm_year - 100;
-                date.month  = tm_struct->tm_mon;
+                date.month  = tm_struct->tm_mon + 1;
                 date.day    = tm_struct->tm_mday;
                 date.hour   = tm_struct->tm_hour;
                 date.minute = tm_struct->tm_min;

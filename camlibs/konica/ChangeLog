@@ -1,3 +1,10 @@
+2003-12-11  Lutz Mueller <lutz@users.sourceforge.net>
+
+	Patches by Andreas Burmester <a.burmester@hamburg.de>:
+
+	* library.c (camera_[get,set]_config: Months are counted from 1 to 
+	  12 on the C200.
+
 2003-05-25  Marcus Meissner <marcus@jet.franken.de>
 	    Aurélien Croc (AP²C) <programming@ap2c.com>
 
