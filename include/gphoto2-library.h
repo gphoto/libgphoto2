@@ -38,21 +38,39 @@ int camera_folder_list		(char *folder_path,
 	/* one of the entries in the list should be "<gphotos>" */
 
 int camera_folder_set		(char *folder_path);
+	/* Sets the current folder path on the camera to 	*/
+	/* camera_path. the folder_path should have been	*/
+	/* obtained from repeat calls to camera_folder_list()	*/
 
 int camera_file_count 		();
+	/* Returns the number of files in the current folder on */
+	/* the camera.						*/
 
 int camera_file_get 	    	(int file_number, 
 				 CameraFile *file);
+	/* Fills in the file struct with a file #file_number	*/
+	/* from the camera.					*/
 
 int camera_file_get_preview 	(int file_number, 
 				 CameraFile *preview);
+	/* Fills in the file struct with a file preview 	*/
+	/* #file_number	from the camera. The preview is a	*/
+	/* picture thumbnail, or snippet from a movie/sound	*/
+	/* if supported.					*/
 
 int camera_file_put 	    	(CameraFile *file);
+	/* Uploads a file to the current folder on the camera. 	*/
+	/* The user is in charge of converting an image to the	*/
+	/* appropriate format.					*/
 
 int camera_file_delete 		(int file_number);
+	/* Deletes a picture from the current folder on the	*/
+	/* camera. 						*/
 
-int camera_file_lock   		(int file_number);
-int camera_file_unlock 		(int file_number);
+int camera_file_protect		(int file_number);
+int camera_file_unprotect	(int file_number);
+	/* protects and unprotects a file on the camera from 	*/
+	/* being deleted. (if supported)			*/
 
 int camera_config 		(CameraConfig *conf, int conf_count);
 
