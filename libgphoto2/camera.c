@@ -477,15 +477,41 @@ int gp_camera_folder_list_folders (Camera *camera, const char* folder,
         return (GP_OK);
 }
 
+int delete_one_by_one (Camera *camera, const char *folder)
+{
+	CameraList list;
+	int result, i;
+
+	result = gp_camera_folder_list_files (camera, folder, &list);
+	if (result != GP_OK)
+		return (result);
+
+	for (i = gp_list_count (&list); i > 0; i--) {
+		result = gp_camera_file_delete (camera, folder,
+					gp_list_entry (&list, i - 1)->name);
+		if (result != GP_OK)
+			return (result);
+	}
+
+	return (GP_OK);
+}
+
 int gp_camera_folder_delete_all (Camera *camera, const char *folder)
 {
         if ((camera == NULL) || (folder == NULL))
                 return (GP_ERROR_BAD_PARAMETERS);
 
+	/* 
+	 * As this function isn't supported by all cameras, we fall back to
+	 * deletion one by one.
+	 */
         if (camera->functions->folder_delete_all == NULL)
-                return (GP_ERROR_NOT_SUPPORTED);
+		return (delete_one_by_one (camera, folder));
 
-        return (camera->functions->folder_delete_all (camera, folder));
+        if (camera->functions->folder_delete_all (camera, folder) != GP_OK)
+		return (delete_one_by_one (camera, folder));
+
+	return (GP_OK);
 }
 
 int gp_camera_folder_put_file (Camera *camera, const char *folder, 
