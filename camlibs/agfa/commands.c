@@ -15,42 +15,47 @@
 #ifdef OS2
 #include <db.h>
 #endif
-#include <netinet/in.h>
+
 #include <gphoto2.h>
+#include <gphoto2-endian.h>
 
 #include "agfa.h"
 
 #define GP_MODULE "agfa"
 
     /* Regular commands always 8 bytes long */
-static int agfa_send_command(int command, int argument, CameraPrivateLibrary *dev) {
+static uint32_t agfa_send_command(uint32_t command, uint32_t argument, 
+				  CameraPrivateLibrary *dev) {
 
-    struct agfa_command cmd;
+    uint8_t cmd[12];
     int result;
    
-    cmd.length = 8;
-    cmd.command = command;
-    cmd.argument = argument;
+    htole32a(&cmd[0],8);        /* Length "8" in little-endian 32bits */
+    htole32a(&cmd[4],command);  /* Command is a little-endian 32bits  */
+    htole32a(&cmd[8],argument); /* Argument is a little-endian 32bits */
+ 
     result=gp_port_write(dev->gpdev,(char *)&cmd,sizeof(cmd));
     if (result<0) return result;
     return GP_OK;
 }
 
     /* Filenames are always 12 bytes long */
-static int agfa_send_file_command(const char *filename, CameraPrivateLibrary *dev) {
+static uint32_t agfa_send_file_command(const char *filename, 
+				       CameraPrivateLibrary *dev) {
     
-    struct agfa_file_command file_cmd;
+    uint8_t file_cmd[16];
     int result;
    
-    file_cmd.length=0x0c;
-    strncpy(file_cmd.filename,filename,12);
+    htole32a(&file_cmd[0],0xc);       /* Length is "C" little-endian 32 bits */
+    strncpy(&file_cmd[4],filename,12);/* Filename is 12 bytes at the end */
+					  
     result=gp_port_write(dev->gpdev,(char *)&file_cmd,sizeof(file_cmd));
     if (result<0) return result;
     return GP_OK;
 }
 
     /* USB-only */
-static int agfa_read(CameraPrivateLibrary *dev, void *buffer, int len) {
+static uint32_t agfa_read(CameraPrivateLibrary *dev, void *buffer, int len) {
 
     return gp_port_read(dev->gpdev, buffer, len);
 }
@@ -69,8 +74,8 @@ int agfa_reset(CameraPrivateLibrary *dev) {
 int agfa_get_status(CameraPrivateLibrary *dev, int *taken,
         int *available, int *rawcount) {
 
-    unsigned char ss[0x60];
-    int ret;
+    uint8_t ss[0x60];
+    uint32_t ret;
 
    
     ret=agfa_send_command(AGFA_STATUS, 0, dev);
@@ -121,7 +126,7 @@ int agfa_capture(CameraPrivateLibrary *dev, CameraFilePath *path) {
 
 int agfa_photos_taken(CameraPrivateLibrary *dev) {
    
-    int ret,numpics;
+    uint32_t ret,numpics;
 
     ret=agfa_send_command(AGFA_GET_NUM_PICS, 0, dev);
 
@@ -135,7 +140,7 @@ int agfa_photos_taken(CameraPrivateLibrary *dev) {
        fprintf(stderr, "agfa_get_storage_status: error getting count\n");
        return ret;
     }
-    return numpics;
+    return le32toh(numpics);
 
 }
 
@@ -143,7 +148,7 @@ int agfa_photos_taken(CameraPrivateLibrary *dev) {
 int agfa_get_file_list(CameraPrivateLibrary *dev) {
 
     char *buffer;
-    int ret, taken, buflen;
+    uint32_t ret, taken, buflen;
 
     
     /* It seems we need to do a "reset" packet before reading names?? */
@@ -201,7 +206,7 @@ int agfa_get_file_list(CameraPrivateLibrary *dev) {
 
 int agfa_get_thumb_size(CameraPrivateLibrary *dev, const char *filename) {
  
-    int ret,temp,size; 
+    uint32_t ret,temp,size; 
    
     ret=agfa_send_command(AGFA_GET_THUMB_SIZE,0,dev);
     if (ret<0) return ret;
@@ -216,14 +221,14 @@ int agfa_get_thumb_size(CameraPrivateLibrary *dev, const char *filename) {
     ret = agfa_read(dev, &size, sizeof(size));        
     if (ret<0) return ret;
     
-    return size;
+    return le32toh(size);
    
 }
 
 int agfa_get_thumb(CameraPrivateLibrary *dev, const char *filename,
 		   unsigned char *data,int size) {
 
-    int ret,temp; 
+    uint32_t ret,temp; 
    
     ret = agfa_send_command(AGFA_GET_THUMB,0,dev);
     if (ret<0) return ret;
@@ -254,7 +259,7 @@ int agfa_get_thumb(CameraPrivateLibrary *dev, const char *filename,
 
 int agfa_get_pic_size(CameraPrivateLibrary *dev, const char *filename) {
  
-    int ret,temp,size; 
+    uint32_t ret,temp,size; 
    
     ret=agfa_send_command(AGFA_GET_PIC_SIZE,0,dev);
     if (ret<0) return ret;
@@ -269,14 +274,14 @@ int agfa_get_pic_size(CameraPrivateLibrary *dev, const char *filename) {
     ret = agfa_read(dev, &size, sizeof(size));        
     if (ret<0) return ret;
     
-    return size;
+    return le32toh(size);
    
 }
 
 int agfa_get_pic(CameraPrivateLibrary *dev, const char *filename,
 		   unsigned char *data,int size) {
    
-    int ret,temp; 
+    uint32_t ret,temp; 
    
     ret = agfa_send_command(AGFA_GET_PIC,0,dev);
     if (ret<0) return ret;
@@ -305,9 +310,9 @@ int agfa_get_pic(CameraPrivateLibrary *dev, const char *filename,
    /* to implement this */
 int agfa_delete_picture(CameraPrivateLibrary *dev, const char *filename) {
    
-    int ret,temp,taken; 
-    char data[4],*buffer;
-    int size=4,buflen;
+    uint32_t ret,temp,taken; 
+    uint8_t data[4],*buffer;
+    uint32_t size=4,buflen;
    
        /* yes, we do this twice?? */
     taken=agfa_photos_taken(dev);

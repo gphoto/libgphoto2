@@ -17,19 +17,6 @@
 #define AGFA_DONE_PIC       0x01FF
 #define AGFA_STATUS	    0x0114
 
-
-/* agfa protocol primitives */
-struct agfa_command {
-	unsigned int length;
-	unsigned int command;
-	unsigned int argument;
-};
-
-struct agfa_file_command {
-   unsigned int length;
-   char filename[12];
-};
-
 struct _CameraPrivateLibrary {
 	GPPort *gpdev;
 
