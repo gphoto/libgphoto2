@@ -23,7 +23,8 @@
 
 /* This is the parent function, who calls most of the functions below.
    It returns GP_ERROR if it cannot get the camera data, and GP_OK otherwise.
-   The subroutines will print out more detained information should they fail. */
+   The subroutines will print out more detained information should they fail.
+*/
 int dimagev_get_camera_data(dimagev_t *dimagev) {
 	dimagev_packet *p, *raw;
 	unsigned char char_buffer;
@@ -126,10 +127,6 @@ int dimagev_get_camera_data(dimagev_t *dimagev) {
 			break;
 	}
 
-	if ( dimagev->debug != 0 ) {
-		dimagev_dump_packet(p);
-	}
-
 	if ( ( raw = dimagev_strip_packet(p) ) == NULL ) {
 		if ( dimagev->debug != 0 ) {
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_data::unable to strip data packet\n");
@@ -151,6 +148,10 @@ int dimagev_get_camera_data(dimagev_t *dimagev) {
 	return GP_OK;
 }
 
+/* This function sends the contents of a dimagev_data_t to the current camera.
+   This allows many changes to be made (e.g. entering host mode and record
+   mode) while only sending a single set_data command.
+*/
 int dimagev_send_data(dimagev_t *dimagev) {
 	dimagev_packet *p;
 	unsigned char *export_data, char_buffer;
@@ -310,6 +311,11 @@ int dimagev_send_data(dimagev_t *dimagev) {
 	return GP_OK;
 }
 
+/* This function populates and retuens a dimagev_data_t with the values
+   contained inside an array of bytes, as returned by the Dimage V. See
+   the description of these fields in the appropriate header file for
+   more information on the bit-packing done here.
+*/
 dimagev_data_t *dimagev_import_camera_data(unsigned char *raw_data) {
 	dimagev_data_t *processed_data;
 
@@ -405,10 +411,67 @@ void dimagev_dump_camera_data(dimagev_data_t *data) {
 
 	gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Quality mode: %s ( %d )", data->quality_setting ? "High" : "Low", data->quality_setting);
 	gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Play or Record mode: %s ( %d )", data->play_rec_mode ? "Record" : "Play", data->play_rec_mode);
-	gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Date: %02d/%02d/%02d %d:%d:%d", data->year, data->month, data->day, data->hour, data->minute, data->second);
+	gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Date: %02d/%02d/%02d %02d:%02d:%02d", data->year, data->month, data->day, data->hour, data->minute, data->second);
 	gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Card ID Valid: %s ( %d )", data->valid ? "Valid" : "Invalid", data->valid);
 	gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Card ID Data: %02x", data->id_number);
 	gp_debug_printf(GP_DEBUG_LOW, "dimagev", "========== End Camera Data ==========");
 
 	return;
+}
+
+/* This function gets the current system time, sets the contents of the current
+   dimagev->data struct appropriately, and then sends the data.
+*/
+int dimagev_set_date(dimagev_t *dimagev) {
+	struct tm *this_time;
+	time_t now;
+
+	if ( dimagev == NULL ) {
+		return GP_ERROR;
+	}
+
+	if ( ( now = time(NULL) ) < 0 ) {
+		if ( dimagev->debug != 0 ) {
+			gp_debug_printf(GP_DEBUG_LOW, "dimagev", "dimagev_set_date::unable to get system time");
+		}
+		return GP_ERROR;
+	}
+
+	if ( ( this_time = localtime(&now) ) == NULL ) {
+		if ( dimagev->debug != 0 ) {
+			gp_debug_printf(GP_DEBUG_LOW, "dimagev", "dimagev_set_date::unable to convert system time to local time");
+		}
+		return GP_ERROR;
+	}
+
+	if ( dimagev->debug != 0 ) {
+		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Setting clock to %02d/%02d/%02d %02d:%02d:%02d\n", this_time->tm_year, ( this_time->tm_mon + 1 ), this_time->tm_mday, this_time->tm_hour, this_time->tm_min, this_time->tm_sec);
+	}
+
+	dimagev->data->date_valid = 1;
+	dimagev->data->year = (unsigned char) ( this_time->tm_year % 100 );
+	dimagev->data->month = (unsigned char) ( this_time->tm_mon + 1 );
+	dimagev->data->day = (unsigned char) this_time->tm_mday;
+	dimagev->data->hour = (unsigned char) this_time->tm_hour;
+	dimagev->data->minute = (unsigned char) this_time->tm_min;
+	dimagev->data->second = (unsigned char) this_time->tm_sec;
+
+	if ( dimagev_send_data(dimagev) == GP_ERROR ) {
+		if ( dimagev->debug != 0 ) {
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_set_date::unable to set time");
+		}
+		return GP_ERROR;
+	}
+
+	/* So we don't set this date again later by mistake. */
+	dimagev->data->date_valid = 0;
+
+	if ( dimagev_send_data(dimagev) == GP_ERROR ) {
+		if ( dimagev->debug != 0 ) {
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_set_date::unable to set time");
+		}
+		return GP_ERROR;
+	}
+
+	return GP_OK;
 }
