@@ -1,3 +1,8 @@
+2002-05-13  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c: Handle SIERRA_PACKET_SESSION_[END,ERROR] by reinitializing
+	  the connection if this error occurs.
+
 2002-04-27  Ilya Konstantinov <gphoto@future.shiny.co.il>
 
 	* sierra.c (camera_start, camera_init): Send the

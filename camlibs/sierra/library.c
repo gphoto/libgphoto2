@@ -33,22 +33,23 @@
 
 #define GP_MODULE "sierra"
 
-/* Short comm. */
-#define NUL             0x00
-#define ENQ             0x05
-#define ACK             0x06
-#define DC1             0x11
-#define NAK             0x15
-#define TRM             0xff
-
-/* Packet types */
-#define TYPE_COMMAND    0x1b
-#define TYPE_DATA       0x02
-#define TYPE_DATA_END   0x03
+typedef enum _SierraPacket SierraPacket;
+enum _SierraPacket {
+	NUL				= 0x00,
+	SIERRA_PACKET_DATA		= 0x02,
+	SIERRA_PACKET_DATA_END		= 0x03,
+	ENQ				= 0x05,
+	ACK				= 0x06,
+	SIERRA_PACKET_INVALID		= 0x11,
+	NAK				= 0x15,
+	SIERRA_PACKET_COMMAND		= 0x1b,
+	SIERRA_PACKET_SESSION_ERROR	= 0xfc,
+	SIERRA_PACKET_SESSION_END	= 0xff
+};
 
 /* Sub-types */
-#define SUBTYPE_COMMAND_FIRST   0x53
-#define SUBTYPE_COMMAND         0x43
+#define SUBSIERRA_PACKET_COMMAND_FIRST   0x53
+#define SUBSIERRA_PACKET_COMMAND         0x43
 
 /* Maximum length of the data field within a packet */
 #define MAX_DATA_FIELD_LENGTH   2048
@@ -327,9 +328,9 @@ sierra_write_packet (Camera *camera, char *packet)
 	GP_DEBUG ("* sierra_write_packet");
 
 	/* Determing packet length */
-	if ((packet[0] == TYPE_COMMAND) ||
-	    (packet[0] == TYPE_DATA) ||
-	    (packet[0] == TYPE_DATA_END)) {
+	if ((packet[0] == SIERRA_PACKET_COMMAND) ||
+	    (packet[0] == SIERRA_PACKET_DATA) ||
+	    (packet[0] == SIERRA_PACKET_DATA_END)) {
 		length = ((unsigned char)packet[2]) +
 			((unsigned char)packet[3]  * 256);
 		length += 6;
@@ -457,13 +458,14 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 		 * If the first read byte is not known, 
 		 * report an error and exit the processing.
 		 */
-		switch ((unsigned char) packet[0]) {
+		switch (packet[0]) {
 		case NUL:
 		case ENQ:
 		case ACK:
-		case DC1:
+		case SIERRA_PACKET_INVALID:
 		case NAK:
-		case TRM:
+		case SIERRA_PACKET_SESSION_ERROR:
+		case SIERRA_PACKET_SESSION_END:
 
 			/* Those are all single byte packets. */
 			if (camera->port->type == GP_PORT_USB &&
@@ -474,9 +476,9 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 			GP_DEBUG ("Packet read. Returning GP_OK.");
 			return (GP_OK);
 
-		case TYPE_DATA:
-		case TYPE_DATA_END:
-		case TYPE_COMMAND:
+		case SIERRA_PACKET_DATA:
+		case SIERRA_PACKET_DATA_END:
+		case SIERRA_PACKET_COMMAND:
 
 			/* Those are packets with more than one byte. */
 			break;
@@ -641,7 +643,7 @@ sierra_transmit_ack (Camera *camera, char *packet, GPContext *context)
 		case ACK:
 			GP_DEBUG ("Transmission successful.");
 			return GP_OK;
-		case DC1:
+		case SIERRA_PACKET_INVALID:
 			gp_context_error (context, _("Packet got rejected "
 				"by camera. Please contact "
 				"<gphoto-devel@gphoto.org>."));
@@ -667,18 +669,18 @@ sierra_build_packet (Camera *camera, char type, char subtype,
 {
 	packet[0] = type;
 	switch (type) {
-	case TYPE_COMMAND:
+	case SIERRA_PACKET_COMMAND:
 		if (camera->port->type == GP_PORT_USB)
 				/* USB cameras don't care about first packets */
 			camera->pl->first_packet = 0;
 		if (camera->pl->first_packet)
-			packet[1] = SUBTYPE_COMMAND_FIRST;
+			packet[1] = SUBSIERRA_PACKET_COMMAND_FIRST;
 		else
-			packet[1] = SUBTYPE_COMMAND;
+			packet[1] = SUBSIERRA_PACKET_COMMAND;
 		camera->pl->first_packet = 0;
 		break;
-	case TYPE_DATA:
-	case TYPE_DATA_END:
+	case SIERRA_PACKET_DATA:
+	case SIERRA_PACKET_DATA_END:
 		packet[1] = subtype;
 		break;
 	default:
@@ -794,7 +796,7 @@ sierra_action (Camera *camera, SierraAction action, GPContext *context)
 	char buf[4096];
 
 	/* Build the command packet */
-	CHECK (sierra_build_packet (camera, TYPE_COMMAND, 0, 3, buf));
+	CHECK (sierra_build_packet (camera, SIERRA_PACKET_COMMAND, 0, 3, buf));
 	buf[4] = 0x02;
 	buf[5] = action;
 	buf[6] = 0x00;
@@ -823,7 +825,7 @@ int sierra_set_int_register (Camera *camera, int reg, int value, GPContext *cont
 
 	GP_DEBUG ("Setting int register %i to %i...", reg, value);
 
-	CHECK (sierra_build_packet (camera, TYPE_COMMAND, 0,
+	CHECK (sierra_build_packet (camera, SIERRA_PACKET_COMMAND, 0,
 				    (value < 0) ? 2 : 6, p));
 
 	/* Fill in the data */
@@ -844,51 +846,68 @@ int sierra_set_int_register (Camera *camera, int reg, int value, GPContext *cont
 
 int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *context) 
 {
-	int r = 0, write_nak = 0;
-	char packet[4096];
-	char buf[4096];
+	int r = 0;
+	unsigned char packet[4096], buf[4096];
 
-	GP_DEBUG ("* sierra_get_int_register");
-	GP_DEBUG ("* register: %i", reg);
-
-	CHECK (sierra_build_packet (camera, TYPE_COMMAND, 0, 2, packet));
+	CHECK (sierra_build_packet (camera, SIERRA_PACKET_COMMAND, 0, 2, packet));
 
 	/* Fill in the data */
 	packet[4] = 0x01;
 	packet[5] = reg;
 
-	while (r++ < RETRIES) {
-		if (write_nak)
-			CHECK (sierra_write_nak (camera))
-		else
-			CHECK (sierra_write_packet (camera, packet));
-
+	GP_DEBUG ("Getting integer value of register 0x%02x...", reg);
+	CHECK (sierra_write_packet (camera, packet));
+	while (1) {
 		CHECK (sierra_read_packet_wait (camera, buf, context));
 		GP_DEBUG ("Successfully read packet. Interpreting result "
-			  "(0x%x)...", buf[0]);
+			  "(0x%02x)...", buf[0]);
 		switch (buf[0]) {
-		case DC1:
+		case SIERRA_PACKET_INVALID:
 			gp_context_error (context, _("Could not get "
 				"register %i. Please contact "
 				"<gphoto-devel@gphoto.org>."), reg);
 			return GP_ERROR;
-		case TYPE_DATA_END:
+		case SIERRA_PACKET_DATA_END:
 			r = ((unsigned char) buf[4]) +
 			    ((unsigned char) buf[5] * 256) +
 			    ((unsigned char) buf[6] * 65536) +
 			    ((unsigned char) buf[7] * 16777216);
 			*value = r;
-			GP_DEBUG ("Value of register 0x%x: 0x%x. ", reg, r);
+			GP_DEBUG ("Value of register 0x%02x: 0x%02x. ", reg, r);
 			CHECK (sierra_write_ack (camera));
-			GP_DEBUG ("Read value of register 0x%x and wrote "
+			GP_DEBUG ("Read value of register 0x%02x and wrote "
 				  "acknowledgement. Returning...", reg);
 			return GP_OK;
-		case ENQ:
-			return GP_OK;
-		default:
 
-			/* Try again */
-			write_nak = 1;
+		case SIERRA_PACKET_SESSION_END:
+		case SIERRA_PACKET_SESSION_ERROR:
+
+			/*
+			 * If this code is reached, the camera has told us
+			 * that it closed the session
+			 * (SIERRA_PACKET_SESSION_END) or that the
+			 * session has already been closed
+			 * (SIERRA_PACKET_SESSION_ERROR). We
+			 * need to reinitialize and try again.
+			 */
+			if (++r > 2) {
+				gp_context_error (context, _("Too many "
+					"retries failed."));
+				return (GP_ERROR);
+			}
+			CHECK (sierra_init (camera, context));
+			CHECK (sierra_write_packet (camera, packet));
+			break;
+
+		default:
+			if (++r > 2) {
+				gp_context_error (context, _("Too many "
+					"retries failed."));
+				return (GP_ERROR);
+			}
+
+			/* Tell the camera to send again. */
+			CHECK (sierra_write_nak (camera));
 			break;
 		}
 	}
@@ -919,20 +938,20 @@ int sierra_set_string_register (Camera *camera, int reg, const char *s, long int
 
 	while (x < length) {
 		if (x == 0) {
-			type = TYPE_COMMAND;
+			type = SIERRA_PACKET_COMMAND;
 			size = (length + 2 - x) > MAX_DATA_FIELD_LENGTH
 				? MAX_DATA_FIELD_LENGTH : length + 2;
 		}  else {
 			size = (length - x) > MAX_DATA_FIELD_LENGTH
 				? MAX_DATA_FIELD_LENGTH : length-x;
 			if (x + size < length)
-				type = TYPE_DATA;
+				type = SIERRA_PACKET_DATA;
 			else
-				type = TYPE_DATA_END;
+				type = SIERRA_PACKET_DATA_END;
 		}
 		CHECK (sierra_build_packet (camera, type, seq, size, packet));
 
-		if (type == TYPE_COMMAND) {
+		if (type == SIERRA_PACKET_COMMAND) {
 			packet[4] = 0x03;
 			packet[5] = reg;
 			memcpy (&packet[6], &s[x], size-2);
@@ -972,7 +991,7 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 		CHECK (sierra_set_int_register (camera, 4, file_number, context));
 
 	/* Build and send the request */
-	CHECK (sierra_build_packet (camera, TYPE_COMMAND, 0, 2, packet));
+	CHECK (sierra_build_packet (camera, SIERRA_PACKET_COMMAND, 0, 2, packet));
 	packet[4] = 0x04;
 	packet[5] = reg;
 	CHECK (sierra_write_packet (camera, packet));
@@ -998,7 +1017,7 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 		CHECK (r);
 
 		switch (packet[0]) {
-		case DC1:
+		case SIERRA_PACKET_INVALID:
 			gp_context_error (context, _("Could not get "
 				"string register %i. Please contact "
 				"<gphoto-devel@gphoto.org>."), reg);
@@ -1020,7 +1039,7 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 			gp_context_progress_update (context, id, *b_len);
 		}
 
-	} while (packet[0] != TYPE_DATA_END);
+	} while (packet[0] != SIERRA_PACKET_DATA_END);
 	if (file)
 		gp_context_progress_stop (context, id);
 
