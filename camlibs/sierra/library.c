@@ -1187,6 +1187,7 @@ int sierra_get_string_register (Camera *camera, int reg, int fnumber,
 	unsigned char p[34816];
 	unsigned int packlength, total = (b_len) ? *b_len : 0;
 	int retries, r;
+	unsigned int min_progress_bytes;
 	static int in_function = 0;
 	const char *file_name;
 	unsigned int id = 0;
@@ -1214,11 +1215,17 @@ int sierra_get_string_register (Camera *camera, int reg, int fnumber,
 	 * and receive 32k size packages, otherwise code 0x04 is used and
 	 * we have 2k size packages.
 	 */
-	p[4] = (camera->pl->flags & SIERRA_EXT_PROTO) ? 0x06 : 0x04;
+	if (camera->pl->flags & SIERRA_EXT_PROTO) {
+		p[4] = 0x06;
+		min_progress_bytes = 32 * 1024;
+	} else {
+		p[4] = 0x04;
+		min_progress_bytes = 2 * 1024;
+	}
 	p[5] = reg;
 	CHECK (sierra_write_packet (camera, p, context));
 
-	if (file && total) {
+	if (file && total > min_progress_bytes) {
 		CHECK (gp_file_get_name(file, &file_name));
 		id = gp_context_progress_start (context, total, file_name);
 	}
@@ -1264,12 +1271,12 @@ int sierra_get_string_register (Camera *camera, int reg, int fnumber,
 
 		if (file) {
 		    CHECK (gp_file_append (file, &p[4], packlength));
-		    if (total)
+		    if (total > min_progress_bytes)
 			gp_context_progress_update (context, id, *b_len);
 		}
 
 	} while (p[0] != SIERRA_PACKET_DATA_END);
-	if (file && total)
+	if (file && total > min_progress_bytes)
 		gp_context_progress_stop (context, id);
 
 	GP_DEBUG ("sierra_get_string_register: completed OK, *b_len %d",

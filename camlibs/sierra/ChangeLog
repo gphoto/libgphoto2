@@ -1,4 +1,8 @@
 2003-11-16  Patrick Mansfield <patmans@users.sourceforge.net>
+	* library.c: Only do progress updates in sierra_get_string_register
+	  if a command requires multiple packets.
+
+2003-11-16  Patrick Mansfield <patmans@users.sourceforge.net>
 	* library.c, sierra.c: Enable progress checks, since the recursion
 	  cases have been removed from libgphoto2 and gtkam.
 
