@@ -21,7 +21,9 @@
 #ifndef __GPHOTO2_PORT_H__
 #define __GPHOTO2_PORT_H__
 
+#ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
 #include <gphoto2-port-info-list.h>
 
 /* For portability */

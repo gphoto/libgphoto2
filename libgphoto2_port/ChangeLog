@@ -1,3 +1,8 @@
+2002-01-13 Dan Fandrich <dan@coneharvesters.com>
+
+	* libgphoto2_port/gphoto2-port-log.h
+	* libgphoto2_port/gphoto2-port.h: Put #ifdef HAVE_CONFIG_H around include
+
 2002-01-12  Hans Ulrich Niedermann <gp@n-dimensional.de>
 	
 	* libgphoto2_port/gphoto2-port.[ch]: renamed "class" parameter to "mainclass"

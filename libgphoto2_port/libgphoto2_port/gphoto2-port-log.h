@@ -21,8 +21,10 @@
 #ifndef __GPHOTO2_PORT_LOG_H__
 #define __GPHOTO2_PORT_LOG_H__
 
-#include <stdarg.h>
+#ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
+#include <stdarg.h>
 
 typedef enum {
 	GP_LOG_ERROR = 0,
