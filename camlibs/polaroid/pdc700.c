@@ -569,7 +569,8 @@ camera_about (Camera *camera, CameraText *about)
 static int
 camera_summary (Camera *camera, CameraText *about)
 {
-	static const char *quality[] = {"normal", "fine", "superfine"};
+	static const char *quality[] = {N_("normal"), N_("fine"),
+					N_("superfine")};
 	PDCInfo info;
 
 	CHECK_RESULT (pdc700_info (camera, &info));

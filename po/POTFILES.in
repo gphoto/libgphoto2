@@ -10,6 +10,7 @@ camlibs/konica/library.c
 camlibs/minolta/dimagev/dimagev.c
 camlibs/panasonic/dc1000.c
 camlibs/panasonic/dc1580.c
+camlibs/polaroid/pdc700.c
 camlibs/sierra/sierra.c
 camlibs/sonydscf1/sonydscf1.c
 libgphoto2/gphoto2-camera.c
