@@ -699,7 +699,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 	/* Get folder handle omiting storage pseudofolder */
 	find_folder_handle(folder,storage,handler,data);
-	GP_DEBUG ("folder: %s\nID = 0x%.4x\tstorage = %.4x\n",folder, handler,storage);
+
 	for (i = 0; i < params->handles.n; i++) {
 	if (params->objectinfo[i].ParentObject==handler)
 	if ((!ptp_operation_issupported(params,PTP_OC_GetStorageIDs)) || 
