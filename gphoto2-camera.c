@@ -1312,6 +1312,8 @@ gp_camera_set_error (Camera *camera, const char *format, ...)
 const char *
 gp_camera_get_error (Camera *camera)
 {
+	CHECK_NULL (camera);
+
 	if (strlen (camera->pc->error))
 		return (camera->pc->error);
 
