@@ -2,7 +2,7 @@
 INCLUDES = -I../ $(VERSION_FLAGS) -I$(top_srcdir)/include
 VERSION_FLAGS = -DLIBGPPORT_VERSION=\"@LIBGPPORT_VERSION@\"
 CFLAGS = @CFLAGS@ @IOLIB_CFLAGS@ \
-	-DIOLIBS=\"$(prefix)/lib/gphoto2_port\" \
+	-DIOLIBS=\"$(libdir)/gphoto2_port\" \
 	-g
 LDFLAGS = @LDFLAGS@ -g -ldl
 
