@@ -49,6 +49,9 @@
 
 #define GP_MODULE "PTP2"
 
+#define USB-TIMEOUT 8000
+#define USB-TIMEOUT-CAPTURE 20000
+
 #define CPR(context,result) {short r=(result); if (r!=PTP_RC_OK) {report_result ((context), r); return (translate_ptp_result (r));}}
 
 #define CPR_free(context,result, freeptr) {\
@@ -535,11 +538,12 @@ camera_abilities (CameraAbilitiesList *list)
 	a.usb_class = 6;
 	a.usb_subclass = -1;
 	a.usb_protocol = -1;
-	a.operations        = GP_OPERATION_NONE;
+	a.operations        = GP_CAPTURE_IMAGE | GP_OPERATION_CONFIG;
 	a.file_operations   = GP_FILE_OPERATION_PREVIEW|
 				GP_FILE_OPERATION_DELETE;
 	a.folder_operations = GP_FOLDER_OPERATION_PUT_FILE
-		| GP_FOLDER_OPERATION_MAKE_DIR;
+		| GP_FOLDER_OPERATION_MAKE_DIR |
+		GP_FOLDER_OPERATION_REMOVE_DIR;
 	CR (gp_abilities_list_append (list, a));
 
 	return (GP_OK);
@@ -588,6 +592,33 @@ camera_about (Camera *camera, CameraText *text, GPContext *context)
 	return (GP_OK);
 }
 
+/* add new object to internal driver structures. issued when creating
+folder, uploading objects, or captured images. */
+static int
+add_object (Camera *camera, uint32_t handle, GPContext *context)
+{
+	int n;
+
+	/* increase number of objects */
+	n=++camera->pl->params.handles.n;
+	/* realloc more space for camera->pl->params.objectinfo */
+	camera->pl->params.objectinfo = (PTPObjectInfo*)
+		realloc(camera->pl->params.objectinfo,
+			sizeof(PTPObjectInfo)*n);
+	/* realloc more space for amera->pl->params.handles.Handler */
+	camera->pl->params.handles.Handler= (uint32_t *)
+		realloc(camera->pl->params.handles.Handler,
+			sizeof(uint32_t)*n);
+	/* clear objectinfo entry for new object and assign new handler */
+	memset(&camera->pl->params.objectinfo[n-1],0,sizeof(PTPObjectInfo));
+	camera->pl->params.handles.Handler[n-1]=handle;
+	/* get new obectinfo */
+	CPR (context, ptp_getobjectinfo(&camera->pl->params,
+		handle,
+		&camera->pl->params.objectinfo[n-1]));
+	return (GP_OK);
+}
+
 static int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		GPContext *context)
@@ -602,13 +633,16 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		PTP_OC_InitiateCapture))
 		return GP_ERROR_NOT_SUPPORTED;
 
-	/* A capture may take longer than the standard 8 seconds. The G5 for instance
-	 * does, or in dark rooms ...
+	/* A capture may take longer than the standard 8 seconds.
+	 * The G5 for instance does, or in dark rooms ...
 	 * Even 16 seconds might not be enough. (Marcus)
 	 */
-	CR (gp_port_set_timeout (camera->port, 16000));
+	/* ptp_initiatecapture() returns immediately, only the event
+	 * indicating that the capure has been completed may occur after
+	 * few seconds. moving down the code. (kil3r)
+	 */
 	CPR(context,ptp_initiatecapture(&camera->pl->params, 0x00000000, 0x00000000));
-	CR (gp_port_set_timeout (camera->port, 8000));
+	CR (gp_port_set_timeout (camera->port, USB-TIMEOUT-CAPTURE));
 	while (ptp_usb_event_wait (&camera->pl->params, &event)!=PTP_RC_OK);
 	if (event.Code==PTP_EC_ObjectAdded) {
 		while (ptp_usb_event_wait (&camera->pl->params, &event)!=PTP_RC_OK);
@@ -616,6 +650,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 			return GP_OK;
 		}
 	} 
+	CR (gp_port_set_timeout (camera->port, USB-TIMEOUT));
 
 	/* we're not going to set path, ptp does not use paths anyway ;) */
 	return GP_ERROR;
@@ -1004,7 +1039,8 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 		GP_DEBUG ("The device does not support uploading files!");
 		return GP_ERROR_NOT_SUPPORTED;
 	}
-
+	/* update internal structures */
+	add_object(camera, handle, context);
 	return (GP_OK);
 }
 
@@ -1154,6 +1190,8 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 		GP_DEBUG ("The device does not support make folder!");
 		return GP_ERROR_NOT_SUPPORTED;
 	}
+	/* update internal structures */
+	add_object(camera, handle, context);
 	return (GP_OK);
 }
 
@@ -1271,7 +1309,7 @@ camera_init (Camera *camera, GPContext *context)
 	/* On large fiels (over 50M) deletion takes over 3 seconds,
 	 * waiting for event after capture may take some time also
 	 */
-	CR (gp_port_set_timeout (camera->port, 8000));
+	CR (gp_port_set_timeout (camera->port, USB-TIMEOUT));
 	/* do we configure port ???*/
 #if 0	
 	/* Configure the port */

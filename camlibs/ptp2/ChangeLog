@@ -1,3 +1,8 @@
+2003-09-19 Mariusz Woloszyn
+	* library.c: fixed capture imout and increased to 20 seconds; fixed
+	  internal structures update when uploding files and creating
+	  folders;
+	* TODO: updated
 2003-09-17  Marcus Meissner <marcus@jet.franken.de>
 
 	* library.c: Increase timeout for capture. A G5 needs longer than 8 seconds...
