@@ -57,8 +57,6 @@ typedef struct {
     int intval;
 } ExifData;
 
-extern struct tagarray tagnames[];
-
 extern int exif_debug; /* Non-zero for debug messages */
 
 /*
