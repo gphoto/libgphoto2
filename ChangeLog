@@ -1,3 +1,8 @@
+2002-02-15 Christophe Barbé <christophe.barbe@ufies.org>
+
+   * libgphoto2_port/doc/DocRules.am: change rule to 
+     build in the builddir (!= srcdir) and to install from buildir.
+
 2002-02-14  Fredrik <fredrik@krixor.xy.org>
 
 	* frontends/command-line/main.c: Make at least a small attempt
