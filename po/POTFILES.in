@@ -51,6 +51,8 @@ camlibs/sierra/sierra.c
 camlibs/sipix/sipix.c
 camlibs/sipix/web2.c
 camlibs/sipixblink/sipixblink.c
+camlibs/smal/smal.c
+camlibs/smal/ultrapocket.c
 camlibs/sonydscf1/dsc_f1.c
 camlibs/sonydscf1/sonydscf1.c
 camlibs/sonydscf55/camera.c
