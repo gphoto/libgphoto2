@@ -38,6 +38,16 @@ dnl Languages
 ALL_LINGUAS="de"
 AM_GNU_GETTEXT
 
+AC_CHECK_FUNC(gettext, gettext_without_libintl=true)
+# same trick as with libdl in libgphoto2:
+# if gettext() doesn't require linking against libintl,
+# we don't have to check for gettext in libintl. Otherwise
+# we may even require libintl.
+dnl AC_CHECK_LIB(intl, gettext, [LIBS="$LIBS -lintl"])
+if test "$gettext_without_libintl" != "true"; then
+        AC_CHECK_LIB(intl, gettext)
+fi
+
 dnl Turn on debugging and catch GNU features incompatible with ANSI C.
 CFLAGS="$CFLAGS -g -Wall -Wmissing-declarations -Wmissing-prototypes"
 LDFLAGS="$LDFLAGS -g -Wall"
