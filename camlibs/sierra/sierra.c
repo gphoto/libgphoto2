@@ -467,6 +467,7 @@ static int
 delete_all_func (CameraFilesystem *fs, const char *folder, void *data)
 {
 	Camera *camera = data;
+	int count;
 
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", 
 			 "*** sierra_folder_delete_all");
@@ -476,17 +477,21 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data)
 	CHECK (camera_start (camera));
 	CHECK_STOP (camera, sierra_change_folder (camera, folder));
 	CHECK_STOP (camera, sierra_delete_all (camera));
-	CHECK (camera_stop (camera));
 
 	/*
 	 * Mick Grant <mickgr@drahthaar.clara.net> found out that his
 	 * Nicon CoolPix 880 won't have deleted any picture at this point.
 	 * It seems that those cameras just acknowledge the command but do
-	 * nothing in the end. gphoto2 will check if all pictures have deleted,
-	 * therefore we don't handle this case here.
+	 * nothing in the end. Therefore, we have to count the number of 
+	 * pictures that are now on the camera. If there indeed are any 
+	 * pictures, return an error. libgphoto2 will then try to manually
+	 * delete them one-by-one.
 	 */
+	CHECK_STOP (camera, sierra_get_int_register (camera, 10, &count));
+	if (count > 0)
+		return (GP_ERROR);
 
-	return (GP_OK);
+	return (camera_stop (camera));
 }
 
 static int

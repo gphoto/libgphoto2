@@ -1,3 +1,12 @@
+2001-11-27  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2/gphoto2-filesys.c: Recover from errors during
+	  file-deletion.
+	* camlibs/sierra/sierra.c: Report an error if, after delete_all, there
+	  are still pictures on the camera. That makes libgphoto2 able to 
+	  fix that.
+	* camlibs/konica/library.c: Here, too.
+
 2001-11-26  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* camlibs/directory/directory.c (set_info_func): Rewrite

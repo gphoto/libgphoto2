@@ -582,7 +582,7 @@ gp_filesystem_delete_all_one_by_one (CameraFilesystem *fs, const char *folder)
 int
 gp_filesystem_delete_all (CameraFilesystem *fs, const char *folder)
 {
-	int x;
+	int x, r;
 //	CameraList list;
 
 	CHECK_NULL (fs && folder);
@@ -594,18 +594,36 @@ gp_filesystem_delete_all (CameraFilesystem *fs, const char *folder)
 	if (!fs->delete_all_func)
 		CHECK_RESULT (gp_filesystem_delete_all_one_by_one (fs, folder))
 	else {
-		CHECK_RESULT (fs->delete_all_func (fs, folder,fs->folder_data));
-		CHECK_RESULT (delete_all_files (fs, x));
 
-//FIXME: Some cameras don't delete all pictures?
-//		fs->folder[x].files_dirty = 1;
-//		CHECK_RESULT (gp_filesystem_list_files (fs, folder, &list));
-//		if (gp_list_count (&list) > 0)
-//			CHECK_RESULT (gp_filesystem_delete_all_one_by_one (fs,
-//								folder));
+		/*
+		 * Mark the folder dirty - it could be that an error
+		 * happens, and then we don't know which files have been
+		 * deleted and which not.
+		 */
+		fs->folder[x].files_dirty = 1;
+
+		/*
+		 * First try to use the delete_all function. If that fails,
+		 * fall back to deletion one-by-one.
+		 */
+		r = fs->delete_all_func (fs, folder,fs->folder_data);
+		if (r < 0) {
+			gp_log (GP_LOG_DEBUG, "gphoto2-filesystem",
+				"delete_all failed (%s). Falling back to "
+				"deletion one-by-one.",
+				gp_result_as_string (r));
+			CHECK_RESULT (gp_filesystem_delete_all_one_by_one (
+								fs, folder));
+		} else
+			CHECK_RESULT (delete_all_files (fs, x));
+
+		/*
+		 * No error happened. We can be sure that all files have been
+		 * deleted.
+		 */
+		fs->folder[x].files_dirty = 0;
 	}
 
-	fs->folder[x].files_dirty = 0;
 	return (GP_OK);
 }
 

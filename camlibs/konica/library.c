@@ -387,11 +387,10 @@ delete_all_func (CameraFilesystem *fs, const char* folder, void *data)
         CHECK (camera, k_erase_all (camera->port, &not_erased));
 
         if (not_erased) {
-		gp_camera_message (camera,
-				   _("%i pictures could not be deleted "
-				     "because they are protected!"),
-				   not_erased);
+		gp_camera_set_error (camera, _("%i pictures could not be "
+			"deleted because they are protected"), not_erased);
 		gp_filesystem_reset (camera->fs);
+		return (GP_ERROR);
         }
 
         return (GP_OK);
