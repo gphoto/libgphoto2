@@ -125,7 +125,7 @@ int camera_init (Camera *camera) {
         /* Create the filesystem */
         b->fs = gp_filesystem_new();
         dev = b->dev;
-        printf("<-camera init");
+        printf("<-camera init\n");
         return (GP_OK);
 }
 
@@ -161,13 +161,36 @@ int camera_file_get (Camera *camera, CameraFile *file, char *folder, char *filen
         /**********************************/
         /* file_number now starts at 0!!! */
         /**********************************/
-        printf("sony dscf1: file get\n");
+        /*printf("sony dscf1: file get\n");
         if(!F1ok())
            return (GP_ERROR);
-        /*file->size = get_picture(file_number,&file->data,JPEG,0,camera_file_count(camera));
-        sprintf(file->name,"PSN%05d.jpg",file_number);*/
-        return (GP_OK);
+        file->size = get_picture(file_number,&file->data,JPEG,0,camera_file_count(camera));
+        sprintf(file->name,"PSN%05d.jpg",file_number);
+        return (GP_OK);*/
+
+        int size, num;
+        SonyStruct *b = (SonyStruct*)camera->camlib_data;
+        printf("->dscf1 camera_file_get\n");
+        /*gp_frontend_progress(camera, NULL, 0.00);*/
+        if(!F1ok())
+           return (GP_ERROR);
+
+        strcpy(file->name, filename);
+        strcpy(file->type, "image/jpg");
+
+        /* Retrieve the number of the photo on the camera */
+        num = gp_filesystem_number(b->fs, "/", filename);
+
+        /*file->data = barbie_read_picture(b, num, 0, &size);*/
+        size=get_picture(num,&file->data,JPEG,0,camera_file_count(camera));
+        if (!file->data)
+                return GP_ERROR;
+        file->size = size;
+        printf("<-dscf1 camera_file_get\n");
+        return GP_OK;
+
 }
+
 
 int camera_file_get_preview (Camera *camera, CameraFile *preview, char *folder, char *filename) {
 
@@ -240,11 +263,12 @@ int camera_file_list (Camera *camera, CameraList *list, char *folder) {
 
         int count, x;
         SonyStruct *b = (SonyStruct*)camera->camlib_data;
-
+        F1ok();
+        /*if(F1ok())
+           return(GP_ERROR);*/
         count = F1howmany();
-
         /* Populate the filesystem */
-        gp_filesystem_populate(b->fs, "/", "mattel%02i.ppm", count);
+        gp_filesystem_populate(b->fs, "/", "dscf1%03i.jpg", count);
 
         for (x=0; x<gp_filesystem_count(b->fs, folder); x++)
                 gp_list_append(list, gp_filesystem_name(b->fs, folder, x), GP_LIST_FILE);
