@@ -21,6 +21,9 @@
  *
  * History:
  * $Log$
+ * Revision 1.45  2002/11/17 15:48:47  marcusmeissner
+ * 	* dimera3500.c: fixed 64bit problems (using long* to int*).
+ *
  * Revision 1.44  2002/01/22 04:57:59  dfandrich
  * 	* TODO: changed note about temp.ppm and added one about multiple ops.
  * 	* mesalib.c: Check for error in mesa_modem_check.
@@ -219,10 +222,10 @@ Dimera_Get_Full_Image (int picnum, long *size, int *width, int *height,
 			Camera *camera, CameraFile *file, GPContext *context);
 
 static uint8_t *
-Dimera_Get_Thumbnail( int picnum, int *size, Camera *camera );
+Dimera_Get_Thumbnail( int picnum, long *size, Camera *camera );
 
 static uint8_t *
-Dimera_Preview( int *size, Camera *camera, GPContext *context );
+Dimera_Preview( long *size, Camera *camera, GPContext *context );
 
 /* Gphoto2 */
 
@@ -341,7 +344,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder, const char *
 					      file, context);
 		break;
 	case GP_FILE_TYPE_PREVIEW:
-		data = Dimera_Get_Thumbnail (num, (int*) &size, camera);
+		data = Dimera_Get_Thumbnail (num,  &size, camera);
 		break;
 	default:
 		gp_context_error (context, _("Image type is not supported"));
@@ -451,13 +454,13 @@ static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePat
 }
 
 static int camera_capture_preview(Camera *camera, CameraFile *file, GPContext *context) {
-        long int size;
+        long size;
 	uint8_t *data;
 
 	gp_file_set_name (file, RAM_IMAGE_TEMPLATE);
 	gp_file_set_mime_type (file, GP_MIME_PGM);
 
-        data = Dimera_Preview((int*) &size, camera, context);
+        data = Dimera_Preview( &size, camera, context);
         if (!data)
                 return GP_ERROR;
 	gp_file_set_data_and_size (file, data, size);
@@ -592,7 +595,7 @@ static int camera_about (Camera *camera, CameraText *about, GPContext *context) 
 /* Download a thumbnail image from the camera and return it in a malloced
 buffer with PGM headers */
 static uint8_t *
-Dimera_Get_Thumbnail( int picnum, int *size, Camera *camera )
+Dimera_Get_Thumbnail( int picnum, long *size, Camera *camera )
 {
 	int32_t		r;
 	uint8_t *image;
@@ -835,7 +838,7 @@ static unsigned calc_new_exposure(unsigned exposure, unsigned brightness) {
 /* Download a live image from the camera and return it in a malloced
 buffer with PGM headers */
 static uint8_t *
-Dimera_Preview( int *size, Camera *camera, GPContext *context )
+Dimera_Preview( long *size, Camera *camera, GPContext *context )
 {
 	uint8_t buffer[VIEWFIND_SZ/2], *p;
 	int		i;
