@@ -350,7 +350,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 	
 	dsc_t		*dsc = NULL;
 	
-	dsc_print_status(camera, "Initializing camera %s", init->model);	
+	dsc_print_status(camera, "Initializing camera %s", camera->model);	
 
 	/* First, set up all the function pointers */
 	camera->functions->id 			= camera_id;

@@ -200,7 +200,7 @@ camera_init (Camera* camera, CameraInit* init)
 	for (i = 0; i < 2; i++) {
 		for (j = 0; ; j++) {
 			if (models[i][j] == NULL) break;
-			if (strcmp (models[i][j], init->model) == 0) {
+			if (strcmp (models[i][j], camera->model) == 0) {
 				if (i == 1) konica_data->image_id_long = TRUE;
 				break;
 			}
