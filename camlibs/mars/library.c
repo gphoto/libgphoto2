@@ -60,7 +60,8 @@ struct {
    	unsigned short idProduct;
 } models[] = {
         {"Aiptek PenCam VGA+", GP_DRIVER_STATUS_EXPERIMENTAL, 0x08ca, 0x0111},
-	{NULL,0,0}
+        {"Emprex PCD3800", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f},
+       	{NULL,0,0}
 };
 
 int
