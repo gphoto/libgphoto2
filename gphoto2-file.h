@@ -22,8 +22,6 @@
 #define __GPHOTO2_FILE_H__
 
 #define GP_MIME_WAV       "audio/wav"
-/** Canon RaW files (CRW). See FIXME: URI missing for format details **/
-#define GP_MIME_CRW       "image/x-canon-raw"
 #define GP_MIME_RAW       "image/x-raw"
 #define GP_MIME_PNG       "image/png"
 #define GP_MIME_PGM       "image/x-portable-graymap"
@@ -33,6 +31,13 @@
 #define GP_MIME_BMP       "image/bmp"
 #define GP_MIME_QUICKTIME "video/quicktime"
 #define GP_MIME_AVI       "video/x-msvideo"
+
+/** GP_MIME_CRW
+ * Canon RaW files (CRW). See http://www.shore.net/~dcoffin/powershot/ 
+ * or http://www2.primushost.com/~dcoffin/powershot/ for details
+ * on the file format
+ **/
+#define GP_MIME_CRW       "image/x-canon-raw"
 
 /** GP_MIME_UNKNOWN:
  * For files that are not recognized by our driver yet.
