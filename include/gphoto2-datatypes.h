@@ -8,10 +8,23 @@
 /* Constants 
    ---------------------------------------------------------------- */
 
-/* Return Values */
-#define	GP_OK				 0
-#define GP_ERROR			-1
-#define GP_ERROR_NONCRITICAL		-2
+/* Return values. 
+   Return values below -99 (starting with -100) are defined by the 
+   individual camera library. */ 
+#define GP_OK			  0
+#define GP_ERROR		 -1	/* generic			*/
+#define GP_ERROR_NONCRITICAL	 -2	/* deprecated	 		*/
+#define GP_ERROR_BAD_PARAMETERS	 -3	/* for checking function-param.	*/
+#define GP_ERROR_IO		 -4	/* IO problem			*/
+#define GP_ERROR_CORRUPTED_DATA	 -5	/* Corrupted data		*/
+#define GP_ERROR_FILE_EXISTS	 -6	/* File exists			*/
+#define GP_ERROR_NO_MEMORY	 -7	/* Insufficient memory		*/
+#define GP_ERROR_MODEL_NOT_FOUND -8	/* Model not found		*/
+#define GP_ERROR_NOT_SUPPORTED	 -9	/* Some op. is unsupported	*/
+#define GP_ERROR_DIRECTORY_NOT_FOUND -10/* Directory not found		*/
+#define GP_ERROR_FILE_NOT_FOUND	-11	/* File not found		*/
+
+#define GP_NUM_ERRORS	12
 
 /* Debugging levels for gp_init */
 #define GP_DEBUG_NONE			0
@@ -279,7 +292,7 @@ typedef int (*c_file_get)	 (struct Camera*, CameraFile*, char*, char*);
 typedef int (*c_file_get_preview)(struct Camera*, CameraFile*, char*, char*);
 typedef int (*c_file_put)	 (struct Camera*, CameraFile*, char*);
 typedef int (*c_file_delete)	 (struct Camera*, char*, char*);
-typedef int (*c_capture)	 (struct Camera*, CameraFile*, CameraCaptureInfo *);
+typedef int (*c_capture)	 (struct Camera*, CameraFile*, CameraCaptureInfo*);
 typedef int (*c_config)		 (struct Camera*);
 typedef int (*c_summary)	 (struct Camera*, CameraText*);
 typedef int (*c_manual)		 (struct Camera*, CameraText*);
