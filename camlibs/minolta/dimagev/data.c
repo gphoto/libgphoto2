@@ -157,7 +157,7 @@ int dimagev_send_data(dimagev_t *dimagev) {
 		free(export_data);
 		return GP_ERROR_IO;
 	} else if ( gp_port_read(dimagev->dev, &char_buffer, 1) < GP_OK ) {
-		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "dimagev_send_data::no response from camera");
+		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "dimagev_send_data::no response from camera - trying to send NAK");
 		free(p);
 		free(export_data);
 		return GP_ERROR_IO;
