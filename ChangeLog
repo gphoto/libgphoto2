@@ -1,3 +1,10 @@
+2001-09-01  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* camlibs/casio: New
+	* configure.in: Add casio. Like the polaroid and samsung, those drivers
+	DON'T WORK and therefore are signed as EXPERIMENTAL. I add those only
+	to give you a basic framework on which to build.
+
 2001-08-31  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* camlibs/polaroid/pdc700.c: New
