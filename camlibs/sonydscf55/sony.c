@@ -615,6 +615,7 @@ sony_file_get(Camera * camera, int imageid, int thumbnail,
 	int sc;			/* count of bytes to skip at start of packet */
 	Packet dp;
 	int rc;
+	char buffer[128];
 
 	gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID, "sony_file_get()");
 	rc = gp_file_clean(file);
@@ -623,7 +624,8 @@ sony_file_get(Camera * camera, int imageid, int thumbnail,
 		// FIXME: There appears to be a file name at dp.buffer+5
 		// after a SelectImage. We could use that for the real
 		// file name instead of our own mockup ("dsc%d.jpg").
-		sprintf(file->name, SONY_FILE_NAME_FMT, imageid);
+		sprintf(buffer, SONY_FILE_NAME_FMT, imageid);
+		gp_file_set_name (file, buffer);
 
 		sony_baud_set(camera, baud_rate);
 
