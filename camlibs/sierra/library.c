@@ -561,14 +561,14 @@ sierra_read_packet (Camera *camera, char *packet, GPContext *context)
 static int
 sierra_read_packet_wait (Camera *camera, char *buf, GPContext *context)
 {
-	int res, r = 0;
+	int result, r = 0;
 
 	while (1) {
 		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
 			return (GP_ERROR_CANCEL);
 
-		res = sierra_read_packet (camera, buf, context);
-		if (res == GP_ERROR_TIMEOUT) {
+		result = sierra_read_packet (camera, buf, context);
+		if (result == GP_ERROR_TIMEOUT) {
 			r++;
 			if (r >= RETRIES) {
 				gp_context_error (context, _("Transmission "
@@ -582,7 +582,7 @@ sierra_read_packet_wait (Camera *camera, char *buf, GPContext *context)
 			continue;
 		}
 
-		CHECK (res);
+		CHECK (result);
 		return (GP_OK);
 	}
 }
@@ -705,7 +705,7 @@ int sierra_set_speed (Camera *camera, int speed, GPContext *context)
 
 	camera->pl->first_packet = 1;
 
-	gp_port_get_settings (camera->port, &settings);
+	CHECK (gp_port_get_settings (camera->port, &settings));
 
 	switch (speed) {
 	case 9600:
