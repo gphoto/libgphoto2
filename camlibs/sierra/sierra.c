@@ -555,8 +555,16 @@ int camera_file_get_generic (Camera *camera, CameraFile *file,
 		regd = 14;
 	}
 
-	/* Fill in the file structure */	
-	strcpy (file->type, "image/jpeg");
+	/* Fill in the file structure */
+	if (thumbnail) 
+		strcpy (file->type, "image/jpeg");
+	else {
+		//FIXME: Do it better...
+		if (strcmp (filename + 8, ".MOV") == 0)
+			strcpy (file->type, "video/quicktime");
+		else
+			strcpy (file->type, "image/jpeg");
+	}
 	strcpy (file->name, filename);
 
 	/* Get the picture data */
@@ -594,7 +602,11 @@ int camera_file_get_info (Camera *camera, const char *folder,
 	/* Get the size of the current thumbnail */
 	CHECK_STOP (camera, sierra_get_int_register (camera, 13, &l));
 	info->preview.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
-	strcpy (info->preview.type, "image/jpeg");
+	//FIXME: Do it better...
+	if (strcmp (filename + 8, ".MOV") == 0)
+		strcpy (info->preview.type, "video/quicktime");
+	else
+		strcpy (info->preview.type, "image/jpeg");
 	info->preview.size = l;
 
 	return (camera_stop (camera));
@@ -660,8 +672,8 @@ static void dump_register (Camera *camera)
 {
 	int ret, value, i;
 	const char *description[] = {
-		"?",
-		"resolution",			//   1
+		"?",				//   0
+		"resolution",
 		"?",
 		"shutter speed",
 		"current image number",
@@ -676,7 +688,7 @@ static void dump_register (Camera *camera)
 		"size of thumbnail of current image",
 		"current preview (captured)",
 		"?",
-		"battery life"
+		"battery life",
 		"?",
 		"?",
 		"brightness/contrast",
@@ -686,8 +698,8 @@ static void dump_register (Camera *camera)
 		"auto off (host)",
 		"auto off (field)",
 		"serial number",
-		"?"
-		"?"
+		"?",
+		"?",
 		"memory left",
 		"?",
 		"?",				//  30
@@ -706,7 +718,7 @@ static void dump_register (Camera *camera)
 		"?", "?", "?", "?", "?", "?", "?", "?", "?",
 		"?",				//  60
 		"?", "?", "?", "?", "?", "?", "?", "?", "?",
-		"?",				//  70
+		"spot metering mode",		//  70
 		"?",
 		"zoom",
 		"?", "?", "?", "?", "?", "?", 
@@ -966,6 +978,27 @@ int camera_get_config (Camera *camera, CameraWidget **window)
 		gp_widget_append (section, child);
         }
 
+	/* Spot Metering Mode */
+	ret = sierra_get_int_register (camera, 70, &value);
+	if (ret == GP_OK) {
+		
+		child = gp_widget_new (GP_WIDGET_RADIO, "Spot Metering Mode");
+		gp_widget_choice_add (child, "On");
+		gp_widget_choice_add (child, "Off");
+
+		switch (value) {
+		case 5:	strcpy (t, "Off");
+			break;
+		case 3: strcpy (t, "On");
+			break;
+		default:
+			sprintf (t, "%i (unknown)", value);
+			gp_widget_choice_add (child, t);
+		}
+		gp_widget_value_set (child, t);
+		gp_widget_append (section, child);
+	}
+
 	/* Zoom */
 	ret = sierra_get_int_register (camera, 72, &value);
 	if (ret == GP_OK) {
@@ -1195,6 +1228,21 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 			return (GP_ERROR_NOT_SUPPORTED);
 		CHECK_STOP (camera, sierra_set_int_register (camera, 33, i));
         }
+
+	/* Spot Metering Mode */
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", 
+			 "*** setting spot metering mode");
+	child = gp_widget_child_by_label (window, "Spot Metering Mode");
+	if (child && gp_widget_changed (child)) {
+		gp_widget_value_get (child, &value);
+		if (strcmp (value, "On") == 0) {
+			i = 3;
+		} else if (strcmp (value, "Off") == 0) {
+			i = 5;
+		} else
+			return (GP_ERROR_NOT_SUPPORTED);
+		CHECK_STOP (camera, sierra_set_int_register (camera, 33, i));
+	}
 
 	/* Zoom */
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting zoom");

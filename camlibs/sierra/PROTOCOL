@@ -39,6 +39,7 @@
  36
  37
  38		lcd auto off
+ 70		spot metering mode
  72		zoom (0 = 1x, 8 = 2x, 520 = 1.6x, 1032 = 2.5x)
  79 (s)		current filename
  83		number of folders in current folder
