@@ -10,10 +10,10 @@ INCLUDES =	\
 	-I$(top_srcdir)/libgphoto2	\
 	-I$(top_srcdir)/libgphoto2_port/libgphoto2_port
 
-# FIXME: libexec is a BSDism, but the libexecdir should nevertheless
-#       be modifiable by a ./configure option
-libexecdir = $(libdir)/$(PACKAGE)
-libexec_PROGRAMS = print-usb-usermap
+# FIXME: utilsdir be modifiable by a ./configure option to adapt to local
+#       policies
+utilsdir = $(libdir)/$(PACKAGE)
+utils_PROGRAMS = print-usb-usermap
 
 print_usb_usermap_SOURCE = print-usb-usermap.c
 print_usb_usermap_LDADD = ../../libgphoto2/libgphoto2.la
