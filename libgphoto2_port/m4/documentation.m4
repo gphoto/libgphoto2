@@ -7,15 +7,18 @@ dnl
 
 AC_DEFUN(GP_CHECK_DOC_DIR,
 [
-AC_ARG_WITH(doc-dir, [  --with-doc-dir=PATH       Where to install docs  [default=autodetect]])
+AC_BEFORE([$0], [GP_BUILD_DOCS])dnl
+
+AC_ARG_WITH(doc-dir, [  --with-doc-dir=PATH       Where to install docs  [default=autodetect]])dnl
 
 # check for the main ("root") documentation directory
 AC_MSG_CHECKING([main docdir])
+
 if test "x${with_doc_dir}" != "x"
-then # docdir given as parameter
+then # docdir is given as parameter
     DOC_DIR="${with_doc_dir}"
     AC_MSG_RESULT([${DOC_DIR} (from parameter)])
-else
+else # otherwise invent a docdir hopefully compatible with system policy
     if test -d "/usr/share/doc"
     then
         maindocdir='${prefix}/share/doc'
