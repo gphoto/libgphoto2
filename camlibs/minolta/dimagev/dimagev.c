@@ -75,7 +75,7 @@ int camera_abilities (CameraAbilitiesList *list)
 	return GP_OK;
 }
 
-int camera_exit (Camera *camera) 
+static int camera_exit (Camera *camera) 
 {
 	dimagev_t *dimagev;
 
@@ -93,15 +93,6 @@ int camera_exit (Camera *camera)
 	if ( dimagev_set_date(dimagev) < GP_OK ) {
 		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to set camera to system time");
 		return GP_ERROR_IO;
-	}
-
-	if ( dimagev->dev != NULL ) {
-		gp_port_close(dimagev->dev);
-		gp_port_free(dimagev->dev);
-	}
-
-	if ( dimagev->fs != NULL ) {
-		gp_filesystem_free(dimagev->fs);
 	}
 
 	if ( dimagev->data != NULL ) {
@@ -123,20 +114,12 @@ int camera_exit (Camera *camera)
 	return GP_OK;
 }
 
-int camera_folder_list_folders (Camera *camera, const char *folder, 
-				CameraList *list) 
+static int file_list_func (CameraFilesystem *fs, const char *folder, 
+			   CameraList *list, void *data) 
 {
-	/* Taking yet another lead from the Panasonic drivers, I'll just */
-	/* return okay, since folders aren't supported on the Minolta Dimage V. */
-	return GP_OK;
-}
-
-int camera_folder_list_files (Camera *camera, const char *folder, 
-			      CameraList *list) 
-{
+	Camera *camera = data;
 	dimagev_t *dimagev;
-	const char *name;
-	int i=0;
+	int ret;
 
 	dimagev = camera->camlib_data;
 
@@ -145,41 +128,35 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 		return GP_ERROR_IO;
 	}
 
-	if ( gp_filesystem_populate(dimagev->fs, "/", DIMAGEV_FILENAME_FMT, dimagev->status->number_images) < GP_OK ) {
-		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_file_list::unable to popukate filesystem");
-		return GP_ERROR_NO_MEMORY;
+	if ((ret = gp_list_populate(list, DIMAGEV_FILENAME_FMT, dimagev->status->number_images)) < GP_OK ) {
+		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_file_list::unable to populate list");
+		return ret;
 	}
 		
-
-	for ( i = 0 ; i < dimagev->status->number_images ; i++ ) {
-		gp_filesystem_name(dimagev->fs, "/", i, &name);
-		gp_list_append(list, name, NULL);
-	}
-
 	return GP_OK;
 }
 
-int camera_file_get (Camera *camera, const char *folder, const char *filename, 
-		     CameraFileType type, CameraFile *file) 
+static int get_file_func (CameraFilesystem *fs, const char *folder,
+			  const char *filename, CameraFileType type,
+			  CameraFile *file, void *data) 
 {
-	dimagev_t *dimagev;
+	Camera *camera = data;
+	dimagev_t *dimagev = camera->camlib_data;
 	int file_number=0, result;
 	char buffer[128];
 
-	dimagev = camera->camlib_data;
-
-	file_number = gp_filesystem_number(dimagev->fs, folder, filename);
+	file_number = gp_filesystem_number(fs, folder, filename);
 	if (file_number < 0)
 		return (file_number);
 
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
-		gp_file_set_mime_type (file, "image/jpeg");
+		gp_file_set_mime_type (file, GP_MIME_JPEG);
 		gp_file_set_name (file, filename);
 		result = dimagev_get_picture (dimagev, file_number + 1, file);
 		break;
 	case GP_FILE_TYPE_PREVIEW:
-		gp_file_set_mime_type (file, "image/ppm");
+		gp_file_set_mime_type (file, GP_MIME_PPM);
 #if defined HAVE_SNPRINTF
 		snprintf(buffer, sizeof(buffer), DIMAGEV_THUMBNAIL_FMT, ( file_number + 1) );
 #else
@@ -197,26 +174,29 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 		return result;
 	}
 
-	gp_file_set_name (file, filename);
-
 	sleep(2);
 	return GP_OK;
 }
 
-int camera_file_delete (Camera *camera, const char *folder, 
+static int camera_file_delete (Camera *camera, const char *folder, 
 			const char *filename) 
 {
 	dimagev_t *dimagev;
-	int file_number=0;
+	int file_number=0, ret;
 
 	dimagev = camera->camlib_data;
 
-	file_number = gp_filesystem_number(dimagev->fs, folder, filename);
+	file_number = gp_filesystem_number(camera->fs, folder, filename);
+	if (file_number < 0)
+		return (file_number);
 
-	return dimagev_delete_picture(dimagev, (file_number + 1 ));
+	ret = dimagev_delete_picture(dimagev, (file_number + 1 ));
+	gp_filesystem_delete (camera->fs, folder, filename);
+
+	return (ret);
 }
 
-int camera_capture (Camera *camera, int capture_type, CameraFilePath *path) 
+static int camera_capture (Camera *camera, int capture_type, CameraFilePath *path) 
 {
 	dimagev_t *dimagev;
 
@@ -270,7 +250,7 @@ int camera_capture (Camera *camera, int capture_type, CameraFilePath *path)
 	return GP_OK;
 }
 
-int camera_folder_put_file (Camera *camera, const char *folder, 
+static int camera_folder_put_file (Camera *camera, const char *folder, 
 			    CameraFile *file) 
 {
 	dimagev_t *dimagev;
@@ -280,16 +260,18 @@ int camera_folder_put_file (Camera *camera, const char *folder,
 	return dimagev_put_file(dimagev, file);
 }
 
-int camera_folder_delete_all (Camera *camera, const char *folder) 
+static int camera_folder_delete_all (Camera *camera, const char *folder) 
 {
-	dimagev_t *dimagev;
+	dimagev_t *dimagev = camera->camlib_data;
+	int ret;
 
-	dimagev = camera->camlib_data;
+	ret = dimagev_delete_all(dimagev);
+	gp_filesystem_delete_all (camera->fs, folder);
 
-	return dimagev_delete_all(dimagev);
+	return (ret);
 }
 
-int camera_summary (Camera *camera, CameraText *summary) 
+static int camera_summary (Camera *camera, CameraText *summary) 
 {
 	dimagev_t *dimagev;
 	int i = 0, count = 0;
@@ -483,7 +465,7 @@ int camera_summary (Camera *camera, CameraText *summary)
 	return GP_OK;
 }
 
-int camera_manual (Camera *camera, CameraText *manual) 
+static int camera_manual (Camera *camera, CameraText *manual) 
 {
 #if defined HAVE_STRNCPY
 	strncpy(manual->text, _("Manual not available."), sizeof(manual->text));
@@ -493,7 +475,7 @@ int camera_manual (Camera *camera, CameraText *manual)
 	return GP_OK;
 }
 
-int camera_about (Camera *camera, CameraText *about) 
+static int camera_about (Camera *camera, CameraText *about) 
 {
 #if defined HAVE_SNPRINTF
 	snprintf(about->text, sizeof(about->text),
@@ -507,14 +489,10 @@ _("Minolta Dimage V Camera Library\n%s\nGus Hartmann <gphoto@gus-the-cat.org>\nS
 
 int camera_init (Camera *camera) 
 {
-        int ret;
         dimagev_t *dimagev = NULL;
 
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;
-        camera->functions->folder_list_folders  = camera_folder_list_folders;
-        camera->functions->folder_list_files    = camera_folder_list_files;
-        camera->functions->file_get             = camera_file_get;
         camera->functions->file_delete          = camera_file_delete;
         camera->functions->folder_put_file      = camera_folder_put_file;
         camera->functions->folder_delete_all    = camera_folder_delete_all;
@@ -531,12 +509,7 @@ int camera_init (Camera *camera)
         }
 
         camera->camlib_data = dimagev;
-
-        /* Now open a port. */
-        if (( ret = gp_port_new(&(dimagev->dev), GP_PORT_SERIAL)) < 0 ) {
-                gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to allocate gp_port_dev");
-                return ret;
-        }
+	dimagev->dev = camera->port;
 
         gp_port_timeout_set(dimagev->dev, 5000);
 
@@ -550,13 +523,7 @@ int camera_init (Camera *camera)
         dimagev->settings.serial.parity = 0;
         dimagev->settings.serial.stopbits = 1;
 
-        if (( ret = gp_filesystem_new(&dimagev->fs)) < GP_OK ) {
-                gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to allocate filesystem");
-                return (ret);
-        }
-
         gp_port_settings_set(dimagev->dev, dimagev->settings);
-        gp_port_open(dimagev->dev);
 
         if  ( dimagev_get_camera_data(dimagev) < GP_OK ) {
                 gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to get current camera data");
@@ -572,6 +539,10 @@ int camera_init (Camera *camera)
         if ( dimagev_set_date(dimagev) < GP_OK ) {
                 gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to set camera to system time");
         }
+
+	/* Set up the filesystem */
+	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
+	gp_filesystem_set_file_func (camera->fs, get_file_func, camera);
 
         return GP_OK;
 }

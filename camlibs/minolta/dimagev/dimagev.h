@@ -202,7 +202,6 @@ typedef struct {
         dimagev_data_t *data;
         dimagev_status_t *status;
         dimagev_info_t *info;
-        CameraFilesystem *fs;
 } dimagev_t;
 
 /* These functions are in packet.c */
