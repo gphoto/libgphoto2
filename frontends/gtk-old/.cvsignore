@@ -14,3 +14,5 @@ libtool
 config.status
 stamp-h
 Makefile
+ABOUT-NLS
+intl
