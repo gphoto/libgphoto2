@@ -1,3 +1,11 @@
+2001-11-27  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2/gphoto2-file.h: Fix formatting of comments: Should
+	  always be
+	  /** (nothing here - new line!)
+	   * GP_WHATEVER: (colon!)
+	   (...)
+
 2001-11-27  Hans Ulrich Niedermann <hun@n-dimensional.de>
 
 	* camlibs/canon/canon.c: removed G2 from serial detection list
