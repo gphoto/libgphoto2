@@ -1,7 +1,5 @@
 libgphoto2_konica.la
-library.lo
-konica.lo
-lowlevel.lo
+*.lo
 .libs
 .deps
 Makefile
