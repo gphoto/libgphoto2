@@ -2,6 +2,9 @@
  *
  * Copyright (C) 2000 Scott Fritzinger
  *
+ * Contributions:
+ * 	Lutz Müller <urc8@rz.uni-karlsruhe.de> (2001)
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -237,6 +240,15 @@ append_file (CameraFilesystem *fs, int x, CameraFile *file)
 	return (GP_OK);
 }
 
+/**
+ * gp_filesystem_reset:
+ * @fs: a #CameraFilesystem
+ *
+ * Resets the filesystem. All cached information including the folder tree
+ * will get lost and will be queried again on demand. 
+ *
+ * Return value: a gphoto2 error code.
+ **/
 int
 gp_filesystem_reset (CameraFilesystem *fs)
 {
@@ -249,6 +261,14 @@ gp_filesystem_reset (CameraFilesystem *fs)
 	return (GP_OK);
 }
 
+/**
+ * gp_filesystem_new:
+ * @fs: a pointer to a #CameraFilesystem
+ *
+ * Creates a new empty #CameraFilesystem
+ *
+ * Return value: a gphoto2 error code.
+ **/
 int
 gp_filesystem_new (CameraFilesystem **fs)
 {
@@ -281,6 +301,14 @@ gp_filesystem_new (CameraFilesystem **fs)
         return (GP_OK);
 }
 
+/**
+ * gp_filesystem_free:
+ * @fs: a #CameraFilesystem
+ *
+ * Frees the #CameraFilesystem
+ *
+ * Return value: a gphoto2 error code.
+ **/
 int
 gp_filesystem_free (CameraFilesystem *fs)
 {
@@ -357,6 +385,19 @@ gp_filesystem_folder_number (CameraFilesystem *fs, const char *folder)
 	return (gp_filesystem_folder_number (fs, folder));
 }
 
+/**
+ * gp_filesystem_append:
+ * @fs: a #CameraFilesystem
+ * @folder: the folder where to put the file in
+ * @filename: filename of the file
+ *
+ * Tells the @fs that there is a file called @filename in folder 
+ * called @folder. Usually, camera drivers will call this function after
+ * capturing an image in order to tell the @fs about the new file.
+ * A front-end should not use this function.
+ *
+ * Return value: a gphoto2 error code.
+ **/
 int
 gp_filesystem_append (CameraFilesystem *fs, const char *folder, 
 		      const char *filename) 
@@ -477,6 +518,18 @@ gp_filesystem_delete_all_one_by_one (CameraFilesystem *fs, const char *folder)
 	return (GP_OK);
 }
 
+/**
+ * gp_filesystem_delete_all
+ * @fs: a #CameraFilesystem
+ * @folder: the folder in which to delete all files
+ *
+ * Deletes all files in the given @folder from the @fs. If the @fs has not
+ * been supplied with a delete_all_func, it tries to delete the files
+ * one by one using the delete_file_func. If that function has not been
+ * supplied neither, an error is returned.
+ *
+ * Return value: a gphoto2 error code.
+ **/
 int
 gp_filesystem_delete_all (CameraFilesystem *fs, const char *folder)
 {
@@ -507,6 +560,18 @@ gp_filesystem_delete_all (CameraFilesystem *fs, const char *folder)
 	return (GP_OK);
 }
 
+/**
+ * gp_filesystem_list_files:
+ * @fs: a #CameraFilesystem
+ * @folder: a folder of which a file list should be generated
+ * @list: a #CameraList where to put the list of files into
+ *
+ * Lists the files in @folder using either cached values or (if there
+ * aren't any) the file_list_func which (hopefully) has been previously
+ * supplied.
+ *
+ * Return value: a gphoto2 error code.
+ **/
 int
 gp_filesystem_list_files (CameraFilesystem *fs, const char *folder, 
 		          CameraList *list)
@@ -558,6 +623,19 @@ gp_filesystem_list_files (CameraFilesystem *fs, const char *folder,
 	return (GP_OK);
 }
 
+/**
+ * gp_filesystem_list_folders:
+ * @fs: a #CameraFilesystem
+ * @folder: a folder
+ * @list: a #CameraList where subfolders should be listed
+ *
+ * Generates a list of subfolders of the supplied @folder either using 
+ * cached values (if there are any) or the folder_list_func if it has been 
+ * supplied previously. If not, it is assumed that only a root folder 
+ * exists (which is the case for many cameras).
+ *
+ * Return value: a gphoto2 error code.
+ **/
 int
 gp_filesystem_list_folders (CameraFilesystem *fs, const char *folder,
 			    CameraList *list)
@@ -633,6 +711,15 @@ gp_filesystem_list_folders (CameraFilesystem *fs, const char *folder,
 	return (GP_OK);
 }
 
+/**
+ * gp_filesystem_count:
+ * @fs: a #CameraFilesystem
+ * @folder: a folder in which to count the files
+ *
+ * Counts the files in the @folder.
+ *
+ * Return value: The number of files in the @folder or a gphoto2 error code.
+ **/
 int
 gp_filesystem_count (CameraFilesystem *fs, const char *folder)
 {
@@ -646,6 +733,18 @@ gp_filesystem_count (CameraFilesystem *fs, const char *folder)
 	return (fs->folder[x].count);
 }
 
+/**
+ * gp_filesystem_delete_file:
+ * @fs: a #CameraFilesystem
+ * @folder: a folder in which to delete the file
+ * @filename: the name of the file to delete
+ *
+ * If a delete_file_func has been supplied to the @fs, this function will
+ * be called and, if this function returns without error, the file will be 
+ * removed from the @fs.
+ *
+ * Return value: a gphoto2 error code.
+ **/
 int
 gp_filesystem_delete_file (CameraFilesystem *fs, const char *folder, 
 			   const char *filename)
@@ -671,6 +770,18 @@ gp_filesystem_delete_file (CameraFilesystem *fs, const char *folder,
 	return (GP_OK);
 }
 
+/**
+ * gp_filesystem_put_file:
+ * @fs: a #CameraFilesystem
+ * @folder: the folder where to put the @file into
+ * @file: the file
+ *
+ * Uploads a file to the camera if a put_file_func has been previously 
+ * supplied to the @fs. If the upload is successful, the file will get
+ * cached in the @fs.
+ *
+ * Return value: a gphoto2 error code.
+ **/
 int
 gp_filesystem_put_file (CameraFilesystem *fs, const char *folder,
 			CameraFile *file)
@@ -696,6 +807,18 @@ gp_filesystem_put_file (CameraFilesystem *fs, const char *folder,
 	return (GP_OK);
 }
 
+/**
+ * gp_filesystem_name:
+ * @fs: a #CameraFilesystem
+ * @folder: the folder where to look up the file with the @filenumber
+ * @filenumber: the number of the file
+ * @filename:
+ *
+ * Looks up the @filename of file with given @filenumber in given @folder.
+ * See gp_filesystem_number for exactly the opposite functionality.
+ * 
+ * Return value: a gphoto2 error code.
+ **/
 int
 gp_filesystem_name (CameraFilesystem *fs, const char *folder, int filenumber,
 		    const char **filename)
@@ -714,6 +837,17 @@ gp_filesystem_name (CameraFilesystem *fs, const char *folder, int filenumber,
 	return (GP_OK);
 }
 
+/**
+ * gp_filesystem_number:
+ * @fs: a #CameraFilesystem
+ * @folder: the folder where to look for file called @filename
+ * @filename: the file to look for
+ *
+ * Looks for a file called @filename in the given @folder. See
+ * gp_filesystem_name for exactly the opposite functionality.
+ *
+ * Return value: a gphoto2 error code.
+ **/
 int
 gp_filesystem_number (CameraFilesystem *fs, const char *folder, 
 		      const char *filename)
@@ -776,6 +910,21 @@ gp_filesystem_scan (CameraFilesystem *fs, const char *folder,
 	return (GP_OK);
 }
 
+/**
+ * gp_filesystem_get_folder:
+ * @fs: a #CameraFilesystem
+ * @filename: the name of the file to search in the @fs
+ * @folder:
+ *
+ * Searches a file called @filename in the @fs and returns the first 
+ * occurrency. This functionality is needed for camera drivers that cannot
+ * figure out where a file gets created after capturing an image although the
+ * name of the image is known. Usually, those drivers will call
+ * gp_filesystem_reset in order to tell the @fs that something has 
+ * changed and then gp_filesystem_get_folder in order to find the file.
+ *
+ * Return value: a gphoto2 error code.
+ **/
 int
 gp_filesystem_get_folder (CameraFilesystem *fs, const char *filename, 
 			  const char **folder)
@@ -798,6 +947,22 @@ gp_filesystem_get_folder (CameraFilesystem *fs, const char *filename,
 	return (GP_ERROR_FILE_NOT_FOUND);
 }
 
+/**
+ * gp_filesystem_set_list_funcs:
+ * @fs: a #CameraFilesystem
+ * @file_list_func: the function that will return listings of files
+ * @folder_list_func: the function that will return listings of folders
+ * @data:
+ *
+ * Tells the @fs which functions to use to retreive listings of folders 
+ * and/or files. Typically, a camera driver would call this function
+ * on initialization. Each function can be NULL indicating that this 
+ * functionality is not supported. For example, many cameras don't support
+ * folders. In this case, you would supply NULL for folder_list_func. Then,
+ * the @fs assumes that there is only a root folder.
+ *
+ * Return value: a gphoto2 error code.
+ **/
 int
 gp_filesystem_set_list_funcs (CameraFilesystem *fs,
 			      CameraFilesystemListFunc file_list_func,
@@ -813,6 +978,21 @@ gp_filesystem_set_list_funcs (CameraFilesystem *fs,
 	return (GP_OK);
 }
 
+/**
+ * gp_filesystem_set_file_funcs:
+ * @fs: a #CameraFilesystem
+ * @get_file_func: the function downloading files
+ * @del_file_func: the function deleting files
+ * @data:
+ *
+ * Tells the @fs which functions to use for file download or file deletion.
+ * Typically, a camera driver would call this function on initialization.
+ * A function can be NULL indicating that this functionality is not supported.
+ * For example, if a camera does not support file deletion, you would supply 
+ * NULL for del_file_func.
+ *
+ * Return value: a gphoto2 error code.
+ **/
 int
 gp_filesystem_set_file_funcs (CameraFilesystem *fs,
 			      CameraFilesystemGetFileFunc get_file_func,
@@ -828,6 +1008,23 @@ gp_filesystem_set_file_funcs (CameraFilesystem *fs,
 	return (GP_OK);
 }
 
+/**
+ * gp_filesystem_set_folder_funcs:
+ * @fs: a #CameraFilesystem
+ * @put_file_func: function used to upload files
+ * @delete_all_func: function used to delete all files in a folder
+ * @data:
+ *
+ * Tells the filesystem which functions to call for file upload or deletion
+ * of all files in a given folder. Typically, a camera driver would call
+ * this function on initialization. If one functionality is not 
+ * supported, NULL can be supplied. If you don't call this function, the @fs
+ * will assume that neither upload nor deletion of all files in a folder
+ * at once is supported. The @fs will try to compensate latter with the
+ * delete_file_func if such a function has been supplied.
+ *
+ * Return value: a gphoto2 error code.
+ **/
 int
 gp_filesystem_set_folder_funcs (CameraFilesystem *fs,
 				CameraFilesystemPutFileFunc put_file_func,
@@ -843,6 +1040,20 @@ gp_filesystem_set_folder_funcs (CameraFilesystem *fs,
 	return (GP_OK);
 }
 
+/**
+ * gp_filesystem_get_file:
+ * @fs: a #CameraFilesystem
+ * @folder: the folder in which the file can be found
+ * @filename: the name of the file to download
+ * @type: the type of the file
+ * @file:
+ *
+ * Downloads the file called @filename from the @folder using the 
+ * get_file_func if such a function has been previously supplied. If the 
+ * file has been previously downloaded, the file is retreived from cache.
+ *
+ * Return value: a gphoto2 error code.
+ **/
 int
 gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 			const char *filename, CameraFileType type,
@@ -916,6 +1127,19 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 	return (GP_OK);
 }
 
+/**
+ * gp_filesystem_set_info-funcs:
+ * @fs: a #CameraFilesystem
+ * @get_info_func: the function to retreive file information
+ * @set_info_func: the function to set file information
+ * @data:
+ *
+ * Tells the filesystem which functions to call when file information 
+ * about a file should be retreived or set. Typically, this function will
+ * get called by the camera driver on initialization. 
+ *
+ * Return value: a gphoto2 error code.
+ **/
 int
 gp_filesystem_set_info_funcs (CameraFilesystem *fs,
 			      CameraFilesystemInfoFunc get_info_func,
@@ -931,6 +1155,15 @@ gp_filesystem_set_info_funcs (CameraFilesystem *fs,
 	return (GP_OK);
 }
 
+/**
+ * gp_filesystem_get_info:
+ * @fs: a #CameraFilesystem
+ * @folder:
+ * @filename:
+ * @info:
+ *
+ * Return value: a gphoto2 error code.
+ **/
 int
 gp_filesystem_get_info (CameraFilesystem *fs, const char *folder,
 			const char *filename, CameraFileInfo *info)
@@ -961,6 +1194,15 @@ gp_filesystem_get_info (CameraFilesystem *fs, const char *folder,
 	return (GP_OK);
 }
 
+/**
+ * gp_filesystem_set_info:
+ * @fs: a #CameraFilesystem
+ * @folder:
+ * @filename:
+ * @info:
+ *
+ * Return value: a gphoto2 error code.
+ **/
 int
 gp_filesystem_set_info (CameraFilesystem *fs, const char *folder,
 			const char *filename, CameraFileInfo *info)
