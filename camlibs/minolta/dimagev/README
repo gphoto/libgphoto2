@@ -45,4 +45,13 @@ Notes on specific functions:
 	Deleting all images is now implemented correctly. This beats iterating
 	accross all of them, hands down.
 
+	Here are the pinouts for the serial cable:
+         _____________     /-----\
+         \ 5 4 3 2 1 /    / X X X \
+          \ 9 8 7 6 /     | 2 5 3 |
+           ---------      -| 8 7 |-
+                            -----
+
+
+
 --Gus Hartmann, <gphoto-dimagev@gus-the-cat.org>
