@@ -29,7 +29,4 @@
 /* DEPRECATED. Use gphoto2-port-log */
 void gp_debug_printf    (int level, const char *id, const char *format, ...);
 
-void gp_debug_set_level (int level);
-int  gp_debug_get_level (void);
-
 #endif /* __GPHOTO2_DEBUG_H__ */
