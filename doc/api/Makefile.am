@@ -33,7 +33,8 @@ sgml/gphoto2-doc.bottom: $(tmpl_sources)
 	$(MAKE) sgml
 
 scan:
-	gtkdoc-scan --module=$(DOC_MODULE) --source-dir=$(DOC_SOURCE_DIR)
+	cd $(srcdir) \
+	&& gtkdoc-scan --module=$(DOC_MODULE) --source-dir=$(DOC_SOURCE_DIR)
 
 templates:
 	cd $(srcdir) && gtkdoc-mktmpl --module=$(DOC_MODULE)
