@@ -295,6 +295,7 @@ gp_camera_exit (Camera *camera, GPContext *context)
 	if (camera->pc->lh) {
 #ifdef HAVE_LTDL_H
 		lt_dlclose (camera->pc->lh);
+		lt_dlexit ();
 #else
 		GP_SYSTEM_DLCLOSE (camera->pc->lh);
 #endif
@@ -325,10 +326,6 @@ gp_camera_new (Camera **camera)
 	if (!*camera) 
 		return (GP_ERROR_NO_MEMORY);
 	memset (*camera, 0, sizeof (Camera));
-
-#ifdef HAVE_LTDL
-	lt_dlinit ();
-#endif
 
         (*camera)->functions = malloc(sizeof(CameraFunctions));
 	if (!(*camera)->functions) {
@@ -609,10 +606,6 @@ gp_camera_free (Camera *camera)
  
 	free (camera);
 
-#ifdef HAVE_LTDL
-	lt_dlexit ();
-#endif
-
 	return (GP_OK);
 }
 
@@ -717,15 +710,23 @@ gp_camera_init (Camera *camera, GPContext *context)
 	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Loading '%s'...",
 		camera->pc->a.library);
 #ifdef HAVE_LTDL
+	lt_dlinit ();
 	camera->pc->lh = lt_dlopenext (camera->pc->a.library);
+	if (!camera->pc->lh) {
+		gp_context_error (context, _("Could not load required "
+			"camera driver '%s' (%s)."), camera->pc->a.library,
+			lt_dlerror ());
+		lt_dlexit ();
+		return (GP_ERROR_LIBRARY);
+	}
 #else
 	camera->pc->lh = GP_SYSTEM_DLOPEN (camera->pc->a.library);
-#endif
 	if (!camera->pc->lh) {
 		gp_context_error (context, _("Could not load required "
 			"camera driver '%s'."), camera->pc->a.library);
 		return (GP_ERROR_LIBRARY);
 	}
+#endif
 
 	/* Initialize the camera */
 #ifdef HAVE_LTDL
@@ -736,6 +737,7 @@ gp_camera_init (Camera *camera, GPContext *context)
 	if (!init_func) {
 #ifdef HAVE_LTDL
 		lt_dlclose (camera->pc->lh);
+		lt_dlexit ();
 #else
 		GP_SYSTEM_DLCLOSE (camera->pc->lh);
 #endif
@@ -751,6 +753,7 @@ gp_camera_init (Camera *camera, GPContext *context)
 		if (result < 0) {
 #ifdef HAVE_LTDL
 			lt_dlclose (camera->pc->lh);
+			lt_dlexit ();
 #else
 			GP_SYSTEM_DLCLOSE (camera->pc->lh);
 #endif
@@ -764,6 +767,7 @@ gp_camera_init (Camera *camera, GPContext *context)
 		gp_port_close (camera->port);
 #ifdef HAVE_LTDL
 		lt_dlclose (camera->pc->lh);
+		lt_dlexit ();
 #else
 		GP_SYSTEM_DLCLOSE (camera->pc->lh);
 #endif

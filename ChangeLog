@@ -5,6 +5,13 @@
 
 2002-06-12  Lutz Müller <lutz@users.sourceforge.net>
 
+        * configure.in:
+        * libgphoto2/gphoto2-abilities-list.c: Make libgphoto2
+          use ltdl.h. I needed to introduce a global variable - code is
+          marked as UGLY_HACK. If you know how to fix it, please tell me.
+
+2002-06-12  Lutz Müller <lutz@users.sourceforge.net>
+
 	* configure.in:
 	* libgphoto2/gphoto2-camera.c:
 	* libgphoto2/gphoto2-abilities-list.c: Fixes for HAVE_LTDL. Still
