@@ -43,7 +43,8 @@ struct _PTPContainer {
 	/* events can only have three parameters */
 	uint32_t Param4;
 	uint32_t Param5;
-
+	/* the number of meaningfull parameters */
+	uint8_t	 Nparam;
 };
 typedef struct _PTPContainer PTPContainer;
 

@@ -88,14 +88,9 @@ ptp_usb_sendreq (PTPParams* params, PTPContainer* req)
 	PTPUSBBulkContainer usbreq;
 
 	/* build appropriate USB container */
-	/*
-	   BTW: at now there are no requests withmore than 3 params, and
-	   some stupid cameras (CANON S45) hangs on some requests if there
-	   are more params than desired although documentation says that
-	   unused parameters have to be set to 0x00000000.
-	   That's why we set length to only three params.
-	*/
-	usbreq.length=htod32(PTP_USB_BULK_REQ_LEN-2*sizeof(uint32_t));
+	usbreq.length=htod32(PTP_USB_BULK_REQ_LEN-
+		(sizeof(uint32_t)*(5-req->Nparam)));
+	ptp_debug(params,"PTP: req->Nparam = %i\n",req->Nparam);
 	usbreq.type=htod16(PTP_USB_CONTAINER_COMMAND);
 	usbreq.code=htod16(req->Code);
 	usbreq.trans_id=htod32(req->Transaction_ID);
@@ -106,7 +101,8 @@ ptp_usb_sendreq (PTPParams* params, PTPContainer* req)
 	usbreq.payload.params.param5=htod32(req->Param5);
 	/* send it to responder */
 	ret=params->write_func((unsigned char *)&usbreq,
-		PTP_USB_BULK_REQ_LEN-2*sizeof(uint32_t), params->data);
+		PTP_USB_BULK_REQ_LEN-(sizeof(uint32_t)*(5-req->Nparam)),
+		params->data);
 	if (ret!=PTP_RC_OK) {
 		ret = PTP_ERROR_IO;
 		ptp_error (params,
@@ -400,6 +396,7 @@ ptp_getdeviceinfo (PTPParams* params, PTPDeviceInfo* deviceinfo)
 
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_GetDeviceInfo;
+	ptp.Nparam=0;
 	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &di);
 	ptp_unpack_DI(params, di, deviceinfo);
 	free(di);
@@ -425,14 +422,15 @@ ptp_opensession (PTPParams* params, uint32_t session)
 	ptp_debug(params,"PTP: Opening session");
 
 	/* SessonID field of the operation dataset should be set allways
-	   set to 0 for OpenSession request */
+	   be set to 0 for OpenSession request! */
 	params->session_id=0x00000000;
-	/* TransactionID should be set to 0 also */
+	/* TransactionID should be set to 0 also! */
 	params->transaction_id=0x0000000;
 	
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_OpenSession;
 	ptp.Param1=session;
+	ptp.Nparam=1;
 	ret=ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL);
 	/* now set the global session id to current session number */
 	params->session_id=session;
@@ -456,6 +454,7 @@ ptp_closesession (PTPParams* params)
 
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_CloseSession;
+	ptp.Nparam=0;
 	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL);
 }
 
@@ -476,6 +475,7 @@ ptp_getstorageids (PTPParams* params, PTPStorageIDs* storageids)
 
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_GetStorageIDs;
+	ptp.Nparam=0;
 	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &sids);
 	ptp_unpack_SIDs(params, sids, storageids);
 	free(sids);
@@ -503,6 +503,7 @@ ptp_getstorageinfo (PTPParams* params, uint32_t storageid,
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_GetStorageInfo;
 	ptp.Param1=storageid;
+	ptp.Nparam=1;
 	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &si);
 	ptp_unpack_SI(params, si, storageinfo);
 	free(si);
@@ -537,6 +538,7 @@ ptp_getobjecthandles (PTPParams* params, uint32_t storage,
 	ptp.Param1=storage;
 	ptp.Param2=objectformatcode;
 	ptp.Param3=associationOH;
+	ptp.Nparam=3;
 	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &oh);
 	ptp_unpack_OH(params, oh, objecthandles);
 	free(oh);
@@ -554,6 +556,7 @@ ptp_getobjectinfo (PTPParams* params, uint32_t handle,
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_GetObjectInfo;
 	ptp.Param1=handle;
+	ptp.Nparam=1;
 	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &oi);
 	ptp_unpack_OI(params, oi, objectinfo);
 	free(oi);
@@ -568,6 +571,7 @@ ptp_getobject (PTPParams* params, uint32_t handle, char** object)
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_GetObject;
 	ptp.Param1=handle;
+	ptp.Nparam=1;
 	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, object);
 }
 
@@ -580,6 +584,7 @@ ptp_getthumb (PTPParams* params, uint32_t handle,  char** object)
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_GetThumb;
 	ptp.Param1=handle;
+	ptp.Nparam=1;
 	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, object);
 }
 
@@ -603,6 +608,7 @@ ptp_deleteobject (PTPParams* params, uint32_t handle,
 	ptp.Code=PTP_OC_DeleteObject;
 	ptp.Param1=handle;
 	ptp.Param2=ofc;
+	ptp.Nparam=2;
 	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL);
 }
 
@@ -638,6 +644,7 @@ ptp_sendobjectinfo (PTPParams* params, uint32_t* store,
 	ptp.Code=PTP_OC_SendObjectInfo;
 	ptp.Param1=*store;
 	ptp.Param2=*parenthandle;
+	ptp.Nparam=2;
 	
 	size=ptp_pack_OI(params, objectinfo, &oidata);
 	ret=ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &oidata); 
@@ -666,6 +673,7 @@ ptp_sendobject (PTPParams* params, char* object, uint32_t size)
 
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_SendObject;
+	ptp.Nparam=0;
 
 	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &object);
 }
@@ -696,6 +704,7 @@ ptp_initiatecapture (PTPParams* params, uint32_t storageid,
 	ptp.Code=PTP_OC_InitiateCapture;
 	ptp.Param1=storageid;
 	ptp.Param2=ofc;
+	ptp.Nparam=2;
 	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL);
 }
 
@@ -732,6 +741,7 @@ ptp_ek_sendfileobjectinfo (PTPParams* params, uint32_t* store,
 	ptp.Code=PTP_OC_EK_SendFileObjectInfo;
 	ptp.Param1=*store;
 	ptp.Param2=*parenthandle;
+	ptp.Nparam=2;
 	
 	size=ptp_pack_OI(params, objectinfo, &oidata);
 	ret=ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &oidata); 
@@ -760,6 +770,7 @@ ptp_ek_sendfileobject (PTPParams* params, char* object, uint32_t size)
 
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_EK_SendFileObject;
+	ptp.Nparam=0;
 
 	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &object);
 }
