@@ -179,6 +179,16 @@ static struct {
 	{"Sanyo", "VPC-G210", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Sanyo", "VPC-G250", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Sierra Imaging", "SD640",SIERRA_MODEL_DEFAULT,	0, 0, 0 },
+	/*
+	 * Added by Sean Bruno on July 22, 2004 to support the Toshiba
+	 * cameras below.
+	 */
+	{"Toshiba", "PDR-M60", SIERRA_MODEL_DEFAULT, 0x1132, 0x4332,
+		SIERRA_NO_51 | SIERRA_NO_REGISTER_40 | SIERRA_NO_USB_CLEAR},
+	{"Toshiba", "PDR-M61", SIERRA_MODEL_DEFAULT, 0x1132, 0x4335,
+		SIERRA_NO_51 | SIERRA_NO_REGISTER_40 | SIERRA_NO_USB_CLEAR},
+	{"Toshiba", "PDR-M65", SIERRA_MODEL_DEFAULT, 0x1132, 0x4334,
+		SIERRA_NO_51 | SIERRA_NO_REGISTER_40 | SIERRA_NO_USB_CLEAR},
 	{NULL, NULL, 0,	0, 0, 0}
 };
 
@@ -1871,8 +1881,13 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *c)
 		sprintf (buf, _("%sSoftware Rev.: %s\n"), buf, t);
 
 	/* Get all the integer information */
-	if (sierra_get_int_register(camera, 40, &v, c) >= 0)
-		sprintf (buf, _("%sFrames Taken: %i\n"), buf, v);
+	if (camera->pl->flags & SIERRA_NO_REGISTER_40) {
+		if (sierra_get_int_register(camera, 10, &v, c) >= 0)
+			sprintf (buf, _("%sFrames Taken: %i\n"), buf, v);
+	} else {
+		if (sierra_get_int_register(camera, 40, &v, c) >= 0)
+			sprintf (buf, _("%sFrames Taken: %i\n"), buf, v);
+	}
 	if (sierra_get_int_register(camera, 11, &v, c) >= 0)
 		sprintf (buf, _("%sFrames Left: %i\n"), buf, v);
 	if (sierra_get_int_register(camera, 16, &v, c) >= 0)

@@ -11,6 +11,8 @@ typedef enum {
 	SIERRA_LOW_SPEED = 1<<2,
 	SIERRA_EXT_PROTO = 1<<3,
 	SIERRA_SKIP_INIT = 1<<4,
+	SIERRA_NO_USB_CLEAR = 1<<5,
+	SIERRA_NO_REGISTER_40 = 1<<6,
 } SierraFlags;
 
 struct _CameraPrivateLibrary {

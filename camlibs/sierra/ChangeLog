@@ -1,3 +1,8 @@
+2004-07-30  Patrick Mansfield <patmans@users.sourceforge.net>
+	* library.c, sierra.c, sierra.h: Patch from Sean Bruno
+	  <sean.bruno@dsl-only.net> to support Toshiba cameras. Added and
+	  use SIERRA_NO_USB_CLEAR and SIERRA_NO_REGISTER_40 flags.
+
 2003-11-16  Patrick Mansfield <patmans@users.sourceforge.net>
 	* library.c: Only do progress updates in sierra_get_string_register
 	  if a command requires multiple packets.

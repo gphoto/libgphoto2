@@ -454,6 +454,17 @@ sierra_write_packet (Camera *camera, char *packet, GPContext *context)
 }
 
 static int
+sierra_clear_usb_halt(Camera *camera)
+{
+	
+	if ( (camera->port->type == GP_PORT_USB) &&
+	     !(camera->pl->flags & SIERRA_WRAP_USB) &&
+	     !(camera->pl->flags & SIERRA_NO_USB_CLEAR) )
+		gp_port_usb_clear_halt(camera->port, GP_PORT_USB_ENDPOINT_IN);
+        return (GP_OK);
+}
+
+static int
 sierra_write_nak (Camera *camera, GPContext *context)
 {
         char buf[4096];
@@ -463,8 +474,7 @@ sierra_write_nak (Camera *camera, GPContext *context)
 
         buf[0] = SIERRA_PACKET_NAK;
         ret = sierra_write_packet (camera, buf, context);
-        if (camera->port->type == GP_PORT_USB && !(camera->pl->flags & SIERRA_WRAP_USB))
-                gp_port_usb_clear_halt(camera->port, GP_PORT_USB_ENDPOINT_IN);
+	sierra_clear_usb_halt(camera);
         return (ret);
 }
 
@@ -522,9 +532,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 
 		/* Clear the USB bus
 		   (what about the SERIAL bus : do we need to flush it?) */
-		if (camera->port->type == GP_PORT_USB && !(camera->pl->flags & SIERRA_WRAP_USB))
-			gp_port_usb_clear_halt (camera->port,
-						GP_PORT_USB_ENDPOINT_IN);
+		sierra_clear_usb_halt(camera);
 
 		/*
 		 * Read data through the bus. If an error occurred,
@@ -539,10 +547,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 			GP_DEBUG ("Read failed (%i: '%s').", result,
 				  gp_result_as_string (result));
 			if (++r > 2) {
-				if (camera->port->type == GP_PORT_USB &&
-				    !(camera->pl->flags & SIERRA_WRAP_USB))
-					gp_port_usb_clear_halt (camera->port,
-						GP_PORT_USB_ENDPOINT_IN);
+				sierra_clear_usb_halt(camera);
 				GP_DEBUG ("Giving up...");
 				return (result);
 			}
@@ -566,11 +571,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 		case SIERRA_PACKET_WRONG_SPEED:
 
 			/* Those are all single byte packets. */
-			if (camera->port->type == GP_PORT_USB &&
-			    !(camera->pl->flags & SIERRA_WRAP_USB))
-				gp_port_usb_clear_halt (camera->port,
-						GP_PORT_USB_ENDPOINT_IN);
-
+			sierra_clear_usb_halt(camera);
 			GP_DEBUG ("Packet read. Returning GP_OK.");
 			return GP_OK;
 
@@ -591,10 +592,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 				"received (0x%x) is not valid."), packet[0]);
 			while (gp_port_read (camera->port, packet, 1) > 0)
 				;
-			if (camera->port->type == GP_PORT_USB &&
-			    !(camera->pl->flags & SIERRA_WRAP_USB))
-				gp_port_usb_clear_halt (camera->port,
-						GP_PORT_USB_ENDPOINT_IN);
+			sierra_clear_usb_halt(camera);
 			return (GP_ERROR_CORRUPTED_DATA);
 		}
 
@@ -607,10 +605,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 			result = gp_port_read (camera->port,
 					       packet + br, 4 - br);
 			if (result < 0) {
-				if (camera->port->type == GP_PORT_USB &&
-				    !(camera->pl->flags & SIERRA_WRAP_USB))
-					gp_port_usb_clear_halt (camera->port,
-						GP_PORT_USB_ENDPOINT_IN);
+				sierra_clear_usb_halt(camera);
 				GP_DEBUG ("Could not read length of "
 					"packet (%i: '%s'). Giving up...",
 					result, gp_result_as_string (result));
@@ -668,7 +663,15 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 			if ((packet[br - 2] == 0xff) &&
 			    (packet[br - 1] == 0xff))
 				break;
-
+			/*
+			 * The checksum for the Toshiba PDR-M6X cameras is
+			 * almost always set to 0x00 0x00.
+			 */
+			if ((packet[br - 2] == 0x00) &&
+			    (packet[br - 1] == 0x00))
+				break;
+			
+					
 			GP_DEBUG ("Checksum wrong (calculated 0x%x, "
 				"found 0x%x)!", c,
 				packet[br - 2] + (packet[br - 1] * 256));
@@ -680,10 +683,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 		 */
 		r++;
 		if (r + 1 >= RETRIES) {
-			if (camera->port->type == GP_PORT_USB &&
-			    !(camera->pl->flags & SIERRA_WRAP_USB))
-				gp_port_usb_clear_halt (camera->port,
-						GP_PORT_USB_ENDPOINT_IN);
+			sierra_clear_usb_halt(camera);
 			GP_DEBUG ("Giving up...");
 			return ((br == length) ? GP_ERROR_CORRUPTED_DATA :
 						 GP_ERROR_TIMEOUT);
@@ -693,8 +693,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 		GP_SYSTEM_SLEEP (10);
 	}
 
-	if (camera->port->type == GP_PORT_USB && !(camera->pl->flags & SIERRA_WRAP_USB))
-		gp_port_usb_clear_halt(camera->port, GP_PORT_USB_ENDPOINT_IN);
+	sierra_clear_usb_halt(camera);
 
 	return GP_OK;
 }
@@ -835,8 +834,7 @@ sierra_write_ack (Camera *camera, GPContext *context)
 	
 	buf[0] = ACK;
 	ret = sierra_write_packet (camera, buf, context);
-	if (camera->port->type == GP_PORT_USB && !(camera->pl->flags & SIERRA_WRAP_USB))
-		gp_port_usb_clear_halt (camera->port, GP_PORT_USB_ENDPOINT_IN);
+	sierra_clear_usb_halt(camera);
 	CHECK (ret);
 
 	GP_DEBUG ("Successfully wrote acknowledgement.");
