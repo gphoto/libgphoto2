@@ -109,26 +109,31 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 		return GP_ERROR_CORRUPTED_DATA;
 	}
 
-	if (camera->pl->md->model == CANON_EOS_D30) {
-		if (camstat == 'A') {
-			/* read another 0x50 bytes */
-			i = gp_port_usb_msg_read (camera->port, 0x04, 0x4, 0, msg, 0x50);
-			if (i != 0x50) {
-				gp_context_error (context,
-						     "EOS D30 Step #3 of initialization failed! "
-						     "(returned %i, expected %i) "
-						     "Camera not operational", i, 0x50);
-				return GP_ERROR_CORRUPTED_DATA;
-			}
-			return GP_OK;
+	if (camstat == 'A') {
+		/* read another 0x50 bytes */
+		i = gp_port_usb_msg_read (camera->port, 0x04, 0x4, 0, msg, 0x50);
+		if (i != 0x50) {
+			gp_context_error (context,
+					     "EOS D30 Step #3 of initialization failed! "
+					     "(returned %i, expected %i) "
+					     "Camera not operational", i, 0x50);
+			return GP_ERROR_CORRUPTED_DATA;
 		}
+		return GP_OK;
 	}
 
-	i = gp_port_usb_msg_write (camera->port, 0x04, 0x11, 0, msg + 0x48, 0x10);
-	if (i != 0x10) {
+	/* set byte 0 in msg to new "canon length" (0x10) (which is total
+	 * packet size - 0x40) and then move the last 0x10 bytes of msg to
+	 * offset 0x40 and write it back to the camera.
+	 */
+	msg[0] = 0x10;
+	memmove (msg + 0x40, msg + 0x48, 0x10);
+
+	i = gp_port_usb_msg_write (camera->port, 0x04, 0x11, 0, msg, 0x50);
+	if (i != 0x50) {
 		gp_context_error (context, "Step #3 of initialization failed! "
 				     "(returned %i, expected %i) Camera not operational", i,
-				     0x10);
+				     0x50);
 		return GP_ERROR_IO_INIT;
 	}
 	GP_DEBUG ("canon_usb_camera_init() "
@@ -170,20 +175,10 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 			  "known not to give correct numbers of bytes.", read_bytes);
 
 	i = gp_port_read (camera->port, buffer, 4);
-	if (i != 4) {
+	if (i != 4)
 		GP_DEBUG ("canon_usb_camera_init() "
 			  "Step #4.2 of initialization failed! (returned %i, expected %i) "
 			  "Camera might still work though. Continuing.", i, 4);
-	} else {
-		if (!((buffer[0] == 0x54) && (buffer[1] == 0x78)
-		      && (buffer[2] == 0x00) && (buffer[3] == 0x00))) {
-			gp_context_error (context,
-					     "Step #4 of initialization failed! "
-					     "Did not return the 54 78 00 00 bytes "
-					     "we expected.");
-			return GP_ERROR_CORRUPTED_DATA;
-		}
-	}
 
 	return GP_OK;
 }
@@ -201,7 +196,7 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 int
 canon_usb_init (Camera *camera, GPContext *context)
 {
-	int res;
+	int res, id_retry;
 	GPPortSettings settings;
 
 	GP_DEBUG ("Initializing the (USB) camera.\n");
@@ -222,10 +217,23 @@ canon_usb_init (Camera *camera, GPContext *context)
 	if (res != GP_OK)
 		return res;
 
-	res = canon_int_identify_camera (camera, context);
+	/* We retry the identify camera because sometimes (camstat == 'A'
+	 * in canon_usb_camera_init()) this is necessary to get the camera
+	 * back in sync, and the windows driver actually executes four of
+	 * these in a row before downloading thumbnails.
+	 */
+	res = GP_ERROR;
+	for (id_retry = 1; id_retry <= 4; id_retry++) {
+		res = canon_int_identify_camera (camera, context);
+		if (res != GP_OK)
+			GP_DEBUG ("Identify camera try %i/%i failed %s", id_retry, 4,
+				id_retry<4?"(this is OK)":"(now it's not OK any more)");
+		else
+			break;
+	}
 	if (res != GP_OK) {
 		gp_context_error (context, _("Camera not ready, "
-					       "identify camera request failed: %s"),
+			 		       "multiple identify camera request failed: %s"),
 				     gp_result_as_string (res));
 		return GP_ERROR;
 	}

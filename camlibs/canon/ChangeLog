@@ -3,6 +3,17 @@
 	* usb.c: Don't key lock Pro 90 IS cameras, they do not support
 	  it. Reported by Karl Thaller.
 
+	* usb.c, Protocol:
+	  Fixed a bug in the init sequence code (write 0x50 bytes like
+	  the Windows driver - not 0x10 like we used to). This actually
+	  made another bug (in the cameras firmware) surface and we had
+	  to mimic the Windows drivers workaround which is to call
+	  'Identify camera' multiple times.
+
+	  If you want to read more about this, go read the gphoto-devel
+	  archives from around this date. Look for messages about trouble
+	  with Canon G1, Pro90IS and EOS D30 cameras.
+
 2002-01-15  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* *.c: gp_camera_status -> gp_context_status
