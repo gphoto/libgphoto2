@@ -1,3 +1,8 @@
+2001-09-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* camlibs/polaroid/pdc320.c: Bug fixes from Nathan Stenzel
+	<nathanstenzel@motion.net>
+
 2001-09-03  Chris Pinkham <cpinkham@infi.net>
 
 	* camlibs/panasonic/coolshot/README

@@ -22,16 +22,43 @@
 #include <stdlib.h>
 #include <string.h>
 
+/*
+ * Those are the answers to some of the commands stated below. We should
+ * (at some point in the future) understand the contents and compare
+ * the return value against them.
+ */
+#define ID_PDC640SE    "\x0\x58\x49\x52\x4c\x49\x4e\x4b\x2\x1\x3\x1\x16\xbf"
+#define ID_PDC320      "\x0\x58\x49\x52\x4c\x49\x4e\x4b\x2\x1\x3\x0\x16\xc0"
+
+#define STATE_PDC640SE "\x40\x2\x80\x1\xe0\x0\x5\x2\x80\x1\xe0\x0\x5\x0\x78\x0\x78\x0\x0\x2\x10"
+#define STATE_PDC320   "\x2\x3f\x1\x40\x0\xf0\x0\x5\x1\x40\x0\xf0\x0\x5\x0\x50\x0\x50\x0\x0\x7\xd0\xf0\xe6"
+
+/*
+ * For the PDC320SE, the init sequence is INIT,ID,ENDINIT,STATE,NUM,SIZE,
+ * handshake?, PIC.
+ * 
+ * During handshake, if the first read byte is not 6 then it is not good. Read
+ * the number of bytes mentioned +2 ("FE FF"?)and then INIT and try SIZE
+ * again (this is a loop). 
+ * 
+ * It is possible that the PDC320 might do a similar handshaking sequence at
+ * that same point.
+ */
+
 //                                                        xf?
 #define PDC320_INIT     "\xe6\xe6\xe6\xe6\xe6\xe6\xe6\xe6\x0\xff\xff"
 #define PDC320_ID                       "\xe6\xe6\xe6\xe6\x1\xfe\xff"
 #define PDC320_STATE                    "\xe6\xe6\xe6\xe6\x2\xfd\xff"
 #define PDC320_NUM                      "\xe6\xe6\xe6\xe6\x3\xfc\xff"
-#define PDC320_SIZE     {0xe6, 0xe6, 0xe6, 0xe6, 0x4, 0x01, 0xfb, 0xfe}
-#define PDC320_PIC      {0xe6, 0xe6, 0xe6, 0xe6, 0x5, 0x01, 0xfa, 0xfe}
+#define PDC320_SIZE     {0xe6, 0xe6, 0xe6, 0xe6, 0x4, 0x00, 0xfb, 0x0}
+#define PDC320_PIC      {0xe6, 0xe6, 0xe6, 0xe6, 0x5, 0x00, 0xfa, 0x0}
 #define PDC320_DEL                      "\xe6\xe6\xe6\xe6\x7\xf8\xff"
 #define PDC320_ENDINIT                  "\xe6\xe6\xe6\xe6\xa\xf5\xff"
 #define PDC320_UNKNOWN3                 "\xe6\xe6\xe6\xe6\xc\xf3\xf3"
+
+#define ACK 0x06
+
+#define RETRIES 3
 
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 #define CHECK_RESULT_FREE(result, data) {int r = (result); if (r < 0) {free (data); return (r);}}
@@ -52,8 +79,8 @@ pdc320_id (CameraPort *port, const char **model)
 	unsigned char buf[32];
 
 	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "*** PDC320_ID ***");
-	CHECK_RESULT (gp_port_write (port, PDC320_ID, sizeof (PDC320_ID)));
-	CHECK_RESULT (gp_port_read (port, buf, 32));
+	CHECK_RESULT (gp_port_write (port, PDC320_ID, sizeof (PDC320_ID) - 1));
+	CHECK_RESULT (gp_port_read (port, buf, 14));
 	if (model) {
 		*model = "unknown";
 		for (i = 0; models[i].model; i++)
@@ -72,10 +99,11 @@ pdc320_init (CameraPort *port)
 	unsigned char buf[32];
 
 	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "*** PDC320_INIT ***");
-	CHECK_RESULT (gp_port_write (port, PDC320_INIT, sizeof (PDC320_INIT)));
+	CHECK_RESULT (gp_port_write (port, PDC320_INIT,
+				     sizeof (PDC320_INIT) - 1));
 	CHECK_RESULT (gp_port_read (port, buf, 3));
 #if 0
-	if ((buf[0] != 0x00) || //0x0f?
+	if ((buf[0] != 0x05) || //0x0f?
 	    (buf[1] != 0xfa) ||
 	    (buf[2] != 0xff))
 		return (GP_ERROR_CORRUPTED_DATA);
@@ -85,13 +113,13 @@ pdc320_init (CameraPort *port)
 
 	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "*** PDC320_STATE ***");
 	CHECK_RESULT (gp_port_write (port, PDC320_STATE,
-				     sizeof (PDC320_STATE)));
-	CHECK_RESULT (gp_port_read (port, buf, 32));
+				     sizeof (PDC320_STATE) - 1));
+	CHECK_RESULT (gp_port_read (port, buf, 16));
 
 	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "*** PDC320_ENDINIT ***");
 	CHECK_RESULT (gp_port_write (port, PDC320_ENDINIT, 
-				     sizeof (PDC320_ENDINIT)));
-	CHECK_RESULT (gp_port_read (port, buf, 32));
+				     sizeof (PDC320_ENDINIT) - 1));
+	CHECK_RESULT (gp_port_read (port, buf, 8));
 
 	return (GP_OK);
 }
@@ -103,9 +131,10 @@ pdc320_num (CameraPort *port)
 	unsigned char buf[4];
 
 	/* The first byte we get is the number of images on the camera */
-	CHECK_RESULT (gp_port_write (port, PDC320_NUM, sizeof (PDC320_NUM)));
-	CHECK_RESULT (gp_port_read (port, buf, 4));
-	num = buf[0];
+	CHECK_RESULT (gp_port_write (port, PDC320_NUM,
+					   sizeof (PDC320_NUM) - 1));
+	CHECK_RESULT (gp_port_read (port, buf, 3));
+	num = buf[1];
 
 #if 0
 	if ((buf[1] != 0x01) ||
@@ -125,8 +154,13 @@ pdc320_delete (CameraPort *port)
 {
 	unsigned char buf[7];
 
-	CHECK_RESULT (gp_port_write (port, PDC320_DEL, sizeof (PDC320_DEL)));
-	CHECK_RESULT (gp_port_read (port, buf, 7));
+	/*
+	 * For the PDC320, we get 3 bytes (0x8 0xf7 0xff) back. It could
+	 * well be that other cameras send other bytes.
+	 */
+	CHECK_RESULT (gp_port_write (port, PDC320_DEL,
+				     sizeof (PDC320_DEL) - 1));
+	CHECK_RESULT (gp_port_read (port, buf, 3));
 
 #if 0
 	if ((buf[0] != 0x08) ||
@@ -145,24 +179,41 @@ pdc320_delete (CameraPort *port)
 static int
 pdc320_size (CameraPort *port, int n)
 {
-	int size;
-	unsigned char buf[7];
+	int size, i;
+	unsigned char buf[256];
 	unsigned char cmd[] = PDC320_SIZE;
 
-	CHECK_RESULT (gp_port_write (port, cmd, sizeof (cmd)));
-	CHECK_RESULT (gp_port_read (port, buf, 7));
+	cmd[5] = n;		/* n is from 1 on up */
+	cmd[7] = 0xff - n;
 
-	size = (buf[1] << 24) + (buf[2] << 16) + (buf[3] << 8) + buf[4];
+	for (i = 0; i < RETRIES; i++) {
 
-#if 0
-	if ((buf[0] != 0x06))
-		return (GP_ERROR_CORRUPTED_DATA);
-#endif
+		/* Write the command */
+		CHECK_RESULT (gp_port_write (port, cmd, sizeof (cmd)));
 
-	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Image %i has size %i.",
-			 n, size);
+		/* Read one byte and check if we can continue */
+		CHECK_RESULT (gp_port_read (port, buf, 1));
+		if (buf[0] != ACK) {
 
-	return (size);
+			/*
+			 * Do we need to dump some bytes here before trying
+			 * again?
+			 */
+			continue;
+		}
+
+		/*
+		 * Ok, everything is fine. Read 6 bytes containing the size
+		 * and return.
+		 */
+		CHECK_RESULT (gp_port_read (port, buf, 6));
+		size = (buf[0] << 24) + (buf[1] << 16) + (buf[2] << 8) + buf[3];
+		gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Image %i has size "
+				 "%i.", n, size);
+		return (size);
+	}
+
+	return (GP_ERROR_CORRUPTED_DATA);
 }
 
 static int
@@ -173,13 +224,15 @@ pdc320_pic (CameraPort *port, int n, unsigned char **data, int *size)
 	int remaining, f1, f2, i, len, checksum;
 
 	/* Get the size of the picture and allocate the memory */
+	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Checking size of image %i...",
+			 n);
 	CHECK_RESULT (*size = pdc320_size (port, n));
 	*data = malloc (sizeof (char) * (*size));
 	if (!*data)
 		return (GP_ERROR_NO_MEMORY);
 
-	cmd[5] += n;
-	cmd[7] -= n;
+	cmd[5] = n;
+	cmd[7] = 0xff - n;
 
 	CHECK_RESULT_FREE (gp_port_write (port, cmd, sizeof (cmd)), *data);
 	
@@ -251,10 +304,16 @@ camera_file_get (Camera *camera, const char *folder, const char *filename,
 	if (type != GP_FILE_TYPE_RAW)
 		return (GP_ERROR_NOT_SUPPORTED);
 
-	/* Get the number of the picture from the filesystem */
+	/*
+	 * Get the number of the picture from the filesystem and increment 
+	 * since we need a range starting with 1.
+	 */
+	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Getting number from fs...");
 	CHECK_RESULT (n = gp_filesystem_number (camera->fs, folder, filename));
+	n++;
 
 	/* Get the file */
+	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Getting file %i...", n);
 	CHECK_RESULT (pdc320_pic (camera->port, n, &data, &size));
 
 	CHECK_RESULT (gp_file_set_data_and_size (file, data, size));
@@ -335,7 +394,7 @@ camera_init (Camera *camera)
 	else
 		settings.serial.speed = 115200;
 	CHECK_RESULT (gp_port_settings_set (camera->port, settings));
-	CHECK_RESULT (gp_port_timeout_set (camera->port, 5000));
+	CHECK_RESULT (gp_port_timeout_set (camera->port, 15000));
 
 	/* Check if the camera is really there */
 	CHECK_RESULT (gp_port_open (camera->port));
