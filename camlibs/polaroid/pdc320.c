@@ -67,7 +67,7 @@
 
 #define ACK 0x06
 
-#define RETRIES 0
+#define RETRIES 3
 
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 #define CHECK_RESULT_FREE(result, data) {int r = (result); if (r < 0) {free (data); return (r);}}
@@ -95,6 +95,7 @@ pdc320_id (CameraPort *port, const char **model)
 		for (i = 0; models[i].model; i++)
 			if (buf[1] == models[i].id) {
 				*model = models[i].model;
+				gp_debug_printf(GP_DEBUG_LOW, "Model is %s", *model);
 				break;
 			}
 	}
@@ -208,13 +209,13 @@ pdc320_size (Camera *camera, int n)
 			 * again?
                          * Yes, but how many is not known for the PDC 320.
 			 */                         
-
 //			if (camera->model==PDC640SE) {
-                        if (camera->model[10]=='F') {
+                        if (camera->model[10]=='6') {
 				CHECK_RESULT (gp_port_read (camera->port, buf, buf[0]+2));
 				CHECK_RESULT (pdc320_init(camera->port));
 //			} else if (camera->model==PDC320) {
-                        } else if (camera->model[10]=='6') {
+                        } else if (camera->model[10]=='F') {
+i=RETRIES;
 			// I have no clue else than to flush the whole buffer
 			// gp_port_flush(camera->port, direction) ??? What is the direction bit about?
 			// it uses dev->ops->flush(dev, direction) which seems to only be valid with serial devices
@@ -423,9 +424,4 @@ camera_init (Camera *camera)
 
 	return (result);
 }
-
-
-
-
-
 
