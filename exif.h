@@ -182,6 +182,12 @@ char *exif_get_tagname(int tag_number);
 unsigned char *exif_get_thumbnail(exifparser *exifdat);
 
 /**
+ * The same as exif_get_thumbnail but returns
+ * also the thumbnail size
+ */
+unsigned char *exif_get_thumbnail_and_size(exifparser *exifdat, long *size);
+
+/**
  * Gets the comment field if it exists.
  */
 int gpe_get_comment(exifparser *exifdat, char *comment);

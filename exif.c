@@ -411,6 +411,20 @@ int exif_set_comment(exifparser *exifdat, char *comment) {
  * The returned thumbnail might be in JPEG or TIFF format.
  */
 unsigned char *exif_get_thumbnail(exifparser *exifdat) {
+
+   long size;
+
+   return exif_get_thumbnail_and_size(exifdat, &size);
+}
+
+
+/**
+ * Gets the thumbnail of an EXIF image.
+ * The thumbnail size is provided
+ *
+ * The returned thumbnail might be in JPEG or TIFF format.
+ */
+unsigned char *exif_get_thumbnail_and_size(exifparser *exifdat, long *size) {
   unsigned char *imagedata,*exifimg,*newimg,*curptr;
   unsigned int entry;
   long dataptr,dsize,tag,datvec,tmp;
@@ -419,6 +433,7 @@ unsigned char *exif_get_thumbnail(exifparser *exifdat) {
   exif_debug=1;
   if (exif_parse_data(exifdat)<0) return(NULL);
 
+  *size = 0;
   newimg=malloc(exifdat->exiflen);
   if (newimg==NULL){
     fprintf(stderr,"exif_get_thumbnail: could not malloc\n");
@@ -428,6 +443,7 @@ unsigned char *exif_get_thumbnail(exifparser *exifdat) {
   /* Copy header*/
   memcpy(newimg,exifdat->data,8);
   curptr=newimg+8;
+  *size += 8;
 
   if (exif_debug) {    
       ExifData owner;
@@ -446,6 +462,7 @@ unsigned char *exif_get_thumbnail(exifparser *exifdat) {
     if (exif_debug) {
       fprintf(stderr,"Too few ifds, doesn't look right. Giving up\n");
     };
+    *size = 0;
     return(NULL); /* Things don't look right...*/
   };
 
@@ -455,6 +472,7 @@ unsigned char *exif_get_thumbnail(exifparser *exifdat) {
   /* Copy number of entries */
   memcpy(curptr,exifimg,2);
   curptr+=2;
+  *size += 2;
 
   entry=exif_get_lilend(exifimg,2);
 
@@ -467,10 +485,12 @@ unsigned char *exif_get_thumbnail(exifparser *exifdat) {
     dsize=gpe_getintval(exifimg,EXIF_JPEGInterchangeFormatLength);
     if (dsize==-1){
       fprintf(stderr,"No Jpeg size tag for thumbnail, skipping\n");
+      *size = 0;
       return(NULL);
     };
     imagedata=exifdat->data+tmp;
     memcpy(newimg,imagedata,dsize);
+    *size += dsize;
     return(newimg);
   };
 
@@ -478,6 +498,7 @@ unsigned char *exif_get_thumbnail(exifparser *exifdat) {
   tmp=gpe_getintval(exifimg,EXIF_StripOffsets); /*imagedata start*/
   if (tmp==-1) {
     fprintf(stderr,"gpe_get_thumbnail: Tiff or jpeg data not found, skipping\n");
+    *size = 0;
     return(NULL);
   };
   imagedata=exifdat->data+tmp;
@@ -485,6 +506,7 @@ unsigned char *exif_get_thumbnail(exifparser *exifdat) {
   dataptr=gpe_getintval(exifimg,EXIF_StripByteCounts);        /* imagedata size */
   if (dataptr==-1) {
     printf("Split two\n");
+    *size = 0;
     return(NULL);
   };
 
@@ -502,12 +524,14 @@ unsigned char *exif_get_thumbnail(exifparser *exifdat) {
       gpe_setval(exifimg,i,12*entry+14); /* set to end of directory */
       memcpy(curptr,exifimg+12*i+2,12);
       curptr+=12;
+      *size += 12;
     }
     else {
       if (dsize<5){
 	/* Just copy the field if small */
         memcpy(curptr,exifimg+12*i+2,12);
 	curptr+=12;
+	*size += 12;
       }
       else {
 	datvec=gpe_getvalue(exifimg,i);
@@ -515,6 +539,7 @@ unsigned char *exif_get_thumbnail(exifparser *exifdat) {
 	for (j=0;j<dsize;j++) imagedata[dataptr++]=exifdat->data[datvec+j];
         memcpy(curptr,exifimg+12*i+2,12);
 	curptr+=12;
+	*size += 12;
       };
     };
   };
@@ -522,6 +547,7 @@ unsigned char *exif_get_thumbnail(exifparser *exifdat) {
   curptr+=4;
   memcpy(curptr,imagedata,dataptr);/* ? */
   curptr+=dataptr;
+  *size += 4+dataptr;
   return newimg;
 
   return 0;
