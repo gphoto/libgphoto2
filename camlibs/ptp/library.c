@@ -846,7 +846,8 @@ camera_init (Camera *camera, GPContext *context)
 	memset (camera->pl->params.data, 0, sizeof (PTPData));
 	((PTPData *) camera->pl->params.data)->camera = camera;
 	camera->pl->params.byteorder = PTP_DL_LE;
-	camera->pl->params.transaction_id=0x00;
+	/* the transaction_id is incemente before sending, thus it means 0x0 */
+	camera->pl->params.transaction_id=0xffffffff;
 
 	/* Configure the port */
 	CR (gp_port_set_timeout (camera->port, 3000));
