@@ -1,3 +1,10 @@
+2002-04-19  Mariusz Woloszyn
+
+	* libgphoto2_port/gphoto2-port-library.h: changed definition of
+	  GPPortOperations.check_int.
+	* libgphoto2_port/gphoto2-port.[ch]: added gp_port_check_int_fast().
+	* usb/libusb.c: changed definition of gp_port_usb_check_int.
+
 2002-04-16  Marcus Meissner <marcus@jet.franken.de>
 
 	* libgphoto_port/gphoto2-port.h, serial/unix.c:

@@ -422,6 +422,7 @@ gp_port_read (GPPort *port, char *data, int size)
  *
  * Reads a specified number of bytes from the inerrupt endpoint
  * into the supplied buffer.
+ * Function waits port->timeout miliseconds for data on interrupt endpoint.
  *
  * Return value: a gphoto2 error code
  **/
@@ -438,7 +439,44 @@ gp_port_check_int (GPPort *port, char *data, int size)
 
 	/* Check if we read as many bytes as expected */
 	CHECK_SUPP (port, _("check_int"), port->pc->ops->check_int);
-	retval = port->pc->ops->check_int (port, data, size);
+	retval = port->pc->ops->check_int (port, data, size, port->timeout);
+	CHECK_RESULT (retval);
+	if (retval != size)
+		gp_log (GP_LOG_DEBUG, "gphoto2-port", "Could only read %i "
+			"out of %i byte(s)", retval, size);
+
+	gp_log_data ("gphoto2-port", data, retval);
+
+	return (retval);
+}
+
+/**
+ * gp_port_check_int_fast:
+ * @port: a #GPPort
+ * @data: a pointer to an allocated buffer
+ * @size: the number of bytes that should be read
+ *
+ * Reads a specified number of bytes from the inerrupt endpoint
+ * into the supplied buffer.
+ * Function waits 50 miliseconds for data on interrupt endpoint.
+ *
+ * Return value: a gphoto2 error code
+ **/
+#define FAST_TIMEOUT	50
+int
+gp_port_check_int_fast (GPPort *port, char *data, int size)
+{
+        int retval;
+
+	gp_log (GP_LOG_DEBUG, "gphoto2-port", "Reading %i=0x%x bytes from inerrupt ep (fast)...",
+		size, size);
+
+	CHECK_NULL (port);
+	CHECK_INIT (port);
+
+	/* Check if we read as many bytes as expected */
+	CHECK_SUPP (port, _("check_int"), port->pc->ops->check_int);
+	retval = port->pc->ops->check_int (port, data, size, FAST_TIMEOUT);
 	CHECK_RESULT (retval);
 	if (retval != size)
 		gp_log (GP_LOG_DEBUG, "gphoto2-port", "Could only read %i "

@@ -226,7 +226,7 @@ gp_port_usb_read(GPPort *port, char *bytes, int size)
 }
 
 static int
-gp_port_usb_check_int (GPPort *port, char *bytes, int size)
+gp_port_usb_check_int (GPPort *port, char *bytes, int size, int timeout)
 {
 	int ret;
 
@@ -234,7 +234,7 @@ gp_port_usb_check_int (GPPort *port, char *bytes, int size)
 		return GP_ERROR_BAD_PARAMETERS;
 
 	ret = usb_bulk_read(port->pl->dh, port->settings.usb.intep,
-			     bytes, size, port->timeout);
+			     bytes, size, timeout);
         if (ret < 0)
 		return GP_ERROR_IO_READ;
 
