@@ -1354,7 +1354,6 @@ canon_usb_get_thumbnail (Camera *camera, const char *name, unsigned char **data,
 
 	htole32a (payload, 0x1);	/* get thumbnail */
 	htole32a (payload + 0x4, USB_BULK_READ_SIZE);
-	htole32a (payload + 0x8, USB_BULK_READ_SIZE);
 
 	/* 0 is to not show status */
 	res = canon_usb_long_dialogue (camera, CANON_USB_FUNCTION_GET_FILE, data, length,
