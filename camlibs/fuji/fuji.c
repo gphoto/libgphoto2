@@ -659,46 +659,6 @@ static void reset_serial (void)
 	devfd = -1; /* shouldn't be needed*/
 }
 
-static int fix_serial ()
-{
-        struct termios newt;
-
-	gp_port_settings settings;
-
-	gp_port_settings_get(thedev, &settings);
-
-        devfd=thedev->device_fd;
-
-	DBG2("Devfd is %d",devfd);
-
-	if (devfd < 0) {
-		DBG("Cannot open device");
-		return(-1);
-	}
-
-	if (tcgetattr(devfd, &newt) < 0) {
-		DBG("tcgetattr");
-		return(-1);
-	}
-
-	DBG2("Speed is %d",cfgetispeed(&newt));
-	newt.c_iflag |= (PARMRK|INPCK);
-	newt.c_iflag &= ~(BRKINT|IGNBRK|IGNPAR|ISTRIP|INLCR|IGNCR|ICRNL|IXON|IXOFF);
-	newt.c_oflag &= ~(OPOST);
-	newt.c_cflag |= (CLOCAL|CREAD|CS8|PARENB);
-	newt.c_cflag &= ~(CSTOPB|HUPCL|PARODD);
-	newt.c_lflag &= ~(ECHO|ECHOE|ECHOK|ECHONL|ICANON|ISIG|NOFLSH|TOSTOP);
-	newt.c_cc[VMIN] = 0;
-	newt.c_cc[VTIME] = 1;
-
-	if (tcsetattr(devfd, TCSANOW, &newt) < 0) {
-	        perror("tcsetattr");
-		DBG2("fix_serial tcsetattr error for %s\n",settings.serial.port);
-		exit(1);
-	}
-       return(fuji_ping (camera, context));
-}
-
 static int fuji_set_max_speed (int newspeed)
 {
   int speed,i,res;
@@ -734,9 +694,6 @@ static int fuji_set_max_speed (int newspeed)
 
   DBG2("Setting speed to %d",speed);
   gp_port_settings_set(thedev, settings);
-
-  if (fix_serial()) return (GP_ERROR);
-
   gp_port_settings_get(thedev, &settings);
   DBG2("Speed set to %d",settings.serial.speed);
   return(fuji_ping (camera, context));
@@ -1040,7 +997,6 @@ static int camera_file_list (Camera *camera, const char *folder, CameraList *lis
   cs=(CameraPrivateLibrary *)camera->pl;
 
   DBG("Camera file list");
-  fix_serial();
   n=fuji_nb_pictures();
   DBG3("Getting file list for %s, %d files",folder,n);
   for (i=0;i<n;i++) {
@@ -1157,8 +1113,8 @@ int camera_init (Camera *camera) {
 	gp_port_timeout_set(thedev,1000);
 	settings.serial.speed 	 = 9600;
 	settings.serial.bits 	 = 8;
-	settings.serial.parity 	 = 0;
-	settings.serial.stopbits = 1;
+	settings.serial.parity 	 = GP_PORT_SERIAL_PARITY_EVEN;
+	settings.serial.stopbits = 0;
 
 	gp_port_settings_set(camera->port,settings);
 	//gp_port_open(thedev);
@@ -1166,10 +1122,6 @@ int camera_init (Camera *camera) {
 	//DBG2("Initialized port %s",settings.serial.port);
 
 	fuji_maxbuf=FUJI_MAXBUF_DEFAULT; /* This should be camera dependent */
-
-	if (fix_serial()) return (GP_ERROR);
-
-	//DBG("Port fixed, setting max speed");
 
 	//fuji_set_max_speed(57600);
 
