@@ -1,5 +1,7 @@
 ########################################################################
 # A short guide to setting up and using gphoto2
+#
+# This file has been made obsolete by Chapter 1 in gphoto2.xml
 ########################################################################
 
 
