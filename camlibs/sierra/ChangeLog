@@ -1,3 +1,10 @@
+2002-05-24  Lutz M@ller <lutz@users.sourceforge.net>
+
+	* library.c: Imitate the behavior of the Windows driver and
+	  check before each sierra_write_packet if the connection is
+	  still open (sierra_check_connection), i.e. if the camera
+	  has sent SIERRA_PACKET_SESSION_END.
+
 2002-05-24  Lutz Müller <lutz@users.sourceforge.net>
 
 	* library.c

@@ -38,10 +38,10 @@ enum _SierraPacket {
 	NUL				= 0x00,
 	SIERRA_PACKET_DATA		= 0x02,
 	SIERRA_PACKET_DATA_END		= 0x03,
-	ENQ				= 0x05,
+	SIERRA_PACKET_ENQ		= 0x05,
 	ACK				= 0x06,
 	SIERRA_PACKET_INVALID		= 0x11,
-	NAK				= 0x15,
+	SIERRA_PACKET_NAK		= 0x15,
 	SIERRA_PACKET_COMMAND		= 0x1b,
 	SIERRA_PACKET_WRONG_SPEED	= 0x8c,
 	SIERRA_PACKET_SESSION_ERROR	= 0xfc,
@@ -312,9 +312,10 @@ sierra_get_memory_left (Camera *camera, int *memory, GPContext *context)
 {
 	int ret;
 
-	if ((ret = sierra_get_int_register(camera, 28, memory, context)) != GP_OK) {
-		gp_context_error (context,
-				     _("Cannot retrieve the available memory left"));
+	ret = sierra_get_int_register (camera, 28, memory, context);
+	if (ret < 0) {
+		gp_context_error (context, _("Cannot retrieve the available "
+					     "memory left"));
 		return ret;
 	}
 
@@ -322,11 +323,60 @@ sierra_get_memory_left (Camera *camera, int *memory, GPContext *context)
 }
 
 static int
-sierra_write_packet (Camera *camera, char *packet)
+sierra_check_connection (Camera *camera, GPContext *context)
+{
+	int r = 0, timeout;
+	unsigned char c;
+
+	GP_DEBUG ("Checking if connection is still open...");
+	while (1) {
+
+		/*
+		 * Do like the Windows driver - check for 20ms if something
+		 * has been sent by the camera.
+		 */
+		CHECK (gp_port_get_timeout (camera->port, &timeout));
+		CHECK (gp_port_set_timeout (camera->port, 20));
+		r = gp_port_read (camera->port, &c, 1);
+		CHECK (gp_port_set_timeout (camera->port, timeout));
+
+		/* If we got a timeout error, everything's just fine. */
+		if (r == GP_ERROR_TIMEOUT)
+			return (GP_OK);
+
+		/* If any error (except timeout) has occurred, report it. */
+		CHECK (r);
+
+		/*
+		 * We have received something. This is not good. Check if
+		 * the camera has closed the connection and told us about
+		 * that by sending SIERRA_PACKET_SESSION_END.
+		 */
+		if (c == SIERRA_PACKET_SESSION_END) {
+			if (++r > 2) {
+				gp_context_error (context, _("Camera refused "
+					"3 times to keep a connection open."));
+				return (GP_ERROR);
+			}
+			CHECK (sierra_init (camera, context));
+			continue;
+		}
+
+		/*
+		 * The camera sends us unexpected data. Dump it and assume
+		 * that everything's just fine.
+		 */
+		while (gp_port_read (camera->port, &c, 1) >= 0);
+		return (GP_OK);
+	}
+}
+
+static int
+sierra_write_packet (Camera *camera, char *packet, GPContext *context)
 {
 	int x, checksum=0, length;
 
-	GP_DEBUG ("* sierra_write_packet");
+	CHECK (sierra_check_connection (camera, context));
 
 	/* Determing packet length */
 	if ((packet[0] == SIERRA_PACKET_COMMAND) ||
@@ -357,15 +407,15 @@ sierra_write_packet (Camera *camera, char *packet)
 }
 
 static int
-sierra_write_nak (Camera *camera)
+sierra_write_nak (Camera *camera, GPContext *context)
 {
         char buf[4096];
         int ret;
 
         GP_DEBUG ("* sierra_write_nack");
 
-        buf[0] = NAK;
-        ret = sierra_write_packet (camera, buf);
+        buf[0] = SIERRA_PACKET_NAK;
+        ret = sierra_write_packet (camera, buf, context);
         if (camera->port->type == GP_PORT_USB && !camera->pl->usb_wrap)
                 gp_port_usb_clear_halt(camera->port, GP_PORT_USB_ENDPOINT_IN);
         return (ret);
@@ -460,10 +510,10 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 		 */
 		switch (packet[0]) {
 		case NUL:
-		case ENQ:
+		case SIERRA_PACKET_ENQ:
 		case ACK:
 		case SIERRA_PACKET_INVALID:
-		case NAK:
+		case SIERRA_PACKET_NAK:
 		case SIERRA_PACKET_SESSION_ERROR:
 		case SIERRA_PACKET_SESSION_END:
 		case SIERRA_PACKET_WRONG_SPEED:
@@ -585,7 +635,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 						 GP_ERROR_TIMEOUT);
 		}
 		GP_DEBUG ("Retrying...");
-		sierra_write_nak (camera);
+		sierra_write_nak (camera, context);
 		GP_SYSTEM_SLEEP (10);
 	}
 
@@ -636,7 +686,7 @@ sierra_transmit_ack (Camera *camera, char *packet, GPContext *context)
 			return (GP_ERROR_CANCEL);
 
 		/* Write packet and read the answer */
-		CHECK (sierra_write_packet (camera, packet));
+		CHECK (sierra_write_packet (camera, packet, context));
 		CHECK (sierra_read_packet_wait (camera, buf, context));
 
 		switch (buf[0]) {
@@ -712,7 +762,7 @@ sierra_build_packet (Camera *camera, char type, char subtype,
 }
 
 static int
-sierra_write_ack (Camera *camera) 
+sierra_write_ack (Camera *camera, GPContext *context) 
 {
 	char buf[4096];
 	int ret;
@@ -720,7 +770,7 @@ sierra_write_ack (Camera *camera)
 	GP_DEBUG ("Writing acknowledgement...");
 	
 	buf[0] = ACK;
-	ret = sierra_write_packet (camera, buf);
+	ret = sierra_write_packet (camera, buf, context);
 	if (camera->port->type == GP_PORT_USB && !camera->pl->usb_wrap)
 		gp_port_usb_clear_halt (camera->port, GP_PORT_USB_ENDPOINT_IN);
 	CHECK (ret);
@@ -744,19 +794,7 @@ sierra_init (Camera *camera, GPContext *context)
 
 	/*
 	 * It seems that the initialization sequence needs to be sent at
-	 * 19200. Portmon logs show:
-	 *  - IRP_MJ_CLEANUP
-	 *  - IRP_MJ_CLOSE
-	 *  - IRP_MJ_CREATE Options: Open
-	 *  - IOCTL_SERIAL_SET_BAUD_RATE Rate: 19200
-	 *  - IOCTL_SERIAL_SET_DTR
-	 *  - IOCTL_SERIAL_SET_LINE_CONTROL
-	 *    StopBits: 1 Parity: NONE WordLength: 8
-	 *  - IOCTL_SERIAL_SET_CHAR
-	 *    EOF:0 ERR:0 BRK:0 EVT:0 XON:11 XOFF:13
-	 *  - IOCTL_SERIAL_SET_HANDFLOW
-	 *    Shake:9 Replace:80000080 XonLimit:2048 XoffLimit:512
-	 *  - IOCTL_SERIAL_SET_TIMEOUTS RI:0 RM:0 RC:500 WM:200 WC:800
+	 * 19200.
 	 */
 	CHECK (gp_port_get_settings (camera->port, &settings));
 	if (settings.serial.speed != 19200) {
@@ -770,7 +808,7 @@ sierra_init (Camera *camera, GPContext *context)
 	while (1) {
 
 		/* Send NUL */
-		CHECK (sierra_write_packet (camera, packet));
+		CHECK (sierra_write_packet (camera, packet, context));
 
 		/* Read the response */
 		ret = sierra_read_packet (camera, buf, context);
@@ -786,10 +824,16 @@ sierra_init (Camera *camera, GPContext *context)
 		}
 		CHECK (ret);
 
-		/* Interpret the response */
 		switch (buf[0]) {
-		case NAK:
+		case SIERRA_PACKET_NAK: 
+
+			/*
+			 * Everything is fine. The next packet is 
+			 * the first packet of this new session.
+			 */
+			camera->pl->first_packet = 1;
 			return (GP_OK);
+
 		case SIERRA_PACKET_SESSION_END:
 		default:
 			if (++r > 3) {
@@ -880,7 +924,7 @@ sierra_action (Camera *camera, SierraAction action, GPContext *context)
 	GP_DEBUG ("Waiting for acknowledgement...");
 	CHECK (sierra_read_packet_wait (camera, buf, context));
 	switch (buf[0]) {
-	case ENQ:
+	case SIERRA_PACKET_ENQ:
 		return (GP_OK);
 	default:
 		gp_context_error (context, _("Received unexpected answer "
@@ -931,7 +975,7 @@ int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *con
 	packet[5] = reg;
 
 	GP_DEBUG ("Getting integer value of register 0x%02x...", reg);
-	CHECK (sierra_write_packet (camera, packet));
+	CHECK (sierra_write_packet (camera, packet, context));
 	while (1) {
 		CHECK (sierra_read_packet_wait (camera, buf, context));
 		GP_DEBUG ("Successfully read packet. Interpreting result "
@@ -949,7 +993,7 @@ int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *con
 			    ((unsigned char) buf[7] * 16777216);
 			*value = r;
 			GP_DEBUG ("Value of register 0x%02x: 0x%02x. ", reg, r);
-			CHECK (sierra_write_ack (camera));
+			CHECK (sierra_write_ack (camera, context));
 			GP_DEBUG ("Read value of register 0x%02x and wrote "
 				  "acknowledgement. Returning...", reg);
 			return GP_OK;
@@ -969,7 +1013,7 @@ int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *con
 			 * the connection.
 			 */
 			CHECK (sierra_init (camera, context));
-			CHECK (sierra_write_packet (camera, packet));
+			CHECK (sierra_write_packet (camera, packet, context));
 			break;
 
 		default:
@@ -980,7 +1024,7 @@ int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *con
 			}
 
 			/* Tell the camera to send again. */
-			CHECK (sierra_write_nak (camera));
+			CHECK (sierra_write_nak (camera, context));
 			break;
 		}
 	}
@@ -1067,7 +1111,7 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 	CHECK (sierra_build_packet (camera, SIERRA_PACKET_COMMAND, 0, 2, packet));
 	packet[4] = 0x04;
 	packet[5] = reg;
-	CHECK (sierra_write_packet (camera, packet));
+	CHECK (sierra_write_packet (camera, packet, context));
 
 	if (file)
 		id = gp_context_progress_start (context, total, _("Downloading..."));
@@ -1084,7 +1128,7 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 				return (r);
 			GP_DEBUG ("Timeout! Retrying (%i of %i)...",
 				  retries, RETRIES);
-			CHECK (sierra_write_nak (camera));
+			CHECK (sierra_write_nak (camera, context));
 			continue;
 		}
 		CHECK (r);
@@ -1098,7 +1142,7 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 		default:
 			break;
 		}
-		CHECK (sierra_write_ack (camera));
+		CHECK (sierra_write_ack (camera, context));
 
 		packlength = packet[2] | (packet[3] << 8);
 		GP_DEBUG ("Packet length: %d", packlength);
