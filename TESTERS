@@ -5,9 +5,13 @@ This list of testers is intended for driver developers to
 find people with the required types of cameras to test their drivers.
 Therefore it is sorted by the camera type.
 
-If you create some changes to a special driver have to test the driver 
-on a type of camera you have no access to, you may contact these nice 
-folks.
+USING THESE NAMES AND ADDRESSES FOR ANY OTHER PURPOSE THAN DEVELOPMENT
+AND TESTING OF SOFTWARE FROM THE gphoto PROCJECT IS STRICTLY
+PROHIBITED. (Just in case anybody gets stupid ideas.)
+
+If you create some changes to a special driver and have to test the 
+driver on a type of camera you do not have direct access to, you may 
+contact these nice folks.
 
 If you have a camera not yet on this list and want to help develop the 
 gphoto project, we ask you to join the testers. Just tell us at 
