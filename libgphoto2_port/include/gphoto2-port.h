@@ -87,15 +87,12 @@ typedef struct {
 	char name[64];
 	char path[64];
 	
-	/* not used yet */
-	int  argument_needed;
-	char argument_description[128];
-	char argument[128];
+        int speed;
 
-	/* don't touch */
+        /* don't touch */
 	char library_filename[1024];
-} gp_port_info;
 
+} gp_port_info;
 
 /* Put the settings together in a union */
 typedef union {

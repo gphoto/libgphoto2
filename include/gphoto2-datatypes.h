@@ -102,18 +102,7 @@ typedef struct {
 } CameraCaptureInfo;
 
 /* Port information/settings */
-typedef struct {
-	CameraPortType type;
-	char name[128];
-	char path[128];
-		/* path to serial port device 			 */
-		/* For serial port, "/dev/ttyS0" or variants	 */
-		/* For parallel port, "/dev/lpt0" or variants	 */
-		/* For usb, "usb"				 */
-		/* For ieee1394, "ieee1394"			 */
-                /* For network, "IP:PORT"  			 */
-	int speed;
-} CameraPortInfo;
+#define CameraPortInfo gp_port_info
 
 /* Functions supported by the cameras */
 

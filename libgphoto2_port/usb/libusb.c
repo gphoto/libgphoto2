@@ -85,7 +85,7 @@ int gp_port_library_list(gp_port_info *list, int *count)
 	list[*count].type = GP_PORT_USB;
 	strcpy(list[*count].name, "Universal Serial Bus");
 	strcpy(list[*count].path, "usb");
-	list[*count].argument_needed = 0;
+	/* list[*count].argument_needed = 0; */
 	*count += 1;
 
 	return GP_OK;

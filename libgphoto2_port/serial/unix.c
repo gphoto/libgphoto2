@@ -144,7 +144,7 @@ int gp_port_library_list (gp_port_info *list, int *count) {
                         strcpy(list[*count].path, buf);
                         sprintf(buf, "Serial Port %i", x);
                         strcpy(list[*count].name, buf);
-                        list[*count].argument_needed = 0;
+                        /* list[*count].argument_needed = 0; */
                         *count += 1;
                 }
 #ifdef OS2
