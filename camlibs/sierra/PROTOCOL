@@ -2,7 +2,7 @@
  register	interpretation
 ---------------------------------------------------------------------------
   1		resolution
-  2
+  2		date (seconds since 1/1/1970)
   3		shutter speed
   4		current image number
   5		aperture
@@ -26,7 +26,7 @@
  23		auto off (host)
  24		auto off (field)
  25 (s)		serial number
- 26
+ 26 (s)		software revision
  27
  28		memory left
  29

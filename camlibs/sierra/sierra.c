@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <gphoto2.h>
+#include <time.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -470,7 +471,7 @@ static void dump_register (Camera *camera)
 	const char *description[] = {
 		"?",				//   0
 		"resolution",
-		"?",
+		"date",
 		"shutter speed",
 		"current image number",
 		"aperture",
@@ -494,7 +495,7 @@ static void dump_register (Camera *camera)
 		"auto off (host)",
 		"auto off (field)",
 		"serial number",
-		"?",
+		"software revision",
 		"?",
 		"memory left",
 		"?",
@@ -1134,11 +1135,15 @@ camera_summary (Camera *camera, CameraText *summary)
 	/* Get all the string-related info */
 	ret = sierra_get_string_register (camera, 22, 0, NULL, t, &value);
 	if (ret == GP_OK)
-		sprintf(buf, _("%sCamera ID       : %s\n"), buf, t);
+		sprintf (buf, _("%sCamera ID       : %s\n"), buf, t);
 
 	ret = sierra_get_string_register (camera, 25, 0, NULL, t, &value);
 	if (ret == GP_OK)
-		sprintf(buf, _("%sSerial Number   : %s\n"), buf, t);
+		sprintf (buf, _("%sSerial Number   : %s\n"), buf, t);
+
+	ret = sierra_get_string_register (camera, 26, 0, NULL, t, &value);
+	if (ret == GP_OK)
+		sprintf (buf, _("%sSoftware Rev.   : %s\n"), buf, t);
 
 	/* Get all the integer information */
 	if (sierra_get_int_register(camera, 10, &value) == GP_OK)
@@ -1150,7 +1155,12 @@ camera_summary (Camera *camera, CameraText *summary)
 	if (sierra_get_int_register(camera, 28, &value) == GP_OK)
 		sprintf (buf, _("%sMemory Left	: %i bytes\n"), buf, value);
 
-	strcpy(summary->text, buf);
+	/* Get date */
+	if (sierra_get_int_register (camera, 2, &value) == GP_OK)
+		sprintf (buf, _("%sDate         : %s\n"), buf, 
+			 ctime ((time_t*) &value));
+
+	strcpy (summary->text, buf);
 
 	return (camera_stop(camera));
 }

@@ -1,0 +1,12 @@
+Michael Trawny <trawny99@yahoo.com>
+JD350e serial protocol reverse engineering
+Driver implementation
+
+Thanks to:
+
+Eric Brombaugh <emeb@goodnet.com>
+Pattern recognition based bayer->RGB demosaic routine
+
+Mark Russinovich <http://www.sysinternals.com> for making his Portmon serial port analysis software freely available.
+
+Adam Harrison <adam@antispin.org>, the author of the STV0680 camlib, whose code was used as a template for this driver.

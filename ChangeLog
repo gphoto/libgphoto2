@@ -1,3 +1,11 @@
+2001-09-27  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* camlibs/sierra/protocol.c:
+	* camlibs/sierra/sierra.c: Gilles Grandou <gilles@grandou.net>
+	figured out how to retrieve date and software revision.
+	* configure.in:
+	* camlibs/jd350e: New driver from Michael Trawny <trawny99@yahoo.com>
+
 2001-09-25  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2/jpeg.h: Fix a warning
