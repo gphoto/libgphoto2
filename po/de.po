@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
 "Report-Msgid-Bugs-To: <gphoto-translation@lists.sourceforge.net>\n"
-"POT-Creation-Date: 2003-09-16 18:03+0200\n"
+"POT-Creation-Date: 2003-10-18 21:21+0200\n"
 "PO-Revision-Date: 2003-07-11 14:45-0400\n"
 "Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
 "Language-Team: deutsch <de@li.org>\n"
@@ -59,26 +59,26 @@ msgstr ""
 "Implementiert mit Hilfe von Dokumenten\n"
 "aus dem Web. Mit Erlaubnis von Vision."
 
-#: camlibs/canon/canon.c:472
+#: camlibs/canon/canon.c:477
 #, c-format
 msgid "Could not create directory %s."
 msgstr "Konnte Verzeichnis >>%s<< nicht anlegen."
 
-#: camlibs/canon/canon.c:475
+#: camlibs/canon/canon.c:480
 #, c-format
 msgid "Could not remove directory %s."
 msgstr "Konnte Verzeichnis >>%s<< nicht löschen."
 
-#: camlibs/canon/canon.c:817 camlibs/canon/canon.c:1039
+#: camlibs/canon/canon.c:822 camlibs/canon/canon.c:1044
 #: camlibs/canon/usb.c:229
 msgid "lock keys failed."
 msgstr "könnte Tasten nicht sperren."
 
-#: camlibs/canon/canon.c:880 camlibs/canon/canon.c:881
+#: camlibs/canon/canon.c:885 camlibs/canon/canon.c:886
 msgid "*UNKNOWN*"
 msgstr "*UNBEKANNT*"
 
-#: camlibs/canon/canon.c:988
+#: camlibs/canon/canon.c:993
 #, c-format
 msgid ""
 "canon_int_capture_image: initial canon_usb_list_all_dirs() failed with "
@@ -87,7 +87,7 @@ msgstr ""
 "canon_int_capture_image: erste canon_usb_list_all_dirs() fehlgeschlagen mit "
 "status %i"
 
-#: camlibs/canon/canon.c:1069
+#: camlibs/canon/canon.c:1074
 #, c-format
 msgid ""
 "canon_int_capture_image: final canon_usb_list_all_dirs() failed with status %"
@@ -96,7 +96,7 @@ msgstr ""
 "canon_int_capture_image: finalletzte canon_usb_list_all_dirs() "
 "fehlgeschlagen mit status %i"
 
-#: camlibs/canon/canon.c:1188
+#: camlibs/canon/canon.c:1193
 #, c-format
 msgid ""
 "Name '%s' (%i characters) too long (%i chars), maximum 30 characters are "
@@ -104,41 +104,41 @@ msgid ""
 msgstr ""
 "Name »%s« (%i Zeichen) ist zu lang (%i Zeichen), maximal 30 Zeichen erlaubt."
 
-#: camlibs/canon/canon.c:1709
+#: camlibs/canon/canon.c:1716
 #, c-format
 msgid "canon_int_list_dir: ERROR: initial message too short (%i < minimum %i)"
 msgstr "canon_int_list_dir: ERROR: erste Meldung zu kurz (%i < minimum %i)"
 
-#: camlibs/canon/canon.c:1731
+#: camlibs/canon/canon.c:1738
 msgid ""
 "canon_int_list_dir: Reached end of packet while examining the first dirent"
 msgstr ""
 "canon_int_list_dir: Ende des Pakets erreicht als erste Verzeichniselemente "
 "untersich wird"
 
-#: camlibs/canon/canon.c:1816
+#: camlibs/canon/canon.c:1823
 msgid "canon_int_list_dir: truncated directory entry encountered"
 msgstr "canon_int_list_dir: verkurzte Verzeichniselemente gefunden"
 
-#: camlibs/canon/canon.c:2126
+#: camlibs/canon/canon.c:2134
 msgid "File protected."
 msgstr "Datei geschützt."
 
-#: camlibs/canon/canon.c:2197
+#: camlibs/canon/canon.c:2205
 msgid "Could not extract JPEG thumbnail from data: Data is not JFIF"
 msgstr ""
 "Könnte JPEG Vorschaubild von Daten nicht ausziehen: Daten sind nicht JFIF"
 
-#: camlibs/canon/canon.c:2222
+#: camlibs/canon/canon.c:2230
 msgid "Could not extract JPEG thumbnail from data: No beginning/end"
 msgstr "Könnte JPEG Vorschaubild von Daten nicht ausziehen: keine Anfang/Ende"
 
-#: camlibs/canon/canon.h:195 camlibs/canon/canon.h:209
+#: camlibs/canon/canon.h:200 camlibs/canon/canon.h:214
 #, c-format
 msgid "NULL parameter \"%s\" in %s line %i"
 msgstr ""
 
-#: camlibs/canon/canon.h:392
+#: camlibs/canon/canon.h:397
 #, c-format
 msgid ""
 "Don't know how to handle camera->port->type value %i aka 0x%xin %s line %i."
@@ -335,7 +335,7 @@ msgstr "Konnte Verzeichnis \\\\DCIM nicht anlegen."
 msgid "Could not create destination directory."
 msgstr "Konnte Zielverzeichnis nicht anlegen."
 
-#: camlibs/canon/library.c:1249 camlibs/ptp2/library.c:659
+#: camlibs/canon/library.c:1249 camlibs/ptp2/library.c:707
 msgid "Camera and Driver Configuration"
 msgstr "Kamera- und Treiber-Konfiguration"
 
@@ -372,8 +372,8 @@ msgstr "Setze Kameradatum auf das Datum des PCs"
 msgid "Firmware revision (readonly)"
 msgstr "Firmware-Revision (Nur-Lesen)"
 
-#: camlibs/canon/library.c:1306 camlibs/ptp2/library.c:661
-#: camlibs/ptp2/library.c:692
+#: camlibs/canon/library.c:1306 camlibs/ptp2/library.c:709
+#: camlibs/ptp2/library.c:740
 msgid "Power (readonly)"
 msgstr "Energie (Nur-Lesen)"
 
@@ -663,7 +663,7 @@ msgstr ""
 msgid "Camera not ready, get_battery failed: %s"
 msgstr "Kamera nicht bereit, get_battery-Anfrage fehlgeschlagen: %s"
 
-#: camlibs/canon/usb.c:350 camlibs/canon/usb.c:376 camlibs/canon/usb.c:425
+#: camlibs/canon/usb.c:351 camlibs/canon/usb.c:377 camlibs/canon/usb.c:426
 #, c-format
 msgid ""
 "canon_usb_lock_keys: Unexpected amount of data returned (%i bytes, expected %"
@@ -672,7 +672,7 @@ msgstr ""
 "canon_usb_lock_keys: Unerwartete Dateilänge erhalten (%i erhalten, %i "
 "erwartet)"
 
-#: camlibs/canon/usb.c:413
+#: camlibs/canon/usb.c:414
 #, c-format
 msgid ""
 "canon_usb_lock_keys: Unexpected return of %i bytes (expected %i) from \"get "
@@ -681,7 +681,7 @@ msgstr ""
 "canon_usb_lock_keys: Unerwartete Dateilänge erhalten (%i erhalten, %i "
 "erwartet) bei >>get picture abilities<<"
 
-#: camlibs/canon/usb.c:468
+#: camlibs/canon/usb.c:470
 #, c-format
 msgid ""
 "canon_usb_unlock_keys: Unexpected amount of data returned (%i bytes, "
@@ -690,7 +690,7 @@ msgstr ""
 "canon_usb_unlock_keys: Unerwartete Dateilänge erhalten (%i erhalten, %i "
 "erwartet)"
 
-#: camlibs/canon/usb.c:519
+#: camlibs/canon/usb.c:521
 #, c-format
 msgid ""
 "canon_usb_poll_interrupt_pipe: interrupt read failed after %i tries, \"%s\""
@@ -698,7 +698,7 @@ msgstr ""
 "canon_usb_poll_interrupt_pipe: lesen von Interruptrohr fehlgeschlagen nach %"
 "i versuchen, >>%s<<"
 
-#: camlibs/canon/usb.c:572
+#: camlibs/canon/usb.c:574
 #, c-format
 msgid ""
 "canon_usb_poll_interrupt_multiple: interrupt read failed after %i tries, \"%s"
@@ -707,28 +707,28 @@ msgstr ""
 "canon_usb_poll_interrupt_pipe: lesen vom Interruptrohr fehlgeschlagen nach %"
 "i versuchen, >>%s<<"
 
-#: camlibs/canon/usb.c:670
+#: camlibs/canon/usb.c:672
 #, c-format
 msgid ""
 "canon_usb_capture_dialogue: bogus length 0x%04x for thumbnail size packet"
 msgstr ""
 "canon_usb_capture_dialogue: Falsche Paketlänge 0x%04x füer Vorschaubildslänge"
 
-#: camlibs/canon/usb.c:681
+#: camlibs/canon/usb.c:683
 #, c-format
 msgid ""
 "canon_usb_capture_dialogue: bogus length 0x%04x for full image size packet"
 msgstr "canon_usb_capture_dialogue: Falsche Paketlänge 0x%04x für Bildslänge"
 
-#: camlibs/canon/usb.c:701
+#: camlibs/canon/usb.c:703
 msgid "canon_usb_capture_dialogue: first interrupt read out of sequence"
 msgstr "canon_usb_capture_dialogue: erste Interruptspaket außer Reihenfolge"
 
-#: camlibs/canon/usb.c:709
+#: camlibs/canon/usb.c:711
 msgid "canon_usb_capture_dialogue: second interrupt read out of sequence"
 msgstr "canon_usb_capture_dialogue: zweite Interruptspaket außer Reihenfolge"
 
-#: camlibs/canon/usb.c:719
+#: camlibs/canon/usb.c:721
 #, c-format
 msgid ""
 "canon_usb_capture_dialogue: photographic failure signaled, code = 0x%08x"
@@ -736,41 +736,41 @@ msgstr ""
 "canon_usb_capture_dialogue: Aufnahme photographisch fehlgeschlagen, code=0x%"
 "08x"
 
-#: camlibs/canon/usb.c:737
+#: camlibs/canon/usb.c:739
 msgid "canon_usb_capture_dialogue: third EOS interrupt read out of sequence"
 msgstr ""
 "canon_usb_capture_dialogue: dritte EOS Interruptspaket außer Reihenfolge"
 
-#: camlibs/canon/usb.c:764
+#: camlibs/canon/usb.c:766
 msgid "canon_usb_capture_dialogue: fourth EOS interrupt read out of sequence"
 msgstr ""
 "canon_usb_capture_dialogue: zweite EOS Interruptspaket außer Reihenfolge"
 
-#: camlibs/canon/usb.c:919
+#: camlibs/canon/usb.c:921
 #, c-format
 msgid "canon_usb_dialogue: payload too big, won't fit into buffer (%i > %i)"
 msgstr "canon_usb_dialogue: Nutzlast zu groß, passt nicht in Puffer (%i > %i)"
 
-#: camlibs/canon/usb.c:1073
+#: camlibs/canon/usb.c:1075
 msgid "Receiving data..."
 msgstr "Empfange Daten..."
 
-#: camlibs/canon/usb.c:1354 camlibs/canon/usb.c:1429 camlibs/canon/usb.c:1450
+#: camlibs/canon/usb.c:1356 camlibs/canon/usb.c:1431 camlibs/canon/usb.c:1452
 #, c-format
 msgid "Out of memory: %d bytes needed."
 msgstr "Speicherplatz fehlt: %d bytes benötigt."
 
-#: camlibs/canon/usb.c:1440
+#: camlibs/canon/usb.c:1442
 #, c-format
 msgid "Couldn't read from file \"%s\""
 msgstr "Konnte Daten vom Datei >>%s<< nicht holen"
 
-#: camlibs/canon/usb.c:1483 camlibs/canon/usb.c:1494 camlibs/canon/usb.c:1530
-#: camlibs/canon/usb.c:1541 camlibs/canon/usb.c:1552
+#: camlibs/canon/usb.c:1485 camlibs/canon/usb.c:1496 camlibs/canon/usb.c:1532
+#: camlibs/canon/usb.c:1543 camlibs/canon/usb.c:1554
 msgid "File upload failed."
 msgstr "Bildhochladung fehlgeschlagen."
 
-#: camlibs/canon/usb.c:1573
+#: camlibs/canon/usb.c:1575
 msgid ""
 "File was too big. You may have to turn your camera off and back on before "
 "uploading more files."
@@ -778,7 +778,7 @@ msgstr ""
 "Datei war zu groß. Möglicherweise müssen Sie ihre Kamera aus- und wieder "
 "einschalten, um weitere Dateien hochzuladen."
 
-#: camlibs/canon/usb.c:1619
+#: camlibs/canon/usb.c:1621
 #, c-format
 msgid ""
 "canon_usb_get_dirents: Couldn't fit payload into buffer, '%.96s' (truncated) "
@@ -786,7 +786,7 @@ msgid ""
 msgstr ""
 "canon_usb_get_dirents: Nutzlast passt nicht in Puffer, '%.96s' (verkurzt)"
 
-#: camlibs/canon/usb.c:1636
+#: camlibs/canon/usb.c:1638
 #, c-format
 msgid ""
 "canon_usb_get_dirents: canon_usb_long_dialogue failed to fetch direntries, "
@@ -795,7 +795,7 @@ msgstr ""
 "canon_usb_get_dirents: canon_usb_long_dialogue könnte keine "
 "Verzeichniselemente holen, status %i"
 
-#: camlibs/canon/usb.c:1686
+#: camlibs/canon/usb.c:1688
 #, c-format
 msgid ""
 "canon_usb_list_all_dirs: Couldn't fit payload into buffer, "
@@ -804,7 +804,7 @@ msgstr ""
 "canon_usb_list_all_dirs: Nutzlast passt nicht in Puffer, >>'%.96s<< "
 "(verkurtzt) zu lang."
 
-#: camlibs/canon/usb.c:1705
+#: camlibs/canon/usb.c:1707
 #, c-format
 msgid ""
 "canon_usb_list_all_dirs: canon_usb_long_dialogue failed to fetch direntries, "
@@ -813,11 +813,11 @@ msgstr ""
 "canon_usb_list_all_dirs: canon_usb_long_dialogue könnte keine "
 "Verzeichniselemente holen, status %i"
 
-#: camlibs/canon/usb.c:1757
+#: camlibs/canon/usb.c:1759
 msgid "canon_usb_set_file_attributes: canon_usb_dialogue failed"
 msgstr "canon_usb_set_file_attributes: canon_usb_dialogue fehlgeschlagen"
 
-#: camlibs/canon/usb.c:1764
+#: camlibs/canon/usb.c:1766
 #, c-format
 msgid ""
 "canon_usb_set_file_attributes: canon_usb_dialogue returned error status 0x%"
@@ -826,12 +826,12 @@ msgstr ""
 "canon_usb_set_file_attributes: canon_usb_dialogue gibt status 0x%08x vom "
 "Kamera"
 
-#: camlibs/canon/usb.c:1835
+#: camlibs/canon/usb.c:1837
 #, c-format
 msgid "Detected a '%s'."
 msgstr "Erkannte eine »%s«."
 
-#: camlibs/canon/usb.c:1841
+#: camlibs/canon/usb.c:1843
 #, c-format
 msgid "Name \"%s\" from camera does not match any known camera"
 msgstr "Name >>%s<< passt mit keinem bekanntes Modell"
@@ -1030,8 +1030,9 @@ msgstr "Kein Speicherplatz vorhanden"
 
 #: camlibs/dimera/dimera3500.c:567 camlibs/dimera/dimera3500.c:603
 #: camlibs/konica/qm150.c:259 camlibs/panasonic/coolshot/library.c:375
-#: camlibs/samsung/samsung.c:214 camlibs/sipix/web2.c:175
-#: camlibs/smal/ultrapocket.c:127 camlibs/smal/ultrapocket.c:173
+#: camlibs/ricoh/g3.c:258 camlibs/samsung/samsung.c:214
+#: camlibs/sipix/web2.c:175 camlibs/smal/ultrapocket.c:127
+#: camlibs/smal/ultrapocket.c:173
 msgid "Downloading image..."
 msgstr "Lade Bild herunter..."
 
@@ -1200,7 +1201,7 @@ msgid "Camera sent unexpected byte 0x%02x."
 msgstr "Kamera hat unerwartetes Byte 0x%02x geschickt."
 
 #: camlibs/fuji/fuji.c:317 camlibs/konica/lowlevel.c:382
-#: camlibs/polaroid/pdc700.c:314
+#: camlibs/polaroid/pdc700.c:314 camlibs/ricoh/g3.c:252
 msgid "Downloading..."
 msgstr "Lade herunter..."
 
@@ -2428,15 +2429,15 @@ msgstr ""
 "Vielen Dank für ihre Nutzung von GPhoto2 und die\n"
 "Betriebssysteme UNIX/Linux.\n"
 
-#: camlibs/largan/lmini/largan.c:265
+#: camlibs/largan/lmini/largan.c:268
 msgid "There is nothing to summarize for this camera."
 msgstr "Es gibt für diese Kamera nichts zusammenzufassen."
 
-#: camlibs/largan/lmini/largan.c:277
+#: camlibs/largan/lmini/largan.c:280
 msgid "No manual"
 msgstr "Kein Handbuch"
 
-#: camlibs/largan/lmini/largan.c:285
+#: camlibs/largan/lmini/largan.c:288
 msgid ""
 "Largan driver\n"
 "Hubert Figuiere <hfiguiere@teaser.fr>\n"
@@ -3069,167 +3070,167 @@ msgid "The requested port type (%i) is not supported by this driver."
 msgstr ""
 "Der angeforderte Port-Typ (%i) wird von diesem Treiber nicht unterstützt."
 
-#: camlibs/ptp2/library.c:112
+#: camlibs/ptp2/library.c:115
 msgid "PTP Undefined Error"
 msgstr "PTP- Undefinierter Fehler"
 
-#: camlibs/ptp2/library.c:113
+#: camlibs/ptp2/library.c:116
 msgid "PTP OK!"
 msgstr "PTP-OK!"
 
-#: camlibs/ptp2/library.c:114
+#: camlibs/ptp2/library.c:117
 msgid "PTP General Error"
 msgstr "PTP-Allgemeiner Fehler"
 
-#: camlibs/ptp2/library.c:115
+#: camlibs/ptp2/library.c:118
 msgid "PTP Session Not Open"
 msgstr "PTP-Sitzung nicht geöffnet"
 
-#: camlibs/ptp2/library.c:116
+#: camlibs/ptp2/library.c:119
 msgid "PTP Invalid Transaction ID"
 msgstr "PTP-Fehlerhafte Transaktions-ID"
 
-#: camlibs/ptp2/library.c:117
+#: camlibs/ptp2/library.c:120
 msgid "PTP Operation Not Supported"
 msgstr "PTP-Operation nicht unterstützt"
 
-#: camlibs/ptp2/library.c:118
+#: camlibs/ptp2/library.c:121
 msgid "PTP Parameter Not Supported"
 msgstr "PTP-Parameter nicht unterstützt"
 
-#: camlibs/ptp2/library.c:119
+#: camlibs/ptp2/library.c:122
 msgid "PTP Incomplete Transfer"
 msgstr "PTP-Unvollständiger Transfer"
 
-#: camlibs/ptp2/library.c:120
+#: camlibs/ptp2/library.c:123
 msgid "PTP Invalid Storage ID"
 msgstr "PTP-Fehlerhafte Storage-ID"
 
-#: camlibs/ptp2/library.c:121
+#: camlibs/ptp2/library.c:124
 msgid "PTP Invalid Object Handle"
 msgstr "PTP-Ungültiges Object Handle"
 
-#: camlibs/ptp2/library.c:122
+#: camlibs/ptp2/library.c:125
 msgid "PTP Device Prop Not Supported"
 msgstr "PTP-Geräteeigenschaft nicht unterstützt"
 
-#: camlibs/ptp2/library.c:123
+#: camlibs/ptp2/library.c:126
 msgid "PTP Invalid Object Format Code"
 msgstr "PTP-Ungültiger Object Formatcode"
 
-#: camlibs/ptp2/library.c:124
+#: camlibs/ptp2/library.c:127
 msgid "PTP Store Full"
 msgstr "PTP-Speicher voll"
 
-#: camlibs/ptp2/library.c:125
+#: camlibs/ptp2/library.c:128
 msgid "PTP Object Write Protected"
 msgstr "PTP-Objekt schreibgeschützt"
 
-#: camlibs/ptp2/library.c:126
+#: camlibs/ptp2/library.c:129
 msgid "PTP Store Read Only"
 msgstr "PTP-Speicher-schreibgeschützt"
 
-#: camlibs/ptp2/library.c:127
+#: camlibs/ptp2/library.c:130
 msgid "PTP Access Denied"
 msgstr "PTP-Zugriff verweigert"
 
-#: camlibs/ptp2/library.c:128
+#: camlibs/ptp2/library.c:131
 msgid "PTP No Thumbnail Present"
 msgstr "PTP-Kein Thumbnail vorhanden"
 
-#: camlibs/ptp2/library.c:129
+#: camlibs/ptp2/library.c:132
 msgid "PTP Self Test Failed"
 msgstr "PTP-Selbsttest fehlgeschlagen"
 
-#: camlibs/ptp2/library.c:130
+#: camlibs/ptp2/library.c:133
 msgid "PTP Partial Deletion"
 msgstr "PTP-Partiell gelöscht"
 
-#: camlibs/ptp2/library.c:131
+#: camlibs/ptp2/library.c:134
 msgid "PTP Store Not Available"
 msgstr "PTP- Speicher nicht verfügbar"
 
-#: camlibs/ptp2/library.c:133
+#: camlibs/ptp2/library.c:136
 msgid "PTP Specification By Format Unsupported"
 msgstr "PTP- Spezifikation durch Format nicht unterstützt"
 
-#: camlibs/ptp2/library.c:134
+#: camlibs/ptp2/library.c:137
 msgid "PTP No Valid Object Info"
 msgstr "PTP-Keine gültige Object Information"
 
-#: camlibs/ptp2/library.c:135
+#: camlibs/ptp2/library.c:138
 msgid "PTP Invalid Code Format"
 msgstr "PTP-Ungültiges Codeformat"
 
-#: camlibs/ptp2/library.c:136
+#: camlibs/ptp2/library.c:139
 msgid "PTP Unknown Vendor Code"
 msgstr "PTP-Unbekannter Händlercode"
 
-#: camlibs/ptp2/library.c:138
+#: camlibs/ptp2/library.c:141
 msgid "PTP Capture Already Terminated"
 msgstr "PTP-Aufnahme bereits beendet"
 
-#: camlibs/ptp2/library.c:139
+#: camlibs/ptp2/library.c:142
 msgid "PTP Device Bus"
 msgstr "PTP-Device Bus"
 
-#: camlibs/ptp2/library.c:140
+#: camlibs/ptp2/library.c:143
 msgid "PTP Invalid Parent Object"
 msgstr "PTP-Ungültiges Vaterobjekt"
 
-#: camlibs/ptp2/library.c:141
+#: camlibs/ptp2/library.c:144
 msgid "PTP Invalid Device Prop Format"
 msgstr "PTP-Ungültiges Geräteeigenschaften Format"
 
-#: camlibs/ptp2/library.c:142
+#: camlibs/ptp2/library.c:145
 msgid "PTP Invalid Device Prop Value"
 msgstr "PTP-Ungültiger Geräteeigenschaftswert"
 
-#: camlibs/ptp2/library.c:143
+#: camlibs/ptp2/library.c:146
 msgid "PTP Invalid Parameter"
 msgstr "PTP-Ungültiger Parameter"
 
-#: camlibs/ptp2/library.c:144
+#: camlibs/ptp2/library.c:147
 msgid "PTP Session Already Opened"
 msgstr "PTP- Sitzung bereits geöffnet."
 
-#: camlibs/ptp2/library.c:145
+#: camlibs/ptp2/library.c:148
 msgid "PTP Transaction Canceled"
 msgstr "PTP-Transaktion abgebrochen"
 
-#: camlibs/ptp2/library.c:147
+#: camlibs/ptp2/library.c:150
 msgid "PTP Specification Of Destination Unsupported"
 msgstr "PTP-Spezifikation des Zieles nicht unterstützt"
 
-#: camlibs/ptp2/library.c:148
+#: camlibs/ptp2/library.c:151
 msgid "PTP EK Filename Required"
 msgstr "PTP-EK-Filename erforderlich"
 
-#: camlibs/ptp2/library.c:149
+#: camlibs/ptp2/library.c:152
 msgid "PTP EK Filename Conflicts"
 msgstr "PTP-EK Filenamenskonflikt"
 
-#: camlibs/ptp2/library.c:150
+#: camlibs/ptp2/library.c:153
 msgid "PTP EK Filename Invalid"
 msgstr "PTP-EK-Filename ungültig"
 
-#: camlibs/ptp2/library.c:152
+#: camlibs/ptp2/library.c:155
 msgid "PTP I/O error"
 msgstr "PTP-Ein/Ausgabefehler"
 
-#: camlibs/ptp2/library.c:153
+#: camlibs/ptp2/library.c:156
 msgid "PTP Error: bad parameter"
 msgstr "PTP- Fehler: Ungültiger Parameter"
 
-#: camlibs/ptp2/library.c:154
+#: camlibs/ptp2/library.c:157
 msgid "PTP Protocol error, data expected"
 msgstr "PTP- Protokollfehler: Daten erwartet"
 
-#: camlibs/ptp2/library.c:155
+#: camlibs/ptp2/library.c:158
 msgid "PTP Protocol error, response expected"
 msgstr "PTP-Protokollfehler: Antwort erwartet"
 
-#: camlibs/ptp2/library.c:585
+#: camlibs/ptp2/library.c:595
 msgid ""
 "PTP2 driver\n"
 "(c)2001-2003 by Mariusz Woloszyn <emsi@ipartners.pl>.\n"
@@ -3239,7 +3240,7 @@ msgstr ""
 "(c) 2001-2003 Mariusz Woloszyn <emsi@ipartners.pl>.\n"
 "Viel Spaß!"
 
-#: camlibs/ptp2/library.c:622
+#: camlibs/ptp2/library.c:670
 #, c-format
 msgid ""
 "Model: %s\n"
@@ -3254,23 +3255,23 @@ msgstr ""
 "Händler Kennung: 0x%08x\n"
 "Händler Beschreibung: %s\n"
 
-#: camlibs/ptp2/library.c:670
+#: camlibs/ptp2/library.c:718
 msgid "Number of values"
 msgstr "Anzahl der Werte"
 
-#: camlibs/ptp2/library.c:674
+#: camlibs/ptp2/library.c:722
 msgid "Supported values"
 msgstr "Unterstützte Werte"
 
-#: camlibs/ptp2/library.c:683
+#: camlibs/ptp2/library.c:731
 msgid "Current value"
 msgstr "Aktueller Wert"
 
-#: camlibs/ptp2/library.c:1161
+#: camlibs/ptp2/library.c:1218
 msgid "Initializing Camera"
 msgstr "Initialisiere Kamera"
 
-#: camlibs/ptp2/library.c:1234
+#: camlibs/ptp2/library.c:1291
 msgid "PTP is implemented for USB cameras only."
 msgstr "PTP- Ist nur für USB Kameras implementiert."
 
@@ -3433,6 +3434,94 @@ msgstr "PTP: Protokollfehler: Daten erwartet"
 #: camlibs/ptp2/ptp.c:947
 msgid "PTP: Protocol error, response expected"
 msgstr "PTP: Protokollfehler: Antwort erwartet"
+
+#: camlibs/ricoh/g3.c:254
+#, fuzzy
+msgid "Downloading movie..."
+msgstr "Lade Datei herunter..."
+
+#: camlibs/ricoh/g3.c:260
+#, fuzzy
+msgid "Downloading audio..."
+msgstr "Lade herunter..."
+
+#: camlibs/ricoh/g3.c:275
+#, fuzzy
+msgid "Downloading EXIF data..."
+msgstr "Lade Daten herunter..."
+
+#: camlibs/ricoh/g3.c:277 camlibs/ricoh/g3.c:296
+#, fuzzy, c-format
+msgid "No EXIF data available for %s."
+msgstr "nicht verfügbar: %s"
+
+#: camlibs/ricoh/g3.c:381
+#, fuzzy
+msgid "Could not delete file."
+msgstr "Konnte Datei »%s« nicht finden."
+
+#: camlibs/ricoh/g3.c:408
+#, fuzzy
+msgid "Could not remove directory."
+msgstr "Konnte Verzeichnis >>%s<< nicht löschen."
+
+#: camlibs/ricoh/g3.c:435
+#, fuzzy
+msgid "Could not create directory."
+msgstr "Konnte Verzeichnis >>%s<< nicht anlegen."
+
+#: camlibs/ricoh/g3.c:454
+#, fuzzy, c-format
+msgid "Version: %s\n"
+msgstr "Version: "
+
+#: camlibs/ricoh/g3.c:459
+#, fuzzy, c-format
+msgid "RTC Status: %d\n"
+msgstr "Kartenstatus:\t\t"
+
+#: camlibs/ricoh/g3.c:465
+#, fuzzy, c-format
+msgid "Camera time: %s %s\n"
+msgstr "%sKamera-ID: %s\n"
+
+#: camlibs/ricoh/g3.c:471
+#, fuzzy, c-format
+msgid "Camera ID: %s\n"
+msgstr "%sKamera-ID: %s\n"
+
+#: camlibs/ricoh/g3.c:477
+#, fuzzy
+msgid "No SD Card inserted.\n"
+msgstr "Speicherkarte nicht unterstützt."
+
+#: camlibs/ricoh/g3.c:480
+#, fuzzy, c-format
+msgid "SD Card ID: %s\n"
+msgstr "%sKamera-ID: %s\n"
+
+#: camlibs/ricoh/g3.c:488
+#, fuzzy, c-format
+msgid "Photos on camera: %d\n"
+msgstr "Speicher in Kamera: %d Mbit.\n"
+
+#: camlibs/ricoh/g3.c:494
+#, c-format
+msgid "SD memory: %d MB total, %d MB free.\n"
+msgstr ""
+
+#: camlibs/ricoh/g3.c:501
+#, c-format
+msgid "Internal memory: %d MB total, %d MB free.\n"
+msgstr ""
+
+#: camlibs/ricoh/g3.c:511
+msgid ""
+"Ricoh Caplio G3.\n"
+"Marcus Meissner <marcus@jet.franken.de>\n"
+"Reverse engineered using USB Snoopy, looking\n"
+"at the firmware update image and wild guessing.\n"
+msgstr ""
 
 #: camlibs/ricoh/library.c:215
 msgid ""
