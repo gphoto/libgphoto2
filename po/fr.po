@@ -83,7 +83,7 @@ msgid ""
 "status %i"
 msgstr ""
 "canon_int_capture_image: appel initial à canon_usb_list_all_dirs() en erreur "
-"avec un statut %i"
+"avec un état %i"
 
 #: camlibs/canon/canon.c:1069
 #, c-format
@@ -92,7 +92,7 @@ msgid ""
 "i"
 msgstr ""
 "canon_int_capture_image: appel final à canon_usb_list_all_dirs() en erreur "
-"avec un statut %i"
+"avec un état %i"
 
 #: camlibs/canon/canon.c:1188
 #, c-format
@@ -169,7 +169,7 @@ msgid ""
 " (i.e. no disk activity)\n"
 msgstr ""
 "Pour le modèle A50, 115200 ne sera pas plus rapide que 57600\n"
-"Les répertoires ne sont PAS supportés\n"
+"Les répertoires ne sont PAS gérés\n"
 "si vous rencontrez beaucoup d'erreurs de transmission, essayez d'avoir votre "
 "ordinateur aussi calme que possible (c-à-d sans activité disque)\n"
 
@@ -252,7 +252,7 @@ msgstr "Indisponible : %s"
 #: camlibs/canon/library.c:813
 #, c-format
 msgid "%s (host time %s%i seconds)"
-msgstr "%s (heure du PC %s%i seconds)"
+msgstr "%s (heure du PC %s%i secondes)"
 
 #: camlibs/canon/library.c:823
 #, c-format
@@ -270,13 +270,13 @@ msgid ""
 "Time: %s\n"
 msgstr ""
 "\n"
-"Indentification de l'appareil :\n"
+"Identification de l'appareil :\n"
 "  Modèle : %s\n"
 "  Propriétaire : %s\n"
 "\n"
 "État énergie : %s\n"
 "\n"
-"Information du disque Flash :\n"
+"Information sur le disque Flash :\n"
 "%s\n"
 "\n"
 "Heure : %s\n"
@@ -311,7 +311,7 @@ msgstr "Erreur à l'effacement de la vignette associée"
 msgid ""
 "Speeds greater than 57600 are not supported for uploading to this camera"
 msgstr ""
-"Les vitesses supérieures à 57600 ne sont pas supportées pour télécharger "
+"Les vitesses supérieures à 57600 ne sont pas gérées pour télécharger "
 "vers l'appareil"
 
 #: camlibs/canon/library.c:1041 camlibs/canon/library.c:1168
@@ -407,7 +407,7 @@ msgstr "ne peut mettre à l'heure"
 #: camlibs/canon/library.c:1573
 #, c-format
 msgid "Unsupported port type %i = 0x%x given. Initialization impossible."
-msgstr "Port de type non-supporté, reçu %i = 0x%x. Initialisation impossible."
+msgstr "Port de type non géré, reçu %i = 0x%x. Initialisation impossible."
 
 #: camlibs/canon/serial.c:699 camlibs/canon/serial.c:764
 msgid "Battery exhausted, camera off."
@@ -510,7 +510,7 @@ msgstr "Pas de réponse de l'appareil"
 
 #: camlibs/canon/serial.c:1358
 msgid "Unrecognized response"
-msgstr "Réponse non-reconnue"
+msgstr "Réponse non reconnue"
 
 #: camlibs/canon/serial.c:1378
 #, c-format
@@ -544,15 +544,15 @@ msgstr "Erreur au changement de vitesse"
 
 #: camlibs/canon/serial.c:1457
 msgid "Error waiting for ACK during initialization retrying"
-msgstr "Erreur à l'attente de l'accusé-réception à la ré-initialisation"
+msgstr "Erreur à l'attente de l'accusé de réception à la réinitialisation"
 
 #: camlibs/canon/serial.c:1463
 msgid "Error waiting ACK during initialization"
-msgstr "Erreur à l'attente de l'accusé-réception à l'initialisation"
+msgstr "Erreur à l'attente de l'accusé de réception à l'initialisation"
 
 #: camlibs/canon/serial.c:1467
 msgid "Connected to camera"
-msgstr "Connecté à l'appareil-photo."
+msgstr "Connecté à l'appareil photo."
 
 #: camlibs/canon/serial.c:1505
 msgid "ERROR: a fatal error condition was detected, can't continue "
@@ -743,7 +743,7 @@ msgid ""
 "File was too big. You may have to turn your camera off and back on before "
 "uploading more files."
 msgstr ""
-"Fichier trop grand. Il est posssible que vous ayez besoin d'eteindre puis "
+"Fichier trop grand. Il est possible que vous ayez besoin d'eteindre puis de "
 "rallumer l'appareil avant de charger d'autres fichiers."
 
 #: camlibs/canon/usb.c:1619
@@ -792,7 +792,7 @@ msgid ""
 "canon_usb_set_file_attributes: canon_usb_dialogue returned error status 0x%"
 "08x from camera"
 msgstr ""
-"canon_usb_set_file_attributes: canon_usb_dialogue renvoie un statut d'erreur "
+"canon_usb_set_file_attributes: canon_usb_dialogue renvoie un état d'erreur "
 "0x%08x de l'appareil"
 
 #: camlibs/canon/usb.c:1835
@@ -807,7 +807,7 @@ msgstr "Nom \"%s\" de l'appareil ne correspond à aucun appareil connu"
 
 #: camlibs/digita/digita.c:331
 msgid "Unsupported image type"
-msgstr "Type d'image non supporté"
+msgstr "Type d'image non géré"
 
 #: camlibs/digita/digita.c:389
 #, c-format
@@ -827,7 +827,7 @@ msgstr ""
 msgid ""
 "Only root folder is supported - you requested a file listing for folder '%s'."
 msgstr ""
-"Seul le dossier racine est supporté, vous avez demandé la liste pour le "
+"Seul le dossier racine est géré, vous avez demandé la liste pour le "
 "dossier '%s'."
 
 #: camlibs/dimera/dimera3500.c:169 camlibs/dimera/dimera3500.c:363
@@ -836,7 +836,7 @@ msgstr "Problème à l'obtention du nombre de fichiers"
 
 #: camlibs/dimera/dimera3500.c:213
 msgid "Image type is not supported"
-msgstr "Type d'image non supporté"
+msgstr "Type d'image non géré"
 
 #: camlibs/dimera/dimera3500.c:268 camlibs/dimera/dimera3500.c:514
 msgid "Problem getting image information"
@@ -844,7 +844,7 @@ msgstr "Problème à l'obtention des informations sur l'image"
 
 #: camlibs/dimera/dimera3500.c:299
 msgid "Capture type is not supported"
-msgstr "Type de capture non supporté"
+msgstr "Type de capture non géré"
 
 #: camlibs/dimera/dimera3500.c:384
 #, c-format
@@ -1053,11 +1053,11 @@ msgstr "Problème à la remise à zéro de l'appareil"
 #: camlibs/dimera/dimera3500.c:908
 msgid "Problem setting camera communication speed"
 msgstr ""
-"Problème à la configuration du débt de la communication vers l'appareil"
+"Problème à la configuration du débit de la communication vers l'appareil"
 
 #: camlibs/dimera/dimera3500.c:927
 msgid "Looks like a modem, not a camera"
-msgstr "Ça ressemble à un modem, pas un appareil-photo"
+msgstr "Ça ressemble à un modem, pas à un appareil photo"
 
 #: camlibs/directory/directory.c:168
 #, c-format
@@ -1143,7 +1143,7 @@ msgstr "Réception d'en-tête incongrue (0x%02x, 0x%02x)."
 #: camlibs/fuji/fuji.c:214
 #, c-format
 msgid "Wrong escape sequence: expected 0x%02x, got 0x%02x."
-msgstr "Mauvaise séquence d'échapement: attendue 0x%02x, reçue 0x%02x."
+msgstr "Mauvaise séquence d'échappement: attendue 0x%02x, reçue 0x%02x."
 
 #: camlibs/fuji/fuji.c:231
 #, c-format
@@ -1158,7 +1158,7 @@ msgstr "Mauvaise donnée - reçue 0x%02x, attendue 0x%02x ou 0x%02x."
 #: camlibs/fuji/fuji.c:251
 #, c-format
 msgid "Bad checksum - got 0x%02x, expected 0x%02x."
-msgstr "Mauvaise somme de controle - obtenue 0x%02x, attendue 0x%02x."
+msgstr "Mauvaise somme de contrôle - obtenue 0x%02x, attendue 0x%02x."
 
 #: camlibs/fuji/fuji.c:289 camlibs/fuji/fuji.c:728
 msgid "Camera rejected the command."
@@ -1220,7 +1220,7 @@ msgstr ""
 #: camlibs/fuji/library.c:317
 #, c-format
 msgid "Bit rate %i is not supported."
-msgstr "Vitesse %i non supportée."
+msgstr "Vitesse %i non gérée."
 
 #: camlibs/fuji/library.c:365
 msgid "Configuration for your FUJI camera"
@@ -1270,7 +1270,7 @@ msgstr ""
 #, c-format
 msgid "Unsupported port type: %d.This driver only works with USBcameras.\n"
 msgstr ""
-"Type de port non supporté: %d. Ce pilote ne marche qu'avec des appareils "
+"Type de port non géré : %d. Ce pilote ne marche qu'avec des appareils "
 "USB.\n"
 
 #: camlibs/gsmart300/library.c:216 camlibs/spca50x/library.c:604
@@ -1289,7 +1289,7 @@ msgstr ""
 #: camlibs/jamcam/jamcam.c:284
 #, c-format
 msgid "Frames Taken     : %4d\n"
-msgstr "Prises de vue    : %4d\n"
+msgstr "Vues prises     : %4d\n"
 
 #: camlibs/jamcam/jamcam.c:295
 msgid "jamcam library v"
@@ -1385,7 +1385,7 @@ msgid ""
 "download the \"kdc2tiff\" program. It is available from http://kdc2tiff."
 "sourceforge.net"
 msgstr ""
-"L'appareil-photo Kodak DC120 utilise le format de fichier KDC pour "
+"L'appareil photo Kodak DC120 utilise le format de fichier KDC pour "
 "enregistrer les fichiers. Si vous voulez voir les fichiers que vous "
 "téléchargez de l'appareil, vous aurez besoin de télécharger l'utilitaire "
 "\"kdc2tiff\". Vous le trouverez à http://kdc2tiff.sourceforge.net"
@@ -1397,7 +1397,7 @@ msgid ""
 "Camera Library for the Kodak DC120 camera.\n"
 "(by popular demand)."
 msgstr ""
-"Bibliothèque pour l'appareil-photo Kodak DC120\n"
+"Bibliothèque pour l'appareil photo Kodak DC120\n"
 "Scott Fritzinger <scottf@gphoto.net>\n"
 "Bibliothèque pour le Kodak DC120\n"
 "Scott Fritzinger <scottf@gphoto.net>\n"
@@ -1548,7 +1548,7 @@ msgstr "Aucune"
 
 #: camlibs/kodak/dc210/dc210.c:269 camlibs/kodak/dc210/dc210.c:422
 msgid "Red eye flash"
-msgstr "Flash anti yeux rouges"
+msgstr "Flash anti-yeux rouges"
 
 #: camlibs/kodak/dc210/dc210.c:271 camlibs/kodak/dc210/dc210.c:275
 #: camlibs/konica/library.c:683 camlibs/konica/library.c:690
@@ -1707,7 +1707,7 @@ msgid ""
 "Camera Library for the Kodak DC240, DC280, DC3400 and DC5000 cameras.\n"
 "Rewritten and updated for gPhoto2."
 msgstr ""
-"Bibliothèque pour l'appareil-photo Kodak DC240\n"
+"Bibliothèque pour l'appareil photo Kodak DC240\n"
 "Scott Fritzinger <scottf@gphoto.net> et Hubert Figuiere <hfiguiere@teaser."
 "fr>\n"
 "Bibliothèque pour les appareils-photo Kodak DC240, DC280, DC3400 et DC5000.\n"
@@ -1747,7 +1747,7 @@ msgstr "Carte n'est pas ouverte"
 
 #: camlibs/kodak/dc240/library.c:612
 msgid "Card is not formatted"
-msgstr "La carte n'est pas formattée"
+msgstr "La carte n'est pas formatée"
 
 #: camlibs/kodak/dc240/library.c:616
 msgid "No card"
@@ -1764,7 +1764,7 @@ msgstr ""
 
 #: camlibs/kodak/dc3200/dc3200.c:142
 msgid "camera inactive for > 9 seconds, re-initing.\n"
-msgstr "appareil inactif depuis plus de 9s., ré-initialisation.\n"
+msgstr "appareil inactif depuis plus de 9s., réinitialisation.\n"
 
 #: camlibs/kodak/dc3200/dc3200.c:431
 msgid ""
@@ -1778,9 +1778,9 @@ msgstr ""
 "Problèmes connus :\n"
 "\n"
 "1. Si le Kodak DC3200 ne reçoit pas une commande au moins toutes les 10    "
-"secondes, il part en time-out, et doit être ré-initialisé. Si vous    "
+"secondes, il part en time-out, et doit être réinitialisé. Si vous    "
 "remarquez que l'appareil ne répond plus, re-sélectionnez l'appareil.    Cela "
-"provoquera sa ré-initialisation."
+"provoquera sa réinitialisation."
 
 #: camlibs/kodak/dc3200/dc3200.c:444
 msgid ""
@@ -1824,7 +1824,7 @@ msgstr "Pas de carte."
 
 #: camlibs/konica/konica.c:83
 msgid "Card not supported."
-msgstr "Type de capture non supporté."
+msgstr "Type de capture non géré."
 
 #: camlibs/konica/konica.c:86
 msgid "Card removed during access."
@@ -1836,7 +1836,7 @@ msgstr "Numéro d'image invalide."
 
 #: camlibs/konica/konica.c:92
 msgid "Card can not be written."
-msgstr "La carte n'est pas formattée."
+msgstr "La carte n'est pas formatée."
 
 #: camlibs/konica/konica.c:95
 msgid "Card is write protected."
@@ -1860,7 +1860,7 @@ msgstr "Erreur d'autofocus."
 
 #: camlibs/konica/konica.c:110
 msgid "System error."
-msgstr "Erreur systeme."
+msgstr "Erreur système."
 
 #: camlibs/konica/konica.c:113
 msgid "Illegal parameter."
@@ -1902,8 +1902,8 @@ msgid ""
 "error: (0x%x,0x%x). Thank you very much!"
 msgstr ""
 "L'appareil vient de retourner une erreur inconnue. Merci d'en informer "
-"l'équipe de dévelopement <gphoto-devel@lists.sourceforge.net> en expliquant "
-"le moyen de reproduire cette erreur : (0x%x,0x%x). Merci d'avance!"
+"l'équipe de développement <gphoto-devel@lists.sourceforge.net> en expliquant "
+"le moyen de reproduire cette erreur : (0x%x,0x%x). Merci d'avance !"
 
 #: camlibs/konica/library.c:158 camlibs/pccam300/library.c:125
 msgid "Getting file list..."
@@ -1955,7 +1955,7 @@ msgid ""
 "Lutz Mueller <lutz@users.sourceforge.net>\n"
 "Support for all Konica and several HP cameras."
 msgstr ""
-"Bibiliothèque Konica\n"
+"Bibliothèque Konica\n"
 "Lutz Müller <lutz@users.sourceforge.net>\n"
 "Supporte tous les appareils Konica et certains appareils HP."
 
@@ -1970,7 +1970,7 @@ msgstr "Configuration Konica"
 #: camlibs/konica/library.c:663 camlibs/konica/library.c:874
 #: camlibs/konica/qm150.c:760
 msgid "Persistent Settings"
-msgstr "Paramètres persistents"
+msgstr "Paramètres persistants"
 
 #: camlibs/konica/library.c:667 camlibs/konica/library.c:878
 #: camlibs/konica/qm150.c:764 camlibs/polaroid/pdc700.c:1006
@@ -2154,7 +2154,7 @@ msgstr "Les données ont été corrompues."
 #: camlibs/konica/qm150.c:404
 #, c-format
 msgid "Image type %d is not supported by this camera !"
-msgstr "Le type de photo %d n'est pas supporté par cet appareil photo !"
+msgstr "Le type de photo %d n'est pas géré par cet appareil photo !"
 
 #: camlibs/konica/qm150.c:442
 #, c-format
@@ -2430,7 +2430,7 @@ msgid ""
 "Hardware Revision:\t%s\n"
 "Firmware Revision:\t%s\n"
 msgstr ""
-"Model:\t\t\tMinolta Dimage V (%s)\n"
+"Modèle :\t\t\tMinolta Dimage V (%s)\n"
 "Revision de matériel :\t%s\n"
 "Revision de microcode : \t%s\n"
 
@@ -2627,7 +2627,7 @@ msgstr "Résumé pour le Mustek MDC800:\n"
 
 #: camlibs/mustek/mdc800.c:237
 msgid "no status reported."
-msgstr "Pas de retour du status."
+msgstr "Pas de retour de l'état."
 
 #: camlibs/mustek/mdc800.c:243
 msgid "Compact Flash Card detected\n"
@@ -2728,7 +2728,7 @@ msgstr ""
 "Bibliothèque gPhoto pour l'appareil Panasonic DC1000\n"
 "Mariusz Zynel <mariusz@mizar.org>\n"
 "\n"
-"Basée sur le programme on dc1000 program écrit par\n"
+"Basée sur le programme dc1000 écrit par\n"
 "Fredrik Roubert <roubert@df.lth.se> et\n"
 "Galen Brooks <galen@nine.com>."
 
@@ -2776,7 +2776,7 @@ msgstr ""
 "stockées au format JPEG sur une carte flash interne, et peuvent être "
 "transférées à un ordinateur à travers le port série intégré. Les fichiers "
 "sont enregistrées dans l'une des deux résolutions : NORMALE (320x240) ou "
-"FINE (640x480). Le capteur CCD derrière la lentille possède seulement 300 "
+"FINE (640x480). Le capteur CCD derrière l'objectif possède seulement 300 "
 "000 pixels, et de ce fait ne produit que des images de basse qualité."
 
 #: camlibs/panasonic/l859/l859.c:602
@@ -3040,14 +3040,14 @@ msgstr ""
 "Information : %s\n"
 "Retardateur : %s\n"
 "LCD : %s\n"
-"Exticntion automatique : %i minutes\n"
+"Extinction automatique : %i minutes\n"
 "Source énergie : %s"
 
 #: camlibs/polaroid/pdc700.c:1231
 #, c-format
 msgid "The requested port type (%i) is not supported by this driver."
 msgstr ""
-"Le type de port demandé (%i) n'est pas supporté par ce pilote logiciel."
+"Le type de port demandé (%i) n'est pas géré par ce pilote logiciel."
 
 #: camlibs/ptp2/library.c:112
 msgid "PTP Undefined Error"
@@ -3063,7 +3063,7 @@ msgstr "PTP Erreur générale"
 
 #: camlibs/ptp2/library.c:115
 msgid "PTP Session Not Open"
-msgstr "PTP Session non-ouverte"
+msgstr "PTP Session non ouverte"
 
 #: camlibs/ptp2/library.c:116
 msgid "PTP Invalid Transaction ID"
@@ -3071,11 +3071,11 @@ msgstr "PTP ID de transaction invalide"
 
 #: camlibs/ptp2/library.c:117
 msgid "PTP Operation Not Supported"
-msgstr "PTP Opération non supportée"
+msgstr "PTP Opération non gérée"
 
 #: camlibs/ptp2/library.c:118
 msgid "PTP Parameter Not Supported"
-msgstr "PTP Paramètre non supporté"
+msgstr "PTP Paramètre non géré"
 
 #: camlibs/ptp2/library.c:119
 msgid "PTP Incomplete Transfer"
@@ -3091,7 +3091,7 @@ msgstr "PTP identificateur d'objet invalide"
 
 #: camlibs/ptp2/library.c:122
 msgid "PTP Device Prop Not Supported"
-msgstr "PTP Propriété de périphérique non supportée"
+msgstr "PTP Propriété de périphérique non gérée"
 
 #: camlibs/ptp2/library.c:123
 msgid "PTP Invalid Object Format Code"
@@ -3131,7 +3131,7 @@ msgstr "PTP espace non disponible"
 
 #: camlibs/ptp2/library.c:133
 msgid "PTP Specification By Format Unsupported"
-msgstr "PTP Spécification de format non supportée"
+msgstr "PTP Spécification de format non gérée"
 
 #: camlibs/ptp2/library.c:134
 msgid "PTP No Valid Object Info"
@@ -3179,7 +3179,7 @@ msgstr "PTP Opération annulée"
 
 #: camlibs/ptp2/library.c:147
 msgid "PTP Specification Of Destination Unsupported"
-msgstr "PTP Spécification de la destination non supportée "
+msgstr "PTP Spécification de la destination non gérée "
 
 #: camlibs/ptp2/library.c:148
 msgid "PTP EK Filename Required"
@@ -3207,7 +3207,7 @@ msgstr "PTP Erreur de protocole, données attendues"
 
 #: camlibs/ptp2/library.c:155
 msgid "PTP Protocol error, response expected"
-msgstr "PTP Errur de protocole, réponse attendue"
+msgstr "PTP Erreur de protocole, réponse attendue"
 
 #: camlibs/ptp2/library.c:585
 msgid ""
@@ -3240,7 +3240,7 @@ msgstr "Nombre de valeurs"
 
 #: camlibs/ptp2/library.c:674
 msgid "Supported values"
-msgstr "Valeurs supportées"
+msgstr "Valeurs gérées"
 
 #: camlibs/ptp2/library.c:683
 msgid "Current value"
@@ -3268,7 +3268,7 @@ msgstr "PTP Erreur générale"
 
 #: camlibs/ptp2/ptp.c:907
 msgid "PTP: Session Not Open"
-msgstr "PTP Session non-ouverte"
+msgstr "PTP Session non ouverte"
 
 #: camlibs/ptp2/ptp.c:908
 msgid "PTP: Invalid Transaction ID"
@@ -3276,11 +3276,11 @@ msgstr "PTP ID de transaction invalide"
 
 #: camlibs/ptp2/ptp.c:909
 msgid "PTP: Operation Not Supported"
-msgstr "PTP Opération non supportée"
+msgstr "PTP Opération non gérée"
 
 #: camlibs/ptp2/ptp.c:910
 msgid "PTP: Parameter Not Supported"
-msgstr "PTP Paramètre non supporté"
+msgstr "PTP Paramètre non géré"
 
 #: camlibs/ptp2/ptp.c:911
 msgid "PTP: Incomplete Transfer"
@@ -3288,7 +3288,7 @@ msgstr "PTP Transfert incomplet"
 
 #: camlibs/ptp2/ptp.c:912
 msgid "PTP: Invalid Storage ID"
-msgstr "PTP ID de sockage invalide"
+msgstr "PTP ID de stockage invalide"
 
 #: camlibs/ptp2/ptp.c:913
 msgid "PTP: Invalid Object Handle"
@@ -3296,7 +3296,7 @@ msgstr "PTP identificateur d'objet invalide"
 
 #: camlibs/ptp2/ptp.c:914
 msgid "PTP: Device Prop Not Supported"
-msgstr "PTP Propriété de périphérique non supportée"
+msgstr "PTP Propriété de périphérique non gérée"
 
 #: camlibs/ptp2/ptp.c:915
 msgid "PTP: Invalid Object Format Code"
@@ -3336,7 +3336,7 @@ msgstr "PTP Espace non disponible"
 
 #: camlibs/ptp2/ptp.c:925
 msgid "PTP: Specification By Format Unsupported"
-msgstr "PTP Spécification de format non supportée"
+msgstr "PTP Spécification de format non gérée"
 
 #: camlibs/ptp2/ptp.c:926
 msgid "PTP: No Valid Object Info"
@@ -3384,7 +3384,7 @@ msgstr "PTP: opération annulée"
 
 #: camlibs/ptp2/ptp.c:939
 msgid "PTP: Specification Of Destination Unsupported"
-msgstr "PTP: Spécification de la destination non supportée "
+msgstr "PTP: Spécification de la destination non gérée "
 
 #: camlibs/ptp2/ptp.c:940
 msgid "PTP: EK Filename Required"
@@ -3591,7 +3591,7 @@ msgstr "Compression"
 #: camlibs/ricoh/library.c:561
 #, c-format
 msgid "Speed %i is not supported!"
-msgstr "La vitesse %i n'est pas supportée!"
+msgstr "La vitesse %i n'est pas gérée !"
 
 #: camlibs/ricoh/ricoh.c:66
 #, fuzzy, c-format
@@ -3710,7 +3710,7 @@ msgstr "Mode couleur"
 #: camlibs/sierra/sierra.c:1451 camlibs/sierra/sierra.c:1460
 #: camlibs/sierra/sierra.c:1687
 msgid "Red-eye Reduction"
-msgstr "Réduction yeux rouges"
+msgstr "Réduction des yeux rouges"
 
 #: camlibs/sierra/epson-desc.c:155 camlibs/sierra/sierra.c:942
 #: camlibs/sierra/sierra.c:953 camlibs/sierra/sierra.c:1250
@@ -3748,7 +3748,7 @@ msgstr "Économie d'énergie pour l'appareil (secondes)"
 #: camlibs/sierra/sierra.c:1302 camlibs/sierra/sierra.c:1501
 #: camlibs/sierra/sierra.c:1714
 msgid "Lens Mode"
-msgstr "Mode lentille"
+msgstr "Mode de l'objectif"
 
 #: camlibs/sierra/epson-desc.c:233 camlibs/sierra/sierra.c:1597
 #: camlibs/sierra/sierra.c:1606 camlibs/sierra/sierra.c:1783
@@ -3918,7 +3918,7 @@ msgstr "Envoi des données..."
 msgid ""
 "recursive calls are not supported by the sierra driver! Please contact %s."
 msgstr ""
-"Les appels récursifs ne sont pas supportés par le pilote sierra ! Contactez "
+"Les appels récursifs ne sont pas gérées par le pilote sierra ! Contactez "
 "<gphoto-devel@lists.sourceforge.net>."
 
 #: camlibs/sierra/library.c:1251
@@ -4079,7 +4079,7 @@ msgstr "Zoom numérique"
 
 #: camlibs/sierra/nikon-desc.c:523
 msgid "Misc exposure/lense settings"
-msgstr "Paramètres divers d'exposition et de lentille"
+msgstr "Paramètres divers d'exposition et d'objectif"
 
 #: camlibs/sierra/nikon-desc.c:546
 msgid "Auto exposure lock"
@@ -4264,7 +4264,7 @@ msgstr "Impossible d'obtenir le nom du répertoire contenant les images"
 #: camlibs/sierra/sierra.c:713
 #, c-format
 msgid "Upload is supported into the '%s' folder only"
-msgstr "Le téléchargement est supporté uniquement dans le répertoire '%s'"
+msgstr "Le téléchargement est géré uniquement dans le répertoire '%s'"
 
 #: camlibs/sierra/sierra.c:841 camlibs/sierra/sierra.c:850
 #: camlibs/sierra/sierra.c:1179
@@ -4339,7 +4339,7 @@ msgstr "Infini/Fish-eye"
 # Translation thanks to Martin Kroeker. [Colin]
 #: camlibs/sierra/sierra.c:1053 camlibs/sierra/sierra.c:1320
 msgid "Spot Metering Mode"
-msgstr "Mode compte-fil"
+msgstr "Mode macro"
 
 #: camlibs/sierra/sierra.c:1076 camlibs/sierra/sierra.c:1082
 msgid "1x"
@@ -4363,7 +4363,7 @@ msgid ""
 "How long will it take until the camera powers off when connected to the "
 "computer?"
 msgstr ""
-"Combien de temps cela prendra-t'il jusqu'à l'extinction de l'appareil quand "
+"Combien de temps cela prendra-t-il jusqu'à l'extinction de l'appareil quand "
 "il est connecté à l'ordinateur ?"
 
 #: camlibs/sierra/sierra.c:1121 camlibs/sierra/sierra.c:1364
@@ -4376,7 +4376,7 @@ msgid ""
 "How long will it take until the camera powers off when not connected to the "
 "computer?"
 msgstr ""
-"Combien de temps cela prendra-t'il jusqu'à l'extinction de l'appareil quand "
+"Combien de temps cela prendra-t-il jusqu'à l'extinction de l'appareil quand "
 "il n'est pas connecté à l'ordinateur ?"
 
 #: camlibs/sierra/sierra.c:1145 camlibs/sierra/sierra.c:1383
@@ -4471,7 +4471,7 @@ msgstr "%sRévision du logiciel : %s\n"
 #: camlibs/sierra/sierra.c:1874
 #, c-format
 msgid "%sFrames Taken: %i\n"
-msgstr "%sPrises de vue : %i\n"
+msgstr "%sVues prises : %i\n"
 
 # Haesslich... [Colin]
 #: camlibs/sierra/sierra.c:1876
@@ -4715,7 +4715,7 @@ msgstr ""
 #, c-format
 msgid "Unsupported port type: %d. This driver only works with USB cameras.\n"
 msgstr ""
-"Type de port non supporté: %d. Ce pilote ne marche qu'avec des appareils "
+"Type de port non géré : %d. Ce pilote ne marche qu'avec des appareils "
 "USB.\n"
 
 #: camlibs/stv0674/stv0674.c:207
@@ -5266,7 +5266,7 @@ msgstr "Erreur inconnue"
 #~ "Basé sur l'interface ligne de commande chotplay\n"
 #~ "de Ken-ichi Hayashi\n"
 #~ "\n"
-#~ "Ce pilote peut ne pas fonctionner, vous avez été avertis.\n"
+#~ "Ce pilote peut ne pas fonctionner, vous avez été averti.\n"
 
 #~ msgid "Error opening camera.\n"
 #~ msgstr "Problème à l'ouverture de l'appareil.\n"
