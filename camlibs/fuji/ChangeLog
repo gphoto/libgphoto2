@@ -1,5 +1,9 @@
 2002-04-21  Lutz Müller <lutz@users.sourceforge.net>
 
+	* fuji.c: Formatting.
+
+2002-04-21  Lutz Müller <lutz@users.sourceforge.net>
+
 	* library.c:
 	* fuji.[c,h]: Implement upload and summary.
 

@@ -551,7 +551,7 @@ fuji_pic_get_thumb (Camera *camera, unsigned int i, unsigned char **data,
 	cmd[5] = (i >> 8);
 
 	CRF (fuji_transmit (camera, cmd, 6, *data, size, context), *data);
-	GP_DEBUG("rec'd thumb \n");
+	GP_DEBUG ("Download of thumbnail completed.");
 
 	return (GP_OK);
 }
@@ -564,10 +564,11 @@ fuji_pic_get (Camera *camera, unsigned int i, unsigned char **data,
 
 	/*
 	 * First, get the size of the picture and allocate the necessary
-	 * memory.
+	 * memory. Some cameras don't support the FUJI_CMD_PIC_SIZE command.
+	 * We will then assume 66000 bytes.
 	 */
-	/*CR (fuji_pic_size (camera, i, size, context));*/
-	if (fuji_pic_size (camera, i, size, context)<0) *size=66000;
+	if (fuji_pic_size (camera, i, size, context) < 0)
+		*size = 66000;
 
 	*data = malloc (sizeof (char) * *size);
 	if (!*data) {
@@ -584,7 +585,7 @@ fuji_pic_get (Camera *camera, unsigned int i, unsigned char **data,
 	cmd[5] = (i >> 8);
 
 	CRF (fuji_transmit (camera, cmd, 6, *data, size, context), *data);
-	GP_DEBUG("Got %d",*size);
+	GP_DEBUG ("Download of picture completed (%i byte(s)).", *size);
 
 	return (GP_OK);
 }
