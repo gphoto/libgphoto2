@@ -44,6 +44,9 @@ dist-hook:
 
 else
 
+all-local:
+	@echo "Dummy target $@."
+
 dist-hook:
 	@echo "Dummy target $@."
 	@echo "Re-run configure with adequate parameters and run make again to build docs."
