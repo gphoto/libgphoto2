@@ -291,11 +291,22 @@
         <title>USB</title>
         <itemizedlist>
           <listitem>
-            <para>Describe the generic get_directory reply packet with
-              the location of the error code offset.</para>
+            <para>Figure out at least basic functionality for newer protocol</para>
+            <itemizedlist>
+              <listitem>
+                <para>Delete file</para>
+              </listitem>
+              <listitem>
+                <para>Capture sequence</para>
+              </listitem>
+              <listitem>
+                <para>Set file attributes</para>
+              </listitem>
+            </itemizedlist>
           </listitem>
           <listitem>
-            <para>Find out the meaning of the status code returned in the word at 0x50.</para>
+            <para>Find out the meaning of more values of the status
+            code returned in the word at 0x50.</para>
           </listitem>
         </itemizedlist>
       </section>
@@ -316,54 +327,61 @@
         <para>09 May 2000: first version with both USB and serial protocols described in the same document.</para>
         <para>05 Dec 2002: import to AbiWord for XML output.</para>
         <para>28 Jan 2003: Convert DocBook XML, expand USB information</para>
-	<literallayout>
-	$Log$
-	Revision 1.14  2005/03/25 18:49:27  swestin
-	Added S30, A510, A40, A200 to table of data in init response.
+        <literallayout>
+        $Log$
+        Revision 1.15  2005/03/31 17:22:10  swestin
+        More insight into "get picture abilities" response.
+        Content of init packet from EOS 350D, which might be a "new" camera
+          like the 20D.
+        "Delete file" for the new protocol (20D) is now understood.
+        Slight revision of "TODO".
 
-	Revision 1.13  2005/03/24 22:03:21  swestin
-	Corrected some XML errors.
-	Added info on command codes (new protocol) found by stupidly sending;
-	   these are the ones that got a reply.
-	
-	Revision 1.12  2005/03/21 13:44:07  swestin
-	Updated copyright notice.
-	Added more info on new protocol (EOS 20D).
-	Added note on differing response lengths to "get camera photo abilities"
-	  with some newer cameras.
-	
-	Revision 1.11  2005/03/17 18:12:01  swestin
-	Minor fix to "Models Covered" table.
-	Added a model or two to the table of initial responses.
-	
-	Revision 1.9  2005/03/09 17:07:39  swestin
-	Tidied up table of known models.
-	More info on camera initial response message.
-	Corrected length of response from "get photo abilities" in new protocol.
-	
-	Revision 1.8  2005/03/08 20:38:40  swestin
-	Added section with list of known cameras.
-	More info on EOS 20D, in various places.
-	Details on EOS 300D's apparent oddball behavior during remote capture.
-	Added A400 info on initialization response packet.
-	
-	Revision 1.7  2005/03/04 20:46:51  swestin
-	Rewrote a bit on the response packet in initialization.
-	Tightened borders on all tables.
-	Added A400 to list of camera models for which we know the initialization
-	  response.
-	
-	Revision 1.6  2005/01/15 21:00:24  swestin
-	Fixed inclusion of CVS log info in document.
-	Added more info on response packet in camera initialization.
-	
-	Revision 1.5  2005/01/04 17:17:11  swestin
-	Fixed various typographical errors.
-	Added info observed from EOS 300D.
-	Regularized structure of USB command descriptions.
-	Added real example of interrupt packet received at camera init.
-	Added formatted example of directory read.
-	</literallayout>
+        Revision 1.14  2005/03/25 18:49:27  swestin
+        Added S30, A510, A40, A200 to table of data in init response.
+        
+        Revision 1.13  2005/03/24 22:03:21  swestin
+        Corrected some XML errors.
+        Added info on command codes (new protocol) found by stupidly sending;
+           these are the ones that got a reply.
+        
+        Revision 1.12  2005/03/21 13:44:07  swestin
+        Updated copyright notice.
+        Added more info on new protocol (EOS 20D).
+        Added note on differing response lengths to "get camera photo abilities"
+          with some newer cameras.
+        
+        Revision 1.11  2005/03/17 18:12:01  swestin
+        Minor fix to "Models Covered" table.
+        Added a model or two to the table of initial responses.
+        
+        Revision 1.9  2005/03/09 17:07:39  swestin
+        Tidied up table of known models.
+        More info on camera initial response message.
+        Corrected length of response from "get photo abilities" in new protocol.
+        
+        Revision 1.8  2005/03/08 20:38:40  swestin
+        Added section with list of known cameras.
+        More info on EOS 20D, in various places.
+        Details on EOS 300D's apparent oddball behavior during remote capture.
+        Added A400 info on initialization response packet.
+        
+        Revision 1.7  2005/03/04 20:46:51  swestin
+        Rewrote a bit on the response packet in initialization.
+        Tightened borders on all tables.
+        Added A400 to list of camera models for which we know the initialization
+          response.
+        
+        Revision 1.6  2005/01/15 21:00:24  swestin
+        Fixed inclusion of CVS log info in document.
+        Added more info on response packet in camera initialization.
+        
+        Revision 1.5  2005/01/04 17:17:11  swestin
+        Fixed various typographical errors.
+        Added info observed from EOS 300D.
+        Regularized structure of USB command descriptions.
+        Added real example of interrupt packet received at camera init.
+        Added formatted example of directory read.
+        </literallayout>
       </section>
     </section>
   </chapter>
@@ -592,7 +610,7 @@ xx 00 xx xx ...
       <table frame="none">
         <title>Sequence numbers observed in serial streams</title>
         <tgroup cols="4" align="left" colsep="1" rowsep="1">
-	  <?dbhtml cellspacing="0" ?>
+          <?dbhtml cellspacing="0" ?>
           <thead>
             <row><entry>&lt;mtype&gt;</entry><entry>&lt;dir&gt;</entry><entry>&lt;fffb&gt;</entry><entry>Operation</entry></row>
           </thead>
@@ -783,7 +801,7 @@ xx &lt;directory_name&gt; 00 00 00
 
         <table id="tbl.FileAtt"><title>File attributes</title>
           <tgroup cols="2" align="left" colsep="1" rowsep="1">
-	  <?dbhtml cellspacing="0" ?>
+          <?dbhtml cellspacing="0" ?>
             <tbody>
               <row><entry>bit0 (0x01)</entry><entry>Set if this file is protected from deletion</entry></row>
               <row><entry>bit4 (0x10)</entry><entry>Set if this directory contains an item but was not recursively entered
@@ -974,39 +992,43 @@ xx &lt;directory_name&gt; 00 00 00
 00000050 00 FD 00 00 00 FD 00 00                         ........
         </programlisting>
 
-	<para>The bytes 0x40-0x43 seem to vary from camera to camera:
-	the S20 here has 01&nbsp;00&nbsp;02&nbsp;00. These bytes might
-	identify which version of the protocol is used. The following
-	table summarizes our observations to date.</para>
+        <para>The bytes 0x40-0x43 seem to vary from camera to camera:
+        the S20 here has 01&nbsp;00&nbsp;02&nbsp;00. These bytes might
+        identify which version of the protocol is used. The following
+        table summarizes our observations to date.</para>
 
         <table id="tbl.InitPacketStuff"><title>Unknown contents of response packet</title>
           <tgroup cols="6" align="right" colsep="1" rowsep="1">
-	  <?dbhtml cellspacing="0" ?>
-	  <colspec colwidth="20em*"/>
+          <?dbhtml cellspacing="0" ?>
+          <colspec colwidth="20em*"/>
           <thead>
             <row><entry>Models</entry><entry>0x40</entry><entry>0x44</entry><entry>0x48</entry><entry>0x4C</entry><entry>0x50</entry><entry>0x54</entry></row>
           </thead>
             <tbody>
               <row><entry>G1, Pro90 IS, Digital IXUS</entry><entry>00 05 07 00</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
               <row><entry>S10, S20</entry><entry>01 00 02 00</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
-              <row><entry>G2, D30, D60, 300D, S110, A10, S30, S300</entry><entry>01 00 05 03</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
+              <row><entry>G2, D30, D60, 300D, S110, A10, A20, S30, S300</entry><entry>01 00 05 03</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
               <row><entry>G3, A60, A70, A75, A80, A300, A400, A510, S45, S50, S230, S400</entry><entry>01 06 15 83</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
-              <row><entry>20D</entry><entry>01 06 15 83</entry><entry><emphasis>0x80000175</emphasis></entry><entry>0x800 (2048)</entry><entry>0x10000 (65536)</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
-              <row><entry>Optura 200 MC camcorder</entry><entry>03 05 04 81</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
+              <row><entry>20D</entry><entry>01 06 15 83</entry><entry><emphasis>0x80000175</emphasis></entry><entry>0x800 (2048)</entry><entry>0x10000 (65536)</entry><entry>0xfd00 (64768)</entry><entry>0x10000 (65536)</entry></row>
+              <row><entry>350D</entry><entry>01 06 15 83</entry><entry><emphasis>0x80000189</emphasis></entry><entry>0x800 (2048)</entry><entry>0x10000 (65536)</entry><entry>0xfd00 (64768)</entry><entry>0x10000 (65536)</entry></row>
+              <row><entry>Optura 200 MC, Optura 40 camcorders</entry><entry>03 05 04 81</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
               <row><entry>S200, S330, A30, A40, A200</entry><entry>03 05 15 81</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
             </tbody>
           </tgroup>
         </table>
 
-	<para>In the older version of the protocol, the USB vendor and
-	product ID are contained in bytes 0x44-0x47 of this packet:
-	here 0x04A93043 for vendor 0x04a9, product 0x3043 identifies
-	this as a PowerShot S20. Unfortunately, the meaning of these
-	bytes seems to have changed in the newer protocol; for an EOS
-	20D, we get 0x80000175, which is identical with bytes
-	0x56-0x59 of a response to the <link
-	linkend="sec.USBnewAbilities">Get Photo Abilities</link>
-	request.</para>
+        <para>In the older version of the protocol, the USB vendor and
+          product ID are contained in bytes 0x44-0x47 of this packet:
+          here 0x04A93043 for vendor 0x04a9, product 0x3043 identifies
+          this as a PowerShot S20. Unfortunately, the meaning of these
+          bytes seems to have changed in the newer protocol; for an
+          EOS 20D, we get 0x80000175, which is identical with bytes
+          0x56-0x59 of a response to the <link
+          linkend="sec.USBnewAbilities">Get Photo Abilities</link>
+          request. This is interesting, because the same bytes wind up
+          in each JPEG or CR2 file as a LONG value for tag 0x10 within
+          the MakerNote. Unfortunately, we don't know what that tag
+          means.</para>
 
         <para>The bytes 0x48-0x57 also vary from camera to camera. I
         think they are 4-byte integers, and suspect that they specify
@@ -1079,14 +1101,14 @@ xx &lt;directory_name&gt; 00 00 00
           <para>Read 16 (0x10) bytes from the interrupt endpoint. Some
             newer cameras (e.g. the PowerShot S50) return the bytes 8
             at a time, so two reads may be needed. The code in bytes
-	    0x44-0x47 is 0x20.</para> <para>Example (EOS 300D):</para>
+            0x44-0x47 is 0x20.</para> <para>Example (EOS 300D):</para>
           <programlisting>
 0000  02 00 00 00 20 00 00 00-10 00 00 00 00 00 00 00  .... ...........                    </programlisting>
 
-	  <para>Note: The EOS 20D seems to return the 16 bytes (8 at a
-	    time) after the <link linkend="sec.USBnewPowerStatus">
-	    &ldquo;Power supply status&rdquo;</link> command, rather
-	    than here.</para>
+          <para>Note: The EOS 20D seems to return the 16 bytes (8 at a
+            time) after the <link linkend="sec.USBnewPowerStatus">
+            &ldquo;Power supply status&rdquo;</link> command, rather
+            than here.</para>
 
         </listitem>
       </orderedlist>
@@ -1111,10 +1133,10 @@ xx &lt;directory_name&gt; 00 00 00
         <para><emphasis>VV</emphasis> : cmd2 (byte)</para>
         <para><emphasis>xx xx xx xx</emphasis> : Length (again)</para>
         <para><emphasis>SS SS SS SS</emphasis> : sequence number (word)</para>
-	<para><emphasis>cc</emphasis> : must be zero in old-style protocol.
-	  In the new protocol, this byte must
-	  contain 0x10 for commands with <emphasis>cmd3</emphasis>=0x201, 0x20
-	  for commands with <emphasis>cmd3</emphasis>=0x202.</para>
+        <para><emphasis>cc</emphasis> : must be zero in old-style protocol.
+          In the new protocol, this byte must
+          contain 0x10 for commands with <emphasis>cmd3</emphasis>=0x201, 0x20
+          for commands with <emphasis>cmd3</emphasis>=0x202.</para>
 
         <itemizedlist>
           <listitem><para>&ldquo;length&rdquo; is the length of the
@@ -1123,7 +1145,10 @@ xx &lt;directory_name&gt; 00 00 00
           <listitem><para>cmd1 and cmd2 are each a single byte</para></listitem>
           <listitem><para>cmd3 is a word</para></listitem>
           <listitem><para>Sequence number is a word, sent back in
-          command reply.</para></listitem>
+              command reply. This may have more meaning than meets the
+              eye; for example, the last byte is nearly always zero, and
+              similar commands tend to have the same last two bytes in
+              this field.</para></listitem>
         </itemizedlist>
 
         <para>USB arguments:
@@ -1330,7 +1355,7 @@ do {
       <title>Summary of available (known) commands</title>
       <table frame="topbot"><title>Storage Control Commands (cmd2=0x11)</title>
         <tgroup cols="5" align="left" colsep="1" rowsep="1">
-	  <?dbhtml cellspacing="0" ?>
+          <?dbhtml cellspacing="0" ?>
           <thead>
             <row><entry>cmd1</entry><entry>cmd3</entry><entry>Argument(e.g.)</entry><entry>Response Length</entry><entry>Operation</entry></row>
           </thead>
@@ -1367,7 +1392,7 @@ do {
       </table>
       <table frame="topbot"><title>Camera Control Commands (cmd2=0x12)</title>
         <tgroup cols="5" align="left" colsep="1" rowsep="1">
-	  <?dbhtml cellspacing="0" ?>
+          <?dbhtml cellspacing="0" ?>
           <thead>
             <row><entry>cmd1</entry><entry>cmd3</entry><entry>Argument(e.g.)</entry><entry>Response Length</entry><entry>Operation</entry></row>
           </thead>
@@ -1404,7 +1429,7 @@ do {
               <entry><link linkend="sec.USBEOSUnlock">EOS (D30/D60) Unlock Keys</link></entry></row>
             <row><entry>0x1D</entry><entry>0x201</entry>
               <entry>none</entry><entry>0x58</entry>
-              <entry><link linkend="sec.USBEOSGetSerial">Get EOS serial number</link></entry></row>
+              <entry><link linkend="sec.USBEOSGetSerial">Get EOS Body ID</link></entry></row>
             <row><entry>0x1F</entry><entry>0x201</entry>
               <entry>none</entry><entry>0x384</entry>
               <entry><link linkend="sec.USBGetPhotoAbilities">Get camera photo abilities</link></entry></row>
@@ -1730,7 +1755,7 @@ do {
 000000C0 00 00 00 00 00 00 00 00-00 00                   ..........
       </programlisting>
 
-	<para>Here is a formatted listing of the entries:</para>
+        <para>Here is a formatted listing of the entries:</para>
 
       <programlisting>
                               D  :
@@ -2135,7 +2160,7 @@ do {
 
       <table frame="topbot"><title>Remote Camera Control Codes</title>
         <tgroup cols="4" align="left" colsep="1" rowsep="1">
-	  <?dbhtml cellspacing="0" ?>
+          <?dbhtml cellspacing="0" ?>
           <thead>
             <row><entry>Subcommand</entry><entry>Sample Parameters</entry><entry>Reply Length</entry><entry>Function</entry></row>
           </thead>
@@ -2409,9 +2434,9 @@ do {
                 <para>I suspect that byte 4 has some sort of flags for
                   the type of image.</para>
               </listitem>
-	       <listitem>
-		 <para>I also guess that the last byte (at 0x16) may encode the
-		   camera model somehow.</para>
+               <listitem>
+                 <para>I also guess that the last byte (at 0x16) may encode the
+                   camera model somehow.</para>
               </listitem>
             </itemizedlist>
             <para>NOTE: This block doesn&rsquo;t arrive if the capture
@@ -2434,9 +2459,9 @@ do {
               <listitem>
                 <para>For the G2, this returns immediately.</para>
               </listitem>
-	       <listitem>
-		 <para>For the EOS 20D, this message never comes.</para>
-	       </listitem>
+               <listitem>
+                 <para>For the EOS 20D, this message never comes.</para>
+               </listitem>
             </itemizedlist>
             <para>This response always seems to be</para>
             <para>0000: 02 00 00 00 0a 00 00 00 10 00 00 00 1d 00 00 00</para>
@@ -2471,7 +2496,7 @@ do {
           <listitem>
             <para>For EOS cameras, read the final message:</para>
             <para>0000: 02 00 00 00 0f 00 00 00 10 00 00 00 00 00 00 00</para>
-	    <para>NOTE: This message seems never to arrive from an EOS 300D.</para>
+            <para>NOTE: This message seems never to arrive from an EOS 300D.</para>
           </listitem>
         </orderedlist>
 
@@ -2539,7 +2564,7 @@ do {
           <varlistentry><term>0x20</term>
             <listitem>
               <para>Response to camera initialization; not seen
-	         during capture dialog.</para>
+                 during capture dialog.</para>
             </listitem>
           </varlistentry>
         </variablelist>
@@ -2818,7 +2843,7 @@ do {
 
         <table frame="topbot" id="table.OldEosCustom"><title>EOS Custom Functions</title>
           <tgroup cols="3" align="left" colsep="1" rowsep="1">
-	  <?dbhtml cellspacing="0" ?>
+          <?dbhtml cellspacing="0" ?>
             <thead>
               <row><entry>Code</entry><entry>Function</entry><entry>Values</entry></row>
             </thead>
@@ -3127,7 +3152,7 @@ do {
     </section>
 
     <section id="sec.USBEOSGetSerial">
-      <title>Get EOS Serial Number</title>
+      <title>Get EOS Body ID</title>
 
       <para>requesttype=0x1d</para>
 
@@ -3153,7 +3178,7 @@ do {
 0010 00 00 00 00 ea 01 28 18                         ......(.
         </programlisting>
 
-      <para>There&rsquo;s one zero word, then four bytes containing the serial number.</para>
+      <para>There&rsquo;s one zero word, then four bytes containing the body ID.</para>
 
       <para>With a D30, the upper 16 bits should be used directly as
         hexadecimal digits, and the lower 16 bits should be converted
@@ -3166,7 +3191,7 @@ do {
       </programlisting>
 
       <para>For a D60, it&rsquo;s a simple binary number: convert it
-        to decimal to get the serial number. &ldquo;1e ab d6 3c&rdquo;
+        to decimal to get the body ID. &ldquo;1e ab d6 3c&rdquo;
         becomes 0x3cd6ab1e; the decimal equivalent is 1020701470, the
         number on the sticker on the base of the camera. This C code
         fragment will convert this to ASCII correctly:</para>
@@ -3255,39 +3280,40 @@ do {
 0380: 00 00 55 aa                                     ..U.
         </programlisting>
 
-      <table frame="topbot"><title>Fields in &ldquo;camera photo abilities&ldquo; response</title>
+      <table frame="topbot"><title>Fields in &ldquo;camera photo abilities&rdquo; response</title>
         <tgroup cols="3" align="left" colsep="1" rowsep="1">
-	  <?dbhtml cellspacing="0" ?>
+          <?dbhtml cellspacing="0" ?>
           <thead>
             <row><entry>offset</entry><entry>bytes</entry><entry>value</entry></row>
           </thead>
           <tbody>
             <row><entry>0x50:</entry><entry>4</entry><entry>status code</entry></row>
-            <row><entry>0x54:</entry><entry>4</entry><entry>size of structure (here 0x330=816 bytes)</entry></row>
-            <row><entry>0x58:</entry><entry>2</entry><entry>unknown (here 0x0110=272)</entry></row>
-            <row><entry>0x5a:</entry><entry>14</entry><entry>camera identification (ASCII)</entry></row>
-            <row><entry>0x68:</entry><entry>4</entry><entry>preferred size of bulk transfers? (here 0x00001400)</entry></row>
-            <row><entry>0x6c:</entry><entry>4</entry><entry>unknown (here 0x00002880=10,368)</entry></row>
-            <row><entry>0x70:</entry><entry>4</entry><entry>unknown (here 0x00004000=16384)</entry></row>
-            <row><entry>0x74:</entry><entry>6</entry><entry>unknown (zero bytes)</entry></row>
+            <row><entry>0x54:</entry><entry>2</entry><entry>size of structure (here 0x330=816 bytes)</entry></row>
+            <row><entry>0x56:</entry><entry>4</entry><entry>unknown (here 0x01100000). This will
+	      show up as the value of the image file tag 0x0010 (EXIF) or 0x5834 (CRW)</entry></row>
+            <row><entry>0x5a:</entry><entry>32</entry><entry>camera identification (ASCII)</entry></row>
             <row><entry>0x7a:</entry><entry>4</entry><entry>Count <emphasis>n</emphasis> of number of entries in image-quality table</entry></row>
-            <row><entry>0x7c:</entry><entry><emphasis>n</emphasis>*28</entry><entry>Table of image quality levels allowed</entry></row>
+            <row><entry>0x7c:</entry><entry><emphasis>n</emphasis>*32</entry><entry>Table of image quality levels allowed</entry></row>
           </tbody>
         </tgroup>
       </table>
+
+      <para>The observed values at 0x56 are: 0x01340000 (A80), 0x01450000 (A400), 0x01270000 (IXUS 400)
+	0x01570000 (A510), 0x01290000 (G5).</para>
+
       <para>Each entry in the table seems to be</para>
       <programlisting>
 struct {
   char imageType[20];   /* ASCII name of this image type */
   long imageHeight, imageWidth;
-  long compressionType;	/* 1: SuperFine 2:Fine 3:Normal 4:RAW */
+  long compressionType; /* 1: SuperFine 2:Fine 3:Normal 4:RAW */
 } tableEntry;
         </programlisting>
       <para>So we can see that the PowerShot G2 can produce the following image types:</para>
       <table frame="topbot">
         <title>PowerShot G2 image formats reported</title>
         <tgroup cols="4" align="left" colsep="1" rowsep="1">
-	  <?dbhtml cellspacing="0" ?>
+          <?dbhtml cellspacing="0" ?>
           <thead>
             <row><entry>Height</entry><entry>Width</entry><entry>Compression</entry><entry>Name</entry></row>
           </thead>
@@ -3318,20 +3344,26 @@ struct {
         seems to be the same function.</para>
 
       <para>Some recent models return responses of different length,
-	so code must be ready for this and read the length from the
-	first four bytes of the response. Cameras known to give
-	different response lengths are</para>
+        so code must be ready for this and read the length from the
+        first four bytes of the response. Cameras known to give
+        different response lengths are</para>
 
       <table frame="topbot">
         <title>Camera models with unusual response length</title>
         <tgroup cols="3" align="left" colsep="1" rowsep="1">
-	  <?dbhtml cellspacing="0" ?>
+          <?dbhtml cellspacing="0" ?>
           <thead>
             <row><entry>Model</entry><entry>Response length</entry><entry>Comments</entry></row>
           </thead>
           <tbody>
-	    <row><entry>PowerShot A80</entry><entry>0x394</entry><entry>Can't understand the entries; mostly 0xff bytes.</entry></row>
-	    <row><entry>PowerShot G5</entry><entry>0x394</entry><entry>Can't understand the entries; entry length seems to be 32 bytes, and strings are in no known character code.</entry></row>
+            <row><entry>PowerShot A400</entry>
+	      <entry>0x394</entry>
+	      <entry>No entries in table (count=0).</entry>
+	    </row>
+            <row><entry>PowerShot A80, G5</entry>
+	      <entry>0x394</entry>
+	      <entry>No entries in table (count=0). Camera name is unprintable garbage.</entry>
+	    </row>
           </tbody>
         </tgroup>
       </table>
@@ -3543,7 +3575,7 @@ struct {
       <title>Summary of available (known) commands in new protocol</title>
       <table frame="topbot"><title>New Storage Control Commands (cmd2=0x11)</title>
         <tgroup cols="5" align="left" colsep="1" rowsep="1">
-	  <?dbhtml cellspacing="0" ?>
+          <?dbhtml cellspacing="0" ?>
           <thead>
             <row><entry>cmd1</entry><entry>cmd3</entry><entry>Argument(e.g.)</entry><entry>Response Length</entry><entry>Operation</entry></row> </thead>
           <tbody>
@@ -3566,7 +3598,7 @@ struct {
               <entry>none</entry><entry>0x54</entry>
               <entry><link linkend="sec.USBnewUnk0911">Unknown</link></entry></row>
             <row><entry>0x0A</entry><entry>0x201</entry>
-              <entry>none</entry><entry>L</entry>
+              <entry>"A:/DCIM/101CANON/IMG_0105.JPG" 0x0007 0x0005 0x0100 0x0008 0x008f7668 0x008f8078 "A:/DCIM/101CANON/" </entry><entry>L</entry>
               <entry><link linkend="sec.USBnewDeleteFile">Delete file</link></entry></row>
             <row><entry>0x0B</entry><entry>0x202</entry>
               <entry>0x01 "D:\DCIM"&lt;NUL&gt; &lt;NUL&gt; &lt;NUL&gt;</entry><entry>L</entry>
@@ -3583,7 +3615,7 @@ struct {
 
       <table frame="topbot"><title>New Camera Control Commands (cmd2=0x12)</title>
         <tgroup cols="5" align="left" colsep="1" rowsep="1">
-	  <?dbhtml cellspacing="0" ?>
+          <?dbhtml cellspacing="0" ?>
           <thead>
             <row><entry>cmd1</entry><entry>cmd3</entry><entry>Argument(e.g.)</entry><entry>Response Length</entry><entry>Operation</entry></row>
           </thead>
@@ -3664,11 +3696,10 @@ struct {
         <itemizedlist>
 
         <listitem><para>0x50: Flag for download of thumbnail:
-          0x00000001 in all requests seen so far, both for the full
-          JPEG image and for the thumbnail.</para></listitem>
+          0x00000001 for thumbnail, 0x00000000 for full image.</para></listitem>
 
         <listitem><para>0x54: Pathname of file to download, terminated
-          by a single NUL byte</para></listitem>
+          by a two NUL bytes</para></listitem>
 
       </itemizedlist></para>
 
@@ -3891,7 +3922,7 @@ struct {
 
       <para>That status code hasn't been seen before, but
         &ldquo;20&nbsp;00&nbsp;00&nbsp;82&rdquo; is &ldquo;EOS unlock
-	 keys failed&rdquo;.</para>
+         keys failed&rdquo;.</para>
 
     </section>
 
@@ -3901,9 +3932,11 @@ struct {
       <para>requesttype=0x0a</para>
 
       <para>This differs from
-	<link linkend="sec.USBDeleteFile">the command 0x0d</link> in
-	the older protocol; more information is included in the
-	command block.</para>
+        <link linkend="sec.USBDeleteFile">the command 0x0d</link> in
+        the older protocol; instead of separate strings for directory
+        and file name, we have a complete path specification
+        (directory/file), then another copy of the directory
+        name. Each seems to be allowed 48 bytes (0x30).</para>
 
       <para>Command: variable length (here 0x91 bytes)</para>
       <programlisting>
@@ -3919,41 +3952,13 @@ struct {
 00000090  2f                                               /
       </programlisting>
 
-      <para>Here we delete a JPEG file. After the file name string, we
-        have 3 zero bytes, then</para>
+      <para>Here we delete a JPEG file. The complete path string is
+        terminated by (at least one) zero byte, followed by garbage.
+        At offset 0x80 of the packet (0x30 of the payload), we have
+        the directory name, <emphasis>with no trailing zero
+        byte.</emphasis></para>
 
-      <table frame="topbot">
-        <title>Extra data in "delete file" command</title>
-        <tgroup cols="3" colsep="1" rowsep="1">
-	  <?dbhtml cellspacing="0" ?>
-	<colspec align="right"/>
-	<colspec align="center"/>
-	<colspec align="left" colwidth="20em"/>
-          <thead>
-            <row><entry>Offset</entry><entry>Value</entry><entry>Meaning</entry></row>
-          </thead>
-          <tbody>
-            <row><entry>0x70</entry><entry>0x0007</entry><entry>??</entry></row>
-            <row><entry>0x72</entry><entry>0x0005</entry><entry>??</entry></row>
-            <row><entry>0x74</entry><entry>0x0100 = 256</entry><entry>??</entry></row>
-            <row><entry>0x76</entry><entry>0x0008</entry><entry>??</entry></row>
-            <row><entry>0x78</entry><entry>0x008f7668 = 9,401,960</entry><entry>??</entry></row>
-            <row><entry>0x7c</entry><entry>0x008f8078 = 9,404,520</entry>
-	      <entry>Always less than the preceding value: here by 2560,
-	        but we have seen 48 as well.</entry>
-	    </row>
-            <row><entry>0x80</entry><entry>"A:/DCIM/101CANON/"</entry><entry>Directory
-              containing file to delete?</entry>
-	    </row>
-          </tbody>
-        </tgroup>
-      </table>
-
-      <para>Could those 2-byte integers be sizes of some components of
-      the path name?  7 is the length of "A:/DCIM", and 5 is the
-      length of "/DCIM". 8 could be the length of "101CANON".</para>
-
-      <para>Response: 0x54 bytes</para>
+       <para>Response: 0x54 bytes</para>
       <programlisting>
 00000000  14 00 00 00 01 03 00 00 00 00 00 00 00 00 00 00  ................
 00000010  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
@@ -3966,9 +3971,8 @@ struct {
       <para>Status codes:</para>
       <simplelist>
         <member>0x00000000 No errors</member>
-        <member>0x02000022 File not found</member>
-        <member>0x02000029 File was protected</member>
-        <member>0x02000086 Path not found</member>
+	 <member>0x82200040 ?? </member>
+	 <member>0x82220040 Bad parameters? Directory not found?</member>
       </simplelist>
 
     </section>
@@ -4062,9 +4066,9 @@ struct {
       <para>requesttype=0x0d</para>
 
       <para>This seems to be similar to
-	<link linkend="sec.USBDiskInfo">the command 0x09</link> in the
-	older protocol, but note that the device name has no trailing
-	backslash.</para>
+        <link linkend="sec.USBDiskInfo">the command 0x09</link> in the
+        older protocol, but note that the device name has no trailing
+        backslash.</para>
 
       <para>Command: variable length (here 0x53 bytes)</para>
       <programlisting>
@@ -4183,11 +4187,11 @@ struct {
       </programlisting>
 
       <para>I don't know what these bytes mean. Bytes 0x84-0x97 are
-	identical to bytes 0x7c-0x8f from <link
-	linkend="sec.USBnewEOSGetCustom">Get Custom Functions.</link>
-	This could just be garbage left in the camera's buffer, as
-	this particular command was issued after the first &ldquo;Get
-	Custom Functions.&rdquo;
+        identical to bytes 0x7c-0x8f from <link
+        linkend="sec.USBnewEOSGetCustom">Get Custom Functions.</link>
+        This could just be garbage left in the camera's buffer, as
+        this particular command was issued after the first &ldquo;Get
+        Custom Functions.&rdquo;
       </para>
 
     </section>
@@ -4364,7 +4368,7 @@ struct {
             <listitem><para>((value &amp;0x20) == 0) running from ac-adapter</para></listitem>
             <listitem><para>((value &amp;0x20) != 0) running from battery</para></listitem>
           </itemizedlist>
-	</listitem>
+        </listitem>
       </itemizedlist>
 
       <para>The last two values also form the end of the response to
@@ -4410,23 +4414,23 @@ struct {
          buffer.</para>
 
       <para>Here are the meanings of all custom functions. Note that
-	this table is not the same as <link
-	linkend="table.OldEosCustom">that for the earlier EOS
-	cameras.</link></para>
+        this table is not the same as <link
+        linkend="table.OldEosCustom">that for the earlier EOS
+        cameras.</link></para>
 
       <table frame="topbot">
         <title>Custom function values for EOS 20D</title>
         <tgroup cols="3" colsep="1" rowsep="1">
-	  <?dbhtml cellspacing="0" ?>
-	<colspec align="right"/>
-	<colspec align="center"/>
-	<colspec align="left" colwidth="20em"/>
+          <?dbhtml cellspacing="0" ?>
+        <colspec align="right"/>
+        <colspec align="center"/>
+        <colspec align="left" colwidth="20em"/>
           <thead>
             <row><entry>Function</entry><entry>Index</entry><entry>Values</entry></row>
           </thead>
           <tbody>
             <row><entry>SET button func, when shooting</entry><entry>1</entry><entry>0: Default (no function) 1: Change quality 2: Change parameters 3: Menu display 4: Image replay</entry></row>
-	    <row><entry>Long exposure noise reduction</entry><entry>2</entry><entry>1: on</entry></row>
+            <row><entry>Long exposure noise reduction</entry><entry>2</entry><entry>1: on</entry></row>
             <row><entry>Shutter speed in Av mode</entry><entry>3</entry><entry>0: auto 1: 1/250</entry></row>
             <row><entry>Shutter button/AE lock button function</entry><entry>4</entry><entry>0: AF/AE lock 1: AE lock/AF 2: AF/AF lock, no AE lock 3: AE/AF, no AE lock</entry></row>
             <row><entry>Disable AF-assist light</entry><entry>5</entry><entry></entry></row>
@@ -4456,10 +4460,10 @@ struct {
 
       <para>seen with EOS 20D; issued after <link
       linkend="sec.USBnewPowerStatus">Power supply status,</link>
-	<link linkend="sec.USBnewIDCamera">Identify Camera,</link>
-	<link linkend="sec.USBnewUnk2">unknown command 2,</link>
-	or <link linkend="sec.USBnewGetCaptured">Get captured
-	image.</link></para>
+        <link linkend="sec.USBnewIDCamera">Identify Camera,</link>
+        <link linkend="sec.USBnewUnk2">unknown command 2,</link>
+        or <link linkend="sec.USBnewGetCaptured">Get captured
+        image.</link></para>
 
       <para>Command: 0x54 bytes</para>
 
@@ -4490,7 +4494,7 @@ struct {
       <para>requesttype=0x22</para>
 
       <para>seen with EOS 20D; perhaps &ldquo;release
-	shutter&rdquo;</para>
+        shutter&rdquo;</para>
 
       <para>Command: 0x54 bytes</para>
 
@@ -4518,46 +4522,46 @@ struct {
 00000010  02 2d a4 81 00 83 ad                             .-.....
       </programlisting>
       <para>This looks a whole lot like the
-	<emphasis>second</emphasis> interrupt message after
-	<link linkend="sec.CamContRelShutter">release</link> on an
-	older Canon camera.
+        <emphasis>second</emphasis> interrupt message after
+        <link linkend="sec.CamContRelShutter">release</link> on an
+        older Canon camera.
       </para>
       <itemizedlist>
-	<listitem>
-	  <para>4-byte integer at byte 0 is 2</para>
-	</listitem>
-	<listitem>
-	  <para>4-byte integer at byte 4 is 0xc</para>
-	</listitem>
-	<listitem>
-	  <para>4-byte integer at byte 8 is total length</para>
-	</listitem>
-	<listitem>
-	  <para>4-byte integer at byte 0x0c may be length of payload
-	    (i.e. &lt;total length&gt; - 0x10)</para>
-	</listitem>
-	<listitem>
-	  <para>4-byte integer at byte 0x0c apparently gives the image
-	    handle for download</para>
-	</listitem>
-	<listitem>
-	  <para>The byte at 0x10 is 2, whereas earlier cameras gave
-	    a 1</para>
-	</listitem>
-	<listitem>
-	  <para>4-byte integer at byte 0x11 is the size of the image
-	    file, just as with older cameras</para>
-	</listitem>
-	<listitem>
-	  <para>The byte at 0x15 happens to be the endpoint index of
-	    the interrupt endpoint of this device, but this may be
-	    coincidence</para>
-	</listitem>
-	<listitem>
-	  <para>The final byte was 0xb0
-	    for the G2, 0xaf for the D60. Could this be some sort of
-	    camera model ID?</para>
-	</listitem>
+        <listitem>
+          <para>4-byte integer at byte 0 is 2</para>
+        </listitem>
+        <listitem>
+          <para>4-byte integer at byte 4 is 0xc</para>
+        </listitem>
+        <listitem>
+          <para>4-byte integer at byte 8 is total length</para>
+        </listitem>
+        <listitem>
+          <para>4-byte integer at byte 0x0c may be length of payload
+            (i.e. &lt;total length&gt; - 0x10)</para>
+        </listitem>
+        <listitem>
+          <para>4-byte integer at byte 0x0c apparently gives the image
+            handle for download</para>
+        </listitem>
+        <listitem>
+          <para>The byte at 0x10 is 2, whereas earlier cameras gave
+            a 1</para>
+        </listitem>
+        <listitem>
+          <para>4-byte integer at byte 0x11 is the size of the image
+            file, just as with older cameras</para>
+        </listitem>
+        <listitem>
+          <para>The byte at 0x15 happens to be the endpoint index of
+            the interrupt endpoint of this device, but this may be
+            coincidence</para>
+        </listitem>
+        <listitem>
+          <para>The final byte was 0xb0
+            for the G2, 0xaf for the D60. Could this be some sort of
+            camera model ID?</para>
+        </listitem>
       </itemizedlist>
 
       <para>But there seem to be other versions of the command,
@@ -4611,11 +4615,11 @@ struct {
       </programlisting>
 
       <para>The 4 bytes at 0x50 are presumably a status code (0 for
-	success); the next four bytes are the camera Body ID (hardware
-	serial number) in binary. Printing this number as a 10-digit
-	decimal with leading zeroes gives the &ldquo;Camera Body
-	No.&rdquo; seen in the EOS Viewer Utility.  This camera has a
-	body ID of 0520308238.
+        success); the next four bytes are the camera Body ID (hardware
+        serial number) in binary. Printing this number as a 10-digit
+        decimal with leading zeroes gives the &ldquo;Camera Body
+        No.&rdquo; seen in the EOS Viewer Utility.  This camera has a
+        body ID of 0520308238.
       </para>
 
     </section>
@@ -4714,9 +4718,9 @@ struct {
 00000470  00 00 00 00                                      ....
       </programlisting>
 
-      <table frame="topbot"><title>Fields in &ldquo;photo abilities&ldquo; response</title>
+      <table frame="topbot"><title>Fields in &ldquo;photo abilities&rdquo; response</title>
         <tgroup cols="3" align="left" colsep="1" rowsep="1">
-	  <?dbhtml cellspacing="0" ?>
+          <?dbhtml cellspacing="0" ?>
           <thead>
             <row><entry>offset</entry><entry>bytes</entry><entry>value</entry></row>
           </thead>
@@ -4725,10 +4729,10 @@ struct {
             <row><entry>0x54:</entry><entry>2?</entry><entry>Length of structure (here 0x420=1056)</entry></row>
             <row><entry>0x56:</entry><entry>2?</entry><entry>unknown (here 0x175=373, 2236/6 rounded to nearest integer)</entry></row>
             <row><entry>0x58:</entry><entry>2</entry><entry>unknown (here 0x8000=32,768)</entry></row>
-            <row><entry>0x5a:</entry><entry>20</entry><entry>camera identification (ASCII)</entry></row>
+            <row><entry>0x5a:</entry><entry>32</entry><entry>camera identification (ASCII)</entry></row>
             <row><entry>0x7a:</entry><entry>4</entry><entry>Count <emphasis>n-1</emphasis>
                 where <emphasis>n</emphasis> is the number of entries in image-quality table</entry></row>
-            <row><entry>0x7e:</entry><entry><emphasis>n</emphasis>*28</entry><entry>Table of image quality levels allowed</entry></row>
+            <row><entry>0x7e:</entry><entry><emphasis>n</emphasis>*32</entry><entry>Table of image quality levels allowed</entry></row>
           </tbody>
         </tgroup>
       </table>
@@ -4744,7 +4748,7 @@ struct {
       <table frame="topbot">
         <title>EOS 20D image formats reported</title>
         <tgroup cols="4" align="left" colsep="1" rowsep="1">
-	  <?dbhtml cellspacing="0" ?>
+          <?dbhtml cellspacing="0" ?>
           <thead>
             <row><entry>Height</entry><entry>Width</entry><entry>Compression</entry><entry>Name</entry></row>
           </thead>
@@ -4773,7 +4777,7 @@ struct {
 
       <table frame="topbot"><title>Remote Camera Control Codes</title>
         <tgroup cols="4" align="left" colsep="1" rowsep="1">
-	  <?dbhtml cellspacing="0" ?>
+          <?dbhtml cellspacing="0" ?>
           <thead>
             <row><entry>Subcommand</entry><entry>Sample Parameters</entry><entry>Reply Length</entry><entry>Function</entry></row>
           </thead>
@@ -4807,7 +4811,7 @@ struct {
 
        <table frame="topbot"><title>Remote Camera Control Codes</title>
         <tgroup cols="4" align="left" colsep="1" rowsep="1">
-	  <?dbhtml cellspacing="0" ?>
+          <?dbhtml cellspacing="0" ?>
           <thead>
             <row><entry>Subcommand</entry><entry>Sample Parameters</entry><entry>Reply Length</entry><entry>Function</entry></row>
           </thead>
@@ -4861,27 +4865,27 @@ struct {
 
         <para>Takes no parameters.</para>
 
-	<para>Command: 0x59 bytes</para>
+        <para>Command: 0x59 bytes</para>
 
-	<programlisting>
+        <programlisting>
 00000000  19 00 00 00 01 02 00 00 00 00 00 00 00 00 00 00  ................
 00000010  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000020  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000030  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000040  02 00 00 00 25 00 10 12 19 00 00 00 68 e7 12 00  ....%.......h...
 00000050  00 00 00 00 00 00 00 00 00                       .........
-	</programlisting>
+        </programlisting>
 
-	<para>Camera response: 0x5c bytes</para>
+        <para>Camera response: 0x5c bytes</para>
 
-	<programlisting>
+        <programlisting>
 00000000  1c 00 00 00 01 03 00 00 00 00 00 00 00 00 00 00  ................
 00000010  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000020  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000030  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000000  02 00 00 00 25 00 10 22 1c 00 00 00 68 e7 12 00  ....%.."....h...
 00000010  00 00 00 00 00 00 00 00 00 00 00 00              ............
-	</programlisting>
+        </programlisting>
 
       </section>
 
@@ -4890,7 +4894,7 @@ struct {
 
         <para>Takes no parameters</para>
 
-	 <para>Command: 0x59 bytes</para>
+         <para>Command: 0x59 bytes</para>
 
       <programlisting>
 00000000  19 00 00 00 01 02 00 00 00 00 00 00 00 00 00 00  ................
@@ -4918,30 +4922,30 @@ struct {
       <section id="sec.newCamContRelShutter">
         <title>Release shutter: 04</title>
 
-	<para>Takes no parameters. We haven't figured out interrupt
-	  communication yet.</para>
+        <para>Takes no parameters. We haven't figured out interrupt
+          communication yet.</para>
 
-	<para>Command: 0x5d bytes</para>
+        <para>Command: 0x5d bytes</para>
 
-	<programlisting>
+        <programlisting>
 00000000  1d 00 00 00 01 02 00 00 00 00 00 00 00 00 00 00  ................
 00000010  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000020  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000030  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000040  02 00 00 00 25 00 10 12 1d 00 00 00 58 e7 12 00  ....%.......X...
 00000050  09 00 00 00 04 00 00 00 02 00 00 00 00           .............
-	</programlisting>
+        </programlisting>
 
-	<para>Response: 0x5c bytes</para>
+        <para>Response: 0x5c bytes</para>
 
-	<programlisting>
+        <programlisting>
 00000000  1c 00 00 00 01 03 00 00 00 00 00 00 00 00 00 00  ................
 00000010  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000020  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000030  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000000  02 00 00 00 25 00 10 22 1c 00 00 00 44 e9 17 01  ....%.."....D...
 00000010  00 00 00 00 04 00 00 00 00 00 00 00              ............
-	</programlisting>
+        </programlisting>
 
       </section>
 
@@ -4952,25 +4956,25 @@ struct {
           where <emphasis>&lt;code&gt;</emphasis> is a combination of
           the following bits:</para>
 
-	<programlisting>
+        <programlisting>
 00000000  19 00 00 00 01 02 00 00 00 00 00 00 00 00 00 00  ................
 00000010  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000020  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000030  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000040  02 00 00 00 25 00 10 12 19 00 00 00 4c e7 12 00  ....%.......L...
 00000050  0a 00 00 00 00 00 00 00 00                       .........
-	</programlisting>
+        </programlisting>
 
-	<para>Response: 0x5c bytes</para>
+        <para>Response: 0x5c bytes</para>
 
-	<programlisting>
+        <programlisting>
 00000000  1c 00 00 00 01 03 00 00 00 00 00 00 00 00 00 00  ................
 00000010  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000020  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000030  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000000  02 00 00 00 25 00 10 22 1c 00 00 00 58 e7 12 00  ....%.."....X...
 00000010  00 00 00 00 09 00 00 00 00 00 00 00              ............
-	</programlisting>
+        </programlisting>
 
 
       </section>
@@ -4983,20 +4987,20 @@ struct {
           0x34 bytes are the same as is sent down by code 07,
           &ldquo;set release parameters&rdquo;.</para>
 
-	<para>Command: 0x59 bytes</para>
+        <para>Command: 0x59 bytes</para>
 
-	<programlisting>
+        <programlisting>
 00000000  19 00 00 00 01 02 00 00 00 00 00 00 00 00 00 00  ................
 00000010  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000020  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000030  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000040  02 00 00 00 25 00 10 12 19 00 00 00 4c e7 12 00  ....%.......L...
 00000050  0a 00 00 00 00 00 00 00 00                       .........
-	</programlisting>
+        </programlisting>
 
-	<para>Response: 8c bytes</para>
+        <para>Response: 8c bytes</para>
 
-	<programlisting>
+        <programlisting>
 00000000  4c 00 00 00 01 03 00 00 00 00 00 00 00 00 00 00  L...............
 00000010  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000020  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
@@ -5006,7 +5010,7 @@ struct {
 00000060  00 00 ff 00 01 01 00 ff 03 ff 02 90 02 ff 00 ff  ................
 00000070  7f 7f 7f 7f ff ff 58 00 1c 00 74 00 00 00 ff ff  ......X...t.....
 00000000  18 00 50 00 ff ff ff ff ff ff 01 00              ..P.........
-	</programlisting>
+        </programlisting>
 
       </section>
 
@@ -5015,27 +5019,27 @@ struct {
 
         <para>No parameters</para>
 
-	 <para>Command: 0x59 bytes</para>
+         <para>Command: 0x59 bytes</para>
 
-	 <programlisting>
+         <programlisting>
 00000000  19 00 00 00 01 02 00 00 00 00 00 00 00 00 00 00  ................
 00000010  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000020  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000030  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000040  02 00 00 00 25 00 10 12 19 00 00 00 5c e7 12 00  ....%.......\...
 00000050  10 00 00 00 00 00 00 00 00                       .........
-	 </programlisting>
+         </programlisting>
 
-	 <para>Response: 0x60 bytes</para>
+         <para>Response: 0x60 bytes</para>
 
-	 <programlisting>
+         <programlisting>
 00000000  20 00 00 00 01 03 00 00 00 00 00 00 00 00 00 00   ...............
 00000010  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000020  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000030  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000000  02 00 00 00 25 00 10 22 20 00 00 00 5c e7 12 00  ....%.." ...\...
 00000010  00 00 00 00 10 00 00 00 04 00 00 00 3c 00 00 00  ............&lt;...
-	 </programlisting>
+         </programlisting>
 
       </section>
 
@@ -5046,20 +5050,20 @@ struct {
         linkend="">Get size of extended release
         parameters.</link></para>
 
-	 <para>Command: 0x5d bytes</para>
+         <para>Command: 0x5d bytes</para>
 
-	 <programlisting>
+         <programlisting>
 00000000  1d 00 00 00 01 02 00 00 00 00 00 00 00 00 00 00  ................
 00000010  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000020  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000030  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000040  02 00 00 00 25 00 10 12 1d 00 00 00 4c e7 12 00  ....%.......L...
 00000050  12 00 00 00 04 00 00 00 3c 00 00 00 00           ........&lt;....
-	 </programlisting>
+         </programlisting>
 
-	 <para>Response: 0x98 bytes</para>
+         <para>Response: 0x98 bytes</para>
 
-	 <programlisting>
+         <programlisting>
 00000000  58 00 00 00 01 03 00 00 00 00 00 00 00 00 00 00  X...............
 00000010  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000020  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
@@ -5070,7 +5074,7 @@ struct {
 00000070  ff ff ff ff ff ff ff ff 00 00 ff ff ff ff ff ff  ................
 00000000  ff ff 00 00 50 14 ff ff 01 00 ff ff ff ff 00 00  ....P...........
 00000010  ff ff 00 00 00 00 00 00                          ........
-	 </programlisting>
+         </programlisting>
 
       </section>
 
@@ -5079,27 +5083,27 @@ struct {
 
         <para>Two parameters: 4, {0x0b,0x0e,0x17,0x18,0x19,0x1a}</para>
 
-	 <para>Command: 0x5d bytes</para>
+         <para>Command: 0x5d bytes</para>
 
-	 <programlisting>
+         <programlisting>
 00000000  1d 00 00 00 01 02 00 00 00 00 00 00 00 00 00 00  ................
 00000010  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000020  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000030  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000040  02 00 00 00 25 00 10 12 1d 00 00 00 4c e7 12 00  ....%.......L...
 00000050  1b 00 00 00 04 00 00 00 0b 00 00 00 00           .............
-	 </programlisting>
+         </programlisting>
 
-	 <para>Response: 0x5e bytes</para>
+         <para>Response: 0x5e bytes</para>
 
-	 <programlisting>
+         <programlisting>
 00000000  1e 00 00 00 01 03 00 00 00 00 00 00 00 00 00 00  ................
 00000010  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000020  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000030  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000000  02 00 00 00 25 00 10 22 1e 00 00 00 4c e7 12 00  ....%.."....L...
 00000010  00 00 00 00 1b 00 00 00 02 00 00 00 0b 00        ..............
-	 </programlisting>
+         </programlisting>
 
 
       </section>
@@ -5109,27 +5113,27 @@ struct {
 
         <para>No parameters</para>
 
-	 <para>Command: 0x59 bytes</para>
+         <para>Command: 0x59 bytes</para>
 
-	 <programlisting>
-	 </programlisting>
+         <programlisting>
+         </programlisting>
 
-	 <para>Response: 0x5c bytes</para>
+         <para>Response: 0x5c bytes</para>
 
-	 <programlisting>
-	 </programlisting>
+         <programlisting>
+         </programlisting>
 
         <para>No parameters</para>
 
-	 <para>Command: 0x59 bytes</para>
+         <para>Command: 0x59 bytes</para>
 
-	 <programlisting>
-	 </programlisting>
+         <programlisting>
+         </programlisting>
 
-	 <para>Response: 0x5c bytes</para>
+         <para>Response: 0x5c bytes</para>
 
-	 <programlisting>
-	 </programlisting>
+         <programlisting>
+         </programlisting>
 
       </section>
 
