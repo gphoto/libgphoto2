@@ -240,11 +240,15 @@ sq_postprocess(CameraPrivateLibrary *priv, int width, int height,
 				MIN(2*(unsigned)RED(rgb,x,y,width),255); */
 			}
 		}
-//		 red_min = MIN(2*(unsigned)red_min,255); 
-//		 red_max = MIN(2*(unsigned)red_max,255); 
+/*
+		 red_min = MIN(2*(unsigned)red_min,255); 
+		 red_max = MIN(2*(unsigned)red_max,255); 
+*/
 	}
 
-//	else { 
+/*
+	else { 
+*/
 		/* indoor electric light */
 /*		GP_DEBUG( "electric light mode");
 		for( y=0; y<height; y++){
@@ -266,8 +270,10 @@ sq_postprocess(CameraPrivateLibrary *priv, int width, int height,
 
 			}
 		}
-//		blue_min = MIN(2*(unsigned)blue_min,255);
-//		blue_max = MIN(2*(unsigned)blue_max,255);
+/*
+		blue_min = MIN(2*(unsigned)blue_min,255);
+		blue_max = MIN(2*(unsigned)blue_max,255);
+
 	}
 
 
