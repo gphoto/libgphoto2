@@ -1,5 +1,9 @@
 2001-08-19  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2/globals.h: Unused. Removed.
+
+2001-08-19  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
+
 	* include/gphoto2-filesys.h:
 	* libgphoto2/filesys.c (gp_filesystem_get_folder): New
 	* libgphoto2/widget.c (gp_widget_get_parent): Corrected typo
