@@ -1,3 +1,8 @@
+2002-11-05  Lutz Müller <lutz@users.sourceforge.net>
+
+	* sierra.c: The 2100UZ seems to use oly3040_cam_desc (reported by
+	  C.A. Marby <marby@lhasa.harvard.edu>)
+
 2002-11-01  Patrick Mansfield <patmans@users.sourceforge.net>
 	* PROTOCOL, epson-desc.c, library.c, nikon-desc.c
 	* olympus-desc.c, sierra-desc.h, sierra.c, sierra.h: Add changes to
