@@ -1,6 +1,6 @@
 08/08/2000 - Notes by Philippe Marzouk <philm@users.sourceforge.net>
  - The driver must be changed to be able to talk to various cameras
-   via the Camera *camera struct with each function call.
+   via the Camera *camera struct with each function call (08/15/2000 - done).
  - USB support is broken as libgpio got changed a bit. I can't test it as
    I don't have USB :-(
  - A5 support is completely broken, with the new filename based API, the 
@@ -13,8 +13,8 @@
    gp_config_set to retrieve and store its configuration information.
    I think it should include : date, owner, battery status, firmware 
    revision and Compact flash space used/available.
-   I don't know if anything else is needed.
- - Starting a Changelog file.
+   I don't know if anything else is needed (08/15/2000 - mostly done).
+ - Starting a Changelog file (done).
  - FOLDERS : folders are not supported on the A50 (users have no control on
    the directory where images are stored on the compact flash) so for the
    moment the internal directory structure is hidden to gphoto2.

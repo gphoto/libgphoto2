@@ -13,8 +13,8 @@
  *
  ****************************************************************************/
 
-void dump_hex(const char *msg, const unsigned char *buf, int len);
-void debug_message(const char * msg, ...);
+void dump_hex(Camera *camera,const char *msg, const unsigned char *buf, int len);
+void debug_message(Camera *camera,const char * msg, ...);
 
 
 #endif /* _CANON_UTIL_H */

@@ -1,3 +1,10 @@
+2000-08-15
+    philm       created a working camera_config_set functions
+                (saves debug level and owner name).
+                modified heavily the driver to use the camlib_data struct
+                to store all the variables which were previously global.
+                The driver should now be able to use more than one Canon
+                camera at a time (not tested). 
 2000-08-10
     philm       added a psa50_set_time function to set the camera date
                 to the PC date.

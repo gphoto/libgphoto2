@@ -37,27 +37,46 @@ struct psa50_dir {
  * Various Powershot camera types
  */
 typedef enum {
-  CANON_PS_A5,
-  CANON_PS_A5_ZOOM,
-  CANON_PS_A50,
-  CANON_PS_S10,
-  CANON_PS_S20,
-  CANON_PS_A70,
-  CANON_PS_S100
+	CANON_PS_A5,
+	  CANON_PS_A5_ZOOM,
+	  CANON_PS_A50,
+	  CANON_PS_S10,
+	  CANON_PS_S20,
+	  CANON_PS_A70,
+	  CANON_PS_S100
 } canonCamModel;
 
 
 struct canon_info
 {
-  canonCamModel model;
-  int speed;        /* The speed we're using for this camera */
-  char ident[32];   /* Model ID string given by the camera */
-  char owner[32];   /* Owner name */
-  char firmwrev[4]; /* Firmware revision */
+	canonCamModel model;
+	gpio_device *gdev;
+	int speed;        /* The speed we're using for this camera */
+	char ident[32];   /* Model ID string given by the camera */
+	char owner[32];   /* Owner name */
+	char firmwrev[4]; /* Firmware revision */
+	int debug;
+	
+	int first_init;  /* first use of camera   1 = yes 0 = no */
+
+/*
+ * Directory access may be rather expensive, so we cache some information.
+ * The first variable in each block indicates whether the block is valid.
+ */
+
+    int cached_ready;
+	int cached_disk;
+	char cached_drive[10]; /* usually something like C: */
+	int cached_capacity;
+	int cached_available;
+	int cached_dir;
+	struct psa50_dir *cached_tree;
+	int cached_images;
+	char **cached_paths; /* only used by A5 */
 };
 
 
-extern struct canon_info camera_data;
+// extern struct canon_info camera_data;
 extern char psa50_id[]; /* ditto @@@ */
 int A5;
 
@@ -91,41 +110,40 @@ typedef unsigned long u32;
 /**
  * Switches the camera on, detects the model and sets its speed
  */
-int psa50_ready(void);
+int psa50_ready(Camera *camera);
 
 /**
  *
  */
-char *psa50_get_disk(void);
+char *psa50_get_disk(Camera *camera);
 
 /**
  *
  */
-int psa50_get_battery(int *pwr_status, int *pwr_source);
+int psa50_get_battery(Camera *camera, int *pwr_status, int *pwr_source);
 
 /**
  *
  */
-int psa50_disk_info(const char *name,int *capacity,int *available);
+int psa50_disk_info(Camera *camera, const char *name,int *capacity,int *available);
 
 /**
  *
  */
-struct psa50_dir *psa50_list_directory(const char *name);
-void psa50_free_dir(struct psa50_dir *list);
-unsigned char *psa50_get_file(const char *name,int *length);
-unsigned char *psa50_get_thumbnail(const char *name,int *length);
-int psa50_put_file(CameraFile *file, char *destname, char *destpath);
-int psa50_set_file_attributes(const char *file, const char *dir, char attrs);
-int psa50_delete_file(const char *name, const char *dir);
-int psa50_end(void);
-int psa50_off(void);
-int psa50_sync_time(void);
-time_t psa50_get_time(void);
-int psa50_set_time(void);
-int psa50_directory_operations(char *path, int action);
-int psa50_get_owner_name(void);
-int psa50_set_owner_name(const char *name);
-void psa50_error_type(void);
+struct psa50_dir *psa50_list_directory(Camera *camera, const char *name);
+void psa50_free_dir(Camera *camera, struct psa50_dir *list);
+unsigned char *psa50_get_file(Camera *camera, const char *name,int *length);
+unsigned char *psa50_get_thumbnail(Camera *camera, const char *name,int *length);
+int psa50_put_file(Camera *camera, CameraFile *file, char *destname, char *destpath);
+int psa50_set_file_attributes(Camera *camera, const char *file, const char *dir, char attrs);
+int psa50_delete_file(Camera *camera, const char *name, const char *dir);
+int psa50_end(Camera *camera);
+int psa50_off(Camera *camera);
+time_t psa50_get_time(Camera *camera);
+int psa50_set_time(Camera *camera);
+int psa50_directory_operations(Camera *camera, char *path, int action);
+int psa50_get_owner_name(Camera *camera);
+int psa50_set_owner_name(Camera *camera, const char *name);
+void psa50_error_type(Camera *camera);
 
 #endif
