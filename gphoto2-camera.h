@@ -49,35 +49,41 @@ typedef enum {
 	GP_CAPTURE_SOUND
 } CameraCaptureType;
 
-typedef int (*c_exit)                   (Camera*);
-typedef int (*c_get_config)             (Camera*, CameraWidget**);
-typedef int (*c_set_config)             (Camera*, CameraWidget*);
-typedef int (*c_capture)                (Camera*, CameraCaptureType,
-					 CameraFilePath*);
-typedef int (*c_capture_preview)        (Camera*, CameraFile*);
-typedef int (*c_summary)                (Camera*, CameraText*);
-typedef int (*c_manual)                 (Camera*, CameraText*);
-typedef int (*c_about)                  (Camera*, CameraText*);
+typedef int (*CameraExitFunc)      (Camera *camera);
 
-/* Don't use (see below) */
+/* Configuration */
+typedef int (*CameraGetConfigFunc) (Camera *camera, CameraWidget **widget);
+typedef int (*CameraSetConfigFunc) (Camera *camera, CameraWidget  *widget);
+typedef int (*CameraFolderGetConfigFunc) (Camera *camera, const char *folder,
+					  CameraWidget **widget);
+typedef int (*CameraFolderSetConfigFunc) (Camera *camera, const char *folder,
+					  CameraWidget *widget);
+typedef int (*CameraFileGetConfigFunc) (Camera *camera, const char *folder,
+				        const char *file,
+					CameraWidget **widget);
+typedef int (*CameraFileSetConfigFunc) (Camera *camera, const char *folder,
+				        const char *file, CameraWidget *widget);
+
+/* Capturing */
+typedef int (*CameraCaptureFunc)        (Camera *camera, CameraCaptureType type,
+				         CameraFilePath *path);
+typedef int (*CameraCapturePreviewFunc) (Camera *camera, CameraFile *file);
+
+/* Textual information */
+typedef int (*CameraSummaryFunc) (Camera *camera, CameraText *text);
+typedef int (*CameraManualFunc)  (Camera *camera, CameraText *text);
+typedef int (*CameraAboutFunc)   (Camera *camera, CameraText *text);
+
+/* Error reporting */
+typedef const char *(*CameraResultFunc) (Camera *camera, int result);
+
+/* DEPRECATED */
 typedef int (*c_folder_list_folders)    (Camera*, const char*, CameraList*);
 typedef int (*c_folder_list_files)      (Camera*, const char*, CameraList*);
-
-typedef int (*c_folder_get_config)      (Camera*, const char*, CameraWidget**);
-typedef int (*c_folder_set_config)      (Camera*, const char*, CameraWidget*);
-
-/* Don't use (see below) */
 typedef int (*c_file_get_info)          (Camera*, const char*,
 					 const char*, CameraFileInfo*);
 typedef int (*c_file_set_info)          (Camera*, const char*,
 					 const char*, CameraFileInfo*);
-
-typedef int (*c_file_get_config)        (Camera*, const char*,
-		                         const char*, CameraWidget**);
-typedef int (*c_file_set_config)        (Camera*, const char*,
-		                         const char*, CameraWidget*);
-
-/* Don't use */
 typedef int (*c_file_get)               (Camera*, const char*,
 		                         const char*, CameraFileType type,
 					 CameraFile*);
@@ -86,33 +92,34 @@ typedef const char *(*c_result_as_string) (Camera*, int);
 
 
 typedef struct {
-	c_exit                  exit;
-	c_get_config            get_config;
-	c_set_config            set_config;
-	c_capture               capture;
-	c_capture_preview       capture_preview;
-	c_summary               summary;
-	c_manual                manual;
-	c_about                 about;
+	CameraExitFunc exit;
 
-	/* Don't use those, use gp_filesystem_set_list_funcs instead */
+	/* Configuration */
+	CameraGetConfigFunc       get_config;
+	CameraSetConfigFunc       set_config;
+	CameraFolderGetConfigFunc folder_get_config;
+	CameraFolderSetConfigFunc folder_set_config;
+	CameraFileGetConfigFunc   file_get_config;
+	CameraFileSetConfigFunc   file_set_config;
+
+	/* Capturing */
+	CameraCaptureFunc        capture;
+	CameraCapturePreviewFunc capture_preview;
+
+	/* Textual information */
+	CameraSummaryFunc summary;
+	CameraManualFunc  manual;
+	CameraAboutFunc   about;
+
+	/* Error reporting */
+	CameraResultFunc result_as_string;
+
+	/* DEPRECATED */
 	c_folder_list_folders   folder_list_folders;
 	c_folder_list_files     folder_list_files;
-
-	c_folder_get_config     folder_get_config;
-	c_folder_set_config     folder_set_config;
-
-	/* Don't use those, use gp_filesystem_set_info_funcs instead */
 	c_file_get_info         file_get_info;
 	c_file_set_info         file_set_info;
-
-	c_file_get_config       file_get_config;
-	c_file_set_config       file_set_config;
-
-	/* Don't use those, use gp_filesystem_set_file_funcs instead */
 	c_file_get              file_get;
-
-	c_result_as_string      result_as_string;
 } CameraFunctions;
 
 /* Those are DEPRECATED */
@@ -125,11 +132,10 @@ typedef void (* CameraProgressFunc) (Camera *, float percentage, void *data);
 
 typedef struct _CameraPrivateLibrary  CameraPrivateLibrary;
 typedef struct _CameraPrivateCore     CameraPrivateCore;
-typedef struct _CameraPrivateFrontend CameraPrivateFrontend;
 
 struct _Camera {
 
-	/* Don't use */
+	/* DEPRECATED */
 	void            *camlib_data;
 
 	/* Those should be accessed only by the camera driver */
@@ -139,7 +145,6 @@ struct _Camera {
 
 	CameraPrivateLibrary  *pl; /* Private data of camera libraries    */
 	CameraPrivateCore     *pc; /* Private data of the core of gphoto2 */
-	CameraPrivateFrontend *pf; /* Private data of the frontend        */
 };
 
 /* Create a new camera device */
