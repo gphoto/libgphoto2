@@ -92,8 +92,11 @@ parse_range_rec (const char *range, unsigned int start, char *index,
 	char buf[1024];
 
 	do {
-		strncpy (buf, range, sizeof (buf));
-		strncat (buf, "\n", sizeof (buf));
+		strncpy (buf, range, sizeof (buf) - 1);
+		buf[sizeof (buf) - 1] = 0;
+		strncat (buf, "\n", sizeof (buf) - strlen (buf) - 1);
+		buf[sizeof (buf) - 1] = 0;
+		
 		switch (range[start + i]) {
 		case '0':
 		case '1':
@@ -105,11 +108,16 @@ parse_range_rec (const char *range, unsigned int start, char *index,
 		case '7':
 		case '8':
 		case '9':
-			for (j = 0; j < start + i; j++)
-				strncat (buf, " ", sizeof (buf));
+			for (j = 0; j < start + i; j++) {
+				strncat (buf, " ", sizeof (buf) - strlen (buf) - 1);
+				buf[sizeof (buf) - 1] = 0;
+			}
 			l = str_grab_nat (range + start, &i);
-			for (; j < start + i; j++)
-				strncat (buf, "^", sizeof (buf));
+			for (; j < start + i; j++) {
+				strncat (buf, "^", sizeof (buf) - strlen (buf) - 1);
+				buf[sizeof (buf) - 1] = 0;
+			}
+			
 			if (l <= 0) {
 				gp_context_error (context, _("%s\n"
 					"Image IDs must be a number greater "
@@ -127,9 +135,12 @@ parse_range_rec (const char *range, unsigned int start, char *index,
 
 			/* If we already have r, then something is wrong. */
 			if (r > 0) {
-				for (j = 0; j < start + i; j++)
-					strncat (buf, " ", sizeof (buf));
-				strncat (buf, "^", sizeof (buf));
+				for (j = 0; j < start + i; j++) {
+					strncat (buf, " ", sizeof (buf) - strlen (buf) - 1);
+					buf[sizeof (buf) - 1] = 0;
+				}
+				strncat (buf, "^", sizeof (buf) - strlen (buf) - 1);
+				buf[sizeof (buf) - 1] = 0;
 				gp_context_error (context, _("%s\n"
 					"Ranges must be separated by ','."),
 					buf);
@@ -138,9 +149,12 @@ parse_range_rec (const char *range, unsigned int start, char *index,
 
 			/* If we have not l, then something is wrong, too. */
 			if (l <= 0) {
-				for (j = 0; j < start + i; j++)
-					strncat (buf, " ", sizeof (buf));
-				strncat (buf, "^", sizeof (buf));
+				for (j = 0; j < start + i; j++) {
+					strncat (buf, " ", sizeof (buf) - strlen (buf) - 1);
+					buf[sizeof (buf) - 1] = 0;
+				}
+				strncat (buf, "^", sizeof (buf) - strlen (buf) - 1);
+				buf[sizeof (buf) - 1] = 0;
 				gp_context_error (context, _("%s\n"
 					"Ranges need to start with "
 					"a number."), buf);
@@ -148,11 +162,16 @@ parse_range_rec (const char *range, unsigned int start, char *index,
 			}
 
 			i++;
-			for (j = 0; j < start + i; j++)
-				strncat (buf, " ", sizeof (buf));
+			for (j = 0; j < start + i; j++) {
+				strncat (buf, " ", sizeof (buf) - strlen (buf) - 1);
+				buf[sizeof (buf) - 1] = 0;
+			}
 			r = str_grab_nat (range + start, &i);
-			for (; j < start + i; j++)
-				strncat (buf, "^", sizeof (buf));
+			for (; j < start + i; j++) {
+				strncat (buf, "^", sizeof (buf) - strlen (buf) - 1);
+				buf[sizeof (buf) - 1] = 0;
+			}
+			buf[sizeof (buf) - 1] = 0;
 			if (r <= 0) {
 				gp_context_error (context, _("%s\n"
 					"Image IDs must be a number greater "
@@ -170,9 +189,12 @@ parse_range_rec (const char *range, unsigned int start, char *index,
 			break; 
 			
 		default :
-			for (j = 0; j < start + i; j++)
-				strncat (buf, " ", sizeof (buf));
-			strncat (buf, "^", sizeof (buf));
+			for (j = 0; j < start + i; j++) {
+				strncat (buf, " ", sizeof (buf) - strlen (buf) - 1);
+				buf[sizeof (buf) - 1] = 0;
+			}
+			strncat (buf, "^", sizeof (buf) - strlen (buf) - 1);
+			buf[sizeof (buf) - 1] = 0;
 			gp_context_error (context, _("%s\n"
 				"Unexpected "
 				"character '%c'."), buf, range[start + i]);
@@ -184,12 +206,18 @@ parse_range_rec (const char *range, unsigned int start, char *index,
 	if (i) {
 		if (0 < r) { /* update range of bytes */ 
 			if (r < l) {
-				strncpy (buf, range, sizeof (buf));
-				strncat (buf, "\n", sizeof (buf));
-				for (j = 0; j < start; j++)
-					strncat (buf, " ", sizeof (buf));
-				for (; j < start + i; j++)
-					strncat (buf, "^", sizeof (buf));
+				strncpy (buf, range, sizeof (buf) - strlen (buf) - 1);
+				buf[sizeof (buf) - 1] = 0;
+				strncat (buf, "\n", sizeof (buf) - strlen (buf) - 1);
+				buf[sizeof (buf) - 1] = 0;
+				for (j = 0; j < start; j++) {
+					strncat (buf, " ", sizeof (buf) - strlen (buf) - 1);
+					buf[sizeof (buf) - 1] = 0;
+				}
+				for (; j < start + i; j++) {
+					strncat (buf, "^", sizeof (buf) - strlen (buf) - 1);
+					buf[sizeof (buf) - 1] = 0;
+				}
 				gp_context_error (context, _("%s\n"
 					"Decreasing ranges "
 					"are not allowed. You specified a "
