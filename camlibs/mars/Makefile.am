@@ -1,5 +1,7 @@
 camlib_LTLIBRARIES = libgphoto2_mars.la
 
+EXTRA_DIST = protocol.txt
+
 INCLUDES =                              		\
         -I$(top_srcdir)/intl				\
         -I$(top_srcdir)/libgphoto2_port			\
