@@ -327,12 +327,8 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 	 * Should the USB layer report that ? I don't know.
 	 * Better to check here.
 	 */
-	if ((idvendor == 0) || (idproduct == 0)) {
-		gp_port_set_error (port, "NOT looking for illegal USB device "
-				   "(vendor 0x%x, product 0x%x)...", 
-				   idvendor, idproduct);
+	if (!idvendor || !idproduct)
 		return GP_ERROR_BAD_PARAMETERS;
-	}
 
 	for (bus = usb_busses; bus; bus = bus->next) {
 		for (dev = bus->devices; dev; dev = dev->next) {
@@ -348,9 +344,9 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 		}
 	}
 
-	gp_port_set_error (port, "Looking for USB device "
-			   "(vendor 0x%x, product 0x%x)... not found.", 
-			   idvendor, idproduct);
+	gp_port_set_error (port, _("Could not find USB device "
+		"(vendor 0x%x, product 0x%x). Make sure this device "
+		"is connected to the computer."), idvendor, idproduct);
 	return GP_ERROR_IO_USB_FIND;
 }
 
