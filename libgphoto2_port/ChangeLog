@@ -1,3 +1,9 @@
+2005-02-16  Marcus Meissner  <marcus@jet.franken.de>
+
+	* usb/libusb.c: also detach the usb-storage driver
+	  when we open a USB device. We can support those
+	  cameras.
+
 2005-02-12  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
 	* configure.in: fix shell syntax error I introduced
