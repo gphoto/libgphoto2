@@ -471,7 +471,7 @@ int camera_file_get (int file_number, CameraFile *file) {
 	DBUG_PRINT_1("Retrieving an image %i from camera", file_number + 1);	
 
 	sprintf(file->name, "dsc%04i.jpg", file_number + 1);
-	file->type = GP_FILE_JPEG;
+	strcpy(file->type, "image/jpg");
 	
 	if (!(file->data = dsc_readimage(dsc, file_number + 1, DSC_FULLIMAGE, &size)))
 		return GP_ERROR;
@@ -492,7 +492,7 @@ int camera_file_get_preview (int file_number, CameraFile *preview) {
 	DBUG_PRINT_1("Retrieving a thumbnail %d from camera", file_number + 1);
 	
 	sprintf(preview->name, "dsc%04i-thumbnail.jpg", file_number + 1);	
-	preview->type = GP_FILE_JPEG;
+	strcpy(preview->type, "image/jpg");
 	
 	if (!(preview->data = dsc_readimage(dsc, file_number + 1, DSC_THUMBNAIL, &size)))
 		return GP_ERROR;
@@ -506,7 +506,7 @@ int camera_file_put (CameraFile *file) {
 
 	char	str[80];
 	
-	if (file->type != GP_FILE_JPEG) {
+	if (strcmp(file->type, "image/jpg") != 0) {
 		DBUG_PRINT("JPEG image format allowed only.");
 		sprintf(str, "JPEG image format allowed only.");
 		gp_message(str);
@@ -540,7 +540,7 @@ int camera_config_set (CameraSetting *setting, int count) {
 	return (GP_ERROR);
 }
 
-int camera_capture (CameraFileType type) {
+int camera_capture (CameraFile *file) {
 
 	return (GP_ERROR);
 }

@@ -296,7 +296,8 @@ return (GP_ERROR);
 	}
 
 	/* Fill in the file structure */
-	file->type = GP_FILE_JPEG;
+	
+	strcpy(file->type, "image/jpg");
 	file->size = length;
 
 	/* Allocate the picture */
@@ -384,7 +385,7 @@ return (GP_ERROR);
 	return (GP_ERROR);
 }
 
-int camera_capture (CameraFileType type) {
+int camera_capture (CameraFile *file) {
 
 	debug_print("Capturing image");
 

@@ -12,7 +12,7 @@ int gpfe_cache_put (int camera_number, int folder_number, int file_number, Camer
 	FILE *fp;
 	char buf[1024];
 
-	sprintf(buf, "%s/.gphoto/cache/%i-%i-%i.%i", getenv("HOME"), 
+	sprintf(buf, "%s/.gphoto/cache/%i-%i-%i.%s", getenv("HOME"), 
 		camera_number, folder_number, file_number, file->type);
 #ifdef DEBUG
 	printf("cache: putting \"%s\"... ", buf);
@@ -34,7 +34,8 @@ int gpfe_cache_get (int camera_number, int folder_number, int file_number, Camer
 	DIR  *d;
 	struct dirent *de;
 	long int s;
-	int camn, foldn, filen, filet;
+	int camn, foldn, filen;
+	char filet[1024];
 	char buf[1024], cachedir[1024];
 
 	sprintf(cachedir, "%s/.gphoto/cache", getenv("HOME"));
@@ -52,7 +53,7 @@ int gpfe_cache_get (int camera_number, int folder_number, int file_number, Camer
 		/* Read each entry */
 		de = readdir(d);
 		if (de) {
-			sscanf(de->d_name, "%i-%i-%i.%i", 
+			sscanf(de->d_name, "%i-%i-%i.%s", 
 			       &camn, &foldn, &filen, &filet);
 			if ((camn  == camera_number) &&
 			    (foldn == folder_number) && 
@@ -70,7 +71,7 @@ int gpfe_cache_get (int camera_number, int folder_number, int file_number, Camer
 					(size_t)file->size, fp);
 				fclose(fp);
 				file->size = s;
-				file->type = filet;
+				sprintf(file->type, "image/%s", filet);
 				return (GP_OK);
 			}
 		}

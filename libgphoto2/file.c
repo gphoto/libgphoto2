@@ -14,7 +14,7 @@ CameraFile* gp_file_new () {
 	CameraFile *f;
 
 	f = (CameraFile*)malloc(sizeof(CameraFile));
-	f->type = GP_FILE_UNKNOWN;
+	strcpy(f->type, "unknown/unknown");
 	strcpy(f->name, "");
 	f->data = NULL;
 	f->size = 0;

@@ -88,7 +88,7 @@ int camera_config_set		(CameraSetting *conf,
 	/* Sets configuration values in the library. These	*/
 	/* values are obtained from the configuration dialog.	*/
 
-int camera_capture 		(CameraFileType type);
+int camera_capture 		(CameraFile *f);
 	/* Have the camera capture a file of type 'type'. 	*/
 	/* type will be one of the generic CameraFileType's.	*/
 	/* This is used to get live previews.			*/

@@ -165,6 +165,7 @@ int camera_file_get (int file_number, CameraFile *file) {
 	FILE *fp;
 	long imagesize;
 	char filename[1024];
+	char *slash;
 
 #if defined(OS2) || defined(WINDOWS)
 	sprintf(filename, "%s\\%s", dir_directory,
@@ -183,7 +184,12 @@ int camera_file_get (int file_number, CameraFile *file) {
 	fclose(fp);
 
 	strcpy(file->name, dir_images[file_number]);
-	file->type = GP_FILE_JPEG;
+	slash = strrchr(dir_images[file_number], '/');
+	if (slash)
+		sprintf(file->type, "image/%s", &slash[1]);
+	   else
+		sprintf(file->type, "image/unknown", &slash[1]);
+
 	file->size = imagesize;
 	return (GP_OK);
 }
@@ -198,6 +204,7 @@ int camera_file_get_preview (int file_number, CameraFile *preview) {
 	char filename[1024];
 	FILE *fp;
 	long int imagesize;
+	char *slash;
 
 	sprintf(filename, "%s/%s", dir_directory,
 		dir_images[file_number]);	
@@ -210,7 +217,12 @@ int camera_file_get_preview (int file_number, CameraFile *preview) {
 	fclose(fp);
 
 	strcpy(preview->name, dir_images[file_number]);
-	preview->type = GP_FILE_JPEG;
+	slash = strrchr(dir_images[file_number], '/');
+	if (slash)
+		sprintf(preview->type, "image/%s", &slash[1]);
+	   else
+		sprintf(preview->type, "image/unknown", &slash[1]);
+
 	preview->size = imagesize;
 
 //	gp_file_image_scale(preview, 80, 60, preview);
@@ -239,7 +251,7 @@ int camera_config_set (CameraSetting *setting, int count) {
 	return (GP_ERROR);
 }
 
-int camera_capture (CameraFileType type) {
+int camera_capture (CameraFile *file) {
 
 	return (GP_ERROR);
 }

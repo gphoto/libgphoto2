@@ -467,7 +467,7 @@ int camera_file_get (int file_number, CameraFile *file)
 		K_IMAGE_JPEG, 
 		(guchar **) &file->data, 
 		(guint *) &file->size))) return (GP_ERROR);
-	file->type = GP_FILE_JPEG;
+	strcpy(file->type, "image/jpg");
 	sprintf (file->name, "%i.jpg", (int) image_id);
 	g_free (information_buffer);
 	return (GP_OK);
@@ -495,7 +495,7 @@ int camera_file_get_preview (int file_number, CameraFile *preview)
 		K_THUMBNAIL, 
 		(guchar **) &preview->data, 
 		(guint *) &preview->size))) return (GP_ERROR);
-	preview->type = GP_FILE_JPEG;
+	strcpy(preview->type, "image/jpg");
 	sprintf (preview->name, "%i.jpg", (int) image_id);
 	g_free (information_buffer);
 	return (GP_OK);
@@ -640,6 +640,5 @@ int camera_config_set (CameraSetting *conf, int count)
 	printf ("Not yet implemented...\n");
 	return (GP_ERROR);
 }
-
 
 

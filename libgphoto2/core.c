@@ -164,7 +164,7 @@ int gp_port_info(int port_number, CameraPortInfo *info) {
 			break;
 		default:
 			info->type = GP_PORT_NONE;
-	}
+	}	
 	strcpy(info->name, i.name);
 	strcpy(info->path, i.path);
 

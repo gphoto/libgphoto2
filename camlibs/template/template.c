@@ -22,6 +22,8 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 	abilities[0].parallel = 0;
 	abilities[0].usb      = 0;
 	abilities[0].ieee1394 = 0;
+	abiltiies[0].network  = 0;
+
 	abilities[0].speed[0] = 0;
 	abilities[0].capture  = 0;
 	abilities[0].config   = 0;
@@ -95,7 +97,7 @@ int camera_config_set (CameraSetting *setting, int count) {
 	return (GP_ERROR);
 }
 
-int camera_capture (CameraFileType type) {
+int camera_capture (CameraFile *file) {
 
 	return (GP_ERROR);
 }

@@ -13,21 +13,6 @@
 #define GP_ERROR			-1
 #define GP_ERROR_NONCRITICAL		-2
 
-/* File Types */
-typedef enum {
-	GP_FILE_UNKNOWN,
-	GP_FILE_IMAGE,	/* Generic */
-	GP_FILE_JPEG,
-	GP_FILE_TIFF,
-	GP_FILE_FLASHPIX,
-	GP_FILE_PPM,
-	GP_FILE_AUDIO,	/* Generic */
-	GP_FILE_WAV,
-	GP_FILE_MOVIE,	/* Generic */
-	GP_FILE_MPEG,
-	GP_FILE_QUICKTIME
-} CameraFileType;
-
 /* Physical Connection Types */
 typedef enum {
 	GP_PORT_NONE,
@@ -89,19 +74,17 @@ typedef struct {
         char path[64];
 } CameraPortInfo;
 
-
 typedef struct {
 	char path[128];
 		/* path to serial port device 			 */
 		/* For serial port, "/dev/ttyS0" or variants	 */
 		/* For parallel port, "/dev/lpt0" or variants	 */
-		/* For usb, "inep# outep#"			 */
+		/* For usb, "usb"				 */
 		/* For ieee1394, "ieee1394"			 */
 		/* For network, the address (ip or fqdn).	 */
-		/* For directory, the path.			 */
 
 	int speed;
-		/* Speed to use					 */
+		/* Speed to use	(serial)			 */
 } CameraPortSettings;
 
 typedef struct {
@@ -133,7 +116,6 @@ typedef struct {
 
 	int file_put;
 		/* Camera can receive files			 */
-
 } CameraAbilities;
 
 typedef struct {
@@ -145,8 +127,8 @@ typedef struct {
 } CameraInit;
 
 typedef struct {
-	CameraFileType	type;
-		/* Type of file (GP_FILE_JPEG, GP_FILE_TIFF, ..) */
+	char		type[64];
+		/* mime-type of file ("image/jpg", "image/tiff", etc..,) */
 
 	char		name[64];
 		/* Suggested name for the file */

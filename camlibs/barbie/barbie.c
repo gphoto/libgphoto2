@@ -366,7 +366,7 @@ int camera_file_get (int file_number, CameraFile *file) {
 
 	strcpy(file->name, "barbie0.ppm");
 	name[6] = '0' + file_number;
-	file->type = GP_FILE_PPM;
+	strcpy(file->type, "image/ppm");
 	file->data = barbie_read_picture(file_number, 0, &size);;
 	if (!file->data)
 		return GP_ERROR;
@@ -386,7 +386,7 @@ int camera_file_get_preview (int file_number, CameraFile *file) {
 
 	gp_progress(0.00);
 
-	file->type = GP_FILE_PPM;
+	strcpy(file->type, "image/ppm");
 	file->data = barbie_read_picture(file_number, 1, &size);;
 	if (!file->data)
 		return GP_ERROR;
@@ -418,8 +418,8 @@ int camera_config_set (CameraSetting *setting, int count) {
 	return GP_OK;
 }
 
-int camera_capture (CameraFileType type) {
-
+int camera_capture (CameraFile *file) {
+/*
 	char cmd[4], resp[4];
 
 	if (glob_debug)
@@ -427,19 +427,19 @@ int camera_capture (CameraFileType type) {
 
 	memcpy(cmd, packet_1, 4);
 
-	/* Initiated the grab */
 	cmd[COMMAND_BYTE] = 'G';
 	cmd[DATA1_BYTE]   = 0x40;
 	if (barbie_exchange(cmd, 4, resp, 4) == 0)
 		return (0);
 
-	/* Get the response (error code) to the grab */
 	cmd[COMMAND_BYTE] = 'Y';
 	cmd[DATA1_BYTE]   = 0;
 	if (barbie_exchange(cmd, 4, resp, 4) == 0)
 		return (0);
 
 	return(resp[DATA1_BYTE] == 0? GP_OK: GP_ERROR);
+*/
+	return (GP_ERROR);
 }	
 
 int camera_summary (char *summary) {
