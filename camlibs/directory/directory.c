@@ -121,7 +121,7 @@ int camera_folder_set(char *folder_name) {
 	}
 	de = readdir(dir);
 	while (de) {
-		gp_update_progress(-1);
+		gp_progress(-1);
 		sprintf(fname, "%s/%s", dir_directory, de->d_name);
 		stat(fname, &s);
                 /* If it's a file ...*/

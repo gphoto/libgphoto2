@@ -3,7 +3,7 @@
 
 #include <gphoto2.h>
 
-int interface_update_status (char *status) {
+int interface_status (char *status) {
 
 	printf("Status: %s\n", status);
 	return (GP_OK);
@@ -26,7 +26,7 @@ int interface_confirm (char *message) {
 	return ((c=='y') || (c=='Y'));
 }
 
-int interface_update_progress (float percentage) {
+int interface_progress (float percentage) {
 
 	if (percentage >= 0)
 		printf("Percent completed: %f\n", percentage);

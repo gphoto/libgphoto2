@@ -363,7 +363,7 @@ int camera_file_get (int file_number, CameraFile *file) {
 		printf("barbie: Getting a picture\n");
 
 
-	gp_update_progress(0.00);
+	gp_progress(0.00);
 
 	strcpy(file->name, "barbie0.ppm");
 	name[6] = '0' + file_number;
@@ -385,7 +385,7 @@ int camera_file_get_preview (int file_number, CameraFile *file) {
 		printf("barbie: Getting a preview\n");
 
 
-	gp_update_progress(0.00);
+	gp_progress(0.00);
 
 	file->type = GP_FILE_PPM;
 	file->data = barbie_read_picture(file_number, 1, &size);;

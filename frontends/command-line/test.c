@@ -84,7 +84,7 @@ int test_gphoto() {
 		printf("cli: ERROR: get_preview error!\n");
 	   else {
 		printf("cli: done!\n");
-		gp_file_save_to_disk(f, "/home/scottf/test.jpg");
+		gp_file_save(f, "/home/scottf/test.jpg");
 	}
 
 	/* ---------------------------------- */

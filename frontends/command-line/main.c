@@ -71,6 +71,7 @@ OPTION_CALLBACK(num_pictures);
 OPTION_CALLBACK(get_picture);
 OPTION_CALLBACK(get_thumbnail);
 OPTION_CALLBACK(delete_picture);
+OPTION_CALLBACK(upload_picture);
 
 /* 2) Add an entry in the option table 				*/
 /*    ----------------------------------------------------------------- */
@@ -105,7 +106,7 @@ Option option[] = {
 {"p", "get-picture",	"#", 		"Get picture # from camera", 	get_picture,	0},
 {"t", "get-thumbnail",	"#", 		"Get thumbnail # from camera",	get_thumbnail,	0},
 {"d", "delete-picture",	"#",		"Delete picture # from camera", delete_picture, 0},
-
+{"u", "upload-picture",	"filename",	"Upload a picture to camera",upload_picture,0},
 /* End of list 			*/
 {"" , "", 		"",		"",				NULL,		0}
 };
@@ -121,6 +122,8 @@ char glob_port[128];
 char glob_model[64];
 char glob_folder[128];
 int  glob_speed;
+
+CameraAbilities glob_abilities;
 
 int  glob_debug;
 int  glob_quiet=0;
@@ -155,7 +158,6 @@ OPTION_CALLBACK(test) {
 
 OPTION_CALLBACK(abilities) {
 
-	CameraAbilities a;
 	int x=0;
 	char buf[32];
 
@@ -164,7 +166,7 @@ OPTION_CALLBACK(abilities) {
 		return (GP_ERROR);
 	}
 
-	if (gp_camera_abilities_by_name(glob_model, &a)==GP_ERROR) {
+	if (gp_camera_abilities_by_name(glob_model, &glob_abilities)==GP_ERROR) {
 		error_print("Could not find camera \"%s\".\nUse \"--list-cameras\" to see available camera models", glob_model);
 		return (GP_ERROR);
 	}
@@ -172,33 +174,33 @@ OPTION_CALLBACK(abilities) {
 	/* Output a parsing friendly abilities table. Split on ":" */
 
 	printf("Abilities for camera:                 : %s\n", 
-		a.model);
+		glob_abilities.model);
         printf("Serial port support                   : %s\n",
-                a.serial == 0? "no":"yes");
+                glob_abilities.serial == 0? "no":"yes");
         printf("Parallel port support                 : %s\n",
-                a.parallel == 0? "no":"yes");
+                glob_abilities.parallel == 0? "no":"yes");
         printf("USB support                           : %s\n",
-                a.usb == 0? "no":"yes");
+                glob_abilities.usb == 0? "no":"yes");
         printf("IEEE1394 support                      : %s\n",
-                a.ieee1394 == 0? "no":"yes");
+                glob_abilities.ieee1394 == 0? "no":"yes");
 
-	if (a.speed[0] != 0) {
+	if (glob_abilities.speed[0] != 0) {
 	printf("Transfer speeds supported             :\n");
 		do {	
-	printf("                                      : %i\n", a.speed[x]);
+	printf("                                      : %i\n", glob_abilities.speed[x]);
 			x++;
-		} while (a.speed[x]!=0);
+		} while (glob_abilities.speed[x]!=0);
 	}
 	printf("Capture from computer support         : %s\n", 
-		a.capture == 0? "no":"yes");
+		glob_abilities.capture == 0? "no":"yes");
 	printf("Configuration support                 : %s\n", 
-		a.config == 0? "no":"yes");
+		glob_abilities.config == 0? "no":"yes");
 	printf("Delete files on camera support        : %s\n", 
-		a.file_delete == 0? "no":"yes");
+		glob_abilities.file_delete == 0? "no":"yes");
 	printf("File preview (thumbnail) support      : %s\n", 
-		a.file_preview == 0? "no":"yes");
+		glob_abilities.file_preview == 0? "no":"yes");
 	printf("File upload support                   : %s\n", 
-		a.file_put == 0? "no":"yes");
+		glob_abilities.file_put == 0? "no":"yes");
 
 	return (GP_OK);
 }
@@ -220,7 +222,7 @@ OPTION_CALLBACK(list_cameras) {
 
 	for (x=0; x<n; x++) {
 		if (gp_camera_name(x, buf)==GP_ERROR)
-			error_print("Could not retrieve the name of camera.", "");
+			error_print("Could not retrieve the name of camerglob_abilities.", "");
 		if (glob_quiet)
 			printf("%s\n", buf);
 		   else
@@ -356,53 +358,6 @@ OPTION_CALLBACK(use_folder) {
 	return (GP_OK);
 }
 
-int get_picture_common(int num, int thumbnail) {
-
-	CameraFile *f;
-	int count=0;
-	char filename[1024];
-
-	if (thumbnail)
-		debug_print("Getting thumbnail", "");
-	   else
-		debug_print("Getting picture", "");
-
-	if (set_globals() == GP_ERROR)
-		return (GP_ERROR);
-
-	count = gp_file_count();
-
-	if (num >= count) {
-		error_print("Picture number is too large", "");
-		return (GP_ERROR);
-	}
-
-	f = gp_file_new();
-	if (thumbnail)
-		gp_file_get_preview(num, f);
-	   else
-		gp_file_get(num, f);
-
-	if ((glob_filename_override)&&(strlen(glob_filename)>0))
-		strcpy(filename, glob_filename);
-	   else if (strlen(f->name)>0)
-		strcpy(filename, f->name);
-	   else {
-		error_print("Filename not found. Use \"--filename\" to specify a filename", "");
-		gp_file_free(f);
-		return (GP_ERROR);
-	}
-
-	if (!glob_quiet)
-		printf("Saving image #%i as %s\n", num, filename);
-	if (gp_file_save_to_disk(f, filename)==GP_ERROR)
-		error_print("Can not save image as ", filename);
-
-	gp_file_free(f);
-
-	return (GP_OK);
-}
-
 OPTION_CALLBACK(num_pictures) {
 
 	int count;
@@ -427,6 +382,59 @@ OPTION_CALLBACK(num_pictures) {
 	return (GP_OK);
 }
 
+int get_picture_common(int num, int thumbnail) {
+
+	CameraFile *f;
+	int count=0;
+	char filename[1024];
+
+	if (thumbnail)
+		debug_print("Getting thumbnail", "");
+	   else
+		debug_print("Getting picture", "");
+
+	if (set_globals() == GP_ERROR)
+		return (GP_ERROR);
+
+	count = gp_file_count();
+
+	if (num >= count) {
+		error_print("Picture number is too large", "");
+		return (GP_ERROR);
+	}
+
+	f = gp_file_new();
+
+	if (thumbnail) {
+		if (!glob_abilities.file_preview) {
+			error_print("Camera can not provide thumbnails", "");
+			gp_file_free(f);
+			return (GP_ERROR);
+		}
+		gp_file_get_preview(num, f);
+	 } else
+		gp_file_get(num, f);
+
+	if ((glob_filename_override)&&(strlen(glob_filename)>0))
+		strcpy(filename, glob_filename);
+	   else if (strlen(f->name)>0)
+		strcpy(filename, f->name);
+	   else {
+		error_print("Filename not found. Use \"--filename\" to specify a filename", "");
+		gp_file_free(f);
+		return (GP_ERROR);
+	}
+
+	if (!glob_quiet)
+		printf("Saving image #%i as %s\n", num, filename);
+	if (gp_file_save(f, filename)==GP_ERROR)
+		error_print("Can not save image as ", filename);
+
+	gp_file_free(f);
+
+	return (GP_OK);
+}
+
 OPTION_CALLBACK(get_picture) {
 
 	return (get_picture_common(atoi(arg), 0));
@@ -447,6 +455,11 @@ OPTION_CALLBACK(delete_picture) {
 	if (set_globals() == GP_ERROR)
 		return (GP_ERROR);
 
+	if (!glob_abilities.file_delete) {
+		error_print("Camera can not delete pictures", "");
+		return (GP_ERROR);
+	}
+
 	count = gp_file_count();
 
 	if (num >= count) {
@@ -459,6 +472,36 @@ OPTION_CALLBACK(delete_picture) {
 		return (GP_ERROR);		
 	}
 	
+	return (GP_OK);
+}
+
+OPTION_CALLBACK(upload_picture) {
+
+	CameraFile *f;
+
+	debug_print("Uploading picture", "");
+
+	if (set_globals() == GP_ERROR)
+		return (GP_ERROR);
+
+	if (!glob_abilities.file_put) {
+		error_print("Camera doesn't support uploading pictures", "");
+		return (GP_ERROR);
+	}
+
+	f = gp_file_new();
+	if (gp_file_open(f, arg)==GP_ERROR) {
+		error_print("Could not open file %s", arg);
+		return (GP_ERROR);		
+	}
+	
+	if (gp_file_put(f)==GP_ERROR) {
+		error_print("Could not upload the picture", "");
+		return (GP_ERROR);
+	}
+
+	gp_file_free(f);
+
 	return (GP_OK);
 }
 
@@ -478,6 +521,11 @@ int set_globals () {
 
 	strcpy(s.port, glob_port);
 	s.speed = glob_speed;
+
+	if (gp_camera_abilities_by_name(glob_model, &glob_abilities)==GP_ERROR) {
+		error_print("Could not find camera \"%s\".\nUse \"--list-cameras\" to see available camera models", glob_model);
+		return (GP_ERROR);
+	}
 
 	if (gp_camera_set_by_name(glob_model, &s)==GP_ERROR) {
 		error_print("Can not initialize camera \"%s\"",glob_model);

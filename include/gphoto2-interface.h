@@ -10,15 +10,14 @@
    ---------------------------------------------------------------- */
 
 /* Displays the current status on an operation in the camera */
-	int interface_update_status (char *status);
+	int interface_status (char *status);
 
 /* Displays a percentage done in the current operation */
-	int interface_update_progress (float percentage);
+	int interface_progress (float percentage);
 
 /* Displays a message (error, very important info) */
 	int interface_message (char *message);
 
 /* Displays a configuration */
 	int interface_confirm (char *message);
-
 
