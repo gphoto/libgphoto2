@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "pdrm65.h"
 #define GP_MODULE "setting"
 
@@ -63,7 +65,9 @@ int pdrm65_get_filenames(GPPort *port, CameraList *list)
 	char out_buf[1024];
 	char in_buf[1024];
 	char ok = 0x06;
-
+	int i;
+	char name[10];
+	
 	gp_port_set_timeout(port, 10000);
 	out_buf[0] = 0x1b;
 	out_buf[1] = 0x43; 
@@ -100,24 +104,91 @@ int pdrm65_get_filenames(GPPort *port, CameraList *list)
 	GP_DEBUG("found %d pictures", numPics);
 
 	
-#if 0
 	for(i=1;  i<numPics+1;  i++) {
-		CHECK( pdrm11_select_file(port, i) );
+		pdrm65_select_file(port, i);
 
-		CHECK(gp_port_usb_msg_read(port, 0x01, 0xe600, i, buf, 14));
+		/* There do not appear to be any filenames in the protocol, just
+		an index, first image is index "1" second is index "2" etc...  */
+		sprintf(name,"%d",i);
+		
 
-		/* the filename is 12 chars starting at the third byte */
-		CHECK(gp_port_usb_msg_read(port, 0x01, PDRM11_CMD_GET_FILENAME, i, buf, 26));
-		for(j=0; j<12; j+=2) {
-			name[j] = buf[j+2+1];
-			name[j+1] = buf[j+2];
-		}
-		name[12] = '\0';
-
-		GP_DEBUG(name);
+		GP_DEBUG("Found picture number %s",name);
 		gp_list_append(list, name, NULL);
 	}
-
-#endif
 	return(GP_OK);
+}
+int pdrm65_select_file(GPPort *port, int current_pic)
+{
+	char out_buf[1024] = "\033\103\006\000\000\004\001\000\000\000\005\000";
+	char in_buf[1024];
+	
+	//sprintf(&out_buf[6],"%o",current_pic);
+	gp_port_write(port, out_buf, 12);
+	gp_port_read (port, in_buf, 1);
+	
+	if (in_buf[0] != 0x06)
+	{
+		return -1;
+	}
+	return(GP_OK);
+}
+
+int pdrm65_get_pict(GPPort *port, const char *pic_number, CameraFile *file)
+{
+	char out_buf[1024];
+	char in_buf[1024];
+	char ok = 0x06;
+	char pic_buf[30656];
+	uint8_t *image;
+	int pic_size = 0;
+	int data_remaining = 0;
+	int image_number = atoi(pic_number);
+	// Set active image to image_number
+	//1b 43 06 00 00 04 01 00 00 00 05 00
+	pdrm65_select_file(port, image_number);
+	// Get size of the image for checking during the transfer.
+	//1b 43 02 00 01 0c 0d 00
+	out_buf[0]=0x1b;
+	out_buf[1]=0x43;
+	out_buf[2]=0x02;
+	out_buf[3]=0x00;
+	out_buf[4]=0x01;
+	out_buf[5]=0x0c;
+	out_buf[6]=0x0d;
+	out_buf[7]=0x00;
+	
+	gp_port_write(port,out_buf,8);
+	gp_port_read(port, in_buf,10);
+	gp_port_write(port,&ok,1);
+	
+	pdrm65_select_file(port, image_number);
+	
+	pic_size = (in_buf[6] * (256*256)) + in_buf[5]*256 + in_buf[4];
+	GP_DEBUG("Picture is size %d KBytes", pic_size);
+	image = malloc(pic_size);
+	
+	//1b 43 02 00 04 0e 12 00
+	//out_bf[0-1]=0x1b 0x43
+	out_buf[2]=0x02;
+	out_buf[3]=0x00;
+	out_buf[4]=0x04;
+	out_buf[5]=0x0e;
+	out_buf[6]=0x12;
+	out_buf[7]=0x00;
+	gp_port_write(port,out_buf,8);
+	while(data_remaining < pic_size)
+	{
+		gp_port_read(port, in_buf, 64);
+		gp_port_read(port, pic_buf, 30656);
+		gp_port_read(port, in_buf, 6);
+		gp_port_write(port, &ok, 1);
+		memcpy(image+data_remaining, in_buf, 30656);
+		data_remaining += 30656;
+		
+		GP_DEBUG("data_remaining = %d", data_remaining);
+		
+	}
+	gp_file_set_mime_type(file, GP_MIME_JPEG);
+	gp_file_set_data_and_size(file, image, pic_size);
+	return (GP_OK);
 }
