@@ -203,12 +203,25 @@ int gp_camera_session (Camera *camera)
 
 int gp_camera_init (Camera *camera)
 {
+	int x;
+	CameraPortInfo info;
+
 	if (camera == NULL) 
 		return (GP_ERROR_BAD_PARAMETERS);
 		
         if (camera->functions->init == NULL) {
                 return(GP_ERROR_NOT_SUPPORTED);
 	}
+
+	/* Set the port type from the path. */
+//FIXME: This should really be done by the frontends...
+        for (x=0; x<gp_port_count(); x++) {
+                gp_port_info(x, &info);
+                if (strcmp(info.path, camera->port->path)==0)
+                        camera->port->type = info.type;
+        }
+
+
 
         return (camera->functions->init (camera));
 }
