@@ -22,7 +22,7 @@
 #define __PTP_H__
 
 #include <stdarg.h>
-#include <_byteorder.h>
+#include <gphoto2-endian.h>
 
 // PTP request/response/data packet structure
 
