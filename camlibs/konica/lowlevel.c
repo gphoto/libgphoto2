@@ -196,82 +196,12 @@ l_send (GPPort *device, unsigned char *send_buffer,
 	/**********************************************************************/
 	unsigned char *sb; 	
 	unsigned int sbs;
-	int result, i = 0;
+	int i = 0;
 
 	CHECK_NULL (device && send_buffer);
 
-	CHECK (gp_port_set_timeout (device, 1000));
-#if 0
-	for (;;) {
-
-		/* Write ENQ. */
-		CHECK (gp_port_write (device, "\5", 1));
-
-		/* Read. */
-		if ((result = gp_port_read (device, &c, 1)) < 1) {
-
-			/* Let's try for a couple of times. */
-			i++;
-			if (i == 5)
-				return (result);
-			continue;
-		}
-		switch (c) {
-		case ACK:
-
-			/* ACK received. We can proceed. */
-			break;
-
-		case NACK:
-
-			/* NACK received. We'll start from the beginning. */
-			continue;
-
-		case ENQ:
-
-			/*
-			 * ENQ received. It seems that the camera would like 
-			 * to send us data, but we do not want it and
-			 * therefore simply reject it. The camera will try
-			 * two more times with ENQ to get us to receive data 
-			 * before finally giving up and sending us ACK.
-			 */
-
-			/* Write NACK.	*/
-			c = NACK;
-			CHECK (gp_port_write (device, &c, 1));
-			for (;;) {
-				CHECK (gp_port_read (device, &c, 1));
-				switch (c) {
-				case ENQ:
-
-					/* The camera has not yet given up. */
-					continue;
-
-				case ACK:
-
-					/* ACK received. We can proceed. */
-					break;
-
-				default:
-
-					/* This should not happen. */
-					return (GP_ERROR_CORRUPTED_DATA);
-
-				}
-				break;
-			}
-			break;
-		default:
-			/*
-			 * The camera seems to send us data. We'll
-			 * simply dump it and try again.
-			 */
-			continue;
-		}
-		break;
-	}
-#endif
+	/* We need to ping the camera first */
+	CHECK (l_ping (device));
 
 	/********************************************************/
 	/* We will write:			 		*/
