@@ -159,7 +159,6 @@ int  glob_speed;
 int  glob_num=1;
 
 Camera         *glob_camera=NULL;
-CameraAbilities glob_abilities;
 
 extern int  glob_debug;
 int  glob_shell=0;
@@ -217,13 +216,14 @@ OPTION_CALLBACK(abilities) {
 
         int x=0;
 	int result;
+	CameraAbilities abilities;
 
         if (strlen(glob_model)==0) {
                 cli_error_print("Must specify a camera model using \"%scamera model\"",LONG_OPTION);
                 return (GP_ERROR);
         }
 
-        if ((result = gp_camera_abilities_by_name(glob_model, &glob_abilities)) != GP_OK) {
+        if ((result = gp_camera_abilities_by_name(glob_model, &abilities)) != GP_OK) {
                 cli_error_print("Could not find camera \"%s\".\nUse \"--list-cameras\" to see available camera models", glob_model);
                 return (result);
         }
@@ -231,35 +231,35 @@ OPTION_CALLBACK(abilities) {
         /* Output a parsing friendly abilities table. Split on ":" */
 
         printf("Abilities for camera:            : %s\n",
-                glob_abilities.model);
+                abilities.model);
         printf("Serial port support              : %s\n",
-                SERIAL_SUPPORTED(glob_abilities.port)? "yes":"no");
+                SERIAL_SUPPORTED(abilities.port)? "yes":"no");
         printf("Parallel port support            : %s\n",
-                PARALLEL_SUPPORTED(glob_abilities.port)? "yes":"no");
+                PARALLEL_SUPPORTED(abilities.port)? "yes":"no");
         printf("USB support                      : %s\n",
-                USB_SUPPORTED(glob_abilities.port)? "yes":"no");
+                USB_SUPPORTED(abilities.port)? "yes":"no");
         printf("IEEE1394 support                 : %s\n",
-                IEEE1394_SUPPORTED(glob_abilities.port)? "yes":"no");
+                IEEE1394_SUPPORTED(abilities.port)? "yes":"no");
         printf("Network support                  : %s\n",
-                NETWORK_SUPPORTED(glob_abilities.port)? "yes":"no");
+                NETWORK_SUPPORTED(abilities.port)? "yes":"no");
 
-        if (glob_abilities.speed[0] != 0) {
+        if (abilities.speed[0] != 0) {
         printf("Transfer speeds supported        :\n");
                 do {
-        printf("                                 : %i\n", glob_abilities.speed[x]);
+        printf("                                 : %i\n", abilities.speed[x]);
                         x++;
-                } while (glob_abilities.speed[x]!=0);
+                } while (abilities.speed[x]!=0);
         }
         printf("Capture from computer support    : %s\n",
-                glob_abilities.capture == 0? "no":"yes");
+                abilities.capture == 0? "no":"yes");
         printf("Configuration support            : %s\n",
-                glob_abilities.config == 0? "no":"yes");
+                abilities.config == 0? "no":"yes");
         printf("Delete files on camera support   : %s\n",
-                glob_abilities.file_delete == 0? "no":"yes");
+                abilities.file_delete == 0? "no":"yes");
         printf("File preview (thumbnail) support : %s\n",
-                glob_abilities.file_preview == 0? "no":"yes");
+                abilities.file_preview == 0? "no":"yes");
         printf("File upload support              : %s\n",
-                glob_abilities.file_put == 0? "no":"yes");
+                abilities.file_put == 0? "no":"yes");
 
         return (GP_OK);
 }
@@ -281,7 +281,7 @@ OPTION_CALLBACK(list_cameras) {
 
         for (x=0; x<n; x++) {
                 if (gp_camera_name(x, buf) != GP_OK)
-                        cli_error_print("Could not retrieve the name of camerglob_abilities.");
+                        cli_error_print("Could not retrieve the name of camera!");
                 if (glob_quiet)
                         printf("%s\n", buf);
                    else
@@ -798,11 +798,6 @@ int set_globals () {
 //	if ((strlen(glob_port) == 0)&&(strcmp(glob_model, "Directory Browse")!=0)) {
 //	        cli_error_print("Must specify a camera port using \"%sport path\"",LONG_OPTION);
 //	        return (GP_ERROR);
-//	}
-
-//	if (gp_camera_abilities_by_name(glob_model, &glob_abilities) != GP_OK) {
-//		cli_error_print("Could not find camera \"%s\".\nUse \"--list-cameras\" to see available camera models", glob_model);
-//	      return (GP_ERROR);
 //	}
 
 	if ((result = gp_camera_new(&glob_camera)) != GP_OK) {

@@ -14,5 +14,4 @@ extern int 		glob_recurse;
 extern int  		glob_stdout;
 extern int  		glob_stdout_size;
 extern Camera*		glob_camera;
-extern CameraAbilities 	glob_abilities;
 extern Option 		option[];
