@@ -1,3 +1,7 @@
+2003-09-05  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* PROTOCOL.txt: added protocol description
+
 2003-01-08  Lutz Müller <lutz@users.sourceforge.net>
 
 	* casio-qv.c (camera_init): Cosmetic change.
