@@ -1,4 +1,3 @@
-
 Adam Harrison <adam@antispin.org>
 Protocol reverse engineering
 Driver implementation
@@ -8,8 +7,13 @@ Pattern recognition based bayer->RGB demosaic routine
 
 Thanks to:
 
-Realtime Control, Inc for making their CommLite serial port analysis software freely available.
+Realtime Control, Inc for making their CommLite serial port analysis
+software freely available.
 
-Eric Brombaugh, for his kind permission to redistribute his bayer->RGB implementation under the GPL.
+Eric Brombaugh, for his kind permission to redistribute his bayer->RGB
+implementation under the GPL.
 
-The authors of the barbiecam camlib, whose code was relied on heavily in writing this driver.
+The authors of the barbiecam camlib, whose code was relied on heavily
+in writing this driver.
+
+Steve Miller (of STM) for providing the usb command information.

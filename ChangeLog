@@ -1,3 +1,11 @@
+2001-12-08  Marcus Meissner <marcus@jet.franken.de>
+	
+	* camlibs/stv0680/stv0680.html: Removed, replaced by pdf below.
+	* camlibs/stv0680/680_commands_and_communication_sdk.pdf.gz:
+	  Extract from STV 680 SDK describing USB command set. Supplied
+	  by STM for 'interested developers'. Not officially supported.
+	* camlibs/stv0680/CREDITS, README.pdf: Adjusted.
+
 2001-12-07  Hans Ulrich Niedermann <hun@n-dimensional.de>
 
 	* frontends/command-line/main.c: ENABLE_DEBUGGING -> DISABLE_DEBUGGING
