@@ -90,7 +90,7 @@ AC_SUBST(dotlibs)
 
 dnl Find out which drivers to compile
 
-camlibs='agfa-cl18 barbie canon casio dimera directory sierra jamcam konica panasonic polaroid digita kodak minolta samsung stv0680 sonydscf1'
+camlibs='agfa-cl18 barbie canon casio dimera directory sierra jamcam konica panasonic polaroid digita kodak minolta samsung stv0680 sonydscf1 sonydscf55'
 AC_SUBST(SUBDIRS_CAMLIBS)
 for i in $camlibs; do
   d=`echo $i | $TR a-z A-Z`
@@ -105,7 +105,7 @@ AC_ARG_WITH(drivers,
   [                            agfa-cl18, barbie, canon, casio, digita, dimera,]
   [                            directory, jamcam, kodak, konica, minolta,]
   [                            panasonic, polaroid, samsung, sierra, sonydscf1,]
-  [                            stv0680 ],
+  [                            sonydscf55, stv0680 ],
   drivers="$withval", drivers="all")
 if test "$drivers" = "all"; then
   for i in $camlibs; do
@@ -187,6 +187,7 @@ camlibs/polaroid/Makefile
 camlibs/samsung/Makefile
 camlibs/sierra/Makefile
 camlibs/sonydscf1/Makefile
+camlibs/sonydscf55/Makefile
 camlibs/stv0680/Makefile
 frontends/Makefile
 frontends/command-line/Makefile

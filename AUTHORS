@@ -45,3 +45,7 @@ gpio serial code
 
 Gus Hartmann <hartmann@madison-expat.net>
 Minolta Dimage V library
+
+Raymond Penners <raymond@dotsphinx.com>
+gPhoto2 port of the Sony DSC-F55 library
+

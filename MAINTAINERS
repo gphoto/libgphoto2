@@ -47,6 +47,9 @@ camlibs/polaroid:
 camlibs/sierra:
 	Scott Fritzinger <scottf@unr.edu>
 
+camlibs/sonydscf55:
+	Raymond Penners <raymond@dotsphinx.com>
+
 Bug reports on sourceforge:
 	Hubert Figuiere <hfiguiere@teaser.fr>
 

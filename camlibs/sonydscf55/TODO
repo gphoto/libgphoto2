@@ -1,0 +1,22 @@
+* The original 0.4 driver contained code for downloading MPEG files.
+Unfortunately, that code did not work correctly when using an Sony
+MSAC-SR1 in combination with memory sticks from a Sony DCR-PC100. In this
+case, when the device is queried for a list of MPEG files it lists the
+JPEG still images. For now, the MPEG code has been left out.
+
+* The driver has only been tested on a Sony MSAC-SR1 Serial Port
+Adaptor with Sony DCR PC-100 memory sticks. Test it on a Sony DSC-F55.
+
+* Fix all FIXME's
+
+* Add calls to gp_frontend_status()
+
+* In cases where an error occurs during transfer, the driver can get
+out of sync with the device. From that point on, the driver is unable
+to successfully initialise the driver, even for new gPhoto sessions. A
+reboot (power-off, power-on) of the MSAC-SR1 device helps. See if it
+is possible to do a proper init in such a case.
+
+--
+Raymond Penners -*- raymond@dotsphinx.com -*- http://www.dotsphinx.com
+
