@@ -575,7 +575,11 @@ l_send_receive (
         if (result != GP_OK) return (result);
 	
 	/* Check if we've received the control data. */
-	if (((*receive_buffer)[0] == send_buffer[0]) && ((*receive_buffer)[1] == send_buffer[1])) return (GP_OK);
+	if (*receive_buffer_size > 1) {
+		if (((*receive_buffer)[0] == send_buffer[0]) && ((*receive_buffer)[1] == send_buffer[1])) return (GP_OK);
+	}
+
+	/* We didn't receive control data yet. */
 	*image_buffer = *receive_buffer; 
 	*image_buffer_size = *receive_buffer_size;
 	*receive_buffer = NULL;
