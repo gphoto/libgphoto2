@@ -556,8 +556,6 @@ int camera_file_get_generic (Camera *camera, CameraFile *file,
 							file_number + 1, 
 							tmp_file, NULL, NULL));
 
-	/* Some camera (e.g. Epson 3000z) send only the Exif data
-	   as thumbnail. A valid Jpeg file needs to be built */
 	if (tmp_file->data[0] == (char)0xFF && 
 	    tmp_file->data[1] == (char)0xD8) {
 
@@ -568,7 +566,10 @@ int camera_file_get_generic (Camera *camera, CameraFile *file,
 	} else if (tmp_file->data[0] == (char)0xFF && 
 		   tmp_file->data[1] == (char)0xE1) {
 
-		/* The JPEG file needs to be built */
+		/* 
+		 * This is EXIF data. We'll build a valid JPEG file.
+		 * This happens for example with the Epson 3000z.
+		 */
 		exifparser exifdat;
 
 		exifdat.header    = (char*) malloc ((size_t)tmp_file->size+2);

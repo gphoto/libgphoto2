@@ -1,5 +1,10 @@
 2001-08-20  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/sierra/sierra.c (camera_file_get_generic): Documentation
+	update
+
+2001-08-20  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/sierra/sierra.c (camera_file_get_generic): Fix detection
 	of TIFF images
 
