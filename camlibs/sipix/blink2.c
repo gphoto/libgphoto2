@@ -72,9 +72,15 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 	xbuf = malloc(8*(1+numpics));
 	ret = gp_port_usb_msg_read( camera->port,BLINK2_GET_DIR,0x03,0,buf,8 );
-	if (ret < GP_OK) return ret;
+	if (ret < GP_OK)  {
+		free(xbuf);
+		return ret;
+	}
 	ret = gp_port_read( camera->port, xbuf, 8*(1+numpics));
-	if (ret < GP_OK) return ret;
+	if (ret < GP_OK) {
+		free(xbuf);
+		return ret;
+	}
 	for ( i=0; i < numpics; i++) {
 		char name[20];
 		if (xbuf[8*(i+1)])
@@ -98,18 +104,32 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	unsigned char	*xbuf, buf[8];
 
 	struct xaddr {
-		unsigned int start,len;
+		unsigned int type, start,len;
 	} *addrs;
 
 	ret = blink2_getnumpics( camera->port, context, &numpics );
 	if (ret < GP_OK) return ret;
 	gp_log(GP_LOG_DEBUG, "blink2","numpics is %d", numpics);
 	xbuf = malloc(8*(1+numpics));
+	if (!xbuf)
+		return GP_ERROR_NO_MEMORY;
 	addrs = (struct xaddr*)malloc(sizeof(struct xaddr)*numpics);
+	if (!addrs) {
+		free(xbuf);
+		return GP_ERROR_NO_MEMORY;
+	}
 	ret = gp_port_usb_msg_read( camera->port,BLINK2_GET_DIR,0x03,0,buf,8 );
-	if (ret < GP_OK) return ret;
+	if (ret < GP_OK) {
+		free(addrs);
+		free(xbuf);
+		return ret;
+	}
 	ret = gp_port_read( camera->port, xbuf, 8*(1+numpics));
-	if (ret < GP_OK) return ret;
+	if (ret < GP_OK) {
+		free(addrs);
+		free(xbuf);
+		return ret;
+	}
 	for ( i=0; i < numpics; i++) {
 		int end, start;
 
@@ -121,17 +141,17 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			(xbuf[8*i+15]);
 		addrs[i].start = start;
 		addrs[i].len = (end-start)/4;
+		addrs[i].type = xbuf[8*(i+1)];
 		gp_log(GP_LOG_DEBUG, "blink2","%d - %d", start, (end-start)/4);
 	}
+	free(xbuf);
 
         image_no = gp_filesystem_number(fs, folder, filename, context);
-
         if(image_no < 0) {
 		free(addrs);
                 return image_no;
 	}
         gp_file_set_name (file, filename);
-        gp_file_set_mime_type (file, GP_MIME_JPEG);
         switch (type) {
         case GP_FILE_TYPE_RAW:
         case GP_FILE_TYPE_NORMAL: {
@@ -139,6 +159,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		unsigned int start, len;
 		int curread;
 		memset( buf, 0, sizeof(buf));
+		
+		if (addrs[image_no].type)
+        		gp_file_set_mime_type (file, GP_MIME_AVI);
+		else
+        		gp_file_set_mime_type (file, GP_MIME_JPEG);
 
 		start = addrs[image_no].start;
 		len = addrs[image_no].len;
@@ -170,8 +195,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
                 break;
         }
 	default:
-                return (GP_ERROR_NOT_SUPPORTED);
+                result = GP_ERROR_NOT_SUPPORTED;
+		break;
         }
+	free(addrs);
         if (result < 0)
                 return result;
         return (GP_OK);

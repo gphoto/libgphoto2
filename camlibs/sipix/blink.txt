@@ -1,0 +1,134 @@
+Sipix blink usb "toy" camera
+
+Stuff you need to know to control the *still* part of the camera
+These are probably incomplete! but they do appear to work
+
+usb vendor id = 0x0851
+usb product id = 0x1542
+
+device has 8megs ram and can take images at 640x480 and 320x240(ish)
+
+usb requests (snooped from doze driver - there listed in the order they appear)
+all control requests are on the control pipe
+bulk is only used to read data and is on interface 1
+
+
+Request
+-------
+no idea what this is for probably camera init?
+
+bmRequestType=c0 Vendor,device to host
+bRequest = 5
+wValue = 1
+Index = 0
+Length = 2
+
+Result:2bytes
+contains: 01 00
+
+
+
+Request
+-------
+again no idea - possibly camera id? - only first 6 bytes used
+bmRequestType=c0 Vendor,device to host
+bRequest = 5
+wValue = 0
+Index = 0
+Length = 8
+
+Result:8bytes
+contains:01 06 79 10 3e 1e 00 00
+
+
+Request
+-------
+Get picture count
+
+bmRequestType=c0 Vendor,device to host
+bRequest = 0
+wValue = 0
+Index = 0
+Length = 8
+
+Result:2bytes
+contains:04 00 (there were 4 pics in device)
+
+
+
+Request
+-------
+
+Gets size of specified image, odd in that request is repeated untill
+first byte in returned data changes to 0
+
+The returned size is in "blocks" these are 0x100 bytes long eithr that
+or ive cocked up where the size field is by a byte ;-)
+
+bmRequestType=c0 Vendor,device to host
+bRequest = 1
+wValue = 0 (image index from 0)
+Index = 1
+Length = 8
+
+Result:8bytes
+contains:01 00 00 00 00 00 00 00
+
+untill value changes
+Result:8bytes
+contains:00 00 10 01 00 00 00 00
+
+
+8 bytes break down into
+byte 00:ready 0 - yes 1 -no
+
+byte 01: size 0
+     02: size 1
+     03: size 2
+     04: size 3
+     05: format flags
+
+	Image Size: Upper 3 bits: (x >> 5)
+
+	0 - 640x480
+	1 - 352x288
+	2 - 176x144
+	3 - 320x240
+	4 - 800x592
+	5 - 160x120
+
+	Unknown: Lower 2 bits	( x & 0x03)
+	
+		0 -> 2
+		2 -> 1
+		3 -> 0
+		1 -> ? 
+		
+	Unknown: Mid 3 bits	( (x >> 2) & 0x07)
+	
+	
+
+     06
+     07
+
+
+request
+-------
+Positions bulk pipe ready to download image
+Again request is repeated untill returned data byte 0 is set to 0
+
+bmRequestType=c0 Vendor,device to host
+bRequest = 2
+wValue = 0 (image index)
+Index = 0
+Length = 6
+
+Result:6bytes
+contains:01 00 00 00 00 00
+
+untill data changes to:
+contains:00 00 00 00 00 00
+
+
+opens bulk pipe and starts reading data in 0x100(256) byte chunks
+closes bulk pipe
