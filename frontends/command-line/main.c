@@ -21,8 +21,8 @@ void usage();
 int  verify_options (int argc, char **argv);
 
 /* Standardized output print functions */
-void debug_print(char *format, ...);
-void error_print(char *format, ...);
+void cli_debug_print(char *format, ...);
+void cli_error_print(char *format, ...);
 
 /* Initializes the globals */
 int  init_globals();
@@ -163,13 +163,13 @@ char glob_filename[128];
 /*    command-line option. It must return GP_OK or GP_ERROR.		*/
 /*    Again, use the OPTION_CALLBACK(function) macro.			*/
 /*    glob_debug is set if the user types in the "--debug" flag. Use 	*/
-/*    debug_print(char *format, ...) to display debug output. Use 	*/
-/*    error_print(char *format, ...) to display error output.		*/
+/*    cli_debug_print(char *format, ...) to display debug output. Use 	*/
+/*    cli_error_print(char *format, ...) to display error output.		*/
 
 
 OPTION_CALLBACK(help) {
 
-	debug_print("Displaying usage");
+	cli_debug_print("Displaying usage");
 	
 	usage();
 	exit(EXIT_SUCCESS);
@@ -177,7 +177,7 @@ OPTION_CALLBACK(help) {
 
 OPTION_CALLBACK(test) {
 
-	debug_print("Testing gPhoto Installation");
+	cli_debug_print("Testing gPhoto Installation");
 
         test_gphoto();
         exit(EXIT_SUCCESS);
@@ -188,12 +188,12 @@ OPTION_CALLBACK(abilities) {
 	int x=0;
 
 	if (strlen(glob_model)==0) {
-		error_print("Must specify a camera model using \"%scamera model\"",LONG_OPTION);
+		cli_error_print("Must specify a camera model using \"%scamera model\"",LONG_OPTION);
 		return (GP_ERROR);
 	}
 
 	if (gp_camera_abilities_by_name(glob_model, &glob_abilities)==GP_ERROR) {
-		error_print("Could not find camera \"%s\".\nUse \"--list-cameras\" to see available camera models", glob_model);
+		cli_error_print("Could not find camera \"%s\".\nUse \"--list-cameras\" to see available camera models", glob_model);
 		return (GP_ERROR);
 	}
 
@@ -239,10 +239,10 @@ OPTION_CALLBACK(list_cameras) {
         int x, n;
         char buf[64];
 
-	debug_print("Listing Cameras");
+	cli_debug_print("Listing Cameras");
 
         if ((n = gp_camera_count())==GP_ERROR)
-                error_print("Could not retrieve the number of supported cameras!");
+                cli_error_print("Could not retrieve the number of supported cameras!");
         if (glob_quiet)
                 printf("%i\n", n);
            else
@@ -250,7 +250,7 @@ OPTION_CALLBACK(list_cameras) {
 
         for (x=0; x<n; x++) {
                 if (gp_camera_name(x, buf)==GP_ERROR)
-                        error_print("Could not retrieve the name of camerglob_abilities.");
+                        cli_error_print("Could not retrieve the name of camerglob_abilities.");
                 if (glob_quiet)
                         printf("%s\n", buf);
                    else
@@ -266,7 +266,7 @@ OPTION_CALLBACK(list_ports) {
         int x, count;
 
         if ((count = gp_port_count()) == GP_ERROR) {
-                error_print("Could not get number of ports");
+                cli_error_print("Could not get number of ports");
                 return (GP_ERROR);
         }
         if (!glob_quiet) {
@@ -285,7 +285,7 @@ OPTION_CALLBACK(list_ports) {
 
 OPTION_CALLBACK(filename) {
 
-        debug_print("Setting filename to %s", arg);
+        cli_debug_print("Setting filename to %s", arg);
 
         strcpy(glob_filename, arg);
         glob_filename_override = 1;
@@ -295,7 +295,7 @@ OPTION_CALLBACK(filename) {
 
 OPTION_CALLBACK(port) {
 
-        debug_print("Setting port to %s", arg);
+        cli_debug_print("Setting port to %s", arg);
 
         strcpy(glob_port, arg);
 
@@ -304,7 +304,7 @@ OPTION_CALLBACK(port) {
 
 OPTION_CALLBACK(speed) {
 
-        debug_print("Setting speed to %s", arg);
+        cli_debug_print("Setting speed to %s", arg);
 
         glob_speed = atoi(arg);
 
@@ -313,7 +313,7 @@ OPTION_CALLBACK(speed) {
 
 OPTION_CALLBACK(model) {
 
-        debug_print("Setting camera model to %s", arg);
+        cli_debug_print("Setting camera model to %s", arg);
 
         strcpy(glob_model, arg);
 
@@ -323,14 +323,14 @@ OPTION_CALLBACK(model) {
 OPTION_CALLBACK(debug) {
 
 	glob_debug = 1;
-	debug_print("Turning on debug mode");
+	cli_debug_print("Turning on debug mode");
 
         return (GP_OK);
 }
 
 OPTION_CALLBACK(quiet) {
 
-	debug_print("Setting to quiet mode");
+	cli_debug_print("Setting to quiet mode");
 
         glob_quiet=1;
 
@@ -354,7 +354,7 @@ OPTION_CALLBACK(daemonmode) {
 
 OPTION_CALLBACK(use_folder) {
 
-	debug_print("Setting folder to %s", arg);
+	cli_debug_print("Setting folder to %s", arg);
 
 	strcpy(glob_folder, arg);
 
@@ -363,7 +363,7 @@ OPTION_CALLBACK(use_folder) {
 
 OPTION_CALLBACK(recurse) {
 
-	debug_print("Setting recursive mode");
+	cli_debug_print("Setting recursive mode");
 
 	glob_recurse = 1;
 
@@ -442,14 +442,14 @@ int for_each_image(char *folder, image_action action, int recurse) {
 	
 	if (folder != NULL && 0 < strlen(folder))
 		if (gp_camera_folder_set(glob_camera, folder) == GP_ERROR) {
-			error_print("Can not find folder \"%s\"", folder);
+			cli_error_print("Can not find folder \"%s\"", folder);
 			return (GP_ERROR);
 		}
 			
 	count = gp_camera_file_count(glob_camera);
 
 	if (count == GP_ERROR) {
-		error_print("Could not get number of pictures on camera");
+		cli_error_print("Could not get number of pictures on camera");
 		return (GP_ERROR);
 	}
 	
@@ -495,7 +495,7 @@ OPTION_CALLBACK(num_pictures) {
 
         int count;
 
-	debug_print("Counting pictures");
+	cli_debug_print("Counting pictures");
 
         if (set_globals() == GP_ERROR)
                 return (GP_ERROR);
@@ -503,7 +503,7 @@ OPTION_CALLBACK(num_pictures) {
 	count = gp_camera_file_count(glob_camera);
 	
 	if (count == GP_ERROR) {
-		error_print("Could not get number of pictures on camera");
+		cli_error_print("Could not get number of pictures on camera");
 		return (GP_ERROR);
 	}
 
@@ -618,21 +618,21 @@ int for_each_image_in_range(char *range, image_action action) {
 	memset(index, 0, MAX_IMAGE_NUMBER);
 	
 	if (parse_range(range, index) == GP_ERROR) {
-		error_print("Invalid range");
+		cli_error_print("Invalid range");
 		return (GP_ERROR);
 	}
 
 	count = gp_camera_file_count(glob_camera);
 
 	if (count == GP_ERROR) {
-		error_print("Could not get number of pictures on camera");
+		cli_error_print("Could not get number of pictures on camera");
 		return (GP_ERROR);
 	}
 	
 	for (max = MAX_IMAGE_NUMBER - 1; !index[max]; max--) {}
 	
 	if (count < max + 1) {
-		error_print("Picture number %i is too large. Available %i picture(s).", max + 1, count);
+		cli_error_print("Picture number %i is too large. Available %i picture(s).", max + 1, count);
 		return (GP_ERROR);
 	}
 
@@ -660,12 +660,12 @@ int save_picture_to_file(int num, int thumbnail) {
 
 	if (thumbnail) {
 		if (gp_camera_file_get_preview(glob_camera, file, num) == GP_ERROR) {
-			error_print("Can not get preview #%i.", num+1);
+			cli_error_print("Can not get preview #%i.", num+1);
 			return (GP_ERROR);
 		}
 	 } else {
 		if (gp_camera_file_get(glob_camera, file, num) == GP_ERROR) {
-			error_print("Can not get picture #%i.", num+1);
+			cli_error_print("Can not get picture #%i.", num+1);
 			return (GP_ERROR);
 		}
 	}
@@ -674,7 +674,7 @@ int save_picture_to_file(int num, int thumbnail) {
 	   else if (strlen(file->name)>0)
 		strcpy(filename, file->name);
 	   else {
-		error_print("Filename not specified. Use \"%sfilename\" to specify a filename", LONG_OPTION);
+		cli_error_print("Filename not specified. Use \"%sfilename\" to specify a filename", LONG_OPTION);
 		gp_file_free(file);
 		return (GP_ERROR);
 	}
@@ -682,7 +682,7 @@ int save_picture_to_file(int num, int thumbnail) {
 	if (!glob_quiet)
 		printf("Saving %s #%i as %s\n", thumbnail ? "preview" : "image", num+1, filename);
 	if (gp_file_save(file, filename) == GP_ERROR) 
-		error_print("Can not save %s as %s", thumbnail ? "preview" : "image", filename);
+		cli_error_print("Can not save %s as %s", thumbnail ? "preview" : "image", filename);
 
 	gp_file_free(file);
 
@@ -719,15 +719,15 @@ int delete_picture_action(int num) {
 int get_picture_common(char *range, int thumbnail) {
 
 	if (thumbnail)
-		debug_print("Getting thumbnail(s) %s", range);
+		cli_debug_print("Getting thumbnail(s) %s", range);
 	else
-		debug_print("Getting picture(s) %s", range);
+		cli_debug_print("Getting picture(s) %s", range);
 		
 	if (set_globals() == GP_ERROR)
 		return (GP_ERROR);
 
 	if (thumbnail && !glob_abilities.file_preview) {
-		error_print("Camera doesn't support picture thumbnails");
+		cli_error_print("Camera doesn't support picture thumbnails");
 		return (GP_ERROR);
 	}
 
@@ -744,7 +744,7 @@ OPTION_CALLBACK(get_picture) {
 
 OPTION_CALLBACK(get_all_pictures) {
 	
-	debug_print("Getting all pictures");
+	cli_debug_print("Getting all pictures");
 				
 	if (set_globals() == GP_ERROR)
 		return (GP_ERROR);
@@ -760,13 +760,13 @@ OPTION_CALLBACK(get_thumbnail) {
 
 OPTION_CALLBACK(get_all_thumbnails) {
 
-	debug_print("Getting all thumbnails");
+	cli_debug_print("Getting all thumbnails");
 			
 	if (set_globals() == GP_ERROR)
 		return (GP_ERROR);
 
 	if (!glob_abilities.file_preview) {
-		error_print("Camera doesn't support picture thumbnails");
+		cli_error_print("Camera doesn't support picture thumbnails");
 		return (GP_ERROR);
 	}
 		
@@ -775,13 +775,13 @@ OPTION_CALLBACK(get_all_thumbnails) {
 
 OPTION_CALLBACK(delete_picture) {
 
-	debug_print("Deleting picture(s) %s", arg);
+	cli_debug_print("Deleting picture(s) %s", arg);
 
 	if (set_globals() == GP_ERROR)
 		return (GP_ERROR);
 
 	if (!glob_abilities.file_delete) {
-		error_print("Camera can not delete pictures");
+		cli_error_print("Camera can not delete pictures");
 		return (GP_ERROR);
 	}
 
@@ -790,13 +790,13 @@ OPTION_CALLBACK(delete_picture) {
 
 OPTION_CALLBACK(delete_all_pictures) {
 
-	debug_print("Deleting all pictures");
+	cli_debug_print("Deleting all pictures");
 			
 	if (set_globals() == GP_ERROR)
 		return (GP_ERROR);
 
 	if (!glob_abilities.file_delete) {
-		error_print("Camera can not delete pictures");
+		cli_error_print("Camera can not delete pictures");
 		return (GP_ERROR);
 	}
 		
@@ -809,23 +809,23 @@ OPTION_CALLBACK(upload_picture) {
 
 	file = gp_file_new();
 
-	debug_print("Uploading picture");
+	cli_debug_print("Uploading picture");
 
         if (set_globals() == GP_ERROR)
                 return (GP_ERROR);
 
 	if (!glob_abilities.file_put) {
-		error_print("Camera doesn't support uploading pictures");
+		cli_error_print("Camera doesn't support uploading pictures");
 		return (GP_ERROR);
 	}
 
 	if (gp_file_open(file, arg)==GP_ERROR) {
-		error_print("Could not open file %s", arg);
+		cli_error_print("Could not open file %s", arg);
 		return (GP_ERROR);		
 	}
 	
 	if (gp_camera_file_put(glob_camera, file)==GP_ERROR) {
-		error_print("Could not upload the picture");
+		cli_error_print("Could not upload the picture");
 		return (GP_ERROR);
 	}
 
@@ -842,7 +842,7 @@ OPTION_CALLBACK(summary) {
                 return (GP_ERROR);
 
         if (gp_camera_summary(glob_camera, &buf)==GP_ERROR) {
-                error_print("Could not get camera summary");
+                cli_error_print("Could not get camera summary");
                 return (GP_ERROR);
         }
         printf("Camera Summary:\n%s\n", buf.text);
@@ -858,7 +858,7 @@ OPTION_CALLBACK(manual) {
                 return (GP_ERROR);
 
         if (gp_camera_manual(glob_camera, &buf)==GP_ERROR) {
-                error_print("Could not get camera manual");
+                cli_error_print("Could not get camera manual");
                 return (GP_ERROR);
         }
         printf("Camera Manual:\n%s\n", buf.text);
@@ -876,7 +876,7 @@ OPTION_CALLBACK(about) {
                 return (GP_ERROR);
 
 	if (gp_camera_about(glob_camera, &buf)==GP_ERROR) {
-		error_print("Could not get camera driver information");
+		cli_error_print("Could not get camera driver information");
 		return (GP_ERROR);
 	}
 	printf("About the library:\n%s\n", buf.text);
@@ -890,12 +890,12 @@ int set_globals () {
 	CameraPortInfo s;
 
 	if (strlen(glob_model) == 0) {
-		error_print("Must specify a camera model using \"%scamera model\"",LONG_OPTION);
+		cli_error_print("Must specify a camera model using \"%scamera model\"",LONG_OPTION);
 		return (GP_ERROR);
 	}
 
 	if ((strlen(glob_port) == 0)&&(strcmp(glob_model, "Directory Browse")!=0)) {
-		error_print("Must specify a camera port using \"%sport path\"",LONG_OPTION);
+		cli_error_print("Must specify a camera port using \"%sport path\"",LONG_OPTION);
 		return (GP_ERROR);
 	}
 
@@ -903,17 +903,17 @@ int set_globals () {
 	s.speed = glob_speed;
 
 	if (gp_camera_abilities_by_name(glob_model, &glob_abilities)==GP_ERROR) {
-		error_print("Could not find camera \"%s\".\nUse \"--list-cameras\" to see available camera models", glob_model);
+		cli_error_print("Could not find camera \"%s\".\nUse \"--list-cameras\" to see available camera models", glob_model);
 		return (GP_ERROR);
 	}
 
 	if (gp_camera_new_by_name(&glob_camera, glob_model, &s)==GP_ERROR) {
-		error_print("Can not initialize camera \"%s\"",glob_model);
+		cli_error_print("Can not initialize camera \"%s\"",glob_model);
 		return (GP_ERROR);
 	}
 
 	if (gp_camera_folder_set(glob_camera, glob_folder)==GP_ERROR) {
-		error_print("Can not find folder \"%s\"",glob_folder);
+		cli_error_print("Can not find folder \"%s\"",glob_folder);
 		return (GP_ERROR);
 	}
 
@@ -979,7 +979,7 @@ int verify_options (int argc, char **argv) {
         which = 0;
 
 	for (x=1; x<argc; x++) {
-		debug_print("checking \"%s\": \n", argv[x]);
+		cli_debug_print("checking \"%s\": \n", argv[x]);
 		match = 0;
 		missing_arg = 0;
 		for (y=0; y<option_count; y++) {
@@ -1009,12 +1009,12 @@ int verify_options (int argc, char **argv) {
 			}
 		}
 		if (!match) {
-			error_print("Bad option \"%s\": ", argv[x]);
+			cli_error_print("Bad option \"%s\": ", argv[x]);
 			if (missing_arg) {
-				error_print("    Missing argument. You must specify the \"%s\"",
+				cli_error_print("    Missing argument. You must specify the \"%s\"",
 					option[which].argument);
 			}   else
-				error_print("    unknown option");
+				cli_error_print("    unknown option");
 			return (GP_ERROR);
 		}
 	}
@@ -1053,7 +1053,7 @@ int execute_options (int argc, char **argv) {
                                    }  else
                                         ret=(*option[x].execute)(NULL);
                                    if (ret == GP_ERROR) {
-                                        // error_print("Option \"%s\" did not execute properly.",op);
+                                        // cli_error_print("Option \"%s\" did not execute properly.",op);
                                         return (GP_ERROR);
                                    }
                                 }
@@ -1112,7 +1112,7 @@ void usage () {
 /* Misc functions							*/
 /* ------------------------------------------------------------------	*/
 
-void debug_print(char *format, ...) {
+void cli_debug_print(char *format, ...) {
 
 	va_list		pvar;
 	
@@ -1125,7 +1125,7 @@ void debug_print(char *format, ...) {
 	}
 }
 
-void error_print(char *format, ...) {
+void cli_error_print(char *format, ...) {
 
 	va_list		pvar;
 

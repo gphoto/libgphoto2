@@ -1,4 +1,3 @@
-#include <dlfcn.h>
 #include <dirent.h>
 #include <fcntl.h>
 #include <stdlib.h>
