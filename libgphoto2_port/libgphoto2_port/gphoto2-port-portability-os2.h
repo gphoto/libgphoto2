@@ -59,7 +59,7 @@
 
 #define CIBAUD  0x100f0000      /* input baud rate (not used) */
 #define CMSPAR  0x40000000      /* mark or space (stick) parity */
-//#define CRTSCTS 0x80000000      /* flow control */
+/* #define CRTSCTS 0x80000000  */    /* flow control */
 
 /* modem lines */
 #define TIOCM_LE        0x001
