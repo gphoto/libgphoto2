@@ -1,3 +1,11 @@
+2003-06-09  Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: support for thumbnails; gtkam works now
+	* mars.c: choice routine for gamma factor 
+	* mars.h: choice routine for gamma factor 
+	* README: support for gtkam described
+
+
 2003-05-18  Theodore Kilgore <kilgota@auburn.edu>
 
 	* library.c: Model Emprex PCD3800 added. Credits to 
