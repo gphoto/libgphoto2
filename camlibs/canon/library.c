@@ -1371,6 +1371,8 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		strcpy (info->file.type, GP_MIME_AVI);
 	else if (is_image (filename))
 		strcpy (info->file.type, GP_MIME_JPEG);
+	else if (is_audio (filename))
+		strcpy (info->file.type, GP_MIME_WAV);
 	else
 		/* May no be correct behaviour ... */
 		strcpy (info->file.type, "unknown");
