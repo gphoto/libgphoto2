@@ -199,8 +199,8 @@ int camera_folder_list	(Camera *camera, CameraList *list, char *folder)
 	i = 0;
 
 	while(i < data_len) {
-		/* files have 0x00,0x01,0x20, dirs have 0x10,0x30 */
-		if(ptr_data_buff[11] != 0x10 && ptr_data_buff[11] != 0x30) {
+		/* directories have 0x10 in their attribute */
+		if(ptr_data_buff[11] & 0x10) {
 			ptr_data_buff += 20;
 			i += 20;
 			continue;
@@ -266,10 +266,8 @@ int camera_file_list (Camera *camera, CameraList *list, char *folder)
 	i = 0;
 	
 	while(i < data_len) {
-		/* files have 0x00,0x01,0x20, dirs have 0x10,0x30 */
-		if(ptr_data_buff[11] != 0x00 &&
-		   ptr_data_buff[11] != 0x20 &&
-		   ptr_data_buff[11] != 0x01) {
+		/* directories have 0x10 in their attribute */
+		if(!(ptr_data_buff[11] & 0x10)) {
 			ptr_data_buff += 20;
 			i += 20;
 			continue;
