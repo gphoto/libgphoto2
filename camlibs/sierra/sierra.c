@@ -1969,10 +1969,7 @@ int get_jpeg_data(const char *data, int data_size, char **jpeg_data, int *jpeg_s
 int
 camera_init (Camera *camera, GPContext *context) 
 {
-#if 0
-        int value=0;
-#endif
-        int x=0, ret;
+        int x = 0, ret, value;
         int vendor=0, product=0, usb_wrap=0;
 	GPPortSettings s;
 	CameraAbilities a;
@@ -2079,17 +2076,20 @@ camera_init (Camera *camera, GPContext *context)
         /* Establish a connection */
         CHECK_FREE (camera, camera_start (camera, context));
 
-#if 0
-        /* FIXME??? What's that for? */
+        /*
+	 * USB cameras seem to need this request. If we don't request the
+	 * contents of this register and directly proceed with checking for
+	 * folder support, the camera doesn't send anything.
+	 */
 	sierra_get_int_register (camera, 1, &value, NULL);
 
+#if 0
         /* FIXME??? What's that for? "Resetting folder system"? */
 	sierra_set_int_register (camera, 83, -1, NULL);
 #endif
 
-        CHECK_STOP_FREE (camera, gp_port_set_timeout (camera->port, 50));
-
         /* Folder support? */
+	CHECK_STOP_FREE (camera, gp_port_set_timeout (camera->port, 50));
         ret = sierra_set_string_register (camera, 84, "\\", 1, NULL);
         if (ret != GP_OK) {
                 camera->pl->folders = 0;
@@ -2098,7 +2098,6 @@ camera_init (Camera *camera, GPContext *context)
 		camera->pl->folders = 1;
                 GP_DEBUG ("*** folder support: yes");
         }
-
         CHECK_STOP_FREE (camera, gp_port_set_timeout (camera->port, TIMEOUT));
 
         /* We are in "/" */
