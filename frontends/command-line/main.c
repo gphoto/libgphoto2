@@ -830,6 +830,9 @@ set_globals (void)
                 CHECK_RESULT (gp_camera_set_port_path (glob_camera, glob_port));
         CHECK_RESULT (gp_camera_set_port_speed (glob_camera, glob_speed));
 
+	gp_camera_set_status_func (glob_camera, status_func, NULL);
+	gp_camera_set_progress_func (glob_camera, progress_func, NULL);
+
         cli_debug_print ("Initializing camera...");
         CHECK_RESULT (gp_camera_init (glob_camera));
 
@@ -966,8 +969,6 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n");
 
         gp_frontend_register (NULL, NULL, gp_interface_message,
 			      gp_interface_confirm, NULL);
-	gp_camera_set_status_func (glob_camera, status_func, NULL);
-	gp_camera_set_progress_func (glob_camera, progress_func, NULL);
         if ((result = execute_options(argc, argv)) != GP_OK) {
                 printf ("gPhoto2 reported the error '%s'\n",
                         gp_camera_get_result_as_string (glob_camera, result));
