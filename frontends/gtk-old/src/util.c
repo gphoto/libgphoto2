@@ -110,6 +110,12 @@ int wait_for_hide (GtkWidget *dialog,
 		else
 			cont = 0;
 	}
+
+	if(!GTK_IS_OBJECT(dialog)) {
+		debug_print("window manager destroyed");
+		return 0;
+	}
+
         if (strcmp("CANCEL",
            (char*)gtk_object_get_data(GTK_OBJECT(dialog), "button"))==0) {
 		debug_print("clicked cancel");

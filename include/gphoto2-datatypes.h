@@ -57,6 +57,8 @@ struct CameraWidget {
 	CameraWidgetType type;
 	char		 label[32];
 
+	/* Private (don't access)
+	   ------------------------------ */
 	/* Current value of the widget */
 	char		 value_string[32];
 	float		 value_number;
@@ -70,9 +72,8 @@ struct CameraWidget {
 	float 		 max;
 	float		 step;
 
-	/* Private (don't access)
-	   ------------------------------ */
-	struct CameraWidget**	children;
+	/* Child info */
+	struct CameraWidget*	children[64];
 	int 			children_count;
 
 };

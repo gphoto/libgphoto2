@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <gphoto2.h>
@@ -17,7 +18,6 @@ CameraWidget* gp_widget_new(CameraWidgetType type, char *label) {
 	strcpy(w->label, label);
 	
 	/* for now, for ease of mem management, pre-alloc 64 children pointers */
-	w->children = (CameraWidget**)malloc(sizeof(CameraWidget*)*64);
 	memset(w->children, 0, sizeof(CameraWidget*)*64);	
 	w->children_count = 0;
 
@@ -28,18 +28,28 @@ CameraWidget* gp_widget_new(CameraWidgetType type, char *label) {
 	return (w);
 }
 
-int gp_widget_free(CameraWidget *widget) {
+
+
+int gp_widget_free_rec (CameraWidget *widget) {
 	/* Recursively delete the widget and all children */
 
 	int x;
 
-	if (widget->children_count == 0)
+	/* Return if they can't have any chilren */
+	if ((widget->type != GP_WIDGET_WINDOW) && (widget->type != GP_WIDGET_SECTION))
 		return (GP_OK);
 
 	for (x=0; x<widget->children_count; x++) {
-		gp_widget_free(widget->children[x]);
+		gp_widget_free_rec(widget->children[x]);
 		free(widget->children[x]);
 	}
+
+	return (GP_OK);
+}
+
+int gp_widget_free (CameraWidget *widget) {
+
+	gp_widget_free_rec (widget);
 
 	free(widget);
 
@@ -52,6 +62,10 @@ int gp_widget_free(CameraWidget *widget) {
 
 int gp_widget_append(CameraWidget *parent, CameraWidget *child) {
 
+	/* Return if they can't have any chilren */
+	if ((parent->type != GP_WIDGET_WINDOW) && (parent->type != GP_WIDGET_SECTION))
+		return (GP_ERROR);
+
 	parent->children[parent->children_count] = child;
 	parent->children_count += 1;
 	
@@ -62,6 +76,10 @@ int gp_widget_prepend(CameraWidget *parent, CameraWidget *child) {
 
 	int x;
 	
+	/* Return if they can't have any chilren */
+	if ((parent->type != GP_WIDGET_WINDOW) && (parent->type != GP_WIDGET_SECTION))
+		return (GP_ERROR);
+
 	/* Shift down 1 */
 	for (x=parent->children_count; x>0; x--)
 		parent->children[x] = parent->children[x-1];
@@ -75,10 +93,18 @@ int gp_widget_prepend(CameraWidget *parent, CameraWidget *child) {
 
 int gp_widget_child_count(CameraWidget *parent) {
 
+	/* Return if they can't have any chilren */
+	if ((parent->type != GP_WIDGET_WINDOW) && (parent->type != GP_WIDGET_SECTION))
+		return (0);
+
 	return (parent->children_count);
 }
 
 CameraWidget*   gp_widget_child(CameraWidget *parent, int child_number) {
+
+	/* Return if they can't have any chilren */
+	if ((parent->type != GP_WIDGET_WINDOW) && (parent->type != GP_WIDGET_SECTION))
+		return (NULL);
 
 	return (parent->children[child_number]);
 }

@@ -122,21 +122,25 @@
 	/* Widget functions */
 	/* ============================================================================== */
 
-	/* Create a new widget */
+	/* Create/free a widget */
 	CameraWidget* gp_widget_new(CameraWidgetType type, char *label);
+	int gp_widget_free(CameraWidget *widget);
 
 	/* Add a child widget to the parent widget */
-	int gp_widget_append (CameraWidget *parent, CameraWidget *child);
-	int gp_widget_prepend(CameraWidget *parent, CameraWidget *child);
+	int gp_widget_append (CameraWidget *widget, CameraWidget *child);
+	int gp_widget_prepend(CameraWidget *widget, CameraWidget *child);
 
 	/* Retrieve the number of children a parent has */
-	int gp_widget_child_count(CameraWidget *parent);
+	int gp_widget_child_count(CameraWidget *widget);
 
 	/* Retrieve a pointer to a child #child_number of the parent */
-	CameraWidget* gp_widget_child(CameraWidget *parent, int child_number);
+	CameraWidget* gp_widget_child(CameraWidget *widget, int child_number);
 
-	/* Frees a widget, as well as all the children */
-	int gp_widget_free(CameraWidget *widget);
+
+	/* For multi-choice widgets, retrieve number of choices */
+	int gp_widget_choice_count(CameraWidget *widget);
+	/* Retrieve the text of a choice for a widget */
+	char *gp_widget_choice(CameraWidget *widget, int choice_number);
 
 	/* For debugging purposes, will dump the widget and all child
 	   widget to stdout */
