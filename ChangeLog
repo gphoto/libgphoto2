@@ -8,6 +8,7 @@
 	* camlibs/sierra/sierra.c: And here.
 	* camlibs/panasonic/l859/l859.c: And here.
 	* camlibs/dimera/dimera3500.c: And here.
+	* camlibs/stv0680/stv0680.c: And here.
 	* frontends/command-line/main.c: And here.
 	* libgphoto2/camera.c: And here.
 	* libgphoto2/file.c:

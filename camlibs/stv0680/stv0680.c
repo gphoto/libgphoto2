@@ -159,9 +159,11 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 {
 	struct stv0680_s *device = camera->camlib_data;
 	int image_no, count, result;
+	char *data;
+	long int size;
 
-	strcpy(file->name, filename);
-	strcpy(file->type, "image/pnm");
+	gp_file_set_name (file, filename);
+	gp_file_set_type (file, "image/pnm");
 
 	result = stv0680_file_count(device, &count);
 	if (result != GP_OK)
@@ -174,8 +176,13 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 	if(image_no < 0)
 		return image_no;
 
-	return stv0680_get_image (device, image_no, &file->data, 
-				  (int*) &file->size);
+	result = stv0680_get_image (device, image_no, &data, 
+				  (int*) &size);
+	if (result < 0)
+		return result;
+	gp_file_set_data_and_size (file, data, size);
+
+	return (GP_OK);
 }
 
 int camera_file_get_preview (Camera *camera, const char *folder, 
@@ -184,9 +191,11 @@ int camera_file_get_preview (Camera *camera, const char *folder,
 
 	struct stv0680_s *device = camera->camlib_data;
 	int image_no, count, result;
+	char *data;
+	long int size;
 
-	strcpy(file->name, filename);
-	strcpy(file->type, "image/pnm");
+	gp_file_set_name (file, filename);
+	gp_file_set_type (file, "image/pnm");
 
 	result = stv0680_file_count(device, &count);
 	if (result != GP_OK)
@@ -199,8 +208,13 @@ int camera_file_get_preview (Camera *camera, const char *folder,
 	if(image_no < 0)
 		return image_no;
 
-	return stv0680_get_image_preview(device, image_no,
-					&file->data, (int*) &file->size);
+	result = stv0680_get_image_preview(device, image_no,
+					&data, (int*) &size);
+	if (result < 0)
+		return (result);
+	gp_file_set_data_and_size (file, data, size);
+
+	return (GP_OK);
 }
 
 int camera_capture (Camera *camera, int capture_type, CameraFilePath *path) 
