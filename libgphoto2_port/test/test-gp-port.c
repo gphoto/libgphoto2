@@ -1,4 +1,7 @@
+/* test-gp-port.c
+ */
 
+#include <config.h>
 #include <stdio.h>
 #include <string.h>
 #include <gphoto2-port.h>
