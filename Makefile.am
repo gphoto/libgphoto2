@@ -3,7 +3,7 @@ lib_LTLIBRARIES = libgphoto2.la
 CFLAGS= @CFLAGS@ \
 	-I$(top_srcdir)/include \
 	-DCAMLIBS=\"$(prefix)/lib/gphoto2\" \
-	-DDOCDIR=\"$(prefix)/doc/gphoto2\"
+	-DDOCDIR=\"@DOC_DIR@\"
 
 libgphoto2_la_LDFLAGS = -version-info 0:0:0
 libgphoto2_la_SOURCES = 	\
