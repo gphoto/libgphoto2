@@ -23,7 +23,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-int glob_debug = GP_DEBUG_NONE;
+static int glob_debug = GP_DEBUG_NONE;
 
 void
 gp_debug_printf (int level, const char *id, const char *format, ...)
