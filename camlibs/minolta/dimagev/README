@@ -7,6 +7,13 @@ community". I am interpreting this "sharing" as the GNU GPL. Minolta takes no
 respondsibility for the information they provided me, which is perfectly fair.
 Please see the file COPYING for more information.
 
+I am willing to provide contact names at Minolta for anyone looking for other
+camera specifications; I have no influence of any kind there, and can't
+guarantee any sort of response from them. Copies of this specification are
+available under the aforementioned "share" clause; I will mail them globally,
+and fax them anywhere in the US or Canada. A lot of the information is in the
+code itself, but sometimes the real spec is nice so readers can find my bugs.
+
 This library is far from complete. There are plenty of places where better
 sanity checking could be done, such as ensuring that the media is write-enabled
 before trying to capture an image. I will continue to work on it until I buy a
@@ -19,4 +26,4 @@ Notes on specific functions:
     valid name for an image retrieved from the camera.
 
 
---Gus Hartmann
+--Gus Hartmann, <gphoto-dimagev@gus-the-cat.org>

@@ -30,7 +30,7 @@ dimagev_packet *dimagev_make_packet(unsigned char *buffer, unsigned int length, 
 	return p;
 }
 
-/* dimagev_verify_packet(): return 1 if valid packet, 0 otherwise. */
+/* dimagev_verify_packet(): return GP_OK if valid packet, GP_ERROR otherwise. */
 int dimagev_verify_packet(dimagev_packet *p) {
 	int i=0;
 	unsigned short correct_checksum=0, current_checksum=0;
@@ -47,10 +47,12 @@ int dimagev_verify_packet(dimagev_packet *p) {
 	}
 
 	if ( current_checksum != correct_checksum ) {
-		fprintf(stderr, "dimagev_verify_packet::checksum bytes were %02x%02x, checksum was %d, should be %d\n", p->buffer[( p->length - 3) ], p->buffer[ ( p->length -2 ) ], current_checksum, correct_checksum);
-		return 0;
+		if ( dimagev->debug != 0 ) {
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_verify_packet::checksum bytes were %02x%02x, checksum was %d, should be %d", p->buffer[( p->length - 3) ], p->buffer[ ( p->length -2 ) ], current_checksum, correct_checksum);
+		}
+		return GP_ERROR;
 	} else {
-		return 1;
+		return GP_OK;
 	}
 }
 
@@ -82,7 +84,7 @@ dimagev_packet *dimagev_read_packet(dimagev_t *dimagev) {
 	}
 
 	/* Now we *should* have a packet. Let's do a sanity check. */
-	if ( dimagev_verify_packet(p) == 0 ) {
+	if ( dimagev_verify_packet(p) == GP_ERROR ) {
 		if ( dimagev->debug != 0 ) {
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_read_packet::got an invalid packet");
 			fprintf(stderr, "dimagev_read_packet::got an invalid packet\n");

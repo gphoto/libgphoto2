@@ -36,6 +36,11 @@ typedef struct {
 	unsigned char buffer[1024];
 } dimagev_packet;
 
+/* This struct represents the information returned by the DIMAGEV_INQUIRY
+   command. The response packet payload is 25 bytes, in the order listed
+   below. The strings are all ASCII values, e.g. "MINOLTA ". The model is
+   always "L1", which was apparently the development name for the Dimage V.
+*/
 typedef struct {
 	unsigned char vendor[8];
 	unsigned char model[8];
@@ -44,6 +49,29 @@ typedef struct {
 	unsigned char have_storage;
 } dimagev_info_t;
 
+/* This struct represents the information returned by the DIMAGEV_GET_STATUS
+   command. This information is all wedged into seven bytes, as shown here:
+
+                                     bits
+      |-- 7 --|-- 6 --|-- 5 --|-- 4 --|-- 3 --|-- 2 --|-- 1 --|-- 0 --|
+ byte |---------------------------------------------------------------|
+   0  |                         Battery level                         |
+   1  |            Number of images (most significant byte)           |
+   2  |            Number of images (least significant byte)          |
+   3  | Minimum number of images left to take (most significant byte) |
+   4  | Minimum number of images left to take (least significant byte)|
+   5  |   0   | Busy  |   0   | Flash |  Lens Status  |  Card Status  |
+   6  |                   Camera and Card ID number                   |
+      |---------------------------------------------------------------|
+
+   Battery level: 0x00 == "not enough", 0xff == "enough"
+   Lens status: 00 == normal, 01|10 == doesn't match flash, 11 == detached
+   Card status: 00 == normal, 01 == full, 10 == write-protected, 11 == bad
+   Flash: 1 == charging, 0 == ready
+
+   I could probably have left it in one of these compacted structures, but
+   memory is not so expensive as to spend that much effort shifting bits.
+*/
 typedef struct {
 	unsigned char battery_level;
 	unsigned int number_images;
@@ -55,6 +83,37 @@ typedef struct {
 	unsigned char id_number;
 } dimagev_status_t;
 
+/* This struct represents the information returned by the DIMAGEV_GET_DATA
+   command and sent with the DIMAGEV_SET_DATA command. It's another tightly
+   packed bit field, as described below:
+
+                                     bits
+      |-- 7 --|-- 6 --|-- 5 --|-- 4 --|-- 3 --|-- 2 --|-- 1 --|-- 0 --|
+ byte |---------------------------------------------------------------|
+   0  | hmode |  OR   |  Date | Self  |     Flash     |Quality| Rec   |
+   1  |                        Camera Clock (year)                    |
+   2  |                        Camera Clock (month)                   |
+   3  |                        Camera Clock (day)                     |
+   4  |                        Camera Clock (hour)                    |
+   5  |                       Camera Clock (minute)                   |
+   6  |                       Camera Clock (second)                   |
+   7  |                      Exposure correction data                 |
+   8  | valid |              Camera and Card ID number                |
+      |---------------------------------------------------------------|
+
+	  hmode: "host mode" e.g. if the PC or camera is in control.
+	  OR: Exposure correction data field is valid - used only for SET command.
+	  Date: The date information is valid - used only for SET command.
+	  Self: True if camera is in self-timer mode.
+	  Flash: 00 == Auto, 01 == Force Flash, 10==No Flash, 11 == Invalid
+	  Quality: Compression setting, 1 == Fine, 0 == Standard
+	  Record mode: When setting, 1 == turn on LCD viewfinder.
+	               When getting, 1 == switch in record mode.
+      Camera Clock: BCD two-digit values for times. Hours are military 0-23.
+	  Exposure correction data: sets exposure correction, from -127 to 128.
+	  valid: Used to set "valid" for memory cards.
+	  Camera and Card ID: used when switching cards.
+*/
 typedef struct {
 	unsigned char host_mode;
 	unsigned char exposure_valid;
@@ -74,6 +133,7 @@ typedef struct {
 	unsigned char id_number;
 } dimagev_data_t;
 
+/* This struct is used as the camera->camlib_data value in this library. */
 typedef struct {
 	int size;   
 	int debug;
