@@ -18,11 +18,13 @@
 #include "interface.h"
 #include "support.h"
 
+/* The Globals */
 GtkWidget *gp_gtk_main_window;
 GtkWidget *gp_gtk_progress_window;
 int	   gp_gtk_debug;
 char	   gp_gtk_camera_model[1024];
 int	   gp_gtk_camera_init=0;
+int	   gp_gtk_old_width;
 
 int
 main (int argc, char *argv[])
@@ -54,6 +56,8 @@ main (int argc, char *argv[])
 	gp_gtk_progress_window = create_progress_window();
 	gp_gtk_main_window = create_main_window ();
 	gtk_widget_show (gp_gtk_main_window);
+	gtk_signal_connect(GTK_OBJECT(gp_gtk_main_window), "check_resize",
+		GTK_SIGNAL_FUNC(icon_resize), NULL);
 
 	/* Retrieve the last width/height of the window */
         if (gp_setting_get("width", buf)==GP_OK) {
@@ -63,6 +67,9 @@ main (int argc, char *argv[])
 		        gdk_window_resize(gp_gtk_main_window->window, x, y);
 		}
 	}
+
+	gdk_window_get_size(gp_gtk_main_window->window, &x, &y);
+	gp_gtk_old_width = x;
 
 	/* Retrieve the last camera used */
 	if (gp_setting_get("camera", buf)==GP_OK) {

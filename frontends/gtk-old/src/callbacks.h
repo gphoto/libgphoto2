@@ -3,6 +3,7 @@
 int main_quit(GtkWidget *widget, gpointer data);
 void debug_print (char *message);
 void idle();
+void icon_resize(GtkWidget *window);
 
 /* General callbacks */
 /* ------------------------------------------------------*/

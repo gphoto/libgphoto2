@@ -34,6 +34,8 @@ int gp_interface_message_long(char *message) {
 
         wait_for_hide(window, ok, NULL);
 
+	gtk_widget_destroy(window);
+
 	return (GP_OK);
 }
 
@@ -60,6 +62,8 @@ int gp_interface_message(char *message) {
 
 	wait_for_hide(window, ok, NULL);
 
+	gtk_widget_destroy(window);
+
 	return (GP_OK);
 }
 
@@ -79,7 +83,19 @@ int gp_interface_progress(float percentage) {
 
 int gp_interface_confirm(char *message) {
 
-	return (GP_OK);
+	GtkWidget *confirm = create_confirm_window();
+	GtkWidget *label   = (GtkWidget*) lookup_widget(confirm, "message");
+	GtkWidget *yes     = (GtkWidget*) lookup_widget(confirm, "yes");
+	GtkWidget *no      = (GtkWidget*) lookup_widget(confirm, "no");
+	int ret = 0;
+
+	gtk_label_set_text(GTK_LABEL(label), message);
+	ret = wait_for_hide(confirm, yes, no);
+
+	if (ret)
+		gtk_widget_destroy(confirm);
+
+	return (ret);
 }
 
 void hide_progress_window (GtkWidget *widget, gpointer data) {
@@ -140,11 +156,6 @@ create_main_window (void)
   GtkAccelGroup *camera1_menu_accels;
   GtkWidget *select2;
   GtkWidget *separator6;
-  GtkWidget *download_index1;
-  GtkWidget *download_index1_menu;
-  GtkAccelGroup *download_index1_menu_accels;
-  GtkWidget *thumbnails1;
-  GtkWidget *no_thumbnails1;
   GtkWidget *download_selected1;
   GtkWidget *download_selected1_menu;
   GtkAccelGroup *download_selected1_menu_accels;
@@ -527,52 +538,6 @@ create_main_window (void)
   gtk_widget_show (separator6);
   gtk_container_add (GTK_CONTAINER (camera1_menu), separator6);
   gtk_widget_set_sensitive (separator6, FALSE);
-
-  download_index1 = gtk_menu_item_new_with_label ("");
-  tmp_key = gtk_label_parse_uline (GTK_LABEL (GTK_BIN (download_index1)->child),
-                                   _("Download _Index"));
-  gtk_widget_add_accelerator (download_index1, "activate_item", camera1_menu_accels,
-                              tmp_key, 0, 0);
-  gtk_widget_ref (download_index1);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "download_index1", download_index1,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (download_index1);
-  gtk_container_add (GTK_CONTAINER (camera1_menu), download_index1);
-
-  download_index1_menu = gtk_menu_new ();
-  gtk_widget_ref (download_index1_menu);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "download_index1_menu", download_index1_menu,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM (download_index1), download_index1_menu);
-  download_index1_menu_accels = gtk_menu_ensure_uline_accel_group (GTK_MENU (download_index1_menu));
-
-  thumbnails1 = gtk_menu_item_new_with_label ("");
-  tmp_key = gtk_label_parse_uline (GTK_LABEL (GTK_BIN (thumbnails1)->child),
-                                   _("_Thumbnails"));
-  gtk_widget_add_accelerator (thumbnails1, "activate_item", download_index1_menu_accels,
-                              tmp_key, 0, 0);
-  gtk_widget_ref (thumbnails1);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "thumbnails1", thumbnails1,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (thumbnails1);
-  gtk_container_add (GTK_CONTAINER (download_index1_menu), thumbnails1);
-  gtk_widget_add_accelerator (thumbnails1, "activate", accel_group,
-                              GDK_i, GDK_MOD1_MASK,
-                              GTK_ACCEL_VISIBLE);
-
-  no_thumbnails1 = gtk_menu_item_new_with_label ("");
-  tmp_key = gtk_label_parse_uline (GTK_LABEL (GTK_BIN (no_thumbnails1)->child),
-                                   _("_No Thumbnails"));
-  gtk_widget_add_accelerator (no_thumbnails1, "activate_item", download_index1_menu_accels,
-                              tmp_key, 0, 0);
-  gtk_widget_ref (no_thumbnails1);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "no_thumbnails1", no_thumbnails1,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (no_thumbnails1);
-  gtk_container_add (GTK_CONTAINER (download_index1_menu), no_thumbnails1);
-  gtk_widget_add_accelerator (no_thumbnails1, "activate", accel_group,
-                              GDK_e, GDK_MOD1_MASK,
-                              GTK_ACCEL_VISIBLE);
 
   download_selected1 = gtk_menu_item_new_with_label ("");
   tmp_key = gtk_label_parse_uline (GTK_LABEL (GTK_BIN (download_selected1)->child),
@@ -1104,12 +1069,6 @@ create_main_window (void)
   gtk_signal_connect (GTK_OBJECT (select2), "activate",
                       GTK_SIGNAL_FUNC (on_select_camera_activate),
                       NULL);
-  gtk_signal_connect (GTK_OBJECT (thumbnails1), "activate",
-                      GTK_SIGNAL_FUNC (on_index_thumbnails_activate),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (no_thumbnails1), "activate",
-                      GTK_SIGNAL_FUNC (on_index_no_thumbnails_activate),
-                      NULL);
   gtk_signal_connect (GTK_OBJECT (thumbnails2), "activate",
                       GTK_SIGNAL_FUNC (on_download_thumbnails_activate),
                       NULL);
@@ -1217,7 +1176,7 @@ create_message_window_long (void)
 GtkWidget*
 create_confirm_window (void)
 {
-  /* widget labels: "yes" "no" */
+  /* widget labels: "message" "yes" "no" */
 
   GtkWidget *confirm_window;
   GtkWidget *vbox4;
@@ -1244,7 +1203,7 @@ create_confirm_window (void)
 
   confirm_label = gtk_label_new (_("Are you sure?"));
   gtk_widget_ref (confirm_label);
-  gtk_object_set_data_full (GTK_OBJECT (confirm_window), "confirm_label", confirm_label,
+  gtk_object_set_data_full (GTK_OBJECT (confirm_window), "message", confirm_label,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (confirm_label);
   gtk_box_pack_start (GTK_BOX (vbox4), confirm_label, TRUE, TRUE, 0);
@@ -1254,7 +1213,6 @@ create_confirm_window (void)
   gtk_object_set_data_full (GTK_OBJECT (confirm_window), "hsep", hsep,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (hsep);
-  gtk_box_pack_end (GTK_BOX (vbox4), hsep, FALSE, FALSE, 0);
 
   hbox2 = gtk_hbox_new (TRUE, 5);
   gtk_widget_ref (hbox2);
@@ -1262,6 +1220,7 @@ create_confirm_window (void)
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (hbox2);
   gtk_box_pack_end (GTK_BOX (vbox4), hbox2, FALSE, TRUE, 0);
+  gtk_box_pack_end (GTK_BOX (vbox4), hsep, FALSE, FALSE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (hbox2), 5);
 
   button19 = gtk_button_new_with_label (_("Yes"));

@@ -33,6 +33,22 @@ void idle() {
                 gtk_main_iteration();
 }
 
+
+void icon_resize(GtkWidget *window) {
+
+	GtkWidget *icon_list = (GtkWidget*)lookup_widget(gp_gtk_main_window, "icons");
+	int x, y;
+
+	gdk_window_get_size(gp_gtk_main_window->window, &x, &y);
+
+	if (abs(gp_gtk_old_width-x)>60) {
+		gtk_icon_list_freeze(GTK_ICON_LIST(icon_list));
+		gtk_icon_list_thaw(GTK_ICON_LIST(icon_list));
+		gp_gtk_old_width = x;
+	}
+
+}
+
 int camera_set() {
 
 	GtkWidget *camera_tree, *message, *message_label, *camera_label, *icon_list;
@@ -624,7 +640,6 @@ void camera_index_common(int thumbnails) {
 		camera_select();
 		return;
 	}
-
 	if (gp_camera_abilities_by_name(buf, &a)==GP_ERROR) {
 		gp_message ("Could not retrieve the camera's abilities");
 		return;
@@ -703,12 +718,79 @@ void camera_download_both() {
 
 }
 
-void camera_delete_selected() {
-	debug_print("camera delete selected");
+void camera_delete_common(int all) {
+
+	GtkWidget *icon_list;
+	GtkIconListItem *item;
+	CameraAbilities a;
+	char buf[1024];
+	int x, count=0;
 
 	if (!gp_gtk_camera_init)
 		if (camera_set()==GP_ERROR) {return;}
 
+	if (gp_confirm("Are you sure you want to DELETE the photos?")==0)
+		return;
+
+	if (gp_setting_get("camera", buf)==GP_ERROR) {
+		gp_message ("ERROR: please choose your camera model again");
+		camera_select();
+		return;
+	}
+	if (gp_camera_abilities_by_name(buf, &a)==GP_ERROR) {
+		gp_message ("Could not retrieve the camera's abilities");
+		return;
+	}
+
+/* Not working? */
+	if (!a.file_delete) {
+		gp_message ("This camera does not support deleting photos.");
+		return;
+	}
+
+	if ((count = gp_file_count())==GP_ERROR) {
+		gp_message ("Could not retrieve the number of pictures");
+		return;
+	}
+	
+	if (all) {
+		for (x=0; x<count; x++) {
+			if (gp_file_delete(0)==GP_ERROR) {
+				sprintf(buf, "Could not delete photo #%04i. Stopping.", x);
+				gp_message(buf);
+				return;
+			}
+		}
+	}
+	
+	icon_list = (GtkWidget*) lookup_widget(gp_gtk_main_window, "icons");
+	for (x=0; x<count; x++) {
+		item = gtk_icon_list_get_nth(GTK_ICON_LIST(icon_list), x);
+		if (item->state == GTK_STATE_SELECTED) {
+			if (gp_file_delete(0)==GP_ERROR) {
+				sprintf(buf, "Could not delete photo #%04i. Stopping.", x);
+				gp_message(buf);
+				return;
+			}
+			gtk_icon_list_remove(GTK_ICON_LIST(icon_list), item);
+			x--;
+			count--;
+		}
+	}
+
+	for (x=0; x<count; x++) {
+		item = gtk_icon_list_get_nth(GTK_ICON_LIST(icon_list), x);
+		sprintf(buf, "#%04i", x);
+		gtk_icon_list_set_label (GTK_ICON_LIST(icon_list), item, buf);
+		gtk_icon_list_freeze(GTK_ICON_LIST(icon_list));
+		gtk_icon_list_thaw(GTK_ICON_LIST(icon_list));
+	}
+}
+
+void camera_delete_selected() {
+	debug_print("camera delete selected");
+
+	camera_delete_common(0);
 }
 
 void camera_delete_all() {
@@ -717,6 +799,7 @@ void camera_delete_all() {
 	if (!gp_gtk_camera_init)
 		if (camera_set()==GP_ERROR) {return;}
 
+	camera_delete_common(1);
 }
 
 void camera_configure() {
