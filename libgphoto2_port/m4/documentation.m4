@@ -136,6 +136,13 @@ AC_SUBST(API_DIR)
 dnl ------------------------------------------------------------------------
 dnl try to find xmlto (required for generation of man pages and html docs)
 dnl ------------------------------------------------------------------------
+#
+# The intention of these macros is the following:
+#
+# A distribution tarball should have the manuals (HTML, PDF, PS) included.
+# Only if the user has the software to re-build the manuals from the
+# docbook source, should we delete or re-create the created docs.
+#
 manual_msg="no (http://cyberelk.net/tim/xmlto/)"
 try_xmlto=true
 have_xmlto=false

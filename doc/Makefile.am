@@ -1,5 +1,14 @@
 SUBDIRS = api figures
 
+#
+# The intention of these macros, targets, rules, and variables is the
+# following:
+#
+# A distribution tarball should have the manuals (HTML, PDF, PS) included.
+# Only if the user has the software to re-build the manuals from the
+# docbook source, should we delete or re-create the created docs.
+#
+
 # distribute manual Portable Document Format (PDF) if possible
 manual_pdf = @manual_pdf@
 
