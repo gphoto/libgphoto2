@@ -62,9 +62,13 @@ int digita_usb_open(CameraPrivateLibrary *dev, Camera *camera)
 	dev->send = digita_usb_send;
 	dev->read = digita_usb_read;
 
+	gp_port_set_timeout(camera->port, 100);
+
 	/* Mop up anything still pending */
 	while (gp_port_read(dev->gpdev, buffer, sizeof(buffer)) > 0)
 		;
+
+	gp_port_set_timeout(camera->port, 10000);
 
 	return GP_OK;
 }
