@@ -76,9 +76,6 @@ int     gp_widget_get_name      (CameraWidget *widget, const char **name);
 int	gp_widget_set_info      (CameraWidget *widget, const char  *info);
 int	gp_widget_get_info      (CameraWidget *widget, const char **info);
 
-
-
-
 int	gp_widget_get_id	(CameraWidget *widget, int *id);
 int	gp_widget_get_type	(CameraWidget *widget, CameraWidgetType *type);
 int	gp_widget_get_label	(CameraWidget *widget, const char **label);
