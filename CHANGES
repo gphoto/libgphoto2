@@ -4,7 +4,7 @@ libgphoto2 CVS HEAD
 drivers (camlibs):
 
    * Canon driver:
-     - added support for G5
+     - added support for G5, Optura 20
      - re-added support for A300 and S50
 
 packaging:

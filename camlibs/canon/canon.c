@@ -78,11 +78,11 @@
  * such that their camera name occurs in the list of supported
  * cameras.
  *
- * Note:
- * - at least some serial cameras require a certain name for correct
+ * Notes:
+ * - At least some serial cameras require a certain name for correct
  *   detection.
- * - newer Canon cameras USB also support a PTP mode. see ptp/ptp2 camlibs.
- * - no IEEE1394 cameras supported yet
+ * - Newer Canon USB cameras also support a PTP mode. See ptp2 camlib.
+ * - No IEEE1394 cameras supported yet.
  **/
 
 #define S32K	(32 * 1024)
@@ -171,6 +171,7 @@ const struct canonCamModelData models[] = {
 	{"Canon:PowerShot unknown 5",		CANON_PS_UNK5,	0x04A9, 0x307a, CAP_SUP, S10M, S32K, S2M, NULL},
 	/* MV630i seems to be a DV camcorder */
 	{"Canon:MV630i",		CANON_MV630I,		0x04A9, 0x307b, CAP_SUP, S99M, S32K, S2M, NULL},
+	{"Canon:Optura 20",		CANON_OPT_20,		0x04A9, 0x307f, CAP_SUP, S99M, S32K, S2M, NULL},
 
 	{"Canon:EOS 10D",		CANON_EOS_10D,		0x04A9, 0x3083, CAP_SUP, S10M, S32K, S2M, NULL},
 	/* 0x3099 is the EOS 300D/Digital Rebel in PTP mode */

@@ -1,3 +1,7 @@
+2003-11-08  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* canon.c, canon.h: Added support for Optura 20 (reported by Walt H)
+
 2003-10-27  Marcus Meissner <meissner@suse.de>
 
 	* canon.c: PowerShot S50 and A300 got lost somewhere.
