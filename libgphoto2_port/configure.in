@@ -47,17 +47,20 @@ dnl                    there running libtool-1.3. For those, we will need
 dnl                    dlopen. Note that on some systems (e.g. FreeBSD)
 dnl                    -ldl isn't needed.
 dnl ---------------------------------------------------------------------------
+dnl Commented out for now because lt_dlforeachfile will not do anything if it
+dnl has already been called before.
+dnl 
 AM_PROG_LIBTOOL
 no_libtool=true
-AC_CHECK_LIB(ltdl, lt_dlforeachfile,
-        AC_CHECK_HEADER(ltdl.h,
-                AC_DEFINE(HAVE_LTDL)
-                LTDL_LIBS="-lltdl"
-                no_libtool=false
-        )
-)
+dnl AC_CHECK_LIB(ltdl, lt_dlforeachfile,
+dnl         AC_CHECK_HEADER(ltdl.h,
+dnl                 AC_DEFINE(HAVE_LTDL)
+dnl                 LTDL_LIBS="-lltdl"
+dnl                 no_libtool=false
+dnl         )
+dnl )
 if $no_libtool; then
-        AC_CHECK_FUNC(dlopen,,
+	AC_CHECK_FUNC(dlopen,,
                 AC_CHECK_LIB(dl, dlopen,
                         LTDL_LIBS="-ldl",
                         AC_ERROR([

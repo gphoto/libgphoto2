@@ -1,3 +1,7 @@
+2001-12-14  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* configure.in: Comment out check for ltdl.h. See comment in there.
+
 2001-12-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* configure.in:
