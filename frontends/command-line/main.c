@@ -131,6 +131,7 @@ OPTION_CALLBACK(version);
 OPTION_CALLBACK(shell);
 OPTION_CALLBACK(list_cameras);
 OPTION_CALLBACK(print_usb_usermap);
+OPTION_CALLBACK(usb_usermap_script);
 OPTION_CALLBACK(auto_detect);
 OPTION_CALLBACK(list_ports);
 OPTION_CALLBACK(filename);
@@ -193,7 +194,8 @@ Option option[] = {
 {"v", "version",     "", N_("Display version and exit"),     version,        0},
 {"h", "help",        "", N_("Displays this help screen"),    help,           0},
 {"",  "list-cameras","", N_("List supported camera models"), list_cameras,   0},
-{"",  "print-usb-usermap", "", N_("Create output for usb.usermap"), print_usb_usermap, 0},
+{"",  "usb-usermap-script", "name", N_("usb.usermap script (dflt=\"usbcam\")"), usb_usermap_script, 0},
+{"",  "print-usb-usermap",  "",     N_("Create output for usb.usermap"),        print_usb_usermap,  0},
 {"",  "list-ports",  "", N_("List supported port devices"),  list_ports,     0},
 {"",  "stdout",      "", N_("Send file to stdout"),          use_stdout,     0},
 {"",  "stdout-size", "", N_("Print filesize before data"),   use_stdout_size,0},
@@ -258,6 +260,7 @@ int  glob_option_count;
 char glob_port[128];
 static char glob_model[64];
 char glob_folder[1024];
+char glob_usb_usermap_script[1024];
 char glob_owd[1024];
 char glob_cwd[1024];
 int  glob_speed;
@@ -514,11 +517,12 @@ OPTION_CALLBACK(print_usb_usermap) {
 		if (!(a.port & GP_PORT_USB))
 		    continue;
 		if (a.usb_vendor && a.usb_product) {
-			printf (GP_USB_HOTPLUG_SCRIPT "               "
+			printf ("%-20s "
 				"0x%04x      0x%04x   0x%04x    0x0000       "
 				"0x0000       0x00         0x00            "
 				"0x00            0x00            0x00               "
 				"0x00               0x00000000\n",
+				glob_usb_usermap_script,
 				GP_USB_HOTPLUG_MATCH_VENDOR_ID | GP_USB_HOTPLUG_MATCH_PRODUCT_ID,
 				a.usb_vendor, a.usb_product);
 		}
@@ -538,11 +542,12 @@ OPTION_CALLBACK(print_usb_usermap) {
 			    flags |= GP_USB_HOTPLUG_MATCH_DEV_PROTOCOL;
 			else
 			    proto = 0;
-			printf (GP_USB_HOTPLUG_SCRIPT "               "
+			printf ("%-20s "
 				"0x%04x      0x0000   0x0000    0x0000       "
 				"0x0000       0x%02x         0x%02x            "
 				"0x%02x        0x00            0x00               "
 				"0x00               0x00000000\n",
+				glob_usb_usermap_script,
 				flags,
 				class, subclass, proto);
 		}
@@ -550,6 +555,16 @@ OPTION_CALLBACK(print_usb_usermap) {
 	CR (gp_abilities_list_free (al));
 
         return (GP_OK);
+}
+
+OPTION_CALLBACK(usb_usermap_script)
+{
+	cli_debug_print("Setting usb.usermap script to \"%s\"", arg);
+
+	strncpy (glob_usb_usermap_script, arg, sizeof (glob_usb_usermap_script) - 1);
+	glob_usb_usermap_script[sizeof (glob_usb_usermap_script) - 1] = 0;
+
+	return (GP_OK);
 }
 
 OPTION_CALLBACK(list_ports)
@@ -1583,6 +1598,7 @@ init_globals (void)
 
         strcpy (glob_port, "");
         strcpy (glob_folder, "/");
+	strcpy (glob_usb_usermap_script, "usbcam");
         if (!getcwd (glob_owd, 1023))
                 strcpy (glob_owd, "./");
         strcpy (glob_cwd, glob_owd);
