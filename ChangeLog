@@ -1,5 +1,9 @@
 2001-11-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/polaroid/pdc700.c: Timeout = 2sec, try each speed 2 times.
+
+2001-11-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/sierra/PROTOCOL: Updated (upload).
 
 2001-11-04  Lutz Müller <urc8@rz.uni-karlsruhe.de>
