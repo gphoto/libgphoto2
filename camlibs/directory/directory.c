@@ -87,8 +87,6 @@ int camera_init (Camera *camera) {
         camera->functions->file_get     	= camera_file_get;
 	camera->functions->config_get		= camera_config_get;
 	camera->functions->config_set		= camera_config_set;
-        camera->functions->file_put     	= camera_file_put;
-        camera->functions->file_delete  	= camera_file_delete;
         camera->functions->config       	= camera_config;
         camera->functions->summary      	= camera_summary;
         camera->functions->manual       	= camera_manual;
@@ -269,17 +267,8 @@ int camera_config_set (Camera *camera, CameraWidget *window) {
 	return (GP_OK);
 }
 
-int camera_file_put (Camera *camera, CameraFile *file, char *folder) {
-
-        return (GP_ERROR_NOT_SUPPORTED);
-}
-
-
-int camera_file_delete (Camera *camera, char *folder, char *filename) {
-
-        return (GP_ERROR_NOT_SUPPORTED);
-}
-
+/* DEPRECATED */
+/* This function is deprecated! Do not implement!*/
 int camera_config (Camera *camera) {
 	CameraWidget *window;
 
@@ -294,50 +283,7 @@ int camera_config (Camera *camera) {
 	camera_config_set (camera, window);
 
         return (GP_OK);
-#if 0
-        /* Example. shows when debugging is on */
-//FIXME: Syntax of gp_widget_value_get/set has changed!
-
-        /* Create a new section for "Quality" */
-        section = gp_widget_new(GP_WIDGET_SECTION, "Quality");
-        gp_widget_append(window, section);
-
-                /* Add the Resolution setting radio buttons */
-                t = gp_widget_new(GP_WIDGET_RADIO, "Resolution");
-                gp_widget_append(section, t);
-                gp_widget_choice_add(t, "Normal");
-                gp_widget_choice_add(t, "High");
-                gp_widget_choice_add(t, "Best");
-                gp_widget_value_set(t, "High");
-
-                t = gp_widget_new(GP_WIDGET_TEXT, "Camera Name");
-                gp_widget_append(section, t);
-                gp_widget_value_set(t, "hey there!");
-
-                t = gp_widget_new(GP_WIDGET_RANGE, "LCD Brightness");
-                gp_widget_append(section, t);
-                gp_widget_range_set(t, 1.0, 7.0, 1.0);
-                gp_widget_value_set(t, "4.0");
-
-        /* Create a new section for "Flash/Lens" and append to window */
-        section = gp_widget_new(GP_WIDGET_SECTION, "Flash/Lens");
-        gp_widget_append(window, section);
-
-                t = gp_widget_new(GP_WIDGET_MENU, "Flash Setting");
-                gp_widget_append(section, t);
-                gp_widget_choice_add(t, "Auto");
-                gp_widget_choice_add(t, "Red-eye");
-                gp_widget_choice_add(t, "Force");
-                gp_widget_choice_add(t, "None");
-                gp_widget_value_set(t, "Red-eye");
-
-                t = gp_widget_new(GP_WIDGET_RADIO, "Lens Mode");
-                gp_widget_append(section, t);
-                gp_widget_choice_add(t, "Normal");
-                gp_widget_choice_add(t, "Macro");
-                gp_widget_value_set(t, "Macro");
-#endif
-}
+} /* END DEPRECATED */
 
 int camera_summary (Camera *camera, CameraText *summary) {
 

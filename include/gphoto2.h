@@ -6,7 +6,11 @@
 */
 
 #ifndef GPHOTO2_H
-#define GPHOTO2_H
+#define GPHOTO2_H 1
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #ifdef OS2
 #include <gphotoos2.h>
@@ -29,5 +33,9 @@
 #include <gphoto2-port.h>
 #include <gphoto2-settings.h>
 #include <gphoto2-widget.h>
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
