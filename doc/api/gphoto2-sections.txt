@@ -1,3 +1,20 @@
+<SECTION>
+<FILE>gphoto2-debug</FILE>
+<TITLE>GPDebug</TITLE>
+
+gp_debug_set_level
+gp_debug_get_level
+
+gp_debug_printf
+
+GPDebugFunc
+gp_debug_set_func
+
+gp_debug_history_get
+gp_debug_history_get_size
+gp_debug_history_set_size
+
+</SECTION>
 
 <SECTION>
 <FILE>gphoto2-widget</FILE>
