@@ -64,9 +64,12 @@ to handle the camera themselves (e.g. the Linux dc2xx driver).
 On Linux systems, you have basically two options to allow user access
 to USB devices:
 a) allow a certain user/group or the world access to ALL USB devices
-   by mounting /proc/bus/usb accordingly
+   by mounting /proc/bus/usb with adequate user and/or group 
+   permissions (default is world-readable and root-only-writable,
+   which is good)
 b) use hotplug and allow access only to the USB devices you want to be
-   accessible
+   accessible (you need /proc/bus/usb mounted here as well, but not
+   mounted writable by anybody else than root)
 
 Solution b) has a huge advantage over a): It doesn't allow the
 user/group to interfere with or eavesdrop on any other USB devices
