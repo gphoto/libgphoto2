@@ -626,14 +626,6 @@ int sierra_delete_all (Camera *camera)
 	/* Read in the ENQ */
 	CHECK (sierra_read_packet (camera, buf));
 
-	/* 
-	 * Mick Grant <mickgr@drahthaar.clara.net> found out that his 
-	 * Nicon CoolPix 880 won't have deleted any picture at this point.
-	 * It seems that those cameras just acknowledge the command but do
-	 * nothing in the end. gphoto2 will check if all pictures have deleted,
-	 * therefore we don't handle this case here.
-	 */
-
 	GP_SYSTEM_SLEEP (QUICKSLEEP);
 
 	return (GP_OK);

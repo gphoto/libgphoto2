@@ -1,5 +1,13 @@
 2001-08-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/sierra/library.c: (sierra_delete_all): Move notice about 
+	cameras ignoring delete_all to ...
+	* camlibs/sierra/sierra.c: (camera_folder_delete_all): ... here. And 
+	update the filesystem - without that, gphoto2 won't be able to 
+	fix the behaviour of some cameras (ignoring delete_all).
+
+2001-08-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/panasonic/Makefile.am: SUBDIRS = l859
 
 2001-08-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>

@@ -533,8 +533,7 @@ int camera_file_get_generic (Camera *camera, CameraFile *file,
 
 	/* Get the file number from the CameraFileSystem */
 	file_number = gp_filesystem_number (fd->fs, folder, filename);
-	if (file_number < 0)
-		return (file_number);
+	CHECK_STOP (camera, file_number);
 
 	if (thumbnail) {
 		regl = 13;
@@ -566,8 +565,9 @@ int camera_file_get_generic (Camera *camera, CameraFile *file,
 	strcpy (tmp_file->name, filename);
 
 	/* Get the picture data */
-	CHECK (sierra_get_string_register (camera, regd, file_number + 1, 
-					   tmp_file, NULL, NULL));
+	CHECK_STOP (camera, sierra_get_string_register (camera, regd,
+							file_number + 1, 
+							tmp_file, NULL, NULL));
 
 	/* Some camera (e.g. Epson 3000z) send only the Exif data
 	   as thumbnail. A valid Jpeg file needs to be built */
@@ -601,6 +601,7 @@ int camera_file_get_generic (Camera *camera, CameraFile *file,
 	}
 
 	gp_file_free (tmp_file);
+
 	return (camera_stop (camera));
 }
 
@@ -652,16 +653,30 @@ int camera_file_get_info (Camera *camera, const char *folder,
 
 int camera_folder_delete_all (Camera *camera, const char *folder)
 {
+	SierraData *fd = (SierraData*)camera->camlib_data;
+
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", 
 			 "*** sierra_folder_delete_all");
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
 
 	CHECK (camera_start (camera));
 
-	CHECK (sierra_delete_all (camera));
+	CHECK_STOP (camera, sierra_delete_all (camera));
 
-	//FIXME: Update the gphoto filesystem?
+	/*
+	 * Mick Grant <mickgr@drahthaar.clara.net> found out that his
+	 * Nicon CoolPix 880 won't have deleted any picture at this point.
+	 * It seems that those cameras just acknowledge the command but do
+	 * nothing in the end. gphoto2 will check if all pictures have deleted,
+	 * therefore we don't handle this case here.
+	 *
+	 * However, we need to update the filesystem so that gphoto2 can
+	 * handle this case.
+	 */
 
+	CHECK_STOP (camera, gp_filesystem_format (fd->fs));
+	CHECK_STOP (camera, update_fs_for_folder (camera, "/"));
+	
 	return (camera_stop (camera));
 }
 
@@ -692,9 +707,9 @@ int camera_file_delete (Camera *camera, const char *folder,
 
 	file_number = gp_filesystem_number (fd->fs, folder, filename);
 
-	CHECK (sierra_delete (camera, file_number + 1));
+	CHECK_STOP (camera, sierra_delete (camera, file_number + 1));
 
-	CHECK (gp_filesystem_delete (fd->fs, folder, filename));
+	CHECK_STOP (camera, gp_filesystem_delete (fd->fs, folder, filename));
 
 	return (camera_stop(camera));
 }
