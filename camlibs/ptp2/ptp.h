@@ -251,9 +251,9 @@ typedef struct _PTPUSBEventContainer PTPUSBEventContainer;
 #define PTP_EC_CaptureComplete		0x400D
 #define PTP_EC_UnreportedStatus		0x400E
 /* Canon extension Event Codes */
-#define PTP_EC_CANON_DeviceInfoChanged	0xC008
+#define PTP_EC_CANON_ObjectInfoChanged		0xC008
 #define PTP_EC_CANON_RequestObjectTransfer	0xC009
-#define PTP_EC_CANON_CameraModeChanged	0xC00C
+#define PTP_EC_CANON_CameraModeChanged		0xC00C
 
 /* PTP device info structure (returned by GetDevInfo) */
 
