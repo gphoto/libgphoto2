@@ -635,7 +635,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	}
 
 	/* do different things with the data fetched above */
-	/* FIXME: For which file type(s) should we gp_file_set_name (file, filename);?
+	/* FIXME: For which file type(s) should we gp_file_set_name (file, filename);*? */
 	switch (type) {
 		case GP_FILE_TYPE_PREVIEW:
 			/* Either this camera model does not support EXIF,
