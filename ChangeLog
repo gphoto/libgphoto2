@@ -1,3 +1,7 @@
+2002-01-13  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* configure.in: 2.0beta4dev8 (to detect old/new canon camlib :-)
+
 2002-01-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2/gphoto2-camera.[c,h]: Remove last references
