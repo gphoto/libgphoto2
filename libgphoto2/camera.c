@@ -175,26 +175,48 @@ int gp_camera_init (Camera *camera)
 	if (camera == NULL) 
 		return (GP_ERROR_BAD_PARAMETERS);
 
-	/* If the port hasn't been indicated, try to figure it out (USB only). */
-	if (strcmp (camera->port->path, "") == 0) {
-		gp_frontend_message (NULL, "\n"
-			"*** Auto-probe for port has not yet been implemented! ***\n"
-			"*** Please specify a port!                            ***\n");
-		return (GP_ERROR_BAD_PARAMETERS);
-	}
+	/* Beware of 'Directory Browse'... */
+	if (strcmp (camera->model, "Directory Browse") != 0) {
 
-        /* Set the port type from the path in case the frontend didn't. */
-        if (camera->port->type == GP_PORT_NONE) {
-                for (x=0; x<gp_port_count_get(); x++) {
-                        gp_port_info_get(x, &info);
-                        if (strcmp(info.path, camera->port->path)==0) {
-                                camera->port->type = info.type;
-				break;
+		/* Set the port's path if only the name has been indicated. */
+		if ((strcmp (camera->port->path, "") == 0) && (strcmp (camera->port->name, "") != 0)) {
+			for (x = 0; x < gp_port_count_get (); x++) {
+				if (gp_port_info_get (x, &info) == GP_OK) {
+					if (strcmp (camera->port->name, info.name) == 0) {
+						strcpy (camera->port->path, info.path);
+						break;
+					}
+				}
 			}
-                }
-		if (x == gp_port_count_get ())
+			if (x < 0) 
+				return (x);
+			if (x == gp_port_count_get ())
+				return (GP_ERROR_BAD_PARAMETERS);
+		}
+	
+		/* If the port hasn't been indicated, try to figure it out (USB only). */
+		if (strcmp (camera->port->path, "") == 0) {
+			gp_frontend_message (NULL, "\n"
+				"*** Auto-probe for port has not yet been implemented! ***\n"
+				"*** Please specify a port!                            ***\n");
 			return (GP_ERROR_BAD_PARAMETERS);
-        }
+		}
+	
+	        /* Set the port type from the path in case the frontend didn't. */
+	        if (camera->port->type == GP_PORT_NONE) {
+	                for (x = 0; x < gp_port_count_get (); x++) {
+	                        gp_port_info_get (x, &info);
+	                        if (strcmp (info.path, camera->port->path) == 0) {
+	                                camera->port->type = info.type;
+					break;
+				}
+	                }
+			if (x < 0) 
+				return (x);
+			if (x == gp_port_count_get ())
+				return (GP_ERROR_BAD_PARAMETERS);
+	        }
+	}
 		
 	/* If the model hasn't been indicated, try to figure it out through probing. */
 	if (strcmp (camera->model, "") == 0) {
@@ -315,6 +337,14 @@ int gp_camera_file_get (Camera *camera, CameraFile *file,
 		return (GP_ERROR_BAD_PARAMETERS);
         if (camera->functions->file_get == NULL)
                 return (GP_ERROR_NOT_SUPPORTED);
+	
+	/* Did we get reasonable foldername/filename? */
+	if ((folder == NULL) || (filename == NULL)) 
+		return (GP_ERROR_BAD_PARAMETERS);
+	if (strlen (folder) == 0)
+		return (GP_ERROR_DIRECTORY_NOT_FOUND);
+	if (strlen (filename) == 0)
+		return (GP_ERROR_FILE_NOT_FOUND);
 
         gp_file_clean(file);
 

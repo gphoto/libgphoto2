@@ -4,7 +4,10 @@ camlib_LTLIBRARIES = libgphoto2_konica.la
 CFLAGS = @CFLAGS@ `glib-config --cflags`
 LDFLAGS = @LDFLAGS@ `glib-config --libs`
 EXTRA_DIST = ChangeLog EXPERTS
-INCLUDES = -I$(top_srcdir)/include
+
+INCLUDES =\
+ -I$(top_srcdir)/include\
+ -DG_LOG_DOMAIN=\"$(PACKAGE)\"\
 
 libgphoto2_konica_la_SOURCES = \
  lowlevel.c lowlevel.h \

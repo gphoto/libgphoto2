@@ -369,8 +369,8 @@ camera_folder_list (Camera* camera, CameraList* list, gchar* folder)
 	g_return_val_if_fail (camera, 	GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (list, 	GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (folder, 	GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (!strcmp (folder, "/"), GP_ERROR_DIRECTORY_NOT_FOUND);
 
-	/* The camera does not support folders. */
 	return (GP_OK);
 }
 
@@ -414,6 +414,7 @@ camera_file_list (Camera* camera, CameraList* list, gchar* folder)
 	g_return_val_if_fail (camera, 	GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (list, 	GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (folder, 	GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (!strcmp (folder, "/"), GP_ERROR_DIRECTORY_NOT_FOUND);
 
 	konica_data = (konica_data_t *) camera->camlib_data;
 	if ((result = k_get_status (
@@ -472,7 +473,7 @@ gint
 camera_file_get_generic (Camera* camera, CameraFile* file, gchar* folder, gchar* filename, k_image_type_t image_type)
 {
 	gulong 		image_id;
-	gchar		image_id_string[] = {0, 0, 0, 0, 0, 0, 0};
+	gchar*		image_id_string;
 	konica_data_t*	kd;
 	gchar*		tmp;
 	gint		result;
@@ -481,6 +482,9 @@ camera_file_get_generic (Camera* camera, CameraFile* file, gchar* folder, gchar*
 	g_return_val_if_fail (file, 	GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (folder, 	GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (filename, GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (!strcmp (folder, "/"), GP_ERROR_DIRECTORY_NOT_FOUND);
+	g_return_val_if_fail (strlen (file) == 11, GP_ERROR_FILE_NOT_FOUND);
+	g_return_val_if_fail (strcmp (folder, "??????.jpeg"), GP_ERROR_FILE_NOT_FOUND);
 
 	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_file_get_generic ***");
 	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** folder: %s", folder);
@@ -489,9 +493,9 @@ camera_file_get_generic (Camera* camera, CameraFile* file, gchar* folder, gchar*
 	kd = (konica_data_t *) camera->camlib_data;
 
 	/* Check if we can get the image id from the filename. */
-	g_return_val_if_fail (filename[0] != '?', GP_ERROR);
-	memcpy (image_id_string, filename, 6);
+	image_id_string = g_strndup (filename, 6);
 	image_id = atol (image_id_string);
+	g_free (image_id_string);
 	
 	/* Get the image. */
 	if ((result = k_get_image (kd->device, kd->image_id_long, image_id, image_type, (guchar **) &file->data, (guint *) &file->size)) != GP_OK) return (result);
@@ -535,6 +539,7 @@ camera_file_delete (Camera* camera, gchar* folder, gchar* filename)
         g_return_val_if_fail (camera, 	GP_ERROR_BAD_PARAMETERS);
         g_return_val_if_fail (folder, 	GP_ERROR_BAD_PARAMETERS);
         g_return_val_if_fail (filename, GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (!strcmp (folder, "/"), GP_ERROR_DIRECTORY_NOT_FOUND);
 
 	konica_data = (konica_data_t *) camera->camlib_data;
 

@@ -37,6 +37,9 @@ int gp_file_ref (CameraFile *file) {
 
 int gp_file_unref (CameraFile *file) {
 
+    if (file == NULL)
+    	return GP_ERROR_BAD_PARAMETERS;
+
     file->ref_count -= 1;
 
     if (file->ref_count == 0)
