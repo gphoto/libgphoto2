@@ -113,9 +113,9 @@ int camera_abilities (CameraAbilitiesList *list)
 
 		memset(&a, 0, sizeof(a));
 		strcpy(a.model, camera_to_usb[i].name);
-		a.status = GP_DRIVER_STATUS_TESTING;
 
 		if (!camera_to_usb[i].idVendor) {
+			a.status	= GP_DRIVER_STATUS_EXPERIMENTAL;
 			a.port     = GP_PORT_SERIAL;
 			a.speed[0] = 115200;
 			a.speed[1] = 0;
@@ -123,6 +123,7 @@ int camera_abilities (CameraAbilitiesList *list)
 			a.file_operations   = GP_FILE_OPERATION_PREVIEW;
 			a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
 		} else {
+			a.status = GP_DRIVER_STATUS_TESTING;
 			a.port     = GP_PORT_USB;
 			a.speed[0] = 0;
 			a.operations        = GP_OPERATION_CAPTURE_PREVIEW | 
