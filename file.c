@@ -174,7 +174,7 @@ gp_file_get_data_and_size (CameraFile *file, const char **data, long int *size)
 }
 
 int
-gp_file_save (CameraFile *file, char *filename)
+gp_file_save (CameraFile *file, const char *filename)
 {
         FILE *fp;
 
@@ -189,7 +189,7 @@ gp_file_save (CameraFile *file, char *filename)
 }
 
 int
-gp_file_open (CameraFile *file, char *filename)
+gp_file_open (CameraFile *file, const char *filename)
 {
         FILE *fp;
         char *name, *dot;

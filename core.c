@@ -278,7 +278,7 @@ gp_autodetect (CameraList *list)
 
 
 void
-gp_debug_printf (int level, char *id, char *format, ...)
+gp_debug_printf (int level, const char *id, const char *format, ...)
 {
         va_list arg;
 

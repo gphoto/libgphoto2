@@ -468,7 +468,7 @@ gp_filesystem_list_folders (CameraFilesystem *fs, const char *folder,
 
 int
 gp_filesystem_populate (CameraFilesystem *fs, const char *folder, 
-		        char *format, int count)
+		        const char *format, int count)
 {
         int x, y;
         char buf[1024];
