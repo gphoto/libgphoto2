@@ -175,6 +175,7 @@ static struct {
 	{"Panasonic", "Coolshot NV-DCF5E", SIERRA_MODEL_DEFAULT, 0, 0, 0 },
 
 	{"Pentax", "Optio 450", SIERRA_MODEL_DEFAULT, 0x0a17,0x0007, SIERRA_WRAP_USB_PENTAX },
+	{"Pentax", "Optio 33WR", SIERRA_MODEL_DEFAULT, 0x0a17,0x0009, SIERRA_WRAP_USB_PENTAX },
 
 	{"Polaroid", "PDC 640", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Polaroid", "PDC 2300Z", SIERRA_MODEL_DEFAULT, 0x0546, 0x0daf,
