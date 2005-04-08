@@ -198,9 +198,9 @@ const struct canonCamModelData models[] = {
         {"Canon:MVX100i",               CANON_CLASS_1,  0x04A9, 0x3082, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
         {"Canon:EOS 10D",               CANON_CLASS_4,  0x04A9, 0x3083, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
-        {"Canon:EOS 300D (normal mode)", CANON_CLASS_6, 0x04A9, 0x3084, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
-        {"Canon:EOS Digital Rebel (normal mode)",CANON_CLASS_6, 0x04A9, 0x3084, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
-        {"Canon:EOS Kiss Digital (normal mode)",CANON_CLASS_6,  0x04A9, 0x3084, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:EOS 300D (normal mode)", CANON_CLASS_4, 0x04A9, 0x3084, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:EOS Digital Rebel (normal mode)",CANON_CLASS_4, 0x04A9, 0x3084, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:EOS Kiss Digital (normal mode)",CANON_CLASS_4,  0x04A9, 0x3084, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
         /* PS G5 uses the same ProductID for PTP and Canon, with protocol autodetection */
         {"Canon:PowerShot G5 (normal mode)", CANON_CLASS_5,     0x04A9, 0x3085, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 

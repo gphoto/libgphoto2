@@ -473,30 +473,6 @@ canon_usb_init (Camera *camera, GPContext *context)
                                           gp_result_as_string (res));
                         return res;
                 }
-/*              if ( camstat == 'C' ) { */
-/*                      read_bytes = 0; */
-/*                      do { */
-/*                              GP_DEBUG ( "canon_usb_camera_init() read_bytes=0x%x", read_bytes ); */
-/*                              i = gp_port_check_int_fast ( camera->port, buffer, 0x10 ); */
-/*                              if ( i > 0 ) */
-/*                                      read_bytes += i; */
-/*                      } while ( read_bytes < 0x10 && i >= 0 ); */
-/*                      if ( read_bytes < 0x10 ) { */
-/*                              GP_DEBUG ( "canon_usb_camera_init() interrupt read returned only %d bytes, status=%d", read_bytes, i ); */
-/*                              if ( i < 0 ) */
-/*                                      return GP_ERROR_OS_FAILURE; */
-/*                              else */
-/*                                      return GP_ERROR_CORRUPTED_DATA; */
-/*                      } */
-/*                      else if ( i < 0 ) { */
-/*                              GP_DEBUG ( "canon_usb_camera_init() interrupt read failed, status=%d", i ); */
-/*                              return GP_ERROR_CORRUPTED_DATA; */
-/*                      } */
-/*                      else if ( i > 0x10 ) */
-/*                              GP_DEBUG ( "canon_usb_camera_init() interrupt read %d bytes, expected 16", read_bytes ); */
-/*                      else */
-/*                              GP_DEBUG ( "canon_usb_camera_init() interrupt read OK" ); */
-/*              } */
         }
         else {
                 if ( camera->pl->md->model != CANON_CLASS_4 ) {
@@ -1015,8 +991,9 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *conte
                         GP_DEBUG ( "canon_usb_capture_dialogue: thumbnail size %ld, tag=0x%08lx",
                                    camera->pl->thumb_length, camera->pl->image_key );
 			camera->pl->transfer_mode &= ~REMOTE_CAPTURE_THUMB_TO_PC;
+			/* Special case for class 6 (newer protocol) and the EOS 300D */
 			if ( camera->pl->transfer_mode == 0
-			     && camera->pl->md->model == CANON_CLASS_6 )
+			     && ( camera->pl->md->model == CANON_CLASS_6 || camera->pl->md->usb_product == 0x3084 ) )
 				goto EXIT;
                         break;
                 case 0x0c:
@@ -1030,11 +1007,12 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *conte
                         GP_DEBUG ( "canon_usb_capture_dialogue: full image size: 0x%08lx, tag=0x%08lx",
                                    camera->pl->image_length, camera->pl->image_key );
 			camera->pl->transfer_mode &= ~REMOTE_CAPTURE_FULL_TO_PC;
+			/* Special case for class 6 (newer protocol) and the EOS 300D */
 			if ( camera->pl->transfer_mode == 0
-			     && camera->pl->md->model == CANON_CLASS_6 )
+			     && ( camera->pl->md->model == CANON_CLASS_6 || camera->pl->md->usb_product == 0x3084 ) )
 				goto EXIT;
                         break;
-                case 0x0a:
+                 case 0x0a:
                         if ( buf2[12] == 0x1c ) {
                                 GP_DEBUG ( "canon_usb_capture_dialogue: first interrupt read" );
                                 if ( camera->pl->capture_step == 0 )
@@ -1093,8 +1071,8 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *conte
                                 goto FAIL;
                         }
 			camera->pl->transfer_mode &= ~(REMOTE_CAPTURE_THUMB_TO_DRIVE|REMOTE_CAPTURE_FULL_TO_DRIVE);
-                        if ( camera->pl->md->model == CANON_CLASS_6 
-			     && camera->pl->transfer_mode == 0 ) {
+			/* Special case for class 6 (newer protocol) and the EOS 300D */
+                         if ( camera->pl->md->model == CANON_CLASS_6 || camera->pl->md->usb_product == 0x3084 ) {
 				GP_DEBUG ( "canon_usb_capture_dialogue:"
 					   " final interrupt read at step %i", camera->pl->capture_step );
 				goto EXIT;
