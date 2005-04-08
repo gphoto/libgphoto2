@@ -55,10 +55,12 @@ typedef enum {
  */
 typedef enum {
 	JPEG_ESC     = 0xFF,
-	JPEG_BEG     = 0xD8,
-	JPEG_SOS     = 0xDB,
 	JPEG_A50_SOS = 0xC4,
-	JPEG_END     = 0xD9
+	JPEG_BEG     = 0xD8,
+	JPEG_SOI     = 0xD8,
+	JPEG_END     = 0xD9,
+	JPEG_SOS     = 0xDB,
+	JPEG_APP1    = 0xE1,
 } canonJpegMarkerCode;
 
 /**
@@ -224,9 +226,15 @@ struct _CameraPrivateLibrary
 	char *cached_drive;	/* usually something like C: */
 	int cached_ready;       /* whether the camera is ready to rock */
 	long image_key, thumb_length, image_length; /* For immediate download of captured image */
-	int capture_step;		     /* To record progress in interrupt reads from capture */
-	int keys_locked; /* whether the keys are currently locked out */
-	unsigned int xfer_length;	     /* Length of max transfer for download */
+	int capture_step;	/* To record progress in interrupt
+				 * reads from capture */
+	int transfer_mode;	/* To remember what interrupt messages
+				   are expected during capture from
+				   newer cameras. */
+	int keys_locked;	/* whether the keys are currently
+				   locked out */
+	unsigned int xfer_length; /* Length of max transfer for
+				     download */
 
 /*
  * Directory access may be rather expensive, so we cached some information.
