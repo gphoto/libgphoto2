@@ -5,11 +5,13 @@ dnl determines documentation "root directory", i.e. the directory
 dnl where all documentation will be placed in
 dnl
 
-AC_DEFUN(GP_CHECK_DOC_DIR,
+AC_DEFUN([GP_CHECK_DOC_DIR],
 [
 AC_BEFORE([$0], [GP_BUILD_DOCS])dnl
 
-AC_ARG_WITH(doc-dir, [  --with-doc-dir=PATH       Where to install docs  [default=autodetect]])dnl
+AC_ARG_WITH([doc-dir],
+[AS_HELP_STRING([--with-doc-dir=PATH],
+[Where to install docs  [default=autodetect]])])
 
 # check for the main ("root") documentation directory
 AC_MSG_CHECKING([main docdir])
@@ -31,7 +33,7 @@ else # otherwise invent a docdir hopefully compatible with system policy
         maindocdir='${datadir}/doc'
         AC_MSG_RESULT([${maindocdir} (default value)])
     fi
-    AC_MSG_CHECKING(package docdir)
+    AC_MSG_CHECKING([package docdir])
     # check whether to include package version into documentation path
     # FIXME: doesn't work properly.
     if ls -d /usr/{share/,}doc/make-[0-9]* > /dev/null 2>&1
@@ -44,8 +46,7 @@ else # otherwise invent a docdir hopefully compatible with system policy
     fi
 fi
 
-AC_SUBST(docdir)
-
+AC_SUBST([docdir])
 ])dnl
 
 dnl
@@ -55,24 +56,27 @@ dnl * determine presence of prerequisites (only gtk-doc for now)
 dnl * determine destination directory for HTML files
 dnl
 
-AC_DEFUN(GP_BUILD_DOCS,
+AC_DEFUN([GP_BUILD_DOCS],
 [
 # docdir has to be determined in advance
 AC_REQUIRE([GP_CHECK_DOC_DIR])
 
-dnl ---------------------------------------------------------------------------
-dnl gtk-doc: We use gtk-doc for building our documentation. However, we
-dnl          require the user to explicitely request the build.
-dnl ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+# gtk-doc: We use gtk-doc for building our documentation. However, we
+#          require the user to explicitely request the build.
+# ---------------------------------------------------------------------------
 try_gtkdoc=false
 gtkdoc_msg="no (not requested)"
 have_gtkdoc=false
-AC_ARG_ENABLE(docs, [  --enable-docs             Use gtk-doc to build documentation [default=no]],[
+AC_ARG_ENABLE([docs],
+[AS_HELP_STRING([--enable-docs],
+[Use gtk-doc to build documentation [default=no]])],[
 	if test x$enableval = xyes; then
 		try_gtkdoc=true
-	fi])
+	fi
+])
 if $try_gtkdoc; then
-	AC_PATH_PROG(GTKDOC,gtkdoc-mkdb)
+	AC_PATH_PROG([GTKDOC],[gtkdoc-mkdb])
 	if test -n "${GTKDOC}"; then
 		have_gtkdoc=true
 		gtkdoc_msg="yes"
@@ -80,13 +84,18 @@ if $try_gtkdoc; then
 		gtkdoc_msg="no (http://www.gtk.org/rdp/download.html)"
 	fi
 fi
-AM_CONDITIONAL(ENABLE_GTK_DOC, $have_gtkdoc)
+AM_CONDITIONAL([ENABLE_GTK_DOC], [$have_gtkdoc])
+GP_CONFIG_MSG([build API docs with gtk-doc],[$gtkdoc_msg])
 
-dnl ---------------------------------------------------------------------------
-dnl Give the user the possibility to install html documentation in a 
-dnl user-defined location.
-dnl ---------------------------------------------------------------------------
-AC_ARG_WITH(html-dir, [  --with-html-dir=PATH      Where to install html docs [default=autodetect]])
+
+# ---------------------------------------------------------------------------
+# Give the user the possibility to install html documentation in a 
+# user-defined location.
+# ---------------------------------------------------------------------------
+AC_ARG_WITH([html-dir],
+[AS_HELP_STRING([--with-html-dir=PATH],
+[Where to install html docs [default=autodetect]])])
+
 AC_MSG_CHECKING([for html dir])
 if test "x${with_html_dir}" = "x" ; then
     htmldir="${docdir}/html"
@@ -95,8 +104,8 @@ else
     htmldir="${with_html_dir}"
     AC_MSG_RESULT([${htmldir} (from parameter)])
 fi
-AC_SUBST(htmldir)
+AC_SUBST([htmldir])
 apidocdir="${htmldir}/api"
-AC_SUBST(apidocdir)
+AC_SUBST([apidocdir}])
 
 ])dnl

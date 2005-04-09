@@ -1,5 +1,4 @@
 dnl AC_NEED_BYTEORDER_H ( HEADER-TO-GENERATE )
-dnl $Id$
 dnl Copyright 2001-2002 by Dan Fandrich <dan@coneharvesters.com>
 dnl This file may be copied and used freely without restrictions.  No warranty
 dnl is expressed or implied.
@@ -13,7 +12,7 @@ dnl in this file.
 
 dnl Look for a symbol in a header file
 dnl AC_HAVE_SYMBOL ( IDENTIFIER, HEADER-FILE, ACTION-IF-FOUND, ACTION-IF-NOT-FOUND )
-AC_DEFUN(AC_HAVE_SYMBOL,
+AC_DEFUN([AC_HAVE_SYMBOL],
 [
 AC_MSG_CHECKING(for $1 in $2)
 AC_EGREP_CPP([symbol is present|\<$1\>],[
@@ -31,7 +30,7 @@ $4
 
 
 dnl Create a header file that defines extended byte swapping macros
-AC_DEFUN(AC_NEED_BYTEORDER_H,
+AC_DEFUN([AC_NEED_BYTEORDER_H],
 [
 changequote(, )dnl
 ac_dir=`echo $1|sed 's%/[^/][^/]*$%%'`
