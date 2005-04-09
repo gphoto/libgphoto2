@@ -19,3 +19,5 @@ EXTRA_DIST =   		\
 	makefile.os2 lgp2port.df
 
 doc_DATA = AUTHORS README NEWS
+
+ACLOCAL_AMFLAGS = -I m4
