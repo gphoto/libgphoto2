@@ -525,9 +525,13 @@ camera_init (Camera *camera, GPContext *context)
 
 	/* What model are we talking to? */
 	gp_camera_get_abilities (camera, &abilities);
-	if (!strcmp (abilities.model, "Polaroid:Fun! 320"))
+	if (	!strcmp (abilities.model, "Polaroid:Fun! 320") ||
+		!strcmp (abilities.model, "Polaroid Fun! 320")
+	)
 		camera->pl->model = PDC320;
-	else if (!strcmp (abilities.model, "Polaroid:640SE"))
+	else if (!strcmp (abilities.model, "Polaroid:640SE") ||
+		 !strcmp (abilities.model, "Polaroid 640SE")
+	)
 		camera->pl->model = PDC640SE;
 	else {
 		free (camera->pl);

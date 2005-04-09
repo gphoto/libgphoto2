@@ -1,3 +1,8 @@
+2005-04-09  Marcus Meissner <marcus@jet.franken.de>
+
+	* pdc320.c: Check for both : and non : names
+	  in model detection.
+
 2004-01-08  Marcus Meissner <marcus@jet.franken.de>
 	
 	From Mark Slemko <slemkom@users.sourceforge.net>
