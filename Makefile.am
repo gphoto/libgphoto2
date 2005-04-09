@@ -11,6 +11,25 @@ SUBDIRS = libgphoto2_port libgphoto2 camlibs tests po packaging doc
 
 doc_DATA = AUTHORS COPYING README CHANGES NEWS
 
+# Help for building packages against libgphoto2 without installing
+# libgphoto2 first. A little hackish, but that's what you get for
+# having "libgphoto2" and "libgphoto2_port" install their header
+# files into $(includedir)/gphoto2.
+all-local:
+	rm -f gphoto2/gphoto2*.h
+	mkdir -p gphoto2
+	cp \
+		libgphoto2/gphoto2*.h \
+		libgphoto2_port/libgphoto2_port/gphoto2*.h \
+		$(srcdir)/libgphoto2/gphoto2*.h \
+		$(srcdir)/libgphoto2_port/libgphoto2_port/gphoto2*.h \
+		gphoto2/ \
+		|| true
+
+clean-local:
+	rm -f gphoto2/gphoto2*.h
+	rmdir gphoto2
+
 # we use just ONE .PHONY target in order not to confuse automake
 
 .PHONY: rpm cvs-tags source-code-check
@@ -36,13 +55,9 @@ source-code-check:
 ########################################################################
 # The following default options for aclocal and automake
 # are required in the top level Makefile.am for the automatic 
-# re-building of the build system files (only if configured with
-# --enable-maintainer-mode). 
-#
-# It is not sufficient to have these options somewhere in autogen.sh!
+# re-building of the build system files.
 
 ACLOCAL_AMFLAGS = -I libgphoto2_port/m4
-AUTOMAKE_OPTIONS = gnu
 
 
 ########################################################################
@@ -62,14 +77,7 @@ rpm:
 	@echo "Dummy $@ target"
 endif
 
-if MAINTAINER_MODE
-
 # add CVS tags - used only by the project maintainer to tag the files of a
 # released version
 cvs-tags: Makefile
 	@echo cvs tag "@PACKAGE@-$$(echo '@VERSION@' | sed -e 's/\./_/g' -e 's/rc/-rc/g')"
-
-else
-cvs-tags:
-	@echo "Dummy $@ target"
-endif
