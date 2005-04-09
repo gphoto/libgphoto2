@@ -190,42 +190,52 @@ AC_SUBST(camlibdir)
 dnl ---------------------------------------------------------------------------
 dnl Camera drivers
 dnl ---------------------------------------------------------------------------
-camlibs='adc65 agfa-cl20 aox barbie canon casio digita dimera directory fuji gsmart300 iclick jamcam jd11 kodak konica largan mars minolta mustek panasonic pccam300 pccam600 polaroid ptp2 ricoh samsung sierra sipix smal sonydscf1 sonydscf55 soundvision spca50x sq905 stv0674 stv0680 sx330z toshiba enigma13'
-AC_SUBST(SUBDIRS_CAMLIBS)
-for i in $camlibs; do
-  d=`echo $i | $TR a-z- A-Z_`
-  eval "CONFIG_DRIVER_$d=n"
-done
-AC_MSG_CHECKING(which drivers to compile)
-AC_ARG_WITH(drivers,
-  [  --with-drivers=<list>   compile drivers in <list>; ]
-  [                            drivers may be separated with commas; ]
-  [                            'all' compiles all drivers; ]
-  [                            possible drivers are: ]
-  [                            adcs65, agfa-cl20, aox, barbie, canon, casio,]
-  [                            digita, dimera, directory, enigma13, fuji, gsmart300,] 
-  [                            iclick, jamcam, jd11, kodak, konica, largan,]
-  [                            mars, minolta, mustek, panasonic, pccam300,]
-  [                            pccam600, polaroid, ptp2, ricoh, samsung, sierra,]
-  [                            smal, sipix, sonydscf1, sonydscf55, soundvision,]
-  [                            spca50x, sq905, stv0674, stv0680, sx330z, toshiba],
-  drivers="$withval", drivers="all")
-if test "$drivers" = "all"; then
-  for i in $camlibs; do
-    SUBDIRS_CAMLIBS="$SUBDIRS_CAMLIBS $i"
-  done
-  AC_MSG_RESULT(all)
-else
-  drivers=`echo $drivers | sed 's/,/ /g'`
-  for driver in $drivers; do
-    if test -n "`echo $camlibs | $GREP -E \"(^| )$driver( |\$)\"`"; then
-      SUBDIRS_CAMLIBS="$SUBDIRS_CAMLIBS $driver"
-    else
-      AC_ERROR(Unknown driver $driver!)
-    fi
-  done
-  AC_MSG_RESULT($drivers)
-fi
+dnl * See libgphoto2_port/m4/gp-camlibs.m4 for usage details, e.g. for
+dnl   marking obsolete camlibs.
+dnl * Please add new camlibs in alphabetical order.
+GP_CAMLIB([adc65])dnl
+GP_CAMLIB([agfa-cl20])dnl
+GP_CAMLIB([aox])dnl
+GP_CAMLIB([barbie])dnl
+GP_CAMLIB([canon])dnl
+GP_CAMLIB([casio])dnl
+GP_CAMLIB([digita])dnl
+GP_CAMLIB([dimera])dnl
+GP_CAMLIB([directory])dnl
+GP_CAMLIB([enigma13])dnl
+GP_CAMLIB([fuji])dnl
+GP_CAMLIB([gsmart300])dnl
+GP_CAMLIB([iclick])dnl
+GP_CAMLIB([jamcam])dnl
+GP_CAMLIB([jd11])dnl
+GP_CAMLIB([kodak])dnl
+GP_CAMLIB([konica])dnl
+GP_CAMLIB([largan])dnl
+GP_CAMLIB([mars])dnl
+GP_CAMLIB([minolta])dnl
+GP_CAMLIB([mustek])dnl
+GP_CAMLIB([panasonic])dnl
+GP_CAMLIB([pccam300])dnl
+GP_CAMLIB([pccam600])dnl
+GP_CAMLIB([polaroid])dnl
+GP_CAMLIB([ptp2])dnl
+GP_CAMLIB([ricoh])dnl
+GP_CAMLIB([samsung])dnl
+GP_CAMLIB([sierra])dnl
+GP_CAMLIB([sipix])dnl
+GP_CAMLIB([smal])dnl
+GP_CAMLIB([sonydscf1])dnl
+GP_CAMLIB([sonydscf55])dnl
+GP_CAMLIB([soundvision])dnl
+GP_CAMLIB([spca50x])dnl
+GP_CAMLIB([sq905])dnl
+GP_CAMLIB([stv0674])dnl
+GP_CAMLIB([stv0680])dnl
+GP_CAMLIB([sx330z])dnl
+GP_CAMLIB([toshiba])dnl
+dnl
+GP_CAMLIBS_DEFINE()dnl
+
 
 dnl ************************************************************
 dnl find out where to install documentation files
@@ -441,6 +451,8 @@ doc/Makefile
 doc/api/Makefile
 ])
 
+GP_CAMLIBS_CHECK_SUBDIRS
+
 if test "x$CDPATH" != "x"
 then
         echo
@@ -466,6 +478,8 @@ Configuration (libgphoto2):
 	/proc/meminfo:             $proc_meminfo_msg
 "
 #	Build User's Manual:       $manual_msg
+
+GP_CONFIG_OUTPUT
 
 echo "
 
