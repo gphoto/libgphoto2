@@ -187,6 +187,8 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp,
 		len=dtoh32(usbdata.length)-PTP_USB_BULK_HDR_LEN;
 		/* allocate memory for data */
 		*data=calloc(len,1);
+		if (readlen)
+			*readlen = len;
 		/* copy first part of data to 'data' */
 		memcpy(*data,usbdata.payload.data,
 			PTP_USB_BULK_PAYLOAD_LEN<len?
