@@ -17,12 +17,15 @@ dnl   GP_CAMLIB([ptp],[obsolete])
 dnl   GP_CAMLIB([ptp2])
 dnl   [...]
 dnl   GP_CAMLIB([toshiba])
-dnl   GP_CAMLIBS_DEFINE
+dnl   GP_CAMLIBS_DEFINE([camlibs])
+dnl
+dnl The camlibs basedir parameter of GP_CAMLIBS_DEFINE is optional.
 dnl
 dnl ####################################################################
 dnl
 AC_DEFUN([GP_CAMLIBS_INIT],[dnl
 AC_BEFORE([$0],[GP_CAMLIB])dnl
+m4_define_default([gp_camlib_srcdir], [camlibs])dnl
 m4_define_default([gp_camlibs], [])dnl
 m4_define_default([gp_camlibs_obsolete], [])dnl
 ])dnl
@@ -53,13 +56,14 @@ AC_DEFUN([GP_CAMLIBS_DEFINE],[dnl
 AC_REQUIRE([GP_CAMLIBS_INIT])dnl
 AC_BEFORE([$0], [GP_CAMLIBS_CHECK_SUBDIRS])dnl
 m4_pattern_allow([m4_strip])dnl
+m4_ifval([$1],[m4_define([gp_camlib_srcdir],[$1])])dnl
 for camlib in m4_strip(gp_camlibs) m4_strip(gp_camlibs_obsolete)
 do
-	if test -d "$srcdir/camlibs/$camlib"; then :; else
+	if test -d "$srcdir/m4_strip(gp_camlib_srcdir)/$camlib"; then :; else
 		AC_MSG_ERROR([
 * Fatal:
 * Source subdirectory for camlib \`$camlib' not found in
-* directory \`$srcdir/camlibs/'
+* directory \`$srcdir/m4_strip(gp_camlib_srcdir)/'
 ])
 	fi
 done
@@ -116,7 +120,7 @@ AC_REQUIRE([GP_CAMLIBS_DEFINE])dnl
 # m4_if([X],[X],AC_LIST_FILES)
 for camlib in m4_strip(gp_camlibs) m4_strip(gp_camlibs_obsolete)
 do
-	camake="camlibs/$camlib/Makefile"
+	camake="m4_strip(gp_camlib_srcdir)/$camlib/Makefile"
 	found=false
 	for confile in $ac_config_files
 	do
