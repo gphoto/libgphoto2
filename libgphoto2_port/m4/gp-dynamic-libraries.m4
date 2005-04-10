@@ -1,5 +1,9 @@
 AC_DEFUN([GP_DYNAMIC_LIBRARIES],[dnl
-AC_REQUIRE([AC_PROG_LIBTOOL])
+dnl We require either of those
+dnl AC_REQUIRE([AC_LIBTTDL_INSTALLABLE])dnl
+dnl AC_REQUIRE([AC_LIBLTDL_CONVENIENCE])dnl
+AC_REQUIRE([AC_LIBTOOL_DLOPEN])dnl
+AC_REQUIRE([AC_PROG_LIBTOOL])dnl
 dnl ---------------------------------------------------------------------------
 dnl Check for libtool: lt_dlforeachfile has been introduced in 
 dnl                    libtool-1.4. However, there are still systems out
@@ -8,41 +12,21 @@ dnl                    dlopen. Note that on some systems (e.g. FreeBSD)
 dnl                    -ldl isn't needed.
 dnl ---------------------------------------------------------------------------
 # $0
-have_ltdl=false
-ltdl_msg="no"
-try_ltdl=false
-AC_ARG_WITH([ltdl],
-[AS_HELP_STRING([--with-ltdl],[use libtool ltdl])],
-[
-        if test x$withval = xyes; then
-                try_ltdl=:
-        fi
-])
-if $try_ltdl; then
-        AC_CHECK_LIB([ltdl], [lt_dlforeachfile],[
-                AC_CHECK_HEADER([ltdl.h],[
-                        AC_DEFINE([HAVE_LTDL],1,[whether we use libltdl])
-                        LTDL_LIBS="-lltdl"
-                        ltdl_msg="yes"
-                        have_ltdl=true
-		])
+LDFLAGS_save="$LDFLAGS"
+LDFLAGS="$LIBLTDL"
+ltdl_msg="no (probably using built-in)"
+AC_CHECK_LIB([ltdl], [lt_dlforeachfile],[
+	CPPFLAGS_save="$CPPFLAGS"
+	CPPFLAGS="$LTDLINCL"
+	AC_CHECK_HEADER([ltdl.h],[
+		AC_DEFINE([HAVE_LTDL],1,[whether we use libltdl])
+		ltdl_msg="yes"
+		have_ltdl=true
 	])
-fi
-GP_CONFIG_MSG([Use ltdl],[${ltdl_msg}])
-if $have_ltdl; then :; else
-        AC_CHECK_FUNC([dlopen],[],[
-                AC_CHECK_LIB([dl], [dlopen], 
-			[LTDL_LIBS="-ldl"],
-			[AC_ERROR([
-*** Could not determine how to handle
-*** shared libraries:
-***  - no libltdl
-***  - no dlopen()
+	CPPFLAGS="$CPPFLAGS_save"
 ])
-		])
-	])
-fi
-AC_SUBST([LTDL_LIBS])
+LDFLAGS="$LDFLAGS_save"
+GP_CONFIG_MSG([Use ltdl (???)],[${ltdl_msg}])
 ])dnl
 dnl
 dnl ####################################################################
