@@ -161,15 +161,14 @@ typedef struct _PTPUSBEventContainer PTPUSBEventContainer;
 #define PTP_OC_CANON_ViewfinderOn	0x900B
 #define PTP_OC_CANON_ViewfinderOff	0x900C
 #define PTP_OC_CANON_ReflectChanges	0x900D
+
 /* 900e - send nothing, gets 5 uint16t in 32bit entities back in 20byte datablob */
 #define PTP_OC_CANON_900e		0x900E
 /* 900f - gets data ... hmm, object handles ? */
 #define PTP_OC_CANON_900f		0x900F
 
-#define PTP_OC_CANON_9010		0x9010
-/* 9010 - gets 65536 kb of data?, 1 parameter input */
-#define PTP_OC_CANON_9011		0x9011
-/* 9011 - sends 65536 kb of data?, 1 parameter input */
+#define PTP_OC_CANON_ThemeDownload	0x9010
+#define PTP_OC_CANON_ThemeUpload	0x9011
 
 
 /* initiate movie capture:
@@ -858,7 +857,8 @@ uint16_t ptp_canon_getfolderentries (PTPParams* params, uint32_t store,
 				uint32_t handle, 
 				PTPCANONFolderEntry** entries,
 				uint32_t* entnum);
-
+uint16_t ptp_canon_theme_download (PTPParams* params, uint32_t themenr,
+				unsigned char **data, unsigned int *size);
 
 /* Non PTP protocol functions */
 int ptp_operation_issupported	(PTPParams* params, uint16_t operation);

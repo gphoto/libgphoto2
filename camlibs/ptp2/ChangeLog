@@ -1,3 +1,8 @@
+2005-04-10  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptp.[ch]: 9010 and 9011 is Canon Theme
+	  Download and Upload.
+
 2005-04-05  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* library.c: Added Pentax Optio 43WR (as reported)
