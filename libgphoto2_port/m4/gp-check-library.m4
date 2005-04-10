@@ -90,7 +90,9 @@ dnl
 AC_REQUIRE([GP_CONFIG_MSG])dnl
 AC_REQUIRE([GP_PKG_CONFIG])dnl
 AC_REQUIRE([_GP_CHECK_LIBRARY_SOEXT])dnl
-dnl
+dnl Use _CFLAGS and _LIBS given to configure.
+dnl This makes it possible to set these vars in a configure script
+dnl and AC_CONFIG_SUBDIRS this configure.
 AC_ARG_VAR([$1][_CFLAGS], [CFLAGS for compiling with ][$2])dnl
 AC_ARG_VAR([$1][_LIBS],   [LIBS to add for linking against ][$2])dnl
 dnl
