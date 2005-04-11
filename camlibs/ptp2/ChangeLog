@@ -1,3 +1,7 @@
+2005-04-11  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* library.c: Added Nikon D2Hs SLR.
+
 2005-04-10  Marcus Meissner  <marcus@jet.franken.de>
 
 	* ptp.[ch]: 9010 and 9011 is Canon Theme

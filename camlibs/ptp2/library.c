@@ -356,6 +356,9 @@ static struct {
 
 	{"Nikon:DSC D70 (PTP mode)",      0x04b0, 0x0406, 0},
 
+	/* reported by Steve Drew <stevedrew@gmail.com> */
+	{"Nikon:D2Hs SLR (PTP mode)",     0x04b0, 0x040c, 0},
+
 	/* in pictbridge mode */
 	{"Panasonic:DMC-FZ20",            0x04da, 0x2374, 0},
 
