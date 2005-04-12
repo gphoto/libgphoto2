@@ -302,7 +302,7 @@ sq_decompress (unsigned char *output, unsigned char *data,
 
 	for (m = 1; m < h - 1; m++) {
 		
-		for (i= 0; i < w; i++)	{	
+		for (i= 1; i < w-1; i++)	{	
 		
 				output[3*(m*w + i) +0] =	
 				(output[3*((m-1)*w + i-1) + 0] +
