@@ -1,0 +1,26 @@
+Manufacturer: Nikon Corporation
+  model: E2500
+  device version: E2500v1.1
+  serial number: 'XXXXXXXXXXXX' <blanked out>
+Vendor extension ID: 0x0000000a
+Vendor extension description: Nikon PTP Extensions
+Supported operations:
+  0x1001
+  0x1002
+  0x1003
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100a
+  0x100b
+  0x101b
+  0x9001
+Events Supported:
+  0x4001
+  0x4004
+  0x4005
+  0xc001
+Device Properties Supported:
