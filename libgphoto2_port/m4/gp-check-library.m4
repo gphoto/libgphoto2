@@ -111,10 +111,11 @@ if test "x${[$1][_LIBS]}" = "x" && test "x${[$1][_CFLAGS]}" = "x"; then
 	AC_MSG_RESULT([${try_][$1][}])
 	m4_popdef([gp_lib_arg])dnl
 	if test "x${[try_][$1]}" = "xautodetect"; then
+		dnl we need that line break after the PKG_CHECK_MODULES
 		m4_ifval([$3],
 			[PKG_CHECK_MODULES([$1],[$2][ $3],[have_][$1][=yes])],
 			[PKG_CHECK_MODULES([$1],[$2],     [have_][$1][=yes])]
-		)dnl
+		)
 		if test "x${[have_][$1]}" = "xno"; then
 			ifs="$IFS"
 			IFS=":" # FIXME: for W32 and OS/2 we need ";" here

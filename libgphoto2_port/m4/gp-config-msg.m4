@@ -51,6 +51,9 @@ AC_DEFUN([GP_CONFIG_MSG],
 m4_if([$1],[],[
 gp_config_msg="${gp_config_msg}
 "
+],[$2],[],[
+gp_config_msg="${gp_config_msg}	$1
+"
 ],[
 gp_config_msg="${gp_config_msg}	$(expr "$1:${gp_config_empty}" : "\(.\{0,${gp_config_len}\}\)") $2
 "
