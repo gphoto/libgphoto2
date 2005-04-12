@@ -7,7 +7,8 @@ dnl
 
 AC_DEFUN([GP_CHECK_DOC_DIR],
 [
-AC_BEFORE([$0], [GP_BUILD_DOCS])dnl
+AC_BEFORE([$0], [GP_BUILD_GTK_DOCS])dnl
+AC_BEFORE([$0], [GP_CHECK_DOXYGEN])dnl
 
 AC_ARG_WITH([doc-dir],
 [AS_HELP_STRING([--with-doc-dir=PATH],
