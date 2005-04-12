@@ -1,6 +1,12 @@
+2005-04-12   Theodore Kilgore <kilgota@auburn.edu>
+
+	* postprocess.c: small oops repaired in sq_decompress()	
+
+
+
 2005-04-03   Theodore Kilgore <kilgota@auburn.edu>
 
-	* library.c: improvements for compressed moed
+	* library.c: improvements for compressed mode
 	* postprocess.c: improvements for compressed mode	
 	* sq905.h: improvements for compressed mode
 
