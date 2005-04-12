@@ -1,0 +1,219 @@
+Canon PowerShot SD100 / Digital IXUS II in capture mode.
+
+Manufacturer: Canon Inc.
+  model: Canon PowerShot SD100
+  device version: 01.0001
+  serial number: '(null)'
+Vendor extension ID: 0x0000000b
+Vendor extension description: (null)
+Supported operations:
+  0x1001
+  0x1002
+  0x1003
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100a
+  0x100b
+  0x100c
+  0x100d
+  0x100e
+  0x100f
+  0x1012
+  0x1014
+  0x1015
+  0x1016
+  0x101b
+  0x9001
+  0x9002
+  0x9003
+  0x9006
+  0x9008
+  0x9009
+  0x900a
+  0x900b
+  0x900c
+  0x900d
+  0x900e
+  0x900f
+  0x9010
+  0x9011
+  0x9012
+  0x9013
+  0x9014
+  0x9015
+  0x9018
+  0x9019
+  0x901a
+  0x901b
+  0x901c
+  0x901d
+  0x901e
+  0x901f
+  0x9020
+  0x9021
+Events Supported:
+  0x4001
+  0x4002
+  0x4003
+  0x4004
+  0x4005
+  0x4006
+  0x4008
+  0x4009
+  0x400a
+  0x400c
+  0x400d
+  0xc001
+  0xc005
+  0xc006
+  0xc007
+  0xc008
+  0xc009
+  0xc00a
+  0xc00b
+  0xc00c
+  0xc00d
+Device Properties Supported:
+  0xd001
+  0xd002
+  0xd003
+  0xd005
+  0xd006
+  0xd007
+  0xd008
+  0xd009
+  0xd00a
+  0xd00b
+  0xd00c
+  0xd00e
+  0xd00f
+  0xd010
+  0xd011
+  0xd012
+  0xd013
+  0xd015
+  0xd017
+  0xd018
+  0xd019
+  0xd01c
+  0xd01d
+  0xd01e
+  0xd01f
+  0xd023
+  0xd024
+  0xd025
+  0xd026
+  0xd027
+  0xd028
+  0xd029
+  0xd02a
+  0xd02c
+  0xd02d
+  0xd02e
+  0xd02f
+  0xd030
+  0xd031
+  0xd032
+  0xd033
+  0xd034
+  0xd037
+  0xd038
+  0xd039
+  0xd03a
+  0xd03b
+  0xd03c
+  0xd03d
+  0xd03e
+  0xd03f
+  0xd040
+  0xd041
+  0xd043
+  0xd044
+  0xd045
+  0xd046
+  0xd047
+  0xd048
+  0xd049
+
+
+Properties in this mode (with german names, sorry):
+
+Signalton Modus(0xd001):(readwrite) (type=0x2) Enumeration [0,1] value: 0
+Property 0xd002:(read only) (type=0x4) Enumeration [0,1,2,3,4,5] value: 2
+Suchermodus(0xd003):(read only) (type=0x6) Enumeration [0,1,2,3] value: 1
+Property 0xd005:(read only) (type=0x2) 32
+Bildqualität(0xd006):(readwrite) (type=0x2) Enumeration [2,3,5] value: 3
+Property 0xd007:(readwrite) (type=0x2) Enumeration [1] value: 1
+Bildgröße(0xd008):(readwrite) (type=0x2) Enumeration [0,1,3,2] value: 0
+Property 0xd009:(read only) (type=0x4) 100
+Blitzmodus(0xd00a):(readwrite) (type=0x2) Enumeration [0,1,2,4,5] value: 5
+Property 0xd00b:(read only) (type=0x2) 1
+TV A/V Einstellungen(0xd00c):(readwrite) (type=0x2) Enumeration [1] value: 1
+Property 0xd00e:(read only) (type=0x2) 0
+Property 0xd00f:(read only) (type=0x2) 0
+Spotmessung(0xd010):(readwrite) (type=0x2) Enumeration [0,1,3] value: 3
+Makromodus(0xd011):(readwrite) (type=0x2) Enumeration [1,3,7] value: 1
+Fokuspunkt(0xd012):(readwrite) (type=0x4) Enumeration [12291,12289] value: 12289
+Weißabgleich(0xd013):(readwrite) (type=0x2) Enumeration [0,1,2,3,4,7,6] value: 0
+Property 0xd015:(read only) (type=0x2) 0
+Property 0xd017:(readwrite) (type=0x1) Enumeration [0] value: 0
+Property 0xd018:(readwrite) (type=0x1) Enumeration [0] value: 0
+Property 0xd019:(readwrite) (type=0x1) Enumeration [0] value: 0
+ISO-Geschwindigkeit(0xd01c):(readwrite) (type=0x4) Enumeration [64,72,80,88,0] value: 64
+Blende(0xd01d):(readwrite) (type=0x4) Enumeration [] value: 32
+Belichtungszeit(0xd01e):(readwrite) (type=0x4) Enumeration [] value: 112
+Belichtungskompensation(0xd01f):(readwrite) (type=0x2) Enumeration [8,11,13,16,19,21,24,27,29,32,35,37,40] value: 24
+Property 0xd023:(read only) (type=0x4) 32
+Property 0xd024:(read only) (type=0x4) 53
+Property 0xd025:(read only) (type=0x4) 173
+Property 0xd026:(read only) (type=0x4) 346
+Property 0xd027:(read only) (type=0x4) 173
+Property 0xd028:(read only) (type=0x4) 32
+Property 0xd029:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15] value: 3
+Zoom(0xd02a):(readwrite) (type=0x4) Range [0 - 9, step 1] value: 0
+Bildgröße und -qualität(0xd02c):(read only) (type=0x4006) Enumeration [
+	a[6] 1536,2048,1,0,0,0,
+	a[6] 1536,2048,6,0,0,0,
+	a[6] 1536,2048,11,0,0,0,
+	a[6] 1200,1600,2,0,0,0,
+	a[6] 1200,1600,7,0,0,0,
+	a[6] 1200,1600,12,0,0,0,
+	a[6] 768,1024,3,0,0,0,
+	a[6] 768,1024,8,0,0,0,
+	a[6] 768,1024,13,0,0,0,
+	a[6] 480,640,5,0,0,0,
+	a[6] 480,640,10,0,0,0,
+	a[6] 480,640,15,0,0,0
+	] value: a[6] 1536,2048,6,0,0,0
+Property 0xd02d:(read only) (type=0x4006) Enumeration [
+	a[4] 119,0,159,0
+	] value: a[4] 119,0,159,0
+Property 0xd02e:(read only) (type=0x6) 20480
+Property 0xd02f:(read only) (type=0x6) 5120
+Property 0xd030:(read only) (type=0x6) 256
+Interner Speicher(0xd031):(read only) (type=0x6) 33554688
+Kameramodell(0xd032):(read only) (type=0xffff) 'Canon PowerShot SD100'
+Kamerabesitzer(0xd033):(readwrite) (type=0x4002) a[16] 77,97,114,99,117,115,32,77,101,105,115,115,110,101,114,0
+UNIX Zeit(0xd034):(readwrite) (type=0x6) 1111340892
+Property 0xd037:(read only) (type=0x4) 0
+Property 0xd038:(read only) (type=0x3) 32
+Reale Bildbreite(0xd039):(read only) (type=0x4) 2048
+Property 0xd03a:(read only) (type=0x4) 0
+Property 0xd03b:(read only) (type=0x4) 0
+Property 0xd03c:(read only) (type=0x4) 53
+Property 0xd03d:(read only) (type=0x4) 5
+Property 0xd03e:(read only) (type=0x4) 346
+Property 0xd03f:(read only) (type=0x4) 640
+Foto Effekt(0xd040):(readwrite) (type=0x4) Enumeration [0,1,2,3,4,5] value: 0
+Autofokus Hilfslicht(0xd041):(readwrite) (type=0x4) Enumeration [0,1] value: 1
+Property 0xd043:(read only) (type=0x4) 0
+Property 0xd044:(readwrite) (type=0x4) Enumeration [0,1] value: 0
+Property 0xd045:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7] value: 4
+Property 0xd046:(read only) (type=0x4) 257
+Property 0xd047:(read only) (type=0x4) 2
+Property 0xd048:(read only) (type=0x4006) a[16] 1640448,1026048,583680,0,254976,914432,571392,327680,0,153600,455680,284672,174080,0,86016,2097152
+Property 0xd049:(read only) (type=0x6) 19070976
