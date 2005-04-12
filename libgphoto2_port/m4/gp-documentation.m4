@@ -56,7 +56,7 @@ dnl * determine presence of prerequisites (only gtk-doc for now)
 dnl * determine destination directory for HTML files
 dnl
 
-AC_DEFUN([GP_BUILD_DOCS],
+AC_DEFUN([GP_BUILD_GTK_DOCS],
 [
 # docdir has to be determined in advance
 AC_REQUIRE([GP_CHECK_DOC_DIR])
@@ -109,3 +109,23 @@ apidocdir="${htmldir}/api"
 AC_SUBST([apidocdir}])
 
 ])dnl
+
+
+dnl doxygen related stuff
+dnl look for tools
+dnl define substitutions for Doxyfile.in
+AC_DEFUN([GP_CHECK_DOXYGEN],[dnl
+AC_REQUIRE([GP_CHECK_DOC_DIR])dnl
+AC_PATH_PROG([DOT], [dot], [false])
+AC_PATH_PROG([DOXYGEN], [doxygen], [false])
+AM_CONDITIONAL([HAVE_DOXYGEN], [test "x$DOXYGEN" != "false"])
+AM_CONDITIONAL([HAVE_DOT], [test "x$DOT" != "false"])
+if test "x$DOT" != "false"; then
+	AC_SUBST([HAVE_DOT],[YES])
+else
+	AC_SUBST([HAVE_DOT],[NO])
+fi
+AC_SUBST([HTML_APIDOC_DIR], ["${PACKAGE_TARNAME}-api.html"])
+AC_SUBST([DOXYGEN_OUTPUT_DIR], [doxygen-output])
+])dnl
+
