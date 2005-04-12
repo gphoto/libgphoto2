@@ -1,0 +1,131 @@
+Manufacturer: Canon
+  model: Canon PowerShot S1 IS
+  device version: 1-1.0.0.0
+  serial number: '(null)'
+Vendor extension ID: 0x0000000b
+Vendor extension description: (null)
+Supported operations:
+  0x1014
+  0x1015
+  0x1016
+  0x1017
+  0x1001
+  0x1002
+  0x1003
+  0x9013
+  0x901f
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100a
+  0x101b
+  0x100c
+  0x100d
+  0x100b
+  0x100f
+  0x1012
+  0x9001
+  0x9021
+  0x901b
+  0x901e
+  0x9019
+  0x9006
+  0x901c
+  0x9002
+  0x100e
+  0x9008
+  0x901a
+  0x9009
+  0x900b
+  0x901d
+  0x900d
+  0x900c
+  0x9014
+  0x9015
+  0x9018
+  0x9012
+  0x900e
+  0x900f
+  0x9010
+  0x9011
+Events Supported:
+  0x4001
+  0x4002
+  0x4003
+  0x4004
+  0x4005
+  0x4006
+  0x4007
+  0x4008
+  0x4009
+  0x400a
+  0x400b
+  0x400c
+  0x400d
+  0x400e
+  0xc001
+  0xc005
+  0xc008
+  0xc009
+  0xc00b
+  0xc00c
+  0xc00d
+  0xc010
+Device Properties Supported:
+  0xd045
+  0xd04a
+  0xd02e
+  0xd02f
+  0xd002
+  0xd003
+  0xd034
+  0xd047
+  0xd046
+  0xd02d
+  0xd048
+  0xd02c
+  0xd030
+  0xd049
+  0xd032
+  0xd033
+  0xd031
+
+Modell: Canon PowerShot S1 IS
+  Geräteversion: 1-1.0.0.0
+  Seriennummer: (null)
+Händler Kennung: 0x0000000b
+Händler Beschreibung: (null)
+Property 0xd045:(readwrite) Enumeration [1,2,3,4,5,6,7] value: 2
+Property 0xd04a:(readwrite) Enumeration [0,1,2,3] value: 0
+Property 0xd02e:(read only) 262144
+Property 0xd02f:(read only) 262144
+Property 0xd002:(read only) Enumeration [0,1,2,3,4,5] value: 0
+Viewfinder Mode(0xd003):(read only) Enumeration [0,1,2,3] value: 1
+UNIX Time(0xd034):(readwrite) 1094657861
+Property 0xd047:(read only) 2
+Property 0xd046:(read only) 257
+Property 0xd02d:(read only) a[4] 119,0,159,0
+Property 0xd048:(read only) a[16] 1640448,1026048,583680,0,254976,914432,571392,327680,0,153600,455680,284672,174080,0,86016,10077696
+Size Quality Mode(0xd02c):(read only) Enumeration [
+	a[6] 1536,2048,1,0,0,0,
+	a[6] 1536,2048,6,0,0,0,
+	a[6] 1536,2048,11,0,0,0,
+	a[6] 1200,1600,2,0,0,0,
+	a[6] 1200,1600,7,0,0,0,
+	a[6] 1200,1600,12,0,0,0,
+	a[6] 768,1024,3,0,0,0,
+	a[6] 768,1024,8,0,0,0,
+	a[6] 768,1024,13,0,0,0,
+	a[6] 480,640,5,0,0,0,
+	a[6] 480,640,10,0,0,0,
+	a[6] 480,640,15,0,0,0
+	] value: a[6] 0,0,0,0,0,0
+Property 0xd030:(read only) 256
+Property 0xd049:(read only) 20316160
+Camera Model(0xd032):(read only) 'Canon PowerShot S1 IS'
+Camera Owner(0xd033):(readwrite) a[0] 
+Flash Memory(0xd031):(read only) 16777472
+
