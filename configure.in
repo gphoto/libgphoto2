@@ -245,7 +245,7 @@ GP_CHECK_DOC_DIR()dnl
 dnl ********
 dnl build docs?
 dnl ********
-GP_BUILD_DOCS()dnl
+GP_BUILD_GTK_DOCS()dnl
 
 dnl ************************************************************
 dnl initialize packaging

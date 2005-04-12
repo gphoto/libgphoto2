@@ -329,7 +329,7 @@ dnl ********
 dnl gtk-doc?
 dnl ********
 GP_CHECK_DOC_DIR()dnl
-GP_BUILD_DOCS()dnl
+GP_BUILD_GTK_DOCS()dnl
 
 
 dnl ---------------------------------------------------------------------------
