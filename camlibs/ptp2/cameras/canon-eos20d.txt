@@ -51,3 +51,12 @@ Events Supported:
 Device Properties Supported:
   0xd045
   0xd04a
+
+Camera summary:
+Model: Canon EOS 20D
+  device version: 03.0001
+  serial number:  (null)
+Vendor extension ID: 0x0000000b
+Vendor extension description: (null)
+Property 0xd045:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7] value: 2
+Property 0xd04a:(readwrite) (type=0x2) Enumeration [0,1,2,3] value: 0
