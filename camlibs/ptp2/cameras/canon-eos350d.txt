@@ -1,0 +1,105 @@
+Manufacturer: Canon Inc.
+  model: Canon EOS 350D DIGITAL
+  device version: 3-0.0.0.1
+  serial number: '(null)'
+Vendor extension ID: 0x0000000b
+Vendor extension description: (null)
+Supported operations:
+  0x1014
+  0x1015
+  0x1016
+  0x1017
+  0x1001
+  0x1002
+  0x1003
+  0x9013
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100a
+  0x101b
+  0x100c
+  0x100d
+  0x100b
+  0x9001
+  0x9002
+  0x9006
+  0x900e
+  0x901b
+  0x901c
+  0x901e
+  0x9021
+  0x100f
+  0x901f
+Events Supported:
+  0x4001
+  0x4002
+  0x4003
+  0x4004
+  0x4005
+  0x4006
+  0x4007
+  0x4008
+  0x4009
+  0x400a
+  0x400c
+  0x400d
+  0xc001
+  0xc005
+  0xc006
+  0xc007
+  0xc008
+  0xc009
+  0xc00a
+  0xc00b
+  0xc00c
+  0xc00d
+Device Properties Supported:
+  0xd045
+  0xd002
+  0xd003
+  0xd02c
+  0xd02d
+  0xd049
+  0xd032
+  0xd031
+  0xd034
+  0xd033
+  0xd02e
+  0xd02f
+  0xd046
+  0xd047
+  0xd030
+  0xd04a
+
+Model: Canon EOS 350D DIGITAL
+  device version: 3-0.0.0.1
+  serial number:  (null)
+Vendor extension ID: 0x0000000b
+Vendor extension description: (null)
+Property 0xd045:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7] value: 2
+Property 0xd002:(read only) (type=0x4) Enumeration [0,1,2,5] value: 0
+Viewfinder Mode(0xd003):(read only) (type=0x6) Enumeration [0,1,2,3] value: 2
+Size Quality Mode(0xd02c):(read only) (type=0x4006) Enumeration [
+        a[6] 2304,3456,6,0,0,0,
+        a[6] 2304,3456,11,0,0,0,
+        a[6] 1664,2496,9,0,0,0,
+        a[6] 1664,2496,14,0,0,0,
+        a[6] 1152,1728,10,0,0,0,
+        a[6] 1152,1728,15,0,0,0
+        ] value: a[6] 0,0,0,0,0,0
+Property 0xd02d:(read only) (type=0x4006) a[4] 119,0,159,0
+Property 0xd049:(read only) (type=0x6) 2147484041
+Camera Model(0xd032):(read only) (type=0xffff) 'Canon EOS 350D DIGITAL'
+Flash Memory(0xd031):(read only) (type=0x6) 1664942591
+UNIX Time(0xd034):(readwrite) (type=0x6) 1112115344
+Camera Owner(0xd033):(readwrite) (type=0x4002) a[0]
+Property 0xd02e:(read only) (type=0x6) 1048576
+Property 0xd02f:(read only) (type=0x6) 64768
+Property 0xd046:(read only) (type=0x4) 257
+Property 0xd047:(read only) (type=0x4) 0
+Property 0xd030:(read only) (type=0x6) 256
+Property 0xd04a:(readwrite) (type=0x2) Enumeration [0,1,2,3] value: 0
