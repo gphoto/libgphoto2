@@ -33,7 +33,7 @@ LIBS="$LIBS_save"
 if "$have_ltdl"; then :; else
 	AC_MSG_CHECKING([for included libltdl])
 	if test -d "$srcdir/libltdl"; then
-		LIBLTDL="\$(top_builddir)/libltdl/libltdl.la"
+		LIBLTDL="\$(top_builddir)/libltdl/libltdlc.la"
 		LTDLINCL="-I\$(top_srcdir)/libltdl"
 		have_ltdl=:
 		ltdl_msg="yes (included)"
