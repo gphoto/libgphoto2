@@ -34,7 +34,7 @@ if "$have_ltdl"; then :; else
 	AC_MSG_CHECKING([for included libltdl])
 	if test -d "$srcdir/libltdl"; then
 		LIBLTDL="\$(top_builddir)/libltdl/libltdl.la"
-		LTDLINCL="\$(top_srcdir)/libltdl"
+		LTDLINCL="-I\$(top_srcdir)/libltdl"
 		have_ltdl=:
 		ltdl_msg="yes (included)"
 		AC_MSG_RESULT([yes])
