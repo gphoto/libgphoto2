@@ -1,13 +1,22 @@
-INCLUDES = 						\
-	-I$(top_srcdir)					\
-	-I$(top_srcdir)/intl				\
-	-DIOLIBS=\"$(libdir)/gphoto2_port/$(VERSION)\"	\
-	-DLOCALEDIR=\"$(datadir)/locale\"
-
-## Compile the IO library into a shared library
 lib_LTLIBRARIES = libgphoto2_port.la
-libgphoto2_port_la_LDFLAGS = -version-info @LIBGPHOTO2_PORT_VERSION_INFO@
-libgphoto2_port_la_LIBADD = $(LTDL_LIBS) $(INTLLIBS)
+
+libgphoto2_port_la_CPPFLAGS =
+	$(LTDLINCL)					\
+	$(AM_CPPFLAGS) $(CPPFLAGS)
+
+# FIXME: -export-symbols $(srcdir)/libgphoto2_port.sym
+libgphoto2_port_la_LDFLAGS = \
+	-no-undefined \
+	-version-info @LIBGPHOTO2_PORT_VERSION_INFO@
+
+libgphoto2_port_la_LIBADD = \
+	$(LIBLTDL) 			\
+	$(INTLLIBS)
+# The libtool docs describe these params, but they don't build.
+#	"-dlopen" self \
+#	"-dlopen" $(top_builddir)/serial/....la \
+#	"-dlopen" $(top_builddir)/usb/....la
+
 libgphoto2_port_la_SOURCES =		\
 	gphoto2-port-info-list.c	\
 	gphoto2-port-log.c		\
@@ -17,6 +26,9 @@ libgphoto2_port_la_SOURCES =		\
 	gphoto2-port.c 			\
 	gphoto2-port-portability.c	\
 	gphoto2-port-result.c
+
+libgphoto2_port_la_DEPENDENCIES = \
+	$(LIBLTDL)
 
 libgphoto2_portincludedir = $(includedir)/gphoto2
 libgphoto2_portinclude_HEADERS =	\

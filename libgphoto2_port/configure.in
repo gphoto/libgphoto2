@@ -1,7 +1,11 @@
-dnl Process this file with autoconf to produce a configure script.
-AC_PREREQ(2.50)
-AC_INIT(libgphoto2_port/gphoto2-port.c)
-AM_CONFIG_HEADER(config.h)
+dnl Process this file with autoreconf to produce a configure script.
+AC_PREREQ(2.59)
+AC_INIT([libgphoto2_port], [0.5.2], [gphoto-devel@lists.sourceforge.net], [libgphoto2_port])
+AC_CONFIG_SRCDIR([libgphoto2_port/gphoto2-port.c])
+AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_MACRO_DIR([m4])
+AM_INIT_AUTOMAKE([gnu 1.8 dist-bzip2])
+
 
 dnl ---------------------------------------------------------------------------
 dnl Versioning (libgphoto2_port-(AGE.)CURRENT.REVISION):
@@ -22,89 +26,63 @@ AC_SUBST(LIBGPHOTO2_PORT_CURRENT)
 LIBGPHOTO2_PORT_VERSION_INFO=`expr $LIBGPHOTO2_PORT_CURRENT + $LIBGPHOTO2_PORT_REVISION`:$LIBGPHOTO2_PORT_AGE:$LIBGPHOTO2_PORT_REVISION
 AC_SUBST(LIBGPHOTO2_PORT_VERSION_INFO)
 
-LIBGPHOTO2_PORT_VERSION=$LIBGPHOTO2_PORT_CURRENT.$LIBGPHOTO2_PORT_REVISION.$LIBGPHOTO2_PORT_AGE
-AC_SUBST(LIBGPHOTO2_PORT_VERSION)
+dnl obsolete
+dnl LIBGPHOTO2_PORT_VERSION=$LIBGPHOTO2_PORT_CURRENT.$LIBGPHOTO2_PORT_REVISION.$LIBGPHOTO2_PORT_AGE
+dnl AC_SUBST(LIBGPHOTO2_PORT_VERSION)
 
-VERSION=${LIBGPHOTO2_PORT_VERSION}
 
-AM_INIT_AUTOMAKE(libgphoto2_port, $VERSION)
-AM_MAINTAINER_MODE
-AC_LIBTOOL_DLOPEN
-
+dnl ---------------------------------------------------------------------------
+dnl Checks for programs.
+dnl ---------------------------------------------------------------------------
 dnl Checks for programs.
 AC_PROG_CC
 AC_PROG_CPP
 AC_PROG_INSTALL
 
+
+dnl Something with the sequences is not quite alright yet.
+dnl SED is supposed to be set in AC_LIBTOOL_SETUP, but the
+dnl sequence seems to get mixed up.
+SED=${SED-sed}
+
+dnl check for/set up libtool and libltdl
+dnl AC_DISABLE_STATIC
+dnl AC_DISABLE_SHARED
+AC_LIBLTDL_CONVENIENCE([libltdl])
+AC_WITH_LTDL
+AC_LIBTOOL_WIN32_DLL
+AC_LIBTOOL_DLOPEN
+AC_PROG_LIBTOOL
+AC_SUBST([LTDLINCL])
+AC_SUBST([LIBLTDL])
+
+# report on compiler/libtool setup
+GP_CONFIG_MSG([Compiler],[${CC}])
+GP_CONFIG_MSG([libltdl includes],[$LTDLINCL])
+GP_CONFIG_MSG([libltdl library],[$LIBLTDL])
+GP_CONFIG_MSG()
+
 AC_DEFINE_UNQUOTED(HAVE_CC,"$CC",[The C compiler we're using])
 
-dnl The following is a hack to get gphoto2 to build on gettext-0.10.35
-dnl systems - BUILD_INCLUDED_LIBINTL is set only in gettext-0.10.37 which is
-dnl the gettext version provided with gphoto2.
-BUILD_INCLUDED_LIBINTL=no
-AC_SUBST(BUILD_INCLUDED_LIBINTL)
-dnl USE_INCLUDED_LIBINTL=no
-dnl AC_SUBST(USE_INCLUDED_LIBINTL)
-
-dnl Solaris hack for grep and tr
-[
-if test -n "`echo $host_os | grep '[sS]olaris'`"; then
-  TR=/usr/xpg4/bin/tr
-  GREP=/usr/xpg4/bin/grep  
-else
-  TR=tr
-  GREP=grep
-fi
-]
 
 dnl ---------------------------------------------------------------------------
 dnl i18n support
 dnl ---------------------------------------------------------------------------
-ALL_LINGUAS="cs da de fr es it ja nb pt_BR ru sl sv uk zh_CN"
-# EVIL HACKS
-AC_MSG_CHECKING([for po/Makevars requiring evil hack])
-GETTEXT_PACKAGE="${PACKAGE}-${LIBGPHOTO2_PORT_CURRENT}"
-AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE",[The gettext domain we're using])
-AC_SUBST(GETTEXT_PACKAGE)
-if test -f po/Makevars.template
-then
-	sed -e "s/^DOMAIN.*/DOMAIN = ${GETTEXT_PACKAGE}/" < po/Makevars.template > po/Makevars
-	AC_MSG_RESULT([yes. done.])
-else
-	AC_MSG_RESULT([no])
-fi
-AM_GNU_GETTEXT
 
-dnl ---------------------------------------------------------------------------
-dnl Check for libtool: lt_dlforeachfile has been introduced in 
-dnl                    libtool-1.4. However, there are still systems out
-dnl                    there running libtool-1.3. For those, we will need
-dnl                    dlopen. Note that on some systems (e.g. FreeBSD)
-dnl                    -ldl isn't needed.
-dnl ---------------------------------------------------------------------------
-AC_PROG_LIBTOOL
-have_ltdl=false
-ltdl_msg="no"
-try_ltdl=false
-AC_ARG_WITH(ltdl, [  --with-ltdl            Use ltdl],[
-        if test x$withval = xyes; then
-                try_ltdl=true
-        fi])
-if $try_ltdl; then
-        AC_CHECK_LIB(ltdl, lt_dlforeachfile,[
-                AC_CHECK_HEADER(ltdl.h,[
-                        AC_DEFINE(HAVE_LTDL,1,[whether we use libltdl])
-                        LTDL_LIBS="-lltdl"
-                        ltdl_msg="yes"
-                        have_ltdl=true])])
-fi
-if ! $have_ltdl; then
-        AC_CHECK_FUNC(dlopen,,[
-                AC_CHECK_LIB(dl, dlopen,[LTDL_LIBS="-ldl"],[AC_ERROR([
-*** Could not determine how to handle
-*** shared libraries!])])])
-fi
-AC_SUBST(LTDL_LIBS)
+dnl The following is a hack to get gphoto2 to build on gettext-0.10.35
+dnl systems - BUILD_INCLUDED_LIBINTL is set only in gettext-0.10.37 which is
+dnl the gettext version provided with gphoto2.
+dnl BUILD_INCLUDED_LIBINTL=no
+dnl AC_SUBST(BUILD_INCLUDED_LIBINTL)
+dnl USE_INCLUDED_LIBINTL=no
+dnl AC_SUBST(USE_INCLUDED_LIBINTL)
+
+GP_GETTEXT_HACK([${PACKAGE}-${LIBGPHOTO2_PORT_CURRENT}],[Lutz Mueller and others])
+ALL_LINGUAS="cs da de fr es it ja nb pt_BR ru sl sv uk zh_CN"
+AM_GNU_GETTEXT_VERSION([0.14.1])
+AM_GNU_GETTEXT([external])
+AM_PO_SUBDIRS()
+AM_ICONV()
 
 AC_CHECK_FUNC(gettext, gettext_without_libintl=true)
 # same trick as with libdl in libgphoto2:
@@ -116,23 +94,30 @@ if test "$gettext_without_libintl" != "true" -a "$USE_NLS" = "yes"; then
         AC_CHECK_LIB(intl, gettext, [INTLLIBS="$INTLLIBS -lintl"])
 fi
 
-dnl Turn on debugging and catch GNU features incompatible with ANSI C.
-if test "$ac_cv_prog_gcc" = "yes"; then
-	CFLAGS="$CFLAGS -g -Wall -Wmissing-declarations -Wmissing-prototypes"
-	LDFLAGS="$LDFLAGS -g -Wall"
-fi
 
+dnl ---------------------------------------------------------------------------
 dnl Checks for header files.
+dnl ---------------------------------------------------------------------------
 AC_HEADER_DIRENT
 AC_HEADER_STDC
 
-AC_INLINE
-AC_CONST
+AC_C_INLINE([])
+AC_C_CONST([])
 
 AC_CHECK_HEADERS(stdlib.h unistd.h stdio.h fcntl.h errno.h sys/time.h	\
 	sys/param.h termios.h sgetty.h ttold.h ioctl-types.h		\
 	fcntl.h sgtty.h sys/ioctl.h sys/time.h termio.h unistd.h	\
 	endian.h byteswap.h asm/io.h)
+
+dnl FIXME: Provide regex.h with the corresponding object code for 
+dnl        platforms which do not have it, e.g. Windows.
+AC_CHECK_HEADER([regex.h],
+                [AC_DEFINE([HAVE_REGEX],1,[whether we have regex.h])],
+		[AC_MSG_ERROR([
+*** We need regex.h and its object code to compile
+*** But we could not find it.
+])
+])
 
 dnl Checks for library functions.
 AC_CHECK_FUNCS(strerror snprintf vsnprintf)
@@ -147,21 +132,21 @@ AC_TRY_COMPILE([#include <ioctl-types.h>], [int foo = TIOCM_RTS;],
 AC_TRY_COMPILE([#include <sys/ioctl.h>], [int foo = TIOCM_RTS;],
 			AC_DEFINE(HAVE_RTS_IOCTL,1,[Define if you have TIOCM_TRS.]))
 
-dnl ******
+
+dnl ---------------------------------------------------------------------------
 dnl serial
-dnl ******
+dnl ---------------------------------------------------------------------------
 serial_msg=yes
 have_serial=true
-baudboy_msg=no
-ttylock_msg=no
-lockdev_msg=no
-resmgr_msg=no
 try_baudboy_msg=true
 try_ttylock=true
 try_lockdev=true
 try_resmgr=true
-AC_ARG_WITH(serial, [  --without-serial        Don't compile in SERIAL support],
-	if test x$withval = xno; then
+AC_ARG_ENABLE([serial],
+	[AS_HELP_STRING([--disable-serial],
+			[do not compile in SERIAL support])],
+[
+	if test x$enableval = xno; then
 		have_serial=false
 		serial_msg=no
 		try_baudboy=false
@@ -169,15 +154,16 @@ AC_ARG_WITH(serial, [  --without-serial        Don't compile in SERIAL support],
 		try_lockdev=false
 		try_resmgr=false
 	fi
-)
+])
 if $have_serial; then
 	IOLIB_SUBDIRS="$IOLIB_SUBDIRS serial"
+	AC_DEFINE([HAVE_SERIAL],1,[Whether you have serial support enabled])
 fi
-case "$serial_msg" in
-yes*)
-	AC_DEFINE(HAVE_SERIAL,1,[Whether you have serial support enabled])
-	;;
-esac
+GP_CONFIG_MSG([Serial support],[$serial_msg])
+
+if $have_serial; then
+
+GP_CONFIG_MSG([Serial locking mechanisms])
 
 dnl -----------------------------------------
 dnl Serial port locking: We try to use either
@@ -186,27 +172,23 @@ dnl  (2) baudboy.h
 dnl  (3) ttylock.h
 dnl  (4) lockdev.h
 dnl -----------------------------------------
-AC_ARG_WITH(baudboy, [  --without-baudboy       Don't use baudboy library],
-	if test x$withval = xno; then
-		try_baudboy=false
+AC_DEFUN([GP_SERLOCK],[dnl
+# $0([$1])
+AC_ARG_ENABLE([$1],
+[AS_HELP_STRING([--disable-][$1],
+		[do not use ][$1][ library])
+],[
+	if test x$enableval = xno; then
+		try_[$1]=false
 	fi
-)
-AC_ARG_WITH(ttylock, [  --without-ttylock       Don't use ttylock library],
-	if test x$withval = xno; then
-		try_ttylock=false
-	fi
-)
-AC_ARG_WITH(lockdev, [  --without-lockdev       Don't use lockdev library],
-	if test x$withval = xno; then
-		try_lockdev=false
-	fi
-)
-AC_ARG_WITH(resmgr, [  --without-resmgr         Don't use resmgr library],
-	if test x$withval = xno; then
-		try_resmgr=false
-	fi
-)
+])
+])dnl
+GP_SERLOCK([baudboy])dnl
+GP_SERLOCK([ttylock])dnl
+GP_SERLOCK([lockdev])dnl
+GP_SERLOCK([resmgr])dnl
 
+resmgr_msg=no
 if $try_resmgr; then
 	AC_CHECK_HEADER(resmgr.h,
 		AC_CHECK_LIB(resmgr, rsm_lock_device,[
@@ -216,7 +198,9 @@ if $try_resmgr; then
 		])
 	)
 fi
+GP_CONFIG_MSG([Using resmgr],[${resmgr_msg}])
 	
+baudboy_msg=no
 if $try_baudboy; then
 	AC_CHECK_HEADER(baudboy.h,
 		baudboy_msg=yes
@@ -225,7 +209,9 @@ if $try_baudboy; then
 		AC_DEFINE(HAVE_BAUDBOY,1,[Define if you have Baudboy serial locking.])
 	)
 fi
+GP_CONFIG_MSG([Using baudboy],[${baudboy_msg}])
 
+ttylock_msg=no
 if $try_ttylock; then
 	AC_CHECK_HEADER(ttylock.h,
 		AC_MSG_CHECKING(if ttylock needs lockdev)
@@ -240,14 +226,17 @@ if $try_ttylock; then
 				AC_DEFINE(HAVE_TTYLOCK,1,[Define if you have ttylock based tty locking.])
 				ttylock_msg=yes
 				try_lockdev=false
-				SERIAL_LFLAGS=-llockdev,
-				AC_MSG_RESULT(unknown),
+				SERIAL_LFLAGS=-llockdev
 				AC_MSG_RESULT(unknown)
-			),
+				AC_MSG_RESULT(unknown)
+			)
 			AC_MSG_RESULT(unknown)
 		)
 	)
 fi
+GP_CONFIG_MSG([Using ttylock],[${ttylock_msg}])
+
+lockdev_msg=no
 if $try_lockdev; then
 	AC_CHECK_LIB(lockdev, dev_lock,[
 		    AC_CHECK_HEADER(lockdev.h,[
@@ -259,88 +248,65 @@ if $try_lockdev; then
 		]
 	)
 fi
-AC_SUBST(SERIAL_LFLAGS)
+GP_CONFIG_MSG([Using lockdev],[${lockdev_msg}])
 
-dnl ******
+fi # have_serial
+
+AC_SUBST([SERIAL_LFLAGS])
+
+
+dnl ---------------------------------------------------------------------------
 dnl libusb
-dnl ******
-usb_msg="no (required for USB cameras, http://sourceforge.net/projects/libusb/)"
-try_usb=true
-AC_ARG_WITH(usb, [  --without-usb           Don't compile in USB support],
-	if test x$withval = xno; then
-		try_usb=false
-	fi
-)
-if $try_usb; then
-	AC_PATH_PROG(LIBUSB_CONFIG,libusb-config)
-	if test -n "${LIBUSB_CONFIG}"; then
-		CPPFLAGS_save="$CPPFLAGS"
-		CPPFLAGS="$CPPFLAGS `$LIBUSB_CONFIG --cflags`"
-		AC_CHECK_HEADER(usb.h,[
-			LDFLAGS_orig="$LDFLAGS"
-			LDFLAGS="`$LIBUSB_CONFIG --libs`"
-			AC_CHECK_LIB(usb,usb_busses,[
-				usb_msg="yes, from `$LIBUSB_CONFIG --prefix`"
-				IOLIB_SUBDIRS="$IOLIB_SUBDIRS usb"
-				USB_LIBS="`$LIBUSB_CONFIG --libs`"
-				USB_CFLAGS="`$LIBUSB_CONFIG --cflags`"
-                        	LIBUSB_VER="`$LIBUSB_CONFIG --version`"],[
-				usb_msg="no (available libusb version too old)"])
-			LDFLAGS="$LDFLAGS_orig"])
-		CPPFLAGS="$CPPFLAGS_save"
-	fi
+dnl ---------------------------------------------------------------------------
+GP_CHECK_LIBRARY([LIBUSB],[libusb],[>= 0.1.5],[usb.h],[usb_busses],[
+	IOLIB_SUBDIRS="$IOLIB_SUBDIRS usb"
+],[],[http://libusb.sourceforge.net/])
 
-	# This 'test' call uses non-standard syntax and will fail on most
-	# systems, but it's just informational so any warning can be ignored.
-	if test "$LIBUSB_VER" \< "0.1.5"; then
-		AC_MSG_WARN([
-*** You need at least version 0.1.5 of the libusb library for USB support
-*** http://sourceforge.net/projects/libusb/
-*** If you cannot find the appropriate version, try CVS
-	])
-	fi
-fi
-case "$usb_msg" in
-yes*)
-	AC_DEFINE(HAVE_USB,1,[Whether you have USB support enabled])
-	;;
-esac
 
-AC_SUBST(USB_CFLAGS)
-AC_SUBST(USB_LIBS)
+# ----------------------------------------------------------------------
+# Define IOLIB stuff
+# ----------------------------------------------------------------------
 
 AC_SUBST(IOLIB_SUBDIRS)
+AC_SUBST([iolibdir],["\$(libdir)/gphoto2_port/\$(VERSION)"])
+AM_CPFLAGS="$AM_CPPFLAGS -DIOLIBS=\\\"${iolibdir}\\\""
 
-dnl **********
+
+dnl ----------------------------------------------------------------------
 dnl GNU regex?
-dnl **********
+dnl ----------------------------------------------------------------------
 AC_CHECK_FUNC(re_compile_pattern, AC_DEFINE(HAVE_GNU_REGEX,1,[Define if you have GNU regex.]))
 
-dnl ******************************
-dnl disable debugging if requested
-dnl ******************************
-AC_ARG_ENABLE(debugging,
-  [  --disable-debugging     do not include debugging code],
-  [if test "$enableval" = "no"; then
-    AC_DEFINE(DISABLE_DEBUGGING,1,[Define if you want to disabled debugging.])
-  fi])
 
-dnl ********
-dnl gtk-doc?
-dnl ********
+dnl ----------------------------------------------------------------------
+dnl disable debugging if requested
+dnl ----------------------------------------------------------------------
+AC_ARG_ENABLE([debug],
+  AS_HELP_STRING([--disable-debug],[do not include debugging code]),
+[
+  if test "$enableval" = "no"; then
+    AC_DEFINE(DISABLE_DEBUGGING,1,[Define if you want to disabled debugging.])
+  fi
+])
+
+
+# ----------------------------------------------------------------------
+# gtk-doc?
+# ----------------------------------------------------------------------
 GP_CHECK_DOC_DIR()dnl
 GP_BUILD_GTK_DOCS()dnl
 
 
-dnl ---------------------------------------------------------------------------
-dnl Reference definitions
-dnl ---------------------------------------------------------------------------
+ ----------------------------------------------------------------------
+# References to external resources (web sites, mailing listes, etc.)
+# ----------------------------------------------------------------------
 
 GP_REFERENCES()dnl
 
 
-AC_OUTPUT([
+AC_CONFIG_FILES([
 Makefile
+po/Makefile.in
 libgphoto2_port/Makefile
 serial/Makefile
 usb/Makefile
@@ -349,6 +315,7 @@ test/Makefile
 doc/Makefile
 m4/Makefile
 ])
+AC_OUTPUT
 
 echo "
 
@@ -370,3 +337,6 @@ Configuration (libgphoto2_port)
 	Build API documentation: $gtkdoc_msg
 	Use ltdl.h:              $ltdl_msg
 "
+
+
+GP_CONFIG_OUTPUT
