@@ -90,23 +90,23 @@ const struct canon_usb_cmdstruct canon_usb_cmd[] = {
 	{CANON_USB_FUNCTION_GET_TIME,		"Get time",			0x03, 0x12, 0x201,	0x60},
 	{CANON_USB_FUNCTION_SET_TIME,		"Set time",			0x04, 0x12, 0x201,	0x54},
 	{CANON_USB_FUNCTION_MKDIR,		"Make directory",		0x05, 0x11, 0x201,	0x54},
-	{CANON_USB_FUNCTION_CAMERA_CHOWN,	"Change camera owner",		0x05, 0x12, 0x201,	0x54},
+	{CANON_USB_FUNCTION_CAMERA_CHOWN,	"Change camera owner",	0x05, 0x12, 0x201,	0x54},
 	{CANON_USB_FUNCTION_RMDIR,		"Remove directory",		0x06, 0x11, 0x201,	0x54},
 	{CANON_USB_FUNCTION_DISK_INFO,		"Disk info request",		0x09, 0x11, 0x201,	0x5c},
 	/* 0x0a is overloaded: "flash device ident" and "delete file", with different responses */
-	{CANON_USB_FUNCTION_FLASH_DEVICE_IDENT,	"Flash device ident",		0x0a, 0x11, 0x202,	0x40},
-	{CANON_USB_FUNCTION_DELETE_FILE_2,	"Delete file",			0x0a, 0x11, 0x201,	0x54},
-	{CANON_USB_FUNCTION_POWER_STATUS,	"Power supply status",		0x0a, 0x12, 0x201,	0x58},
+	{CANON_USB_FUNCTION_FLASH_DEVICE_IDENT,	"Flash device ident",	0x0a, 0x11, 0x202,	0x40},
+	{CANON_USB_FUNCTION_DELETE_FILE_2,	"Delete file",		0x0a, 0x11, 0x201,	0x54},
+	{CANON_USB_FUNCTION_POWER_STATUS,	"Power supply status",	0x0a, 0x12, 0x201,	0x58},
 	{CANON_USB_FUNCTION_GET_DIRENT,		"Get directory entries",	0x0b, 0x11, 0x202,	0x40},
 	/* Command code 0x0d is overloaded: delete file (old),
 	 * disk info request ID (new). */
-	{CANON_USB_FUNCTION_DELETE_FILE,	"Delete file",			0x0d, 0x11, 0x201,	0x54},
+	{CANON_USB_FUNCTION_DELETE_FILE,	"Delete file",		0x0d, 0x11, 0x201,	0x54},
 	{CANON_USB_FUNCTION_DISK_INFO_2,	"Disk info request (new)",	0x0d, 0x11, 0x201,	0x5c},
 	/* Command code 0x0e is overloaded: set file attribute (old),
 	 * flash device ID (new). And the response is different: fixed
 	 * length in old, variable length in new. */
-	{CANON_USB_FUNCTION_SET_ATTR,		"Set file attributes",		0x0e, 0x11, 0x201,	0x54},
-	{CANON_USB_FUNCTION_FLASH_DEVICE_IDENT_2, "Flash device ident (new)",	0x0e, 0x11, 0x202,	0x40},
+	{CANON_USB_FUNCTION_SET_ATTR,		"Set file attributes",	0x0e, 0x11, 0x201,	0x54},
+	{CANON_USB_FUNCTION_FLASH_DEVICE_IDENT_2, "Flash device ident (new)", 0x0e, 0x11, 0x202,	0x40},
 	{CANON_USB_FUNCTION_SET_FILE_TIME,	"Set file time",		0x0f, 0x11, 0x201,	0x54},
 	/* Notice the overloaded command code 0x13: remote camera control
 	   in the original protocol, power status in the new protocol. */
@@ -122,12 +122,12 @@ const struct canon_usb_cmdstruct canon_usb_cmd[] = {
 	{CANON_USB_FUNCTION_GENERIC_LOCK_KEYS,	"Lock keys and turn off LCD",	0x20, 0x12, 0x201,	0x54},
 	{CANON_USB_FUNCTION_20D_UNKNOWN_1,	"Unknown EOS 20D function",	0x21, 0x12, 0x201,	0x54},
 	{CANON_USB_FUNCTION_20D_UNKNOWN_2,	"Unknown EOS 20D function",	0x22, 0x12, 0x201,	0x54},
-	{CANON_USB_FUNCTION_EOS_GET_BODY_ID_2,	"New EOS get body ID",		0x23, 0x12, 0x201,	0x58},
-	{CANON_USB_FUNCTION_GET_PIC_ABILITIES_2, "New get picture abilities",	0x24, 0x12, 0x201,	0x474},
+	{CANON_USB_FUNCTION_EOS_GET_BODY_ID_2,	"Get body ID (new)",		0x23, 0x12, 0x201,	0x58},
+	{CANON_USB_FUNCTION_GET_PIC_ABILITIES_2, "Get picture abilities (new)",	0x24, 0x12, 0x201,	0x474},
 	{CANON_USB_FUNCTION_CONTROL_CAMERA_2,	"Remote camera control (new)",	0x25, 0x12, 0x201,	0x40},
-	{CANON_USB_FUNCTION_RETRIEVE_CAPTURE_2, "New download a captured image", 0x26, 0x12, 0x202,	0x40},
-	{CANON_USB_FUNCTION_20D_UNKNOWN_4,	"Unknown EOS 20D function",	0x35, 0x12, 0x201,	0x5c},
-	{CANON_USB_FUNCTION_20D_UNKNOWN_5,	"Unknown EOS 20D function",	0x36, 0x12, 0x201,	0x54},
+	{CANON_USB_FUNCTION_RETRIEVE_CAPTURE_2, "Download captured image (new)", 0x26, 0x12, 0x202,	0x40},
+	{CANON_USB_FUNCTION_LOCK_KEYS_2,	"Lock keys (new)",		0x35, 0x12, 0x201,	0x5c},
+	{CANON_USB_FUNCTION_UNLOCK_KEYS_2,	"Unlock keys (new)",		0x36, 0x12, 0x201,	0x54},
 	/* WARNING: I don't think this is really the right value, but
 	 * it gives no error on EOS 20D -- swestin 22-Mar-05 */
 	{CANON_USB_FUNCTION_SET_ATTR_2,		"Set file attributes (new))", 0x07, 0x11, 0x201,	0x54},
@@ -139,7 +139,7 @@ const struct canon_usb_control_cmdstruct canon_usb_control_cmd[] = {
 	/* COMMAND NAME                         Description            Value   CmdLen ReplyLen */
 	{CANON_USB_CONTROL_INIT,                "Camera control init",  0x00,  0x18,  0x1c},  /* load 0x00, 0x00 */
 	{CANON_USB_CONTROL_SHUTTER_RELEASE,     "Release shutter",      0x04,  0x18,  0x1c},  /* load 0x04, 0x00 */
-	{CANON_USB_CONTROL_SET_PARAMS,          "Set release params",   0x07,  0x00,  0x1c},  /* ?? */
+	{CANON_USB_CONTROL_SET_PARAMS,          "Set release params",   0x07,  0x3c,  0x1c},  /* ?? */
 	{CANON_USB_CONTROL_SET_TRANSFER_MODE,   "Set transfer mode",    0x09,  0x1c,  0x1c},  /* load (0x09, 0x04, 0x03) or (0x09, 0x04, 0x02000003) */
 	{CANON_USB_CONTROL_GET_PARAMS,          "Get release params",   0x0a,  0x18,  0x4c},  /* load 0x0a, 0x00 */
 	{CANON_USB_CONTROL_GET_ZOOM_POS,        "Get zoom position",    0x0b,  0x18,  0x20},  /* load 0x0b, 0x00 */
@@ -630,7 +630,7 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
                         memset (payload, 0, sizeof (payload));
                         payload[0] = 0x06;
 
-                        c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_20D_UNKNOWN_4,
+                        c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_LOCK_KEYS_2,
                                                     &bytes_read, payload, 4);
                         if ( c_res == NULL )
                                 return GP_ERROR_OS_FAILURE;
@@ -689,7 +689,7 @@ canon_usb_unlock_keys (Camera *camera, GPContext *context)
                         camera->pl->keys_locked = FALSE;
                 }
                 else if ( camera->pl->md->model == CANON_CLASS_6 ) {
-                        c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_20D_UNKNOWN_5,
+                        c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_UNLOCK_KEYS_2,
                                                     &bytes_read, NULL, 0);
                         if ( c_res == NULL )
                                 return GP_ERROR_OS_FAILURE;
@@ -961,6 +961,24 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *conte
                 goto FAIL;
         }
 
+	if ( camera->pl->md->model == CANON_CLASS_6 ) {
+		/* Don't know what this command does, but the Windows
+		 * software issues it here. */
+		htole32a ( payload, 0x0f );
+		GP_DEBUG ( "canon_usb_capture_dialogue: Issuing unknown command 0x22 for class 6 camera." );
+                buffer = canon_usb_dialogue ( camera,
+					      CANON_USB_FUNCTION_20D_UNKNOWN_2,
+					      return_length, payload, 4 ); 
+
+                if ( buffer == NULL )
+                        GP_DEBUG ( "canon_usb_capture_dialogue: Unknown command 0x22 returned null buffer; continuing anyway." );
+		else if ( *return_length != 0x4 )
+                        GP_DEBUG ( "canon_usb_capture_dialogue: Unknown command 0x22 returned buffer of unexpected size 0x%x; continuing anyway.",
+				*return_length );
+		else if ( le32atoh ( buffer+0x50 ) != 0 )
+                        GP_DEBUG ( "canon_usb_capture_dialogue: Unknown command 0x22 returned status code 0x%x; continuing anyway.",
+				   le32atoh ( buffer+0x50 ) );
+	}
         /* Now we need to read from the interrupt pipe. Since we have
            to use the short timeout (50 ms), we need to try several
            times.
@@ -970,7 +988,6 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *conte
         camera->pl->thumb_length = 0; camera->pl->image_length = 0;
         camera->pl->image_key = 0x81818181;
 
-	sleep(1);
         while ( buf2[4] != 0x0f ) {
                 status = canon_usb_poll_interrupt_pipe ( camera, buf2, MAX_INTERRUPT_TRIES );
                 if ( status > 0x17 )
