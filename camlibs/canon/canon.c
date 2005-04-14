@@ -194,8 +194,8 @@ const struct canonCamModelData models[] = {
         /* 3080 is in MacOS Info.plist, but I don't know what it is
          * --swestin. */
         {"Canon:PowerShot Unknown 4",   CANON_CLASS_1,  0x04A9, 0x3080, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-        {"Canon:Optura 10",             CANON_CLASS_1,  0x04A9, 0x3082, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-        {"Canon:MVX100i",               CANON_CLASS_1,  0x04A9, 0x3082, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:Optura 10",             CANON_CLASS_1,  0x04A9, 0x3082, CAP_NON, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:MVX100i",               CANON_CLASS_1,  0x04A9, 0x3082, CAP_NON, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
         {"Canon:EOS 10D",               CANON_CLASS_4,  0x04A9, 0x3083, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:EOS 300D (normal mode)", CANON_CLASS_4, 0x04A9, 0x3084, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
@@ -909,8 +909,8 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, int *length,
                 if ( status < 0 )
                         return status;
 
-                /* Lock keys here for D30/D60 */
-                if ( camera->pl->md->model == CANON_CLASS_4 ) {
+                /* Lock keys here for EOS cameras */
+                if ( camera->pl->md->model == CANON_CLASS_4 || camera->pl->md->model == CANON_CLASS_6 ) {
                         status = canon_usb_lock_keys(camera,context);
                         if ( status < 0 ) {
                                 gp_context_error (context, _("lock keys failed."));
@@ -1190,9 +1190,44 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
                    see if that helps. */
                 status = canon_int_do_control_command (camera,
                                                        CANON_USB_CONTROL_GET_PARAMS,
-                                                       0x04, transfermode);
+                                                       0x00, 0);
                 if ( status < 0 )
                         return status;
+
+#ifdef DEBUG_TINY_IMAGES
+                {
+                        unsigned char *result_block;
+                        int result_len, payload_len;
+                        unsigned char payload[0x59];
+                        unsigned char *params;
+                        unsigned char desc[1024];
+                        payload_len = canon_int_pack_control_subcmd ( payload,
+                                                                      CANON_USB_CONTROL_GET_PARAMS,
+                                                                      0x00, 0,
+                                                                      desc );
+                        result_block = canon_usb_dialogue ( camera, CANON_USB_FUNCTION_CONTROL_CAMERA,
+                                                            &result_len, payload, payload_len );
+                        if ( result_block == NULL )
+                                return GP_ERROR;
+
+                        memset ( payload, 0, sizeof(payload) );
+                        params = payload+0x08;
+                        memcpy ( params, result_block+0x0c, 0x30 );
+
+                        payload[0] = 0x07;
+                        payload[4] = 0x30;
+                        params[1] = 2;       /* "Normal" compression */
+                        params[2] = 1;       /* JPEG */
+                        params[3] = 2;       /* small */
+                        params[4] = params[5] = 0; /* Self timer off */
+                        params[6] = 0;             /* Flash off */
+                        params[7] = 0;             /* Beep off */
+                        result_block = canon_usb_dialogue ( camera, CANON_USB_FUNCTION_CONTROL_CAMERA,
+                                                            &result_len, payload, 0x38 );
+                        if ( result_block == NULL )
+                                return GP_ERROR;
+                }
+#endif /* DEBUG_TINY_IMAGES */
 
                 status = canon_int_do_control_command (camera,
                                                        CANON_USB_CONTROL_GET_PARAMS,
@@ -1200,8 +1235,8 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
                 if ( status < 0 )
                         return status;
 
-                /* Lock keys here for D30/D60 */
-                if ( camera->pl->md->model == CANON_CLASS_4 ) {
+                /* Lock keys here for EOS */
+                if ( camera->pl->md->model == CANON_CLASS_4 || camera->pl->md->model == CANON_CLASS_6 ) {
                         status = canon_usb_lock_keys(camera,context);
                         if ( status < 0 ) {
                                 gp_context_error (context, _("lock keys failed."));
