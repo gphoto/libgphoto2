@@ -9,17 +9,23 @@
 #ifdef BINARYFILEMODE
 #include <fcntl.h>  /* for setmode() */
 #endif
+
 #include <stdlib.h>
 #include <time.h>
+
 #if HAVE_UNISTD_H
 # include <sys/types.h>
 # include <unistd.h>
 #endif
+
 #if HAVE_SYS_PARAM_H
 # include <sys/param.h>
 #else
-#define MAXPATHLEN 256
+# ifndef MAXPATHLEN
+#  define MAXPATHLEN 256
+# endif
 #endif
+
 #include <termios.h>
 
 #include "chotplay.h"

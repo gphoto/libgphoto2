@@ -10,8 +10,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-03-19 16:41+0100\n"
+"Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
+"POT-Creation-Date: 2005-04-10 10:46+0200\n"
 "PO-Revision-Date: 2005-01-06 16:14+0100\n"
 "Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
 "Language-Team: deutsch <de@li.org>\n"
@@ -20,112 +20,122 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.0.2\n"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:178
+#: libgphoto2_port/gphoto2-port-info-list.c:176
+#, fuzzy, c-format
+msgid "Called for filename '%s'."
+msgstr "Konnte »%s« nicht öffnen (%m)."
+
+#: libgphoto2_port/gphoto2-port-info-list.c:181
 #, c-format
 msgid "Could not load '%s': '%s'."
 msgstr "Konnte »%s« nicht laden (%s)."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:186
+#: libgphoto2_port/gphoto2-port-info-list.c:189
 #, c-format
 msgid "Could not find some functions in '%s': '%s'."
 msgstr "Konnte einige Funktionen nicht in '%s' finden: '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:198
-#: libgphoto2_port/gphoto2-port-info-list.c:322
+#: libgphoto2_port/gphoto2-port-info-list.c:201
+#: libgphoto2_port/gphoto2-port-info-list.c:327
 #, c-format
 msgid "'%s' already loaded"
 msgstr "'%s' bereits geladen"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:207
+#: libgphoto2_port/gphoto2-port-info-list.c:210
 #, c-format
 msgid "Could not load port driver list: '%s'."
 msgstr "Konnte Port Treiberliste»%s« nicht laden."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:214
+#: libgphoto2_port/gphoto2-port-info-list.c:217
 #, c-format
 msgid "Loaded '%s' ('%s') from '%s'."
 msgstr "Habe '%s' ('%s') von '%s' geladen."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:253
-#, c-format
-msgid "Loading io-drivers from '%s'..."
+#: libgphoto2_port/gphoto2-port-info-list.c:258
+#, fuzzy, c-format
+msgid "Using ltdl to load io-drivers from '%s'..."
 msgstr "Lade I/O Treiber von '%s'..."
 
 #: libgphoto2_port/gphoto2-port-info-list.c:268
+#, fuzzy, c-format
+msgid "Loading io-drivers from '%s' without ltdl..."
+msgstr "Lade I/O Treiber von '%s'..."
+
+#: libgphoto2_port/gphoto2-port-info-list.c:273
 #, c-format
 msgid "Could not load any io-library because '%s' could not be opened (%m)"
 msgstr ""
 "Konnte keinerlei I/O-Bibliothek laden weil »%s« nicht geöffnet werden konnte "
 "(%m)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:300
+#: libgphoto2_port/gphoto2-port-info-list.c:305
 #, c-format
 msgid "'%s' is not a library (%s)"
 msgstr "'%s' ist keine Bibliothek (%s)."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:310
+#: libgphoto2_port/gphoto2-port-info-list.c:315
 #, c-format
 msgid "Could not find some functions in '%s' (%s)"
 msgstr "Konnte einige Funktionen in »%s« nicht finden (%s)."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:330
+#: libgphoto2_port/gphoto2-port-info-list.c:335
 #, c-format
 msgid "Could not load list (%s)"
 msgstr "Konnte Liste nicht laden (%s)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:338
+#: libgphoto2_port/gphoto2-port-info-list.c:343
 #, c-format
 msgid "Loaded '%s' (%s) from '%s'"
 msgstr "Habe '%s' (%s) von %s geladen"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:369
+#: libgphoto2_port/gphoto2-port-info-list.c:374
 #, c-format
 msgid "Counting entries (%i available)..."
 msgstr "Zähle Eintrage (%i vorhanden)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:378
+#: libgphoto2_port/gphoto2-port-info-list.c:383
 #, c-format
 msgid "%i regular entries available."
 msgstr "%i reguläre Eintrage verf?gbar."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:407
+#: libgphoto2_port/gphoto2-port-info-list.c:412
 #, c-format
 msgid "Looking for path '%s' (%i entries available)..."
 msgstr "Suche Pfad '%s' (%i Einträge vorhanden)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:419
+#: libgphoto2_port/gphoto2-port-info-list.c:424
 #, c-format
 msgid "Starting regex search for '%s'..."
 msgstr "Starte Suche mit regulärem Ausdruck '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:425
+#: libgphoto2_port/gphoto2-port-info-list.c:430
 #, c-format
 msgid "Trying '%s'..."
 msgstr "Versuche '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:446
+#: libgphoto2_port/gphoto2-port-info-list.c:451
 msgid "regcomp failed"
 msgstr "regcomp fehlgeschlagen"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:457
+#: libgphoto2_port/gphoto2-port-info-list.c:462
 #, c-format
 msgid "re_match failed (%i)"
 msgstr "re_match fehlgeschlagen (%i)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:465
+#: libgphoto2_port/gphoto2-port-info-list.c:470
 msgid "regexec failed"
 msgstr "regexec fehlgeschlagen"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:472
+#: libgphoto2_port/gphoto2-port-info-list.c:477
 msgid "Generic Port"
 msgstr "Generischer Port"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:496
+#: libgphoto2_port/gphoto2-port-info-list.c:501
 #, c-format
 msgid "Looking up entry '%s'..."
 msgstr "Suche Eintrag '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:526
+#: libgphoto2_port/gphoto2-port-info-list.c:531
 #, c-format
 msgid "Getting info of entry %i (%i available)..."
 msgstr "Hole Informationen von Eintrag %i (%i vorhanden)..."

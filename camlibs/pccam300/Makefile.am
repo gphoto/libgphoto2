@@ -1,4 +1,3 @@
-camlibdir = $(libdir)/gphoto2/$(VERSION)
 camlib_LTLIBRARIES = libgphoto2_pccam300.la
 
 libgphoto2_pccam300_la_SOURCES = pccam300.c pccam300.h library.c 

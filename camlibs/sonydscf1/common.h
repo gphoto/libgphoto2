@@ -11,6 +11,8 @@
 /* NEXTSTEP "/dev/ttya" */
 /* IRIX  "/dev/ttyf1" */
 
+#include <config.h>
+
 #if defined(WIN32) || defined(OS2)
 #define RSPORT "COM1"
 #else
@@ -42,6 +44,10 @@
 #ifdef STDC_HEADERS
 # define P__(x) x
 #else
+# error STDC_HEADERS NOT defined
+# error Compilation of functions defined with P__ will fail anyway, so
+# error it does not hurt if we abort it here a little earlier and more
+# error to the point.
 # define P__(x) ()
 #endif
 

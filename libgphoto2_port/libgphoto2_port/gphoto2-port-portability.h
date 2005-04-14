@@ -11,6 +11,9 @@
 #include <stdio.h>
 #include <direct.h>
 
+#ifdef IOLIBS
+#undef IOLIBS
+#endif
 #define IOLIBS			"."
 #define strcasecmp		_stricmp
 #define snprintf		_snprintf

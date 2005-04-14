@@ -1,6 +1,6 @@
 dnl Process this file with autoreconf to produce a configure script.
 AC_PREREQ(2.59)
-AC_INIT([libgphoto2], [2.2head], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
+AC_INIT([libgphoto2], [2.2alpha], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
 AC_CONFIG_SRCDIR([libgphoto2/gphoto2.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([libgphoto2_port/m4])
@@ -108,15 +108,6 @@ AM_CPPFLAGS="$AM_CPPFLAGS -DLOCALEDIR=\\\"\$(datadir)/locale\\\""
 
 
 dnl ---------------------------------------------------------------------------
-dnl Turn on debugging and all warnings when using gcc
-dnl ---------------------------------------------------------------------------
-if test "$ac_cv_prog_gcc" = "yes"; then
-	CFLAGS="$CFLAGS -g -Wall -Wmissing-declarations -Wmissing-prototypes"
-	LDFLAGS="$LDFLAGS -g -Wall"
-fi
-
-
-dnl ---------------------------------------------------------------------------
 dnl FIXME: What is this good for?
 dnl Replace `main' with a function in -libs:
 dnl ---------------------------------------------------------------------------
@@ -136,6 +127,7 @@ AC_CHECK_LIB(jpeg,jpeg_start_decompress,[
 		libjpeg_msg="yes"
 	])
 ])
+GP_CONFIG_MSG([JPEG mangling support],[${libjpeg_msg}])
 
 
 dnl ---------------------------------------------------------------------------
@@ -169,7 +161,13 @@ AC_MSG_CHECKING([for tm_gmtoff in struct tm])
 AC_COMPILE_IFELSE([dnl
 AC_LANG_PROGRAM([[
 #include <sys/types.h>
-#include <$ac_cv_struct_tm>]], [[struct tm tm; tm.tm_gmtoff;]])],[AC_DEFINE(HAVE_TM_GMTOFF,1,whether struct tm has tm_gmtoff field)
+#include <$ac_cv_struct_tm>
+]], [[
+struct tm tm;
+tm.tm_gmtoff;
+]])dnl
+],[
+AC_DEFINE(HAVE_TM_GMTOFF,1,whether struct tm has tm_gmtoff field)
 AC_MSG_RESULT(yes)
 ],[
 AC_MSG_RESULT(no)
@@ -178,20 +176,13 @@ AC_MSG_RESULT(no)
 
 dnl Create a stdint.h-like file containing size-specific integer definitions
 dnl that will always be available
-AX_NEED_STDINT_H(libgphoto2/_stdint.h)
+AX_NEED_STDINT_H([libgphoto2/_stdint.h])
 
 dnl Create a header file containing NetBSD-style byte swapping macros
 AC_NEED_BYTEORDER_H(libgphoto2/gphoto2-endian.h)
 
 
 dnl ---------------------------------------------------------------------------
-dnl Find out how to dynamically load modules
-dnl FIXME: do we really need this? The libltdl convenience lib should do
-dnl        that for us, right?
-dnl ---------------------------------------------------------------------------
-dnl GP_DYNAMIC_LIBRARIES
-
-
 dnl Old libtool stuff left here for reference purposes. For now.
 dnl dnl ---------------------------------------------------------------------------
 dnl dnl Check for libtool: lt_dlforeachfile has been introduced in 
@@ -256,7 +247,7 @@ AM_CPPFLAGS="$AM_CPPFLAGS -DCAMLIBS=\\\"\$(camlibdir)\\\""
 
 
 dnl ---------------------------------------------------------------------------
-dnl Camera drivers
+dnl Camera drivers (camlibs)
 dnl ---------------------------------------------------------------------------
 dnl * See libgphoto2_port/m4/gp-camlibs.m4 for usage details, e.g. for
 dnl   marking obsolete camlibs.
@@ -371,7 +362,7 @@ dnl /proc/meminfo: If the meminfo /proc entry is available, we use it
 dnl to limit the libgphoto2 filesystem cache size.
 dnl ---------------------------------------------------------------------------
 if test "$cross_compiling" != yes; then
-	AC_CHECK_FILE(/proc/meminfo, [
+	AC_CHECK_FILE([/proc/meminfo], [
 		proc_meminfo_msg="available";
 		proc_meminfo=true;
 		AC_DEFINE(HAVE_PROCMEMINFO,1,[whether we get memory info from /proc/meminfo])
@@ -383,32 +374,32 @@ else
 	proc_meminfo_msg="state not known, cross-compilation";
 	proc_meminfo=false;
 fi
+GP_CONFIG_MSG([/proc/meminfo],[$proc_meminfo_msg])
+
 
 dnl Check for sysctl()
 AC_MSG_CHECKING([for sysctl on BSD])
-AC_TRY_COMPILE([
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 	#ifdef __FreeBSD__
 	#	 include <sys/types.h>
 	#elif (__NetBSD__ || __OpenBSD__)
 	#	 include <sys/param.h>
 	#endif
 	#include <unistd.h>
-	#include <sys/sysctl.h>],
-	[int mib[2] = { CTL_HW, HW_PHYSMEM };
+	#include <sys/sysctl.h>]], [[int mib[2] = { CTL_HW, HW_PHYSMEM };
 	int value;
 	size_t valuelen = sizeof(value);
-	sysctl(mib, 2 , &value, &valuelen, NULL, 0)],
-	AC_DEFINE(HAVE_SYSCTL,1,[whether we may use sysctl])
-	AC_MSG_RESULT(yes),
-	AC_MSG_RESULT(no)
-)
+	sysctl(mib, 2 , &value, &valuelen, NULL, 0)]])],[AC_DEFINE(HAVE_SYSCTL,1,whether we may use sysctl)
+	AC_MSG_RESULT(yes)],[AC_MSG_RESULT(no)
+])
 
 
 dnl ---------------------------------------------------------------------------
 dnl Turn on debugging and all warnings when using gcc
 dnl ---------------------------------------------------------------------------
-if test "$ac_cv_c_compiler_gnu" = "yes"; then
-	AM_CPPFLAGS="$AM_CPPFLAGS -g -Wall -Wmissing-declarations -Wmissing-prototypes"
+if test "$GCC" = "yes"; then
+	AM_CPPFLAGS="$AM_CPPFLAGS -g -Wall"
+	AM_CPPFLAGS="$AM_CPPFLAGS -Wmissing-declarations -Wmissing-prototypes"
 	AM_LDFLAGS="$AM_LDFLAGS -g -Wall"
 fi
 
@@ -428,14 +419,15 @@ else
 ])
 fi
 
+# Message about configured subprojects
 GP_CONFIG_MSG()dnl
 GP_CONFIG_MSG([Subprojects],[${subdirs}])dnl
-
 
 # ---------------------------------------------------------------------------
 # Create output files
 # ---------------------------------------------------------------------------
 AC_CONFIG_FILES([
+po/Makefile.in
 README
 Makefile
 camlibs/Makefile

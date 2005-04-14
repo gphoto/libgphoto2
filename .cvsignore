@@ -24,6 +24,8 @@ gphoto2-config
 install-sh
 missing
 mkinstalldirs
+libltdl
+intl
 *.tar.gz
 *.tar.bz2
 *.log

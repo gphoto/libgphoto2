@@ -24,7 +24,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#ifdef HAVE_REGEX
 #include <regex.h>
+#else
+#error We need regex.h, but it has not been detected.
+#endif
 
 #ifdef HAVE_LTDL
 #include <ltdl.h>

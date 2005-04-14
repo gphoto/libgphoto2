@@ -202,16 +202,16 @@ dnl
 dnl Run our own test link
 dnl    Does not work for *.la libs, so we deactivated it.
 dnl
-dnl m4_ifval([$5],[dnl
-dnl if test "x${[have_][$1]}" = "xyes"; then
+m4_ifval([$5],[dnl
+if test "x${[have_][$1]}" = "xyes"; then
 dnl AC_MSG_CHECKING([whether ][$2][ test link succeeds])
-dnl LDFLAGS_save="$LDFLAGS"
-dnl LDFLAGS="${[$1]_LIBS}"
-dnl AC_TRY_LINK_FUNC([$5],[],[have_][$1][=no])
-dnl LDFLAGS="$LDFLAGS_save"
+LIBS_save="$LIBSS"
+LIBS="${[$1]_LIBS}"
+AC_TRY_LINK_FUNC([$5],[],[have_][$1][=no])
+LIBS="$LIBS_save"
 dnl AC_MSG_RESULT([${[have_][$1]}])
-dnl fi
-dnl ])dnl
+fi
+])dnl
 dnl
 dnl Abort configure script if mandatory, but not found
 dnl
