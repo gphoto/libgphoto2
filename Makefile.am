@@ -1,14 +1,14 @@
-INCLUDES =						\
-	-I$(top_srcdir)					\
-	-I$(top_srcdir)/intl				\
-	-I$(top_srcdir)/libgphoto2_port/libgphoto2_port	\
-	-DLOCALEDIR=\"$(datadir)/locale\"		\
-	-DCAMLIBS=\"$(camlibdir)\"			\
-	$(EXIF_CFLAGS)
-
 lib_LTLIBRARIES = libgphoto2.la
 
-libgphoto2_la_LDFLAGS = -version-info @LIBGPHOTO2_VERSION_INFO@
+libgphoto2_la_CPPFLAGS =				\
+	$(LTDLINCL)					\
+	$(AM_CPPFLAGS) $(CPPFLAGS)			\
+	$(LIBEXIF_CFLAGS)
+
+# FIXME: -export-symbols $(srcdir)/libgphoto2.sym
+libgphoto2_la_LDFLAGS =	\
+	-no-undefined	\
+	-version-info @LIBGPHOTO2_VERSION_INFO@
 
 libgphoto2_la_SOURCES = 	\
 	gphoto2-abilities-list.c\
@@ -27,11 +27,20 @@ libgphoto2_la_SOURCES = 	\
 	gphoto2-version.h	\
 	gphoto2-setting.c	\
 	gphoto2-widget.c
+
 libgphoto2_la_LIBADD =					\
-	$(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la\
-	$(LTDL_LIBS)					\
-	$(EXIF_LIBS)					\
+	$(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la \
+	$(LIBLTDL)					\
+	$(LIBEXIF_LIBS)					\
 	-lm $(INTLLIBS)
+# The libtool docs describe these params, but they don't build.
+#	"-dlopen" self \
+#	"-dlopen" $(top_builddir)/camlibs/canon/....la \
+#	"-dlopen" $(top_builddir)/camlibs/ptp2/....la
+
+libgphoto2_la_DEPENDENCIES = \
+	$(LIBLTDL)
+
 
 libgphoto2includedir = $(includedir)/gphoto2
 libgphoto2include_HEADERS =	\
