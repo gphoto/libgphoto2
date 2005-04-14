@@ -51,7 +51,7 @@
 #endif
 #include <limits.h>
 
-#ifdef HAVE_EXIF
+#ifdef HAVE_LIBEXIF
 #  include <libexif/exif-data.h>
 #endif
 
@@ -97,7 +97,7 @@ typedef struct {
 	CameraFilesystemFile *file;
 } CameraFilesystemFolder;
 
-#ifdef HAVE_EXIF
+#ifdef HAVE_LIBEXIF
 
 static int gp_filesystem_get_file_impl (CameraFilesystem *, const char *,
 		const char *, CameraFileType, CameraFile *, GPContext *);
@@ -133,7 +133,7 @@ get_exif_mtime (const unsigned char *data, unsigned long size)
         /*
          * HP PhotoSmart C30 has the date and time in ifd_exif.
          */
-#ifdef HAVE_EXIF_0_5_4
+#ifdef HAVE_LIBEXIF_IFD
 	e = exif_content_get_entry (ed->ifd[EXIF_IFD_0], EXIF_TAG_DATE_TIME);
 	if (e)
 		t1 = get_time_from_exif_tag(e);
@@ -1564,7 +1564,7 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
                         CameraFile *file, GPContext *context)
 {
 	int r;
-#ifdef HAVE_EXIF
+#ifdef HAVE_LIBEXIF
 	CameraFile *efile;
 	const char *data = NULL;
 	unsigned char *buf;
@@ -1583,7 +1583,7 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 		 * Could not get preview (unsupported operation). Some 
 		 * cameras hide the thumbnail in EXIF data. Check it out.
 		 */
-#ifdef HAVE_EXIF
+#ifdef HAVE_LIBEXIF
 		GP_DEBUG ("Getting previews is not supported. Trying "
 			  "EXIF data...");
 		CR (gp_file_new (&efile));
@@ -1633,7 +1633,7 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 		 * Some cameras hide EXIF data in thumbnails (!). Check it
 		 * out.
 		 */
-#ifdef HAVE_EXIF
+#ifdef HAVE_LIBEXIF
 		GP_DEBUG ("Getting EXIF data is not supported. Trying "
 			  "thumbnail...");
 		CR (gp_file_new (&efile));
@@ -1718,7 +1718,7 @@ gp_filesystem_get_info (CameraFilesystem *fs, const char *folder,
 			GPContext *context)
 {
 	int x, y;
-#ifdef HAVE_EXIF
+#ifdef HAVE_LIBEXIF
 	time_t t;
 #endif
 
@@ -1750,7 +1750,7 @@ gp_filesystem_get_info (CameraFilesystem *fs, const char *folder,
 	 * If we didn't get GP_FILE_INFO_MTIME, we'll have a look if we
 	 * can get it from EXIF data.
 	 */
-#ifdef HAVE_EXIF
+#ifdef HAVE_LIBEXIF
 	if (!(fs->folder[x].file[y].info.file.fields & GP_FILE_INFO_MTIME)) {
 		GP_DEBUG ("Did not get mtime. Trying EXIF information...");
 		t = gp_filesystem_get_exif_mtime (fs, folder, filename);
@@ -2154,7 +2154,7 @@ gp_filesystem_set_file_noop (CameraFilesystem *fs, const char *folder,
 	const char *filename;
 	int x, y, r;
 	time_t t;
-#ifdef HAVE_EXIF
+#ifdef HAVE_LIBEXIF
 	const char *data;
 	unsigned long int size;
 #endif
@@ -2238,7 +2238,7 @@ gp_filesystem_set_file_noop (CameraFilesystem *fs, const char *folder,
 	 * file, check if there is EXIF data in the file that contains
 	 * information on the mtime.
 	 */
-#ifdef HAVE_EXIF 
+#ifdef HAVE_LIBEXIF 
         if (!t && (type == GP_FILE_TYPE_NORMAL)) {
 		GP_DEBUG ("Searching data for mtime...");
 		CR (gp_file_get_data_and_size (file, &data, &size));
@@ -2250,7 +2250,7 @@ gp_filesystem_set_file_noop (CameraFilesystem *fs, const char *folder,
 	 * Still no mtime? Let's see if the camera offers us data of type
 	 * GP_FILE_TYPE_EXIF that includes information on the mtime.
 	 */
-#ifdef HAVE_EXIF
+#ifdef HAVE_LIBEXIF
 	if (!t) {
 		GP_DEBUG ("Trying EXIF information...");
 		t = gp_filesystem_get_exif_mtime (fs, folder, filename);
