@@ -1,11 +1,6 @@
 camlib_LTLIBRARIES = libgphoto2_casio_qv.la
 EXTRA_DIST = PROTOCOL.txt
 
-INCLUDES =                                              \
-        -I$(top_srcdir)/libgphoto2_port/libgphoto2_port \
-        -I$(top_srcdir)/libgphoto2			\
-	-I$(top_builddir)/libgphoto2
-
 libgphoto2_casio_qv_la_SOURCES =		\
 	casio-qv.c				\
 	casio-qv-commands.c casio-qv-commands.h \

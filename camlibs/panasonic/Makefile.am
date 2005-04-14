@@ -6,12 +6,6 @@ camlib_LTLIBRARIES =\
  libgphoto2_panasonic_dc1000.la\
  libgphoto2_panasonic_dc1580.la
 
-INCLUDES =                                              \
-        -I$(top_srcdir)/intl				\
-        -I$(top_srcdir)/libgphoto2_port/libgphoto2_port \
-        -I$(top_srcdir)/libgphoto2			\
-	-I$(top_builddir)/libgphoto2
-
 libgphoto2_panasonic_dc1000_la_SOURCES = dc1000.c dc1000.h dc.c dc.h
 libgphoto2_panasonic_dc1000_la_LDFLAGS = -module -avoid-version
 libgphoto2_panasonic_dc1000_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la
