@@ -200,18 +200,17 @@ fi
 ])dnl
 dnl
 dnl Run our own test link
-dnl    Does not work for *.la libs, so we deactivated it.
+dnl    Does not work for libraries which be built after configure time,
+dnl    so we deactivate it.
 dnl
-m4_ifval([$5],[dnl
-if test "x${[have_][$1]}" = "xyes"; then
-dnl AC_MSG_CHECKING([whether ][$2][ test link succeeds])
-LIBS_save="$LIBSS"
-LIBS="${[$1]_LIBS}"
-AC_TRY_LINK_FUNC([$5],[],[have_][$1][=no])
-LIBS="$LIBS_save"
-dnl AC_MSG_RESULT([${[have_][$1]}])
-fi
-])dnl
+dnl m4_ifval([$5],[dnl
+dnl if test "x${[have_][$1]}" = "xyes"; then
+dnl LIBS_save="$LIBSS"
+dnl LIBS="${[$1]_LIBS}"
+dnl AC_TRY_LINK_FUNC([$5],[],[have_][$1][=no])
+dnl LIBS="$LIBS_save"
+dnl fi
+dnl ])dnl
 dnl
 dnl Abort configure script if mandatory, but not found
 dnl
