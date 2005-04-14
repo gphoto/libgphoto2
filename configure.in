@@ -1,10 +1,14 @@
-dnl Process this file with autoconf to produce a configure script.
-AC_PREREQ(2.50)
-AC_INIT(libgphoto2/gphoto2.h)
-AM_CONFIG_HEADER(config.h)
-AM_INIT_AUTOMAKE(libgphoto2, 2.1.5head)
-AM_MAINTAINER_MODE
-AC_LIBTOOL_DLOPEN
+dnl Process this file with autoreconf to produce a configure script.
+AC_PREREQ(2.59)
+AC_INIT([libgphoto2], [2.1.5head], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
+AC_CONFIG_SRCDIR([libgphoto2/gphoto2.h])
+AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_MACRO_DIR([libgphoto2_port/m4])
+AM_INIT_AUTOMAKE([gnu 1.8 dist-bzip2])
+
+GP_CHECK_SHELL_ENVIRONMENT
+GP_CONFIG_MSG([Source code location],[${srcdir}])
+
 
 dnl ---------------------------------------------------------------------------
 dnl Versioning:
@@ -25,12 +29,50 @@ AC_SUBST(LIBGPHOTO2_CURRENT)
 LIBGPHOTO2_VERSION_INFO=`expr $LIBGPHOTO2_CURRENT + $LIBGPHOTO2_REVISION`:$LIBGPHOTO2_AGE:$LIBGPHOTO2_REVISION
 AC_SUBST(LIBGPHOTO2_VERSION_INFO)
 
+
+dnl Set up compiler options
+dnl "CPPFLAGS" concerns the C preprocessor, i.e. both C and C++ source code.
+dnl C only would be CFLAGS, C++ only CXXFLAGS
+AM_CPPFLAGS="$CPPFLAGS"
+
+AM_CPPFLAGS="$AM_CPPFLAGS -I\$(top_srcdir)"
+AM_CPPFLAGS="$AM_CPPFLAGS -I\$(top_srcdir)/libgphoto2_port/libgphoto2_port"
+AM_CPPFLAGS="$AM_CPPFLAGS -I\$(top_srcdir)/libgphoto2"
+AM_CPPFLAGS="$AM_CPPFLAGS -I\$(top_builddir)/libgphoto2"
+
+
+dnl ---------------------------------------------------------------------------
 dnl Checks for programs.
+dnl ---------------------------------------------------------------------------
+
 AC_PROG_CC
 AC_PROG_CPP
 AC_PROG_INSTALL
 
+dnl Something with the sequences is not quite alright yet.
+dnl SED is supposed to be set in AC_LIBTOOL_SETUP, but the
+dnl sequence seems to get mixed up.
+SED=${SED-sed}
+
+dnl check for/set up libtool and libltdl
+dnl AC_DISABLE_STATIC
+dnl AC_DISABLE_SHARED
+AC_LIBLTDL_CONVENIENCE([libltdl])
+AC_WITH_LTDL
+AC_LIBTOOL_WIN32_DLL
+AC_LIBTOOL_DLOPEN
+AC_PROG_LIBTOOL
+AC_SUBST([LTDLINCL])
+AC_SUBST([LIBLTDL])
+
+# report on compiler/libtool setup
+GP_CONFIG_MSG([Compiler],[${CC}])
+GP_CONFIG_MSG([libltdl includes],[$LTDLINCL])
+GP_CONFIG_MSG([libltdl library],[$LIBLTDL])
+GP_CONFIG_MSG()
+
 AC_DEFINE_UNQUOTED(HAVE_CC,"$CC",[The C compiler we're using])
+
 
 dnl ---------------------------------------------------------------------------
 dnl Reference definitions
@@ -39,44 +81,30 @@ dnl ---------------------------------------------------------------------------
 
 GP_REFERENCES()dnl
 
+
 dnl ---------------------------------------------------------------------------
 dnl i18n support (including some hacks)
 dnl ---------------------------------------------------------------------------
-dnl The following is a hack to get gphoto2 to build on gettext-0.10.35 
-dnl systems - BUILD_INCLUDED_LIBINTL is set only in gettext-0.10.37 which is
-dnl the gettext version provided with gphoto2.
-BUILD_INCLUDED_LIBINTL=no
-AC_SUBST(BUILD_INCLUDED_LIBINTL)
-dnl USE_INCLUDED_LIBINTL=no
-dnl AC_SUBST(USE_INCLUDED_LIBINTL)
 
 ALL_LINGUAS="da de es fr hu it ja nb ru sl sv uk zh_CN"
-# EVIL HACKS
-AC_MSG_CHECKING([for po/Makevars requiring evil hack])
-GETTEXT_PACKAGE="${PACKAGE}-${LIBGPHOTO2_CURRENT}"
-AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE",[The gettext domain we're using])
-AC_SUBST(GETTEXT_PACKAGE)
-if test -f po/Makevars.template
-then
-	sed \
-		-e "s/^DOMAIN.*/DOMAIN = ${GETTEXT_PACKAGE}/" \
-		-e "s/^MSGID_BUGS_ADDRESS.*/MSGID_BUGS_ADDRESS = ${MAIL_GPHOTO_TRANSLATION}/" \
-	< po/Makevars.template > po/Makevars
-	AC_MSG_RESULT([yes. done.])
-else
-	AC_MSG_RESULT([no])
-fi
-AM_GNU_GETTEXT
+GP_GETTEXT_HACK([${PACKAGE}-${LIBGPHOTO2_CURRENT}],[The gPhoto Team])
+AM_GNU_GETTEXT_VERSION([0.14.1])
+AM_GNU_GETTEXT([external])
+AM_PO_SUBDIRS()
+AM_ICONV()
 
-AC_CHECK_FUNC(gettext, gettext_without_libintl=true)
+dnl FIXME: We have to make sure this works first
+dnl AC_CHECK_FUNC(gettext, gettext_without_libintl=true)
 # same trick as with libdl:
 # if gettext() doesn't require linking against libintl,
 # we don't have to check for gettext in libintl. Otherwise
 # we may even require libintl.
-dnl AC_CHECK_LIB(intl, gettext, [LIBS="$LIBS -lintl"])
-if test "$gettext_without_libintl" != "true" -a "$USE_NLS" = "yes"; then
-        AC_CHECK_LIB(intl, gettext, [INTLLIBS="$INTLLIBS -lintl"])
-fi
+dnl if test "$gettext_without_libintl" != "true" -a "$USE_NLS" = "yes"; then
+dnl        AC_CHECK_LIB([intl], [gettext], [INTLLIBS="$INTLLIBS -lintl"])
+dnl fi
+
+AM_CPPFLAGS="$AM_CPPFLAGS -DLOCALEDIR=\\\"\$(datadir)/locale\\\""
+
 
 dnl ---------------------------------------------------------------------------
 dnl Turn on debugging and all warnings when using gcc
@@ -86,9 +114,17 @@ if test "$ac_cv_prog_gcc" = "yes"; then
 	LDFLAGS="$LDFLAGS -g -Wall"
 fi
 
+
+dnl ---------------------------------------------------------------------------
+dnl FIXME: What is this good for?
 dnl Replace `main' with a function in -libs:
+dnl ---------------------------------------------------------------------------
 AC_CHECK_LIB(ibs, main)
 
+
+dnl ---------------------------------------------------------------------------
+dnl check for libjpeg
+dnl ---------------------------------------------------------------------------
 LIBJPEG=""
 libjpeg_msg="no"
 AC_SUBST(LIBJPEG)
@@ -100,45 +136,23 @@ AC_CHECK_LIB(jpeg,jpeg_start_decompress,[
 	])
 ])
 
+
 dnl ---------------------------------------------------------------------------
 dnl Checks for header files.
 dnl ---------------------------------------------------------------------------
 AC_HEADER_DIRENT
+# before _HEADER_STDC
 AC_HEADER_STDC
+# after _HEADER_STDC
 AC_CHECK_HEADERS(getopt.h unistd.h mcheck.h)
-AC_INLINE
-AC_CONST
+AC_C_INLINE([])
+AC_C_CONST([])
+dnl FIXME: AC_STRUCT_TIMEZONE
+
 
 dnl ---------------------------------------------------------------------------
-dnl Check for libtool: lt_dlforeachfile has been introduced in 
-dnl		       libtool-1.4. However, there are still systems out
-dnl		       there running libtool-1.3. For those, we will need
-dnl		       dlopen. Note that on some systems (e.g. FreeBSD)
-dnl		       -ldl isn't needed.
+dnl more header/function/def checks
 dnl ---------------------------------------------------------------------------
-AC_PROG_LIBTOOL
-have_ltdl=false
-ltdl_msg="no"
-try_ltdl=false
-AC_ARG_WITH(ltdl, [  --with-ltdl             Use ltdl],[
-        if test x$withval = xyes; then
-		try_ltdl=true
-	fi])
-if $try_ltdl; then
-	AC_CHECK_LIB(ltdl, lt_dlforeachfile,[
-		AC_CHECK_HEADER(ltdl.h,[
-			AC_DEFINE(HAVE_LTDL,1,[whether we use libltdl])
-			LTDL_LIBS="-lltdl"
-			ltdl_msg="yes"
-			have_ltdl=true])])
-fi
-if ! $have_ltdl; then
-	AC_CHECK_FUNC(dlopen,,[
-		AC_CHECK_LIB(dl, dlopen,[LTDL_LIBS="-ldl"],[AC_ERROR([
-*** Could not determine how to handle
-*** shared libraries!])])])
-fi
-AC_SUBST(LTDL_LIBS)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_SIZE_T
@@ -151,13 +165,15 @@ AC_STRUCT_TM
 
 dnl Check for tm_gmtoff in struct tm
 AC_MSG_CHECKING([for tm_gmtoff in struct tm])
-AC_TRY_COMPILE([
+AC_COMPILE_IFELSE([dnl
+AC_LANG_PROGRAM([[
 #include <sys/types.h>
-#include <$ac_cv_struct_tm>], [struct tm tm; tm.tm_gmtoff;],
-AC_DEFINE(HAVE_TM_GMTOFF,1,[whether struct tm has tm_gmtoff field])
-AC_MSG_RESULT(yes),
+#include <$ac_cv_struct_tm>]], [[struct tm tm; tm.tm_gmtoff;]])],[AC_DEFINE(HAVE_TM_GMTOFF,1,whether struct tm has tm_gmtoff field)
+AC_MSG_RESULT(yes)
+],[
 AC_MSG_RESULT(no)
-)
+])
+
 
 dnl Create a stdint.h-like file containing size-specific integer definitions
 dnl that will always be available
@@ -166,26 +182,77 @@ AX_NEED_STDINT_H(libgphoto2/_stdint.h)
 dnl Create a header file containing NetBSD-style byte swapping macros
 AC_NEED_BYTEORDER_H(libgphoto2/gphoto2-endian.h)
 
-dnl Solaris hack for grep and tr
-[
-if test -n "`echo $host_os | grep '[sS]olaris'`"; then
-  TR=/usr/xpg4/bin/tr
-  GREP=/usr/xpg4/bin/grep  
-else
-  TR=tr
-  GREP=grep
-fi
-]
 
 dnl ---------------------------------------------------------------------------
-dnl camlib directory
+dnl Find out how to dynamically load modules
+dnl FIXME: do we really need this? The libltdl convenience lib should do
+dnl        that for us, right?
 dnl ---------------------------------------------------------------------------
-AC_MSG_CHECKING(where to install camlibs)
-AC_ARG_WITH(camlibdir,
-  [  --with-camlibdir=<path>   install camlibs in directory <path> ],
-  camlibdir="$withval", camlibdir='${libdir}/gphoto2/${VERSION}')
-AC_MSG_RESULT("$camlibdir")
-AC_SUBST(camlibdir)
+dnl GP_DYNAMIC_LIBRARIES
+
+
+dnl Old libtool stuff left here for reference purposes. For now.
+dnl dnl ---------------------------------------------------------------------------
+dnl dnl Check for libtool: lt_dlforeachfile has been introduced in 
+dnl dnl		       libtool-1.4. However, there are still systems out
+dnl dnl		       there running libtool-1.3. For those, we will need
+dnl dnl		       dlopen. Note that on some systems (e.g. FreeBSD)
+dnl dnl		       -ldl isn't needed.
+dnl dnl ---------------------------------------------------------------------------
+dnl AC_PROG_LIBTOOL
+dnl have_ltdl=false
+dnl ltdl_msg="no"
+dnl try_ltdl=false
+dnl AC_ARG_WITH(ltdl, [  --with-ltdl             Use ltdl],[
+dnl         if test x$withval = xyes; then
+dnl 		try_ltdl=true
+dnl 	fi])
+dnl if $try_ltdl; then
+dnl 	AC_CHECK_LIB(ltdl, lt_dlforeachfile,[
+dnl 		AC_CHECK_HEADER(ltdl.h,[
+dnl 			AC_DEFINE(HAVE_LTDL,1,[whether we use libltdl])
+dnl 			LTDL_LIBS="-lltdl"
+dnl 			ltdl_msg="yes"
+dnl 			have_ltdl=true])])
+dnl fi
+dnl if ! $have_ltdl; then
+dnl 	AC_CHECK_FUNC(dlopen,,[
+dnl 		AC_CHECK_LIB(dl, dlopen,[LTDL_LIBS="-ldl"],[AC_ERROR([
+dnl *** Could not determine how to handle
+dnl *** shared libraries!])])])
+dnl fi
+dnl AC_SUBST(LTDL_LIBS)
+
+
+dnl should be obsolete (we're not using grep and tr any more)
+dnl dnl Solaris hack for grep and tr
+dnl [
+dnl if test -n "`echo $host_os | grep '[sS]olaris'`"; then
+dnl   TR=/usr/xpg4/bin/tr
+dnl   GREP=/usr/xpg4/bin/grep  
+dnl else
+dnl   TR=tr
+dnl   GREP=grep
+dnl fi
+dnl ]
+
+
+dnl ---------------------------------------------------------------------------
+dnl camlib installation directory
+dnl ---------------------------------------------------------------------------
+AC_MSG_CHECKING([where to install camlibs])
+AC_ARG_WITH([camlibdir],[dnl
+	AS_HELP_STRING([--with-camlibdir=<path>],
+			[install camlibs in directory <path>])
+],[
+	camlibdir="$withval"
+],[
+	camlibdir='$(libdir)/$(PACKAGE_TARNAME)/$(PACKAGE_VERSION)'
+])
+AC_MSG_RESULT([${camlibdir}])
+AC_SUBST([camlibdir])
+AM_CPPFLAGS="$AM_CPPFLAGS -DCAMLIBS=\\\"\$(camlibdir)\\\""
+
 
 dnl ---------------------------------------------------------------------------
 dnl Camera drivers
@@ -237,46 +304,26 @@ dnl
 GP_CAMLIBS_DEFINE()dnl
 
 
-dnl ************************************************************
-dnl find out where to install documentation files
-dnl ************************************************************
+dnl --------------------------------------------------------------------
+dnl documentation
+dnl --------------------------------------------------------------------
 GP_CHECK_DOC_DIR()dnl
-
-dnl ********
-dnl build docs?
-dnl ********
 GP_BUILD_GTK_DOCS()dnl
 
-dnl ************************************************************
-dnl initialize packaging
-dnl ************************************************************
+
+dnl --------------------------------------------------------------------
+dnl initialize convenience packaging
+dnl --------------------------------------------------------------------
 GPKG_CHECK_RPM()dnl Check wether to package for a system using RPM
 GPKG_CHECK_LINUX()dnl Check wether to package for a linux system
 
-dnl ---------------------------------------------------------------------------
-dnl pkg-config: pkg-config is a tool to simplify checks for libraries and
-dnl             versions. I really think this is a good thing and therefore
-dnl             use it here. However, if pkg-config is not installed,
-dnl             we offer alternative checks, too.
-dnl ---------------------------------------------------------------------------
-pkgconfig_msg="no (http://www.freedesktop.org/software/pkgconfig)"
-try_pkgconfig=true
-have_pkgconfig=false
-AC_ARG_WITH(pkgconfig, [  --without-pkgconfig       Don't use pkg-config],[
-	if test x$withval = xno; then
-		try_pkgconfig=false
-		pkgconfig_msg="no (not requested)"
-	fi])
-if $try_pkgconfig; then
-	AC_PATH_PROG(PKG_CONFIG,pkg-config)
-	if test -n "${PKG_CONFIG}"; then
-		have_pkgconfig=true
-		pkgconfig_msg="yes"
-	fi
-fi
-# guessing directory to install *.pc into
+
+dnl --------------------------------------------------------------------
+dnl guess directory to install *.pc into
+dnl --------------------------------------------------------------------
 pkgconfigdir='${libdir}/pkgconfig'
 AC_SUBST(pkgconfigdir)
+
 
 dnl ---------------------------------------------------------------------------
 dnl libexif: The CameraFilesystem can use libexif for extracting thumbnails
@@ -285,61 +332,38 @@ dnl	     a file.
 dnl	     libexif is available from
 dnl	     http://www.sourceforge.net/projects/libexif
 dnl ---------------------------------------------------------------------------
-exif_msg="no (http://www.sourceforge.net/projects/libexif)"
-try_exif=true
-have_exif=false
-AC_ARG_WITH(exif, [  --without-exif            Don't use libexif],[
-	if test x$withval = xno; then
-		try_exif=false
-		exif_msg="no (not requested)"
-	fi])
-if test "x$prefix" = xNONE; then
-	exif_prefix=$ac_default_prefix
-else
-	exif_prefix=$prefix
-fi
-AC_ARG_WITH(exif-prefix, [  --with-exif-prefix=PREFIX Location of libexif],[
-	exif_prefix="$withval"]) 
-if $try_exif; then
-	if $have_pkgconfig; then
-		AC_MSG_CHECKING([for libexif using pkg-config])
-		if ${PKG_CONFIG} --exists libexif > /dev/null 2>&1; then
-			EXIF_CFLAGS=`$PKG_CONFIG --cflags libexif`
-			EXIF_LIBS=`$PKG_CONFIG --libs libexif`
-			have_exif=true
-			libexif_version=`${PKG_CONFIG} --modversion libexif`
-			libexif_prefix=`${PKG_CONFIG} --variable=prefix libexif`
-			exif_msg="yes (version ${libexif_version} from ${libexif_prefix})"
-			AC_DEFINE(HAVE_EXIF,1,[whether we use libexif])
-		fi
-		AC_MSG_RESULT($exif_msg)
-	else
-		CPPFLAGS_save="$CPPFLAGS"
-		CPPFLAGS="-I$exif_prefix/include/libexif -I$exif_prefix/include $CPPFLAGS"
-		AC_CHECK_HEADER(exif-data.h, [
-			EXIF_CFLAGS="-I$exif_prefix/include -I$exif_prefix/include/libexif"
-			EXIF_LIBS="-L$exif_prefix/lib -lexif"
-			have_exif=true
-			exif_msg="yes (unknown version from standard location)" 
-			AC_DEFINE(HAVE_EXIF,1,[whether we use libexif])])
-	fi
-        if $have_exif; then
-                CPPFLAGS_save="$CPPFLAGS"
-                CPPFLAGS=$EXIF_CFLAGS
-                AC_CHECK_HEADER([exif-ifd.h], [
-                        exif_msg="${exif_msg}, (>= 0.5.4)"
-                        AC_DEFINE(HAVE_EXIF_0_5_4,1,[whether we use a version of libexif greater than 0.5.3])])
-                CPPFLAGS="$CPPFLAGS_save"
-        fi
-fi
-AM_CONDITIONAL(HAVE_EXIF, $have_exif)
-AC_SUBST(EXIF_CFLAGS)
-AC_SUBST(EXIF_LIBS)
+GP_CHECK_LIBRARY([LIBEXIF],[libexif],[],
+		 [libexif/exif-data.h],[exif_data_new],[
+# Check for libexif version
+dnl FIXME: Use AC_CHECK_MEMBER?
+CPPFLAGS_save="$CPPFLAGS"
+CPPFLAGS="$LIBEXIF_CFLAGS"
+AC_TRY_COMPILE([
+/* CC=$CC */
+/* CPPFLAGS=${CPPFLAGS} */
+/* LDFLAGS=${LDFLAGS} */
+#include <libexif/exif-data.h>
+#include <libexif/exif-content.h>
+],[
+	ExifData ed;
+	ExifContent *ec0, *ec1;
+	ec0 = &ed.ifd[0];
+	ec1 = &ed.ifd[1];
+],[dnl
+	AC_DEFINE([HAVE_LIBEXIF_IFD],1,
+		[whether we use a version of libexif with ExifData.ifd[[]]])
+])
+CPPFLAGS="$CPPFLAGS_save"
+],[],[default-on],[http://www.sourceforge.net/projects/libexif])dnl
 
 
+dnl ---------------------------------------------------------------------------
 dnl Check libusb
+dnl FIXME: What for?
+dnl ---------------------------------------------------------------------------
 AC_PATH_PROG(LIBUSB_CONFIG,libusb-config)
 AM_CONDITIONAL(HAVE_LIBUSB,test -n "${LIBUSB_CONFIG}")
+
 
 dnl ---------------------------------------------------------------------------
 dnl /proc/meminfo: If the meminfo /proc entry is available, we use it
@@ -378,12 +402,39 @@ AC_TRY_COMPILE([
 	AC_MSG_RESULT(no)
 )
 
-dnl ---------------------------------------------------------------------------
-dnl Configure libgphoto2-port
-dnl ---------------------------------------------------------------------------
-AC_CONFIG_SUBDIRS(libgphoto2_port)
 
-AC_OUTPUT([
+dnl ---------------------------------------------------------------------------
+dnl Turn on debugging and all warnings when using gcc
+dnl ---------------------------------------------------------------------------
+if test "$ac_cv_c_compiler_gnu" = "yes"; then
+	AM_CPPFLAGS="$AM_CPPFLAGS -g -Wall -Wmissing-declarations -Wmissing-prototypes"
+	AM_LDFLAGS="$AM_LDFLAGS -g -Wall"
+fi
+
+AC_SUBST([AM_CPPFLAGS])
+AC_SUBST([AM_LDFLAGS])
+
+
+dnl ---------------------------------------------------------------------------
+dnl Configure subprojects
+dnl ---------------------------------------------------------------------------
+if test -d "$srcdir/libgphoto2_port"; then
+	AC_CONFIG_SUBDIRS([libgphoto2_port])
+else
+	AC_MSG_ERROR([
+*** Hey, where have you hidden my libgphoto2_port?
+*** I needed that!
+])
+fi
+
+GP_CONFIG_MSG()dnl
+GP_CONFIG_MSG([Subprojects],[${subdirs}])dnl
+
+
+# ---------------------------------------------------------------------------
+# Create output files
+# ---------------------------------------------------------------------------
+AC_CONFIG_FILES([
 README
 Makefile
 camlibs/Makefile
@@ -450,6 +501,7 @@ packaging/rpm/package.spec
 doc/Makefile
 doc/api/Makefile
 ])
+AC_OUTPUT
 
 GP_CAMLIBS_CHECK_SUBDIRS
 
@@ -462,31 +514,15 @@ then
         echo "***********************************************************"
 fi
 
-echo "
-
-Configuration (libgphoto2):
-
-	Source code location:      ${srcdir}
-	Version:                   ${VERSION}
-	Compiler:                  ${CC}
-
-	Build API documentation:   $gtkdoc_msg
-	pkg-config:                $pkgconfig_msg
-	EXIF support:              $exif_msg
-	JPEG mangling support:     $libjpeg_msg
-	Use ltdl.h:                $ltdl_msg
-	/proc/meminfo:             $proc_meminfo_msg
-"
-#	Build User's Manual:       $manual_msg
-
 GP_CONFIG_OUTPUT
 
 echo "
 
 Please check whether the configuration I detected matches what you
 would like to have. E.g. make sure that USB support is there if you
-intend to use USB cameras with $PACKAGE.
+intend to use USB cameras with $PACKAGE_NAME.
 
-Please also check that PKG_CONFIG_PATH contains ${pkgconfigdir} 
+Please also check that PKG_CONFIG_PATH contains
+    ${pkgconfigdir} 
 before compiling any libgphoto2 frontend.
 "
