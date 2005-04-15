@@ -249,6 +249,11 @@ AC_MSG_RESULT([${camlibdir}])
 AC_SUBST([camlibdir])
 AM_CPPFLAGS="$AM_CPPFLAGS -DCAMLIBS=\\\"\$(camlibdir)\\\""
 
+CAMLIB_LDFLAGS="-module -no-undefined -avoid-version -export-dynamic"
+CAMLIB_LDFLAGS="$CAMLIB_LDFLAGS -export-symbols \$(top_srcdir)/camlibs/camlib.sym"
+AC_SUBST([CAMLIB_LDFLAGS],[${CAMLIB_LDFLAGS}])
+AC_SUBST([CAMLIB_LIBS],["\$(top_builddir)/libgphoto2/libgphoto2.la"])
+
 
 dnl ---------------------------------------------------------------------------
 dnl Camera drivers (camlibs)
