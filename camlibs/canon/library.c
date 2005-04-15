@@ -98,7 +98,7 @@ extern long int timezone;
  */
 int camera_id (CameraText *id)
 {
-	GP_DEBUG ("camera_id()");
+	/* GP_DEBUG ("camera_id()"); */
 
 	strcpy (id->text, "canon");
 
@@ -157,7 +157,7 @@ camera_abilities (CameraAbilitiesList *list)
 	int i;
 	CameraAbilities a;
 
-	GP_DEBUG ("camera_abilities()");
+	/* GP_DEBUG ("camera_abilities()"); */
 
 	for (i = 0; models[i].id_str; i++) {
 		memset (&a, 0, sizeof (a));
@@ -565,7 +565,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 				GP_DEBUG (_("%s is a file type for which no thumbnail is provided"),canon_path);
 				return (GP_ERROR_NOT_SUPPORTED);
 			}
-#ifdef HAVE_EXIF
+#ifdef HAVE_LIBEXIF
 			/* Check if we have libexif, it is a jpeg file
 			 * and it is not a PowerShot Pro 70 (which
 			 * does not support EXIF), return not
@@ -579,7 +579,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 					return (GP_ERROR_NOT_SUPPORTED);
 				}
 			}
-#endif /* HAVE_EXIF */
+#endif /* HAVE_LIBEXIF */
 			if (*thumbname == '\0') {
 				/* file internal thumbnail */
 				ret = canon_int_get_thumbnail (camera, canon_path, &data,
@@ -592,7 +592,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			break;
 
 		case GP_FILE_TYPE_EXIF:
-#ifdef HAVE_EXIF
+#ifdef HAVE_LIBEXIF
 			/* the PowerShot Pro 70 does not support EXIF */
 			if (camera->pl->md->model == CANON_CLASS_2)
 				return (GP_ERROR_NOT_SUPPORTED);
@@ -616,7 +616,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 #else
 			GP_DEBUG ("get_file_func: EXIF file type requested but no libexif");
 			return (GP_ERROR_NOT_SUPPORTED);
-#endif /* HAVE_EXIF */
+#endif /* HAVE_LIBEXIF */
 			break;
 
 		default:
@@ -687,12 +687,12 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			gp_file_set_data_and_size (file, data, datalen);
 			gp_file_set_name (file, filename);
 			break;
-#ifdef HAVE_EXIF
+#ifdef HAVE_LIBEXIF
 		case GP_FILE_TYPE_EXIF:
 			gp_file_set_mime_type (file, GP_MIME_JPEG);
 			gp_file_set_data_and_size (file, data, datalen);
 			break;
-#endif /* HAVE_EXIF */
+#endif /* HAVE_LIBEXIF */
 		default:
 			/* this case should've been caught above anyway */
 			if (data)

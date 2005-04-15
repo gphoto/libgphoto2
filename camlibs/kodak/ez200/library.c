@@ -76,7 +76,7 @@ camera_abilities (CameraAbilitiesList *list)
     	int i;    
     	CameraAbilities a;
 
-	GP_DEBUG("Begin_Abilities");
+	/* GP_DEBUG("Begin_Abilities"); */
 
     	for (i = 0; models[i].name; i++) {
         	memset (&a, 0, sizeof(a));
@@ -95,7 +95,7 @@ camera_abilities (CameraAbilitiesList *list)
        		gp_abilities_list_append (list, a);
     	}
 	
-	GP_DEBUG("End_Abilities");
+	/* GP_DEBUG("End_Abilities"); */
 	
     	return GP_OK;
 }

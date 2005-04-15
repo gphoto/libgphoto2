@@ -30,6 +30,8 @@
 
 #ifdef HAVE_LTDL
 #include <ltdl.h>
+#else
+#error libltdl required!
 #endif
 
 #include "gphoto2-port-result.h"
@@ -66,11 +68,7 @@ struct _GPPortPrivateCore {
 
 	GPPortInfo info;
 	GPPortOperations *ops;
-#ifdef HAVE_LTDL
 	lt_dlhandle lh;
-#else
-	void *lh; /* Library handle */
-#endif
 };
 
 /**
@@ -156,15 +154,10 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
 		port->pc->ops = NULL;
 	}
 	if (port->pc->lh) {
-#ifdef HAVE_LTDL
 		lt_dlclose (port->pc->lh);
 		lt_dlexit ();
-#else
-		GP_SYSTEM_DLCLOSE (port->pc->lh);
-#endif
 	}
 
-#ifdef HAVE_LTDL
 	lt_dlinit ();
 	port->pc->lh = lt_dlopenext (info.library_filename);
 	if (!port->pc->lh) {
@@ -174,35 +167,15 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
 		lt_dlexit ();
 		return (GP_ERROR_LIBRARY);
 	}
-#else
-	port->pc->lh = GP_SYSTEM_DLOPEN (info.library_filename);
-	if (!port->pc->lh) {
-		gp_log (GP_LOG_ERROR, "gphoto2-port", _("Could not load "
-			"'%s' ('%s')"), info.library_filename,
-			GP_SYSTEM_DLERROR ());
-		return (GP_ERROR_LIBRARY);
-	}
-#endif
 
 	/* Load the operations */
-#ifdef HAVE_LTDL
 	ops_func = lt_dlsym (port->pc->lh, "gp_port_library_operations");
-#else
-	ops_func = GP_SYSTEM_DLSYM (port->pc->lh, "gp_port_library_operations");
-#endif
 	if (!ops_func) {
-#ifdef HAVE_LTDL
 		gp_log (GP_LOG_ERROR, "gphoto2-port", _("Could not find "
 			"'gp_port_library_operations' in '%s' ('%s')"),
 			info.library_filename, lt_dlerror ());
 		lt_dlclose (port->pc->lh);
 		lt_dlexit ();
-#else
-		gp_log (GP_LOG_ERROR, "gphoto2-port", _("Could not find "
-			"'gp_port_library_operations' in '%s' ('%s')"),
-			info.library_filename, GP_SYSTEM_DLERROR ());
-		GP_SYSTEM_DLCLOSE (port->pc->lh);
-#endif
 		port->pc->lh = NULL;
 		return (GP_ERROR_LIBRARY);
 	}
@@ -333,12 +306,8 @@ gp_port_free (GPPort *port)
 		}
 
 		if (port->pc->lh) {
-#ifdef HAVE_LTDL
 			lt_dlclose (port->pc->lh);
 			lt_dlexit ();
-#else
-		        GP_SYSTEM_DLCLOSE (port->pc->lh);
-#endif
 			port->pc->lh = NULL;
 		}
 

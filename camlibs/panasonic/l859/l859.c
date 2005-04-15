@@ -340,7 +340,7 @@ static int l859_readimageblock(Camera *camera, int block, char *buffer) {
 
 int camera_id (CameraText *id) {
 
-	GP_DEBUG ("Camera ID");
+	/* GP_DEBUG ("Camera ID"); */
 
 	strcpy(id->text, "panasonic-l859");
 

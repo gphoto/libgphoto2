@@ -115,7 +115,7 @@ camera_abilities (CameraAbilitiesList *list)
 	char *ptr;
 	int   x = 0;
 
-	GP_DEBUG(" * camera_abilities()");
+	/* GP_DEBUG(" * camera_abilities()"); */
 
 	ptr = models[x].model;
 	while (ptr) {

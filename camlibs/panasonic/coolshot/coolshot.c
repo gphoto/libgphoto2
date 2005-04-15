@@ -68,7 +68,7 @@ struct _CameraPrivateLibrary {
 
 int camera_id (CameraText *id)
 {
-	GP_DEBUG ("* camera_id");
+	/* GP_DEBUG ("* camera_id"); */
 
 	strcpy (id->text, "coolshot");
 
@@ -81,7 +81,7 @@ int camera_abilities (CameraAbilitiesList *list)
 	char *ptr;
 	CameraAbilities a;
 
-	GP_DEBUG ("* camera_abilities");
+	/* GP_DEBUG ("* camera_abilities"); */
 
 	ptr = coolshot_cameras[x++];
 	while (*ptr) {

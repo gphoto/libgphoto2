@@ -35,7 +35,7 @@ const char **gp_port_library_version(GPVersionVerbosity verbose)
 #else
 			"unknown cc",
 #endif
-#ifdef HAVE_USB
+#ifdef HAVE_LIBUSB
 			"USB",
 #else
 			"no USB",
@@ -58,11 +58,6 @@ const char **gp_port_library_version(GPVersionVerbosity verbose)
 #else
 			"no serial",
 #endif
-#ifdef HAVE_LTDL
-			"ltdl",
-#else
-			"no ltdl",
-#endif
 			NULL
 		};
 	static const char *verb[] =
@@ -73,8 +68,10 @@ const char **gp_port_library_version(GPVersionVerbosity verbose)
 #else
 			"unknown (C compiler used)",
 #endif
-#ifdef HAVE_USB
-			"USB (for USB cameras)",
+#ifdef HAVE_LIBUSB_WIN32
+			"USB (libusb-win32, for USB cameras)",
+#elif defined(HAVE_LIBUSB)
+			"USB (libusb, for USB cameras)",
 #else
 			"no USB (for USB cameras)",
 #endif
@@ -102,11 +99,6 @@ const char **gp_port_library_version(GPVersionVerbosity verbose)
 			"lockdev (serial port locking)",
 #else
 			"no lockdev (serial port locking)",
-#endif
-#ifdef HAVE_LTDL
-			"ltdl (hopefully with non-buggy libltdl :-)",
-#else
-			"no ltdl (working around buggy libltdl, eh? :-)",
 #endif
 			NULL
 		};

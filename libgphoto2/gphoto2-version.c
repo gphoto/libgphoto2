@@ -36,15 +36,10 @@ const char **gp_library_version(GPVersionVerbosity verbose)
 #else
 			"unknown cc",
 #endif
-#ifdef HAVE_EXIF
+#ifdef HAVE_LIBEXIF
 			"EXIF",
 #else
 			"no EXIF",
-#endif
-#ifdef HAVE_LTDL
-			"ltdl",
-#else
-			"no ltdl",
 #endif
 #ifdef HAVE_PROCMEMINFO
 			"/proc/meminfo",
@@ -61,15 +56,10 @@ const char **gp_library_version(GPVersionVerbosity verbose)
 #else
 			"unknown (C compiler used)",
 #endif
-#ifdef HAVE_EXIF
+#ifdef HAVE_LIBEXIF
 			"EXIF (for special handling of EXIF files)",
 #else
 			"no EXIF (for special handling of EXIF files)",
-#endif
-#ifdef HAVE_LTDL
-			"ltdl (hopefully with non-buggy libltdl :-)",
-#else
-			"no ltdl (working around buggy libltdl, eh? :-)",
 #endif
 #ifdef HAVE_PROCMEMINFO
 			"/proc/meminfo (adapts cache size to memory available)",

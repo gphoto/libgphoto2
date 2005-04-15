@@ -27,7 +27,7 @@
 #include <utime.h>
 #include <unistd.h>
 
-#ifdef HAVE_EXIF
+#ifdef HAVE_LIBEXIF
 #include <libexif/exif-data.h>
 #endif
 
@@ -432,11 +432,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 #ifdef DEBUG
 	unsigned int i, id;
 #endif
-#ifdef HAVE_EXIF
+#ifdef HAVE_LIBEXIF
 	ExifData *data;
 	unsigned char *buf;
 	unsigned int buf_len;
-#endif /* HAVE_EXIF */
+#endif /* HAVE_LIBEXIF */
 
 	if (strlen (folder) == 1)
 		snprintf (path, sizeof (path), "/%s", filename);
@@ -452,7 +452,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		result = gp_file_open (file, path);
 		break;
 #endif
-#ifdef HAVE_EXIF
+#ifdef HAVE_LIBEXIF
 	case GP_FILE_TYPE_EXIF:
 		data = exif_data_new_from_file (path);
 		if (!data) {
@@ -464,7 +464,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		exif_data_unref (data);
 		gp_file_set_data_and_size (file, buf, buf_len);
 		return (GP_OK);
-#endif /* HAVE_EXIF */
+#endif /* HAVE_LIBEXIF */
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
 	}

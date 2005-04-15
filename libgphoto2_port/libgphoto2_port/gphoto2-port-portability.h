@@ -32,12 +32,6 @@ typedef struct {
 /* Sleep functionality */
 #define	GP_SYSTEM_SLEEP(_ms)		Sleep(_ms)
 
-/* Dynamic library functions */
-#define GP_SYSTEM_DLOPEN(_filename)		LoadLibrary(_filename)
-#define GP_SYSTEM_DLSYM(_handle, _funcname)	GetProcAddress(_handle, _funcname)
-#define GP_SYSTEM_DLCLOSE(_handle)		FreeLibrary(_handle)
-#define GP_SYSTEM_DLERROR()			"Windows Error"
-
 /* Directory-oriented functions */
 #define GP_SYSTEM_DIR		        GPPORTWINDIR *
 #define GP_SYSTEM_DIRENT		WIN32_FIND_DATA *
@@ -60,17 +54,6 @@ typedef struct {
 
 /* Sleep functionality */
 #define	GP_SYSTEM_SLEEP(_ms)		usleep((_ms)*1000)
-
-/* Dynamic library functions */
-#define GP_SYSTEM_DLOPEN(_filename)		dlopen(_filename, RTLD_LAZY)
-#if defined(__APPLE__) && !defined(HAVE_LTDL)
- 	/* Darwin prepends underscores to symbols, but not with ltdl. */
-#define GP_SYSTEM_DLSYM(_handle, _funcname)	dlsym(_handle, "_" _funcname) 
-#else
-#define GP_SYSTEM_DLSYM(_handle, _funcname)	dlsym(_handle, _funcname)
-#endif
-#define GP_SYSTEM_DLCLOSE(_handle)	        dlclose(_handle)
-#define GP_SYSTEM_DLERROR()		        dlerror()
 
 /* Directory-oriented functions */
 #define GP_SYSTEM_DIR                   DIR *

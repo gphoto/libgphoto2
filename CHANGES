@@ -1,5 +1,15 @@
 ----------------------------------------------------------------------------
-libgphoto2 CVS HEAD
+libgphoto2 CVS HEAD (2.2)
+
+Build system (packagers beware!):
+
+   * now requires libltdl
+   * works with contemporary build tools
+   * new ./configure parameter set
+     
+
+----------------------------------------------------------------------------
+libgphoto2 2.1.6
 
 General libgphoto2 features:
 
