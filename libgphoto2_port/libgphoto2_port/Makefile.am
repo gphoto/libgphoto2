@@ -1,6 +1,6 @@
 lib_LTLIBRARIES = libgphoto2_port.la
 
-libgphoto2_port_la_CPPFLAGS =
+libgphoto2_port_la_CPPFLAGS = \
 	$(LTDLINCL)					\
 	$(AM_CPPFLAGS) $(CPPFLAGS)
 

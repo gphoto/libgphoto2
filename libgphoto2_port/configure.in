@@ -56,12 +56,17 @@ AC_SUBST([LTDLINCL])
 AC_SUBST([LIBLTDL])
 
 # report on compiler/libtool setup
+GP_CONFIG_MSG([Build])
+GP_CONFIG_MSG([Source directory],[${srcdir}])
 GP_CONFIG_MSG([Compiler],[${CC}])
 GP_CONFIG_MSG([libltdl includes],[$LTDLINCL])
 GP_CONFIG_MSG([libltdl library],[$LIBLTDL])
-GP_CONFIG_MSG()
 
 AC_DEFINE_UNQUOTED(HAVE_CC,"$CC",[The C compiler we're using])
+
+AM_CPPFLAGS="$CPPFLAGS"
+AM_CPPFLAGS="$AM_CPPFLAGS -I\$(top_srcdir)"
+AM_CPPFLAGS="$AM_CPPFLAGS -I\$(top_srcdir)/libgphoto2_port"
 
 
 dnl ---------------------------------------------------------------------------
@@ -82,6 +87,10 @@ AM_GNU_GETTEXT_VERSION([0.14.1])
 AM_GNU_GETTEXT([external])
 AM_PO_SUBDIRS()
 AM_ICONV()
+GP_GETTEXT_FLAGS()
+
+AC_SUBST([localedir],["\$(datadir)/locale"])
+AM_CPPFLAGS="$AM_CPPFLAGS -DLOCALEDIR=\\\"${localedir}\\\""
 
 AC_CHECK_FUNC(gettext, gettext_without_libintl=true)
 # same trick as with libdl in libgphoto2:
@@ -168,11 +177,11 @@ if $have_serial; then
 	IOLIB_SUBDIRS="$IOLIB_SUBDIRS serial"
 	AC_DEFINE([HAVE_SERIAL],1,[Whether you have serial support enabled])
 fi
+GP_CONFIG_MSG([Serial ports])
 GP_CONFIG_MSG([Serial support],[$serial_msg])
 
+SERIAL_LIBS=""
 if $have_serial; then
-
-GP_CONFIG_MSG([Serial locking mechanisms])
 
 dnl -----------------------------------------
 dnl Serial port locking: We try to use either
@@ -196,7 +205,6 @@ GP_SERLOCK([baudboy])dnl
 GP_SERLOCK([ttylock])dnl
 GP_SERLOCK([lockdev])dnl
 GP_SERLOCK([resmgr])dnl
-SERIAL_LIBS=""
 
 resmgr_msg=no
 if $try_resmgr; then
@@ -208,7 +216,7 @@ if $try_resmgr; then
 		])
 	)
 fi
-GP_CONFIG_MSG([Using resmgr],[${resmgr_msg}])
+GP_CONFIG_MSG([resmgr locking],[${resmgr_msg}])
 	
 baudboy_msg=no
 if $try_baudboy; then
@@ -219,7 +227,7 @@ if $try_baudboy; then
 		AC_DEFINE(HAVE_BAUDBOY,1,[Define if you have Baudboy serial locking.])
 	)
 fi
-GP_CONFIG_MSG([Using baudboy],[${baudboy_msg}])
+GP_CONFIG_MSG([baudboy locking],[${baudboy_msg}])
 
 ttylock_msg=no
 if $try_ttylock; then
@@ -244,7 +252,7 @@ if $try_ttylock; then
 		)
 	)
 fi
-GP_CONFIG_MSG([Using ttylock],[${ttylock_msg}])
+GP_CONFIG_MSG([ttylock locking],[${ttylock_msg}])
 
 lockdev_msg=no
 if $try_lockdev; then
@@ -258,7 +266,7 @@ if $try_lockdev; then
 		]
 	)
 fi
-GP_CONFIG_MSG([Using lockdev],[${lockdev_msg}])
+GP_CONFIG_MSG([lockdev locking],[${lockdev_msg}])
 
 fi # have_serial
 
@@ -267,9 +275,14 @@ AC_SUBST([SERIAL_LIBS])
 dnl ---------------------------------------------------------------------------
 dnl libusb
 dnl ---------------------------------------------------------------------------
-GP_CHECK_LIBRARY([LIBUSB],[libusb],[>= 0.1.5],[usb.h],[usb_busses],[
+GP_CONFIG_MSG([USB ports])
+GP_CHECK_LIBRARY([LIBUSB],[libusb],[>= 0.1.5],
+		[usb.h],[usb_busses],[
 	IOLIB_SUBDIRS="$IOLIB_SUBDIRS usb"
-],[],[http://libusb.sourceforge.net/])
+],[],
+		[default-on],
+		[http://libusb.sourceforge.net/]
+)
 
 
 # ----------------------------------------------------------------------
@@ -278,7 +291,7 @@ GP_CHECK_LIBRARY([LIBUSB],[libusb],[>= 0.1.5],[usb.h],[usb_busses],[
 
 AC_SUBST(IOLIB_SUBDIRS)
 AC_SUBST([iolibdir],["\$(libdir)/\$(PACKAGE_TARNAME)/\$(VERSION)"])
-AM_CPFLAGS="$AM_CPPFLAGS -DIOLIBS=\\\"${iolibdir}\\\""
+AM_CPPFLAGS="$AM_CPPFLAGS -DIOLIBS=\\\"${iolibdir}\\\""
 
 
 dnl ----------------------------------------------------------------------
@@ -304,6 +317,7 @@ AC_ARG_ENABLE([debug],
 # ----------------------------------------------------------------------
 # gtk-doc?
 # ----------------------------------------------------------------------
+GP_CONFIG_MSG([Documentation])
 GP_CHECK_DOC_DIR()dnl
 GP_BUILD_GTK_DOCS()dnl
 
@@ -315,6 +329,25 @@ GP_BUILD_GTK_DOCS()dnl
 GP_REFERENCES()dnl
 
 
+dnl ---------------------------------------------------------------------------
+dnl Turn on all warnings when using gcc
+dnl ---------------------------------------------------------------------------
+if test "$GCC" = "yes"; then
+	AM_CPPFLAGS="$AM_CPPFLAGS -Wall"
+	AM_CPPFLAGS="$AM_CPPFLAGS -Wmissing-declarations -Wmissing-prototypes"
+	AM_LDFLAGS="$AM_LDFLAGS -Wall"
+	# FIXME: Check for --enable-debug here
+	AM_CPPFLAGS="$AM_CPPFLAGS -g"
+	AM_LDFLAGS="$AM_LDFLAGS -g"
+fi
+
+AC_SUBST([AM_CPPFLAGS])
+AC_SUBST([AM_LDFLAGS])
+
+
+# ---------------------------------------------------------------------------
+# Create output files
+# ---------------------------------------------------------------------------
 AC_CONFIG_FILES([
 Makefile
 po/Makefile.in
@@ -327,25 +360,6 @@ doc/Makefile
 m4/Makefile
 ])
 AC_OUTPUT
-
-echo "
-
-Configuration (libgphoto2_port)
-
-	Source code location:    ${srcdir}
-	Compiler:                ${CC}
-
-	SERIAL support:          $serial_msg
-
-	Locking mechanism (for serial ports):
-	Use resmgr:              $resmgr_msg
-	Use baudboy:             $baudboy_msg
-	Use ttylock:             $ttylock_msg
-	Use lockdev:             $lockdev_msg
-
-	Build API documentation: $gtkdoc_msg
-	Use ltdl.h:              $ltdl_msg
-"
 
 GP_CONFIG_OUTPUT
 

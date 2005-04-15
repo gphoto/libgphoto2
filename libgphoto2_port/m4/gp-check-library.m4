@@ -1,4 +1,7 @@
-dnl @synopsis GP_CHECK_LIBRARY([VARNAMEPART],[libname],[VERSION-REQUIREMENT],[headername],[functionname],[ACTION-IF-FOUND],[ACTION-IF-NOT-FOUND],[OPTIONAL-REQUIRED-ETC],[WHERE-TO-GET-IT])
+dnl @synopsis GP_CHECK_LIBRARY([VARNAMEPART],[libname],[VERSION-REQUIREMENT],
+dnl                            [headername],[functionname],
+dnl                            [ACTION-IF-FOUND],[ACTION-IF-NOT-FOUND],
+dnl                            [OPTIONAL-REQUIRED-ETC],[WHERE-TO-GET-IT])
 dnl
 dnl Checks for the presence of a certain library.
 dnl
@@ -97,6 +100,7 @@ AC_ARG_VAR([$1][_CFLAGS], [CFLAGS for compiling with ][$2])dnl
 AC_ARG_VAR([$1][_LIBS],   [LIBS to add for linking against ][$2])dnl
 dnl
 AC_MSG_CHECKING([for ][$2][ to use])
+userdef_[$1]=no
 have_[$1]=no
 if test "x${[$1][_LIBS]}" = "x" && test "x${[$1][_CFLAGS]}" = "x"; then
 	m4_if([$8], [default-off],
@@ -157,6 +161,7 @@ if test "x${[$1][_LIBS]}" = "x" && test "x${[$1][_CFLAGS]}" = "x"; then
 	fi
 elif test "x${[$1][_LIBS]}" != "x" && test "x${[$1][_CFLAGS]}" != "x"; then
 	AC_MSG_RESULT([user-defined])
+	userdef_[$1]=yes
 	have_[$1]=yes
 else
 	AC_MSG_ERROR([
@@ -201,16 +206,16 @@ fi
 dnl
 dnl Run our own test link
 dnl    Does not work for libraries which be built after configure time,
-dnl    so we deactivate it.
+dnl    so we deactivate it for them (userdef_).
 dnl
-dnl m4_ifval([$5],[dnl
-dnl if test "x${[have_][$1]}" = "xyes"; then
-dnl LIBS_save="$LIBSS"
-dnl LIBS="${[$1]_LIBS}"
-dnl AC_TRY_LINK_FUNC([$5],[],[have_][$1][=no])
-dnl LIBS="$LIBS_save"
-dnl fi
-dnl ])dnl
+m4_ifval([$5],[dnl
+if test "x${[userdef_][$1]}" = "xno" && test "x${[have_][$1]}" = "xyes"; then
+	LIBS_save="$LIBSS"
+	LIBS="${[$1]_LIBS}"
+	AC_TRY_LINK_FUNC([$5],[],[have_][$1][=no])
+	LIBS="$LIBS_save"
+fi
+])dnl
 dnl
 dnl Abort configure script if mandatory, but not found
 dnl

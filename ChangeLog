@@ -1,3 +1,8 @@
+2005-04-14 Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* */configure.in, */Makefile.am, ...: updated build system.
+	  See "./autogen.sh --help" and ./configure --help" for help.
+
 2005-04-05   Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* camlibs/ptp: removing obsolete camlib.

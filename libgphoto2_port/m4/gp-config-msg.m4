@@ -33,8 +33,9 @@ AC_REQUIRE([GP_CHECK_SHELL_ENVIRONMENT])
 dnl the empty string must contain at least as many spaces as the substr length
 dnl FIXME: let m4 determine that length
 dnl        (collect left parts in array and choose largest length)
-m4_if([$1],[],[gp_config_len="22"],[gp_config_len="$1"])
+m4_if([$1],[],[gp_config_len="30"],[gp_config_len="$1"])
 gp_config_empty=""
+gp_config_len3="$(expr "$gp_config_len" - 3)"
 n="$gp_config_len"
 while test "$n" -gt 0; do
       gp_config_empty="${gp_config_empty} "
@@ -42,9 +43,9 @@ while test "$n" -gt 0; do
 done
 gp_config_msg="
 Configuration (${PACKAGE_TARNAME} ${PACKAGE_VERSION}):
-
 "
 ])dnl
+dnl
 dnl
 AC_DEFUN([GP_CONFIG_MSG],
 [AC_REQUIRE([GP_CONFIG_INIT])dnl
@@ -52,18 +53,44 @@ m4_if([$1],[],[
 gp_config_msg="${gp_config_msg}
 "
 ],[$2],[],[
-gp_config_msg="${gp_config_msg}	$1
+gp_config_msg="${gp_config_msg}
+  [$1]
 "
 ],[
-gp_config_msg="${gp_config_msg}	$(expr "$1:${gp_config_empty}" : "\(.\{0,${gp_config_len}\}\)") $2
+gp_config_msg_len="$(expr length "[$1]")"
+if test "$gp_config_msg_len" -ge "$gp_config_len"; then
+	gp_config_msg_lhs="$(expr "[$1]" : "\(.\{0,${gp_config_len3}\}\)")..:"
+else
+	gp_config_msg_lhs="$(expr "[$1]:${gp_config_empty}" : "\(.\{0,${gp_config_len}\}\)")"
+fi
+gp_config_msg="${gp_config_msg}    ${gp_config_msg_lhs} [$2]
 "
 ])])dnl
+dnl
+AC_DEFUN([GP_CONFIG_MSG_SUBDIRS],[dnl
+# Message about configured subprojects
+if test "x$subdirs" != "x"; then
+	GP_CONFIG_MSG()dnl
+	_subdirs=""
+	for sd in $subdirs; do
+		ssd="$(basename "$sd")"
+		if test "x$_subdirs" = "x"; then
+			_subdirs="$ssd";
+		else
+			_subdirs="$_subdirs $ssd"
+		fi
+	done
+	GP_CONFIG_MSG([Subprojects],[${_subdirs}])dnl
+fi
+])dnl
 dnl
 AC_DEFUN([GP_CONFIG_OUTPUT],
 [AC_REQUIRE([GP_CONFIG_INIT])dnl
 AC_REQUIRE([GP_CONFIG_MSG])dnl
+AC_REQUIRE([GP_CONFIG_MSG_SUBDIRS])dnl
 echo "${gp_config_msg}
-You may run \"make\" and \"make install\" now.";])dnl
+You may run \"make\" and \"make install\" now."
+])dnl
 dnl
 dnl Please do not remove this:
 dnl filetype: de774af3-dc3b-4b1d-b6f2-4aca35d3da16

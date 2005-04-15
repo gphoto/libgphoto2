@@ -7,6 +7,7 @@ AC_CONFIG_MACRO_DIR([libgphoto2_port/m4])
 AM_INIT_AUTOMAKE([gnu 1.8 dist-bzip2])
 
 GP_CHECK_SHELL_ENVIRONMENT
+GP_CONFIG_MSG([Build])
 GP_CONFIG_MSG([Source code location],[${srcdir}])
 
 
@@ -70,7 +71,6 @@ AC_SUBST([LIBLTDL])
 GP_CONFIG_MSG([Compiler],[${CC}])
 GP_CONFIG_MSG([libltdl includes],[$LTDLINCL])
 GP_CONFIG_MSG([libltdl library],[$LIBLTDL])
-GP_CONFIG_MSG()
 
 AC_DEFINE_UNQUOTED(HAVE_CC,"$CC",[The C compiler we're using])
 
@@ -83,6 +83,8 @@ dnl ---------------------------------------------------------------------------
 GP_REFERENCES()dnl
 
 
+GP_CONFIG_MSG([Features])
+
 dnl ---------------------------------------------------------------------------
 dnl i18n support (including some hacks)
 dnl ---------------------------------------------------------------------------
@@ -93,6 +95,7 @@ AM_GNU_GETTEXT_VERSION([0.14.1])
 AM_GNU_GETTEXT([external])
 AM_PO_SUBDIRS()
 AM_ICONV()
+GP_GETTEXT_FLAGS()
 
 dnl FIXME: We have to make sure this works first
 dnl AC_CHECK_FUNC(gettext, gettext_without_libintl=true)
@@ -104,7 +107,8 @@ dnl if test "$gettext_without_libintl" != "true" -a "$USE_NLS" = "yes"; then
 dnl        AC_CHECK_LIB([intl], [gettext], [INTLLIBS="$INTLLIBS -lintl"])
 dnl fi
 
-AM_CPPFLAGS="$AM_CPPFLAGS -DLOCALEDIR=\\\"\$(datadir)/locale\\\""
+AC_SUBST([localedir],["\$(datadir)/locale"])
+AM_CPPFLAGS="$AM_CPPFLAGS -DLOCALEDIR=\\\"${localedir}\\\""
 
 
 dnl ---------------------------------------------------------------------------
@@ -361,46 +365,56 @@ dnl ---------------------------------------------------------------------------
 dnl /proc/meminfo: If the meminfo /proc entry is available, we use it
 dnl to limit the libgphoto2 filesystem cache size.
 dnl ---------------------------------------------------------------------------
-if test "$cross_compiling" != yes; then
-	AC_CHECK_FILE([/proc/meminfo], [
-		proc_meminfo_msg="available";
-		proc_meminfo=true;
-		AC_DEFINE(HAVE_PROCMEMINFO,1,[whether we get memory info from /proc/meminfo])
-	], [
-		proc_meminfo_msg="not available";
-		proc_meminfo=false;
+meminfo_msg="not available"
+meminfo=false
+
+case "$host" in
+*linux*)
+	if test "$cross_compiling" != yes; then
+		AC_CHECK_FILE([/proc/meminfo], [
+			meminfo_msg="/proc/meminfo (verified)";
+		])
+	else
+		meminfo_msg="/proc/meminfo (judged from host $host)"
+	fi
+	AC_DEFINE(HAVE_PROCMEMINFO,1,[whether we get memory info from /proc/meminfo])
+	;;
+*)
+	dnl Check for sysctl()
+	AC_MSG_CHECKING([for sysctl on BSD])
+	AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+		#ifdef __FreeBSD__
+		#	 include <sys/types.h>
+		#elif (__NetBSD__ || __OpenBSD__)
+		#	 include <sys/param.h>
+		#endif
+		#include <unistd.h>
+		#include <sys/sysctl.h>]], [[int mib[2] = { CTL_HW, HW_PHYSMEM };
+		int value;
+		size_t valuelen = sizeof(value);
+		sysctl(mib, 2 , &value, &valuelen, NULL, 0)
+	]])],[
+		AC_DEFINE(HAVE_SYSCTL,1,whether we may use sysctl)
+		AC_MSG_RESULT(yes)
+	],[
+		AC_MSG_RESULT(no)
 	])
-else
-	proc_meminfo_msg="state not known, cross-compilation";
-	proc_meminfo=false;
-fi
-GP_CONFIG_MSG([/proc/meminfo],[$proc_meminfo_msg])
+	;;
+esac
 
-
-dnl Check for sysctl()
-AC_MSG_CHECKING([for sysctl on BSD])
-AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
-	#ifdef __FreeBSD__
-	#	 include <sys/types.h>
-	#elif (__NetBSD__ || __OpenBSD__)
-	#	 include <sys/param.h>
-	#endif
-	#include <unistd.h>
-	#include <sys/sysctl.h>]], [[int mib[2] = { CTL_HW, HW_PHYSMEM };
-	int value;
-	size_t valuelen = sizeof(value);
-	sysctl(mib, 2 , &value, &valuelen, NULL, 0)]])],[AC_DEFINE(HAVE_SYSCTL,1,whether we may use sysctl)
-	AC_MSG_RESULT(yes)],[AC_MSG_RESULT(no)
-])
+GP_CONFIG_MSG([Memory information],[$meminfo_msg])
 
 
 dnl ---------------------------------------------------------------------------
-dnl Turn on debugging and all warnings when using gcc
+dnl Turn on all warnings when using gcc
 dnl ---------------------------------------------------------------------------
 if test "$GCC" = "yes"; then
-	AM_CPPFLAGS="$AM_CPPFLAGS -g -Wall"
+	AM_CPPFLAGS="$AM_CPPFLAGS -Wall"
 	AM_CPPFLAGS="$AM_CPPFLAGS -Wmissing-declarations -Wmissing-prototypes"
-	AM_LDFLAGS="$AM_LDFLAGS -g -Wall"
+	AM_LDFLAGS="$AM_LDFLAGS -Wall"
+	# FIXME: Check for --enable-debug here
+	AM_CPPFLAGS="$AM_CPPFLAGS -g"
+	AM_LDFLAGS="$AM_LDFLAGS -g"
 fi
 
 AC_SUBST([AM_CPPFLAGS])
@@ -419,9 +433,6 @@ else
 ])
 fi
 
-# Message about configured subprojects
-GP_CONFIG_MSG()dnl
-GP_CONFIG_MSG([Subprojects],[${subdirs}])dnl
 
 # ---------------------------------------------------------------------------
 # Create output files
@@ -510,7 +521,6 @@ fi
 GP_CONFIG_OUTPUT
 
 echo "
-
 Please check whether the configuration I detected matches what you
 would like to have. E.g. make sure that USB support is there if you
 intend to use USB cameras with $PACKAGE_NAME.
