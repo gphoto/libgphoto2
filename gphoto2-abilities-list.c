@@ -27,6 +27,8 @@
 
 #ifdef HAVE_LTDL
 #  include <ltdl.h>
+#else
+#  error libltdl required!
 #endif
 
 #include "gphoto2-result.h"
@@ -120,7 +122,6 @@ gp_abilities_list_free (CameraAbilitiesList *list)
 	return (GP_OK);
 }
 
-#ifdef HAVE_LTDL
 
 static int
 foreach_func (const char *filename, lt_ptr data)
@@ -133,7 +134,7 @@ foreach_func (const char *filename, lt_ptr data)
 
 	return (0);
 }
-#endif
+
 
 static int
 gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
@@ -145,23 +146,14 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 	int x, old_count, new_count;
 	unsigned int i, p;
 	const char *filename;
-#ifdef HAVE_LTDL
 	CameraList *flist;
 	int count;
 	lt_dlhandle lh;
-#else
-	GP_SYSTEM_DIR d;
-	GP_SYSTEM_DIRENT de;
-	char buf[1024];
-	void *lh;
-	unsigned int n;
-#endif
 
 	CHECK_NULL (list && dir);
 
-#ifdef HAVE_LTDL
 	gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
-		"Using ltdl to load camera libraries in '%s'...", dir);
+		"Using ltdl to load camera libraries from '%s'...", dir);
 	CHECK_RESULT (gp_list_new (&flist));
 	CHECK_RESULT (gp_list_reset (flist));
 	lt_dlinit ();
@@ -252,137 +244,6 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 	gp_context_progress_stop (context, p);
 	lt_dlexit ();
 	gp_list_free (flist);
-#else
-
-	gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
-		"Loading camera libraries in '%s' without ltdl...", dir);
-	gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
-		"Note that failing to load *.a and *.la is NOT an error!");
-	/* Open the directory */
-	d = GP_SYSTEM_OPENDIR (dir);
-	if (!d) {
-		gp_log (GP_LOG_ERROR, "gphoto2-abilities-list",
-			_("Could not open '%s'"), dir);
-		return GP_ERROR_LIBRARY;
-	}
-
-	/* Count the files */
-	n = 0;
-	while (GP_SYSTEM_READDIR (d))
-		n++;
-	GP_SYSTEM_CLOSEDIR (d);
-	d = GP_SYSTEM_OPENDIR (dir);
-
-	p = gp_context_progress_start (context, n,
-			_("Loading camera drivers from '%s'..."), dir);
-	i = 0;
-	do {
-
-		/* Read each entry */
-		de = GP_SYSTEM_READDIR (d);
-		if (de) {
-
-			/*
-			 * Tell the frontend about our progress and offer the
-			 * possiblility to cancel.
-			 */
-			i++;
-			gp_context_progress_update (context, p, i);
-			if (gp_context_cancel (context) ==
-						GP_CONTEXT_FEEDBACK_CANCEL)
-				return (GP_ERROR_CANCEL);
-
-			/* Construct the full path to the file */
-			filename = GP_SYSTEM_FILENAME (de);
-			snprintf (buf, sizeof (buf), "%s%c%s", dir,
-				  GP_SYSTEM_DIR_DELIM, filename);
-
-			/* Don't try to open ".*" */
-			if (filename[0] == '.')
-				continue;
-
-			/* Try to open the library */
-			gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
-				"Trying to load '%s'...", buf);
-			lh = GP_SYSTEM_DLOPEN (buf);
-			if (!lh) {
-				size_t len;
-				len = strlen(buf);
-				if ((len >= 3) &&
-				    (buf[len-1] == 'a') &&
-				    ((buf[len-2] == '.') ||
-				     ((buf[len-2] == 'l') && (buf[len-3] == '.'))
-					    )) {
-					/* *.la or *.a - we cannot load these, so no error msg */
-				} else {
-					gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
-						"Failed to load '%s': %s.", buf,
-						GP_SYSTEM_DLERROR ());
-				}
-				continue;
-			}
-
-			/* camera_id */
-			id = GP_SYSTEM_DLSYM (lh, "camera_id");
-			if (!id) {
-				gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
-					"Library '%s' does not seem to "
-					"contain a camera_id function: %s",
-					buf, GP_SYSTEM_DLERROR ());
-				GP_SYSTEM_DLCLOSE (lh);
-				continue;
-			}
-
-			/*
-			 * Make sure the camera driver hasn't been
-			 * loaded yet
-			 */
-			if (id (&text) != GP_OK) {
-				GP_SYSTEM_DLCLOSE (lh);
-				continue;
-			}
-			if (gp_abilities_list_lookup_id (list, text.text) >= 0){
-				GP_SYSTEM_DLCLOSE (lh);
-				continue;
-			}
-
-			/* camera_abilities */
-			ab = GP_SYSTEM_DLSYM (lh, "camera_abilities");
-			if (!ab) {
-				gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
-					"Library '%s' does not seem to "
-					"contain a camera_abilities function: "
-					"%s", buf, GP_SYSTEM_DLERROR ());
-				GP_SYSTEM_DLCLOSE (lh);
-				continue;
-			}
-
-			old_count = gp_abilities_list_count (list);
-			if (old_count < 0) {
-				GP_SYSTEM_DLCLOSE (lh);
-				continue;
-			}
-
-			if (ab (list) != GP_OK) {
-				GP_SYSTEM_DLCLOSE (lh);
-				continue;
-			}
-
-			GP_SYSTEM_DLCLOSE (lh);
-
-			new_count = gp_abilities_list_count (list);
-			if (new_count < 0)
-				continue;
-
-			/* Copy in the core-specific information */
-			for (x = old_count; x < new_count; x++) {
-				strcpy (list->abilities[x].id, text.text);
-				strcpy (list->abilities[x].library, buf);
-			}
-		}
-	} while (de);
-	gp_context_progress_stop (context, p);
-#endif
 
 	return (GP_OK);
 }

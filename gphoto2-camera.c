@@ -31,6 +31,8 @@
 
 #ifdef HAVE_LTDL
 #  include <ltdl.h>
+#else
+#  error libltdl required!
 #endif
 
 #include "gphoto2-context.h"
@@ -237,11 +239,7 @@ struct _CameraPrivateCore {
 	CameraAbilities a;
 
 	/* Library handle */
-#ifdef HAVE_LTDL
 	lt_dlhandle lh;
-#else
-	void *lh;
-#endif
 
 	char error[2048];
 
@@ -306,12 +304,8 @@ gp_camera_exit (Camera *camera, GPContext *context)
 	memset (camera->functions, 0, sizeof (CameraFunctions));
 
 	if (camera->pc->lh) {
-#ifdef HAVE_LTDL_H
 		lt_dlclose (camera->pc->lh);
 		lt_dlexit ();
-#else
-		GP_SYSTEM_DLCLOSE (camera->pc->lh);
-#endif
 		camera->pc->lh = NULL;
 	}
 
@@ -727,7 +721,6 @@ gp_camera_init (Camera *camera, GPContext *context)
 	/* Load the library. */
 	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Loading '%s'...",
 		camera->pc->a.library);
-#ifdef HAVE_LTDL
 	lt_dlinit ();
 	camera->pc->lh = lt_dlopenext (camera->pc->a.library);
 	if (!camera->pc->lh) {
@@ -737,28 +730,12 @@ gp_camera_init (Camera *camera, GPContext *context)
 		lt_dlexit ();
 		return (GP_ERROR_LIBRARY);
 	}
-#else
-	camera->pc->lh = GP_SYSTEM_DLOPEN (camera->pc->a.library);
-	if (!camera->pc->lh) {
-		gp_context_error (context, _("Could not load required "
-			"camera driver '%s'."), camera->pc->a.library);
-		return (GP_ERROR_LIBRARY);
-	}
-#endif
 
 	/* Initialize the camera */
-#ifdef HAVE_LTDL
 	init_func = lt_dlsym (camera->pc->lh, "camera_init");
-#else
-	init_func = GP_SYSTEM_DLSYM (camera->pc->lh, "camera_init");
-#endif
 	if (!init_func) {
-#ifdef HAVE_LTDL
 		lt_dlclose (camera->pc->lh);
 		lt_dlexit ();
-#else
-		GP_SYSTEM_DLCLOSE (camera->pc->lh);
-#endif
 		camera->pc->lh = NULL;
 		gp_context_error (context, _("Camera driver '%s' is "
 			"missing the 'camera_init' function."), 
@@ -769,12 +746,8 @@ gp_camera_init (Camera *camera, GPContext *context)
 	if (strcasecmp (camera->pc->a.model, "Directory Browse")) {
 		result = gp_port_open (camera->port);
 		if (result < 0) {
-#ifdef HAVE_LTDL
 			lt_dlclose (camera->pc->lh);
 			lt_dlexit ();
-#else
-			GP_SYSTEM_DLCLOSE (camera->pc->lh);
-#endif
 			camera->pc->lh = NULL;
 			return (result);
 		}
@@ -783,12 +756,8 @@ gp_camera_init (Camera *camera, GPContext *context)
 	result = init_func (camera, context);
 	if (result < 0) {
 		gp_port_close (camera->port);
-#ifdef HAVE_LTDL
 		lt_dlclose (camera->pc->lh);
 		lt_dlexit ();
-#else
-		GP_SYSTEM_DLCLOSE (camera->pc->lh);
-#endif
 		camera->pc->lh = NULL;
 		memset (camera->functions, 0, sizeof (CameraFunctions));
 		return (result);
