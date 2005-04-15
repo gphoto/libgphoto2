@@ -8,14 +8,18 @@ AM_INIT_AUTOMAKE([gnu 1.8 dist-bzip2])
 
 
 dnl ---------------------------------------------------------------------------
-dnl Versioning (libgphoto2_port-(AGE.)CURRENT.REVISION):
+dnl Advanced information about versioning:
+dnl   * "Writing shared libraries" by Mike Hearn
+dnl         http://navi.cx/~mike/writing-shared-libraries.html
+dnl   * libtool.info chapter "Versioning"
+dnl ---------------------------------------------------------------------------
+dnl Versioning:
 dnl  - AGE (Micro):      Increment if any interfaces have been added; set to 0
 dnl                      if any interfaces have been removed. Removal has 
 dnl                      precedence over adding, so set to 0 if both happened.
 dnl  - REVISION (Minor): Increment any time the source changes; set to 
 dnl                      0 if you incremented CURRENT.
-dnl  - CURRENT (Major):  Increment if the interface has additions, changes,
-dnl                      removals.
+dnl  - CURRENT (Major):  Increment if the interface has changes or removals.
 dnl ---------------------------------------------------------------------------
 LIBGPHOTO2_PORT_AGE=1
 LIBGPHOTO2_PORT_REVISION=5
