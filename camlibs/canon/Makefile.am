@@ -18,13 +18,6 @@ libgphoto2_canon_la_SOURCES =	\
 	usb.c usb.h		\
 	crc.c crc.h		\
 	util.c util.h
-libgphoto2_canon_la_SOURCES =\
-canon.c canon.h\
-library.c library.h\
-serial.c serial.h \
-usb.c usb.h \
-crc.c crc.h \
-util.c util.h
 libgphoto2_canon_la_LDFLAGS = -module -avoid-version
 libgphoto2_canon_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la
 
