@@ -26,7 +26,7 @@ dnl                           default: []
 dnl
 dnl What the ACTION-IFs can do:
 dnl
-dnl   * change the variable have_[$1] to "yes" or "now" and thus change
+dnl   * change the variable have_[$1] to "yes" or "no" and thus change
 dnl     the outcome of the test
 dnl   * execute additional checks to define more specific variables, e.g.
 dnl     for different API versions
@@ -103,6 +103,7 @@ AC_MSG_CHECKING([for ][$2][ to use])
 userdef_[$1]=no
 have_[$1]=no
 if test "x${[$1][_LIBS]}" = "x" && test "x${[$1][_CFLAGS]}" = "x"; then
+	dnl define --with/--without argument
 	m4_if([$8], [default-off],
 		[m4_pushdef([gp_lib_arg],[--without-][$2])dnl
 			try_[$1]=no
@@ -115,14 +116,47 @@ if test "x${[$1][_LIBS]}" = "x" && test "x${[$1][_CFLAGS]}" = "x"; then
 	AC_MSG_RESULT([${try_][$1][}])
 	m4_popdef([gp_lib_arg])dnl
 	if test "x${[try_][$1]}" = "xautodetect"; then
-		dnl we need that line break after the PKG_CHECK_MODULES
-		m4_ifval([$3],
-			[PKG_CHECK_MODULES([$1],[$2][ $3],[have_][$1][=yes])],
-			[PKG_CHECK_MODULES([$1],[$2],     [have_][$1][=yes])]
-		)
+		dnl OK, we have to autodetect.
+		dnl We start autodetection with the cleanest known method: pkg-config
+		if test "x${[have_][$1]}" = "xno"; then
+			dnl we need that line break after the PKG_CHECK_MODULES
+			m4_ifval([$3],
+				[PKG_CHECK_MODULES([$1],[$2][ $3],[have_][$1][=yes],[:])],
+				[PKG_CHECK_MODULES([$1],[$2],     [have_][$1][=yes],[:])]
+			)
+		fi
+		AC_MSG_WARN([The `$2' library could not be found using pkg-config.
+No version checks will be performed if it is found using any other method.])
+		dnl If pkg-config didn't find anything, try the libfoo-config program
+		dnl we certain known libraries ship with.
+		if test "x${[have_][$1]}" = "xno"; then
+			AC_MSG_CHECKING([$2][ config program])
+			m4_pushdef([gp_lib_config],[m4_if([$2],[libusb],[libusb-config],
+				[$2],[libgphoto2],[gphoto2-config],
+				[$2],[libgphoto2_port],[gphoto2-port-config],
+				[none])])dnl
+			AC_MSG_RESULT([gp_lib_config])
+			AC_PATH_PROG([$1][_CONFIG_PROG],[gp_lib_config])
+			if test -n "${[$1][_CONFIG_PROG]}" &&
+				test "${[$1][_CONFIG_PROG]}" != "none"; then
+				AC_MSG_CHECKING([for ][$2][ parameters from ][gp_lib_config])
+				[$1]_LIBS="$(${[$1][_CONFIG_PROG]} --libs || echo "*error*")"
+				[$1]_CFLAGSS="$(${[$1][_CONFIG_PROG]} --cflags || echo "*error*")"
+				if test "x${[$1]_LIBS}" = "*error*" || 
+					test "x${[$1]_CFLAGS}" = "*error*"; then
+					AC_MSG_RESULT([error])
+				else
+					have_[$1]=yes
+					AC_MSG_RESULT([ok])
+				fi
+			fi
+			m4_popdef([gp_lib_config])dnl
+		fi
+		dnl Neither pkg-config, nor the libfoo-config program have found anything.
+		dnl So let's just probe the system.
 		if test "x${[have_][$1]}" = "xno"; then
 			ifs="$IFS"
-			IFS=":" # FIXME: for W32 and OS/2 we need ";" here
+			IFS=":" # FIXME: for W32 and OS/2 we may need ";" here
 			for _libdir_ in \
 				${LD_LIBRARY_PATH} \
 				"${libdir}" \
@@ -164,6 +198,7 @@ elif test "x${[$1][_LIBS]}" != "x" && test "x${[$1][_CFLAGS]}" != "x"; then
 	userdef_[$1]=yes
 	have_[$1]=yes
 else
+	AC_MSG_RESULT([broken call])
 	AC_MSG_ERROR([
 * Fatal:
 * When calling configure for ${PACKAGE_TARNAME}
@@ -210,10 +245,12 @@ dnl    so we deactivate it for them (userdef_).
 dnl
 m4_ifval([$5],[dnl
 if test "x${[userdef_][$1]}" = "xno" && test "x${[have_][$1]}" = "xyes"; then
-	LIBS_save="$LIBSS"
+	AC_MSG_CHECKING([for function ][$5][ in ][$2])
+	LIBS_save="$LIBS"
 	LIBS="${[$1]_LIBS}"
 	AC_TRY_LINK_FUNC([$5],[],[have_][$1][=no])
 	LIBS="$LIBS_save"
+	AC_MSG_RESULT([${[have_][$1]}])
 fi
 ])dnl
 dnl
