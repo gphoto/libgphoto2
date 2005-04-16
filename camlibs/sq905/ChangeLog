@@ -1,3 +1,13 @@
+2005-04-06   Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: fix sq_decompress() to handle Magpix B350
+	* postprocess.c: fix sq_decompress() to handle Magpix B350	
+	* sq905.h: fix sq_decompress() to handle Magpix B350
+	* sq905.h: fix sq_decompress() to handle Magpix B350	
+
+
+
+
 2005-04-12   Theodore Kilgore <kilgota@auburn.edu>
 
 	* postprocess.c: small oops repaired in sq_decompress()	

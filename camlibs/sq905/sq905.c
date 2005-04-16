@@ -73,6 +73,10 @@ sq_init (GPPort *port, CameraPrivateLibrary *priv)
 	} else if (!memcmp (c, "\x09\x05\x01\x32", 4)) {
 		priv->model = SQ_MODEL_MAGPIX;
 /*
+	} else if (!memcmp (c, "\x09\x13\x06\x67", 4)) {
+		priv->model = SQ_MODEL_913c;
+*/
+/*
 	} else if (!memcmp (c, "\x50\x05\x00\x26", 4)) {
 		priv->model = SQ_MODEL_PRECISION;
 */
@@ -257,16 +261,18 @@ sq_preprocess (SQModel model, int comp_ratio, unsigned char is_in_clip,
 		/* Some cameras need de-mirror-imaging, too. */
 		switch (model) {
 		case SQ_MODEL_POCK_CAM:
-		case SQ_MODEL_MAGPIX:
-    			for (i = 0; i < h*comp_ratio; i++) {
+    			for (i = 0; i < h/comp_ratio; i++) {
 				for (m = 0 ; m < w/(2*comp_ratio*comp_ratio); m++) { 
         				temp = data[w*i/(comp_ratio*comp_ratio) +m];
-        				data[w*i/(comp_ratio*comp_ratio) +m] 
+					data[w*i/(comp_ratio*comp_ratio)] 
 						= data[w*i/(comp_ratio*comp_ratio) +w -1 -m];
 					data[w*i/(comp_ratio*comp_ratio) +w -1 -m] = temp;
 				}
-    			}    	
+				
+    			} 
+
 			break;
+
 		default:  ;  /* If any other model, do nothing here. */
 		}
 		break;

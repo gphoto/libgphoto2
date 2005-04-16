@@ -358,7 +358,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			"255\n", w, h);
 		ptr = ppm + strlen (ppm);
 		if (comp_ratio>1) {
-			sq_decompress (ptr, frame_data, w, h, entry);			
+			sq_decompress (camera->pl->model, ptr, frame_data, w, h, entry);			
 			sq_postprocess(camera->pl,w, h, ptr, entry);
 		}
 		size = strlen (ppm) + (w * h * 3);

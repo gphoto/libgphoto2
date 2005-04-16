@@ -36,7 +36,7 @@
 
 
 int
-sq_decompress (unsigned char *output, unsigned char *data,
+sq_decompress (SQModel model, unsigned char *output, unsigned char *data,
 	    int w, int h, int n)
 {
 	/*
@@ -117,7 +117,7 @@ sq_decompress (unsigned char *output, unsigned char *data,
 
 					mark_green[2*i] =
 					data[2*i+1] =  
-					MIN(MAX(datum, 0x20), 0xe0);    
+					MIN(MAX(datum, 0x0), 0xff);    
 
 
 				} else {
@@ -127,11 +127,11 @@ sq_decompress (unsigned char *output, unsigned char *data,
 						mark_green[2*i +j] =
 						data[(2*m+j)*w + 2*i +1 - j] =
 						MIN(2*(mark + datum - 0x80) 
-						- (mark*datum)/128., 0xe0);
+						- (mark*datum)/128., 0xff);
 					} else {
 						mark_green[2*i +j] =
 						data[(2*m+j)*w + 2*i +1 - j] =
-		    				MAX((mark*datum)/128, 0x20);
+		    				MAX((mark*datum)/128, 0x0);
 					}
 				}
 
@@ -139,8 +139,8 @@ sq_decompress (unsigned char *output, unsigned char *data,
 				data[(2*m+j)*w + 2*i +1 - j] =
 		    		MIN( 256 *
 				pow((float)mark_green[2*i + j]/256., .95),
-				0xe0);
-
+				0xff);
+		    
 				/*
         			 * Here begin the reds and blues. 
 				 * Reds in even slots on even-numbered lines.
@@ -148,12 +148,13 @@ sq_decompress (unsigned char *output, unsigned char *data,
 				 */
 				
 				if (j)	datum =  blue[m*w/2 + i ] ;
-				else	datum =  red[m*w/2 + i ] ;
 
+				else 	datum =  red[m*w/2 + i ] ;
+			
 				if(!m) {
 					mark_redblue[2*i+j]= 
 					data[j*w +2*i+j]=  
-					MIN(MAX(datum, 0x20), 0xe0);
+					MIN(MAX(datum, 0x0), 0xff);
 				} else {
 					mark = mark_redblue[2*i + j];
 					if (datum >= 0x80) {
@@ -161,13 +162,13 @@ sq_decompress (unsigned char *output, unsigned char *data,
 						data[(2*m+j)*w + 2*i + j] =
 						MIN(2*(mark + datum - 0x80) 
 						- (mark*datum)
-						/128., 0xe0);
+						/128., 0xff);
 					    
 					} else {
 					
 						mark_redblue[2*i +j] =
 						data[(2*m+j)*w + 2*i + j] =
-						MAX((mark*datum)/128,0x20);
+						MAX((mark*datum)/128,0x0);
 					}
 
 				}
@@ -176,8 +177,8 @@ sq_decompress (unsigned char *output, unsigned char *data,
 				data[(2*m+j)*w + 2*i + j] =
 		    		MIN( 256 *
 				pow((float)mark_redblue[2*i + j]/256., .95),
-				0xe0);
-
+				0xff);
+			
 
 
 			}					
@@ -185,28 +186,34 @@ sq_decompress (unsigned char *output, unsigned char *data,
 			/* Averaging of data inputs */
 
 			for (i = 1; i < w/2-1; i++ ) {
-
+				if(m)	
 				mark_redblue[2*i + j] =
 				data[(2*m+j)*w + 2*i + j] =
 				(data[(2*m+j)*w + 2*i + j] +
 				data[(2*m+j)*w + 2*i -2 + j])/2;
-			
-				if (j) {
-					mark_green[2*i + j] =
-					data[(2*m+j)*w + 2*i +1 - j] =
-					(data[(2*m+j)*w + 2*i +1 - j] +
-					data[(2*m+j)*w + 2*i +3 - j])/2;
-				} else if(m) {
+
+				if (m &&j) {
 					mark_green[2*i + j] =
 					data[(2*m+j)*w + 2*i +1 - j] =
 					(data[(2*m+j)*w + 2*i +1 - j] +
 					data[(2*m+j)*w + 2*i -1 - j])/2;
+				} else if(m) {
+					mark_green[2*i + j] =
+					data[(2*m+j)*w + 2*i +1 - j] =
+					(data[(2*m+j)*w + 2*i +1 - j] +
+					data[(2*m+j)*w + 2*i +3 - j])/2;
 				}
 			}
 			mark_green[j] =
 			data[(2*m+j)*w +1-j] =
 			(data[(2*m+j)*w +1-j] +
 			data[(2*m+j)*w +3-j])/2;
+
+			mark_green[w - 2 +j] =
+			data[(2*m+j)*w + w - 2 +1-j] =
+			(data[(2*m+j)*w + w - 2 +1-j] +
+			data[(2*m+j)*w + w - 2 -1-j])/2;
+
 
 			mark_redblue[w -2 + j] =
 			data[(2*m+j)*w + w- 2 + j] =
@@ -217,9 +224,6 @@ sq_decompress (unsigned char *output, unsigned char *data,
 			data[(2*m+j)*w + j] =
 			(data[(2*m+j)*w + j] +
 			data[(2*m+j)*w + 2 + j])/2;
-
-
-
 		}
 	}
 	free (green);
@@ -244,12 +248,10 @@ sq_decompress (unsigned char *output, unsigned char *data,
 			 * the interpolated greens (at the even pixels on 
 			 * even lines and odd pixels on odd lines)
 			 */
-			if (!j) {
-			output[3*(2*m*w) +1] =	
-			data[2*m*w + 1 ];
-			output[3*(2*m*w + w - 1) +1] =	
-			data[2*m*w + w - 2 ];
-			}
+			output[3*((2*m+j)*w+1-j) +1] =	
+			data[(2*m+j)*w + 1 -j];
+			output[3*((2*m+j)*w + w - 1 - j) +1] =	
+			data[(2*m+j)*w + w - 1 - j];
 			
 			for (i= 1; i < w/2 - 1; i++)		
 				output[3*((2*m+j)*w + 2*i - j) + 1] =
@@ -259,9 +261,9 @@ sq_decompress (unsigned char *output, unsigned char *data,
 			 * the interpolated reds on even (red-green) lines and
 			 * the interpolated blues on odd (green-blue) lines
 			 */
-			output[3*((2*m+j)*w ) +2*j] =	
+			output[3*((2*m+j)*w +j) +2*j] =	
 			data[(2*m+j)*w + j];
-			output[3*((2*m+j)*w + w - 1) +2*j] =	
+			output[3*((2*m+j)*w + w - 1+j) +2*j] =	
 			data[(2*m+j)*w + w - 1 - 1 + j];
 
 			for (i= 1; i < w/2 -1; i++)		
@@ -273,7 +275,7 @@ sq_decompress (unsigned char *output, unsigned char *data,
 	/*
 	 * finally the missing blues, on even-numbered lines
 	 * and reds on odd-numbered lines.
-	 * we just interpolate diagonally for both
+	 * We just interpolate diagonally for both.
 	 */
 	for (m = 0; m < h/2; m++) {
 
@@ -282,21 +284,17 @@ sq_decompress (unsigned char *output, unsigned char *data,
 		
 			output[3*((2*m)*w + i) +2] =	
 			(output[3*((2*m-1)*w + i-1) + 2] +
-			output[3*((2*m+1)*w +i+1 ) + 2])/2;
+			output[3*((2*m+1)*w +i+1 ) + 2]+ 
+			output[3*((2*m-1)*w + i+1) + 2] +
+			output[3*((2*m+1)*w +i-1 ) + 2])/4;
 		
 			output[3*((2*m+1)*w + i) +0] =	
 			(output[3*(2*m*w + i-1) + 0] +
-			output[3*((2*m+2)*w +i+1) + 0])/2;
+			output[3*((2*m+2)*w +i+1) + 0]+ 			output[3*(2*m*w + i+1) + 0] +
+			output[3*((2*m+2)*w +i-1) + 0])/4;
+
 		}
 	}		
-	
-	for (i= 0; i < w; i++) {	
-		output[3*i +2] = output[3*(w + i) + 2];
-		output[3*(w+i)] = output[3*i];
-	}
-	for (i= 0; i < w; i++)		
-		output[3*((h-1)*w + i) +0] = output[3*((h -2)*w +i) + 0];					
-
 
 	/* Diagonal smoothing */
 
@@ -323,9 +321,22 @@ sq_decompress (unsigned char *output, unsigned char *data,
 			}
 	}		
 	
-
-
-
+	/* De-mirroring for some models */
+	switch(model) {
+	case(SQ_MODEL_MAGPIX):
+		for (m=0; m<h; m++){
+			for(i=0; i<w/2; i++){
+				for(j=0; j<3; j++) {
+					datum = output[3*(m*w +i) + j];
+					output[3*(m*w +i) +j] 
+					    = output[3*(m*w +w - 1 -i) +j];
+					output[3*(m*w +w - 1 -i) +j] = datum;
+				}
+			}
+		}
+		break;
+	default: ; 		/* default is "do nothing" */
+	}
 	return(GP_OK);
 }
 

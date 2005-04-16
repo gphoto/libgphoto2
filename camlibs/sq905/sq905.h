@@ -16,7 +16,8 @@
 typedef enum {
 	SQ_MODEL_POCK_CAM,
 	SQ_MODEL_PRECISION,
-	SQ_MODEL_MAGPIX,
+	SQ_MODEL_MAGPIX, 
+/*	SQ_MODEL_913c, */
 	SQ_MODEL_DEFAULT
 } SQModel;
 
@@ -55,7 +56,7 @@ sq_preprocess		(SQModel model, int comp_ratio,
 				unsigned char is_in_clip, 
 				unsigned char *data, int w, int h);
 int
-sq_decompress 		(unsigned char *output, unsigned char *data, 
+sq_decompress 		(SQModel model, unsigned char *output, unsigned char *data, 
 				int w, int h, int n);
 int sq_postprocess	(CameraPrivateLibrary *priv, 
 				int width, int height, 
