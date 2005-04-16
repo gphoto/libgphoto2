@@ -212,69 +212,65 @@ GP_SERLOCK([resmgr])dnl
 
 resmgr_msg=no
 if $try_resmgr; then
-	AC_CHECK_HEADER(resmgr.h,
+	AC_CHECK_HEADER(resmgr.h,[
 		AC_CHECK_LIB(resmgr, rsm_lock_device,[
 			resmgr_msg=yes
 			SERIAL_LIBS="-lresmgr"
 			AC_DEFINE(HAVE_RESMGR,1,[Define if we have the resmgr library.])
 		])
-	)
+	])
 fi
 GP_CONFIG_MSG([resmgr locking],[${resmgr_msg}])
 	
 baudboy_msg=no
 if $try_baudboy; then
-	AC_CHECK_HEADER(baudboy.h,
+	AC_CHECK_HEADER(baudboy.h,[
 		baudboy_msg=yes
 		try_ttylock=false
 		try_lockdev=false
 		AC_DEFINE(HAVE_BAUDBOY,1,[Define if you have Baudboy serial locking.])
-	)
+	])
 fi
 GP_CONFIG_MSG([baudboy locking],[${baudboy_msg}])
 
 ttylock_msg=no
 if $try_ttylock; then
-	AC_CHECK_HEADER(ttylock.h,
+	AC_CHECK_HEADER(ttylock.h,[
 		AC_MSG_CHECKING(if ttylock needs lockdev)
-		AC_TRY_LINK([#include <ttylock.h>],[ttylocked ("/dev/foo");],
+		AC_TRY_LINK([#include <ttylock.h>],[ttylocked ("/dev/foo");],[
 			AC_MSG_RESULT(no)
 			AC_DEFINE(HAVE_TTYLOCK,1,[Define if you have ttylock based tty locking.])
 			ttylock_msg=yes
 			try_lockdev=false,
 			LDFLAGS="$LDFLAGS -llockdev"
-			AC_TRY_LINK([#include <ttylock.h>],[ttylocked ("/dev/foo");],
+			AC_TRY_LINK([#include <ttylock.h>],[ttylocked ("/dev/foo");],[
 				AC_MSG_RESULT(yes)
 				AC_DEFINE(HAVE_TTYLOCK,1,[Define if you have ttylock based tty locking.])
 				ttylock_msg=yes
 				try_lockdev=false
 				SERIAL_LIBS=-llockdev
-				AC_MSG_RESULT(unknown)
-				AC_MSG_RESULT(unknown)
-			)
-			AC_MSG_RESULT(unknown)
-		)
-	)
+			])
+		])
+	])
 fi
 GP_CONFIG_MSG([ttylock locking],[${ttylock_msg}])
 
 lockdev_msg=no
 if $try_lockdev; then
 	AC_CHECK_LIB(lockdev, dev_lock,[
-		    AC_CHECK_HEADER(lockdev.h,[
-				AC_DEFINE(HAVE_LOCKDEV,1,[Define if you have dev_lock/lockdev based locking.])
-				lockdev_msg=yes
-				SERIAL_LIBS=-llockdev
-			    ]
-		    )
-		]
-	)
+		AC_CHECK_HEADER(lockdev.h,[
+			AC_DEFINE(HAVE_LOCKDEV,1,[Define if you have dev_lock/lockdev based locking.])
+			lockdev_msg=yes
+			SERIAL_LIBS=-llockdev
+		])
+	])
 fi
 GP_CONFIG_MSG([lockdev locking],[${lockdev_msg}])
 
 fi # have_serial
 
 AC_SUBST([SERIAL_LIBS])
+
 
 dnl ---------------------------------------------------------------------------
 dnl libusb
