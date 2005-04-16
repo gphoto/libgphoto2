@@ -125,11 +125,11 @@ if test "x${[$1][_LIBS]}" = "x" && test "x${[$1][_CFLAGS]}" = "x"; then
 				[PKG_CHECK_MODULES([$1],[$2],     [have_][$1][=yes],[:])]
 			)
 		fi
-		AC_MSG_WARN([The `$2' library could not be found using pkg-config.
-No version checks will be performed if it is found using any other method.])
 		dnl If pkg-config didn't find anything, try the libfoo-config program
-		dnl we certain known libraries ship with.
+		dnl certain known libraries ship with.
 		if test "x${[have_][$1]}" = "xno"; then
+			AC_MSG_WARN([The `$2' library could not be found using pkg-config.
+No version checks will be performed if it is found using any other method.])
 			AC_MSG_CHECKING([$2][ config program])
 			m4_pushdef([gp_lib_config],[m4_if([$2],[libusb],[libusb-config],
 				[$2],[libgphoto2],[gphoto2-config],
