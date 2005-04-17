@@ -1,0 +1,30 @@
+Manufacturer: Hewlett-Packard
+  model: hp photosmart 735
+  device version: V1.12
+  serial number: '(null)'
+Vendor extension ID: 0x00000000
+Vendor extension description: Hewlett-Packard
+Supported operations:
+  0x1001
+  0x1002
+  0x1003
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100a
+  0x100b
+  0x100c
+  0x100d
+  0x1014
+  0x1015
+  0x1016
+  0x1017
+  0x101b
+Events Supported:
+Device Properties Supported:
+  0x5001
+  0x5003
+  0x5011
