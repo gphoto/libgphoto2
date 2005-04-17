@@ -1,4 +1,10 @@
-2005-04-06   Theodore Kilgore <kilgota@auburn.edu>
+2005-04-17   Theodore Kilgore <kilgota@auburn.edu>
+
+	* ChangeLog: Fixed some typos.
+
+
+
+2005-04-16   Theodore Kilgore <kilgota@auburn.edu>
 
 	* library.c: fix sq_decompress() to handle Magpix B350
 	* postprocess.c: fix sq_decompress() to handle Magpix B350	
@@ -34,11 +40,11 @@
 	* library.c: added Concord Eye-Q Duo, Sakar Kidz Cam
 	(get_file_func): Conditionnalize pre-processing
 
-2003-11-11 Theodore Kilgore <kilgota@auburn.edu>
+2004-11-11 Theodore Kilgore <kilgota@auburn.edu>
 	
 	* postprocess.c: bugfix for release.
 
-2003-11-11 Theodore Kilgore <kilgota@auburn.edu>
+2004-11-11 Theodore Kilgore <kilgota@auburn.edu>
 	* library.c: added ViviCam 5B and SY-2107C cameras.
 
 
@@ -47,7 +53,7 @@
 	* sq905.c (sq_read_picture_data): Fix build for gcc 2.95
 	(bug #1055868)
 
-2003-08-25 Theodore Kilgore <kilgota@auburn.edu>
+2004-08-25 Theodore Kilgore <kilgota@auburn.edu>
 
 
 	* README.913C: Description of Argus DC-1730 0x2770:0x913c camera.
@@ -59,7 +65,7 @@
 	* sq905.h: In sq_access_reg ( ) the "index" is an int. Oops. 
 
 
-2003-06-29 Theodore Kilgore <kilgota@auburn.edu>
+2004-06-29 Theodore Kilgore <kilgota@auburn.edu>
 
 	* sq905.c: Major rewrite. Credit to Cedric Cellier 
 		<rixed@happyleptic.org> for several improvements, in particular
