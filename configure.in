@@ -94,7 +94,7 @@ dnl i18n support (including some hacks)
 dnl ---------------------------------------------------------------------------
 
 ALL_LINGUAS="da de es fr hu it ja nb ru sl sv uk zh_CN"
-GP_GETTEXT_HACK([${PACKAGE}-${LIBGPHOTO2_CURRENT}],[The gPhoto Team])
+GP_GETTEXT_HACK([${PACKAGE}-${LIBGPHOTO2_CURRENT}],[The gPhoto Team],[${MAIL_GPHOTO_TRANSLATION}])
 AM_GNU_GETTEXT_VERSION([0.14.1])
 AM_GNU_GETTEXT([external])
 AM_PO_SUBDIRS()

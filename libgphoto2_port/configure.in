@@ -73,6 +73,13 @@ AM_CPPFLAGS="$AM_CPPFLAGS -I\$(top_srcdir)"
 AM_CPPFLAGS="$AM_CPPFLAGS -I\$(top_srcdir)/libgphoto2_port"
 
 
+# ----------------------------------------------------------------------
+# References to external resources (web sites, mailing listes, etc.)
+# ----------------------------------------------------------------------
+
+GP_REFERENCES()dnl
+
+
 dnl ---------------------------------------------------------------------------
 dnl i18n support
 dnl ---------------------------------------------------------------------------
@@ -85,7 +92,7 @@ dnl AC_SUBST(BUILD_INCLUDED_LIBINTL)
 dnl USE_INCLUDED_LIBINTL=no
 dnl AC_SUBST(USE_INCLUDED_LIBINTL)
 
-GP_GETTEXT_HACK([${PACKAGE}-${LIBGPHOTO2_PORT_CURRENT}],[Lutz Mueller and others])
+GP_GETTEXT_HACK([${PACKAGE}-${LIBGPHOTO2_PORT_CURRENT}],[Lutz Mueller and others],[${MAIL_GPHOTO_TRANSLATION}])
 ALL_LINGUAS="cs da de fr es it ja nb pt_BR ru sl sv uk zh_CN"
 AM_GNU_GETTEXT_VERSION([0.14.1])
 AM_GNU_GETTEXT([external])
@@ -221,7 +228,7 @@ if $try_resmgr; then
 	])
 fi
 GP_CONFIG_MSG([resmgr locking],[${resmgr_msg}])
-	
+
 baudboy_msg=no
 if $try_baudboy; then
 	AC_CHECK_HEADER(baudboy.h,[
@@ -320,13 +327,6 @@ AC_ARG_ENABLE([debug],
 GP_CONFIG_MSG([Documentation])
 GP_CHECK_DOC_DIR()dnl
 GP_BUILD_GTK_DOCS()dnl
-
-
-# ----------------------------------------------------------------------
-# References to external resources (web sites, mailing listes, etc.)
-# ----------------------------------------------------------------------
-
-GP_REFERENCES()dnl
 
 
 dnl ---------------------------------------------------------------------------
