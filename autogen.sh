@@ -19,7 +19,7 @@ debug="false"
 recursive="false"
 dryrun="false"
 self="$(basename "$0")"
-autogen_version="0.4.0"
+autogen_version="0.4.1"
 
 
 ########################################################################
@@ -307,10 +307,17 @@ if cd "${dir}"; then
 	#   - we still want symlinks for the files
 	#   - but we want to (implicitly) AC_CONFIG_SUBDIR and that writes to
 	#     these files.
+	if test ! -d "${AG_LIBLTDL_DIR}" || test ! -f "${AG_LIBLTDL_DIR}/Makefile.am"; then
+		echo "Could not create libltdl directory \`${AG_LIBLTDL_DIR}'."
+		echo "Leaving \`$(pwd)' and aborting."
+		exit 2
+	fi
 	(cd "${AG_LIBLTDL_DIR}" && execute_command rm -f aclocal.m4 config.guess config.sub configure install-sh ltmain.sh Makefile.in missing)
     fi
     if test -n "${AG_SUBDIRS}"; then
 	"$0" --init ${dryrun_param} --recursive ${AG_SUBDIRS}
+	status="$?"
+	if test "$status" -ne 0; then exit "$status"; fi
     fi
     if "$recursive"; then :; else
 	if execute_command autoreconf --install --symlink ${AUTORECONF_OPTS}; then
