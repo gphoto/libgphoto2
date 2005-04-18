@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libgphoto2_port 2.1.5\n"
-"Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2005-04-10 10:46+0200\n"
-"PO-Revision-Date: 2005-02-07 20:51+0000\n"
+"Project-Id-Version: libgphoto2_port 2.1.6rc1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-04-11 12:37-0400\n"
+"PO-Revision-Date: 2005-04-18 14:28+0100\n"
 "Last-Translator: Marco Colombo <m.colombo@ed.ac.uk>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
 "MIME-Version: 1.0\n"
@@ -17,9 +17,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8-bit\n"
 
 #: libgphoto2_port/gphoto2-port-info-list.c:176
-#, fuzzy, c-format
+#, c-format
 msgid "Called for filename '%s'."
-msgstr "Impossibile aprire \"%s\" (%m)."
+msgstr "Chiamato per il file \"%s\"."
 
 #: libgphoto2_port/gphoto2-port-info-list.c:181
 #, c-format
@@ -48,21 +48,19 @@ msgid "Loaded '%s' ('%s') from '%s'."
 msgstr "Caricato \"%s\" (\"%s\") da \"%s\"."
 
 #: libgphoto2_port/gphoto2-port-info-list.c:258
-#, fuzzy, c-format
+#, c-format
 msgid "Using ltdl to load io-drivers from '%s'..."
-msgstr "Caricamento dei driver di I/O da \"%s\"..."
+msgstr "Si usa ltdl per caricare i driver di I/O da \"%s\"..."
 
 #: libgphoto2_port/gphoto2-port-info-list.c:268
-#, fuzzy, c-format
+#, c-format
 msgid "Loading io-drivers from '%s' without ltdl..."
-msgstr "Caricamento dei driver di I/O da \"%s\"..."
+msgstr "Caricamento dei driver di I/O da \"%s\" senza ltdl..."
 
 #: libgphoto2_port/gphoto2-port-info-list.c:273
 #, c-format
 msgid "Could not load any io-library because '%s' could not be opened (%m)"
-msgstr ""
-"Impossibile caricare le librerie di I/O perché \"%s\" non può essere aperto "
-"(%m)"
+msgstr "Impossibile caricare le librerie di I/O perché \"%s\" non può essere aperto (%m)"
 
 #: libgphoto2_port/gphoto2-port-info-list.c:305
 #, c-format
@@ -107,7 +105,7 @@ msgstr "Avvio ricerca con espressioni regolari per \"%s\"..."
 #: libgphoto2_port/gphoto2-port-info-list.c:430
 #, c-format
 msgid "Trying '%s'..."
-msgstr ""
+msgstr "Si sta provando \"%s\"..."
 
 #: libgphoto2_port/gphoto2-port-info-list.c:451
 msgid "regcomp failed"
@@ -336,34 +334,35 @@ msgstr "alto"
 msgid "Setting pin %i (%s: '%s') to '%s'..."
 msgstr "Impostazione del pin %i (%s: \"%s\") a \"%s\"..."
 
+# FIXME
 #: libgphoto2_port/gphoto2-port.c:705
 #, c-format
 msgid "Sending break (%i milliseconds)..."
-msgstr ""
+msgstr "Invio break (%i millisecondi)..."
 
 #: libgphoto2_port/gphoto2-port.c:720
 msgid "Flushing port..."
-msgstr ""
+msgstr "Svuotamento porta..."
 
+# FIXME
 #: libgphoto2_port/gphoto2-port.c:761
 msgid "Clear halt..."
-msgstr ""
+msgstr "Pulitura halt..."
 
 #: libgphoto2_port/gphoto2-port.c:778
 #, c-format
 msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr ""
-"Scrittura messaggio (richiesta=0x%x valore=0x%x indice=0x%x dim.=%i=0x%x)..."
+msgstr "Scrittura messaggio (richiesta=0x%x valore=0x%x indice=0x%x dim.=%i=0x%x)..."
 
 #: libgphoto2_port/gphoto2-port.c:799
 #, c-format
 msgid "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr ""
-"Lettura messaggio (richiesta=0x%x valore=0x%x indice=0x%x dim.=%i=0x%x)..."
+msgstr "Lettura messaggio (richiesta=0x%x valore=0x%x indice=0x%x dim.=%i=0x%x)..."
 
+# FIXME UPSTREAM
 #: libgphoto2_port/gphoto2-port.c:806
 msgid "msg_read"
-msgstr ""
+msgstr "msg_read"
 
 #: libgphoto2_port/gphoto2-port.c:866
 msgid "No error description available"
@@ -382,9 +381,7 @@ msgstr "Il dispositivo \"%s\" è bloccato dal pid %d"
 #: serial/unix.c:239
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
-msgstr ""
-"Non è stato possibile bloccare il dispositivo \"%s\" (dev_lock ha restituito "
-"%d)"
+msgstr "Non è stato possibile bloccare il dispositivo \"%s\" (dev_lock ha restituito %d)"
 
 #: serial/unix.c:273
 #, c-format
@@ -394,16 +391,12 @@ msgstr "Non è stato possibile sbloccare il dispositivo \"%s\"."
 #: serial/unix.c:285
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
-msgstr ""
-"Non è stato possibile sbloccare il dispositivo \"%s\" perché bloccato dal "
-"pid %d."
+msgstr "Non è stato possibile sbloccare il dispositivo \"%s\" perché bloccato dal pid %d."
 
 #: serial/unix.c:289
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
-msgstr ""
-"Non è stato possibile sbloccare il dispositivo \"%s\" (dev_unlock ha "
-"restituito %d)"
+msgstr "Non è stato possibile sbloccare il dispositivo \"%s\" (dev_unlock ha restituito %d)"
 
 #: serial/unix.c:365
 #, c-format
@@ -429,10 +422,11 @@ msgstr "Impossibile scrivere alla porta (%m)"
 msgid "Parity error."
 msgstr "Errore di parità."
 
+# FIXME
 #: serial/unix.c:603
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
-msgstr ""
+msgstr "Sequenza di risposta di parità 0xff 0x%02x inattesa."
 
 #: serial/unix.c:646
 #, c-format
@@ -452,7 +446,7 @@ msgstr "Impossibile impostare il livello del pin %i a %i (%m)."
 #: serial/unix.c:728
 #, c-format
 msgid "Could not flush '%s' (%m)."
-msgstr ""
+msgstr "Impossibile svuotare \"%s\" (%m)."
 
 #: serial/unix.c:841
 #, c-format
@@ -471,12 +465,12 @@ msgstr "La fotocamera è già in uso."
 #: usb/libusb.c:201
 #, c-format
 msgid "Device has driver '%s' attached, detaching it now."
-msgstr ""
+msgstr "Il dispositivo ha il driver \"%s\" collegato, scollegamento in corso."
 
 #: usb/libusb.c:204
 #, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
-msgstr ""
+msgstr "Impossibile scollegare il driver \"%s\" del kernel per il dispositivo."
 
 #: usb/libusb.c:206
 msgid "Could not query kernel driver of device."
@@ -484,14 +478,8 @@ msgstr "Impossibile interrogare il driver del kernel per il dispositivo."
 
 #: usb/libusb.c:213
 #, c-format
-msgid ""
-"Could not claim interface %d (%m). Make sure no other program or kernel "
-"module (such as %s) is using the device and you have read/write access to "
-"the device."
-msgstr ""
-"Impossibile reclamare l'interfaccia %d (%m). Assicurarsi che nessun altro "
-"programma o un modulo del kernel (come %s) stia usando il dispositivo, e che "
-"si abbia accesso in lettura e scrittura al dispositivo."
+msgid "Could not claim interface %d (%m). Make sure no other program or kernel module (such as %s) is using the device and you have read/write access to the device."
+msgstr "Impossibile reclamare l'interfaccia %d (%m). Assicurarsi che nessun altro programma o un modulo del kernel (come %s) stia usando il dispositivo, e che si abbia accesso in lettura e scrittura al dispositivo."
 
 #: usb/libusb.c:232
 #, c-format
@@ -508,10 +496,11 @@ msgstr "Impossibile chiudere la porta USB (%m)."
 msgid "Could not set config %d/%d (%m)"
 msgstr "Impossibile impostare la configurazione %d/%d (%m)"
 
+# FIXME
 #: usb/libusb.c:401
 #, c-format
 msgid "Could not set altsetting %d/%d (%m)"
-msgstr ""
+msgstr "Impossibile impostare altsetting %d/%d (%m)"
 
 #: usb/libusb.c:493
 #, c-format
@@ -520,40 +509,15 @@ msgstr "L'id del vendor o del prodotto (0x%x,0x%x) fornito non è valido."
 
 #: usb/libusb.c:525
 #, c-format
-msgid ""
-"USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
-"not function with gphoto2. Reference: %s"
-msgstr ""
-"Il dispositivo USB (vendor 0x%x, prodotto 0x%x) è un dispositivo di "
-"archiviazione di massa, e potrebbe non funzionare con gphoto2. Riferimento: %"
-"s"
+msgid "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might not function with gphoto2. Reference: %s"
+msgstr "Il dispositivo USB (vendor 0x%x, prodotto 0x%x) è un dispositivo di archiviazione di massa, e potrebbe non funzionare con gphoto2. Riferimento: %s"
 
 #: usb/libusb.c:558
 #, c-format
-msgid ""
-"Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
-"is connected to the computer."
-msgstr ""
-"Impossibile trovare il dispositivo USB (vendor 0x%x, prodotto 0x%x). "
-"Assicurarsi che il dispositivo sia connesso al computer."
+msgid "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device is connected to the computer."
+msgstr "Impossibile trovare il dispositivo USB (vendor 0x%x, prodotto 0x%x). Assicurarsi che il dispositivo sia connesso al computer."
 
 #: usb/libusb.c:689
 #, c-format
-msgid ""
-"Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
-"sure this device is connected to the computer."
-msgstr ""
-"Impossibile trovare il dispositivo USB (classe 0x%x, sottoclasse 0x%x, "
-"protocollo 0x%x). Assicurarsi che il dispositivo sia connesso al computer."
-
-#, fuzzy
-#~ msgid "close"
-#~ msgstr "Chiudi"
-
-#, fuzzy
-#~ msgid "write"
-#~ msgstr "Stampa"
-
-#, fuzzy
-#~ msgid "read"
-#~ msgstr "Crea"
+msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
+msgstr "Impossibile trovare il dispositivo USB (classe 0x%x, sottoclasse 0x%x, protocollo 0x%x). Assicurarsi che il dispositivo sia connesso al computer."
