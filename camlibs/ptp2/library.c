@@ -353,13 +353,14 @@ static struct {
 	{"Nikon:DSC D100 (PTP mode)",     0x04b0, 0x0402, 0},
 	/* D2H SLR in PTP mode from Steve Drew <stevedrew@gmail.com> */
 	{"Nikon:D2H SLR (PTP mode)",      0x04b0, 0x0404, 0},
-
 	{"Nikon:DSC D70 (PTP mode)",      0x04b0, 0x0406, 0},
 
-	/* reported by Steve Drew <stevedrew@gmail.com> */
-	{"Nikon:D2Hs SLR (PTP mode)",     0x04b0, 0x040c, 0},
+	/* Justin Case <justin_case@gmx.net> */
+	{"Nikon:D2X SLR (PTP mode)",      0x04b0, 0x0408, 0},
 
-	/* in pictbridge mode */
+	/* Thomas Luzat <thomas.luzat@gmx.net> */
+	{"Panasonic:DMC-FZ20 (alternate id)", 0x04da, 0x2372, 0},
+
 	{"Panasonic:DMC-FZ20",            0x04da, 0x2374, 0},
 
 	/* From Thomas Hackel */
