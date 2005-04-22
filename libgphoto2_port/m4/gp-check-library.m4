@@ -65,6 +65,7 @@ soext=""
 case "$host" in
 	*linux*)	soext=".so" ;;
 	*sunos*)	soext=".so" ;;
+	*solaris*)	soext=".so" ;;
 	*bsd*)		soext=".so" ;;
 	*darwin*)	soext=".dylib" ;;
 	*w32*)		soext=".dll" ;;
