@@ -39,7 +39,7 @@ gp_config_len3="$(expr "$gp_config_len" - 3)"
 n="$gp_config_len"
 while test "$n" -gt 0; do
       gp_config_empty="${gp_config_empty} "
-      n="$(expr $n - 1)"
+      n="$(expr "$n" - 1)"
 done
 gp_config_msg="
 Configuration (${PACKAGE_TARNAME} ${PACKAGE_VERSION}):
@@ -57,7 +57,7 @@ gp_config_msg="${gp_config_msg}
   [$1]
 "
 ],[
-gp_config_msg_len="$(expr length "[$1]")"
+gp_config_msg_len="$(expr "[$1]" : '.*')"
 if test "$gp_config_msg_len" -ge "$gp_config_len"; then
 	gp_config_msg_lhs="$(expr "[$1]" : "\(.\{0,${gp_config_len3}\}\)")..:"
 else
