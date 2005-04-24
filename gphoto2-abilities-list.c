@@ -60,6 +60,14 @@
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 #define CHECK_MEM(m)         {if (!(m)) return (GP_ERROR_NO_MEMORY);}
 
+/** CAMLIBDIR_ENV:
+ *
+ * Name of the environment variable which may contain the path where
+ * to look for the camlibs. If this environment variable is not defined,
+ * use the compiled-in default constant.
+ **/
+#define CAMLIBDIR_ENV "CAMLIBS"
+
 /**
  * CameraAbilitiesList:
  *
@@ -261,9 +269,11 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 int
 gp_abilities_list_load (CameraAbilitiesList *list, GPContext *context)
 {
+	const char *camlib_env = getenv(CAMLIBDIR_ENV);
+	const char *camlibs = (camlib_env != NULL)?camlib_env:CAMLIBS;
 	CHECK_NULL (list);
 
-	CHECK_RESULT (gp_abilities_list_load_dir (list, CAMLIBS, context));
+	CHECK_RESULT (gp_abilities_list_load_dir (list, camlibs, context));
 	CHECK_RESULT (gp_abilities_list_sort (list));
 
 	return (GP_OK);
