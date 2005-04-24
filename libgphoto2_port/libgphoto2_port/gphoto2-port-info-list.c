@@ -72,6 +72,14 @@ struct _GPPortInfoList {
 #define CHECK_NULL(x) {if (!(x)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CR(x)         {int r=(x);if (r<0) return (r);}
 
+/** IOLIBDIR_ENV:
+ *
+ * Name of the environment variable which may contain the path where
+ * to look for the IO libs. If this environment variable is not defined,
+ * use the compiled-in default constant.
+ **/
+#define IOLIBDIR_ENV "IOLIBS"
+
 /**
  * gp_port_info_list_new:
  * @list:
@@ -242,15 +250,17 @@ foreach_func (const char *filename, lt_ptr data)
 int
 gp_port_info_list_load (GPPortInfoList *list)
 {
+	const char *iolibs_env = getenv(IOLIBDIR_ENV);
+	const char *iolibs = (iolibs_env != NULL)?iolibs_env:IOLIBS;
 	int result;
 
 	CHECK_NULL (list);
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list", _("Using ltdl to load io-drivers "
-		"from '%s'..."),IOLIBS);
+		"from '%s'..."),iolibs);
 	lt_dlinit ();
-	lt_dladdsearchdir (IOLIBS);
-	result = lt_dlforeachfile (IOLIBS, foreach_func, list);
+	lt_dladdsearchdir (iolibs);
+	result = lt_dlforeachfile (iolibs, foreach_func, list);
 	lt_dlexit ();
 	if (result < 0)
 		return (result);
