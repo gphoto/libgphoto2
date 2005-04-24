@@ -286,6 +286,17 @@ struct _CameraFilesystem {
 	}								\
 }
 
+/** check for buffer overflow */
+#define CBO(bufsize, string_len, msg) \
+	if (bufsize <= string_len) { \
+		GP_DEBUG ("%s: strlen(...) = %d " \
+			">= sizeof(buffer) = %d", \
+			msg, string_len, bufsize \
+		); \
+		gp_context_error (context, "preventing buffer overflow"); \
+	return GP_ERROR; \
+	}
+
 static int
 delete_all_files (CameraFilesystem *fs, int x)
 {
@@ -387,14 +398,15 @@ append_folder (CameraFilesystem *fs, const char *folder, GPContext *context)
 {
         CameraFilesystemFolder *new;
         int x;
-        char buf[128];
+        char *buf = NULL;
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-filesystem",
 		"Internally appending folder %s...", folder);
 
-        CHECK_NULL (fs && folder);
+	CHECK_NULL (fs);
+	CHECK_NULL (folder);	
 	CC (context);
-        CA (folder, context);
+	CA (folder, context);
 
         /* Make sure the directory doesn't exist */
 	for (x = 0; x < fs->count; x++)
@@ -408,7 +420,9 @@ append_folder (CameraFilesystem *fs, const char *folder, GPContext *context)
         }
 
         /* Make sure the parent exist. If not, create it. */
-	strncpy (buf, folder, sizeof (buf));
+	buf = strdup (folder);
+	CHECK_NULL (buf);
+	/* free buf before returning */
         for (x = strlen (buf) - 1; x >= 0; x--)
                 if (buf[x] == '/')
                         break;
@@ -431,7 +445,10 @@ append_folder (CameraFilesystem *fs, const char *folder, GPContext *context)
         fs->count++;
 
 	/* Initialize the folder (and remove trailing slashes if necessary). */
-        strcpy (fs->folder[fs->count - 1].name, folder);
+	CBO(sizeof(fs->folder[fs->count - 1].name), strlen(folder),
+	    "append_folder(): folder >= sizeof(CameraFilesystemFolder.name)");
+	strcpy (fs->folder[fs->count - 1].name, folder);
+	fs->folder[fs->count - 1].name[sizeof(fs->folder[fs->count - 1].name)-1] = '\0';
         if ((strlen (folder) > 1) &&
             (fs->folder[fs->count - 1].name[strlen (folder) - 1] == '/'))
                 fs->folder[fs->count - 1].name[strlen (folder) - 1] = '\0';
@@ -439,11 +456,12 @@ append_folder (CameraFilesystem *fs, const char *folder, GPContext *context)
         fs->folder[fs->count - 1].files_dirty = 1;
         fs->folder[fs->count - 1].folders_dirty = 1;
 
+	free(buf);
         return (GP_OK);
 }
 
 static int
-append_file (CameraFilesystem *fs, int x, CameraFile *file)
+append_file (CameraFilesystem *fs, int x, CameraFile *file, GPContext *context)
 {
 	CameraFilesystemFile *new;
 	const char *name;
@@ -462,6 +480,9 @@ append_file (CameraFilesystem *fs, int x, CameraFile *file)
 	fs->folder[x].count++;
 	memset (&(fs->folder[x].file[fs->folder[x].count - 1]), 0,
 		sizeof (CameraFilesystemFile));
+	CBO(strlen(name), 
+	    sizeof(fs->folder[x].file[fs->folder[x].count - 1].name),
+	    "append_file()");
 	strcpy (fs->folder[x].file[fs->folder[x].count - 1].name, name);
 	fs->folder[x].file[fs->folder[x].count - 1].info_dirty = 1;
 	fs->folder[x].file[fs->folder[x].count - 1].normal = file;
@@ -1194,7 +1215,7 @@ gp_filesystem_put_file (CameraFilesystem *fs, const char *folder,
 
 	/* Upload the file */
 	CR (fs->put_file_func (fs, folder, file, fs->folder_data, context));
-	CR (append_file (fs, x, file));
+	CR (append_file (fs, x, file, context));
 
 	return (GP_OK);
 }
