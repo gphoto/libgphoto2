@@ -672,10 +672,13 @@ gp_port_usb_find_device_by_class_lib(GPPort *port, int class, int subclass, int 
 				gp_log (GP_LOG_VERBOSE, "gphoto2-port-usb",
 					"Detected defaults: config %d, "
 					"interface %d, altsetting %d, "
+					"idVendor ID %04x, idProduct %04x, "
 					"inep %02x, outep %02x, intep %02x",
 					port->settings.usb.config,
 					port->settings.usb.interface,
 					port->settings.usb.altsetting,
+					dev->descriptor.idVendor,
+					dev->descriptor.idProduct,
 					port->settings.usb.inep,
 					port->settings.usb.outep,
 					port->settings.usb.intep
