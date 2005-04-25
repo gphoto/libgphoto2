@@ -422,7 +422,9 @@ append_folder (CameraFilesystem *fs, const char *folder, GPContext *context)
         /* Make sure the parent exist. If not, create it. */
 	buf = strdup (folder);
 	CHECK_NULL (buf);
-	/* free buf before returning */
+	/* Do not forget to free buf before returning in the normal case.
+	 * In case of error abortions, it probably will not matter much, though.
+	 */
         for (x = strlen (buf) - 1; x >= 0; x--)
                 if (buf[x] == '/')
                         break;
