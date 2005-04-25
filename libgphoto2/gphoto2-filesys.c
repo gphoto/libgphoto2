@@ -294,7 +294,7 @@ struct _CameraFilesystem {
 			msg, string_len, bufsize \
 		); \
 		gp_context_error (context, "preventing buffer overflow"); \
-	return GP_ERROR; \
+		return GP_ERROR; \
 	}
 
 static int
