@@ -448,7 +448,6 @@ append_folder (CameraFilesystem *fs, const char *folder, GPContext *context)
 	CBO(sizeof(fs->folder[fs->count - 1].name), strlen(folder),
 	    "append_folder(): folder >= sizeof(CameraFilesystemFolder.name)");
 	strcpy (fs->folder[fs->count - 1].name, folder);
-	fs->folder[fs->count - 1].name[sizeof(fs->folder[fs->count - 1].name)-1] = '\0';
         if ((strlen (folder) > 1) &&
             (fs->folder[fs->count - 1].name[strlen (folder) - 1] == '/'))
                 fs->folder[fs->count - 1].name[strlen (folder) - 1] = '\0';
