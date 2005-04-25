@@ -2,4 +2,4 @@
 
 SUBDIRS = @SUBDIRS_CAMLIBS@
 
-EXTRA_DIST = makefile.os2
+EXTRA_DIST = camlib.sym makefile.os2
