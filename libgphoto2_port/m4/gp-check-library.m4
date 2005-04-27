@@ -9,7 +9,7 @@ dnl Parameters:
 dnl
 dnl    VARNAMEPART            partial variable name for variable definitions
 dnl    libname                name of library
-dnl    VERSION-REQUIREMENT    check for the version using pkg-config
+dnl    VERSION-REQUIREMENT    check for the version using pkg-config.
 dnl                           default: []
 dnl    headername             name of header file
 dnl                           default: []
@@ -21,7 +21,7 @@ dnl    ACTION-IF-NOT-FOUND    shell action to execute if not found
 dnl                           default: []
 dnl    OPTIONAL-REQUIRED-ETC  one of "mandatory", "default-on", "default-off"
 dnl                           default: [mandatory]
-dnl    WHERE-TO-GET-IT        place where to find the library
+dnl    WHERE-TO-GET-IT        place where to find the library, e.g. a URL
 dnl                           default: []
 dnl
 dnl What the ACTION-IFs can do:
@@ -31,14 +31,14 @@ dnl     the outcome of the test
 dnl   * execute additional checks to define more specific variables, e.g.
 dnl     for different API versions
 dnl
-dnl Results after calling it:
+dnl These results have happened after calling GP_CHECK_LIBRARY:
 dnl
 dnl    AM_CONDITIONAL([HAVE_VARPREFIX],[ if found ])
 dnl    AM_SUBST([have_VARPREFIX], [ "yes" if found, "no" if not found ])
 dnl    AM_SUBST([VARPREFIX_CFLAGS],[ -I, -D and stuff ])
-dnl    AM_SUBST([VARPREFIX_LIBS], [ /path/to/libname.la ])
+dnl    AM_SUBST([VARPREFIX_LIBS], [ /path/to/libname.la -L/path -lfoo ])
 dnl
-dnl Parameters to ./configure which influence the results:
+dnl Parameters to ./configure which influence the GP_CHECK_LIBRARY results:
 dnl
 dnl   * VARNAMEPART_LIBS=/foobar/arm-palmos/lib/libname.la
 dnl     VARNAMEPART_CFLAGS=-I/foobar/include
@@ -51,6 +51,7 @@ dnl
 dnl Examples:
 dnl    GP_CHECK_LIBRARY([LIBEXIF], [libexif])dnl
 dnl    GP_CHECK_LIBRARY([LIBEXIF], [libexif-gtk], [>= 0.3.3])dnl
+dnl                                  note the space! ^
 dnl
 dnl Possible enhancements:
 dnl
