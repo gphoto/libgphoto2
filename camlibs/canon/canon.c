@@ -1382,9 +1382,9 @@ canon_int_set_owner_name (Camera *camera, const char *name, GPContext *context)
         GP_DEBUG ("canon_int_set_owner_name() called, name = '%s'", name);
         if (strlen (name) > 30) {
                 gp_context_error (context,
-                                  _("Name '%s' (%i characters) "
+                                  _("Name '%s' (%li characters) "
                                     "too long, maximum 30 characters are "
-                                    "allowed."), name, strlen (name));
+                                    "allowed."), name, (long)strlen (name));
                 return GP_ERROR_BAD_PARAMETERS;
         }
 
@@ -2393,6 +2393,10 @@ canon_int_delete_file (Camera *camera, const char *name, const char *dir, GPCont
                         }
                         if ( msg == NULL )
                                 return GP_ERROR_OS_FAILURE;
+                        else if ( le32atoh ( msg ) != 0 ) {
+                                GP_DEBUG ( "canon_int_delete_file: non-zero return code 0x%x from camera.\n   Possibly tried to delete a nonexistent file.", le32atoh ( msg ) );
+                                return GP_ERROR_FILE_NOT_FOUND;
+                        }
 
                         break;
                 case GP_PORT_SERIAL:
