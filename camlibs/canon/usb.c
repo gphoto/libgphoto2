@@ -460,12 +460,11 @@ canon_usb_init (Camera *camera, GPContext *context)
                         GP_DEBUG ( "canon_usb_init: \"get picture abilities\" failed; continuing anyway." );
                 }
                 else if ( bytes_read == 0x424 ) {
-                        GP_DEBUG ( "canon_usb_init: Got the expected number of bytes back from \"get picture abilities.\"" );
+                        GP_DEBUG ( "canon_usb_init: Got the expected length back from \"get picture abilities.\"" );
                 } else {
-                        gp_context_message ( context,
-                                           _("canon_usb_init: "
-                                             "Unexpected return of %i bytes (expected %i) from \"get picture abilities.\""),
-                                           bytes_read, 0x424 );
+                        GP_DEBUG ( "canon_usb_init: "
+				   "Unexpected return of %i bytes (expected %i) from \"get picture abilities.\" We will continue.",
+				   bytes_read, 0x424 );
                 }
                 res = canon_int_get_battery(camera, NULL, NULL, context);
                 if (res != GP_OK) {
@@ -533,7 +532,7 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
                         if ( c_res == NULL )
                                 return GP_ERROR_OS_FAILURE;
                         if ( bytes_read == 0x334 ) {
-                                GP_DEBUG ( "canon_usb_lock_keys: Got the expected number of bytes back from \"get picture abilities.\"" );
+                                GP_DEBUG ( "canon_usb_lock_keys: Got the expected length back from \"get picture abilities.\"" );
                         } else {
                                 GP_DEBUG ( "canon_usb_lock_keys: "
                                            "Unexpected return of %i bytes (expected %i) from "
@@ -546,11 +545,11 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
                         if ( c_res == NULL )
                                 return GP_ERROR_OS_FAILURE;
                         if (bytes_read == 0x4) {
-                                GP_DEBUG ("canon_usb_lock_keys: Got the expected number of bytes back.");
+                                GP_DEBUG ("canon_usb_lock_keys: Got the expected length back.");
                         } else {
                                 gp_context_error (context,
                                                   _("canon_usb_lock_keys: "
-                                                  "Unexpected amount of data returned (%i bytes, expected %i)"),
+                                                  "Unexpected length returned from \"lock keys\" function (%i bytes, expected %i)"),
                                                   bytes_read, 0x4);
                                 return GP_ERROR_CORRUPTED_DATA;
                         }
@@ -568,11 +567,11 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
                         if ( c_res == NULL )
                                 return GP_ERROR_OS_FAILURE;
                         if (bytes_read == 0x4) {
-                                GP_DEBUG ("canon_usb_lock_keys: Got the expected number of bytes back.");
+                                GP_DEBUG ("canon_usb_lock_keys: Got the expected length back.");
                         } else {
                                 gp_context_error (context,
                                                   _("canon_usb_lock_keys: "
-                                                  "Unexpected amount of data returned (%i bytes, expected %i)"),
+                                                  "Unexpected length returned (%i bytes, expected %i)"),
                                                   bytes_read, 0x4);
                                 return GP_ERROR_CORRUPTED_DATA;
                         }
@@ -594,11 +593,11 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
                         if ( c_res == NULL )
                                 return GP_ERROR_OS_FAILURE;
                         if (bytes_read == 0x4) {
-                                GP_DEBUG ("canon_usb_lock_keys: Got the expected number of bytes back.");
+                                GP_DEBUG ("canon_usb_lock_keys: Got the expected length back.");
                         } else {
                                 gp_context_error (context,
                                                   _("canon_usb_lock_keys: "
-                                                  "Unexpected amount of data returned (%i bytes, expected %i)"),
+                                                  "Unexpected length returned (%i bytes, expected %i)"),
                                                   bytes_read, 0x4);
                                 return GP_ERROR_CORRUPTED_DATA;
                         }
@@ -619,7 +618,7 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
                                 GP_DEBUG ( "canon_usb_lock_keys: \"get picture abilities\" failed; continuing anyway." );
                         }
                         else if ( bytes_read == 0x474 ) {
-                                GP_DEBUG ( "canon_usb_lock_keys: Got the expected number of bytes back from \"get picture abilities.\"" );
+                                GP_DEBUG ( "canon_usb_lock_keys: Got the expected length back from \"get picture abilities.\"" );
                         } else {
                                 gp_context_message ( context,
                                                    _("canon_usb_lock_keys: "
@@ -635,11 +634,11 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
                         if ( c_res == NULL )
                                 return GP_ERROR_OS_FAILURE;
                         if (bytes_read == 0xc) {
-                                GP_DEBUG ("canon_usb_lock_keys: Got the expected number of bytes back.");
+                                GP_DEBUG ("canon_usb_lock_keys: Got the expected length back.");
                         } else {
                                 gp_context_error (context,
                                                   _("canon_usb_lock_keys: "
-                                                  "Unexpected amount of data returned (%i bytes, expected %i)"),
+                                                  "Unexpected length returned (%i bytes, expected %i)"),
                                                   bytes_read, 0xc);
                                 return GP_ERROR_CORRUPTED_DATA;
                         }
@@ -678,11 +677,11 @@ canon_usb_unlock_keys (Camera *camera, GPContext *context)
                         if ( c_res == NULL )
                                 return GP_ERROR_OS_FAILURE;
                         if (bytes_read == 0x4) {
-                                GP_DEBUG ("canon_usb_unlock_keys: Got the expected number of bytes back.");
+                                GP_DEBUG ("canon_usb_unlock_keys: Got the expected length back.");
                         } else {
                                 gp_context_error (context,
                                                   _("canon_usb_unlock_keys: "
-                                                    "Unexpected amount of data returned (%i bytes, expected %i)"),
+                                                    "Unexpected length returned (%i bytes, expected %i)"),
                                                   bytes_read, 0x4);
                                 return GP_ERROR_CORRUPTED_DATA;
                         }
@@ -694,11 +693,11 @@ canon_usb_unlock_keys (Camera *camera, GPContext *context)
                         if ( c_res == NULL )
                                 return GP_ERROR_OS_FAILURE;
                         if (bytes_read == 0x4) {
-                                GP_DEBUG ("canon_usb_unlock_keys: Got the expected number of bytes back.");
+                                GP_DEBUG ("canon_usb_unlock_keys: Got the expected length back.");
                         } else {
                                 gp_context_error (context,
                                                   _("canon_usb_unlock_keys: "
-                                                    "Unexpected amount of data returned (%i bytes, expected %i)"),
+                                                    "Unexpected length returned (%i bytes, expected %i)"),
                                                   bytes_read, 0x4);
                                 return GP_ERROR_CORRUPTED_DATA;
                         }
@@ -743,7 +742,7 @@ canon_usb_get_body_id (Camera *camera, GPContext *context)
                         return GP_ERROR_OS_FAILURE;
                 else if (bytes_read == 0x8) {
                         int body_id = le32atoh ( c_res+0x4 );
-                        GP_DEBUG ("canon_usb_get_body_id: Got the expected number of bytes back.");
+                        GP_DEBUG ("canon_usb_get_body_id: Got the expected length back.");
                         if ( camera->pl->md->usb_product == 0x3044 )
                                 /* EOS D30 is a special case */
                                 GP_DEBUG ("canon_usb_get_body_id: body ID is %04x%05d", (body_id>>16)&0xffff, body_id&0xffff );
@@ -765,7 +764,7 @@ canon_usb_get_body_id (Camera *camera, GPContext *context)
                         return GP_ERROR_OS_FAILURE;
                 else if (bytes_read == 0x8) {
                         int body_id = le32atoh ( c_res+0x4 );
-                        GP_DEBUG ("canon_usb_get_body_id: Got the expected number of bytes back.");
+                        GP_DEBUG ("canon_usb_get_body_id: Got the expected length back.");
                         GP_DEBUG ("canon_usb_get_body_id: body ID is %010d", body_id );
                         return ( body_id );
                 } else {
@@ -1516,7 +1515,7 @@ canon_usb_long_dialogue (Camera *camera, canonCommandIndex canon_funct, unsigned
          */
         if (bytes_read != 0x40) {
                 GP_DEBUG ("canon_usb_long_dialogue: canon_usb_dialogue "
-                          "did not return (%i bytes) the number of bytes "
+                          "returned %i bytes, not the length "
                           "we expected (%i)!. Aborting.", bytes_read, 0x40);
                 return GP_ERROR_CORRUPTED_DATA;
         }
