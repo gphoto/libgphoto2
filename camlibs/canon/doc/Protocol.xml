@@ -330,6 +330,9 @@
 
         <literallayout>
         $Log$
+        Revision 1.18  2005/04/27 19:28:22  swestin
+        We now know the contents of the init packet from PowerShot SD200.
+
         Revision 1.17  2005/04/14 20:31:10  swestin
         Corrected one erroneous output dump.
 
@@ -1017,7 +1020,7 @@ xx &lt;directory_name&gt; 00 00 00
               <row><entry>G1, Pro90 IS, Digital IXUS</entry><entry>00 05 07 00</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
               <row><entry>S10, S20</entry><entry>01 00 02 00</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
               <row><entry>G2, D30, D60, 300D, S110, A10, A20, S30, S300</entry><entry>01 00 05 03</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
-              <row><entry>G3, A60, A70, A75, A80, A300, A400, A510, S45, S50, S230, S400</entry><entry>01 06 15 83</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
+              <row><entry>G3, A60, A70, A75, A80, A300, A400, A510, S45, S50, S230, S400, SD200</entry><entry>01 06 15 83</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
               <row><entry>20D</entry><entry>01 06 15 83</entry><entry><emphasis>0x80000175</emphasis></entry><entry>0x800 (2048)</entry><entry>0x10000 (65536)</entry><entry>0xfd00 (64768)</entry><entry>0x10000 (65536)</entry></row>
               <row><entry>350D</entry><entry>01 06 15 83</entry><entry><emphasis>0x80000189</emphasis></entry><entry>0x800 (2048)</entry><entry>0x10000 (65536)</entry><entry>0xfd00 (64768)</entry><entry>0x10000 (65536)</entry></row>
               <row><entry>Optura 200 MC, Optura 40 camcorders</entry><entry>03 05 04 81</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
