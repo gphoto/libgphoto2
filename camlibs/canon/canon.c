@@ -100,10 +100,8 @@
   European name      North American                 Japanese             Intro date
 
   IXUS 700           PowerShot SD500                IXY Digital 60       February 2005
-  IXUS 50            PowerShot SD400                IXY Digital 55       February 2005
   PowerShot A520                                                         January 2005
   Digital IXUS 40    PowerShot SD300                IXY Digital 50       September 2004
-  PowerShot G6                                                           August 2004
   PowerShot Pro1                                                         February 2004
   */
 const struct canonCamModelData models[] = {
@@ -167,19 +165,16 @@ const struct canonCamModelData models[] = {
         {"Canon:PowerShot S230 (normal mode)",  CANON_CLASS_4,  0x04A9, 0x3070, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:Digital IXUS v3 (normal mode)", CANON_CLASS_4,  0x04A9, 0x3070, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         /* 0x3071 is S230/IXUS v3 in PTP mode */
-
+        /* Following cameras share the ID for PTP and Canon modes */
         {"Canon:PowerShot SD100 (normal mode)", CANON_CLASS_5,  0x04A9, 0x3072, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:Digital IXUS II (normal mode)", CANON_CLASS_5,  0x04A9, 0x3072, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-        /* added from report on mailinglist. XXX: assuming capture works -Marcus */
-        /* PS A70 uses the same ProductID for PTP and Canon, with protocol autodetection */
         {"Canon:PowerShot A70",         CANON_CLASS_1,  0x04A9, 0x3073, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-        /* PS A60 uses the same ProductID for PTP and Canon, with protocol autodetection */
         {"Canon:PowerShot A60",         CANON_CLASS_1,  0x04A9, 0x3074, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-        /* reported working on SourceForge patch tracker. */
-        /* PS S400 uses the same ProductID for PTP and Canon, with protocol autodetection */
         {"Canon:Digital IXUS 400",      CANON_CLASS_1,  0x04A9, 0x3075, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:PowerShot S400",        CANON_CLASS_1,  0x04A9, 0x3075, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        /* End of shared ID's */
         {"Canon:PowerShot A300",        CANON_CLASS_1,  0x04A9, 0x3076, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        /* S50 also shares ID for PTP and Canon modes */
         {"Canon:PowerShot S50 (normal mode)",   CANON_CLASS_4,  0x04A9, 0x3077, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:ZR70MC",                CANON_CLASS_5,  0x04A9, 0x3078, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:MV650i",                CANON_CLASS_5,  0x04A9, 0x3079, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
@@ -194,15 +189,17 @@ const struct canonCamModelData models[] = {
         /* 3080 is in MacOS Info.plist, but I don't know what it is
          * --swestin. */
         {"Canon:PowerShot Unknown 4",   CANON_CLASS_1,  0x04A9, 0x3080, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+
         {"Canon:Optura 10",             CANON_CLASS_1,  0x04A9, 0x3082, CAP_NON, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:MVX100i",               CANON_CLASS_1,  0x04A9, 0x3082, CAP_NON, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-
         {"Canon:EOS 10D",               CANON_CLASS_4,  0x04A9, 0x3083, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:EOS 300D (normal mode)", CANON_CLASS_4, 0x04A9, 0x3084, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:EOS Digital Rebel (normal mode)",CANON_CLASS_4, 0x04A9, 0x3084, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:EOS Kiss Digital (normal mode)",CANON_CLASS_4,  0x04A9, 0x3084, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
         /* PS G5 uses the same ProductID for PTP and Canon, with protocol autodetection */
         {"Canon:PowerShot G5 (normal mode)", CANON_CLASS_5,     0x04A9, 0x3085, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+
+        /* Elura 50 camcorder is 0x3087 in PTP mode. */
 
         /* Optura Xi/MVX 3i/FV M1 uses 308d in PTP mode; 3089 in Canon mode? */
 
@@ -211,12 +208,14 @@ const struct canonCamModelData models[] = {
         /* Optura 300/MVX 10i/IXY DV M2 video camera uses 3095 in PTP mode. */
 
         /* 0x3099 is the EOS 300D/Digital Rebel in PTP mode */
+        /* A80 seems to share the ID for PTP and Canon modes */
         {"Canon:PowerShot A80 (normal mode)",   CANON_CLASS_1,  0x04A9, 0x309A, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         /* 0x309b is the SD10 Digital ELPH/Digital IXUS i/IXY Digital L
            in PTP mode; will it work in Canon mode? */
         {"Canon:PowerShot SD10 Digital ELPH (normal mode)",   CANON_CLASS_1,  0x04A9, 0x309B, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-        {"Canon:Digital IXUS i (normal mode)",  CANON_CLASS_1,  0x04A9, 0x309C, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-        {"Canon:PowerShot IXY Digital L (normal mode)", CANON_CLASS_1,  0x04A9, 0x309C, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:Digital IXUS i (normal mode)",  CANON_CLASS_1,  0x04A9, 0x309B, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:PowerShot IXY Digital L (normal mode)", CANON_CLASS_1,  0x04A9, 0x309B, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        /* Product ID shared between PTP and Canon mode */
         {"Canon:PowerShot S1 IS (normal mode)", CANON_CLASS_5,  0x04A9, 0x309C, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
         /* 30a0 is ZR90/MV750i camcorder */
@@ -224,8 +223,10 @@ const struct canonCamModelData models[] = {
         /* 30a8 is Elura 60E/MVX200i camcorder */
         /* 30a9 is Optura 40/MVX25i camcorder */
 
+        /* Another block of cameras that share the ID for PTP and Canon modes */
         {"Canon:PowerShot S70 (normal mode)",   CANON_CLASS_5,  0x04A9, 0x30b1, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:PowerShot S60 (normal mode)",   CANON_CLASS_5,  0x04A9, 0x30b2, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:PowerShot G6 (normal mode)",    CANON_CLASS_5,  0x04A9, 0x30b3, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:Digital IXUS 500 (normal mode)",CANON_CLASS_5,  0x04A9, 0x30b4, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:PowerShot S500 Digital ELPH (normal mode)",CANON_CLASS_5,       0x04A9, 0x30b4, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:IXY Digital 500 (normal mode)", CANON_CLASS_5,  0x04A9, 0x30b4, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
@@ -239,12 +240,17 @@ const struct canonCamModelData models[] = {
         {"Canon:Digital IXUS 430 (normal mode)",CANON_CLASS_5,  0x04A9, 0x30ba, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:IXY Digital 430 (normal mode)", CANON_CLASS_5,  0x04A9, 0x30ba, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:PowerShot A95 (normal mode)",   CANON_CLASS_5,  0x04A9, 0x30bb, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        /* End of shared ID's */
 
         /* 0x30bf is PowerShot SD300/Digital IXUS 40 in PTP mode */
-        /* 0x30c0 is PowerShot SD200 in PTP mode */
-        {"Canon:PowerShot SD200 (normal mode)", CANON_CLASS_4,  0x04A9, 0x30c0, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-        {"Canon:Digital IXUS 30 (normal mode)", CANON_CLASS_4,  0x04A9, 0x30c0, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-        {"Canon:IXY Digital 40 (normal mode)",  CANON_CLASS_4,  0x04A9, 0x30c0, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        /* Another block of cameras that share the ID for PTP and Canon modes */
+        {"Canon:PowerShot SD200 (normal mode)", CANON_CLASS_1,  0x04A9, 0x30c0, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:Digital IXUS 30 (normal mode)", CANON_CLASS_1,  0x04A9, 0x30c0, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:IXY Digital 40 (normal mode)",  CANON_CLASS_1,  0x04A9, 0x30c0, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:PowerShot SD400 (normal mode)", CANON_CLASS_4,  0x04A9, 0x30c1, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:Digital IXUS 50 (normal mode)", CANON_CLASS_4,  0x04A9, 0x30c1, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:IXY Digital 55 (normal mode)",  CANON_CLASS_4,  0x04A9, 0x30c1, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        /* End of shared ID's */
 
         {"Canon:PowerShot A510 (normal mode)",  CANON_CLASS_1,  0x04A9, 0x30c2, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
