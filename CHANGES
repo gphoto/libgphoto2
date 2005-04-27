@@ -6,7 +6,11 @@ Build system (packagers beware!):
    * now requires libltdl
    * works with contemporary build tools
    * new ./configure parameter set
-     
+
+libgphoto2:
+
+   * If set, use environment variable CAMLIBS to find the camera drivers.
+     Ditto for libgphoto2_port, IOLIBS and IO drivers.
 
 ----------------------------------------------------------------------------
 libgphoto2 2.1.6
