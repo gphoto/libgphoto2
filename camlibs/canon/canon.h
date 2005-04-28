@@ -65,21 +65,30 @@ typedef enum {
 
 /**
  * canonCamClass:
- * @CANON_CLASS_0: does not support key lock at all. Examples: G1,
- *                 Pro 90is, S100, S10, S20
+ * @CANON_CLASS_0: does not support key lock at all.
+ *                 Only known models: G1, Pro 90is, S100, S110, IXUS
+ *                 v, IXY DIGITAL, Digital IXUS, S10, S20
+ *
  * @CANON_CLASS_1: supports lock, but not unlock. Supports (and
  *                 requires) "get picture abilities" before capture.
  *                 Examples: A5, A5 Zoom, A50, S30, S40, S200, S300,
  *                 S330, G2, A10, A20, A30, A40, A100, A200,
  *                 Optura200/MVX2i.
- * @CANON_CLASS_2: like class 1, but doesn't support EXIF. Example: Pro 70.
- * @CANON_CLASS_3: like class 1, but can't delete image
+ *
+ * @CANON_CLASS_2: like class 1, but doesn't support EXIF. Pro 70
+ *		   is only known model.
+ *
+ * @CANON_CLASS_3: like class 1, but can't delete image. Only known models:
+ *		   A5, A5 Zoom.
+ *
  * @CANON_CLASS_4: supports lock/unlock. EOS D30 was first example; others
  *                 include D60, 10D, 300D, S230, S400. Doesn't support
  *		   "get picture abilities".
+ *
  * @CANON_CLASS_5: supports lock, no unlock, but not "get picture abilities".
  *                 Examples: S45, G3.
- * @CANON_CLASS_6: major protocol revision. 20D and 350D use this protocol.
+ *
+ * @CANON_CLASS_6: major protocol revision. Examples: EOS 20D and 350D.
  *
  * Enumeration of all camera types currently supported. Simplified so
  * that all cameras with similar behavior have the same code.
