@@ -64,14 +64,16 @@ static int serial_code = 0;
  * messages. */
 static struct canon_usb_status canon_usb_status_table[] = {
         {0x00000000, NULL},
-        {0x22000002, "File not found"},
-        {0x29000002, "File was protected"},
-        {0x2a000002, "Compact Flash card full"},
-        {0x81000002, "Failed to lock EOS keys"},
-        {0x82000002, "Failed to unlock EOS keys"},
-        {0x85000002, "Could not switch to capture mode"},
-        {0x86000002, "Invalid command parameters"},
-        {0x87000002, "No storage card in camera"}
+        {0x02000022, "File not found"},
+        {0x02000029, "File was protected"},
+        {0x0200002a, "Compact Flash card full"},
+        {0x02000081, "Failed to lock EOS keys"},
+        {0x02000082, "Failed to unlock EOS keys"},
+        {0x02000085, "Could not switch to capture mode"},
+        {0x02000086, "Invalid command parameters"},
+        {0x02000087, "No storage card in camera"},
+	{0x82200040, "Unknown error (new protocol)"},
+	{0x82220040, "Unknown error (new protocol)"}
 };
 
 
@@ -1453,13 +1455,14 @@ canon_usb_dialogue (Camera *camera, canonCommandIndex canon_funct, int *return_l
                 return buffer;
         } else {
                 char *msg = canon_usb_decode_status ( le32atoh ( buffer+0x50 ) );
-                if ( msg != NULL ) {
-                        GP_DEBUG ( "canon_usb_dialogue: camera status \"%s\""
-                                   " in response to command 0x%x 0x%x 0x%x (%s)",
-                                   msg, cmd1, cmd2, cmd3, funct_descr );
-                }
                 if (return_length)
                         *return_length = (read_bytes - 0x50);
+                if ( msg != NULL ) {
+                        GP_DEBUG ( "canon_usb_dialogue: camera status \"%s\""
+				   " in response to command 0x%x 0x%x 0x%x (%s)",
+				   msg, cmd1, cmd2, cmd3, funct_descr );
+			return NULL;
+                }
                 return buffer + 0x50;
         }
 }
