@@ -330,6 +330,11 @@
 
         <literallayout>
         $Log$
+        Revision 1.19  2005/04/28 18:03:36  swestin
+        Added some new info from init packet for certain models.
+        Corrected init packet info for Optura 20, Optura 40 camcorders.
+        Corrected one dangling link.
+
         Revision 1.18  2005/04/27 19:28:22  swestin
         We now know the contents of the init packet from PowerShot SD200.
 
@@ -1021,9 +1026,10 @@ xx &lt;directory_name&gt; 00 00 00
               <row><entry>S10, S20</entry><entry>01 00 02 00</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
               <row><entry>G2, D30, D60, 300D, S110, A10, A20, S30, S300</entry><entry>01 00 05 03</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
               <row><entry>G3, A60, A70, A75, A80, A300, A400, A510, S45, S50, S230, S400, SD200</entry><entry>01 06 15 83</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
-              <row><entry>20D</entry><entry>01 06 15 83</entry><entry><emphasis>0x80000175</emphasis></entry><entry>0x800 (2048)</entry><entry>0x10000 (65536)</entry><entry>0xfd00 (64768)</entry><entry>0x10000 (65536)</entry></row>
-              <row><entry>350D</entry><entry>01 06 15 83</entry><entry><emphasis>0x80000189</emphasis></entry><entry>0x800 (2048)</entry><entry>0x10000 (65536)</entry><entry>0xfd00 (64768)</entry><entry>0x10000 (65536)</entry></row>
-              <row><entry>Optura 200 MC, Optura 40 camcorders</entry><entry>03 05 04 81</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
+              <row><entry>20D</entry><entry>01 06 15 83</entry><entry>0x80000175</entry><entry>0x800 (2048)</entry><entry>0x10000 (65536)</entry><entry>0xfd00 (64768)</entry><entry>0x10000 (65536)</entry></row>
+              <row><entry>350D</entry><entry>01 06 15 83</entry><entry>0x80000189</entry><entry>0x800 (2048)</entry><entry>0x10000 (65536)</entry><entry>0xfd00 (64768)</entry><entry>0x10000 (65536)</entry></row>
+              <row><entry>Optura 200 MC camcorder</entry><entry>03 05 04 81</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
+              <row><entry>Optura 20, Optura 40 camcorders</entry><entry>03 05 04 81</entry><entry><emphasis>USBid</emphasis></entry><entry>0x200 (512)</entry><entry>-1</entry><entry>0x200 (512)</entry><entry>0xfd00 (64768)</entry></row>
               <row><entry>S200, S330, A30, A40, A200</entry><entry>03 05 15 81</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
             </tbody>
           </tgroup>
@@ -3310,8 +3316,10 @@ do {
         </tgroup>
       </table>
 
-      <para>The observed values at 0x56 are: 0x01100000 (G2) 0x01270000 (IXUS 400), 0x01340000 (A80), 0x01450000 (A400),
-	0x01570000 (A510), 0x01290000 (G5), 0x01668000 (D60).</para>
+      <para>The observed values at 0x56 are: 0x00000110 (G2)
+	0x000125 (A70), 0x00000127 (IXUS 400), 0x00000134 (A80),
+	0x00000145 (A400), 0x00000157 (A510), 0x00000129 (G5),
+	0x80000166 (D60), 0x8003024a (Optura 20).</para>
 
       <para>Each entry in the table seems to be</para>
       <programlisting>
@@ -3932,9 +3940,7 @@ struct {
 0010  20 00 40 82            -                          .@.            
       </programlisting>
 
-      <para>That status code hasn't been seen before, but
-        &ldquo;20&nbsp;00&nbsp;00&nbsp;82&rdquo; is &ldquo;EOS unlock
-         keys failed&rdquo;.</para>
+      <para>That status code hasn't been seen before.</para>
 
     </section>
 
@@ -5107,7 +5113,7 @@ struct {
         <title>Get extended release parameters: 12</title>
 
         <para>Parameters are the 8-byte result from <link
-        linkend="newCamContGetExtParSize">Get size of extended release
+        linkend="sec.newCamContGetExtParSize">Get size of extended release
         parameters.</link></para>
 
          <para>Command: 0x5d bytes</para>
