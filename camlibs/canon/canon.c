@@ -136,8 +136,8 @@ const struct canonCamModelData models[] = {
         {"Canon:PowerShot S30",         CANON_CLASS_1,  0x04A9, 0x3057, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:PowerShot A40",         CANON_CLASS_1,  0x04A9, 0x3058, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:PowerShot A30",         CANON_CLASS_1,  0x04A9, 0x3059, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
-        /* 305a is the ZR50 Digital Camcorder. */
-        /* 305b is the ZR45MC Digital Camcorder. */
+        /* 305a is the ZR50 Digital Camcorder in USB Mass Storage mode. */
+        /* 305b is the ZR45MC Digital Camcorder in USB Mass Storage mode. */
         /* 305c is in MacOS Info.plist, but I don't know what it is --swestin. */
         {"Canon:PowerShot unknown 2",   CANON_CLASS_1,  0x04A9, 0x305c, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
 
@@ -158,7 +158,7 @@ const struct canonCamModelData models[] = {
         {"Canon:Optura 200 MC",         CANON_CLASS_1,  0x04A9, 0x306B, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:MVX2i",                 CANON_CLASS_1,  0x04A9, 0x306B, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:IXY DV M",              CANON_CLASS_1,  0x04A9, 0x306B, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-        {"Canon:PowerShot S45 (normal mode)",   CANON_CLASS_4,  0x04A9, 0x306C, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:PowerShot S45 (normal mode)",   CANON_CLASS_5,  0x04A9, 0x306C, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         /* 0x306D is S45 in PTP mode */
         {"Canon:PowerShot G3 (normal mode)",    CANON_CLASS_5,  0x04A9, 0x306E, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         /* 0x306F is G3 in PTP mode */
@@ -176,19 +176,20 @@ const struct canonCamModelData models[] = {
         {"Canon:PowerShot A300",        CANON_CLASS_1,  0x04A9, 0x3076, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         /* S50 also shares ID for PTP and Canon modes */
         {"Canon:PowerShot S50 (normal mode)",   CANON_CLASS_4,  0x04A9, 0x3077, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-        {"Canon:ZR70MC",                CANON_CLASS_5,  0x04A9, 0x3078, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
-        {"Canon:MV650i",                CANON_CLASS_5,  0x04A9, 0x3079, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-        /* 307a is in MacOS Info.plist, but I don't know what it is
-         * --swestin. */
-        {"Canon:PowerShot unknown 5",   CANON_CLASS_5,  0x04A9, 0x307a, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
-        /* MV630i is a DV camcorder */
-        {"Canon:MV630i",                CANON_CLASS_5,  0x04A9, 0x307b, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:ZR70MC (normal mode)",      CANON_CLASS_1,  0x04A9, 0x3078, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
+        /* 3079 is listed for MV650i, probably in PTP mode. */
+        {"Canon:MV650i (normal mode)",  CANON_CLASS_1,  0x04A9, 0x307a, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
+        /* 307b is listed for MV630i, probably in PTP mode. */
+        {"Canon:MV630i (normal mode)",  CANON_CLASS_1,  0x04A9, 0x307c, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
-        {"Canon:Optura 20",             CANON_CLASS_5,  0x04A9, 0x307f, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-        {"Canon:MVX150i",               CANON_CLASS_5,  0x04A9, 0x307f, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-        /* 3080 is in MacOS Info.plist, but I don't know what it is
-         * --swestin. */
-        {"Canon:PowerShot Unknown 4",   CANON_CLASS_1,  0x04A9, 0x3080, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        /* 307f is Optura 20/MVX150i in PTP mode */
+        {"Canon:Optura 20 (normal mode)", CANON_CLASS_1,  0x04A9, 0x3080, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:MVX150i (normal mode)", CANON_CLASS_1,  0x04A9, 0x3080, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        /* Sighted at
+         * <http://www.qbik.ch/usb/devices/showdescr.php?id=2232>. */
+        {"Canon:Optura 10",             CANON_CLASS_1,  0x04A9, 0x3081, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:MVX100i",               CANON_CLASS_1,  0x04A9, 0x3081, CAP_NON, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+
 
         {"Canon:Optura 10",             CANON_CLASS_1,  0x04A9, 0x3082, CAP_NON, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:MVX100i",               CANON_CLASS_1,  0x04A9, 0x3082, CAP_NON, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
@@ -199,13 +200,20 @@ const struct canonCamModelData models[] = {
         /* PS G5 uses the same ProductID for PTP and Canon, with protocol autodetection */
         {"Canon:PowerShot G5 (normal mode)", CANON_CLASS_5,     0x04A9, 0x3085, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
-        /* Elura 50 camcorder is 0x3087 in PTP mode. */
+        /* Elura 50 camcorder is 0x3087 in PTP mode; 3088 in Canon mode? */
+        {"Canon:Elura 50 (normal mode)",  CANON_CLASS_1,  0x04A9, 0x3088, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
-        /* Optura Xi/MVX 3i/FV M1 uses 308d in PTP mode; 3089 in Canon mode? */
+        /* Optura Xi/MVX 3i/FV M1 uses 308d in PTP mode; 308e in Canon mode? */
+        {"Canon:Optura Xi (normal mode)",  CANON_CLASS_1,  0x04A9, 0x308e, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:MVX 3i (normal mode)",  CANON_CLASS_1,  0x04A9, 0x308e, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:FV M1 (normal mode)",  CANON_CLASS_1,  0x04A9, 0x308e, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
-        /* Optura 300/MVX 10i/IXY DV M2 video camera uses 3093 in USB Mass Storage mode, */
+        /* Optura 300/MVX 10i/IXY DV M2 video camera uses 3093 in USB Mass Storage mode. */
 
-        /* Optura 300/MVX 10i/IXY DV M2 video camera uses 3095 in PTP mode. */
+        /* Optura 300/MVX 10i/IXY DV M2 video camera uses 3095 in PTP mode; 3096 in Canon mode? */
+        {"Canon:Optura 300 (normal mode)",  CANON_CLASS_1,  0x04A9, 0x3096, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:MVX 10i (normal mode)",  CANON_CLASS_1,  0x04A9, 0x3096, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:IXY DV M2 (normal mode)",  CANON_CLASS_1,  0x04A9, 0x3096, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
         /* 0x3099 is the EOS 300D/Digital Rebel in PTP mode */
         /* A80 seems to share the ID for PTP and Canon modes */
@@ -220,8 +228,14 @@ const struct canonCamModelData models[] = {
 
         /* 30a0 is ZR90/MV750i camcorder */
 
-        /* 30a8 is Elura 60E/MVX200i camcorder */
-        /* 30a9 is Optura 40/MVX25i camcorder */
+        /* 30a8 is Elura 60E/MVX200i camcorder in PTP mode; don't know
+         * if it will respond in native mode at the same product
+         * ID. */
+        /* 30a9 is Optura 40/MVX25i camcorder, reported working at
+         * <http://www.qbik.ch/usb/devices/showdescr.php?id=2700>. Seems
+         * to share ID with PTP. */
+        {"Canon:Optura 40 (normal mode)", CANON_CLASS_1,  0x04A9, 0x30A9, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:MVX25i (normal mode)", CANON_CLASS_1,  0x04A9, 0x30A9, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
         /* Another block of cameras that share the ID for PTP and Canon modes */
         {"Canon:PowerShot S70 (normal mode)",   CANON_CLASS_5,  0x04A9, 0x30b1, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
@@ -250,9 +264,8 @@ const struct canonCamModelData models[] = {
         {"Canon:PowerShot SD400 (normal mode)", CANON_CLASS_4,  0x04A9, 0x30c1, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:Digital IXUS 50 (normal mode)", CANON_CLASS_4,  0x04A9, 0x30c1, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:IXY Digital 55 (normal mode)",  CANON_CLASS_4,  0x04A9, 0x30c1, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-        /* End of shared ID's */
-
         {"Canon:PowerShot A510 (normal mode)",  CANON_CLASS_1,  0x04A9, 0x30c2, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        /* End of shared ID's */
 
         {"Canon:PowerShot SD20 (normal mode)",  CANON_CLASS_5,  0x04A9, 0x30c4, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:Digital IXUS i5 (normal mode)", CANON_CLASS_5,  0x04A9, 0x30c4, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
@@ -819,14 +832,14 @@ canon_int_do_control_command (Camera *camera, int subcmd, int a, int b)
                  * response. It also needs an extra zero byte at the
                  * end. */
                 payload[payloadlen++] = 0;
-                msg = canon_usb_dialogue(camera, 
-                                         CANON_USB_FUNCTION_CONTROL_CAMERA_2,
-                                         &datalen, payload, payloadlen);
+                msg = canon_usb_dialogue ( camera, 
+                                           CANON_USB_FUNCTION_CONTROL_CAMERA_2,
+                                           &datalen, payload, payloadlen );
         }
         else
-                msg = canon_usb_dialogue(camera, 
-                                         CANON_USB_FUNCTION_CONTROL_CAMERA,
-                                         &datalen, payload, payloadlen);
+                msg = canon_usb_dialogue ( camera, 
+                                           CANON_USB_FUNCTION_CONTROL_CAMERA,
+                                           &datalen, payload, payloadlen );
         if ( msg == NULL  && datalen != 0x1c) {
                 /* ERROR */
                 GP_DEBUG("%s datalen=%x",
@@ -1186,8 +1199,12 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
                 status = canon_int_do_control_command (camera,
                                                        CANON_USB_CONTROL_SET_TRANSFER_MODE,
                                                        0x04, transfermode);
-                if ( status < 0 )
+                if ( status < 0 ) {
+                        canon_int_do_control_command (camera,
+                                                      CANON_USB_CONTROL_EXIT,
+                                                      0, 0);
                         return status;
+                }
 
                 gp_port_set_timeout (camera->port, mstimeout);
                 GP_DEBUG("canon_int_capture_image: set camera port timeout back to %d seconds...", mstimeout / 1000 );
@@ -1197,8 +1214,12 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
                 status = canon_int_do_control_command (camera,
                                                        CANON_USB_CONTROL_GET_PARAMS,
                                                        0x00, 0);
-                if ( status < 0 )
+                if ( status < 0 ) {
+                        canon_int_do_control_command (camera,
+                                                      CANON_USB_CONTROL_EXIT,
+                                                      0, 0);
                         return status;
+                }
 
 #ifdef DEBUG_TINY_IMAGES
                 {
@@ -1238,14 +1259,21 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
                 status = canon_int_do_control_command (camera,
                                                        CANON_USB_CONTROL_GET_PARAMS,
                                                        0x04, transfermode);
-                if ( status < 0 )
+                if ( status < 0 ) {
+                        canon_int_do_control_command (camera,
+                                                      CANON_USB_CONTROL_EXIT,
+                                                      0, 0);
                         return status;
+                }
 
                 /* Lock keys here for EOS */
                 if ( camera->pl->md->model == CANON_CLASS_4 || camera->pl->md->model == CANON_CLASS_6 ) {
                         status = canon_usb_lock_keys(camera,context);
                         if ( status < 0 ) {
                                 gp_context_error (context, _("lock keys failed."));
+                                canon_int_do_control_command (camera,
+                                                              CANON_USB_CONTROL_EXIT,
+                                                              0, 0);
                                 return status;
                         }
                 }
