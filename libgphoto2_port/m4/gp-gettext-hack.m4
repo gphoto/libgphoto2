@@ -54,11 +54,10 @@ fi
 AC_DEFUN([GP_GETTEXT_FLAGS],
 [
 AC_REQUIRE([AM_GNU_GETTEXT])
-AC_REQUIRE([GP_CONFIG_MSG])
+AC_REQUIRE([GP_CONFIG_INIT])
 if test "x${BUILD_INCLUDED_LIBINTL}" = "xyes"; then
    AM_CFLAGS="${AM_CFLAGS} -I\$(top_srcdir)/intl"
 fi
-GP_CONFIG_MSG
 GP_CONFIG_MSG([Use translations],[${USE_NLS}])
 if test "x$USE_NLS" = "xyes" && test "${BUILD_INCLUDED_LIBINTL}"; then
    GP_CONFIG_MSG([Use included libintl],[${BUILD_INCLUDED_LIBINTL}])
