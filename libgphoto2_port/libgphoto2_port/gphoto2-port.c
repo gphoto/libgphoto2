@@ -28,11 +28,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#ifdef HAVE_LTDL
 #include <ltdl.h>
-#else
-#error libltdl required!
-#endif
 
 #include "gphoto2-port-result.h"
 #include "gphoto2-port-info-list.h"

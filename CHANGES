@@ -3,11 +3,12 @@ libgphoto2 CVS HEAD (2.2)
 
 Build system (packagers beware!):
 
-   * now requires libltdl
+   * now requires libltdl (from system or shipped with tarball)
    * works with contemporary build tools
    * new ./configure parameter set
    * no more accidentally building without libusb (use --without-libusb
      if you insist on that)
+   * camlibs and iolibs are now installed into new directories
 
 libgphoto2:
 

@@ -29,11 +29,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-#ifdef HAVE_LTDL
-#  include <ltdl.h>
-#else
-#  error libltdl required!
-#endif
+#include <ltdl.h>
 
 #include "gphoto2-context.h"
 #include "gphoto2-result.h"

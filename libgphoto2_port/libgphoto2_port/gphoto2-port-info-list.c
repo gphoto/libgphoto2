@@ -30,11 +30,7 @@
 #error We need regex.h, but it has not been detected.
 #endif
 
-#ifdef HAVE_LTDL
 #include <ltdl.h>
-#else
-#error libltdl required!
-#endif
 
 #include <gphoto2-port-result.h>
 #include <gphoto2-port-library.h>
