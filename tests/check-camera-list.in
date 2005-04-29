@@ -1,0 +1,32 @@
+#!/bin/sh
+
+top_builddir="@top_builddir@"
+camlibdir="@camlibdir@"
+DESTDIR="@DESTDIR@"
+MAKE="@MAKE@"
+
+CAMLIBS="${DESTDIR}${camlibdir}"
+
+if test -d "${CAMLIBS}"; then
+    :
+elif test -d "$(pwd)/_inst/${camlibdir}"; then
+    DESTDIR="$(pwd)/_inst"
+    CAMLIBS="${DESTDIR}${camlibdir}"
+    :
+else
+    DESTDIR="$(pwd)/_inst"
+    CAMLIBS="${DESTDIR}${camlibdir}"
+    (cd "${top_builddir}" && ${MAKE} DESTDIR="$DESTDIR" install)
+    if test -d "${CAMLIBS}"; then
+    	echo "Test installation successful"
+    else
+    	echo "Test installation failed"
+    	exit 1
+    fi
+fi
+
+echo "Using camlib dir: $CAMLIBS"
+export CAMLIBS
+
+#echo "FIXME: Actually list all cameras."
+./test-camera-list
