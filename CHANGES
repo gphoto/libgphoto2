@@ -6,6 +6,8 @@ Build system (packagers beware!):
    * now requires libltdl
    * works with contemporary build tools
    * new ./configure parameter set
+   * no more accidentally building without libusb (use --without-libusb
+     if you insist on that)
 
 libgphoto2:
 
