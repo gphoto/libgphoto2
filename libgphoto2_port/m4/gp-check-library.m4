@@ -20,6 +20,7 @@ dnl                           default: []
 dnl    ACTION-IF-NOT-FOUND    shell action to execute if not found
 dnl                           default: []
 dnl    OPTIONAL-REQUIRED-ETC  one of "mandatory", "default-on", "default-off"
+dnl                                  "disable-explicitly"
 dnl                           default: [mandatory]
 dnl    WHERE-TO-GET-IT        place where to find the library, e.g. a URL
 dnl                           default: []
@@ -30,6 +31,15 @@ dnl   * change the variable have_[$1] to "yes" or "no" and thus change
 dnl     the outcome of the test
 dnl   * execute additional checks to define more specific variables, e.g.
 dnl     for different API versions
+dnl
+dnl What the OPTIONAL-REQUIRED-ETC options mean:
+dnl
+dnl   mandatory           Absolute requirement, cannot be disabled.
+dnl   default-on          If found, it is used. If not found, it is not used.
+dnl   default-off         In case of --with-libfoo, detect it. Without
+dnl                       --with-libfoo, do not look for and use it.
+dnl   disable-explicitly  Required by default, but can be disabled by
+dnl                       explicitly giving --without-libfoo.
 dnl
 dnl These results have happened after calling GP_CHECK_LIBRARY:
 dnl
@@ -278,6 +288,31 @@ PKG_CONFIG_PATH=${PKG_CONFIG_PATH}
       $9]))
 fi
 ])dnl
+dnl
+dnl Abort configure script if not found and not explicitly disabled
+dnl
+m4_if([$8],[disable-explicitly],[
+if test "x${[try_][$1]}" != "xno" && test "x${[have_][$1]}" = "xno"; then
+        AC_MSG_ERROR([
+PKG_CONFIG_PATH=${PKG_CONFIG_PATH}
+[$1][_LIBS]=${[$1][_LIBS]}
+[$1][_CFLAGS]=${[$1][_CFLAGS]}
+
+* Fatal: ${PACKAGE_NAME} by default requires $2 to build.
+*        You must explicitly disable $2 to build ${PACKAGE_TARNAME} without it.
+* 
+* Possible solutions:
+*   - call configure with --with-$2=no or --without-$2
+*   - set PKG_CONFIG_PATH to adequate value
+*   - call configure with [$1][_LIBS]=.. and [$1][_CFLAGS]=..
+*   - call configure with one of the --with-$2 parameters
+]m4_ifval([$9],[dnl
+*   - get $2 and install it
+],[dnl
+*   - get $2 and install it:
+      $9]))
+fi
+])dnl
 AM_CONDITIONAL([HAVE_][$1], [test "x$have_[$1]" = "xyes"])
 if test "x$have_[$1]" = "xyes"; then
 	AC_DEFINE([HAVE_][$1], 1, [whether we compile with ][$2][ support])
@@ -313,6 +348,8 @@ m4_if([$4], [mandatory],        [_GP_CHECK_LIBRARY_SYNTAX_ERROR($0)],
 m4_if([$8], [], [dnl
       _GP_CHECK_LIBRARY([$1],[$2],[$3],[$4],[$5],[$6],[$7],[mandatory],[$9])],
       [$8], [default-on], [dnl
+      _GP_CHECK_LIBRARY([$1],[$2],[$3],[$4],[$5],[$6],[$7],[$8],[$9])],
+      [$8], [disable-explicitly], [dnl
       _GP_CHECK_LIBRARY([$1],[$2],[$3],[$4],[$5],[$6],[$7],[$8],[$9])],
       [$8], [default-off], [dnl
       _GP_CHECK_LIBRARY([$1],[$2],[$3],[$4],[$5],[$6],[$7],[$8],[$9])],

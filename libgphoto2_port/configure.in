@@ -243,21 +243,23 @@ GP_CONFIG_MSG([baudboy locking],[${baudboy_msg}])
 ttylock_msg=no
 if $try_ttylock; then
 	AC_CHECK_HEADER(ttylock.h,[
-		AC_MSG_CHECKING(if ttylock needs lockdev)
+		lockdev_result="no"
 		AC_TRY_LINK([#include <ttylock.h>],[ttylocked ("/dev/foo");],[
-			AC_MSG_RESULT(no)
+			lockdev_result="no"
 			AC_DEFINE(HAVE_TTYLOCK,1,[Define if you have ttylock based tty locking.])
 			ttylock_msg=yes
 			try_lockdev=false,
 			LDFLAGS="$LDFLAGS -llockdev"
 			AC_TRY_LINK([#include <ttylock.h>],[ttylocked ("/dev/foo");],[
-				AC_MSG_RESULT(yes)
+				lockdev_result="yes"
 				AC_DEFINE(HAVE_TTYLOCK,1,[Define if you have ttylock based tty locking.])
 				ttylock_msg=yes
 				try_lockdev=false
 				SERIAL_LIBS=-llockdev
 			])
 		])
+		AC_MSG_CHECKING([if ttylock needs lockdev])
+		AC_MSG_RESULT([${lockdev_result}])
 	])
 fi
 GP_CONFIG_MSG([ttylock locking],[${ttylock_msg}])
@@ -287,7 +289,7 @@ GP_CHECK_LIBRARY([LIBUSB],[libusb],[>= 0.1.5],
 		[usb.h],[usb_busses],[
 	IOLIB_SUBDIRS="$IOLIB_SUBDIRS usb"
 ],[],
-		[default-on],
+		[disable-explicitly],
 		[http://libusb.sourceforge.net/]
 )
 
