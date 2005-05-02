@@ -30,16 +30,20 @@ AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], ["$GETTEXT_PACKAGE"],
 AC_SUBST([GETTEXT_PACKAGE])
 sed_cmds="s|^DOMAIN.*|DOMAIN = ${GETTEXT_PACKAGE}|"
 m4_if([$2],[],[],[sed_cmds="${sed_cmds};s|^COPYRIGHT_HOLDER.*|COPYRIGHT_HOLDER = $2|"])
-m4_if([$3],[],[if test -n "$PACKAGE_BUGREPORT"; then
+m4_ifval([$3],[
+if test -n "$PACKAGE_BUGREPORT"; then
    sed_mb="${PACKAGE_BUGREPORT}"
 else
    AC_MSG_ERROR([
 *** Your configure.{ac,in} is wrong.
 *** Either define PACKAGE_BUGREPORT (by using the 4-parameter AC INIT syntax)
-*** or give [GP_GETTEXT_HACK] the second parameter.
+*** or give [GP_GETTEXT_HACK] the third parameter.
 ***
 ])
-fi],[sed_mb="$3"])
+fi
+],[
+sed_mb="$3"
+])
 sed_cmds="${sed_cmds};s|^MSGID_BUGS_ADDRESS.*|MSGID_BUGS_ADDRESS = ${sed_mb}|"
 # Not so sure whether this hack is all *that* evil...
 AC_MSG_CHECKING([for po/Makevars requiring hack])
