@@ -161,6 +161,9 @@ AC_TRY_COMPILE([#include <ioctl-types.h>], [int foo = TIOCM_RTS;],
 AC_TRY_COMPILE([#include <sys/ioctl.h>], [int foo = TIOCM_RTS;],
 			AC_DEFINE(HAVE_RTS_IOCTL,1,[Define if you have TIOCM_TRS.]))
 
+# Check for va_copy()
+GP_VA_COPY
+
 
 dnl ---------------------------------------------------------------------------
 dnl serial
