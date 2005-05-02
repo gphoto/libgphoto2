@@ -60,6 +60,11 @@
 #include "canon.h"
 #include "serial.h"
 
+#ifdef HAVE_LIBEXIF
+#  include <libexif/exif-data.h>
+#  include <libexif/exif-utils.h>
+#endif
+
 /************************************************************************
  * Camera definitions
  ************************************************************************/
@@ -91,6 +96,7 @@
 #define KILOBYTE	(1024U)
 #define MEGABYTE	(1024U * KILOBYTE)
 #define SL_THUMB	( 100U * KILOBYTE)
+#define SL_THUMB_CR2    (1024U * KILOBYTE)
 #define SL_PICTURE	(  10U * MEGABYTE)
 #define SL_MOVIE_SMALL	( 100U * MEGABYTE)
 #define SL_MOVIE_LARGE	(2048U * MEGABYTE)
@@ -275,12 +281,12 @@ const struct canonCamModelData models[] = {
         /* 0x30ea is EOS 1D Mark II in PTP mode */
 
 #ifdef CANON_EXPERIMENTAL_20D
-        {"Canon:EOS 20D (normal mode)",         CANON_CLASS_6,  0x04A9, 0x30eb, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:EOS 20D (normal mode)",         CANON_CLASS_6,  0x04A9, 0x30eb, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB_CR2, SL_PICTURE, NULL},
         /* 0x30ec is EOS 20D in PTP mode */
 
-        {"Canon:EOS 350D (normal mode)",                CANON_CLASS_6,  0x04A9, 0x30ee, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-        {"Canon:Digital Rebel XT (normal mode)",                CANON_CLASS_6,  0x04A9, 0x30ee, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-        {"Canon:EOS Kiss Digital N (normal mode)",              CANON_CLASS_6,  0x04A9, 0x30ee, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:EOS 350D (normal mode)",                CANON_CLASS_6,  0x04A9, 0x30ee, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB_CR2, SL_PICTURE, NULL},
+        {"Canon:Digital Rebel XT (normal mode)",                CANON_CLASS_6,  0x04A9, 0x30ee, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB_CR2, SL_PICTURE, NULL},
+        {"Canon:EOS Kiss Digital N (normal mode)",              CANON_CLASS_6,  0x04A9, 0x30ee, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB_CR2, SL_PICTURE, NULL},
         /* 30ef is EOS 350D/Digital Rebel XT/EOS Kiss Digital N in PTP mode. */
 #endif
         {NULL}
@@ -2232,12 +2238,23 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
                                                         if (thumbname == NULL) {
                                                                 /* no thumbnail */
                                                         } else {
-                                                                /* all known Canon cams have JPEG thumbs */
-                                                                info.preview.fields =
-                                                                        GP_FILE_INFO_TYPE;
-                                                                strncpy (info.preview.type,
-                                                                         GP_MIME_JPEG,
-                                                                         sizeof (info.preview.type));
+                                                                if ( is_cr2 ( info.file.name ) ) {
+                                                                        /* We get the first part of the raw file as the thumbnail;
+                                                                           this is (almost) a valid EXIF file. */
+                                                                        info.preview.fields =
+                                                                                GP_FILE_INFO_TYPE;
+                                                                        strncpy (info.preview.type,
+                                                                                 GP_MIME_EXIF,
+                                                                                 sizeof (info.preview.type));
+                                                                }
+                                                                else {
+                                                                        /* Older Canon cams have JPEG thumbs */
+                                                                        info.preview.fields =
+                                                                                GP_FILE_INFO_TYPE;
+                                                                        strncpy (info.preview.type,
+                                                                                 GP_MIME_JPEG,
+                                                                                 sizeof (info.preview.type));
+                                                                }
                                                         }
 
                                                         res = gp_filesystem_set_info_noop (camera->fs,
@@ -2249,6 +2266,8 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
                                                                           info.file.name, folder, gp_result_as_string (res));
                                                         }
                                                 }
+                                                GP_DEBUG ( "file \"%s\" has preview of MIME type \"%s\"\n",
+                                                           info.file.name, info.preview.type );
                                         }
                                 }
                                 /* Some cameras have ".." explicitly
@@ -2517,50 +2536,120 @@ canon_int_extract_jpeg_thumb (unsigned char *data, const unsigned int datalen,
         *retdata = NULL;
         *retdatalen = 0;
 
-        if (data[0] != JPEG_ESC || data[1] != JPEG_BEG) {
+        if (data[0] == JPEG_ESC || data[1] == JPEG_BEG) {
+                GP_DEBUG ("canon_int_extract_jpeg_thumb: this is a JFIF file.");
+
+                /* pictures are JFIF files, we skip the first 2 bytes (0xFF 0xD8)
+                 * first go look for start of JPEG, when that is found we set thumbstart
+                 * to the current position and never look for JPEG begin bytes again.
+                 * when thumbstart is set look for JPEG end.
+                 */
+                for (i = 3; i < datalen; i++)
+                        if (data[i] == JPEG_ESC) {
+                                if (! thumbstart) {
+                                        if (i < (datalen - 3) &&
+                                            data[i + 1] == JPEG_BEG &&
+                                            ((data[i + 3] == JPEG_SOS) || (data[i + 3] == JPEG_A50_SOS)))
+                                                thumbstart = i;
+                                } else if (i < (datalen - 1) && (data[i + 1] == JPEG_END)) {
+                                        thumbsize = i + 2 - thumbstart;
+                                        break;
+                                }
+
+                        }
+                if (! thumbsize) {
+                        gp_context_error (context, _("Could not extract JPEG "
+                                                     "thumbnail from data: No beginning/end"));
+                        GP_DEBUG ("canon_int_extract_jpeg_thumb: could not find JPEG "
+                                  "beginning (offset %i) or end (size %i) in %i bytes of data",
+                                  datalen, thumbstart, thumbsize);
+                        return GP_ERROR_CORRUPTED_DATA;
+                }
+
+                /* now that we know the size of the thumbnail embedded in the JFIF data, malloc() */
+                *retdata = malloc (thumbsize);
+                if (! *retdata) {
+                        GP_DEBUG ("canon_int_extract_jpeg_thumb: could not allocate %i bytes of memory", thumbsize);
+                        return GP_ERROR_NO_MEMORY;
+                }
+
+                /* and copy */
+                memcpy (*retdata, data + thumbstart, thumbsize);
+                *retdatalen = thumbsize;
+        }
+        else if ( !strcmp ( data, "II*" ) && data[8] == 'C' && data[9] == 'R' ) {
+
+                /* This is a valid EXIF file; we need to sort through
+                 * to get the JPEG thumbnail. */
+#ifdef HAVE_LIBEXIF
+                /* We have to do this ourselves, because libexif
+                 * assumes that the EXIF info is encapsulated in an
+                 * APP1 marker in a JFIF file. So we parse enough to
+                 * get the thumbnail, which is found via IFD 1. */
+                /* FIXME: We need to extract the EXIF IFD and copy it
+                 * into the image we return, as higher levels of
+                 * software assume that the EXIF is included in the
+                 * JPEG thumbnail and just fetch the thumbnail to get
+                 * the EXIF data. */
+                int ifd0_offset, ifd1_offset, n_tags;
+                int jpeg_offset = -1, jpeg_size = -1, i;
+
+                GP_DEBUG ( "canon_int_extract_jpeg_thumb: this is from a CR2 file.");
+                dump_hex ( stderr, data, 32 );
+                ifd0_offset = exif_get_long ( data+4, EXIF_BYTE_ORDER_INTEL );
+                GP_DEBUG ( "canon_int_extract_jpeg_thumb: IFD 0 at 0x%x\n", ifd0_offset );
+                n_tags = exif_get_short ( data+ifd0_offset, EXIF_BYTE_ORDER_INTEL );
+                GP_DEBUG ( "canon_int_extract_jpeg_thumb: %d tags in IFD 0\n", n_tags );
+                ifd1_offset = exif_get_long ( data + ifd0_offset + 2 + 12*n_tags, EXIF_BYTE_ORDER_INTEL );
+                GP_DEBUG ( "canon_int_extract_jpeg_thumb: IFD 1 at 0x%x\n", ifd1_offset );
+                n_tags = exif_get_short ( data+ifd1_offset, EXIF_BYTE_ORDER_INTEL );
+                GP_DEBUG ( "canon_int_extract_jpeg_thumb: %d tags in IFD 1\n", n_tags );
+
+                /* Now go through IFD 1 and find the two tags we need. */
+                for ( i=0; i<n_tags; i++ ) {
+                        unsigned char *entry = data+ifd1_offset + 2 + 12*i;
+                        short tag = exif_get_short ( entry, EXIF_BYTE_ORDER_INTEL );
+                        GP_DEBUG ( "canon_int_extract_jpeg_thumb: tag %d is %s\n",
+                                   i, exif_tag_get_name ( tag ) );
+                        switch ( tag ) {
+                        case EXIF_TAG_JPEG_INTERCHANGE_FORMAT_LENGTH:
+                                jpeg_size = exif_get_long ( entry + 8, EXIF_BYTE_ORDER_INTEL );
+                                GP_DEBUG ( "canon_int_extract_jpeg_thumb: JPEG length is %d\n",
+                                           jpeg_size );
+                                break;
+                        case EXIF_TAG_JPEG_INTERCHANGE_FORMAT:
+                                jpeg_offset = exif_get_long ( entry + 8, EXIF_BYTE_ORDER_INTEL );
+                                GP_DEBUG ( "canon_int_extract_jpeg_thumb: JPEG offset is 0x%x\n",
+                                           jpeg_offset );
+                                break;
+                        default:
+                                break;
+                        }
+                }
+                if ( jpeg_size < 0 || jpeg_offset < 0 ) {
+                        GP_DEBUG ( "canon_int_extract_jpeg_thumb: missing a required tag: length=%d, offset=%d\n",
+                                   jpeg_size, jpeg_offset );
+                        return GP_ERROR_CORRUPTED_DATA;
+                }
+
+                /* Now we should have enough to extract the thumbnail. */
+                GP_DEBUG ( "canon_int_extract_jpeg_thumb: %d bytes of JPEG image\n",
+                            jpeg_size );
+                *retdatalen = jpeg_size;
+                *retdata = malloc ( *retdatalen );
+                memcpy ( *retdata, data + jpeg_offset, *retdatalen );
+                dump_hex ( stderr, *retdata, 32 );
+#else /* HAVE_LIBEXIF */
+                GP_DEBUG ( "canon_int_extract_jpeg_thumb: Can't grok thumbnail from a CR2 file without libexif");
+                return GP_ERROR_NOT_SUPPORTED;
+#endif /* HAVE_LIBEXIF */
+        }
+        else {
                 gp_context_error (context, _("Could not extract JPEG "
                                              "thumbnail from data: Data is not JFIF"));
                 GP_DEBUG ("canon_int_extract_jpeg_thumb: data is not JFIF, cannot extract thumbnail");
                 return GP_ERROR_CORRUPTED_DATA;
         }
-
-        /* pictures are JFIF files, we skip the first 2 bytes (0xFF 0xD8)
-         * first go look for start of JPEG, when that is found we set thumbstart
-         * to the current position and never look for JPEG begin bytes again.
-         * when thumbstart is set look for JPEG end.
-         */
-        for (i = 3; i < datalen; i++)
-                if (data[i] == JPEG_ESC) {
-                        if (! thumbstart) {
-                                if (i < (datalen - 3) &&
-                                        data[i + 1] == JPEG_BEG &&
-                                        ((data[i + 3] == JPEG_SOS) || (data[i + 3] == JPEG_A50_SOS)))
-                                        thumbstart = i;
-                        } else if (i < (datalen - 1) && (data[i + 1] == JPEG_END)) {
-                                thumbsize = i + 2 - thumbstart;
-                                break;
-                        }
-
-                }
-        if (! thumbsize) {
-                gp_context_error (context, _("Could not extract JPEG "
-                                             "thumbnail from data: No beginning/end"));
-                GP_DEBUG ("canon_int_extract_jpeg_thumb: could not find JPEG "
-                          "beginning (offset %i) or end (size %i) in %i bytes of data",
-                          datalen, thumbstart, thumbsize);
-                return GP_ERROR_CORRUPTED_DATA;
-        }
-
-        /* now that we know the size of the thumbnail embedded in the JFIF data, malloc() */
-        *retdata = malloc (thumbsize);
-        if (! *retdata) {
-                GP_DEBUG ("canon_int_extract_jpeg_thumb: could not allocate %i bytes of memory", thumbsize);
-                return GP_ERROR_NO_MEMORY;
-        }
-
-        /* and copy */
-        memcpy (*retdata, data + thumbstart, thumbsize);
-        *retdatalen = thumbsize;
 
         return GP_OK;
 }
