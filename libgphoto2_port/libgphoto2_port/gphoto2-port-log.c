@@ -251,13 +251,20 @@ gp_logv (GPLogLevel level, const char *domain, const char *format,
 	 va_list args)
 {
 	int i;
+#ifdef HAVE_VA_COPY
 	va_list xargs;
+#endif
 
 	for (i = 0; i < log_funcs_count; i++) {
 		if (log_funcs[i].level >= level) {
+#ifdef HAVE_VA_COPY
 			va_copy (xargs, args);
 			log_funcs[i].func (level, domain, format, xargs,
 					   log_funcs[i].data);
+#else
+			log_funcs[i].func (level, domain, format, args,
+					   log_funcs[i].data);
+#endif
 		}
 	}
 }
