@@ -99,7 +99,7 @@
 #define CHECK(result) {int r=(result); if (r<0) return (r);}
 
 /* Linux */
-#if defined(__linux__)
+#ifdef __linux__
 /* devfs is accounted for in the implementation */
 #define GP_PORT_SERIAL_PREFIX   "/dev/ttyS%i"
 #define GP_PORT_SERIAL_RANGE_LOW        0
@@ -107,7 +107,7 @@
 #endif
 
 /* FreeBSD */
-#if defined(__FreeBSD__)
+#ifdef __FreeBSD__
 #define GP_PORT_SERIAL_PREFIX   "/dev/cuaa%x"
 #define GP_PORT_SERIAL_RANGE_LOW        0
 #define GP_PORT_SERIAL_RANGE_HIGH       (0xf)
@@ -115,28 +115,28 @@
 
 /* OpenBSD */
 /* devices appear to go up to /dev/cuac7, but we just list the first 4 */
-#if defined(__OpenBSD__)
+#ifdef __OpenBSD__
 # define GP_PORT_SERIAL_PREFIX   "/dev/cua%02x"
 # define GP_PORT_SERIAL_RANGE_LOW        0
 # define GP_PORT_SERIAL_RANGE_HIGH       3
 #endif
 
 /* NetBSD */
-#if defined(__NetBSD__)
+#ifdef __NetBSD__
 #define GP_PORT_SERIAL_PREFIX   "/dev/tty0%i"
 #define GP_PORT_SERIAL_RANGE_LOW        0
 #define GP_PORT_SERIAL_RANGE_HIGH       32
 #endif
 
 /* Tru64 UNIX */
-#if defined(__osf__)
+#ifdef __osf__
 #define GP_PORT_SERIAL_PREFIX   "/dev/tty%02i"
 #define GP_PORT_SERIAL_RANGE_LOW        0
 #define GP_PORT_SERIAL_RANGE_HIGH       4
 #endif
 
 /* Darwin */
-#if defined(__APPLE__)
+#ifdef __APPLE__
 /* This is the Keyspan USB serial adapter device (UNTESTED) */
 #define GP_PORT_SERIAL_PREFIX   "/dev/tty.KeyUSA28X%i"
 #define GP_PORT_SERIAL_RANGE_LOW        111
