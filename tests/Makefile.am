@@ -20,13 +20,25 @@ noinst_PROGRAMS =	\
 	test-filesys
 
 test_gphoto2_SOURCE = test-gphoto2.c
-test_gphoto2_LDADD = $(top_builddir)/libgphoto2/libgphoto2.la $(INTLLIBS)
+test_gphoto2_LDADD = \
+	$(top_builddir)/libgphoto2/libgphoto2.la \
+	$(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la \
+	$(LIBEXIF_LIBS) \
+	$(INTLLIBS)
 
 test_filesys_SOURCE = test-filesys.c
-test_filesys_LDADD = $(top_builddir)/libgphoto2/libgphoto2.la $(INTLLIBS)
+test_filesys_LDADD = \
+	$(top_builddir)/libgphoto2/libgphoto2.la \
+	$(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la \
+	$(LIBEXIF_LIBS) \
+	$(INTLLIBS)
 
 test_camera_list_SOURCE = test-camera-list.c
-test_camera_list_LDADD = $(top_builddir)/libgphoto2/libgphoto2.la $(INTLLIBS)
+test_camera_list_LDADD = \
+	$(top_builddir)/libgphoto2/libgphoto2.la \
+	$(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la \
+	$(LIBEXIF_LIBS) \
+	$(INTLLIBS)
 
 clean-local:
 	rm -rf _inst
