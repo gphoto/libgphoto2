@@ -29,7 +29,7 @@ all-local:
 
 clean-local:
 	rm -f gphoto2/gphoto2*.h
-	rmdir gphoto2
+	rmdir gphoto2 || true
 
 # we use just ONE .PHONY target in order not to confuse automake
 
