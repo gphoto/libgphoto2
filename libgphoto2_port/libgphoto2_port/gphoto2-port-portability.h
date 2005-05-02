@@ -47,7 +47,6 @@ typedef struct {
 
 #include <sys/types.h>
 #include <dirent.h>
-#include <dlfcn.h>
 #include <sys/param.h>
 #include <sys/stat.h>
 #include <unistd.h>
