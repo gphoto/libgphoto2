@@ -542,19 +542,32 @@ static short
 ptp_read_func (unsigned char *bytes, unsigned int size, void *data, unsigned int *readbytes)
 {
 	Camera *camera = ((PTPData *)data)->camera;
-	int result;
+	int toread, result = GP_ERROR, curread = 0;
 
-	/*
-	 * gp_port_read returns (in case of success) the number of bytes read.
+	/* Split into small blocks. Too large blocks (>1x MB) would
+	 * timeout.
 	 */
-	result = gp_port_read (camera->port, bytes, size);
-	if (result==0) result = gp_port_read (camera->port, bytes, size);
-	if (result >= 0) {
-		*readbytes = result;
+	while (curread < size) {
+		toread =size - curread;
+		if (toread > 4096)
+			toread = 4096;
+		result = gp_port_read (camera->port, bytes + curread, toread);
+		if (result == 0) {
+			result = gp_port_read (camera->port, bytes + curread, toread);
+			if (result < 0) {
+				break;
+			}
+		}
+		if (result < 0)
+			break;
+		curread += result;
+		if (result < toread) /* short reads are common */
+			break;
+	}
+	if (result > 0) {
+		*readbytes = curread;
 		return (PTP_RC_OK);
-	} else
-	{
-		perror("gp_port_read");
+	} else {
 		return (translate_gp_result (result));
 	}
 }
