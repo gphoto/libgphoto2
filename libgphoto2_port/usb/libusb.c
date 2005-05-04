@@ -356,7 +356,7 @@ gp_port_usb_msg_read_lib(GPPort *port, int request, int value, int index,
 static int
 gp_port_usb_update (GPPort *port)
 {
-	int ret;
+	int ret, ifacereleased = FALSE;
 
 	if (!port)
 		return GP_ERROR_BAD_PARAMETERS;
@@ -372,10 +372,20 @@ gp_port_usb_update (GPPort *port)
 		sizeof(port->settings.usb));
 
 	if (port->settings.usb.config != port->pl->config) {
+		/* This can only be changed with the interface released. 
+		 * This is a hard requirement since 2.6.12.
+		 */
+		if (usb_release_interface (port->pl->dh,
+					   port->settings.usb.interface) < 0) {
+			gp_log (GP_LOG_DEBUG, "gphoto2-port-usb","releasing the iface for config failed.");
+			ifacereleased = FALSE;
+		} else {
+			ifacereleased = TRUE;
+		}
 		ret = usb_set_configuration(port->pl->dh,
 				     port->settings.usb.config);
 		if (ret < 0) {
-			gp_port_set_error (port, 
+			gp_port_set_error (port,
 				_("Could not set config %d/%d (%m)"),
 				port->settings.usb.interface,
 				port->settings.usb.config);
@@ -387,6 +397,13 @@ gp_port_usb_update (GPPort *port)
 			port->pl->config,
 			port->settings.usb.config);
 
+		if (ifacereleased) {
+			ret = usb_claim_interface (port->pl->dh,
+						   port->settings.usb.interface);
+			if (ret < 0) {
+				gp_log (GP_LOG_DEBUG, "gphoto2-port-usb","reclaiming the iface for config failed.");
+			}
+		}
 		/*
 		 * Copy at once if something else fails so that this
 		 * does not get re-applied
@@ -394,6 +411,7 @@ gp_port_usb_update (GPPort *port)
 		port->pl->config = port->settings.usb.config;
 	}
 
+	/* This can be changed with interface claimed. (And I think it must be claimed.) */
 	if (port->settings.usb.altsetting != port->pl->altsetting) {
 		ret = usb_set_altinterface(port->pl->dh, port->settings.usb.altsetting);
 		if (ret < 0) {
