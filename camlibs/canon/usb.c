@@ -395,21 +395,8 @@ canon_usb_init (Camera *camera, GPContext *context)
         /* unsigned char buffer[0x44]; */
         int res, id_retry, i, camstat; 
         /* int read_bytes; */
-        GPPortSettings settings;
 
         GP_DEBUG ("Initializing the (USB) camera.\n");
-
-        /* Get the current settings */
-        gp_port_get_settings (camera->port, &settings);
-
-        /* Use the default settings the core parsed */
-
-        /* Set the new settings */
-        res = gp_port_set_settings (camera->port, settings);
-        if (res != GP_OK) {
-                gp_context_error (context, _("Could not apply USB settings"));
-                return res;
-        }
 
         camstat = canon_usb_camera_init (camera, context);
         if ( camstat < 0 )
