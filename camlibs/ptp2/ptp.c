@@ -1390,7 +1390,7 @@ ptp_canon_getfolderentries (PTPParams* params, uint32_t store, uint32_t p2,
  **/
 uint16_t
 ptp_canon_theme_download (PTPParams* params, uint32_t themenr,
-		unsigned char **data, unsigned int *size)
+		char **data, unsigned int *size)
 {
 	PTPContainer ptp;
 

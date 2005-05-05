@@ -858,7 +858,7 @@ uint16_t ptp_canon_getfolderentries (PTPParams* params, uint32_t store,
 				PTPCANONFolderEntry** entries,
 				uint32_t* entnum);
 uint16_t ptp_canon_theme_download (PTPParams* params, uint32_t themenr,
-				unsigned char **data, unsigned int *size);
+				char **data, unsigned int *size);
 
 /* Non PTP protocol functions */
 int ptp_operation_issupported	(PTPParams* params, uint16_t operation);
