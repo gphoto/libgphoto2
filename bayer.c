@@ -43,7 +43,7 @@ gp_bayer_expand (unsigned char *input, int w, int h, unsigned char *output,
 {
 	int x, y, i;
 	int colour, bayer;
-	char *ptr = input;
+	char *ptr = (char*)input;
 
 	switch (tile) {
 
