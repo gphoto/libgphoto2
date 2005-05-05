@@ -424,6 +424,8 @@ static struct {
 	{"Canon:EOS 1D Mark II (PTP mode)",     0x04a9, 0x30ea, 0},
  	{"Canon:EOS 20D (PTP mode)",            0x04a9, 0x30ec, PTPBUG_DCIM_WRONG_PARENT},
 	{"Canon:EOS 350D (PTP mode)",           0x04a9, 0x30ef, PTPBUG_DCIM_WRONG_PARENT},
+	{"Canon:Digital IXUS 700 (PTP mode)",   0x04a9, 0x30f2, 0},
+	{"Canon:PowerShot SD500 (PTP mode)",    0x04a9, 0x30f2, 0},
 	/* Nick Richards <nick@nedrichards.com> */
 	{"Canon:Digital IXUS 50 (PTP mode)",    0x04a9, 0x310e, 0},
 
