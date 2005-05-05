@@ -96,6 +96,9 @@
  *   but for newer protocol.
  * @CANON_USB_FUNCTION_SET_ATTR_2: Presumed code to set attribute bits
  *   for a file on an EOS 20D and its ilk.
+ * @CANON_USB_FUNCTION_CAMERA_CHOWN_2: Same as %CANON_USB_FUNCTION_CAMERA_CHOWN,
+ *  but for newer protocol.
+ * @CANON_USB_FUNCTION_GET_OWNER: Gets just the owner name, in newer protocol.
  *
  * Codes to give to canon_usb_dialogue() or canon_usb_long_dialogue()
  * to select which command to issue to the camera. See the protocol
@@ -139,6 +142,8 @@ typedef enum {
 	CANON_USB_FUNCTION_UNLOCK_KEYS_2,
 	CANON_USB_FUNCTION_DELETE_FILE_2,
 	CANON_USB_FUNCTION_SET_ATTR_2,
+	CANON_USB_FUNCTION_CAMERA_CHOWN_2,
+	CANON_USB_FUNCTION_GET_OWNER,
 } canonCommandIndex;
 
 /**

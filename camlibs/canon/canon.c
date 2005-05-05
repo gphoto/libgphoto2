@@ -631,7 +631,16 @@ canon_int_identify_camera (Camera *camera, GPContext *context)
         /* Store these values in our "camera" structure: */
         memcpy (camera->pl->firmwrev, (char *) msg + 8, 4);
         strncpy (camera->pl->ident, (char *) msg + 12, 32);
-        strncpy (camera->pl->owner, (char *) msg + 44, 32);
+        if ( camera->pl->md->model != CANON_CLASS_6 )
+                strncpy (camera->pl->owner, (char *) msg + 44, 32);
+        else {
+                /* Need to get owner explicitly. */
+                msg = canon_usb_dialogue ( camera, CANON_USB_FUNCTION_GET_OWNER, &len, NULL, 0 );
+                if ( msg == NULL )
+                        return GP_ERROR_OS_FAILURE;
+                strncpy (camera->pl->owner, (char *) msg + 4, 32);
+        }
+
 
         GP_DEBUG ("canon_int_identify_camera: ident '%s' owner '%s', firmware %d.%d.%d.%d",
                   camera->pl->ident, camera->pl->owner,
@@ -685,7 +694,7 @@ canon_int_get_battery (Camera *camera, int *pwr_status, int *pwr_source, GPConte
         }
 
         if (len != 0x8) {
-                GP_DEBUG ("canon_int_get_battery: Unexpected amount of data returned "
+                GP_DEBUG ("canon_int_get_battery: Unexpected length returned "
                           "(expected %i got %i)", 0x8, len);
                 return GP_ERROR_CORRUPTED_DATA;
         }
@@ -1381,7 +1390,7 @@ canon_int_set_file_attributes (Camera *camera, const char *file, const char *dir
         }
 
         if (len != 0x4) {
-                GP_DEBUG ("canon_int_set_file_attributes: Unexpected amount of data returned "
+                GP_DEBUG ("canon_int_set_file_attributes: Unexpected length returned "
                           "(expected %i got %i)", 0x4, len);
                 return GP_ERROR_CORRUPTED_DATA;
         }
@@ -1411,6 +1420,7 @@ int
 canon_int_set_owner_name (Camera *camera, const char *name, GPContext *context)
 {
         unsigned char *msg;
+        char payload[4];
         int len;
 
         GP_DEBUG ("canon_int_set_owner_name() called, name = '%s'", name);
@@ -1424,8 +1434,14 @@ canon_int_set_owner_name (Camera *camera, const char *name, GPContext *context)
 
         switch (camera->port->type) {
                 case GP_PORT_USB:
-                        msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_CAMERA_CHOWN,
-                                                  &len, name, strlen (name) + 1);
+                        if ( camera->pl->md->model == CANON_CLASS_6 ) {
+                                msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_CAMERA_CHOWN_2,
+                                                          &len, name, strlen (name) + 1);
+                                htole32a ( payload, 0x0f );
+                        }
+                        else
+                                msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_CAMERA_CHOWN,
+                                                          &len, name, strlen (name) + 1);
                         if ( msg == NULL )
                                 return GP_ERROR_OS_FAILURE;
                         break;
@@ -1441,7 +1457,7 @@ canon_int_set_owner_name (Camera *camera, const char *name, GPContext *context)
         }
 
         if (len != 0x04) {
-                GP_DEBUG ("canon_int_set_owner_name: Unexpected amount of data returned "
+                GP_DEBUG ("canon_int_set_owner_name: Unexpected length returned "
                           "(expected %i got %i)", 0x4, len);
                 return GP_ERROR_CORRUPTED_DATA;
         }
@@ -1501,7 +1517,7 @@ canon_int_get_time (Camera *camera, time_t *camera_time, GPContext *context)
         }
 
         if (len != 0x10) {
-                GP_DEBUG ("canon_int_get_time: Unexpected amount of data returned "
+                GP_DEBUG ("canon_int_get_time: Unexpected length returned "
                           "(expected %i got %i)", 0x10, len);
                 return GP_ERROR_CORRUPTED_DATA;
         }
@@ -1587,7 +1603,7 @@ canon_int_set_time (Camera *camera, time_t date, GPContext *context)
         }
 
         if (len != 0x4) {
-                GP_DEBUG ("canon_int_set_time: Unexpected amount of data returned "
+                GP_DEBUG ("canon_int_set_time: Unexpected length returned "
                           "(expected %i got %i)", 0x4, len);
                 return GP_ERROR_CORRUPTED_DATA;
         }
@@ -1759,7 +1775,7 @@ canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, i
 
         if (len < 0x0c) {
                 GP_DEBUG ("canon_int_get_disk_name_info: "
-                        "Unexpected amount of data returned "
+                        "Unexpected length returned "
                         "(expected %i got %i)", 0x0c, len);
                 return GP_ERROR_CORRUPTED_DATA;
         }

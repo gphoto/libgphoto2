@@ -689,7 +689,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			break;
 #ifdef HAVE_LIBEXIF
 		case GP_FILE_TYPE_EXIF:
-			gp_file_set_mime_type (file, GP_MIME_JPEG);
+			if ( !is_cr2 ( filename ) )
+				gp_file_set_mime_type (file, GP_MIME_JPEG);
+			else
+				gp_file_set_mime_type (file, GP_MIME_EXIF);
 			gp_file_set_data_and_size (file, data, datalen);
 			break;
 #endif /* HAVE_LIBEXIF */
