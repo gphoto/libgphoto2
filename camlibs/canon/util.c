@@ -236,6 +236,44 @@ filename2mimetype (const char *filename)
 	return GP_MIME_UNKNOWN;
 }
 
+void dump_hex ( FILE *fp, void *buffer, int length ) {
+	unsigned char *data = (unsigned char *)buffer;
+	int i, j, full_lines, remainder;
+	char output_line[17];
+
+	/* Dump a buffer in hexadecimal */
+	full_lines = length / 16;
+	remainder = length % 16;
+	output_line[16] = 0;
+
+	for ( i=0; i<full_lines*16; i+=16 ) {
+		fprintf ( fp, "%04x: ", i );
+		for ( j=0; j<16; j++ ) {
+			fprintf ( fp, " %02x", data[i+j] );
+			if ( data[i+j] >= 32 && data[i+j] < 127 )
+				output_line[j] = data[i+j];
+			else
+				output_line[j] = '.';
+		}
+		fprintf ( fp, "  %s\n", output_line );
+	}
+	if ( remainder > 0 ) {
+		fprintf ( fp, "%04x: ", i );
+		for ( j=0; j<remainder; j++ ) {
+			fprintf ( fp, " %02x", data[i+j] );
+			if ( data[i+j] >= 32 && data[i+j] < 127 )
+				output_line[j] = data[i+j];
+			else
+				output_line[j] = '.';
+		}
+		output_line[j] = 0;
+		for (; j<16; j++ )
+			fprintf ( fp, "   " );		 /* Pad line to same length */
+		fprintf ( fp, "  %s\n", output_line );
+	}
+	fprintf ( fp, "\n" );
+}
+
 
 /****************************************************************************
  *
