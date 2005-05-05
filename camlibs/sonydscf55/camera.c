@@ -259,32 +259,29 @@ model_compare(const char *a, const char *b)
 	const char *amod;
 	const char *bmod;
 	int alen, blen;
-	int rc;
-	
+
 	alen = strlen(a);
 	blen = strlen(b);
-	if (alen != blen) {
-		rc = 0;
+	if (alen != blen)
+		return 0;
+	amod = strchr(a, ':');
+	bmod = strchr(b, ':');
+	if ((amod == NULL && bmod == NULL)
+	    || (amod != NULL && bmod != NULL)) {
+		return !strcasecmp(a, b);
 	}
-	else {
-		amod = strchr(a, ':');
-		bmod = strchr(b, ':');
-		if ((amod == NULL && bmod == NULL)
-		    || (amod != NULL && bmod != NULL)) {
-			rc = !strcasecmp(a, b);
-		}
-		else if (amod != NULL) {
-			int aidx = amod - a;
-			rc = (!strncasecmp(a, b, aidx))
-				&& (!strcasecmp(a+aidx+1, b+aidx+1));
-		}
-		else if (bmod != NULL) {
-			int bidx = bmod - b;
-			rc = (!strncasecmp(a, b, bidx))
-				&& (!strcasecmp(a+bidx+1, b+bidx+1));
-		}
+	if (amod != NULL) {
+		int aidx = amod - a;
+		return (!strncasecmp(a, b, aidx))
+			&& (!strcasecmp(a+aidx+1, b+aidx+1));
 	}
-	return rc;
+	if (bmod != NULL) {
+		int bidx = bmod - b;
+		return (!strncasecmp(a, b, bidx))
+			&& (!strcasecmp(a+bidx+1, b+bidx+1));
+	}
+	/* can't really get here */
+	return 42;
 }
 
 static int
