@@ -18,8 +18,9 @@ libgphoto2_canon_la_SOURCES =	\
 	usb.c usb.h		\
 	crc.c crc.h		\
 	util.c util.h
+libgphoto2_canon_la_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS) $(LIBEXIF_CFLAGS)
 libgphoto2_canon_la_LDFLAGS = -module -avoid-version
-libgphoto2_canon_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la
+libgphoto2_canon_la_LIBADD = $(LIBEXIF_LIBS) $(top_builddir)/libgphoto2/libgphoto2.la
 
 
 # "common" version:
@@ -39,8 +40,9 @@ libcanon_la_SOURCES =	\
 	usb.c usb.h		\
 	crc.c crc.h		\
 	util.c util.h
+libcanon_la_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS) $(LIBEXIF_CFLAGS)
 libcanon_la_LDFLAGS = $(CAMLIB_LDFLAGS)
-libcanon_la_LIBADD  = $(CAMLIB_LIBS)
+libcanon_la_LIBADD  = $(LIBEXIF_LIBS) $(CAMLIB_LIBS)
 
 
 # "ideal" version:
@@ -59,8 +61,9 @@ canon_la_SOURCES =	\
 	usb.c usb.h		\
 	crc.c crc.h		\
 	util.c util.h
+canon_la_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS) $(LIBEXIF_CFLAGS)
 canon_la_LDFLAGS = -module -no-undefined -avoid-version -export-dynamic \
 	-export-symbols $(top_srcdir)/camlibs/camlib.sym
-canon_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la
+canon_la_LIBADD = $(LIBEXIF_LIBS) $(top_builddir)/libgphoto2/libgphoto2.la
 
 
