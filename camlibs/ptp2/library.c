@@ -556,9 +556,6 @@ ptp_read_func (unsigned char *bytes, unsigned int size, void *data, unsigned int
 		result = gp_port_read (camera->port, bytes + curread, toread);
 		if (result == 0) {
 			result = gp_port_read (camera->port, bytes + curread, toread);
-			if (result < 0) {
-				break;
-			}
 		}
 		if (result < 0)
 			break;
