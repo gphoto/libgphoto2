@@ -19,7 +19,7 @@ debug="false"
 recursive="false"
 dryrun="false"
 self="$(basename "$0")"
-autogen_version="0.4.2"
+autogen_version="0.4.3"
 
 
 ########################################################################
@@ -336,7 +336,9 @@ fi
     # Just error propagation
     status="$?"
     echo "$self:init: Left directory \`${dir}'"
-    if test "$status" -ne "0"; then
+    if "$recursive"; then 
+    	:
+    elif test "$status" -ne "0"; then
 	exit "$status"
     fi
 }
@@ -435,12 +437,13 @@ fi
 for dir in ${dirs}; do
     "$debug" && echo "Running commands on directory \`${dir}'"
     if test ! -d "$dir"; then
-	echo "Could not find directory \`${dir}'"	
+	echo "Could not find directory \`${dir}'"
+    else
+	init_vars "$dir"
+	for command in ${commands}; do
+	    "command_$command" "$dir"
+	done
     fi
-    init_vars "$dir"
-    for command in ${commands}; do
-	"command_$command" "$dir"
-    done
 done
 
 exit 0
