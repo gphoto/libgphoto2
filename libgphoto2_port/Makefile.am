@@ -16,6 +16,7 @@ EXTRA_DIST =   		\
 	COPYING.LIB \
 	NEWS \
 	README \
+	iolib.sym \
 	gphoto2-port-config.in \
 	makefile.os2 lgp2port.df
 
