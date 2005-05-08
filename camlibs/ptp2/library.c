@@ -3013,30 +3013,22 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	CPR (context, ptp_deleteobject(&camera->pl->params,
 		camera->pl->params.handles.Handler[object_id],0));
 
-	/* disabled currently */
-#if 0 
-	/* Needed for Canon IXUS II at least, but not for Kodak CX 6230, nor Nikon
-	 * CoolPix 2500. 
-	 * The documentation is not clear on whether this event is sent or not,
-	 * I read it that it is sent when the file vanishes through external
-	 * influences.
-	 * this fix 
+	/* On Canon firmwares, a DeleteObject causes a ObjectRemoved event
+	 * to be sent. At least on Digital IXUS II and PowerShot A85.
 	 */
-	if (camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) {
-		if (ptp_event_issupported(&camera->pl->params, PTP_OC_DeleteObject)) {
-			PTPContainer event;
-			int ret;
+	if ((camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
+	    ptp_event_issupported(&camera->pl->params, PTP_EC_ObjectRemoved)) {
+		PTPContainer event;
+		int ret;
 
-			do {
-				ret = ptp_usb_event_wait (&camera->pl->params, &event);
-				if (	(ret == PTP_RC_OK) &&
-					(event.Code == PTP_EC_ObjectRemoved)
-				)
-					break;
-			} while (ret == PTP_RC_OK);
-		}
+		do {
+			ret = ptp_usb_event_wait (&camera->pl->params, &event);
+			if (	(ret == PTP_RC_OK) &&
+				(event.Code == PTP_EC_ObjectRemoved)
+			)
+				break;
+		} while (ret == PTP_RC_OK);
  	}
-#endif
 	return (GP_OK);
 }
 

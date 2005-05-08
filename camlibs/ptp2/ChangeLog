@@ -1,3 +1,7 @@
+2005-05-08  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Get removeobject events for canons on delete.
+
 2005-05-05  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Added PowerShot SD500 aka IXUS 700
