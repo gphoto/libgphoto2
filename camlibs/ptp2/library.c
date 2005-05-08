@@ -367,6 +367,9 @@ static struct {
 	{"Olympus:C-370Z",                0x07b4, 0x0109, 0},
 	{"Olympus:X-450",                 0x07b4, 0x0109, 0},
 	{"Olympus:D-535Z",                0x07b4, 0x0109, 0},
+
+	/* http://callendor.zongo.be/wiki/OlympusMju500 */
+	{"Olympus:mju 500",               0x07b4, 0x0113, 0},
 	/* From VICTOR <viaaurea@yahoo.es> */
 	{"Olympus:C-350Z",                0x07b4, 0x0114, 0},
 	{"Olympus:D-560Z",                0x07b4, 0x0114, 0},
