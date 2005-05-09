@@ -19,7 +19,7 @@ debug="false"
 recursive="false"
 dryrun="false"
 self="$(basename "$0")"
-autogen_version="0.4.3"
+autogen_version="0.4.4"
 
 
 ########################################################################
@@ -118,7 +118,7 @@ init_vars() {
     #        OK, the "init" part is done recursively by autopoint, so that is easy.
     #        But the cleaning should also work recursively, but that is difficult
     #        with the current structure of the script.
-    AG_SUBDIRS="$(for k in $(sed -n 's/^[[:space:]]*AC_CONFIG_SUBDIRS(\[\{0,1\}\([^])]*\).*/\1/p' "$CONFIGURE_AC"); do echo "${k}"; done)"
+    AG_SUBDIRS="$(for k in $(sed -n 's/^[[:space:]]*GP_AUTOGEN_SUBDIR(\[\{0,1\}\([^])]*\).*/\1/p' "$CONFIGURE_AC"); do echo "${k}"; done)"
     AG_LIBLTDL_DIR="$(sed -n 's/^[[:space:]]*AC_LIBLTDL_\(INSTALLABLE\|CONVENIENCE\)(\[\{0,1\}\([^])]*\).*/\2/p' < "$CONFIGURE_AC")"
     if test "x$AG_LIBLTDL_DIR" = "x"; then
         tmp="$(sed -n 's/^[[:space:]]*\(AC_LIBLTDL_\)\(INSTALLABLE\|CONVENIENCE\)(\[\{0,1\}\([^])]*\).*/\1/p' < "$CONFIGURE_AC")"
