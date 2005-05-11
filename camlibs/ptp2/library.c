@@ -1113,6 +1113,9 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	 * Thus we set CameraFilePath to the path to last object reported by
 	 * the camera.
 	 */
+	/* I hate workarounds! Nikon is not 100% PTP compatible here! */
+	if (camera->pl->params.deviceinfo.VendorExtensionID==PTP_VENDOR_NIKON) 
+		goto out;
 	{
 		short ret;
 		ret=ptp_usb_event_wait(&camera->pl->params,&event);
@@ -1124,9 +1127,6 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		add_object (camera, event.Param1, context);
 		newobject = event.Param1;
 
-		/* I hate workarounds! Nikon is not 100% PTP compatible here! */
-		if (camera->pl->params.deviceinfo.VendorExtensionID==PTP_VENDOR_NIKON) 
-			goto out;
 		if (ptp_usb_event_wait(&camera->pl->params, &event)!=PTP_RC_OK)
 		{
 			gp_context_error (context,
