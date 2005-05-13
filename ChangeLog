@@ -1,3 +1,7 @@
+2005-05-13  Marcus Meissner  <marcus@jet.franken.de>
+
+	* po/eu.po: new baskish from Hizkuntza Politikarako Sailburuordetza <hizkpol@ej-gv.es>
+
 2005-04-14 Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* */configure.in, */Makefile.am, ...: updated build system.
