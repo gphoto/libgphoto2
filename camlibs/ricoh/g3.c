@@ -766,9 +766,9 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 				char xfn[13];
 				int date, time, month, year;
 
-				strcpy(xfn, buf+n*32);
+				strncpy (xfn, buf+n*32, 8);
 				xfn[8] = '.';
-				strcpy(xfn+9, buf+n*32+8);
+				strncpy (xfn+9, buf+n*32+8, 3);
 				xfn[8+1+3] = '\0';
 
 				ret = gp_filesystem_append (fs, folder, xfn, context);
