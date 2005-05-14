@@ -1,3 +1,13 @@
+2005-05-14  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Added a /special folder for camera specific
+	  non ptp filesystem data.
+
+	  (Canon: theme data, Nikon: Whitebalance Curve, etc.)
+
+	  Implemented Canon theme download (but still as a blob
+	  file).
+
 2005-05-08  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Get removeobject events for canons on delete.

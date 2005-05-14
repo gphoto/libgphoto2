@@ -112,6 +112,32 @@
 		}						\
 }
 
+typedef int (*getfunc_t)(CameraFilesystem*, const char*, const char *, CameraFileType, CameraFile *, void *, GPContext *);
+typedef int (*putfunc_t)(CameraFilesystem*, const char*, CameraFile*, void*, GPContext*);
+
+struct special_file {
+	char		*name;
+	getfunc_t	getfunc;
+	putfunc_t	putfunc;
+};
+
+static int nrofspecial_files = 0;
+static struct special_file *special_files = NULL;
+
+static int
+add_special_file (char *name, getfunc_t getfunc, putfunc_t putfunc) {
+	if (nrofspecial_files)
+		special_files = realloc (special_files, sizeof(special_files[0])*(nrofspecial_files+1));
+	else
+		special_files = malloc (sizeof(special_files[0]));
+
+	special_files[nrofspecial_files].name = strdup(name);
+	special_files[nrofspecial_files].putfunc = putfunc;
+	special_files[nrofspecial_files].getfunc = getfunc;
+	nrofspecial_files++;
+	return (GP_OK);
+}
+
 #define STORAGE_FOLDER_PREFIX		"store_"
 
 /* PTP error descriptions */
@@ -1234,6 +1260,36 @@ _get_getset(uint8_t gs) {
 	default: return N_("Unknown");
 	}
 	return N_("Unknown");
+}
+
+static int
+canon_theme_get (CameraFilesystem *fs, const char *folder, const char *filename,
+		 CameraFileType type, CameraFile *file, void *data,
+		 GPContext *context)
+{
+	uint16_t	res;
+	Camera		*camera = (Camera*)data;
+	PTPParams	*params = &camera->pl->params;
+	char		*xdata;
+	unsigned int	size;
+
+	((PTPData *) camera->pl->params.data)->context = context;
+
+	res = ptp_canon_theme_download (params, 1, &xdata, &size);
+	if (res != PTP_RC_OK)  {
+		report_result(context, res);
+		return (translate_ptp_result(res));
+	}
+	CR (gp_file_set_data_and_size (file, xdata, size));
+	return (GP_OK);
+}
+
+static int
+canon_theme_put (CameraFilesystem *fs, const char *folder, CameraFile *file,
+		void *data, GPContext *context)
+{
+	/* not yet */
+	return (GP_OK);
 }
 
 static int
@@ -2741,9 +2797,15 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
     /*((PTPData *)((Camera *)data)->pl->params.data)->context = context;*/
     
     /* There should be NO files in root folder */
-    if (!strcmp(folder, "/")) {
+    if (!strcmp(folder, "/"))
         return (GP_OK);
+
+    if (!strcmp(folder, "/special")) {
+	for (i=0; i<nrofspecial_files; i++)
+		CR (gp_list_append (list, special_files[i].name, NULL));
+	return (GP_OK);
     }
+
     /* compute storage ID value from folder patch */
     folder_to_storage(folder,storage);
     
@@ -2770,6 +2832,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 {
 	PTPParams *params = &((Camera *)data)->pl->params;
 	int i;
+	uint32_t handler,storage;
 
 	/*((PTPData *)((Camera *)data)->pl->params.data)->context = context;*/
 
@@ -2797,10 +2860,17 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 				storageids.Storage[i]);
 			CR (gp_list_append (list, fname, NULL));
 		}
+
+		if (nrofspecial_files)
+			CR (gp_list_append (list, "special", NULL));
+
 		return (GP_OK);
 	}
-	{
-	uint32_t handler,storage;
+
+	if (!strcmp(folder, "/special")) {
+		/* no folders in here */
+		return (GP_OK);
+	}
 
 	/* compute storage ID value from folder path */
 	folder_to_storage(folder,storage);
@@ -2815,7 +2885,6 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	if (params->objectinfo[i].ObjectFormat==PTP_OFC_Association &&
 		params->objectinfo[i].AssociationType!=PTP_AT_Undefined)
 		CR (gp_list_append (list, params->objectinfo[i].Filename, NULL));
-	}
 	}
 	return (GP_OK);
 }
@@ -2842,6 +2911,15 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	PTPObjectInfo * oi;
 
 	((PTPData *) camera->pl->params.data)->context = context;
+
+	if (!strcmp (folder, "/special")) {
+		int i;
+
+		for (i=0;i<nrofspecial_files;i++)
+			if (!strcmp (special_files[i].name, filename))
+				return special_files[i].getfunc (fs, folder, filename, type, file, data, context);
+		return (GP_ERROR_BAD_PARAMETERS); /* file not found */
+	}
 
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);
@@ -2949,6 +3027,16 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	PTPParams* params=&camera->pl->params;
 
 	((PTPData *) camera->pl->params.data)->context = context;
+
+	if (!strcmp (folder, "/special")) {
+		int i;
+
+		for (i=0;i<nrofspecial_files;i++)
+			if (!strcmp (special_files[i].name, filename))
+				return special_files[i].putfunc (fs, folder, file, data, context);
+		return (GP_ERROR_BAD_PARAMETERS); /* file not found */
+	}
+
 	memset(&oi, 0, sizeof (PTPObjectInfo));
 	gp_file_get_name (file, &filename); 
 	gp_file_get_data_and_size (file, (const char **)&object, &intsize);
@@ -3002,6 +3090,9 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	((PTPData *) camera->pl->params.data)->context = context;
 
 	if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_DeleteObject))
+		return GP_ERROR_NOT_SUPPORTED;
+
+	if (!strcmp (folder, "/special"))
 		return GP_ERROR_NOT_SUPPORTED;
 
 	/* compute storage ID value from folder patch */
@@ -3073,6 +3164,9 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	uint32_t storage;
 
 	((PTPData *) camera->pl->params.data)->context = context;
+	
+	if (!strcmp (folder, "/special"))
+		return (GP_ERROR_BAD_PARAMETERS); /* for now */
 
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);
@@ -3128,6 +3222,9 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 	uint32_t storage;
 	uint32_t handle;
 	PTPParams* params=&camera->pl->params;
+
+	if (!strcmp (folder, "/special"))
+		return GP_ERROR_NOT_SUPPORTED;
 
 	((PTPData *) camera->pl->params.data)->context = context;
 	memset(&oi, 0, sizeof (PTPObjectInfo));
@@ -3377,6 +3474,21 @@ camera_init (Camera *camera, GPContext *context)
 
 	/* init internal ptp objectfiles (required for fs implementation) */
 	init_ptp_fs (camera, context);
+
+	switch (camera->pl->params.deviceinfo.VendorExtensionID) {
+	case PTP_VENDOR_CANON:
+		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_ThemeDownload))
+			add_special_file("theme.dat", canon_theme_get, canon_theme_put);
+		break;
+	case PTP_VENDOR_NIKON:
+	/* Veggen: add curve magic command here: 
+		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_ThemeDownload))
+			add_special_file("curve.ntc", nikon_curve_get, nikon_curve_put);
+		break;e
+	*/
+	default:
+		break;
+	}
 
 	/* Configure the CameraFilesystem */
 	CR (gp_filesystem_set_list_funcs (camera->fs, file_list_func,
