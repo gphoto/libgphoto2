@@ -93,7 +93,7 @@ dnl USE_INCLUDED_LIBINTL=no
 dnl AC_SUBST(USE_INCLUDED_LIBINTL)
 
 GP_GETTEXT_HACK([${PACKAGE}-${LIBGPHOTO2_PORT_CURRENT}],[Lutz Mueller and others],[${MAIL_GPHOTO_TRANSLATION}])
-ALL_LINGUAS="cs da de fr es it ja nb pt_BR ru sl sv uk zh_CN"
+ALL_LINGUAS="cs da de fr es eu it ja nb pt_BR ru sl sv uk zh_CN"
 AM_GNU_GETTEXT_VERSION([0.14.1])
 AM_GNU_GETTEXT([external])
 AM_PO_SUBDIRS()
