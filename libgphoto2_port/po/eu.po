@@ -1,0 +1,351 @@
+# translation of libgphoto2_port.po to Basque
+# Basque Translation.
+# Copyright © 2005 Iñaki Larrañaga.
+# Iñaki Larrañaga <dooteo@euskalgnu.org>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: eu\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-12-15 17:05-0500\n"
+"PO-Revision-Date: 2005-05-14 13:32+0200\n"
+"Last-Translator: Iñaki Larrañaga  <dooteo@euskalgnu.org>\n"
+"Language-Team:  <itzulpena@euskalgnu.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.9.1\n"
+
+#: libgphoto2_port/gphoto2-port-info-list.c:268
+#, c-format
+msgid "Could not load any io-library because '%s' could not be opened (%m)"
+msgstr "Ezin izan da sarrerako/irteerako liburutegia kargatu, '%s' ezin izan delako ireki (%m)"
+
+#: libgphoto2_port/gphoto2-port-info-list.c:472
+msgid "Generic Port"
+msgstr "Ataka generikoa"
+
+#: libgphoto2_port/gphoto2-port-result.c:58
+msgid "No error"
+msgstr "Errorerik gabe"
+
+#: libgphoto2_port/gphoto2-port-result.c:60
+msgid "Unspecified error"
+msgstr "Zehaztu gabeko errorea"
+
+#: libgphoto2_port/gphoto2-port-result.c:62
+msgid "I/O problem"
+msgstr "S/I-ko arazoa"
+
+#: libgphoto2_port/gphoto2-port-result.c:64
+msgid "Bad parameters"
+msgstr "Parametro okerrak"
+
+#: libgphoto2_port/gphoto2-port-result.c:66
+msgid "Unsupported operation"
+msgstr "Eragiketa ez dago onartuta"
+
+#: libgphoto2_port/gphoto2-port-result.c:68
+msgid "Timeout reading from or writing to the port"
+msgstr "Denbora-muga irungitu da atakan irakurtzean/idaztean"
+
+#: libgphoto2_port/gphoto2-port-result.c:70
+msgid "Serial port not supported"
+msgstr "Serieko ataka ez dago onartuta"
+
+#: libgphoto2_port/gphoto2-port-result.c:72
+msgid "USB port not supported"
+msgstr "USB ataka ez dago onartuta"
+
+#: libgphoto2_port/gphoto2-port-result.c:74
+msgid "Unknown port"
+msgstr "Ataka ezezaguna"
+
+#: libgphoto2_port/gphoto2-port-result.c:76
+msgid "Out of memory"
+msgstr "Memoriarik gabe"
+
+#: libgphoto2_port/gphoto2-port-result.c:78
+msgid "Error loading a library"
+msgstr "Errorea liburutegia kargatzean"
+
+#: libgphoto2_port/gphoto2-port-result.c:80
+msgid "Error initializing the port"
+msgstr "Errorea ataka hasieratzean"
+
+#: libgphoto2_port/gphoto2-port-result.c:82
+msgid "Error reading from the port"
+msgstr "Errorea atakatik irakurtzean"
+
+#: libgphoto2_port/gphoto2-port-result.c:84
+msgid "Error writing to the port"
+msgstr "Errorea atakan idaztean"
+
+#: libgphoto2_port/gphoto2-port-result.c:86
+msgid "Error updating the port settings"
+msgstr "Errorea atakako konfigurazioa eguneratzean"
+
+#: libgphoto2_port/gphoto2-port-result.c:88
+msgid "Error setting the serial port speed"
+msgstr "Errorea serieko atakaren abiadura ezartzean"
+
+#: libgphoto2_port/gphoto2-port-result.c:90
+msgid "Error clearing a halt condition on the USB port"
+msgstr "Errorea USB atakako itzaltze-baldintza ezabatzean"
+
+#: libgphoto2_port/gphoto2-port-result.c:92
+msgid "Could not find the requested device on the USB port"
+msgstr "Ezin izan da eskatutako gailua USB atakan aurkitu"
+
+#: libgphoto2_port/gphoto2-port-result.c:94
+msgid "Could not claim the USB device"
+msgstr "Ezin izan da USB gailua aldarrikatu"
+
+#: libgphoto2_port/gphoto2-port-result.c:96
+msgid "Could not lock the device"
+msgstr "Ezin izan da gailua blokeatu"
+
+#: libgphoto2_port/gphoto2-port-result.c:98
+msgid "Unknown error"
+msgstr "Errore ezezaguna"
+
+#: libgphoto2_port/gphoto2-port.c:56
+#, c-format
+msgid "The operation '%s' is not supported by this device"
+msgstr "Gailu honek ez du '%s' eragiketa onartzen"
+
+#: libgphoto2_port/gphoto2-port.c:57
+msgid "The port has not yet been initialized"
+msgstr "Ez da ataka hasieratu oraindik"
+
+#: libgphoto2_port/gphoto2-port.c:280
+msgid "open"
+msgstr "ireki"
+
+#: libgphoto2_port/gphoto2-port.c:303
+msgid "close"
+msgstr "itxi"
+
+#: libgphoto2_port/gphoto2-port.c:378
+msgid "write"
+msgstr "idatzi"
+
+#: libgphoto2_port/gphoto2-port.c:410
+msgid "read"
+msgstr "irakurri"
+
+#: libgphoto2_port/gphoto2-port.c:446 libgphoto2_port/gphoto2-port.c:480
+msgid "check_int"
+msgstr "check_int"
+
+#: libgphoto2_port/gphoto2-port.c:597
+msgid "update"
+msgstr "eguneratu"
+
+#: libgphoto2_port/gphoto2-port.c:643
+msgid "get_pin"
+msgstr "get_pin"
+
+#: libgphoto2_port/gphoto2-port.c:695
+msgid "set_pin"
+msgstr "set_pin"
+
+#: libgphoto2_port/gphoto2-port.c:710
+msgid "send_break"
+msgstr "send_break"
+
+#: libgphoto2_port/gphoto2-port.c:723
+msgid "flush"
+msgstr "hustu"
+
+#: libgphoto2_port/gphoto2-port.c:739
+msgid "find_device"
+msgstr "find_device"
+
+#: libgphoto2_port/gphoto2-port.c:751
+msgid "find_device_by_class"
+msgstr "find_device_by_class"
+
+#: libgphoto2_port/gphoto2-port.c:765
+msgid "clear_halt"
+msgstr "clear_halt"
+
+#: libgphoto2_port/gphoto2-port.c:785
+msgid "msg_write"
+msgstr "msg_write"
+
+#: libgphoto2_port/gphoto2-port.c:805
+msgid "msg_read"
+msgstr "msg_read"
+
+#: libgphoto2_port/gphoto2-port.c:865
+msgid "No error description available"
+msgstr "Errorearen azalpena ez dago eskuragarri"
+
+#: serial/unix.c:226
+#, c-format
+msgid "Could not lock device '%s'"
+msgstr "Ezin izan da '%s' gailua blokeatu"
+
+#: serial/unix.c:236
+#, c-format
+msgid "Device '%s' is locked by pid %d"
+msgstr "'%s' gailua %d pid-ek blokeatuta dauka"
+
+#: serial/unix.c:239
+#, c-format
+msgid "Device '%s' could not be locked (dev_lock returned %d)"
+msgstr "Ezin izan da '%s' gailua blokeatu (dev_lock-ek %d itzuli du)"
+
+#: serial/unix.c:273
+#, c-format
+msgid "Device '%s' could not be unlocked."
+msgstr "Ezin izan da '%s' gailua desblokeatu."
+
+#: serial/unix.c:285
+#, c-format
+msgid "Device '%s' could not be unlocked as it is locked by pid %d."
+msgstr "Ezin izan da '%s' gailua desblokeatu, %d pid-ak blokeatuta baitauka."
+
+#: serial/unix.c:289
+#, c-format
+msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
+msgstr "Ezin izan da '%s' desblokeatu (dev_unlock-ek %d itzuli du)"
+
+#: serial/unix.c:365
+#, c-format
+msgid "Serial Port %i"
+msgstr "Serieko ataka: %i"
+
+#: serial/unix.c:456
+#, c-format
+msgid "Failed to open '%s' (%m)."
+msgstr "Huts egin du '%s' irekitzean (%m)."
+
+#: serial/unix.c:474
+#, c-format
+msgid "Could not close '%s' (%m)."
+msgstr "Ezin izan da '%s' itxi (%m)."
+
+#: serial/unix.c:527
+#, c-format
+msgid "Could not write to port (%m)"
+msgstr "Ezin izan da atakan idatzi (%m)"
+
+#: serial/unix.c:599
+msgid "Parity error."
+msgstr "Paritate-errorea."
+
+#: serial/unix.c:603
+#, c-format
+msgid "Unexpected parity response sequence 0xff 0x%02x."
+msgstr "Ustegabeko 0xff 0x%02x paritate-erantzuna sekuentzia."
+
+#: serial/unix.c:646
+#, c-format
+msgid "Unknown pin %i."
+msgstr "%i PIN ezezaguna."
+
+#: serial/unix.c:668
+#, c-format
+msgid "Could not get level of pin %i (%m)."
+msgstr "Ezin izan da %i pin-aren maila lortu (%m)."
+
+#: serial/unix.c:703
+#, c-format
+msgid "Could not set level of pin %i to %i (%m)."
+msgstr "Ezin izan da %i pin-aren maila %i gisa ezarri (%m)."
+
+#: serial/unix.c:728
+#, c-format
+msgid "Could not flush '%s' (%m)."
+msgstr "Ezin izan da '%s' hustu (%m)."
+
+#: serial/unix.c:841
+#, c-format
+msgid "Could not set the baudrate to %d"
+msgstr "Ezin izan da %d(r)en baudio-tasa ezarri"
+
+#: usb/libusb.c:186
+#, c-format
+msgid "Could not open USB device (%m)."
+msgstr "Ezin izan da USB gailua ireki (%m)."
+
+#: usb/libusb.c:196
+msgid "Camera is already in use."
+msgstr "Kamera jadanik erabiltzen ari da"
+
+#: usb/libusb.c:201
+msgid "Camera is supported by USB Storage driver."
+msgstr "USB biltegi kontrolatzaileak kamera onartzen du"
+
+#: usb/libusb.c:205
+#, c-format
+msgid "Device has driver '%s' attached, detaching it now."
+msgstr "Gailuak '%s' kontrolatzailea erantsita du, askatu orain."
+
+#: usb/libusb.c:208
+#, c-format
+msgid "Could not detach kernel driver '%s' of camera device."
+msgstr "Ezin izan da kamera gailuaren kerneleko '%s' kontrolatzailea askatu"
+
+#: usb/libusb.c:210
+msgid "Could not query kernel driver of device."
+msgstr "Ezin izan da gailuaren kontrolatzailea kernelari eskatu"
+
+#: usb/libusb.c:217
+#, c-format
+msgid ""
+"Could not claim interface %d (%m). Make sure no other program or kernel "
+"module (such as %s) is using the device and you have read/write access to "
+"the device."
+msgstr "Ezin izan da %d interfazea aldarrikatu (%m). Ziurta zaitez beste programa batek edo kerneleko modulo batek (%s bezalakoak) gailua erabiltzen ari ez dela, eta gailuan irakurtzeko/idazteko baimenak dituzula."
+
+#: usb/libusb.c:236
+#, c-format
+msgid "Could not release interface %d (%m)."
+msgstr "Ezin izan da %d interfazea askatu (%m)."
+
+#: usb/libusb.c:243
+#, c-format
+msgid "Could not close USB port (%m)."
+msgstr "Ezin izan da USB ataka itxi (%m)."
+
+#: usb/libusb.c:383
+#, c-format
+msgid "Could not set config %d/%d (%m)"
+msgstr "Ezin izan da %d/%d konfigurazioa ezarri (%m)."
+
+#: usb/libusb.c:405
+#, c-format
+msgid "Could not set altsetting %d/%d (%m)"
+msgstr "Ezin izan da %d/%d aukerazko konfigurazioa ezarri (%m)"
+
+#: usb/libusb.c:497
+#, c-format
+msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
+msgstr "Zehaztutako hornitzailearen edo produktuaren IDa (0x%x,0x%x) ez da baliozkoa."
+
+#: usb/libusb.c:529
+#, c-format
+msgid ""
+"USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
+"not function with gphoto2. Reference: %s"
+msgstr ""
+"USB gailua (0x%x hornitzailea, 0x%x produktua) "
+"biltegiratze-gailua da, eta ez du gphoto2-rekin funtzionatuko. Erreferentzia: %s"
+
+#: usb/libusb.c:562
+#, c-format
+msgid ""
+"Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
+"is connected to the computer."
+msgstr "Ezin izan da USB gailua (0x%x hornitzailea, 0x%x produktua) aurkitu. Ziurta zaitez gailua ordenagailuari konektatuta dagoela."
+
+#: usb/libusb.c:693
+#, c-format
+msgid ""
+"Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
+"sure this device is connected to the computer."
+msgstr "Ezin izan da USB gailua aurkitu (0x%x klasea, 0x%x azpiklasea, 0x%x protokoloa). Ziurta zaitez gailua ordenagailura konektatuta dagoela."
+
