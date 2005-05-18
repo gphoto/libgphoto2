@@ -356,12 +356,13 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			"# CREATOR: gphoto2, SQ905 library\n"
 			"%d %d\n"
 			"255\n", w, h);
-		ptr = ppm + strlen (ppm);
+		size = strlen (ppm);
+		ptr = ppm + size;
 		if (comp_ratio>1) {
 			sq_decompress (camera->pl->model, ptr, frame_data, w, h, entry);			
 			sq_postprocess(camera->pl,w, h, ptr, entry);
 		}
-		size = strlen (ppm) + (w * h * 3);
+		size = size + (w * h * 3);
 		GP_DEBUG ("size = %i\n", size);
 
 		if ( comp_ratio == 1) {

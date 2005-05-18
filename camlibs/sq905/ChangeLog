@@ -1,3 +1,9 @@
+2005-05-18   Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: bug in compressed photo routine fixed, found by Cedric Cellier.
+
+
+
 2005-04-17   Theodore Kilgore <kilgota@auburn.edu>
 
 	* ChangeLog: Fixed some typos.
