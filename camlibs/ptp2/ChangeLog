@@ -3,6 +3,8 @@
 	* library.c: Hub reverted the Kodak LS473 -> 743 change,
 	  corrected again.
 
+	* library.c: Eos Mark II D has root bug too.
+
 2005-05-14  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Added a /special folder for camera specific
