@@ -260,7 +260,7 @@ static struct {
 	{"Kodak:DX4330", 0x040a, 0x0555, 0},
 	{"Kodak:CX4200", 0x040a, 0x0560, 0},
 	{"Kodak:CX4210", 0x040a, 0x0560, 0},
-	{"Kodak:LS473",  0x040a, 0x0565, 0},
+	{"Kodak:LS743",  0x040a, 0x0565, 0},
 	/* both above with different product IDs
 	   normal/retail versions of the same model */
 	{"Kodak:CX4300", 0x040a, 0x0566, 0},
