@@ -185,7 +185,7 @@ static struct {
 	{"Sanyo", "VPC-G200", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Sanyo", "VPC-G200EX", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Sanyo", "VPC-G210", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
-	{"Sanyo", "VPC-G250", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
+	{"Sanyo", "VPC-G250", 	SIERRA_MODEL_DEFAULT,	0, 0, SIERRA_NO_51 },
 	{"Sierra Imaging", "SD640",SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	/*
 	 * Added by Sean Bruno on July 22, 2004 to support the Toshiba

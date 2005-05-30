@@ -1,3 +1,7 @@
+2005-05-30  Marcus Meissner  <marcus@jet.franken.de>
+
+	* sierra.c: Sanyo VPC G250 does not have register 51.
+
 2005-05-08  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* sierra.c: The olympus c-420l does only like
