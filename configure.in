@@ -296,6 +296,7 @@ GP_CAMLIB([samsung])dnl
 GP_CAMLIB([sierra])dnl
 GP_CAMLIB([sipix])dnl
 GP_CAMLIB([smal])dnl
+GP_CAMLIB([sonix])dnl
 GP_CAMLIB([sonydscf1])dnl
 GP_CAMLIB([sonydscf55])dnl
 GP_CAMLIB([soundvision])dnl
@@ -493,6 +494,7 @@ camlibs/samsung/Makefile
 camlibs/sierra/Makefile
 camlibs/sipix/Makefile
 camlibs/smal/Makefile
+camlibs/sonix/Makefile
 camlibs/sonydscf1/Makefile
 camlibs/sonydscf55/Makefile
 camlibs/soundvision/Makefile

@@ -1,3 +1,9 @@
+2005-06-08  Theodore Kilgore <kilgota@auburn.edu>
+
+	* libgphoto2_port/: added functions to support new request types
+	* camlibs/sonix:   initial hookup
+	* configure.in:	    hooked up camlibs/sonix
+
 2005-05-13  Marcus Meissner  <marcus@jet.franken.de>
 
 	* po/eu.po: new baskish from Hizkuntza Politikarako Sailburuordetza <hizkpol@ej-gv.es>
