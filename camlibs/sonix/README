@@ -1,0 +1,138 @@
+/* README for libgphoto2/camlibs/sonix camera library
+ *
+ * Copyright (C) 2005 Theodore Kilgore <kilgota@auburn.edu>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details. 
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+This library is intended to support the stillcam functions of the Vivivar 
+Vivicam 3350B and similar cameras which use the sn9c2028 chip from Sonix.
+The 3350B uses an OV7630 sensor and produces a maximum
+resolution of 640x480 and an option to use 320x240. The photos are all 
+compressed. The compression scheme is lossy and seems to be a variation on 
+RLE. The decompression algorithm originates, I understand, in the work of
+Bertrik Sikkens for the sn9c102 cameras. In the macam project for 
+MacOS-X camera support(webcam-osx project on sourceforge), the 
+decompression algorithm for the sn9c2028 cameras was developed by Mattias 
+Krauss and adapted for use with the Vivitar Vivicam 3350B in particular 
+by Harald Ruda <hrx at users.sourceforge.net>, who also brought their work 
+to my attention.
+
+Features of the camera include the ability to delete all photos. A "delete last"
+function and a "capture" function also exist in the macam driver, but neither 
+seems to work when tested with my Vivicam 3350B. They may work with other 
+sn9c2028 cameras, and if so will be included here in the future. 
+Another camera which the macam driver also supports has been listed here as a 
+supported camera. It apparently uses 352x288 and 176x144 resolution settings. 
+I have not personally tested it and would appreciate any 
+reports about it, as well as any other cameras which seem to have the same 
+chip. These cameras also can act as pccam or webcam and use isochronous 
+transfer to do that. Support for this feature in Linux requires a kernel 
+module. That is a possible future project, but the requirement for direct 
+kernel support precludes supporting the webcam function here. 
+
+The following remarks come from some notes in the macam source code, which is 
+licensed under the GPL. I thank the webcam-osx developers for their help and 
+cooperation. The section about the Vivicam 3350B was written by Harald. 
+
+(quotation begins)
+
+The video in the data stream is a GRBG-Bayer pattern (compressed by some sort 
+of run-length encoding and Huffman compression). The data stream format is 
+as follows:
+
+<frame 1 header>
+<line 1 header>
+<pixel 1 bitcode>
+<pixel 2 bitcode>
+...
+<pixel x bitcode>
+<line 2 header>
+...
+<line y header>
+<padding bits>
+<frame 2 header>
+...
+
+The frame header is 12 bytes long 
+(0xff 0xff 0x00 0xc4 0xc4 0x96 
+0x00 0x<*1> 0x<*2> 0x<*3> 0x<*4> 0x<*5>). <*1> seems to be a frame counter 
+(bits 6 and 7) and a size indicator 
+(bits 1 and 2: 00=VGA, 01=SIF, 10=QSIF) Bit 0 seems to be always 1, 
+4 and 5 seem to be always 0. Bit 3 is often 0 (but not always).
+<*2> to <*5>'s meanings are probably some sort of brightness summary/average.
+
+After that, the video lines follow. Each line starts with a 16-bit line 
+header with two 8-bit starting values - since it's a Bayer pattern, there 
+are two color components alternating in each line. Both components are 
+tracked individually and independently (just alternating).
+
+After the line header, the actual pixels follow. The line lengths don't match 
+exactly their named formats - for example, VGA mode seems to have only 638 
+Pixels in a row. For each pixel, there's a code in the stream that describes 
+the next component value. It can either be described as a change from the 
+last value of that component or as a direct value. These codes are not bound 
+to bytes - it's a pure bitstream. Codes have different lengths, according to 
+their likeliness. The algorithm is similar to Huffman compression, the main 
+differences are 
+) the two modes, 
+b) the bit codes seem to be handmade, 
+c) there's some redundancy because of the two description modes 
+and 
+d) not all possible values exist - therefore, the values had to be quantized 
+(i.e. this compression algorithm is lossy). The codes are as follows 
+(they are not completely correct, I have to figure out a better way to 
+decipher this, but they basically work):
+*/
+/*
+0 		: 0 (leave as is)
+1000		: +8
+1001		: -8
+101 		: +3
+110 		: -3
+11100		: +18
+11101xxxxx 	: =8*(xxxxx)+4 (these values seem 
+			to be unprecise - especially for low values)
+1111		: -18
+*/
+/*
+ViviCam 3350B additions
+=======================
+
+This uses the OV7630 imaging chip, which has a BGGR bayer matrix
+
+The code sent is almost exactly the same as above, except:
+- need to skip 20 bytes, not 12 when decoding
+- rows do indeed contain the full amount of pixels 
+(the first two are actually the first two!)
+- the bit-stream decoding is almost the same, these work very well, 
+and are absolutely correct
+11100		: +20
+11101xxxxx 	: =8*(xxxxx)+0
+1111		: -20
+
+Some of these changes may also apply to the original (Sonix2028) driver, 
+but without a way to test changes, they will be left alone.
+
+(end quotation)
+
+Apparently, the Mac deals with downloads from the camera in a slightly 
+different manner. I found it necessary here to skip only 8 bytes, as the 
+"first 12 bytes" simply do not comprise part of the data. Otherwise, the 
+decompression algorithm used here is slightly simplified from what is used in 
+the macam driver, but is essentially identical. It seems to work perfectly, 
+except that brightness and/or gamma need sometimes to be adjusted, especially 
+for photos taken in dim light. 
