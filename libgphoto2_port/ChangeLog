@@ -5,10 +5,10 @@
 	  types needed by Sonix sn9c2028 cameras.
 	* libgphoto2_port/gphoto2_port_library.h: msg_interface_write and 
 	  msg_interface_read declared
-	* libgphoto2_port/gphoto2_port.h: gp_port_usb_msg_write and 
-	  gp_port_usb_msg_read functions declared
-	* libgphoto2_port/gphoto2_port.c: gp_port_usb_msg_write and 
-	  gp_port_usb_msg_read functions added
+	* libgphoto2_port/gphoto2_port.h: gp_port_usb_msg_interface_write and 
+	  gp_port_usb_msg_interface_read functions declared
+	* libgphoto2_port/gphoto2_port.c: gp_port_usb_msg_interface_write and 
+	  gp_port_usb_msg_interface_read functions added
 	      
 
 2005-03-04  Marcus Meissner  <marcus@jet.franken.de>
