@@ -781,6 +781,62 @@ gp_port_usb_msg_read (GPPort *port, int request, int value, int index,
         return (retval);
 }
 
+/* 
+ * The next two functions handle the request types 0x41 for write 
+ * and 0xc1 for read.
+ */
+
+int
+gp_port_usb_msg_interface_write (GPPort *port, int request, 
+	int value, int index, char *bytes, int size)
+{
+        int retval;
+
+	gp_log (GP_LOG_DEBUG, "gphoto2-port", "Writing message "
+		"(request=0x%x value=0x%x index=0x%x size=%i=0x%x)...",
+		request, value, index, size, size);
+	gp_log_data ("gphoto2-port", bytes, size);
+
+	CHECK_NULL (port);
+	CHECK_INIT (port);
+
+	CHECK_SUPP (port, _("msg_build"), port->pc->ops->msg_interface_write);
+        retval = port->pc->ops->msg_interface_write(port, request, 
+        		value, index, bytes, size);
+	CHECK_RESULT (retval);
+
+        return (retval);
+}
+
+
+int
+gp_port_usb_msg_interface_read (GPPort *port, int request, int value, int index,
+	char *bytes, int size)
+{
+        int retval;
+
+	gp_log (GP_LOG_DEBUG, "gphoto2-port", "Reading message "
+		"(request=0x%x value=0x%x index=0x%x size=%i=0x%x)...",
+		request, value, index, size, size);
+
+	CHECK_NULL (port);
+	CHECK_INIT (port);
+
+	CHECK_SUPP (port, _("msg_read"), port->pc->ops->msg_interface_read);
+        retval = port->pc->ops->msg_interface_read (port, request, 
+        		value, index, bytes, size);
+	CHECK_RESULT (retval);
+
+	if (retval != size)
+		gp_log (GP_LOG_DEBUG, "gphoto2-port", "Could only read %i "
+			"out of %i byte(s)", retval, size);
+
+	gp_log_data ("gphoto2-port", bytes, retval);
+
+        return (retval);
+}
+
+
 /**
  * gp_port_set_error:
  * @port: a #GPPort

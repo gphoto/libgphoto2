@@ -52,7 +52,10 @@ struct _GPPortOperations {
                                 char *bytes, int size);
         int (*msg_read)   (GPPort * dev, int request, int value, int index,
                                 char *bytes, int size);
-
+        int (*msg_interface_write)  (GPPort * dev, int request, 
+                                int value, int index, char *bytes, int size);
+        int (*msg_interface_read)  (GPPort * dev, int request, 
+                                int value, int index, char *bytes, int size);
 };
 
 typedef GPPortType (* GPPortLibraryType) (void);

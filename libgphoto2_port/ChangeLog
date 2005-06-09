@@ -1,3 +1,16 @@
+2005-06-08  Theodore Kilgota  <kilgota@auburn.edu>
+	* usb/libusb.c: added gp_port_usb_msg_interface_write_lib and
+	  gp_port_usb_msg_interface_read_lib functions, and corresponding 
+	  entries in "ops" list, in order to support 0x41 and 0xc1 request 
+	  types needed by Sonix sn9c2028 cameras.
+	* libgphoto2_port/gphoto2_port_library.h: msg_interface_write and 
+	  msg_interface_read declared
+	* libgphoto2_port/gphoto2_port.h: gp_port_usb_msg_write and 
+	  gp_port_usb_msg_read functions declared
+	* libgphoto2_port/gphoto2_port.c: gp_port_usb_msg_write and 
+	  gp_port_usb_msg_read functions added
+	      
+
 2005-03-04  Marcus Meissner  <marcus@jet.franken.de>
 
 	* serial/unix.c: make IUCLC check more generic.
