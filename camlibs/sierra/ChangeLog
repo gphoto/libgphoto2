@@ -1,3 +1,7 @@
+2005-06-10  Marcus Meissner  <marcus@jet.franken.de>
+
+	* sierra.c: Added Nikon Coolpix 4300 in wrapper modce.
+
 2005-05-30  Marcus Meissner  <marcus@jet.franken.de>
 
 	* sierra.c: Sanyo VPC G250 does not have register 51.
