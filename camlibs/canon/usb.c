@@ -2325,21 +2325,28 @@ canon_usb_list_all_dirs (Camera *camera, unsigned char **dirent_data,
 
 /**
  * canon_usb_ready:
- * @camera: camera to get ready
+ * @camera: camera to check
  *
- * USB part of canon_int_ready
+ * Checks whether camera is available for communication.
  *
  * Returns: gphoto2 error code
+ *          GP_OK if camera is ready
  *
  */
 int
-canon_usb_ready (Camera *camera)
+canon_usb_ready (Camera *camera, GPContext *context)
 {
+	unsigned char *msg;
+        int len;
+
         GP_DEBUG ("canon_usb_ready()");
 
-        /* XXX send a 'ping' packet and check that the camera is
-         * still alive.
-         */
+        /* "Identify camera" seems to be a command compatible with all
+	 * cameras, and one that doesn't change the camera state. */
+	msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_IDENTIFY_CAMERA,
+				  &len, NULL, 0);
+	if ( msg == NULL )
+		return GP_ERROR_OS_FAILURE;
 
         return GP_OK;
 }
