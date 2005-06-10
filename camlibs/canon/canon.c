@@ -105,7 +105,6 @@
 /* Models with unknown USB ID's:
   European name      North American                 Japanese             Intro date
 
-  IXUS 700           PowerShot SD500                IXY Digital 60       February 2005
   PowerShot A520                                                         January 2005
   Digital IXUS 40    PowerShot SD300                IXY Digital 50       September 2004
   PowerShot Pro1                                                         February 2004
@@ -269,9 +268,9 @@ const struct canonCamModelData models[] = {
         {"Canon:Digital IXUS 30 (normal mode)", CANON_CLASS_6,  0x04A9, 0x30c0, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:IXY Digital 40 (normal mode)",  CANON_CLASS_6,  0x04A9, 0x30c0, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 #endif /* CANON_EXPERIMENTAL_20D */
-        {"Canon:PowerShot SD400 (normal mode)", CANON_CLASS_4,  0x04A9, 0x30c1, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-        {"Canon:Digital IXUS 50 (normal mode)", CANON_CLASS_4,  0x04A9, 0x30c1, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-        {"Canon:IXY Digital 55 (normal mode)",  CANON_CLASS_4,  0x04A9, 0x30c1, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:PowerShot SD400 (normal mode)", CANON_CLASS_4,  0x04A9, 0x30c1, CAP_NON, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:Digital IXUS 50 (normal mode)", CANON_CLASS_4,  0x04A9, 0x30c1, CAP_NON, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:IXY Digital 55 (normal mode)",  CANON_CLASS_4,  0x04A9, 0x30c1, CAP_NON, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:PowerShot A510 (normal mode)",  CANON_CLASS_1,  0x04A9, 0x30c2, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         /* End of shared ID's */
 
@@ -292,9 +291,9 @@ const struct canonCamModelData models[] = {
         /* 30ef is EOS 350D/Digital Rebel XT/EOS Kiss Digital N in PTP mode. */
 #endif /* CANON_EXPERIMENTAL_20D */
 
-        {"Canon:PowerShot SD500 (normal mode)",  CANON_CLASS_1,  0x04A9, 0x30f2, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-        {"Canon:Digital IXUS 700 (normal mode)",  CANON_CLASS_1,  0x04A9, 0x30f2, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-        {"Canon:IXY Digital 60 (normal mode)",  CANON_CLASS_1,  0x04A9, 0x30f2, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:PowerShot SD500 (normal mode)",  CANON_CLASS_1,  0x04A9, 0x30f2, CAP_NON, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:Digital IXUS 700 (normal mode)",  CANON_CLASS_1,  0x04A9, 0x30f2, CAP_NON, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:IXY Digital 60 (normal mode)",  CANON_CLASS_1,  0x04A9, 0x30f2, CAP_NON, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
         {NULL}
         /* *INDENT-ON* */
@@ -1637,7 +1636,7 @@ canon_int_ready (Camera *camera, GPContext *context)
 
         switch (camera->port->type) {
                 case GP_PORT_USB:
-                        res = canon_usb_ready (camera);
+                        res = canon_usb_ready (camera, context);
                         break;
                 case GP_PORT_SERIAL:
                         res = canon_serial_ready (camera, context);
@@ -2003,6 +2002,11 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
         GP_DEBUG ("BEGIN canon_int_list_directory() folder '%s' aka '%s' (%s, %s)", folder,
                   canonfolder, list_files ? "files" : "no files",
                   list_folders ? "folders" : "no folders");
+
+        if ( canonfolder == NULL ) {
+                GP_DEBUG ( "Error: canon_int_list_directory called with null name for camera folder" );
+                return GP_ERROR;
+        }
 
         /* Fetch all directory entries from the camera */
         switch (camera->port->type) {
