@@ -5,9 +5,9 @@ libgphoto2_la_CPPFLAGS =				\
 	$(AM_CPPFLAGS) $(CPPFLAGS)			\
 	$(LIBEXIF_CFLAGS)
 
-# FIXME: -export-symbols $(srcdir)/libgphoto2.sym
 libgphoto2_la_LDFLAGS =	\
 	-no-undefined	\
+	-export-symbols $(srcdir)/libgphoto2.sym \
 	-version-info @LIBGPHOTO2_VERSION_INFO@
 
 libgphoto2_la_SOURCES = 	\
@@ -59,7 +59,7 @@ libgphoto2include_HEADERS =	\
 
 pkgconfig_DATA = libgphoto2.pc
 
-EXTRA_DIST = libgphoto2.pc.in gphoto2-library.c
+EXTRA_DIST = libgphoto2.pc.in gphoto2-library.c libgphoto2.sym
 
 DISTCLEANFILES = _stdint.h gphoto2-endian.h
 
