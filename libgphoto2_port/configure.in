@@ -295,6 +295,7 @@ GP_CHECK_LIBRARY([LIBUSB],[libusb],[>= 0.1.5],
 # Define IOLIB stuff
 # ----------------------------------------------------------------------
 
+IOLIB_SUBDIRS="$IOLIB_SUBDIRS disk"
 AC_SUBST(IOLIB_SUBDIRS)
 AC_SUBST([iolibdir],["\$(libdir)/\$(PACKAGE_TARNAME)/\$(VERSION)"])
 AM_CPPFLAGS="$AM_CPPFLAGS -DIOLIBS=\\\"${iolibdir}\\\""
@@ -353,6 +354,7 @@ po/Makefile.in
 libgphoto2_port/Makefile
 serial/Makefile
 usb/Makefile
+disk/Makefile
 gphoto2-port-config
 test/Makefile
 doc/Makefile

@@ -24,7 +24,8 @@
 typedef enum { 
 	GP_PORT_NONE        =      0,
 	GP_PORT_SERIAL      = 1 << 0,
-	GP_PORT_USB         = 1 << 2
+	GP_PORT_USB         = 1 << 2,
+	GP_PORT_DISK        = 1 << 3
 } GPPortType;
 
 typedef struct _GPPortInfo GPPortInfo;

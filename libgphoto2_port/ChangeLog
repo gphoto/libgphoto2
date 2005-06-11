@@ -1,3 +1,10 @@
+2005-06-11  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* disk/*:
+	* configure.in: added disk/ subdir
+
+	* libgphoto2_port/gphoto2-port-info-list.h: added GP_PORT_DISK.
+
 2005-06-08  Theodore Kilgota  <kilgota@auburn.edu>
 	* usb/libusb.c: added gp_port_usb_msg_interface_write_lib and
 	  gp_port_usb_msg_interface_read_lib functions, and corresponding 
