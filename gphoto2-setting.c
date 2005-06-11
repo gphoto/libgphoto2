@@ -149,7 +149,7 @@ load_settings (void)
 #else
 	sprintf (buf, "%s/.gphoto", getenv ("HOME"));
 #endif
-	(void)GP_SYSTEM_MKDIR (buf);
+	(void)gp_system_mkdir (buf);
 
 	glob_setting_count = 0;
 #ifdef WIN32

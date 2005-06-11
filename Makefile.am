@@ -5,9 +5,10 @@ libgphoto2_la_CPPFLAGS =				\
 	$(AM_CPPFLAGS) $(CPPFLAGS)			\
 	$(LIBEXIF_CFLAGS)
 
+#	-export-symbols $(srcdir)/libgphoto2.sym \
+#
 libgphoto2_la_LDFLAGS =	\
 	-no-undefined	\
-	-export-symbols $(srcdir)/libgphoto2.sym \
 	-version-info @LIBGPHOTO2_VERSION_INFO@
 
 libgphoto2_la_SOURCES = 	\
