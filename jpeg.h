@@ -40,38 +40,38 @@ typedef struct jpeg {
     struct chunk *marker[20]; /* I think this should be big enough */
 }jpeg;
 
-chunk *chunk_new(int length);
-chunk *chunk_new_filled(int length, char *data);
-void chunk_destroy(chunk *mychunk);
-void chunk_print(chunk *mychunk);
+chunk *gpi_jpeg_chunk_new(int length);
+chunk *gpi_jpeg_chunk_new_filled(int length, char *data);
+void gpi_jpeg_chunk_destroy(chunk *mychunk);
+void gpi_jpeg_chunk_print(chunk *mychunk);
 
-char  gp_jpeg_findff(int *location, chunk *picture);
-char  gp_jpeg_findactivemarker(char *id, int *location, chunk *picture);
-char *gp_jpeg_markername(int c);
+char  gpi_jpeg_findff(int *location, chunk *picture);
+char  gpi_jpeg_findactivemarker(char *id, int *location, chunk *picture);
+char *gpi_jpeg_markername(int c);
 
-jpeg *gp_jpeg_new        (void);
-void  gp_jpeg_destroy    (jpeg *myjpeg);
-void  gp_jpeg_add_marker (jpeg *myjpeg, chunk *picture, int start, int end);
-void  gp_jpeg_add_chunk  (jpeg *myjpeg, chunk *source);
-void  gp_jpeg_parse      (jpeg *myjpeg, chunk *picture);
-void  gp_jpeg_print      (jpeg *myjpeg);
+jpeg *gpi_jpeg_new        (void);
+void  gpi_jpeg_destroy    (jpeg *myjpeg);
+void  gpi_jpeg_add_marker (jpeg *myjpeg, chunk *picture, int start, int end);
+void  gpi_jpeg_add_chunk  (jpeg *myjpeg, chunk *source);
+void  gpi_jpeg_parse      (jpeg *myjpeg, chunk *picture);
+void  gpi_jpeg_print      (jpeg *myjpeg);
 
-chunk *gp_jpeg_make_start   (void);
-chunk *gp_jpeg_make_SOFC    (int width, int height,
+chunk *gpi_jpeg_make_start   (void);
+chunk *gpi_jpeg_make_SOFC    (int width, int height,
 			     char vh1, char vh2, char vh3,
 			     char q1, char q2, char q3);
-chunk *gp_jpeg_makeSsSeAhAl (int huffset1, int huffset2, int huffset3);
+chunk *gpi_jpeg_makeSsSeAhAl (int huffset1, int huffset2, int huffset3);
 
-void gp_jpeg_print_quantization_table(jpeg_quantization_table *table);
-chunk *gp_jpeg_make_quantization(jpeg_quantization_table *table, char number);
-jpeg_quantization_table *gp_jpeg_quantization2table(chunk *qmarker);
+void gpi_jpeg_print_quantization_table(jpeg_quantization_table *table);
+chunk *gpi_jpeg_make_quantization(jpeg_quantization_table *table, char number);
+jpeg_quantization_table *gpi_jpeg_quantization2table(chunk *qmarker);
 
-jpeg *gp_jpeg_header(int width, int height,
+jpeg *gpi_jpeg_header(int width, int height,
     char vh1, char vh2, char vh3,
     char q1, char q2, char q3,
     jpeg_quantization_table *quant1, jpeg_quantization_table *quant2,
     char huffset1, char huffset2, char huffset3,
     chunk *huff1, chunk *huff2, chunk *huff3, chunk *huff4);
 
-char gp_jpeg_write(CameraFile *file, const char *name, jpeg *myjpeg);
+char gpi_jpeg_write(CameraFile *file, const char *name, jpeg *myjpeg);
 #endif

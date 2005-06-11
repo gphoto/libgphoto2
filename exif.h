@@ -67,34 +67,34 @@ int exif_parse_data(exifparser *exifdat);
 /*
  * Returns the value of a field, identified by its tag and the IFD.
  */
-int exif_get_field( int tag_number, int ifd, exifparser *exifdat, ExifData *tag_data);
+int gpi_exif_get_field( int tag_number, int ifd, exifparser *exifdat, ExifData *tag_data);
 
 /*
  * Gets a numeric tag
  */
-int exif_get_int_field( int tag_number, int ifd, exifparser *exifdat);
+int gpi_exif_get_int_field( int tag_number, int ifd, exifparser *exifdat);
 
 /*
  * Gets an ASCII tag.
  */
-char * exif_get_ascii_field( int tag_number, int ifd, exifparser *exifdat);
+char * gpi_exif_get_ascii_field( int tag_number, int ifd, exifparser *exifdat);
 
 /*
  * Returns the name of a given tag number
  */
-char *exif_get_tagname(int tag_number);
+char *gpi_exif_get_tagname(int tag_number);
 
 /*
  * Returns a pointer to the thumbnail data if it
  * exists.
  */
-unsigned char *exif_get_thumbnail(exifparser *exifdat);
+unsigned char *gpi_exif_get_thumbnail(exifparser *exifdat);
 
 /*
- * The same as exif_get_thumbnail but returns
+ * The same as gpi_exif_get_thumbnail but returns
  * also the thumbnail size
  */
-unsigned char *exif_get_thumbnail_and_size(exifparser *exifdat, long *size);
+unsigned char *gpi_exif_get_thumbnail_and_size(exifparser *exifdat, long *size);
 
 /*
  * Gets the comment field if it exists.
@@ -109,7 +109,7 @@ int gpe_set_comment(exifparser *exifdat, char *comment);
 /*
  * COMMENT ME
  */
-int stat_exif(exifparser *exifdata);
+int gpi_exif_stat(exifparser *exifdata);
 int gpe_dump_exif(exifparser *exifdata);
 
 /*
