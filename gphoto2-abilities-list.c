@@ -367,7 +367,7 @@ gp_abilities_list_detect (CameraAbilitiesList *list,
 {
 	GPPortInfo info;
 	GPPort *port;
-	int i, info_count, ability;
+	int i, info_count;
 
 	CHECK_NULL (list && info_list && l);
 
@@ -382,7 +382,8 @@ gp_abilities_list_detect (CameraAbilitiesList *list,
 		CHECK_RESULT (gp_port_info_list_get_info (info_list, i, &info));
 		CHECK_RESULT (gp_port_set_info (port, info));
 		switch (info.type) {
-		case GP_PORT_USB:
+		case GP_PORT_USB: {
+			int ability;
 			res = gp_abilities_list_detect_usb (list, &ability, port);
 			if (res == GP_OK) {
 				gp_list_append(l,
@@ -392,7 +393,7 @@ gp_abilities_list_detect (CameraAbilitiesList *list,
 				gp_port_set_error (port, NULL);
 
 			break;
-
+		}
 		default:
 			/*
 			 * We currently cannot detect any cameras on this
