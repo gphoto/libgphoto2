@@ -280,7 +280,7 @@ int canon_usb_set_file_attributes (Camera *camera,
 				   unsigned int attr_bits,
 				   const char *dir, const char *file,
 				   GPContext *context);
-int canon_usb_ready (Camera *camera);
+int canon_usb_ready (Camera *camera, GPContext *context);
 int canon_usb_identify (Camera *camera, GPContext *context);
 
 #endif /* _CANON_USB_H */
