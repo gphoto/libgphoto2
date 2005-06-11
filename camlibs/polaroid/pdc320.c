@@ -423,17 +423,18 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
     width = data[4]*256 + data[5];
     height = data[2]*256 + data[3];
 	GP_DEBUG ("Width=%i\tHeight=%i\n", width, height);
-    myjpeg = gp_jpeg_header(width,height/2, 0x11,0x11,0x21, 1,0,0, &chrominance, &luminance,
-            0,0,0, chunk_new_filled(HUFF_00), chunk_new_filled(HUFF_10), NULL, NULL);
+    myjpeg = gpi_jpeg_header(width,height/2, 0x11,0x11,0x21, 1,0,0, &chrominance, &luminance,
+            0,0,0, gpi_jpeg_chunk_new_filled(HUFF_00),
+	    gpi_jpeg_chunk_new_filled(HUFF_10), NULL, NULL);
 	GP_DEBUG ("Turning the picture data into a chunk data type\n");
-    tempchunk = chunk_new(size);
+    tempchunk = gpi_jpeg_chunk_new(size);
     tempchunk->data = data;
 	GP_DEBUG ("Adding the picture data to the jpeg structure\n");
-    gp_jpeg_add_marker(myjpeg, tempchunk, 6, size-1);
+    gpi_jpeg_add_marker(myjpeg, tempchunk, 6, size-1);
 	GP_DEBUG ("Writing the jpeg file\n");
-    gp_jpeg_write(file, filename, myjpeg);
+    gpi_jpeg_write(file, filename, myjpeg);
 	GP_DEBUG ("Cleaning up the mess\n");
-    gp_jpeg_destroy(myjpeg);
+    gpi_jpeg_destroy(myjpeg);
 
     }
     return (GP_OK);

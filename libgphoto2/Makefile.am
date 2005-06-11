@@ -5,10 +5,20 @@ libgphoto2_la_CPPFLAGS =				\
 	$(AM_CPPFLAGS) $(CPPFLAGS)			\
 	$(LIBEXIF_CFLAGS)
 
-#	-export-symbols $(srcdir)/libgphoto2.sym \
+# Notes about the list of exported symbols:
+#    gp_* also contains internal symbols which are intended for
+#         INTERNAL USE ONLY and should be converted into gpi_* symbols
+#    gpi_* are for libgphoto2/camlib internal use only
+#          NEVER USE gpi_* in frontends!
+#    gp_* gphoto2 API, used in 
+#         - frontends
+#           BE AWARE that NOT ALL gp_* FUNCTIONS ARE CONSIDERED PUBLIC.
 #
+# Yes, this is messy, but we are going to clean this up.
+
 libgphoto2_la_LDFLAGS =	\
 	-no-undefined	\
+	-export-symbols $(srcdir)/libgphoto2.sym \
 	-version-info @LIBGPHOTO2_VERSION_INFO@
 
 libgphoto2_la_SOURCES = 	\
@@ -22,7 +32,6 @@ libgphoto2_la_SOURCES = 	\
 	gamma.c gamma.h		\
 	jpeg.c jpeg.h		\
 	gphoto2-list.c		\
-	pattrec.c pattrec.h	\
 	gphoto2-result.c	\
 	gphoto2-version.c	\
 	gphoto2-version.h	\

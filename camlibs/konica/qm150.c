@@ -379,7 +379,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			}
 			exifdat.header = d;
 			exifdat.data = d+12;
-			thumbnail = exif_get_thumbnail_and_size(&exifdat,
+			thumbnail = gpi_exif_get_thumbnail_and_size(&exifdat,
 				&long_len);
 			free(d);
 			d = thumbnail;

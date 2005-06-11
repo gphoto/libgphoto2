@@ -187,12 +187,12 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 	exifdat.header = data;
 	exifdat.data = data + 12 ;
 
-	if ( stat_exif(&exifdat) != 0 ) {
+	if ( gpi_exif_stat(&exifdat) != 0 ) {
 		GP_DEBUG( "dimagev_get_picture::unable to stat EXIF tags");
 		return GP_OK;
 	}
 
-/*	gpe_dump_exif(&exifdat);*/
+/*	gpi_exif_dump(&exifdat); */
 
 #endif
 
