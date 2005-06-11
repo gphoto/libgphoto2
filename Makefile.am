@@ -14,17 +14,18 @@ doc_DATA = AUTHORS COPYING README CHANGES NEWS
 
 # Help for building packages against libgphoto2 without installing
 # libgphoto2 first. A little hackish, but that's what you get for
-# having "libgphoto2" and "libgphoto2_port" install their header
+# having both "libgphoto2" and "libgphoto2_port" install their header
 # files into $(includedir)/gphoto2.
 all-local:
-	rm -f gphoto2/gphoto2*.h
-	mkdir -p gphoto2
-	cp \
+	@echo "Creating/Updating gphoto2/ directory with gphoto2*.h files"
+	@rm -f gphoto2/gphoto2*.h
+	@mkdir -p gphoto2
+	@cp \
 		libgphoto2/gphoto2*.h \
 		libgphoto2_port/libgphoto2_port/gphoto2*.h \
 		$(srcdir)/libgphoto2/gphoto2*.h \
 		$(srcdir)/libgphoto2_port/libgphoto2_port/gphoto2*.h \
-		gphoto2/ \
+		gphoto2/ > /dev/null 2>&1 \
 		|| true
 
 clean-local:
