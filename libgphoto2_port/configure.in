@@ -21,7 +21,7 @@ dnl  - REVISION (Minor): Increment any time the source changes; set to
 dnl                      0 if you incremented CURRENT.
 dnl  - CURRENT (Major):  Increment if the interface has changes or removals.
 dnl ---------------------------------------------------------------------------
-LIBGPHOTO2_PORT_AGE=1
+LIBGPHOTO2_PORT_AGE=2
 LIBGPHOTO2_PORT_REVISION=5
 LIBGPHOTO2_PORT_CURRENT=0
 LIBGPHOTO2_PORT_VERSION_INFO=`expr $LIBGPHOTO2_PORT_CURRENT + $LIBGPHOTO2_PORT_REVISION`:$LIBGPHOTO2_PORT_AGE:$LIBGPHOTO2_PORT_REVISION
