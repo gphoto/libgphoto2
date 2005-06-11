@@ -4,9 +4,10 @@ libgphoto2_port_la_CPPFLAGS = \
 	$(LTDLINCL)					\
 	$(AM_CPPFLAGS) $(CPPFLAGS)
 
-# FIXME: -export-symbols $(srcdir)/libgphoto2_port.sym
+# Dynamically linked library
 libgphoto2_port_la_LDFLAGS = \
 	-no-undefined \
+	-export-symbols $(srcdir)/libgphoto2_port.sym \
 	-version-info @LIBGPHOTO2_PORT_VERSION_INFO@
 
 libgphoto2_port_la_LIBADD = \
@@ -30,6 +31,7 @@ libgphoto2_port_la_SOURCES =		\
 libgphoto2_port_la_DEPENDENCIES = \
 	$(LIBLTDL)
 
+# ship headers
 libgphoto2_portincludedir = $(includedir)/gphoto2
 libgphoto2_portinclude_HEADERS =	\
 	gphoto2-port.h			\
@@ -43,4 +45,7 @@ libgphoto2_portinclude_HEADERS =	\
 #       the source tarball correctly at "make dist", this may
 #       be the result of tar not creating archives with >99
 #       characters of path length.
-EXTRA_DIST = gphoto2-port-portability-os2.h
+EXTRA_DIST = gphoto2-port-portability-os2.h libgphoto2_port.sym
+
+../libltdl/libltdlc.la:
+	cd ../libltdl && $(MAKE) libltdlc.la
