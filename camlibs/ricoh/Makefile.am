@@ -1,11 +1,13 @@
-camlib_LTLIBRARIES = libgphoto2_ricoh.la libgphoto2_ricoh_g3.la
+camlib_LTLIBRARIES = ricoh.la ricoh_g3.la
 
 EXTRA_DIST = g3.txt
 
-libgphoto2_ricoh_la_SOURCES = library.c ricoh.c ricoh.h crctab.h
-libgphoto2_ricoh_la_LDFLAGS = -module -avoid-version
-libgphoto2_ricoh_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la
+ricoh_la_SOURCES = library.c ricoh.c ricoh.h crctab.h
+ricoh_la_LDFLAGS = -module -no-undefined -avoid-version -export-dynamic \
+	-export-symbols $(top_srcdir)/camlibs/camlib.sym
+ricoh_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la
 
-libgphoto2_ricoh_g3_la_SOURCES = g3.c
-libgphoto2_ricoh_g3_la_LDFLAGS = -module -avoid-version
-libgphoto2_ricoh_g3_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la
+ricoh_g3_la_SOURCES = g3.c
+ricoh_g3_la_LDFLAGS = -module -no-undefined -avoid-version -export-dynamic \
+	-export-symbols $(top_srcdir)/camlibs/camlib.sym
+ricoh_g3_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la

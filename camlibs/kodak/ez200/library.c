@@ -46,7 +46,7 @@
 #include "ez200.h"
 #include <gphoto2-port.h>
 
-#define GP_MODULE "ez200"
+#define GP_MODULE "kodak_ez200"
 
 struct _CameraPrivateLibrary {
 	Model model;
