@@ -642,8 +642,8 @@ camera_get_config (Camera* camera, CameraWidget** window, GPContext *context)
         time_t          t;
         float value_float;
         const char *name;
-        GP_SYSTEM_DIR d;
-        GP_SYSTEM_DIRENT de;
+        gp_system_dir d;
+        gp_system_dirent de;
 	unsigned int id;
 
         /* Get the current settings. */
@@ -739,12 +739,12 @@ camera_get_config (Camera* camera, CameraWidget** window, GPContext *context)
         gp_widget_append (*window, section);
 
         /* Language */
-        d = GP_SYSTEM_OPENDIR (LOCALIZATION);
+        d = gp_system_opendir (LOCALIZATION);
         if (d) {
                 gp_widget_new (GP_WIDGET_MENU, _("Language"), &widget);
                 gp_widget_append (section, widget);
-                while ((de = GP_SYSTEM_READDIR (d))) {
-                        name = GP_SYSTEM_FILENAME (de);
+                while ((de = gp_system_readdir (d))) {
+                        name = gp_system_filename (de);
                         if (name && (*name != '.'))
                                 gp_widget_add_choice (widget, name);
                 }

@@ -1,3 +1,10 @@
+2005-06-11  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* configure.in: new version 2.1.99.head.0
+	* camlibs/**/Makefile.am: link camlibs as libtool modules with
+	  shorter names and explicit symbol list
+	* libgphoto2/Makefile.am: link libgphoto2 with explicit symbol list
+
 2005-06-08  Theodore Kilgore <kilgota@auburn.edu>
 
 	* libgphoto2_port/: added functions to support new request types
@@ -8,16 +15,16 @@
 
 	* po/eu.po: new baskish from Hizkuntza Politikarako Sailburuordetza <hizkpol@ej-gv.es>
 
-2005-04-14 Hans Ulrich Niedermann <gp@n-dimensional.de>
+2005-04-14  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* */configure.in, */Makefile.am, ...: updated build system.
 	  See "./autogen.sh --help" and ./configure --help" for help.
 
-2005-04-05   Hubert Figuiere  <hfiguiere@teaser.fr>
+2005-04-05  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* camlibs/ptp: removing obsolete camlib.
 	
-2005-03-30 Hans Ulrich Niedermann <gp@n-dimensional.de>
+2005-03-30  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* libgphoto2/gphoto2-file.c: replace stricmp() by strcasecmp()
 	  #include <gphoto2-port-portability.h> should take care of

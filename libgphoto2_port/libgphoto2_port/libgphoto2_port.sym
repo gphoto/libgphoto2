@@ -44,3 +44,11 @@ gp_port_usb_msg_interface_write
 gp_port_usb_msg_read
 gp_port_usb_msg_write
 gp_port_write
+gp_system_mkdir
+gp_system_rmdir
+gp_system_opendir
+gp_system_readdir
+gp_system_filename
+gp_system_closedir
+gp_system_is_file
+gp_system_is_dir

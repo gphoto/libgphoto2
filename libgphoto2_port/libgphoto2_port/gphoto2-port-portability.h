@@ -33,9 +33,9 @@ typedef struct {
 #define	GP_SYSTEM_SLEEP(_ms)		Sleep(_ms)
 
 /* Directory-oriented functions */
-#define GP_SYSTEM_DIR		        GPPORTWINDIR *
-#define GP_SYSTEM_DIRENT		WIN32_FIND_DATA *
-#define GP_SYSTEM_DIR_DELIM		'\\'
+#define gp_system_dir		        GPPORTWINDIR *
+#define gp_system_dirent		WIN32_FIND_DATA *
+#define gp_system_dir_delim		'\\'
 
 
 #else
@@ -55,21 +55,23 @@ typedef struct {
 #define	GP_SYSTEM_SLEEP(_ms)		usleep((_ms)*1000)
 
 /* Directory-oriented functions */
-#define GP_SYSTEM_DIR                   DIR *
-#define GP_SYSTEM_DIRENT		struct dirent *
+#define gp_system_dir                   DIR *
+#define gp_system_dirent		struct dirent *
 #ifdef OS2
-#define GP_SYSTEM_DIR_DELIM		'\\'
+#define gp_system_dir_delim		'\\'
 #else
-#define GP_SYSTEM_DIR_DELIM		'/'
+#define gp_system_dir_delim		'/'
 #endif /* OS2 */
 
 #endif /* else */
 
-int		 GP_SYSTEM_MKDIR	(const char *dirname);
-int              GP_SYSTEM_RMDIR        (const char *dirname);
-GP_SYSTEM_DIR	 GP_SYSTEM_OPENDIR	(const char *dirname);
-GP_SYSTEM_DIRENT GP_SYSTEM_READDIR	(GP_SYSTEM_DIR d);
-const char*	 GP_SYSTEM_FILENAME	(GP_SYSTEM_DIRENT de);
-int		 GP_SYSTEM_CLOSEDIR	(GP_SYSTEM_DIR dir);
-int		 GP_SYSTEM_IS_FILE	(const char *filename);
-int		 GP_SYSTEM_IS_DIR	(const char *dirname);
+int		 gp_system_mkdir	(const char *dirname);
+int              gp_system_rmdir        (const char *dirname);
+gp_system_dir	 gp_system_opendir	(const char *dirname);
+gp_system_dirent gp_system_readdir	(gp_system_dir d);
+const char*	 gp_system_filename	(gp_system_dirent de);
+int		 gp_system_closedir	(gp_system_dir dir);
+int		 gp_system_is_file	(const char *filename);
+int		 gp_system_is_dir	(const char *dirname);
+
+/* end of file */

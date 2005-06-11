@@ -4,10 +4,10 @@ libgphoto2_port_la_CPPFLAGS = \
 	$(LTDLINCL)					\
 	$(AM_CPPFLAGS) $(CPPFLAGS)
 
+#	-export-symbols $(srcdir)/libgphoto2_port.sym \
 # Dynamically linked library
 libgphoto2_port_la_LDFLAGS = \
 	-no-undefined \
-	-export-symbols $(srcdir)/libgphoto2_port.sym \
 	-version-info @LIBGPHOTO2_PORT_VERSION_INFO@
 
 libgphoto2_port_la_LIBADD = \

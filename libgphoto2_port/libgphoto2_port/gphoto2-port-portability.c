@@ -29,14 +29,14 @@ void gp_port_win_convert_path (const char *path) {
                         path[x] = '\\';
 }
 
-int GP_SYSTEM_MKDIR (const char *dirname) {
+int gp_system_mkdir (const char *dirname) {
 
         if (_mkdir(dirname) < 0)
                 return (GP_ERROR);
         return (GP_OK);
 }
 
-GP_SYSTEM_DIR GP_SYSTEM_OPENDIR (const char *dirname) {
+GP_SYSTEM_DIR gp_system_opendir (const char *dirname) {
 
         GPPORTWINDIR *d;
         DWORD dr;
@@ -61,7 +61,7 @@ GP_SYSTEM_DIR GP_SYSTEM_OPENDIR (const char *dirname) {
         return (d);
 }
 
-GP_SYSTEM_DIRENT GP_SYSTEM_READDIR (GP_SYSTEM_DIR d) {
+GP_SYSTEM_DIRENT gp_system_readdir (GP_SYSTEM_DIR d) {
 
         char dirn[1024];
 
@@ -96,18 +96,18 @@ GP_SYSTEM_DIRENT GP_SYSTEM_READDIR (GP_SYSTEM_DIR d) {
         return (&(d->search));
 }
 
-const char *GP_SYSTEM_FILENAME (GP_SYSTEM_DIRENT de) {
+const char *gp_system_filename (GP_SYSTEM_DIRENT de) {
 
         return (de->cFileName);
 }
 
-int  GP_SYSTEM_CLOSEDIR (GP_SYSTEM_DIR d) {
+int gp_system_closedir (GP_SYSTEM_DIR d) {
         FindClose(d->handle);
         free(d);
         return (1);
 }
 
-int GP_SYSTEM_IS_FILE (const char *filename) {
+int gp_system_is_file (const char *filename) {
 
         struct stat st;
 
@@ -118,7 +118,7 @@ int GP_SYSTEM_IS_FILE (const char *filename) {
         return (st.st_mode & _S_IFREG);
 }
 
-int GP_SYSTEM_IS_DIR (const char *dirname) {
+int gp_system_is_dir (const char *dirname) {
 
         struct stat st;
 
@@ -135,14 +135,14 @@ int GP_SYSTEM_IS_DIR (const char *dirname) {
 
 #else
 
-int GP_SYSTEM_MKDIR (const char *dirname) {
+int gp_system_mkdir (const char *dirname) {
 
         if (mkdir(dirname, 0700)<0)
                 return (GP_ERROR);
         return (GP_OK);
 }
 
-int GP_SYSTEM_RMDIR (const char *dirname) {
+int gp_system_rmdir (const char *dirname) {
 
 	if (rmdir (dirname) < 0)
 		return (GP_ERROR);
@@ -150,24 +150,24 @@ int GP_SYSTEM_RMDIR (const char *dirname) {
 	return (GP_OK);
 }
 
-GP_SYSTEM_DIR GP_SYSTEM_OPENDIR (const char *dirname) {
+gp_system_dir gp_system_opendir (const char *dirname) {
         return (opendir(dirname));
 }
 
-GP_SYSTEM_DIRENT GP_SYSTEM_READDIR (GP_SYSTEM_DIR d) {
+gp_system_dirent gp_system_readdir (gp_system_dir d) {
         return (readdir(d));
 }
 
-const char *GP_SYSTEM_FILENAME (GP_SYSTEM_DIRENT de) {
+const char *gp_system_filename (gp_system_dirent de) {
         return (de->d_name);
 }
 
-int GP_SYSTEM_CLOSEDIR (GP_SYSTEM_DIR dir) {
+int gp_system_closedir (gp_system_dir dir) {
         closedir(dir);
         return (GP_OK);
 }
 
-int GP_SYSTEM_IS_FILE (const char *filename) {
+int gp_system_is_file (const char *filename) {
         struct stat st;
 
         if (stat(filename, &st)!=0)
@@ -175,7 +175,7 @@ int GP_SYSTEM_IS_FILE (const char *filename) {
         return (!S_ISDIR(st.st_mode));
 }
 
-int GP_SYSTEM_IS_DIR (const char *dirname) {
+int gp_system_is_dir (const char *dirname) {
         struct stat st;
 
         if (stat(dirname, &st)!=0)

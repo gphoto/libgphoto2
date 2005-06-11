@@ -141,12 +141,12 @@ static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data, GPContext *context)
 {
-	GP_SYSTEM_DIR dir;
-	GP_SYSTEM_DIRENT de;
+	gp_system_dir dir;
+	gp_system_dirent de;
 	char buf[1024], f[1024];
 	unsigned int id, n;
 
-	dir = GP_SYSTEM_OPENDIR ((char*) folder);
+	dir = gp_system_opendir ((char*) folder);
 	if (!dir)
 		return (GP_ERROR);
 	
@@ -158,36 +158,36 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 	/* Count the files */
 	n = 0;
-	while (GP_SYSTEM_READDIR (dir))
+	while (gp_system_readdir (dir))
 		n++;
 
-	GP_SYSTEM_CLOSEDIR (dir);
-	dir = GP_SYSTEM_OPENDIR (folder);
+	gp_system_closedir (dir);
+	dir = gp_system_opendir (folder);
 	if (!dir)
 		return (GP_ERROR);
 	id = gp_context_progress_start (context, n, _("Listing files in "
 				"'%s'..."), folder);
 	n = 0;
-	while ((de = GP_SYSTEM_READDIR(dir))) {
+	while ((de = gp_system_readdir(dir))) {
 
 		/* Give some feedback */
 		gp_context_progress_update (context, id, n + 1);
 		gp_context_idle (context);
 		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL) {
-			GP_SYSTEM_CLOSEDIR (dir);
+			gp_system_closedir (dir);
 			return (GP_ERROR_CANCEL);
 		}
 
-		if (strcmp(GP_SYSTEM_FILENAME(de), "." ) &&
-		    strcmp(GP_SYSTEM_FILENAME(de), "..")) {
-			sprintf (buf, "%s%s", f, GP_SYSTEM_FILENAME (de));
-			if (GP_SYSTEM_IS_FILE (buf) && (get_mime_type (buf)))
-				gp_list_append (list, GP_SYSTEM_FILENAME (de),
+		if (strcmp(gp_system_filename(de), "." ) &&
+		    strcmp(gp_system_filename(de), "..")) {
+			sprintf (buf, "%s%s", f, gp_system_filename (de));
+			if (gp_system_is_file (buf) && (get_mime_type (buf)))
+				gp_list_append (list, gp_system_filename (de),
 						NULL);
 		}
 		n++;
 	}
-	GP_SYSTEM_CLOSEDIR (dir);
+	gp_system_closedir (dir);
 	gp_context_progress_stop (context, id);
 
 	return (GP_OK);
@@ -197,8 +197,8 @@ static int
 folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		  void *data, GPContext *context)
 {
-	GP_SYSTEM_DIR dir;
-	GP_SYSTEM_DIRENT de;
+	gp_system_dir dir;
+	gp_system_dirent de;
 	char buf[1024], f[1024];
 #ifdef FOLLOW_LINKS
 	char link[1024];
@@ -230,7 +230,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	}
 #endif
 
-	dir = GP_SYSTEM_OPENDIR ((char*) folder);
+	dir = gp_system_opendir ((char*) folder);
 	if (!dir)
 		return (GP_ERROR);
 
@@ -242,43 +242,43 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 	/* Count the files */
 	n = 0;
-	while (GP_SYSTEM_READDIR (dir))
+	while (gp_system_readdir (dir))
 		n++;
 
-	GP_SYSTEM_CLOSEDIR (dir);
-	dir = GP_SYSTEM_OPENDIR (folder);
+	gp_system_closedir (dir);
+	dir = gp_system_opendir (folder);
 	if (!dir)
 		return (GP_ERROR);
 	id = gp_context_progress_start (context, n, _("Listing folders in "
 					"'%s'..."), folder);
 	n = 0;
-	while ((de = GP_SYSTEM_READDIR (dir))) {
+	while ((de = gp_system_readdir (dir))) {
 
 		/* Give some feedback */
 		gp_context_progress_update (context, id, n + 1);
 		gp_context_idle (context);
 		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL) {
-			GP_SYSTEM_CLOSEDIR (dir);
+			gp_system_closedir (dir);
 			return (GP_ERROR_CANCEL);
 		}
-		if ((strcmp (GP_SYSTEM_FILENAME (de), "." ) != 0) &&
-		    (strcmp (GP_SYSTEM_FILENAME (de), "..") != 0)) {
-			sprintf (buf, "%s%s", f, GP_SYSTEM_FILENAME (de));
-			dirname = GP_SYSTEM_FILENAME (de);
-			if (GP_SYSTEM_IS_DIR (buf)) {
+		if ((strcmp (gp_system_filename (de), "." ) != 0) &&
+		    (strcmp (gp_system_filename (de), "..") != 0)) {
+			sprintf (buf, "%s%s", f, gp_system_filename (de));
+			dirname = gp_system_filename (de);
+			if (gp_system_is_dir (buf)) {
 				if (dirname[0] != '.')
 					gp_list_append (list,
-							GP_SYSTEM_FILENAME (de),
+							gp_system_filename (de),
 							NULL);
 				else if (view_hidden)
 					gp_list_append (list,
-							GP_SYSTEM_FILENAME (de),
+							gp_system_filename (de),
 							NULL);
 			}
 		}
 		n++;
 	}
-	GP_SYSTEM_CLOSEDIR (dir);
+	gp_system_closedir (dir);
 	gp_context_progress_stop (context, id);
 
 	return (GP_OK);
@@ -568,7 +568,7 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *name,
 		strncat (path, "/", sizeof (path));
 	strncat (path, name, sizeof (path));
 
-	return (GP_SYSTEM_MKDIR (path));
+	return (gp_system_mkdir (path));
 }
 
 static int
@@ -582,7 +582,7 @@ remove_dir_func (CameraFilesystem *fs, const char *folder, const char *name,
 		strncat (path, "/", sizeof (path));
 	strncat (path, name, sizeof (path));
 
-	return (GP_SYSTEM_RMDIR (path));
+	return (gp_system_rmdir (path));
 }
 
 static int
