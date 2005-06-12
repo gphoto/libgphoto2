@@ -814,7 +814,7 @@ int gpi_exif_dump(exifparser *exifdata){
  * Return data size of directory entry at tagind
  */
 int gpe_datsize(unsigned char *data,int tagind){
-  return(exif_sizetab[gpi_exif_get_lilend(data+tagind*12+4,2)]*exif_get_lilend(data+tagind*12+6,4));
+  return(exif_sizetab[gpi_exif_get_lilend(data+tagind*12+4,2)]*gpi_exif_get_lilend(data+tagind*12+6,4));
 }
 
 int gpi_exif_stat(exifparser *exifdata) {
