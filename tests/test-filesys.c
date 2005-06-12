@@ -126,7 +126,7 @@ main (int argc, char **argv)
 {
 	CameraFilesystem *fs;
 	CameraFileInfo info;
-	CameraList list;
+	CameraList *list;
 	int x, count;
 	const char *name;
 	GPContext *context;
@@ -134,6 +134,8 @@ main (int argc, char **argv)
 #ifdef HAVE_MCHECK_H
 	mtrace();
 #endif
+
+	CHECK (gp_list_new(&list));
 
 	gp_log_add_func (GP_LOG_DEBUG, log_func, NULL);
 	context = gp_context_new ();
@@ -240,19 +242,19 @@ main (int argc, char **argv)
 
 	printf ("*** Getting file list for folder '/whatever/directory'...\n");
 	CHECK (gp_filesystem_list_folders (fs, "/whatever/directory",
-					   &list, context));
+					   list, context));
 
 	printf ("*** Getting file list for folder '/whatever/directory' "
 		"again (cached!)...\n");
 	CHECK (gp_filesystem_list_folders (fs, "/whatever/directory",
-					   &list, context));
+					   list, context));
 
 	printf ("*** Counting the contents...\n");
-	CHECK (count = gp_list_count (&list));
+	CHECK (count = gp_list_count (list));
 
 	printf ("*** Listing the contents...\n");
 	for (x = 0; x < count; x++) {
-		CHECK (gp_list_get_name (&list, x, &name));
+		CHECK (gp_list_get_name (list, x, &name));
 		printf (" %i: '%s'\n", x, name);
 	}
 
@@ -271,6 +273,8 @@ main (int argc, char **argv)
 	CHECK (gp_filesystem_free (fs));
 
 	gp_context_unref (context);
+
+	CHECK (gp_list_free(list));
 
 #ifdef HAVE_MCHECK_H
 	muntrace();
