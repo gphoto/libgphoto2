@@ -27,6 +27,25 @@ extern "C" {
 
 #define MAX_ENTRIES 1024
 
+/* Usage pattern for CameraList for users external of
+ * libgphoto2, such as libgphoto2 frontends:
+ *
+ *    CameraList *list;
+ *    gp_list_new (&list);
+ *    init_list_somehow (list);
+ *    for (i=0; i < gp_list_count(list); i++) {
+ *        char *name, *value;
+ *        gp_list_get_name (list, i, &name);
+ *        gp_list_get_name (list, i, &value);
+ *        do_something_with (name, value);
+ *    }
+ *    gp_list_free (list);
+ *
+ * Please do NOT directly instantiate a CameraList object like this:
+ *               CameraList foo;     // DO NOT DO THIS
+ * Please do NOT directly access the structure members like this:
+ *               list->entry[i].name // DO NOT DO THIS
+ */
 struct _CameraList {
 	int  count;
 	struct {
