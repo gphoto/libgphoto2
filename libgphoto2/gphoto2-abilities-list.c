@@ -131,12 +131,13 @@ static int
 foreach_func (const char *filename, lt_ptr data)
 {
 	CameraList *list = data;
+	int result;
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
 		"Found '%s'.", filename);
-	gp_list_append (list, filename, NULL);
+	result = gp_list_append (list, filename, NULL);
 
-	return (0);
+	return ((result == GP_OK)?0:1);
 }
 
 
@@ -152,6 +153,7 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 	const char *filename;
 	CameraList *flist;
 	int count;
+	int ret;
 	lt_dlhandle lh;
 
 	CHECK_NULL (list && dir);
@@ -162,8 +164,16 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 	CHECK_RESULT (gp_list_reset (flist));
 	lt_dlinit ();
 	lt_dladdsearchdir (dir);
-	lt_dlforeachfile (dir, foreach_func, flist);
+	ret = lt_dlforeachfile (dir, foreach_func, flist);
 	lt_dlexit ();
+	if (ret != 0) {
+		gp_log (GP_LOG_ERROR, "gp-abilities-list", 
+			"Internal error looking for camlibs (%d)", ret);
+		gp_context_error (context,
+				  _("Internal error looking for camlibs. "
+				    "(path names too long?)"));
+		return (GP_ERROR);
+	}
 	CHECK_RESULT (count = gp_list_count (flist));
 	gp_log (GP_LOG_DEBUG, "gp-abilities-list", "Found %i "
 		"camera drivers.", count);
@@ -371,7 +381,7 @@ gp_abilities_list_detect (CameraAbilitiesList *list,
 
 	CHECK_NULL (list && info_list && l);
 
-	l->count = 0;
+	gp_list_reset (l);
 
 	CHECK_RESULT (info_count = gp_port_info_list_count (info_list));
 
