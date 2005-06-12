@@ -2,8 +2,16 @@
 
 top_builddir="@top_builddir@"
 camlibdir="@camlibdir@"
+libdir="@libdir@"
 DESTDIR="@DESTDIR@"
 MAKE="@MAKE@"
+
+echo "---------------------"
+pwd
+echo "camlibdir=$camlibdir"
+echo "libdir=$libdir"
+echo "DESTDIR=$DESTDIR"
+echo "top_builddir=$top_builddir"
 
 CAMLIBS="${DESTDIR}${camlibdir}"
 
@@ -25,8 +33,19 @@ else
     fi
 fi
 
+LD_LIBRARY_PATH="$DESTDIR$libdir:$LD_LIBRARY_PATH"
+export LD_LIBRARY_PATH
 echo "Using camlib dir: $CAMLIBS"
 export CAMLIBS
 
-#echo "FIXME: Actually list all cameras."
+echo "====================="
+pwd
+echo "camlibdir=$camlibdir"
+echo "libdir=$libdir"
+echo "DESTDIR=$DESTDIR"
+echo "top_builddir=$top_builddir"
+echo "CAMLIBS=$CAMLIBS"
+echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
+echo "#####################"
+
 ./test-camera-list

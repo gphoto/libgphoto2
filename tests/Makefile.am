@@ -48,6 +48,7 @@ clean-local:
 	@sed \
 		-e 's|@top_builddir\@|$(top_builddir)|g' \
 		-e 's|@camlibdir\@|$(camlibdir)|g' \
+		-e 's|@libdir\@|$(libdir)|g' \
 		-e 's|@DESTDIR\@|$(DESTDIR)|g' \
 		-e 's|@MAKE\@|$(MAKE)|g' \
 		< "$<" > "$@"
