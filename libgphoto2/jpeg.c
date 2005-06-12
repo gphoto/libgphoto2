@@ -65,7 +65,7 @@ chunk *gpi_jpeg_chunk_new_filled(int length, char *data)
 {
     chunk *mychunk;
     printf("Entered gpi_jpeg_chunk_new_filled\n");
-    mychunk = chunk_new(length);
+    mychunk = gpi_jpeg_chunk_new(length);
     printf("Filling the chunk data via chunk_new_filled\n");
     memcpy(mychunk->data, data, length);
     return mychunk;
