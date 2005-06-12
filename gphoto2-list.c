@@ -20,6 +20,7 @@
 
 #include "config.h"
 #include "gphoto2-list.h"
+#include "gphoto2-port-log.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,6 +30,7 @@
 
 #define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
+
 
 /**
  * gp_list_new:
@@ -147,12 +149,36 @@ gp_list_append (CameraList *list, const char *name, const char *value)
 	if (list->count == MAX_ENTRIES)
 		return (GP_ERROR_NO_MEMORY);
 
-	if (name)
-		strncpy (list->entry[list->count].name, name,
-			 sizeof (list->entry[list->count].name));
-	if (value)
-		strncpy (list->entry[list->count].value, value,
-			 sizeof (list->entry[list->count].value));
+	if (name) {
+		/* check that the value fits */
+		const size_t buf_len = sizeof (list->entry[list->count].name);
+		const size_t str_len = strlen (name);
+		if (str_len >= buf_len) {
+			gp_log (GP_LOG_ERROR, "gphoto2-list", 
+				"gp_list_append: "
+				"'name' value too long (%d >= %d)",
+				str_len, buf_len);
+			return (GP_ERROR_NO_MEMORY);		
+		}
+		/* set the value */
+		strncpy (list->entry[list->count].name, name, buf_len);
+		list->entry[list->count].name[buf_len-1] = '\0';
+	}
+	if (value) {
+		/* check that the value fits */
+		const size_t buf_len = sizeof (list->entry[list->count].value);
+		const size_t str_len = strlen (value);
+		if (str_len >= buf_len) {
+			gp_log (GP_LOG_ERROR, "gphoto2-list", 
+				"gp_list_append: "
+				"'value' value too long (%d >= %d)",
+				str_len, buf_len);
+			return (GP_ERROR_NO_MEMORY);		
+		}
+		/* set the value */
+		strncpy (list->entry[list->count].value, value, buf_len);
+		list->entry[list->count].value[buf_len-1] = '\0';
+	}
 
         list->count++;
 
@@ -281,6 +307,20 @@ gp_list_set_value (CameraList *list, int index, const char *value)
 	if (index < 0 || index >= list->count)
 		return (GP_ERROR_BAD_PARAMETERS);
 
+	do {
+		/* check that the value fits */
+		const size_t buf_len = sizeof (list->entry[index].value);
+		const size_t str_len = strlen (value);
+		if (str_len >= buf_len) {
+			gp_log (GP_LOG_ERROR, "gphoto2-list", 
+				"gp_list_append: "
+				"'value' value too long (%d >= %d)",
+				str_len, buf_len);
+			return (GP_ERROR_NO_MEMORY);		
+		}
+	} while (0);
+
+	/* set the value */
 	strcpy (list->entry[index].value, value);
 
 	return (GP_OK);
@@ -304,6 +344,20 @@ gp_list_set_name (CameraList *list, int index, const char *name)
 	if (index >= list->count)
 		return (GP_ERROR_BAD_PARAMETERS);
 
+	do {
+		/* check that the value fits */
+		const size_t buf_len = sizeof (list->entry[index].name);
+		const size_t str_len = strlen (name);
+		if (str_len >= buf_len) {
+			gp_log (GP_LOG_ERROR, "gphoto2-list", 
+				"gp_list_append: "
+				"'name' value too long (%d >= %d)",
+				str_len, buf_len);
+			return (GP_ERROR_NO_MEMORY);		
+		}
+	} while (0);
+
+	/* set the value */
 	strcpy (list->entry[index].name, name);
 
 	return (GP_OK);
