@@ -58,7 +58,24 @@ int gp_file_ref            (CameraFile *file);
 int gp_file_unref          (CameraFile *file);
 int gp_file_free           (CameraFile *file);
 
-/* Do not use those */
+/* "Do not use those"
+ *
+ * These functions probably were originally intended for internal use only.
+ * However, due to
+ *   - the lack of good documentation
+ *   - this being the obvious way to save a file
+ *   - the fact that libgphoto2 has been exporting all its internal
+ *     symbols for years (until 2005-06)
+ *   - our in-house frontends gphoto2 and gtkam using them
+ * a number of external frontends started to use these functions, as
+ * of 2005-06:
+ *    - digikam
+ *    - f-spot
+ *    - gthumb
+ * But a few frontends seem to live without it:
+ *    - flphoto
+ *    - kamera
+ */
 int gp_file_open           (CameraFile *file, const char *filename);
 int gp_file_save           (CameraFile *file, const char *filename);
 int gp_file_clean          (CameraFile *file);
