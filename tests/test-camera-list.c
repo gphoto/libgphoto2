@@ -91,12 +91,20 @@ basename (const char *pathname)
 	return (const char *)result;
 }
 
+/* Define the different output formats.
+ * These may be used for consistency checking and other stuff.
+ */
 typedef enum {
-	/* text table with headers */
+	/* Text table with headers. */
 	FMT_HEADED_TEXT = 0,
-	/* text table without headers */
+	/* Text table without headers. */
 	FMT_FLAT_TEXT,
-	/* comma separated values without headers */
+	/* Text table just of camlibs without headers,
+	 * which will contain duplicate lines! 
+	 * Treat the output with | sort | uniq to get meaningful results.
+	 */
+	FMT_FLAT_CAMLIBS,
+	/* Comma separated values without headers */
 	FMT_CSV,
 	/* Demo XML, don't use this for anything (yet) */
 	FMT_XML,
@@ -123,6 +131,8 @@ parse_command_line (const int argc, char *argv[])
 #endif
 		if (strcmp(argv[i], "--debug") == 0) {
 			do_debug = 1;
+		} else if (strcmp(argv[i], "--format=text") == 0) {
+			format = FMT_HEADED_TEXT;
 		} else if (strcmp(argv[i], "--format=flattext") == 0) {
 			format = FMT_FLAT_TEXT;
 		} else if (strcmp(argv[i], "--format=csv") == 0) {
@@ -131,10 +141,14 @@ parse_command_line (const int argc, char *argv[])
 			format = FMT_XML;
 		} else if (strcmp(argv[i], "--format=count") == 0) {
 			format = FMT_COUNT;
+		} else if (strcmp(argv[i], "--format=camlibs") == 0) {
+			format = FMT_FLAT_CAMLIBS;
 		} else {
 			const char * const bn = basename(argv[0]);
 			printf("Unknown command line parameter %d: \"%s\"\n",
 			       i, argv[i]);
+			printf("Sorry, no more help to give but the "
+			       "source code.\n");
 			printf("%s: Aborting.\n", bn);
 			exit(1);
 		}
@@ -185,14 +199,16 @@ main (int argc, char *argv[])
 		fmt_str = "%3d|%-20s|%-20s|%s\n";
 		break;
 	case FMT_XML:
-		fmt_str = "  <camera entry_number=\"%d\">\n"
-			"    <camlib-name value=\"%s\"/>\n"
-			"    <driver-name value=\"%s\"/>\n"
-			"    <camera-name value=\"%s\"/>\n"
+		fmt_str = "  <camera name=\"%4$s\" entry_number=\"%1$d\">\n"
+			"    <camlib-name value=\"%2$s\"/>\n"
+			"    <driver-name value=\"%3$s\"/>\n"
 			"  </camera>\n";
 		printf("<?xml version=\"%s\" encoding=\"%s\"?>\n"
 		       "<camera-list camera-count=\"%d\">\n", 
 		       "1.0", "us-ascii", count);
+		break;
+	case FMT_FLAT_CAMLIBS:
+		fmt_str = "%2$-28s  %3$s\n";
 		break;
 	case FMT_COUNT:
 		printf("%d\n", count);
@@ -217,6 +233,8 @@ main (int argc, char *argv[])
 				print_hline();
 			}
 			break;
+		case FMT_FLAT_CAMLIBS:
+			break;
 		case FMT_XML:
 			break;
 		case FMT_CSV:
@@ -227,7 +245,8 @@ main (int argc, char *argv[])
 			break;
 		}
 
-		printf(fmt_str, i+1, 
+		printf(fmt_str,
+		       i+1, 
 		       camlib_basename,
 		       abilities.id,
 		       abilities.model);
@@ -239,6 +258,8 @@ main (int argc, char *argv[])
 		print_hline();
 		print_headline();
 		print_hline();
+		break;
+	case FMT_FLAT_CAMLIBS:
 		break;
 	case FMT_XML:
 		printf("</camera-list>\n");
