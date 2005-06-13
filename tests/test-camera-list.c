@@ -32,8 +32,8 @@
 #define CHECK(f) {int res = f; if (res < 0) {printf ("ERROR: %s\n", gp_result_as_string (res)); return (1);}}
 
 
-#define TEST_DEBUG
-/* #undef TEST_DEBUG */
+/* #define TEST_DEBUG */
+#undef TEST_DEBUG
 
 #ifdef TEST_DEBUG
 
@@ -79,6 +79,20 @@ print_hline (void)
 	       "-------------------------------------------");
 }
 
+static const char *
+basename (const char *pathname)
+{
+	char *result, *tmp;
+	/* remove path part from camlib name */
+	for (result=tmp=pathname; *tmp != '\0'; tmp++) {
+		if ((*tmp == gp_system_dir_delim) 
+		    && (*(tmp+1) != '\0')) {
+			result = tmp+1;
+		}
+	}
+	return (const char *)result;
+}
+
 int
 main (int argc, char *argv [])
 {
@@ -110,22 +124,16 @@ main (int argc, char *argv [])
 	print_hline();
 	for (i = 0; i < count; i++) {
 		CameraAbilities abilities;
-		char *p,*x;
+		const char *camlib_basename;
 		CHECK (gp_abilities_list_get_abilities (al, i, &abilities));
-		/* remove path part from camlib name */
-		for (x=p=abilities.library; *p != '\0'; p++) {
-			if ((*p == gp_system_dir_delim) 
-			    && (*(p+1) != '\0')) {
-				x = p+1;
-			}
-		}
+		camlib_basename = basename(abilities.library);
 		if (((i%25)== 0) && ((count-i) > 5)) {
 			print_hline();
 			print_headline();
 			print_hline();
 		}
 		printf("%3d|%-20s|%-20s|%s\n", i+1, 
-		       x,
+		       camlib_basename,
 		       abilities.id,
 		       abilities.model);
 	}
