@@ -1,3 +1,11 @@
+2005-06-12  Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Added CD302N, reported by Pedro de Oliveira <falso@rdk.homeip.net>
+		     Code cleanup.
+	* mars.c:    Code cleanup. Argus DC-1620 will download raw files now.
+	* mars.h:    Code cleanup.	     
+
+
 2005-01-24  Theodore Kilgore <kilgota@auburn.edu>
 
 	* library.c: Added Precision Mini Model HA513A, reported by Alexander Bostrom.

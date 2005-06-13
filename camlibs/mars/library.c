@@ -1,6 +1,6 @@
 /* library.c
  *
- * Copyright (C) 2003 Theodore Kilgore <kilgota@auburn.edu>
+ * Copyright (C) 2004 Theodore Kilgore <kilgota@auburn.edu>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -49,7 +49,6 @@
 #define GP_MODULE "mars"
 
 struct _CameraPrivateLibrary {
-	Model model;
 	Info info[0x2000];
 };
 
@@ -64,7 +63,8 @@ struct {
 	{"Vivitar Vivicam 55", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f},
 	{"Haimei Electronics HE-501A", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010e},
 	{"Elta Medi@ digi-cam", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010e},
-	{"Precision Mini, Model HA513A", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010e},
+	{"Precision Mini, Model HA513A", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f},
+	{"Digital camera, CD302N", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010e},	
 /*	{"Argus DC-1610", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f}, */
 /*	{"Argus DC-1620", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f}, */
  	{NULL,0,0}
@@ -96,7 +96,8 @@ camera_abilities (CameraAbilitiesList *list)
 		else
 			a.operations = GP_OPERATION_CAPTURE_IMAGE;
        		a.folder_operations = GP_FOLDER_OPERATION_NONE;
-       		a.file_operations   = GP_FILE_OPERATION_PREVIEW; 
+       		a.file_operations   = GP_FILE_OPERATION_PREVIEW 
+					+ GP_FILE_OPERATION_RAW; 
        		gp_abilities_list_append (list, a);
     	}
     	return GP_OK;
@@ -127,12 +128,9 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
 	_(
         "This driver supports cameras with Mars MR97310 chip (and direct\n"
         "equivalents ??Pixart PACx07?\?) and should work with gtkam.\n"
-	"The driver allows you to get\n"
-	"   - thumbnails for gtkam\n"
-	"   - full images (640x480 or 320x240PPM format) (??352x288 & 176x144?\?)\n"
 	"The camera does not support deletion of photos, nor uploading\n"
-	"of data. This driver does not support the optional photo\n" 
-	"compression mode.\n" 
+	"of data. \n"
+	"This driver will not decode compressed photos.\n" 
 	"If present on the camera, video clip frames are downloaded \n"
 	"as consecutive still photos.\n"
 	)); 
@@ -180,8 +178,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       GPContext *context)
 {
     	Camera *camera = user_data; 
-    	int w, h = 0, b = 0, comp_ratio, k;
-	int x, y, c;
+  	int w, h = 0, b = 0, k;
     	unsigned char *data; 
     	unsigned char  *ppm;
 	unsigned char *p_data = NULL;
@@ -194,8 +191,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
     	/* Get the number of the photo on the camera */
 	k = gp_filesystem_number (camera->fs, "/", filename, context); 
-    	/* Resolution must be checked for each individual picture. */
-    	comp_ratio = mars_get_comp_ratio (camera->pl->info, k);
     	w = mars_get_picture_width (camera->pl->info, k);
     	switch (w) {
 	case 640: h = 480; break;
@@ -207,45 +202,41 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	
 	GP_DEBUG ("height is %i\n", h); 		
     
-    	b = w * h / comp_ratio;
-	data = malloc (b+140);
+	b = mars_get_pic_data_size(camera->pl->info, k);
+
+	/* Now increase b from "actual size" to _downloaded_ size. */
+	b = ((b+ 0x1b0)/0x2000 + 1) * 0x2000;
+
+	data = malloc (b);
 	if (!data) return GP_ERROR_NO_MEMORY;
-    	memset (data, 0, b+140);
+    	memset (data, 0, b);
+	GP_DEBUG ("buffersize= %i = 0x%x butes\n", b,b); 
 
-	GP_DEBUG ("buffer= %i\n", b); 
+	mars_read_picture_data (camera, camera->pl->info, 
+					    camera->port, data, b, k);
 
+	if (GP_FILE_TYPE_RAW == type) {
+		memmove(data, data+128, b - 128);
+		/* We keep the SOF marker; actual data starts at byte 12 */
+		gp_file_set_mime_type(file, GP_MIME_RAW);
+		gp_file_set_name(file, filename);
+		gp_file_set_data_and_size(file, data , b );
+		return GP_OK;
+	}
+
+	if (GP_FILE_TYPE_EXIF == type) return GP_ERROR_FILE_EXISTS;
+	
 	p_data = malloc (w * h);
 	if (!p_data) {free (data); return GP_ERROR_NO_MEMORY;}
 	memset (p_data, 0, w * h);
+		
 
-    	switch (type) {
-	case GP_FILE_TYPE_NORMAL:
-		mars_read_picture_data (camera, camera->pl->info, 
-					    camera->port, data, b, k);
-		break;
-
-	case GP_FILE_TYPE_PREVIEW:
-		mars_read_picture_data (camera, camera->pl->info,
-					    camera->port, data, b, k);
-		break;
-
-	default:
-		free (p_data);
-		free (data);
-		return GP_ERROR_NOT_SUPPORTED;
-    	}
-
-	switch (comp_ratio) {
-	case 3:
+	if (mars_chk_compression (camera->pl->info, k)) {
 		/* FIXME: This function right now does nothing in particular */
-		mars_decompress (data, p_data, b, w, h);
-		free (data);
-		break; 	
-	default:	/* "default" means comp_ratio = 1 */ 		
-		    memcpy (p_data, data + 140, w*h);		 	
-		    memcpy (p_data+w*h - 139, data, 140);
-		    /* Is this where the misplaced junk goes? Who knows? */
-		free (data);
+		mars_decompress (p_data, data, b, w, h);
+		
+	} else {
+		memcpy (p_data, data + 140, w*h);		 	
 	}
 
 	/* Now put the data into a PPM image file. */
@@ -273,18 +264,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	 * gamma of .50 arrived at by experimentation. Maybe could be 
 	 * improved? Well, here is a guess for improvement.
 	 */
-	
-	if (GP_FILE_TYPE_PREVIEW==type) {
-		for (y=0; y<h/8; y++) {
-			for (x=0; x<w/8; x++) {
-				for (c=0; c<3; c++) {
-					ptr[(y*w/8+x)*3 +c] = ptr[(y*8*w+x*8)*3 +c];
-				}
-			}
-		}
-	}
-	
-	
 	 
         gp_file_set_mime_type (file, GP_MIME_PPM);
         gp_file_set_name (file, filename); 
@@ -355,7 +334,7 @@ camera_init(Camera *camera, GPContext *context)
 	if (!camera->pl) return GP_ERROR_NO_MEMORY;
 	memset (camera->pl, 0, sizeof (CameraPrivateLibrary));
 	/* Connect to the camera */
-	mars_init (camera,camera->port, &camera->pl->model, camera->pl->info);
+	mars_init (camera,camera->port, camera->pl->info);
 
 	return GP_OK;
 }

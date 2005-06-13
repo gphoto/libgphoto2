@@ -25,23 +25,20 @@
 
 typedef unsigned char Info;
 
-typedef enum {MODEL_AIPTEK
-	} Model;
-
-int mars_init              (Camera *camera, GPPort *port, Model *model, Info *info);
+int mars_init              (Camera *camera, GPPort *port, Info *info);
 int mars_reset	     (GPPort *port);
 int mars_get_num_pics   (Info *info);
-int mars_get_comp_ratio   (Info *info, int n);
+int mars_chk_compression   (Info *info, int n);
 int mars_get_picture_width   (Info *info, int n);
+int mars_get_pic_data_size (Info *info, int n);
 int set_usb_in_endpoint	     (Camera *camera, int inep);
 int set_usb_out_endpoint	     (Camera *camera, int outep);
 int mars_read_data         (Camera *camera, GPPort *port, char *data, int size);
 int mars_read_picture_data (Camera *camera, Info *info,
 				GPPort *port, char *data, int size, int n);
-int mars_decompress (char *data,char *p_data, int b, int w, int h);
+int mars_decompress (char *p_data,char *data, int b, int w, int h);
 int M_READ (GPPort *port, char *data, int size);
 int M_COMMAND (GPPort *port, char *command, int size, char *response);
-int mars_write_some_data(Camera *camera, GPPort *port);
 int mars_routine (Info *info, GPPort *port, 
 					char param, int n); 
 int mars_get_gamma(Info *info, int n);

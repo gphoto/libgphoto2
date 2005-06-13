@@ -253,5 +253,14 @@ submitting the patch which makes it work.
 Nils Naumann <nau@gmx.net> for reporting his camera 24 hours after Scott, 
 and for testing Scott's patch. 
 
-
+5. 2005-06-12 Code streamlined considerably. There are several more cameras 
+out there which I call the "new generation." Some of these cameras are 
+compressed-mode only, and some of them have a flashlamp. the flashlamp seems 
+to need new codes for the photos sizes, starting with 1 or 9 (uncompressed), or 
+3 or b (compressed). The "routine" function needed to be rewritten, and it 
+is also discovered that the proper data size for the download of a photo is 
+always an integer multiple of 0x2000. Anything else, some of the new cameras 
+will freeze. The old Aiptek Pencam VGA+ seems to work better this way, too. 
+Some new cameras such as the Argus DC-1620 have the same Vendor:Product IDs 
+as older cameras. 
 

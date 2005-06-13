@@ -28,6 +28,7 @@
 
 #include <gphoto2.h>
 #include <gphoto2-port.h>
+#include <gphoto2-endian.h>
 
 #include "mars.h"
 
@@ -38,7 +39,7 @@
 #define RESET		0xba
 
 int 
-mars_init (Camera *camera, GPPort *port, Model *model, Info *info) 
+mars_init (Camera *camera, GPPort *port, Info *info) 
 {
 	unsigned char c[16];
 	unsigned char status = 0;
@@ -55,11 +56,12 @@ mars_init (Camera *camera, GPPort *port, Model *model, Info *info)
 		gp_port_write(port, "\x19", 1);
 		gp_port_read(port, c, 16);
 	}
-
 	while ( (status != 0xb5)){
 	status = mars_routine (info, port, INIT, 0);    
 	GP_DEBUG("status = 0x%x\n", status);
 	}
+
+
 
 	/* Not a typo. This _will_ download the config data ;) */
 	mars_read_picture_data (camera, info, port, info, 0x2000, 0); 
@@ -87,68 +89,43 @@ mars_get_num_pics      (Info *info)
 	for (i = 0; i < 0x3fe; i++) if ( !(0xff - info[8*i]) )  
 	{
 	GP_DEBUG ( "i is %i\n", i);
+	memcpy(info+0x1ff0, "i", 1);
 	return i;
 	}
+	memcpy(info+0x1ff0, "0", 1);
 	return 0;
 }
 
 int
-mars_get_comp_ratio (Info *info, int n)
+mars_chk_compression (Info *info, int n)
 {
-    	switch (info[8*n]) {
-	case 0x28:
-	case 0x26:
-	case 0xa8:
-	case 0xa6:
-	case 0xa2:
-	case 0x22:
-	case 0xa0:
-	case 0x20: return 3;
-	case  0x8:
-	case 0x88:
-	case  0x6:
-	case 0x86:
-	case 0x82:
-	case  0x2:
-	case 0x80:
-	case  0x0: return 1;
-	default:
-		GP_DEBUG ("Your camera has unknown resolution settings.\n");
-		return (GP_ERROR_NOT_SUPPORTED);
-	}
+	return	((info[8*n] >>4) & 2);
 }
 
 int
 mars_get_picture_width (Info *info, int n)
 {
-    	switch (info[8*n]) {  
-	case 0x80:
-	case  0x0:
-	case 0xa0:
-	case 0x20: return 176;
-	case  0x6:
-	case 0x26:
-	case 0x86:
-	case 0xa6: return 320;
-	case 0x82:
-	case  0x2:
-	case 0xa2:
-	case 0x22: return 352;
-	case  0x8:
-	case 0x88:
-	case 0x28:
-	case 0xa8: return 640;
+    	switch (info[8*n] & 0x0f) {  
+	case 0x00: return 176;
+	case 0x02: return 144;
+	case 0x06: return 320;
+	case 0x08: return 640;
 	default:
 		GP_DEBUG ("Your pictures have unknown width.\n");
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
 }
 
+int
+mars_get_pic_data_size (Info *info, int n)
+{
+	return (info[8*n+6]*0x100 + info[8*n+5])*0x100 + info[8*n+4];
+}
+
 int 
 set_usb_in_endpoint	     (Camera *camera, int inep) 
 {
 	GPPortSettings settings;
-	
 	gp_port_get_settings ( camera ->port, &settings);
 	settings.usb.inep = inep;
 	return gp_port_set_settings ( camera ->port, settings);
@@ -158,7 +135,6 @@ int
 mars_read_data         (Camera *camera, GPPort *port, char *data, int size) 
 { 
 	int MAX_BULK = 0x2000;
-
 	while(size > 0) {
 		int len = (size>MAX_BULK)?MAX_BULK:size;
 	        gp_port_read  (port, data, len); 
@@ -174,43 +150,32 @@ mars_read_picture_data (Camera *camera, Info *info, GPPort *port,
 					char *data, int size, int n) 
 {
 	unsigned char c[16];
-	unsigned char complete[2] = {0x19, 0x54};
-	unsigned char status = 0;	
+	
 	memset(c,0,sizeof(c));
 	/*Initialization routine for download. */
-	while( (status != 0xa8 )) {
-		status = mars_routine (info, port, GET_DATA, n);
-	}
+	mars_routine (info, port, GET_DATA, n);
 	/*Data transfer begins*/
 	set_usb_in_endpoint (camera, 0x82); 
 	mars_read_data (camera, port, data, size);
 	set_usb_in_endpoint (camera, 0x83); 	
-	gp_port_write(port, complete, 2);		
-	
     	return GP_OK;
 } 
 
 int
 mars_reset (GPPort *port)
 {
-	unsigned char bogus[6];
-	memset(bogus, 0, sizeof(bogus)); 
-	mars_routine (bogus, port, RESET, 0); 
+	gp_port_write(port, "\x19\x54", 2);	
     	return GP_OK;
 }
 
-int 
-mars_decompress (char *data,char *p_data, int b, int w, int h) 
+int mars_decompress (char *p_data, char *data, int b, int w, int h)
 {
-	/* FIXME! This is supposed to decompress the photo! */
-
-	int i;
-	memmove(data, data+140, b);
-	for ( i=0; i< b; i++ ) {
-	
-	memcpy(p_data+3*i,data+i, 1);
-	}
+	if (b < w*h)
+	memcpy (p_data, data, b);
+	else
+	memcpy (p_data, data, w*h);	
 	return GP_OK;
+
 }
 
 int 
@@ -249,12 +214,11 @@ mars_routine (Info *info, GPPort *port, char param, int n)
 	memset(c,0,sizeof(c));
 
 	/*Routine used in initialization, photo download, and reset. */
-
     	M_READ(port, c, 16); 	
-	if ( (c[0] == 0x02 ) ) {		/* Clears camera if jammed. */
+	if ( (c[0] == 0x02 ) ) {	/* Clears camera if jammed */
 		gp_port_write(port, "\x19", 1);
 		gp_port_read(port, c, 16);
-    		M_READ(port, c, 16); 	
+		M_READ(port, c, 16);
 	}
 
 	M_COMMAND(port, start, 2, c);
@@ -263,12 +227,11 @@ mars_routine (Info *info, GPPort *port, char param, int n)
 
 	c[0] = 0;
 	gp_port_write(port, address2, 2);	
-
 	/* Moving the memory cursor to the given address? */
 	while (( c[0] != 0xa) ) {	
     	M_READ(port, c, 16); 	
 	}
-
+	
 	M_COMMAND(port, address3, 2, c);
 	M_COMMAND(port, address4, 2, c);
 	M_COMMAND(port, address5, 2, c);
@@ -286,4 +249,6 @@ mars_get_gamma(Info *info, int n)
 {
 return info[8*n + 7];
 }
+
+
 
