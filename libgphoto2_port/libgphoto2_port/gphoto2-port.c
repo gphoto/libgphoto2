@@ -199,6 +199,11 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
 		port->settings.usb.altsetting = -1;
 		gp_port_set_timeout (port, 5000);
 		break;
+	case GP_PORT_DISK:
+		strncpy(port->settings.disk.mountpoint, 
+			strchr(info.path, ':') + 1, 
+			sizeof(port->settings.disk.mountpoint));
+		break;
 	default:
 		/* Nothing in here */
 		break;

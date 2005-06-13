@@ -49,6 +49,8 @@
 
 #define GP_ERROR_IO_LOCK                -60
 
+#define GP_ERROR_HAL                    -70
+
 const char *gp_port_result_as_string (int result);
 
 #endif /* __GPHOTO2_PORT_RESULT_H__ */

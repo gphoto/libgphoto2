@@ -290,12 +290,22 @@ GP_CHECK_LIBRARY([LIBUSB],[libusb],[>= 0.1.5],
 		[http://libusb.sourceforge.net/]
 )
 
+dnl ---------------------------------------------------------------------------
+dnl disk - hal and various stuff
+dnl ---------------------------------------------------------------------------
+PKG_CHECK_MODULES(HAL, [dbus-1 >= 0.31 hal >= 0.5.0], 
+		       [have_hal=true], 
+		       [have_hal=false])
+if test "x$have_hal" = "xtrue"; then
+   AC_SUBST(HAL_CFLAGS)
+   AC_SUBST(HAL_LIBS)
+   IOLIB_SUBDIRS="$IOLIB_SUBDIRS disk"
+fi
 
 # ----------------------------------------------------------------------
 # Define IOLIB stuff
 # ----------------------------------------------------------------------
 
-IOLIB_SUBDIRS="$IOLIB_SUBDIRS disk"
 AC_SUBST(IOLIB_SUBDIRS)
 AC_SUBST([iolibdir],["\$(libdir)/\$(PACKAGE_TARNAME)/\$(VERSION)"])
 AM_CPPFLAGS="$AM_CPPFLAGS -DIOLIBS=\\\"${iolibdir}\\\""

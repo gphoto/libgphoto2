@@ -94,6 +94,8 @@ gp_port_result_as_string (int result)
 		return _("Could not claim the USB device");
 	case GP_ERROR_IO_LOCK:
 		return _("Could not lock the device");
+	case GP_ERROR_HAL:
+		return _("libhal error");
 	default:
 		return _("Unknown error");
 	}

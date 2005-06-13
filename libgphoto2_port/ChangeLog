@@ -1,3 +1,20 @@
+2005-06-12  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* libgphoto2_port/gphoto2-port.h: new disk settings struct.
+
+	* libgphoto2_port/gphoto2-port.c (gp_port_set_info): copy
+	disk port settings
+
+	* libgphoto2_port/gphoto2-port-result.[ch]: 
+	added GP_HAL_ERROR
+
+	* disk/Makefile.am: added HAL flags
+
+	* disk/disk.c (gp_port_library_list): list mounted filesystems 
+	using libhal.
+
+	* configure.in (HAL_CFLAGS): detect libhal
+
 2005-06-11  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* libgphoto2_port/Makefile.am: link libgphoto2_port 
