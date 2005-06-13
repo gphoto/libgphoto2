@@ -72,9 +72,15 @@ int gp_file_free           (CameraFile *file);
  *    - digikam
  *    - f-spot
  *    - gthumb
- * But a few frontends seem to live without it:
+ * But a few frontends can live without it (and thus are likely to
+ * use the correct API):
  *    - flphoto
  *    - kamera
+ *
+ * So we're going to phase these functions out over the next year or
+ * so, going the GTK way of keeping the ABI but breaking the API. So
+ * we'll continue to export functionally equivalent functions, but the
+ * header files will not contain definitions for you to use any more.
  */
 int gp_file_open           (CameraFile *file, const char *filename);
 int gp_file_save           (CameraFile *file, const char *filename);
