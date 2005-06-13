@@ -32,11 +32,14 @@
 
 #define CHECK(f) {int res = f; if (res < 0) {printf ("ERROR: %s\n", gp_result_as_string (res)); return (1);}}
 
-/* boolean value */
+
+/** boolean value */
 static int do_debug = 0;
 
-/* time zero for debug log time stamps */
+
+/** time zero for debug log time stamps */
 struct timeval glob_tv_zero = { 0, 0 };
+
 
 static void
 #ifdef __GNUC__
@@ -67,6 +70,7 @@ print_headline (void)
 	       "camera model");
 }
 
+
 static void
 print_hline (void)
 {
@@ -75,6 +79,7 @@ print_hline (void)
 	       "--------------------",
 	       "-------------------------------------------");
 }
+
 
 /** C equivalent of basename(1) */
 static const char *
@@ -91,7 +96,8 @@ basename (const char *pathname)
 	return (const char *)result;
 }
 
-/* Define the different output formats.
+
+/** Define the different output formats.
  * These may be used for consistency checking and other stuff.
  */
 typedef enum {
@@ -114,7 +120,9 @@ typedef enum {
 
 static OutputFormat format = FMT_HEADED_TEXT;
 
+
 // #define DEBUG_OUTPUT
+
 
 /** Parse command line and set global variables. */
 static void
@@ -155,6 +163,10 @@ parse_command_line (const int argc, char *argv[])
 	}
 }
 
+
+/** 
+ * Get list of supported cameras, walk through it and create some output.
+ */
 int
 main (int argc, char *argv[])
 {
