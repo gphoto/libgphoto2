@@ -35,7 +35,7 @@
  * making camera_init() the last function in this file, we can avoid 
  * the need for forward declarations of the object member functions.
  *
- * \section linknote Notes about linking and exporting symbols
+ * \section linknote Note about "static" functions and exporting symbols
  *
  * The build system uses libtool to explicitly specify the list of
  * exported symbols. Only the three functions of the camlib API 
