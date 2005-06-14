@@ -314,6 +314,7 @@ dnl --------------------------------------------------------------------
 dnl documentation
 dnl --------------------------------------------------------------------
 GP_CHECK_DOC_DIR()dnl
+GP_CHECK_DOXYGEN()dnl
 GP_BUILD_GTK_DOCS()dnl
 
 
@@ -515,6 +516,7 @@ packaging/linux-hotplug/Makefile
 packaging/rpm/Makefile
 packaging/rpm/package.spec
 doc/Makefile
+doc/Doxyfile
 doc/api/Makefile
 ])
 AC_OUTPUT
