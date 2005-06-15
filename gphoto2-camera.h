@@ -66,7 +66,13 @@ typedef enum {
 } CameraCaptureType;
 
 /**
- * \
+ * \name Camera object member functions
+ *
+ * These functions must be implemented by a camlib and the camlib's 
+ * camera_init() function will add them to a Camera object.
+ *
+ * @{
+ */
 typedef int (*CameraExitFunc)      (Camera *camera, GPContext *context);
 typedef int (*CameraGetConfigFunc) (Camera *camera, CameraWidget **widget,
 				    GPContext *context);
@@ -82,6 +88,8 @@ typedef int (*CameraManualFunc)    (Camera *camera, CameraText *text,
 				    GPContext *context);
 typedef int (*CameraAboutFunc)     (Camera *camera, CameraText *text,
 				    GPContext *context);
+
+/**@}*/
 
 
 /**
