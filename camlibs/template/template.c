@@ -73,6 +73,8 @@
 /**
  * @name Camera object member functions
  *
+ * The prototypes for these functions are defined in gphoto2-camera.h
+ *
  * @{
  */
 /**********************************************************************/
