@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2005-06-10 19:41+0200\n"
+"POT-Creation-Date: 2005-06-12 17:07+0200\n"
 "PO-Revision-Date: 2005-05-12 16:52+0200\n"
 "Last-Translator: Hizkuntza Politikarako Sailburuordetza <hizkpol@ej-gv.es>\n"
 "Language-Team:  <itzulpena@euskalgnu.org>\n"
@@ -90,26 +90,26 @@ msgstr ""
 "Sarean topatutako dokumentuak erabiliz\n"
 "inplementatua. Baimena Vision-ek emana."
 
-#: camlibs/canon/canon.c:581
+#: camlibs/canon/canon.c:580
 #, c-format
 msgid "Could not create directory %s."
 msgstr "Ezin izan da %s direktorioa sortu."
 
-#: camlibs/canon/canon.c:584
+#: camlibs/canon/canon.c:583
 #, c-format
 msgid "Could not remove directory %s."
 msgstr "Ezin izan da %s direktorioa kendu."
 
-#: camlibs/canon/canon.c:957 camlibs/canon/canon.c:1295
+#: camlibs/canon/canon.c:956 camlibs/canon/canon.c:1294
 #: camlibs/canon/usb.c:513
 msgid "lock keys failed."
 msgstr "blokeo-teklek huts egin dute."
 
-#: camlibs/canon/canon.c:1021 camlibs/canon/canon.c:1022
+#: camlibs/canon/canon.c:1020 camlibs/canon/canon.c:1021
 msgid "*UNKNOWN*"
 msgstr "*EZEZAGUNA*"
 
-#: camlibs/canon/canon.c:1192
+#: camlibs/canon/canon.c:1191
 #, c-format
 msgid ""
 "canon_int_capture_image: initial canon_usb_list_all_dirs() failed with "
@@ -118,7 +118,7 @@ msgstr ""
 "canon_int_capture_image: hasierako canon_usb_list_all_dirs()-ek huts egin du "
 "%i egoerarekin"
 
-#: camlibs/canon/canon.c:1329
+#: camlibs/canon/canon.c:1328
 #, c-format
 msgid ""
 "canon_int_capture_image: final canon_usb_list_all_dirs() failed with status %"
@@ -127,25 +127,25 @@ msgstr ""
 "canon_int_capture_image: amaierako canon_usb_list_all_dirs()-ek huts egin du "
 "%i egoerarekin"
 
-#: camlibs/canon/canon.c:1436
+#: camlibs/canon/canon.c:1435
 #, fuzzy, c-format
 msgid "Name '%s' (%li characters) too long, maximum 30 characters are allowed."
 msgstr ""
 "'%s' izena (%i karaktere) luzeegia da gehienez 30 karaktere izan ditzakete."
 
-#: camlibs/canon/canon.c:1851
+#: camlibs/canon/canon.c:1850
 #, c-format
 msgid "Lower case letters in %s not allowed."
 msgstr "%s-(e)n letra minuskulan ez dira onartzen."
 
-#: camlibs/canon/canon.c:2026
+#: camlibs/canon/canon.c:2030
 #, fuzzy, c-format
 msgid ""
 "canon_int_list_directory: ERROR: initial message too short (%i < minimum %i)"
 msgstr ""
 "canon_int_list_dir: ERROREA: hasierako mezua laburregia da (%i < minimoa %i)"
 
-#: camlibs/canon/canon.c:2048
+#: camlibs/canon/canon.c:2052
 #, fuzzy
 msgid ""
 "canon_int_list_directory: Reached end of packet while examining the first "
@@ -154,22 +154,22 @@ msgstr ""
 "canon_int_list_dir: Paketearen amaierara heldu da direktorioaren 1. sarrera "
 "aztertzen"
 
-#: camlibs/canon/canon.c:2133
+#: camlibs/canon/canon.c:2137
 #, fuzzy
 msgid "canon_int_list_directory: truncated directory entry encountered"
 msgstr "canon_int_list_dir: direktorioko sarrera trunkatua aurkitu da"
 
-#: camlibs/canon/canon.c:2492
+#: camlibs/canon/canon.c:2496
 msgid "File protected."
 msgstr "Fitxategia babestuta."
 
-#: camlibs/canon/canon.c:2584
+#: camlibs/canon/canon.c:2588
 msgid "Could not extract JPEG thumbnail from data: No beginning/end"
 msgstr ""
 "Ezin izan da JPEG koadro txikia atera datuetatik: ez dago hasierarik/"
 "amaierarik"
 
-#: camlibs/canon/canon.c:2671
+#: camlibs/canon/canon.c:2675
 msgid "Could not extract JPEG thumbnail from data: Data is not JFIF"
 msgstr "Ezin izan da datuen JPEG koadro txikia atera: Datuak ez dira JFIF"
 
@@ -917,12 +917,12 @@ msgstr ""
 "canon_usb_list_all_dirs: canon_usb_long_dialogue-k ezin izan ditu "
 "direktorioaren sarrerak hartu, %i itzuli du"
 
-#: camlibs/canon/usb.c:2386
+#: camlibs/canon/usb.c:2393
 #, c-format
 msgid "Detected a '%s'."
 msgstr "'%s' detektatu da."
 
-#: camlibs/canon/usb.c:2392
+#: camlibs/canon/usb.c:2399
 #, c-format
 msgid "Name \"%s\" from camera does not match any known camera"
 msgstr "Kameraren \"%s\" izena ez dator bat ezagutzen diren kamerekin"
@@ -3184,7 +3184,7 @@ msgid "pccam600 init:Unexpected error: gp_port_read returned %d instead of %d"
 msgstr ""
 "pccam600 init: ustegabeko errorea: gp_port_read-ek %d itzuli du, %d ordez"
 
-#: camlibs/polaroid/pdc320.c:455
+#: camlibs/polaroid/pdc320.c:456
 msgid ""
 "Download program for several Polaroid cameras. Originally written by Peter "
 "Desnoyers <pjd@fred.cambridge.ma.us>, and adapted for gphoto2 by Nathan "
@@ -3198,7 +3198,7 @@ msgstr ""
 "net> egokitua.\n"
 "Polaroid 640Seren proba Michael Golden-ek egin zuen <naugrim@juno.com>."
 
-#: camlibs/polaroid/pdc320.c:485
+#: camlibs/polaroid/pdc320.c:486
 #, c-format
 msgid "Model: %x, %x, %x, %x"
 msgstr "Modeloa: %x, %x, %x, %x"
@@ -6288,105 +6288,105 @@ msgstr ""
 "ASIC STV0674 prozesadorea erabiltzen duten kameretarako kontrolatzailea.\n"
 "Protokoloaren ingeniaritza alderantzikatua SnoopyPro erabiliz egin da\n"
 
-#: camlibs/stv0680/library.c:354 camlibs/stv0680/library.c:388
+#: camlibs/stv0680/library.c:353 camlibs/stv0680/library.c:387
 msgid "Bad exposure (not enough light probably)"
 msgstr "Esposizio okerra (baliteke nahikoa argi ez egotea)"
 
-#: camlibs/stv0680/library.c:518
+#: camlibs/stv0680/library.c:517
 msgid "Information for STV0680 based camera:\n"
 msgstr "STV0680en oinarritutako kameretarako informazioa:\n"
 
-#: camlibs/stv0680/library.c:523
+#: camlibs/stv0680/library.c:522
 #, c-format
 msgid "Firmware Revision: %d.%d\n"
 msgstr "Firmwarearen berrikuspena: %d.%d\n"
 
-#: camlibs/stv0680/library.c:527
+#: camlibs/stv0680/library.c:526
 #, c-format
 msgid "ASIC Revision: %d.%d\n"
 msgstr "ASICen berrikuspena: %d.%d\n"
 
-#: camlibs/stv0680/library.c:531
+#: camlibs/stv0680/library.c:530
 #, c-format
 msgid "Sensor ID: %d.%d\n"
 msgstr "Sentsorearen IDa: %d.%d\n"
 
-#: camlibs/stv0680/library.c:537
+#: camlibs/stv0680/library.c:536
 #, c-format
 msgid "Camera is configured for lights flickering with %dHz.\n"
 msgstr "Kamera %dHz-etan keinu egiten duten argietarako konfiguratuta dago.\n"
 
-#: camlibs/stv0680/library.c:540
+#: camlibs/stv0680/library.c:539
 #, c-format
 msgid "Memory in camera: %d Mbit.\n"
 msgstr "Kameraren memoria: %d Mbit.\n"
 
-#: camlibs/stv0680/library.c:544
+#: camlibs/stv0680/library.c:543
 msgid "Camera supports Thumbnails.\n"
 msgstr "Kamerak koadro txikiak onartzen ditu.\n"
 
-#: camlibs/stv0680/library.c:546
+#: camlibs/stv0680/library.c:545
 msgid "Camera supports Video.\n"
 msgstr "Kamerak bideoa onartzen du.\n"
 
-#: camlibs/stv0680/library.c:549
+#: camlibs/stv0680/library.c:548
 msgid "Camera pictures are monochrome.\n"
 msgstr "Kamerako irudiak monokromatikoak dira.\n"
 
-#: camlibs/stv0680/library.c:551
+#: camlibs/stv0680/library.c:550
 msgid "Camera has memory.\n"
 msgstr "Kamerak memoria du.\n"
 
-#: camlibs/stv0680/library.c:553
+#: camlibs/stv0680/library.c:552
 msgid "Camera supports videoformats: "
 msgstr "Kamerak bideo-formatuak onartzen ditu: "
 
-#: camlibs/stv0680/library.c:559
+#: camlibs/stv0680/library.c:558
 #, c-format
 msgid "Vendor ID: %02x%02x\n"
 msgstr "Hornitzailearen IDa: %02x%02x\n"
 
-#: camlibs/stv0680/library.c:563
+#: camlibs/stv0680/library.c:562
 #, c-format
 msgid "Product ID: %02x%02x\n"
 msgstr "Produktuaren IDa: %02x%02x\n"
 
-#: camlibs/stv0680/library.c:570
+#: camlibs/stv0680/library.c:569
 #, c-format
 msgid "Number of Images: %d\n"
 msgstr "Irudi-kopurua: %d\n"
 
-#: camlibs/stv0680/library.c:573
+#: camlibs/stv0680/library.c:572
 #, c-format
 msgid "Maximum number of Images: %d\n"
 msgstr "Gehienezko irudi-kopurua: %d\n"
 
-#: camlibs/stv0680/library.c:576
+#: camlibs/stv0680/library.c:575
 #, c-format
 msgid "Image width: %d\n"
 msgstr "Irudiaren zabalera: %d\n"
 
-#: camlibs/stv0680/library.c:579
+#: camlibs/stv0680/library.c:578
 #, c-format
 msgid "Image height: %d\n"
 msgstr "Irudiaren altuera: %d\n"
 
-#: camlibs/stv0680/library.c:582
+#: camlibs/stv0680/library.c:581
 #, c-format
 msgid "Image size: %d\n"
 msgstr "Irudiaren tamaina: %d\n"
 
-#: camlibs/stv0680/library.c:586
+#: camlibs/stv0680/library.c:585
 #, c-format
 msgid "Thumbnail width: %d\n"
 msgstr "Koadro txikiaren zabalera: %d\n"
 
-#: camlibs/stv0680/library.c:587
+#: camlibs/stv0680/library.c:586
 #, c-format
 msgid "Thumbnail height: %d\n"
 msgstr "Koadro txikiaren altuera: %d\n"
 
-#: camlibs/stv0680/library.c:588
+#: camlibs/stv0680/library.c:587
 #, c-format
 msgid "Thumbnail size: %d\n"
 msgstr "Koadro txikiaren tamaina: %d\n"
@@ -6440,12 +6440,16 @@ msgstr ""
 "David Hogue <david@jawa.gotdns.org>\n"
 "Toshiba pdr-m11 kontrolatzailea.\n"
 
-#: libgphoto2/gphoto2-abilities-list.c:172
+#: libgphoto2/gphoto2-abilities-list.c:173
+msgid "Internal error looking for camlibs. (path names too long?)"
+msgstr ""
+
+#: libgphoto2/gphoto2-abilities-list.c:182
 #, c-format
 msgid "Loading camera drivers from '%s'..."
 msgstr "Kamera-kontrolatzaileak kargatzen '%s'(e)tik..."
 
-#: libgphoto2/gphoto2-abilities-list.c:566
+#: libgphoto2/gphoto2-abilities-list.c:576
 #, c-format
 msgid "Could not find any driver for '%s'"
 msgstr "Ezin izan da kontrolatzailerik bidali '%s'(e)rako"

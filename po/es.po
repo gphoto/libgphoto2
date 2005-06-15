@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2 2.1.4\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2005-06-10 19:41+0200\n"
+"POT-Creation-Date: 2005-06-12 17:07+0200\n"
 "PO-Revision-Date: 2004-05-11 13:12+0200\n"
 "Last-Translator: Quique <quique@sindominio.net>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -82,26 +82,26 @@ msgstr ""
 "Implementado utilizando documentos encontrados\n"
 "en la web. Permiso concedido por Vision."
 
-#: camlibs/canon/canon.c:581
+#: camlibs/canon/canon.c:580
 #, c-format
 msgid "Could not create directory %s."
 msgstr "No se ha podido crear el directorio %s."
 
-#: camlibs/canon/canon.c:584
+#: camlibs/canon/canon.c:583
 #, c-format
 msgid "Could not remove directory %s."
 msgstr "No se ha podido eliminar el directorio %s."
 
-#: camlibs/canon/canon.c:957 camlibs/canon/canon.c:1295
+#: camlibs/canon/canon.c:956 camlibs/canon/canon.c:1294
 #: camlibs/canon/usb.c:513
 msgid "lock keys failed."
 msgstr "ha fallado el bloqueo de teclas."
 
-#: camlibs/canon/canon.c:1021 camlibs/canon/canon.c:1022
+#: camlibs/canon/canon.c:1020 camlibs/canon/canon.c:1021
 msgid "*UNKNOWN*"
 msgstr "*DESCONOCIDO*"
 
-#: camlibs/canon/canon.c:1192
+#: camlibs/canon/canon.c:1191
 #, c-format
 msgid ""
 "canon_int_capture_image: initial canon_usb_list_all_dirs() failed with "
@@ -110,7 +110,7 @@ msgstr ""
 "canon_int_capture_image: la llamada inicial a canon_usb_list_all_dirs() ha "
 "fallado con el estado %i"
 
-#: camlibs/canon/canon.c:1329
+#: camlibs/canon/canon.c:1328
 #, c-format
 msgid ""
 "canon_int_capture_image: final canon_usb_list_all_dirs() failed with status %"
@@ -119,26 +119,26 @@ msgstr ""
 "canon_int_capture_image: la llamada final a canon_usb_list_all_dirs() ha "
 "fallado con estado %i"
 
-#: camlibs/canon/canon.c:1436
+#: camlibs/canon/canon.c:1435
 #, fuzzy, c-format
 msgid "Name '%s' (%li characters) too long, maximum 30 characters are allowed."
 msgstr ""
 "El nombre «%s» (%i caracteres) es demasiado largo (%i caracteres), el máximo "
 "permitido es de 30 caracteres."
 
-#: camlibs/canon/canon.c:1851
+#: camlibs/canon/canon.c:1850
 #, c-format
 msgid "Lower case letters in %s not allowed."
 msgstr ""
 
-#: camlibs/canon/canon.c:2026
+#: camlibs/canon/canon.c:2030
 #, fuzzy, c-format
 msgid ""
 "canon_int_list_directory: ERROR: initial message too short (%i < minimum %i)"
 msgstr ""
 "canon_int_list_dir: ERROR: mensaje inicial demasiado corto (%i < mínimo %i)"
 
-#: camlibs/canon/canon.c:2048
+#: camlibs/canon/canon.c:2052
 #, fuzzy
 msgid ""
 "canon_int_list_directory: Reached end of packet while examining the first "
@@ -147,22 +147,22 @@ msgstr ""
 "canon_int_list_dir: Se ha llegado al final del paquete mientras se examinaba "
 "la primera entrada de directorio"
 
-#: camlibs/canon/canon.c:2133
+#: camlibs/canon/canon.c:2137
 #, fuzzy
 msgid "canon_int_list_directory: truncated directory entry encountered"
 msgstr ""
 "canon_int_list_dir: se ha encontrado una entrada de directorio truncada"
 
-#: camlibs/canon/canon.c:2492
+#: camlibs/canon/canon.c:2496
 msgid "File protected."
 msgstr "Fichero protegido."
 
-#: camlibs/canon/canon.c:2584
+#: camlibs/canon/canon.c:2588
 msgid "Could not extract JPEG thumbnail from data: No beginning/end"
 msgstr ""
 "No se ha podido extraer la miniatura JPEG de los datos: No hay comienzo/fin"
 
-#: camlibs/canon/canon.c:2671
+#: camlibs/canon/canon.c:2675
 msgid "Could not extract JPEG thumbnail from data: Data is not JFIF"
 msgstr ""
 "No se ha podido extraer la miniatura JPEG de los datos: Los datos no están "
@@ -913,12 +913,12 @@ msgstr ""
 "canon_usb_list_all_dirs: canon_usb_long_dialogue ha fallado al obtener "
 "entradas de directorio, ha devuelto %i"
 
-#: camlibs/canon/usb.c:2386
+#: camlibs/canon/usb.c:2393
 #, c-format
 msgid "Detected a '%s'."
 msgstr "Se ha detectado una '%s'."
 
-#: camlibs/canon/usb.c:2392
+#: camlibs/canon/usb.c:2399
 #, c-format
 msgid "Name \"%s\" from camera does not match any known camera"
 msgstr "El nombre \"%s\" de la cámara no coincide con ninguna cámara conocida"
@@ -3158,7 +3158,7 @@ msgstr ""
 msgid "pccam600 init:Unexpected error: gp_port_read returned %d instead of %d"
 msgstr ""
 
-#: camlibs/polaroid/pdc320.c:455
+#: camlibs/polaroid/pdc320.c:456
 msgid ""
 "Download program for several Polaroid cameras. Originally written by Peter "
 "Desnoyers <pjd@fred.cambridge.ma.us>, and adapted for gphoto2 by Nathan "
@@ -3173,7 +3173,7 @@ msgstr ""
 "La prueba con una Polaroid 640SE fue realizada por Michael Golden "
 "<naugrim@juno.com>."
 
-#: camlibs/polaroid/pdc320.c:485
+#: camlibs/polaroid/pdc320.c:486
 #, c-format
 msgid "Model: %x, %x, %x, %x"
 msgstr "Modelo: %x, %x, %x, %x"
@@ -6295,105 +6295,105 @@ msgstr ""
 "Controlador para cámaras que utilizan el procesador ASIC STV0674.\n"
 "Ingeniería inversa del protocolo usando una SnoopyPro\n"
 
-#: camlibs/stv0680/library.c:354 camlibs/stv0680/library.c:388
+#: camlibs/stv0680/library.c:353 camlibs/stv0680/library.c:387
 msgid "Bad exposure (not enough light probably)"
 msgstr "Exposición incorrecta (probablemente no haya luz suficiente)"
 
-#: camlibs/stv0680/library.c:518
+#: camlibs/stv0680/library.c:517
 msgid "Information for STV0680 based camera:\n"
 msgstr "Información para la cámara basada en STV0680:\n"
 
-#: camlibs/stv0680/library.c:523
+#: camlibs/stv0680/library.c:522
 #, c-format
 msgid "Firmware Revision: %d.%d\n"
 msgstr "Revisión del firmware: %d.%d\n"
 
-#: camlibs/stv0680/library.c:527
+#: camlibs/stv0680/library.c:526
 #, c-format
 msgid "ASIC Revision: %d.%d\n"
 msgstr "Revisión del ASIC: %d.%d\n"
 
-#: camlibs/stv0680/library.c:531
+#: camlibs/stv0680/library.c:530
 #, c-format
 msgid "Sensor ID: %d.%d\n"
 msgstr "ID del sensor: %d.%d\n"
 
-#: camlibs/stv0680/library.c:537
+#: camlibs/stv0680/library.c:536
 #, c-format
 msgid "Camera is configured for lights flickering with %dHz.\n"
 msgstr "La cámara está configurada para una luz centelleante a %dHz.\n"
 
-#: camlibs/stv0680/library.c:540
+#: camlibs/stv0680/library.c:539
 #, c-format
 msgid "Memory in camera: %d Mbit.\n"
 msgstr "Memoria en la cámara: %d Mbit.\n"
 
-#: camlibs/stv0680/library.c:544
+#: camlibs/stv0680/library.c:543
 msgid "Camera supports Thumbnails.\n"
 msgstr "La cámara soporta miniaturas.\n"
 
-#: camlibs/stv0680/library.c:546
+#: camlibs/stv0680/library.c:545
 msgid "Camera supports Video.\n"
 msgstr "La cámara soporta vídeo.\n"
 
-#: camlibs/stv0680/library.c:549
+#: camlibs/stv0680/library.c:548
 msgid "Camera pictures are monochrome.\n"
 msgstr "Las fotos de la cámara son monocromáticas.\n"
 
-#: camlibs/stv0680/library.c:551
+#: camlibs/stv0680/library.c:550
 msgid "Camera has memory.\n"
 msgstr "La cámara tiene memoria.\n"
 
-#: camlibs/stv0680/library.c:553
+#: camlibs/stv0680/library.c:552
 msgid "Camera supports videoformats: "
 msgstr "La cámara soporta los formatos de vídeo: "
 
-#: camlibs/stv0680/library.c:559
+#: camlibs/stv0680/library.c:558
 #, c-format
 msgid "Vendor ID: %02x%02x\n"
 msgstr "Identificador del fabricante: %02x%02x\n"
 
-#: camlibs/stv0680/library.c:563
+#: camlibs/stv0680/library.c:562
 #, c-format
 msgid "Product ID: %02x%02x\n"
 msgstr "Identificador del producto: %02x%02x\n"
 
-#: camlibs/stv0680/library.c:570
+#: camlibs/stv0680/library.c:569
 #, c-format
 msgid "Number of Images: %d\n"
 msgstr "Cantidad de imágenes: %d\n"
 
-#: camlibs/stv0680/library.c:573
+#: camlibs/stv0680/library.c:572
 #, c-format
 msgid "Maximum number of Images: %d\n"
 msgstr "Cantidad máxima de imágenes: %d\n"
 
-#: camlibs/stv0680/library.c:576
+#: camlibs/stv0680/library.c:575
 #, c-format
 msgid "Image width: %d\n"
 msgstr "Anchura de la imagen: %d\n"
 
-#: camlibs/stv0680/library.c:579
+#: camlibs/stv0680/library.c:578
 #, c-format
 msgid "Image height: %d\n"
 msgstr "Altura de la imagen: %d\n"
 
-#: camlibs/stv0680/library.c:582
+#: camlibs/stv0680/library.c:581
 #, c-format
 msgid "Image size: %d\n"
 msgstr "Tamaño de la imagen: %d\n"
 
-#: camlibs/stv0680/library.c:586
+#: camlibs/stv0680/library.c:585
 #, c-format
 msgid "Thumbnail width: %d\n"
 msgstr "Anchura de la miniatura: %d\n"
 
-#: camlibs/stv0680/library.c:587
+#: camlibs/stv0680/library.c:586
 #, c-format
 msgid "Thumbnail height: %d\n"
 msgstr "Altura de la miniatura: %d\n"
 
-#: camlibs/stv0680/library.c:588
+#: camlibs/stv0680/library.c:587
 #, c-format
 msgid "Thumbnail size: %d\n"
 msgstr "Tamaño de la miniatura: %d\n"
@@ -6443,12 +6443,16 @@ msgid ""
 "Toshiba pdr-m11 driver.\n"
 msgstr ""
 
-#: libgphoto2/gphoto2-abilities-list.c:172
+#: libgphoto2/gphoto2-abilities-list.c:173
+msgid "Internal error looking for camlibs. (path names too long?)"
+msgstr ""
+
+#: libgphoto2/gphoto2-abilities-list.c:182
 #, c-format
 msgid "Loading camera drivers from '%s'..."
 msgstr "Cargando los controladores para la cámara desde '%s'..."
 
-#: libgphoto2/gphoto2-abilities-list.c:566
+#: libgphoto2/gphoto2-abilities-list.c:576
 #, c-format
 msgid "Could not find any driver for '%s'"
 msgstr "No se ha podido encontrar ningún controlador para '%s'"

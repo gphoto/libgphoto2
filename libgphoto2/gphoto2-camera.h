@@ -1,4 +1,5 @@
-/* gphoto2-camera.h
+/** \file gphoto2-camera.h
+ * \brief Implement Camera object representing a camera attached to the system.
  *
  * Copyright © 2000 Scott Fritzinger
  *
@@ -23,7 +24,20 @@
 
 #include <gphoto2-context.h>
 
+
+/**
+ * \brief Object representing a camera attached to the system.
+ *
+ * A Camera object represents a specific instance of a (physical of
+ * virtual) camera attached to the system.
+ * 
+ * The abilities of this type of camera are stored in a CameraAbility
+ * object.
+ *
+ * The details of the Camera object are internal.
+ */
 typedef struct _Camera Camera;
+
 
 #include <gphoto2-port.h>
 #include <gphoto2-port-info-list.h>
@@ -51,6 +65,8 @@ typedef enum {
 	GP_CAPTURE_SOUND
 } CameraCaptureType;
 
+/**
+ * \
 typedef int (*CameraExitFunc)      (Camera *camera, GPContext *context);
 typedef int (*CameraGetConfigFunc) (Camera *camera, CameraWidget **widget,
 				    GPContext *context);
@@ -67,20 +83,23 @@ typedef int (*CameraManualFunc)    (Camera *camera, CameraText *text,
 typedef int (*CameraAboutFunc)     (Camera *camera, CameraText *text,
 				    GPContext *context);
 
+
 /**
- * CameraPrePostFunc:
- * @camera: a #Camera
+ * \param camera a \ref Camera object
+ * \param context a \ref GPContext object
+ * \return a gphoto2 error code
  *
  * Implement this function in the camera driver if the camera needs to
- * be initialized before or reset the after each access from libgphoto2.
+ * be initialized before or reset the after each access from
+ * libgphoto2.
+ *
  * For example, you would probably set the speed to the highest one 
  * right before downloading an image, and reset it to the default speed 
  * afterwards so that other programs will not be affected by this speed
  * change.
- *
- * Return value: a gphoto2 error code
- **/
+ */
 typedef int (*CameraPrePostFunc) (Camera *camera, GPContext *context);
+
 
 typedef struct _CameraFunctions CameraFunctions;
 struct _CameraFunctions {
@@ -124,36 +143,59 @@ typedef struct _CameraPrivateCore     CameraPrivateCore;
 
 struct _Camera {
 
-	/* Those should be accessed only by the camera driver */
+	/** \name Those should be accessed only by the camera driver.
+	 * @{ */
 	GPPort           *port;
 	CameraFilesystem *fs;
 	CameraFunctions  *functions;
+ 	/**@}*/
 
-	CameraPrivateLibrary  *pl; /* Private data of camera libraries    */
-	CameraPrivateCore     *pc; /* Private data of the core of gphoto2 */
+	CameraPrivateLibrary  *pl; /**< Private data of camera libraries.    */
+	CameraPrivateCore     *pc; /**< Private data of the core of gphoto2. */
 };
 
-/* Create a new camera device */
+
+/** Create a new camera device. */
 int gp_camera_new               (Camera **camera);
 
-/* Preparing initialization */
+
+/** \name Preparing initialization 
+ * @{
+ */
 int gp_camera_set_abilities     (Camera *camera, CameraAbilities  abilities);
 int gp_camera_get_abilities	(Camera *camera, CameraAbilities *abilities);
 int gp_camera_set_port_info     (Camera *camera, GPPortInfo  info);
 int gp_camera_get_port_info     (Camera *camera, GPPortInfo *info);
 
-/*
+/**@}*/
+
+
+/**
+ * \name camera speed
+ *
  * You normally don't use that. If you do, you prevent the camera driver
- * from selecting the optimal speed
+ * from selecting the optimal speed.
+ *
+ * @{
  */
 int gp_camera_set_port_speed    (Camera *camera, int speed);
 int gp_camera_get_port_speed    (Camera *camera);
 
-/* Initialization */
+/**@}*/
+
+
+/** \name Initialization 
+ * @{ 
+ */
 int gp_camera_init               (Camera *camera, GPContext *context);
 int gp_camera_exit               (Camera *camera, GPContext *context);
 
-/* Operations on cameras */
+/**@}*/
+
+
+/** \name Operations on cameras 
+ * @{ 
+ */
 int gp_camera_ref   		 (Camera *camera);
 int gp_camera_unref 		 (Camera *camera);
 int gp_camera_free 		 (Camera *camera);
@@ -173,7 +215,12 @@ int gp_camera_capture 		 (Camera *camera, CameraCaptureType type,
 int gp_camera_capture_preview 	 (Camera *camera, CameraFile *file,
 				  GPContext *context);
 
-/* Operations on folders */
+/**@}*/
+
+
+/** \name Operations on folders 
+ * @{
+ */
 int gp_camera_folder_list_files   (Camera *camera, const char *folder, 
 				   CameraList *list, GPContext *context);
 int gp_camera_folder_list_folders (Camera *camera, const char *folder, 
@@ -187,7 +234,12 @@ int gp_camera_folder_make_dir     (Camera *camera, const char *folder,
 int gp_camera_folder_remove_dir   (Camera *camera, const char *folder,
 				   const char *name, GPContext *context);
 
-/* Operations on files */
+/**@}*/
+
+
+/** \name Operations on files 
+ * @{
+ */
 int gp_camera_file_get_info 	(Camera *camera, const char *folder, 
 				 const char *file, CameraFileInfo *info,
 				 GPContext *context);
@@ -199,8 +251,13 @@ int gp_camera_file_get		(Camera *camera, const char *folder,
 				 CameraFile *camera_file, GPContext *context);
 int gp_camera_file_delete     	(Camera *camera, const char *folder, 
 				 const char *file, GPContext *context);
+/**@}*/
 
-/* Some cameras need 'keep-alive-messages'. */
+
+/**
+ * \name Some cameras need 'keep-alive-messages'. 
+ * @{
+ */
 typedef int          (* CameraTimeoutFunc)      (Camera *camera,
 						 GPContext *context);
 typedef unsigned int (* CameraTimeoutStartFunc) (Camera *camera,
@@ -216,5 +273,7 @@ void         gp_camera_set_timeout_funcs (Camera *camera,
 int          gp_camera_start_timeout     (Camera *camera, unsigned int timeout,
 					  CameraTimeoutFunc func);
 void         gp_camera_stop_timeout      (Camera *camera, unsigned int id);
+
+/**@}*/
 
 #endif /* __GPHOTO2_CAMERA_H__ */

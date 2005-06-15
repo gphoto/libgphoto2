@@ -27,9 +27,7 @@
 #include <gphoto2-port-log.h>
 
 /**
- * GPContext:
- *
- * The internals of this structure are private.
+ * \internal
  **/
 struct _GPContext
 {
