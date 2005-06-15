@@ -1,0 +1,4 @@
+2005-06-15  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* disk.c (gp_port_library_list): unref the dbus connection
+
