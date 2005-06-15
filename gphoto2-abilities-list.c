@@ -1,17 +1,21 @@
-/* gphoto2-abilities-list.c
+/** \file gphoto2-abilities-list.c
+ * \brief List of supported camera models including their abilities.
  *
- * Copyright © 2000 Scott Fritzinger
+ * \author Copyright © 2000 Scott Fritzinger
  *
+ * \par
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
+ * \par
  * This library is distributed in the hope that it will be useful, 
  * but WITHOUT ANY WARRANTY; without even the implied warranty of 
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details. 
  *
+ * \par
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
@@ -50,26 +54,26 @@
 #  define N_(String) (String)
 #endif
 
+/** \internal */
 #define GP_MODULE "gphoto2-abilities-list"
 
+/** \internal */
 #define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
+/** \internal */
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
+/** \internal */
 #define CHECK_MEM(m)         {if (!(m)) return (GP_ERROR_NO_MEMORY);}
 
-/** CAMLIBDIR_ENV:
- *
+/**
  * Name of the environment variable which may contain the path where
  * to look for the camlibs. If this environment variable is not defined,
  * use the compiled-in default constant.
- **/
+ *
+ * \internal Internal use only.
+ */
 #define CAMLIBDIR_ENV "CAMLIBS"
 
-/**
- * CameraAbilitiesList:
- *
- * A list of supported camera models including their abilities. The internals
- * of this list are hidden - please use functions to access the list.
- **/
+/** \internal */
 struct _CameraAbilitiesList {
 	int count;
 	CameraAbilities *abilities;
@@ -79,14 +83,13 @@ static int gp_abilities_list_lookup_id (CameraAbilitiesList *, const char *);
 static int gp_abilities_list_sort      (CameraAbilitiesList *);
 
 /**
- * gp_abilities_list_new:
- * @list:
+ * Allocate the memory for a new abilities list.
+ * \param list CameraAbilitiesList object to initialize
+ * \return gphoto2 error code
  *
- * Allocates the memory for a new abilities list. You would then call
- * #gp_abilities_list_load in order to populate it.
- *
- * Return value: a gphoto2 error code
- **/
+ * You would then call gp_abilities_list_load() in order to 
+ * populate it.
+ */
 int
 gp_abilities_list_new (CameraAbilitiesList **list)
 {
@@ -107,13 +110,11 @@ gp_abilities_list_new (CameraAbilitiesList **list)
 }
 
 /**
- * gp_abilities_list_free:
- * @list: a #CameraAbilitiesList
+ * \brief Free the given CameraAbilitiesList object.
  *
- * Frees the @list.
- *
- * Return value: a gphoto2 error code
- **/
+ * \param list a CameraAbilitiesList
+ * \return a gphoto2 error code
+ */
 int
 gp_abilities_list_free (CameraAbilitiesList *list)
 {
@@ -262,16 +263,17 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 	return (GP_OK);
 }
 
+
 /**
- * gp_abilities_list_load:
- * @list: a #CameraAbilitiesList
- * @context: a #GPContext
+ * \brief Scans the system for camera drivers.
  *
- * Scans the system for camera drivers. All supported camera models will then
- * be added to the @list.
+ * \param list a CameraAbilitiesList
+ * \param context a GPContext
+ * \return a gphoto2 error code
  *
- * Return value: a gphoto2 error code
- **/
+ * All supported camera models will then be added to the list.
+ *
+ */
 int
 gp_abilities_list_load (CameraAbilitiesList *list, GPContext *context)
 {
@@ -284,6 +286,7 @@ gp_abilities_list_load (CameraAbilitiesList *list, GPContext *context)
 
 	return (GP_OK);
 }
+
 
 static int
 gp_abilities_list_detect_usb (CameraAbilitiesList *list,
@@ -359,17 +362,17 @@ gp_abilities_list_detect_usb (CameraAbilitiesList *list,
 	return res;
 }
 
+
 /**
- * gp_abilities_list_detect:
- * @list: a #CameraAbilitiesList
- * @info_list: a #GPPortInfoList
- * @l: a #CameraList
+ * \param list a CameraAbilitiesList
+ * \param info_list a GPPortInfoList
+ * \param l a CameraList
+ * \return a gphoto2 error code
  *
  * Tries to detect any camera connected to the computer using the supplied
- * @list of supported cameras and the supplied @info_list of ports.
+ * list of supported cameras and the supplied info_list of ports.
  *
- * Return value: a gphoto2 error code
- **/
+ */
 int
 gp_abilities_list_detect (CameraAbilitiesList *list,
 			  GPPortInfoList *info_list, CameraList *l,
@@ -420,11 +423,9 @@ gp_abilities_list_detect (CameraAbilitiesList *list,
 
 
 /**
- * remove_colon_from_string:
- * @str: a char * string
- *
- * Remove first colon from string, if any. Replace it by a space.
- **/
+ * \brief Remove first colon from string, if any. Replace it by a space.
+ * \param str a char * string
+ */
 static void
 remove_colon_from_string (char *str)
 {
@@ -437,16 +438,15 @@ remove_colon_from_string (char *str)
 
 
 /**
- * gp_abilities_list_append:
- * @list: a #CameraAbilitiesList
- * @abilities: #CameraAbilities
+ * \brief Append the abilities to the list.
+ * \param list  CameraAbilitiesList
+ * \param abilities  CameraAbilities
+ * \return a gphoto2 error code
  *
- * Appends the @abilities to the @list. This function is called by a camera
- * library on #camera_abilities in order to inform gphoto2 about a supported
- * camera model.
+ * This function is called by a camera library on camera_abilities()
+ * in order to inform libgphoto2 about a supported camera model.
  *
- * Return value: a gphoto2 error code
- **/
+ */
 int
 gp_abilities_list_append (CameraAbilitiesList *list, CameraAbilities abilities)
 {
@@ -476,14 +476,12 @@ gp_abilities_list_append (CameraAbilitiesList *list, CameraAbilities abilities)
 	return (GP_OK);
 }
 
+
 /**
- * gp_abilities_list_reset:
- * @list: a #CameraAbilitiesList
- *
- * Resets the list.
- *
- * Return value: a gphoto2 error code
- **/
+ * \brief Reset the list.
+ * \param list a CameraAbilitiesList
+ * \return a gphoto2 error code
+ */
 int
 gp_abilities_list_reset (CameraAbilitiesList *list)
 {
@@ -498,14 +496,12 @@ gp_abilities_list_reset (CameraAbilitiesList *list)
 	return (GP_OK);
 }
 
+
 /**
- * gp_abilities_list_count:
- * @list: a #CameraAbilitiesList
- *
- * Counts the entries in the supplied @list.
- *
- * Return value: The number of entries or a gphoto2 error code
- **/
+ * \brief Count the entries in the supplied list.
+ * \param a CameraAbilitiesList
+ * \return The number of entries or a gphoto2 error code
+ */
 int
 gp_abilities_list_count (CameraAbilitiesList *list)
 {
@@ -513,6 +509,7 @@ gp_abilities_list_count (CameraAbilitiesList *list)
 
 	return (list->count);
 }
+
 
 static int
 gp_abilities_list_sort (CameraAbilitiesList *list)
@@ -538,6 +535,7 @@ gp_abilities_list_sort (CameraAbilitiesList *list)
 	return (GP_OK);
 }
 
+
 static int
 gp_abilities_list_lookup_id (CameraAbilitiesList *list, const char *id)
 {
@@ -552,15 +550,13 @@ gp_abilities_list_lookup_id (CameraAbilitiesList *list, const char *id)
 	return (GP_ERROR);
 }
 
+
 /**
- * gp_abilities_list_lookup_model
- * @list: a #CameraAbilitiesList
- * @model: a camera model
- *
- * Searches the @list for an entry of given @model.
- *
- * Return value: Index of entry or gphoto2 error code
- **/
+ * \brief Search the list for an entry of given model name
+ * \param list a #CameraAbilitiesList
+ * \param model a camera model name
+ * \return Index of entry or gphoto2 error code
+ */
 int
 gp_abilities_list_lookup_model (CameraAbilitiesList *list, const char *model)
 {
@@ -578,18 +574,18 @@ gp_abilities_list_lookup_model (CameraAbilitiesList *list, const char *model)
 	return (GP_ERROR_MODEL_NOT_FOUND);
 }
 
+
 /**
- * gp_abilities_list_get_abilities:
- * @list: a #CameraAbilitiesList
- * @index: index
- * @abilities: #CameraAbilities
+ * \brief Retrieve the camera abilities of entry with supplied index number.
+ * \param list a CameraAbilitiesList
+ * \param index index
+ * \param abilities CameraAbilities
+ * \return a gphoto2 error code
  *
- * Retrieves the camera @abilities of entry with supplied @index. Typically,
- * you would call #gp_camera_set_abilities afterwards in order to prepare the
- * initialization of a camera.
- *
- * Return value: a gphoto2 error code
- **/
+ * Retrieves the camera @abilities of entry with supplied
+ * index number. Typically, you would call gp_camera_set_abilities()
+ * afterwards in order to prepare the initialization of a camera.
+ */
 int
 gp_abilities_list_get_abilities (CameraAbilitiesList *list, int index,
 				 CameraAbilities *abilities)
@@ -603,6 +599,7 @@ gp_abilities_list_get_abilities (CameraAbilitiesList *list, int index,
 
 	return (GP_OK);
 }
+
 
 /*
  * Local Variables:

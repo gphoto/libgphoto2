@@ -1,20 +1,22 @@
-/* gphoto2-camera.c
+/** \file gphoto2-camera.c
+ * \brief Implement Camera object representing a camera attached to the system.
  *
- * Copyright © 2000 Scott Fritzinger
+ * \author Copyright © 2000 Scott Fritzinger
+ * \author 2001-2002: Lutz Müller <lutz@users.sf.net>
  *
- * Contributions:
- * 	2001-2002: Lutz Müller <lutz@users.sf.net>
- *
+ * \par
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
+ * \par
  * This library is distributed in the hope that it will be useful, 
  * but WITHOUT ANY WARRANTY; without even the implied warranty of 
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details. 
  *
+ * \par
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
@@ -253,19 +255,21 @@ struct _CameraPrivateCore {
 	unsigned int           timeout_ids_len;
 };
 
+
 /**
- * gp_camera_exit:
- * @camera: a #Camera
- * @context: a #GPContext
+ * \brief Close connection to camera.
+ * \param camera a Camera object
+ * \param context a GPContext object
+ * \return a gphoto2 error code.
  *
  * Closes a connection to the camera and therefore gives other application
- * the possibility to access the camera, too. It is recommended that you 
- * call this function when you currently don't need the camera. The camera
- * will get reinitialized by #gp_camera_init automatically if you try to 
- * access the camera again.
+ * the possibility to access the camera, too.
  *
- * Return value: a gphoto2 error code.
- **/
+ * It is recommended that you 
+ * call this function when you currently don't need the camera. The camera
+ * will get reinitialized by gp_camera_init() automatically if you try to 
+ * access the camera again.
+ */
 int
 gp_camera_exit (Camera *camera, GPContext *context)
 {
@@ -310,14 +314,12 @@ gp_camera_exit (Camera *camera, GPContext *context)
 	return (GP_OK);
 }
 
+
 /**
- * gp_camera_new:
- * @camera:
- *
- * Allocates the memory for a #Camera.
- *
- * Return value: a gphoto2 error code
- **/
+ * \brief Allocates the memory for a Camera.
+ * \param camera The Camera:: object to initialize.
+ * \return a gphoto2 error code
+ */
 int
 gp_camera_new (Camera **camera)
 {
@@ -363,20 +365,20 @@ gp_camera_new (Camera **camera)
         return(GP_OK);
 }
 
+
 /**
- * gp_camera_set_abilities:
- * @camera: a #Camera
- * @abilities: the #CameraAbilities to be set
+ * \brief Sets the camera abilities. 
+ * \param camera: a #Camera
+ * \param abilities the #CameraAbilities to be set
+ * \return a gphoto2 error code
  *
- * Sets the camera abilities. You need to call this function before
- * calling #gp_camera_init the first time unless you want gphoto2 to autodetect 
- * cameras and choose the first detected one. By setting the @abilities, you
- * tell gphoto2 what model the @camera is and what camera driver should 
- * be used for accessing the @camera. You can get @abilities by calling
- * #gp_abilities_list_get_abilities.
- *
- * Return value: a gphoto2 error code
- **/
+ * You need to call this function before calling gp_camera_init() the
+ * first time unless you want gphoto2 to autodetect cameras and choose
+ * the first detected one. By setting the \c abilities, you 
+ * tell gphoto2 what model the \c camera is and what camera driver should 
+ * be used for accessing the \c camera. You can get \c abilities by calling
+ * gp_abilities_list_get_abilities().
+ */
 int
 gp_camera_set_abilities (Camera *camera, CameraAbilities abilities)
 {
@@ -397,15 +399,13 @@ gp_camera_set_abilities (Camera *camera, CameraAbilities abilities)
 	return (GP_OK);
 }
 
+
 /**
- * gp_camera_get_abilities:
- * @camera: a #Camera
- * @abilities:
- *
- * Retrieves the @abilities of the @camera. 
- *
- * Return value: a gphoto2 error code
- **/
+ * \brief Retrieve the \c abilities of the \c camera. 
+ * \param camera a #Camera
+ * \param abilities
+ * \return a gphoto2 error code
+ */
 int
 gp_camera_get_abilities (Camera *camera, CameraAbilities *abilities)
 {
@@ -416,6 +416,7 @@ gp_camera_get_abilities (Camera *camera, CameraAbilities *abilities)
 	return (GP_OK);
 }
 
+
 int
 gp_camera_get_port_info (Camera *camera, GPPortInfo *info)
 {
@@ -425,6 +426,7 @@ gp_camera_get_port_info (Camera *camera, GPPortInfo *info)
 
 	return (GP_OK);
 }
+
 
 int
 gp_camera_set_port_info (Camera *camera, GPPortInfo info)
@@ -445,21 +447,21 @@ gp_camera_set_port_info (Camera *camera, GPPortInfo info)
 	return (GP_OK);
 }
 
+
 /**
- * gp_camera_set_port_speed:
- * @camera: a #Camera
- * @speed: the speed
+ * \brief Set the camera speed.
+ * \param camera a Camera
+ * \param speed the speed
+ * \return a gphoto2 error code
  *
- * Sets the speed. This function is typically used prior first initialization 
+ * This function is typically used prior first initialization 
  * using #gp_camera_init for debugging purposes. Normally, a camera driver
  * will try to figure out the current speed of the camera and set the speed
  * to the optimal one automatically. Note that this function only works with 
  * serial ports. In other words, you have to set the camera's port to a 
  * serial one (using #gp_camera_set_port_path or #gp_camera_set_port_name)
  * prior calling this function.
- *
- * Return value: a gphoto2 error code
- **/
+ */
 int
 gp_camera_set_port_speed (Camera *camera, int speed)
 {
@@ -494,14 +496,12 @@ gp_camera_set_port_speed (Camera *camera, int speed)
 	return (GP_OK);
 }
 
+
 /** 
- * gp_camera_get_port_speed:
- * @camera: a #Camera
- *
- * Retrieves the current speed.
- *
- * Return value: The current speed or a gphoto2 error code
- **/
+ * \brief Retrieve the current speed.
+ * \param camera a Camera
+ * \return The current speed or a gphoto2 error code
+ */
 int
 gp_camera_get_port_speed (Camera *camera)
 {
@@ -510,14 +510,12 @@ gp_camera_get_port_speed (Camera *camera)
 	return (camera->pc->speed);
 }
 
+
 /**
- * gp_camera_ref:
- * @camera: a #Camera
- *
- * Increments the reference count of a @camera.
- *
- * Return value: a gphoto2 error code
- **/
+ * \brief Increment the reference count of a @camera.
+ * \param camera a Camera
+ * \return a gphoto2 error code
+ */
 int
 gp_camera_ref (Camera *camera)
 {
@@ -528,15 +526,15 @@ gp_camera_ref (Camera *camera)
 	return (GP_OK);
 }
 
+
 /**
- * gp_camera_unref:
- * @camera: a #Camera
+ * \brief Decrements the reference count of a Camera.
+ * \param camera a #Camera
+ * \return a gphoto2 error code
  *
- * Decrements the reference count of a @camera. If the reference count 
- * reaches %0, the @camera will be freed automatically.
- *
- * Return value: a gphoto2 error code
- **/
+ * If the reference count reaches %0, the \c camera will be freed 
+ * automatically.
+ */
 int
 gp_camera_unref (Camera *camera)
 {
@@ -561,15 +559,15 @@ gp_camera_unref (Camera *camera)
 	return (GP_OK);
 }
 
+
 /**
- * gp_camera_free:
- * @camera: a #Camera
+ * \brief Free the \c camera.
+ * \param camera a Camera
+ * \return a gphoto2 error code
  *
- * Frees the camera. This function should never be used. Please use
- * #gp_camera_unref instead.
- *
- * Return value: a gphoto2 error code
- **/
+ * \deprecated 
+ * This function should never be used. Please use gp_camera_unref() instead.
+ */
 int
 gp_camera_free (Camera *camera)
 {
@@ -612,21 +610,21 @@ gp_camera_free (Camera *camera)
 	return (GP_OK);
 }
 
+
 /**
- * gp_camera_init:
- * @camera: a #camera
- * @context: a #GPContext
+ * \brief Initiate a connection to the \c camera. 
+ * \param camera a camera
+ * \param context a GPContext
+ * \return a gphoto2 error code
  *
- * Initiates a connection to the camera. Before calling this function, the
+ * Before calling this function, the
  * @camera should be set up using #gp_camera_set_port_path or
  * #gp_camera_set_port_name and #gp_camera_set_abilities. If that has been
  * omitted, gphoto2 tries to autodetect any cameras and chooses the first one
  * if any cameras are found. It is generally a good idea to call
  * #gp_camera_exit after transactions have been completed in order to give
  * other applications the chance to access the camera, too.
- *
- * Return value: a gphoto2 error code
- **/
+ */
 int
 gp_camera_init (Camera *camera, GPContext *context)
 {
@@ -767,17 +765,16 @@ gp_camera_init (Camera *camera, GPContext *context)
 	return (GP_OK);
 }
 
+
 /**
- * gp_camera_get_config:
- * @camera: a #Camera
- * @window:
- * @context: a #GPContext
+ * \brief Retrieve a configuration \c window for the \c camera.
+ * \param camera a Camera
+ * \param window a CameraWidget
+ * \param context a GPContext
+ * \return gphoto2 error code
  *
- * Retrieves a configuration @window for the @camera. This window can be
- * used for construction of a configuration dialog.
- *
- * Return value: a gphoto2 error code
- **/
+ * This \c window can be used for construction of a configuration dialog.
+ */
 int
 gp_camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 {
@@ -798,6 +795,7 @@ gp_camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	return (GP_OK);
 }
 
+
 /**
  * gp_camera_set_config:
  * @camera: a #Camera
@@ -808,7 +806,7 @@ gp_camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
  * #gp_camera_get_config and passed to this function in order to adjust
  * the settings on the camera.
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int
 gp_camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
@@ -840,7 +838,7 @@ gp_camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
  * like manufacturer, pictures taken, or generally information that is
  * not configurable.
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int
 gp_camera_get_summary (Camera *camera, CameraText *summary, GPContext *context)
@@ -871,7 +869,7 @@ gp_camera_get_summary (Camera *camera, CameraText *summary, GPContext *context)
  * Retrieves the @manual for given @camera. This manual typically contains
  * information about using the camera.
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int
 gp_camera_get_manual (Camera *camera, CameraText *manual, GPContext *context)
@@ -902,7 +900,7 @@ gp_camera_get_manual (Camera *camera, CameraText *manual, GPContext *context)
  * Retrieves information about the camera driver. Typically, this information
  * contains name and address of the author, acknowledgements, etc.
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int
 gp_camera_get_about (Camera *camera, CameraText *about, GPContext *context)
@@ -935,7 +933,7 @@ gp_camera_get_about (Camera *camera, CameraText *about, GPContext *context)
  * The resulting file will be stored on the camera. The location gets stored
  * in @path. The file can then be downloaded using #gp_camera_file_get.
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int
 gp_camera_capture (Camera *camera, CameraCaptureType type,
@@ -959,15 +957,15 @@ gp_camera_capture (Camera *camera, CameraCaptureType type,
 
 /**
  * gp_camera_capture_preview:
- * @camera: a #Camera
- * @file: a #CameraFile
- * @context: a #GPContext
+ * \param camera: a #Camera
+ * \param file: a #CameraFile
+ * \param context: a #GPContext
  *
  * Captures a preview that won't be stored on the camera but returned in 
  * supplied @file. For example, you could use #gp_capture_preview for 
  * taking some sample pictures before calling #gp_capture.
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int
 gp_camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
@@ -993,14 +991,14 @@ gp_camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 
 /**
  * gp_camera_folder_list_files:
- * @camera: a #Camera
- * @folder: a folder
- * @list: a #CameraList
- * @context: a #GPContext
+ * \param camera: a #Camera
+ * \param folder: a folder
+ * \param list: a #CameraList
+ * \param context: a #GPContext
  *
  * Lists the files in supplied @folder.
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int
 gp_camera_folder_list_files (Camera *camera, const char *folder, 
@@ -1023,14 +1021,14 @@ gp_camera_folder_list_files (Camera *camera, const char *folder,
 
 /**
  * gp_camera_folder_list_folders:
- * @camera: a #Camera
- * @folder: a folder
- * @list: a #CameraList
- * @context: a #GPContext
+ * \param camera: a #Camera
+ * \param folder: a folder
+ * \param list: a #CameraList
+ * \param context: a #GPContext
  *
  * Lists the folders in supplied @folder.
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int
 gp_camera_folder_list_folders (Camera *camera, const char* folder, 
@@ -1053,13 +1051,13 @@ gp_camera_folder_list_folders (Camera *camera, const char* folder,
 
 /**
  * gp_camera_folder_delete_all:
- * @camera: a #Camera
- * @folder: a folder
- * @context: a #GPContext
+ * \param camera: a #Camera
+ * \param folder: a folder
+ * \param context: a #GPContext
  *
  * Deletes all files in a given @folder.
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int
 gp_camera_folder_delete_all (Camera *camera, const char *folder,
@@ -1080,14 +1078,14 @@ gp_camera_folder_delete_all (Camera *camera, const char *folder,
 
 /**
  * gp_camera_folder_put_file:
- * @camera: a #Camera
- * @folder: a folder
- * @file: a #CameraFile
- * @context: a #GPContext
+ * \param camera: a #Camera
+ * \param folder: a folder
+ * \param file: a #CameraFile
+ * \param context: a #GPContext
  *
  * Uploads a file into given @folder.
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int
 gp_camera_folder_put_file (Camera *camera, const char *folder,
@@ -1108,15 +1106,15 @@ gp_camera_folder_put_file (Camera *camera, const char *folder,
 
 /**
  * gp_camera_file_get_info:
- * @camera: a #Camera
- * @folder: a folder
- * @file: the name of the file
- * @info:
- * @context: a #GPContext
+ * \param camera: a #Camera
+ * \param folder: a folder
+ * \param file: the name of the file
+ * \param info:
+ * \param context: a #GPContext
  *
  * Retrieves information about a @file.
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int
 gp_camera_file_get_info (Camera *camera, const char *folder, 
@@ -1180,15 +1178,15 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 
 /**
  * gp_camera_file_set_info:
- * @camera: a #Camera
- * @folder: a folder
- * @file: the name of a file
- * @info: the #CameraFileInfo
- * @context: a #GPContext
+ * \param camera: a #Camera
+ * \param folder: a folder
+ * \param file: the name of a file
+ * \param info: the #CameraFileInfo
+ * \param context: a #GPContext
  *
  * Sets some file properties like name or permissions.
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int
 gp_camera_file_set_info (Camera *camera, const char *folder, 
@@ -1207,16 +1205,16 @@ gp_camera_file_set_info (Camera *camera, const char *folder,
 
 /**
  * gp_camera_file_get:
- * @camera: a #Camera
- * @folder: a folder
- * @file: the name of a file
- * @type: the #CameraFileType
- * @camera_file: a #CameraFile
- * @context: a #GPContext
+ * \param camera: a #Camera
+ * \param folder: a folder
+ * \param file: the name of a file
+ * \param type: the #CameraFileType
+ * \param camera_file: a #CameraFile
+ * \param context: a #GPContext
  *
  * Retrieves a @file from the @camera.
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int 
 gp_camera_file_get (Camera *camera, const char *folder, const char *file,
@@ -1250,14 +1248,14 @@ gp_camera_file_get (Camera *camera, const char *folder, const char *file,
 
 /**
  * gp_camera_file_delete:
- * @camera: a #Camera
- * @folder: a folder
- * @file: the name of a file
- * @context: a #GPContext
+ * \param camera: a #Camera
+ * \param folder: a folder
+ * \param file: the name of a file
+ * \param context: a #GPContext
  *
  * Deletes the @file from a @folder.
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int
 gp_camera_file_delete (Camera *camera, const char *folder, const char *file,
@@ -1278,14 +1276,14 @@ gp_camera_file_delete (Camera *camera, const char *folder, const char *file,
 
 /**
  * gp_camera_folder_make_dir:
- * @camera: a #Camera
- * @folder: the location where to create the new directory
- * @name: the name of the directory to be created
- * @context: a #GPContext
+ * \param camera: a #Camera
+ * \param folder: the location where to create the new directory
+ * \param name: the name of the directory to be created
+ * \param context: a #GPContext
  *
  * Creates a new directory called @name in given @folder.
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int
 gp_camera_folder_make_dir (Camera *camera, const char *folder,
@@ -1303,15 +1301,15 @@ gp_camera_folder_make_dir (Camera *camera, const char *folder,
 
 /**
  * gp_camera_folder_remove_dir:
- * @camera: a #Camera
- * @folder: the folder from which to remove the directory
- * @name: the name of the directory to be removed
- * @context: a #GPContext
+ * \param camera: a #Camera
+ * \param folder: the folder from which to remove the directory
+ * \param name: the name of the directory to be removed
+ * \param context: a #GPContext
  *
  * Removes an (empty) directory called @name from the given @folder.
  *
- * Return value: a gphoto2 error code
- **/
+ * \return a gphoto2 error code
+ */
 int
 gp_camera_folder_remove_dir (Camera *camera, const char *folder,
 			     const char *name, GPContext *context)
@@ -1328,17 +1326,17 @@ gp_camera_folder_remove_dir (Camera *camera, const char *folder,
 
 /**
  * gp_camera_set_timeout_funcs:
- * @camera: a #Camera
- * @start_func:
- * @stop_func:
- * @data:
+ * \param camera a Camera
+ * \param start_func
+ * \param stop_func
+ * \param data
  *
  * If your frontend has something like idle loops, it is recommended you
  * use #gp_camera_set_timeout_funcs in order to give the camera driver the
  * possibility to keep up the connection to the camera.
  *
- * Return value: a gphoto2 error code
- **/
+ * \return a gphoto2 error code
+ */
 void
 gp_camera_set_timeout_funcs (Camera *camera, CameraTimeoutStartFunc start_func,
 			     CameraTimeoutStopFunc stop_func,
@@ -1352,19 +1350,19 @@ gp_camera_set_timeout_funcs (Camera *camera, CameraTimeoutStartFunc start_func,
 	camera->pc->timeout_data = data;
 }
 
+
 /**
  * gp_camera_start_timeout:
- * @camera: a #Camera
- * @timeout: the number of seconds that should pass between each call to
- * 	     @func
- * @func: the function that should be called each @timeout seconds
+ * \param camera a #Camera
+ * \param timeout number of seconds that should pass between each call to
+ * 	     \c func
+ * \param func the function that should be called each \c timeout seconds
+ * \return The id of the background process or a gphoto2 error code
  *
- * This function should be called by the camera driver during #camera_init
+ * This function should be called by the camera driver during camera_init()
  * if the camera needs to be sent messages periodically in order to prevent
- * it to shut down.
- *
- * Return value: The id of the background process or a gphoto2 error code
- **/
+ * it from shutting down.
+ */
 int
 gp_camera_start_timeout (Camera *camera, unsigned int timeout,
 			 CameraTimeoutFunc func)
@@ -1398,15 +1396,16 @@ gp_camera_start_timeout (Camera *camera, unsigned int timeout,
 	return (id);
 }
 
+
 /**
- * gp_camera_stop_timeout:
- * @camera: a #Camera
- * @id: the id of the background process previously returned by 
- * 	#gp_camera_start_timeout
+ * \brief Stop periodic calls to keepalive function.
+ * \param camera a #Camera
+ * \param id the id of the background process previously returned by 
+ * 	gp_camera_start_timeout()
  *
  * Call this function in the camera driver if you want to stop a periodic
- * call to a function that has been started using #gp_camera_start_timeout.
- **/
+ * call to a function that has been started using gp_camera_start_timeout().
+ */
 void
 gp_camera_stop_timeout (Camera *camera, unsigned int id)
 {

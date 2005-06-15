@@ -1,4 +1,4 @@
-/* gphoto2-file.h
+/** \file gphoto2-file.h
  *
  * Copyright © 2000 Scott Fritzinger
  *
@@ -50,7 +50,11 @@ typedef enum {
 	GP_FILE_TYPE_EXIF
 } CameraFileType;
 
-/* Internals are private */
+/**
+ * \class CameraFile
+ *
+ * The internals of the \ref CameraFile struct are private.
+ */
 typedef struct _CameraFile CameraFile;
 
 int gp_file_new            (CameraFile **file);

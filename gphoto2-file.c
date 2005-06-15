@@ -1,21 +1,28 @@
-/* gphoto2-file.c
+/** \file gphoto2-file.c
  *
- * Copyright © 2000 Scott Fritzinger
+ * \author Copyright © 2000 Scott Fritzinger
  *
+ * \par
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
+ * \par
  * This library is distributed in the hope that it will be useful, 
  * but WITHOUT ANY WARRANTY; without even the implied warranty of 
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details. 
  *
+ * \par
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
+ *
+ * \note
+ * This file contains internal functions. Use of these functions from
+ * external software modules is considered <strong>deprecated</strong>.
  */
 
 #include "config.h"
@@ -37,11 +44,9 @@
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 #define CHECK_MEM(m)         {if (!(m)) return (GP_ERROR_NO_MEMORY);}
 
-/**
- * CameraFile:
- *
- * The internals of this struct are private.
- **/
+/*
+ * The internals of the CameraFile struct are private.
+ */
 struct _CameraFile {
         CameraFileType type;
         char mime_type [64];
