@@ -332,6 +332,9 @@
 
         <literallayout>
         $Log$
+        Revision 1.21  2005/06/21 16:45:13  swestin
+        More info on PowerShot S1 IS.
+
         Revision 1.20  2005/06/10 01:38:26  swestin
         More info on EOS 20D.
         Cross-referenced new command codes to old.
@@ -1045,6 +1048,7 @@ xx &lt;directory_name&gt; 00 00 00
               <row><entry>G2, D30, D60, 300D, S110, A10, A20, S30, S300</entry><entry>01 00 05 03</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
               <row><entry>300D</entry><entry>01 00 05 83</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
               <row><entry>G3, A60, A70, A75, A80, A300, A400, A510, S45, S50, S230, S400, SD200</entry><entry>01 06 15 83</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
+              <row><entry>S1 IS</entry><entry>01 06 15 83</entry><entry><emphasis>04 a9 30 85</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
               <row><entry>20D</entry><entry>01 06 15 83</entry><entry>0x80000175</entry><entry>0x800 (2048)</entry><entry>0x10000 (65536)</entry><entry>0xfd00 (64768)</entry><entry>0x10000 (65536)</entry></row>
               <row><entry>350D</entry><entry>01 06 15 83</entry><entry>0x80000189</entry><entry>0x800 (2048)</entry><entry>0x10000 (65536)</entry><entry>0xfd00 (64768)</entry><entry>0x10000 (65536)</entry></row>
               <row><entry>Optura 200 MC camcorder</entry><entry>03 05 04 81</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
@@ -1055,9 +1059,10 @@ xx &lt;directory_name&gt; 00 00 00
         </table>
 
         <para>In the older version of the protocol, the USB vendor and
-          product ID are contained in bytes 0x44-0x47 of this packet:
+          product ID are normally contained in bytes 0x44-0x47 of this packet:
           here 0x04A93043 for vendor 0x04a9, product 0x3043 identifies
-          this as a PowerShot S20. Unfortunately, the meaning of these
+          this as a PowerShot S20.</para>
+	<para>Unfortunately, the meaning of these
           bytes seems to have changed in the newer protocol; for an
           EOS 20D, we get 0x80000175, which is identical with bytes
           0x56-0x59 of a response to the <link
@@ -1066,6 +1071,9 @@ xx &lt;directory_name&gt; 00 00 00
           in each JPEG or CR2 file as a LONG value for tag 0x10 within
           the MakerNote. That may be a model identifier for the
           camera.</para>
+	<para>Even stranger, there seems to be a group of cameras
+	  (apparently using the older protocol) that all report 0x3085
+	  as the product ID, which is correct for the PowerShot G5.</para>
 
         <para>The bytes 0x48-0x57 also vary from camera to camera. I
         think they are 4-byte integers, and suspect that they specify
