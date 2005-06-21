@@ -290,6 +290,7 @@ const struct canonCamModelData models[] = {
         {"Canon:EOS Kiss Digital N (normal mode)",              CANON_CLASS_6,  0x04A9, 0x30ee, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB_CR2, SL_PICTURE, NULL},
         /* 30ef is EOS 350D/Digital Rebel XT/EOS Kiss Digital N in PTP mode. */
 #endif /* CANON_EXPERIMENTAL_20D */
+        {"Canon:PowerShot S2 IS (normal mode)",  CANON_CLASS_1,  0x04A9, 0x30f0, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
         {"Canon:PowerShot SD500 (normal mode)",  CANON_CLASS_1,  0x04A9, 0x30f2, CAP_NON, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:Digital IXUS 700 (normal mode)",  CANON_CLASS_1,  0x04A9, 0x30f2, CAP_NON, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
@@ -1188,7 +1189,9 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
                 status = canon_usb_list_all_dirs ( camera, &initial_state, &initial_state_len, context );
 
                 if ( status < 0 ) {
-                        gp_context_error (context, _("canon_int_capture_image: initial canon_usb_list_all_dirs() failed with status %i"), status );
+                        gp_context_error (context,
+                                          _("canon_int_capture_image: initial canon_usb_list_all_dirs() failed with status %li"),
+                                          (long)status );
                         return status;
                 }
 
@@ -2101,10 +2104,9 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 
                 GP_LOG (GP_LOG_DATA,
                         "canon_int_list_directory: "
-                        "reading dirent at position %i of %i (0x%x of 0x%x)",
-                        (pos - dirent_data), (end_of_data - dirent_data), (pos - dirent_data),
-                        (end_of_data - dirent_data)
-                        );
+                        "reading dirent at position %li of %li (0x%lx of 0x%lx)",
+                        (long)(pos - dirent_data), (long)(end_of_data - dirent_data),
+                        (long)(pos - dirent_data), (long)(end_of_data - dirent_data) );
 
                 if (pos + CANON_MINIMUM_DIRENT_SIZE > end_of_data) {
                         if (camera->port->type == GP_PORT_SERIAL) {
@@ -2116,23 +2118,24 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 
                                 if (temp_ch == end_of_data) {
                                         GP_DEBUG ("canon_int_list_directory: "
-                                                  "the last %i bytes were all 0 - ignoring.",
-                                                  temp_ch - pos);
+                                                  "the last %li bytes were all 0 - ignoring.",
+                                                  (long)(temp_ch - pos));
                                         break;
                                 } else {
                                         GP_DEBUG ("canon_int_list_directory: "
-                                                  "byte[%i=0x%x] == %i=0x%x", temp_ch - pos,
-                                                  temp_ch - pos, *temp_ch, *temp_ch);
+                                                  "byte[%li=0x%lx] == %i=0x%x", (long)(temp_ch - pos),
+                                                  (long)(temp_ch - pos), *temp_ch, *temp_ch);
                                         GP_DEBUG ("canon_int_list_directory: "
-                                                  "pos is %p, end_of_data is %p, temp_ch is %p - diff is 0x%x",
-                                                  pos, end_of_data, temp_ch, temp_ch - pos);
+                                                  "pos is %p, end_of_data is %p, temp_ch is %p - diff is 0x%lx",
+                                                  pos, end_of_data, temp_ch, (long)(temp_ch - pos));
                                 }
                         }
                         GP_DEBUG ("canon_int_list_directory: "
-                                  "dirent at position %i=0x%x of %i=0x%x is too small, "
-                                  "minimum dirent is %i bytes", (pos - dirent_data),
-                                  (pos - dirent_data), (end_of_data - dirent_data),
-                                  (end_of_data - dirent_data), CANON_MINIMUM_DIRENT_SIZE);
+                                  "dirent at position %li=0x%lx of %li=0x%lx is too small, "
+                                  "minimum dirent is %i bytes",
+                                  (long)(pos - dirent_data), (long)(pos - dirent_data),
+                                  (long)(end_of_data - dirent_data), (long)(end_of_data - dirent_data),
+                                  CANON_MINIMUM_DIRENT_SIZE);
                         gp_context_error (context,
                                           _("canon_int_list_directory: "
                                            "truncated directory entry encountered"));
@@ -2152,9 +2155,10 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 
                 if (temp_ch == end_of_data || *temp_ch != 0) {
                         GP_DEBUG ("canon_int_list_directory: "
-                                  "dirent at position %i of %i has invalid name in it."
-                                  "bailing out with what we've got.", (pos - dirent_data),
-                                  (end_of_data - dirent_data));
+                                  "dirent at position %li of %li has invalid name in it."
+                                  "bailing out with what we've got.",
+                                  (long)(pos - dirent_data),
+                                  (long)(end_of_data - dirent_data));
                         break;
                 }
                 dirent_name_len = strlen (dirent_name);
@@ -2165,9 +2169,10 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
                  */
                 if (dirent_name_len > 256) {
                         GP_DEBUG ("canon_int_list_directory: "
-                                  "the name in dirent at position %i of %i is too long. (%li bytes)."
-                                  "bailing out with what we've got.", (pos - dirent_data),
-                                  (end_of_data - dirent_data), (long)dirent_name_len);
+                                  "the name in dirent at position %li of %li is too long. (%li bytes)."
+                                  "bailing out with what we've got.",
+                                  (long)(pos - dirent_data), (long)(end_of_data - dirent_data),
+                                  (long)dirent_name_len);
                         break;
                 }
 
@@ -2311,8 +2316,8 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
                         } else {
                                 /* this case could mean that this was the last dirent */
                                 GP_DEBUG ("canon_int_list_directory: "
-                                          "dirent at position %i of %i has NULL name, skipping.",
-                                          (pos - dirent_data), (end_of_data - dirent_data));
+                                          "dirent at position %li of %li has NULL name, skipping.",
+                                          (long)(pos - dirent_data), (long)(end_of_data - dirent_data));
                         }
                 }
 
