@@ -43,6 +43,17 @@ uninstall-apidocs:
 clean-apidocs:
 	rm -rf $(DOXYGEN_OUTPUT_DIR)
 
+
+# if we ever have more targets, move those out...
+
+all-local: $(DOXYGEN_STAMPS)
+
+install-data-local: install-apidocs
+
+uninstall-local: uninstall-apidocs
+
+clean-local: clean-apidocs
+
 endif
 
 
@@ -54,13 +65,6 @@ EXTRA_DIST = Doxyfile.in README.apidocs $(HTML_APIDOC_DIR).tar.gz $(old_EXTRA_DI
 
 doc_DATA = $(DOXYGEN_FILES) README.apidocs
 
-all-local: $(DOXYGEN_STAMPS)
-
-install-data-local: install-apidocs
-
-uninstall-local: uninstall-apidocs
-
-clean-local: clean-apidocs
 
 CLEANFILES = $(DOXYGEN_FILES) $(DOXYGEN_STAMPS)
 
