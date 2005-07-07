@@ -1,3 +1,8 @@
+2005-07-07  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Moved one Olympus product id to sierra
+	  driver where it belongs.
+
 2005-05-25  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* library.c: Hub reverted the Kodak LS473 -> 743 change,

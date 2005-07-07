@@ -389,11 +389,6 @@ static struct {
 
 	{"Panasonic:DMC-FZ20",            0x04da, 0x2374, 0},
 
-	/* From Thomas Hackel */
-	{"Olympus:C-370Z",                0x07b4, 0x0109, 0},
-	{"Olympus:X-450",                 0x07b4, 0x0109, 0},
-	{"Olympus:D-535Z",                0x07b4, 0x0109, 0},
-
 	/* http://callendor.zongo.be/wiki/OlympusMju500 */
 	{"Olympus:mju 500",               0x07b4, 0x0113, 0},
 	/* From VICTOR <viaaurea@yahoo.es> */
