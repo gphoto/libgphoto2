@@ -1,3 +1,7 @@
+2005-07-07  Marcus Meissner  <marcus@jet.franken.de>
+
+	* sierra.c: Moved new Olympus entries prodid 0x109 here (from ptp2).
+
 2005-06-10  Marcus Meissner  <marcus@jet.franken.de>
 
 	* sierra.c: Added Nikon Coolpix 4300 in wrapper modce.
