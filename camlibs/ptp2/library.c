@@ -2399,6 +2399,50 @@ _put_CaptureMode(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval
 	return (GP_ERROR);
 }
 
+static struct deviceproptableu16 focus_metering[] = {
+	{ N_("Dynamic Area"),	0x0002, 0 },
+	{ N_("Single Area"),	0x8010, PTP_VENDOR_NIKON},
+	{ N_("Closest Subject"),0x8011, PTP_VENDOR_NIKON},
+};
+
+static int
+_get_FocusMetering(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+	int i;
+	char buf[20];
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
+		return (GP_ERROR);
+	if (dpd->DataType != PTP_DTC_UINT16)
+		return (GP_ERROR);
+	sprintf(buf, "unknown %04x", dpd->CurrentValue.u16);
+	gp_widget_set_value (*widget, buf);
+	for (i=0;i<sizeof (focus_metering)/sizeof (focus_metering[0]);i++) {
+		gp_widget_add_choice (*widget, _(focus_metering[i].label));
+		if (focus_metering[i].value == dpd->CurrentValue.u16)
+			gp_widget_set_value (*widget, _(focus_metering[i].label));
+	}
+	return (GP_OK);
+}
+
+static int
+_put_FocusMetering(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+	char *value;
+	int i, ret;
+
+	ret = gp_widget_get_value (widget, &value);
+	if (ret != GP_OK)
+		return ret;
+	for (i=0;i<sizeof (focus_metering)/sizeof (focus_metering[0]);i++) {
+		if (!strcmp (value, _(focus_metering[i].label))) {
+			propval->u16 = focus_metering[i].value;
+			return (GP_OK);
+		}
+	}
+	return (GP_ERROR);
+}
+
 
 static struct deviceproptableu8 canon_macromode[] = {
 	{ N_("Off"),		0x01, 0 },
@@ -2772,6 +2816,7 @@ static struct submenu image_settings_menu[] = {
         { N_("Exposure Time"), "exptime", PTP_DPC_ExposureTime, 0, PTP_DTC_UINT32, _get_ExpTime, _put_ExpTime},
         { N_("Exposure Program"), "expprogram", PTP_DPC_ExposureProgramMode, 0, PTP_DTC_UINT16, _get_ExposureProgram, _put_ExposureProgram},
         { N_("Still Capture Mode"), "capturemode", PTP_DPC_StillCaptureMode, 0, PTP_DTC_UINT16, _get_CaptureMode, _put_CaptureMode},
+        { N_("Focus Metering Mode"), "focusmetermode", PTP_DPC_FocusMeteringMode, 0, PTP_DTC_UINT16, _get_FocusMetering, _put_FocusMetering},
         { N_("ISO Speed"), "iso", PTP_DPC_CANON_ISOSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ISO, _put_Canon_ISO},
         { N_("Macro Mode"), "macromode", PTP_DPC_CANON_MacroMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_Macro, _put_Canon_Macro},
 	{ N_("WhiteBalance"), "whitebalance", PTP_DPC_CANON_WhiteBalance, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_WhiteBalance, _put_Canon_WhiteBalance},
