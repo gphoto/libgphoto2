@@ -1,3 +1,14 @@
+2005-07-08  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Borrowed a Nikon D70 for a day
+	  (thanks AJ!) and implemented:
+
+	  F-Number, Focal Length, Exposure Metering Mode,
+	  Focus Metering Mode, Flash Mode, Exposure Time,
+	  Exposure Program Mode, Exposure Index (ISO),
+	  Still Capture Mode, AF Illumination (dont know what
+	  this is), AF Beep Mode.
+
 2005-07-07  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Moved one Olympus product id to sierra
