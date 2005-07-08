@@ -2181,6 +2181,46 @@ _put_Canon_ISO(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) 
 	return (GP_ERROR);
 }
 
+static int
+_get_ISO(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+	int i;
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
+		return (GP_ERROR);
+	if (dpd->DataType != PTP_DTC_UINT16)
+		return (GP_ERROR);
+
+        for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
+		char	buf[20];
+
+		sprintf(buf,"%d",dpd->FORM.Enum.SupportedValue[i].u16);
+                gp_widget_add_choice (*widget,buf);
+		if (dpd->FORM.Enum.SupportedValue[i].u16 == dpd->CurrentValue.u16)
+                	gp_widget_set_value (*widget,buf);
+        }
+	return (GP_OK);
+}
+
+static int
+_put_ISO(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval)
+{
+	int i, ret;
+	char *value;
+	unsigned int	u;
+
+	ret = gp_widget_get_value (widget, &value);
+	if (ret != GP_OK)
+		return ret;
+
+	if (sscanf(value, "%ud", &u)) {
+		propval->u16 = u;
+		return GP_OK;
+	}
+	return GP_ERROR;
+}
+
 static struct deviceproptableu8 canon_macromode[] = {
 	{ N_("Off"),		0x01, 0 },
 	{ N_("Macro"),		0x03, 0 },
@@ -2548,6 +2588,7 @@ static struct submenu image_settings_menu[] = {
         { N_("Image Quality"), "imgquality", PTP_DPC_CANON_ImageQuality, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_Quality, _put_Canon_Quality},
         { N_("Image Size"), "imgsize", PTP_DPC_ImageSize, 0, PTP_DTC_STR, _get_ImageSize, _put_ImageSize},
         { N_("Image Size"), "imgsize", PTP_DPC_CANON_ImageSize, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_Size, _put_Canon_Size},
+        { N_("ISO Speed"), "iso", PTP_DPC_ExposureIndex, 0, PTP_DTC_UINT16, _get_ISO, _put_ISO},
         { N_("ISO Speed"), "iso", PTP_DPC_CANON_ISOSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ISO, _put_Canon_ISO},
         { N_("Macro Mode"), "macromode", PTP_DPC_CANON_MacroMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_Macro, _put_Canon_Macro},
 	{ N_("WhiteBalance"), "whitebalance", PTP_DPC_CANON_WhiteBalance, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_WhiteBalance, _put_Canon_WhiteBalance},
