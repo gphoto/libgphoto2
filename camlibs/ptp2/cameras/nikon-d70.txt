@@ -151,3 +151,274 @@ Device Properties Supported:
   0xd1b0
   0xd1c0
   0xd1c1
+
+v2 firmware:
+
+Device info:
+Manufacturer: Nikon Corporation
+  model: D70
+  device version: V2.00
+  serial number: '(null)'
+Vendor extension ID: 0x0000000a
+Vendor extension description: Nikon PTP Extensions
+Supported operations:
+  0x1001
+  0x1002
+  0x1003
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100a
+  0x100b
+  0x100c
+  0x100d
+  0x100e
+  0x100f
+  0x1014
+  0x1015
+  0x1016
+  0x101b
+  0x90c0
+  0x90c1
+  0x90c2
+  0x90c3
+  0x90c4
+  0x90c5
+  0x90c6
+  0x90c7
+  0x90c8
+  0x90c9
+Events Supported:
+  0x4001
+  0x4002
+  0x4004
+  0x4005
+  0x4006
+  0x4009
+  0x400a
+  0x400c
+  0x400d
+  0xc101
+  0xc102
+Device Properties Supported:
+  0x5001
+  0x5003
+  0x5004
+  0x5005
+  0x5007
+  0x5008
+  0x500a
+  0x500b
+  0x500c
+  0x500d
+  0x500e
+  0x500f
+  0x5010
+  0x5011
+  0x5013
+  0x5018
+  0x501c
+  0xd017
+  0xd018
+  0xd019
+  0xd01a
+  0xd01b
+  0xd01c
+  0xd01d
+  0xd01f
+  0xd025
+  0xd026
+  0xd02a
+  0xd02b
+  0xd02c
+  0xd02d
+  0xd045
+  0xd04f
+  0xd054
+  0xd056
+  0xd058
+  0xd059
+  0xd05e
+  0xd05f
+  0xd062
+  0xd063
+  0xd064
+  0xd06b
+  0xd06c
+  0xd075
+  0xd078
+  0xd07a
+  0xd086
+  0xd08a
+  0xd090
+  0xd091
+  0xd092
+  0xd0c0
+  0xd0c2
+  0xd0c3
+  0xd0c4
+  0xd0c5
+  0xd0e0
+  0xd0e1
+  0xd0e2
+  0xd0e3
+  0xd0e4
+  0xd0e5
+  0xd0e6
+  0xd100
+  0xd101
+  0xd102
+  0xd103
+  0xd104
+  0xd105
+  0xd106
+  0xd108
+  0xd109
+  0xd10a
+  0xd10d
+  0xd10e
+  0xd10b
+  0xd120
+  0xd121
+  0xd122
+  0xd124
+  0xd125
+  0xd126
+  0xd140
+  0xd142
+  0xd160
+  0xd161
+  0xd163
+  0xd164
+  0xd165
+  0xd166
+  0xd167
+  0xd168
+  0xd169
+  0xd16b
+  0xd16c
+  0xd16d
+  0xd16e
+  0xd180
+  0xd190
+  0xd1b0
+  0xd1c0
+  0xd1c1
+
+Camera summary:
+Model: D70
+  device version: V2.00
+  serial number:  (null)
+Vendor extension ID: 0x0000000a
+Vendor extension description: Nikon PTP Extensions
+Battery Level(0x5001):(read only) (type=0x2) Range [0 - 100, step 1] value: 100% (100)
+Image Size(0x5003):(readwrite) (type=0xffff) Enumeration [
+	'3008x2000',
+	'2240x1488',
+	'1504x1000'
+	] value: '3008x2000'
+Compression Setting(0x5004):(readwrite) (type=0x2) Enumeration [0,1,2,4,5] value: JPEG Fine (2)
+White Balance(0x5005):(readwrite) (type=0x4) Enumeration [2,4,5,6,7,32784,32785,32787] value: Auto (2)
+F-Number(0x5007):(readwrite) (type=0x4) Enumeration [350,400,450,500,560,630,710,800,900,1000,1100,1300,1400,1600,1800,2000,2200] value: f/3.5 (350)
+Focal Length(0x5008):(read only) (type=0x6) Range [1800 - 7000, step 1] value: 18 mm (1800)
+Focus Mode(0x500a):(read only) (type=0x4) Enumeration [1,32784,32785] value: AF-S (32784)
+Exposure Metering Mode(0x500b):(readwrite) (type=0x4) Enumeration [2,3,4] value: Matrix (3)
+Flash Mode(0x500c):(readwrite) (type=0x4) Enumeration [4,32784,32785,32786,32787] value: Default (32784)
+Exposure Time(0x500d):(read only) (type=0x6) Enumeration [1,2,3,4,5,6,8,10,12,15,20,25,31,40,50,62,80,100,125,166,200,250,333,400,500,666,769,1000,1250,1666,2000,2500,3333,4000,5000,6250,7692,10000,13000,16000,20000,25000,30000,40000,50000,60000,80000,100000,130000,150000,200000,250000,300000] value: 0.017 sec (1666)
+Exposure Program Mode(0x500e):(read only) (type=0x4) Enumeration [1,2,3,4,32784,32785,32786,32787,32788,32789,32790] value: P (2)
+Exposure Index (film speed ISO)(0x500f):(readwrite) (type=0x4) Enumeration [200,250,320,400,500,640,800,1000,1250,1600] value: ISO 200 (200)
+Exposure Bias Compensation(0x5010):(readwrite) (type=0x3) Enumeration [-5000,-4666,-4333,-4000,-3666,-3333,-3000,-2666,-2333,-2000,-1666,-1333,-1000,-666,-333,0,333,666,1000,1333,1666,2000,2333,2666,3000,3333,3666,4000,4333,4666,5000] value: 0.0 stops (0)
+Date Time(0x5011):(readwrite) (type=0xffff) '20050708T100610'
+Still Capture Mode(0x5013):(readwrite) (type=0x4) Enumeration [1,2,32785,32787,32788] value: Single Shot (1)
+Burst Number(0x5018):(readwrite) (type=0x4) Range [1 - 49, step 1] value: 1
+Focus Metering Mode(0x501c):(readwrite) (type=0x4) Enumeration [2,32784,32785] value: Single Area (32784)
+Auto White Balance Bias(0xd017):(readwrite) (type=0x1) Range [-3 - 3, step 1] value: 0
+Tungsten White Balance Bias(0xd018):(readwrite) (type=0x1) Range [-3 - 3, step 1] value: 0
+Flourescent White Balance Bias(0xd019):(readwrite) (type=0x1) Range [-3 - 3, step 1] value: 0
+Daylight White Balance Bias(0xd01a):(readwrite) (type=0x1) Range [-3 - 3, step 1] value: 0
+Flash White Balance Bias(0xd01b):(readwrite) (type=0x1) Range [-3 - 3, step 1] value: 0
+Cloudy White Balance Bias(0xd01c):(readwrite) (type=0x1) Range [-3 - 3, step 1] value: 0
+Shady White Balance Bias(0xd01d):(readwrite) (type=0x1) Range [-3 - 4, step 1] value: 0
+Property 0xd01f:(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
+Property 0xd025:(read only) (type=0x6) 33685926
+Property 0xd026:(read only) (type=0x6) 33685926
+Sharpening(0xd02a):(readwrite) (type=0x2) Range [0 - 6, step 1] value: 0
+Tone Compensation(0xd02b):(readwrite) (type=0x2) Range [0 - 6, step 1] value: 0
+Colour Mode(0xd02c):(readwrite) (type=0x2) Range [0 - 2, step 1] value: sRGB (0)
+Hue Adjustment(0xd02d):(readwrite) (type=0x1) Range [-9 - 9, step 3] value: 0
+Property 0xd045:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Focus Area(0xd04f):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Auto ISO(0xd054):(readwrite) (type=0x2) Range [0 - 1, step 1] value: Off (0)
+Exposure Step(0xd056):(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
+Exposure Compensation(0xd058):(readwrite) (type=0x2) Range [0 - 1, step 1] value: Off (0)
+Centre Weight Area(0xd059):(readwrite) (type=0x2) Range [0 - 3, step 1] value: 8 mm (1)
+Exposure Lock(0xd05e):(readwrite) (type=0x2) Range [0 - 1, step 1] value: Off (0)
+Focus Lock(0xd05f):(readwrite) (type=0x2) Range [0 - 5, step 1] value: 0
+Auto Meter Off Time(0xd062):(readwrite) (type=0x2) Range [0 - 4, step 1] value: 1
+Self Timer Delay(0xd063):(readwrite) (type=0x2) Range [0 - 3, step 1] value: 2
+LCD Off Time(0xd064):(readwrite) (type=0x2) Range [0 - 4, step 1] value: 1
+Long Exposure Noise Reduction(0xd06b):(readwrite) (type=0x2) Range [0 - 1, step 1] value: Off (0)
+File Number Sequencing(0xd06c):(readwrite) (type=0x2) Range [0 - 2, step 1] value: On (1)
+Flash Shutter Speed(0xd075):(readwrite) (type=0x2) Range [0 - 11, step 1] value: 0
+Auto Bracket Set(0xd078):(readwrite) (type=0x2) Range [0 - 3, step 1] value: 0
+Auto Bracket Order(0xd07a):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Reverse Command Dials(0xd086):(readwrite) (type=0x2) Range [0 - 1, step 1] value: Off (0)
+No CF Card Release(0xd08a):(readwrite) (type=0x2) Range [0 - 1, step 1] value: Off (1)
+Image Comment String(0xd090):(readwrite) (type=0xffff) '                                    '
+Property 0xd091:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Auto Image Rotation(0xd092):(readwrite) (type=0x2) Range [0 - 1, step 1] value: On (0)
+Exposure Bracketing(0xd0c0):(readwrite) (type=0x2) Range [0 - 1, step 1] value: Off (0)
+Exposure Bracketing Number(0xd0c2):(readwrite) (type=0x2) Range [0 - 2, step 1] value: 2
+Property 0xd0c3:(read only) (type=0x2) Range [1 - 3, step 1] value: 1
+Property 0xd0c4:(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
+Property 0xd0c5:(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
+Lens ID(0xd0e0):(read only) (type=0x2) AF-S Nikkor 18-70mm 1:3.5-4.5G ED DX (127)
+Property 0xd0e1:(read only) (type=0x2) Range [0 - 1, step 1] value: 1
+Property 0xd0e2:(read only) (type=0x2) 3
+Min. Focal Length(0xd0e3):(read only) (type=0x6) 18 mm (1800)
+Max. Focal Length(0xd0e4):(read only) (type=0x6) 70 mm (7000)
+Max. Aperture at Min. Focal Length(0xd0e5):(read only) (type=0x4) f/3.5 (350)
+Max. Aperture at Max. Focal Length(0xd0e6):(read only) (type=0x4) f/4.5 (450)
+Property 0xd100:(read only) (type=0x6) Enumeration [73536,71936,70536,69536,68736,68036,67536,67136,66786,66536,66336,66176,66036,65936,65856,65786,65736,65696,65661,65636,65616,65596,65586,65576,65566,65561,65556,65551,65549,65546,65544,65542,65541,65540,65539,655385,65538,655376,655373,65537,851978,1048586,131073,1638410,196609,262145,327681,393217,524289,655361,851969,983041,1310721,1638401,1966081] value: 65544
+Property 0xd101:(read only) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xd102:(read only) (type=0x2) 0
+Maximum Shots(0xd103):(read only) (type=0x2) Range [0 - 49, step 1] value: 9
+Property 0xd104:(read only) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xd105:(read only) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xd106:(read only) (type=0x2) Range [0 - 1, step 1] value: 0
+Active AF Sensor(0xd108):(readwrite) (type=0x2) Range [0 - 4, step 1] value: Centre (0)
+Property 0xd109:(readwrite) (type=0x1) Range [-30 - 30, step 2] value: 0
+Exposure Meter(0xd10a):(read only) (type=0x1) Range [-128 - 127, step 1] value: 0.0 stops (0)
+Property 0xd10d:(read only) (type=0xffff) 'NO= 3003d00a        '
+Property 0xd10e:(read only) (type=0x2) Range [0 - 2, step 1] value: 0
+Property 0xd10b:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xd120:(read only) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xd121:(read only) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xd122:(read only) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xd124:(read only) (type=0x1) Range [-18 - 18, step 1] value: 0
+Property 0xd125:(read only) (type=0x2) Range [0 - 7, step 1] value: 1
+Flash Exposure Compensation(0xd126):(readwrite) (type=0x1) Range [-18 - 6, step 2] value: 0.0 stops (0)
+Property 0xd140:(readwrite) (type=0x2) Range [0 - 7, step 1] value: 0
+Property 0xd142:(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
+AF Beep Mode(0xd160):(readwrite) (type=0x2) Range [0 - 1, step 1] value: Off (1)
+??? AF Related(0xd161):(readwrite) (type=0x2) Range [0 - 1, step 1] value: Off (0)
+AF Lamp(0xd163):(readwrite) (type=0x2) Range [0 - 1, step 1] value: On (0)
+Auto ISO P/A/DVP Setting(0xd164):(readwrite) (type=0x2) Range [0 - 12, step 1] value: 2
+Image Review(0xd165):(readwrite) (type=0x2) Range [0 - 1, step 1] value: On (0)
+AF Area Illumination(0xd166):(readwrite) (type=0x2) Range [0 - 2, step 1] value: Auto (0)
+Flash Mode(0xd167):(readwrite) (type=0x2) Range [0 - 2, step 1] value: iTTL (0)
+Property 0xd168:(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
+Flash Sign(0xd169):(readwrite) (type=0x2) Range [0 - 1, step 1] value: On (0)
+Remote Timeout(0xd16b):(readwrite) (type=0x2) Range [0 - 3, step 1] value: 1 min (0)
+Viewfinder Grid Display(0xd16c):(readwrite) (type=0x2) Range [0 - 1, step 1] value: On (1)
+Flash Power(0xd16d):(readwrite) (type=0x2) Range [0 - 4, step 1] value: Full (0)
+Property 0xd16e:(readwrite) (type=0x2) Range [0 - 7, step 1] value: 0
+Property 0xd180:(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
+Property 0xd190:(readwrite) (type=0x2) Range [0 - 12, step 2] value: 6
+Low Light(0xd1b0):(read only) (type=0x2) Range [0 - 4, step 1] value: No (0)
+Flash Open(0xd1c0):(read only) (type=0x2) Range [0 - 1, step 1] value: No (0)
+Flash Charged(0xd1c1):(read only) (type=0x2) Range [0 - 1, step 1] value: No (0)
+
