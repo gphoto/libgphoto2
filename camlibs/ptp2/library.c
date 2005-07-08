@@ -2444,51 +2444,6 @@ _put_FocusMetering(Camera* camera, CameraWidget *widget, PTPPropertyValue *propv
 }
 
 
-static struct deviceproptableu16 focus_mode[] = {
-	{ N_("Manual Focus"),	0x0001, 0 },
-	{ N_("AF-S"),		0x8010, PTP_VENDOR_NIKON},
-	{ N_("AF-C"),		0x8011, PTP_VENDOR_NIKON},
-};
-
-static int
-_get_FocusMode(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
-	int i;
-	char buf[20];
-
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
-		return (GP_ERROR);
-	if (dpd->DataType != PTP_DTC_UINT16)
-		return (GP_ERROR);
-	sprintf(buf, "unknown %04x", dpd->CurrentValue.u16);
-	gp_widget_set_value (*widget, buf);
-	for (i=0;i<sizeof (focus_mode)/sizeof (focus_mode[0]);i++) {
-		gp_widget_add_choice (*widget, _(focus_mode[i].label));
-		if (focus_mode[i].value == dpd->CurrentValue.u16)
-			gp_widget_set_value (*widget, _(focus_mode[i].label));
-	}
-	return (GP_OK);
-}
-
-static int
-_put_FocusMode(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
-	char *value;
-	int i, ret;
-
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK)
-		return ret;
-	for (i=0;i<sizeof (focus_mode)/sizeof (focus_mode[0]);i++) {
-		if (!strcmp (value, _(focus_mode[i].label))) {
-			propval->u16 = focus_mode[i].value;
-			return (GP_OK);
-		}
-	}
-	return (GP_ERROR);
-}
-
-
 static struct deviceproptableu16 flash_mode[] = {
 	{ N_("Default"),			0x8010, PTP_VENDOR_NIKON},
 	{ N_("Red-eye Reduction"),		0x0004, 0 },
@@ -2534,6 +2489,48 @@ _put_FlashMode(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) 
 	}
 	return (GP_ERROR);
 }
+
+static struct deviceproptableu8 nikon_afareaillum[] = {
+      { N_("Auto"),		0, 0 },
+      { N_("Off"),		1, 0 },
+      { N_("On"),		2, 0 },
+};
+
+static int
+_get_Nikon_AFAreaIllum(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+	int i;
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	if (!(dpd->FormFlag & PTP_DPFF_Range))
+		return (GP_ERROR);
+	if (dpd->DataType != PTP_DTC_UINT8)
+		return (GP_ERROR);
+	for (i=0;i<sizeof (nikon_afareaillum)/sizeof (nikon_afareaillum[0]);i++) {
+		gp_widget_add_choice (*widget, _(nikon_afareaillum[i].label));
+		if (nikon_afareaillum[i].value == dpd->CurrentValue.u8)
+			gp_widget_set_value (*widget, _(nikon_afareaillum[i].label));
+	}
+	return (GP_OK);
+}
+
+static int
+_put_Nikon_AFAreaIllum(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+	char *value;
+	int i, ret;
+
+	ret = gp_widget_get_value (widget, &value);
+	if (ret != GP_OK)
+		return ret;
+	for (i=0;i<sizeof (nikon_afareaillum)/sizeof (nikon_afareaillum[0]);i++) {
+		if (!strcmp (value, _(nikon_afareaillum[i].label))) {
+			propval->u8 = nikon_afareaillum[i].value;
+			return (GP_OK);
+		}
+	}
+	return (GP_ERROR);
+}
+
 
 
 static struct deviceproptableu8 canon_macromode[] = {
@@ -2897,29 +2894,17 @@ static struct submenu camera_settings_menu[] = {
 	{ NULL },
 };
 
+/* think of this as properties of the "film" */
 static struct submenu image_settings_menu[] = {
         { N_("Long Exp Noise Reduction"), "longexpnr", PTP_DPC_NIKON_D4LongExposureNoiseReduction, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
         { N_("Image Quality"), "imgquality", PTP_DPC_CompressionSetting, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Compression, _put_Compression},
         { N_("Image Quality"), "imgquality", PTP_DPC_CANON_ImageQuality, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_Quality, _put_Canon_Quality},
         { N_("Image Size"), "imgsize", PTP_DPC_ImageSize, 0, PTP_DTC_STR, _get_ImageSize, _put_ImageSize},
         { N_("Image Size"), "imgsize", PTP_DPC_CANON_ImageSize, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_Size, _put_Canon_Size},
-        { N_("F Number"), "f-number", PTP_DPC_FNumber, 0, PTP_DTC_UINT16, _get_FNumber, _put_FNumber},
-        { N_("ISO Speed"), "iso", PTP_DPC_ExposureIndex, 0, PTP_DTC_UINT16, _get_ISO, _put_ISO},
-        { N_("Exposure Time"), "exptime", PTP_DPC_ExposureTime, 0, PTP_DTC_UINT32, _get_ExpTime, _put_ExpTime},
-        { N_("Exposure Program"), "expprogram", PTP_DPC_ExposureProgramMode, 0, PTP_DTC_UINT16, _get_ExposureProgram, _put_ExposureProgram},
-        { N_("Still Capture Mode"), "capturemode", PTP_DPC_StillCaptureMode, 0, PTP_DTC_UINT16, _get_CaptureMode, _put_CaptureMode},
-        { N_("Focus Metering Mode"), "focusmetermode", PTP_DPC_FocusMeteringMode, 0, PTP_DTC_UINT16, _get_FocusMetering, _put_FocusMetering},
-        { N_("Focus Mode"), "focusmode", PTP_DPC_FocusMode, 0, PTP_DTC_UINT16, _get_FocusMode, _put_FocusMode},
-        { N_("Flash Mode"), "flash", PTP_DPC_FlashMode, 0, PTP_DTC_UINT16, _get_FlashMode, _put_FlashMode},
         { N_("ISO Speed"), "iso", PTP_DPC_CANON_ISOSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ISO, _put_Canon_ISO},
-        { N_("Macro Mode"), "macromode", PTP_DPC_CANON_MacroMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_Macro, _put_Canon_Macro},
 	{ N_("WhiteBalance"), "whitebalance", PTP_DPC_CANON_WhiteBalance, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_WhiteBalance, _put_Canon_WhiteBalance},
-	{ N_("Metering Mode"), "meteringmode", PTP_DPC_CANON_MeteringMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_MeteringMode, _put_Canon_MeteringMode},
 	{ N_("WhiteBalance"), "whitebalance", PTP_DPC_WhiteBalance, 0, PTP_DTC_UINT16, _get_WhiteBalance, _put_WhiteBalance},
 	{ N_("Photo Effect"), "photoeffect", PTP_DPC_CANON_PhotoEffect, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_PhotoEffect, _put_Canon_PhotoEffect},
-	{ N_("Aperture"), "aperture", PTP_DPC_CANON_Aperture, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_Aperture, _put_Canon_Aperture},
-	{ N_("Focusing Point"), "focusingpoint", PTP_DPC_CANON_FocusingPoint, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_FocusingPoint, _put_Canon_FocusingPoint},
-	{ N_("Shutter Speed"), "shutterspeed", PTP_DPC_CANON_ShutterSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ShutterSpeed, _put_Canon_ShutterSpeed},
         { NULL },
 };
 
@@ -2928,6 +2913,19 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Assist Light"), "assistlight", PTP_DPC_CANON_AssistLight, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_AssistLight, _put_Canon_AssistLight},
 	{ N_("Exposure Compensation"), "exposurecompensation", PTP_DPC_CANON_ExpCompensation, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_ExpCompensation, _put_Canon_ExpCompensation},
 	{ N_("Flash"), "flash", PTP_DPC_CANON_FlashMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_FlashMode, _put_Canon_FlashMode},
+	{ N_("AF Area Illumination"), "af-area-illumination", PTP_DPC_NIKON_AFAreaIllumination, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_AFAreaIllum, _put_Nikon_AFAreaIllum},
+        { N_("F Number"), "f-number", PTP_DPC_FNumber, 0, PTP_DTC_UINT16, _get_FNumber, _put_FNumber},
+        { N_("ISO Speed"), "iso", PTP_DPC_ExposureIndex, 0, PTP_DTC_UINT16, _get_ISO, _put_ISO},
+        { N_("Exposure Time"), "exptime", PTP_DPC_ExposureTime, 0, PTP_DTC_UINT32, _get_ExpTime, _put_ExpTime},
+        { N_("Exposure Program"), "expprogram", PTP_DPC_ExposureProgramMode, 0, PTP_DTC_UINT16, _get_ExposureProgram, _put_ExposureProgram},
+        { N_("Still Capture Mode"), "capturemode", PTP_DPC_StillCaptureMode, 0, PTP_DTC_UINT16, _get_CaptureMode, _put_CaptureMode},
+        { N_("Focus Metering Mode"), "focusmetermode", PTP_DPC_FocusMeteringMode, 0, PTP_DTC_UINT16, _get_FocusMetering, _put_FocusMetering},
+        { N_("Flash Mode"), "flash", PTP_DPC_FlashMode, 0, PTP_DTC_UINT16, _get_FlashMode, _put_FlashMode},
+	{ N_("Aperture"), "aperture", PTP_DPC_CANON_Aperture, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_Aperture, _put_Canon_Aperture},
+	{ N_("Focusing Point"), "focusingpoint", PTP_DPC_CANON_FocusingPoint, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_FocusingPoint, _put_Canon_FocusingPoint},
+	{ N_("Shutter Speed"), "shutterspeed", PTP_DPC_CANON_ShutterSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ShutterSpeed, _put_Canon_ShutterSpeed},
+	{ N_("Metering Mode"), "meteringmode", PTP_DPC_CANON_MeteringMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_MeteringMode, _put_Canon_MeteringMode},
+        { N_("Macro Mode"), "macromode", PTP_DPC_CANON_MacroMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_Macro, _put_Canon_Macro},
 	/* { N_("Viewfinder Mode"), "viewfinder", PTP_DPC_CANON_ViewFinderMode, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_ViewFinderMode, _put_Canon_ViewFinderMode}, */
 	{ NULL },
 };
