@@ -314,27 +314,46 @@ Model: D70
   serial number:  (null)
 Vendor extension ID: 0x0000000a
 Vendor extension description: Nikon PTP Extensions
-Battery Level(0x5001):(read only) (type=0x2) Range [0 - 100, step 1] value: 100% (100)
-Image Size(0x5003):(readwrite) (type=0xffff) Enumeration [
-	'3008x2000',
-	'2240x1488',
-	'1504x1000'
-	] value: '3008x2000'
-Compression Setting(0x5004):(readwrite) (type=0x2) Enumeration [0,1,2,4,5] value: JPEG Fine (2)
-White Balance(0x5005):(readwrite) (type=0x4) Enumeration [2,4,5,6,7,32784,32785,32787] value: Auto (2)
-F-Number(0x5007):(readwrite) (type=0x4) Enumeration [350,400,450,500,560,630,710,800,900,1000,1100,1300,1400,1600,1800,2000,2200] value: f/3.5 (350)
-Focal Length(0x5008):(read only) (type=0x6) Range [1800 - 7000, step 1] value: 18 mm (1800)
-Focus Mode(0x500a):(read only) (type=0x4) Enumeration [1,32784,32785] value: AF-S (32784)
-Exposure Metering Mode(0x500b):(readwrite) (type=0x4) Enumeration [2,3,4] value: Matrix (3)
-Flash Mode(0x500c):(readwrite) (type=0x4) Enumeration [4,32784,32785,32786,32787] value: Default (32784)
-Exposure Time(0x500d):(read only) (type=0x6) Enumeration [1,2,3,4,5,6,8,10,12,15,20,25,31,40,50,62,80,100,125,166,200,250,333,400,500,666,769,1000,1250,1666,2000,2500,3333,4000,5000,6250,7692,10000,13000,16000,20000,25000,30000,40000,50000,60000,80000,100000,130000,150000,200000,250000,300000] value: 0.017 sec (1666)
-Exposure Program Mode(0x500e):(read only) (type=0x4) Enumeration [1,2,3,4,32784,32785,32786,32787,32788,32789,32790] value: P (2)
-Exposure Index (film speed ISO)(0x500f):(readwrite) (type=0x4) Enumeration [200,250,320,400,500,640,800,1000,1250,1600] value: ISO 200 (200)
+	Battery Level(0x5001):(read only) (type=0x2) Range [0 - 100, step 1] value: 100% (100)
+[x]	Image Size(0x5003):(readwrite) (type=0xffff) Enumeration [
+		'3008x2000',
+		'2240x1488',
+		'1504x1000'
+		] value: '3008x2000'
+[x]	Compression Setting(0x5004):(readwrite) (type=0x2) Enumeration [0,1,2,4,5] value: JPEG Fine (2)
+[x]	White Balance(0x5005):(readwrite) (type=0x4) Enumeration [2,4,5,6,7,32784,32785,32787] value: Auto (2)
+
+
+[x]	F-Number(0x5007):(readwrite) (type=0x4) Enumeration [350,400,450,500,560,630,710,800,900,1000,1100,1300,1400,1600,1800,2000,2200] value: f/3.5 (350)
+
+	Focal Length(0x5008):(read only) (type=0x6) Range [1800 - 7000, step 1] value: 18 mm (1800)
+	Focus Mode(0x500a):(read only) (type=0x4) Enumeration [1,32784,32785] value: AF-S (32784)
+
+[x]	Exposure Metering Mode(0x500b):(readwrite) (type=0x4) Enumeration [2,3,4] value: Matrix (3)
+
+[x]	Flash Mode(0x500c):(readwrite) (type=0x4) Enumeration [4,32784,32785,32786,32787] value: Default (32784)
+
+[-]	Exposure Time(0x500d):(read only) (type=0x6) Enumeration [1,2,3,4,5,6,8,10,12,15,20,25,31,40,50,62,80,100,125,166,200,250,333,400,500,666,769,1000,1250,1666,2000,2500,3333,4000,5000,6250,7692,10000,13000,16000,20000,25000,30000,40000,50000,60000,80000,100000,130000,150000,200000,250000,300000] value: 0.017 sec (1666)
+			(zuviele choices)
+
+[x]	Exposure Program Mode(0x500e):(read only) (type=0x4) Enumeration [1,2,3,4,32784,32785,32786,32787,32788,32789,32790] value: P (2)
+
+[x]	Exposure Index (film speed ISO)(0x500f):(readwrite) (type=0x4) Enumeration [200,250,320,400,500,640,800,1000,1250,1600] value: ISO 200 (200)
+
+
 Exposure Bias Compensation(0x5010):(readwrite) (type=0x3) Enumeration [-5000,-4666,-4333,-4000,-3666,-3333,-3000,-2666,-2333,-2000,-1666,-1333,-1000,-666,-333,0,333,666,1000,1333,1666,2000,2333,2666,3000,3333,3666,4000,4333,4666,5000] value: 0.0 stops (0)
+
+
+
 Date Time(0x5011):(readwrite) (type=0xffff) '20050708T100610'
-Still Capture Mode(0x5013):(readwrite) (type=0x4) Enumeration [1,2,32785,32787,32788] value: Single Shot (1)
+
+[x]	Still Capture Mode(0x5013):(readwrite) (type=0x4) Enumeration [1,2,32785,32787,32788] value: Single Shot (1)
+
 Burst Number(0x5018):(readwrite) (type=0x4) Range [1 - 49, step 1] value: 1
-Focus Metering Mode(0x501c):(readwrite) (type=0x4) Enumeration [2,32784,32785] value: Single Area (32784)
+
+[x]	Focus Metering Mode(0x501c):(readwrite) (type=0x4) Enumeration [2,32784,32785] value: Single Area (32784)
+
+
 Auto White Balance Bias(0xd017):(readwrite) (type=0x1) Range [-3 - 3, step 1] value: 0
 Tungsten White Balance Bias(0xd018):(readwrite) (type=0x1) Range [-3 - 3, step 1] value: 0
 Flourescent White Balance Bias(0xd019):(readwrite) (type=0x1) Range [-3 - 3, step 1] value: 0
@@ -418,7 +437,8 @@ Flash Power(0xd16d):(readwrite) (type=0x2) Range [0 - 4, step 1] value: Full (0)
 Property 0xd16e:(readwrite) (type=0x2) Range [0 - 7, step 1] value: 0
 Property 0xd180:(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
 Property 0xd190:(readwrite) (type=0x2) Range [0 - 12, step 2] value: 6
-Low Light(0xd1b0):(read only) (type=0x2) Range [0 - 4, step 1] value: No (0)
-Flash Open(0xd1c0):(read only) (type=0x2) Range [0 - 1, step 1] value: No (0)
-Flash Charged(0xd1c1):(read only) (type=0x2) Range [0 - 1, step 1] value: No (0)
 
+
+	Low Light(0xd1b0):(read only) (type=0x2) Range [0 - 4, step 1] value: No (0)
+	Flash Open(0xd1c0):(read only) (type=0x2) Range [0 - 1, step 1] value: No (0)
+	Flash Charged(0xd1c1):(read only) (type=0x2) Range [0 - 1, step 1] value: No (0)
