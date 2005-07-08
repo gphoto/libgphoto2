@@ -2302,10 +2302,10 @@ _put_ExpTime(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval)
 }
 
 static struct deviceproptableu16 exposure_program_modes[] = {
-	{ "M",			0x0001, PTP_VENDOR_NIKON },
-	{ "P",			0x0002, PTP_VENDOR_NIKON },
-	{ "A",			0x0003, PTP_VENDOR_NIKON },
-	{ "S",			0x0004, PTP_VENDOR_NIKON },
+	{ "M",			0x0001, PTP_VENDOR_NIKON },/*might be generic*/
+	{ "P",			0x0002, PTP_VENDOR_NIKON },/*might be generic*/
+	{ "A",			0x0003, PTP_VENDOR_NIKON },/*might be generic*/
+	{ "S",			0x0004, PTP_VENDOR_NIKON },/*might be generic*/
 	{ N_("Auto"),		0x8010, PTP_VENDOR_NIKON},
 	{ N_("Portrait"),	0x8011, PTP_VENDOR_NIKON},
 	{ N_("Landscape"),	0x8012, PTP_VENDOR_NIKON},
@@ -2347,6 +2347,52 @@ _put_ExposureProgram(Camera* camera, CameraWidget *widget, PTPPropertyValue *pro
 	for (i=0;i<sizeof (exposure_program_modes)/sizeof (exposure_program_modes[0]);i++) {
 		if (!strcmp (value, _(exposure_program_modes[i].label))) {
 			propval->u16 = exposure_program_modes[i].value;
+			return (GP_OK);
+		}
+	}
+	return (GP_ERROR);
+}
+
+static struct deviceproptableu16 capture_mode[] = {
+	{ N_("Single Shot"),	0x0001, 0 },
+	{ N_("Power Wind"),	0x0002, 0 },
+	{ N_("Timer"),		0x8011, PTP_VENDOR_NIKON},
+	{ N_("Remote"),		0x8013, PTP_VENDOR_NIKON},
+	{ N_("Timer + Remote"),	0x8014, PTP_VENDOR_NIKON},
+};
+
+static int
+_get_CaptureMode(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+	int i;
+	char buf[20];
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
+		return (GP_ERROR);
+	if (dpd->DataType != PTP_DTC_UINT16)
+		return (GP_ERROR);
+	sprintf(buf, "unknown %04x", dpd->CurrentValue.u16);
+	gp_widget_set_value (*widget, buf);
+	for (i=0;i<sizeof (capture_mode)/sizeof (capture_mode[0]);i++) {
+		gp_widget_add_choice (*widget, _(capture_mode[i].label));
+		if (capture_mode[i].value == dpd->CurrentValue.u16)
+			gp_widget_set_value (*widget, _(capture_mode[i].label));
+	}
+	return (GP_OK);
+}
+
+static int
+_put_CaptureMode(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+	char *value;
+	int i, ret;
+
+	ret = gp_widget_get_value (widget, &value);
+	if (ret != GP_OK)
+		return ret;
+	for (i=0;i<sizeof (capture_mode)/sizeof (capture_mode[0]);i++) {
+		if (!strcmp (value, _(capture_mode[i].label))) {
+			propval->u16 = capture_mode[i].value;
 			return (GP_OK);
 		}
 	}
@@ -2725,6 +2771,7 @@ static struct submenu image_settings_menu[] = {
         { N_("ISO Speed"), "iso", PTP_DPC_ExposureIndex, 0, PTP_DTC_UINT16, _get_ISO, _put_ISO},
         { N_("Exposure Time"), "exptime", PTP_DPC_ExposureTime, 0, PTP_DTC_UINT32, _get_ExpTime, _put_ExpTime},
         { N_("Exposure Program"), "expprogram", PTP_DPC_ExposureProgramMode, 0, PTP_DTC_UINT16, _get_ExposureProgram, _put_ExposureProgram},
+        { N_("Still Capture Mode"), "capturemode", PTP_DPC_StillCaptureMode, 0, PTP_DTC_UINT16, _get_CaptureMode, _put_CaptureMode},
         { N_("ISO Speed"), "iso", PTP_DPC_CANON_ISOSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ISO, _put_Canon_ISO},
         { N_("Macro Mode"), "macromode", PTP_DPC_CANON_MacroMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_Macro, _put_Canon_Macro},
 	{ N_("WhiteBalance"), "whitebalance", PTP_DPC_CANON_WhiteBalance, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_WhiteBalance, _put_Canon_WhiteBalance},
