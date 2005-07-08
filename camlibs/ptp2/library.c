@@ -2444,6 +2444,51 @@ _put_FocusMetering(Camera* camera, CameraWidget *widget, PTPPropertyValue *propv
 }
 
 
+static struct deviceproptableu16 exposure_metering[] = {
+	{ N_("Center Weighted"),0x0002, 0 },
+	{ N_("Matrix"),		0x0003, 0 },
+	{ N_("Spot"),		0x0004, 0 },
+};
+
+static int
+_get_ExposureMetering(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+	int i;
+	char buf[20];
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
+		return (GP_ERROR);
+	if (dpd->DataType != PTP_DTC_UINT16)
+		return (GP_ERROR);
+	sprintf(buf, "unknown %04x", dpd->CurrentValue.u16);
+	gp_widget_set_value (*widget, buf);
+	for (i=0;i<sizeof (exposure_metering)/sizeof (exposure_metering[0]);i++) {
+		gp_widget_add_choice (*widget, _(exposure_metering[i].label));
+		if (exposure_metering[i].value == dpd->CurrentValue.u16)
+			gp_widget_set_value (*widget, _(exposure_metering[i].label));
+	}
+	return (GP_OK);
+}
+
+static int
+_put_ExposureMetering(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+	char *value;
+	int i, ret;
+
+	ret = gp_widget_get_value (widget, &value);
+	if (ret != GP_OK)
+		return ret;
+	for (i=0;i<sizeof (exposure_metering)/sizeof (exposure_metering[0]);i++) {
+		if (!strcmp (value, _(exposure_metering[i].label))) {
+			propval->u16 = exposure_metering[i].value;
+			return (GP_OK);
+		}
+	}
+	return (GP_ERROR);
+}
+
+
 static struct deviceproptableu16 flash_mode[] = {
 	{ N_("Default"),			0x8010, PTP_VENDOR_NIKON},
 	{ N_("Red-eye Reduction"),		0x0004, 0 },
@@ -2920,6 +2965,7 @@ static struct submenu capture_settings_menu[] = {
         { N_("Exposure Program"), "expprogram", PTP_DPC_ExposureProgramMode, 0, PTP_DTC_UINT16, _get_ExposureProgram, _put_ExposureProgram},
         { N_("Still Capture Mode"), "capturemode", PTP_DPC_StillCaptureMode, 0, PTP_DTC_UINT16, _get_CaptureMode, _put_CaptureMode},
         { N_("Focus Metering Mode"), "focusmetermode", PTP_DPC_FocusMeteringMode, 0, PTP_DTC_UINT16, _get_FocusMetering, _put_FocusMetering},
+        { N_("Exposure Metering Mode"), "exposuremetermode", PTP_DPC_ExposureMeteringMode, 0, PTP_DTC_UINT16, _get_ExposureMetering, _put_ExposureMetering},
         { N_("Flash Mode"), "flash", PTP_DPC_FlashMode, 0, PTP_DTC_UINT16, _get_FlashMode, _put_FlashMode},
 	{ N_("Aperture"), "aperture", PTP_DPC_CANON_Aperture, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_Aperture, _put_Canon_Aperture},
 	{ N_("Focusing Point"), "focusingpoint", PTP_DPC_CANON_FocusingPoint, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_FocusingPoint, _put_Canon_FocusingPoint},
