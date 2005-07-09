@@ -277,6 +277,7 @@ GP_CAMLIB([directory])dnl
 GP_CAMLIB([enigma13])dnl
 GP_CAMLIB([fuji])dnl
 GP_CAMLIB([gsmart300])dnl
+GP_CAMLIB([hp215])dnl
 GP_CAMLIB([iclick])dnl
 GP_CAMLIB([jamcam])dnl
 GP_CAMLIB([jd11])dnl
@@ -466,6 +467,7 @@ camlibs/dimera/Makefile
 camlibs/directory/Makefile
 camlibs/fuji/Makefile
 camlibs/gsmart300/Makefile
+camlibs/hp215/Makefile
 camlibs/iclick/Makefile
 camlibs/jamcam/Makefile
 camlibs/jd11/Makefile

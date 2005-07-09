@@ -48,6 +48,9 @@ camlibs/gsmart300:
 	Jérôme Lodewyck <lodewyck@clipper.ens.fr>
 	Till Adam <till@adam-lilienthal.de>
 
+camlibs/hp215:
+	Marcus Meissner <marcus@jet.franken.de>
+
 camlibs/iclick:
 	Theodore Kilgore <kilgota@auburn.edu>
 
