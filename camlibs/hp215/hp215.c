@@ -1,6 +1,7 @@
 /*****************************************************************************
  *  Copyright (C) 2002  Jason Surprise <thesurprises1@attbi.com>             *
  *                2003  Enno Bartels   <ennobartels@t-online.de>             *
+ *		  2005  Marcus Meissner <marcus@jet.franken.de>              *
  *****************************************************************************
  *                                                                           *
  *  This program is free software; you can redistribute it and/or            *
@@ -87,14 +88,7 @@ char monNameShort[12][30];
 /*****************************************************************************
  *  Function name    : hp_gen_cmd                                            *
  *****************************************************************************/
-/*! \fn int hp_gen_cmd (int cmd, int num, unsigned char *buffer)
-
-    \brief  Generate a camera commando.
-    \param  cmd    (i|-) Command 
-    \param  num    (i|-) Number of the picture (1..n)
-    \param  buffer (i|-)  
-    \n\n
-
+/*
     For picture/thumbnail and pic date/time request, the following
     algorithm is used to generate the cmd to send to the camera for each
     picture.
@@ -102,7 +96,6 @@ char monNameShort[12][30];
     Thanks to Roberto Ragusa for figuring out the algorithm for this.  I
     would have never figured it out..
 
-<pre>
                                    | b    u    f    f    e    r
                                    | 0    1cmd 2    3    4    5    6    7    8    9    10    11 
     -------------------------------+---------------------------------------------------------------
@@ -145,64 +138,62 @@ char monNameShort[12][30];
 
     buffer[11] = 0x03;
 
-</pre>
 */
 
 static int 
 hp_gen_cmd (int cmd, int num, unsigned char *buffer)
 {
-    int x4, x5, x6;
-    int myx7, myx8, myx9, myx10;
+	int x4, x5, x6;
+	int myx7, myx8, myx9, myx10;
 
-    buffer[0] = 0x02;
-    buffer[1] = cmd;
-    buffer[2] = 0x84;
-    buffer[3] = 0x80;
-    buffer[4] = ((num&0xf00)>>8) | 0x80;
-    buffer[5] = ((num&0xf0 )>>4) | 0x80;
-    buffer[6] = ((num&0xf  )   ) | 0x80;
+	buffer[0] = 0x02;
+	buffer[1] = cmd;
+	buffer[2] = 0x84;
+	buffer[3] = 0x80;
+	buffer[4] = ((num&0xf00)>>8) | 0x80;
+	buffer[5] = ((num&0xf0 )>>4) | 0x80;
+	buffer[6] = ((num&0xf  )   ) | 0x80;
 
-    x4 = buffer[4]&0xf;
-    x5 = buffer[5]&0xf;
-    x6 = buffer[6]&0xf;
+	x4 = buffer[4]&0xf;
+	x5 = buffer[5]&0xf;
+	x6 = buffer[6]&0xf;
 
-    /* Kind of command */
-    switch (cmd)
-    {
-      case 0xb3: /* Request for a preview */
-                 myx7=0xf,myx8=0x2,myx9=0xe,myx10=0x8;
-                 break;
+	/* Kind of command */
+	switch (cmd) {
+	case 0xb3: /* Request for a preview */
+		 myx7=0xf,myx8=0x2,myx9=0xe,myx10=0x8;
+		 break;
 
-      case 0xb4: /* Request for a picture */
-                 myx7=0x3,myx8=0xa,myx9=0xa,myx10=0x9;
-                 break;
+	case 0xb4: /* Request for a picture */
+		 myx7=0x3,myx8=0xa,myx9=0xa,myx10=0x9;
+		 break;
 
-      case 0xc5: /* Request date/time for preview */
-                 myx7=0x3,myx8=0xa,myx9=0x9,myx10=0x5;
-                 break;
+	case 0xc5: /* Request date/time for preview */
+		 myx7=0x3,myx8=0xa,myx9=0x9,myx10=0x5;
+		 break;
 
-      case 0xb1: /* Request delete a single pic */
-                 myx7=0x7,myx8=0x9,myx9=0xa,myx10=0x8;
-                 break;
+	case 0xb1: /* Request delete a single pic */
+		 myx7=0x7,myx8=0x9,myx9=0xa,myx10=0x8;
+		 break;
 
-      default:   /* unknown command */
-                 gp_log (GP_LOG_ERROR, "hp215", "ERROR: Unknown command %x!\n", cmd);
-                 return GP_ERROR;
-    }
+	default:   /* unknown command */
+		 gp_log (GP_LOG_ERROR, "hp215", "ERROR: Unknown command %x!\n", cmd);
+		 return GP_ERROR;
+	}
 
-    /* What is happening here ? */
-    myx7  ^= x6^((x5<<1)&0xf)^x5^((x4<<1)&0xf)^x4^x4>>2;
-    myx8  ^= (x6>>3)^((x5<<1)&0xf)^(x5>>3)^x5^((x4<<2)&0xf)^((x4<<1)&0xf)^x4;
-    myx9  ^= ((x6<<1)&0xf)^((x5>>3<<1)&0xf)^((x5<<1)&0xf)^x5^((x4<<1)&0xf)^x4;
-    myx10 ^= x6^x5^(x5>>3);
+	/* What is happening here ? */
+	myx7  ^= x6^((x5<<1)&0xf)^x5^((x4<<1)&0xf)^x4^x4>>2;
+	myx8  ^= (x6>>3)^((x5<<1)&0xf)^(x5>>3)^x5^((x4<<2)&0xf)^((x4<<1)&0xf)^x4;
+	myx9  ^= ((x6<<1)&0xf)^((x5>>3<<1)&0xf)^((x5<<1)&0xf)^x5^((x4<<1)&0xf)^x4;
+	myx10 ^= x6^x5^(x5>>3);
 
-    buffer[7]  = myx7  | 0x80;
-    buffer[8]  = myx8  | 0x80;
-    buffer[9]  = myx9  | 0x80;
-    buffer[10] = myx10 | 0x80;
+	buffer[7]  = myx7  | 0x80;
+	buffer[8]  = myx8  | 0x80;
+	buffer[9]  = myx9  | 0x80;
+	buffer[10] = myx10 | 0x80;
 
-    buffer[11] = 0x03;
-    return GP_OK;
+	buffer[11] = 0x03;
+	return GP_OK;
 }
 
 
@@ -286,7 +277,6 @@ hp_get_timeDate_cam (Camera *cam, char *txtbuffer, size_t txtbuffersize)
 	date.day   = (msg[8]-48)*10 + (msg[9]-48);
 	date.month = (msg[5]-48)*10 + (msg[6]-48) - 1;
 	date.year  = 2000 + (msg[11]-48)*10 + (msg[12]-48);
-
 	date.hour  = (msg[14]-48)*10 + (msg[15]-48);
 	date.min   = (msg[17]-48)*10 + (msg[18]-48);
 
@@ -308,19 +298,6 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 	strcpy (summary->text, buffer);
 	return (GP_OK);
 }
-
-
-static int
-camera_manual (Camera *camera, CameraText *manual, GPContext *context)
-{
-	/*
-	 * If you would like to tell the user some information about how 
-	 * to use the camera or the driver, this is the place to do.
-	 */
-
-	return (GP_OK);
-}
-
 
 static int
 camera_about (Camera *camera, CameraText *about, GPContext *context)
@@ -638,7 +615,6 @@ camera_init (Camera *camera, GPContext *context)
 	GPPortSettings settings;
 
         camera->functions->summary              = camera_summary;
-        camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;
 
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
