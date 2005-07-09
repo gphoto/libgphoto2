@@ -236,21 +236,8 @@ hp_rcv_ack (Camera *cam)
     return GP_ERROR_IO;
 }
 
-
-/*****************************************************************************
- *  Function name    : hp_get_timeDate_cam                                   *
- *****************************************************************************/
-/*! \fn int hp_get_timeDate_cam (t_camera *cam)
-
-    \brief  Get date and time.
-    \param  cam   (i|-) Pointer to the usb device ?!
-    \n\n
-
-    This function will read the date and time of the camera.
-    \n\n\n
-*/
-static int 
-hp_get_timeDate_cam (Camera *cam)
+static int
+hp_get_timeDate_cam (Camera *cam, char *txtbuffer, size_t txtbuffersize)
 {
 	int           i, ret;
 	unsigned char msg[0x6b];
@@ -303,7 +290,7 @@ hp_get_timeDate_cam (Camera *cam)
 	date.hour  = (msg[14]-48)*10 + (msg[15]-48);
 	date.min   = (msg[17]-48)*10 + (msg[18]-48);
 
-	sprintf (buffer, _("Current camera time:  %04d-%02d-%02d  %02d:%02d\n"), 
+	snprintf (txtbuffer, txtbuffersize, _("Current camera time:  %04d-%02d-%02d  %02d:%02d\n"), 
 		date.year, date.month, date.day, date.hour, date.min
 	);
 	return GP_OK;
@@ -312,11 +299,13 @@ hp_get_timeDate_cam (Camera *cam)
 static int
 camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
-	/*
-	 * Fill out the summary with some information about the current 
-	 * state of the camera (like pictures taken, etc.).
-	 */
+	char	buffer[200];
+	int	ret;
 
+	ret = hp_get_timeDate_cam (camera, buffer, sizeof(buffer));
+	if (ret < GP_OK)
+		return ret;
+	strcpy (summary->text, buffer);
 	return (GP_OK);
 }
 
