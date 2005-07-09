@@ -17,6 +17,7 @@ camlibs/enigma13/enigma13.c
 camlibs/fuji/fuji.c
 camlibs/fuji/library.c
 camlibs/gsmart300/library.c
+camlibs/hp215/hp215.c
 camlibs/iclick/library.c
 camlibs/jamcam/jamcam.c
 camlibs/jamcam/library.c
