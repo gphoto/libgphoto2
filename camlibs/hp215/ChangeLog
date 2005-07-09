@@ -1,0 +1,6 @@
+Sat Jul  9 17:39:28 CEST 2005  Marcus Meissner  <marcus@jet.franken.de>
+
+	* *: Initial import of HP Photosmart 215 driver.
+
+	     Can download images and previews, can delete single images
+	     and all images.
