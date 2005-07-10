@@ -174,43 +174,48 @@ enum hp215_cmd {
 */
 
 static int
-hp_gen_cmd_blob (enum hp215_cmd cmd, int bytes, unsigned char *argdata, unsigned char *buffer)
+hp_gen_cmd_blob (enum hp215_cmd cmd, int bytes, unsigned char *argdata, unsigned char **buf, int *buflen)
 {
 	int i, crc = 0;
+	
+	*buflen = 1+1+1+bytes+4+1; /* STX, CMD, ARGLEN, arguments, 4xCRC, ETX */
+	*buf    = malloc(*buflen);
+	if (!*buf)
+		return GP_ERROR_NO_MEMORY;
 
 	/* store STX */
-	buffer[0] = STX;
+	(*buf)[0] = STX;
 
 	/* store CMD */
-	buffer[1] = cmd;
+	(*buf)[1] = cmd;
 	if (bytes >= 0x7d) {
 		gp_log (GP_LOG_ERROR, "hp215", "Using too large argument buffer %d bytes\n", bytes);
 		return GP_ERROR_BAD_PARAMETERS;
 	}
 	/* store arglen */
-	buffer[2] = 0x80 | bytes;
+	(*buf)[2] = 0x80 | bytes;
 
 	if (bytes) {
 		/* store arguments */
-		memcpy (buffer+3, argdata, bytes);
+		memcpy ((*buf)+3, argdata, bytes);
 	}
 
 	/* generate CRC over cmd, len, and arguments */
 	for (i=1;i<bytes + 3;i++)
-		crc = updcrc(buffer[i], crc);
+		crc = updcrc((*buf)[i], crc);
 	
 	/* store CRC */
-	buffer[bytes+3] = ((crc >> 12) & 0xf) | 0x80;
-	buffer[bytes+4] = ((crc >>  8) & 0xf) | 0x80;
-	buffer[bytes+5] = ((crc >>  4) & 0xf) | 0x80;
-	buffer[bytes+6] = ((crc >>  0) & 0xf) | 0x80;
+	(*buf)[bytes+3] = ((crc >> 12) & 0xf) | 0x80;
+	(*buf)[bytes+4] = ((crc >>  8) & 0xf) | 0x80;
+	(*buf)[bytes+5] = ((crc >>  4) & 0xf) | 0x80;
+	(*buf)[bytes+6] = ((crc >>  0) & 0xf) | 0x80;
 	/* store ETX */
-	buffer[bytes+7] = ETX;
+	(*buf)[bytes+7] = ETX;
 	return GP_OK;
 }
 
 static int
-hp_gen_cmd_1_16 (enum hp215_cmd cmd, unsigned short val, unsigned char *buffer)
+hp_gen_cmd_1_16 (enum hp215_cmd cmd, unsigned short val, unsigned char **buf, int *buflen)
 {
 	unsigned char argbuf[4];
 
@@ -218,14 +223,14 @@ hp_gen_cmd_1_16 (enum hp215_cmd cmd, unsigned short val, unsigned char *buffer)
 	argbuf[1] = ((val&0x0f00)>> 8) | 0x80;
 	argbuf[2] = ((val&0x00f0)>> 4) | 0x80;
 	argbuf[3] = ((val&0x000f)    ) | 0x80;
-	return hp_gen_cmd_blob (cmd, 4, argbuf, buffer);
+	return hp_gen_cmd_blob (cmd, 4, argbuf, buf, buflen);
 }
 
 
 static int
 hp_send_ack (Camera *cam)
 {
-	unsigned char byte = ACK;
+	char byte = ACK;
 	int ret;
 
 	gp_log (GP_LOG_DEBUG, "hp215", "Sending ACK ... ");
@@ -240,7 +245,7 @@ static int
 hp_rcv_ack (Camera *cam)
 {
 	int           ret;
-	unsigned char byte = '\0';
+	char byte = '\0';
 
 	gp_log (GP_LOG_DEBUG, "hp215", "Receiving ACK ... ");
 	ret = gp_port_read (cam->port, &byte, 1);
@@ -253,49 +258,53 @@ hp_rcv_ack (Camera *cam)
 }
 
 static int
+hp_send_command_and_receive_blob(
+	Camera *camera, unsigned char *buf, int buflen,
+	unsigned char **msg, int *msglen
+) {
+	int ret;
+	unsigned char msgbuf[0x400];
+
+	*msg = NULL;
+	*msglen = 0;
+	ret = gp_port_write (camera->port, (char*)buf, buflen);
+	if (ret < GP_OK)
+		return ret;
+	if (hp_rcv_ack (camera))
+		return GP_ERROR_IO;
+	gp_log( GP_LOG_DEBUG, "hp215", "Expecting reply blob");
+	ret = gp_port_read (camera->port, (char*)msgbuf, sizeof(msgbuf));
+	if (ret < GP_OK)
+		return ret;
+	if (msgbuf[0] != STX) {
+		gp_log (GP_LOG_ERROR, "hp215", "Expected STX / 02 at begin of buffer, found %02x\n", msgbuf[0]);
+		return GP_ERROR_IO;
+	}
+	if (msgbuf[ret-1] != ETX) {
+		gp_log (GP_LOG_ERROR, "hp215", "Expected ETX / 03 at end of buffer, found %02x\n", msgbuf[ret-1]);
+		return GP_ERROR_IO;
+	}
+	*msg = malloc(ret);
+	*msglen = ret;
+	memcpy (*msg, msgbuf, ret);
+	return hp_send_ack (camera);
+}
+
+static int
 hp_get_timeDate_cam (Camera *cam, char *txtbuffer, size_t txtbuffersize)
 {
-	int           i, ret;
-	unsigned char msg[0x6b];
-	unsigned char buffer[8];
+	int           msglen, buflen, ret;
+	unsigned char *msg;
+	unsigned char *buf;
 	t_date        date;
 
-	hp_gen_cmd_blob (GET_CAMERA_CURINFO, 0, NULL, buffer);
-	memset(msg, 0, sizeof(msg));
-
-	/* Sending date/time command */
 	gp_log (GP_LOG_DEBUG, "hp215", "Sending date/time command ... ");
-	i = gp_port_write (cam->port, buffer, 8);
-	if (i < GP_OK)
-		return i;
 
-	gp_log (GP_LOG_DEBUG, "hp215", "OK!\n");
-	/* Check receive ACK */
-	if (hp_rcv_ack (cam))
-		return GP_ERROR_IO;
-
-	gp_log (GP_LOG_DEBUG, "hp215", "Receiving date/time msg ...");
-
-	/* Reading date/time answer */
-	i = gp_port_read (cam->port, msg, 0x6b);
-	if (i != 0x6b) {
-		gp_log (GP_LOG_ERROR, "hp215", "FAILED: Could not receive 0x6b bytes, but %d!\n", i);
-		return GP_ERROR_IO;
-	}
-
-	/* Check start/stop value of the answer */
-	if (msg[0]!=2) {
-		gp_log (GP_LOG_DEBUG, "hp215", "FAILED: Start code missing!\n");
-		return GP_ERROR_IO;
-	}
-
-	if (msg[0x6a]!=3) {
-		gp_log (GP_LOG_DEBUG, "hp215", "FAILED: Start code missing!\n");
-		return GP_ERROR_IO;
-	}
-
-	gp_log (GP_LOG_DEBUG, "hp215", "OK!\n");
-	ret = hp_send_ack(cam);
+	ret = hp_gen_cmd_blob (GET_CAMERA_CURINFO, 0, NULL, &buf, &buflen);
+	if (ret < GP_OK)
+		return ret;
+	ret = hp_send_command_and_receive_blob (cam, buf, buflen, &msg, &msglen);
+	free (buf);
 	if (ret < GP_OK)
 		return ret;
 
@@ -305,6 +314,7 @@ hp_get_timeDate_cam (Camera *cam, char *txtbuffer, size_t txtbuffersize)
 	date.year  = 2000 + (msg[11]-48)*10 + (msg[12]-48);
 	date.hour  = (msg[14]-48)*10 + (msg[15]-48);
 	date.min   = (msg[17]-48)*10 + (msg[18]-48);
+	free (msg);
 
 	snprintf (txtbuffer, txtbuffersize, _("Current camera time:  %04d-%02d-%02d  %02d:%02d\n"),
 		date.year, date.month, date.day, date.hour, date.min
@@ -343,9 +353,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       GPContext *context)
 {
 	Camera *camera = data;
-	int           ret;
-	unsigned char msg[0x01000];
-	unsigned char buffer[12];
+	int           ret, buflen, msglen;
+	unsigned char imgdata[0x01000];
+	unsigned char *buf, *msg;
         int image_no;
 	unsigned char cmd;
 
@@ -366,44 +376,23 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return GP_ERROR_BAD_PARAMETERS;
 	}
 
-	hp_gen_cmd_1_16 (cmd, image_no, buffer);
-	ret = gp_port_write (camera->port, buffer, 0x0c);
+	ret = hp_gen_cmd_1_16 (cmd, image_no, &buf, &buflen);
 	if (ret < GP_OK)
 		return ret;
-
-	if (hp_rcv_ack(camera))
-		return GP_ERROR_IO;
-
-	ret = gp_port_read (camera->port, msg, 0x87);
-	if (ret!=0x87)
-	{
-		gp_log (GP_LOG_ERROR, "hp215", "FAILED: Second ack failed!\n");
-		return GP_ERROR_IO;
-	}
-	/* Check start code */
-	if (msg[0]!=2) {
-		gp_log (GP_LOG_ERROR, "hp215", "FAILED: Start code missing!\n");
-		return GP_ERROR_IO;
-	}
-
-	/* Check stop code */
-	if (msg[ret-1]!=3) {
-		gp_log (GP_LOG_ERROR, "hp215", "FAILED: Stop code missing!\n");
-		return GP_ERROR_IO;
-	}
-
-	ret = hp_send_ack(camera);
+	ret = hp_send_command_and_receive_blob (camera, buf, buflen, &msg, &msglen);
+	free (buf);
 	if (ret < GP_OK)
 		return ret;
+	free (msg);
 
 	gp_file_set_mime_type (file, GP_MIME_JPEG);
 
 	/* Read preview in 4096 byte parts (0x1000) */
 	while (1)
 	{
-		ret = gp_port_read (camera->port, msg, 0x1000);
+		ret = gp_port_read (camera->port, (char*)imgdata, 0x1000);
 		/* Check if preview reading is complete*/
-		if ((ret==1) && (msg[0]==0x04)) {
+		if ((ret==1) && (imgdata[0]==0x04)) {
 			gp_log (GP_LOG_DEBUG, "hp215", "Image data complete!\n");
 			break;
 		}
@@ -413,7 +402,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			gp_log (GP_LOG_ERROR, "hp215", "Warning: Image data may be corrupted...\n");
 			break;
 		}
-		gp_file_append (file, msg, ret);
+		gp_file_append (file, (char*)imgdata, ret);
 	}
 	return GP_OK;
 }
@@ -423,29 +412,20 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 		  const char *filename, void *data, GPContext *context)
 {
 	Camera *camera = data;
-	int ret;
-	unsigned char  msg[0x1000];
-	unsigned char  buffer[12];
-        int image_no;
+	int image_no, ret, msglen, buflen;
+	unsigned char  *msg, *buf;
 
         image_no = gp_filesystem_number(fs, folder, filename, context);
         if(image_no < 0)
                 return image_no;
-	image_no++;
-
-	memset(msg, 0, sizeof(msg));
-	hp_gen_cmd_1_16 (DELETE_PHOTO, image_no, buffer);
-	ret = gp_port_write (camera->port, buffer, 0x0c);
+	ret = hp_gen_cmd_1_16 (DELETE_PHOTO, image_no+1, &buf, &buflen);
 	if (ret < GP_OK)
 		return ret;
-	if (hp_rcv_ack(camera))
-		return GP_ERROR_IO;
-	ret = gp_port_read (camera->port, msg, 10);
-	if (ret!=10)
-		return GP_ERROR_IO;
-	ret = hp_send_ack(camera);
+	ret = hp_send_command_and_receive_blob (camera, buf, buflen, &msg, &msglen);
+	free (buf);
 	if (ret < GP_OK)
 		return ret;
+	free (msg);
 	return (GP_OK);
 }
 
@@ -454,21 +434,19 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 		 GPContext *context)
 {
 	Camera *camera = data;
-	unsigned char buffer[12];
-	unsigned char msg[10];
-	int      ret;
+	unsigned char *buf;
+	unsigned char *msg;
+	int      ret, buflen, msglen;
 
-	memset (msg, 0, sizeof(msg));
-	hp_gen_cmd_1_16 (DELETE_PHOTO, 0xFFFF, buffer);
-	ret = gp_port_write (camera->port, buffer, 12);
+	ret = hp_gen_cmd_1_16 (DELETE_PHOTO, 0xFFFF, &buf, &buflen);
 	if (ret < GP_OK)
-		return GP_ERROR_IO;
-	if (hp_rcv_ack(camera))
-		return GP_ERROR_IO;
-	ret = gp_port_read (camera->port, msg, sizeof(msg));
-	if (ret != sizeof(msg))
-		return GP_ERROR_IO;
-	return hp_send_ack(camera);
+		return ret;
+	ret = hp_send_command_and_receive_blob (camera, buf, buflen, &msg, &msglen);
+	free (buf);
+	if (ret < GP_OK)
+		return ret;
+	free (msg);
+	return (GP_OK);
 }
 
 
@@ -476,43 +454,22 @@ static int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileInfo *info, void *data, GPContext *context)
 {
-	Camera *camera = data;
-	int           ret;
-	unsigned char msg[0x01000];
-	unsigned char buffer[12];
-	int           offset = 13;
-        int image_no;
+	Camera		*camera = data;
+	int		ret, msglen, buflen, offset = 13, image_no;
+	unsigned char	*msg, *buf;
 
         image_no = gp_filesystem_number(fs, folder, filename, context);
         if(image_no < 0)
                 return image_no;
-	image_no++;
-
-	memset (msg, 0, sizeof(msg));
-	hp_gen_cmd_1_16 (GET_PHOTO_INFO, image_no, buffer);
-	ret = gp_port_write (camera->port, buffer, 0x0c);
+	ret = hp_gen_cmd_1_16 (GET_PHOTO_INFO, image_no+1, &buf, &buflen);
 	if (ret < GP_OK)
 		return ret;
-	if (hp_rcv_ack (camera))
-		return GP_ERROR_IO;
-	ret = gp_port_read (camera->port, msg, 0x3e);
-	if (ret != 0x3e) {
-		gp_log (GP_LOG_DEBUG, "hp215", "0x3e bytes expected, but only %d read in get_info_func\n", ret);
-		return GP_ERROR_IO;
-	}
-	/* Check start  code of the getten message */
-	if (msg[0] != 0x02)
-		return GP_ERROR_IO;
-
-	/* Check stop code of the getten message */
-	if (msg[ret-1] != 0x03)
-		return GP_ERROR_IO;
-
-	ret = hp_send_ack(camera);
+	ret = hp_send_command_and_receive_blob (camera, buf, buflen, &msg, &msglen);
+	free (buf);
 	if (ret < GP_OK)
 		return ret;
-
-	return GP_OK;
+	free (msg);
+	return GP_ERROR_IO;
 #if 0
 	/* Copy getten date into date placeholder */
 	strcpy ((camera->pic[cnt+1])->date_time, &msg[0x0d]);
@@ -562,49 +519,19 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data, GPContext *context)
 {
 	Camera *camera = data;
-	int           ret, count, i;
-	unsigned char msg[0x32];
+	int           ret, msglen, count;
+	unsigned char *msg;
 	unsigned char buffer[] = HP_CMD_GET_PHOTO_ALBUM;
-
-	/* Initalize message */
-	memset (msg, 0, sizeof(msg));
 
 	/* Sending photo album request command */
 	gp_log (GP_LOG_DEBUG, "hp215", "Sending photo album request ... ");
-	i = gp_port_write (camera->port, buffer, 16);
-	if(i < GP_OK)
-		return i;
-	if (hp_rcv_ack(camera))
-		return GP_ERROR_IO;
-
-	/* Reading - Receiving photo album */
-	gp_log (GP_LOG_DEBUG, "hp215", "Receiving photo album ... ");
-	i = gp_port_read (camera->port, msg, 0x32);
-	/* Check the length of the getten message */
-	if(i != 0x32) {
-		gp_log (GP_LOG_DEBUG, "hp215", "FAILED: Could not receive 0x32 bytes, just %d!\n", i);
-		return GP_ERROR_IO;
-	}
-
-	/* Check start code */
-	if (msg[0] != 2) {
-		gp_log (GP_LOG_DEBUG, "hp215", "FAILED: Start code missing!\n");
-		return GP_ERROR_IO;
-	}
-
-	/* Check stop code */
-	if (msg[0x31] != 3) {
-		gp_log (GP_LOG_DEBUG, "hp215", "FAILED: Stop code missing!\n");
-		return GP_ERROR_IO;
-	}
-
-	ret = hp_send_ack (camera);
-	if (ret < GP_OK) {
-		gp_log (GP_LOG_DEBUG, "hp215", "FAILED: send ack failed!\n");
+	ret = hp_send_command_and_receive_blob (camera, buffer, sizeof(buffer), &msg, &msglen);
+	if (ret < GP_OK)
 		return ret;
-	}
 	/* Calculate the number of pictures from the gotten message */
 	count = 256*(msg[42]&0x7f) + 16*(msg[43]&0x7f) + (msg[44]&0x7f);
+
+	free (msg);
         return gp_list_populate(list, "image%i.jpg", count);
 }
 
@@ -612,26 +539,17 @@ static int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
                 GPContext *context)
 {
-	unsigned char buffer[12];
-	unsigned char msg[10];
-	int ret;
+	unsigned char *buf, *msg;
+	int ret, buflen, msglen;
 
-	hp_gen_cmd_1_16 (TAKE_PHOTO, 1, buffer);
-	ret = gp_port_write (camera->port, buffer, 12);
+	ret = hp_gen_cmd_1_16 (TAKE_PHOTO, 1, &buf, &buflen);
 	if (ret < GP_OK)
 		return ret;
-	if (hp_rcv_ack (camera))
-		return GP_ERROR_IO;
-	gp_log( GP_LOG_DEBUG, "hp215", "Expecting capture reply ... ");
-	/* FIXME: hangs here currently */
-	ret = gp_port_read (camera->port, msg, 10);
-	if (ret != 10) {
-		gp_log (GP_LOG_ERROR, "hp215", "ERROR: Init failed. %d bytes received instead of 10!\n", ret);
-		return GP_ERROR_IO;
-	}
-	ret = hp_send_ack (camera);
+	ret = hp_send_command_and_receive_blob (camera, buf, buflen, &msg, &msglen);
+	free (buf);
 	if (ret < GP_OK)
 		return ret;
+	free (msg);
         /*
          * tell libgphoto2 where to find it by filling out the path.
          */
@@ -666,9 +584,8 @@ camera_abilities (CameraAbilitiesList *list) {
 int
 camera_init (Camera *camera, GPContext *context)
 {
-	int           ret;
-	unsigned char msg[10];
-	unsigned char buffer[8];
+	unsigned char *msg,*buf;
+	int ret, msglen, buflen;
 	GPPortSettings settings;
 
         camera->functions->summary              = camera_summary;
@@ -684,32 +601,17 @@ camera_init (Camera *camera, GPContext *context)
 	settings.usb.inep  = 0x83;
 	settings.usb.outep = 0x04;
 	gp_port_set_settings (camera->port, settings);
-/*
-    This function does the initialisation sequence.
-    The following init sequence is visible in all traces I've done, so it
-    is most likely needed before any other command is sent
-
-   000005	B>  00000000:  02ce 808a 848d 8303                   ........
-   000006	B<  00000000:  06                                    .
-   000007	B<  00000000:  02ce 82e0 e08a 8985 8803              ..........
-   000008	B>  00000000:  06                                    .
- */
-
-	memset(msg, 0, sizeof(msg));
-
+	/* This function does the initialisation sequence.
+	 * CMD = 0xce, REPLY = 2 byte, 0xe0 0xe0  ... apparently means ok.
+	 */
 	gp_log (GP_LOG_DEBUG, "hp215", "Sending init sequence ... ");
-
-	hp_gen_cmd_blob (GET_CAMERA_READY, 0, NULL, buffer);
-	ret = gp_port_write (camera->port, buffer, 8);
+	ret = hp_gen_cmd_blob (GET_CAMERA_READY, 0, NULL, &buf, &buflen);
 	if (ret < GP_OK)
 		return ret;
-	if (hp_rcv_ack (camera))
-		return GP_ERROR_IO;
-	gp_log( GP_LOG_DEBUG, "hp215", "Expecting init sequence ... ");
-	ret = gp_port_read (camera->port, msg, 10);
-	if (ret != 10) {
-		gp_log (GP_LOG_ERROR, "hp215", "ERROR: Init failed. %d bytes received instead of 10!\n", ret);
-		return GP_ERROR_IO;
-	}
-	return hp_send_ack (camera);
+	ret = hp_send_command_and_receive_blob (camera, buf, buflen, &msg, &msglen);
+	free (buf);
+	if (ret < GP_OK)
+		return ret;
+	free (msg);
+	return ret;
 }
