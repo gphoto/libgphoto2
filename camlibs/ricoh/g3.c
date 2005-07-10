@@ -50,87 +50,46 @@
  * 
  */
 
-
-struct _GPPortPrivateLibrary {
-	unsigned char	*buf;
-	int		len;
-};
-
 static int
-g3_channel_read(GPPort *port, int *channel, char **pbuffer, int *plen)
+g3_channel_read(GPPort *port, int *channel, char **buffer, int *len)
 {
-	unsigned char	xbuf[0x800];
-	int		tocopy, ret, curlen;
-	int		len;
-	int		diff;
-	unsigned char	*buf;
+	unsigned char xbuf[0x800];
+	int tocopy, ret, curlen;
 
-	if (port->pl->len) {
-		buf = port->pl->buf;
-		len = port->pl->len;
-		port->pl->len = 0;
-	} else {
-		len = gp_port_read(port, (char*)xbuf, 0x800);
-		if (len < GP_OK) {
-			gp_log(GP_LOG_ERROR, "g3", "read error in g3_get_one_channel\n");
-			return len;
-		}
-		buf = xbuf;
-	}
-	if (len < 8) {
-		gp_log(GP_LOG_ERROR, "g3" ,"len is not large enough, %d.\n", len);
-		return GP_ERROR_IO;
+	ret = gp_port_read(port, xbuf, 0x800);
+	if (ret < GP_OK) { 
+		gp_log(GP_LOG_ERROR, "g3", "read error in g3_channel_read\n");
+		return ret;
 	}
 
-	if ((buf[2] != 0xff) && (buf[3] != 0xff)) {
+	if ((xbuf[2] != 0xff) && (xbuf[3] != 0xff)) {
 		gp_log(GP_LOG_ERROR, "g3" ,"first bytes do not match.\n");
 		return GP_ERROR_IO;
 	}
 
-	*channel = buf[1];
-	*plen = buf[4] + (buf[5]<<8) + (buf[6]<<16) + (buf[7]<<24);
-
-	diff = len-*plen-8;
-
-	/* The case where we get 2 channel blobs in one go is always:
-	 * ... control connection data (very small)
-	 * ... bulk connection data (large)
-	 * so it will be in the first 0x800 bytes.
-	 */
-	if (diff > 0) {
-		if (port->pl->buf)
-			port->pl->buf = realloc (port->pl->buf, diff);
-		else
-			port->pl->buf = malloc (diff);
-		if (!port->pl->buf) {
-			gp_log(GP_LOG_ERROR, "g3" ,"failed allocation of %d bytes for fallback buffer.\n", len-*plen);
-			return GP_ERROR_IO;
-		}
-		memcpy (port->pl->buf, buf+8+*plen, diff);
-		port->pl->len = diff;
-	}
-
+	*channel = xbuf[1];
+	*len = xbuf[4] + (xbuf[5]<<8) + (xbuf[6]<<16) + (xbuf[7]<<24);
 	/* Safety buffer of 0x800 ... we can only read in 0x800 chunks, 
-	 * otherwise the communication gets hickups. However *plen might be
+	 * otherwise the communication gets hickups. However *len might be
 	 * less.
 	 */
-	if (!*pbuffer)
-		*pbuffer = malloc(*plen + 1 + 0x800);
+	if (!*buffer)
+		*buffer = malloc(*len + 1 + 0x800);
 	else
-		*pbuffer = realloc(*pbuffer, *plen + 1 + 0x800);
-	tocopy = *plen;
+		*buffer = realloc(*buffer, *len + 1 + 0x800);
+	tocopy = *len;
 	if (tocopy > 0x800-8) tocopy = 0x800-8;
-	memcpy(*pbuffer, xbuf+8, tocopy);
+	memcpy(*buffer, xbuf+8, tocopy);
 	curlen = tocopy;
-	while (curlen < *plen) {
-		ret = gp_port_read(port, *pbuffer + curlen, 0x800);
+	while (curlen < *len) {
+		ret = gp_port_read(port, *buffer + curlen, 0x800);
 		if (ret < GP_OK) {
 			gp_log(GP_LOG_ERROR, "g3", "read error in g3_channel_read\n");
 			return ret;
 		}
 		curlen += ret;
 	}
-	(*pbuffer)[*plen] = 0x00;
+	(*buffer)[*len] = 0x00;
 	return GP_OK;
 }
 
@@ -155,50 +114,35 @@ g3_channel_read_bytes(
 		int rest = expected;
 		if (rest > 65536) rest = 65536;
 
-		if (port->pl->len) {
-			memcpy (xbuf, port->pl->buf, port->pl->len);
-			if (rest > port->pl->len)
-				rest = ((rest - port->pl->len) + 9 + 3) & ~3;
-		} else {
-			rest = (rest + 9 + 3) & ~3;
+		rest = (rest + 9 + 3) & ~3;
+		if (rest < 0x800) rest = 0x800;
+
+		ret = gp_port_read(port, xbuf, rest);
+		if (ret < GP_OK) {
+			gp_log(GP_LOG_ERROR, "g3", "read error in g3_channel_read\n");
+			return ret;
+		}
+		if (ret != rest) {
+			gp_log(GP_LOG_ERROR, "g3", "read error in g3_channel_read\n");
+			return ret;
 		}
 
-		if (rest > 0) {
-			if (rest < 0x800) rest = 0x800;
-			ret = gp_port_read (port, (char*)(xbuf+port->pl->len), rest);
-			if (ret < GP_OK) {
-				gp_log (GP_LOG_ERROR, "g3", "read error in g3_channel_read\n");
-				return ret;
-			}
-			if (ret != rest) {
-				gp_log (GP_LOG_ERROR, "g3", "read error in g3_channel_read\n");
-				return ret;
-			}
-		}
-		port->pl->len = 0;
 		if ((xbuf[2] != 0xff) || (xbuf[3] != 0xff)) {
-			gp_log (GP_LOG_ERROR, "g3", "first bytes do not match.\n");
-			free (xbuf);
+			gp_log(GP_LOG_ERROR, "g3", "first bytes do not match.\n");
+			free(xbuf);
 			return GP_ERROR_IO;
 		}
 		len = xbuf[4] + (xbuf[5]<<8) + (xbuf[6]<<16) + (xbuf[7]<<24);
 		*channel = xbuf[1];
-		if (len > expected) {
-			gp_log (GP_LOG_ERROR,"g3","len %d is > rest expected %d, pushing back.\n", len, expected);
-			if (port->pl->buf)
-				port->pl->buf = malloc (expected - len);
-			else
-				port->pl->buf = realloc (port->pl->buf, expected - len);
-			memcpy (port->pl->buf, xbuf+8+len, expected - len);
-			port->pl->len = expected - len;
-		}
-		memcpy (*buffer+xlen, xbuf+8, len);
+		if (len > expected)
+			gp_log(GP_LOG_ERROR,"g3","len %d is > rest expected %d\n", len, expected);
+		memcpy(*buffer+xlen, xbuf+8, len);
 		expected	-= len;
 		xlen		+= len;
 		gp_context_progress_update (context, id, xlen);
 	}
 	gp_context_progress_stop (context, id);
-	free (xbuf);
+	free(xbuf);
 	return GP_OK;
 }
 
@@ -900,14 +844,8 @@ out:
 int
 camera_init (Camera *camera, GPContext *context) 
 {
-	GPPortPrivateLibrary *cbuf;
+	/*char *buf;*/
 	GPPortSettings settings;
-
-	cbuf = malloc(sizeof(*cbuf));
-	if (!cbuf)
-		return GP_ERROR;
-	memset(cbuf, 0, sizeof(*cbuf));
-	camera->port->pl = cbuf;
 
         /* First, set up all the needed function pointers */
         camera->functions->summary              = camera_summary;
@@ -939,8 +877,6 @@ camera_init (Camera *camera, GPContext *context)
 	 * Once you have configured the port, you should check if a 
 	 * connection to the camera can be established.
 	 */
-
-	
 
 	/* testing code ... 
 	buf = NULL;
