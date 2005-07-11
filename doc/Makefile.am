@@ -54,6 +54,12 @@ uninstall-local: uninstall-apidocs
 
 clean-local: clean-apidocs
 
+doc_EXTRA_DIST = $(HTML_APIDOC_DIR).tar.gz 
+
+doc_DATA = $(DOXYGEN_FILES) README.apidocs
+
+CLEANFILES = $(DOXYGEN_FILES) $(DOXYGEN_STAMPS)
+
 endif
 
 
@@ -61,10 +67,4 @@ endif
 # Common part
 ########################################################################
 
-EXTRA_DIST = Doxyfile.in README.apidocs $(HTML_APIDOC_DIR).tar.gz $(old_EXTRA_DIST)
-
-doc_DATA = $(DOXYGEN_FILES) README.apidocs
-
-
-CLEANFILES = $(DOXYGEN_FILES) $(DOXYGEN_STAMPS)
-
+EXTRA_DIST = $(doc_EXTRA_DIST) Doxyfile.in README.apidocs $(old_EXTRA_DIST)
