@@ -250,6 +250,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	unsigned char gtable[256];
 	int size;
 
+	if (GP_FILE_TYPE_EXIF ==type) return GP_ERROR_FILE_EXISTS;
+
 	if (GP_FILE_TYPE_RAW!=type && GP_FILE_TYPE_NORMAL
 				    !=type && GP_FILE_TYPE_PREVIEW!=type) {
 
@@ -320,7 +322,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		default:  h = 288; break;
 		}
 		b = nb_frames * w * h / comp_ratio;
-
+		do_preprocess = 1;
 		if (camera->pl->last_fetched_data) break;
 
 		camera->pl->last_fetched_data = malloc (nb_frames*w*h);
@@ -331,7 +333,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		GP_DEBUG("Fetch entry %i\n", to_fetch);
 		sq_read_picture_data 
 				(camera->port, camera->pl->last_fetched_data, b);
-		do_preprocess = 1;
 		camera->pl->last_fetched_entry = to_fetch;
 	} while (camera->pl->last_fetched_entry<entry);
 

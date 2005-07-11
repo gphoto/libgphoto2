@@ -324,6 +324,7 @@ sq_decompress (SQModel model, unsigned char *output, unsigned char *data,
 	/* De-mirroring for some models */
 	switch(model) {
 	case(SQ_MODEL_MAGPIX):
+	case(SQ_MODEL_POCK_CAM):	
 		for (m=0; m<h; m++){
 			for(i=0; i<w/2; i++){
 				for(j=0; j<3; j++) {

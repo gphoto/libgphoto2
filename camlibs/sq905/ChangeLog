@@ -1,5 +1,14 @@
 2005-05-18   Theodore Kilgore <kilgota@auburn.edu>
 
+	* library.c: Several improvements for SQ_MODEL_POCK_CAM
+	* postprocess.c: Several improvements for SQ_MODEL_POCK_CAM	
+	* sq905.c: Several improvements for SQ_MODEL_POCK_CAM, thanks to 
+	Julius Schwartzenberg <julius@zgod.cjb.net> for exhaustive testing!
+
+
+
+2005-05-18   Theodore Kilgore <kilgota@auburn.edu>
+
 	* library.c: bug in compressed photo routine fixed, found by Cedric Cellier.
 
 
