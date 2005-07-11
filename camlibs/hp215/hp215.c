@@ -177,7 +177,7 @@ static int
 hp_gen_cmd_blob (enum hp215_cmd cmd, int bytes, unsigned char *argdata, unsigned char **buf, int *buflen)
 {
 	int i, crc = 0;
-	
+
 	*buflen = 1+1+1+bytes+4+1; /* STX, CMD, ARGLEN, arguments, 4xCRC, ETX */
 	*buf    = malloc(*buflen);
 	if (!*buf)
@@ -189,7 +189,7 @@ hp_gen_cmd_blob (enum hp215_cmd cmd, int bytes, unsigned char *argdata, unsigned
 	/* store CMD */
 	(*buf)[1] = cmd;
 	if (bytes >= 0x7d) {
-		gp_log (GP_LOG_ERROR, "hp215", "Using too large argument buffer %d bytes\n", bytes);
+		gp_log (GP_LOG_ERROR, "hp215", "Using too large argument buffer %d bytes", bytes);
 		return GP_ERROR_BAD_PARAMETERS;
 	}
 	/* store arglen */
@@ -203,7 +203,7 @@ hp_gen_cmd_blob (enum hp215_cmd cmd, int bytes, unsigned char *argdata, unsigned
 	/* generate CRC over cmd, len, and arguments */
 	for (i=1;i<bytes + 3;i++)
 		crc = updcrc((*buf)[i], crc);
-	
+
 	/* store CRC */
 	(*buf)[bytes+3] = ((crc >> 12) & 0xf) | 0x80;
 	(*buf)[bytes+4] = ((crc >>  8) & 0xf) | 0x80;
@@ -236,7 +236,7 @@ hp_send_ack (Camera *cam)
 	gp_log (GP_LOG_DEBUG, "hp215", "Sending ACK ... ");
 	ret = gp_port_write (cam->port, &byte, 1);
 	if (ret < GP_OK)
-		gp_log (GP_LOG_ERROR, "hp215", "ACK sending failed with %d\n", ret);
+		gp_log (GP_LOG_ERROR, "hp215", "ACK sending failed with %d", ret);
 	return ret;
 }
 
@@ -262,7 +262,7 @@ hp_send_command_and_receive_blob(
 	Camera *camera, unsigned char *buf, int buflen,
 	unsigned char **msg, int *msglen
 ) {
-	int ret;
+	int ret, replydatalen;
 	unsigned char msgbuf[0x400];
 
 	*msg = NULL;
@@ -277,17 +277,40 @@ hp_send_command_and_receive_blob(
 	if (ret < GP_OK)
 		return ret;
 	if (msgbuf[0] != STX) {
-		gp_log (GP_LOG_ERROR, "hp215", "Expected STX / 02 at begin of buffer, found %02x\n", msgbuf[0]);
+		gp_log (GP_LOG_ERROR, "hp215", "Expected STX / 02 at begin of buffer, found %02x", msgbuf[0]);
 		return GP_ERROR_IO;
 	}
 	if (msgbuf[ret-1] != ETX) {
-		gp_log (GP_LOG_ERROR, "hp215", "Expected ETX / 03 at end of buffer, found %02x\n", msgbuf[ret-1]);
+		gp_log (GP_LOG_ERROR, "hp215", "Expected ETX / 03 at end of buffer, found %02x", msgbuf[ret-1]);
 		return GP_ERROR_IO;
 	}
-	*msg = malloc(ret);
-	*msglen = ret;
-	memcpy (*msg, msgbuf, ret);
+	replydatalen = msgbuf[2] & 0x7f;
+	if (replydatalen != ret - 8) {
+		gp_log (GP_LOG_ERROR, "hp215", "Reply datablob length says %d, but just %d bytes available?", replydatalen, ret-8);
+		return GP_ERROR_IO;
+	}
+	*msg = malloc(replydatalen);
+	*msglen = replydatalen;
+	memcpy (*msg, msgbuf+3, replydatalen);
+	gp_log (GP_LOG_DEBUG, "hp215", "Reply data block:");
+	gp_log_data ("hp215", *msg, *msglen);
 	return hp_send_ack (camera);
+}
+
+static int
+decode_u32(unsigned char **msg, int *msglen, unsigned int *val) {
+	unsigned int x = 0,i;
+
+	for (i=0;i<8;i++) {
+		if (!*msglen)
+			return GP_ERROR;
+		x <<= 4;
+		x  |= ((**msg) & 0x0f);
+		(*msg)++;
+		(*msglen)--;
+	}
+	*val = x;
+	return GP_OK;
 }
 
 static int
@@ -309,11 +332,11 @@ hp_get_timeDate_cam (Camera *cam, char *txtbuffer, size_t txtbuffersize)
 		return ret;
 
 	/* Filter time and date out of the message */
-	date.day   = (msg[8]-48)*10 + (msg[9]-48);
-	date.month = (msg[5]-48)*10 + (msg[6]-48) - 1;
-	date.year  = 2000 + (msg[11]-48)*10 + (msg[12]-48);
-	date.hour  = (msg[14]-48)*10 + (msg[15]-48);
-	date.min   = (msg[17]-48)*10 + (msg[18]-48);
+	date.day   = (msg[5]-48)*10 + (msg[6]-48);
+	date.month = (msg[2]-48)*10 + (msg[3]-48) - 1;
+	date.year  = 2000 + (msg[8]-48)*10 + (msg[9]-48);
+	date.hour  = (msg[11]-48)*10 + (msg[12]-48);
+	date.min   = (msg[14]-48)*10 + (msg[15]-48);
 	free (msg);
 
 	snprintf (txtbuffer, txtbuffersize, _("Current camera time:  %04d-%02d-%02d  %02d:%02d\n"),
@@ -362,9 +385,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
         image_no = gp_filesystem_number(fs, folder, filename, context);
         if(image_no < 0)
                 return image_no;
-	image_no++;
 
-	memset(msg, 0, sizeof(msg));
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
 		cmd = DOWNLOAD_PHOTO;
@@ -376,7 +397,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return GP_ERROR_BAD_PARAMETERS;
 	}
 
-	ret = hp_gen_cmd_1_16 (cmd, image_no, &buf, &buflen);
+	ret = hp_gen_cmd_1_16 (cmd, image_no+1, &buf, &buflen);
 	if (ret < GP_OK)
 		return ret;
 	ret = hp_send_command_and_receive_blob (camera, buf, buflen, &msg, &msglen);
@@ -393,13 +414,13 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		ret = gp_port_read (camera->port, (char*)imgdata, 0x1000);
 		/* Check if preview reading is complete*/
 		if ((ret==1) && (imgdata[0]==0x04)) {
-			gp_log (GP_LOG_DEBUG, "hp215", "Image data complete!\n");
+			gp_log (GP_LOG_DEBUG, "hp215", "Image data complete!");
 			break;
 		}
 
 		/* Check if there was an error */
 		if (ret==-1) {
-			gp_log (GP_LOG_ERROR, "hp215", "Warning: Image data may be corrupted...\n");
+			gp_log (GP_LOG_ERROR, "hp215", "Warning: Image data may be corrupted...");
 			break;
 		}
 		gp_file_append (file, (char*)imgdata, ret);
@@ -456,7 +477,10 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 {
 	Camera		*camera = data;
 	int		ret, msglen, buflen, offset = 13, image_no;
-	unsigned char	*msg, *buf;
+	unsigned int	val;
+	unsigned char	*xmsg, *msg, *buf;
+
+	gp_log (GP_LOG_DEBUG, "hp215", "folder %s, filename %s", folder, filename);
 
         image_no = gp_filesystem_number(fs, folder, filename, context);
         if(image_no < 0)
@@ -468,10 +492,24 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	free (buf);
 	if (ret < GP_OK)
 		return ret;
+	if (msglen < 2)
+		return GP_ERROR_IO;
+
+	xmsg = msg;
+	xmsg   += 2;
+	msglen -= 2;
+
+	ret = decode_u32(&xmsg, &msglen, &val);
+	if (ret < GP_OK)
+		return ret;
+	memset (info, 0, sizeof(*info));
+	info->file.fields = GP_FILE_INFO_SIZE;
+	info->file.size = val;
+	info->preview.fields = 0;
+
 	free (msg);
-	return GP_ERROR_IO;
+	return GP_OK;
 #if 0
-	/* Copy getten date into date placeholder */
 	strcpy ((camera->pic[cnt+1])->date_time, &msg[0x0d]);
 
 	/* Calculate day,month, year, hour and minute of the photo */
@@ -529,7 +567,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	if (ret < GP_OK)
 		return ret;
 	/* Calculate the number of pictures from the gotten message */
-	count = 256*(msg[42]&0x7f) + 16*(msg[43]&0x7f) + (msg[44]&0x7f);
+	count = 256*(msg[39]&0x7f) + 16*(msg[40]&0x7f) + (msg[41]&0x7f);
 
 	free (msg);
         return gp_list_populate(list, "image%i.jpg", count);
