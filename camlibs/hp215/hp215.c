@@ -151,17 +151,6 @@ enum hp215_cmd {
     CC CC CC CC   16 bit CRC split into 4 bit pieces, | 0x80
     03 - ETX
 
-     Request for a preview         | 0xb3	16bit picnum
-     Request for a picture         | 0xb4	16bit picnum
-     Request date/time for preview | 0xc5	16bit picnum
-     Request for deleting one pic  | 0xb1	16bit picnum
-
-    Picture number:
-    ----------------
-    buffer[4] = ((num&0xf00)>>8) | 0x80;
-    buffer[5] = ((num&0xf0 )>>4) | 0x80;
-    buffer[6] = ((num&0xf  )   ) | 0x80;
-
     A generic CRC is done over the buffer, starting with the CMD byte (offset 1).
 
     buffer[7]  = ((crc>>12) & 0xf) | 0x80;
@@ -293,7 +282,7 @@ hp_send_command_and_receive_blob(
 	*msglen = replydatalen;
 	memcpy (*msg, msgbuf+3, replydatalen);
 	gp_log (GP_LOG_DEBUG, "hp215", "Reply data block:");
-	gp_log_data ("hp215", *msg, *msglen);
+	gp_log_data ("hp215", (char*)*msg, *msglen);
 	return hp_send_ack (camera);
 }
 
@@ -495,6 +484,12 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (msglen < 2)
 		return GP_ERROR_IO;
 
+/*
+0000  e0 e0 80 80 80 85 86 85-84 84 30 31 2f 30 32 2f  ..........01/02/
+0010  30 30 20 31 34 3a 34 38-00 80 81 80 80 80 80 81  00 14:48........
+0020  88 89 84 81 80 80 80 80-80 81 00 00 00 00 00 00  ................
+0030  00 00 00 00 00 00      -                         ......          
+ */
 	xmsg = msg;
 	xmsg   += 2;
 	msglen -= 2;
@@ -505,7 +500,22 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	memset (info, 0, sizeof(*info));
 	info->file.fields = GP_FILE_INFO_SIZE;
 	info->file.size = val;
-	info->preview.fields = 0;
+
+	xmsg	+= 0x0f;
+	msglen	-= 0x0f;
+	gp_log (GP_LOG_DEBUG, "hp215", "byte0 %02x", xmsg[0]);
+	gp_log (GP_LOG_DEBUG, "hp215", "byte1 %02x", xmsg[1]);
+	xmsg	+= 2;
+	msglen	-= 2;
+
+	ret = decode_u32(&xmsg, &msglen, &val);
+	if (ret < GP_OK)
+		return ret;
+	info->preview.fields = GP_FILE_INFO_SIZE;
+	info->preview.size = val;
+
+	gp_log (GP_LOG_DEBUG, "hp215", "byte2 %02x", xmsg[0]);
+	gp_log (GP_LOG_DEBUG, "hp215", "byte3 %02x", xmsg[1]);
 
 	free (msg);
 	return GP_OK;
@@ -525,54 +535,35 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 #endif
 }
 
-
-/*
-
-   000013 B> 00000000: 02c6 8880 8083 8438 2f30 3288 848e 8b03 .......8/02.....
-
-   000014 B< 00000000: 06                                      .
-
-   000015 B< 00000000: 02c6 aae0 e050 686f 746f 416c 6275 6d00 .....PhotoAlbum.
-             00000010: 3a32 3600 8080 0180 8182 8c81 8080 8080 :26.............
-             00000020: 8080 8080 e480 8080 8080 8080 8087 8084 ................
-             00000030: 8a03                                    ..
-
-   000016 B> 00000000: 06                                      .
-
-    The first cmd in the trace is sent to the camera.  It appears to
-    change depending on some factors.  For example, it seems to use the
-    last 4 digits of the date returned from the camera as part of the cmd
-    that is sent (the 8/02 above is from 7/18/02 that was returned from
-    the camera in hp_get_timeDate_cam.  However, I have found that I
-    can use the above command as is regardless of the date/time and still
-    receive the PhotoAlbum correctly, so I've implemented it as a static
-    call.
-
-    From observation, the 43+44+45th lower words of the returned msg contains
-    the number of pictures in the camera.
- */
-
 static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data, GPContext *context)
 {
-	Camera *camera = data;
-	int           ret, msglen, count;
-	unsigned char *msg;
-	unsigned char buffer[] = HP_CMD_GET_PHOTO_ALBUM;
+	Camera		*camera = data;
+	int		ret, msglen, buflen;
+	unsigned int	count;
+	unsigned char	*xmsg, *msg, *buf;
 
-	/* Sending photo album request command */
-	gp_log (GP_LOG_DEBUG, "hp215", "Sending photo album request ... ");
-	ret = hp_send_command_and_receive_blob (camera, buffer, sizeof(buffer), &msg, &msglen);
+	/* Note: The original windows driver sends 0x348, and 4 bytes junk.
+	 * we just send the 0x348 and it works. */
+	ret = hp_gen_cmd_1_16 (GET_ALBUM_INFO, 0x348, &buf, &buflen);
 	if (ret < GP_OK)
 		return ret;
-	/* Calculate the number of pictures from the gotten message */
-	count = 256*(msg[39]&0x7f) + 16*(msg[40]&0x7f) + (msg[41]&0x7f);
-
+	gp_log (GP_LOG_DEBUG, "hp215", "Sending photo album request ... ");
+	ret = hp_send_command_and_receive_blob (camera, buf, buflen, &msg, &msglen);
+	free (buf);
+	if (ret < GP_OK)
+		return ret;
+	xmsg	= msg + 0x22; /* skip e0e0 and 0x20 byte string */
+	msglen	= msglen - 0x22;
+	ret = decode_u32(&xmsg, &msglen, &count);
 	free (msg);
+	if (ret < GP_OK)
+		return ret;
         return gp_list_populate(list, "image%i.jpg", count);
 }
 
+#if 0 /* does not work */
 static int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
                 GPContext *context)
@@ -593,6 +584,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
          */
 	return GP_OK;
 }
+#endif
 
 
 int
@@ -612,7 +604,7 @@ camera_abilities (CameraAbilitiesList *list) {
 	a.port			= GP_PORT_USB;
 	a.usb_vendor		= 0x3f0;	/* HP */
 	a.usb_product		= 0x6202;	/* Photosmart 215 */
-	a.operations		= GP_OPERATION_CAPTURE_IMAGE;
+	a.operations		= GP_OPERATION_NONE;
 	a.file_operations	= GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
 	a.folder_operations	= GP_FOLDER_OPERATION_DELETE_ALL;
 	return gp_abilities_list_append(list, a);
@@ -628,7 +620,6 @@ camera_init (Camera *camera, GPContext *context)
 
         camera->functions->summary              = camera_summary;
         camera->functions->about                = camera_about;
-        camera->functions->capture              = camera_capture;
 
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
 	gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL, camera);
