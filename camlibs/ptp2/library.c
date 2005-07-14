@@ -470,6 +470,9 @@ static struct {
 	/* Rollei dr5  */
 	{"Rollei:dr5 (PTP mode)",               0x05ca, 0x220f, 0},
 
+	/* Ricoh Caplio GX 8 */
+	{"Ricoh:Caplio GX 8 (PTP mode)",        0x05ca, 0x032d, 0},
+
 	/* Pentax cameras */
 	{"Pentax:Optio 43WR",                   0x0a17, 0x000d, 0},
 

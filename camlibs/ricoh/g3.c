@@ -291,6 +291,11 @@ camera_abilities (CameraAbilitiesList *list)
 	a.usb_product	= 0x2213;
 	gp_abilities_list_append(list, a);
 
+	strcpy(a.model, "Ricoh:Caplio GX 8");
+	a.usb_vendor	= 0x5ca;
+	a.usb_product	= 0x2214;
+	gp_abilities_list_append(list, a);
+
 	return (GP_OK);
 }
 

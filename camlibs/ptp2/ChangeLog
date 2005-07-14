@@ -1,3 +1,7 @@
+2005-07-14  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* library.c: Added GX 8 in ptp mode.
+
 2005-07-08  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Borrowed a Nikon D70 for a day
