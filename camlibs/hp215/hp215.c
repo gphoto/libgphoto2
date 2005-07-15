@@ -131,6 +131,7 @@ enum hp215_cmd {
 	DOWNLOAD_PHOTO_FROM_ALBUM	= 0xbe,
 	GET_CAMERA_CAPS			= 0xc0,
 	GET_CAMERA_CURINFO		= 0xc1,
+	GET_SHOOT_MODE_2		= 0xc3,
 	GET_PHOTO_INFO			= 0xc5,
 	GET_ALBUM_INFO			= 0xc6,
 	GET_CAMERA_READY		= 0xce,
@@ -231,7 +232,7 @@ hp_send_ack (Camera *cam)
 
 
 static int
-hp_rcv_ack (Camera *cam)
+hp_rcv_ack (Camera *cam, char *ackval)
 {
 	int           ret;
 	char byte = '\0';
@@ -240,6 +241,8 @@ hp_rcv_ack (Camera *cam)
 	ret = gp_port_read (cam->port, &byte, 1);
 	if (ret < GP_OK)
 		return ret;
+	if (ackval)
+		*ackval = byte;
 	if (byte == ACK)
 		return GP_OK;
 	gp_log (GP_LOG_DEBUG, "hp215", "Expected ACK, but read %02x", byte);
@@ -283,16 +286,25 @@ hp_send_command_and_receive_blob(
 	Camera *camera, unsigned char *buf, int buflen,
 	unsigned char **msg, int *msglen, unsigned int *retcode
 ) {
-	int ackret, ret, replydatalen;
+	int tries, ackret, ret, replydatalen;
 	unsigned char msgbuf[0x400];
+	char ackval;
 
+	tries = 0;
 	*msg = NULL;
 	*msglen = 0;
-	ret = gp_port_write (camera->port, (char*)buf, buflen);
-	if (ret < GP_OK)
-		return ret;
-	if (hp_rcv_ack (camera))
-		return GP_ERROR_IO;
+	for (tries = 0; tries < 3; tries++ ) {
+		ret = gp_port_write (camera->port, (char*)buf, buflen);
+		if (ret < GP_OK)
+			return ret;
+		ret = hp_rcv_ack (camera, &ackval);
+		if (ret < GP_OK) {
+			if (ackval == NAK)
+				continue;
+			return GP_ERROR_IO;
+		}
+		break;
+	}
 	gp_log( GP_LOG_DEBUG, "hp215", "Expecting reply blob");
 	ret = gp_port_read (camera->port, (char*)msgbuf, sizeof(msgbuf));
 	if (ret < GP_OK)
@@ -363,9 +375,12 @@ static int
 hp_get_timeDate_cam (Camera *cam, char *txtbuffer, size_t txtbuffersize)
 {
 	int		msglen, buflen, ret;
-	unsigned char	*msg, *buf;
+	unsigned char	*xmsg, *msg, *buf;
 	unsigned int	retcode;
 	t_date		date;
+	unsigned short	val16;
+	unsigned int	percent, val32, freespace, unixtime, freeimages, usedimages;
+	char		datebuf[15];
 
 	gp_log (GP_LOG_DEBUG, "hp215", "Sending date/time command ... ");
 
@@ -376,18 +391,57 @@ hp_get_timeDate_cam (Camera *cam, char *txtbuffer, size_t txtbuffersize)
 	free (buf);
 	if (ret < GP_OK)
 		return ret;
+	xmsg = msg;
+	if (msglen < 0x59) {
+		gp_log (GP_LOG_ERROR, "hp215", "too short reply block, %d bytes", msglen);
+		return GP_ERROR_IO;
+	}
+	
+	memcpy (datebuf, msg, 15);
+	gp_log (GP_LOG_DEBUG, "hp215", "0f: %02x", msg[0x0f] & 0x7f);
+	gp_log (GP_LOG_DEBUG, "hp215", "10: %02x", msg[0x10] & 0x7f);
+
+	xmsg += 0x12;
+	msglen -= 0x12;
+	decode_u16(&xmsg, &msglen, &val16);
+	gp_log (GP_LOG_DEBUG, "hp215", "12: %04x", val16);
+	gp_log (GP_LOG_DEBUG, "hp215", "16: %02x", msg[0x16] & 0x7f);
+	xmsg++;msglen--;
+	decode_u16(&xmsg, &msglen, &val16);
+	gp_log (GP_LOG_DEBUG, "hp215", "17: %04x", val16);
+	decode_u16(&xmsg, &msglen, &val16);
+	gp_log (GP_LOG_DEBUG, "hp215", "1b: %04x", val16);
+	percent = msg[0x1f] & 0x7f;
+	xmsg++;msglen--;
+	decode_u32(&xmsg, &msglen, &val32);
+	gp_log (GP_LOG_DEBUG, "hp215", "20: %08x", val32);
+	decode_u32(&xmsg, &msglen, &val32);
+	gp_log (GP_LOG_DEBUG, "hp215", "28: %08x", val32);
+	decode_u32(&xmsg, &msglen, &val32);
+	gp_log (GP_LOG_DEBUG, "hp215", "30: %08x", val32);
+	gp_log (GP_LOG_DEBUG, "hp215", "38: %02x", msg[0x38] & 0x7f);
+	xmsg++;msglen--;
+	decode_u32(&xmsg, &msglen, &unixtime);
+	decode_u32(&xmsg, &msglen, &freeimages);
+	decode_u32(&xmsg, &msglen, &usedimages);
+	decode_u32(&xmsg, &msglen, &val32);
+	gp_log (GP_LOG_DEBUG, "hp215", "51: %08x", val32);
+	decode_u32(&xmsg, &msglen, &freespace);
 
 	/* Filter time and date out of the message */
-	date.day   = (msg[5]-48)*10 + (msg[6]-48);
-	date.month = (msg[2]-48)*10 + (msg[3]-48) - 1;
-	date.year  = 2000 + (msg[8]-48)*10 + (msg[9]-48);
-	date.hour  = (msg[11]-48)*10 + (msg[12]-48);
-	date.min   = (msg[14]-48)*10 + (msg[15]-48);
+	date.day   = (msg[3]-48)*10 + (msg[4]-48);
+	date.month = (msg[0]-48)*10 + (msg[1]-48);
+	date.year  = 2000 + (msg[6]-48)*10 + (msg[7]-48);
+	date.hour  = (msg[9]-48)*10 + (msg[10]-48);
+	date.min   = (msg[12]-48)*10 + (msg[13]-48);
 	free (msg);
 
-	snprintf (txtbuffer, txtbuffersize, _("Current camera time:  %04d-%02d-%02d  %02d:%02d\n"),
-		date.year, date.month, date.day, date.hour, date.min
+
+	snprintf (txtbuffer, txtbuffersize, _("Current camera time:  %04d-%02d-%02d  %02d:%02d\nFree card memory: %d\nImages on card: %d\nImages free on card: %d\nBattery level: %d %%"),
+		date.year, date.month, date.day, date.hour, date.min,
+		freespace, usedimages, freeimages, percent
 	);
+	/* FIXME: communication hangs here ... perhaps need to reset USB pipe */
 	return GP_OK;
 }
 
@@ -423,7 +477,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 {
 	Camera *camera = data;
 	int           ret, buflen, msglen, image_no;
-	unsigned char imgdata[0x01000];
 	unsigned char cmd, *buf, *msg;
 	unsigned int  retcode;
 
@@ -449,26 +502,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	free (buf);
 	if (ret < GP_OK)
 		return ret;
-	free (msg);
-
 	gp_file_set_mime_type (file, GP_MIME_JPEG);
-
-	/* Read preview in 4096 byte parts (0x1000) */
-	while (1) {
-		ret = gp_port_read (camera->port, (char*)imgdata, 0x1000);
-		/* Check if preview reading is complete*/
-		if ((ret == 1) && (imgdata[0] == EOT)) {
-			gp_log (GP_LOG_DEBUG, "hp215", "Image data complete!");
-			break;
-		}
-
-		/* Check if there was an error */
-		if (ret==-1) {
-			gp_log (GP_LOG_ERROR, "hp215", "Warning: Image data may be corrupted...");
-			break;
-		}
-		gp_file_append (file, (char*)imgdata, ret);
-	}
+	gp_file_set_data_and_size (file, (char*)msg, msglen);
+	/* do not free (msg), we handed it to the lower layer right now */
 	return GP_OK;
 }
 
@@ -654,26 +690,26 @@ get_shoot_mode_table (Camera *camera) {
 		xmsg += 0x20;
 		msglen -= 0x20;
 		/* 0x15 left */
-		/* u4 u4 u8 u4 u4 u4 u4 u4 u4 u4 */
-		gp_log (GP_LOG_DEBUG, "hp215", "%01x %01x %02x %01x %01x %01x %01x %01x %01x %01x",
-			xmsg[0] & 0xf,
-			xmsg[1] & 0xf,
+		/* u4 u4 u8 u7 u4 u4 u4 u4 u4 u4 */
+		gp_log (GP_LOG_DEBUG, "hp215", "%01x %01x %02x %02x %01x %01x %01x %01x %01x %01x",
+			xmsg[0] & 0x0f,
+			xmsg[1] & 0x0f,
 			((xmsg[2] & 0xf) << 4) | (xmsg[3] & 0xf),
-			xmsg[4] & 0xf,
-			xmsg[5] & 0xf,
-			xmsg[6] & 0xf,
-			xmsg[7] & 0xf,
-			xmsg[8] & 0xf,
-			xmsg[9] & 0xf,
-			xmsg[10] & 0xf
+			xmsg[4] & 0x7f,
+			xmsg[5] & 0x0f,
+			xmsg[6] & 0x0f,
+			xmsg[7] & 0x0f,
+			xmsg[8] & 0x0f,
+			xmsg[9] & 0x0f,
+			xmsg[10] & 0x0f
 		);
-		/* u4 u4 u8 u4 u4 u16 */
-		gp_log (GP_LOG_DEBUG, "hp215", "%01x %01x %02x %01x %01x",
-			xmsg[11] & 0xf,
-			xmsg[12] & 0xf,
+		/* u7 u7 u8 u7 u7 u16 */
+		gp_log (GP_LOG_DEBUG, "hp215", "%02x %02x %02x %02x %02x",
+			xmsg[11] & 0x7f,
+			xmsg[12] & 0x7f,
 			((xmsg[13] & 0xf) << 4) | (xmsg[14] & 0xf),
-			xmsg[15] & 0xf,
-			xmsg[16] & 0xf
+			xmsg[15] & 0x7f,
+			xmsg[16] & 0x7f
 		);
 		xmsg += 0x11;
 		msglen -= 0x11;
@@ -684,6 +720,33 @@ get_shoot_mode_table (Camera *camera) {
 	free (msg);
 	return GP_OK;
 }
+
+static int
+camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
+{
+	unsigned char *buf, *msg;
+	int ret, buflen, msglen;
+	unsigned int retcode;
+
+	/* there is one mode where we send a 16bit 0x1 */
+	ret = hp_gen_cmd_blob (TAKE_PREVIEW, 0, NULL, &buf, &buflen);
+	if (ret < GP_OK)
+		return ret;
+	gp_port_set_timeout (camera->port, 10000);
+	ret = hp_send_command_and_receive_blob (camera, buf, buflen, &msg, &msglen, &retcode);
+	free (buf);
+	if (ret < GP_OK)
+		return ret;
+	if (retcode != HP215_OK) {
+		free (msg);
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+	gp_file_set_mime_type (file, GP_MIME_JPEG);
+	gp_file_set_data_and_size (file, (char*)msg, msglen);
+	/* do not free (msg), we handed it to the lower layer right now */
+	return ret;
+}
+
 
 static int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
@@ -730,7 +793,7 @@ camera_abilities (CameraAbilitiesList *list) {
 	a.port			= GP_PORT_USB;
 	a.usb_vendor		= 0x3f0;	/* HP */
 	a.usb_product		= 0x6202;	/* Photosmart 215 */
-	a.operations		= GP_OPERATION_NONE;
+	a.operations		= GP_OPERATION_CAPTURE_PREVIEW | GP_OPERATION_CAPTURE_IMAGE;
 	a.file_operations	= GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
 	a.folder_operations	= GP_FOLDER_OPERATION_DELETE_ALL;
 	return gp_abilities_list_append(list, a);
@@ -748,6 +811,7 @@ camera_init (Camera *camera, GPContext *context)
 	camera->functions->summary              = camera_summary;
 	camera->functions->about                = camera_about;
 	camera->functions->capture              = camera_capture;
+	camera->functions->capture_preview      = camera_capture_preview;
 
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
 	gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL, camera);
