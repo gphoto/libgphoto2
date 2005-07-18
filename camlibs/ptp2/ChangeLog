@@ -1,3 +1,12 @@
+2005-07-19  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Use params everywhere.
+
+	  Enhance errorhandling to report errors only for
+	  the correct vendor.
+
+	  Completed Canon theme download, but disabled.
+	
 2005-07-14  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* library.c: Added GX 8 in ptp mode.

@@ -59,12 +59,12 @@
 #define USB_TIMEOUT 8000
 #define USB_TIMEOUT_CAPTURE 20000
 
-#define CPR(context,result) {short r=(result); if (r!=PTP_RC_OK) {report_result ((context), r); return (translate_ptp_result (r));}}
+#define CPR(context,result) {short r=(result); if (r!=PTP_RC_OK) {report_result ((context), r, params->deviceinfo.VendorExtensionID); return (translate_ptp_result (r));}}
 
 #define CPR_free(context,result, freeptr) {\
 			short r=(result);\
 			if (r!=PTP_RC_OK) {\
-				report_result ((context), r);\
+				report_result ((context), r, params->deviceinfo.VendorExtensionID);\
 				free(freeptr);\
 				return (translate_ptp_result (r));\
 			}\
@@ -143,62 +143,65 @@ add_special_file (char *name, getfunc_t getfunc, putfunc_t putfunc) {
 /* PTP error descriptions */
 static struct {
 	short n;
+	short v;
 	const char *txt;
 } ptp_errors[] = {
-	{PTP_RC_Undefined, 		N_("PTP Undefined Error")},
-	{PTP_RC_OK, 			N_("PTP OK!")},
-	{PTP_RC_GeneralError, 		N_("PTP General Error")},
-	{PTP_RC_SessionNotOpen, 	N_("PTP Session Not Open")},
-	{PTP_RC_InvalidTransactionID, 	N_("PTP Invalid Transaction ID")},
-	{PTP_RC_OperationNotSupported, 	N_("PTP Operation Not Supported")},
-	{PTP_RC_ParameterNotSupported, 	N_("PTP Parameter Not Supported")},
-	{PTP_RC_IncompleteTransfer, 	N_("PTP Incomplete Transfer")},
-	{PTP_RC_InvalidStorageId, 	N_("PTP Invalid Storage ID")},
-	{PTP_RC_InvalidObjectHandle, 	N_("PTP Invalid Object Handle")},
-	{PTP_RC_DevicePropNotSupported, N_("PTP Device Prop Not Supported")},
-	{PTP_RC_InvalidObjectFormatCode, N_("PTP Invalid Object Format Code")},
-	{PTP_RC_StoreFull, 		N_("PTP Store Full")},
-	{PTP_RC_ObjectWriteProtected, 	N_("PTP Object Write Protected")},
-	{PTP_RC_StoreReadOnly, 		N_("PTP Store Read Only")},
-	{PTP_RC_AccessDenied,		N_("PTP Access Denied")},
-	{PTP_RC_NoThumbnailPresent, 	N_("PTP No Thumbnail Present")},
-	{PTP_RC_SelfTestFailed, 	N_("PTP Self Test Failed")},
-	{PTP_RC_PartialDeletion, 	N_("PTP Partial Deletion")},
-	{PTP_RC_StoreNotAvailable, 	N_("PTP Store Not Available")},
+	{PTP_RC_Undefined, 		0, N_("PTP Undefined Error")},
+	{PTP_RC_OK, 			0, N_("PTP OK!")},
+	{PTP_RC_GeneralError, 		0, N_("PTP General Error")},
+	{PTP_RC_SessionNotOpen, 	0, N_("PTP Session Not Open")},
+	{PTP_RC_InvalidTransactionID, 	0, N_("PTP Invalid Transaction ID")},
+	{PTP_RC_OperationNotSupported, 	0, N_("PTP Operation Not Supported")},
+	{PTP_RC_ParameterNotSupported, 	0, N_("PTP Parameter Not Supported")},
+	{PTP_RC_IncompleteTransfer, 	0, N_("PTP Incomplete Transfer")},
+	{PTP_RC_InvalidStorageId, 	0, N_("PTP Invalid Storage ID")},
+	{PTP_RC_InvalidObjectHandle, 	0, N_("PTP Invalid Object Handle")},
+	{PTP_RC_DevicePropNotSupported, 0, N_("PTP Device Prop Not Supported")},
+	{PTP_RC_InvalidObjectFormatCode, 0, N_("PTP Invalid Object Format Code")},
+	{PTP_RC_StoreFull, 		0, N_("PTP Store Full")},
+	{PTP_RC_ObjectWriteProtected, 	0, N_("PTP Object Write Protected")},
+	{PTP_RC_StoreReadOnly, 		0, N_("PTP Store Read Only")},
+	{PTP_RC_AccessDenied,		0, N_("PTP Access Denied")},
+	{PTP_RC_NoThumbnailPresent, 	0, N_("PTP No Thumbnail Present")},
+	{PTP_RC_SelfTestFailed, 	0, N_("PTP Self Test Failed")},
+	{PTP_RC_PartialDeletion, 	0, N_("PTP Partial Deletion")},
+	{PTP_RC_StoreNotAvailable, 	0, N_("PTP Store Not Available")},
 	{PTP_RC_SpecificationByFormatUnsupported,
-				N_("PTP Specification By Format Unsupported")},
-	{PTP_RC_NoValidObjectInfo, 	N_("PTP No Valid Object Info")},
-	{PTP_RC_InvalidCodeFormat, 	N_("PTP Invalid Code Format")},
-	{PTP_RC_UnknownVendorCode, 	N_("PTP Unknown Vendor Code")},
+				0, N_("PTP Specification By Format Unsupported")},
+	{PTP_RC_NoValidObjectInfo, 	0, N_("PTP No Valid Object Info")},
+	{PTP_RC_InvalidCodeFormat, 	0, N_("PTP Invalid Code Format")},
+	{PTP_RC_UnknownVendorCode, 	0, N_("PTP Unknown Vendor Code")},
 	{PTP_RC_CaptureAlreadyTerminated,
-					N_("PTP Capture Already Terminated")},
-	{PTP_RC_DeviceBusy, 		N_("PTP Device Busy")},
-	{PTP_RC_InvalidParentObject, 	N_("PTP Invalid Parent Object")},
-	{PTP_RC_InvalidDevicePropFormat, N_("PTP Invalid Device Prop Format")},
-	{PTP_RC_InvalidDevicePropValue, N_("PTP Invalid Device Prop Value")},
-	{PTP_RC_InvalidParameter, 	N_("PTP Invalid Parameter")},
-	{PTP_RC_SessionAlreadyOpened, 	N_("PTP Session Already Opened")},
-	{PTP_RC_TransactionCanceled, 	N_("PTP Transaction Canceled")},
+					0, N_("PTP Capture Already Terminated")},
+	{PTP_RC_DeviceBusy, 		0, N_("PTP Device Busy")},
+	{PTP_RC_InvalidParentObject, 	0, N_("PTP Invalid Parent Object")},
+	{PTP_RC_InvalidDevicePropFormat, 0, N_("PTP Invalid Device Prop Format")},
+	{PTP_RC_InvalidDevicePropValue, 0, N_("PTP Invalid Device Prop Value")},
+	{PTP_RC_InvalidParameter, 	0, N_("PTP Invalid Parameter")},
+	{PTP_RC_SessionAlreadyOpened, 	0, N_("PTP Session Already Opened")},
+	{PTP_RC_TransactionCanceled, 	0, N_("PTP Transaction Canceled")},
 	{PTP_RC_SpecificationOfDestinationUnsupported,
-			N_("PTP Specification Of Destination Unsupported")},
-	{PTP_RC_EK_FilenameRequired,	N_("PTP EK Filename Required")},
-	{PTP_RC_EK_FilenameConflicts,	N_("PTP EK Filename Conflicts")},
-	{PTP_RC_EK_FilenameInvalid,	N_("PTP EK Filename Invalid")},
+			0, N_("PTP Specification Of Destination Unsupported")},
+	{PTP_RC_EK_FilenameRequired,	PTP_VENDOR_EASTMAN_KODAK, N_("PTP EK Filename Required")},
+	{PTP_RC_EK_FilenameConflicts,	PTP_VENDOR_EASTMAN_KODAK, N_("PTP EK Filename Conflicts")},
+	{PTP_RC_EK_FilenameInvalid,	PTP_VENDOR_EASTMAN_KODAK, N_("PTP EK Filename Invalid")},
 
-	{PTP_ERROR_IO,		  N_("PTP I/O error")},
-	{PTP_ERROR_BADPARAM,	  N_("PTP Error: bad parameter")},
-	{PTP_ERROR_DATA_EXPECTED, N_("PTP Protocol error, data expected")},
-	{PTP_ERROR_RESP_EXPECTED, N_("PTP Protocol error, response expected")},
-	{0, NULL}
+	{PTP_ERROR_IO,		  0, N_("PTP I/O error")},
+	{PTP_ERROR_BADPARAM,	  0, N_("PTP Error: bad parameter")},
+	{PTP_ERROR_DATA_EXPECTED, 0, N_("PTP Protocol error, data expected")},
+	{PTP_ERROR_RESP_EXPECTED, 0, N_("PTP Protocol error, response expected")},
+	{0, 0, NULL}
 };
 
 static void
-report_result (GPContext *context, short result)
+report_result (GPContext *context, short result, short vendor)
 {
 	unsigned int i;
 
 	for (i = 0; ptp_errors[i].txt; i++)
-		if (ptp_errors[i].n == result)
+		if ((ptp_errors[i].n == result) && (
+		    (ptp_errors[i].v == 0) || (ptp_errors[i].v == vendor)
+		))
 			gp_context_error (context, "%s", dgettext(GETTEXT_PACKAGE, ptp_errors[i].txt));
 }
 
@@ -801,24 +804,23 @@ static int
 add_object (Camera *camera, uint32_t handle, GPContext *context)
 {
 	int n;
+	PTPParams *params = &camera->pl->params;
 
 	/* increase number of objects */
-	n=++camera->pl->params.handles.n;
+	n = ++params->handles.n;
 	/* realloc more space for camera->pl->params.objectinfo */
-	camera->pl->params.objectinfo = (PTPObjectInfo*)
-		realloc(camera->pl->params.objectinfo,
+	params->objectinfo = (PTPObjectInfo*)
+		realloc(params->objectinfo,
 			sizeof(PTPObjectInfo)*n);
-	/* realloc more space for amera->pl->params.handles.Handler */
-	camera->pl->params.handles.Handler= (uint32_t *)
-		realloc(camera->pl->params.handles.Handler,
+	/* realloc more space for params->handles.Handler */
+	params->handles.Handler= (uint32_t *)
+		realloc(params->handles.Handler,
 			sizeof(uint32_t)*n);
 	/* clear objectinfo entry for new object and assign new handler */
-	memset(&camera->pl->params.objectinfo[n-1],0,sizeof(PTPObjectInfo));
-	camera->pl->params.handles.Handler[n-1]=handle;
+	memset(&params->objectinfo[n-1],0,sizeof(PTPObjectInfo));
+	params->handles.Handler[n-1]=handle;
 	/* get new obectinfo */
-	CPR (context, ptp_getobjectinfo(&camera->pl->params,
-		handle,
-		&camera->pl->params.objectinfo[n-1]));
+	CPR (context, ptp_getobjectinfo(params, handle, &params->objectinfo[n-1]));
 	return (GP_OK);
 }
 
@@ -1264,6 +1266,15 @@ _get_getset(uint8_t gs) {
 	return N_("Unknown");
 }
 
+#pragma pack(1)
+struct canon_theme_entry {
+	uint16_t	unknown1;
+	uint32_t	offset;
+	uint32_t	length;
+	uint8_t		name[8];
+	char		unknown2[8];
+};
+
 static int
 canon_theme_get (CameraFilesystem *fs, const char *folder, const char *filename,
 		 CameraFileType type, CameraFile *file, void *data,
@@ -1274,13 +1285,24 @@ canon_theme_get (CameraFilesystem *fs, const char *folder, const char *filename,
 	PTPParams	*params = &camera->pl->params;
 	char		*xdata;
 	unsigned int	size;
+	int i;
+	struct canon_theme_entry	*ent;
 
 	((PTPData *) camera->pl->params.data)->context = context;
 
 	res = ptp_canon_theme_download (params, 1, &xdata, &size);
 	if (res != PTP_RC_OK)  {
-		report_result(context, res);
+		report_result(context, res, params->deviceinfo.VendorExtensionID);
 		return (translate_ptp_result(res));
+	}
+	if (size < 42+sizeof(struct canon_theme_entry)*5)
+		return GP_ERROR_BAD_PARAMETERS;
+	ent = (struct canon_theme_entry*)(xdata+42);
+	for (i=0;i<5;i++) {
+		fprintf(stderr,"entry %d: unknown1 = %x\n", i, ent[i].unknown1);
+		fprintf(stderr,"entry %d: off = %d\n", i, ent[i].offset);
+		fprintf(stderr,"entry %d: len = %d\n", i, ent[i].length);
+		fprintf(stderr,"entry %d: name = %s\n", i, ent[i].name);
 	}
 	CR (gp_file_set_data_and_size (file, xdata, size));
 	return (GP_OK);
@@ -3342,8 +3364,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	uint32_t size;
 	uint32_t storage;
 	PTPObjectInfo * oi;
+	PTPParams *params = &camera->pl->params;
 
-	((PTPData *) camera->pl->params.data)->context = context;
+	((PTPData *) params->data)->context = context;
 
 	if (!strcmp (folder, "/special")) {
 		int i;
@@ -3363,7 +3386,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if ((object_id=handle_to_n(object_id, camera))==PTP_HANDLER_SPECIAL)
 		return (GP_ERROR_BAD_PARAMETERS);
 
-	oi=&camera->pl->params.objectinfo[object_id];
+	oi=&params->objectinfo[object_id];
 
 	GP_DEBUG ("Getting file.");
 	switch (type) {
@@ -3375,11 +3398,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 		/* Check if we have partial downloads. Otherwise we can just hope
 		 * upstream downloads the whole image to get EXIF data. */
-		if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_GetPartialObject))
+		if (!ptp_operation_issupported(params, PTP_OC_GetPartialObject))
 			return (GP_ERROR_NOT_SUPPORTED);
 		/* could also use Canon partial downloads */
-		CPR (context, ptp_getpartialobject (&camera->pl->params,
-			camera->pl->params.handles.Handler[object_id],
+		CPR (context, ptp_getpartialobject (params,
+			params->handles.Handler[object_id],
 			0, 10, &ximage));
 		image = (unsigned char*)ximage;
 
@@ -3399,8 +3422,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		maxbytes = (image[4] << 8 ) + image[5];
 		free (image);
 		ximage = NULL;
-		CPR (context, ptp_getpartialobject (&camera->pl->params,
-			camera->pl->params.handles.Handler[object_id],
+		CPR (context, ptp_getpartialobject (params,
+			params->handles.Handler[object_id],
 			offset, maxbytes, &ximage));
 		CR (gp_file_set_data_and_size (file, ximage, maxbytes));
 		break;
@@ -3410,8 +3433,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 		/* If thumb size is 0 then there is no thumbnail at all... */
 		if((size=oi->ThumbCompressedSize)==0) return (GP_ERROR_NOT_SUPPORTED);
-		CPR (context, ptp_getthumb(&camera->pl->params,
-			camera->pl->params.handles.Handler[object_id],
+		CPR (context, ptp_getthumb(params,
+			params->handles.Handler[object_id],
 			&ximage));
 		CR (gp_file_set_data_and_size (file, ximage, size));
 		/* XXX does gp_file_set_data_and_size free() image ptr upon
@@ -3430,8 +3453,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			return (GP_ERROR_NOT_SUPPORTED);
 
 		size=oi->ObjectCompressedSize;
-		CPR (context, ptp_getobject(&camera->pl->params,
-			camera->pl->params.handles.Handler[object_id],
+		CPR (context, ptp_getobject(params,
+			params->handles.Handler[object_id],
 			&ximage));
 		CR (gp_file_set_data_and_size (file, ximage, size));
 		/* XXX does gp_file_set_data_and_size free() image ptr upon
@@ -3519,10 +3542,11 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	Camera *camera = data;
 	unsigned long object_id;
 	uint32_t storage;
+	PTPParams *params = &camera->pl->params;
 
-	((PTPData *) camera->pl->params.data)->context = context;
+	((PTPData *) params->data)->context = context;
 
-	if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_DeleteObject))
+	if (!ptp_operation_issupported(params, PTP_OC_DeleteObject))
 		return GP_ERROR_NOT_SUPPORTED;
 
 	if (!strcmp (folder, "/special"))
@@ -3537,19 +3561,19 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	if ((object_id=handle_to_n(object_id, camera))==PTP_HANDLER_SPECIAL)
 		return (GP_ERROR_BAD_PARAMETERS);
 
-	CPR (context, ptp_deleteobject(&camera->pl->params,
-		camera->pl->params.handles.Handler[object_id],0));
+	CPR (context, ptp_deleteobject(params,
+		params->handles.Handler[object_id],0));
 
 	/* On Canon firmwares, a DeleteObject causes a ObjectRemoved event
 	 * to be sent. At least on Digital IXUS II and PowerShot A85.
 	 */
-	if ((camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
-	    ptp_event_issupported(&camera->pl->params, PTP_EC_ObjectRemoved)) {
+	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
+	    ptp_event_issupported(params, PTP_EC_ObjectRemoved)) {
 		PTPContainer event;
 		int ret;
 
 		do {
-			ret = ptp_usb_event_wait (&camera->pl->params, &event);
+			ret = ptp_usb_event_wait (params, &event);
 			if (	(ret == PTP_RC_OK) &&
 				(event.Code == PTP_EC_ObjectRemoved)
 			)
@@ -3566,10 +3590,11 @@ remove_dir_func (CameraFilesystem *fs, const char *folder,
 	Camera *camera = data;
 	unsigned long object_id;
 	uint32_t storage;
+	PTPParams *params = &camera->pl->params;
 
-	((PTPData *) camera->pl->params.data)->context = context;
+	((PTPData *) params->data)->context = context;
 
-	if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_DeleteObject))
+	if (!ptp_operation_issupported(params, PTP_OC_DeleteObject))
 		return GP_ERROR_NOT_SUPPORTED;
 
 	/* compute storage ID value from folder patch */
@@ -3581,9 +3606,7 @@ remove_dir_func (CameraFilesystem *fs, const char *folder,
 	if ((object_id=handle_to_n(object_id, camera))==PTP_HANDLER_SPECIAL)
 		return (GP_ERROR_BAD_PARAMETERS);
 
-	CPR (context, ptp_deleteobject(&camera->pl->params,
-		camera->pl->params.handles.Handler[object_id],0));
-
+	CPR (context, ptp_deleteobject(params, params->handles.Handler[object_id],0));
 	return (GP_OK);
 }
 
@@ -3702,37 +3725,36 @@ static int
 init_ptp_fs (Camera *camera, GPContext *context)
 {
 	int i,id,nroot;
+	PTPParams *params = &camera->pl->params;
 
-	((PTPData *) camera->pl->params.data)->context = context;
+	((PTPData *) params->data)->context = context;
 
 	/* Get file handles array for filesystem */
 	id = gp_context_progress_start (context, 100, _("Initializing Camera"));
 	/* be paranoid!!! */
-	memset (&camera->pl->params.handles, 0, sizeof(PTPObjectHandles));
+	memset (&params->handles, 0, sizeof(PTPObjectHandles));
 	/* get objecthandles of all objects from all stores */
 	CPR (context, ptp_getobjecthandles
-	(&camera->pl->params, 0xffffffff, 0x000000, 0x000000,
-	&camera->pl->params.handles));
+	(params, 0xffffffff, 0x000000, 0x000000, &params->handles));
 
 	gp_context_progress_update (context, id, 10);
 	/* wee need that for fileststem */
-	camera->pl->params.objectinfo =
-		(PTPObjectInfo*)malloc(sizeof(PTPObjectInfo)*
-		camera->pl->params.handles.n);
-	memset (camera->pl->params.objectinfo,0,sizeof(PTPObjectInfo)
-		*camera->pl->params.handles.n);
-	for (i = 0; i < camera->pl->params.handles.n; i++) {
-		CPR (context, ptp_getobjectinfo(&camera->pl->params,
-			camera->pl->params.handles.Handler[i],
-			&camera->pl->params.objectinfo[i]));
+	params->objectinfo = (PTPObjectInfo*)malloc(sizeof(PTPObjectInfo)*
+		params->handles.n);
+	memset (params->objectinfo,0,sizeof(PTPObjectInfo)*params->handles.n);
+
+	for (i = 0; i < params->handles.n; i++) {
+		CPR (context, ptp_getobjectinfo(params,
+			params->handles.Handler[i],
+			&params->objectinfo[i]));
 #if 1
 		{
 		PTPObjectInfo *oi;
 
-		oi=&camera->pl->params.objectinfo[i];
+		oi=&params->objectinfo[i];
 		GP_DEBUG ("ObjectInfo for '%s':", oi->Filename);
 		GP_DEBUG ("  Object ID: 0x%08x",
-			camera->pl->params.handles.Handler[i]);
+			params->handles.Handler[i]);
 		GP_DEBUG ("  StorageID: 0x%08x", oi->StorageID);
 		GP_DEBUG ("  ObjectFormat: 0x%04x", oi->ObjectFormat);
 		GP_DEBUG ("  ProtectionStatus: 0x%04x", oi->ProtectionStatus);
@@ -3753,7 +3775,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 		}
 #endif
 		gp_context_progress_update (context, id,
-		10+(90*i)/camera->pl->params.handles.n);
+		10+(90*i)/params->handles.n);
 	}
 	gp_context_progress_stop (context, id);
 
@@ -3762,21 +3784,19 @@ init_ptp_fs (Camera *camera, GPContext *context)
             GP_DEBUG("PTPBUG_DCIM_WRONG_PARENT bug workaround");
             /* Count number of root directory objects */
             nroot = 0;
-            for (i = 0; i < camera->pl->params.handles.n; i++) {
-		if (camera->pl->params.objectinfo[i].ParentObject == 0) {
+            for (i = 0; i < params->handles.n; i++)
+		if (params->objectinfo[i].ParentObject == 0)
                     nroot++;
-                }
-            }
-            
+
             GP_DEBUG("Found %d root directory objects", nroot);
             
             /* If no root directory objects, look for "DCIM".  This way, we can
              * handle cameras that report the wrong ParentObject ID for root
              */
-            if (nroot == 0 && camera->pl->params.handles.n > 0) {
-		for (i = 0; i < camera->pl->params.handles.n; i++)
+            if (nroot == 0 && params->handles.n > 0) {
+		for (i = 0; i < params->handles.n; i++)
 		{
-                    PTPObjectInfo *oi = &camera->pl->params.objectinfo[i];
+                    PTPObjectInfo *oi = &params->objectinfo[i];
                     
                     if (strcmp(oi->Filename, "DCIM") == 0)
                     {
@@ -3806,6 +3826,7 @@ camera_init (Camera *camera, GPContext *context)
 {
     	CameraAbilities a;
 	int ret, i, retried = 0;
+	PTPParams *params;
 
 	/* Make sure our port is a USB port */
 	if (camera->port->type != GP_PORT_USB) {
@@ -3826,6 +3847,7 @@ camera_init (Camera *camera, GPContext *context)
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));
 	if (!camera->pl)
 		return (GP_ERROR_NO_MEMORY);
+	params = &camera->pl->params;
 	camera->pl->params.sendreq_func=ptp_usb_sendreq;
 	camera->pl->params.senddata_func=ptp_usb_senddata;
 	camera->pl->params.getresp_func=ptp_usb_getresp;
@@ -3872,7 +3894,7 @@ camera_init (Camera *camera, GPContext *context)
 				retried++;
 				continue;
 			}
-			report_result(context, ret);
+			report_result(context, ret, camera->pl->params.deviceinfo.VendorExtensionID);
 			return (translate_ptp_result(ret));
 		}
 		break;
@@ -3910,8 +3932,15 @@ camera_init (Camera *camera, GPContext *context)
 
 	switch (camera->pl->params.deviceinfo.VendorExtensionID) {
 	case PTP_VENDOR_CANON:
-		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_ThemeDownload))
-			add_special_file("theme.dat", canon_theme_get, canon_theme_put);
+#if 0
+		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_ThemeDownload)) {
+			add_special_file("startimage.jpg",	canon_theme_get, canon_theme_put);
+			add_special_file("startsound.wav",	canon_theme_get, canon_theme_put);
+			add_special_file("operation.wav",	canon_theme_get, canon_theme_put);
+			add_special_file("shutterrelease.wav",	canon_theme_get, canon_theme_put);
+			add_special_file("selftimer.wav",	canon_theme_get, canon_theme_put);
+		}
+#endif
 		break;
 	case PTP_VENDOR_NIKON:
 	/* Veggen: add curve magic command here: 
