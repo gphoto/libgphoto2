@@ -170,7 +170,8 @@ typedef struct _PTPUSBEventContainer PTPUSBEventContainer;
 #define PTP_OC_CANON_ThemeDownload	0x9010
 #define PTP_OC_CANON_ThemeUpload	0x9011
 
-
+#define PTP_OC_NIKON_CurveDownload	0x90C5
+#define PTP_OC_NIKON_CurveUpload	0x90C6
 /* initiate movie capture:
    9010 startmoviecapture?
    9003 stopmoviecapture?
@@ -480,6 +481,38 @@ struct _PTPCANONFolderEntry {
     char     Filename[PTP_CANON_FilenameBufferLen];
 };
 typedef struct _PTPCANONFolderEntry PTPCANONFolderEntry;
+
+/* Nikon Tone Curve Data */
+
+#define PTP_NIKON_MaxCurvePoints 19
+
+struct _PTPNIKONCoordinatePair {
+	uint8_t		X;
+	uint8_t		Y;
+};
+
+typedef struct _PTPNIKONCoordinatePair PTPNIKONCoordinatePair;
+
+struct _PTPNTCCoordinatePair {
+	uint8_t		X;
+	uint8_t		Y;
+};
+
+typedef struct _PTPNTCCoordinatePair PTPNTCCoordinatePair;
+
+struct _PTPNIKONCurveData {
+	char 			static_preamble[6];
+	uint8_t			XAxisStartPoint;
+	uint8_t			XAxisEndPoint;
+	uint8_t			YAxisStartPoint;
+	uint8_t			YAxisEndPoint;
+	uint8_t			MidPointIntegerPart;
+	uint8_t			MidPointDecimalPart;
+	uint8_t			NCoordinates;
+	PTPNIKONCoordinatePair	CurveCoordinates[PTP_NIKON_MaxCurvePoints];
+};
+
+typedef struct _PTPNIKONCurveData PTPNIKONCurveData;
 
 /* DataType Codes */
 
@@ -860,6 +893,8 @@ uint16_t ptp_canon_getfolderentries (PTPParams* params, uint32_t store,
 uint16_t ptp_canon_theme_download (PTPParams* params, uint32_t themenr,
 				char **data, unsigned int *size);
 
+uint16_t ptp_nikon_curve_download (PTPParams* params, 
+				char **data, unsigned int *size);
 /* Non PTP protocol functions */
 int ptp_operation_issupported	(PTPParams* params, uint16_t operation);
 int ptp_event_issupported	(PTPParams* params, uint16_t event);

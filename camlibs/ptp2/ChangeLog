@@ -1,5 +1,13 @@
 2005-07-19  Marcus Meissner  <marcus@jet.franken.de>
 
+	From Vince Vegard <vegard@engen.priv.no>:
+	* library.c, ptp.c, ptp.h:
+
+	  Implemented Nikon Curve download.
+
+
+2005-07-19  Marcus Meissner  <marcus@jet.franken.de>
+
 	* library.c: Use params everywhere.
 
 	  Enhance errorhandling to report errors only for

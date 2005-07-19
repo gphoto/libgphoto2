@@ -1404,6 +1404,18 @@ ptp_canon_theme_download (PTPParams* params, uint32_t themenr,
 }
 
 
+
+uint16_t
+ptp_nikon_curve_download (PTPParams* params, char **data, unsigned int *size) {
+	PTPContainer ptp;
+	*data = NULL;
+	*size = 0;
+	PTP_CNT_INIT(ptp);
+	ptp.Code	= PTP_OC_NIKON_CurveDownload;
+	ptp.Nparam	= 0;
+	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size); 
+}
+
 /* Non PTP protocol functions */
 /* devinfo testing functions */
 
