@@ -721,8 +721,8 @@ camera_abilities (CameraAbilitiesList *list)
 	a.port   = GP_PORT_USB;
 	a.speed[0] = 0;
 	a.usb_class = 6;
-	a.usb_subclass = -1;
-	a.usb_protocol = -1;
+	a.usb_subclass = 1;
+	a.usb_protocol = 1;
 	a.operations        = GP_CAPTURE_IMAGE | GP_OPERATION_CONFIG;
 	a.file_operations   = GP_FILE_OPERATION_PREVIEW|
 				GP_FILE_OPERATION_DELETE;

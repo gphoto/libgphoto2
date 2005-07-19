@@ -7,6 +7,8 @@
 
 	* library.c: Added Nikon Coolpix 5200.
 
+	* library.c: PTP is class 6, subclass 1, protocol 1.
+
 
 2005-07-19  Marcus Meissner  <marcus@jet.franken.de>
 
