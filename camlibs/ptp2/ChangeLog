@@ -5,6 +5,8 @@
 
 	  Implemented Nikon Curve download.
 
+	* library.c: Added Nikon Coolpix 5200.
+
 
 2005-07-19  Marcus Meissner  <marcus@jet.franken.de>
 
