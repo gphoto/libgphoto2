@@ -46,3 +46,32 @@ Device Properties Supported:
   0x500f
   0x5013
   0xd001
+
+
+Camera summary:
+Model: E5700
+  device version: E5700v1.1
+  serial number:  00000xxxxxxx
+Vendor extension ID: 0x0000000a
+Vendor extension description: Nikon PTP Extensions
+Image Size(0x5003):(readwrite) (type=0xffff) Enumeration [
+        '640x480',
+        '1024x768',
+        '1280x960',
+        '1600x1200',
+        '2560x1920',
+        '2560x1704'
+        ] value: '2560x1920'
+Compression Setting(0x5004):(readwrite) (type=0x2) Enumeration [6,12,25,100,127] value: 25
+White Balance(0x5005):(readwrite) (type=0x4) Enumeration [2,4,6,5,32769,3,7] value: Auto (2)
+F-Number(0x5007):(readwrite) (type=0x4) Enumeration [280,320,350,400,450,500,560,630,710,800] value: f/2.9 (290)
+Focal Length(0x5008):(readwrite) (type=0x6) Enumeration [3500,3500,3600,3700,3900,4200,4600,5000,5400,5800,6200,6600,7000,7400,7800,8300,8800,9300,10000,10700,11600,12500,13600,14800,16100,17600,19100,20600,22300,24200,26600,28000] value: 35 mm (3500)
+Focus Distance(0x5009):(readwrite) (type=0x4) Enumeration [65535,19910,9910,6570,4910,3910,3240,2760,2410,2130,1910,1730,1570,1450,1340,1240,1160,1080,1020,960,910,820,750,690,640,600,560,520,490,460,430,410,390,370,350,330,320,300,290,280,270,260,250,240,230,220,210,190,180,170,160,150,140,130,120,110,100,90,80,70,60,50,40,30] value: 1020
+Focus Mode(0x500a):(readwrite) (type=0x4) Enumeration [2,0,3,1] value: 2
+Exposure Metering Mode(0x500b):(readwrite) (type=0x4) Enumeration [1,4,2,3] value: 1
+Flash Mode(0x500c):(readwrite) (type=0x4) Enumeration [1,2,3,4,32769] value: 2
+Exposure Time(0x500d):(readwrite) (type=0x6) Enumeration [80000,40000,20000,10000,5000,2500,1250,662,333,167,80,40,20,10,5,2] value: 5e-05 sec (5)
+Exposure Program Mode(0x500e):(readwrite) (type=0x4) Enumeration [1,2,3,4] value: P (2)
+Exposure Index (film speed ISO)(0x500f):(readwrite) (type=0x4) Enumeration [65535,100,200,400,800] value: ISO 100 (100)
+Still Capture Mode(0x5013):(readwrite) (type=0x4) Enumeration [1] value: Single Shot (1)
+Property 0xd001:(read only) (type=0x0) Undefined
