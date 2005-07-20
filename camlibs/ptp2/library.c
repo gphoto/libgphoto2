@@ -253,6 +253,8 @@ static struct {
 
 	{"Kodak:DX3900", 0x040a, 0x0170, 0},
 	{"Kodak:MC3",    0x040a, 0x0400, 0},
+	/* reported by Ken Moffat */
+	{"Kodak:Z7590",  0x040a, 0x0403, 0},
 	{"Kodak:DX3500", 0x040a, 0x0500, 0},
 	{"Kodak:DX3600", 0x040a, 0x0510, 0},
 	{"Kodak:DX3215", 0x040a, 0x0525, 0},
