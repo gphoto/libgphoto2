@@ -1,3 +1,10 @@
+2005-07-22  Lutz Mueller <lutz@users.sourceforge.net>
+
+	Patch by Michael Haardt <michael@moria.de>:
+
+	* casio-qv.c: Fix capture function and name of captured picture. List all
+	authors in about. Fix camera abilities.
+
 2005-01-21  Marcus Meissner <marcus@jet.franken.de>
 
 	* casio-qv.c: marked up strings for translation.

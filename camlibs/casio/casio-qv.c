@@ -89,16 +89,18 @@ camera_abilities (CameraAbilitiesList *list)
 
 		memset (&a, 0, sizeof(a));
 		strcpy (a.model, models[i].model);
-		a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
+		a.status = GP_DRIVER_STATUS_PRODUCTION;
 		a.port     = GP_PORT_SERIAL;
 		a.speed[0] = 9600;
 		a.speed[1] = 19200;
 		a.speed[2] = 38400;
 		a.speed[3] = 57600;
 		a.speed[4] = 115200;
-		a.operations        = GP_OPERATION_NONE;
-		a.file_operations   = GP_FILE_OPERATION_NONE;
-		a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
+		a.operations        = GP_OPERATION_CAPTURE_IMAGE |
+		                      GP_OPERATION_CONFIG;
+		a.file_operations   = GP_FILE_OPERATION_DELETE |
+		                      GP_FILE_OPERATION_PREVIEW;
+		a.folder_operations = GP_FOLDER_OPERATION_NONE;
 
 		CHECK_RESULT (gp_abilities_list_append (list, a));
 	}
@@ -184,9 +186,12 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 static int
 camera_about (Camera *camera, CameraText *about, GPContext *context) 
 {
-	strcpy (about->text, _("Download program for Casio QV cameras. "
-		"Originally written for gphoto-0.4. Adapted for gphoto2 by "
-		"Lutz Mueller <lutz@users.sf.net>."));
+	strcpy (about->text, _("Driver framework written by Lutz Mueller "
+		"<lutz@users.sf.net>.\n"
+		"This software has QVplay's source code, written by Ken-ichi HAYASHI "
+		"<xg2k-hys@asahi-net.or.jp> and Jun-ichiro \"itojun\" Itoh "
+		"<itojun@itojun.org>.\n"
+		"Integration of QVplay by Michael Haardt <michael@moria.de>."));
 
 	return (GP_OK);
 }
@@ -289,13 +294,12 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	if (type != GP_CAPTURE_IMAGE)
 		return (GP_ERROR_NOT_SUPPORTED);
 
-	/* Capture the image */
 	CHECK_RESULT (QVcapture (camera));
 
-	/* Tell libgphoto2 where to look for the new image */
 	strcpy (path->folder, "/");
-	sprintf (path->name, "CASIO_QV_%03i.jpg",
-		 gp_filesystem_count (camera->fs, "/", context)+1);
+	sprintf (path->name, "CASIO_QV_%03i.jpg", QVnumpic (camera));
+
+	CHECK_RESULT (gp_filesystem_append (camera->fs, "/", path->name, context));
 
 	return (GP_OK);
 }
@@ -336,19 +340,25 @@ camera_init (Camera *camera, GPContext *context)
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func, delete_file_func, camera);
 
 	CHECK_RESULT (gp_port_get_settings (camera->port, &settings));
-	/* 1000 is not enough for some operations */
-	CHECK_RESULT (gp_port_set_timeout (camera->port, 2000));
-        selected_speed = settings.serial.speed;
-        if (!selected_speed) selected_speed = 115200;
-	/* protocol always starts with 9600 */
+
+	/* Taking pictures takes over 5 seconds, so use 7 seconds to be safe */
+	CHECK_RESULT (gp_port_set_timeout (camera->port, 7000));
+	selected_speed = settings.serial.speed;
+	if (!selected_speed) selected_speed = 115200;
+
+	/* Protocol always starts with 9600 */
 	settings.serial.speed = 9600;
 	CHECK_RESULT (gp_port_set_settings (camera->port, settings));
-	/* power up interface */
+
+	/* Power up interface */
 	gp_port_set_pin (camera->port, GP_PIN_RTS, GP_LEVEL_HIGH);
 	gp_port_set_pin (camera->port, GP_PIN_DTR, GP_LEVEL_LOW);
 	gp_port_set_pin (camera->port, GP_PIN_CTS, GP_LEVEL_LOW);
-	/* There may be one junk character at this point, but QVping */
-	/* takes care of that. */
+
+	/*
+	 * There may be one junk character at this point, but QVping
+	 * takes care of that.
+	 */
 	CHECK_RESULT (QVping (camera));
 	CHECK_RESULT (QVsetspeed (camera,selected_speed));
 
