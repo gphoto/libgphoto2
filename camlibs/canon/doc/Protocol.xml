@@ -17,7 +17,7 @@
   <!-- ===================================================================== -->
 
   <title><phrase role="strong">Canon PowerShot Series Transfer
- Protocol Specifications</phrase> $Date$</title>
+ Protocol Description</phrase> $Date$</title>
 
   <chapter id="chap.Intro">
     <title>Introduction</title>
@@ -332,6 +332,10 @@
 
         <literallayout>
         $Log$
+        Revision 1.22  2005/07/29 20:15:26  swestin
+        Changed "Specificatyions" to "Description" in title; this is more truthful,
+         as we aren't specifying, just trying to describe what's there.
+
         Revision 1.21  2005/06/21 16:45:13  swestin
         More info on PowerShot S1 IS.
 
@@ -413,7 +417,7 @@
     </section>
   </chapter>
   <chapter id="chap.Serial">
-    <title>Serial Protocol Specifications</title>
+    <title>Serial Protocol Description</title>
     <section id="sec.SerIntro">
       <title>Introduction</title>
       <para>We have chosen to describe the Canon Serial Protocol as successive layers.
