@@ -1,3 +1,8 @@
+2005-07-31  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* library.c: Added Coolpix 5900 
+	  https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1248287&group_id=8874
+
 2005-07-19  Marcus Meissner  <marcus@jet.franken.de>
 
 	From Vince Vegard <vegard@engen.priv.no>:
