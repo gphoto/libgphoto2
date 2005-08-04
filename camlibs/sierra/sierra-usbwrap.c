@@ -213,13 +213,16 @@ static int
 usb_wrap_OK (GPPort *dev, uw_header_t *hdr, unsigned int type)
 {
    uw_response_t rsp;
+   int ret;
    memset(&rsp, 0, sizeof(rsp));
 
    GP_DEBUG( "usb_wrap_OK" );
 
-   if (gp_port_read(dev, (char*)&rsp, sizeof(rsp)) != sizeof(rsp))
+   if ((ret = gp_port_read(dev, (char*)&rsp, sizeof(rsp))) != sizeof(rsp))
    {
       GP_DEBUG( "gp_port_read *** FAILED" );
+      if (ret < GP_OK)
+	return ret;
       return GP_ERROR;
    }
 
@@ -251,7 +254,7 @@ usb_wrap_RDY(gp_port* dev, unsigned int type)
 {
    uw_header_t hdr;
    uw_pkout_rdy_t msg;
-   int retries = 3;
+   int ret, retries = 3;
 
    GP_DEBUG( "usb_wrap_RDY" );
 
@@ -267,19 +270,19 @@ try_rdy_again:
    MAKE_UW_REQUEST_RDY (&hdr.request_type, type);
    msg.packet_type = UW_PACKET_RDY;
   
-   if (gp_port_write(dev, (char*)&hdr, sizeof(hdr)) < GP_OK ||
-       gp_port_write(dev, (char*)&msg, sizeof(msg)) < GP_OK)
+   if ((ret=gp_port_write(dev, (char*)&hdr, sizeof(hdr))) < GP_OK ||
+       (ret=gp_port_write(dev, (char*)&msg, sizeof(msg))) < GP_OK)
    {
       GP_DEBUG( "usb_wrap_RDY *** FAILED" );
-      return GP_ERROR;
+      return ret;
    }
 
-   if (usb_wrap_OK(dev, &hdr, type) != GP_OK)
+   if ((ret=usb_wrap_OK(dev, &hdr, type)) != GP_OK)
    {
       if (!retries--)
       {
         GP_DEBUG( "usb_wrap_RDY GIVING UP" );
-        return GP_ERROR;
+        return ret;
       }
       GP_DEBUG( "usb_wrap_RDY *** RETRYING" );
       goto try_rdy_again;
@@ -292,6 +295,7 @@ usb_wrap_STAT(gp_port* dev, unsigned int type)
 {
    uw_header_t hdr;
    uw_stat_t msg;
+   int ret;
 
    GP_DEBUG( "usb_wrap_STAT" );
 
@@ -304,10 +308,12 @@ usb_wrap_STAT(gp_port* dev, unsigned int type)
    hdr.length    = uw_value(sizeof(msg));
    MAKE_UW_REQUEST_STAT (&hdr.request_type, type);
   
-   if (gp_port_write(dev, (char*)&hdr, sizeof(hdr)) < GP_OK ||
-       gp_port_read(dev, (char*)&msg, sizeof(msg)) != sizeof(msg))
+   if ((ret=gp_port_write(dev, (char*)&hdr, sizeof(hdr))) < GP_OK ||
+       (ret=gp_port_read(dev, (char*)&msg, sizeof(msg))) != sizeof(msg))
    {
       GP_DEBUG( "usb_wrap_STAT *** FAILED" );
+      if (ret < GP_OK)
+	return ret;
       return GP_ERROR;
    }
 
@@ -335,7 +341,7 @@ usb_wrap_CMND(gp_port* dev, unsigned int type, char* sierra_msg, int sierra_len)
 {
    uw_header_t hdr;
    uw_pkout_sierra_hdr_t* msg;
-   int msg_len = sizeof(*msg) + sierra_len;
+   int ret, msg_len = sizeof(*msg) + sierra_len;
    
    GP_DEBUG( "usb_wrap_CMND" );
    
@@ -354,12 +360,12 @@ usb_wrap_CMND(gp_port* dev, unsigned int type, char* sierra_msg, int sierra_len)
    GP_DEBUG( "usb_wrap_CMND writing %i + %i",
                    sizeof(hdr), msg_len);
    
-   if (gp_port_write(dev, (char*)&hdr, sizeof(hdr)) < GP_OK ||
-       gp_port_write(dev, (char*)msg, msg_len) < GP_OK)
+   if ((ret=gp_port_write(dev, (char*)&hdr, sizeof(hdr))) < GP_OK ||
+       (ret=gp_port_write(dev, (char*)msg, msg_len)) < GP_OK)
    {
       GP_DEBUG( "usb_wrap_CMND ** WRITE FAILED");
       free(msg);
-      return GP_ERROR;
+      return ret;
    }
    free(msg);
 
@@ -371,6 +377,7 @@ usb_wrap_SIZE(gp_port* dev, unsigned int type, uw32_t* size)
 {
    uw_header_t hdr;
    uw_size_t msg;
+   int ret;
   
    GP_DEBUG( "usb_wrap_SIZE" );
    memset(&hdr, 0, sizeof(hdr));
@@ -381,10 +388,12 @@ usb_wrap_SIZE(gp_port* dev, unsigned int type, uw32_t* size)
    hdr.rw_length = uw_value(sizeof(msg));
    hdr.length    = uw_value(sizeof(msg));
    MAKE_UW_REQUEST_SIZE (&hdr.request_type, type);
-   if (gp_port_write(dev, (char*)&hdr, sizeof(hdr)) < GP_OK ||
-       gp_port_read(dev, (char*)&msg, sizeof(msg)) != sizeof(msg))
+   if ((ret=gp_port_write(dev, (char*)&hdr, sizeof(hdr))) < GP_OK ||
+       (ret=gp_port_read(dev, (char*)&msg, sizeof(msg))) != sizeof(msg))
    {
       GP_DEBUG( "usb_wrap_SIZE *** FAILED" );
+      if (ret < GP_OK)
+	return ret;
       return GP_ERROR;
    }
 
@@ -413,6 +422,7 @@ usb_wrap_DATA (GPPort *dev, unsigned int type, char *sierra_response, int *sierr
    uw_header_t hdr;
    uw_pkout_sierra_hdr_t* msg;
    unsigned int msg_len;
+   int ret;
 
    GP_DEBUG( "usb_wrap_DATA" );
 
@@ -439,11 +449,13 @@ usb_wrap_DATA (GPPort *dev, unsigned int type, char *sierra_response, int *sierr
    hdr.length    = uw_value(msg_len);
    MAKE_UW_REQUEST_DATA (&hdr.request_type, type);
 
-   if (gp_port_write(dev, (char*)&hdr, sizeof(hdr)) < GP_OK ||
-       gp_port_read(dev, (char*)msg, msg_len) != msg_len)
+   if ((ret=gp_port_write(dev, (char*)&hdr, sizeof(hdr))) < GP_OK ||
+       (ret=gp_port_read(dev, (char*)msg, msg_len)) != msg_len)
    {
       GP_DEBUG( "usb_wrap_DATA FAILED" );
       free(msg);
+      if (ret < GP_OK)
+	return ret;
       return GP_ERROR;
    }
    memcpy(sierra_response, (char*)msg + sizeof(*msg), *sierra_len);

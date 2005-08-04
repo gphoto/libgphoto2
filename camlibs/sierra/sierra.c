@@ -107,8 +107,11 @@ static struct {
 							&cp995_cam_desc},
 	{"Nikon", "CoolPix 2500 (Sierra Mode)", SIERRA_MODEL_CAM_DESC, 0x04b0, 0x0108,
 						SIERRA_WRAP_USB_NIKON | SIERRA_NO_51,
-							&cp880_cam_desc},
+							&cp2500_cam_desc},
 	{"Nikon", "CoolPix 4300 (Sierra Mode)", SIERRA_MODEL_CAM_DESC, 0x04b0, 0x010e,
+						SIERRA_WRAP_USB_NIKON | SIERRA_NO_51,
+							&cp880_cam_desc},
+	{"Nikon", "CoolPix 3500 (Sierra Mode)", SIERRA_MODEL_CAM_DESC, 0x04b0, 0x0110,
 						SIERRA_WRAP_USB_NIKON | SIERRA_NO_51,
 							&cp880_cam_desc},
 	{"Olympus", "D-100Z", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
@@ -147,6 +150,11 @@ static struct {
 	{"Olympus", "C-860L",	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus", "C-900 Zoom", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus", "C-900L Zoom", SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+
+	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1082569&group_id=8874&atid=358874 
+	 * strangely only works with low speed
+	 */
+	{"Olympus", "C-990 Zoom", 	SIERRA_MODEL_OLYMPUS,	0, 0, SIERRA_LOW_SPEED },
 	{"Olympus", "C-1000L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus", "C-1400L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus", "C-1400XL", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
@@ -359,6 +367,12 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		info->audio.fields |= GP_FILE_INFO_TYPE;
 	}
 
+#if 0 /* need to add GMT -> local conversion first */
+	if (i.date) {
+		info->file.fields |= GP_FILE_INFO_MTIME;
+		info->file.mtime = i.date; /* FIXME: convert from GMT to localtime */
+	}
+#endif
 	/* Type of image and preview? */
 	if (strstr (filename, ".MOV") != NULL) {
 		strcpy (info->file.type, GP_MIME_QUICKTIME);
