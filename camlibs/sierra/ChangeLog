@@ -1,3 +1,7 @@
+2005-08-04  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* sierra.c: epson photopc 700 has no reg 51 either
+
 2005-07-07  Marcus Meissner  <marcus@jet.franken.de>
 
 	* sierra.c: Moved new Olympus entries prodid 0x109 here (from ptp2).

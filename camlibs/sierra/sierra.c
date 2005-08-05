@@ -86,7 +86,7 @@ static struct {
 	{"Epson", "PhotoPC 600", SIERRA_MODEL_EPSON,	0, 0, 0 },
 	{"Epson", "PhotoPC 650", SIERRA_MODEL_EPSON,	0, 0,
 					SIERRA_NO_51 | SIERRA_LOW_SPEED },
-	{"Epson", "PhotoPC 700", SIERRA_MODEL_EPSON,	0, 0, 0 },
+	{"Epson", "PhotoPC 700", SIERRA_MODEL_EPSON,	0, 0, SIERRA_NO_51 },
 	{"Epson", "PhotoPC 800", SIERRA_MODEL_EPSON,	0, 0, 0 },
 	{"Epson", "PhotoPC 850z", SIERRA_MODEL_EPSON,     0x4b8, 0x402, 0},
 	{"Epson", "PhotoPC 3000z", SIERRA_MODEL_CAM_DESC,	0x4b8, 0x403, 0, &ep3000z_cam_desc},
