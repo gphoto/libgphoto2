@@ -1,3 +1,7 @@
+2005-08-07  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* library.c: Added Kodak C340 (mail by Maurizio Daniele <hayabusa@portalis.it>)
+
 2005-07-31  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* library.c: Added Coolpix 5900 
