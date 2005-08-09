@@ -202,6 +202,7 @@ static int print_fdi_map(const int add_comments)
 			printf("     <merge key=\"info.category\" type=\"string\">camera</merge>\n");
 			printf("     <append key=\"info.capabilities\" type=\"strlist\">camera</append>\n");
 			printf("     <merge key=\"camera.access_method\" type=\"string\">libgphoto2</merge>\n");
+			printf("     <merge key=\"camera.libgphoto2.name\" type=\"string\">%s</merge>\n", a.model);
 			printf("     <merge key=\"camera.libgphoto2.support\" type=\"bool\">true</merge>\n");
 			printf("    </match>\n");
 			printf("   </match>\n");
@@ -213,6 +214,7 @@ static int print_fdi_map(const int add_comments)
 			printf("      <merge key=\"info.category\" type=\"string\">camera</merge>\n");
 			printf("      <append key=\"info.capabilities\" type=\"strlist\">camera</append>\n");
 			printf("      <merge key=\"camera.access_method\" type=\"string\">libgphoto2</merge>\n");
+			printf("      <merge key=\"camera.libgphoto2.name\" type=\"string\">%s</merge>\n", a.model);
 			printf("      <merge key=\"camera.libgphoto2.support\" type=\"bool\">true</merge>\n");
 			printf("     </match>\n");
 			printf("    </match>\n");
