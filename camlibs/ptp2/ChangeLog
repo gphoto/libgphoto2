@@ -1,3 +1,7 @@
+2005-08-11  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* library.c: Added Coolpix 5600.
+
 2005-08-07  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* library.c: Added Kodak C340 (mail by Maurizio Daniele <hayabusa@portalis.it>)
