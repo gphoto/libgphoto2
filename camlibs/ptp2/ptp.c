@@ -1879,6 +1879,8 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 static int64_t
 _value_to_num(PTPPropertyValue *data, uint16_t dt) {
 	if (dt == PTP_DTC_STR) {
+		if (!data->str)
+			return 0;
 		return atol(data->str);
 	}
 	if (dt & PTP_DTC_ARRAY_MASK) {
