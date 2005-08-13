@@ -1,3 +1,8 @@
+2005-08-13  Theodore Kilgore <kilgota@auburn.edu>
+
+	* mars.c:    mars_get_picture_width() corrected for 352x288 photos.
+
+
 2005-06-12  Theodore Kilgore <kilgota@auburn.edu>
 
 	* library.c: Added CD302N, reported by Pedro de Oliveira <falso@rdk.homeip.net>

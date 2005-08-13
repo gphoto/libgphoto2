@@ -107,7 +107,7 @@ mars_get_picture_width (Info *info, int n)
 {
     	switch (info[8*n] & 0x0f) {  
 	case 0x00: return 176;
-	case 0x02: return 144;
+	case 0x02: return 352;
 	case 0x06: return 320;
 	case 0x08: return 640;
 	default:
