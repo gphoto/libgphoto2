@@ -212,11 +212,6 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	gp_system_dir dir;
 	gp_system_dirent de;
 	char buf[1024], f[1024];
-#ifdef FOLLOW_LINKS
-	char link[1024];
-#endif
-	const char *dirname;
-	int view_hidden=1;
 	unsigned int id, n;
 	struct stat st;
 	Camera *camera = (Camera*)data;
@@ -237,39 +232,15 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		else
 			strcpy (f, folder);
 	}
-
-	if (gp_setting_get ("directory", "hidden", buf) == GP_OK)
-		view_hidden = atoi (buf);
-
-	if (lstat (f, &st) != 0) {
-		gp_context_error (context, _("Could not get information "
-				  "about '%s' (%m)."), f);
-		return (GP_ERROR);
-	}
-
-#ifdef FOLLOW_LINKS
-	/* Check if this is a link */
-	if (S_ISLNK (st.st_mode)) {
-		if (readlink (f, link, sizeof (link) < 0)) {
-			gp_context_error (context, _("Could not follow the "
-				"link '%s' (%m)."), f);
-			return (GP_ERROR);
-		}
-		GP_DEBUG ("Following link '%s' -> '%s'...", f, link);
-		return (folder_list_func (fs, link, list, data, context));
-	}
-#endif
-
 	dir = gp_system_opendir ((char*) f);
 	if (!dir)
 		return (GP_ERROR);
-
 	/* Count the files */
 	n = 0;
 	while (gp_system_readdir (dir))
 		n++;
-
 	gp_system_closedir (dir);
+
 	dir = gp_system_opendir (f);
 	if (!dir)
 		return (GP_ERROR);
@@ -277,7 +248,6 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 					"'%s'..."), folder);
 	n = 0;
 	while ((de = gp_system_readdir (dir))) {
-
 		/* Give some feedback */
 		gp_context_progress_update (context, id, n + 1);
 		gp_context_idle (context);
@@ -288,17 +258,17 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		if ((strcmp (gp_system_filename (de), "." ) != 0) &&
 		    (strcmp (gp_system_filename (de), "..") != 0)) {
 			sprintf (buf, "%s%s", f, gp_system_filename (de));
-			dirname = gp_system_filename (de);
-			if (gp_system_is_dir (buf)) {
-				if (dirname[0] != '.')
-					gp_list_append (list,
-							gp_system_filename (de),
-							NULL);
-				else if (view_hidden)
-					gp_list_append (list,
-							gp_system_filename (de),
-							NULL);
+
+			/* lstat ... do not follow symlinks */
+			if (lstat (buf, &st) != 0) {
+				gp_context_error (context, _("Could not get information "
+						  "about '%s' (%m)."), buf);
+				return (GP_ERROR);
 			}
+			if (S_ISDIR (st.st_mode))
+				gp_list_append (list,
+						gp_system_filename (de),
+						NULL);
 		}
 		n++;
 	}
@@ -312,10 +282,6 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 		      CameraFileInfo *info, void *data, GPContext *context)
 {
 	char path[1024];
-#ifdef FOLLOW_LINKS
-	char link[1024];
-	char *name;
-#endif
 	const char *mime_type;
 	struct stat st;
 	Camera *camera = (Camera*)data;
@@ -340,24 +306,6 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 		return (GP_ERROR);
 	}
 
-#ifdef FOLLOW_LINKS
-	if (S_ISLNK (st.st_mode)) {
-		if (readlink (path, link, sizeof (link) < 0)) {
-			gp_context_error (context, _("Could not follow the "
-				"link '%s' in '%s' (%m)."), file, folder);
-			return (GP_ERROR);
-		}
-		name = strrchr (link, '/');
-		if (!name)
-			return (GP_ERROR);
-		else {
-			*name = '\0';
-			name++;
-			return (get_info_func (fs, link, name, info, data,
-					       context));
-		}
-	}
-#endif
 
 #ifdef DEBUG
 	info->preview.fields = GP_FILE_INFO_SIZE;
@@ -379,7 +327,6 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 #ifdef DEBUG
 	info->preview.size = st.st_size;
 #endif
-
 	mime_type = get_mime_type (file);
 	if (!mime_type)
 		mime_type = "application/octet-stream";
@@ -543,58 +490,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 }
 
 static int
-camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
-{
-	CameraWidget *widget;
-#ifdef DEBUG
-	CameraWidget *section;
-#endif
-        char buf[256];
-        int val;
-
-        gp_widget_new (GP_WIDGET_WINDOW, _("Directory Browse"), window);
-        gp_widget_new (GP_WIDGET_TOGGLE, _("View hidden directories"),
-                       &widget);
-        gp_setting_get ("directory", "hidden", buf);
-        val = atoi (buf);
-        gp_widget_set_value (widget, &val);
-        gp_widget_append (*window, widget);
-
-#ifdef DEBUG
-	gp_widget_new (GP_WIDGET_SECTION, "Testing", &section);
-	gp_widget_append (*window, section);
-
-	gp_widget_new (GP_WIDGET_TEXT, "Text", &widget);
-	gp_widget_set_value (widget, "This is some text.");
-	gp_widget_append (section, widget);
-
-	gp_widget_new (GP_WIDGET_DATE, "Date & Time", &widget);
-	val = time (NULL) - 100000;
-	gp_widget_set_value (widget, &val);
-	gp_widget_append (section, widget);
-#endif
-
-        return (GP_OK);
-}
-
-static int
-camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
-{
-        CameraWidget *widget;
-        char buf[256];
-        int val;
-
-        gp_widget_get_child_by_label (window, _("View hidden directories"),
-				      &widget);
-        if (gp_widget_changed (widget)) {
-                gp_widget_get_value (widget, &val);
-                sprintf (buf, "%i", val);
-                gp_setting_set ("directory", "hidden", buf);
-        }
-        return (GP_OK);
-}
-
-static int
 camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 {
         strcpy (manual->text, _("The Directory Browse \"camera\" lets "
@@ -617,12 +512,21 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *name,
 	       void *data, GPContext *context)
 {
 	char path[2048];
+	Camera *camera = (Camera*)data;
 
-	strncpy (path, folder, sizeof (path));
-	if (strlen (folder) > 1)
-		strncat (path, "/", sizeof (path));
-	strncat (path, name, sizeof (path));
+	if (camera->port->type == GP_PORT_DISK) {
+		GPPortSettings settings;
 
+		gp_port_get_settings (camera->port, &settings);
+		snprintf (path, sizeof(path), "%s/%s/%s",
+			settings.disk.mountpoint, 
+			folder,
+			name
+		);
+	} else {
+		/* old style access */
+		snprintf (path, sizeof (path), "%s/%s", folder, name);
+	}
 	return (gp_system_mkdir (path));
 }
 
@@ -631,12 +535,21 @@ remove_dir_func (CameraFilesystem *fs, const char *folder, const char *name,
 		 void *data, GPContext *context)
 {
 	char path[2048];
+	Camera *camera = (Camera*)data;
 
-	strncpy (path, folder, sizeof (path));
-	if (strlen (folder) > 1)
-		strncat (path, "/", sizeof (path));
-	strncat (path, name, sizeof (path));
+	if (camera->port->type == GP_PORT_DISK) {
+		GPPortSettings settings;
 
+		gp_port_get_settings (camera->port, &settings);
+		snprintf (path, sizeof(path), "%s/%s/%s",
+			settings.disk.mountpoint, 
+			folder,
+			name
+		);
+	} else {
+		/* old style access */
+		snprintf (path, sizeof (path), "%s/%s", folder, name);
+	}
 	return (gp_system_rmdir (path));
 }
 
@@ -646,11 +559,21 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 {
 	char path[2048];
 	int result;
+	Camera *camera = (Camera*)data;
 
-	if (strlen (folder) > 1)
+	if (camera->port->type == GP_PORT_DISK) {
+		GPPortSettings settings;
+
+		gp_port_get_settings (camera->port, &settings);
+		snprintf (path, sizeof(path), "%s/%s/%s",
+			settings.disk.mountpoint, 
+			folder,
+			file
+		);
+	} else {
+		/* old style access */
 		snprintf (path, sizeof (path), "%s/%s", folder, file);
-	else
-		snprintf (path, sizeof (path), "/%s", file);
+	}
 	result = unlink (path);
 	if (result) {
 		gp_context_error (context, _("Could not delete file '%s' "
@@ -672,13 +595,23 @@ put_file_func (CameraFilesystem *fs, const char *folder,
 #ifdef DEBUG
 	unsigned int i, id;
 #endif
+	Camera *camera = (Camera*)data;
 
 	gp_file_get_name (file, &name);
 
-	strncpy (path, folder, sizeof (path));
-	if (strlen (folder) > 1)
-		strncat (path, "/", sizeof (path));
-	strncat (path, name, sizeof (path));
+	if (camera->port->type == GP_PORT_DISK) {
+		GPPortSettings settings;
+
+		gp_port_get_settings (camera->port, &settings);
+		snprintf (path, sizeof(path), "%s/%s/%s",
+			settings.disk.mountpoint, 
+			folder,
+			name
+		);
+	} else {
+		/* old style access */
+		snprintf (path, sizeof (path), "%s/%s", folder, name);
+	}
 
 	result = gp_file_save (file, path);
 	if (result < 0)
@@ -728,20 +661,9 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 int
 camera_init (Camera *camera, GPContext *context)
 {
-        char buf[256];
-
         /* First, set up all the function pointers */
-        camera->functions->get_config           = camera_get_config;
-        camera->functions->set_config           = camera_set_config;
         camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;
-#ifdef DEBUG
-	camera->functions->capture              = camera_capture;
-	camera->functions->capture_preview	= camera_capture_preview;
-#endif
-
-        if (gp_setting_get("directory", "hidden", buf) != GP_OK)
-                gp_setting_set("directory", "hidden", "1");
 
         gp_filesystem_set_list_funcs (camera->fs, file_list_func,
                                       folder_list_func, camera);
