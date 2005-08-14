@@ -147,8 +147,6 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	unsigned int id, n;
 	Camera *camera = (Camera*)data;
 
-	fprintf(stderr, "folder %s\n", folder);
-
 	if (camera->port->type == GP_PORT_DISK) {
 		GPPortSettings settings;
 
@@ -223,7 +221,6 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	struct stat st;
 	Camera *camera = (Camera*)data;
 
-	fprintf(stderr, "folder %s\n", folder);
 	if (camera->port->type == GP_PORT_DISK) {
 		GPPortSettings settings;
 
@@ -323,7 +320,6 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	struct stat st;
 	Camera *camera = (Camera*)data;
 
-	fprintf(stderr, "folder %s, file %s\n", folder, file);
 	if (camera->port->type == GP_PORT_DISK) {
 		GPPortSettings settings;
 
@@ -400,7 +396,6 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	char path_old[1024], path_new[1024], path[1024];
 	Camera *camera = (Camera*)data;
 
-	fprintf(stderr, "folder %s, file %s\n", folder, file);
 	if (camera->port->type == GP_PORT_DISK) {
 		GPPortSettings settings;
 
@@ -489,7 +484,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 #endif /* HAVE_LIBEXIF */
 	Camera *camera = (Camera*)user_data;
 
-	fprintf(stderr, "folder %s, file %s\n", folder, filename);
 	if (camera->port->type == GP_PORT_DISK) {
 		GPPortSettings settings;
 
