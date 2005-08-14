@@ -407,6 +407,23 @@ gp_abilities_list_detect (CameraAbilitiesList *list,
 
 			break;
 		}
+		case GP_PORT_DISK: {
+			char	*s, path[1024];
+			struct stat stbuf;
+		
+			s = strchr (info.path, ':');
+			if (!s)
+				break;
+			s++;
+			snprintf (path, sizeof(path), "%s/DCIM", s);
+			if (-1 == stat(path, &stbuf)) {
+				snprintf (path, sizeof(path), "%s/dcim", s);
+				if (-1 == stat(path, &stbuf))
+					continue;
+			}
+			gp_list_append (l, "Directory Browse", info.path);
+			break;
+		}
 		default:
 			/*
 			 * We currently cannot detect any cameras on this
