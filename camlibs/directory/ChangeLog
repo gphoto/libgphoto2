@@ -1,5 +1,10 @@
+2005-08-14  Marcus Meissner  <marcus@jet.franken.de>
+
+	* directory.c: Support GP_PORT_DISK style ports
+	  with offset directories.
+
 2003-02-27  Marcus Meissner <marcus@jet.franken.de>
-	
+
 	* directory.c: We support EXIF download.
 
 2003-01-29  Hubert Figuiere  <hfiguiere@teaser.fr>

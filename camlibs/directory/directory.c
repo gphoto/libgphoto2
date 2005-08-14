@@ -145,16 +145,30 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	gp_system_dirent de;
 	char buf[1024], f[1024];
 	unsigned int id, n;
+	Camera *camera = (Camera*)data;
 
-	dir = gp_system_opendir ((char*) folder);
+	fprintf(stderr, "folder %s\n", folder);
+
+	if (camera->port->type == GP_PORT_DISK) {
+		GPPortSettings settings;
+
+		gp_port_get_settings (camera->port, &settings);
+		snprintf (f, sizeof(f), "%s/%s/",
+			settings.disk.mountpoint, 
+			folder
+		);
+	} else {
+		/* old style access */
+		if (folder[strlen(folder)-1] != '/')
+			sprintf (f, "%s%c", folder, '/');
+		else
+			strcpy (f, folder);
+	}
+	dir = gp_system_opendir ((char*) f);
 	if (!dir)
 		return (GP_ERROR);
 	
 	/* Make sure we have 1 delimiter */
-	if (folder[strlen(folder)-1] != '/')
-		sprintf (f, "%s%c", folder, '/');
-	else
-		strcpy (f, folder);
 
 	/* Count the files */
 	n = 0;
@@ -162,11 +176,11 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		n++;
 
 	gp_system_closedir (dir);
-	dir = gp_system_opendir (folder);
+	dir = gp_system_opendir (f);
 	if (!dir)
 		return (GP_ERROR);
 	id = gp_context_progress_start (context, n, _("Listing files in "
-				"'%s'..."), folder);
+				"'%s'..."), f);
 	n = 0;
 	while ((de = gp_system_readdir(dir))) {
 
@@ -207,38 +221,51 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	int view_hidden=1;
 	unsigned int id, n;
 	struct stat st;
+	Camera *camera = (Camera*)data;
+
+	fprintf(stderr, "folder %s\n", folder);
+	if (camera->port->type == GP_PORT_DISK) {
+		GPPortSettings settings;
+
+		gp_port_get_settings (camera->port, &settings);
+		snprintf (f, sizeof(f), "%s/%s/",
+			settings.disk.mountpoint, 
+			folder
+		);
+	} else {
+		/* old style access */
+		/* Make sure we have 1 delimiter */
+		if (folder[strlen(folder)-1] != '/')
+			sprintf (f, "%s%c", folder, '/');
+		else
+			strcpy (f, folder);
+	}
 
 	if (gp_setting_get ("directory", "hidden", buf) == GP_OK)
 		view_hidden = atoi (buf);
 
-	if (lstat (folder, &st) != 0) {
+	if (lstat (f, &st) != 0) {
 		gp_context_error (context, _("Could not get information "
-				  "about '%s' (%m)."), folder);
+				  "about '%s' (%m)."), f);
 		return (GP_ERROR);
 	}
 
 #ifdef FOLLOW_LINKS
 	/* Check if this is a link */
 	if (S_ISLNK (st.st_mode)) {
-		if (readlink (folder, link, sizeof (link) < 0)) {
+		if (readlink (f, link, sizeof (link) < 0)) {
 			gp_context_error (context, _("Could not follow the "
-				"link '%s' (%m)."), folder);
+				"link '%s' (%m)."), f);
 			return (GP_ERROR);
 		}
-		GP_DEBUG ("Following link '%s' -> '%s'...", folder, link);
+		GP_DEBUG ("Following link '%s' -> '%s'...", f, link);
 		return (folder_list_func (fs, link, list, data, context));
 	}
 #endif
 
-	dir = gp_system_opendir ((char*) folder);
+	dir = gp_system_opendir ((char*) f);
 	if (!dir)
 		return (GP_ERROR);
-
-	/* Make sure we have 1 delimiter */
-	if (folder[strlen(folder)-1] != '/')
-		sprintf (f, "%s%c", folder, '/');
-	else
-		strcpy (f, folder);
 
 	/* Count the files */
 	n = 0;
@@ -246,7 +273,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		n++;
 
 	gp_system_closedir (dir);
-	dir = gp_system_opendir (folder);
+	dir = gp_system_opendir (f);
 	if (!dir)
 		return (GP_ERROR);
 	id = gp_context_progress_start (context, n, _("Listing folders in "
@@ -280,7 +307,6 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	}
 	gp_system_closedir (dir);
 	gp_context_progress_stop (context, id);
-
 	return (GP_OK);
 }
 
@@ -295,11 +321,23 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 #endif
 	const char *mime_type;
 	struct stat st;
+	Camera *camera = (Camera*)data;
 
-	if (strlen (folder) == 1)
-		snprintf (path, sizeof (path), "/%s", file);
-	else
+	fprintf(stderr, "folder %s, file %s\n", folder, file);
+	if (camera->port->type == GP_PORT_DISK) {
+		GPPortSettings settings;
+
+		gp_port_get_settings (camera->port, &settings);
+		snprintf (path, sizeof(path), "%s/%s/%s",
+			settings.disk.mountpoint, 
+			folder,
+			file
+		);
+	} else {
+		/* old style access */
 		snprintf (path, sizeof (path), "%s/%s", folder, file);
+	}
+
 	if (lstat (path, &st) != 0) {
 		gp_context_error (context, _("Could not get information "
 			"about '%s' in '%s' (%m)."), file, folder);
@@ -360,6 +398,22 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 {
 	int retval;
 	char path_old[1024], path_new[1024], path[1024];
+	Camera *camera = (Camera*)data;
+
+	fprintf(stderr, "folder %s, file %s\n", folder, file);
+	if (camera->port->type == GP_PORT_DISK) {
+		GPPortSettings settings;
+
+		gp_port_get_settings (camera->port, &settings);
+		snprintf (path, sizeof(path), "%s/%s/%s",
+			settings.disk.mountpoint, 
+			folder,
+			file
+		);
+	} else {
+		/* old style access */
+		snprintf (path, sizeof (path), "%s/%s", folder, file);
+	}
 
 	/* We don't support updating permissions (yet) */
 	if (info.file.fields & GP_FILE_INFO_PERMISSIONS)
@@ -370,10 +424,6 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 
 		utimbuf.actime  = info.file.mtime;
 		utimbuf.modtime = info.file.mtime;
-		if (strlen (folder) == 1)
-			snprintf (path, sizeof (path), "/%s", file);
-		else
-			snprintf (path, sizeof (path), "%s/%s", folder, file);
 		if (utime (path, &utimbuf) != 0) {
 			gp_context_error (context, _("Could not change "
 				"time of file '%s' in '%s' (%m)."),
@@ -437,11 +487,22 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	unsigned char *buf;
 	unsigned int buf_len;
 #endif /* HAVE_LIBEXIF */
+	Camera *camera = (Camera*)user_data;
 
-	if (strlen (folder) == 1)
-		snprintf (path, sizeof (path), "/%s", filename);
-	else
+	fprintf(stderr, "folder %s, file %s\n", folder, filename);
+	if (camera->port->type == GP_PORT_DISK) {
+		GPPortSettings settings;
+
+		gp_port_get_settings (camera->port, &settings);
+		snprintf (path, sizeof(path), "%s/%s/%s",
+			settings.disk.mountpoint, 
+			folder,
+			filename
+		);
+	} else {
+		/* old style access */
 		snprintf (path, sizeof (path), "%s/%s", folder, filename);
+	}
 
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
