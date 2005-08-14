@@ -1,3 +1,11 @@
+2005-08-14  Marcus Meissner  <marcus@jet.franken.de>
+
+	* configure.in: Use "disk" unconditional. 
+	  When we detect HAL , define HAVE_HAL.
+
+	* disk/disk.c: Read /etc/fstab and /etc/mtab and look
+	  for digital camera mounts.
+
 2005-06-12  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* libgphoto2_port/gphoto2-port.h: new disk settings struct.

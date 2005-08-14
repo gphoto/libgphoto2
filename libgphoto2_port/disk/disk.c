@@ -33,8 +33,11 @@
 #include <sys/param.h>
 #include <dirent.h>
 #include <string.h>
+#include <mntent.h>
 
+#ifdef HAVE_HAL
 #include <hal/libhal.h>
+#endif
 
 #include <gphoto2-port.h>
 #include <gphoto2-port-result.h>
@@ -75,13 +78,14 @@ int
 gp_port_library_list (GPPortInfoList *list)
 {
 	GPPortInfo info;
+#ifdef HAVE_HAL
         LibHalContext *ctx;
+        DBusError error;
+        DBusConnection *dbus_connection;
         int i;
         int num_volumes;
         char **volumes;
         char *udi;
-        DBusError error;
-        DBusConnection *dbus_connection;
 
         ctx = libhal_ctx_new ();
         if (!ctx) {
@@ -171,7 +175,58 @@ gp_port_library_list (GPPortInfoList *list)
 	libhal_ctx_free(ctx);
 
 	dbus_connection_unref(dbus_connection);
+#else
+	FILE *mnt;
+	struct mntent *mntent;
+	char	path[1024];
+	struct stat stbuf;
 
+	info.type = GP_PORT_DISK;
+
+	mnt = setmntent ("/etc/fstab", "r");
+	while ((mntent = getmntent (mnt))) {
+		/* detect floppies so we don't access them with the stat() below */
+		if (	(NULL != strstr(mntent->mnt_fsname,"fd")) ||
+			(NULL != strstr(mntent->mnt_fsname,"floppy"))
+		)
+			continue;
+
+		snprintf (path, sizeof(path), "%s/DCIM", mntent->mnt_dir);
+		if (-1 == stat(path, &stbuf)) {
+			snprintf (path, sizeof(path), "%s/dcim", mntent->mnt_dir);
+			if (-1 == stat(path, &stbuf))
+				continue;
+		}
+		snprintf (info.name, sizeof(info.name), _("Media '%s'"), mntent->mnt_fsname),
+		snprintf (info.path, sizeof(info.path), "disk:%s", mntent->mnt_dir);
+		if (gp_port_info_list_lookup_path (list, info.path) >= GP_OK)
+			continue;
+		CHECK (gp_port_info_list_append (list, info));
+	}
+	endmntent(mnt);
+	mnt = setmntent ("/etc/mtab", "r");
+	while ((mntent = getmntent (mnt))) {
+		/* detect floppies so we don't access them with the stat() below */
+		if (	(NULL != strstr(mntent->mnt_fsname,"fd")) ||
+			(NULL != strstr(mntent->mnt_fsname,"floppy"))
+		)
+			continue;
+
+		snprintf (path, sizeof(path), "%s/DCIM", mntent->mnt_dir);
+		if (-1 == stat(path, &stbuf)) {
+			snprintf (path, sizeof(path), "%s/dcim", mntent->mnt_dir);
+			if (-1 == stat(path, &stbuf))
+				continue;
+		}
+		info.type = GP_PORT_DISK;
+		snprintf (info.name, sizeof(info.name), _("Media '%s'"), mntent->mnt_fsname),
+		snprintf (info.path, sizeof(info.path), "disk:%s", mntent->mnt_dir);
+		if (gp_port_info_list_lookup_path (list, info.path) >= GP_OK)
+			continue;
+		CHECK (gp_port_info_list_append (list, info));
+	}
+	endmntent(mnt);
+#endif
 	return GP_OK;
 }
 
