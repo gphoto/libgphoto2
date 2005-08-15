@@ -1,6 +1,7 @@
 /* directory.c
  *
  * Copyright © 2001 Lutz Müller <lutz@users.sf.net>
+ * Copyright © 2005 Marcus Meissner <marcus@jet.franken.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -64,8 +65,12 @@ static const struct {
 	{"tif",  GP_MIME_TIFF},
 	{"ppm",  GP_MIME_PPM},
 	{"pgm",  GP_MIME_PGM},
+	{"avi",  GP_MIME_AVI},
+	{"mov",  GP_MIME_QUICKTIME},
 	{"pbm", "image/x-portable-bitmap"},
+	{"crw",  GP_MIME_RAW},
 	{"png",  GP_MIME_PNG},
+	{"wav",  GP_MIME_WAV},
 	{NULL, NULL}
 };
 
@@ -155,6 +160,12 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 			settings.disk.mountpoint, 
 			folder
 		);
+		/* UNIX / is empty, or we recurse through the whole fs */
+		if (	(!strcmp(settings.disk.mountpoint, "") ||
+			 !strcmp(settings.disk.mountpoint, "/")) &&
+			!strcmp(folder,"/")
+		)
+			return GP_OK;
 	} else {
 		/* old style access */
 		if (folder[strlen(folder)-1] != '/')
@@ -224,6 +235,12 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 			settings.disk.mountpoint, 
 			folder
 		);
+		/* UNIX / is empty, or we recurse through the whole fs */
+		if (	(!strcmp(settings.disk.mountpoint, "") ||
+			 !strcmp(settings.disk.mountpoint, "/")) &&
+			!strcmp(folder,"/")
+		)
+			return GP_OK;
 	} else {
 		/* old style access */
 		/* Make sure we have 1 delimiter */
@@ -306,12 +323,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 		return (GP_ERROR);
 	}
 
-
-#ifdef DEBUG
-	info->preview.fields = GP_FILE_INFO_SIZE;
-#else
         info->preview.fields = GP_FILE_INFO_NONE;
-#endif
         info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_NAME |
                             GP_FILE_INFO_TYPE | GP_FILE_INFO_PERMISSIONS |
 			    GP_FILE_INFO_MTIME;
@@ -324,9 +336,6 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 		info->file.permissions |= GP_FILE_PERM_DELETE;
         strcpy (info->file.name, file);
         info->file.size = st.st_size;
-#ifdef DEBUG
-	info->preview.size = st.st_size;
-#endif
 	mime_type = get_mime_type (file);
 	if (!mime_type)
 		mime_type = "application/octet-stream";
