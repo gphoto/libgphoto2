@@ -191,18 +191,31 @@ static int print_fdi_map(const int add_comments)
 
 
         for (x = 0; x < n; x++) {
+		char	*s, *d, model[256];
+
 		CR (gp_abilities_list_get_abilities (al, x, &a));
 
 		if (!(a.port & GP_PORT_USB))
 		    continue;
 
+		s = a.model; d = model;
+		while (*s) {
+		    if (*s == '&') {
+			strcpy(d,"&amp;");
+			d += strlen(d);
+		    } else {
+		    	*d++ = *s;
+		    }
+		    s++;
+		}
+		*d = '\0';
 		if (a.usb_vendor) { /* usb product id might be 0! */
 			printf("   <match key=\"usb.vendor_id\" int=\"%d\">\n", a.usb_vendor);
 			printf("    <match key=\"usb.product_id\" int=\"%d\">\n", a.usb_product);
 			printf("     <merge key=\"info.category\" type=\"string\">camera</merge>\n");
 			printf("     <append key=\"info.capabilities\" type=\"strlist\">camera</append>\n");
 			printf("     <merge key=\"camera.access_method\" type=\"string\">libgphoto2</merge>\n");
-			printf("     <merge key=\"camera.libgphoto2.name\" type=\"string\">%s</merge>\n", a.model);
+			printf("     <merge key=\"camera.libgphoto2.name\" type=\"string\">%s</merge>\n", model);
 			printf("     <merge key=\"camera.libgphoto2.support\" type=\"bool\">true</merge>\n");
 			printf("    </match>\n");
 			printf("   </match>\n");
@@ -214,7 +227,7 @@ static int print_fdi_map(const int add_comments)
 			printf("      <merge key=\"info.category\" type=\"string\">camera</merge>\n");
 			printf("      <append key=\"info.capabilities\" type=\"strlist\">camera</append>\n");
 			printf("      <merge key=\"camera.access_method\" type=\"string\">libgphoto2</merge>\n");
-			printf("      <merge key=\"camera.libgphoto2.name\" type=\"string\">%s</merge>\n", a.model);
+			printf("      <merge key=\"camera.libgphoto2.name\" type=\"string\">%s</merge>\n", model);
 			printf("      <merge key=\"camera.libgphoto2.support\" type=\"bool\">true</merge>\n");
 			printf("     </match>\n");
 			printf("    </match>\n");
