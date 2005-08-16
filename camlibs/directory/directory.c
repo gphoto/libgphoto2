@@ -116,15 +116,11 @@ int camera_abilities (CameraAbilitiesList *list)
 	memset(&a, 0, sizeof(a));
         strcpy(a.model, "Directory Browse");
 	a.status = GP_DRIVER_STATUS_PRODUCTION;
-        a.port     = GP_PORT_NONE;
+        a.port     = GP_PORT_DISK;
         a.speed[0] = 0;
 
-#ifdef DEBUG
-	a.operations = GP_OPERATION_CONFIG | GP_OPERATION_CAPTURE_PREVIEW |
-		       GP_OPERATION_CAPTURE_IMAGE;
-#else
-        a.operations = GP_OPERATION_CONFIG;
-#endif
+        a.operations = GP_OPERATION_NONE;
+
 #ifdef DEBUG
         a.file_operations = GP_FILE_OPERATION_PREVIEW |
 			    GP_FILE_OPERATION_DELETE | 
