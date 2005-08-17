@@ -80,7 +80,7 @@ gp_port_library_list (GPPortInfoList *list)
 	GPPortInfo info;
 	struct usb_bus *bus;
 	struct usb_device *dev;
-	int nrofdevices = 0;
+	int nrofdevices = 0, i, i1, i2, unknownint;
 
 	/* default port first */
 	info.type = GP_PORT_USB;
@@ -102,6 +102,22 @@ gp_port_library_list (GPPortInfoList *list)
 				(dev->descriptor.bDeviceClass == USB_CLASS_PRINTER)	||
 				(dev->descriptor.bDeviceClass == USB_CLASS_COMM)
 			)
+				continue;
+			/* excepts HUBs, usually the interfaces have the classes, not
+			 * the device */
+			unknownint = 0;
+			for (i = 0; i < dev->descriptor.bNumConfigurations; i++)
+				for (i1 = 0; i1 < dev->config[i].bNumInterfaces; i1++)
+					for (i2 = 0; i2 < dev->config[i].interface[i1].num_altsetting; i2++) {
+						struct usb_interface_descriptor *intf = &dev->config[i].interface[i1].altsetting[i2]; 
+						if (	(intf->bInterfaceClass == USB_CLASS_HID)	||
+							(intf->bInterfaceClass == USB_CLASS_PRINTER)	||
+							(intf->bInterfaceClass == USB_CLASS_COMM))
+							continue;
+						unknownint++;
+					}
+			/* when we find only hids, printer or comm ifaces  ... skip this */
+			if (!unknownint)
 				continue;
 			/* Note: We do not skip USB storage. Some devices can support both,
 			 * and the Ricoh erronously reports it.
@@ -129,6 +145,22 @@ gp_port_library_list (GPPortInfoList *list)
 				(dev->descriptor.bDeviceClass == USB_CLASS_PRINTER)	||
 				(dev->descriptor.bDeviceClass == USB_CLASS_COMM)
 			)
+				continue;
+			/* excepts HUBs, usually the interfaces have the classes, not
+			 * the device */
+			unknownint = 0;
+			for (i = 0; i < dev->descriptor.bNumConfigurations; i++)
+				for (i1 = 0; i1 < dev->config[i].bNumInterfaces; i1++)
+					for (i2 = 0; i2 < dev->config[i].interface[i1].num_altsetting; i2++) {
+						struct usb_interface_descriptor *intf = &dev->config[i].interface[i1].altsetting[i2]; 
+						if (	(intf->bInterfaceClass == USB_CLASS_HID)	||
+							(intf->bInterfaceClass == USB_CLASS_PRINTER)	||
+							(intf->bInterfaceClass == USB_CLASS_COMM))
+							continue;
+						unknownint++;
+					}
+			/* when we find only hids, printer or comm ifaces  ... skip this */
+			if (!unknownint)
 				continue;
 			/* Note: We do not skip USB storage. Some devices can support both,
 			 * and the Ricoh erronously reports it.
