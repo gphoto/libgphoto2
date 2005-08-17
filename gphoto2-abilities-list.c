@@ -421,7 +421,7 @@ gp_abilities_list_detect (CameraAbilitiesList *list,
 				if (-1 == stat(path, &stbuf))
 					continue;
 			}
-			gp_list_append (l, "Directory Browse", info.path);
+			gp_list_append (l, "Mass Storage Camera", info.path);
 			break;
 		}
 		default:
