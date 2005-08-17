@@ -135,6 +135,11 @@ int camera_abilities (CameraAbilitiesList *list)
 
         gp_abilities_list_append(list, a);
 
+	/* Since "Directory Browse" is hardcoded in clients,
+	 * better also add a new name here.
+	 */
+        strcpy(a.model, "Mass Storage Camera");
+        gp_abilities_list_append(list, a);
         return (GP_OK);
 }
 
