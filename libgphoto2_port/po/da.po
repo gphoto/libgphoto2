@@ -1,449 +1,466 @@
-# Danish translation of gphoto
-# Copyright © 2000 Free Software Foundation, Inc.
-# Kenneth Christiansen <kenneth@ripen.dk> 2000.
-# Keld Simonsen <keld@dkuug.dk>, 2000.
+# translation of libgphoto2_port-2.1.6.po to Danish
+# Copyright (C) 2005 Free Software Foundation, Inc.
+# Mogens Jæger <mogensjaeger@get2net.dk>, 2005.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gphoto 0.4.3\n"
-"Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2005-06-10 19:40+0200\n"
-"PO-Revision-Date: 2000-04-19 10:12+02:00\n"
-"Last-Translator: Keld Simonsen <keld@dkuug.dk>\n"
-"Language-Team: Dansk <dansk@klid.dk>\n"
+"Project-Id-Version: libgphoto2_port 2.1.6\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-03-31 07:55+0200\n"
+"PO-Revision-Date: 2005-08-17 17:32+0200\n"
+"Last-Translator: Mogens Jæger <mogensjaeger@get2net.dk>\n"
+"Language-Team: Danish <dansk@klid.dk>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
-"Content-Transfer-Encoding: 8-bit\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.10\n"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:185
-#, fuzzy, c-format
-msgid "Called for filename '%s'."
-msgstr "Fejl: kunne ikke åbne %s"
-
-#: libgphoto2_port/gphoto2-port-info-list.c:190
-#, fuzzy, c-format
+#: libgphoto2_port/gphoto2-port-info-list.c:178
+#, c-format
 msgid "Could not load '%s': '%s'."
-msgstr ""
-"Kunne ikke åbne:\n"
-"%s"
+msgstr "Kunne ikke indlæse '%s': '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:198
+#: libgphoto2_port/gphoto2-port-info-list.c:186
 #, c-format
 msgid "Could not find some functions in '%s': '%s'."
-msgstr ""
+msgstr "Kunne ikke finde visse funktioner i '%s': '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:210
+#: libgphoto2_port/gphoto2-port-info-list.c:198
+#: libgphoto2_port/gphoto2-port-info-list.c:322
 #, c-format
 msgid "'%s' already loaded"
-msgstr ""
+msgstr "'%s' allerede indlæst"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:219
-#, fuzzy, c-format
+#: libgphoto2_port/gphoto2-port-info-list.c:207
+#, c-format
 msgid "Could not load port driver list: '%s'."
-msgstr "Kunne ikke finde smugkig"
+msgstr "Kunne ikke indlæse portdriverliste: '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:226
+#: libgphoto2_port/gphoto2-port-info-list.c:214
 #, c-format
 msgid "Loaded '%s' ('%s') from '%s'."
-msgstr ""
+msgstr "Indlæste '%s' ('%s') fra '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:255
+#: libgphoto2_port/gphoto2-port-info-list.c:253
 #, fuzzy, c-format
-msgid "Using ltdl to load io-drivers from '%s'..."
-msgstr "Kunne ikke finde smugkig"
+msgid "Loading io-drivers from '%s'..."
+msgstr "Indlæser io-drivere fra '%s' uden ltdl..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:282
+#: libgphoto2_port/gphoto2-port-info-list.c:268
 #, c-format
-msgid "Counting entries (%i available)..."
+msgid "Could not load any io-library because '%s' could not be opened (%m)"
 msgstr ""
+"Kunne ikke indlæse nogen io-biblioteker, fordi '%s' ikke kunne åbnes (%m)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:291
+#: libgphoto2_port/gphoto2-port-info-list.c:300
 #, c-format
-msgid "%i regular entries available."
-msgstr ""
+msgid "'%s' is not a library (%s)"
+msgstr "'%s' er ikke et bibliotek (%s)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:320
+#: libgphoto2_port/gphoto2-port-info-list.c:310
 #, c-format
-msgid "Looking for path '%s' (%i entries available)..."
-msgstr ""
+msgid "Could not find some functions in '%s' (%s)"
+msgstr "Kunne ikke finde visse funktioner i '%s' (%s)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:332
+#: libgphoto2_port/gphoto2-port-info-list.c:330
 #, c-format
-msgid "Starting regex search for '%s'..."
-msgstr ""
+msgid "Could not load list (%s)"
+msgstr "Kunne ikke indlæse liste (%s)"
 
 #: libgphoto2_port/gphoto2-port-info-list.c:338
 #, c-format
-msgid "Trying '%s'..."
-msgstr ""
+msgid "Loaded '%s' (%s) from '%s'"
+msgstr "Indlæste '%s' (%s) fra '%s'"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:359
-msgid "regcomp failed"
-msgstr ""
-
-#: libgphoto2_port/gphoto2-port-info-list.c:370
+#: libgphoto2_port/gphoto2-port-info-list.c:369
 #, c-format
-msgid "re_match failed (%i)"
-msgstr ""
+msgid "Counting entries (%i available)..."
+msgstr "Tæller indgange (%i til rådighed)..."
 
 #: libgphoto2_port/gphoto2-port-info-list.c:378
+#, c-format
+msgid "%i regular entries available."
+msgstr "%i regulære indgange til rådighed."
+
+#: libgphoto2_port/gphoto2-port-info-list.c:407
+#, c-format
+msgid "Looking for path '%s' (%i entries available)..."
+msgstr "Ser efter sti '%s' (%i indgange til rådighed)..."
+
+#: libgphoto2_port/gphoto2-port-info-list.c:419
+#, c-format
+msgid "Starting regex search for '%s'..."
+msgstr "Starter regex-søgning efter '%s'..."
+
+#: libgphoto2_port/gphoto2-port-info-list.c:425
+#, c-format
+msgid "Trying '%s'..."
+msgstr "Prøver '%s'..."
+
+#: libgphoto2_port/gphoto2-port-info-list.c:446
+msgid "regcomp failed"
+msgstr "regcomp fejlede"
+
+#: libgphoto2_port/gphoto2-port-info-list.c:457
+#, c-format
+msgid "re_match failed (%i)"
+msgstr "re_match fejlede (%i)"
+
+#: libgphoto2_port/gphoto2-port-info-list.c:465
 msgid "regexec failed"
-msgstr ""
+msgstr "regexec fejlede"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:385
+#: libgphoto2_port/gphoto2-port-info-list.c:472
 msgid "Generic Port"
-msgstr ""
+msgstr "Almindelig port"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:409
+#: libgphoto2_port/gphoto2-port-info-list.c:496
 #, c-format
 msgid "Looking up entry '%s'..."
-msgstr ""
+msgstr "Ser efter indgang '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:439
+#: libgphoto2_port/gphoto2-port-info-list.c:526
 #, c-format
 msgid "Getting info of entry %i (%i available)..."
-msgstr ""
+msgstr "Henter information om indgang %i (%i til rådighed)..."
 
 #: libgphoto2_port/gphoto2-port-result.c:58
 msgid "No error"
-msgstr ""
+msgstr "Ingen fejl"
 
 #: libgphoto2_port/gphoto2-port-result.c:60
 msgid "Unspecified error"
-msgstr ""
+msgstr "Ikke-specificeret fejl"
 
 #: libgphoto2_port/gphoto2-port-result.c:62
 msgid "I/O problem"
-msgstr ""
+msgstr "I/O problem"
 
 #: libgphoto2_port/gphoto2-port-result.c:64
 msgid "Bad parameters"
-msgstr ""
+msgstr "Forkerte parametre"
 
 #: libgphoto2_port/gphoto2-port-result.c:66
 msgid "Unsupported operation"
-msgstr ""
+msgstr "Ikke understøttet proces"
 
 #: libgphoto2_port/gphoto2-port-result.c:68
 msgid "Timeout reading from or writing to the port"
-msgstr ""
+msgstr "Tidsudløb ved læsning/skrivning til porten"
 
 #: libgphoto2_port/gphoto2-port-result.c:70
 msgid "Serial port not supported"
-msgstr ""
+msgstr "Seriel-port ikke understøttet"
 
 #: libgphoto2_port/gphoto2-port-result.c:72
 msgid "USB port not supported"
-msgstr ""
+msgstr "USB-port ikke understøttet"
 
 #: libgphoto2_port/gphoto2-port-result.c:74
 msgid "Unknown port"
-msgstr ""
+msgstr "Ukendt port"
 
 #: libgphoto2_port/gphoto2-port-result.c:76
 msgid "Out of memory"
-msgstr ""
+msgstr "Ikke mere hukommelse"
 
 #: libgphoto2_port/gphoto2-port-result.c:78
 msgid "Error loading a library"
-msgstr ""
+msgstr "Fejl ved indlæsning af bibliotek"
 
 #: libgphoto2_port/gphoto2-port-result.c:80
 msgid "Error initializing the port"
-msgstr ""
+msgstr "Fejl ved initialisering af porten"
 
 #: libgphoto2_port/gphoto2-port-result.c:82
 msgid "Error reading from the port"
-msgstr ""
+msgstr "Fejl ved læsning fra porten"
 
 #: libgphoto2_port/gphoto2-port-result.c:84
 msgid "Error writing to the port"
-msgstr ""
+msgstr "Fejl ved skrivning til porten"
 
 #: libgphoto2_port/gphoto2-port-result.c:86
 msgid "Error updating the port settings"
-msgstr ""
+msgstr "Fejl ved opdatering af portindstillinger"
 
 #: libgphoto2_port/gphoto2-port-result.c:88
 msgid "Error setting the serial port speed"
-msgstr ""
+msgstr "Fejl ved indstilling af den serielle porthastighed"
 
 #: libgphoto2_port/gphoto2-port-result.c:90
 msgid "Error clearing a halt condition on the USB port"
-msgstr ""
+msgstr "Fejl ved nulstilling af en stop-tilstand på USB-porten"
 
 #: libgphoto2_port/gphoto2-port-result.c:92
 msgid "Could not find the requested device on the USB port"
-msgstr ""
+msgstr "Kunne ikke finde den efterspurgte enhed på USB-porten"
 
 #: libgphoto2_port/gphoto2-port-result.c:94
-#, fuzzy
 msgid "Could not claim the USB device"
-msgstr "Kunne ikke finde smugkig"
+msgstr "Kunne ikke kræve USB enheden"
 
 #: libgphoto2_port/gphoto2-port-result.c:96
-#, fuzzy
 msgid "Could not lock the device"
-msgstr "Kunne ikke finde smugkig"
+msgstr "Kunne ikke låse enheden"
 
 #: libgphoto2_port/gphoto2-port-result.c:98
 msgid "Unknown error"
-msgstr ""
+msgstr "Ukendt fejl"
 
-#: libgphoto2_port/gphoto2-port.c:54
+#: libgphoto2_port/gphoto2-port.c:56
 #, c-format
 msgid "The operation '%s' is not supported by this device"
-msgstr ""
+msgstr "Processen '%s' er ikke understøttet af denne enhed"
 
-#: libgphoto2_port/gphoto2-port.c:55
+#: libgphoto2_port/gphoto2-port.c:57
 msgid "The port has not yet been initialized"
-msgstr ""
+msgstr "Porten er endnu ikke blevet initialiseret"
 
-#: libgphoto2_port/gphoto2-port.c:85
+#: libgphoto2_port/gphoto2-port.c:91
 msgid "Creating new device..."
-msgstr ""
+msgstr "Danner ny enhed..."
 
-#: libgphoto2_port/gphoto2-port.c:160
-#, fuzzy, c-format
+#: libgphoto2_port/gphoto2-port.c:171
+#, c-format
 msgid "Could not load '%s' ('%s')."
-msgstr ""
-"Kunne ikke åbne:\n"
-"%s"
+msgstr "Kunne ikke indlæse '%s' ('%s')."
 
-#: libgphoto2_port/gphoto2-port.c:170
+#: libgphoto2_port/gphoto2-port.c:180
+#, c-format
+msgid "Could not load '%s' ('%s')"
+msgstr "Kunne ikke indlæse '%s' ('%s')."
+
+#: libgphoto2_port/gphoto2-port.c:195 libgphoto2_port/gphoto2-port.c:201
 #, c-format
 msgid "Could not find 'gp_port_library_operations' in '%s' ('%s')"
-msgstr ""
+msgstr "Kunne ikke finde 'gp_port_library_operations' i '%s' ('%s')"
 
-#: libgphoto2_port/gphoto2-port.c:245
+#: libgphoto2_port/gphoto2-port.c:276
 #, c-format
 msgid "Opening %s port..."
-msgstr ""
+msgstr "Åbner %s port..."
 
-#: libgphoto2_port/gphoto2-port.c:267
+#: libgphoto2_port/gphoto2-port.c:298
 msgid "Closing port..."
-msgstr ""
+msgstr "Lukker port..."
 
-#: libgphoto2_port/gphoto2-port.c:289
+#: libgphoto2_port/gphoto2-port.c:320
 msgid "Freeing port..."
-msgstr ""
+msgstr "Frigør port..."
 
-#: libgphoto2_port/gphoto2-port.c:334
+#: libgphoto2_port/gphoto2-port.c:369
 #, c-format
 msgid "Writing %i=0x%x byte(s) to port..."
-msgstr ""
+msgstr "Skriver %i=0x%x byte til port..."
 
-#: libgphoto2_port/gphoto2-port.c:347
-#, fuzzy, c-format
+#: libgphoto2_port/gphoto2-port.c:382
+#, c-format
 msgid "Could only write %i out of %i byte(s)"
-msgstr "Kunne ikke hente #%i"
+msgstr "Kunne kun skrive %i ud af %i byte"
 
-#: libgphoto2_port/gphoto2-port.c:368
+#: libgphoto2_port/gphoto2-port.c:403
 #, c-format
 msgid "Reading %i=0x%x bytes from port..."
-msgstr ""
+msgstr "Læser %i=0x%x byte fra port..."
 
-#: libgphoto2_port/gphoto2-port.c:379 libgphoto2_port/gphoto2-port.c:415
-#: libgphoto2_port/gphoto2-port.c:454 libgphoto2_port/gphoto2-port.c:776
+#: libgphoto2_port/gphoto2-port.c:414 libgphoto2_port/gphoto2-port.c:450
+#: libgphoto2_port/gphoto2-port.c:489 libgphoto2_port/gphoto2-port.c:811
 #, c-format
 msgid "Could only read %i out of %i byte(s)"
-msgstr ""
+msgstr "Kunne kun læse %i ud af %i byte"
 
-#: libgphoto2_port/gphoto2-port.c:404
+#: libgphoto2_port/gphoto2-port.c:439
 #, c-format
 msgid "Reading %i=0x%x bytes from interrupt endpoint..."
-msgstr ""
+msgstr "Læser %i=0x%x byte fra afbrudt-endepunkt..."
 
-#: libgphoto2_port/gphoto2-port.c:464
+#: libgphoto2_port/gphoto2-port.c:499
 #, c-format
 msgid "Reading %i=0x%x bytes from interrupt endpoint (fast)..."
-msgstr ""
+msgstr "Læser %i=0x%x byte fra afbrudt-endepunkt (hurtig)..."
 
-#: libgphoto2_port/gphoto2-port.c:489
+#: libgphoto2_port/gphoto2-port.c:524
 #, c-format
 msgid "Setting timeout to %i millisecond(s)..."
-msgstr ""
+msgstr "Sætter tidsudløb til %i millisekunder..."
 
-#: libgphoto2_port/gphoto2-port.c:525
+#: libgphoto2_port/gphoto2-port.c:560
 msgid "Getting timeout..."
-msgstr ""
+msgstr "Henter tidsudløb..."
 
-#: libgphoto2_port/gphoto2-port.c:529
+#: libgphoto2_port/gphoto2-port.c:564
 #, c-format
 msgid "Current timeout: %i milliseconds"
-msgstr ""
+msgstr "Nuværende tidsudløb: %i millisekunder"
 
-#: libgphoto2_port/gphoto2-port.c:551
+#: libgphoto2_port/gphoto2-port.c:586
 msgid "Setting settings..."
-msgstr ""
-
-#: libgphoto2_port/gphoto2-port.c:602
-#, fuzzy, c-format
-msgid "Getting level of pin %i..."
-msgstr "Kunne ikke hente #%i"
-
-#: libgphoto2_port/gphoto2-port.c:611
-#, c-format
-msgid "Level of pin %i: %i"
-msgstr ""
+msgstr "Sætter indstillinger..."
 
 #: libgphoto2_port/gphoto2-port.c:637
+#, c-format
+msgid "Getting level of pin %i..."
+msgstr "Henter niveau for pin %i..."
+
+#: libgphoto2_port/gphoto2-port.c:646
+#, c-format
+msgid "Level of pin %i: %i"
+msgstr "Niveau for pin %i: %i"
+
+#: libgphoto2_port/gphoto2-port.c:672
 msgid "low"
-msgstr ""
+msgstr "lav"
 
-#: libgphoto2_port/gphoto2-port.c:638
+#: libgphoto2_port/gphoto2-port.c:673
 msgid "high"
-msgstr ""
+msgstr "høj"
 
-#: libgphoto2_port/gphoto2-port.c:653
+#: libgphoto2_port/gphoto2-port.c:688
 #, c-format
 msgid "Setting pin %i (%s: '%s') to '%s'..."
-msgstr ""
+msgstr "Sætter pin %i (%s: '%s') til '%s'..."
 
-#: libgphoto2_port/gphoto2-port.c:670
+#: libgphoto2_port/gphoto2-port.c:705
 #, c-format
 msgid "Sending break (%i milliseconds)..."
-msgstr ""
+msgstr "Sender skift (%i millisekunder)..."
 
-#: libgphoto2_port/gphoto2-port.c:685
+#: libgphoto2_port/gphoto2-port.c:720
 msgid "Flushing port..."
-msgstr ""
+msgstr "Tømmer port..."
 
-#: libgphoto2_port/gphoto2-port.c:726
+#: libgphoto2_port/gphoto2-port.c:761
 msgid "Clear halt..."
-msgstr ""
+msgstr "Ryd stop..."
 
-#: libgphoto2_port/gphoto2-port.c:743
+#: libgphoto2_port/gphoto2-port.c:778
 #, c-format
 msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
 msgstr ""
+"Skriver besked (forespørgsel=0x%x værdi=0x%x indeks=0x%x størrelse=%i=0x%"
+"x)..."
 
-#: libgphoto2_port/gphoto2-port.c:764
+#: libgphoto2_port/gphoto2-port.c:799
 #, c-format
 msgid "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
 msgstr ""
+"Læser besked (forespørgsel=0x%x værdi=0x%x indeks=0x%x størrelse=%i=0x%x)..."
 
-#: libgphoto2_port/gphoto2-port.c:771 libgphoto2_port/gphoto2-port.c:825
+#: libgphoto2_port/gphoto2-port.c:806
 msgid "msg_read"
-msgstr ""
+msgstr "msg_read"
 
-#: libgphoto2_port/gphoto2-port.c:803
-msgid "msg_build"
-msgstr ""
-
-#: libgphoto2_port/gphoto2-port.c:887
+#: libgphoto2_port/gphoto2-port.c:866
 msgid "No error description available"
-msgstr ""
+msgstr "Ingen fejlbeskrivelse tilgængelig"
 
 #: serial/unix.c:226
-#, fuzzy, c-format
+#, c-format
 msgid "Could not lock device '%s'"
-msgstr "Kunne ikke finde smugkig"
+msgstr "Kunne ikke låse enhed '%s'"
 
 #: serial/unix.c:236
 #, c-format
 msgid "Device '%s' is locked by pid %d"
-msgstr ""
+msgstr "Enheden '%s' er låst af pid %d"
 
 #: serial/unix.c:239
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
-msgstr ""
+msgstr "Enheden '%s' kunne ikke låses (dev_lock returnerede %d)"
 
 #: serial/unix.c:273
 #, c-format
 msgid "Device '%s' could not be unlocked."
-msgstr ""
+msgstr "Enheden '%s' kunne ikke låses op."
 
 #: serial/unix.c:285
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
-msgstr ""
+msgstr "Enheden '%s' kunne ikke låses op da den er låst af pid %d."
 
 #: serial/unix.c:289
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
-msgstr ""
+msgstr "Enheden '%s' kunne ikke låses op (dev_unlock returnerede %d)"
 
 #: serial/unix.c:365
 #, c-format
 msgid "Serial Port %i"
-msgstr ""
+msgstr "Seriel-port %i"
 
 #: serial/unix.c:456
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to open '%s' (%m)."
-msgstr "Fejl: kunne ikke åbne %s"
+msgstr "Åbning af '%s' (%m) fejlede."
 
 #: serial/unix.c:474
-#, fuzzy, c-format
+#, c-format
 msgid "Could not close '%s' (%m)."
-msgstr ""
-"Kunne ikke åbne:\n"
-"%s"
+msgstr "Kunne ikke lukke '%s' (%m)."
 
 #: serial/unix.c:527
-#, fuzzy, c-format
+#, c-format
 msgid "Could not write to port (%m)"
-msgstr "Kunne ikke hente #%i"
+msgstr "Kunne ikke skrive til port (%m)"
 
 #: serial/unix.c:599
 msgid "Parity error."
-msgstr ""
+msgstr "Paritetsfejl."
 
 #: serial/unix.c:603
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
-msgstr ""
+msgstr "Uventet paritetssvar-sekvens 0xff 0x%02x."
 
 #: serial/unix.c:646
 #, c-format
 msgid "Unknown pin %i."
-msgstr ""
+msgstr "Ukendt pin %i."
 
 #: serial/unix.c:668
-#, fuzzy, c-format
+#, c-format
 msgid "Could not get level of pin %i (%m)."
-msgstr "Kunne ikke hente #%i"
+msgstr "Kunne ikke hente niveau af pin %i (%m)."
 
 #: serial/unix.c:703
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
-msgstr ""
+msgstr "Kunne ikke sætte niveau af pin %i til %i (%m)."
 
 #: serial/unix.c:728
 #, c-format
 msgid "Could not flush '%s' (%m)."
-msgstr ""
+msgstr "Kunne ikke tømme '%s' (%m)."
 
 #: serial/unix.c:841
-#, fuzzy, c-format
+#, c-format
 msgid "Could not set the baudrate to %d"
-msgstr "Kunne ikke hente antal billeder"
+msgstr "Kunne ikke sætte baudrate til %d"
 
 #: usb/libusb.c:186
-#, fuzzy, c-format
+#, c-format
 msgid "Could not open USB device (%m)."
-msgstr "Kunne ikke finde smugkig"
+msgstr "Kunne ikke åbne USB enheden (%m)."
 
 #: usb/libusb.c:196
 msgid "Camera is already in use."
-msgstr ""
+msgstr "Kameraet er allerede i brug."
 
 #: usb/libusb.c:201
 #, c-format
 msgid "Device has driver '%s' attached, detaching it now."
-msgstr ""
+msgstr "Enheden har driver '%s' tilknyttet, frigør det nu."
 
 #: usb/libusb.c:204
 #, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
-msgstr ""
+msgstr "Kunne ikke frigøre kerneldriver '%s' fra kameraenheden."
 
 #: usb/libusb.c:206
-#, fuzzy
 msgid "Could not query kernel driver of device."
-msgstr "Kunne ikke finde smugkig"
+msgstr "Kunne ikke forespørge kerneldriver fra enheden."
 
 #: usb/libusb.c:213
 #, c-format
@@ -452,79 +469,65 @@ msgid ""
 "module (such as %s) is using the device and you have read/write access to "
 "the device."
 msgstr ""
+"Kunne ikke kræve grænseflade %d (%m). Sikr dig at ingen andreprogrammer "
+"eller kerneldrivere (som f.eks. %s) bruger enheden, og at du har læse/skrive "
+"rettigheder til enheden."
 
 #: usb/libusb.c:232
 #, c-format
 msgid "Could not release interface %d (%m)."
-msgstr ""
+msgstr "Kunne ikke frigøre grænseflade %d (%m)."
 
 #: usb/libusb.c:239
 #, c-format
 msgid "Could not close USB port (%m)."
-msgstr ""
+msgstr "Kunne ikke lukke USB-port (%m)."
 
-#: usb/libusb.c:419
+#: usb/libusb.c:379
 #, c-format
 msgid "Could not set config %d/%d (%m)"
-msgstr ""
+msgstr "Kunne ikke sætte konfiguration %d/%d (%m)"
 
-#: usb/libusb.c:449
-#, fuzzy, c-format
+#: usb/libusb.c:401
+#, c-format
 msgid "Could not set altsetting %d/%d (%m)"
-msgstr "Kunne ikke hente #%i"
+msgstr "Kunne ikke sætte alt-indstillinger %d/%d (%m)"
 
-#: usb/libusb.c:541
+#: usb/libusb.c:493
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr ""
+"Det leverede fremstiller- eller produkt-id (0x%x,0x%x) er ikke gyldigt."
 
-#: usb/libusb.c:573
+#: usb/libusb.c:525
 #, c-format
 msgid ""
 "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
 "not function with gphoto2. Reference: %s"
 msgstr ""
+"USB-enheden (fremstiller 0x%x, produkt 0x%x) er en masselager enhed, og "
+"virker måske ikke med gphoto2. Reference: %s"
 
-#: usb/libusb.c:606
+#: usb/libusb.c:558
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
 "is connected to the computer."
 msgstr ""
+"Kunne ikke finde USB-enheden (fremstiller 0x%x, produkt 0x%x). Sikr dig at "
+"enheden er tilsluttet computeren."
 
-#: usb/libusb.c:740
+#: usb/libusb.c:689
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
 "sure this device is connected to the computer."
 msgstr ""
+"Kunne ikke finde USB-enheden (class 0x%x, subclass 0x%x, protokol0x%x). Sikr "
+"dig at enheden er tilsluttet computeren."
 
-#, fuzzy
-#~ msgid "Could not find some functions in '%s' (%s)"
-#~ msgstr ""
-#~ "Kunne ikke åbne:\n"
-#~ "%s"
+#~ msgid "Called for filename '%s'."
+#~ msgstr "Kaldte efter filnavn '%s'. "
 
-#, fuzzy
-#~ msgid "Could not load list (%s)"
-#~ msgstr ""
-#~ "Kunne ikke åbne:\n"
-#~ "%s"
-
-#, fuzzy
-#~ msgid "Could not load '%s' ('%s')"
-#~ msgstr ""
-#~ "Kunne ikke åbne:\n"
-#~ "%s"
-
-#, fuzzy
-#~ msgid "close"
-#~ msgstr "Luk"
-
-#, fuzzy
-#~ msgid "write"
-#~ msgstr "Udskriv"
-
-#, fuzzy
-#~ msgid "read"
-#~ msgstr "Opret"
+#~ msgid "Using ltdl to load io-drivers from '%s'..."
+#~ msgstr "Bruger ltdl til at indlæse io-drivere fra '%s'..."
