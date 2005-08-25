@@ -32,8 +32,7 @@
 #include "gphoto2-result.h"
 #include "gphoto2-file.h"
 #include "gphoto2-port-log.h"
-
-#define PICTURES_TO_KEEP	2
+#include "gphoto2-setting.h"
 
 #include <limits.h>
 
@@ -82,6 +81,9 @@ typedef struct {
 	int folders_dirty;
 	CameraFilesystemFile *file;
 } CameraFilesystemFolder;
+
+#define PICTURES_TO_KEEP	2
+static int pictures_to_keep = -1;
 
 #ifdef HAVE_LIBEXIF
 
@@ -1918,6 +1920,7 @@ gp_filesystem_lru_update (CameraFilesystem *fs, const char *folder,
 	const char *filename;
 	unsigned long int size;
 	int x, y;
+	char cached_images[1024];
 
 	CHECK_NULL (fs && folder && file);
 
@@ -1937,9 +1940,21 @@ gp_filesystem_lru_update (CameraFilesystem *fs, const char *folder,
 	 *
 	 * So lets just keep 2 pictures in memory.
 	 */
+	if (pictures_to_keep == -1) {
+		if (gp_setting_get ("libgphoto", "cached-images", cached_images) == GP_OK) {
+			pictures_to_keep = atoi(cached_images);
+		} else {
+			/* store a default setting */
+			sprintf (cached_images, "%d", PICTURES_TO_KEEP);
+			gp_setting_set ("libgphoto", "cached-images", cached_images);
+		}
+	}
+
+	if (pictures_to_keep < 0) /* also sanity check, but no upper limit. */
+		pictures_to_keep = PICTURES_TO_KEEP;
 
 	x = gp_filesystem_lru_count (fs);
-	while (x > PICTURES_TO_KEEP) {
+	while (x > pictures_to_keep) {
 		CR (gp_filesystem_lru_free (fs));
 		x = gp_filesystem_lru_count (fs);
 	}
