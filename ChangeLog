@@ -1,3 +1,11 @@
+2005-08-25  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* libgphoto2/gphoto2-filesys.c
+
+	  Got rid of most LRU heuristics, simplified to just store
+	  the last 2 full datastreams. This should be fully sufficient
+	  for 99.9% of all usecases (download images lineary).
+
 2005-06-27  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* po/ru.po: Update ru.po

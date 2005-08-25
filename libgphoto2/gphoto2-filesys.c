@@ -33,22 +33,8 @@
 #include "gphoto2-file.h"
 #include "gphoto2-port-log.h"
 
-#ifdef HAVE_PROCMEMINFO
-#  include <fcntl.h>
-#elif (defined(sun) || defined(__sun__)) && defined(__svr4__)
-#  include <sys/stat.h>
-#  include <sys/swap.h>
-#  include <sys/fcntl.h>
-#endif
+#define PICTURES_TO_KEEP	2
 
-#ifdef HAVE_SYSCTL
-#	if __FreeBSD__
-#		include <sys/types.h>
-#	elif (__NetBSD__ || __OpenBSD__)
-#		include <sys/param.h>
-#	endif
-#	include <sys/sysctl.h>
-#endif
 #include <limits.h>
 
 #ifdef HAVE_LIBEXIF
@@ -291,7 +277,7 @@ struct _CameraFilesystem {
 	if (bufsize <= string_len) { \
 		GP_DEBUG ("%s: strlen(...) = %d " \
 			">= sizeof(buffer) = %d", \
-			msg, string_len, bufsize \
+			msg, (int)string_len, (int)bufsize \
 		); \
 		gp_context_error (context, "preventing buffer overflow"); \
 		return GP_ERROR; \
@@ -1907,118 +1893,21 @@ gp_filesystem_lru_free (CameraFilesystem *fs)
 	return (GP_OK);
 }
 
-/**
- * gp_get_free_memory:
- * @context: a #GPContext
- * @free:
- *
- * Reads the amount of free kB:
- *  - free memory + free swap for Linux
- *  XXX - free memory for BSD (need a way to find free swap)
- *
- * Return value: a gphoto2 error code.
- **/
 static int
-gp_get_free_memory (GPContext *context, unsigned *free)
+gp_filesystem_lru_count (CameraFilesystem *fs)
 {
-#ifdef HAVE_PROCMEMINFO
+	CameraFilesystemFile *ptr;
+	int count = 0;
 
-	char buf[1024], *head, *tail, *tmp;
-	int n, fd = -1;
-	*free=0;
-
-	if ((fd = open ("/proc/meminfo", O_RDONLY)) == -1) {
-		gp_context_error (context, _("Could not open '/proc/meminfo' "
-			"for reading ('%m'). Make sure the proc filesystem "
-			"is mounted."));
-		return (GP_ERROR);
+	if (!fs) return 0;
+	ptr = fs->lru_first;
+	while (ptr) {
+		if (ptr->normal || ptr->raw || ptr->audio)
+			count++;
+		ptr = ptr->lru_next;
 	}
-	
-	lseek (fd, 0L, SEEK_SET);
-	if ((n = read (fd, buf, sizeof (buf) - 1)) < 0) {
-		gp_context_error (context, _("An error occured while "
-			"reading '/proc/meminfo' ('%m')."));
-		return (GP_ERROR);
-	}
-	buf[n] = '\0';
-	n = 0;
-	head = buf;
-	do {
-		tail = strchr (head, ':');
-		if (!tail)
-			break;
-		*tail = '\0';
-		tmp = head;
-		head = tail + 1;
-		if (!strcmp (tmp, "MemFree")) {
-			*free += strtoul (head, NULL, 10);
-			n++;
-		} else if (!strcmp (tmp, "SwapFree")) {
-			*free += strtoul (head, NULL, 10);
-			n++;
-		}
-		tail = strchr (head, '\n');
-		if (!tail)
-			break;
-		head = tail + 1;
-	} while (n != 2);
-	return (GP_OK);
-
-#elif HAVE_SYSCTL && (__FreeBSD__ || __NetBSD__ || __OpenBSD__ || __APPLE__ )
-
-	int mib[2] = { CTL_HW, HW_PHYSMEM };
-	unsigned long value;
-	size_t valuelen = sizeof(value);
-	*free=0;
-	if (sysctl(mib, 2 , &value, &valuelen, NULL, 0) == -1) {
-		gp_context_error (context, _("sysctl call failed ('%m')."));
-		return (GP_ERROR);
-	}
-	*free=value;
-	return (GP_OK);
-
-#elif (defined(sun) || defined(__sun__)) && defined(__svr4__)
-
-	long freemem=0;
-	long freeswap=0;
-	int page_size;
-	static struct anoninfo anon;
-
-	*free = 0;
-
-	page_size = getpagesize();
-	if ( (freemem = sysconf(_SC_AVPHYS_PAGES)) == -1 )
-	  {
-	    gp_context_error (context, _("sysconf call failed ('%m')."));
-	    return (GP_ERROR);
-	  }
-
-	freemem *= page_size;
-
-	if (swapctl(SC_AINFO, &anon) == -1)
-	  {
-	    gp_context_error (context, _("swapctl call failed ('%m')."));
-	    return (GP_ERROR);
-	  }
-
-	freeswap = anon.ani_max - anon.ani_resv;
-	freeswap *= page_size;
-
-	printf("Free Memory : %ld Swap %ld\n",freemem,freeswap);
-
-	*free = freemem + freeswap;
-	return (GP_OK);
-
-#else
-
-	/* No way to know the free memory on this system */
-	*free = UINT_MAX;
-	return (GP_OK);
-
-#endif
-
+	return count;
 }
-
 
 static int
 gp_filesystem_lru_update (CameraFilesystem *fs, const char *folder,
@@ -2029,7 +1918,6 @@ gp_filesystem_lru_update (CameraFilesystem *fs, const char *folder,
 	const char *filename;
 	unsigned long int size;
 	int x, y;
-	unsigned int free;
 
 	CHECK_NULL (fs && folder && file);
 
@@ -2038,25 +1926,22 @@ gp_filesystem_lru_update (CameraFilesystem *fs, const char *folder,
 	CR (gp_file_get_data_and_size (file, NULL, &size));
 
 	/*
-	 * The following is a simple case which is used to test the LRU.
-	 * I need to implement a way to pass a limit and then use it instead
-	 * of 600000. If the limit is not defined use the gp_get_free_memory
+	 * The following is a very simple case which is used to prune
+	 * the LRU. We keep PICTURES_TO_KEEP pictures in the LRU.
+	 *
+	 * We have 2 main scenarios:
+	 *	- query all thumbnails (repeatedly) ... they are cached and
+	 *	  are not pruned by lru free.
+	 *	- download all images, linear.	no real need for caching.
+	 *	- skip back 1 image (in viewers) (really? I don't know.)
+	 *
+	 * So lets just keep 2 pictures in memory.
 	 */
-#if 0
-	while (fs->lru_size + size > 600000) {
-		GP_DEBUG ("Freeing cached data before adding new data "
-			  "(cache=%ld, new=%ld)", fs->lru_size, size);
-		CR (gp_filesystem_lru_free (fs));
-	}
-#endif
 
-	CR (gp_get_free_memory (context, &free));
-	while (free < (size / 1024 + 1024)) {
-		GP_DEBUG ("Freeing cached data before adding new data "
-			  "(cache=%ldB, new=%ldB, free=%dkB)",
-			  fs->lru_size, size, free);
+	x = gp_filesystem_lru_count (fs);
+	while (x > PICTURES_TO_KEEP) {
 		CR (gp_filesystem_lru_free (fs));
-		CR (gp_get_free_memory (context, &free));
+		x = gp_filesystem_lru_count (fs);
 	}
 
 	GP_DEBUG ("Adding file '%s' from folder '%s' to the fscache LRU list "
