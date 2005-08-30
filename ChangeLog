@@ -1,3 +1,10 @@
+2005-08-30  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* bindings/java: Java bindings from patch# 1108091
+        http://sf.net/tracker/?func=detail&aid=1108091&group_id=8874&atid=308874
+	* bindings/python: Python binding from patch# 1152835
+	http://sf.net/tracker/?func=detail&aid=1152835&group_id=8874&atid=308874
+	
 2005-08-25  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* libgphoto2/gphoto2-filesys.c

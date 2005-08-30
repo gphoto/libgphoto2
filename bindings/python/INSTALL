@@ -1,0 +1,7 @@
+To install this python extension, you just have to type :
+
+# python setup.py build
+# sudo python setup.py install
+
+then you can run the test program :
+# python gptest.py
