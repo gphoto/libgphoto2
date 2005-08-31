@@ -1,3 +1,7 @@
+2005-08-31  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* bindings/csharp: C# binding from f-spot 0.1.1
+
 2005-08-30  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* bindings/java: Java bindings from patch# 1108091
