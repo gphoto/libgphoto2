@@ -381,6 +381,8 @@ static struct {
 	{"Nikon:Coolpix 4100 (PTP mode)", 0x04b0, 0x012d, 0},
 	/* Nikon Coolpix 5600: Andy Shevchenko, 11 Aug 2005 */
 	{"Nikon:Coolpix 5600 (PTP mode)", 0x04b0, 0x012e, 0},
+	/* 4600: Martin Klaffenboeck <martin.klaffenboeck@gmx.at> */
+	{"Nikon:Coolpix 4600 (PTP mode)", 0x04b0, 0x0130, 0},
 	{"Nikon:Coolpix 5900 (PTP mode)", 0x04b0, 0x0135, 0},
 	{"Nikon:Coolpix SQ (PTP mode)",   0x04b0, 0x0202, 0},
 	/* lars marowski bree, 16.8.2004 */
