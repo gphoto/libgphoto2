@@ -48,7 +48,7 @@ struct _CameraWidget {
 	float   value_float;
 
 	/* For Radio and Menu */
-	char    choice [32] [64];
+	char    choice [100] [64];
 	int     choice_count;
 
 	/* For Range */
@@ -108,12 +108,12 @@ gp_widget_new (CameraWidgetType type, const char *label,
 	(*widget)->choice_count 	= 0;
 	(*widget)->id			= i++;
 
-        /* Alloc 64 children pointers */
-	memset ((*widget)->children, 0, sizeof (CameraWidget*) * 64);
+        /* Clear all children pointers */
+	memset ((*widget)->children, 0, sizeof((*widget)->children));
 	(*widget)->children_count = 0;
 
 	/* Clear out the choices */
-	for (x = 0; x < 32; x++)
+	for (x = 0; x < sizeof((*widget)->choice)/sizeof((*widget)->choice[0]); x++)
 		strcpy ((*widget)->choice[x], "");
 
 	return (GP_OK);
@@ -730,11 +730,11 @@ gp_widget_add_choice (CameraWidget *widget, const char *choice)
 	    (widget->type != GP_WIDGET_MENU))
 		return (GP_ERROR_BAD_PARAMETERS);
 
-	/* static list of choices is full (32?) */
+	/* static list of choices is full */
 	if (widget->choice_count >= sizeof(widget->choice)/sizeof(widget->choice[0]))
 		return (GP_ERROR);
 
-	strncpy (widget->choice[widget->choice_count], choice, 64);
+	strncpy (widget->choice[widget->choice_count], choice, sizeof(widget->choice[0]));
 	widget->choice_count += 1;
 
 	return (GP_OK);
