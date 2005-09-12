@@ -25,6 +25,16 @@
 
 typedef unsigned char Info;
 
+/* Huffman table for decompressing the compressed mode */
+
+typedef struct {
+	int is_abs;
+	int len;
+	int val;
+} code_table_t;
+
+
+
 int mars_init              (Camera *camera, GPPort *port, Info *info);
 int mars_reset	     (GPPort *port);
 int mars_get_num_pics   (Info *info);
@@ -36,13 +46,19 @@ int set_usb_out_endpoint	     (Camera *camera, int outep);
 int mars_read_data         (Camera *camera, GPPort *port, char *data, int size);
 int mars_read_picture_data (Camera *camera, Info *info,
 				GPPort *port, char *data, int size, int n);
-int mars_decompress (char *p_data,char *data, int b, int w, int h);
 int M_READ (GPPort *port, char *data, int size);
 int M_COMMAND (GPPort *port, char *command, int size, char *response);
 int mars_routine (Info *info, GPPort *port, 
 					char param, int n); 
-int mars_get_gamma(Info *info, int n);
 
+/* Some basic color correction */
+int mars_postprocess(CameraPrivateLibrary *priv, int width, 
+			int height, int is_compressed, unsigned char *rgb, int n);
+
+/* The following are used for decompression of compressed-mode photos */
+void precalc_table(code_table_t *table);
+unsigned char get_bits(unsigned char *inp, int bitpos);
+int mars_decompress (unsigned char *inp ,unsigned char *outp, int w, int h);
 
 #endif
 
