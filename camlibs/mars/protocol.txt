@@ -170,9 +170,7 @@ However, the smallest possible unit which can be downloaded is apparently of
 size 0x100=256 bytes. A strange inconsistency. 
 
 Finally, for the seventh column there is at this time no obvious 
-interpretation. Perhaps it has to do with brightness, contrast, or gamma factor.
-The assumption that it has something to do with the gamma factor is here built
-into the code, and that assumption does seem to improve the photos. 
+interpretation. 
 
 A DATA CORRUPTION PROBLEM
 
@@ -264,3 +262,14 @@ will freeze. The old Aiptek Pencam VGA+ seems to work better this way, too.
 Some new cameras such as the Argus DC-1620 have the same Vendor:Product IDs 
 as older cameras. 
 
+6. 2005-09-12 Some minor changes to the init routine make it more reliable 
+across the various different cameras. The big change is the support for the 
+compression mode. I got lucky by noticing that the camlibs/sonix routine 
+almost works here. After this, credit to 
+
+Bertrik Sikkens <bertrik@zonnet.nl> for figuring out the rest of the codec, 
+which still needed a lot of tweaking and smoothing after that. The camera uses 
+a quite lossy differential Huffman encoding, and apparently due to the data 
+loss the decompression can get unstable.
+
+Michel Xhaard <mxhaard@magic.fr> for testing.

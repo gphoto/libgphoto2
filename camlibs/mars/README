@@ -20,8 +20,13 @@ the raw data is in Bayer array format. Here, everything is saved in PPM format.
 The camera can also be used as a webcam (unsupported here) or to make a "video 
 clip." This driver supports the 640x480 and 320x240 *uncompressed* stillcam 
 and "clip" modes only. Clips download nicely as a succession of PPM files. 
-There is an optional 3X compression mode, proprietary and not obvious. 
+There is an optional compression mode, proprietary and not obvious. 
 The adventurous and persistent are hereby encouraged to play with it. 
+Update 09/12/05: Decompression sort of works, now. Thanks to Bertrik Sikkens 
+for the basic algorithm, and to Michel Xhaard for testing my additional tweaks. 
+With some of the cameras it is possible now to get decent photos in compressed 
+mode, at least some of the time. For this, the camera seems to function best 
+at outdoor use. 
 
 The outside of the package advertises "Interpolated XGA (1024x768) Resolution" 
 (which can be turned on or off). If "enhancement" is turned on, the appearance 
