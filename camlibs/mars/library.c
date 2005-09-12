@@ -185,6 +185,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	unsigned char gtable[256];
 	char *ptr;
 	int size = 0;
+	int is_compressed = 0;
 	float gamma_factor;
 
     	GP_DEBUG ("Downloading pictures!\n");
@@ -217,7 +218,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	if (GP_FILE_TYPE_RAW == type) {
 		memmove(data, data+128, b - 128);
-		/* We keep the SOF marker; actual data starts at byte 12 */
+		/* We keep the SOF marker; actual data starts at byte 12 now */
 		gp_file_set_mime_type(file, GP_MIME_RAW);
 		gp_file_set_name(file, filename);
 		gp_file_set_data_and_size(file, data , b );
@@ -232,12 +233,12 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		
 
 	if (mars_chk_compression (camera->pl->info, k)) {
-		/* FIXME: This function right now does nothing in particular */
-		mars_decompress (p_data, data, b, w, h);
-		
-	} else {
-		memcpy (p_data, data + 140, w*h);		 	
+		is_compressed = mars_chk_compression (camera->pl->info, k);
+		mars_decompress (data + 140, p_data, w, h);
 	}
+	else memcpy (p_data, data + 140, w*h);		 	
+	gamma_factor = (float)data[135]/128.; 
+	free(data);
 
 	/* Now put the data into a PPM image file. */
 
@@ -254,17 +255,15 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	GP_DEBUG ("size = %i\n", size);
 
 	gp_bayer_decode (p_data, w , h , ptr, BAYER_TILE_RGGB);
-	gamma_factor = 1. - (float)mars_get_gamma(camera->pl->info, k)/256.;
-	if( (gamma_factor < .3 ) ) gamma_factor = .3;
-	if( (gamma_factor > .5 ) ) gamma_factor = .5;
+
+	mars_postprocess(camera->pl, w, h, is_compressed, ptr, k);
+
+	if( gamma_factor < .3 ) gamma_factor = .3;
+	if( gamma_factor > .7 ) gamma_factor = .7;
 	gp_gamma_fill_table (gtable, gamma_factor );
 	gp_gamma_correct_single (gtable, ptr, w * h);
 
-	/*
-	 * gamma of .50 arrived at by experimentation. Maybe could be 
-	 * improved? Well, here is a guess for improvement.
-	 */
-	 
+
         gp_file_set_mime_type (file, GP_MIME_PPM);
         gp_file_set_name (file, filename); 
 	gp_file_set_data_and_size (file, ppm, size);
@@ -280,6 +279,7 @@ camera_exit (Camera *camera, GPContext *context)
 {
 	GP_DEBUG ("Mars camera_exit");
 	mars_reset(camera->port);
+	gp_port_close(camera->port);
 	if (camera->pl) {
 		free (camera->pl);
 		camera->pl = NULL;
