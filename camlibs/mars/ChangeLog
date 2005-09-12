@@ -1,6 +1,17 @@
-2005-08-13  Theodore Kilgore <kilgota@auburn.edu>
+2005-09-12  Theodore Kilgore <kilgota@auburn.edu>
 
-	* mars.c:    mars_get_picture_width() corrected for 352x288 photos.
+	* library.c: Changes to get_file_func() include new computation for 
+		     gamma factor.
+	* mars.c:    Support for compressed mode. Thanks to Bertrik Sikkens 
+		     <bertrik@zonnet.nl> for help with the algorithm and to 
+		     Michel Xhaard <mxhaard@magic.fr> for testing. Minor 
+		     changes to mars_init(); 
+		     mars_postprocess() distinguishes between compressed and 
+		     uncompressed;
+		     mars_get_gamma() eliminated.  
+	* mars.h:    Changes to accommodate changes in mars.c.
+	* README:    Updated.
+	* protocol.txt:    Updated.
 
 
 2005-06-12  Theodore Kilgore <kilgota@auburn.edu>
