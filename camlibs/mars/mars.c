@@ -68,14 +68,10 @@ mars_init (Camera *camera, GPPort *port, Info *info)
 
 	/* Removing extraneous line or lines of config data. See "protocol.txt/" */
 	 
-	switch (info[0]) {
-
-	case 0xff:
+	if ((info[0] == 0xff)&& (info[1] == 0)&&(info[2]==0xff))
 		memmove(info, info + 16, 0x1ff0); /* Saving config */
-		break;
-	default: 
+	else
 		memcpy(info, info + 144, 0x1f70); /* Saving config */
-	}
 
 	GP_DEBUG("Leaving mars_init\n");
         return GP_OK;
@@ -168,15 +164,164 @@ mars_reset (GPPort *port)
     	return GP_OK;
 }
 
-int mars_decompress (char *p_data, char *data, int b, int w, int h)
-{
-	if (b < w*h)
-	memcpy (p_data, data, b);
-	else
-	memcpy (p_data, data, w*h);	
-	return GP_OK;
 
+
+void precalc_table(code_table_t *table)
+{
+	int i;
+	int is_abs, val, len;
+
+is_abs = 0;
+	for (i = 0; i < 256; i++) {
+		is_abs = 0;
+		val = 0;
+		len = 0;
+		if ((i & 0x80) == 0) {
+			/* code 0 */
+			val = 0;
+			len = 1;
+		}
+		else if ((i & 0xE0) == 0xC0) {
+			/* code 110 */
+			val = -3;
+			len = 3;
+		}
+		else if ((i & 0xE0) == 0xA0) {
+			/* code 101 */
+			val = +3;
+			len = 3;
+		}
+		else if ((i & 0xF0) == 0x80) {
+			/* code 1000 */
+			val = +8;
+			len = 4;
+		}
+		else if ((i & 0xF0) == 0x90) {
+			/* code 1001 */
+			val = -8;
+			len = 4;
+		}
+		else if ((i & 0xF0) == 0xF0) {
+			/* code 1111 */
+			val = -20;
+			len = 4;
+		}
+		else if ((i & 0xF8) == 0xE0) {
+			/* code 11100 */
+			val = 20;
+			len = 5;
+		}
+		else if ((i & 0xF8) == 0xE8) {
+			/* code 11101xxxxx */
+			is_abs = 1;
+			val = 0;	/* value is calculated later */
+			len = 5;
+		}
+		table[i].is_abs = is_abs;
+		table[i].val = val;
+		table[i].len = len;
+	}
 }
+
+#define CLAMP(x)	((x)<0x20?0x20:((x)>0xdf)?0xdf:(x))
+
+unsigned char get_bits(unsigned char *inp, int bitpos)
+{
+	unsigned char *addr;
+
+	addr = inp + (bitpos / 8);
+	return (addr[0] << (bitpos & 7)) | (addr[1] >> (8 - (bitpos & 7)));
+}
+
+
+int mars_decompress (unsigned char *inp, 
+				unsigned char *outp, int width, int height)
+{
+	int row, col, val, bitpos;
+	unsigned char code;
+	code_table_t table[256];
+
+	/* First calculate the Huffman table */
+	precalc_table(table);
+	
+
+	bitpos = 0;
+
+	/* main decoding loop */
+	for (row = 0; row < height; row++) {
+
+		/* first two pixels in first two rows are stored as raw 8-bit */
+		if (row < 2) {
+			*outp++ = get_bits(inp, bitpos);
+			bitpos += 8;
+			*outp++ = get_bits(inp, bitpos);
+			bitpos += 8;
+			col = 2;
+		}
+		else {
+			col = 0;
+		}
+
+		for (; col < width; col++) {
+		
+			/* get bitcode */
+			code = get_bits(inp, bitpos);
+			bitpos += table[code].len;
+
+			/* calculate pixel value */
+			if (table[code].is_abs) {
+				/* get 5 more bits and use them as absolute value */
+				val = get_bits(inp, bitpos) & 0xF8;
+				bitpos += 5;
+			}
+			else { 
+				/* value is relative to some reference pixel(s) */
+				if ((row < 2)) {
+					/* top row: relative to left pixel */
+					val = outp[-2];
+				}
+				else if ((col < 2) )  {
+					/* columns 0 and 1: relative to top pixel */
+					val = (outp[-2*width] +
+							outp[-2*width +2])/2;
+				}
+				else if (col >= (width - 2))  {
+					/* right column: relative left pixel */
+					val = outp[-2];
+		
+				}
+				else {
+					/* main area: average of left pixel 
+					 * and 3 top pixels 
+					 */
+					val = 
+					( outp[-2] +
+				outp[-2*width] 
+					+ 
+					outp[-2*width - 2]
+					+ outp[-2*width + 2]) /4 ;
+				/* back-correction of row - 2 */
+			if((col < width - 3) && (row > 3))
+				outp[-2*width+2] = CLAMP((5*outp[-2*width + 2]
+				    + val + table[code].val 
+				    +outp[-2*width]
+				    + outp[-4*width + 4])/8);
+				}
+				/* add delta */
+				val += table[code].val;
+
+			}
+		
+			/* store pixel */
+			*outp++ = CLAMP(val);
+
+		}
+
+	}
+
+	return 0;
+}
+
 
 int 
 M_READ (GPPort *port, char *data, int size) 
@@ -208,8 +353,8 @@ mars_routine (Info *info, GPPort *port, char param, int n)
 	unsigned char address5[2] = {0x19, info[8*n+5]};
 	unsigned char address6[2] = {0x19, info[8*n+6]};
 
-	do_something[0]= 0x19; 
-	do_something[1]=param;
+	do_something[0] = 0x19; 
+	do_something[1] = param;
 
 	memset(c,0,sizeof(c));
 
@@ -243,12 +388,72 @@ mars_routine (Info *info, GPPort *port, char param, int n)
 	return(c[0]);
 }
 
+/* Brightness correction routine adapted from 
+ * camlibs/polaroid/jd350e.c, copyright © 2001 Michael Trawny 
+ * <trawny99@users.sourceforge.net>
+ */
+
+
+#define RED(p,x,y,w) *((p)+3*((y)*(w)+(x))  )
+#define GREEN(p,x,y,w) *((p)+3*((y)*(w)+(x))+1)
+#define BLUE(p,x,y,w) *((p)+3*((y)*(w)+(x))+2)
+
+#define MINMAX(a,min,max) { (min)=MIN(min,a); (max)=MAX(max,a); }
+
+#ifndef MAX
+# define MAX(a, b) ((a) > (b) ? (a) : (b))
+#endif
+#ifndef MIN
+# define MIN(a, b) ((a) < (b) ? (a) : (b))
+#endif
+
 
 int 
-mars_get_gamma(Info *info, int n) 
+mars_postprocess(CameraPrivateLibrary *priv, int width, int height, 
+			int is_compressed, unsigned char* rgb, int n)
 {
-return info[8*n + 7];
+	int
+		x,y,
+		red_min=255, red_max=0, 
+		blue_min=255, blue_max=0, 
+		green_min=255, green_max=0;
+	double
+		min, max, amplify = 1.0, THE_MAX = 255.0; 
+
+	if (is_compressed)
+		THE_MAX = 239.0;
+	
+	/* determine min and max per color... */
+
+	for( y=0; y<height; y++){
+		for( x=0; x<width; x++ ){
+			MINMAX( RED(rgb,x,y,width), red_min,   red_max  );
+			MINMAX( GREEN(rgb,x,y,width), green_min, green_max);
+			MINMAX( BLUE(rgb,x,y,width), blue_min,  blue_max );
+		}
+	}
+
+
+
+
+	/* Normalize brightness ... */
+
+	max = MAX( MAX( red_max, green_max ), blue_max);
+	min = MIN( MIN( red_min, green_min ), blue_min);
+	if (is_compressed)
+	amplify = THE_MAX/(max-min);
+
+	for( y=0; y<height; y++){
+		for( x=0; x<width; x++ ){
+			RED(rgb,x,y,width)= 
+			    MIN(amplify*(double)(RED(rgb,x,y,width)-min),THE_MAX);
+			GREEN(rgb,x,y,width)= 
+			    MIN(amplify*(double)(GREEN(rgb,x,y,width)-min),THE_MAX);
+			BLUE(rgb,x,y,width)= 
+			    MIN(amplify*(double)(BLUE(rgb,x,y,width)-min),THE_MAX);
+		}
+	}
+
+	return GP_OK;
 }
-
-
 
