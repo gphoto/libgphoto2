@@ -1,5 +1,10 @@
 2005-09-12  Theodore Kilgore <kilgota@auburn.edu>
 
+	* library.c: Added Argus DC-1620 to list of experimentally supported.
+
+
+2005-09-12  Theodore Kilgore <kilgota@auburn.edu>
+
 	* library.c: Changes to get_file_func() include new computation for 
 		     gamma factor.
 	* mars.c:    Support for compressed mode. Thanks to Bertrik Sikkens 
