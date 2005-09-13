@@ -1,6 +1,5 @@
 camlibs/adc65/adc65.c
 camlibs/agfa-cl20/agfa_cl20.c
-camlibs/agfa-cl20/agfa_cl20.c
 camlibs/aox/library.c
 camlibs/barbie/barbie.c
 camlibs/canon/canon.c
@@ -69,6 +68,7 @@ camlibs/sipix/blink.c
 camlibs/sipix/web2.c
 camlibs/smal/smal.c
 camlibs/smal/ultrapocket.c
+camlibs/sonix/library.c
 camlibs/sonydscf1/dsc_f1.c
 camlibs/sonydscf1/sonydscf1.c
 camlibs/sonydscf55/camera.c
