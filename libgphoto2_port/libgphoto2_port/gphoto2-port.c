@@ -805,7 +805,7 @@ gp_port_usb_msg_interface_write (GPPort *port, int request,
 	CHECK_NULL (port);
 	CHECK_INIT (port);
 
-	CHECK_SUPP (port, _("msg_build"), port->pc->ops->msg_interface_write);
+	CHECK_SUPP (port, "msg_build", port->pc->ops->msg_interface_write);
         retval = port->pc->ops->msg_interface_write(port, request, 
         		value, index, bytes, size);
 	CHECK_RESULT (retval);
@@ -827,7 +827,7 @@ gp_port_usb_msg_interface_read (GPPort *port, int request, int value, int index,
 	CHECK_NULL (port);
 	CHECK_INIT (port);
 
-	CHECK_SUPP (port, _("msg_read"), port->pc->ops->msg_interface_read);
+	CHECK_SUPP (port, "msg_read", port->pc->ops->msg_interface_read);
         retval = port->pc->ops->msg_interface_read (port, request, 
         		value, index, bytes, size);
 	CHECK_RESULT (retval);
