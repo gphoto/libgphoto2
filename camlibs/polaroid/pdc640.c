@@ -160,6 +160,13 @@ static struct {
 			"trust%04i.ppm"
 		}
 	},
+	{"Clever CAM 360", 0x797, 0x8001, {
+			jd350e,
+			BAYER_TILE_BGGR,
+			&jd350e_postprocessing_and_flip,
+			"scope%04i.ppm"
+		}
+	},
 	/* http://www.meade.com/sportsoptics/catalog/captureview/index.html */
 	{"GrandTek ScopeCam", 0x797, 0x801c, {
 		 	jd350e,
