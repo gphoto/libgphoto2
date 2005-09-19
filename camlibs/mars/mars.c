@@ -165,13 +165,11 @@ mars_reset (GPPort *port)
 }
 
 
-
 void precalc_table(code_table_t *table)
 {
 	int i;
 	int is_abs, val, len;
 
-is_abs = 0;
 	for (i = 0; i < 256; i++) {
 		is_abs = 0;
 		val = 0;
@@ -203,12 +201,14 @@ is_abs = 0;
 		}
 		else if ((i & 0xF0) == 0xF0) {
 			/* code 1111 */
+		//	val = -20;
 			val = -20;
 			len = 4;
 		}
 		else if ((i & 0xF8) == 0xE0) {
 			/* code 11100 */
-			val = 20;
+		//	val = +20;
+			val = +20;
 			len = 5;
 		}
 		else if ((i & 0xF8) == 0xE8) {
@@ -223,24 +223,19 @@ is_abs = 0;
 	}
 }
 
-#define CLAMP(x)	((x)<0x20?0x20:((x)>0xdf)?0xdf:(x))
-
-unsigned char get_bits(unsigned char *inp, int bitpos)
-{
-	unsigned char *addr;
-
-	addr = inp + (bitpos / 8);
-	return (addr[0] << (bitpos & 7)) | (addr[1] >> (8 - (bitpos & 7)));
-}
+#define CLAMP(x)	((x)<0?0:((x)>255)?255:(x))
 
 
 int mars_decompress (unsigned char *inp, 
 				unsigned char *outp, int width, int height)
 {
-	int row, col, val, bitpos;
+	int row, col;
 	unsigned char code;
+	int val;
 	code_table_t table[256];
-
+	unsigned char *addr;
+	int bitpos;
+	unsigned char A,B,C,D;
 	/* First calculate the Huffman table */
 	precalc_table(table);
 	
@@ -249,74 +244,76 @@ int mars_decompress (unsigned char *inp,
 
 	/* main decoding loop */
 	for (row = 0; row < height; row++) {
+		col = 0;
 
 		/* first two pixels in first two rows are stored as raw 8-bit */
 		if (row < 2) {
-			*outp++ = get_bits(inp, bitpos);
+			addr = inp + (bitpos >> 3);
+			code = (addr[0] << (bitpos & 7)) | (addr[1] >> (8 - (bitpos & 7)));
 			bitpos += 8;
-			*outp++ = get_bits(inp, bitpos);
+			*outp++ = code;
+
+			addr = inp + (bitpos >> 3);
+			code = (addr[0] << (bitpos & 7)) | (addr[1] >> (8 - (bitpos & 7)));
 			bitpos += 8;
-			col = 2;
-		}
-		else {
-			col = 0;
+			*outp++ = code;
+
+			col += 2;
 		}
 
-		for (; col < width; col++) {
-		
+		while (col < width) {
 			/* get bitcode */
-			code = get_bits(inp, bitpos);
+			addr = inp + (bitpos >> 3);
+			code = (addr[0] << (bitpos & 7)) | (addr[1] >> (8 - (bitpos & 7)));
+
+			/* update bit position */
 			bitpos += table[code].len;
 
 			/* calculate pixel value */
 			if (table[code].is_abs) {
 				/* get 5 more bits and use them as absolute value */
-				val = get_bits(inp, bitpos) & 0xF8;
+				addr = inp + (bitpos >> 3);
+				code = (addr[0] << (bitpos & 7)) | (addr[1] >> (8 - (bitpos & 7)));
+				val = (code & 0xF8);
 				bitpos += 5;
 			}
-			else { 
-				/* value is relative to some reference pixel(s) */
-				if ((row < 2)) {
+			else {
+				/* value is relative to top or left pixel */
+				val = table[code].val;
+				if (row < 2) {
 					/* top row: relative to left pixel */
-					val = outp[-2];
+					val += outp[-2];
 				}
-				else if ((col < 2) )  {
-					/* columns 0 and 1: relative to top pixel */
-					val = (outp[-2*width] +
-							outp[-2*width +2])/2;
+				else if (col < 2) {
+					/* left column: relative to top pixel */
+					val += (outp[-2*width] + 
+						    outp[-2*width + 2])/2;
+				
 				}
-				else if (col >= (width - 2))  {
-					/* right column: relative left pixel */
-					val = outp[-2];
-		
+				else if (col > width - 3) {
+					/* left column: relative to top pixel */
+					val += (outp[-2*width] +
+					    outp[-2*width - 2])/2;
 				}
+				
 				else {
-					/* main area: average of left pixel 
-					 * and 3 top pixels 
-					 */
-					val = 
-					( outp[-2] +
-				outp[-2*width] 
-					+ 
-					outp[-2*width - 2]
-					+ outp[-2*width + 2]) /4 ;
-				/* back-correction of row - 2 */
-			if((col < width - 3) && (row > 3))
-				outp[-2*width+2] = CLAMP((5*outp[-2*width + 2]
-				    + val + table[code].val 
-				    +outp[-2*width]
-				    + outp[-4*width + 4])/8);
+					/* main area: average of left pixel and top pixel */
+					A=outp[-2];
+					C=outp[-2*width-2];
+					B=outp[-2*width ];
+					D=outp[-2*width+2];
+					if (D-A >= 0)
+						val += MIN((D-A)/7, 32)+ (A+B)/2;
+				
+					else 
+						val += -MIN((A-D)/7, 32)+ (A+B)/2;    
 				}
-				/* add delta */
-				val += table[code].val;
-
 			}
-		
+
 			/* store pixel */
 			*outp++ = CLAMP(val);
-
+			col++;
 		}
-
 	}
 
 	return 0;
@@ -353,8 +350,8 @@ mars_routine (Info *info, GPPort *port, char param, int n)
 	unsigned char address5[2] = {0x19, info[8*n+5]};
 	unsigned char address6[2] = {0x19, info[8*n+6]};
 
-	do_something[0] = 0x19; 
-	do_something[1] = param;
+	do_something[0]= 0x19; 
+	do_something[1]=param;
 
 	memset(c,0,sizeof(c));
 
@@ -388,6 +385,9 @@ mars_routine (Info *info, GPPort *port, char param, int n)
 	return(c[0]);
 }
 
+
+
+
 /* Brightness correction routine adapted from 
  * camlibs/polaroid/jd350e.c, copyright © 2001 Michael Trawny 
  * <trawny99@users.sourceforge.net>
@@ -397,6 +397,8 @@ mars_routine (Info *info, GPPort *port, char param, int n)
 #define RED(p,x,y,w) *((p)+3*((y)*(w)+(x))  )
 #define GREEN(p,x,y,w) *((p)+3*((y)*(w)+(x))+1)
 #define BLUE(p,x,y,w) *((p)+3*((y)*(w)+(x))+2)
+
+#define SWAP(a,b) {unsigned char t=(a); (a)=(b); (b)=t;}
 
 #define MINMAX(a,min,max) { (min)=MIN(min,a); (max)=MAX(max,a); }
 
@@ -418,11 +420,13 @@ mars_postprocess(CameraPrivateLibrary *priv, int width, int height,
 		blue_min=255, blue_max=0, 
 		green_min=255, green_max=0;
 	double
-		min, max, amplify = 1.0, THE_MAX = 255.0; 
+		min, max, amplify = 1.0, THE_MAX = 255.0, THE_MIN = 0.0;
 
-	if (is_compressed)
-		THE_MAX = 239.0;
-	
+	if (is_compressed) {
+		THE_MAX = 239.0;	
+		THE_MIN = 16.0;
+	}	
+
 	/* determine min and max per color... */
 
 	for( y=0; y<height; y++){
@@ -440,16 +444,15 @@ mars_postprocess(CameraPrivateLibrary *priv, int width, int height,
 
 	max = MAX( MAX( red_max, green_max ), blue_max);
 	min = MIN( MIN( red_min, green_min ), blue_min);
-	if (is_compressed)
-	amplify = THE_MAX/(max-min);
+	amplify = (255.0)/(max-min);
 
 	for( y=0; y<height; y++){
 		for( x=0; x<width; x++ ){
-			RED(rgb,x,y,width)= 
+			RED(rgb,x,y,width) = 
 			    MIN(amplify*(double)(RED(rgb,x,y,width)-min),THE_MAX);
-			GREEN(rgb,x,y,width)= 
+			GREEN(rgb,x,y,width) = 
 			    MIN(amplify*(double)(GREEN(rgb,x,y,width)-min),THE_MAX);
-			BLUE(rgb,x,y,width)= 
+			BLUE(rgb,x,y,width) = 
 			    MIN(amplify*(double)(BLUE(rgb,x,y,width)-min),THE_MAX);
 		}
 	}
