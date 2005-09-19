@@ -1,3 +1,9 @@
+2005-09-19  Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Added Argus DC-1610 and Philips P44417B keychain camera.
+	* mars.c:    More improvement for decompression, based upon some ideas
+		     of Michel Xhaard <mxhaard@magic.fr>.
+
 2005-09-12  Theodore Kilgore <kilgota@auburn.edu>
 
 	* library.c: Added Argus DC-1620 to list of experimentally supported.
