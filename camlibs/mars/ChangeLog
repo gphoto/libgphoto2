@@ -1,3 +1,8 @@
+2005-09-21  Theodore Kilgore <kilgota@auburn.edu>
+
+	* mars.c:    Removal of two overlooked "//" comment symbols.
+
+
 2005-09-19  Theodore Kilgore <kilgota@auburn.edu>
 
 	* library.c: Added Argus DC-1610 and Philips P44417B keychain camera.

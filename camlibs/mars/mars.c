@@ -201,13 +201,11 @@ void precalc_table(code_table_t *table)
 		}
 		else if ((i & 0xF0) == 0xF0) {
 			/* code 1111 */
-		//	val = -20;
 			val = -20;
 			len = 4;
 		}
 		else if ((i & 0xF8) == 0xE0) {
 			/* code 11100 */
-		//	val = +20;
 			val = +20;
 			len = 5;
 		}
