@@ -1,5 +1,22 @@
 libptp2 (c)2001-2003 Mariusz Woloszyn <emsi@ipartners.pl>
 
+libgphoto2 ptp2 camlib driver also 
+Copyright 2003 - 2005 Marcus Meissner
+Copyright        2005 Hubert Figuire.
+
+========================
+*Upstream documentation*
+========================
+- For the PTP command set there is no freely available reference. However
+  you can buy one from http://i3a.org/
+
+- For PTP via USB Documentation check:
+	http://www.usb.org/developers/devclass_docs/usb_still_img10.pdf
+
+- For PTP via PTPIP check:
+	ftp://www.fotonation.com//download/IEEE_PTPIP_paper.pdf
+
+
 =====================
 *About this software*
 =====================
