@@ -127,9 +127,11 @@ camera_cam_desc_get_widget (Camera *camera, CameraRegisterType *reg_p,
 		 */
 		ret = GP_OK;
 	} else if (reg_p->reg_len == 4) {
+		int rval;
 		ret = sierra_get_int_register (camera, reg_p->reg_number,
-					       (int*) &reg_p->reg_value,
+					       &rval,
 					       context);
+		reg_p->reg_value = rval;
 	} else if (reg_p->reg_len == 8) {
 		/*
 		 * reg_value is 8 bytes maximum. If you need a bigger
@@ -334,7 +336,8 @@ camera_cam_desc_set_value (Camera *camera, CameraRegisterType *reg_p,
 			 */
 			val[1] = 0;
 		} else if (reg_p->reg_len == 8) {
-			val[1] = ((int *) &reg_p->reg_value)[1];
+			memcpy(&val[1], ((char*)&reg_p->reg_value)+sizeof(val[0]), sizeof(val[0]));
+			/* val[1] = ((int *) &reg_p->reg_value)[1]; */
 		} else if (reg_p->reg_len != 4 ) {
 			GP_DEBUG ("Unsupported range with register length %d",
 				  reg_p->reg_len);

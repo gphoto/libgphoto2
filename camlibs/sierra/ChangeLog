@@ -1,3 +1,7 @@
+2005-09-26  Marcus Meissner  <marcus@jet.franken.de>
+
+	* sierra-desc.c: Fixed 2 strict aliasing problems.
+
 2005-08-04  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* sierra.c: epson photopc 700 has no reg 51 either
