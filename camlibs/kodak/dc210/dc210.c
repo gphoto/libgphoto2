@@ -486,42 +486,42 @@ static int camera_summary (Camera *camera, CameraText *summary,
     {
         strcpy(summary_string,"Kodak DC210\n");
         
-        snprintf(buff,1024,"Pictures in camera: %d\n",
+        snprintf(buff,1024,_("Pictures in camera: %d\n"),
 		 status.numPicturesInCamera);
         strcat(summary_string,buff);
 
-        snprintf(buff,1024,"There is space for another\n   %d low compressed\n   %d medium compressed or\n   %d high compressed pictures\n",
+        snprintf(buff,1024,_("There is space for another\n   %d low compressed\n   %d medium compressed or\n   %d high compressed pictures\n"),
 		 status.remainingLow, status.remainingMedium, status.remainingHigh);
         strcat(summary_string,buff);
 
-        snprintf(buff,1024,"Total pictures taken: %d\n",
+        snprintf(buff,1024,_("Total pictures taken: %d\n"),
 		 status.totalPicturesTaken);
         strcat(summary_string,buff);
 
-        snprintf(buff,1024,"Total flashes fired: %d\n",
+        snprintf(buff,1024,_("Total flashes fired: %d\n"),
 		 status.totalFlashesFired);
         strcat(summary_string,buff);
 
-        snprintf(buff,1024,"Firmware: %d.%d\n",status.firmwareMajor,status.firmwareMinor);
+        snprintf(buff,1024,_("Firmware: %d.%d\n"),status.firmwareMajor,status.firmwareMinor);
         strcat(summary_string,buff);
 
 	switch (status.file_type){
 	case DC210_FILE_TYPE_JPEG: 
-		snprintf(buff, 1024, "Filetype: JPEG ("); break;
+		snprintf(buff, 1024, _("Filetype: JPEG (")); break;
 	case DC210_FILE_TYPE_FPX: 
-		snprintf(buff, 1024, "Filetype: FlashPix ("); break;
+		snprintf(buff, 1024, _("Filetype: FlashPix (")); break;
 	};
 	strcat(summary_string, buff);
         
 	switch (status.compression_type){
 	case DC210_LOW_COMPRESSION:    
-		snprintf(buff, 1024, "low compression, "); break;
+		snprintf(buff, 1024, _("low compression, ")); break;
 	case DC210_MEDIUM_COMPRESSION: 
-		snprintf(buff, 1024, "medium compression, "); break;
+		snprintf(buff, 1024, _("medium compression, ")); break;
 	case DC210_HIGH_COMPRESSION:   
-		snprintf(buff, 1024, "high compression, "); break;
+		snprintf(buff, 1024, _("high compression, ")); break;
 	default:                       
-		snprintf(buff, 1024, "unknown compression %d, ", status.compression_type); break;
+		snprintf(buff, 1024, _("unknown compression %d, "), status.compression_type); break;
 	};
 	strcat(summary_string, buff);
         
@@ -531,7 +531,7 @@ static int camera_summary (Camera *camera, CameraText *summary,
 	case DC210_FILE_1152: 
 		snprintf(buff, 1024, "1152x864 pixel)\n"); break;
 	default: 
-		snprintf(buff, 1024, "unknown resolution %d)\n", status.resolution); break;
+		snprintf(buff, 1024, _("unknown resolution %d)\n"), status.resolution); break;
 	};
 	strcat(summary_string, buff);
         
@@ -544,65 +544,68 @@ static int camera_summary (Camera *camera, CameraText *summary,
         strcat(summary_string,buff);*/
         
 	if (status.acstatus)
-		snprintf(buff,1024,"AC adapter is connected\n");
+		snprintf(buff,1024,_("AC adapter is connected.\n"));
 	else
-		snprintf(buff,1024,"AC adapter is not connected\n");
+		snprintf(buff,1024,_("AC adapter is not connected.\n"));
         strcat(summary_string,buff);
         
-        strftime(buff,1024,"Time: %a, %d %b %Y %T\n",
+	/* time string, do not change the % escapes */
+        strftime(buff,1024,_("Time: %a, %d %b %Y %T\n"),
 		 localtime((time_t *)&status.time));
         strcat(summary_string,buff);
         
 	switch (status.zoom){
 	case DC210_ZOOM_58: 
-		snprintf(buff, 1024, "Zoom: 58 mm\n"); break;
+		snprintf(buff, 1024, _("Zoom: 58 mm\n")); break;
 	case DC210_ZOOM_51: 
-		snprintf(buff, 1024, "Zoom: 51 mm\n"); break;
+		snprintf(buff, 1024, _("Zoom: 51 mm\n")); break;
 	case DC210_ZOOM_41: 
-		snprintf(buff, 1024, "Zoom: 41 mm\n"); break;
+		snprintf(buff, 1024, _("Zoom: 41 mm\n")); break;
 	case DC210_ZOOM_34: 
-		snprintf(buff, 1024, "Zoom: 34 mm\n"); break;
+		snprintf(buff, 1024, _("Zoom: 34 mm\n")); break;
 	case DC210_ZOOM_29: 
-		snprintf(buff, 1024, "Zoom: 29 mm\n"); break;
+		snprintf(buff, 1024, _("Zoom: 29 mm\n")); break;
 	case DC210_ZOOM_MACRO: 
-		snprintf(buff, 1024, "Zoom: macro\n"); break;
+		snprintf(buff, 1024, _("Zoom: macro\n")); break;
 	default: 
-		snprintf(buff, 1024, "Unknown zoom mode %d\n", 
+		snprintf(buff, 1024, _("Unknown zoom mode %d\n"), 
 			 status.zoom); break;
 	};
         strcat(summary_string,buff);
         
 	if (status.exp_compensation > -5 && status.exp_compensation < 4)
-		snprintf(buff, 1024, "Exposure compensation: %s\n", exp_comp[status.exp_compensation + 4]);
+		snprintf(buff, 1024, _("Exposure compensation: %s\n"), exp_comp[status.exp_compensation + 4]);
 	else
-		snprintf(buff, 1024, "Exposure compensation: %d\n", status.exp_compensation);
+		snprintf(buff, 1024, _("Exposure compensation: %d\n"), status.exp_compensation);
         strcat(summary_string,buff);
 
 	switch (status.flash){
 	case DC210_FLASH_AUTO: 
-		snprintf(buff, 1024, "Flash mode: auto, "); break;
+		snprintf(buff, 1024, _("Flash mode: auto, ")); break;
 	case DC210_FLASH_FORCE: 
-		snprintf(buff, 1024, "Flash mode: force, "); break;
+		snprintf(buff, 1024, _("Flash mode: force, ")); break;
 	case DC210_FLASH_NONE: 
-		snprintf(buff, 1024, "Flash mode: off\n"); break;
+		snprintf(buff, 1024, _("Flash mode: off\n")); break;
 	default: 
-		snprintf(buff, 1024, "Unknown flash mode %d, ", 
+		snprintf(buff, 1024, _("Unknown flash mode %d, "), 
 			 status.flash); break;
 	};
         strcat(summary_string,buff);
 
 	if (status.flash != DC210_FLASH_NONE){
 		if (status.preflash)
-			snprintf(buff,1024,"red eye flash on\n");
+			/* trans: continuation of "Flash mode:" line */
+			snprintf(buff,1024,_("red eye flash on.\n"));
 		else
-			snprintf(buff,1024,"red eye flash off\n");
+			/* trans: continuation of "Flash mode:" line */
+			snprintf(buff,1024,_("red eye flash off.\n"));
 		strcat(summary_string,buff);
 	};
 
 	if (status.card_status.open == 0)
-		snprintf(buff, 1024, "No card in camera.\n");
+		snprintf(buff, 1024, _("No card in camera.\n"));
 	else
-		snprintf(buff,1024,"Card name: %s\nFree space on card: %d kilobytes\n",
+		snprintf(buff,1024, _("Card name: %s\nFree space on card: %d kB\n"),
 			 status.album_name,
 			 status.card_status.space);
 	
