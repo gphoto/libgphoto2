@@ -214,7 +214,7 @@ static int print_fdi_map(const int add_comments)
 			printf("    <match key=\"usb.product_id\" int=\"%d\">\n", a.usb_product);
 			printf("     <merge key=\"info.category\" type=\"string\">camera</merge>\n");
 			printf("     <append key=\"info.capabilities\" type=\"strlist\">camera</append>\n");
-			printf("     <merge key=\"camera.access_method\" type=\"string\">libgphoto2</merge>\n");
+			printf("     <merge key=\"camera.access_method\" type=\"string\">proprietary</merge>\n");
 			printf("     <merge key=\"camera.libgphoto2.name\" type=\"string\">%s</merge>\n", model);
 			printf("     <merge key=\"camera.libgphoto2.support\" type=\"bool\">true</merge>\n");
 			printf("    </match>\n");
@@ -226,7 +226,15 @@ static int print_fdi_map(const int add_comments)
 			printf("     <match key=\"usb.interface.protocol\" int=\"%d\">\n", a.usb_protocol);
 			printf("      <merge key=\"info.category\" type=\"string\">camera</merge>\n");
 			printf("      <append key=\"info.capabilities\" type=\"strlist\">camera</append>\n");
-			printf("      <merge key=\"camera.access_method\" type=\"string\">libgphoto2</merge>\n");
+			if (a.usb_class == 6) {
+				printf("      <merge key=\"camera.access_method\" type=\"string\">ptp</merge>\n");
+			} else {
+				if (a.usb_class == 8) {
+					printf("      <merge key=\"camera.access_method\" type=\"string\">storage</merge>\n");
+				} else {
+					printf("      <merge key=\"camera.access_method\" type=\"string\">proprietary</merge>\n");
+				}
+			}
 			printf("      <merge key=\"camera.libgphoto2.name\" type=\"string\">%s</merge>\n", model);
 			printf("      <merge key=\"camera.libgphoto2.support\" type=\"bool\">true</merge>\n");
 			printf("     </match>\n");
