@@ -469,8 +469,8 @@ append_file (CameraFilesystem *fs, int x, CameraFile *file, GPContext *context)
 	fs->folder[x].count++;
 	memset (&(fs->folder[x].file[fs->folder[x].count - 1]), 0,
 		sizeof (CameraFilesystemFile));
-	CBO(strlen(name), 
-	    sizeof(fs->folder[x].file[fs->folder[x].count - 1].name),
+	CBO(sizeof(fs->folder[x].file[fs->folder[x].count - 1].name),
+	    strlen(name),
 	    "append_file()");
 	strcpy (fs->folder[x].file[fs->folder[x].count - 1].name, name);
 	fs->folder[x].file[fs->folder[x].count - 1].info_dirty = 1;
