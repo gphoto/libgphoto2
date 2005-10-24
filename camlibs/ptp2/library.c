@@ -288,6 +288,8 @@ static struct {
 	{"Kodak:CX7430", 0x040a, 0x057b, 0},
 	{"Kodak:CX7530", 0x040a, 0x057c, 0},
 	{"Kodak:DX7440", 0x040a, 0x057d, 0},
+	/* c300 Pau Rodriguez-Estivill <prodrigestivill@yahoo.es> */
+	{"Kodak:C300",   0x040a, 0x057e, 0},
 	{"Kodak:DX7590", 0x040a, 0x057f, 0},
 	{"Kodak:Z730",   0x040a, 0x0580, 0},
 	{"Kodak:CX6445", 0x040a, 0x0584, 0},
