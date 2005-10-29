@@ -3490,6 +3490,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		 * upstream downloads the whole image to get EXIF data. */
 		if (!ptp_operation_issupported(params, PTP_OC_GetPartialObject))
 			return (GP_ERROR_NOT_SUPPORTED);
+		/* Device may hang is a partial read is attempted beyond the file */
+		if (oi->ObjectCompressedSize < 10)
+			return (GP_ERROR_NOT_SUPPORTED);
 		/* could also use Canon partial downloads */
 		CPR (context, ptp_getpartialobject (params,
 			params->handles.Handler[object_id],
