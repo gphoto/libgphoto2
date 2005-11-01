@@ -480,6 +480,8 @@ static struct {
 	{"Canon:PowerShot SD500 (PTP mode)",    0x04a9, 0x30f2, 0},
 	/* Conan Colx, A410, gphoto-Feature Requests-1342538 */
 	{"Canon:PowerShot A410 (PTP mode)",     0x04a9, 0x30f9, 0},
+	/* A610, Andriy Kulchytskyy <whoops@ukrtop.com> */
+	{"Canon:PowerShot A610 (PTP mode)",     0x04a9, 0x30fd, 0},
 	/* Rob Lensen <rob@bsdfreaks.nl> */
 	{"Canon:Digital IXUS 55 (PTP mode)",    0x04a9, 0x30ff, 0},
 	/* Nick Richards <nick@nedrichards.com> */
