@@ -1,3 +1,158 @@
+2005-11-02  Marcus Meissner  <marcus@jet.franken.de>
+
+	* canon.c: S1 IS and S2 IS in current CVS are not working,
+	  comment out for now :(
+
+2005-07-19  Stephen Westin
+	* canon.c: Corrected "IXY Digital 60" to "IXY Digital 600" now
+		that one has been sighted in the wild.
+		Moved SD500/IXUS 700/IXY 600 from class 1 to class 5,
+		since "get picture abilities" fails.
+
+2005-06-21  Stephen Westin
+	* canon.c: Added ID for PowerShot S2 IS.
+		Revised format specifications in error/log messages:
+		I think that all length-related quantities are now
+		coerced to long, as some systems (e.g. MacOS X) have
+		64-bit length types and 64-bit pointers are coming.
+
+2005-06-10  Stephen Westin
+	* canon.c: The PowerShot SD400/SD500 (aka Digital IXUS 50/60
+		aka IXY Digital 55/60) don't support capture at all,
+		according to Canon software manuals.
+		Added support for a real "is this awake?" query
+		(implemented in usb.c).
+
+2005-06-10  Stephen Westin
+	* canon.c: Moved PowerShot SD200/IXUS 30/IXY 40 from class 1 to
+		class 6 for experimentation. This camera now needs
+		CFLAGS=-DCANON_EXPERIMENTAL_20D to be included in the list.
+		I kinda suspect that the SD400/IXUS 50/IXY 55 will need
+		to go along with them. The A510 has been demonstrated working
+		with the older protocol.
+
+2005-05-05  Stephen Westin
+	* canon.c: We now set and fetch the owner name correctly in new
+		protocol.
+		Error messages are improved.
+		  o more text in place of numeric error codes
+		  o "amount of data" -> "length"
+		I think I now have gotten rid of "gp_context_message"
+		(which stops for interactive input) when we are surprised
+		at the length returned by a command.
+
+2005-05-02  Stephen Westin
+	* canon.c: Initial capability to get JPEG thumbnails from CR2 raw
+		files (but not yet EXIF data).
+
+2005-04-28  Stephen Westin
+	Added several camcorders: Elura 50, Optura 10/MVX100i,
+	   Optura Xi/MVX 3i/FV M1, Optura Xi/MVX 3i/FV M1, Optura 40/MVX25i
+	   based on Web reports and some intelligent (I hope) guesses.
+	Fixed Optura 20/MVX150i ID: 307f is for PTP, but 3080 is for us.
+	   Based on reports from psapsa at users.sourceforge.net.
+	We now attempt to exit from remote control mode on any capture error.
+	Fixed one long vs. int warning.
+	Added message for failure of file delete.
+	Learned more about vendor ID's of several cameras.
+	Moved PowerShot SD200/IXUS 30/Digital IXY 40 from class 4 to class 1
+	  for testing.
+
+2005-04-14  Stephen Westin
+	Included new class 6 cameras in all the EOS conditionals (I think).
+	Flag MVX100i as having no capture capability, which seems to be the case.
+	  (I suspect other camcorders are in the same boat, but can't test the
+	   hypothesis).
+
+2005-04-08  Stephen Westin
+	Backed out 300D changes; we now treat it as a class 4 camera, except
+	  for interrupt messages during capture, which are like a class 6.
+	300D is now in class 6 along with 20D and 350D.
+	Modified canon_int_list_directory so it no longer returns ".." as
+	  a directory.
+	Modified canon_int_list_directory and canon_int_find_new_image
+	  to handle directory ".." better and avoid memory access violations.
+	Fixed log messages in canon_int_list_directory to give complete
+	  function name.
+	Made CR2 a different class of images, since it has no external thumbnail
+	   file.
+	use %ld and (long) casts for time_t values in *printf
+	Moved PowerShot SD200 / Digital IXUS 30 / IXY Digital 40 from class 5
+	  to class 4 (EOS-like) as an experiment.
+	Added check for null pointer in directory walk to avoid access error.
+	Corrected one C++-style comment.
+	EOS Digital Rebel XT/EOS 350D/EOS Digital Kiss N is now a Class 6 camera,
+	   and needs CFLAGS=-DCANON_EXPERIMENTAL_20D to be included in the code.
+	fix unintended consequences of getting rid of warning messages
+	The capacity and available variables are not NULL as verified above.
+	But cap and ava are only set for the USB case, so we have to check for that.
+	If you know the logic better, feel free to improve the code :)
+	Capture from EOS 20D seems to work.
+	We now print the camera firmware version in the debug log message
+	  from "identify camera".
+
+2005-03-31  Stephen Westin
+	"Delete file" now works on EOS 20D.
+	Added conditional CANON_EXPERIMENTAL_20D to enable 20D support, so
+	   naive users won't be misled that this is actually trustworthy code.
+	Camera model changes:
+	 o MVX100i/Optura 20 is now 0x3082, not 0x3081.
+	 o PowerShot A75 moved from class 5 to class 1 as a guess.
+	Allow unexpected length of packet returned from "get picture abilities".
+	Made canon_int_capture_preview() more like canon_int_capture_image().
+	A bit of housekeeping here and there.
+	Corrected vendor ID for EOS 350D/EOS Digital Rebel N/EOS Digital Kiss XT:
+	  30ee is correct for Canon mode, 30ef is for PTP only.
+	Updated and expanded list of models with USB ID's.
+	Corrected bug in canon_int_set_file_attributes: one byte too short on
+	  command (we need two NULs at the end). We now use
+	  canon_usb_set_file_attributes in usb.c.
+	Corrected canon_usb_set_file_attributes, which never could have worked.
+	Fixed one type warning long vs. int
+	Fixed sizes reported by get_disk_info for EOS 20D.
+	Added PowerShot A510.
+
+2005-03-14  Stephen Westin
+	Fixes toward EOS 20D support:
+	 o "flash device ID", "get disk info", and "delete file"
+	   have different command codes.
+	 o "get disk info" seems to return values in K rather than bytes.
+	Moved PowerShot A60 & A70 from class 5 to class 1.
+	Casts on various parameters to avoid warnings both on Linux and
+	  on Mac OS X, which seem to have different sizes for size_t.
+	Changed to use all 32 bytes, if present, from both camera
+	  model and owner name from "identify camera" command.
+	Some realignment.
+
+2005-03-09  Stephen Westin
+	Corrected an infinite loop when checking for filename
+	  of a newly captured image, only if that was the only image
+	  on the camera.
+	Corrected protocol classes for IXUS v (I think it's the same camera
+	   as PowerShot S110, but with different USB ID) and PowerShot S45
+	   (we had reports that it was working with the EOS (class 4) code,
+	   but somehow it was in class 5).
+	Corrected one comment.
+	Move PowerShot A300 from class 4 to class 1.
+	Moved PowerShot A80 from class 4 to class 1.
+	Whoops, I wanted the S400/IXUS 400 in class 1, not 3.
+	Moved PowerShot S400 (Digital IXUS 400) from class 4 (EOS-like) to
+	class 3.
+	Moved PowerShot A400 back to class 5. I have my doubts, but don't
+	know any better candidate.
+	Moved PowerShot S400 from class 1 to class 4, which is where it
+	apparently worked before (May 2003).
+	Corrected a couple of gcc warnings on type of format specifiers
+	(long int vs. int).
+	unknown 4 (gleaned from Mac Info.plist file) should be 3080. It had
+	  duplicated 3081.
+	Moved PowerShot S400 (aka Digital IXUS 400) from class 4 to class 1.
+	Added info on several camera models: both ones we know and ones we
+	  would like to know.
+	Added aliases for several cameras that are sold with different names
+	  in different markets.
+	Moved IXUS v from class 0 to class 1.
+
 2005-01-16  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* canon.c: Added PowerShot SD200.
