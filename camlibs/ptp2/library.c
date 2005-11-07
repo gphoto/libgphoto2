@@ -422,6 +422,10 @@ static struct {
 	{"Olympus:C-350Z",                0x07b4, 0x0114, 0},
 	{"Olympus:D-560Z",                0x07b4, 0x0114, 0},
 	{"Olympus:X-250",                 0x07b4, 0x0114, 0},
+	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1349900&group_id=8874&atid=108874 */
+	{"Olympus:C-310Z",                0x07b4, 0x0114, 0},
+	{"Olympus:D-540Z",                0x07b4, 0x0114, 0},
+	{"Olympus:X-100",                 0x07b4, 0x0114, 0},
 
 	/* (at least some) newer Canon cameras can be switched between
 	 * PTP and "normal" (i.e. Canon) mode
