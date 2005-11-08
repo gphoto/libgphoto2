@@ -410,6 +410,8 @@ static struct {
 
 	/* Thomas Luzat <thomas.luzat@gmx.net> */
 	{"Panasonic:DMC-FZ20 (alternate id)", 0x04da, 0x2372, 0},
+	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1350226&group_id=8874&atid=208874 */
+	{"Panasonic:DMC-LZ2",                 0x04da, 0x2372, 0},
 
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1275100&group_id=8874&atid=358874 */
 	{"Panasonic:Lumix FZ5",           0x04da, 0x2372, 0},
