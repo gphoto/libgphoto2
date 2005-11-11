@@ -217,7 +217,12 @@ static int print_fdi_map(const int add_comments, const char *argv0)
 			printf("    <match key=\"usb.product_id\" int=\"%d\">\n", a.usb_product);
 			printf("     <merge key=\"info.category\" type=\"string\">camera</merge>\n");
 			printf("     <append key=\"info.capabilities\" type=\"strlist\">camera</append>\n");
-			printf("     <merge key=\"camera.access_method\" type=\"string\">proprietary</merge>\n");
+
+			/* HACK alert ... but the HAL / gnome-volume-manager guys want that */
+			if (NULL!=strstr(a.library,"ptp"))
+				printf("     <merge key=\"camera.access_method\" type=\"string\">ptp</merge>\n");
+			else
+				printf("     <merge key=\"camera.access_method\" type=\"string\">proprietary</merge>\n");
 			printf("     <merge key=\"camera.libgphoto2.name\" type=\"string\">%s</merge>\n", model);
 			printf("     <merge key=\"camera.libgphoto2.support\" type=\"bool\">true</merge>\n");
 			printf("    </match>\n");
