@@ -411,7 +411,7 @@ static struct {
 	/* Thomas Luzat <thomas.luzat@gmx.net> */
 	{"Panasonic:DMC-FZ20 (alternate id)", 0x04da, 0x2372, 0},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1350226&group_id=8874&atid=208874 */
-	{"Panasonic:DMC-LZ2",                 0x04da, 0x2372, 0},
+	{"Panasonic:DMC-LZ2",             0x04da, 0x2372, 0},
 
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1275100&group_id=8874&atid=358874 */
 	{"Panasonic:Lumix FZ5",           0x04da, 0x2372, 0},
@@ -519,6 +519,8 @@ static struct {
 	/* iRiver OGG and MP3 player. First MTP Device supported!
 	 * Freaky <freaky@bananateam.nl> */
 	{"iRiver:T10",                          0x4102, 0x1117, 0},
+	/* Bruno Parente Lima <brunoparente77@yahoo.com.br> */
+	{"iRiver:T30",                          0x4102, 0x1119, 0},
 
 	/* more coming soon :) */
 	{NULL, 0, 0, 0}
