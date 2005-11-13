@@ -105,9 +105,11 @@ static struct {
 	{"Nikon", "CoolPix 995",   SIERRA_MODEL_CAM_DESC, 0x04b0, 0x0104,
 						SIERRA_WRAP_USB_OLYMPUS,
 							&cp995_cam_desc},
+#if 0
 	{"Nikon", "CoolPix 2500 (Sierra Mode)", SIERRA_MODEL_CAM_DESC, 0x04b0, 0x0108,
 						SIERRA_WRAP_USB_NIKON | SIERRA_NO_51,
 							&cp2500_cam_desc},
+#endif
 	{"Nikon", "CoolPix 4300 (Sierra Mode)", SIERRA_MODEL_CAM_DESC, 0x04b0, 0x010e,
 						SIERRA_WRAP_USB_NIKON | SIERRA_NO_51,
 							&cp880_cam_desc},
@@ -139,6 +141,8 @@ static struct {
 	{"Olympus", "C-700UZ",	SIERRA_MODEL_CAM_DESC,	0x07b4, 0x105,
 					SIERRA_WRAP_USB_OLYMPUS, &oly3040_cam_desc},
 	{"Olympus", "C-750UZ",	SIERRA_MODEL_CAM_DESC,	0x07b4, 0x105,
+					SIERRA_WRAP_USB_OLYMPUS, &oly750uz_cam_desc},
+	{"Olympus", "C-770UZ",	SIERRA_MODEL_CAM_DESC,	0x07b4, 0x105,
 					SIERRA_WRAP_USB_OLYMPUS, &oly750uz_cam_desc},
 	{"Olympus", "C-800", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus", "C-800L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
