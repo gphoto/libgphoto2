@@ -406,6 +406,9 @@ static struct {
 	/* Justin Case <justin_case@gmx.net> */
 	{"Nikon:D2X SLR (PTP mode)",      0x04b0, 0x0408, 0},
 
+	/* Niclas Gustafsson (nulleman @ sf) */
+	{"Nikon:D50 (PTP mode)",          0x04b0, 0x040a, 0},
+
 	{"Nikon:DSC D70s (PTP mode)",     0x04b0, 0x040e, 0},
 
 	/* Thomas Luzat <thomas.luzat@gmx.net> */
