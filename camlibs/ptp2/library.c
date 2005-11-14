@@ -518,9 +518,9 @@ static struct {
 	/* Pentax cameras */
 	{"Pentax:Optio 43WR",                   0x0a17, 0x000d, 0},
 
-
-	/* iRiver OGG and MP3 player. First MTP Device supported!
-	 * Freaky <freaky@bananateam.nl> */
+	/* Jay MacDonald <jay@cheakamus.com> */
+	{"iRiver:T10 (alternate)",              0x4102, 0x1113, 0},
+	/* Freaky <freaky@bananateam.nl> */
 	{"iRiver:T10",                          0x4102, 0x1117, 0},
 	/* Bruno Parente Lima <brunoparente77@yahoo.com.br> */
 	{"iRiver:T30",                          0x4102, 0x1119, 0},
