@@ -103,11 +103,20 @@
 #define NO_USB  0
 
 /* Models with unknown USB ID's:
-  European name      North American                 Japanese             Intro date
+  European name          North American                 Japanese             Intro date
 
-  PowerShot A520                                                         January 2005
-  Digital IXUS 40    PowerShot SD300                IXY Digital 50       September 2004
-  PowerShot Pro1                                                         February 2004
+  PowerShot A520                                                             January 2005
+  Digital IXUS 40        PowerShot SD300                IXY Digital 50       September 2004
+  PowerShot Pro1                                                             February 2004
+                         PowerShot SD30                 IXY i zoom           August 2005
+                         PowerShot A410                                      August 2005
+                         PowerShot A610                                      August 2005
+                         PowerShot A620                                      August 2005
+  Digital IXUS 55        PowerShot SD450                                     August 2005
+  Digital IXUS 750       PowerShot SD550                                     August 2005
+                         PowerShot S80                                       August 2005
+  Digital IXUS Wireless  PowerShot SD430                                     August 2005
+                         EOS Digital 5D                                      August 2005
   */
 const struct canonCamModelData models[] = {
 	/* *INDENT-OFF* */
@@ -304,6 +313,7 @@ const struct canonCamModelData models[] = {
         {"Canon:Digital IXUS 700 (normal mode)",  CANON_CLASS_5,  0x04A9, 0x30f2, CAP_NON, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:IXY Digital 600 (normal mode)",  CANON_CLASS_5,  0x04A9, 0x30f2, CAP_NON, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
+        {"Canon:PowerShot A610 (normal mode)",   CANON_CLASS_5,  0x04A9, 0x30fd, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {NULL}
         /* *INDENT-ON* */
 };
