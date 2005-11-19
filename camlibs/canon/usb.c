@@ -309,7 +309,8 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
                                 return GP_ERROR_CORRUPTED_DATA;
 			}
                 }
-                if ( camera->pl->md->model != CANON_CLASS_6 ) {
+		/* Temp hack for SD500/IXUS 700/IXY 600 for testing */
+                if ( camera->pl->md->model != CANON_CLASS_6 && camera->pl->md->usb_product != 0x30f2 ) {
                         /* We expect to get 0x44 bytes here, but the camera is picky at this stage and
                          * we must read 0x40 bytes and then read 0x4 bytes more.
                          */
