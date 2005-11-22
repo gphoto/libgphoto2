@@ -262,7 +262,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		}
 		for (i = 0; i < dinfo.output_height ; i++ ) {
 			int j;
-			jpeg_read_scanlines(&dinfo,(JSAMPARRAY)(char*)&rawline,1);
+			JSAMPROW row[1];
+			JSAMPARRAY arr = row;
+
+			row[0] = (JSAMPROW)rawline;
+			jpeg_read_scanlines(&dinfo,arr,1);
 
 			memcpy(convline+((dinfo.output_width/16-1)*16+8)*3, rawline+((dinfo.output_width/16-1)*16+8)*3, 8*3);
 			memcpy(convline+pitch/2, rawline, 8*3);
