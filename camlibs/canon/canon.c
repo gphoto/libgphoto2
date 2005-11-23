@@ -313,6 +313,8 @@ const struct canonCamModelData models[] = {
         {"Canon:Digital IXUS 700 (normal mode)",  CANON_CLASS_5,  0x04A9, 0x30f2, CAP_NON, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:IXY Digital 600 (normal mode)",  CANON_CLASS_5,  0x04A9, 0x30f2, CAP_NON, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
+	/* I was not able to make A620 work with CLASS 5, 1 and 6. -Marcus */
+
         {"Canon:PowerShot A610 (normal mode)",   CANON_CLASS_5,  0x04A9, 0x30fd, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {NULL}
         /* *INDENT-ON* */
