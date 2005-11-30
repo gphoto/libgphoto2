@@ -525,6 +525,8 @@ static struct {
 	{"iRiver:T10 (alternate)",              0x4102, 0x1113, 0},
 	/* Freaky <freaky@bananateam.nl> */
 	{"iRiver:T10",                          0x4102, 0x1117, 0},
+	/* Martin Senst <martin.senst@gmx.de> */
+	{"iRiver:T20",                          0x4102, 0x1118, 0},
 	/* Bruno Parente Lima <brunoparente77@yahoo.com.br> */
 	{"iRiver:T30",                          0x4102, 0x1119, 0},
 
