@@ -1,3 +1,7 @@
+2005-12-04  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* dc210.c: Mark Longridge reports DC215 working.
+
 2003-12-11  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* dc210.c: status = TESTING

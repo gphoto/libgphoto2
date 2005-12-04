@@ -25,7 +25,7 @@
 
 #include "dc210.h"
 
-char * exp_comp[] = {"-2.0 EV", "-1.5 EV", "-1.0 EV", "-0.5 EV", "AUTO", "+0.5 EV",
+static char * exp_comp[] = {"-2.0 EV", "-1.5 EV", "-1.0 EV", "-0.5 EV", "AUTO", "+0.5 EV",
 		     "+1.0 EV", "+1.5 EV", "+2.0 EV"};
 
 int camera_id (CameraText *id) {
@@ -41,7 +41,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 
 	memset (&a, 0, sizeof(a));
 	strcpy(a.model, "Kodak:DC210");
-	a.status = GP_DRIVER_STATUS_TESTING;
+	a.status = GP_DRIVER_STATUS_PRODUCTION;
 	a.port     = GP_PORT_SERIAL;
 	a.speed[0] = 9600;
 	a.speed[1] = 19200;
@@ -53,6 +53,10 @@ int camera_abilities (CameraAbilitiesList *list) {
 	a.file_operations   = 	GP_FILE_OPERATION_DELETE |  GP_FILE_OPERATION_PREVIEW;
 	a.folder_operations = 	GP_FOLDER_OPERATION_NONE;
 
+	gp_abilities_list_append(list, a);
+
+	/* Mark Longridge <mark@cubeman.org> */
+	strcpy(a.model, "Kodak:DC215");
 	gp_abilities_list_append(list, a);
 
 	return (GP_OK);
