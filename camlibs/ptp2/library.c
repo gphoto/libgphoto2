@@ -239,6 +239,9 @@ static struct {
 	unsigned short usb_product;
 	unsigned long known_bugs;
 } models[] = {
+
+	{"Creative:Zen MicroPhoto",             0x041e, 0x413c, 0},
+
 	/*
 	 * The very first PTP camera (with special firmware only), also
 	 * called "PTP Prototype", may report non PTP interface class
@@ -319,6 +322,8 @@ static struct {
 	/* report from Federico Prat Villar <fprat@lsi.uji.es> */
 	{"HP:PhotoSmart 43x (PTP mode)", 0x03f0, 0x7202, 0},
 	{"HP:PhotoSmart M307 (PTP mode)", 0x03f0, 0x7302, 0},
+	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1365941&group_id=8874&atid=108874 */
+	{"HP:PhotoSmart M415 (PTP mode)", 0x03f0, 0x7a02, 0},
 
 	/* Most Sony PTP cameras use the same product/vendor IDs. */
 	{"Sony:PTP",                  0x054c, 0x004e, 0},
