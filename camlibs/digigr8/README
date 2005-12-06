@@ -1,0 +1,165 @@
+/* This is the README file for libgphoto2/camlibs/digigr8. This README is an 
+ * integral part of the libgphoto2/camlibs/digigr8 library source code and is 
+ * distributed with that source code under the LGPL license. a copy of which 
+ * license may be seen in any of the source files in libgphoto2/camlibs/digigr8, 
+ * or in the head directory of libgphoto2.
+ */ 
+ 
+ 
+INTRODUCTION:
+
+The cameras supported here have a controller chip from S&Q Technologies. 
+They have USB Vendor:Product number 0x2770:0x905c. These cameras are cheap 
+and basic. Their functioning resembles that of the cameras supported by the 
+sq905 camera library, but is a bit different. 
+
+At this time, The only camera which I know of with this USB ID is the 
+Digigr8 from RadioShack. For information about any other cameras with the 
+same USB ID, I am totally dependent on reports from users and testers. If you
+have another 0x2770:0x905c camera and want it to work and it currently does
+not, then I will be very glad to hear from you. Saying this a different way:
+further progress with your camera will depend upon your input.
+
+WHAT CHIP IS ACTUALLY IN THESE CAMERAS? 
+
+I do not know. I did not take mine apart to look inside.
+
+WHAT FEATURES DO THESE CAMERAS HAVE, AND WHAT DOES THIS DRIVER SUPPORT?
+
+	FEATURE LIST					SUPPORTED (Y/N/Part)
+-- USB connection to computer
+-- High resolution 640x480, uncompressed 				Y
+-- Low resolution 320x240, uncompressed					Y
+-- High resolution 640x480, compressed 					N
+-- Low resolution 320x240, compressed					N
+-- Ability to "switch" resolution between pictures 			Y
+-- Ability to download all pictures on camera				Y
+-- Ability to download the first k pictures, where 
+	k is less than the number on the camera 			Y
+-- Ability to download individual photos				N
+-- Internal battery, which recharges through the USB port		N/A
+-- Small size								N/A
+-- Will connect directly to USB port, like a flash drive		N/A
+
+-------------------------------------------------------------------------
+The following things can be done with button-pushes on the camera:
+-------------------------------------------------------------------------
+-- Frequency filter for use in artificial light. Can be set 
+	to cancel 60hz or 50hz interference. 
+-- Delete all, delete last, resolution setting, compression mode setting. 
+-- "Clip" mode will shoot three frames. The camera "sees" these frames as 
+	ordinary photos. Also the photo counter on the LED counts them.
+-- "AVI" mode shoots until the shutter button is released, or until the 
+	camera is full. The photo counter does NOT count the AVI frames, 
+	but thinks all of the frames are part of one photo. Otherwise, the
+	camera sees the frames as ordinary photos, so gphoto2 will give the 
+	actual count of all frames, whether photos or part of an AVI clip,
+	Also gphoto2 will download the AVI frames as if they were ordinary 
+	photos. Apparently, AVI frames are always 320x240 regardless of the 
+	resolution setting. AVI mode does honor the compression setting, 
+	though, if it happens to be turned on. 
+
+Notes:  
+
+The only known camera supported by the camlibs/digigr8 have a 640x480 
+high-resolution setting and a 320x240 low-resolution setting. If your
+0x2770:0x905c camera uses another resolution setting, then it might still 
+work. There is some similarity with the sq905 cameras, and I kept that part 
+of the code here. If it does not work, then the new resolution setting 
+needs to be listed in digigr8.c in digi_get_picture_width ().
+If you encounter new resolution settings, then please report them. 
+
+The pictures obtained on the uncompressed settings can often be superior to
+those obtained using the software which came with the camera, but not
+always. Generally, considering that they are cheap, low resolution cameras,
+these cameras give relatively good pictures,
+
+
+The digigr8 cameras can also function as webcams, but that is outside the 
+scope of gphoto2. 
+
+
+HARDWARE LIMITATIONS AND CONSTRAINTS
+
+1. 	The downloading of "thumbnails" as special files is totally 
+unsupported by the hardware. The manufacturer's driver will only download
+all photos and display them. It then lets the user to "save" the photos 
+which the user selects. Through a bit of fakery which involves 
+downloading data and throwing it away, this primitive behavior is 
+improved a bit, here, and gphoto2 -p will work. 
+
+
+2.	The camera's data storage provides only sequential access, not
+random access. In other words, it acts as though it were a tape drive
+instead of a disk. The constraints which this places are obvious. It means 
+for example that "gphoto2 -p 2" will NOT download the second photo on the 
+camera.
+
+3.	Considering the way the communication protocols of these cameras
+seem to work, it would seem nearly impossible to copy any data to the camera
+for storage and transport. The camera clearly does not have files on it,
+only data addresses. And the camera does not keep time. For similar 
+reasons, it would also seem impossible to delete a photo from the camera by
+action of software on the computer. The camera supports two choices for
+deletion: delete the last photo taken, or delete all. Each action is
+performed by an appropriate sequence of button pushes on the camera.
+
+
+WHAT GUI FRONTENDS DOES THIS CAMERA LIBRARY SUOPPORT?
+
+Gtkam seems to work well for me with this library. Some of the other various
+frontends do not seem to work quite so well for me. But one of them may work 
+nicely for you, and you are hereby encouraged to try it. If you want to use 
+either gtkam or digikam, you are encouraged to read the camera's manual (in 
+gtkam, right-click on the name of the camera in the left panel, after starting 
+the program and having chosen the right camera). 
+
+
+NOTES  
+
+1.	The program is set up to put out pictures in PPM or raw format.  
+
+2.	 The gamma setting (actually seems to be one over gamma) used for
+the construction of PPM image files has been obtained by trial and error. It
+seems to work very well for outdoor pictures, but the setting is a
+compromise between what happens with outdoor photos and what happens with
+indoor photos. Conceivably, the program could support a choice between two
+or more gamma settings, optimizing for different conditions. 
+
+3. 	A still-experimental postprocessing routine is added, to provide
+some sharpening and color correction for different lighting conditions. The
+routine can easily be turned off if one wishes, and because it is
+experimental you may so wish. To disable it, just comment out the line in
+get_file_func ( ) in library.c where the function digi_postprocess ( ) is
+called. Then (still from within the sq905 directory) do "make install" to
+install your change.
+
+4. 	To unscramble the "High Compression" setting is an unsolved problem.  
+
+5. 	Please get back to me with reports about other SQ cameras (any cameras 
+with Vendor number 0x2770), with their specifications (what it says in the OEM 
+manual about resolution and number of pictures, as well as make and model, and 
+whether it works or not with any libgphoto2 driver or not, would be enough), 
+and with a log file if it seems it is supposed to work but there are problems. 
+
+
+WARRANTY? 
+
+	Absolutely not. No warranty. Never. Not responsible for any actual
+	or potential damage or consequences to anyone or to the equipment of
+	anyone for using this program, whether the alleged damage or alleged
+	consequences are claimed to be real, imaginary, direct, collateral,
+	for pain and suffering, or are claimed to be inflicted upon any
+	"third party" who is not the user or installer of the program. The
+	program has been written for my pleasure and to broaden and deepen
+	my knowledge of computer hardware and software. The program has not
+	been written with the immediate expectation of financial gain or
+	profit on my part, nor has it been commissioned for pay. It is
+	presumed that any end-user of this program will have access to the
+	source code of the program and can judge for himself or herself
+	whether he/she wishes to use it or not, or can consult someone with
+	appropriate expertise to make such a judgment. 
+
+
+Theodore Kilgore
+12/05/05
