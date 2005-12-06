@@ -1,3 +1,11 @@
+2005-12-06  Theodore Kilgore  <kilgota@auburn.edu>
+
+	* camlibs/digigr8/*: New camera library for 0x2770:0x905c cameras. 
+	* configure.in: camlibs/digigr8 hooked up.
+	* AUTHORS: author of camlibs/digigr8 added.
+	* MAINTAINERS: maintainer of camlibs/digigr8 added. 
+
+
 2005-08-31  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* bindings/csharp: C# binding from f-spot 0.1.1

@@ -271,6 +271,7 @@ GP_CAMLIB([aox])dnl
 GP_CAMLIB([barbie])dnl
 GP_CAMLIB([canon])dnl
 GP_CAMLIB([casio])dnl
+GP_CAMLIB([digigr8])dnl
 GP_CAMLIB([digita])dnl
 GP_CAMLIB([dimera])dnl
 GP_CAMLIB([directory])dnl
@@ -418,6 +419,7 @@ camlibs/barbie/Makefile
 camlibs/canon/Makefile
 camlibs/canon/doc/Makefile
 camlibs/casio/Makefile
+camlibs/digigr8/Makefile
 camlibs/digita/Makefile
 camlibs/dimera/Makefile
 camlibs/directory/Makefile

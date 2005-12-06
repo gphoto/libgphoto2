@@ -35,6 +35,9 @@ camlibs/benq:
 camlibs/canon:
 	Philippe Marzouk <philm@users.sourceforge.net>
 
+camlibs/digigr8:
+	Theodore Kilgore <kilgota@auburn.edu>
+
 camlibs/digita:
 	Johannes Erdfelt <johannes@erdfelt.com>
 
