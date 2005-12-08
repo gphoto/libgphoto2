@@ -1,10 +1,10 @@
+2005-12-08  Marcus Meissner  <marcus@jet.franken.de>
 2005-11-23  Marcus Meissner  <marcus@jet.franken.de>
 
+	* Added Kodak Easyshare C31, reported by Giulio Salani.
 	* Added Canon PowerShot A620, reported by Tom Roelz.
 	* Added iRiver T20, reported by Martin Senst.
-
-2005-11-01  Marcus Meissner  <marcus@jet.franken.de>
-	
+	* Added HP Photosmart M415, mentioned in a bugreport.
 	* Added Canon PowerShot A610, reported by Andriy Kulchyts.
 	* Added Olympus d-540z, c-310z, x-100, reported by Bruno Parente.
 	* Added Panasonic DMC-LZ2, reported by Jens Stutte.

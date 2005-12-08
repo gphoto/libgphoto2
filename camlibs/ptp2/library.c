@@ -297,6 +297,8 @@ static struct {
 	{"Kodak:Z730",   0x040a, 0x0580, 0},
 	{"Kodak:CX6445", 0x040a, 0x0584, 0},
 	{"Kodak:CX7525", 0x040a, 0x0586, 0},
+	/* Giulio Salani <ilfunambolo@gmail.com> */
+	{"Kodak:C310",   0x040a, 0x058a, 0},
 	/* c340 Maurizio Daniele <hayabusa@portalis.it> */
 	{"Kodak:C340",   0x040a, 0x058d, 0},
 	/* v550 Jon Burgess <jburgess@uklinux.net> */
