@@ -1,0 +1,23 @@
+#!/bin/bash
+# This is taken from Fedora Core gphoto2 package.
+# http://cvs.fedora.redhat.com/viewcvs/*checkout*/devel/gphoto2/gphoto-set-procperm
+
+console_user=`cat /var/run/console/console.lock` 
+
+if [ -z "$console_user" ] ; then
+  exit 1 
+fi
+
+if [ -z "$HAL_PROP_USB_BUS_NUMBER" -o -z "$HAL_PROP_USB_LINUX_DEVICE_NUMBER" ] ; then
+  exit 1 
+fi
+
+if [ $HAL_PROP_USB_BUS_NUMBER -lt 0 -o  $HAL_PROP_USB_LINUX_DEVICE_NUMBER -lt 0 ] ; then
+  exit 1 
+fi
+
+
+bus_num=`printf %.3u $HAL_PROP_USB_BUS_NUMBER`
+dev_num=`printf %.3u $HAL_PROP_USB_LINUX_DEVICE_NUMBER`
+
+chown $console_user /proc/bus/usb/$bus_num/$dev_num 
