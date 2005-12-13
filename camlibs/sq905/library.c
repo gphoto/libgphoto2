@@ -245,7 +245,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	int nb_frames, to_fetch;  
 	int do_preprocess;
 	unsigned char comp_ratio;
-	unsigned char *frame_data; 
+	unsigned char *frame_data, *rawdata; 
 	unsigned char *ppm, *ptr;
 	unsigned char gtable[256];
 	int size;
@@ -342,6 +342,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	 */
 
 	if (GP_FILE_TYPE_RAW!=type) {
+
 		if (do_preprocess) {
 			sq_preprocess(camera->pl->model, comp_ratio, is_in_clip, 
 				frame_data, w, h);
@@ -387,11 +388,13 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	} else {	/* type is GP_FILE_TYPE_RAW */
 		size = w*h/comp_ratio;
+		rawdata = malloc (size);
+		if (!rawdata) return GP_ERROR_NO_MEMORY;
+		memcpy (rawdata, frame_data, size);
 		gp_file_set_mime_type (file, GP_MIME_RAW);
 		gp_file_set_name (file, filename);
-	        gp_file_set_data_and_size (file, frame_data, size);  
+	        gp_file_set_data_and_size (file, rawdata, size);  
 	}
-
 	/* Reset camera when done, for more graceful exit. */
 	if ((!(is_in_clip)&&(entry +1 == camera->pl->nb_entries)) 
 	|| ((is_in_clip)&& (frame +1 == nb_frames )))

@@ -1,5 +1,10 @@
 2005-05-18   Theodore Kilgore <kilgota@auburn.edu>
 
+	* library.c: raw photo download routine segfault fixed.
+
+
+2005-05-18   Theodore Kilgore <kilgota@auburn.edu>
+
 	* library.c: Several improvements for SQ_MODEL_POCK_CAM
 	* postprocess.c: Several improvements for SQ_MODEL_POCK_CAM	
 	* sq905.c: Several improvements for SQ_MODEL_POCK_CAM, thanks to 
