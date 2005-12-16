@@ -519,6 +519,8 @@ static struct {
 
 	/* Ricoh Caplio GX */
 	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
+	/* Ricoh Caplio R3 */
+	{"Ricoh:Caplio R3 (PTP mode)",          0x05ca, 0x032f, 0},
 
 	/* Rollei dr5  */
 	{"Rollei:dr5 (PTP mode)",               0x05ca, 0x220f, 0},
