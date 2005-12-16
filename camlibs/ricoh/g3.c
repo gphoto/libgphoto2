@@ -296,6 +296,11 @@ camera_abilities (CameraAbilitiesList *list)
 	a.usb_product	= 0x2214;
 	gp_abilities_list_append(list, a);
 
+	strcpy(a.model, "Ricoh:Caplio R3");
+	a.usb_vendor	= 0x5ca;
+	a.usb_product	= 0x2216;
+	gp_abilities_list_append(list, a);
+
 	return (GP_OK);
 }
 
@@ -702,6 +707,10 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		 */
 		ret = g3_ftp_command_and_reply(camera->port, "-NLST /", &buf);
 		if (ret < GP_OK) goto out;
+		if (buf[0] == '4') {
+			/* seen with R3: 450 Open Error... likely OK. */
+			goto out;
+		}
 		if (buf[0] != '1') {
 			ret = GP_ERROR_IO;
 			goto out;
@@ -745,7 +754,10 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 			}
 		}
 	} else {
-		ret = GP_ERROR_IO;
+		if (buf[0] == '4')
+			ret = GP_OK;
+		else	
+			ret = GP_ERROR_IO;
 	}
 out:
 	if (buf) free(buf);
@@ -842,7 +854,10 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 			}
 		}
 	} else {
-		ret = GP_ERROR_IO;
+		if (buf[0] == '4') /* 450 Open Error ... like dir not there */
+			ret = GP_OK;
+		else		
+			ret = GP_ERROR_IO;
 	}
 out:
 	if (buf) free(buf);

@@ -1,3 +1,9 @@
+2005-12-16  Marcus Meissner  <marcus@jet.franken.de>
+
+	* g3.c: Added Ricoh Caplio R3.
+	        Adjusted directory handling with 450 returned
+		for -NLST /IROM/.
+
 2005-07-14  Marcus Meissner  <marcus@jet.franken.de>
 
 	* g3.c: Added Ricoh Caplio GX 8.
