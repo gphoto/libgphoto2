@@ -399,6 +399,8 @@ static struct {
 	/* 4600: Martin Klaffenboeck <martin.klaffenboeck@gmx.at> */
 	{"Nikon:Coolpix 4600 (PTP mode)", 0x04b0, 0x0130, 0},
 	{"Nikon:Coolpix 5900 (PTP mode)", 0x04b0, 0x0135, 0},
+	/* Marcus Meissner */
+	{"Nikon:Coolpix P2 (PTP mode)",   0x04b0, 0x0142, 0},
 	{"Nikon:Coolpix SQ (PTP mode)",   0x04b0, 0x0202, 0},
 	/* lars marowski bree, 16.8.2004 */
 	{"Nikon:Coolpix 4200 (PTP mode)", 0x04b0, 0x0204, 0},
