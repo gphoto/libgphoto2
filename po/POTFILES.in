@@ -36,6 +36,7 @@ camlibs/konica/library.c
 camlibs/konica/lowlevel.c
 camlibs/konica/qm150.c
 camlibs/largan/lmini/largan.c
+camlibs/lg_gsm/library.c
 camlibs/mars/library.c
 camlibs/minolta/dimagev/dimagev.c
 camlibs/mustek/core.c
