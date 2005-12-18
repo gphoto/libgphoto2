@@ -185,9 +185,12 @@ typedef struct _PTPUSBEventContainer PTPUSBEventContainer;
 #define PTP_OC_CANON_GetFolderEntries	0x9021
 
 /* Nikon extension Operation Codes */
-#define PTP_OC_NIKON_SetControlMode     0x90C2
+#define PTP_OC_NIKON_Capture		0x90C0
+#define PTP_OC_NIKON_SetControlMode	0x90C2
 #define PTP_OC_NIKON_CurveDownload	0x90C5
 #define PTP_OC_NIKON_CurveUpload	0x90C6
+#define PTP_OC_NIKON_CheckEvent		0x90C7
+#define PTP_OC_NIKON_CheckReadyness	0x90C8
 
 /* Proprietary vendor extension operations mask */
 #define PTP_OC_EXTENSION_MASK           0xF000
@@ -913,6 +916,11 @@ uint16_t ptp_canon_theme_download (PTPParams* params, uint32_t themenr,
 
 uint16_t ptp_nikon_curve_download (PTPParams* params, 
 				char **data, unsigned int *size);
+
+uint16_t ptp_nikon_setcontrolmode (PTPParams* params, uint32_t mode);
+uint16_t ptp_nikon_capture (PTPParams* params, uint32_t x);
+uint16_t ptp_nikon_check_event (PTPParams* params, char **data, unsigned int *size);
+uint16_t ptp_nikon_check_readyness (PTPParams* params);
 /* Non PTP protocol functions */
 int ptp_operation_issupported	(PTPParams* params, uint16_t operation);
 int ptp_event_issupported	(PTPParams* params, uint16_t event);

@@ -3,6 +3,8 @@
 	* library.c, ptp.c, ptp.h:
 
 	  Synchronized Nikon defines with libptp2.
+	
+	  Added Nikon (special) capture, checkevent, check readyness
 
 2005-12-08  Marcus Meissner  <marcus@jet.franken.de>
 

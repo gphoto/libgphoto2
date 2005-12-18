@@ -1416,6 +1416,74 @@ ptp_nikon_curve_download (PTPParams* params, char **data, unsigned int *size) {
 	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size); 
 }
 
+/**
+ * ptp_nikon_setcontrolmode:
+ *
+ * This command can switch the camera to full PC control mode.
+ *  
+ * params:	PTPParams*
+ *      uint32_t mode - mode
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_nikon_setcontrolmode (PTPParams* params, uint32_t mode)
+{
+        PTPContainer ptp;
+        
+        PTP_CNT_INIT(ptp);
+        ptp.Code=PTP_OC_NIKON_SetControlMode;
+        ptp.Param1=mode;
+        ptp.Nparam=1;
+        return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+}
+
+/**
+ * ptp_nikon_capture:
+ *
+ * This command captures a picture on the Nikon.
+ *  
+ * params:	PTPParams*
+ *      uint32_t x - unknown parameter. seen to be -1.
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_nikon_capture (PTPParams* params, uint32_t x)
+{
+        PTPContainer ptp;
+        
+        PTP_CNT_INIT(ptp);
+        ptp.Code=PTP_OC_NIKON_Capture;
+        ptp.Param1=x;
+        ptp.Nparam=1;
+        return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+}
+
+uint16_t
+ptp_nikon_check_event (PTPParams* params, char **data, unsigned int *size)
+{
+        PTPContainer ptp;
+        
+        PTP_CNT_INIT(ptp);
+        ptp.Code=PTP_OC_NIKON_CheckEvent;
+        ptp.Nparam=0;
+        return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
+}
+
+uint16_t
+ptp_nikon_check_readyness (PTPParams* params)
+{
+        PTPContainer ptp;
+        
+        PTP_CNT_INIT(ptp);
+        ptp.Code=PTP_OC_NIKON_CheckReadyness;
+        ptp.Nparam=0;
+        return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+}
+
 /* Non PTP protocol functions */
 /* devinfo testing functions */
 
