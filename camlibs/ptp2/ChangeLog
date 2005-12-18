@@ -1,3 +1,9 @@
+2005-12-18  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c, ptp.c, ptp.h:
+
+	  Synchronized Nikon defines with libptp2.
+
 2005-12-08  Marcus Meissner  <marcus@jet.franken.de>
 
 	* Added Nikon Coolpix P2.
