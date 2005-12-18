@@ -285,6 +285,7 @@ GP_CAMLIB([jd11])dnl
 GP_CAMLIB([kodak])dnl
 GP_CAMLIB([konica])dnl
 GP_CAMLIB([largan])dnl
+GP_CAMLIB([lg_gsm])dnl
 GP_CAMLIB([mars])dnl
 GP_CAMLIB([minolta])dnl
 GP_CAMLIB([mustek])dnl
@@ -439,6 +440,7 @@ camlibs/konica/Makefile
 camlibs/konica/localization/Makefile
 camlibs/largan/Makefile
 camlibs/largan/lmini/Makefile
+camlibs/lg_gsm/Makefile
 camlibs/mars/Makefile
 camlibs/minolta/Makefile
 camlibs/minolta/dimagev/Makefile
