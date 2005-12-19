@@ -301,6 +301,7 @@ static struct {
 	{"Kodak:C310",   0x040a, 0x058a, 0},
 	/* c340 Maurizio Daniele <hayabusa@portalis.it> */
 	{"Kodak:C340",   0x040a, 0x058d, 0},
+	{"Kodak:V530",   0x040a, 0x058e, 0},
 	/* v550 Jon Burgess <jburgess@uklinux.net> */
 	{"Kodak:V550",   0x040a, 0x058f, 0},
 
