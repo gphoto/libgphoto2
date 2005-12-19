@@ -239,9 +239,6 @@ static struct {
 	unsigned short usb_product;
 	unsigned long known_bugs;
 } models[] = {
-
-	{"Creative:Zen MicroPhoto",             0x041e, 0x413c, 0},
-
 	/*
 	 * The very first PTP camera (with special firmware only), also
 	 * called "PTP Prototype", may report non PTP interface class
@@ -299,6 +296,8 @@ static struct {
 	{"Kodak:CX7525", 0x040a, 0x0586, 0},
 	/* Giulio Salani <ilfunambolo@gmail.com> */
 	{"Kodak:C310",   0x040a, 0x058a, 0},
+	/* Brandon Sharitt */
+	{"Kodak:C330",   0x040a, 0x058c, 0},
 	/* c340 Maurizio Daniele <hayabusa@portalis.it> */
 	{"Kodak:C340",   0x040a, 0x058d, 0},
 	{"Kodak:V530",   0x040a, 0x058e, 0},
@@ -507,6 +506,7 @@ static struct {
 	{"Canon:PowerShot A610 (PTP mode)",     0x04a9, 0x30fd, 0},
 	/* Rob Lensen <rob@bsdfreaks.nl> */
 	{"Canon:Digital IXUS 55 (PTP mode)",    0x04a9, 0x30ff, 0},
+	{"Canon:PowerShot SD450 (PTP mode)",    0x04a9, 0x30ff, 0},
 	/* Nick Richards <nick@nedrichards.com> */
 	{"Canon:Digital IXUS 50 (PTP mode)",    0x04a9, 0x310e, 0},
 
@@ -542,6 +542,11 @@ static struct {
 	{"iRiver:T20",                          0x4102, 0x1118, 0},
 	/* Bruno Parente Lima <brunoparente77@yahoo.com.br> */
 	{"iRiver:T30",                          0x4102, 0x1119, 0},
+
+	/* Jennifer Scalf <oneferna@gmail.com> */
+	/* not really working ... speaks a pretty bad version of PTP 
+	{"Creative:Zen MicroPhoto",             0x041e, 0x413c, 0},
+	 */
 
 	/* more coming soon :) */
 	{NULL, 0, 0, 0}
