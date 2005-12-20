@@ -327,6 +327,8 @@ static struct {
 	{"HP:PhotoSmart R817 (PTP mode)", 0x03f0, 0x7702, 0},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1365941&group_id=8874&atid=108874 */
 	{"HP:PhotoSmart M415 (PTP mode)", 0x03f0, 0x7a02, 0},
+	/* irc contact, YGingras */
+	{"HP:PhotoSmart M23 (PTP mode)", 0x03f0, 0x7b02, 0},
 
 	/* Most Sony PTP cameras use the same product/vendor IDs. */
 	{"Sony:PTP",                  0x054c, 0x004e, 0},
