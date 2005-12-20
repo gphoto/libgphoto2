@@ -509,6 +509,7 @@ static struct {
 	{"Canon:PowerShot SD450 (PTP mode)",    0x04a9, 0x30ff, 0},
 	/* Nick Richards <nick@nedrichards.com> */
 	{"Canon:Digital IXUS 50 (PTP mode)",    0x04a9, 0x310e, 0},
+	{"Canon:Digital IXUS 750 (PTP mode)",   0x04a9, 0x3116, 0},
 
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
