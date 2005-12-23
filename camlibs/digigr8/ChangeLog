@@ -1,3 +1,11 @@
+2005-22-06   Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Added two cameras.
+		Soundstar TDC-35 reported by Patrice Mandin
+		<mandin.patrice@wanadoo.fr>
+		Che-Ez Snap SNAP-U reported by  Lou
+		<lou@fixit.nospammail.net>
+
 2005-12-06   Theodore Kilgore <kilgota@auburn.edu>
 
 	First check-in.

@@ -57,6 +57,11 @@ struct {
    	unsigned short idProduct;
 } models[] = {
         	{"Digigr8",     GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
+        	{"Che-Ez Snap SNAP-U",     GP_DRIVER_STATUS_EXPERIMENTAL, 
+								0x2770, 0x905c},
+        	{"Soundstar TDC-35",     GP_DRIVER_STATUS_EXPERIMENTAL, 
+								0x2770, 0x905c},
+
 	{NULL,0,0,0}
 };
 
