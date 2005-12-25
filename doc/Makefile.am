@@ -39,6 +39,8 @@ uninstall-apidocs:
 
 clean-apidocs:
 	rm -rf $(DOXYGEN_OUTPUT_DIR)
+	rm -f $(DOXYGEN_OUTPUT_DIR).stamp
+	rm -f $(HTML_APIDOC_DIR).tar.gz
 
 
 # if we ever have more targets, move those out...
