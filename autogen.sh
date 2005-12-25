@@ -19,7 +19,7 @@ debug="false"
 recursive="false"
 dryrun="false"
 self="$(basename "$0")"
-autogen_version="0.4.5"
+autogen_version="0.4.6"
 
 
 ########################################################################
@@ -305,7 +305,7 @@ if cd "${dir}"; then
     if test "x$AG_LIBLTDL_DIR" != "x"; then
 	# We have to run libtoolize --ltdl ourselves because
 	#   - autoreconf doesn't run it at all
-	execute_command "${LIBTOOLIZE-"libtoolize"}" --ltdl
+	execute_command "${LIBTOOLIZE-"libtoolize"}" --ltdl --copy
 	# And we have to clean up the generated files after libtoolize because
 	#   - we still want symlinks for the files
 	#   - but we want to (implicitly) AC_CONFIG_SUBDIR and that writes to
@@ -345,6 +345,53 @@ fi
 	exit "$status"
     fi
 }
+
+
+########################################################################
+# If not explicitly given, try to find most convenient tools in $PATH
+#
+# This method only works for tools made for parallel installation with
+# a version suffix, i.e. autoconf and automake.
+#
+# libtool and gettext do not support that, so you'll still have to
+# manually set the respective variables if the default does not work
+# for you.
+
+skip="false"
+oldversion="oldversion"
+while read flag variable binary version restofline; do
+	case "$flag" in
+	+)
+		if "$skip"; then skip=false; fi
+		if test -n "`eval echo \$\{$variable+"set"\}`"; then
+			skip=:
+		else
+			if test -x "`which ${binary}${version}`"; then
+				export "$variable"="${binary}${version}"
+				oldversion="${version}"
+			else
+				skip=:
+			fi
+		fi
+		;;
+	-)
+		if "$skip"; then :; else
+			export "$variable"="${binary}${oldversion}"
+		fi
+		;;
+	esac
+done<<EOF
++ AUTOMAKE	automake	-1.9
+- ACLOCAL	aclocal
++ AUTOMAKE	automake	-1.8
+- ACLOCAL	aclocal
++ AUTOCONF	autoconf	2.59
+- AUTOHEADER	autoheader
+- AUTORECONF	autoreconf
++ AUTOCONF	autoconf	2.50
+- AUTOHEADER	autoheader
+- AUTORECONF	autoreconf
+EOF
 
 
 ########################################################################
@@ -404,53 +451,6 @@ if test "x$pdirs" != "x"; then
     # dirs given on command line? use them!
     dirs="$pdirs"
 fi
-
-
-########################################################################
-# If not explicitly given, try to find most convenient tools in $PATH
-#
-# This method only works for tools made for parallel installation with
-# a version suffix, i.e. autoconf and automake.
-#
-# libtool and gettext do not support that, so you'll still have to
-# manually set the respective variables if the default does not work
-# for you.
-
-skip="false"
-oldversion="oldversion"
-while read flag variable binary version restofline; do
-	case "$flag" in
-	+)
-		if "$skip"; then skip=false; fi
-		if test -n "`eval echo \$\{$variable+"set"\}`"; then
-			skip=:
-		else
-			if test -x "`which ${binary}${version}`"; then
-				export "$variable"="${binary}${version}"
-				oldversion="${version}"
-			else
-				skip=:
-			fi
-		fi
-		;;
-	-)
-		if "$skip"; then :; else
-			export "$variable"="${binary}${oldversion}"
-		fi
-		;;
-	esac
-done<<EOF
-+ AUTOMAKE	automake	-1.9
-- ACLOCAL	aclocal
-+ AUTOMAKE	automake	-1.8
-- ACLOCAL	aclocal
-+ AUTOCONF	autoconf	2.59
-- AUTOHEADER	autoheader
-- AUTORECONF	autoreconf
-+ AUTOCONF	autoconf	2.50
-- AUTOHEADER	autoheader
-- AUTORECONF	autoreconf
-EOF
 
 
 ########################################################################
