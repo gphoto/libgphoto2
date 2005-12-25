@@ -308,6 +308,7 @@ GP_CAMLIB([sq905])dnl
 GP_CAMLIB([stv0674])dnl
 GP_CAMLIB([stv0680])dnl
 GP_CAMLIB([sx330z])dnl
+GP_CAMLIB([template])dnl
 GP_CAMLIB([toshiba])dnl
 dnl
 GP_CAMLIBS_DEFINE()dnl
@@ -466,6 +467,7 @@ camlibs/sq905/Makefile
 camlibs/stv0674/Makefile
 camlibs/stv0680/Makefile
 camlibs/sx330z/Makefile
+camlibs/template/Makefile
 camlibs/toshiba/Makefile
 camlibs/toshiba/pdrm11/Makefile
 camlibs/enigma13/Makefile
