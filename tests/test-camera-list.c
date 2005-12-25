@@ -1,4 +1,4 @@
-/* test-gphoto2.c
+/* test-camera-list.c
  *
  * Copyright © 2001 Lutz Müller <lutz@users.sf.net>
  * Copyright © 2005 Hans Ulrich Niedermann <gp@n-dimensional.de>
