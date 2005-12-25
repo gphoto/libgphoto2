@@ -19,13 +19,10 @@ if HAVE_DOXYGEN
 DOXYGEN_FILES =
 DOXYGEN_STAMPS = $(DOXYGEN_OUTPUT_DIR).stamp
 
-# FIXME: Depending on the source files would be sufficient...
-$(DOXYGEN_OUTPUT_DIR).stamp: Doxyfile $(top_builddir)/libgphoto2/libgphoto2.la
+# FIXME: Depend on source files.
+$(DOXYGEN_OUTPUT_DIR).stamp: Doxyfile
 	doxygen Doxyfile
 	echo > $@
-
-$(top_builddir)/libgphoto2/libgphoto2.la:
-	cd $(top_builddir)/libgphoto2 && $(MAKE) libgphoto2.la
 
 $(HTML_APIDOC_DIR).tar.gz: $(DOXYGEN_OUTPUT_DIR).stamp
 	(cd $(DOXYGEN_OUTPUT_DIR) && $(AMTAR) chof - $(HTML_APIDOC_DIR) | GZIP=--best gzip -c) > $@
