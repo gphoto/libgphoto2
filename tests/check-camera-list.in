@@ -15,26 +15,33 @@ echo "top_builddir=$top_builddir"
 
 CAMLIBS="${DESTDIR}${camlibdir}"
 
+pwd="$(pwd)"
 if test -d "${CAMLIBS}"; then
-    :
-elif test -d "$(pwd)/_inst/${camlibdir}"; then
-    DESTDIR="$(pwd)/_inst"
-    CAMLIBS="${DESTDIR}${camlibdir}"
+    echo "Found camlibs in default install dir."
     :
 else
-    DESTDIR="$(pwd)/_inst"
+    echo "Going to use our own camlib installation"
+    DESTDIR="${pwd}/_inst"
     CAMLIBS="${DESTDIR}${camlibdir}"
-    (cd "${top_builddir}" && ${MAKE} DESTDIR="$DESTDIR" install)
+    for reldir in \
+    	libgphoto2_port/libgphoto2_port \
+	libgphoto2 \
+	camlibs
+    do
+        (cd "${top_builddir}/${reldir}" && ${MAKE} DESTDIR="$DESTDIR" install)
+    done
+    ln -s "${CAMLIBS}" "_camlibs"
+    CAMLIBS="${pwd}/_camlibs"
     if test -d "${CAMLIBS}"; then
-    	echo "Test installation successful"
+	echo "Test installation successful"
     else
-    	echo "Test installation failed"
-    	exit 1
+	echo "Test installation failed"
+	exit 1
     fi
 fi
 
-LD_LIBRARY_PATH="$DESTDIR$libdir:$LD_LIBRARY_PATH"
-export LD_LIBRARY_PATH
+#LD_LIBRARY_PATH="$DESTDIR$libdir:$LD_LIBRARY_PATH"
+#export LD_LIBRARY_PATH
 echo "Using camlib dir: $CAMLIBS"
 export CAMLIBS
 

@@ -1,8 +1,3 @@
-
-INCLUDES =						\
-	-I$(top_srcdir)/libgphoto2			\
-	-I$(top_srcdir)/libgphoto2_port/libgphoto2_port
-
 check_PROGRAMS = test-camera-list
 
 check_SCRIPTS = \
@@ -42,6 +37,7 @@ test_camera_list_LDADD = \
 
 clean-local:
 	rm -rf _inst
+	rm -f _camlibs
 
 %.sh: %.in
 	@echo "Creating $@"
@@ -53,3 +49,4 @@ clean-local:
 		-e 's|@MAKE\@|$(MAKE)|g' \
 		< "$<" > "$@"
 	@chmod +x $@
+
