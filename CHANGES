@@ -16,11 +16,87 @@ libgphoto2:
 
    * If set, use environment variable CAMLIBS to find the camera drivers.
      Ditto for libgphoto2_port, IOLIBS and IO drivers.
-
-New features:
    * disk: "port" for USB Mass Storage support
-   * basic MTP support for mp3 players.
-   * TBD
+   * various USB fixes
+   * Generate .fdi files for HAL
+   * Memory usage greatly reduced by only keeping last 2 pictures
+     in memory cache
+
+Drivers (camlibs)
+
+   * basic MTP support for iRiver mp3 players using ptp driver T10,
+     T20, T30, M415
+
+   * canon
+     * IXY Digital 600 fixes
+     * Added A610
+     * Experimental SD500
+     * Experimental A620 (not really working)
+
+   * casio
+     * various fixes in QV-10 driver
+
+   * digigr8 (NEW)
+     * support Digigr8, Che-Ez Snap SNAP-U, Soundstar TDC-35
+
+   * kodak/dc210
+     * Added DC215
+
+   * ricoh/g3
+     * Ricoh Caplio GX, GX 8
+     * Ricoh R2, R3
+     * Rollei dr5 
+
+   * hp215 (NEW)
+     * support HP 215
+
+   * lg_gsm (NEW)
+     * support LG T5100
+
+   * mars
+     * various fixes
+     * Added Argus DC-1620, DC-1610 (experimental)
+     * Added Philips P44417B
+
+   * pdc640
+     * Added Clever CAM 360
+
+   * ptp
+     * For Nikon, handle ISO speed, aperture, exposure program,
+       capture, focus metering mode, flash mode, AF beep toggle
+     * Nikon curve
+     * Added Kodak Z730, Z7590, C340, LS753, V530, V550, C310, C330
+     * Added Nikon D50, D70s, 4600, 4800, 5600, 5900, Coolpix P2
+     * Added Canon A410, A520, A610, A620, IXUS 55, SD450, IXUS 750
+     * Added HP R817, Photosmart M23
+     * Added Olympus D-540z, C-310z, X-100
+     * Added Panasonic Lumix FZ5, DMC-LZ2
+     * Added Ricoh R3
+     * Added Sony DSC-H1, DSC-R1
+     * Added MTP devices (mp3 players)
+       
+   * sierra
+     * various fixes
+     * Added C-770UZ
+
+   * sq905
+     * various fixes
+     * fix some crashers
+
+Bindings
+
+   * added Java (patch# 1108091)
+   * added Python (patch# 1152835)
+   * added C#
+
+Translation updates:
+
+   * da
+   * it
+   * ru
+   * vi
+   * zh_TW
+
 
 ----------------------------------------------------------------------------
 libgphoto2 2.1.6
