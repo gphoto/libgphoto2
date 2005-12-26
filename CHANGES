@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------------
-libgphoto2 CVS HEAD (2.2)
+libgphoto2 2.1.99 (pre-release of 2.2)
 
 Build system (packagers beware!):
 
@@ -9,11 +9,18 @@ Build system (packagers beware!):
    * no more accidentally building without libusb (use --without-libusb
      if you insist on that)
    * camlibs and iolibs are now installed into new directories
+   * libhal 0.5 is currently an option for the disk: port.
+     Distribution that ships it might want to build it with it.
 
 libgphoto2:
 
    * If set, use environment variable CAMLIBS to find the camera drivers.
      Ditto for libgphoto2_port, IOLIBS and IO drivers.
+
+New features:
+   * disk: "port" for USB Mass Storage support
+   * basic MTP support for mp3 players.
+   * TBD
 
 ----------------------------------------------------------------------------
 libgphoto2 2.1.6
