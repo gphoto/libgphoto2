@@ -1,0 +1,4 @@
+2005-12-25  Hubert Figuiere  <hub@figuiere.net>
+
+	* template.c: cleanup and some warning fixed.
+

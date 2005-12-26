@@ -51,6 +51,8 @@
  */
 #include "config.h"
 
+#include <string.h>
+
 #include <gphoto2-library.h>
 #include <gphoto2-result.h>
 
@@ -87,7 +89,7 @@
 int
 camera_exit (Camera *camera, GPContext *context) 
 {
-	return (GP_OK);
+	return GP_OK;
 }
 
 
@@ -103,7 +105,7 @@ camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 
 	/* Append your sections and widgets here. */
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 
@@ -119,7 +121,7 @@ camera_config_set (Camera *camera, CameraWidget *window, GPContext *context)
 	 * Check if the widgets' values have changed. If yes, tell the camera.
 	 */
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 
@@ -138,7 +140,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	 * disk. If your camera does, please delete it from the camera.
 	 */
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 
@@ -156,7 +158,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	 * out the path.
 	 */
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 
@@ -173,7 +175,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 	 * state of the camera (like pictures taken, etc.).
 	 */
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 
@@ -190,7 +192,7 @@ camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 	 * to use the camera or the driver, this is the place to do.
 	 */
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 
@@ -207,7 +209,7 @@ camera_about (Camera *camera, CameraText *about, GPContext *context)
 			       "Quick description of the library.\n"
 			       "No more than 5 lines if possible."));
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 /*@}*/
@@ -239,7 +241,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	 * gp_file_set_data_and_size, etc.
 	 */
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 
@@ -259,7 +261,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	 * gp_file_get_name, etc.
 	 */
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 
@@ -276,7 +278,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 
 	/* Delete the file from the camera. */
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 
@@ -296,7 +298,7 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 	 * such a functionality, just don't implement this function.
 	 */
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 
@@ -313,7 +315,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	/* Get the file info here and write it into <info> */
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 
@@ -330,7 +332,7 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 
 	/* Set the file info here from <info> */
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 
@@ -347,7 +349,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 	/* List your folders here */
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 
@@ -364,7 +366,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 	/* List your files here */
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 /*@}*/
@@ -392,7 +394,7 @@ camera_id (CameraText *id)
 {
 	strcpy(id->text, "REPLACE WITH UNIQUE LIBRARY ID");
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 
@@ -428,7 +430,7 @@ camera_abilities (CameraAbilitiesList *list)
 
 	gp_abilities_list_append(list, a);
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 
@@ -475,7 +477,7 @@ camera_init (Camera *camera, GPContext *context)
 	 * connection to the camera can be established.
 	 */
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 /*@}*/
