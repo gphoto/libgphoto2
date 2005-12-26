@@ -1,3 +1,7 @@
+2005-12-25  Hubert Figuiere  <hub@figuiere.net>
+
+	* configure.in: Version 2.1.99 (pre-release)
+
 2005-12-06  Theodore Kilgore  <kilgota@auburn.edu>
 
 	* camlibs/digigr8/*: New camera library for 0x2770:0x905c cameras. 
