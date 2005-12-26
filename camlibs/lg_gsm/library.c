@@ -136,27 +136,28 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	Camera *camera = user_data; 
 
         int k;
-	unsigned char temp;
-	unsigned char *data;
+	char *data;
 	int len;
 
 	k = gp_filesystem_number(camera->fs, "/", filename, context);
 
 	switch (type) {
 	case GP_FILE_TYPE_PREVIEW:
-		return (GP_ERROR_NOT_SUPPORTED);
+		return GP_ERROR_NOT_SUPPORTED;
 	case GP_FILE_TYPE_NORMAL:
 		len = lg_gsm_get_picture_size (camera->port, k);
 		GP_DEBUG("len = %i\n", len);
 		data = malloc(len);
 		if (!data) {
-			printf("Malloc failed\n"); return 0;}
+			GP_DEBUG("malloc failed\n");
+			return GP_ERROR_NO_MEMORY;
+		}
 		lg_gsm_read_picture_data (camera->port, data, len, k);
 		gp_file_append (file, data, len);
 		free (data);
 		break;
 	default:
-		return (GP_ERROR_NOT_SUPPORTED);
+		return GP_ERROR_NOT_SUPPORTED;
 
 	}
 
@@ -191,11 +192,12 @@ camera_init(Camera *camera, GPContext *context)
    
 	GP_DEBUG ("Initializing the camera\n");
 	ret = gp_port_get_settings(camera->port,&settings);
-	if (ret < 0) return ret; 
+	if (ret < 0) 
+		return ret; 
 
 	switch (camera->port->type) {
 		case GP_PORT_SERIAL:
-			return ( GP_ERROR );
+			return GP_ERROR;
 		case GP_PORT_USB:
 			settings.usb.config = 1;
 			settings.usb.altsetting = 0;
@@ -204,11 +206,12 @@ camera_init(Camera *camera, GPContext *context)
 			settings.usb.outep =0x02;
 			break;
 		default:
-			return ( GP_ERROR );
+			return GP_ERROR;
 	}
 
 	ret = gp_port_set_settings(camera->port,settings);
-	if (ret < 0) return ret; 
+	if (ret < 0) 
+		return ret; 
 
 	GP_DEBUG("interface = %i\n", settings.usb.interface);
 	GP_DEBUG("inep = %x\n", settings.usb.inep);	
@@ -219,7 +222,8 @@ camera_init(Camera *camera, GPContext *context)
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
 
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));
-	if (!camera->pl) return GP_ERROR_NO_MEMORY;
+	if (!camera->pl) 
+		return GP_ERROR_NO_MEMORY;
 	memset (camera->pl, 0, sizeof (CameraPrivateLibrary));
 
 	/* Connect to the camera */
