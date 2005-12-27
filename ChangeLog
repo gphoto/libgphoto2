@@ -36,6 +36,19 @@
 
 	  You can control this by the setting "libgphoto2" , "cached-images".
 
+2005-08-14  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* camlibs/directory.c, libgphoto2_port/disk, 
+	  libgphoto2/gphoto2-abilities-list.c:
+	
+	Added support for mounted digitalcameras (USB
+	mass storage based).
+
+	Port type is:
+		disk:/full/path/
+	Camera driver is:
+		"Directory Browse"
+
 2005-06-27  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* po/ru.po: Update ru.po
