@@ -193,7 +193,7 @@ sub handle_char {
 	} elsif ($code == 0x1005) {
 		if ($type ==1 ) {
 			my $sid = get_uint32(\@bytes);
-			printf "GetStorageInfo(1005) storage=%08lx\n,$sid";
+			printf "GetStorageInfo(1005) storage=0x%08lx\n",$sid;
 		} elsif ($type == 3) {
 			my $storagetype		= get_uint16(\@curdata);
 			my $filesystemtype	= get_uint16(\@curdata);
@@ -211,6 +211,17 @@ sub handle_char {
 			printf "GetDevicePropDesc(1014) prop = %04x\n", $prop;
 		} elsif ($type == 3) {
 			print "GetDevicePropDesc(1014)\n";
+		}
+		return;
+	} elsif ($code == 0x1006) {
+		if ($type == 1) {
+			my $p1 = get_uint32(\@bytes);
+			my $p2 = get_uint32(\@bytes);
+			my $p3 = get_uint32(\@bytes);
+			printf "GetNumObjects(1006) 0x%08lx,0x%08lx,0x%08lx\n", $p1,$p2,$p3;
+		} elsif ($type == 3) {
+			my $p1 = get_uint32(\@bytes);
+			print "GetNumObjects(1006) num=$p1\n";
 		}
 		return;
 	} elsif ($code == 0x1015) {
