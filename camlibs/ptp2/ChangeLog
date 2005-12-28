@@ -1,3 +1,10 @@
+2005-12-28  Marcus Meissner  <marcus@jet.franken.de>
+
+	* Fixed signedness warnings by using "unsigned char*"
+	  more often.
+
+	  Added ptp_getnumobjects() function.
+
 2005-12-19  Marcus Meissner  <marcus@jet.franken.de>
 
 	* Added Canon IXUS 750.

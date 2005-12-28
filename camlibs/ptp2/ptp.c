@@ -299,7 +299,7 @@ ptp_usb_getresp (PTPParams* params, PTPContainer* resp)
  **/
 static uint16_t
 ptp_transaction (PTPParams* params, PTPContainer* ptp, 
-		uint16_t flags, unsigned int sendlen, char** data,
+		uint16_t flags, unsigned int sendlen, unsigned char** data,
 		unsigned int *recvlen)
 {
 	if ((params==NULL) || (ptp==NULL)) 
@@ -408,9 +408,9 @@ uint16_t
 ptp_getdeviceinfo (PTPParams* params, PTPDeviceInfo* deviceinfo)
 {
 	uint16_t ret;
-	int len;
+	unsigned int len;
 	PTPContainer ptp;
-	char* di=NULL;
+	unsigned char* di=NULL;
 
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_GetDeviceInfo;
@@ -490,8 +490,8 @@ ptp_getstorageids (PTPParams* params, PTPStorageIDs* storageids)
 {
 	uint16_t ret;
 	PTPContainer ptp;
-	int len;
-	char* sids=NULL;
+	unsigned int len;
+	unsigned char* sids=NULL;
 
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_GetStorageIDs;
@@ -519,8 +519,8 @@ ptp_getstorageinfo (PTPParams* params, uint32_t storageid,
 {
 	uint16_t ret;
 	PTPContainer ptp;
-	char* si=NULL;
-	int len;
+	unsigned char* si=NULL;
+	unsigned int len;
 
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_GetStorageInfo;
@@ -554,8 +554,8 @@ ptp_getobjecthandles (PTPParams* params, uint32_t storage,
 {
 	uint16_t ret;
 	PTPContainer ptp;
-	char* oh=NULL;
-	int len;
+	unsigned char* oh=NULL;
+	unsigned int len;
 
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_GetObjectHandles;
@@ -567,6 +567,46 @@ ptp_getobjecthandles (PTPParams* params, uint32_t storage,
 	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &oh, &len);
 	if (ret == PTP_RC_OK) ptp_unpack_OH(params, oh, objecthandles, len);
 	free(oh);
+	return ret;
+}
+
+/**
+ * ptp_getnumobjects:
+ * params:	PTPParams*
+ *		storage			- StorageID
+ *		objectformatcode	- ObjectFormatCode (optional)
+ *		associationOH		- ObjectHandle of Association for
+ *					  wich a list of children is desired
+ *					  (optional)
+ *		numobs			- pointer to uint32_t that takes number of objects
+ *
+ * Fills numobs with number of objects on device.
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
+uint16_t
+ptp_getnumobjects (PTPParams* params, uint32_t storage,
+			uint32_t objectformatcode, uint32_t associationOH,
+			uint32_t* numobs)
+{
+	uint16_t ret;
+	PTPContainer ptp;
+	int len;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code=PTP_OC_GetObjectHandles;
+	ptp.Param1=storage;
+	ptp.Param2=objectformatcode;
+	ptp.Param3=associationOH;
+	ptp.Nparam=3;
+	len=0;
+	ret=ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+	if (ret == PTP_RC_OK) {
+		if (ptp.Nparam >= 1)
+			*numobs = ptp.Param1;
+		else
+			ret = PTP_RC_GeneralError;
+	}
 	return ret;
 }
 
@@ -586,8 +626,8 @@ ptp_getobjectinfo (PTPParams* params, uint32_t handle,
 {
 	uint16_t ret;
 	PTPContainer ptp;
-	char* oi=NULL;
-	int len;
+	unsigned char* oi=NULL;
+	unsigned int len;
 
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_GetObjectInfo;
@@ -612,10 +652,10 @@ ptp_getobjectinfo (PTPParams* params, uint32_t handle,
  * Return values: Some PTP_RC_* code.
  **/
 uint16_t
-ptp_getobject (PTPParams* params, uint32_t handle, char** object)
+ptp_getobject (PTPParams* params, uint32_t handle, unsigned char** object)
 {
 	PTPContainer ptp;
-	int len;
+	unsigned int len;
 
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_GetObject;
@@ -640,10 +680,10 @@ ptp_getobject (PTPParams* params, uint32_t handle, char** object)
  **/
 uint16_t
 ptp_getpartialobject (PTPParams* params, uint32_t handle, uint32_t offset,
-			uint32_t maxbytes, char** object)
+			uint32_t maxbytes, unsigned char** object)
 {
 	PTPContainer ptp;
-	int len;
+	unsigned int len;
 
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_GetPartialObject;
@@ -667,10 +707,10 @@ ptp_getpartialobject (PTPParams* params, uint32_t handle, uint32_t offset,
  * Return values: Some PTP_RC_* code.
  **/
 uint16_t
-ptp_getthumb (PTPParams* params, uint32_t handle,  char** object)
+ptp_getthumb (PTPParams* params, uint32_t handle, unsigned char** object)
 {
 	PTPContainer ptp;
-	int len;
+	unsigned int len;
 
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_GetThumb;
@@ -727,7 +767,7 @@ ptp_sendobjectinfo (PTPParams* params, uint32_t* store,
 {
 	uint16_t ret;
 	PTPContainer ptp;
-	char* oidata=NULL;
+	unsigned char* oidata=NULL;
 	uint32_t size;
 
 	PTP_CNT_INIT(ptp);
@@ -757,7 +797,7 @@ ptp_sendobjectinfo (PTPParams* params, uint32_t* store,
  *
  */
 uint16_t
-ptp_sendobject (PTPParams* params, char* object, uint32_t size)
+ptp_sendobject (PTPParams* params, unsigned char* object, uint32_t size)
 {
 	PTPContainer ptp;
 
@@ -804,8 +844,8 @@ ptp_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 {
 	PTPContainer ptp;
 	uint16_t ret;
-	int len;
-	char* dpd=NULL;
+	unsigned int len;
+	unsigned char* dpd=NULL;
 
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_GetDevicePropDesc;
@@ -825,8 +865,9 @@ ptp_getdevicepropvalue (PTPParams* params, uint16_t propcode,
 {
 	PTPContainer ptp;
 	uint16_t ret;
-	int len, offset;
-	char* dpv=NULL;
+	unsigned int len;
+	int offset;
+	unsigned char* dpv=NULL;
 
 
 	PTP_CNT_INIT(ptp);
@@ -847,7 +888,7 @@ ptp_setdevicepropvalue (PTPParams* params, uint16_t propcode,
 	PTPContainer ptp;
 	uint16_t ret;
 	uint32_t size;
-	char* dpv=NULL;
+	unsigned char* dpv=NULL;
 
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_SetDevicePropValue;
@@ -884,7 +925,7 @@ ptp_ek_sendfileobjectinfo (PTPParams* params, uint32_t* store,
 {
 	uint16_t ret;
 	PTPContainer ptp;
-	char* oidata=NULL;
+	unsigned char* oidata=NULL;
 	uint32_t size;
 
 	PTP_CNT_INIT(ptp);
@@ -914,7 +955,7 @@ ptp_ek_sendfileobjectinfo (PTPParams* params, uint32_t* store,
  *
  */
 uint16_t
-ptp_ek_sendfileobject (PTPParams* params, char* object, uint32_t size)
+ptp_ek_sendfileobject (PTPParams* params, unsigned char* object, uint32_t size)
 {
 	PTPContainer ptp;
 
@@ -1109,8 +1150,8 @@ ptp_canon_checkevent (PTPParams* params, PTPUSBEventContainer* event, int* iseve
 {
 	uint16_t ret;
 	PTPContainer ptp;
-	char *evdata = NULL;
-	int len;
+	unsigned char *evdata = NULL;
+	unsigned int len;
 	
 	*isevent=0;
 	PTP_CNT_INIT(ptp);
@@ -1224,13 +1265,13 @@ ptp_canon_initiatecaptureinmemory (PTPParams* params)
 uint16_t
 ptp_canon_getpartialobject (PTPParams* params, uint32_t handle, 
 				uint32_t offset, uint32_t size,
-				uint32_t pos, char** block, 
+				uint32_t pos, unsigned char** block, 
 				uint32_t* readnum)
 {
 	uint16_t ret;
 	PTPContainer ptp;
-	char *data=NULL;
-	int len;
+	unsigned char *data=NULL;
+	unsigned int len;
 	
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_CANON_GetPartialObject;
@@ -1265,11 +1306,11 @@ ptp_canon_getpartialobject (PTPParams* params, uint32_t handle,
  *
  **/
 uint16_t
-ptp_canon_getviewfinderimage (PTPParams* params, char** image, uint32_t* size)
+ptp_canon_getviewfinderimage (PTPParams* params, unsigned char** image, uint32_t* size)
 {
 	uint16_t ret;
 	PTPContainer ptp;
-	int len;
+	unsigned int len;
 	
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_CANON_GetViewfinderImage;
@@ -1301,8 +1342,8 @@ ptp_canon_getchanges (PTPParams* params, uint16_t** props, uint32_t* propnum)
 {
 	uint16_t ret;
 	PTPContainer ptp;
-	char* data=NULL;
-	int len;
+	unsigned char* data=NULL;
+	unsigned int len;
 	
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_CANON_GetChanges;
@@ -1345,8 +1386,8 @@ ptp_canon_getfolderentries (PTPParams* params, uint32_t store, uint32_t p2,
 {
 	uint16_t ret;
 	PTPContainer ptp;
-	char *data = NULL;
-	int len;
+	unsigned char *data = NULL;
+	unsigned int len;
 	
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_CANON_GetFolderEntries;
@@ -1390,7 +1431,7 @@ ptp_canon_getfolderentries (PTPParams* params, uint32_t store, uint32_t p2,
  **/
 uint16_t
 ptp_canon_theme_download (PTPParams* params, uint32_t themenr,
-		char **data, unsigned int *size)
+		unsigned char **data, unsigned int *size)
 {
 	PTPContainer ptp;
 
@@ -1406,7 +1447,7 @@ ptp_canon_theme_download (PTPParams* params, uint32_t themenr,
 
 
 uint16_t
-ptp_nikon_curve_download (PTPParams* params, char **data, unsigned int *size) {
+ptp_nikon_curve_download (PTPParams* params, unsigned char **data, unsigned int *size) {
 	PTPContainer ptp;
 	*data = NULL;
 	*size = 0;
@@ -1463,7 +1504,7 @@ ptp_nikon_capture (PTPParams* params, uint32_t x)
 }
 
 uint16_t
-ptp_nikon_check_event (PTPParams* params, char **data, unsigned int *size)
+ptp_nikon_check_event (PTPParams* params, unsigned char **data, unsigned int *size)
 {
         PTPContainer ptp;
         

@@ -68,7 +68,7 @@ dtoh32ap (PTPParams *params, unsigned char *a)
 
 
 static inline char*
-ptp_unpack_string(PTPParams *params, char* data, uint16_t offset, uint8_t *len)
+ptp_unpack_string(PTPParams *params, unsigned char* data, uint16_t offset, uint8_t *len)
 {
 	int i;
 	char *string=NULL;
@@ -87,7 +87,7 @@ ptp_unpack_string(PTPParams *params, char* data, uint16_t offset, uint8_t *len)
 }
 
 static inline void
-ptp_pack_string(PTPParams *params, char *string, char* data, uint16_t offset, uint8_t *len)
+ptp_pack_string(PTPParams *params, char *string, unsigned char* data, uint16_t offset, uint8_t *len)
 {
 	int i;
 	*len = (uint8_t)strlen(string);
@@ -100,7 +100,7 @@ ptp_pack_string(PTPParams *params, char *string, char* data, uint16_t offset, ui
 }
 
 static inline uint32_t
-ptp_unpack_uint32_t_array(PTPParams *params, char* data, uint16_t offset, uint32_t **array)
+ptp_unpack_uint32_t_array(PTPParams *params, unsigned char* data, uint16_t offset, uint32_t **array)
 {
 	uint32_t n, i=0;
 
@@ -114,7 +114,7 @@ ptp_unpack_uint32_t_array(PTPParams *params, char* data, uint16_t offset, uint32
 }
 
 static inline uint32_t
-ptp_unpack_uint16_t_array(PTPParams *params, char* data, uint16_t offset, uint16_t **array)
+ptp_unpack_uint16_t_array(PTPParams *params, unsigned char* data, uint16_t offset, uint16_t **array)
 {
 	uint32_t n, i=0;
 
@@ -137,7 +137,7 @@ ptp_unpack_uint16_t_array(PTPParams *params, char* data, uint16_t offset, uint16
 #define PTP_di_OperationsSupported	10
 
 static inline void
-ptp_unpack_DI (PTPParams *params, char* data, PTPDeviceInfo *di, unsigned int datalen)
+ptp_unpack_DI (PTPParams *params, unsigned char* data, PTPDeviceInfo *di, unsigned int datalen)
 {
 	uint8_t len;
 	unsigned int totallen;
@@ -196,7 +196,7 @@ ptp_unpack_DI (PTPParams *params, char* data, PTPDeviceInfo *di, unsigned int da
 #define PTP_oh				 0
 
 static inline void
-ptp_unpack_OH (PTPParams *params, char* data, PTPObjectHandles *oh, unsigned int len)
+ptp_unpack_OH (PTPParams *params, unsigned char* data, PTPObjectHandles *oh, unsigned int len)
 {
 	oh->n = ptp_unpack_uint32_t_array(params, data, PTP_oh, &oh->Handler);
 }
@@ -206,7 +206,7 @@ ptp_unpack_OH (PTPParams *params, char* data, PTPObjectHandles *oh, unsigned int
 #define PTP_sids			 0
 
 static inline void
-ptp_unpack_SIDs (PTPParams *params, char* data, PTPStorageIDs *sids, unsigned int len)
+ptp_unpack_SIDs (PTPParams *params, unsigned char* data, PTPStorageIDs *sids, unsigned int len)
 {
 	sids->n = ptp_unpack_uint32_t_array(params, data, PTP_sids,
 	&sids->Storage);
@@ -223,7 +223,7 @@ ptp_unpack_SIDs (PTPParams *params, char* data, PTPStorageIDs *sids, unsigned in
 #define PTP_si_StorageDescription	26
 
 static inline void
-ptp_unpack_SI (PTPParams *params, char* data, PTPStorageInfo *si, unsigned int len)
+ptp_unpack_SI (PTPParams *params, unsigned char* data, PTPStorageInfo *si, unsigned int len)
 {
 	uint8_t storagedescriptionlen;
 
@@ -260,9 +260,9 @@ ptp_unpack_SI (PTPParams *params, char* data, PTPStorageInfo *si, unsigned int l
 #define PTP_oi_Filename			53
 
 static inline uint32_t
-ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, char** oidataptr)
+ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, unsigned char** oidataptr)
 {
-	char* oidata;
+	unsigned char* oidata;
 	uint8_t filenamelen;
 	uint8_t capturedatelen=0;
 	/* let's allocate some memory first; XXX i'm sure it's wrong */
@@ -322,7 +322,7 @@ ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, char** oidataptr)
 }
 
 static inline void
-ptp_unpack_OI (PTPParams *params, char* data, PTPObjectInfo *oi, unsigned int len)
+ptp_unpack_OI (PTPParams *params, unsigned char* data, PTPObjectInfo *oi, unsigned int len)
 {
 	uint8_t filenamelen;
 	uint8_t capturedatelen;
@@ -494,7 +494,7 @@ ptp_unpack_DPV (
 #define PTP_dpd_FactoryDefaultValue	5
 
 static inline int
-ptp_unpack_DPD (PTPParams *params, char* data, PTPDevicePropDesc *dpd, unsigned int dpdlen)
+ptp_unpack_DPD (PTPParams *params, unsigned char* data, PTPDevicePropDesc *dpd, unsigned int dpdlen)
 {
 	int offset=0, ret;
 
@@ -564,9 +564,9 @@ outofmemory:
 }
 
 static inline uint32_t
-ptp_pack_DPV (PTPParams *params, PTPPropertyValue* value, char** dpvptr, uint16_t datatype)
+ptp_pack_DPV (PTPParams *params, PTPPropertyValue* value, unsigned char** dpvptr, uint16_t datatype)
 {
-	char* dpv=NULL;
+	unsigned char* dpv=NULL;
 	uint32_t size=0;
 	int	i;
 
@@ -672,7 +672,7 @@ ptp_pack_DPV (PTPParams *params, PTPPropertyValue* value, char** dpvptr, uint16_
 #define PTP_ec_Param3		20
 
 static inline void
-ptp_unpack_EC (PTPParams *params, char* data, PTPUSBEventContainer *ec, unsigned int len)
+ptp_unpack_EC (PTPParams *params, unsigned char* data, PTPUSBEventContainer *ec, unsigned int len)
 {
 	if (data==NULL)
 		return;
@@ -707,7 +707,7 @@ ptp_unpack_EC (PTPParams *params, char* data, PTPUSBEventContainer *ec, unsigned
 #define PTP_cfe_Filename		15
 
 static inline void
-ptp_unpack_Canon_FE (PTPParams *params, char* data, PTPCANONFolderEntry *fe)
+ptp_unpack_Canon_FE (PTPParams *params, unsigned char* data, PTPCANONFolderEntry *fe)
 {
 	int i;
 	if (data==NULL)

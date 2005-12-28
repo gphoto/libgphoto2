@@ -659,9 +659,9 @@ ptp_read_func (unsigned char *bytes, unsigned int size, void *data, unsigned int
 		toread =size - curread;
 		if (toread > 4096)
 			toread = 4096;
-		result = gp_port_read (camera->port, bytes + curread, toread);
+		result = gp_port_read (camera->port, (char*)(bytes + curread), toread);
 		if (result == 0) {
-			result = gp_port_read (camera->port, bytes + curread, toread);
+			result = gp_port_read (camera->port, (char*)(bytes + curread), toread);
 		}
 		if (result < 0)
 			break;
@@ -687,7 +687,7 @@ ptp_write_func (unsigned char *bytes, unsigned int size, void *data)
 	 * gp_port_write returns (in case of success) the number of bytes
 	 * write. libptp doesn't need that.
 	 */
-	result = gp_port_write (camera->port, bytes, size);
+	result = gp_port_write (camera->port, (char*)bytes, size);
 	if (result >= 0)
 		return (PTP_RC_OK);
 	else
@@ -708,8 +708,8 @@ ptp_check_int (unsigned char *bytes, unsigned int size, void *data, unsigned int
 	 * read.
 	 */
 
-	result = gp_port_check_int (camera->port, bytes, size);
-	if (result==0) result = gp_port_check_int (camera->port, bytes, size);
+	result = gp_port_check_int (camera->port, (char*)bytes, size);
+	if (result==0) result = gp_port_check_int (camera->port, (char*)bytes, size);
 	if (result >= 0) {
 		*rlen = result;
 		return (PTP_RC_OK);
@@ -729,8 +729,8 @@ ptp_check_int_fast (unsigned char *bytes, unsigned int size, void *data, unsigne
 	 * read. libptp doesn't need that.
 	 */
 
-	result = gp_port_check_int_fast (camera->port, bytes, size);
-	if (result==0) result = gp_port_check_int_fast (camera->port, bytes, size);
+	result = gp_port_check_int_fast (camera->port, (char*)bytes, size);
+	if (result==0) result = gp_port_check_int_fast (camera->port, (char*)bytes, size);
 	if (result >= 0) {
 		*rlen = result;
 		return (PTP_RC_OK);
@@ -1021,7 +1021,7 @@ camera_unprepare_capture (Camera *camera, GPContext *context)
 static int
 camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 {
-	char		*data;
+	unsigned char	*data;
 	uint32_t	size;
 	int ret;
 	PTPParams *params = &camera->pl->params;
@@ -1049,7 +1049,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			gp_context_error (context, _("Canon get viewfinder image failed: %d"), ret);
 			return GP_ERROR;
 		}
-		gp_file_set_data_and_size ( file, data, size );
+		gp_file_set_data_and_size ( file, (char*)data, size );
 		gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
 		/* Add an arbitrary file name so caller won't crash */
 		gp_file_set_name (file, "canon_preview.jpg");
@@ -1355,7 +1355,7 @@ canon_theme_get (CameraFilesystem *fs, const char *folder, const char *filename,
 	uint16_t	res;
 	Camera		*camera = (Camera*)data;
 	PTPParams	*params = &camera->pl->params;
-	char		*xdata;
+	unsigned char	*xdata;
 	unsigned int	size;
 	int i;
 	struct canon_theme_entry	*ent;
@@ -1376,7 +1376,7 @@ canon_theme_get (CameraFilesystem *fs, const char *folder, const char *filename,
 		fprintf(stderr,"entry %d: len = %d\n", i, ent[i].length);
 		fprintf(stderr,"entry %d: name = %s\n", i, ent[i].name);
 	}
-	CR (gp_file_set_data_and_size (file, xdata, size));
+	CR (gp_file_set_data_and_size (file, (char*)xdata, size));
 	return (GP_OK);
 }
 
@@ -1396,7 +1396,7 @@ nikon_curve_get (CameraFilesystem *fs, const char *folder, const char *filename,
 	uint16_t	res;
 	Camera		*camera = (Camera*)data;
 	PTPParams	*params = &camera->pl->params;
-	char		*xdata;
+	unsigned char	*xdata;
 	unsigned int	size;
 	int		n;
 	PTPNIKONCurveData	*tonecurve;
@@ -3527,7 +3527,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	case	GP_FILE_TYPE_EXIF: {
 		uint32_t offset;
 		uint32_t maxbytes;
-		char 	*ximage = NULL;
+		unsigned char 	*ximage = NULL;
 
 		/* Check if we have partial downloads. Otherwise we can just hope
 		 * upstream downloads the whole image to get EXIF data. */
@@ -3540,45 +3540,44 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		CPR (context, ptp_getpartialobject (params,
 			params->handles.Handler[object_id],
 			0, 10, &ximage));
-		image = (unsigned char*)ximage;
 
-		if (!((image[0] == 0xff) && (image[1] == 0xd8))) {	/* SOI */
+		if (!((ximage[0] == 0xff) && (ximage[1] == 0xd8))) {	/* SOI */
 			free (image);
 			return (GP_ERROR_NOT_SUPPORTED);
 		}
-		if (!((image[2] == 0xff) && (image[3] == 0xe1))) {	/* App0 */
+		if (!((ximage[2] == 0xff) && (ximage[3] == 0xe1))) {	/* App0 */
 			free (image);
 			return (GP_ERROR_NOT_SUPPORTED);
 		}
-		if (0 != memcmp(image+6, "Exif", 4)) {
-			free (image);
+		if (0 != memcmp(ximage+6, "Exif", 4)) {
+			free (ximage);
 			return (GP_ERROR_NOT_SUPPORTED);
 		}
 		offset = 2;
-		maxbytes = (image[4] << 8 ) + image[5];
-		free (image);
+		maxbytes = (ximage[4] << 8 ) + ximage[5];
+		free (ximage);
 		ximage = NULL;
 		CPR (context, ptp_getpartialobject (params,
 			params->handles.Handler[object_id],
 			offset, maxbytes, &ximage));
-		CR (gp_file_set_data_and_size (file, ximage, maxbytes));
+		CR (gp_file_set_data_and_size (file, (char*)ximage, maxbytes));
 		break;
 	}
 	case	GP_FILE_TYPE_PREVIEW: {
-		char *ximage = NULL;
+		unsigned char *ximage = NULL;
 
 		/* If thumb size is 0 then there is no thumbnail at all... */
 		if((size=oi->ThumbCompressedSize)==0) return (GP_ERROR_NOT_SUPPORTED);
 		CPR (context, ptp_getthumb(params,
 			params->handles.Handler[object_id],
 			&ximage));
-		CR (gp_file_set_data_and_size (file, ximage, size));
+		CR (gp_file_set_data_and_size (file, (char*)ximage, size));
 		/* XXX does gp_file_set_data_and_size free() image ptr upon
 		   failure?? */
 		break;
 	}
 	default: {
-		char *ximage = NULL;
+		unsigned char *ximage = NULL;
 
 		/* we do not allow downloading unknown type files as in most
 		cases they are special file (like firmware or control) which
@@ -3592,7 +3591,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		CPR (context, ptp_getobject(params,
 			params->handles.Handler[object_id],
 			&ximage));
-		CR (gp_file_set_data_and_size (file, ximage, size));
+		CR (gp_file_set_data_and_size (file, (char*)ximage, size));
 		/* XXX does gp_file_set_data_and_size free() image ptr upon
 		   failure?? */
 		break;
@@ -3614,7 +3613,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	uint32_t parent;
 	uint32_t storage;
 	uint32_t handle;
-	long int intsize;
+	unsigned long intsize;
 	uint32_t size;
 	PTPParams* params=&camera->pl->params;
 
@@ -3657,11 +3656,11 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	{
 		CPR (context, ptp_ek_sendfileobjectinfo (params, &storage,
 			&parent, &handle, &oi));
-		CPR (context, ptp_ek_sendfileobject (params, object, size));
+		CPR (context, ptp_ek_sendfileobject (params, (unsigned char*)object, size));
 	} else if (ptp_operation_issupported(params, PTP_OC_SendObjectInfo)) {
 		CPR (context, ptp_sendobjectinfo (params, &storage,
 			&parent, &handle, &oi));
-		CPR (context, ptp_sendobject (params, object, size));
+		CPR (context, ptp_sendobject (params, (unsigned char*)object, size));
 	} else {
 		GP_DEBUG ("The device does not support uploading files!");
 		return GP_ERROR_NOT_SUPPORTED;

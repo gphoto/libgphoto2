@@ -845,15 +845,20 @@ uint16_t ptp_getobjecthandles 	(PTPParams* params, uint32_t storage,
 				uint32_t associationOH,
 				PTPObjectHandles* objecthandles);
 
+uint16_t ptp_getnumobjects 	(PTPParams* params, uint32_t storage,
+				uint32_t objectformatcode,
+				uint32_t associationOH,
+				uint32_t* numobs);
+
 uint16_t ptp_getobjectinfo	(PTPParams *params, uint32_t handle,
 				PTPObjectInfo* objectinfo);
 
 uint16_t ptp_getobject		(PTPParams *params, uint32_t handle,
-				char** object);
+				unsigned char** object);
 uint16_t ptp_getpartialobject	(PTPParams* params, uint32_t handle, uint32_t offset,
-				uint32_t maxbytes, char** object);
+				uint32_t maxbytes, unsigned char** object);
 uint16_t ptp_getthumb		(PTPParams *params, uint32_t handle,
-				char** object);
+				unsigned char** object);
 
 uint16_t ptp_deleteobject	(PTPParams* params, uint32_t handle,
 				uint32_t ofc);
@@ -861,7 +866,7 @@ uint16_t ptp_deleteobject	(PTPParams* params, uint32_t handle,
 uint16_t ptp_sendobjectinfo	(PTPParams* params, uint32_t* store,
 				uint32_t* parenthandle, uint32_t* handle,
 				PTPObjectInfo* objectinfo);
-uint16_t ptp_sendobject		(PTPParams* params, char* object,
+uint16_t ptp_sendobject		(PTPParams* params, unsigned char* object,
 				uint32_t size);
 
 uint16_t ptp_initiatecapture	(PTPParams* params, uint32_t storageid,
@@ -878,7 +883,7 @@ uint16_t ptp_setdevicepropvalue (PTPParams* params, uint16_t propcode,
 uint16_t ptp_ek_sendfileobjectinfo (PTPParams* params, uint32_t* store,
 				uint32_t* parenthandle, uint32_t* handle,
 				PTPObjectInfo* objectinfo);
-uint16_t ptp_ek_sendfileobject	(PTPParams* params, char* object,
+uint16_t ptp_ek_sendfileobject	(PTPParams* params, unsigned char* object,
 				uint32_t size);
 				
 /* Canon PTP extensions */
@@ -900,9 +905,9 @@ uint16_t ptp_canon_focusunlock (PTPParams* params);
 uint16_t ptp_canon_initiatecaptureinmemory (PTPParams* params);
 uint16_t ptp_canon_getpartialobject (PTPParams* params, uint32_t handle, 
 				uint32_t offset, uint32_t size,
-				uint32_t pos, char** block, 
+				uint32_t pos, unsigned char** block, 
 				uint32_t* readnum);
-uint16_t ptp_canon_getviewfinderimage (PTPParams* params, char** image,
+uint16_t ptp_canon_getviewfinderimage (PTPParams* params, unsigned char** image,
 				uint32_t* size);
 uint16_t ptp_canon_getchanges (PTPParams* params, uint16_t** props,
 				uint32_t* propnum); 
@@ -912,14 +917,14 @@ uint16_t ptp_canon_getfolderentries (PTPParams* params, uint32_t store,
 				PTPCANONFolderEntry** entries,
 				uint32_t* entnum);
 uint16_t ptp_canon_theme_download (PTPParams* params, uint32_t themenr,
-				char **data, unsigned int *size);
+				unsigned char **data, unsigned int *size);
 
 uint16_t ptp_nikon_curve_download (PTPParams* params, 
-				char **data, unsigned int *size);
+				unsigned char **data, unsigned int *size);
 
 uint16_t ptp_nikon_setcontrolmode (PTPParams* params, uint32_t mode);
 uint16_t ptp_nikon_capture (PTPParams* params, uint32_t x);
-uint16_t ptp_nikon_check_event (PTPParams* params, char **data, unsigned int *size);
+uint16_t ptp_nikon_check_event (PTPParams* params, unsigned char **data, unsigned int *size);
 uint16_t ptp_nikon_check_readyness (PTPParams* params);
 /* Non PTP protocol functions */
 int ptp_operation_issupported	(PTPParams* params, uint16_t operation);
