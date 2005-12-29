@@ -20,9 +20,15 @@ have another 0x2770:0x905c camera and want it to work and it currently does
 not, then I will be very glad to hear from you. Saying this a different way:
 further progress with your camera will depend upon your input.
 
+(update 12/29/05) Several more cameras reported, including one which is the 
+same make/model as one which previously used an sq905 chip and used the sq905 
+Vendor:Product number. SQ Technologies seems to have discontinued the SQ905
+and this chip is apparently its successor. 
+
 WHAT CHIP IS ACTUALLY IN THESE CAMERAS? 
 
-I do not know. I did not take mine apart to look inside.
+I do not know. I did not take mine apart to look inside. 
+(update) Someone has reported to me that he did, and it is an SQ905C chip. 
 
 WHAT FEATURES DO THESE CAMERAS HAVE, AND WHAT DOES THIS DRIVER SUPPORT?
 
@@ -36,10 +42,8 @@ WHAT FEATURES DO THESE CAMERAS HAVE, AND WHAT DOES THIS DRIVER SUPPORT?
 -- Ability to download all pictures on camera				Y
 -- Ability to download the first k pictures, where 
 	k is less than the number on the camera 			Y
--- Ability to download individual photos				N
+-- Ability to download individual photos				Y (faked, but works)
 -- Internal battery, which recharges through the USB port		N/A
--- Small size								N/A
--- Will connect directly to USB port, like a flash drive		N/A
 
 -------------------------------------------------------------------------
 The following things can be done with button-pushes on the camera:
@@ -61,13 +65,14 @@ The following things can be done with button-pushes on the camera:
 
 Notes:  
 
-The only known camera supported by the camlibs/digigr8 have a 640x480 
+The only known cameras supported by the camlibs/digigr8 have a 640x480 
 high-resolution setting and a 320x240 low-resolution setting. If your
 0x2770:0x905c camera uses another resolution setting, then it might still 
 work. There is some similarity with the sq905 cameras, and I kept that part 
-of the code here. If it does not work, then the new resolution setting 
-needs to be listed in digigr8.c in digi_get_picture_width ().
-If you encounter new resolution settings, then please report them. 
+of the code here. Specifically, if the camera has 352x288 and 176x144 
+resolution settings, these might work but are not tested. If your camera does 
+not work due to unknown resolution settings, then the new resolution settings 
+need to be listed in digigr8.c in digi_get_picture_width (). Please report them. 
 
 The pictures obtained on the uncompressed settings can often be superior to
 those obtained using the software which came with the camera, but not
@@ -91,16 +96,18 @@ improved a bit, here, and gphoto2 -p will work.
 
 2.	The camera's data storage provides only sequential access, not
 random access. In other words, it acts as though it were a tape drive
-instead of a disk. The constraints which this places are obvious. It means 
-for example that "gphoto2 -p 2" will NOT download the second photo on the 
-camera.
+instead of a disk. Worse, it's like a tape drive with no fast forward and 
+no reverse controls. The constraints which this places are obvious. It means 
+for example that "gphoto2 -p 2" would NOT download the second photo on the 
+camera, unless the support for it is so written as to download the previous 
+photo and throw the data away. 
 
 3.	Considering the way the communication protocols of these cameras
 seem to work, it would seem nearly impossible to copy any data to the camera
 for storage and transport. The camera clearly does not have files on it,
 only data addresses. And the camera does not keep time. For similar 
 reasons, it would also seem impossible to delete a photo from the camera by
-action of software on the computer. The camera supports two choices for
+action of software on the computer. The camera itself supports two choices for
 deletion: delete the last photo taken, or delete all. Each action is
 performed by an appropriate sequence of button pushes on the camera.
 
@@ -163,3 +170,4 @@ WARRANTY?
 
 Theodore Kilgore
 12/05/05
+(revised 12/29/05)
