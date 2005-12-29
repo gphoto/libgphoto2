@@ -140,8 +140,11 @@ typedef struct _PTPUSBEventContainer PTPUSBEventContainer;
 #define PTP_OC_InitiateOpenCapture      0x101C
 
 /* Eastman Kodak extension Operation Codes */
+#define PTP_OC_EK_GetSerial		0x9003
+#define PTP_OC_EK_SetSerial		0x9004
 #define PTP_OC_EK_SendFileObjectInfo	0x9005
 #define PTP_OC_EK_SendFileObject	0x9006
+#define PTP_OC_EK_SetText		0x9008
 
 /* Canon extension Operation Codes */
 #define PTP_OC_CANON_GetObjectSize	0x9001
@@ -539,6 +542,12 @@ struct _PTPNIKONCurveData {
 
 typedef struct _PTPNIKONCurveData PTPNIKONCurveData;
 
+struct _PTPEKTextParams {
+	char	*title;
+	char	*line[5];
+};
+typedef struct _PTPEKTextParams PTPEKTextParams;
+
 /* DataType Codes */
 
 #define PTP_DTC_UNDEF		0x0000
@@ -896,14 +905,18 @@ uint16_t ptp_setdevicepropvalue (PTPParams* params, uint16_t propcode,
                         	PTPPropertyValue* value, uint16_t datatype);
 
 
+/* Eastman Kodak extensions */
+uint16_t ptp_ek_9009 (PTPParams* params, unsigned char **serial, unsigned int *size);
+uint16_t ptp_ek_getserial (PTPParams* params, unsigned char **serial, unsigned int *size);
+uint16_t ptp_ek_setserial (PTPParams* params, unsigned char *serial, uint32_t size);
+uint16_t ptp_ek_settext (PTPParams* params, PTPEKTextParams *text);
 uint16_t ptp_ek_sendfileobjectinfo (PTPParams* params, uint32_t* store,
 				uint32_t* parenthandle, uint32_t* handle,
 				PTPObjectInfo* objectinfo);
 uint16_t ptp_ek_sendfileobject	(PTPParams* params, unsigned char* object,
 				uint32_t size);
-				
-/* Canon PTP extensions */
 
+/* Canon PTP extensions */
 uint16_t ptp_canon_getobjectsize (PTPParams* params, uint32_t handle,
 				uint32_t p2, uint32_t* size, uint32_t* rp2);
 
@@ -937,7 +950,6 @@ uint16_t ptp_canon_theme_download (PTPParams* params, uint32_t themenr,
 
 uint16_t ptp_nikon_curve_download (PTPParams* params, 
 				unsigned char **data, unsigned int *size);
-
 uint16_t ptp_nikon_setcontrolmode (PTPParams* params, uint32_t mode);
 uint16_t ptp_nikon_capture (PTPParams* params, uint32_t x);
 uint16_t ptp_nikon_check_event (PTPParams* params, unsigned char **data, unsigned int *size);

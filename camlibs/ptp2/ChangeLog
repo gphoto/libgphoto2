@@ -19,6 +19,10 @@
 
 	* Cleaned up some names of Nikon defines values.
 
+	* ptp-pack.c, ptp.c, ptp.h: Added Eastman Kodak 
+	  setserial, getserial and settext commands.
+	  You can display "Hello World!" on the TFT ... ;)
+
 2005-12-28  Marcus Meissner  <marcus@jet.franken.de>
 
 	* Fixed signedness warnings by using "unsigned char*"

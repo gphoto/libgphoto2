@@ -944,6 +944,90 @@ ptp_ek_sendfileobjectinfo (PTPParams* params, uint32_t* store,
 }
 
 /**
+ * ptp_ek_getserial:
+ * params:	PTPParams*
+ *		char**	serial		- contains the serial number of the camera
+ *		uint32_t* size		- contains the string length
+ *		
+ * Gets the serial number from the device. (ptp serial)
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ */
+uint16_t
+ptp_ek_getserial (PTPParams* params, unsigned char **data, unsigned int *size)
+{
+	PTPContainer ptp;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code   = PTP_OC_EK_GetSerial;
+	ptp.Nparam = 0;
+	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size); 
+}
+
+/**
+ * ptp_ek_setserial:
+ * params:	PTPParams*
+ *		char*	serial		- contains the new serial number
+ *		uint32_t size		- string length
+ *		
+ * Sets the serial number of the device. (ptp serial)
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ */
+uint16_t
+ptp_ek_setserial (PTPParams* params, unsigned char *data, unsigned int size)
+{
+	PTPContainer ptp;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code   = PTP_OC_EK_SetSerial;
+	ptp.Nparam = 0;
+	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &data, NULL); 
+}
+
+/* unclear yet, but I guess it returns the info from 9008 */
+uint16_t
+ptp_ek_9009 (PTPParams* params, unsigned char **data, unsigned int *size)
+{
+	PTPContainer ptp;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code   = 0x9009;
+	ptp.Nparam = 0;
+	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size); 
+}
+
+/**
+ * ptp_ek_settext:
+ * params:	PTPParams*
+ *		PTPEKTextParams*	- contains the texts to display.
+ *		
+ * Displays the specified texts on the TFT of the camera.
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ */
+uint16_t
+ptp_ek_settext (PTPParams* params, PTPEKTextParams *text)
+{
+	PTPContainer ptp;
+	uint16_t ret;
+	unsigned int size;
+	unsigned char *data;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code   = PTP_OC_EK_SetText;
+	ptp.Nparam = 0;
+	if (0 == (size = ptp_pack_EK_text(params, text, &data)))
+		return PTP_ERROR_BADPARAM;
+	ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &data, NULL); 
+	free(data);
+	return ret;
+}
+
+/**
  * ptp_ek_sendfileobject:
  * params:	PTPParams*
  *		char*	object		- contains the object that is to be sent
