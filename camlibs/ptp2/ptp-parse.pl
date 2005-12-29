@@ -179,10 +179,10 @@ sub handle_char {
 			my $nr;
 			my $i;
 
-			$nr = get_uint32(\@bytes);
+			$nr = get_uint32(\@curdata);
 			printf "GetStorageIds(1004) [%x]=", $nr;
 			for ($i = 0; $i < $nr; $i++) {
-				printf("0x%08x",get_uint32(\@bytes));
+				printf("0x%08x",get_uint32(\@curdata));
 				if ($i != $nr-1) {
 					print ",";
 				}
@@ -302,11 +302,11 @@ sub handle_char {
 			print "CANON GetChanges(9020)\n";
 		} elsif ($type == 3) {
 			print "CANON GetChanges(9020) ";
-			my $len = get_uint32(\@bytes);
+			my $len = get_uint32(\@curdata);
 			my $i;
 			print " codes[$len] = {";
 			for ($i = 0; $i < $len ; $i++) {
-				my $code = get_uint16(\@bytes);
+				my $code = get_uint16(\@curdata);
 				printf("%04x,",$code);
 			}
 			print "}\n";
@@ -344,6 +344,8 @@ sub handle_char {
 		}
 		print "\n";
 		return;
+	} elsif ($code == 0x400d) {
+		print "CaptureComplete(400d)";
 	} else {
 		printf "%04x ", $code;
 	}
