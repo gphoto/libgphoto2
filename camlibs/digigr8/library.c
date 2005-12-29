@@ -56,12 +56,19 @@ struct {
    	unsigned short idVendor;
    	unsigned short idProduct;
 } models[] = {
+<<<<<<< library.c
+        {"Digigr8",     	GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
+        {"Che-Ez Snap SNAP-U",  GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
+        {"DC-N130t",            GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905C},	
+        {"Soundstar TDC-35",    GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
+=======
         	{"Digigr8",     GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
         	{"Che-Ez Snap SNAP-U",     GP_DRIVER_STATUS_EXPERIMENTAL, 
 								0x2770, 0x905c},
         	{"Soundstar TDC-35",     GP_DRIVER_STATUS_EXPERIMENTAL, 
 								0x2770, 0x905c},
 
+>>>>>>> 1.2
 	{NULL,0,0,0}
 };
 
