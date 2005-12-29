@@ -1457,6 +1457,23 @@ ptp_nikon_curve_download (PTPParams* params, unsigned char **data, unsigned int 
 	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size); 
 }
 
+uint16_t
+ptp_nikon_getfileinfoinblock ( PTPParams* params,
+	uint32_t p1, uint32_t p2, uint32_t p3,
+	unsigned char **data, unsigned int *size
+) {
+	PTPContainer ptp;
+	*data = NULL;
+	*size = 0;
+	PTP_CNT_INIT(ptp);
+	ptp.Code	= PTP_OC_NIKON_GetFileInfoInBlock;
+	ptp.Nparam	= 3;
+	ptp.Param1	= p1;
+	ptp.Param2	= p2;
+	ptp.Param3	= p3;
+	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size); 
+}
+
 /**
  * ptp_nikon_setcontrolmode:
  *
@@ -1515,12 +1532,12 @@ ptp_nikon_check_event (PTPParams* params, unsigned char **data, unsigned int *si
 }
 
 uint16_t
-ptp_nikon_check_readyness (PTPParams* params)
+ptp_nikon_device_ready (PTPParams* params)
 {
         PTPContainer ptp;
         
         PTP_CNT_INIT(ptp);
-        ptp.Code=PTP_OC_NIKON_CheckReadyness;
+        ptp.Code=PTP_OC_NIKON_DeviceReady;
         ptp.Nparam=0;
         return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
 }

@@ -1,3 +1,24 @@
+2005-12-29  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptp.c, ptp.h, library.c:
+	  Added "fast filesystem" startup mode for newer
+	  Nikon cameras.
+
+	  For cards with large number of images this patch
+	  reduces the time from > 10 seconds down to 1.5 seconds.
+
+	  It however only allows recreation of a limited view
+	  of the /DCIM tree.
+
+	  To switch between old (more correct) and new (faster)
+	  model, use the "Camera Settings" -> "Fast Filesystem" 
+	  config.
+
+	* library.c: Kodak C330 has no 0x0 parentobject entry in
+	  non-card mode, so mark it as "autodetect parent".
+
+	* Cleaned up some names of Nikon defines values.
+
 2005-12-28  Marcus Meissner  <marcus@jet.franken.de>
 
 	* Fixed signedness warnings by using "unsigned char*"

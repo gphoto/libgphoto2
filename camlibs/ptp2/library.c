@@ -28,6 +28,7 @@
 
 #include <gphoto2-library.h>
 #include <gphoto2-port-log.h>
+#include <gphoto2-setting.h>
 
 #define EXPERIMENTAL_CANON_CAPTURE 0
 
@@ -297,7 +298,7 @@ static struct {
 	/* Giulio Salani <ilfunambolo@gmail.com> */
 	{"Kodak:C310",   0x040a, 0x058a, 0},
 	/* Brandon Sharitt */
-	{"Kodak:C330",   0x040a, 0x058c, 0},
+	{"Kodak:C330",   0x040a, 0x058c, PTPBUG_DCIM_WRONG_PARENT},
 	/* c340 Maurizio Daniele <hayabusa@portalis.it> */
 	{"Kodak:C340",   0x040a, 0x058d, 0},
 	{"Kodak:V530",   0x040a, 0x058e, 0},
@@ -3001,6 +3002,8 @@ _get_STR_as_time(Camera* camera, CameraWidget **widget, struct submenu *menu, PT
 	memset(&tm,0,sizeof(tm));
 	gp_widget_new (GP_WIDGET_DATE, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
+	if (!dpd->CurrentValue.str)
+		return (GP_ERROR);
 	strncpy(capture_date,dpd->CurrentValue.str,sizeof(capture_date));
 	strncpy (tmp, capture_date, 4);
 	tmp[4] = 0;
@@ -3106,6 +3109,33 @@ _put_Nikon_BeepMode(Camera* camera, CameraWidget *widget, PTPPropertyValue *prop
 	return GP_OK;
 }
 
+static int
+_get_Nikon_FastFS(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+	int val;
+	char buf[1024];
+
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	val = 1; /* default is fast fs */
+	if (GP_OK == gp_setting_get("ptp2","nikon.fastfilesystem", buf))
+		val = atoi(buf);
+	gp_widget_set_value  (*widget, &val);
+	return (GP_OK);
+}
+
+static int
+_put_Nikon_FastFS(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+	int val, ret;
+	char buf[20];
+
+	ret = gp_widget_get_value (widget, &val);
+	if (ret != GP_OK)
+		return ret;
+	sprintf(buf,"%d",val);
+	gp_setting_set("ptp2","nikon.fastfilesystem",buf);
+	return GP_OK;
+}
+
 static struct submenu camera_settings_menu[] = {
 	{ N_("Camera Owner"), "owner", PTP_DPC_CANON_CameraOwner, PTP_VENDOR_CANON, PTP_DTC_AUINT8, _get_AUINT8_as_CHAR_ARRAY, _put_AUINT8_as_CHAR_ARRAY },
 	{ N_("Camera Model"), "model", PTP_DPC_CANON_CameraModel, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_None },
@@ -3116,6 +3146,7 @@ static struct submenu camera_settings_menu[] = {
         { N_("Image Comment"), "imgcomment", PTP_DPC_NIKON_ImageCommentString, PTP_VENDOR_NIKON, PTP_DTC_STR, _get_STR, _put_STR },
 
 /* virtual */
+	{ N_("Fast Filesystem"), "fastfs", 0, PTP_VENDOR_NIKON, 0, _get_Nikon_FastFS, _put_Nikon_FastFS },
 	{ N_("Capture"), "capture", 0, PTP_VENDOR_CANON, 0, _get_Canon_CaptureMode, _put_Canon_CaptureMode},
 	{ NULL },
 };
@@ -3755,7 +3786,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	uint32_t storage;
 
 	((PTPData *) camera->pl->params.data)->context = context;
-	
+
 	if (!strcmp (folder, "/special"))
 		return (GP_ERROR_BAD_PARAMETERS); /* for now */
 
@@ -3785,22 +3816,36 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	/* if object is an image */
 	if ((oi->ObjectFormat & 0x0800) != 0) {
-		info->preview.fields = GP_FILE_INFO_SIZE|GP_FILE_INFO_WIDTH
-				|GP_FILE_INFO_HEIGHT|GP_FILE_INFO_TYPE;
+		info->preview.fields = 0;
 		strcpy_mime(info->preview.type, oi->ThumbFormat);
-		info->preview.size   = oi->ThumbCompressedSize;
-		info->preview.width  = oi->ThumbPixWidth;
-		info->preview.height = oi->ThumbPixHeight;
+		if (strlen(info->preview.type)) {
+			info->preview.fields |= GP_FILE_INFO_TYPE;
+		}
+		if (oi->ThumbCompressedSize) {
+			info->preview.size   = oi->ThumbCompressedSize;
+			info->preview.fields |= GP_FILE_INFO_SIZE;
+		}
+		if (oi->ThumbPixWidth) {
+			info->preview.width  = oi->ThumbPixWidth;
+			info->preview.fields |= GP_FILE_INFO_WIDTH;
+		}
+		if (oi->ThumbPixHeight) {
+			info->preview.height  = oi->ThumbPixHeight;
+			info->preview.fields |= GP_FILE_INFO_HEIGHT;
+		}
 
-		info->file.fields = info->file.fields |
-				GP_FILE_INFO_WIDTH  |
-				GP_FILE_INFO_HEIGHT;
+		info->file.fields = info->file.fields;
 
-		info->file.width  = oi->ImagePixWidth;
-		info->file.height = oi->ImagePixHeight;
-	}
-
-		return (GP_OK);
+		if (oi->ImagePixWidth) {
+			info->file.width  = oi->ImagePixWidth;
+			info->file.fields |= GP_FILE_INFO_WIDTH;
+		}
+		if (oi->ImagePixHeight) {
+			info->file.height  = oi->ImagePixHeight;
+			info->file.fields |= GP_FILE_INFO_HEIGHT;
+		}
+	}	
+	return (GP_OK);
 }
 
 static int
@@ -3861,13 +3906,158 @@ init_ptp_fs (Camera *camera, GPContext *context)
 {
 	int i,id,nroot;
 	PTPParams *params = &camera->pl->params;
+	char buf[1024];
 
 	((PTPData *) params->data)->context = context;
+	memset (&params->handles, 0, sizeof(PTPObjectHandles));
 
+	/* Nikon supports a fast filesystem retrieval.
+	 * Unfortunately this function returns a flat folder structure
+	 * which cannot be changed to represent the actual FAT layout.
+	 * So if you need to get access to _all_ files on the ptp fs, 
+	 * you can change the setting to "false" (gphoto2 --config or
+	 * edit ~/.gphoto2/settings directly).
+	 * A normal user does only download the images ... so the default
+	 * is "fast".
+	 */
+
+	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
+	    (ptp_operation_issupported(params, PTP_OC_NIKON_GetFileInfoInBlock)) &&
+	    ((GP_OK != gp_setting_get("ptp2","nikon.fastfilesystem",buf)) || atoi(buf))
+        )
+	{
+		unsigned char	*data,*curptr;
+		unsigned int	size;
+		int		i,guessedcnt,curhandle;
+		uint32_t	generatedoid = 0x42420000;
+		uint32_t	rootoid = generatedoid++;
+		int		roothandle = -1;
+		uint16_t	res;
+		PTPStorageIDs	ids;
+
+		/* To get the correct storage id for all the objects */
+		res = ptp_getstorageids (params, &ids);
+		if (res != PTP_RC_OK) goto fallback;
+		if (ids.n != 1) { /* can't cope with this currently */
+			gp_log (GP_LOG_DEBUG, "ptp", "more than 1 storage id present");
+			free(ids.Storage);
+			goto fallback;
+		}
+		res = ptp_nikon_getfileinfoinblock(params, 1, 0xffffffff, 0xffffffff, &data, &size);
+		if (res != PTP_RC_OK) {
+			gp_log (GP_LOG_DEBUG, "ptp", "getfileinfoblock failed");
+			free(ids.Storage);
+			goto fallback;
+		}
+		curptr = data;
+		if (*curptr != 0x01) { /* version of data format */
+			gp_log (GP_LOG_DEBUG, "ptp", "version is 0x%02x, expected 0x01", *curptr);
+			free(ids.Storage);
+			free(data);
+			goto fallback;
+		}
+		guessedcnt = size/8; /* wild guess ... 4 byte type, at least 2 chars name, 2 more bytes */
+		params->handles.Handler = malloc(sizeof(params->handles.Handler[0])*guessedcnt);
+		memset(params->handles.Handler,0,sizeof(params->handles.Handler[0])*guessedcnt);
+		params->objectinfo = (PTPObjectInfo*)malloc(sizeof(PTPObjectInfo)*guessedcnt);
+		memset(params->objectinfo,0,sizeof(PTPObjectInfo)*guessedcnt);
+		curhandle=0;
+		curptr++;
+
+		/* This ptp command does not get a ready made directory structure, it
+		 * gets a list of folders (flat) and its image related file contents.
+		 * It does not get AUTPRNT.MRK for instance...
+		 * It is however very fast since it is just one ptp command roundtrip.
+		 */
+		while (curptr-data < size) { /* loops over folders */
+			int numents, namelen, dirhandle;
+			uint32_t	diroid = generatedoid++;
+
+			namelen = curptr[0]+(curptr[1]<<8)+(curptr[2]<<16)+(curptr[3]<<24);
+			curptr+=4;
+			if (!strcmp((char*)curptr,"DCIM")) {
+				/* to generated the /DCIM/NNNABCDEF/ structure, handle /DCIM/ 
+				 * differently */
+				diroid = rootoid;
+				roothandle = curhandle;
+				params->handles.Handler[curhandle] = rootoid;
+				params->objectinfo[curhandle].ParentObject = 0;
+			} else {
+				if (roothandle == -1) { /* We must synthesize /DCIM... */
+					roothandle = curhandle;
+					params->handles.Handler[curhandle] = rootoid;
+					params->objectinfo[curhandle].ParentObject = 0;
+					params->objectinfo[curhandle].StorageID = ids.Storage[0];
+					params->objectinfo[curhandle].Filename = strdup("DCIM");
+					params->objectinfo[curhandle].ObjectFormat = PTP_OFC_Association;
+					params->objectinfo[curhandle].AssociationType = PTP_AT_GenericFolder;
+					curhandle++;
+				}
+				params->handles.Handler[curhandle] = diroid;
+				params->objectinfo[curhandle].ParentObject = rootoid;
+			}
+			params->objectinfo[curhandle].ObjectFormat = PTP_OFC_Association;
+			params->objectinfo[curhandle].AssociationType = PTP_AT_GenericFolder;
+			params->objectinfo[curhandle].StorageID = ids.Storage[0];
+			params->objectinfo[curhandle].Filename = strdup((char*)curptr);
+
+			while (*curptr) curptr++; curptr++;
+			numents = curptr[0]+(curptr[1]<<8); curptr+=2;
+			dirhandle = curhandle;
+			curhandle++;
+			for (i=0;i<numents;i++) {
+				uint32_t oid, size, xtime;
+
+				oid = curptr[0]+(curptr[1]<<8)+(curptr[2]<<16)+(curptr[3]<<24);
+				curptr += 4;
+				namelen = curptr[0]+(curptr[1]<<8)+(curptr[2]<<16)+(curptr[3]<<24);
+				curptr += 4;
+				params->handles.Handler[curhandle] = oid;
+				params->objectinfo[curhandle].StorageID = ids.Storage[0];
+				params->objectinfo[curhandle].Filename = strdup((char*)curptr);
+				params->objectinfo[curhandle].ObjectFormat = PTP_OFC_Undefined;
+				if (NULL!=strstr((char*)curptr,".JPG"))
+					params->objectinfo[curhandle].ObjectFormat = PTP_OFC_EXIF_JPEG;
+				if (NULL!=strstr((char*)curptr,".MOV"))
+					params->objectinfo[curhandle].ObjectFormat = PTP_OFC_QT;
+				if (NULL!=strstr((char*)curptr,".AVI"))
+					params->objectinfo[curhandle].ObjectFormat = PTP_OFC_AVI;
+				if (NULL!=strstr((char*)curptr,".WAV"))
+					params->objectinfo[curhandle].ObjectFormat = PTP_OFC_WAV;
+				while (*curptr) curptr++; curptr++;
+				size = curptr[0]+(curptr[1]<<8)+(curptr[2]<<16)+(curptr[3]<<24);
+				params->objectinfo[curhandle].ObjectCompressedSize = size;
+				curptr += 4;
+				xtime = curptr[0]+(curptr[1]<<8)+(curptr[2]<<16)+(curptr[3]<<24);
+				if (xtime > 0x12cea600) /* Unknown files are 1.1.1980 */
+					params->objectinfo[curhandle].CaptureDate = xtime;
+				curptr += 4;
+				/* Hack ... to find our directory oid, we just getobjectinfo
+				 * the first file object.
+				 */
+				if (0 && !i) {
+					ptp_getobjectinfo(params, oid, &params->objectinfo[curhandle]);
+					diroid = params->objectinfo[curhandle].ParentObject;
+					params->handles.Handler[dirhandle] = diroid;
+					if ((params->objectinfo[dirhandle].ParentObject & 0xffff0000) == 0x42420000) {
+						if (roothandle >= 0) {
+							ptp_getobjectinfo(params, diroid, &params->objectinfo[dirhandle]);
+							rootoid = params->objectinfo[dirhandle].ParentObject;
+							params->handles.Handler[roothandle] = rootoid;
+						}
+					}
+				}
+				params->objectinfo[curhandle].ParentObject = diroid;
+				curhandle++;
+			}
+		}
+		params->handles.n = curhandle;
+		return PTP_RC_OK;
+	}
+
+fallback:
 	/* Get file handles array for filesystem */
 	id = gp_context_progress_start (context, 100, _("Initializing Camera"));
-	/* be paranoid!!! */
-	memset (&params->handles, 0, sizeof(PTPObjectHandles));
 	/* get objecthandles of all objects from all stores */
 	CPR (context, ptp_getobjecthandles
 	(params, 0xffffffff, 0x000000, 0x000000, &params->handles));

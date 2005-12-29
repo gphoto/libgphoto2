@@ -185,12 +185,19 @@ typedef struct _PTPUSBEventContainer PTPUSBEventContainer;
 #define PTP_OC_CANON_GetFolderEntries	0x9021
 
 /* Nikon extension Operation Codes */
+#define PTP_OC_NIKON_GetProfileAllData	0x9006
+#define PTP_OC_NIKON_SendProfileData	0x9007
+#define PTP_OC_NIKON_DeleteProfile	0x9008
+#define PTP_OC_NIKON_SetProfileData	0x9009
+#define PTP_OC_NIKON_AdvancedTransfer	0x9010
+#define PTP_OC_NIKON_GetFileInfoInBlock	0x9011
 #define PTP_OC_NIKON_Capture		0x90C0
 #define PTP_OC_NIKON_SetControlMode	0x90C2
 #define PTP_OC_NIKON_CurveDownload	0x90C5
 #define PTP_OC_NIKON_CurveUpload	0x90C6
 #define PTP_OC_NIKON_CheckEvent		0x90C7
-#define PTP_OC_NIKON_CheckReadyness	0x90C8
+#define PTP_OC_NIKON_DeviceReady	0x90C8
+#define PTP_OC_NIKON_GetDevicePTPIPInfo	0x90E0
 
 /* Proprietary vendor extension operations mask */
 #define PTP_OC_EXTENSION_MASK           0xF000
@@ -236,6 +243,9 @@ typedef struct _PTPUSBEventContainer PTPUSBEventContainer;
 #define PTP_RC_EK_FilenameConflicts	0xA002
 #define PTP_RC_EK_FilenameInvalid	0xA003
 
+/* Nikon specific response codes */
+#define PTP_RC_NIKON_AdvancedTransferCancel 0xA022
+
 /* libptp2 extended ERROR codes */
 #define PTP_ERROR_IO			0x02FF
 #define PTP_ERROR_DATA_EXPECTED		0x02FE
@@ -259,10 +269,16 @@ typedef struct _PTPUSBEventContainer PTPUSBEventContainer;
 #define PTP_EC_StorageInfoChanged	0x400C
 #define PTP_EC_CaptureComplete		0x400D
 #define PTP_EC_UnreportedStatus		0x400E
+
 /* Canon extension Event Codes */
 #define PTP_EC_CANON_ObjectInfoChanged		0xC008
 #define PTP_EC_CANON_RequestObjectTransfer	0xC009
 #define PTP_EC_CANON_CameraModeChanged		0xC00C
+
+/* Nikon extension Event Codes */
+#define PTP_EC_Nikon_ObjectAddedInSDRAM		0xC101
+/* Gets 1 parameter, objectid pointing to DPOF object */
+#define PTP_EC_Nikon_AdvancedTransfer		0xC103
 
 /* PTP device info structure (returned by GetDevInfo) */
 
@@ -479,7 +495,7 @@ typedef struct _PTPDevicePropDesc PTPDevicePropDesc;
 /* Canon filesystem's folder entry Dataset */
 
 #define PTP_CANON_FilenameBufferLen	13
-#define PTP_CANON_FolderEntryLen	sizeof(PTPCANONFolderEntry)
+#define PTP_CANON_FolderEntryLen	28
 
 struct _PTPCANONFolderEntry {
 	uint32_t	ObjectHandle;
@@ -487,7 +503,7 @@ struct _PTPCANONFolderEntry {
 	uint8_t		Flags;
 	uint32_t	ObjectSize;
 	time_t		Time;
-    char     Filename[PTP_CANON_FilenameBufferLen];
+	char		Filename[PTP_CANON_FilenameBufferLen];
 };
 typedef struct _PTPCANONFolderEntry PTPCANONFolderEntry;
 
@@ -925,7 +941,9 @@ uint16_t ptp_nikon_curve_download (PTPParams* params,
 uint16_t ptp_nikon_setcontrolmode (PTPParams* params, uint32_t mode);
 uint16_t ptp_nikon_capture (PTPParams* params, uint32_t x);
 uint16_t ptp_nikon_check_event (PTPParams* params, unsigned char **data, unsigned int *size);
-uint16_t ptp_nikon_check_readyness (PTPParams* params);
+uint16_t ptp_nikon_getfileinfoinblock (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3,
+					unsigned char **data, unsigned int *size);
+uint16_t ptp_nikon_device_ready (PTPParams* params);
 /* Non PTP protocol functions */
 int ptp_operation_issupported	(PTPParams* params, uint16_t operation);
 int ptp_event_issupported	(PTPParams* params, uint16_t event);
