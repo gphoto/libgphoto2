@@ -1,4 +1,11 @@
-2005-22-06   Theodore Kilgore <kilgota@auburn.edu>
+2005-2-05   Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Added DC-N130t, reported by 
+		Thierry Leconte <f4dwv@users.sourceforge.net>
+	* README: Some updates. 	
+		
+
+2005-22-05   Theodore Kilgore <kilgota@auburn.edu>
 
 	* library.c: Added two cameras.
 		Soundstar TDC-35 reported by Patrice Mandin
@@ -6,6 +13,6 @@
 		Che-Ez Snap SNAP-U reported by  Lou
 		<lou@fixit.nospammail.net>
 
-2005-12-06   Theodore Kilgore <kilgota@auburn.edu>
+2005-12-05   Theodore Kilgore <kilgota@auburn.edu>
 
 	First check-in.
