@@ -128,8 +128,10 @@ if test "x${[$1][_LIBS]}" = "x" && test "x${[$1][_CFLAGS]}" = "x"; then
 	AC_MSG_RESULT([${try_][$1][}])
 	m4_popdef([gp_lib_arg])dnl
 	if test "x${[try_][$1]}" = "xautodetect"; then
+		dnl
 		dnl OK, we have to autodetect.
 		dnl We start autodetection with the cleanest known method: pkg-config
+		dnl
 		if test "x${[have_][$1]}" = "xno"; then
 			dnl we need that line break after the PKG_CHECK_MODULES
 			m4_ifval([$3],
@@ -137,8 +139,11 @@ if test "x${[$1][_LIBS]}" = "x" && test "x${[$1][_CFLAGS]}" = "x"; then
 				[PKG_CHECK_MODULES([$1],[$2],     [have_][$1][=yes],[:])]
 			)
 		fi
+		m4_ifval([$3],[# Version requirement given, so relying on pkgconfig results.],[
+		dnl
 		dnl If pkg-config didn't find anything, try the libfoo-config program
 		dnl certain known libraries ship with.
+		dnl
 		if test "x${[have_][$1]}" = "xno"; then
 			AC_MSG_WARN([The `$2' library could not be found using pkg-config.
 No version checks will be performed if it is found using any other method.])
@@ -164,8 +169,10 @@ No version checks will be performed if it is found using any other method.])
 			fi
 			m4_popdef([gp_lib_config])dnl
 		fi
+		dnl
 		dnl Neither pkg-config, nor the libfoo-config program have found anything.
 		dnl So let's just probe the system.
+		dnl
 		if test "x${[have_][$1]}" = "xno"; then
 			ifs="$IFS"
 			IFS=":" # FIXME: for W32 and OS/2 we may need ";" here
@@ -199,6 +206,7 @@ No version checks will be performed if it is found using any other method.])
 				have_[$1]=yes
 			fi
 		fi
+		])
 	elif test "x${[try_][$1]}" = "xno"; then
 		:
 	else
