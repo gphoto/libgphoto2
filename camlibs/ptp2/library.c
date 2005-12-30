@@ -3569,7 +3569,12 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		/* Device may hang is a partial read is attempted beyond the file */
 		if (oi->ObjectCompressedSize < 10)
 			return (GP_ERROR_NOT_SUPPORTED);
-		/* could also use Canon partial downloads */
+
+		/* We only support JPEG / EXIF format ... others might hang. */
+		if (oi->ObjectFormat != PTP_OFC_EXIF_JPEG)
+			return (GP_ERROR_NOT_SUPPORTED);
+
+		/* Note: Could also use Canon partial downloads */
 		CPR (context, ptp_getpartialobject (params,
 			params->handles.Handler[object_id],
 			0, 10, &ximage));

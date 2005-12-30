@@ -1,3 +1,8 @@
+2005-12-30  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* library.c: Only allow getpartialobject for EXIF
+	  JPEG images.
+
 2005-12-29  Marcus Meissner  <marcus@jet.franken.de>
 
 	* ptp.c, ptp.h, library.c:
