@@ -140,9 +140,10 @@ sub handle_char {
 	}
 
 	if ($type == 3) {
-		if ($code == 0x2001) {
-			print "OK(2001) ";
-		}
+		if ($code == 0x2001) { print "OK(2001) "; }
+		elsif ($code == 0x2002) { print "GeneralError(2002) "; }
+		elsif ($code == 0x2019) { print "DeviceBusy(2019) "; }
+		else { printf "Unknown(%04x) ",$code; }
 		$code = $lastcode;
 	}
 
