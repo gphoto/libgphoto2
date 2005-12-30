@@ -128,5 +128,6 @@ else
 fi
 AC_SUBST([HTML_APIDOC_DIR], ["${PACKAGE_TARNAME}-api.html"])
 AC_SUBST([DOXYGEN_OUTPUT_DIR], [doxygen-output])
+AC_SUBST([HTML_APIDOC_INTERNALS_DIR], ["${PACKAGE_TARNAME}-internals.html"])
 ])dnl
 
