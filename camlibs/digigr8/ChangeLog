@@ -1,4 +1,9 @@
-2005-2-05   Theodore Kilgore <kilgota@auburn.edu>
+2005-29-05   Theodore Kilgore <kilgota@auburn.edu>
+
+	* digigr8.c: GP_MODULE "didigr8" -> GP_MODULE "digigr8"
+
+
+2005-29-05   Theodore Kilgore <kilgota@auburn.edu>
 
 	* library.c: Added DC-N130t, reported by 
 		Thierry Leconte <f4dwv@users.sourceforge.net>

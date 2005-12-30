@@ -31,7 +31,7 @@
 #include <gphoto2-port.h>
 #include "digigr8.h"
 
-#define GP_MODULE "didigr8" 
+#define GP_MODULE "digigr8" 
 
 #define SQWRITE gp_port_usb_msg_write
 #define SQREAD  gp_port_usb_msg_read
