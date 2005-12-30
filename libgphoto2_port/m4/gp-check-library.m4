@@ -283,7 +283,7 @@ PKG_CONFIG_PATH=${PKG_CONFIG_PATH}
 [$1][_LIBS]=${[$1][_LIBS]}
 [$1][_CFLAGS]=${[$1][_CFLAGS]}
 
-* Fatal: ${PACKAGE_NAME} requires $2 to build.
+* Fatal: ${PACKAGE_NAME} requires $2 $3 to build.
 * 
 * Possible solutions:
 *   - set PKG_CONFIG_PATH to adequate value
@@ -306,7 +306,7 @@ PKG_CONFIG_PATH=${PKG_CONFIG_PATH}
 [$1][_LIBS]=${[$1][_LIBS]}
 [$1][_CFLAGS]=${[$1][_CFLAGS]}
 
-* Fatal: ${PACKAGE_NAME} by default requires $2 to build.
+* Fatal: ${PACKAGE_NAME} by default requires $2 $3 to build.
 *        You must explicitly disable $2 to build ${PACKAGE_TARNAME} without it.
 * 
 * Possible solutions:
