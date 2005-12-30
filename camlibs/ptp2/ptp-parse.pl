@@ -2,16 +2,16 @@
 # Copyright Marcus Meissner 2005.
 # Licensed under GPL v2. NO WARRANTY.
 # 
-# This is unfinished ... It does not correctly read the data.
+# This is mostly unfinished ...
 
 use strict;
 use XML::Parser;
 
 my $xmlfile = shift @ARGV || die "specify xml file on cmdline:$!\n";
 my $p1 = new XML::Parser(
-         Handlers => {	Start => \&handle_start,
-			End   => \&handle_end,
-			Char  => \&handle_char}
+         Handlers => {	Start => \&xml_handle_start,
+			End   => \&xml_handle_end,
+			Char  => \&xml_handle_char}
 );
 $p1->parsefile($xmlfile);
 
@@ -24,20 +24,6 @@ my $curep = -1;
 my %urbenc = ();
 my @curdata = ();
 my $lastcode = 0;
-
-sub handle_start {
-	my ($expat, $element, $attr, $val) = @_;
-	if (($element eq "urb") && ($attr eq "sequence")) {
-		$curseq = $val;
-		$urbenc{$val} = $urbenc{$val} + 1;
-	}
-	push @elemstack, $element;
-}
-
-sub handle_end {
-	my ($expat, $element) = @_;
-	pop @elemstack;
-}
 
 sub get_uint32 {
 	my($arrref) = @_;
@@ -77,9 +63,8 @@ sub get_str {
 
 my $lastfunction;
 
-sub handle_char {
+sub xml_handle_char {
 	my ($expat, $str) = @_;
-	my $dummy;
 	my @bytes;
 
 	if ($elemstack[$#elemstack] eq "function") {
@@ -138,6 +123,35 @@ sub handle_char {
 		push @curdata, @bytes;
 		return;
 	}
+	dump_ptp_line($type,$code,\@bytes,\@curdata);
+}
+
+sub xml_handle_start {
+	my ($expat, $element, $attr, $val) = @_;
+	if (($element eq "urb") && ($attr eq "sequence")) {
+		$curseq = $val;
+		$urbenc{$val} = $urbenc{$val} + 1;
+	}
+	push @elemstack, $element;
+}
+
+sub xml_handle_end {
+	my ($expat, $element) = @_;
+	pop @elemstack;
+}
+
+
+# Evaluate and print out debug commands
+# type == 1 	during send ... print parameters sent to camera
+# type == 3	after response ... print data returned
+#		@bytes - bulk container in response (no data)
+#		@curdata - bulk data if command had seperate datastream
+sub
+dump_ptp_line() {
+	my($type,$code,$bytesref,$curdataref) = @_;
+	my @bytes = @{$bytesref};
+	my @curdata = @{$curdataref};
+	my $dummy;
 
 	if ($type == 3) {
 		if ($code == 0x2001) { print "OK(2001) "; }
@@ -148,11 +162,6 @@ sub handle_char {
 	}
 
 
-	# evaluate commands
-	# type == 1 	during send ... print parameters sent to camera
-	# type == 3	after response ... print data returned
-	#		@bytes - bulk container in response (no data)
-	#		@curdata - bulk data if command had seperate datastream
 
 	if ($code == 0x1001) {
 		if ($type == 1) {
