@@ -499,7 +499,15 @@ static struct {
 	{"Canon:PowerShot A510 (PTP mode)",     0x04a9, 0x30c2, 0},
 	{"Canon:EOS 1D Mark II (PTP mode)",     0x04a9, 0x30ea, PTPBUG_DCIM_WRONG_PARENT},
  	{"Canon:EOS 20D (PTP mode)",            0x04a9, 0x30ec, PTPBUG_DCIM_WRONG_PARENT},
-	{"Canon:EOS 350D (PTP mode)",           0x04a9, 0x30ef, PTPBUG_DCIM_WRONG_PARENT},
+
+	/* 30ef is the ID in explicit PTP mode.
+	 * 30ee is the ID with the camera in Canon mode, but the camera reacts to
+	 * PTP commands according to:
+	 * https://sourceforge.net/tracker/?func=detail&atid=108874&aid=1394326&group_id=8874
+	 * They need to have different names.
+	 */
+	{"Canon:EOS 350D (PTP mode)",           0x04a9, 0x30ee, PTPBUG_DCIM_WRONG_PARENT},
+	{"Canon:EOS 350D",                      0x04a9, 0x30ef, PTPBUG_DCIM_WRONG_PARENT},
 	{"Canon:PowerShot S2 IS (PTP mode)",    0x04a9, 0x30f0, 0},
 	{"Canon:Digital IXUS 700 (PTP mode)",   0x04a9, 0x30f2, 0},
 	{"Canon:PowerShot SD500 (PTP mode)",    0x04a9, 0x30f2, 0},
