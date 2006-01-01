@@ -1118,9 +1118,9 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	 *		will download a file called "VirtualObject"
 	 */
 	if (	EXPERIMENTAL_CANON_CAPTURE &&
-		camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_CANON
+		params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON
 	) {
-		if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_InitiateCaptureInMemory)) {
+		if (!ptp_operation_issupported(params, PTP_OC_CANON_InitiateCaptureInMemory)) {
 			gp_context_error (context,
 			_("Sorry, your Canon camera does not support Canon Captureinitiation"));
 			return GP_ERROR_NOT_SUPPORTED;
@@ -1192,8 +1192,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		goto out;
 	}
 
-	if (!ptp_operation_issupported(&camera->pl->params,
-		PTP_OC_InitiateCapture)) {
+	if (!ptp_operation_issupported(params,PTP_OC_InitiateCapture)) {
 		gp_context_error(context,
                	_("Sorry, your camera does not support generic capture"));
 		return GP_ERROR_NOT_SUPPORTED;
@@ -1207,7 +1206,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	 * indicating that the capure has been completed may occur after
 	 * few seconds. moving down the code. (kil3r)
 	 */
-	CPR(context,ptp_initiatecapture(&camera->pl->params, 0x00000000, 0x00000000));
+	CPR(context,ptp_initiatecapture(params, 0x00000000, 0x00000000));
 	CR (gp_port_set_timeout (camera->port, USB_TIMEOUT_CAPTURE));
 	/* A word of comments is worth here.
 	 * After InitiateCapture camera should report with ObjectAdded event
@@ -1226,8 +1225,9 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	 * Thus we set CameraFilePath to the path to last object reported by
 	 * the camera.
 	 */
+
 	/* I hate workarounds! Nikon is not 100% PTP compatible here! */
-	if (camera->pl->params.deviceinfo.VendorExtensionID==PTP_VENDOR_NIKON) 
+	if (params->deviceinfo.VendorExtensionID==PTP_VENDOR_NIKON) 
 		goto out;
 	{
 		short ret;
@@ -1743,7 +1743,7 @@ _put_Nikon_OnOff_UINT8(Camera* camera, CameraWidget *widget, PTPPropertyValue *p
 }
 
 static int
-_get_UINT32_as_MB(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_CANON_FirmwareVersion(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
 	char value[64];
 
 	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
@@ -1751,7 +1751,8 @@ _get_UINT32_as_MB(Camera* camera, CameraWidget **widget, struct submenu *menu, P
 	if (dpd->DataType != PTP_DTC_UINT32) {
 		sprintf (value,_("unexpected datatype %i"),dpd->DataType);
 	} else {
-		sprintf (value,"%i",dpd->CurrentValue.u32/1024/1024);
+		uint32_t x = dpd->CurrentValue.u32;
+		sprintf (value,"%d.%d.%d.%d",((x&0xff000000)>>24),((x&0xff0000)>>16),((x&0xff00)>>8),x&0xff);
 	}
 	gp_widget_set_value (*widget,value);
 	return (GP_OK);
@@ -2747,14 +2748,14 @@ _put_Nikon_AFAreaIllum(Camera* camera, CameraWidget *widget, PTPPropertyValue *p
 
 
 
-static struct deviceproptableu8 canon_macromode[] = {
+static struct deviceproptableu8 canon_afdistance[] = {
 	{ N_("Off"),		0x01, 0 },
 	{ N_("Macro"),		0x03, 0 },
 	{ N_("Long distance"),	0x07, 0 }, /* Unchecked. */
 };
 
 static int
-_get_Canon_Macro(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_Canon_AFDistance(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
 	int i;
 
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
@@ -2763,25 +2764,25 @@ _get_Canon_Macro(Camera* camera, CameraWidget **widget, struct submenu *menu, PT
 		return (GP_ERROR);
 	if (dpd->DataType != PTP_DTC_UINT8)
 		return (GP_ERROR);
-	for (i=0;i<sizeof (canon_macromode)/sizeof (canon_macromode[0]);i++) {
-		gp_widget_add_choice (*widget, _(canon_macromode[i].label));
-		if (canon_macromode[i].value == dpd->CurrentValue.u8)
-			gp_widget_set_value (*widget, _(canon_macromode[i].label));
+	for (i=0;i<sizeof (canon_afdistance)/sizeof (canon_afdistance[0]);i++) {
+		gp_widget_add_choice (*widget, _(canon_afdistance[i].label));
+		if (canon_afdistance[i].value == dpd->CurrentValue.u8)
+			gp_widget_set_value (*widget, _(canon_afdistance[i].label));
 	}
 	return (GP_OK);
 }
 
 static int
-_put_Canon_Macro(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+_put_Canon_AFDistance(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
 	char *value;
 	int i, ret;
 
 	ret = gp_widget_get_value (widget, &value);
 	if (ret != GP_OK)
 		return ret;
-	for (i=0;i<sizeof (canon_macromode)/sizeof (canon_macromode[0]);i++) {
-		if (!strcmp (value, _(canon_macromode[i].label))) {
-			propval->u8 = canon_macromode[i].value;
+	for (i=0;i<sizeof (canon_afdistance)/sizeof (canon_afdistance[0]);i++) {
+		if (!strcmp (value, _(canon_afdistance[i].label))) {
+			propval->u8 = canon_afdistance[i].value;
 			return (GP_OK);
 		}
 	}
@@ -3149,7 +3150,7 @@ _put_Nikon_FastFS(Camera* camera, CameraWidget *widget, PTPPropertyValue *propva
 static struct submenu camera_settings_menu[] = {
 	{ N_("Camera Owner"), "owner", PTP_DPC_CANON_CameraOwner, PTP_VENDOR_CANON, PTP_DTC_AUINT8, _get_AUINT8_as_CHAR_ARRAY, _put_AUINT8_as_CHAR_ARRAY },
 	{ N_("Camera Model"), "model", PTP_DPC_CANON_CameraModel, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_None },
-	{ N_("Flash Memory"), "internalmemory", PTP_DPC_CANON_FlashMemory, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_UINT32_as_MB, _put_None },
+	{ N_("Firmware Version"), "firmwareversion", PTP_DPC_CANON_FirmwareVersion, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_CANON_FirmwareVersion, _put_None },
 	{ N_("Camera Time"),  "time", PTP_DPC_CANON_UnixTime,     PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_UINT32_as_time, _put_UINT32_as_time },
 	{ N_("Camera Time"),  "time", PTP_DPC_DateTime,           0,                PTP_DTC_STR, _get_STR_as_time, _put_STR_as_time },
 	{ N_("Beep Mode"),  "beep",   PTP_DPC_CANON_BeepMode,     PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_BeepMode, _put_Canon_BeepMode },
@@ -3194,7 +3195,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Focusing Point"), "focusingpoint", PTP_DPC_CANON_FocusingPoint, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_FocusingPoint, _put_Canon_FocusingPoint},
 	{ N_("Shutter Speed"), "shutterspeed", PTP_DPC_CANON_ShutterSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ShutterSpeed, _put_Canon_ShutterSpeed},
 	{ N_("Metering Mode"), "meteringmode", PTP_DPC_CANON_MeteringMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_MeteringMode, _put_Canon_MeteringMode},
-        { N_("Macro Mode"), "macromode", PTP_DPC_CANON_MacroMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_Macro, _put_Canon_Macro},
+        { N_("AF Distance"), "afdistance", PTP_DPC_CANON_AFDistance, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_AFDistance, _put_Canon_AFDistance},
 	/* { N_("Viewfinder Mode"), "viewfinder", PTP_DPC_CANON_ViewFinderMode, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_ViewFinderMode, _put_Canon_ViewFinderMode}, */
 	{ NULL },
 };
@@ -4289,6 +4290,7 @@ camera_init (Camera *camera, GPContext *context)
 	default:
 		break;
 	}
+
 
 	/* Configure the CameraFilesystem */
 	CR (gp_filesystem_set_list_funcs (camera->fs, file_list_func,

@@ -987,16 +987,45 @@ ptp_ek_setserial (PTPParams* params, unsigned char *data, unsigned int size)
 	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &data, NULL); 
 }
 
-/* unclear yet, but I guess it returns the info from 9008 */
+/* unclear what it does yet */
 uint16_t
-ptp_ek_9009 (PTPParams* params, unsigned char **data, unsigned int *size)
+ptp_ek_9007 (PTPParams* params, unsigned char **data, unsigned int *size)
 {
 	PTPContainer ptp;
 
 	PTP_CNT_INIT(ptp);
-	ptp.Code   = 0x9009;
+	ptp.Code   = 0x9007;
 	ptp.Nparam = 0;
 	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size); 
+}
+
+/* unclear what it does yet */
+uint16_t
+ptp_ek_9009 (PTPParams* params, uint32_t *p1, uint32_t *p2)
+{
+	PTPContainer	ptp;
+	uint16_t	ret;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code   = 0x9009;
+	ptp.Nparam = 0;
+	ret = ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL); 
+	*p1 = ptp.Param1;
+	*p2 = ptp.Param2;
+	return ret;
+}
+
+/* unclear yet, but I guess it returns the info from 9008 */
+uint16_t
+ptp_ek_900c (PTPParams* params, unsigned char **data, unsigned int *size)
+{
+	PTPContainer ptp;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code   = 0x900c;
+	ptp.Nparam = 0;
+	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size); 
+	/* returned data is 16bit,16bit,32bit,32bit */
 }
 
 /**
@@ -1324,6 +1353,17 @@ ptp_canon_initiatecaptureinmemory (PTPParams* params)
 	
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_CANON_InitiateCaptureInMemory;
+	ptp.Nparam=0;
+	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+}
+
+uint16_t
+ptp_canon_9012 (PTPParams* params)
+{
+	PTPContainer ptp;
+	
+	PTP_CNT_INIT(ptp);
+	ptp.Code=0x9012;
 	ptp.Nparam=0;
 	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
 }
@@ -1843,10 +1883,9 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_CANON_ImageQuality,	N_("Image Quality")},
 		{PTP_DPC_CANON_ImageSize,	N_("Image Size")},
 		{PTP_DPC_CANON_FlashMode,	N_("Flash Mode")},
-		/* a/v = audio/video */
-		{PTP_DPC_CANON_TvAvSetting,	N_("TV A/V Setting")},
+		{PTP_DPC_CANON_ShootingMode,	N_("Shooting Mode")},
 		{PTP_DPC_CANON_MeteringMode,	N_("Metering Mode")},
-		{PTP_DPC_CANON_MacroMode,	N_("Macro Mode")},
+		{PTP_DPC_CANON_AFDistance,	N_("AF Distance")},
 		{PTP_DPC_CANON_FocusingPoint,	N_("Focusing Point")},
 		{PTP_DPC_CANON_WhiteBalance,	N_("White Balance")},
 		{PTP_DPC_CANON_ISOSpeed,	N_("ISO Speed")},
@@ -1855,11 +1894,11 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_CANON_ExpCompensation,	N_("Exposure Compensation")},
 		{PTP_DPC_CANON_Zoom,		N_("Zoom")},
 		{PTP_DPC_CANON_SizeQualityMode,	N_("Size Quality Mode")},
-		{PTP_DPC_CANON_FlashMemory,	N_("Flash Memory")},
+		{PTP_DPC_CANON_FirmwareVersion,	N_("Firmware Version")},
 		{PTP_DPC_CANON_CameraModel,	N_("Camera Model")},
 		{PTP_DPC_CANON_CameraOwner,	N_("Camera Owner")},
 		{PTP_DPC_CANON_UnixTime,	N_("UNIX Time")},
-		{PTP_DPC_CANON_RealImageWidth,	N_("Real Image Width")},
+		{PTP_DPC_CANON_DZoomMagnification,	N_("Digital Zoom Magnification")},
 		{PTP_DPC_CANON_PhotoEffect,	N_("Photo Effect")},
 		{PTP_DPC_CANON_AssistLight,	N_("Assist Light")},
 		{0,NULL}

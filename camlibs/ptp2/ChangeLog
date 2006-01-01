@@ -3,6 +3,10 @@
 	* library.c: Add EOS 350 canon id too, since
 	  it apparently reacts to PTP traffic on it too.
 
+	* ptp.c, ptp.h: Adjusted several canon properties to 
+	  better names. Added some previously not known ones.
+	  "ramsize" is actually "firmwareversion" and so on.
+
 2005-12-30  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* library.c: Only allow getpartialobject for EXIF

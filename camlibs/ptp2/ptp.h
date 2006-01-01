@@ -165,7 +165,9 @@ typedef struct _PTPUSBEventContainer PTPUSBEventContainer;
 #define PTP_OC_CANON_ViewfinderOff	0x900C
 #define PTP_OC_CANON_ReflectChanges	0x900D
 
-/* 900e - send nothing, gets 5 uint16t in 32bit entities back in 20byte datablob */
+/* 900e - send nothing, gets 5 uint16t in 32bit entities back in 20byte datablob 
+ * GetFlashDevParam?
+ */
 #define PTP_OC_CANON_900e		0x900E
 /* 900f - gets data ... hmm, object handles ? */
 #define PTP_OC_CANON_900f		0x900F
@@ -184,6 +186,7 @@ typedef struct _PTPUSBEventContainer PTPUSBEventContainer;
 #define PTP_OC_CANON_InitiateCaptureInMemory	0x901A
 #define PTP_OC_CANON_GetPartialObject	0x901B
 #define PTP_OC_CANON_GetViewfinderImage	0x901d
+	/* Viewfinder Auto functions */
 #define PTP_OC_CANON_GetChanges		0x9020
 #define PTP_OC_CANON_GetFolderEntries	0x9021
 
@@ -274,6 +277,7 @@ typedef struct _PTPUSBEventContainer PTPUSBEventContainer;
 #define PTP_EC_UnreportedStatus		0x400E
 
 /* Canon extension Event Codes */
+#define PTP_EC_CANON_ExtendedErrorcode		0xC005	/* ? */
 #define PTP_EC_CANON_ObjectInfoChanged		0xC008
 #define PTP_EC_CANON_RequestObjectTransfer	0xC009
 #define PTP_EC_CANON_CameraModeChanged		0xC00C
@@ -632,26 +636,30 @@ typedef struct _PTPEKTextParams PTPEKTextParams;
 #define PTP_DPC_CANON_D007		0xD007
 #define PTP_DPC_CANON_ImageSize		0xD008
 #define PTP_DPC_CANON_FlashMode		0xD00A
-#define PTP_DPC_CANON_TvAvSetting	0xD00C
+#define PTP_DPC_CANON_ShootingMode	0xD00C
+#define PTP_DPC_CANON_DriveMode		0xD00E
 #define PTP_DPC_CANON_MeteringMode	0xD010
-#define PTP_DPC_CANON_MacroMode		0xD011
+#define PTP_DPC_CANON_AFDistance	0xD011
 #define PTP_DPC_CANON_FocusingPoint	0xD012
 #define PTP_DPC_CANON_WhiteBalance	0xD013
 #define PTP_DPC_CANON_ISOSpeed		0xD01C
 #define PTP_DPC_CANON_Aperture		0xD01D
 #define PTP_DPC_CANON_ShutterSpeed	0xD01E
 #define PTP_DPC_CANON_ExpCompensation	0xD01F
+
+	/* capture data type (?) */
 #define PTP_DPC_CANON_D029		0xD029
 #define PTP_DPC_CANON_Zoom		0xD02A
 #define PTP_DPC_CANON_SizeQualityMode	0xD02C
-#define PTP_DPC_CANON_FlashMemory	0xD031
+#define PTP_DPC_CANON_FirmwareVersion	0xD031
 #define PTP_DPC_CANON_CameraModel	0xD032
 #define PTP_DPC_CANON_CameraOwner	0xD033
 #define PTP_DPC_CANON_UnixTime		0xD034
-#define PTP_DPC_CANON_RealImageWidth	0xD039
+#define PTP_DPC_CANON_DZoomMagnification	0xD039
 #define PTP_DPC_CANON_PhotoEffect	0xD040
 #define PTP_DPC_CANON_AssistLight	0xD041
 #define PTP_DPC_CANON_D045		0xD045
+#define PTP_DPC_CANON_AverageFilesizes	0xD048
 
 /* Nikon extension device property codes */
 #define PTP_DPC_NIKON_ShootingBank			0xD010
@@ -906,7 +914,9 @@ uint16_t ptp_setdevicepropvalue (PTPParams* params, uint16_t propcode,
 
 
 /* Eastman Kodak extensions */
-uint16_t ptp_ek_9009 (PTPParams* params, unsigned char **serial, unsigned int *size);
+uint16_t ptp_ek_9007 (PTPParams* params, unsigned char **serial, unsigned int *size);
+uint16_t ptp_ek_9009 (PTPParams* params, uint32_t*, uint32_t*);
+uint16_t ptp_ek_900c (PTPParams* params, unsigned char **serial, unsigned int *size);
 uint16_t ptp_ek_getserial (PTPParams* params, unsigned char **serial, unsigned int *size);
 uint16_t ptp_ek_setserial (PTPParams* params, unsigned char *serial, uint32_t size);
 uint16_t ptp_ek_settext (PTPParams* params, PTPEKTextParams *text);
@@ -917,6 +927,7 @@ uint16_t ptp_ek_sendfileobject	(PTPParams* params, unsigned char* object,
 				uint32_t size);
 
 /* Canon PTP extensions */
+uint16_t ptp_canon_9012 (PTPParams* params);
 uint16_t ptp_canon_getobjectsize (PTPParams* params, uint32_t handle,
 				uint32_t p2, uint32_t* size, uint32_t* rp2);
 
