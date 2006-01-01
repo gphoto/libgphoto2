@@ -1,14 +1,17 @@
+2005-12-31  Hubert Figuiere  <hub@figuiere.net>
+
+	* library.c: Added Nexxtech Mini Digital Camera
+	reported by Ken Kennedy
+
 2005-29-05   Theodore Kilgore <kilgota@auburn.edu>
 
 	* digigr8.c: GP_MODULE "didigr8" -> GP_MODULE "digigr8"
-
 
 2005-29-05   Theodore Kilgore <kilgota@auburn.edu>
 
 	* library.c: Added DC-N130t, reported by 
 		Thierry Leconte <f4dwv@users.sourceforge.net>
 	* README: Some updates. 	
-		
 
 2005-22-05   Theodore Kilgore <kilgota@auburn.edu>
 
