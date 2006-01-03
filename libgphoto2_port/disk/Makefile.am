@@ -8,6 +8,7 @@ disk_la_LDFLAGS = -module -no-undefined -avoid-version \
 disk_la_CPPFLAGS = \
 	-I$(top_srcdir)/libgphoto2_port $(INTL_CFLAGS) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(LIBUSB_CFLAGS) $(HAL_CFLAGS)
+disk_la_DEPENDENCIES = $(top_srcdir)/iolib.sym
 disk_la_LIBADD = \
 	$(top_builddir)/libgphoto2_port/libgphoto2_port.la \
 	$(HAL_LIBS)

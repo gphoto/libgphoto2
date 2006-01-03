@@ -47,7 +47,8 @@ libgphoto2_port_la_SOURCES =		\
 	gphoto2-port-result.c
 
 libgphoto2_port_la_DEPENDENCIES = \
-	$(LIBLTDL)
+	$(LIBLTDL) \
+	$(srcdir)/libgphoto2_port.sym
 
 # ship headers
 libgphoto2_portincludedir = $(includedir)/gphoto2

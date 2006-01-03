@@ -11,4 +11,5 @@ sierra_la_SOURCES =\
 	nikon-desc.c olympus-desc.c epson-desc.c
 sierra_la_LDFLAGS = -module -no-undefined -avoid-version -export-dynamic \
 	-export-symbols $(top_srcdir)/camlibs/camlib.sym
+sierra_la_DEPENDENCIES = $(top_srcdir)/camlibs/camlib.sym
 sierra_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la $(LIBEXIF_LIBS)

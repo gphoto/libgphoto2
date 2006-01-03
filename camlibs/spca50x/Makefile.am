@@ -10,4 +10,5 @@ spca50x_la_SOURCES = spca50x.c spca50x.h \
 	spca50x-avi-header.h
 spca50x_la_LDFLAGS = -module -no-undefined -avoid-version -export-dynamic \
 	-export-symbols $(top_srcdir)/camlibs/camlib.sym
+spca50x_la_DEPENDENCIES = $(top_srcdir)/camlibs/camlib.sym
 spca50x_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la

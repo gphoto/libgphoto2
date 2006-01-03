@@ -1,10 +1,5 @@
 lib_LTLIBRARIES = libgphoto2.la
 
-libgphoto2_la_CPPFLAGS =				\
-	$(LTDLINCL)					\
-	$(AM_CPPFLAGS) $(CPPFLAGS)			\
-	$(LIBEXIF_CFLAGS)
-
 # Notes about the list of exported symbols:
 #    gp_* also contains internal symbols which are intended for
 #         INTERNAL USE ONLY and should be converted into gpi_* symbols
@@ -16,11 +11,16 @@ libgphoto2_la_CPPFLAGS =				\
 #
 # Yes, this is messy, but we are going to clean this up.
 
+libgphoto2_la_CPPFLAGS =				\
+	$(LTDLINCL)					\
+	$(AM_CPPFLAGS) $(CPPFLAGS)			\
+	$(LIBEXIF_CFLAGS)
+
 libgphoto2_la_LDFLAGS =	\
 	-no-undefined	\
 	-export-symbols $(srcdir)/libgphoto2.sym \
 	-version-info @LIBGPHOTO2_VERSION_INFO@
-
+	
 libgphoto2_la_SOURCES = 	\
 	gphoto2-abilities-list.c\
 	bayer.c bayer.h		\
@@ -49,8 +49,8 @@ libgphoto2_la_LIBADD =					\
 #	"-dlopen" $(top_builddir)/camlibs/ptp2/....la
 
 libgphoto2_la_DEPENDENCIES = \
+	$(srcdir)/libgphoto2.sym \
 	$(LIBLTDL)
-
 
 libgphoto2includedir = $(includedir)/gphoto2
 libgphoto2include_HEADERS =	\
