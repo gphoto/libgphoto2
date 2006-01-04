@@ -61,6 +61,8 @@ int gp_port_info_list_lookup_name (GPPortInfoList *list, const char *name);
 
 int gp_port_info_list_get_info (GPPortInfoList *list, int n, GPPortInfo *info);
 
+const char *gp_port_message_codeset (const char*);
+
 /* DEPRECATED */
 typedef GPPortInfo gp_port_info;
 

@@ -76,6 +76,11 @@ struct _GPPortInfoList {
  **/
 #define IOLIBDIR_ENV "IOLIBS"
 
+const char*
+gp_port_message_codeset (const char *codeset) {
+	return bind_textdomain_codeset (GETTEXT_PACKAGE, codeset);
+}
+
 /**
  * gp_port_info_list_new:
  * @list:
