@@ -56,8 +56,8 @@ struct {
    	unsigned short idVendor;
    	unsigned short idProduct;
 } models[] = {
-        {"SQ chip camera",    GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
-        {"Argus DC-1510",     GP_DRIVER_STATUS_PRODUCTION,   0x2770, 0x9120},
+	{"SQ chip camera",    GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
+	{"Argus DC-1510",     GP_DRIVER_STATUS_PRODUCTION,   0x2770, 0x9120},
 	{"Gear to go",        GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"Mitek CD10" ,       GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"Mitek CD30P",       GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
@@ -69,9 +69,9 @@ struct {
 	{"Magpix B350",       GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"Jenoptik JDC 350",  GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"Precision Mini Digital Camera",
-			      GP_DRIVER_STATUS_PRODUCTION , 0x2770 , 0x9120},
-        {"iConcepts digital camera" ,
-                              GP_DRIVER_STATUS_PRODUCTION , 0x2770 , 0x9120},
+	                      GP_DRIVER_STATUS_PRODUCTION , 0x2770 , 0x9120},
+	{"iConcepts digital camera" ,
+                          GP_DRIVER_STATUS_PRODUCTION , 0x2770 , 0x9120},
 	{"Sakar Kidz Cam",    GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"ViviCam3350",       GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"ViviCam5B",         GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
@@ -79,7 +79,10 @@ struct {
 	{"SY-2107C",          GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"Shark SDC-513",     GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"Shark SDC-519",     GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
+	{"Shark 2-in-1 Mini", GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"Argus DC-1730",     GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x913c},
+	{"Request Ultra Slim", 
+	                      GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{NULL,0,0}
 };
 

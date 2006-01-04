@@ -1,7 +1,11 @@
+2006-01-03  Hubert Figuiere  <hub@figuiere.net>
+
+	* library.c: Shark 2-in-1 Mini
+	             Request Ultra Slim
+
 2005-05-18   Theodore Kilgore <kilgota@auburn.edu>
 
 	* library.c: raw photo download routine segfault fixed.
-
 
 2005-05-18   Theodore Kilgore <kilgota@auburn.edu>
 
@@ -10,19 +14,14 @@
 	* sq905.c: Several improvements for SQ_MODEL_POCK_CAM, thanks to 
 	Julius Schwartzenberg <julius@zgod.cjb.net> for exhaustive testing!
 
-
-
 2005-05-18   Theodore Kilgore <kilgota@auburn.edu>
 
-	* library.c: bug in compressed photo routine fixed, found by Cedric Cellier.
-
-
+	* library.c: bug in compressed photo routine fixed, found by 
+	Cedric Cellier.
 
 2005-04-17   Theodore Kilgore <kilgota@auburn.edu>
 
 	* ChangeLog: Fixed some typos.
-
-
 
 2005-04-16   Theodore Kilgore <kilgota@auburn.edu>
 
@@ -31,14 +30,9 @@
 	* sq905.h: fix sq_decompress() to handle Magpix B350
 	* sq905.h: fix sq_decompress() to handle Magpix B350	
 
-
-
-
 2005-04-12   Theodore Kilgore <kilgota@auburn.edu>
 
 	* postprocess.c: small oops repaired in sq_decompress()	
-
-
 
 2005-04-03   Theodore Kilgore <kilgota@auburn.edu>
 
@@ -46,14 +40,10 @@
 	* postprocess.c: improvements for compressed mode	
 	* sq905.h: improvements for compressed mode
 
-
 2005-01-17   Theodore Kilgore <kilgota@auburn.edu>
 
 	* library.c: added Shark SDC-513 and SDC-519
 	* postprocess.c: Code cleanup	
-
-
-
 
 2004-12-15   Theodore Kilgore <kilgota@auburn.edu>
 
@@ -65,8 +55,8 @@
 	* postprocess.c: bugfix for release.
 
 2004-11-11 Theodore Kilgore <kilgota@auburn.edu>
-	* library.c: added ViviCam 5B and SY-2107C cameras.
 
+	* library.c: added ViviCam 5B and SY-2107C cameras.
 
 2004-10-28  Hubert Figuiere  <hfiguiere@teaser.fr>
 
@@ -74,7 +64,6 @@
 	(bug #1055868)
 
 2004-08-25 Theodore Kilgore <kilgota@auburn.edu>
-
 
 	* README.913C: Description of Argus DC-1730 0x2770:0x913c camera.
 	
@@ -84,12 +73,11 @@
 	
 	* sq905.h: In sq_access_reg ( ) the "index" is an int. Oops. 
 
-
 2004-06-29 Theodore Kilgore <kilgota@auburn.edu>
 
 	* sq905.c: Major rewrite. Credit to Cedric Cellier 
 		<rixed@happyleptic.org> for several improvements, in particular
-		sq_rewind ( ), which permits random access to photos on camera. 
+		sq_rewind ( ), which permits random access to photos on camera.
 	
 	* sq905.h: needed changes declared.
 	
@@ -106,7 +94,6 @@
 	* TODO: list of things which still need work. 
 	
 	* Makefile.am: postprocess.c added as source file.		
-
 
 2003-11-21 Theodore Kilgore <kilgota@auburn.edu>
 
@@ -175,7 +162,8 @@
 
 2003-07-30  Lutz Mueller <lutz@users.sourceforge.net>
 
-	* library.c: Move some variables around to make non-gcc-compilers happy.
+	* library.c: Move some variables around to make non-gcc-compilers 
+	happy.
 
 2003-07-15  Lutz Mueller <lutz@users.sourceforge.net>
 
