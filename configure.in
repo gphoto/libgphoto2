@@ -1,6 +1,7 @@
 dnl Process this file with autoreconf to produce a configure script.
 AC_PREREQ(2.59)
-AC_INIT([libgphoto2], [2.1.99], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
+dnl ******* THE NEXT VERSION MUST BE 2.1.99.1 at least or higher!
+AC_INIT([libgphoto2], [2.1.99.0head], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
 AC_CONFIG_SRCDIR([libgphoto2/gphoto2.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([libgphoto2_port/m4])
