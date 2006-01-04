@@ -1,3 +1,21 @@
+libgphoto2 HEAD
+
+Build system (packagers beware!):
+
+   * A HAL FDI file can be generated using:
+
+ 	print-usb-usermap --fdi
+
+     (during chrooted build you can use:
+	CAMLIBS=$BUILDROOT/usr/lib/libgphoto2/2.2/ print-usb-usermap --fdi
+     )
+
+   * A new function, gp_message_codeset(const char*), can be used to make all
+     messages of libgphoto2 and libgphoto2_port to use one specific codeset.
+     It is using bind_textdomain_codeset().
+
+     This is useful for gtk+ applications for instance.
+
 ----------------------------------------------------------------------------
 libgphoto2 2.1.99 (pre-release of 2.2)
 
