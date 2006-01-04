@@ -50,6 +50,7 @@
 #  define dgettext(Domain,Message) (Message)
 #  define dcgettext(Domain,Message,Type) (Message)
 #  define bindtextdomain(Domain,Directory) (Domain)
+#  define bind_textdomain_codeset(Domain,Charset) (Domain)
 #  define _(String) (String)
 #  define N_(String) (String)
 #endif
@@ -81,6 +82,21 @@ struct _CameraAbilitiesList {
 
 static int gp_abilities_list_lookup_id (CameraAbilitiesList *, const char *);
 static int gp_abilities_list_sort      (CameraAbilitiesList *);
+
+/**
+ * Set the codeset for all messages returned by libgphoto2.
+ * \param codeset New codeset for the messages. For instance "utf-8".
+ * \return old codeset as returned from bind_textdomain_codeset().
+ *
+ * You would then call gp_abilities_list_load() in order to 
+ * populate it.
+ */
+const char*
+gp_message_codeset (const char *codeset)
+{
+	gp_port_message_codeset (codeset);
+	return bind_textdomain_codeset (GETTEXT_PACKAGE, codeset);
+}
 
 /**
  * Allocate the memory for a new abilities list.

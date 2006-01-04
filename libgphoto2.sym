@@ -129,6 +129,7 @@ gp_list_set_name
 gp_list_set_value
 gp_list_sort
 gp_list_unref
+gp_message_codeset
 gp_result_as_string
 gp_setting_get
 gp_setting_set

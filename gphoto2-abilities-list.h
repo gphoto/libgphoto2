@@ -139,6 +139,8 @@ int gp_abilities_list_lookup_model (CameraAbilitiesList *list,
 int gp_abilities_list_get_abilities (CameraAbilitiesList *list, int index,
 				     CameraAbilities *abilities);
 
+const char *gp_message_codeset (const char *);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
