@@ -532,7 +532,8 @@ static struct {
 
 	/* Fuji PTP cameras */
 	{"Fuji:FinePix S7000 (PictBridge mode)",0x04cb, 0x0142, 0},
-	{"Fuji:FinePix A330 (PictBridge mode)",0x04cb, 0x014a, 0},
+	{"Fuji:FinePix A330 (PictBridge mode)", 0x04cb, 0x014a, 0},
+	{"Fuji:FinePix E900 (PictBridge mode)", 0x04cb, 0x0193, 0},
 
 	/* Ricoh Caplio GX */
 	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
@@ -3747,7 +3748,8 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 		params->handles.Handler[object_id],0));
 
 	/* On Canon firmwares, a DeleteObject causes a ObjectRemoved event
-	 * to be sent. At least on Digital IXUS II and PowerShot A85.
+	 * to be sent. At least on Digital IXUS II and PowerShot A85. But
+         * not on 350D.
 	 */
 	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
 	    ptp_event_issupported(params, PTP_EC_ObjectRemoved)) {
@@ -3755,7 +3757,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 		int ret;
 
 		do {
-			ret = ptp_usb_event_wait (params, &event);
+			ret = ptp_usb_event_check (params, &event);
 			if (	(ret == PTP_RC_OK) &&
 				(event.Code == PTP_EC_ObjectRemoved)
 			)
@@ -3849,9 +3851,6 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			info->preview.height  = oi->ThumbPixHeight;
 			info->preview.fields |= GP_FILE_INFO_HEIGHT;
 		}
-
-		info->file.fields = info->file.fields;
-
 		if (oi->ImagePixWidth) {
 			info->file.width  = oi->ImagePixWidth;
 			info->file.fields |= GP_FILE_INFO_WIDTH;

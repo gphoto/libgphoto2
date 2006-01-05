@@ -1,3 +1,9 @@
+2006-01-05  Marcus Meissner  <marcus@jet.franken.de>
+	* library.c: Removed one unnecessary line of code.
+	  Use event_check instead of event_wait for now in
+	  canon specific delete code.
+	  Added Fuji Finepix E900/PictBridge id.
+
 2006-01-01  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* library.c: Add EOS 350 canon id too, since
