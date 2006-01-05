@@ -558,6 +558,9 @@ static struct {
 	/* Bruno Parente Lima <brunoparente77@yahoo.com.br> */
 	{"iRiver:T30",                          0x4102, 0x1119, 0},
 
+	/* From: thanosz@softhome.net */
+	{"Philipps:HDD6320",                    0x0471, 0x01eb, 0},
+
 	/* Jennifer Scalf <oneferna@gmail.com> */
 	/* not really working ... speaks a pretty bad version of PTP 
 	{"Creative:Zen MicroPhoto",             0x041e, 0x413c, 0},
