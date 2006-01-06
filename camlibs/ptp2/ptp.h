@@ -205,6 +205,18 @@ typedef struct _PTPUSBEventContainer PTPUSBEventContainer;
 #define PTP_OC_NIKON_DeviceReady	0x90C8
 #define PTP_OC_NIKON_GetDevicePTPIPInfo	0x90E0
 
+/* Microsoft / MTP extension codes */
+#define PTP_OC_MTP_GetObjectPropsSupported	0x9801
+#define PTP_OC_MTP_GetObjectPropDesc		0x9802
+#define PTP_OC_MTP_GetObjectPropValue		0x9803
+#define PTP_OC_MTP_SetObjectPropValue		0x9804
+#define PTP_OC_MTP_GetObjPropList		0x9805
+#define PTP_OC_MTP_SetObjPropList		0x9806
+#define PTP_OC_MTP_GetInterdependendPropdesc	0x9807
+#define PTP_OC_MTP_SendObjectPropList		0x9808
+#define PTP_OC_MTP_GetObjectReferences		0x9810
+#define PTP_OC_MTP_SetObjectReferences		0x9811
+
 /* Proprietary vendor extension operations mask */
 #define PTP_OC_EXTENSION_MASK           0xF000
 #define PTP_OC_EXTENSION                0x9000
@@ -244,6 +256,7 @@ typedef struct _PTPUSBEventContainer PTPUSBEventContainer;
 #define PTP_RC_SessionAlreadyOpened     0x201E
 #define PTP_RC_TransactionCanceled      0x201F
 #define PTP_RC_SpecificationOfDestinationUnsupported            0x2020
+
 /* Eastman Kodak extension Response Codes */
 #define PTP_RC_EK_FilenameRequired	0xA001
 #define PTP_RC_EK_FilenameConflicts	0xA002
@@ -251,6 +264,16 @@ typedef struct _PTPUSBEventContainer PTPUSBEventContainer;
 
 /* Nikon specific response codes */
 #define PTP_RC_NIKON_AdvancedTransferCancel 0xA022
+
+/* Microsoft/MTP specific codes */
+#define PTP_RC_MTP_Undefined			0xA800
+#define PTP_RC_MTP_Invalid_ObjectPropCode	0xA801
+#define PTP_RC_MTP_Invalid_ObjectProp_Format	0xA802
+#define PTP_RC_MTP_Invalid_ObjectProp_Value	0xA803
+#define PTP_RC_MTP_Invalid_ObjectReference	0xA804
+#define PTP_RC_MTP_Invalid_Dataset		0xA806
+#define PTP_RC_MTP_Specification_By_Group_Unsupported		0xA808
+#define PTP_RC_MTP_Object_Too_Large		0xA809
 
 /* libptp2 extended ERROR codes */
 #define PTP_ERROR_IO			0x02FF
@@ -775,6 +798,9 @@ typedef struct _PTPEKTextParams PTPEKTextParams;
 #define PTP_DPC_NIKON_FlashOpen				0xD1C0
 #define PTP_DPC_NIKON_FlashCharged			0xD1C1
 
+/* Microsoft/MTP specific */
+#define PTP_DPC_MTP_Synchronization_Partner		0xD401
+#define PTP_DPC_MTP_Device_Friendly_Name		0xD402
 
 
 /* Device Property Form Flag */
