@@ -40,30 +40,30 @@ PTP Phase:
 
 The packet types are:
 
-TYPE 1 (INIT)
+TYPE 1 (Init_Command_Request)
 	payload sizeof(GUID)+(1+lstrlenW(computername))*sizeof(WCHAR) bytes
 		16 byte GUID
 		xx byte WCHAR computername with terminating \0
 
 	=> Can be followed by type 2 or type 5.
 
-TYPE 2 (INIT REPLY)
+TYPE 2 (Init_Command_Ack)
 	payload 4+sizeof(GUID)+(1+lstrlenW(cameraname))*sizeof(WCHAR) bytes.
 		4 byte	ID
 		16 byte	GUID (MAC is used here, and repeated)
 		xx byte WCHAR Camera Name with terminating \0
 
-TYPE 3 (STARTUP CAMERA)
+TYPE 3 (Init_Event_Request)
 	payload 4 bytes.
 		4 byte ID (from INIT REPLY)
 
 	Can get type 4 or type 5 reply.
 
-TYPE 4 (CAMERA READY)
+TYPE 4 (Init_Event_Ack)
 	no payload.
 	You can start sending PTP traffic now.
 
-TYPE 5 (INIT PHASE ERROR)
+TYPE 5 (Init_Fail)
 	payload 4 byte. 
 		4 byte error code (unclear meaning)
 		-> might mean busy / access denied.
