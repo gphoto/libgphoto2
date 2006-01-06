@@ -1,4 +1,4 @@
-EXTRA_DIST = ptp-pack.c
+EXTRA_DIST = ptp-pack.c PTPIP.TXT README TODO ChangeLog
 
 camlib_LTLIBRARIES = ptp2.la
 

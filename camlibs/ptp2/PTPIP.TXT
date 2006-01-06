@@ -1,0 +1,129 @@
+This briefly describes the PTP/IP transfer layer.
+
+It was reverse engineered from a ethereal packet dump.
+
+The connections is a simple TCP/IP socket connection.
+Default port is 15740 (same as the ISO number for PTP).
+
+The layers communicate in packets, their layout is:
+	4 byte length	(little endian)
+	4 byte type	(little endian)
+
+		type:		1	- init
+				2	- init reply (success)
+				5	- init reply (error)
+				3	- startup camera
+				4	- ack camera
+
+				6 	- (to  ) ptp command
+				7	- (from) ptp ack
+				8	- (from) ptp interrupt
+				9	- (both) data length return after command
+				b	- (to  ) cancel transaction
+				c	- (from) 
+				d	- (to  ) keep alive / ping
+				e	- (from)
+
+State transitions:
+
+Initial Phase:
+	1 (initiator) -> 2 -> 3 -> 4  -> PTP traffic
+		      -> 5      -> 5
+PTP Phase:
+	Any (device->initiator) block can be of type 8 (PTP interrupt) (I think).
+
+	command flow:
+	PTPSTART -> 6 -> 7 -> PTPSTART
+                     \
+                      9 -> A/C -> 7 -> PTPSTART
+
+
+The packet types are:
+
+TYPE 1 (INIT)
+	payload sizeof(GUID)+(1+lstrlenW(computername))*sizeof(WCHAR) bytes
+		16 byte GUID
+		xx byte WCHAR computername with terminating \0
+
+	=> Can be followed by type 2 or type 5.
+
+TYPE 2 (INIT REPLY)
+	payload 4+sizeof(GUID)+(1+lstrlenW(cameraname))*sizeof(WCHAR) bytes.
+		4 byte	ID
+		16 byte	GUID (MAC is used here, and repeated)
+		xx byte WCHAR Camera Name with terminating \0
+
+TYPE 3 (STARTUP CAMERA)
+	payload 4 bytes.
+		4 byte ID (from INIT REPLY)
+
+	Can get type 4 or type 5 reply.
+
+TYPE 4 (CAMERA READY)
+	no payload.
+	You can start sending PTP traffic now.
+
+TYPE 5 (INIT PHASE ERROR)
+	payload 4 byte. 
+		4 byte error code (unclear meaning)
+		-> might mean busy / access denied.
+
+
+
+TYPE 6 (PTP COMMAND):
+	payload n bytes.
+		2 bytes PTP command
+		n bytes command arguments
+
+	May be followed by 0x9 (data reader/data sender)
+	Will be followed then by 0x7 (PTP response)
+
+TYPE 7(PTP ACK):
+	payload 6 - 26 bytes
+		2 bytes		PTP response code
+		4 bytes 	nr of arguments
+		nr*4 bytes	arguments
+
+
+TYPE 8 (PTP EVENT)
+	length 14 - 26
+
+		2 byte	event code
+			ptp event specific data..
+
+TYPE 9 (GET DATA):
+	8 byte payload.
+
+	4 byte number
+	4 byte download size (without 0e/0a blob size)
+
+	can be followed by 0e, 0a, 0c
+
+TYPE 10 / 0xA (READ DATA 1):
+	4 byte payload.
+		4 byte	xid (transaction id?)
+
+TYPE 11 / 0xB (CANCEL TRANSACTION):
+	12 byte
+		4 length
+		4 type
+		4 <ID>
+	
+	-> Gets 0x7 ack back.
+
+TYPE 12 / 0xC (READ DATA 1):
+	4 byte payload.
+		4 byte	xid (transaction id?)
+
+TYPE 13 / 0xD (PING REQUEST)
+	0 byte payload.
+
+TYPE 14 / 0xE (PING REPLY)
+	0 byte payload.
+
+
+PTP READ DATA:
+	(type can be: 0A, 0C, 07(response))
+
+	0A, 0C:
+		packetlen < 12	-> error
