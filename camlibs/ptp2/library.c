@@ -549,6 +549,8 @@ static struct {
 	/* Pentax cameras */
 	{"Pentax:Optio 43WR",                   0x0a17, 0x000d, 0},
 
+	{"Sanyo:VPC-C5 (PTP mode)",             0x0474, 0x0230, 0},
+
 	/* Jay MacDonald <jay@cheakamus.com> */
 	{"iRiver:T10 (alternate)",              0x4102, 0x1113, 0},
 	/* Freaky <freaky@bananateam.nl> */
