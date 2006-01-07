@@ -12,6 +12,7 @@ dnl Advanced information about versioning:
 dnl   * "Writing shared libraries" by Mike Hearn
 dnl         http://navi.cx/~mike/writing-shared-libraries.html
 dnl   * libtool.info chapter "Versioning"
+dnl   * libtool.info chapter "Updating library version information"
 dnl ---------------------------------------------------------------------------
 dnl Versioning:
 dnl  - CURRENT (Major):  Increment if the interface has changes. AGE is always
@@ -31,6 +32,7 @@ dnl ---------------------------------------------------------------------------
 LIBGPHOTO2_PORT_AGE=6
 LIBGPHOTO2_PORT_REVISION=0
 LIBGPHOTO2_PORT_CURRENT=6
+AC_SUBST([LIBGPHOTO2_PORT_CURRENT_MIN],[`expr $LIBGPHOTO2_PORT_CURRENT - $LIBGPHOTO2_PORT_AGE`])
 LIBGPHOTO2_PORT_VERSION_INFO=$LIBGPHOTO2_PORT_CURRENT:$LIBGPHOTO2_PORT_REVISION:$LIBGPHOTO2_PORT_AGE
 
 AC_SUBST(LIBGPHOTO2_PORT_AGE)
@@ -99,7 +101,7 @@ dnl AC_SUBST(BUILD_INCLUDED_LIBINTL)
 dnl USE_INCLUDED_LIBINTL=no
 dnl AC_SUBST(USE_INCLUDED_LIBINTL)
 
-GP_GETTEXT_HACK([${PACKAGE}-${LIBGPHOTO2_PORT_CURRENT}],[Lutz Mueller and others],[${MAIL_GPHOTO_TRANSLATION}])
+GP_GETTEXT_HACK([${PACKAGE}-${LIBGPHOTO2_PORT_CURRENT_MIN}],[Lutz Mueller and others],[${MAIL_GPHOTO_TRANSLATION}])
 ALL_LINGUAS="cs da de fr es eu it ja nb pl pt_BR ru sl sv uk vi zh_CN zh_TW"
 AM_GNU_GETTEXT_VERSION([0.14.1])
 AM_GNU_GETTEXT([external])

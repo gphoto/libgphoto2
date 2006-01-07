@@ -17,6 +17,7 @@ dnl Advanced information about versioning:
 dnl   * "Writing shared libraries" by Mike Hearn
 dnl         http://navi.cx/~mike/writing-shared-libraries.html
 dnl   * libtool.info chapter "Versioning"
+dnl   * libtool.info chapter "Updating library version information"
 dnl ---------------------------------------------------------------------------
 dnl Versioning:
 dnl  - CURRENT (Major):  Increment if the interface has changes. AGE is always
@@ -39,6 +40,7 @@ LIBGPHOTO2_CURRENT=3
 AC_SUBST(LIBGPHOTO2_AGE)
 AC_SUBST(LIBGPHOTO2_REVISION)
 AC_SUBST(LIBGPHOTO2_CURRENT)
+AC_SUBST([LIBGPHOTO2_CURRENT_MIN],[`expr $LIBGPHOTO2_CURRENT - $LIBGPHOTO2_AGE`])
 LIBGPHOTO2_VERSION_INFO=$LIBGPHOTO2_CURRENT:$LIBGPHOTO2_REVISION:$LIBGPHOTO2_AGE
 AC_SUBST(LIBGPHOTO2_VERSION_INFO)
 
@@ -102,7 +104,7 @@ dnl i18n support (including some hacks)
 dnl ---------------------------------------------------------------------------
 
 ALL_LINGUAS="da de es eu fr hu it ja nb pl ru sl sv uk zh_CN"
-GP_GETTEXT_HACK([${PACKAGE}-${LIBGPHOTO2_CURRENT}],[The gPhoto Team],[${MAIL_GPHOTO_TRANSLATION}])
+GP_GETTEXT_HACK([${PACKAGE}-${LIBGPHOTO2_CURRENT_MIN}],[The gPhoto Team],[${MAIL_GPHOTO_TRANSLATION}])
 AM_GNU_GETTEXT_VERSION([0.14.1])
 AM_GNU_GETTEXT([external])
 AM_PO_SUBDIRS()
