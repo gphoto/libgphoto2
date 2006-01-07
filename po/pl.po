@@ -1050,6 +1050,13 @@ msgid ""
 "  configured manually or set to automatic mode.\n"
 "* Image quality is currently lower than it could be.\n"
 msgstr ""
+" * Zak³ócenia obrazu albo problemy z komunikacj± s±\n"
+"   zwykle spowodowane niskim stanem baterii.\n"
+" * Zdjêcia robione zdalnie tym aparatem s± przechowywane\n"
+"   w tymczasowej pamiêci RAM, a nie na karcie pamiêci flash.\n"
+" * Sterowanie ekspozycj± przy zdjêciach mo¿e byæ\n"
+"   konfigurowane rêcznie lub ustawione w trybie automatycznym.\n"
+" * Jako¶æ obrazu jest teraz ni¿sza ni¿ mog³aby byæ.\n"
 
 #: camlibs/dimera/dimera3500.c:439
 msgid ""
@@ -1067,15 +1074,27 @@ msgid ""
 "     Information on protocol, raw image format,\n"
 "     gphoto2 port\n"
 msgstr ""
+"gPhoto2 Mustek VDC-3500/Relisys Dimera 3500\n"
+"To oprogramowanie stworzono przy pomocy w³asno¶ciowych\n"
+"informacji nale¿±cych do StarDot Technologies.\n"
+"\n"
+"Autor:\n"
+"  Brian Beattie  <URL:http://www.beattie-home.net>\n"
+"Wspó³twórcy:\n"
+"  Chuck Homic <chuck@vvisions.com>\n"
+"     Przekszta³canie surowych obrazów z aparatu do RGB\n"
+"  Dan Fandrich <dan@coneharvesters.com>\n"
+"     Informacje o protokole, format surowego obrazu,\n"
+"     port gphoto2\n"
 
 #: camlibs/dimera/dimera3500.c:532
 msgid "Problem reading image from flash"
-msgstr ""
+msgstr "Problem przy odczycie obrazu z pamiêci flash"
 
 #: camlibs/dimera/dimera3500.c:550 camlibs/dimera/dimera3500.c:716
 #: camlibs/dimera/dimera3500.c:860
 msgid "Out of memory"
-msgstr ""
+msgstr "Brak pamiêci"
 
 #: camlibs/dimera/dimera3500.c:567 camlibs/dimera/dimera3500.c:603
 #: camlibs/konica/qm150.c:259 camlibs/panasonic/coolshot/library.c:375
@@ -1083,219 +1102,221 @@ msgstr ""
 #: camlibs/sipix/web2.c:175 camlibs/smal/ultrapocket.c:127
 #: camlibs/smal/ultrapocket.c:173
 msgid "Downloading image..."
-msgstr ""
+msgstr "¦ci±ganie obrazu..."
 
 #: camlibs/dimera/dimera3500.c:589 camlibs/dimera/dimera3500.c:625
 msgid "Problem downloading image"
-msgstr ""
+msgstr "Problem przy ¶ci±ganiu obrazu"
 
 #: camlibs/dimera/dimera3500.c:597
 msgid "User canceled download"
-msgstr ""
+msgstr "¦ci±ganie przerwane przez u¿ytkownika"
 
 #: camlibs/dimera/dimera3500.c:731
 msgid "Problem taking live image"
-msgstr ""
+msgstr "Problem przy robieniu zdjêcia na ¿ywo"
 
 #: camlibs/dimera/dimera3500.c:773 camlibs/konica/library.c:804
 #: camlibs/konica/library.c:1037 camlibs/konica/qm150.c:882
 #: camlibs/ricoh/library.c:496
 msgid "Exposure"
-msgstr ""
+msgstr "Ekspozycja"
 
 #: camlibs/dimera/dimera3500.c:776 camlibs/dimera/dimera3500.c:813
 msgid "Automatic exposure adjustment on preview"
-msgstr ""
+msgstr "Automatyczne dostrajanie ekspozycji przy podgl±dzie"
 
 #: camlibs/dimera/dimera3500.c:780 camlibs/dimera/dimera3500.c:805
 msgid "Exposure level on preview"
-msgstr ""
+msgstr "Poziom ekspozycji przy podgl±dzie"
 
 #: camlibs/dimera/dimera3500.c:788 camlibs/dimera/dimera3500.c:822
 msgid "Automatic flash on capture"
-msgstr ""
+msgstr "Automatyczny flesz przy robieniu zdjêcia"
 
 #: camlibs/dimera/dimera3500.c:888
 msgid "Problem opening port"
-msgstr ""
+msgstr "Problem przy otwieraniu portu"
 
 #: camlibs/dimera/dimera3500.c:898
 msgid "Problem resetting camera"
-msgstr ""
+msgstr "Problem przy resetowaniu aparatu"
 
 #: camlibs/dimera/dimera3500.c:908
 msgid "Problem setting camera communication speed"
-msgstr ""
+msgstr "Problem przy ustawianiu prêdko¶ci komunikacji z aparatem"
 
 #: camlibs/dimera/dimera3500.c:927
 msgid "Looks like a modem, not a camera"
-msgstr ""
+msgstr "Wygl±da jak modem, a nie aparat"
 
 #: camlibs/directory/directory.c:192
 #, c-format
 msgid "Listing files in '%s'..."
-msgstr ""
+msgstr "Pobieranie listy plików w '%s'..."
 
 #: camlibs/directory/directory.c:265
 #, c-format
 msgid "Listing folders in '%s'..."
-msgstr ""
+msgstr "Pobieranie listy folderów w '%s'..."
 
 #: camlibs/directory/directory.c:282
 #, c-format
 msgid "Could not get information about '%s' (%m)."
-msgstr ""
+msgstr "Nie uda³o siê uzyskaæ informacji o '%s' (%m)."
 
 #: camlibs/directory/directory.c:322
 #, c-format
 msgid "Could not get information about '%s' in '%s' (%m)."
-msgstr ""
+msgstr "Nie uda³o siê uzyskaæ informacji o '%s' w '%s' (%m)."
 
 #: camlibs/directory/directory.c:380
 #, c-format
 msgid "Could not change time of file '%s' in '%s' (%m)."
-msgstr ""
+msgstr "Nie uda³o siê zmieniæ czasu pliku '%s' w '%s' (%m)."
 
 #: camlibs/directory/directory.c:471
 #, c-format
 msgid "Could not open '%s'."
-msgstr ""
+msgstr "Nie uda³o siê otworzyæ '%s'."
 
 #: camlibs/directory/directory.c:505
 msgid "The Directory Browse \"camera\" lets you index photos on your hard drive."
-msgstr ""
+msgstr "Przegl±danie katalogu \"aparat\" pozwala indeksowaæ zdjêcia na twardym dysku."
 
 #: camlibs/directory/directory.c:514
 msgid "Directory Browse Mode - written by Scott Fritzinger <scottf@unr.edu>."
-msgstr ""
+msgstr "Tryb przegl±dania katalogu - napisa³ Scott Fritzinger <scottf@unr.edu>."
 
 #: camlibs/directory/directory.c:589
 #, c-format
 msgid "Could not delete file '%s' in folder '%s' (error code %i: %m)."
-msgstr ""
+msgstr "Nie uda³o siê usun±æ pliku '%s' w folderze '%s' (kod b³êdu %i: %m)."
 
 #: camlibs/enigma13/enigma13.c:69
 msgid "Download program for Digital Dream Enigma 1.3. by <olivier@aixmarseille.com>, and adapted from spca50x driver.Thanks you, spca50x team, it was easy to port your driver on this cam! "
-msgstr ""
+msgstr "Program do ¶ci±gania dla aparatów Digital Dream Enigma 1.3. napisany przez <olivier@aixmarseille.com> i zaadoptowany do sterownika spca50x. Podziêkowania dla za³ogi spca50x, ³atwo by³o sportowaæ wasz sterownik do tego aparatu! "
 
 #: camlibs/fuji/fuji.c:85
 #, c-format
 msgid "The camera sent only %i byte(s), but we need at least %i."
-msgstr ""
+msgstr "Aparat wys³a³ tylko %i bajt(ów), ale potrzeba co najmniej %i."
 
 #: camlibs/fuji/fuji.c:126 camlibs/ricoh/library.c:551
 msgid "Could not contact camera."
-msgstr ""
+msgstr "Nie uda³o siê skontaktowaæ z aparatem"
 
 #: camlibs/fuji/fuji.c:188
 #, c-format
 msgid "Received unexpected data (0x%02x, 0x%02x)."
-msgstr ""
+msgstr "Odebrano nieoczekiwane dane (0x%02x, 0x%02x)."
 
 #: camlibs/fuji/fuji.c:214
 #, c-format
 msgid "Wrong escape sequence: expected 0x%02x, got 0x%02x."
-msgstr ""
+msgstr "Niew³a¶ciwa sekwencja steruj±ca: oczekiwano 0x%02x, otrzymano 0x%02x."
 
 #: camlibs/fuji/fuji.c:231
 #, c-format
 msgid "Bad data - got 0x%02x, expected 0x%02x."
-msgstr ""
+msgstr "Z³e dane - otrzymano 0x%02x, oczekiwano 0x%02x."
 
 #: camlibs/fuji/fuji.c:244
 #, c-format
 msgid "Bad data - got 0x%02x, expected 0x%02x or 0x%02x."
-msgstr ""
+msgstr "Z³e dane - otrzymano 0x%02x, oczekiwano 0x%02x lub 0x%02x."
 
 #: camlibs/fuji/fuji.c:251
 #, c-format
 msgid "Bad checksum - got 0x%02x, expected 0x%02x."
-msgstr ""
+msgstr "Z³a suma kontrolna - otrzymano 0x%02x, oczekiwano 0x%02x."
 
 #: camlibs/fuji/fuji.c:289 camlibs/fuji/fuji.c:728
 msgid "Camera rejected the command."
-msgstr ""
+msgstr "Aparat odrzuci³ polecenie."
 
 #: camlibs/fuji/fuji.c:298 camlibs/fuji/fuji.c:737
 msgid "Camera reset itself."
-msgstr ""
+msgstr "Aparat zresetowa³ siê."
 
 #: camlibs/fuji/fuji.c:302 camlibs/fuji/fuji.c:742
 #, c-format
 msgid "Camera sent unexpected byte 0x%02x."
-msgstr ""
+msgstr "Aparat wys³a³ nieoczekiwany bajt 0x%02x."
 
 #: camlibs/fuji/fuji.c:317 camlibs/konica/lowlevel.c:382
 #: camlibs/polaroid/pdc700.c:314 camlibs/ricoh/g3.c:340
 msgid "Downloading..."
-msgstr ""
+msgstr "¦ci±ganie..."
 
 #: camlibs/fuji/fuji.c:538
 #, c-format
 msgid "Could not allocate %i byte(s) for downloading the thumbnail."
-msgstr ""
+msgstr "Nie uda³o siê przydzieliæ %i bajt(ów) do ¶ci±gniêcia miniaturki."
 
 #: camlibs/fuji/fuji.c:572
 #, c-format
 msgid "Could not allocate %i byte(s) for downloading the picture."
-msgstr ""
+msgstr "Nie uda³o siê przydzieliæ %i bajt(ów) do ¶ci±gniêcia obrazu."
 
 #: camlibs/fuji/fuji.c:671
 #, c-format
 msgid "The camera does not accept '%s' as filename."
-msgstr ""
+msgstr "Aparat nie przyj±³ '%s' jako nazwy pliku."
 
 #: camlibs/fuji/fuji.c:675
 #, c-format
 msgid "Could not initialize upload (camera responded with 0x%02x)."
-msgstr ""
+msgstr "Nie uda³o siê rozpocz±æ przesy³ania do aparatu (aparat odpowiedzia³ 0x%02x)."
 
 #: camlibs/fuji/fuji.c:773
 #, c-format
 msgid "The camera does not support speed %i."
-msgstr ""
+msgstr "Aparat nie obs³uguje prêdko¶ci %i."
 
 #: camlibs/fuji/fuji.c:777
 #, c-format
 msgid "Could not set speed to %i (camera responded with %i)."
-msgstr ""
+msgstr "Nie uda³o siê ustawiæ prêdko¶ci %i (aparat odpowiedzia³ %i)."
 
 #: camlibs/fuji/library.c:153
 msgid ""
 "Matthew G. Martin\n"
 "Based on fujiplay by Thierry Bousch <bousch@topo.math.u-psud.fr>\n"
 msgstr ""
+"Matthew G. Martin\n"
+"Oparty o fujiplay, który napisa³ Thierry Bousch <bousch@topo.math.u-psud.fr>\n"
 
 #: camlibs/fuji/library.c:317
 #, c-format
 msgid "Bit rate %ld is not supported."
-msgstr ""
+msgstr "Prêdko¶æ %ld nie jest obs³ugiwana."
 
 #: camlibs/fuji/library.c:365
 msgid "Configuration for your FUJI camera"
-msgstr ""
+msgstr "Konfiguracja aparatu FUJI"
 
 #: camlibs/fuji/library.c:370 camlibs/fuji/library.c:403
 #: camlibs/ricoh/library.c:445 camlibs/ricoh/library.c:447
 #: camlibs/sierra/sierra.c:1690 camlibs/sierra/sierra.c:1863
 msgid "Date & Time"
-msgstr ""
+msgstr "Data i czas"
 
 #: camlibs/fuji/library.c:385 camlibs/fuji/library.c:418
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #: camlibs/fuji/library.c:438
 msgid "Version: "
-msgstr ""
+msgstr "Wersja: "
 
 #: camlibs/fuji/library.c:444
 msgid "Model: "
-msgstr ""
+msgstr "Model: "
 
 #: camlibs/fuji/library.c:451
 msgid "Available memory: "
-msgstr ""
+msgstr "Dostêpna pamiêæ: "
 
 #: camlibs/gsmart300/library.c:163
 msgid ""
@@ -1306,20 +1327,26 @@ msgid ""
 "based on several other gphoto2 camlib modules and the specifications kindly provided by Mustek.\n"
 "\n"
 msgstr ""
+"biblioteka gsmart300 \n"
+"Till Adam <till@adam-lilienthal.de>\n"
+"Jerome Lodewyck <jerome.lodewyck@ens.fr>\n"
+"Obs³uga aparatów cyfrowych Mustek gSmart 300\n"
+"oparta na ró¿nych innych modu³ach camlib gphoto2 i specyfikacji udostêpnionej przez Musteka.\n"
+"\n"
 
 #: camlibs/gsmart300/library.c:199
 #, c-format
 msgid "Unsupported port type: %d. This driver only works with USBcameras.\n"
-msgstr ""
+msgstr "Nieobs³ugiwany rodzaj portu: %d. Ten sterownik dzia³a tylko z aparatami USB.\n"
 
 #: camlibs/gsmart300/library.c:216 camlibs/spca50x/library.c:628
 msgid "Could not reset camera.\n"
-msgstr ""
+msgstr "Nie uda³o siê zresetowaæ aparatu.\n"
 
 #: camlibs/gsmart300/library.c:346 camlibs/spca50x/library.c:516
 #, c-format
 msgid "Your camera does only support deleting the last file on the camera. In this case, this is file '%s'."
-msgstr ""
+msgstr "Ten aparat obs³uguje tylko usuwanie ostatniego pliku z aparatu. W tym przypadku tym plikiem jest '%s'."
 
 #: camlibs/hp215/hp215.c:440
 #, c-format
@@ -1330,6 +1357,11 @@ msgid ""
 "Images free on card: %d\n"
 "Battery level: %d %%"
 msgstr ""
+"Bie¿±cy czas aparatu:  %04d-%02d-%02d  %02d:%02d\n"
+"Wolna pamiêæ na karcie: %d\n"
+"Obrazów na karcie: %d\n"
+"Wolnych obrazów na karcie: %d\n"
+"Poziom baterii: %d%%"
 
 #: camlibs/hp215/hp215.c:464
 msgid ""
@@ -1339,6 +1371,11 @@ msgid ""
 "Merged from the standalone hp215 program.\n"
 "This driver allows download of images and previews, and deletion of images.\n"
 msgstr ""
+"hp215\n"
+"Marcus Meissner <marcus@jet.franken.de>\n"
+"Sterownik dostêpu do aparatów HP Photosmart 215.\n"
+"W³±czony z oddzielnego programu hp215.\n"
+"Sterownik pozwala na ¶ci±ganie obrazów i podgl±dów oraz usuwanie obrazów.\n"
 
 #: camlibs/iclick/library.c:102
 #, c-format
@@ -1346,6 +1383,8 @@ msgid ""
 "Your USB camera is an iClick 5X.\n"
 "The total number of pictures taken is %i\n"
 msgstr ""
+"Ten aparat USB to iClick 5X.\n"
+"Ca³kowita liczba zrobionych zdjêæ: %i\n"
 
 #: camlibs/iclick/library.c:114
 msgid ""
@@ -1359,26 +1398,37 @@ msgid ""
 "from the command line.\n"
 "Also don't even try to download video clips.\n"
 msgstr ""
+"Dla aparatów o ID 0x2770:0x9153:\n"
+"\n"
+"Nie jest zalecane u¿ywanie programu GUI do dostêpu do tego\n"
+"aparatu, chyba ¿e tylko dla zabawy albo ¿eby spróbowaæ, czy\n"
+"mo¿na spaliæ bezpiecznik.\n"
+"Aby naprawdê ¶ci±gn±æ zdjêcia, nale¿y spróbowaæ:\n"
+"gphoto2 -P\n"
+"z linii poleceñ.\n"
+"Nie naale¿y nawet próbowaæ ¶ci±gaæ filmów.\n"
 
 #: camlibs/iclick/library.c:132
 msgid ""
 "iClick 5X driver\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
 msgstr ""
+"Sterownik iClick 5X\n"
+"Theodore Kilgore <kilgota@auburn.edu>\n"
 
 #: camlibs/jamcam/jamcam.c:284
 #, c-format
 msgid "Frames Taken     : %4d\n"
-msgstr ""
+msgstr "Wykonanych klatek: %4d\n"
 
 #: camlibs/jamcam/jamcam.c:295
 msgid "jamcam library v"
-msgstr ""
+msgstr "biblioteka jamcam v"
 
 #: camlibs/jamcam/jamcam.c:296 camlibs/panasonic/coolshot/coolshot.c:265
 #: camlibs/spca50x/library.c:303
 msgid " "
-msgstr ""
+msgstr " "
 
 #: camlibs/jamcam/jamcam.c:296
 msgid ""
@@ -1388,14 +1438,18 @@ msgid ""
 "based on reverse engineering serial protocol.\n"
 "\n"
 msgstr ""
+"\n"
+"Chris Pinkham <cpinkham@infi.net>\n"
+"Obs³uga aparatów cyfrowych KBGear JamCam v2.0 i v3.0\n"
+"oparta o wsteczne rozpracowanie protoko³u szeregowego.\n"
 
 #: camlibs/jamcam/library.c:337 camlibs/jd11/serial.c:459
 msgid "Downloading data..."
-msgstr ""
+msgstr "¦ci±ganie danych..."
 
 #: camlibs/jamcam/library.c:497 camlibs/jd11/serial.c:375
 msgid "Downloading thumbnail..."
-msgstr ""
+msgstr "¦ci±ganie miniaturki..."
 
 #: camlibs/jd11/jd11.c:161
 msgid ""
@@ -1406,6 +1460,12 @@ msgid ""
 "   - thumbnails (64x48 PGM format)\n"
 "   - full images (640x480 PPM format)\n"
 msgstr ""
+"Aparat JD11 dzia³a dosyæ dobrze z tym sterownikiem.\n"
+"Interfejs RS232 przy 115 kbitach jest wymagany do przesy³ania zdjêæ.\n"
+"Sterownik pozwala na pobranie\n"
+"\n"
+"   - miniaturek (64x48 w formacie PGM)\n"
+"   - pe³nych obrazów (640x480 w formacie PPM)\n"
 
 #: camlibs/jd11/jd11.c:174
 msgid ""
@@ -1414,42 +1474,46 @@ msgid ""
 "Driver for the Jenoptik JD11 camera.\n"
 "Protocol reverse engineered using WINE and IDA."
 msgstr ""
+"JD11\n"
+"Marcus Meissner <marcus@jet.franken.de>\n"
+"Sterownik dla aparatów Jenoptik JD11.\n"
+"Protokó³ wstecznie rozpracowany przy u¿yciu WINE i IDA."
 
 #: camlibs/jd11/jd11.c:187
 msgid "JD11 Configuration"
-msgstr ""
+msgstr "Konfiguracja JD11"
 
 #: camlibs/jd11/jd11.c:190 camlibs/jd11/jd11.c:247
 msgid "Other Settings"
-msgstr ""
+msgstr "Inne ustawienia"
 
 #: camlibs/jd11/jd11.c:195 camlibs/jd11/jd11.c:248
 msgid "Bulb Exposure Time"
-msgstr ""
+msgstr "Czas ekspozycji ¿arówki"
 
 #: camlibs/jd11/jd11.c:204 camlibs/jd11/jd11.c:256
 msgid "Color Settings"
-msgstr ""
+msgstr "Ustawienia kolorów"
 
 #: camlibs/jd11/jd11.c:211 camlibs/jd11/jd11.c:258
 msgid "Red"
-msgstr ""
+msgstr "Czerwieñ"
 
 #: camlibs/jd11/jd11.c:219 camlibs/jd11/jd11.c:263
 msgid "Green"
-msgstr ""
+msgstr "Zieleñ"
 
 #: camlibs/jd11/jd11.c:227 camlibs/jd11/jd11.c:268
 msgid "Blue"
-msgstr ""
+msgstr "B³êkit"
 
 #: camlibs/kodak/dc120/dc120.c:31
 msgid "CompactFlash Card"
-msgstr ""
+msgstr "Karta CompactFlash"
 
 #: camlibs/kodak/dc120/dc120.c:364
 msgid "The Kodak DC120 camera uses the KDC file format for storing images. If you want to view the images you download from your camera, you will need to download the \"kdc2tiff\" program. It is available from http://kdc2tiff.sourceforge.net"
-msgstr ""
+msgstr "Aparat Kodak DC120 u¿ywa formatu plików KDC do przechowywania obrazów. Aby ogl±daæ obrazy ¶ci±gniête z aparatu, potrzebny jest program \"kdc2tiff\". Jest on dostêpny pod http://kdc2tiff.sourceforge.net"
 
 #: camlibs/kodak/dc120/dc120.c:376
 msgid ""
@@ -1458,73 +1522,76 @@ msgid ""
 "Camera Library for the Kodak DC120 camera.\n"
 "(by popular demand)."
 msgstr ""
+"Biblioteka dla aparatów Kodak DC120\n"
+"Scott Fritzinger <scottf@gphoto.net>\n"
+"(na ogólne zapotrzebowanie)."
 
 #: camlibs/kodak/dc120/library.c:122 camlibs/kodak/dc210/library.c:441
 #: camlibs/kodak/dc240/library.c:316 camlibs/panasonic/dc1000.c:422
 #: camlibs/panasonic/dc1580.c:550
 msgid "Getting data..."
-msgstr ""
+msgstr "Pobieranie danych..."
 
 #: camlibs/kodak/dc120/library.c:506
 msgid "Waiting for completion..."
-msgstr ""
+msgstr "Oczekiwanie na zakoñczenie..."
 
 #: camlibs/kodak/dc210/dc210.c:174
 msgid "File"
-msgstr ""
+msgstr "Plik"
 
 #: camlibs/kodak/dc210/dc210.c:177 camlibs/kodak/dc210/dc210.c:346
 msgid "File type"
-msgstr ""
+msgstr "Rodzaj pliku"
 
 #: camlibs/kodak/dc210/dc210.c:179 camlibs/kodak/dc210/dc210.c:184
 msgid "JPEG"
-msgstr ""
+msgstr "JPEG"
 
 #: camlibs/kodak/dc210/dc210.c:180 camlibs/kodak/dc210/dc210.c:186
 msgid "FlashPix"
-msgstr ""
+msgstr "FlashPix"
 
 #: camlibs/kodak/dc210/dc210.c:190 camlibs/kodak/dc210/dc210.c:355
 msgid "File resolution"
-msgstr ""
+msgstr "Rozdzielczo¶æ pliku"
 
 #: camlibs/kodak/dc210/dc210.c:192 camlibs/kodak/dc210/dc210.c:197
 #: camlibs/ricoh/library.c:318
 msgid "640 x 480"
-msgstr ""
+msgstr "640 x 480"
 
 #: camlibs/kodak/dc210/dc210.c:193 camlibs/kodak/dc210/dc210.c:199
 msgid "1152 x 864"
-msgstr ""
+msgstr "1152 x 864"
 
 #: camlibs/kodak/dc210/dc210.c:205 camlibs/kodak/dc210/dc210.c:368
 msgid "File compression"
-msgstr ""
+msgstr "Kompresja pliku"
 
 #: camlibs/kodak/dc210/dc210.c:207 camlibs/kodak/dc210/dc210.c:213
 msgid "Low (best quality)"
-msgstr ""
+msgstr "Niska (najlepsza jako¶æ)"
 
 #: camlibs/kodak/dc210/dc210.c:208 camlibs/kodak/dc210/dc210.c:215
 msgid "Medium (better quality)"
-msgstr ""
+msgstr "¦rednia (lepsza jako¶æ)"
 
 #: camlibs/kodak/dc210/dc210.c:209 camlibs/kodak/dc210/dc210.c:217
 msgid "High (good quality)"
-msgstr ""
+msgstr "Wysoka (dobra jako¶æ)"
 
 #: camlibs/kodak/dc210/dc210.c:221 camlibs/konica/qm150.c:1053
 #: camlibs/ptp2/library.c:3119
 msgid "Capture"
-msgstr ""
+msgstr "Zdjêcia"
 
 #: camlibs/kodak/dc210/dc210.c:224 camlibs/kodak/dc210/dc210.c:383
 #: camlibs/konica/qm150.c:1039 camlibs/ptp2/library.c:3138
 #: camlibs/ptp2/ptp.c:1714 camlibs/ricoh/library.c:499
 #: camlibs/sierra/sierra.c:1132 camlibs/sierra/sierra.c:1392
 msgid "Zoom"
-msgstr ""
+msgstr "Powiêkszenie"
 
 #: camlibs/kodak/dc210/dc210.c:231 camlibs/kodak/dc210/dc210.c:245
 #: camlibs/konica/qm150.c:1025 camlibs/ptp2/library.c:2470
@@ -1535,31 +1602,31 @@ msgstr ""
 #: camlibs/sierra/sierra.c:1363 camlibs/sierra/sierra.c:1559
 #: camlibs/sierra/sierra.c:1562 camlibs/sierra/sierra.c:1775
 msgid "Macro"
-msgstr ""
+msgstr "Makro"
 
 #: camlibs/kodak/dc210/dc210.c:235
 msgid "58 mm"
-msgstr ""
+msgstr "58 mm"
 
 #: camlibs/kodak/dc210/dc210.c:237
 msgid "51 mm"
-msgstr ""
+msgstr "51 mm"
 
 #: camlibs/kodak/dc210/dc210.c:239
 msgid "41 mm"
-msgstr ""
+msgstr "41 mm"
 
 #: camlibs/kodak/dc210/dc210.c:241
 msgid "34 mm"
-msgstr ""
+msgstr "34 mm"
 
 #: camlibs/kodak/dc210/dc210.c:243
 msgid "29 mm"
-msgstr ""
+msgstr "29 mm"
 
 #: camlibs/kodak/dc210/dc210.c:249 camlibs/kodak/dc210/dc210.c:408
 msgid "Exposure compensation"
-msgstr ""
+msgstr "Kompensacja ekspozycji"
 
 #: camlibs/kodak/dc210/dc210.c:259 camlibs/kodak/dc210/dc210.c:265
 #: camlibs/konica/library.c:783 camlibs/konica/library.c:799
@@ -1595,7 +1662,7 @@ msgstr ""
 #: camlibs/sierra/sierra.c:1538 camlibs/sierra/sierra.c:1738
 #: camlibs/sierra/sierra.c:1758
 msgid "Auto"
-msgstr ""
+msgstr "Auto"
 
 #: camlibs/kodak/dc210/dc210.c:260 camlibs/kodak/dc210/dc210.c:267
 #: camlibs/sierra/epson-desc.c:152 camlibs/sierra/nikon-desc.c:235
@@ -1604,16 +1671,16 @@ msgstr ""
 #: camlibs/sierra/sierra.c:1301 camlibs/sierra/sierra.c:1506
 #: camlibs/sierra/sierra.c:1513 camlibs/sierra/sierra.c:1740
 msgid "Force"
-msgstr ""
+msgstr "Wymuszenie"
 
 #: camlibs/kodak/dc210/dc210.c:261 camlibs/kodak/dc210/dc210.c:269
 #: camlibs/ricoh/library.c:346
 msgid "None"
-msgstr ""
+msgstr "Brak"
 
 #: camlibs/kodak/dc210/dc210.c:273 camlibs/kodak/dc210/dc210.c:426
 msgid "Red eye flash"
-msgstr ""
+msgstr "Flesz z redukcj± czerwonych oczu"
 
 #: camlibs/kodak/dc210/dc210.c:275 camlibs/kodak/dc210/dc210.c:279
 #: camlibs/konica/library.c:683 camlibs/konica/library.c:690
@@ -1634,7 +1701,7 @@ msgstr ""
 #: camlibs/sierra/sierra.c:1112 camlibs/sierra/sierra.c:1118
 #: camlibs/sierra/sierra.c:1381
 msgid "On"
-msgstr ""
+msgstr "W³±czono"
 
 #: camlibs/kodak/dc210/dc210.c:276 camlibs/kodak/dc210/dc210.c:281
 #: camlibs/kodak/dc210/dc210.c:441 camlibs/konica/library.c:684
@@ -1664,50 +1731,52 @@ msgstr ""
 #: camlibs/sierra/sierra.c:1383 camlibs/sierra/sierra.c:1507
 #: camlibs/sierra/sierra.c:1515 camlibs/sierra/sierra.c:1742
 msgid "Off"
-msgstr ""
+msgstr "Wy³±czono"
 
 #: camlibs/kodak/dc210/dc210.c:284
 msgid "Other"
-msgstr ""
+msgstr "Inne"
 
 #: camlibs/kodak/dc210/dc210.c:290
 msgid "Set clock in camera"
-msgstr ""
+msgstr "Ustawienie zegara w aparaci3"
 
 #: camlibs/kodak/dc210/dc210.c:294 camlibs/kodak/dc210/dc210.c:419
 msgid "Port speed"
-msgstr ""
+msgstr "Prêdko¶æ portu"
 
 #: camlibs/kodak/dc210/dc210.c:304 camlibs/kodak/dc210/library.c:697
 msgid "Album name"
-msgstr ""
+msgstr "Nazwa albumu"
 
 #: camlibs/kodak/dc210/dc210.c:307
 msgid "Name to set on card when formatting."
-msgstr ""
+msgstr "Nazwa do ustawienia na karcie przy formatowaniu."
 
 #: camlibs/kodak/dc210/dc210.c:309
 msgid "Format compact flash"
-msgstr ""
+msgstr "Formatowanie karty compact flash"
 
 #: camlibs/kodak/dc210/dc210.c:312
 msgid "Format card and set album name."
-msgstr ""
+msgstr "Formatowanie karty i ustawienie nazwy albumu."
 
 #: camlibs/kodak/dc210/dc210.c:315
 msgid "Debug"
-msgstr ""
+msgstr "Diagnostyka"
 
 #: camlibs/kodak/dc210/dc210.c:333
 msgid ""
 "Execute predefined command\n"
 "with parameter values."
 msgstr ""
+"Wykonanie predefiniowanego polecenia\n"
+"z warto¶ciami parametrów."
 
 #: camlibs/kodak/dc210/dc210.c:493
 #, c-format
 msgid "Pictures in camera: %d\n"
-msgstr ""
+msgstr "Zdjêæ w aparacie: %d\n"
 
 #: camlibs/kodak/dc210/dc210.c:497
 #, c-format
@@ -1717,150 +1786,154 @@ msgid ""
 "   %d medium compressed or\n"
 "   %d high compressed pictures\n"
 msgstr ""
+"Jest miejsce na kolejne\n"
+"   %d nisko skompresowanych\n"
+"   %d ¶rednio skompresowanych lub\n"
+"   %d wysoko skompresowanych zdjêæ\n"
 
 #: camlibs/kodak/dc210/dc210.c:501
 #, c-format
 msgid "Total pictures taken: %d\n"
-msgstr ""
+msgstr "W sumie wykonano zdjêæ: %d\n"
 
 #: camlibs/kodak/dc210/dc210.c:505
 #, c-format
 msgid "Total flashes fired: %d\n"
-msgstr ""
+msgstr "W sumie flesza u¿yto razy: %d\n"
 
 #: camlibs/kodak/dc210/dc210.c:509
 #, c-format
 msgid "Firmware: %d.%d\n"
-msgstr ""
+msgstr "Firmware: %d.%d\n"
 
 #: camlibs/kodak/dc210/dc210.c:514
 #, c-format
 msgid "Filetype: JPEG ("
-msgstr ""
+msgstr "Rodzaj pliku: JPEG ("
 
 #: camlibs/kodak/dc210/dc210.c:516
 #, c-format
 msgid "Filetype: FlashPix ("
-msgstr ""
+msgstr "Rodzaj pliku: FlashPix ("
 
 #: camlibs/kodak/dc210/dc210.c:522
 #, c-format
 msgid "low compression, "
-msgstr ""
+msgstr "niska kompresja, "
 
 #: camlibs/kodak/dc210/dc210.c:524
 #, c-format
 msgid "medium compression, "
-msgstr ""
+msgstr "¶rednia kompresja, "
 
 #: camlibs/kodak/dc210/dc210.c:526
 #, c-format
 msgid "high compression, "
-msgstr ""
+msgstr "wysoka kompresja, "
 
 #: camlibs/kodak/dc210/dc210.c:528
 #, c-format
 msgid "unknown compression %d, "
-msgstr ""
+msgstr "nieznana kompresja %d, "
 
 #: camlibs/kodak/dc210/dc210.c:538
 #, c-format
 msgid "unknown resolution %d)\n"
-msgstr ""
+msgstr "nieznana rozdzielczo¶æ %d)\n"
 
 #: camlibs/kodak/dc210/dc210.c:551
 #, c-format
 msgid "AC adapter is connected.\n"
-msgstr ""
+msgstr "Zasilacz AC jest pod³±czony.\n"
 
 #: camlibs/kodak/dc210/dc210.c:553
 #, c-format
 msgid "AC adapter is not connected.\n"
-msgstr ""
+msgstr "Zasilacz AC nie jest pod³±czony.\n"
 
 #: camlibs/kodak/dc210/dc210.c:557
 msgid "Time: %a, %d %b %Y %T\n"
-msgstr ""
+msgstr "Czas: %a, %d %b %Y %T\n"
 
 #: camlibs/kodak/dc210/dc210.c:563
 #, c-format
 msgid "Zoom: 58 mm\n"
-msgstr ""
+msgstr "Powiêkszenie: 58 mm\n"
 
 #: camlibs/kodak/dc210/dc210.c:565
 #, c-format
 msgid "Zoom: 51 mm\n"
-msgstr ""
+msgstr "Powiêkszenie: 51 mm\n"
 
 #: camlibs/kodak/dc210/dc210.c:567
 #, c-format
 msgid "Zoom: 41 mm\n"
-msgstr ""
+msgstr "Powiêkszenie: 41 mm\n"
 
 #: camlibs/kodak/dc210/dc210.c:569
 #, c-format
 msgid "Zoom: 34 mm\n"
-msgstr ""
+msgstr "Powiêkszenie: 34 mm\n"
 
 #: camlibs/kodak/dc210/dc210.c:571
 #, c-format
 msgid "Zoom: 29 mm\n"
-msgstr ""
+msgstr "Powiêkszenie: 29 mm\n"
 
 #: camlibs/kodak/dc210/dc210.c:573
 #, c-format
 msgid "Zoom: macro\n"
-msgstr ""
+msgstr "Powiêkszenie: makro\n"
 
 #: camlibs/kodak/dc210/dc210.c:575
 #, c-format
 msgid "Unknown zoom mode %d\n"
-msgstr ""
+msgstr "Nieznany tryb powiêkszenia %d\n"
 
 #: camlibs/kodak/dc210/dc210.c:581
 #, c-format
 msgid "Exposure compensation: %s\n"
-msgstr ""
+msgstr "Kompensacja ekspozycji: %s\n"
 
 #: camlibs/kodak/dc210/dc210.c:583
 #, c-format
 msgid "Exposure compensation: %d\n"
-msgstr ""
+msgstr "Kompensacja ekspozycji: %d\n"
 
 #: camlibs/kodak/dc210/dc210.c:588
 #, c-format
 msgid "Flash mode: auto, "
-msgstr ""
+msgstr "Tryb flesza: auto, "
 
 #: camlibs/kodak/dc210/dc210.c:590
 #, c-format
 msgid "Flash mode: force, "
-msgstr ""
+msgstr "Tryb flesza: wymuszony, "
 
 #: camlibs/kodak/dc210/dc210.c:592
 #, c-format
 msgid "Flash mode: off\n"
-msgstr ""
+msgstr "Tryb flesza: wy³±czony\n"
 
 #: camlibs/kodak/dc210/dc210.c:594
 #, c-format
 msgid "Unknown flash mode %d, "
-msgstr ""
+msgstr "Nieznany tryb flesza %d, "
 
 #: camlibs/kodak/dc210/dc210.c:602
 #, c-format
 msgid "red eye flash on.\n"
-msgstr ""
+msgstr "redukcja czerwonych oczu w³±czona.\n"
 
 #: camlibs/kodak/dc210/dc210.c:605
 #, c-format
 msgid "red eye flash off.\n"
-msgstr ""
+msgstr "redukcja czerwonych oczu wy³±czona.\n"
 
 #: camlibs/kodak/dc210/dc210.c:610
 #, c-format
 msgid "No card in camera.\n"
-msgstr ""
+msgstr "Brak karty w aparacie.\n"
 
 #: camlibs/kodak/dc210/dc210.c:612
 #, c-format
@@ -1868,67 +1941,71 @@ msgid ""
 "Card name: %s\n"
 "Free space on card: %d kB\n"
 msgstr ""
+"Nazwa karty: %s\n"
+"Wolne miejsce na karcie: %d kB\n"
 
 #: camlibs/kodak/dc210/dc210.c:632
 msgid "This library has been tested with a Kodak DC 215 Zoom camera. It might work also with DC 200 and DC 210 cameras. If you happen to have such a camera, please send a message to koltan@gmx.de to let me know, if you have any troubles with this driver library or if everything is okay."
-msgstr ""
+msgstr "Ta biblioteka by³a testowana z aparatem Kodak DC 215 Zoom. Mo¿e dzia³aæ tak¿e z aparatami DC 200 i DC 210. Je¶li masz taki aparat, wy¶lij wiadomo¶æ na adres koltan@gmx.de aby zawiadomiæ autora, czy by³y jakie¶ problemy z tym sterownikiem, czy wszystko by³o w porz±dku."
 
 #: camlibs/kodak/dc210/dc210.c:644
 msgid ""
 "Camera Library for the Kodak DC215 Zoom camera.\n"
 "Michael Koltan <koltan@gmx.de>\n"
 msgstr ""
+"Biblioteka dla aparatów Kodak DC215.\n"
+"Michael Koltan <koltan@gmx.de>\n"
 
 #: camlibs/kodak/dc210/library.c:349
 msgid "Waiting..."
-msgstr ""
+msgstr "Oczekiwanie..."
 
 #: camlibs/kodak/dc210/library.c:1369
 msgid "Parameter 1"
-msgstr ""
+msgstr "Parametr 1"
 
 #: camlibs/kodak/dc210/library.c:1373
 msgid "Parameter 2"
-msgstr ""
+msgstr "Parametr 2"
 
 #: camlibs/kodak/dc210/library.c:1377
 msgid "Parameter 3"
-msgstr ""
+msgstr "Parametr 3"
 
 #: camlibs/kodak/dc240/dc240.c:180
 #, c-format
 msgid "Model: Kodak %s\n"
-msgstr ""
+msgstr "Model: Kodak %s\n"
 
 #: camlibs/kodak/dc240/dc240.c:181
 #, c-format
 msgid "Firmware version: %d.%02d\n"
-msgstr ""
+msgstr "Wersja firmware'u: %d.%02d\n"
 
 #: camlibs/kodak/dc240/dc240.c:183
 #, c-format
 msgid "Battery status: %s, AC Adapter: %s\n"
-msgstr ""
+msgstr "Stan baterii: %s, zasilacz AC: %s\n"
 
 #: camlibs/kodak/dc240/dc240.c:187
 #, c-format
 msgid "Number of pictures: %d\n"
-msgstr ""
+msgstr "Liczba zdjêæ: %d\n"
 
 #: camlibs/kodak/dc240/dc240.c:189
 #, c-format
 msgid "Space remaining: High: %d, Medium: %d, Low: %d\n"
-msgstr ""
+msgstr "Pozosta³e miejsce: wysoka: %d, ¶rednia: %d, niska: %d\n"
 
 #: camlibs/kodak/dc240/dc240.c:193
 #, c-format
 msgid "Memory card status (%d): %s\n"
-msgstr ""
+msgstr "Stan karty pamiêci (%d): %s\n"
 
 #: camlibs/kodak/dc240/dc240.c:197
 #, c-format
 msgid "Total pictures captured: %d, Flashes fired: %d\n"
-msgstr ""
+msgstr "W sumie wykonano zdjêæ: %d, flesza u¿yto razy: %d\n"
 
 #: camlibs/kodak/dc240/dc240.c:211
 msgid ""
@@ -1937,51 +2014,55 @@ msgid ""
 "Camera Library for the Kodak DC240, DC280, DC3400 and DC5000 cameras.\n"
 "Rewritten and updated for gPhoto2."
 msgstr ""
+"Biblioteka dla aparatów Kodak DC240\n"
+"Scott Fritzinger <scottf@gphoto.net> i Hubert Figuiere <hfiguiere@teaser.fr>\n"
+"Biblioteka dla aparatów Kodak DC240, DC280, DC3400 i DC5000.\n"
+"Przepisano i uaktualniono dla gPhoto2."
 
 #: camlibs/kodak/dc240/library.c:573
 msgid "Weak"
-msgstr ""
+msgstr "S³abe"
 
 #: camlibs/kodak/dc240/library.c:576
 msgid "Empty"
-msgstr ""
+msgstr "Puste"
 
 #: camlibs/kodak/dc240/library.c:581 camlibs/kodak/dc240/library.c:596
 msgid "Invalid"
-msgstr ""
+msgstr "Nieprawid³owy"
 
 #: camlibs/kodak/dc240/library.c:588
 msgid "Not used"
-msgstr ""
+msgstr "Nie u¿ywany"
 
 #: camlibs/kodak/dc240/library.c:591
 msgid "In use"
-msgstr ""
+msgstr "U¿ywany"
 
 #: camlibs/kodak/dc240/library.c:605
 msgid "Card is open"
-msgstr ""
+msgstr "Karta otwarta"
 
 #: camlibs/kodak/dc240/library.c:608
 msgid "Card is not open"
-msgstr ""
+msgstr "Karta nie otwarta"
 
 #: camlibs/kodak/dc240/library.c:612
 msgid "Card is not formatted"
-msgstr ""
+msgstr "Karta nie sformatowana"
 
 #: camlibs/kodak/dc240/library.c:616
 msgid "No card"
-msgstr ""
+msgstr "Brak karty"
 
 #: camlibs/kodak/dc3200/dc3200.c:38
 msgid "There is currently an operation in progress. This camera only supports one operation at a time. Please wait until the current operation has finished."
-msgstr ""
+msgstr "Aktualnie wykonuje siê jaka¶ operacja. Ten aparat obs³uguje tylko jedn± operacjê w danej chwili. Proszê poczekaæ na zakoñczenie bie¿±cej operacji."
 
 #: camlibs/kodak/dc3200/dc3200.c:142
 #, c-format
 msgid "camera inactive for > 9 seconds, re-initing.\n"
-msgstr ""
+msgstr "aparat nieaktywny przez > 9 sekund, ponowna inicjalizacja.\n"
 
 #: camlibs/kodak/dc3200/dc3200.c:431
 msgid ""
@@ -1989,6 +2070,9 @@ msgid ""
 "\n"
 "1. If the Kodak DC3200 does not receive a command at least every 10 seconds, it will time out, and will have to be re-initialized. If you notice the camera does not respond, simply re-select the camera. This will cause it to reinitialize."
 msgstr ""
+"Znane problemy:\n"
+"\n"
+"1. Je¶li Kodak DC3200 nie otrzyma polecenia przynajmniej co ka¿de 10 sekund, wyczerpie siê limit czasu i bêdzie musia³ byæ ponownie inicjalizowany. Je¶li aparat nie bêdzie odpowiada³, wystarczy ponownie wybraæ aparat - spowoduje to ponown± inicjalizacjê."
 
 #: camlibs/kodak/dc3200/dc3200.c:444
 msgid ""
@@ -1997,6 +2081,10 @@ msgid ""
 "\n"
 "Questions and comments appreciated."
 msgstr ""
+"Sterownik do aparatów Kodak DC3200\n"
+"Donn Morrison <dmorriso@gulf.uvic.ca>\n"
+"\n"
+"Pytania i komentarze mile widziane."
 
 #: camlibs/kodak/ez200/library.c:111
 #, c-format
@@ -2004,138 +2092,142 @@ msgid ""
 "Your USB camera is a Kodak EZ200.\n"
 "Number of PICs = %i\n"
 msgstr ""
+"Aparat USB to Kodak EZ200.\n"
+"Liczba zdjêæ = %i\n"
 
 #: camlibs/kodak/ez200/library.c:124
 msgid ""
 "Kodak EZ200 driver\n"
 "Bucas Jean-Francois <jfbucas@tuxfamily.org>\n"
 msgstr ""
+"Sterownik Kodak EZ200\n"
+"Bucas Jean-Francois <jfbucas@tuxfamily.org>\n"
 
 #: camlibs/konica/konica.c:62
 msgid "Focusing error."
-msgstr ""
+msgstr "B³±d ogniskowania."
 
 #: camlibs/konica/konica.c:65
 msgid "Iris error."
-msgstr ""
+msgstr "B³±d Iris."
 
 #: camlibs/konica/konica.c:68
 msgid "Strobe error."
-msgstr ""
+msgstr "B³±d bramki."
 
 #: camlibs/konica/konica.c:71
 msgid "EEPROM checksum error."
-msgstr ""
+msgstr "B³±d sumy kontrolnej EEPROM-u."
 
 #: camlibs/konica/konica.c:74
 msgid "Internal error (1)."
-msgstr ""
+msgstr "B³±d wewnêtrzny (1)."
 
 #: camlibs/konica/konica.c:77
 msgid "Internal error (2)."
-msgstr ""
+msgstr "B³±d wewnêtrzny (2)."
 
 #: camlibs/konica/konica.c:80
 msgid "No card present."
-msgstr ""
+msgstr "Karta nie w³o¿ona."
 
 #: camlibs/konica/konica.c:83
 msgid "Card not supported."
-msgstr ""
+msgstr "Karta nie obs³ugiwana."
 
 #: camlibs/konica/konica.c:86
 msgid "Card removed during access."
-msgstr ""
+msgstr "Karta usuniêta podczas dostêpu."
 
 #: camlibs/konica/konica.c:89
 msgid "Image number not valid."
-msgstr ""
+msgstr "Liczba obrazów nieprawid³owa."
 
 #: camlibs/konica/konica.c:92
 msgid "Card can not be written."
-msgstr ""
+msgstr "Zapis na kartê niemo¿liwy."
 
 #: camlibs/konica/konica.c:95
 msgid "Card is write protected."
-msgstr ""
+msgstr "Karta jest zabezpieczona przed zapisem."
 
 #: camlibs/konica/konica.c:98
 msgid "No space left on card."
-msgstr ""
+msgstr "Nie ma miejsca na karcie."
 
 #: camlibs/konica/konica.c:101
 msgid "Image protected."
-msgstr ""
+msgstr "Obraz zabezpieczony."
 
 #: camlibs/konica/konica.c:104
 msgid "Light too dark."
-msgstr ""
+msgstr "O¶wietlenie zbyt ciemne."
 
 #: camlibs/konica/konica.c:107
 msgid "Autofocus error."
-msgstr ""
+msgstr "B³±d autofocusu."
 
 #: camlibs/konica/konica.c:110
 msgid "System error."
-msgstr ""
+msgstr "B³±d systemowy."
 
 #: camlibs/konica/konica.c:113
 msgid "Illegal parameter."
-msgstr ""
+msgstr "Niedozwolony parametr."
 
 #: camlibs/konica/konica.c:116
 msgid "Command can not be cancelled."
-msgstr ""
+msgstr "Polecenie nie mo¿e byæ przerwane."
 
 #: camlibs/konica/konica.c:119
 msgid "Localization data too long."
-msgstr ""
+msgstr "Dane lokalizacyjne zbyt d³ugie."
 
 #: camlibs/konica/konica.c:122
 msgid "Localization data corrupt."
-msgstr ""
+msgstr "Dane lokalizacyjne uszkodzone."
 
 #: camlibs/konica/konica.c:125
 msgid "Unsupported command."
-msgstr ""
+msgstr "Nieobs³ugiwane polecenie."
 
 #: camlibs/konica/konica.c:128
 msgid "Other command executing."
-msgstr ""
+msgstr "Wykonywane jest inne polecenie."
 
 #: camlibs/konica/konica.c:131
 msgid "Command order error."
-msgstr ""
+msgstr "B³±d kolejno¶ci poleceñ."
 
 #: camlibs/konica/konica.c:134
 msgid "Unknown error."
-msgstr ""
+msgstr "Nieznany b³±d."
 
 #: camlibs/konica/konica.c:137
 #, c-format
 msgid "The camera has just sent an error that has not yet been discovered. Please report the following to %s with additional information how you got this error: (0x%x,0x%x). Thank you very much!"
-msgstr ""
+msgstr "Aparat wys³a³ w³a¶nie b³±d, który nie zosta³ jeszcze odkryty. Proszê zg³osiæ nastêpuj±cy raport na adres %s z dodatkowymi informacjami jak uzyskano ten b³±d: (0x%x,0x%x). Z góry dziêkujê!"
 
 #: camlibs/konica/library.c:158 camlibs/pccam300/library.c:123
 msgid "Getting file list..."
-msgstr ""
+msgstr "Pobieranie listy plików..."
 
 #: camlibs/konica/library.c:325
 msgid "Testing different speeds..."
-msgstr ""
+msgstr "Testowanie ró¿nych prêdko¶ci..."
 
 #: camlibs/konica/library.c:340
 msgid "The camera could not be contacted. Please make sure it is connected to the computer and turned on."
-msgstr ""
+msgstr "Nie uda³o siê skontaktowaæ z aparatem. Proszê upewniæ siê, ¿e jest pod³±czony do komputera i w³±czony."
 
 #: camlibs/konica/library.c:373
 msgid "Your camera does not support changing filenames."
-msgstr ""
+msgstr "Aparat nie obs³uguje zmiany nazw plików."
 
 #: camlibs/konica/library.c:432
 #, c-format
 msgid "%i pictures could not be deleted because they are protected"
-msgstr ""
+msgstr "%i obrazów nie uda³o siê usun±æ poniewa¿ s± zabezpieczone"
 
 #: camlibs/konica/library.c:533
 #, c-format
@@ -2148,6 +2240,13 @@ msgid ""
 "Name: %s,\n"
 "Manufacturer: %s\n"
 msgstr ""
+"Model: %s\n"
+"Numer seryjny: %s,\n"
+"Wersja sprzêtu: %i.%i\n"
+"Wersja oprogramowania: %i.%i\n"
+"Wersja oprogramowania testowego: %i.%i\n"
+"Nazwa: %s,\n"
+"Producent: %s\n"
 
 #: camlibs/konica/library.c:626
 msgid ""
@@ -2155,162 +2254,165 @@ msgid ""
 "Lutz Mueller <lutz@users.sourceforge.net>\n"
 "Support for all Konica and several HP cameras."
 msgstr ""
+"Biblioteka Konica\n"
+"Lutz Mueller <lutz@users.sourceforge.net>\n"
+"Obs³uga wszystkich aparatów Konica i niektórych HP."
 
 #: camlibs/konica/library.c:651
 msgid "Getting configuration..."
-msgstr ""
+msgstr "Pobieranie konfiguracji..."
 
 #: camlibs/konica/library.c:658 camlibs/konica/qm150.c:755
 msgid "Konica Configuration"
-msgstr ""
+msgstr "Konfiguracja Konica"
 
 #: camlibs/konica/library.c:663 camlibs/konica/library.c:874
 #: camlibs/konica/qm150.c:760
 msgid "Persistent Settings"
-msgstr ""
+msgstr "Ustawienia zachowywane"
 
 #: camlibs/konica/library.c:667 camlibs/konica/library.c:878
 #: camlibs/konica/qm150.c:764 camlibs/polaroid/pdc700.c:1004
 #: camlibs/polaroid/pdc700.c:1017 camlibs/polaroid/pdc700.c:1087
 msgid "Date and Time"
-msgstr ""
+msgstr "Data i czas"
 
 #: camlibs/konica/library.c:681 camlibs/konica/library.c:895
 msgid "Beep"
-msgstr ""
+msgstr "Piszczyk"
 
 #: camlibs/konica/library.c:693
 msgid "Shall the camera beep when taking a picture?"
-msgstr ""
+msgstr "Czy aparat ma piszczeæ przy robieniu zdjêcia?"
 
 #: camlibs/konica/library.c:697 camlibs/konica/library.c:907
 msgid "Self Timer Time"
-msgstr ""
+msgstr "Czas samowyzwalacza"
 
 #: camlibs/konica/library.c:704 camlibs/konica/library.c:915
 #: camlibs/konica/qm150.c:769
 msgid "Auto Off Time"
-msgstr ""
+msgstr "Czas automatycznego wy³±czania"
 
 #: camlibs/konica/library.c:711 camlibs/konica/library.c:923
 msgid "Slide Show Interval"
-msgstr ""
+msgstr "Odstêp miêdzy pokazywanymi slajdami"
 
 #: camlibs/konica/library.c:718 camlibs/konica/library.c:932
 #: camlibs/konica/qm150.c:777 camlibs/ricoh/library.c:495
 #: camlibs/sierra/sierra.c:894 camlibs/sierra/sierra.c:1226
 #: camlibs/sierra/sierra.c:1577 camlibs/sierra/sierra.c:1786
 msgid "Resolution"
-msgstr ""
+msgstr "Rozdzielczo¶æ"
 
 #: camlibs/konica/library.c:720 camlibs/konica/library.c:728
 #: camlibs/konica/library.c:937
 msgid "Low (576 x 436)"
-msgstr ""
+msgstr "Niska (576 x 436)"
 
 #: camlibs/konica/library.c:721 camlibs/konica/library.c:731
 msgid "Medium (1152 x 872)"
-msgstr ""
+msgstr "¦rednia (1152 x 872)"
 
 #: camlibs/konica/library.c:722 camlibs/konica/library.c:725
 #: camlibs/konica/library.c:935
 msgid "High (1152 x 872)"
-msgstr ""
+msgstr "Wysoka (1152 x 872)"
 
 #: camlibs/konica/library.c:738 camlibs/konica/library.c:948
 #: camlibs/konica/qm150.c:825
 msgid "Localization"
-msgstr ""
+msgstr "Lokalizacja"
 
 #: camlibs/konica/library.c:744 camlibs/konica/library.c:951
 #: camlibs/sierra/epson-desc.c:246 camlibs/sierra/nikon-desc.c:434
 #: camlibs/sierra/sierra.c:1653 camlibs/sierra/sierra.c:1837
 msgid "Language"
-msgstr ""
+msgstr "Jêzyk"
 
 #: camlibs/konica/library.c:751 camlibs/konica/library.c:760
 #: camlibs/konica/library.c:768 camlibs/konica/library.c:955
 #: camlibs/konica/library.c:980 camlibs/konica/library.c:998
 msgid "None selected"
-msgstr ""
+msgstr "Nie wybrano"
 
 #: camlibs/konica/library.c:755 camlibs/konica/library.c:977
 msgid "TV Output Format"
-msgstr ""
+msgstr "Format wyj¶cia TV"
 
 #: camlibs/konica/library.c:757 camlibs/konica/library.c:981
 msgid "NTSC"
-msgstr ""
+msgstr "NTSC"
 
 #: camlibs/konica/library.c:758 camlibs/konica/library.c:983
 msgid "PAL"
-msgstr ""
+msgstr "PAL"
 
 #: camlibs/konica/library.c:759 camlibs/konica/library.c:985
 msgid "Do not display TV menu"
-msgstr ""
+msgstr "Nie wy¶wietlanie menu TV"
 
 #: camlibs/konica/library.c:763 camlibs/konica/library.c:995
 #: camlibs/konica/qm150.c:829
 msgid "Date Format"
-msgstr ""
+msgstr "Format daty"
 
 #: camlibs/konica/library.c:765 camlibs/konica/library.c:999
 #: camlibs/konica/qm150.c:831 camlibs/konica/qm150.c:836
 msgid "Month/Day/Year"
-msgstr ""
+msgstr "Miesi±c/Dzieñ/Rok"
 
 #: camlibs/konica/library.c:766 camlibs/konica/library.c:1001
 #: camlibs/konica/qm150.c:832 camlibs/konica/qm150.c:839
 msgid "Day/Month/Year"
-msgstr ""
+msgstr "Dzieñ/Miesi±c/Rok"
 
 #: camlibs/konica/library.c:767 camlibs/konica/library.c:1003
 #: camlibs/konica/qm150.c:833 camlibs/konica/qm150.c:842
 msgid "Year/Month/Day"
-msgstr ""
+msgstr "Rok/Miesi±c/Dzieñ"
 
 #: camlibs/konica/library.c:773 camlibs/konica/library.c:1015
 #: camlibs/konica/qm150.c:849
 msgid "Session-persistent Settings"
-msgstr ""
+msgstr "Ustawienia sta³e dla sesji"
 
 #: camlibs/konica/library.c:782 camlibs/konica/library.c:793
 #: camlibs/konica/library.c:1026 camlibs/konica/qm150.c:858
 #: camlibs/konica/qm150.c:868
 msgid "On, red-eye reduction"
-msgstr ""
+msgstr "W³±czony, redukcja czerwonych oczu"
 
 #: camlibs/konica/library.c:784 camlibs/konica/library.c:796
 #: camlibs/konica/qm150.c:860 camlibs/konica/qm150.c:875
 msgid "Auto, red-eye reduction"
-msgstr ""
+msgstr "Automatyczny, redukcja czerwonych oczu"
 
 #: camlibs/konica/library.c:811 camlibs/konica/library.c:1045
 #: camlibs/konica/qm150.c:941
 msgid "Focus"
-msgstr ""
+msgstr "Ogniskowa"
 
 #: camlibs/konica/library.c:813 camlibs/konica/library.c:820
 #: camlibs/sierra/epson-desc.c:170 camlibs/sierra/sierra.c:1534
 #: camlibs/sierra/sierra.c:1540 camlibs/sierra/sierra.c:1760
 msgid "Fixed"
-msgstr ""
+msgstr "Sta³a"
 
 #: camlibs/konica/library.c:827 camlibs/konica/library.c:1050
 #: camlibs/konica/qm150.c:1091
 msgid "Volatile Settings"
-msgstr ""
+msgstr "Ustawienia ulotne"
 
 #: camlibs/konica/library.c:831 camlibs/konica/library.c:1053
 #: camlibs/konica/qm150.c:1095 camlibs/polaroid/pdc700.c:163
 msgid "Self Timer"
-msgstr ""
+msgstr "Samowyzwalacz"
 
 #: camlibs/konica/library.c:833 camlibs/konica/library.c:1063
 #: camlibs/konica/qm150.c:1097
 msgid "Self Timer (only next picture)"
-msgstr ""
+msgstr "Samowyzwalacz (tylko dla nastêpnego zdjêcia)"
 
 #: camlibs/konica/library.c:834 camlibs/konica/library.c:841
 #: camlibs/konica/qm150.c:1098 camlibs/konica/qm150.c:1105
@@ -2326,213 +2428,213 @@ msgstr ""
 #: camlibs/sierra/sierra.c:1777
 #, c-format
 msgid "Normal"
-msgstr ""
+msgstr "Zwyk³y"
 
 #: camlibs/konica/library.c:837 camlibs/konica/qm150.c:1101
 msgid "Self Timer (next picture only)"
-msgstr ""
+msgstr "Samowyzwalacz (tylko dla nastêpnego zdjêcia)"
 
 #: camlibs/konica/library.c:1094
 #, c-format
 msgid "Could not find localization data at '%s'"
-msgstr ""
+msgstr "Nie uda³o siê odnale¼æ danych lokalizacji pod '%s'"
 
 #: camlibs/konica/library.c:1158
 msgid "Localization file too long!"
-msgstr ""
+msgstr "Plik lokalizacji zbyt d³ugi!"
 
 #: camlibs/konica/qm150.c:252
 msgid "This preview doesn't exist."
-msgstr ""
+msgstr "Ten podgl±d nie istnieje."
 
 #: camlibs/konica/qm150.c:284
 msgid "Data has been corrupted."
-msgstr ""
+msgstr "Dane zosta³y uszkodzone."
 
 #: camlibs/konica/qm150.c:404
 #, c-format
 msgid "Image type %d is not supported by this camera !"
-msgstr ""
+msgstr "Typ obrazu %d nie jest obs³ugiwany przez ten aparat!"
 
 #: camlibs/konica/qm150.c:460
 #, c-format
 msgid "Can't delete image %s."
-msgstr ""
+msgstr "Nie mo¿na usun±æ obrazu %s."
 
 #: camlibs/konica/qm150.c:491
 msgid "Can't delete all images."
-msgstr ""
+msgstr "Nie mo¿na usun±æ wszystkich obrazów."
 
 #: camlibs/konica/qm150.c:523
 msgid "Uploading image..."
-msgstr ""
+msgstr "Przesy³anie obrazu do aparatu..."
 
 #: camlibs/konica/qm150.c:533 camlibs/konica/qm150.c:598
 msgid "Can't upload this image to the camera. An error has occured."
-msgstr ""
+msgstr "Nie mo¿na przes³aæ tego obrazu do aparatu. Wyst±pi³ b³±d."
 
 #: camlibs/konica/qm150.c:640
 msgid "You must be in record mode to capture image."
-msgstr ""
+msgstr "Do wykonywania zdjêæ musi byæ w³±czony tryb nagrywania."
 
 #: camlibs/konica/qm150.c:643
 msgid "No space available to capture new image. You must delete some images."
-msgstr ""
+msgstr "Brak wolnego miejsca aby zrobiæ nowe zdjêcie. Trzeba usun±æ trochê obrazów."
 
 #: camlibs/konica/qm150.c:647
 msgid "Can't capture new image. Unknown error"
-msgstr ""
+msgstr "Nie mo¿na zrobiæ zdjêcia. Nieznany b³±d"
 
 #: camlibs/konica/qm150.c:659
 msgid "No answer from the camera."
-msgstr ""
+msgstr "Brak odpowiedzi od aparatu."
 
 #: camlibs/konica/qm150.c:779 camlibs/konica/qm150.c:787
 #: camlibs/sierra/nikon-desc.c:203 camlibs/sierra/sierra.c:936
 #: camlibs/sierra/sierra.c:943 camlibs/sierra/sierra.c:1261
 msgid "Low"
-msgstr ""
+msgstr "Niska"
 
 #: camlibs/konica/qm150.c:780 camlibs/konica/qm150.c:790
 #: camlibs/sierra/nikon-desc.c:204 camlibs/sierra/sierra.c:937
 #: camlibs/sierra/sierra.c:945 camlibs/sierra/sierra.c:1263
 msgid "Medium"
-msgstr ""
+msgstr "¦rednia"
 
 #: camlibs/konica/qm150.c:781 camlibs/konica/qm150.c:784
 #: camlibs/sierra/sierra.c:897 camlibs/sierra/sierra.c:905
 #: camlibs/sierra/sierra.c:938 camlibs/sierra/sierra.c:947
 #: camlibs/sierra/sierra.c:1234 camlibs/sierra/sierra.c:1265
 msgid "High"
-msgstr ""
+msgstr "Wysoka"
 
 #: camlibs/konica/qm150.c:795 camlibs/polaroid/pdc700.c:162
 msgid "LCD"
-msgstr ""
+msgstr "LCD"
 
 #: camlibs/konica/qm150.c:809
 msgid "Icons"
-msgstr ""
+msgstr "Ikony"
 
 #: camlibs/konica/qm150.c:943 camlibs/konica/qm150.c:952
 msgid "2.0m"
-msgstr ""
+msgstr "2.0m"
 
 #: camlibs/konica/qm150.c:944 camlibs/konica/qm150.c:955
 msgid "0.5m"
-msgstr ""
+msgstr "0.5m"
 
 #: camlibs/konica/qm150.c:945 camlibs/konica/qm150.c:958
 msgid "0.1m"
-msgstr ""
+msgstr "0.1m"
 
 #: camlibs/konica/qm150.c:963
 msgid "White balance"
-msgstr ""
+msgstr "Balans bieli"
 
 #: camlibs/konica/qm150.c:965 camlibs/konica/qm150.c:976
 msgid "Office"
-msgstr ""
+msgstr "Biuro"
 
 #: camlibs/konica/qm150.c:966 camlibs/konica/qm150.c:973
 msgid "Day-lt"
-msgstr ""
+msgstr "¦wiat³o dzienne"
 
 #: camlibs/konica/qm150.c:981 camlibs/ptp2/ptp.c:1668
 msgid "Sharpness"
-msgstr ""
+msgstr "Ostro¶æ"
 
 #: camlibs/konica/qm150.c:983 camlibs/konica/qm150.c:991
 msgid "Sharp"
-msgstr ""
+msgstr "Ostra"
 
 #: camlibs/konica/qm150.c:984 camlibs/konica/qm150.c:994
 msgid "Soft"
-msgstr ""
+msgstr "Miêkka"
 
 #: camlibs/konica/qm150.c:999 camlibs/sierra/epson-desc.c:136
 #: camlibs/sierra/nikon-desc.c:219
 msgid "Color"
-msgstr ""
+msgstr "Kolor"
 
 #: camlibs/konica/qm150.c:1001 camlibs/konica/qm150.c:1011
 msgid "Light"
-msgstr ""
+msgstr "Jasny"
 
 #: camlibs/konica/qm150.c:1002 camlibs/konica/qm150.c:1014
 msgid "Deep"
-msgstr ""
+msgstr "G³êboki"
 
 #: camlibs/konica/qm150.c:1003 camlibs/konica/qm150.c:1017
 msgid "Black and White"
-msgstr ""
+msgstr "Czarno-bia³y"
 
 #: camlibs/konica/qm150.c:1004 camlibs/konica/qm150.c:1020
 #: camlibs/ptp2/library.c:2882 camlibs/ricoh/library.c:331
 #: camlibs/sierra/olympus-desc.c:378 camlibs/sierra/sierra.c:967
 #: camlibs/sierra/sierra.c:976 camlibs/sierra/sierra.c:1282
 msgid "Sepia"
-msgstr ""
+msgstr "Sepia"
 
 #: camlibs/konica/qm150.c:1055 camlibs/konica/qm150.c:1059
 msgid "Single"
-msgstr ""
+msgstr "Pojedyncze"
 
 #: camlibs/konica/qm150.c:1056 camlibs/konica/qm150.c:1062
 msgid "Sequence 9"
-msgstr ""
+msgstr "Sekwencja 9"
 
 #: camlibs/konica/qm150.c:1067
 msgid "Date display"
-msgstr ""
+msgstr "Wy¶wietlanie daty"
 
 #: camlibs/konica/qm150.c:1069 camlibs/konica/qm150.c:1078
 msgid "Anywhere"
-msgstr ""
+msgstr "Nigdy"
 
 #: camlibs/konica/qm150.c:1070 camlibs/konica/qm150.c:1076
 msgid "Play mode"
-msgstr ""
+msgstr "W trybie odtwarzania"
 
 #: camlibs/konica/qm150.c:1071 camlibs/konica/qm150.c:1084
 msgid "Record mode"
-msgstr ""
+msgstr "W trybie nagrywania"
 
 #: camlibs/konica/qm150.c:1072 camlibs/konica/qm150.c:1082
 msgid "Everywhere"
-msgstr ""
+msgstr "Zawsze"
 
 #: camlibs/konica/qm150.c:1142
 #, c-format
 msgid "AC"
-msgstr ""
+msgstr "AC"
 
 #: camlibs/konica/qm150.c:1145 camlibs/minolta/dimagev/dimagev.c:306
 #: camlibs/sierra/nikon-desc.c:361
 #, c-format
 msgid "Play"
-msgstr ""
+msgstr "Odtwarzanie"
 
 #: camlibs/konica/qm150.c:1147 camlibs/minolta/dimagev/dimagev.c:306
 #: camlibs/sierra/nikon-desc.c:360
 #, c-format
 msgid "Record"
-msgstr ""
+msgstr "Nagrywanie"
 
 #: camlibs/konica/qm150.c:1157
 #, c-format
 msgid "DD/MM/YYYY"
-msgstr ""
+msgstr "DD/MM/RRRR"
 
 #: camlibs/konica/qm150.c:1162
 #, c-format
 msgid "YYYY/MM/DD"
-msgstr ""
+msgstr "RRRR/MM/DD"
 
 #: camlibs/konica/qm150.c:1166
 #, c-format
 msgid "MM/DD/YYYY"
-msgstr ""
+msgstr "MM/DD/RRRR"
 
 #: camlibs/konica/qm150.c:1170
 #, c-format
@@ -2546,6 +2648,14 @@ msgid ""
 "Date display: %s\n"
 "Date and Time: %s\n"
 msgstr ""
+"Model: %s\n"
+"Pojemno¶æ: %iMo\n"
+"Zasilanie: %s\n"
+"Czas automatycznego wy³±czania: %i min\n"
+"Tryb: %s\n"
+"Obrazy: %i/%i\n"
+"Wy¶wietlanie daty: %s\n"
+"Data i czas: %s\n"
 
 #: camlibs/konica/qm150.c:1193
 #, c-format
@@ -2556,6 +2666,11 @@ msgid ""
 "http://www.ap2c.com\n"
 "Support for the french Konica Q-M150."
 msgstr ""
+"Biblioteka Konica Q-M150\n"
+"Marcus Meissner <marcus@jet.franken.de>\n"
+"Aurelien Croc (AP2C) <programming@ap2c.com>\n"
+"http://www.ap2c.com\n"
+"Obs³uga francuskich aparatów Konica Q-M150."
 
 #: camlibs/konica/qm150.c:1208
 #, c-format
@@ -2571,14 +2686,23 @@ msgid ""
 "\n"
 "Thanks to use GPhoto2 and UNIX/Linux Operating systems.\n"
 msgstr ""
+"O aparacie Konica Q-M150:\n"
+"Ten aparat nie pozwala wykonywaæ ¿adnych zmian z zewn±trz.\n"
+"Tak wiêc w konfiguracji mo¿na tylko ogl±daæ jak jest\n"
+"skonfigurowany aparat, ale nie mo¿na niczego zmieniæ.\n"
+"\n"
+"W przypadku problemów z tym sterownikiem proszê pisaæ\n"
+"na adres autorów tego sterownika.\n"
+"\n"
+"Podziêkowania za u¿ywanie GPhoto2 i systemów operacyjnych UNIX/Linux.\n"
 
 #: camlibs/largan/lmini/largan.c:268
 msgid "There is nothing to summarize for this camera."
-msgstr ""
+msgstr "Nie ma niæ opisuj±cego ten aparat."
 
 #: camlibs/largan/lmini/largan.c:280
 msgid "No manual"
-msgstr ""
+msgstr "Brak podrêcznika"
 
 #: camlibs/largan/lmini/largan.c:288
 msgid ""
@@ -2587,6 +2711,10 @@ msgid ""
 "\n"
 "Handles Largan Lmini camera.\n"
 msgstr ""
+"Sterownik Largan\n"
+"Hubert Figuiere <hfiguiere@teaser.fr>\n"
+"\n"
+"Obs³uguje aparaty Largan Lmini.\n"
 
 #: camlibs/lg_gsm/library.c:102
 #, c-format
@@ -2595,12 +2723,17 @@ msgid ""
 "Firmware         = %s\n"
 "Firmware Version = %s\n"
 msgstr ""
+"Aparat USB wygl±da na LG GSM.\n"
+"Firmware          = %s\n"
+"Wersja firmware'u = %s\n"
 
 #: camlibs/lg_gsm/library.c:114
 msgid ""
 "LG GSM generic driver\n"
 "Guillaume Bedot <littletux@zarb.org>\n"
 msgstr ""
+"Ogólny sterownik LG GSM\n"
+"Guillaume Bedot <littletux@zarb.org>\n"
 
 #: camlibs/mars/library.c:114
 #, c-format
@@ -2608,6 +2741,8 @@ msgid ""
 "Mars MR97310 camera.\n"
 "There is %i photo in it. \n"
 msgstr ""
+"Aparat Mars MR97310.\n"
+"Zawiera %i zdjêcie. \n"
 
 #: camlibs/mars/library.c:118
 #, c-format
@@ -2615,6 +2750,8 @@ msgid ""
 "Mars MR97310 camera.\n"
 "There are %i photos in it. \n"
 msgstr ""
+"Aparat Mars MR97310.\n"
+"Zawiera %i zdjêæ. \n"
 
 #: camlibs/mars/library.c:130
 msgid ""
@@ -2626,12 +2763,21 @@ msgid ""
 "If present on the camera, video clip frames are downloaded \n"
 "as consecutive still photos.\n"
 msgstr ""
+"Ten sterownik obs³uguje aparaty z uk³adem MR97310 (i bezpo¶rednie\n"
+"odpowiedniki ??Pixart PAC0x07??) i powinien dzia³aæ z gtkam.\n"
+"Aparaty te nie obs³uguj± usuwania zdjêæ ani przesy³ania danych do\n"
+"aparatu. \n"
+"Ten sterownik nie dekoduje skompresowanych zdjêæ.\n"
+"Je¶li zostan± znalezione w aparacie klatki filmów, s± ¶ci±gane\n"
+"jako kolejne nieruchome zdjêcia.\n"
 
 #: camlibs/mars/library.c:148
 msgid ""
 "Mars MR97310 camera library\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
 msgstr ""
+"Biblioteka dla aparatów Mars MR97310\n"
+"Theodore Kilgore <kilgota@auburn.edu>\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:270
 #, c-format
@@ -2656,60 +2802,71 @@ msgid ""
 "Card ID:\t\t%d\n"
 "Flash Mode:\t\t"
 msgstr ""
+"Tryb hosta:                    %s\n"
+"Korekcja ekspozycji:           %s\n"
+"Dane ekspozycji:               %d\n"
+"Poprawno¶æ daty:               %s\n"
+"Data:                          %d/%02d/%02d %02d:%02d:%02d\n"
+"Samowyzwalacz ustawiony:       %s\n"
+"Ustawienie jako¶ci:            %s\n"
+"Tryb odtwarzanie/nagrywanie:   %s\n"
+"Poprawno¶æ ID karty:           %s\n"
+"ID karty:                      %d\n"
+"Tryb flesza:                   "
 
 #: camlibs/minolta/dimagev/dimagev.c:297 camlibs/ptp2/library.c:2518
 #: camlibs/ptp2/ptp.c:2076
 msgid "Remote"
-msgstr ""
+msgstr "Zdalny"
 
 #: camlibs/minolta/dimagev/dimagev.c:297
 msgid "Local"
-msgstr ""
+msgstr "Lokalny"
 
 #: camlibs/minolta/dimagev/dimagev.c:298 camlibs/minolta/dimagev/dimagev.c:300
 #: camlibs/minolta/dimagev/dimagev.c:304 camlibs/minolta/dimagev/dimagev.c:307
 #: camlibs/ptp2/ptp.c:1988
 msgid "Yes"
-msgstr ""
+msgstr "Tak"
 
 #: camlibs/minolta/dimagev/dimagev.c:298 camlibs/minolta/dimagev/dimagev.c:300
 #: camlibs/minolta/dimagev/dimagev.c:304 camlibs/minolta/dimagev/dimagev.c:307
 #: camlibs/ptp2/ptp.c:1988
 msgid "No"
-msgstr ""
+msgstr "Nie"
 
 #: camlibs/minolta/dimagev/dimagev.c:305 camlibs/sierra/nikon-desc.c:283
 #: camlibs/sierra/sierra.c:1579 camlibs/sierra/sierra.c:1586
 #: camlibs/sierra/sierra.c:1791
 msgid "Fine"
-msgstr ""
+msgstr "Dobra"
 
 #: camlibs/minolta/dimagev/dimagev.c:305 camlibs/sierra/sierra.c:896
 #: camlibs/sierra/sierra.c:903 camlibs/sierra/sierra.c:1232
 #: camlibs/sierra/sierra.c:1578 camlibs/sierra/sierra.c:1584
 #: camlibs/sierra/sierra.c:1789
 msgid "Standard"
-msgstr ""
+msgstr "Normalna"
 
 #: camlibs/minolta/dimagev/dimagev.c:321
 #, c-format
 msgid "Automatic\n"
-msgstr ""
+msgstr "Auto\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:329
 #, c-format
 msgid "Force Flash\n"
-msgstr ""
+msgstr "Wymuszenie flesza\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:337
 #, c-format
 msgid "Prohibit Flash\n"
-msgstr ""
+msgstr "Zakazanie flesza\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:345
 #, c-format
 msgid "Invalid Value ( %d )\n"
-msgstr ""
+msgstr "Niepoprawna warto¶æ (%d)\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:359
 #, c-format
@@ -2721,72 +2878,78 @@ msgid ""
 "Flash Charging:\t\t%s\n"
 "Lens Status:\t\t"
 msgstr ""
+"Poziom baterii:                %s\n"
+"Liczba obrazów:                %d\n"
+"Minimalna pozosta³a pojemno¶æ: %d\n"
+"Zajêto¶æ:                      %s\n"
+"£adowanie flesza:              %s\n"
+"Stan obiektywu:                "
 
 #: camlibs/minolta/dimagev/dimagev.c:365
 msgid "Not Full"
-msgstr ""
+msgstr "Niepe³ne"
 
 #: camlibs/minolta/dimagev/dimagev.c:365 camlibs/minolta/dimagev/dimagev.c:408
 #: camlibs/ptp2/ptp.c:2090
 #, c-format
 msgid "Full"
-msgstr ""
+msgstr "Pe³ne"
 
 #: camlibs/minolta/dimagev/dimagev.c:368
 msgid "Busy"
-msgstr ""
+msgstr "Zajêty"
 
 #: camlibs/minolta/dimagev/dimagev.c:368
 msgid "Idle"
-msgstr ""
+msgstr "Wolny"
 
 #: camlibs/minolta/dimagev/dimagev.c:369
 msgid "Charging"
-msgstr ""
+msgstr "£adowany"
 
 #: camlibs/minolta/dimagev/dimagev.c:369
 msgid "Ready"
-msgstr ""
+msgstr "Gotowy"
 
 #: camlibs/minolta/dimagev/dimagev.c:380
 #, c-format
 msgid "Normal\n"
-msgstr ""
+msgstr "Normalny\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:383
 #, c-format
 msgid "Lens direction does not match flash light\n"
-msgstr ""
+msgstr "Kierunek obiektywu nie zgadza siê ze ¶wiat³em flesza\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:386
 #, c-format
 msgid "Lens is not connected\n"
-msgstr ""
+msgstr "Obiektyw nie pod³±czony\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:389
 #, c-format
 msgid "Bad value for lens status %d\n"
-msgstr ""
+msgstr "Z³a warto¶æ stanu obiektywu %d\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:398
 #, c-format
 msgid "Card Status:\t\t"
-msgstr ""
+msgstr "Stan karty:                    "
 
 #: camlibs/minolta/dimagev/dimagev.c:411
 #, c-format
 msgid "Write-protected"
-msgstr ""
+msgstr "Zabezpieczona przed zapisem"
 
 #: camlibs/minolta/dimagev/dimagev.c:414
 #, c-format
 msgid "Unsuitable card"
-msgstr ""
+msgstr "Niepasuj±ca"
 
 #: camlibs/minolta/dimagev/dimagev.c:417
 #, c-format
 msgid "Bade value for card status %d"
-msgstr ""
+msgstr "Z³a warto¶æ stanu karty %d"
 
 #: camlibs/minolta/dimagev/dimagev.c:436
 #, c-format
@@ -2796,62 +2959,65 @@ msgid ""
 "Gus Hartmann <gphoto@gus-the-cat.org>\n"
 "Special thanks to Minolta for the spec."
 msgstr ""
+"Biblioteka dla aparatów Minolta Dimage V\n"
+"%sGus Hartmann <gphoto@gus-the-cat.org>\n"
+"Specjalne podziêkowania dla Minolty za specyfikacjê."
 
 #: camlibs/mustek/core.c:575
 msgid "FlashLight : Auto (RedEye Reduction)"
-msgstr ""
+msgstr "Flesz : Auto (redukcja czerwonych oczu)"
 
 #: camlibs/mustek/core.c:577
 msgid "FlashLight : Auto"
-msgstr ""
+msgstr "Flesz : Auto"
 
 #: camlibs/mustek/core.c:579
 msgid "FlashLight : On (RedEye Reduction)"
-msgstr ""
+msgstr "Flesz : W³±czony (redukcja czerwonych oczu)"
 
 #: camlibs/mustek/core.c:581
 msgid "FlashLight : On"
-msgstr ""
+msgstr "Flesz : W³±czony"
 
 #: camlibs/mustek/core.c:583
 msgid "FlashLight : Off"
-msgstr ""
+msgstr "Flesz : Wy³±czony"
 
 #: camlibs/mustek/core.c:585
 msgid "FlashLight : undefined"
-msgstr ""
+msgstr "Flesz : nieokre¶lony"
 
 #: camlibs/mustek/mdc800.c:232
 msgid "Summary for Mustek MDC800:\n"
-msgstr ""
+msgstr "Opis aparatu Mustek MDC800:\n"
 
 #: camlibs/mustek/mdc800.c:235
 msgid "no status reported."
-msgstr ""
+msgstr "stan nie zg³oszony."
 
 #: camlibs/mustek/mdc800.c:241
 msgid "Compact Flash Card detected\n"
-msgstr ""
+msgstr "Wykryto kartê Compact Flash\n"
 
 #: camlibs/mustek/mdc800.c:243
 msgid "No Compact Flash Card detected\n"
-msgstr ""
+msgstr "Nie wykryto karty Compact Flash\n"
 
 #: camlibs/mustek/mdc800.c:247
 msgid "Current Mode: Camera Mode\n"
-msgstr ""
+msgstr "Bie¿±cy tryb: tryb aparatu\n"
 
 #: camlibs/mustek/mdc800.c:249
 msgid "Current Mode: Playback Mode\n"
-msgstr ""
+msgstr "Bie¿±cy tryb: tryb odtwarzania\n"
 
 #: camlibs/mustek/mdc800.c:258
 msgid "Batteries are ok."
-msgstr ""
+msgstr "Baterie s± w porz±dku."
 
 #: camlibs/mustek/mdc800.c:260
 msgid "Batteries are low."
-msgstr ""
+msgstr "Baterie s± na wyczerpaniu"
 
 #: camlibs/mustek/mdc800.c:279
 msgid ""
@@ -2860,6 +3026,10 @@ msgid ""
 "Ported to gphoto2 by Marcus Meissner <marcus@jet.franken.de>\n"
 "Supports Serial and USB Protocol."
 msgstr ""
+"Biblioteka gPhoto2 Mustek MDC-800\n"
+"Henning Zabel <henning@uni-paderborn.de>\n"
+"Do gphoto2 sportowa³ Marcus Meissner <marcus@jet.franken.de>\n"
+"Obsluguje protokó³ szeregowy i USB."
 
 #: camlibs/panasonic/coolshot/coolshot.c:264
 msgid "coolshot library v"
