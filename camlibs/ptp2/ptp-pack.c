@@ -721,6 +721,35 @@ ptp_unpack_Canon_FE (PTPParams *params, unsigned char* data, PTPCANONFolderEntry
 		fe->Filename[i]=(char)dtoh8a(&data[PTP_cfe_Filename+i]);
 }
 
+/*
+    PTP USB Event container unpack for Nikon events.
+*/
+#define PTP_nikon_ec_Length		0
+#define PTP_nikon_ec_Code		2
+#define PTP_nikon_ec_Param1		4
+#define PTP_nikon_ec_Size		6
+static inline void
+ptp_unpack_Nikon_EC (PTPParams *params, unsigned char* data, unsigned int len, PTPUSBEventContainer **ec, int *cnt)
+{
+	int i;
+
+	*ec = NULL;
+	if (data == NULL)
+		return;
+	if (len < PTP_nikon_ec_Code)
+		return;
+	*cnt = dtoh16a(&data[PTP_nikon_ec_Length]);
+	if (*cnt > (len-PTP_nikon_ec_Code)/PTP_nikon_ec_Size) /* broken cnt? */
+		return;
+	*ec = malloc(sizeof(PTPUSBEventContainer)*(*cnt));
+	
+	for (i=0;i<*cnt;i++) {
+		memset(&ec[i],0,sizeof(PTPUSBEventContainer));
+		(*ec[i]).code	= dtoh16a(&data[PTP_nikon_ec_Code+PTP_nikon_ec_Size*i]);
+		(*ec[i]).param1	= dtoh32a(&data[PTP_nikon_ec_Param1+PTP_nikon_ec_Size*i]);
+	}
+}
+
 
 static inline uint32_t
 ptp_pack_EK_text(PTPParams *params, PTPEKTextParams *text, unsigned char **data) {

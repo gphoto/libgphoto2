@@ -190,9 +190,7 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp,
 		if (readlen)
 			*readlen = len;
 		/* copy first part of data to 'data' */
-		memcpy(*data,usbdata.payload.data,
-			PTP_USB_BULK_PAYLOAD_LEN<len?
-			PTP_USB_BULK_PAYLOAD_LEN:len);
+		memcpy(*data,usbdata.payload.data,PTP_USB_BULK_PAYLOAD_LEN<len?PTP_USB_BULK_PAYLOAD_LEN:len);
 		/* is that all of data? */
 		if (len+PTP_USB_BULK_HDR_LEN<=sizeof(usbdata)) break;
 		/* if not finaly read the rest of it */
@@ -1644,17 +1642,49 @@ ptp_nikon_capture (PTPParams* params, uint32_t x)
         return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
 }
 
+/**
+ * ptp_nikon_check_event:
+ *
+ * This command checks the event queue on the Nikon.
+ *  
+ * params:	PTPParams*
+ *      PTPUSBEventContainer **event - list of usb events.
+ *	int *evtcnt - number of usb events in event structure.
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
 uint16_t
-ptp_nikon_check_event (PTPParams* params, unsigned char **data, unsigned int *size)
+ptp_nikon_check_event (PTPParams* params, PTPUSBEventContainer** event, int* evtcnt)
 {
         PTPContainer ptp;
-        
-        PTP_CNT_INIT(ptp);
-        ptp.Code=PTP_OC_NIKON_CheckEvent;
-        ptp.Nparam=0;
-        return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
+	uint16_t ret;
+	unsigned char *data = NULL;
+	unsigned int size = 0;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code=PTP_OC_NIKON_CheckEvent;
+	ptp.Nparam=0;
+	*evtcnt = 0;
+	ret = ptp_transaction (params, &ptp, PTP_DP_GETDATA, 0, &data, &size);
+	if (ret == PTP_RC_OK) {
+		ptp_unpack_Nikon_EC (params, data, size, event, evtcnt);
+		free (data);
+	}
+	return ret;
 }
 
+/**
+ * ptp_nikon_device_ready:
+ *
+ * This command checks if the device is ready. Used after
+ * a capture.
+ *  
+ * params:	PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
 uint16_t
 ptp_nikon_device_ready (PTPParams* params)
 {

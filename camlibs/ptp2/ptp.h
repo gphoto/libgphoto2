@@ -989,7 +989,7 @@ uint16_t ptp_nikon_curve_download (PTPParams* params,
 				unsigned char **data, unsigned int *size);
 uint16_t ptp_nikon_setcontrolmode (PTPParams* params, uint32_t mode);
 uint16_t ptp_nikon_capture (PTPParams* params, uint32_t x);
-uint16_t ptp_nikon_check_event (PTPParams* params, unsigned char **data, unsigned int *size);
+uint16_t ptp_nikon_check_event (PTPParams* params, PTPUSBEventContainer **evt, int *evtcnt);
 uint16_t ptp_nikon_getfileinfoinblock (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3,
 					unsigned char **data, unsigned int *size);
 uint16_t ptp_nikon_device_ready (PTPParams* params);
