@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: libgphoto2 2.1.99\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2005-12-25 11:09-0500\n"
-"PO-Revision-Date: 2006-01-05 20:06+0100\n"
+"PO-Revision-Date: 2006-01-08 14:40+0100\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -200,7 +200,7 @@ msgstr ""
 " nieruchomego obrazu.\n"
 "Zawiera kod do komunikacji przez port szeregowy oraz USB, ale (jeszcze)\n"
 " nie przez IEEE 1394 (Firewire).\n"
-"Jest zaprojektowany do prazy z ponad 70 modelami tak starymi jak\n"
+"Jest zaprojektowany do pracy z ponad 70 modelami tak starymi jak\n"
 " PowerShot A5 czy Pro70 z 1998 roku oraz tak nowymi jak PowerShot A510\n"
 " czy EOS 350D z 2005 roku.\n"
 "Nie by³ jeszcze testowany z aparatami EOS 1D ani EOS 1Ds.\n"
@@ -1406,7 +1406,7 @@ msgstr ""
 "Aby naprawdê ¶ci±gn±æ zdjêcia, nale¿y spróbowaæ:\n"
 "gphoto2 -P\n"
 "z linii poleceñ.\n"
-"Nie naale¿y nawet próbowaæ ¶ci±gaæ filmów.\n"
+"Nie nale¿y nawet próbowaæ ¶ci±gaæ filmów.\n"
 
 #: camlibs/iclick/library.c:132
 msgid ""
@@ -1739,7 +1739,7 @@ msgstr "Inne"
 
 #: camlibs/kodak/dc210/dc210.c:290
 msgid "Set clock in camera"
-msgstr "Ustawienie zegara w aparaci3"
+msgstr "Ustawienie zegara w aparacie"
 
 #: camlibs/kodak/dc210/dc210.c:294 camlibs/kodak/dc210/dc210.c:419
 msgid "Port speed"
@@ -2786,6 +2786,9 @@ msgid ""
 "Hardware Revision:\t%s\n"
 "Firmware Revision:\t%s\n"
 msgstr ""
+"Model:\t\t\tMinolta Dimage V (%s)\n"
+"Wersja sprzêtu:\t%s\n"
+"Wersja firmware'u:\t%s\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:285
 #, c-format
@@ -2960,7 +2963,8 @@ msgid ""
 "Special thanks to Minolta for the spec."
 msgstr ""
 "Biblioteka dla aparatów Minolta Dimage V\n"
-"%sGus Hartmann <gphoto@gus-the-cat.org>\n"
+"%s\n"
+"Gus Hartmann <gphoto@gus-the-cat.org>\n"
 "Specjalne podziêkowania dla Minolty za specyfikacjê."
 
 #: camlibs/mustek/core.c:575
@@ -3029,7 +3033,7 @@ msgstr ""
 "Biblioteka gPhoto2 Mustek MDC-800\n"
 "Henning Zabel <henning@uni-paderborn.de>\n"
 "Do gphoto2 sportowa³ Marcus Meissner <marcus@jet.franken.de>\n"
-"Obsluguje protokó³ szeregowy i USB."
+"Obs³uguje protokó³ szeregowy i USB."
 
 #: camlibs/panasonic/coolshot/coolshot.c:264
 msgid "coolshot library v"
@@ -3174,7 +3178,7 @@ msgstr ""
 "Creative PC-CAM 300\n"
 " Autorzy: Till Adam\n"
 "<till@adam-lilienthal.de>\n"
-"i: Miah Gregory\n"
+"i Miah Gregory\n"
 " <mace@darksilence.net>"
 
 #: camlibs/pccam600/library.c:190
@@ -5525,8 +5529,7 @@ msgstr ""
 "    przyciski menu i LCD a¿ pojawi siê menu sterowania\n"
 "    aparatem - po czym ustawiæ opcjê na ON.\n"
 "(3) Po prze³±czeniu trybu LCD na 'Monitor' lub\n"
-"    'Normalny'\n"
-" nie nale¿y zapomnieæ o prze³±czeniu\n"
+"    'Normalny' nie nale¿y zapomnieæ o prze³±czeniu\n"
 "    z powrotem na 'Wy³±czony' przed roz³±czeniem.\n"
 "    W przeciwnym wypadku nie mo¿na u¿ywaæ przycisków\n"
 "    aparatu. W przypadku zakoñczenia pracy w tym stanie\n"
@@ -5560,8 +5563,7 @@ msgstr ""
 "    sterowania aparatem. Nale¿y prze³±czyæ je na tryb\n"
 "    sterowania.\n"
 "(2) Po prze³±czeniu trybu LCD na 'Monitor' lub\n"
-"    'Normalny'\n"
-" nie nale¿y zapomnieæ o prze³±czeniu\n"
+"    'Normalny' nie nale¿y zapomnieæ o prze³±czeniu\n"
 "    z powrotem na 'Wy³±czony' przed roz³±czeniem.\n"
 "    W przeciwnym wypadku nie mo¿na u¿ywaæ przycisków\n"
 "    aparatu. W przypadku zakoñczenia pracy w tym stanie\n"
@@ -5836,6 +5838,14 @@ msgid ""
 "  a PhotoPC 3000z, if your camera acts differently\n"
 "  please send a mail to %s (in English)\n"
 msgstr ""
+"Trochê uwag o aparatach Epson:\n"
+"- Niektórych parametrów nie da siê zmieniaæ zdalnie:\n"
+"  * powiêkszenia\n"
+"  * ogniskowej\n"
+"  * w³asnej konfiguracji balansu bieli\n"
+"- Konfiguracja zosta³a wstecznie rozpracowana przy u¿yciu\n"
+"  PhotoPC 3000z, je¶li aparat zachowuje siê inaczej, proszê\n"
+"  wys³aæ list na adres %s (po angielsku)\n"
 
 #: camlibs/sierra/sierra.c:1982
 msgid ""
@@ -5857,6 +5867,24 @@ msgid ""
 "    state, you should reconnect the camera to the\n"
 "    PC and switch LCD to 'Off'."
 msgstr ""
+"Trochê uwag o aparatach Olympus (i innych?):\n"
+"(1) Konfiguracja aparatu:\n"
+"    Warto¶æ 0 oznacza domy¶ln± (auto).\n"
+"(2) Olympus C-3040Z (mo¿e tak¿e C-2040Z i inne) ma\n"
+"    tryb USB PC Control. Aby u¿yæ tego trybu, aparat\n"
+"    musi byæ prze³±czony w tryb 'USB PC control mode'.\n"
+"    Aby uzyskaæ menu do prze³±czania trybów, nale¿y\n"
+"    w³±czyæ aparat, otworzyæ drzwiczki dostêpu do karty\n"
+"    pamiêci, a nastêpnie przycisn±æ i przytrzymaæ oba\n"
+"    przyciski menu i LCD a¿ pojawi siê menu sterowania\n"
+"    aparatem - po czym ustawiæ opcjê na ON.\n"
+"(3) Po prze³±czeniu trybu LCD na 'Monitor' lub\n"
+"    'Normalny' nie nale¿y zapomnieæ o prze³±czeniu\n"
+"    z powrotem na 'Wy³±czony' przed roz³±czeniem.\n"
+"    W przeciwnym wypadku nie mo¿na u¿ywaæ przycisków\n"
+"    aparatu. W przypadku zakoñczenia pracy w tym stanie\n"
+"    nale¿y ponownie pod³±czyæ aparat do komputera\n"
+"    i prze³±czyæ LCD na 'Wy³±czony'."
 
 #: camlibs/sierra/sierra.c:2011
 msgid ""
@@ -5869,11 +5897,19 @@ msgid ""
 "for the use of their Olympus C-3030Z for USB\n"
 "support implementation."
 msgstr ""
+"Biblioteka sierra SPARClite\n"
+"Scott Fritzinger <scottf@unr.edu>\n"
+"Obs³uga aparatów cyfrowych opartych na sierra\n"
+"w tym Olympus, Nikon, Epson, Pentax i innych.\n"
+"\n"
+"Podziêkowania dla Data Engines (www.dataengines.com)\n"
+"za wykorzystanie ich Olympusa C-3030Z do implementacji\n"
+"obs³ugi USB."
 
 #: camlibs/sierra/sierra-desc.c:186
 #, c-format
 msgid "%lld (unknown)"
-msgstr ""
+msgstr "%lld (nieznany)"
 
 #: camlibs/sipix/blink.c:911
 msgid ""
@@ -5881,10 +5917,13 @@ msgid ""
 "Vincent Sanders <vince@kyllikki.org>\n"
 "Marcus Meissner <marcus@jet.franken.de>.\n"
 msgstr ""
+"Sterownik Sipix StyleCam Blink\n"
+"Vincent Sanders <vince@kyllikki.org>\n"
+"Marcus Meissner <marcus@jet.franken.de>.\n"
 
 #: camlibs/sipix/blink.c:1068 camlibs/stv0674/stv0674.c:250
 msgid "Could not apply USB settings"
-msgstr ""
+msgstr "Nie uda³o siê zastosowaæ ustawieñ USB"
 
 #: camlibs/sipix/web2.c:629
 msgid ""
@@ -5892,6 +5931,9 @@ msgid ""
 "Marcus Meissner <marcus@jet.franken.de>\n"
 "Driver for accessing the SiPix Web2 camera."
 msgstr ""
+"SiPix Web2\n"
+"Marcus Meissner <marcus@jet.franken.de>\n"
+"Sterownik dostêpu do aparatów SiPix Web2."
 
 #: camlibs/smal/smal.c:168
 msgid ""
@@ -5899,6 +5941,9 @@ msgid ""
 "Lee Benfield <lee@benf.org>\n"
 "Driver for accessing the Smal Ultrapocket camera, and OEM versions (slimshot)"
 msgstr ""
+"Smal Ultrapocket\n"
+"Lee Benfield <lee@benf.org>\n"
+"Sterownik dostêpu do aparatów Smal Ultrapocket i wersji OEM (slimshot)"
 
 #: camlibs/sonix/library.c:98
 #, c-format
@@ -5906,6 +5951,8 @@ msgid ""
 "Sonix camera.\n"
 "There is %i photo in it. \n"
 msgstr ""
+"Aparat Sonix.\n"
+"Zawiera %i zdjêcie. \n"
 
 #: camlibs/sonix/library.c:102
 #, c-format
@@ -5913,6 +5960,8 @@ msgid ""
 "Sonix camera.\n"
 "There are %i photos in it. \n"
 msgstr ""
+"Aparat Sonix.\n"
+"Zawiera %i zdjêæ. \n"
 
 #: camlibs/sonix/library.c:114
 msgid ""
@@ -5925,39 +5974,49 @@ msgid ""
 "as consecutive still photos.\n"
 "Capture not supported"
 msgstr ""
+"Ten sterownik obs³uguje aparaty z uk³adem Sonix\n"
+"i powinien dzia³aæ z gtkam.\n"
+"Sterownik pozwala uzyskaæ\n"
+"   - miniaturki dla gtkam\n"
+"   - pe³ne obrazy w formacie PPM\n"
+"Je¶li zostan± znalezione w aparacie klatki filmów, s± ¶ci±gane\n"
+"jako kolejne nieruchome zdjêcia.\n"
+"Robienie zdjêæ nie jest obs³ugiwane"
 
 #: camlibs/sonix/library.c:133
 msgid ""
 "Sonix camera library\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
 msgstr ""
+"Biblioteka dla aparatów Sonix\n"
+"Theodore Kilgore <kilgota@auburn.edu>\n"
 
 #: camlibs/sonydscf1/dsc_f1.c:134
 msgid "Sorry, this function not implemented..."
-msgstr ""
+msgstr "Niestety ta funkcja nie jest zaimplementowana..."
 
 #: camlibs/sonydscf1/dsc_f1.c:140
 msgid "Sorry, nothing to configure..."
-msgstr ""
+msgstr "Niestety nie ma nic do konfigurowania..."
 
 #: camlibs/sonydscf1/dsc_f1.c:146
 msgid "Sorry, taking pictures is not implemented..."
-msgstr ""
+msgstr "Niestety robienie zdjêæ nie jest zaimplementowane..."
 
 #: camlibs/sonydscf1/dsc_f1.c:152
 #, c-format
 msgid "Couldn't open camera.\n"
-msgstr ""
+msgstr "Nie uda³o siê otworzyæ aparatu.\n"
 
 #: camlibs/sonydscf1/dsc_f1.c:166
 #, c-format
 msgid "Error opening camera\n"
-msgstr ""
+msgstr "B³±d podczas otwierania aparatu\n"
 
 #: camlibs/sonydscf1/dsc_f1.c:171
 #, c-format
 msgid "Picture number is too large.\n"
-msgstr ""
+msgstr "Numer zdjêcia zbyt du¿y.\n"
 
 #: camlibs/sonydscf1/dsc_f1.c:182
 msgid ""
@@ -5969,11 +6028,17 @@ msgid ""
 "\n"
 "This lib may not work. YMMV\n"
 msgstr ""
+"Obs³uga aparatów cyfrowych Sony SDC-F1 Digital Camera\n"
+"M. Adam Kendall <joker@penguinpub.com>\n"
+"\n"
+"Oparto na interfejsie linii poleceñ chotplay,\n"
+"który napisa³ Ken-ichi Hayashi\n"
+"Ta biblioteka mo¿e nie dzia³aæ. YMMV\n"
 
 #: camlibs/sonydscf1/dsc_f1.c:187 camlibs/sonydscf1/dsc_f1.c:188
 #, c-format
 msgid "Error opening camera.\n"
-msgstr ""
+msgstr "B³±d podczas otwierania aparatu.\n"
 
 #: camlibs/sonydscf1/sonydscf1.c:132
 msgid ""
@@ -5983,6 +6048,11 @@ msgid ""
 "Ken-ichi Hayashi\n"
 "Gphoto2 port by Bart van Leeuwen <bart@netage.nl>"
 msgstr ""
+"Obs³uga aparatów cyfrowych Sony SDC-F1 Digital Camera\n"
+"M. Adam Kendall <joker@penguinpub.com>\n"
+"Oparto na interfejsie linii poleceñ chotplay,\n"
+"który napisa³ Ken-ichi Hayashi\n"
+"Port Gphoto2 wykona³ Bart van Leeuwen <bart@netage.nl>"
 
 #: camlibs/sonydscf55/camera.c:102
 msgid ""
@@ -5991,6 +6061,10 @@ msgid ""
 "Originally written by Mark Davies <mdavies@dial.pipex.com>\n"
 "gPhoto2 port by Raymond Penners <raymond@dotsphinx.com>"
 msgstr ""
+"Biblioteka gPhoto Sony DSC-F55/505\n"
+"Obs³uguje Sony MSAC-SR1 i wk³ad pamiêci u¿ywany przez DCR-PC100\n"
+"Oryginalnie napisa³ Mark Davies <mdavies@dial.pipex.com>\n"
+"Port gPhoto2 wykona³ Raymond Penners <raymond@dotsphinx.com>"
 
 #: camlibs/soundvision/soundvision.c:317
 #, c-format
@@ -6000,17 +6074,23 @@ msgid ""
 "Memory Total: %ikB\n"
 "Memory Free:  %ikB\n"
 msgstr ""
+"Wersja firmware'u: %8s\n"
+"Zdjêcia:      %i\n"
+"Ca³a pamiêæ:  %ikB\n"
+"Wolna pamiêæ: %ikB\n"
 
 #: camlibs/soundvision/soundvision.c:325
 #, c-format
 msgid "Firmware Revision: %8s"
-msgstr ""
+msgstr "Wersja firmware'u: %8s"
 
 #: camlibs/soundvision/soundvision.c:333
 msgid ""
 "Soundvision Driver\n"
 "Vince Weaver <vince@deater.net>\n"
 msgstr ""
+"Sterownik Soundvision\n"
+"Vince Weaver <vince@deater.net>\n"
 
 #: camlibs/spca50x/library.c:269
 #, c-format
@@ -6018,6 +6098,8 @@ msgid ""
 "FLASH:\n"
 " Files: %d\n"
 msgstr ""
+"FLASH:\n"
+" Plików: %d\n"
 
 #: camlibs/spca50x/library.c:278
 #, c-format
@@ -6029,10 +6111,16 @@ msgid ""
 "Space used: %8d\n"
 "Space free: %8d\n"
 msgstr ""
+"SDRAM:\n"
+" Plików: %d\n"
+"  Obrazów: %4d\n"
+"  Filmów:  %4d\n"
+"Miejsce u¿yte: %8d\n"
+"Miejsce wolne: %8d\n"
 
 #: camlibs/spca50x/library.c:302
 msgid "spca50x library v"
-msgstr ""
+msgstr "Biblioteka spca50x v"
 
 #: camlibs/spca50x/library.c:303
 msgid ""
@@ -6041,11 +6129,15 @@ msgid ""
 "Support for digital cameras with a sunplus spca50x chip based on several other gphoto2 camlib modules and the information kindly provided by Mustek.\n"
 "\n"
 msgstr ""
+"\n"
+"Till Adam <till@adam-lilienthal.de>\n"
+"Obs³uga aparatów cyfrowych z uk³adem sunplus spca50x oparta na ró¿nych innych modu³ach camlib z gphoto2 i informacjach udostêpnionych przez Musteka.\n"
+"\n"
 
 #: camlibs/spca50x/library.c:571
 #, c-format
 msgid "Unsupported port type: %d. This driver only works with USB cameras.\n"
-msgstr ""
+msgstr "Nieobs³ugiwany rodzaj portu: %d. Ten sterownik dzia³a tylko z aparatami USB.\n"
 
 #: camlibs/sq905/library.c:124
 #, c-format
@@ -6055,6 +6147,10 @@ msgid ""
 "Some of these could be clips containing\n"
 "several frames\n"
 msgstr ""
+"Ten aprarat USB ma chipset S&Q.\n"
+"Ca³kowita liczba wykonanych zdjêæ to %i\n"
+"Czê¶æ z nich mog³o byæ filmami zawieraj±cymi\n"
+"wiele klatek\n"
 
 #: camlibs/sq905/library.c:138
 msgid ""
@@ -6077,12 +6173,32 @@ msgid ""
 "specify from which clip they came. Thus, you may freely \n"
 "choose to save clip frames in separate directories. or not.\n"
 msgstr ""
+"Dla aparatów z uk³adem S&Q Technologies.\n"
+"Powinien dzia³aæ z gtkam. Zdjêcia bêd± zapisane w formacie PPM.\n"
+"\n"
+"Wszystkie znane aparaty S&Q maj± dwa ustawienia rozdzielczo¶ci.\n"
+"Co one oznaczaj±, zale¿y od konkretnego aparatu.\n"
+"Niektóre z tych aparatów pozwalaj± na usuwanie wszystkich zdjêæ.\n"
+"Wiêkszo¶æ nie pozwala.\n"
+"Przesy³anie danych do aparatu nie jest obs³ugiwane.\n"
+"Tryb kompresji zdjêæ dostêpny w wielu aparatach S&Q jest\n"
+"obs³ugiwany do pewnego poziomu.\n"
+"Je¶li zostan± znalezione w aparacie, filmy s± widoczne jako podkatalogi.\n"
+"Gtkam ¶ci±gnie je oddzielnie. Kiedy filmy s± obecne w aparacie, przed\n"
+"nazw± aparatu jest ma³y trójk±t. Je¶li nie ma ¿adnych folderów na li¶cie,\n"
+"nale¿y klikn±æ na tym ma³ym trójk±cie, ¿eby siê pojawi³a. Nastêpnie\n"
+"mo¿na klikn±æ na folderze aby do niego wej¶æ i zobaczyæ lub ¶ci±gn±æ klatki.\n"
+"Klatki bêd± ¶ci±gniête jako osobne zdjêcia ze specjalnymi nazwami\n"
+"okre¶laj±cymi z którego filmu pochodz±. W ten sposób mo¿na swobodnie\n"
+"wybraæ zapis klatek filmu do osobnych katalogów, lub nie.\n"
 
 #: camlibs/sq905/library.c:166
 msgid ""
 "sq905 generic driver\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
 msgstr ""
+"Ogólny sterownik sq905\n"
+"Theodore Kilgore <kilgota@auburn.edu>\n"
 
 #: camlibs/stv0674/stv0674.c:203
 msgid ""
@@ -6091,109 +6207,113 @@ msgid ""
 "Driver for cameras using the STV0674 processor ASIC.\n"
 "Protocol reverse engineered using SnoopyPro\n"
 msgstr ""
+"STV0674\n"
+"Vincent Sanders <vince@kyllikki.org>\n"
+"Sterownik do aparatów u¿ywaj±cych procesora ASIC STV0674.\n"
+"Protokó³ wstecznie rozpracowany przy u¿yciu SnoopyPro\n"
 
 #: camlibs/stv0680/library.c:353 camlibs/stv0680/library.c:387
 msgid "Bad exposure (not enough light probably)"
-msgstr ""
+msgstr "Z³a ekspozycja (prawdopodobnie za ma³o ¶wiat³a)"
 
 #: camlibs/stv0680/library.c:517
 msgid "Information for STV0680 based camera:\n"
-msgstr ""
+msgstr "Informacje dla aparatu opartego o STV0680:\n"
 
 #: camlibs/stv0680/library.c:522
 #, c-format
 msgid "Firmware Revision: %d.%d\n"
-msgstr ""
+msgstr "Wersja firmware'u: %d.%d\n"
 
 #: camlibs/stv0680/library.c:526
 #, c-format
 msgid "ASIC Revision: %d.%d\n"
-msgstr ""
+msgstr "Wersja ASIC: %d.%d\n"
 
 #: camlibs/stv0680/library.c:530
 #, c-format
 msgid "Sensor ID: %d.%d\n"
-msgstr ""
+msgstr "ID sensora: %d.%d\n"
 
 #: camlibs/stv0680/library.c:536
 #, c-format
 msgid "Camera is configured for lights flickering with %dHz.\n"
-msgstr ""
+msgstr "Aparat jest skonfigurowany dla ¶wiate³ migaj±cych z czêstotliwo¶ci± %dHz.\n"
 
 #: camlibs/stv0680/library.c:539
 #, c-format
 msgid "Memory in camera: %d Mbit.\n"
-msgstr ""
+msgstr "Pamiêæ w aparacie: %d Mbit.\n"
 
 #: camlibs/stv0680/library.c:543
 msgid "Camera supports Thumbnails.\n"
-msgstr ""
+msgstr "Aparat obs³uguje miniaturki.\n"
 
 #: camlibs/stv0680/library.c:545
 msgid "Camera supports Video.\n"
-msgstr ""
+msgstr "Aparat obs³uguje filmy.\n"
 
 #: camlibs/stv0680/library.c:548
 msgid "Camera pictures are monochrome.\n"
-msgstr ""
+msgstr "Zdjêcia z aparatu s± monochromatyczne.\n"
 
 #: camlibs/stv0680/library.c:550
 msgid "Camera has memory.\n"
-msgstr ""
+msgstr "Aparat ma pamiêæ.\n"
 
 #: camlibs/stv0680/library.c:552
 msgid "Camera supports videoformats: "
-msgstr ""
+msgstr "Aparat obs³uguje formaty obrazu: "
 
 #: camlibs/stv0680/library.c:558
 #, c-format
 msgid "Vendor ID: %02x%02x\n"
-msgstr ""
+msgstr "ID producenta: %02x%02x\n"
 
 #: camlibs/stv0680/library.c:562
 #, c-format
 msgid "Product ID: %02x%02x\n"
-msgstr ""
+msgstr "ID produktu: %02x%02x\n"
 
 #: camlibs/stv0680/library.c:569
 #, c-format
 msgid "Number of Images: %d\n"
-msgstr ""
+msgstr "Liczba zdjêæ: %d\n"
 
 #: camlibs/stv0680/library.c:572
 #, c-format
 msgid "Maximum number of Images: %d\n"
-msgstr ""
+msgstr "Maksymalna liczba zdjêæ: %d\n"
 
 #: camlibs/stv0680/library.c:575
 #, c-format
 msgid "Image width: %d\n"
-msgstr ""
+msgstr "Szeroko¶æ obrazu: %d\n"
 
 #: camlibs/stv0680/library.c:578
 #, c-format
 msgid "Image height: %d\n"
-msgstr ""
+msgstr "Wysoko¶æ obrazu: %d\n"
 
 #: camlibs/stv0680/library.c:581
 #, c-format
 msgid "Image size: %d\n"
-msgstr ""
+msgstr "Rozmiar obrazu: %d\n"
 
 #: camlibs/stv0680/library.c:585
 #, c-format
 msgid "Thumbnail width: %d\n"
-msgstr ""
+msgstr "Szeroko¶æ miniaturki: %d\n"
 
 #: camlibs/stv0680/library.c:586
 #, c-format
 msgid "Thumbnail height: %d\n"
-msgstr ""
+msgstr "Wysoko¶æ miniaturki: %d\n"
 
 #: camlibs/stv0680/library.c:587
 #, c-format
 msgid "Thumbnail size: %d\n"
-msgstr ""
+msgstr "Rozmiar miniaturki: %d\n"
 
 #: camlibs/stv0680/stv0680.c:272
 msgid ""
@@ -6204,11 +6324,17 @@ msgid ""
 "Carsten Weinholz <c.weinholz@netcologne.de>\n"
 "Extended for Aiptek PenCam and other STM USB Dual-mode cameras."
 msgstr ""
+"STV0680\n"
+"Adam Harrison <adam@antispin.org>\n"
+"Sterownik dla aparatów u¿ywaj±cych procesora ASIC STV0680.\n"
+"Protokó³ rozpracowany wstecznie przy u¿yciu CommLite Beta 5\n"
+"Carsten Weinholz <c.weinholz@netcologne.de>\n"
+"Rozszerzono dla aparatów Aiptek PenCam oraz innych STM USB Dual-mode."
 
 #: camlibs/sx330z/library.c:139
 #, c-format
 msgid "Getting information on %i files..."
-msgstr ""
+msgstr "Pobieranie informacji o %i plikach..."
 
 #: camlibs/sx330z/library.c:253
 msgid ""
@@ -6217,10 +6343,14 @@ msgid ""
 "Please send bugreports and comments.\n"
 "Dominik Kuhlen <kinimod@users.sourceforge.net>\n"
 msgstr ""
+"Biblioteka dla aparatów (Traveler) SX330z (i innych Aldi-cam).\n"
+"Aparaty innych producentów, jak Jenoptik, Skanhex, Maginon, powinny tak¿e dzia³aæ.\n"
+"Proszê wysy³aæ raporty b³êdów i komentarze.\n"
+"Dominik Kuhlen <kinimod@users.sourceforge.net>\n"
 
 #: camlibs/sx330z/library.c:292
 msgid "sx330z is USB only"
-msgstr ""
+msgstr "sx330z jest tylko na USB"
 
 #: camlibs/toshiba/pdrm11/library.c:218
 msgid ""
@@ -6228,210 +6358,213 @@ msgid ""
 "David Hogue <david@jawa.gotdns.org>\n"
 "Toshiba pdr-m11 driver.\n"
 msgstr ""
+"Toshiba\n"
+"David Hogue <david@jawa.gotdns.org>\n"
+"Sterownik Toshiba pdr-m11.\n"
 
 #: libgphoto2/gphoto2-abilities-list.c:174
 msgid "Internal error looking for camlibs. (path names too long?)"
-msgstr ""
+msgstr "B³±d wewnêtrzny przy szukaniu camlibów (¶cie¿ka zbyt d³uga?)."
 
 #: libgphoto2/gphoto2-abilities-list.c:183
 #, c-format
 msgid "Loading camera drivers from '%s'..."
-msgstr ""
+msgstr "Wczytywanie sterowników do aparatów z '%s'..."
 
 #: libgphoto2/gphoto2-abilities-list.c:589
 #, c-format
 msgid "Could not find any driver for '%s'"
-msgstr ""
+msgstr "Nie uda³o siê odnale¼æ ¿adnego sterownika dla '%s'"
 
 #: libgphoto2/gphoto2-camera.c:81
 #, c-format
 msgid "An error occurred in the io-library ('%s'): %s"
-msgstr ""
+msgstr "Wyst±pi³ b³±d w bibliotece io ('%s'): %s"
 
 #: libgphoto2/gphoto2-camera.c:85
 msgid "No additional information available."
-msgstr ""
+msgstr "Dodatkowe informacje niedostêpne."
 
 #: libgphoto2/gphoto2-camera.c:674
 msgid "Could not detect any camera"
-msgstr ""
+msgstr "Nie uda³o siê wykryæ ¿adnego aparatu"
 
 #: libgphoto2/gphoto2-camera.c:696
 msgid "You have to set the port prior initialization of the camera."
-msgstr ""
+msgstr "Trzeba ustawiæ port przed inicjalizacj± aparatu."
 
 #: libgphoto2/gphoto2-camera.c:721
 #, c-format
 msgid "Could not load required camera driver '%s' (%s)."
-msgstr ""
+msgstr "Nie uda³o siê wczytaæ wymaganego sterownika aparatu '%s' (%s)."
 
 #: libgphoto2/gphoto2-camera.c:734
 #, c-format
 msgid "Camera driver '%s' is missing the 'camera_init' function."
-msgstr ""
+msgstr "Sterownik aparatu '%s' nie ma funkcji 'camera_init'."
 
 #: libgphoto2/gphoto2-camera.c:785
 msgid "This camera does not offer any configuration options."
-msgstr ""
+msgstr "Ten aparat nie oferuje ¿adnych opcji konfiguracyjnych."
 
 #: libgphoto2/gphoto2-camera.c:818
 msgid "This camera does not support setting configuration options."
-msgstr ""
+msgstr "Ten aparat nie obs³uguje ustawiania opcji konfiguracyjnych."
 
 #: libgphoto2/gphoto2-camera.c:850
 msgid "This camera does not support summaries."
-msgstr ""
+msgstr "Ten aparat nie obs³uguje opisów."
 
 #: libgphoto2/gphoto2-camera.c:881
 msgid "This camera does not offer a manual."
-msgstr ""
+msgstr "Ten aparat nie oferuje podrêcznika."
 
 #: libgphoto2/gphoto2-camera.c:912
 msgid "This camera does not provide information about the driver."
-msgstr ""
+msgstr "Ten aparat nie dostarcza informacji o sterowniku."
 
 #: libgphoto2/gphoto2-camera.c:946
 msgid "This camera can not capture."
-msgstr ""
+msgstr "Ten aparat nie mo¿e robiæ zdjêæ."
 
 #: libgphoto2/gphoto2-camera.c:979
 msgid "This camera can not capture previews."
-msgstr ""
+msgstr "Ten aparat nie mo¿e robiæ podgl±du zdjêcia."
 
 #: libgphoto2/gphoto2-filesys.c:272
 #, c-format
 msgid "The path '%s' is not absolute."
-msgstr ""
+msgstr "¦cie¿ka '%s' nie jest bezwzglêdna."
 
 #: libgphoto2/gphoto2-filesys.c:405
 #, c-format
 msgid "Could not append folder '%s' as this folder already exists."
-msgstr ""
+msgstr "Nie uda³o siê do³±czyæ folderu '%s', jako ¿e ten folder ju¿ istnieje."
 
 #: libgphoto2/gphoto2-filesys.c:587
 #, c-format
 msgid "Could not find folder '%s'."
-msgstr ""
+msgstr "Nie uda³o siê odnale¼æ folderu '%s'."
 
 #: libgphoto2/gphoto2-filesys.c:604
 #, c-format
 msgid "Folder '%s' does not contain a folder '%s'."
-msgstr ""
+msgstr "Folder '%s' nie zawiera folderu '%s'."
 
 #: libgphoto2/gphoto2-filesys.c:668
 #, c-format
 msgid "Could not append '%s' to folder '%s' because this file already exists."
-msgstr ""
+msgstr "Nie uda³o siê do³±czyæ '%s' do folderu '%s' poniewa¿ ten plik ju¿ istnieje."
 
 #: libgphoto2/gphoto2-filesys.c:1045
 #, c-format
 msgid "You have been trying to delete '%s' from folder '%s', but the filesystem does not support deletion of files."
-msgstr ""
+msgstr "Próbowano usun±æ '%s' z folderu '%s', ale system plików nie obs³uguje usuwania plików."
 
 #: libgphoto2/gphoto2-filesys.c:1148
 #, c-format
 msgid "There are still subfolders in folder '%s' that you are trying to remove."
-msgstr ""
+msgstr "Nadal istniej± podkatalogi w folderze '%s', który próbowano usun±æ."
 
 #: libgphoto2/gphoto2-filesys.c:1155
 #, c-format
 msgid "There are still files in folder '%s' that you are trying to remove."
-msgstr ""
+msgstr "Nadal istniej± pliki w folderze '%s', który próbowano usun±æ."
 
 #: libgphoto2/gphoto2-filesys.c:1197
 msgid "The filesystem does not support upload of files."
-msgstr ""
+msgstr "System plików nie obs³uguje przesy³ania plików do aparatu."
 
 #: libgphoto2/gphoto2-filesys.c:1238
 #, c-format
 msgid "Folder '%s' does only contain %i files, but you requested a file with number %i."
-msgstr ""
+msgstr "Folder '%s' zawiera tylko %i plików, a ¿±dano pliku o numerze %i."
 
 #: libgphoto2/gphoto2-filesys.c:1283
 #, c-format
 msgid "File '%s' could not be found in folder '%s'."
-msgstr ""
+msgstr "Nie uda³o siê odnale¼æ pliku '%s' w folderze '%s'."
 
 #: libgphoto2/gphoto2-filesys.c:1370
 #, c-format
 msgid "Could not find file '%s'."
-msgstr ""
+msgstr "Nie uda³o siê odnale¼æ pliku '%s'."
 
 #: libgphoto2/gphoto2-filesys.c:1495
 msgid "The filesystem doesn't support getting files"
-msgstr ""
+msgstr "System plików nie obs³uguje pobierania plików"
 
 #: libgphoto2/gphoto2-filesys.c:1530 libgphoto2/gphoto2-filesys.c:1989
 #: libgphoto2/gphoto2-filesys.c:2142
 #, c-format
 msgid "Unknown file type %i."
-msgstr ""
+msgstr "Nieznany rodzaj pliku %i."
 
 #: libgphoto2/gphoto2-filesys.c:1534
 #, c-format
 msgid "Downloading '%s' from folder '%s'..."
-msgstr ""
+msgstr "¦ci±ganie '%s' z folderu '%s'..."
 
 #: libgphoto2/gphoto2-filesys.c:1744
 msgid "The filesystem doesn't support getting file information"
-msgstr ""
+msgstr "System plików nie obs³uguje pobierania informacji o plikach"
 
 #: libgphoto2/gphoto2-filesys.c:2245
 msgid "The filesystem doesn't support setting file information"
-msgstr ""
+msgstr "System plików nie obs³uguje ustawiania informacji o plikach"
 
 #: libgphoto2/gphoto2-filesys.c:2268
 msgid "Read-only file attributes like width and height can not be changed."
-msgstr ""
+msgstr "Atrybutów tylko do odczytu, jak szeroko¶æ i wysoko¶æ, nie mo¿na zmieniæ."
 
 #: libgphoto2/gphoto2-result.c:44
 msgid "Corrupted data"
-msgstr ""
+msgstr "Dane uszkodzone"
 
 #: libgphoto2/gphoto2-result.c:45
 msgid "File exists"
-msgstr ""
+msgstr "Plik istnieje"
 
 #: libgphoto2/gphoto2-result.c:46
 msgid "Unknown model"
-msgstr ""
+msgstr "Nieznany model"
 
 #: libgphoto2/gphoto2-result.c:47
 msgid "Directory not found"
-msgstr ""
+msgstr "Nie odnaleziono katalogu"
 
 #: libgphoto2/gphoto2-result.c:48
 msgid "File not found"
-msgstr ""
+msgstr "Nie odnaleziono pliku"
 
 #: libgphoto2/gphoto2-result.c:49
 msgid "Directory exists"
-msgstr ""
+msgstr "Katalog istnieje"
 
 #: libgphoto2/gphoto2-result.c:50
 msgid "I/O in progress"
-msgstr ""
+msgstr "Trwa operacja wej¶cia/wyj¶cia"
 
 #: libgphoto2/gphoto2-result.c:51
 msgid "Path not absolute"
-msgstr ""
+msgstr "¦cie¿ka nie jest bezwzglêdna"
 
 #: libgphoto2/gphoto2-result.c:52
 msgid "Operation cancelled"
-msgstr ""
+msgstr "Operacja anulowana"
 
 #: libgphoto2/gphoto2-result.c:53
 msgid "Camera could not complete operation"
-msgstr ""
+msgstr "Aparat nie zakoñczy³ operacji"
 
 #: libgphoto2/gphoto2-result.c:54
 msgid "OS error in camera communication"
-msgstr ""
+msgstr "B³±d systemu operacyjnego podczas komunikacji z aparatem"
 
 #: libgphoto2/gphoto2-result.c:79
 msgid "Unknown camera library error"
-msgstr ""
+msgstr "Nieznany b³±d biblioteki aparatu"
 
 #: libgphoto2/gphoto2-result.c:85
 msgid "Unknown error"
-msgstr ""
+msgstr "Nieznany b³±d"
