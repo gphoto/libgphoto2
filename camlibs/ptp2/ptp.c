@@ -1696,6 +1696,29 @@ ptp_nikon_device_ready (PTPParams* params)
         return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
 }
 
+/**
+ * ptp_nikon_getptpipinfo:
+ *
+ * This command gets the ptpip info data.
+ *  
+ * params:	PTPParams*
+ *	unsigned char *data	- data
+ *	unsigned int size	- size of returned data
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_nikon_getptpipinfo (PTPParams* params, unsigned char **data, unsigned int *size)
+{
+        PTPContainer ptp;
+        
+        PTP_CNT_INIT(ptp);
+        ptp.Code=PTP_OC_NIKON_GetDevicePTPIPInfo;
+        ptp.Nparam=0;
+        return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
+}
+
 /* Non PTP protocol functions */
 /* devinfo testing functions */
 
@@ -2246,7 +2269,7 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		{PTP_DPC_CompressionSetting, 4, N_("RAW")},
 		{PTP_DPC_CompressionSetting, 5, N_("RAW + JPEG Basic")},
 		{PTP_DPC_WhiteBalance, 2, N_("Auto")},
-		{PTP_DPC_WhiteBalance, 6, N_("Incadescent")},
+		{PTP_DPC_WhiteBalance, 6, N_("Incandescent")},
 		{PTP_DPC_WhiteBalance, 5, N_("Fluorescent")},
 		{PTP_DPC_WhiteBalance, 4, N_("Daylight")},
 		{PTP_DPC_WhiteBalance, 7, N_("Flash")},
