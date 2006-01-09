@@ -485,6 +485,7 @@ libgphoto2/libgphoto2.pc
 gphoto2-config
 packaging/Makefile
 packaging/linux-hotplug/Makefile
+packaging/generic/Makefile
 packaging/rpm/Makefile
 packaging/rpm/package.spec
 doc/Makefile

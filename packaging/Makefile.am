@@ -1,1 +1,1 @@
-SUBDIRS = linux-hotplug rpm
+SUBDIRS = linux-hotplug generic rpm
