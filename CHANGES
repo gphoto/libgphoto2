@@ -2,19 +2,30 @@ libgphoto2 HEAD
 
 Build system (packagers beware!):
 
-   * A HAL FDI file can be generated using:
+   * You can generate HAL FDI, linux-hotplug usb.usermap, and udev rules
+     now:
 
- 	print-usb-usermap --fdi
+ 	  ${libdir}/print-camera-list (hal-fdi|usb-usermap|udev-rules)
 
-     (during chrooted build you can use:
-	CAMLIBS=$BUILDROOT/usr/lib/libgphoto2/2.2/ print-usb-usermap --fdi
-     )
+     During chrooted build you can use:
+	CAMLIBS=$BUILDROOT/usr/lib/libgphoto2/2.2/ print-camera-list hal-fdi
 
-   * A new function, gp_message_codeset(const char*), can be used to make all
-     messages of libgphoto2 and libgphoto2_port to use one specific codeset.
-     It is using bind_textdomain_codeset().
+     This obsoletes print-usb-usermap and print-udev-rules.
 
-     This is useful for gtk+ applications for instance.
+libgphoto2:
+
+   * Added new function gp_message_codeset(const char*) to API.
+      - If you do not call this function, libgphoto2 will give you its
+        messages in the codeset defined by the system locale.
+	(The system locale is defined by the LANG, LANGUAGE, and LC_*
+	environment variables.)
+      - Call this function with your desired codeset if you require
+        libgphoto2 messages in a fixed codeset independent from the
+        system locale. For example, GTK+ applications always expect UTF-8.
+      - gp_message_codeset() propagates the requested charset to
+        libgphoto2_port and then calls gettext's bind_textdomain_codeset()
+        function.
+
 
 ----------------------------------------------------------------------------
 libgphoto2 2.1.99 (pre-release of 2.2)
