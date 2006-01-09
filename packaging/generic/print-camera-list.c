@@ -25,6 +25,10 @@
 #define ARGV0 "print-camera-list"
 
 #define HELP_TEXT \
+"* WARNING * WARNING * WARNING * WARNING * WARNING * WARNING * WARNING *\n" \
+"  " ARGV0 " is not implemented completely yet\n" \
+"* WARNING * WARNING * WARNING * WARNING * WARNING * WARNING * WARNING *\n" \
+"\n" \
 ARGV0 " - print libgphoto2 camera list in different formats" \
 "\n" \
 "Syntax:\n" \
@@ -415,6 +419,8 @@ static int iterate_camera_list(const int add_comments, const output_format_t *fo
 }
 
 
+/* FIXME: Add hyperlink to format documentation. */
+
 static const output_format_t formats[] = {
 	{name: "human-readable",
 	 descr: "human readable list of cameras",
@@ -427,7 +433,7 @@ static const output_format_t formats[] = {
 	{name: "usb-usermap",
 	 descr: "usb.usermap include file for linux-hotplug",
 	 help: "If no <scriptname> is given, uses the script name "
-	 "\"" GP_USB_HOTPLUG_SCRIPT "\". Put this into /etc/hotplug/usb/<scriptname>.usermap",
+	 "\"" GP_USB_HOTPLUG_SCRIPT "\".\n        Put this into /etc/hotplug/usb/<scriptname>.usermap",
 	 paramdescr: "<NAME_OF_HOTPLUG_SCRIPT>",
 	 begin_func: empty_begin_func,
 	 camera_func: hotplug_camera_func,
@@ -457,7 +463,7 @@ static const output_format_t formats[] = {
 static int print_format_list(const output_format_t *formats)
 {
 	int i;
-	printf("List of formats\n");
+	printf("List of output formats:\n");
 	for (i=0; formats[i].name != NULL; ++i) {
 		if (formats[i].paramdescr != NULL) {
 			printf("    %s %s\n        %s\n", 
