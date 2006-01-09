@@ -41,6 +41,7 @@
 #else
 #  define _(String) (String)
 #  define N_(String) (String)
+#  define ngettext(String1,String2,Count) ((Count==1)?String1:String)
 #endif
 
 #include <gphoto2-port.h>
@@ -93,19 +94,13 @@ camera_abilities (CameraAbilitiesList *list)
 static int
 camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
-	switch(camera->pl->num_pics) {
-	case 1:
-    	sprintf (summary->text,_("Sonix camera.\n" 
-			"There is %i photo in it. \n"), camera->pl->num_pics);  
-	break;
-	default:
-    	sprintf (summary->text,_("Sonix camera.\n" 
-			"There are %i photos in it. \n"), camera->pl->num_pics);  
-	}	
-
+        sprintf (summary->text,ngettext(
+		"Sonix camera.\nThere is %i photo in it.\n",
+		"Sonix camera.\nThere are %i photos in it.\n",
+		camera->pl->num_pics
+	), camera->pl->num_pics);
     	return GP_OK;
 }
-
 
 static int camera_manual (Camera *camera, CameraText *manual, GPContext *context) 
 {
@@ -123,9 +118,6 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
 
 	return (GP_OK);
 }
-
-
-
 
 static int
 camera_about (Camera *camera, CameraText *about, GPContext *context)
