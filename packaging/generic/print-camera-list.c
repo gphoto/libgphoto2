@@ -66,11 +66,15 @@ ARGV0 " prints the camera list in the specified format FORMAT on stdout.\n" \
 typedef struct {
 	int number_of_cameras;
 	int add_comments;
+	int argc;
+	char **argv;
 } func_params_t;
 
 
 typedef int (* begin_func_t)  (const func_params_t *params);
-typedef int (* camera_func_t) (const func_params_t *params, const CameraAbilities *ca);
+typedef int (* camera_func_t) (const func_params_t *params, 
+			       const int i,
+			       const CameraAbilities *ca);
 typedef int (* end_func_t)    (const func_params_t *params);
 
 
@@ -116,7 +120,9 @@ typedef int (* end_func_t)    (const func_params_t *params);
  */
 
 static int
-hotplug_camera_func (const func_params_t *params, const CameraAbilities *a)
+hotplug_camera_func (const func_params_t *params, 
+		     const int i,
+		     const CameraAbilities *a)
 {
 	int flags = 0;
 	int class = 0, subclass = 0, proto = 0;
@@ -174,6 +180,77 @@ hotplug_camera_func (const func_params_t *params, const CameraAbilities *a)
 }
 
 
+static void
+print_headline (void)
+{
+	printf("No.|%-20s|%-20s|%s\n",
+	       "camlib",
+	       "driver name",
+	       "camera model");
+}
+
+
+static void
+print_hline (void)
+{
+	printf("---+%-20s+%-20s+%s\n",
+	       "--------------------",
+	       "--------------------",
+	       "-------------------------------------------");
+}
+
+
+static int
+human_begin_func (const func_params_t *params)
+{
+	print_hline();
+	print_headline();
+	print_hline();
+	return 0;
+}
+
+
+static int
+human_end_func (const func_params_t *params)
+{
+	print_hline();
+	print_headline();
+	return 0;
+}
+
+
+/** C equivalent of basename(1) */
+static const char *
+basename (const char *pathname)
+{
+	char *result, *tmp;
+	/* remove path part from camlib name */
+	for (result=tmp=(char *)pathname; (*tmp!='\0'); tmp++) {
+		if ((*tmp == gp_system_dir_delim) 
+		    && (*(tmp+1) != '\0')) {
+			result = tmp+1;
+		}
+	}
+	return (const char *)result;
+}
+
+
+static int
+human_camera_func (const func_params_t *params, 
+		   const int i, 
+		   const CameraAbilities *a)
+{
+	const char *camlib_basename;
+	camlib_basename = basename(a->library);
+	printf("%3d|%-20s|%-20s|%s\n",
+	       i+1, 
+	       camlib_basename,
+	       a->id,
+	       a->model);
+	return 0;
+}
+
+
 static int
 udev_begin_func (const func_params_t *params)
 {
@@ -193,7 +270,9 @@ udev_end_func (const func_params_t *params)
 
 
 static int
-udev_camera_func (const func_params_t *params, const CameraAbilities *a)
+udev_camera_func (const func_params_t *params, 
+		  const int i,
+		  const CameraAbilities *a)
 {
 	int flags = 0;
 	int class = 0, subclass = 0, proto = 0;
@@ -288,7 +367,9 @@ fdi_begin_func (const func_params_t *params)
 
 
 static int
-fdi_camera_func (const func_params_t *params, const CameraAbilities *a)
+fdi_camera_func (const func_params_t *params, 
+		 const int i,
+		 const CameraAbilities *a)
 {
 	char	*s, *d, model[256];
 
@@ -386,7 +467,10 @@ typedef struct {
 } output_format_t;
 
 
-static int iterate_camera_list(const int add_comments, const output_format_t *format, char *argv[])
+static int
+iterate_camera_list (const int add_comments, 
+		     const output_format_t *format, 
+		     int argc, char *argv[])
 {
 	int number_of_cameras;
 	CameraAbilitiesList *al;
@@ -398,7 +482,10 @@ static int iterate_camera_list(const int add_comments, const output_format_t *fo
 	CR (number_of_cameras = gp_abilities_list_count (al));
 	
 	params.add_comments = add_comments;
-	params. number_of_cameras = number_of_cameras;
+	params.number_of_cameras = number_of_cameras;
+	params.argc = argc;
+	params.argv = NULL;
+	// params.argv = &argv;
 	
 	if (format->begin_func != NULL) {
 		format->begin_func(&params);
@@ -408,7 +495,7 @@ static int iterate_camera_list(const int add_comments, const output_format_t *fo
 		int i;
 		for (i = 0; i < number_of_cameras; i++) {
 			CR (gp_abilities_list_get_abilities (al, i, &a));
-			format->camera_func(&params, &a);
+			format->camera_func(&params, i, &a);
 		}
 	}
 
@@ -422,14 +509,15 @@ static int iterate_camera_list(const int add_comments, const output_format_t *fo
 
 /* FIXME: Add hyperlink to format documentation. */
 
+/** list of supported output formats */
 static const output_format_t formats[] = {
 	{name: "human-readable",
 	 descr: "human readable list of cameras",
 	 help: NULL,
 	 paramdescr: NULL,
-	 begin_func: NULL,
-	 camera_func: NULL,
-	 end_func: NULL
+	 begin_func: human_begin_func,
+	 camera_func: human_camera_func,
+	 end_func: human_end_func
 	},
 	{name: "usb-usermap",
 	 descr: "usb.usermap include file for linux-hotplug",
@@ -461,6 +549,9 @@ static const output_format_t formats[] = {
 };
 
 
+/** \brief print list of output formats with descriptions
+ */
+
 static int print_format_list(const output_format_t *formats)
 {
 	int i;
@@ -483,6 +574,9 @@ static int print_format_list(const output_format_t *formats)
 }
 
 
+/** \brief print program help
+ */
+
 static int print_help()
 {
 	puts(HELP_TEXT);
@@ -490,16 +584,20 @@ static int print_help()
 }
 
 
+/** \brief main program: parse and check arguments, then delegate the work
+ */
+
 int main(int argc, char *argv[])
 {
-	int add_comments = FALSE;    /* whether to add cam model as a comment */
-	int debug_mode = FALSE;      /* whether we should output debug messages */
-	char *format_name = NULL;
-	int format_index;
+	int add_comments = FALSE; /* whether to add cam model as a comment */
+	int debug_mode = FALSE;   /* whether we should output debug messages */
+
+	char *format_name = NULL; /* name of desired output format */
+	int format_index;         /* index number of (desired) output format */
 
 	int i;
 
-	/* check command line arguments */
+	/* walk through command line arguments until format is encountered */
 	for (i=1; (i<argc) && (format_name == NULL); i++) {
 		if (0 == strcmp(argv[i], "--verbose")) {
 			if (add_comments) {
@@ -523,6 +621,7 @@ int main(int argc, char *argv[])
 		}
 	}
 
+	/* walk through output format list, searching for the requested one */
 	if (format_name == NULL) {
 		return print_help();
 	}
@@ -533,10 +632,16 @@ int main(int argc, char *argv[])
 		}
 		format_index++;
 	}
-	if ((formats[format_index].name == NULL) || (strcmp(formats[format_index].name, format_name) != 0)) {
+	if ((formats[format_index].name == NULL) || 
+	    (strcmp(formats[format_index].name, format_name) != 0)) {
 		return print_help();
 	}
-	return iterate_camera_list(add_comments, &formats[format_index], (i<argc)?(&argv[i]):NULL);
+
+	/* execute the work using the given parameters*/
+	return iterate_camera_list(add_comments, &formats[format_index],
+				   (i<argc)?(argc-i):(0),
+				   (i<argc)?(&argv[i]):(NULL)
+		);
 }
 
 /*
