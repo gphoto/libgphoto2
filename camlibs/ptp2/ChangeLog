@@ -1,3 +1,7 @@
+2006-01-09  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* library.c: added iRiver U10.
+
 2006-01-08  Marcus Meissner  <marcus@jet.franken.de>
 
 	* ptp.c, ptp-pack.c, ptp.h: Enhanced ptp_nikon_check_event(),
