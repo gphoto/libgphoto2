@@ -22,6 +22,7 @@
 
 #define GP_USB_HOTPLUG_SCRIPT "usbcam"
 
+/* Not sure whether this is the best possible name */
 #define ARGV0 "print-camera-list"
 
 #define HELP_TEXT \
