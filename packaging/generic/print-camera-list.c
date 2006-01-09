@@ -26,10 +26,6 @@
 #define ARGV0 "print-camera-list"
 
 #define HELP_TEXT \
-"* WARNING * WARNING * WARNING * WARNING * WARNING * WARNING * WARNING *\n" \
-"  " ARGV0 " is not implemented completely yet\n" \
-"* WARNING * WARNING * WARNING * WARNING * WARNING * WARNING * WARNING *\n" \
-"\n" \
 ARGV0 " - print libgphoto2 camera list in different formats" \
 "\n" \
 "Syntax:\n" \
@@ -67,7 +63,7 @@ typedef struct {
 	int number_of_cameras;
 	int add_comments;
 	int argc;
-	char **argv;
+	char ***argv;
 } func_params_t;
 
 
@@ -127,9 +123,12 @@ hotplug_camera_func (const func_params_t *params,
 	int flags = 0;
 	int class = 0, subclass = 0, proto = 0;
 	int usb_vendor = 0, usb_product = 0;
-	const char *usermap_script = "OERKSFIXME";
+	const char *usermap_script = 
+		(*(params->argv)[0] != NULL)
+		?(*(params->argv)[0])
+		:(GP_USB_HOTPLUG_SCRIPT);
 
-	if (a->usb_vendor) { /* usb product id may be 0! */
+	if (a->usb_vendor) { /* usb product id may be zero! */
 		class = 0;
 		subclass = 0;
 		proto = 0;
@@ -152,30 +151,26 @@ hotplug_camera_func (const func_params_t *params,
 		usb_vendor = 0;
 		usb_product = 0;
 	} else {
-		flags = 0;
+		/* not a USB camera */
+		return 0;
 	}
 
-	if (flags != 0) {
-		if (params->add_comments) {
-			printf ("# %s\n", 
-				a->model);
-		}
-		/* The first 3 lone bytes are the device class.
-		 * the second 3 lone bytes are the interface class.
-		 * for PTP we want the interface class.
-		 */
-		printf ("%-20s "
-			"0x%04x      0x%04x   0x%04x    0x0000       "
-			"0x0000      0x00         0x00            "
-			"0x00            0x%02x            0x%02x               "
-			"0x%02x               0x00000000\n",
-			usermap_script, flags, 
-			a->usb_vendor, a->usb_product,
-			class, subclass, proto);
-	} else {
-		fputs ("Error: Neither vendor/product nor class/subclass matched\n", stderr);
-		return 2;
+	if (params->add_comments) {
+		printf ("# %s\n", 
+			a->model);
 	}
+	/* The first 3 lone bytes are the device class.
+	 * the second 3 lone bytes are the interface class.
+	 * for PTP we want the interface class.
+	 */
+	printf ("%-20s "
+		"0x%04x      0x%04x   0x%04x    0x0000       "
+		"0x0000      0x00         0x00            "
+		"0x00            0x%02x            0x%02x               "
+		"0x%02x               0x00000000\n",
+		usermap_script, flags, 
+		a->usb_vendor, a->usb_product,
+		class, subclass, proto);
 	return 0;
 }
 
@@ -277,9 +272,12 @@ udev_camera_func (const func_params_t *params,
 	int flags = 0;
 	int class = 0, subclass = 0, proto = 0;
 	int usb_vendor = 0, usb_product = 0;
-	const char *hotplug_script = "OERKSFIXME";
+	const char *hotplug_script =
+		(*(params->argv)[0] != NULL)
+		?(*(params->argv)[0])
+		:("/etc/hotplug/usb/" GP_USB_HOTPLUG_SCRIPT);
 
-	if (a->usb_vendor) { /* usb product id may be 0! */
+	if (a->usb_vendor) { /* usb product id may be zero! */
 		class = 0;
 		subclass = 0;
 		proto = 0;
@@ -302,31 +300,27 @@ udev_camera_func (const func_params_t *params,
 		usb_vendor = 0;
 		usb_product = 0;
 	} else {
-		flags = 0;
+		/* not a USB camera */
+		return 0;
 	}
 
-	if (flags != 0) {
-		if (params->add_comments) {
-			printf ("# %s\n", a->model);
+	if (params->add_comments) {
+		printf ("# %s\n", a->model);
+	}
+	
+	if (flags & GP_USB_HOTPLUG_MATCH_DEV_CLASS) {
+		printf("SYSFS{bDeviceClass}==\"%02x\", ", class);
+		if (flags & GP_USB_HOTPLUG_MATCH_DEV_SUBCLASS) {
+			printf("SYSFS{bDeviceSubClass}==\"%02x\", ", subclass);
 		}
-
-		if (flags & GP_USB_HOTPLUG_MATCH_DEV_CLASS) {
-			printf("SYSFS{bDeviceClass}==\"%02x\", ", class);
-			if (flags & GP_USB_HOTPLUG_MATCH_DEV_SUBCLASS) {
-				printf("SYSFS{bDeviceSubClass}==\"%02x\", ", subclass);
+		if (flags & GP_USB_HOTPLUG_MATCH_DEV_PROTOCOL) {
+			printf("SYSFS{bDeviceProtocol}==\"%02x\", ", proto);
 			}
-			if (flags & GP_USB_HOTPLUG_MATCH_DEV_PROTOCOL) {
-				printf("SYSFS{bDeviceProtocol}==\"%02x\", ", proto);
-			}
-		} else {
-			printf ("SYSFS{idVendor}==\"%04x\", SYSFS{idProduct}==\"%04x\", ",
-				a->usb_vendor, a->usb_product);
-		}
-		printf("RUN+=\"%s\"\n", hotplug_script);
 	} else {
-		fputs ("Error: Neither vendor/product nor class/subclass matched\n", stderr);
-		return 2;
+		printf ("SYSFS{idVendor}==\"%04x\", SYSFS{idProduct}==\"%04x\", ",
+			a->usb_vendor, a->usb_product);
 	}
+	printf("RUN+=\"%s\"\n", hotplug_script);
 	return 0;
 }
 
@@ -470,7 +464,7 @@ typedef struct {
 static int
 iterate_camera_list (const int add_comments, 
 		     const output_format_t *format, 
-		     int argc, char *argv[])
+		     char *argv[])
 {
 	int number_of_cameras;
 	CameraAbilitiesList *al;
@@ -483,9 +477,7 @@ iterate_camera_list (const int add_comments,
 	
 	params.add_comments = add_comments;
 	params.number_of_cameras = number_of_cameras;
-	params.argc = argc;
-	params.argv = NULL;
-	// params.argv = &argv;
+	params.argv = &argv;
 	
 	if (format->begin_func != NULL) {
 		format->begin_func(&params);
@@ -594,8 +586,14 @@ int main(int argc, char *argv[])
 
 	char *format_name = NULL; /* name of desired output format */
 	int format_index;         /* index number of (desired) output format */
+	static char *fmt_argv[8];
 
-	int i;
+	int i, j;
+
+	/* initialize parameters to NULL */
+	for (i=0; i<(sizeof(fmt_argv)/sizeof(fmt_argv[0])); i++) {
+		fmt_argv[i] = NULL;
+	}
 
 	/* walk through command line arguments until format is encountered */
 	for (i=1; (i<argc) && (format_name == NULL); i++) {
@@ -637,10 +635,14 @@ int main(int argc, char *argv[])
 		return print_help();
 	}
 
+	/* copy remaining arguments */
+	for (j=i; (j<argc) && ((j-i)<((sizeof(fmt_argv)/sizeof(fmt_argv[0]))-1)); j++) {
+		fmt_argv[j-i] = argv[j];
+	}
+
 	/* execute the work using the given parameters*/
 	return iterate_camera_list(add_comments, &formats[format_index],
-				   (i<argc)?(argc-i):(0),
-				   (i<argc)?(&argv[i]):(NULL)
+				   fmt_argv
 		);
 }
 
