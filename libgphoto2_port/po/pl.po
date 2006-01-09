@@ -5,99 +5,130 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libgphoto2_port 2.1.99\n"
-"Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-01-05 19:01+0100\n"
-"PO-Revision-Date: 2006-01-05 17:50+0100\n"
+"Project-Id-Version: libgphoto2_port 2.1.6\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-06-23 04:45-0400\n"
+"PO-Revision-Date: 2005-12-26 19:20+0100\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-2\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:185
+#: libgphoto2_port/gphoto2-port-info-list.c:176
 #, c-format
 msgid "Called for filename '%s'."
 msgstr "Wywo³ano dla nazwy pliku '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:190
+#: libgphoto2_port/gphoto2-port-info-list.c:181
 #, c-format
 msgid "Could not load '%s': '%s'."
 msgstr "Nie uda³o siê za³adowaæ '%s': '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:198
+#: libgphoto2_port/gphoto2-port-info-list.c:189
 #, c-format
 msgid "Could not find some functions in '%s': '%s'."
 msgstr "Nie uda³o siê odnale¼æ funkcji w '%s': '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:210
+#: libgphoto2_port/gphoto2-port-info-list.c:201
+#: libgphoto2_port/gphoto2-port-info-list.c:327
 #, c-format
 msgid "'%s' already loaded"
 msgstr "'%s' ju¿ za³adowany"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:219
+#: libgphoto2_port/gphoto2-port-info-list.c:210
 #, c-format
 msgid "Could not load port driver list: '%s'."
 msgstr "Nie uda³o siê za³adowaæ listy sterowników portów: '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:226
+#: libgphoto2_port/gphoto2-port-info-list.c:217
 #, c-format
 msgid "Loaded '%s' ('%s') from '%s'."
 msgstr "Za³adowano '%s' ('%s') z '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:255
+#: libgphoto2_port/gphoto2-port-info-list.c:258
 #, c-format
 msgid "Using ltdl to load io-drivers from '%s'..."
 msgstr "U¿ycie ltdl do za³adowania sterowników we/wy z '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:282
+#: libgphoto2_port/gphoto2-port-info-list.c:268
+#, c-format
+msgid "Loading io-drivers from '%s' without ltdl..."
+msgstr "£adowanie sterowników we/wy z '%s' bez ltdl..."
+
+#: libgphoto2_port/gphoto2-port-info-list.c:273
+#, c-format
+msgid "Could not load any io-library because '%s' could not be opened (%m)"
+msgstr "Nie uda³o siê za³adowaæ ¿adnej biblioteki we/wy poniewa¿ nie mo¿na otworzyæ '%s' (%m)"
+
+#: libgphoto2_port/gphoto2-port-info-list.c:305
+#, c-format
+msgid "'%s' is not a library (%s)"
+msgstr "'%s' nie jest bibliotek± (%s)"
+
+#: libgphoto2_port/gphoto2-port-info-list.c:315
+#, c-format
+msgid "Could not find some functions in '%s' (%s)"
+msgstr "Nie uda³o siê odnale¼æ funkcji w '%s' (%s)"
+
+#: libgphoto2_port/gphoto2-port-info-list.c:335
+#, c-format
+msgid "Could not load list (%s)"
+msgstr "Nie uda³o siê za³adowaæ listy (%s)"
+
+#: libgphoto2_port/gphoto2-port-info-list.c:343
+#, c-format
+msgid "Loaded '%s' (%s) from '%s'"
+msgstr "Za³adowano '%s' (%s) z '%s'"
+
+#: libgphoto2_port/gphoto2-port-info-list.c:374
 #, c-format
 msgid "Counting entries (%i available)..."
 msgstr "Liczenie wpisów (%i dostêpnych)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:291
+#: libgphoto2_port/gphoto2-port-info-list.c:383
 #, c-format
 msgid "%i regular entries available."
 msgstr "%i dostêpnych zwyk³ych wpisów."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:320
+#: libgphoto2_port/gphoto2-port-info-list.c:412
 #, c-format
 msgid "Looking for path '%s' (%i entries available)..."
 msgstr "Poszukiwanie ¶cie¿ki '%s' (%i dostêpnych wpisów)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:332
+#: libgphoto2_port/gphoto2-port-info-list.c:424
 #, c-format
 msgid "Starting regex search for '%s'..."
 msgstr "Rozpoczêcie szukania wyra¿enia regularnego dla '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:338
+#: libgphoto2_port/gphoto2-port-info-list.c:430
 #, c-format
 msgid "Trying '%s'..."
 msgstr "Próbowanie '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:359
+#: libgphoto2_port/gphoto2-port-info-list.c:451
 msgid "regcomp failed"
 msgstr "regcomp nie powiod³o siê"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:370
+#: libgphoto2_port/gphoto2-port-info-list.c:462
 #, c-format
 msgid "re_match failed (%i)"
 msgstr "re_match nie powiod³o siê (%i)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:378
+#: libgphoto2_port/gphoto2-port-info-list.c:470
 msgid "regexec failed"
 msgstr "regexec nie powiod³o siê"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:385
+#: libgphoto2_port/gphoto2-port-info-list.c:477
 msgid "Generic Port"
 msgstr "Ogólny port"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:409
+#: libgphoto2_port/gphoto2-port-info-list.c:501
 #, c-format
 msgid "Looking up entry '%s'..."
 msgstr "Poszukiwanie wpisu '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:439
+#: libgphoto2_port/gphoto2-port-info-list.c:531
 #, c-format
 msgid "Getting info of entry %i (%i available)..."
 msgstr "Pobieranie informacji z wpisu %i (%i dostêpnych)..."
@@ -183,152 +214,150 @@ msgid "Could not lock the device"
 msgstr "Nie uda³o siê zablokowaæ urz±dzenia"
 
 #: libgphoto2_port/gphoto2-port-result.c:98
-msgid "libhal error"
-msgstr "B³±d libhal"
-
-#: libgphoto2_port/gphoto2-port-result.c:100
 msgid "Unknown error"
 msgstr "Nieznany b³±d"
 
-#: libgphoto2_port/gphoto2-port.c:54
+#: libgphoto2_port/gphoto2-port.c:56
 #, c-format
 msgid "The operation '%s' is not supported by this device"
 msgstr "Operacja '%s' nie jest obs³ugiwana przez to urz±dzenie"
 
-#: libgphoto2_port/gphoto2-port.c:55
+#: libgphoto2_port/gphoto2-port.c:57
 msgid "The port has not yet been initialized"
 msgstr "Port nie zosta³ jeszcze zainicjowany"
 
-#: libgphoto2_port/gphoto2-port.c:85
+#: libgphoto2_port/gphoto2-port.c:91
 msgid "Creating new device..."
 msgstr "Tworzenie nowego urz±dzenia..."
 
-#: libgphoto2_port/gphoto2-port.c:160
+#: libgphoto2_port/gphoto2-port.c:171
 #, c-format
 msgid "Could not load '%s' ('%s')."
 msgstr "Nie uda³o siê za³adowaæ '%s' ('%s')."
 
-#: libgphoto2_port/gphoto2-port.c:170
+#: libgphoto2_port/gphoto2-port.c:180
+#, c-format
+msgid "Could not load '%s' ('%s')"
+msgstr "Nie uda³o siê za³adowaæ '%s' ('%s')"
+
+#: libgphoto2_port/gphoto2-port.c:195 libgphoto2_port/gphoto2-port.c:201
 #, c-format
 msgid "Could not find 'gp_port_library_operations' in '%s' ('%s')"
 msgstr "Nie uda³o siê odnale¼æ 'gp_port_library_operations' w '%s' ('%s')"
 
-#: libgphoto2_port/gphoto2-port.c:250
+#: libgphoto2_port/gphoto2-port.c:276
 #, c-format
 msgid "Opening %s port..."
 msgstr "Otwieranie portu %s..."
 
-#: libgphoto2_port/gphoto2-port.c:272
+#: libgphoto2_port/gphoto2-port.c:298
 msgid "Closing port..."
 msgstr "Zamykanie portu..."
 
-#: libgphoto2_port/gphoto2-port.c:294
+#: libgphoto2_port/gphoto2-port.c:320
 msgid "Freeing port..."
 msgstr "Zwalnianie portu..."
 
-#: libgphoto2_port/gphoto2-port.c:339
+#: libgphoto2_port/gphoto2-port.c:369
 #, c-format
 msgid "Writing %i=0x%x byte(s) to port..."
 msgstr "Zapis %i=0x%x bajtów do portu..."
 
-#: libgphoto2_port/gphoto2-port.c:352
+#: libgphoto2_port/gphoto2-port.c:382
 #, c-format
 msgid "Could only write %i out of %i byte(s)"
 msgstr "Uda³o siê zapisaæ tylko %i z %i bajtów"
 
-#: libgphoto2_port/gphoto2-port.c:373
+#: libgphoto2_port/gphoto2-port.c:403
 #, c-format
 msgid "Reading %i=0x%x bytes from port..."
 msgstr "Odczyt %i=0x%x bajtów z portu..."
 
-#: libgphoto2_port/gphoto2-port.c:384 libgphoto2_port/gphoto2-port.c:420
-#: libgphoto2_port/gphoto2-port.c:459 libgphoto2_port/gphoto2-port.c:781
+#: libgphoto2_port/gphoto2-port.c:414 libgphoto2_port/gphoto2-port.c:450
+#: libgphoto2_port/gphoto2-port.c:489 libgphoto2_port/gphoto2-port.c:811
 #, c-format
 msgid "Could only read %i out of %i byte(s)"
 msgstr "Uda³o siê odczytaæ tylko %i z %i bajtów"
 
-#: libgphoto2_port/gphoto2-port.c:409
+#: libgphoto2_port/gphoto2-port.c:439
 #, c-format
 msgid "Reading %i=0x%x bytes from interrupt endpoint..."
 msgstr "Odczyt %i=0x%x bajtów z koñcówki przerwania..."
 
-#: libgphoto2_port/gphoto2-port.c:469
+#: libgphoto2_port/gphoto2-port.c:499
 #, c-format
 msgid "Reading %i=0x%x bytes from interrupt endpoint (fast)..."
 msgstr "Odczyt %i=0x%x bajtów z koñcówki przerwania (szybki)..."
 
-#: libgphoto2_port/gphoto2-port.c:494
+#: libgphoto2_port/gphoto2-port.c:524
 #, c-format
 msgid "Setting timeout to %i millisecond(s)..."
 msgstr "Ustawianie limitu czasu na %i milisekund..."
 
-#: libgphoto2_port/gphoto2-port.c:530
+#: libgphoto2_port/gphoto2-port.c:560
 msgid "Getting timeout..."
 msgstr "Pobieranie limitu czasu..."
 
-#: libgphoto2_port/gphoto2-port.c:534
+#: libgphoto2_port/gphoto2-port.c:564
 #, c-format
 msgid "Current timeout: %i milliseconds"
 msgstr "Bie¿±cy limit czasu: %i milisekund"
 
-#: libgphoto2_port/gphoto2-port.c:556
+#: libgphoto2_port/gphoto2-port.c:586
 msgid "Setting settings..."
 msgstr "Ustawianie ustawieñ..."
 
-#: libgphoto2_port/gphoto2-port.c:607
+#: libgphoto2_port/gphoto2-port.c:637
 #, c-format
 msgid "Getting level of pin %i..."
 msgstr "Pobieranie poziomu pinu %i..."
 
-#: libgphoto2_port/gphoto2-port.c:616
+#: libgphoto2_port/gphoto2-port.c:646
 #, c-format
 msgid "Level of pin %i: %i"
 msgstr "Poziom pinu %i: %i"
 
-#: libgphoto2_port/gphoto2-port.c:642
+#: libgphoto2_port/gphoto2-port.c:672
 msgid "low"
 msgstr "niski"
 
-#: libgphoto2_port/gphoto2-port.c:643
+#: libgphoto2_port/gphoto2-port.c:673
 msgid "high"
 msgstr "wysoki"
 
-#: libgphoto2_port/gphoto2-port.c:658
+#: libgphoto2_port/gphoto2-port.c:688
 #, c-format
 msgid "Setting pin %i (%s: '%s') to '%s'..."
 msgstr "Ustawianie pinu %i (%s: '%s') na '%s'..."
 
-#: libgphoto2_port/gphoto2-port.c:675
+#: libgphoto2_port/gphoto2-port.c:705
 #, c-format
 msgid "Sending break (%i milliseconds)..."
 msgstr "Wysy³anie sygna³u break (%i milisekund)..."
 
-#: libgphoto2_port/gphoto2-port.c:690
+#: libgphoto2_port/gphoto2-port.c:720
 msgid "Flushing port..."
 msgstr "Przeczyszczanie portu..."
 
-#: libgphoto2_port/gphoto2-port.c:731
-#, c-format
-msgid "Clear halt on ep %02x"
-msgstr ""
+#: libgphoto2_port/gphoto2-port.c:761
+msgid "Clear halt..."
+msgstr "Zerowanie stopu..."
 
-#: libgphoto2_port/gphoto2-port.c:748
+#: libgphoto2_port/gphoto2-port.c:778
 #, c-format
 msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr ""
-"Zapis komunikatu (¿±danie=0x%x warto¶æ=0x%x indeks=0x%x rozmiar=%i=0x%x)..."
+msgstr "Zapis komunikatu (¿±danie=0x%x warto¶æ=0x%x indeks=0x%x rozmiar=%i=0x%x)..."
 
-#: libgphoto2_port/gphoto2-port.c:769
+#: libgphoto2_port/gphoto2-port.c:799
 #, c-format
 msgid "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr ""
-"Odczyt komunikatu (¿±danie=0x%x warto¶æ=0x%x indeks=0x%x rozmiar=%i=0x%x)..."
+msgstr "Odczyt komunikatu (¿±danie=0x%x warto¶æ=0x%x indeks=0x%x rozmiar=%i=0x%x)..."
 
-#: libgphoto2_port/gphoto2-port.c:776
+#: libgphoto2_port/gphoto2-port.c:806
 msgid "msg_read"
 msgstr "msg_read"
 
-#: libgphoto2_port/gphoto2-port.c:892
+#: libgphoto2_port/gphoto2-port.c:866
 msgid "No error description available"
 msgstr "Opis b³êdu niedostêpny"
 
@@ -355,9 +384,7 @@ msgstr "Urz±dzenie '%s' nie mo¿e zostaæ odblokowane."
 #: serial/unix.c:285
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
-msgstr ""
-"Urz±dzenie '%s' nie mo¿e zostaæ odblokowane, bo jest zablokowane przez pid %"
-"d."
+msgstr "Urz±dzenie '%s' nie mo¿e zostaæ odblokowane, bo jest zablokowane przez pid %d."
 
 #: serial/unix.c:289
 #, c-format
@@ -418,101 +445,70 @@ msgstr "Nie uda³o siê przeczy¶ciæ '%s' (%m)."
 msgid "Could not set the baudrate to %d"
 msgstr "Nie uda³o siê ustawiæ liczby bodów na %d"
 
-#: usb/libusb.c:218
+#: usb/libusb.c:186
 #, c-format
 msgid "Could not open USB device (%m)."
 msgstr "Nie uda³o siê otworzyæ urz±dzenia USB (%m)."
 
-#: usb/libusb.c:228
+#: usb/libusb.c:196
 msgid "Camera is already in use."
 msgstr "Aparat jest ju¿ w u¿yciu."
 
-#: usb/libusb.c:233
+#: usb/libusb.c:201
 #, c-format
 msgid "Device has driver '%s' attached, detaching it now."
 msgstr "Urz±dzenie ma pod³±czony sterownik '%s', od³±czanie go."
 
-#: usb/libusb.c:236
+#: usb/libusb.c:204
 #, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
 msgstr "Nie uda³o siê od³±czyæ sterownika j±dra '%s' od aparatu."
 
-#: usb/libusb.c:238
+#: usb/libusb.c:206
 msgid "Could not query kernel driver of device."
 msgstr "Nie uda³o siê zapytaæ j±dra o sterownik urz±dzenia."
 
-#: usb/libusb.c:245
+#: usb/libusb.c:213
 #, c-format
-msgid ""
-"Could not claim interface %d (%m). Make sure no other program or kernel "
-"module (such as %s) is using the device and you have read/write access to "
-"the device."
-msgstr ""
-"Nie uda³o siê zaw³aszczyæ interfejsu %d (%m). Nale¿y upewniæ siê, czy ¿aden "
-"inny program lub modu³ j±dra (taki jak %s) nie u¿ywa tego urz±dzenia i mamy "
-"prawa odczytu/zapisu do urz±dzenia."
+msgid "Could not claim interface %d (%m). Make sure no other program or kernel module (such as %s) is using the device and you have read/write access to the device."
+msgstr "Nie uda³o siê zaw³aszczyæ interfejsu %d (%m). Nale¿y upewniæ siê, czy ¿aden inny program lub modu³ j±dra (taki jak %s) nie u¿ywa tego urz±dzenia i mamy prawa odczytu/zapisu do urz±dzenia."
 
-#: usb/libusb.c:264
+#: usb/libusb.c:232
 #, c-format
 msgid "Could not release interface %d (%m)."
 msgstr "Nie uda³o siê oddaæ interfejsu %d (%m)."
 
-#: usb/libusb.c:271
+#: usb/libusb.c:239
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr "Nie uda³o siê zamkn±æ portu USB (%m)."
 
-#: usb/libusb.c:451
+#: usb/libusb.c:389
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "Nie uda³o siê ustawiæ konfiguracji %d/%d (%m)"
 
-#: usb/libusb.c:481
+#: usb/libusb.c:419
 #, c-format
 msgid "Could not set altsetting %d/%d (%m)"
 msgstr "Nie uda³o siê ustawiæ altsetting %d/%d (%m)"
 
-#: usb/libusb.c:573
+#: usb/libusb.c:511
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
-msgstr ""
-"Podany identyfikator producenta lub produktu (0x%x,0x%x) nie jest poprawny."
+msgstr "Podany identyfikator producenta lub produktu (0x%x,0x%x) nie jest poprawny."
 
-#: usb/libusb.c:605
+#: usb/libusb.c:543
 #, c-format
-msgid ""
-"USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
-"not function with gphoto2. Reference: %s"
-msgstr ""
-"Urz±dzenie USB (producent 0x%x, produkt 0x%x) to urz±dzenie przechowuj±ce "
-"dane i mo¿e nie dzia³aæ z gphoto2. Odno¶nik: %s"
+msgid "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might not function with gphoto2. Reference: %s"
+msgstr "Urz±dzenie USB (producent 0x%x, produkt 0x%x) to urz±dzenie przechowuj±ce dane i mo¿e nie dzia³aæ z gphoto2. Odno¶nik: %s"
 
-#: usb/libusb.c:638
+#: usb/libusb.c:576
 #, c-format
-msgid ""
-"Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
-"is connected to the computer."
-msgstr ""
-"Nie uda³o siê odnale¼æ urz±dzenia USB (producent 0x%x, produkt 0x%x). Nale¿y "
-"upewniæ siê, ¿e to urz±dzenie jest pod³±czone do komputera."
+msgid "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device is connected to the computer."
+msgstr "Nie uda³o siê odnale¼æ urz±dzenia USB (producent 0x%x, produkt 0x%x). Nale¿y upewniæ siê, ¿e to urz±dzenie jest pod³±czone do komputera."
 
-#: usb/libusb.c:772
+#: usb/libusb.c:710
 #, c-format
-msgid ""
-"Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
-"sure this device is connected to the computer."
-msgstr ""
-"Nie uda³o siê odnale¼æ urz±dzenia USB (klasa 0x%x, podklasa 0x%x, protokó³ 0x"
-"%x). Nale¿y upewniæ siê, ¿e to urz±dzenie jest pod³±czone do komputera)."
-
-#: disk/disk.c:161 disk/disk.c:200 disk/disk.c:222
-#, c-format
-msgid "Media '%s'"
-msgstr "No¶nik '%s'"
-
-#: disk/disk.c:162
-msgid "(unknown)"
-msgstr "(nieznany)"
-
-#~ msgid "Clear halt..."
-#~ msgstr "Zerowanie stopu..."
+msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
+msgstr "Nie uda³o siê odnale¼æ urz±dzenia USB (klasa 0x%x, podklasa 0x%x, protokó³ 0x%x). Nale¿y upewniæ siê, ¿e to urz±dzenie jest pod³±czone do komputera)."
