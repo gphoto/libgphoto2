@@ -1992,7 +1992,7 @@ camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 		    "    camera control menu appears. Set it to ON.\n"
 		    "(3) If you switch the 'LCD mode' to 'Monitor' or\n"
 		    "    'Normal', don't forget to switch it back to 'Off'\n"
-		    "    before disconnectig. Otherwise you cannot use\n"
+		    "    before disconnecting. Otherwise you cannot use\n"
 		    "    the camera's buttons. If you end up with this\n"
 		    "    state, you should reconnect the camera to the\n"
 		    "    PC and switch LCD to 'Off'."));
