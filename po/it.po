@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: libgphoto2 2.1.99\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2005-12-25 11:09-0500\n"
-"PO-Revision-Date: 2006-01-09 16:36+0000\n"
+"PO-Revision-Date: 2006-01-10 11:47+0000\n"
 "Last-Translator: Marco Colombo <m.colombo@ed.ac.uk>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
 "MIME-Version: 1.0\n"
@@ -489,7 +489,7 @@ msgstr "canon_serial_get_dirents: ricevuta voce di directory troncata"
 
 #: camlibs/canon/serial.c:1216
 msgid "canon_serial_get_dirents: Too many dirents, we must be looping."
-msgstr ""
+msgstr "canon_serial_get_dirents: troppe voci di directory, ci deve essere un ciclo."
 
 #: camlibs/canon/serial.c:1226
 #, c-format
@@ -679,12 +679,12 @@ msgstr "canon_usb_get_body_id: restituita lunghezza dei dati inattesa (%i byte, 
 #: camlibs/canon/usb.c:859
 #, c-format
 msgid "canon_usb_poll_interrupt_pipe: interrupt read failed after %i tries, %6.3f sec \"%s\""
-msgstr ""
+msgstr "canon_usb_poll_interrupt_pipe: lettura dell'interrupt fallita dopo %i tentativi, %6.3f secondi \"%s\""
 
 #: camlibs/canon/usb.c:914
 #, c-format
 msgid "canon_usb_poll_interrupt_multiple: interrupt read failed after %i tries, \"%s\""
-msgstr ""
+msgstr "canon_usb_poll_interrupt_multiple: lettura dell'interrupt fallita dopo %i tentativi, \"%s\""
 
 #: camlibs/canon/usb.c:1036
 #, c-format
@@ -1270,6 +1270,12 @@ msgid ""
 "based on several other gphoto2 camlib modules and the specifications kindly provided by Mustek.\n"
 "\n"
 msgstr ""
+"Libreria gsmart300\n"
+"Till Adam <till@adam-lilienthal.de>\n"
+"Jerome Lodewyck <jerome.lodewyck@ens.fr>\n"
+"Supporto per fotocamere Mustek gSmart 300\n"
+"basato su altri moduli di gphoto2 e sulle specifiche gentilmente fornite da Mustek.\n"
+"\n"
 
 #: camlibs/gsmart300/library.c:199
 #, c-format
@@ -1909,7 +1915,7 @@ msgstr "Stato scheda di memoria (%d): %s\n"
 #: camlibs/kodak/dc240/dc240.c:197
 #, c-format
 msgid "Total pictures captured: %d, Flashes fired: %d\n"
-msgstr ""
+msgstr "Numero di foto scattate: %d, Flash scattati: %d\n"
 
 #: camlibs/kodak/dc240/dc240.c:211
 msgid ""
@@ -1961,7 +1967,7 @@ msgstr "Nessuna scheda"
 
 #: camlibs/kodak/dc3200/dc3200.c:38
 msgid "There is currently an operation in progress. This camera only supports one operation at a time. Please wait until the current operation has finished."
-msgstr ""
+msgstr "Un'operazione è in corso. Questa fotocamera gestisce solo un'operazione alla volta. Attendere fino alla conclusione dell'operazione corrente."
 
 #: camlibs/kodak/dc3200/dc3200.c:142
 #, c-format
@@ -2338,7 +2344,7 @@ msgstr ""
 #: camlibs/konica/library.c:1094
 #, c-format
 msgid "Could not find localization data at '%s'"
-msgstr ""
+msgstr "Impossibile trovare i dati di localizzazione in '%s'"
 
 #: camlibs/konica/library.c:1158
 msgid "Localization file too long!"
@@ -2607,12 +2613,17 @@ msgid ""
 "Firmware         = %s\n"
 "Firmware Version = %s\n"
 msgstr ""
+"La fotocamera USB sembra essere una LG GSM.\n"
+"Firmware              = %s\n"
+"Versione del firmware = %s\n"
 
 #: camlibs/lg_gsm/library.c:114
 msgid ""
 "LG GSM generic driver\n"
 "Guillaume Bedot <littletux@zarb.org>\n"
 msgstr ""
+"Driver generico per LG GSM\n"
+"Guillaume Bedot <littletux@zarb.org>\n"
 
 #: camlibs/mars/library.c:114
 #, c-format
@@ -2755,11 +2766,11 @@ msgstr "Piena"
 
 #: camlibs/minolta/dimagev/dimagev.c:368
 msgid "Busy"
-msgstr ""
+msgstr "Occupata"
 
 #: camlibs/minolta/dimagev/dimagev.c:368
 msgid "Idle"
-msgstr ""
+msgstr "In attesa"
 
 #: camlibs/minolta/dimagev/dimagev.c:369
 msgid "Charging"
@@ -2767,7 +2778,7 @@ msgstr "Caricamento in corso"
 
 #: camlibs/minolta/dimagev/dimagev.c:369
 msgid "Ready"
-msgstr ""
+msgstr "Pronta"
 
 #: camlibs/minolta/dimagev/dimagev.c:380
 #, c-format
@@ -2873,11 +2884,11 @@ msgstr ""
 
 #: camlibs/mustek/mdc800.c:258
 msgid "Batteries are ok."
-msgstr ""
+msgstr "Le batterie sono cariche."
 
 #: camlibs/mustek/mdc800.c:260
 msgid "Batteries are low."
-msgstr ""
+msgstr "Le batterie sono quasi scariche."
 
 #: camlibs/mustek/mdc800.c:279
 msgid ""
@@ -3156,7 +3167,7 @@ msgstr "batteria"
 
 #: camlibs/polaroid/pdc700.c:172
 msgid "a/c adaptor"
-msgstr ""
+msgstr "adattatore di corrente"
 
 #: camlibs/polaroid/pdc700.c:229
 #, c-format
@@ -3188,7 +3199,7 @@ msgstr ""
 #: camlibs/polaroid/pdc700.c:914
 #, c-format
 msgid "%i bytes of an unknown image format have been received. Please write to %s and ask for assistance."
-msgstr ""
+msgstr "Sono stati ricevuti %i byte di un formato immagine sconosciuto. Contattare %s per assistenza."
 
 #: camlibs/polaroid/pdc700.c:939
 msgid "Download program for Polaroid DC700 camera. Originally written by Ryan Lantzer <rlantzer@umr.edu> for gphoto-4.x. Adapted for gphoto2 by Lutz Mueller <lutz@users.sf.net>."
@@ -3320,7 +3331,7 @@ msgstr "PTP Formato codice non valido"
 
 #: camlibs/ptp2/library.c:173
 msgid "PTP Unknown Vendor Code"
-msgstr ""
+msgstr "PTP Codice fornitore sconosciuto"
 
 #: camlibs/ptp2/library.c:175
 msgid "PTP Capture Already Terminated"
@@ -3600,11 +3611,11 @@ msgstr "Sport"
 
 #: camlibs/ptp2/library.c:2472 camlibs/ptp2/ptp.c:2072
 msgid "Night Portrait"
-msgstr ""
+msgstr "Ritratto notturno"
 
 #: camlibs/ptp2/library.c:2473 camlibs/ptp2/ptp.c:2071
 msgid "Night Landscape"
-msgstr ""
+msgstr "Paesaggio notturno"
 
 #: camlibs/ptp2/library.c:2515 camlibs/ptp2/ptp.c:2073
 msgid "Single Shot"
@@ -3949,7 +3960,7 @@ msgstr "PTP: Formato codice non valido"
 
 #: camlibs/ptp2/ptp.c:1608
 msgid "PTP: Unknown Vendor Code"
-msgstr ""
+msgstr "PTP: Codice fornitore sconosciuto"
 
 #: camlibs/ptp2/ptp.c:1610
 msgid "PTP: Capture Already Terminated"
@@ -4054,12 +4065,12 @@ msgstr "Lunghezza focale"
 
 #: camlibs/ptp2/ptp.c:1654
 msgid "Focus Distance"
-msgstr ""
+msgstr "Distanza messa a fuoco"
 
 #: camlibs/ptp2/ptp.c:1655 camlibs/sierra/nikon-desc.c:331
 #: camlibs/sierra/olympus-desc.c:495
 msgid "Focus Mode"
-msgstr ""
+msgstr "Modalità messa a fuoco"
 
 #: camlibs/ptp2/ptp.c:1659
 msgid "Exposure Program Mode"
@@ -4160,7 +4171,7 @@ msgstr ""
 
 #: camlibs/ptp2/ptp.c:1719
 msgid "UNIX Time"
-msgstr ""
+msgstr "Orario UNIX"
 
 #: camlibs/ptp2/ptp.c:1720
 msgid "Real Image Width"
@@ -4283,7 +4294,7 @@ msgstr ""
 
 #: camlibs/ptp2/ptp.c:1787
 msgid "Auto ISO"
-msgstr ""
+msgstr "Auto ISO"
 
 #: camlibs/ptp2/ptp.c:1789
 msgid "ISO Step"
@@ -4331,7 +4342,7 @@ msgstr ""
 
 #: camlibs/ptp2/ptp.c:1813
 msgid "PTP_DPC_NIKON_D3ExpDelayMode"
-msgstr ""
+msgstr "PTP_DPC_NIKON_D3ExpDelayMode"
 
 #: camlibs/ptp2/ptp.c:1815
 msgid "Long Exposure Noise Reduction"
@@ -4343,15 +4354,15 @@ msgstr ""
 
 #: camlibs/ptp2/ptp.c:1819
 msgid "PTP_DPC_NIKON_D6ControlPanelFinderRearControl"
-msgstr ""
+msgstr "PTP_DPC_NIKON_D6ControlPanelFinderRearControl"
 
 #: camlibs/ptp2/ptp.c:1821
 msgid "PTP_DPC_NIKON_ControlPanelFinderViewfinder"
-msgstr ""
+msgstr "PTP_DPC_NIKON_ControlPanelFinderViewfinder"
 
 #: camlibs/ptp2/ptp.c:1823
 msgid "PTP_DPC_NIKON_D7Illumination"
-msgstr ""
+msgstr "PTP_DPC_NIKON_D7Illumination"
 
 #: camlibs/ptp2/ptp.c:1825
 msgid "Flash Sync. Speed"
@@ -5505,7 +5516,7 @@ msgstr "F8"
 #: camlibs/sierra/sierra.c:1580 camlibs/sierra/sierra.c:1588
 #: camlibs/sierra/sierra.c:1793
 msgid "SuperFine"
-msgstr ""
+msgstr "SuperFine"
 
 #: camlibs/sierra/sierra.c:1581 camlibs/sierra/sierra.c:1590
 #: camlibs/sierra/sierra.c:1795
@@ -5805,6 +5816,12 @@ msgid ""
 "Space used: %8d\n"
 "Space free: %8d\n"
 msgstr ""
+"SDRAM:\n"
+" File: %d\n"
+"  Immagini: %4d\n"
+"  Filmati:  %4d\n"
+"Spazio usato:  %8d\n"
+"Spazio libero: %8d\n"
 
 #: camlibs/spca50x/library.c:302
 msgid "spca50x library v"
@@ -5909,7 +5926,7 @@ msgstr "La fotocamera gestisce le miniature.\n"
 
 #: camlibs/stv0680/library.c:545
 msgid "Camera supports Video.\n"
-msgstr ""
+msgstr "La fotocamera gestisce i filmati.\n"
 
 #: camlibs/stv0680/library.c:548
 msgid "Camera pictures are monochrome.\n"
