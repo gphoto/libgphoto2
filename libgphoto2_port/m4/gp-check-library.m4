@@ -139,14 +139,11 @@ if test "x${[$1][_LIBS]}" = "x" && test "x${[$1][_CFLAGS]}" = "x"; then
 				[PKG_CHECK_MODULES([$1],[$2],     [have_][$1][=yes],[:])]
 			)
 		fi
-		m4_ifval([$3],[# Version requirement given, so relying on pkgconfig results.],[
 		dnl
 		dnl If pkg-config didn't find anything, try the libfoo-config program
 		dnl certain known libraries ship with.
 		dnl
 		if test "x${[have_][$1]}" = "xno"; then
-			AC_MSG_WARN([The `$2' library could not be found using pkg-config.
-No version checks will be performed if it is found using any other method.])
 			AC_MSG_CHECKING([$2][ config program])
 			m4_pushdef([gp_lib_config],[m4_if([$2],[libusb],[libusb-config],
 				[$2],[libgphoto2],[gphoto2-config],
@@ -156,6 +153,44 @@ No version checks will be performed if it is found using any other method.])
 			AC_PATH_PROG([$1][_CONFIG_PROG],[gp_lib_config])
 			if test -n "${[$1][_CONFIG_PROG]}" &&
 				test "${[$1][_CONFIG_PROG]}" != "none"; then
+				m4_ifval([$3],[
+				AC_MSG_CHECKING([for ][$2][ version according to ][gp_lib_config])
+				m4_pushdef([gp_lib_compop],[regexp([$3], [\(>=\|>\|<\|<=\|=\)[ \t]*.*], [\1])])dnl comparison operator
+				m4_if(	gp_lib_compop,[>=],[_][$1][_COMPN="-lt"],
+					gp_lib_compop,[>], [_][$1][_COMPN="-le"],
+					gp_lib_compop,[<], [_][$1][_COMPN="-ge"],
+					gp_lib_compop,[<=],[_][$1][_COMPN="-gt"],
+					gp_lib_compop,[=], [_][$1][_COMPN="-ne"],
+					[m4_errprint(__file__:__line__:[ Error:
+Illegal version comparison operator: `gp_lib_compop'
+It must be one of ">=", ">", "<", "<=", "=".
+])m4_exit(1)])
+				m4_popdef([gp_lib_compop])dnl
+				# split requested version number using m4 regexps
+				_[$1]_REQ_1="regexp([$3], [\(>=\|>\|<\|<=\|=\)[ \t]*\([0-9]+\).*],                           [\2])"
+				_[$1]_REQ_2="regexp([$3], [\(>=\|>\|<\|<=\|=\)[ \t]*\([0-9]+\)\.\([0-9]+\).*],               [\3])"
+				_[$1]_REQ_3="regexp([$3], [\(>=\|>\|<\|<=\|=\)[ \t]*\([0-9]+\)\.\([0-9]+\)\.\([0-9]+\).*],   [\4])"
+				_[$1]_REQ_4="regexp([$3], [\(>=\|>\|<\|<=\|=\)[ \t]*\([0-9]+\)\.\([0-9]+\)\.\([0-9]+\)(.*)], [\5])"
+				# split installed version number via shell and sed
+				_[$1]_VERSION="$("${[$1][_CONFIG_PROG]}" --version)"
+				_[$1]_VER_1="$(echo "${_[$1]_VERSION}" | sed 's/\([[0-9]]*\).*/\1/g')"
+				_[$1]_VER_2="$(echo "${_[$1]_VERSION}" | sed 's/\([[0-9]]*\)\.\([[0-9]]*\).*/\2/g')"
+				_[$1]_VER_3="$(echo "${_[$1]_VERSION}" | sed 's/\([[0-9]]*\)\.\([[0-9]]*\)\.\([[0-9]]*\).*/\3/g')"
+				_[$1]_VER_4="$(echo "${_[$1]_VERSION}" | sed 's/\([[0-9]]*\)\.\([[0-9]]*\)\.\([[0-9]]*\)\(.*\)/\4/g')"
+				AC_MSG_RESULT([${_][$1][_VERSION}])
+				_tmp=false
+				if   test "${_[$1]_VER_1}" "${_[$1]_COMPN}" "${_[$1]_REQ_1}"; then _tmp=true;
+				elif test "${_[$1]_VER_2}" "${_[$1]_COMPN}" "${_[$1]_REQ_2}"; then _tmp=true;
+				elif test "${_[$1]_VER_3}" "${_[$1]_COMPN}" "${_[$1]_REQ_3}"; then _tmp=true;
+				fi
+				AC_MSG_CHECKING([if ][$2][ version matching requirement ][$3])
+				if "${_tmp}"; then
+				   AC_MSG_RESULT([no])
+				   AC_MSG_ERROR([Version requirement ][$2][ ][$3][ not met.])
+				else
+				   AC_MSG_RESULT([yes])
+				fi
+				])dnl if version requirement given
 				AC_MSG_CHECKING([for ][$2][ parameters from ][gp_lib_config])
 				[$1]_LIBS="$(${[$1][_CONFIG_PROG]} --libs || echo "*error*")"
 				[$1]_CFLAGSS="$(${[$1][_CONFIG_PROG]} --cflags || echo "*error*")"
@@ -169,10 +204,13 @@ No version checks will be performed if it is found using any other method.])
 			fi
 			m4_popdef([gp_lib_config])dnl
 		fi
+		m4_ifval([$3],[# Version requirement given, so we do not rely on probing.],[
 		dnl
 		dnl Neither pkg-config, nor the libfoo-config program have found anything.
 		dnl So let's just probe the system.
 		dnl
+		AC_MSG_WARN([The `$2' library could not be found using pkg-config or its known config program.
+No version checks will be performed if it is found using any other method.])
 		if test "x${[have_][$1]}" = "xno"; then
 			ifs="$IFS"
 			IFS=":" # FIXME: for W32 and OS/2 we may need ";" here
