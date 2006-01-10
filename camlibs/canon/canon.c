@@ -309,9 +309,12 @@ const struct canonCamModelData models[] = {
         {"Canon:PowerShot S2 IS (normal mode)",  CANON_CLASS_1,  0x04A9, 0x30f0, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 #endif
 
+#if 0
+/* reportedly not working either. failing with lock keys - Marcus */
         {"Canon:PowerShot SD500 (normal mode)",  CANON_CLASS_5,  0x04A9, 0x30f2, CAP_NON, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:Digital IXUS 700 (normal mode)",  CANON_CLASS_5,  0x04A9, 0x30f2, CAP_NON, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:IXY Digital 600 (normal mode)",  CANON_CLASS_5,  0x04A9, 0x30f2, CAP_NON, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+#endif
 
 	/* I was not able to make A620 work with CLASS 5, 1 and 6. -Marcus */
 
