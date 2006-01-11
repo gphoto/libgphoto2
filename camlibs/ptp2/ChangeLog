@@ -1,3 +1,8 @@
+2006-01-11  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Also split ptp writes into 4k chunks
+	  to avoid lowlevel timeouts.
+
 2006-01-09  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* library.c: added iRiver U10.

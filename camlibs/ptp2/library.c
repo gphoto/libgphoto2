@@ -676,7 +676,7 @@ ptp_read_func (unsigned char *bytes, unsigned int size, void *data, unsigned int
 	 * timeout.
 	 */
 	while (curread < size) {
-		toread =size - curread;
+		toread = size - curread;
 		if (toread > 4096)
 			toread = 4096;
 		result = gp_port_read (camera->port, (char*)(bytes + curread), toread);
@@ -701,20 +701,24 @@ static short
 ptp_write_func (unsigned char *bytes, unsigned int size, void *data)
 {
 	Camera *camera = ((PTPData *)data)->camera;
-	int result;
+	int towrite, result = GP_ERROR, curwrite = 0;
 
 	/*
 	 * gp_port_write returns (in case of success) the number of bytes
-	 * write. libptp doesn't need that.
+	 * write. Too large blocks (>5x MB) could timeout.
 	 */
-	result = gp_port_write (camera->port, (char*)bytes, size);
-	if (result >= 0)
-		return (PTP_RC_OK);
-	else
-	{
-		perror("gp_port_write");
-		return (translate_gp_result (result));
+	while (curwrite < size) {
+		towrite = size-curwrite;
+		if (towrite > 4096)
+			towrite = 4096;
+		result = gp_port_write (camera->port, (char*)(bytes + curwrite), towrite);
+		if (result < 0)
+			return (translate_gp_result (result));
+		curwrite += result;
+		if (result < towrite) /* short writes happen */
+			break;
 	}
+	return PTP_RC_OK;
 }
 
 static short
