@@ -398,8 +398,7 @@ append_folder (CameraFilesystem *fs, const char *folder, GPContext *context)
 
         /* Make sure the directory doesn't exist */
 	for (x = 0; x < fs->count; x++)
-		if (!strncmp (fs->folder[x].name, folder, strlen (folder)) &&
-		    (strlen (fs->folder[x].name) == strlen (folder)))
+		if (!strcmp (fs->folder[x].name, folder))
 			break;
 	if (x < fs->count) {
 		gp_context_error (context, _("Could not append folder '%s' "
@@ -419,7 +418,7 @@ append_folder (CameraFilesystem *fs, const char *folder, GPContext *context)
         if (x > 0) {
                 buf[x] = '\0';
 		for (x = 0; x < fs->count; x++)
-			if (!strncmp (fs->folder[x].name, buf, strlen (buf)))
+			if (!strcmp (fs->folder[x].name, buf))
 				break;
 		if (x == fs->count)
 			CR (append_folder (fs, buf, context))
