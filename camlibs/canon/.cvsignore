@@ -1,5 +1,5 @@
 *~ .*~
-libgphoto2_canon.la
+*.la
 *.lo
 .libs
 .deps
