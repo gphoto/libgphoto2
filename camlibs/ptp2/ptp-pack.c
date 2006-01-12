@@ -54,6 +54,22 @@ dtoh32ap (PTPParams *params, unsigned char *a)
 	return ((params->byteorder==PTP_DL_LE)?le32atoh(a):be32atoh(a));
 }
 
+static inline uint64_t
+dtoh64ap (PTPParams *params, unsigned char *a)
+{
+	uint64_t tmp = 0;
+	int i;
+
+	if (params->byteorder==PTP_DL_LE) {
+		for (i=0;i<8;i++)
+			tmp |= (((uint64_t)a[i]) << (8*i));
+	} else {
+		for (i=0;i<8;i++)
+			tmp |= (((uint64_t)a[i]) << (8*(7-i)));
+	}
+	return tmp;
+}
+
 #define htod8a(a,x)	*(uint8_t*)(a) = x
 #define htod16a(a,x)	htod16ap(params,a,x)
 #define htod32a(a,x)	htod32ap(params,a,x)
@@ -63,6 +79,7 @@ dtoh32ap (PTPParams *params, unsigned char *a)
 #define dtoh8a(x)	(*(uint8_t*)(x))
 #define dtoh16a(a)	dtoh16ap(params,a)
 #define dtoh32a(a)	dtoh32ap(params,a)
+#define dtoh64a(a)	dtoh64ap(params,a)
 #define dtoh16(x)	dtoh16p(params,x)
 #define dtoh32(x)	dtoh32p(params,x)
 
@@ -230,7 +247,8 @@ ptp_unpack_SI (PTPParams *params, unsigned char* data, PTPStorageInfo *si, unsig
 	si->StorageType=dtoh16a(&data[PTP_si_StorageType]);
 	si->FilesystemType=dtoh16a(&data[PTP_si_FilesystemType]);
 	si->AccessCapability=dtoh16a(&data[PTP_si_AccessCapability]);
-	/* XXX no dtoh64a !!! skiping next two */
+	si->MaxCapability=dtoh64a(&data[PTP_si_MaxCapability]);
+	si->FreeSpaceInBytes=dtoh64a(&data[PTP_si_FreeSpaceInBytes]);
 	si->FreeSpaceInImages=dtoh32a(&data[PTP_si_FreeSpaceInImages]);
 	si->StorageDescription=ptp_unpack_string(params, data,
 		PTP_si_StorageDescription, &storagedescriptionlen);

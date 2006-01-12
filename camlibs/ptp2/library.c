@@ -1477,10 +1477,13 @@ static int
 camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 {
 	int n, i, j;
+	int spaceleft;
 	char *txt;
 	PTPParams *params = &(camera->pl->params);
 	PTPDeviceInfo pdi;
+	PTPStorageIDs storageids;
 
+	spaceleft = sizeof(summary->text);
 	n = snprintf (summary->text, sizeof (summary->text),
 		_("Model: %s\n"
 		"  device version: %s\n"
@@ -1496,9 +1499,94 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 
 	if (n>=sizeof (summary->text))
 		return GP_OK;
-
+	spaceleft -= n;
 	txt = summary->text + strlen (summary->text);
 
+	if (ptp_operation_issupported(params,PTP_OC_GetStorageIDs) &&
+	    ptp_operation_issupported(params,PTP_OC_GetStorageInfo)
+	) {
+		CPR (context, ptp_getstorageids(params,
+			&storageids));
+		n = snprintf (txt, spaceleft,_("\nStorage Devices Summary:\n"));
+		if (n >= spaceleft) return GP_OK;
+		spaceleft -= n; txt += n;
+
+		for (i=0; i<storageids.n; i++) {
+			char tmpname[20], *s;
+
+			PTPStorageInfo storageinfo;
+			if ((storageids.Storage[i]&0x0000ffff)==0)
+				continue;
+			
+			n = snprintf (txt, spaceleft,"store_%08x:\n",(unsigned int)storageids.Storage[i]);
+			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+
+			CPR (context, ptp_getstorageinfo(params,
+				storageids.Storage[i], &storageinfo));
+			n = snprintf (txt, spaceleft,_("\tStorageDescription: %s\n"),
+				storageinfo.StorageDescription?storageinfo.StorageDescription:_("None")
+			);
+			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+			n = snprintf (txt, spaceleft,_("\tVolumeLabel: %s\n"),
+				storageinfo.VolumeLabel?storageinfo.VolumeLabel:_("None")
+			);
+			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+
+			switch (storageinfo.StorageType) {
+			case PTP_ST_Undefined: s = _("Undefined"); break;
+			case PTP_ST_FixedROM: s = _("Builtin ROM"); break;
+			case PTP_ST_RemovableROM: s = _("Removable ROM"); break;
+			case PTP_ST_FixedRAM: s = _("Builtin RAM"); break;
+			case PTP_ST_RemovableRAM: s = _("Removable RAM (memory card)"); break;
+			default:
+				snprintf(tmpname, sizeof(tmpname), _("Unknown: 0x%04x\n"), storageinfo.StorageType);
+				s = tmpname;
+				break;
+			}
+			n = snprintf (txt, spaceleft,_("\tStorage Type: %s\n"), s);
+			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+
+			switch (storageinfo.FilesystemType) {
+			case PTP_FST_Undefined: s = _("Undefined"); break;
+			case PTP_FST_GenericFlat: s = _("Generic Flat"); break;
+			case PTP_FST_GenericHierarchical: s = _("Generic Hierarchical"); break;
+			case PTP_FST_DCF: s = _("Digital Camera Layout (DCIM)"); break;
+			default:
+				snprintf(tmpname, sizeof(tmpname), _("Unknown: 0x%04x\n"), storageinfo.FilesystemType);
+				s = tmpname;
+				break;
+			}
+			n = snprintf (txt, spaceleft,_("\tFilesystemtype: %s\n"), s);
+			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+
+			switch (storageinfo.AccessCapability) {
+			case PTP_AC_ReadWrite: s = _("Read-Write"); break;
+			case PTP_AC_ReadOnly: s = _("Read-Only"); break;
+			case PTP_AC_ReadOnly_with_Object_Deletion: s = _("Read Only with Object deletion"); break;
+			default:
+				snprintf(tmpname, sizeof(tmpname), _("Unknown: 0x%04x\n"), storageinfo.AccessCapability);
+				s = tmpname;
+				break;
+			}
+			n = snprintf (txt, spaceleft,_("\tAccess Capability: %s\n"), s);
+			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+			n = snprintf (txt, spaceleft,_("\tMaximum Capability: %llu (%lu MB)\n"),
+				(unsigned long long)storageinfo.MaxCapability,
+				(unsigned long)(storageinfo.MaxCapability/1024/1024)
+			);
+			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+			n = snprintf (txt, spaceleft,_("\tFree Space (Bytes): %llu (%lu MB)\n"),
+				(unsigned long long)storageinfo.FreeSpaceInBytes,
+				(unsigned long)(storageinfo.FreeSpaceInBytes/1024/1024)
+			);
+			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+			n = snprintf (txt, spaceleft,_("\tFree Space (Images): %d\n"), (unsigned int)storageinfo.FreeSpaceInImages);
+			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+		}
+	}
+
+	n = snprintf (txt, spaceleft,_("\nDevice Property Summary:\n"));
+	if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
 	/* The information is cached. However, the canon firmware changes
 	 * the available properties in capture mode.
 	 */

@@ -1,3 +1,9 @@
+2006-01-12  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* library.c, ptp-pack.c:
+	  Unpack all members of the StorageInfo structure.
+	  Add Storage summary to --summary output.
+
 2006-01-11  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Also split ptp writes into 4k chunks
