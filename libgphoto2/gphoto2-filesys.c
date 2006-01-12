@@ -61,8 +61,12 @@
 
 #define GP_MODULE "libgphoto2"
 
+#ifndef PATH_MAX
+# define PATH_MAX 4096
+#endif
+
 typedef struct _CameraFilesystemFile {
-	char name [128];
+	char name [256];
 	int info_dirty;
 	CameraFileInfo info;
 	struct _CameraFilesystemFile *lru_prev;
@@ -76,7 +80,7 @@ typedef struct _CameraFilesystemFile {
 
 typedef struct {
 	int count;
-	char name [128];
+	char name [PATH_MAX];
 	int files_dirty;
 	int folders_dirty;
 	CameraFilesystemFile *file;
@@ -560,7 +564,7 @@ gp_filesystem_folder_number (CameraFilesystem *fs, const char *folder,
 			     GPContext *context)
 {
 	int x, y, len;
-	char buf[128];
+	char buf[PATH_MAX];
 	CameraList *list;
 
 	CHECK_NULL (fs && folder);
@@ -914,7 +918,7 @@ gp_filesystem_list_folders (CameraFilesystem *fs, const char *folder,
 			    CameraList *list, GPContext *context)
 {
 	int x, y, j, offset, count;
-	char buf[1024];
+	char buf[PATH_MAX];
 	const char *name;
 	unsigned int len;
 
