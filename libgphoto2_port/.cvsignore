@@ -27,3 +27,5 @@ missing
 mkinstalldirs
 install-sh
 ABOUT-NLS
+INSTALL
+COPYING
