@@ -218,7 +218,7 @@ camera_abilities (CameraAbilitiesList *list)
 
 	memset(&a, 0, sizeof(a));
 	strcpy(a.model, "Ricoh:Caplio G3");
-	a.status	= GP_DRIVER_STATUS_TESTING;
+	a.status	= GP_DRIVER_STATUS_PRODUCTION;
 	a.port		= GP_PORT_USB;
 	a.usb_vendor	= 0x5ca;
 	a.usb_product	= 0x2204;
