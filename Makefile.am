@@ -12,10 +12,19 @@ SUBDIRS = @subdirs@ libgphoto2 camlibs tests po packaging doc
 
 doc_DATA = AUTHORS COPYING README CHANGES NEWS
 
-# Help for building packages against libgphoto2 without installing
-# libgphoto2 first. A little hackish, but that's what you get for
-# having both "libgphoto2" and "libgphoto2_port" install their header
-# files into $(includedir)/gphoto2.
+# Create gphoto2/ directory and copy all header files into it.
+#
+# Reasons to do that:
+#  - Both libgphoto2 and libgphoto2_port install their *.h files
+#    into $(includedir)/gphoto2
+#  - Example programs can use #include <gphoto2/gphoto2-foobar.h>
+#    like any libgphoto2 frontend is supposed to do.
+#    (Promotes clean API use)
+#  - Helps build libgphoto2 frontends against libgphoto2 without
+#    installing libgphoto2 first.
+#
+# FIXME: This breaks "make -j all". You'd have to run "make all-local"
+#        manually first.
 all-local:
 	@echo "Creating/Updating gphoto2/ directory with gphoto2*.h files"
 	@rm -f gphoto2/gphoto2*.h
