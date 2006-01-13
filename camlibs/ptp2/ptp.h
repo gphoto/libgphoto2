@@ -49,8 +49,9 @@ struct _PTPContainer {
 typedef struct _PTPContainer PTPContainer;
 
 /* PTP USB Bulk-Pipe container */
-/* USB bulk max max packet length for high speed endpoints */
+/* USB bulk max packet length for high speed endpoints */
 #define PTP_USB_BULK_HS_MAX_PACKET_LEN	512
+#define PTP_USB_BULK_HS_MAX_PACKET_LEN2	4096
 #define PTP_USB_BULK_HDR_LEN		(2*sizeof(uint32_t)+2*sizeof(uint16_t))
 #define PTP_USB_BULK_PAYLOAD_LEN	(PTP_USB_BULK_HS_MAX_PACKET_LEN-PTP_USB_BULK_HDR_LEN)
 #define PTP_USB_BULK_REQ_LEN	(PTP_USB_BULK_HDR_LEN+5*sizeof(uint32_t))
@@ -433,10 +434,44 @@ typedef struct _PTPObjectInfo PTPObjectInfo;
 #define PTP_OFC_JPX				0x3810
 /* Eastman Kodak extension ancillary format */
 #define PTP_OFC_EK_M3U				0xb002
-
+/* MTP extensions */
+#define PTP_OFC_MTP_Firmware			0xb802
+#define PTP_OFC_MTP_WindowsImageFormat		0xb882
+#define PTP_OFC_MTP_UndefinedAudio		0xb900
+#define PTP_OFC_MTP_WMA				0xb901
+#define PTP_OFC_MTP_OGG				0xb902
+#define PTP_OFC_MTP_UndefinedVideo		0xb980
+#define PTP_OFC_MTP_WMV				0xb981
+#define PTP_OFC_MTP_MP4				0xb982
+#define PTP_OFC_MTP_UndefinedCollection		0xba00
+#define PTP_OFC_MTP_AbstractMultimediaAlbum	0xba01
+#define PTP_OFC_MTP_AbstractImageAlbum		0xba02
+#define PTP_OFC_MTP_AbstractAudioAlbum		0xba03
+#define PTP_OFC_MTP_AbstractVideoAlbum		0xba04
+#define PTP_OFC_MTP_AbstractAudioVideoPlaylist	0xba05
+#define PTP_OFC_MTP_AbstractContactGroup	0xba06
+#define PTP_OFC_MTP_AbstractMessageFolder	0xba07
+#define PTP_OFC_MTP_AbstractChapteredProduction	0xba08
+#define PTP_OFC_MTP_WPLPlaylist			0xba10
+#define PTP_OFC_MTP_M3UPlaylist			0xba11
+#define PTP_OFC_MTP_MPLPlaylist			0xba12
+#define PTP_OFC_MTP_ASXPlaylist			0xba13
+#define PTP_OFC_MTP_PLSPlaylist			0xba14
+#define PTP_OFC_MTP_UndefinedDocument		0xba80
+#define PTP_OFC_MTP_AbstractDocument		0xba81
+#define PTP_OFC_MTP_UndefinedMessage		0xbb00
+#define PTP_OFC_MTP_AbstractMessage		0xbb01
+#define PTP_OFC_MTP_UndefinedContact		0xbb80
+#define PTP_OFC_MTP_AbstractContact		0xbb81
+#define PTP_OFC_MTP_vCard2			0xbb82
+#define PTP_OFC_MTP_vCard3			0xbb83
+#define PTP_OFC_MTP_UndefinedCalendarItem	0xbe00
+#define PTP_OFC_MTP_AbstractCalendarItem	0xbe01
+#define PTP_OFC_MTP_vCalendar1			0xbe02
+#define PTP_OFC_MTP_vCalendar2			0xbe03
+#define PTP_OFC_MTP_UndefinedWindowsExecutable	0xbe80
 
 /* PTP Association Types */
-
 #define PTP_AT_Undefined			0x0000
 #define PTP_AT_GenericFolder			0x0001
 #define PTP_AT_Album				0x0002
