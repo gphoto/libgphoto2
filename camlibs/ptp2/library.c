@@ -1491,16 +1491,104 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 		"Vendor extension ID: 0x%08x\n"
 		"Vendor extension description: %s\n"
 	),
-		camera->pl->params.deviceinfo.Model,
-		camera->pl->params.deviceinfo.DeviceVersion,
-		camera->pl->params.deviceinfo.SerialNumber,
-		camera->pl->params.deviceinfo.VendorExtensionID,
-		camera->pl->params.deviceinfo.VendorExtensionDesc);
+		params->deviceinfo.Model,
+		params->deviceinfo.DeviceVersion,
+		params->deviceinfo.SerialNumber,
+		params->deviceinfo.VendorExtensionID,
+		params->deviceinfo.VendorExtensionDesc);
 
 	if (n>=sizeof (summary->text))
 		return GP_OK;
 	spaceleft -= n;
 	txt = summary->text + strlen (summary->text);
+
+/* Dump Formats */
+	n = snprintf (txt, spaceleft,_("\nCapture Formats: "));
+	if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+
+	for (i=0;i<params->deviceinfo.CaptureFormats_len;i++) {
+		switch (params->deviceinfo.CaptureFormats[i]) {
+		case PTP_OFC_EXIF_JPEG: n = snprintf (txt, spaceleft,_("JPEG")); break;
+		case PTP_OFC_AVI: n = snprintf (txt, spaceleft,_("MS AVI")); break;
+		case PTP_OFC_WAV: n = snprintf (txt, spaceleft,_("MS Wave")); break;
+		case PTP_OFC_QT: n = snprintf (txt, spaceleft,_("Apple Quicktime")); break;
+		default:
+			n = snprintf (txt, spaceleft,_("Unknown(%04x)"), params->deviceinfo.CaptureFormats[i]);
+			break;
+		}
+		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+		if (i<params->deviceinfo.CaptureFormats_len-1) {
+			n = snprintf (txt, spaceleft," ");
+			if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+		}
+	}
+	n = snprintf (txt, spaceleft,"\n");
+	if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+
+	n = snprintf (txt, spaceleft,_("Display Formats: "));
+	if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+	for (i=0;i<params->deviceinfo.ImageFormats_len;i++) {
+		switch (params->deviceinfo.ImageFormats[i]) {
+		case PTP_OFC_EXIF_JPEG: n = snprintf (txt, spaceleft,_("JPEG")); break;
+		case PTP_OFC_AVI: n = snprintf (txt, spaceleft,_("MS AVI")); break;
+		case PTP_OFC_WAV: n = snprintf (txt, spaceleft,_("MS Wave")); break;
+		case PTP_OFC_MP3: n = snprintf (txt, spaceleft,_("MP3")); break;
+		case PTP_OFC_QT: n = snprintf (txt, spaceleft,_("Apple Quicktime")); break;
+		case PTP_OFC_Association: n = snprintf (txt, spaceleft,_("Association/Directory")); break;
+		case PTP_OFC_Script: n = snprintf (txt, spaceleft,_("Script")); break;
+		default:
+			n = snprintf (txt, spaceleft,_("Unknown(%04x)"), params->deviceinfo.ImageFormats[i]);
+			break;
+		}
+		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+		if (i<params->deviceinfo.ImageFormats_len-1) {
+			n = snprintf (txt, spaceleft,", ");
+			if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+		}
+	}
+	n = snprintf (txt, spaceleft,"\n");
+	if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+
+/* Dump out dynamic capabilities */
+	n = snprintf (txt, spaceleft,_("\nDevice Capabilities:\n"));
+	if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+
+	/* First line for file operations */
+		n = snprintf (txt, spaceleft,_("\tFile Download, "));
+		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+		if (ptp_operation_issupported(params,PTP_OC_DeleteObject))
+			n = snprintf (txt, spaceleft,_("File Deletion, "));
+		else
+			n = snprintf (txt, spaceleft,_("No File Deletion, "));
+		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+
+		if (ptp_operation_issupported(params,PTP_OC_SendObject))
+			n = snprintf (txt, spaceleft,_("File Upload\n"));
+		else
+			n = snprintf (txt, spaceleft,_("No File Upload\n"));
+		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+
+	/* Second line for capture */
+		if (ptp_operation_issupported(params,PTP_OC_InitiateCapture))
+			n = snprintf (txt, spaceleft,_("\tGeneric Image Capture, "));
+		else
+			n = snprintf (txt, spaceleft,_("\tNo Image Capture, "));
+		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+		if (ptp_operation_issupported(params,PTP_OC_InitiateOpenCapture))
+			n = snprintf (txt, spaceleft,_("Open Capture, "));
+		else
+			n = snprintf (txt, spaceleft,_("No Open Capture, "));
+		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+
+		if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
+		    ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_ViewfinderOn))
+			n = snprintf (txt, spaceleft,_("Canon Capture\n"));
+		if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
+		     ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_Capture))
+			n = snprintf (txt, spaceleft,_("Nikon Capture\n"));
+		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+
+/* Dump storage information */
 
 	if (ptp_operation_issupported(params,PTP_OC_GetStorageIDs) &&
 	    ptp_operation_issupported(params,PTP_OC_GetStorageInfo)
@@ -1508,8 +1596,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 		CPR (context, ptp_getstorageids(params,
 			&storageids));
 		n = snprintf (txt, spaceleft,_("\nStorage Devices Summary:\n"));
-		if (n >= spaceleft) return GP_OK;
-		spaceleft -= n; txt += n;
+		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
 
 		for (i=0; i<storageids.n; i++) {
 			char tmpname[20], *s;
