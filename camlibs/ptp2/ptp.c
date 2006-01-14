@@ -303,17 +303,6 @@ ptp_transaction (PTPParams* params, PTPContainer* ptp,
 	if ((params==NULL) || (ptp==NULL)) 
 		return PTP_ERROR_BADPARAM;
 	
-#if 0
-        {
-		PTPUSBEventContainer usbevent;
-		uint16_t rlen, ret;
-
-		ret=params->check_int_fast_func((unsigned char*)&usbevent, sizeof(usbevent), params->data, &rlen);
-		if (ret == PTP_RC_OK) {
-			fprintf(stderr,"Event %04x received.\n",dtoh16(usbevent.code));
-		}
-        }
-#endif
 	ptp->Transaction_ID=params->transaction_id++;
 	ptp->SessionID=params->session_id;
 	/* send request */
