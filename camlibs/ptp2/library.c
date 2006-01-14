@@ -2125,7 +2125,7 @@ static int
 _get_ImageSize(CONFIG_GET_ARGS) {
         int j;
 
-        gp_widget_new (GP_WIDGET_MENU, _(menu->label), widget);
+        gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
         gp_widget_set_name (*widget, menu->name);
         if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
                 return(GP_ERROR);
@@ -2474,10 +2474,13 @@ _put_ExpTime(CONFIG_PUT_ARGS)
 }
 
 static struct deviceproptableu16 exposure_program_modes[] = {
-	{ "M",			0x0001, PTP_VENDOR_NIKON },/*might be generic*/
-	{ "P",			0x0002, PTP_VENDOR_NIKON },/*might be generic*/
-	{ "A",			0x0003, PTP_VENDOR_NIKON },/*might be generic*/
-	{ "S",			0x0004, PTP_VENDOR_NIKON },/*might be generic*/
+	{ "M",			0x0001, 0 },
+	{ "P",			0x0002, 0 },
+	{ "A",			0x0003, 0 },
+	{ "S",			0x0004, 0 },
+	{ N_("Creative"),	0x0005, 0 },
+	{ N_("Action"),		0x0006, 0 },
+	{ N_("Portrait"),	0x0007, 0 },
 	{ N_("Auto"),		0x8010, PTP_VENDOR_NIKON},
 	{ N_("Portrait"),	0x8011, PTP_VENDOR_NIKON},
 	{ N_("Landscape"),	0x8012, PTP_VENDOR_NIKON},
@@ -2530,6 +2533,14 @@ static struct deviceproptableu16 flash_mode[] = {
 	{ N_("Red-eye Reduction + Slow Sync"),	0x8013, PTP_VENDOR_NIKON},
 };
 GENERIC16TABLE(FlashMode,flash_mode)
+
+
+static struct deviceproptableu16 effect_modes[] = {
+	{ N_("Standard"),	0x0001, 0 },
+	{ N_("Black & White"),	0x0002, 0 },
+	{ N_("Sepia"),		0x0003, 0 },
+};
+GENERIC16TABLE(EffectMode,effect_modes)
 
 
 static int
@@ -2647,41 +2658,8 @@ static struct deviceproptableu8 canon_afdistance[] = {
 	{ N_("Macro"),		0x03, 0 },
 	{ N_("Long distance"),	0x07, 0 }, /* Unchecked. */
 };
+GENERIC8TABLE(Canon_AFDistance,canon_afdistance)
 
-static int
-_get_Canon_AFDistance(CONFIG_GET_ARGS) {
-	int i;
-
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
-		return (GP_ERROR);
-	if (dpd->DataType != PTP_DTC_UINT8)
-		return (GP_ERROR);
-	for (i=0;i<sizeof (canon_afdistance)/sizeof (canon_afdistance[0]);i++) {
-		gp_widget_add_choice (*widget, _(canon_afdistance[i].label));
-		if (canon_afdistance[i].value == dpd->CurrentValue.u8)
-			gp_widget_set_value (*widget, _(canon_afdistance[i].label));
-	}
-	return (GP_OK);
-}
-
-static int
-_put_Canon_AFDistance(CONFIG_PUT_ARGS) {
-	char *value;
-	int i, ret;
-
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK)
-		return ret;
-	for (i=0;i<sizeof (canon_afdistance)/sizeof (canon_afdistance[0]);i++) {
-		if (!strcmp (value, _(canon_afdistance[i].label))) {
-			propval->u8 = canon_afdistance[i].value;
-			return (GP_OK);
-		}
-	}
-	return (GP_ERROR);
-}
 
 /* Focus Modes as per PTP standard. |0x8000 means vendor specific. */
 static struct deviceproptableu16 focusmodes[] = {
@@ -2702,41 +2680,8 @@ static struct deviceproptableu8 canon_whitebalance[] = {
       { N_("Fluorescent H"),	7, 0 },
       { N_("Custom"),		6, 0 },
 };
+GENERIC8TABLE(Canon_WhiteBalance,canon_whitebalance)
 
-static int
-_get_Canon_WhiteBalance(CONFIG_GET_ARGS) {
-	int i;
-
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
-		return (GP_ERROR);
-	if (dpd->DataType != PTP_DTC_UINT8)
-		return (GP_ERROR);
-	for (i=0;i<sizeof (canon_whitebalance)/sizeof (canon_whitebalance[0]);i++) {
-		gp_widget_add_choice (*widget, _(canon_whitebalance[i].label));
-		if (canon_whitebalance[i].value == dpd->CurrentValue.u8)
-			gp_widget_set_value (*widget, _(canon_whitebalance[i].label));
-	}
-	return (GP_OK);
-}
-
-static int
-_put_Canon_WhiteBalance(CONFIG_PUT_ARGS) {
-	char *value;
-	int i, ret;
-
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK)
-		return ret;
-	for (i=0;i<sizeof (canon_whitebalance)/sizeof (canon_whitebalance[0]);i++) {
-		if (!strcmp (value, _(canon_whitebalance[i].label))) {
-			propval->u8 = canon_whitebalance[i].value;
-			return (GP_OK);
-		}
-	}
-	return (GP_ERROR);
-}
 
 static struct deviceproptableu8 canon_expcompensation[] = {
       { N_("Factory Default"),	0xff, 0 },
@@ -2754,41 +2699,8 @@ static struct deviceproptableu8 canon_expcompensation[] = {
       { "-1 2/3",		0x25, 0 },
       { "-2",			0x28, 0 },
 };
+GENERIC8TABLE(Canon_ExpCompensation,canon_expcompensation)
 
-static int
-_get_Canon_ExpCompensation(CONFIG_GET_ARGS) {
-	int i;
-
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
-		return (GP_ERROR);
-	if (dpd->DataType != PTP_DTC_UINT8)
-		return (GP_ERROR);
-	for (i=0;i<sizeof (canon_expcompensation)/sizeof (canon_expcompensation[0]);i++) {
-		gp_widget_add_choice (*widget, _(canon_expcompensation[i].label));
-		if (canon_expcompensation[i].value == dpd->CurrentValue.u8)
-			gp_widget_set_value (*widget, _(canon_expcompensation[i].label));
-	}
-	return (GP_OK);
-}
-
-static int
-_put_Canon_ExpCompensation(CONFIG_PUT_ARGS) {
-	char *value;
-	int i, ret;
-
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK)
-		return ret;
-	for (i=0;i<sizeof (canon_expcompensation)/sizeof (canon_expcompensation[0]);i++) {
-		if (!strcmp (value, _(canon_expcompensation[i].label))) {
-			propval->u8 = canon_expcompensation[i].value;
-			return (GP_OK);
-		}
-	}
-	return (GP_ERROR);
-}
 
 static struct deviceproptableu16 canon_photoeffect[] = {
       { N_("Off"),		0, 0 },
@@ -3002,7 +2914,6 @@ static struct submenu camera_settings_menu[] = {
 
 /* think of this as properties of the "film" */
 static struct submenu image_settings_menu[] = {
-        { N_("Long Exp Noise Reduction"), "longexpnr", PTP_DPC_NIKON_LongExposureNoiseReduction, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
         { N_("Image Quality"), "imgquality", PTP_DPC_CompressionSetting, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Compression, _put_Compression},
         { N_("Image Quality"), "imgquality", PTP_DPC_CANON_ImageQuality, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_Quality, _put_Canon_Quality},
         { N_("Image Size"), "imgsize", PTP_DPC_ImageSize, 0, PTP_DTC_STR, _get_ImageSize, _put_ImageSize},
@@ -3015,6 +2926,8 @@ static struct submenu image_settings_menu[] = {
 };
 
 static struct submenu capture_settings_menu[] = {
+        { N_("Long Exp Noise Reduction"), "longexpnr", PTP_DPC_NIKON_LongExposureNoiseReduction, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
+        { N_("Auto Focus Mode"), "autofocusmode", PTP_DPC_NIKON_AutofocusMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ N_("Zoom"), "zoom", PTP_DPC_CANON_Zoom, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ZoomRange, _put_Canon_ZoomRange},
 	{ N_("Assist Light"), "assistlight", PTP_DPC_CANON_AssistLight, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_AssistLight, _put_Canon_AssistLight},
 	{ N_("Exposure Compensation"), "exposurecompensation", PTP_DPC_CANON_ExpCompensation, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_ExpCompensation, _put_Canon_ExpCompensation},
@@ -3026,6 +2939,7 @@ static struct submenu capture_settings_menu[] = {
         { N_("Focus Mode"), "focusmode", PTP_DPC_FocusMode, 0, PTP_DTC_UINT16, _get_FocusMode, _put_FocusMode},
         { N_("ISO Speed"), "iso", PTP_DPC_ExposureIndex, 0, PTP_DTC_UINT16, _get_ISO, _put_ISO},
         { N_("Exposure Time"), "exptime", PTP_DPC_ExposureTime, 0, PTP_DTC_UINT32, _get_ExpTime, _put_ExpTime},
+        { N_("Effect Mode"), "effectmode", PTP_DPC_EffectMode, 0, PTP_DTC_UINT16, _get_EffectMode, _put_EffectMode},
         { N_("Exposure Program"), "expprogram", PTP_DPC_ExposureProgramMode, 0, PTP_DTC_UINT16, _get_ExposureProgram, _put_ExposureProgram},
         { N_("Still Capture Mode"), "capturemode", PTP_DPC_StillCaptureMode, 0, PTP_DTC_UINT16, _get_CaptureMode, _put_CaptureMode},
         { N_("Focus Metering Mode"), "focusmetermode", PTP_DPC_FocusMeteringMode, 0, PTP_DTC_UINT16, _get_FocusMetering, _put_FocusMetering},
