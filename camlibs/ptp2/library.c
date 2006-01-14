@@ -1511,6 +1511,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 		case PTP_OFC_EXIF_JPEG: n = snprintf (txt, spaceleft,_("JPEG")); break;
 		case PTP_OFC_AVI: n = snprintf (txt, spaceleft,_("MS AVI")); break;
 		case PTP_OFC_WAV: n = snprintf (txt, spaceleft,_("MS Wave")); break;
+		case PTP_OFC_MP3: n = snprintf (txt, spaceleft,_("MP3")); break;
 		case PTP_OFC_QT: n = snprintf (txt, spaceleft,_("Apple Quicktime")); break;
 		default:
 			n = snprintf (txt, spaceleft,_("Unknown(%04x)"), params->deviceinfo.CaptureFormats[i]);
@@ -1530,6 +1531,8 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 	for (i=0;i<params->deviceinfo.ImageFormats_len;i++) {
 		switch (params->deviceinfo.ImageFormats[i]) {
 		case PTP_OFC_EXIF_JPEG: n = snprintf (txt, spaceleft,_("JPEG")); break;
+		case PTP_OFC_DPOF: n = snprintf (txt, spaceleft,_("DPOF")); break;
+		case PTP_OFC_TIFF: n = snprintf (txt, spaceleft,_("TIFF")); break;
 		case PTP_OFC_AVI: n = snprintf (txt, spaceleft,_("MS AVI")); break;
 		case PTP_OFC_WAV: n = snprintf (txt, spaceleft,_("MS Wave")); break;
 		case PTP_OFC_MP3: n = snprintf (txt, spaceleft,_("MP3")); break;
@@ -1580,12 +1583,18 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 			n = snprintf (txt, spaceleft,_("No Open Capture, "));
 		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
 
+		n = 0;
 		if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
-		    ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_ViewfinderOn))
+		    ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_ViewfinderOn)) {
 			n = snprintf (txt, spaceleft,_("Canon Capture\n"));
-		if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
-		     ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_Capture))
-			n = snprintf (txt, spaceleft,_("Nikon Capture\n"));
+		} else  {
+			if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
+			     ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_Capture)) {
+				n = snprintf (txt, spaceleft,_("Nikon Capture\n"));
+			} else {
+				n = snprintf (txt, spaceleft,_("No vendor specific capture\n"));
+			}
+		}
 		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
 
 /* Dump storage information */
