@@ -7,9 +7,12 @@
 	  Cleaned up config function parameter lists.
 	  Need to property desc on "put" too (for Focal Length
 	  currently).
+	  Replaced 19 tablelookup based functions doing
+	  the same by 2.
 
-	  Implemented FocalLength configuration.
-
+	  Implemented configuration for:
+		- FocalLength
+		- FocusMode
 
 2006-01-12  Marcus Meissner  <marcus@jet.franken.de>
 	

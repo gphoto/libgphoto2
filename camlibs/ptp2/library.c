@@ -1767,8 +1767,10 @@ have_prop(Camera *camera, uint16_t vendor, uint16_t prop) {
 
 struct submenu;
 #define CONFIG_GET_ARGS Camera *camera, CameraWidget **widget, struct submenu* menu, PTPDevicePropDesc *dpd
+#define CONFIG_GET_NAMES camera, widget, menu, dpd
 typedef int (*get_func)(CONFIG_GET_ARGS);
 #define CONFIG_PUT_ARGS Camera *camera, CameraWidget *widget, PTPPropertyValue *propval, PTPDevicePropDesc *dpd
+#define CONFIG_PUT_NAMES camera, widget, propval, dpd
 typedef int (*put_func)(CONFIG_PUT_ARGS);
 
 struct submenu {
@@ -1799,6 +1801,157 @@ struct deviceproptableu16 {
 	uint16_t	vendor_id;
 };
 
+/* Generic helper function for:
+ *
+ * ENUM UINT16 propertiess, with potential vendor specific variables.
+ */
+static int
+_get_Generic16Table(CONFIG_GET_ARGS, struct deviceproptableu16* tbl, int tblsize) {
+	int i, j;
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
+		return (GP_ERROR);
+	if (dpd->DataType != PTP_DTC_UINT16)
+		return (GP_ERROR);
+	for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
+		int isset = FALSE;
+
+		for (j=0;j<tblsize;j++) {
+			if ((tbl[j].value == dpd->FORM.Enum.SupportedValue[i].u16) &&
+			    ((tbl[j].vendor_id == 0) ||
+			     (tbl[j].vendor_id == camera->pl->params.deviceinfo.VendorExtensionID))
+			) {
+				gp_widget_add_choice (*widget, _(tbl[j].label));
+				if (tbl[j].value == dpd->CurrentValue.u16)
+					gp_widget_set_value (*widget, _(tbl[j].label));
+				isset = TRUE;
+				break;
+			}
+		}
+		if (!isset) {
+			char buf[200];
+			sprintf(buf, _("Unknown value %04x"), dpd->FORM.Enum.SupportedValue[i].u16);
+			gp_widget_add_choice (*widget, buf);
+			if (dpd->FORM.Enum.SupportedValue[i].u16 == dpd->CurrentValue.u16)
+				gp_widget_set_value (*widget, buf);
+		}
+	}
+	return (GP_OK);
+}
+
+
+static int
+_put_Generic16Table(CONFIG_PUT_ARGS, struct deviceproptableu16* tbl, int tblsize) {
+	char *value;
+	int i, ret, intval;
+
+	ret = gp_widget_get_value (widget, &value);
+	if (ret != GP_OK)
+		return ret;
+	for (i=0;i<tblsize;i++) {
+		if (!strcmp(_(tbl[i].label),value) &&
+		    ((tbl[i].vendor_id == 0) || (tbl[i].vendor_id == camera->pl->params.deviceinfo.VendorExtensionID))
+		) {
+			propval->u16 = tbl[i].value;
+			return GP_OK;
+		}
+	}
+	if (!sscanf(value, _("Unknown value %04x"), &intval))
+		return (GP_ERROR);
+	propval->u16 = intval;
+	return GP_OK;
+}
+
+#define GENERIC16TABLE(name,tbl) 			\
+static int						\
+_get_##name(CONFIG_GET_ARGS) {				\
+	return _get_Generic16Table(CONFIG_GET_NAMES,	\
+		tbl,sizeof(tbl)/sizeof(tbl[0])		\
+	);						\
+}							\
+							\
+static int						\
+_put_##name(CONFIG_PUT_ARGS) {				\
+	return _put_Generic16Table(CONFIG_PUT_NAMES,	\
+		tbl,sizeof(tbl)/sizeof(tbl[0])		\
+	);						\
+}
+
+static int
+_get_Generic8Table(CONFIG_GET_ARGS, struct deviceproptableu8* tbl, int tblsize) {
+	int i, j;
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
+		return (GP_ERROR);
+	if (dpd->DataType != PTP_DTC_UINT8)
+		return (GP_ERROR);
+	for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
+		int isset = FALSE;
+
+		for (j=0;j<tblsize;j++) {
+			if ((tbl[j].value == dpd->FORM.Enum.SupportedValue[i].u8) &&
+			    ((tbl[j].vendor_id == 0) ||
+			     (tbl[j].vendor_id == camera->pl->params.deviceinfo.VendorExtensionID))
+			) {
+				gp_widget_add_choice (*widget, _(tbl[j].label));
+				if (tbl[j].value == dpd->CurrentValue.u8)
+					gp_widget_set_value (*widget, _(tbl[j].label));
+				isset = TRUE;
+				break;
+			}
+		}
+		if (!isset) {
+			char buf[200];
+			sprintf(buf, _("Unknown value %04x"), dpd->FORM.Enum.SupportedValue[i].u8);
+			gp_widget_add_choice (*widget, buf);
+			if (dpd->FORM.Enum.SupportedValue[i].u8 == dpd->CurrentValue.u8)
+				gp_widget_set_value (*widget, buf);
+		}
+	}
+	return (GP_OK);
+}
+
+
+static int
+_put_Generic8Table(CONFIG_PUT_ARGS, struct deviceproptableu8* tbl, int tblsize) {
+	char *value;
+	int i, ret, intval;
+
+	ret = gp_widget_get_value (widget, &value);
+	if (ret != GP_OK)
+		return ret;
+	for (i=0;i<tblsize;i++) {
+		if (!strcmp(_(tbl[i].label),value) &&
+		    ((tbl[i].vendor_id == 0) || (tbl[i].vendor_id == camera->pl->params.deviceinfo.VendorExtensionID))
+		) {
+			propval->u8 = tbl[i].value;
+			return GP_OK;
+		}
+	}
+	if (!sscanf(value, _("Unknown value %04x"), &intval))
+		return (GP_ERROR);
+	propval->u8 = intval;
+	return GP_OK;
+}
+
+#define GENERIC8TABLE(name,tbl) 			\
+static int						\
+_get_##name(CONFIG_GET_ARGS) {				\
+	return _get_Generic8Table(CONFIG_GET_NAMES,	\
+		tbl,sizeof(tbl)/sizeof(tbl[0])		\
+	);						\
+}							\
+							\
+static int						\
+_put_##name(CONFIG_PUT_ARGS) {				\
+	return _put_Generic8Table(CONFIG_PUT_NAMES,	\
+		tbl,sizeof(tbl)/sizeof(tbl[0])		\
+	);						\
+}
 
 static int
 _get_AUINT8_as_CHAR_ARRAY(CONFIG_GET_ARGS) {
@@ -1941,72 +2094,21 @@ _get_CANON_FirmwareVersion(CONFIG_GET_ARGS) {
 }
 
 static struct deviceproptableu16 whitebalance[] = {
-	{ N_("Manual"), 0x0001, 0 },
-	{ N_("Automatic"), 0x0002, 0 },
-	{ N_("One-push Automatic"), 0x0003, 0 },
-	{ N_("Daylight"), 0x0004, 0 },
-	{ N_("Fluorescent"), 0x0005, 0 },
-	{ N_("Tungsten"), 0x0006, 0 },
-	{ N_("Flash"), 0x0007, 0 },
-	{ N_("Cloudy"), 0x8010, PTP_VENDOR_NIKON },
-	{ N_("Shade"), 0x8011, PTP_VENDOR_NIKON },
-	{ N_("Preset"), 0x8013, PTP_VENDOR_NIKON },
+	{ N_("Manual"),			0x0001, 0 },
+	{ N_("Automatic"),		0x0002, 0 },
+	{ N_("One-push Automatic"),	0x0003, 0 },
+	{ N_("Daylight"),		0x0004, 0 },
+	{ N_("Fluorescent"),		0x0005, 0 },
+	{ N_("Tungsten"),		0x0006, 0 },
+	{ N_("Flash"),			0x0007, 0 },
+	{ N_("Cloudy"),			0x8010, PTP_VENDOR_NIKON },
+	{ N_("Shade"),			0x8011, PTP_VENDOR_NIKON },
+	{ N_("Preset"),			0x8013, PTP_VENDOR_NIKON },
 	{ NULL },
 };
+GENERIC16TABLE(WhiteBalance,whitebalance)
 
 
-static int
-_get_WhiteBalance (CONFIG_GET_ARGS) {
-	int i, j, value=-1;
-	gp_widget_new (GP_WIDGET_MENU, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
-		return(GP_ERROR);
-	if (dpd->DataType != PTP_DTC_UINT16)
-		return(GP_ERROR);
-	/* Run through all the supported values and all the values known to
-	   the camera, and see which values that matches */
-	for (j=0;j<dpd->FORM.Enum.NumberOfValues; j++) {
-		for (i=0;whitebalance[i].label;i++) {
-			if ((dpd->FORM.Enum.SupportedValue[j].u16 == whitebalance[i].value) && ((whitebalance[i].vendor_id == 0) || (whitebalance[i].vendor_id == camera->pl->params.deviceinfo.VendorExtensionID))) {
-				gp_widget_add_choice (*widget, _(whitebalance[i].label));
-				/* Might as well take note here if this value
-				is the one currently set. */
-				if (dpd->CurrentValue.u16 == whitebalance[i].value)
-					value = i;
-				/* Make sure at least a known value is set
-				   as chosen initially */
-				if (value==-1)
-					value = i;
-			}
-		}
-	}
-	if (value>=0)
-		gp_widget_set_value ( *widget, _(whitebalance[value].label));
-	return GP_OK;
-}
-
-static int
-_put_WhiteBalance(CONFIG_PUT_ARGS) {
-	int i;
-	char *value;
-	int ret;
-	int retval = -1;
-
-	ret = gp_widget_get_value (widget, &value);
-	if(ret != GP_OK)
-		return ret;
-	for (i=0; (whitebalance[i].label && (retval<0));i++) {
-		if (!strcmp ( _(whitebalance[i].label),value))
-			retval = i;
-	}
-	if (retval>=0) 
-		propval->u16 = whitebalance[retval].value;
-	else
-		return GP_ERROR;
-	return GP_OK;
-}
-	
 /* Everything is camera specific. */
 static struct deviceproptableu8 compression[] = {
 	{ N_("JPEG Basic"), 0x00, PTP_VENDOR_NIKON },
@@ -2016,58 +2118,8 @@ static struct deviceproptableu8 compression[] = {
 	{ N_("NEF+BASIC"), 0x05, PTP_VENDOR_NIKON },
 	{ NULL },
 };
+GENERIC8TABLE(Compression,compression)
 
-static int
-_get_Compression (CONFIG_GET_ARGS) {
-	int i, j, value=-1;
-	gp_widget_new (GP_WIDGET_MENU, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
-		return(GP_ERROR);
-	if (dpd->DataType != PTP_DTC_UINT8)
-		return(GP_ERROR);
-	/* Run through all the supported values and all the values known to
-	   the camera, and see which values that matches */
-	for (j=0;j<dpd->FORM.Enum.NumberOfValues; j++) {
-		for (i=0;compression[i].label;i++) {
-			if ((dpd->FORM.Enum.SupportedValue[j].u8 == compression[i].value) && ((compression[i].vendor_id == 0) || (compression[i].vendor_id == camera->pl->params.deviceinfo.VendorExtensionID))) {
-				gp_widget_add_choice (*widget, _(compression[i].label));
-				/* Might as well take note here if this value
-				is the one currently set. */
-				if (dpd->CurrentValue.u8 == compression[i].value)
-					value = i;
-				/* Make sure at least a known value is set
-				   as chosen initially */
-				if (value==-1)
-					value = i;
-			}
-		}
-	}
-	if (value>=0)
-		gp_widget_set_value ( *widget, _(compression[value].label));
-	return GP_OK;
-}
-
-static int
-_put_Compression(CONFIG_PUT_ARGS) {
-	int i;
-	char *value;
-	int ret;
-	int retval = -1;
-
-	ret = gp_widget_get_value (widget, &value);
-	if(ret != GP_OK)
-		return ret;
-	for (i=0; (compression[i].label && (retval<0));i++) {
-		if (!strcmp ( _(compression[i].label),value))
-			retval = i;
-	}
-	if (retval>=0) 
-		propval->u8 = compression[retval].value;
-	else
-		return GP_ERROR;
-	return GP_OK;
-}
 
 static int
 _get_ImageSize(CONFIG_GET_ARGS) {
@@ -2201,41 +2253,8 @@ static struct deviceproptableu8 canon_quality[] = {
 	{ N_("super fine"),	0x05, 0 },
 	{ NULL },
 };
+GENERIC8TABLE(Canon_Quality,canon_quality)
 
-static int
-_get_Canon_Quality(CONFIG_GET_ARGS) {
-	int i;
-
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
-		return (GP_ERROR);
-	if (dpd->DataType != PTP_DTC_UINT8)
-		return (GP_ERROR);
-	for (i=0;i<sizeof (canon_quality)/sizeof (canon_quality[0]);i++) {
-		gp_widget_add_choice (*widget, _(canon_quality[i].label));
-		if (canon_quality[i].value == dpd->CurrentValue.u8)
-			gp_widget_set_value (*widget, _(canon_quality[i].label));
-	}
-	return (GP_OK);
-}
-
-static int
-_put_Canon_Quality(CONFIG_PUT_ARGS) {
-	char *value;
-	int i, ret;
-
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK)
-		return ret;
-	for (i=0;i<sizeof (canon_quality)/sizeof (canon_quality[0]);i++) {
-		if (!strcmp (value, _(canon_quality[i].label))) {
-			propval->u8 = canon_quality[i].value;
-			return (GP_OK);
-		}
-	}
-	return (GP_ERROR);
-}
 
 static struct deviceproptableu8 canon_flash[] = {
 	{ N_("off"),	0, 0 },
@@ -2244,82 +2263,16 @@ static struct deviceproptableu8 canon_flash[] = {
 	{ N_("auto red eye"), 5, 0 },
 	{ N_("on red eye"), 6, 0 },
 };
+GENERIC8TABLE(Canon_FlashMode,canon_flash)
 
-static int
-_get_Canon_FlashMode(CONFIG_GET_ARGS) {
-	int i;
-
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
-		return (GP_ERROR);
-	if (dpd->DataType != PTP_DTC_UINT8)
-		return (GP_ERROR);
-	for (i=0;i<sizeof (canon_flash)/sizeof (canon_flash[0]);i++) {
-		gp_widget_add_choice (*widget, _(canon_flash[i].label));
-		if (canon_flash[i].value == dpd->CurrentValue.u8)
-			gp_widget_set_value (*widget, _(canon_flash[i].label));
-	}
-	return (GP_OK);
-}
-
-static int
-_put_Canon_FlashMode(CONFIG_PUT_ARGS) {
-	char *value;
-	int i, ret;
-
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK)
-		return ret;
-	for (i=0;i<sizeof (canon_flash)/sizeof (canon_flash[0]);i++) {
-		if (!strcmp (value, _(canon_flash[i].label))) {
-			propval->u8 = canon_flash[i].value;
-			return (GP_OK);
-		}
-	}
-	return (GP_ERROR);
-}
 
 static struct deviceproptableu8 canon_meteringmode[] = {
 	{ "center weighted(?)",	0, 0 },
 	{ N_("spot"),		1, 0 },
 	{ "integral(?)",	3, 0 },
 };
+GENERIC8TABLE(Canon_MeteringMode,canon_meteringmode)
 
-static int
-_get_Canon_MeteringMode(CONFIG_GET_ARGS) {
-	int i;
-
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
-		return (GP_ERROR);
-	if (dpd->DataType != PTP_DTC_UINT8)
-		return (GP_ERROR);
-	for (i=0;i<sizeof (canon_meteringmode)/sizeof (canon_meteringmode[0]);i++) {
-		gp_widget_add_choice (*widget, _(canon_meteringmode[i].label));
-		if (canon_meteringmode[i].value == dpd->CurrentValue.u8)
-			gp_widget_set_value (*widget, _(canon_meteringmode[i].label));
-	}
-	return (GP_OK);
-}
-
-static int
-_put_Canon_MeteringMode(CONFIG_PUT_ARGS) {
-	char *value;
-	int i, ret;
-
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK)
-		return ret;
-	for (i=0;i<sizeof (canon_meteringmode)/sizeof (canon_meteringmode[0]);i++) {
-		if (!strcmp (value, _(canon_meteringmode[i].label))) {
-			propval->u8 = canon_meteringmode[i].value;
-			return (GP_OK);
-		}
-	}
-	return (GP_ERROR);
-}
 
 static struct deviceproptableu16 canon_shutterspeed[] = {
       {  "auto",0x0000,0 },
@@ -2370,81 +2323,15 @@ static struct deviceproptableu16 canon_shutterspeed[] = {
       {  "1/1600",0x008d,0 },
       {  "1/2000",0x0090,0 },
 };
+GENERIC16TABLE(Canon_ShutterSpeed,canon_shutterspeed)
 
-static int
-_get_Canon_ShutterSpeed(CONFIG_GET_ARGS) {
-	int i;
-
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
-		return (GP_ERROR);
-	if (dpd->DataType != PTP_DTC_UINT16)
-		return (GP_ERROR);
-	for (i=0;i<sizeof (canon_shutterspeed)/sizeof (canon_shutterspeed[0]);i++) {
-		gp_widget_add_choice (*widget, _(canon_shutterspeed[i].label));
-		if (canon_shutterspeed[i].value == dpd->CurrentValue.u16)
-			gp_widget_set_value (*widget, _(canon_shutterspeed[i].label));
-	}
-	return (GP_OK);
-}
-
-static int
-_put_Canon_ShutterSpeed(CONFIG_PUT_ARGS) {
-	char *value;
-	int i, ret;
-
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK)
-		return ret;
-	for (i=0;i<sizeof (canon_shutterspeed)/sizeof (canon_shutterspeed[0]);i++) {
-		if (!strcmp (value, _(canon_shutterspeed[i].label))) {
-			propval->u16 = canon_shutterspeed[i].value;
-			return (GP_OK);
-		}
-	}
-	return (GP_ERROR);
-}
 
 static struct deviceproptableu16 canon_focuspoints[] = {
-	{ N_("center"),	0x3003, 0 },
-	{ N_("auto"),	0x3001, 0 },
+	{ N_("Center"),	0x3003, 0 },
+	{ N_("Auto"),	0x3001, 0 },
 };
+GENERIC16TABLE(Canon_FocusingPoint,canon_focuspoints)
 
-static int
-_get_Canon_FocusingPoint(CONFIG_GET_ARGS) {
-	int i;
-
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
-		return (GP_ERROR);
-	if (dpd->DataType != PTP_DTC_UINT16)
-		return (GP_ERROR);
-	for (i=0;i<sizeof (canon_focuspoints)/sizeof (canon_focuspoints[0]);i++) {
-		gp_widget_add_choice (*widget, _(canon_focuspoints[i].label));
-		if (canon_focuspoints[i].value == dpd->CurrentValue.u16)
-			gp_widget_set_value (*widget, _(canon_focuspoints[i].label));
-	}
-	return (GP_OK);
-}
-
-static int
-_put_Canon_FocusingPoint(CONFIG_PUT_ARGS) {
-	char *value;
-	int i, ret;
-
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK)
-		return ret;
-	for (i=0;i<sizeof (canon_focuspoints)/sizeof (canon_focuspoints[0]);i++) {
-		if (!strcmp (value, _(canon_focuspoints[i].label))) {
-			propval->u16 = canon_focuspoints[i].value;
-			return (GP_OK);
-		}
-	}
-	return (GP_ERROR);
-}
 
 static struct deviceproptableu8 canon_size[] = {
 	{ N_("large"),		0x00, 0 },
@@ -2453,41 +2340,8 @@ static struct deviceproptableu8 canon_size[] = {
 	{ N_("small"),		0x02, 0 },
 	{ NULL },
 };
+GENERIC8TABLE(Canon_Size,canon_size)
 
-static int
-_get_Canon_Size(CONFIG_GET_ARGS) {
-	int i;
-
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
-		return (GP_ERROR);
-	if (dpd->DataType != PTP_DTC_UINT8)
-		return (GP_ERROR);
-	for (i=0;i<sizeof (canon_size)/sizeof (canon_size[0]);i++) {
-		gp_widget_add_choice (*widget, _(canon_size[i].label));
-		if (canon_size[i].value == dpd->CurrentValue.u8)
-			gp_widget_set_value (*widget, _(canon_size[i].label));
-	}
-	return (GP_OK);
-}
-
-static int
-_put_Canon_Size(CONFIG_PUT_ARGS) {
-	char *value;
-	int i, ret;
-
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK)
-		return ret;
-	for (i=0;i<sizeof (canon_size)/sizeof (canon_size[0]);i++) {
-		if (!strcmp (value, _(canon_size[i].label))) {
-			propval->u8 = canon_size[i].value;
-			return (GP_OK);
-		}
-	}
-	return (GP_ERROR);
-}
 
 static struct deviceproptableu16 canon_isospeed[] = {
 	{ N_("Factory Default"),0xffff, 0 },
@@ -2497,41 +2351,7 @@ static struct deviceproptableu16 canon_isospeed[] = {
 	{ "400",		0x0058, 0 },
 	{ N_("Auto"),		0x0000, 0 },
 };
-
-static int
-_get_Canon_ISO(CONFIG_GET_ARGS) {
-	int i;
-
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
-		return (GP_ERROR);
-	if (dpd->DataType != PTP_DTC_UINT16)
-		return (GP_ERROR);
-	for (i=0;i<sizeof (canon_isospeed)/sizeof (canon_isospeed[0]);i++) {
-		gp_widget_add_choice (*widget, _(canon_isospeed[i].label));
-		if (canon_isospeed[i].value == dpd->CurrentValue.u16)
-			gp_widget_set_value (*widget, _(canon_isospeed[i].label));
-	}
-	return (GP_OK);
-}
-
-static int
-_put_Canon_ISO(CONFIG_PUT_ARGS) {
-	char *value;
-	int i, ret;
-
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK)
-		return ret;
-	for (i=0;i<sizeof (canon_isospeed)/sizeof (canon_isospeed[0]);i++) {
-		if (!strcmp (value, _(canon_isospeed[i].label))) {
-			propval->u16 = canon_isospeed[i].value;
-			return (GP_OK);
-		}
-	}
-	return (GP_ERROR);
-}
+GENERIC16TABLE(Canon_ISO,canon_isospeed)
 
 static int
 _get_ISO(CONFIG_GET_ARGS) {
@@ -2666,226 +2486,51 @@ static struct deviceproptableu16 exposure_program_modes[] = {
 	{ N_("Night Portrait"),	0x8015, PTP_VENDOR_NIKON},
 	{ N_("Night Landscape"),0x8016, PTP_VENDOR_NIKON},
 };
+GENERIC16TABLE(ExposureProgram,exposure_program_modes)
 
-static int
-_get_ExposureProgram(CONFIG_GET_ARGS) {
-	int i;
-	char buf[20];
-
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
-		return (GP_ERROR);
-	if (dpd->DataType != PTP_DTC_UINT16)
-		return (GP_ERROR);
-	sprintf(buf, "unknown %04x", dpd->CurrentValue.u16);
-	gp_widget_set_value (*widget, buf);
-	for (i=0;i<sizeof (exposure_program_modes)/sizeof (exposure_program_modes[0]);i++) {
-		gp_widget_add_choice (*widget, _(exposure_program_modes[i].label));
-		if (exposure_program_modes[i].value == dpd->CurrentValue.u16)
-			gp_widget_set_value (*widget, _(exposure_program_modes[i].label));
-	}
-	return (GP_OK);
-}
-
-static int
-_put_ExposureProgram(CONFIG_PUT_ARGS) {
-	char *value;
-	int i, ret;
-
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK)
-		return ret;
-	for (i=0;i<sizeof (exposure_program_modes)/sizeof (exposure_program_modes[0]);i++) {
-		if (!strcmp (value, _(exposure_program_modes[i].label))) {
-			propval->u16 = exposure_program_modes[i].value;
-			return (GP_OK);
-		}
-	}
-	return (GP_ERROR);
-}
 
 static struct deviceproptableu16 capture_mode[] = {
 	{ N_("Single Shot"),	0x0001, 0 },
-	{ N_("Power Wind"),	0x0002, 0 },
+	{ N_("Burst"),		0x0002, 0 },
+	{ N_("Timelapse"),	0x0003, 0 },
 	{ N_("Timer"),		0x8011, PTP_VENDOR_NIKON},
 	{ N_("Remote"),		0x8013, PTP_VENDOR_NIKON},
 	{ N_("Timer + Remote"),	0x8014, PTP_VENDOR_NIKON},
 };
+GENERIC16TABLE(CaptureMode,capture_mode)
 
-static int
-_get_CaptureMode(CONFIG_GET_ARGS) {
-	int i;
-	char buf[20];
-
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
-		return (GP_ERROR);
-	if (dpd->DataType != PTP_DTC_UINT16)
-		return (GP_ERROR);
-	sprintf(buf, "unknown %04x", dpd->CurrentValue.u16);
-	gp_widget_set_value (*widget, buf);
-	for (i=0;i<sizeof (capture_mode)/sizeof (capture_mode[0]);i++) {
-		gp_widget_add_choice (*widget, _(capture_mode[i].label));
-		if (capture_mode[i].value == dpd->CurrentValue.u16)
-			gp_widget_set_value (*widget, _(capture_mode[i].label));
-	}
-	return (GP_OK);
-}
-
-static int
-_put_CaptureMode(CONFIG_PUT_ARGS) {
-	char *value;
-	int i, ret;
-
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK)
-		return ret;
-	for (i=0;i<sizeof (capture_mode)/sizeof (capture_mode[0]);i++) {
-		if (!strcmp (value, _(capture_mode[i].label))) {
-			propval->u16 = capture_mode[i].value;
-			return (GP_OK);
-		}
-	}
-	return (GP_ERROR);
-}
 
 static struct deviceproptableu16 focus_metering[] = {
 	{ N_("Dynamic Area"),	0x0002, 0 },
 	{ N_("Single Area"),	0x8010, PTP_VENDOR_NIKON},
 	{ N_("Closest Subject"),0x8011, PTP_VENDOR_NIKON},
 };
-
-static int
-_get_FocusMetering(CONFIG_GET_ARGS) {
-	int i;
-	char buf[20];
-
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
-		return (GP_ERROR);
-	if (dpd->DataType != PTP_DTC_UINT16)
-		return (GP_ERROR);
-	sprintf(buf, "unknown %04x", dpd->CurrentValue.u16);
-	gp_widget_set_value (*widget, buf);
-	for (i=0;i<sizeof (focus_metering)/sizeof (focus_metering[0]);i++) {
-		gp_widget_add_choice (*widget, _(focus_metering[i].label));
-		if (focus_metering[i].value == dpd->CurrentValue.u16)
-			gp_widget_set_value (*widget, _(focus_metering[i].label));
-	}
-	return (GP_OK);
-}
-
-static int
-_put_FocusMetering(CONFIG_PUT_ARGS) {
-	char *value;
-	int i, ret;
-
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK)
-		return ret;
-	for (i=0;i<sizeof (focus_metering)/sizeof (focus_metering[0]);i++) {
-		if (!strcmp (value, _(focus_metering[i].label))) {
-			propval->u16 = focus_metering[i].value;
-			return (GP_OK);
-		}
-	}
-	return (GP_ERROR);
-}
+GENERIC16TABLE(FocusMetering,focus_metering)
 
 
 static struct deviceproptableu16 exposure_metering[] = {
+	{ N_("Average"),	0x0001, 0 },
 	{ N_("Center Weighted"),0x0002, 0 },
-	{ N_("Matrix"),		0x0003, 0 },
-	{ N_("Spot"),		0x0004, 0 },
+	{ N_("Multi Spot"),	0x0003, 0 },
+	{ N_("Center Spot"),	0x0004, 0 },
 };
-
-static int
-_get_ExposureMetering(CONFIG_GET_ARGS) {
-	int i;
-	char buf[20];
-
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
-		return (GP_ERROR);
-	if (dpd->DataType != PTP_DTC_UINT16)
-		return (GP_ERROR);
-	sprintf(buf, "unknown %04x", dpd->CurrentValue.u16);
-	gp_widget_set_value (*widget, buf);
-	for (i=0;i<sizeof (exposure_metering)/sizeof (exposure_metering[0]);i++) {
-		gp_widget_add_choice (*widget, _(exposure_metering[i].label));
-		if (exposure_metering[i].value == dpd->CurrentValue.u16)
-			gp_widget_set_value (*widget, _(exposure_metering[i].label));
-	}
-	return (GP_OK);
-}
-
-static int
-_put_ExposureMetering(CONFIG_PUT_ARGS) {
-	char *value;
-	int i, ret;
-
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK)
-		return ret;
-	for (i=0;i<sizeof (exposure_metering)/sizeof (exposure_metering[0]);i++) {
-		if (!strcmp (value, _(exposure_metering[i].label))) {
-			propval->u16 = exposure_metering[i].value;
-			return (GP_OK);
-		}
-	}
-	return (GP_ERROR);
-}
+GENERIC16TABLE(ExposureMetering,exposure_metering)
 
 
 static struct deviceproptableu16 flash_mode[] = {
+	{ N_("Automatic Flash"),		0x0001, 0 },
+	{ N_("Flash off"),			0x0002, 0 },
+	{ N_("Fill flash"),			0x0003, 0 },
+	{ N_("Red-eye automatic"),		0x0004, 0 },
+	{ N_("Red-eye fill"),			0x0005, 0 },
+	{ N_("External sync"),			0x0006, 0 },
 	{ N_("Default"),			0x8010, PTP_VENDOR_NIKON},
-	{ N_("Red-eye Reduction"),		0x0004, 0 },
-	{ N_("Red-eye Reduction + Slow Sync"),	0x8013, PTP_VENDOR_NIKON},
 	{ N_("Slow Sync"),			0x8011, PTP_VENDOR_NIKON},
 	{ N_("Rear Curtain Sync + Slow Sync"),	0x8012, PTP_VENDOR_NIKON},
+	{ N_("Red-eye Reduction + Slow Sync"),	0x8013, PTP_VENDOR_NIKON},
 };
+GENERIC16TABLE(FlashMode,flash_mode)
 
-static int
-_get_FlashMode(CONFIG_GET_ARGS) {
-	int i;
-	char buf[20];
-
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
-		return (GP_ERROR);
-	if (dpd->DataType != PTP_DTC_UINT16)
-		return (GP_ERROR);
-	sprintf(buf, "unknown %04x", dpd->CurrentValue.u16);
-	gp_widget_set_value (*widget, buf);
-	for (i=0;i<sizeof (flash_mode)/sizeof (flash_mode[0]);i++) {
-		gp_widget_add_choice (*widget, _(flash_mode[i].label));
-		if (flash_mode[i].value == dpd->CurrentValue.u16)
-			gp_widget_set_value (*widget, _(flash_mode[i].label));
-	}
-	return (GP_OK);
-}
-
-static int
-_put_FlashMode(CONFIG_PUT_ARGS) {
-	char *value;
-	int i, ret;
-
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK)
-		return ret;
-	for (i=0;i<sizeof (flash_mode)/sizeof (flash_mode[0]);i++) {
-		if (!strcmp (value, _(flash_mode[i].label))) {
-			propval->u16 = flash_mode[i].value;
-			return (GP_OK);
-		}
-	}
-	return (GP_ERROR);
-}
 
 static int
 _get_FocalLength(CONFIG_GET_ARGS) {
@@ -3038,6 +2683,16 @@ _put_Canon_AFDistance(CONFIG_PUT_ARGS) {
 	return (GP_ERROR);
 }
 
+/* Focus Modes as per PTP standard. |0x8000 means vendor specific. */
+static struct deviceproptableu16 focusmodes[] = {
+	{ N_("Undefined"),	0x0000, 0 },
+	{ N_("Manual"),		0x0001, 0 },
+	{ N_("Automatic"),	0x0002, 0 },
+	{ N_("Automatic Macro"),0x0003, 0 },
+};
+GENERIC16TABLE(FocusMode,focusmodes)
+
+
 static struct deviceproptableu8 canon_whitebalance[] = {
       { N_("Auto"),		0, 0 },
       { N_("Daylight"),		1, 0 },
@@ -3143,41 +2798,8 @@ static struct deviceproptableu16 canon_photoeffect[] = {
       { N_("Sepia"),		4, 0 },
       { N_("Black & white"),	5, 0 },
 };
+GENERIC16TABLE(Canon_PhotoEffect,canon_photoeffect)
 
-static int
-_get_Canon_PhotoEffect(CONFIG_GET_ARGS) {
-	int i;
-
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
-		return (GP_ERROR);
-	if (dpd->DataType != PTP_DTC_UINT16)
-		return (GP_ERROR);
-	for (i=0;i<sizeof (canon_photoeffect)/sizeof (canon_photoeffect[0]);i++) {
-		gp_widget_add_choice (*widget, _(canon_photoeffect[i].label));
-		if (canon_photoeffect[i].value == dpd->CurrentValue.u16)
-			gp_widget_set_value (*widget, _(canon_photoeffect[i].label));
-	}
-	return (GP_OK);
-}
-
-static int
-_put_Canon_PhotoEffect(CONFIG_PUT_ARGS) {
-	char *value;
-	int i, ret;
-
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK)
-		return ret;
-	for (i=0;i<sizeof (canon_photoeffect)/sizeof (canon_photoeffect[0]);i++) {
-		if (!strcmp (value, _(canon_photoeffect[i].label))) {
-			propval->u16 = canon_photoeffect[i].value;
-			return (GP_OK);
-		}
-	}
-	return (GP_ERROR);
-}
 
 static struct deviceproptableu16 canon_aperture[] = {
       { N_("auto"),	0xffff, 0 },
@@ -3192,41 +2814,8 @@ static struct deviceproptableu16 canon_aperture[] = {
       { "7.1",		0x0035, 0 },
       { "8.0",		0x0038, 0 },
 };
+GENERIC16TABLE(Canon_Aperture,canon_aperture)
 
-static int
-_get_Canon_Aperture(CONFIG_GET_ARGS) {
-	int i;
-
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
-		return (GP_ERROR);
-	if (dpd->DataType != PTP_DTC_UINT16)
-		return (GP_ERROR);
-	for (i=0;i<sizeof (canon_aperture)/sizeof (canon_aperture[0]);i++) {
-		gp_widget_add_choice (*widget, _(canon_aperture[i].label));
-		if (canon_aperture[i].value == dpd->CurrentValue.u16)
-			gp_widget_set_value (*widget, _(canon_aperture[i].label));
-	}
-	return (GP_OK);
-}
-
-static int
-_put_Canon_Aperture(CONFIG_PUT_ARGS) {
-	char *value;
-	int i, ret;
-
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK)
-		return ret;
-	for (i=0;i<sizeof (canon_aperture)/sizeof (canon_aperture[0]);i++) {
-		if (!strcmp (value, _(canon_aperture[i].label))) {
-			propval->u16 = canon_aperture[i].value;
-			return (GP_OK);
-		}
-	}
-	return (GP_ERROR);
-}
 
 static int
 _get_UINT32_as_time(CONFIG_GET_ARGS) {
@@ -3429,18 +3018,19 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Zoom"), "zoom", PTP_DPC_CANON_Zoom, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ZoomRange, _put_Canon_ZoomRange},
 	{ N_("Assist Light"), "assistlight", PTP_DPC_CANON_AssistLight, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_AssistLight, _put_Canon_AssistLight},
 	{ N_("Exposure Compensation"), "exposurecompensation", PTP_DPC_CANON_ExpCompensation, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_ExpCompensation, _put_Canon_ExpCompensation},
-	{ N_("Flash"), "flash", PTP_DPC_CANON_FlashMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_FlashMode, _put_Canon_FlashMode},
+	{ N_("Flash Mode"), "flashmode", PTP_DPC_CANON_FlashMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_FlashMode, _put_Canon_FlashMode},
 	{ N_("AF Area Illumination"), "af-area-illumination", PTP_DPC_NIKON_AFAreaIllumination, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_AFAreaIllum, _put_Nikon_AFAreaIllum},
 	{ N_("AF Beep Mode"), "afbeep", PTP_DPC_NIKON_BeepOff, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_BeepMode, _put_Nikon_BeepMode},
         { N_("F Number"), "f-number", PTP_DPC_FNumber, 0, PTP_DTC_UINT16, _get_FNumber, _put_FNumber},
         { N_("Focal Length"), "focallength", PTP_DPC_FocalLength, 0, PTP_DTC_UINT32, _get_FocalLength, _put_FocalLength},
+        { N_("Focus Mode"), "focusmode", PTP_DPC_FocusMode, 0, PTP_DTC_UINT16, _get_FocusMode, _put_FocusMode},
         { N_("ISO Speed"), "iso", PTP_DPC_ExposureIndex, 0, PTP_DTC_UINT16, _get_ISO, _put_ISO},
         { N_("Exposure Time"), "exptime", PTP_DPC_ExposureTime, 0, PTP_DTC_UINT32, _get_ExpTime, _put_ExpTime},
         { N_("Exposure Program"), "expprogram", PTP_DPC_ExposureProgramMode, 0, PTP_DTC_UINT16, _get_ExposureProgram, _put_ExposureProgram},
         { N_("Still Capture Mode"), "capturemode", PTP_DPC_StillCaptureMode, 0, PTP_DTC_UINT16, _get_CaptureMode, _put_CaptureMode},
         { N_("Focus Metering Mode"), "focusmetermode", PTP_DPC_FocusMeteringMode, 0, PTP_DTC_UINT16, _get_FocusMetering, _put_FocusMetering},
         { N_("Exposure Metering Mode"), "exposuremetermode", PTP_DPC_ExposureMeteringMode, 0, PTP_DTC_UINT16, _get_ExposureMetering, _put_ExposureMetering},
-        { N_("Flash Mode"), "flash", PTP_DPC_FlashMode, 0, PTP_DTC_UINT16, _get_FlashMode, _put_FlashMode},
+        { N_("Flash Mode"), "flashmode", PTP_DPC_FlashMode, 0, PTP_DTC_UINT16, _get_FlashMode, _put_FlashMode},
 	{ N_("Aperture"), "aperture", PTP_DPC_CANON_Aperture, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_Aperture, _put_Canon_Aperture},
 	{ N_("Focusing Point"), "focusingpoint", PTP_DPC_CANON_FocusingPoint, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_FocusingPoint, _put_Canon_FocusingPoint},
 	{ N_("Shutter Speed"), "shutterspeed", PTP_DPC_CANON_ShutterSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ShutterSpeed, _put_Canon_ShutterSpeed},
