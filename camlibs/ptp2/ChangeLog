@@ -1,3 +1,16 @@
+2006-01-14  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c, ptp.c, ptp.h: more --summary output.
+	  List OFC codes now.
+
+	* library.c:
+	  Cleaned up config function parameter lists.
+	  Need to property desc on "put" too (for Focal Length
+	  currently).
+
+	  Implemented FocalLength configuration.
+
+
 2006-01-12  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* library.c, ptp-pack.c:

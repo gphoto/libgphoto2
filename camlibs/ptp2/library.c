@@ -404,6 +404,7 @@ static struct {
 	/* 4600: Martin Klaffenboeck <martin.klaffenboeck@gmx.at> */
 	{"Nikon:Coolpix 4600 (PTP mode)", 0x04b0, 0x0130, 0},
 	{"Nikon:Coolpix 5900 (PTP mode)", 0x04b0, 0x0135, 0},
+	{"Nikon:Coolpix P1 (PTP mode)",   0x04b0, 0x0140, 0},
 	/* Marcus Meissner */
 	{"Nikon:Coolpix P2 (PTP mode)",   0x04b0, 0x0142, 0},
 	{"Nikon:Coolpix SQ (PTP mode)",   0x04b0, 0x0202, 0},
@@ -1373,6 +1374,7 @@ struct canon_theme_entry {
 	char		unknown2[8];
 };
 
+#if 0 /* leave out ... is confusing -P downloads */
 static int
 canon_theme_get (CameraFilesystem *fs, const char *folder, const char *filename,
 		 CameraFileType type, CameraFile *file, void *data,
@@ -1413,6 +1415,7 @@ canon_theme_put (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	/* not yet */
 	return (GP_OK);
 }
+#endif
 
 static int
 nikon_curve_get (CameraFilesystem *fs, const char *folder, const char *filename,
@@ -1763,8 +1766,10 @@ have_prop(Camera *camera, uint16_t vendor, uint16_t prop) {
 }
 
 struct submenu;
-typedef int (*get_func)(Camera *camera, CameraWidget **widget, struct submenu* menu, PTPDevicePropDesc *dpd);
-typedef int (*put_func)(Camera *camera, CameraWidget *widget, PTPPropertyValue *propval);
+#define CONFIG_GET_ARGS Camera *camera, CameraWidget **widget, struct submenu* menu, PTPDevicePropDesc *dpd
+typedef int (*get_func)(CONFIG_GET_ARGS);
+#define CONFIG_PUT_ARGS Camera *camera, CameraWidget *widget, PTPPropertyValue *propval, PTPDevicePropDesc *dpd
+typedef int (*put_func)(CONFIG_PUT_ARGS);
 
 struct submenu {
 	char 		*label;
@@ -1796,7 +1801,7 @@ struct deviceproptableu16 {
 
 
 static int
-_get_AUINT8_as_CHAR_ARRAY(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_AUINT8_as_CHAR_ARRAY(CONFIG_GET_ARGS) {
 	int	j;
 	char 	value[128];
 
@@ -1814,7 +1819,7 @@ _get_AUINT8_as_CHAR_ARRAY(Camera* camera, CameraWidget **widget, struct submenu 
 }
 
 static int
-_get_STR(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_STR(CONFIG_GET_ARGS) {
 	char value[64];
 
 	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
@@ -1829,7 +1834,7 @@ _get_STR(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDeviceP
 }
 
 static int
-_put_STR(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+_put_STR(CONFIG_PUT_ARGS) {
         const char *string;
         int ret;
         ret = gp_widget_get_value (widget,&string);
@@ -1840,7 +1845,7 @@ _put_STR(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
 }
 
 static int
-_put_AUINT8_as_CHAR_ARRAY(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+_put_AUINT8_as_CHAR_ARRAY(CONFIG_PUT_ARGS) {
 	char	*value;
 	int	i, ret;
 
@@ -1858,7 +1863,7 @@ _put_AUINT8_as_CHAR_ARRAY(Camera* camera, CameraWidget *widget, PTPPropertyValue
 
 #if 0
 static int
-_get_Range_INT8(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_Range_INT8(CONFIG_GET_ARGS) {
 	float CurrentValue;
 	
 	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
@@ -1875,7 +1880,7 @@ _get_Range_INT8(Camera* camera, CameraWidget **widget, struct submenu *menu, PTP
 
 
 static int
-_put_Range_INT8(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+_put_Range_INT8(CONFIG_PUT_ARGS) {
 	int ret;
 	float f;
 	ret = gp_widget_get_value (widget, &f);
@@ -1887,7 +1892,7 @@ _put_Range_INT8(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval)
 #endif
 
 static int
-_get_Nikon_OnOff_UINT8(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_Nikon_OnOff_UINT8(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name ( *widget, menu->name);
 	if (dpd->FormFlag != PTP_DPFF_Range)
@@ -1901,7 +1906,7 @@ _get_Nikon_OnOff_UINT8(Camera* camera, CameraWidget **widget, struct submenu *me
 }
 
 static int
-_put_Nikon_OnOff_UINT8(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+_put_Nikon_OnOff_UINT8(CONFIG_PUT_ARGS) {
 	int ret;
 	char *value;
 
@@ -1920,7 +1925,7 @@ _put_Nikon_OnOff_UINT8(Camera* camera, CameraWidget *widget, PTPPropertyValue *p
 }
 
 static int
-_get_CANON_FirmwareVersion(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_CANON_FirmwareVersion(CONFIG_GET_ARGS) {
 	char value[64];
 
 	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
@@ -1951,7 +1956,7 @@ static struct deviceproptableu16 whitebalance[] = {
 
 
 static int
-_get_WhiteBalance (Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_WhiteBalance (CONFIG_GET_ARGS) {
 	int i, j, value=-1;
 	gp_widget_new (GP_WIDGET_MENU, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
@@ -1982,7 +1987,7 @@ _get_WhiteBalance (Camera* camera, CameraWidget **widget, struct submenu *menu, 
 }
 
 static int
-_put_WhiteBalance(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+_put_WhiteBalance(CONFIG_PUT_ARGS) {
 	int i;
 	char *value;
 	int ret;
@@ -2013,7 +2018,7 @@ static struct deviceproptableu8 compression[] = {
 };
 
 static int
-_get_Compression (Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_Compression (CONFIG_GET_ARGS) {
 	int i, j, value=-1;
 	gp_widget_new (GP_WIDGET_MENU, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
@@ -2044,7 +2049,7 @@ _get_Compression (Camera* camera, CameraWidget **widget, struct submenu *menu, P
 }
 
 static int
-_put_Compression(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+_put_Compression(CONFIG_PUT_ARGS) {
 	int i;
 	char *value;
 	int ret;
@@ -2065,7 +2070,7 @@ _put_Compression(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval
 }
 
 static int
-_get_ImageSize(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_ImageSize(CONFIG_GET_ARGS) {
         int j;
 
         gp_widget_new (GP_WIDGET_MENU, _(menu->label), widget);
@@ -2082,7 +2087,7 @@ _get_ImageSize(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPD
 }
 
 static int
-_put_ImageSize(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+_put_ImageSize(CONFIG_PUT_ARGS) {
         char *value;
         int ret;
 
@@ -2095,7 +2100,7 @@ _put_ImageSize(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) 
 
 
 static int
-_get_Canon_AssistLight(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_Canon_AssistLight(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
 	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
@@ -2109,7 +2114,7 @@ _get_Canon_AssistLight(Camera* camera, CameraWidget **widget, struct submenu *me
 }
 
 static int
-_put_Canon_AssistLight(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+_put_Canon_AssistLight(CONFIG_PUT_ARGS) {
 	char *value;
 	int ret;
 
@@ -2128,7 +2133,7 @@ _put_Canon_AssistLight(Camera* camera, CameraWidget *widget, PTPPropertyValue *p
 }
 
 static int
-_get_Canon_BeepMode(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_Canon_BeepMode(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
 	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
@@ -2142,7 +2147,7 @@ _get_Canon_BeepMode(Camera* camera, CameraWidget **widget, struct submenu *menu,
 }
 
 static int
-_put_Canon_BeepMode(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+_put_Canon_BeepMode(CONFIG_PUT_ARGS) {
 	char *value;
 	int ret;
 
@@ -2161,7 +2166,7 @@ _put_Canon_BeepMode(Camera* camera, CameraWidget *widget, PTPPropertyValue *prop
 }
 
 static int
-_get_Canon_ZoomRange(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_Canon_ZoomRange(CONFIG_GET_ARGS) {
 	float	f, t, b, s;
 
 	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
@@ -2178,7 +2183,7 @@ _get_Canon_ZoomRange(Camera* camera, CameraWidget **widget, struct submenu *menu
 }
 
 static int
-_put_Canon_ZoomRange(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval)
+_put_Canon_ZoomRange(CONFIG_PUT_ARGS)
 {
 	float	f;
 	int	ret;
@@ -2198,7 +2203,7 @@ static struct deviceproptableu8 canon_quality[] = {
 };
 
 static int
-_get_Canon_Quality(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_Canon_Quality(CONFIG_GET_ARGS) {
 	int i;
 
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
@@ -2216,7 +2221,7 @@ _get_Canon_Quality(Camera* camera, CameraWidget **widget, struct submenu *menu, 
 }
 
 static int
-_put_Canon_Quality(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+_put_Canon_Quality(CONFIG_PUT_ARGS) {
 	char *value;
 	int i, ret;
 
@@ -2241,7 +2246,7 @@ static struct deviceproptableu8 canon_flash[] = {
 };
 
 static int
-_get_Canon_FlashMode(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_Canon_FlashMode(CONFIG_GET_ARGS) {
 	int i;
 
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
@@ -2259,7 +2264,7 @@ _get_Canon_FlashMode(Camera* camera, CameraWidget **widget, struct submenu *menu
 }
 
 static int
-_put_Canon_FlashMode(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+_put_Canon_FlashMode(CONFIG_PUT_ARGS) {
 	char *value;
 	int i, ret;
 
@@ -2282,7 +2287,7 @@ static struct deviceproptableu8 canon_meteringmode[] = {
 };
 
 static int
-_get_Canon_MeteringMode(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_Canon_MeteringMode(CONFIG_GET_ARGS) {
 	int i;
 
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
@@ -2300,7 +2305,7 @@ _get_Canon_MeteringMode(Camera* camera, CameraWidget **widget, struct submenu *m
 }
 
 static int
-_put_Canon_MeteringMode(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+_put_Canon_MeteringMode(CONFIG_PUT_ARGS) {
 	char *value;
 	int i, ret;
 
@@ -2367,7 +2372,7 @@ static struct deviceproptableu16 canon_shutterspeed[] = {
 };
 
 static int
-_get_Canon_ShutterSpeed(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_Canon_ShutterSpeed(CONFIG_GET_ARGS) {
 	int i;
 
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
@@ -2385,7 +2390,7 @@ _get_Canon_ShutterSpeed(Camera* camera, CameraWidget **widget, struct submenu *m
 }
 
 static int
-_put_Canon_ShutterSpeed(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+_put_Canon_ShutterSpeed(CONFIG_PUT_ARGS) {
 	char *value;
 	int i, ret;
 
@@ -2407,7 +2412,7 @@ static struct deviceproptableu16 canon_focuspoints[] = {
 };
 
 static int
-_get_Canon_FocusingPoint(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_Canon_FocusingPoint(CONFIG_GET_ARGS) {
 	int i;
 
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
@@ -2425,7 +2430,7 @@ _get_Canon_FocusingPoint(Camera* camera, CameraWidget **widget, struct submenu *
 }
 
 static int
-_put_Canon_FocusingPoint(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+_put_Canon_FocusingPoint(CONFIG_PUT_ARGS) {
 	char *value;
 	int i, ret;
 
@@ -2450,7 +2455,7 @@ static struct deviceproptableu8 canon_size[] = {
 };
 
 static int
-_get_Canon_Size(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_Canon_Size(CONFIG_GET_ARGS) {
 	int i;
 
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
@@ -2468,7 +2473,7 @@ _get_Canon_Size(Camera* camera, CameraWidget **widget, struct submenu *menu, PTP
 }
 
 static int
-_put_Canon_Size(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+_put_Canon_Size(CONFIG_PUT_ARGS) {
 	char *value;
 	int i, ret;
 
@@ -2494,7 +2499,7 @@ static struct deviceproptableu16 canon_isospeed[] = {
 };
 
 static int
-_get_Canon_ISO(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_Canon_ISO(CONFIG_GET_ARGS) {
 	int i;
 
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
@@ -2512,7 +2517,7 @@ _get_Canon_ISO(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPD
 }
 
 static int
-_put_Canon_ISO(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+_put_Canon_ISO(CONFIG_PUT_ARGS) {
 	char *value;
 	int i, ret;
 
@@ -2529,7 +2534,7 @@ _put_Canon_ISO(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) 
 }
 
 static int
-_get_ISO(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_ISO(CONFIG_GET_ARGS) {
 	int i;
 
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
@@ -2551,7 +2556,7 @@ _get_ISO(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDeviceP
 }
 
 static int
-_put_ISO(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval)
+_put_ISO(CONFIG_PUT_ARGS)
 {
 	int ret;
 	char *value;
@@ -2569,7 +2574,7 @@ _put_ISO(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval)
 }
 
 static int
-_get_FNumber(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_FNumber(CONFIG_GET_ARGS) {
 	int i;
 
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
@@ -2591,7 +2596,7 @@ _get_FNumber(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDev
 }
 
 static int
-_put_FNumber(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval)
+_put_FNumber(CONFIG_PUT_ARGS)
 {
 	int	ret;
 	char	*value;
@@ -2609,7 +2614,7 @@ _put_FNumber(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval)
 }
 
 static int
-_get_ExpTime(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_ExpTime(CONFIG_GET_ARGS) {
 	int i;
 
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
@@ -2631,7 +2636,7 @@ _get_ExpTime(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDev
 }
 
 static int
-_put_ExpTime(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval)
+_put_ExpTime(CONFIG_PUT_ARGS)
 {
 	int	ret;
 	char	*value;
@@ -2663,7 +2668,7 @@ static struct deviceproptableu16 exposure_program_modes[] = {
 };
 
 static int
-_get_ExposureProgram(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_ExposureProgram(CONFIG_GET_ARGS) {
 	int i;
 	char buf[20];
 
@@ -2684,7 +2689,7 @@ _get_ExposureProgram(Camera* camera, CameraWidget **widget, struct submenu *menu
 }
 
 static int
-_put_ExposureProgram(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+_put_ExposureProgram(CONFIG_PUT_ARGS) {
 	char *value;
 	int i, ret;
 
@@ -2709,7 +2714,7 @@ static struct deviceproptableu16 capture_mode[] = {
 };
 
 static int
-_get_CaptureMode(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_CaptureMode(CONFIG_GET_ARGS) {
 	int i;
 	char buf[20];
 
@@ -2730,7 +2735,7 @@ _get_CaptureMode(Camera* camera, CameraWidget **widget, struct submenu *menu, PT
 }
 
 static int
-_put_CaptureMode(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+_put_CaptureMode(CONFIG_PUT_ARGS) {
 	char *value;
 	int i, ret;
 
@@ -2753,7 +2758,7 @@ static struct deviceproptableu16 focus_metering[] = {
 };
 
 static int
-_get_FocusMetering(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_FocusMetering(CONFIG_GET_ARGS) {
 	int i;
 	char buf[20];
 
@@ -2774,7 +2779,7 @@ _get_FocusMetering(Camera* camera, CameraWidget **widget, struct submenu *menu, 
 }
 
 static int
-_put_FocusMetering(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+_put_FocusMetering(CONFIG_PUT_ARGS) {
 	char *value;
 	int i, ret;
 
@@ -2798,7 +2803,7 @@ static struct deviceproptableu16 exposure_metering[] = {
 };
 
 static int
-_get_ExposureMetering(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_ExposureMetering(CONFIG_GET_ARGS) {
 	int i;
 	char buf[20];
 
@@ -2819,7 +2824,7 @@ _get_ExposureMetering(Camera* camera, CameraWidget **widget, struct submenu *men
 }
 
 static int
-_put_ExposureMetering(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+_put_ExposureMetering(CONFIG_PUT_ARGS) {
 	char *value;
 	int i, ret;
 
@@ -2845,7 +2850,7 @@ static struct deviceproptableu16 flash_mode[] = {
 };
 
 static int
-_get_FlashMode(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_FlashMode(CONFIG_GET_ARGS) {
 	int i;
 	char buf[20];
 
@@ -2866,7 +2871,7 @@ _get_FlashMode(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPD
 }
 
 static int
-_put_FlashMode(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+_put_FlashMode(CONFIG_PUT_ARGS) {
 	char *value;
 	int i, ret;
 
@@ -2882,6 +2887,74 @@ _put_FlashMode(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) 
 	return (GP_ERROR);
 }
 
+static int
+_get_FocalLength(CONFIG_GET_ARGS) {
+	float value_float , start=0.0, end=0.0, step=0.0;
+	int i;
+
+	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+
+	if (!(dpd->FormFlag & (PTP_DPFF_Range|PTP_DPFF_Enumeration)))
+		return (GP_ERROR);
+
+	if (dpd->DataType != PTP_DTC_UINT32)
+		return (GP_ERROR);
+
+	if (dpd->FormFlag & PTP_DPFF_Enumeration) {
+		/* Find the range we need. */
+		start = 10000.0;
+		end = 0.0;
+		for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
+			float cur = dpd->FORM.Enum.SupportedValue[i].u32 / 100.0;
+
+			if (cur < start) start = cur;
+			if (cur > end)   end = cur;
+		}
+		step = 1.0;
+	}
+	if (dpd->FormFlag & PTP_DPFF_Range) {
+		start = dpd->FORM.Range.MinimumValue.u32/100.0;
+		end = dpd->FORM.Range.MaximumValue.u32/100.0;
+		step = dpd->FORM.Range.StepSize.u32/100.0;
+	}
+	gp_widget_set_range (*widget, start, end, step);
+	value_float = dpd->CurrentValue.u32/100.0;
+	gp_widget_set_value (*widget, &value_float);
+	return (GP_OK);
+}
+
+static int
+_put_FocalLength(CONFIG_PUT_ARGS) {
+	int ret, i;
+	float value_float;
+	uint32_t curdiff, newval;
+
+	ret = gp_widget_get_value (widget, &value_float);
+	if (ret != GP_OK)
+		return ret;
+	propval->u32 = 100*value_float;
+	if (dpd->FormFlag & PTP_DPFF_Range)
+		return GP_OK;
+	/* If FocalLength is enumerated, we need to hit the 
+	 * values exactly, otherwise nothing will happen.
+	 * (problem encountered on my Nikon P2)
+	 */
+	curdiff = 10000;
+	newval = propval->u32;
+	for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
+		uint32_t diff = abs(dpd->FORM.Enum.SupportedValue[i].u32  - propval->u32);
+
+		if (diff < curdiff) {
+			newval = dpd->FORM.Enum.SupportedValue[i].u32;
+			curdiff = diff;
+		}
+	}
+	propval->u32 = newval;
+	return GP_OK;
+}
+
+
 static struct deviceproptableu8 nikon_afareaillum[] = {
       { N_("Auto"),		0, 0 },
       { N_("Off"),		1, 0 },
@@ -2889,7 +2962,7 @@ static struct deviceproptableu8 nikon_afareaillum[] = {
 };
 
 static int
-_get_Nikon_AFAreaIllum(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_Nikon_AFAreaIllum(CONFIG_GET_ARGS) {
 	int i;
 
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
@@ -2907,7 +2980,7 @@ _get_Nikon_AFAreaIllum(Camera* camera, CameraWidget **widget, struct submenu *me
 }
 
 static int
-_put_Nikon_AFAreaIllum(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+_put_Nikon_AFAreaIllum(CONFIG_PUT_ARGS) {
 	char *value;
 	int i, ret;
 
@@ -2924,7 +2997,6 @@ _put_Nikon_AFAreaIllum(Camera* camera, CameraWidget *widget, PTPPropertyValue *p
 }
 
 
-
 static struct deviceproptableu8 canon_afdistance[] = {
 	{ N_("Off"),		0x01, 0 },
 	{ N_("Macro"),		0x03, 0 },
@@ -2932,7 +3004,7 @@ static struct deviceproptableu8 canon_afdistance[] = {
 };
 
 static int
-_get_Canon_AFDistance(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_Canon_AFDistance(CONFIG_GET_ARGS) {
 	int i;
 
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
@@ -2950,7 +3022,7 @@ _get_Canon_AFDistance(Camera* camera, CameraWidget **widget, struct submenu *men
 }
 
 static int
-_put_Canon_AFDistance(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+_put_Canon_AFDistance(CONFIG_PUT_ARGS) {
 	char *value;
 	int i, ret;
 
@@ -2977,7 +3049,7 @@ static struct deviceproptableu8 canon_whitebalance[] = {
 };
 
 static int
-_get_Canon_WhiteBalance(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_Canon_WhiteBalance(CONFIG_GET_ARGS) {
 	int i;
 
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
@@ -2995,7 +3067,7 @@ _get_Canon_WhiteBalance(Camera* camera, CameraWidget **widget, struct submenu *m
 }
 
 static int
-_put_Canon_WhiteBalance(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+_put_Canon_WhiteBalance(CONFIG_PUT_ARGS) {
 	char *value;
 	int i, ret;
 
@@ -3029,7 +3101,7 @@ static struct deviceproptableu8 canon_expcompensation[] = {
 };
 
 static int
-_get_Canon_ExpCompensation(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_Canon_ExpCompensation(CONFIG_GET_ARGS) {
 	int i;
 
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
@@ -3047,7 +3119,7 @@ _get_Canon_ExpCompensation(Camera* camera, CameraWidget **widget, struct submenu
 }
 
 static int
-_put_Canon_ExpCompensation(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+_put_Canon_ExpCompensation(CONFIG_PUT_ARGS) {
 	char *value;
 	int i, ret;
 
@@ -3073,7 +3145,7 @@ static struct deviceproptableu16 canon_photoeffect[] = {
 };
 
 static int
-_get_Canon_PhotoEffect(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_Canon_PhotoEffect(CONFIG_GET_ARGS) {
 	int i;
 
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
@@ -3091,7 +3163,7 @@ _get_Canon_PhotoEffect(Camera* camera, CameraWidget **widget, struct submenu *me
 }
 
 static int
-_put_Canon_PhotoEffect(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+_put_Canon_PhotoEffect(CONFIG_PUT_ARGS) {
 	char *value;
 	int i, ret;
 
@@ -3122,7 +3194,7 @@ static struct deviceproptableu16 canon_aperture[] = {
 };
 
 static int
-_get_Canon_Aperture(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_Canon_Aperture(CONFIG_GET_ARGS) {
 	int i;
 
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
@@ -3140,7 +3212,7 @@ _get_Canon_Aperture(Camera* camera, CameraWidget **widget, struct submenu *menu,
 }
 
 static int
-_put_Canon_Aperture(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+_put_Canon_Aperture(CONFIG_PUT_ARGS) {
 	char *value;
 	int i, ret;
 
@@ -3157,7 +3229,7 @@ _put_Canon_Aperture(Camera* camera, CameraWidget *widget, PTPPropertyValue *prop
 }
 
 static int
-_get_UINT32_as_time(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_UINT32_as_time(CONFIG_GET_ARGS) {
 	time_t	camtime;
 
 	gp_widget_new (GP_WIDGET_DATE, _(menu->label), widget);
@@ -3168,7 +3240,7 @@ _get_UINT32_as_time(Camera* camera, CameraWidget **widget, struct submenu *menu,
 }
 
 static int
-_put_UINT32_as_time(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+_put_UINT32_as_time(CONFIG_PUT_ARGS) {
 	time_t	camtime;
 	int	ret;
 
@@ -3181,7 +3253,7 @@ _put_UINT32_as_time(Camera* camera, CameraWidget *widget, PTPPropertyValue *prop
 }
 
 static int
-_get_STR_as_time(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_STR_as_time(CONFIG_GET_ARGS) {
 	time_t		camtime;
 	struct tm	tm;
 	char		capture_date[64],tmp[5];
@@ -3217,7 +3289,7 @@ _get_STR_as_time(Camera* camera, CameraWidget **widget, struct submenu *menu, PT
 }
 
 static int
-_put_STR_as_time(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+_put_STR_as_time(CONFIG_PUT_ARGS) {
 	time_t		camtime;
 #ifdef HAVE_GMTIME_R
 	struct tm	xtm;
@@ -3242,12 +3314,12 @@ _put_STR_as_time(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval
 }
 
 static int
-_put_None(Camera* camera, CameraWidget *widget, PTPPropertyValue *dpd) {
+_put_None(CONFIG_PUT_ARGS) {
 	return (GP_ERROR_NOT_SUPPORTED);
 }
 
 static int
-_get_Canon_CaptureMode(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_Canon_CaptureMode(CONFIG_GET_ARGS) {
 	int val;
 
 	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
@@ -3258,7 +3330,7 @@ _get_Canon_CaptureMode(Camera* camera, CameraWidget **widget, struct submenu *me
 }
 
 static int
-_put_Canon_CaptureMode(Camera* camera, CameraWidget *widget, PTPPropertyValue *dpd) {
+_put_Canon_CaptureMode(CONFIG_PUT_ARGS) {
 	int val, ret;
 
 	ret = gp_widget_get_value (widget, &val);
@@ -3275,7 +3347,7 @@ _put_Canon_CaptureMode(Camera* camera, CameraWidget *widget, PTPPropertyValue *d
 }
 
 static int
-_get_Nikon_BeepMode(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_Nikon_BeepMode(CONFIG_GET_ARGS) {
 	int val;
 
 	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
@@ -3286,7 +3358,7 @@ _get_Nikon_BeepMode(Camera* camera, CameraWidget **widget, struct submenu *menu,
 }
 
 static int
-_put_Nikon_BeepMode(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+_put_Nikon_BeepMode(CONFIG_PUT_ARGS) {
 	int val, ret;
 
 	ret = gp_widget_get_value (widget, &val);
@@ -3298,7 +3370,7 @@ _put_Nikon_BeepMode(Camera* camera, CameraWidget *widget, PTPPropertyValue *prop
 }
 
 static int
-_get_Nikon_FastFS(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_Nikon_FastFS(CONFIG_GET_ARGS) {
 	int val;
 	char buf[1024];
 
@@ -3312,7 +3384,7 @@ _get_Nikon_FastFS(Camera* camera, CameraWidget **widget, struct submenu *menu, P
 }
 
 static int
-_put_Nikon_FastFS(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+_put_Nikon_FastFS(CONFIG_PUT_ARGS) {
 	int val, ret;
 	char buf[20];
 
@@ -3361,6 +3433,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("AF Area Illumination"), "af-area-illumination", PTP_DPC_NIKON_AFAreaIllumination, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_AFAreaIllum, _put_Nikon_AFAreaIllum},
 	{ N_("AF Beep Mode"), "afbeep", PTP_DPC_NIKON_BeepOff, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_BeepMode, _put_Nikon_BeepMode},
         { N_("F Number"), "f-number", PTP_DPC_FNumber, 0, PTP_DTC_UINT16, _get_FNumber, _put_FNumber},
+        { N_("Focal Length"), "focallength", PTP_DPC_FocalLength, 0, PTP_DTC_UINT32, _get_FocalLength, _put_FocalLength},
         { N_("ISO Speed"), "iso", PTP_DPC_ExposureIndex, 0, PTP_DTC_UINT16, _get_ISO, _put_ISO},
         { N_("Exposure Time"), "exptime", PTP_DPC_ExposureTime, 0, PTP_DTC_UINT32, _get_ExpTime, _put_ExpTime},
         { N_("Exposure Program"), "expprogram", PTP_DPC_ExposureProgramMode, 0, PTP_DTC_UINT16, _get_ExposureProgram, _put_ExposureProgram},
@@ -3503,12 +3576,17 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 				continue;
 
 			if (cursub->propid) {
-				ret = cursub->putfunc (camera, widget, &propval);
+				PTPDevicePropDesc dpd;
+
+				memset(&dpd,0,sizeof(dpd));
+				ptp_getdevicepropdesc(&camera->pl->params,cursub->propid,&dpd);
+				ret = cursub->putfunc (camera, widget, &propval, &dpd);
 				if (ret == GP_OK)
 					ptp_setdevicepropvalue (&camera->pl->params, cursub->propid, &propval, cursub->type);
 				ptp_free_devicepropvalue (cursub->type, &propval);
+				ptp_free_devicepropdesc(&dpd);
 			} else {
-				ret = cursub->putfunc (camera, widget, NULL);
+				ret = cursub->putfunc (camera, widget, NULL, NULL);
 			}
 		}
 	}
