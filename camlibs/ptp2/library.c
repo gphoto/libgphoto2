@@ -1507,16 +1507,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 	if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
 
 	for (i=0;i<params->deviceinfo.CaptureFormats_len;i++) {
-		switch (params->deviceinfo.CaptureFormats[i]) {
-		case PTP_OFC_EXIF_JPEG: n = snprintf (txt, spaceleft,_("JPEG")); break;
-		case PTP_OFC_AVI: n = snprintf (txt, spaceleft,_("MS AVI")); break;
-		case PTP_OFC_WAV: n = snprintf (txt, spaceleft,_("MS Wave")); break;
-		case PTP_OFC_MP3: n = snprintf (txt, spaceleft,_("MP3")); break;
-		case PTP_OFC_QT: n = snprintf (txt, spaceleft,_("Apple Quicktime")); break;
-		default:
-			n = snprintf (txt, spaceleft,_("Unknown(%04x)"), params->deviceinfo.CaptureFormats[i]);
-			break;
-		}
+		n = ptp_render_ofc (params, params->deviceinfo.CaptureFormats[i], spaceleft, txt);
 		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
 		if (i<params->deviceinfo.CaptureFormats_len-1) {
 			n = snprintf (txt, spaceleft," ");
@@ -1529,20 +1520,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 	n = snprintf (txt, spaceleft,_("Display Formats: "));
 	if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
 	for (i=0;i<params->deviceinfo.ImageFormats_len;i++) {
-		switch (params->deviceinfo.ImageFormats[i]) {
-		case PTP_OFC_EXIF_JPEG: n = snprintf (txt, spaceleft,_("JPEG")); break;
-		case PTP_OFC_DPOF: n = snprintf (txt, spaceleft,_("DPOF")); break;
-		case PTP_OFC_TIFF: n = snprintf (txt, spaceleft,_("TIFF")); break;
-		case PTP_OFC_AVI: n = snprintf (txt, spaceleft,_("MS AVI")); break;
-		case PTP_OFC_WAV: n = snprintf (txt, spaceleft,_("MS Wave")); break;
-		case PTP_OFC_MP3: n = snprintf (txt, spaceleft,_("MP3")); break;
-		case PTP_OFC_QT: n = snprintf (txt, spaceleft,_("Apple Quicktime")); break;
-		case PTP_OFC_Association: n = snprintf (txt, spaceleft,_("Association/Directory")); break;
-		case PTP_OFC_Script: n = snprintf (txt, spaceleft,_("Script")); break;
-		default:
-			n = snprintf (txt, spaceleft,_("Unknown(%04x)"), params->deviceinfo.ImageFormats[i]);
-			break;
-		}
+		n = ptp_render_ofc (params, params->deviceinfo.ImageFormats[i], spaceleft, txt);
 		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
 		if (i<params->deviceinfo.ImageFormats_len-1) {
 			n = snprintf (txt, spaceleft,", ");
