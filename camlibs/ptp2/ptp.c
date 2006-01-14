@@ -303,6 +303,17 @@ ptp_transaction (PTPParams* params, PTPContainer* ptp,
 	if ((params==NULL) || (ptp==NULL)) 
 		return PTP_ERROR_BADPARAM;
 	
+#if 0
+        {
+		PTPUSBEventContainer usbevent;
+		uint16_t rlen, ret;
+
+		ret=params->check_int_fast_func((unsigned char*)&usbevent, sizeof(usbevent), params->data, &rlen);
+		if (ret == PTP_RC_OK) {
+			fprintf(stderr,"Event %04x received.\n",dtoh16(usbevent.code));
+		}
+        }
+#endif
 	ptp->Transaction_ID=params->transaction_id++;
 	ptp->SessionID=params->session_id;
 	/* send request */
@@ -1719,6 +1730,29 @@ ptp_nikon_getptpipinfo (PTPParams* params, unsigned char **data, unsigned int *s
         return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
 }
 
+/**
+ * ptp_mtp_getobjectpropssupported:
+ *
+ * This command gets the object properties possible from the device.
+ *  
+ * params:	PTPParams*
+ *	unsigned char *data	- data
+ *	unsigned int size	- size of returned data
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_mtp_getobjectpropssupported (PTPParams* params, unsigned char **data, unsigned int *size)
+{
+        PTPContainer ptp;
+        
+        PTP_CNT_INIT(ptp);
+        ptp.Code=PTP_OC_MTP_GetObjectPropsSupported;
+        ptp.Nparam=0;
+        return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
+}
+
 /* Non PTP protocol functions */
 /* devinfo testing functions */
 
@@ -2387,4 +2421,110 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 	}
 
 	return 0;
+}
+
+
+struct {
+	uint16_t ofc;
+	const char *format;
+} ptp_ofc_trans[] = {
+	{PTP_OFC_Undefined,"Undefined Type"},
+	{PTP_OFC_Association,"Association/Directory"},
+	{PTP_OFC_Script,"Script"},
+	{PTP_OFC_Executable,"Executable"},
+	{PTP_OFC_Text,"Text"},
+	{PTP_OFC_HTML,"HTML"},
+	{PTP_OFC_DPOF,"DPOF"},
+	{PTP_OFC_AIFF,"AIFF"},
+	{PTP_OFC_WAV,"MS Wave"},
+	{PTP_OFC_MP3,"MP3"},
+	{PTP_OFC_AVI,"MS AVI"},
+	{PTP_OFC_MPEG,"MPEG"},
+	{PTP_OFC_ASF,"ASF"},
+	{PTP_OFC_QT,"Apple Quicktime"},
+	{PTP_OFC_EXIF_JPEG,"JPEG"},
+	{PTP_OFC_TIFF_EP,"TIFF EP"},
+	{PTP_OFC_FlashPix,"FlashPix"},
+	{PTP_OFC_BMP,"BMP"},
+	{PTP_OFC_CIFF,"CIFF"},
+	{PTP_OFC_GIF,"GIF"},
+	{PTP_OFC_JFIF,"JFIF"},
+	{PTP_OFC_PCD,"PCD"},
+	{PTP_OFC_PICT,"PICT"},
+	{PTP_OFC_PNG,"PNG"},
+	{PTP_OFC_TIFF,"TIFF"},
+	{PTP_OFC_TIFF_IT,"TIFF_IT"},
+	{PTP_OFC_JP2,"JP2"},
+	{PTP_OFC_JPX,"JPX"},
+};
+
+struct {
+	uint16_t ofc;
+	const char *format;
+} ptp_ofc_mtp_trans[] = {
+	{PTP_OFC_MTP_Firmware,N_("Firmware")},
+	{PTP_OFC_MTP_WindowsImageFormat,N_("WindowsImageFormat")},
+	{PTP_OFC_MTP_UndefinedAudio,N_("Undefined Audio")},
+	{PTP_OFC_MTP_WMA,"WMA"},
+	{PTP_OFC_MTP_OGG,"OGG"},
+	{PTP_OFC_MTP_UndefinedVideo,N_("Undefined Video")},
+	{PTP_OFC_MTP_WMV,"WMV"},
+	{PTP_OFC_MTP_MP4,"MP4"},
+	{PTP_OFC_MTP_UndefinedCollection,N_("Undefined Collection")},
+	{PTP_OFC_MTP_AbstractMultimediaAlbum,N_("Abstract Multimedia Album")},
+	{PTP_OFC_MTP_AbstractImageAlbum,N_("Abstract Image Album")},
+	{PTP_OFC_MTP_AbstractAudioAlbum,N_("Abstract Audio Album")},
+	{PTP_OFC_MTP_AbstractVideoAlbum,N_("Abstract Video Album")},
+	{PTP_OFC_MTP_AbstractAudioVideoPlaylist,N_("Abstract Audio Video Playlist")},
+	{PTP_OFC_MTP_AbstractContactGroup,N_("Abstract Contact Group")},
+	{PTP_OFC_MTP_AbstractMessageFolder,N_("Abstract Message Folder")},
+	{PTP_OFC_MTP_AbstractChapteredProduction,N_("Abstract Chaptered Production")},
+	{PTP_OFC_MTP_WPLPlaylist,N_("WPL Playlist")},
+	{PTP_OFC_MTP_M3UPlaylist,N_("M3U Playlist")},
+	{PTP_OFC_MTP_MPLPlaylist,N_("MPL Playlist")},
+	{PTP_OFC_MTP_ASXPlaylist,N_("ASX Playlist")},
+	{PTP_OFC_MTP_PLSPlaylist,N_("PLS Playlist")},
+	{PTP_OFC_MTP_UndefinedDocument,N_("UndefinedDocument")},
+	{PTP_OFC_MTP_AbstractDocument,N_("AbstractDocument")},
+	{PTP_OFC_MTP_UndefinedMessage,N_("UndefinedMessage")},
+	{PTP_OFC_MTP_AbstractMessage,N_("AbstractMessage")},
+	{PTP_OFC_MTP_UndefinedContact,N_("UndefinedContact")},
+	{PTP_OFC_MTP_AbstractContact,N_("AbstractContact")},
+	{PTP_OFC_MTP_vCard2,N_("vCard2")},
+	{PTP_OFC_MTP_vCard3,N_("vCard3")},
+	{PTP_OFC_MTP_UndefinedCalendarItem,N_("UndefinedCalendarItem")},
+	{PTP_OFC_MTP_AbstractCalendarItem,N_("AbstractCalendarItem")},
+	{PTP_OFC_MTP_vCalendar1,N_("vCalendar1")},
+	{PTP_OFC_MTP_vCalendar2,N_("vCalendar2")},
+	{PTP_OFC_MTP_UndefinedWindowsExecutable,N_("Undefined Windows Executable")},
+};
+
+int
+ptp_render_ofc(PTPParams* params, uint16_t ofc, int spaceleft, char *txt)
+{
+	int i;
+	
+	if (!(ofc & 0x8000)) {
+		for (i=0;i<sizeof(ptp_ofc_trans)/sizeof(ptp_ofc_trans[0]);i++)
+			if (ofc == ptp_ofc_trans[i].ofc)
+				return snprintf(txt, spaceleft,_(ptp_ofc_trans[i].format));
+	} else {
+		switch (params->deviceinfo.VendorExtensionID) {
+		case PTP_VENDOR_EASTMAN_KODAK:
+			switch (ofc) {
+			case PTP_OFC_EK_M3U:
+				return snprintf (txt, spaceleft,_("M3U"));
+			default:
+				break;
+			}
+			break;
+		case PTP_VENDOR_MICROSOFT:
+			for (i=0;i<sizeof(ptp_ofc_mtp_trans)/sizeof(ptp_ofc_mtp_trans[0]);i++)
+				if (ofc == ptp_ofc_mtp_trans[i].ofc)
+					return snprintf(txt, spaceleft,_(ptp_ofc_mtp_trans[i].format));
+			break;
+		default:break;
+		}
+	}
+	return snprintf (txt, spaceleft,_("Unknown(%04x)"), ofc);
 }

@@ -1034,6 +1034,8 @@ uint16_t ptp_nikon_check_event (PTPParams* params, PTPUSBEventContainer **evt, i
 uint16_t ptp_nikon_getfileinfoinblock (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3,
 					unsigned char **data, unsigned int *size);
 uint16_t ptp_nikon_device_ready (PTPParams* params);
+uint16_t ptp_mtp_getobjectpropssupported (PTPParams* params, unsigned char **data, unsigned int *size);
+
 /* Non PTP protocol functions */
 int ptp_operation_issupported	(PTPParams* params, uint16_t operation);
 int ptp_event_issupported	(PTPParams* params, uint16_t event);
@@ -1049,5 +1051,8 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc);
 int
 ptp_render_property_value(PTPParams* params, uint16_t dpc,
                           PTPDevicePropDesc *dpd, int length, char *out);
+int
+ptp_render_ofc(PTPParams* params, uint16_t ofc, int spaceleft, char *txt);
+
 
 #endif /* __PTP_H__ */
