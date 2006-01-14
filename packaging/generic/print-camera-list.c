@@ -247,6 +247,21 @@ human_camera_func (const func_params_t *params,
 
 
 static int
+idlist_camera_func (const func_params_t *params, 
+		   const int i, 
+		   const CameraAbilities *a)
+{
+	if (a->usb_vendor) { /* usb product id may be zero! */
+		printf("%04x:%04x %s\n",
+		       a->usb_vendor,
+		       a->usb_product,
+		       a->model);
+	}
+	return 0;
+}
+
+
+static int
 udev_begin_func (const func_params_t *params)
 {
 	printf ("# udev rules file for libgphoto2\n#\n");
@@ -535,6 +550,14 @@ static const output_format_t formats[] = {
 	 begin_func: udev_begin_func, 
 	 camera_func: udev_camera_func,
 	 end_func: udev_end_func
+	},
+	{name: "idlist",
+	 descr: "list of IDs and names",
+	 help: "grep for an ID to find the device name",
+	 paramdescr: NULL,
+	 begin_func: empty_begin_func, 
+	 camera_func: idlist_camera_func,
+	 end_func: empty_end_func
 	},
 	{NULL, NULL, NULL, NULL, 
 	 NULL, NULL, NULL}
