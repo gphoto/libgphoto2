@@ -29,15 +29,15 @@ try_popt=auto
 require_popt=no
 AC_ARG_ENABLE([popt],
 [AS_HELP_STRING([--$1-popt],[Do not use popt])],
-[ if   test "x$withval" = no \
-    || test "x$withval" = off \
-    || test "x$withval" = false; 
+[ if   test "x$enableval" = no \
+    || test "x$enableval" = off \
+    || test "x$enableval" = false; 
   then
     try_popt=no
     require_popt=no
-  elif test "x$withval" = yes \
-    || test "x$withval" = on \
-    || test "x$withval" = true
+  elif test "x$enableval" = yes \
+    || test "x$enableval" = on \
+    || test "x$enableval" = true
   then
     try_popt=yes
     require_popt=yes
