@@ -669,16 +669,24 @@ struct _PTPData {
 };
 typedef struct _PTPData PTPData;
 
+#define CONTEXT_BLOCK_SIZE	100000
 static short
 ptp_read_func (unsigned char *bytes, unsigned int size, void *data, unsigned int *readbytes)
 {
 	Camera *camera = ((PTPData *)data)->camera;
 	int toread, result = GP_ERROR, curread = 0;
+	int usecontext = (size > CONTEXT_BLOCK_SIZE);
+	int progressid = 0;
+	GPContext *context = ((PTPData *)data)->context;
 
 	/* Split into small blocks. Too large blocks (>1x MB) would
 	 * timeout.
 	 */
+	if (usecontext)
+		progressid = gp_context_progress_start (context, (size/CONTEXT_BLOCK_SIZE), _("Downloading..."));
 	while (curread < size) {
+		int oldsize = curread; 
+
 		toread = size - curread;
 		if (toread > 4096)
 			toread = 4096;
@@ -689,9 +697,13 @@ ptp_read_func (unsigned char *bytes, unsigned int size, void *data, unsigned int
 		if (result < 0)
 			break;
 		curread += result;
+		if (usecontext && (oldsize/CONTEXT_BLOCK_SIZE < curread/CONTEXT_BLOCK_SIZE))
+			gp_context_progress_update (context, progressid, curread/CONTEXT_BLOCK_SIZE);
 		if (result < toread) /* short reads are common */
 			break;
 	}
+	if (usecontext)
+		gp_context_progress_stop (context, progressid);
 	if (result > 0) {
 		*readbytes = curread;
 		return (PTP_RC_OK);
@@ -705,22 +717,33 @@ ptp_write_func (unsigned char *bytes, unsigned int size, void *data)
 {
 	Camera *camera = ((PTPData *)data)->camera;
 	int towrite, result = GP_ERROR, curwrite = 0;
+	int progressid = 0;
+	int usecontext = (size > CONTEXT_BLOCK_SIZE);
+	GPContext *context = ((PTPData *)data)->context;
 
 	/*
 	 * gp_port_write returns (in case of success) the number of bytes
 	 * write. Too large blocks (>5x MB) could timeout.
 	 */
+	if (usecontext)
+		progressid = gp_context_progress_start (context, (size/CONTEXT_BLOCK_SIZE), _("Uploading..."));
 	while (curwrite < size) {
+		int oldsize = curwrite; 
+
 		towrite = size-curwrite;
 		if (towrite > 4096)
 			towrite = 4096;
 		result = gp_port_write (camera->port, (char*)(bytes + curwrite), towrite);
 		if (result < 0)
 			return (translate_gp_result (result));
+		if (usecontext && (oldsize/CONTEXT_BLOCK_SIZE < curwrite/CONTEXT_BLOCK_SIZE))
+			gp_context_progress_update (context, progressid, curwrite/CONTEXT_BLOCK_SIZE);
 		curwrite += result;
 		if (result < towrite) /* short writes happen */
 			break;
 	}
+	if (usecontext)
+		gp_context_progress_stop (context, progressid);
 	return PTP_RC_OK;
 }
 
