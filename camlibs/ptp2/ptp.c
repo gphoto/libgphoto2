@@ -1720,9 +1720,9 @@ ptp_nikon_getptpipinfo (PTPParams* params, unsigned char **data, unsigned int *s
 }
 
 /**
- * ptp_mtp_getobjectpropssupported:
+ * ptp_nikon_getprofilealldata:
  *
- * This command gets the object properties possible from the device.
+ * This command gets the ptpip info data.
  *  
  * params:	PTPParams*
  *	unsigned char *data	- data
@@ -1732,14 +1732,47 @@ ptp_nikon_getptpipinfo (PTPParams* params, unsigned char **data, unsigned int *s
  *
  **/
 uint16_t
-ptp_mtp_getobjectpropssupported (PTPParams* params, unsigned char **data, unsigned int *size)
+ptp_nikon_getprofilealldata (PTPParams* params, unsigned char **data, unsigned int *size)
 {
         PTPContainer ptp;
         
         PTP_CNT_INIT(ptp);
-        ptp.Code=PTP_OC_MTP_GetObjectPropsSupported;
+        ptp.Code=PTP_OC_NIKON_GetProfileAllData;
         ptp.Nparam=0;
         return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
+}
+
+/**
+ * ptp_mtp_getobjectpropssupported:
+ *
+ * This command gets the object properties possible from the device.
+ *  
+ * params:	PTPParams*
+ *	uint ofc		- object format code
+ *	unsigned int *propnum	- number of elements in returned array
+ *	uint16_t *props		- array of supported properties
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_mtp_getobjectpropssupported (PTPParams* params, uint16_t ofc,
+		 uint32_t *propnum, uint16_t **props
+) {
+        PTPContainer ptp;
+	uint16_t ret;
+	unsigned char *data = NULL;
+	unsigned int size = 0;
+        
+        PTP_CNT_INIT(ptp);
+        ptp.Code=PTP_OC_MTP_GetObjectPropsSupported;
+        ptp.Nparam = 1;
+        ptp.Param1 = ofc;
+        ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size);
+	if (ret == PTP_RC_OK)
+        	*propnum=ptp_unpack_uint16_t_array(params,data,0,props);
+	free(data);
+	return ret;
 }
 
 /* Non PTP protocol functions */
@@ -2516,4 +2549,92 @@ ptp_render_ofc(PTPParams* params, uint16_t ofc, int spaceleft, char *txt)
 		}
 	}
 	return snprintf (txt, spaceleft,_("Unknown(%04x)"), ofc);
+}
+
+struct {
+	uint16_t id;
+	const char *name;
+} ptp_opc_trans[] = {
+	{PTP_OPC_StorageID,"StorageID"},
+	{PTP_OPC_ObjectFormat,"ObjectFormat"},
+	{PTP_OPC_ProtectionStatus,"ProtectionStatus"},
+	{PTP_OPC_ObjectSize,"ObjectSize"},
+	{PTP_OPC_AssociationType,"AssociationType"},
+	{PTP_OPC_AssociationDesc,"AssociationDesc"},
+	{PTP_OPC_ObjectFileName,"ObjectFileName"},
+	{PTP_OPC_DateCreated,"DateCreated"},
+	{PTP_OPC_DateModified,"DateModified"},
+	{PTP_OPC_Keywords,"Keywords"},
+	{PTP_OPC_ParentObject,"ParentObject"},
+	{PTP_OPC_PersistantUniqueObjectIdentifier,"PersistantUniqueObjectIdentifier"},
+	{PTP_OPC_SyncID,"SyncID"},
+	{PTP_OPC_PropertyBag,"PropertyBag"},
+	{PTP_OPC_Name,"Name"},
+	{PTP_OPC_CreatedBy,"CreatedBy"},
+	{PTP_OPC_Artist,"Artist"},
+	{PTP_OPC_DateAuthored,"DateAuthored"},
+	{PTP_OPC_Description,"Description"},
+	{PTP_OPC_URLReference,"URLReference"},
+	{PTP_OPC_LanguageLocale,"LanguageLocale"},
+	{PTP_OPC_CopyrightInformation,"CopyrightInformation"},
+	{PTP_OPC_Source,"Source"},
+	{PTP_OPC_OriginLocation,"OriginLocation"},
+	{PTP_OPC_DateAdded,"DateAdded"},
+	{PTP_OPC_NonConsumable,"NonConsumable"},
+	{PTP_OPC_CorruptOrUnplayable,"CorruptOrUnplayable"},
+	{PTP_OPC_RepresentativeSampleFormat,"RepresentativeSampleFormat"},
+	{PTP_OPC_RepresentativeSampleSize,"RepresentativeSampleSize"},
+	{PTP_OPC_RepresentativeSampleHeight,"RepresentativeSampleHeight"},
+	{PTP_OPC_RepresentativeSampleWidth,"RepresentativeSampleWidth"},
+	{PTP_OPC_RepresentativeSampleDuration,"RepresentativeSampleDuration"},
+	{PTP_OPC_RepresentativeSampleData,"RepresentativeSampleData"},
+	{PTP_OPC_Width,"Width"},
+	{PTP_OPC_Height,"Height"},
+	{PTP_OPC_Duration,"Duration"},
+	{PTP_OPC_Rating,"Rating"},
+	{PTP_OPC_Track,"Track"},
+	{PTP_OPC_Genre,"Genre"},
+	{PTP_OPC_Credits,"Credits"},
+	{PTP_OPC_Lyrics,"Lyrics"},
+	{PTP_OPC_SubscriptionContentID,"SubscriptionContentID"},
+	{PTP_OPC_ProducedBy,"ProducedBy"},
+	{PTP_OPC_UseCount,"UseCount"},
+	{PTP_OPC_SkipCount,"SkipCount"},
+	{PTP_OPC_LastAccessed,"LastAccessed"},
+	{PTP_OPC_ParentalRating,"ParentalRating"},
+	{PTP_OPC_MetaGenre,"MetaGenre"},
+	{PTP_OPC_Composer,"Composer"},
+	{PTP_OPC_EffectiveRating,"EffectiveRating"},
+	{PTP_OPC_Subtitle,"Subtitle"},
+	{PTP_OPC_OriginalReleaseDate,"OriginalReleaseDate"},
+	{PTP_OPC_AlbumName,"AlbumName"},
+	{PTP_OPC_AlbumArtist,"AlbumArtist"},
+	{PTP_OPC_Mood,"Mood"},
+	{PTP_OPC_DRMStatus,"DRMStatus"},
+	{PTP_OPC_SubDescription,"SubDescription"},
+	{PTP_OPC_IsCropped,"IsCropped"},
+	{PTP_OPC_IsColorCorrected,"IsColorCorrected"},
+	{PTP_OPC_TotalBitRate,"TotalBitRate"},
+	{PTP_OPC_BitRateType,"BitRateType"},
+	{PTP_OPC_SampleRate,"SampleRate"},
+	{PTP_OPC_NumberOfChannels,"NumberOfChannels"},
+	{PTP_OPC_AudioBitDepth,"AudioBitDepth"},
+	{PTP_OPC_ScanDepth,"ScanDepth"},
+	{PTP_OPC_AudioWAVECodec,"AudioWAVECodec"},
+	{PTP_OPC_AudioBitRate,"AudioBitRate"},
+	{PTP_OPC_VideoFourCCCodec,"VideoFourCCCodec"},
+	{PTP_OPC_VideoBitRate,"VideoBitRate"},
+	{PTP_OPC_FramesPerThousandSeconds,"FramesPerThousandSeconds"},
+	{PTP_OPC_KeyFrameDistance,"KeyFrameDistance"},
+	{PTP_OPC_BufferSize,"BufferSize"},
+	{PTP_OPC_EncodingQuality,"EncodingQuality"},
+};
+
+int
+ptp_render_mtp_propname(uint16_t propid, int spaceleft, char *txt) {
+	int i;
+	for (i=0;i<sizeof(ptp_opc_trans)/sizeof(ptp_opc_trans[0]);i++)
+		if (propid == ptp_opc_trans[i].id)
+			return snprintf(txt, spaceleft,ptp_opc_trans[i].name);
+	return snprintf (txt, spaceleft,"unknown(%04x)", propid);
 }

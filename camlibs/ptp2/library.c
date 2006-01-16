@@ -1558,6 +1558,41 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 	n = snprintf (txt, spaceleft,"\n");
 	if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
 
+	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+	    ptp_operation_issupported(params,PTP_OC_MTP_GetObjectPropsSupported)
+	) {
+		n = snprintf (txt, spaceleft,_("Supported MTP Object Properties:\n"));
+		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+		for (i=0;i<params->deviceinfo.ImageFormats_len;i++) {
+			uint16_t ret, *props = NULL;
+			uint32_t propcnt = 0;
+			int j;
+
+			n = snprintf (txt, spaceleft,"\t");
+			if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+			n = ptp_render_ofc (params, params->deviceinfo.ImageFormats[i], spaceleft, txt);
+			if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+			n = snprintf (txt, spaceleft,"/%04x:", params->deviceinfo.ImageFormats[i]);
+			if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+
+			ret = ptp_mtp_getobjectpropssupported (params, params->deviceinfo.ImageFormats[i], &propcnt, &props);
+			if (ret != PTP_RC_OK) {
+				n = snprintf (txt, spaceleft,_(" PTP error %04x on query"), ret);
+				if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+			} else {
+				for (j=0;j<propcnt;j++) {
+					n = snprintf (txt, spaceleft," %04x/",props[j]);
+					if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+					n = ptp_render_mtp_propname(props[j],spaceleft,txt);
+					if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+				}
+				free(props);
+			}
+			n = snprintf (txt, spaceleft,"\n");
+			if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+		}
+	}
+
 /* Dump out dynamic capabilities */
 	n = snprintf (txt, spaceleft,_("\nDevice Capabilities:\n"));
 	if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;

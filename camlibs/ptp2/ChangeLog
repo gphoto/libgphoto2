@@ -4,6 +4,9 @@
 	  downloads and uploads. Contributed by 
 	  Dave O <cxreg@pobox.com>.
 
+	* ptp.c, ptp.h, library.c: Print MTP object properties
+	  in --summary
+
 2006-01-14  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c, ptp.c, ptp.h: more --summary output.

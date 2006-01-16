@@ -842,6 +842,80 @@ typedef struct _PTPEKTextParams PTPEKTextParams;
 #define PTP_DPC_MTP_Synchronization_Partner		0xD401
 #define PTP_DPC_MTP_Device_Friendly_Name		0xD402
 
+/* MTP specific Object Properties */
+#define PTP_OPC_StorageID				0xDC01
+#define PTP_OPC_ObjectFormat				0xDC02
+#define PTP_OPC_ProtectionStatus			0xDC03
+#define PTP_OPC_ObjectSize				0xDC04
+#define PTP_OPC_AssociationType				0xDC05
+#define PTP_OPC_AssociationDesc				0xDC06
+#define PTP_OPC_ObjectFileName				0xDC07
+#define PTP_OPC_DateCreated				0xDC08
+#define PTP_OPC_DateModified				0xDC09
+#define PTP_OPC_Keywords				0xDC0A
+#define PTP_OPC_ParentObject				0xDC0B
+#define PTP_OPC_PersistantUniqueObjectIdentifier	0xDC41
+#define PTP_OPC_SyncID					0xDC42
+#define PTP_OPC_PropertyBag				0xDC43
+#define PTP_OPC_Name					0xDC44
+#define PTP_OPC_CreatedBy				0xDC45
+#define PTP_OPC_Artist					0xDC46
+#define PTP_OPC_DateAuthored				0xDC47
+#define PTP_OPC_Description				0xDC48
+#define PTP_OPC_URLReference				0xDC49
+#define PTP_OPC_LanguageLocale				0xDC4A
+#define PTP_OPC_CopyrightInformation			0xDC4B
+#define PTP_OPC_Source					0xDC4C
+#define PTP_OPC_OriginLocation				0xDC4D
+#define PTP_OPC_DateAdded				0xDC4E
+#define PTP_OPC_NonConsumable				0xDC4F
+#define PTP_OPC_CorruptOrUnplayable			0xDC50
+#define PTP_OPC_RepresentativeSampleFormat		0xDC81
+#define PTP_OPC_RepresentativeSampleSize		0xDC82
+#define PTP_OPC_RepresentativeSampleHeight		0xDC83
+#define PTP_OPC_RepresentativeSampleWidth		0xDC84
+#define PTP_OPC_RepresentativeSampleDuration		0xDC85
+#define PTP_OPC_RepresentativeSampleData		0xDC86
+#define PTP_OPC_Width					0xDC87
+#define PTP_OPC_Height					0xDC88
+#define PTP_OPC_Duration				0xDC89
+#define PTP_OPC_Rating					0xDC8A
+#define PTP_OPC_Track					0xDC8B
+#define PTP_OPC_Genre					0xDC8C
+#define PTP_OPC_Credits					0xDC8D
+#define PTP_OPC_Lyrics					0xDC8E
+#define PTP_OPC_SubscriptionContentID			0xDC8F
+#define PTP_OPC_ProducedBy				0xDC90
+#define PTP_OPC_UseCount				0xDC91
+#define PTP_OPC_SkipCount				0xDC92
+#define PTP_OPC_LastAccessed				0xDC93
+#define PTP_OPC_ParentalRating				0xDC94
+#define PTP_OPC_MetaGenre				0xDC95
+#define PTP_OPC_Composer				0xDC96
+#define PTP_OPC_EffectiveRating				0xDC97
+#define PTP_OPC_Subtitle				0xDC98
+#define PTP_OPC_OriginalReleaseDate			0xDC99
+#define PTP_OPC_AlbumName				0xDC9A
+#define PTP_OPC_AlbumArtist				0xDC9B
+#define PTP_OPC_Mood					0xDC9C
+#define PTP_OPC_DRMStatus				0xDC9D
+#define PTP_OPC_SubDescription				0xDC9E
+#define PTP_OPC_IsCropped				0xDCD1
+#define PTP_OPC_IsColorCorrected			0xDCD2
+#define PTP_OPC_TotalBitRate				0xDE91
+#define PTP_OPC_BitRateType				0xDE92
+#define PTP_OPC_SampleRate				0xDE93
+#define PTP_OPC_NumberOfChannels			0xDE94
+#define PTP_OPC_AudioBitDepth				0xDE95
+#define PTP_OPC_ScanDepth				0xDE97
+#define PTP_OPC_AudioWAVECodec				0xDE99
+#define PTP_OPC_AudioBitRate				0xDE9A
+#define PTP_OPC_VideoFourCCCodec			0xDE9B
+#define PTP_OPC_VideoBitRate				0xDE9C
+#define PTP_OPC_FramesPerThousandSeconds		0xDE9D
+#define PTP_OPC_KeyFrameDistance			0xDE9E
+#define PTP_OPC_BufferSize				0xDE9F
+#define PTP_OPC_EncodingQuality				0xDEA0
 
 /* Device Property Form Flag */
 
@@ -1028,13 +1102,14 @@ uint16_t ptp_canon_theme_download (PTPParams* params, uint32_t themenr,
 uint16_t ptp_nikon_curve_download (PTPParams* params, 
 				unsigned char **data, unsigned int *size);
 uint16_t ptp_nikon_getptpipinfo (PTPParams* params, unsigned char **data, unsigned int *size);
+uint16_t ptp_nikon_getprofilealldata (PTPParams* params, unsigned char **data, unsigned int *size);
 uint16_t ptp_nikon_setcontrolmode (PTPParams* params, uint32_t mode);
 uint16_t ptp_nikon_capture (PTPParams* params, uint32_t x);
 uint16_t ptp_nikon_check_event (PTPParams* params, PTPUSBEventContainer **evt, int *evtcnt);
 uint16_t ptp_nikon_getfileinfoinblock (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3,
 					unsigned char **data, unsigned int *size);
 uint16_t ptp_nikon_device_ready (PTPParams* params);
-uint16_t ptp_mtp_getobjectpropssupported (PTPParams* params, unsigned char **data, unsigned int *size);
+uint16_t ptp_mtp_getobjectpropssupported (PTPParams* params, uint16_t ofc, uint32_t *propnum, uint16_t **props);
 
 /* Non PTP protocol functions */
 int ptp_operation_issupported	(PTPParams* params, uint16_t operation);
@@ -1051,8 +1126,7 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc);
 int
 ptp_render_property_value(PTPParams* params, uint16_t dpc,
                           PTPDevicePropDesc *dpd, int length, char *out);
-int
-ptp_render_ofc(PTPParams* params, uint16_t ofc, int spaceleft, char *txt);
-
+int ptp_render_ofc(PTPParams* params, uint16_t ofc, int spaceleft, char *txt);
+int ptp_render_mtp_propname(uint16_t propid, int spaceleft, char *txt);
 
 #endif /* __PTP_H__ */
