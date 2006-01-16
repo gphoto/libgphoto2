@@ -1743,6 +1743,30 @@ ptp_nikon_getprofilealldata (PTPParams* params, unsigned char **data, unsigned i
 }
 
 /**
+ * ptp_nikon_sendprofiledata:
+ *
+ * This command gets the ptpip info data.
+ *  
+ * params:	PTPParams*
+ *	unsigned char *data	- data
+ *	unsigned int size	- size of returned data
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_nikon_sendprofiledata (PTPParams* params, uint32_t profilenr, unsigned char *data, unsigned int size)
+{
+        PTPContainer ptp;
+        
+        PTP_CNT_INIT(ptp);
+        ptp.Code=PTP_OC_NIKON_SendProfileData;
+        ptp.Nparam=1;
+        ptp.Param1=profilenr;
+        return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &data, NULL);
+}
+
+/**
  * ptp_mtp_getobjectpropssupported:
  *
  * This command gets the object properties possible from the device.
