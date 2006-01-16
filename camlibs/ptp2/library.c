@@ -734,11 +734,8 @@ ptp_write_func (unsigned char *bytes, unsigned int size, void *data)
 		if (towrite > 4096)
 			towrite = 4096;
 		result = gp_port_write (camera->port, (char*)(bytes + curwrite), towrite);
-		if (result < 0) {
-			if (usecontext)
-				gp_context_progress_stop (context, progressid);
-			return (translate_gp_result (result));
-		}
+		if (result < 0)
+			break;
 		if (usecontext && (oldsize/CONTEXT_BLOCK_SIZE < curwrite/CONTEXT_BLOCK_SIZE))
 			gp_context_progress_update (context, progressid, curwrite/CONTEXT_BLOCK_SIZE);
 		curwrite += result;
@@ -747,6 +744,8 @@ ptp_write_func (unsigned char *bytes, unsigned int size, void *data)
 	}
 	if (usecontext)
 		gp_context_progress_stop (context, progressid);
+	if (result < 0)
+		return (translate_gp_result (result));
 	return PTP_RC_OK;
 }
 
