@@ -6,15 +6,9 @@
 
 use strict;
 use XML::Parser;
+use IO::Handle;
 
 my $xmlfile = shift @ARGV || die "specify xml file on cmdline:$!\n";
-my $p1 = new XML::Parser(
-         Handlers => {	Start => \&xml_handle_start,
-			End   => \&xml_handle_end,
-			Char  => \&xml_handle_char}
-);
-$p1->parsefile($xmlfile);
-
 
 my @elemstack = ();
 my @data = 0;
@@ -24,6 +18,68 @@ my $curep = -1;
 my %urbenc = ();
 my @curdata = ();
 my $lastcode = 0;
+
+my $size=-s $xmlfile;
+my $buffer;
+sysopen(BINFILE,$xmlfile,0) || die "sysopen: $!";
+sysread(BINFILE,$buffer,$size);
+close(BINFILE);
+
+my @data = unpack("C*",$buffer);
+if ($data[0] == '<') {
+	my $p1 = new XML::Parser(
+		 Handlers => {	Start => \&xml_handle_start,
+				End   => \&xml_handle_end,
+				Char  => \&xml_handle_char}
+	);
+	$p1->parsefile($xmlfile);
+	exit 0;
+}
+
+# binary file parser ... looking for usb trace 
+
+my $expectseqnr = 0;
+my @curdata;
+my $dataskip;
+while ($#data) {
+	my $type  = $data[4] | ($data[5] << 8);
+	if (($type < 1) || ($type > 4)) {
+		shift @data;
+		next;
+	}
+	my $code  = $data[6] | ($data[7] << 8);
+	my $len   = $data[0] | ($data[1] << 8) | ($data[2] << 16) | ($data[3] << 24);
+	my $seqnr = $data[8] | ($data[9] << 8) | ($data[0xa] << 16) | ($data[0xb] << 24);
+	if ($code < 0x1000) { shift @data; next; }
+	if ($seqnr != $expectseqnr) {
+		shift @data;
+		next;
+	}
+	if ($len > $#data) {
+		shift @data;
+		next;
+	}
+	if ($type == 1) {
+		$dataskip = 1;
+	}
+	#printf STDERR "type = %04x, code=%04x, len = %08x, seqnr = %08x\n", $type, $code, $len, $seqnr;
+	my @bytes = @data[0xc..$len-1];
+	if ($type == 2) {
+		if ($dataskip == 0) {
+			@curdata = @data[0xc..$len-1];
+		}
+		$dataskip--;
+	}
+	dump_ptp_line($type,$code,\@bytes,\@curdata);
+	if ($type == 3) {
+		$expectseqnr++;
+		@curdata = ();
+	}
+	shift @data;
+}
+print "done\n";
+exit 0;
+
 
 sub get_uint32 {
 	my($arrref) = @_;
