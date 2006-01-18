@@ -17,7 +17,8 @@ my $curseq = -1;
 my $curep = -1;
 my %urbenc = ();
 my @curdata = ();
-my $lastcode = 0;
+my $lastcode;
+my $vendorid = 0;
 
 my $size=-s $xmlfile;
 my $buffer;
@@ -26,7 +27,7 @@ sysread(BINFILE,$buffer,$size);
 close(BINFILE);
 
 my @data = unpack("C*",$buffer);
-if ($data[0] == '<') {
+if ($data[0] == 60) { # 60 == '<' ... start of XML file ...
 	my $p1 = new XML::Parser(
 		 Handlers => {	Start => \&xml_handle_start,
 				End   => \&xml_handle_end,
@@ -36,8 +37,7 @@ if ($data[0] == '<') {
 	exit 0;
 }
 
-# binary file parser ... looking for usb trace 
-
+# binary file parser ... Looking for ptp usb traffic 
 my $expectseqnr = 0;
 my @curdata;
 my $dataskip;
@@ -61,11 +61,15 @@ while ($#data) {
 	}
 	if ($type == 1) {
 		$dataskip = 1;
+		$lastcode = $code;
+		# $dataskip = 0 if ($code == 0x1008);
+		@curdata = ();
 	}
-	#printf STDERR "type = %04x, code=%04x, len = %08x, seqnr = %08x\n", $type, $code, $len, $seqnr;
+	printf "type = %04x, code=%04x, len = %08x, seqnr = %08x\n", $type, $code, $len, $seqnr;
 	my @bytes = @data[0xc..$len-1];
 	if ($type == 2) {
 		if ($dataskip == 0) {
+			print "...using data\n";
 			@curdata = @data[0xc..$len-1];
 		}
 		$dataskip--;
@@ -111,9 +115,6 @@ sub get_str {
 		$str .= pack("C",shift(@{$arrref}));
 		shift @{$arrref};
 	}
-	# remove terminating 0x00 0x00
-	shift @{$arrref};
-	shift @{$arrref};
 	return $str;
 }
 
@@ -217,13 +218,22 @@ dump_ptp_line() {
 		$code = $lastcode;
 	}
 
-
-
 	if ($code == 0x1001) {
 		if ($type == 1) {
 			print "GetDeviceInfo(1001)\n";
-		} else {
-			print "GetDeviceInfo(1001) data=" . join(",",@curdata) . "\n";
+		} elsif ($type == 3) {
+			my $sver 	= get_uint16(\@curdata);
+			$vendorid	= get_uint32(\@curdata);
+			my $vendorextver= get_uint16(\@curdata);
+			my $vendorextstr= get_str(\@curdata);
+			my $funcmode	= get_uint16(\@curdata);
+
+			print "GetDeviceInfo(1001)\n";
+			print "\tStandardversion: $sver\n";
+			print "\tVendorExtID: $vendorid\n";
+			print "\tVendorExtVer: $vendorextver\n";
+			print "\tVendorExtStr: $vendorextstr\n";
+			printf "\tFunctionalMode: %x\n", $funcmode;
 		}
 		return;
 	} elsif ($code == 0x9008) {
@@ -337,7 +347,7 @@ dump_ptp_line() {
 			my $assoctype	= get_uint16(\@curdata);	# 42
 			my $assocdesc	= get_uint32(\@curdata);	# 44
 			my $seqnr	= get_uint32(\@curdata);	# 48
-			my $filename	= get_str(\@curdata);
+			my $filename	= get_str(\@curdata);		# 52
 			my $capdate	= get_str(\@curdata);
 			my $moddate	= get_str(\@curdata);
 
@@ -347,6 +357,18 @@ dump_ptp_line() {
 			print "\tmodificationdate: $moddate\n";
 			printf "\tStorageID: %08lx\n", $sid;
 			printf "\tOFC: %04x\n",$of;
+		}
+		return;
+	} elsif ($code == 0x101b) {
+		if ($type == 1 ) {
+			my $obid	= get_uint32(\@bytes);
+			my $offset	= get_uint32(\@bytes);
+			my $maxbytes	= get_uint32(\@bytes);
+			printf("GetPartialObject(1008) object=0x%08lx, offset=%d, maxbytes=%d\n", $obid,$offset, $maxbytes);
+		} elsif ($type == 3) {
+			print "GetPartialObject(1008) ... data ...\n";
+			@curdata = ();
+			@bytes = ();
 		}
 		return;
 	} elsif ($code == 0x9014) {
