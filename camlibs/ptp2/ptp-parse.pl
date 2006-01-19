@@ -41,21 +41,25 @@ if ($data[0] == 60) { # 60 == '<' ... start of XML file ...
 my $expectseqnr = 0;
 my @curdata;
 my $dataskip;
+my $off = 0;
 while ($#data) {
 	my $type  = $data[4] | ($data[5] << 8);
 	if (($type < 1) || ($type > 4)) {
+		$off++;
 		shift @data;
 		next;
 	}
 	my $code  = $data[6] | ($data[7] << 8);
 	my $len   = $data[0] | ($data[1] << 8) | ($data[2] << 16) | ($data[3] << 24);
 	my $seqnr = $data[8] | ($data[9] << 8) | ($data[0xa] << 16) | ($data[0xb] << 24);
-	if ($code < 0x1000) { shift @data; next; }
+	if ($code < 0x1000) { $off++;shift @data; next; }
 	if ($seqnr != $expectseqnr) {
+		$off++;
 		shift @data;
 		next;
 	}
 	if ($len > $#data) {
+		$off++;
 		shift @data;
 		next;
 	}
@@ -63,9 +67,10 @@ while ($#data) {
 		$dataskip = 1;
 		$lastcode = $code;
 		# $dataskip = 0 if ($code == 0x1008);
+		$dataskip = 0 if ($code == 0x9007);
 		@curdata = ();
 	}
-	printf "type = %04x, code=%04x, len = %08x, seqnr = %08x\n", $type, $code, $len, $seqnr;
+	printf "off $off, type = %04x, code=%04x, len = %08x, seqnr = %08x\n", $type, $code, $len, $seqnr;
 	my @bytes = @data[0xc..$len-1];
 	if ($type == 2) {
 		if ($dataskip == 0) {
@@ -79,6 +84,7 @@ while ($#data) {
 		$expectseqnr++;
 		@curdata = ();
 	}
+	$off++;
 	shift @data;
 }
 print "done\n";
@@ -236,13 +242,13 @@ dump_ptp_line() {
 			printf "\tFunctionalMode: %x\n", $funcmode;
 		}
 		return;
-	} elsif ($code == 0x9008) {
+	} elsif (($vendorid == 11) && ($code == 0x9008)) {
 		print "CANON Start Shooting Mode (9008)\n";
 		return;
-	} elsif ($code == 0x900b) {
+	} elsif (($vendorid == 11) && ($code == 0x900b)) {
 		print "CANON ViewFinder On(900b)\n";
 		return;
-	} elsif ($code == 0x900b) {
+	} elsif (($vendorid == 11) && ($code == 0x900c)) {
 		print "CANON ViewFinder Off(900c)\n";
 		return;
 	} elsif ($code == 0x1002) {
@@ -371,21 +377,21 @@ dump_ptp_line() {
 			@bytes = ();
 		}
 		return;
-	} elsif ($code == 0x9014) {
+	} elsif (($vendorid == 11) && ($code == 0x9014)) {
 		if ($type ==1 ) {
 			print "FocusLock(9014)\n";
 		} elsif ($type == 3) {
 			printf("FocusLock(9014) ...\n");
 		}
 		return;
-	} elsif ($code == 0x9015) {
+	} elsif (($vendorid == 11) && ($code == 0x9015)) {
 		if ($type ==1 ) {
 			print "FocusUnlock(9015)\n";
 		} elsif ($type == 3) {
 			printf("FocusUnlock(9015) ...\n");
 		}
 		return;
-	} elsif ($code == 0x9020) {
+	} elsif (($vendorid == 11) && ($code == 0x9020)) {
 		if ($type ==1 ) {
 			print "CANON GetChanges(9020)\n";
 		} elsif ($type == 3) {
@@ -400,7 +406,7 @@ dump_ptp_line() {
 			print "}\n";
 		}
 		return;
-	} elsif ($code == 0x9013) {
+	} elsif (($vendorid == 11) && ($code == 0x9013)) {
 		if ($type == 1) {
 			print "CANON CheckEvent(9013)\n";
 		} elsif ($type == 3) {
