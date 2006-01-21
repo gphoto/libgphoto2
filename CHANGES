@@ -103,6 +103,29 @@ Drivers (camlibs)
      * Added Ricoh R3
      * Added Sony DSC-H1, DSC-R1
      * Added MTP devices (mp3 players)
+     * Some iRiver MTP devices (mp3/ogg players) are supported too,
+       but are experimental.
+
+       While the "Creative Zen Micro" is also an MTP device, we were
+       not able yet to decipher the PTP protocol deviation.
+
+       In general, MTP devices can be supported here, but you need
+       to add the ID in camlibs/ptp2/library.c directly, since they
+       do not have a USB class id.
+
+     * Now supports a "fast filesystem" mode on newer Nikon PTP cameras.
+     
+       This speeds up initialisation notably on cameras with lots (>50)
+       of images.
+
+       However, this mode does not find the special files on the camera
+       (AUTPRNT.MRK). It also cannot represent the correct directory
+       structure.
+
+       For normal users (who just download and process the images) the
+       "fast" mode is recommended.
+
+       It can be toggled in the "Camera Settings" menu and ~/.gphoto/settings.
        
    * sierra
      * various fixes
@@ -125,6 +148,7 @@ Translation updates:
    * ru
    * vi
    * zh_TW
+
 
 
 ----------------------------------------------------------------------------
