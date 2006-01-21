@@ -44,13 +44,18 @@
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 #define CHECK_MEM(m)         {if (!(m)) return (GP_ERROR_NO_MEMORY);}
 
+/* lengt of one path component */
+#ifndef MAX_PATH
+# define MAX_PATH 256
+#endif
+
 /*
  * The internals of the CameraFile struct are private.
  */
 struct _CameraFile {
         CameraFileType type;
         char mime_type [64];
-        char name [64];
+        char name [MAX_PATH];
         unsigned long int size;
         unsigned char *data;
         long bytes_read;
