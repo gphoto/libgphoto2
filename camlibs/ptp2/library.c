@@ -331,7 +331,9 @@ static struct {
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1365941&group_id=8874&atid=108874 */
 	{"HP:PhotoSmart M415 (PTP mode)", 0x03f0, 0x7a02, 0},
 	/* irc contact, YGingras */
-	{"HP:PhotoSmart M23 (PTP mode)", 0x03f0, 0x7b02, 0},
+	{"HP:PhotoSmart M23 (PTP mode)",  0x03f0, 0x7b02, 0},
+	/* irc contact */
+	{"HP:PhotoSmart M317 (PTP mode)", 0x03f0, 0x7d02, 0},
 
 	/* Most Sony PTP cameras use the same product/vendor IDs. */
 	{"Sony:PTP",                  0x054c, 0x004e, 0},
@@ -3327,13 +3329,17 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	/* Get folder handle omiting storage pseudofolder */
 	find_folder_handle(folder,storage,handler,data);
 
+	/* Look for objects we can present as directories.
+	 * Currently we specify *any* PTP association as directory.
+	 */
 	for (i = 0; i < params->handles.n; i++) {
-	if (params->objectinfo[i].ParentObject==handler)
-	if ((!ptp_operation_issupported(params,PTP_OC_GetStorageIDs)) || 
-		(params->objectinfo[i].StorageID == storage))
-	if (params->objectinfo[i].ObjectFormat==PTP_OFC_Association &&
-		params->objectinfo[i].AssociationType!=PTP_AT_Undefined)
-		CR (gp_list_append (list, params->objectinfo[i].Filename, NULL));
+		if (	(params->objectinfo[i].ParentObject==handler)		&&
+			((!ptp_operation_issupported(params,PTP_OC_GetStorageIDs)) || 
+			 (params->objectinfo[i].StorageID == storage)
+			)							&&
+			(params->objectinfo[i].ObjectFormat==PTP_OFC_Association)
+		)
+			CR (gp_list_append (list, params->objectinfo[i].Filename, NULL));
 	}
 	return (GP_OK);
 }
