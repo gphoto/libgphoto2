@@ -5,6 +5,9 @@
 	  The E317 sees AssocType 0x0 (undefined) for DCIM/ et.al.
 	
 	  Avoid buffer overflows on too long filenames.
+	
+	  Enabled Creative Zen Micro (was failing on the 512 byte
+	  problem before, should be fixed now).
 
 2006-01-17  Marcus Meissner  <marcus@jet.franken.de>
 
