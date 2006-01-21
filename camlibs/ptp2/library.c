@@ -572,9 +572,7 @@ static struct {
 	{"Philipps:HDD6320",                    0x0471, 0x01eb, 0},
 
 	/* Jennifer Scalf <oneferna@gmail.com> */
-	/* not really working ... speaks a pretty bad version of PTP 
 	{"Creative:Zen MicroPhoto",             0x041e, 0x413c, 0},
-	 */
 
 	/* more coming soon :) */
 	{NULL, 0, 0, 0}
