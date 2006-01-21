@@ -333,7 +333,7 @@ static struct {
 	/* irc contact, YGingras */
 	{"HP:PhotoSmart M23 (PTP mode)",  0x03f0, 0x7b02, 0},
 	/* irc contact */
-	{"HP:PhotoSmart M317 (PTP mode)", 0x03f0, 0x7d02, 0},
+	{"HP:PhotoSmart E317 (PTP mode)", 0x03f0, 0x7d02, 0},
 
 	/* Most Sony PTP cameras use the same product/vendor IDs. */
 	{"Sony:PTP",                  0x054c, 0x004e, 0},

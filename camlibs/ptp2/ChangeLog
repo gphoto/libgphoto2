@@ -1,8 +1,8 @@
 2006-01-21  Marcus Meissner  <marcus@jet.franken.de>
 
-	* library.c: Added HP Photosmart M317
+	* library.c: Added HP Photosmart E317
 	* library.c: Relaxed Association checks for directories.
-	  The M317 sees AssocType 0x0 (undefined) for DCIM/ et.al.
+	  The E317 sees AssocType 0x0 (undefined) for DCIM/ et.al.
 
 2006-01-17  Marcus Meissner  <marcus@jet.franken.de>
 
