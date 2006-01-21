@@ -3644,7 +3644,11 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	oi=&camera->pl->params.objectinfo[object_id];
 
 	info->file.fields = GP_FILE_INFO_SIZE|GP_FILE_INFO_TYPE|GP_FILE_INFO_MTIME;
-	if (oi->Filename) {
+
+	/* Avoid buffer overflows on long filenames, just don't copy it 
+	 * if it is too long.
+	 */
+	if (oi->Filename && (strlen(oi->Filename)+1 < sizeof(info->file.name))) {
 		strcpy(info->file.name, oi->Filename);
 		info->file.fields |= GP_FILE_INFO_NAME;
 	}
