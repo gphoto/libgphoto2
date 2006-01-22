@@ -1,6 +1,7 @@
 2006-01-21  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Added HP Photosmart E317
+		     Added Canon PowerShot S80.
 	* library.c: Relaxed Association checks for directories.
 	  The E317 sees AssocType 0x0 (undefined) for DCIM/ et.al.
 	
