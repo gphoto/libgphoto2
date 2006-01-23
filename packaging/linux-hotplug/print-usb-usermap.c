@@ -4,6 +4,9 @@
  * Portions Copyright © 2002 Lutz Müller <lutz@users.sourceforge.net>
  * Portions Copyright © 2002 FIXME
  *
+ * This program is DEPRECATED.
+ * Use print-camera-list (from packaging/generic/).
+ * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -24,6 +27,10 @@
 #define ARGV0 "print-usb-usermap"
 
 #define HELP_TEXT \
+"* DEPRECATED * DEPRECATED * DEPRECATED * DEPRECATED * DEPRECATED * DEPRECATED *\n" \
+" If possible, please use print-camera-list (from packaging/generic/) instead\n" \
+" of " ARGV0 ". If not, please help us fix print-camera-list.\n" \
+"* DEPRECATED * DEPRECATED * DEPRECATED * DEPRECATED * DEPRECATED * DEPRECATED *\n" \
 ARGV0 " - print usb.usermap file for linux-hotplug or FDI file for HAL\n" \
 "\n" \
 "Syntax:\n" \
