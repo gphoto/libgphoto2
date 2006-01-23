@@ -77,9 +77,9 @@ typedef int (* end_func_t)    (const func_params_t *params);
 #define GP_USB_HOTPLUG_MATCH_VENDOR_ID          0x0001
 #define GP_USB_HOTPLUG_MATCH_PRODUCT_ID         0x0002
 
-#define GP_USB_HOTPLUG_MATCH_DEV_CLASS          0x0080
-#define GP_USB_HOTPLUG_MATCH_DEV_SUBCLASS       0x0100
-#define GP_USB_HOTPLUG_MATCH_DEV_PROTOCOL       0x0200
+#define GP_USB_HOTPLUG_MATCH_INT_CLASS          0x0080
+#define GP_USB_HOTPLUG_MATCH_INT_SUBCLASS       0x0100
+#define GP_USB_HOTPLUG_MATCH_INT_PROTOCOL       0x0200
 
 
 #ifdef __GNUC__
@@ -139,13 +139,13 @@ hotplug_camera_func (const func_params_t *params,
 		class = a->usb_class;
 		subclass = a->usb_subclass;
 		proto = a->usb_protocol;
-		flags = GP_USB_HOTPLUG_MATCH_DEV_CLASS;
+		flags = GP_USB_HOTPLUG_MATCH_INT_CLASS;
 		if (subclass != -1)
-			flags |= GP_USB_HOTPLUG_MATCH_DEV_SUBCLASS;
+			flags |= GP_USB_HOTPLUG_MATCH_INT_SUBCLASS;
 		else
 			subclass = 0;
 		if (proto != -1)
-			flags |= GP_USB_HOTPLUG_MATCH_DEV_PROTOCOL;
+			flags |= GP_USB_HOTPLUG_MATCH_INT_PROTOCOL;
 		else
 			proto = 0;
 		usb_vendor = 0;
@@ -303,13 +303,13 @@ udev_camera_func (const func_params_t *params,
 		class = a->usb_class;
 		subclass = a->usb_subclass;
 		proto = a->usb_protocol;
-		flags = GP_USB_HOTPLUG_MATCH_DEV_CLASS;
+		flags = GP_USB_HOTPLUG_MATCH_INT_CLASS;
 		if (subclass != -1)
-			flags |= GP_USB_HOTPLUG_MATCH_DEV_SUBCLASS;
+			flags |= GP_USB_HOTPLUG_MATCH_INT_SUBCLASS;
 		else
 			subclass = 0;
 		if (proto != -1)
-			flags |= GP_USB_HOTPLUG_MATCH_DEV_PROTOCOL;
+			flags |= GP_USB_HOTPLUG_MATCH_INT_PROTOCOL;
 		else
 			proto = 0;
 		usb_vendor = 0;
@@ -323,13 +323,13 @@ udev_camera_func (const func_params_t *params,
 		printf ("# %s\n", a->model);
 	}
 	
-	if (flags & GP_USB_HOTPLUG_MATCH_DEV_CLASS) {
-		printf("SYSFS{bDeviceClass}==\"%02x\", ", class);
-		if (flags & GP_USB_HOTPLUG_MATCH_DEV_SUBCLASS) {
-			printf("SYSFS{bDeviceSubClass}==\"%02x\", ", subclass);
+	if (flags & GP_USB_HOTPLUG_MATCH_INT_CLASS) {
+		printf("SYSFS{bInterfaceClass}==\"%02x\", ", class);
+		if (flags & GP_USB_HOTPLUG_MATCH_INT_SUBCLASS) {
+			printf("SYSFS{bInterfaceSubClass}==\"%02x\", ", subclass);
 		}
-		if (flags & GP_USB_HOTPLUG_MATCH_DEV_PROTOCOL) {
-			printf("SYSFS{bDeviceProtocol}==\"%02x\", ", proto);
+		if (flags & GP_USB_HOTPLUG_MATCH_INT_PROTOCOL) {
+			printf("SYSFS{bInterfaceProtocol}==\"%02x\", ", proto);
 			}
 	} else {
 		printf ("SYSFS{idVendor}==\"%04x\", SYSFS{idProduct}==\"%04x\", ",
