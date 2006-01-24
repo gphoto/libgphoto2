@@ -457,51 +457,51 @@ static struct {
 	 * PTP and "normal" (i.e. Canon) mode
 	 * Canon PS G3: A. Marinichev, 20 nov 2002
 	 */
-	{"Canon:PowerShot S45 (PTP mode)",      0x04a9, 0x306d, 0},
+	{"Canon:PowerShot S45 (PTP mode)",      0x04a9, 0x306d, PTPBUG_DELETE_SENDS_EVENT},
 		/* 0x306c is S45 in normal (canon) mode */
-	{"Canon:PowerShot G3 (PTP mode)",       0x04a9, 0x306f, 0},
+	{"Canon:PowerShot G3 (PTP mode)",       0x04a9, 0x306f, PTPBUG_DELETE_SENDS_EVENT},
 		/* 0x306e is G3 in normal (canon) mode */
-	{"Canon:PowerShot S230 (PTP mode)",     0x04a9, 0x3071, 0},
+	{"Canon:PowerShot S230 (PTP mode)",     0x04a9, 0x3071, PTPBUG_DELETE_SENDS_EVENT},
 		/* 0x3070 is S230 in normal (canon) mode */
-	{"Canon:Digital IXUS v3 (PTP mode)",    0x04a9, 0x3071, 0},
+	{"Canon:Digital IXUS v3 (PTP mode)",    0x04a9, 0x3071, PTPBUG_DELETE_SENDS_EVENT},
 		/* it's the same as S230 */
 
-	{"Canon:Digital IXUS II (PTP mode)",    0x04a9, 0x3072, 0},
-	{"Canon:PowerShot SD100 (PTP mode)",    0x04a9, 0x3072, 0},
+	{"Canon:Digital IXUS II (PTP mode)",    0x04a9, 0x3072, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot SD100 (PTP mode)",    0x04a9, 0x3072, PTPBUG_DELETE_SENDS_EVENT},
 
-	{"Canon:PowerShot A70 (PTP)",           0x04a9, 0x3073, 0},
-	{"Canon:PowerShot A60 (PTP)",           0x04a9, 0x3074, 0},
+	{"Canon:PowerShot A70 (PTP)",           0x04a9, 0x3073, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot A60 (PTP)",           0x04a9, 0x3074, PTPBUG_DELETE_SENDS_EVENT},
 		/* IXUS 400 has the same PID in both modes, Till Kamppeter */
-	{"Canon:Digital IXUS 400 (PTP mode)",   0x04a9, 0x3075, 0},
-	{"Canon:PowerShot S50 (PTP mode)",      0x04a9, 0x3077, 0},
-	{"Canon:PowerShot G5 (PTP mode)",       0x04a9, 0x3085, 0},
-	{"Canon:Elura 50 (PTP mode)",           0x04a9, 0x3087, 0},
+	{"Canon:Digital IXUS 400 (PTP mode)",   0x04a9, 0x3075, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot S50 (PTP mode)",      0x04a9, 0x3077, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot G5 (PTP mode)",       0x04a9, 0x3085, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:Elura 50 (PTP mode)",           0x04a9, 0x3087, PTPBUG_DELETE_SENDS_EVENT},
 		/* 0x3084 is the EOS 300D/Digital Rebel in normal (canon) mode */
 	{"Canon:EOS 300D (PTP mode)",           0x04a9, 0x3099, PTPBUG_DCIM_WRONG_PARENT},
 	{"Canon:EOS Digital Rebel (PTP mode)",  0x04a9, 0x3099, PTPBUG_DCIM_WRONG_PARENT},
 	{"Canon:EOS Kiss Digital (PTP mode)",   0x04a9, 0x3099, PTPBUG_DCIM_WRONG_PARENT},
-	{"Canon:PowerShot A80 (PTP)",           0x04a9, 0x309a, 0},
-	{"Canon:Digital IXUS i (PTP mode)",     0x04a9, 0x309b, 0},
-	{"Canon:PowerShot S1 IS (PTP mode)",    0x04a9, 0x309c, 0},
-	{"Canon:Powershot S70 (PTP mode)",      0x04a9, 0x30b1, 0},
-	{"Canon:Powershot S60 (PTP mode)",      0x04a9, 0x30b2, 0},
-	{"Canon:Powershot G6 (PTP mode)",       0x04a9, 0x30b3, 0},
-	{"Canon:Digital IXUS 500 (PTP mode)",   0x04a9, 0x30b4, 0},
-	{"Canon:PowerShot S500 (PTP mode)",     0x04a9, 0x30b4, 0},
-	{"Canon:PowerShot A75 (PTP mode)",      0x04a9, 0x30b5, 0},
-	{"Canon:PowerShot SD110 (PTP mode)",    0x04a9, 0x30b6, 0},
-	{"Canon:Digital IXUS IIs (PTP mode)",   0x04a9, 0x30b6, 0},
-	{"Canon:PowerShot A400 (PTP mode)",     0x04a9, 0x30b7, 0},
-	{"Canon:PowerShot A310 (PTP mode)",     0x04a9, 0x30b8, 0},
-	{"Canon:PowerShot A85 (PTP mode)",      0x04a9, 0x30b9, 0},
-	{"Canon:Digital IXUS 430 (PTP mode)",   0x04a9, 0x30ba, 0},
- 	{"Canon:PowerShot S410 (PTP mode)",     0x04a9, 0x30ba, 0},
- 	{"Canon:PowerShot A95 (PTP mode)",      0x04a9, 0x30bb, 0},
-	{"Canon:Digital IXUS 40 (PTP mode)",    0x04a9, 0x30bf, 0},
- 	{"Canon:PowerShot SD200 (PTP mode)",    0x04a9, 0x30c0, 0},
- 	{"Canon:Digital IXUS 30 (PTP mode)",    0x04a9, 0x30c0, 0},
- 	{"Canon:PowerShot A520 (PTP mode)",     0x04a9, 0x30c1, 0},
-	{"Canon:PowerShot A510 (PTP mode)",     0x04a9, 0x30c2, 0},
+	{"Canon:PowerShot A80 (PTP)",           0x04a9, 0x309a, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:Digital IXUS i (PTP mode)",     0x04a9, 0x309b, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot S1 IS (PTP mode)",    0x04a9, 0x309c, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:Powershot S70 (PTP mode)",      0x04a9, 0x30b1, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:Powershot S60 (PTP mode)",      0x04a9, 0x30b2, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:Powershot G6 (PTP mode)",       0x04a9, 0x30b3, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:Digital IXUS 500 (PTP mode)",   0x04a9, 0x30b4, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot S500 (PTP mode)",     0x04a9, 0x30b4, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot A75 (PTP mode)",      0x04a9, 0x30b5, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot SD110 (PTP mode)",    0x04a9, 0x30b6, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:Digital IXUS IIs (PTP mode)",   0x04a9, 0x30b6, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot A400 (PTP mode)",     0x04a9, 0x30b7, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot A310 (PTP mode)",     0x04a9, 0x30b8, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot A85 (PTP mode)",      0x04a9, 0x30b9, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:Digital IXUS 430 (PTP mode)",   0x04a9, 0x30ba, PTPBUG_DELETE_SENDS_EVENT},
+ 	{"Canon:PowerShot S410 (PTP mode)",     0x04a9, 0x30ba, PTPBUG_DELETE_SENDS_EVENT},
+ 	{"Canon:PowerShot A95 (PTP mode)",      0x04a9, 0x30bb, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:Digital IXUS 40 (PTP mode)",    0x04a9, 0x30bf, PTPBUG_DELETE_SENDS_EVENT},
+ 	{"Canon:PowerShot SD200 (PTP mode)",    0x04a9, 0x30c0, PTPBUG_DELETE_SENDS_EVENT},
+ 	{"Canon:Digital IXUS 30 (PTP mode)",    0x04a9, 0x30c0, PTPBUG_DELETE_SENDS_EVENT},
+ 	{"Canon:PowerShot A520 (PTP mode)",     0x04a9, 0x30c1, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot A510 (PTP mode)",     0x04a9, 0x30c2, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:EOS 1D Mark II (PTP mode)",     0x04a9, 0x30ea, PTPBUG_DCIM_WRONG_PARENT},
  	{"Canon:EOS 20D (PTP mode)",            0x04a9, 0x30ec, PTPBUG_DCIM_WRONG_PARENT},
 
@@ -513,23 +513,23 @@ static struct {
 	 */
 	{"Canon:EOS 350D (PTP mode)",           0x04a9, 0x30ee, PTPBUG_DCIM_WRONG_PARENT},
 	{"Canon:EOS 350D",                      0x04a9, 0x30ef, PTPBUG_DCIM_WRONG_PARENT},
-	{"Canon:PowerShot S2 IS (PTP mode)",    0x04a9, 0x30f0, 0},
-	{"Canon:Digital IXUS 700 (PTP mode)",   0x04a9, 0x30f2, 0},
-	{"Canon:PowerShot SD500 (PTP mode)",    0x04a9, 0x30f2, 0},
+	{"Canon:PowerShot S2 IS (PTP mode)",    0x04a9, 0x30f0, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:Digital IXUS 700 (PTP mode)",   0x04a9, 0x30f2, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot SD500 (PTP mode)",    0x04a9, 0x30f2, PTPBUG_DELETE_SENDS_EVENT},
 	/* Conan Colx, A410, gphoto-Feature Requests-1342538 */
-	{"Canon:PowerShot A410 (PTP mode)",     0x04a9, 0x30f9, 0},
+	{"Canon:PowerShot A410 (PTP mode)",     0x04a9, 0x30f9, PTPBUG_DELETE_SENDS_EVENT},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1411976&group_id=8874&atid=358874 */
-	{"Canon:PowerShot S80 (PTP mode)",      0x04a9, 0x30fa, 0},
+	{"Canon:PowerShot S80 (PTP mode)",      0x04a9, 0x30fa, PTPBUG_DELETE_SENDS_EVENT},
 	/* A620, Tom Roelz */
-	{"Canon:PowerShot A620 (PTP mode)",     0x04a9, 0x30fc, 0},
+	{"Canon:PowerShot A620 (PTP mode)",     0x04a9, 0x30fc, PTPBUG_DELETE_SENDS_EVENT},
 	/* A610, Andriy Kulchytskyy <whoops@ukrtop.com> */
-	{"Canon:PowerShot A610 (PTP mode)",     0x04a9, 0x30fd, 0},
+	{"Canon:PowerShot A610 (PTP mode)",     0x04a9, 0x30fd, PTPBUG_DELETE_SENDS_EVENT},
 	/* Rob Lensen <rob@bsdfreaks.nl> */
-	{"Canon:Digital IXUS 55 (PTP mode)",    0x04a9, 0x30ff, 0},
-	{"Canon:PowerShot SD450 (PTP mode)",    0x04a9, 0x30ff, 0},
+	{"Canon:Digital IXUS 55 (PTP mode)",    0x04a9, 0x30ff, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot SD450 (PTP mode)",    0x04a9, 0x30ff, PTPBUG_DELETE_SENDS_EVENT},
 	/* Nick Richards <nick@nedrichards.com> */
-	{"Canon:Digital IXUS 50 (PTP mode)",    0x04a9, 0x310e, 0},
-	{"Canon:Digital IXUS 750 (PTP mode)",   0x04a9, 0x3116, 0},
+	{"Canon:Digital IXUS 50 (PTP mode)",    0x04a9, 0x310e, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:Digital IXUS 750 (PTP mode)",   0x04a9, 0x3116, PTPBUG_DELETE_SENDS_EVENT},
 
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
@@ -3571,11 +3571,11 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	CPR (context, ptp_deleteobject(params,
 		params->handles.Handler[object_id],0));
 
-	/* On Canon firmwares, a DeleteObject causes a ObjectRemoved event
+	/* On some Canon firmwares, a DeleteObject causes a ObjectRemoved event
 	 * to be sent. At least on Digital IXUS II and PowerShot A85. But
          * not on 350D.
 	 */
-	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
+	if (DELETE_SENDS_EVENT(camera->pl) &&
 	    ptp_event_issupported(params, PTP_EC_ObjectRemoved)) {
 		PTPContainer event;
 		int ret;

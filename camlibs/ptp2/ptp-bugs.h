@@ -24,10 +24,13 @@
 
 
 #define PTPBUG_DCIM_WRONG_PARENT (1<<0)
+#define PTPBUG_DELETE_SENDS_EVENT (1<<1)
 
 
 #define DCIM_WRONG_PARENT_BUG(x) \
   ((x)->bugs & PTPBUG_DCIM_WRONG_PARENT)
+#define DELETE_SENDS_EVENT(x) \
+  ((x)->bugs & PTPBUG_DELETE_SENDS_EVENT)
 
 
 #endif

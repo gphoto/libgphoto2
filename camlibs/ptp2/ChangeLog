@@ -1,3 +1,11 @@
+2006-01-24  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* ptp-bugs.h, library.c: Added bug handling where some canon
+	  cameras send ObjectDeleted events on DeleteObject.
+
+	  Since EOS firmware doesnt do that, use a bugflag
+	  instead of vendor check.
+
 2006-01-21  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Added HP Photosmart E317
