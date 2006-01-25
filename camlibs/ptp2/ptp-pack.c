@@ -762,9 +762,9 @@ ptp_unpack_Nikon_EC (PTPParams *params, unsigned char* data, unsigned int len, P
 	*ec = malloc(sizeof(PTPUSBEventContainer)*(*cnt));
 	
 	for (i=0;i<*cnt;i++) {
-		memset(&ec[i],0,sizeof(PTPUSBEventContainer));
-		(*ec[i]).code	= dtoh16a(&data[PTP_nikon_ec_Code+PTP_nikon_ec_Size*i]);
-		(*ec[i]).param1	= dtoh32a(&data[PTP_nikon_ec_Param1+PTP_nikon_ec_Size*i]);
+		memset(&(*ec)[i],0,sizeof(PTPUSBEventContainer));
+		(*ec)[i].code	= dtoh16a(&data[PTP_nikon_ec_Code+PTP_nikon_ec_Size*i]);
+		(*ec)[i].param1	= dtoh32a(&data[PTP_nikon_ec_Param1+PTP_nikon_ec_Size*i]);
 	}
 }
 
