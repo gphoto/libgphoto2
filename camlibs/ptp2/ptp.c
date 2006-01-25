@@ -259,14 +259,6 @@ ptp_usb_getresp (PTPParams* params, PTPContainer* resp)
 #define PTP_DP_GETDATA		0x0002	/* receiving data */
 #define PTP_DP_DATA_MASK	0x00ff	/* data phase mask */
 
-/* Number of PTP Request phase parameters */
-#define PTP_RQ_PARAM0		0x0000	/* zero parameters */
-#define PTP_RQ_PARAM1		0x0100	/* one parameter */
-#define PTP_RQ_PARAM2		0x0200	/* two parameters */
-#define PTP_RQ_PARAM3		0x0300	/* three parameters */
-#define PTP_RQ_PARAM4		0x0400	/* four parameters */
-#define PTP_RQ_PARAM5		0x0500	/* five parameters */
-
 /**
  * ptp_transaction:
  * params:	PTPParams*
@@ -309,17 +301,17 @@ ptp_transaction (PTPParams* params, PTPContainer* ptp,
 	CHECK_PTP_RC(params->sendreq_func (params, ptp));
 	/* is there a dataphase? */
 	switch (flags&PTP_DP_DATA_MASK) {
-		case PTP_DP_SENDDATA:
-			CHECK_PTP_RC(params->senddata_func(params, ptp,
-				*data, sendlen));
-			break;
-		case PTP_DP_GETDATA:
-			CHECK_PTP_RC(params->getdata_func(params, ptp,
-				(unsigned char**)data, recvlen));
-			break;
-		case PTP_DP_NODATA:
-			break;
-		default:
+	case PTP_DP_SENDDATA:
+		CHECK_PTP_RC(params->senddata_func(params, ptp,
+			*data, sendlen));
+		break;
+	case PTP_DP_GETDATA:
+		CHECK_PTP_RC(params->getdata_func(params, ptp,
+			(unsigned char**)data, recvlen));
+		break;
+	case PTP_DP_NODATA:
+		break;
+	default:
 		return PTP_ERROR_BADPARAM;
 	}
 	/* get response */
