@@ -35,6 +35,9 @@ camlibs/benq:
 camlibs/canon:
 	Philippe Marzouk <philm@users.sourceforge.net>
 
+camlibs/clicksmart310:
+	Theodore Kilgore <kilgota@auburn.edu>
+
 camlibs/digigr8:
 	Theodore Kilgore <kilgota@auburn.edu>
 

@@ -1,3 +1,10 @@
+2006-01-27  Theodore Kilgore  <kilgota@auburn.edu>
+
+	* camlibs/clicksmart310/*: Supports Logitech Clicksmart 310. 
+	* configure.in: camlibs/clicksmart310 hooked up.
+	* AUTHORS: author of camlibs/clicksmart310 added.
+	* MAINTAINERS: maintainer of camlibs/clicksmart310 added. 
+
 2006-01-04  Hubert Figuiere  <hub@figuiere.net>
 
 	* configure.in: bump the .so version
