@@ -91,6 +91,7 @@ static int pictures_to_keep = -1;
 
 #ifdef HAVE_LIBEXIF
 
+static int gp_filesystem_lru_remove_one (CameraFilesystem *fs, CameraFilesystemFile *item);
 static int gp_filesystem_get_file_impl (CameraFilesystem *, const char *,
 		const char *, CameraFileType, CameraFile *, GPContext *);
 
@@ -717,6 +718,7 @@ delete_file (CameraFilesystem *fs, int x, int y)
 {
 	CameraFilesystemFile *new_fip;
 
+	gp_filesystem_lru_remove_one (fs, &fs->folder[x].file[y]);
 	/* Get rid of cached files */
 	if (fs->folder[x].file[y].preview) {
 		gp_file_unref (fs->folder[x].file[y].preview);
