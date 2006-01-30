@@ -89,9 +89,11 @@ typedef struct {
 #define PICTURES_TO_KEEP	2
 static int pictures_to_keep = -1;
 
+static int gp_filesystem_lru_clear (CameraFilesystem *fs);
+static int gp_filesystem_lru_remove_one (CameraFilesystem *fs, CameraFilesystemFile *item);
+
 #ifdef HAVE_LIBEXIF
 
-static int gp_filesystem_lru_remove_one (CameraFilesystem *fs, CameraFilesystemFile *item);
 static int gp_filesystem_get_file_impl (CameraFilesystem *, const char *,
 		const char *, CameraFileType, CameraFile *, GPContext *);
 
@@ -298,9 +300,9 @@ delete_all_files (CameraFilesystem *fs, int x)
         CHECK_NULL (fs);
 
         if (fs->folder[x].count) {
-
 		/* Get rid of cached files */
                 for (y = 0; y < fs->folder[x].count; y++) {
+			gp_filesystem_lru_remove_one (fs, &fs->folder[x].file[y]);
 			if (fs->folder[x].file[y].preview) {
 	                        gp_file_unref (fs->folder[x].file[y].preview);
 				fs->folder[x].file[y].preview = NULL;
@@ -483,8 +485,6 @@ append_file (CameraFilesystem *fs, int x, CameraFile *file, GPContext *context)
 
 	return (GP_OK);
 }
-
-static int gp_filesystem_lru_clear (CameraFilesystem *fs);
 
 /**
  * gp_filesystem_reset:
