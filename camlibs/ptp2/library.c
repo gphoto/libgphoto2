@@ -1257,8 +1257,11 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	PTPPropertyValue propval;
 	uint32_t newobject = 0x0;
 
-	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON)
-		return camera_nikon_capture (camera, type, path, context);
+	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) {
+		char buf[1024];
+		if ((GP_OK != gp_setting_get("ptp2","capturetarget",buf)) || !strcmp(buf,"sdram"))
+			return camera_nikon_capture (camera, type, path, context);
+	}
 
 	if (type != GP_CAPTURE_IMAGE)
 		return GP_ERROR_NOT_SUPPORTED;
@@ -3068,6 +3071,48 @@ _put_Nikon_FastFS(CONFIG_PUT_ARGS) {
 	return GP_OK;
 }
 
+static struct {
+	char	*name;
+	char	*label;
+} capturetargets[] = {
+	{"sdram", N_("Internal RAM") },
+	{"card", N_("Memory card") },
+};
+
+static int
+_get_CaptureTarget(CONFIG_GET_ARGS) {
+	int i;
+	char buf[1024];
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	if (GP_OK != gp_setting_get("ptp2","capturetarget", buf))
+		strcpy(buf,"sdram");
+	for (i=0;i<sizeof (capturetargets)/sizeof (capturetargets[i]);i++) {
+		gp_widget_add_choice (*widget, _(capturetargets[i].label));
+		if (!strcmp (buf,capturetargets[i].name))
+			gp_widget_set_value (*widget, _(capturetargets[i].label));
+	}
+	return (GP_OK);
+}
+
+static int
+_put_CaptureTarget(CONFIG_PUT_ARGS) {
+	int i, ret;
+	char *val;
+
+	ret = gp_widget_get_value (widget, &val);
+	if (ret != GP_OK)
+		return ret;
+	for (i=0;i<sizeof(capturetargets)/sizeof(capturetargets[i]);i++) {
+		if (!strcmp( val, _(capturetargets[i].label))) {
+			gp_setting_set("ptp2","capturetarget",capturetargets[i].name);
+			break;
+		}
+	}
+	return GP_OK;
+}
+
 static struct submenu camera_settings_menu[] = {
 	{ N_("Camera Owner"), "owner", PTP_DPC_CANON_CameraOwner, PTP_VENDOR_CANON, PTP_DTC_AUINT8, _get_AUINT8_as_CHAR_ARRAY, _put_AUINT8_as_CHAR_ARRAY },
 	{ N_("Camera Model"), "model", PTP_DPC_CANON_CameraModel, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_None },
@@ -3079,6 +3124,7 @@ static struct submenu camera_settings_menu[] = {
 
 /* virtual */
 	{ N_("Fast Filesystem"), "fastfs", 0, PTP_VENDOR_NIKON, 0, _get_Nikon_FastFS, _put_Nikon_FastFS },
+	{ N_("Capture Target"), "capturetarget", 0, PTP_VENDOR_NIKON, 0, _get_CaptureTarget, _put_CaptureTarget },
 	{ N_("Capture"), "capture", 0, PTP_VENDOR_CANON, 0, _get_Canon_CaptureMode, _put_Canon_CaptureMode},
 	{ NULL },
 };
