@@ -1138,6 +1138,112 @@ get_folder_from_handle (Camera *camera, uint32_t storage, uint32_t handle, char 
 	return (GP_OK);
 }
 
+/**
+ * camera_nikon_capture:
+ * params:      Camera*			- camera object
+ *              CameraCaptureType type	- type of object to capture
+ *              CameraFilePath *path    - filled out with filename and folder on return
+ *              GPContext* context      - gphoto context for this operation
+ *
+ * This function captures an image using special Nikon capture to SDRAM.
+ * The object(s) do(es) not appear in the "objecthandles" array returned by GetObjectHandles,
+ * so we need to download them here immediately.
+ *
+ * Return values: A gphoto return code.
+ * Upon success CameraFilePath *path contains the folder and filename of the captured
+ * image.
+ */
+static int
+camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
+		GPContext *context)
+{
+	static int capcnt = 0;
+	PTPObjectInfo		oi;
+	int			ret;
+	PTPParams		*params = &camera->pl->params;
+	uint32_t		newobject = 0x0;
+	CameraFile		*file = NULL;
+	unsigned char		*ximage = NULL;
+	CameraFileInfo		info;
+
+	if (type != GP_CAPTURE_IMAGE)
+		return GP_ERROR_NOT_SUPPORTED;
+
+	if (params->deviceinfo.VendorExtensionID!=PTP_VENDOR_NIKON)
+		return GP_ERROR_NOT_SUPPORTED;
+
+	if (!ptp_operation_issupported(params,PTP_OC_NIKON_Capture)) {
+		gp_context_error(context,
+               	_("Sorry, your camera does not support Nikon capture"));
+		return GP_ERROR_NOT_SUPPORTED;
+	}
+
+	CPR(context,ptp_nikon_capture(params, 0xffffffff));
+	CR (gp_port_set_timeout (camera->port, USB_TIMEOUT_CAPTURE));
+
+	while (ptp_nikon_device_ready(params) != PTP_RC_OK) {
+		/* Just busy loop until the camera is ready again. */
+	}
+
+	do {
+		int i, evtcnt, hasc101 = 0;
+		PTPUSBEventContainer *nevent = NULL;
+
+		ret = ptp_nikon_check_event(params, &nevent, &evtcnt);
+		if (ret != PTP_RC_OK)
+			break;
+		for (i=0;i<evtcnt;i++) {
+			if (nevent[i].code == 0xc101) hasc101 = 1;
+			/*fprintf(stderr,"nevent.Code is %x / param %lx\n", nevent[i].code, (unsigned long)nevent[i].param1);*/
+		}
+		free (nevent);
+		if (hasc101) break;
+	} while (1);
+	newobject = 0xffff0001;
+
+	/* FIXME: handle multiple images (as in BurstMode) */
+
+	ret = ptp_getobjectinfo (params, newobject, &oi);
+	if (ret != PTP_RC_OK) return GP_ERROR_IO;
+	if (oi.ParentObject != 0) {
+		fprintf(stderr,"Parentobject is 0x%lx now?\n", (unsigned long)oi.ParentObject);
+	}
+	sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)oi.StorageID);
+	sprintf (path->name, "capt%04d.jpg", capcnt++);
+	ret = gp_file_new(&file);
+	if (ret!=GP_OK) return ret;
+	gp_file_set_type (file, GP_FILE_TYPE_NORMAL);
+	gp_file_set_name(file, path->name);
+	set_mimetype (camera, file, oi.ObjectFormat);
+	CPR (context, ptp_getobject(params, newobject, &ximage));
+	ret = gp_file_set_data_and_size(file, (char*)ximage, oi.ObjectCompressedSize);
+	if (ret != GP_OK) return ret;
+	ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
+        if (ret != GP_OK) return ret;
+	ret = gp_filesystem_set_file_noop(camera->fs, path->folder, file, context);
+        if (ret != GP_OK) return ret;
+
+	/* we also get the fs info for free, so just set it */
+	info.file.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME | 
+			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT | 
+			GP_FILE_INFO_SIZE;
+	strcpy_mime (info.file.type, oi.ObjectFormat);
+	strcpy(info.file.name,path->name);
+	info.file.width		= oi.ImagePixWidth;
+	info.file.height	= oi.ImagePixHeight;
+	info.file.size		= oi.ObjectCompressedSize;
+	info.preview.fields = GP_FILE_INFO_TYPE |
+			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT | 
+			GP_FILE_INFO_SIZE;
+	strcpy_mime (info.preview.type, oi.ThumbFormat);
+	info.preview.width	= oi.ThumbPixWidth;
+	info.preview.height	= oi.ThumbPixHeight;
+	info.preview.size	= oi.ThumbCompressedSize;
+	ret = gp_filesystem_set_info_noop(camera->fs, path->folder, info, context);
+        if (ret != GP_OK) return ret;
+	return GP_OK;
+}
+
 static int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		GPContext *context)
@@ -1149,7 +1255,10 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	uint16_t val16;
 	uint32_t handle;
 	PTPPropertyValue propval;
-	uint32_t	newobject = 0x0;
+	uint32_t newobject = 0x0;
+
+	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON)
+		return camera_nikon_capture (camera, type, path, context);
 
 	if (type != GP_CAPTURE_IMAGE)
 		return GP_ERROR_NOT_SUPPORTED;
@@ -3558,6 +3667,12 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 
 	if (!strcmp (folder, "/special"))
 		return GP_ERROR_NOT_SUPPORTED;
+
+	/* virtual file created by Nikon special capture */
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
+		!strncmp (filename, "capt", 4)
+	)
+		return GP_OK;
 
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);

@@ -1,3 +1,8 @@
+2006-01-30  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Added Nikon SDRAM capture.
+	  Downloads images directly after capture.
+
 2006-01-24  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* ptp-bugs.h, library.c: Added bug handling where some canon
