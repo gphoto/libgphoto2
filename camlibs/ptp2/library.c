@@ -1256,7 +1256,9 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	PTPPropertyValue propval;
 	uint32_t newobject = 0x0;
 
-	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) {
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
+		ptp_operation_issupported(params, PTP_OC_NIKON_Capture)
+	){
 		char buf[1024];
 		if ((GP_OK != gp_setting_get("ptp2","capturetarget",buf)) || !strcmp(buf,"sdram"))
 			return camera_nikon_capture (camera, type, path, context);
