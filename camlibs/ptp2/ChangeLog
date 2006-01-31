@@ -1,5 +1,10 @@
 2006-01-31  Marcus Meissner  <marcus@jet.franken.de>
 
+	* library.c: Enabled Canon SDRAM capture,
+	  using the same methods as the Nikon capture.
+
+2006-01-31  Marcus Meissner  <marcus@jet.franken.de>
+
 	* library.c: Added Toshiba Gigabeat MTP player.
 
 2006-01-30  Marcus Meissner  <marcus@jet.franken.de>

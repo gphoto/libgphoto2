@@ -30,9 +30,6 @@
 #include <gphoto2-port-log.h>
 #include <gphoto2-setting.h>
 
-#define EXPERIMENTAL_CANON_CAPTURE 0
-
-
 #ifdef ENABLE_NLS
 #  include <libintl.h>
 #  undef _
@@ -1084,9 +1081,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	 * Enable: remote 0 &&, run 
 	 * 	gphoto2 --set-config capture=on --capture-preview
 	 */
-	if (	EXPERIMENTAL_CANON_CAPTURE &&
-		camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_CANON
-	) {
+	if (camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) {
 		if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_ViewfinderOn)) {
 			gp_context_error (context,
 			_("Sorry, your Canon camera does not support Canon Viewfinder mode"));
@@ -1137,6 +1132,47 @@ get_folder_from_handle (Camera *camera, uint32_t storage, uint32_t handle, char 
 	return (GP_OK);
 }
 
+static int
+add_objectid_to_gphotofs(Camera *camera, CameraFilePath *path, GPContext *context,
+	uint32_t newobject, PTPObjectInfo *oi) {
+	int			ret;
+	PTPParams		*params = &camera->pl->params;
+	CameraFile		*file = NULL;
+	unsigned char		*ximage = NULL;
+	CameraFileInfo		info;
+
+	ret = gp_file_new(&file);
+	if (ret!=GP_OK) return ret;
+	gp_file_set_type (file, GP_FILE_TYPE_NORMAL);
+	gp_file_set_name(file, path->name);
+	set_mimetype (camera, file, oi->ObjectFormat);
+	CPR (context, ptp_getobject(params, newobject, &ximage));
+	ret = gp_file_set_data_and_size(file, (char*)ximage, oi->ObjectCompressedSize);
+	if (ret != GP_OK) return ret;
+	ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
+        if (ret != GP_OK) return ret;
+	ret = gp_filesystem_set_file_noop(camera->fs, path->folder, file, context);
+        if (ret != GP_OK) return ret;
+
+	/* we also get the fs info for free, so just set it */
+	info.file.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME | 
+			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT | 
+			GP_FILE_INFO_SIZE;
+	strcpy_mime (info.file.type, oi->ObjectFormat);
+	strcpy(info.file.name,path->name);
+	info.file.width		= oi->ImagePixWidth;
+	info.file.height	= oi->ImagePixHeight;
+	info.file.size		= oi->ObjectCompressedSize;
+	info.preview.fields = GP_FILE_INFO_TYPE |
+			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT | 
+			GP_FILE_INFO_SIZE;
+	strcpy_mime (info.preview.type, oi->ThumbFormat);
+	info.preview.width	= oi->ThumbPixWidth;
+	info.preview.height	= oi->ThumbPixHeight;
+	info.preview.size	= oi->ThumbCompressedSize;
+	return gp_filesystem_set_info_noop(camera->fs, path->folder, info, context);
+}
+
 /**
  * camera_nikon_capture:
  * params:      Camera*			- camera object
@@ -1161,9 +1197,6 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	int			ret;
 	PTPParams		*params = &camera->pl->params;
 	uint32_t		newobject = 0x0;
-	CameraFile		*file = NULL;
-	unsigned char		*ximage = NULL;
-	CameraFileInfo		info;
 
 	if (type != GP_CAPTURE_IMAGE)
 		return GP_ERROR_NOT_SUPPORTED;
@@ -1198,10 +1231,10 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		free (nevent);
 		if (hasc101) break;
 	} while (1);
+
 	newobject = 0xffff0001;
 
 	/* FIXME: handle multiple images (as in BurstMode) */
-
 	ret = ptp_getobjectinfo (params, newobject, &oi);
 	if (ret != PTP_RC_OK) return GP_ERROR_IO;
 	if (oi.ParentObject != 0) {
@@ -1209,38 +1242,109 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	}
 	sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)oi.StorageID);
 	sprintf (path->name, "capt%04d.jpg", capcnt++);
-	ret = gp_file_new(&file);
-	if (ret!=GP_OK) return ret;
-	gp_file_set_type (file, GP_FILE_TYPE_NORMAL);
-	gp_file_set_name(file, path->name);
-	set_mimetype (camera, file, oi.ObjectFormat);
-	CPR (context, ptp_getobject(params, newobject, &ximage));
-	ret = gp_file_set_data_and_size(file, (char*)ximage, oi.ObjectCompressedSize);
-	if (ret != GP_OK) return ret;
-	ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
-        if (ret != GP_OK) return ret;
-	ret = gp_filesystem_set_file_noop(camera->fs, path->folder, file, context);
-        if (ret != GP_OK) return ret;
+	return add_objectid_to_gphotofs(camera, path, context, newobject, &oi);
+}
 
-	/* we also get the fs info for free, so just set it */
-	info.file.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME | 
-			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT | 
-			GP_FILE_INFO_SIZE;
-	strcpy_mime (info.file.type, oi.ObjectFormat);
-	strcpy(info.file.name,path->name);
-	info.file.width		= oi.ImagePixWidth;
-	info.file.height	= oi.ImagePixHeight;
-	info.file.size		= oi.ObjectCompressedSize;
-	info.preview.fields = GP_FILE_INFO_TYPE |
-			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT | 
-			GP_FILE_INFO_SIZE;
-	strcpy_mime (info.preview.type, oi.ThumbFormat);
-	info.preview.width	= oi.ThumbPixWidth;
-	info.preview.height	= oi.ThumbPixHeight;
-	info.preview.size	= oi.ThumbCompressedSize;
-	ret = gp_filesystem_set_info_noop(camera->fs, path->folder, info, context);
-        if (ret != GP_OK) return ret;
-	return GP_OK;
+/* To use:
+ *	gphoto2 --set-config capture=on --config --capture-image
+ *	gphoto2  -f /store_80000001 -p 1
+ *		will download a file called "VirtualObject"
+ */
+static int
+camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
+		GPContext *context)
+{
+	static int capcnt = 0;
+	PTPObjectInfo		oi;
+	int			i, ret, isevent;
+	PTPParams		*params = &camera->pl->params;
+	uint32_t		newobject = 0x0;
+	PTPPropertyValue	propval;
+	uint16_t		val16;
+	PTPContainer		event;
+	PTPUSBEventContainer	usbevent;
+	uint32_t		handle;
+
+	if (!ptp_operation_issupported(params, PTP_OC_CANON_InitiateCaptureInMemory)) {
+		gp_context_error (context,
+		_("Sorry, your Canon camera does not support Canon Captureinitiation"));
+		return GP_ERROR_NOT_SUPPORTED;
+	}
+	propval.u16=3; /* 3 */
+	ret = ptp_setdevicepropvalue(params, PTP_DPC_CANON_D029, &propval, PTP_DTC_UINT16);
+	if (ret != PTP_RC_OK)
+		gp_log (GP_LOG_DEBUG, "ptp", "setdevicepropvalue 0xd029 failed, %d\n", ret);
+
+	/* FIXME: For now, to avoid flash during debug */
+	propval.u8 = 0;
+	ret = ptp_setdevicepropvalue(params, PTP_DPC_CANON_FlashMode, &propval, PTP_DTC_UINT8);
+
+	ret = ptp_canon_initiatecaptureinmemory (params);
+	if (ret != PTP_RC_OK) {
+		gp_context_error (context, _("Canon Capture failed: %d"), ret);
+		return GP_ERROR;
+	}
+	/* Catch event */
+	if (PTP_RC_OK == (val16 = ptp_usb_event_wait (params, &event))) {
+		if (event.Code == PTP_EC_CaptureComplete)
+			gp_log (GP_LOG_DEBUG, "ptp", "Event: capture complete. \n");
+		else
+			gp_log (GP_LOG_DEBUG, "ptp", "Unknown event: 0x%X\n", event.Code);
+	} /* else no event yet ... try later. */
+
+	/* checking events in stack. */
+	for (i=0;i<100;i++) {
+		ret = ptp_canon_checkevent (params,&usbevent,&isevent);
+		if (ret!=PTP_RC_OK)
+			continue;
+		if (isevent)
+			gp_log (GP_LOG_DEBUG, "ptp","evdata: L=0x%X, T=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X\n", usbevent.length,usbevent.type,usbevent.code,usbevent.trans_id, usbevent.param1, usbevent.param2, usbevent.param3);
+		if (	isevent  &&
+			(usbevent.type==PTP_USB_CONTAINER_EVENT) &&
+			(usbevent.code==PTP_EC_CANON_RequestObjectTransfer)
+		) {
+			int j;
+
+			handle=usbevent.param1;
+			gp_log (GP_LOG_DEBUG, "ptp", "PTP_EC_CANON_RequestObjectTransfer, object handle=0x%X. \n",usbevent.param1);
+			gp_log (GP_LOG_DEBUG, "ptp","evdata: L=0x%X, T=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X\n", usbevent.length,usbevent.type,usbevent.code,usbevent.trans_id, usbevent.param1, usbevent.param2, usbevent.param3);
+			newobject = usbevent.param1;
+
+			for (j=0;j<2;j++) {
+				ret=ptp_canon_checkevent(params,&usbevent,&isevent);
+				if ((ret==PTP_RC_OK) && isevent)
+					gp_log (GP_LOG_DEBUG, "ptp", "evdata: L=0x%X, T=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X\n", usbevent.length,usbevent.type,usbevent.code,usbevent.trans_id, usbevent.param1, usbevent.param2, usbevent.param3);
+			}
+
+
+			ret = ptp_canon_reflectchanges(params,7);
+			break;
+		}
+	}
+	/* Catch event, attempt  2 */
+	if (val16!=PTP_RC_OK) {
+		if (PTP_RC_OK==ptp_usb_event_wait (params, &event)) {
+			if (event.Code==PTP_EC_CaptureComplete)
+				printf("Event: capture complete. \n");
+			else
+				printf("Event: 0x%X\n", event.Code);
+		} else
+			printf("No expected capture complete event\n");
+	}
+	if (i==100) {
+	    gp_log (GP_LOG_DEBUG, "ptp","ERROR: Capture timed out!\n");        
+	    return GP_ERROR_TIMEOUT;
+	}
+
+	/* FIXME: handle multiple images (as in BurstMode) */
+	ret = ptp_getobjectinfo (params, newobject, &oi);
+	if (ret != PTP_RC_OK) return GP_ERROR_IO;
+	if (oi.ParentObject != 0) {
+		fprintf(stderr,"Parentobject is 0x%lx now?\n", (unsigned long)oi.ParentObject);
+	}
+	sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)oi.StorageID);
+	sprintf (path->name, "capt%04d.jpg", capcnt++);
+	return add_objectid_to_gphotofs(camera, path, context, newobject, &oi);
 }
 
 static int
@@ -1248,12 +1352,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		GPContext *context)
 {
 	PTPContainer event;
-	PTPUSBEventContainer usbevent;
-	int ret, i, isevent;
 	PTPParams *params = &camera->pl->params;
-	uint16_t val16;
-	uint32_t handle;
-	PTPPropertyValue propval;
 	uint32_t newobject = 0x0;
 
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
@@ -1263,90 +1362,16 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		if ((GP_OK != gp_setting_get("ptp2","capturetarget",buf)) || !strcmp(buf,"sdram"))
 			return camera_nikon_capture (camera, type, path, context);
 	}
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
+		ptp_operation_issupported(params, PTP_OC_CANON_InitiateCaptureInMemory)
+	) {
+		char buf[1024];
+		if ((GP_OK != gp_setting_get("ptp2","capturetarget",buf)) || !strcmp(buf,"sdram"))
+			return camera_canon_capture (camera, type, path, context);
+	}
 
 	if (type != GP_CAPTURE_IMAGE)
 		return GP_ERROR_NOT_SUPPORTED;
-
-	/* Canon mode disabled until functioning fully */
-	/* to enable, remove 0&&, then:
-	 *	gphoto2 --set-config capture=on --config --capture-image
-	 *	gphoto2  -f /store_80000001 -p 1
-	 *		will download a file called "VirtualObject"
-	 */
-	if (	EXPERIMENTAL_CANON_CAPTURE &&
-		params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON
-	) {
-		if (!ptp_operation_issupported(params, PTP_OC_CANON_InitiateCaptureInMemory)) {
-			gp_context_error (context,
-			_("Sorry, your Canon camera does not support Canon Captureinitiation"));
-			return GP_ERROR_NOT_SUPPORTED;
-		}
-		propval.u16=3; /* 3 */
-		ret = ptp_setdevicepropvalue(params, PTP_DPC_CANON_D029, &propval, PTP_DTC_UINT16);
-		if (ret != PTP_RC_OK)
-			gp_log (GP_LOG_DEBUG, "ptp", "setdevicepropvalue 0xd029 failed, %d\n", ret);
-
-		/* FIXME: For now, to avoid flash during debug */
-		propval.u8 = 0;
-		ret = ptp_setdevicepropvalue(params, PTP_DPC_CANON_FlashMode, &propval, PTP_DTC_UINT8);
-
-		ret = ptp_canon_initiatecaptureinmemory (params);
-		if (ret != PTP_RC_OK) {
-			gp_context_error (context, _("Canon Capture failed: %d"), ret);
-			return GP_ERROR;
-		}
-		/* Catch event */
-		if (PTP_RC_OK == (val16 = ptp_usb_event_wait (params, &event))) {
-			if (event.Code == PTP_EC_CaptureComplete)
-				gp_log (GP_LOG_DEBUG, "ptp", "Event: capture complete. \n");
-			else
-				gp_log (GP_LOG_DEBUG, "ptp", "Unknown event: 0x%X\n", event.Code);
-		} /* else no event yet ... try later. */
-
-	        /* checking events in stack. */
-		for (i=0;i<100;i++) {
-			ret = ptp_canon_checkevent (params,&usbevent,&isevent);
-			if (ret!=PTP_RC_OK)
-				continue;
-			if (isevent)
-				gp_log (GP_LOG_DEBUG, "ptp","evdata: L=0x%X, T=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X\n", usbevent.length,usbevent.type,usbevent.code,usbevent.trans_id, usbevent.param1, usbevent.param2, usbevent.param3);
-			if (	isevent  &&
-				(usbevent.type==PTP_USB_CONTAINER_EVENT) &&
-				(usbevent.code==PTP_EC_CANON_RequestObjectTransfer)
-			) {
-				int j;
-
-				handle=usbevent.param1;
-				gp_log (GP_LOG_DEBUG, "ptp", "PTP_EC_CANON_RequestObjectTransfer, object handle=0x%X. \n",usbevent.param1);
-				gp_log (GP_LOG_DEBUG, "ptp","evdata: L=0x%X, T=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X\n", usbevent.length,usbevent.type,usbevent.code,usbevent.trans_id, usbevent.param1, usbevent.param2, usbevent.param3);
-
-				add_object (camera, usbevent.param1, context);
-
-				for (j=0;j<2;j++) {
-					ret=ptp_canon_checkevent(params,&usbevent,&isevent);
-					if ((ret==PTP_RC_OK) && isevent)
-						gp_log (GP_LOG_DEBUG, "ptp", "evdata: L=0x%X, T=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X\n", usbevent.length,usbevent.type,usbevent.code,usbevent.trans_id, usbevent.param1, usbevent.param2, usbevent.param3);
-				}
-
-
-				ret = ptp_canon_reflectchanges(params,7);
-				break;
-			}
-		}
-		/* Catch event, attempt  2 */
-		if (val16!=PTP_RC_OK) {
-			if (PTP_RC_OK==ptp_usb_event_wait (params, &event)) {
-				if (event.Code==PTP_EC_CaptureComplete)
-					printf("Event: capture complete. \n");
-				else
-					printf("Event: 0x%X\n", event.Code);
-			} else
-				printf("No expected capture complete event\n");
-		}
-		if (i==100)
-		    gp_log (GP_LOG_DEBUG, "ptp","ERROR: Capture timed out!\n");        
-		goto out;
-	}
 
 	if (!ptp_operation_issupported(params,PTP_OC_InitiateCapture)) {
 		gp_context_error(context,
@@ -1420,10 +1445,10 @@ out:
 	if (newobject != 0) {
 		int i;
 
-		for (i = camera->pl->params.handles.n ; i--; ) {
+		for (i = params->handles.n ; i--; ) {
 			PTPObjectInfo	*obinfo;
 
-			if (camera->pl->params.handles.Handler[i] != newobject)
+			if (params->handles.Handler[i] != newobject)
 				continue;
 			obinfo = &camera->pl->params.objectinfo[i];
 			strcpy  (path->name,  obinfo->Filename);
@@ -3012,10 +3037,6 @@ _put_Canon_CaptureMode(CONFIG_PUT_ARGS) {
 	ret = gp_widget_get_value (widget, &val);
 	if (ret != GP_OK)
 		return ret;
-
-	if (!EXPERIMENTAL_CANON_CAPTURE)
-		return GP_ERROR;
-
 	if (val)
 		return camera_prepare_capture (camera, NULL);
 	else
@@ -3716,7 +3737,8 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 		return GP_ERROR_NOT_SUPPORTED;
 
 	/* virtual file created by Nikon special capture */
-	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
+	if (	((params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) ||
+		 (params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON)   ) &&
 		!strncmp (filename, "capt", 4)
 	)
 		return GP_OK;
