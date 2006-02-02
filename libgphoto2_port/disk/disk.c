@@ -33,7 +33,9 @@
 #include <sys/param.h>
 #include <dirent.h>
 #include <string.h>
-#include <mntent.h>
+#ifdef HAVE_MNTENT_H
+# include <mntent.h>
+#endif
 
 #ifdef HAVE_HAL
 #include <hal/libhal.h>
@@ -176,6 +178,7 @@ gp_port_library_list (GPPortInfoList *list)
 	dbus_connection_disconnect (dbus_connection);
 	dbus_connection_unref (dbus_connection);
 #else
+# ifdef HAVE_MNTENT_H
 	FILE *mnt;
 	struct mntent *mntent;
 	char	path[1024];
@@ -226,6 +229,8 @@ gp_port_library_list (GPPortInfoList *list)
 		CHECK (gp_port_info_list_append (list, info));
 	}
 	endmntent(mnt);
+# endif
+/* actually else ... "no ports available here." */
 #endif
 	return GP_OK;
 }
