@@ -1000,7 +1000,7 @@ camera_prepare_capture (Camera *camera, GPContext *context)
 		CPR (context, ptp_canon_startshootingmode (params));
 
 		/* Catch event */
-		if (PTP_RC_OK==(val16=ptp_usb_event_wait (params, &evc))) {
+		if (PTP_RC_OK==(val16=params->event_wait (params, &evc))) {
 			if (evc.Code==PTP_EC_StorageInfoChanged)
 				gp_log (GP_LOG_DEBUG, "ptp", "Event: entering  shooting mode. \n");
 			else 
@@ -1022,7 +1022,7 @@ camera_prepare_capture (Camera *camera, GPContext *context)
 		}
 		/* Catch event, attempt  2 */
 		if (val16!=PTP_RC_OK) {
-			if (PTP_RC_OK==ptp_usb_event_wait (params, &evc)) {
+			if (PTP_RC_OK==params->event_wait (params, &evc)) {
 				if (evc.Code == PTP_EC_StorageInfoChanged)
 					gp_log (GP_LOG_DEBUG, "ptp","Event: entering shooting mode.\n");
 				else
@@ -1285,7 +1285,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		return GP_ERROR;
 	}
 	/* Catch event */
-	if (PTP_RC_OK == (val16 = ptp_usb_event_wait (params, &event))) {
+	if (PTP_RC_OK == (val16 = params->event_wait (params, &event))) {
 		if (event.Code == PTP_EC_CaptureComplete)
 			gp_log (GP_LOG_DEBUG, "ptp", "Event: capture complete. \n");
 		else
@@ -1323,7 +1323,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	}
 	/* Catch event, attempt  2 */
 	if (val16!=PTP_RC_OK) {
-		if (PTP_RC_OK==ptp_usb_event_wait (params, &event)) {
+		if (PTP_RC_OK==params->event_wait (params, &event)) {
 			if (event.Code==PTP_EC_CaptureComplete)
 				printf("Event: capture complete. \n");
 			else
@@ -1411,8 +1411,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	if (params->deviceinfo.VendorExtensionID==PTP_VENDOR_NIKON) 
 		goto out;
 	{
-		short ret;
-		ret=ptp_usb_event_wait(&camera->pl->params,&event);
+		short ret = params->event_wait(params,&event);
 		CR (gp_port_set_timeout (camera->port, USB_TIMEOUT));
 		if (ret!=PTP_RC_OK) goto err;
 	}
@@ -1421,7 +1420,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		add_object (camera, event.Param1, context);
 		newobject = event.Param1;
 
-		if (ptp_usb_event_wait(&camera->pl->params, &event)!=PTP_RC_OK)
+		if (params->event_wait (params, &event)!=PTP_RC_OK)
 		{
 			gp_context_error (context,
 			_("Capture command completed, but no confirmation received"));
@@ -3765,7 +3764,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 		int ret;
 
 		do {
-			ret = ptp_usb_event_check (params, &event);
+			ret = params->event_check (params, &event);
 			if (	(ret == PTP_RC_OK) &&
 				(event.Code == PTP_EC_ObjectRemoved)
 			)
@@ -4206,6 +4205,8 @@ camera_init (Camera *camera, GPContext *context)
 	camera->pl->params.getdata_func=ptp_usb_getdata;
 	camera->pl->params.write_func = ptp_write_func;
 	camera->pl->params.read_func  = ptp_read_func;
+	camera->pl->params.event_check = ptp_usb_event_check;
+	camera->pl->params.event_wait = ptp_usb_event_wait;
 	camera->pl->params.check_int_func = ptp_check_int;
 	camera->pl->params.check_int_fast_func = ptp_check_int_fast;
 	camera->pl->params.debug_func = ptp_debug_func;
