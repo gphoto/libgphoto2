@@ -1,3 +1,6 @@
+2006-02-06  Marcus Meissner  <marcus@jet.franken.de>
+	* library.c: Added EOS 5D
+
 2006-02-05  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Use event_check and event_wait
