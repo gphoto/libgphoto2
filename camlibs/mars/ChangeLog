@@ -1,3 +1,19 @@
+2006-02-08  Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Added two new cameras. One is the Argus QuickClix, 
+		     which uses a new, still unsolved compression codec and
+		     is therefore marked as DEPRECATED. 
+		     The other cameras I personally own are upgraded to
+		     TESTING, because of improvements in decompression.
+		     Minor code changes in get_file_func().
+		     Improvements to camera_manual(). 
+	* mars.c:    Improvements in mars_decompress().
+		     mars_postprocess() eliminated.
+	* mars.h:    mars_postprocess() eliminated.
+	* README:    updated.
+	* protocol.txt: updated. 
+
+
 2005-09-21  Theodore Kilgore <kilgota@auburn.edu>
 
 	* mars.c:    Removal of two overlooked "//" comment symbols.
