@@ -126,16 +126,24 @@ photo   1	08 00 04 00 0c b0 04 cc
 
 (the columns in this table are numbered from 0 to 7 in what follows)
 
-In this pattern, the entry in the zeroeth column is a code which refers to the
-size of the photo and also indicates whether there is compression, or not. In 
-this particular example, none of the photos are compressed. The entries ending 
-in 8 indicate size 640x480, and those ending in 6 indicate size 320x240. 
-Furthermore, each photo consists of a number of bytes equal to the product of 
-its dimensions. For a 640x480 photo, the number of bytes is 0x4b000, and 
-for a 320x240 photo is the number is 0x12c00. Why it is that 08 and 88 both 
-signify 640x480 and 06 and 86 both signify 320x240, is not clear. Which of the 
-two used would seem to depend only upon whether the photo is listed in the left 
-half of a line, or in the right half. 
+In this pattern, the entry in the zeroeth column is a code which gives the 
+size of the photo and indicates if there is compression, or not. In 
+this particular example, none of the photos are compressed. The second digit of 
+this byte indicates the size:
+
+    0	->	176x144
+    2	->	352x288
+    6	->	320x240
+    8	->	640x480
+
+The first digit of this byte indicates presence or absence of compression. If 
+it is 2, 3, 6, 7, a, b, d, or f there is compression; otherwise the photo  
+is not compressed. For a photo of given size and compression status, the first
+digit is also dependent upon the location in the line of config data. If in 
+the first position on the line, then that digit is less than 8, and if in the 
+second position then 8 is added. This is seen in our example, where 08 and 88
+both signify 640x480 uncompressed, and 06 and 86 both signify 320x240 
+uncompressed. 
 
 The entries in columns 1, 2, and 3 of our rearranged data seem to indicate the 
 storage location, in (hexadecimal) little endian format. Comparison of these 
@@ -146,28 +154,13 @@ example, the configuration data, of size 0x2000, would require
 0x2000/8 = 0x400 storage blocks, and the beginning point for the first photo is 
 listed as location 0x400. Also, the fact that three bytes are used for the 
 storage location indicates that the maximum size of memory which can be 
-addressed under this scheme is 8*16*16*16 bytes. That is, 32 megabytes.  
+addressed under this scheme is 8*16*16*16 bytes. That is, 32 megabytes. The 
+known Mars cameras do not approach this upper memory limit, however. 
 
-Column 4 seems to contain a marker or "magic number" indicating that
-the data comprises a photo. For, following this logic, the block 
+The entries in columns 4 through 6 indicate, again in little endian form, the 
+data size for the given photo, in bytes. The actual data size to be requested
+and downloaded from the camera needs to be tne next integer multiple of 0x2000. 
 
-		00 00 00 00 00 00 00 00
-
-in line 0000 would seem to provide information about the configuration data
-block. According to this analysis, the zeroeth 00 would indicate that the data
-is configuration data, not a photo. The first and second and third 00 bytes 
-would indicate that the config data starts at memory block 00 00 00, and byte 
-four would then presumably give 00 as a marker for config data. On the other
-hand, the fourth byte of configuration data for a photo is always 0xc0. 
-
-The entries in the fifth and sixth indicate, again in little endian form, the 
-number of bytes, times 0x100, which must be downloaded for the given photo. 
-For example, we already know that photo 1 is 640x480 and is thus of size 
-0x4b000; these bytes here read b0 04. And for photo 2, which is 320x240 and 
-thus of size 0x12c00 these bytes read 01 2c. Rather strangely, we have a 
-situation in which the memory allocation units seem to be of size 8 bytes each. 
-However, the smallest possible unit which can be downloaded is apparently of 
-size 0x100=256 bytes. A strange inconsistency. 
 
 Finally, for the seventh column there is at this time no obvious 
 interpretation. 
@@ -201,20 +194,8 @@ bytes. Thus the problem can apparently be overcome by checking whether
 ff 00 ff 00 occurs on line 0000 or on line 0080. 
 
 For similarly unknown reasons, the same offset seems to occur at the
-beginning of every download of a photo. One gets eight lines of junk,
-followed by several marker characters, and only then comes the data. The
-total number of "junk" characters seems to total 140, which must be thrown
-away in order for the photo to come out right instead of in two pieces.
-Then, 140 bytes are missing at the bottom right of the photo instead. And,
-no, the bytes from the beginning are not supposed to be put at the end,
-either. Been there. Tried that. So it is a mystery. 
-
-These picture data corruption problems occur with the manufacturer's driver
-as well. However, the "stock" driver does seem to know how to supply some 
-missing bytes at the bottom right of the photo -- most definitely without
-downloading them. Perhaps the 8 lines of "junk" at the beginning are
-supposed to be stuck back somewhere in the middle, in a manner most
-mysterious. Who knows? 
+beginning of every download of a photo. One gets 128 bytes of pure junk,
+followed by 12 bytes which include a signature, and only then comes the data. 
 
 
 UPDATES and REVISIONS:
@@ -273,3 +254,8 @@ a quite lossy differential Huffman encoding, and apparently due to the data
 loss the decompression can get unstable.
 
 Michel Xhaard <mxhaard@magic.fr> for testing.
+
+7. 2006-02-08 "Tweaking and smoothing" of decompression carried out, for 
+the most part successfully. Several new cameras added. One of them is the 
+Argus QuickClix, which uses a *different* compression algorithm! I hope 
+nobody else buys one, unless the purchaser is a decompression expert. 

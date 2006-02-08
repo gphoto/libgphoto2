@@ -46,6 +46,57 @@ not take full advantage even of the mentioned abilities. There, one has the
 choice either to download all photos, or none. If all are downloaded, then 
 thumbnails are created. The user can then do previews and decide what to save. 
 
+
+STATUS NOTES ON SUPPORTED CAMERAS (7 Feb. 2006)
+
+The only problem with using any of these cameras is the compression codec. 
+Bertrik's decompression algorithm seems basically correct, but it has a problem 
+with leaving diagonal color artifacts, a problem which can be severe in bad 
+lighting conditions, especially if there are lots of dark colors in the photo. 
+I have recently been able to alleviate this problem, to a great extent, but 
+not completely. Also, not all of the cameras seem to perform equally well 
+in compressed mode, when used to shoot similar photos under similar lighting 
+conditions. Here is a report on the cameras which I own. I can not say anything 
+about the others unless their performance in compressed mode is reported to me:
+
+Aiptek Pencam VGA+: Compressed mode is very sensitive to bad lighting, 
+especially when there are dark colors in the image. The camera also will refuse
+to shoot both in compressed and in uncompressed moed if the light is very bad 
+(indoors, in the evening) and that is probably all for the best. 
+
+Argus DC-1620: Compressed mode only. No uncompressed photos. The compressed 
+mode works pretty well, though. Outdoor photos are pretty good, and if you are
+willing to put up with a cheap, compressed-mode-only camera it might even be 
+worth your money. The camera does have some problems in bad light, but not so
+severe as with the Aiptek Pencam VGA+.
+
+Sakar Digital #77379: Also compressed mode only. Seems to work pretty well. Has 
+a very high cutoff threshold and will not take photos in the evening, even if 
+one points it at a bright monitor screen. 
+
+Argus QuickClix: Compressed mode only. The compression algorithm is different 
+from the compression algorithm in the other known Mars cameras, too. I have 
+no idea how the compression algorithm works, either. Thus, this camera is a 
+paperweight unless someone figures out how to decompress the data. Don't buy 
+one unless you are adventurous, patient, and want to help out. That's why it 
+is listed as DEPRECATED. 
+
+SPECIFIC WARNING REGARDING ARGUS QUICKCLIX
+
+For the Mars cameras, all data for raw photos begins with a signature. The 
+uncompressed photos begin with FF FF 00 FF 96 64 00, and raw photos using the 
+compression which is solved begin with FF FF 00 FF 96 64 50. If you get a 
+camera in which the raw data begins with the signature FF FF 00 FF 96 64 20 
+then your camera uses the same compression algorithm as the Argus QuickClix, 
+and obviously it also will not work. 
+
+Finally, one can not distinguish an Argus QuickClix from an Argus DC-1620 by 
+appearance. From the outside they are identical. Also they and several other 
+cameras use the same USB Vendor:Product number and do not give any 
+identification string after they are connected, either. So, unless the new 
+compression algorithm is unlocked, there is a real problem here. 
+
+
 USABILITY OF DRIVER WITH GUI FRONTENDS
 
 The camera library presented here seems to work with gtkam as a frontend. To 
