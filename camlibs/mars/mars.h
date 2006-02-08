@@ -51,10 +51,6 @@ int M_COMMAND (GPPort *port, char *command, int size, char *response);
 int mars_routine (Info *info, GPPort *port, 
 					char param, int n); 
 
-/* Some basic color correction */
-int mars_postprocess(CameraPrivateLibrary *priv, int width, 
-			int height, int is_compressed, unsigned char *rgb, int n);
-
 /* The following are used for decompression of compressed-mode photos */
 void precalc_table(code_table_t *table);
 unsigned char get_bits(unsigned char *inp, int bitpos);
