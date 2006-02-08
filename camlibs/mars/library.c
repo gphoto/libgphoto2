@@ -58,7 +58,7 @@ struct {
    	unsigned short idVendor;
    	unsigned short idProduct;
 } models[] = {
-        {"Aiptek PenCam VGA+", GP_DRIVER_STATUS_EXPERIMENTAL, 0x08ca, 0x0111},
+        {"Aiptek PenCam VGA+", GP_DRIVER_STATUS_TESTING, 0x08ca, 0x0111},
  	{"Emprex PCD3600", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f},
 	{"Vivitar Vivicam 55", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f},
 	{"Haimei Electronics HE-501A", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010e},
@@ -66,9 +66,11 @@ struct {
 	{"Precision Mini, Model HA513A", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f},
 	{"Digital camera, CD302N", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010e},	
 	{"Argus DC-1610", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f}, 
-	{"Argus DC-1620", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f}, 
-	{"Philips P44417B keychain camera", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f}, 
- 	{NULL,0,0,0}
+	{"Argus DC-1620", GP_DRIVER_STATUS_TESTING, 0x093a, 0x010f}, 
+	{"Philips P44417B keychain camera", GP_DRIVER_STATUS_TESTING, 0x093a, 0x010f},
+ 	{"Sakar Digital no. 77379", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f},
+	{"Argus QuickClix", GP_DRIVER_STATUS_DEPRECATED, 0x093a, 0x010f},
+	{NULL,0,0,0}
 };
 
 int
@@ -131,9 +133,12 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
         "equivalents ??Pixart PACx07?\?) and should work with gtkam.\n"
 	"The camera does not support deletion of photos, nor uploading\n"
 	"of data. \n"
-	"This driver will not decode compressed photos.\n" 
+	"Decoding of compressed photos may or may not work well\n" 
+	"and does not work equally well for all supported cameras.\n"
+	"Photo data processing for Argus QuickClix is NOT SUPPORTED.\n"
 	"If present on the camera, video clip frames are downloaded \n"
 	"as consecutive still photos.\n"
+	"For further details please consult libgphoto2/camlibs/README.\n"
 	)); 
 
 	return (GP_OK);
@@ -186,7 +191,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	unsigned char gtable[256];
 	char *ptr;
 	int size = 0;
-	int is_compressed = 0;
 	float gamma_factor;
 
     	GP_DEBUG ("Downloading pictures!\n");
@@ -216,9 +220,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	mars_read_picture_data (camera, camera->pl->info, 
 					    camera->port, data, b, k);
+	/* The first 128 bytes are junk, so we toss them.*/
+	memmove(data, data+128, b - 128);
 
 	if (GP_FILE_TYPE_RAW == type) {
-		memmove(data, data+128, b - 128);
+
 		/* We keep the SOF marker; actual data starts at byte 12 now */
 		gp_file_set_mime_type(file, GP_MIME_RAW);
 		gp_file_set_name(file, filename);
@@ -226,6 +232,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return GP_OK;
 	}
 
+	/* These are cheap cameras. There ain't no EXIF data. */
 	if (GP_FILE_TYPE_EXIF == type) return GP_ERROR_FILE_EXISTS;
 	
 	p_data = malloc (w * h);
@@ -234,11 +241,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		
 
 	if (mars_chk_compression (camera->pl->info, k)) {
-		is_compressed = mars_chk_compression (camera->pl->info, k);
-		mars_decompress (data + 140, p_data, w, h);
+		mars_decompress (data + 12, p_data, w, h);
 	}
-	else memcpy (p_data, data + 140, w*h);		 	
-	gamma_factor = (float)data[135]/128.; 
+	else memcpy (p_data, data + 12, w*h);		 	
+	gamma_factor = (float)data[7]/128.; 
 	free(data);
 
 	/* Now put the data into a PPM image file. */
@@ -256,8 +262,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	GP_DEBUG ("size = %i\n", size);
 
 	gp_bayer_decode (p_data, w , h , ptr, BAYER_TILE_RGGB);
-
-	mars_postprocess(camera->pl, w, h, is_compressed, ptr, k);
 
 	if( gamma_factor < .3 ) gamma_factor = .3;
 	if( gamma_factor > .7 ) gamma_factor = .7;
