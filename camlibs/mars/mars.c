@@ -38,6 +38,14 @@
 #define GET_DATA 	0x0f
 #define RESET		0xba
 
+#ifndef MAX
+# define MAX(a, b) ((a) > (b) ? (a) : (b))
+#endif
+#ifndef MIN
+# define MIN(a, b) ((a) < (b) ? (a) : (b))
+#endif
+
+
 int 
 mars_init (Camera *camera, GPPort *port, Info *info) 
 {
@@ -66,7 +74,7 @@ mars_init (Camera *camera, GPPort *port, Info *info)
 	/* Not a typo. This _will_ download the config data ;) */
 	mars_read_picture_data (camera, info, port, info, 0x2000, 0); 
 
-	/* Removing extraneous line or lines of config data. See "protocol.txt/" */
+	/* Removing extraneous line or lines of config data. See "protocol.txt" */
 	 
 	if ((info[0] == 0xff)&& (info[1] == 0)&&(info[2]==0xff))
 		memmove(info, info + 16, 0x1ff0); /* Saving config */
@@ -131,8 +139,9 @@ int
 mars_read_data         (Camera *camera, GPPort *port, char *data, int size) 
 { 
 	int MAX_BULK = 0x2000;
+	int len = 0;
 	while(size > 0) {
-		int len = (size>MAX_BULK)?MAX_BULK:size;
+		len = (size>MAX_BULK)?MAX_BULK:size;
 	        gp_port_read  (port, data, len); 
     		data += len;
 		size -= len;
@@ -221,7 +230,7 @@ void precalc_table(code_table_t *table)
 	}
 }
 
-#define CLAMP(x)	((x)<0?0:((x)>255)?255:(x))
+#define CLAMP(x)	((x)<16?16:((x)>251)?251:(x))
 
 
 int mars_decompress (unsigned char *inp, 
@@ -233,7 +242,7 @@ int mars_decompress (unsigned char *inp,
 	code_table_t table[256];
 	unsigned char *addr;
 	int bitpos;
-	unsigned char A,B,C,D;
+	unsigned char A,B,C,D, predictor;
 	/* First calculate the Huffman table */
 	precalc_table(table);
 	
@@ -301,10 +310,18 @@ int mars_decompress (unsigned char *inp,
 					B=outp[-2*width ];
 					D=outp[-2*width+2];
 					if (D-A >= 0)
-						val += MIN((D-A)/7, 32)+ (A+B)/2;
+						predictor= 
+						MIN((D-A)/8, 251-(A+B)/2)+ (A+B)/2;
 				
 					else 
-						val += -MIN((A-D)/7, 32)+ (A+B)/2;    
+						predictor= 
+						-MIN((A-D)/8, (A+B)/2-4)+ (A+B)/2;
+					if ((val)&&(predictor > 0xcf))
+						val = (5*val +1)/4;
+					if ((val)&&(predictor < 0x20)) 
+						val = (5*val+3)/4;  	
+				
+					val += predictor;
 				}
 			}
 
@@ -384,77 +401,4 @@ mars_routine (Info *info, GPPort *port, char param, int n)
 }
 
 
-
-
-/* Brightness correction routine adapted from 
- * camlibs/polaroid/jd350e.c, copyright © 2001 Michael Trawny 
- * <trawny99@users.sourceforge.net>
- */
-
-
-#define RED(p,x,y,w) *((p)+3*((y)*(w)+(x))  )
-#define GREEN(p,x,y,w) *((p)+3*((y)*(w)+(x))+1)
-#define BLUE(p,x,y,w) *((p)+3*((y)*(w)+(x))+2)
-
-#define SWAP(a,b) {unsigned char t=(a); (a)=(b); (b)=t;}
-
-#define MINMAX(a,min,max) { (min)=MIN(min,a); (max)=MAX(max,a); }
-
-#ifndef MAX
-# define MAX(a, b) ((a) > (b) ? (a) : (b))
-#endif
-#ifndef MIN
-# define MIN(a, b) ((a) < (b) ? (a) : (b))
-#endif
-
-
-int 
-mars_postprocess(CameraPrivateLibrary *priv, int width, int height, 
-			int is_compressed, unsigned char* rgb, int n)
-{
-	int
-		x,y,
-		red_min=255, red_max=0, 
-		blue_min=255, blue_max=0, 
-		green_min=255, green_max=0;
-	double
-		min, max, amplify = 1.0, THE_MAX = 255.0, THE_MIN = 0.0;
-
-	if (is_compressed) {
-		THE_MAX = 239.0;	
-		THE_MIN = 16.0;
-	}	
-
-	/* determine min and max per color... */
-
-	for( y=0; y<height; y++){
-		for( x=0; x<width; x++ ){
-			MINMAX( RED(rgb,x,y,width), red_min,   red_max  );
-			MINMAX( GREEN(rgb,x,y,width), green_min, green_max);
-			MINMAX( BLUE(rgb,x,y,width), blue_min,  blue_max );
-		}
-	}
-
-
-
-
-	/* Normalize brightness ... */
-
-	max = MAX( MAX( red_max, green_max ), blue_max);
-	min = MIN( MIN( red_min, green_min ), blue_min);
-	amplify = (255.0)/(max-min);
-
-	for( y=0; y<height; y++){
-		for( x=0; x<width; x++ ){
-			RED(rgb,x,y,width) = 
-			    MIN(amplify*(double)(RED(rgb,x,y,width)-min),THE_MAX);
-			GREEN(rgb,x,y,width) = 
-			    MIN(amplify*(double)(GREEN(rgb,x,y,width)-min),THE_MAX);
-			BLUE(rgb,x,y,width) = 
-			    MIN(amplify*(double)(BLUE(rgb,x,y,width)-min),THE_MAX);
-		}
-	}
-
-	return GP_OK;
-}
 
