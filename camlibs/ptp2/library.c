@@ -736,9 +736,9 @@ ptp_write_func (unsigned char *bytes, unsigned int size, void *data)
 		result = gp_port_write (camera->port, (char*)(bytes + curwrite), towrite);
 		if (result < 0)
 			break;
+		curwrite += result;
 		if (usecontext && (oldsize/CONTEXT_BLOCK_SIZE < curwrite/CONTEXT_BLOCK_SIZE))
 			gp_context_progress_update (context, progressid, curwrite/CONTEXT_BLOCK_SIZE);
-		curwrite += result;
 		if (result < towrite) /* short writes happen */
 			break;
 	}
