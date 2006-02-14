@@ -9,6 +9,7 @@ camlibs/canon/library.c
 camlibs/canon/serial.c
 camlibs/canon/usb.c
 camlibs/casio/casio-qv.c
+camlibs/clicksmart310/library.c
 camlibs/digigr8/library.c
 camlibs/digita/digita.c
 camlibs/dimera/dimera3500.c
