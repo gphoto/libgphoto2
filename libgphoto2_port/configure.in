@@ -140,6 +140,16 @@ AC_CHECK_HEADER([regex.h],
 ])
 ])
 
+dnl Apple Bonjour / mDNSResponder multicast DNS queries.
+MDNS_LIBS=
+AC_CHECK_HEADER([dns_sd.h],[
+		AC_CHECK_LIB(dns_sd,DNSServiceResolve,[
+			MDNS_LIBS="-ldns_sd"
+			AC_DEFINE(HAVE_MDNS_BONJOUR,1,[Define if you have Bonjour/mDNSResponder.])
+		])
+])
+AC_SUBST(MDNS_LIBS)
+
 dnl Checks for library functions.
 AC_CHECK_FUNCS(strerror snprintf vsnprintf)
 
@@ -305,6 +315,9 @@ if test "x$have_hal" = "xtrue"; then
 fi
 IOLIB_SUBDIRS="$IOLIB_SUBDIRS disk"
 
+dnl ptpip - works 'everywhere' with TCP/IP stack.
+IOLIB_SUBDIRS="$IOLIB_SUBDIRS ptpip"
+
 # ----------------------------------------------------------------------
 # Define IOLIB stuff
 # ----------------------------------------------------------------------
@@ -368,6 +381,7 @@ libgphoto2_port/Makefile
 serial/Makefile
 usb/Makefile
 disk/Makefile
+ptpip/Makefile
 gphoto2-port-config
 test/Makefile
 doc/Makefile

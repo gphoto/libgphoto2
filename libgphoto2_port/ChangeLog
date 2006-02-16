@@ -1,3 +1,9 @@
+2006-02-16  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* ptpip/: New directory for PTP/IP support.
+	* configure.in: added ptpip directory
+	  autodetect mDNSresponder (UNIX version of Bonjour)
+
 2006-01-04  Hubert Figuiere  <hub@figuiere.net>
 
 	* configure.in: buumped .so version. Bumped 
