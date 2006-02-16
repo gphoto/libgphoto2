@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port 2.1.99\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2005-09-13 07:59+0200\n"
+"POT-Creation-Date: 2006-02-15 07:48+0100\n"
 "PO-Revision-Date: 2005-12-29 14:25+0100\n"
 "Last-Translator: Mogens Jaeger <mogensjaeger@get2net.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
@@ -15,89 +15,89 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.10.2\n"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:185
+#: libgphoto2_port/gphoto2-port-info-list.c:190
 #, c-format
 msgid "Called for filename '%s'."
 msgstr "Kaldte efter filnavn '%s'. "
 
-#: libgphoto2_port/gphoto2-port-info-list.c:190
+#: libgphoto2_port/gphoto2-port-info-list.c:195
 #, c-format
 msgid "Could not load '%s': '%s'."
 msgstr "Kunne ikke indlæse '%s': '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:198
+#: libgphoto2_port/gphoto2-port-info-list.c:203
 #, c-format
 msgid "Could not find some functions in '%s': '%s'."
 msgstr "Kunne ikke finde visse funktioner i '%s': '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:210
+#: libgphoto2_port/gphoto2-port-info-list.c:215
 #, c-format
 msgid "'%s' already loaded"
 msgstr "'%s' allerede indlæst"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:219
+#: libgphoto2_port/gphoto2-port-info-list.c:224
 #, c-format
 msgid "Could not load port driver list: '%s'."
 msgstr "Kunne ikke indlæse portdriverliste: '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:226
+#: libgphoto2_port/gphoto2-port-info-list.c:231
 #, c-format
 msgid "Loaded '%s' ('%s') from '%s'."
 msgstr "Indlæste '%s' ('%s') fra '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:255
+#: libgphoto2_port/gphoto2-port-info-list.c:260
 #, c-format
 msgid "Using ltdl to load io-drivers from '%s'..."
 msgstr "Bruger ltdl til at indlæse io-drivere fra '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:282
+#: libgphoto2_port/gphoto2-port-info-list.c:287
 #, c-format
 msgid "Counting entries (%i available)..."
 msgstr "Tæller indgange (%i til rådighed)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:291
+#: libgphoto2_port/gphoto2-port-info-list.c:296
 #, c-format
 msgid "%i regular entries available."
 msgstr "%i regulære indgange til rådighed."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:320
+#: libgphoto2_port/gphoto2-port-info-list.c:325
 #, c-format
 msgid "Looking for path '%s' (%i entries available)..."
 msgstr "Ser efter sti '%s' (%i indgange til rådighed)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:332
+#: libgphoto2_port/gphoto2-port-info-list.c:337
 #, c-format
 msgid "Starting regex search for '%s'..."
 msgstr "Starter regex-søgning efter '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:338
+#: libgphoto2_port/gphoto2-port-info-list.c:343
 #, c-format
 msgid "Trying '%s'..."
 msgstr "Prøver '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:359
+#: libgphoto2_port/gphoto2-port-info-list.c:364
 msgid "regcomp failed"
 msgstr "regcomp fejlede"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:370
+#: libgphoto2_port/gphoto2-port-info-list.c:375
 #, c-format
 msgid "re_match failed (%i)"
 msgstr "re_match fejlede (%i)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:378
+#: libgphoto2_port/gphoto2-port-info-list.c:383
 msgid "regexec failed"
 msgstr "regexec fejlede"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:385
+#: libgphoto2_port/gphoto2-port-info-list.c:390
 msgid "Generic Port"
 msgstr "Almindelig port"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:409
+#: libgphoto2_port/gphoto2-port-info-list.c:414
 #, c-format
 msgid "Looking up entry '%s'..."
 msgstr "Ser efter indgang '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:439
+#: libgphoto2_port/gphoto2-port-info-list.c:444
 #, c-format
 msgid "Getting info of entry %i (%i available)..."
 msgstr "Henter information om indgang %i (%i til rådighed)..."
@@ -332,86 +332,86 @@ msgstr "msg_read"
 msgid "No error description available"
 msgstr "Ingen fejlbeskrivelse tilgængelig"
 
-#: serial/unix.c:226
+#: serial/unix.c:230
 #, c-format
 msgid "Could not lock device '%s'"
 msgstr "Kunne ikke låse enhed '%s'"
 
-#: serial/unix.c:236
+#: serial/unix.c:240
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr "Enheden '%s' er låst af pid %d"
 
-#: serial/unix.c:239
+#: serial/unix.c:243
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr "Enheden '%s' kunne ikke låses (dev_lock returnerede %d)"
 
-#: serial/unix.c:273
+#: serial/unix.c:277
 #, c-format
 msgid "Device '%s' could not be unlocked."
 msgstr "Enheden '%s' kunne ikke låses op."
 
-#: serial/unix.c:285
+#: serial/unix.c:289
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr "Enheden '%s' kunne ikke låses op da den er låst af pid %d."
 
-#: serial/unix.c:289
+#: serial/unix.c:293
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr "Enheden '%s' kunne ikke låses op (dev_unlock returnerede %d)"
 
-#: serial/unix.c:365
+#: serial/unix.c:369
 #, c-format
 msgid "Serial Port %i"
 msgstr "Seriel-port %i"
 
-#: serial/unix.c:456
+#: serial/unix.c:460
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Åbning af '%s' (%m) fejlede."
 
-#: serial/unix.c:474
+#: serial/unix.c:478
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Kunne ikke lukke '%s' (%m)."
 
-#: serial/unix.c:527
+#: serial/unix.c:531
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "Kunne ikke skrive til port (%m)"
 
-#: serial/unix.c:599
+#: serial/unix.c:603
 msgid "Parity error."
 msgstr "Paritetsfejl."
 
-#: serial/unix.c:603
+#: serial/unix.c:607
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Uventet paritetssvar-sekvens 0xff 0x%02x."
 
-#: serial/unix.c:646
+#: serial/unix.c:650
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Ukendt pin %i."
 
-#: serial/unix.c:668
+#: serial/unix.c:672
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Kunne ikke hente niveau af pin %i (%m)."
 
-#: serial/unix.c:703
+#: serial/unix.c:707
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "Kunne ikke sætte niveau af pin %i til %i (%m)."
 
-#: serial/unix.c:728
+#: serial/unix.c:732
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "Kunne ikke tømme '%s' (%m)."
 
-#: serial/unix.c:841
+#: serial/unix.c:845
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Kunne ikke sætte baudrate til %d"
@@ -503,11 +503,11 @@ msgstr ""
 "Kunne ikke finde USB-enheden (class 0x%x, subclass 0x%x, protokol0x%x). Sikr "
 "dig at enheden er tilsluttet computeren."
 
-#: disk/disk.c:161 disk/disk.c:200 disk/disk.c:222
+#: disk/disk.c:163 disk/disk.c:203 disk/disk.c:225
 #, c-format
 msgid "Media '%s'"
 msgstr "Medie '%s'"
 
-#: disk/disk.c:162
+#: disk/disk.c:164
 msgid "(unknown)"
 msgstr "(ukendt)"

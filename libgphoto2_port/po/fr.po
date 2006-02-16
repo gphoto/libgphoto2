@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2005-06-10 19:40+0200\n"
+"POT-Creation-Date: 2006-02-15 07:48+0100\n"
 "PO-Revision-Date: 2002-06-18 16:33--500\n"
 "Last-Translator: christophe barbé <christophe@ufies.org>\n"
 "Language-Team: Français <traduc@traduc.org>\n"
@@ -13,89 +13,89 @@ msgstr ""
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:185
+#: libgphoto2_port/gphoto2-port-info-list.c:190
 #, fuzzy, c-format
 msgid "Called for filename '%s'."
 msgstr "Impossible d'ouvrir '%s' (%m)."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:190
+#: libgphoto2_port/gphoto2-port-info-list.c:195
 #, fuzzy, c-format
 msgid "Could not load '%s': '%s'."
 msgstr "Impossible de fermer '%s' (%m)."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:198
+#: libgphoto2_port/gphoto2-port-info-list.c:203
 #, c-format
 msgid "Could not find some functions in '%s': '%s'."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:210
+#: libgphoto2_port/gphoto2-port-info-list.c:215
 #, c-format
 msgid "'%s' already loaded"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:219
+#: libgphoto2_port/gphoto2-port-info-list.c:224
 #, fuzzy, c-format
 msgid "Could not load port driver list: '%s'."
 msgstr "Impossible de verrouiller le périphérique '%s'"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:226
+#: libgphoto2_port/gphoto2-port-info-list.c:231
 #, c-format
 msgid "Loaded '%s' ('%s') from '%s'."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:255
+#: libgphoto2_port/gphoto2-port-info-list.c:260
 #, fuzzy, c-format
 msgid "Using ltdl to load io-drivers from '%s'..."
 msgstr "Impossible de verrouiller le périphérique '%s'"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:282
+#: libgphoto2_port/gphoto2-port-info-list.c:287
 #, c-format
 msgid "Counting entries (%i available)..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:291
+#: libgphoto2_port/gphoto2-port-info-list.c:296
 #, c-format
 msgid "%i regular entries available."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:320
+#: libgphoto2_port/gphoto2-port-info-list.c:325
 #, c-format
 msgid "Looking for path '%s' (%i entries available)..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:332
+#: libgphoto2_port/gphoto2-port-info-list.c:337
 #, c-format
 msgid "Starting regex search for '%s'..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:338
+#: libgphoto2_port/gphoto2-port-info-list.c:343
 #, c-format
 msgid "Trying '%s'..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:359
+#: libgphoto2_port/gphoto2-port-info-list.c:364
 msgid "regcomp failed"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:370
+#: libgphoto2_port/gphoto2-port-info-list.c:375
 #, c-format
 msgid "re_match failed (%i)"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:378
+#: libgphoto2_port/gphoto2-port-info-list.c:383
 msgid "regexec failed"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:385
+#: libgphoto2_port/gphoto2-port-info-list.c:390
 msgid "Generic Port"
 msgstr "Port générique"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:409
+#: libgphoto2_port/gphoto2-port-info-list.c:414
 #, c-format
 msgid "Looking up entry '%s'..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:439
+#: libgphoto2_port/gphoto2-port-info-list.c:444
 #, c-format
 msgid "Getting info of entry %i (%i available)..."
 msgstr ""
@@ -181,6 +181,10 @@ msgid "Could not lock the device"
 msgstr "Impossible de verrouiller le périphérique"
 
 #: libgphoto2_port/gphoto2-port-result.c:98
+msgid "libhal error"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-result.c:100
 msgid "Unknown error"
 msgstr "Erreur inconnue"
 
@@ -207,238 +211,234 @@ msgstr "Impossible de fermer '%s' (%m)."
 msgid "Could not find 'gp_port_library_operations' in '%s' ('%s')"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:245
+#: libgphoto2_port/gphoto2-port.c:250
 #, c-format
 msgid "Opening %s port..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:267
+#: libgphoto2_port/gphoto2-port.c:272
 msgid "Closing port..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:289
+#: libgphoto2_port/gphoto2-port.c:294
 msgid "Freeing port..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:334
+#: libgphoto2_port/gphoto2-port.c:339
 #, c-format
 msgid "Writing %i=0x%x byte(s) to port..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:347
+#: libgphoto2_port/gphoto2-port.c:352
 #, fuzzy, c-format
 msgid "Could only write %i out of %i byte(s)"
 msgstr "Impossible d'écrire sur le port (%m)"
 
-#: libgphoto2_port/gphoto2-port.c:368
+#: libgphoto2_port/gphoto2-port.c:373
 #, c-format
 msgid "Reading %i=0x%x bytes from port..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:379 libgphoto2_port/gphoto2-port.c:415
-#: libgphoto2_port/gphoto2-port.c:454 libgphoto2_port/gphoto2-port.c:776
+#: libgphoto2_port/gphoto2-port.c:384 libgphoto2_port/gphoto2-port.c:420
+#: libgphoto2_port/gphoto2-port.c:459 libgphoto2_port/gphoto2-port.c:781
 #, c-format
 msgid "Could only read %i out of %i byte(s)"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:404
+#: libgphoto2_port/gphoto2-port.c:409
 #, c-format
 msgid "Reading %i=0x%x bytes from interrupt endpoint..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:464
+#: libgphoto2_port/gphoto2-port.c:469
 #, c-format
 msgid "Reading %i=0x%x bytes from interrupt endpoint (fast)..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:489
+#: libgphoto2_port/gphoto2-port.c:494
 #, c-format
 msgid "Setting timeout to %i millisecond(s)..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:525
+#: libgphoto2_port/gphoto2-port.c:530
 msgid "Getting timeout..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:529
+#: libgphoto2_port/gphoto2-port.c:534
 #, c-format
 msgid "Current timeout: %i milliseconds"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:551
+#: libgphoto2_port/gphoto2-port.c:556
 msgid "Setting settings..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:602
+#: libgphoto2_port/gphoto2-port.c:607
 #, fuzzy, c-format
 msgid "Getting level of pin %i..."
 msgstr "Impossible de connaître le niveau de la borne %i (%m)."
 
-#: libgphoto2_port/gphoto2-port.c:611
+#: libgphoto2_port/gphoto2-port.c:616
 #, c-format
 msgid "Level of pin %i: %i"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:637
+#: libgphoto2_port/gphoto2-port.c:642
 msgid "low"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:638
+#: libgphoto2_port/gphoto2-port.c:643
 msgid "high"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:653
+#: libgphoto2_port/gphoto2-port.c:658
 #, c-format
 msgid "Setting pin %i (%s: '%s') to '%s'..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:670
+#: libgphoto2_port/gphoto2-port.c:675
 #, c-format
 msgid "Sending break (%i milliseconds)..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:685
+#: libgphoto2_port/gphoto2-port.c:690
 msgid "Flushing port..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:726
+#: libgphoto2_port/gphoto2-port.c:731
 #, fuzzy
 msgid "Clear halt..."
 msgstr "clear_halt"
 
-#: libgphoto2_port/gphoto2-port.c:743
+#: libgphoto2_port/gphoto2-port.c:748
 #, c-format
 msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:764
+#: libgphoto2_port/gphoto2-port.c:769
 #, c-format
 msgid "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:771 libgphoto2_port/gphoto2-port.c:825
+#: libgphoto2_port/gphoto2-port.c:776
 msgid "msg_read"
 msgstr "msg_read"
 
-#: libgphoto2_port/gphoto2-port.c:803
-msgid "msg_build"
-msgstr ""
-
-#: libgphoto2_port/gphoto2-port.c:887
+#: libgphoto2_port/gphoto2-port.c:892
 msgid "No error description available"
 msgstr "Pas de description d'erreur disponible"
 
-#: serial/unix.c:226
+#: serial/unix.c:230
 #, c-format
 msgid "Could not lock device '%s'"
 msgstr "Impossible de verrouiller le périphérique '%s'"
 
-#: serial/unix.c:236
+#: serial/unix.c:240
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr "Le périphérique '%s' est verrouillé par le processus %d."
 
-#: serial/unix.c:239
+#: serial/unix.c:243
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr "Le périphérique '%s' ne peut être verrouillé (dev_lock a retourné %d)"
 
-#: serial/unix.c:273
+#: serial/unix.c:277
 #, c-format
 msgid "Device '%s' could not be unlocked."
 msgstr "Impossible de déverrouiller le périphérique '%s'."
 
-#: serial/unix.c:285
+#: serial/unix.c:289
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr ""
 "Le périphérique '%s' ne peut être déverrouillé car verrouillé par le "
 "processus %d."
 
-#: serial/unix.c:289
+#: serial/unix.c:293
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr "Le device '%s' ne peut être déverrouillé (dev_unlock a retourné %d)"
 
-#: serial/unix.c:365
+#: serial/unix.c:369
 #, c-format
 msgid "Serial Port %i"
 msgstr "Port série %i"
 
-#: serial/unix.c:456
+#: serial/unix.c:460
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Impossible d'ouvrir '%s' (%m)."
 
-#: serial/unix.c:474
+#: serial/unix.c:478
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Impossible de fermer '%s' (%m)."
 
-#: serial/unix.c:527
+#: serial/unix.c:531
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "Impossible d'écrire sur le port (%m)"
 
-#: serial/unix.c:599
+#: serial/unix.c:603
 msgid "Parity error."
 msgstr "Erreur de parité."
 
-#: serial/unix.c:603
+#: serial/unix.c:607
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Séquence de réponse de parité 0xff 0x%02x inattendue."
 
-#: serial/unix.c:646
+#: serial/unix.c:650
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Borne inconnue %i."
 
-#: serial/unix.c:668
+#: serial/unix.c:672
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Impossible de connaître le niveau de la borne %i (%m)."
 
-#: serial/unix.c:703
+#: serial/unix.c:707
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "Impossible de configurer le niveau de la borne %i à %i (%m)."
 
-#: serial/unix.c:728
+#: serial/unix.c:732
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "Impossible de vider '%s' (%m)."
 
-#: serial/unix.c:841
+#: serial/unix.c:845
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Impossible de configurer le débit à %d"
 
-#: usb/libusb.c:186
+#: usb/libusb.c:218
 #, c-format
 msgid "Could not open USB device (%m)."
 msgstr "Impossible d'ouvrir le périphérique USB (%m)."
 
-#: usb/libusb.c:196
+#: usb/libusb.c:228
 msgid "Camera is already in use."
 msgstr ""
 
-#: usb/libusb.c:201
+#: usb/libusb.c:233
 #, c-format
 msgid "Device has driver '%s' attached, detaching it now."
 msgstr ""
 
-#: usb/libusb.c:204
+#: usb/libusb.c:236
 #, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
 msgstr ""
 
-#: usb/libusb.c:206
+#: usb/libusb.c:238
 #, fuzzy
 msgid "Could not query kernel driver of device."
 msgstr "Impossible de verrouiller le périphérique"
 
-#: usb/libusb.c:213
+#: usb/libusb.c:245
 #, fuzzy, c-format
 msgid ""
 "Could not claim interface %d (%m). Make sure no other program or kernel "
@@ -449,32 +449,32 @@ msgstr ""
 "ou module noyau (par ex. dc2xx ou stv680) n'utilise le périphérique et que "
 "vous avez bien accès en lecture/écriture au descripteur de périphérique."
 
-#: usb/libusb.c:232
+#: usb/libusb.c:264
 #, c-format
 msgid "Could not release interface %d (%m)."
 msgstr "Impossible de relâcher l'interface %d (%m)."
 
-#: usb/libusb.c:239
+#: usb/libusb.c:271
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr "Impossible de fermer le port USB (%m)."
 
-#: usb/libusb.c:419
+#: usb/libusb.c:451
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "Impossible de configurer %d/%d (%m)"
 
-#: usb/libusb.c:449
+#: usb/libusb.c:481
 #, c-format
 msgid "Could not set altsetting %d/%d (%m)"
 msgstr "Impossible de positionner la configuration alternative %d/%d (%m)"
 
-#: usb/libusb.c:541
+#: usb/libusb.c:573
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr "Le couple fabricant/produit (0x%x,0x%x) est invalide."
 
-#: usb/libusb.c:573
+#: usb/libusb.c:605
 #, c-format
 msgid ""
 "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
@@ -484,7 +484,7 @@ msgstr ""
 "stockage de masse, et peut ne peut pas fonctionner avec gphoto2. Référence: %"
 "s"
 
-#: usb/libusb.c:606
+#: usb/libusb.c:638
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
@@ -493,7 +493,7 @@ msgstr ""
 "Impossible de trouver le périphérique USB (fabricant 0x%x, produit 0x%x). "
 "Assurez-vous qu'il est bien connecté à l'ordinateur."
 
-#: usb/libusb.c:740
+#: usb/libusb.c:772
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
@@ -501,6 +501,15 @@ msgid ""
 msgstr ""
 "Impossible de trouver le périphérique USB (fabricant 0x%x, sous-classe 0x%x, "
 "produit 0x%x). Assurez-vous qu'il est bien connecté à l'ordinateur."
+
+#: disk/disk.c:163 disk/disk.c:203 disk/disk.c:225
+#, c-format
+msgid "Media '%s'"
+msgstr ""
+
+#: disk/disk.c:164
+msgid "(unknown)"
+msgstr ""
 
 #~ msgid "Could not load any io-library because '%s' could not be opened (%m)"
 #~ msgstr ""
