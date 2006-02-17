@@ -70,7 +70,7 @@ while ($#data) {
 		$dataskip = 0 if ($code == 0x9007);
 		@curdata = ();
 	}
-	printf "off $off, type = %04x, code=%04x, len = %08x, seqnr = %08x\n", $type, $code, $len, $seqnr;
+	printf "off %x, type = %04x, code=%04x, len = %08x, seqnr = %08x\n", $off, $type, $code, $len, $seqnr;
 	my @bytes = @data[0xc..$len-1];
 	if ($type == 2) {
 		if ($dataskip == 0) {

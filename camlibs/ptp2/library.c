@@ -853,6 +853,19 @@ camera_abilities (CameraAbilitiesList *list)
 		GP_FOLDER_OPERATION_REMOVE_DIR;
 	CR (gp_abilities_list_append (list, a));
 
+#ifdef ENABLE_PTPIP /* Not fully polished yet. */
+	strcpy(a.model, "PTP/IP Camera");
+	a.status = GP_DRIVER_STATUS_TESTING;
+	a.port   = GP_PORT_PTPIP;
+	a.operations        =	GP_CAPTURE_IMAGE		|
+				GP_OPERATION_CONFIG;
+	a.file_operations   =	GP_FILE_OPERATION_PREVIEW	|
+				GP_FILE_OPERATION_DELETE;
+	a.folder_operations =	GP_FOLDER_OPERATION_PUT_FILE	|
+				GP_FOLDER_OPERATION_MAKE_DIR	|
+				GP_FOLDER_OPERATION_REMOVE_DIR;
+	CR (gp_abilities_list_append (list, a));
+#endif
 	return (GP_OK);
 }
 
@@ -4181,12 +4194,20 @@ camera_init (Camera *camera, GPContext *context)
 	int ret, i, retried = 0;
 	PTPParams *params;
 
-	/* Make sure our port is a USB port */
-	if (camera->port->type != GP_PORT_USB) {
-		gp_context_error (context, _("PTP is implemented for "
-			"USB cameras only."));
+#ifdef ENABLE_PTPIP
+	/* Make sure our port is either USB or PTP/IP. */
+	if ((camera->port->type != GP_PORT_USB) && (camera->port->type != GP_PORT_PTPIP)) {
+		gp_context_error (context, _("PTP is only implemented for "
+			"USB and PTP/IP cameras currently, port type %x"), camera->port->type);
 		return (GP_ERROR_UNKNOWN_PORT);
 	}
+#else
+	/* Make sure our port is a USB port. */
+	if (camera->port->type != GP_PORT_USB) {
+		gp_context_error (context, _("PTP is implemented for USB cameras only."));
+		return (GP_ERROR_UNKNOWN_PORT);
+	}
+#endif
 
 	camera->functions->about = camera_about;
 	camera->functions->exit = camera_exit;
@@ -4201,16 +4222,6 @@ camera_init (Camera *camera, GPContext *context)
 	if (!camera->pl)
 		return (GP_ERROR_NO_MEMORY);
 	params = &camera->pl->params;
-	camera->pl->params.sendreq_func=ptp_usb_sendreq;
-	camera->pl->params.senddata_func=ptp_usb_senddata;
-	camera->pl->params.getresp_func=ptp_usb_getresp;
-	camera->pl->params.getdata_func=ptp_usb_getdata;
-	camera->pl->params.write_func = ptp_write_func;
-	camera->pl->params.read_func  = ptp_read_func;
-	camera->pl->params.event_check = ptp_usb_event_check;
-	camera->pl->params.event_wait = ptp_usb_event_wait;
-	camera->pl->params.check_int_func = ptp_check_int;
-	camera->pl->params.check_int_fast_func = ptp_check_int_fast;
 	camera->pl->params.debug_func = ptp_debug_func;
 	camera->pl->params.error_func = ptp_error_func;
 	camera->pl->params.data = malloc (sizeof (PTPData));
@@ -4218,6 +4229,47 @@ camera_init (Camera *camera, GPContext *context)
 	((PTPData *) camera->pl->params.data)->camera = camera;
 	camera->pl->params.byteorder = PTP_DL_LE;
 
+	switch (camera->port->type) {
+	case GP_PORT_USB:
+		camera->pl->params.sendreq_func		= ptp_usb_sendreq;
+		camera->pl->params.senddata_func	= ptp_usb_senddata;
+		camera->pl->params.getresp_func		= ptp_usb_getresp;
+		camera->pl->params.getdata_func		= ptp_usb_getdata;
+		camera->pl->params.event_wait		= ptp_usb_event_wait;
+		camera->pl->params.event_check		= ptp_usb_event_check;
+
+		camera->pl->params.write_func		= ptp_write_func;
+		camera->pl->params.read_func		= ptp_read_func;
+		camera->pl->params.check_int_func	= ptp_check_int;
+		camera->pl->params.check_int_fast_func	= ptp_check_int_fast;
+		break;
+#ifdef ENABLE_PTPIP
+	case GP_PORT_PTPIP: {
+		GPPortInfo	pinfo;
+
+		ret = gp_port_get_info (camera->port, &pinfo);
+		if (ret != GP_OK)
+			return ret;
+		ret = ptp_ptpip_connect (&camera->pl->params, "192.168.0.5:15740");
+		if (ret != GP_OK)
+			return ret;
+		camera->pl->params.sendreq_func		= ptp_ptpip_sendreq;
+		camera->pl->params.senddata_func	= ptp_ptpip_senddata;
+		camera->pl->params.getresp_func		= ptp_ptpip_getresp;
+		camera->pl->params.getdata_func		= ptp_ptpip_getdata;
+		camera->pl->params.event_wait		= ptp_ptpip_event_wait;
+		camera->pl->params.event_check		= ptp_ptpip_event_check;
+
+		camera->pl->params.write_func		= NULL;
+		camera->pl->params.read_func		= NULL;
+		camera->pl->params.check_int_func	= NULL;
+		camera->pl->params.check_int_fast_func	= NULL;
+		break;
+	}
+#endif
+	default:
+		break;
+	}
         gp_camera_get_abilities(camera, &a);
         for (i = 0; models[i].model; i++) {
             if ((a.usb_vendor == models[i].usb_vendor) &&
@@ -4232,7 +4284,6 @@ camera_init (Camera *camera, GPContext *context)
 	 * waiting for event after capture may take some time also
 	 */
 	CR (gp_port_set_timeout (camera->port, USB_TIMEOUT));
-	/* do we configure port ???*/
 
 	/* Establish a connection to the camera */
 	((PTPData *) camera->pl->params.data)->context = context;

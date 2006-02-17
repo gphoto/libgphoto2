@@ -1,3 +1,25 @@
+2006-02-17  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptpip.c,ptp.h,library.c:
+	
+          PTP/IP protocol implementation.
+
+	  Currently not enabled, just included for
+	  reference and the not so faint at heart.
+
+	  Missing:
+	  - Still using hardcoded IP address and GUID.
+	  - autoconf the UNIX socket function stuff.
+	  - PTPIP event handling
+
+2006-02-17  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptp.c: Return the actual PTP protocol return
+	  code from the ptp_transaction(). 
+
+	  This makes us see the actual errors the camera
+	  reports.
+
 2006-02-06  Marcus Meissner  <marcus@jet.franken.de>
 	* library.c: Added EOS 5D
 
