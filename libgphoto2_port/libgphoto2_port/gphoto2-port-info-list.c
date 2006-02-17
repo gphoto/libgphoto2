@@ -144,7 +144,9 @@ gp_port_info_list_free (GPPortInfoList *list)
  * against info.path and - if successfull - will append this entry to the 
  * list.
  *
- * Return value: The index of the new entry or a gphoto2 error code
+ * NOTE: This returns index - number of generic entries, not the correct index.
+ *
+ * Return value: A non-negative number or a gphoto2 error code
  **/
 int
 gp_port_info_list_append (GPPortInfoList *list, GPPortInfo info)
@@ -385,10 +387,11 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 		}
 #endif
 		CR (result = gp_port_info_list_append (list, list->info[i]));
-		strncpy (list->info[result].path, path,
-			 sizeof (list->info[result].path));
-		strncpy (list->info[result].name, _("Generic Port"),
-			 sizeof (list->info[result].name));
+		/* NOTE: this is offset by "generic" */
+		strncpy (list->info[result + generic].path, path,
+			 sizeof (list->info[result + generic].path));
+		strncpy (list->info[result + generic].name, _("Generic Port"),
+			 sizeof (list->info[result + generic].name));
 		return (result);
 	}
 
