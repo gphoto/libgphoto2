@@ -316,7 +316,8 @@ ptp_transaction (PTPParams* params, PTPContainer* ptp,
 	}
 	/* get response */
 	CHECK_PTP_RC(params->getresp_func(params, ptp));
-	return PTP_RC_OK;
+
+	return ptp->Code;
 }
 
 /* Enets handling functions */
@@ -767,7 +768,7 @@ ptp_sendobjectinfo (PTPParams* params, uint32_t* store,
 	ptp.Nparam=2;
 	
 	size=ptp_pack_OI(params, objectinfo, &oidata);
-	ret=ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &oidata, NULL); 
+	ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &oidata, NULL); 
 	free(oidata);
 	*store=ptp.Param1;
 	*parenthandle=ptp.Param2;
