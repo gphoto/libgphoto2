@@ -85,14 +85,22 @@ gp_port_library_list (GPPortInfoList *list)
 	/* default port first */
 	info.type = GP_PORT_USB;
 	strcpy (info.name, "Universal Serial Bus");
-        strcpy (info.path, "usb:");
+	strcpy (info.path, "usb:");
+	CHECK (gp_port_info_list_append (list, info));
+
+	/* generic matcher. This will catch passed XXX,YYY entries for instance. */
+	memset (info.name, 0, sizeof(info.name));
+	strcpy (info.path, "^usb:");
 	CHECK (gp_port_info_list_append (list, info));
 
 	usb_init ();
 	usb_find_busses ();
 	usb_find_devices ();
 
+	strcpy (info.name, "Universal Serial Bus");
+
 	bus = usb_get_busses();
+
 	/* Look and enumerate all USB ports. */
 	while (bus) {
 		for (dev = bus->devices; dev; dev = dev->next) {
