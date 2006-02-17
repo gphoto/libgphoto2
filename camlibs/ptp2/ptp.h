@@ -100,6 +100,28 @@ typedef struct _PTPUSBEventContainer PTPUSBEventContainer;
 #define PTP_USB_CONTAINER_RESPONSE		0x0003
 #define PTP_USB_CONTAINER_EVENT			0x0004
 
+/* PTP/IP definitions */
+#define PTPIP_INIT_COMMAND_REQUEST	1
+#define PTPIP_INIT_COMMAND_ACK		2
+#define PTPIP_INIT_EVENT_REQUEST	3
+#define PTPIP_INIT_EVENT_ACK		4
+#define PTPIP_INIT_FAIL			5
+#define PTPIP_CMD_REQUEST		6
+#define PTPIP_CMD_RESPONSE		7
+#define PTPIP_EVENT			8
+#define PTPIP_START_DATA_PACKET		9
+#define PTPIP_DATA_PACKET		10
+#define PTPIP_CANCEL_TRANSACTION	11
+#define PTPIP_END_DATA_PACKET		12
+#define PTPIP_PING			13
+#define PTPIP_PONG			14
+
+struct _PTPIPHeader {
+	uint32_t	length;
+	uint32_t	type;
+};
+typedef struct _PTPIPHeader PTPIPHeader;
+
 /* Vendor IDs */
 #define PTP_VENDOR_EASTMAN_KODAK	0x00000001
 #define PTP_VENDOR_SEIKO_EPSON		0x00000002
@@ -992,6 +1014,12 @@ struct _PTPParams {
 	PTPObjectHandles handles;
 	PTPObjectInfo * objectinfo;
 	PTPDeviceInfo deviceinfo;
+
+	/* PTP/IP related data */
+	int		cmdfd, evtfd;
+	uint8_t		cameraguid[16];
+	uint32_t	eventpipeid;
+	char		*cameraname;
 };
 
 /* last, but not least - ptp functions */
@@ -1002,7 +1030,17 @@ uint16_t ptp_usb_getresp	(PTPParams* params, PTPContainer* resp);
 uint16_t ptp_usb_getdata	(PTPParams* params, PTPContainer* ptp, 
 				unsigned char **data, unsigned int *readlen);
 uint16_t ptp_usb_event_check	(PTPParams* params, PTPContainer* event);
-uint16_t ptp_usb_event_wait		(PTPParams* params, PTPContainer* event);
+uint16_t ptp_usb_event_wait	(PTPParams* params, PTPContainer* event);
+
+int      ptp_ptpip_connect	(PTPParams* params, const char *port);
+uint16_t ptp_ptpip_sendreq	(PTPParams* params, PTPContainer* req);
+uint16_t ptp_ptpip_senddata	(PTPParams* params, PTPContainer* ptp,
+				unsigned char *data, unsigned int size);
+uint16_t ptp_ptpip_getresp	(PTPParams* params, PTPContainer* resp);
+uint16_t ptp_ptpip_getdata	(PTPParams* params, PTPContainer* ptp, 
+				unsigned char **data, unsigned int *readlen);
+uint16_t ptp_ptpip_event_wait	(PTPParams* params, PTPContainer* event);
+uint16_t ptp_ptpip_event_check	(PTPParams* params, PTPContainer* event);
 
 uint16_t ptp_getdeviceinfo	(PTPParams* params, PTPDeviceInfo* deviceinfo);
 
