@@ -1,7 +1,18 @@
+2006-02-19  Marcus Meissner  <marcus@jet.franken.de>
+
+	* Regular expression support added for:
+
+	  usb:		(currently supported: usb:XXX,YYY,
+			 can get easily more)
+
+	  disk:		(disk:/full/path/)
+	  ptpip:	(ptpip:ipnr:port)
+
 2006-02-17  Marcus Meissner  <marcus@jet.franken.de>
 
 	* libgphoto2_port/gphoto2-port-info-list.c: Fixed
-	  regexp handling.
+	  various problems in regular expression based ports
+	  handling.
 
 2006-02-16  Marcus Meissner  <marcus@jet.franken.de>
 	
