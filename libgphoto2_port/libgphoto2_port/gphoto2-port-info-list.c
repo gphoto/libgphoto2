@@ -267,7 +267,6 @@ gp_port_info_list_load (GPPortInfoList *list)
 	lt_dlexit ();
 	if (result < 0)
 		return (result);
-
         return (GP_OK);
 }
 
@@ -338,6 +337,8 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list",
 		_("Starting regex search for '%s'..."), path);
 	for (i = 0; i < list->count; i++) {
+		GPPortInfo newinfo;
+
 		if (strlen (list->info[i].name))
 			continue;
 
@@ -386,13 +387,11 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 			continue;
 		}
 #endif
-		CR (result = gp_port_info_list_append (list, list->info[i]));
-		/* NOTE: this is offset by "generic" */
-		strncpy (list->info[result + generic].path, path,
-			 sizeof (list->info[result + generic].path));
-		strncpy (list->info[result + generic].name, _("Generic Port"),
-			 sizeof (list->info[result + generic].name));
-		return (result);
+		memcpy (&newinfo, &list->info[i], sizeof(newinfo));
+		strncpy (newinfo.path, path, sizeof (newinfo.path));
+		strncpy (newinfo.name, _("Generic Port"), sizeof (newinfo.name));
+		CR (result = gp_port_info_list_append (list, newinfo));
+		return result;
 	}
 
 	return (GP_ERROR_UNKNOWN_PORT);
