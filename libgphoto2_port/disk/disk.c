@@ -230,8 +230,12 @@ gp_port_library_list (GPPortInfoList *list)
 	}
 	endmntent(mnt);
 # endif
-/* actually else ... "no ports available here." */
 #endif
+	/* generic disk:/xxx/ matcher */
+	info.type = GP_PORT_DISK;
+	memset (info.name, 0, sizeof(info.name));
+	snprintf (info.path, sizeof(info.path), "^disk:");
+	CHECK (gp_port_info_list_append (list, info));
 	return GP_OK;
 }
 
