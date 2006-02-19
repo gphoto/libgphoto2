@@ -120,7 +120,7 @@ _ptpip_resolved (
 	memcpy(&inaddr.s_addr,hent->h_addr_list[0],hent->h_length);
 	info.type = GP_PORT_PTPIP;
 	snprintf (info.name, sizeof(info.name), mdnsi->name);
-	snprintf (info.path, sizeof(info.path), "ptpip:%s", inet_ntoa(inaddr));
+	snprintf (info.path, sizeof(info.path), "ptpip:%s:%d", inet_ntoa(inaddr), port);
 	gp_port_info_list_append (mdnsi->list, info);
 }
 
@@ -189,11 +189,13 @@ gp_port_library_list (GPPortInfoList *list)
 	);
 	/* We need to make it a non-blocking query */
 	fd = DNSServiceRefSockFD(sd);
-	FD_ZERO (&infds); FD_SET (fd, &infds); 
-	tv.tv_sec = 0; tv.tv_usec = 1;
-	/* If we have input, we can try to process a result */
-	if (1 == select (fd+1, &infds, NULL, NULL, &tv))
-		DNSServiceProcessResult (sd);
+	if (fd != -1) {
+		FD_ZERO (&infds); FD_SET (fd, &infds); 
+		tv.tv_sec = 0; tv.tv_usec = 1;
+		/* If we have input, we can try to process a result */
+		if (1 == select (fd+1, &infds, NULL, NULL, &tv))
+			DNSServiceProcessResult (sd);
+	}
 	DNSServiceRefDeallocate (sd);
 #endif
 	return GP_OK;
