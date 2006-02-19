@@ -122,6 +122,11 @@ _ptpip_resolved (
 	snprintf (info.name, sizeof(info.name), mdnsi->name);
 	snprintf (info.path, sizeof(info.path), "ptpip:%s:%d", inet_ntoa(inaddr), port);
 	gp_port_info_list_append (mdnsi->list, info);
+
+	/* regexp matcher */
+	memset (info.name, 0, sizeof(info.name));
+	snprintf (info.path, sizeof(info.path), "^ptpip:");
+	gp_port_info_list_append (mdnsi->list, info);
 }
 
 static void
