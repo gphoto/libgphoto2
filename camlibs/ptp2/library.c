@@ -4250,11 +4250,15 @@ camera_init (Camera *camera, GPContext *context)
 		GPPortInfo	pinfo;
 
 		ret = gp_port_get_info (camera->port, &pinfo);
-		if (ret != GP_OK)
+		if (ret != GP_OK) {
+			gp_log (GP_LOG_ERROR, "ptpip", "Failed to get port info?\n");
 			return ret;
-		ret = ptp_ptpip_connect (&camera->pl->params, "192.168.0.5:15740");
-		if (ret != GP_OK)
+		}
+		ret = ptp_ptpip_connect (&camera->pl->params, pinfo.path);
+		if (ret != GP_OK) {
+			gp_log (GP_LOG_ERROR, "ptpip", "Failed to connect.\n");
 			return ret;
+		}
 		camera->pl->params.sendreq_func		= ptp_ptpip_sendreq;
 		camera->pl->params.senddata_func	= ptp_ptpip_senddata;
 		camera->pl->params.getresp_func		= ptp_ptpip_getresp;
