@@ -204,6 +204,11 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
 			strchr(info.path, ':') + 1, 
 			sizeof(port->settings.disk.mountpoint));
 		break;
+	case GP_PORT_PTPIP:
+		strncpy(port->settings.ptpip.address, 
+			strchr(info.path, ':') + 1, 
+			sizeof(port->settings.ptpip.address));
+		break;
 	default:
 		/* Nothing in here */
 		break;

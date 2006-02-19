@@ -84,11 +84,17 @@ struct _GPPortSettingsDisk {
 	char mountpoint[128];
 };
 
+typedef struct _GPPortSettingsPTPIP GPPortSettingsPTPIP;
+struct _GPPortSettingsPTPIP {
+	char address[128];
+};
+
 typedef union _GPPortSettings GPPortSettings;
 union _GPPortSettings {
-	GPPortSettingsSerial serial;
-	GPPortSettingsUSB usb;
-	GPPortSettingsDisk disk;
+	GPPortSettingsSerial	serial;
+	GPPortSettingsUSB	usb;
+	GPPortSettingsDisk	disk;
+	GPPortSettingsPTPIP	ptpip;
 };
 
 enum {
