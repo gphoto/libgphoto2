@@ -64,7 +64,7 @@ msgstr "Zähle Eintrage (%i vorhanden)..."
 #: libgphoto2_port/gphoto2-port-info-list.c:296
 #, c-format
 msgid "%i regular entries available."
-msgstr "%i reguläre Eintrage verf?gbar."
+msgstr "%i reguläre Einträge verfügbar."
 
 #: libgphoto2_port/gphoto2-port-info-list.c:325
 #, c-format
