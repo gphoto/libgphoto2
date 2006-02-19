@@ -94,7 +94,11 @@ SET_SHOOT_PARAM			= 0xa7,
 	SET_SHOOT_MODE_BY_INDEX		= 0xaa,
 	GET_SHOOT_MODE_TABLE		= 0xab,
 	SET_ACTIVE_SHOOTING_MODE	= 0xac,
-	TAKE_PHOTO 			= 0xb0,
+
+TAKE_PHOTO 			= 0xb0,
+	Either no arguments (stores photo on camera)?
+	
+
 	DELETE_PHOTO			= 0xb1,
 
 PROTECT_PHOTO			= 0xb2,
@@ -114,6 +118,8 @@ DOWNLOAD_PHOTO			= 0xb4,
 
 TAKE_PREVIEW			= 0xb5,
 	Either no arguments, or a single 16 bit 1.
+
+	No arguments -> returns data.
 
 	Returns image date (jpeg) in the large reply blob.
 	Occasionaly causes next command to result in NAK.
