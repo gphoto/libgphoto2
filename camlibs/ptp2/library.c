@@ -3163,6 +3163,7 @@ static struct submenu camera_settings_menu[] = {
 /* virtual */
 	{ N_("Fast Filesystem"), "fastfs", 0, PTP_VENDOR_NIKON, 0, _get_Nikon_FastFS, _put_Nikon_FastFS },
 	{ N_("Capture Target"), "capturetarget", 0, PTP_VENDOR_NIKON, 0, _get_CaptureTarget, _put_CaptureTarget },
+	{ N_("Capture Target"), "capturetarget", 0, PTP_VENDOR_CANON, 0, _get_CaptureTarget, _put_CaptureTarget },
 	{ N_("Capture"), "capture", 0, PTP_VENDOR_CANON, 0, _get_Canon_CaptureMode, _put_Canon_CaptureMode},
 	{ NULL },
 };
