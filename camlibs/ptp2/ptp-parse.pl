@@ -70,12 +70,22 @@ while ($#data) {
 		$dataskip = 0 if ($code == 0x9007);
 		@curdata = ();
 	}
-	printf "off %x, type = %04x, code=%04x, len = %08x, seqnr = %08x\n", $off, $type, $code, $len, $seqnr;
-	my @bytes = @data[0xc..$len-1];
+	# printf "off %x, type = %04x, code=%04x, len = %08x, seqnr = %08x\n", $off, $type, $code, $len, $seqnr;
+	my @bytes;
+	if ($len <= 64) {
+ 		@bytes = @data[0xc..$len-1];
+	} else {
+ 		@bytes = @data[0xc..0x3f]+@data[0x40+0x120..0x120+$len-1];
+	}
 	if ($type == 2) {
 		if ($dataskip == 0) {
-			print "...using data\n";
+			my $i;
 			@curdata = @data[0xc..$len-1];
+			if ($len <= 64) {
+				@curdata = @data[0xc..$len-1];
+			} else {
+				@curdata = (@data[0xc..0x3f],@data[0x40+0x120..0x120+$len-1]);
+			}
 		}
 		$dataskip--;
 	}
@@ -90,6 +100,29 @@ while ($#data) {
 print "done\n";
 exit 0;
 
+
+sub hexdump {
+	my @data = @_;
+	my $i;
+	my $str = "";
+	for ($i = 0;$i <= $#data ; $i++) {
+		my $c = $data[$i];
+		if (($i & 0x0f) == 0) {
+			if ($i) {
+				print " $str\n";
+				$str = "";
+			}
+			printf "%03x: ", $i;
+		}
+		printf " %02x", $c;
+		if (($c >= 0x20) && ($c < 0x7f)) {
+			$str .= sprintf "%c", $c;
+		} else {
+			$str .= ".";
+		}
+	}
+	printf " $str\n";
+}
 
 sub get_uint32 {
 	my($arrref) = @_;
@@ -217,7 +250,7 @@ dump_ptp_line() {
 	my $dummy;
 
 	if ($type == 3) {
-		if ($code == 0x2001) { print "OK(2001) "; }
+		if ($code == 0x2001) { print "OK(2001) - "; }
 		elsif ($code == 0x2002) { print "GeneralError(2002) "; }
 		elsif ($code == 0x2019) { print "DeviceBusy(2019) "; }
 		else { printf "Unknown(%04x) ",$code; }
@@ -429,13 +462,19 @@ dump_ptp_line() {
 			print "\n";
 		}
 		return;
-	} elsif ($code == 0x2001) {
-		print "OK(2001) ";
-			
-		while ($#bytes > 0) {
-			printf "0x%08x", get_uint32(\@bytes);
-			print "," if ($#bytes >0);
+	} elsif (($vendorid == 10) && ($code == 0x9007)) {
+		if ($type == 1) {
+			my $profnr = get_uint32(\@bytes);
+			print "NIKON UploadProfile(9007) nr=$profnr\n";
+		} elsif ($type == 3) {
+			print "NIKON UploadProfile(9007), data:\n";
+			hexdump(@curdata);
 		}
+		return;
+	} elsif ($code == 0x2001) {
+		my $code = get_uint32(\@bytes);
+		print "OK(2001) code=$code";
+		hexdump(@bytes);
 		print "\n";
 		return;
 	} elsif ($code == 0x400d) {
@@ -443,6 +482,6 @@ dump_ptp_line() {
 	} else {
 		printf "%04x ", $code;
 	}
-	print join(",",@bytes) . "\n";
+	hexdump (@bytes);
 	# print "str: $str\n";
 }
