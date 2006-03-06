@@ -507,7 +507,7 @@ ptp_ptpip_event_wait (PTPParams* params, PTPContainer* event) {
 
 int
 ptp_ptpip_connect (PTPParams* params, const char *address) {
-	char 		*addr, *s;
+	char 		*addr, *s, *p;
 	int		port;
 	struct sockaddr_in	saddr;
 	uint16_t	ret;
@@ -517,11 +517,18 @@ ptp_ptpip_connect (PTPParams* params, const char *address) {
 		return GP_ERROR_BAD_PARAMETERS;
 	addr = strdup (address);
 	s = strchr (addr,':'); *s = '\0';
-	if (!sscanf (s+1,"%d",&port)) {
-		free (addr);
-		return GP_ERROR_BAD_PARAMETERS;
+	p = strchr (s+1,':');
+	port = 15740;
+	if (p) {
+		*p = '\0';
+		if (!sscanf (p+1,"%d",&port)) {
+			fprintf(stderr,"failed to scan for port in %s\n", p+1);
+			free (addr);
+			return GP_ERROR_BAD_PARAMETERS;
+		}
 	}
-	if (!inet_aton (addr,  &saddr.sin_addr)) {
+	if (!inet_aton (s+1,  &saddr.sin_addr)) {
+		fprintf(stderr,"failed to scan for addr in %s\n", s+1);
 		free (addr);
 		return GP_ERROR_BAD_PARAMETERS;
 	}
