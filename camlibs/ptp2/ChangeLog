@@ -1,3 +1,10 @@
+2006-03-10  Hubert Figuiere  <hub@figuiere.net>
+
+	* library.c: HP 850 has PTPBUG_DUPE_FILE
+	(file_list_func): handle DUPE_FILE bug
+
+	* ptp-bugs.h (PTPBUG_DUPE_FILE): added this PTP bug
+
 2006-03-09  Hubert Figuiere  <hub@figuiere.net>
 
 	* library.c: Added Kodak C360 (from Debian) 

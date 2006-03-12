@@ -1,6 +1,6 @@
 /* ptp-bugs.h
  *
- * Copyright (C) 2005 Hubert Figuiere <hfiguiere@teaser.fr>
+ * Copyright (C) 2005-2006 Hubert Figuiere <hfiguiere@teaser.fr>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,12 +25,13 @@
 
 #define PTPBUG_DCIM_WRONG_PARENT (1<<0)
 #define PTPBUG_DELETE_SENDS_EVENT (1<<1)
-
+#define PTPBUG_DUPE_FILE (1<<2)
 
 #define DCIM_WRONG_PARENT_BUG(x) \
   ((x)->bugs & PTPBUG_DCIM_WRONG_PARENT)
 #define DELETE_SENDS_EVENT(x) \
   ((x)->bugs & PTPBUG_DELETE_SENDS_EVENT)
-
+#define CAN_HAVE_DUPE_FILE(x) \
+  ((x)->bugs & PTPBUG_DUPE_FILE)
 
 #endif

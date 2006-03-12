@@ -308,7 +308,7 @@ static struct {
 
 	/* HP PTP cameras */
 	{"HP:PhotoSmart 812 (PTP mode)", 0x03f0, 0x4202, 0},
-	{"HP:PhotoSmart 850 (PTP mode)", 0x03f0, 0x4302, 0},
+	{"HP:PhotoSmart 850 (PTP mode)", 0x03f0, 0x4302, PTPBUG_DUPE_FILE},
 	/* HP PhotoSmart 935: T. Kaproncai, 25 Jul 2003*/
 	{"HP:PhotoSmart 935 (PTP mode)", 0x03f0, 0x4402, 0},
 	/* HP:PhotoSmart 945: T. Jelbert, 2004/03/29	*/
@@ -3461,8 +3461,15 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
     
     /* Get (parent) folder handle omiting storage pseudofolder */
     find_folder_handle(folder,storage,parent,data);
-    
+
     for (i = 0; i < params->handles.n; i++) {
+	/* HP Photosmart 850, the camera tends to duplicate filename in the list.
+         * Original patch by clement.rezvoy@gmail.com */
+	if (CAN_HAVE_DUPE_FILE(camera->pl) && (list->count != 0) 
+	    && (params->objectinfo[i].Filename) 
+	    && strcmp(params->objectinfo[i].Filename, list->entry[list->count-1].name) == 0) {
+		continue;
+	}
 	if (params->objectinfo[i].ParentObject==parent) {
             if (params->objectinfo[i].ObjectFormat != PTP_OFC_Association) {
                 if (!ptp_operation_issupported(params,PTP_OC_GetStorageIDs)
