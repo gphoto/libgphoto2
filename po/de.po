@@ -98,12 +98,12 @@ msgstr ""
 #: camlibs/canon/canon.c:604
 #, c-format
 msgid "Could not create directory %s."
-msgstr "Konnte Verzeichnis >>%s<< nicht anlegen."
+msgstr "Konnte Verzeichnis »%s« nicht anlegen."
 
 #: camlibs/canon/canon.c:607
 #, c-format
 msgid "Could not remove directory %s."
-msgstr "Konnte Verzeichnis >>%s<< nicht löschen."
+msgstr "Konnte Verzeichnis »%s« nicht löschen."
 
 #: camlibs/canon/canon.c:980 camlibs/canon/canon.c:1320
 #: camlibs/canon/usb.c:514
@@ -588,12 +588,12 @@ msgstr "Nicht erkannte Antwort"
 #: camlibs/canon/serial.c:1378
 #, c-format
 msgid "Detected a \"%s\" aka \"%s\""
-msgstr "Erkannte eine »%s« alias >>%s<<"
+msgstr "Erkannte eine »%s« alias »%s«"
 
 #: camlibs/canon/serial.c:1386
 #, c-format
 msgid "Unknown model \"%s\""
-msgstr "Unbekanntes Modell >>%s<<"
+msgstr "Unbekanntes Modell »%s«"
 
 #: camlibs/canon/serial.c:1407
 msgid "Bad EOT"
@@ -774,7 +774,7 @@ msgid ""
 "\""
 msgstr ""
 "canon_usb_poll_interrupt_pipe: lesen vom Interruptrohr fehlgeschlagen nach %"
-"i versuchen, >>%s<<"
+"i versuchen, »%s«"
 
 #: camlibs/canon/usb.c:1036
 #, c-format
@@ -844,7 +844,7 @@ msgstr ""
 #: camlibs/canon/usb.c:2041
 #, c-format
 msgid "Couldn't read from file \"%s\""
-msgstr "Konnte Daten vom Datei >>%s<< nicht holen"
+msgstr "Konnte Daten vom Datei »%s« nicht holen"
 
 #: camlibs/canon/usb.c:2051
 #, c-format
@@ -886,7 +886,7 @@ msgid ""
 "canon_usb_list_all_dirs: Couldn't fit payload into buffer, "
 "'%.96s' (truncated) too long."
 msgstr ""
-"canon_usb_list_all_dirs: Nutzlast passt nicht in Puffer, >>'%.96s<< "
+"canon_usb_list_all_dirs: Nutzlast passt nicht in Puffer, »%.96s« "
 "(verkurtzt) zu lang."
 
 #: camlibs/canon/usb.c:2318
@@ -906,7 +906,7 @@ msgstr "Erkannte eine »%s«."
 #: camlibs/canon/usb.c:2400
 #, c-format
 msgid "Name \"%s\" from camera does not match any known camera"
-msgstr "Name >>%s<< passt mit keinem bekanntes Modell"
+msgstr "Name »%s« passt mit keinem bekanntes Modell"
 
 #: camlibs/casio/casio-qv.c:151
 #, c-format
