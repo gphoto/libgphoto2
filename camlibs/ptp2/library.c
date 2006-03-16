@@ -860,7 +860,6 @@ camera_abilities (CameraAbilitiesList *list)
 		GP_FOLDER_OPERATION_REMOVE_DIR;
 	CR (gp_abilities_list_append (list, a));
 
-#ifdef ENABLE_PTPIP /* Not fully polished yet. */
 	strcpy(a.model, "PTP/IP Camera");
 	a.status = GP_DRIVER_STATUS_TESTING;
 	a.port   = GP_PORT_PTPIP;
@@ -872,7 +871,6 @@ camera_abilities (CameraAbilitiesList *list)
 				GP_FOLDER_OPERATION_MAKE_DIR	|
 				GP_FOLDER_OPERATION_REMOVE_DIR;
 	CR (gp_abilities_list_append (list, a));
-#endif
 	return (GP_OK);
 }
 
@@ -4209,20 +4207,12 @@ camera_init (Camera *camera, GPContext *context)
 	int ret, i, retried = 0;
 	PTPParams *params;
 
-#ifdef ENABLE_PTPIP
 	/* Make sure our port is either USB or PTP/IP. */
 	if ((camera->port->type != GP_PORT_USB) && (camera->port->type != GP_PORT_PTPIP)) {
 		gp_context_error (context, _("PTP is only implemented for "
 			"USB and PTP/IP cameras currently, port type %x"), camera->port->type);
 		return (GP_ERROR_UNKNOWN_PORT);
 	}
-#else
-	/* Make sure our port is a USB port. */
-	if (camera->port->type != GP_PORT_USB) {
-		gp_context_error (context, _("PTP is implemented for USB cameras only."));
-		return (GP_ERROR_UNKNOWN_PORT);
-	}
-#endif
 
 	camera->functions->about = camera_about;
 	camera->functions->exit = camera_exit;
@@ -4258,7 +4248,6 @@ camera_init (Camera *camera, GPContext *context)
 		camera->pl->params.check_int_func	= ptp_check_int;
 		camera->pl->params.check_int_fast_func	= ptp_check_int_fast;
 		break;
-#ifdef ENABLE_PTPIP
 	case GP_PORT_PTPIP: {
 		GPPortInfo	pinfo;
 
@@ -4285,7 +4274,6 @@ camera_init (Camera *camera, GPContext *context)
 		camera->pl->params.check_int_fast_func	= NULL;
 		break;
 	}
-#endif
 	default:
 		break;
 	}

@@ -1,3 +1,9 @@
+2006-03-16  Marcus Meissner  <marcus@jet.franken.de>
+
+	* Makefile.am, library.c: Enable PTP/IP per default
+	  to shake out compile problems on !Linux before
+	  release.
+
 2006-03-10  Hubert Figuiere  <hub@figuiere.net>
 
 	* library.c: HP 850 has PTPBUG_DUPE_FILE
