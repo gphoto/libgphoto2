@@ -114,7 +114,11 @@ gp_port_library_list (GPPortInfoList *list)
 			/* excepts HUBs, usually the interfaces have the classes, not
 			 * the device */
 			unknownint = 0;
-			for (i = 0; i < dev->descriptor.bNumConfigurations; i++)
+			for (i = 0; i < dev->descriptor.bNumConfigurations; i++) {
+				if (!dev->config) {
+					unknownint++;
+					continue;
+				}
 				for (i1 = 0; i1 < dev->config[i].bNumInterfaces; i1++)
 					for (i2 = 0; i2 < dev->config[i].interface[i1].num_altsetting; i2++) {
 						struct usb_interface_descriptor *intf = &dev->config[i].interface[i1].altsetting[i2]; 
@@ -124,6 +128,7 @@ gp_port_library_list (GPPortInfoList *list)
 							continue;
 						unknownint++;
 					}
+			}
 			/* when we find only hids, printer or comm ifaces  ... skip this */
 			if (!unknownint)
 				continue;
@@ -157,7 +162,11 @@ gp_port_library_list (GPPortInfoList *list)
 			/* excepts HUBs, usually the interfaces have the classes, not
 			 * the device */
 			unknownint = 0;
-			for (i = 0; i < dev->descriptor.bNumConfigurations; i++)
+			for (i = 0; i < dev->descriptor.bNumConfigurations; i++) {
+				if (!dev->config) {
+					unknownint++;
+					continue;
+				}
 				for (i1 = 0; i1 < dev->config[i].bNumInterfaces; i1++)
 					for (i2 = 0; i2 < dev->config[i].interface[i1].num_altsetting; i2++) {
 						struct usb_interface_descriptor *intf = &dev->config[i].interface[i1].altsetting[i2]; 
@@ -167,6 +176,7 @@ gp_port_library_list (GPPortInfoList *list)
 							continue;
 						unknownint++;
 					}
+			}
 			/* when we find only hids, printer or comm ifaces  ... skip this */
 			if (!unknownint)
 				continue;
