@@ -457,6 +457,9 @@ static struct {
 	{"Olympus:C-55Z",                 0x07b4, 0x0114, 0},
 	{"Olympus:C-5500Z",               0x07b4, 0x0114, 0},
 
+	/* IRC report */
+	{"Casio:EX-Z120",                 0x07cf, 0x1042, 0},
+
 	/* (at least some) newer Canon cameras can be switched between
 	 * PTP and "normal" (i.e. Canon) mode
 	 * Canon PS G3: A. Marinichev, 20 nov 2002
