@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2006-03-15 22:09+0100\n"
-"PO-Revision-Date: 2006-03-15 22:11+0100\n"
+"PO-Revision-Date: 2006-03-15 22:31+0100\n"
 "Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
 "Language-Team:  <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -5305,9 +5305,8 @@ msgid "Spot"
 msgstr "Punkt"
 
 #: camlibs/ptp2/ptp.c:2381
-#, fuzzy
 msgid "Power Wind"
-msgstr "Stromsparmodus"
+msgstr "Schnellaufzug"
 
 #: camlibs/ptp2/ptp.c:2396
 #, fuzzy
@@ -5315,26 +5314,24 @@ msgid "Commander"
 msgstr "Fehler in Kommandoreihenfolge."
 
 #: camlibs/ptp2/ptp.c:2403
-#, fuzzy
 msgid "1 min"
-msgstr "41 mm"
+msgstr "1 Minute"
 
 #: camlibs/ptp2/ptp.c:2404
 msgid "5 mins"
-msgstr ""
+msgstr "5 Minuten"
 
 #: camlibs/ptp2/ptp.c:2405
 msgid "10 mins"
-msgstr ""
+msgstr "10 Minuten"
 
 #: camlibs/ptp2/ptp.c:2406
 msgid "15 mins"
-msgstr ""
+msgstr "15 Minuten"
 
 #: camlibs/ptp2/ptp.c:2415
-#, fuzzy
 msgid "Centre"
-msgstr "Aufnahme"
+msgstr "Zentrum"
 
 #: camlibs/ptp2/ptp.c:2416
 msgid "Top"
@@ -5473,25 +5470,25 @@ msgstr ""
 
 #: camlibs/ptp2/ptp.c:2536
 msgid "vCalendar1"
-msgstr ""
+msgstr "vCalendar1"
 
 #: camlibs/ptp2/ptp.c:2537
 msgid "vCalendar2"
-msgstr ""
+msgstr "vCalendar2"
 
 #: camlibs/ptp2/ptp.c:2538
 msgid "Undefined Windows Executable"
-msgstr ""
+msgstr "Undefiniertes Windows Executable"
 
 #: camlibs/ptp2/ptp.c:2555
 #, c-format
 msgid "M3U"
-msgstr ""
+msgstr "M3U"
 
 #: camlibs/ptp2/ptp.c:2568
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown(%04x)"
-msgstr "unbekannt (0x%02x)"
+msgstr "Unbekannt (%04x)"
 
 #: camlibs/ricoh/g3.c:342
 msgid "Downloading movie..."
@@ -6661,7 +6658,6 @@ msgstr ""
 
 # Ist "Freigabe" richtig? [Colin]
 #: camlibs/sierra/sierra.c:2011
-#, fuzzy
 msgid ""
 "sierra SPARClite library\n"
 "Scott Fritzinger <scottf@unr.edu>\n"
@@ -6675,7 +6671,7 @@ msgstr ""
 "sierra SPARClite-Bibliothek\n"
 "Scott Fritzinger <scottf@unr.edu>\n"
 "Unterstützung für Sierra-basierte Digitalkameras\n"
-"incl. Olympus, Nikon, Epson, und andere.\n"
+"incl. Olympus, Nikon, Epson, Pentax, und andere.\n"
 "\n"
 "Dank an Data Engines (www.dataengines.com) für die\n"
 "Freigabe ihrer Olympus C-3030Z for USB-Implementierung."
@@ -6721,7 +6717,7 @@ msgstr ""
 "Versionen (slimshot)."
 
 #: camlibs/sonix/library.c:98
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Sonix camera.\n"
 "There is %i photo in it.\n"
@@ -6729,14 +6725,13 @@ msgid_plural ""
 "Sonix camera.\n"
 "There are %i photos in it.\n"
 msgstr[0] ""
-"Mars MR97310 Kamera.\n"
+"Sonix Kamera.\n"
 "Es ist %i Foto auf der Kamera.\n"
 msgstr[1] ""
-"Mars MR97310 Kamera.\n"
-"Es ist %i Foto auf der Kamera.\n"
+"Sonix Kamera.\n"
+"Es sind %i Fotos auf der Kamera.\n"
 
 #: camlibs/sonix/library.c:109
-#, fuzzy
 msgid ""
 "This driver supports cameras with Sonix chip\n"
 "and should work with gtkam.\n"
@@ -6747,24 +6742,13 @@ msgid ""
 "as consecutive still photos.\n"
 "Capture not supported"
 msgstr ""
-"Dieser Treiber unterst?tzt Kameras mit Mars MR97310 Chip (und direkten "
-"Equivalenten ??Pixart PAC0x7??) und sollte mit gtkam arbeiten.\n"
-"Der Treiber erlaubt ihnen:\n"
-"   - Thumbnails f?r gtkam zu holen\n"
-"   - volle Bilder (im 640x480 oder 320x240 PPM Format) (??352x288 & "
-"176x144??)\n"
-"Die Kamera unterst?tzt nicht das Löschen, auch kein Upload von Daten.\n"
-"Dieser Treiber unterst?tzt nicht den optionalen Bildkompressionsmodus.\n"
-"Wenn Videoclip Bilder auf der Kamera vorhanden sind, werden diese\n"
-"als fortlaufende Standbilder runtergeladen.\n"
 
 #: camlibs/sonix/library.c:125
-#, fuzzy
 msgid ""
 "Sonix camera library\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
 msgstr ""
-"Mars MR97310 Kamera Treiber\n"
+"Sonix Kamera Treiber\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
 
 #: camlibs/sonydscf1/dsc_f1.c:134
@@ -7139,7 +7123,7 @@ msgstr ""
 
 #: libgphoto2/gphoto2-abilities-list.c:190
 msgid "Internal error looking for camlibs. (path names too long?)"
-msgstr ""
+msgstr "Interner Fehler beim Suchen der Kamerabibliotheken (Pfadnamen zu lang?)"
 
 #: libgphoto2/gphoto2-abilities-list.c:199
 #, c-format
@@ -7352,7 +7336,7 @@ msgstr "Kamera konnte die Operation nicht vollenden"
 
 #: libgphoto2/gphoto2-result.c:54
 msgid "OS error in camera communication"
-msgstr "Betriebssystempperatioin der tzen dkommunikationdatenrate"
+msgstr "Fehler in der Kamerakommunikation"
 
 #: libgphoto2/gphoto2-result.c:79
 msgid "Unknown camera library error"
