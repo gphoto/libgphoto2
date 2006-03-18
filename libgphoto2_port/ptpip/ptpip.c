@@ -120,7 +120,7 @@ _ptpip_resolved (
 	memcpy(&inaddr.s_addr,hent->h_addr_list[0],hent->h_length);
 	info.type = GP_PORT_PTPIP;
 	snprintf (info.name, sizeof(info.name), mdnsi->name);
-	snprintf (info.path, sizeof(info.path), "ptpip:%s:%d", inet_ntoa(inaddr), port);
+	snprintf (info.path, sizeof(info.path), "ptpip:%s:%d", inet_ntoa(inaddr), htons(port));
 	gp_port_info_list_append (mdnsi->list, info);
 
 	/* regexp matcher */
@@ -250,6 +250,13 @@ gp_port_ptpip_read(GPPort *port, char *bytes, int size)
         return GP_OK;
 }
 
+static int
+gp_port_ptpip_update (GPPort *port)
+{
+	return GP_OK;
+}
+
+
 GPPortOperations *
 gp_port_library_operations (void)
 {
@@ -265,5 +272,6 @@ gp_port_library_operations (void)
 	ops->close  = gp_port_ptpip_close;
 	ops->read   = gp_port_ptpip_read;
 	ops->write  = gp_port_ptpip_write;
+	ops->update  = gp_port_ptpip_update;
 	return ops;
 }
