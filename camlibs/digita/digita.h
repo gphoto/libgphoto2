@@ -73,8 +73,8 @@ struct partial_tag {
 
 struct filename {
 	unsigned int driveno;
-	unsigned char path[32];
-	unsigned char dosname[16];
+	char path[32];
+	char dosname[16];
 };
 
 struct file_item {

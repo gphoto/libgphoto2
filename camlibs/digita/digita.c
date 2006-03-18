@@ -206,7 +206,7 @@ static int file_list_func(CameraFilesystem *fs, const char *folder,
 }
 
 #define GFD_BUFSIZE 19432
-static char *digita_file_get(Camera *camera, const char *folder, 
+static unsigned char *digita_file_get(Camera *camera, const char *folder, 
 			     const char *filename, int thumbnail, int *size,
 			     GPContext *context)
 {
@@ -341,7 +341,7 @@ static int get_file_func(CameraFilesystem *fs, const char *folder,
 
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
-		gp_file_set_data_and_size(file, data, buflen);
+		gp_file_set_data_and_size(file, (char*)data, buflen);
 		gp_file_set_mime_type(file, GP_MIME_JPEG);
 		break;
 	case GP_FILE_TYPE_PREVIEW:
@@ -367,7 +367,7 @@ static int get_file_func(CameraFilesystem *fs, const char *folder,
 
 		strcpy(ppm, ppmhead);
 
-		decode_ycc422(data + 16, width, height, ppm + strlen(ppmhead));
+		decode_ycc422(data + 16, width, height, (unsigned char*)(ppm + strlen(ppmhead)));
 		free(data);
 
 		gp_file_set_mime_type(file, GP_MIME_PPM);

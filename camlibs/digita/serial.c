@@ -122,7 +122,7 @@ static int poll_and_wait(gp_port *dev, int length, int bob, int eob)
 
 static int digita_serial_send(CameraPrivateLibrary *dev, void *_buffer, int len)
 {
-	unsigned char *buffer = _buffer;
+	char *buffer = _buffer;
 	unsigned short s;
 	int sent = 0, size;
 
@@ -170,7 +170,7 @@ static int poll_and_reply(gp_port *dev, int *length, int *eob, int nak)
 
 static int digita_serial_read(CameraPrivateLibrary *dev, void *_buffer, int len)
 {
-	unsigned char *buffer = _buffer;
+	char *buffer = _buffer;
 	unsigned short s;
 	int received = 0, size, eob;
 
