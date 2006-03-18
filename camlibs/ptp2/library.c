@@ -514,6 +514,8 @@ static struct {
 	/* Jeff Mock <jeff@mock.com> */
  	{"Canon:EOS 5D (PTP mode)",             0x04a9, 0x3101, PTPBUG_DCIM_WRONG_PARENT},
 
+ 	{"Canon:Optura 600 (PTP mode)",         0x04a9, 0x3105, 0},
+
 	/* 30ef is the ID in explicit PTP mode.
 	 * 30ee is the ID with the camera in Canon mode, but the camera reacts to
 	 * PTP commands according to:

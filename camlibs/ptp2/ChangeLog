@@ -1,3 +1,7 @@
+2006-03-18  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Added Canon Optura 600.
+
 2006-03-16  Marcus Meissner  <marcus@jet.franken.de>
 
 	* Makefile.am, library.c: Enable PTP/IP per default
