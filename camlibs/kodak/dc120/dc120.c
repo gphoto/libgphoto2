@@ -400,8 +400,6 @@ int camera_init (Camera *camera, GPContext *context) {
         camera->functions->about        = camera_about;
 
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
-	gp_filesystem_set_file_funcs (camera->fs, get_file_func,
-				      delete_file_func, camera);
 
 	/* Configure the port (remember the speed) */
 	gp_port_get_settings (camera->port, &settings);
