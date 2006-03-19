@@ -236,10 +236,7 @@ camera_init (Camera *camera, GPContext *context)
 	camera->functions->about            = camera_about;
 
 	/* Set up the CameraFilesystem */
-	gp_filesystem_set_list_funcs (camera->fs, file_list_func,
-				      folder_list_func, camera);
-	gp_filesystem_set_file_funcs (camera->fs, get_file_func,
-				      delete_file_func, camera);
+	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 
 	ret = gp_port_get_settings (camera->port, &settings);
 	if (ret < 0)
