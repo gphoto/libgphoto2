@@ -82,11 +82,13 @@
 /**********************************************************************/
 
 
-/** Clean up some stuff (FIXME: When, what, why?).
+/**
+ * Finish up the camera communication and free
+ * private data. You do not need to close the port.
  *
  * This function is a method of the Camera object.
  */
-int
+static int
 camera_exit (Camera *camera, GPContext *context) 
 {
 	return GP_OK;
@@ -94,11 +96,11 @@ camera_exit (Camera *camera, GPContext *context)
 
 
 /**
- * FIXME.
+ * Get the full configuration tree of the camera.
  *
  * This function is a method of the Camera object.
  */
-int
+static int
 camera_config_get (Camera *camera, CameraWidget **window, GPContext *context) 
 {
 	gp_widget_new (GP_WIDGET_WINDOW, "Camera Configuration", window);
@@ -110,11 +112,13 @@ camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 
 
 /**
- * FIXME.
+ * Set parts of the configuration tree. Note that you get
+ * back the whole tree, but should only set the modified
+ * values.
  *
  * This function is a method of the Camera object.
  */
-int
+static int
 camera_config_set (Camera *camera, CameraWidget *window, GPContext *context) 
 {
 	/*
@@ -126,82 +130,68 @@ camera_config_set (Camera *camera, CameraWidget *window, GPContext *context)
 
 
 /**
- * FIXME.
+ * Capture a preview and return the data in the given file (again,
+ * use gp_file_set_data_and_size, gp_file_set_mime_type, etc.).
+ * libgphoto2 assumes that previews are NOT stored on the camera's 
+ * disk. If your camera does, please delete it from the camera.
  *
  * This function is a method of the Camera object.
  */
-int
+static int
 camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 {
-	/*
-	 * Capture a preview and return the data in the given file (again,
-	 * use gp_file_set_data_and_size, gp_file_set_mime_type, etc.).
-	 * libgphoto2 assumes that previews are NOT stored on the camera's 
-	 * disk. If your camera does, please delete it from the camera.
-	 */
-
 	return GP_OK;
 }
 
 
 /**
- * FIXME.
+ * Capture an image and tell libgphoto2 where to find it by filling
+ * out the path.
  *
  * This function is a method of the Camera object.
  */
-int
+static int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		GPContext *context)
 {
-	/*
-	 * Capture an image and tell libgphoto2 where to find it by filling
-	 * out the path.
-	 */
-
 	return GP_OK;
 }
 
 
 /**
- * FIXME.
+ * Fill out the summary with textual information about the current 
+ * state of the camera (like pictures taken, etc.).
  *
  * This function is a method of the Camera object.
  */
-int
+static int
 camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
-	/*
-	 * Fill out the summary with some information about the current 
-	 * state of the camera (like pictures taken, etc.).
-	 */
-
 	return GP_OK;
 }
 
 
 /**
- * FIXME.
+ * Return the camera drivers manual.
+ * If you would like to tell the user some information about how 
+ * to use the camera or the driver, this is the place to do.
  *
  * This function is a method of the Camera object.
  */
-int
+static int
 camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 {
-	/*
-	 * If you would like to tell the user some information about how 
-	 * to use the camera or the driver, this is the place to do.
-	 */
-
 	return GP_OK;
 }
 
 
 /**
- * FIXME.
+ * Return "About" content as textual description.
+ * Will be translated.
  *
  * This function is a method of the Camera object.
  */
-int
+static int
 camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
 	strcpy (about->text, _("Library Name\n"
@@ -229,7 +219,7 @@ camera_about (Camera *camera, CameraText *about, GPContext *context)
  *
  * This function is a CameraFilesystem method.
  */
-int
+static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *data,
 	       GPContext *context)
@@ -250,7 +240,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
  *
  * This function is a CameraFilesystem method.
  */
-int
+static int
 put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	       void *data, GPContext *context)
 {
@@ -270,7 +260,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
  *
  * This function is a CameraFilesystem method.
  */
-int
+static int
 delete_file_func (CameraFilesystem *fs, const char *folder,
 		  const char *filename, void *data, GPContext *context)
 {
@@ -287,7 +277,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
  *
  * This function is a CameraFilesystem method.
  */
-int
+static int
 delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 		 GPContext *context)
 {
@@ -303,17 +293,15 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 
 
 /**
- * FIXME.
+ * Get the file info here and write it into <info>
  *
  * This function is a CameraFilesystem method.
  */
-int
+static int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileInfo *info, void *data, GPContext *context)
 {
 	Camera *camera = data;
-
-	/* Get the file info here and write it into <info> */
 
 	return GP_OK;
 }
@@ -324,7 +312,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
  *
  * This function is a CameraFilesystem method.
  */
-int
+static int
 set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	       CameraFileInfo info, void *data, GPContext *context)
 {
@@ -337,11 +325,11 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 
 
 /**
- * FIXME.
+ * List available folders in the specified folder.
  *
  * This function is a CameraFilesystem method.
  */
-int
+static int
 folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		  void *data, GPContext *context)
 {
@@ -354,11 +342,11 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 
 /**
- * FIXME.
+ * List available files in the specified folder.
  *
  * This function is a CameraFilesystem method.
  */
-int
+static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data, GPContext *context)
 {
@@ -433,6 +421,24 @@ camera_abilities (CameraAbilitiesList *list)
 	return GP_OK;
 }
 
+/**
+ * All filesystem accessor functions.
+ *
+ * This should contain all filesystem accessor functions
+ * available in the camera library. Non-present fields
+ * are NULL.
+ *
+ */
+static CameraFilesystemFuncs fsfuncs = {
+	.file_list_func = file_list_func,
+	.folder_list_func = folder_list_func,
+	.get_info_func = get_info_func,
+	.set_info_func = set_info_func,
+	.get_file_func = get_file_func,
+	.del_file_func = delete_file_func,
+	.put_file_func = put_file_func,
+	.delete_all_func = delete_all_func,
+};
 
 /**
  * Initialize a Camera object.
@@ -457,14 +463,7 @@ camera_init (Camera *camera, GPContext *context)
         camera->functions->about                = camera_about;
 
 	/* Now, tell the filesystem where to get lists, files and info */
-	gp_filesystem_set_list_funcs (camera->fs, file_list_func,
-				      folder_list_func, camera);
-	gp_filesystem_set_info_funcs (camera->fs, get_info_func, set_info_func,
-				      camera);
-	gp_filesystem_set_file_funcs (camera->fs, get_file_func,
-				      delete_file_func, camera);
-	gp_filesystem_set_folder_funcs (camera->fs, put_file_func,
-					delete_all_func, NULL, NULL, camera);
+	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 
 	/*
 	 * The port is already provided with camera->port (and
