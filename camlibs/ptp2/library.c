@@ -4204,6 +4204,16 @@ fallback:
 	return (GP_OK);
 }
 
+static CameraFilesystemFuncs fsfuncs = {
+	.file_list_func		= file_list_func,
+	.folder_list_func	= folder_list_func,
+	.get_info_func		= get_info_func,
+	.get_file_func		= get_file_func,
+	.del_file_func		= delete_file_func,
+	.put_file_func		= put_file_func,
+	.make_dir_func		= make_dir_func,
+	.remove_dir_func	= remove_dir_func
+};
 
 int
 camera_init (Camera *camera, GPContext *context)
@@ -4367,17 +4377,6 @@ camera_init (Camera *camera, GPContext *context)
 	default:
 		break;
 	}
-
-
-	/* Configure the CameraFilesystem */
-	CR (gp_filesystem_set_list_funcs (camera->fs, file_list_func,
-					  folder_list_func, camera));
-	CR (gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL,
-					  camera));
-	CR (gp_filesystem_set_file_funcs (camera->fs, get_file_func,
-					  delete_file_func, camera));
-	CR (gp_filesystem_set_folder_funcs (camera->fs, put_file_func,
-					    NULL, make_dir_func,
-					    remove_dir_func, camera));
+	CR (gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera));
 	return (GP_OK);
 }
