@@ -381,6 +381,13 @@ static int camera_about (Camera *camera, CameraText *about, GPContext *context)
 	return (GP_OK);
 }
 
+static CameraFilesystemFuncs fsfuncs = {
+	.file_list_func = file_list_func,
+	.folder_list_func = folder_list_func,
+	.get_file_func = get_file_func,
+	.del_file_func = delete_file_func,
+};
+
 int camera_init (Camera *camera, GPContext *context) {
 
         GPPortSettings settings;
@@ -392,8 +399,7 @@ int camera_init (Camera *camera, GPContext *context) {
         camera->functions->manual       = camera_manual;
         camera->functions->about        = camera_about;
 
-	gp_filesystem_set_list_funcs (camera->fs, file_list_func,
-				      folder_list_func, camera);
+	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func,
 				      delete_file_func, camera);
 

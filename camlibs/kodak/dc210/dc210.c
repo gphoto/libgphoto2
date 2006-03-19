@@ -647,6 +647,13 @@ static int camera_about (Camera *camera, CameraText *about, GPContext *context)
 	return (GP_OK);
 }
 
+static CameraFilesystemFuncs fsfuncs = {
+	.file_list_func = file_list_func,
+	.get_file_func = get_file_func,
+	.get_info_func = get_info_func,
+	.del_file_func = delete_file_func,
+};
+
 int camera_init (Camera *camera, GPContext *context) {
 
 	DC210_DEBUG("Initialising camera.\n");
@@ -660,25 +667,11 @@ int camera_init (Camera *camera, GPContext *context) {
         camera->functions->manual       = camera_manual;
         camera->functions->about        = camera_about;
 
-	gp_filesystem_set_info_funcs (camera->fs, get_info_func,
-	  NULL, camera);
-	gp_filesystem_set_list_funcs (camera->fs, file_list_func,
-				      NULL, camera);
-	gp_filesystem_set_file_funcs (camera->fs, get_file_func,
-				      delete_file_func, camera);
+	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 
 	if (dc210_init_port (camera) == GP_ERROR) return GP_ERROR;
 	if (dc210_open_card (camera) == GP_ERROR) return GP_ERROR;
 
         return (GP_OK);
 }
-
-
 /****************************************************************************/
-
-
-
-
-
-
-

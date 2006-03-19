@@ -216,6 +216,13 @@ camera_about (Camera *camera, CameraText *about, GPContext *context)
 	return (GP_OK);
 }
 
+static CameraFilesystemFuncs fsfuncs = {
+	.file_list_func = file_list_func,
+	.folder_list_func = folder_list_func,
+	.get_file_func = get_file_func,
+	.del_file_func = delete_file_func
+};
+
 int
 camera_init (Camera *camera, GPContext *context) 
 {
