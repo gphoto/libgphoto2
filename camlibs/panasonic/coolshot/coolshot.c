@@ -271,6 +271,12 @@ static int camera_about (Camera *camera, CameraText *about, GPContext *context)
 	return (GP_OK);
 }
 
+static CameraFilesystemFuncs fsfuncs = {
+	.file_list_func = file_list_func,
+	.get_file_func = get_file_func,
+	.get_info_func = get_info_func,
+};
+
 int camera_init (Camera *camera, GPContext *context)
 {
 	int count;
@@ -304,16 +310,10 @@ int camera_init (Camera *camera, GPContext *context)
 	CHECK (count = coolshot_file_count (camera));
 
 	CHECK (camera_start (camera));
-	CHECK (gp_filesystem_set_list_funcs (camera->fs,
-		file_list_func, NULL, camera));
-	CHECK (gp_filesystem_set_info_funcs (camera->fs,
-		get_info_func, NULL, camera));
-	CHECK (gp_filesystem_set_file_funcs (camera->fs,
-		get_file_func, NULL, camera));
+	CHECK (gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera));
 
 	/* coolshot_sb sets to default speed if speed == 0 */
 	CHECK (coolshot_sb (camera, camera->pl->speed));
 
 	return (camera_stop (camera));
 }
-
