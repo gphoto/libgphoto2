@@ -199,6 +199,26 @@ int gp_filesystem_set_folder_funcs (CameraFilesystem *fs,
 				  CameraFilesystemDirFunc make_dir_func,
 				  CameraFilesystemDirFunc remove_dir_func,
 				  void *data);
+
+typedef struct _CameraFilesystemFuncs CameraFilesystemFuncs;
+struct _CameraFilesystemFuncs {
+	CameraFilesystemListFunc	file_list_func;
+	CameraFilesystemListFunc	folder_list_func;
+	CameraFilesystemPutFileFunc	put_file_func;
+	CameraFilesystemDeleteAllFunc	delete_all_func;
+	CameraFilesystemGetInfoFunc	get_info_func;
+	CameraFilesystemSetInfoFunc	set_info_func;
+	CameraFilesystemDirFunc		make_dir_func;
+	CameraFilesystemDirFunc		remove_dir_func;
+	CameraFilesystemGetFileFunc	get_file_func;
+	CameraFilesystemDeleteFileFunc	del_file_func;
+
+	/* for later use. Remove one if you add a new function */
+	void				*unused[32];
+};
+int gp_filesystem_set_funcs	(CameraFilesystem *fs,
+				 CameraFilesystemFuncs *funcs,
+				 void *data);
 int gp_filesystem_put_file   (CameraFilesystem *fs, const char *folder,
 			      CameraFile *file, GPContext *context);
 int gp_filesystem_delete_all (CameraFilesystem *fs, const char *folder,

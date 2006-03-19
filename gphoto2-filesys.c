@@ -1718,6 +1718,45 @@ gp_filesystem_set_info_funcs (CameraFilesystem *fs,
 }
 
 /**
+ * gp_filesystem_set_funcs:
+ * @fs: a #CameraFilesystem
+ * @funcs: pointer to a struct of filesystem functions
+ * @data:
+ *
+ * Tells the filesystem which functions to call for camera/filesystem specific 
+ * functions.
+ *
+ * Return value: a gphoto2 error code.
+ **/
+int
+gp_filesystem_set_funcs	(CameraFilesystem *fs,
+			 CameraFilesystemFuncs *funcs,
+			 void *data)
+{
+	CHECK_NULL (fs);
+
+	fs->get_info_func	= funcs->get_info_func;
+	fs->set_info_func	= funcs->set_info_func;
+	fs->info_data = data;
+
+	fs->put_file_func	= funcs->put_file_func;
+	fs->delete_all_func	= funcs->delete_all_func;
+	fs->make_dir_func	= funcs->make_dir_func;
+	fs->remove_dir_func	= funcs->remove_dir_func;
+	fs->folder_data = data;
+
+	fs->file_list_func	= funcs->file_list_func;
+	fs->folder_list_func	= funcs->folder_list_func;
+	fs->list_data = data;
+
+	fs->delete_file_func	= funcs->del_file_func;
+	fs->get_file_func	= funcs->get_file_func;
+	fs->file_data = data;
+
+	return (GP_OK);
+}
+
+/**
  * gp_filesystem_get_info:
  * @fs: a #CameraFilesystem
  * @folder:

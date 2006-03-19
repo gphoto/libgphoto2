@@ -112,6 +112,7 @@ gp_filesystem_set_info
 gp_filesystem_set_info_funcs
 gp_filesystem_set_info_noop
 gp_filesystem_set_list_funcs
+gp_filesystem_set_funcs
 gp_file_unref
 gp_gamma_correct_single
 gp_gamma_fill_table
