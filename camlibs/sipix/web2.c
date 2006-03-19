@@ -682,14 +682,17 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	return (GP_OK);
 }
 
+static CameraFilesystemFuncs fsfuncs = {
+	.file_list_func = file_list_func,
+	.get_file_func = get_file_func,
+	.del_file_func = delete_file_func
+};
+
 int
 camera_init (Camera *camera, GPContext *context) 
 {
         camera->functions->exit                 = camera_exit;
         camera->functions->about                = camera_about;
-	gp_filesystem_set_list_funcs (camera->fs, file_list_func,
-				      NULL, camera);
-	gp_filesystem_set_file_funcs (camera->fs, get_file_func,
-				      delete_file_func, camera);
+	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 	return web2_init(camera->port, context);
 }
