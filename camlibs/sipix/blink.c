@@ -787,45 +787,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 }
 
 static int
-put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
-	       void *data, GPContext *context)
-{
-	/* Camera *camera; */
-
-	/*
-	 * Upload the file to the camera. Use gp_file_get_data_and_size,
-	 * gp_file_get_name, etc.
-	 */
-
-	return (GP_OK);
-}
-
-static int
-delete_file_func (CameraFilesystem *fs, const char *folder,
-		  const char *filename, void *data, GPContext *context)
-{
-	/* Camera *camera = data; */
-
-	/* Delete the file from the camera. */
-
-	return (GP_OK);
-}
-
-static int
-delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
-		 GPContext *context)
-{
-	/* Camera *camera = data; */
-
-	/*
-	 * Delete all files in the given folder. If your camera doesn't have
-	 * such a functionality, just don't implement this function.
-	 */
-
-	return (GP_OK);
-}
-
-static int
 camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 {
 	gp_widget_new (GP_WIDGET_WINDOW, "Camera Configuration", window);
@@ -917,39 +878,6 @@ camera_about (Camera *camera, CameraText *about, GPContext *context)
 }
 
 static int
-get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
-	       CameraFileInfo *info, void *data, GPContext *context)
-{
-	/* Camera *camera = data; */
-
-	/* Get the file info here and write it into <info> */
-
-	return (GP_OK);
-}
-static int
-set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
-	       CameraFileInfo info, void *data, GPContext *context)
-{
-	/* Camera *camera = data; */
-
-	/* Set the file info here from <info> */
-
-	return (GP_OK);
-}
-
-
-static int
-folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
-		  void *data, GPContext *context)
-{
-	/* Camera *camera = data; */
-
-	/* List your folders here */
-
-	return (GP_OK);
-}
-
-static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data, GPContext *context)
 {
@@ -1020,6 +948,11 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	return (GP_OK);
 }
 
+static CameraFilesystemFuncs fsfuncs = {
+	.file_list_func = file_list_func,
+	.get_file_func = get_file_func,
+};
+
 int
 camera_init (Camera *camera, GPContext *context)
 {
@@ -1039,15 +972,7 @@ camera_init (Camera *camera, GPContext *context)
 	camera->functions->about                = camera_about;
 
 	/* Now, tell the filesystem where to get lists, files and info */
-	gp_filesystem_set_list_funcs (camera->fs, file_list_func,
-				      folder_list_func, camera);
-	gp_filesystem_set_info_funcs (camera->fs, get_info_func, set_info_func,
-				      camera);
-	gp_filesystem_set_file_funcs (camera->fs, get_file_func,
-				      delete_file_func, camera);
-	gp_filesystem_set_folder_funcs (camera->fs, put_file_func,
-					delete_all_func, NULL, NULL, camera);
-
+	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 	/*
 	 * The port is already provided with camera->port (and
 	 * already open). You just have to use functions like
