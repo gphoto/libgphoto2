@@ -191,16 +191,13 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 		  const char *filename, void *data, GPContext *context)
 {
 	Camera *camera = data;
-	int ret;
 	int index;
 	
 	/* Delete one file from the camera. 
 	(only the last file can be deleted)*/
 	
 	index = convert_name_to_index (filename);
-	ret = largan_erase (camera, index);
-	
-	return ret;
+	return largan_erase (camera, index);
 }
 
 
@@ -209,77 +206,20 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 		 GPContext *context)
 {
 	Camera *camera = data;
-	int ret;
 	/*
 	 * Delete all files in the given folder. If your camera doesn't have
 	 * such a functionality, just don't implement this function.
 	 */
 
-	ret = largan_erase (camera, 0xff);
-	
-	return ret;
+	return largan_erase (camera, 0xff);
 }
 
-#if 0
-static int
-camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
-{
- 	int ret;
- 	/*
- 	 * Capture a preview and return the data in the given file (again,
- 	 * use gp_file_set_data_and_size, gp_file_set_mime_type, etc.).
- 	 * libgphoto2 assumes that previews are NOT stored on the camera's 
- 	 * disk. If your camera does, please delete it from the camera.
- 	*/ 
- 	ret = largan_capture (camera);
- 	if (ret != GP_OK) {
- 		return ret;
- 	}
-
-	return (GP_OK);
-}
-#endif
 
 static int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		GPContext *context)
 {
-	int ret;
-	/*
-	 * Capture an image and tell libgphoto2 where to find it by filling
-	 * out the path.
-	 */
-	ret = largan_capture (camera);
-	if (ret != GP_OK) {
-		return ret;
-	}
-	
-
-	return (GP_OK);
-}
-
-static int
-camera_summary (Camera *camera, CameraText *summary, GPContext *context)
-{
-	/*
-	 * Fill out the summary with some information about the current 
-	 * state of the camera (like pictures taken, etc.).
-	 */
-	strcpy (summary->text, _("There is nothing to summarize for this camera."));
-
-	return (GP_OK);
-}
-
-static int
-camera_manual (Camera *camera, CameraText *manual, GPContext *context)
-{
-	/*
-	 * If you would like to tell the user some information about how 
-	 * to use the camera or the driver, this is the place to do.
-	 */
-	strcpy (manual->text, _("No manual"));
-
-	return (GP_OK);
+	return largan_capture (camera);
 }
 
 static int
@@ -289,17 +229,6 @@ camera_about (Camera *camera, CameraText *about, GPContext *context)
 			       "Hubert Figuiere <hfiguiere@teaser.fr>\n\n"
 			       "Handles Largan Lmini camera.\n"
 			       ""));
-
-	return (GP_OK);
-}
-
-static int
-get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
-	       CameraFileInfo *info, void *data, GPContext *context)
-{
-	/* Camera *camera = data; */
-
-	/* Get the file info here and write it into <info> */
 
 	return (GP_OK);
 }
@@ -327,6 +256,13 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	return (GP_OK);
 }
 
+static CameraFilesystemFuncs fsfuncs = {
+	.file_list_func = file_list_func,
+	.get_file_func = get_file_func,
+	.del_file_func = delete_file_func,
+	.delete_all_func = delete_all_func,
+};
+
 int
 camera_init (Camera *camera, GPContext *context) 
 {
@@ -336,21 +272,10 @@ camera_init (Camera *camera, GPContext *context)
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;
         camera->functions->capture              = camera_capture;
-	/*        camera->functions->capture_preview      = camera_capture_preview;*/
-        camera->functions->summary              = camera_summary;
-        camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;
 
 	/* Now, tell the filesystem where to get lists, files and info */
-	gp_filesystem_set_list_funcs (camera->fs, file_list_func,
-				      NULL, camera);
-	gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL,
-				      camera);
-	gp_filesystem_set_file_funcs (camera->fs, get_file_func, 
-				      delete_file_func, camera);
-	gp_filesystem_set_folder_funcs (camera->fs, NULL,
-					delete_all_func, NULL, NULL, camera);
-
+	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 	/*
 	 * The port is already provided with camera->port (and
 	 * already open). You just have to use functions like
@@ -394,10 +319,5 @@ camera_init (Camera *camera, GPContext *context)
 	 * Once you have configured the port, you should check if a 
 	 * connection to the camera can be established.
 	 */
-	ret = largan_open (camera);
-	if (ret < 0)
-		return (ret);
-	
-
-	return (GP_OK);
+	return largan_open (camera);
 }
