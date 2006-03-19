@@ -668,22 +668,23 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 }
 #endif
 
+static CameraFilesystemFuncs fsfuncs = {
+	.file_list_func = file_list_func,
+	.folder_list_func = folder_list_func,
+	.set_info_func = set_info_func,
+	.get_info_func = get_info_func,
+	.get_file_func = get_file_func,
+	.put_file_func = put_file_func,
+	.del_file_func = delete_file_func,
+	.make_dir_func = make_dir_func,
+	.remove_dir_func = remove_dir_func,
+};
+
 int
 camera_init (Camera *camera, GPContext *context)
 {
         /* First, set up all the function pointers */
         camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;
-
-        gp_filesystem_set_list_funcs (camera->fs, file_list_func,
-                                      folder_list_func, camera);
-	gp_filesystem_set_info_funcs (camera->fs, get_info_func,
-				      set_info_func, camera);
-	gp_filesystem_set_file_funcs (camera->fs, get_file_func,
-				      delete_file_func, camera);
-	gp_filesystem_set_folder_funcs (camera->fs, put_file_func, NULL,
-					make_dir_func, remove_dir_func, camera);
-
-        return (GP_OK);
+        return gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 }
-
