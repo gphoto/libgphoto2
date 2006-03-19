@@ -9,22 +9,17 @@
 
 #define GP_MODULE "barbie"
 
-/* packet headers/footers */
-char packet_header[3]           = {0x02, 0x01};
-char packet_header_data[6]      = {0x02, 0x01, 0x01, 0x01, 0x01}; 
-char packet_header_firmware[4]  = {0x02, 'V', 0x01};
-char packet_footer[2]           = {0x03};
-
 /* Some simple packet templates */
 char packet_1[4]                = {0x02, 0x01, 0x01, 0x03};
-char packet_2[5]                = {0x02, 0x01, 0x01, 0x01, 0x03};
 
+static char *barbie_read_data (GPPort *port, char *cmd, int cmd_size, int data_type, int *size);
 
 /* Utility Functions
    =======================================================================
 */
 
-void barbie_packet_dump(GPPort *port, int direction, char *buf, int size) {
+static void
+barbie_packet_dump(GPPort *port, int direction, char *buf, int size) {
 	int x;
 
 	if (direction == 0)
@@ -40,7 +35,8 @@ void barbie_packet_dump(GPPort *port, int direction, char *buf, int size) {
 	GP_DEBUG ("\n");
 }
 
-int barbie_write_command(GPPort *port, char *command, int size) {
+static int
+barbie_write_command(GPPort *port, char *command, int size) {
 
 	int x;
 
@@ -49,7 +45,8 @@ int barbie_write_command(GPPort *port, char *command, int size) {
 	return (x == GP_OK);
 }
 
-int barbie_read_response(GPPort *port, char *response, int size) {
+static int
+barbie_read_response(GPPort *port, char *response, int size) {
 
 	int x;
 	char ack = 0;
