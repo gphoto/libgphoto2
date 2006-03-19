@@ -758,9 +758,9 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 
 /*	get_shoot_mode_table (camera); */
 
-	/*ret = hp_gen_cmd_1_16 (TAKE_PHOTO, 1, &buf, &buflen);*/
+	/*ret = hp_gen_cmd_1_16 (TAKE_PHOTO, 1, &buf, &buflen);*/ /* download after capture */
 	gp_port_set_timeout (camera->port, 60000);
-	ret = hp_gen_cmd_blob (TAKE_PHOTO, 0, NULL, &buf, &buflen);
+	ret = hp_gen_cmd_blob (TAKE_PHOTO, 0, NULL, &buf, &buflen); /* store on camera */
 	if (ret < GP_OK)
 		return ret;
 	ret = hp_send_command_and_receive_blob (camera, buf, buflen, &msg, &msglen, &retcode);
@@ -799,6 +799,13 @@ camera_abilities (CameraAbilitiesList *list) {
 	return gp_abilities_list_append(list, a);
 }
 
+static CameraFilesystemFuncs fsfuncs = {
+	.file_list_func = file_list_func,
+	.get_info_func = get_info_func,
+	.get_file_func = get_file_func,
+	.del_file_func = delete_file_func,
+	.delete_all_func = delete_all_func
+};
 
 int
 camera_init (Camera *camera, GPContext *context)
@@ -813,10 +820,7 @@ camera_init (Camera *camera, GPContext *context)
 	camera->functions->capture              = camera_capture;
 	camera->functions->capture_preview      = camera_capture_preview;
 
-	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
-	gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL, camera);
-	gp_filesystem_set_file_funcs (camera->fs, get_file_func, delete_file_func, camera);
-	gp_filesystem_set_folder_funcs (camera->fs, NULL, delete_all_func, NULL, NULL, camera);
+	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 
 	gp_port_get_settings (camera->port, &settings);
 	settings.usb.inep  = 0x83;
