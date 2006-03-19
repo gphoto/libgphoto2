@@ -84,14 +84,18 @@ camera_about (Camera *camera, CameraText *about, GPContext *context) {
         return GP_OK;
 }
 
+static CameraFilesystemFuncs fsfuncs = {
+	.file_list_func = file_list_func,
+	.get_file_func = get_file_func
+};
+
 int
 camera_init(Camera *camera, GPContext *context) {
 	int ret;
 	gp_port_settings settings;
 
 	camera->functions->about        = camera_about;
-	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
-	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
+	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 
 	ret = gp_port_set_timeout (camera->port, 5000);
 	if (ret < GP_OK)
