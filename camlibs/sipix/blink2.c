@@ -52,6 +52,7 @@
 #define BLINK2_DELETE_ALL		0x12
 #define BLINK2_CHECK_CAPTURE_FINISH	0x16
 #define BLINK2_SET_EXPOSURE_COUNT	0x17
+#define BLINK2_GET_FIRMWARE_ID		0x18
 
 static int
 blink2_getnumpics(
@@ -60,8 +61,6 @@ blink2_getnumpics(
     char buf[6];
     int ret;
     
-    ret = gp_port_usb_msg_read(port, 0x18, 0x03, 0, buf, 6);
-    ret = gp_port_usb_msg_read(port, BLINK2_GET_NUMPICS, 0x03, 0, buf, 2);
     ret = gp_port_usb_msg_read(port, BLINK2_GET_NUMPICS, 0x03, 0, buf, 2);
     if (ret<GP_OK)
 	return ret;
@@ -424,25 +423,29 @@ camera_id (CameraText *id)
 	return (GP_OK);
 }
 
+static CameraFilesystemFuncs fsfuncs = {
+	.file_list_func = file_list_func,
+	.get_file_func = get_file_func,
+	.delete_all_func = delete_all_func
+};
+
 int
 camera_init (Camera *camera, GPContext *context) 
 {
-	char buf[8];
+	char buf[6];
 	int ret;
 	GPPortSettings settings;
 
         camera->functions->capture              = camera_capture;
 
-	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
-	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
-	gp_filesystem_set_folder_funcs (camera->fs, NULL, delete_all_func, NULL, NULL, camera);
+	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 	gp_port_get_settings( camera->port, &settings);
 	settings.usb.interface = 0;
 	settings.usb.altsetting = 0;
 	ret = gp_port_set_settings (camera->port, settings);
 	if (ret < GP_OK) return ret;
 
-	ret = gp_port_usb_msg_read( camera->port, 0x18, 0x03, 0, buf, 6);
+	ret = gp_port_usb_msg_read( camera->port, BLINK2_GET_FIRMWARE_ID, 0x03, 0, buf, 6);
 	if (ret < GP_OK)
 		return ret;
 	ret = gp_port_usb_msg_read( camera->port, 0x04, 0x03, 0, buf, 1);
