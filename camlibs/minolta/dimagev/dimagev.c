@@ -175,15 +175,13 @@ static int delete_file_func (CameraFilesystem *fs, const char *folder,
 			     GPContext *context) 
 {
 	Camera *camera = data;
-	int file_number=0, ret;
+	int file_number=0;
 
 	file_number = gp_filesystem_number(camera->fs, folder, filename, context);
 	if (file_number < 0)
 		return (file_number);
 
-	ret = dimagev_delete_picture(camera->pl, (file_number + 1 ));
-
-	return (ret);
+	return dimagev_delete_picture(camera->pl, (file_number + 1 ));
 }
 
 static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context) 
@@ -228,11 +226,8 @@ static int delete_all_func (CameraFilesystem *fs, const char *folder,
 			    void *data, GPContext *context) 
 {
 	Camera *camera = data;
-	int ret;
 
-	ret = dimagev_delete_all(camera->pl);
-
-	return (ret);
+	return dimagev_delete_all(camera->pl);
 }
 
 static int camera_summary (Camera *camera, CameraText *summary, GPContext *context) 
@@ -438,6 +433,14 @@ _("Minolta Dimage V Camera Library\n%s\nGus Hartmann <gphoto@gus-the-cat.org>\nS
 	return GP_OK;
 }
 
+static CameraFilesystemFuncs fsfuncs = {
+	.file_list_func = file_list_func,
+	.get_file_func = get_file_func,
+	.del_file_func = delete_file_func,
+	.put_file_func = put_file_func,
+	.delete_all_func = delete_all_func,
+};
+
 int camera_init (Camera *camera, GPContext *context) 
 {
 	GPPortSettings settings;
@@ -485,12 +488,6 @@ int camera_init (Camera *camera, GPContext *context)
         }
 
 	/* Set up the filesystem */
-	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
-	gp_filesystem_set_file_funcs (camera->fs, get_file_func,
-				      delete_file_func, camera);
-	gp_filesystem_set_folder_funcs (camera->fs, put_file_func,
-					delete_all_func, NULL, NULL, camera);
-
+	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
         return GP_OK;
 }
-
