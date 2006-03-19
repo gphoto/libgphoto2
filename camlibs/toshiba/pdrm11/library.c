@@ -89,27 +89,16 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       GPContext *context)
 {
 	int picNum;
-	int ret;
 	Camera *camera = data;
 	
 	switch(type){
 	case GP_FILE_TYPE_PREVIEW:
 	case GP_FILE_TYPE_NORMAL:
 		picNum = gp_filesystem_number(fs, folder, filename, context) + 1;
-		ret =  pdrm11_get_file (fs, filename, type, file, camera->port, picNum);
-		return(ret);
+		return pdrm11_get_file (fs, filename, type, file, camera->port, picNum);
 	default:
 		return GP_ERROR_NOT_SUPPORTED;
 	}
-}
-
-
-static int
-put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
-	       void *data, GPContext *context)
-{
-	GP_DEBUG("put_file_func");
-	return (GP_OK);
 }
 
 
@@ -118,97 +107,10 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 		  const char *filename, void *data, GPContext *context)
 {
 	int picNum;
-	int ret;
 	Camera *camera = data;
 
-
 	picNum = gp_filesystem_number(fs, folder, filename, context) + 1;
-	ret = pdrm11_delete_file(camera->port, picNum);
-	return (GP_OK);
-}
-
-
-static int
-delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
-		 GPContext *context)
-{
-	/*Camera *camera = data;*/
-	GP_DEBUG("deleta_all_func");
-
-	/*
-	 * Delete all files in the given folder. If your camera doesn't have
-	 * such a functionality, just don't implement this function.
-	 */
-
-	return (GP_OK);
-}
-
-
-static int
-camera_config_get (Camera *camera, CameraWidget **window, GPContext *context) 
-{
-	GP_DEBUG("camera_config_get");
-	gp_widget_new (GP_WIDGET_WINDOW, "Camera Configuration", window);
-
-
-	/* Append your sections and widgets here. */
-
-	return (GP_OK);
-}
-
-
-static int
-camera_config_set (Camera *camera, CameraWidget *window, GPContext *context) 
-{
-	GP_DEBUG("camera_config_set");
-	/*
-	 * Check if the widgets' values have changed. If yes, tell the camera.
-	 */
-
-	return (GP_OK);
-}
-
-
-static int
-camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
-{
-	GP_DEBUG("camera_capture_preview");
-	return (GP_OK);
-}
-
-
-static int
-camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
-		GPContext *context)
-{
-	GP_DEBUG("camera_capture");
-	return (GP_OK);
-}
-
-
-static int
-camera_summary (Camera *camera, CameraText *summary, GPContext *context)
-{
-	GP_DEBUG("camera_summary");
-	/*
-	 * Fill out the summary with some information about the current 
-	 * state of the camera (like pictures taken, etc.).
-	 */
-
-	return (GP_OK);
-}
-
-
-static int
-camera_manual (Camera *camera, CameraText *manual, GPContext *context)
-{
-	GP_DEBUG("camera_manual");
-	/*
-	 * If you would like to tell the user some information about how 
-	 * to use the camera or the driver, this is the place to do.
-	 */
-
-	return (GP_OK);
+	return pdrm11_delete_file(camera->port, picNum);
 }
 
 
@@ -222,68 +124,20 @@ camera_about (Camera *camera, CameraText *about, GPContext *context)
 	return (GP_OK);
 }
 
-
-static int
-get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
-	       CameraFileInfo *info, void *data, GPContext *context)
-{
-	/* Camera *camera = data; */
-	time_t now;
-
-	GP_DEBUG("get_info_func");
-
-	now = time(NULL);
-	GP_DEBUG("now: 0x%lx", (long)now);
-	info->file.mtime = now;
-
-	info->file.fields = GP_FILE_INFO_MTIME;
-	
-
-	return (GP_OK);
-}
-
-
-static int
-set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
-	       CameraFileInfo info, void *data, GPContext *context)
-{
-	/*Camera *camera = data;*/
-	GP_DEBUG("set_info_func");
-
-	/* Set the file info here from <info> */
-	
-
-	return (GP_OK);
-}
-
-
-
-static int
-folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
-		  void *data, GPContext *context)
-{
-	/*Camera *camera = data;*/
-	GP_DEBUG("folder_list_func");
-
-	/* List your folders here */
-
-	return (GP_OK);
-}
-
-
-
 static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data, GPContext *context)
 {
 	Camera *camera = data;
-	int ret;
 
-	ret = pdrm11_get_filenames(camera->port, list);
-	return (GP_OK);
+	return pdrm11_get_filenames(camera->port, list);
 }
 
-
+static CameraFilesystemFuncs fsfuncs = {
+	.file_list_func = file_list_func,
+	.get_file_func = get_file_func,
+	.del_file_func = delete_file_func
+};
 
 int
 camera_init (Camera *camera, GPContext *context) 
@@ -292,26 +146,8 @@ camera_init (Camera *camera, GPContext *context)
 
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;
-        camera->functions->get_config           = camera_config_get;
-        camera->functions->set_config           = camera_config_set;
-        camera->functions->capture              = camera_capture;
-        camera->functions->capture_preview      = camera_capture_preview;
-        camera->functions->summary              = camera_summary;
-        camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;
-
 	/* Now, tell the filesystem where to get lists, files and info */
-	gp_filesystem_set_list_funcs (camera->fs, file_list_func,
-				      folder_list_func, camera);
-	gp_filesystem_set_info_funcs (camera->fs, get_info_func, set_info_func,
-				      camera);
-	gp_filesystem_set_file_funcs (camera->fs, get_file_func,
-				      delete_file_func, camera);
-	gp_filesystem_set_folder_funcs (camera->fs, put_file_func,
-					delete_all_func, NULL, NULL, camera);
-
-
-
-	ret = pdrm11_init(camera->port);
-	return(ret);
+	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
+	return pdrm11_init(camera->port);
 }
