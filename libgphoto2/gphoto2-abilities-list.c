@@ -440,7 +440,6 @@ gp_abilities_list_detect (CameraAbilitiesList *list,
 			gp_list_append (l, "Mass Storage Camera", info.path);
 			break;
 		}
-#ifdef ENABLE_PTPIP /* only enable if you enable the ptp2 part */
 		case GP_PORT_PTPIP: {
 			char	*s;
 
@@ -451,7 +450,6 @@ gp_abilities_list_detect (CameraAbilitiesList *list,
 			gp_list_append (l, "PTP/IP Camera", info.path);
 			break;
 		}
-#endif
 		default:
 			/*
 			 * We currently cannot detect any cameras on this
