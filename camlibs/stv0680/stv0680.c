@@ -289,10 +289,15 @@ delete_all_func (CameraFilesystem *fs, const char* folder, void *data,
 	return stv0680_delete_all(camera->port);
 }
 
+static CameraFilesystemFuncs fsfuncs = {
+	.file_list_func = file_list_func,
+	.get_file_func = get_file_func,
+	.delete_all_func = delete_all_func,
+};
+
 int camera_init (Camera *camera, GPContext *context) 
 {
 	GPPortSettings settings;
-        int ret;
 
         /* First, set up all the function pointers */
         camera->functions->summary              = camera_summary;
@@ -319,12 +324,8 @@ int camera_init (Camera *camera, GPContext *context)
 	gp_port_set_settings(camera->port, settings);
 
 	/* Set up the filesystem */
-	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
-	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
-
-	gp_filesystem_set_folder_funcs (camera->fs, NULL, delete_all_func, NULL, NULL, camera);
+	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 
         /* test camera */
-        ret = stv0680_ping(camera->port);
-	return (ret);
+        return stv0680_ping(camera->port);
 }
