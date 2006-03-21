@@ -1488,6 +1488,64 @@ out:
 	return GP_OK;
 }
 
+static int
+camera_wait_for_event (Camera *camera, int timeout,
+		       CameraEventType *eventtype, void **eventdata,
+		       GPContext *context) {
+	PTPContainer event;
+	PTPParams *params = &camera->pl->params;
+	uint32_t newobject = 0x0;
+	CameraFilePath *path;
+        int i, oldtimeout;
+	uint16_t ret;
+
+	gp_port_get_timeout (camera->port, &oldtimeout);
+	gp_port_set_timeout (camera->port, timeout);
+	ret = params->event_wait(params,&event);
+	gp_port_set_timeout (camera->port, oldtimeout);
+
+	if (ret!=PTP_RC_OK) {
+		/* FIXME: Might be another error, but usually is a timeout */
+		gp_log (GP_LOG_DEBUG, "ptp2", "wait_for_event received error 0x%04x", ret);
+		*eventtype = GP_EVENT_TIMEOUT;
+		return GP_OK;
+	}
+
+	switch (event.Code) {
+	case PTP_EC_ObjectAdded:
+		path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
+		if (!path)
+			return GP_ERROR_NO_MEMORY;
+		newobject = event.Param1;
+		add_object (camera, event.Param1, context);
+		path->name[0]='\0';
+		path->folder[0]='\0';
+
+		for (i = params->handles.n ; i--; ) {
+			PTPObjectInfo	*obinfo;
+
+			if (params->handles.Handler[i] != newobject)
+				continue;
+			obinfo = &camera->pl->params.objectinfo[i];
+			strcpy  (path->name,  obinfo->Filename);
+			sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)obinfo->StorageID);
+			get_folder_from_handle (camera, obinfo->StorageID, obinfo->ParentObject, path->folder);
+			/* delete last / or we get confused later. */
+			path->folder[ strlen(path->folder)-1 ] = '\0';
+			CR (gp_filesystem_append (camera->fs, path->folder,
+						  path->name, context));
+			break;
+		}
+		*eventtype = GP_EVENT_FILE_ADDED;
+		*eventdata = path;
+		break;
+	default:
+		*eventtype = GP_EVENT_UNKNOWN;
+		break;
+	}
+	return GP_OK;
+}
+
 static void
 _value_to_str(PTPPropertyValue *data, uint16_t dt, char *txt) {
 	if (dt == PTP_DTC_STR) {
@@ -4236,6 +4294,7 @@ camera_init (Camera *camera, GPContext *context)
 	camera->functions->summary = camera_summary;
 	camera->functions->get_config = camera_get_config;
 	camera->functions->set_config = camera_set_config;
+	camera->functions->wait_for_event = camera_wait_for_event;
 
 	/* We need some data that we pass around */
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));
