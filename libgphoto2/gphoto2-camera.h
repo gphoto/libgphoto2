@@ -65,6 +65,13 @@ typedef enum {
 	GP_CAPTURE_SOUND
 } CameraCaptureType;
 
+typedef enum {
+	GP_EVENT_UNKNOWN,	/* unknown and unhandled event */
+	GP_EVENT_TIMEOUT,	/* timeout, no arguments */
+	GP_EVENT_FILE_ADDED,	/* char* = file path on camfs */
+	GP_EVENT_FOLDER_ADDED,	/* char* = folder on camfs */
+} CameraEventType;
+
 /**
  * \name Camera object member functions
  *
@@ -88,7 +95,9 @@ typedef int (*CameraManualFunc)    (Camera *camera, CameraText *text,
 				    GPContext *context);
 typedef int (*CameraAboutFunc)     (Camera *camera, CameraText *text,
 				    GPContext *context);
-
+typedef int (*CameraWaitForEvent)  (Camera *camera, int timeout,
+				    CameraEventType *eventtype, void **eventdata,
+				    GPContext *context);
 /**@}*/
 
 
@@ -131,6 +140,9 @@ struct _CameraFunctions {
 	CameraManualFunc  manual;
 	CameraAboutFunc   about;
 
+	/* Event Interface */
+	CameraWaitForEvent wait_for_event;
+
 	/* Reserved space to use in the future without changing the struct size */
 	void *reserved1;
 	void *reserved2;
@@ -139,7 +151,6 @@ struct _CameraFunctions {
 	void *reserved5;
 	void *reserved6;
 	void *reserved7;
-	void *reserved8;
 };
 
 /* Those are DEPRECATED */
@@ -222,6 +233,9 @@ int gp_camera_capture 		 (Camera *camera, CameraCaptureType type,
 				  CameraFilePath *path, GPContext *context);
 int gp_camera_capture_preview 	 (Camera *camera, CameraFile *file,
 				  GPContext *context);
+int gp_camera_wait_for_event     (Camera *camera, int timeout,
+		                  CameraEventType *eventtype, void **eventdata,
+			          GPContext *context);
 
 /**@}*/
 
@@ -241,7 +255,6 @@ int gp_camera_folder_make_dir     (Camera *camera, const char *folder,
 				   const char *name, GPContext *context);
 int gp_camera_folder_remove_dir   (Camera *camera, const char *folder,
 				   const char *name, GPContext *context);
-
 /**@}*/
 
 

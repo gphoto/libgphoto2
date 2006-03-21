@@ -1,3 +1,13 @@
+2006-03-21  Marcus Meissner  <marcus@jet.franken.de>
+
+	* libgphoto2/gphoto2-camera.[ch]:
+
+	  Added gp_camera_wait_for_event() API, to wait for
+	  specific camera events and return them to the caller.
+	  See camlibs/ptp2/library.c for an example usage.
+
+	  Contributed by Edward Flick <eddy@cdf-imaging.com>.
+
 2006-01-27  Theodore Kilgore  <kilgota@auburn.edu>
 
 	* camlibs/clicksmart310/*: Supports Logitech Clicksmart 310. 

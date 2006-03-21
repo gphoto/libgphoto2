@@ -989,6 +989,44 @@ gp_camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	return (GP_OK);
 }
 
+
+/**
+ * \brief Wait for an event from the \c camera.
+ * \param camera a Camera
+ * \param timeout amount of time to wait in 1/1000 seconds
+ * \param eventtype received CameraEventType [out]
+ * \param eventdata received event specific data [out]
+ * \param context a GPContext
+ * \return gphoto2 error code
+ *
+ * This function blocks and waits for an event to come from the camera.  If
+ * timeout occurs before an event is received then
+ * *eventtype==GP_EVENT_TIMEOUT and eventdata is left unchanged.
+ * If an event is received then eventtype is set to the type of event, and
+ * eventdata is set to event specific data.  See the CameraEventType enum
+ * to see which eventtype's match to which types of eventdata.
+ */
+int
+gp_camera_wait_for_event (Camera *camera, int timeout,
+		          CameraEventType *eventtype, void **eventdata,
+			  GPContext *context)
+{
+	CHECK_NULL (camera);
+	CHECK_INIT (camera, context);
+
+	if (!camera->functions->wait_for_event) {
+		gp_context_error (context, _("This camera does "
+			"not support event handling."));
+		CAMERA_UNUSED (camera, context);
+                return (GP_ERROR_NOT_SUPPORTED);
+	}
+	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->wait_for_event (
+					camera, timeout, eventtype, eventdata,
+					context), context);
+	CAMERA_UNUSED (camera, context);
+	return (GP_OK);
+}
+
 /**
  * gp_camera_folder_list_files:
  * \param camera: a #Camera
