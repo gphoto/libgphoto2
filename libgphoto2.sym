@@ -42,6 +42,7 @@ gp_camera_set_timeout_funcs
 gp_camera_start_timeout
 gp_camera_stop_timeout
 gp_camera_unref
+gp_camera_wait_for_event
 gp_context_cancel
 gp_context_error
 gp_context_idle
