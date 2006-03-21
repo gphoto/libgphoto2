@@ -581,8 +581,14 @@ static struct {
 	{"iRiver:T30",                          0x4102, 0x1119, 0},
 	/* From: thanosz@softhome.net */
 	{"Philipps:HDD6320",                    0x0471, 0x01eb, 0},
+	/* stolen from libmtp source */
+	{"Creative Portable Media Center",	0x041e, 0x4123, 0},
+	{"Creative Zen Micro (MTP mode)",	0x041e, 0x4130, 0},
+	{"Creative Zen Touch (MTP mode)",	0x041e, 0x4131, 0},
+	{"Creative Zen Sleek (MTP mode)",	0x041e, 0x4137, 0},
 	/* Jennifer Scalf <oneferna@gmail.com> */
 	{"Creative:Zen MicroPhoto",             0x041e, 0x413c, 0},
+	
 	/* Marcoen Hirschberg <marcoen@users.sourceforge.net> */
 	{"Toshiba:Gigabeat",                    0x0930, 0x000c, 0},
 
