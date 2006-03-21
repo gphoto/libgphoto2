@@ -15,6 +15,10 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #------------------------------------------------------------------------------
+cdef extern from "stdlib.h":
+  void free(void *)
+
+#------------------------------------------------------------------------------
 
 cdef extern from "time.h":
   ctypedef struct time_t:
@@ -645,6 +649,12 @@ cdef extern from "gphoto2-camera.h":
     GP_CAPTURE_MOVIE
     GP_CAPTURE_SOUND
 
+  ctypedef enum CameraEventType:
+    GP_EVENT_UNKNOWN        # unknown and unhandled event
+    GP_EVENT_TIMEOUT        # timeout, no arguments
+    GP_EVENT_FILE_ADDED     # CameraFilePath = file in camfs
+    GP_EVENT_FOLDER_ADDED   # CameraFilePath = folder in camfs
+
   ctypedef int (*CameraExitFunc)      (Camera *camera, GPContext *context)
   ctypedef int (*CameraGetConfigFunc) (Camera *camera, CameraWidget **widget, GPContext *context)
   ctypedef int (*CameraSetConfigFunc) (Camera *camera, CameraWidget  *widget, GPContext *context)
@@ -716,6 +726,7 @@ cdef extern from "gphoto2-camera.h":
   int gp_camera_get_about          (Camera *camera, CameraText *about, GPContext *context)
   int gp_camera_capture            (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context)
   int gp_camera_capture_preview    (Camera *camera, CameraFile *file, GPContext *context)
+  int gp_camera_wait_for_event     (Camera *camera, int timeout, CameraEventType *eventtype, void **eventdata, GPContext *context)
 
   int gp_camera_folder_list_files   (Camera *camera,  char *folder, CameraList *list, GPContext *context)
   int gp_camera_folder_list_folders (Camera *camera,  char *folder, CameraList *list, GPContext *context)
@@ -936,3 +947,26 @@ cdef class camera:
     cdef CameraFilePath path
     check(gp_camera_capture(self.camera, GP_CAPTURE_IMAGE, &path, NULL))
     return (path.folder, path.name)
+
+  def wait_for_event(self,int timeout):
+    cdef CameraEventType event
+    cdef void *data
+    check(gp_camera_wait_for_event(self.camera,timeout,&event,&data,NULL))
+    eventdata=None
+    if event==GP_EVENT_FILE_ADDED:
+      eventdata=((<CameraFilePath*>data).folder,(<CameraFilePath*>data).name)
+      free(data)
+    return (event,eventdata)
+
+  def list_folders_in_folder(self,char *path):
+    cdef cameraList l
+    l=cameraList()
+    check(gp_camera_folder_list_folders( self.camera, path, l.liste, NULL ));
+    return l
+
+  def list_files_in_folder(self,char *path):
+    cdef cameraList l
+    l=cameraList()
+    check(gp_camera_folder_list_files( self.camera, path, l.liste, NULL ));
+    return l
+

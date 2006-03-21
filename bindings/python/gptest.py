@@ -49,6 +49,9 @@ cam=gphoto2.camera()
 
 print("Initializing camera...")
 cam.init()
+list = cam.list_folders_in_folder('/')
+for i in range(0,list.count()):
+  print list[i]
 print cam.summary
 print cam.abilities
 print cam.capture_image()
