@@ -916,6 +916,13 @@ cdef class abilities_list:
     check(gp_abilities_list_detect(self.abilitiesList, p.portInfoList, l.liste, NULL))
     return l
 
+class cameraeventtype:
+    GP_EVENT_UNKNOWN,        \
+    GP_EVENT_TIMEOUT,        \
+    GP_EVENT_FILE_ADDED,     \
+    GP_EVENT_FOLDER_ADDED    \
+    = range(0,4)
+
 cdef class camera:
   cdef Camera *camera
 
@@ -924,6 +931,11 @@ cdef class camera:
 
   def init(self):
     check(gp_camera_init(self.camera, NULL))
+
+  def reinit(self):
+    gp_camera_free(self.camera)
+    check(gp_camera_new(&self.camera))
+    self.init()
 
   def __dealloc__(self):
     check(gp_camera_free(self.camera))
