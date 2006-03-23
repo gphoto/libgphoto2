@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port 2.1.99\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-03-14 20:22+0100\n"
+"POT-Creation-Date: 2006-03-23 18:42+0100\n"
 "PO-Revision-Date: 2005-12-29 14:25+0100\n"
 "Last-Translator: Mogens Jaeger <mogensjaeger@get2net.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
@@ -416,30 +416,30 @@ msgstr "Kunne ikke tømme '%s' (%m)."
 msgid "Could not set the baudrate to %d"
 msgstr "Kunne ikke sætte baudrate til %d"
 
-#: usb/libusb.c:226
+#: usb/libusb.c:236
 #, c-format
 msgid "Could not open USB device (%m)."
 msgstr "Kunne ikke åbne USB enheden (%m)."
 
-#: usb/libusb.c:236
+#: usb/libusb.c:246
 msgid "Camera is already in use."
 msgstr "Kameraet er allerede i brug."
 
-#: usb/libusb.c:241
+#: usb/libusb.c:251
 #, c-format
 msgid "Device has driver '%s' attached, detaching it now."
 msgstr "Enheden har driver '%s' tilknyttet, frigør det nu."
 
-#: usb/libusb.c:244
+#: usb/libusb.c:254
 #, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
 msgstr "Kunne ikke frigøre kerneldriver '%s' fra kameraenheden."
 
-#: usb/libusb.c:246
+#: usb/libusb.c:256
 msgid "Could not query kernel driver of device."
 msgstr "Kunne ikke forespørge kerneldriver fra enheden."
 
-#: usb/libusb.c:253
+#: usb/libusb.c:263
 #, c-format
 msgid ""
 "Could not claim interface %d (%m). Make sure no other program or kernel "
@@ -450,33 +450,33 @@ msgstr ""
 "eller kerneldrivere (som f.eks. %s) bruger enheden, og at du har læse/skrive "
 "rettigheder til enheden."
 
-#: usb/libusb.c:272
+#: usb/libusb.c:282
 #, c-format
 msgid "Could not release interface %d (%m)."
 msgstr "Kunne ikke frigøre grænseflade %d (%m)."
 
-#: usb/libusb.c:279
+#: usb/libusb.c:289
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr "Kunne ikke lukke USB-port (%m)."
 
-#: usb/libusb.c:459
+#: usb/libusb.c:469
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "Kunne ikke sætte konfiguration %d/%d (%m)"
 
-#: usb/libusb.c:489
+#: usb/libusb.c:499
 #, c-format
 msgid "Could not set altsetting %d/%d (%m)"
 msgstr "Kunne ikke sætte alt-indstillinger %d/%d (%m)"
 
-#: usb/libusb.c:581
+#: usb/libusb.c:591
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr ""
 "Det leverede fremstiller- eller produkt-id (0x%x,0x%x) er ikke gyldigt."
 
-#: usb/libusb.c:613
+#: usb/libusb.c:623
 #, c-format
 msgid ""
 "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
@@ -485,7 +485,7 @@ msgstr ""
 "USB-enheden (fremstiller 0x%x, produkt 0x%x) er en masselagerenhed, og "
 "virker måske ikke med gphoto2. Reference: %s"
 
-#: usb/libusb.c:646
+#: usb/libusb.c:656
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
@@ -494,7 +494,7 @@ msgstr ""
 "Kunne ikke finde USB-enheden (fremstiller 0x%x, produkt 0x%x). Sikr dig at "
 "enheden er tilsluttet computeren."
 
-#: usb/libusb.c:780
+#: usb/libusb.c:790
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "

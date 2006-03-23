@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port 2.1.6\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-03-14 20:22+0100\n"
+"POT-Creation-Date: 2006-03-23 18:42+0100\n"
 "PO-Revision-Date: 2005-08-29 13:47+0800\n"
 "Last-Translator: Wei-Lun Chao <chaoweilun@pcmail.com.tw>\n"
 "Language-Team: Chinese (traditional) <zh-l10n@linux.org.tw>\n"
@@ -414,30 +414,30 @@ msgstr "無法重新整理「%s」(%m)。"
 msgid "Could not set the baudrate to %d"
 msgstr "無法將鮑率設定為 %d"
 
-#: usb/libusb.c:226
+#: usb/libusb.c:236
 #, c-format
 msgid "Could not open USB device (%m)."
 msgstr "無法開啟 USB 裝置 (%m)。"
 
-#: usb/libusb.c:236
+#: usb/libusb.c:246
 msgid "Camera is already in use."
 msgstr "照相機正在使用。"
 
-#: usb/libusb.c:241
+#: usb/libusb.c:251
 #, c-format
 msgid "Device has driver '%s' attached, detaching it now."
 msgstr "裝置已附掛驅動程式「%s」，現在卸掛它。"
 
-#: usb/libusb.c:244
+#: usb/libusb.c:254
 #, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
 msgstr "無法卸掛照相機裝置的核心驅動程式「%s」。"
 
-#: usb/libusb.c:246
+#: usb/libusb.c:256
 msgid "Could not query kernel driver of device."
 msgstr "無法查詢裝置的核心驅動程式。"
 
-#: usb/libusb.c:253
+#: usb/libusb.c:263
 #, c-format
 msgid ""
 "Could not claim interface %d (%m). Make sure no other program or kernel "
@@ -447,32 +447,32 @@ msgstr ""
 "無法請求介面 %d (%m)。請確認沒有其它程式或核心模組 (例如 %s) 正在使用這個裝"
 "置，並且您有對這個裝置的讀/寫權。"
 
-#: usb/libusb.c:272
+#: usb/libusb.c:282
 #, c-format
 msgid "Could not release interface %d (%m)."
 msgstr "無法釋放介面 %d (%m)。"
 
-#: usb/libusb.c:279
+#: usb/libusb.c:289
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr "無法關閉 USB 連接埠 (%m)。"
 
-#: usb/libusb.c:459
+#: usb/libusb.c:469
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "無法設定配置 %d/%d (%m)"
 
-#: usb/libusb.c:489
+#: usb/libusb.c:499
 #, c-format
 msgid "Could not set altsetting %d/%d (%m)"
 msgstr "無法設定補充設定 %d/%d (%m)"
 
-#: usb/libusb.c:581
+#: usb/libusb.c:591
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr "提供的廠商或產品 id (0x%x、0x%x) 不正確。"
 
-#: usb/libusb.c:613
+#: usb/libusb.c:623
 #, c-format
 msgid ""
 "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
@@ -481,14 +481,14 @@ msgstr ""
 "USB 裝置 (廠商 0x%x、產品 0x%x) 是個大量儲存裝置，而且也許無法與 gphoto2 一起"
 "作用。參考：%s"
 
-#: usb/libusb.c:646
+#: usb/libusb.c:656
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
 "is connected to the computer."
 msgstr "無法找到 USB 裝置 (廠商 0x%x、產品 0x%x)。請確認這個裝置已連接到電腦。"
 
-#: usb/libusb.c:780
+#: usb/libusb.c:790
 #, fuzzy, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "

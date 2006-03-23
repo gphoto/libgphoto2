@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-03-14 20:22+0100\n"
+"POT-Creation-Date: 2006-03-23 18:42+0100\n"
 "PO-Revision-Date: 2005-09-13 08:00+0200\n"
 "Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
 "Language-Team:  <de@li.org>\n"
@@ -424,30 +424,30 @@ msgstr "Konnte »%s« nicht leeren (%m)."
 msgid "Could not set the baudrate to %d"
 msgstr "Konnte Baudrate nicht auf %d setzen"
 
-#: usb/libusb.c:226
+#: usb/libusb.c:236
 #, c-format
 msgid "Could not open USB device (%m)."
 msgstr "Konnte USB-Gerät nicht öffnen (%m)."
 
-#: usb/libusb.c:236
+#: usb/libusb.c:246
 msgid "Camera is already in use."
 msgstr "Kamera ist bereits in Benutzung."
 
-#: usb/libusb.c:241
+#: usb/libusb.c:251
 #, c-format
 msgid "Device has driver '%s' attached, detaching it now."
 msgstr "Gerät hat Kerneltreiber '%s' zugewiesen, löse Treiber jetzt."
 
-#: usb/libusb.c:244
+#: usb/libusb.c:254
 #, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
 msgstr "Konnte Kerneltreiber '%s' nicht vom Kamera Device lösen."
 
-#: usb/libusb.c:246
+#: usb/libusb.c:256
 msgid "Could not query kernel driver of device."
 msgstr "Konnte den Kerneltreiber des Gerätes nicht abfragen."
 
-#: usb/libusb.c:253
+#: usb/libusb.c:263
 #, c-format
 msgid ""
 "Could not claim interface %d (%m). Make sure no other program or kernel "
@@ -459,33 +459,33 @@ msgstr ""
 "anderes Programm oder Kernelmodul (z.B. %s) das Gerät verwendet und Sie \n"
 "Lese- und Schreibrechte für das Gerät haben."
 
-#: usb/libusb.c:272
+#: usb/libusb.c:282
 #, c-format
 msgid "Could not release interface %d (%m)."
 msgstr "Konnte Schnittstelle %d nicht freigeben (%m)."
 
-#: usb/libusb.c:279
+#: usb/libusb.c:289
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr "Konnte USB-Port nicht schließen (%m)."
 
-#: usb/libusb.c:459
+#: usb/libusb.c:469
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "Konnte Konfiguration %d/%d nicht setzen (%m)"
 
-#: usb/libusb.c:489
+#: usb/libusb.c:499
 #, c-format
 msgid "Could not set altsetting %d/%d (%m)"
 msgstr "Konnte Alternativ-Setting %d/%d nicht setzen (%m)"
 
-#: usb/libusb.c:581
+#: usb/libusb.c:591
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr ""
 "Die angegebene Hersteller- oder Produkt-ID (0x%x,0x%x) ist nicht gültig."
 
-#: usb/libusb.c:613
+#: usb/libusb.c:623
 #, c-format
 msgid ""
 "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
@@ -495,7 +495,7 @@ msgstr ""
 "und wird von System direkt unterstützt (und deshalb nicht von gphoto2). "
 "Lesen Sie hierzu bitte %s"
 
-#: usb/libusb.c:646
+#: usb/libusb.c:656
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
@@ -505,7 +505,7 @@ msgstr ""
 "Stellen Sie sicher, dass das Gerät ordnungsgemäß an den Computer "
 "angeschlossen ist."
 
-#: usb/libusb.c:780
+#: usb/libusb.c:790
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "

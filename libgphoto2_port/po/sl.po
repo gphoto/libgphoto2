@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gphoto\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-03-14 20:22+0100\n"
+"POT-Creation-Date: 2006-03-23 18:42+0100\n"
 "PO-Revision-Date: 2002-01-04 19:28+0100\n"
 "Last-Translator: Andraz Tori <andraz.tori1@guest.arnes.si>\n"
 "Language-Team: Slovenian <translation-team-sl@lists.sourceforge.net>\n"
@@ -420,31 +420,31 @@ msgstr ""
 msgid "Could not set the baudrate to %d"
 msgstr "Ne morem dobiti ¹tevila slik"
 
-#: usb/libusb.c:226
+#: usb/libusb.c:236
 #, fuzzy, c-format
 msgid "Could not open USB device (%m)."
 msgstr "Ne morem dobiti vzorca"
 
-#: usb/libusb.c:236
+#: usb/libusb.c:246
 msgid "Camera is already in use."
 msgstr ""
 
-#: usb/libusb.c:241
+#: usb/libusb.c:251
 #, c-format
 msgid "Device has driver '%s' attached, detaching it now."
 msgstr ""
 
-#: usb/libusb.c:244
+#: usb/libusb.c:254
 #, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
 msgstr ""
 
-#: usb/libusb.c:246
+#: usb/libusb.c:256
 #, fuzzy
 msgid "Could not query kernel driver of device."
 msgstr "Ne morem dobiti vzorca"
 
-#: usb/libusb.c:253
+#: usb/libusb.c:263
 #, c-format
 msgid ""
 "Could not claim interface %d (%m). Make sure no other program or kernel "
@@ -452,46 +452,46 @@ msgid ""
 "the device."
 msgstr ""
 
-#: usb/libusb.c:272
+#: usb/libusb.c:282
 #, c-format
 msgid "Could not release interface %d (%m)."
 msgstr ""
 
-#: usb/libusb.c:279
+#: usb/libusb.c:289
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr ""
 
-#: usb/libusb.c:459
+#: usb/libusb.c:469
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr ""
 
-#: usb/libusb.c:489
+#: usb/libusb.c:499
 #, fuzzy, c-format
 msgid "Could not set altsetting %d/%d (%m)"
 msgstr "Ne morem dobiti #%i"
 
-#: usb/libusb.c:581
+#: usb/libusb.c:591
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr ""
 
-#: usb/libusb.c:613
+#: usb/libusb.c:623
 #, c-format
 msgid ""
 "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
 "not function with gphoto2. Reference: %s"
 msgstr ""
 
-#: usb/libusb.c:646
+#: usb/libusb.c:656
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
 "is connected to the computer."
 msgstr ""
 
-#: usb/libusb.c:780
+#: usb/libusb.c:790
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "

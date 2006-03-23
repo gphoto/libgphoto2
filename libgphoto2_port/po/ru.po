@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gphoto\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-03-14 20:22+0100\n"
+"POT-Creation-Date: 2006-03-23 18:42+0100\n"
 "PO-Revision-Date: 2005-01-05 23:00+0300\n"
 "Last-Translator: Вячеслав Диконов (Vyacheslav Dikonov) <slava@altlinux.ru>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -419,30 +419,30 @@ msgstr "Невозможно сбросить буферы устройства 
 msgid "Could not set the baudrate to %d"
 msgstr "Невозможно установить скорость %d"
 
-#: usb/libusb.c:226
+#: usb/libusb.c:236
 #, c-format
 msgid "Could not open USB device (%m)."
 msgstr "Невозможно открыть USB-устройство (%m)."
 
-#: usb/libusb.c:236
+#: usb/libusb.c:246
 msgid "Camera is already in use."
 msgstr "Фотоаппарат уже занят."
 
-#: usb/libusb.c:241
+#: usb/libusb.c:251
 #, c-format
 msgid "Device has driver '%s' attached, detaching it now."
 msgstr "Подключён драйвер '%s'. Производится отключение драйвера."
 
-#: usb/libusb.c:244
+#: usb/libusb.c:254
 #, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
 msgstr "Невозможно отключить драйвер ядра '%s' для устройства фотоаппарата."
 
-#: usb/libusb.c:246
+#: usb/libusb.c:256
 msgid "Could not query kernel driver of device."
 msgstr "Невозможно опросить драйвер ядра для устройства."
 
-#: usb/libusb.c:253
+#: usb/libusb.c:263
 #, c-format
 msgid ""
 "Could not claim interface %d (%m). Make sure no other program or kernel "
@@ -453,32 +453,32 @@ msgstr ""
 "другой программой или модулем ядра (таким как %s), и что у вас есть доступ к "
 "устройству по чтению и записи."
 
-#: usb/libusb.c:272
+#: usb/libusb.c:282
 #, c-format
 msgid "Could not release interface %d (%m)."
 msgstr "Невозможно освободить интерфейс %d (%m)."
 
-#: usb/libusb.c:279
+#: usb/libusb.c:289
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr "Невозможно закрыть порт USB (%m)."
 
-#: usb/libusb.c:459
+#: usb/libusb.c:469
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "Невозможно изменить конфигурацию %d/%d (%m)"
 
-#: usb/libusb.c:489
+#: usb/libusb.c:499
 #, c-format
 msgid "Could not set altsetting %d/%d (%m)"
 msgstr "Невозможно установить альтернативную конфигурацию %d/%d (%m)"
 
-#: usb/libusb.c:581
+#: usb/libusb.c:591
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr "Неверный идентификатор производителя или продукта (0x%x,0x%x)."
 
-#: usb/libusb.c:613
+#: usb/libusb.c:623
 #, c-format
 msgid ""
 "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
@@ -487,7 +487,7 @@ msgstr ""
 "USB устройство (производитель 0x%x, продукт 0x%x) работает как устройство "
 "хранения данных.Программа gphoto2 не может его использовать. См.: %s"
 
-#: usb/libusb.c:646
+#: usb/libusb.c:656
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
@@ -496,7 +496,7 @@ msgstr ""
 "Не найдено устройство USB (производитель 0x%x, продукт 0x%x). Убедитесь, что "
 "устройство подключено к компьютеру."
 
-#: usb/libusb.c:780
+#: usb/libusb.c:790
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "

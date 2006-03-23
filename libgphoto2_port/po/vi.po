@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2 port-2.1.6rc2\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-03-14 20:22+0100\n"
+"POT-Creation-Date: 2006-03-23 18:42+0100\n"
 "PO-Revision-Date: 2005-06-29 19:59+0930\n"
 "Last-Translator: Ngô Trần Thủy <ngotranthuy@gmail.com>\n"
 "Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net>\n"
@@ -422,30 +422,30 @@ msgstr "Không thể chuyển hết ra ngoài «%s» (%m)."
 msgid "Could not set the baudrate to %d"
 msgstr "Không thể thiết lập tốc độ truyền (baud) là %d"
 
-#: usb/libusb.c:226
+#: usb/libusb.c:236
 #, c-format
 msgid "Could not open USB device (%m)."
 msgstr "Không thể mở thiết bị USB (%m)."
 
-#: usb/libusb.c:236
+#: usb/libusb.c:246
 msgid "Camera is already in use."
 msgstr "Máy ảnh đã dùng."
 
-#: usb/libusb.c:241
+#: usb/libusb.c:251
 #, c-format
 msgid "Device has driver '%s' attached, detaching it now."
 msgstr "Thiết bị có trình điều khiển «%s» đính kèm, gỡ bỏ ngay bây giờ."
 
-#: usb/libusb.c:244
+#: usb/libusb.c:254
 #, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
 msgstr "Không thể gỡ bỏ trình điều khiển hạt nhân «%s» của máy ảnh."
 
-#: usb/libusb.c:246
+#: usb/libusb.c:256
 msgid "Could not query kernel driver of device."
 msgstr "Không thể tuy vấn trình điều khiển hạt nhân của thiết bị."
 
-#: usb/libusb.c:253
+#: usb/libusb.c:263
 #, c-format
 msgid ""
 "Could not claim interface %d (%m). Make sure no other program or kernel "
@@ -455,32 +455,32 @@ msgstr ""
 "Không thể quyền đòi giao diện %d (%m). Kiểm tra xem có chương trình (như là %"
 "s) đang sử dụng thiết bị mà bạn có quyền đọc từ và ghi vào thiết bị này."
 
-#: usb/libusb.c:272
+#: usb/libusb.c:282
 #, c-format
 msgid "Could not release interface %d (%m)."
 msgstr "Không thể nhả giao diện %d (%m)."
 
-#: usb/libusb.c:279
+#: usb/libusb.c:289
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr "Không thể đóng cổng USB (%m)."
 
-#: usb/libusb.c:459
+#: usb/libusb.c:469
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "Không thể thiết lập cấu hình «%d/%d» (%m)"
 
-#: usb/libusb.c:489
+#: usb/libusb.c:499
 #, c-format
 msgid "Could not set altsetting %d/%d (%m)"
 msgstr "Không thể thiết lập «altsetting» (thiết lập thay thế) «%d/%d» (%m)"
 
-#: usb/libusb.c:581
+#: usb/libusb.c:591
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr "Mã sản phẩm hay mã nhà bán (0x%x, 0x%x) không đúng"
 
-#: usb/libusb.c:613
+#: usb/libusb.c:623
 #, c-format
 msgid ""
 "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
@@ -489,7 +489,7 @@ msgstr ""
 "Thiết bị USB (nhà bạn 0x%x, sản phẩm 0x%x) là thiết bị lưu trữ chung và có "
 "thể không hoạt động với trình gphoto2. Tham khảo: %s"
 
-#: usb/libusb.c:646
+#: usb/libusb.c:656
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
@@ -498,7 +498,7 @@ msgstr ""
 "Không tìm thấy thiết bị USB (nhà bán 0x%x, sản phẩm 0x%x). Kiểm tra xem việc "
 "kết nối thiết bị với máy tính."
 
-#: usb/libusb.c:780
+#: usb/libusb.c:790
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
