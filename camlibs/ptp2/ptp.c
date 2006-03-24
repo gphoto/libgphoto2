@@ -168,9 +168,9 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp,
 	if (*data!=NULL) return PTP_ERROR_BADPARAM;
 	do {
 		unsigned int len, rlen;
-		/* read first(?) part of data */
+		/* read the header and potentially the first data */
 		ret=params->read_func((unsigned char *)&usbdata,
-				sizeof(usbdata), params->data, &len);
+				sizeof(usbdata), params->data, &rlen);
 		if (ret!=PTP_RC_OK) {
 			ret = PTP_ERROR_IO;
 			break;
@@ -183,20 +183,29 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp,
 			ret = dtoh16(usbdata.code);
 			break;
 		}
-		/* evaluate data length */
+
+		/* For most PTP devices rlen is 512 == sizeof(usbdata)
+		 * here. For MTP devices splitting header and data it might
+		 * be 12.
+		 */
+		/* Evaluate full data length. */
 		len=dtoh32(usbdata.length)-PTP_USB_BULK_HDR_LEN;
-		/* allocate memory for data */
+
+		/* Allocate memory for data. */
 		*data=calloc(len,1);
 		if (readlen)
 			*readlen = len;
-		/* copy first part of data to 'data' */
-		memcpy(*data,usbdata.payload.data,PTP_USB_BULK_PAYLOAD_LEN<len?PTP_USB_BULK_PAYLOAD_LEN:len);
-		/* is that all of data? */
-		if (len+PTP_USB_BULK_HDR_LEN<=sizeof(usbdata)) break;
-		/* if not finaly read the rest of it */
+
+		/* Copy first part of data to 'data' */
+		memcpy(*data,usbdata.payload.data,rlen - PTP_USB_BULK_HDR_LEN);
+
+		/* Is that all of data? */
+		if (len+PTP_USB_BULK_HDR_LEN<=rlen) break;
+
+		/* If not read the rest of it. */
 		ret=params->read_func(((unsigned char *)(*data))+
-					PTP_USB_BULK_PAYLOAD_LEN,
-					len-PTP_USB_BULK_PAYLOAD_LEN,
+					rlen - PTP_USB_BULK_HDR_LEN,
+					len-(rlen - PTP_USB_BULK_HDR_LEN),
 					params->data, &rlen);
 		if (ret!=PTP_RC_OK) {
 			ret = PTP_ERROR_IO;
