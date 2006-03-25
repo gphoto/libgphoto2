@@ -76,6 +76,7 @@ typedef struct _CameraFilesystemFile {
 	CameraFile *raw;
 	CameraFile *audio;
 	CameraFile *exif;
+	CameraFile *metadata;
 } CameraFilesystemFile;
 
 typedef struct {
@@ -322,6 +323,10 @@ delete_all_files (CameraFilesystem *fs, int x)
 			if (fs->folder[x].file[y].exif) {
 				gp_file_unref (fs->folder[x].file[y].exif);
 				fs->folder[x].file[y].exif = NULL;
+			}
+			if (fs->folder[x].file[y].metadata) {
+				gp_file_unref (fs->folder[x].file[y].metadata);
+				fs->folder[x].file[y].metadata = NULL;
 			}
 		}
 
@@ -739,6 +744,10 @@ delete_file (CameraFilesystem *fs, int x, int y)
 	if (fs->folder[x].file[y].exif) {
 		gp_file_unref (fs->folder[x].file[y].exif);
 		fs->folder[x].file[y].exif = NULL;
+	}
+	if (fs->folder[x].file[y].metadata) {
+		gp_file_unref (fs->folder[x].file[y].metadata);
+		fs->folder[x].file[y].metadata = NULL;
 	}
 
 	/* Move all files behind one position up */
@@ -1531,6 +1540,11 @@ gp_filesystem_get_file_impl (CameraFilesystem *fs, const char *folder,
 			return (gp_file_copy (file,
 					fs->folder[x].file[y].exif));
 		break;
+	case GP_FILE_TYPE_METADATA:
+		if (fs->folder[x].file[y].metadata)
+			return (gp_file_copy (file,
+					fs->folder[x].file[y].metadata));
+		break;
 	default:
 		gp_context_error (context, _("Unknown file type %i."), type);
 		return (GP_ERROR);
@@ -2028,6 +2042,7 @@ gp_filesystem_lru_update (CameraFilesystem *fs, const char *folder,
 			break;
 		case GP_FILE_TYPE_PREVIEW:
 		case GP_FILE_TYPE_EXIF:
+		case GP_FILE_TYPE_METADATA:
 			break;
 		default:
 			gp_context_error (context, _("Unknown file type %i."),
@@ -2180,6 +2195,12 @@ gp_filesystem_set_file_noop (CameraFilesystem *fs, const char *folder,
 		if (fs->folder[x].file[y].exif)
 			gp_file_unref (fs->folder[x].file[y].exif);
 		fs->folder[x].file[y].exif = file;
+		gp_file_ref (file);
+		break;
+	case GP_FILE_TYPE_METADATA:
+		if (fs->folder[x].file[y].metadata)
+			gp_file_unref (fs->folder[x].file[y].metadata);
+		fs->folder[x].file[y].metadata = file;
 		gp_file_ref (file);
 		break;
 	default:
