@@ -41,6 +41,11 @@ extern "C" {
 #define GP_MIME_CRW       "image/x-canon-raw"
 #define GP_MIME_UNKNOWN   "application/octet-stream"
 #define GP_MIME_EXIF      "application/x-exif"
+#define GP_MIME_MP3       "audio/mpeg"
+#define GP_MIME_OGG       "application/ogg"
+#define GP_MIME_WMA       "audio/x-wma"
+#define GP_MIME_ASF       "audio/x-asf"
+#define GP_MIME_MPEG      "video/mpeg"
 
 typedef enum {
 	GP_FILE_TYPE_PREVIEW,
