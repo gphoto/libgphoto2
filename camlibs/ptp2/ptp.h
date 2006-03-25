@@ -1010,6 +1010,9 @@ struct _PTPParams {
 	/* ptp session ID */
 	uint32_t session_id;
 
+	/* if we have MTP style split header/data transfers */
+	int	split_header_data;
+
 	/* internal structures used by ptp driver */
 	PTPObjectHandles handles;
 	PTPObjectInfo * objectinfo;

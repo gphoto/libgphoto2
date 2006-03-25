@@ -1,6 +1,7 @@
 /* ptp.c
  *
  * Copyright (C) 2001-2004 Mariusz Woloszyn <emsi@ipartners.pl>
+ * Copyright (C) 2003-2006 Marcus Meissner <marcus@jet.franken.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -124,19 +125,27 @@ ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
 			unsigned char *data, unsigned int size)
 {
 	uint16_t ret;
+	int wlen, datawlen;
 	PTPUSBBulkContainer usbdata;
 
 	/* build appropriate USB container */
-	usbdata.length=htod32(PTP_USB_BULK_HDR_LEN+size);
-	usbdata.type=htod16(PTP_USB_CONTAINER_DATA);
-	usbdata.code=htod16(ptp->Code);
-	usbdata.trans_id=htod32(ptp->Transaction_ID);
-	memcpy(usbdata.payload.data,data,
-		(size<PTP_USB_BULK_PAYLOAD_LEN)?size:PTP_USB_BULK_PAYLOAD_LEN);
+	usbdata.length	= htod32(PTP_USB_BULK_HDR_LEN+size);
+	usbdata.type	= htod16(PTP_USB_CONTAINER_DATA);
+	usbdata.code	= htod16(ptp->Code);
+	usbdata.trans_id= htod32(ptp->Transaction_ID);
+
+	if (params->split_header_data) {
+		datawlen = 0;
+		wlen = PTP_USB_BULK_HDR_LEN;
+	} else {
+		/* For all camera devices. */
+		datawlen = (size<PTP_USB_BULK_PAYLOAD_LEN)?size:PTP_USB_BULK_PAYLOAD_LEN;
+		wlen = PTP_USB_BULK_HDR_LEN + datawlen;
+		memcpy(usbdata.payload.data, data, datawlen);
+			
+	}
 	/* send first part of data */
-	ret=params->write_func((unsigned char *)&usbdata, PTP_USB_BULK_HDR_LEN+
-		((size<PTP_USB_BULK_PAYLOAD_LEN)?size:PTP_USB_BULK_PAYLOAD_LEN),
-		params->data);
+	ret = params->write_func((unsigned char *)&usbdata, wlen, params->data);
 	if (ret!=PTP_RC_OK) {
 		ret = PTP_ERROR_IO;
 /*		ptp_error (params,
@@ -144,10 +153,9 @@ ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
 			ptp->Code,ret);*/
 		return ret;
 	}
-	if (size<=PTP_USB_BULK_PAYLOAD_LEN) return ret;
+	if (size <= datawlen) return ret;
 	/* if everything OK send the rest */
-	ret=params->write_func (data+PTP_USB_BULK_PAYLOAD_LEN,
-				size-PTP_USB_BULK_PAYLOAD_LEN, params->data);
+	ret=params->write_func (data + datawlen, size - datawlen, params->data);
 	if (ret!=PTP_RC_OK) {
 		ret = PTP_ERROR_IO;
 /*		ptp_error (params,
@@ -190,6 +198,10 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp,
 		 */
 		/* Evaluate full data length. */
 		len=dtoh32(usbdata.length)-PTP_USB_BULK_HDR_LEN;
+
+		/* autodetect split header/data MTP devices */
+		if (dtoh32(usbdata.length) > 12 && (rlen==12))
+			params->split_header_data = 1;
 
 		/* Allocate memory for data. */
 		*data=calloc(len,1);
@@ -2466,6 +2478,15 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 			    ptp_value_list_Nikon[i].key==kval)
 				return snprintf(out, length, "%s",
 					_(ptp_value_list_Nikon[i].value));
+	}
+	if (params->deviceinfo.VendorExtensionID==PTP_VENDOR_MICROSOFT) {
+		switch (dpc) {
+		case PTP_DPC_MTP_Synchronization_Partner:
+		case PTP_DPC_MTP_Device_Friendly_Name:
+			return snprintf(out, length, "%s", dpd->CurrentValue.str);
+		default:
+			break;
+		}
 	}
 
 	return 0;
