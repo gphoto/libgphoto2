@@ -244,6 +244,7 @@ gp_file_open (CameraFile *file, const char *filename)
             "wma",  GP_MIME_WMA,
             "asf",  GP_MIME_ASF,
             "ogg",  GP_MIME_OGG,
+            "mpg",  GP_MIME_MPEG,
             NULL};
 
 	CHECK_NULL (file && filename);
