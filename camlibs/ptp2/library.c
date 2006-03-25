@@ -1,7 +1,7 @@
 /* library.c
  *
  * Copyright (C) 2001-2005 Mariusz Woloszyn <emsi@ipartners.pl>
- * Copyright (C) 2003-2005 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright (C) 2003-2006 Marcus Meissner <marcus@jet.franken.de>
  * Copyright (C) 2005 Hubert Figuiere <hfiguiere@teaser.fr>
  *
  * This library is free software; you can redistribute it and/or
@@ -100,13 +100,14 @@
 }
 
 #define folder_to_storage(fn,s) {				\
-		{						\
 		if (!strncmp(fn,"/"STORAGE_FOLDER_PREFIX,strlen(STORAGE_FOLDER_PREFIX)+1))							\
 		{						\
 			if (strlen(fn)<strlen(STORAGE_FOLDER_PREFIX)+8+1) \
 				return (GP_ERROR);		\
 			s = strtoul(fn + strlen(STORAGE_FOLDER_PREFIX)+1, NULL, 16);								\
-		} else return (GP_ERROR);			\
+		} else { 					\
+			gp_context_error (context, _("You need to specify a folder starting with /store_xxxxxxxxx/"));				\
+			return (GP_ERROR);			\
 		}						\
 }
 
@@ -3630,6 +3631,37 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 }
 
 static int
+ptp_mtp_render_metadata (
+	PTPParams *params, uint32_t object_id, uint16_t ofc, CameraFile *file
+) {
+	uint16_t ret, *props = NULL;
+	uint32_t propcnt = 0;
+	int j;
+
+	ret = ptp_mtp_getobjectpropssupported (params, ofc, &propcnt, &props);
+	if (ret != PTP_RC_OK) return (GP_ERROR);
+
+	for (j=0;j<propcnt;j++) {
+		char	propname[256];
+		int n;
+
+		n = ptp_render_mtp_propname(props[j], sizeof(propname), propname);
+		gp_file_append (file, "<", 1);
+		gp_file_append (file, propname, n);
+		gp_file_append (file, ">", 1);
+
+		/* TODO: Dump content of property into file here. */
+
+		gp_file_append (file, "</", 2);
+		gp_file_append (file, propname, n);
+		gp_file_append (file, ">\n", 2);
+
+	}
+	free(props);
+	return (GP_OK);
+}
+
+static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *data,
 	       GPContext *context)
@@ -3733,6 +3765,12 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		   failure?? */
 		break;
 	}
+	case	GP_FILE_TYPE_METADATA:
+		if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+		    ptp_operation_issupported(params,PTP_OC_MTP_GetObjectPropsSupported)
+		)
+			return ptp_mtp_render_metadata (params,object_id,oi->ObjectFormat,file);
+		return (GP_ERROR_NOT_SUPPORTED);
 	default: {
 		unsigned char *ximage = NULL;
 
@@ -4318,6 +4356,7 @@ camera_init (Camera *camera, GPContext *context)
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));
 	if (!camera->pl)
 		return (GP_ERROR_NO_MEMORY);
+	memset (camera->pl, 0, sizeof (CameraPrivateLibrary));
 	params = &camera->pl->params;
 	camera->pl->params.debug_func = ptp_debug_func;
 	camera->pl->params.error_func = ptp_error_func;
