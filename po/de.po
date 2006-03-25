@@ -7199,7 +7199,7 @@ msgstr "Die Pfadangabe »%s« ist nicht absolut."
 #, c-format
 msgid "Could not append folder '%s' as this folder already exists."
 msgstr ""
-"Konnte Verzeichnis »%s« nicht anhängen, das dieses Verzeichnis bereits "
+"Konnte Verzeichnis »%s« nicht anhängen, da dieses Verzeichnis bereits "
 "existiert."
 
 #: libgphoto2/gphoto2-filesys.c:591
@@ -7216,7 +7216,7 @@ msgstr "Verzeichnis »%s« enthält kein Verzeichnis »%s«."
 #, c-format
 msgid "Could not append '%s' to folder '%s' because this file already exists."
 msgstr ""
-"Konnte »%s« nicht an Verzeichnis »%s« anhängen, das diese Datei bereits "
+"Konnte »%s« nicht an Verzeichnis »%s« anhängen, da diese Datei bereits "
 "existiert."
 
 #: libgphoto2/gphoto2-filesys.c:1050
