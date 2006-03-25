@@ -1,28 +1,37 @@
 This briefly describes the PTP/IP transfer layer.
 
-It was reverse engineered from a ethereal packet dump.
+(It was reverse engineered from a ethereal network packet dump.)
 
-The connections is a simple TCP/IP socket connection.
+The connections are simple TCP/IP socket connection.
+
 Default port is 15740 (same as the ISO number for PTP).
 
-The layers communicate in packets, their layout is:
-	4 byte length	(little endian)
-	4 byte type	(little endian)
+There are 2 connections used:
+	- control & data connection (initiator (computer) driven)
+	- event connection  (responder (camera) driven)
 
-		type:		1	- startup cmd pipe
-				2	- startup cmd pipe ok
-				3	- startup event pipe
-				4	- ack event pipe
-				5	- init reply (error)
+The participants communicate in packets, their layout is:
 
-				6 	- (to  ) ptp command
-				7	- (from) ptp ack
-				8	- (from) ptp interrupt
-				9	- (both) data length return after command
-				b	- (to  ) cancel transaction
-				c	- (from) 
-				d	- (to  ) keep alive / ping
-				e	- (from) keep alive / pong
+	4 byte		length	(little endian)
+	4 byte		type	(little endian)
+	length - 8 byte	data	(type specific)
+
+
+Type:		1	- (to  ) Init_Command_Request
+		2	- (from) Init_Command_Ack
+		3	- (to  ) Init_Event_Request
+		4	- (from) Init_Event_Ack
+		5	- (from) Init_Fail
+
+		6 	- (to  ) Cmd_Request
+		7	- (from) Cmd_Response
+		8	- (from) Event
+		9	- (both) Start_Data_Packet
+		a	- (both) Data_Packet
+		b	- (to  ) Cancel_Transaction
+		c	- (from) End_Data_Packet
+		d	- (to  ) Ping
+		e	- (from) Pong
 
 State transitions:
 
@@ -55,17 +64,17 @@ TYPE 1 (Init_Command_Request)
 TYPE 2 (Init_Command_Ack)
 	payload 4+sizeof(GUID)+(1+lstrlenW(cameraname))*sizeof(WCHAR) bytes.
 		4 byte	ID	(session id, to be used for event startup)
-		16 byte	GUID (MAC is used here, and repeated)
+		16 byte	GUID (MAC is used here for my camera, and repeated)
 		xx byte WCHAR Camera Name with terminating \0
 
 TYPE 3 (Init_Event_Request)
 	payload 4 bytes.
 		4 byte ID (from Init_Command_Ack)
 
-	Can get type 4 or type 5 reply.
+	=> Can get type 4 or type 5 reply.
 
 TYPE 4 (Init_Event_Ack)
-	no payload.
+	No payload.
 	You can start sending PTP traffic now.
 
 TYPE 5 (Init_Fail)
@@ -74,7 +83,7 @@ TYPE 5 (Init_Fail)
 		-> might mean busy / access denied.
 
 
-TYPE 6 (PTP COMMAND):
+TYPE 6 (Cmd_Request):
 	payload n bytes.
 		2 bytes PTP command
 		n bytes command arguments
@@ -82,20 +91,19 @@ TYPE 6 (PTP COMMAND):
 	May be followed by 0x9 (data reader/data sender)
 	Will be followed then by 0x7 (PTP response)
 
-TYPE 7(PTP ACK):
+TYPE 7 (Cmd_Response):
 	payload 6 - 26 bytes
 		2 bytes		PTP response code
 		4 bytes 	nr of arguments
 		nr*4 bytes	arguments
 
 
-TYPE 8 (PTP EVENT)
+TYPE 8 (Event)
 	length 14 - 26
-
 		2 byte	event code
 			ptp event specific data..
 
-TYPE 9 (GET DATA):
+TYPE 9 (Start_Data_Packet):
 	8 byte payload.
 
 	4 byte number
@@ -103,11 +111,11 @@ TYPE 9 (GET DATA):
 
 	can be followed by 0e, 0a, 0c
 
-TYPE 10 / 0xA (READ DATA 1):
+TYPE 10 (Data_Packet):
 	4 byte payload.
 		4 byte	xid (transaction id?)
 
-TYPE 11 / 0xB (CANCEL TRANSACTION):
+TYPE 11 (Cancel_Transaction):
 	12 byte
 		4 length
 		4 type
@@ -115,14 +123,14 @@ TYPE 11 / 0xB (CANCEL TRANSACTION):
 	
 	-> Gets 0x7 ack back.
 
-TYPE 12 / 0xC (READ DATA 1):
+TYPE 12 (End_Data_Packet):
 	4 byte payload.
 		4 byte	xid (transaction id?)
 
-TYPE 13 / 0xD (PING REQUEST)
+TYPE 13 (Ping
 	0 byte payload.
 
-TYPE 14 / 0xE (PING REPLY)
+TYPE 14 (Pong)
 	0 byte payload.
 
 
