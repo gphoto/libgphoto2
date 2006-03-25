@@ -610,7 +610,7 @@ static struct {
 	{PTP_OFC_DPOF,		"text/plain"},
 	{PTP_OFC_AIFF,		"audio/x-aiff"},
 	{PTP_OFC_WAV,		GP_MIME_WAV},
-	{PTP_OFC_MP3,		"audio/basic"},
+	{PTP_OFC_MP3,		"audio/mpeg"},
 	{PTP_OFC_AVI,		GP_MIME_AVI},
 	{PTP_OFC_MPEG,		"video/mpeg"},
 	{PTP_OFC_ASF,		"video/x-asf"},
@@ -3525,7 +3525,8 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
     int i;
     
     /*((PTPData *)((Camera *)data)->pl->params.data)->context = context;*/
-    
+    gp_log (GP_LOG_DEBUG, "ptp2", "file_list_func(%s)", folder);
+
     /* There should be NO files in root folder */
     if (!strcmp(folder, "/"))
         return (GP_OK);
@@ -3550,16 +3551,20 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	    && strcmp(params->objectinfo[i].Filename, list->entry[list->count-1].name) == 0) {
 		continue;
 	}
-	if (params->objectinfo[i].ParentObject==parent) {
-            if (params->objectinfo[i].ObjectFormat != PTP_OFC_Association) {
-                if (!ptp_operation_issupported(params,PTP_OC_GetStorageIDs)
-                    || (params->objectinfo[i].StorageID == storage)) {
-                    CR (gp_list_append (list, params->objectinfo[i].Filename, NULL));
-                }
-            }
-        }
+
+	/* not on our storage devices -> next */
+	if ((ptp_operation_issupported(params,PTP_OC_GetStorageIDs)
+            && (params->objectinfo[i].StorageID != storage)))
+		continue;
+	/* not our parent -> next */
+	if (params->objectinfo[i].ParentObject!=parent)
+		continue;
+	/* is a directory -> next */
+	if (params->objectinfo[i].ObjectFormat == PTP_OFC_Association)
+		continue;
+
+	CR(gp_list_append (list, params->objectinfo[i].Filename, NULL));
     }
-    
     return GP_OK;
 }
 
@@ -3572,6 +3577,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	uint32_t handler,storage;
 
 	/*((PTPData *)((Camera *)data)->pl->params.data)->context = context;*/
+	gp_log (GP_LOG_DEBUG, "ptp2", "folder_list_func(%s)", folder);
 
 	/* add storage pseudofolders in root folder */
 	if (!strcmp(folder, "/")) {
