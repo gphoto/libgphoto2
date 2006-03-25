@@ -23,9 +23,9 @@
 #define __PTP_BUGS_H_
 
 
-#define PTPBUG_DCIM_WRONG_PARENT (1<<0)
-#define PTPBUG_DELETE_SENDS_EVENT (1<<1)
-#define PTPBUG_DUPE_FILE (1<<2)
+#define PTPBUG_DCIM_WRONG_PARENT	(1<<0)
+#define PTPBUG_DELETE_SENDS_EVENT	(1<<1)
+#define PTPBUG_DUPE_FILE		(1<<2)
 
 #define DCIM_WRONG_PARENT_BUG(x) \
   ((x)->bugs & PTPBUG_DCIM_WRONG_PARENT)
