@@ -1505,6 +1505,7 @@ camera_wait_for_event (Camera *camera, int timeout,
         int i, oldtimeout;
 	uint16_t ret;
 
+	memset (&event, 0, sizeof(event));
 	gp_port_get_timeout (camera->port, &oldtimeout);
 	gp_port_set_timeout (camera->port, timeout);
 	ret = params->event_wait(params,&event);
@@ -1512,10 +1513,13 @@ camera_wait_for_event (Camera *camera, int timeout,
 
 	if (ret!=PTP_RC_OK) {
 		/* FIXME: Might be another error, but usually is a timeout */
-		gp_log (GP_LOG_DEBUG, "ptp2", "wait_for_event received error 0x%04x", ret);
+		gp_log (GP_LOG_DEBUG, "ptp2", "wait_for_event: received error 0x%04x", ret);
 		*eventtype = GP_EVENT_TIMEOUT;
 		return GP_OK;
 	}
+	gp_log (GP_LOG_DEBUG, "ptp2", "wait_for_event: code=0x%04x, param1 0x%08x",
+		event.Code, event.Param1
+	);
 
 	switch (event.Code) {
 	case PTP_EC_ObjectAdded:
@@ -1545,9 +1549,17 @@ camera_wait_for_event (Camera *camera, int timeout,
 		*eventtype = GP_EVENT_FILE_ADDED;
 		*eventdata = path;
 		break;
-	default:
+	default: {
+		char *x;
+
 		*eventtype = GP_EVENT_UNKNOWN;
+		x = malloc(strlen("PTP Event 0123, Param1 01234567")+1);
+		if (x) {
+			sprintf (x, "PTP Event %04x, Param1 %08x", event.Code, event.Param1);
+			*eventdata = x;
+		}
 		break;
+	}
 	}
 	return GP_OK;
 }
