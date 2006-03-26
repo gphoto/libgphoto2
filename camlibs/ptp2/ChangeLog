@@ -1,3 +1,14 @@
+2006-03-26  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Handle mp3 mime type correctly.
+		New devices (copied from libmtp).
+		Better "bad folder" errormessage.
+
+2006-03-21  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Added wait_for_event hook to return
+	  ptp events.
+
 2006-03-18  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Added Canon Optura 600.
