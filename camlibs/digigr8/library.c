@@ -57,10 +57,11 @@ struct {
    	unsigned short idProduct;
 } models[] = {
         {"Digigr8",     	GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
-        {"Che-Ez Snap SNAP-U",  GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
+	{"Che-Ez Snap SNAP-U",  GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
         {"DC-N130t",            GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905C},	
         {"Soundstar TDC-35",    GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
 	{"Nexxtech Mini Digital Camera", GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
+        {"Vivitar Vivicam35",   GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
 	{NULL,0,0,0}
 };
 
