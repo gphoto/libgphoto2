@@ -768,11 +768,9 @@ ptp_write_func (unsigned char *bytes, unsigned int size, void *data)
 	if (usecontext)
 		gp_context_progress_stop (context, progressid);
 
-#if 0
-	/* should load wMaxPacketsize from endpoint first */
+	/* Should load wMaxPacketsize from endpoint first. But works fine for all EPs. */
 	if ((size % 512) == 0)
 		gp_port_write (camera->port, "x", 0);
-#endif
 	if (result < 0)
 		return (translate_gp_result (result));
 	return PTP_RC_OK;
