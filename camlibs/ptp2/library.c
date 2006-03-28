@@ -541,6 +541,8 @@ static struct {
 	{"Canon:PowerShot SD450 (PTP mode)",    0x04a9, 0x30ff, PTPBUG_DELETE_SENDS_EVENT},
 	/* Nick Richards <nick@nedrichards.com> */
 	{"Canon:Digital IXUS 50 (PTP mode)",    0x04a9, 0x310e, PTPBUG_DELETE_SENDS_EVENT},
+	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1456391&group_id=8874 */
+	{"Canon:EOS 30D (PTP mode)",            0x04a9, 0x3113, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:Digital IXUS 750 (PTP mode)",   0x04a9, 0x3116, PTPBUG_DELETE_SENDS_EVENT},
 
 	/* Konica-Minolta PTP cameras */
@@ -930,10 +932,19 @@ camera_exit (Camera *camera, GPContext *context)
 static int
 camera_about (Camera *camera, CameraText *text, GPContext *context)
 {
+	/* Note that we are not a so called 'Licensed Implementation' of MTP
+	 * ... (for a LI you need express approval from Microsoft etc.)
+	 */
 	strncpy (text->text,
-		 _("PTP2 driver\n"
-		   "(c)2001-2003 by Mariusz Woloszyn <emsi@ipartners.pl>.\n"
-		   "Enjoy!"), sizeof (text->text));
+	 _("PTP2 driver\n"
+	   "(c)2001-2005 by Mariusz Woloszyn <emsi@ipartners.pl>.\n"
+	   "(c)2003-2006 by Marcus Meissner <marcus@jet.franken.de>.\n"
+	   "This driver supports cameras that support PTP or PictBridge(tm), and\n"
+	   "Media Players that support the Media Transfer Protocol (MTP).\n"
+	   "\n"
+	   "This driver is not a 'Licensed Implementation' of the Media Transfer Protocol.\n"
+	   "\n"
+	   "Enjoy!"), sizeof (text->text));
 	return (GP_OK);
 }
 

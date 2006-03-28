@@ -1,3 +1,12 @@
+2006-03-28  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Added EOS 30D as reported on SF.
+
+	* library.c: Enhance about text a bit. Explain
+	  that we are not a Licensed MTP Implementation,
+	  but are fully able and willing to serve MTP
+	  devices.
+
 2006-03-26  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Handle mp3 mime type correctly.
