@@ -433,6 +433,13 @@ static int delete_file_func(CameraFilesystem *fs, const char *folder,
         return digita_file_delete(camera, folder, filename, context);
 }
 
+static CameraFilesystemFuncs fsfuncs = {
+	.file_list_func = file_list_func,
+	.folder_list_func = folder_list_func,
+	.get_file_func = get_file_func,
+	.del_file_func = delete_file_func
+};
+
 int camera_init(Camera *camera, GPContext *context)
 {
 	int ret = 0;
@@ -446,10 +453,7 @@ int camera_init(Camera *camera, GPContext *context)
 	camera->functions->about	= camera_about;
 
 	/* Set up the CameraFilesystem */
-	gp_filesystem_set_list_funcs(camera->fs, file_list_func,
-				      folder_list_func, camera);
-	gp_filesystem_set_file_funcs(camera->fs, get_file_func,
-				      delete_file_func, camera);
+	gp_filesystem_set_funcs(camera->fs, &fsfuncs, camera);
 
 	GP_DEBUG( "Initializing the camera");
 

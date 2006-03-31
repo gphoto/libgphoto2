@@ -416,6 +416,12 @@ camera_id (CameraText *id)
 	return (GP_OK);
 }
 
+static CameraFilesystemFuncs fsfuncs = {
+	.file_list_func = file_list_func,
+	.get_file_func = get_file_func,
+	.delete_all_func = enigma13_flash_delete_all
+};
+
 int
 camera_init (Camera *camera, GPContext *context) 
 {
@@ -423,14 +429,7 @@ camera_init (Camera *camera, GPContext *context)
 
         camera->functions->about        = enigma13_about;
 
-	CHECK(gp_filesystem_set_list_funcs 
-               (camera->fs, file_list_func, NULL, camera));
-	CHECK(gp_filesystem_set_file_funcs 
-               (camera->fs, get_file_func, NULL, camera));
-        CHECK(gp_filesystem_set_folder_funcs 
-               (camera->fs,NULL,  enigma13_flash_delete_all , NULL, NULL, camera));
-                                
-
+	CHECK(gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera));
 	CHECK(gp_port_get_settings( camera->port, &settings));
         settings.usb.inep = 0x82;
         settings.usb.outep = 0x03;
@@ -439,7 +438,6 @@ camera_init (Camera *camera, GPContext *context)
         settings.usb.altsetting = 0;
         CHECK(gp_port_set_timeout (camera->port, ENIGMA13_USB_TIMEOUT_MS));
 	CHECK(gp_port_set_settings( camera->port, settings));
-
 	return GP_OK;
 
 
