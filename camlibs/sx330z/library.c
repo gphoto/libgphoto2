@@ -271,6 +271,11 @@ camera_exit(Camera *camera, GPContext *context)
 }
 
 
+static CameraFilesystemFuncs fsfuncs = {
+	.file_list_func = file_list_func,
+	.get_file_func = get_file_func,
+	.del_file_func = del_file_func
+};
 
 /*
  * OK, lets get serious !
@@ -296,10 +301,7 @@ camera_init(Camera *camera,GPContext *context)
  CR(gp_port_set_settings(camera->port,settings));
  CR(gp_port_set_timeout(camera->port,TIMEOUT)); 
 
- /* Todo : fs support */
-/* CR(gp_filesystem_set_info_funcs(camera->fs,get_info_func,NULL,camera));*/
- CR(gp_filesystem_set_list_funcs(camera->fs,file_list_func,NULL,camera));
- CR(gp_filesystem_set_file_funcs(camera->fs,get_file_func,del_file_func,camera));
+ CR(gp_filesystem_set_funcs(camera->fs, &fsfuncs, camera));
  
  camera->pl=malloc(sizeof(CameraPrivateLibrary));
  if (!camera->pl) 

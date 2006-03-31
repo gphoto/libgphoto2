@@ -209,6 +209,11 @@ camera_exit (Camera *camera, GPContext *context)
 	return GP_OK;
 }
 
+static CameraFilesystemFuncs fsfuncs = {
+	.file_list_func = file_list_func,
+	.get_file_func = get_file_func,
+};
+
 int
 camera_init(Camera *camera, GPContext *context)
 {
@@ -225,15 +230,15 @@ camera_init(Camera *camera, GPContext *context)
 	if (ret < 0) return ret; 
 
 	switch (camera->port->type) {
-		case GP_PORT_USB:
-			settings.usb.config	= 1;
-			settings.usb.altsetting	= 0;
-			settings.usb.interface	= 1;
-			settings.usb.inep	= 0x82;
-			settings.usb.outep	= 0x03;
-			break;
-		default:
-			return ( GP_ERROR );
+	case GP_PORT_USB:
+		settings.usb.config	= 1;
+		settings.usb.altsetting	= 0;
+		settings.usb.interface	= 1;
+		settings.usb.inep	= 0x82;
+		settings.usb.outep	= 0x03;
+		break;
+	default:
+		return ( GP_ERROR );
 	}
 
 	ret = gp_port_set_settings(camera->port,settings);
@@ -244,8 +249,7 @@ camera_init(Camera *camera, GPContext *context)
 	GP_DEBUG("outep = %x\n", settings.usb.outep);
 
         /* Tell the CameraFilesystem where to get lists from */
-	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
-	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
+	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));
 	if (!camera->pl) return GP_ERROR_NO_MEMORY;
@@ -253,8 +257,6 @@ camera_init(Camera *camera, GPContext *context)
 
 	/* Connect to the camera */
 	ez200_init (camera->port, &camera->pl->model, camera->pl->info);
-
 	GP_DEBUG("fin_camera_init\n");	
-
 	return GP_OK;
 }

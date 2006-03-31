@@ -218,6 +218,12 @@ delete_all_func (CameraFilesystem *fs, const char* folder, void *data,
 	return stv0674_delete_all(camera->port);
 }
 
+static CameraFilesystemFuncs fsfuncs = {
+	.file_list_func = file_list_func,
+	.get_file_func = get_file_func,
+	.delete_all_func = delete_all_func
+};
+
 int camera_init (Camera *camera, GPContext *context)
 {
     GPPortSettings settings;
@@ -250,14 +256,8 @@ int camera_init (Camera *camera, GPContext *context)
 	gp_context_error (context, _("Could not apply USB settings"));
 	return ret;
     }
-
     /* Set up the filesystem */
-    gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
-    gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
-
-    gp_filesystem_set_folder_funcs (camera->fs, NULL, delete_all_func, NULL, NULL, camera);
-
+    gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
     /* test camera */
-    ret = stv0674_ping(camera->port);
-    return (ret);
+    return stv0674_ping(camera->port);
 }
