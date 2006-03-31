@@ -2062,6 +2062,17 @@ int get_jpeg_data(const char *data, int data_size, char **jpeg_data, int *jpeg_s
 	return ret_status;
 }
 
+static CameraFilesystemFuncs fsfuncs = {
+	.file_list_func = file_list_func,
+	.folder_list_func = folder_list_func,
+	.get_info_func = get_info_func,
+	.set_info_func = set_info_func,
+	.get_file_func = get_file_func,
+	.put_file_func = put_file_func,
+	.del_file_func = delete_file_func,
+	.delete_all_func = delete_all_func,
+};
+
 int
 camera_init (Camera *camera, GPContext *context) 
 {
@@ -2218,14 +2229,7 @@ camera_init (Camera *camera, GPContext *context)
 
         /* We start off not knowing where we are */
         strcpy (camera->pl->folder, "");
-        CHECK_STOP_FREE (camera, gp_filesystem_set_list_funcs (camera->fs,
-				file_list_func, folder_list_func, camera));
-        CHECK_STOP_FREE (camera, gp_filesystem_set_info_funcs (camera->fs,
-                                get_info_func, set_info_func, camera));
-	CHECK_STOP_FREE (camera, gp_filesystem_set_file_funcs (camera->fs,
-				get_file_func, delete_file_func, camera));
-	CHECK_STOP_FREE (camera, gp_filesystem_set_folder_funcs (camera->fs,
-				put_file_func, delete_all_func, NULL, NULL, camera));
+        CHECK_STOP_FREE (camera, gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera));
 
         CHECK (camera_stop (camera, context));
 
