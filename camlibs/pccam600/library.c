@@ -276,6 +276,13 @@ static int delete_file_func(CameraFilesystem *fs, const char *folder,
   return GP_OK;
 }
 
+static CameraFilesystemFuncs fsfuncs = {
+	.get_info_func = get_info_func,
+	.get_file_func = get_file_func,
+	.file_list_func = file_list_func,
+	.del_file_func = delete_file_func,
+};
+
 int camera_init(Camera *camera, GPContext *context){
   GPPortSettings settings;
   int ret = 0;
@@ -304,9 +311,5 @@ int camera_init(Camera *camera, GPContext *context){
     }    
   ret = pccam600_init(camera->port, context);
   if (ret < 0) return ret;
-  gp_filesystem_set_info_funcs (camera->fs, get_info_func,NULL, camera);
-  gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
-  gp_filesystem_set_file_funcs (camera->fs, get_file_func, delete_file_func,
-				camera);
-  return GP_OK;
+  return gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 }
