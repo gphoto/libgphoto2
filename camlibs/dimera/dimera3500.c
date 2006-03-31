@@ -833,6 +833,12 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	return GP_OK;
 }
 
+static CameraFilesystemFuncs fsfuncs = {
+	.file_list_func = file_list_func,
+	.get_file_func = get_file_func,
+	.get_info_func = get_info_func
+};
+
 int camera_init (Camera *camera, GPContext *context) {
 
 	GPPortSettings settings;
@@ -932,11 +938,7 @@ int camera_init (Camera *camera, GPContext *context) {
 		/* Hopefully, gp_camera_set_error was called for this error */
 		return ret;
         }
-
 	/* Tell the filesystem where to get listings and info from */
-	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
-	gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL, camera);
-	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
-
+	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 	return (GP_OK);
 }
