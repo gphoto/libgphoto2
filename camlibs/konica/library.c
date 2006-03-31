@@ -1203,6 +1203,15 @@ camera_post_func (Camera *camera, GPContext *context)
 	return (GP_OK);
 }
 
+static CameraFilesystemFuncs fsfuncs = {
+	.get_info_func = get_info_func,
+	.set_info_func = set_info_func,
+	.file_list_func = file_list_func,
+	.get_file_func = get_file_func,
+	.del_file_func = delete_file_func,
+	.delete_all_func = delete_all_func,
+};
+
 int
 camera_init (Camera* camera, GPContext *context)
 {
@@ -1267,21 +1276,12 @@ camera_init (Camera* camera, GPContext *context)
         default:
                 return (GP_ERROR_UNKNOWN_PORT);
         }
-
         /* Set up the filesystem */
-	C(gp_filesystem_set_info_funcs (camera->fs, get_info_func,
-					set_info_func, camera));
-	C(gp_filesystem_set_list_funcs (camera->fs, file_list_func,
-					NULL, camera));
-	C(gp_filesystem_set_file_funcs (camera->fs, get_file_func,
-					delete_file_func, camera));
-	C(gp_filesystem_set_folder_funcs (camera->fs, NULL, delete_all_func,
-					NULL, NULL, camera));
+	C(gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera));
 
 	/* Ping the camera every minute to prevent shut-down. */
 	camera->pl->timeout = gp_camera_start_timeout (camera, PING_TIMEOUT,
 						       timeout_func);
-
         return (GP_OK);
 }
 
