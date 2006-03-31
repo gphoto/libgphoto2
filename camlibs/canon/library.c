@@ -1520,6 +1520,17 @@ remove_dir_func (CameraFilesystem *fs, const char *folder, const char *name, voi
  * Returns: gphoto2 error code
  *
  */
+static CameraFilesystemFuncs fsfuncs = {
+	.file_list_func = file_list_func,
+	.folder_list_func = folder_list_func,
+	.get_info_func = get_info_func,
+	.get_file_func = get_file_func,
+	.del_file_func = delete_file_func,
+	.put_file_func = put_file_func,
+	.make_dir_func = make_dir_func,
+	.remove_dir_func = remove_dir_func
+};
+
 int
 camera_init (Camera *camera, GPContext *context)
 {
@@ -1538,18 +1549,7 @@ camera_init (Camera *camera, GPContext *context)
 	camera->functions->about = camera_about;
 
 	/* Set up the CameraFilesystem */
-	gp_filesystem_set_list_funcs (camera->fs, file_list_func, folder_list_func, camera);
-	gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL, camera);
-	gp_filesystem_set_file_funcs (camera->fs, get_file_func, delete_file_func, camera);
-	gp_filesystem_set_folder_funcs (camera->fs,
-#ifdef CANON_EXPERIMENTAL_UPLOAD
-					put_file_func, 
-#else
-					(camera->port->type == GP_PORT_SERIAL)?put_file_func:NULL,
-#endif /* CANON_EXPERIMENTAL_UPLOAD */
-					NULL, make_dir_func,
-					remove_dir_func, camera);
-
+	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));
 	if (!camera->pl)
 		return (GP_ERROR_NO_MEMORY);
