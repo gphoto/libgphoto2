@@ -866,6 +866,17 @@ out:
 	return (GP_OK);
 }
 
+static CameraFilesystemFuncs fsfuncs = {
+	.file_list_func = file_list_func,
+	.get_file_func = get_file_func,
+	.del_file_func = delete_file_func,
+	.get_info_func = get_info_func,
+	.set_info_func = set_info_func,
+	.folder_list_func = folder_list_func,
+	.make_dir_func = mkdir_func,
+	.remove_dir_func = rmdir_func,
+};
+
 int
 camera_init (Camera *camera, GPContext *context) 
 {
@@ -877,15 +888,7 @@ camera_init (Camera *camera, GPContext *context)
         camera->functions->about                = camera_about;
 
 	/* Now, tell the filesystem where to get lists, files and info */
-	gp_filesystem_set_list_funcs (camera->fs, file_list_func,
-				      folder_list_func, camera);
-	gp_filesystem_set_info_funcs (camera->fs, get_info_func, set_info_func,
-				      camera);
-	gp_filesystem_set_file_funcs (camera->fs, get_file_func,
-				      delete_file_func, camera);
-	gp_filesystem_set_folder_funcs (camera->fs, NULL, NULL,
-					mkdir_func, rmdir_func, camera);
-
+	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 
         gp_port_get_settings(camera->port, &settings);
 	settings.usb.inep = 0x81;

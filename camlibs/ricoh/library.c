@@ -517,6 +517,14 @@ static struct {
 	{     0, 0}
 };
 
+static CameraFilesystemFuncs fsfuncs = {
+	.file_list_func = file_list_func,
+	.get_file_func = get_file_func,
+	.del_file_func = del_file_func,
+	.put_file_func = put_file_func,
+	.get_info_func = get_info_func
+};
+
 int
 camera_init (Camera *camera, GPContext *context)
 {
@@ -577,16 +585,7 @@ camera_init (Camera *camera, GPContext *context)
 	camera->functions->about = camera_about;
 	camera->functions->get_config = camera_get_config;
 	camera->functions->set_config = camera_set_config;
-	
-	CR (gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL,
-					  camera));
-	CR (gp_filesystem_set_file_funcs (camera->fs, get_file_func,
-					  del_file_func, camera));
-	CR (gp_filesystem_set_info_funcs (camera->fs, get_info_func,
-						NULL, camera));
-	CR (gp_filesystem_set_folder_funcs (camera->fs, put_file_func,
-					    NULL, NULL, NULL, camera));
-
+	CR (gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera));
 	/*
 	 * Remember the model. It could be that there hasn't been the 
 	 * need to call ricoh_connect. Then we don't have a model. Should
