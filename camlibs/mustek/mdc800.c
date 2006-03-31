@@ -319,6 +319,16 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	return (GP_OK);
 }
 
+static CameraFilesystemFuncs fsfuncs = {
+	.file_list_func = file_list_func,
+	.folder_list_func = folder_list_func,
+	.get_file_func = get_file_func,
+	.put_file_func = put_file_func,
+	.get_info_func = get_info_func,
+	.del_file_func = delete_file_func,
+	.delete_all_func = delete_all_func
+};
+
 int
 camera_init (Camera *camera, GPContext *context)
 {
@@ -332,14 +342,7 @@ camera_init (Camera *camera, GPContext *context)
         camera->functions->about                = camera_about;
 
 	/* Now, tell the filesystem where to get lists, files and info */
-	gp_filesystem_set_list_funcs (camera->fs, file_list_func,
-				      folder_list_func, camera);
-	gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL,
-				      camera);
-	gp_filesystem_set_file_funcs (camera->fs, get_file_func,
-				      delete_file_func, camera);
-	gp_filesystem_set_folder_funcs (camera->fs, put_file_func,
-					delete_all_func, NULL, NULL, camera);
+	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 
 	/* Configure port */
 	gp_port_set_timeout(camera->port,MDC800_DEFAULT_COMMAND_RETRY_DELAY);
