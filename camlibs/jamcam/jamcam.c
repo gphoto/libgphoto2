@@ -302,6 +302,12 @@ static int camera_about (Camera *camera, CameraText *about, GPContext *context)
 	return (GP_OK);
 }
 
+static CameraFilesystemFuncs fsfuncs = {
+	.file_list_func = file_list_func,
+	.get_file_func = get_file_func,
+	.get_info_func = get_info_func,
+};
+
 int camera_init (Camera *camera, GPContext *context)
 {
 	int count;
@@ -333,7 +339,6 @@ int camera_init (Camera *camera, GPContext *context)
 		break;
 	}
 	CHECK (gp_port_set_settings (camera->port, settings));
-
 	CHECK (gp_port_set_timeout (camera->port, TIMEOUT));
 
 	/* check to see if camera is really there */
@@ -343,13 +348,6 @@ int camera_init (Camera *camera, GPContext *context)
 	CHECK (count = jamcam_file_count (camera));
 
 	/* Set up the CameraFilesystem */
-	CHECK (gp_filesystem_set_list_funcs (camera->fs,
-		file_list_func, NULL, camera));
-	CHECK (gp_filesystem_set_info_funcs (camera->fs,
-		get_info_func, NULL, camera));
-	CHECK (gp_filesystem_set_file_funcs (camera->fs, get_file_func,
-		NULL, camera));
-
-	return (GP_OK);
+	return gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 }
 
