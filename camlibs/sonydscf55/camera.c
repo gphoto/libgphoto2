@@ -307,6 +307,12 @@ get_camera_model(Camera *camera, SonyModel *model)
 }
 
 
+static CameraFilesystemFuncs fsfuncs = {
+	.file_list_func = file_list_func,
+	.get_file_func = get_file_func,
+	.get_info_func = get_info_func
+};
+
 /**
  * Initialises camera
  */
@@ -317,21 +323,16 @@ camera_init(Camera * camera, GPContext *context)
 	SonyModel model; 
 
 	rc = get_camera_model(camera, &model);
-	if (rc != GP_OK) {
+	if (rc != GP_OK)
 		return rc;
-	}
 
 	camera->functions->exit = camera_exit;
 	camera->functions->about = camera_about;
-
-	gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL, camera);
-	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
-	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
+	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));
-	if (!camera->pl) {
+	if (!camera->pl)
 		return (GP_ERROR_NO_MEMORY);
-	}
 
 	rc = sony_init (camera, model);
 	if (rc < 0) {
@@ -339,7 +340,6 @@ camera_init(Camera * camera, GPContext *context)
 		camera->pl = NULL;
 		return (rc);
 	}
-
 	return (GP_OK);
 }
 
