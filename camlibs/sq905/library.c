@@ -501,6 +501,13 @@ camera_exit (Camera *camera, GPContext *context)
 	return GP_OK;
 }
 
+static CameraFilesystemFuncs fsfuncs = {
+	.file_list_func = file_list_func,
+	.folder_list_func = folder_list_func,
+	.get_file_func = get_file_func,
+	.get_info_func = get_info_func,
+	.delete_all_func = delete_all_func,
+};
 int
 camera_init(Camera *camera, GPContext *context)
 {
@@ -524,12 +531,7 @@ camera_init(Camera *camera, GPContext *context)
 	if (ret < 0) return ret; 
 
         /* Tell the CameraFilesystem where to get lists from */
-	gp_filesystem_set_list_funcs (camera->fs, file_list_func, 
-					    folder_list_func, camera);
-        gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL, camera);
-	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
-	gp_filesystem_set_folder_funcs (camera->fs, NULL, delete_all_func, 
-					    NULL, NULL, camera);
+	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));
 	if (!camera->pl) return GP_ERROR_NO_MEMORY;
 	camera->pl->model = 0;
