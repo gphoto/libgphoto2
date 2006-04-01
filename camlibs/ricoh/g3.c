@@ -678,16 +678,6 @@ out:
 	return (GP_OK);
 
 }
-static int
-set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
-	       CameraFileInfo info, void *data, GPContext *context)
-{
-	/*Camera *camera = data;*/
-
-	/* Set the file info here from <info> */
-
-	return (GP_OK);
-}
 
 
 static int
@@ -871,7 +861,6 @@ static CameraFilesystemFuncs fsfuncs = {
 	.get_file_func = get_file_func,
 	.del_file_func = delete_file_func,
 	.get_info_func = get_info_func,
-	.set_info_func = set_info_func,
 	.folder_list_func = folder_list_func,
 	.make_dir_func = mkdir_func,
 	.remove_dir_func = rmdir_func,
