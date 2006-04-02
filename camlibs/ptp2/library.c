@@ -3126,6 +3126,22 @@ static struct deviceproptableu16 canon_aperture[] = {
 GENERIC16TABLE(Canon_Aperture,canon_aperture)
 
 
+static struct deviceproptableu8 nikon_bracketset[] = {
+      { N_("AE & Flash"),	0, 0 },
+      { N_("AE only"),		1, 0 },
+      { N_("Flash only"),	2, 0 },
+      { N_("WB bracketing"),	3, 0 },
+};
+GENERIC8TABLE(Nikon_BracketSet,nikon_bracketset)
+
+
+static struct deviceproptableu8 nikon_bracketorder[] = {
+      { N_("MTR > Under"),	0, 0 },
+      { N_("Under > MTR"),	1, 0 },
+};
+GENERIC8TABLE(Nikon_BracketOrder,nikon_bracketorder)
+
+
 static int
 _get_UINT32_as_time(CONFIG_GET_ARGS) {
 	time_t	camtime;
@@ -3401,6 +3417,8 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Flash Mode Manual Power"), "flashmodemanualpower", PTP_DPC_NIKON_FlashModeManualPower, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashModeManualPower, _put_Nikon_FlashModeManualPower},
 	{ N_("Auto Focus Area Power"), "autofocusarea", PTP_DPC_NIKON_AutofocusArea, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_AutofocusArea, _put_Nikon_AutofocusArea},
 	{ N_("Flash Exposure Compensation"), "flashexposurecompensation", PTP_DPC_NIKON_FlashExposureCompensation, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashExposureCompensation, _put_Nikon_FlashExposureCompensation},
+	{ N_("Bracket Set"), "bracketset", PTP_DPC_NIKON_BracketSet, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_BracketSet, _put_Nikon_BracketSet},
+	{ N_("Bracket Order"), "bracketorder", PTP_DPC_NIKON_BracketOrder, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_BracketOrder, _put_Nikon_BracketOrder},
 	/* { N_("Viewfinder Mode"), "viewfinder", PTP_DPC_CANON_ViewFinderMode, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_ViewFinderMode, _put_Canon_ViewFinderMode}, */
 	{ NULL },
 };
