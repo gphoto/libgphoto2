@@ -585,16 +585,19 @@ static struct {
 	/* From: thanosz@softhome.net */
 	{"Philipps:HDD6320",                    0x0471, 0x01eb, 0},
 	/* borrowed from libmtp source */
-	{"Creative Zen Vision",			0x041e, 0x411f, 0},
-	{"Creative Portable Media Center",	0x041e, 0x4123, 0},
-	{"Creative Zen Xtra",			0x041e, 0x4128, 0},
+	{"Creative:Zen Vision",			0x041e, 0x411f, 0},
+	{"Creative:Portable Media Center",	0x041e, 0x4123, 0},
+	{"Creative:Zen Xtra",			0x041e, 0x4128, 0},
 	{"Second generation Dell DJ",		0x041e, 0x412f, 0},
-	{"Creative Zen Micro",			0x041e, 0x4130, 0},
-	{"Creative Zen Touch",			0x041e, 0x4131, 0},
-	{"Creative Zen Sleek",			0x041e, 0x4137, 0},
+	{"Creative:Zen Micro",			0x041e, 0x4130, 0},
+	{"Creative:Zen Touch",			0x041e, 0x4131, 0},
+	{"Creative:Zen Sleek",			0x041e, 0x4137, 0},
 	/* Jennifer Scalf <oneferna@gmail.com> */
 	{"Creative:Zen MicroPhoto",             0x041e, 0x413c, 0},
-	{"Creative Zen Vision:M",		0x041e, 0x413e, 0},
+	{"Creative:Zen Vision:M",		0x041e, 0x413e, 0},
+
+	/* IRC reporter */
+	{"Dell:DJ Itty",			0x413c, 0x4500, 0},
 
 	/* Marcoen Hirschberg <marcoen@users.sourceforge.net> */
 	{"Toshiba:Gigabeat",                    0x0930, 0x000c, 0},
@@ -769,7 +772,6 @@ ptp_write_func (unsigned char *bytes, unsigned int size, void *data)
 	}
 	if (usecontext)
 		gp_context_progress_stop (context, progressid);
-
 	/* Should load wMaxPacketsize from endpoint first. But works fine for all EPs. */
 	if ((size % 512) == 0)
 		gp_port_write (camera->port, "x", 0);
