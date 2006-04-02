@@ -1,3 +1,7 @@
+2006-04-02  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Added lots of Nikon configure options.
+
 2006-03-28  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Added EOS 30D as reported on SF.
