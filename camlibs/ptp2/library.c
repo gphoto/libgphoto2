@@ -2833,6 +2833,14 @@ static struct deviceproptableu16 focus_metering[] = {
 GENERIC16TABLE(FocusMetering,focus_metering)
 
 
+static struct deviceproptableu8 nikon_colormodel[] = {
+	{ N_("sRGB (portrait)"), 0x00, 0 },
+	{ N_("AdobeRGB"),        0x01, 0 },
+	{ N_("sRGB (nature)"),   0x02, 0 },
+};
+GENERIC8TABLE(Nikon_ColorModel,nikon_colormodel)
+
+
 static struct deviceproptableu16 exposure_metering[] = {
 	{ N_("Average"),	0x0001, 0 },
 	{ N_("Center Weighted"),0x0002, 0 },
@@ -2989,6 +2997,8 @@ static struct deviceproptableu16 focusmodes[] = {
 	{ N_("Manual"),		0x0001, 0 },
 	{ N_("Automatic"),	0x0002, 0 },
 	{ N_("Automatic Macro"),0x0003, 0 },
+	{ N_("AF-S"),		0x8010, PTP_VENDOR_NIKON },
+	{ N_("AF-C"),		0x8011, PTP_VENDOR_NIKON },
 };
 GENERIC16TABLE(FocusMode,focusmodes)
 
@@ -3284,6 +3294,8 @@ static struct submenu image_settings_menu[] = {
 	{ N_("WhiteBalance"), "whitebalance", PTP_DPC_CANON_WhiteBalance, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_WhiteBalance, _put_Canon_WhiteBalance},
 	{ N_("WhiteBalance"), "whitebalance", PTP_DPC_WhiteBalance, 0, PTP_DTC_UINT16, _get_WhiteBalance, _put_WhiteBalance},
 	{ N_("Photo Effect"), "photoeffect", PTP_DPC_CANON_PhotoEffect, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_PhotoEffect, _put_Canon_PhotoEffect},
+	{ N_("Color Model"), "colormodel", PTP_DPC_NIKON_ColorModel, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_ColorModel, _put_Nikon_ColorModel},
+	{ N_("Auto ISO"), "autoiso", PTP_DPC_NIKON_ISOAuto, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
         { NULL },
 };
 
@@ -3312,6 +3324,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Shutter Speed"), "shutterspeed", PTP_DPC_CANON_ShutterSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ShutterSpeed, _put_Canon_ShutterSpeed},
 	{ N_("Metering Mode"), "meteringmode", PTP_DPC_CANON_MeteringMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_MeteringMode, _put_Canon_MeteringMode},
         { N_("AF Distance"), "afdistance", PTP_DPC_CANON_AFDistance, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_AFDistance, _put_Canon_AFDistance},
+	{ N_("Focus Area Wrap"), "focusareawrap", PTP_DPC_NIKON_FocusAreaWrap, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	/* { N_("Viewfinder Mode"), "viewfinder", PTP_DPC_CANON_ViewFinderMode, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_ViewFinderMode, _put_Canon_ViewFinderMode}, */
 	{ NULL },
 };

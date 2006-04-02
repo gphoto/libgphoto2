@@ -763,7 +763,7 @@ typedef struct _PTPEKTextParams PTPEKTextParams;
 #define PTP_DPC_NIKON_WhiteBalanceColorTemperature	0xD01E
 #define PTP_DPC_NIKON_ImageSharpening			0xD02A
 #define PTP_DPC_NIKON_ToneCompensation			0xD02B
-#define PTP_DPC_NIKON_ColorMode				0xD02C
+#define PTP_DPC_NIKON_ColorModel			0xD02C
 #define PTP_DPC_NIKON_HueAdjustment			0xD02D
 #define PTP_DPC_NIKON_NonCPULensDataFocalLength		0xD02E
 #define PTP_DPC_NIKON_NonCPULensDataMaximumAperture	0xD02F

@@ -2075,8 +2075,8 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("Sharpening")},
 		{PTP_DPC_NIKON_ToneCompensation,		/* 0xD02b */
 		 N_("Tone Compensation")},
-		{PTP_DPC_NIKON_ColorMode,			/* 0xD02c */
-		 N_("Color Mode")},
+		{PTP_DPC_NIKON_ColorModel,			/* 0xD02c */
+		 N_("Color Model")},
 		{PTP_DPC_NIKON_HueAdjustment,			/* 0xD02d */
 		 N_("Hue Adjustment")},
 		{PTP_DPC_NIKON_NonCPULensDataFocalLength,	/* 0xD02e */
@@ -2410,8 +2410,9 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		{PTP_DPC_NIKON_AFAreaIllumination, 0, N_("Auto")},
 		{PTP_DPC_NIKON_AFAreaIllumination, 1, N_("Off")},
 		{PTP_DPC_NIKON_AFAreaIllumination, 2, N_("On")},
-		{PTP_DPC_NIKON_ColorMode, 0, "sRGB"},
-		{PTP_DPC_NIKON_ColorMode, 1, ""},
+		{PTP_DPC_NIKON_ColorModel, 0, "sRGB"},
+		{PTP_DPC_NIKON_ColorModel, 1, "AdobeRGB"},
+		{PTP_DPC_NIKON_ColorModel, 2, "sRGB"},
 		{PTP_DPC_NIKON_FlashMode, 0, "iTTL"},
 		{PTP_DPC_NIKON_FlashMode, 1, N_("Manual")},
 		{PTP_DPC_NIKON_FlashMode, 2, N_("Commander")},
