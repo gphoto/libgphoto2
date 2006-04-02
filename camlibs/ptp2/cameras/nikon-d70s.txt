@@ -254,7 +254,7 @@ Property 0xd0c5:(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
 	Property 0xd104:(read only) (type=0x2) Range [0 - 1, step 1] value: 0
 	Property 0xd105:(read only) (type=0x2) Range [0 - 1, step 1] value: 0
 	Property 0xd106:(read only) (type=0x2) Range [0 - 1, step 1] value: 0
-Active AF Sensor(0xd108):(readwrite) (type=0x2) Range [0 - 4, step 1] value: Centre (0)
+	Active AF Sensor(0xd108):(readwrite) (type=0x2) Range [0 - 4, step 1] value: Centre (0)
 Property 0xd109:(readwrite) (type=0x1) Range [-30 - 30, step 2] value: 0
 	Exposure Meter(0xd10a):(read only) (type=0x1) Range [-128 - 127, step 1] value: 0.0 stops (0)
 	Property 0xd10d:(read only) (type=0xffff) 'NO= 20053ca8        '

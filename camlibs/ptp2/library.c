@@ -2626,6 +2626,15 @@ static struct deviceproptableu8 nikon_flashmode[] = {
 };
 GENERIC8TABLE(Nikon_FlashMode,nikon_flashmode)
 
+static struct deviceproptableu8 flash_modemanualpower[] = {
+	{ N_("Full"),	0x00, 0 },
+	{ "1/2",	0x01, 0 },
+	{ "1/4",	0x02, 0 },
+	{ "1/8",	0x03, 0 },
+	{ "1/16",	0x04, 0 },
+};
+GENERIC8TABLE(Nikon_FlashModeManualPower,flash_modemanualpower)
+
 static struct deviceproptableu8 canon_meteringmode[] = {
 	{ "center weighted(?)",	0, 0 },
 	{ N_("spot"),		1, 0 },
@@ -2879,6 +2888,16 @@ static struct deviceproptableu8 nikon_colormodel[] = {
 GENERIC8TABLE(Nikon_ColorModel,nikon_colormodel)
 
 
+static struct deviceproptableu8 nikon_afsensor[] = {
+	{ N_("Centre"),	0x00, 0 },
+	{ N_("Top"),	0x01, 0 },
+	{ N_("Bottom"),	0x02, 0 },
+	{ N_("Left"),	0x03, 0 },
+	{ N_("Right"),	0x04, 0 },
+};
+GENERIC8TABLE(Nikon_AutofocusArea,nikon_afsensor)
+
+
 static struct deviceproptableu16 exposure_metering[] = {
 	{ N_("Average"),	0x0001, 0 },
 	{ N_("Center Weighted"),0x0002, 0 },
@@ -2901,16 +2920,6 @@ static struct deviceproptableu16 flash_mode[] = {
 	{ N_("Red-eye Reduction + Slow Sync"),	0x8013, PTP_VENDOR_NIKON},
 };
 GENERIC16TABLE(FlashMode,flash_mode)
-
-static struct deviceproptableu8 flash_modemanualpower[] = {
-	{ N_("Full"),	0x00, 0 },
-	{ "1/2",	0x01, 0 },
-	{ "1/4",	0x02, 0 },
-	{ "1/8",	0x03, 0 },
-	{ "1/16",	0x04, 0 },
-};
-GENERIC8TABLE(Nikon_FlashModeManualPower,flash_modemanualpower)
-
 
 static struct deviceproptableu16 effect_modes[] = {
 	{ N_("Standard"),	0x0001, 0 },
@@ -2987,6 +2996,38 @@ _put_FocalLength(CONFIG_PUT_ARGS) {
 	return GP_OK;
 }
 
+static int
+_get_Nikon_FlashExposureCompensation(CONFIG_GET_ARGS) {
+	float value_float;
+
+	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	if (!(dpd->FormFlag & PTP_DPFF_Range))
+		return (GP_ERROR);
+	if (dpd->DataType != PTP_DTC_INT8)
+		return (GP_ERROR);
+	gp_widget_set_range (*widget,
+		dpd->FORM.Range.MinimumValue.i8/6.0,
+		dpd->FORM.Range.MaximumValue.i8/6.0,
+		dpd->FORM.Range.StepSize.i8/6.0
+	);
+	value_float = dpd->CurrentValue.i8/6.0;
+	gp_widget_set_value (*widget, &value_float);
+	return (GP_OK);
+}
+
+static int
+_put_Nikon_FlashExposureCompensation(CONFIG_PUT_ARGS) {
+	int ret;
+	float value_float;
+
+	ret = gp_widget_get_value (widget, &value_float);
+	if (ret != GP_OK)
+		return ret;
+	propval->i8 = 6.0*value_float;
+	return GP_OK;
+
+}
 
 static struct deviceproptableu8 nikon_afareaillum[] = {
       { N_("Auto"),		0, 0 },
@@ -3358,6 +3399,8 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Viewfinder Grid"), "viewfindergrid", PTP_DPC_NIKON_GridDisplay, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ N_("Image Review"), "imagereview", PTP_DPC_NIKON_ImageReview, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ N_("Flash Mode Manual Power"), "flashmodemanualpower", PTP_DPC_NIKON_FlashModeManualPower, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashModeManualPower, _put_Nikon_FlashModeManualPower},
+	{ N_("Auto Focus Area Power"), "autofocusarea", PTP_DPC_NIKON_AutofocusArea, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_AutofocusArea, _put_Nikon_AutofocusArea},
+	{ N_("Flash Exposure Compensation"), "flashexposurecompensation", PTP_DPC_NIKON_FlashExposureCompensation, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashExposureCompensation, _put_Nikon_FlashExposureCompensation},
 	/* { N_("Viewfinder Mode"), "viewfinder", PTP_DPC_CANON_ViewFinderMode, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_ViewFinderMode, _put_Canon_ViewFinderMode}, */
 	{ NULL },
 };
