@@ -2207,34 +2207,66 @@ _get_Generic8Table(CONFIG_GET_ARGS, struct deviceproptableu8* tbl, int tblsize) 
 
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
-	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
-		return (GP_ERROR);
-	if (dpd->DataType != PTP_DTC_UINT8)
-		return (GP_ERROR);
-	for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
-		int isset = FALSE;
+	if (dpd->FormFlag & PTP_DPFF_Enumeration) {
+		if (dpd->DataType != PTP_DTC_UINT8)
+			return (GP_ERROR);
+		for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
+			int isset = FALSE;
 
-		for (j=0;j<tblsize;j++) {
-			if ((tbl[j].value == dpd->FORM.Enum.SupportedValue[i].u8) &&
-			    ((tbl[j].vendor_id == 0) ||
-			     (tbl[j].vendor_id == camera->pl->params.deviceinfo.VendorExtensionID))
-			) {
-				gp_widget_add_choice (*widget, _(tbl[j].label));
-				if (tbl[j].value == dpd->CurrentValue.u8)
-					gp_widget_set_value (*widget, _(tbl[j].label));
-				isset = TRUE;
-				break;
+			for (j=0;j<tblsize;j++) {
+				if ((tbl[j].value == dpd->FORM.Enum.SupportedValue[i].u8) &&
+				    ((tbl[j].vendor_id == 0) ||
+				     (tbl[j].vendor_id == camera->pl->params.deviceinfo.VendorExtensionID))
+				) {
+					gp_widget_add_choice (*widget, _(tbl[j].label));
+					if (tbl[j].value == dpd->CurrentValue.u8)
+						gp_widget_set_value (*widget, _(tbl[j].label));
+					isset = TRUE;
+					break;
+				}
+			}
+			if (!isset) {
+				char buf[200];
+				sprintf(buf, _("Unknown value %04x"), dpd->FORM.Enum.SupportedValue[i].u8);
+				gp_widget_add_choice (*widget, buf);
+				if (dpd->FORM.Enum.SupportedValue[i].u8 == dpd->CurrentValue.u8)
+					gp_widget_set_value (*widget, buf);
 			}
 		}
-		if (!isset) {
-			char buf[200];
-			sprintf(buf, _("Unknown value %04x"), dpd->FORM.Enum.SupportedValue[i].u8);
-			gp_widget_add_choice (*widget, buf);
-			if (dpd->FORM.Enum.SupportedValue[i].u8 == dpd->CurrentValue.u8)
-				gp_widget_set_value (*widget, buf);
-		}
+		return (GP_OK);
 	}
-	return (GP_OK);
+	if (dpd->FormFlag & PTP_DPFF_Range) {
+		if (dpd->DataType != PTP_DTC_UINT8)
+			return (GP_ERROR);
+		for (	i = dpd->FORM.Range.MinimumValue.u8;
+			i <= dpd->FORM.Range.MaximumValue.u8;
+			i+= dpd->FORM.Range.StepSize.u8
+		) {
+			int isset = FALSE;
+
+			for (j=0;j<tblsize;j++) {
+				if ((tbl[j].value == i) &&
+				    ((tbl[j].vendor_id == 0) ||
+				     (tbl[j].vendor_id == camera->pl->params.deviceinfo.VendorExtensionID))
+				) {
+					gp_widget_add_choice (*widget, _(tbl[j].label));
+					if (tbl[j].value == dpd->CurrentValue.u8)
+						gp_widget_set_value (*widget, _(tbl[j].label));
+					isset = TRUE;
+					break;
+				}
+			}
+			if (!isset) {
+				char buf[200];
+				sprintf(buf, _("Unknown value %04x"), dpd->FORM.Range.MaximumValue.u8);
+				gp_widget_add_choice (*widget, buf);
+				if (dpd->FORM.Range.MaximumValue.u8 == dpd->CurrentValue.u8)
+					gp_widget_set_value (*widget, buf);
+			}
+		}
+		return (GP_OK);
+	}
+	return (GP_ERROR);
 }
 
 
