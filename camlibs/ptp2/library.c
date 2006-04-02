@@ -2978,41 +2978,18 @@ static struct deviceproptableu8 nikon_afareaillum[] = {
       { N_("Off"),		1, 0 },
       { N_("On"),		2, 0 },
 };
+GENERIC8TABLE(Nikon_AFAreaIllum,nikon_afareaillum)
 
-static int
-_get_Nikon_AFAreaIllum(CONFIG_GET_ARGS) {
-	int i;
 
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-	if (!(dpd->FormFlag & PTP_DPFF_Range))
-		return (GP_ERROR);
-	if (dpd->DataType != PTP_DTC_UINT8)
-		return (GP_ERROR);
-	for (i=0;i<sizeof (nikon_afareaillum)/sizeof (nikon_afareaillum[0]);i++) {
-		gp_widget_add_choice (*widget, _(nikon_afareaillum[i].label));
-		if (nikon_afareaillum[i].value == dpd->CurrentValue.u8)
-			gp_widget_set_value (*widget, _(nikon_afareaillum[i].label));
-	}
-	return (GP_OK);
-}
-
-static int
-_put_Nikon_AFAreaIllum(CONFIG_PUT_ARGS) {
-	char *value;
-	int i, ret;
-
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK)
-		return ret;
-	for (i=0;i<sizeof (nikon_afareaillum)/sizeof (nikon_afareaillum[0]);i++) {
-		if (!strcmp (value, _(nikon_afareaillum[i].label))) {
-			propval->u8 = nikon_afareaillum[i].value;
-			return (GP_OK);
-		}
-	}
-	return (GP_ERROR);
-}
+static struct deviceproptableu8 nikon_aelaflmode[] = {
+	{ N_("AE/AF Lock"),	0x00, 0 },
+	{ N_("AE Lock only"),	0x01, 0 },
+	{ N_("AF Lock Only"),	0x02, 0 },
+	{ N_("AF Lock Hold"),	0x03, 0 },
+	{ N_("AF On"),		0x04, 0 },
+	{ N_("Flash Level Lock"),0x05, 0 },
+};
+GENERIC8TABLE(Nikon_AELAFLMode,nikon_aelaflmode)
 
 
 static struct deviceproptableu8 canon_afdistance[] = {
@@ -3357,6 +3334,8 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Metering Mode"), "meteringmode", PTP_DPC_CANON_MeteringMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_MeteringMode, _put_Canon_MeteringMode},
         { N_("AF Distance"), "afdistance", PTP_DPC_CANON_AFDistance, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_AFDistance, _put_Canon_AFDistance},
 	{ N_("Focus Area Wrap"), "focusareawrap", PTP_DPC_NIKON_FocusAreaWrap, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
+	{ N_("Exposure Lock"), "exposurelock", PTP_DPC_NIKON_AELockMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
+	{ N_("AE-L/AF-L Mode"), "aelaflmode", PTP_DPC_NIKON_AELAFLMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_AELAFLMode, _put_Nikon_AELAFLMode},
 	/* { N_("Viewfinder Mode"), "viewfinder", PTP_DPC_CANON_ViewFinderMode, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_ViewFinderMode, _put_Canon_ViewFinderMode}, */
 	{ NULL },
 };
