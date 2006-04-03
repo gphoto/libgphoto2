@@ -1125,7 +1125,7 @@ camera_unprepare_capture (Camera *camera, GPContext *context)
 static int
 camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 {
-	unsigned char	*data;
+	unsigned char	*data = NULL;
 	uint32_t	size;
 	int ret;
 	PTPParams *params = &camera->pl->params;
