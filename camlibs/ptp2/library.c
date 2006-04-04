@@ -433,7 +433,7 @@ static struct {
 
 	{"Nikon:DSC D70s (PTP mode)",     0x04b0, 0x040e, 0},
 	/* Jana Jaeger <jjaeger.suse.de> */
-	{"Nikon:DSC D200 (PTP mode)",     0x04b0, 0x040f, 0},
+	{"Nikon:DSC D200 (PTP mode)",     0x04b0, 0x0410, 0},
 
 	/* Thomas Luzat <thomas.luzat@gmx.net> */
 	{"Panasonic:DMC-FZ20 (alternate id)", 0x04da, 0x2372, 0},
