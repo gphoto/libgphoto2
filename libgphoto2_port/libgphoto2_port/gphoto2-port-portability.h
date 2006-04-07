@@ -1,8 +1,8 @@
 
-/* Windows Portability
+/* Windows Portability, but not during WINE compilation (TWAIN mode)
    ------------------------------------------------------------------ */
 
-#ifdef WIN32
+#if defined(WIN32) && !defined(__WINESRC__)
 
 #include <windows.h>
 #include <sys/types.h>
