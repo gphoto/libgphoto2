@@ -1,538 +1,491 @@
-# Ukrainian translation of gPhoto.
-# Copyright � 2000 Free Software Foundation, Inc.
-# Yuri Syrota <rasta@renome.rovno.ua>, 2000.
+# Ukrainian translation of libgphoto2_port.
+# Copyright (C) 2000 Free Software Foundation, Inc.
+# This file is distributed under the same license as the libgphoto2_port package.
+# Maxim V. Dziumanenko <mvd@mylinux.com.ua>, 2006
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gphoto\n"
+"Project-Id-Version: libgphoto2_port 2.1.99\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-03-23 18:42+0100\n"
-"PO-Revision-Date: 2000-06-27 16:33+0200\n"
-"Last-Translator: Yuri Syrota <rasta@renome.rovno.ua>\n"
-"Language-Team: Ukrainian <ru@li.org>\n"
+"POT-Creation-Date: 2005-12-25 11:06-0500\n"
+"PO-Revision-Date: 2006-04-07 13:20+0300\n"
+"Last-Translator: Maxim V. Dziumanenko <mvd@mylinux.com.ua>\n"
+"Language-Team: Ukrainian <translation-team-uk@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=koi8-u\n"
-"Content-Transfer-Encoding: 8-bit\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:192
-#, fuzzy, c-format
+#: libgphoto2_port/gphoto2-port-info-list.c:185
+#, c-format
 msgid "Called for filename '%s'."
-msgstr "�������: �� ������� צ������ %s"
+msgstr "Виклик файлу '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:197
-#, fuzzy, c-format
+#: libgphoto2_port/gphoto2-port-info-list.c:190
+#, c-format
 msgid "Could not load '%s': '%s'."
-msgstr ""
-"�� ������� צ������:\n"
-"%s"
+msgstr "Не вдається завантажити '%s': '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:205
+#: libgphoto2_port/gphoto2-port-info-list.c:198
 #, c-format
 msgid "Could not find some functions in '%s': '%s'."
-msgstr ""
+msgstr "Не знайдені деякі функції у '%s': '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:217
+#: libgphoto2_port/gphoto2-port-info-list.c:210
 #, c-format
 msgid "'%s' already loaded"
-msgstr ""
+msgstr "'%s' вже завантажено"
+
+#: libgphoto2_port/gphoto2-port-info-list.c:219
+#, c-format
+msgid "Could not load port driver list: '%s'."
+msgstr "Не вдається завантажити список драйверів портів: '%s'."
 
 #: libgphoto2_port/gphoto2-port-info-list.c:226
-#, fuzzy, c-format
-msgid "Could not load port driver list: '%s'."
-msgstr "�� ������� �������� ��������"
-
-#: libgphoto2_port/gphoto2-port-info-list.c:233
 #, c-format
 msgid "Loaded '%s' ('%s') from '%s'."
-msgstr ""
+msgstr "Завантажено '%s' ('%s') з '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:262
-#, fuzzy, c-format
+#: libgphoto2_port/gphoto2-port-info-list.c:255
+#, c-format
 msgid "Using ltdl to load io-drivers from '%s'..."
-msgstr "�� ������� �������� ��������"
+msgstr "Використовується ltdl для завантаження драйверів портів з '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:288
+#: libgphoto2_port/gphoto2-port-info-list.c:282
 #, c-format
 msgid "Counting entries (%i available)..."
-msgstr ""
+msgstr "Підрахунок кількості записів (%i доступно)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:297
+#: libgphoto2_port/gphoto2-port-info-list.c:291
 #, c-format
 msgid "%i regular entries available."
-msgstr ""
+msgstr "доступно %i звичайних записів."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:326
+#: libgphoto2_port/gphoto2-port-info-list.c:320
 #, c-format
 msgid "Looking for path '%s' (%i entries available)..."
-msgstr ""
+msgstr "Пошук шляху '%s' (доступно %i записів)..."
+
+#: libgphoto2_port/gphoto2-port-info-list.c:332
+#, c-format
+msgid "Starting regex search for '%s'..."
+msgstr "Початок пошуку '%s' з використанням регулярних виразів..."
 
 #: libgphoto2_port/gphoto2-port-info-list.c:338
 #, c-format
-msgid "Starting regex search for '%s'..."
-msgstr ""
-
-#: libgphoto2_port/gphoto2-port-info-list.c:346
-#, c-format
 msgid "Trying '%s'..."
-msgstr ""
+msgstr "перевіряється '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:367
+#: libgphoto2_port/gphoto2-port-info-list.c:359
 msgid "regcomp failed"
-msgstr ""
+msgstr "помилка regcomp"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:378
+#: libgphoto2_port/gphoto2-port-info-list.c:370
 #, c-format
 msgid "re_match failed (%i)"
-msgstr ""
+msgstr "помилка re_match (%i)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:386
+#: libgphoto2_port/gphoto2-port-info-list.c:378
 msgid "regexec failed"
-msgstr ""
+msgstr "помилка regexec"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:392
+#: libgphoto2_port/gphoto2-port-info-list.c:385
 msgid "Generic Port"
-msgstr ""
+msgstr "Звичайний порт"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:416
+#: libgphoto2_port/gphoto2-port-info-list.c:409
 #, c-format
 msgid "Looking up entry '%s'..."
-msgstr ""
+msgstr "Пошук запису '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:446
+#: libgphoto2_port/gphoto2-port-info-list.c:439
 #, c-format
 msgid "Getting info of entry %i (%i available)..."
-msgstr ""
+msgstr "отримання інформації про запис %i (доступно %i)..."
 
 #: libgphoto2_port/gphoto2-port-result.c:58
 msgid "No error"
-msgstr ""
+msgstr "Помилок немає"
 
 #: libgphoto2_port/gphoto2-port-result.c:60
 msgid "Unspecified error"
-msgstr ""
+msgstr "Невизначена помилка"
 
 #: libgphoto2_port/gphoto2-port-result.c:62
 msgid "I/O problem"
-msgstr ""
+msgstr "Помилка вводу/виводу"
 
 #: libgphoto2_port/gphoto2-port-result.c:64
 msgid "Bad parameters"
-msgstr ""
+msgstr "неправильні аргументи"
 
 #: libgphoto2_port/gphoto2-port-result.c:66
 msgid "Unsupported operation"
-msgstr ""
+msgstr "Непідтримувана дія"
 
 #: libgphoto2_port/gphoto2-port-result.c:68
 msgid "Timeout reading from or writing to the port"
-msgstr ""
+msgstr "Вийшов час очікування відповіді при читанні або записі у порт"
 
 #: libgphoto2_port/gphoto2-port-result.c:70
 msgid "Serial port not supported"
-msgstr ""
+msgstr "Немає підтримки послідовного порту"
 
 #: libgphoto2_port/gphoto2-port-result.c:72
 msgid "USB port not supported"
-msgstr ""
+msgstr "немає підтримки порту USB"
 
 #: libgphoto2_port/gphoto2-port-result.c:74
 msgid "Unknown port"
-msgstr ""
+msgstr "Невідомий порт"
 
 #: libgphoto2_port/gphoto2-port-result.c:76
 msgid "Out of memory"
-msgstr ""
+msgstr "Недостатньо пам'яті"
 
 #: libgphoto2_port/gphoto2-port-result.c:78
 msgid "Error loading a library"
-msgstr ""
+msgstr "Помилка завантаження бібліотеки"
 
 #: libgphoto2_port/gphoto2-port-result.c:80
 msgid "Error initializing the port"
-msgstr ""
+msgstr "Помилка ініціалізації порту"
 
 #: libgphoto2_port/gphoto2-port-result.c:82
 msgid "Error reading from the port"
-msgstr ""
+msgstr "Помилка читання з порту"
 
 #: libgphoto2_port/gphoto2-port-result.c:84
 msgid "Error writing to the port"
-msgstr ""
+msgstr "Помилка запису у порт"
 
 #: libgphoto2_port/gphoto2-port-result.c:86
 msgid "Error updating the port settings"
-msgstr ""
+msgstr "Помилка оновлення параметрів порту"
 
 #: libgphoto2_port/gphoto2-port-result.c:88
 msgid "Error setting the serial port speed"
-msgstr ""
+msgstr "Помилка встановлення швидкості передачі через послідовний порт"
 
 #: libgphoto2_port/gphoto2-port-result.c:90
 msgid "Error clearing a halt condition on the USB port"
-msgstr ""
+msgstr "Помилка усунення halt-умови на порту USB"
 
 #: libgphoto2_port/gphoto2-port-result.c:92
 msgid "Could not find the requested device on the USB port"
-msgstr ""
+msgstr "Не вдається знайти запитаний пристрій на порту USB"
 
 #: libgphoto2_port/gphoto2-port-result.c:94
-#, fuzzy
 msgid "Could not claim the USB device"
-msgstr "�� ������� �������� ��������"
+msgstr "Не вдається отримати контроль на д пристроєм USB"
 
 #: libgphoto2_port/gphoto2-port-result.c:96
-#, fuzzy
 msgid "Could not lock the device"
-msgstr "�� ������� �������� ��������"
+msgstr "Не вдається заблокувати пристрій"
 
 #: libgphoto2_port/gphoto2-port-result.c:98
 msgid "libhal error"
-msgstr ""
+msgstr "помилка libhal"
 
 #: libgphoto2_port/gphoto2-port-result.c:100
 msgid "Unknown error"
-msgstr ""
+msgstr "Невідома помилка"
 
 #: libgphoto2_port/gphoto2-port.c:54
 #, c-format
 msgid "The operation '%s' is not supported by this device"
-msgstr ""
+msgstr "Цей пристрій не підтримує операцію '%s'"
 
 #: libgphoto2_port/gphoto2-port.c:55
 msgid "The port has not yet been initialized"
-msgstr ""
+msgstr "порт ще не був ініціалізований"
 
 #: libgphoto2_port/gphoto2-port.c:85
 msgid "Creating new device..."
-msgstr ""
+msgstr "Створюється новий пристрій..."
 
 #: libgphoto2_port/gphoto2-port.c:160
-#, fuzzy, c-format
+#, c-format
 msgid "Could not load '%s' ('%s')."
-msgstr ""
-"�� ������� צ������:\n"
-"%s"
+msgstr "Не вдається завантажити '%s' ('%s')."
 
 #: libgphoto2_port/gphoto2-port.c:170
 #, c-format
 msgid "Could not find 'gp_port_library_operations' in '%s' ('%s')"
-msgstr ""
+msgstr "Не вдається знайти 'gp_port_library_operations' у '%s' ('%s')"
 
 #: libgphoto2_port/gphoto2-port.c:250
 #, c-format
 msgid "Opening %s port..."
-msgstr ""
+msgstr "Відкривання %s порту..."
 
 #: libgphoto2_port/gphoto2-port.c:272
 msgid "Closing port..."
-msgstr ""
+msgstr "Закривання порту..."
 
 #: libgphoto2_port/gphoto2-port.c:294
 msgid "Freeing port..."
-msgstr ""
+msgstr "Звільнення порту..."
 
 #: libgphoto2_port/gphoto2-port.c:339
 #, c-format
 msgid "Writing %i=0x%x byte(s) to port..."
-msgstr ""
+msgstr "Запис %i=0x%x байт(ів) у порт..."
 
 #: libgphoto2_port/gphoto2-port.c:352
-#, fuzzy, c-format
+#, c-format
 msgid "Could only write %i out of %i byte(s)"
-msgstr "�� ������� צ������� #%i"
+msgstr "записано лише %i з %i байтів"
 
 #: libgphoto2_port/gphoto2-port.c:373
 #, c-format
 msgid "Reading %i=0x%x bytes from port..."
-msgstr ""
+msgstr "Читання %i=0x%x байтів з порту..."
 
 #: libgphoto2_port/gphoto2-port.c:384 libgphoto2_port/gphoto2-port.c:420
 #: libgphoto2_port/gphoto2-port.c:459 libgphoto2_port/gphoto2-port.c:781
 #, c-format
 msgid "Could only read %i out of %i byte(s)"
-msgstr ""
+msgstr "Отримано лише %i з %i байтів"
 
 #: libgphoto2_port/gphoto2-port.c:409
 #, c-format
 msgid "Reading %i=0x%x bytes from interrupt endpoint..."
-msgstr ""
+msgstr "Читання %i=0x%x байтів з кінцевої точки переривання..."
 
 #: libgphoto2_port/gphoto2-port.c:469
 #, c-format
 msgid "Reading %i=0x%x bytes from interrupt endpoint (fast)..."
-msgstr ""
+msgstr "Читання %i=0x%x байтів з кінцевої точки переривання (прискорене)..."
 
 #: libgphoto2_port/gphoto2-port.c:494
 #, c-format
 msgid "Setting timeout to %i millisecond(s)..."
-msgstr ""
+msgstr "Встановлення часу затримки у %i мілісекунд..."
 
 #: libgphoto2_port/gphoto2-port.c:530
 msgid "Getting timeout..."
-msgstr ""
+msgstr "Визначення часу затримки..."
 
 #: libgphoto2_port/gphoto2-port.c:534
 #, c-format
 msgid "Current timeout: %i milliseconds"
-msgstr ""
+msgstr "Поточний час затримки: %i мілісекунд"
 
 #: libgphoto2_port/gphoto2-port.c:556
 msgid "Setting settings..."
-msgstr ""
+msgstr "Встановлення параметрів..."
 
 #: libgphoto2_port/gphoto2-port.c:607
-#, fuzzy, c-format
+#, c-format
 msgid "Getting level of pin %i..."
-msgstr "�� ������� צ������� #%i"
+msgstr "Отримання рівня pin %i..."
 
 #: libgphoto2_port/gphoto2-port.c:616
 #, c-format
 msgid "Level of pin %i: %i"
-msgstr ""
+msgstr "Рівень pin %i: %i"
 
 #: libgphoto2_port/gphoto2-port.c:642
 msgid "low"
-msgstr ""
+msgstr "низьк."
 
 #: libgphoto2_port/gphoto2-port.c:643
 msgid "high"
-msgstr ""
+msgstr "висок."
 
 #: libgphoto2_port/gphoto2-port.c:658
 #, c-format
 msgid "Setting pin %i (%s: '%s') to '%s'..."
-msgstr ""
+msgstr "Встановлення pin %i (%s: '%s') у '%s'..."
 
 #: libgphoto2_port/gphoto2-port.c:675
 #, c-format
 msgid "Sending break (%i milliseconds)..."
-msgstr ""
+msgstr "Надсилання сигналу переривання (%i мілісекунд)..."
 
 #: libgphoto2_port/gphoto2-port.c:690
 msgid "Flushing port..."
-msgstr ""
+msgstr "Скидання буферів порту..."
 
 #: libgphoto2_port/gphoto2-port.c:731
 msgid "Clear halt..."
-msgstr ""
+msgstr "Очистити ознаку halt..."
 
 #: libgphoto2_port/gphoto2-port.c:748
 #, c-format
 msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr ""
+msgstr "Запис повідомлення (запит=0x%x значення=0x%x індекс=0x%x розмір=%i=0x%x)..."
 
 #: libgphoto2_port/gphoto2-port.c:769
 #, c-format
 msgid "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr ""
+msgstr "Читання повідомлення (запит=0x%x значення=0x%x індекс=0x%x розмір=%i=0x%x)..."
 
 #: libgphoto2_port/gphoto2-port.c:776
 msgid "msg_read"
-msgstr ""
+msgstr "msg_read"
 
 #: libgphoto2_port/gphoto2-port.c:892
 msgid "No error description available"
-msgstr ""
+msgstr "Опис помилки недоступний"
 
-#: serial/unix.c:230
-#, fuzzy, c-format
+#: serial/unix.c:226
+#, c-format
 msgid "Could not lock device '%s'"
-msgstr "�� ������� �������� ��������"
+msgstr "Не вдається заблокувати пристрій '%s'"
 
-#: serial/unix.c:240
+#: serial/unix.c:236
 #, c-format
 msgid "Device '%s' is locked by pid %d"
-msgstr ""
+msgstr "Пристрій '%s' заблоковано процесом з pid %d"
 
-#: serial/unix.c:243
+#: serial/unix.c:239
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
-msgstr ""
+msgstr "Неможливо заблокувати пристрій '%s' (функція dev_lock повернула %d)"
 
-#: serial/unix.c:277
+#: serial/unix.c:273
 #, c-format
 msgid "Device '%s' could not be unlocked."
-msgstr ""
+msgstr "Пристрій '%s' неможливо розблокувати."
+
+#: serial/unix.c:285
+#, c-format
+msgid "Device '%s' could not be unlocked as it is locked by pid %d."
+msgstr "Пристрій '%s' неможливо розблокувати, оскільки він заблокований процесом %d."
 
 #: serial/unix.c:289
 #, c-format
-msgid "Device '%s' could not be unlocked as it is locked by pid %d."
-msgstr ""
-
-#: serial/unix.c:293
-#, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
-msgstr ""
+msgstr "пристрій '%s' неможливо розблокувати (функція dev_unlock повернула значення %d)"
 
-#: serial/unix.c:369
+#: serial/unix.c:365
 #, c-format
 msgid "Serial Port %i"
-msgstr ""
+msgstr "Послідовний порт %i"
 
-#: serial/unix.c:460
-#, fuzzy, c-format
+#: serial/unix.c:456
+#, c-format
 msgid "Failed to open '%s' (%m)."
-msgstr "�������: �� ������� צ������ %s"
+msgstr "Не вдається відкрити '%s' (%m)."
 
-#: serial/unix.c:478
-#, fuzzy, c-format
+#: serial/unix.c:474
+#, c-format
 msgid "Could not close '%s' (%m)."
-msgstr ""
-"�� ������� צ������:\n"
-"%s"
+msgstr "Не вдається закрити '%s' (%m)."
 
-#: serial/unix.c:531
-#, fuzzy, c-format
+#: serial/unix.c:527
+#, c-format
 msgid "Could not write to port (%m)"
-msgstr "�� ������� צ������� #%i"
+msgstr "Не вдається записати у порт (%m)"
+
+#: serial/unix.c:599
+msgid "Parity error."
+msgstr "Помилка парності"
 
 #: serial/unix.c:603
-msgid "Parity error."
-msgstr ""
-
-#: serial/unix.c:607
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
-msgstr ""
+msgstr "Неочікувана послідовність контролю парності 0xff 0x%02x."
 
-#: serial/unix.c:650
+#: serial/unix.c:646
 #, c-format
 msgid "Unknown pin %i."
-msgstr ""
+msgstr "Невідомий pin %i."
 
-#: serial/unix.c:672
-#, fuzzy, c-format
+#: serial/unix.c:668
+#, c-format
 msgid "Could not get level of pin %i (%m)."
-msgstr "�� ������� צ������� #%i"
+msgstr "Не вдається отримати рівень pin %i (%m)."
 
-#: serial/unix.c:707
+#: serial/unix.c:703
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
-msgstr ""
+msgstr "Не вдається встановити рівень pin %i у %i (%m)."
 
-#: serial/unix.c:732
+#: serial/unix.c:728
 #, c-format
 msgid "Could not flush '%s' (%m)."
-msgstr ""
+msgstr "Не вдається скинути буфери пристрою '%s' (%m)."
 
-#: serial/unix.c:845
-#, fuzzy, c-format
+#: serial/unix.c:841
+#, c-format
 msgid "Could not set the baudrate to %d"
-msgstr "�� ������� �������� ˦�����Ԧ ���������"
+msgstr "Неможливо встановити швидкість %d"
 
-#: usb/libusb.c:236
-#, fuzzy, c-format
+#: usb/libusb.c:218
+#, c-format
 msgid "Could not open USB device (%m)."
-msgstr "�� ������� �������� ��������"
+msgstr "Не вдається відкрити пристрій USB (%m)."
 
-#: usb/libusb.c:246
+#: usb/libusb.c:228
 msgid "Camera is already in use."
-msgstr ""
+msgstr "Фотоапарат вже зайнятий."
 
-#: usb/libusb.c:251
+#: usb/libusb.c:233
 #, c-format
 msgid "Device has driver '%s' attached, detaching it now."
-msgstr ""
+msgstr "Підключено драйвер '%s'. Виконується відключення драйвера."
 
-#: usb/libusb.c:254
+#: usb/libusb.c:236
 #, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
-msgstr ""
+msgstr "Не вдається відключити драйвера ядра '%s' для пристрою фотоапарату."
 
-#: usb/libusb.c:256
-#, fuzzy
+#: usb/libusb.c:238
 msgid "Could not query kernel driver of device."
-msgstr "�� ������� �������� ��������"
+msgstr "Не вдається опитати драйвер ядра для пристрою."
 
-#: usb/libusb.c:263
+#: usb/libusb.c:245
 #, c-format
-msgid ""
-"Could not claim interface %d (%m). Make sure no other program or kernel "
-"module (such as %s) is using the device and you have read/write access to "
-"the device."
-msgstr ""
+msgid "Could not claim interface %d (%m). Make sure no other program or kernel module (such as %s) is using the device and you have read/write access to the device."
+msgstr "Не вдається захопити інтерфейс %d (%m). Перевірте, що пристрій не зайнятий іншою програмою або модулем ядра (таким як %s), та що у вас є доступ читання та запису до пристрою."
 
-#: usb/libusb.c:282
+#: usb/libusb.c:264
 #, c-format
 msgid "Could not release interface %d (%m)."
-msgstr ""
+msgstr "Не вдається звільнити інтерфейс %d (%m)."
 
-#: usb/libusb.c:289
+#: usb/libusb.c:271
 #, c-format
 msgid "Could not close USB port (%m)."
-msgstr ""
+msgstr "Не вдається зарити порт USB (%m)."
 
-#: usb/libusb.c:469
+#: usb/libusb.c:451
 #, c-format
 msgid "Could not set config %d/%d (%m)"
-msgstr ""
+msgstr "Не вдається змінити конфігурацію %d/%d (%m)"
 
-#: usb/libusb.c:499
-#, fuzzy, c-format
+#: usb/libusb.c:481
+#, c-format
 msgid "Could not set altsetting %d/%d (%m)"
-msgstr "�� ������� צ������� #%i"
+msgstr "Не вдається встановити альтернативну конфігурацію %d/%d (%m)"
 
-#: usb/libusb.c:591
+#: usb/libusb.c:573
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
-msgstr ""
+msgstr "неправильний ідентифікатор виробника та продукту (0x%x,0x%x)."
 
-#: usb/libusb.c:623
+#: usb/libusb.c:605
 #, c-format
-msgid ""
-"USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
-"not function with gphoto2. Reference: %s"
-msgstr ""
+msgid "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might not function with gphoto2. Reference: %s"
+msgstr "Пристрій USB (виробник 0x%x, продукт 0x%x) працює як пристрій зберігання даних. Програма gphoto2 не може його використовувати: %s"
 
-#: usb/libusb.c:656
+#: usb/libusb.c:638
 #, c-format
-msgid ""
-"Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
-"is connected to the computer."
-msgstr ""
+msgid "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device is connected to the computer."
+msgstr "Не вдається знайти пристрій USB (виробник 0x%x, продукт 0x%x). Перевірте, що пристрій з'єднаний з комп'ютером."
 
-#: usb/libusb.c:790
+#: usb/libusb.c:772
 #, c-format
-msgid ""
-"Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
-"sure this device is connected to the computer."
-msgstr ""
+msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
+msgstr "Не вдається знайти пристрій USB (клас 0x%x, підклас 0x%x, протокол 0x%x). Перевірте, що пристрій з'єднаний з комп'ютером."
 
-#: disk/disk.c:163 disk/disk.c:203 disk/disk.c:225
+#: disk/disk.c:161 disk/disk.c:200 disk/disk.c:222
 #, c-format
 msgid "Media '%s'"
-msgstr ""
+msgstr "Носій '%s'"
 
-#: disk/disk.c:164
+#: disk/disk.c:162
 msgid "(unknown)"
-msgstr ""
-
-#, fuzzy
-#~ msgid "Could not find some functions in '%s' (%s)"
-#~ msgstr ""
-#~ "�� ������� צ������:\n"
-#~ "%s"
-
-#, fuzzy
-#~ msgid "Could not load list (%s)"
-#~ msgstr ""
-#~ "�� ������� צ������:\n"
-#~ "%s"
-
-#, fuzzy
-#~ msgid "Could not load '%s' ('%s')"
-#~ msgstr ""
-#~ "�� ������� צ������:\n"
-#~ "%s"
-
-#, fuzzy
-#~ msgid "close"
-#~ msgstr "�������"
-
-#, fuzzy
-#~ msgid "write"
-#~ msgstr "���������"
-
-#, fuzzy
-#~ msgid "read"
-#~ msgstr "��������"
+msgstr "(невідомий)"
