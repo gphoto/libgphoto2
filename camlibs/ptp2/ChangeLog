@@ -1,3 +1,7 @@
+2006-04-12  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* library.c: Added PowerShot A700 as reported.
+
 2006-04-04  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Added Nikon D200, as reported by Jana Jaeger.
