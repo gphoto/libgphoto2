@@ -586,6 +586,8 @@ static struct {
 	{"iRiver:T20",                          0x4102, 0x1118, 0},
 	/* Bruno Parente Lima <brunoparente77@yahoo.com.br> */
 	{"iRiver:T30",                          0x4102, 0x1119, 0},
+	/* Petr Spatka spatka@luzanky.cz */
+	{"iRiver:H10",                          0x4102, 0x2102, 0},
 	/* From: thanosz@softhome.net */
 	{"Philipps:HDD6320",                    0x0471, 0x01eb, 0},
 	/* borrowed from libmtp source */
