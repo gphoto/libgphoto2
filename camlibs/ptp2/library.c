@@ -4012,6 +4012,20 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	return (GP_OK);
 }
 
+/* To avoid roundtrips for querying prop desc
+ * that are uninteresting for us we list all
+ * that are exposed by PTP anyway (and are r/o).
+ */
+static unsigned short uninteresting_props [] = {
+	PTP_OPC_StorageID,
+	PTP_OPC_ObjectFormat,
+	PTP_OPC_ProtectionStatus,
+	PTP_OPC_ObjectSize,
+	PTP_OPC_AssociationType,
+	PTP_OPC_AssociationDesc,
+	PTP_OPC_ParentObject
+};
+
 static int
 ptp_mtp_render_metadata (
 	PTPParams *params, uint32_t object_id, uint16_t ofc, CameraFile *file
@@ -4024,20 +4038,166 @@ ptp_mtp_render_metadata (
 	if (ret != PTP_RC_OK) return (GP_ERROR);
 
 	for (j=0;j<propcnt;j++) {
-		char	propname[256];
-		int n;
+		char			propname[256];
+		char			text[256];
+		PTPObjectPropDesc	opd;
+		int 			i, n;
+
+		for (i=sizeof(uninteresting_props)/sizeof(uninteresting_props[0]);i--;)
+			if (uninteresting_props[i] == props[j])
+				break;
+		if (i != -1) /* Is uninteresting. */
+			continue;
 
 		n = ptp_render_mtp_propname(props[j], sizeof(propname), propname);
 		gp_file_append (file, "<", 1);
 		gp_file_append (file, propname, n);
 		gp_file_append (file, ">", 1);
 
-		/* TODO: Dump content of property into file here. */
-
+		ret = ptp_mtp_getobjectpropdesc (params, props[j], ofc, &opd);
+		if (ret != PTP_RC_OK) {
+			fprintf (stderr," getobjectpropdesc returns 0x%x\n", ret);
+		} else {
+			PTPPropertyValue	pv;
+			ret = ptp_mtp_getobjectpropvalue (params, object_id, props[j], &pv, opd.DataType);
+			if (ret != PTP_RC_OK) {
+				sprintf (text, "failure to retrieve %x of oid %x, ret %x", props[j], object_id, ret);
+			} else {
+				switch (opd.DataType) {
+				default:sprintf (text, "Unknown type %d", opd.DataType);
+					break;
+				case PTP_DTC_STR:
+					snprintf (text, sizeof(text), "%s", pv.str);
+					break;
+				case PTP_DTC_INT32:
+					sprintf (text, "%d", pv.i32);
+					break;
+				case PTP_DTC_INT16:
+					sprintf (text, "%d", pv.i16);
+					break;
+				case PTP_DTC_INT8:
+					sprintf (text, "%d", pv.i8);
+					break;
+				case PTP_DTC_UINT32:
+					sprintf (text, "%u", pv.u32);
+					break;
+				case PTP_DTC_UINT16:
+					sprintf (text, "%u", pv.u16);
+					break;
+				case PTP_DTC_UINT8:
+					sprintf (text, "%u", pv.u8);
+					break;
+				}
+			}
+			gp_file_append (file, text, strlen(text));
+		}
 		gp_file_append (file, "</", 2);
 		gp_file_append (file, propname, n);
 		gp_file_append (file, ">\n", 2);
 
+	}
+	free(props);
+	return (GP_OK);
+}
+
+/* To avoid roundtrips for querying prop desc if it is R/O 
+ * we list all that are by standard means R/O.
+ */
+static unsigned short readonly_props [] = {
+	PTP_OPC_StorageID,
+	PTP_OPC_ObjectFormat,
+	PTP_OPC_ProtectionStatus,
+	PTP_OPC_ObjectSize,
+	PTP_OPC_AssociationType,
+	PTP_OPC_AssociationDesc,
+	PTP_OPC_ParentObject,
+	PTP_OPC_PersistantUniqueObjectIdentifier,
+	PTP_OPC_DateAdded,
+	PTP_OPC_CorruptOrUnplayable,
+	PTP_OPC_RepresentativeSampleFormat,
+	PTP_OPC_RepresentativeSampleSize,
+	PTP_OPC_RepresentativeSampleHeight,
+	PTP_OPC_RepresentativeSampleWidth,
+	PTP_OPC_RepresentativeSampleDuration
+};
+
+static int
+ptp_mtp_parse_metadata (
+	PTPParams *params, uint32_t object_id, uint16_t ofc, CameraFile *file
+) {
+	uint16_t ret, *props = NULL;
+	uint32_t propcnt = 0;
+	char	*filedata = NULL;
+	unsigned long	filesize = 0;
+	int j;
+
+	if (gp_file_get_data_and_size (file, (const char**)&filedata, &filesize) < GP_OK)
+		return (GP_ERROR);
+
+	ret = ptp_mtp_getobjectpropssupported (params, ofc, &propcnt, &props);
+	if (ret != PTP_RC_OK) return (GP_ERROR);
+
+	for (j=0;j<propcnt;j++) {
+		char			propname[256],propname2[256];
+		char			*begin, *end, *content;
+		PTPObjectPropDesc	opd;
+		int 			i, n;
+		PTPPropertyValue	pv;
+
+		for (i=sizeof(readonly_props)/sizeof(readonly_props[0]);i--;)
+			if (readonly_props[i] == props[j])
+				break;
+		if (i != -1) /* Is read/only */
+			continue;
+		n = ptp_render_mtp_propname(props[j], sizeof(propname), propname);
+		sprintf (propname2, "<%s>", propname);
+		begin= strstr (filedata, propname2);
+		if (!begin) continue;
+		begin += strlen(propname2);
+		sprintf (propname2, "</%s>", propname);
+		end = strstr (begin, propname2);
+		if (!end) continue;
+		*end = '\0';
+		content = strdup(begin);
+		*end = '<';
+		fprintf (stderr, "found tag %s, content %s\n", propname, content);
+		ret = ptp_mtp_getobjectpropdesc (params, props[j], ofc, &opd);
+		if (ret != PTP_RC_OK) {
+			fprintf (stderr," getobjectpropdesc returns 0x%x\n", ret);
+			free (content); content = NULL;
+			continue;
+		}
+		if (opd.GetSet == 0) /* property is read/only */
+			continue;
+		switch (opd.DataType) {
+		default:gp_log (GP_LOG_ERROR, "ptp2", "mtp parser: Unknown datatype %d, content %s", opd.DataType, content);
+			free (content); content = NULL;
+			continue;
+			break;
+		case PTP_DTC_STR:
+			pv.str = content;
+			break;
+		case PTP_DTC_INT32:
+			sscanf (content, "%d", &pv.i32);
+			break;
+		case PTP_DTC_INT16:
+			sscanf (content, "%hd", &pv.i16);
+			break;
+		case PTP_DTC_INT8:
+			sscanf (content, "%hhd", &pv.i8);
+			break;
+		case PTP_DTC_UINT32:
+			sscanf (content, "%u", &pv.u32);
+			break;
+		case PTP_DTC_UINT16:
+			sscanf (content, "%hu", &pv.u16);
+			break;
+		case PTP_DTC_UINT8:
+			sscanf (content, "%hhu", &pv.u8);
+			break;
+		}
+		ret = ptp_mtp_setobjectpropvalue (params, object_id, props[j], &pv, opd.DataType);
+		free (content); content = NULL;
 	}
 	free(props);
 	return (GP_OK);
@@ -4151,7 +4311,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
 		    ptp_operation_issupported(params,PTP_OC_MTP_GetObjectPropsSupported)
 		)
-			return ptp_mtp_render_metadata (params,object_id,oi->ObjectFormat,file);
+			return ptp_mtp_render_metadata (params,params->handles.Handler[object_id],oi->ObjectFormat,file);
 		return (GP_ERROR_NOT_SUPPORTED);
 	default: {
 		unsigned char *ximage = NULL;
@@ -4193,6 +4353,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	unsigned long intsize;
 	uint32_t size;
 	PTPParams* params=&camera->pl->params;
+	CameraFileType	type;
 
 	((PTPData *) camera->pl->params.data)->context = context;
 
@@ -4207,6 +4368,37 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 
 	memset(&oi, 0, sizeof (PTPObjectInfo));
 	gp_file_get_name (file, &filename); 
+	gp_file_get_type (file, &type);
+
+	if (type == GP_FILE_TYPE_METADATA) {
+		if ((params->deviceinfo.VendorExtensionID==PTP_VENDOR_MICROSOFT) &&
+		    ptp_operation_issupported(params,PTP_OC_MTP_GetObjectPropsSupported)
+		) {
+			uint32_t object_id;
+			int n;
+			PTPObjectInfo *poi;
+
+			/* compute storage ID value from folder patch */
+			folder_to_storage(folder,storage);
+
+			/* Get file number omiting storage pseudofolder */
+			find_folder_handle(folder, storage, object_id, data);
+			object_id = find_child(filename, storage, object_id, camera);
+			if (object_id ==PTP_HANDLER_SPECIAL) {
+				gp_context_error (context, _("File '%s/%s' does not exist."), folder, filename);
+				return (GP_ERROR_BAD_PARAMETERS);
+			}
+			if ((n = handle_to_n(object_id, camera))==PTP_HANDLER_SPECIAL) {
+				gp_context_error (context, _("File '%s/%s' does not exist."), folder, filename);
+				return (GP_ERROR_BAD_PARAMETERS);
+			}
+			poi=&params->objectinfo[n];
+			return ptp_mtp_parse_metadata (params,object_id,poi->ObjectFormat,file);
+		}
+		gp_context_error (context, _("Metadata only supported for MTP devices."));
+		return GP_ERROR;
+	}
+
 	gp_file_get_data_and_size (file, (const char **)&object, &intsize);
 	size=(uint32_t)intsize;
 

@@ -1813,6 +1813,107 @@ ptp_mtp_getobjectpropssupported (PTPParams* params, uint16_t ofc,
 	return ret;
 }
 
+/**
+ * ptp_mtp_getobjectpropdesc:
+ *
+ * This command gets the object property description.
+ *  
+ * params:	PTPParams*
+ *	uint16_t opc	- object property code
+ *	uint16_t ofc	- object format code
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_mtp_getobjectpropdesc (
+	PTPParams* params, uint16_t opc, uint16_t ofc, PTPObjectPropDesc *opd
+) {
+        PTPContainer ptp;
+	uint16_t ret;
+	unsigned char *data = NULL;
+	unsigned int size = 0;
+        
+        PTP_CNT_INIT(ptp);
+        ptp.Code=PTP_OC_MTP_GetObjectPropDesc;
+        ptp.Nparam = 2;
+        ptp.Param1 = opc;
+        ptp.Param2 = ofc;
+        ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size);
+	if (ret == PTP_RC_OK)
+		ptp_unpack_OPD (params, data, opd, size);
+	free(data);
+	return ret;
+}
+
+/**
+ * ptp_mtp_getobjectpropvalue:
+ *
+ * This command gets the object properties of an object handle.
+ *  
+ * params:	PTPParams*
+ *	uint32_t objectid	- object format code
+ *	uint16_t opc		- object prop code
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_mtp_getobjectpropvalue (
+	PTPParams* params, uint32_t oid, uint16_t opc,
+	PTPPropertyValue *value, uint16_t datatype
+) {
+        PTPContainer ptp;
+	uint16_t ret;
+	unsigned char *data = NULL;
+	unsigned int size = 0;
+	int offset = 0;
+        
+        PTP_CNT_INIT(ptp);
+        ptp.Code=PTP_OC_MTP_GetObjectPropValue;
+        ptp.Nparam = 2;
+        ptp.Param1 = oid;
+        ptp.Param2 = opc;
+        ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size);
+	if (ret == PTP_RC_OK)
+		ptp_unpack_DPV(params, data, &offset, size, value, datatype);
+	free(data);
+	return ret;
+}
+
+/**
+ * ptp_mtp_setobjectpropvalue:
+ *
+ * This command gets the object properties of an object handle.
+ *  
+ * params:	PTPParams*
+ *	uint32_t objectid	- object format code
+ *	uint16_t opc		- object prop code
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_mtp_setobjectpropvalue (
+	PTPParams* params, uint32_t oid, uint16_t opc,
+	PTPPropertyValue *value, uint16_t datatype
+) {
+        PTPContainer ptp;
+	uint16_t ret;
+	unsigned char *data = NULL;
+	unsigned int size ;
+        
+        PTP_CNT_INIT(ptp);
+        ptp.Code=PTP_OC_MTP_SetObjectPropValue;
+        ptp.Nparam = 2;
+        ptp.Param1 = oid;
+        ptp.Param2 = opc;
+	size = ptp_pack_DPV(params, value, &data, datatype);
+        ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &data, NULL);
+	free(data);
+	return ret;
+}
+
 /* Non PTP protocol functions */
 /* devinfo testing functions */
 
@@ -1898,6 +1999,32 @@ ptp_free_devicepropdesc(PTPDevicePropDesc* dpd)
 				ptp_free_devicepropvalue (dpd->DataType, dpd->FORM.Enum.SupportedValue+i);
 			free (dpd->FORM.Enum.SupportedValue);
 		}
+	}
+}
+
+void
+ptp_free_objectpropdesc(PTPObjectPropDesc* opd)
+{
+	uint16_t i;
+
+	ptp_free_devicepropvalue (opd->DataType, &opd->FactoryDefaultValue);
+	switch (opd->FormFlag) {
+	case PTP_OPFF_None:
+		break;
+	case PTP_OPFF_Range:
+		ptp_free_devicepropvalue (opd->DataType, &opd->FORM.Range.MinimumValue);
+		ptp_free_devicepropvalue (opd->DataType, &opd->FORM.Range.MaximumValue);
+		ptp_free_devicepropvalue (opd->DataType, &opd->FORM.Range.StepSize);
+		break;
+	case PTP_OPFF_Enumeration:
+		if (opd->FORM.Enum.SupportedValue) {
+			for (i=0;i<opd->FORM.Enum.NumberOfValues;i++)
+				ptp_free_devicepropvalue (opd->DataType, opd->FORM.Enum.SupportedValue+i);
+			free (opd->FORM.Enum.SupportedValue);
+		}
+	default:
+		fprintf (stderr, "Unknown OPFF type %d\n", opd->FormFlag);
+		break;
 	}
 }
 

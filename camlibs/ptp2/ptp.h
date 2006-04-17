@@ -584,6 +584,22 @@ struct _PTPDevicePropDesc {
 };
 typedef struct _PTPDevicePropDesc PTPDevicePropDesc;
 
+/* Object Property Describing Dataset (DevicePropDesc) */
+
+struct _PTPObjectPropDesc {
+	uint16_t		ObjectPropertyCode;
+	uint16_t		DataType;
+	uint8_t			GetSet;
+	PTPPropertyValue	FactoryDefaultValue;
+	uint32_t		GroupCode;
+	uint8_t			FormFlag;
+	union	{
+		PTPPropDescEnumForm	Enum;
+		PTPPropDescRangeForm	Range;
+	} FORM;
+};
+typedef struct _PTPObjectPropDesc PTPObjectPropDesc;
+
 /* Canon filesystem's folder entry Dataset */
 
 #define PTP_CANON_FilenameBufferLen	13
@@ -945,6 +961,16 @@ typedef struct _PTPEKTextParams PTPEKTextParams;
 #define PTP_DPFF_Range			0x01
 #define PTP_DPFF_Enumeration		0x02
 
+/* Object Property Codes used by MTP (first 3 are same as DPFF codes) */
+#define PTP_OPFF_None			0x00
+#define PTP_OPFF_Range			0x01
+#define PTP_OPFF_Enumeration		0x02
+#define PTP_OPFF_DateTime		0x03
+#define PTP_OPFF_FixedLengthArray	0x04
+#define PTP_OPFF_RegularExpression	0x05
+#define PTP_OPFF_ByteArray		0x06
+#define PTP_OPFF_LongString		0xFF
+
 /* Device Property GetSet type */
 #define PTP_DPGS_Get			0x00
 #define PTP_DPGS_GetSet			0x01
@@ -1093,6 +1119,12 @@ uint16_t ptp_getdevicepropvalue	(PTPParams* params, uint16_t propcode,
 uint16_t ptp_setdevicepropvalue (PTPParams* params, uint16_t propcode,
                         	PTPPropertyValue* value, uint16_t datatype);
 
+uint16_t ptp_mtp_getobjectpropdesc (PTPParams* params, uint16_t opc, uint16_t ofc,
+				PTPObjectPropDesc *objectpropertydesc);
+uint16_t ptp_mtp_getobjectpropvalue (PTPParams* params, uint32_t oid, uint16_t opc, 
+				PTPPropertyValue *value, uint16_t datatype);
+uint16_t ptp_mtp_setobjectpropvalue (PTPParams* params, uint32_t oid, uint16_t opc,
+				PTPPropertyValue *value, uint16_t datatype);
 
 /* Eastman Kodak extensions */
 uint16_t ptp_ek_9007 (PTPParams* params, unsigned char **serial, unsigned int *size);
@@ -1160,6 +1192,7 @@ int ptp_property_issupported	(PTPParams* params, uint16_t property);
 
 void ptp_free_devicepropdesc	(PTPDevicePropDesc* dpd);
 void ptp_free_devicepropvalue	(uint16_t dt, PTPPropertyValue* dpd);
+void ptp_free_objectpropdesc	(PTPObjectPropDesc* dpd);
 void ptp_perror			(PTPParams* params, uint16_t error);
 
 const char*

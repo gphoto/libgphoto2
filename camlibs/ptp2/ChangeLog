@@ -4,6 +4,8 @@
 	* library.c: Prepare handling Burst mode on the Nikon DSLRs,
 	  (I just need to know the Object ID sequence generated).
 
+	* library.c: Added METADATA retrieval and setting for MTP devices.
+
 2006-04-12  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* library.c: Added PowerShot A700 as reported.
