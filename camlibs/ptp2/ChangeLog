@@ -1,3 +1,9 @@
+2006-04-17  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* ptp.c, library.c: Added several more Nikon DSLR config options.
+	* library.c: Prepare handling Burst mode on the Nikon DSLRs,
+	  (I just need to know the Object ID sequence generated).
+
 2006-04-12  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* library.c: Added PowerShot A700 as reported.

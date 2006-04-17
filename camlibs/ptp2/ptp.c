@@ -2205,6 +2205,12 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("Exposure Aperture Lock")},
 		{PTP_DPC_NIKON_MaximumShots,			/* 0xD103 */
 		 N_("Maximum Shots")},
+		{PTP_DPC_NIKON_OptimizeImage,			/* 0xD140 */
+		 N_("Optimize Image")},
+		{PTP_DPC_NIKON_Saturation,			/* 0xD142 */
+		 N_("Saturation")},
+		{PTP_DPC_NIKON_CSMMenu,				/* 0xD180 */
+		 N_("CSM Menu")},
 		{PTP_DPC_NIKON_BeepOff,
 		 N_("AF Beep Mode")},
 		{PTP_DPC_NIKON_AutofocusMode,
@@ -2445,12 +2451,42 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		{PTP_DPC_NIKON_AutofocusArea, 2, N_("Bottom")},
 		{PTP_DPC_NIKON_AutofocusArea, 3, N_("Left")},
 		{PTP_DPC_NIKON_AutofocusArea, 4, N_("Right")},
+		{PTP_DPC_NIKON_OptimizeImage, 0, N_("Normal")},
+		{PTP_DPC_NIKON_OptimizeImage, 1, N_("Vivid")},
+		{PTP_DPC_NIKON_OptimizeImage, 2, N_("Sharper")},
+		{PTP_DPC_NIKON_OptimizeImage, 3, N_("Softer")},
+		{PTP_DPC_NIKON_OptimizeImage, 4, N_("Direct Print")},
+		{PTP_DPC_NIKON_OptimizeImage, 5, N_("Portrait")},
+		{PTP_DPC_NIKON_OptimizeImage, 6, N_("Landscape")},
+		{PTP_DPC_NIKON_OptimizeImage, 7, N_("Custom")},
+
+		{PTP_DPC_NIKON_ImageSharpening, 0, N_("Auto")},
+		{PTP_DPC_NIKON_ImageSharpening, 1, N_("Normal")},
+		{PTP_DPC_NIKON_ImageSharpening, 2, N_("Low")},
+		{PTP_DPC_NIKON_ImageSharpening, 3, N_("Medium Low")},
+		{PTP_DPC_NIKON_ImageSharpening, 4, N_("Medium high")},
+		{PTP_DPC_NIKON_ImageSharpening, 5, N_("High")},
+		{PTP_DPC_NIKON_ImageSharpening, 6, N_("None")},
+
+		{PTP_DPC_NIKON_ToneCompensation, 0, N_("Auto")},
+		{PTP_DPC_NIKON_ToneCompensation, 1, N_("Normal")},
+		{PTP_DPC_NIKON_ToneCompensation, 2, N_("Low contrast")},
+		{PTP_DPC_NIKON_ToneCompensation, 3, N_("Medium low")},
+		{PTP_DPC_NIKON_ToneCompensation, 4, N_("Medium high")},
+		{PTP_DPC_NIKON_ToneCompensation, 5, N_("High control")},
+		{PTP_DPC_NIKON_ToneCompensation, 6, N_("Custom")},
+
+		{PTP_DPC_NIKON_Saturation, 0, N_("Normal")},
+		{PTP_DPC_NIKON_Saturation, 1, N_("Moderate")},
+		{PTP_DPC_NIKON_Saturation, 2, N_("Enhanced")},
+
 		{PTP_DPC_NIKON_LensID, 0, N_("Unknown")},
 		{PTP_DPC_NIKON_LensID, 38, "Sigma 70-300mm 1:4-5.6 D APO Macro"},
 		{PTP_DPC_NIKON_LensID, 83, "AF Nikkor 80-200mm 1:2.8 D ED"},
 		{PTP_DPC_NIKON_LensID, 118, "AF Nikkor 50mm 1:1.8 D"},
 		{PTP_DPC_NIKON_LensID, 127, "AF-S Nikkor 18-70mm 1:3.5-4.5G ED DX"},
 		PTP_VAL_YN(PTP_DPC_NIKON_LowLight),
+		PTP_VAL_YN(PTP_DPC_NIKON_CSMMenu),
 		PTP_VAL_RBOOL(PTP_DPC_NIKON_BeepOff),
 		{0, 0, NULL}
 	};
@@ -2491,6 +2527,20 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		case PTP_DPC_MTP_Synchronization_Partner:
 		case PTP_DPC_MTP_Device_Friendly_Name:
 			return snprintf(out, length, "%s", dpd->CurrentValue.str);
+		case 0xd101:
+		case 0xd102: {
+			for (i=0;(i<dpd->CurrentValue.a.count) && (i<length);i++)
+				out[i] = dpd->CurrentValue.a.v[i].u16;
+			if (	dpd->CurrentValue.a.count &&
+				(dpd->CurrentValue.a.count < length)) {
+				out[dpd->CurrentValue.a.count-1] = 0;
+				return dpd->CurrentValue.a.count-1;
+			} else {
+				out[length-1] = 0;
+				return length;
+			}
+			break;
+		}
 		default:
 			break;
 		}
@@ -2498,7 +2548,6 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 
 	return 0;
 }
-
 
 struct {
 	uint16_t ofc;
