@@ -335,6 +335,10 @@ gp_port_library_list (GPPortInfoList *list)
 		if (r)
 			continue;
 #endif
+		/* Very first of all, if the device node is not there,
+		 * there is no need to try locking. */
+		if ((stat (path, &s) == -1) && ((errno == ENOENT) || (errno == ENODEV)))
+			continue;
 
 		/* First of all, try to lock the device */
 		if (gp_port_serial_lock (NULL, path) < 0)
