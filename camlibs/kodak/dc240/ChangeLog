@@ -1,3 +1,7 @@
+2006-04-18  Hubert Figuiere  <hub@figuiere.net>
+
+	* dc240.c: alias get raw files to get files.
+
 2004-06-16  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* dc240.h (TIMEOUT): fix bug 920532
