@@ -600,7 +600,11 @@ static struct {
 	{"Creative:Zen Sleek",			0x041e, 0x4137, 0},
 	/* Jennifer Scalf <oneferna@gmail.com> */
 	{"Creative:Zen MicroPhoto",             0x041e, 0x413c, 0},
+	{"Creative:Zen Sleek Photo",		0x041e, 0x413d, 0 },
 	{"Creative:Zen Vision:M",		0x041e, 0x413e, 0},
+
+	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1474056&group_id=8874&atid=108874 */
+	{"Samsung:YP-T7J", 			0x04e8, 0x5047, 0 },
 
 	/* IRC reporter */
 	{"Dell:DJ Itty",			0x413c, 0x4500, 0},
