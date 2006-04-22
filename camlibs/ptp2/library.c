@@ -1258,7 +1258,6 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	static int capcnt = 0;
 	PTPObjectInfo		oi;
 	PTPParams		*params = &camera->pl->params;
-	uint32_t		newobject = 0x0;
 	PTPDevicePropDesc	propdesc;
 	int			i, ret, hasc101 = 0, burstnumber = 1;
 
@@ -1304,18 +1303,13 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		free (nevent);
 	}
 
-	/* FIXME: We only know the first Object ID, but not the later
-	 * ones in burst mode. So reduce to 1. -Marcus
-	 */
-	burstnumber = 1;
-
 	for (i=0;i<burstnumber;i++) {
-		newobject = 0xffff0001 - i;
-
-		/* FIXME: handle multiple images (as in BurstMode) */
-		ret = ptp_getobjectinfo (params, newobject, &oi);
+		/* In Burst mode, the image is always 0xffff0001.
+		 * The firmware just gives us one after the other for the same ID
+		 */
+		ret = ptp_getobjectinfo (params, 0xffff0001, &oi);
 		if (ret != PTP_RC_OK) {
-			fprintf (stderr,"getobjectinfo(%x) failed: %d\n", newobject, ret);
+			fprintf (stderr,"getobjectinfo(%x) failed: %d\n", 0xffff0001, ret);
 			return GP_ERROR_IO;
 		}
 		if (oi.ParentObject != 0)
@@ -1325,7 +1319,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 			oi.StorageID = 0x00010001;
 		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)oi.StorageID);
 		sprintf (path->name, "capt%04d.jpg", capcnt++);
-		ret = add_objectid_to_gphotofs(camera, path, context, newobject, &oi);
+		ret = add_objectid_to_gphotofs(camera, path, context, 0xffff0001, &oi);
 		if (ret != GP_OK) {
 			fprintf (stderr, "failed to add object\n");
 			return ret;
