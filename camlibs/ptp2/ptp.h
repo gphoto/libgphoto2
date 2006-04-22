@@ -872,6 +872,7 @@ typedef struct _PTPEKTextParams PTPEKTextParams;
 #define PTP_DPC_NIKON_FlashModeManualPower		0xD16D
 #define PTP_DPC_NIKON_FlashModeCommanderPower		0xD16E
 #define PTP_DPC_NIKON_CSMMenu				0xD180
+#define PTP_DPC_NIKON_BracketingFramesAndSteps		0xD190
 #define PTP_DPC_NIKON_LowLight				0xD1B0
 #define PTP_DPC_NIKON_FlashOpen				0xD1C0
 #define PTP_DPC_NIKON_FlashCharged			0xD1C1
