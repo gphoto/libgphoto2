@@ -2211,29 +2211,29 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_NIKON_NonCPULensDataMaximumAperture,	/* 0xD02f */
 		 N_("Lens Max. Aperture (Non CPU)")},
 		{PTP_DPC_NIKON_CSMMenuBankSelect,		/* 0xD040 */
-		 N_("PTP_DPC_NIKON_CSMMenuBankSelect")},
+		 "PTP_DPC_NIKON_CSMMenuBankSelect"},
 		{PTP_DPC_NIKON_MenuBankNameA,			/* 0xD041 */
-		 N_("PTP_DPC_NIKON_MenuBankNameA")},
+		 "PTP_DPC_NIKON_MenuBankNameA"},
 		{PTP_DPC_NIKON_MenuBankNameB,			/* 0xD042 */
-		 N_("PTP_DPC_NIKON_MenuBankNameB")},
+		 "PTP_DPC_NIKON_MenuBankNameB"},
 		{PTP_DPC_NIKON_MenuBankNameC,			/* 0xD043 */
-		 N_("PTP_DPC_NIKON_MenuBankNameC")},
+		 "PTP_DPC_NIKON_MenuBankNameC"},
 		{PTP_DPC_NIKON_MenuBankNameD,			/* 0xD044 */
-		 N_("PTP_DPC_NIKON_MenuBankNameD")},
+		 "PTP_DPC_NIKON_MenuBankNameD"},
 		{PTP_DPC_NIKON_A1AFCModePriority,		/* 0xD048 */
-		 N_("PTP_DPC_NIKON_A1AFCModePriority")},
+		 "PTP_DPC_NIKON_A1AFCModePriority"},
 		{PTP_DPC_NIKON_A2AFSModePriority,		/* 0xD049 */
-		 N_("PTP_DPC_NIKON_A2AFSModePriority")},
+		 "PTP_DPC_NIKON_A2AFSModePriority"},
 		{PTP_DPC_NIKON_A3GroupDynamicAF,		/* 0xD04a */
-		 N_("PTP_DPC_NIKON_A3GroupDynamicAF")},
+		 "PTP_DPC_NIKON_A3GroupDynamicAF"},
 		{PTP_DPC_NIKON_A4AFActivation,			/* 0xD04b */
-		 N_("PTP_DPC_NIKON_A4AFActivation")},
+		 "PTP_DPC_NIKON_A4AFActivation"},
 		{PTP_DPC_NIKON_A5FocusAreaIllumManualFocus,	/* 0xD04c */
-		 N_("PTP_DPC_NIKON_A5FocusAreaIllumManualFocus")},
+		 "PTP_DPC_NIKON_A5FocusAreaIllumManualFocus"},
 		{PTP_DPC_NIKON_FocusAreaIllumContinuous,	/* 0xD04d */
-		 N_("PTP_DPC_NIKON_FocusAreaIllumContinuous")},
+		 "PTP_DPC_NIKON_FocusAreaIllumContinuous"},
 		{PTP_DPC_NIKON_FocusAreaIllumWhenSelected,	/* 0xD04e */
-		 N_("PTP_DPC_NIKON_FocusAreaIllumWhenSelected")},
+		 "PTP_DPC_NIKON_FocusAreaIllumWhenSelected"},
 		{PTP_DPC_NIKON_FocusAreaWrap,			/* 0xD04f */
 		 N_("Focus Area Wrap")},
 		{PTP_DPC_NIKON_A7VerticalAFON,			/* 0xD050 */
