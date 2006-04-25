@@ -338,6 +338,11 @@ typedef struct _PTPIPHeader PTPIPHeader;
 /* Gets 1 parameter, objectid pointing to DPOF object */
 #define PTP_EC_Nikon_AdvancedTransfer		0xC103
 
+/* constants for GetObjectHandles */
+#define PTP_GOH_ALL_STORAGE 0xffffffff
+#define PTP_GOH_ALL_FORMATS 0x00000000
+#define PTP_GOH_ALL_ASSOCS  0x00000000
+
 /* PTP device info structure (returned by GetDevInfo) */
 
 struct _PTPDeviceInfo {
@@ -537,7 +542,8 @@ typedef struct _PTPObjectInfo PTPObjectInfo;
 /* Property Describing Dataset, Range Form */
 
 union _PTPPropertyValue {
-	char		*str;	/* malloced */
+	char		*str;	/* common string, malloced */
+	uint16_t        *unistr; /* UCS2 unicode string, malloced */
 	uint8_t		u8;
 	int8_t		i8;
 	uint16_t	u16;
@@ -680,6 +686,7 @@ typedef struct _PTPEKTextParams PTPEKTextParams;
 #define PTP_DTC_AINT128		(PTP_DTC_ARRAY_MASK | PTP_DTC_INT128)
 #define PTP_DTC_AUINT128	(PTP_DTC_ARRAY_MASK | PTP_DTC_UINT128)
 
+#define PTP_DTC_UNISTR		0xFFFE
 #define PTP_DTC_STR		0xFFFF
 
 /* Device Properties Codes */

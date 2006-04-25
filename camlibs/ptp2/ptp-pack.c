@@ -500,6 +500,25 @@ ptp_unpack_DPV (
 			return 0;
 		break;
 	}
+	case PTP_DTC_UNISTR: {
+	  /* this length includes the null character */
+	  const int unicsize = sizeof(uint16_t);
+	  uint8_t len=dtoh8a(&data[0]);
+	  if (len==0) {
+	    value->unistr = malloc(unicsize);
+	    value->unistr[0]=0;
+	  } else {
+	    int i;
+	    value->unistr = malloc(len*unicsize);
+	    for (i=0;i<len;i++) {
+	      value->unistr[i]=dtoh16a(&data[i*unicsize+1]);
+	    }
+	    /* just to be sure... */
+	    value->unistr[len-1]=0;
+	  }	  
+	  return 2*len+1;
+	  break;
+	}
 	}
 	return 1;
 }
@@ -740,6 +759,27 @@ ptp_pack_DPV (PTPParams *params, PTPPropertyValue* value, unsigned char** dpvptr
 		dpv=malloc(size);
 		memset(dpv,0,size);
 		ptp_pack_string(params, value->str, dpv, 0, &len);
+		break;
+	}
+	case PTP_DTC_UNISTR: {
+		uint8_t len = 0;
+		/* note PTP_MAXSTRLEN includes the null terminator */
+		while (((uint16_t *)value)[len] != 0 && len != PTP_MAXSTRLEN-1)
+			len++;
+		if (len==0) {
+			size=1;
+			dpv=malloc(size);
+			*dpv=0;
+		} else {
+			/* 2 extra bytes for the terminator, 1 for the length at the beginning */
+			size=len*2+3;
+			dpv=malloc(size);
+			memset(dpv,0,size);
+			htod8a(&dpv[0],len+1);
+			for (i = 0; i < len; i++)
+				htod16a(&dpv[i*2+1],((uint16_t *)value)[i]);
+			/* terminator is done by memset above */
+		}
 		break;
 	}
 	}
