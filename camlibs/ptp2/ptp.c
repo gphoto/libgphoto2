@@ -2265,17 +2265,17 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_NIKON_D2MaximumShots,			/* 0xD069 */
 		 N_("Max. Shots")},
 		{PTP_DPC_NIKON_D3ExpDelayMode,			/* 0xD06a */
-		 N_("PTP_DPC_NIKON_D3ExpDelayMode")},
+		 "PTP_DPC_NIKON_D3ExpDelayMode"},
 		{PTP_DPC_NIKON_LongExposureNoiseReduction,	/* 0xD06b */
 		 N_("Long Exposure Noise Reduction")},
 		{PTP_DPC_NIKON_FileNumberSequence,		/* 0xD06c */
 		 N_("File Number Sequencing")},
 		{PTP_DPC_NIKON_D6ControlPanelFinderRearControl,	/* 0xD06d */
-		 N_("PTP_DPC_NIKON_D6ControlPanelFinderRearControl")},
+		 "PTP_DPC_NIKON_D6ControlPanelFinderRearControl"},
 		{PTP_DPC_NIKON_ControlPanelFinderViewfinder,	/* 0xD06e */
-		 N_("PTP_DPC_NIKON_ControlPanelFinderViewfinder")},
+		 "PTP_DPC_NIKON_ControlPanelFinderViewfinder"},
 		{PTP_DPC_NIKON_D7Illumination,			/* 0xD06f */
-		 N_("PTP_DPC_NIKON_D7Illumination")},
+		 "PTP_DPC_NIKON_D7Illumination"},
 		{PTP_DPC_NIKON_E1FlashSyncSpeed,		/* 0xD074 */
 		 N_("Flash Sync. Speed")},
 		{PTP_DPC_NIKON_FlashShutterSpeed,		/* 0xD075 */
