@@ -191,6 +191,12 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp,
 			ret = dtoh16(usbdata.code);
 			break;
 		}
+		if (rlen > dtoh32(usbdata.length)) {
+			/* I observed this on iRiver MTP devices. -Marcus */
+			ptp_debug (params, "ptp2/ptp_usb_getdata: read %d bytes too much, expect problems!", rlen - dtoh32(usbdata.length)
+			);
+			rlen = dtoh32(usbdata.length);
+		}
 
 		/* For most PTP devices rlen is 512 == sizeof(usbdata)
 		 * here. For MTP devices splitting header and data it might

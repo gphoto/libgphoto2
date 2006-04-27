@@ -1,3 +1,9 @@
+2006-04-27  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptp.c: The iRiver devices occasionaly send a byte more than
+	  we requested which could lead to memory corruption due to 
+	  logic that did not expect that.
+
 2006-04-17  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* ptp.c, library.c: Added several more Nikon DSLR config options.
