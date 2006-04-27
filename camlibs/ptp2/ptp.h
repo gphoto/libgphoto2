@@ -244,6 +244,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_MTP_SendObjectPropList		0x9808
 #define PTP_OC_MTP_GetObjectReferences		0x9810
 #define PTP_OC_MTP_SetObjectReferences		0x9811
+#define PTP_OC_MTP_UpdateDeviceFirmware		0x9812
 
 /* Proprietary vendor extension operations mask */
 #define PTP_OC_EXTENSION_MASK           0xF000
