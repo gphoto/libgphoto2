@@ -4160,15 +4160,17 @@ ptp_mtp_parse_metadata (
 		*end = '\0';
 		content = strdup(begin);
 		*end = '<';
-		fprintf (stderr, "found tag %s, content %s\n", propname, content);
+		gp_log (GP_LOG_DEBUG, "ptp2", "found tag %s, content %s", propname, content);
 		ret = ptp_mtp_getobjectpropdesc (params, props[j], ofc, &opd);
 		if (ret != PTP_RC_OK) {
-			fprintf (stderr," getobjectpropdesc returns 0x%x\n", ret);
+			gp_log (GP_LOG_DEBUG, "ptp2", " getobjectpropdesc returns 0x%x", ret);
 			free (content); content = NULL;
 			continue;
 		}
-		if (opd.GetSet == 0) /* property is read/only */
+		if (opd.GetSet == 0) {
+			gp_log (GP_LOG_DEBUG, "ptp2", "Tag %s is read only, sorry.", propname);
 			continue;
+		}	
 		switch (opd.DataType) {
 		default:gp_log (GP_LOG_ERROR, "ptp2", "mtp parser: Unknown datatype %d, content %s", opd.DataType, content);
 			free (content); content = NULL;

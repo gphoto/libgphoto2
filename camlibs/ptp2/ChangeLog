@@ -4,6 +4,8 @@
 	  we requested which could lead to memory corruption due to 
 	  logic that did not expect that.
 
+	* library.c: Replaced fprintf by gp_log in parse_metadata.
+
 2006-04-17  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* ptp.c, library.c: Added several more Nikon DSLR config options.
