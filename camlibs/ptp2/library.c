@@ -4067,7 +4067,7 @@ ptp_mtp_render_metadata (
 				default:sprintf (text, "Unknown type %d", opd.DataType);
 					break;
 				case PTP_DTC_STR:
-					snprintf (text, sizeof(text), "%s", pv.str);
+					snprintf (text, sizeof(text), "%s", pv.str?pv.str:"");
 					break;
 				case PTP_DTC_INT32:
 					sprintf (text, "%d", pv.i32);
