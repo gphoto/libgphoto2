@@ -1983,6 +1983,10 @@ ptp_free_devicepropvalue(uint16_t dt, PTPPropertyValue* dpd) {
 		if (dpd->str)
 			free(dpd->str);
 		break;
+	case PTP_DTC_UNISTR:
+		if (dpd->unistr)
+			free(dpd->unistr);
+		break;
 	}
 }
 
