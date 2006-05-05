@@ -614,6 +614,9 @@ static struct {
 	/* Marcoen Hirschberg <marcoen@users.sourceforge.net> */
 	{"Toshiba:Gigabeat",                    0x0930, 0x000c, 0},
 
+	/* From Mark Veinot */
+	{"JVC:Alneo XA-HD500", 			0x04f1, 0x6105, 0},
+
 	/* more coming soon :) */
 	{NULL, 0, 0, 0}
 };
