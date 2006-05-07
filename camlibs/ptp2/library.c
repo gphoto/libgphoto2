@@ -590,6 +590,8 @@ static struct {
 	{"iRiver:T30",                          0x4102, 0x1119, 0},
 	/* Petr Spatka spatka@luzanky.cz */
 	{"iRiver:H10",                          0x4102, 0x2102, 0},
+	{"iRiver:Portable Media Center",	0x1006, 0x4002, 0 },
+	{"iRiver:Portable Media Center",	0x1006, 0x4003, 0 },
 	/* From: thanosz@softhome.net */
 	{"Philipps:HDD6320",                    0x0471, 0x01eb, 0},
 	/* borrowed from libmtp source */
@@ -616,6 +618,9 @@ static struct {
 
 	/* From Mark Veinot */
 	{"JVC:Alneo XA-HD500", 			0x04f1, 0x6105, 0},
+
+	{"Samsung:YH-999 Portable Media Center",0x04e8, 0x5a0f, 0 },
+	{"Intel:Bandon Portable Media Center",	0x045e, 0x00c9, 0 },
 
 	/* more coming soon :) */
 	{NULL, 0, 0, 0}
