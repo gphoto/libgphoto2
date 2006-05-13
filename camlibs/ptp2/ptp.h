@@ -244,6 +244,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_MTP_SendObjectPropList		0x9808
 #define PTP_OC_MTP_GetObjectReferences		0x9810
 #define PTP_OC_MTP_SetObjectReferences		0x9811
+#define PTP_OC_MTP_UpdateDeviceFirmware		0x9812
 
 /* Proprietary vendor extension operations mask */
 #define PTP_OC_EXTENSION_MASK           0xF000
@@ -337,6 +338,11 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_EC_Nikon_ObjectAddedInSDRAM		0xC101
 /* Gets 1 parameter, objectid pointing to DPOF object */
 #define PTP_EC_Nikon_AdvancedTransfer		0xC103
+
+/* constants for GetObjectHandles */
+#define PTP_GOH_ALL_STORAGE 0xffffffff
+#define PTP_GOH_ALL_FORMATS 0x00000000
+#define PTP_GOH_ALL_ASSOCS  0x00000000
 
 /* PTP device info structure (returned by GetDevInfo) */
 
@@ -872,6 +878,7 @@ typedef struct _PTPEKTextParams PTPEKTextParams;
 #define PTP_DPC_NIKON_FlashModeManualPower		0xD16D
 #define PTP_DPC_NIKON_FlashModeCommanderPower		0xD16E
 #define PTP_DPC_NIKON_CSMMenu				0xD180
+#define PTP_DPC_NIKON_BracketingFramesAndSteps		0xD190
 #define PTP_DPC_NIKON_LowLight				0xD1B0
 #define PTP_DPC_NIKON_FlashOpen				0xD1C0
 #define PTP_DPC_NIKON_FlashCharged			0xD1C1

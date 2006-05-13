@@ -191,6 +191,12 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp,
 			ret = dtoh16(usbdata.code);
 			break;
 		}
+		if (rlen > dtoh32(usbdata.length)) {
+			/* I observed this on iRiver MTP devices. -Marcus */
+			ptp_debug (params, "ptp2/ptp_usb_getdata: read %d bytes too much, expect problems!", rlen - dtoh32(usbdata.length)
+			);
+			rlen = dtoh32(usbdata.length);
+		}
 
 		/* For most PTP devices rlen is 512 == sizeof(usbdata)
 		 * here. For MTP devices splitting header and data it might
@@ -2211,29 +2217,29 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_NIKON_NonCPULensDataMaximumAperture,	/* 0xD02f */
 		 N_("Lens Max. Aperture (Non CPU)")},
 		{PTP_DPC_NIKON_CSMMenuBankSelect,		/* 0xD040 */
-		 N_("PTP_DPC_NIKON_CSMMenuBankSelect")},
+		 "PTP_DPC_NIKON_CSMMenuBankSelect"},
 		{PTP_DPC_NIKON_MenuBankNameA,			/* 0xD041 */
-		 N_("PTP_DPC_NIKON_MenuBankNameA")},
+		 "PTP_DPC_NIKON_MenuBankNameA"},
 		{PTP_DPC_NIKON_MenuBankNameB,			/* 0xD042 */
-		 N_("PTP_DPC_NIKON_MenuBankNameB")},
+		 "PTP_DPC_NIKON_MenuBankNameB"},
 		{PTP_DPC_NIKON_MenuBankNameC,			/* 0xD043 */
-		 N_("PTP_DPC_NIKON_MenuBankNameC")},
+		 "PTP_DPC_NIKON_MenuBankNameC"},
 		{PTP_DPC_NIKON_MenuBankNameD,			/* 0xD044 */
-		 N_("PTP_DPC_NIKON_MenuBankNameD")},
+		 "PTP_DPC_NIKON_MenuBankNameD"},
 		{PTP_DPC_NIKON_A1AFCModePriority,		/* 0xD048 */
-		 N_("PTP_DPC_NIKON_A1AFCModePriority")},
+		 "PTP_DPC_NIKON_A1AFCModePriority"},
 		{PTP_DPC_NIKON_A2AFSModePriority,		/* 0xD049 */
-		 N_("PTP_DPC_NIKON_A2AFSModePriority")},
+		 "PTP_DPC_NIKON_A2AFSModePriority"},
 		{PTP_DPC_NIKON_A3GroupDynamicAF,		/* 0xD04a */
-		 N_("PTP_DPC_NIKON_A3GroupDynamicAF")},
+		 "PTP_DPC_NIKON_A3GroupDynamicAF"},
 		{PTP_DPC_NIKON_A4AFActivation,			/* 0xD04b */
-		 N_("PTP_DPC_NIKON_A4AFActivation")},
+		 "PTP_DPC_NIKON_A4AFActivation"},
 		{PTP_DPC_NIKON_A5FocusAreaIllumManualFocus,	/* 0xD04c */
-		 N_("PTP_DPC_NIKON_A5FocusAreaIllumManualFocus")},
+		 "PTP_DPC_NIKON_A5FocusAreaIllumManualFocus"},
 		{PTP_DPC_NIKON_FocusAreaIllumContinuous,	/* 0xD04d */
-		 N_("PTP_DPC_NIKON_FocusAreaIllumContinuous")},
+		 "PTP_DPC_NIKON_FocusAreaIllumContinuous"},
 		{PTP_DPC_NIKON_FocusAreaIllumWhenSelected,	/* 0xD04e */
-		 N_("PTP_DPC_NIKON_FocusAreaIllumWhenSelected")},
+		 "PTP_DPC_NIKON_FocusAreaIllumWhenSelected"},
 		{PTP_DPC_NIKON_FocusAreaWrap,			/* 0xD04f */
 		 N_("Focus Area Wrap")},
 		{PTP_DPC_NIKON_A7VerticalAFON,			/* 0xD050 */
@@ -2265,17 +2271,17 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_NIKON_D2MaximumShots,			/* 0xD069 */
 		 N_("Max. Shots")},
 		{PTP_DPC_NIKON_D3ExpDelayMode,			/* 0xD06a */
-		 N_("PTP_DPC_NIKON_D3ExpDelayMode")},
+		 "PTP_DPC_NIKON_D3ExpDelayMode"},
 		{PTP_DPC_NIKON_LongExposureNoiseReduction,	/* 0xD06b */
 		 N_("Long Exposure Noise Reduction")},
 		{PTP_DPC_NIKON_FileNumberSequence,		/* 0xD06c */
 		 N_("File Number Sequencing")},
 		{PTP_DPC_NIKON_D6ControlPanelFinderRearControl,	/* 0xD06d */
-		 N_("PTP_DPC_NIKON_D6ControlPanelFinderRearControl")},
+		 "PTP_DPC_NIKON_D6ControlPanelFinderRearControl"},
 		{PTP_DPC_NIKON_ControlPanelFinderViewfinder,	/* 0xD06e */
-		 N_("PTP_DPC_NIKON_ControlPanelFinderViewfinder")},
+		 "PTP_DPC_NIKON_ControlPanelFinderViewfinder"},
 		{PTP_DPC_NIKON_D7Illumination,			/* 0xD06f */
-		 N_("PTP_DPC_NIKON_D7Illumination")},
+		 "PTP_DPC_NIKON_D7Illumination"},
 		{PTP_DPC_NIKON_E1FlashSyncSpeed,		/* 0xD074 */
 		 N_("Flash Sync. Speed")},
 		{PTP_DPC_NIKON_FlashShutterSpeed,		/* 0xD075 */

@@ -373,6 +373,7 @@ static struct {
 	{"Sony:DSC-W12 (PTP mode)",   0x054c, 0x004e, 0},
 	{"Sony:MVC-CD300 (PTP mode)", 0x054c, 0x004e, 0},
 	{"Sony:MVC-CD500 (PTP mode)", 0x054c, 0x004e, 0},
+	{"Sony:DSC-U10 (PTP mode)",   0x054c, 0x004e, 0},
 
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109, 0},
@@ -441,6 +442,9 @@ static struct {
 	{"Panasonic:DMC-LZ2",             0x04da, 0x2372, 0},
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=1405541&group_id=8874&atid=358874 */
 	{"Panasonic:DMC-LC1",             0x04da, 0x2372, 0},
+
+	/* Søren Krarup Olesen <sko@acoustics.aau.dk> */
+	{"Leica:D-LUX 2",                 0x04da, 0x2375, 0},
 
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1275100&group_id=8874&atid=358874 */
 	{"Panasonic:Lumix FZ5",           0x04da, 0x2372, 0},
@@ -590,6 +594,8 @@ static struct {
 	{"iRiver:T30",                          0x4102, 0x1119, 0},
 	/* Petr Spatka spatka@luzanky.cz */
 	{"iRiver:H10",                          0x4102, 0x2102, 0},
+	{"iRiver:Portable Media Center",	0x1006, 0x4002, 0 },
+	{"iRiver:Portable Media Center",	0x1006, 0x4003, 0 },
 	/* From: thanosz@softhome.net */
 	{"Philipps:HDD6320",                    0x0471, 0x01eb, 0},
 	/* borrowed from libmtp source */
@@ -602,13 +608,23 @@ static struct {
 	{"Creative:Zen Sleek",			0x041e, 0x4137, 0},
 	/* Jennifer Scalf <oneferna@gmail.com> */
 	{"Creative:Zen MicroPhoto",             0x041e, 0x413c, 0},
+	{"Creative:Zen Sleek Photo",		0x041e, 0x413d, 0 },
 	{"Creative:Zen Vision:M",		0x041e, 0x413e, 0},
+
+	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1474056&group_id=8874&atid=108874 */
+	{"Samsung:YP-T7J", 			0x04e8, 0x5047, 0 },
 
 	/* IRC reporter */
 	{"Dell:DJ Itty",			0x413c, 0x4500, 0},
 
 	/* Marcoen Hirschberg <marcoen@users.sourceforge.net> */
 	{"Toshiba:Gigabeat",                    0x0930, 0x000c, 0},
+
+	/* From Mark Veinot */
+	{"JVC:Alneo XA-HD500", 			0x04f1, 0x6105, 0},
+
+	{"Samsung:YH-999 Portable Media Center",0x04e8, 0x5a0f, 0 },
+	{"Intel:Bandon Portable Media Center",	0x045e, 0x00c9, 0 },
 
 	/* more coming soon :) */
 	{NULL, 0, 0, 0}
@@ -1256,7 +1272,6 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	static int capcnt = 0;
 	PTPObjectInfo		oi;
 	PTPParams		*params = &camera->pl->params;
-	uint32_t		newobject = 0x0;
 	PTPDevicePropDesc	propdesc;
 	int			i, ret, hasc101 = 0, burstnumber = 1;
 
@@ -1302,18 +1317,13 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		free (nevent);
 	}
 
-	/* FIXME: We only know the first Object ID, but not the later
-	 * ones in burst mode. So reduce to 1. -Marcus
-	 */
-	burstnumber = 1;
-
 	for (i=0;i<burstnumber;i++) {
-		newobject = 0xffff0001 - i;
-
-		/* FIXME: handle multiple images (as in BurstMode) */
-		ret = ptp_getobjectinfo (params, newobject, &oi);
+		/* In Burst mode, the image is always 0xffff0001.
+		 * The firmware just gives us one after the other for the same ID
+		 */
+		ret = ptp_getobjectinfo (params, 0xffff0001, &oi);
 		if (ret != PTP_RC_OK) {
-			fprintf (stderr,"getobjectinfo(%x) failed: %d\n", newobject, ret);
+			fprintf (stderr,"getobjectinfo(%x) failed: %d\n", 0xffff0001, ret);
 			return GP_ERROR_IO;
 		}
 		if (oi.ParentObject != 0)
@@ -1323,7 +1333,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 			oi.StorageID = 0x00010001;
 		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)oi.StorageID);
 		sprintf (path->name, "capt%04d.jpg", capcnt++);
-		ret = add_objectid_to_gphotofs(camera, path, context, newobject, &oi);
+		ret = add_objectid_to_gphotofs(camera, path, context, 0xffff0001, &oi);
 		if (ret != GP_OK) {
 			fprintf (stderr, "failed to add object\n");
 			return ret;
@@ -3650,7 +3660,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Image Rotation Flag"), "imagerotationflag", PTP_DPC_NIKON_ImageRotation, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ N_("Release without CF card"), "nocfcardrelease", PTP_DPC_NIKON_NoCFCard, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ N_("Flash Mode Manual Power"), "flashmodemanualpower", PTP_DPC_NIKON_FlashModeManualPower, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashModeManualPower, _put_Nikon_FlashModeManualPower},
-	{ N_("Auto Focus Area Power"), "autofocusarea", PTP_DPC_NIKON_AutofocusArea, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_AutofocusArea, _put_Nikon_AutofocusArea},
+	{ N_("Auto Focus Area"), "autofocusarea", PTP_DPC_NIKON_AutofocusArea, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_AutofocusArea, _put_Nikon_AutofocusArea},
 	{ N_("Flash Exposure Compensation"), "flashexposurecompensation", PTP_DPC_NIKON_FlashExposureCompensation, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashExposureCompensation, _put_Nikon_FlashExposureCompensation},
 	{ N_("Bracket Set"), "bracketset", PTP_DPC_NIKON_BracketSet, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_BracketSet, _put_Nikon_BracketSet},
 	{ N_("Bracket Order"), "bracketorder", PTP_DPC_NIKON_BracketOrder, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_BracketOrder, _put_Nikon_BracketOrder},
@@ -4071,7 +4081,7 @@ ptp_mtp_render_metadata (
 				default:sprintf (text, "Unknown type %d", opd.DataType);
 					break;
 				case PTP_DTC_STR:
-					snprintf (text, sizeof(text), "%s", pv.str);
+					snprintf (text, sizeof(text), "%s", pv.str?pv.str:"");
 					break;
 				case PTP_DTC_INT32:
 					sprintf (text, "%d", pv.i32);
@@ -4164,15 +4174,17 @@ ptp_mtp_parse_metadata (
 		*end = '\0';
 		content = strdup(begin);
 		*end = '<';
-		fprintf (stderr, "found tag %s, content %s\n", propname, content);
+		gp_log (GP_LOG_DEBUG, "ptp2", "found tag %s, content %s", propname, content);
 		ret = ptp_mtp_getobjectpropdesc (params, props[j], ofc, &opd);
 		if (ret != PTP_RC_OK) {
-			fprintf (stderr," getobjectpropdesc returns 0x%x\n", ret);
+			gp_log (GP_LOG_DEBUG, "ptp2", " getobjectpropdesc returns 0x%x", ret);
 			free (content); content = NULL;
 			continue;
 		}
-		if (opd.GetSet == 0) /* property is read/only */
+		if (opd.GetSet == 0) {
+			gp_log (GP_LOG_DEBUG, "ptp2", "Tag %s is read only, sorry.", propname);
 			continue;
+		}	
 		switch (opd.DataType) {
 		default:gp_log (GP_LOG_ERROR, "ptp2", "mtp parser: Unknown datatype %d, content %s", opd.DataType, content);
 			free (content); content = NULL;
