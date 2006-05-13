@@ -68,7 +68,8 @@ struct _GPPortInfoList {
 #define CHECK_NULL(x) {if (!(x)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CR(x)         {int r=(x);if (r<0) return (r);}
 
-/** IOLIBDIR_ENV:
+/**
+ * IOLIBDIR_ENV:
  *
  * Name of the environment variable which may contain the path where
  * to look for the IO libs. If this environment variable is not defined,
