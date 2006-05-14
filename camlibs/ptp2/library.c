@@ -379,8 +379,8 @@ static struct {
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109, 0},
 	/* Nikon Coolpix 5700: A. Tanenbaum, 29 Oct 2002 */
 	{"Nikon:Coolpix 5700 (PTP mode)", 0x04b0, 0x010d, 0},
-	/* Nikon CoolPix 4500: T. Kaproncai, 22 Aug 2003 */
-	{"Nikon CoolPix 4500 (PTP mode)", 0x04b0, 0x010b, 0},
+	/* Nikon Coolpix 4500: T. Kaproncai, 22 Aug 2003 */
+	{"Nikon Coolpix 4500 (PTP mode)", 0x04b0, 0x010b, 0},
 	/* Nikon Coolpix 4300: Marco Rodriguez, 10 dic 2002 */
 	{"Nikon:Coolpix 4300 (PTP mode)", 0x04b0, 0x010f, 0},
 	/* Nikon Coolpix 3500: M. Meissner, 07 May 2003 */
@@ -435,6 +435,9 @@ static struct {
 	{"Nikon:DSC D70s (PTP mode)",     0x04b0, 0x040e, 0},
 	/* Jana Jaeger <jjaeger.suse.de> */
 	{"Nikon:DSC D200 (PTP mode)",     0x04b0, 0x0410, 0},
+
+	/* Sridharan Rengaswamy <sridhar@stsci.edu>, Coolpix L3 */
+	{"Nikon:Coolpix L3 (PTP mode)",   0x04b0, 0x041a, 0},
 
 	/* Thomas Luzat <thomas.luzat@gmx.net> */
 	{"Panasonic:DMC-FZ20 (alternate id)", 0x04da, 0x2372, 0},
