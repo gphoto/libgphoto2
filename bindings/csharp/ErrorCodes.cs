@@ -79,7 +79,7 @@ namespace LibGPhoto2
 		[DllImport ("libgphoto2.so")]
 		internal static extern IntPtr gp_result_as_string (ErrorCode result);
 		
-		[DllImport ("libgphoto2.so")]
+		[DllImport ("libgphoto2_port.so")]
 		internal static extern IntPtr gp_port_result_as_string (ErrorCode result);
 	}
 	
