@@ -295,6 +295,8 @@ static struct {
 	{"Kodak:CX7525", 0x040a, 0x0586, 0},
 	/* a sf bugreporter */
 	{"Kodak:Z700",   0x040a, 0x0587, 0},
+	/* EasyShare Z740, Benjamin Mesing <bensmail@gmx.net> */
+	{"Kodak:EasyShare Z740", 0x040a, 0x0588, 0},
 	/* EasyShare C360, Guilherme de S. Pastore via Debian */
  	{"Kodak:C360",   0x040a, 0x0589, 0},
 	/* Giulio Salani <ilfunambolo@gmail.com> */
