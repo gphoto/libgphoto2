@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port 2.1.99\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-03-23 18:42+0100\n"
+"POT-Creation-Date: 2006-04-21 12:23+0200\n"
 "PO-Revision-Date: 2006-01-09 16:14+0000\n"
 "Last-Translator: Marco Colombo <m.colombo@ed.ac.uk>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
@@ -374,57 +374,57 @@ msgstr ""
 "Non è stato possibile sbloccare il dispositivo \"%s\" (dev_unlock ha "
 "restituito %d)"
 
-#: serial/unix.c:369
+#: serial/unix.c:373
 #, c-format
 msgid "Serial Port %i"
 msgstr "Porta seriale %i"
 
-#: serial/unix.c:460
+#: serial/unix.c:464
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Impossibile aprire \"%s\" (%m)."
 
-#: serial/unix.c:478
+#: serial/unix.c:482
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Impossibile chiudere \"%s\" (%m)."
 
-#: serial/unix.c:531
+#: serial/unix.c:535
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "Impossibile scrivere alla porta (%m)"
 
-#: serial/unix.c:603
+#: serial/unix.c:607
 msgid "Parity error."
 msgstr "Errore di parità."
 
 # FIXME
-#: serial/unix.c:607
+#: serial/unix.c:611
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Sequenza di risposta di parità 0xff 0x%02x inattesa."
 
-#: serial/unix.c:650
+#: serial/unix.c:654
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Pin %i sconosciuto."
 
-#: serial/unix.c:672
+#: serial/unix.c:676
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Impossibile ottenere il livello del pin %i (%m)."
 
-#: serial/unix.c:707
+#: serial/unix.c:711
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "Impossibile impostare il livello del pin %i a %i (%m)."
 
-#: serial/unix.c:732
+#: serial/unix.c:736
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "Impossibile svuotare \"%s\" (%m)."
 
-#: serial/unix.c:845
+#: serial/unix.c:849
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Impossibile impostare il baudrate a %d"

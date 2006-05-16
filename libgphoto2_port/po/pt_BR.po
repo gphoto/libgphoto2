@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-03-23 18:42+0100\n"
+"POT-Creation-Date: 2006-04-21 12:23+0200\n"
 "PO-Revision-Date: 2002-12-03 17:00+0100\n"
 "Last-Translator: Evandro Gardenali <evandro@fasternet.com.br>\n"
 "Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
@@ -359,56 +359,56 @@ msgstr "Dispositivo '%s'não pode ser destravado pois está travado pelo pid %d."
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr "Dispositivo '%s' não pode ser destravado (dev_unlock retornou %d)"
 
-#: serial/unix.c:369
+#: serial/unix.c:373
 #, c-format
 msgid "Serial Port %i"
 msgstr "Porta serial %i"
 
-#: serial/unix.c:460
+#: serial/unix.c:464
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Falhou ao abrir '%s' (%m)."
 
-#: serial/unix.c:478
+#: serial/unix.c:482
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Não pude fechar '%s' (%m)."
 
-#: serial/unix.c:531
+#: serial/unix.c:535
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "Não foi possível escrever para a porta (%m)"
 
-#: serial/unix.c:603
+#: serial/unix.c:607
 msgid "Parity error."
 msgstr "Erro de Paridade"
 
-#: serial/unix.c:607
+#: serial/unix.c:611
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Sequencia de resposta de paridade inesperada 0xff 0x%02x."
 
-#: serial/unix.c:650
+#: serial/unix.c:654
 #, c-format
 msgid "Unknown pin %i."
 msgstr "pin desconhecido %i"
 
-#: serial/unix.c:672
+#: serial/unix.c:676
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Nào foi possível obter o nivel do pin %i (%m)."
 
-#: serial/unix.c:707
+#: serial/unix.c:711
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "Não foi possível ajustar o nivel do pin de %i para %i"
 
-#: serial/unix.c:732
+#: serial/unix.c:736
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "Não foi possível descarregar '%s' (%m)."
 
-#: serial/unix.c:845
+#: serial/unix.c:849
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Não foi possível ajustar a taxa de baud para %d"

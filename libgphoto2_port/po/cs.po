@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port VERSION\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-03-23 18:42+0100\n"
+"POT-Creation-Date: 2006-04-21 12:23+0200\n"
 "PO-Revision-Date: 2003-07-12 15:08+0200\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -360,56 +360,56 @@ msgstr "Zařízení '%s' nemohlo být odemčeno, protože je zamčeno pid %d."
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr "Zařízení '%s' nemohlo být odemčeno (dev_unlock vrátilo %d)"
 
-#: serial/unix.c:369
+#: serial/unix.c:373
 #, c-format
 msgid "Serial Port %i"
 msgstr "Sériový port %i"
 
-#: serial/unix.c:460
+#: serial/unix.c:464
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Nemohu otevřít '%s' (%m)."
 
-#: serial/unix.c:478
+#: serial/unix.c:482
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Nemohu zavřít '%s' (%m)"
 
-#: serial/unix.c:531
+#: serial/unix.c:535
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "Nemohu zapisovat na port (%m)"
 
-#: serial/unix.c:603
+#: serial/unix.c:607
 msgid "Parity error."
 msgstr "Chyba parity."
 
-#: serial/unix.c:607
+#: serial/unix.c:611
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Neočekávaná sekvence odpovědi na paritu 0xff 0x%02x."
 
-#: serial/unix.c:650
+#: serial/unix.c:654
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Neznámý vývod %i."
 
-#: serial/unix.c:672
+#: serial/unix.c:676
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Nemohu získat úroveň vývodu %i (%m)."
 
-#: serial/unix.c:707
+#: serial/unix.c:711
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "Nemohu nastavit úroveň vývodu %i na %i (%m)."
 
-#: serial/unix.c:732
+#: serial/unix.c:736
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "Nemohu vyprázdnit '%s' (%m)."
 
-#: serial/unix.c:845
+#: serial/unix.c:849
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Nemohu nastavit rychlost přenosu na %d"

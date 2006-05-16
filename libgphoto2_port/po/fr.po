@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-03-23 18:42+0100\n"
+"POT-Creation-Date: 2006-04-21 12:23+0200\n"
 "PO-Revision-Date: 2002-06-18 16:33--500\n"
 "Last-Translator: christophe barbé <christophe@ufies.org>\n"
 "Language-Team: Français <traduc@traduc.org>\n"
@@ -360,56 +360,56 @@ msgstr ""
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr "Le device '%s' ne peut être déverrouillé (dev_unlock a retourné %d)"
 
-#: serial/unix.c:369
+#: serial/unix.c:373
 #, c-format
 msgid "Serial Port %i"
 msgstr "Port série %i"
 
-#: serial/unix.c:460
+#: serial/unix.c:464
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Impossible d'ouvrir '%s' (%m)."
 
-#: serial/unix.c:478
+#: serial/unix.c:482
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Impossible de fermer '%s' (%m)."
 
-#: serial/unix.c:531
+#: serial/unix.c:535
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "Impossible d'écrire sur le port (%m)"
 
-#: serial/unix.c:603
+#: serial/unix.c:607
 msgid "Parity error."
 msgstr "Erreur de parité."
 
-#: serial/unix.c:607
+#: serial/unix.c:611
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Séquence de réponse de parité 0xff 0x%02x inattendue."
 
-#: serial/unix.c:650
+#: serial/unix.c:654
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Borne inconnue %i."
 
-#: serial/unix.c:672
+#: serial/unix.c:676
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Impossible de connaître le niveau de la borne %i (%m)."
 
-#: serial/unix.c:707
+#: serial/unix.c:711
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "Impossible de configurer le niveau de la borne %i à %i (%m)."
 
-#: serial/unix.c:732
+#: serial/unix.c:736
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "Impossible de vider '%s' (%m)."
 
-#: serial/unix.c:845
+#: serial/unix.c:849
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Impossible de configurer le débit à %d"

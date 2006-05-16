@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-03-23 18:42+0100\n"
+"POT-Creation-Date: 2006-04-21 12:23+0200\n"
 "PO-Revision-Date: 2005-05-14 13:32+0200\n"
 "Last-Translator: Iñaki Larrañaga  <dooteo@euskalgnu.org>\n"
 "Language-Team:  <itzulpena@euskalgnu.org>\n"
@@ -361,56 +361,56 @@ msgstr "Ezin izan da '%s' gailua desblokeatu, %d pid-ak blokeatuta baitauka."
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr "Ezin izan da '%s' desblokeatu (dev_unlock-ek %d itzuli du)"
 
-#: serial/unix.c:369
+#: serial/unix.c:373
 #, c-format
 msgid "Serial Port %i"
 msgstr "Serieko ataka: %i"
 
-#: serial/unix.c:460
+#: serial/unix.c:464
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Huts egin du '%s' irekitzean (%m)."
 
-#: serial/unix.c:478
+#: serial/unix.c:482
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Ezin izan da '%s' itxi (%m)."
 
-#: serial/unix.c:531
+#: serial/unix.c:535
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "Ezin izan da atakan idatzi (%m)"
 
-#: serial/unix.c:603
+#: serial/unix.c:607
 msgid "Parity error."
 msgstr "Paritate-errorea."
 
-#: serial/unix.c:607
+#: serial/unix.c:611
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Ustegabeko 0xff 0x%02x paritate-erantzuna sekuentzia."
 
-#: serial/unix.c:650
+#: serial/unix.c:654
 #, c-format
 msgid "Unknown pin %i."
 msgstr "%i PIN ezezaguna."
 
-#: serial/unix.c:672
+#: serial/unix.c:676
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Ezin izan da %i pin-aren maila lortu (%m)."
 
-#: serial/unix.c:707
+#: serial/unix.c:711
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "Ezin izan da %i pin-aren maila %i gisa ezarri (%m)."
 
-#: serial/unix.c:732
+#: serial/unix.c:736
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "Ezin izan da '%s' hustu (%m)."
 
-#: serial/unix.c:845
+#: serial/unix.c:849
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Ezin izan da %d(r)en baudio-tasa ezarri"
