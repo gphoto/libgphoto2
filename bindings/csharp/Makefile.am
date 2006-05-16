@@ -1,6 +1,5 @@
 MCSFLAGS = -unsafe -debug
 
-pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgphoto2-sharp.pc
 
 LIBGPHOTO2_SHARP_GENERATED_CSFILES = \
@@ -20,8 +19,6 @@ LIBGPHOTO2_SHARP_CSFILES =				\
 	$(srcdir)/PortInfo.cs				\
 	$(srcdir)/PortInfoList.cs
 
-# FIXME: Where to install this, depending on gmcs/mcs and stuff?
-cslibdir = $(libdir)/$(PACKAGE_TARNAME)
 cslib_DATA =				\
 	libgphoto2-sharp.dll		\
 	libgphoto2-sharp.dll.config	\

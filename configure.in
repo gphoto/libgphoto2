@@ -91,6 +91,7 @@ else
   bindings="${bindings}${bindings+ }csharp"
   AC_MSG_RESULT([found])
 fi
+AC_SUBST([cslibdir],[${libdir}/${PACKAGE_TARNAME}])
 
 AM_CONDITIONAL([HAVE_MONO], [test "x${build_binding_csharp}" = "xyes"])
 GP_CONFIG_MSG([Bindings], [${bindings}])

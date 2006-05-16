@@ -2,11 +2,10 @@ prefix=@prefix@
 exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
-Libraries=@libdir@/libgphoto2/libgphoto2-sharp.dll
+Libraries=@cslibdir@/libgphoto2-sharp.dll
+LibraryBase=@cslibdir@
 
 Name: libgphoto2-sharp
 Description: libgphoto2-sharp - .NET Bindings for libgphoto2 in C#
 Version: @VERSION@
-Libs: -r:@libdir@/libgphoto2/libgphoto2-sharp.dll
-
-Index: bindings/csharp/AssemblyInfo.cs
+Libs: -r:${Libraries}
