@@ -1,4 +1,4 @@
-CSC = mcs --unsafe -g
+MCSFLAGS = --unsafe -g
 
 LIBGPHOTO2_SHARP_CSFILES =				\
 	$(srcdir)/AssemblyInfo.cs			\
@@ -22,7 +22,7 @@ libgphoto2sharplib_DATA =		\
 
 
 libgphoto2-sharp.dll: $(LIBGPHOTO2_SHARP_CSFILES)
-	$(CSC) -o $@ /target:library $(LIBGPHOTO2_SHARP_CSFILES)
+	$(MCS) $(MCSFLAGS) -o $@ /target:library $(LIBGPHOTO2_SHARP_CSFILES)
 
 all: libgphoto2-sharp.dll
 
