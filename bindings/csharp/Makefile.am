@@ -15,16 +15,14 @@ LIBGPHOTO2_SHARP_CSFILES =				\
 	$(srcdir)/PortInfo.cs				\
 	$(srcdir)/PortInfoList.cs
 
-libgphoto2sharplibdir = $(libdir)/f-spot
-libgphoto2sharplib_DATA =		\
+# FIXME: Where to install this?
+cslibdir = $(libdir)/$(PACKAGE_TARNAME)
+cslib_DATA =		\
 	libgphoto2-sharp.dll		\
 	libgphoto2-sharp.dll.config
 
-
 libgphoto2-sharp.dll: $(LIBGPHOTO2_SHARP_CSFILES)
 	$(MCS) $(MCSFLAGS) -o $@ /target:library $(LIBGPHOTO2_SHARP_CSFILES)
-
-all: libgphoto2-sharp.dll
 
 EXTRA_DIST =							\
 	libgphoto2-sharp.dll.config				\
