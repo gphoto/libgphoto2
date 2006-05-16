@@ -12,12 +12,18 @@ Build system (packagers beware!):
 
      This obsoletes print-usb-usermap and print-udev-rules.
 
-  The hal FDI file should be put into:
+     The hal FDI file should be put into:
 	/usr/share/hal/fdi/information/10freedesktop/10-camera-libgphoto2.fdi
 
+     If you need to generate different stuff based on the cameras, please add
+     it to the "print-camera-list" helper.
 
-  If you need to generate different stuff based on the cameras, please add it
-  to the "print-camera-list" helper.
+   * Added C# (csharp) bindings
+
+     Thanks to Patrick van Staveren <trick@vanstaveren.us>'s initiative,
+     we now compile, ship and install the C# bindings. However, a few
+     things will still change about it, so don't just completely rely on
+     it, its file names and locations, etc. just yet.
 
 
 Client programmers (KDE, GNOME, MONO, C....) with specific character

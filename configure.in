@@ -524,6 +524,8 @@ doc/Doxyfile
 doc/api/Makefile
 bindings/Makefile
 bindings/csharp/Makefile
+bindings/csharp/AssemblyInfo.cs
+bindings/csharp/libgphoto2-sharp.pc
 ])
 AC_OUTPUT
 
