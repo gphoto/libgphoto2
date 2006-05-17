@@ -27,8 +27,8 @@ cslib_DATA =				\
 libgphoto2-sharp.dll: $(LIBGPHOTO2_SHARP_GENERATED_CSFILES) $(LIBGPHOTO2_SHARP_CSFILES)
 	$(MCS) $(MCSFLAGS) -out:$@ /target:library $(LIBGPHOTO2_SHARP_GENERATED_CSFILES) $(LIBGPHOTO2_SHARP_CSFILES)
 
-TestGphoto2Sharp.exe: $(srcdir)/TestGphoto2Sharp.cs
-	$(MCS) $(MCSFLAGS) -out:$@ $<
+TestGphoto2Sharp.exe: $(srcdir)/TestGphoto2Sharp.cs libgphoto2-sharp.dll
+	$(MCS) $(MCSFLAGS) -out:$@ -r:libgphoto2-sharp.dll $<
 
 check_SCRIPTS = TestGphoto2Sharp
 check_DATA = TestGphoto2Sharp.exe
