@@ -6,12 +6,17 @@
 using LibGPhoto2;
 
 class Gphoto2SharpTest {
+
+	static string basename(string filename) {
+		char [] chars = { '/', '\\' };
+		string [] components = filename.Split(chars);
+		return components[components.Length-1];
+	}
+	
 	public static int Main() {
 		System.Console.WriteLine("Testing libgphoto2-sharp...");
-		CameraAbilitiesList al;
-		Context ctx;
-		ctx = new Context();
-		al = new CameraAbilitiesList();
+		Context ctx = new Context();
+		CameraAbilitiesList al = new CameraAbilitiesList();
 		al.Load(ctx);
 
 		int count = al.Count();
@@ -25,11 +30,13 @@ class Gphoto2SharpTest {
 		}
 
 		for (int i = 0; i < count; i++) {
-			CameraAbilities abilities;
-			string camlib_basename;
-			abilities = al.GetAbilities(i);
-			camlib_basename = /* basename( */ abilities.library/*)*/;
-			System.Console.WriteLine("#" + i + " " + abilities.id + " " + abilities.model + " " + camlib_basename);
+			CameraAbilities abilities = al.GetAbilities(i);
+			string camlib_basename = basename(abilities.library);
+			System.Console.WriteLine("{0,3}  {3,-20}  {1,-20}  {2}",
+					i,
+					abilities.id,
+					abilities.model,
+					camlib_basename);
 		}
 											
 		// Return non-0 when test fails
