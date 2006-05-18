@@ -1,3 +1,19 @@
+# Build libgphoto2-sharp, the C# bindings for libgphoto2.
+#
+# Due to lacking automake support for mono/C#, we compile the C#
+# code as _DATA.
+#
+# We also have a test case which is called on "make check".
+#
+# This should be clean for
+#   - out-of-tree builds
+# 
+# It may be buggy for
+#   - cross-compiles
+#   - C# 2 (gmcs instead of mcs; more issues)
+#
+# This Makefile.am relies on a few variables defined in configure.in.
+
 MCSFLAGS = -unsafe -debug
 
 pkgconfig_DATA = libgphoto2-sharp.pc
