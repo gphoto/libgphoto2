@@ -63,6 +63,8 @@ EXTRA_DIST =							\
 	AssemblyInfo.cs.in
 
 CLEANFILES =							\
+	TestGphoto2Sharp.exe					\
+	TestGphoto2Sharp.exe.mdb				\
 	libgphoto2-sharp.dll.mdb				\
 	libgphoto2-sharp.dll					\
 	TestGphoto2Sharp
