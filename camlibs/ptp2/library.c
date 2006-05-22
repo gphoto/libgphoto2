@@ -422,6 +422,10 @@ static struct {
 	{"Nikon:Coolpix 5200 (PTP mode)", 0x04b0, 0x0206, 0},
 	/* Nikon Coolpix 2000 */
 	{"Nikon:Coolpix 2000 (PTP mode)", 0x04b0, 0x0302, 0},
+
+	/* From IRC reporter. */
+	{"Nikon:Coolpix L4 (PTP mode)",   0x04b0, 0x0305, 0},
+
 	/* Nikon D100 has a PTP mode: westin 2002.10.16 */
 	{"Nikon:DSC D100 (PTP mode)",     0x04b0, 0x0402, 0},
 	/* D2H SLR in PTP mode from Steve Drew <stevedrew@gmail.com> */
