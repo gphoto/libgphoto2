@@ -1,20 +1,20 @@
-/** \file gphoto2-file.c
+/** \file
  *
  * \author Copyright © 2000 Scott Fritzinger
  *
- * \par
+ * \note
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * \par
+ * \note
  * This library is distributed in the hope that it will be useful, 
  * but WITHOUT ANY WARRANTY; without even the implied warranty of 
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details. 
  *
- * \par
+ * \note
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
@@ -50,6 +50,7 @@
 #endif
 
 /*
+ * @internal
  * The internals of the CameraFile struct are private.
  */
 struct _CameraFile {
@@ -70,6 +71,11 @@ struct _CameraFile {
         char header [128];
 };
 
+/**
+ * @param file a pointer to a #CameraFile
+ * @return a gphoto2 error code.
+ *
+ **/
 int
 gp_file_new (CameraFile **file)
 {
@@ -87,6 +93,11 @@ gp_file_new (CameraFile **file)
 	return (GP_OK);
 }
 
+/**
+ * @param file a #CameraFile
+ * @return a gphoto2 error code.
+ *
+ **/
 int gp_file_free (CameraFile *file)
 {
 	CHECK_NULL (file);
@@ -98,6 +109,11 @@ int gp_file_free (CameraFile *file)
 	return (GP_OK);
 }
 
+/**
+ * @param file a #CameraFile
+ * @return a gphoto2 error code.
+ *
+ **/
 int
 gp_file_ref (CameraFile *file)
 {
@@ -108,6 +124,11 @@ gp_file_ref (CameraFile *file)
 	return (GP_OK);
 }
 
+/**
+ * @param file a #CameraFile
+ * @return a gphoto2 error code.
+ *
+ **/
 int
 gp_file_unref (CameraFile *file)
 {
@@ -121,6 +142,13 @@ gp_file_unref (CameraFile *file)
 	return (GP_OK);
 }
 
+/**
+ * @param file a #CameraFile
+ * @param data
+ * @param size
+ * @return a gphoto2 error code.
+ *
+ **/
 int
 gp_file_append (CameraFile *file, const char *data, unsigned long int size)
 {
@@ -144,6 +172,13 @@ gp_file_append (CameraFile *file, const char *data, unsigned long int size)
         return (GP_OK);
 }
 
+/**
+ * @param file a #CameraFile
+ * @param data
+ * @param size
+ * @return a gphoto2 error code.
+ *
+ **/
 int
 gp_file_set_data_and_size (CameraFile *file, char *data,
 			   unsigned long int size)
@@ -160,15 +195,15 @@ gp_file_set_data_and_size (CameraFile *file, char *data,
 }
 
 /**
- * gp_file_get_data_and_size:
- * @file: a #CameraFile
- * @data:
- * @size:
+ * Get a pointer to the data and the file's size.
  *
- * Get a pointer to the data and the file's size. Both @data and @size can
- * be NULL and will then be ignored.
+ * @param file a #CameraFile
+ * @param data
+ * @param size
+ * @return a gphoto2 error code.
  *
- * Return value: a gphoto2 error code.
+ * Both data and size can be NULL and will then be ignored.
+ *
  **/
 int
 gp_file_get_data_and_size (CameraFile *file, const char **data,
@@ -184,6 +219,12 @@ gp_file_get_data_and_size (CameraFile *file, const char **data,
 	return (GP_OK);
 }
 
+/**
+ * @param file a #CameraFile
+ * @param filename
+ * @return a gphoto2 error code.
+ *
+ **/
 int
 gp_file_save (CameraFile *file, const char *filename)
 {
@@ -214,6 +255,12 @@ gp_file_save (CameraFile *file, const char *filename)
 	return (GP_OK);
 }
 
+/**
+ * @param file a #CameraFile
+ * @param filename
+ * @return a gphoto2 error code.
+ *
+ **/
 int
 gp_file_open (CameraFile *file, const char *filename)
 {
@@ -309,6 +356,11 @@ gp_file_open (CameraFile *file, const char *filename)
         return (GP_OK);
 }
 
+/**
+ * @param file a #CameraFile
+ * @return a gphoto2 error code.
+ *
+ **/
 int
 gp_file_clean (CameraFile *file)
 {
@@ -348,6 +400,12 @@ gp_file_clean (CameraFile *file)
         return (GP_OK);
 }
 
+/**
+ * @param destination a #CameraFile
+ * @param source a #CameraFile
+ * @return a gphoto2 error code.
+ *
+ **/
 int
 gp_file_copy (CameraFile *destination, CameraFile *source)
 {
@@ -375,6 +433,12 @@ gp_file_copy (CameraFile *destination, CameraFile *source)
 	return (GP_OK);
 }
 
+/**
+ * @param file a #CameraFile
+ * @param name a pointer to a name string
+ * @return a gphoto2 error code.
+ *
+ **/
 int
 gp_file_get_name (CameraFile *file, const char **name)
 {
@@ -385,6 +449,12 @@ gp_file_get_name (CameraFile *file, const char **name)
 	return (GP_OK);
 }
 
+/**
+ * @param file a #CameraFile
+ * @param mime_type a pointer to a MIME type string
+ * @return a gphoto2 error code.
+ *
+ **/
 int
 gp_file_get_mime_type (CameraFile *file, const char **mime_type)
 {
@@ -395,6 +465,12 @@ gp_file_get_mime_type (CameraFile *file, const char **mime_type)
 	return (GP_OK);
 }
 
+/**
+ * @param file a #CameraFile
+ * @param name a pointer to a MIME type string
+ * @return a gphoto2 error code.
+ *
+ **/
 int
 gp_file_set_name (CameraFile *file, const char *name)
 {
@@ -405,6 +481,12 @@ gp_file_set_name (CameraFile *file, const char *name)
 	return (GP_OK);
 }
 
+/**
+ * @param file a #CameraFile
+ * @param mime_type a MIME type string
+ * @return a gphoto2 error code.
+ *
+ **/
 int
 gp_file_set_mime_type (CameraFile *file, const char *mime_type)
 {
@@ -415,6 +497,11 @@ gp_file_set_mime_type (CameraFile *file, const char *mime_type)
 	return (GP_OK);
 }
 
+/**
+ * @param file a #CameraFile
+ * @return a gphoto2 error code.
+ *
+ **/
 int
 gp_file_detect_mime_type (CameraFile *file)
 {
@@ -438,6 +525,11 @@ gp_file_detect_mime_type (CameraFile *file)
 	return (GP_OK);
 }
 
+/**
+ * @param file a #CameraFile
+ * @return a gphoto2 error code.
+ *
+ **/
 int
 gp_file_adjust_name_for_mime_type (CameraFile *file)
 {
@@ -480,6 +572,12 @@ gp_file_adjust_name_for_mime_type (CameraFile *file)
 	return (GP_OK);
 }
 
+/**
+ * @param file a #CameraFile
+ * @param type a #CameraFileType
+ * @return a gphoto2 error code.
+ *
+ **/
 int
 gp_file_set_type (CameraFile *file, CameraFileType type)
 {
@@ -490,6 +588,12 @@ gp_file_set_type (CameraFile *file, CameraFileType type)
 	return (GP_OK);
 }
 
+/**
+ * @param file a #CameraFile
+ * @param type a #CameraFileType
+ * @return a gphoto2 error code.
+ *
+ **/
 int
 gp_file_get_type (CameraFile *file, CameraFileType *type)
 {
@@ -500,6 +604,17 @@ gp_file_get_type (CameraFile *file, CameraFileType *type)
 	return (GP_OK);
 }
 
+/**
+ * @param file a #CameraFile
+ * @param red_table
+ * @param red_size
+ * @param red_table
+ * @param green_size
+ * @param red_table
+ * @param blue_size
+ * @return a gphoto2 error code.
+ *
+ **/
 int
 gp_file_set_color_table (CameraFile *file,
 			 const unsigned char *red_table,   int red_size,
@@ -528,6 +643,13 @@ gp_file_set_color_table (CameraFile *file,
 	return (GP_OK);
 }
 
+/**
+ * @param file a #CameraFile
+ * @param width
+ * @param height
+ * @return a gphoto2 error code.
+ *
+ **/
 int
 gp_file_set_width_and_height (CameraFile *file, int width, int height)
 {
@@ -539,6 +661,12 @@ gp_file_set_width_and_height (CameraFile *file, int width, int height)
 	return (GP_OK);
 }
 
+/**
+ * @param file a #CameraFile
+ * @param header
+ * @return a gphoto2 error code.
+ *
+ **/
 int
 gp_file_set_header (CameraFile *file, const char *header)
 {
@@ -549,6 +677,12 @@ gp_file_set_header (CameraFile *file, const char *header)
 	return (GP_OK);
 }
 
+/**
+ * @param file a #CameraFile
+ * @param method a #CameraFileConversionMethod
+ * @return a gphoto2 error code.
+ *
+ **/
 int
 gp_file_set_conversion_method (CameraFile *file,
 			       CameraFileConversionMethod method)
@@ -561,6 +695,9 @@ gp_file_set_conversion_method (CameraFile *file,
 }
 
 /* Chuck Homic's Bayer conversion routine, originally for the Dimera 3500 */
+/**
+ * @internal
+ **/
 static int
 gp_file_conversion_chuck (CameraFile *file, unsigned char *data)
 {
@@ -637,6 +774,9 @@ gp_file_conversion_chuck (CameraFile *file, unsigned char *data)
 	return (GP_OK);
 }
 
+/**
+ * @internal
+ **/
 static int
 gp_file_raw_to_ppm (CameraFile *file)
 {
@@ -671,6 +811,12 @@ gp_file_raw_to_ppm (CameraFile *file)
 	return (GP_OK);
 }
 
+/**
+ * @param file a #CameraFile
+ * @param mime_type a MIME type string
+ * @return a gphoto2 error code.
+ *
+ **/
 int
 gp_file_convert (CameraFile *file, const char *mime_type)
 {
@@ -684,6 +830,12 @@ gp_file_convert (CameraFile *file, const char *mime_type)
 		return (GP_ERROR_NOT_SUPPORTED);
 }
 
+/**
+ * @param file a #CameraFile
+ * @param mtime
+ * @return a gphoto2 error code.
+ *
+ **/
 int
 gp_file_get_mtime (CameraFile *file, time_t *mtime)
 {
@@ -694,6 +846,12 @@ gp_file_get_mtime (CameraFile *file, time_t *mtime)
 	return (GP_OK);
 }
 
+/**
+ * @param file a #CameraFile
+ * @param mtime
+ * @return a gphoto2 error code.
+ *
+ **/
 int
 gp_file_set_mtime (CameraFile *file, time_t mtime)
 {
