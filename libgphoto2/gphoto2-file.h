@@ -1,6 +1,6 @@
 /** \file
  *
- * \author Copyright © 2000 Scott Fritzinger
+ * \author Copyright 2000 Scott Fritzinger
  *
  * \note
  * This library is free software; you can redistribute it and/or

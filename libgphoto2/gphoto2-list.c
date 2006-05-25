@@ -1,17 +1,20 @@
-/* list.c
+/** \file
  *
- * Copyright © 2000 Scott Fritzinger
+ * \author Copyright 2000 Scott Fritzinger
  *
+ * \note
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
+ * \note
  * This library is distributed in the hope that it will be useful, 
  * but WITHOUT ANY WARRANTY; without even the implied warranty of 
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details. 
  *
+ * \note
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
@@ -33,12 +36,11 @@
 
 
 /**
- * gp_list_new:
- * @list:
- *
  * Creates a new #CameraList.
  *
- * Return value: a gphoto2 error code
+ * @param list
+ * @return a gphoto2 error code
+ *
  **/
 int
 gp_list_new (CameraList **list)
@@ -56,12 +58,11 @@ gp_list_new (CameraList **list)
 }
 
 /**
- * gp_list_ref:
- * @list: a #CameraList
- *
  * Increments the reference count of the @list.
  *
- * Return value: a gphoto2 error code.
+ * @param list a #CameraList
+ * @return a gphoto2 error code.
+ *
  **/
 int
 gp_list_ref (CameraList *list)
@@ -74,13 +75,13 @@ gp_list_ref (CameraList *list)
 }
 
 /**
- * gp_list_unref:
- * @list: a #CameraList
+ * Decrements the reference count of the \c list.
  *
- * Decrements the reference count of the @list. If there are no references
- * left, the @list will be freed.
+ * @param list a #CameraList
+ * @return a gphoto2 error code
  *
- * Return value: a gphoto2 error code
+ * If there are no references left, the \c list will be freed.
+ *
  **/
 int
 gp_list_unref (CameraList *list)
@@ -96,12 +97,11 @@ gp_list_unref (CameraList *list)
 }
 
 /**
- * gp_list_free:
- * @list: the #CameraList to be freed
+ * Frees the \c list. It is recommended to use #gp_list_unref instead.
  *
- * Frees the @list. It is recommended to use #gp_list_unref instead.
+ * @param list the #CameraList to be freed
+ * @return a gphoto2 error code
  *
- * Return value: a gphoto2 error code
  **/
 int
 gp_list_free (CameraList *list) 
@@ -114,12 +114,11 @@ gp_list_free (CameraList *list)
 }
 
 /**
- * gp_list_reset:
- * @list: a #CameraList
+ * Resets the \c list and removes all entries.
  *
- * Resets the @list and removes all entries.
+ * @param list a #CameraList
+ * @return a gphoto2 error code
  *
- * Return value: a gphoto2 error code
  **/
 int
 gp_list_reset (CameraList *list)
@@ -132,14 +131,13 @@ gp_list_reset (CameraList *list)
 }
 
 /**
- * gp_list_append:
- * @list: a #CameraList
- * @name: the name of the entry to append
- * @value: the value of the entry to append
+ * Appends \c name and \c value to the \c list.
  *
- * Appends @name and @value to the @list.
+ * @param list a #CameraList
+ * @param name the name of the entry to append
+ * @param value the value of the entry to append
+ * @return a gphoto2 error code
  *
- * Return value: a gphoto2 error code
  **/
 int
 gp_list_append (CameraList *list, const char *name, const char *value)
@@ -185,6 +183,9 @@ gp_list_append (CameraList *list, const char *name, const char *value)
         return (GP_OK);
 }
 
+/**
+  * @internal
+  */
 static void
 exchange (CameraList *list, int x, int y)
 {
@@ -203,12 +204,11 @@ exchange (CameraList *list, int x, int y)
 }
 
 /**
- * gp_list_sort:
- * @list: a #CameraList
+ * Sorts the \c list entries with respect to the names.
  *
- * Sorts the @list entries with respect to the names.
+ * @param list a #CameraList
+ * @return a gphoto2 error code
  *
- * Return value: a gphoto2 error code
  **/
 int
 gp_list_sort (CameraList *list)
@@ -228,12 +228,11 @@ gp_list_sort (CameraList *list)
 }
 
 /**
- * gp_list_count:
- * @list: a #CameraList
- *
- * Counts the entries in the @list.
+ * Counts the entries in the \c list.
  * 
- * Return value: a gphoto2 error code
+ * @param list a #CameraList
+ * @return a gphoto2 error code
+ *
  **/
 int
 gp_list_count (CameraList *list)
@@ -244,14 +243,13 @@ gp_list_count (CameraList *list)
 }
 
 /**
- * gp_list_get_name:
- * @list: a #CameraList
- * @index: index of the entry
- * @name:
+ * Retrieves the \c name of entry with \c index.
  *
- * Retrieves the @name of entry with @index.
+ * @param list a #CameraList
+ * @param index index of the entry
+ * @param name
+ * @return a gphoto2 error code.
  *
- * Return value: a gphoto2 error code.
  **/
 int
 gp_list_get_name (CameraList *list, int index, const char **name)
@@ -267,14 +265,13 @@ gp_list_get_name (CameraList *list, int index, const char **name)
 }
 
 /**
- * gp_list_get_value:
- * @list: a #CameraList
- * @index: index of the entry
- * @value:
+ * Retrieves the value of entry with \c index.
  *
- * Retrieves the value of entry with @index.
+ * @param list a #CameraList
+ * @param index index of the entry
+ * @param value
+ * @return a gphoto2 error code
  *
- * Return value: a gphoto2 error code
  **/
 int
 gp_list_get_value (CameraList *list, int index, const char **value)
@@ -290,14 +287,13 @@ gp_list_get_value (CameraList *list, int index, const char **value)
 }
 
 /**
- * gp_list_set_value:
- * @list: a #CameraList
- * @index: index of the entry
- * @value: the value to be set
+ * Sets the \c value of an entry.
  *
- * Sets the @value of an entry.
+ * @param list a #CameraList
+ * @param index index of the entry
+ * @param value the value to be set
+ * @return a gphoto2 error code
  *
- * Return value: a gphoto2 error code
  **/
 int
 gp_list_set_value (CameraList *list, int index, const char *value)
@@ -327,14 +323,13 @@ gp_list_set_value (CameraList *list, int index, const char *value)
 }
 
 /**
- * gp_list_set_name:
- * @list: a #CameraList
- * @index: index of entry
- * @name: name to be set
- *
  * Sets the name of an entry.
  *
- * Return value: a gphoto2 error code
+ * @param list a #CameraList
+ * @param index index of entry
+ * @param name name to be set
+ * @return a gphoto2 error code
+ *
  **/
 int
 gp_list_set_name (CameraList *list, int index, const char *name)
@@ -364,18 +359,18 @@ gp_list_set_name (CameraList *list, int index, const char *name)
 }
 
 /**
- * gp_list_populate:
- * @list: a #CameraList
- * @format: the format
- * @count: number of entries to be added to the @list
+ * Adds \c count entries to the list.
  *
- * Adds @count entries to the list. Typically, this function is called by
- * a camera driver when there is no way of retrieving the real name of a
- * picture. In this case, when asked for a file list
- * (see #CameraFilesystemListFunc), the list is populated with dummy
+ * @param list a #CameraList
+ * @param format the format
+ * @param count number of entries to be added to the @list
+ * @return a gphoto2 error code
+ *
+ * Typically, this function is called by a camera driver when there is no way
+ * of retrieving the real name of a picture. In this case, when asked for a
+ * file list (see #CameraFilesystemListFunc), the list is populated with dummy
  * names generated by this function.
  *
- * Return value: a gphoto2 error code
  **/
 int
 gp_list_populate  (CameraList *list, const char *format, int count)

@@ -1,17 +1,20 @@
-/* gphoto2-library.h:
+/** \file
  * 
- * Copyright © 2000 Scott Fritzinger
+ * \author Copyright 2000 Scott Fritzinger
  *
+ * \note
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
+ * \note
  * This library is distributed in the hope that it will be useful, 
  * but WITHOUT ANY WARRANTY; without even the implied warranty of 
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details. 
  *
+ * \note
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
@@ -30,35 +33,34 @@ extern "C" {
 #endif /* __cplusplus */
 
 /**
- * CameraLibraryIdFunc:
- * @id: a #CameraText
- *
  * Returns a unique @id for the camera driver.
  *
- * Return value: a gphoto2 error code
+ * @param id a #CameraText
+ * @return a gphoto2 error code
+ *
  **/
 typedef int (* CameraLibraryIdFunc)        (CameraText *id);
 
 /**
- * CameraLibraryAbilitiesFunc:
- * @list: a #CameraAbilitiesList
- *
  * Adds the abilities of the supported models to the supplied @list.
  *
- * Return value: a gphoto2 error code
+ * @param list a #CameraAbilitiesList
+ * @return a gphoto2 error code
+ *
  **/
 typedef int (* CameraLibraryAbilitiesFunc) (CameraAbilitiesList *list);
 
 /**
- * CameraLibraryInitFunc:
- * @camera: a #Camera
- * @context: a #GPContext
+ * Initializes the camera.
  *
- * Initializes the camera. The camera driver will establish a first connection
+ * @param camera a #Camera
+ * @param context a #GPContext
+ * @return a gphoto2 error code
+ *
+ * The camera driver will establish a first connection
  * to the camera and configure the @camera variable (i.e. using 
  * #gp_filesystem_set_list_funcs or #gp_port_get_settings).
  *
- * Return value: a gphoto2 error code
  **/
 typedef int (* CameraLibraryInitFunc)      (Camera *camera, GPContext *context);
 
