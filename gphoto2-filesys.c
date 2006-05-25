@@ -1,6 +1,6 @@
 /* gphoto2-filesys.c
  *
- * Copyright © 2000 Scott Fritzinger
+ * Copyright 2000 Scott Fritzinger
  *
  * Contributions:
  *      Lutz Müller <lutz@users.sf.net> (2001)

@@ -1,7 +1,7 @@
 /** \file gphoto2-abilities-list.h
  * \brief List of supported camera models including their abilities.
  *
- * \author Copyright © 2000 Scott Fritzinger
+ * \author Copyright 2000 Scott Fritzinger
  *
  * \par
  * This library is free software; you can redistribute it and/or
