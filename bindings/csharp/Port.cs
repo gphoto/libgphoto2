@@ -7,7 +7,9 @@ namespace LibGPhoto2
 	{
 		None = 0,
 		Serial = 1 << 0,
-		USB = 1 << 2
+		USB = 1 << 2,
+		Disk = 1 << 3,
+		PTPIP = 1 << 4
 	}
 
 	public enum PortSerialParity
@@ -62,11 +64,19 @@ namespace LibGPhoto2
 		public int altsetting;
 	}
 
+	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct PortSettingsDisk
+	{
+		[MarshalAs(UnmanagedType.ByValTStr, SizeConst=128)] public char[] mountpoint;
+	}
+
+
 	[StructLayout(LayoutKind.Explicit)]
 	public unsafe struct PortSettings
 	{
 		[FieldOffset(0)] public PortSettingsSerial serial;
 		[FieldOffset(0)] public PortSettingsUSB usb;
+		[FieldOffset(0)] public PortSettingsDisk disk;
 	}
 
 #if false
