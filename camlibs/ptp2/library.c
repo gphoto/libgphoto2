@@ -599,6 +599,8 @@ static struct {
 
 	/* Jay MacDonald <jay@cheakamus.com> */
 	{"iRiver:T10 (alternate)",              0x4102, 0x1113, 0},
+	/* Andreas Thienemann <andreas@bawue.de> */
+	{"iRiver:T20 FM",			0x4102, 0x1114, 0},
 	/* Roger Pixley <skreech2@gmail.com> */
 	{"iRiver:U10",                          0x4102, 0x1116, 0},
 	/* Freaky <freaky@bananateam.nl> */
