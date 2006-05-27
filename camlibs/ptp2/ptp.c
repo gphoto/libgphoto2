@@ -1920,6 +1920,41 @@ ptp_mtp_setobjectpropvalue (
 	return ret;
 }
 
+uint16_t
+ptp_mtp_getobjectreferences (PTPParams* params, uint32_t handle, uint32_t** ohArray, uint32_t* arraylen)
+{
+	PTPContainer ptp;
+	uint16_t ret;
+	unsigned char* dpv=NULL;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code=PTP_OC_MTP_GetObjectReferences;
+	ptp.Param1=handle;
+	ptp.Nparam=1;
+	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &dpv, NULL);
+	if (ret == PTP_RC_OK) *arraylen = ptp_unpack_uint32_t_array(params, dpv, 0, ohArray);
+	free(dpv);
+	return ret;
+}
+
+uint16_t
+ptp_mtp_setobjectreferences (PTPParams* params, uint32_t handle, uint32_t* ohArray, uint32_t arraylen)
+{
+	PTPContainer ptp;
+	uint16_t ret;
+	uint32_t size;
+	unsigned char* dpv=NULL;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code   = PTP_OC_MTP_SetObjectReferences;
+	ptp.Param1 = handle;
+	ptp.Nparam = 1;
+	size = ptp_pack_uint32_t_array(params, ohArray, arraylen, &dpv);
+	ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, (unsigned char **)&dpv, NULL);
+	free(dpv);
+	return ret;
+}
+
 /* Non PTP protocol functions */
 /* devinfo testing functions */
 
