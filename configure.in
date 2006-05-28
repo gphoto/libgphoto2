@@ -70,6 +70,21 @@ SED=${SED-sed}
 
 GP_PKG_CONFIG
 
+
+dnl --------------------------------------------------------------------
+dnl Check requirements for bindings
+dnl --------------------------------------------------------------------
+
+dnl Check for SWIG
+
+AC_PATH_PROG([SWIG], [swig])
+AC_SUBST([SWIG])
+
+if test -x "$SWIG"; then
+   bindings="${bindings}${bindings+ }java"
+fi
+AM_CONDITIONAL([HAVE_SWIG], [test -x "$SWIG"])
+
 dnl Check for Mono and Mono C# compiler from f-spot
 
 dnl --- Check for mono and mcs
@@ -527,6 +542,7 @@ bindings/Makefile
 bindings/csharp/Makefile
 bindings/csharp/AssemblyInfo.cs
 bindings/csharp/libgphoto2-sharp.pc
+bindings/java/Makefile
 ])
 AC_OUTPUT
 
