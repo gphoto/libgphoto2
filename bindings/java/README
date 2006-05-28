@@ -1,10 +1,33 @@
-This directory holds the files used by SWIG to generate bindings for Java and other high-level languages such as C#, Perl, PHP, Python, Tcl and others.
+########################################################################
+# NOTE:
+#
+#   You can find a quite old README for the 3rd-party version of the
+#   SWIG based bindings below.
+#
+#   As of 2006-05, the gphoto2 team is integrating SWIG based bindings
+#   into the libgphoto2 build system, but that work is not finished
+#   yet.
+#
+#   For now, all bindings to libgphoto2 are considered alpha, i.e.
+#   API and ABI may still change and break backward compatibility.
+# 
+########################################################################
+
+
+This directory holds the files used by SWIG to generate bindings for
+Java and other high-level languages such as C#, Perl, PHP, Python, Tcl
+and others.
+
 For more information on SWIG, see http://www.swig.org/
 
-This file and these scripts focus on Java.  Other languages should be simple since the SWIG interface file should be the same.  Note that the SWIG wrapper libraries can only support one language at a time (at least not without a lot more work), so if you compile for another language you may want to create a separate directory for those files.
+This file and these scripts focus on Java.  Other languages should be
+simple since the SWIG interface file should be the same.  Note that
+the SWIG wrapper libraries can only support one language at a time (at
+least not without a lot more work), so if you compile for another
+language you may want to create a separate directory for those files.
 
-To build the Java bindings, first configure and build the libgphoto2 library.
-Then cd to the swig-java directory and run "make-swig-java.sh"
+To build the Java bindings, first configure and build the libgphoto2
+library. Then cd to the swig-java directory and run "make-swig-java.sh"
 
 See the end of this file for a list of files that should be created...
 
@@ -14,7 +37,9 @@ cp -a libgphoto2_jni.so /opt/SUNWappserver/jdk/jre/lib/i386/
 then you should be able to run the javatest.java file:
 java -classpath swig-java:swig-java/swig-org-gphoto2.jar javatest
 
-The two files, "libgphoto2_jni.so" and "swig-org-gphoto2.jar" (plus the standard libgphoto2 install) should be all that you need to include in your java project.
+The two files, "libgphoto2_jni.so" and "swig-org-gphoto2.jar" (plus
+the standard libgphoto2 install) should be all that you need to
+include in your java project.
 
 
 You should get a bunch of files like this:
