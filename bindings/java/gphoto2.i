@@ -17,45 +17,45 @@
 %}
 
 %{
-#include <libgphoto2/gphoto2.h>
-#include <libgphoto2/gphoto2-version.h>
-#include <libgphoto2/gphoto2-context.h>
-#include <libgphoto2/gphoto2-abilities-list.h>
-#include <libgphoto2/gphoto2-camera.h>
-#include <libgphoto2/gphoto2-file.h>
-#include <libgphoto2/gphoto2-filesys.h>
-#include <libgphoto2/gphoto2-library.h>
-#include <libgphoto2/gphoto2-list.h>
-#include <libgphoto2/gphoto2-result.h>
-#include <libgphoto2/gphoto2-setting.h>
-#include <libgphoto2/gphoto2-widget.h>
-#include <libgphoto2_port/gphoto2-port.h>
-#include <libgphoto2_port/gphoto2-port-version.h>
-#include <libgphoto2_port/gphoto2-port-info-list.h>
-#include <libgphoto2_port/gphoto2-port-log.h>
-#include <libgphoto2_port/gphoto2-port-portability.h>
-#include <libgphoto2_port/gphoto2-port-result.h>
+#include <gphoto2/gphoto2.h>
+#include <gphoto2/gphoto2-version.h>
+#include <gphoto2/gphoto2-context.h>
+#include <gphoto2/gphoto2-abilities-list.h>
+#include <gphoto2/gphoto2-camera.h>
+#include <gphoto2/gphoto2-file.h>
+#include <gphoto2/gphoto2-filesys.h>
+#include <gphoto2/gphoto2-library.h>
+#include <gphoto2/gphoto2-list.h>
+#include <gphoto2/gphoto2-result.h>
+#include <gphoto2/gphoto2-setting.h>
+#include <gphoto2/gphoto2-widget.h>
+#include <gphoto2/gphoto2-port.h>
+#include <gphoto2/gphoto2-port-version.h>
+#include <gphoto2/gphoto2-port-info-list.h>
+#include <gphoto2/gphoto2-port-log.h>
+#include <gphoto2/gphoto2-port-portability.h>
+#include <gphoto2/gphoto2-port-result.h>
 %}
 
 
-%include "libgphoto2/gphoto2.h"
-%include "libgphoto2/gphoto2-version.h"
-%include "libgphoto2/gphoto2-context.h"
-%include "libgphoto2/gphoto2-abilities-list.h"
-%include "libgphoto2/gphoto2-camera.h" 
-%include "libgphoto2/gphoto2-file.h"
-%include "libgphoto2/gphoto2-filesys.h"
-%include "libgphoto2/gphoto2-library.h"
-%include "libgphoto2/gphoto2-list.h"
-%include "libgphoto2/gphoto2-result.h"
-%include "libgphoto2/gphoto2-setting.h"
-%include "libgphoto2/gphoto2-widget.h"
-%include "libgphoto2_port/gphoto2-port.h"
-%include "libgphoto2_port/gphoto2-port-version.h"
-%include "libgphoto2_port/gphoto2-port-info-list.h"
-%include "libgphoto2_port/gphoto2-port-log.h"
-%include "libgphoto2_port/gphoto2-port-portability.h"
-%include "libgphoto2_port/gphoto2-port-result.h"
+%include "gphoto2/gphoto2.h"
+%include "gphoto2/gphoto2-version.h"
+%include "gphoto2/gphoto2-context.h"
+%include "gphoto2/gphoto2-abilities-list.h"
+%include "gphoto2/gphoto2-camera.h" 
+%include "gphoto2/gphoto2-file.h"
+%include "gphoto2/gphoto2-filesys.h"
+%include "gphoto2/gphoto2-library.h"
+%include "gphoto2/gphoto2-list.h"
+%include "gphoto2/gphoto2-result.h"
+%include "gphoto2/gphoto2-setting.h"
+%include "gphoto2/gphoto2-widget.h"
+%include "gphoto2/gphoto2-port.h"
+%include "gphoto2/gphoto2-port-version.h"
+%include "gphoto2/gphoto2-port-info-list.h"
+%include "gphoto2/gphoto2-port-log.h"
+%include "gphoto2/gphoto2-port-portability.h"
+%include "gphoto2/gphoto2-port-result.h"
 
 %inline %{
 
