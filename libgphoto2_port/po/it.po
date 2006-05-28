@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port 2.1.99\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-04-21 12:23+0200\n"
+"POT-Creation-Date: 2006-05-29 00:07+0200\n"
 "PO-Revision-Date: 2006-01-09 16:14+0000\n"
 "Last-Translator: Marco Colombo <m.colombo@ed.ac.uk>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
@@ -16,89 +16,89 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:192
+#: libgphoto2_port/gphoto2-port-info-list.c:193
 #, c-format
 msgid "Called for filename '%s'."
 msgstr "Chiamato per il file \"%s\"."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:197
+#: libgphoto2_port/gphoto2-port-info-list.c:198
 #, c-format
 msgid "Could not load '%s': '%s'."
 msgstr "Impossibile caricare \"%s\": \"%s\"."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:205
+#: libgphoto2_port/gphoto2-port-info-list.c:206
 #, c-format
 msgid "Could not find some functions in '%s': '%s'."
 msgstr "Impossibile trovare alcune funzioni in \"%s\": \"%s\"."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:217
+#: libgphoto2_port/gphoto2-port-info-list.c:218
 #, c-format
 msgid "'%s' already loaded"
 msgstr "\"%s\" è già caricato"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:226
+#: libgphoto2_port/gphoto2-port-info-list.c:227
 #, c-format
 msgid "Could not load port driver list: '%s'."
 msgstr "Impossibile caricare l'elenco dei driver per la porta: \"%s\"."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:233
+#: libgphoto2_port/gphoto2-port-info-list.c:234
 #, c-format
 msgid "Loaded '%s' ('%s') from '%s'."
 msgstr "Caricato \"%s\" (\"%s\") da \"%s\"."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:262
+#: libgphoto2_port/gphoto2-port-info-list.c:263
 #, c-format
 msgid "Using ltdl to load io-drivers from '%s'..."
 msgstr "Si usa ltdl per caricare i driver di I/O da \"%s\"..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:288
+#: libgphoto2_port/gphoto2-port-info-list.c:289
 #, c-format
 msgid "Counting entries (%i available)..."
 msgstr "Conteggio delle voci (%i disponibili)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:297
+#: libgphoto2_port/gphoto2-port-info-list.c:298
 #, c-format
 msgid "%i regular entries available."
 msgstr "%i voci regolari disponibili."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:326
+#: libgphoto2_port/gphoto2-port-info-list.c:327
 #, c-format
 msgid "Looking for path '%s' (%i entries available)..."
 msgstr "Ricerca del percorso \"%s\" (%i voci disponibili)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:338
+#: libgphoto2_port/gphoto2-port-info-list.c:339
 #, c-format
 msgid "Starting regex search for '%s'..."
 msgstr "Avvio ricerca con espressioni regolari per \"%s\"..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:346
+#: libgphoto2_port/gphoto2-port-info-list.c:347
 #, c-format
 msgid "Trying '%s'..."
 msgstr "Si sta provando \"%s\"..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:367
+#: libgphoto2_port/gphoto2-port-info-list.c:368
 msgid "regcomp failed"
 msgstr "regcomp non riuscito"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:378
+#: libgphoto2_port/gphoto2-port-info-list.c:379
 #, c-format
 msgid "re_match failed (%i)"
 msgstr "re_match non riuscito (%i)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:386
+#: libgphoto2_port/gphoto2-port-info-list.c:387
 msgid "regexec failed"
 msgstr "regexec non riuscito"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:392
+#: libgphoto2_port/gphoto2-port-info-list.c:393
 msgid "Generic Port"
 msgstr "Porta generica"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:416
+#: libgphoto2_port/gphoto2-port-info-list.c:417
 #, c-format
 msgid "Looking up entry '%s'..."
 msgstr "Consultazione della voce \"%s\" in corso..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:446
+#: libgphoto2_port/gphoto2-port-info-list.c:447
 #, c-format
 msgid "Getting info of entry %i (%i available)..."
 msgstr "Lettura delle informazioni sulla voce %i (%i disponibili)..."

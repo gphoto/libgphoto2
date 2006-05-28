@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port 2.1.6\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-04-21 12:23+0200\n"
+"POT-Creation-Date: 2006-05-29 00:07+0200\n"
 "PO-Revision-Date: 2005-08-29 13:47+0800\n"
 "Last-Translator: Wei-Lun Chao <chaoweilun@pcmail.com.tw>\n"
 "Language-Team: Chinese (traditional) <zh-l10n@linux.org.tw>\n"
@@ -16,89 +16,89 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:192
+#: libgphoto2_port/gphoto2-port-info-list.c:193
 #, c-format
 msgid "Called for filename '%s'."
 msgstr "由名為「%s」的檔案所呼叫。"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:197
+#: libgphoto2_port/gphoto2-port-info-list.c:198
 #, c-format
 msgid "Could not load '%s': '%s'."
 msgstr "無法載入「%s」：「%s」。"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:205
+#: libgphoto2_port/gphoto2-port-info-list.c:206
 #, c-format
 msgid "Could not find some functions in '%s': '%s'."
 msgstr "無法在「%s」中找到某些功能：「%s」"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:217
+#: libgphoto2_port/gphoto2-port-info-list.c:218
 #, c-format
 msgid "'%s' already loaded"
 msgstr "「%s」已載入"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:226
+#: libgphoto2_port/gphoto2-port-info-list.c:227
 #, c-format
 msgid "Could not load port driver list: '%s'."
 msgstr "無法載入連接埠驅動程式清單：「%s」。"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:233
+#: libgphoto2_port/gphoto2-port-info-list.c:234
 #, c-format
 msgid "Loaded '%s' ('%s') from '%s'."
 msgstr "已載入的「%s」(「%s」)來自於「%s」。"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:262
+#: libgphoto2_port/gphoto2-port-info-list.c:263
 #, c-format
 msgid "Using ltdl to load io-drivers from '%s'..."
 msgstr "使用 ltdl 以從「%s」載入輸出入驅動程式 ..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:288
+#: libgphoto2_port/gphoto2-port-info-list.c:289
 #, c-format
 msgid "Counting entries (%i available)..."
 msgstr "計數條目 (%i 項可用)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:297
+#: libgphoto2_port/gphoto2-port-info-list.c:298
 #, c-format
 msgid "%i regular entries available."
 msgstr "%i 項正規條目可用。"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:326
+#: libgphoto2_port/gphoto2-port-info-list.c:327
 #, c-format
 msgid "Looking for path '%s' (%i entries available)..."
 msgstr "正在尋找路徑「%s」(%i 項條目可用)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:338
+#: libgphoto2_port/gphoto2-port-info-list.c:339
 #, c-format
 msgid "Starting regex search for '%s'..."
 msgstr "開始以正規表示式尋找「%s」..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:346
+#: libgphoto2_port/gphoto2-port-info-list.c:347
 #, c-format
 msgid "Trying '%s'..."
 msgstr "正在嘗試「%s」..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:367
+#: libgphoto2_port/gphoto2-port-info-list.c:368
 msgid "regcomp failed"
 msgstr "正規表示式編譯失敗"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:378
+#: libgphoto2_port/gphoto2-port-info-list.c:379
 #, c-format
 msgid "re_match failed (%i)"
 msgstr "正規表示式匹配失敗 (%i)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:386
+#: libgphoto2_port/gphoto2-port-info-list.c:387
 msgid "regexec failed"
 msgstr "正規表示式執行失敗"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:392
+#: libgphoto2_port/gphoto2-port-info-list.c:393
 msgid "Generic Port"
 msgstr "通用連接埠"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:416
+#: libgphoto2_port/gphoto2-port-info-list.c:417
 #, c-format
 msgid "Looking up entry '%s'..."
 msgstr "正在尋找條目「%s」..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:446
+#: libgphoto2_port/gphoto2-port-info-list.c:447
 #, c-format
 msgid "Getting info of entry %i (%i available)..."
 msgstr "正在取得條目 %i 的資訊 (%i 項可用)..."

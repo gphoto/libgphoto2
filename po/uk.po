@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2 2.1.99\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2005-12-25 11:09-0500\n"
+"POT-Creation-Date: 2006-05-29 00:08+0200\n"
 "PO-Revision-Date: 2006-04-07 12:45+0300\n"
 "Last-Translator: Maxim V. Dziumanenko <mvd@mylinux.com.ua>\n"
 "Language-Team: Ukrainian <translation-team-uk@lists.sourceforge.net>\n"
@@ -90,67 +90,83 @@ msgstr ""
 "Реалізовано використовуючи документацію з\n"
 "Інтернет за згодою Vision."
 
-#: camlibs/canon/canon.c:601
+#: camlibs/canon/canon.c:604
 #, c-format
 msgid "Could not create directory %s."
 msgstr "Не вдається створити каталог %s."
 
-#: camlibs/canon/canon.c:604
+#: camlibs/canon/canon.c:607
 #, c-format
 msgid "Could not remove directory %s."
 msgstr "Не вдається видалити каталог %s."
 
-#: camlibs/canon/canon.c:977 camlibs/canon/canon.c:1317
+#: camlibs/canon/canon.c:980 camlibs/canon/canon.c:1320
 #: camlibs/canon/usb.c:514
 msgid "lock keys failed."
 msgstr "помилка блокування клавіш."
 
-#: camlibs/canon/canon.c:1041 camlibs/canon/canon.c:1042
+#: camlibs/canon/canon.c:1044 camlibs/canon/canon.c:1045
 msgid "*UNKNOWN*"
 msgstr "*Невідомо*"
 
-#: camlibs/canon/canon.c:1213
+#: camlibs/canon/canon.c:1216
 #, c-format
-msgid "canon_int_capture_image: initial canon_usb_list_all_dirs() failed with status %li"
-msgstr "canon_int_capture_image: перша функція canon_usb_list_all_dirs() завершилась помилкою з кодом %li"
+msgid ""
+"canon_int_capture_image: initial canon_usb_list_all_dirs() failed with "
+"status %li"
+msgstr ""
+"canon_int_capture_image: перша функція canon_usb_list_all_dirs() завершилась "
+"помилкою з кодом %li"
 
-#: camlibs/canon/canon.c:1351
+#: camlibs/canon/canon.c:1354
 #, c-format
-msgid "canon_int_capture_image: final canon_usb_list_all_dirs() failed with status %i"
-msgstr "canon_int_capture_image: остання функція canon_usb_list_all_dirs() завершилась помилкою з кодом %i"
+msgid ""
+"canon_int_capture_image: final canon_usb_list_all_dirs() failed with status %"
+"i"
+msgstr ""
+"canon_int_capture_image: остання функція canon_usb_list_all_dirs() "
+"завершилась помилкою з кодом %i"
 
-#: camlibs/canon/canon.c:1458
+#: camlibs/canon/canon.c:1461
 #, c-format
 msgid "Name '%s' (%li characters) too long, maximum 30 characters are allowed."
-msgstr "Надто довга назва '%s' (%li символів), допускається максимум 30 символів."
+msgstr ""
+"Надто довга назва '%s' (%li символів), допускається максимум 30 символів."
 
-#: camlibs/canon/canon.c:1873
+#: camlibs/canon/canon.c:1878
 #, c-format
 msgid "Lower case letters in %s not allowed."
 msgstr "Символи нижнього регістру у %s недопускаються."
 
-#: camlibs/canon/canon.c:2053
+#: camlibs/canon/canon.c:2058
 #, c-format
-msgid "canon_int_list_directory: ERROR: initial message too short (%i < minimum %i)"
-msgstr "canon_int_list_directory: ERROR: початкове повідомлення надто коротке (%i < мінімум %i)"
+msgid ""
+"canon_int_list_directory: ERROR: initial message too short (%i < minimum %i)"
+msgstr ""
+"canon_int_list_directory: ERROR: початкове повідомлення надто коротке (%i < "
+"мінімум %i)"
 
-#: camlibs/canon/canon.c:2075
-msgid "canon_int_list_directory: Reached end of packet while examining the first dirent"
-msgstr "canon_int_list_directory: Досягнуто кінець пакету при аналізі першого елементу каталогу"
+#: camlibs/canon/canon.c:2080
+msgid ""
+"canon_int_list_directory: Reached end of packet while examining the first "
+"dirent"
+msgstr ""
+"canon_int_list_directory: Досягнуто кінець пакету при аналізі першого "
+"елементу каталогу"
 
-#: camlibs/canon/canon.c:2160
+#: camlibs/canon/canon.c:2165
 msgid "canon_int_list_directory: truncated directory entry encountered"
 msgstr "canon_int_list_directory: обрізано запис каталогу"
 
-#: camlibs/canon/canon.c:2521
+#: camlibs/canon/canon.c:2526
 msgid "File protected."
 msgstr "Файл захищений."
 
-#: camlibs/canon/canon.c:2613
+#: camlibs/canon/canon.c:2618
 msgid "Could not extract JPEG thumbnail from data: No beginning/end"
 msgstr "Не вдається отримати мініатюру JPEG: відсутній початок/кінець"
 
-#: camlibs/canon/canon.c:2700
+#: camlibs/canon/canon.c:2705
 msgid "Could not extract JPEG thumbnail from data: Data is not JFIF"
 msgstr "Не вдається отримати мініатюру JPEG: дані не у форматі JFIF"
 
@@ -161,8 +177,11 @@ msgstr "параметр NULL \"%s\" у %s рядок %i"
 
 #: camlibs/canon/canon.h:359
 #, c-format
-msgid "Don't know how to handle camera->port->type value %i aka 0x%xin %s line %i."
-msgstr "Невідомо як працювати із значеннями camera->port->type, що дорівнюють %i 0x%x у %s рядок %i."
+msgid ""
+"Don't know how to handle camera->port->type value %i aka 0x%xin %s line %i."
+msgstr ""
+"Невідомо як працювати із значеннями camera->port->type, що дорівнюють %i 0x%"
+"x у %s рядок %i."
 
 #: camlibs/canon/crc.c:237
 #, c-format
@@ -176,8 +195,12 @@ msgstr "не вдається обчислити значення контрол
 
 #: camlibs/canon/crc.c:277
 #, c-format
-msgid "warning: CRC not checked (add len %d, value 0x%04x) #########################\n"
-msgstr "попередження: CRC не перевірено (+ довжина %d, значення 0x%04x) #########################\n"
+msgid ""
+"warning: CRC not checked (add len %d, value 0x%04x) "
+"#########################\n"
+msgstr ""
+"попередження: CRC не перевірено (+ довжина %d, значення 0x%04x) "
+"#########################\n"
 
 #: camlibs/canon/library.c:125
 msgid ""
@@ -205,8 +228,10 @@ msgstr ""
 " та Pro70 випуску 1998, так і з новими PowerShot A510 та EOS 350D випуску\n"
 " 2005.\n"
 "Драйвер не перевірявся з EOS 1D чи EOS 1Ds.\n"
-"Для A50 використання швидкості 115200 біт/с може бути фактично повільніше ніж 57600\n"
-"Якщо виникають численні помилки при передачі через послідовний порт, спробуйте\n"
+"Для A50 використання швидкості 115200 біт/с може бути фактично повільніше "
+"ніж 57600\n"
+"Якщо виникають численні помилки при передачі через послідовний порт, "
+"спробуйте\n"
 " зменшити активність комп'ютера (наприклад, дискову активність)\n"
 
 #: camlibs/canon/library.c:254
@@ -348,8 +373,11 @@ msgid "Error deleting associated thumbnail file"
 msgstr "Помилка видалення пов'язаного файлу мініатюри"
 
 #: camlibs/canon/library.c:1036 camlibs/canon/library.c:1165
-msgid "Speeds greater than 57600 are not supported for uploading to this camera"
-msgstr "Швидкості, що перевищують 57600 не підтримуються при завантаженні у цей фотоапарат"
+msgid ""
+"Speeds greater than 57600 are not supported for uploading to this camera"
+msgstr ""
+"Швидкості, що перевищують 57600 не підтримуються при завантаженні у цей "
+"фотоапарат"
 
 #: camlibs/canon/library.c:1053 camlibs/canon/library.c:1182
 msgid "Could not get flash drive letter"
@@ -371,8 +399,8 @@ msgstr "Не вдається створити каталог \\DCIM"
 msgid "Could not create destination directory."
 msgstr "Не вдається створити цільовий каталог."
 
-#: camlibs/canon/library.c:1263 camlibs/ptp2/library.c:3174
-#: camlibs/ptp2/library.c:3265
+#: camlibs/canon/library.c:1263 camlibs/ptp2/library.c:3718
+#: camlibs/ptp2/library.c:3809
 msgid "Camera and Driver Configuration"
 msgstr "Налаштовування фотоапарату та драйвера"
 
@@ -409,8 +437,8 @@ msgstr "Встановити дату у фотоапараті з комп'ют
 msgid "Firmware revision (readonly)"
 msgstr "Версія прошивки (лише для читання)"
 
-#: camlibs/canon/library.c:1320 camlibs/ptp2/library.c:3212
-#: camlibs/ptp2/library.c:3241
+#: camlibs/canon/library.c:1320 camlibs/ptp2/library.c:3756
+#: camlibs/ptp2/library.c:3785
 msgid "Power (readonly)"
 msgstr "Живлення (лише для читання)"
 
@@ -488,13 +516,20 @@ msgid "Getting file..."
 msgstr "Отримання файлу"
 
 #: camlibs/canon/serial.c:1123
-msgid "canon_serial_get_dirents: canon_serial_dialogue failed to fetch directory entries"
-msgstr "canon_serial_get_dirents: canon_serial_dialogue не вдається отримати елементи каталогу"
+msgid ""
+"canon_serial_get_dirents: canon_serial_dialogue failed to fetch directory "
+"entries"
+msgstr ""
+"canon_serial_get_dirents: canon_serial_dialogue не вдається отримати "
+"елементи каталогу"
 
 #: camlibs/canon/serial.c:1131
 #, c-format
-msgid "canon_serial_get_dirents: Initial dirent packet too short (only %i bytes)"
-msgstr "canon_serial_get_dirents: внутрішній пакет елементу каталогу надто короткий (лише %i байтів)"
+msgid ""
+"canon_serial_get_dirents: Initial dirent packet too short (only %i bytes)"
+msgstr ""
+"canon_serial_get_dirents: внутрішній пакет елементу каталогу надто короткий "
+"(лише %i байтів)"
 
 #: camlibs/canon/serial.c:1151
 #, c-format
@@ -511,12 +546,16 @@ msgstr "canon_serial_get_dirents: отримано обрізаний елеме
 
 #: camlibs/canon/serial.c:1216
 msgid "canon_serial_get_dirents: Too many dirents, we must be looping."
-msgstr "canon_serial_get_dirents: надто багато елементів каталогу, треба проходити циклом."
+msgstr ""
+"canon_serial_get_dirents: надто багато елементів каталогу, треба проходити "
+"циклом."
 
 #: camlibs/canon/serial.c:1226
 #, c-format
 msgid "canon_serial_get_dirents: Could not resize dirent buffer to %i bytes"
-msgstr "canon_serial_get_dirents: Не вдається змінити розмір буферу елементів каталогу на %i байтів"
+msgstr ""
+"canon_serial_get_dirents: Не вдається змінити розмір буферу елементів "
+"каталогу на %i байтів"
 
 #: camlibs/canon/serial.c:1295
 msgid "Error changing speed."
@@ -543,7 +582,7 @@ msgid "Communication error 1"
 msgstr "Помилка зв'язку 1"
 
 #: camlibs/canon/serial.c:1350 camlibs/canon/serial.c:1354
-#: camlibs/dimera/dimera3500.c:921
+#: camlibs/dimera/dimera3500.c:927
 msgid "No response from camera"
 msgstr "Немає відповіді від фотоапарату"
 
@@ -633,28 +672,44 @@ msgstr "Нерозпізнана відповідь фотоапарату '%c'"
 
 #: camlibs/canon/usb.c:247
 #, c-format
-msgid "Step #2 of initialization failed: \"%s\" on read of %i) Camera not operational"
-msgstr "Помилка кроку ініціалізації 2: \"%s\" при читанні %i) Фотоапарат не працює"
+msgid ""
+"Step #2 of initialization failed: \"%s\" on read of %i) Camera not "
+"operational"
+msgstr ""
+"Помилка кроку ініціалізації 2: \"%s\" при читанні %i) Фотоапарат не працює"
 
 #: camlibs/canon/usb.c:253
 #, c-format
-msgid "Step #2 of initialization failed! (returned %i bytes, expected %i) Camera not operational"
-msgstr "Помилка кроку ініціалізації 2! (отримано %i байтів, очікувалось %i) Фотоапарат не працює"
+msgid ""
+"Step #2 of initialization failed! (returned %i bytes, expected %i) Camera "
+"not operational"
+msgstr ""
+"Помилка кроку ініціалізації 2! (отримано %i байтів, очікувалось %i) "
+"Фотоапарат не працює"
 
 #: camlibs/canon/usb.c:272
 #, c-format
-msgid "Step #3 of initialization failed: \"%s\" on read of %i Camera not operational"
-msgstr "Помилка кроку ініціалізації 3: \"%s\" при читанні %i) Фотоапарат не працює"
+msgid ""
+"Step #3 of initialization failed: \"%s\" on read of %i Camera not operational"
+msgstr ""
+"Помилка кроку ініціалізації 3: \"%s\" при читанні %i) Фотоапарат не працює"
 
 #: camlibs/canon/usb.c:279 camlibs/canon/usb.c:306
 #, c-format
-msgid "Step #3 of initialization failed! (returned %i, expected %i) Camera not operational"
-msgstr "Помилка кроку ініціалізації 3! (отримано %i байтів, очікувалось %i) Фотоапарат не працює"
+msgid ""
+"Step #3 of initialization failed! (returned %i, expected %i) Camera not "
+"operational"
+msgstr ""
+"Помилка кроку ініціалізації 3! (отримано %i байтів, очікувалось %i) "
+"Фотоапарат не працює"
 
 #: camlibs/canon/usb.c:299
 #, c-format
-msgid "Step #3 of initialization failed: \"%s\" on write of %i Camera not operational"
-msgstr "Помилка кроку ініціалізації 3: \"%s\" при записі %i) Фотоапарат не працює"
+msgid ""
+"Step #3 of initialization failed: \"%s\" on write of %i Camera not "
+"operational"
+msgstr ""
+"Помилка кроку ініціалізації 3: \"%s\" при записі %i) Фотоапарат не працює"
 
 #: camlibs/canon/usb.c:337 camlibs/canon/usb.c:378
 #, c-format
@@ -669,7 +724,9 @@ msgstr "Помилка кроку 4! (отримано %i, очікувалос�
 #: camlibs/canon/usb.c:467
 #, c-format
 msgid "Camera not ready, multiple 'Identify camera' requests failed: %s"
-msgstr "Фотоапарат неготовий, численні помилки на запит 'Ідентифікація фотоапарату': %s"
+msgstr ""
+"Фотоапарат неготовий, численні помилки на запит 'Ідентифікація фотоапарату': "
+"%s"
 
 #: camlibs/canon/usb.c:505 camlibs/canon/usb.c:521
 #, c-format
@@ -678,74 +735,107 @@ msgstr "Фотоапарат не готовий, помилка get_battery: %s
 
 #: camlibs/canon/usb.c:585
 #, c-format
-msgid "canon_usb_lock_keys: Unexpected length returned from \"lock keys\" function (%i bytes, expected %i)"
-msgstr "canon_usb_lock_keys: Неочікувана довжина результату функції \"блокувати клавіші\" (%i байтів, очікувалось %i)"
+msgid ""
+"canon_usb_lock_keys: Unexpected length returned from \"lock keys\" function "
+"(%i bytes, expected %i)"
+msgstr ""
+"canon_usb_lock_keys: Неочікувана довжина результату функції \"блокувати "
+"клавіші\" (%i байтів, очікувалось %i)"
 
 #: camlibs/canon/usb.c:607 camlibs/canon/usb.c:633 camlibs/canon/usb.c:673
 #, c-format
 msgid "canon_usb_lock_keys: Unexpected length returned (%i bytes, expected %i)"
-msgstr "canon_usb_lock_keys: Результат неочікуваної довжини (%i байтів, очікувалось %i)"
+msgstr ""
+"canon_usb_lock_keys: Результат неочікуваної довжини (%i байтів, очікувалось %"
+"i)"
 
 #: camlibs/canon/usb.c:716 camlibs/canon/usb.c:732
 #, c-format
-msgid "canon_usb_unlock_keys: Unexpected length returned (%i bytes, expected %i)"
-msgstr "canon_usb_unlock_keys: Результат неочікуваної довжини (%i байтів, очікувалось %i)"
+msgid ""
+"canon_usb_unlock_keys: Unexpected length returned (%i bytes, expected %i)"
+msgstr ""
+"canon_usb_unlock_keys: Результат неочікуваної довжини (%i байтів, "
+"очікувалось %i)"
 
 #: camlibs/canon/usb.c:787 camlibs/canon/usb.c:805
 #, c-format
-msgid "canon_usb_get_body_id: Unexpected data length returned (%i bytes, expected %i)"
-msgstr "canon_usb_get_body_id: Результат неочікуваної довжини (%i байтів, очікувалось %i)"
+msgid ""
+"canon_usb_get_body_id: Unexpected data length returned (%i bytes, expected %"
+"i)"
+msgstr ""
+"canon_usb_get_body_id: Результат неочікуваної довжини (%i байтів, "
+"очікувалось %i)"
 
 #: camlibs/canon/usb.c:859
 #, c-format
-msgid "canon_usb_poll_interrupt_pipe: interrupt read failed after %i tries, %6.3f sec \"%s\""
-msgstr "canon_usb_poll_interrupt_pipe: читання перервано після %i спроб, %6.3f секунд \"%s\""
+msgid ""
+"canon_usb_poll_interrupt_pipe: interrupt read failed after %i tries, %6.3f "
+"sec \"%s\""
+msgstr ""
+"canon_usb_poll_interrupt_pipe: читання перервано після %i спроб, %6.3f "
+"секунд \"%s\""
 
 #: camlibs/canon/usb.c:914
 #, c-format
-msgid "canon_usb_poll_interrupt_multiple: interrupt read failed after %i tries, \"%s\""
-msgstr "canon_usb_poll_interrupt_multiple: читання перервано після %i спроб, \"%s\""
+msgid ""
+"canon_usb_poll_interrupt_multiple: interrupt read failed after %i tries, \"%s"
+"\""
+msgstr ""
+"canon_usb_poll_interrupt_multiple: читання перервано після %i спроб, \"%s\""
 
 #: camlibs/canon/usb.c:1036
 #, c-format
-msgid "canon_usb_capture_dialogue: bogus length 0x%04x for thumbnail size packet"
-msgstr "canon_usb_capture_dialogue: неправильна довжина 0x%04x пакету мініатюри"
+msgid ""
+"canon_usb_capture_dialogue: bogus length 0x%04x for thumbnail size packet"
+msgstr ""
+"canon_usb_capture_dialogue: неправильна довжина 0x%04x пакету мініатюри"
 
 #: camlibs/canon/usb.c:1052
 #, c-format
-msgid "canon_usb_capture_dialogue: bogus length 0x%04x for full image size packet"
-msgstr "canon_usb_capture_dialogue: неправильна довжина 0x%04x розміру пакету зображення"
+msgid ""
+"canon_usb_capture_dialogue: bogus length 0x%04x for full image size packet"
+msgstr ""
+"canon_usb_capture_dialogue: неправильна довжина 0x%04x розміру пакету "
+"зображення"
 
 #: camlibs/canon/usb.c:1077
 msgid "canon_usb_capture_dialogue: first interrupt read out of sequence"
-msgstr "canon_usb_capture_dialogue: перше переривання читання поза послідовністю"
+msgstr ""
+"canon_usb_capture_dialogue: перше переривання читання поза послідовністю"
 
 #: camlibs/canon/usb.c:1085
 msgid "canon_usb_capture_dialogue: second interrupt read out of sequence"
-msgstr "canon_usb_capture_dialogue: друге перериванні читання поза послідовністю"
+msgstr ""
+"canon_usb_capture_dialogue: друге перериванні читання поза послідовністю"
 
 #: camlibs/canon/usb.c:1095
 #, c-format
-msgid "canon_usb_capture_dialogue: photographic failure signaled, code = 0x%08x"
+msgid ""
+"canon_usb_capture_dialogue: photographic failure signaled, code = 0x%08x"
 msgstr "canon_usb_capture_dialogue: помилка фотоапарату, код = 0x%08x"
 
 #: camlibs/canon/usb.c:1113
 msgid "canon_usb_capture_dialogue: third EOS interrupt read out of sequence"
-msgstr "canon_usb_capture_dialogue: третє переривання читання EOS поза послідовністю"
+msgstr ""
+"canon_usb_capture_dialogue: третє переривання читання EOS поза послідовністю"
 
 #: camlibs/canon/usb.c:1148
 msgid "canon_usb_capture_dialogue: fourth EOS interrupt read out of sequence"
-msgstr "canon_usb_capture_dialogue: четверте переривання EOS поза послідовністю"
+msgstr ""
+"canon_usb_capture_dialogue: четверте переривання EOS поза послідовністю"
 
 #: camlibs/canon/usb.c:1333
 #, c-format
 msgid "canon_usb_dialogue: payload too big, won't fit into buffer (%i > %i)"
-msgstr "canon_usb_dialogue: об'єкт надто великий, не уміщається у буфері (%i > %i)"
+msgstr ""
+"canon_usb_dialogue: об'єкт надто великий, не уміщається у буфері (%i > %i)"
 
 #: camlibs/canon/usb.c:1439
 #, c-format
 msgid "canon_usb_dialogue: expected 0x%x bytes, but camera reports 0x%x"
-msgstr "canon_usb_dialogue: очікувалось 0x%x байтів, але фотоапарат повідомив про 0x%x"
+msgstr ""
+"canon_usb_dialogue: очікувалось 0x%x байтів, але фотоапарат повідомив про 0x%"
+"x"
 
 #: camlibs/canon/usb.c:1561
 msgid "Receiving data..."
@@ -762,8 +852,12 @@ msgstr "canon_usb_set_file_attributes: помилка canon_usb_dialogue"
 
 #: camlibs/canon/usb.c:1966
 #, c-format
-msgid "Warning in canon_usb_set_file_attributes: canon_usb_dialogue returned error status 0x%08x from camera"
-msgstr "Попередження canon_usb_set_file_attributes: у canon_usb_dialogue помилка статусу фотоапарату 0x%08x"
+msgid ""
+"Warning in canon_usb_set_file_attributes: canon_usb_dialogue returned error "
+"status 0x%08x from camera"
+msgstr ""
+"Попередження canon_usb_set_file_attributes: у canon_usb_dialogue помилка "
+"статусу фотоапарату 0x%08x"
 
 #: camlibs/canon/usb.c:2041
 #, c-format
@@ -781,28 +875,48 @@ msgid "File upload failed."
 msgstr "Помилка вивантаження файлу."
 
 #: camlibs/canon/usb.c:2185
-msgid "File was too big. You may have to turn your camera off and back on before uploading more files."
-msgstr "Файл надто великий. Перш ніж вивантажувати інші файли слід вимкнути фотоапарат та увімкнути знову."
+msgid ""
+"File was too big. You may have to turn your camera off and back on before "
+"uploading more files."
+msgstr ""
+"Файл надто великий. Перш ніж вивантажувати інші файли слід вимкнути "
+"фотоапарат та увімкнути знову."
 
 #: camlibs/canon/usb.c:2231
 #, c-format
-msgid "canon_usb_get_dirents: Couldn't fit payload into buffer, '%.96s' (truncated) too long."
-msgstr "canon_usb_get_dirents: Не вдається розмістити файл у буфер, '%.96s' (обрізано) надто довгий."
+msgid ""
+"canon_usb_get_dirents: Couldn't fit payload into buffer, '%.96s' (truncated) "
+"too long."
+msgstr ""
+"canon_usb_get_dirents: Не вдається розмістити файл у буфер, "
+"'%.96s' (обрізано) надто довгий."
 
 #: camlibs/canon/usb.c:2248
 #, c-format
-msgid "canon_usb_get_dirents: canon_usb_long_dialogue failed to fetch direntries, returned %i"
-msgstr "canon_usb_get_dirents: не вдається отримати елементи каталогц canon_usb_long_dialogue, отримано %i"
+msgid ""
+"canon_usb_get_dirents: canon_usb_long_dialogue failed to fetch direntries, "
+"returned %i"
+msgstr ""
+"canon_usb_get_dirents: не вдається отримати елементи каталогц "
+"canon_usb_long_dialogue, отримано %i"
 
 #: camlibs/canon/usb.c:2299
 #, c-format
-msgid "canon_usb_list_all_dirs: Couldn't fit payload into buffer, '%.96s' (truncated) too long."
-msgstr "canon_usb_list_all_dirs: пакет не уміщається у буфер, '%.96s' (обрізано) надто довгий."
+msgid ""
+"canon_usb_list_all_dirs: Couldn't fit payload into buffer, "
+"'%.96s' (truncated) too long."
+msgstr ""
+"canon_usb_list_all_dirs: пакет не уміщається у буфер, '%.96s' (обрізано) "
+"надто довгий."
 
 #: camlibs/canon/usb.c:2318
 #, c-format
-msgid "canon_usb_list_all_dirs: canon_usb_long_dialogue failed to fetch direntries, returned %i"
-msgstr "canon_usb_list_all_dirs: помилка отримання елементів каталогу canon_usb_long_dialogue, отримано %i"
+msgid ""
+"canon_usb_list_all_dirs: canon_usb_long_dialogue failed to fetch direntries, "
+"returned %i"
+msgstr ""
+"canon_usb_list_all_dirs: помилка отримання елементів каталогу "
+"canon_usb_long_dialogue, отримано %i"
 
 #: camlibs/canon/usb.c:2394
 #, c-format
@@ -827,11 +941,13 @@ msgstr "Зображення %s захищене від видалення."
 #: camlibs/casio/casio-qv.c:189
 msgid ""
 "Driver framework written by Lutz Mueller <lutz@users.sf.net>.\n"
-"This software has QVplay's source code, written by Ken-ichi HAYASHI <xg2k-hys@asahi-net.or.jp> and Jun-ichiro \"itojun\" Itoh <itojun@itojun.org>.\n"
+"This software has QVplay's source code, written by Ken-ichi HAYASHI <xg2k-"
+"hys@asahi-net.or.jp> and Jun-ichiro \"itojun\" Itoh <itojun@itojun.org>.\n"
 "Integration of QVplay by Michael Haardt <michael@moria.de>."
 msgstr ""
 "Драйвер написав Lutz Mueller <lutz@users.sf.net>.\n"
-"Програма містить код QVplay, що написаний Ken-ichi HAYASHI <xg2k-hys@asahi-net.or.jp> та Jun-ichiro \"itojun\" Itoh <itojun@itojun.org>.\n"
+"Програма містить код QVplay, що написаний Ken-ichi HAYASHI <xg2k-hys@asahi-"
+"net.or.jp> та Jun-ichiro \"itojun\" Itoh <itojun@itojun.org>.\n"
 "Інтеграцію QVplay виконав Michael Haardt <michael@moria.de>."
 
 #: camlibs/casio/casio-qv.c:208
@@ -867,6 +983,45 @@ msgstr "Дуже темний"
 #: camlibs/kodak/dc240/library.c:570
 msgid "OK"
 msgstr "Гаразд"
+
+#: camlibs/clicksmart310/library.c:99
+#, c-format
+msgid ""
+"Your Logitech Clicksmart 310\n"
+"has  %i pictures in it.\n"
+msgstr ""
+
+#: camlibs/clicksmart310/library.c:113
+msgid ""
+"Two resolution settings, 352x288 and 176x144. Photo data \n"
+"is in JPEG format when downloaded and thus has no predetermined\n"
+"size. Therefore, the advertised maximum number of photos the\n"
+"camera can hold must be understood as an approximation.\n"
+"All gphoto2 options will work, except for the following which\n"
+"the hardware will not support:\n"
+"\tDeletion of individual or selected photos (gphoto2 -d)\n"
+"\tCapture (gphoto2 --capture or --capture-image)\n"
+"However, capture is possible using the webcam interface,\n"
+"supported by the spca50x kernel module.\n"
+"GUI access using gtkam has been tested, and works. However,\n"
+"the camera does not produce separate thumbnails. Since the images\n"
+"are in any event already small and of low resolution, the driver\n"
+"merely downloads the actual images to use as thumbnails.\n"
+"The camera can shoot in 'video clip' mode. The resulting frames\n"
+"are saved here as a succession of still photos. The user can \n"
+"animate them using (for example) ImageMagick's 'animate' function.\n"
+"For more details on the camera's functions, please consult\n"
+"libgphoto2/camlibs/README.\n"
+msgstr ""
+
+#: camlibs/clicksmart310/library.c:140
+#, fuzzy
+msgid ""
+"Logitech Clicksmart 310 driver\n"
+"Theodore Kilgore <kilgota@auburn.edu>\n"
+msgstr ""
+"iClick 5X driver\n"
+"Theodore Kilgore <kilgota@auburn.edu>\n"
 
 #: camlibs/digigr8/library.c:106
 #, c-format
@@ -926,8 +1081,11 @@ msgstr ""
 
 #: camlibs/dimera/dimera3500.c:161
 #, c-format
-msgid "Only root folder is supported - you requested a file listing for folder '%s'."
-msgstr "Підтримується лише звернення до кореневої теки - ви запитали список файлів з теки '%s'."
+msgid ""
+"Only root folder is supported - you requested a file listing for folder '%s'."
+msgstr ""
+"Підтримується лише звернення до кореневої теки - ви запитали список файлів з "
+"теки '%s'."
 
 #: camlibs/dimera/dimera3500.c:169 camlibs/dimera/dimera3500.c:363
 msgid "Problem getting number of images"
@@ -961,7 +1119,8 @@ msgid ""
 "Camera is %s powered%s\n"
 msgstr ""
 "Dimera 3500 вер. %s %d/%d %d:%d\n"
-"%d знімків з приблизно %d (висока розд.здатність) чи %d (низька розд.здатність)\n"
+"%d знімків з приблизно %d (висока розд.здатність) чи %d (низька розд."
+"здатність)\n"
 "Можливості фотоапарату: %s, %s, %s, %s\n"
 "Карта пам'яті %s, %s та %s\n"
 "Вибрано роздільну здатність %s\n"
@@ -970,9 +1129,9 @@ msgstr ""
 #: camlibs/dimera/dimera3500.c:399 camlibs/dimera/dimera3500.c:785
 #: camlibs/kodak/dc210/dc210.c:257 camlibs/kodak/dc210/dc210.c:425
 #: camlibs/konica/library.c:778 camlibs/konica/library.c:1019
-#: camlibs/konica/qm150.c:854 camlibs/ptp2/library.c:1756
-#: camlibs/ptp2/library.c:3141 camlibs/ptp2/ptp.c:2041
-#: camlibs/ricoh/library.c:500 camlibs/sierra/nikon-desc.c:286
+#: camlibs/konica/qm150.c:854 camlibs/ptp2/library.c:2518
+#: camlibs/ptp2/ptp.c:2547 camlibs/ricoh/library.c:500
+#: camlibs/sierra/nikon-desc.c:286
 msgid "Flash"
 msgstr "Спалах"
 
@@ -1093,7 +1252,7 @@ msgid "Problem reading image from flash"
 msgstr "Помилка читання зображення з карти"
 
 #: camlibs/dimera/dimera3500.c:550 camlibs/dimera/dimera3500.c:716
-#: camlibs/dimera/dimera3500.c:860
+#: camlibs/dimera/dimera3500.c:866
 msgid "Out of memory"
 msgstr "Недостатньо пам'яті"
 
@@ -1135,19 +1294,19 @@ msgstr "Тривалість експозиції при попередньом�
 msgid "Automatic flash on capture"
 msgstr "Автоматичний спалах при зйомці"
 
-#: camlibs/dimera/dimera3500.c:888
+#: camlibs/dimera/dimera3500.c:894
 msgid "Problem opening port"
 msgstr "Помилка відкривання порта"
 
-#: camlibs/dimera/dimera3500.c:898
+#: camlibs/dimera/dimera3500.c:904
 msgid "Problem resetting camera"
 msgstr "Помилка скидання стану камери"
 
-#: camlibs/dimera/dimera3500.c:908
+#: camlibs/dimera/dimera3500.c:914
 msgid "Problem setting camera communication speed"
 msgstr "Помилка встановлення швидкості обміну даними з фотоапаратом"
 
-#: camlibs/dimera/dimera3500.c:927
+#: camlibs/dimera/dimera3500.c:933
 msgid "Looks like a modem, not a camera"
 msgstr "Схоже, що це модем, а не фотоапарат"
 
@@ -1182,8 +1341,10 @@ msgid "Could not open '%s'."
 msgstr "Не вдається відкрити '%s'."
 
 #: camlibs/directory/directory.c:505
-msgid "The Directory Browse \"camera\" lets you index photos on your hard drive."
-msgstr "При перегляді каталогу \"camera\" виводиться список фотографій на диску."
+msgid ""
+"The Directory Browse \"camera\" lets you index photos on your hard drive."
+msgstr ""
+"При перегляді каталогу \"camera\" виводиться список фотографій на диску."
 
 #: camlibs/directory/directory.c:514
 msgid "Directory Browse Mode - written by Scott Fritzinger <scottf@unr.edu>."
@@ -1195,15 +1356,21 @@ msgid "Could not delete file '%s' in folder '%s' (error code %i: %m)."
 msgstr "Не вдається видалити файл '%s' у теці '%s' (код помилки %i: %m)."
 
 #: camlibs/enigma13/enigma13.c:69
-msgid "Download program for Digital Dream Enigma 1.3. by <olivier@aixmarseille.com>, and adapted from spca50x driver.Thanks you, spca50x team, it was easy to port your driver on this cam! "
-msgstr "Програма копіювання знімків для Digital Dream Enigma 1.3. від <olivier@aixmarseille.com>, створена на основі драйвера spca50x. Подяка авторам spca50x! Адаптувати ваш драйвер для цього апарата було нескладно! "
+msgid ""
+"Download program for Digital Dream Enigma 1.3. by <olivier@aixmarseille."
+"com>, and adapted from spca50x driver.Thanks you, spca50x team, it was easy "
+"to port your driver on this cam! "
+msgstr ""
+"Програма копіювання знімків для Digital Dream Enigma 1.3. від "
+"<olivier@aixmarseille.com>, створена на основі драйвера spca50x. Подяка "
+"авторам spca50x! Адаптувати ваш драйвер для цього апарата було нескладно! "
 
 #: camlibs/fuji/fuji.c:85
 #, c-format
 msgid "The camera sent only %i byte(s), but we need at least %i."
 msgstr "Фотоапарат надіслав лише %i байтів, але потрібно принаймні %i."
 
-#: camlibs/fuji/fuji.c:126 camlibs/ricoh/library.c:551
+#: camlibs/fuji/fuji.c:126 camlibs/ricoh/library.c:559
 msgid "Could not contact camera."
 msgstr "Не вдається зв'язатись з фотоапаратом."
 
@@ -1246,7 +1413,8 @@ msgid "Camera sent unexpected byte 0x%02x."
 msgstr "Фотоапарат надіслав неочікувані дані 0x%02x."
 
 #: camlibs/fuji/fuji.c:317 camlibs/konica/lowlevel.c:382
-#: camlibs/polaroid/pdc700.c:314 camlibs/ricoh/g3.c:340
+#: camlibs/polaroid/pdc700.c:314 camlibs/ptp2/library.c:755
+#: camlibs/ricoh/g3.c:340
 msgid "Downloading..."
 msgstr "Завантаження..."
 
@@ -1268,7 +1436,8 @@ msgstr "Фотоапарат не приймає '%s' як назву файла
 #: camlibs/fuji/fuji.c:675
 #, c-format
 msgid "Could not initialize upload (camera responded with 0x%02x)."
-msgstr "Не вдається ініціалізувати вивантаження (фотоапарат повернув код 0x%02x)."
+msgstr ""
+"Не вдається ініціалізувати вивантаження (фотоапарат повернув код 0x%02x)."
 
 #: camlibs/fuji/fuji.c:773
 #, c-format
@@ -1325,29 +1494,36 @@ msgid ""
 "Till Adam <till@adam-lilienthal.de>\n"
 "Jerome Lodewyck <jerome.lodewyck@ens.fr>\n"
 "Support for Mustek gSmart 300 digital cameras\n"
-"based on several other gphoto2 camlib modules and the specifications kindly provided by Mustek.\n"
+"based on several other gphoto2 camlib modules and the specifications kindly "
+"provided by Mustek.\n"
 "\n"
 msgstr ""
 "Бібліотека gsmart300 \n"
 "Till Adam <till@adam-lilienthal.de>\n"
 "Jerome Lodewyck <jerome.lodewyck@ens.fr>\n"
 "Підтримка фотоапаратів Mustek gSmart 300\n"
-"основана на кількох модулях gphoto2 та специфікаціях, що люб'язно надані фірмою Mustek.\n"
+"основана на кількох модулях gphoto2 та специфікаціях, що люб'язно надані "
+"фірмою Mustek.\n"
 "\n"
 
-#: camlibs/gsmart300/library.c:199
+#: camlibs/gsmart300/library.c:207 camlibs/spca50x/library.c:579
 #, c-format
-msgid "Unsupported port type: %d. This driver only works with USBcameras.\n"
-msgstr "Непідтримуваний тип порту: %d. Цей драйвер підтримує лише USB-фотоапарати.\n"
+msgid "Unsupported port type: %d. This driver only works with USB cameras.\n"
+msgstr ""
+"Непідтримуваний тип порту: %d. Цей драйвер працює лише з фотоапаратами USB.\n"
 
-#: camlibs/gsmart300/library.c:216 camlibs/spca50x/library.c:628
+#: camlibs/gsmart300/library.c:224 camlibs/spca50x/library.c:636
 msgid "Could not reset camera.\n"
 msgstr "Не вдається скинути стан фотоапарату.\n"
 
-#: camlibs/gsmart300/library.c:346 camlibs/spca50x/library.c:516
+#: camlibs/gsmart300/library.c:343 camlibs/spca50x/library.c:516
 #, c-format
-msgid "Your camera does only support deleting the last file on the camera. In this case, this is file '%s'."
-msgstr "Ваш фотоапарат підтримує видалення лише останнього файлу на фотоапараті. Тобто, це файл '%s'."
+msgid ""
+"Your camera does only support deleting the last file on the camera. In this "
+"case, this is file '%s'."
+msgstr ""
+"Ваш фотоапарат підтримує видалення лише останнього файлу на фотоапараті. "
+"Тобто, це файл '%s'."
 
 #: camlibs/hp215/hp215.c:440
 #, c-format
@@ -1376,7 +1552,8 @@ msgstr ""
 "Marcus Meissner <marcus@jet.franken.de>\n"
 "Драйвер для фотоапарату HP Photosmart 215.\n"
 "Побудовано на основі окремої програми hp215.\n"
-"Драйвер дозволяє завантажувати зображення та мініатюри, та дозволяє видаляти зображення.\n"
+"Драйвер дозволяє завантажувати зображення та мініатюри, та дозволяє видаляти "
+"зображення.\n"
 
 #: camlibs/iclick/library.c:102
 #, c-format
@@ -1514,8 +1691,15 @@ msgid "CompactFlash Card"
 msgstr "Карта CompactFlash"
 
 #: camlibs/kodak/dc120/dc120.c:364
-msgid "The Kodak DC120 camera uses the KDC file format for storing images. If you want to view the images you download from your camera, you will need to download the \"kdc2tiff\" program. It is available from http://kdc2tiff.sourceforge.net"
-msgstr "Фотоапарат Kodak DC120 використовує формат KDC для запису зображень. Для перегляду отриманих з апарата зображень знадобиться програма \"kdc2tiff\". Її можна завантажити з сайту http://kdc2tiff.sourceforge.net"
+msgid ""
+"The Kodak DC120 camera uses the KDC file format for storing images. If you "
+"want to view the images you download from your camera, you will need to "
+"download the \"kdc2tiff\" program. It is available from http://kdc2tiff."
+"sourceforge.net"
+msgstr ""
+"Фотоапарат Kodak DC120 використовує формат KDC для запису зображень. Для "
+"перегляду отриманих з апарата зображень знадобиться програма \"kdc2tiff\". "
+"Її можна завантажити з сайту http://kdc2tiff.sourceforge.net"
 
 #: camlibs/kodak/dc120/dc120.c:376
 msgid ""
@@ -1585,20 +1769,20 @@ msgid "High (good quality)"
 msgstr "Високе (добра якість)"
 
 #: camlibs/kodak/dc210/dc210.c:221 camlibs/konica/qm150.c:1053
-#: camlibs/ptp2/library.c:3119
+#: camlibs/ptp2/library.c:3624
 msgid "Capture"
 msgstr "Зйомка"
 
 #: camlibs/kodak/dc210/dc210.c:224 camlibs/kodak/dc210/dc210.c:383
-#: camlibs/konica/qm150.c:1039 camlibs/ptp2/library.c:3138
-#: camlibs/ptp2/ptp.c:1714 camlibs/ricoh/library.c:499
+#: camlibs/konica/qm150.c:1039 camlibs/ptp2/library.c:3646
+#: camlibs/ptp2/ptp.c:2214 camlibs/ricoh/library.c:499
 #: camlibs/sierra/sierra.c:1132 camlibs/sierra/sierra.c:1392
 msgid "Zoom"
 msgstr "Масштаб"
 
 #: camlibs/kodak/dc210/dc210.c:231 camlibs/kodak/dc210/dc210.c:245
-#: camlibs/konica/qm150.c:1025 camlibs/ptp2/library.c:2470
-#: camlibs/ptp2/library.c:2741 camlibs/ptp2/ptp.c:2069
+#: camlibs/konica/qm150.c:1025 camlibs/ptp2/library.c:2982
+#: camlibs/ptp2/library.c:3270 camlibs/ptp2/ptp.c:2581
 #: camlibs/ricoh/library.c:498 camlibs/sierra/epson-desc.c:218
 #: camlibs/sierra/nikon-desc.c:324 camlibs/sierra/olympus-desc.c:488
 #: camlibs/sierra/sierra.c:1087 camlibs/sierra/sierra.c:1092
@@ -1640,9 +1824,11 @@ msgstr "Компенсація експозиції"
 #: camlibs/konica/qm150.c:967 camlibs/konica/qm150.c:970
 #: camlibs/konica/qm150.c:985 camlibs/konica/qm150.c:988
 #: camlibs/konica/qm150.c:1005 camlibs/konica/qm150.c:1008
-#: camlibs/ptp2/library.c:2304 camlibs/ptp2/library.c:2467
-#: camlibs/ptp2/library.c:2697 camlibs/ptp2/library.c:2781
-#: camlibs/ptp2/ptp.c:2037 camlibs/ptp2/ptp.c:2066 camlibs/ptp2/ptp.c:2082
+#: camlibs/ptp2/library.c:2826 camlibs/ptp2/library.c:2847
+#: camlibs/ptp2/library.c:2979 camlibs/ptp2/library.c:3159
+#: camlibs/ptp2/library.c:3247 camlibs/ptp2/library.c:3258
+#: camlibs/ptp2/library.c:3289 camlibs/ptp2/ptp.c:2543 camlibs/ptp2/ptp.c:2578
+#: camlibs/ptp2/ptp.c:2594 camlibs/ptp2/ptp.c:2635 camlibs/ptp2/ptp.c:2643
 #: camlibs/ricoh/library.c:311 camlibs/ricoh/library.c:326
 #: camlibs/ricoh/library.c:367 camlibs/sierra/epson-desc.c:151
 #: camlibs/sierra/epson-desc.c:169 camlibs/sierra/nikon-desc.c:168
@@ -1677,6 +1863,8 @@ msgid "Force"
 msgstr "Примусово"
 
 #: camlibs/kodak/dc210/dc210.c:261 camlibs/kodak/dc210/dc210.c:269
+#: camlibs/ptp2/library.c:1989 camlibs/ptp2/library.c:1993
+#: camlibs/ptp2/library.c:3253 camlibs/ptp2/ptp.c:2641
 #: camlibs/ricoh/library.c:346
 msgid "None"
 msgstr "Немає"
@@ -1693,13 +1881,13 @@ msgstr "Запобігання червоним очам"
 #: camlibs/konica/qm150.c:815 camlibs/konica/qm150.c:857
 #: camlibs/konica/qm150.c:870 camlibs/konica/qm150.c:1027
 #: camlibs/konica/qm150.c:1034 camlibs/konica/qm150.c:1041
-#: camlibs/konica/qm150.c:1048 camlibs/ptp2/library.c:1709
-#: camlibs/ptp2/library.c:1711 camlibs/ptp2/library.c:1723
-#: camlibs/ptp2/library.c:1916 camlibs/ptp2/library.c:1918
-#: camlibs/ptp2/library.c:1930 camlibs/ptp2/library.c:1949
-#: camlibs/ptp2/library.c:1951 camlibs/ptp2/library.c:1963
-#: camlibs/ptp2/library.c:2699 camlibs/ptp2/ptp.c:1986 camlibs/ptp2/ptp.c:1987
-#: camlibs/ptp2/ptp.c:2084 camlibs/ricoh/library.c:338
+#: camlibs/konica/qm150.c:1048 camlibs/ptp2/library.c:2470
+#: camlibs/ptp2/library.c:2472 camlibs/ptp2/library.c:2484
+#: camlibs/ptp2/library.c:2577 camlibs/ptp2/library.c:2579
+#: camlibs/ptp2/library.c:2591 camlibs/ptp2/library.c:2610
+#: camlibs/ptp2/library.c:2612 camlibs/ptp2/library.c:2624
+#: camlibs/ptp2/library.c:3161 camlibs/ptp2/ptp.c:2492 camlibs/ptp2/ptp.c:2493
+#: camlibs/ptp2/ptp.c:2596 camlibs/ricoh/library.c:338
 #: camlibs/ricoh/library.c:369 camlibs/sierra/nikon-desc.c:305
 #: camlibs/sierra/sierra.c:1112 camlibs/sierra/sierra.c:1118
 #: camlibs/sierra/sierra.c:1381
@@ -1715,14 +1903,14 @@ msgstr "Увімк"
 #: camlibs/konica/qm150.c:818 camlibs/konica/qm150.c:856
 #: camlibs/konica/qm150.c:863 camlibs/konica/qm150.c:1028
 #: camlibs/konica/qm150.c:1031 camlibs/konica/qm150.c:1042
-#: camlibs/konica/qm150.c:1045 camlibs/ptp2/library.c:1710
-#: camlibs/ptp2/library.c:1711 camlibs/ptp2/library.c:1727
-#: camlibs/ptp2/library.c:1917 camlibs/ptp2/library.c:1918
-#: camlibs/ptp2/library.c:1934 camlibs/ptp2/library.c:1950
-#: camlibs/ptp2/library.c:1951 camlibs/ptp2/library.c:1967
-#: camlibs/ptp2/library.c:2698 camlibs/ptp2/library.c:2740
-#: camlibs/ptp2/library.c:2878 camlibs/ptp2/ptp.c:1986 camlibs/ptp2/ptp.c:1987
-#: camlibs/ptp2/ptp.c:2083 camlibs/ricoh/library.c:339
+#: camlibs/konica/qm150.c:1045 camlibs/ptp2/library.c:2471
+#: camlibs/ptp2/library.c:2472 camlibs/ptp2/library.c:2488
+#: camlibs/ptp2/library.c:2578 camlibs/ptp2/library.c:2579
+#: camlibs/ptp2/library.c:2595 camlibs/ptp2/library.c:2611
+#: camlibs/ptp2/library.c:2612 camlibs/ptp2/library.c:2628
+#: camlibs/ptp2/library.c:3160 camlibs/ptp2/library.c:3269
+#: camlibs/ptp2/library.c:3320 camlibs/ptp2/ptp.c:2492 camlibs/ptp2/ptp.c:2493
+#: camlibs/ptp2/ptp.c:2595 camlibs/ricoh/library.c:339
 #: camlibs/ricoh/library.c:368 camlibs/ricoh/library.c:376
 #: camlibs/sierra/epson-desc.c:153 camlibs/sierra/nikon-desc.c:236
 #: camlibs/sierra/nikon-desc.c:304 camlibs/sierra/nikon-desc.c:359
@@ -1948,8 +2136,16 @@ msgstr ""
 "Вільний простір на картці: %d кБ\n"
 
 #: camlibs/kodak/dc210/dc210.c:632
-msgid "This library has been tested with a Kodak DC 215 Zoom camera. It might work also with DC 200 and DC 210 cameras. If you happen to have such a camera, please send a message to koltan@gmx.de to let me know, if you have any troubles with this driver library or if everything is okay."
-msgstr "працездатність драйвера перевірено з апаратом Kodak DC 215 Zoom. Можливо він підійде для DC 200 та DC 210. Якщо у вас є один з перелічених фотоапаратів, будь-ласка, повідомте за адресою koltan@gmx.de чи усі функції доступні з цим драйвером, та чи немає з ним проблем."
+msgid ""
+"This library has been tested with a Kodak DC 215 Zoom camera. It might work "
+"also with DC 200 and DC 210 cameras. If you happen to have such a camera, "
+"please send a message to koltan@gmx.de to let me know, if you have any "
+"troubles with this driver library or if everything is okay."
+msgstr ""
+"працездатність драйвера перевірено з апаратом Kodak DC 215 Zoom. Можливо він "
+"підійде для DC 200 та DC 210. Якщо у вас є один з перелічених фотоапаратів, "
+"будь-ласка, повідомте за адресою koltan@gmx.de чи усі функції доступні з цим "
+"драйвером, та чи немає з ним проблем."
 
 #: camlibs/kodak/dc210/dc210.c:644
 msgid ""
@@ -2013,12 +2209,14 @@ msgstr "Знято локальних знімків: %d, Спалахів: %d\n
 #: camlibs/kodak/dc240/dc240.c:211
 msgid ""
 "Kodak DC240 Camera Library\n"
-"Scott Fritzinger <scottf@gphoto.net> and Hubert Figuiere <hfiguiere@teaser.fr>\n"
+"Scott Fritzinger <scottf@gphoto.net> and Hubert Figuiere <hfiguiere@teaser."
+"fr>\n"
 "Camera Library for the Kodak DC240, DC280, DC3400 and DC5000 cameras.\n"
 "Rewritten and updated for gPhoto2."
 msgstr ""
 "Бібліотека для фотоапарата Kodak DC240\n"
-"Scott Fritzinger <scottf@gphoto.net> та Hubert Figuiere <hfiguiere@teaser.fr>\n"
+"Scott Fritzinger <scottf@gphoto.net> та Hubert Figuiere <hfiguiere@teaser."
+"fr>\n"
 "Бібліотека для фотоапаратів Kodak DC240, DC280, DC3400 та DC5000.\n"
 "Оновлено та переписано для gPhoto2."
 
@@ -2059,8 +2257,12 @@ msgid "No card"
 msgstr "Немає карти пам'яті"
 
 #: camlibs/kodak/dc3200/dc3200.c:38
-msgid "There is currently an operation in progress. This camera only supports one operation at a time. Please wait until the current operation has finished."
-msgstr "Виконується дія. Цей фотоапарат не підтримує одночасне виконання кількох команд. Дочекайтесь завершення поточної операції."
+msgid ""
+"There is currently an operation in progress. This camera only supports one "
+"operation at a time. Please wait until the current operation has finished."
+msgstr ""
+"Виконується дія. Цей фотоапарат не підтримує одночасне виконання кількох "
+"команд. Дочекайтесь завершення поточної операції."
 
 #: camlibs/kodak/dc3200/dc3200.c:142
 #, c-format
@@ -2071,11 +2273,16 @@ msgstr "фотоапарат неактивний більше ніж 9 секу
 msgid ""
 "Known problems:\n"
 "\n"
-"1. If the Kodak DC3200 does not receive a command at least every 10 seconds, it will time out, and will have to be re-initialized. If you notice the camera does not respond, simply re-select the camera. This will cause it to reinitialize."
+"1. If the Kodak DC3200 does not receive a command at least every 10 seconds, "
+"it will time out, and will have to be re-initialized. If you notice the "
+"camera does not respond, simply re-select the camera. This will cause it to "
+"reinitialize."
 msgstr ""
 "Відомі проблеми:\n"
 "\n"
-"1. Якщо Kodak DC3200 не отримує команд протягом 10 секунд, відбудеться тайм-аут та знадобиться повторна ініціалізація. Якщо апарат перестає реагувати, просто заново виберіть його. При цьому відбудеться нова ініціалізація."
+"1. Якщо Kodak DC3200 не отримує команд протягом 10 секунд, відбудеться тайм-"
+"аут та знадобиться повторна ініціалізація. Якщо апарат перестає реагувати, "
+"просто заново виберіть його. При цьому відбудеться нова ініціалізація."
 
 #: camlibs/kodak/dc3200/dc3200.c:444
 msgid ""
@@ -2208,8 +2415,13 @@ msgstr "Невідома помилка."
 
 #: camlibs/konica/konica.c:137
 #, c-format
-msgid "The camera has just sent an error that has not yet been discovered. Please report the following to %s with additional information how you got this error: (0x%x,0x%x). Thank you very much!"
-msgstr "Фотоапарат щойно повідомив про невідому помилку. Сповістіть про це %s, та вкажіть коли виникла ця помилка: (0x%x,0x%x). Дуже дякуємо!"
+msgid ""
+"The camera has just sent an error that has not yet been discovered. Please "
+"report the following to %s with additional information how you got this "
+"error: (0x%x,0x%x). Thank you very much!"
+msgstr ""
+"Фотоапарат щойно повідомив про невідому помилку. Сповістіть про це %s, та "
+"вкажіть коли виникла ця помилка: (0x%x,0x%x). Дуже дякуємо!"
 
 #: camlibs/konica/library.c:158 camlibs/pccam300/library.c:123
 msgid "Getting file list..."
@@ -2220,8 +2432,12 @@ msgid "Testing different speeds..."
 msgstr "Перевіряються різні швидкості..."
 
 #: camlibs/konica/library.c:340
-msgid "The camera could not be contacted. Please make sure it is connected to the computer and turned on."
-msgstr "Не вдається зв'язатись з фотоапаратом.Перевірте, що він увімкнений та з'єднаний з комп'ютером."
+msgid ""
+"The camera could not be contacted. Please make sure it is connected to the "
+"computer and turned on."
+msgstr ""
+"Не вдається зв'язатись з фотоапаратом.Перевірте, що він увімкнений та "
+"з'єднаний з комп'ютером."
 
 #: camlibs/konica/library.c:373
 msgid "Your camera does not support changing filenames."
@@ -2419,7 +2635,10 @@ msgstr "Автоспуск (лише наступний знімок)"
 
 #: camlibs/konica/library.c:834 camlibs/konica/library.c:841
 #: camlibs/konica/qm150.c:1098 camlibs/konica/qm150.c:1105
-#: camlibs/minolta/dimagev/dimagev.c:405 camlibs/ricoh/library.c:348
+#: camlibs/minolta/dimagev/dimagev.c:400 camlibs/ptp2/library.c:3235
+#: camlibs/ptp2/library.c:3248 camlibs/ptp2/library.c:3259
+#: camlibs/ptp2/library.c:3355 camlibs/ptp2/ptp.c:2626 camlibs/ptp2/ptp.c:2636
+#: camlibs/ptp2/ptp.c:2644 camlibs/ptp2/ptp.c:2651 camlibs/ricoh/library.c:348
 #: camlibs/sierra/epson-desc.c:219 camlibs/sierra/nikon-desc.c:253
 #: camlibs/sierra/nikon-desc.c:325 camlibs/sierra/olympus-desc.c:376
 #: camlibs/sierra/olympus-desc.c:511 camlibs/sierra/sierra.c:965
@@ -2493,6 +2712,7 @@ msgid "No answer from the camera."
 msgstr "Немає відповіді від фотоапарату."
 
 #: camlibs/konica/qm150.c:779 camlibs/konica/qm150.c:787
+#: camlibs/ptp2/library.c:3249 camlibs/ptp2/ptp.c:2637
 #: camlibs/sierra/nikon-desc.c:203 camlibs/sierra/sierra.c:936
 #: camlibs/sierra/sierra.c:943 camlibs/sierra/sierra.c:1261
 msgid "Low"
@@ -2505,6 +2725,7 @@ msgid "Medium"
 msgstr "Середня"
 
 #: camlibs/konica/qm150.c:781 camlibs/konica/qm150.c:784
+#: camlibs/ptp2/library.c:3252 camlibs/ptp2/ptp.c:2640
 #: camlibs/sierra/sierra.c:897 camlibs/sierra/sierra.c:905
 #: camlibs/sierra/sierra.c:938 camlibs/sierra/sierra.c:947
 #: camlibs/sierra/sierra.c:1234 camlibs/sierra/sierra.c:1265
@@ -2543,7 +2764,7 @@ msgstr "Офіс"
 msgid "Day-lt"
 msgstr "Денний"
 
-#: camlibs/konica/qm150.c:981 camlibs/ptp2/ptp.c:1668
+#: camlibs/konica/qm150.c:981 camlibs/ptp2/ptp.c:2169
 msgid "Sharpness"
 msgstr "Чіткість"
 
@@ -2573,9 +2794,10 @@ msgid "Black and White"
 msgstr "Чорно-білий"
 
 #: camlibs/konica/qm150.c:1004 camlibs/konica/qm150.c:1020
-#: camlibs/ptp2/library.c:2882 camlibs/ricoh/library.c:331
-#: camlibs/sierra/olympus-desc.c:378 camlibs/sierra/sierra.c:967
-#: camlibs/sierra/sierra.c:976 camlibs/sierra/sierra.c:1282
+#: camlibs/ptp2/library.c:3053 camlibs/ptp2/library.c:3324
+#: camlibs/ricoh/library.c:331 camlibs/sierra/olympus-desc.c:378
+#: camlibs/sierra/sierra.c:967 camlibs/sierra/sierra.c:976
+#: camlibs/sierra/sierra.c:1282
 msgid "Sepia"
 msgstr "Сепія"
 
@@ -2612,13 +2834,13 @@ msgstr "Всюди"
 msgid "AC"
 msgstr "Блок живлення"
 
-#: camlibs/konica/qm150.c:1145 camlibs/minolta/dimagev/dimagev.c:306
+#: camlibs/konica/qm150.c:1145 camlibs/minolta/dimagev/dimagev.c:301
 #: camlibs/sierra/nikon-desc.c:361
 #, c-format
 msgid "Play"
 msgstr "Відтворення"
 
-#: camlibs/konica/qm150.c:1147 camlibs/minolta/dimagev/dimagev.c:306
+#: camlibs/konica/qm150.c:1147 camlibs/minolta/dimagev/dimagev.c:301
 #: camlibs/sierra/nikon-desc.c:360
 #, c-format
 msgid "Record"
@@ -2699,15 +2921,7 @@ msgstr ""
 "\n"
 "Дякуємо за використання GPhoto2 та ОС UNIX/Linux.\n"
 
-#: camlibs/largan/lmini/largan.c:268
-msgid "There is nothing to summarize for this camera."
-msgstr "Немає даних для зведення про цей фотоапарат."
-
-#: camlibs/largan/lmini/largan.c:280
-msgid "No manual"
-msgstr "Довідка відсутня"
-
-#: camlibs/largan/lmini/largan.c:288
+#: camlibs/largan/lmini/largan.c:228
 msgid ""
 "Largan driver\n"
 "Hubert Figuiere <hfiguiere@teaser.fr>\n"
@@ -2738,7 +2952,7 @@ msgstr ""
 "Базовий драйвер для LG GSM\n"
 "Guillaume Bedot <littletux@zarb.org>\n"
 
-#: camlibs/mars/library.c:114
+#: camlibs/mars/library.c:116
 #, c-format
 msgid ""
 "Mars MR97310 camera.\n"
@@ -2747,7 +2961,7 @@ msgstr ""
 "Фотоапарат Mars MR97310.\n"
 "Містить %i знімків. \n"
 
-#: camlibs/mars/library.c:118
+#: camlibs/mars/library.c:120
 #, c-format
 msgid ""
 "Mars MR97310 camera.\n"
@@ -2756,15 +2970,19 @@ msgstr ""
 "Фотоапарат Mars MR97310.\n"
 "Містить %i знімків. \n"
 
-#: camlibs/mars/library.c:130
+#: camlibs/mars/library.c:132
+#, fuzzy
 msgid ""
 "This driver supports cameras with Mars MR97310 chip (and direct\n"
 "equivalents ??Pixart PACx07??) and should work with gtkam.\n"
 "The camera does not support deletion of photos, nor uploading\n"
 "of data. \n"
-"This driver will not decode compressed photos.\n"
+"Decoding of compressed photos may or may not work well\n"
+"and does not work equally well for all supported cameras.\n"
+"Photo data processing for Argus QuickClix is NOT SUPPORTED.\n"
 "If present on the camera, video clip frames are downloaded \n"
 "as consecutive still photos.\n"
+"For further details please consult libgphoto2/camlibs/README.\n"
 msgstr ""
 "Драйвер підтримує фотоапарати з м/с Mars MR97310 (та його безпосередніми\n"
 "аналогами ??Pixart PACx07??) і повинен працювати з gtkam.\n"
@@ -2772,7 +2990,7 @@ msgstr ""
 "Якщо фотоапарат зберігає відеозаписи, то окремі кадри можна отримати\n"
 "у вигляді послідовності знімків.\n"
 
-#: camlibs/mars/library.c:148
+#: camlibs/mars/library.c:153
 msgid ""
 "Mars MR97310 camera library\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
@@ -2780,7 +2998,7 @@ msgstr ""
 "Бібліотека для фотоапарата Mars MR97310\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
 
-#: camlibs/minolta/dimagev/dimagev.c:270
+#: camlibs/minolta/dimagev/dimagev.c:265
 #, c-format
 msgid ""
 "Model:\t\t\tMinolta Dimage V (%s)\n"
@@ -2791,7 +3009,7 @@ msgstr ""
 "Версія пристрою:\t%s\n"
 "Версія прошивки:\t%s\n"
 
-#: camlibs/minolta/dimagev/dimagev.c:285
+#: camlibs/minolta/dimagev/dimagev.c:280
 #, c-format
 msgid ""
 "Host Mode:\t\t%s\n"
@@ -2818,61 +3036,61 @@ msgstr ""
 "ID карти:\t\t%d\n"
 "Режим спалаху:\t\t"
 
-#: camlibs/minolta/dimagev/dimagev.c:297 camlibs/ptp2/library.c:2518
-#: camlibs/ptp2/ptp.c:2076
+#: camlibs/minolta/dimagev/dimagev.c:292 camlibs/ptp2/library.c:2995
+#: camlibs/ptp2/ptp.c:2588
 msgid "Remote"
 msgstr "Автономний"
 
-#: camlibs/minolta/dimagev/dimagev.c:297
+#: camlibs/minolta/dimagev/dimagev.c:292
 msgid "Local"
 msgstr "Локальний"
 
-#: camlibs/minolta/dimagev/dimagev.c:298 camlibs/minolta/dimagev/dimagev.c:300
-#: camlibs/minolta/dimagev/dimagev.c:304 camlibs/minolta/dimagev/dimagev.c:307
-#: camlibs/ptp2/ptp.c:1988
+#: camlibs/minolta/dimagev/dimagev.c:293 camlibs/minolta/dimagev/dimagev.c:295
+#: camlibs/minolta/dimagev/dimagev.c:299 camlibs/minolta/dimagev/dimagev.c:302
+#: camlibs/ptp2/ptp.c:2494
 msgid "Yes"
 msgstr "Так"
 
-#: camlibs/minolta/dimagev/dimagev.c:298 camlibs/minolta/dimagev/dimagev.c:300
-#: camlibs/minolta/dimagev/dimagev.c:304 camlibs/minolta/dimagev/dimagev.c:307
-#: camlibs/ptp2/ptp.c:1988
+#: camlibs/minolta/dimagev/dimagev.c:293 camlibs/minolta/dimagev/dimagev.c:295
+#: camlibs/minolta/dimagev/dimagev.c:299 camlibs/minolta/dimagev/dimagev.c:302
+#: camlibs/ptp2/ptp.c:2494
 msgid "No"
 msgstr "Ні"
 
-#: camlibs/minolta/dimagev/dimagev.c:305 camlibs/sierra/nikon-desc.c:283
+#: camlibs/minolta/dimagev/dimagev.c:300 camlibs/sierra/nikon-desc.c:283
 #: camlibs/sierra/sierra.c:1579 camlibs/sierra/sierra.c:1586
 #: camlibs/sierra/sierra.c:1791
 msgid "Fine"
 msgstr "Вдосконалений"
 
-#: camlibs/minolta/dimagev/dimagev.c:305 camlibs/sierra/sierra.c:896
-#: camlibs/sierra/sierra.c:903 camlibs/sierra/sierra.c:1232
-#: camlibs/sierra/sierra.c:1578 camlibs/sierra/sierra.c:1584
-#: camlibs/sierra/sierra.c:1789
+#: camlibs/minolta/dimagev/dimagev.c:300 camlibs/ptp2/library.c:3051
+#: camlibs/sierra/sierra.c:896 camlibs/sierra/sierra.c:903
+#: camlibs/sierra/sierra.c:1232 camlibs/sierra/sierra.c:1578
+#: camlibs/sierra/sierra.c:1584 camlibs/sierra/sierra.c:1789
 msgid "Standard"
 msgstr "Стандартний"
 
-#: camlibs/minolta/dimagev/dimagev.c:321
+#: camlibs/minolta/dimagev/dimagev.c:316
 #, c-format
 msgid "Automatic\n"
 msgstr "Автомат\n"
 
-#: camlibs/minolta/dimagev/dimagev.c:329
+#: camlibs/minolta/dimagev/dimagev.c:324
 #, c-format
 msgid "Force Flash\n"
 msgstr "Примусовий спалах\n"
 
-#: camlibs/minolta/dimagev/dimagev.c:337
+#: camlibs/minolta/dimagev/dimagev.c:332
 #, c-format
 msgid "Prohibit Flash\n"
 msgstr "Заборона спалаху\n"
 
-#: camlibs/minolta/dimagev/dimagev.c:345
+#: camlibs/minolta/dimagev/dimagev.c:340
 #, c-format
 msgid "Invalid Value ( %d )\n"
 msgstr "Неправильне значення ( %d )\n"
 
-#: camlibs/minolta/dimagev/dimagev.c:359
+#: camlibs/minolta/dimagev/dimagev.c:354
 #, c-format
 msgid ""
 "Battery Level:\t\t%s\n"
@@ -2889,73 +3107,73 @@ msgstr ""
 "Зарядка спалаху:\t\t%s\n"
 "Стан об'єктиву:\t\t"
 
-#: camlibs/minolta/dimagev/dimagev.c:365
+#: camlibs/minolta/dimagev/dimagev.c:360
 msgid "Not Full"
 msgstr "Неповний"
 
-#: camlibs/minolta/dimagev/dimagev.c:365 camlibs/minolta/dimagev/dimagev.c:408
-#: camlibs/ptp2/ptp.c:2090
+#: camlibs/minolta/dimagev/dimagev.c:360 camlibs/minolta/dimagev/dimagev.c:403
+#: camlibs/ptp2/library.c:2756 camlibs/ptp2/ptp.c:2603
 #, c-format
 msgid "Full"
 msgstr "Повний"
 
-#: camlibs/minolta/dimagev/dimagev.c:368
+#: camlibs/minolta/dimagev/dimagev.c:363
 msgid "Busy"
 msgstr "Зайнято"
 
-#: camlibs/minolta/dimagev/dimagev.c:368
+#: camlibs/minolta/dimagev/dimagev.c:363
 msgid "Idle"
 msgstr "Бездіяльний"
 
-#: camlibs/minolta/dimagev/dimagev.c:369
+#: camlibs/minolta/dimagev/dimagev.c:364
 msgid "Charging"
 msgstr "Заряджається"
 
-#: camlibs/minolta/dimagev/dimagev.c:369
+#: camlibs/minolta/dimagev/dimagev.c:364
 msgid "Ready"
 msgstr "Готовий"
 
-#: camlibs/minolta/dimagev/dimagev.c:380
+#: camlibs/minolta/dimagev/dimagev.c:375
 #, c-format
 msgid "Normal\n"
 msgstr "Звичайний\n"
 
-#: camlibs/minolta/dimagev/dimagev.c:383
+#: camlibs/minolta/dimagev/dimagev.c:378
 #, c-format
 msgid "Lens direction does not match flash light\n"
 msgstr "Напрямок об'єктиву не відповідає напрямку світла\n"
 
-#: camlibs/minolta/dimagev/dimagev.c:386
+#: camlibs/minolta/dimagev/dimagev.c:381
 #, c-format
 msgid "Lens is not connected\n"
 msgstr "Об'єктив не підключено\n"
 
-#: camlibs/minolta/dimagev/dimagev.c:389
+#: camlibs/minolta/dimagev/dimagev.c:384
 #, c-format
 msgid "Bad value for lens status %d\n"
 msgstr "Неправильне значення стану об'єктиву %d\n"
 
-#: camlibs/minolta/dimagev/dimagev.c:398
+#: camlibs/minolta/dimagev/dimagev.c:393
 #, c-format
 msgid "Card Status:\t\t"
 msgstr "Стан карти:\t\t"
 
-#: camlibs/minolta/dimagev/dimagev.c:411
+#: camlibs/minolta/dimagev/dimagev.c:406
 #, c-format
 msgid "Write-protected"
 msgstr "Захист від запису"
 
-#: camlibs/minolta/dimagev/dimagev.c:414
+#: camlibs/minolta/dimagev/dimagev.c:409
 #, c-format
 msgid "Unsuitable card"
 msgstr "Несумісна карта"
 
-#: camlibs/minolta/dimagev/dimagev.c:417
+#: camlibs/minolta/dimagev/dimagev.c:412
 #, c-format
 msgid "Bade value for card status %d"
 msgstr "Неправильне значення стану карти %d"
 
-#: camlibs/minolta/dimagev/dimagev.c:436
+#: camlibs/minolta/dimagev/dimagev.c:431
 #, c-format
 msgid ""
 "Minolta Dimage V Camera Library\n"
@@ -3070,11 +3288,15 @@ msgstr "Завантаження зображення: %s."
 
 #: camlibs/panasonic/dc1000.c:461 camlibs/panasonic/dc1580.c:586
 #, c-format
-msgid "File size is %ld bytes. The size of the largest file possible to upload is: %i bytes."
-msgstr "Розмір файла складає %ld байт. Максимально можливий розмір для завантаження: %i байт."
+msgid ""
+"File size is %ld bytes. The size of the largest file possible to upload is: %"
+"i bytes."
+msgstr ""
+"Розмір файла складає %ld байт. Максимально можливий розмір для завантаження: "
+"%i байт."
 
 #: camlibs/panasonic/dc1000.c:474 camlibs/panasonic/dc1580.c:597
-#: camlibs/ricoh/ricoh.c:837
+#: camlibs/ptp2/library.c:798 camlibs/ricoh/ricoh.c:837
 msgid "Uploading..."
 msgstr "Завантаження..."
 
@@ -3129,21 +3351,38 @@ msgstr "Копіюється '%s'..."
 msgid ""
 "Panasonic PV-L859-K/PV-L779-K Palmcorder\n"
 "\n"
-"Panasonic introduced image capturing technology called PHOTOSHOT for the first time to this series of Palmcorders.  Images are stored in JPEG format on an internal flashcard and can be transfered to a computer through the built-in serial port.  Images are saved in one of two resolutions; NORMAL is 320x240 and FINE is 640x480.  The CCD device which captures the images from the lens is only 300K and thus produces only low quality pictures."
+"Panasonic introduced image capturing technology called PHOTOSHOT for the "
+"first time to this series of Palmcorders.  Images are stored in JPEG format "
+"on an internal flashcard and can be transfered to a computer through the "
+"built-in serial port.  Images are saved in one of two resolutions; NORMAL is "
+"320x240 and FINE is 640x480.  The CCD device which captures the images from "
+"the lens is only 300K and thus produces only low quality pictures."
 msgstr ""
 "Panasonic PV-L859-K/PV-L779-K Palmcorder\n"
 "\n"
-"Фірма Panasonic вперше застосувала технологію отримання знімків PHOTOSHOT в цієї серії апаратів Palmcorder. Зображення зберігається у форматі JPEG на внутрішній карті пам'яті та можуть бути передані на комп'ютер через вбудований послідовний порт. Зображення зберігаються у одному з двох режимів: НОРМАЛЬНОМУ - 320x240 та ВИСОКОМУ - 640x480. Роздільна здатність ПЗС матриці дорівнює лише 300 тисячам точок, тому якість отримуваних знімків досить низька."
+"Фірма Panasonic вперше застосувала технологію отримання знімків PHOTOSHOT в "
+"цієї серії апаратів Palmcorder. Зображення зберігається у форматі JPEG на "
+"внутрішній карті пам'яті та можуть бути передані на комп'ютер через "
+"вбудований послідовний порт. Зображення зберігаються у одному з двох "
+"режимів: НОРМАЛЬНОМУ - 320x240 та ВИСОКОМУ - 640x480. Роздільна здатність "
+"ПЗС матриці дорівнює лише 300 тисячам точок, тому якість отримуваних знімків "
+"досить низька."
 
 #: camlibs/panasonic/l859/l859.c:602
 msgid ""
 "Known problems:\n"
 "\n"
-"If communications problems occur, reset the camera and restart the application.  The driver is not robust enough yet to recover from these situations, especially if a problem occurs and the camera is not properly shutdown at speeds faster than 9600."
+"If communications problems occur, reset the camera and restart the "
+"application.  The driver is not robust enough yet to recover from these "
+"situations, especially if a problem occurs and the camera is not properly "
+"shutdown at speeds faster than 9600."
 msgstr ""
 "Відомі проблеми:\n"
 "\n"
-"При виникненні помилок передачі даних виконайте перезапуск фотоапарату та перезапустіть програму. Драйвер поки не може самостійно виходити з такого стану, особливо, якщо проблема виникає при швидкостях більших за 9600 та апарат не вимикається повністю."
+"При виникненні помилок передачі даних виконайте перезапуск фотоапарату та "
+"перезапустіть програму. Драйвер поки не може самостійно виходити з такого "
+"стану, особливо, якщо проблема виникає при швидкостях більших за 9600 та "
+"апарат не вимикається повністю."
 
 #: camlibs/panasonic/l859/l859.c:616
 msgid ""
@@ -3219,14 +3458,21 @@ msgstr "pccam600_init:Очікувалось %d блоків, отримано %
 #: camlibs/pccam600/pccam600.c:228
 #, c-format
 msgid "pccam600 init:Unexpected error: gp_port_read returned %d instead of %d"
-msgstr "pccam600 init:Неочікувана помилка: gp_port_read повернула %d замість %d"
+msgstr ""
+"pccam600 init:Неочікувана помилка: gp_port_read повернула %d замість %d"
 
 #: camlibs/polaroid/pdc320.c:456
 msgid ""
-"Download program for several Polaroid cameras. Originally written by Peter Desnoyers <pjd@fred.cambridge.ma.us>, and adapted for gphoto2 by Nathan Stenzel <nathanstenzel@users.sourceforge.net> and Lutz Mueller <lutz@users.sf.net>.\n"
+"Download program for several Polaroid cameras. Originally written by Peter "
+"Desnoyers <pjd@fred.cambridge.ma.us>, and adapted for gphoto2 by Nathan "
+"Stenzel <nathanstenzel@users.sourceforge.net> and Lutz Mueller <lutz@users."
+"sf.net>.\n"
 "Polaroid 640SE testing was done by Michael Golden <naugrim@juno.com>."
 msgstr ""
-"Програма копіювання знімків для кількох моделей Polaroid. Початковий автор - Peter Desnoyers <pjd@fred.cambridge.ma.us>, адаптація для gphoto2 - Nathan Stenzel <nathanstenzel@users.sourceforge.net> та Lutz Mueller <lutz@users.sf.net>.\n"
+"Програма копіювання знімків для кількох моделей Polaroid. Початковий автор - "
+"Peter Desnoyers <pjd@fred.cambridge.ma.us>, адаптація для gphoto2 - Nathan "
+"Stenzel <nathanstenzel@users.sourceforge.net> та Lutz Mueller <lutz@users.sf."
+"net>.\n"
 "Тестування Polaroid 640SE - Michael Golden <naugrim@juno.com>."
 
 #: camlibs/polaroid/pdc320.c:486
@@ -3235,16 +3481,26 @@ msgid "Model: %x, %x, %x, %x"
 msgstr "Модель: %x, %x, %x, %x"
 
 #: camlibs/polaroid/pdc640.c:903
-msgid "Download program for GrandTek 98x based cameras. Originally written by Chris Byrne <adapt@ihug.co.nz>, and adapted for gphoto2 by Lutz Mueller <lutz@users.sf.net>.Protocol enhancements and postprocessing  for Jenoptik JD350e by Michael Trawny <trawny99@users.sourceforge.net>.Bugfixes by Marcus Meissner <marcus@jet.franken.de>."
-msgstr "Програма копіювання зображень для фотоапаратів побудованих на  GrandTek 98x. Початковий автор - Chris Byrne <adapt@ihug.co.nz>, адаптація для gphoto2 - Lutz Mueller <lutz@users.sf.net>. Вдосконалення протоколу та доопрацювання для Jenoptik JD350e виконав Michael Trawny <trawny99@users.sourceforge.net>. Виправлення помилок - Marcus Meissner <marcus@jet.franken.de>."
+msgid ""
+"Download program for GrandTek 98x based cameras. Originally written by Chris "
+"Byrne <adapt@ihug.co.nz>, and adapted for gphoto2 by Lutz Mueller "
+"<lutz@users.sf.net>.Protocol enhancements and postprocessing  for Jenoptik "
+"JD350e by Michael Trawny <trawny99@users.sourceforge.net>.Bugfixes by Marcus "
+"Meissner <marcus@jet.franken.de>."
+msgstr ""
+"Програма копіювання зображень для фотоапаратів побудованих на  GrandTek 98x. "
+"Початковий автор - Chris Byrne <adapt@ihug.co.nz>, адаптація для gphoto2 - "
+"Lutz Mueller <lutz@users.sf.net>. Вдосконалення протоколу та доопрацювання "
+"для Jenoptik JD350e виконав Michael Trawny <trawny99@users.sourceforge.net>. "
+"Виправлення помилок - Marcus Meissner <marcus@jet.franken.de>."
 
-#: camlibs/polaroid/pdc700.c:159 camlibs/ptp2/library.c:3126
-#: camlibs/ptp2/library.c:3127 camlibs/ptp2/ptp.c:1701
+#: camlibs/polaroid/pdc700.c:159 camlibs/ptp2/library.c:3630
+#: camlibs/ptp2/library.c:3631 camlibs/ptp2/ptp.c:2202
 msgid "Image Quality"
 msgstr "Якість зображення"
 
-#: camlibs/polaroid/pdc700.c:160 camlibs/ptp2/library.c:3128
-#: camlibs/ptp2/library.c:3129 camlibs/ptp2/ptp.c:1648 camlibs/ptp2/ptp.c:1702
+#: camlibs/polaroid/pdc700.c:160 camlibs/ptp2/library.c:3632
+#: camlibs/ptp2/library.c:3633 camlibs/ptp2/ptp.c:2149 camlibs/ptp2/ptp.c:2203
 msgid "Image Size"
 msgstr "Розмір зображення"
 
@@ -3260,11 +3516,11 @@ msgstr "Автоматичне вимикання (хвилин)"
 msgid "Information"
 msgstr "Інформація"
 
-#: camlibs/polaroid/pdc700.c:167 camlibs/ptp2/library.c:2005
+#: camlibs/polaroid/pdc700.c:167 camlibs/ptp2/library.c:2731
 msgid "normal"
 msgstr "звичайна"
 
-#: camlibs/polaroid/pdc700.c:167 camlibs/ptp2/library.c:2006
+#: camlibs/polaroid/pdc700.c:167 camlibs/ptp2/library.c:2732
 msgid "fine"
 msgstr "висока"
 
@@ -3272,21 +3528,21 @@ msgstr "висока"
 msgid "superfine"
 msgstr "досить висока"
 
-#: camlibs/polaroid/pdc700.c:169 camlibs/ptp2/library.c:2048
-#: camlibs/ptp2/library.c:2217 camlibs/ptp2/library.c:2922
-#: camlibs/sierra/epson-desc.c:116 camlibs/sierra/sierra.c:1477
-#: camlibs/sierra/sierra.c:1491 camlibs/sierra/sierra.c:1726
+#: camlibs/polaroid/pdc700.c:169 camlibs/ptp2/library.c:2741
+#: camlibs/ptp2/library.c:3331 camlibs/sierra/epson-desc.c:116
+#: camlibs/sierra/sierra.c:1477 camlibs/sierra/sierra.c:1491
+#: camlibs/sierra/sierra.c:1726
 msgid "auto"
 msgstr "авто"
 
 #: camlibs/polaroid/pdc700.c:169 camlibs/polaroid/pdc700.c:170
-#: camlibs/ptp2/library.c:2049 camlibs/sierra/nikon-desc.c:565
+#: camlibs/ptp2/library.c:2742 camlibs/sierra/nikon-desc.c:565
 #: camlibs/sierra/nikon-desc.c:570
 msgid "on"
 msgstr "увімк"
 
 #: camlibs/polaroid/pdc700.c:169 camlibs/polaroid/pdc700.c:170
-#: camlibs/ptp2/library.c:2047 camlibs/sierra/nikon-desc.c:564
+#: camlibs/ptp2/library.c:2740 camlibs/sierra/nikon-desc.c:564
 #: camlibs/sierra/nikon-desc.c:569
 msgid "off"
 msgstr "вимк"
@@ -3335,17 +3591,31 @@ msgstr "Фотоапарат надіслав більше байтів ніж �
 
 #: camlibs/polaroid/pdc700.c:451
 #, c-format
-msgid "Requested information about picture %i (= 0x%x), but got information about picture %i back"
-msgstr "Очікувана інформація про зображення %i (= 0x%x), але назад отримано інформацію про зображення %i"
+msgid ""
+"Requested information about picture %i (= 0x%x), but got information about "
+"picture %i back"
+msgstr ""
+"Очікувана інформація про зображення %i (= 0x%x), але назад отримано "
+"інформацію про зображення %i"
 
 #: camlibs/polaroid/pdc700.c:914
 #, c-format
-msgid "%i bytes of an unknown image format have been received. Please write to %s and ask for assistance."
-msgstr "Отримано %i байтів про невідомий формат зображення. Запишіть у %s та попросіть про допомогу."
+msgid ""
+"%i bytes of an unknown image format have been received. Please write to %s "
+"and ask for assistance."
+msgstr ""
+"Отримано %i байтів про невідомий формат зображення. Запишіть у %s та "
+"попросіть про допомогу."
 
 #: camlibs/polaroid/pdc700.c:939
-msgid "Download program for Polaroid DC700 camera. Originally written by Ryan Lantzer <rlantzer@umr.edu> for gphoto-4.x. Adapted for gphoto2 by Lutz Mueller <lutz@users.sf.net>."
-msgstr "Програма копіювання зображень для Polaroid DC700. Початково програма написана - Ryan Lantzer <rlantzer@umr.edu> для gphoto-4.x. Адаптація для gphoto2 - Lutz Mueller <lutz@users.sf.net>."
+msgid ""
+"Download program for Polaroid DC700 camera. Originally written by Ryan "
+"Lantzer <rlantzer@umr.edu> for gphoto-4.x. Adapted for gphoto2 by Lutz "
+"Mueller <lutz@users.sf.net>."
+msgstr ""
+"Програма копіювання зображень для Polaroid DC700. Початково програма "
+"написана - Ryan Lantzer <rlantzer@umr.edu> для gphoto-4.x. Адаптація для "
+"gphoto2 - Lutz Mueller <lutz@users.sf.net>."
 
 #: camlibs/polaroid/pdc700.c:995
 msgid "How long will it take until the camera powers off?"
@@ -3388,240 +3658,253 @@ msgstr ""
 "Автоматичне вимикання: %i хвилин\n"
 "Джерело живлення: %s"
 
-#: camlibs/polaroid/pdc700.c:1229
+#: camlibs/polaroid/pdc700.c:1233
 #, c-format
 msgid "The requested port type (%i) is not supported by this driver."
 msgstr "Запитаний діапазон портів (%i) не підтримується цим драйвером."
 
-#: camlibs/ptp2/library.c:149
+#: camlibs/ptp2/library.c:109
+msgid "You need to specify a folder starting with /store_xxxxxxxxx/"
+msgstr ""
+
+#: camlibs/ptp2/library.c:148
 msgid "PTP Undefined Error"
 msgstr "Невідома помилка PTP"
 
-#: camlibs/ptp2/library.c:150
+#: camlibs/ptp2/library.c:149
 msgid "PTP OK!"
 msgstr "PTP OK!"
 
-#: camlibs/ptp2/library.c:151
+#: camlibs/ptp2/library.c:150
 msgid "PTP General Error"
 msgstr "Внутрішня помилка PTP"
 
-#: camlibs/ptp2/library.c:152
+#: camlibs/ptp2/library.c:151
 msgid "PTP Session Not Open"
 msgstr "Сеанс PTP не відкритий"
 
-#: camlibs/ptp2/library.c:153
+#: camlibs/ptp2/library.c:152
 msgid "PTP Invalid Transaction ID"
 msgstr "Неправильний ідентифікатор транзакції"
 
-#: camlibs/ptp2/library.c:154
+#: camlibs/ptp2/library.c:153
 msgid "PTP Operation Not Supported"
 msgstr "Операція PTP не підтримується"
 
-#: camlibs/ptp2/library.c:155
+#: camlibs/ptp2/library.c:154
 msgid "PTP Parameter Not Supported"
 msgstr "Параметр PTP не підтримуються"
 
-#: camlibs/ptp2/library.c:156
+#: camlibs/ptp2/library.c:155
 msgid "PTP Incomplete Transfer"
 msgstr "неповна передача PTP"
 
-#: camlibs/ptp2/library.c:157
+#: camlibs/ptp2/library.c:156
 msgid "PTP Invalid Storage ID"
 msgstr "PTP неправильний ідентифікатор сховища"
 
-#: camlibs/ptp2/library.c:158
+#: camlibs/ptp2/library.c:157
 msgid "PTP Invalid Object Handle"
 msgstr "Неправильний дескриптор об'єкту PTP"
 
-#: camlibs/ptp2/library.c:159
+#: camlibs/ptp2/library.c:158
 msgid "PTP Device Prop Not Supported"
 msgstr "Властивість пристрою PTP не підтримується"
 
-#: camlibs/ptp2/library.c:160
+#: camlibs/ptp2/library.c:159
 msgid "PTP Invalid Object Format Code"
 msgstr "Неправильний код формату об'єкту PTP"
 
-#: camlibs/ptp2/library.c:161
+#: camlibs/ptp2/library.c:160
 msgid "PTP Store Full"
 msgstr "Сховище PTP переповнене"
 
-#: camlibs/ptp2/library.c:162
+#: camlibs/ptp2/library.c:161
 msgid "PTP Object Write Protected"
 msgstr "Об'єкт PTP захищений від запису"
 
-#: camlibs/ptp2/library.c:163
+#: camlibs/ptp2/library.c:162
 msgid "PTP Store Read Only"
 msgstr "Сховище PTP лише для читання"
 
-#: camlibs/ptp2/library.c:164
+#: camlibs/ptp2/library.c:163
 msgid "PTP Access Denied"
 msgstr "Доступ до PTP заборонено"
 
-#: camlibs/ptp2/library.c:165
+#: camlibs/ptp2/library.c:164
 msgid "PTP No Thumbnail Present"
 msgstr "Мініатюра PTP відсутня"
 
-#: camlibs/ptp2/library.c:166
+#: camlibs/ptp2/library.c:165
 msgid "PTP Self Test Failed"
 msgstr "Помилка самотестування PTP"
 
-#: camlibs/ptp2/library.c:167
+#: camlibs/ptp2/library.c:166
 msgid "PTP Partial Deletion"
 msgstr "Часткове видалення PTP"
 
-#: camlibs/ptp2/library.c:168
+#: camlibs/ptp2/library.c:167
 msgid "PTP Store Not Available"
 msgstr "Недоступне сховище PTP"
 
-#: camlibs/ptp2/library.c:170
+#: camlibs/ptp2/library.c:169
 msgid "PTP Specification By Format Unsupported"
 msgstr "Непідтримувана специфікація формату PTP"
 
-#: camlibs/ptp2/library.c:171
+#: camlibs/ptp2/library.c:170
 msgid "PTP No Valid Object Info"
 msgstr "Відсутня правильна інформація про об'єкт PTP"
 
-#: camlibs/ptp2/library.c:172
+#: camlibs/ptp2/library.c:171
 msgid "PTP Invalid Code Format"
 msgstr "Неправильний формат коду PTP"
 
-#: camlibs/ptp2/library.c:173
+#: camlibs/ptp2/library.c:172
 msgid "PTP Unknown Vendor Code"
 msgstr "Невідомий код виробника PTP"
 
-#: camlibs/ptp2/library.c:175
+#: camlibs/ptp2/library.c:174
 msgid "PTP Capture Already Terminated"
 msgstr "Зйомку PTP вже перервано"
 
-#: camlibs/ptp2/library.c:176
+#: camlibs/ptp2/library.c:175
 msgid "PTP Device Busy"
 msgstr "Пристрій PTP зайнятий"
 
-#: camlibs/ptp2/library.c:177
+#: camlibs/ptp2/library.c:176
 msgid "PTP Invalid Parent Object"
 msgstr "Невідомий батьківський об'єкт PTP"
 
-#: camlibs/ptp2/library.c:178
+#: camlibs/ptp2/library.c:177
 msgid "PTP Invalid Device Prop Format"
 msgstr "Неправильний формат властивості пристрою PTP"
 
-#: camlibs/ptp2/library.c:179
+#: camlibs/ptp2/library.c:178
 msgid "PTP Invalid Device Prop Value"
 msgstr "Неправильне значення пристрою PTP"
 
-#: camlibs/ptp2/library.c:180
+#: camlibs/ptp2/library.c:179
 msgid "PTP Invalid Parameter"
 msgstr "Неправильний параметр PTP"
 
-#: camlibs/ptp2/library.c:181
+#: camlibs/ptp2/library.c:180
 msgid "PTP Session Already Opened"
 msgstr "Сеанс PTP вже відкритий"
 
-#: camlibs/ptp2/library.c:182
+#: camlibs/ptp2/library.c:181
 msgid "PTP Transaction Canceled"
 msgstr "Транзакцію PTP скасовано"
 
-#: camlibs/ptp2/library.c:184
+#: camlibs/ptp2/library.c:183
 msgid "PTP Specification Of Destination Unsupported"
 msgstr "Непідтримувана специфікація цілі PTP"
 
-#: camlibs/ptp2/library.c:185
+#: camlibs/ptp2/library.c:184
 msgid "PTP EK Filename Required"
 msgstr "Вимагається назва файлу PTP EK"
 
-#: camlibs/ptp2/library.c:186
+#: camlibs/ptp2/library.c:185
 msgid "PTP EK Filename Conflicts"
 msgstr "Конфлікт назви файлу PTP EK"
 
-#: camlibs/ptp2/library.c:187
+#: camlibs/ptp2/library.c:186
 msgid "PTP EK Filename Invalid"
 msgstr "Неправильна назва PTP EK"
 
-#: camlibs/ptp2/library.c:189
+#: camlibs/ptp2/library.c:188
 msgid "PTP I/O error"
 msgstr "помилка вводу-виводу PTP"
 
-#: camlibs/ptp2/library.c:190
+#: camlibs/ptp2/library.c:189
 msgid "PTP Error: bad parameter"
 msgstr "PTP Error: неправильний параметр"
 
-#: camlibs/ptp2/library.c:191
+#: camlibs/ptp2/library.c:190
 msgid "PTP Protocol error, data expected"
 msgstr "Помилка протоколу PTP, очікувались дані"
 
-#: camlibs/ptp2/library.c:192
+#: camlibs/ptp2/library.c:191
 msgid "PTP Protocol error, response expected"
 msgstr "Помилку протоколу PTP, очікувалась відповідь"
 
-#: camlibs/ptp2/library.c:844
+#: camlibs/ptp2/library.c:982
 msgid ""
 "PTP2 driver\n"
-"(c)2001-2003 by Mariusz Woloszyn <emsi@ipartners.pl>.\n"
+"(c)2001-2005 by Mariusz Woloszyn <emsi@ipartners.pl>.\n"
+"(c)2003-2006 by Marcus Meissner <marcus@jet.franken.de>.\n"
+"This driver supports cameras that support PTP or PictBridge(tm), and\n"
+"Media Players that support the Media Transfer Protocol (MTP).\n"
+"\n"
+"This driver is not a 'Licensed Implementation' of the Media Transfer "
+"Protocol.\n"
+"\n"
 "Enjoy!"
 msgstr ""
-"Драйвер PTP2\n"
-"(c)2001-2003 Автор Mariusz Woloszyn <emsi@ipartners.pl>.\n"
-"Користуйтесь!"
 
-#: camlibs/ptp2/library.c:914 camlibs/ptp2/library.c:1003
+#: camlibs/ptp2/library.c:1058 camlibs/ptp2/library.c:1147
 msgid "Sorry, your Canon camera does not support Canon capture"
 msgstr "Ваш фотоапарат Canon не підтримує режим захоплення Canon"
 
-#: camlibs/ptp2/library.c:1039
+#: camlibs/ptp2/library.c:1181
 msgid "Sorry, your Canon camera does not support Canon Viewfinder mode"
 msgstr "Ваш фотоапарат Canon не підтримує режим видошукача Canon"
 
-#: camlibs/ptp2/library.c:1044
+#: camlibs/ptp2/library.c:1186
 #, c-format
 msgid "Canon enable viewfinder failed: %d"
 msgstr "Не вдається увімкнути видошукача Canon: %d"
 
-#: camlibs/ptp2/library.c:1049
+#: camlibs/ptp2/library.c:1191
 #, c-format
 msgid "Canon get viewfinder image failed: %d"
 msgstr "Не вдається отримати зображення видошукача Canon: %d"
 
-#: camlibs/ptp2/library.c:1059
+#: camlibs/ptp2/library.c:1201
 #, c-format
 msgid "Canon disable viewfinder failed: %d"
 msgstr "Помилка вимикання видошукача Canon: %d"
 
-#: camlibs/ptp2/library.c:1114
+#: camlibs/ptp2/library.c:1303
+#, fuzzy
+msgid "Sorry, your camera does not support Nikon capture"
+msgstr "Ваш фотоапарат не підтримує загальне захоплення"
+
+#: camlibs/ptp2/library.c:1384
 msgid "Sorry, your Canon camera does not support Canon Captureinitiation"
 msgstr "Збереження покажчика ще не підтримується"
 
-#: camlibs/ptp2/library.c:1128
+#: camlibs/ptp2/library.c:1398
 #, c-format
 msgid "Canon Capture failed: %d"
 msgstr "Помилка захоплення Canon: %d"
 
-#: camlibs/ptp2/library.c:1187
+#: camlibs/ptp2/library.c:1492
 msgid "Sorry, your camera does not support generic capture"
 msgstr "Ваш фотоапарат не підтримує загальне захоплення"
 
-#: camlibs/ptp2/library.c:1235
+#: camlibs/ptp2/library.c:1540
 msgid "Capture command completed, but no confirmation received"
 msgstr "Команду захоплення виконано, але підтвердження не отримано"
 
-#: camlibs/ptp2/library.c:1242
+#: camlibs/ptp2/library.c:1547
 #, c-format
 msgid "Received event 0x%04x"
 msgstr "Отримано подію 0x%04x"
 
-#: camlibs/ptp2/library.c:1334
+#: camlibs/ptp2/library.c:1709
 msgid "read only"
 msgstr "лише для читання"
 
-#: camlibs/ptp2/library.c:1335
+#: camlibs/ptp2/library.c:1710
 msgid "readwrite"
 msgstr "читання та запис"
 
-#: camlibs/ptp2/library.c:1336 camlibs/ptp2/library.c:1338
-#: camlibs/ptp2/ptp.c:2113
+#: camlibs/ptp2/library.c:1711 camlibs/ptp2/library.c:1713
+#: camlibs/ptp2/ptp.c:2655
 msgid "Unknown"
 msgstr "Невідомо"
 
-#: camlibs/ptp2/library.c:1461
+#: camlibs/ptp2/library.c:1841
 #, c-format
 msgid ""
 "Model: %s\n"
@@ -3636,202 +3919,488 @@ msgstr ""
 "ID фірмового доповнення: 0x%08x\n"
 "Опис фірмового доповнення: %s\n"
 
-#: camlibs/ptp2/library.c:1618 camlibs/ptp2/library.c:1635
-#: camlibs/ptp2/library.c:1741
+#: camlibs/ptp2/library.c:1859
+#, fuzzy, c-format
+msgid ""
+"\n"
+"Capture Formats: "
+msgstr "Формат дати"
+
+#: camlibs/ptp2/library.c:1873
+#, fuzzy, c-format
+msgid "Display Formats: "
+msgstr "Формат дати"
+
+#: camlibs/ptp2/library.c:1889
+#, c-format
+msgid "Supported MTP Object Properties:\n"
+msgstr ""
+
+#: camlibs/ptp2/library.c:1905
+#, c-format
+msgid " PTP error %04x on query"
+msgstr ""
+
+#: camlibs/ptp2/library.c:1922
+#, c-format
+msgid ""
+"\n"
+"Device Capabilities:\n"
+msgstr ""
+
+#: camlibs/ptp2/library.c:1926
+#, c-format
+msgid "\tFile Download, "
+msgstr ""
+
+#: camlibs/ptp2/library.c:1929
+#, fuzzy, c-format
+msgid "File Deletion, "
+msgstr "Роздільна здатність"
+
+#: camlibs/ptp2/library.c:1931
+#, fuzzy, c-format
+msgid "No File Deletion, "
+msgstr "Роздільна здатність"
+
+#: camlibs/ptp2/library.c:1935
+#, fuzzy, c-format
+msgid "File Upload\n"
+msgstr "Помилка вивантаження файлу."
+
+#: camlibs/ptp2/library.c:1937
+#, c-format
+msgid "No File Upload\n"
+msgstr ""
+
+#: camlibs/ptp2/library.c:1942
+#, c-format
+msgid "\tGeneric Image Capture, "
+msgstr ""
+
+#: camlibs/ptp2/library.c:1944
+#, c-format
+msgid "\tNo Image Capture, "
+msgstr ""
+
+#: camlibs/ptp2/library.c:1947
+#, fuzzy, c-format
+msgid "Open Capture, "
+msgstr "Зйомка"
+
+#: camlibs/ptp2/library.c:1949
+#, c-format
+msgid "No Open Capture, "
+msgstr ""
+
+#: camlibs/ptp2/library.c:1955
+#, fuzzy, c-format
+msgid "Canon Capture\n"
+msgstr "Помилка захоплення Canon: %d"
+
+#: camlibs/ptp2/library.c:1959
+#, fuzzy, c-format
+msgid "Nikon Capture\n"
+msgstr "Зйомка"
+
+#: camlibs/ptp2/library.c:1961
+#, c-format
+msgid "No vendor specific capture\n"
+msgstr ""
+
+#: camlibs/ptp2/library.c:1973
+#, c-format
+msgid ""
+"\n"
+"Storage Devices Summary:\n"
+msgstr ""
+
+#: camlibs/ptp2/library.c:1988
+#, c-format
+msgid "\tStorageDescription: %s\n"
+msgstr ""
+
+#: camlibs/ptp2/library.c:1992
+#, c-format
+msgid "\tVolumeLabel: %s\n"
+msgstr ""
+
+#: camlibs/ptp2/library.c:1998 camlibs/ptp2/library.c:2012
+#: camlibs/ptp2/library.c:3278
+#, fuzzy
+msgid "Undefined"
+msgstr "Невідома помилка PTP"
+
+#: camlibs/ptp2/library.c:1999
+msgid "Builtin ROM"
+msgstr ""
+
+#: camlibs/ptp2/library.c:2000
+msgid "Removable ROM"
+msgstr ""
+
+#: camlibs/ptp2/library.c:2001
+msgid "Builtin RAM"
+msgstr ""
+
+#: camlibs/ptp2/library.c:2002
+msgid "Removable RAM (memory card)"
+msgstr ""
+
+#: camlibs/ptp2/library.c:2004 camlibs/ptp2/library.c:2017
+#: camlibs/ptp2/library.c:2029
+#, fuzzy, c-format
+msgid "Unknown: 0x%04x\n"
+msgstr "невідомо (0x%02x)"
+
+#: camlibs/ptp2/library.c:2008
+#, c-format
+msgid "\tStorage Type: %s\n"
+msgstr ""
+
+#: camlibs/ptp2/library.c:2013
+#, fuzzy
+msgid "Generic Flat"
+msgstr "Загальне"
+
+#: camlibs/ptp2/library.c:2014
+msgid "Generic Hierarchical"
+msgstr ""
+
+#: camlibs/ptp2/library.c:2015
+msgid "Digital Camera Layout (DCIM)"
+msgstr ""
+
+#: camlibs/ptp2/library.c:2021
+#, c-format
+msgid "\tFilesystemtype: %s\n"
+msgstr ""
+
+#: camlibs/ptp2/library.c:2025
+#, fuzzy
+msgid "Read-Write"
+msgstr "читання та запис"
+
+#: camlibs/ptp2/library.c:2026
+#, fuzzy
+msgid "Read-Only"
+msgstr "Готовий"
+
+#: camlibs/ptp2/library.c:2027
+msgid "Read Only with Object deletion"
+msgstr ""
+
+#: camlibs/ptp2/library.c:2033
+#, c-format
+msgid "\tAccess Capability: %s\n"
+msgstr ""
+
+#: camlibs/ptp2/library.c:2035
+#, c-format
+msgid "\tMaximum Capability: %llu (%lu MB)\n"
+msgstr ""
+
+#: camlibs/ptp2/library.c:2040
+#, c-format
+msgid "\tFree Space (Bytes): %llu (%lu MB)\n"
+msgstr ""
+
+#: camlibs/ptp2/library.c:2045
+#, fuzzy, c-format
+msgid "\tFree Space (Images): %d\n"
+msgstr "Кількість зображень: %d\n"
+
+#: camlibs/ptp2/library.c:2050
+#, c-format
+msgid ""
+"\n"
+"Device Property Summary:\n"
+msgstr ""
+
+#: camlibs/ptp2/library.c:2218 camlibs/ptp2/library.c:2244
+#: camlibs/ptp2/library.c:2291 camlibs/ptp2/library.c:2322
+#: camlibs/ptp2/library.c:2350
+#, fuzzy, c-format
+msgid "Unknown value %04x"
+msgstr "Невідомий тип файлу %i."
+
+#: camlibs/ptp2/library.c:2379 camlibs/ptp2/library.c:2396
+#: camlibs/ptp2/library.c:2502
 #, c-format
 msgid "unexpected datatype %i"
 msgstr "несподіваний тип даних %i"
 
-#: camlibs/ptp2/library.c:1750 camlibs/ptp2/ptp.c:2088
+#: camlibs/ptp2/library.c:2512 camlibs/ptp2/library.c:2750
+#: camlibs/ptp2/library.c:3279 camlibs/ptp2/ptp.c:2601
 #: camlibs/sierra/olympus-desc.c:490
 msgid "Manual"
 msgstr "Ручний"
 
-#: camlibs/ptp2/library.c:1751
+#: camlibs/ptp2/library.c:2513 camlibs/ptp2/library.c:3280
 msgid "Automatic"
 msgstr "Автоматично"
 
-#: camlibs/ptp2/library.c:1752
+#: camlibs/ptp2/library.c:2514
 msgid "One-push Automatic"
 msgstr "Автомат у один дотик"
 
-#: camlibs/ptp2/library.c:1753 camlibs/ptp2/library.c:2782
-#: camlibs/ptp2/ptp.c:2040 camlibs/sierra/olympus-desc.c:431
+#: camlibs/ptp2/library.c:2515 camlibs/ptp2/library.c:3290
+#: camlibs/ptp2/ptp.c:2546 camlibs/sierra/olympus-desc.c:431
 #: camlibs/sierra/olympus-desc.c:450 camlibs/sierra/olympus-desc.c:469
 msgid "Daylight"
 msgstr "Денне світло"
 
-#: camlibs/ptp2/library.c:1754 camlibs/ptp2/library.c:2785
-#: camlibs/ptp2/ptp.c:2039 camlibs/ricoh/library.c:328
+#: camlibs/ptp2/library.c:2516 camlibs/ptp2/library.c:3293
+#: camlibs/ptp2/ptp.c:2545 camlibs/ricoh/library.c:328
 #: camlibs/sierra/nikon-desc.c:285 camlibs/sierra/olympus-desc.c:432
 #: camlibs/sierra/olympus-desc.c:451 camlibs/sierra/sierra.c:1058
 #: camlibs/sierra/sierra.c:1067 camlibs/sierra/sierra.c:1346
 msgid "Fluorescent"
 msgstr "Флуоресцентна лампа"
 
-#: camlibs/ptp2/library.c:1755 camlibs/ptp2/library.c:2784
+#: camlibs/ptp2/library.c:2517 camlibs/ptp2/library.c:3292
 #: camlibs/sierra/olympus-desc.c:433 camlibs/sierra/olympus-desc.c:452
 #: camlibs/sierra/olympus-desc.c:470 camlibs/sierra/sierra.c:1059
 #: camlibs/sierra/sierra.c:1069 camlibs/sierra/sierra.c:1348
 msgid "Tungsten"
 msgstr "Вольфрамова лампа"
 
-#: camlibs/ptp2/library.c:1757 camlibs/ptp2/library.c:2783
-#: camlibs/ptp2/ptp.c:2042 camlibs/sierra/nikon-desc.c:288
+#: camlibs/ptp2/library.c:2519 camlibs/ptp2/library.c:3291
+#: camlibs/ptp2/ptp.c:2548 camlibs/sierra/nikon-desc.c:288
 #: camlibs/sierra/olympus-desc.c:434 camlibs/sierra/olympus-desc.c:453
 #: camlibs/sierra/olympus-desc.c:474 camlibs/sierra/sierra.c:1060
 #: camlibs/sierra/sierra.c:1072 camlibs/sierra/sierra.c:1350
 msgid "Cloudy"
 msgstr "Хмарно"
 
-#: camlibs/ptp2/library.c:1758 camlibs/ptp2/ptp.c:2043
+#: camlibs/ptp2/library.c:2520 camlibs/ptp2/ptp.c:2549
 msgid "Shade"
 msgstr "Різко"
 
-#: camlibs/ptp2/library.c:1759 camlibs/ptp2/ptp.c:2044
+#: camlibs/ptp2/library.c:2521 camlibs/ptp2/ptp.c:2550
 #: camlibs/sierra/nikon-desc.c:287
 msgid "Preset"
 msgstr "Шаблон"
 
-#: camlibs/ptp2/library.c:1818 camlibs/ptp2/ptp.c:2032
+#: camlibs/ptp2/library.c:2529 camlibs/ptp2/ptp.c:2538
 msgid "JPEG Basic"
 msgstr "Базовий JPEG"
 
-#: camlibs/ptp2/library.c:1819
+#: camlibs/ptp2/library.c:2530
 msgid "JPEG Normal"
 msgstr "Звичайний JPEG"
 
-#: camlibs/ptp2/library.c:1820 camlibs/ptp2/ptp.c:2034
+#: camlibs/ptp2/library.c:2531 camlibs/ptp2/ptp.c:2540
 msgid "JPEG Fine"
 msgstr "Покращений JPEG"
 
-#: camlibs/ptp2/library.c:1821
+#: camlibs/ptp2/library.c:2532
 msgid "NEF (Raw)"
 msgstr "NEF (Raw)"
 
-#: camlibs/ptp2/library.c:1822
+#: camlibs/ptp2/library.c:2533
 msgid "NEF+BASIC"
 msgstr "NEF+БАЗОВИЙ"
 
-#: camlibs/ptp2/library.c:2007
+#: camlibs/ptp2/library.c:2733
 msgid "super fine"
 msgstr "найкраща якість"
 
-#: camlibs/ptp2/library.c:2050
+#: camlibs/ptp2/library.c:2743
 msgid "auto red eye"
 msgstr "авто проти червоних очей"
 
-#: camlibs/ptp2/library.c:2051
+#: camlibs/ptp2/library.c:2744
 msgid "on red eye"
 msgstr "проти червоних очей"
 
-#: camlibs/ptp2/library.c:2091
+#: camlibs/ptp2/library.c:2749
+msgid "iTTL"
+msgstr ""
+
+#: camlibs/ptp2/library.c:2751 camlibs/ptp2/ptp.c:2602
+msgid "Commander"
+msgstr "Командувач"
+
+#: camlibs/ptp2/library.c:2766
 msgid "spot"
 msgstr "точка"
 
-#: camlibs/ptp2/library.c:2216
-msgid "center"
+#: camlibs/ptp2/library.c:2825
+#, fuzzy
+msgid "Center"
 msgstr "центр"
 
-#: camlibs/ptp2/library.c:2256
+#: camlibs/ptp2/library.c:2832
 msgid "large"
 msgstr "великий"
 
-#: camlibs/ptp2/library.c:2257
+#: camlibs/ptp2/library.c:2833
 msgid "medium 1"
 msgstr "середовище 1"
 
-#: camlibs/ptp2/library.c:2258
+#: camlibs/ptp2/library.c:2834
 msgid "medium 2"
 msgstr "середовище 2"
 
-#: camlibs/ptp2/library.c:2259
+#: camlibs/ptp2/library.c:2835
 msgid "small"
 msgstr "малий"
 
-#: camlibs/ptp2/library.c:2299 camlibs/ptp2/library.c:2826
+#: camlibs/ptp2/library.c:2842 camlibs/ptp2/library.c:3301
 msgid "Factory Default"
 msgstr "Заводські параметри"
 
-#: camlibs/ptp2/library.c:2468 camlibs/ptp2/ptp.c:2067
+#: camlibs/ptp2/library.c:2976
+msgid "Creative"
+msgstr ""
+
+#: camlibs/ptp2/library.c:2977
+#, fuzzy
+msgid "Action"
+msgstr "Авто"
+
+#: camlibs/ptp2/library.c:2978 camlibs/ptp2/library.c:2980
+#: camlibs/ptp2/library.c:3240 camlibs/ptp2/ptp.c:2579 camlibs/ptp2/ptp.c:2631
 msgid "Portrait"
 msgstr "Книжкова"
 
-#: camlibs/ptp2/library.c:2469 camlibs/ptp2/ptp.c:2068
+#: camlibs/ptp2/library.c:2981 camlibs/ptp2/library.c:3241
+#: camlibs/ptp2/ptp.c:2580 camlibs/ptp2/ptp.c:2632
 msgid "Landscape"
 msgstr "Альбомна"
 
-#: camlibs/ptp2/library.c:2471 camlibs/ptp2/ptp.c:2070
+#: camlibs/ptp2/library.c:2983 camlibs/ptp2/ptp.c:2582
 msgid "Sports"
 msgstr "Спорт"
 
-#: camlibs/ptp2/library.c:2472 camlibs/ptp2/ptp.c:2072
+#: camlibs/ptp2/library.c:2984 camlibs/ptp2/ptp.c:2584
 msgid "Night Portrait"
 msgstr "Нічна альбомна"
 
-#: camlibs/ptp2/library.c:2473 camlibs/ptp2/ptp.c:2071
+#: camlibs/ptp2/library.c:2985 camlibs/ptp2/ptp.c:2583
 msgid "Night Landscape"
 msgstr "Нічна книжкова"
 
-#: camlibs/ptp2/library.c:2515 camlibs/ptp2/ptp.c:2073
+#: camlibs/ptp2/library.c:2991 camlibs/ptp2/ptp.c:2585
 msgid "Single Shot"
 msgstr "Знімок екрану"
 
-#: camlibs/ptp2/library.c:2516 camlibs/ptp2/ptp.c:2074
-msgid "Power Wind"
-msgstr "Потужний вітер"
+#: camlibs/ptp2/library.c:2992
+#, fuzzy
+msgid "Burst"
+msgstr "Найкраще"
 
-#: camlibs/ptp2/library.c:2517 camlibs/ptp2/ptp.c:2075
+#: camlibs/ptp2/library.c:2993
+#, fuzzy
+msgid "Timelapse"
+msgstr "Кількість проміжків часу"
+
+#: camlibs/ptp2/library.c:2994 camlibs/ptp2/ptp.c:2587
 msgid "Timer"
 msgstr "Таймер"
 
-#: camlibs/ptp2/library.c:2519 camlibs/ptp2/ptp.c:2077
+#: camlibs/ptp2/library.c:2996 camlibs/ptp2/ptp.c:2589
 msgid "Timer + Remote"
 msgstr "Таймер + віддалене керування"
 
-#: camlibs/ptp2/library.c:2561 camlibs/ptp2/ptp.c:2050
+#: camlibs/ptp2/library.c:3002 camlibs/ptp2/ptp.c:2556
 msgid "Dynamic Area"
 msgstr "Динамічна область"
 
-#: camlibs/ptp2/library.c:2562 camlibs/ptp2/ptp.c:2051
+#: camlibs/ptp2/library.c:3003 camlibs/ptp2/ptp.c:2557
 msgid "Single Area"
 msgstr "Одиночна область"
 
-#: camlibs/ptp2/library.c:2563 camlibs/ptp2/ptp.c:2052
+#: camlibs/ptp2/library.c:3004 camlibs/ptp2/ptp.c:2558
 msgid "Closest Subject"
 msgstr "Найближча тема"
 
-#: camlibs/ptp2/library.c:2606 camlibs/ptp2/ptp.c:2059
+#: camlibs/ptp2/library.c:3010
+#, fuzzy
+msgid "sRGB (portrait)"
+msgstr "Книжкова"
+
+#: camlibs/ptp2/library.c:3011
+msgid "AdobeRGB"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3012
+msgid "sRGB (nature)"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3018 camlibs/ptp2/ptp.c:2621
+msgid "Centre"
+msgstr "По-центру"
+
+#: camlibs/ptp2/library.c:3019 camlibs/ptp2/ptp.c:2622
+msgid "Top"
+msgstr "Згори"
+
+#: camlibs/ptp2/library.c:3020 camlibs/ptp2/ptp.c:2623
+msgid "Bottom"
+msgstr "Знизу"
+
+#: camlibs/ptp2/library.c:3021 camlibs/ptp2/ptp.c:2624
+msgid "Left"
+msgstr "Зліва"
+
+#: camlibs/ptp2/library.c:3022 camlibs/ptp2/ptp.c:2625
+msgid "Right"
+msgstr "Справа"
+
+#: camlibs/ptp2/library.c:3028
+msgid "Average"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3029 camlibs/ptp2/ptp.c:2571
 msgid "Center Weighted"
 msgstr "Центрально-зважений"
 
-#: camlibs/ptp2/library.c:2607 camlibs/ptp2/ptp.c:2060
-#: camlibs/sierra/nikon-desc.c:493 camlibs/sierra/olympus-desc.c:627
-msgid "Matrix"
-msgstr "Матриця"
+#: camlibs/ptp2/library.c:3030
+msgid "Multi Spot"
+msgstr ""
 
-#: camlibs/ptp2/library.c:2608 camlibs/ptp2/ptp.c:2061
-#: camlibs/sierra/nikon-desc.c:492 camlibs/sierra/olympus-desc.c:626
-msgid "Spot"
-msgstr "Точечний"
+#: camlibs/ptp2/library.c:3031
+#, fuzzy
+msgid "Center Spot"
+msgstr "Центрально-зважений"
 
-#: camlibs/ptp2/library.c:2651 camlibs/ptp2/ptp.c:2045
+#: camlibs/ptp2/library.c:3037
+#, fuzzy
+msgid "Automatic Flash"
+msgstr "Автоматично"
+
+#: camlibs/ptp2/library.c:3038
+#, fuzzy
+msgid "Flash off"
+msgstr "Режим спалаху"
+
+#: camlibs/ptp2/library.c:3039
+#, fuzzy
+msgid "Fill flash"
+msgstr "Спалах"
+
+#: camlibs/ptp2/library.c:3040
+#, fuzzy
+msgid "Red-eye automatic"
+msgstr "Запобігання червоним очам"
+
+#: camlibs/ptp2/library.c:3041
+#, fuzzy
+msgid "Red-eye fill"
+msgstr "Запобігання червоним очам"
+
+#: camlibs/ptp2/library.c:3042
+#, fuzzy
+msgid "External sync"
+msgstr "зовні"
+
+#: camlibs/ptp2/library.c:3043 camlibs/ptp2/ptp.c:2551
 msgid "Default"
 msgstr "Типово"
 
-#: camlibs/ptp2/library.c:2652 camlibs/ptp2/ptp.c:2046
-#: camlibs/sierra/epson-desc.c:154 camlibs/sierra/sierra.c:998
-#: camlibs/sierra/sierra.c:1008 camlibs/sierra/sierra.c:1305
-#: camlibs/sierra/sierra.c:1508 camlibs/sierra/sierra.c:1517
-#: camlibs/sierra/sierra.c:1744
-msgid "Red-eye Reduction"
-msgstr "Запобігання червоним очам"
-
-#: camlibs/ptp2/library.c:2653 camlibs/ptp2/ptp.c:2047
-msgid "Red-eye Reduction + Slow Sync"
-msgstr "Запобігання червоним очам + уповільнена синхр."
-
-#: camlibs/ptp2/library.c:2654 camlibs/ptp2/ptp.c:2048
+#: camlibs/ptp2/library.c:3044 camlibs/ptp2/ptp.c:2554
 #: camlibs/sierra/epson-desc.c:155 camlibs/sierra/sierra.c:999
 #: camlibs/sierra/sierra.c:1010 camlibs/sierra/sierra.c:1307
 #: camlibs/sierra/sierra.c:1509 camlibs/sierra/sierra.c:1519
@@ -3839,154 +4408,610 @@ msgstr "Запобігання червоним очам + уповільнен�
 msgid "Slow Sync"
 msgstr "Уповільнена синхр."
 
-#: camlibs/ptp2/library.c:2655 camlibs/ptp2/ptp.c:2049
+#: camlibs/ptp2/library.c:3045 camlibs/ptp2/ptp.c:2555
 msgid "Rear Curtain Sync + Slow Sync"
 msgstr "Задній фронт синхр. + уповільнена синхр."
 
-#: camlibs/ptp2/library.c:2742
-msgid "Long distance"
-msgstr "Велика відстань"
+#: camlibs/ptp2/library.c:3046 camlibs/ptp2/ptp.c:2553
+msgid "Red-eye Reduction + Slow Sync"
+msgstr "Запобігання червоним очам + уповільнена синхр."
 
-#: camlibs/ptp2/library.c:2786
-msgid "Fluorescent H"
-msgstr "Флуоресцентний H"
+#: camlibs/ptp2/library.c:3052 camlibs/ricoh/library.c:330
+#: camlibs/sierra/epson-desc.c:137
+msgid "Black & White"
+msgstr "Чорно-білий"
 
-#: camlibs/ptp2/library.c:2787 camlibs/sierra/epson-desc.c:171
-#: camlibs/sierra/sierra.c:1535 camlibs/sierra/sierra.c:1542
-#: camlibs/sierra/sierra.c:1762
-msgid "Custom"
-msgstr "Інший"
+#: camlibs/ptp2/library.c:3167 camlibs/ptp2/ptp.c:2565
+#, fuzzy
+msgid "AE/AF Lock"
+msgstr "Блокування фокусу"
 
-#: camlibs/ptp2/library.c:2879
+#: camlibs/ptp2/library.c:3168 camlibs/ptp2/ptp.c:2567
+msgid "AE Lock only"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3169
+msgid "AF Lock Only"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3170 camlibs/ptp2/ptp.c:2568
+msgid "AF Lock Hold"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3171 camlibs/ptp2/ptp.c:2569
+msgid "AF On"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3172
+msgid "Flash Level Lock"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3177 camlibs/ptp2/library.c:3197
+msgid "10 seconds"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3178 camlibs/ptp2/library.c:3198
+msgid "20 seconds"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3179 camlibs/ptp2/library.c:3227
+#, fuzzy
+msgid "1 minute"
+msgstr "1 хвилина"
+
+#: camlibs/ptp2/library.c:3180 camlibs/ptp2/library.c:3228
+#, fuzzy
+msgid "5 minutes"
+msgstr "5 хвилин"
+
+#: camlibs/ptp2/library.c:3181 camlibs/ptp2/library.c:3229
+#, fuzzy
+msgid "10 minutes"
+msgstr "10 хвилин"
+
+#: camlibs/ptp2/library.c:3186
+msgid "4 seconds"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3187
+msgid "6 seconds"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3188
+msgid "8 seconds"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3189
+msgid "16 seconds"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3190
+#, fuzzy
+msgid "30 minutes"
+msgstr "10 хвилин"
+
+#: camlibs/ptp2/library.c:3195
+msgid "2 seconds"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3196
+msgid "5 seconds"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3203
+#, fuzzy
+msgid "6 mm"
+msgstr "29 mm"
+
+#: camlibs/ptp2/library.c:3204
+#, fuzzy
+msgid "8 mm"
+msgstr "58 mm"
+
+#: camlibs/ptp2/library.c:3205
+#, fuzzy
+msgid "10 mm"
+msgstr "51 mm"
+
+#: camlibs/ptp2/library.c:3206
+#, fuzzy
+msgid "20 mm"
+msgstr "29 mm"
+
+#: camlibs/ptp2/library.c:3211
+msgid "1/60"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3212
+msgid "1/30"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3213
+msgid "1/15"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3214
+msgid "1/8"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3215
+msgid "1/4"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3216
+msgid "1/2"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3217
+#, fuzzy
+msgid "1"
+msgstr "1x"
+
+#: camlibs/ptp2/library.c:3218
+#, fuzzy
+msgid "2"
+msgstr "F2"
+
+#: camlibs/ptp2/library.c:3219
+#, fuzzy
+msgid "4"
+msgstr "F4"
+
+#: camlibs/ptp2/library.c:3220
+#, fuzzy
+msgid "8"
+msgstr "F8"
+
+#: camlibs/ptp2/library.c:3221
+#, fuzzy
+msgid "15"
+msgstr "1.5"
+
+#: camlibs/ptp2/library.c:3222
+msgid "30"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3230
+#, fuzzy
+msgid "15 minutes"
+msgstr "15 хвилин"
+
+#: camlibs/ptp2/library.c:3236 camlibs/ptp2/library.c:3321
+#: camlibs/ptp2/ptp.c:2627
 msgid "Vivid"
 msgstr "Жвавий"
 
-#: camlibs/ptp2/library.c:2880
+#: camlibs/ptp2/library.c:3237 camlibs/ptp2/ptp.c:2628
+#, fuzzy
+msgid "Sharper"
+msgstr "Різко"
+
+#: camlibs/ptp2/library.c:3238 camlibs/ptp2/ptp.c:2629
+#, fuzzy
+msgid "Softer"
+msgstr "М'яко"
+
+#: camlibs/ptp2/library.c:3239 camlibs/ptp2/ptp.c:2630
+#, fuzzy
+msgid "Direct Print"
+msgstr "Каталог існує"
+
+#: camlibs/ptp2/library.c:3242 camlibs/ptp2/library.c:3264
+#: camlibs/ptp2/library.c:3295 camlibs/ptp2/ptp.c:2633 camlibs/ptp2/ptp.c:2649
+#: camlibs/sierra/epson-desc.c:171 camlibs/sierra/sierra.c:1535
+#: camlibs/sierra/sierra.c:1542 camlibs/sierra/sierra.c:1762
+msgid "Custom"
+msgstr "Інший"
+
+#: camlibs/ptp2/library.c:3250 camlibs/ptp2/ptp.c:2638
+#, fuzzy
+msgid "Medium Low"
+msgstr "Середня"
+
+#: camlibs/ptp2/library.c:3251 camlibs/ptp2/library.c:3262
+#: camlibs/ptp2/ptp.c:2639 camlibs/ptp2/ptp.c:2647
+#, fuzzy
+msgid "Medium high"
+msgstr "Середня"
+
+#: camlibs/ptp2/library.c:3260 camlibs/ptp2/ptp.c:2645
+#, fuzzy
+msgid "Low contrast"
+msgstr "Контрастність"
+
+#: camlibs/ptp2/library.c:3261 camlibs/ptp2/ptp.c:2646
+#, fuzzy
+msgid "Medium low"
+msgstr "Середня"
+
+#: camlibs/ptp2/library.c:3263 camlibs/ptp2/ptp.c:2648
+msgid "High control"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3271
+msgid "Long distance"
+msgstr "Велика відстань"
+
+#: camlibs/ptp2/library.c:3281
+#, fuzzy
+msgid "Automatic Macro"
+msgstr "Автоматично"
+
+#: camlibs/ptp2/library.c:3282
+msgid "AF-S"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3283
+#, fuzzy
+msgid "AF-C"
+msgstr "Блок живлення"
+
+#: camlibs/ptp2/library.c:3294
+msgid "Fluorescent H"
+msgstr "Флуоресцентний H"
+
+#: camlibs/ptp2/library.c:3322
 msgid "Neutral"
 msgstr "Нейтральний"
 
-#: camlibs/ptp2/library.c:2881
+#: camlibs/ptp2/library.c:3323
 msgid "Low sharpening"
 msgstr "Низька різкість"
 
-#: camlibs/ptp2/library.c:2883
+#: camlibs/ptp2/library.c:3325
 msgid "Black & white"
 msgstr "Чорно-білий"
 
-#: camlibs/ptp2/library.c:3110 camlibs/ptp2/ptp.c:1718
+#: camlibs/ptp2/library.c:3347
+#, fuzzy
+msgid "AE & Flash"
+msgstr "БЕЗ спалаху"
+
+#: camlibs/ptp2/library.c:3348
+#, fuzzy
+msgid "AE only"
+msgstr "лише для читання"
+
+#: camlibs/ptp2/library.c:3349
+#, fuzzy
+msgid "Flash only"
+msgstr "Пам'ять Flash"
+
+#: camlibs/ptp2/library.c:3350
+#, fuzzy
+msgid "WB bracketing"
+msgstr "Дужка експозиції"
+
+#: camlibs/ptp2/library.c:3356 camlibs/ptp2/ptp.c:2652
+msgid "Moderate"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3357 camlibs/ptp2/ptp.c:2653
+msgid "Enhanced"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3363
+msgid "MTR > Under"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3364
+msgid "Under > MTR"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3570
+#, fuzzy
+msgid "Internal RAM"
+msgstr "всередині"
+
+#: camlibs/ptp2/library.c:3571
+#, fuzzy
+msgid "Memory card"
+msgstr "Немає карти пам'яті"
+
+#: camlibs/ptp2/library.c:3609 camlibs/ptp2/ptp.c:2218
 msgid "Camera Owner"
 msgstr "Власник фотоапарату"
 
-#: camlibs/ptp2/library.c:3111 camlibs/ptp2/ptp.c:1717
+#: camlibs/ptp2/library.c:3610 camlibs/ptp2/ptp.c:2217
 msgid "Camera Model"
 msgstr "Модель фотоапарату"
 
-#: camlibs/ptp2/library.c:3112 camlibs/ptp2/ptp.c:1716
-msgid "Flash Memory"
-msgstr "Пам'ять Flash"
+#: camlibs/ptp2/library.c:3611 camlibs/ptp2/ptp.c:2216
+#, fuzzy
+msgid "Firmware Version"
+msgstr "Версія прошивки: %8s"
 
-#: camlibs/ptp2/library.c:3113 camlibs/ptp2/library.c:3114
+#: camlibs/ptp2/library.c:3612 camlibs/ptp2/library.c:3613
 msgid "Camera Time"
 msgstr "Час фотоапарату"
 
-#: camlibs/ptp2/library.c:3115 camlibs/ptp2/ptp.c:1688 camlibs/ptp2/ptp.c:1699
+#: camlibs/ptp2/library.c:3614 camlibs/ptp2/ptp.c:2189 camlibs/ptp2/ptp.c:2200
 msgid "Beep Mode"
 msgstr "Режим сигналу"
 
-#: camlibs/ptp2/library.c:3116
+#: camlibs/ptp2/library.c:3615
 msgid "Image Comment"
 msgstr "Коментар до зображення"
 
-#: camlibs/ptp2/library.c:3125
-msgid "Long Exp Noise Reduction"
-msgstr "Зменшення шумів при довгій експозиції"
+#: camlibs/ptp2/library.c:3616 camlibs/ptp2/ptp.c:2307
+msgid "LCD Off Time"
+msgstr "Час вимикання LCD"
 
-#: camlibs/ptp2/library.c:3130 camlibs/ptp2/library.c:3145
-#: camlibs/ptp2/ptp.c:1710 camlibs/sierra/olympus-desc.c:698
+#: camlibs/ptp2/library.c:3617
+#, fuzzy
+msgid "Meter Off Time"
+msgstr "Автоматичний лічильник часу у вимкненому стані"
+
+#: camlibs/ptp2/library.c:3618 camlibs/ptp2/ptp.c:2385
+msgid "CSM Menu"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3621
+msgid "Fast Filesystem"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3622 camlibs/ptp2/library.c:3623
+#, fuzzy
+msgid "Capture Target"
+msgstr "Параметри зйомки"
+
+#: camlibs/ptp2/library.c:3634 camlibs/ptp2/library.c:3657
+#: camlibs/ptp2/ptp.c:2210 camlibs/sierra/olympus-desc.c:698
 #: camlibs/sierra/olympus-desc.c:716
 msgid "ISO Speed"
 msgstr "Швидкість ISO"
 
-#: camlibs/ptp2/library.c:3131 camlibs/ptp2/library.c:3132
+#: camlibs/ptp2/library.c:3635 camlibs/ptp2/library.c:3636
 msgid "WhiteBalance"
 msgstr "Баланс білого"
 
-#: camlibs/ptp2/library.c:3133 camlibs/ptp2/ptp.c:1721
+#: camlibs/ptp2/library.c:3637 camlibs/ptp2/ptp.c:2221
 msgid "Photo Effect"
 msgstr "Фотоефект"
 
-#: camlibs/ptp2/library.c:3139 camlibs/ptp2/ptp.c:1722
+#: camlibs/ptp2/library.c:3638 camlibs/ptp2/ptp.c:2251
+#, fuzzy
+msgid "Color Model"
+msgstr "Режим кольору"
+
+#: camlibs/ptp2/library.c:3639 camlibs/ptp2/ptp.c:2287
+msgid "Auto ISO"
+msgstr "Автоматично визначати ISO"
+
+#: camlibs/ptp2/library.c:3644
+msgid "Long Exp Noise Reduction"
+msgstr "Зменшення шумів при довгій експозиції"
+
+#: camlibs/ptp2/library.c:3645
+#, fuzzy
+msgid "Auto Focus Mode"
+msgstr "Режим автофокусу"
+
+#: camlibs/ptp2/library.c:3647 camlibs/ptp2/library.c:3648
+#: camlibs/ptp2/ptp.c:2222
 msgid "Assist Light"
 msgstr "Допоміжне світло"
 
-#: camlibs/ptp2/library.c:3140 camlibs/ptp2/ptp.c:1713 camlibs/ptp2/ptp.c:1795
+#: camlibs/ptp2/library.c:3649 camlibs/ptp2/ptp.c:2213 camlibs/ptp2/ptp.c:2295
 #: camlibs/sierra/nikon-desc.c:459 camlibs/sierra/nikon-desc.c:482
 #: camlibs/sierra/olympus-desc.c:617
 msgid "Exposure Compensation"
 msgstr "Компенсація експозиції"
 
-#: camlibs/ptp2/library.c:3142 camlibs/ptp2/ptp.c:1893
-msgid "AF Area Illumination"
-msgstr "Область освітлення AF"
-
-#: camlibs/ptp2/library.c:3143 camlibs/ptp2/ptp.c:1881
-msgid "AF Beep Mode"
-msgstr "Режим звукового сигналу AF"
-
-#: camlibs/ptp2/library.c:3144
-msgid "F Number"
-msgstr "Число F"
-
-#: camlibs/ptp2/library.c:3146 camlibs/ptp2/ptp.c:1658
-msgid "Exposure Time"
-msgstr "Час експозиції"
-
-#: camlibs/ptp2/library.c:3147
-msgid "Exposure Program"
-msgstr "Програма експозиції"
-
-#: camlibs/ptp2/library.c:3148 camlibs/ptp2/ptp.c:1666
-msgid "Still Capture Mode"
-msgstr "Тихий режим зйомки"
-
-#: camlibs/ptp2/library.c:3149 camlibs/ptp2/ptp.c:1675
-msgid "Focus Metering Mode"
-msgstr "Режим виміру фокусу"
-
-#: camlibs/ptp2/library.c:3150 camlibs/ptp2/ptp.c:1656
-msgid "Exposure Metering Mode"
-msgstr "Режим виміру експозиції"
-
-#: camlibs/ptp2/library.c:3151 camlibs/ptp2/ptp.c:1657 camlibs/ptp2/ptp.c:1703
-#: camlibs/ptp2/ptp.c:1829 camlibs/ptp2/ptp.c:1895 camlibs/sierra/sierra.c:994
+#: camlibs/ptp2/library.c:3650 camlibs/ptp2/library.c:3651
+#: camlibs/ptp2/library.c:3664 camlibs/ptp2/ptp.c:2158 camlibs/ptp2/ptp.c:2204
+#: camlibs/ptp2/ptp.c:2329 camlibs/ptp2/ptp.c:2401 camlibs/sierra/sierra.c:994
 #: camlibs/sierra/sierra.c:1295 camlibs/sierra/sierra.c:1504
 #: camlibs/sierra/sierra.c:1735
 msgid "Flash Mode"
 msgstr "Режим спалаху"
 
-#: camlibs/ptp2/library.c:3152 camlibs/ptp2/ptp.c:1711
+#: camlibs/ptp2/library.c:3652 camlibs/ptp2/ptp.c:2399
+msgid "AF Area Illumination"
+msgstr "Область освітлення AF"
+
+#: camlibs/ptp2/library.c:3653 camlibs/ptp2/ptp.c:2387
+msgid "AF Beep Mode"
+msgstr "Режим звукового сигналу AF"
+
+#: camlibs/ptp2/library.c:3654
+msgid "F Number"
+msgstr "Число F"
+
+#: camlibs/ptp2/library.c:3655 camlibs/ptp2/ptp.c:2154
+msgid "Focal Length"
+msgstr "Фокусна відстань"
+
+#: camlibs/ptp2/library.c:3656 camlibs/ptp2/ptp.c:2156
+#: camlibs/sierra/nikon-desc.c:331 camlibs/sierra/olympus-desc.c:495
+msgid "Focus Mode"
+msgstr "Режим фокусу"
+
+#: camlibs/ptp2/library.c:3658 camlibs/ptp2/ptp.c:2159
+msgid "Exposure Time"
+msgstr "Час експозиції"
+
+#: camlibs/ptp2/library.c:3659 camlibs/ptp2/ptp.c:2171
+msgid "Effect Mode"
+msgstr "Режим ефектів"
+
+#: camlibs/ptp2/library.c:3660
+msgid "Exposure Program"
+msgstr "Програма експозиції"
+
+#: camlibs/ptp2/library.c:3661 camlibs/ptp2/ptp.c:2167
+msgid "Still Capture Mode"
+msgstr "Тихий режим зйомки"
+
+#: camlibs/ptp2/library.c:3662 camlibs/ptp2/ptp.c:2176
+msgid "Focus Metering Mode"
+msgstr "Режим виміру фокусу"
+
+#: camlibs/ptp2/library.c:3663 camlibs/ptp2/ptp.c:2157
+msgid "Exposure Metering Mode"
+msgstr "Режим виміру експозиції"
+
+#: camlibs/ptp2/library.c:3665 camlibs/ptp2/ptp.c:2211
 #: camlibs/sierra/sierra.c:934 camlibs/sierra/sierra.c:1255
 #: camlibs/sierra/sierra.c:1470 camlibs/sierra/sierra.c:1711
 msgid "Aperture"
 msgstr "Діафрагма"
 
-#: camlibs/ptp2/library.c:3153 camlibs/ptp2/ptp.c:1708
+#: camlibs/ptp2/library.c:3666 camlibs/ptp2/ptp.c:2208
 msgid "Focusing Point"
 msgstr "Точка фокусування"
 
-#: camlibs/ptp2/library.c:3154
+#: camlibs/ptp2/library.c:3667
 msgid "Shutter Speed"
 msgstr "Швидкість затвору"
 
-#: camlibs/ptp2/library.c:3155 camlibs/ptp2/ptp.c:1706
+#: camlibs/ptp2/library.c:3668 camlibs/ptp2/ptp.c:2206
 msgid "Metering Mode"
 msgstr "Баланс білого"
 
-#: camlibs/ptp2/library.c:3156 camlibs/ptp2/ptp.c:1707
-msgid "Macro Mode"
-msgstr "Макрорежим"
+#: camlibs/ptp2/library.c:3669 camlibs/ptp2/ptp.c:2207
+#, fuzzy
+msgid "AF Distance"
+msgstr "Фокусна відстань"
 
-#: camlibs/ptp2/library.c:3162 camlibs/sierra/epson-desc.c:282
+#: camlibs/ptp2/library.c:3670 camlibs/ptp2/ptp.c:2283
+msgid "Focus Area Wrap"
+msgstr "Область фокусу"
+
+#: camlibs/ptp2/library.c:3671 camlibs/ptp2/ptp.c:2299
+msgid "Exposure Lock"
+msgstr "Блокування експозиції"
+
+#: camlibs/ptp2/library.c:3672
+msgid "AE-L/AF-L Mode"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3673 camlibs/ptp2/ptp.c:2317
+msgid "File Number Sequencing"
+msgstr "Впорядкування номерів файлів"
+
+#: camlibs/ptp2/library.c:3674 camlibs/ptp2/ptp.c:2405
+msgid "Flash Sign"
+msgstr "Знак спалаху"
+
+#: camlibs/ptp2/library.c:3675
+#, fuzzy
+msgid "Viewfinder Grid"
+msgstr "Режим видошукача"
+
+#: camlibs/ptp2/library.c:3676 camlibs/ptp2/ptp.c:2395
+msgid "Image Review"
+msgstr "Огляд зображення"
+
+#: camlibs/ptp2/library.c:3677
+#, fuzzy
+msgid "Image Rotation Flag"
+msgstr "Обертання зображення"
+
+#: camlibs/ptp2/library.c:3678
+msgid "Release without CF card"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3679 camlibs/ptp2/ptp.c:2403
+msgid "Flash Mode Manual Power"
+msgstr "Ручне встановлення потужності спалаху"
+
+#: camlibs/ptp2/library.c:3680
+#, fuzzy
+msgid "Auto Focus Area"
+msgstr "Режим автофокусу"
+
+#: camlibs/ptp2/library.c:3681 camlibs/ptp2/ptp.c:2407
+msgid "Flash Exposure Compensation"
+msgstr "Компенсація витримки спалаху"
+
+#: camlibs/ptp2/library.c:3682 camlibs/ptp2/ptp.c:2333
+msgid "Bracket Set"
+msgstr "Встановлено дужку"
+
+#: camlibs/ptp2/library.c:3683 camlibs/ptp2/ptp.c:2337
+msgid "Bracket Order"
+msgstr "Порядок дужок"
+
+#: camlibs/ptp2/library.c:3684 camlibs/ptp2/ptp.c:2172
+msgid "Burst Number"
+msgstr "Кількість спалахів"
+
+#: camlibs/ptp2/library.c:3685
+#, fuzzy
+msgid "Auto Whitebalance Bias"
+msgstr "Автоматичний баланс білого"
+
+#: camlibs/ptp2/library.c:3686
+#, fuzzy
+msgid "Tungsten Whitebalance Bias"
+msgstr "Вольфрамовий баланс білого"
+
+#: camlibs/ptp2/library.c:3687
+#, fuzzy
+msgid "Flourescent Whitebalance Bias"
+msgstr "Флуоресцентний баланс білого"
+
+#: camlibs/ptp2/library.c:3688
+#, fuzzy
+msgid "Daylight Whitebalance Bias"
+msgstr "Баланс білого денного світла"
+
+#: camlibs/ptp2/library.c:3689
+#, fuzzy
+msgid "Flash Whitebalance Bias"
+msgstr "Баланс білого спалаху"
+
+#: camlibs/ptp2/library.c:3690
+#, fuzzy
+msgid "Cloudy Whitebalance Bias"
+msgstr "Туманний баланс білого"
+
+#: camlibs/ptp2/library.c:3691
+#, fuzzy
+msgid "Shade Whitebalance Bias"
+msgstr "Тінистий баланс білого"
+
+#: camlibs/ptp2/library.c:3692
+#, fuzzy
+msgid "Selftimer Delay"
+msgstr "Затримка власного таймера"
+
+#: camlibs/ptp2/library.c:3693
+#, fuzzy
+msgid "Center Weight Area"
+msgstr "область центру мас"
+
+#: camlibs/ptp2/library.c:3694 camlibs/ptp2/ptp.c:2327
+msgid "Flash Shutter Speed"
+msgstr "Швидкість затвору при спалаху"
+
+#: camlibs/ptp2/library.c:3695 camlibs/ptp2/ptp.c:2409
+msgid "Remote Timeout"
+msgstr "Віддалений таймаут"
+
+#: camlibs/ptp2/library.c:3696 camlibs/ptp2/ptp.c:2381
+msgid "Optimize Image"
+msgstr ""
+
+#: camlibs/ptp2/library.c:3697 camlibs/ptp2/ptp.c:2247
+msgid "Sharpening"
+msgstr "Підвищення різкості"
+
+#: camlibs/ptp2/library.c:3698 camlibs/ptp2/ptp.c:2249
+msgid "Tone Compensation"
+msgstr "Компенсація тону"
+
+#: camlibs/ptp2/library.c:3699 camlibs/ptp2/ptp.c:2383
+#, fuzzy
+msgid "Saturation"
+msgstr "Налаштовування"
+
+#: camlibs/ptp2/library.c:3700 camlibs/ptp2/ptp.c:2253
+msgid "Hue Adjustment"
+msgstr "Корегування відтінку"
+
+#: camlibs/ptp2/library.c:3706 camlibs/sierra/epson-desc.c:282
 #: camlibs/sierra/nikon-desc.c:662 camlibs/sierra/nikon-desc.c:673
 #: camlibs/sierra/olympus-desc.c:834 camlibs/sierra/olympus-desc.c:889
 #: camlibs/sierra/olympus-desc.c:903 camlibs/sierra/sierra.c:1157
@@ -3994,211 +5019,222 @@ msgstr "Макрорежим"
 msgid "Camera Settings"
 msgstr "Параметри фотоапарату"
 
-#: camlibs/ptp2/library.c:3163
+#: camlibs/ptp2/library.c:3707
 msgid "Image Settings"
 msgstr "Параметри зображення"
 
-#: camlibs/ptp2/library.c:3164
+#: camlibs/ptp2/library.c:3708
 msgid "Capture Settings"
 msgstr "Параметри зйомки"
 
-#: camlibs/ptp2/library.c:3221
+#: camlibs/ptp2/library.c:3765
 msgid "Number of values"
 msgstr "Кількість значень"
 
-#: camlibs/ptp2/library.c:3225
+#: camlibs/ptp2/library.c:3769
 msgid "Supported values"
 msgstr "Підтримувані значення"
 
-#: camlibs/ptp2/library.c:3233
+#: camlibs/ptp2/library.c:3777
 msgid "Current value"
 msgstr "Поточне значення"
 
-#: camlibs/ptp2/library.c:3869
+#: camlibs/ptp2/library.c:4421 camlibs/ptp2/library.c:4425
+#, c-format
+msgid "File '%s/%s' does not exist."
+msgstr ""
+
+#: camlibs/ptp2/library.c:4431
+msgid "Metadata only supported for MTP devices."
+msgstr ""
+
+#: camlibs/ptp2/library.c:4840
 msgid "Initializing Camera"
 msgstr "Ініціалізація фотоапарату"
 
-#: camlibs/ptp2/library.c:3969
-msgid "PTP is implemented for USB cameras only."
+#: camlibs/ptp2/library.c:4948
+#, fuzzy, c-format
+msgid ""
+"PTP is only implemented for USB and PTP/IP cameras currently, port type %x"
 msgstr "PTP підтримується лише з фотоапаратами USB."
 
-#: camlibs/ptp2/ptp.c:1584
+#: camlibs/ptp2/ptp.c:2085
 msgid "PTP: Undefined Error"
 msgstr "PTP: невідома помилка"
 
-#: camlibs/ptp2/ptp.c:1585
+#: camlibs/ptp2/ptp.c:2086
 msgid "PTP: OK!"
 msgstr "PTP: OK!"
 
-#: camlibs/ptp2/ptp.c:1586
+#: camlibs/ptp2/ptp.c:2087
 msgid "PTP: General Error"
 msgstr "PTP: загальна помилка"
 
-#: camlibs/ptp2/ptp.c:1587
+#: camlibs/ptp2/ptp.c:2088
 msgid "PTP: Session Not Open"
 msgstr "PTP: сеанс не відкритий"
 
-#: camlibs/ptp2/ptp.c:1588
+#: camlibs/ptp2/ptp.c:2089
 msgid "PTP: Invalid Transaction ID"
 msgstr "PTP: неправильний ідентифікатор транзакції"
 
-#: camlibs/ptp2/ptp.c:1589
+#: camlibs/ptp2/ptp.c:2090
 msgid "PTP: Operation Not Supported"
 msgstr "PTP: Операція не підтримується"
 
-#: camlibs/ptp2/ptp.c:1590
+#: camlibs/ptp2/ptp.c:2091
 msgid "PTP: Parameter Not Supported"
 msgstr "PTP: параметр не підтримуються"
 
-#: camlibs/ptp2/ptp.c:1591
+#: camlibs/ptp2/ptp.c:2092
 msgid "PTP: Incomplete Transfer"
 msgstr "PTP: неповна передача"
 
-#: camlibs/ptp2/ptp.c:1592
+#: camlibs/ptp2/ptp.c:2093
 msgid "PTP: Invalid Storage ID"
 msgstr "PTP: Неправильний ідентифікатор сховища"
 
-#: camlibs/ptp2/ptp.c:1593
+#: camlibs/ptp2/ptp.c:2094
 msgid "PTP: Invalid Object Handle"
 msgstr "PTP: неправильний дескриптор об'єкту"
 
-#: camlibs/ptp2/ptp.c:1594
+#: camlibs/ptp2/ptp.c:2095
 msgid "PTP: Device Prop Not Supported"
 msgstr "PTP: властивості пристрою не підтримуються"
 
-#: camlibs/ptp2/ptp.c:1595
+#: camlibs/ptp2/ptp.c:2096
 msgid "PTP: Invalid Object Format Code"
 msgstr "PTP: неправильний код формату об'єкту"
 
-#: camlibs/ptp2/ptp.c:1596
+#: camlibs/ptp2/ptp.c:2097
 msgid "PTP: Store Full"
 msgstr "PTP: сховище переповнене"
 
-#: camlibs/ptp2/ptp.c:1597
+#: camlibs/ptp2/ptp.c:2098
 msgid "PTP: Object Write Protected"
 msgstr "PTP: об'єкт захищений від запису"
 
-#: camlibs/ptp2/ptp.c:1598
+#: camlibs/ptp2/ptp.c:2099
 msgid "PTP: Store Read Only"
 msgstr "PTP: сховище лише для читання"
 
-#: camlibs/ptp2/ptp.c:1599
+#: camlibs/ptp2/ptp.c:2100
 msgid "PTP: Access Denied"
 msgstr "PTP: Доступ заборонено"
 
-#: camlibs/ptp2/ptp.c:1600
+#: camlibs/ptp2/ptp.c:2101
 msgid "PTP: No Thumbnail Present"
 msgstr "PTP: відсутня мініатюра"
 
-#: camlibs/ptp2/ptp.c:1601
+#: camlibs/ptp2/ptp.c:2102
 msgid "PTP: Self Test Failed"
 msgstr "PTP: Помилка самотестування"
 
-#: camlibs/ptp2/ptp.c:1602
+#: camlibs/ptp2/ptp.c:2103
 msgid "PTP: Partial Deletion"
 msgstr "PTP: часткове видалення"
 
-#: camlibs/ptp2/ptp.c:1603
+#: camlibs/ptp2/ptp.c:2104
 msgid "PTP: Store Not Available"
 msgstr "PTP: сховище недоступне"
 
-#: camlibs/ptp2/ptp.c:1605
+#: camlibs/ptp2/ptp.c:2106
 msgid "PTP: Specification By Format Unsupported"
 msgstr "PTP: непідтримувана специфікація формату"
 
-#: camlibs/ptp2/ptp.c:1606
+#: camlibs/ptp2/ptp.c:2107
 msgid "PTP: No Valid Object Info"
 msgstr "PTP: немає правильної інформації про об'єкт"
 
-#: camlibs/ptp2/ptp.c:1607
+#: camlibs/ptp2/ptp.c:2108
 msgid "PTP: Invalid Code Format"
 msgstr "PTP: неправильний формат коду"
 
-#: camlibs/ptp2/ptp.c:1608
+#: camlibs/ptp2/ptp.c:2109
 msgid "PTP: Unknown Vendor Code"
 msgstr "PTP: невідомий код виробника"
 
-#: camlibs/ptp2/ptp.c:1610
+#: camlibs/ptp2/ptp.c:2111
 msgid "PTP: Capture Already Terminated"
 msgstr "PTP: захоплення вже перервано"
 
-#: camlibs/ptp2/ptp.c:1611
+#: camlibs/ptp2/ptp.c:2112
 msgid "PTP: Device Busy"
 msgstr "PTP: пристрій зайнятий"
 
-#: camlibs/ptp2/ptp.c:1612
+#: camlibs/ptp2/ptp.c:2113
 msgid "PTP: Invalid Parent Object"
 msgstr "PTP: неправильний батьківський об'єкт"
 
-#: camlibs/ptp2/ptp.c:1613
+#: camlibs/ptp2/ptp.c:2114
 msgid "PTP: Invalid Device Prop Format"
 msgstr "PTP: неправильний формат властивості пристрою"
 
-#: camlibs/ptp2/ptp.c:1614
+#: camlibs/ptp2/ptp.c:2115
 msgid "PTP: Invalid Device Prop Value"
 msgstr "PTP: неправильне значення властивості пристрою"
 
-#: camlibs/ptp2/ptp.c:1615
+#: camlibs/ptp2/ptp.c:2116
 msgid "PTP: Invalid Parameter"
 msgstr "PTP: неправильний параметр"
 
-#: camlibs/ptp2/ptp.c:1616
+#: camlibs/ptp2/ptp.c:2117
 msgid "PTP: Session Already Opened"
 msgstr "PTP: сеанс вже відкритий"
 
-#: camlibs/ptp2/ptp.c:1617
+#: camlibs/ptp2/ptp.c:2118
 msgid "PTP: Transaction Canceled"
 msgstr "PTP: транзакцію скасовано"
 
-#: camlibs/ptp2/ptp.c:1619
+#: camlibs/ptp2/ptp.c:2120
 msgid "PTP: Specification Of Destination Unsupported"
 msgstr "PTP: непідтримувана специфікація цілі"
 
-#: camlibs/ptp2/ptp.c:1620
+#: camlibs/ptp2/ptp.c:2121
 msgid "PTP: EK Filename Required"
 msgstr "PTP: вимагається назва файлу EK"
 
-#: camlibs/ptp2/ptp.c:1621
+#: camlibs/ptp2/ptp.c:2122
 msgid "PTP: EK Filename Conflicts"
 msgstr "PTP: конфлікт назви файлу EK"
 
-#: camlibs/ptp2/ptp.c:1622
+#: camlibs/ptp2/ptp.c:2123
 msgid "PTP: EK Filename Invalid"
 msgstr "PTP: неправильна назва файлу EK"
 
-#: camlibs/ptp2/ptp.c:1624
+#: camlibs/ptp2/ptp.c:2125
 msgid "PTP: I/O error"
 msgstr "PTP: помилка вводу-виводу"
 
-#: camlibs/ptp2/ptp.c:1625
+#: camlibs/ptp2/ptp.c:2126
 msgid "PTP: Error: bad parameter"
 msgstr "PTP: помилка: неправильний параметр"
 
-#: camlibs/ptp2/ptp.c:1626
+#: camlibs/ptp2/ptp.c:2127
 msgid "PTP: Protocol error, data expected"
 msgstr "PTP: помилка протоколу, очікуються дані"
 
-#: camlibs/ptp2/ptp.c:1627
+#: camlibs/ptp2/ptp.c:2128
 msgid "PTP: Protocol error, response expected"
 msgstr "PTP: помилка протоколу, очікується відповідь"
 
-#: camlibs/ptp2/ptp.c:1645
+#: camlibs/ptp2/ptp.c:2146
 msgid "Undefined PTP Property"
 msgstr "Невизначена властивість PTP"
 
-#: camlibs/ptp2/ptp.c:1646
+#: camlibs/ptp2/ptp.c:2147
 msgid "Battery Level"
 msgstr "Рівень заряду батареї"
 
-#: camlibs/ptp2/ptp.c:1647
+#: camlibs/ptp2/ptp.c:2148
 msgid "Functional Mode"
 msgstr "Режим функціонування"
 
-#: camlibs/ptp2/ptp.c:1649
+#: camlibs/ptp2/ptp.c:2150
 msgid "Compression Setting"
 msgstr "Параметри стиснення"
 
-#: camlibs/ptp2/ptp.c:1650 camlibs/ptp2/ptp.c:1709
+#: camlibs/ptp2/ptp.c:2151 camlibs/ptp2/ptp.c:2209
 #: camlibs/sierra/epson-desc.c:176 camlibs/sierra/nikon-desc.c:293
 #: camlibs/sierra/olympus-desc.c:439 camlibs/sierra/olympus-desc.c:458
 #: camlibs/sierra/olympus-desc.c:479 camlibs/sierra/sierra.c:1055
@@ -4207,568 +5243,564 @@ msgstr "Параметри стиснення"
 msgid "White Balance"
 msgstr "Баланс білого"
 
-#: camlibs/ptp2/ptp.c:1651
+#: camlibs/ptp2/ptp.c:2152
 msgid "RGB Gain"
 msgstr "Підсилення RGB"
 
-#: camlibs/ptp2/ptp.c:1652
+#: camlibs/ptp2/ptp.c:2153
 msgid "F-Number"
 msgstr "Число F"
 
-#: camlibs/ptp2/ptp.c:1653
-msgid "Focal Length"
-msgstr "Фокусна відстань"
-
-#: camlibs/ptp2/ptp.c:1654
+#: camlibs/ptp2/ptp.c:2155
 msgid "Focus Distance"
 msgstr "Фокусна відстань"
 
-#: camlibs/ptp2/ptp.c:1655 camlibs/sierra/nikon-desc.c:331
-#: camlibs/sierra/olympus-desc.c:495
-msgid "Focus Mode"
-msgstr "Режим фокусу"
-
-#: camlibs/ptp2/ptp.c:1659
+#: camlibs/ptp2/ptp.c:2160
 msgid "Exposure Program Mode"
 msgstr "Режим програмованої експозиції"
 
-#: camlibs/ptp2/ptp.c:1661
+#: camlibs/ptp2/ptp.c:2162
 msgid "Exposure Index (film speed ISO)"
 msgstr "Індекс експозиції (швидкість за ISO)"
 
-#: camlibs/ptp2/ptp.c:1663
+#: camlibs/ptp2/ptp.c:2164
 msgid "Exposure Bias Compensation"
 msgstr "Корекція експозиції"
 
-#: camlibs/ptp2/ptp.c:1664
+#: camlibs/ptp2/ptp.c:2165
 msgid "Date Time"
 msgstr "Дата та час"
 
-#: camlibs/ptp2/ptp.c:1665
+#: camlibs/ptp2/ptp.c:2166
 msgid "Pre-Capture Delay"
 msgstr "Затримка перед знімком"
 
-#: camlibs/ptp2/ptp.c:1667
+#: camlibs/ptp2/ptp.c:2168
 msgid "Contrast"
 msgstr "Контрастність"
 
-#: camlibs/ptp2/ptp.c:1669 camlibs/sierra/nikon-desc.c:553
+#: camlibs/ptp2/ptp.c:2170 camlibs/sierra/nikon-desc.c:553
 #: camlibs/sierra/nikon-desc.c:576
 msgid "Digital Zoom"
 msgstr "Цифрове збільшення"
 
-#: camlibs/ptp2/ptp.c:1670
-msgid "Effect Mode"
-msgstr "Режим ефектів"
-
-#: camlibs/ptp2/ptp.c:1671
-msgid "Burst Number"
-msgstr "Кількість спалахів"
-
-#: camlibs/ptp2/ptp.c:1672
+#: camlibs/ptp2/ptp.c:2173
 msgid "Burst Interval"
 msgstr "Інтервал між спалахами"
 
-#: camlibs/ptp2/ptp.c:1673
+#: camlibs/ptp2/ptp.c:2174
 msgid "Timelapse Number"
 msgstr "Кількість проміжків часу"
 
-#: camlibs/ptp2/ptp.c:1674
+#: camlibs/ptp2/ptp.c:2175
 msgid "Timelapse Interval"
 msgstr "Інтервал між проміжками часу"
 
-#: camlibs/ptp2/ptp.c:1676
+#: camlibs/ptp2/ptp.c:2177
 msgid "Upload URL"
 msgstr "URL закачування"
 
-#: camlibs/ptp2/ptp.c:1677
+#: camlibs/ptp2/ptp.c:2178
 msgid "Artist"
 msgstr "Виконавець"
 
-#: camlibs/ptp2/ptp.c:1678
+#: camlibs/ptp2/ptp.c:2179
 msgid "Copyright Info"
 msgstr "Інформація про авторські права"
 
-#: camlibs/ptp2/ptp.c:1685
+#: camlibs/ptp2/ptp.c:2186
 msgid "Color Temperature"
 msgstr "Кольорова температура"
 
-#: camlibs/ptp2/ptp.c:1687
+#: camlibs/ptp2/ptp.c:2188
 msgid "Date Time Stamp Format"
 msgstr "Формат штампу дати та часу"
 
-#: camlibs/ptp2/ptp.c:1689
+#: camlibs/ptp2/ptp.c:2190
 msgid "Video Out"
 msgstr "Вивід відео"
 
-#: camlibs/ptp2/ptp.c:1690
+#: camlibs/ptp2/ptp.c:2191
 msgid "Power Saving"
 msgstr "Економія енергії"
 
-#: camlibs/ptp2/ptp.c:1691
+#: camlibs/ptp2/ptp.c:2192
 msgid "UI Language"
 msgstr "Мова інтерфейсу"
 
-#: camlibs/ptp2/ptp.c:1700
+#: camlibs/ptp2/ptp.c:2201
 msgid "Viewfinder Mode"
 msgstr "Режим видошукача"
 
-#: camlibs/ptp2/ptp.c:1705
-msgid "TV A/V Setting"
-msgstr "Параметри A/V-виводу ТБ"
+#: camlibs/ptp2/ptp.c:2205
+#, fuzzy
+msgid "Shooting Mode"
+msgstr "Швидкість затвору"
 
-#: camlibs/ptp2/ptp.c:1712
+#: camlibs/ptp2/ptp.c:2212
 msgid "ShutterSpeed"
 msgstr "Швидкість затвору"
 
-#: camlibs/ptp2/ptp.c:1715
+#: camlibs/ptp2/ptp.c:2215
 msgid "Size Quality Mode"
 msgstr "Режим якості розміру"
 
-#: camlibs/ptp2/ptp.c:1719
+#: camlibs/ptp2/ptp.c:2219
 msgid "UNIX Time"
 msgstr "Час UNIX"
 
-#: camlibs/ptp2/ptp.c:1720
-msgid "Real Image Width"
-msgstr "Ширина реал-тайм зображення"
+#: camlibs/ptp2/ptp.c:2220
+#, fuzzy
+msgid "Digital Zoom Magnification"
+msgstr "Цифрове збільшення"
 
-#: camlibs/ptp2/ptp.c:1731
+#: camlibs/ptp2/ptp.c:2231
 msgid "Auto White Balance Bias"
 msgstr "Автоматичний баланс білого"
 
-#: camlibs/ptp2/ptp.c:1733
+#: camlibs/ptp2/ptp.c:2233
 msgid "Tungsten White Balance Bias"
 msgstr "Вольфрамовий баланс білого"
 
-#: camlibs/ptp2/ptp.c:1735
+#: camlibs/ptp2/ptp.c:2235
 msgid "Flourescent White Balance Bias"
 msgstr "Флуоресцентний баланс білого"
 
-#: camlibs/ptp2/ptp.c:1737
+#: camlibs/ptp2/ptp.c:2237
 msgid "Daylight White Balance Bias"
 msgstr "Баланс білого денного світла"
 
-#: camlibs/ptp2/ptp.c:1739
+#: camlibs/ptp2/ptp.c:2239
 msgid "Flash White Balance Bias"
 msgstr "Баланс білого спалаху"
 
-#: camlibs/ptp2/ptp.c:1741
+#: camlibs/ptp2/ptp.c:2241
 msgid "Cloudy White Balance Bias"
 msgstr "Туманний баланс білого"
 
-#: camlibs/ptp2/ptp.c:1743
+#: camlibs/ptp2/ptp.c:2243
 msgid "Shady White Balance Bias"
 msgstr "Тінистий баланс білого"
 
-#: camlibs/ptp2/ptp.c:1745
+#: camlibs/ptp2/ptp.c:2245
 msgid "White Balance Colour Temperature"
 msgstr "Температура білого кольору"
 
-#: camlibs/ptp2/ptp.c:1747
-msgid "Sharpening"
-msgstr "Підвищення різкості"
-
-#: camlibs/ptp2/ptp.c:1749
-msgid "Tone Compensation"
-msgstr "Компенсація тону"
-
-#: camlibs/ptp2/ptp.c:1751 camlibs/sierra/epson-desc.c:142
-#: camlibs/sierra/nikon-desc.c:225 camlibs/sierra/sierra.c:964
-#: camlibs/sierra/sierra.c:1274 camlibs/sierra/sierra.c:1603
-#: camlibs/sierra/sierra.c:1804
-msgid "Color Mode"
-msgstr "Режим кольору"
-
-#: camlibs/ptp2/ptp.c:1753
-msgid "Hue Adjustment"
-msgstr "Корегування відтінку"
-
-#: camlibs/ptp2/ptp.c:1755
+#: camlibs/ptp2/ptp.c:2255
 msgid "Lens Focal Length (Non CPU)"
 msgstr "Фокальна довжина об'єктиву (Не CPU)"
 
-#: camlibs/ptp2/ptp.c:1757
+#: camlibs/ptp2/ptp.c:2257
 msgid "Lens Max. Aperture (Non CPU)"
 msgstr "Максимальна діафрагма об'єктиву CPU)"
 
-#: camlibs/ptp2/ptp.c:1759
-msgid "PTP_DPC_NIKON_CSMMenuBankSelect"
-msgstr "PTP_DPC_NIKON_CSMMenuBankSelect"
-
-#: camlibs/ptp2/ptp.c:1761
-msgid "PTP_DPC_NIKON_MenuBankNameA"
-msgstr "PTP_DPC_NIKON_MenuBankNameA"
-
-#: camlibs/ptp2/ptp.c:1763
-msgid "PTP_DPC_NIKON_MenuBankNameB"
-msgstr "PTP_DPC_NIKON_MenuBankNameB"
-
-#: camlibs/ptp2/ptp.c:1765
-msgid "PTP_DPC_NIKON_MenuBankNameC"
-msgstr "PTP_DPC_NIKON_MenuBankNameC"
-
-#: camlibs/ptp2/ptp.c:1767
-msgid "PTP_DPC_NIKON_MenuBankNameD"
-msgstr "PTP_DPC_NIKON_MenuBankNameD"
-
-#: camlibs/ptp2/ptp.c:1769
-msgid "PTP_DPC_NIKON_A1AFCModePriority"
-msgstr "PTP_DPC_NIKON_A1AFCModePriority"
-
-#: camlibs/ptp2/ptp.c:1771
-msgid "PTP_DPC_NIKON_A2AFSModePriority"
-msgstr "PTP_DPC_NIKON_A2AFSModePriority"
-
-#: camlibs/ptp2/ptp.c:1773
-msgid "PTP_DPC_NIKON_A3GroupDynamicAF"
-msgstr "PTP_DPC_NIKON_A3GroupDynamicAF"
-
-#: camlibs/ptp2/ptp.c:1775
-msgid "PTP_DPC_NIKON_A4AFActivation"
-msgstr "PTP_DPC_NIKON_A4AFActivation"
-
-#: camlibs/ptp2/ptp.c:1777
-msgid "PTP_DPC_NIKON_A5FocusAreaIllumManualFocus"
-msgstr "PTP_DPC_NIKON_A5FocusAreaIllumManualFocus"
-
-#: camlibs/ptp2/ptp.c:1779
-msgid "PTP_DPC_NIKON_FocusAreaIllumContinuous"
-msgstr "PTP_DPC_NIKON_FocusAreaIllumContinuous"
-
-#: camlibs/ptp2/ptp.c:1781
-msgid "PTP_DPC_NIKON_FocusAreaIllumWhenSelected"
-msgstr "PTP_DPC_NIKON_FocusAreaIllumWhenSelected"
-
-#: camlibs/ptp2/ptp.c:1783
-msgid "Focus Area Wrap"
-msgstr "Область фокусу"
-
-#: camlibs/ptp2/ptp.c:1785
+#: camlibs/ptp2/ptp.c:2285
 msgid "Vertical AF On"
 msgstr "Вертикальний AF On"
 
-#: camlibs/ptp2/ptp.c:1787
-msgid "Auto ISO"
-msgstr "Автоматично визначати ISO"
-
-#: camlibs/ptp2/ptp.c:1789
+#: camlibs/ptp2/ptp.c:2289
 msgid "ISO Step"
 msgstr "Крок ISO"
 
-#: camlibs/ptp2/ptp.c:1791
+#: camlibs/ptp2/ptp.c:2291
 msgid "Exposure Step"
 msgstr "Крок експозиції"
 
-#: camlibs/ptp2/ptp.c:1793
+#: camlibs/ptp2/ptp.c:2293
 msgid "Exposure Compensation (EV)"
 msgstr "Компенсація експозиції (EV)"
 
-#: camlibs/ptp2/ptp.c:1797
+#: camlibs/ptp2/ptp.c:2297
 msgid "Centre Weight Area"
 msgstr "область центру мас"
 
-#: camlibs/ptp2/ptp.c:1799
-msgid "Exposure Lock"
-msgstr "Блокування експозиції"
-
-#: camlibs/ptp2/ptp.c:1801
+#: camlibs/ptp2/ptp.c:2301
 msgid "Focus Lock"
 msgstr "Блокування фокусу"
 
-#: camlibs/ptp2/ptp.c:1803
+#: camlibs/ptp2/ptp.c:2303
 msgid "Auto Meter Off Time"
 msgstr "Автоматичний лічильник часу у вимкненому стані"
 
-#: camlibs/ptp2/ptp.c:1805
+#: camlibs/ptp2/ptp.c:2305
 msgid "Self Timer Delay"
 msgstr "Затримка власного таймера"
 
-#: camlibs/ptp2/ptp.c:1807
-msgid "LCD Off Time"
-msgstr "Час вимикання LCD"
-
-#: camlibs/ptp2/ptp.c:1809
+#: camlibs/ptp2/ptp.c:2309
 msgid "Shooting Speed"
 msgstr "Швидкість затвору"
 
-#: camlibs/ptp2/ptp.c:1811
+#: camlibs/ptp2/ptp.c:2311
 msgid "Max. Shots"
 msgstr "Макс. знімків"
 
-#: camlibs/ptp2/ptp.c:1813
-msgid "PTP_DPC_NIKON_D3ExpDelayMode"
-msgstr "PTP_DPC_NIKON_D3ExpDelayMode"
-
-#: camlibs/ptp2/ptp.c:1815
+#: camlibs/ptp2/ptp.c:2315
 msgid "Long Exposure Noise Reduction"
 msgstr "Зменшення шумів при довгій експозиції"
 
-#: camlibs/ptp2/ptp.c:1817
-msgid "File Number Sequencing"
-msgstr "Впорядкування номерів файлів"
-
-#: camlibs/ptp2/ptp.c:1819
-msgid "PTP_DPC_NIKON_D6ControlPanelFinderRearControl"
-msgstr "PTP_DPC_NIKON_D6ControlPanelFinderRearControl"
-
-#: camlibs/ptp2/ptp.c:1821
-msgid "PTP_DPC_NIKON_ControlPanelFinderViewfinder"
-msgstr "PTP_DPC_NIKON_ControlPanelFinderViewfinder"
-
-#: camlibs/ptp2/ptp.c:1823
-msgid "PTP_DPC_NIKON_D7Illumination"
-msgstr "PTP_DPC_NIKON_D7Illumination"
-
-#: camlibs/ptp2/ptp.c:1825
+#: camlibs/ptp2/ptp.c:2325
 msgid "Flash Sync. Speed"
 msgstr "Швидкість синхронізації спалаху"
 
-#: camlibs/ptp2/ptp.c:1827
-msgid "Flash Shutter Speed"
-msgstr "Швидкість затвору при спалаху"
-
-#: camlibs/ptp2/ptp.c:1831
+#: camlibs/ptp2/ptp.c:2331
 msgid "Modeling Flash"
 msgstr "Моделювання спалаху"
 
-#: camlibs/ptp2/ptp.c:1833
-msgid "Bracket Set"
-msgstr "Встановлено дужку"
-
-#: camlibs/ptp2/ptp.c:1835
+#: camlibs/ptp2/ptp.c:2335
 msgid "Manual Mode Bracketing"
 msgstr "Режим ручних дужок"
 
-#: camlibs/ptp2/ptp.c:1837
-msgid "Bracket Order"
-msgstr "Порядок дужок"
-
-#: camlibs/ptp2/ptp.c:1839
+#: camlibs/ptp2/ptp.c:2339
 msgid "Auto Bracket Selection"
 msgstr "Автоматичне виділення дужок"
 
-#: camlibs/ptp2/ptp.c:1841
+#: camlibs/ptp2/ptp.c:2341
 msgid "Center Button Shooting Mode"
 msgstr "Режим спуску середньою кнопкою"
 
-#: camlibs/ptp2/ptp.c:1843
+#: camlibs/ptp2/ptp.c:2343
 msgid "Center Button Playback Mode"
 msgstr "Режим відтворення середньою кнопкою"
 
-#: camlibs/ptp2/ptp.c:1845
+#: camlibs/ptp2/ptp.c:2345
 msgid "Multiselector"
 msgstr "Множинний вибір"
 
-#: camlibs/ptp2/ptp.c:1847
+#: camlibs/ptp2/ptp.c:2347
 msgid "Photo Info. Playback"
 msgstr "Відтворення інформації про фотографію"
 
-#: camlibs/ptp2/ptp.c:1849
+#: camlibs/ptp2/ptp.c:2349
 msgid "Assign Func. Button"
 msgstr "Призначити кнопку функції"
 
-#: camlibs/ptp2/ptp.c:1851
+#: camlibs/ptp2/ptp.c:2351
 msgid "Customise Command Dials"
 msgstr "Власні команди набору"
 
-#: camlibs/ptp2/ptp.c:1853
+#: camlibs/ptp2/ptp.c:2353
 msgid "Reverse Command Dial"
 msgstr "Реверсивна команда набору"
 
-#: camlibs/ptp2/ptp.c:1855
+#: camlibs/ptp2/ptp.c:2355
 msgid "Aperture Setting"
 msgstr "Параметри діафрагми"
 
-#: camlibs/ptp2/ptp.c:1857
+#: camlibs/ptp2/ptp.c:2357
 msgid "Menus and Playback"
 msgstr "Меню та відтворення"
 
-#: camlibs/ptp2/ptp.c:1859
+#: camlibs/ptp2/ptp.c:2359
 msgid "Buttons and Dials"
 msgstr "Кнопки та набір"
 
-#: camlibs/ptp2/ptp.c:1861
+#: camlibs/ptp2/ptp.c:2361
 msgid "No CF Card Release"
 msgstr "Картка CF не відпущена"
 
-#: camlibs/ptp2/ptp.c:1863
+#: camlibs/ptp2/ptp.c:2363
 msgid "Image Rotation"
 msgstr "Обертання зображення"
 
-#: camlibs/ptp2/ptp.c:1865
+#: camlibs/ptp2/ptp.c:2365
 msgid "Exposure Bracketing"
 msgstr "Дужка експозиції"
 
-#: camlibs/ptp2/ptp.c:1867
+#: camlibs/ptp2/ptp.c:2367
 msgid "Exposure Bracketing Distance"
 msgstr "Дистанція дужок експозиції"
 
-#: camlibs/ptp2/ptp.c:1869
+#: camlibs/ptp2/ptp.c:2369
 msgid "Exposure Bracketing Number"
 msgstr "Кількість дужок експозиції"
 
-#: camlibs/ptp2/ptp.c:1871
+#: camlibs/ptp2/ptp.c:2371
 msgid "AF LCD Top Mode 2"
 msgstr "AF LCD верхній режим 2"
 
-#: camlibs/ptp2/ptp.c:1873
+#: camlibs/ptp2/ptp.c:2373
 msgid "Active AF Sensor"
 msgstr "Активний сенсор AF"
 
-#: camlibs/ptp2/ptp.c:1875
+#: camlibs/ptp2/ptp.c:2375
 msgid "Exposure Meter"
 msgstr "Лічильник експозиції"
 
-#: camlibs/ptp2/ptp.c:1877
+#: camlibs/ptp2/ptp.c:2377
 msgid "Exposure Aperture Lock"
 msgstr "Блокування діафрагми експозиції"
 
-#: camlibs/ptp2/ptp.c:1879
+#: camlibs/ptp2/ptp.c:2379
 msgid "Maximum Shots"
 msgstr "Максимум знімків"
 
-#: camlibs/ptp2/ptp.c:1883
+#: camlibs/ptp2/ptp.c:2389
 msgid "Autofocus Mode"
 msgstr "Режим автофокусу"
 
-#: camlibs/ptp2/ptp.c:1885
+#: camlibs/ptp2/ptp.c:2391
 msgid "AF Assist Lamp"
 msgstr "Допоміжна лампа AF"
 
-#: camlibs/ptp2/ptp.c:1887
+#: camlibs/ptp2/ptp.c:2393
 msgid "Auto ISO P/A/DVP Setting"
 msgstr "Автоматичні параметри ISO P/A/DVP "
 
-#: camlibs/ptp2/ptp.c:1889
-msgid "Image Review"
-msgstr "Огляд зображення"
-
-#: camlibs/ptp2/ptp.c:1891
+#: camlibs/ptp2/ptp.c:2397
 msgid "Viewfinder Grid Display"
 msgstr "Відображення сітки у видошукачі"
 
-#: camlibs/ptp2/ptp.c:1897
-msgid "Flash Mode Manual Power"
-msgstr "Ручне встановлення потужності спалаху"
-
-#: camlibs/ptp2/ptp.c:1899
-msgid "Flash Sign"
-msgstr "Знак спалаху"
-
-#: camlibs/ptp2/ptp.c:1901
-msgid "Flash Exposure Compensation"
-msgstr "Компенсація витримки спалаху"
-
-#: camlibs/ptp2/ptp.c:1903
-msgid "Remote Timeout"
-msgstr "Віддалений таймаут"
-
-#: camlibs/ptp2/ptp.c:1905
+#: camlibs/ptp2/ptp.c:2411
 msgid "Image Comment String"
 msgstr "Рядок коментаря до зображення"
 
-#: camlibs/ptp2/ptp.c:1907
+#: camlibs/ptp2/ptp.c:2413
 msgid "Flash Open"
 msgstr "Спалах підключений"
 
-#: camlibs/ptp2/ptp.c:1909
+#: camlibs/ptp2/ptp.c:2415
 msgid "Flash Charged"
 msgstr "Спалах заряджається"
 
-#: camlibs/ptp2/ptp.c:1911
+#: camlibs/ptp2/ptp.c:2417
 msgid "Lens ID"
 msgstr "Ідентифікатор об'єктиву"
 
-#: camlibs/ptp2/ptp.c:1913
+#: camlibs/ptp2/ptp.c:2419
 msgid "Min. Focal Length"
 msgstr "Мінімальна фокусна відстань"
 
-#: camlibs/ptp2/ptp.c:1915
+#: camlibs/ptp2/ptp.c:2421
 msgid "Max. Focal Length"
 msgstr "Максимальна фокусна відстань"
 
-#: camlibs/ptp2/ptp.c:1917
+#: camlibs/ptp2/ptp.c:2423
 msgid "Max. Aperture at Min. Focal Length"
 msgstr "Макс. діафрагма при мін. фокусній відстані"
 
-#: camlibs/ptp2/ptp.c:1919
+#: camlibs/ptp2/ptp.c:2425
 msgid "Max. Aperture at Max. Focal Length"
 msgstr "Макс. діафрагма при макс. фокусній відстані"
 
-#: camlibs/ptp2/ptp.c:1921
+#: camlibs/ptp2/ptp.c:2427
 msgid "Low Light"
 msgstr "Слабе світло"
 
-#: camlibs/ptp2/ptp.c:2016 camlibs/ptp2/ptp.c:2017 camlibs/ptp2/ptp.c:2018
+#: camlibs/ptp2/ptp.c:2522 camlibs/ptp2/ptp.c:2523 camlibs/ptp2/ptp.c:2524
 #, c-format
 msgid "%.1f stops"
 msgstr "%.1f зупинок"
 
-#: camlibs/ptp2/ptp.c:2019
+#: camlibs/ptp2/ptp.c:2525
 #, c-format
 msgid "%.0f mm"
 msgstr "%.0f mm"
 
-#: camlibs/ptp2/ptp.c:2033
+#: camlibs/ptp2/ptp.c:2539
 msgid "JPEG Norm"
 msgstr "Звичайний JPEG"
 
-#: camlibs/ptp2/ptp.c:2035
+#: camlibs/ptp2/ptp.c:2541
 msgid "RAW"
 msgstr "RAW"
 
-#: camlibs/ptp2/ptp.c:2036
+#: camlibs/ptp2/ptp.c:2542
 msgid "RAW + JPEG Basic"
 msgstr "RAW + основний JPEG"
 
-#: camlibs/ptp2/ptp.c:2038
-msgid "Incadescent"
-msgstr "Incadescent"
+#: camlibs/ptp2/ptp.c:2544 camlibs/ricoh/library.c:329
+#: camlibs/sierra/nikon-desc.c:284
+msgid "Incandescent"
+msgstr "Лампа накалювання"
 
-#: camlibs/ptp2/ptp.c:2053
+#: camlibs/ptp2/ptp.c:2552 camlibs/sierra/epson-desc.c:154
+#: camlibs/sierra/sierra.c:998 camlibs/sierra/sierra.c:1008
+#: camlibs/sierra/sierra.c:1305 camlibs/sierra/sierra.c:1508
+#: camlibs/sierra/sierra.c:1517 camlibs/sierra/sierra.c:1744
+msgid "Red-eye Reduction"
+msgstr "Запобігання червоним очам"
+
+#: camlibs/ptp2/ptp.c:2559
 msgid "Manual Focus"
 msgstr "Ручний фокус"
 
-#: camlibs/ptp2/ptp.c:2089
-msgid "Commander"
-msgstr "Командувач"
+#: camlibs/ptp2/ptp.c:2566
+msgid "AF Lock only"
+msgstr ""
 
-#: camlibs/ptp2/ptp.c:2096
+#: camlibs/ptp2/ptp.c:2570
+#, fuzzy
+msgid "Flash Lock"
+msgstr "Блокування фокусу"
+
+#: camlibs/ptp2/ptp.c:2572 camlibs/sierra/nikon-desc.c:493
+#: camlibs/sierra/olympus-desc.c:627
+msgid "Matrix"
+msgstr "Матриця"
+
+#: camlibs/ptp2/ptp.c:2573 camlibs/sierra/nikon-desc.c:492
+#: camlibs/sierra/olympus-desc.c:626
+msgid "Spot"
+msgstr "Точечний"
+
+#: camlibs/ptp2/ptp.c:2586
+msgid "Power Wind"
+msgstr "Потужний вітер"
+
+#: camlibs/ptp2/ptp.c:2609
 msgid "1 min"
 msgstr "1 хвилина"
 
-#: camlibs/ptp2/ptp.c:2097
+#: camlibs/ptp2/ptp.c:2610
 msgid "5 mins"
 msgstr "5 хвилин"
 
-#: camlibs/ptp2/ptp.c:2098
+#: camlibs/ptp2/ptp.c:2611
 msgid "10 mins"
 msgstr "10 хвилин"
 
-#: camlibs/ptp2/ptp.c:2099
+#: camlibs/ptp2/ptp.c:2612
 msgid "15 mins"
 msgstr "15 хвилин"
 
-#: camlibs/ptp2/ptp.c:2108
-msgid "Centre"
-msgstr "По-центру"
+#: camlibs/ptp2/ptp.c:2762
+#, fuzzy
+msgid "Firmware"
+msgstr "Версія прошивки: %d.%d\n"
 
-#: camlibs/ptp2/ptp.c:2109
-msgid "Top"
-msgstr "Згори"
+#: camlibs/ptp2/ptp.c:2763
+msgid "WindowsImageFormat"
+msgstr ""
 
-#: camlibs/ptp2/ptp.c:2110
-msgid "Bottom"
-msgstr "Знизу"
+#: camlibs/ptp2/ptp.c:2764
+#, fuzzy
+msgid "Undefined Audio"
+msgstr "Невідома помилка PTP"
 
-#: camlibs/ptp2/ptp.c:2111
-msgid "Left"
-msgstr "Зліва"
+#: camlibs/ptp2/ptp.c:2767
+#, fuzzy
+msgid "Undefined Video"
+msgstr "Невідома помилка PTP"
 
-#: camlibs/ptp2/ptp.c:2112
-msgid "Right"
-msgstr "Справа"
+#: camlibs/ptp2/ptp.c:2770
+#, fuzzy
+msgid "Undefined Collection"
+msgstr "Невизначена властивість PTP"
+
+#: camlibs/ptp2/ptp.c:2771
+msgid "Abstract Multimedia Album"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:2772
+msgid "Abstract Image Album"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:2773
+msgid "Abstract Audio Album"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:2774
+msgid "Abstract Video Album"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:2775
+msgid "Abstract Audio Video Playlist"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:2776
+msgid "Abstract Contact Group"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:2777
+msgid "Abstract Message Folder"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:2778
+msgid "Abstract Chaptered Production"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:2779
+msgid "WPL Playlist"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:2780
+msgid "M3U Playlist"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:2781
+msgid "MPL Playlist"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:2782
+msgid "ASX Playlist"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:2783
+msgid "PLS Playlist"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:2784
+#, fuzzy
+msgid "UndefinedDocument"
+msgstr "Невизначена властивість PTP"
+
+#: camlibs/ptp2/ptp.c:2785
+msgid "AbstractDocument"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:2786
+msgid "UndefinedMessage"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:2787
+msgid "AbstractMessage"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:2788
+msgid "UndefinedContact"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:2789
+msgid "AbstractContact"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:2790
+msgid "vCard2"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:2791
+msgid "vCard3"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:2792
+msgid "UndefinedCalendarItem"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:2793
+msgid "AbstractCalendarItem"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:2794
+msgid "vCalendar1"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:2795
+msgid "vCalendar2"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:2796
+msgid "Undefined Windows Executable"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:2813
+#, c-format
+msgid "M3U"
+msgstr ""
+
+#: camlibs/ptp2/ptp.c:2826
+#, fuzzy, c-format
+msgid "Unknown(%04x)"
+msgstr "невідомо (0x%02x)"
 
 #: camlibs/ricoh/g3.c:342
 msgid "Downloading movie..."
@@ -4926,14 +5958,6 @@ msgstr "1280 x 960"
 msgid "Outdoor"
 msgstr "На вулиці"
 
-#: camlibs/ricoh/library.c:329 camlibs/sierra/nikon-desc.c:284
-msgid "Incandescent"
-msgstr "Лампа накалювання"
-
-#: camlibs/ricoh/library.c:330 camlibs/sierra/epson-desc.c:137
-msgid "Black & White"
-msgstr "Чорно-білий"
-
 #: camlibs/ricoh/library.c:347
 msgid "Maximal"
 msgstr "Максимальний"
@@ -5023,7 +6047,7 @@ msgstr "Режим запису"
 msgid "Compression"
 msgstr "Стиснення"
 
-#: camlibs/ricoh/library.c:561
+#: camlibs/ricoh/library.c:569
 #, c-format
 msgid "Speed %i is not supported!"
 msgstr "Швидкість %i не підтримується!"
@@ -5036,7 +6060,8 @@ msgstr "Очікувалось  %i, отримано %i. Повідомте пр
 #: camlibs/ricoh/ricoh.c:75
 #, c-format
 msgid "Expected %i bytes, got %i. Please report this error to %s."
-msgstr "Очікувалось %i байтів, отримано %i. Повідомте про цю помилку за адресою %s."
+msgstr ""
+"Очікувалось %i байтів, отримано %i. Повідомте про цю помилку за адресою %s."
 
 #: camlibs/ricoh/ricoh.c:172 camlibs/ricoh/ricoh.c:186
 #, c-format
@@ -5051,7 +6076,8 @@ msgstr "Неправильні символи (0x%x, 0x%x). Зв'яжіться 
 #: camlibs/ricoh/ricoh.c:256 camlibs/ricoh/ricoh.c:325
 #, c-format
 msgid "Camera busy. If the problem persists, please contact %s."
-msgstr "Фотоапарат зайнятий. Якщо ця проблема виникає постійно, зв'яжіться з %s."
+msgstr ""
+"Фотоапарат зайнятий. Якщо ця проблема виникає постійно, зв'яжіться з %s."
 
 #: camlibs/ricoh/ricoh.c:291
 #, c-format
@@ -5080,12 +6106,23 @@ msgstr "Невідома помилка. Зв'яжіться з %s."
 
 #: camlibs/ricoh/ricoh.c:816
 #, c-format
-msgid "The filename's length must not exceed 12 characters ('%s' has %i characters)."
-msgstr "Довжина назви файлу не повинна перевищувати 12 символів ('%s' має %i символів)."
+msgid ""
+"The filename's length must not exceed 12 characters ('%s' has %i characters)."
+msgstr ""
+"Довжина назви файлу не повинна перевищувати 12 символів ('%s' має %i "
+"символів)."
 
 #: camlibs/samsung/samsung.c:243
-msgid "The Samsung digimax 800k driver has been written by James McKenzie <james@fishsoup.dhs.org> for gphoto. Lutz Mueller <lutz@users.sourceforge.net> ported it to gphoto2. Marcus Meissner <marcus@jet.franken.de> fixed and enhanced the port."
-msgstr "Драйвер Samsung digimax 800k написав James McKenzie <james@fishsoup.dhs.org> для gphoto. Lutz Mueller <lutz@users.sourceforge.net> переніс його у gphoto2. Marcus Meissner <marcus@jet.franken.de> виправляв помилки та вносив вдосконалення."
+msgid ""
+"The Samsung digimax 800k driver has been written by James McKenzie "
+"<james@fishsoup.dhs.org> for gphoto. Lutz Mueller <lutz@users.sourceforge."
+"net> ported it to gphoto2. Marcus Meissner <marcus@jet.franken.de> fixed and "
+"enhanced the port."
+msgstr ""
+"Драйвер Samsung digimax 800k написав James McKenzie <james@fishsoup.dhs.org> "
+"для gphoto. Lutz Mueller <lutz@users.sourceforge.net> переніс його у "
+"gphoto2. Marcus Meissner <marcus@jet.franken.de> виправляв помилки та вносив "
+"вдосконалення."
 
 #: camlibs/sierra/epson-desc.c:85 camlibs/sierra/nikon-desc.c:92
 #: camlibs/sierra/nikon-desc.c:126 camlibs/sierra/olympus-desc.c:106
@@ -5103,6 +6140,12 @@ msgstr "Дата й час (GMT)"
 #: camlibs/sierra/olympus-desc.c:367
 msgid "Aperature Settings"
 msgstr "Параметри діафрагми"
+
+#: camlibs/sierra/epson-desc.c:142 camlibs/sierra/nikon-desc.c:225
+#: camlibs/sierra/sierra.c:964 camlibs/sierra/sierra.c:1274
+#: camlibs/sierra/sierra.c:1603 camlibs/sierra/sierra.c:1804
+msgid "Color Mode"
+msgstr "Режим кольору"
 
 #: camlibs/sierra/epson-desc.c:160 camlibs/sierra/nikon-desc.c:243
 #: camlibs/sierra/olympus-desc.c:402 camlibs/sierra/olympus-desc.c:421
@@ -5203,8 +6246,10 @@ msgstr "Не вдається отримати дані про ємність а
 
 #: camlibs/sierra/library.c:304
 #, c-format
-msgid "The battery level of the camera is too low (%d%%). The operation is aborted."
-msgstr "Заряд акумулятора фотоапарату надто низький (%d%%). Операцію скасовано."
+msgid ""
+"The battery level of the camera is too low (%d%%). The operation is aborted."
+msgstr ""
+"Заряд акумулятора фотоапарату надто низький (%d%%). Операцію скасовано."
 
 #: camlibs/sierra/library.c:328
 msgid "Cannot retrieve the available memory left"
@@ -5221,7 +6266,8 @@ msgstr "Отримано перший байт (0x%x), який є неправ�
 
 #: camlibs/sierra/library.c:719
 #, c-format
-msgid "Transmission of packet timed out even after %i retries. Please contact %s."
+msgid ""
+"Transmission of packet timed out even after %i retries. Please contact %s."
 msgstr "Таймаут при передачі пакету, навіть після %i спроб. Зв'яжіться з %s."
 
 #: camlibs/sierra/library.c:753 camlibs/sierra/library.c:777
@@ -5267,8 +6313,10 @@ msgstr "Передача даних..."
 
 #: camlibs/sierra/library.c:1204
 #, c-format
-msgid "recursive calls are not supported by the sierra driver! Please contact %s."
-msgstr "рекурсивні виклики не підтримуються драйвером фотоапарату! Зв'яжіться з %s."
+msgid ""
+"recursive calls are not supported by the sierra driver! Please contact %s."
+msgstr ""
+"рекурсивні виклики не підтримуються драйвером фотоапарату! Зв'яжіться з %s."
 
 #: camlibs/sierra/library.c:1259
 #, c-format
@@ -5500,6 +6548,7 @@ msgid "Time format"
 msgstr "Формат часу"
 
 #: camlibs/sierra/olympus-desc.c:910
+#, fuzzy
 msgid ""
 "Some notes about Olympus cameras:\n"
 "(1) Camera Configuration:\n"
@@ -5514,7 +6563,7 @@ msgid ""
 "    camera control menu appears. Set it to ON.\n"
 "(3) If you switch the 'LCD mode' to 'Monitor' or\n"
 "    'Normal', don't forget to switch it back to 'Off'\n"
-"    before disconnectig. Otherwise you cannot use\n"
+"    before disconnecting. Otherwise you cannot use\n"
 "    the camera's buttons. If you end up with this\n"
 "    state, you should reconnect the camera to the\n"
 "    PC and switch LCD to 'Off'."
@@ -5538,6 +6587,7 @@ msgstr ""
 "    перемикнути параметр у 'Off'."
 
 #: camlibs/sierra/olympus-desc.c:931
+#, fuzzy
 msgid ""
 "Olympus 750 Ultra Zoom:\n"
 "(1) Olympus 750UZ has a USB PC Control mode. In order\n"
@@ -5549,7 +6599,7 @@ msgid ""
 "    camera control menu appears. Set it to control mode.\n"
 "(2) If you switch the 'LCD mode' to 'Monitor' or\n"
 "    'Normal', don't forget to switch it back to 'Off'\n"
-"    before disconnectig. Otherwise you cannot use\n"
+"    before disconnecting. Otherwise you cannot use\n"
 "    the camera's buttons. If you end up with this\n"
 "    state, you should reconnect the camera to the\n"
 "    PC and switch LCD to 'Off'."
@@ -5698,8 +6748,12 @@ msgid "Auto Off (host) (in seconds)"
 msgstr "Автоматичне вимикання (комп'ютер) (у секундах)"
 
 #: camlibs/sierra/sierra.c:1166 camlibs/sierra/sierra.c:1628
-msgid "How long will it take until the camera powers off when connected to the computer?"
-msgstr "Скільки часу мине до автоматичного вимикання фотоапарату, коли він з'єднаний з комп'ютером?"
+msgid ""
+"How long will it take until the camera powers off when connected to the "
+"computer?"
+msgstr ""
+"Скільки часу мине до автоматичного вимикання фотоапарату, коли він з'єднаний "
+"з комп'ютером?"
 
 #: camlibs/sierra/sierra.c:1178 camlibs/sierra/sierra.c:1421
 #: camlibs/sierra/sierra.c:1640 camlibs/sierra/sierra.c:1828
@@ -5707,8 +6761,12 @@ msgid "Auto Off (field) (in seconds)"
 msgstr "Автовимикання (автономно) (у секундах)"
 
 #: camlibs/sierra/sierra.c:1180 camlibs/sierra/sierra.c:1642
-msgid "How long will it take until the camera powers off when not connected to the computer?"
-msgstr "Скільки часу мине до автоматичного вимикання фотоапарату, коли він не з'єднаний з комп'ютером?"
+msgid ""
+"How long will it take until the camera powers off when not connected to the "
+"computer?"
+msgstr ""
+"Скільки часу мине до автоматичного вимикання фотоапарату, коли він не "
+"з'єднаний з комп'ютером?"
 
 #: camlibs/sierra/sierra.c:1202 camlibs/sierra/sierra.c:1440
 msgid "LCD Auto Off (in seconds)"
@@ -5770,7 +6828,8 @@ msgstr "чорно-білий"
 
 #: camlibs/sierra/sierra.c:1911
 msgid "Note: no memory card present, some values may be invalid\n"
-msgstr "Зауважте: відсутня картка пам'яті, деякі значення можуть бути неправильні\n"
+msgstr ""
+"Зауважте: відсутня картка пам'яті, деякі значення можуть бути неправильні\n"
 
 #: camlibs/sierra/sierra.c:1919
 #, c-format
@@ -5848,6 +6907,7 @@ msgstr ""
 "  за адресою %s (англійською)\n"
 
 #: camlibs/sierra/sierra.c:1982
+#, fuzzy
 msgid ""
 "Some notes about Olympus cameras (and others?):\n"
 "(1) Camera Configuration:\n"
@@ -5862,7 +6922,7 @@ msgid ""
 "    camera control menu appears. Set it to ON.\n"
 "(3) If you switch the 'LCD mode' to 'Monitor' or\n"
 "    'Normal', don't forget to switch it back to 'Off'\n"
-"    before disconnectig. Otherwise you cannot use\n"
+"    before disconnecting. Otherwise you cannot use\n"
 "    the camera's buttons. If you end up with this\n"
 "    state, you should reconnect the camera to the\n"
 "    PC and switch LCD to 'Off'."
@@ -5910,7 +6970,7 @@ msgstr ""
 msgid "%lld (unknown)"
 msgstr "%lld (невідомо)"
 
-#: camlibs/sipix/blink.c:911
+#: camlibs/sipix/blink.c:872
 msgid ""
 "Sipix StyleCam Blink Driver\n"
 "Vincent Sanders <vince@kyllikki.org>\n"
@@ -5920,7 +6980,7 @@ msgstr ""
 "Vincent Sanders <vince@kyllikki.org>\n"
 "Marcus Meissner <marcus@jet.franken.de>.\n"
 
-#: camlibs/sipix/blink.c:1068 camlibs/stv0674/stv0674.c:250
+#: camlibs/sipix/blink.c:993 camlibs/stv0674/stv0674.c:256
 msgid "Could not apply USB settings"
 msgstr "Не вдається застосувати параметри USB"
 
@@ -5945,24 +7005,21 @@ msgstr ""
 "Драйвер доступу до апарату Smal Ultrapocket та його OEM вариантам (slimshot)"
 
 #: camlibs/sonix/library.c:98
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "Sonix camera.\n"
-"There is %i photo in it. \n"
-msgstr ""
+"There is %i photo in it.\n"
+msgid_plural ""
+"Sonix camera.\n"
+"There are %i photos in it.\n"
+msgstr[0] ""
+"Фотоапарат Sonix.\n"
+"Містить %i знімок. \n"
+msgstr[1] ""
 "Фотоапарат Sonix.\n"
 "Містить %i знімок. \n"
 
-#: camlibs/sonix/library.c:102
-#, c-format
-msgid ""
-"Sonix camera.\n"
-"There are %i photos in it. \n"
-msgstr ""
-"Фотоапарат Sonix\n"
-"Містить %i знімків. \n"
-
-#: camlibs/sonix/library.c:114
+#: camlibs/sonix/library.c:109
 msgid ""
 "This driver supports cameras with Sonix chip\n"
 "and should work with gtkam.\n"
@@ -5982,7 +7039,7 @@ msgstr ""
 "у вигляді послідовності нерухомих знімків.\n"
 "Захоплення не підтримується"
 
-#: camlibs/sonix/library.c:133
+#: camlibs/sonix/library.c:125
 msgid ""
 "Sonix camera library\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
@@ -6126,20 +7183,17 @@ msgstr "бібліотека spca50x v"
 msgid ""
 "\n"
 "Till Adam <till@adam-lilienthal.de>\n"
-"Support for digital cameras with a sunplus spca50x chip based on several other gphoto2 camlib modules and the information kindly provided by Mustek.\n"
+"Support for digital cameras with a sunplus spca50x chip based on several "
+"other gphoto2 camlib modules and the information kindly provided by Mustek.\n"
 "\n"
 msgstr ""
 "\n"
 "Till Adam <till@adam-lilienthal.de>\n"
-"Підтримка фотоапаратів з мікросхемою sunplus spca50x основана на інших модулях gphoto2 та відомостях, що люб'язно надані Mustek.\n"
+"Підтримка фотоапаратів з мікросхемою sunplus spca50x основана на інших "
+"модулях gphoto2 та відомостях, що люб'язно надані Mustek.\n"
 "\n"
 
-#: camlibs/spca50x/library.c:571
-#, c-format
-msgid "Unsupported port type: %d. This driver only works with USB cameras.\n"
-msgstr "Непідтримуваний тип порту: %d. Цей драйвер працює лише з фотоапаратами USB.\n"
-
-#: camlibs/sq905/library.c:124
+#: camlibs/sq905/library.c:127
 #, c-format
 msgid ""
 "Your USB camera has a S&Q chipset.\n"
@@ -6152,7 +7206,7 @@ msgstr ""
 "Деякі з них можуть бути відеокліпами,\n"
 "що складаються кількох кадрів.\n"
 
-#: camlibs/sq905/library.c:138
+#: camlibs/sq905/library.c:141
 msgid ""
 "For cameras with S&Q Technologies chip.\n"
 "Should work with gtkam. Photos will be saved in PPM format.\n"
@@ -6192,7 +7246,7 @@ msgstr ""
 "відеопослідовності вони відносяться. Таким чином можна \n"
 "вибрати, чи зберігати кадри у окремих каталогах.\n"
 
-#: camlibs/sq905/library.c:166
+#: camlibs/sq905/library.c:169
 msgid ""
 "sq905 generic driver\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
@@ -6344,15 +7398,16 @@ msgid ""
 "Dominik Kuhlen <kinimod@users.sourceforge.net>\n"
 msgstr ""
 "Бібліотека для (Traveler) SX330z (та інших фотоапаратів Aldi).\n"
-"Також мають працювати апарати таких виробників, як Jenoptik, Skanhex, Maginon.\n"
+"Також мають працювати апарати таких виробників, як Jenoptik, Skanhex, "
+"Maginon.\n"
 "Повідомлення про помилки та відгуки надсилайте за адресою:\n"
 "Dominik Kuhlen <kinimod@users.sourceforge.net>\n"
 
-#: camlibs/sx330z/library.c:292
+#: camlibs/sx330z/library.c:297
 msgid "sx330z is USB only"
 msgstr "sx330z лише для USB"
 
-#: camlibs/toshiba/pdrm11/library.c:218
+#: camlibs/toshiba/pdrm11/library.c:120
 msgid ""
 "Toshiba\n"
 "David Hogue <david@jawa.gotdns.org>\n"
@@ -6362,158 +7417,170 @@ msgstr ""
 "David Hogue <david@jawa.gotdns.org>\n"
 "Драйвер Toshiba pdr-m11.\n"
 
-#: libgphoto2/gphoto2-abilities-list.c:174
+#: libgphoto2/gphoto2-abilities-list.c:190
 msgid "Internal error looking for camlibs. (path names too long?)"
 msgstr "Внутрішня помилка пошуку camlibs. (назви шляхів надто довгі?)"
 
-#: libgphoto2/gphoto2-abilities-list.c:183
+#: libgphoto2/gphoto2-abilities-list.c:199
 #, c-format
 msgid "Loading camera drivers from '%s'..."
 msgstr "Завантажуються драйвери фотоапарату з '%s'..."
 
-#: libgphoto2/gphoto2-abilities-list.c:589
+#: libgphoto2/gphoto2-abilities-list.c:615
 #, c-format
 msgid "Could not find any driver for '%s'"
 msgstr "Не вдається знайти драйвер для '%s'"
 
-#: libgphoto2/gphoto2-camera.c:81
+#: libgphoto2/gphoto2-camera.c:82
 #, c-format
 msgid "An error occurred in the io-library ('%s'): %s"
 msgstr "Помилка у бібліотеці вводу-виводу ('%s'): %s"
 
-#: libgphoto2/gphoto2-camera.c:85
+#: libgphoto2/gphoto2-camera.c:86
 msgid "No additional information available."
 msgstr "Додаткова інформація відсутня."
 
-#: libgphoto2/gphoto2-camera.c:674
+#: libgphoto2/gphoto2-camera.c:695
 msgid "Could not detect any camera"
 msgstr "Фотоапарат не виявлено"
 
-#: libgphoto2/gphoto2-camera.c:696
+#: libgphoto2/gphoto2-camera.c:717
 msgid "You have to set the port prior initialization of the camera."
 msgstr "Перед пошуком фотоапарату слід встановити порт."
 
-#: libgphoto2/gphoto2-camera.c:721
+#: libgphoto2/gphoto2-camera.c:742
 #, c-format
 msgid "Could not load required camera driver '%s' (%s)."
 msgstr "Не вдається завантажити драйвер фотоапарату '%s' (%s)."
 
-#: libgphoto2/gphoto2-camera.c:734
+#: libgphoto2/gphoto2-camera.c:755
 #, c-format
 msgid "Camera driver '%s' is missing the 'camera_init' function."
 msgstr "У драйвері фотоапарату '%s' відсутня функція 'camera_init'."
 
-#: libgphoto2/gphoto2-camera.c:785
+#: libgphoto2/gphoto2-camera.c:808
 msgid "This camera does not offer any configuration options."
 msgstr "Фотоапарат не має конфігураційних параметрів."
 
-#: libgphoto2/gphoto2-camera.c:818
+#: libgphoto2/gphoto2-camera.c:841
 msgid "This camera does not support setting configuration options."
 msgstr "Фотоапарат не підтримує встановлення параметрів."
 
-#: libgphoto2/gphoto2-camera.c:850
+#: libgphoto2/gphoto2-camera.c:873
 msgid "This camera does not support summaries."
 msgstr "Фотоапарат не підтримує зведення."
 
-#: libgphoto2/gphoto2-camera.c:881
+#: libgphoto2/gphoto2-camera.c:904
 msgid "This camera does not offer a manual."
 msgstr "Фотоапарат не надає довідку."
 
-#: libgphoto2/gphoto2-camera.c:912
+#: libgphoto2/gphoto2-camera.c:936
 msgid "This camera does not provide information about the driver."
 msgstr "Фотоапарат не надає інформацію про драйвер."
 
-#: libgphoto2/gphoto2-camera.c:946
+#: libgphoto2/gphoto2-camera.c:970
 msgid "This camera can not capture."
 msgstr "Фотоапарат не підтримує захоплення."
 
-#: libgphoto2/gphoto2-camera.c:979
+#: libgphoto2/gphoto2-camera.c:1004
 msgid "This camera can not capture previews."
 msgstr "Фотоапарат не підтримує попереднє захоплення."
 
-#: libgphoto2/gphoto2-filesys.c:272
+#: libgphoto2/gphoto2-camera.c:1045
+#, fuzzy
+msgid "This camera does not support event handling."
+msgstr "Фотоапарат не підтримує швидкість %i."
+
+#: libgphoto2/gphoto2-filesys.c:280
 #, c-format
 msgid "The path '%s' is not absolute."
 msgstr "Шлях \"%s\" не є абсолютним."
 
-#: libgphoto2/gphoto2-filesys.c:405
+#: libgphoto2/gphoto2-filesys.c:416
 #, c-format
 msgid "Could not append folder '%s' as this folder already exists."
 msgstr "Не вдається додати теку '%s'. Тека вже існує."
 
-#: libgphoto2/gphoto2-filesys.c:587
+#: libgphoto2/gphoto2-filesys.c:596
 #, c-format
 msgid "Could not find folder '%s'."
 msgstr "Не вдається знайти теку '%s'."
 
-#: libgphoto2/gphoto2-filesys.c:604
+#: libgphoto2/gphoto2-filesys.c:613
 #, c-format
 msgid "Folder '%s' does not contain a folder '%s'."
 msgstr "Тека '%s' не містить теку '%s'."
 
-#: libgphoto2/gphoto2-filesys.c:668
+#: libgphoto2/gphoto2-filesys.c:677
 #, c-format
 msgid "Could not append '%s' to folder '%s' because this file already exists."
 msgstr "Не вдається додати '%s' до теки '%s' тому що файл вже існує."
 
-#: libgphoto2/gphoto2-filesys.c:1045
+#: libgphoto2/gphoto2-filesys.c:1059
 #, c-format
-msgid "You have been trying to delete '%s' from folder '%s', but the filesystem does not support deletion of files."
-msgstr "Ви намагаєтесь видалити '%s' з теки '%s', але файлова система не підтримує видалення файлів."
+msgid ""
+"You have been trying to delete '%s' from folder '%s', but the filesystem "
+"does not support deletion of files."
+msgstr ""
+"Ви намагаєтесь видалити '%s' з теки '%s', але файлова система не підтримує "
+"видалення файлів."
 
-#: libgphoto2/gphoto2-filesys.c:1148
+#: libgphoto2/gphoto2-filesys.c:1162
 #, c-format
-msgid "There are still subfolders in folder '%s' that you are trying to remove."
+msgid ""
+"There are still subfolders in folder '%s' that you are trying to remove."
 msgstr "У теці, яку ви намагаєтесь видалити '%s' є досі є підтеки."
 
-#: libgphoto2/gphoto2-filesys.c:1155
+#: libgphoto2/gphoto2-filesys.c:1169
 #, c-format
 msgid "There are still files in folder '%s' that you are trying to remove."
 msgstr "У теці, яку ви намагаєтесь видалити '%s' є досі є інші теки."
 
-#: libgphoto2/gphoto2-filesys.c:1197
+#: libgphoto2/gphoto2-filesys.c:1211
 msgid "The filesystem does not support upload of files."
 msgstr "Файлова система не підтримує закачування файлів."
 
-#: libgphoto2/gphoto2-filesys.c:1238
+#: libgphoto2/gphoto2-filesys.c:1252
 #, c-format
-msgid "Folder '%s' does only contain %i files, but you requested a file with number %i."
+msgid ""
+"Folder '%s' does only contain %i files, but you requested a file with number "
+"%i."
 msgstr "Тека '%s' містить лише %i файлів, але ви запитали файл з номером %i."
 
-#: libgphoto2/gphoto2-filesys.c:1283
+#: libgphoto2/gphoto2-filesys.c:1297
 #, c-format
 msgid "File '%s' could not be found in folder '%s'."
 msgstr "Не вдається знайти файл '%s' у теці '%s'."
 
-#: libgphoto2/gphoto2-filesys.c:1370
+#: libgphoto2/gphoto2-filesys.c:1384
 #, c-format
 msgid "Could not find file '%s'."
 msgstr "Не вдається знайти файл '%s'."
 
-#: libgphoto2/gphoto2-filesys.c:1495
+#: libgphoto2/gphoto2-filesys.c:1509
 msgid "The filesystem doesn't support getting files"
 msgstr "Файлова система не підтримує отримання файлів"
 
-#: libgphoto2/gphoto2-filesys.c:1530 libgphoto2/gphoto2-filesys.c:1989
-#: libgphoto2/gphoto2-filesys.c:2142
+#: libgphoto2/gphoto2-filesys.c:1549 libgphoto2/gphoto2-filesys.c:2048
+#: libgphoto2/gphoto2-filesys.c:2207
 #, c-format
 msgid "Unknown file type %i."
 msgstr "Невідомий тип файлу %i."
 
-#: libgphoto2/gphoto2-filesys.c:1534
+#: libgphoto2/gphoto2-filesys.c:1553
 #, c-format
 msgid "Downloading '%s' from folder '%s'..."
 msgstr "Завантаження '%s' з теки '%s'..."
 
-#: libgphoto2/gphoto2-filesys.c:1744
+#: libgphoto2/gphoto2-filesys.c:1802
 msgid "The filesystem doesn't support getting file information"
 msgstr "Файлова система не підтримує отриманні відомостей про файл"
 
-#: libgphoto2/gphoto2-filesys.c:2245
+#: libgphoto2/gphoto2-filesys.c:2310
 msgid "The filesystem doesn't support setting file information"
 msgstr "Файлова система не підтримує встановлення інформації про файл"
 
-#: libgphoto2/gphoto2-filesys.c:2268
+#: libgphoto2/gphoto2-filesys.c:2333
 msgid "Read-only file attributes like width and height can not be changed."
 msgstr "Не можна змінювати атрибути, такі як ширина та висота"
 
@@ -6569,8 +7636,99 @@ msgstr "Невідома помилка драйвера фотоапарату"
 msgid "Unknown error"
 msgstr "Невідома помилка"
 
-#~ msgid "Download program for Casio QV cameras. Originally written for gphoto-0.4. Adapted for gphoto2 by Lutz Mueller <lutz@users.sf.net>."
-#~ msgstr "Програма завантаження для фотоапаратів типу Casio QV. Спочатку написана для gphoto-0.4. Адаптована до gphoto2 Lutz Mueller <lutz@users.sf.net>."
+#~ msgid "Unsupported port type: %d. This driver only works with USBcameras.\n"
+#~ msgstr ""
+#~ "Непідтримуваний тип порту: %d. Цей драйвер підтримує лише USB-"
+#~ "фотоапарати.\n"
+
+#~ msgid "There is nothing to summarize for this camera."
+#~ msgstr "Немає даних для зведення про цей фотоапарат."
+
+#~ msgid "No manual"
+#~ msgstr "Довідка відсутня"
+
+#~ msgid ""
+#~ "PTP2 driver\n"
+#~ "(c)2001-2003 by Mariusz Woloszyn <emsi@ipartners.pl>.\n"
+#~ "Enjoy!"
+#~ msgstr ""
+#~ "Драйвер PTP2\n"
+#~ "(c)2001-2003 Автор Mariusz Woloszyn <emsi@ipartners.pl>.\n"
+#~ "Користуйтесь!"
+
+#~ msgid "Macro Mode"
+#~ msgstr "Макрорежим"
+
+#~ msgid "TV A/V Setting"
+#~ msgstr "Параметри A/V-виводу ТБ"
+
+#~ msgid "Real Image Width"
+#~ msgstr "Ширина реал-тайм зображення"
+
+#~ msgid "PTP_DPC_NIKON_CSMMenuBankSelect"
+#~ msgstr "PTP_DPC_NIKON_CSMMenuBankSelect"
+
+#~ msgid "PTP_DPC_NIKON_MenuBankNameA"
+#~ msgstr "PTP_DPC_NIKON_MenuBankNameA"
+
+#~ msgid "PTP_DPC_NIKON_MenuBankNameB"
+#~ msgstr "PTP_DPC_NIKON_MenuBankNameB"
+
+#~ msgid "PTP_DPC_NIKON_MenuBankNameC"
+#~ msgstr "PTP_DPC_NIKON_MenuBankNameC"
+
+#~ msgid "PTP_DPC_NIKON_MenuBankNameD"
+#~ msgstr "PTP_DPC_NIKON_MenuBankNameD"
+
+#~ msgid "PTP_DPC_NIKON_A1AFCModePriority"
+#~ msgstr "PTP_DPC_NIKON_A1AFCModePriority"
+
+#~ msgid "PTP_DPC_NIKON_A2AFSModePriority"
+#~ msgstr "PTP_DPC_NIKON_A2AFSModePriority"
+
+#~ msgid "PTP_DPC_NIKON_A3GroupDynamicAF"
+#~ msgstr "PTP_DPC_NIKON_A3GroupDynamicAF"
+
+#~ msgid "PTP_DPC_NIKON_A4AFActivation"
+#~ msgstr "PTP_DPC_NIKON_A4AFActivation"
+
+#~ msgid "PTP_DPC_NIKON_A5FocusAreaIllumManualFocus"
+#~ msgstr "PTP_DPC_NIKON_A5FocusAreaIllumManualFocus"
+
+#~ msgid "PTP_DPC_NIKON_FocusAreaIllumContinuous"
+#~ msgstr "PTP_DPC_NIKON_FocusAreaIllumContinuous"
+
+#~ msgid "PTP_DPC_NIKON_FocusAreaIllumWhenSelected"
+#~ msgstr "PTP_DPC_NIKON_FocusAreaIllumWhenSelected"
+
+#~ msgid "PTP_DPC_NIKON_D3ExpDelayMode"
+#~ msgstr "PTP_DPC_NIKON_D3ExpDelayMode"
+
+#~ msgid "PTP_DPC_NIKON_D6ControlPanelFinderRearControl"
+#~ msgstr "PTP_DPC_NIKON_D6ControlPanelFinderRearControl"
+
+#~ msgid "PTP_DPC_NIKON_ControlPanelFinderViewfinder"
+#~ msgstr "PTP_DPC_NIKON_ControlPanelFinderViewfinder"
+
+#~ msgid "PTP_DPC_NIKON_D7Illumination"
+#~ msgstr "PTP_DPC_NIKON_D7Illumination"
+
+#~ msgid "Incadescent"
+#~ msgstr "Incadescent"
+
+#~ msgid ""
+#~ "Sonix camera.\n"
+#~ "There are %i photos in it. \n"
+#~ msgstr ""
+#~ "Фотоапарат Sonix\n"
+#~ "Містить %i знімків. \n"
+
+#~ msgid ""
+#~ "Download program for Casio QV cameras. Originally written for gphoto-0.4. "
+#~ "Adapted for gphoto2 by Lutz Mueller <lutz@users.sf.net>."
+#~ msgstr ""
+#~ "Програма завантаження для фотоапаратів типу Casio QV. Спочатку написана "
+#~ "для gphoto-0.4. Адаптована до gphoto2 Lutz Mueller <lutz@users.sf.net>."
 
 #~ msgid "Could not follow the link '%s' (%m)."
 #~ msgstr "Неможливо піти за посиланням '%s' (%m)."
@@ -6596,8 +7754,12 @@ msgstr "Невідома помилка"
 #~ msgid "Could not load required camera driver '%s'."
 #~ msgstr "Не вдається завантажити драйвер фотоапарату '%s'."
 
-#~ msgid "Could not open '/proc/meminfo' for reading ('%m'). Make sure the proc filesystem is mounted."
-#~ msgstr "Не вдається '/proc/meminfo' для читання ('%m'). Перевірте чи підключена файлова система proc."
+#~ msgid ""
+#~ "Could not open '/proc/meminfo' for reading ('%m'). Make sure the proc "
+#~ "filesystem is mounted."
+#~ msgstr ""
+#~ "Не вдається '/proc/meminfo' для читання ('%m'). Перевірте чи підключена "
+#~ "файлова система proc."
 
 #~ msgid "An error occured while reading '/proc/meminfo' ('%m')."
 #~ msgstr "Помилка при читанні '/proc/meminfo' ('%m')."
