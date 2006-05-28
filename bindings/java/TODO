@@ -1,3 +1,7 @@
-This swig-java build process needs to be integrated into the libtool process used by the rest of the library
-Bindings for other languages supported by SWIG
-May need more helper functions in the SWIG interface file for dereferencing pointers and converting types.
+ * This swig-java build process needs to be integrated into the
+   libtool process used by the rest of the library
+ * Bindings for other languages supported by SWIG
+ * May need more helper functions in the SWIG interface file for
+   dereferencing pointers and converting types.
+ * Clean up build system
+ * Make bindings and test cases work with non-Sun java

@@ -125,9 +125,9 @@ public class javatest {
         CameraFilePath cfpOut = new CameraFilePath();
 
         result=-1;
-        int nLoops=0;
+     	// int nLoops=0;
         for (int i=0; result!=0 && i<5; i++) {
-            result = gphoto2.gp_camera_capture(cam, gphoto2Constants.GP_CAPTURE_IMAGE, cfpOut, context);
+            result = gphoto2.gp_camera_capture(cam, CameraCaptureType.GP_CAPTURE_IMAGE, cfpOut, context);
             if (result != 0) System.out.println("unexpected JNI result '" + result + "', retrying...");
         }
         if (result != 0) throw new RuntimeException("unexpected JNI result '" + result + "'");
@@ -158,3 +158,10 @@ public class javatest {
 	System.out.println("exiting");
 	}
 }
+
+
+/*
+ * Local Variables:
+ * mode: java
+ * End:
+ */
