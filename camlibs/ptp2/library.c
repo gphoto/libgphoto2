@@ -565,6 +565,8 @@ static struct {
 	{"Canon:PowerShot A700 (PTP mode)",     0x04a9, 0x3117, PTPBUG_DELETE_SENDS_EVENT},
 	/* Gert Vervoort <gert.vervoort@hccnet.nl> */
 	{"Canon:PowerShot S3 IS (PTP mode)",    0x04a9, 0x311a, PTPBUG_DELETE_SENDS_EVENT},
+	/* David Goodenough <david.goodenough at linkchoose.co.uk> */
+	{"Canon:PowerShot A540 (PTP mode)",     0x04a9, 0x311b, PTPBUG_DELETE_SENDS_EVENT},
 	/* Irc reporter */
 	{"Canon:Digital IXUS 60 (PTP mode)",    0x04a9, 0x311c, PTPBUG_DELETE_SENDS_EVENT},
 	/* Ales Kozumplik <kozumplik@gmail.com> */
