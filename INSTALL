@@ -21,22 +21,22 @@ At lease one of these should work at any time.
 Step 0: Preparing configuration
 ===============================
 
-If you got your copy of gphoto2 packaged as a .tar.gz or .tar.bz2 tarball, 
-SKIP THIS STEP. 
+If you have obtained your copy of gphoto2 packaged from a .tar.gz or
+.tar.bz2 tarball, SKIP THIS STEP. 
 
-If you got libgphoto2 from CVS, then you will have to prepare for step 1,
-the configuration of the sources.
+If you have obtained libgphoto2 from SVN, then you will have to
+prepare for step 1 (the configuration of the sources).
 
-For that, we supply you with a script called 'autogen.sh'. It calls
-several tools in a certain sequence. For autogen.sh to work, you
-require the following tools
+For that preparation, we supply you with a script named
+'autogen.sh'. It calls several tools in a certain sequence. For
+autogen.sh to work, you require the following tools
 
 	automake
 	autoconf
-	gettext
-	libtool
+	gettext  (possibly from -dev or -devel package)
+	libtool  (possibly from -dev or -devel package)
 
-in versions compatible to each other and to libgphoto2. Most
+in versions compatible with each other and with libgphoto2. Most
 combinations on current GNU/Linux systems work, whereas BSD systems
 tend to have some compatibility problems.
 
