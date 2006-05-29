@@ -19,7 +19,7 @@ debug="false"
 recursive="false"
 dryrun="false"
 self="$(basename "$0")"
-autogen_version="0.4.6"
+autogen_version="0.4.7"
 
 
 ########################################################################
@@ -366,7 +366,7 @@ while read flag variable binary version restofline; do
 		if test -n "`eval echo \$\{$variable+"set"\}`"; then
 			skip=:
 		else
-			if test -x "`which ${binary}${version}`"; then
+			if test -x "`which ${binary}${version} 2> /dev/null`"; then
 				export "$variable"="${binary}${version}"
 				oldversion="${version}"
 			else
@@ -461,21 +461,22 @@ if "$check_versions"; then
 	errors=false
 	lf="
 "
-	while read tool minversion; do
+	while read tool minversion package; do
 		version="$("$tool" --version | sed 's/^.*(.*) *\(.*\)$/\1/g;1q')"
 		# compare version and minversion
 		first="$(echo "$version$lf$minversion" | sort -n | sed '1q')"
 		if test "x$minversion" != "x$first" && test "x$version" = "x$first"; then
-			echo "Version \`$version' of \`$tool' not sufficient. At least \`$minversion' required."
+			echo "Version \`$version' of \`$tool' from the \`$package' (dev/devel) package is not sufficient."
+			echo "At least \`$minversion' required."
 			errors=:
 		fi
 	done <<EOF
-${ACLOCAL-"aclocal"}	1.8
-${AUTOMAKE-"automake"}	1.8
-${AUTOCONF-"autoconf"}	2.59
-${AUTOHEADER-"autoheader"}	2.59
-${AUTOPOINT-"autopoint"}	0.14.1
-${LIBTOOLIZE-"libtoolize"}	1.4
+${ACLOCAL-"aclocal"}	1.8	automake
+${AUTOMAKE-"automake"}	1.8	automake
+${AUTOCONF-"autoconf"}	2.59	autoconf
+${AUTOHEADER-"autoheader"}	2.59	autoconf
+${AUTOPOINT-"autopoint"}	0.14.1	gettext
+${LIBTOOLIZE-"libtoolize"}	1.4	libtool
 EOF
 	if "$errors"; then
 		echo "Please update your toolset."
