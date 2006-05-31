@@ -187,48 +187,52 @@ gp_port_library_list (GPPortInfoList *list)
 	info.type = GP_PORT_DISK;
 
 	mnt = setmntent ("/etc/fstab", "r");
-	while ((mntent = getmntent (mnt))) {
-		/* detect floppies so we don't access them with the stat() below */
-		if (	(NULL != strstr(mntent->mnt_fsname,"fd")) ||
-			(NULL != strstr(mntent->mnt_fsname,"floppy"))
-		)
-			continue;
-
-		snprintf (path, sizeof(path), "%s/DCIM", mntent->mnt_dir);
-		if (-1 == stat(path, &stbuf)) {
-			snprintf (path, sizeof(path), "%s/dcim", mntent->mnt_dir);
-			if (-1 == stat(path, &stbuf))
+	if (mnt) {
+		while ((mntent = getmntent (mnt))) {
+			/* detect floppies so we don't access them with the stat() below */
+			if (	(NULL != strstr(mntent->mnt_fsname,"fd")) ||
+				(NULL != strstr(mntent->mnt_fsname,"floppy"))
+			)
 				continue;
+
+			snprintf (path, sizeof(path), "%s/DCIM", mntent->mnt_dir);
+			if (-1 == stat(path, &stbuf)) {
+				snprintf (path, sizeof(path), "%s/dcim", mntent->mnt_dir);
+				if (-1 == stat(path, &stbuf))
+					continue;
+			}
+			snprintf (info.name, sizeof(info.name), _("Media '%s'"), mntent->mnt_fsname),
+			snprintf (info.path, sizeof(info.path), "disk:%s", mntent->mnt_dir);
+			if (gp_port_info_list_lookup_path (list, info.path) >= GP_OK)
+				continue;
+			CHECK (gp_port_info_list_append (list, info));
 		}
-		snprintf (info.name, sizeof(info.name), _("Media '%s'"), mntent->mnt_fsname),
-		snprintf (info.path, sizeof(info.path), "disk:%s", mntent->mnt_dir);
-		if (gp_port_info_list_lookup_path (list, info.path) >= GP_OK)
-			continue;
-		CHECK (gp_port_info_list_append (list, info));
+		endmntent(mnt);
 	}
-	endmntent(mnt);
 	mnt = setmntent ("/etc/mtab", "r");
-	while ((mntent = getmntent (mnt))) {
-		/* detect floppies so we don't access them with the stat() below */
-		if (	(NULL != strstr(mntent->mnt_fsname,"fd")) ||
-			(NULL != strstr(mntent->mnt_fsname,"floppy"))
-		)
-			continue;
-
-		snprintf (path, sizeof(path), "%s/DCIM", mntent->mnt_dir);
-		if (-1 == stat(path, &stbuf)) {
-			snprintf (path, sizeof(path), "%s/dcim", mntent->mnt_dir);
-			if (-1 == stat(path, &stbuf))
+	if (mnt) {
+		while ((mntent = getmntent (mnt))) {
+			/* detect floppies so we don't access them with the stat() below */
+			if (	(NULL != strstr(mntent->mnt_fsname,"fd")) ||
+				(NULL != strstr(mntent->mnt_fsname,"floppy"))
+			)
 				continue;
+
+			snprintf (path, sizeof(path), "%s/DCIM", mntent->mnt_dir);
+			if (-1 == stat(path, &stbuf)) {
+				snprintf (path, sizeof(path), "%s/dcim", mntent->mnt_dir);
+				if (-1 == stat(path, &stbuf))
+					continue;
+			}
+			info.type = GP_PORT_DISK;
+			snprintf (info.name, sizeof(info.name), _("Media '%s'"), mntent->mnt_fsname),
+			snprintf (info.path, sizeof(info.path), "disk:%s", mntent->mnt_dir);
+			if (gp_port_info_list_lookup_path (list, info.path) >= GP_OK)
+				continue;
+			CHECK (gp_port_info_list_append (list, info));
 		}
-		info.type = GP_PORT_DISK;
-		snprintf (info.name, sizeof(info.name), _("Media '%s'"), mntent->mnt_fsname),
-		snprintf (info.path, sizeof(info.path), "disk:%s", mntent->mnt_dir);
-		if (gp_port_info_list_lookup_path (list, info.path) >= GP_OK)
-			continue;
-		CHECK (gp_port_info_list_append (list, info));
+		endmntent(mnt);
 	}
-	endmntent(mnt);
 # endif
 #endif
 	/* generic disk:/xxx/ matcher */
