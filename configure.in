@@ -79,11 +79,17 @@ dnl Check for SWIG
 
 AC_PATH_PROG([SWIG], [swig])
 AC_SUBST([SWIG])
+AM_CONDITIONAL([HAVE_SWIG], [test -x "$SWIG"])
 
-if test -x "$SWIG"; then
+AC_PATH_PROG([JAVAC], [javac])
+AC_SUBST([JAVAC])
+AC_PATH_PROG([JAVAC], [javac])
+AC_SUBST([JAVAC])
+AM_CONDITIONAL([HAVA_JDK], [test -x "$JAVAC" && test -x "$JAVA"])
+
+if test -x "$SWIG" && test -x "$JAVAC" && test -x "$JAVA"; then
    bindings="${bindings}${bindings+ }java"
 fi
-AM_CONDITIONAL([HAVE_SWIG], [test -x "$SWIG"])
 
 dnl Check for Mono and Mono C# compiler from f-spot
 
