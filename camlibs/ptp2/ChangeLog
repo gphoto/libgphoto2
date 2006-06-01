@@ -1,3 +1,14 @@
+2006-06-01  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Added new USB ids for:
+	  Canon PowerShot A540, A530, S3 IS, SD700, IXUS 800, IXUS 60,
+	  iRiver T20 FM
+	  Nikon Coolpix L4, L3
+	  Kodak Easyshare Z740
+	  Sony DSC-U10
+	  Leica D-LUX 2
+	  JVC Alneo XA-HD500
+
 2006-04-27  Marcus Meissner  <marcus@jet.franken.de>
 
 	* ptp.c: The iRiver devices occasionaly send a byte more than
