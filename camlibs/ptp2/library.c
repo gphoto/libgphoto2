@@ -627,6 +627,7 @@ static struct {
 	{"Second generation Dell DJ",		0x041e, 0x412f, 0},
 	{"Creative:Zen Micro",			0x041e, 0x4130, 0},
 	{"Creative:Zen Touch",			0x041e, 0x4131, 0},
+	{"Dell:Pocket DJ",			0x041e, 0x4132, 0},
 	{"Creative:Zen Sleek",			0x041e, 0x4137, 0},
 	/* Jennifer Scalf <oneferna@gmail.com> */
 	{"Creative:Zen MicroPhoto",             0x041e, 0x413c, 0},
