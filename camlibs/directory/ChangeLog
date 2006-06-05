@@ -1,3 +1,7 @@
+2006-06-03  Hubert Figuiere  <hub@figuiere.net>
+
+	* directory.c: Added more extensions as file types.
+
 2005-08-17  Marcus Meissner  <marcus@jet.franken.de>
 
 	* directory.c: Use "Mass Storage Camera" to avoid
