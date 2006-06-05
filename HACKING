@@ -21,7 +21,7 @@ checkout -P
 
 in $HOME/.cvsrc and send us the output of "cvs diff some_file.c".
 
-We prefer patches against the current CVS version very much over
+We prefer patches against the current SVN trunk very much over
 patches against old released versions, but these are also welcome :-)
 
 source files
