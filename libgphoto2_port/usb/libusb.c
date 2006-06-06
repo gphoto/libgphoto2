@@ -358,7 +358,7 @@ gp_port_usb_check_int (GPPort *port, char *bytes, int size, int timeout)
 {
 	int ret;
 
-	if (!port || !port->pl->dh)
+	if (!port || !port->pl->dh || timeout < 0)
 		return GP_ERROR_BAD_PARAMETERS;
 
 	ret = usb_bulk_read(port->pl->dh, port->settings.usb.intep,
