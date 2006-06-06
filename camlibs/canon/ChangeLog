@@ -1,3 +1,10 @@
+2006-06-06  Paul Walmsley <paul@booyaka.com>
+
+	* usb.c: canon_int_usb_poll_interrupt_pipe() can return a negative
+	  result to indicate an error.  But canon_usb_capture_dialogue()
+	  only checks whether the result was equal to 0 to test for
+	  an error.
+
 2005-11-02  Marcus Meissner  <marcus@jet.franken.de>
 
 	* canon.c: S1 IS and S2 IS in current CVS are not working,

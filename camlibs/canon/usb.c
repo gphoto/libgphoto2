@@ -1026,7 +1026,7 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *conte
                 if ( status > 0x17 )
                         GP_DEBUG ( "canon_usb_capture_dialogue:"
                                    " interrupt read too long (length=%i)", status );
-                else if (  status == 0 )
+                else if (  status <= 0 )
                         goto FAIL;
 
                 switch ( buf2[4] ) {
