@@ -189,6 +189,32 @@ typedef enum {
 	CAP_EXP      /* experimental support */
 } canonCaptureSupport;
 
+/**
+ * canonCaptureSizeClass:
+ * @CAPTURE_COMPATIBILITY: operate in the traditional gphoto2 mode
+ * @CAPTURE_THUMB: capture thumbnails 
+ * @CAPTURE_FULL_IMAGES: capture full-sized images
+ *
+ * By default (CAPTURE_COMPATIBILITY mode), the driver will capture
+ * thumbnails to the host computer in capture_preview, and full-sized
+ * images to the camera's drive in capture_image.  
+ * CAPTURE_FULL_IMAGE will capture a full-sized image to the host 
+ * computer in capture_preview, or to the camera's drive in capture_image.
+ * CAPTURE_THUMB is likewise intended to capture thumbnails to either 
+ * the host computer or to the camera's drive, although these modes do not
+ * seem to work right now.
+ *
+ */
+typedef enum {
+	CAPTURE_COMPATIBILITY = 1,
+	CAPTURE_THUMB,
+	CAPTURE_FULL_IMAGE
+} canonCaptureSizeClass;
+
+struct canonCaptureSizeClassStruct {
+	canonCaptureSizeClass value;
+	char *label;
+};
 
 struct canonCamModelData
 {
@@ -246,6 +272,9 @@ struct _CameraPrivateLibrary
 				     download */
 
 	int remote_control;   /* is the camera currently under USB control? */
+
+	canonCaptureSizeClass capture_size; /* Size class for remote-
+                                               captured images */
 
 /*
  * Directory access may be rather expensive, so we cached some information.

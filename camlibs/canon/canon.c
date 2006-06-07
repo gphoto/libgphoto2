@@ -986,10 +986,16 @@ int
 canon_int_capture_preview (Camera *camera, unsigned char **data, int *length,
                            GPContext *context)
 {
-        canonTransferMode transfermode = REMOTE_CAPTURE_THUMB_TO_PC;
+        canonTransferMode transfermode;
 
         int mstimeout = -1;
         int status;
+
+        /* Should we download the thumbnail, or the full image ? */
+        if (camera->pl->capture_size == CAPTURE_FULL_IMAGE) 
+                transfermode = REMOTE_CAPTURE_FULL_TO_PC;
+        else 
+                transfermode = REMOTE_CAPTURE_THUMB_TO_PC;
 
         switch (camera->port->type) {
         case GP_PORT_USB:
@@ -1061,16 +1067,32 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, int *length,
                         return GP_ERROR_OS_FAILURE;
                 }
 
-                /* Download the thumbnail image. */
-                if ( camera->pl->thumb_length > 0 ) {
-                        status = canon_usb_get_captured_thumbnail ( camera, camera->pl->image_key, data, length, context );
-                        if ( status < 0 ) {
-                                GP_DEBUG ( "canon_int_capture_preview:"
-                                         " thumbnail download failed, status= %i", status );
-                                return status;
+                if (transfermode == REMOTE_CAPTURE_FULL_TO_PC) {
+                        
+                        /* Download the image. */
+                        if ( camera->pl->image_length > 0 ) {
+                                status = canon_usb_get_captured_image ( camera, camera->pl->image_key, data, length, context );
+                                if ( status < 0 ) {
+                                        GP_DEBUG ( "canon_int_capture_preview:"
+                                                   " image download failed, status= %i", status );
+                                        return status;
+                                }
                         }
+                        
+                } else if (transfermode == REMOTE_CAPTURE_THUMB_TO_PC) {
+                        
+                        /* Download the thumbnail image. */
+                        if ( camera->pl->thumb_length > 0 ) {
+                                status = canon_usb_get_captured_thumbnail ( camera, camera->pl->image_key, data, length, context );
+                                if ( status < 0 ) {
+                                        GP_DEBUG ( "canon_int_capture_preview:"
+                                                   " thumbnail download failed, status= %i", status );
+                                        return status;
+                                }
+                        }
+                        
                 }
-
+                
                 /* End release mode */
                 status = canon_int_end_remote_control (camera, context);
                 if ( status < 0 )
@@ -1258,7 +1280,7 @@ int
 canon_int_capture_image (Camera *camera, CameraFilePath *path,
                          GPContext *context)
 {
-        canonTransferMode transfermode = REMOTE_CAPTURE_FULL_TO_DRIVE;
+        canonTransferMode transfermode;
 
         int mstimeout = -1;
         int status;
@@ -1268,6 +1290,12 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
                                                      * before/after
                                                      * directories */
         int initial_state_len, final_state_len;
+
+        /* Should we save the thumbnail, or the full image ? */
+        if (camera->pl->capture_size == CAPTURE_THUMB) 
+                transfermode = REMOTE_CAPTURE_THUMB_TO_DRIVE;
+        else 
+                transfermode = REMOTE_CAPTURE_FULL_TO_DRIVE;
 
         switch (camera->port->type) {
         case GP_PORT_USB:

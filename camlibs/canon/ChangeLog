@@ -1,3 +1,26 @@
+2006-06-07  Paul Walmsley <paul@booyaka.com>
+
+	* canon.[ch]:  
+	* library.c: gphoto2's Canon driver currently supports two capture
+	modes: canon_int_capture_preview(), which captures a thumbnail to
+	the host computer; and canon_int_capture_image(), which captures a
+	full-sized image to the camera's drive.  We'd like to control each
+	parameter -- the capture image size class and the capture
+	destination -- independently, without breaking compatibility with
+	current applications.  So, add a configuration option, "Capture
+	size class," by which the user can specify whether to operate in
+	"compatibility mode" (the default -- represents the driver's
+	previous behavior), or whether to capture thumbnails, or
+	full-sized images.  capture_preview() then always captures to the
+	host computer, and capture_image() always captures to the camera's
+	drive, no matter what the image's size.
+	Our primary interest is in remote capture of full-sized images to
+	the host computer.  We've observed that on the EOS 5D, with these
+	patches applied, it's possible to capture full-sized images to the
+	host computer or to the camera's drive.  Capturing thumbnails
+	alone is supported only in name by these patches -- further work
+	will be required to make that function.
+
 2006-06-06  Paul Walmsley <paul@booyaka.com>
 
 	* canon.[ch]: Replace the open-coded CANON_USB_CONTROL_INIT and

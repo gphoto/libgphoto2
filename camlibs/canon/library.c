@@ -86,6 +86,13 @@ extern long int timezone;
 #define UPLOAD_BOOL FALSE
 #endif
 
+const struct canonCaptureSizeClassStruct captureSizeArray[] = {
+        {CAPTURE_COMPATIBILITY, "Compatibility mode"},
+        {CAPTURE_THUMB, "Thumbnail"},
+        {CAPTURE_FULL_IMAGE, "Full Image"},
+	{0, NULL}
+};
+
 /**
  * camera_id:
  * @id: string buffer to receive text identifying camera type
@@ -1255,7 +1262,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 {
 	CameraWidget *t, *section;
 	char power_str[128], firm[64];
-	int pwr_status, pwr_source, res;
+	int pwr_status, pwr_source, res, i, menuval;
 	time_t camtime;
 
 	GP_DEBUG ("camera_get_config()");
@@ -1271,6 +1278,27 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 	gp_widget_new (GP_WIDGET_TEXT, _("Owner name"), &t);
 	gp_widget_set_value (t, camera->pl->owner);
+	gp_widget_append (section, t);
+
+	/* Capture size class */
+	gp_widget_new (GP_WIDGET_MENU, _("Capture size class"), &t);
+
+	/* Map it to the list of choices */
+	i = 0;
+	menuval = -1;
+	while (captureSizeArray[i].label) {
+		gp_widget_add_choice (t, _(captureSizeArray[i].label));
+		if (camera->pl->capture_size == captureSizeArray[i].value) {
+			gp_widget_set_value (t, _(captureSizeArray[i].label));
+			menuval = i;
+		}
+		i++;
+	}
+	
+	/* Set to "Compatibility mode" if not currently set */
+	if (menuval == -1) 
+		gp_widget_set_value (t, _("Compatibility mode"));
+
 	gp_widget_append (section, t);
 
 	if (camera->pl->cached_ready == 1) {
@@ -1343,6 +1371,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 {
 	CameraWidget *w;
 	char *wvalue;
+	int i;
 
 	GP_DEBUG ("camera_set_config()");
 
@@ -1357,6 +1386,25 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			else
 				gp_context_status (context, _("could not change owner name"));
 		}
+	}
+
+	gp_widget_get_child_by_label (window, _("Capture size class"), &w);
+	if (gp_widget_changed (w)) {
+		gp_widget_get_value (w, &wvalue);
+
+		i = 0;
+		while (captureSizeArray[i].label) {
+			if (strcmp (captureSizeArray[i].label, wvalue) == 0) {
+				camera->pl->capture_size = captureSizeArray[i].value;
+				gp_context_status (context, _("Capture size class changed"));
+				break;
+			}
+			i++;
+		}
+		
+		if (!captureSizeArray[i].label) 
+			gp_context_status (context, _("Invalid capture size class setting"));
+
 	}
 
 	gp_widget_get_child_by_label (window, _("Set camera date to PC date"), &w);
