@@ -467,6 +467,10 @@ canon_int_pack_control_subcmd (unsigned char *payload, int subcmd,
 			       char *desc);
 int
 canon_int_do_control_command (Camera *camera, int subcmd, int a, int b);
+int
+canon_int_do_control_dialogue (Camera *camera, int subcmd, int a, int b, unsigned char **response_handle, int *datalen);
+int
+canon_int_do_control_dialogue_payload (Camera *camera, char *payload, int payloadlen, unsigned char **response_handle, int *datalen);
 
 
 

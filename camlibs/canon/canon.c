@@ -902,6 +902,110 @@ canon_int_do_control_command (Camera *camera, int subcmd, int a, int b)
 }
 
 /**
+ * canon_int_do_control_dialogue:
+ * @camera: Camera to work on
+ * @subcmd: Subcommand for remote capture command
+ *   (e.g. %CANON_USB_CONTROL_INIT)
+ * @a: 32-bit first word of payload (first command parameter)
+ * @b: 32-bit second word of payload (second command parameter)
+ * @response_handle: pointer to a pointer where the camera response buffer
+ *   address should be stored.  
+ * @datalen: the length of the response data from the camera
+ *
+ * Executes a remote capture command that returns data from the 
+ * camera, e.g., get release parameters.
+ *
+ * Returns: gphoto2 status code, camera response data in @response_handle,
+ *          length of the response in @datalen
+ *
+ */
+int
+canon_int_do_control_dialogue (Camera *camera, int subcmd, int a, int b, 
+                               unsigned char **response_handle, int *datalen)
+{
+        char payload[0x4c];
+        char desc[128];
+        int payloadlen;
+        unsigned char *msg;
+        int status;
+
+        payloadlen = canon_int_pack_control_subcmd (payload, subcmd,
+                                                    a, b, desc);
+        GP_DEBUG("%s++ with %x, %x", desc, a, b);
+
+        status = canon_int_do_control_dialogue_payload (camera, payload,
+                                                        payloadlen, 
+                                                        response_handle, datalen);
+
+        if ( status < 0 ) {
+                /* ERROR */
+                GP_DEBUG("%s error: datalen=%x", desc, *datalen);
+                return GP_ERROR_CORRUPTED_DATA;
+        }
+
+        GP_DEBUG("%s--", desc);
+
+        return GP_OK;
+}
+
+/**
+ * canon_int_do_control_dialogue_payload:
+ * @camera: Camera to work on
+ * @subcmd: Subcommand for remote capture command
+ *   (e.g. %CANON_USB_CONTROL_INIT)
+ * @payload: pointer to the payload data buffer to send to the camera
+ * @payloadlen: length of the payload to send to the camera
+ * @response_handle: pointer to a pointer where the camera response buffer
+ *   address should be stored.  
+ * @datalen: the length of the response data from the camera
+ *
+ * Executes a command with arbitrary parameter data that returns data
+ * from the camera, e.g., get release parameters, set release parameters.
+ * This function provides the caller full control over payload data.
+ *
+ * Returns: gphoto2 status code, camera response data in @response_handle,
+ *          length of the response in @datalen
+ *
+ */
+int
+canon_int_do_control_dialogue_payload (Camera *camera, char *payload, 
+                                       int payloadlen, 
+                                       unsigned char **response_handle, 
+                                       int *datalen)
+{
+        unsigned char *msg;
+
+        GP_DEBUG("canon_int_do_control_dialogue_payload++");
+
+        if ( camera->pl->md->model == CANON_CLASS_6 ) {
+                /* Newer protocol uses a different code, but with same
+                 * response. It also needs an extra zero byte at the
+                 * end. */
+                payload[payloadlen++] = 0;
+                msg = canon_usb_dialogue_full ( camera, 
+                                                CANON_USB_FUNCTION_CONTROL_CAMERA_2,
+                                                datalen, payload, payloadlen);
+        }
+        else
+                msg = canon_usb_dialogue_full ( camera, 
+                                                CANON_USB_FUNCTION_CONTROL_CAMERA,
+                                                datalen, payload, payloadlen);
+
+        if ( msg == NULL  && *datalen != 0x1c) {
+                /* ERROR */
+                GP_DEBUG("canon_int_do_control_dialogue_payload error: "
+                         "datalen=%x", *datalen);
+                return GP_ERROR_CORRUPTED_DATA;
+        }
+
+        *response_handle = msg;
+
+        GP_DEBUG("canon_int_do_control_dialogue_payload--");
+
+        return GP_OK;
+}
+
+/**
  * canon_int_start_remote_control:
  * @camera: Camera to work on
  * @context: context for error reporting

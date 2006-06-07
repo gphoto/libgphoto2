@@ -1,5 +1,12 @@
 2006-06-07  Paul Walmsley <paul@booyaka.com>
 
+	* canon.[ch]: Add canon_int_do_control_dialogue() and
+	canon_int_do_control_dialogue_payload().  These functions execute
+	a remote capture command on the camera and return the camera's
+	response. canon_int_do_control_dialogue_payload() gives the caller
+	full control over the payload.  We need these to retrieve and set
+	the camera's release parameters.
+
 	* usb.[ch]: Split canon_usb_dialogue() into two functions:
 	canon_usb_dialogue_full(), which returns the full camera response
 	packet, needed by canon_usb_long_dialogue() (and also by
