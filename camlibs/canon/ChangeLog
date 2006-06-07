@@ -1,5 +1,10 @@
 2006-06-07  Paul Walmsley <paul@booyaka.com>
 
+	* usb.[ch]: Split canon_usb_dialogue() into two functions:
+	canon_usb_dialogue_full(), which returns the full camera response
+	packet, needed by canon_usb_long_dialogue() (and also by
+	canon_int_get_release_params(), later in this patch series).
+	
 	* canon.c: Add the USB ID for the EOS 5D in PC connection mode.
 	
 	* canon.[ch]:  

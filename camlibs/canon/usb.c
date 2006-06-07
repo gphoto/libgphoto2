@@ -1190,7 +1190,7 @@ static char *canon_usb_decode_status ( int code ) {
 }
 
 /**
- * canon_usb_dialogue:
+ * canon_usb_dialogue_full:
  * @camera: the Camera to work with
  * @canon_funct: integer constant that identifies function we are execute
  * @return_length: number of bytes to read from the camera as response
@@ -1219,13 +1219,15 @@ static char *canon_usb_decode_status ( int code ) {
  *      unsigned char ** which can be pointed to our buffer and an int
  *      returned with GP_OK or some error code.
  *
- * Returns: a char * that points to the data read from the camera (or
- * NULL on failure), and sets what @return_length points to to the number
- * of bytes read.
+ * Returns: a char * that points to all of the packet data read from
+ * the camera (or NULL on failure), and sets what @return_length
+ * points to to the number of bytes read.  Note that, unlike this
+ * function, canon_usb_dialogue() chops off the first 0x50 bytes to
+ * generate its output.
  *
  */
 unsigned char *
-canon_usb_dialogue (Camera *camera, canonCommandIndex canon_funct, int *return_length, const char *payload,
+canon_usb_dialogue_full (Camera *camera, canonCommandIndex canon_funct, int *return_length, const char *payload,
                     int payload_length)
 {
         int msgsize, status, i;
@@ -1474,29 +1476,72 @@ canon_usb_dialogue (Camera *camera, canonCommandIndex canon_funct, int *return_l
                 }
         }
 
-        /* if cmd3 is 0x202, this is a command that returns L (long) data
-         * and what we return here is the complete packet (ie. not skipping the
-         * first 0x50 bytes we otherwise would) so that the caller
-         * (which is canon_usb_long_dialogue()) can find out how much data to
-         * read from the USB port by looking at offset 6 in this packet.
-         */
-        if (cmd3 == 0x202) {
-                if (return_length)
-                        *return_length = read_bytes;
-                return buffer;
-        } else {
                 char *msg = canon_usb_decode_status ( le32atoh ( buffer+0x50 ) );
-                if (return_length)
-                        *return_length = (read_bytes - 0x50);
                 if ( msg != NULL ) {
                         GP_DEBUG ( "canon_usb_dialogue: camera status \"%s\""
 				   " in response to command 0x%x 0x%x 0x%x (%s)",
 				   msg, cmd1, cmd2, cmd3, funct_descr );
 			return NULL;
                 }
-                return buffer + 0x50;
+
+	if (return_length)
+		*return_length = read_bytes;
+	return buffer;
         }
+
+/**
+ * canon_usb_dialogue:
+ * @camera: the Camera to work with
+ * @canon_funct: integer constant that identifies function we are execute
+ * @return_length: number of bytes to read from the camera as response
+ * @payload: data we are to send to the camera
+ * @payload_length: length of #payload
+ *
+ * USB version of the #canon_serial_dialogue function.
+ *
+ * We construct a packet with the known command values (cmd{1,2,3}) of
+ * the function requested (#canon_funct) to the camera. If #return_length
+ * exists for this function, we read #return_length bytes back from the
+ * camera and return this camera response to the caller.
+ *
+ * Example :
+ *
+ *      This function gets called with
+ *              #canon_funct = %CANON_USB_FUNCTION_SET_TIME
+ *              #payload = already constructed payload with the new time
+ *      we construct a complete command packet and send this to the camera.
+ *      The canon_usb_cmdstruct indicates that command
+ *      CANON_USB_FUNCTION_SET_TIME returns four bytes, so we read those
+ *      four bytes into our buffer and return a pointer to the buffer to
+ *      the caller.
+ *
+ *      This should probably be changed so that the caller supplies a
+ *      unsigned char ** which can be pointed to our buffer and an int
+ *      returned with GP_OK or some error code.
+ *
+ * Returns: a char * that points to the data read from the camera (or
+ * NULL on failure), and sets what @return_length points to to the number
+ * of bytes read.
+ *
+ */
+unsigned char *
+canon_usb_dialogue (Camera *camera, canonCommandIndex canon_funct, int *return_length, const char *payload,
+                    int payload_length)
+{
+	unsigned char *buffer;
+
+	buffer = canon_usb_dialogue_full (camera, canon_funct, return_length,
+					  payload, payload_length);
+	
+	/* Remove the packet header from the response */
+	if (return_length)
+		*return_length = *return_length - 0x50;
+	if (buffer) 
+		return buffer + 0x50;
+	else 
+		return NULL;
 }
+
 
 /**
  * canon_usb_long_dialogue:
@@ -1534,12 +1579,12 @@ canon_usb_long_dialogue (Camera *camera, canonCommandIndex canon_funct, unsigned
         GP_DEBUG ("canon_usb_long_dialogue() function %i, payload = %i bytes", canon_funct,
                   payload_length);
 
-        /* Call canon_usb_dialogue(), this will not return any data "the usual way"
+        /* Call canon_usb_dialogue_full(), this will not return any data "the usual way"
          * but after this we read 0x40 bytes from the USB port, the int at pos 6 in
          * the returned data holds the total number of bytes we are to read.
          */
         lpacket =
-                canon_usb_dialogue (camera, canon_funct, &bytes_read, payload, payload_length);
+                canon_usb_dialogue_full (camera, canon_funct, &bytes_read, payload, payload_length);
         if (lpacket == NULL) {
                 GP_DEBUG ("canon_usb_long_dialogue: canon_usb_dialogue returned error!");
                 return GP_ERROR_OS_FAILURE;

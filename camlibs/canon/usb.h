@@ -258,6 +258,8 @@ int canon_usb_set_file_time ( Camera *camera, char *camera_filename, time_t time
 int canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath, 
 	        GPContext *context);
 unsigned char *canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *context );
+unsigned char *canon_usb_dialogue_full (Camera *camera, canonCommandIndex canon_funct,
+				   int *return_length, const char *payload, int payload_length);
 unsigned char *canon_usb_dialogue (Camera *camera, canonCommandIndex canon_funct,
 				   int *return_length, const char *payload, int payload_length);
 int canon_usb_long_dialogue (Camera *camera, canonCommandIndex canon_funct, unsigned char **data, 
