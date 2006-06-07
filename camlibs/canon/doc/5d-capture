@@ -1,0 +1,153 @@
+Here is a dump of the comments that came with the patches for EOS 5D
+capture implementation. From: Paul Walmsley <paul@booyaka.com>
+
+a01_start_end_remote_control.patch:
+
+Replace the open-coded CANON_USB_CONTROL_INIT and
+CANON_USB_CONTROL_EXIT commands with functions, and set a flag in the
+host computer's camera state when the camera is in remote release
+control.
+
+
+a02_add_capture_size_class.patch
+
+gphoto2's Canon driver currently supports two capture modes:
+canon_int_capture_preview(), which captures a thumbnail to the host
+computer; and canon_int_capture_image(), which captures a full-sized
+image to the camera's drive.  We'd like to control each parameter --
+the capture image size class and the capture destination --
+independently, without breaking compatibility with current
+applications.  So, add a configuration option, "Capture size class,"
+by which the user can specify whether to operate in "compatibility
+mode" (the default -- represents the driver's previous behavior), or
+whether to capture thumbnails, or full-sized images.  capture_preview() then
+always captures to the host computer, and capture_image() always captures to
+the camera's drive, no matter what the image's size.
+
+Our primary interest is in remote capture of full-sized images to the
+host computer.  We've observed that on the EOS 5D, with these patches
+applied, it's possible to capture full-sized images to the host
+computer or to the camera's drive.  Capturing thumbnails alone is supported
+only in name by these patches -- further work will be required to make that
+function.
+
+a03_add_eos_5d_usb_id.patch
+
+Add the USB ID for the EOS 5D in PC connection mode.  (0x04A9, 0x3102
+is the corresponding ID for PTP mode.)
+
+b01_add_canon_usb_dialogue_full.patch
+
+Split canon_usb_dialogue() into two functions:
+canon_usb_dialogue_full(), which returns the full camera response
+packet, needed by canon_usb_long_dialogue() (and also by
+canon_int_get_release_params(), later in this patch series).
+
+b02_add_canon_control_dialogue.patch
+
+Add canon_int_do_control_dialogue() and
+canon_int_do_control_dialogue_payload().  These functions execute a
+remote capture command on the camera and return the camera's response.
+canon_int_do_control_dialogue_payload() gives the caller full control
+over the payload.  We need these to retrieve and set the camera's
+release parameters.
+
+b03_add_get_release_params.patch
+
+Add support for querying the camera's shutter speed, ISO speed,
+aperture, resolution, and focus mode via gphoto2's configuration
+interface.  Tested on the Canon EOS 5D.
+
+c01_add_set_release_params.patch
+
+This patch adds remote control over "release parameters" -- shutter
+speed, ISO speed, aperture, resolution, autofocus mode -- for the
+Canon EOS 5D camera.  You must build with CANON_EXPERIMENTAL_20D and
+CANON_EXPERIMENTAL_SET_RELEASE_PARAMS defined for this code to be
+compiled.  This patch also depends on the Canon EOS 5D 'query release
+parameters' patch series posted earlier, also available from
+<http://www.booyaka.com/~paul/libgphoto2/getreleaseparams/>
+
+PLEASE NOTE THAT THESE PATCHES HAVE ONLY BEEN TESTED WITH THE CANON
+EOS 5D.  I suspect that they might work with other Canon "class 6"
+cameras, such as the EOS 20D, the EOS 350D, etc., but do not know for
+sure.  If you wish to use this code, please first query the camera's
+current parameters, and ensure that the values returned match what is
+displayed on the camera, before trying any parameter set operations.
+USE THIS CODE AT YOUR OWN RISK.  It seems to work fine on the EOS 5D, but
+that's all I can test here.
+
+These release parameters can be changed via libgphoto2's configuration
+interface.  For example, to query the camera's current shutter speed,
+try:
+
+gphoto2 --get-config "Shutter speed"
+
+The shutter speed can be set via the following:
+
+gphoto2 --set-config "Shutter speed"="1/30 second"
+
+
+Thanks to the Internet Archive, <http://www.archive.org/>, for funding
+the development of this code.  This patch is used in the Internet
+Archive's book scanner.
+
+The patch applies against libgphoto2-2.1.99 and current svn.  A copy
+of this patch can also be downloaded from
+<http://www.booyaka.com/~paul/libgphoto2/setreleaseparams/>.
+
+d01_add_secondary_image_support.patch
+
+This patch adds support for downloading "secondary images" -- the
+JPEGs created when the capture resolution is set to the "RAW + JPEG"
+modes -- for the Canon EOS 5D camera.  You must build with
+CANON_EXPERIMENTAL_20D and CANON_EXPERIMENTAL_SECONDARY_IMAGE defined
+for this code to be compiled.  This patch also depends on the Canon
+EOS 5D 'query release parameters' patch series posted earlier, also
+available from
+<http://www.booyaka.com/~paul/libgphoto2/getreleaseparams/>
+
+Note that currently the code does nothing with the downloaded
+secondary image - it merely discards it.
+
+The primary motivation for this patch is to work around a nasty bug in
+the Canon EOS 5D firmware.  While shooting RAW images directly to the
+host computer, the camera can shoot no more than 137 images before
+refusing to transfer any further image data.  The camera menus still
+work, the shutter will still release on command, but no image data can
+be downloaded until the camera power switch is toggled.  Chuck
+Westfall of Canon USA confirmed the bug and provided some helpful
+workarounds; the most practical for us was to shoot in a "RAW + JPEG"
+mode.  However, this setting requires extra protocol support on the
+host computer side - otherwise, the camera will stop transferring
+images after only 5 or 6 shots.  This patch provides this extra
+support.
+
+The secondary image code is marked with a separate define because it
+attempts to automatically determine whether a secondary download is
+necessary based on the camera's current capture resolution setting.
+This works fine on the 5D, but other Canon cameras may have different
+resolution setting bytes which could confuse this code.  Testers welcome!
+
+Thanks to the Internet Archive, <http://www.archive.org/>, for funding
+the development of this code.  This patch is used in the Internet
+Archive's book scanner.
+
+The patch applies against libgphoto2-2.1.99 and current svn.  A copy
+of this patch can also be downloaded from
+<http://www.booyaka.com/~paul/libgphoto2/secondaryimage/>.
+
+e01_return_photographic_status.patch
+
+When the camera cannot capture an image due to a 'photographic failure,'
+return a gphoto2 error code resembling the actual failure code, rather than
+simply returning a generic error.  Tested on the Canon EOS 5D.
+
+Thanks to the Internet Archive, <http://www.archive.org/>, for funding
+the development of this code.  This patch is used in the Internet
+Archive's book scanner.
+
+The patch applies against libgphoto2-2.1.99 and current svn.  A copy
+of this patch can also be downloaded from
+<http://www.booyaka.com/~paul/libgphoto2/photostatus/>.
+

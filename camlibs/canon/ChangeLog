@@ -1,3 +1,7 @@
+2006-06-07  Hubert Figuiere  <hub@figuiere.net>
+
+	* doc/5d-capture: new documentation on capture for changes below.
+
 2006-06-07  Paul Walmsley <paul@booyaka.com>
 
 	* canon.c, usb.[ch], library.c: When the camera cannot capture an
