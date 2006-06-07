@@ -245,6 +245,8 @@ struct _CameraPrivateLibrary
 	unsigned int xfer_length; /* Length of max transfer for
 				     download */
 
+	int remote_control;   /* is the camera currently under USB control? */
+
 /*
  * Directory access may be rather expensive, so we cached some information.
  * This is now done by libgphoto2, so we are continuously removing this stuff.
@@ -422,6 +424,8 @@ int canon_int_set_time(Camera *camera, time_t date, GPContext *context);
 int canon_int_directory_operations(Camera *camera, const char *path, canonDirFunctionCode action, GPContext *context);
 int canon_int_identify_camera(Camera *camera, GPContext *context);
 int canon_int_set_owner_name(Camera *camera, const char *name, GPContext *context);
+int canon_int_start_remote_control(Camera *camera, GPContext *context);
+int canon_int_end_remote_control(Camera *camera, GPContext *context);
 
 /*
  * introduced for capturing

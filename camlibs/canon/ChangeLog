@@ -1,9 +1,14 @@
 2006-06-06  Paul Walmsley <paul@booyaka.com>
 
+	* canon.[ch]: Replace the open-coded CANON_USB_CONTROL_INIT and
+	CANON_USB_CONTROL_EXIT commands with functions, and set a flag in
+	the host computer's camera state when the camera is in remote
+	release control.
+ 
 	* usb.c: canon_int_usb_poll_interrupt_pipe() can return a negative
 	  result to indicate an error.  But canon_usb_capture_dialogue()
-	  only checks whether the result was equal to 0 to test for
-	  an error.
+	  only checks whether the result was equal to 0 to test for an
+	  error.
 
 2005-11-02  Marcus Meissner  <marcus@jet.franken.de>
 

@@ -902,6 +902,72 @@ canon_int_do_control_command (Camera *camera, int subcmd, int a, int b)
 }
 
 /**
+ * canon_int_start_remote_control:
+ * @camera: Camera to work on
+ * @context: context for error reporting
+ *
+ * Initiate remote control of the shutter release and related photographic
+ * parameters.
+ *
+ * Returns: gphoto2 status code
+ *
+ */
+int 
+canon_int_start_remote_control (Camera *camera, GPContext *context) 
+{
+        int status;
+
+        if (camera->pl->remote_control) {
+                GP_DEBUG ("canon_int_start_remote_control: Camera already under remote control");
+                return GP_ERROR; 
+        }
+
+        /* Init, extends camera lens, puts us in remote capture mode */
+        status = canon_int_do_control_command (camera,
+                                               CANON_USB_CONTROL_INIT, 0, 0);
+
+
+        if (status == GP_OK) 
+                camera->pl->remote_control = 1;
+
+        return status;
+}
+
+
+/**
+ * canon_int_end_remote_control:
+ * @camera: Camera to work on
+ * @context: context for error reporting
+ *
+ * Terminate remote control of the shutter release and related photographic
+ * parameters.
+ *
+ * Returns: gphoto2 status code
+ *
+ */
+int 
+canon_int_end_remote_control (Camera *camera, GPContext *context) 
+{
+        int status;
+
+        if (!camera->pl->remote_control) {
+                GP_DEBUG ("canon_int_end_remote_control: Camera not currently under remote control");
+                return GP_ERROR;
+        }
+
+        /* End release mode */
+        status = canon_int_do_control_command (camera,
+                                               CANON_USB_CONTROL_EXIT, 0, 0);
+
+
+        if (status == GP_OK) 
+                camera->pl->remote_control = 0;
+
+        return status;
+}
+
+
+/**
  * canon_int_capture_preview
  * @camera: camera to work with
  * @data: gets thumbnail image data.
@@ -936,9 +1002,8 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, int *length,
                  */
 
                 gp_port_set_timeout (camera->port, 15000);
-                /* Init, extends camera lens, puts us in remote capture mode */
-                status = canon_int_do_control_command (camera,
-                                                       CANON_USB_CONTROL_INIT, 0, 0);
+
+                status = canon_int_start_remote_control (camera, context);
                 if ( status < 0 )
                         return status;
 
@@ -992,9 +1057,7 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, int *length,
                 *data = canon_usb_capture_dialogue ( camera, &status, context );
                 if ( *data == NULL ) {
                         /* Try to leave camera in a usable state. */
-                        canon_int_do_control_command (camera,
-                                                      CANON_USB_CONTROL_EXIT,
-                                                      0, 0);
+                        canon_int_end_remote_control (camera, context);
                         return GP_ERROR_OS_FAILURE;
                 }
 
@@ -1009,9 +1072,7 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, int *length,
                 }
 
                 /* End release mode */
-                status = canon_int_do_control_command (camera,
-                                                       CANON_USB_CONTROL_EXIT,
-                                                       0, 0);
+                status = canon_int_end_remote_control (camera, context);
                 if ( status < 0 )
                         return status;
 
@@ -1229,9 +1290,8 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
                  */
 
                 gp_port_set_timeout (camera->port, 15000);
-                /* Init, extends camera lens, puts us in remote capture mode */
-                status = canon_int_do_control_command (camera,
-                                                       CANON_USB_CONTROL_INIT, 0, 0);
+
+                status = canon_int_start_remote_control (camera, context);
                 if ( status < 0 )
                         return status;
 
@@ -1250,9 +1310,7 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
                                                        CANON_USB_CONTROL_SET_TRANSFER_MODE,
                                                        0x04, transfermode);
                 if ( status < 0 ) {
-                        canon_int_do_control_command (camera,
-                                                      CANON_USB_CONTROL_EXIT,
-                                                      0, 0);
+                        canon_int_end_remote_control (camera, context);
                         return status;
                 }
 
@@ -1265,9 +1323,7 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
                                                        CANON_USB_CONTROL_GET_PARAMS,
                                                        0x00, 0);
                 if ( status < 0 ) {
-                        canon_int_do_control_command (camera,
-                                                      CANON_USB_CONTROL_EXIT,
-                                                      0, 0);
+                        canon_int_end_remote_control (camera, context);
                         return status;
                 }
 
@@ -1310,9 +1366,7 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
                                                        CANON_USB_CONTROL_GET_PARAMS,
                                                        0x04, transfermode);
                 if ( status < 0 ) {
-                        canon_int_do_control_command (camera,
-                                                      CANON_USB_CONTROL_EXIT,
-                                                      0, 0);
+                        canon_int_end_remote_control (camera, context);
                         return status;
                 }
 
@@ -1321,9 +1375,7 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
                         status = canon_usb_lock_keys(camera,context);
                         if ( status < 0 ) {
                                 gp_context_error (context, _("lock keys failed."));
-                                canon_int_do_control_command (camera,
-                                                              CANON_USB_CONTROL_EXIT,
-                                                              0, 0);
+                                canon_int_end_remote_control (camera, context);
                                 return status;
                         }
                 }
@@ -1335,16 +1387,12 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
                 data = canon_usb_capture_dialogue ( camera, &status, context );
                 if ( data == NULL ) {
                         /* Try to leave camera in a usable state. */
-                        canon_int_do_control_command (camera,
-                                                      CANON_USB_CONTROL_EXIT,
-                                                      0, 0);
+                        canon_int_end_remote_control (camera, context);
                         return GP_ERROR_OS_FAILURE;
                 }
 
                 /* End release mode */
-                status = canon_int_do_control_command (camera,
-                                                       CANON_USB_CONTROL_EXIT,
-                                                       0, 0);
+                status = canon_int_end_remote_control (camera, context);
                 if ( status < 0 )
                         return status;
 
