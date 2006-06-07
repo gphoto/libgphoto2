@@ -93,6 +93,114 @@ const struct canonCaptureSizeClassStruct captureSizeArray[] = {
 	{0, NULL}
 };
 
+#ifdef CANON_EXPERIMENTAL_20D
+
+const struct canonIsoStateStruct isoStateArray[] = {
+        {ISO_100, "ISO 100"},
+        {ISO_125, "ISO 125"},
+        {ISO_160, "ISO 160"},
+        {ISO_200, "ISO 200"},
+        {ISO_250, "ISO 250"},
+        {ISO_320, "ISO 320"},
+        {ISO_400, "ISO 400"},
+        {ISO_500, "ISO 500"},
+        {ISO_640, "ISO 640"},
+        {ISO_800, "ISO 800"},
+        {ISO_1000, "ISO 1000"},
+        {ISO_1250, "ISO 1250"},
+        {ISO_1600, "ISO 1600"},
+	{0, NULL},
+};
+
+const struct canonShutterSpeedStateStruct shutterSpeedStateArray[] = {
+        {SHUTTER_SPEED_1_SEC, "1 second"},
+        {SHUTTER_SPEED_0_8_SEC, "8/10 second"},
+        {SHUTTER_SPEED_0_6_SEC, "6/10 second"},
+        {SHUTTER_SPEED_0_4_SEC, "4/10 second"},
+        {SHUTTER_SPEED_0_3_SEC, "3/10 second"},
+        {SHUTTER_SPEED_1_4, "1/4 second"},
+        {SHUTTER_SPEED_1_5, "1/5 second"},
+        {SHUTTER_SPEED_1_6, "1/6 second"},
+        {SHUTTER_SPEED_1_8, "1/8 second"},
+        {SHUTTER_SPEED_1_10, "1/10 second"},
+        {SHUTTER_SPEED_1_13, "1/13 second"},
+        {SHUTTER_SPEED_1_15, "1/15 second"},
+        {SHUTTER_SPEED_1_20, "1/20 second"},
+        {SHUTTER_SPEED_1_25, "1/25 second"},
+        {SHUTTER_SPEED_1_30, "1/30 second"},
+        {SHUTTER_SPEED_1_40, "1/40 second"},
+        {SHUTTER_SPEED_1_50, "1/50 second"},
+        {SHUTTER_SPEED_1_60, "1/60 second"},
+        {SHUTTER_SPEED_1_80, "1/80 second"},
+        {SHUTTER_SPEED_1_100, "1/100 second"},
+        {SHUTTER_SPEED_1_125, "1/125 second"},
+        {SHUTTER_SPEED_1_160, "1/160 second"},
+        {SHUTTER_SPEED_1_200, "1/200 second"},
+	{0, NULL},
+};
+
+const struct canonApertureStateStruct apertureStateArray[] = {
+        {APERTURE_F2_8, "f2.8"},
+        {APERTURE_F3_2, "f3.2"},
+        {APERTURE_F3_5, "f3.5"},
+        {APERTURE_F4_0, "f4.0"},
+        {APERTURE_F4_5, "f4.5"},
+        {APERTURE_F5_0, "f5.0"},
+        {APERTURE_F5_6, "f5.6"},
+        {APERTURE_F6_3, "f6.3"},
+        {APERTURE_F7_1, "f7.1"},
+        {APERTURE_F8, "f8"},
+        {APERTURE_F9, "f9"},
+        {APERTURE_F10, "f10"},
+        {APERTURE_F11, "f11"},
+        {APERTURE_F13, "f13"},
+        {APERTURE_F14, "f14"},
+        {APERTURE_F16, "f16"},
+        {APERTURE_F18, "f18"},
+        {APERTURE_F20, "f20"},
+	{0, NULL},
+};
+
+const struct canonFocusModeStateStruct focusModeStateArray[] = {
+        {AUTO_FOCUS_ONE_SHOT, "Auto focus: one-shot"},
+        {AUTO_FOCUS_AI_SERVO, "Auto focus: AI servo"},
+        {AUTO_FOCUS_AI_FOCUS, "Auto focus: AI focus"},
+        {MANUAL_FOCUS, "Manual focus"},
+	{0, NULL},
+};
+
+const struct canonResolutionStateStruct resolutionStateArray[] = {
+	{RESOLUTION_RAW, "RAW", 
+	 0x04, 0x02, 0x00},
+	{RESOLUTION_SMALL_NORMAL_JPEG, "Small Normal JPEG", 
+	 0x02, 0x01, 0x02},
+	{RESOLUTION_SMALL_FINE_JPEG, "Small Fine JPEG", 
+	 0x03, 0x01, 0x02},
+	{RESOLUTION_MEDIUM_NORMAL_JPEG, "Medium Normal JPEG", 
+	 0x02, 0x01, 0x01},
+	{RESOLUTION_MEDIUM_FINE_JPEG, "Medium Fine JPEG", 
+	 0x03, 0x01, 0x01},
+	{RESOLUTION_LARGE_NORMAL_JPEG, "Large Normal JPEG", 
+	 0x02, 0x01, 0x00},
+	{RESOLUTION_LARGE_FINE_JPEG, "Large Fine JPEG", 
+	 0x03, 0x01, 0x00},
+	{RESOLUTION_RAW_AND_SMALL_NORMAL_JPEG, "RAW + Small Normal JPEG", 
+	 0x24, 0x12, 0x20},
+	{RESOLUTION_RAW_AND_SMALL_FINE_JPEG, "RAW + Small Fine JPEG", 
+	 0x34, 0x12, 0x20},
+	{RESOLUTION_RAW_AND_MEDIUM_NORMAL_JPEG, "RAW + Medium Normal JPEG", 
+	 0x24, 0x12, 0x10},
+	{RESOLUTION_RAW_AND_MEDIUM_FINE_JPEG, "RAW + Medium Fine JPEG", 
+	 0x34, 0x12, 0x10},
+	{RESOLUTION_RAW_AND_LARGE_NORMAL_JPEG, "RAW + Large Normal JPEG", 
+	 0x24, 0x12, 0x00},
+	{RESOLUTION_RAW_AND_LARGE_FINE_JPEG, "RAW + Large Fine JPEG", 
+	 0x34, 0x12, 0x00},
+	{0, NULL, 0, 0, 0},
+};
+
+#endif /* CANON_EXPERIMENTAL_20D */
+
 /**
  * camera_id:
  * @id: string buffer to receive text identifying camera type
@@ -1262,10 +1370,15 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 {
 	CameraWidget *t, *section;
 	char power_str[128], firm[64];
+	int iso, shutter_speed, aperture, focus_mode;
+	int res_byte1, res_byte2, res_byte3;
 	int pwr_status, pwr_source, res, i, menuval;
 	time_t camtime;
 
 	GP_DEBUG ("camera_get_config()");
+
+	if (!check_readiness (camera, context))
+		return -1;
 
 	gp_widget_new (GP_WIDGET_WINDOW, _("Camera and Driver Configuration"), window);
 
@@ -1300,6 +1413,192 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		gp_widget_set_value (t, _("Compatibility mode"));
 
 	gp_widget_append (section, t);
+
+
+#ifdef CANON_EXPERIMENTAL_20D
+
+	/********************* Release params **********************/
+
+	/* Necessary for release params: ISO, aperture, etc. */
+	if (!camera->pl->remote_control) {
+		res = canon_int_start_remote_control (camera, context);
+		if (res != GP_OK) 
+			return -1;
+	}
+
+	/* ISO speed */
+	gp_widget_new (GP_WIDGET_MENU, _("ISO speed"), &t);
+
+	/* Get the camera's current ISO speed setting */
+	iso = -1;
+	if (camera->pl->cached_ready == 1) {
+		res = canon_int_get_release_params(camera, context);
+		if (res == GP_OK) 
+			iso = camera->pl->release_params[ISO_INDEX];
+	}
+
+	/* Map it to the list of choices */
+	i = 0;
+	menuval = -1;
+	while (isoStateArray[i].label) {
+		gp_widget_add_choice (t, _(isoStateArray[i].label));
+		if (iso == isoStateArray[i].value) {
+			gp_widget_set_value (t, _(isoStateArray[i].label));
+			menuval = i;
+		}
+		i++;
+	}
+	
+	/* Set an unknown ISO value if the 
+	 * camera is set to something weird */
+	if (menuval == -1) {
+		gp_widget_add_choice (t, _("Unknown"));
+		gp_widget_set_value (t, _("Unknown"));
+	};
+
+	gp_widget_append (section, t);
+
+
+	/* Shutter speed */
+	gp_widget_new (GP_WIDGET_MENU, _("Shutter speed"), &t);
+
+	/* Get the camera's current shutter speed setting */
+	shutter_speed = -1;
+	if (camera->pl->cached_ready == 1) {
+		res = canon_int_get_release_params(camera, context);
+		if (res == GP_OK) 
+			shutter_speed = camera->pl->release_params[SHUTTERSPEED_INDEX];
+	}
+
+	/* Map it to the list of choices */
+	i = 0;
+	menuval = -1;
+	while (shutterSpeedStateArray[i].label) {
+		gp_widget_add_choice (t, _(shutterSpeedStateArray[i].label));
+		if (shutter_speed == shutterSpeedStateArray[i].value) {
+			gp_widget_set_value (t, _(shutterSpeedStateArray[i].label));
+			menuval = i;
+		}
+		i++;
+	}
+	
+	/* Set an unknown shutter value if the 
+	 * camera is set to something weird */
+	if (menuval == -1) {
+		gp_widget_add_choice (t, _("Unknown"));
+		gp_widget_set_value (t, _("Unknown"));
+	};
+
+	gp_widget_append (section, t);
+
+
+	/* Aperture */
+	gp_widget_new (GP_WIDGET_MENU, _("Aperture"), &t);
+
+	/* Get the camera's current aperture setting */
+	aperture = -1;
+	if (camera->pl->cached_ready == 1) {
+		res = canon_int_get_release_params(camera, context);
+		if (res == GP_OK) 
+			aperture = camera->pl->release_params[APERTURE_INDEX];
+	}
+
+	/* Map it to the list of choices */
+	i = 0;
+	menuval = -1;
+	while (apertureStateArray[i].label) {
+		gp_widget_add_choice (t, _(apertureStateArray[i].label));
+		if (aperture == apertureStateArray[i].value) {
+			gp_widget_set_value (t, _(apertureStateArray[i].label));
+			menuval = i;
+		}
+		i++;
+	}
+	
+	/* Set an unknown aperture value if the 
+	 * camera is set to something weird */
+	if (menuval == -1) {
+		gp_widget_add_choice (t, _("Unknown"));
+		gp_widget_set_value (t, _("Unknown"));
+	};
+
+	gp_widget_append (section, t);
+
+
+	/* Resolution */
+	gp_widget_new (GP_WIDGET_MENU, _("Resolution"), &t);
+
+	/* Get the camera's current resolution setting */
+	res_byte1 = res_byte2 = res_byte3 = -1;
+	if (camera->pl->cached_ready == 1) {
+		res = canon_int_get_release_params (camera, context);
+		if (res == GP_OK) {
+			res_byte1 = camera->pl->release_params[RESOLUTION_1_INDEX];
+			res_byte2 = camera->pl->release_params[RESOLUTION_2_INDEX];
+			res_byte3 = camera->pl->release_params[RESOLUTION_3_INDEX];
+		}
+	}
+
+	/* Map it to the list of choices */
+	i = 0;
+	menuval = -1;
+	while (resolutionStateArray[i].label) {
+		gp_widget_add_choice (t, _(resolutionStateArray[i].label));
+		if (res_byte1 == resolutionStateArray[i].res_byte1 && 
+		    res_byte2 == resolutionStateArray[i].res_byte2 && 
+		    res_byte3 == resolutionStateArray[i].res_byte3) {
+			gp_widget_set_value (t, _(resolutionStateArray[i].label));
+			menuval = i;
+		}
+		i++;
+	}
+	
+	/* Set an unknown resolution value if the 
+	 * camera is set to something weird */
+	if (menuval == -1) {
+		gp_widget_add_choice (t, _("Unknown"));
+		gp_widget_set_value (t, _("Unknown"));
+	};
+
+	gp_widget_append (section, t);
+
+
+	/* Focus mode */
+	gp_widget_new (GP_WIDGET_MENU, _("Focus mode"), &t);
+
+	/* Get the camera's current focus mode setting */
+	focus_mode = -1;
+	if (camera->pl->cached_ready == 1) {
+		res = canon_int_get_release_params(camera, context);
+		if (res == GP_OK) 
+			focus_mode = camera->pl->release_params[FOCUS_MODE_INDEX];
+	}
+
+	/* Map it to the list of choices */
+	i = 0;
+	menuval = -1;
+	while (focusModeStateArray[i].label) {
+		gp_widget_add_choice (t, _(focusModeStateArray[i].label));
+		if (focus_mode == focusModeStateArray[i].value) {
+			gp_widget_set_value (t, _(focusModeStateArray[i].label));
+			menuval = i;
+		}
+		i++;
+	}
+	
+	/* Set an unknown focus mode value if the 
+	 * camera is set to something weird */
+	if (menuval == -1) {
+		gp_widget_add_choice (t, _("Unknown"));
+		gp_widget_set_value (t, _("Unknown"));
+	};
+
+	gp_widget_append (section, t);
+
+	/************************ end release params ************************/
+
+#endif /* CANON_EXPERIMENTAL_20D */
+
 
 	if (camera->pl->cached_ready == 1) {
 		res = canon_int_get_time (camera, &camtime, context);
@@ -1362,6 +1661,14 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_append (section, t);
 #endif /* CANON_EXPERIMENTAL_UPLOAD */
 
+#ifdef CANON_EXPERIMENTAL_20D
+	if (camera->pl->remote_control) {
+		res = canon_int_end_remote_control (camera, context);
+		if (res != GP_OK)   
+			return GP_ERROR;
+	};
+#endif
+
 	return GP_OK;
 }
 
@@ -1406,6 +1713,28 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			gp_context_status (context, _("Invalid capture size class setting"));
 
 	}
+
+#ifdef CANON_EXPERIMENTAL_20D
+
+	/* Return errors if the user attempts to change any of the release
+	   parameters. */
+	gp_widget_get_child_by_label (window, _("Shutter speed"), &w);
+	if (gp_widget_changed (w)) 
+		return GP_ERROR;
+	gp_widget_get_child_by_label (window, _("ISO speed"), &w);
+	if (gp_widget_changed (w)) 
+		return GP_ERROR;
+	gp_widget_get_child_by_label (window, _("Aperture"), &w);
+	if (gp_widget_changed (w)) 
+		return GP_ERROR;
+	gp_widget_get_child_by_label (window, _("Resolution"), &w);
+	if (gp_widget_changed (w)) 
+		return GP_ERROR;
+	gp_widget_get_child_by_label (window, _("Focus mode"), &w);
+	if (gp_widget_changed (w)) 
+		return GP_ERROR;
+
+#endif
 
 	gp_widget_get_child_by_label (window, _("Set camera date to PC date"), &w);
 	if (gp_widget_changed (w)) {

@@ -1,5 +1,9 @@
 2006-06-07  Paul Walmsley <paul@booyaka.com>
 
+	* canon.[ch], library.c: Add support for querying the camera's
+	shutter speed, ISO speed, aperture, resolution, and focus mode via
+	gphoto2's configuration interface.  Tested on the Canon EOS 5D.
+
 	* canon.[ch]: Add canon_int_do_control_dialogue() and
 	canon_int_do_control_dialogue_payload().  These functions execute
 	a remote capture command on the camera and return the camera's

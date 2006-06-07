@@ -189,6 +189,149 @@ typedef enum {
 	CAP_EXP      /* experimental support */
 } canonCaptureSupport;
 
+
+#ifdef CANON_EXPERIMENTAL_20D
+/**
+ * These ISO, shutter speed, aperture, etc. settings are correct for the 
+ * EOS 5D; unsure about other cameras.
+ */
+typedef enum {
+	ISO_100 = 0x48,
+	ISO_125 = 0x4b,
+	ISO_160 = 0x4d,
+	ISO_200 = 0x50,
+	ISO_250 = 0x53,
+	ISO_320 = 0x55,
+	ISO_400 = 0x58,
+	ISO_500 = 0x5b,
+	ISO_640 = 0x5d,
+	ISO_800 = 0x60,
+	ISO_1000 = 0x63,
+	ISO_1250 = 0x65,
+	ISO_1600 = 0x68
+} canonIsoState;
+
+struct canonIsoStateStruct {
+	canonIsoState value;
+	char *label;
+};
+
+typedef enum {
+	APERTURE_F2_8 = 0x20,
+	APERTURE_F3_2 = 0x23,
+	APERTURE_F3_5 = 0x25,
+	APERTURE_F4_0 = 0x28,
+	APERTURE_F4_5 = 0x2b,
+	APERTURE_F5_0 = 0x2d,
+	APERTURE_F5_6 = 0x30,
+	APERTURE_F6_3 = 0x33,
+	APERTURE_F7_1 = 0x35,
+	APERTURE_F8 = 0x38,
+	APERTURE_F9 = 0x3b,
+	APERTURE_F10 = 0x3d,
+	APERTURE_F11 = 0x40,
+	APERTURE_F13 = 0x43,
+	APERTURE_F14 = 0x45,
+	APERTURE_F16 = 0x48,
+	APERTURE_F18 = 0x4b,
+	APERTURE_F20 = 0x4d
+} canonApertureState;
+
+struct canonApertureStateStruct {
+	canonApertureState value;
+	char *label;
+};
+
+typedef enum {
+	SHUTTER_SPEED_1_SEC = 0x38,
+	SHUTTER_SPEED_0_8_SEC = 0x3b,
+	SHUTTER_SPEED_0_6_SEC = 0x3d,
+	SHUTTER_SPEED_0_5_SEC = 0x40,
+	SHUTTER_SPEED_0_4_SEC = 0x43,
+	SHUTTER_SPEED_0_3_SEC = 0x45,
+	SHUTTER_SPEED_1_4 = 0x48,
+	SHUTTER_SPEED_1_5 = 0x4b,
+	SHUTTER_SPEED_1_6 = 0x4d,
+	SHUTTER_SPEED_1_8 = 0x50,
+	SHUTTER_SPEED_1_10 = 0x53,
+	SHUTTER_SPEED_1_13 = 0x55,
+	SHUTTER_SPEED_1_15 = 0x58,
+	SHUTTER_SPEED_1_20 = 0x5b,
+	SHUTTER_SPEED_1_25 = 0x5d,
+	SHUTTER_SPEED_1_30 = 0x60,
+	SHUTTER_SPEED_1_40 = 0x63,
+	SHUTTER_SPEED_1_50 = 0x65,
+	SHUTTER_SPEED_1_60 = 0x68,
+	SHUTTER_SPEED_1_80 = 0x6b,
+	SHUTTER_SPEED_1_100 = 0x6d,
+	SHUTTER_SPEED_1_125 = 0x70,
+	SHUTTER_SPEED_1_160 = 0x73,
+	SHUTTER_SPEED_1_200 = 0x75
+} canonShutterSpeedState;
+
+struct canonShutterSpeedStateStruct {
+	canonShutterSpeedState value;
+	char *label;
+};
+
+typedef enum {
+	RESOLUTION_RAW                        = 0,
+	RESOLUTION_RAW_AND_LARGE_FINE_JPEG, 
+	RESOLUTION_RAW_AND_LARGE_NORMAL_JPEG, 
+	RESOLUTION_RAW_AND_MEDIUM_FINE_JPEG, 
+	RESOLUTION_RAW_AND_MEDIUM_NORMAL_JPEG,
+	RESOLUTION_RAW_AND_SMALL_FINE_JPEG,
+	RESOLUTION_RAW_AND_SMALL_NORMAL_JPEG,
+	RESOLUTION_LARGE_FINE_JPEG,
+	RESOLUTION_LARGE_NORMAL_JPEG,
+	RESOLUTION_MEDIUM_FINE_JPEG,
+	RESOLUTION_MEDIUM_NORMAL_JPEG,
+	RESOLUTION_SMALL_FINE_JPEG,
+	RESOLUTION_SMALL_NORMAL_JPEG
+} canonResolutionState;
+
+
+struct canonResolutionStateStruct {
+	canonResolutionState value;
+	char *label;
+	unsigned char res_byte1;
+	unsigned char res_byte2;
+	unsigned char res_byte3;
+};
+
+typedef enum {
+	AUTO_FOCUS_ONE_SHOT = 0,
+	AUTO_FOCUS_AI_SERVO,
+	AUTO_FOCUS_AI_FOCUS,
+	MANUAL_FOCUS
+} canonFocusModeState;
+
+struct canonFocusModeStateStruct {
+	canonFocusModeState value;
+	char *label;
+};
+
+
+#endif /* CANON_EXPERIMENTAL_20D */
+
+/* The following defines are for the CANON_EXPERIMENTAL_20D */
+
+/* Size of the release parameter block */
+#define RELEASE_PARAMS_LEN  0x2f
+
+/* These indexes are byte offsets into the release parameter data */
+#define RESOLUTION_1_INDEX  0x01
+#define RESOLUTION_2_INDEX  0x02
+#define RESOLUTION_3_INDEX  0x03
+#define BEEP_INDEX          0x07
+#define FOCUS_MODE_INDEX    0x12
+#define ISO_INDEX           0x1a
+#define APERTURE_INDEX      0x1c
+#define SHUTTERSPEED_INDEX  0x1e
+
+/* end of CANON_EXPERIMENTAL_20D defines */
+
+
 /**
  * canonCaptureSizeClass:
  * @CAPTURE_COMPATIBILITY: operate in the traditional gphoto2 mode
@@ -275,6 +418,11 @@ struct _CameraPrivateLibrary
 
 	canonCaptureSizeClass capture_size; /* Size class for remote-
                                                captured images */
+
+	unsigned char release_params[RELEASE_PARAMS_LEN]; /* "Release 
+							     parameters:"
+							     ISO, aperture, 
+							     etc */
 
 /*
  * Directory access may be rather expensive, so we cached some information.
@@ -461,6 +609,9 @@ int canon_int_end_remote_control(Camera *camera, GPContext *context);
  */
 int
 canon_int_get_picture_abilities (Camera *camera, GPContext *context);
+#ifdef CANON_EXPERIMENTAL_20D
+int canon_int_get_release_params (Camera *camera, GPContext *context);
+#endif
 int
 canon_int_pack_control_subcmd (unsigned char *payload, int subcmd,
 			       int word0, int word1,

@@ -1618,6 +1618,87 @@ canon_int_set_file_attributes (Camera *camera, const char *file, const char *dir
         return GP_OK;
 }
 
+
+#ifdef CANON_EXPERIMENTAL_20D
+
+/**
+ * canon_int_get_release_params
+ * @camera: the camera to work on
+ * @context: the context to print on error
+ *
+ * Reads the camera's release parameters (ISO, aperture, shutter speed, etc)
+ *
+ * Right now this has only been tested on an EOS 5D via USB. 
+ * Note that the camera must be under USB control via 
+ * canon_int_start_remote_control() before calling this function.
+ *
+ * Returns: gphoto2 error code
+ *
+ */
+int
+canon_int_get_release_params (Camera *camera, GPContext *context)
+{
+        unsigned char *response;
+        int len = 0x8c;
+        int status;
+
+        GP_DEBUG ("canon_int_get_release_params()");
+
+        /* canon_int_start_remote_control() must be called before 
+           this function */
+        if (!camera->pl->remote_control) {
+                GP_DEBUG ("canon_int_get_release_params: Camera not under USB control");
+                return GP_ERROR;
+        }
+
+
+        switch (camera->port->type) {
+                case GP_PORT_USB:
+                        status = canon_int_do_control_dialogue (camera,
+                                                                CANON_USB_CONTROL_GET_PARAMS,
+                                                                0x00, 0, &response, &len);
+                        
+                        if ( response == NULL )
+                                return GP_ERROR_OS_FAILURE;
+                        break;
+                case GP_PORT_SERIAL:
+                        return GP_ERROR_NOT_SUPPORTED;
+                        break;
+                GP_PORT_DEFAULT
+        }
+
+
+        if (len != 0x8c) {
+                GP_DEBUG ("canon_int_get_release_params: Unexpected length returned "
+                          "(expected %i got %i)", 0x8c, len);
+                return GP_ERROR_CORRUPTED_DATA;
+        }
+
+
+        /* 
+         * 0x5c is the offset to the camera parameters in the 
+         * get release params response data 
+         */
+        memcpy(camera->pl->release_params, response + 0x5c, 
+               sizeof(camera->pl->release_params));
+
+        GP_DEBUG ("canon_int_get_release_params: shutter speed = 0x%02x", 
+                  camera->pl->release_params[SHUTTERSPEED_INDEX]);
+
+        GP_DEBUG ("canon_int_get_release_params: aperture = 0x%02x", 
+                  camera->pl->release_params[APERTURE_INDEX]);
+
+        GP_DEBUG ("canon_int_get_release_params: iso = 0x%02x", 
+                  camera->pl->release_params[ISO_INDEX]);
+
+        GP_DEBUG ("canon_int_get_release_params: focus mode = 0x%02x", 
+                  camera->pl->release_params[FOCUS_MODE_INDEX]);
+
+        return GP_OK;
+}
+
+#endif /* CANON_EXPERIMENTAL_20D */
+
 /**
  * canon_int_set_owner_name:
  * @camera: the camera to set the owner name of
