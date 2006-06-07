@@ -116,7 +116,6 @@
   Digital IXUS 750       PowerShot SD550                                     August 2005
                          PowerShot S80                                       August 2005
   Digital IXUS Wireless  PowerShot SD430                                     August 2005
-                         EOS Digital 5D                                      August 2005
   */
 const struct canonCamModelData models[] = {
 	/* *INDENT-OFF* */
@@ -302,6 +301,7 @@ const struct canonCamModelData models[] = {
         {"Canon:Digital Rebel XT (normal mode)",                CANON_CLASS_6,  0x04A9, 0x30ee, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB_CR2, SL_PICTURE, NULL},
         {"Canon:EOS Kiss Digital N (normal mode)",              CANON_CLASS_6,  0x04A9, 0x30ee, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB_CR2, SL_PICTURE, NULL},
         /* 30ef is EOS 350D/Digital Rebel XT/EOS Kiss Digital N in PTP mode. */
+        {"Canon:EOS 5D (normal mode)",          CANON_CLASS_6,  0x04A9, 0x3101, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 #endif /* CANON_EXPERIMENTAL_20D */
 
 #if 0

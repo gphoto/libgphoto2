@@ -1,5 +1,7 @@
 2006-06-07  Paul Walmsley <paul@booyaka.com>
 
+	* canon.c: Add the USB ID for the EOS 5D in PC connection mode.
+	
 	* canon.[ch]:  
 	* library.c: gphoto2's Canon driver currently supports two capture
 	modes: canon_int_capture_preview(), which captures a thumbnail to
