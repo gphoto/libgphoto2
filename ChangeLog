@@ -1,3 +1,11 @@
+2006-06-07  Hubert Figuiere  <hub@figuiere.net>
+
+	* AUTHORS: added credits for 5D capture support.
+
+2006-04-18  Hubert Figuiere  <hub@figuiere.net>
+
+	* configure.in: 2.2.0trunk version
+
 2006-03-21  Marcus Meissner  <marcus@jet.franken.de>
 
 	* libgphoto2/gphoto2-camera.[ch]:

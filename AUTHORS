@@ -72,3 +72,10 @@ aox, clicksmart310, digigr8, iclick, mars, sq905, sonix libraries.
 
 Stephen Pollei<stephen_pollei@comcast.net>
 iclick library.
+
+Paul Walmsley <paul@booyaka.com>
+Canon 5D (class 6) capture support. Thanks to the Internet 
+Archive, <http://www.archive.org/>, for funding the development 
+of this code.  This code is used in the Internet Archive's book 
+scanner.
+
