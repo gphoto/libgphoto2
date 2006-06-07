@@ -925,6 +925,9 @@ int canon_usb_poll_interrupt_multiple ( Camera *camera[], int n_cameras,
  * canon_usb_capture_dialogue:
  * @camera: the Camera to work with
  * @return_length: number of bytes to read from the camera as response
+ * @photo_status: a pointer to an int that returns a photographic status
+ *                error codes from the camera (if any) if this function
+ *                returns NULL
  * @context: context for error reporting
  *
  * Handles the "capture image" command, where we must read the
@@ -935,11 +938,12 @@ int canon_usb_poll_interrupt_multiple ( Camera *camera[], int n_cameras,
  *
  * Returns: a char * that points to the data read from the camera (or
  * NULL on failure), and sets what @return_length points to to the number
- * of bytes read.
+ * of bytes read. If this function returns NULL, return any photographic
+ * failure error codes in what @photo_status points to.
  *
  */
 unsigned char *
-canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *context )
+canon_usb_capture_dialogue (Camera *camera, int *return_length, int *photo_status, GPContext *context )
 {
         int status;
         unsigned char payload[9]; /* used for sending data to camera */
@@ -953,6 +957,9 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *conte
                 *return_length = 0;
 
         GP_DEBUG ("canon_usb_capture_dialogue()");
+
+	*photo_status = 0; /* This should only be checked by the caller 
+			      if canon_usb_capture_dialogue() returns null */
 
         /* Build payload for command, which contains subfunction code */
         memset (payload, 0x00, sizeof (payload));
@@ -1114,6 +1121,7 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *conte
                                 GP_LOG ( GP_LOG_ERROR, _("canon_usb_capture_dialogue:"
 							 " photographic failure signaled, code = 0x%08x"),
                                          le32atoh ( buf2+16 ) );
+				*photo_status = le32atoh ( buf2+16 );
                                 goto FAIL2;
                         }
                         else {

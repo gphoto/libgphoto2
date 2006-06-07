@@ -1,5 +1,10 @@
 2006-06-07  Paul Walmsley <paul@booyaka.com>
 
+	* canon.c, usb.[ch], library.c: When the camera cannot capture an
+	image due to a 'photographic failure,' return a gphoto2 error code
+	resembling the actual failure code, rather than simply returning a
+	generic error.  Tested on the Canon EOS 5D.
+
 	* canon.[ch], usb.[ch]: Adds support for downloading "secondary
 	images" -- the JPEGs created when the capture resolution is set to
 	the "RAW + JPEG" modes -- for the Canon EOS 5D camera.

@@ -431,7 +431,7 @@ camera_exit (Camera *camera, GPContext *context)
  * downloads its thumbnail to the host computer without storing it on
  * the camera.
  *
- * Returns: GP_OK
+ * Returns: gphoto2 error code
  *
  */
 static int
@@ -445,7 +445,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	code = canon_int_capture_preview (camera, &data, &size, context);
 	if ( code != GP_OK) {
 		gp_context_error (context, _("Error capturing image"));
-		return GP_ERROR;
+		return code;
 	}
 	gp_file_set_data_and_size ( file, data, size );
 	gp_file_set_mime_type (file, GP_MIME_JPEG);	/* always */
@@ -471,15 +471,18 @@ static int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		GPContext *context)
 {
+	int code;
+
 	GP_DEBUG ("canon_capture() called");
 
 	if (type != GP_CAPTURE_IMAGE) {
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 
-	if (canon_int_capture_image (camera, path, context) != GP_OK) {
+	code = canon_int_capture_image (camera, path, context);
+	if (code != GP_OK) {
 		gp_context_error (context, _("Error capturing image"));
-		return GP_ERROR;
+		return code;
 	}
 
 	return GP_OK;

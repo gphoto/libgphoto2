@@ -1100,6 +1100,8 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, int *length,
         unsigned char *b_data_orig = NULL;
         unsigned char **b_data = &b_data_orig;
 
+        int photo_status;
+
         /* Should we download the thumbnail, or the full image ? */
         if (camera->pl->capture_size == CAPTURE_FULL_IMAGE) 
                 transfermode = REMOTE_CAPTURE_FULL_TO_PC;
@@ -1172,11 +1174,21 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, int *length,
                    Can't use normal "canon_int_do_control_command", as
                    we must read the interrupt pipe before the response
                    comes back for this commmand. */
-                *data = canon_usb_capture_dialogue ( camera, &status, context );
+                *data = canon_usb_capture_dialogue ( camera, &status, &photo_status, context );
                 if ( *data == NULL ) {
                         /* Try to leave camera in a usable state. */
                         canon_int_end_remote_control (camera, context);
-                        return GP_ERROR_OS_FAILURE;
+
+                        /* XXX It would be nice if we had a way to 
+                           decode the camera error state for the caller
+                           application.  For example, 
+                           photo_status == 0x01 seems to mean
+                           "autofocus failure" on the EOS 5D. */
+                        if (photo_status != 0) 
+                                return GP_ERROR_CAMERA_ERROR;
+                        else
+                                return GP_ERROR_OS_FAILURE;
+
                 }
 
                 if (transfermode == REMOTE_CAPTURE_FULL_TO_PC) {
@@ -1420,6 +1432,8 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
                                                      * directories */
         int initial_state_len, final_state_len;
 
+        int photo_status;
+
         /* Should we save the thumbnail, or the full image ? */
         if (camera->pl->capture_size == CAPTURE_THUMB) 
                 transfermode = REMOTE_CAPTURE_THUMB_TO_DRIVE;
@@ -1541,11 +1555,21 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
                    Can't use normal "canon_int_do_control_command", as
                    we must read the interrupt pipe before the response
                    comes back for this commmand. */
-                data = canon_usb_capture_dialogue ( camera, &status, context );
+                data = canon_usb_capture_dialogue ( camera, &status, &photo_status, context );
                 if ( data == NULL ) {
                         /* Try to leave camera in a usable state. */
                         canon_int_end_remote_control (camera, context);
-                        return GP_ERROR_OS_FAILURE;
+
+                        /* XXX It would be nice if we had a way to 
+                           decode the camera error state for the caller
+                           application.  For example, 
+                           photo_status == 0x01 seems to mean
+                           "autofocus failure" on the EOS 5D. */
+                        if (photo_status != 0) 
+                                return GP_ERROR_CAMERA_ERROR;
+                        else 
+                                return GP_ERROR_OS_FAILURE;
+
                 }
 
                 /* End release mode */
