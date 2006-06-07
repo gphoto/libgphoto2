@@ -1699,6 +1699,418 @@ canon_int_get_release_params (Camera *camera, GPContext *context)
 
 #endif /* CANON_EXPERIMENTAL_20D */
 
+#ifdef CANON_EXPERIMENTAL_SET_RELEASE_PARAMS
+
+/**
+ * canon_int_set_shutter_speed
+ * @camera: camera to work with
+ * @shutter_speed: shutter speed - use one of the defines such as 
+ *                 SHUTTER_SPEED_1_15 for 1/15th of a second, etc.
+ * @context: context for error reporting
+ *
+ * Sets the camera's shutter speed.  Only tested for EOS 5D via USB.
+ *
+ * Returns: gphoto2 error code
+ *
+ */
+int
+canon_int_set_shutter_speed (Camera *camera, canonShutterSpeedState shutter_speed,
+                             GPContext *context)
+{
+        int status;
+
+        GP_DEBUG ("canon_int_set_shutter_speed() called for speed 0x%02x",
+                  shutter_speed);
+
+        /* Get the current camera settings */
+        
+        status = canon_int_get_release_params (camera, context);
+        
+        if (status < 0)
+                return status;
+
+
+        /* Modify the shutter speed */
+        
+        /* XXX must test for valid shutter speeds here */
+        camera->pl->release_params[SHUTTERSPEED_INDEX] = shutter_speed;
+        
+        /* Upload the shutter speed to the camera */
+        status = canon_int_set_release_params (camera, context);
+
+        if (status < 0)
+                return status;
+        
+        /* Make sure the camera changed it! */
+        
+        status = canon_int_get_release_params (camera, context);
+
+        if (status < 0)
+                return status;
+        
+        if (camera->pl->release_params[SHUTTERSPEED_INDEX] != shutter_speed) {
+                GP_DEBUG ("canon_int_set_shutter_speed: Could not set shutter "
+                          "speed to 0x%02x (camera returned 0x%02x)", 
+                          shutter_speed, 
+                          camera->pl->release_params[SHUTTERSPEED_INDEX]);
+                return GP_ERROR_NOT_SUPPORTED;
+        } else {
+                GP_DEBUG ("canon_int_set_shutter_speed: shutter speed change verified");
+        }
+        
+        GP_DEBUG ("canon_int_set_shutter_speed() finished successfully");
+
+        return GP_OK;        
+}
+
+
+/**
+ * canon_int_set_resolution
+ * @camera: camera to work with
+ * @res_byte1: byte 1 of the 3-byte resolution code
+ * @res_byte2: byte 2 of the 3-byte resolution code
+ * @res_byte3: byte 3 of the 3-byte resolution code
+ *                
+ * @context: context for error reporting
+ *
+ * Sets the camera's output image resolution.  Only tested for EOS 5D via USB.
+ *
+ * Returns: gphoto2 error code
+ *
+ */
+int
+canon_int_set_resolution (Camera *camera, unsigned char res_byte1, 
+                          unsigned char res_byte2, unsigned char res_byte3,  
+                          GPContext *context)
+{
+        int status;
+
+        GP_DEBUG ("canon_int_set_resolution() called");
+
+        /* Get the current camera settings */
+        
+        status = canon_int_get_release_params (camera, context);
+        
+        if (status < 0)
+                return status;
+        
+        /* Modify the resolution */
+
+        camera->pl->release_params[RESOLUTION_1_INDEX] = res_byte1;
+        camera->pl->release_params[RESOLUTION_2_INDEX] = res_byte2;
+        camera->pl->release_params[RESOLUTION_3_INDEX] = res_byte3;
+
+        
+        /* Upload the resolution to the camera */
+        status = canon_int_set_release_params (camera, context);
+        
+        if (status < 0)
+                return status;
+        
+        /* It seems to take the camera body a while to change this parameter 
+           when all three res_bytes are changed at once.  
+           So, give the camera a chance to catch up.
+           3750 us was occasionally too short, but 5000 us seems to 
+           work well. */
+        usleep(5000);
+
+        /* Make sure the camera changed it! */
+
+        status = canon_int_get_release_params (camera, context);
+        
+        if (status < 0)
+                return status;
+                
+        if (camera->pl->release_params[RESOLUTION_1_INDEX] != res_byte1 ||
+            camera->pl->release_params[RESOLUTION_2_INDEX] != res_byte2 || 
+            camera->pl->release_params[RESOLUTION_3_INDEX] != res_byte3) {
+                GP_DEBUG ("canon_int_set_resolution: Could not set resolution "
+                          "to 0x%02x 0x%02x 0x%02x (camera returned 0x%02x 0x%02x 0x%02x)", 
+                          res_byte1, res_byte2, res_byte3, 
+                          camera->pl->release_params[RESOLUTION_1_INDEX],
+                          camera->pl->release_params[RESOLUTION_2_INDEX],
+                          camera->pl->release_params[RESOLUTION_3_INDEX]);
+                return GP_ERROR_CORRUPTED_DATA;
+        } else {
+                GP_DEBUG ("canon_int_set_resolution: resolution change verified");
+        }
+        
+        GP_DEBUG ("canon_int_set_resolution() finished successfully");
+
+        return GP_OK;        
+}
+
+
+/**
+ * canon_int_set_iso
+ * @camera: camera to work with
+ * @iso: ISO - use one of the defines such as ISO_400, etc. 
+ * @context: context for error reporting
+ *
+ * Sets the camera's ISO speed.  Only tested for EOS 5D via USB.
+ *
+ * Returns: gphoto2 error code
+ *
+ */
+int
+canon_int_set_iso (Camera *camera, canonIsoState iso,
+                             GPContext *context)
+{
+        int status;
+
+        GP_DEBUG ("canon_int_set_iso() called for ISO 0x%02x", iso);
+
+        /* Get the current camera settings */
+        
+        status = canon_int_get_release_params (camera, context);
+        
+        if (status < 0)
+                return status;
+
+        /* Modify the ISO */
+        
+        camera->pl->release_params[ISO_INDEX] = iso;
+        
+        /* Upload the ISO to the camera */
+        status = canon_int_set_release_params (camera, context);
+        
+        if (status < 0)
+                return status;
+        
+        /* Make sure the camera changed it! */
+        
+        status = canon_int_get_release_params (camera, context);
+        
+        if (status < 0)
+                return status;
+        
+        if (camera->pl->release_params[ISO_INDEX] != iso) {
+                GP_DEBUG ("canon_int_set_iso: Could not set ISO "
+                          "to 0x%02x (camera returned 0x%02x)", 
+                          iso, camera->pl->release_params[ISO_INDEX]);
+                return GP_ERROR_CORRUPTED_DATA;
+        } else {
+                GP_DEBUG ("canon_int_set_iso: ISO change verified");
+        }
+        
+        GP_DEBUG ("canon_int_set_iso() finished successfully");
+
+        return GP_OK;        
+}
+
+/**
+ * canon_int_set_aperture
+ * @camera: camera to work with
+ * @aperture: use one of the defines such as APERTURE_F5_6, etc. 
+ * @context: context for error reporting
+ *
+ * Sets the camera's aperture.  Only tested for EOS 5D via USB.
+ *
+ * Returns: gphoto2 error code
+ *
+ */
+int
+canon_int_set_aperture (Camera *camera, canonApertureState aperture,
+                             GPContext *context)
+{
+        int status;
+
+        GP_DEBUG ("canon_int_set_aperture() called for aperture 0x%02x",
+                  aperture);
+
+        /* Get the current camera settings */
+        
+        status = canon_int_get_release_params (camera, context);
+        
+        if (status < 0)
+                return status;
+
+        /* Modify the aperture */
+        
+        camera->pl->release_params[APERTURE_INDEX] = aperture;
+        
+        /* Upload the aperture to the camera */
+        status = canon_int_set_release_params (camera, context);
+
+        if (status < 0)
+                return status;
+        
+        /* Make sure the camera changed it! */
+        
+        status = canon_int_get_release_params (camera, context);
+
+        if (status < 0)
+                return status;
+        
+        if (camera->pl->release_params[APERTURE_INDEX] != aperture) {
+                GP_DEBUG ("canon_int_set_aperture: Could not set aperture "
+                          "to 0x%02x (camera returned 0x%02x)", 
+                          aperture, 
+                          camera->pl->release_params[APERTURE_INDEX]);
+                return GP_ERROR_CORRUPTED_DATA;
+        } else {
+                GP_DEBUG ("canon_int_set_aperture: aperture change verified");
+        }
+        
+        GP_DEBUG ("canon_int_set_aperture() finished successfully");
+
+        return GP_OK;        
+}
+
+
+/**
+ * canon_int_set_focus_mode
+ * @camera: camera to work with
+ * @focus_mode: use one of the defines such as AUTO_FOCUS_AI_SERVO, etc. 
+ * @context: context for error reporting
+ *
+ * Sets the camera's focus mode.  Note that the selection of focus modes is 
+ * limited by the AF/MF switch on the lens body.  In particular, this function
+ * is only useful for switching between the various autofocus modes while the
+ * lens focus switch is set to 'AF'.  Only tested for EOS 5D via USB.
+ *
+ * Returns: gphoto2 error code
+ *
+ */
+int
+canon_int_set_focus_mode (Camera *camera, canonFocusModeState focus_mode,
+                             GPContext *context)
+{
+        int status;
+
+        GP_DEBUG ("canon_int_set_focus_mode() called for focus mode 0x%02x",
+                  focus_mode);
+
+        /* Get the current camera settings */
+        
+        status = canon_int_get_release_params (camera, context);
+        
+        if (status < 0)
+                return status;
+
+
+        /* Modify the focus mode */
+        
+        camera->pl->release_params[FOCUS_MODE_INDEX] = focus_mode;
+        
+        /* Upload the focus mode to the camera */
+        status = canon_int_set_release_params (camera, context);
+
+        if (status < 0)
+                return status;
+        
+        /* Make sure the camera changed it! */
+        
+        status = canon_int_get_release_params (camera, context);
+
+        if (status < 0)
+                return status;
+        
+        if (camera->pl->release_params[FOCUS_MODE_INDEX] != focus_mode) {
+                GP_DEBUG ("canon_int_set_focus_mode: Could not set focus_mode "
+                          "to 0x%02x (camera returned 0x%02x)", 
+                          focus_mode, 
+                          camera->pl->release_params[FOCUS_MODE_INDEX]);
+                return GP_ERROR_CORRUPTED_DATA;
+        } else {
+                GP_DEBUG ("canon_int_set_focus_mode: focus_mode change verified");
+        }
+        
+        GP_DEBUG ("canon_int_set_focus_mode() finished successfully");
+
+        return GP_OK;        
+}
+
+/**
+ * canon_int_set_release_params
+ * @camera: camera to work with
+ * @context: context for error reporting
+ *
+ * Sets the camera's release params --  e.g., shutter speed,
+ * aperture, ISO -- based on the current in-memory state for these params.
+ *
+ * Returns: gphoto2 error code
+ *
+ */
+int
+canon_int_set_release_params (Camera *camera, GPContext *context)
+{
+        unsigned char payload[0x4c];
+        unsigned char *msg, *trash_handle;
+        int len, payloadlen, trash_int;
+        int status;
+
+        GP_DEBUG ("canon_int_set_release_params() called");
+
+        if (!camera->pl->remote_control) {
+                GP_DEBUG ("canon_int_set_release_params: Camera not under USB control");
+                return GP_ERROR; 
+        }
+
+        memset(payload, 0, sizeof(payload));
+
+        switch (camera->port->type) {
+            case GP_PORT_USB:
+                    /* This is what we need for Canon class 6 cameras - 
+                       not sure what it is for previous protocols */
+                    payload[0x0] = CANON_USB_CONTROL_SET_ZOOM_POS; 
+                    payload[0x4] = 0x30;
+
+                    /* Copy the release parameter block from the camera state
+                     * structure into the payload.  The 0x08 is the byte offset
+                     * into the payload where the release parameters start.
+                     */
+                    memcpy(payload + 0x08, camera->pl->release_params, 
+                           sizeof(camera->pl->release_params)); 
+
+                    payloadlen = RELEASE_PARAMS_LEN + 0x08;
+
+                    status = canon_int_do_control_dialogue_payload (camera, payload, payloadlen, &msg, &len);
+                    
+                    if ( msg == NULL )
+                            return GP_ERROR_CORRUPTED_DATA;
+
+                    /* Send the camera a get_release_params, then
+                     * send the set_release_params op again.
+                     * Apparently, there are some parameters which require
+                     * two "sets" to take effect on the Canon EOS 5D.
+                     */
+
+                    status = canon_int_do_control_dialogue (camera,
+                                                            CANON_USB_CONTROL_GET_PARAMS,
+                                                            0x00, 0, &trash_handle, &trash_int);
+                        
+
+                    if ( status < 0 )
+                            return GP_ERROR;
+
+                    
+                    status = canon_int_do_control_dialogue_payload (camera, payload, payloadlen, &msg, &len);
+
+                    if ( msg == NULL )
+                            return GP_ERROR_CORRUPTED_DATA;
+
+                break;
+            case GP_PORT_SERIAL:
+                    return GP_ERROR_NOT_SUPPORTED;
+                    break;
+            GP_PORT_DEFAULT
+        }
+
+        if (len != 92) {
+                GP_DEBUG ("canon_int_set_release_params: Unexpected length returned "
+                          "(expected %i got %i)", 92, len);
+                return GP_ERROR_CORRUPTED_DATA;
+        }
+
+        GP_DEBUG ("canon_int_set_release_params finished successfully");
+
+        return GP_OK;
+
+}
+
+#endif /* CANON_EXPERIMENTAL_SET_RELEASE_PARAMS */
+
 /**
  * canon_int_set_owner_name:
  * @camera: the camera to set the owner name of

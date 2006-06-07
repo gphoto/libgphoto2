@@ -594,6 +594,13 @@ int canon_int_get_thumbnail(Camera *camera, const char *name, unsigned char **re
 int canon_int_put_file(Camera *camera, CameraFile *file, char *destname, char *destpath, GPContext *context);
 int canon_int_set_file_attributes(Camera *camera, const char *file, const char *dir, canonDirentAttributeBits attrs, GPContext *context);
 int canon_int_delete_file(Camera *camera, const char *name, const char *dir, GPContext *context);
+#ifdef CANON_EXPERIMENTAL_SET_RELEASE_PARAMS
+int canon_int_set_shutter_speed(Camera *camera, canonShutterSpeedState shutter_speed, GPContext *context);
+int canon_int_set_iso(Camera *camera, canonIsoState iso, GPContext *context);
+int canon_int_set_aperture(Camera *camera, canonApertureState aperture, GPContext *context);
+int canon_int_set_focus_mode (Camera *camera, canonFocusModeState focus_mode, GPContext *context);
+int canon_int_set_resolution (Camera *camera, unsigned char res_byte1, unsigned char res_byte2, unsigned char res_byte3, GPContext *context);
+#endif
 int canon_serial_end(Camera *camera);
 int canon_serial_off(Camera *camera);
 int canon_int_get_time(Camera *camera, time_t *camera_time, GPContext *context);
@@ -611,6 +618,9 @@ int
 canon_int_get_picture_abilities (Camera *camera, GPContext *context);
 #ifdef CANON_EXPERIMENTAL_20D
 int canon_int_get_release_params (Camera *camera, GPContext *context);
+#endif
+#ifdef CANON_EXPERIMENTAL_SET_RELEASE_PARAMS
+int canon_int_set_release_params(Camera *camera, GPContext *context);
 #endif
 int
 canon_int_pack_control_subcmd (unsigned char *payload, int subcmd,

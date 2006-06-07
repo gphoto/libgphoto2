@@ -1,5 +1,10 @@
 2006-06-07  Paul Walmsley <paul@booyaka.com>
 
+	* canon.[ch], library.c: Adds remote control over "release
+	parameters" -- shutter speed, ISO speed, aperture, resolution,
+	autofocus mode -- for the Canon EOS 5D camera. It might work with
+	other Canon "class 6" cameras
+
 	* canon.[ch], library.c: Add support for querying the camera's
 	shutter speed, ISO speed, aperture, resolution, and focus mode via
 	gphoto2's configuration interface.  Tested on the Canon EOS 5D.
