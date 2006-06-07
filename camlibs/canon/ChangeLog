@@ -1,5 +1,9 @@
 2006-06-07  Paul Walmsley <paul@booyaka.com>
 
+	* canon.[ch], usb.[ch]: Adds support for downloading "secondary
+	images" -- the JPEGs created when the capture resolution is set to
+	the "RAW + JPEG" modes -- for the Canon EOS 5D camera.
+	
 	* canon.[ch], library.c: Adds remote control over "release
 	parameters" -- shutter speed, ISO speed, aperture, resolution,
 	autofocus mode -- for the Canon EOS 5D camera. It might work with

@@ -272,6 +272,9 @@ int canon_usb_poll_interrupt_multiple ( Camera *camera[], int n_cameras,
 					unsigned char *buf, int n_tries,
 					int *which );
 int canon_usb_get_captured_image (Camera *camera, const int key, unsigned char **data, int *length, GPContext *context);
+#ifdef CANON_EXPERIMENTAL_SECONDARY_IMAGE
+int canon_usb_get_captured_secondary_image (Camera *camera, const int key, unsigned char **data, int *length, GPContext *context);
+#endif
 int canon_usb_get_captured_thumbnail (Camera *camera, const int key, unsigned char **data, int *length, GPContext *context);
 int canon_usb_lock_keys(Camera *camera, GPContext *context);
 int canon_usb_unlock_keys(Camera *camera, GPContext *context);

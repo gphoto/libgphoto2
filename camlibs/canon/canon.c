@@ -1095,6 +1095,11 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, int *length,
         int mstimeout = -1;
         int status;
 
+        int b_length_orig = 0;
+        int *b_length = &b_length_orig;
+        unsigned char *b_data_orig = NULL;
+        unsigned char **b_data = &b_data_orig;
+
         /* Should we download the thumbnail, or the full image ? */
         if (camera->pl->capture_size == CAPTURE_FULL_IMAGE) 
                 transfermode = REMOTE_CAPTURE_FULL_TO_PC;
@@ -1107,6 +1112,9 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, int *length,
                 gp_port_get_timeout (camera->port, &mstimeout);
                 GP_DEBUG("canon_int_capture_preview: usb port timeout starts at %dms", mstimeout);
 
+                camera->pl->image_b_key = 0x0;
+                camera->pl->image_b_length = 0x0;
+                
                 /*
                  * Send a sequence of CONTROL_CAMERA commands.
                  */
@@ -1182,6 +1190,23 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, int *length,
                                         return status;
                                 }
                         }
+                        
+#ifdef CANON_EXPERIMENTAL_SECONDARY_IMAGE 
+                        /* Download the secondary image, if one exists */
+                        if ( camera->pl->image_b_length > 0 ) {
+                                status = canon_usb_get_captured_secondary_image ( camera, camera->pl->image_b_key, b_data, b_length, context );
+                                if ( status < 0 ) {
+                                        GP_DEBUG ( "canon_int_capture_preview:"
+                                                   " secondary image download failed, status= %i", status );
+                                        return status;
+                                }
+                                
+                                /* Get rid of it */
+                                /* XXX maybe this should be changed in the future 
+                                 * to do something else with it */
+                                free(b_data_orig);
+                        }
+#endif /* CANON_EXPERIMENTAL_SECONDARY_IMAGE */
                         
                 } else if (transfermode == REMOTE_CAPTURE_THUMB_TO_PC) {
                         
@@ -1693,6 +1718,25 @@ canon_int_get_release_params (Camera *camera, GPContext *context)
 
         GP_DEBUG ("canon_int_get_release_params: focus mode = 0x%02x", 
                   camera->pl->release_params[FOCUS_MODE_INDEX]);
+
+        camera->pl->secondary_image = 0;
+#ifdef CANON_EXPERIMENTAL_SECONDARY_IMAGE
+	/* Based on the resolution settings in the release params, 
+	   determine whether we expect one or two images to be returned
+	   by the camera. 
+           I am not sure if this will work correctly for non-EOS 5D 
+           cameras - I would appreciate testing feedback from other
+           Canon camera users.  To test, define 
+           CANON_EXPERIMENTAL_SECONDARY_IMAGE, then try capturing an image 
+           to the host computer in a single format (e.g., RAW or Large Fine 
+           JPEG).  Also try capturing an image when the camera is set to 
+           a dual format, e.g., RAW + Large Fine JPEG. Note that currently, we 
+           only save the primary image to disk.
+           Thanks - <paul@booyaka.com>
+        */
+	if (camera->pl->release_params[RESOLUTION_2_INDEX] & 0xf0) 
+		camera->pl->secondary_image = 1;
+#endif
 
         return GP_OK;
 }

@@ -1058,6 +1058,25 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *conte
                                    camera->pl->image_length, camera->pl->image_key );
 			camera->pl->transfer_mode &= ~REMOTE_CAPTURE_FULL_TO_PC;
 			/* Special case for class 6 (newer protocol) and the EOS 300D */
+			if (!camera->pl->secondary_image &&
+			    camera->pl->transfer_mode == 0
+			     && ( camera->pl->md->model == CANON_CLASS_6 || camera->pl->md->usb_product == 0x3084 ) )
+				goto EXIT;
+
+                        break;
+		case 0x10:
+                        /* Secondary image size, key */
+			/* (only for RAW + JPEG modes) */
+			GP_LOG ( GP_LOG_DEBUG, _("canon_usb_capture_dialogue:"
+						 "secondary image descriptor received"));
+			
+			camera->pl->image_b_length = le32atoh ( buf2+0x11 );
+			camera->pl->image_b_key = le32atoh ( buf2+0x0c );
+
+			GP_DEBUG ( "canon_usb_capture_dialogue: secondary image size: 0x%08lx, tag=0x%08lx",
+				   camera->pl->image_b_length, camera->pl->image_b_key);
+			camera->pl->transfer_mode &= ~REMOTE_CAPTURE_FULL_TO_PC;
+			/* Special case for class 6 (newer protocol) and the EOS 300D */
 			if ( camera->pl->transfer_mode == 0
 			     && ( camera->pl->md->model == CANON_CLASS_6 || camera->pl->md->usb_product == 0x3084 ) )
 				goto EXIT;
@@ -1861,6 +1880,62 @@ canon_usb_get_captured_image (Camera *camera, const int key, unsigned char **dat
 
         return GP_OK;
 }
+
+#ifdef CANON_EXPERIMENTAL_SECONDARY_IMAGE
+
+/**
+ * canon_usb_get_captured_secondary_image:
+ * @camera: camera to work on
+ * @key: index of image to fetch, returned from canon_usb_capture_dialogue()
+ * @data: to receive image data
+ * @length: to receive length of image data
+ * @context: context for error reporting
+ *
+ * Gets the just-captured image from a USB-connected Canon
+ * camera. This function must be called soon after an image capture,
+ * and needs the image key returned by canon_usb_capture_dialogue().
+ * This function is only used for "secondary images," e.g., the JPEGs 
+ * downloaded when the camera's capture resolution mode is set to "RAW + JPEG"
+ *
+ * Returns: gphoto2 error code, length in @length, and image data in @data.
+ *
+ */
+int
+canon_usb_get_captured_secondary_image (Camera *camera, const int key, unsigned char **data, int *length,
+					GPContext *context)
+{
+        char payload[16];
+        int payload_length = 16, result;
+
+        GP_DEBUG ("canon_usb_get_captured_secondary_image() called");
+
+        /* Construct payload containing buffer size and function request.
+         * See the file Protocol in this directory for more information.
+         */
+        htole32a (payload, 0x0);        /* always zero */
+        htole32a (payload + 0x4, camera->pl->xfer_length);
+        htole32a (payload + 0x8, CANON_DOWNLOAD_SECONDARY);
+        htole32a (payload + 0xc, key);
+
+        /* the 1 is to show status */
+	if ( camera->pl->md->model == CANON_CLASS_6 )
+		result = canon_usb_long_dialogue (camera, CANON_USB_FUNCTION_RETRIEVE_CAPTURE_2, data, length,
+						  0, payload,
+						  payload_length, 1, context);
+	else
+		result = canon_usb_long_dialogue (camera, CANON_USB_FUNCTION_RETRIEVE_CAPTURE, data, length,
+						  0, payload,
+						  payload_length, 1, context);
+        if (result != GP_OK) {
+                GP_DEBUG ("canon_usb_get_captured_secondary_image: canon_usb_long_dialogue() "
+                          "returned error (%i).", result);
+                return result;
+        }
+
+        return GP_OK;
+}
+
+#endif /* CANON_EXPERIMENTAL_SECONDARY_IMAGE */
 
 /**
  * canon_usb_get_captured_thumbnail:

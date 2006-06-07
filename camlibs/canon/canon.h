@@ -130,6 +130,7 @@ typedef enum {
  * canonDownloadImageType:
  * @CANON_DOWNLOAD_THUMB: Get just the thumbnail for the image
  * @CANON_DOWNLOAD_FULL: Get the full image
+ * @CANON_DOWNLOAD_SECONDARY: Get the full secondary image
  *
  * Codes for "Download Captured Image" command to tell the camera to
  * download either the thumbnail or the full image for the most
@@ -138,7 +139,8 @@ typedef enum {
  */
 typedef enum {
 	CANON_DOWNLOAD_THUMB = 1,
-	CANON_DOWNLOAD_FULL  = 2
+	CANON_DOWNLOAD_FULL  = 2,
+	CANON_DOWNLOAD_SECONDARY  = 3
 } canonDownloadImageType;
 
 /**
@@ -404,6 +406,7 @@ struct _CameraPrivateLibrary
 	char *cached_drive;	/* usually something like C: */
 	int cached_ready;       /* whether the camera is ready to rock */
 	long image_key, thumb_length, image_length; /* For immediate download of captured image */
+	long image_b_key, image_b_length; /* For immediate download of secondary captured image */
 	int capture_step;	/* To record progress in interrupt
 				 * reads from capture */
 	int transfer_mode;	/* To remember what interrupt messages
@@ -423,6 +426,9 @@ struct _CameraPrivateLibrary
 							     parameters:"
 							     ISO, aperture, 
 							     etc */
+
+	int secondary_image; /* Should we attempt to download a 
+				secondary image? (e.g., RAW + JPEG) */
 
 /*
  * Directory access may be rather expensive, so we cached some information.
