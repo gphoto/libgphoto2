@@ -56,6 +56,15 @@
 
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 
+/* IDENTIFY_INIT_TIMEOUT: the starting timeout (in milliseconds) 
+ * to wait for the camera to respond to an "identify camera" request.
+ * This timeout is doubled for each retry */
+#define IDENTIFY_INIT_TIMEOUT 10
+
+/* IDENTIFY_MAX_ATTEMPTS: how many "identify camera" requests to send 
+ * to the camera, until we give up for lack of response. */
+#define IDENTIFY_MAX_ATTEMPTS 10
+
 /* WARNING: This destroys reentrancy of the code. Better to put this
  * in the camera descriptor somewhere. */
 static int serial_code = 0;
@@ -440,6 +449,9 @@ canon_usb_init (Camera *camera, GPContext *context)
         /* unsigned char buffer[0x44]; */
         int res, id_retry, i, camstat; 
         /* int read_bytes; */
+	int orig_mstimeout = -1;
+	int id_mstimeout = IDENTIFY_INIT_TIMEOUT; /* separate timeout for 
+						     identify camera */
 
         GP_DEBUG ("Initializing the (USB) camera.\n");
 
@@ -447,21 +459,33 @@ canon_usb_init (Camera *camera, GPContext *context)
         if ( camstat < 0 )
                 return camstat;
 
+	/* Save the original timeout value and set up the initial 
+	   identify camera timeout value */
+	gp_port_get_timeout (camera->port, &orig_mstimeout);
+	gp_port_set_timeout (camera->port, id_mstimeout);
+
         /* We retry the identify camera because sometimes (camstat == 'A'
          * in canon_usb_camera_init()) this is necessary to get the camera
          * back in sync, and the windows driver actually executes four of
          * these in a row before downloading thumbnails.
          */
         res = GP_ERROR;
-        for (id_retry = 1; id_retry <= 4; id_retry++) {
+        for (id_retry = 1; id_retry <= IDENTIFY_MAX_ATTEMPTS; id_retry++) {
                 res = canon_int_identify_camera (camera, context);
-                if (res != GP_OK)
-                        GP_DEBUG ("Identify camera try %i/%i failed %s", id_retry, 4,
+                if (res != GP_OK) {
+                        GP_DEBUG ("Identify camera try %i/%i failed %s", id_retry, IDENTIFY_MAX_ATTEMPTS,
                                   id_retry <
-                                  4 ? "(this is OK)" : "(now it's not OK any more)");
+                                  IDENTIFY_MAX_ATTEMPTS ? "(this is OK)" : "(now it's not OK any more)");
+			id_mstimeout *= 2;
+			gp_port_set_timeout (camera->port, id_mstimeout);
+		}
                 else
                         break;
         }
+
+	/* Restore the original timeout value */
+	gp_port_set_timeout (camera->port, orig_mstimeout);
+
         if (res != GP_OK) {
                 gp_context_error (context,
                                   _("Camera not ready, "

@@ -1,3 +1,12 @@
+2006-06-09  Paul Walmsley  <paul@booyaka.com>
+
+	* usb.c: Modify identify camera code to retry quickly, and to
+        double the retry delay with each failure.  This seems to work
+        well for at least the Canon EOS 5D, where the first identify
+        often is ignored by the camera, but the second identify camera
+        generates a response, no matter how quickly it is sent after the
+        first.
+
 2006-06-07  Hubert Figuiere  <hub@figuiere.net>
 
 	* doc/5d-capture: new documentation on capture for changes below.
