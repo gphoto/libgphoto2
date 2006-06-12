@@ -437,7 +437,8 @@ camera_exit (Camera *camera, GPContext *context)
 static int
 camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 {
-	int size, code;
+	unsigned int size;
+	int code;
 	unsigned char *data;
 
 	GP_DEBUG ("canon_capture_preview() called");
@@ -447,7 +448,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		gp_context_error (context, _("Error capturing image"));
 		return code;
 	}
-	gp_file_set_data_and_size ( file, data, size );
+	gp_file_set_data_and_size ( file, (char *)data, size );
 	gp_file_set_mime_type (file, GP_MIME_JPEG);	/* always */
 	/* Add an arbitrary file name so caller won't crash */
 	gp_file_set_name (file, "canon_preview.jpg");
@@ -789,20 +790,20 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			}
 			GP_DEBUG ("get_file_func: GP_FILE_TYPE_PREVIEW: extracted thumbnail data (%i bytes)", datalen);
 
-			gp_file_set_data_and_size (file, data, datalen);
+			gp_file_set_data_and_size (file, (char *)data, datalen);
 			gp_file_set_mime_type (file, GP_MIME_JPEG);	/* always */
 			gp_file_set_name (file, filename);
 			break;
 
 		case GP_FILE_TYPE_AUDIO:
 			gp_file_set_mime_type (file, GP_MIME_WAV);
-			gp_file_set_data_and_size (file, data, datalen);
+			gp_file_set_data_and_size (file, (char *)data, datalen);
 			gp_file_set_name (file, filename);
 			break;
 
 		case GP_FILE_TYPE_NORMAL:
 			gp_file_set_mime_type (file, filename2mimetype (filename));
-			gp_file_set_data_and_size (file, data, datalen);
+			gp_file_set_data_and_size (file, (char *)data, datalen);
 			gp_file_set_name (file, filename);
 			break;
 #ifdef HAVE_LIBEXIF
@@ -811,7 +812,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 				gp_file_set_mime_type (file, GP_MIME_JPEG);
 			else
 				gp_file_set_mime_type (file, GP_MIME_EXIF);
-			gp_file_set_data_and_size (file, data, datalen);
+			gp_file_set_data_and_size (file, (char *)data, datalen);
 			break;
 #endif /* HAVE_LIBEXIF */
 		default:
@@ -1261,7 +1262,8 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 {
 	Camera *camera = data;
 	char destpath[300], destname[300], dir[300], dcf_root_dir[10];
-	int j, dirnum = 0, r;
+	unsigned int j;
+	int dirnum = 0, r;
 	char buf[10];
 	CameraAbilities a;
 
@@ -1445,7 +1447,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	menuval = -1;
 	while (isoStateArray[i].label) {
 		gp_widget_add_choice (t, _(isoStateArray[i].label));
-		if (iso == isoStateArray[i].value) {
+		if (iso == (int)isoStateArray[i].value) {
 			gp_widget_set_value (t, _(isoStateArray[i].label));
 			menuval = i;
 		}
@@ -1478,7 +1480,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	menuval = -1;
 	while (shutterSpeedStateArray[i].label) {
 		gp_widget_add_choice (t, _(shutterSpeedStateArray[i].label));
-		if (shutter_speed == shutterSpeedStateArray[i].value) {
+		if (shutter_speed == (int)shutterSpeedStateArray[i].value) {
 			gp_widget_set_value (t, _(shutterSpeedStateArray[i].label));
 			menuval = i;
 		}
@@ -1511,7 +1513,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	menuval = -1;
 	while (apertureStateArray[i].label) {
 		gp_widget_add_choice (t, _(apertureStateArray[i].label));
-		if (aperture == apertureStateArray[i].value) {
+		if (aperture == (int)apertureStateArray[i].value) {
 			gp_widget_set_value (t, _(apertureStateArray[i].label));
 			menuval = i;
 		}
@@ -1582,7 +1584,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	menuval = -1;
 	while (focusModeStateArray[i].label) {
 		gp_widget_add_choice (t, _(focusModeStateArray[i].label));
-		if (focus_mode == focusModeStateArray[i].value) {
+		if (focus_mode == (int)focusModeStateArray[i].value) {
 			gp_widget_set_value (t, _(focusModeStateArray[i].label));
 			menuval = i;
 		}

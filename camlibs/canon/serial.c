@@ -237,7 +237,7 @@ canon_serial_get_byte (GPPort *gdev)
 		return (int) *cachep++;
 	}
 
-	recv = gp_port_read (gdev, cache, 1);
+	recv = gp_port_read (gdev, (char *)cache, 1);
 	if (recv < 0)		/* An error occurred */
 		return -1;
 
@@ -276,7 +276,8 @@ canon_serial_send_frame (Camera *camera, const unsigned char *pkt, int len)
 	p = buffer;
 	*p++ = CANON_FBEG;
 	while (len--) {
-		if (p - buffer >= sizeof (buffer) - 1) {
+		if (p < buffer ||
+		    (unsigned int)(p - buffer) >= sizeof (buffer) - 1) {
 			GP_DEBUG ("FATAL ERROR: send buffer overflow\n");
 			return -1;
 		}
@@ -321,7 +322,8 @@ canon_serial_recv_frame (Camera *camera, int *len)
 			return NULL;
 		if (c == CANON_ESC)
 			c = canon_serial_get_byte (camera->port) ^ CANON_XOR;
-		if (p - buffer >= sizeof (buffer)) {
+		if (p < buffer ||
+		    (unsigned int)(p - buffer) >= sizeof (buffer)) {
 			GP_DEBUG ("FATAL ERROR: receive buffer overflow\n");
 			return NULL;
 		}
@@ -332,7 +334,7 @@ canon_serial_recv_frame (Camera *camera, int *len)
 	 * set a lower debug level
 	 */
 	gp_log (GP_LOG_DATA, "canon", "RECV (without CANON_FBEG and CANON_FEND bytes)");
-	gp_log_data ("canon", buffer, p - buffer);
+	gp_log_data ("canon", (char *)buffer, p - buffer);
 
 	if (len)
 		*len = p - buffer;
@@ -553,7 +555,7 @@ canon_serial_send_msg (Camera *camera, unsigned char mtype, unsigned char dir, v
 	total = 0;
 
 	while (1) {
-		const char *str;
+		const unsigned char *str;
 		int len;
 
 		str = va_arg (*ap, unsigned char *);
@@ -652,7 +654,7 @@ canon_serial_send_msg (Camera *camera, unsigned char mtype, unsigned char dir, v
  *
  */
 unsigned char *
-canon_serial_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, int *total,
+canon_serial_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, unsigned int *total,
 		       GPContext *context)
 {
 	static unsigned char *msg = NULL;
@@ -824,7 +826,7 @@ canon_serial_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, i
  */
 unsigned char *
 canon_serial_dialogue (Camera *camera, GPContext *context, unsigned char mtype,
-		       unsigned char dir, int *len, ...)
+		       unsigned char dir, unsigned int *len, ...)
 {
 	va_list ap;
 	int okay, try;
@@ -888,8 +890,8 @@ canon_serial_dialogue (Camera *camera, GPContext *context, unsigned char mtype,
 int
 canon_serial_end (Camera *camera)
 {
-	canon_serial_send (camera, "\xC0\x00\x02\x55\x2C\xC1", 6, USLEEP2);
-	canon_serial_send (camera, "\xC0\x00\x04\x01\x00\x00\x00\x24\xC6\xC1", 8, USLEEP2);
+	canon_serial_send (camera, (unsigned char *)"\xC0\x00\x02\x55\x2C\xC1", 6, USLEEP2);
+	canon_serial_send (camera, (unsigned char *)"\xC0\x00\x04\x01\x00\x00\x00\x24\xC6\xC1", 8, USLEEP2);
 	return GP_OK;
 }
 
@@ -907,8 +909,8 @@ canon_serial_end (Camera *camera)
 int
 canon_serial_off (Camera *camera)
 {
-	canon_serial_send (camera, "\xC0\x00\x02\x55\x2C\xC1", 6, USLEEP2);
-	canon_serial_send (camera, "\xC0\x00\x04\x01\x00\x00\x00\x24\xC6\xC1", 8, USLEEP2);
+	canon_serial_send (camera, (unsigned char *)"\xC0\x00\x02\x55\x2C\xC1", 6, USLEEP2);
+	canon_serial_send (camera, (unsigned char *)"\xC0\x00\x04\x01\x00\x00\x00\x24\xC6\xC1", 8, USLEEP2);
 	canon_serial_change_speed (camera->port, 9600);
 	return GP_OK;
 }
@@ -963,9 +965,10 @@ canon_serial_put_file (Camera *camera, CameraFile *file, char *destname, char *d
 	char offset2[4];
 	int block_len;
 	char block_len2[4];
-	int sent = 0;
-	int i, j = 0, len, hdr_len;
-	long int size;
+	unsigned int sent = 0;
+	int i, j = 0;
+	unsigned int len, hdr_len;
+	unsigned long int size;
 	const char *data, *name;
 	unsigned int id;
 
@@ -1031,13 +1034,13 @@ canon_serial_put_file (Camera *camera, CameraFile *file, char *destname, char *d
  *
  */
 unsigned char *
-canon_serial_get_file (Camera *camera, const char *name, int *length, GPContext *context)
+canon_serial_get_file (Camera *camera, const char *name, unsigned int *length, GPContext *context)
 {
 	unsigned char *file = NULL;
 	unsigned char *msg;
 	unsigned char name_len;
 	unsigned int total = 0, expect = 0, size, id;
-	int len;
+	unsigned int len;
 
 	if (camera->pl->receive_error == FATAL_ERROR) {
 		GP_DEBUG ("ERROR: can't continue a fatal error condition detected\n");
@@ -1111,7 +1114,7 @@ canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
 			  unsigned int *dirents_length, const char *path, GPContext *context)
 {
 	unsigned char *p, *temp_ch, *data = NULL;
-	int mallocd_bytes, total_size;
+	unsigned int mallocd_bytes, total_size;
 
 	*dirent_data = NULL;
 
@@ -1138,7 +1141,7 @@ canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
 	gp_log (GP_LOG_DATA, "canon",
 		"canon_serial_get_dirents: "
 		"dirent packet received from canon_serial_dialogue:");
-	gp_log_data ("canon", p, *dirents_length);
+	gp_log_data ("canon", (char *)p, *dirents_length);
 
 	/* the first five bytes is only for the RS232 implementation
 	 * of this command, we do not need to copy them so therefore
@@ -1179,7 +1182,7 @@ canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
 		gp_log (GP_LOG_DATA, "canon",
 			"canon_serial_get_dirents: "
 			"dirent packet received from canon_serial_recv_msg:");
-		gp_log_data ("canon", p, *dirents_length);
+		gp_log_data ("canon", (char *)p, *dirents_length);
 
 		/* the first five bytes is only for the RS232 implementation,
 		 * don't count them when checking dirent size
@@ -1196,9 +1199,10 @@ canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
 		/* check if we need to allocate some more memory,
 		 * the first five bytes is only for the RS232
 		 * implementation of this command, don't need to
-		 * malloc for them.
+		 * malloc for them.  note that we ensured earlier in this
+		 * function that *dirents_length >= 5.
 		 */
-		if (total_size + (*dirents_length - 5) > mallocd_bytes) {
+		if (total_size + (unsigned int)(*dirents_length - 5) > mallocd_bytes) {
 			/* we allocate 1024 bytes chunks instead
 			 * of the exact number of bytes needed.
 			 * this is OK since we will free this
@@ -1260,7 +1264,7 @@ canon_serial_ready (Camera *camera, GPContext *context)
 {
 	unsigned char type, seq;
 	int good_ack, speed, try, len, i;
-	char *pkt;
+	unsigned char *pkt;
 	int res;
 	char cam_id_str[2000];
 	unsigned int id;
@@ -1335,7 +1339,7 @@ canon_serial_ready (Camera *camera, GPContext *context)
 	}
 	id = gp_context_progress_start (context, MAX_TRIES, _("Trying to contact camera..."));
 	for (try = 0; try < MAX_TRIES; try++) {
-		if (canon_serial_send (camera, "\x55\x55\x55\x55\x55\x55\x55\x55", 8, USLEEP1)
+		if (canon_serial_send (camera, (unsigned char *)"\x55\x55\x55\x55\x55\x55\x55\x55", 8, USLEEP1)
 		    < 0) {
 			gp_context_error (context, _("Communication error 1"));
 			return GP_ERROR;
@@ -1354,11 +1358,11 @@ canon_serial_ready (Camera *camera, GPContext *context)
 		gp_context_error (context, _("No response from camera"));
 		return GP_ERROR;
 	}
-	if (len < 40 && strncmp (pkt + 26, "Canon", 5)) {
+	if (len < 40 && strncmp ((char *)pkt + 26, "Canon", 5)) {
 		gp_context_error (context, _("Unrecognized response"));
 		return GP_ERROR;
 	}
-	strncpy (cam_id_str, pkt + 26, sizeof (cam_id_str) - 1);
+	strncpy (cam_id_str, (char *)pkt + 26, sizeof (cam_id_str) - 1);
 
 	GP_DEBUG ("cam_id_str : '%s'", cam_id_str);
 
@@ -1409,7 +1413,7 @@ canon_serial_ready (Camera *camera, GPContext *context)
 	}
 	camera->pl->seq_tx = 0;
 	camera->pl->seq_rx = 1;
-	if (!canon_serial_send_frame (camera, "\x00\x05\x00\x00\x00\x00\xdb\xd1", 8)) {
+	if (!canon_serial_send_frame (camera, (unsigned char *)"\x00\x05\x00\x00\x00\x00\xdb\xd1", 8)) {
 		gp_context_error (context, _("Communication error 2"));
 		return GP_ERROR;
 	}
@@ -1432,7 +1436,7 @@ canon_serial_ready (Camera *camera, GPContext *context)
 			break;
 	}
 
-	if (!res || !canon_serial_send_frame (camera, "\x00\x04\x01\x00\x00\x00\x24\xc6", 8)) {
+	if (!res || !canon_serial_send_frame (camera, (unsigned char *)"\x00\x04\x01\x00\x00\x00\x24\xc6", 8)) {
 		gp_context_error (context, _("Communication error 3"));
 		return GP_ERROR;
 	}
@@ -1488,7 +1492,7 @@ canon_serial_ready (Camera *camera, GPContext *context)
  */
 int
 canon_serial_get_thumbnail (Camera *camera, const char *name, unsigned char **data,
-			    int *length, GPContext *context)
+			    unsigned int *length, GPContext *context)
 {
 	unsigned int expect = 0, size, payload_length, total_file_size;
 	unsigned int total = 0, id;

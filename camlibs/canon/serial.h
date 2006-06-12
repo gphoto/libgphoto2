@@ -29,19 +29,19 @@ int canon_serial_send_frame (Camera *camera, const unsigned char *pkt, int len);
 unsigned char *canon_serial_recv_frame (Camera *camera, int *len);
 void canon_serial_error_type(Camera *camera);
 
-unsigned char * canon_serial_dialogue (Camera *camera, GPContext *context, unsigned char mtype, unsigned char dir, int *len, ...);
+unsigned char * canon_serial_dialogue (Camera *camera, GPContext *context, unsigned char mtype, unsigned char dir, unsigned int *len, ...);
 int canon_serial_send_packet (Camera *camera, unsigned char type, unsigned char seq, unsigned char *pkt, int len);
 unsigned char *canon_serial_recv_packet (Camera *camera, unsigned char *type, unsigned char *seq, int *len);
 int canon_serial_wait_for_ack (Camera *camera);
-unsigned char *canon_serial_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, int *total, GPContext *context);
+unsigned char *canon_serial_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, unsigned int *total, GPContext *context);
 
-unsigned char *canon_serial_get_file (Camera *camera, const char *name, int *length, GPContext *context);
+unsigned char *canon_serial_get_file (Camera *camera, const char *name, unsigned int *length, GPContext *context);
 int canon_serial_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath, GPContext *context);
 int canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data, unsigned int *dirents_length, const char *path, GPContext *context);
 
 
 int canon_serial_ready (Camera *camera, GPContext *context);
-int canon_serial_get_thumbnail (Camera *camera, const char *name, unsigned char **data, int *length, GPContext *context);
+int canon_serial_get_thumbnail (Camera *camera, const char *name, unsigned char **data, unsigned int *length, GPContext *context);
 
 /**
  * MAX_TRIES
@@ -291,7 +291,7 @@ typedef enum {
  * String to send to set camera speed to 9600 bits per second.
  *
  */
-#define SPEED_9600   "\x00\x03\x02\x02\x01\x10\x00\x00\x00\x00\xc0\x39"
+#define SPEED_9600   (unsigned char *)"\x00\x03\x02\x02\x01\x10\x00\x00\x00\x00\xc0\x39"
 
 /**
  * SPEED_19200
@@ -299,7 +299,7 @@ typedef enum {
  * String to send to set camera speed to 19200 bits per second.
  *
  */
-#define SPEED_19200  "\x00\x03\x08\x02\x01\x10\x00\x00\x00\x00\x13\x1f"
+#define SPEED_19200  (unsigned char *)"\x00\x03\x08\x02\x01\x10\x00\x00\x00\x00\x13\x1f"
 
 /**
  * SPEED_38400
@@ -307,7 +307,7 @@ typedef enum {
  * String to send to set camera speed to 38400 bits per second.
  *
  */
-#define SPEED_38400  "\x00\x03\x20\x02\x01\x10\x00\x00\x00\x00\x5f\x84"
+#define SPEED_38400  (unsigned char *)"\x00\x03\x20\x02\x01\x10\x00\x00\x00\x00\x5f\x84"
 
 /**
  * SPEED_57600
@@ -315,7 +315,7 @@ typedef enum {
  * String to send to set camera speed to 57600 bits per second.
  *
  */
-#define SPEED_57600  "\x00\x03\x40\x02\x01\x10\x00\x00\x00\x00\x5e\x57"
+#define SPEED_57600  (unsigned char *)"\x00\x03\x40\x02\x01\x10\x00\x00\x00\x00\x5e\x57"
 
 /**
  * SPEED_115200
@@ -323,7 +323,7 @@ typedef enum {
  * String to send to set camera speed to 115200 bits per second.
  *
  */
-#define SPEED_115200 "\x00\x03\x80\x02\x01\x10\x00\x00\x00\x00\x4d\xf9"
+#define SPEED_115200 (unsigned char *)"\x00\x03\x80\x02\x01\x10\x00\x00\x00\x00\x4d\xf9"
 
 
 

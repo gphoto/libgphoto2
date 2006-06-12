@@ -221,7 +221,7 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
                 return i;
 
         /* Read one byte from the control pipe. */
-        i = gp_port_usb_msg_read (camera->port, 0x0c, 0x55, 0, msg, 1);
+        i = gp_port_usb_msg_read (camera->port, 0x0c, 0x55, 0, (char *)msg, 1);
         if (i != 1) {
                 gp_context_error (context, _("Could not establish initial contact with camera"));
                 return GP_ERROR_CORRUPTED_DATA;
@@ -249,7 +249,7 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
         GP_DEBUG ("canon_usb_camera_init() initial camera response: %c/'%s'",
                   camstat, camstat_str);
 
-        i = gp_port_usb_msg_read (camera->port, 0x04, 0x1, 0, msg, 0x58);
+        i = gp_port_usb_msg_read (camera->port, 0x04, 0x1, 0, (char *)msg, 0x58);
         if (i != 0x58) {
                 if ( i < 0 ) {
 			gp_context_error (context,
@@ -274,7 +274,7 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 
         if (camstat == 'A') {
                 /* read another 0x50 bytes */
-                i = gp_port_usb_msg_read (camera->port, 0x04, 0x4, 0, msg, 0x50);
+                i = gp_port_usb_msg_read (camera->port, 0x04, 0x4, 0, (char *)msg, 0x50);
                 if (i != 0x50) {
                         if ( i < 0 ) {
 				gp_context_error (context,
@@ -301,7 +301,7 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
                 memset ( msg, 0, 0x40 );
                 msg[0] = 0x10;
                 memmove (msg + 0x40, msg + 0x48, 0x10);
-                i = gp_port_usb_msg_write (camera->port, 0x04, 0x11, 0, msg, 0x50);
+                i = gp_port_usb_msg_write (camera->port, 0x04, 0x11, 0, (char *)msg, 0x50);
                 if (i != 0x50) {
                         if ( i < 0 ) {
 				gp_context_error (context,
@@ -323,7 +323,7 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
                         /* We expect to get 0x44 bytes here, but the camera is picky at this stage and
                          * we must read 0x40 bytes and then read 0x4 bytes more.
                          */
-                        i = gp_port_read (camera->port, buffer, 0x40);
+                        i = gp_port_read (camera->port, (char *)buffer, 0x40);
                         if ((i >= 4)
                             && (buffer[i - 4] == 0x54) && (buffer[i - 3] == 0x78)
                             && (buffer[i - 2] == 0x00) && (buffer[i - 1] == 0x00)) {
@@ -363,7 +363,7 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
                                 GP_DEBUG ("canon_usb_camera_init() camera says to read %i more bytes, "
                                           "we would have expected 4 - overriding since some cameras are "
                                           "known not to give correct numbers of bytes.", read_bytes);
-                        i = gp_port_read (camera->port, buffer, 4);
+                        i = gp_port_read (camera->port, (char *)buffer, 4);
                         if (i != 4) {
 				if ( i < 0 )
 					GP_DEBUG ("canon_usb_camera_init() "
@@ -380,7 +380,7 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
                 else {
                         /* Newer cameras can give us all 0x44 bytes at
                          * once; some insist on it. */
-                        i = gp_port_read (camera->port, buffer, 0x44);
+                        i = gp_port_read (camera->port, (char *)buffer, 0x44);
                         if (i != 0x44) {
 				if ( i < 0 ) {
 					gp_context_error (context,
@@ -402,7 +402,7 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
                 read_bytes = 0;
                 do {
                         GP_DEBUG ( "canon_usb_camera_init() read_bytes=0x%x", read_bytes );
-                        i = gp_port_check_int_fast ( camera->port, buffer, 0x10 );
+                        i = gp_port_check_int_fast ( camera->port, (char *)buffer, 0x10 );
                         if ( i > 0 )
                                 read_bytes += i;
                 } while ( read_bytes < 0x10 && i >= 0 );
@@ -499,7 +499,7 @@ canon_usb_init (Camera *camera, GPContext *context)
 
         if ( camera->pl->md->model == CANON_CLASS_6 ) {
                 unsigned char *c_res;
-                int bytes_read = 0;
+                unsigned int bytes_read = 0;
 
                 /* Get body ID here */
                 GP_DEBUG ( "canon_usb_init: camera uses newer protocol, so we get body ID" );
@@ -566,8 +566,8 @@ int
 canon_usb_lock_keys (Camera *camera, GPContext *context)
 {
         unsigned char *c_res;
-        int bytes_read;
-        char payload[4];
+        unsigned int bytes_read;
+        unsigned char payload[4];
 
         GP_DEBUG ("canon_usb_lock_keys()");
 
@@ -721,7 +721,7 @@ int
 canon_usb_unlock_keys (Camera *camera, GPContext *context)
 {
         unsigned char *c_res;
-        int bytes_read;
+        unsigned int bytes_read;
 
         GP_DEBUG ("canon_usb_unlock_keys()");
 
@@ -787,7 +787,7 @@ int
 canon_usb_get_body_id (Camera *camera, GPContext *context)
 {
         unsigned char *c_res;
-        int bytes_read;
+        unsigned int bytes_read;
 
         GP_DEBUG ("canon_usb_get_body_id()");
 
@@ -872,7 +872,7 @@ static int canon_usb_poll_interrupt_pipe ( Camera *camera, unsigned char *buf, i
            error or a non-zero size. */
         for ( i=0; i<n_tries; i++ ) {
                 status = gp_port_check_int_fast ( camera->port,
-                                                  buf, 0x40 );
+                                                  (char *)buf, 0x40 );
                 if ( status != 0 ) /* Either some real data, or failure */
                         break;
         }
@@ -932,7 +932,7 @@ int canon_usb_poll_interrupt_multiple ( Camera *camera[], int n_cameras,
                         *which = (*which+1) % n_cameras;
 
                 status = gp_port_check_int_fast ( camera[*which]->port,
-                                                  buf, 0x40 );
+                                                  (char *)buf, 0x40 );
         }
         if ( status <= 0 )
                 GP_LOG ( GP_LOG_ERROR, _("canon_usb_poll_interrupt_multiple:"
@@ -967,7 +967,7 @@ int canon_usb_poll_interrupt_multiple ( Camera *camera[], int n_cameras,
  *
  */
 unsigned char *
-canon_usb_capture_dialogue (Camera *camera, int *return_length, int *photo_status, GPContext *context )
+canon_usb_capture_dialogue (Camera *camera, unsigned int *return_length, int *photo_status, GPContext *context )
 {
         int status;
         unsigned char payload[9]; /* used for sending data to camera */
@@ -1227,7 +1227,7 @@ FAIL2:	/* After "photographic error" is signaled, we know pipe is clean. */
  * Returns: a string with the error message, or NUL if status is OK.
  */
 static char *canon_usb_decode_status ( int code ) {
-        int i;
+        unsigned int i;
         static char message[100];
 
         for ( i=0;
@@ -1278,12 +1278,13 @@ static char *canon_usb_decode_status ( int code ) {
  *
  */
 unsigned char *
-canon_usb_dialogue_full (Camera *camera, canonCommandIndex canon_funct, int *return_length, const char *payload,
-                    int payload_length)
+canon_usb_dialogue_full (Camera *camera, canonCommandIndex canon_funct, unsigned int *return_length, const unsigned char *payload,
+                    unsigned int payload_length)
 {
         int msgsize, status, i;
         char cmd1 = 0, cmd2 = 0, *funct_descr = "";
-        int cmd3 = 0, read_bytes = 0, read_bytes1 = 0, read_bytes2 = 0;
+        int cmd3 = 0, read_bytes1 = 0, read_bytes2 = 0;
+	unsigned int read_bytes = 0;
         unsigned char packet[1024];     /* used for sending data to camera */
         static unsigned char buffer[0x474];     /* used for receiving data from camera */
 
@@ -1378,7 +1379,7 @@ canon_usb_dialogue_full (Camera *camera, canonCommandIndex canon_funct, int *ret
 
         if (payload_length) {
                 GP_DEBUG ("Payload :");
-                gp_log_data ("canon", payload, (long)payload_length);
+                gp_log_data ("canon", (char *)payload, (long)payload_length);
         }
 
         if ((payload_length + 0x50) > sizeof (packet)) {
@@ -1420,7 +1421,7 @@ canon_usb_dialogue_full (Camera *camera, canonCommandIndex canon_funct, int *ret
 
         /* now send the packet to the camera */
         status = gp_port_usb_msg_write (camera->port, msgsize > 1 ? 0x04 : 0x0c, 0x10, 0,
-                                        packet, msgsize);
+                                        (char *)packet, msgsize);
         if (status != msgsize) {
                 GP_DEBUG ("canon_usb_dialogue: write failed! (returned %i)\n", status);
                 return NULL;
@@ -1463,7 +1464,7 @@ canon_usb_dialogue_full (Camera *camera, canonCommandIndex canon_funct, int *ret
                  * camera to camera.
                  */
                 read_bytes1 = read_bytes - (read_bytes % 0x40);
-                status = gp_port_read (camera->port, buffer, read_bytes1);
+                status = gp_port_read (camera->port, (char *)buffer, read_bytes1);
                 if (status != read_bytes1) {
                         if ( status >= 0 )
                                 GP_DEBUG ("canon_usb_dialogue: read 1 of 0x%x bytes failed! (returned %i)",
@@ -1475,7 +1476,7 @@ canon_usb_dialogue_full (Camera *camera, canonCommandIndex canon_funct, int *ret
                 }
 
                 if ( cmd3 != 0x202 ) {
-                        int reported_length = le32atoh (buffer);
+                        unsigned int reported_length = le32atoh (buffer);
                         if ( reported_length == 0 ) {
                                 /* No length at start of packet. Did we read enough to
                                  * see the length later on? */
@@ -1499,7 +1500,7 @@ canon_usb_dialogue_full (Camera *camera, canonCommandIndex canon_funct, int *ret
                 read_bytes2 = read_bytes - read_bytes1;
 
                 if ( read_bytes2 > 0 ) {
-                        status = gp_port_read (camera->port, buffer + read_bytes1, read_bytes2);
+                        status = gp_port_read (camera->port, (char *)buffer + read_bytes1, read_bytes2);
                         if (status != read_bytes2) {
                                 if ( status >= 0 )
                                         GP_DEBUG ("canon_usb_dialogue: read 2 of %i bytes failed! (returned %i)",
@@ -1515,8 +1516,8 @@ canon_usb_dialogue_full (Camera *camera, canonCommandIndex canon_funct, int *ret
                 /* Newer protocol: these cameras allow (and some
                  * demand) the host software to read the entire
                  * response in one operation. */
-                status = gp_port_read (camera->port, buffer, read_bytes );
-                if ( status != read_bytes ) {
+                status = gp_port_read (camera->port, (char *)buffer, read_bytes );
+                if ( status != (int)read_bytes ) {
                         if ( status >= 0 )
                                 GP_DEBUG ("canon_usb_dialogue: single read of %i bytes failed! (returned %i)",
                                           read_bytes, status);
@@ -1576,8 +1577,8 @@ canon_usb_dialogue_full (Camera *camera, canonCommandIndex canon_funct, int *ret
  *
  */
 unsigned char *
-canon_usb_dialogue (Camera *camera, canonCommandIndex canon_funct, int *return_length, const char *payload,
-                    int payload_length)
+canon_usb_dialogue (Camera *camera, canonCommandIndex canon_funct, unsigned int *return_length, const unsigned char *payload,
+                    unsigned int payload_length)
 {
 	unsigned char *buffer;
 
@@ -1616,10 +1617,11 @@ canon_usb_dialogue (Camera *camera, canonCommandIndex canon_funct, int *return_l
  */
 int
 canon_usb_long_dialogue (Camera *camera, canonCommandIndex canon_funct, unsigned char **data,
-                         int *data_length, int max_data_size, const char *payload,
-                         int payload_length, int display_status, GPContext *context)
+                         unsigned int *data_length, unsigned int max_data_size, const unsigned char *payload,
+                         unsigned int payload_length, int display_status, GPContext *context)
 {
         int bytes_read;
+	unsigned int dialogue_len;
         unsigned int total_data_size = 0, bytes_received = 0, read_bytes = camera->pl->xfer_length;
         unsigned char *lpacket;         /* "length packet" */
         unsigned int id = 0;
@@ -1635,7 +1637,7 @@ canon_usb_long_dialogue (Camera *camera, canonCommandIndex canon_funct, unsigned
          * the returned data holds the total number of bytes we are to read.
          */
         lpacket =
-                canon_usb_dialogue_full (camera, canon_funct, &bytes_read, payload, payload_length);
+                canon_usb_dialogue_full (camera, canon_funct, &dialogue_len, payload, payload_length);
         if (lpacket == NULL) {
                 GP_DEBUG ("canon_usb_long_dialogue: canon_usb_dialogue returned error!");
                 return GP_ERROR_OS_FAILURE;
@@ -1643,10 +1645,10 @@ canon_usb_long_dialogue (Camera *camera, canonCommandIndex canon_funct, unsigned
         /* This check should not be needed since we check the return of canon_usb_dialogue()
          * above, but as the saying goes: better safe than sorry.
          */
-        if (bytes_read != 0x40) {
+        if (dialogue_len != 0x40) {
                 GP_DEBUG ("canon_usb_long_dialogue: canon_usb_dialogue "
                           "returned %i bytes, not the length "
-                          "we expected (%i)!. Aborting.", bytes_read, 0x40);
+                          "we expected (%i)!. Aborting.", dialogue_len, 0x40);
                 return GP_ERROR_CORRUPTED_DATA;
         }
 
@@ -1684,7 +1686,7 @@ canon_usb_long_dialogue (Camera *camera, canonCommandIndex canon_funct, unsigned
                 GP_DEBUG ("canon_usb_long_dialogue: total_data_size = %i, "
                           "bytes_received = %i, read_bytes = %i (0x%x)", total_data_size,
                           bytes_received, read_bytes, read_bytes);
-                bytes_read = gp_port_read (camera->port, *data + bytes_received, read_bytes);
+                bytes_read = gp_port_read (camera->port, (char *)*data + bytes_received, read_bytes);
                 if (bytes_read < 1) {
                         GP_DEBUG ("canon_usb_long_dialogue: gp_port_read() returned error (%i) or no data\n",
                                   bytes_read);
@@ -1700,9 +1702,7 @@ canon_usb_long_dialogue (Camera *camera, canonCommandIndex canon_funct, unsigned
                                 return bytes_read;
                         else
                                 return GP_ERROR_CORRUPTED_DATA;
-                }
-
-                if (bytes_read < read_bytes)
+                } else if ((unsigned int)bytes_read < read_bytes)
                         GP_DEBUG ("canon_usb_long_dialogue: WARNING: gp_port_read() resulted in short read "
                                   "(returned %i bytes, expected %i)", bytes_read, read_bytes);
                 bytes_received += bytes_read;
@@ -1732,7 +1732,7 @@ canon_usb_long_dialogue (Camera *camera, canonCommandIndex canon_funct, unsigned
  *
  */
 int
-canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, int *length,
+canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, unsigned int *length,
                     GPContext *context)
 {
         char payload[100];
@@ -1775,7 +1775,7 @@ canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, int 
 
         /* the 1 is to show status */
         res = canon_usb_long_dialogue (camera, CANON_USB_FUNCTION_GET_FILE, data, length,
-                                       camera->pl->md->max_movie_size, payload,
+                                       camera->pl->md->max_movie_size, (unsigned char *)payload,
                                        payload_length, 1, context);
         if (res != GP_OK) {
                 GP_DEBUG ("canon_usb_get_file: canon_usb_long_dialogue() "
@@ -1802,11 +1802,12 @@ canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, int 
  *
  */
 int
-canon_usb_get_thumbnail (Camera *camera, const char *name, unsigned char **data, int *length,
+canon_usb_get_thumbnail (Camera *camera, const char *name, unsigned char **data, unsigned int *length,
                          GPContext *context)
 {
         char payload[100];
-        int payload_length, res, offset;
+        unsigned int payload_length;
+	int res, offset;
 
         GP_DEBUG ("canon_usb_get_thumbnail() called for file '%s'", name);
 
@@ -1851,7 +1852,7 @@ canon_usb_get_thumbnail (Camera *camera, const char *name, unsigned char **data,
 
         /* 0 is to not show status */
         res = canon_usb_long_dialogue (camera, CANON_USB_FUNCTION_GET_FILE, data, length,
-                                       camera->pl->md->max_thumbnail_size, payload,
+                                       camera->pl->md->max_thumbnail_size, (unsigned char *)payload,
                                        payload_length, 0, context);
 
         if (res != GP_OK) {
@@ -1879,10 +1880,10 @@ canon_usb_get_thumbnail (Camera *camera, const char *name, unsigned char **data,
  *
  */
 int
-canon_usb_get_captured_image (Camera *camera, const int key, unsigned char **data, int *length,
+canon_usb_get_captured_image (Camera *camera, const int key, unsigned char **data, unsigned int *length,
                               GPContext *context)
 {
-        char payload[16];
+        unsigned char payload[16];
         int payload_length = 16, result;
 
         GP_DEBUG ("canon_usb_get_captured_image() called");
@@ -1933,10 +1934,10 @@ canon_usb_get_captured_image (Camera *camera, const int key, unsigned char **dat
  *
  */
 int
-canon_usb_get_captured_secondary_image (Camera *camera, const int key, unsigned char **data, int *length,
+canon_usb_get_captured_secondary_image (Camera *camera, const int key, unsigned char **data, unsigned int *length,
 					GPContext *context)
 {
-        char payload[16];
+        unsigned char payload[16];
         int payload_length = 16, result;
 
         GP_DEBUG ("canon_usb_get_captured_secondary_image() called");
@@ -1986,10 +1987,10 @@ canon_usb_get_captured_secondary_image (Camera *camera, const int key, unsigned 
  *
  */
 int
-canon_usb_get_captured_thumbnail (Camera *camera, const int key, unsigned char **data, int *length,
+canon_usb_get_captured_thumbnail (Camera *camera, const int key, unsigned char **data, unsigned int *length,
 				  GPContext *context)
 {
-        char payload[16];
+        unsigned char payload[16];
         int payload_length = 16, result;
 
         GP_DEBUG ("canon_usb_get_captured_thumbnail() called");
@@ -2036,9 +2037,9 @@ canon_usb_get_captured_thumbnail (Camera *camera, const int key, unsigned char *
 int canon_usb_set_file_time ( Camera *camera, char *camera_filename, time_t time, GPContext *context)
 {
         unsigned char *result_buffer;
-        int payload_size =  0x4 + strlen(camera_filename) + 2,
+        unsigned int payload_size =  0x4 + strlen(camera_filename) + 2,
                 bytes_read;
-        char *payload = malloc ( payload_size );
+        unsigned char *payload = malloc ( payload_size );
 
         if ( payload == NULL ) {
                 GP_DEBUG ( "canon_usb_set_file_time:"
@@ -2049,7 +2050,7 @@ int canon_usb_set_file_time ( Camera *camera, char *camera_filename, time_t time
         }
         memset ( payload, 0, payload_size );
 
-        strncpy ( payload + 0x4, camera_filename, strlen(camera_filename) );
+        strncpy ( (char *)payload + 0x4, camera_filename, strlen(camera_filename) );
         htole32a ( payload, time );          /* Load specified time for camera directory. */
         result_buffer = canon_usb_dialogue ( camera, CANON_USB_FUNCTION_SET_FILE_TIME,
 					     &bytes_read, payload, payload_size );
@@ -2083,7 +2084,7 @@ canon_usb_set_file_attributes (Camera *camera, unsigned int attr_bits,
         /* Pathname string plus 32-bit parameter plus two NULs. */
         unsigned int payload_length = 4 + strlen (dir) + 1 + strlen (file) + 2;
         unsigned char *payload = calloc ( payload_length, sizeof ( unsigned char ) );
-        int bytes_read;
+        unsigned int bytes_read;
         unsigned char *res;
 
         GP_DEBUG ( "canon_usb_set_file_attributes()" );
@@ -2429,7 +2430,7 @@ canon_usb_list_all_dirs (Camera *camera, unsigned char **dirent_data,
 {
         unsigned char payload[100];
         unsigned int payload_length;
-        unsigned char *disk_name = canon_int_get_disk_name (camera, context);
+        char *disk_name = canon_int_get_disk_name (camera, context);
         int res;
 
         *dirent_data = NULL;
@@ -2462,7 +2463,7 @@ canon_usb_list_all_dirs (Camera *camera, unsigned char **dirent_data,
         /* Give no max data size.
          * 0 is to not show progress status
          */
-        res = canon_usb_long_dialogue (camera, CANON_USB_FUNCTION_GET_DIRENT, dirent_data,
+        res = canon_usb_long_dialogue (camera, CANON_USB_FUNCTION_GET_DIRENT, (unsigned char **)dirent_data,
                                        dirents_length, 0, payload, payload_length, 0,
                                        context);
         if (res != GP_OK) {
@@ -2490,7 +2491,7 @@ int
 canon_usb_ready (Camera *camera, GPContext *context)
 {
 	unsigned char *msg;
-        int len;
+        unsigned int len;
 
         GP_DEBUG ("canon_usb_ready()");
 

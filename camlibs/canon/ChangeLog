@@ -1,3 +1,20 @@
+2006-06-11  Paul Walmsley  <paul@booyaka.com>
+
+	* canon.[ch], usb.[ch], serial.[ch], library.c: Fix existing
+	compile-time warnings.  Most of the fixes fell into one of these
+	categories: (A) Converting length fields from signed int/long to
+	unsigned, unless the meaning of the field is overloaded to pass
+	back a gphoto2 error code (which are negative);
+	(B) Converting fields of binary data used in camera interaction
+	from signed char to unsigned char; (C) Casting unsigned char
+	buffers passed to the gphoto2 port code, etc. to signed char;
+	(D) Reviewing comparisons between signed and unsigned numbers, and
+	ensuring that the comparisons are safely restricted to unsigned
+	numbers when necessary.
+
+	* Makefile.am: add '-Wall -Wextra -Wno-unused-parameter
+	-Wno-missing-field-initializers' to CPPFLAGS.
+
 2006-06-09  Paul Walmsley  <paul@booyaka.com>
 
 	* usb.c: Modify identify camera code to retry quickly, and to

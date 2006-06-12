@@ -588,15 +588,15 @@ char *canon_int_get_disk_name(Camera *camera, GPContext *context);
 int canon_int_get_battery(Camera *camera, int *pwr_status, int *pwr_source, GPContext *context);
 
 int canon_int_capture_image (Camera *camera, CameraFilePath *path, GPContext *context);
-int canon_int_capture_preview (Camera *camera, unsigned char **data, int *length,
+int canon_int_capture_preview (Camera *camera, unsigned char **data, unsigned int *length,
 			       GPContext *context);
 
 int canon_int_get_disk_name_info(Camera *camera, const char *name,int *capacity,int *available, GPContext *context);
 
 int canon_int_list_directory (Camera *camera, const char *folder, CameraList *list, const canonDirlistFunctionBits flags, GPContext *context);
 
-int canon_int_get_file(Camera *camera, const char *name, unsigned char **data, int *length, GPContext *context);
-int canon_int_get_thumbnail(Camera *camera, const char *name, unsigned char **retdata, int *length, GPContext *context);
+int canon_int_get_file(Camera *camera, const char *name, unsigned char **data, unsigned int *length, GPContext *context);
+int canon_int_get_thumbnail(Camera *camera, const char *name, unsigned char **retdata, unsigned int *length, GPContext *context);
 int canon_int_put_file(Camera *camera, CameraFile *file, char *destname, char *destpath, GPContext *context);
 int canon_int_set_file_attributes(Camera *camera, const char *file, const char *dir, canonDirentAttributeBits attrs, GPContext *context);
 int canon_int_delete_file(Camera *camera, const char *name, const char *dir, GPContext *context);
@@ -629,15 +629,15 @@ int canon_int_get_release_params (Camera *camera, GPContext *context);
 int canon_int_set_release_params(Camera *camera, GPContext *context);
 #endif
 int
-canon_int_pack_control_subcmd (unsigned char *payload, int subcmd,
+canon_int_pack_control_subcmd (unsigned char *payload, unsigned int subcmd,
 			       int word0, int word1,
 			       char *desc);
 int
-canon_int_do_control_command (Camera *camera, int subcmd, int a, int b);
+canon_int_do_control_command (Camera *camera, unsigned int subcmd, int a, int b);
 int
-canon_int_do_control_dialogue (Camera *camera, int subcmd, int a, int b, unsigned char **response_handle, int *datalen);
+canon_int_do_control_dialogue (Camera *camera, unsigned int subcmd, int a, int b, unsigned char **response_handle, unsigned int *datalen);
 int
-canon_int_do_control_dialogue_payload (Camera *camera, char *payload, int payloadlen, unsigned char **response_handle, int *datalen);
+canon_int_do_control_dialogue_payload (Camera *camera, unsigned char *payload, unsigned int payloadlen, unsigned char **response_handle, unsigned int *datalen);
 
 
 
