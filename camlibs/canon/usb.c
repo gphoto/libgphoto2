@@ -1319,11 +1319,11 @@ canon_usb_dialogue_full (Camera *camera, canonCommandIndex canon_funct, unsigned
                 i++;
         }
         if (canon_usb_cmd[i].num == 0) {
-                GP_DEBUG ("canon_usb_dialogue() called for ILLEGAL function %i! Aborting.",
+                GP_DEBUG ("canon_usb_dialogue_full() called for ILLEGAL function %i! Aborting.",
                           canon_funct);
                 return NULL;
         }
-        GP_DEBUG ("canon_usb_dialogue() cmd 0x%x 0x%x 0x%x (%s)", cmd1, cmd2, cmd3,
+        GP_DEBUG ("canon_usb_dialogue_full() cmd 0x%x 0x%x 0x%x (%s)", cmd1, cmd2, cmd3,
                   funct_descr);
 
         /*
@@ -1347,20 +1347,20 @@ canon_usb_dialogue_full (Camera *camera, canonCommandIndex canon_funct, unsigned
                         j++;
                 }
                 if (canon_usb_control_cmd[j].num == 0) {
-                        GP_DEBUG("canon_usb_dialogue(): CONTROL_CAMERA called for ILLEGAL "
+                        GP_DEBUG("canon_usb_dialogue_full(): CONTROL_CAMERA called for ILLEGAL "
                                  "sub function %i! Aborting.", canon_subfunc);
                         return NULL;
                 }
                 read_bytes += additional_read_bytes;
 
-                GP_DEBUG ("canon_usb_dialogue() called with CONTROL_CAMERA, %s",
+                GP_DEBUG ("canon_usb_dialogue_full() called with CONTROL_CAMERA, %s",
                           canon_usb_control_cmd[j].description);
 		if ( !strcmp ( "Set transfer mode", canon_usb_control_cmd[j].description ) ) {
 			/* We need to remember the transfer mode, as with
 			 * newer cameras it changes capture
 			 * completion. */
 			camera->pl->transfer_mode = payload[8];
-			GP_DEBUG ( "canon_usb_dialogue() setting transfer mode to %d",
+			GP_DEBUG ( "canon_usb_dialogue_full() setting transfer mode to %d",
 				   camera->pl->transfer_mode );
 		}
         }
@@ -1371,7 +1371,7 @@ canon_usb_dialogue_full (Camera *camera, canonCommandIndex canon_funct, unsigned
                  * all the others and did not update the declaration of 'buffer' in
                  * this function.
                  */
-                GP_DEBUG ("canon_usb_dialogue() "
+                GP_DEBUG ("canon_usb_dialogue_full() "
                           "read_bytes %i won't fit in buffer of size %li!", read_bytes,
                           (long)sizeof (buffer));
                 return NULL;
@@ -1423,7 +1423,7 @@ canon_usb_dialogue_full (Camera *camera, canonCommandIndex canon_funct, unsigned
         status = gp_port_usb_msg_write (camera->port, msgsize > 1 ? 0x04 : 0x0c, 0x10, 0,
                                         (char *)packet, msgsize);
         if (status != msgsize) {
-                GP_DEBUG ("canon_usb_dialogue: write failed! (returned %i)\n", status);
+                GP_DEBUG ("canon_usb_dialogue_full: write failed! (returned %i)\n", status);
                 return NULL;
         }
 
@@ -1467,10 +1467,10 @@ canon_usb_dialogue_full (Camera *camera, canonCommandIndex canon_funct, unsigned
                 status = gp_port_read (camera->port, (char *)buffer, read_bytes1);
                 if (status != read_bytes1) {
                         if ( status >= 0 )
-                                GP_DEBUG ("canon_usb_dialogue: read 1 of 0x%x bytes failed! (returned %i)",
+                                GP_DEBUG ("canon_usb_dialogue_full: read 1 of 0x%x bytes failed! (returned %i)",
                                           read_bytes1, status);
                         else                         /* Error code */
-                                GP_DEBUG ("canon_usb_dialogue: read 1 of 0x%x bytes failed! (%s)",
+                                GP_DEBUG ("canon_usb_dialogue_full: read 1 of 0x%x bytes failed! (%s)",
                                           read_bytes1, gp_result_as_string ( status ) );
                         return NULL;
                 }
@@ -1480,13 +1480,13 @@ canon_usb_dialogue_full (Camera *camera, canonCommandIndex canon_funct, unsigned
                         if ( reported_length == 0 ) {
                                 /* No length at start of packet. Did we read enough to
                                  * see the length later on? */
-                                GP_DEBUG ( "canon_usb_dialogue: no length at start of packet." );
+                                GP_DEBUG ( "canon_usb_dialogue_full: no length at start of packet." );
                                 if ( read_bytes1 >= 0x50 ) {
                                         reported_length = le32atoh (buffer+0x48);
-                                        GP_DEBUG ( "canon_usb_dialogue: got length from offset 0x48." );
+                                        GP_DEBUG ( "canon_usb_dialogue_full: got length from offset 0x48." );
                                 }
                         }
-                        GP_DEBUG ("canon_usb_dialogue: camera reports 0x%x bytes (0x%x total)",
+                        GP_DEBUG ("canon_usb_dialogue_full: camera reports 0x%x bytes (0x%x total)",
                                   reported_length, reported_length+0x40 );
 
                         if ( reported_length > 0 && reported_length+0x40 != read_bytes ) {
@@ -1503,10 +1503,10 @@ canon_usb_dialogue_full (Camera *camera, canonCommandIndex canon_funct, unsigned
                         status = gp_port_read (camera->port, (char *)buffer + read_bytes1, read_bytes2);
                         if (status != read_bytes2) {
                                 if ( status >= 0 )
-                                        GP_DEBUG ("canon_usb_dialogue: read 2 of %i bytes failed! (returned %i)",
+                                        GP_DEBUG ("canon_usb_dialogue_full: read 2 of %i bytes failed! (returned %i)",
                                                   read_bytes2, status);
                                 else                         /* Error code */
-                                        GP_DEBUG ("canon_usb_dialogue: read 2 of %i bytes failed! (%s)",
+                                        GP_DEBUG ("canon_usb_dialogue_full: read 2 of %i bytes failed! (%s)",
                                                   read_bytes2, gp_result_as_string ( status ) );
                                 return NULL;
                         }
@@ -1519,10 +1519,10 @@ canon_usb_dialogue_full (Camera *camera, canonCommandIndex canon_funct, unsigned
                 status = gp_port_read (camera->port, (char *)buffer, read_bytes );
                 if ( status != (int)read_bytes ) {
                         if ( status >= 0 )
-                                GP_DEBUG ("canon_usb_dialogue: single read of %i bytes failed! (returned %i)",
+                                GP_DEBUG ("canon_usb_dialogue_full: single read of %i bytes failed! (returned %i)",
                                           read_bytes, status);
                         else                         /* Error code */
-                                GP_DEBUG ("canon_usb_dialogue: single read of %i bytes failed! (%s)",
+                                GP_DEBUG ("canon_usb_dialogue_full: single read of %i bytes failed! (%s)",
                                           read_bytes, gp_result_as_string ( status ) );
                         return NULL;
                 }
@@ -1530,7 +1530,7 @@ canon_usb_dialogue_full (Camera *camera, canonCommandIndex canon_funct, unsigned
 
                 char *msg = canon_usb_decode_status ( le32atoh ( buffer+0x50 ) );
                 if ( msg != NULL ) {
-                        GP_DEBUG ( "canon_usb_dialogue: camera status \"%s\""
+                        GP_DEBUG ( "canon_usb_dialogue_full: camera status \"%s\""
 				   " in response to command 0x%x 0x%x 0x%x (%s)",
 				   msg, cmd1, cmd2, cmd3, funct_descr );
 			return NULL;

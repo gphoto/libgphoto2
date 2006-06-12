@@ -422,10 +422,12 @@ struct _CameraPrivateLibrary
 	canonCaptureSizeClass capture_size; /* Size class for remote-
                                                captured images */
 
+#ifdef CANON_EXPERIMENTAL_20D
 	unsigned char release_params[RELEASE_PARAMS_LEN]; /* "Release 
 							     parameters:"
 							     ISO, aperture, 
 							     etc */
+#endif
 
 	int secondary_image; /* Should we attempt to download a 
 				secondary image? (e.g., RAW + JPEG) */

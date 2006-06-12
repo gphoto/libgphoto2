@@ -1,3 +1,14 @@
+2006-06-12  Paul Walmsley <paul@booyaka.com>
+
+	* canon.h: Fix build failure when CANON_EXPERIMENTAL_20D is not
+	defined, by wrapping the release_params array in an '#ifdef
+	CANON_EXPERIMENTAL_20D'
+
+2006-06-11  Paul Walmsley <paul@booyaka.com>
+
+	* usb.c: Fix the debug messages in canon_usb_dialogue_full() to
+	report the correct function name.
+
 2006-06-11  Paul Walmsley  <paul@booyaka.com>
 
 	* canon.[ch], usb.[ch], serial.[ch], library.c: Fix existing
