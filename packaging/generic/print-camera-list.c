@@ -48,8 +48,11 @@ ARGV0 " prints the camera list in the specified format FORMAT on stdout.\n" \
 #include <time.h>
 #include <string.h>
 
-#include <gphoto2/gphoto2-camera.h>
-#include <gphoto2/gphoto2-port-log.h>
+/* NOTE: If you want to build a similar program outside the
+ *       libgphoto2 package, use #include <gphoto2/gphoto2-foo.h>
+ */
+#include <gphoto2-camera.h>
+#include <gphoto2-port-log.h>
 
 #ifndef TRUE
 #define TRUE  (0==0)
