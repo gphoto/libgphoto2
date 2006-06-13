@@ -2696,11 +2696,11 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 	}
 	if (params->deviceinfo.VendorExtensionID==PTP_VENDOR_MICROSOFT) {
 		switch (dpc) {
-		case PTP_DPC_MTP_Synchronization_Partner:
-		case PTP_DPC_MTP_Device_Friendly_Name:
+		case PTP_DPC_MTP_SynchronizationPartner:
+		case PTP_DPC_MTP_DeviceFriendlyName:
 			return snprintf(out, length, "%s", dpd->CurrentValue.str);
-		case 0xd101:
-		case 0xd102: {
+		case PTP_DPC_MTP_SecureTime:
+		case PTP_DPC_MTP_DeviceCertificate: {
 			for (i=0;(i<dpd->CurrentValue.a.count) && (i<length);i++)
 				out[i] = dpd->CurrentValue.a.v[i].u16;
 			if (	dpd->CurrentValue.a.count &&

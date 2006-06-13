@@ -1,3 +1,7 @@
+2006-06-13  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptp.{ch}: Updated MTP defines from libmtp.
+
 2006-06-01  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Added new USB ids for:

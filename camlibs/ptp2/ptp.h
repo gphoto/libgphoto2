@@ -245,6 +245,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_MTP_GetObjectReferences		0x9810
 #define PTP_OC_MTP_SetObjectReferences		0x9811
 #define PTP_OC_MTP_UpdateDeviceFirmware		0x9812
+#define PTP_OC_MTP_Skip                         0x9820
 
 /* Proprietary vendor extension operations mask */
 #define PTP_OC_EXTENSION_MASK           0xF000
@@ -886,8 +887,16 @@ typedef struct _PTPEKTextParams PTPEKTextParams;
 #define PTP_DPC_NIKON_FlashCharged			0xD1C1
 
 /* Microsoft/MTP specific */
-#define PTP_DPC_MTP_Synchronization_Partner		0xD401
-#define PTP_DPC_MTP_Device_Friendly_Name		0xD402
+#define PTP_DPC_MTP_SecureTime                          0xD101
+#define PTP_DPC_MTP_DeviceCertificate                   0xD102
+#define PTP_DPC_MTP_SynchronizationPartner              0xD401
+#define PTP_DPC_MTP_DeviceFriendlyName                  0xD402
+#define PTP_DPC_MTP_VolumeLevel                         0xD403
+#define PTP_DPC_MTP_DeviceIcon                          0xD405
+#define PTP_DPC_MTP_PlaybackRate                        0xD410
+#define PTP_DPC_MTP_PlaybackObject                      0xD411
+#define PTP_DPC_MTP_PlaybackContainerIndex              0xD412
+#define PTP_DPC_MTP_PlaybackPosition                    0xD413
 
 /* MTP specific Object Properties */
 #define PTP_OPC_StorageID				0xDC01
