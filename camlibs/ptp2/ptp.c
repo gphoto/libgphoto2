@@ -2427,10 +2427,34 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("Low Light")},
 		{0,NULL}
 	};
+        struct {
+		uint16_t dpc;
+		const char *txt;
+        } ptp_device_properties_MTP[] = {
+		{PTP_DPC_MTP_SecureTime,        N_("Secure Time")},
+		{PTP_DPC_MTP_DeviceCertificate, N_("Device Certificate")},
+		{PTP_DPC_MTP_SynchronizationPartner,
+		 N_("Synchronization Partner")},
+		{PTP_DPC_MTP_DeviceFriendlyName,
+		 N_("Device Friendly Name")},
+		{PTP_DPC_MTP_VolumeLevel,       N_("Volume Level")},
+		{PTP_DPC_MTP_DeviceIcon,        N_("Device Icon")},
+		{PTP_DPC_MTP_PlaybackRate,      N_("Playback Rate")},
+		{PTP_DPC_MTP_PlaybackObject,    N_("Playback Object")},
+		{PTP_DPC_MTP_PlaybackContainerIndex,
+		 N_("Playback Container Index")},
+		{PTP_DPC_MTP_PlaybackPosition,  N_("Playback Position")},
+		{0,NULL}
+        };
 
 	for (i=0; ptp_device_properties[i].txt!=NULL; i++)
 		if (ptp_device_properties[i].dpc==dpc)
 			return (ptp_device_properties[i].txt);
+
+	if (params->deviceinfo.VendorExtensionID==PTP_VENDOR_MICROSOFT)
+		for (i=0; ptp_device_properties_MTP[i].txt!=NULL; i++)
+			if (ptp_device_properties_MTP[i].dpc==dpc)
+				return (ptp_device_properties_MTP[i].txt);
 
 	if (params->deviceinfo.VendorExtensionID==PTP_VENDOR_EASTMAN_KODAK)
 		for (i=0; ptp_device_properties_EK[i].txt!=NULL; i++)
@@ -2662,7 +2686,6 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		PTP_VAL_RBOOL(PTP_DPC_NIKON_BeepOff),
 		{0, 0, NULL}
 	};
-
 	if (params->deviceinfo.VendorExtensionID==PTP_VENDOR_NIKON) {
 		int64_t kval;
 
