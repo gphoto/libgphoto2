@@ -44,12 +44,15 @@ ARGV0 " prints the camera list in the specified format FORMAT on stdout.\n" \
 
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <sys/time.h>
 #include <time.h>
 #include <string.h>
 
 /* NOTE: If you want to build a similar program outside the
- *       libgphoto2 package, use #include <gphoto2/gphoto2-foo.h>
+ *       libgphoto2 package, use 
+ *          #include <gphoto2/gphoto2-foo.h>
+ *       !!!!
  */
 #include <gphoto2-camera.h>
 #include <gphoto2-port-log.h>
@@ -61,12 +64,15 @@ ARGV0 " prints the camera list in the specified format FORMAT on stdout.\n" \
 #define FALSE (0!=0)
 #endif
 
+typedef char *string_array_t[];
+
+typedef string_array_t *string_array_p;
 
 typedef struct {
 	int number_of_cameras;
 	int add_comments;
 	int argc;
-	char ***argv;
+	string_array_p argv;
 } func_params_t;
 
 
@@ -108,6 +114,13 @@ typedef int (* end_func_t)    (const func_params_t *params);
 	} while (0)
 #endif /* __GNUC__ */
 
+#define FATAL(msg...) \
+	do { \
+		fprintf(stderr, ARGV0 ": Fatal: " msg); \
+		fprintf(stderr, "\n"); \
+		exit(13); \
+	} while (0)
+
 
 /* print_usb_usermap
  *
@@ -127,8 +140,8 @@ hotplug_camera_func (const func_params_t *params,
 	int class = 0, subclass = 0, proto = 0;
 	int usb_vendor = 0, usb_product = 0;
 	const char *usermap_script = 
-		(*(params->argv)[0] != NULL)
-		?(*(params->argv)[0])
+		((*params->argv)[0] != NULL)
+		?((*params->argv)[0])
 		:(GP_USB_HOTPLUG_SCRIPT);
 
 	if (a->usb_vendor) { /* usb product id may be zero! */
@@ -290,10 +303,6 @@ udev_camera_func (const func_params_t *params,
 	int flags = 0;
 	int class = 0, subclass = 0, proto = 0;
 	int usb_vendor = 0, usb_product = 0;
-	const char *hotplug_script =
-		(*(params->argv)[0] != NULL)
-		?(*(params->argv)[0])
-		:("/etc/hotplug/usb/" GP_USB_HOTPLUG_SCRIPT);
 
 	if (a->usb_vendor) { /* usb product id may be zero! */
 		class = 0;
@@ -337,8 +346,59 @@ udev_camera_func (const func_params_t *params,
 	} else {
 		printf ("SYSFS{idVendor}==\"%04x\", SYSFS{idProduct}==\"%04x\", ",
 			a->usb_vendor, a->usb_product);
+	}	
+	if ((*params->argv)[1] == NULL) {
+		const char *hotplug_script = ((*params->argv)[0] != NULL)
+			?((*params->argv)[0])
+			:("/etc/hotplug/usb/" GP_USB_HOTPLUG_SCRIPT);	
+		printf("RUN+=\"%s\"\n", hotplug_script);
+	} else { /* more than two parameters in params->argv */
+		char *mode = NULL;
+		char *user = NULL;
+		char *group = NULL;
+
+		int i;
+		char *key = NULL, *val = NULL;
+		for (i=0; ((key=(*params->argv)[i])   != NULL) && 
+			  ((val=(*params->argv)[i+1]) != NULL); i+=2) {
+			if (strcmp("user", key)==0) {
+				user = val;
+			} else if (strcmp("group", key)==0) {
+				group = val;
+			} else if (strcmp("mode", key)==0) {
+				mode = val;
+			} else {
+				FATAL("Unknown key argument: %s", key);
+			}
+		}
+		if ((key != NULL) && (val == NULL)) {
+			FATAL("Single argument remaining; need pairs of key and value");
+		}
+
+		if (mode != NULL || user != NULL || group != NULL) {
+			if (mode != NULL) {
+				printf("MODE=\"%s\"", mode);
+				if (user != NULL || group != NULL) {
+					printf(", ");
+				}
+			}
+			if (user != NULL) {
+				printf("USER=\"%s\"", user);
+				if (group != NULL) {
+					printf(", ");
+				}
+			}
+			if (group != NULL) {
+				printf("GROUP=\"%s\"", group);
+			}
+			printf("\n");
+		} else {
+			FATAL("Arguments required");
+		}
 	}
-	printf("RUN+=\"%s\"\n", hotplug_script);
+	/*
+	printf("MUH!\n");
+	*/
 	return 0;
 }
 
@@ -578,7 +638,7 @@ typedef struct {
 static int
 iterate_camera_list (const int add_comments, 
 		     const output_format_t *format, 
-		     char *argv[])
+		     string_array_p argv)
 {
 	int number_of_cameras;
 	CameraAbilitiesList *al;
@@ -588,10 +648,10 @@ iterate_camera_list (const int add_comments,
 	CR (gp_abilities_list_new (&al));
 	CR (gp_abilities_list_load (al, NULL)); /* use NULL context */
 	CR (number_of_cameras = gp_abilities_list_count (al));
-	
+
 	params.add_comments = add_comments;
 	params.number_of_cameras = number_of_cameras;
-	params.argv = &argv;
+	params.argv = argv;
 	
 	if (format->begin_func != NULL) {
 		format->begin_func(&params);
@@ -652,8 +712,8 @@ static const output_format_t formats[] = {
 	},
 	{name: "udev-rules",
 	 descr: "udev rules file",
-	 help: "Put it into /etc/udev/libgphoto2.rules",
-	 paramdescr: "<PATH_TO_HOTPLUG_SCRIPT>",
+	 help: "Put it into /etc/udev/libgphoto2.rules, set file mode, user, group or add script to run",
+	 paramdescr: "( <PATH_TO_SCRIPT> | [mode <mode>|user <user>|group <group>]* ) ",
 	 begin_func: udev_begin_func, 
 	 camera_func: udev_camera_func,
 	 end_func: udev_end_func
@@ -716,7 +776,7 @@ int main(int argc, char *argv[])
 
 	char *format_name = NULL; /* name of desired output format */
 	int format_index;         /* index number of (desired) output format */
-	static char *fmt_argv[8];
+	static char *fmt_argv[16]; /* format specific arguments */
 
 	int i, j;
 
@@ -766,13 +826,15 @@ int main(int argc, char *argv[])
 	}
 
 	/* copy remaining arguments */
-	for (j=i; (j<argc) && ((j-i)<((sizeof(fmt_argv)/sizeof(fmt_argv[0]))-1)); j++) {
+	for (j=i; 
+	     (j<argc) && ((j-i)<((sizeof(fmt_argv)/sizeof(fmt_argv[0]))-1)); 
+	     j++) {
 		fmt_argv[j-i] = argv[j];
 	}
 
 	/* execute the work using the given parameters*/
 	return iterate_camera_list(add_comments, &formats[format_index],
-				   fmt_argv
+				   &fmt_argv
 		);
 }
 
