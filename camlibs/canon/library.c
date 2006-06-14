@@ -87,9 +87,9 @@ extern long int timezone;
 #endif
 
 const struct canonCaptureSizeClassStruct captureSizeArray[] = {
-        {CAPTURE_COMPATIBILITY, "Compatibility mode"},
-        {CAPTURE_THUMB, "Thumbnail"},
-        {CAPTURE_FULL_IMAGE, "Full Image"},
+        {CAPTURE_COMPATIBILITY, N_("Compatibility mode")},
+        {CAPTURE_THUMB, N_("Thumbnail")},
+        {CAPTURE_FULL_IMAGE, N_("Full Image")},
 	{0, NULL}
 };
 
@@ -162,39 +162,39 @@ const struct canonApertureStateStruct apertureStateArray[] = {
 };
 
 const struct canonFocusModeStateStruct focusModeStateArray[] = {
-        {AUTO_FOCUS_ONE_SHOT, "Auto focus: one-shot"},
-        {AUTO_FOCUS_AI_SERVO, "Auto focus: AI servo"},
-        {AUTO_FOCUS_AI_FOCUS, "Auto focus: AI focus"},
-        {MANUAL_FOCUS, "Manual focus"},
+        {AUTO_FOCUS_ONE_SHOT, N_("Auto focus: one-shot")},
+        {AUTO_FOCUS_AI_SERVO, N_("Auto focus: AI servo")},
+        {AUTO_FOCUS_AI_FOCUS, N_("Auto focus: AI focus")},
+        {MANUAL_FOCUS, N_("Manual focus")},
 	{0, NULL},
 };
 
 const struct canonResolutionStateStruct resolutionStateArray[] = {
-	{RESOLUTION_RAW, "RAW", 
+	{RESOLUTION_RAW, N_("RAW"),
 	 0x04, 0x02, 0x00},
-	{RESOLUTION_SMALL_NORMAL_JPEG, "Small Normal JPEG", 
+	{RESOLUTION_SMALL_NORMAL_JPEG, N("Small Normal JPEG"),
 	 0x02, 0x01, 0x02},
-	{RESOLUTION_SMALL_FINE_JPEG, "Small Fine JPEG", 
+	{RESOLUTION_SMALL_FINE_JPEG, N_("Small Fine JPEG"),
 	 0x03, 0x01, 0x02},
-	{RESOLUTION_MEDIUM_NORMAL_JPEG, "Medium Normal JPEG", 
+	{RESOLUTION_MEDIUM_NORMAL_JPEG, N_("Medium Normal JPEG"),
 	 0x02, 0x01, 0x01},
-	{RESOLUTION_MEDIUM_FINE_JPEG, "Medium Fine JPEG", 
+	{RESOLUTION_MEDIUM_FINE_JPEG, N_("Medium Fine JPEG"),
 	 0x03, 0x01, 0x01},
-	{RESOLUTION_LARGE_NORMAL_JPEG, "Large Normal JPEG", 
+	{RESOLUTION_LARGE_NORMAL_JPEG, N_("Large Normal JPEG"),
 	 0x02, 0x01, 0x00},
-	{RESOLUTION_LARGE_FINE_JPEG, "Large Fine JPEG", 
+	{RESOLUTION_LARGE_FINE_JPEG, N_("Large Fine JPEG"),
 	 0x03, 0x01, 0x00},
-	{RESOLUTION_RAW_AND_SMALL_NORMAL_JPEG, "RAW + Small Normal JPEG", 
+	{RESOLUTION_RAW_AND_SMALL_NORMAL_JPEG, N_("RAW + Small Normal JPEG"),
 	 0x24, 0x12, 0x20},
-	{RESOLUTION_RAW_AND_SMALL_FINE_JPEG, "RAW + Small Fine JPEG", 
+	{RESOLUTION_RAW_AND_SMALL_FINE_JPEG, N_("RAW + Small Fine JPEG"),
 	 0x34, 0x12, 0x20},
-	{RESOLUTION_RAW_AND_MEDIUM_NORMAL_JPEG, "RAW + Medium Normal JPEG", 
+	{RESOLUTION_RAW_AND_MEDIUM_NORMAL_JPEG, N_("RAW + Medium Normal JPEG"),
 	 0x24, 0x12, 0x10},
-	{RESOLUTION_RAW_AND_MEDIUM_FINE_JPEG, "RAW + Medium Fine JPEG", 
+	{RESOLUTION_RAW_AND_MEDIUM_FINE_JPEG, N_("RAW + Medium Fine JPEG"),
 	 0x34, 0x12, 0x10},
-	{RESOLUTION_RAW_AND_LARGE_NORMAL_JPEG, "RAW + Large Normal JPEG", 
+	{RESOLUTION_RAW_AND_LARGE_NORMAL_JPEG, N_("RAW + Large Normal JPEG"),
 	 0x24, 0x12, 0x00},
-	{RESOLUTION_RAW_AND_LARGE_FINE_JPEG, "RAW + Large Fine JPEG", 
+	{RESOLUTION_RAW_AND_LARGE_FINE_JPEG, N_("RAW + Large Fine JPEG"),
 	 0x34, 0x12, 0x00},
 	{0, NULL, 0, 0, 0},
 };
@@ -1386,20 +1386,25 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		return -1;
 
 	gp_widget_new (GP_WIDGET_WINDOW, _("Camera and Driver Configuration"), window);
+	gp_widget_set_name (*window, "main");
 
 	gp_widget_new (GP_WIDGET_SECTION, _("Camera"), &section);
+	gp_widget_set_name (section, "camera");
 	gp_widget_append (*window, section);
 
 	gp_widget_new (GP_WIDGET_TEXT, _("Camera Model (readonly)"), &t);
+	gp_widget_set_name (t, "model");
 	gp_widget_set_value (t, camera->pl->ident);
 	gp_widget_append (section, t);
 
 	gp_widget_new (GP_WIDGET_TEXT, _("Owner name"), &t);
+	gp_widget_set_name (t, "owner");
 	gp_widget_set_value (t, camera->pl->owner);
 	gp_widget_append (section, t);
 
 	/* Capture size class */
 	gp_widget_new (GP_WIDGET_MENU, _("Capture size class"), &t);
+	gp_widget_set_name (t, "capturesizeclass");
 
 	/* Map it to the list of choices */
 	i = 0;
@@ -1433,6 +1438,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 	/* ISO speed */
 	gp_widget_new (GP_WIDGET_MENU, _("ISO speed"), &t);
+	gp_widget_set_name (t, "iso");
 
 	/* Get the camera's current ISO speed setting */
 	iso = -1;
@@ -1466,6 +1472,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 	/* Shutter speed */
 	gp_widget_new (GP_WIDGET_MENU, _("Shutter speed"), &t);
+	gp_widget_set_name (t, "shutterspeed");
 
 	/* Get the camera's current shutter speed setting */
 	shutter_speed = -1;
@@ -1499,6 +1506,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 	/* Aperture */
 	gp_widget_new (GP_WIDGET_MENU, _("Aperture"), &t);
+	gp_widget_set_name (t, "aperture");
 
 	/* Get the camera's current aperture setting */
 	aperture = -1;
@@ -1532,6 +1540,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 	/* Resolution */
 	gp_widget_new (GP_WIDGET_MENU, _("Resolution"), &t);
+	gp_widget_set_name (t, "resolution");
 
 	/* Get the camera's current resolution setting */
 	res_byte1 = res_byte2 = res_byte3 = -1;
@@ -1570,6 +1579,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 	/* Focus mode */
 	gp_widget_new (GP_WIDGET_MENU, _("Focus mode"), &t);
+	gp_widget_set_name (t, "focusmode");
 
 	/* Get the camera's current focus mode setting */
 	focus_mode = -1;
@@ -1605,27 +1615,26 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 #endif /* CANON_EXPERIMENTAL_20D */
 
 
+	gp_widget_new (GP_WIDGET_TEXT, _("Date and Time (readonly)"), &t);
+	gp_widget_set_name (t, "datetime");
 	if (camera->pl->cached_ready == 1) {
 		res = canon_int_get_time (camera, &camtime, context);
 		if (res == GP_OK) {
-			gp_widget_new (GP_WIDGET_DATE, _("Date and Time (readonly)"), &t);
 			gp_widget_set_value (t, &camtime);
-			gp_widget_append (section, t);
 		} else {
-			gp_widget_new (GP_WIDGET_TEXT, _("Date and Time (readonly)"), &t);
 			gp_widget_set_value (t, _("Error"));
-			gp_widget_append (section, t);
 		}
 	} else {
-		gp_widget_new (GP_WIDGET_TEXT, _("Date and Time (readonly)"), &t);
 		gp_widget_set_value (t, _("Unavailable"));
-		gp_widget_append (section, t);
 	}
+	gp_widget_append (section, t);
 
 	gp_widget_new (GP_WIDGET_TOGGLE, _("Set camera date to PC date"), &t);
+	gp_widget_set_name (t, "setcameratime");
 	gp_widget_append (section, t);
 
 	gp_widget_new (GP_WIDGET_TEXT, _("Firmware revision (readonly)"), &t);
+	gp_widget_set_name (t, "firmwareversion");
 	sprintf (firm, "%i.%i.%i.%i", camera->pl->firmwrev[3], camera->pl->firmwrev[2],
 		 camera->pl->firmwrev[1], camera->pl->firmwrev[0]);
 	gp_widget_set_value (t, firm);
@@ -1650,18 +1659,22 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	}
 
 	gp_widget_new (GP_WIDGET_TEXT, _("Power (readonly)"), &t);
+	gp_widget_set_name (t, "power");
 	gp_widget_set_value (t, power_str);
 	gp_widget_append (section, t);
 
 	gp_widget_new (GP_WIDGET_SECTION, _("Driver"), &section);
+	gp_widget_set_name (t, "driver");
 	gp_widget_append (*window, section);
 
 	gp_widget_new (GP_WIDGET_TOGGLE, _("List all files"), &t);
+	gp_widget_set_name (t, "list_all_files");
 	gp_widget_set_value (t, &camera->pl->list_all_files);
 	gp_widget_append (section, t);
 
 #ifdef CANON_EXPERIMENTAL_UPLOAD
 	gp_widget_new (GP_WIDGET_TOGGLE, _("Keep filename on upload"), &t);
+	gp_widget_set_name (t, "keep_filename_on_upload");
 	gp_widget_set_value (t, &camera->pl->upload_keep_filename);
 	gp_widget_append (section, t);
 #endif /* CANON_EXPERIMENTAL_UPLOAD */
@@ -1707,7 +1720,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 
 		i = 0;
 		while (captureSizeArray[i].label) {
-			if (strcmp (captureSizeArray[i].label, wvalue) == 0) {
+			if (strcmp (_(captureSizeArray[i].label), wvalue) == 0) {
 				camera->pl->capture_size = captureSizeArray[i].value;
 				gp_context_status (context, _("Capture size class changed"));
 				break;

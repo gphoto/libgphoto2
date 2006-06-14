@@ -1,10 +1,18 @@
-2006-06-12  Paul Walmsley <paul@booyaka.com>
+2006-06-14  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Mark up strings for translation.
+	  Compare against translated string.
+	
+	  Mark up configuration widgets with symbolic names to
+	  avoid spaces or translated strings in commandline modes.
+
+2006-06-12  Paul Walmsley  <paul@booyaka.com>
 
 	* canon.h: Fix build failure when CANON_EXPERIMENTAL_20D is not
 	defined, by wrapping the release_params array in an '#ifdef
 	CANON_EXPERIMENTAL_20D'
 
-2006-06-11  Paul Walmsley <paul@booyaka.com>
+2006-06-11  Paul Walmsley  <paul@booyaka.com>
 
 	* usb.c: Fix the debug messages in canon_usb_dialogue_full() to
 	report the correct function name.
