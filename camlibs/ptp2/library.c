@@ -416,7 +416,7 @@ static struct {
 	/* Marcus Meissner */
 	{"Nikon:Coolpix P2 (PTP mode)",   0x04b0, 0x0142, 0},
 	/* Lowe, John Michael <jomlowe@iupui.edu> */
-	{"Nikon:Coolpix S2 (PTP mode)",   0x04b0, 0x014d, 0},
+	{"Nikon:Coolpix S2 (PTP mode)",   0x04b0, 0x014e, 0},
 	{"Nikon:Coolpix SQ (PTP mode)",   0x04b0, 0x0202, 0},
 	/* lars marowski bree, 16.8.2004 */
 	{"Nikon:Coolpix 4200 (PTP mode)", 0x04b0, 0x0204, 0},
