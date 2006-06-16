@@ -1,3 +1,7 @@
+2006-06-16  Hubert Figuiere  <hub@figuiere.net>
+
+	* library.c: 30D has DCIM ROOT bug
+
 2006-04-27  Marcus Meissner  <marcus@jet.franken.de>
 
 	* ptp.c: The iRiver devices occasionaly send a byte more than
