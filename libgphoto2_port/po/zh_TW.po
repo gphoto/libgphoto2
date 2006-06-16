@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port 2.1.6\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-03-23 18:42+0100\n"
+"POT-Creation-Date: 2006-06-16 01:12-0400\n"
 "PO-Revision-Date: 2005-08-29 13:47+0800\n"
 "Last-Translator: Wei-Lun Chao <chaoweilun@pcmail.com.tw>\n"
 "Language-Team: Chinese (traditional) <zh-l10n@linux.org.tw>\n"
@@ -16,89 +16,89 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:192
+#: libgphoto2_port/gphoto2-port-info-list.c:193
 #, c-format
 msgid "Called for filename '%s'."
 msgstr "由名為「%s」的檔案所呼叫。"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:197
+#: libgphoto2_port/gphoto2-port-info-list.c:198
 #, c-format
 msgid "Could not load '%s': '%s'."
 msgstr "無法載入「%s」：「%s」。"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:205
+#: libgphoto2_port/gphoto2-port-info-list.c:206
 #, c-format
 msgid "Could not find some functions in '%s': '%s'."
 msgstr "無法在「%s」中找到某些功能：「%s」"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:217
+#: libgphoto2_port/gphoto2-port-info-list.c:218
 #, c-format
 msgid "'%s' already loaded"
 msgstr "「%s」已載入"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:226
+#: libgphoto2_port/gphoto2-port-info-list.c:227
 #, c-format
 msgid "Could not load port driver list: '%s'."
 msgstr "無法載入連接埠驅動程式清單：「%s」。"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:233
+#: libgphoto2_port/gphoto2-port-info-list.c:234
 #, c-format
 msgid "Loaded '%s' ('%s') from '%s'."
 msgstr "已載入的「%s」(「%s」)來自於「%s」。"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:262
+#: libgphoto2_port/gphoto2-port-info-list.c:263
 #, c-format
 msgid "Using ltdl to load io-drivers from '%s'..."
 msgstr "使用 ltdl 以從「%s」載入輸出入驅動程式 ..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:288
+#: libgphoto2_port/gphoto2-port-info-list.c:289
 #, c-format
 msgid "Counting entries (%i available)..."
 msgstr "計數條目 (%i 項可用)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:297
+#: libgphoto2_port/gphoto2-port-info-list.c:298
 #, c-format
 msgid "%i regular entries available."
 msgstr "%i 項正規條目可用。"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:326
+#: libgphoto2_port/gphoto2-port-info-list.c:327
 #, c-format
 msgid "Looking for path '%s' (%i entries available)..."
 msgstr "正在尋找路徑「%s」(%i 項條目可用)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:338
+#: libgphoto2_port/gphoto2-port-info-list.c:339
 #, c-format
 msgid "Starting regex search for '%s'..."
 msgstr "開始以正規表示式尋找「%s」..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:346
+#: libgphoto2_port/gphoto2-port-info-list.c:347
 #, c-format
 msgid "Trying '%s'..."
 msgstr "正在嘗試「%s」..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:367
+#: libgphoto2_port/gphoto2-port-info-list.c:368
 msgid "regcomp failed"
 msgstr "正規表示式編譯失敗"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:378
+#: libgphoto2_port/gphoto2-port-info-list.c:379
 #, c-format
 msgid "re_match failed (%i)"
 msgstr "正規表示式匹配失敗 (%i)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:386
+#: libgphoto2_port/gphoto2-port-info-list.c:387
 msgid "regexec failed"
 msgstr "正規表示式執行失敗"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:392
+#: libgphoto2_port/gphoto2-port-info-list.c:393
 msgid "Generic Port"
 msgstr "通用連接埠"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:416
+#: libgphoto2_port/gphoto2-port-info-list.c:417
 #, c-format
 msgid "Looking up entry '%s'..."
 msgstr "正在尋找條目「%s」..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:446
+#: libgphoto2_port/gphoto2-port-info-list.c:447
 #, c-format
 msgid "Getting info of entry %i (%i available)..."
 msgstr "正在取得條目 %i 的資訊 (%i 項可用)..."
@@ -360,56 +360,56 @@ msgstr "由於裝置「%s」已被行程編號為 %d 的行程鎖定，所以無
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr "無法解鎖裝置「%s」(dev_unlock 回傳 %d)"
 
-#: serial/unix.c:369
+#: serial/unix.c:373
 #, c-format
 msgid "Serial Port %i"
 msgstr "序列埠 %i"
 
-#: serial/unix.c:460
+#: serial/unix.c:464
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "開啟「%s」(%m)失敗。"
 
-#: serial/unix.c:478
+#: serial/unix.c:482
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "無法關閉「%s」(%m)。"
 
-#: serial/unix.c:531
+#: serial/unix.c:535
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "無法寫入連接埠 (%m)"
 
-#: serial/unix.c:603
+#: serial/unix.c:607
 msgid "Parity error."
 msgstr "奇偶檢查錯誤。"
 
-#: serial/unix.c:607
+#: serial/unix.c:611
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "意外的奇偶應答序列 0xff 0x%02x。"
 
-#: serial/unix.c:650
+#: serial/unix.c:654
 #, c-format
 msgid "Unknown pin %i."
 msgstr "不明針腳 %i。"
 
-#: serial/unix.c:672
+#: serial/unix.c:676
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "無法獲取針腳 %i 的層級 (%m)。"
 
-#: serial/unix.c:707
+#: serial/unix.c:711
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "無法將針腳 %i 的層級設定為 %i (%m)。"
 
-#: serial/unix.c:732
+#: serial/unix.c:736
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "無法重新整理「%s」(%m)。"
 
-#: serial/unix.c:845
+#: serial/unix.c:849
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "無法將鮑率設定為 %d"
