@@ -1,4 +1,4 @@
-libgphoto2 HEAD
+libgphoto2 2.2
 
 Build system (packagers beware!):
 
@@ -36,6 +36,8 @@ set requirements:
         function.
 
 libgphoto2 changes:
+
+   * libgphoto DSO version is now 2.1.0
 
    * Lots of bugs were fixed.
 
@@ -90,6 +92,14 @@ Driver changes:
        - Better --summary output, listing also Storage Devices and Device abilities.
 
        - Lots of new device ids.
+         * Canon 5D, 30D, A340, A700, S40, S80
+	 * Nikon D200
+         * Casio EX-Z120
+         * Kodak C360, Z700
+         * HP M317
+	 * Panasonic DMC-LC1
+         * Fuji E900
+         
 
 ----------------------------------------------------------------------------
 libgphoto2 2.1.99 (pre-release of 2.2)
