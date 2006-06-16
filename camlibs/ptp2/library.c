@@ -554,6 +554,17 @@ static struct {
 	{"Canon:EOS 30D (PTP mode)",            0x04a9, 0x3113, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:Digital IXUS 750 (PTP mode)",   0x04a9, 0x3116, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot A700 (PTP mode)",     0x04a9, 0x3117, PTPBUG_DELETE_SENDS_EVENT},
+	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1498577&group_id=8874&atid=358874 */
+	{"Canon:PowerShot SD700 (PTP mode)",    0x04a9, 0x3119, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:Digital IXUS 800 (PTP mode)",   0x04a9, 0x3119, PTPBUG_DELETE_SENDS_EVENT},
+	/* Gert Vervoort <gert.vervoort@hccnet.nl> */
+	{"Canon:PowerShot S3 IS (PTP mode)",    0x04a9, 0x311a, PTPBUG_DELETE_SENDS_EVENT},
+	/* David Goodenough <david.goodenough at linkchoose.co.uk> */
+	{"Canon:PowerShot A540 (PTP mode)",     0x04a9, 0x311b, PTPBUG_DELETE_SENDS_EVENT},
+	/* Irc reporter */
+	{"Canon:Digital IXUS 60 (PTP mode)",    0x04a9, 0x311c, PTPBUG_DELETE_SENDS_EVENT},
+	/* Ales Kozumplik <kozumplik@gmail.com> */
+	{"Canon:PowerShot A530 (PTP mode)",     0x04a9, 0x3126, PTPBUG_DELETE_SENDS_EVENT},
 
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
@@ -584,6 +595,8 @@ static struct {
 
 	/* Jay MacDonald <jay@cheakamus.com> */
 	{"iRiver:T10 (alternate)",              0x4102, 0x1113, 0},
+	/* Andreas Thienemann <andreas@bawue.de> */
+	{"iRiver:T20 FM",			0x4102, 0x1114, 0},
 	/* Roger Pixley <skreech2@gmail.com> */
 	{"iRiver:U10",                          0x4102, 0x1116, 0},
 	/* Freaky <freaky@bananateam.nl> */
