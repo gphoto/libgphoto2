@@ -1,4 +1,33 @@
-libgphoto2 2.2
+libgphoto2 2.2.1
+----------------
+
+PTP:
+   * Improved Nikon remot control
+   * MTP fixes
+   * New devices:
+          Canon PowerShot A540, A530, S3 IS, SD700, IXUS 800, IXUS 60,
+          iRiver T20 FM
+          Dell Pocket DJ
+          Nikon Coolpix L4, L3
+          Kodak Easyshare Z740
+          Sony DSC-U10
+          Leica D-LUX 2
+          JVC Alneo XA-HD500
+     
+Canon:
+   * 5D - 20D experimental capture support
+
+Disk port:
+   * fix a crasher
+
+Bindings:
+   * C# bindings are installed if build
+   * Partial Java bindings
+
+
+----------------------------------------------------------------------------
+libgphoto2 2.2.0
+
 
 Build system (packagers beware!):
 
