@@ -172,7 +172,7 @@ const struct canonFocusModeStateStruct focusModeStateArray[] = {
 const struct canonResolutionStateStruct resolutionStateArray[] = {
 	{RESOLUTION_RAW, N_("RAW"),
 	 0x04, 0x02, 0x00},
-	{RESOLUTION_SMALL_NORMAL_JPEG, N("Small Normal JPEG"),
+	{RESOLUTION_SMALL_NORMAL_JPEG, N_("Small Normal JPEG"),
 	 0x02, 0x01, 0x02},
 	{RESOLUTION_SMALL_FINE_JPEG, N_("Small Fine JPEG"),
 	 0x03, 0x01, 0x02},
