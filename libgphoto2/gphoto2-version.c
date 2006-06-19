@@ -41,11 +41,6 @@ const char **gp_library_version(GPVersionVerbosity verbose)
 #else
 			"no EXIF",
 #endif
-#ifdef HAVE_PROCMEMINFO
-			"/proc/meminfo",
-#else
-			"no /proc/meminfo",
-#endif
 			NULL
 		};
 	static const char *verb[] =
@@ -60,11 +55,6 @@ const char **gp_library_version(GPVersionVerbosity verbose)
 			"EXIF (for special handling of EXIF files)",
 #else
 			"no EXIF (for special handling of EXIF files)",
-#endif
-#ifdef HAVE_PROCMEMINFO
-			"/proc/meminfo (adapts cache size to memory available)",
-#else
-			"no /proc/meminfo (adapts cache size to memory available)",
 #endif
 			NULL
 		};
