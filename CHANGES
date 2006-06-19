@@ -1,4 +1,8 @@
-libgphoto2 2.2
+libgphoto2 2.2.1
+
+   * Fix build for FreeBSD users (and other non-Linux)
+
+libgphoto2 2.2.0
 
 Build system (packagers beware!):
 

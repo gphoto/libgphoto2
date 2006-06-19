@@ -1,6 +1,6 @@
 dnl Process this file with autoreconf to produce a configure script.
 AC_PREREQ(2.59)
-AC_INIT([libgphoto2], [2.2.0], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
+AC_INIT([libgphoto2], [2.2.1], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
 AC_CONFIG_SRCDIR([libgphoto2/gphoto2.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([libgphoto2_port/m4])
@@ -34,7 +34,7 @@ dnl  increment AGE, Otherwise AGE is reset to 0. If CURRENT has changed,
 dnl  REVISION is set to 0, otherwise REVISION is incremented.
 dnl ---------------------------------------------------------------------------
 AC_SUBST([LIBGPHOTO2_AGE],      [1])
-AC_SUBST([LIBGPHOTO2_REVISION], [0])
+AC_SUBST([LIBGPHOTO2_REVISION], [1])
 AC_SUBST([LIBGPHOTO2_CURRENT],  [3])
 AC_SUBST([LIBGPHOTO2_CURRENT_MIN],
          [`expr $LIBGPHOTO2_CURRENT - $LIBGPHOTO2_AGE`])

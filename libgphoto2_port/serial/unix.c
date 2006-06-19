@@ -307,9 +307,7 @@ gp_port_library_list (GPPortInfoList *list)
 	GPPortInfo info;
 	char path[1024], prefix[1024];
         int x, fd;
-#ifdef __linux
         struct stat s;
-#endif
 #ifdef OS2
         int r, fh, option;
 #endif
