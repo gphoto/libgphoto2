@@ -4,7 +4,7 @@ AC_PREREQ(2.59)
 dnl NOTE: Be version style _higher_ than the last release.
 dnl       So lastversion.X.trunk for instance. Bump X if necessary.
 
-dnl ******* THE NEXT VERSION MUST BE 2.2.1 at least or higher!
+dnl ******* THE NEXT RELEASE VERSION MUST BE 2.2.1 at least or higher!
 AC_INIT([libgphoto2], [2.2.0.1.trunk], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
 AC_CONFIG_SRCDIR([libgphoto2/gphoto2.h])
 AC_CONFIG_HEADERS([config.h])
@@ -87,11 +87,11 @@ AM_CONDITIONAL([HAVE_SWIG], [test -x "$SWIG"])
 
 AC_PATH_PROG([JAVAC], [javac])
 AC_SUBST([JAVAC])
-AC_PATH_PROG([JAVAC], [javac])
-AC_SUBST([JAVAC])
+AC_PATH_PROG([JAVA], [java])
+AC_SUBST([JAVA])
 AM_CONDITIONAL([HAVA_JDK], [test -x "$JAVAC" && test -x "$JAVA"])
 
-if test -x "$SWIG" && test -x "$JAVAC" && test -x "$JAVA"; then
+if false && test -x "$SWIG" && test -x "$JAVAC" && test -x "$JAVA"; then
    bindings="${bindings}${bindings+ }java"
 fi
 
