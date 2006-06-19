@@ -33,6 +33,9 @@
 #include <errno.h>
 #include <sys/select.h>
 
+#include <sys/socket.h>
+#include <netinet/in.h>
+
 #include <gphoto2-library.h>
 #include <gphoto2-port-log.h>
 #include <gphoto2-setting.h>
@@ -219,7 +222,7 @@ ptp_ptpip_senddata (PTPParams* params, PTPContainer* ptp,
 	if (ret == -1)
 		perror ("sendreq/write to cmdfd");
 	if (ret != sizeof(request)) {
-		gp_log (GP_LOG_ERROR, "ptpip/senddata", "ptp_ptpip_senddata() len=%ld but ret=%d", sizeof(request), ret);
+		gp_log (GP_LOG_ERROR, "ptpip/senddata", "ptp_ptpip_senddata() len=%d but ret=%d", (int)sizeof(request), ret);
 		return PTP_RC_GeneralError;
 	}
 	xdata = malloc(WRITE_BLOCKSIZE+8+4);
