@@ -60,7 +60,8 @@ EXTRA_DIST =							\
 	libgphoto2-sharp.dll.config				\
 	libgphoto2-sharp.pc.in					\
 	$(LIBGPHOTO2_SHARP_CSFILES)				\
-	AssemblyInfo.cs.in
+	AssemblyInfo.cs.in					\
+	TestGphoto2Sharp.cs
 
 CLEANFILES =							\
 	TestGphoto2Sharp.exe					\
