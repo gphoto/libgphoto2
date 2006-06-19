@@ -1,5 +1,4 @@
-libgphoto2 2.2.1
-----------------
+libgphoto2 TRUNK
 
 PTP:
    * Improved Nikon remot control
@@ -24,8 +23,14 @@ Bindings:
    * C# bindings are installed if build
    * Partial Java bindings
 
+----------------------------------------------------------------------------
+
+libgphoto2 2.2.1
+
+   * Fix build for FreeBSD users (and other non-Linux)
 
 ----------------------------------------------------------------------------
+
 libgphoto2 2.2.0
 
 
