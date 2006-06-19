@@ -552,8 +552,8 @@ bindings/Makefile
 bindings/csharp/Makefile
 bindings/csharp/AssemblyInfo.cs
 bindings/csharp/libgphoto2-sharp.pc
-bindings/java/Makefile
 ])
+#bindings/java/Makefile
 AC_OUTPUT
 
 GP_CAMLIBS_CHECK_SUBDIRS
