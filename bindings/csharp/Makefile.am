@@ -46,22 +46,18 @@ libgphoto2-sharp.dll: $(LIBGPHOTO2_SHARP_GENERATED_CSFILES) $(LIBGPHOTO2_SHARP_C
 TestGphoto2Sharp.exe: $(srcdir)/TestGphoto2Sharp.cs libgphoto2-sharp.dll
 	$(MCS) $(MCSFLAGS) -out:$@ -r:libgphoto2-sharp.dll $<
 
-check_SCRIPTS = TestGphoto2Sharp
+check_SCRIPTS = check-camera-list.sh
 check_DATA = TestGphoto2Sharp.exe
 
 TESTS = $(check_SCRIPTS)
-
-TestGphoto2Sharp: Makefile $(srcdir)/TestGphoto2Sharp.cs
-	echo '#!/bin/sh' > $@
-	echo '$(MONO) $$(dirname "$$0")/TestGphoto2Sharp.exe' >> $@
-	chmod +x $@
 
 EXTRA_DIST =							\
 	libgphoto2-sharp.dll.config				\
 	libgphoto2-sharp.pc.in					\
 	$(LIBGPHOTO2_SHARP_CSFILES)				\
 	AssemblyInfo.cs.in					\
-	TestGphoto2Sharp.cs
+	TestGphoto2Sharp.cs					\
+	check-camera-list.in
 
 CLEANFILES =							\
 	TestGphoto2Sharp.exe					\
@@ -69,4 +65,17 @@ CLEANFILES =							\
 	libgphoto2-sharp.dll.mdb				\
 	libgphoto2-sharp.dll					\
 	TestGphoto2Sharp
+
+
+%.sh: %.in
+	@echo "Creating $@"
+	@sed \
+		-e 's|@top_builddir\@|$(top_builddir)|g' \
+		-e 's|@camlibdir\@|$(camlibdir)|g' \
+		-e 's|@libdir\@|$(libdir)|g' \
+		-e 's|@DESTDIR\@|$(DESTDIR)|g' \
+		-e 's|@MAKE\@|$(MAKE)|g' \
+		-e 's|@MONO\@|$(MONO)|g' \
+		< "$<" > "$@"
+	@chmod +x $@
 
