@@ -64,8 +64,11 @@ CLEANFILES =							\
 	TestGphoto2Sharp.exe.mdb				\
 	libgphoto2-sharp.dll.mdb				\
 	libgphoto2-sharp.dll					\
-	TestGphoto2Sharp
+	$(check_SCRIPTS)
 
+clean-local:
+	rm -rf _inst
+	rm -f _camlibs
 
 %.sh: %.in
 	@echo "Creating $@"
