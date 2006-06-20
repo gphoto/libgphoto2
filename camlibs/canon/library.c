@@ -1010,23 +1010,23 @@ delete_file_func (CameraFilesystem *fs, const char *folder, const char *filename
 		return GP_ERROR;
 	}
 
-	/* If we have a file with associated thumbnail file, delete
-	 * its thumbnail as well */
-	thumbname = canon_int_filename2thumbname (camera, filename);
-	if ((thumbname != NULL) && (*thumbname != '\0')) {
-		GP_DEBUG ("delete_file_func: thumbname: %s\n folder: %s\n", thumbname,
-			  canonfolder);
-		if (canon_int_delete_file (camera, thumbname, canonfolder, context) != GP_OK) {
-			/* XXX should we handle this as an error?
-			 * Probably only in case the camera link died,
-			 * but not if the file just had already been
-			 * deleted before. */
-			gp_context_error (context,
-					  _("Error deleting associated thumbnail file"));
-			return GP_ERROR;
+
+	/* If we have a file with associated thumbnail file that is not
+	 * listed, delete its thumbnail as well */
+	if (!camera->pl->list_all_files) {
+		thumbname = canon_int_filename2thumbname (camera, filename);
+		if ((thumbname != NULL) && (*thumbname != '\0')) {
+			GP_DEBUG ("delete_file_func: thumbname: %s\n folder: %s\n", thumbname, canonfolder);
+			if (canon_int_delete_file (camera, thumbname, canonfolder, context) != GP_OK) {
+				/* XXX should we handle this as an error?
+				 * Probably only in case the camera link died,
+				 * but not if the file just had already been
+				 * deleted before. */
+				gp_context_error (context, _("Error deleting associated thumbnail file"));
+				return GP_ERROR;
+			}
 		}
 	}
-
 	return GP_OK;
 }
 
@@ -1696,8 +1696,9 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 {
 	CameraWidget *w;
 	char *wvalue;
-	int i, res;
+	int i, res, val;
 	unsigned char iso, shutter_speed, aperture, focus_mode;
+	char str[16];
 
 	GP_DEBUG ("camera_set_config()");
 
@@ -1976,6 +1977,10 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	gp_widget_get_child_by_label (window, _("List all files"), &w);
 	if (gp_widget_changed (w)) {
 		/* XXXXX mark CameraFS as dirty */
+		gp_widget_get_value (w, &val);
+		camera->pl->list_all_files = val;
+		sprintf (str, "%d", val);
+		gp_setting_set ("canon", "list_all_files", str);
 		gp_widget_get_value (w, &camera->pl->list_all_files);
 		GP_DEBUG ("New config value for \"List all files\" %i",
 			  camera->pl->list_all_files);
@@ -2135,6 +2140,7 @@ int
 camera_init (Camera *camera, GPContext *context)
 {
 	GPPortSettings settings;
+	char buf[1024];
 
 	GP_DEBUG ("canon camera_init()");
 
@@ -2159,7 +2165,10 @@ camera_init (Camera *camera, GPContext *context)
 	camera->pl->seq_rx = 1;
 
 	/* default to false, i.e. list only known file types, use DCIF filenames */
-	camera->pl->list_all_files = FALSE;
+	if (gp_setting_get ("canon", "list_all_files", buf) == GP_OK)
+		camera->pl->list_all_files = atoi(buf);
+	else
+		camera->pl->list_all_files = FALSE;
 #ifdef CANON_EXPERIMENTAL_UPLOAD
 	camera->pl->upload_keep_filename = FALSE;
 #endif

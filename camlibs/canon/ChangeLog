@@ -1,3 +1,11 @@
+2006-06-20  Marcus Meissner  <marcus@jet.franken.de>
+	    Karl Tomlinson  <ktomlinson@users.sf.net>
+
+	* library.c: Keep list_all_files setting permanent.
+
+	* library.c: Also delete thumbnails (but only if
+	  list_all_files is not set.)
+
 2006-06-14  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Mark up strings for translation.
