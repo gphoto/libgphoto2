@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-05-29 00:07+0200\n"
+"POT-Creation-Date: 2006-06-19 21:32+0200\n"
 "PO-Revision-Date: 2005-09-13 08:00+0200\n"
 "Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
 "Language-Team:  <de@li.org>\n"
@@ -370,56 +370,56 @@ msgstr ""
 "Reservierung von Gerät »%s« konnte nicht freigegeben werden (dev_unlock "
 "lieferte %d)"
 
-#: serial/unix.c:373
+#: serial/unix.c:371
 #, c-format
 msgid "Serial Port %i"
 msgstr "Serieller Port %i"
 
-#: serial/unix.c:464
+#: serial/unix.c:462
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Konnte »%s« nicht öffnen (%m)."
 
-#: serial/unix.c:482
+#: serial/unix.c:480
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Konnte »%s« nicht schließen (%m)."
 
-#: serial/unix.c:535
+#: serial/unix.c:533
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "Konnte nicht auf Port schreiben (%m)"
 
-#: serial/unix.c:607
+#: serial/unix.c:605
 msgid "Parity error."
 msgstr "Paritätsfehler."
 
-#: serial/unix.c:611
+#: serial/unix.c:609
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Unerwartete Paritätsantwort, Sequenz 0xff 0x%02x."
 
-#: serial/unix.c:654
+#: serial/unix.c:652
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Unbekannter Pin %i."
 
-#: serial/unix.c:676
+#: serial/unix.c:674
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Konnte Level von Pin %i nicht holen (%m)."
 
-#: serial/unix.c:711
+#: serial/unix.c:709
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "Konnte Level von Pin %i nicht auf %i setzen (%m)."
 
-#: serial/unix.c:736
+#: serial/unix.c:734
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "Konnte »%s« nicht leeren (%m)."
 
-#: serial/unix.c:849
+#: serial/unix.c:847
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Konnte Baudrate nicht auf %d setzen"
@@ -516,7 +516,7 @@ msgstr ""
 "Stellen Sie sicher, dass das Gerät ordnungsgemäß an den Computer "
 "angeschlossen ist."
 
-#: disk/disk.c:163 disk/disk.c:203 disk/disk.c:225
+#: disk/disk.c:163 disk/disk.c:204 disk/disk.c:228
 #, c-format
 msgid "Media '%s'"
 msgstr "Medium »%s«"

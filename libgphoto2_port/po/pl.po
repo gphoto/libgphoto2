@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port 2.1.6\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-05-29 00:07+0200\n"
+"POT-Creation-Date: 2006-06-19 21:32+0200\n"
 "PO-Revision-Date: 2005-12-26 19:20+0100\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -363,56 +363,56 @@ msgstr ""
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr "Urz±dzenie '%s' nie mo¿e zostaæ odblokowane (dev_unlock zwróci³o %d)"
 
-#: serial/unix.c:373
+#: serial/unix.c:371
 #, c-format
 msgid "Serial Port %i"
 msgstr "Port szeregowy %i"
 
-#: serial/unix.c:464
+#: serial/unix.c:462
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Nie uda³o siê otworzyæ '%s' (%m)."
 
-#: serial/unix.c:482
+#: serial/unix.c:480
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Nie uda³o siê zamkn±æ '%s' (%m)."
 
-#: serial/unix.c:535
+#: serial/unix.c:533
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "Nie uda³ siê zapis do portu (%m)"
 
-#: serial/unix.c:607
+#: serial/unix.c:605
 msgid "Parity error."
 msgstr "B³±d parzysto¶ci."
 
-#: serial/unix.c:611
+#: serial/unix.c:609
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Nieoczekiwana sekwencja odpowiedzi parzysto¶ci 0xff 0x%02x."
 
-#: serial/unix.c:654
+#: serial/unix.c:652
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Nieznany pin %i."
 
-#: serial/unix.c:676
+#: serial/unix.c:674
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Nie uda³o siê pobraæ poziomu pinu %i (%m)."
 
-#: serial/unix.c:711
+#: serial/unix.c:709
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "Nie uda³o siê ustawiæ poziomu pinu %i na %i (%m)."
 
-#: serial/unix.c:736
+#: serial/unix.c:734
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "Nie uda³o siê przeczy¶ciæ '%s' (%m)."
 
-#: serial/unix.c:849
+#: serial/unix.c:847
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Nie uda³o siê ustawiæ liczby bodów na %d"
@@ -504,7 +504,7 @@ msgstr ""
 "Nie uda³o siê odnale¼æ urz±dzenia USB (klasa 0x%x, podklasa 0x%x, protokó³ 0x"
 "%x). Nale¿y upewniæ siê, ¿e to urz±dzenie jest pod³±czone do komputera)."
 
-#: disk/disk.c:163 disk/disk.c:203 disk/disk.c:225
+#: disk/disk.c:163 disk/disk.c:204 disk/disk.c:228
 #, c-format
 msgid "Media '%s'"
 msgstr ""

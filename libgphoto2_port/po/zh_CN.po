@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-05-29 00:07+0200\n"
+"POT-Creation-Date: 2006-06-19 21:32+0200\n"
 "PO-Revision-Date: 2002-11-21 13:11+0800\n"
 "Last-Translator: Wang Li <charles@linux.net.cn>\n"
 "Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
@@ -359,56 +359,56 @@ msgstr "由于设备‘%s’已被进程号为 %d 的进程锁定，所以无法锁定。"
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr "无法解锁设备‘%s’(dev_unlock 返回 %d)"
 
-#: serial/unix.c:373
+#: serial/unix.c:371
 #, c-format
 msgid "Serial Port %i"
 msgstr "串口 %i"
 
-#: serial/unix.c:464
+#: serial/unix.c:462
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "打开‘%s’(%m)失败。"
 
-#: serial/unix.c:482
+#: serial/unix.c:480
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "无法关闭‘%s’(%m)。"
 
-#: serial/unix.c:535
+#: serial/unix.c:533
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "无法写端口 (%m)"
 
-#: serial/unix.c:607
+#: serial/unix.c:605
 msgid "Parity error."
 msgstr "奇偶错误。"
 
-#: serial/unix.c:611
+#: serial/unix.c:609
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "意外的奇偶应答序列 0xff 0x%02x。"
 
-#: serial/unix.c:654
+#: serial/unix.c:652
 #, c-format
 msgid "Unknown pin %i."
 msgstr "未知插脚 %i。"
 
-#: serial/unix.c:676
+#: serial/unix.c:674
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "无法获取插脚 %i 的级别 (%m)。"
 
-#: serial/unix.c:711
+#: serial/unix.c:709
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "无法将插脚 %i 的级别设置为 %i (%m)。"
 
-#: serial/unix.c:736
+#: serial/unix.c:734
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "无法刷新‘%s’(%m)。"
 
-#: serial/unix.c:849
+#: serial/unix.c:847
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "无法设置将波特率设置为 %d"
@@ -494,7 +494,7 @@ msgid ""
 msgstr ""
 "无法找到 USB 设备 (类 0x%x、子类 0x%x、协议 0x%x)。确信该设备已连接到计算机。"
 
-#: disk/disk.c:163 disk/disk.c:203 disk/disk.c:225
+#: disk/disk.c:163 disk/disk.c:204 disk/disk.c:228
 #, c-format
 msgid "Media '%s'"
 msgstr ""

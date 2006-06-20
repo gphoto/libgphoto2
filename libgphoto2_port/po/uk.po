@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port 2.1.99\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-05-29 00:07+0200\n"
+"POT-Creation-Date: 2006-06-19 21:32+0200\n"
 "PO-Revision-Date: 2006-04-07 13:20+0300\n"
 "Last-Translator: Maxim V. Dziumanenko <mvd@mylinux.com.ua>\n"
 "Language-Team: Ukrainian <translation-team-uk@lists.sourceforge.net>\n"
@@ -364,56 +364,56 @@ msgstr ""
 "пристрій '%s' неможливо розблокувати (функція dev_unlock повернула значення %"
 "d)"
 
-#: serial/unix.c:373
+#: serial/unix.c:371
 #, c-format
 msgid "Serial Port %i"
 msgstr "Послідовний порт %i"
 
-#: serial/unix.c:464
+#: serial/unix.c:462
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Не вдається відкрити '%s' (%m)."
 
-#: serial/unix.c:482
+#: serial/unix.c:480
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Не вдається закрити '%s' (%m)."
 
-#: serial/unix.c:535
+#: serial/unix.c:533
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "Не вдається записати у порт (%m)"
 
-#: serial/unix.c:607
+#: serial/unix.c:605
 msgid "Parity error."
 msgstr "Помилка парності"
 
-#: serial/unix.c:611
+#: serial/unix.c:609
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Неочікувана послідовність контролю парності 0xff 0x%02x."
 
-#: serial/unix.c:654
+#: serial/unix.c:652
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Невідомий pin %i."
 
-#: serial/unix.c:676
+#: serial/unix.c:674
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Не вдається отримати рівень pin %i (%m)."
 
-#: serial/unix.c:711
+#: serial/unix.c:709
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "Не вдається встановити рівень pin %i у %i (%m)."
 
-#: serial/unix.c:736
+#: serial/unix.c:734
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "Не вдається скинути буфери пристрою '%s' (%m)."
 
-#: serial/unix.c:849
+#: serial/unix.c:847
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Неможливо встановити швидкість %d"
@@ -504,7 +504,7 @@ msgstr ""
 "Не вдається знайти пристрій USB (клас 0x%x, підклас 0x%x, протокол 0x%x). "
 "Перевірте, що пристрій з'єднаний з комп'ютером."
 
-#: disk/disk.c:163 disk/disk.c:203 disk/disk.c:225
+#: disk/disk.c:163 disk/disk.c:204 disk/disk.c:228
 #, c-format
 msgid "Media '%s'"
 msgstr "Носій '%s'"

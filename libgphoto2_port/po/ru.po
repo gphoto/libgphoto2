@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gphoto\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-05-29 00:07+0200\n"
+"POT-Creation-Date: 2006-06-19 21:32+0200\n"
 "PO-Revision-Date: 2005-01-05 23:00+0300\n"
 "Last-Translator: Вячеслав Диконов (Vyacheslav Dikonov) <slava@altlinux.ru>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -365,56 +365,56 @@ msgstr ""
 "Устройство '%s' невозможно разблокировать.(функция dev_unlock вернула "
 "значение %d)"
 
-#: serial/unix.c:373
+#: serial/unix.c:371
 #, c-format
 msgid "Serial Port %i"
 msgstr "Последовательный порт %i"
 
-#: serial/unix.c:464
+#: serial/unix.c:462
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Не удалось открыть '%s' (%m)."
 
-#: serial/unix.c:482
+#: serial/unix.c:480
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Не удалось закрыть '%s' (%m)."
 
-#: serial/unix.c:535
+#: serial/unix.c:533
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "Запись в порт невозможна (%m)"
 
-#: serial/unix.c:607
+#: serial/unix.c:605
 msgid "Parity error."
 msgstr "Ошибка чётности"
 
-#: serial/unix.c:611
+#: serial/unix.c:609
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Неверная последовательность контроля чётности - 0xff 0x%02x"
 
-#: serial/unix.c:654
+#: serial/unix.c:652
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Неизвестный pin %i."
 
-#: serial/unix.c:676
+#: serial/unix.c:674
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Невозможно получить уровень pin %i (%m)."
 
-#: serial/unix.c:711
+#: serial/unix.c:709
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "Невозможно установить уровень pin %i в %i (%m)."
 
-#: serial/unix.c:736
+#: serial/unix.c:734
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "Невозможно сбросить буферы устройства '%s' (%m)."
 
-#: serial/unix.c:849
+#: serial/unix.c:847
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Невозможно установить скорость %d"
@@ -505,7 +505,7 @@ msgstr ""
 "Не найдено устройство USB (класс 0x%x, подкласс 0x%x, протокол 0x%x). "
 "Убедитесь, что устройство подключено к компьютеру."
 
-#: disk/disk.c:163 disk/disk.c:203 disk/disk.c:225
+#: disk/disk.c:163 disk/disk.c:204 disk/disk.c:228
 #, c-format
 msgid "Media '%s'"
 msgstr ""

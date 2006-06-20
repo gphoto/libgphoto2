@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port 2.0\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-05-29 00:07+0200\n"
+"POT-Creation-Date: 2006-06-19 21:32+0200\n"
 "PO-Revision-Date: 2002-07-24 08:54+0200\n"
 "Last-Translator: Stefan Björnelund <Stefanb@Update.UU.SE>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -361,56 +361,56 @@ msgstr "Enheten '%s' kunde inte låsas upp eftersom den är låsta av pid %d."
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr "Enheten '%s' kunde inte låsas upp (dev_lock returnerade %d)"
 
-#: serial/unix.c:373
+#: serial/unix.c:371
 #, c-format
 msgid "Serial Port %i"
 msgstr "Serieport %i"
 
-#: serial/unix.c:464
+#: serial/unix.c:462
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Misslyckades att öppna '%s' (%m)."
 
-#: serial/unix.c:482
+#: serial/unix.c:480
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Kunde inte stänga '%s' (%m)."
 
-#: serial/unix.c:535
+#: serial/unix.c:533
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "Kunde inte skriva till port (%m)"
 
-#: serial/unix.c:607
+#: serial/unix.c:605
 msgid "Parity error."
 msgstr "Partiets fel"
 
-#: serial/unix.c:611
+#: serial/unix.c:609
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Oväntat partiets svarsekvens 0xff 0x%02x."
 
-#: serial/unix.c:654
+#: serial/unix.c:652
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Okänd pin %i."
 
-#: serial/unix.c:676
+#: serial/unix.c:674
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Kunde inte hämta nivån av pin %i (%m)."
 
-#: serial/unix.c:711
+#: serial/unix.c:709
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "Kunde inte sätta nivån av pin %i till %i (%m)."
 
-#: serial/unix.c:736
+#: serial/unix.c:734
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "Kunde inte spola ut '%s' (%m)."
 
-#: serial/unix.c:849
+#: serial/unix.c:847
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Kunde inte sätta bit-hhastigheten till %d"
@@ -503,7 +503,7 @@ msgstr ""
 "Kunde inte finna USB.enheten  (klass 0x%x, underklass 0x%x, protokoll 0x%x). "
 "Kontrollera att enheten är ansluten till datorn."
 
-#: disk/disk.c:163 disk/disk.c:203 disk/disk.c:225
+#: disk/disk.c:163 disk/disk.c:204 disk/disk.c:228
 #, c-format
 msgid "Media '%s'"
 msgstr ""
