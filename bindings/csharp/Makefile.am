@@ -14,13 +14,6 @@
 #
 # This Makefile.am relies on a few variables defined in configure.in.
 
-MCSFLAGS = -unsafe -debug
-
-pkgconfig_DATA = libgphoto2-sharp.pc
-
-LIBGPHOTO2_SHARP_GENERATED_CSFILES = \
-	AssemblyInfo.cs
-
 LIBGPHOTO2_SHARP_CSFILES =				\
 	$(srcdir)/Camera.cs				\
 	$(srcdir)/CameraAbilitiesList.cs		\
@@ -34,6 +27,15 @@ LIBGPHOTO2_SHARP_CSFILES =				\
 	$(srcdir)/Port.cs				\
 	$(srcdir)/PortInfo.cs				\
 	$(srcdir)/PortInfoList.cs
+
+if HAVE_MONO
+
+MCSFLAGS = -unsafe -debug
+
+pkgconfig_DATA = libgphoto2-sharp.pc
+
+LIBGPHOTO2_SHARP_GENERATED_CSFILES = \
+	AssemblyInfo.cs
 
 cslib_DATA =				\
 	libgphoto2-sharp.dll		\
@@ -51,6 +53,15 @@ check_DATA = TestGphoto2Sharp.exe
 
 TESTS = $(check_SCRIPTS)
 
+CLEANFILES =							\
+	TestGphoto2Sharp.exe					\
+	TestGphoto2Sharp.exe.mdb				\
+	libgphoto2-sharp.dll.mdb				\
+	libgphoto2-sharp.dll					\
+	$(check_SCRIPTS)
+
+endif
+
 EXTRA_DIST =							\
 	libgphoto2-sharp.dll.config				\
 	libgphoto2-sharp.pc.in					\
@@ -58,13 +69,6 @@ EXTRA_DIST =							\
 	AssemblyInfo.cs.in					\
 	TestGphoto2Sharp.cs					\
 	check-camera-list.in
-
-CLEANFILES =							\
-	TestGphoto2Sharp.exe					\
-	TestGphoto2Sharp.exe.mdb				\
-	libgphoto2-sharp.dll.mdb				\
-	libgphoto2-sharp.dll					\
-	$(check_SCRIPTS)
 
 clean-local:
 	rm -rf _inst
