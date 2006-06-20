@@ -41,7 +41,7 @@
 #else
 #  define _(String) (String)
 #  define N_(String) (String)
-#  define ngettext(String1,String2,Count) ((Count==1)?String1:String)
+#  define ngettext(String1,String2,Count) ((Count==1)?String1:String2)
 #endif
 
 #include <gphoto2-port.h>
