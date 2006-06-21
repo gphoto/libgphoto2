@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: libgphoto2 2.2.0\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2006-06-19 21:32+0200\n"
-"PO-Revision-Date: 2006-06-20 15:45+0200\n"
+"PO-Revision-Date: 2006-06-21 08:46+0200\n"
 "Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
 "Language-Team: German <translation-team-de@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -144,10 +144,8 @@ msgstr "Kleingeschriebene Buchstaben sind in %s nicht erlaubt."
 
 #: camlibs/canon/canon.c:2809
 #, c-format
-msgid ""
-"canon_int_list_directory: ERROR: initial message too short (%i < minimum %i)"
-msgstr ""
-"canon_int_list_directory: ERROR: erste Meldung zu kurz (%i < minimum %i)"
+msgid "canon_int_list_directory: ERROR: initial message too short (%i < minimum %i)"
+msgstr "canon_int_list_directory: ERROR: erste Meldung zu kurz (%i < minimum %i)"
 
 #: camlibs/canon/canon.c:2831
 msgid ""
@@ -171,8 +169,7 @@ msgstr "Könnte JPEG Vorschaubild von Daten nicht ausziehen: keine Anfang/Ende"
 
 #: camlibs/canon/canon.c:3456
 msgid "Could not extract JPEG thumbnail from data: Data is not JFIF"
-msgstr ""
-"Könnte JPEG Vorschaubild von Daten nicht ausziehen: Daten sind nicht JFIF"
+msgstr "Könnte JPEG Vorschaubild von Daten nicht ausziehen: Daten sind nicht JFIF"
 
 #: camlibs/canon/canon.h:157 camlibs/canon/canon.h:171
 #, c-format
@@ -181,8 +178,7 @@ msgstr "NULL Parameter \"%s\" in %s, Zeile %i"
 
 #: camlibs/canon/canon.h:546
 #, c-format
-msgid ""
-"Don't know how to handle camera->port->type value %i aka 0x%xin %s line %i."
+msgid "Don't know how to handle camera->port->type value %i aka 0x%xin %s line %i."
 msgstr "Kann den Porttypen %i aka 0x%x in %s Zeile %i nicht behandeln."
 
 #: camlibs/canon/crc.c:237
@@ -206,35 +202,29 @@ msgstr ""
 
 #: camlibs/canon/library.c:90 camlibs/canon/library.c:1423
 msgid "Compatibility mode"
-msgstr ""
+msgstr "Kompatibilitätsmodus"
 
 #: camlibs/canon/library.c:91
-#, fuzzy
 msgid "Thumbnail"
-msgstr "Vorschau Modus"
+msgstr "Vorschau"
 
 #: camlibs/canon/library.c:92
-#, fuzzy
 msgid "Full Image"
-msgstr "Bild"
+msgstr "Vollbild"
 
 #: camlibs/canon/library.c:165
-#, fuzzy
 msgid "Auto focus: one-shot"
-msgstr "Autofokus Modus"
+msgstr "Autofokus: einmal"
 
 #: camlibs/canon/library.c:166
-#, fuzzy
 msgid "Auto focus: AI servo"
-msgstr "Autofokus Fehler."
+msgstr "Autofokus: kontinuierlich"
 
 #: camlibs/canon/library.c:167
-#, fuzzy
 msgid "Auto focus: AI focus"
-msgstr "Autofokus Modus"
+msgstr "Autofokus: AI Fokus"
 
 #: camlibs/canon/library.c:168
-#, fuzzy
 msgid "Manual focus"
 msgstr "Manueller Fokus"
 
@@ -459,10 +449,8 @@ msgid "Error deleting associated thumbnail file"
 msgstr "Fehler beim Löschen des zugehörigen Vorschaubildes"
 
 #: camlibs/canon/library.c:1155 camlibs/canon/library.c:1285
-msgid ""
-"Speeds greater than 57600 are not supported for uploading to this camera"
-msgstr ""
-"Raten über 57600 sind mit dieser Kamera nicht für das Hochladen unterstützt"
+msgid "Speeds greater than 57600 are not supported for uploading to this camera"
+msgstr "Raten über 57600 sind mit dieser Kamera nicht für das Hochladen unterstützt"
 
 #: camlibs/canon/library.c:1172 camlibs/canon/library.c:1302
 msgid "Could not get flash drive letter"
@@ -503,15 +491,13 @@ msgid "Owner name"
 msgstr "Eigentümername"
 
 #: camlibs/canon/library.c:1406 camlibs/canon/library.c:1717
-#, fuzzy
 msgid "Capture size class"
-msgstr "Aufnahmeverzögerung"
+msgstr "Aufnahmeart"
 
 #: camlibs/canon/library.c:1440 camlibs/canon/library.c:1744
 #: camlibs/canon/library.c:1759
-#, fuzzy
 msgid "ISO speed"
-msgstr "ISO-Geschwindigkeit"
+msgstr "ISO Geschwindigkeit"
 
 #: camlibs/canon/library.c:1466 camlibs/canon/library.c:1467
 #: camlibs/canon/library.c:1500 camlibs/canon/library.c:1501
@@ -525,7 +511,6 @@ msgstr "Unbekannt"
 
 #: camlibs/canon/library.c:1474 camlibs/canon/library.c:1741
 #: camlibs/canon/library.c:1799
-#, fuzzy
 msgid "Shutter speed"
 msgstr "Belichtungszeit"
 
@@ -548,7 +533,6 @@ msgstr "Auflösung"
 
 #: camlibs/canon/library.c:1581 camlibs/canon/library.c:1753
 #: camlibs/canon/library.c:1919
-#, fuzzy
 msgid "Focus mode"
 msgstr "Fokusmodus"
 
@@ -606,82 +590,71 @@ msgstr "Konnte Eigentümernamen nicht ändern"
 
 #: camlibs/canon/library.c:1725
 msgid "Capture size class changed"
-msgstr ""
+msgstr "Aufnahmeart geändert"
 
 #: camlibs/canon/library.c:1732
 msgid "Invalid capture size class setting"
-msgstr ""
+msgstr "Ungültige Aufnahmeart"
 
 #: camlibs/canon/library.c:1783
 msgid "Invalid ISO speed setting"
-msgstr ""
+msgstr "Ungültiges ISO Einstellung"
 
 #: camlibs/canon/library.c:1786
-#, fuzzy
 msgid "ISO speed changed"
-msgstr "Eigentümername geändert"
+msgstr "ISO Einstellung geändert"
 
 #: camlibs/canon/library.c:1788
-#, fuzzy
 msgid "Could not change ISO speed"
-msgstr "Konnte Eigentümernamen nicht ändern"
+msgstr "Konnte ISO nicht ändern"
 
 #: camlibs/canon/library.c:1823
 msgid "Invalid shutter speed setting"
-msgstr ""
+msgstr "Ungültige Belichtungszeit"
 
 #: camlibs/canon/library.c:1826
-#, fuzzy
 msgid "Shutter speed changed"
-msgstr "Belichtungszeit"
+msgstr "Belichtungszeit geändert"
 
 #: camlibs/canon/library.c:1828
-#, fuzzy
 msgid "Could not change shutter speed"
-msgstr "Konnte Eigentümernamen nicht ändern"
+msgstr "Konnte Belichtungszeit nicht ändern"
 
 #: camlibs/canon/library.c:1863
-#, fuzzy
 msgid "Invalid aperture setting"
-msgstr "Blendeneinstellung"
+msgstr "Ungültige Blende"
 
 #: camlibs/canon/library.c:1866
-#, fuzzy
 msgid "Aperture changed"
-msgstr "Blendeneinstellung"
+msgstr "Blende geändert"
 
 #: camlibs/canon/library.c:1868
-#, fuzzy
 msgid "Could not change aperture"
-msgstr "Konnte Eigentümernamen nicht ändern"
+msgstr "Konnte Blende nicht ändern"
 
 #: camlibs/canon/library.c:1902
 msgid "Invalid resolution setting"
-msgstr ""
+msgstr "Ungültige Auflösung"
 
 #: camlibs/canon/library.c:1906
-#, fuzzy
 msgid "Resolution changed"
-msgstr "Auflösungsumschaltung"
+msgstr "Auflösung geändert"
 
 #: camlibs/canon/library.c:1908
-#, fuzzy
 msgid "Could not change resolution"
-msgstr "Konnte Verzeichnis nicht anlegen."
+msgstr "Konnte Auflõsung nicht  ndern       ä"
 
 #: camlibs/canon/library.c:1943
 msgid "Invalid focus mode setting"
-msgstr ""
+msgstr "Ungültiger Fokusmodus"
 
 #: camlibs/canon/library.c:1946
-#, fuzzy
 msgid "Focus mode changed"
-msgstr "Fokusmodus"
+msgstr "Fokusmodus geändert"
 
 #: camlibs/canon/library.c:1948
-#, fuzzy
 msgid "Could not change focus mode"
-msgstr "Konnte Eigentümernamen nicht ändern"
+msgstr "Konnte Fokusmodus nicht ändern"
 
 #: camlibs/canon/library.c:1969
 msgid "time set"
@@ -689,7 +662,7 @@ msgstr "Zeit gesetzt"
 
 #: camlibs/canon/library.c:1971
 msgid "could not set time"
-msgstr "Konnte Zeit nicht setzen"
+msgstr "konnte Zeit nicht setzen"
 
 #: camlibs/canon/library.c:2189
 #, c-format
@@ -744,8 +717,7 @@ msgstr ""
 
 #: camlibs/canon/serial.c:1134
 #, c-format
-msgid ""
-"canon_serial_get_dirents: Initial dirent packet too short (only %i bytes)"
+msgid "canon_serial_get_dirents: Initial dirent packet too short (only %i bytes)"
 msgstr ""
 "canon_serial_get_dirents: Anfangend Verzeichniselementepaket zu kurz (nur %i "
 "bytes)"
@@ -841,8 +813,7 @@ msgstr "Fehler beim Ändern der Datenrate"
 
 #: camlibs/canon/serial.c:1460
 msgid "Error waiting for ACK during initialization retrying"
-msgstr ""
-"Fehler beim Warten auf ACK, während die Initialisierung erneut versucht wird"
+msgstr "Fehler beim Warten auf ACK, während die Initialisierung erneut versucht wird"
 
 #: camlibs/canon/serial.c:1466
 msgid "Error waiting ACK during initialization"
@@ -910,8 +881,7 @@ msgstr ""
 
 #: camlibs/canon/usb.c:281
 #, c-format
-msgid ""
-"Step #3 of initialization failed: \"%s\" on read of %i Camera not operational"
+msgid "Step #3 of initialization failed: \"%s\" on read of %i Camera not operational"
 msgstr ""
 "Stufe nr.3 der Kamerainitialisierung fehlgeschlagen: »%s« beim Lesen von %i "
 "Kamera funktioniert nicht"
@@ -937,8 +907,7 @@ msgstr ""
 #: camlibs/canon/usb.c:346 camlibs/canon/usb.c:387
 #, c-format
 msgid "Step #4 failed: \"%s\" on read of %i. Camera not operational"
-msgstr ""
-"Stufe nr.4 fehlgeschlagen: %s beim Lesen von %i. Kamera funktioniert nicht"
+msgstr "Stufe nr.4 fehlgeschlagen: %s beim Lesen von %i. Kamera funktioniert nicht"
 
 #: camlibs/canon/usb.c:353 camlibs/canon/usb.c:394
 #, c-format
@@ -950,8 +919,7 @@ msgstr ""
 #: camlibs/canon/usb.c:491
 #, c-format
 msgid "Camera not ready, multiple 'Identify camera' requests failed: %s"
-msgstr ""
-"Kamera nicht bereit, mehrere »Identify camera«-Anfragen fehlgeschlagen: %s"
+msgstr "Kamera nicht bereit, mehrere »Identify camera«-Anfragen fehlgeschlagen: %s"
 
 #: camlibs/canon/usb.c:529 camlibs/canon/usb.c:545
 #, c-format
@@ -970,15 +938,12 @@ msgstr ""
 #: camlibs/canon/usb.c:631 camlibs/canon/usb.c:657 camlibs/canon/usb.c:697
 #, c-format
 msgid "canon_usb_lock_keys: Unexpected length returned (%i bytes, expected %i)"
-msgstr ""
-"canon_usb_lock_keys: Unerwartete Länge erhalten (%i erhalten, %i erwartet)"
+msgstr "canon_usb_lock_keys: Unerwartete Länge erhalten (%i erhalten, %i erwartet)"
 
 #: camlibs/canon/usb.c:740 camlibs/canon/usb.c:756
 #, c-format
-msgid ""
-"canon_usb_unlock_keys: Unexpected length returned (%i bytes, expected %i)"
-msgstr ""
-"canon_usb_unlock_keys: Unerwartete Länge erhalten (%i erhalten, %i erwartet)"
+msgid "canon_usb_unlock_keys: Unexpected length returned (%i bytes, expected %i)"
+msgstr "canon_usb_unlock_keys: Unerwartete Länge erhalten (%i erhalten, %i erwartet)"
 
 #: camlibs/canon/usb.c:811 camlibs/canon/usb.c:829
 #, c-format
@@ -1009,21 +974,17 @@ msgstr ""
 
 #: camlibs/canon/usb.c:1067
 #, c-format
-msgid ""
-"canon_usb_capture_dialogue: bogus length 0x%04x for thumbnail size packet"
-msgstr ""
-"canon_usb_capture_dialogue: Falsche Paketlänge 0x%04x füer Vorschaubildslänge"
+msgid "canon_usb_capture_dialogue: bogus length 0x%04x for thumbnail size packet"
+msgstr "canon_usb_capture_dialogue: Falsche Paketlänge 0x%04x füer Vorschaubildslänge"
 
 #: camlibs/canon/usb.c:1083
 #, c-format
-msgid ""
-"canon_usb_capture_dialogue: bogus length 0x%04x for full image size packet"
+msgid "canon_usb_capture_dialogue: bogus length 0x%04x for full image size packet"
 msgstr "canon_usb_capture_dialogue: Falsche Paketlänge 0x%04x für Bildslänge"
 
 #: camlibs/canon/usb.c:1101
-#, fuzzy
 msgid "canon_usb_capture_dialogue:secondary image descriptor received"
-msgstr "canon_usb_capture_dialogue: zweite Interruptspaket außer Reihenfolge"
+msgstr "canon_usb_capture_dialogue: zweiter Bilddescriptor empfangen"
 
 #: camlibs/canon/usb.c:1127
 msgid "canon_usb_capture_dialogue: first interrupt read out of sequence"
@@ -1035,21 +996,18 @@ msgstr "canon_usb_capture_dialogue: zweite Interruptspaket außer Reihenfolge"
 
 #: camlibs/canon/usb.c:1145
 #, c-format
-msgid ""
-"canon_usb_capture_dialogue: photographic failure signaled, code = 0x%08x"
+msgid "canon_usb_capture_dialogue: photographic failure signaled, code = 0x%08x"
 msgstr ""
 "canon_usb_capture_dialogue: Aufnahme photographisch fehlgeschlagen, code=0x%"
 "08x"
 
 #: camlibs/canon/usb.c:1164
 msgid "canon_usb_capture_dialogue: third EOS interrupt read out of sequence"
-msgstr ""
-"canon_usb_capture_dialogue: dritte EOS Interruptspaket außer Reihenfolge"
+msgstr "canon_usb_capture_dialogue: dritte EOS Interruptspaket außer Reihenfolge"
 
 #: camlibs/canon/usb.c:1199
 msgid "canon_usb_capture_dialogue: fourth EOS interrupt read out of sequence"
-msgstr ""
-"canon_usb_capture_dialogue: zweite EOS Interruptspaket außer Reihenfolge"
+msgstr "canon_usb_capture_dialogue: zweite EOS Interruptspaket außer Reihenfolge"
 
 #: camlibs/canon/usb.c:1387
 #, c-format
@@ -1111,8 +1069,7 @@ msgstr ""
 msgid ""
 "canon_usb_get_dirents: Couldn't fit payload into buffer, '%.96s' (truncated) "
 "too long."
-msgstr ""
-"canon_usb_get_dirents: Nutzlast passt nicht in Puffer, '%.96s' (verkurzt)"
+msgstr "canon_usb_get_dirents: Nutzlast passt nicht in Puffer, '%.96s' (verkurzt)"
 
 #: camlibs/canon/usb.c:2401
 #, c-format
@@ -1237,6 +1194,25 @@ msgid ""
 "For more details on the camera's functions, please consult\n"
 "libgphoto2/camlibs/README.\n"
 msgstr ""
+"Zwei Aufösungen, 352x288 und 176x144. Bilddaten\n"
+"werden im JPEG Format runtergeladen und haben daher keine vorbestimmbare\n"
+"Größe. Deshalb ist die maximale Anzahl an Bildern auf der Kamera nur ein\n"
+"Näherungswert.\n"
+"Alle gphoto2 Optionen funktionieren, außer den folgenden, die die Kamera nicht\n"
+"unterstützt:\n"
+"\tLöschen von einzelnen Fotos (gphoto2 -d)\n"
+"\tAufnahme (gphoto2 --capture oder --capture-image)\n"
+"Allerdings ist Aufnahme über den Webcam Modus möglich,\n"
+"der durch das spca50x Kernel Modul unterstützt wird.\n"
+"GUI Zugriff mit gtkam wurde getestet und funktioniert. Allerdings\n"
+"erstellt die Kamera keine seperaten Vorschaubilder. Da die Bilder\n"
+"bereits geringe Größe haben, lädt der Treiber einfach die normalen Bilder\n"
+"als Vorschaubilder herunter.\n"
+"Die Kamera kann in einem 'Videoclip' Modus aufnehmen. Die entstehenden Einzelbilder\n"
+"werden als Folge von normalen Bildern gespeichert. Der Benutzer kann sie dann \n"
+"selber animieren mit z.B. ImageMagick's 'animate' Funktion.\n"
+"Frü mehr Details ,ber die Kamerafunktionen konsultieren sie bitten"
+"libgphüoto2/camlibs/clicksmart310/README.\n"
 
 #: camlibs/clicksmart310/library.c:140
 msgid ""
@@ -1295,8 +1271,7 @@ msgstr ""
 
 #: camlibs/dimera/dimera3500.c:161
 #, c-format
-msgid ""
-"Only root folder is supported - you requested a file listing for folder '%s'."
+msgid "Only root folder is supported - you requested a file listing for folder '%s'."
 msgstr ""
 "Nur das Wurzelverzeichnis wird unterstützt - Sie forderten eine Dateiliste "
 "für Verzeichnis »%s«."
@@ -1554,8 +1529,7 @@ msgid "Could not open '%s'."
 msgstr "Konnte »%s« nicht öffnen."
 
 #: camlibs/directory/directory.c:511
-msgid ""
-"The Directory Browse \"camera\" lets you index photos on your hard drive."
+msgid "The Directory Browse \"camera\" lets you index photos on your hard drive."
 msgstr ""
 "Der \"Kamera\" Verzeichnismodus erlaubt es Ihnen, \n"
 "Bilder auf der Festplatte zu indexieren."
@@ -1722,8 +1696,7 @@ msgstr ""
 #: camlibs/gsmart300/library.c:207 camlibs/spca50x/library.c:579
 #, c-format
 msgid "Unsupported port type: %d. This driver only works with USB cameras.\n"
-msgstr ""
-"Nichtunterstützter Porttyp: %d. Dieser Treiber unterstützt nur USB-Kameras.\n"
+msgstr "Nichtunterstützter Porttyp: %d. Dieser Treiber unterstützt nur USB-Kameras.\n"
 
 #: camlibs/gsmart300/library.c:224 camlibs/spca50x/library.c:636
 msgid "Could not reset camera.\n"
@@ -2909,8 +2882,7 @@ msgstr "Sie müssen im Aufnahmemodus sein, um Bilder aufzunehmen."
 
 #: camlibs/konica/qm150.c:643
 msgid "No space available to capture new image. You must delete some images."
-msgstr ""
-"Kein Raum für Neuaufnahmen vorhanden. Sie müssen einige Bilder löschen."
+msgstr "Kein Raum für Neuaufnahmen vorhanden. Sie müssen einige Bilder löschen."
 
 #: camlibs/konica/qm150.c:647
 msgid "Can't capture new image. Unknown error"
@@ -3506,8 +3478,7 @@ msgstr "Lade Bild »%s« hoch."
 msgid ""
 "File size is %ld bytes. The size of the largest file possible to upload is: %"
 "i bytes."
-msgstr ""
-"Dateigröße ist %ld bytes. Größtmögliche Datei für das Hochladen ist %i bytes."
+msgstr "Dateigröße ist %ld bytes. Größtmögliche Datei für das Hochladen ist %i bytes."
 
 #: camlibs/panasonic/dc1000.c:474 camlibs/panasonic/dc1580.c:597
 #: camlibs/ptp2/library.c:805 camlibs/ricoh/ricoh.c:837
@@ -3873,8 +3844,7 @@ msgstr ""
 #: camlibs/polaroid/pdc700.c:1233
 #, c-format
 msgid "The requested port type (%i) is not supported by this driver."
-msgstr ""
-"Der angeforderte Port-Typ (%i) wird von diesem Treiber nicht unterstützt."
+msgstr "Der angeforderte Port-Typ (%i) wird von diesem Treiber nicht unterstützt."
 
 #: camlibs/ptp2/library.c:109
 msgid "You need to specify a folder starting with /store_xxxxxxxxx/"
@@ -4668,12 +4638,10 @@ msgid "1 minute"
 msgstr "1 Minute"
 
 #: camlibs/ptp2/library.c:3187 camlibs/ptp2/library.c:3235
-#, fuzzy
 msgid "5 minutes"
 msgstr "5 Minuten"
 
 #: camlibs/ptp2/library.c:3188 camlibs/ptp2/library.c:3236
-#, fuzzy
 msgid "10 minutes"
 msgstr "10 Minuten"
 
@@ -4770,7 +4738,6 @@ msgid "30"
 msgstr "30"
 
 #: camlibs/ptp2/library.c:3237
-#, fuzzy
 msgid "15 minutes"
 msgstr "15 Minuten"
 
@@ -5088,14 +5055,12 @@ msgid "Flash Mode Manual Power"
 msgstr "Blitzmodus mit manuelle Energie"
 
 #: camlibs/ptp2/library.c:3687
-#, fuzzy
 msgid "Auto Focus Area"
 msgstr "Autofokusbereich"
 
 #: camlibs/ptp2/library.c:3688 camlibs/ptp2/ptp.c:2407
-#, fuzzy
 msgid "Flash Exposure Compensation"
-msgstr "Belichtungskompensation"
+msgstr "Blitz Belichtungskompensation"
 
 #: camlibs/ptp2/library.c:3689 camlibs/ptp2/ptp.c:2333
 msgid "Bracket Set"
@@ -5216,10 +5181,8 @@ msgstr "Initialisiere Kamera"
 
 #: camlibs/ptp2/library.c:4955
 #, c-format
-msgid ""
-"PTP is only implemented for USB and PTP/IP cameras currently, port type %x"
-msgstr ""
-"PTP- Ist nur für USB und PTP/IP Kameras implementiert, Port Typ ist %x."
+msgid "PTP is only implemented for USB and PTP/IP cameras currently, port type %x"
+msgstr "PTP- Ist nur für USB und PTP/IP Kameras implementiert, Port Typ ist %x."
 
 #: camlibs/ptp2/ptp.c:2085
 msgid "PTP: Undefined Error"
@@ -5754,28 +5717,24 @@ msgid "Secure Time"
 msgstr "Belichtungszeit"
 
 #: camlibs/ptp2/ptp.c:2435
-#, fuzzy
 msgid "Device Certificate"
-msgstr ""
-"\n"
-"Fähigkeiten des Geräts:\n"
+msgstr "Geräte Zertifikat"
 
 #: camlibs/ptp2/ptp.c:2437
 msgid "Synchronization Partner"
-msgstr ""
+msgstr "Synchronisationspartner"
 
 #: camlibs/ptp2/ptp.c:2439
 msgid "Device Friendly Name"
-msgstr ""
+msgstr "Anzeigbarer Gerätename"
 
 #: camlibs/ptp2/ptp.c:2440
-#, fuzzy
 msgid "Volume Level"
-msgstr "\tLabel des Speichergerätes: %s\n"
+msgstr "Lautstärke"
 
 #: camlibs/ptp2/ptp.c:2441
 msgid "Device Icon"
-msgstr ""
+msgstr "Geräte Icon"
 
 #: camlibs/ptp2/ptp.c:2442
 msgid "Playback Rate"
@@ -6257,8 +6216,7 @@ msgstr "%i erwartet, %i erhalten. Bitte kontaktieren Sie %s (auf Englisch)."
 #: camlibs/ricoh/ricoh.c:75
 #, c-format
 msgid "Expected %i bytes, got %i. Please report this error to %s."
-msgstr ""
-"%i Bytes erwartet, %i erhalten. Bitte kontaktieren Sie %s (auf Englisch)."
+msgstr "%i Bytes erwartet, %i erhalten. Bitte kontaktieren Sie %s (auf Englisch)."
 
 #: camlibs/ricoh/ricoh.c:172 camlibs/ricoh/ricoh.c:186
 #, c-format
@@ -6270,8 +6228,7 @@ msgstr ""
 #: camlibs/ricoh/ricoh.c:215
 #, c-format
 msgid "Bad characters (0x%x, 0x%x). Please contact %s."
-msgstr ""
-"Fehlerhafte Zeichen (0x%x, 0x%x). Bitte kontaktieren Sie %s (auf Englisch)."
+msgstr "Fehlerhafte Zeichen (0x%x, 0x%x). Bitte kontaktieren Sie %s (auf Englisch)."
 
 #: camlibs/ricoh/ricoh.c:256 camlibs/ricoh/ricoh.c:325
 #, c-format
@@ -6317,8 +6274,7 @@ msgstr ""
 
 #: camlibs/ricoh/ricoh.c:816
 #, c-format
-msgid ""
-"The filename's length must not exceed 12 characters ('%s' has %i characters)."
+msgid "The filename's length must not exceed 12 characters ('%s' has %i characters)."
 msgstr ""
 "Die Länge des Dateinamens darf 12 Zeichen nicht überschreiten (»%s« hat %i "
 "Zeichen)."
@@ -6457,10 +6413,8 @@ msgstr "Kann die Batteriekapazität nicht bekommen"
 
 #: camlibs/sierra/library.c:304
 #, c-format
-msgid ""
-"The battery level of the camera is too low (%d%%). The operation is aborted."
-msgstr ""
-"Der Batteriestand der Kamera ist zu niedrig (%d%%). Befehl wird abgebrochen."
+msgid "The battery level of the camera is too low (%d%%). The operation is aborted."
+msgstr "Der Batteriestand der Kamera ist zu niedrig (%d%%). Befehl wird abgebrochen."
 
 #: camlibs/sierra/library.c:328
 msgid "Cannot retrieve the available memory left"
@@ -6477,8 +6431,7 @@ msgstr "Das erste empfangene Byte (0x%x) ist nicht gültig."
 
 #: camlibs/sierra/library.c:719
 #, c-format
-msgid ""
-"Transmission of packet timed out even after %i retries. Please contact %s."
+msgid "Transmission of packet timed out even after %i retries. Please contact %s."
 msgstr ""
 "Time-Out für Übertragung des Datenpakets nach %i Versuchen. \n"
 "Bitte kontaktieren Sie %s (auf Englisch)."
@@ -6522,8 +6475,7 @@ msgstr ""
 #: camlibs/sierra/library.c:1065
 #, c-format
 msgid "Could not get register %i. Please contact %s."
-msgstr ""
-"Konnte Register %i nicht holen. Bitte kontaktieren Sie %s (auf Englisch)."
+msgstr "Konnte Register %i nicht holen. Bitte kontaktieren Sie %s (auf Englisch)."
 
 #: camlibs/sierra/library.c:1085 camlibs/sierra/library.c:1105
 msgid "Too many retries failed."
@@ -6535,8 +6487,7 @@ msgstr "Sende Daten..."
 
 #: camlibs/sierra/library.c:1204
 #, c-format
-msgid ""
-"recursive calls are not supported by the sierra driver! Please contact %s."
+msgid "recursive calls are not supported by the sierra driver! Please contact %s."
 msgstr ""
 "Rekursive Aufrufe werden vom Sierra-Treiber nicht unterstützt.\n"
 "Bitte kontaktieren Sie %s (auf Englisch)."
@@ -6551,8 +6502,7 @@ msgstr ""
 #: camlibs/sierra/library.c:1490
 #, c-format
 msgid "Expected 32 bytes, got %i. Please contact %s."
-msgstr ""
-"32 Bytes erwartet, %i erhalten. Bitte kontaktieren Sie %s (auf Englisch)."
+msgstr "32 Bytes erwartet, %i erhalten. Bitte kontaktieren Sie %s (auf Englisch)."
 
 #: camlibs/sierra/nikon-desc.c:162 camlibs/sierra/olympus-desc.c:280
 msgid "Shutter Speed microseconds (0 auto)"
@@ -7061,8 +7011,7 @@ msgstr "schwarz/weiß"
 
 #: camlibs/sierra/sierra.c:1911
 msgid "Note: no memory card present, some values may be invalid\n"
-msgstr ""
-"Note: keine Speicherkarte vorhanden, einige Werte können ungültig sein\n"
+msgstr "Note: keine Speicherkarte vorhanden, einige Werte können ungültig sein\n"
 
 #: camlibs/sierra/sierra.c:1919
 #, c-format
@@ -7648,8 +7597,7 @@ msgstr ""
 
 #: libgphoto2/gphoto2-abilities-list.c:190
 msgid "Internal error looking for camlibs. (path names too long?)"
-msgstr ""
-"Interner Fehler beim Suchen der Kamerabibliotheken (Pfadnamen zu lang?)"
+msgstr "Interner Fehler beim Suchen der Kamerabibliotheken (Pfadnamen zu lang?)"
 
 #: libgphoto2/gphoto2-abilities-list.c:199
 #, c-format
@@ -7676,8 +7624,7 @@ msgstr "Konnte keine Kamera finden"
 
 #: libgphoto2/gphoto2-camera.c:717
 msgid "You have to set the port prior initialization of the camera."
-msgstr ""
-"Sie müssen einen Port setzen, bevor Sie die Kamera initialisieren können"
+msgstr "Sie müssen einen Port setzen, bevor Sie die Kamera initialisieren können"
 
 #: libgphoto2/gphoto2-camera.c:742
 #, c-format
@@ -7761,8 +7708,7 @@ msgstr ""
 
 #: libgphoto2/gphoto2-filesys.c:1162
 #, c-format
-msgid ""
-"There are still subfolders in folder '%s' that you are trying to remove."
+msgid "There are still subfolders in folder '%s' that you are trying to remove."
 msgstr ""
 "Im Verzeichnis »%s«, das Sie zu Löschen versuchen, befinden sich immer noch "
 "Unterverzeichnisse."
@@ -7877,3 +7823,4 @@ msgstr "Unbekannter Fehler des Kamera-Treibers"
 #: libgphoto2/gphoto2-result.c:85
 msgid "Unknown error"
 msgstr "Unbekannter Fehler"
+
