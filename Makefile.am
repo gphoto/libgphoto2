@@ -23,8 +23,10 @@ doc_DATA = AUTHORS COPYING README CHANGES NEWS
 #  - Helps build libgphoto2 frontends against libgphoto2 without
 #    installing libgphoto2 first.
 #
-# FIXME: This breaks "make -j all". You'd have to run "make all-local"
-#        manually first.
+# This functionality is duplicated in configure.in in order to
+# set up the gphoto2/ directory before building other stuff. This
+# makes it possible to consistently use #include <gphoto2/stuff.h>.
+
 all-local:
 	@echo "Creating/Updating gphoto2/ directory with gphoto2*.h files"
 	@rm -f gphoto2/gphoto2*.h
@@ -37,6 +39,9 @@ all-local:
 		gphoto2/ > /dev/null 2>&1 \
 		|| true
 
+# This is also called by distclean, so we don't need a separate
+# distclean-local target as counterpart to the gphoto2/ creation
+# in the configure script.
 clean-local:
 	rm -f gphoto2/gphoto2*.h
 	rmdir gphoto2 || true
