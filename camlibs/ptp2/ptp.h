@@ -474,6 +474,7 @@ typedef struct _PTPObjectInfo PTPObjectInfo;
 #define PTP_OFC_MTP_UndefinedAudio		0xb900
 #define PTP_OFC_MTP_WMA				0xb901
 #define PTP_OFC_MTP_OGG				0xb902
+#define PTP_OFC_MTP_AudibleCodec		0xb904
 #define PTP_OFC_MTP_UndefinedVideo		0xb980
 #define PTP_OFC_MTP_WMV				0xb981
 #define PTP_OFC_MTP_MP4				0xb982

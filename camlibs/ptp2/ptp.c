@@ -2787,6 +2787,7 @@ struct {
 	{PTP_OFC_MTP_UndefinedAudio,N_("Undefined Audio")},
 	{PTP_OFC_MTP_WMA,"WMA"},
 	{PTP_OFC_MTP_OGG,"OGG"},
+	{PTP_OFC_MTP_AudibleCodec,N_("Audible.com Codec")},
 	{PTP_OFC_MTP_UndefinedVideo,N_("Undefined Video")},
 	{PTP_OFC_MTP_WMV,"WMV"},
 	{PTP_OFC_MTP_MP4,"MP4"},
