@@ -26,7 +26,7 @@ and availability of gphoto2. Another source of information is
 
         http://sourceforge.net/projects/gphoto
 
-where you can access our SVN server to fetch the source code of
+where you can access our CVS server to fetch the source code of
 gphoto2, gtkam and GnoCam (see below).
 
 
@@ -97,7 +97,7 @@ It is available at the following places:
 
  - At the gphoto website: http://www.gphoto.org/
 
- - In the SVN module gphoto2-manual
+ - In the CVS module gphoto2-manual
 
 The gPhoto2 Manual includes information about setting up USB
 hotplugging.
