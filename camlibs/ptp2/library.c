@@ -634,7 +634,7 @@ static struct {
 	{"Creative:Zen Sleek",			0x041e, 0x4137, 0},
 	/* Jennifer Scalf <oneferna@gmail.com> */
 	{"Creative:Zen MicroPhoto",             0x041e, 0x413c, 0},
-	{"Creative:Zen Sleek Photo",		0x041e, 0x413d, 0 },
+	{"Creative:Zen Sleek Photo",		0x041e, 0x413d, 0},
 	{"Creative:Zen Vision:M",		0x041e, 0x413e, 0},
 
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1474056&group_id=8874&atid=108874 */
@@ -649,8 +649,9 @@ static struct {
 	/* From Mark Veinot */
 	{"JVC:Alneo XA-HD500", 			0x04f1, 0x6105, 0},
 
-	{"Samsung:YH-999 Portable Media Center",0x04e8, 0x5a0f, 0 },
-	{"Intel:Bandon Portable Media Center",	0x045e, 0x00c9, 0 },
+	{"Samsung:YH-999 Portable Media Center",0x04e8, 0x5a0f, 0},
+	{"Samsung:YH-925",			0x04e8, 0x502f, 0},
+	{"Intel:Bandon Portable Media Center",	0x045e, 0x00c9, 0},
 
 	/* more coming soon :) */
 	{NULL, 0, 0, 0}
