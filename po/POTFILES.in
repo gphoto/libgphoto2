@@ -54,6 +54,7 @@ camlibs/pccam600/pccam600.c
 camlibs/polaroid/pdc320.c
 camlibs/polaroid/pdc640.c
 camlibs/polaroid/pdc700.c
+camlibs/ptp2/config.c
 camlibs/ptp2/library.c
 camlibs/ptp2/ptp.c
 camlibs/ricoh/g3.c
