@@ -36,6 +36,11 @@ const char **gp_library_version(GPVersionVerbosity verbose)
 #else
 			"unknown cc",
 #endif
+#ifdef HAVE_LTDL
+			"ltdl",
+#else
+			"no ltdl",
+#endif
 #ifdef HAVE_LIBEXIF
 			"EXIF",
 #else
@@ -50,6 +55,11 @@ const char **gp_library_version(GPVersionVerbosity verbose)
 			HAVE_CC " (C compiler used)",
 #else
 			"unknown (C compiler used)",
+#endif
+#ifdef HAVE_LTDL
+			"ltdl (for portable loading of camlibs)",
+#else
+			"no ltdl (for portable loading of camlibs)",
 #endif
 #ifdef HAVE_LIBEXIF
 			"EXIF (for special handling of EXIF files)",
