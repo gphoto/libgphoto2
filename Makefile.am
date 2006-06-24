@@ -8,7 +8,7 @@ bin_SCRIPTS = gphoto2-config
 EXTRA_DIST = HACKING MAINTAINERS makefile.os2 os2mak.inc TESTERS CHANGES
 
 # Note: @subdirs@ lists all the directories from AC_CONFIG_SUBDIRS()
-SUBDIRS = @subdirs@ libgphoto2 camlibs tests po packaging doc
+SUBDIRS = @subdirs@ libgphoto2 camlibs tests po bindings packaging doc
 
 doc_DATA = AUTHORS COPYING README CHANGES NEWS
 
