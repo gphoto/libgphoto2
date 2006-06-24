@@ -1,4 +1,8 @@
 2006-06-24  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Added AVPlaylist download (upload to come).
+
+2006-06-24  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* library.c, config.c, ptp-private.h, Makefile.am:
 	

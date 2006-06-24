@@ -2405,6 +2405,72 @@ ptp_mtp_parse_metadata (
 }
 
 static int
+mtp_get_playlist_string(
+	Camera *camera, uint32_t object_id, char **xcontent, int *xcontentlen
+) {
+	PTPParams *params = &camera->pl->params;
+	uint32_t	numobjects = 0, *objects = NULL;
+	uint16_t	ret;
+	int		i, contentlen = 0;
+	char		*content = NULL;
+
+	ret = ptp_mtp_getobjectreferences (params, object_id, &objects, &numobjects);
+	if (ret != PTP_RC_OK)
+		return (translate_ptp_result(ret));
+	
+	for (i=0;i<numobjects;i++) {
+		char		buf[4096];
+		int		len;
+
+		memset(buf, 0, sizeof(buf));
+		len = 0;
+		object_id = objects[i];
+		do {
+			int j = handle_to_n(object_id, camera);
+			if (j == PTP_HANDLER_SPECIAL)
+				break;
+			/* make space for new filename */
+			memmove (buf+strlen(params->objectinfo[j].Filename)+1, buf, len);
+			memcpy (buf+1, params->objectinfo[j].Filename, strlen (params->objectinfo[j].Filename));
+			buf[0] = '/';
+			object_id = params->objectinfo[j].ParentObject;
+			len = strlen(buf);
+		} while (object_id != 0);
+		if (content) {
+			content = realloc (content, contentlen+len+1+1);
+			strcpy (content+contentlen, buf);
+			strcpy (content+contentlen+len, "\n");
+			contentlen += len+1;
+		} else {
+			content = malloc (len+1+1);
+			strcpy (content, buf);
+			strcpy (content+len, "\n");
+			contentlen = len+1;
+		}
+	}
+	if (xcontent)
+		*xcontent = content;
+	else
+		free (content);
+	*xcontentlen = contentlen;
+	return (GP_OK);
+}
+
+static int
+mtp_get_playlist(
+	Camera *camera, CameraFile *file, uint32_t object_id, GPContext *context
+) {
+	char	*content;
+	int	ret, contentlen;
+
+	ret = mtp_get_playlist_string( camera, object_id, &content, &contentlen);
+	if (ret != GP_OK) return ret;
+	/* takes ownership of content */
+	gp_file_set_data_and_size (file, content, contentlen);
+	return (GP_OK);
+}
+
+static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *data,
 	       GPContext *context)
@@ -2524,6 +2590,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			(oi->ObjectFormat == PTP_OFC_Undefined &&
 				oi->ThumbFormat == PTP_OFC_Undefined))
 			return (GP_ERROR_NOT_SUPPORTED);
+
+		if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+		    (oi->ObjectFormat == PTP_OFC_MTP_AbstractAudioVideoPlaylist))
+			return mtp_get_playlist (camera, file, params->handles.Handler[object_id], context);
 
 		size=oi->ObjectCompressedSize;
 		CPR (context, ptp_getobject(params,
@@ -2758,6 +2828,16 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		info->file.fields |= GP_FILE_INFO_NAME;
 	}
 	info->file.size   = oi->ObjectCompressedSize;
+
+	/* MTP playlists have their own size calculation */
+	if ((camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+	    (oi->ObjectFormat == PTP_OFC_MTP_AbstractAudioVideoPlaylist)) {
+		int ret, contentlen;
+		ret = mtp_get_playlist_string (camera, camera->pl->params.handles.Handler[object_id], NULL, &contentlen);
+		if (ret != GP_OK) return ret;
+		info->file.size = contentlen;
+	}
+
 	strcpy_mime (info->file.type, oi->ObjectFormat);
 	if (oi->ModificationDate != 0) {
 		info->file.mtime = oi->ModificationDate;
