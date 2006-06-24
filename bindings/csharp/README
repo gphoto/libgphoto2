@@ -1,4 +1,24 @@
-This code is imported from f-spot.
+This code has been imported from f-spot and adapted slightly to fit into
+the libgphoto2 build system.
 
 http://ftp.gnome.org/Public/GNOME/sources/f-spot/0.1/f-spot-0.1.1.tar.bz2
+
+IMPORTANT NOTE:
+
+   This is in pre-alpha state, we still have a few things to figure
+   out before we can call this interface stable.
+
+
+TODO:
+
+ * gmcs vs. mcs
+   Libraries compiled with gmcs (C# 2.0) and mcs (C# 1.x) are not compatible.
+   Does one ship both? What should they be named, and where should they be
+   installed? And how is an application supposed to detect their respective
+   presence?
+   
+ * Is there a cleaner set of automake/autoconf macros for C#/mono?
+
+ * Define special binding macros like the camlib or iolib macros, perhaps
+   even define a generic set of macros for all three.
 

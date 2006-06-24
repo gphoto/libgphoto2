@@ -207,7 +207,7 @@ namespace LibGPhoto2
 		
 		public void Exit (Context context)
 		{
-			Error.CheckError (gp_camera_init (this.Handle, context.Handle));
+			Error.CheckError (gp_camera_exit (this.Handle, context.Handle));
 		}
 		
 		[DllImport ("libgphoto2.so")]
@@ -368,7 +368,7 @@ namespace LibGPhoto2
 		{
 			CameraText summary;
 
-			Error.CheckError (Camera.gp_camera_get_summary(this.Handle, out summary, context.Handle));
+			Error.CheckError (gp_camera_get_summary(this.Handle, out summary, context.Handle));
 
 			return summary;
 		}

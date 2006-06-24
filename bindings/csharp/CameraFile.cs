@@ -9,7 +9,8 @@ namespace LibGPhoto2
 		Normal,
 		Raw,
 		Audio,
-		Exif
+		Exif,
+		MetaData
 	}
 	
 	public class MimeTypes
