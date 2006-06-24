@@ -1,7 +1,20 @@
-MCSFLAGS = --unsafe -g
+# Build libgphoto2-sharp, the C# bindings for libgphoto2.
+#
+# Due to lacking automake support for mono/C#, we compile the C#
+# code as _DATA.
+#
+# We also have a test case which is called on "make check".
+#
+# This should be clean for
+#   - out-of-tree builds
+# 
+# It may be buggy for
+#   - cross-compiles
+#   - C# 2 (gmcs instead of mcs; more issues)
+#
+# This Makefile.am relies on a few variables defined in configure.in.
 
 LIBGPHOTO2_SHARP_CSFILES =				\
-	$(srcdir)/AssemblyInfo.cs			\
 	$(srcdir)/Camera.cs				\
 	$(srcdir)/CameraAbilitiesList.cs		\
 	$(srcdir)/CameraFile.cs				\
@@ -15,22 +28,61 @@ LIBGPHOTO2_SHARP_CSFILES =				\
 	$(srcdir)/PortInfo.cs				\
 	$(srcdir)/PortInfoList.cs
 
-libgphoto2sharplibdir = $(libdir)/f-spot
-libgphoto2sharplib_DATA =		\
+if HAVE_MONO
+
+MCSFLAGS = -unsafe -debug
+
+pkgconfig_DATA = libgphoto2-sharp.pc
+
+LIBGPHOTO2_SHARP_GENERATED_CSFILES = \
+	AssemblyInfo.cs
+
+cslib_DATA =				\
 	libgphoto2-sharp.dll		\
-	libgphoto2-sharp.dll.config
+	libgphoto2-sharp.dll.config	\
+	libgphoto2-sharp.dll.mdb
 
+libgphoto2-sharp.dll: $(LIBGPHOTO2_SHARP_GENERATED_CSFILES) $(LIBGPHOTO2_SHARP_CSFILES)
+	$(MCS) $(MCSFLAGS) -out:$@ /target:library $(LIBGPHOTO2_SHARP_GENERATED_CSFILES) $(LIBGPHOTO2_SHARP_CSFILES)
 
-libgphoto2-sharp.dll: $(LIBGPHOTO2_SHARP_CSFILES)
-	$(MCS) $(MCSFLAGS) -o $@ /target:library $(LIBGPHOTO2_SHARP_CSFILES)
+TestGphoto2Sharp.exe: $(srcdir)/TestGphoto2Sharp.cs libgphoto2-sharp.dll
+	$(MCS) $(MCSFLAGS) -out:$@ -r:libgphoto2-sharp.dll $<
 
-all: libgphoto2-sharp.dll
+check_SCRIPTS = check-camera-list.sh
+check_DATA = TestGphoto2Sharp.exe
+
+TESTS = $(check_SCRIPTS)
+
+CLEANFILES =							\
+	TestGphoto2Sharp.exe					\
+	TestGphoto2Sharp.exe.mdb				\
+	libgphoto2-sharp.dll.mdb				\
+	libgphoto2-sharp.dll					\
+	$(check_SCRIPTS)
+
+endif
 
 EXTRA_DIST =							\
 	libgphoto2-sharp.dll.config				\
-	$(LIBGPHOTO2_SHARP_CSFILES)
+	libgphoto2-sharp.pc.in					\
+	$(LIBGPHOTO2_SHARP_CSFILES)				\
+	AssemblyInfo.cs.in					\
+	TestGphoto2Sharp.cs					\
+	check-camera-list.in
 
-CLEANFILES =							\
-	libgphoto2-sharp.dll.mdb				\
-	libgphoto2-sharp.dll
+clean-local:
+	rm -rf _inst
+	rm -f _camlibs
+
+%.sh: %.in
+	@echo "Creating $@"
+	@sed \
+		-e 's|@top_builddir\@|$(top_builddir)|g' \
+		-e 's|@camlibdir\@|$(camlibdir)|g' \
+		-e 's|@libdir\@|$(libdir)|g' \
+		-e 's|@DESTDIR\@|$(DESTDIR)|g' \
+		-e 's|@MAKE\@|$(MAKE)|g' \
+		-e 's|@MONO\@|$(MONO)|g' \
+		< "$<" > "$@"
+	@chmod +x $@
 
