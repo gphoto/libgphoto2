@@ -1,3 +1,7 @@
+2006-06-24  David Selmeczi <seldavid@gmail.com>
+
+	* library.c,canon.c: Added more 350D parameters.
+
 2006-06-20  Marcus Meissner  <marcus@jet.franken.de>
 	    Karl Tomlinson  <ktomlinson@users.sf.net>
 
