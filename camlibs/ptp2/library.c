@@ -2436,6 +2436,11 @@ mtp_get_playlist_string(
 			object_id = params->objectinfo[j].ParentObject;
 			len = strlen(buf);
 		} while (object_id != 0);
+		memmove (buf+strlen("/store_00010001"), buf, len);
+		sprintf (buf,"/store_%08x",(unsigned int)params->objectinfo[handle_to_n(objects[i],camera)].StorageID);
+		buf[strlen(buf)]='/';
+		len = strlen(buf);
+
 		if (content) {
 			content = realloc (content, contentlen+len+1+1);
 			strcpy (content+contentlen, buf);
