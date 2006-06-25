@@ -10,5 +10,6 @@ serial_la_CPPFLAGS = -I$(top_srcdir)/libgphoto2_port $(INTL_CFLAGS)
 serial_la_DEPENDENCIES = $(top_srcdir)/iolib.sym
 serial_la_LIBADD =				\
 	$(top_builddir)/libgphoto2_port/libgphoto2_port.la	\
-	$(SERIAL_LIBS)
+	$(SERIAL_LIBS)						\
+	$(INTLLIBS)
 serial_la_SOURCES = unix.c

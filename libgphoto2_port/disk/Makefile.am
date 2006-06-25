@@ -11,5 +11,6 @@ disk_la_CPPFLAGS = \
 disk_la_DEPENDENCIES = $(top_srcdir)/iolib.sym
 disk_la_LIBADD = \
 	$(top_builddir)/libgphoto2_port/libgphoto2_port.la \
+	$(INTLLIBS) \
 	$(HAL_LIBS)
 disk_la_SOURCES = disk.c
