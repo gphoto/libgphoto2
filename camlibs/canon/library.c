@@ -113,6 +113,22 @@ const struct canonIsoStateStruct isoStateArray[] = {
 };
 
 const struct canonShutterSpeedStateStruct shutterSpeedStateArray[] = {
+        {SHUTTER_SPEED_BULB, "Bulb"},
+        {SHUTTER_SPEED_30_SEC, "30 seconds"},
+        {SHUTTER_SPEED_25_SEC, "25 seconds"},
+        {SHUTTER_SPEED_20_SEC, "20 seconds"},
+        {SHUTTER_SPEED_15_SEC, "15 seconds"},
+        {SHUTTER_SPEED_13_SEC, "13 seconds"},
+        {SHUTTER_SPEED_10_SEC, "10 seconds"},
+        {SHUTTER_SPEED_8_SEC, "8 seconds"},
+        {SHUTTER_SPEED_6_SEC, "6 seconds"},
+        {SHUTTER_SPEED_5_SEC, "5 seconds"},
+        {SHUTTER_SPEED_4_SEC, "4 seconds"},
+        {SHUTTER_SPEED_3_2_SEC, "3.2 second"},
+        {SHUTTER_SPEED_2_5_SEC, "2.5 second"},
+        {SHUTTER_SPEED_2_SEC, "2 seconds"},
+        {SHUTTER_SPEED_1_6_SEC, "1.6 second"},
+        {SHUTTER_SPEED_1_3_SEC, "1.3 second"},
         {SHUTTER_SPEED_1_SEC, "1 second"},
         {SHUTTER_SPEED_0_8_SEC, "8/10 second"},
         {SHUTTER_SPEED_0_6_SEC, "6/10 second"},
@@ -136,6 +152,18 @@ const struct canonShutterSpeedStateStruct shutterSpeedStateArray[] = {
         {SHUTTER_SPEED_1_125, "1/125 second"},
         {SHUTTER_SPEED_1_160, "1/160 second"},
         {SHUTTER_SPEED_1_200, "1/200 second"},
+        {SHUTTER_SPEED_1_250, "1/250 second"},
+        {SHUTTER_SPEED_1_320, "1/320 second"},
+        {SHUTTER_SPEED_1_400, "1/400 second"},
+        {SHUTTER_SPEED_1_500, "1/640 second"},
+        {SHUTTER_SPEED_1_640, "1/640 second"},
+        {SHUTTER_SPEED_1_800, "1/800 second"},
+        {SHUTTER_SPEED_1_1000, "1/1000 second"},
+        {SHUTTER_SPEED_1_1250, "1/1250 second"},
+        {SHUTTER_SPEED_1_1600, "1/1600 second"},
+        {SHUTTER_SPEED_1_2000, "1/2000 second"},
+        {SHUTTER_SPEED_1_3200, "1/3200 second"},
+        {SHUTTER_SPEED_1_4000, "1/4000 second"},
 	{0, NULL},
 };
 
@@ -158,6 +186,7 @@ const struct canonApertureStateStruct apertureStateArray[] = {
         {APERTURE_F16, "f16"},
         {APERTURE_F18, "f18"},
         {APERTURE_F20, "f20"},
+        {APERTURE_F22, "f22"},
 	{0, NULL},
 };
 
