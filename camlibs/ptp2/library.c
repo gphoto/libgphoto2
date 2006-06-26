@@ -309,6 +309,8 @@ static struct {
 	{"Kodak:V530",   0x040a, 0x058e, 0},
 	/* v550 Jon Burgess <jburgess@uklinux.net> */
 	{"Kodak:V550",   0x040a, 0x058f, 0},
+	/* David D. Huff Jr. <David.Huff@computer-critters.com> */
+	{"Kodak:Z650",   0x040a, 0x059e, 0},
 
 	/* HP PTP cameras */
 	{"HP:PhotoSmart 812 (PTP mode)", 0x03f0, 0x4202, 0},
