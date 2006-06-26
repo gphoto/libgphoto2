@@ -354,15 +354,15 @@ udev_camera_func (const func_params_t *params,
 		printf("RUN+=\"%s\"\n", hotplug_script);
 	} else { /* more than two parameters in params->argv */
 		char *mode = NULL;
-		char *user = NULL;
+		char *owner = NULL;
 		char *group = NULL;
 
 		int i;
 		char *key = NULL, *val = NULL;
 		for (i=0; ((key=(*params->argv)[i])   != NULL) && 
 			  ((val=(*params->argv)[i+1]) != NULL); i+=2) {
-			if (strcmp("user", key)==0) {
-				user = val;
+			if (strcmp("owner", key)==0) {
+				owner = val;
 			} else if (strcmp("group", key)==0) {
 				group = val;
 			} else if (strcmp("mode", key)==0) {
@@ -375,15 +375,15 @@ udev_camera_func (const func_params_t *params,
 			FATAL("Single argument remaining; need pairs of key and value");
 		}
 
-		if (mode != NULL || user != NULL || group != NULL) {
+		if (mode != NULL || owner != NULL || group != NULL) {
 			if (mode != NULL) {
 				printf("MODE=\"%s\"", mode);
-				if (user != NULL || group != NULL) {
+				if (owner != NULL || group != NULL) {
 					printf(", ");
 				}
 			}
-			if (user != NULL) {
-				printf("USER=\"%s\"", user);
+			if (owner != NULL) {
+				printf("OWNER=\"%s\"", owner);
 				if (group != NULL) {
 					printf(", ");
 				}
@@ -712,8 +712,8 @@ static const output_format_t formats[] = {
 	},
 	{name: "udev-rules",
 	 descr: "udev rules file",
-	 help: "Put it into /etc/udev/libgphoto2.rules, set file mode, user, group or add script to run",
-	 paramdescr: "( <PATH_TO_SCRIPT> | [mode <mode>|user <user>|group <group>]* ) ",
+	 help: "Put it into /etc/udev/libgphoto2.rules, set file mode, owner, group or add script to run",
+	 paramdescr: "( <PATH_TO_SCRIPT> | [mode <mode>|owner <owner>|group <group>]* ) ",
 	 begin_func: udev_begin_func, 
 	 camera_func: udev_camera_func,
 	 end_func: udev_end_func
