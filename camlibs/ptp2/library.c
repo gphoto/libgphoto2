@@ -2455,6 +2455,7 @@ mtp_get_playlist_string(
 			contentlen = len+1;
 		}
 	}
+	if (!content) content = malloc(1);
 	if (xcontent)
 		*xcontent = content;
 	else
