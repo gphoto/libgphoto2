@@ -8,7 +8,8 @@ namespace LibGPhoto2
 	{
 		Production,
 		Testing,
-		Experimental
+		Experimental,
+		Depreciated
 	}
 	
 	public enum CameraOperation
