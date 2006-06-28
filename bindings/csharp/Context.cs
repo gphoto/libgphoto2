@@ -18,7 +18,6 @@ namespace LibGPhoto2
 
 		protected override void Cleanup ()
 		{
-			System.Console.WriteLine ("cleanup context");
 			gp_context_unref(handle);
 		}
 	}
