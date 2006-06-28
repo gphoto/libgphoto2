@@ -5,35 +5,40 @@ namespace LibGPhoto2
 {
 	public enum ErrorCode
 	{
-		/* IO Errors */
-		GeneraError		= -1,
-		BadParameters		= -2,
-		NoMemory		= -3,
-		Library			= -4,
-		UnknownPort		= -5,
-		NotSupported		= -6,
-		IO			= -7,
-		Timout			= -10,
-		SupportedSerial		= -20,
-		SupportedUSB		= -21,
-		Init			= -31,
-		Read			= -34,
-		Write			= -35,
-		Update			= -37,
-		SerialSpeed		= -41,
-		USBClearHalt		= -51,
-		USBFind			= -52,
-		USBClaim		= -53,
-		Lock			= -60,
+        /* libgphoto2_port errors */
+        GeneralError        = -1,
+        BadParameters       = -2,
+        NoMemory            = -3,
+        Library             = -4,
+        UnknownPort         = -5,
+        NotSupported        = -6,
+        IO                  = -7,
+        Timout              = -10,
+        SupportedSerial		= -20,
+        SupportedUSB		= -21,
+        Init                = -31,
+        Read                = -34,
+        Write               = -35,
+        Update              = -37,
+        SerialSpeed         = -41,
+        USBClearHalt        = -51,
+        USBFind             = -52,
+        USBClaim            = -53,
+        Lock                = -60,
+        Hal                 = -70,
 
-		/* Other Errors*/
-		CorruptedData		= -102,
-		PathNotAbsolute		= -111,
-		DirectoryExists		= -109,
-		FileExists		= -103,
-		FileNotFound		= -108,
-		DirectoryNotFound	= -107,
-		ModelNotFound		= -105
+        /* libgphogphoto2 errors */
+        CorruptedData       = -102,
+        FileExists          = -103,
+        ModelNotFound       = -105,
+        DirectoryNotFound   = -107,
+        FileNotFound        = -108,
+        DirectoryExists     = -109,
+        CameraBusy          = -110,
+        PathNotAbsolute     = -111,
+        Cancel              = -112,
+        CameraError         = -113,
+        OsFailure           = -114
 	}
 
 	public class Error
