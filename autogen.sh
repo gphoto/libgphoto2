@@ -19,7 +19,7 @@ debug="false"
 recursive="false"
 dryrun="false"
 self="$(basename "$0")"
-autogen_version="0.4.7"
+autogen_version="0.4.8"
 
 
 ########################################################################
@@ -229,8 +229,9 @@ EOF
     "$debug" && echo " done."
 
     if "$debug"; then set | grep '^AG_'; fi
-    dryrun_param=""
-    if "$dryrun"; then dryrun_param="--dry-run"; fi
+    recurse_params=""
+    if "$dryrun"; then recurse_params="$recurse_params --dry-run"; fi
+    if "$debug";  then recurse_params="$recurse_params --verbose"; fi
 }
 
 
@@ -282,7 +283,7 @@ command_clean() {
 		done
 		echo " done."
 		if test -n "${AG_SUBDIRS}"; then
-		    "$0" --clean ${dryrun_param} --recursive ${AG_SUBDIRS}
+		    "$0" --clean ${recurse_params} --recursive ${AG_SUBDIRS}
 		fi
 	    fi
 	)
@@ -318,7 +319,7 @@ if cd "${dir}"; then
 	(cd "${AG_LIBLTDL_DIR}" && execute_command rm -f aclocal.m4 config.guess config.sub configure install-sh ltmain.sh Makefile.in missing)
     fi
     if test -n "${AG_SUBDIRS}"; then
-	"$0" --init ${dryrun_param} --recursive ${AG_SUBDIRS}
+	"$0" --init ${recurse_params} --recursive ${AG_SUBDIRS}
 	status="$?"
 	if test "$status" -ne 0; then exit "$status"; fi
     fi
@@ -340,7 +341,7 @@ fi
     status="$?"
     echo "$self:init: Left directory \`${dir}'"
     if "$recursive"; then 
-    	:
+	:
     elif test "$status" -ne "0"; then
 	exit "$status"
     fi
