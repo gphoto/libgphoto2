@@ -939,6 +939,22 @@ camera_abilities (CameraAbilitiesList *list)
 	a.folder_operations = GP_FOLDER_OPERATION_PUT_FILE
 		| GP_FOLDER_OPERATION_MAKE_DIR |
 		GP_FOLDER_OPERATION_REMOVE_DIR;
+	a.device_type       = GP_DEVICE_STILL_CAMERA;
+	CR (gp_abilities_list_append (list, a));
+
+	strcpy(a.model, "MTP Device");
+	a.status = GP_DRIVER_STATUS_TESTING;
+	a.port   = GP_PORT_USB;
+	a.speed[0] = 0;
+	a.usb_class = 666;
+	a.usb_subclass = -1;
+	a.usb_protocol = -1;
+	a.operations        = GP_OPERATION_NONE;
+	a.file_operations   = GP_FILE_OPERATION_DELETE;
+	a.folder_operations = GP_FOLDER_OPERATION_PUT_FILE
+		| GP_FOLDER_OPERATION_MAKE_DIR |
+		GP_FOLDER_OPERATION_REMOVE_DIR;
+	a.device_type       = GP_DEVICE_AUDIO_PLAYER;
 	CR (gp_abilities_list_append (list, a));
 
 	strcpy(a.model, "PTP/IP Camera");
@@ -951,6 +967,7 @@ camera_abilities (CameraAbilitiesList *list)
 	a.folder_operations =	GP_FOLDER_OPERATION_PUT_FILE	|
 				GP_FOLDER_OPERATION_MAKE_DIR	|
 				GP_FOLDER_OPERATION_REMOVE_DIR;
+	a.device_type       = GP_DEVICE_STILL_CAMERA;
 	CR (gp_abilities_list_append (list, a));
 	return (GP_OK);
 }
