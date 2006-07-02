@@ -71,7 +71,7 @@ struct _GPPortPrivateLibrary {
 GPPortType
 gp_port_library_type (void)
 {
-        return (GP_PORT_USB);
+	return (GP_PORT_USB);
 }
 
 int
@@ -659,10 +659,96 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 	return GP_ERROR_IO_USB_FIND;
 }
 
+/* This function reads the Microsoft OS Descriptor and looks inside to
+ * find if it is a MTP device. This is the similar to the way that
+ * Windows Media Player 10 uses.
+ * It is documented to some degree on various internet pages.
+ */
+static int
+gp_port_usb_match_mtp_device(struct usb_device *dev,int *configno, int *interfaceno, int *altsettingno)
+{
+	char buf[1000], cmd;
+	int ret,i,i1,i2;
+	usb_dev_handle *devh;
+
+	/* All of them are "vendor specific" device class */
+#if 0
+	if ((dev->descriptor.bDeviceClass!=0xff) && (dev->descriptor.bDeviceClass!=0))
+		return 0;
+#endif
+
+	devh = usb_open (dev);
+	/* get string descriptor at 0xEE */
+	ret = usb_get_descriptor (devh, 0x03, 0xee, buf, sizeof(buf));
+	if (ret > 0) gp_log_data("get_MS_OSD",buf, ret);
+	if (ret < 10) goto errout;
+	if (!((buf[2] == 'M') && (buf[4]=='S') && (buf[6]=='F') && (buf[8]=='T')))
+		goto errout;
+	cmd = buf[16];
+	ret = usb_control_msg (devh, USB_ENDPOINT_IN|USB_RECIP_DEVICE|USB_TYPE_VENDOR, cmd, 0, 4, buf, sizeof(buf), 1000);
+	if (ret == -1) {
+		gp_log (GP_LOG_ERROR, "mtp matcher", "control message says %d\n", ret);
+		goto errout;
+	}
+	if (buf[0] != 0x28) {
+		gp_log (GP_LOG_ERROR, "mtp matcher", "ret is %d, buf[0] is %x\n", ret, buf[0]);
+		goto errout;
+	}
+	if (ret > 0) gp_log_data("get_MS_ExtDesc",buf, ret);
+	if ((buf[0x12] != 'M') || (buf[0x13] != 'T') || (buf[0x14] != 'P')) {
+		gp_log (GP_LOG_ERROR, "mtp matcher", "buf at 0x12 is %02x%02x%02x\n", buf[0x12], buf[0x13], buf[0x14]);
+		goto errout;
+	}
+	ret = usb_control_msg (devh, USB_ENDPOINT_IN|USB_RECIP_DEVICE|USB_TYPE_VENDOR, cmd, 0, 5, buf, sizeof(buf), 1000);
+	if (ret == -1) goto errout;
+	if (buf[0] != 0x28) {
+		gp_log (GP_LOG_ERROR, "mtp matcher", "ret is %d, buf[0] is %x\n", ret, buf[0]);
+		goto errout;
+	}
+	if (ret > 0) gp_log_data("get_MS_ExtProp",buf, ret);
+	if ((buf[0x12] != 'M') || (buf[0x13] != 'T') || (buf[0x14] != 'P')) {
+		gp_log (GP_LOG_ERROR, "mtp matcher", "buf at 0x12 is %02x%02x%02x\n", buf[0x12], buf[0x13], buf[0x14]);
+		goto errout;
+	}
+	usb_close (devh);
+
+	/* Now chose a nice interface for us to use ... Just take the first. */
+
+	if (dev->descriptor.bNumConfigurations > 1)
+		gp_log (GP_LOG_ERROR, "mtp matcher", "The device has %d configurations!\n", dev->descriptor.bNumConfigurations);
+	for (i = 0; i < dev->descriptor.bNumConfigurations; i++) {
+		struct usb_config_descriptor *config =
+			&dev->config[i];
+
+		if (config->bNumInterfaces > 1)
+			gp_log (GP_LOG_ERROR, "mtp matcher", "The configuration has %d interfaces!\n", config->bNumInterfaces);
+		for (i1 = 0; i1 < config->bNumInterfaces; i1++) {
+			struct usb_interface *interface =
+				&config->interface[i1];
+
+			if (interface->num_altsetting > 1)
+				gp_log (GP_LOG_ERROR, "mtp matcher", "The interface has %d altsettings!\n", interface->num_altsetting);
+			for (i2 = 0; i2 < interface->num_altsetting; i2++) {
+				*configno = i;
+				*interfaceno = i1;
+				*altsettingno = i2;
+				return 1;
+			}
+		}
+	}
+	return 1;
+errout:
+	usb_close (devh);
+	return 0;
+}
+
 static int
 gp_port_usb_match_device_by_class(struct usb_device *dev, int class, int subclass, int protocol, int *configno, int *interfaceno, int *altsettingno)
 {
 	int i, i1, i2;
+
+	if (class == 666) /* Special hack for MTP devices with MS OS descriptors. */
+		return gp_port_usb_match_mtp_device (dev, configno, interfaceno, altsettingno);
 
 	if (dev->descriptor.bDeviceClass == class &&
 	    (subclass == -1 ||
