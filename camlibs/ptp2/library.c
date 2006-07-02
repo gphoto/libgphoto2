@@ -656,6 +656,9 @@ static struct {
 	{"Samsung:YH-925",			0x04e8, 0x502f, 0},
 	{"Intel:Bandon Portable Media Center",	0x045e, 0x00c9, 0},
 
+	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1515815&group_id=8874&atid=358874 */
+	{"Sandisk:Sansa e200",			0x0781, 0x7420, 0},
+
 	/* more coming soon :) */
 	{NULL, 0, 0, 0}
 };
