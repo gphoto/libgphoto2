@@ -40,6 +40,15 @@ typedef enum {
 	GP_DRIVER_STATUS_DEPRECATED
 } CameraDriverStatus;
 
+/**
+ * Type of the device represented. Currently we have Still Cameras
+ * and MTP Audio Players.
+ */
+typedef enum {
+        GP_DEVICE_STILL_CAMERA          = 0,
+        GP_DEVICE_AUDIO_PLAYER          = 1 << 0
+} GphotoDeviceType;
+
 typedef enum {
         GP_OPERATION_NONE               = 0,
         GP_OPERATION_CAPTURE_IMAGE      = 1 << 0,
@@ -97,9 +106,9 @@ typedef struct {
         char library [1024];	/**< \internal */
         char id [1024];		/**< \internal */
 
+	GphotoDeviceType 	device_type;	/**< Device type. */
 	/* Reserved space to use in the future w/out changing the 
 	 * struct size */
-	int reserved1;		/**< reserved space \internal */
         int reserved2;		/**< reserved space \internal */
         int reserved3;		/**< reserved space \internal */
         int reserved4;		/**< reserved space \internal */
