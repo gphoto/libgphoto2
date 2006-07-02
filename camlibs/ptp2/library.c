@@ -607,60 +607,58 @@ static struct {
 
 	{"Sanyo:VPC-C5 (PTP mode)",             0x0474, 0x0230, 0},
 
+	/************ Add MTP devices below this line ***********/
 	/* Jay MacDonald <jay@cheakamus.com> */
-	{"iRiver:T10 (alternate)",              0x4102, 0x1113, 0},
+	{"iRiver:T10 (alternate)",              0x4102, 0x1113, PTP_MTP},
 	/* Andreas Thienemann <andreas@bawue.de> */
-	{"iRiver:T20 FM",			0x4102, 0x1114, 0},
+	{"iRiver:T20 FM",			0x4102, 0x1114, PTP_MTP},
 	/* Roger Pixley <skreech2@gmail.com> */
-	{"iRiver:U10",                          0x4102, 0x1116, 0},
+	{"iRiver:U10",                          0x4102, 0x1116, PTP_MTP},
 	/* Freaky <freaky@bananateam.nl> */
-	{"iRiver:T10",                          0x4102, 0x1117, 0},
+	{"iRiver:T10",                          0x4102, 0x1117, PTP_MTP},
 	/* Martin Senst <martin.senst@gmx.de> */
-	{"iRiver:T20",                          0x4102, 0x1118, 0},
+	{"iRiver:T20",                          0x4102, 0x1118, PTP_MTP},
 	/* Bruno Parente Lima <brunoparente77@yahoo.com.br> */
-	{"iRiver:T30",                          0x4102, 0x1119, 0},
+	{"iRiver:T30",                          0x4102, 0x1119, PTP_MTP},
 	/* Petr Spatka spatka@luzanky.cz */
-	{"iRiver:H10",                          0x4102, 0x2102, 0},
-	{"iRiver:Portable Media Center",	0x1006, 0x4002, 0 },
-	{"iRiver:Portable Media Center",	0x1006, 0x4003, 0 },
+	{"iRiver:H10",                          0x4102, 0x2102, PTP_MTP},
+	{"iRiver:Portable Media Center",	0x1006, 0x4002, PTP_MTP},
+	{"iRiver:Portable Media Center",	0x1006, 0x4003, PTP_MTP},
 	/* From: thanosz@softhome.net */
-	{"Philipps:HDD6320",                    0x0471, 0x01eb, 0},
-	{"Philipps:HDD6130/17",                 0x0471, 0x014c, 0},
+	{"Philipps:HDD6320",                    0x0471, 0x01eb, PTP_MTP},
+	{"Philipps:HDD6130/17",                 0x0471, 0x014c, PTP_MTP},
 	/* borrowed from libmtp source */
-	{"Creative:Zen Vision",			0x041e, 0x411f, 0},
-	{"Creative:Portable Media Center",	0x041e, 0x4123, 0},
-	{"Creative:Zen Xtra",			0x041e, 0x4128, 0},
-	{"Second generation Dell DJ",		0x041e, 0x412f, 0},
-	{"Creative:Zen Micro",			0x041e, 0x4130, 0},
-	{"Creative:Zen Touch",			0x041e, 0x4131, 0},
-	{"Dell:Pocket DJ",			0x041e, 0x4132, 0},
-	{"Creative:Zen Sleek",			0x041e, 0x4137, 0},
+	{"Creative:Zen Vision",			0x041e, 0x411f, PTP_MTP},
+	{"Creative:Portable Media Center",	0x041e, 0x4123, PTP_MTP},
+	{"Creative:Zen Xtra",			0x041e, 0x4128, PTP_MTP},
+	{"Second generation Dell DJ",		0x041e, 0x412f, PTP_MTP},
+	{"Creative:Zen Micro",			0x041e, 0x4130, PTP_MTP},
+	{"Creative:Zen Touch",			0x041e, 0x4131, PTP_MTP},
+	{"Dell:Pocket DJ",			0x041e, 0x4132, PTP_MTP},
+	{"Creative:Zen Sleek",			0x041e, 0x4137, PTP_MTP},
 	/* Jennifer Scalf <oneferna@gmail.com> */
-	{"Creative:Zen MicroPhoto",             0x041e, 0x413c, 0},
-	{"Creative:Zen Sleek Photo",		0x041e, 0x413d, 0},
-	{"Creative:Zen Vision:M",		0x041e, 0x413e, 0},
+	{"Creative:Zen MicroPhoto",             0x041e, 0x413c, PTP_MTP},
+	{"Creative:Zen Sleek Photo",		0x041e, 0x413d, PTP_MTP},
+	{"Creative:Zen Vision:M",		0x041e, 0x413e, PTP_MTP},
 
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1474056&group_id=8874&atid=108874 */
-	{"Samsung:YP-T7J", 			0x04e8, 0x5047, 0 },
+	{"Samsung:YP-T7J", 			0x04e8, 0x5047, PTP_MTP},
 
 	/* IRC reporter */
-	{"Dell:DJ Itty",			0x413c, 0x4500, 0},
+	{"Dell:DJ Itty",			0x413c, 0x4500, PTP_MTP},
 
 	/* Marcoen Hirschberg <marcoen@users.sourceforge.net> */
-	{"Toshiba:Gigabeat",                    0x0930, 0x000c, 0},
+	{"Toshiba:Gigabeat",                    0x0930, 0x000c, PTP_MTP},
 
 	/* From Mark Veinot */
-	{"JVC:Alneo XA-HD500", 			0x04f1, 0x6105, 0},
+	{"JVC:Alneo XA-HD500", 			0x04f1, 0x6105, PTP_MTP},
 
-	{"Samsung:YH-999 Portable Media Center",0x04e8, 0x5a0f, 0},
-	{"Samsung:YH-925",			0x04e8, 0x502f, 0},
-	{"Intel:Bandon Portable Media Center",	0x045e, 0x00c9, 0},
+	{"Samsung:YH-999 Portable Media Center",0x04e8, 0x5a0f, PTP_MTP},
+	{"Samsung:YH-925",			0x04e8, 0x502f, PTP_MTP},
+	{"Intel:Bandon Portable Media Center",	0x045e, 0x00c9, PTP_MTP},
 
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1515815&group_id=8874&atid=358874 */
-	{"Sandisk:Sansa e200",			0x0781, 0x7420, 0},
-
-	/* more coming soon :) */
-	{NULL, 0, 0, 0}
+	{"Sandisk:Sansa e200",			0x0781, 0x7420, PTP_MTP},
 };
 
 static struct {
@@ -904,18 +902,25 @@ camera_abilities (CameraAbilitiesList *list)
 	CameraAbilities a;
 
 	memset(&a,0, sizeof(a));
-	for (i = 0; models[i].model; i++) {
+	for (i = 0; i < sizeof(models)/sizeof(models[0]); i++) {
 		strcpy (a.model, models[i].model);
 		a.status = GP_DRIVER_STATUS_PRODUCTION;
 		a.port   = GP_PORT_USB;
 		a.speed[0] = 0;
 		a.usb_vendor = models[i].usb_vendor;
 		a.usb_product= models[i].usb_product;
-		a.operations        = GP_CAPTURE_IMAGE | GP_OPERATION_CONFIG;
-		a.file_operations   = GP_FILE_OPERATION_PREVIEW |
-					GP_FILE_OPERATION_DELETE;
-		a.folder_operations = GP_FOLDER_OPERATION_PUT_FILE
-			| GP_FOLDER_OPERATION_MAKE_DIR |
+		if (models[i].known_bugs & PTP_MTP) {
+			a.operations        = GP_OPERATION_NONE;
+			a.device_type       = GP_DEVICE_AUDIO_PLAYER;
+			a.file_operations   = GP_FILE_OPERATION_DELETE;
+		} else {
+			a.device_type       = GP_DEVICE_STILL_CAMERA;
+			a.operations        = GP_CAPTURE_IMAGE | GP_OPERATION_CONFIG;
+			a.file_operations   = GP_FILE_OPERATION_PREVIEW |
+						GP_FILE_OPERATION_DELETE;
+		}
+		a.folder_operations = GP_FOLDER_OPERATION_PUT_FILE |
+			GP_FOLDER_OPERATION_MAKE_DIR |
 			GP_FOLDER_OPERATION_REMOVE_DIR;
 		CR (gp_abilities_list_append (list, a));
 		memset(&a,0, sizeof(a));
@@ -2124,25 +2129,36 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
     find_folder_handle(folder,storage,parent,data);
 
     for (i = 0; i < params->handles.n; i++) {
-	/* HP Photosmart 850, the camera tends to duplicate filename in the list.
-         * Original patch by clement.rezvoy@gmail.com */
-	if (CAN_HAVE_DUPE_FILE(camera->pl) && (list->count != 0) 
-	    && (params->objectinfo[i].Filename) 
-	    && strcmp(params->objectinfo[i].Filename, list->entry[list->count-1].name) == 0) {
+	int j;
+
+	/* not our parent -> next */
+	if (params->objectinfo[i].ParentObject!=parent)
 		continue;
-	}
 
 	/* not on our storage devices -> next */
 	if ((ptp_operation_issupported(params,PTP_OC_GetStorageIDs)
             && (params->objectinfo[i].StorageID != storage)))
 		continue;
-	/* not our parent -> next */
-	if (params->objectinfo[i].ParentObject!=parent)
-		continue;
-	/* is a directory -> next */
+
+	/* Is a directory -> next */
 	if (params->objectinfo[i].ObjectFormat == PTP_OFC_Association)
 		continue;
 
+	if (!params->objectinfo[i].Filename)
+	    continue;
+
+	if (1 || CAN_HAVE_DUPE_FILE(camera->pl)) {
+	    /* HP Photosmart 850, the camera tends to duplicate filename in the list.
+             * Original patch by clement.rezvoy@gmail.com */
+	    /* search backwards, likely gets hits faster. */
+	    for (j=list->count;j--;)
+    		if (!strcmp(params->objectinfo[i].Filename, list->entry[j].name))
+		    break;
+	    if (j>=0) {
+		gp_log (GP_LOG_ERROR, "ptp2/file_list_func", "Duplicate filename '%s' in folder '%s'. Ignoring nth entry.\n", folder, params->objectinfo[i].Filename);
+		continue;
+	    }
+	}
 	CR(gp_list_append (list, params->objectinfo[i].Filename, NULL));
     }
     return GP_OK;
@@ -3275,7 +3291,7 @@ camera_init (Camera *camera, GPContext *context)
 		break;
 	}
         gp_camera_get_abilities(camera, &a);
-        for (i = 0; models[i].model; i++) {
+        for (i = 0; sizeof(models)/sizeof(models[0]); i++) {
             if ((a.usb_vendor == models[i].usb_vendor) &&
                 (a.usb_product == models[i].usb_product)){
                 camera->pl->bugs = models[i].known_bugs;

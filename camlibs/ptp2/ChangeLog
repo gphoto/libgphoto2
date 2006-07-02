@@ -1,3 +1,12 @@
+2006-07-02  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Enhanced duplication logic to
+	  work for the cases we encounter on MTP devices.
+
+	* ptp-bugs.h, library.c: Mark up MTP devices
+	  and classify them as Audio Devices. (For later
+	  use by packaging scripts.)
+
 2006-06-26  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Added Kodak Z650.
