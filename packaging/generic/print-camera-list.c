@@ -473,13 +473,25 @@ fdi_camera_func (const func_params_t *params,
 		printf("   <match key=\"usb.vendor_id\" int=\"%d\">\n", a->usb_vendor);
 		printf("    <match key=\"usb.product_id\" int=\"%d\">\n", a->usb_product);
 		printf("     <merge key=\"info.category\" type=\"string\">camera</merge>\n");
-		printf("     <append key=\"info.capabilities\" type=\"strlist\">camera</append>\n");
+		if (a->device_type & GP_DEVICE_AUDIO_PLAYER) {
+			printf("     <append key=\"info.capabilities\" type=\"strlist\">camera</append>\n");
+			printf("     <merge key=\"info.category\" type=\"string\">portable_audio_player</merge>\n");
+			printf("     <append key=\"info.capabilities\" type=\"strlist\">portable_audio_player</append>\n");
+			printf("     <merge key=\"portable_audio_player.access_method\" type=\"string\">libgphoto2</merge>\n");
+			printf("     <merge key=\"portable_audio_player.type\" type=\"string\">user</merge>\n");
 
-		/* HACK alert ... but the HAL / gnome-volume-manager guys want that */
-		if (NULL!=strstr(a->library,"ptp"))
-			printf("     <merge key=\"camera.access_method\" type=\"string\">ptp</merge>\n");
-		else
-			printf("     <merge key=\"camera.access_method\" type=\"string\">proprietary</merge>\n");
+			/* FIXME: needs true formats ... But all of them can do MP3 */
+			printf("     <append key=\"portable_audio_player.output_formats\" type=\"strlist\">audio/mpeg</append>\n");
+		} else {
+			printf("     <append key=\"info.capabilities\" type=\"strlist\">camera</append>\n");
+
+			/* HACK alert ... but the HAL / gnome-volume-manager guys want that */
+			if (NULL!=strstr(a->library,"ptp"))
+				printf("     <merge key=\"camera.access_method\" type=\"string\">ptp</merge>\n");
+			else
+				printf("     <merge key=\"camera.access_method\" type=\"string\">proprietary</merge>\n");
+		}
+		/* leave them here even for audio players */
 		printf("     <merge key=\"camera.libgphoto2.name\" type=\"string\">%s</merge>\n", model);
 		printf("     <merge key=\"camera.libgphoto2.support\" type=\"bool\">true</merge>\n");
 		printf("    </match>\n");
@@ -577,7 +589,10 @@ fdi_device_camera_func (const func_params_t *params,
 		 */
 		printf("   <match key=\"usb_device.vendor_id\" int=\"%d\">\n", a->usb_vendor);
 		printf("    <match key=\"usb_device.product_id\" int=\"%d\">\n", a->usb_product);
-		printf("     <append key=\"info.capabilities\" type=\"strlist\">camera</append>\n");
+		if (a->device_type & GP_DEVICE_AUDIO_PLAYER)
+			printf("     <append key=\"info.capabilities\" type=\"strlist\">portable_audio_player</append>\n");
+		else
+			printf("     <append key=\"info.capabilities\" type=\"strlist\">camera</append>\n");
 		printf("    </match>\n");
 		printf("   </match>\n");
 	}
