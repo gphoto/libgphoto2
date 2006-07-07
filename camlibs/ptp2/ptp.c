@@ -1740,34 +1740,130 @@ ptp_nikon_getptpipinfo (PTPParams* params, unsigned char **data, unsigned int *s
 }
 
 /**
- * ptp_nikon_getprofilealldata:
+ * ptp_nikon_getwifiprofilelist:
  *
- * This command gets the ptpip info data.
+ * This command gets the wifi profile list.
  *  
  * params:	PTPParams*
- *	unsigned char *data	- data
- *	unsigned int size	- size of returned data
  *
  * Return values: Some PTP_RC_* code.
  *
  **/
 uint16_t
-ptp_nikon_getprofilealldata (PTPParams* params, unsigned char **data, unsigned int *size)
+ptp_nikon_getwifiprofilelist (PTPParams* params)
 {
         PTPContainer ptp;
-        
+	unsigned char* data;
+	unsigned int size;
+	unsigned int pos;
+	unsigned int profn;
+	unsigned int n;
+	char* buffer;
+	uint8_t len;
+	
         PTP_CNT_INIT(ptp);
         ptp.Code=PTP_OC_NIKON_GetProfileAllData;
         ptp.Nparam=0;
-        return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
+	size = 0;
+	data = NULL;
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
+
+	if (size < 2) return PTP_RC_Undefined; /* FIXME: Add more precise error code */
+
+	params->wifi_profiles_version = data[0];
+	params->wifi_profiles_number = data[1];
+	if (params->wifi_profiles)
+		free(params->wifi_profiles);
+	
+	params->wifi_profiles = malloc(params->wifi_profiles_number*sizeof(PTPNIKONWifiProfile));
+	memset(params->wifi_profiles, 0, params->wifi_profiles_number*sizeof(PTPNIKONWifiProfile));
+
+	pos = 2;
+	profn = 0;
+	while (profn < params->wifi_profiles_number && pos < size) {
+		if (pos+6 >= size) return PTP_RC_Undefined;
+		params->wifi_profiles[profn].id = data[pos++];
+		params->wifi_profiles[profn].valid = data[pos++];
+
+		n = dtoh32a(&data[pos]);
+		pos += 4;
+		if (pos+n+4 >= size) return PTP_RC_Undefined;
+		strncpy(params->wifi_profiles[profn].profile_name, (char*)&data[pos], n);
+		params->wifi_profiles[profn].profile_name[16] = '\0';
+		pos += n;
+
+		params->wifi_profiles[profn].display_order = data[pos++];
+		params->wifi_profiles[profn].device_type = data[pos++];
+		params->wifi_profiles[profn].icon_type = data[pos++];
+
+		buffer = ptp_unpack_string(params, data, pos, &len);
+		strncpy(params->wifi_profiles[profn].creation_date, buffer, sizeof(params->wifi_profiles[profn].creation_date));
+		pos += (len*2+1);
+		if (pos+1 >= size) return PTP_RC_Undefined;
+		/* FIXME: check if it is really last usage date */
+		buffer = ptp_unpack_string(params, data, pos, &len);
+		strncpy(params->wifi_profiles[profn].lastusage_date, buffer, sizeof(params->wifi_profiles[profn].lastusage_date));
+		pos += (len*2+1);
+		if (pos+5 >= size) return PTP_RC_Undefined;
+		
+		n = dtoh32a(&data[pos]);
+		pos += 4;
+		if (pos+n >= size) return PTP_RC_Undefined;
+		strncpy(params->wifi_profiles[profn].essid, (char*)&data[pos], n);
+		params->wifi_profiles[profn].essid[32] = '\0';
+		pos += n;
+		pos += 1;
+		profn++;
+	}
+
+#if 0
+	PTPNIKONWifiProfile test;
+	memset(&test, 0, sizeof(PTPNIKONWifiProfile));
+	strcpy(test.profile_name, "MyTest");
+	test.icon_type = 1;
+	strcpy(test.essid, "nikon");
+	test.ip_address = 10 + 11 << 16 + 11 << 24;
+	test.subnet_mask = 24;
+	test.access_mode = 1;
+	test.wifi_channel = 1;
+	test.key_nr = 1;
+
+	ptp_nikon_writewifiprofile(params, &test);
+#endif
+
+	return PTP_RC_OK;
 }
 
 /**
- * ptp_nikon_sendprofiledata:
+ * ptp_nikon_deletewifiprofile:
+ *
+ * This command deletes a wifi profile.
+ *  
+ * params:	PTPParams*
+ *	unsigned int profilenr	- profile number
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_nikon_deletewifiprofile (PTPParams* params, uint32_t profilenr)
+{
+	PTPContainer ptp;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code=PTP_OC_NIKON_DeleteProfile;
+	ptp.Nparam=1;
+	ptp.Param1=profilenr;
+	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+}
+
+/**
+ * ptp_nikon_writewifiprofile:
  *
  * This command gets the ptpip info data.
  *  
  * params:	PTPParams*
+ *	unsigned int profilenr	- profile number
  *	unsigned char *data	- data
  *	unsigned int size	- size of returned data
  *
@@ -1775,15 +1871,91 @@ ptp_nikon_getprofilealldata (PTPParams* params, unsigned char **data, unsigned i
  *
  **/
 uint16_t
-ptp_nikon_sendprofiledata (PTPParams* params, uint32_t profilenr, unsigned char *data, unsigned int size)
+ptp_nikon_writewifiprofile (PTPParams* params, PTPNIKONWifiProfile* profile)
 {
-        PTPContainer ptp;
-        
-        PTP_CNT_INIT(ptp);
-        ptp.Code=PTP_OC_NIKON_SendProfileData;
-        ptp.Nparam=1;
-        ptp.Param1=profilenr;
-        return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &data, NULL);
+	unsigned char guid[16];
+	
+	PTPContainer ptp;
+	unsigned char buffer[1024];
+	unsigned char* data = buffer;
+	int size = 0;
+	int i;
+	uint8_t len;
+	int profilenr = -1;
+	
+	ptp_nikon_getptpipguid(guid);
+	
+	if (!params->wifi_profiles)
+		CHECK_PTP_RC(ptp_nikon_getwifiprofilelist(params));
+	
+	for (i = 0; i < params->wifi_profiles_number; i++) {
+		if (!params->wifi_profiles[i].valid) {
+			profilenr = params->wifi_profiles[i].id;
+			break;
+		}
+	}
+	
+	if (profilenr == -1) {
+		/* No free profile! */
+		return PTP_RC_StoreFull;
+	}
+	
+	memset(buffer, 0, 1024);
+	
+	buffer[0x00] = 0x64; /* Version */
+	
+	/* Profile name */
+	htod32a(&buffer[0x01], 17);
+	/* 16 as third parameter, so there will always be a null-byte in the end */
+	strncpy((char*)&buffer[0x05], profile->profile_name, 16);
+	
+	buffer[0x16] = 0x00; /* Display order */
+	buffer[0x17] = profile->device_type;
+	buffer[0x18] = profile->icon_type;
+	
+	/* FIXME: Creation date: put a real date here */
+	ptp_pack_string(params, "19990909T090909", data, 0x19, &len);
+	
+	/* IP parameters */
+	*((unsigned int*)&buffer[0x3A]) = profile->ip_address; /* Do not reverse bytes */
+	buffer[0x3E] = profile->subnet_mask;
+	*((unsigned int*)&buffer[0x3F]) = profile->gateway_address; /* Do not reverse bytes */
+	buffer[0x43] = profile->address_mode;
+	
+	/* Wifi parameters */
+	buffer[0x44] = profile->access_mode;
+	buffer[0x45] = profile->wifi_channel;
+	
+	htod32a(&buffer[0x46], 33); /* essid */
+	 /* 32 as third parameter, so there will always be a null-byte in the end */
+	strncpy((char*)&buffer[0x4A], profile->essid, 32);
+	
+	buffer[0x6B] = profile->authentification;
+	buffer[0x6C] = profile->encryption;
+	htod32a(&buffer[0x6D], 64);
+	for (i = 0; i < 64; i++) {
+		buffer[0x71+i] = profile->key[i];
+	}
+	buffer[0xB1] = profile->key_nr;
+	memcpy(&buffer[0xB2], guid, 16);
+	
+	switch(profile->encryption) {
+	case 1: /* WEP 64bit */
+		htod16a(&buffer[0xC2], 5); /* (64-24)/8 = 5 */
+		break;
+	case 2: /* WEP 128bit */
+		htod16a(&buffer[0xC2], 13); /* (128-24)/8 = 13 */
+		break;
+	default:
+		htod16a(&buffer[0xC2], 0);
+	}
+	size = 0xC4;
+	       
+	PTP_CNT_INIT(ptp);
+	ptp.Code=PTP_OC_NIKON_SendProfileData;
+	ptp.Nparam=1;
+	ptp.Param1=profilenr;
+	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &data, NULL);
 }
 
 /**

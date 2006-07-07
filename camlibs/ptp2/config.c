@@ -205,6 +205,12 @@ typedef int (*get_func)(CONFIG_GET_ARGS);
 #define CONFIG_PUT_NAMES camera, widget, propval, dpd
 typedef int (*put_func)(CONFIG_PUT_ARGS);
 
+struct menu;
+#define CONFIG_MENU_GET_ARGS Camera *camera, CameraWidget **widget, struct menu* menu
+typedef int (*get_menu_func)(CONFIG_MENU_GET_ARGS);
+#define CONFIG_MENU_PUT_ARGS Camera *camera, CameraWidget *widget
+typedef int (*put_menu_func)(CONFIG_MENU_PUT_ARGS);
+
 struct submenu {
 	char 		*label;
 	char		*name;
@@ -218,7 +224,11 @@ struct submenu {
 struct menu {
 	char		*label;
 	char		*name;
+	/* Either: Standard menu */
 	struct	submenu	*submenus;
+	/* Or: Non-standard menu with custom behaviour */
+	get_menu_func	getfunc;
+	put_menu_func	putfunc;
 };
 
 struct deviceproptableu8 {
@@ -1654,6 +1664,486 @@ _put_CaptureTarget(CONFIG_PUT_ARGS) {
 	return GP_OK;
 }
 
+/* Wifi profiles functions */
+
+static int
+_put_nikon_list_wifi_profiles (CONFIG_PUT_ARGS)
+{
+	int i;
+	CameraWidget *child, *child2;
+	const char *name;
+	int value;
+	char* endptr;
+	long val;
+	int deleted = 0;
+	
+	for (i = 0; i < gp_widget_count_children(widget); i++) {
+		gp_widget_get_child(widget, i, &child);
+		gp_widget_get_child_by_name(child, "delete", &child2);
+		
+		gp_widget_get_value(child2, &value);
+		if (value) {
+			gp_widget_get_name(child, &name);
+			/* FIXME: far from elegant way to get ID back... */
+			val = strtol(name, &endptr, 0);
+			if (!*endptr) {
+				ptp_nikon_deletewifiprofile(&(camera->pl->params), val);
+				gp_widget_set_value(child2, 0);
+				deleted = 1;
+			}
+		}
+	}
+
+	/* FIXME: deleted entry still exists, rebuild tree if deleted = 1 ? */
+	
+	return GP_OK;
+}
+
+static int
+_get_nikon_list_wifi_profiles (CONFIG_GET_ARGS)
+{
+	gp_widget_new (GP_WIDGET_SECTION, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+
+	CameraWidget *child;
+
+	int ret;
+	char buffer[4096];
+	int i;
+	PTPParams *params = &(camera->pl->params);
+
+	ret = ptp_nikon_getwifiprofilelist(params);
+	if (ret != PTP_RC_OK) {
+		return (GP_ERROR_NOT_SUPPORTED);
+	}
+
+	gp_widget_new (GP_WIDGET_TEXT, "Version", &child);
+	snprintf(buffer, 4096, _("%d"), params->wifi_profiles_version);
+	gp_widget_set_value(child, buffer);
+	gp_widget_append(*widget, child);
+
+	for (i = 0; i < params->wifi_profiles_number; i++) {
+		CameraWidget *child2;
+		if (params->wifi_profiles[i].valid) {
+			gp_widget_new (GP_WIDGET_SECTION, params->wifi_profiles[i].profile_name, &child);
+			snprintf(buffer, 4096, "%d", params->wifi_profiles[i].id);
+			gp_widget_set_name(child, buffer);
+			gp_widget_append(*widget, child);
+
+			gp_widget_new (GP_WIDGET_TEXT, _("ID"), &child2);
+			snprintf (buffer, 4096, "%d", params->wifi_profiles[i].id);
+			gp_widget_set_value(child2, buffer);
+			gp_widget_append(child, child2);
+
+			gp_widget_new (GP_WIDGET_TEXT, _("essid"), &child2);
+			snprintf (buffer, 4096, "%s", params->wifi_profiles[i].essid);
+			gp_widget_set_value(child2, buffer);
+			gp_widget_append(child, child2);
+
+			gp_widget_new (GP_WIDGET_TEXT, _("Display"), &child2);
+			snprintf (buffer, 4096, "Order: %d, Icon: %d, Device type: %d",
+			          params->wifi_profiles[i].display_order,
+			          params->wifi_profiles[i].icon_type,
+			          params->wifi_profiles[i].device_type);
+			gp_widget_set_value(child2, buffer);
+			gp_widget_append(child, child2);
+			
+			gp_widget_new (GP_WIDGET_TEXT, "Dates", &child2);
+			snprintf (buffer, 4096,
+				_("Creation date: %s, Last usage date: %s"),
+				params->wifi_profiles[i].creation_date,
+				params->wifi_profiles[i].lastusage_date);
+			gp_widget_set_value(child2, buffer);
+			gp_widget_append(child, child2);
+
+			gp_widget_new (GP_WIDGET_TOGGLE, _("Delete"), &child2);
+			gp_widget_set_value(child2, 0);
+			gp_widget_set_name(child2, "delete");
+			gp_widget_append(child, child2);
+		}
+	}
+
+	return GP_OK;
+}
+
+static int
+_get_nikon_wifi_profile_prop(CONFIG_GET_ARGS) {
+	char buffer[1024];
+	
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	gp_setting_get("ptp2_wifi",menu->name,buffer);
+	gp_widget_set_value(*widget,buffer);
+	return (GP_OK);
+}
+
+static int
+_put_nikon_wifi_profile_prop(CONFIG_PUT_ARGS) {
+	char *string, *name;
+	int ret;
+	ret = gp_widget_get_value(widget,&string);
+	if (ret != GP_OK)
+		return ret;
+	gp_widget_get_name(widget,(const char**)&name);
+	gp_setting_set("ptp2_wifi",name,string);
+	return (GP_OK);
+}
+
+static int
+_get_nikon_wifi_profile_channel(CONFIG_GET_ARGS) {
+	char buffer[1024];
+	float val;
+	
+	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	gp_setting_get("ptp2_wifi", menu->name, buffer);
+	val = (float)atoi(buffer);
+	gp_widget_set_range(*widget, 1.0, 11.0, 1.0);
+	if (!val)
+		val = 1.0;
+	gp_widget_set_value(*widget, &val);
+	
+	return (GP_OK);
+}
+
+static int
+_put_nikon_wifi_profile_channel(CONFIG_PUT_ARGS) {
+	char *string, *name;
+	int ret;
+	float val;
+	char buffer[16];
+	ret = gp_widget_get_value(widget,&string);
+	if (ret != GP_OK)
+		return ret;
+	gp_widget_get_name(widget,(const char**)&name);
+	gp_widget_get_value(widget, &val);
+
+	snprintf(buffer, 16, "%d", (int)val);
+	gp_setting_set("ptp2_wifi",name,buffer);
+	return GP_OK;
+}
+
+static char* encryption_values[] = {
+N_("None"),
+N_("WEP 64-bit"),
+N_("WEP 128-bit"),
+NULL
+};
+
+static int
+_get_nikon_wifi_profile_encryption(CONFIG_GET_ARGS) {
+	char buffer[1024];
+	int i;
+	int val;
+	
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	gp_setting_get("ptp2_wifi", menu->name, buffer);
+	val = atoi(buffer);
+	
+	for (i = 0; encryption_values[i]; i++) {
+		gp_widget_add_choice(*widget, _(encryption_values[i]));
+		if (i == val)
+			gp_widget_set_value(*widget, _(encryption_values[i]));
+	}
+	
+	return (GP_OK);
+}
+
+static int
+_put_nikon_wifi_profile_encryption(CONFIG_PUT_ARGS) {
+	char *string, *name;
+	int ret;
+	int i;
+	char buffer[16];
+	ret = gp_widget_get_value(widget,&string);
+	if (ret != GP_OK)
+		return ret;
+	gp_widget_get_name(widget,(const char**)&name);
+
+	for (i = 0; encryption_values[i]; i++) {
+		if (!strcmp(_(encryption_values[i]), string)) {
+			snprintf(buffer, 16, "%d", i);
+			gp_setting_set("ptp2_wifi",name,buffer);
+			return GP_OK;
+		}
+	}
+
+	return GP_ERROR_BAD_PARAMETERS;
+}
+
+static char* accessmode_values[] = {
+N_("Managed"),
+N_("Ad-hoc"),
+NULL
+};
+
+static int
+_get_nikon_wifi_profile_accessmode(CONFIG_GET_ARGS) {
+	char buffer[1024];
+	int i;
+	int val;
+	
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	gp_setting_get("ptp2_wifi", menu->name, buffer);
+	val = atoi(buffer);
+	
+	for (i = 0; accessmode_values[i]; i++) {
+		gp_widget_add_choice(*widget, _(accessmode_values[i]));
+		if (i == val)
+			gp_widget_set_value(*widget, _(accessmode_values[i]));
+	}
+	
+	return (GP_OK);
+}
+
+static int
+_put_nikon_wifi_profile_accessmode(CONFIG_PUT_ARGS) {
+	char *string, *name;
+	int ret;
+	int i;
+	char buffer[16];
+	ret = gp_widget_get_value(widget,&string);
+	if (ret != GP_OK)
+		return ret;
+	gp_widget_get_name(widget,(const char**)&name);
+
+	for (i = 0; accessmode_values[i]; i++) {
+		if (!strcmp(_(accessmode_values[i]), string)) {
+			snprintf(buffer, 16, "%d", i);
+			gp_setting_set("ptp2_wifi",name,buffer);
+			return GP_OK;
+		}
+	}
+
+	return GP_ERROR_BAD_PARAMETERS;
+}
+
+static int
+_get_nikon_wifi_profile_write(CONFIG_GET_ARGS) {
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	gp_widget_set_value(*widget, 0);
+	return (GP_OK);
+}
+
+static int
+_put_nikon_wifi_profile_write(CONFIG_PUT_ARGS) {
+	char buffer[1024];
+	char keypart[3];
+	char* pos, *endptr;
+	int value, i;
+	int ret;
+	ret = gp_widget_get_value(widget,&value);
+	if (ret != GP_OK)
+		return ret;
+	if (value) {
+		struct in_addr inp;
+		PTPNIKONWifiProfile profile;
+		memset(&profile, 0, sizeof(PTPNIKONWifiProfile));
+		profile.icon_type = 1;
+		profile.key_nr = 1;
+
+		gp_setting_get("ptp2_wifi","name",buffer);
+		strncpy(profile.profile_name, buffer, 16);
+		gp_setting_get("ptp2_wifi","essid",buffer);
+		strncpy(profile.essid, buffer, 32);
+
+		gp_setting_get("ptp2_wifi","accessmode",buffer);
+		profile.access_mode = atoi(buffer);
+
+		gp_setting_get("ptp2_wifi","ipaddr",buffer);
+		if (buffer[0] != 0) { /* No DHCP */
+			if (!inet_aton (buffer, &inp)) {
+				fprintf(stderr,"failed to scan for addr in %s\n", buffer);
+				return GP_ERROR_BAD_PARAMETERS;
+			}
+			profile.ip_address = inp.s_addr;
+			gp_setting_get("ptp2_wifi","netmask",buffer);
+			if (!inet_aton (buffer, &inp)) {
+				fprintf(stderr,"failed to scan for netmask in %s\n", buffer);
+				return GP_ERROR_BAD_PARAMETERS;
+			}
+			inp.s_addr = be32toh(inp.s_addr); /* Reverse bytes so we can use the code below. */
+			profile.subnet_mask = 32;
+			while (((inp.s_addr >> (32-profile.subnet_mask)) & 0x01) == 0) {
+				profile.subnet_mask--;
+				if (profile.subnet_mask <= 0) {
+					fprintf(stderr,"Invalid subnet mask %s: no zeros\n", buffer);
+					return GP_ERROR_BAD_PARAMETERS;
+				}
+			}
+			/* Check there is only ones left */
+			if ((inp.s_addr | ((0x01 << (32-profile.subnet_mask)) - 1)) != 0xFFFFFFFF) {
+				fprintf(stderr,"Invalid subnet mask %s: misplaced zeros\n", buffer);
+				return GP_ERROR_BAD_PARAMETERS;
+			}
+
+			/* Gateway (never tested) */
+			gp_setting_get("ptp2_wifi","gw",buffer);
+			if (*buffer) {
+				if (!inet_aton (buffer, &inp)) {
+					fprintf(stderr,"failed to scan for gw in %s\n", buffer);
+					return GP_ERROR_BAD_PARAMETERS;
+				}
+				profile.gateway_address = inp.s_addr;
+			}
+		}
+		else { /* DHCP */
+			/* Never use mode 2, as mode 3 switches to mode 2
+			 * if it gets no DHCP answer. */
+			profile.address_mode = 3;
+		}
+
+		gp_setting_get("ptp2_wifi","channel",buffer);
+		profile.wifi_channel = atoi(buffer);
+
+		/* Encryption */
+		gp_setting_get("ptp2_wifi","encryption",buffer);
+		profile.encryption = atoi(buffer);
+		
+		if (profile.encryption != 0) {
+			gp_setting_get("ptp2_wifi","key",buffer);
+			i = 0;
+			pos = buffer;
+			keypart[2] = 0;
+			while (*pos) {
+				if (!*(pos+1)) {
+					fprintf(stderr,"Bad key: '%s'\n", buffer);
+					return GP_ERROR_BAD_PARAMETERS;	
+				}
+				keypart[0] = *(pos++);
+				keypart[1] = *(pos++);
+				profile.key[i++] = strtol(keypart, &endptr, 16);
+				if (endptr != keypart+2) {
+					fprintf(stderr,"Bad key: '%s', '%s' is not a number\n", buffer, keypart);
+					return GP_ERROR_BAD_PARAMETERS;	
+				}
+				if (*pos == ':')
+					pos++;
+			}
+			if (profile.encryption == 1) { /* WEP 64-bit */
+				if (i != 5) { /* 5*8 = 40 bit + 24 bit (IV) = 64 bit */
+					fprintf(stderr,"Bad key: '%s', %d bit length, should be 40 bit.\n", buffer, i*8);
+					return GP_ERROR_BAD_PARAMETERS;	
+				}
+			}
+			else if (profile.encryption == 2) { /* WEP 128-bit */
+				if (i != 13) { /* 13*8 = 104 bit + 24 bit (IV) = 128 bit */
+					fprintf(stderr,"Bad key: '%s', %d bit length, should be 104 bit.\n", buffer, i*8);
+					return GP_ERROR_BAD_PARAMETERS;	
+				}
+			}
+		}
+
+		ptp_nikon_writewifiprofile(&(camera->pl->params), &profile);
+	}
+	return (GP_OK);
+}
+
+static struct submenu create_wifi_profile_submenu[] = {
+	{ N_("Profile name"), "name", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_prop, _put_nikon_wifi_profile_prop },
+	{ N_("Wifi essid"), "essid", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_prop, _put_nikon_wifi_profile_prop },
+	{ N_("IP address (empty for DHCP)"), "ipaddr", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_prop, _put_nikon_wifi_profile_prop },
+	{ N_("Network mask"), "netmask", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_prop, _put_nikon_wifi_profile_prop },
+	{ N_("Default gateway"), "gw", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_prop, _put_nikon_wifi_profile_prop },
+	{ N_("Access mode"), "accessmode", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_accessmode, _put_nikon_wifi_profile_accessmode },
+	{ N_("Wifi channel"), "channel", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_channel, _put_nikon_wifi_profile_channel },
+	{ N_("Encryption"), "encryption", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_encryption, _put_nikon_wifi_profile_encryption },
+	{ N_("Encryption key (hex)"), "key", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_prop, _put_nikon_wifi_profile_prop },
+	{ N_("Write"), "write", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_write, _put_nikon_wifi_profile_write },
+	{ NULL },
+};
+
+static int
+_get_nikon_create_wifi_profile (CONFIG_GET_ARGS)
+{
+	int submenuno;
+	CameraWidget *subwidget;
+	
+	gp_widget_new (GP_WIDGET_SECTION, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+
+	for (submenuno = 0; create_wifi_profile_submenu[submenuno].name ; submenuno++ ) {
+		struct submenu *cursub = create_wifi_profile_submenu+submenuno;
+
+		cursub->getfunc (camera, &subwidget, cursub, NULL);
+		gp_widget_append (*widget, subwidget);
+	}
+	
+	return GP_OK;
+}
+
+static int
+_put_nikon_create_wifi_profile (CONFIG_PUT_ARGS)
+{
+	int submenuno, ret;
+	CameraWidget *subwidget;
+	
+	for (submenuno = 0; create_wifi_profile_submenu[submenuno].name ; submenuno++ ) {
+		struct submenu *cursub = create_wifi_profile_submenu+submenuno;
+
+		ret = gp_widget_get_child_by_label (widget, _(cursub->label), &subwidget);
+		if (ret != GP_OK)
+			continue;
+
+		if (!gp_widget_changed (subwidget))
+			continue;
+
+		ret = cursub->putfunc (camera, subwidget, NULL, NULL);
+	}
+
+	return GP_OK;
+}
+
+static struct submenu wifi_profiles_menu[] = {
+	/* wifi */
+	{ N_("List Wifi profiles"), "list", 0, PTP_VENDOR_NIKON, 0, _get_nikon_list_wifi_profiles, _put_nikon_list_wifi_profiles },
+	{ N_("Create Wifi profile"), "new", 0, PTP_VENDOR_NIKON, 0, _get_nikon_create_wifi_profile, _put_nikon_create_wifi_profile },
+	{ NULL },
+};
+
+/* Wifi profiles menu is a non-standard menu, because putfunc is always
+ * called on each submenu, whether or not the value has been changed. */
+static int
+_get_wifi_profiles_menu (CONFIG_MENU_GET_ARGS)
+{
+	CameraWidget *subwidget;
+	int submenuno;
+
+	gp_widget_new (GP_WIDGET_SECTION, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+
+	for (submenuno = 0; wifi_profiles_menu[submenuno].name ; submenuno++ ) {
+		struct submenu *cursub = wifi_profiles_menu+submenuno;
+
+		cursub->getfunc (camera, &subwidget, cursub, NULL);
+		gp_widget_append (*widget, subwidget);
+	}
+
+	return GP_OK;
+}
+
+static int
+_put_wifi_profiles_menu (CONFIG_MENU_PUT_ARGS)
+{
+	int submenuno, ret;
+	CameraWidget *subwidget;
+	
+	for (submenuno = 0; wifi_profiles_menu[submenuno].name ; submenuno++ ) {
+		struct submenu *cursub = wifi_profiles_menu+submenuno;
+
+		ret = gp_widget_get_child_by_label (widget, _(cursub->label), &subwidget);
+		if (ret != GP_OK)
+			continue;
+
+		ret = cursub->putfunc (camera, subwidget, NULL, NULL);
+	}
+
+	return GP_OK;
+}
+
 static struct submenu camera_settings_menu[] = {
 	{ N_("Camera Owner"), "owner", PTP_DPC_CANON_CameraOwner, PTP_VENDOR_CANON, PTP_DTC_AUINT8, _get_AUINT8_as_CHAR_ARRAY, _put_AUINT8_as_CHAR_ARRAY },
 	{ N_("Camera Model"), "model", PTP_DPC_CANON_CameraModel, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_None },
@@ -1752,9 +2242,10 @@ static struct submenu capture_settings_menu[] = {
 };
 
 static struct menu menus[] = {
-	{ N_("Camera Settings"), "settings", camera_settings_menu },
-	{ N_("Image Settings"), "imgsettings", image_settings_menu },
-	{ N_("Capture Settings"), "capturesettings", capture_settings_menu },
+	{ N_("Camera Settings"), "settings", camera_settings_menu, NULL, NULL },
+	{ N_("Image Settings"), "imgsettings", image_settings_menu, NULL, NULL },
+	{ N_("Capture Settings"), "capturesettings", capture_settings_menu, NULL, NULL },
+	{ N_("Wifi profiles"), "wifiprofiles", NULL, _get_wifi_profiles_menu, _put_wifi_profiles_menu },
 };
 
 int
@@ -1767,6 +2258,14 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_new (GP_WIDGET_WINDOW, _("Camera and Driver Configuration"), window);
 	gp_widget_set_name (*window, "main");
 	for (menuno = 0; menuno < sizeof(menus)/sizeof(menus[0]) ; menuno++ ) {
+		if (!menus[menuno].submenus) { /* Custom menu */
+			struct menu *cur = menus+menuno;
+			cur->getfunc(camera, &section, cur);
+			gp_widget_append(*window, section);
+			continue;
+		}
+		
+		/* Standard menu with submenus */
 		gp_widget_new (GP_WIDGET_SECTION, _(menus[menuno].label), &section);
 		gp_widget_set_name (section, menus[menuno].name);
 		gp_widget_append (*window, section);
@@ -1862,6 +2361,15 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		ret = gp_widget_get_child_by_label (subwindow, _(menus[menuno].label), &section);
 		if (ret != GP_OK)
 			continue;
+
+		if (!menus[menuno].submenus) { /* Custom menu */
+			struct menu *cur = menus+menuno;
+			cur->putfunc(camera, section);
+			continue;
+		}
+		
+		/* Standard menu with submenus */
+
 		for (submenuno = 0; menus[menuno].submenus[submenuno].label ; submenuno++ ) {
 			PTPPropertyValue	propval;
 

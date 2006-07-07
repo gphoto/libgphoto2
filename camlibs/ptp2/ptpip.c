@@ -23,6 +23,8 @@
  * - Some configure checking magic missing for the special header files 
  *   and functions.
  * - Not everything implementation correctly cross checked.
+ * - Coolpix P3 does not give transfer status (image 000x/000y), and reports an
+ *   error when transfers finish correctly.
  */
 #include "config.h"
 
@@ -79,6 +81,7 @@
 #define ptpip_cmd_param5	34
 
 static uint16_t ptp_ptpip_check_event (PTPParams* params);
+static void ptp_nikon_getptpipguid (unsigned char* guid);
 
 /* send / receive functions */
 uint16_t
@@ -375,11 +378,10 @@ ptp_ptpip_init_command_request (PTPParams* params)
 	char		hostname[100];
 	unsigned char*	cmdrequest;
 	int 		len,i,ret;
-	unsigned char	guid[] = {
-		0x61,0x10,0x85,0x7e, 0xfa,0xae,0x98,0x49,
-		0x8c,0xa1,0x5e,0x7d, 0x8f,0x9d,0x81,0x29
-	};
-
+	unsigned char	guid[16];
+	
+	ptp_nikon_getptpipguid(guid);
+	
 	if (gethostname (hostname, sizeof(hostname)))
 		return PTP_RC_GeneralError;
 	len = ptpip_initcmd_name + (strlen(hostname)+1)*2 + 4;
@@ -506,6 +508,66 @@ ptp_ptpip_event_check (PTPParams* params, PTPContainer* event) {
 uint16_t
 ptp_ptpip_event_wait (PTPParams* params, PTPContainer* event) {
 	return ptp_ptpip_event (params, event, PTP_EVENT_CHECK);
+}
+
+/**
+ * ptp_nikon_getwifiguid:
+ *
+ * This command gets the GUID of this machine. If it does not exists, it creates
+ * one.
+ *  
+ * params:	PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+static void
+ptp_nikon_getptpipguid (unsigned char* guid) {
+	char buffer[1024];
+	int i;
+	long val;
+	int valid;
+	char* endptr;
+	char* pos;
+	
+	gp_setting_get("ptp2_ip","guid",buffer);
+	
+	if (strlen(buffer) == 47) { /* 47 = 16*2 (numbers) + 15 (semi-colons) */
+		pos = buffer;
+		valid = 1;
+		for (i = 0; i < 16; i++) {
+			val = strtol(pos, &endptr, 16);
+			if (((*endptr != ':') && (*endptr != 0)) || (endptr != pos+2)) {
+				valid = 0;
+				break;
+			}
+			guid[i] = (unsigned char)val;
+			pos += 3;
+		}
+		/*printf("GUID ");
+		for (i = 0; i < 16; i++) {
+			printf("%02x:", guid[i]);
+		}
+		printf("\n");*/
+		if (valid)
+			return;
+	}
+	
+	/*fprintf(stderr, "Invalid GUID\n");*/
+	
+	/* Generate an ID */
+	srand(time(NULL));
+	buffer[0] = 0;
+	pos = buffer;
+	for (i = 0; i < 16; i++) {
+		guid[i] = (unsigned char) ((256.0 * rand()) / RAND_MAX);
+		pos += sprintf(pos, "%02x:", guid[i]);
+	}
+	buffer[47] = 0;
+	
+	/*printf("New GUID: %s\n", buffer);*/
+	
+	gp_setting_set("ptp2_ip","guid",buffer);
 }
 
 

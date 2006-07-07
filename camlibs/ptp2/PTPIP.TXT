@@ -139,3 +139,59 @@ PTP READ DATA:
 
 	0A, 0C:
 		packetlen < 12	-> error
+
+
+Profile creation packet (USB)
+-----------------------------
+0x00	BYTE Version (0x64)
+0x01	0x00	UINT32 length (always 16+1, as 16 is the maximum profilename length)
+0x05	0x04	BYTE profilename[length]
+
+0x16	BYTE	DisplayOrder (always 00)
+0x17	BYTE	DeviceType
+		0 - Computer
+		1 - Printer
+
+0x18	BYTE	IconType (at least 01 is a valid value)
+0x19	0x00	BYTE length_in_characters (always 0x10 == 0x20 bytes : 4(Year) + 2(Month) + 2(Day) + 1('T') + 2(Hour) + 2(Minute) + 2(Second) + 1('\0') = 16)
+0x1A	0x01	UINT16 timestr[length_in_characters]
+0x3A	INT32	IPAddress
+0x3E	BYTE	SubnetMask	(1 byte only? first byte)
+0x3F	INT32	Gateway
+
+0x43	BYTE	AddressSetting
+		0	Manual
+		2	DHCP in ad-hoc mode :
+				Pick a random address in 169.254.1.*
+				(check with several ARP requests that no one use
+				this address)
+		3	DHCP in managed mode : 
+				Send a standard DHCP request, if it gets no
+				answer, switch to mode 2
+
+0x44	BYTE	AccessMode
+		0	Managed/Infrastructure
+		1	Ad-Hoc Mode
+
+0x45	BYTE	Channel
+
+0x46	0x00	UINT32	length (always 32+1, maximum Wifi essid length)
+0x4A	0x04	BYTE 	SSID[length]
+
+0x6B	BYTE	Authentication
+		0	Open (?)
+		1	Shared
+		2	WPA-PSK
+
+0x6C	BYTE	Encryption
+		0 	None (?)
+		1	WEP 64 bits
+		2	WEP 128 bits
+		3	TKIP
+
+0x6D	0x00	UINT32	length (always 64, whatever the key size is)
+0x71	0x04	BYTE	EncryptionKey[length]
+
+0xB1	BYTE	EncryptionKeyNr
+0xB2	BYTE	MachineGUID[0x10]
+0xC2	UINT16	Encryption key length in bytes 0x0005 for WEP64, 0x000d for WEP128 

@@ -662,6 +662,39 @@ struct _PTPEKTextParams {
 };
 typedef struct _PTPEKTextParams PTPEKTextParams;
 
+/* Nikon Wifi profiles */
+
+struct _PTPNIKONWifiProfile {
+	/* Values valid both when reading and writing profiles */
+	char      profile_name[17];
+	uint8_t   device_type;
+	uint8_t   icon_type;
+	char      essid[33];
+
+	/* Values only valid when reading. Some of these are in the write packet,
+	 * but are set automatically, like id, display_order and creation_date. */
+	uint8_t   id;
+	uint8_t   valid;
+	uint8_t   display_order;
+	char      creation_date[16];
+	char      lastusage_date[16];
+	
+	/* Values only valid when writing */
+	uint32_t  ip_address;
+	uint8_t   subnet_mask; /* first zero bit position, e.g. 24 for 255.255.255.0 */
+	uint32_t  gateway_address;
+	uint8_t   address_mode; /* 0 - Manual, 2-3 -  DHCP ad-hoc/managed*/
+	uint8_t   access_mode; /* 0 - Managed, 1 - Adhoc */
+	uint8_t   wifi_channel; /* 1-11 */
+	uint8_t   authentification; /* 0 - Open, 1 - Shared, 2 - WPA-PSK */
+	uint8_t   encryption; /* 0 - None, 1 - WEP 64bit, 2 - WEP 128bit (not supported: 3 - TKIP) */
+	uint8_t   key[64];
+	uint8_t   key_nr;
+//	char      guid[16];
+};
+
+typedef struct _PTPNIKONWifiProfile PTPNIKONWifiProfile;
+
 /* DataType Codes */
 
 #define PTP_DTC_UNDEF		0x0000
@@ -1063,6 +1096,11 @@ struct _PTPParams {
 	PTPObjectInfo * objectinfo;
 	PTPDeviceInfo deviceinfo;
 
+	/* Wifi profiles */
+	uint8_t  wifi_profiles_version;
+	uint8_t  wifi_profiles_number;
+	PTPNIKONWifiProfile *wifi_profiles;
+
 	/* PTP/IP related data */
 	int		cmdfd, evtfd;
 	uint8_t		cameraguid[16];
@@ -1197,8 +1235,9 @@ uint16_t ptp_canon_theme_download (PTPParams* params, uint32_t themenr,
 uint16_t ptp_nikon_curve_download (PTPParams* params, 
 				unsigned char **data, unsigned int *size);
 uint16_t ptp_nikon_getptpipinfo (PTPParams* params, unsigned char **data, unsigned int *size);
-uint16_t ptp_nikon_getprofilealldata (PTPParams* params, unsigned char **data, unsigned int *size);
-uint16_t ptp_nikon_sendprofiledata (PTPParams* params, uint32_t profilenr, unsigned char *data, unsigned int size);
+uint16_t ptp_nikon_getwifiprofilelist (PTPParams* params);
+uint16_t ptp_nikon_writewifiprofile (PTPParams* params, PTPNIKONWifiProfile* profile);
+uint16_t ptp_nikon_deletewifiprofile (PTPParams* params, uint32_t profilenr);
 uint16_t ptp_nikon_setcontrolmode (PTPParams* params, uint32_t mode);
 uint16_t ptp_nikon_capture (PTPParams* params, uint32_t x);
 uint16_t ptp_nikon_check_event (PTPParams* params, PTPUSBEventContainer **evt, int *evtcnt);

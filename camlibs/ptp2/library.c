@@ -1001,7 +1001,7 @@ camera_exit (Camera *camera, GPContext *context)
 	}
 
 	/* FIXME: free all camera->pl->params.objectinfo[] and
-	   other malloced data */
+	   other malloced data, like wifi profiles */
 
 	return (GP_OK);
 }
@@ -1874,6 +1874,13 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 			}
 		}
 		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+
+	/* Third line for Wifi support, but just leave it out if not there. */
+		if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
+		     ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_GetProfileAllData)) {
+			n = snprintf (txt, spaceleft,_("\tNikon Wifi support\n"));
+			if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+		}
 
 /* Dump storage information */
 

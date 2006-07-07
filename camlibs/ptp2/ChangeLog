@@ -1,3 +1,14 @@
+2006-07-07  Nicolas Boichat  <nicolas@boichat.ch>
+
+	* library.c,ptp.c,ptp.h,ptpip.c:
+	  Added configuration upload of WIFI profiles
+	  for the Nikon P2.
+
+	* ptpip.c: Generate a random GUID if not set yet
+	  and store it in the gphoto settings.
+
+	* PTPIP.TXT: Documented profile layout.
+
 2006-07-02  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Enhanced duplication logic to
