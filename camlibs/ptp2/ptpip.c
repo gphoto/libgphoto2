@@ -81,7 +81,6 @@
 #define ptpip_cmd_param5	34
 
 static uint16_t ptp_ptpip_check_event (PTPParams* params);
-static void ptp_nikon_getptpipguid (unsigned char* guid);
 
 /* send / receive functions */
 uint16_t
@@ -521,7 +520,7 @@ ptp_ptpip_event_wait (PTPParams* params, PTPContainer* event) {
  * Return values: Some PTP_RC_* code.
  *
  **/
-static void
+void
 ptp_nikon_getptpipguid (unsigned char* guid) {
 	char buffer[1024];
 	int i;

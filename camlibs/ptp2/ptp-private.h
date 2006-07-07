@@ -32,4 +32,3 @@ struct _CameraPrivateLibrary {
 	PTPParams params;
 	unsigned long bugs;
 };
-

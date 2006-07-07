@@ -1264,4 +1264,7 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
                           PTPDevicePropDesc *dpd, int length, char *out);
 int ptp_render_ofc(PTPParams* params, uint16_t ofc, int spaceleft, char *txt);
 int ptp_render_mtp_propname(uint16_t propid, int spaceleft, char *txt);
+
+/* ptpip.c */
+void ptp_nikon_getptpipguid (unsigned char* guid);
 #endif /* __PTP_H__ */

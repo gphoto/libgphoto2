@@ -1884,7 +1884,7 @@ ptp_nikon_writewifiprofile (PTPParams* params, PTPNIKONWifiProfile* profile)
 	int profilenr = -1;
 	
 	ptp_nikon_getptpipguid(guid);
-	
+
 	if (!params->wifi_profiles)
 		CHECK_PTP_RC(ptp_nikon_getwifiprofilelist(params));
 	
