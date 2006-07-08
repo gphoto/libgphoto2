@@ -2253,7 +2253,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 {
 	CameraWidget *section, *widget;
 	PTPDevicePropDesc dpd;
-	int menuno, submenuno;
+	int menuno, submenuno, ret;
 
 	gp_widget_new (GP_WIDGET_WINDOW, _("Camera and Driver Configuration"), window);
 	gp_widget_set_name (*window, "main");
@@ -2272,17 +2272,20 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 		for (submenuno = 0; menus[menuno].submenus[submenuno].name ; submenuno++ ) {
 			struct submenu *cursub = menus[menuno].submenus+submenuno;
+			widget = NULL;
 
 			if (!have_prop(camera,cursub->vendorid,cursub->propid))
 				continue;
 			if (cursub->propid) {
 				memset(&dpd,0,sizeof(dpd));
 				ptp_getdevicepropdesc(&camera->pl->params,cursub->propid,&dpd);
-				cursub->getfunc (camera, &widget, cursub, &dpd);
+				ret = cursub->getfunc (camera, &widget, cursub, &dpd);
 				ptp_free_devicepropdesc(&dpd);
 			} else {
-				cursub->getfunc (camera, &widget, cursub, NULL);
+				ret = cursub->getfunc (camera, &widget, cursub, NULL);
 			}
+			if (ret != GP_OK)
+				continue;
 			gp_widget_append (section, widget);
 		}
 	}
