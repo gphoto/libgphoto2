@@ -1,6 +1,10 @@
+2006-07-08  Marcus Meissner  <marcus@jet.franken.de>
+
+	* config.c: Hue Adjustment is an Enumeration on Nikon P3.
+
 2006-07-08  Nicolas Boichat  <nicolas@boichat.ch>
 
-	* library.c: Fixed bug in generic handler, when widgets
+	* config.c: Fixed bug in generic handler, when widgets
 	  could be added twice.
 
 2006-07-07  Nicolas Boichat  <nicolas@boichat.ch>

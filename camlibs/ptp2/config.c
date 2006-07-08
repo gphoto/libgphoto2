@@ -759,30 +759,64 @@ _get_Nikon_HueAdjustment(CONFIG_GET_ARGS) {
 
 	if (dpd->DataType != PTP_DTC_INT8)
 		return (GP_ERROR);
-	if (!(dpd->FormFlag & PTP_DPFF_Range))
-		return (GP_ERROR);
-	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
-	gp_widget_set_name (*widget,menu->name);
-	f = (float)dpd->CurrentValue.i8;
-	b = (float)dpd->FORM.Range.MinimumValue.i8;
-	t = (float)dpd->FORM.Range.MaximumValue.i8;
-	s = (float)dpd->FORM.Range.StepSize.i8;
-	gp_widget_set_range (*widget, b, t, s);
-	gp_widget_set_value (*widget, &f);
-	return (GP_OK);
+	if (dpd->FormFlag & PTP_DPFF_Range) {
+		gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
+		gp_widget_set_name (*widget,menu->name);
+		f = (float)dpd->CurrentValue.i8;
+		b = (float)dpd->FORM.Range.MinimumValue.i8;
+		t = (float)dpd->FORM.Range.MaximumValue.i8;
+		s = (float)dpd->FORM.Range.StepSize.i8;
+		gp_widget_set_range (*widget, b, t, s);
+		gp_widget_set_value (*widget, &f);
+		return (GP_OK);
+	}
+	if (dpd->FormFlag & PTP_DPFF_Enumeration) {
+		char buf[20];
+		int i, isset = FALSE;
+
+		gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+		gp_widget_set_name (*widget,menu->name);
+		for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
+
+			sprintf (buf, "%d", dpd->FORM.Enum.SupportedValue[i].i8);
+			gp_widget_add_choice (*widget, buf);
+			if (dpd->FORM.Enum.SupportedValue[i].i8 == dpd->CurrentValue.i8) {
+				gp_widget_set_value (*widget, buf);
+				isset = TRUE;
+			}
+		}
+		if (!isset) {
+			sprintf (buf, "%d", dpd->FORM.Enum.SupportedValue[0].i8);
+			gp_widget_set_value (*widget, buf);
+		}
+		return (GP_OK);
+	}
+	return (GP_ERROR);
 }
 
 static int
 _put_Nikon_HueAdjustment(CONFIG_PUT_ARGS)
 {
-	float	f;
 	int	ret;
 
-	f = 0.0;
-	ret = gp_widget_get_value (widget,&f);
-	if (ret != GP_OK) return ret;
-	propval->i8 = (signed char)f;
-	return (GP_OK);
+	if (dpd->FormFlag & PTP_DPFF_Range) {
+		float	f = 0.0;
+		ret = gp_widget_get_value (widget,&f);
+		if (ret != GP_OK) return ret;
+		propval->i8 = (signed char)f;
+		return (GP_OK);
+	}
+	if (dpd->FormFlag & PTP_DPFF_Enumeration) {
+		char *val;
+		int ival;
+		
+		ret = gp_widget_get_value (widget, &val);
+		if (ret != GP_OK) return ret;
+		sscanf (val, "%d", &ival);
+		propval->i8 = ival;
+		return (GP_OK);
+	}
+	return (GP_ERROR);
 }
 
 
