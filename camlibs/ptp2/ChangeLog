@@ -1,3 +1,7 @@
+2006-07-22  Hubert Figuiere  <hub@figuiere.net>
+
+	* library.c: Added Kodak P850
+
 2006-07-08  Marcus Meissner  <marcus@jet.franken.de>
 
 	* config.c: Hue Adjustment is an Enumeration on Nikon P3.
@@ -30,6 +34,7 @@
 	* library.c: Generic autodetection of MTP devices
 	  by bypass hack with USB class.
 
+>>>>>>> .r9027
 2006-06-26  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Added Kodak Z650.
