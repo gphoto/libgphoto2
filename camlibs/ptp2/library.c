@@ -643,11 +643,10 @@ static struct {
 	{"Creative:Zen Sleek Photo",		0x041e, 0x413d, PTP_MTP},
 	{"Creative:Zen Vision:M",		0x041e, 0x413e, PTP_MTP},
 
-	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1474056&group_id=8874&atid=108874 */
-	{"Samsung:YP-T7J", 			0x04e8, 0x5047, PTP_MTP},
-
 	/* IRC reporter */
 	{"Dell:DJ Itty",			0x413c, 0x4500, PTP_MTP},
+
+	{"Intel:Bandon Portable Media Center",	0x045e, 0x00c9, PTP_MTP},
 
 	/* Marcoen Hirschberg <marcoen@users.sourceforge.net> */
 	{"Toshiba:Gigabeat",                    0x0930, 0x000c, PTP_MTP},
@@ -655,9 +654,11 @@ static struct {
 	/* From Mark Veinot */
 	{"JVC:Alneo XA-HD500", 			0x04f1, 0x6105, PTP_MTP},
 
-	{"Samsung:YH-999 Portable Media Center",0x04e8, 0x5a0f, PTP_MTP},
+	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1474056&group_id=8874&atid=108874 */
+	{"Samsung:YP-T7J", 			0x04e8, 0x5047, PTP_MTP},
+	{"Samsung:YH-820",			0x04e8, 0x502e, PTP_MTP},
 	{"Samsung:YH-925",			0x04e8, 0x502f, PTP_MTP},
-	{"Intel:Bandon Portable Media Center",	0x045e, 0x00c9, PTP_MTP},
+	{"Samsung:YH-999 Portable Media Center",0x04e8, 0x5a0f, PTP_MTP},
 
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1515815&group_id=8874&atid=358874 */
 	{"Sandisk:Sansa e200",			0x0781, 0x7420, PTP_MTP},
