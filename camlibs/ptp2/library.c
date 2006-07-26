@@ -662,6 +662,10 @@ static struct {
 
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1515815&group_id=8874&atid=358874 */
 	{"Sandisk:Sansa e200",			0x0781, 0x7420, PTP_MTP},
+	{"Sandisk:Sansa e260",			0x0781, 0x7420, PTP_MTP},
+	/* Reported by tangent_@users.sourceforge.net */
+	{"SanDisk:Sansa c150",			0x0781, 0x7410, PTP_MTP },
+
 };
 
 static struct {
