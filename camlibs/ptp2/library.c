@@ -650,6 +650,7 @@ static struct {
 
 	/* Marcoen Hirschberg <marcoen@users.sourceforge.net> */
 	{"Toshiba:Gigabeat",                    0x0930, 0x000c, PTP_MTP},
+	{"Toshiba:Gigabeat MEGF-40",            0x0930, 0x0009, PTP_MTP},
 
 	/* From Mark Veinot */
 	{"JVC:Alneo XA-HD500", 			0x04f1, 0x6105, PTP_MTP},
