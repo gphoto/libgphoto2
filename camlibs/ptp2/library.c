@@ -628,6 +628,7 @@ static struct {
 	{"iRiver:Portable Media Center",	0x1006, 0x4003, PTP_MTP},
 	/* From: thanosz@softhome.net */
 	{"Philipps:HDD6320",                    0x0471, 0x01eb, PTP_MTP},
+	{"Philipps:HDD6320 2",                  0x0471, 0x014b, PTP_MTP},
 	{"Philipps:HDD6130/17",                 0x0471, 0x014c, PTP_MTP},
 	/* borrowed from libmtp source */
 	{"Creative:Zen Vision",			0x041e, 0x411f, PTP_MTP},
