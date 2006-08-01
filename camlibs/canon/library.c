@@ -1750,10 +1750,12 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	CameraWidget *w;
 	char *wvalue;
 	int i, val;
-	/*
+#ifdef CANON_EXPERIMENTAL_20D
+#ifdef CANON_EXPERIMENTAL_SET_RELEASE_PARAMS
 	int res;
 	unsigned char iso, shutter_speed, aperture, focus_mode;
-	*/
+#endif
+#endif
 	char str[16];
 
 	GP_DEBUG ("camera_set_config()");
