@@ -1424,10 +1424,12 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 {
 	CameraWidget *t, *section;
 	char power_str[128], firm[64];
-	/*
+
+#ifdef CANON_EXPERIMENTAL_20D
 	int iso, shutter_speed, aperture, focus_mode;
 	int res_byte1, res_byte2, res_byte3;
-	*/
+#endif
+
 	int pwr_status, pwr_source, res, i, menuval;
 	time_t camtime;
 
