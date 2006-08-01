@@ -95,6 +95,7 @@ typedef enum {
  *
  */
 typedef enum {
+	CANON_CLASS_NONE,
 	CANON_CLASS_0,
 	CANON_CLASS_1,
 	CANON_CLASS_2,

@@ -322,7 +322,7 @@ const struct canonCamModelData models[] = {
 	/* also reported as not working. */
         {"Canon:PowerShot A610 (normal mode)",   CANON_CLASS_5,  0x04A9, 0x30fd, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 #endif
-        {NULL}
+        {NULL, CANON_CLASS_NONE, 0x0000, 0x0000, CAP_NON, 0U, 0U, 0U, NULL}
         /* *INDENT-ON* */
 };
 
@@ -354,8 +354,25 @@ extern long int timezone;
 #define extra_file_for_thumb_of_crw TRUE
 #define extra_file_for_thumb_of_cr2 FALSE
 
+#ifdef __GNUC__
+# define __unused__ __attribute__((unused))
+#else
+# define __unused__
+#endif
+
+
+/*! \brief Return filename with extension replaced
+ *
+ * We just replace file ending by .THM and assume this is the
+ * name of the thumbnail file.
+ *
+ * CAUTION!
+ *  - This function does not consider the newext parameter.
+ *  - This function is NOT threadsafe!
+ */
+
 static const char *
-replace_filename_extension(const char *filename, const char *newext)
+replace_filename_extension(const char *filename, const char __unused__ *newext)
 {
         char *p;
         static char buf[1024];
@@ -387,15 +404,23 @@ replace_filename_extension(const char *filename, const char *newext)
         }
 }
 
+
+/*! \brief Return filename with extension replaced
+ *
+ * We just replace file ending by .WAV, the first three
+ * letters by SND and assume this is the name of the audio file.
+ *
+ * CAUTION!
+ *  - This function does not consider the newext parameter.
+ *  - This function is NOT threadsafe!
+ */
+
 static char *
-filename_to_audio(const char *filename, const char *newext)
+filename_to_audio(const char *filename, const char __unused__ *newext)
 {
         char *p;
         static char buf[1024];
 
-        /* We just replace file ending by .WAV, the first three
-         * letters by SND and assume this is the name of the audio file.
-         */
         if (sizeof(buf) < strlen (filename) + 1) {
                 strncpy (buf, filename, sizeof (buf) - 1);
                 GP_DEBUG ("filename_to_audio: Buffer too small in %s line %i.",
@@ -445,7 +470,7 @@ filename_to_audio(const char *filename, const char *newext)
  */
 
 const char *
-canon_int_filename2audioname (Camera *camera, const char *filename)
+canon_int_filename2audioname (Camera __unused__ *camera, const char *filename)
 {
         char *result;
 
@@ -488,7 +513,7 @@ canon_int_filename2audioname (Camera *camera, const char *filename)
  */
 
 const char *
-canon_int_filename2thumbname (Camera *camera, const char *filename)
+canon_int_filename2thumbname (Camera __unused__ *camera, const char *filename)
 {
         static char *nullstring = "";
 
@@ -1021,7 +1046,7 @@ canon_int_do_control_dialogue_payload (Camera *camera, unsigned char *payload,
  *
  */
 int 
-canon_int_start_remote_control (Camera *camera, GPContext *context) 
+canon_int_start_remote_control (Camera *camera, GPContext __unused__ *context) 
 {
         int status;
 
@@ -1054,7 +1079,7 @@ canon_int_start_remote_control (Camera *camera, GPContext *context)
  *
  */
 int 
-canon_int_end_remote_control (Camera *camera, GPContext *context) 
+canon_int_end_remote_control (Camera *camera, GPContext __unused__ *context) 
 {
         int status;
 
@@ -1100,10 +1125,12 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, unsigned int *l
         int status;
         unsigned int return_length;
 
+        /*
         unsigned int b_length_orig = 0;
         unsigned int *b_length = &b_length_orig;
         unsigned char *b_data_orig = NULL;
-        unsigned char **b_data = &b_data_orig;
+        unsigned char **b_data = &b_data_orig; 
+         */
 
         int photo_status;
 
@@ -2657,7 +2684,7 @@ gphoto2canonpath (Camera *camera, const char *path, GPContext *context)
  *
  */
 const char *
-canon2gphotopath (Camera *camera, const char *path)
+canon2gphotopath (Camera __unused__ *camera, const char *path)
 {
         static char tmp[2000];
         char *p;

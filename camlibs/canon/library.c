@@ -66,6 +66,14 @@
 #include "serial.h"
 #include "usb.h"
 
+
+#ifdef __GNUC__
+# define __unused__ __attribute__((unused))
+#else
+# define __unused__
+#endif
+
+
 #ifndef HAVE_TM_GMTOFF
 /* required for time conversions in camera_summary() */
 extern long int timezone;
@@ -261,7 +269,8 @@ int camera_id (CameraText *id)
  *
  */
 static int
-camera_manual (Camera *camera, CameraText *manual, GPContext *context)
+camera_manual (Camera __unused__ *camera, CameraText *manual, 
+	       GPContext __unused__ *context)
 {
 	GP_DEBUG ("camera_manual()");
 
@@ -591,7 +600,8 @@ update_disk_cache (Camera *camera, GPContext *context)
  ****************************************************************************/
 
 static int
-file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list, void *data,
+file_list_func (CameraFilesystem __unused__ *fs, const char *folder, 
+		CameraList *list, void *data,
 		GPContext *context)
 {
 	Camera *camera = data;
@@ -601,11 +611,13 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list, void
 	if (!check_readiness (camera, context))
 		return GP_ERROR;
 
-	return canon_int_list_directory (camera, folder, list, CANON_LIST_FILES, context);
+	return canon_int_list_directory (camera, folder, list, 
+					 CANON_LIST_FILES, context);
 }
 
 static int
-folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list, void *data,
+folder_list_func (CameraFilesystem __unused__ *fs, const char *folder, 
+		  CameraList *list, void *data,
 		  GPContext *context)
 {
 	Camera *camera = data;
@@ -615,12 +627,14 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list, vo
 	if (!check_readiness (camera, context))
 		return GP_ERROR;
 
-	return canon_int_list_directory (camera, folder, list, CANON_LIST_FOLDERS, context);
+	return canon_int_list_directory (camera, folder, list, 
+					 CANON_LIST_FOLDERS, context);
 }
 
 static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
-	       CameraFileType type, CameraFile *file, void *user_data, GPContext *context)
+	       CameraFileType type, CameraFile *file, void *user_data, 
+	       GPContext *context)
 {
 	Camera *camera = user_data;
 	unsigned char *data = NULL, *thumbdata = NULL;
@@ -987,7 +1001,8 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 /****************************************************************************/
 
 static int
-camera_about (Camera *camera, CameraText *about, GPContext *context)
+camera_about (Camera __unused__ *camera, CameraText *about, 
+	      GPContext __unused__ *context)
 {
 	GP_DEBUG ("camera_about()");
 
@@ -1009,7 +1024,8 @@ camera_about (Camera *camera, CameraText *about, GPContext *context)
 /****************************************************************************/
 
 static int
-delete_file_func (CameraFilesystem *fs, const char *folder, const char *filename, void *data,
+delete_file_func (CameraFilesystem __unused__ *fs, const char *folder, 
+		  const char *filename, void *data,
 		  GPContext *context)
 {
 	Camera *camera = data;
@@ -1286,7 +1302,8 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 #else /* not CANON_EXPERIMENTAL_UPLOAD */
 
 static int
-put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void *data,
+put_file_func (CameraFilesystem __unused__ *fs, const char __unused__ *folder,
+	       CameraFile *file, void *data,
 	       GPContext *context)
 {
 	Camera *camera = data;
@@ -1299,7 +1316,8 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 	GP_DEBUG ("camera_folder_put_file()");
 
 	if (camera->port->type == GP_PORT_USB) {
-		gp_context_error (context, "File upload not implemented for USB yet");
+		gp_context_error (context,
+				  "File upload not implemented for USB yet");
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 
@@ -1308,10 +1326,12 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 
 	gp_camera_get_abilities (camera, &a);
 	/* Special case for A50 and Pro 70 */
-	if ((camera->pl->speed > 57600) && ((camera->pl->md->model == CANON_CLASS_1)
-					    || (camera->pl->md->model == CANON_CLASS_2))) {
+	if ((camera->pl->speed > 57600) && 
+	    ((camera->pl->md->model == CANON_CLASS_1)
+	     || (camera->pl->md->model == CANON_CLASS_2))) {
 		gp_context_error (context,
-				  _("Speeds greater than 57600 are not supported for uploading to this camera"));
+				  _("Speeds greater than 57600 are not "
+				    "supported for uploading to this camera"));
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 
@@ -1404,8 +1424,10 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 {
 	CameraWidget *t, *section;
 	char power_str[128], firm[64];
+	/*
 	int iso, shutter_speed, aperture, focus_mode;
 	int res_byte1, res_byte2, res_byte3;
+	*/
 	int pwr_status, pwr_source, res, i, menuval;
 	time_t camtime;
 
@@ -1725,8 +1747,11 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 {
 	CameraWidget *w;
 	char *wvalue;
-	int i, res, val;
+	int i, val;
+	/*
+	int res;
 	unsigned char iso, shutter_speed, aperture, focus_mode;
+	*/
 	char str[16];
 
 	GP_DEBUG ("camera_set_config()");
@@ -2030,8 +2055,10 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 }
 
 static int
-get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
-	       CameraFileInfo * info, void *data, GPContext *context)
+get_info_func (CameraFilesystem __unused__ *fs, const char *folder, 
+	       const char *filename,
+	       CameraFileInfo * info, 
+	       void __unused__ *data, GPContext __unused__ *context)
 {
 	GP_DEBUG ("get_info_func() called for '%s'/'%s'", folder, filename);
 
@@ -2061,7 +2088,8 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 }
 
 static int
-make_dir_func (CameraFilesystem *fs, const char *folder, const char *name, void *data,
+make_dir_func (CameraFilesystem __unused__ *fs, const char *folder,
+	       const char *name, void *data,
 	       GPContext *context)
 {
 	Camera *camera = data;
@@ -2093,7 +2121,8 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *name, void 
 	if (canonpath == NULL)
 		return GP_ERROR_BAD_PARAMETERS;
 
-	r = canon_int_directory_operations (camera, canonpath, DIR_CREATE, context);
+	r = canon_int_directory_operations (camera, canonpath, 
+					    DIR_CREATE, context);
 	if (r != GP_OK)
 		return (r);
 
@@ -2101,7 +2130,8 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *name, void 
 }
 
 static int
-remove_dir_func (CameraFilesystem *fs, const char *folder, const char *name, void *data,
+remove_dir_func (CameraFilesystem __unused__ *fs, const char *folder,
+		 const char *name, void *data,
 		 GPContext *context)
 {
 	Camera *camera = data;
@@ -2133,7 +2163,8 @@ remove_dir_func (CameraFilesystem *fs, const char *folder, const char *name, voi
 	if (canonpath == NULL)
 		return GP_ERROR_BAD_PARAMETERS;
 
-	r = canon_int_directory_operations (camera, canonpath, DIR_REMOVE, context);
+	r = canon_int_directory_operations (camera, canonpath, 
+					    DIR_REMOVE, context);
 	if (r != GP_OK)
 		return (r);
 

@@ -61,6 +61,14 @@
 # define MIN(a, b) ((a) < (b) ? (a) : (b))
 #endif
 
+
+#ifdef __GNUC__
+# define __unused__ __attribute__((unused))
+#else
+# define __unused__
+#endif
+
+
 /**
  * serial_flush_input
  * @gdev: serial port to use
@@ -69,7 +77,7 @@
  *
  */
 void
-serial_flush_input (GPPort *gdev)
+serial_flush_input (GPPort __unused__ *gdev)
 {
 }
 
@@ -81,7 +89,7 @@ serial_flush_input (GPPort *gdev)
  *
  */
 void
-serial_flush_output (GPPort *gdev)
+serial_flush_output (GPPort __unused__ *gdev)
 {
 }
 

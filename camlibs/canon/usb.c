@@ -54,6 +54,12 @@
 #include "canon.h"
 #include "util.h"
 
+#ifdef __GNUC__
+# define __unused__ __attribute__((unused))
+#else
+# define __unused__
+#endif
+
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 
 /* IDENTIFY_INIT_TIMEOUT: the starting timeout (in milliseconds) 
@@ -149,7 +155,7 @@ const struct canon_usb_cmdstruct canon_usb_cmd[] = {
 	/* WARNING: I don't think this is really the right value, but
 	 * it gives no error on EOS 20D -- swestin 22-Mar-05 */
 	{CANON_USB_FUNCTION_SET_ATTR_2,		"Set file attributes (new))", 0x07, 0x11, 0x201,	0x54},
-	{ 0 }
+	{ 0, NULL, 0, 0, 0, 0 }
 };
 
 
@@ -184,7 +190,7 @@ const struct canon_usb_control_cmdstruct canon_usb_control_cmd[] = {
 	 0x11,  0x00,  0x00},
 	{CANON_USB_CONTROL_SELECT_CAM_OUTPUT,   "Select camera output", 0x14,  0x00,  0x00}, /* LCD (0x1), Video out (0x2), or OFF (0x3) */
 	{CANON_USB_CONTROL_DO_AE_AF_AWB,        "Do AE, AF, and AWB",   0x15,  0x00,  0x00},
-	{ 0 }
+	{ 0, NULL, 0, 0, 0 }
 };
 
 
@@ -572,6 +578,7 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
         GP_DEBUG ("canon_usb_lock_keys()");
 
         switch (camera->pl->md->model) {
+	case CANON_CLASS_NONE:
 	case CANON_CLASS_0:
 		GP_DEBUG ("canon_usb_lock_keys: Your camera model does not need the keylock.");
 		break;
@@ -2125,6 +2132,7 @@ canon_usb_set_file_attributes (Camera *camera, unsigned int attr_bits,
         return GP_OK;
 }
 
+
 /**
  * canon_usb_put_file:
  * @camera: camera to lock keys on
@@ -2148,13 +2156,23 @@ canon_usb_set_file_attributes (Camera *camera, unsigned int attr_bits,
  * Returns: gphoto2 error code
  *
  */
+
+#ifndef CANON_EXPERIMENTAL_UPLOAD
 int
-canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath,
+canon_usb_put_file (Camera __unused__ *camera, CameraFile __unused__ *file,
+		    char __unused__ *destname, char __unused__ *destpath,
+                    GPContext __unused__ *context)
+{
+        return GP_ERROR_NOT_SUPPORTED;
+}
+
+#else /* else ifdef CANON_EXPERIMENTAL_UPLOAD */
+
+int
+canon_usb_put_file (Camera *camera, CameraFile *file, 
+		    char *destname, char *destpath,
                     GPContext *context)
 {
-#ifndef CANON_EXPERIMENTAL_UPLOAD
-        return GP_ERROR_NOT_SUPPORTED;
-#else
         long int packet_size = USB_BULK_WRITE_SIZE;
         char buffer[0x80];
         long int len1,len2;
@@ -2342,8 +2360,9 @@ canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *dest
 		free(newdata);
         free(packet);
         return GP_OK;
-#endif /* CANON_EXPERIMENTAL_UPLOAD */
 }
+#endif /* CANON_EXPERIMENTAL_UPLOAD */
+
 
 /**
  * canon_usb_get_dirents:
@@ -2488,7 +2507,7 @@ canon_usb_list_all_dirs (Camera *camera, unsigned char **dirent_data,
  *
  */
 int
-canon_usb_ready (Camera *camera, GPContext *context)
+canon_usb_ready (Camera *camera, GPContext __unused__ *context)
 {
 	unsigned char *msg;
         unsigned int len;
@@ -2504,6 +2523,7 @@ canon_usb_ready (Camera *camera, GPContext *context)
 
         return GP_OK;
 }
+
 
 /**
  * canon_usb_identify:
@@ -2554,6 +2574,7 @@ canon_usb_identify (Camera *camera, GPContext *context)
 
         return GP_ERROR_MODEL_NOT_FOUND;
 }
+
 
 /*
  * Local Variables:
