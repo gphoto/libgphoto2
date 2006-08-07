@@ -543,6 +543,7 @@ static struct {
 	{"Canon:EOS 350D (PTP mode)",           0x04a9, 0x30ee, PTPBUG_DCIM_WRONG_PARENT},
 	{"Canon:EOS 350D",                      0x04a9, 0x30ef, PTPBUG_DCIM_WRONG_PARENT},
 	{"Canon:PowerShot S2 IS (PTP mode)",    0x04a9, 0x30f0, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot SD430 (PTP mode)",    0x04a9, 0x30f1, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:Digital IXUS 700 (PTP mode)",   0x04a9, 0x30f2, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot SD500 (PTP mode)",    0x04a9, 0x30f2, PTPBUG_DELETE_SENDS_EVENT},
 	/* A340, Andreas Stempfhuber <andi@afulinux.de> */
