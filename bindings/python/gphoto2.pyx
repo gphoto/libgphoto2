@@ -15,6 +15,10 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #------------------------------------------------------------------------------
+cdef extern from "Python.h":
+    object PyString_FromStringAndSize(char *, int)
+
+#------------------------------------------------------------------------------
 cdef extern from "stdlib.h":
   void free(void *)
 
@@ -776,7 +780,13 @@ def version(verbose=False):
 cdef check(result):
   if result!=0:
     txt=gp_result_as_string(result)
-    raise Exception('Erreur ('+str(result)+') : '+txt)
+    raise Exception('Error ('+str(result)+') : '+txt)
+
+cdef check_unref(int result,CameraFile *file):
+  if result!=0:
+    gp_file_unref(file)
+    txt=gp_result_as_string(result)
+    raise Exception('Error ('+str(result)+') : '+txt)
 
 cdef class portInfo:
   cdef GPPortInfo info
@@ -981,4 +991,24 @@ cdef class camera:
     l=cameraList()
     check(gp_camera_folder_list_files( self.camera, path, l.liste, NULL ));
     return l
+
+  def upload_file_to(self,char *srcpath,char *destfolder,char *destfilename):
+    cdef CameraFile *cfile
+    check( gp_file_new( &cfile ) )
+    check_unref( gp_file_open( cfile, srcpath ), cfile )
+    check_unref( gp_file_set_name( cfile, destfilename ), cfile )
+    check_unref( gp_camera_folder_put_file( self.camera, destfolder, cfile, NULL ), cfile )
+    gp_file_unref( cfile )
+    
+  def download_file_to(self,char *srcfolder,char *srcfilename,char *destpath):
+    cdef CameraFile *cfile
+    cdef char *data
+    cdef unsigned long size
+    check( gp_file_new( &cfile ) )
+    check_unref( gp_camera_file_get ( self.camera, srcfolder, srcfilename, GP_FILE_TYPE_NORMAL, cfile, NULL ), cfile )
+    check_unref( gp_file_get_data_and_size( cfile, &data, &size ), cfile )
+    gp_file_unref( cfile )
+    dfile = open( destpath, 'w' )
+    dfile.write( PyString_FromStringAndSize( data, size ) )
+    dfile.close()
 
