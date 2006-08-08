@@ -1,3 +1,8 @@
+2006-08-08  Marcus Meissner  <marcus@jet.franken.de>
+
+	* sierra.c: Added Nikon CoolPix 2100, from
+	  Ken Restivo <ken@restivo.org>.
+
 2005-09-26  Marcus Meissner  <marcus@jet.franken.de>
 
 	* sierra-desc.c: Fixed 2 strict aliasing problems.
