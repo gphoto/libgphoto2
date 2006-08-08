@@ -240,7 +240,7 @@ msgstr "Schreibe %i=0x%x Byte(s) auf den Port..."
 #: libgphoto2_port/gphoto2-port.c:352
 #, c-format
 msgid "Could only write %i out of %i byte(s)"
-msgstr "Konnte nicht %i von %i Byte(s) schreiben"
+msgstr "Konnte nur %i von %i Byte(s) schreiben"
 
 #: libgphoto2_port/gphoto2-port.c:373
 #, c-format
