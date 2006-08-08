@@ -73,7 +73,7 @@ typedef enum {
 	GP_EVENT_UNKNOWN,	/* unknown and unhandled event */
 	GP_EVENT_TIMEOUT,	/* timeout, no arguments */
 	GP_EVENT_FILE_ADDED,	/* CameraFilePath* = file path on camfs */
-	GP_EVENT_FOLDER_ADDED,	/* CameraFilePath* = folder on camfs */
+	GP_EVENT_FOLDER_ADDED	/* CameraFilePath* = folder on camfs */
 } CameraEventType;
 
 /**
