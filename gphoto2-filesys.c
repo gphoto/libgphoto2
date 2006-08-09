@@ -413,9 +413,9 @@ append_folder (CameraFilesystem *fs, const char *folder, GPContext *context)
 		if (!strcmp (fs->folder[x].name, folder))
 			break;
 	if (x < fs->count) {
-		gp_context_error (context, _("Could not append folder '%s' "
-			"as this folder already exists."), folder);
-                return (GP_ERROR_DIRECTORY_EXISTS);
+		gp_log (GP_LOG_DEBUG, "filesys", "Folder %s "
+			"is duplicated, return OK.", folder);
+                return (GP_OK);
         }
 
         /* Make sure the parent exist. If not, create it. */
