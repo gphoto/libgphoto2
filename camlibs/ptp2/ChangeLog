@@ -1,3 +1,7 @@
+2006-08-10  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* Added alternate iRiver H10 id, reported by Scott Call.
+
 2006-08-07  Hubert Figuiere  <hub@figuiere.net>
 
 	* library.c: Added Canon SD430
@@ -38,7 +42,6 @@
 	* library.c: Generic autodetection of MTP devices
 	  by bypass hack with USB class.
 
->>>>>>> .r9027
 2006-06-26  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Added Kodak Z650.

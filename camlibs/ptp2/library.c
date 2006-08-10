@@ -623,6 +623,8 @@ static struct {
 	{"iRiver:T20",                          0x4102, 0x1118, PTP_MTP},
 	/* Bruno Parente Lima <brunoparente77@yahoo.com.br> */
 	{"iRiver:T30",                          0x4102, 0x1119, PTP_MTP},
+	/* Scott Call <scott.call@gmail.com> */
+	{"iRiver:H10 20GB",                     0x4102, 0x2101, PTP_MTP},
 	/* Petr Spatka spatka@luzanky.cz */
 	{"iRiver:H10",                          0x4102, 0x2102, PTP_MTP},
 	{"iRiver:Portable Media Center",	0x1006, 0x4002, PTP_MTP},
