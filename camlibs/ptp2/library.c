@@ -665,11 +665,13 @@ static struct {
 	{"Samsung:YH-925",			0x04e8, 0x502f, PTP_MTP},
 	{"Samsung:YH-999 Portable Media Center",0x04e8, 0x5a0f, PTP_MTP},
 
+	/* Reported by Brian Robison */
+	{"SanDisk:Sansa m240",			0x0781, 0x7400, PTP_MTP},
+	/* Reported by tangent_@users.sourceforge.net */
+	{"SanDisk:Sansa c150",			0x0781, 0x7410, PTP_MTP},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1515815&group_id=8874&atid=358874 */
 	{"Sandisk:Sansa e200",			0x0781, 0x7420, PTP_MTP},
 	{"Sandisk:Sansa e260",			0x0781, 0x7420, PTP_MTP},
-	/* Reported by tangent_@users.sourceforge.net */
-	{"SanDisk:Sansa c150",			0x0781, 0x7410, PTP_MTP },
 
 };
 
