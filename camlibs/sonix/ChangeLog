@@ -1,0 +1,14 @@
+2006-08-14   Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Added Sakar Digital Keychain 11199. 
+		     New functionality to support new camera.
+
+	* sonix.c: Rewritten to support new camera.
+
+	* sonix.h: Rewritten to support new camera.
+
+	* README: Revised.
+
+2005-06-09   Theodore Kilgore <kilgota@auburn.edu>
+
+	First check-in.
