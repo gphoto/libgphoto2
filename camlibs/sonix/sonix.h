@@ -23,22 +23,29 @@
 
 #include <libgphoto2_port/gphoto2-port.h>
 
-typedef enum {MODEL_VIVICAM
-	} Model;
+/*
+ *typedef enum {MODEL_VIVICAM
+ *	} Model;
+ */
 
 struct _CameraPrivateLibrary {
-	Model model;
+/*	Model model; */ 	/* "model" and "fwversion" functionally equal */
 	int num_pics;
+	unsigned char size_code[512];
+	unsigned char fwversion;
 	unsigned char full;
+	unsigned char avitype;
 };
 
 
 int sonix_init              	(GPPort *port, CameraPrivateLibrary *priv);
-int sonix_get_picture_width   	(GPPort *port, int n);
 int sonix_get_picture_size   	(GPPort *port, int n);
-int sonix_read_picture_data 	(Camera *camera, GPPort *port, char *data, 
+int sonix_read_data_size 	(Camera *camera, GPPort *port, char *data, 
 				    int n);
 int sonix_delete_all_pics      	(GPPort *port);
+int sonix_delete_last      	(GPPort *port);
+int sonix_capture_image      	(GPPort *port); 
+int sonix_exit		      	(GPPort *port);
 int sonix_decode		(unsigned char * dst, unsigned char * src, 
 				    int width, int height);
 int SONIX_READ 			(GPPort *port, char *data);
