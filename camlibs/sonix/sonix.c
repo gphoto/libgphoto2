@@ -151,6 +151,8 @@ int sonix_init (GPPort *port, CameraPrivateLibrary *priv)
 	/* For the code meanings, see get_file_func() in library.c */
 	priv->size_code[i] = (reading[1]&0x0f);
 	}
+
+	priv->sonix_init_done = 1;
 	GP_DEBUG("Leaving sonix_init\n");
 
         return GP_OK;
