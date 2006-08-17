@@ -98,6 +98,14 @@ camera_abilities (CameraAbilitiesList *list)
 static int
 camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
+	int ret = 0;
+	if(!camera->pl->sonix_init_done) 
+		ret = sonix_init(camera->port, camera->pl);
+	if ( ret != GP_OK) {
+		free(camera->pl);
+		return ret;
+	}	
+
         sprintf (summary->text,ngettext(
 		"Sonix camera.\nThere is %i photo in it.\n",
 		"Sonix camera.\nThere are %i photos in it.\n",
@@ -144,6 +152,14 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	int i = 0;
 	char name[16];
 	int(avitype);
+	int ret = 0;
+	if(!camera->pl->sonix_init_done) 
+		ret = sonix_init(camera->port, camera->pl);
+	if ( ret != GP_OK) {
+		free(camera->pl);
+		return ret;
+	}	
+
 	for (i=0; i<camera->pl->num_pics; i++) {
 		avitype = camera->pl->size_code[i];
 		if (avitype == 9) {
@@ -173,8 +189,15 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	unsigned long int size = 0, frame_size = 0;
 	unsigned int avitype = 0;
 	char name[16];
-
+	int ret = 0;
+	
     	GP_DEBUG ("Downloading pictures!\n");
+	if(!camera->pl->sonix_init_done) 
+		ret = sonix_init(camera->port, camera->pl);
+	if ( ret != GP_OK) {
+		free(camera->pl);
+		return ret;
+	}	
 
     	/* Get the number of the photo on the camera */
 	k = gp_filesystem_number (camera->fs, "/", filename, context); 
@@ -267,7 +290,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		} 
 
 	case GP_FILE_TYPE_PREVIEW:
-
+		if (k == camera->pl->num_pics - 1) {
+			camera->pl->sonix_init_done = 1;
+			sonix_exit(camera->port);
+		}
 		/* For an AVI file, we make a PPM thumbnail of the 
 		 * first frame. Otherwise, still photos are processed 
 		 * here, and also the thumbnails for them. 
@@ -332,6 +358,14 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 		GPContext *context) 
 {
 	Camera *camera = data;
+	int ret = 0;
+	if(!camera->pl->sonix_init_done) 
+		ret = sonix_init(camera->port, camera->pl);
+	if ( ret != GP_OK) {
+		free(camera->pl);
+		return ret;
+	}	
+
 	sonix_delete_all_pics (camera->port);
 	return GP_OK;
 }
@@ -342,6 +376,13 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 {
 	Camera *camera = data;
 	int k;
+	int ret = 0;
+	if(!camera->pl->sonix_init_done) 
+		ret = sonix_init(camera->port, camera->pl);
+	if ( ret != GP_OK) {
+		free(camera->pl);
+		return ret;
+	}	
 	k = gp_filesystem_number (camera->fs, "/", filename, context);     
 	if (k+1 != camera->pl->num_pics)
 		return GP_ERROR_NOT_SUPPORTED;
@@ -356,6 +397,14 @@ static int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		GPContext *context)
 {
+	int ret = 0;
+	if(!camera->pl->sonix_init_done) 
+		ret = sonix_init(camera->port, camera->pl);
+	if ( ret != GP_OK) {
+		free(camera->pl);
+		return ret;
+	}	
+
 	if ((camera->pl->fwversion == 0x0a))
 		return GP_ERROR_NOT_SUPPORTED;
 	if (camera->pl->full)
@@ -436,13 +485,12 @@ camera_init(Camera *camera, GPContext *context)
 	camera->pl->num_pics = 0;
 	camera->pl->full = 1;
 	camera->pl->avitype = 0;
-	/* Connect to the camera */
-	ret = sonix_init (camera->port, camera->pl);
-	if ( ret != GP_OK) {
-		free(camera->pl);
-		return ret;
-	}	
-	
+	camera->pl->sonix_init_done = 0;
+	/* Connect to the camera only if something is actually being done,
+	 * because otherwise the Sakar Digital Keychain camera is put into 
+	 * some kind of active mode when gtkam is run, and will not leave 
+	 * this mode even after gtkam is exited. 
+	 */
 	
 	return GP_OK;
 }
