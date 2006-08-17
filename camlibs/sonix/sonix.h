@@ -35,6 +35,7 @@ struct _CameraPrivateLibrary {
 	unsigned char fwversion;
 	unsigned char full;
 	unsigned char avitype;
+	int sonix_init_done;
 };
 
 
