@@ -170,10 +170,13 @@ but only on camera disconnect from the computer. This phenomenon may be quite
 harmless, but who knows? It obviously means that some kind of background 
 activity is taking place inside the camera. This LED activity does not occur 
 if the gphoto2 command line or the gphoto2 shell or flphoto are used. 
+(UPDATE: A workaround patch has been applied, which seems to fix this, as of
+08/17/06)
+
 
 -- flphoto will give a message when asked to save an AVI file, that it cannot
 put the AVI file into an "album." Well, perhaps not. But not to worry. 
 It will save the AVI file anyway, even while protesting. 
 
 
-(This file revised 08/14/2006)
+(This file revised 08/17/2006)
