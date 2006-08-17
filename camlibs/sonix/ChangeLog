@@ -1,3 +1,17 @@
+2006-08-17   Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Workaround for gtkam problems with Sakar 11199.
+
+	* sonix.c: Workaround for gtkam problems with Sakar 11199.
+
+	* sonix.h: Workaround for gtkam problems with Sakar 11199.
+
+	* README: Revisions.
+
+	* sakar-avi-header.h: Forgot to commit this. Here it is!
+
+
+
 2006-08-14   Theodore Kilgore <kilgota@auburn.edu>
 
 	* library.c: Added Sakar Digital Keychain 11199. 
