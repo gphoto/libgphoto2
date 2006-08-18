@@ -20,7 +20,7 @@ libgphoto2_la_LDFLAGS =	\
 	-no-undefined	\
 	-export-symbols $(srcdir)/libgphoto2.sym \
 	-version-info @LIBGPHOTO2_VERSION_INFO@
-	
+
 libgphoto2_la_SOURCES = 	\
 	gphoto2-abilities-list.c\
 	bayer.c bayer.h		\
@@ -73,3 +73,18 @@ EXTRA_DIST = libgphoto2.pc.in gphoto2-library.c libgphoto2.sym
 
 DISTCLEANFILES = _stdint.h gphoto2-endian.h
 
+
+# Compatibility for header inclusions.
+#
+# - Old code has -I/usr/include/gphoto2
+#   #include <gphoto2-camera.h>
+#
+# - New code has -I/usr/include
+#   #include <gphoto2/gphoto2-camera.h>
+
+install-data-local:
+	rm -f $(DESTDIR)$(libgphoto2includedir)/gphoto2
+	$(LN_S) . $(DESTDIR)$(libgphoto2includedir)/gphoto2
+
+uninstall-local:
+	rm -f $(DESTDIR)$(libgphoto2includedir)/gphoto2
