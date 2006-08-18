@@ -79,6 +79,7 @@ typedef struct {
 typedef int (* begin_func_t)  (const func_params_t *params);
 typedef int (* camera_func_t) (const func_params_t *params, 
 			       const int i,
+			       const int total,
 			       const CameraAbilities *ca);
 typedef int (* end_func_t)    (const func_params_t *params);
 
@@ -134,6 +135,7 @@ typedef int (* end_func_t)    (const func_params_t *params);
 static int
 hotplug_camera_func (const func_params_t *params, 
 		     const int i,
+		     const int total,
 		     const CameraAbilities *a)
 {
 	int flags = 0;
@@ -249,6 +251,7 @@ basename (const char *pathname)
 static int
 human_camera_func (const func_params_t *params, 
 		   const int i, 
+		   const int total,
 		   const CameraAbilities *a)
 {
 	const char *camlib_basename;
@@ -265,6 +268,7 @@ human_camera_func (const func_params_t *params,
 static int
 idlist_camera_func (const func_params_t *params, 
 		   const int i, 
+		   const int total,
 		   const CameraAbilities *a)
 {
 	if (a->usb_vendor) { /* usb product id may be zero! */
@@ -298,6 +302,7 @@ udev_end_func (const func_params_t *params)
 static int
 udev_camera_func (const func_params_t *params, 
 		  const int i,
+		  const int total,
 		  const CameraAbilities *a)
 {
 	int flags = 0;
@@ -441,6 +446,7 @@ fdi_begin_func (const func_params_t *params)
 static int
 fdi_camera_func (const func_params_t *params, 
 		 const int i,
+		 const int total,
 		 const CameraAbilities *a)
 {
 	char	*s, *d, model[256];
@@ -556,6 +562,7 @@ fdi_device_begin_func (const func_params_t *params)
 static int
 fdi_device_camera_func (const func_params_t *params, 
 		 	const int i,
+			const int total,
 		 	const CameraAbilities *a)
 {
 	char	*s, *d, model[256];
@@ -676,7 +683,7 @@ iterate_camera_list (const int add_comments,
 		int i;
 		for (i = 0; i < number_of_cameras; i++) {
 			CR (gp_abilities_list_get_abilities (al, i, &a));
-			format->camera_func(&params, i, &a);
+			format->camera_func(&params, i, number_of_cameras, &a);
 		}
 	}
 
