@@ -68,3 +68,19 @@ EXTRA_DIST = gphoto2-port-portability-os2.h libgphoto2_port.sym
 
 ../libltdl/libltdlc.la:
 	cd ../libltdl && $(MAKE) libltdlc.la
+
+
+# Compatibility for header inclusions.
+#
+# - Old code has -I/usr/include/gphoto2
+#   #include <gphoto2-camera.h>
+#
+# - New code has -I/usr/include
+#   #include <gphoto2/gphoto2-camera.h>
+
+install-data-local:
+	rm -f $(DESTDIR)$(libgphoto2_portincludedir)/gphoto2
+	$(LN_S) . $(DESTDIR)$(libgphoto2_portincludedir)/gphoto2
+
+uninstall-local:
+	rm -f $(DESTDIR)$(libgphoto2_portincludedir)/gphoto2
