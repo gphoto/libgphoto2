@@ -59,10 +59,9 @@ typedef enum {
 	GP_FILE_TYPE_METADATA
 } CameraFileType;
 
-/**
- * \class CameraFile
+/*! \class CameraFile
  *
- * The internals of the \ref CameraFile struct are private.
+ * The internals of the #CameraFile struct are private.
  */
 typedef struct _CameraFile CameraFile;
 
