@@ -144,4 +144,44 @@ void gp_log_data (const char *domain, const char *data, unsigned int size);
 
 #endif /* DISABLE_DEBUGGING */
 
+#ifdef _GPHOTO2_INTERNAL_CODE
+
+  typedef struct StringFlagItem {
+    char *str;
+    unsigned int flag;
+  } StringFlagItem;
+
+  typedef void (*string_item_func) (const char *str, void *data);
+
+  void 
+  gpi_enum_to_string(const unsigned int _enum, 
+		     const StringFlagItem *map,
+		     string_item_func func, void *data);
+
+  int
+  gpi_string_to_enum(const char *str,
+		     unsigned int *result,
+		     const StringFlagItem *map);
+
+  void 
+  gpi_flags_to_string_list(const unsigned int flags, 
+			   const StringFlagItem *map,
+			   string_item_func func, void *data);
+  
+  int 
+  gpi_string_or_to_flags(const char *str, 
+			 unsigned int *flags,
+			 const StringFlagItem *map);
+
+  unsigned int 
+  gpi_string_to_flag(const char *str, 
+		     const StringFlagItem *map);
+
+  unsigned int 
+  gpi_string_list_to_flags(const char *str[], 
+			   const StringFlagItem *map);
+  
+#endif /* _GPHOTO2_INTERNAL_CODE */
+
+
 #endif /* __GPHOTO2_PORT_LOG_H__ */

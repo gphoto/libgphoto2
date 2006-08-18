@@ -18,6 +18,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#define _GPHOTO2_INTERNAL_CODE
+
 #include "config.h"
 #include "gphoto2-port-info-list.h"
 
@@ -463,3 +465,15 @@ gp_port_info_list_get_info (GPPortInfoList *list, int n, GPPortInfo *info)
 
 	return (GP_OK);
 }
+
+
+#ifdef _GPHOTO2_INTERNAL_CODE
+const StringFlagItem gpi_gphoto_port_type_map[] = {
+	{ "none",   GP_PORT_NONE },
+	{ "serial", GP_PORT_SERIAL },
+	{ "usb",    GP_PORT_USB },
+	{ "disk",   GP_PORT_DISK },
+	{ "ptpip",  GP_PORT_PTPIP },
+	{ NULL, 0 },
+};
+#endif /* _GPHOTO2_INTERNAL_CODE */

@@ -18,6 +18,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#define _GPHOTO2_INTERNAL_CODE
+
 #include "config.h"
 #include "gphoto2-port-log.h"
 
@@ -341,3 +343,98 @@ gp_log (GPLogLevel level, const char *domain, const char *format, ...)
 {
 }
 #endif /* DISABLE_DEBUGGING */
+
+
+#ifdef _GPHOTO2_INTERNAL_CODE
+
+void
+gpi_enum_to_string(unsigned int _enum, 
+		   const StringFlagItem *map,
+		   string_item_func func, void *data)
+{
+	int i;
+	for (i=0; map[i].str != NULL; i++) {
+		if (_enum == map[i].flag) {
+			func(map[i].str, data);
+			break;
+		}
+	}
+}
+
+int
+gpi_string_to_enum(const char *str,
+		   unsigned int *result,
+		   const StringFlagItem *map)
+{
+	int i;
+	for (i=0; map[i].str != NULL; i++) {
+		if (0==strcmp(map[i].str, str)) {
+			(*result) = map[i].flag;
+			return 0;
+		}
+	}
+	return 1;
+}
+
+void
+gpi_flags_to_string_list(unsigned int flags, 
+			 const StringFlagItem *map,
+			 string_item_func func, void *data)
+{
+	int i;
+	for (i=0; map[i].str != NULL; i++) {
+		if ((flags == 0) && (map[i].flag == 0)) {
+			func(map[i].str, data);
+			break;
+		} else if (0 != (flags & map[i].flag)) {
+			func(map[i].str, data);      
+		}
+	}
+}
+
+unsigned int 
+gpi_string_to_flag(const char *str, 
+	       const StringFlagItem *map)
+{
+	int i;
+	for (i=0; map[i].str != NULL; i++) {
+		if (0==strcmp(map[i].str, str)) {
+			return map[i].flag;
+		}
+	}
+  return 0;
+}
+
+int 
+gpi_string_or_to_flags(const char *str, 
+		       unsigned int *flags,
+		       const StringFlagItem *map)
+{
+	int i;
+	int found = 0;
+	for (i=0; map[i].str != NULL; i++) {
+		if (0==strcmp(map[i].str, str)) {
+			(*flags) |= map[i].flag;
+			found = 1;
+		}
+	}
+	if (found) {
+		return 0;
+	} else {
+		return 1;
+	}
+}
+
+unsigned int
+gpi_string_list_to_flags(const char *str[], 
+		     const StringFlagItem *map)
+{
+	int i;
+	unsigned int flags = 0;
+	for (i=0; str[i] != NULL; i++) {
+		flags |= gpi_string_to_flag(str[i], map);
+	}
+	return flags;
+}
+
+#endif /* _GPHOTO2_INTERNAL_CODE */

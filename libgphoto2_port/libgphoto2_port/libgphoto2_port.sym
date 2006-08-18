@@ -53,3 +53,10 @@ gp_system_filename
 gp_system_closedir
 gp_system_is_file
 gp_system_is_dir
+gpi_gphoto_port_type_map
+gpi_enum_to_string
+gpi_string_to_enum
+gpi_string_to_flag
+gpi_string_or_to_flags
+gpi_string_list_to_flags
+gpi_flags_to_string_list

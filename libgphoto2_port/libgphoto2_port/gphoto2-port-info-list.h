@@ -45,6 +45,11 @@ struct _GPPortInfo {
 extern "C" {
 #endif /* __cplusplus */
 
+#ifdef _GPHOTO2_INTERNAL_CODE
+#include <gphoto2-port-log.h>
+extern const StringFlagItem gpi_gphoto_port_type_map[];
+#endif
+
 /* Internals are private */
 typedef struct _GPPortInfoList GPPortInfoList;
 
