@@ -6,13 +6,16 @@ Important: This is a prototype the developers can play with. The final
            version will look much different, so don't invest too much
            in it.
 
+Note: We try to talk of "devices" and "drivers" instead of "cameras"
+      and "camlibs" since we also support digital audio players.
+
 
 =============================================
 The idea
 ========
 
- * Maintain the database of cameras, their abilities
-   etc. independently from the libgphoto2 camlibs.
+ * Maintain a device database (DDB) of cameras (and audio players),
+   their abilities etc. independently from the libgphoto2 camlibs.
 
  * Updates to the database are much easier to publish than updates to
    the camlibs which need to be compiled.
@@ -35,6 +38,14 @@ The implementation
 
  * camlib specific settings can be accommodated using the
    driver_options { ... }; section.
+
+ * The binary code (stripped) for the test case is about 22KByte. I
+   suppose we could implement this database in about 35 to 40 KByte.
+   However, we can probably get rid of some code in the drivers to
+   compensate. 
+   For comparison:
+    * The current libgphoto2.so is about 120 KByte stripped. 
+    * libxml2.so is 1.2MB (stripped).
 
 
 =============================================
@@ -60,6 +71,29 @@ How to test it
       (hostname;cat /proc/cpuinfo)|md5sum|cut -d" " -f1
    to the list in configure.in to avoid the --enable-gp2ddb
    requirement.
+
+
+=============================================
+TODO
+====
+
+What would need to be done to go into production with this:
+
+ * Find a way to integrate the gphoto2 DDB with the HAL device 
+   database, possibly using a sub/superset of the HAL device
+   database. However, HAL does its stuff in XML, and we probably don't
+   want libgphoto2 to depend on an XML parser.
+
+ * Add driver specific parameters to DDB.
+
+ * Rewrite gp_abilities_list_load() to read the data currently stored
+   in the CameryAbilities record and all driver specific information
+   from the DDB.
+
+ * Rewrite all drivers to read their device specific parameters from
+   the new CameraAbilities record.
+
+ * Maintain binary compatibility.
 
 
 ========================================================================
