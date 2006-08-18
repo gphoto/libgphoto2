@@ -1184,7 +1184,7 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 	int result = GP_OK;
 	const char *mime_type;
 	const char *data;
-	long int size;
+	/* long int size; */
 	CameraFile *cfile;
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Getting file info for '%s' "
@@ -1218,6 +1218,7 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 	CRS (camera, gp_file_new (&cfile), context);
 	if (gp_camera_file_get (camera, folder, file, GP_FILE_TYPE_PREVIEW,
 						cfile, context) == GP_OK) {
+		unsigned long size;
 		info->preview.fields |= GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
 		gp_file_get_data_and_size (cfile, &data, &size);
 		info->preview.size = size;
