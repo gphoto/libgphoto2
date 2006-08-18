@@ -663,6 +663,8 @@ static struct {
 	{"Samsung:YP-T7J", 			0x04e8, 0x5047, PTP_MTP},
 	{"Samsung:YH-820",			0x04e8, 0x502e, PTP_MTP},
 	{"Samsung:YH-925",			0x04e8, 0x502f, PTP_MTP},
+	/* Reported by cstrickler@gmail.com */
+	{"Samsung YP-U2J (YP-U2JXB/XAA)",	0x04e8, 0x5054, PTP_MTP},
 	{"Samsung:YH-999 Portable Media Center",0x04e8, 0x5a0f, PTP_MTP},
 
 	/* Reported by Brian Robison */
