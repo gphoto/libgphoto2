@@ -141,9 +141,10 @@ int gpe_datsize(unsigned char *data,int tagind);
 int gpe_tagnum( char *data,int tagind);
 int gpe_getintval(unsigned char *data, int tagnum);
 
-long gpi_exif_get_lilend(unsigned char *data, int size);
-int gpe_theval(unsigned char *data,int tagind);
-void gpe_setval(unsigned char *data,int tagind,long newval);
+long gpi_exif_get_lilend(char *data, int size);
+int gpe_theval(char *data,int tagind);
+void gpe_setval(char *data,int tagind,long newval);
+
 long exif_next_ifd(unsigned char *exif,int num);
 int gpi_exif_get_comment(exifparser *exifdat, char *comment);
 int exif_set_comment(exifparser *exifdat, char *comment);
@@ -163,13 +164,13 @@ long gpi_exif_get_slilend(unsigned char *data, int size);
  *
  * Returns : the value
  */
-long gpi_exif_get_lilend(unsigned char *data, int size){
+long gpi_exif_get_lilend(char *data, int size){
   long total;
 
   total=0;
   for (--size;size>=0;size--){
     total<<=8;
-    total+=data[size];
+    total+=(unsigned char)(data[size]);
   }
 
   return(total);
@@ -197,7 +198,7 @@ long gpi_exif_get_slilend(unsigned char *data, int size){
 /*
  *  Return "value" of directory entry at tagind
  */
-int gpe_theval(unsigned char *data,int tagind){
+int gpe_theval(char *data,int tagind){
  return(gpi_exif_get_lilend(data+tagind*12+10,4));
 }
 
@@ -205,7 +206,7 @@ int gpe_theval(unsigned char *data,int tagind){
 /*
  *  Set the "value" of directory entry at tagind.
  */
-void gpe_setval(unsigned char *data,int tagind,long newval){
+void gpe_setval(char *data,int tagind,long newval){
   int i;
   for (i=0;i<4;i++) data[tagind*12+10+i]=0xff&(newval>>(i*8));
   if (gpe_getvalue(data,tagind)!=newval) 

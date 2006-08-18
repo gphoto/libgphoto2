@@ -29,7 +29,7 @@
 #define CHECK(f) {int res = f; if (res < 0) {printf ("ERROR: %s\n", gp_result_as_string (res)); return (1);}}
 
 int
-main (int argc, char *argv [])
+main ()
 {
 	CameraText text;
 	Camera *camera;

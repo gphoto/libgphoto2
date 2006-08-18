@@ -30,18 +30,26 @@
 #include <gphoto2-result.h>
 #include <gphoto2-port-log.h>
 
+
+#ifdef __GNUC__
+#define __unused__ __attribute__((unused))
+#else
+#define __unused__
+#endif
+
+
 #define CHECK(r) {int ret = r; if (ret < 0) {printf ("Got error: %s\n", gp_result_as_string (ret)); return (1);}}
 
 static void
-log_func (GPLogLevel level, const char *domain,
-	  const char *format, va_list args, void *data)
+log_func (GPLogLevel __unused__ level, const char __unused__ *domain,
+	  const char *format, va_list args, void __unused__ *data)
 {
 	vprintf (format, args);
 	printf ("\n");
 }
 
 static void
-error_func (GPContext *context, const char *format, va_list args, void *data)
+error_func (GPContext __unused__ *context, const char *format, va_list args, void __unused__ *data)
 {
 	printf ("### ");
 	vprintf (format, args);
@@ -49,8 +57,10 @@ error_func (GPContext *context, const char *format, va_list args, void *data)
 }
 
 static int
-set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
-	       CameraFileInfo info, void *data, GPContext *context)
+set_info_func (CameraFilesystem __unused__ *fs, const char __unused__ *folder, 
+	       const char __unused__ *file,
+	       CameraFileInfo __unused__ info, void __unused__ *data, 
+	       GPContext __unused__ *context)
 {
 	printf ("  -> The camera will set the file info here.\n");
 
@@ -58,8 +68,9 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 }
 
 static int
-get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
-	       CameraFileInfo *info, void *data, GPContext *context)
+get_info_func (CameraFilesystem __unused__ *fs, const char __unused__ *folder, 
+	       const char *file,
+	       CameraFileInfo *info, void __unused__ *data, GPContext __unused__ *context)
 {
 	printf ("  -> The camera will get the file info here.\n");
 
@@ -71,8 +82,9 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 }
 
 static int
-file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
-		void *data, GPContext *context)
+file_list_func (CameraFilesystem __unused__ *fs, const char *folder, 
+		CameraList *list,
+		void __unused__ *data, GPContext __unused__ *context)
 {
 	printf ("### -> The camera will list the files in '%s' here.\n", folder);
 
@@ -89,8 +101,9 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 }
 
 static int
-folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
-		  void *data, GPContext *context)
+folder_list_func (CameraFilesystem __unused__ *fs, const char *folder, 
+		  CameraList *list,
+		  void __unused__ *data, GPContext __unused__ *context)
 {
 	printf ("### -> The camera will list the folders in '%s' here.\n", 
 		folder);
@@ -113,8 +126,9 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 }
 
 static int
-delete_file_func (CameraFilesystem *fs, const char *folder, const char *file,
-		  void *data, GPContext *context)
+delete_file_func (CameraFilesystem __unused__ *fs, const char *folder, 
+		  const char *file,
+		  void __unused__ *data, GPContext __unused__ *context)
 {
 	printf ("Here we should delete %s from folder %s...\n", file, folder);
 
@@ -122,7 +136,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder, const char *file,
 }
 
 int
-main (int argc, char **argv)
+main ()
 {
 	CameraFilesystem *fs;
 	CameraFileInfo info;

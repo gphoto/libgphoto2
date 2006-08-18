@@ -33,6 +33,13 @@
 #define CHECK(f) {int res = f; if (res < 0) {printf ("ERROR: %s\n", gp_result_as_string (res)); return (1);}}
 
 
+#ifdef __GNUC__
+#define __unused__ __attribute__((unused))
+#else
+#define __unused__
+#endif
+
+
 /** boolean value */
 static int do_debug = 0;
 
@@ -46,7 +53,7 @@ static void
 		__attribute__((__format__(printf,3,0)))
 #endif
 debug_func (GPLogLevel level, const char *domain, const char *format,
-	    va_list args, void *data)
+	    va_list args, void __unused__ *data)
 {
 	struct timeval tv;
 	long sec, usec;
