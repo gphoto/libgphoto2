@@ -1,0 +1,67 @@
+========================================================================
+The gphoto2 device database (gp2ddb)
+========================================================================
+
+Important: This is a prototype the developers can play with. The final
+           version will look much different, so don't invest too much
+           in it.
+
+
+=============================================
+The idea
+========
+
+ * Maintain the database of cameras, their abilities
+   etc. independently from the libgphoto2 camlibs.
+
+ * Updates to the database are much easier to publish than updates to
+   the camlibs which need to be compiled.
+
+
+=============================================
+The implementation
+==================
+
+ * A flex/bison based parser for text based config.
+
+ * The text format is not completely ironed out yet.
+
+ * It is possible to use some HAL device database instead, but do we
+   really want to require HAL? Depends whether we target embedded or
+   desktop environments.
+
+ * print-camera-list prints the current config in the new format
+   (minus camlib internal settings)
+
+ * camlib specific settings can be accommodated using the
+   driver_options { ... }; section.
+
+
+=============================================
+The testcase
+============
+
+ * The testcase check-ddb.sh checks that the CameraAbilitiesList read
+   from the text database is the same one read from the camlibs via
+   gp_abilities_list_load() - for all 700something cameras.
+
+
+=============================================
+How to test it
+==============
+
+ * Add --enable-gp2ddb to your ./configure parameters.
+
+ * Run "make check".
+
+ * Have a look into tests/ddb/.
+
+ * Possibly add the output of
+      (hostname;cat /proc/cpuinfo)|md5sum|cut -d" " -f1
+   to the list in configure.in to avoid the --enable-gp2ddb
+   requirement.
+
+
+========================================================================
+End of file.
+========================================================================

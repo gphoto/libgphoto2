@@ -20,6 +20,10 @@
  * Boston, MA 02111-1307, USA.
  */
 
+
+#define _GPHOTO2_INTERNAL_CODE
+
+
 #define GP_USB_HOTPLUG_SCRIPT "usbcam"
 
 /* Not sure whether this is the best possible name */
@@ -421,6 +425,171 @@ empty_end_func (const func_params_t *params)
 }
 
 
+
+static int
+ddb_begin_func (const func_params_t *params)
+{
+	printf("# Beginning of gphoto2 device database (PRE-ALPHA format!)\n\n");
+	return 0;
+}
+
+
+static int
+ddb_end_func (const func_params_t *params)
+{
+	printf("# End of gphoto2 device database (PRE-ALPHA format!).\n");
+	return 0;
+}
+
+
+static void
+ddb_list_out_func(const char *str, void *data)
+{
+	int *first = (int *)data;
+	printf("%s %s", (*first)?"":",", str);
+	*first = 0;
+}
+
+
+static int
+ddb_camera_func (const func_params_t *params, 
+		 const int i,
+		 const int total,
+		 const CameraAbilities *a)
+{
+	int flags = 0;
+	int class = 0, subclass = 0, proto = 0;
+	int usb_vendor = 0, usb_product = 0;
+	int first = 1;
+	const char *camlib_basename = basename(a->library);
+
+	printf("# This is a PRE-ALPHA data format. Do not use it.\n\n");
+
+	if (params->add_comments) {
+		printf ("# %s\n", a->model);
+	}
+
+	printf("# automatically generated camera record %d/%d\n", i+1, total);
+	printf("device \"%s\" {\n", a->model);
+
+	printf("    device_type");
+	first = 1;
+	gpi_enum_to_string(a->device_type, 
+			   gpi_gphoto_device_type_map,
+			   ddb_list_out_func,
+			   (void *) &first);	
+	printf(";\n");
+
+	printf("    driver \"%s\";\n", camlib_basename);
+
+	printf("    driver_status");
+	first = 1;
+	gpi_enum_to_string(a->status, 
+			   gpi_camera_driver_status_map,
+			   ddb_list_out_func,
+			   (void *) &first);	
+	printf(";\n");
+
+	printf("    operations");
+	first = 1;
+	gpi_flags_to_string_list(a->operations, 
+				 gpi_camera_operation_map,
+				 ddb_list_out_func,
+				 (void *) &first);	
+	printf(";\n");
+
+	printf("    file_operations");
+	first = 1;
+	gpi_flags_to_string_list(a->file_operations, 
+				 gpi_file_operation_map,
+				 ddb_list_out_func,
+				 (void *) &first);	
+	printf(";\n");
+
+	printf("    folder_operations");
+	first = 1;
+	gpi_flags_to_string_list(a->folder_operations, 
+				 gpi_folder_operation_map,
+				 ddb_list_out_func,
+				 (void *) &first);	
+	printf(";\n");
+
+	if (0 != (a->port & GP_PORT_SERIAL)) {
+		unsigned int i;
+		int first = 1;
+		printf("    interface serial {\n");
+		if (a->speed[0] != 0) {
+			printf("        speeds");
+			for (i=0; 
+			     ((i < (sizeof(a->speed)/sizeof(a->speed[0]))) &&
+			      (a->speed[i] != 0)); i++) {
+				printf("%s %d", (first)?"":",", a->speed[i]);
+				first = 0;
+			}
+			printf(";\n");
+		}
+		printf("    };\n");
+	}
+	if (0 != (a->port & GP_PORT_USB)) {
+		if (a->usb_vendor) { 
+			/* usb product id may be zero! */
+			class = 0;
+			subclass = 0;
+			proto = 0;
+			flags = GP_USB_HOTPLUG_MATCH_VENDOR_ID | GP_USB_HOTPLUG_MATCH_PRODUCT_ID;
+			usb_vendor = a->usb_vendor;
+			usb_product = a->usb_product;
+		} else if (a->usb_class) {
+			class = a->usb_class;
+			subclass = a->usb_subclass;
+			proto = a->usb_protocol;
+			flags = GP_USB_HOTPLUG_MATCH_INT_CLASS;
+			if (subclass != -1)
+				flags |= GP_USB_HOTPLUG_MATCH_INT_SUBCLASS;
+			else
+				subclass = 0;
+			if (proto != -1)
+				flags |= GP_USB_HOTPLUG_MATCH_INT_PROTOCOL;
+			else
+				proto = 0;
+			usb_vendor = 0;
+			usb_product = 0;
+		}
+	
+		if (flags & GP_USB_HOTPLUG_MATCH_INT_CLASS) {
+			printf("    interface usb {\n");
+			printf("        class 0x%02x;\n", class);
+			if (flags & GP_USB_HOTPLUG_MATCH_INT_SUBCLASS) {
+				printf("        subclass 0x%02x;\n", subclass);
+			}
+			if (flags & GP_USB_HOTPLUG_MATCH_INT_PROTOCOL) {
+				printf("        protocol 0x%02x;\n", proto);
+			}
+			printf("    };\n");
+		} else {
+			printf("    interface usb {\n");
+			printf("        vendor  0x%04x;\n", a->usb_vendor);
+			printf("        product 0x%04x;\n", a->usb_product);
+			printf("    };\n");
+		}
+	}
+	if (0 != (a->port & GP_PORT_DISK)) {
+		printf("    interface disk;\n");
+	}
+	if (0 != (a->port & GP_PORT_PTPIP)) {
+		printf("    interface ptpip;\n");		
+	}
+
+	printf("    # driver_options {\n");
+	printf("    #      option \"foo\";\n");
+	printf("    #      option \"bar\" \"bla\";\n");
+	printf("    # };\n");
+
+	printf("}; # %s\n\n", a->model);
+	return 0;
+}
+
+
 /* print_fdi_map
  *
  * Print FDI Device Information file for HAL with information on 
@@ -747,6 +916,14 @@ static const output_format_t formats[] = {
 	 begin_func: empty_begin_func, 
 	 camera_func: idlist_camera_func,
 	 end_func: empty_end_func
+	},
+	{name: "gp2ddb",
+	 descr: "gphoto2 device database (PRE-ALPHA)",
+	 help: "PRE-ALPHA test stage, do not use for production! Machine parseable.",
+	 paramdescr: NULL,
+	 begin_func: ddb_begin_func,
+	 camera_func: ddb_camera_func,
+	 end_func: ddb_end_func
 	},
 	{NULL, NULL, NULL, NULL, 
 	 NULL, NULL, NULL}

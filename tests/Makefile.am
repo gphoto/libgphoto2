@@ -1,3 +1,5 @@
+SUBDIRS = ddb
+
 check_PROGRAMS = test-camera-list
 
 check_SCRIPTS = \
