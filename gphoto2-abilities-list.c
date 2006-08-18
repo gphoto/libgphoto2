@@ -22,6 +22,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#define _GPHOTO2_INTERNAL_CODE
+
 #include "config.h"
 #include "gphoto2-abilities-list.h"
 
@@ -64,15 +66,6 @@
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 /** \internal */
 #define CHECK_MEM(m)         {if (!(m)) return (GP_ERROR_NO_MEMORY);}
-
-/**
- * Name of the environment variable which may contain the path where
- * to look for the camlibs. If this environment variable is not defined,
- * use the compiled-in default constant.
- *
- * \internal Internal use only.
- */
-#define CAMLIBDIR_ENV "CAMLIBS"
 
 /** \internal */
 struct _CameraAbilitiesList {
@@ -642,6 +635,59 @@ gp_abilities_list_get_abilities (CameraAbilitiesList *list, int index,
 
 	return (GP_OK);
 }
+
+
+#ifdef _GPHOTO2_INTERNAL_CODE
+
+/* enum CameraOperation */
+const StringFlagItem gpi_camera_operation_map[] = {
+	{ "none",            GP_OPERATION_NONE },
+	{ "capture_image",   GP_OPERATION_CAPTURE_IMAGE },
+	{ "capture_video",   GP_OPERATION_CAPTURE_VIDEO },
+	{ "capture_audio",   GP_OPERATION_CAPTURE_AUDIO },
+	{ "capture_preview", GP_OPERATION_CAPTURE_PREVIEW },
+	{ "config",          GP_OPERATION_CONFIG },
+	{ NULL, 0 },
+};
+
+/* enum CameraFileOperation */
+const StringFlagItem gpi_file_operation_map[] = {
+	{ "none",    GP_FILE_OPERATION_NONE },
+	{ "delete",  GP_FILE_OPERATION_DELETE },
+	{ "preview", GP_FILE_OPERATION_PREVIEW },
+	{ "raw",     GP_FILE_OPERATION_RAW },
+	{ "audio",   GP_FILE_OPERATION_AUDIO },
+	{ "exif",    GP_FILE_OPERATION_EXIF },
+	{ NULL, 0 },
+};
+
+/* enum CameraFolderOperation */
+const StringFlagItem gpi_folder_operation_map[] = {
+	{ "none",       GP_FOLDER_OPERATION_NONE },
+	{ "delete_all", GP_FOLDER_OPERATION_DELETE_ALL },
+	{ "put_file",   GP_FOLDER_OPERATION_PUT_FILE },
+	{ "make_dir",   GP_FOLDER_OPERATION_MAKE_DIR },
+	{ "remove_dir", GP_FOLDER_OPERATION_REMOVE_DIR },
+	{ NULL, 0 },
+};
+
+/* enum GphotoDeviceType */
+const StringFlagItem gpi_gphoto_device_type_map[] = {
+	{ "still_camera", GP_DEVICE_STILL_CAMERA },
+	{ "audio_player", GP_DEVICE_AUDIO_PLAYER },
+	{ NULL, 0 },
+};
+
+/* enum CameraDriverStatus */
+const StringFlagItem gpi_camera_driver_status_map[] = {
+	{ "production",   GP_DRIVER_STATUS_PRODUCTION },
+	{ "testing",      GP_DRIVER_STATUS_TESTING },
+	{ "experimental", GP_DRIVER_STATUS_EXPERIMENTAL },
+	{ "deprecated",   GP_DRIVER_STATUS_DEPRECATED },
+	{ NULL, 0 },
+};
+
+#endif /* _GPHOTO2_INTERNAL_CODE */
 
 
 /*

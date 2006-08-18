@@ -29,6 +29,8 @@
 #include <gphoto2-list.h>
 #include <gphoto2-port-info-list.h>
 
+#include <gphoto2-port-log.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
@@ -74,6 +76,26 @@ typedef enum {
         GP_FOLDER_OPERATION_MAKE_DIR    = 1 << 2,
         GP_FOLDER_OPERATION_REMOVE_DIR  = 1 << 3
 } CameraFolderOperation;
+
+
+#ifdef _GPHOTO2_INTERNAL_CODE
+
+  /* enum CameraOperation */
+  extern const StringFlagItem gpi_camera_operation_map[];
+
+  /* enum CameraFileOperation */
+  extern const StringFlagItem gpi_file_operation_map[];
+
+  /* enum CameraFolderOperation */
+  extern const StringFlagItem gpi_folder_operation_map[];
+
+  /* enum GphotoDeviceType */
+  extern const StringFlagItem gpi_gphoto_device_type_map[];
+
+  /* enum CameraDriverStatus */
+  extern const StringFlagItem gpi_camera_driver_status_map[];
+
+#endif /* _GPHOTO2_INTERNAL_CODE */
 
 
 /** 
@@ -149,6 +171,19 @@ int gp_abilities_list_get_abilities (CameraAbilitiesList *list, int index,
 				     CameraAbilities *abilities);
 
 const char *gp_message_codeset (const char *);
+
+
+/**
+ * Name of the environment variable which may contain the path where
+ * to look for the camlibs. If this environment variable is not defined,
+ * use the compiled-in default constant.
+ *
+ * \internal Internal use only.
+ */
+#ifdef _GPHOTO2_INTERNAL_CODE
+#define CAMLIBDIR_ENV "CAMLIBS"
+#endif /* _GPHOTO2_INTERNAL_CODE */
+
 
 #ifdef __cplusplus
 }
