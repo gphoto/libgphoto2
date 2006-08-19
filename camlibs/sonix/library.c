@@ -105,7 +105,8 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 		free(camera->pl);
 		return ret;
 	}	
-
+	if (!camera->pl->num_pics) 
+		sonix_exit(camera->port);
         sprintf (summary->text,ngettext(
 		"Sonix camera.\nThere is %i photo in it.\n",
 		"Sonix camera.\nThere are %i photos in it.\n",
@@ -159,7 +160,10 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		free(camera->pl);
 		return ret;
 	}	
-
+	if(!camera->pl->num_pics) {
+		sonix_exit(camera->port);
+		return GP_OK;
+	}
 	for (i=0; i<camera->pl->num_pics; i++) {
 		avitype = camera->pl->size_code[i];
 		if (avitype == 9) {
@@ -197,6 +201,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if ( ret != GP_OK) {
 		free(camera->pl);
 		return ret;
+	}	
+
+	if(!camera->pl->num_pics) {
+		sonix_exit(camera->port);
+		return GP_OK;
 	}	
 
     	/* Get the number of the photo on the camera */
