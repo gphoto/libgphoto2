@@ -1,5 +1,13 @@
 2006-08-17   Theodore Kilgore <kilgota@auburn.edu>
 
+	* library.c: Workaround for gtkam problem if camera empty.
+
+	* sonix.c: indentation inside for() statement.
+
+
+
+2006-08-17   Theodore Kilgore <kilgota@auburn.edu>
+
 	* library.c: Workaround for gtkam problems with Sakar 11199.
 
 	* sonix.c: Workaround for gtkam problems with Sakar 11199.
