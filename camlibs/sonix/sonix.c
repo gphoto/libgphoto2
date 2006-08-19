@@ -136,20 +136,20 @@ int sonix_init (GPPort *port, CameraPrivateLibrary *priv)
 	memset(c,0,sizeof(c));
 
 	for (i = 0; i < priv->num_pics; i++) {
-	GP_DEBUG("getting size_code for picture %i\n", i+1);
-	/* Gets the resolution setting, also flags a multi-frame entry. */
-	c[0] = 0x19;
-	c[1] = (i+1)%256;
-	c[2] = (i+1)/256;
+		GP_DEBUG("getting size_code for picture %i\n", i+1);
+		/* Gets the resolution setting, also flags a multi-frame entry. */
+		c[0] = 0x19;
+		c[1] = (i+1)%256;
+		c[2] = (i+1)/256;
 	
-	SONIX_COMMAND ( port, c );
-	SONIX_READ(port, &status);
-	SONIX_READ4 (port, reading);		
-	if (reading[0] != 0x99)
-		return GP_ERROR_CAMERA_ERROR;	
-	SONIX_READ(port, &status);
-	/* For the code meanings, see get_file_func() in library.c */
-	priv->size_code[i] = (reading[1]&0x0f);
+		SONIX_COMMAND ( port, c );
+		SONIX_READ(port, &status);
+		SONIX_READ4 (port, reading);		
+		if (reading[0] != 0x99)
+			return GP_ERROR_CAMERA_ERROR;	
+		SONIX_READ(port, &status);
+		/* For the code meanings, see get_file_func() in library.c */
+		priv->size_code[i] = (reading[1]&0x0f);
 	}
 
 	priv->sonix_init_done = 1;
