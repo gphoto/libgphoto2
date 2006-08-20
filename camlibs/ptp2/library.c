@@ -2666,9 +2666,16 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			return mtp_get_playlist (camera, file, params->handles.Handler[object_id], context);
 
 		size=oi->ObjectCompressedSize;
-		CPR (context, ptp_getobject(params,
+		if (size) {
+			CPR (context, ptp_getobject(params,
 			params->handles.Handler[object_id],
 			&ximage));
+		} else {
+			/* Do not download 0 sized files.
+			 * It is not necessary and even breaks for some camera special files.
+			 */
+			ximage = malloc(1);
+		}
 		CR (gp_file_set_data_and_size (file, (char*)ximage, size));
 		/* XXX does gp_file_set_data_and_size free() image ptr upon
 		   failure?? */
