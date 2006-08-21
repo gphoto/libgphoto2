@@ -1045,7 +1045,8 @@ typedef uint16_t (* PTPIOSendData)	(PTPParams* params, PTPContainer* ptp,
 					unsigned char *data, unsigned int size);
 typedef uint16_t (* PTPIOGetResp)	(PTPParams* params, PTPContainer* resp);
 typedef uint16_t (* PTPIOGetData)	(PTPParams* params, PTPContainer* ptp,
-					unsigned char **data, unsigned int *recvlen);
+	                                unsigned char **data, unsigned int *recvlen,
+	                                int to_fd);
 /* debug functions */
 typedef void (* PTPErrorFunc) (void *data, const char *format, va_list args)
 #if (__GNUC__ >= 3)
@@ -1114,7 +1115,8 @@ uint16_t ptp_usb_senddata	(PTPParams* params, PTPContainer* ptp,
 				unsigned char *data, unsigned int size);
 uint16_t ptp_usb_getresp	(PTPParams* params, PTPContainer* resp);
 uint16_t ptp_usb_getdata	(PTPParams* params, PTPContainer* ptp, 
-				unsigned char **data, unsigned int *readlen);
+				 unsigned char **data, unsigned int *readlen,
+	                         int to_fd);
 uint16_t ptp_usb_event_check	(PTPParams* params, PTPContainer* event);
 uint16_t ptp_usb_event_wait	(PTPParams* params, PTPContainer* event);
 
@@ -1124,7 +1126,8 @@ uint16_t ptp_ptpip_senddata	(PTPParams* params, PTPContainer* ptp,
 				unsigned char *data, unsigned int size);
 uint16_t ptp_ptpip_getresp	(PTPParams* params, PTPContainer* resp);
 uint16_t ptp_ptpip_getdata	(PTPParams* params, PTPContainer* ptp, 
-				unsigned char **data, unsigned int *readlen);
+				 unsigned char **data, unsigned int *readlen,
+	                         int to_fd);
 uint16_t ptp_ptpip_event_wait	(PTPParams* params, PTPContainer* event);
 uint16_t ptp_ptpip_event_check	(PTPParams* params, PTPContainer* event);
 
@@ -1152,6 +1155,7 @@ uint16_t ptp_getobjectinfo	(PTPParams *params, uint32_t handle,
 
 uint16_t ptp_getobject		(PTPParams *params, uint32_t handle,
 				unsigned char** object);
+uint16_t ptp_getobject_tofd     (PTPParams* params, uint32_t handle, int fd);
 uint16_t ptp_getpartialobject	(PTPParams* params, uint32_t handle, uint32_t offset,
 				uint32_t maxbytes, unsigned char** object);
 uint16_t ptp_getthumb		(PTPParams *params, uint32_t handle,

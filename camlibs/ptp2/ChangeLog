@@ -2,6 +2,9 @@
 	
 	* library.c: Do not download 0 sized objects.
 
+	* ptp.{c,h}: Merged libmtp patch "download to fd"
+	  to keep in sync with them.
+
 2006-08-10  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* Added alternate iRiver H10 id, reported by Scott Call.
