@@ -265,12 +265,17 @@ ptp_ptpip_senddata (PTPParams* params, PTPContainer* ptp,
 
 uint16_t
 ptp_ptpip_getdata (PTPParams* params, PTPContainer* ptp,
-		unsigned char **data, unsigned int *readlen)
+		unsigned char **data, unsigned int *readlen, int to_fd)
 {
 	PTPIPHeader		hdr;
 	unsigned char		*xdata = NULL;
 	uint16_t 		ret;
 	int			toread, curread;
+
+	if (to_fd != -1) {
+		gp_log (GP_LOG_ERROR, "ptpip/getdata", "fd transfers not handled yet");
+		return PTP_RC_GeneralError;
+	}
 
 	ret = ptp_ptpip_cmd_read (params, &hdr, &xdata);
 	if (ret != PTP_RC_OK)
