@@ -722,7 +722,7 @@ typedef struct _PTPNIKONWifiProfile PTPNIKONWifiProfile;
 #define PTP_DTC_AINT128		(PTP_DTC_ARRAY_MASK | PTP_DTC_INT128)
 #define PTP_DTC_AUINT128	(PTP_DTC_ARRAY_MASK | PTP_DTC_UINT128)
 
-#define PTP_DTC_UNISTR		0xFFFE
+#define PTP_DTC_UNISTR		0xFFFE	/* internal only */
 #define PTP_DTC_STR		0xFFFF
 
 /* Device Properties Codes */
