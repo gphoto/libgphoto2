@@ -79,6 +79,7 @@ EXTRA_DIST = gphoto2-port-portability-os2.h libgphoto2_port.sym
 #   #include <gphoto2/gphoto2-camera.h>
 
 install-data-local:
+	$(INSTALL) -m 0755 -d $(DESTDIR)$(libgphoto2_portincludedir)
 	rm -f $(DESTDIR)$(libgphoto2_portincludedir)/gphoto2
 	$(LN_S) . $(DESTDIR)$(libgphoto2_portincludedir)/gphoto2
 

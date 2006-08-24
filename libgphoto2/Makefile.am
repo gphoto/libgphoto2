@@ -83,6 +83,7 @@ DISTCLEANFILES = _stdint.h gphoto2-endian.h
 #   #include <gphoto2/gphoto2-camera.h>
 
 install-data-local:
+	$(INSTALL) -m 0755 -d $(DESTDIR)$(libgphoto2includedir)
 	rm -f $(DESTDIR)$(libgphoto2includedir)/gphoto2
 	$(LN_S) . $(DESTDIR)$(libgphoto2includedir)/gphoto2
 
