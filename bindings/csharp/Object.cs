@@ -32,7 +32,6 @@ namespace LibGPhoto2 {
             if (!disposed) {
                 if (disposing) {
                     // clean up anything that's managed
-                    handle = null;
                 }
                 // clean up any unmanaged objects
                 Cleanup ();
