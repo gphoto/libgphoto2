@@ -3,7 +3,8 @@ using System.Runtime.InteropServices;
 
 namespace LibGPhoto2 {
 	public abstract class Object : System.IDisposable {
-		protected HandleRef handle;
+	    protected HandleRef handle;
+	    private bool disposed = false;
 		
 		public HandleRef Handle {
 			get {
@@ -20,14 +21,30 @@ namespace LibGPhoto2 {
 		
 		protected abstract void Cleanup ();
 		
-		public void Dispose () {
-			Cleanup ();
+		public void Dispose ()
+		{
+		    Dispose (true);
 			System.GC.SuppressFinalize (this);
 		}
 		
+        private void Dispose (bool disposing)
+        {
+            if (!disposed) {
+                if (disposing) {
+                    // clean up anything that's managed
+                    handle = null;
+                }
+                // clean up any unmanaged objects
+                Cleanup ();
+                disposed = true;
+            } else {
+                Console.WriteLine ("Saved us from doubly disposing an object!");
+            }
+        }
+        
 		~Object ()
 		{
-			Cleanup ();
+			Dispose (false);
 		}
 	}
 }
