@@ -20,7 +20,7 @@ Disk port:
    * fix a crasher
 
 Bindings:
-   * C# bindings are installed if build
+   * Mono/.NET bindings are installed if Mono is found
    * Partial Java bindings
 
 ----------------------------------------------------------------------------
