@@ -2,6 +2,7 @@
  *
  * Copyright (C) 2001-2004 Mariusz Woloszyn <emsi@ipartners.pl>
  * Copyright (C) 2003-2006 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright (C) 2006 Linus Walleij <triad@df.lth.se>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -2365,10 +2366,6 @@ ptp_free_devicepropvalue(uint16_t dt, PTPPropertyValue* dpd) {
 		if (dpd->str)
 			free(dpd->str);
 		break;
-	case PTP_DTC_UNISTR:
-		if (dpd->unistr)
-			free(dpd->unistr);
-		break;
 	}
 }
 
@@ -2485,7 +2482,7 @@ const char*
 ptp_get_property_description(PTPParams* params, uint16_t dpc)
 {
 	int i;
-	// Device Property descriptions
+	/* Device Property descriptions */
 	struct {
 		uint16_t dpc;
 		const char *txt;
@@ -3071,6 +3068,7 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 			return snprintf(out, length, "%s", dpd->CurrentValue.str);
 		case PTP_DPC_MTP_SecureTime:
 		case PTP_DPC_MTP_DeviceCertificate: {
+			/* FIXME: Convert to use unicode demux functions */
 			for (i=0;(i<dpd->CurrentValue.a.count) && (i<length);i++)
 				out[i] = dpd->CurrentValue.a.v[i].u16;
 			if (	dpd->CurrentValue.a.count &&

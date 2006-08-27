@@ -25,6 +25,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <time.h>
+#include <langinfo.h>
 
 #include <gphoto2-library.h>
 #include <gphoto2-port-log.h>
@@ -1003,6 +1004,9 @@ static int
 camera_exit (Camera *camera, GPContext *context)
 {
 	if (camera->pl!=NULL) {
+		/* close iconv converters */
+		iconv_close(camera->pl->params.cd_ucs2_to_locale);
+		iconv_close(camera->pl->params.cd_locale_to_ucs2);
 		/* close ptp session */
 		ptp_closesession (&camera->pl->params);
 		free (camera->pl);
@@ -3267,6 +3271,7 @@ camera_init (Camera *camera, GPContext *context)
     	CameraAbilities a;
 	int ret, i, retried = 0;
 	PTPParams *params;
+	char *curloc;
 
 	/* Make sure our port is either USB or PTP/IP. */
 	if ((camera->port->type != GP_PORT_USB) && (camera->port->type != GP_PORT_PTPIP)) {
@@ -3340,6 +3345,17 @@ camera_init (Camera *camera, GPContext *context)
 	default:
 		break;
 	}
+
+	curloc = nl_langinfo (CODESET);
+	if (!curloc) curloc="UTF-8";
+	camera->pl->params.cd_ucs2_to_locale = iconv_open(curloc, "UCS-2");
+	camera->pl->params.cd_locale_to_ucs2 = iconv_open("UCS-2", curloc);
+	if ((camera->pl->params.cd_ucs2_to_locale == (iconv_t) -1) ||
+	    (camera->pl->params.cd_locale_to_ucs2 == (iconv_t) -1)) {
+		gp_log (GP_LOG_ERROR, "iconv", "Failed to create iconv converter.\n");
+		return (GP_ERROR_OS_FAILURE);
+	}
+	
         gp_camera_get_abilities(camera, &a);
         for (i = 0; sizeof(models)/sizeof(models[0]); i++) {
             if ((a.usb_vendor == models[i].usb_vendor) &&

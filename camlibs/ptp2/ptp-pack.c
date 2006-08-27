@@ -1,5 +1,7 @@
 /* currently this file is included into ptp.c */
 
+#include <iconv.h>
+
 static inline uint16_t
 htod16p (PTPParams *params, uint16_t var)
 {
@@ -88,32 +90,103 @@ static inline char*
 ptp_unpack_string(PTPParams *params, unsigned char* data, uint16_t offset, uint8_t *len)
 {
 	int i;
-	char *string=NULL;
+	uint8_t loclen;
 
-	*len=dtoh8a(&data[offset]);
-	if (*len) {
-		string=malloc(*len);
-		memset(string, 0, *len);
-		for (i=0;i<*len && i< PTP_MAXSTRLEN; i++) {
-			string[i]=(char)dtoh16a(&data[offset+i*2+1]);
+	/* Cannot exceed 255 (PTP_MAXSTRLEN) since it is a single byte, duh ... */
+	loclen = dtoh8a(&data[offset]);
+	/* This len is used to advance the buffer pointer */
+	*len = loclen;
+	if (loclen) {
+		uint16_t string[PTP_MAXSTRLEN+1];
+		char *stringp = (char *) string;
+		char loclstr[PTP_MAXSTRLEN*3+1]; /* UTF-8 encoding is max 3 bytes per UCS2 char. */
+		char *locp = loclstr;
+		size_t nconv;
+		size_t convlen = loclen * 2; /* UCS-2 is 16 bit wide */
+		size_t convmax = PTP_MAXSTRLEN*3;
+		
+		for (i=0;i<loclen;i++) {
+			string[i]=dtoh16a(&data[offset+i*2+1]);
 		}
-		/* be paranoid! :( */
-		string[*len-1]=0;
+		/* be paranoid! Add a terminator. :( */
+		string[loclen]=0x0000U;
+		loclstr[0]='\0';
+		/* loclstr=ucs2_to_utf8(string); */
+		/* Do the conversion.  */
+		nconv = iconv (params->cd_ucs2_to_locale, &stringp, &convlen, &locp, &convmax);
+		/* FIXME: handle size errors */
+		loclstr[PTP_MAXSTRLEN*3] = '\0';
+		if (nconv == (size_t) -1)
+			return NULL;
+		return strdup(loclstr);
 	}
-	return (string);
+	return NULL;
 }
+
+
+static inline int
+ucs2strlen(uint16_t const * const unicstr)
+{
+	int length;
+	
+	/* Unicode strings are terminated with 2 * 0x00 */
+	for(length = 0; unicstr[length] != 0x0000U; length ++);
+	return length;
+}
+
 
 static inline void
 ptp_pack_string(PTPParams *params, char *string, unsigned char* data, uint16_t offset, uint8_t *len)
 {
 	int i;
-	*len = (uint8_t)strlen(string);
-	
-	/* XXX: check strlen! */
-	htod8a(&data[offset],*len+1);
-	for (i=0;i<*len && i< PTP_MAXSTRLEN; i++) {
-		htod16a(&data[offset+i*2+1],(uint16_t)string[i]);
+	int packedlen;
+	uint16_t ucs2str[PTP_MAXSTRLEN+1];
+	char *ucs2strp = (char *) ucs2str;
+	char *stringp = string;
+	size_t nconv;
+	size_t convlen = strlen(string);
+	size_t convmax = PTP_MAXSTRLEN * 2; /* Includes the terminator */
+
+	/* Cannot exceed 255 (PTP_MAXSTRLEN) since it is a single byte, duh ... */
+	ucs2str[0] = 0x0000U;
+	memset(ucs2strp, 0, PTP_MAXSTRLEN*2+2);
+	nconv = iconv (params->cd_locale_to_ucs2, &stringp, &convlen, &ucs2strp, &convmax);
+	if (nconv == (size_t) -1) {
+		ucs2str[0] = 0x0000U;
 	}
+	packedlen = ucs2strlen(ucs2str);
+	if (packedlen > PTP_MAXSTRLEN-1) {
+		*len=0;
+		return;
+	}
+	*len = (uint8_t) packedlen;
+
+	/* +1 for the length byte, no zero 0x0000 terminator */
+	htod8a(&data[offset],packedlen+1);
+	for (i=0;i<packedlen && i< PTP_MAXSTRLEN; i++) {
+		htod16a(&data[offset+i*2+1],ucs2str[i]);
+	}
+}
+
+static inline unsigned char *
+ptp_get_packed_stringcopy(PTPParams *params, char *string)
+{
+	uint8_t packed[PTP_MAXSTRLEN+3], len;
+	size_t plen;
+	unsigned char *retcopy = NULL;
+
+	ptp_pack_string(params, string, (unsigned char*) packed, 0, &len);
+	plen = len + 1;
+	/* Assure proper termination */
+	packed[plen] = 0x00;
+	packed[plen+1] = 0x00;
+	/* Include terminator */
+	plen += 2;
+	retcopy = malloc(plen);
+	if (!retcopy)
+		return NULL;
+	memcpy(retcopy, packed, plen);
+	return (retcopy);
 }
 
 static inline uint32_t
@@ -512,22 +585,6 @@ ptp_unpack_DPV (
 			return 0;
 		break;
 	}
-	case PTP_DTC_UNISTR: {
-	  uint8_t len=dtoh8a(&data[0]);
-	  if (len==0) {
-	    value->unistr = malloc(sizeof(value->unistr[0]));
-	    value->unistr[0]=0;
-	  } else {
-	    int i;
-	    value->unistr = malloc(len*sizeof(value->unistr[0]));
-	    for (i=0;i<len;i++)
-	      value->unistr[i]=dtoh16a(&data[i*sizeof(value->unistr[0])+1]);
-	    /* just to be sure... */
-	    value->unistr[len-1]=0;
-	  }
-	  return 2*len+1;
-	  break;
-	}
 	}
 	return 1;
 }
@@ -762,34 +819,7 @@ ptp_pack_DPV (PTPParams *params, PTPPropertyValue* value, unsigned char** dpvptr
 		break;
 	/* XXX: other int types are unimplemented */
 	case PTP_DTC_STR: {
-		uint8_t len;
-
-		size=strlen(value->str)*2+3;
-		dpv=malloc(size);
-		memset(dpv,0,size);
-		ptp_pack_string(params, value->str, dpv, 0, &len);
-		break;
-	}
-	case PTP_DTC_UNISTR: {
-		uint8_t len = 0;
-		/* note PTP_MAXSTRLEN includes the null terminator */
-		while (value->unistr[len] != 0 && len != PTP_MAXSTRLEN-1)
-			len++;
-		if (len==0) {
-			size=1;
-			dpv=malloc(size);
-			*dpv=0;
-		} else {
-			/* 2 extra bytes for the terminator, 1 for the length at the beginning */
-			size=len*2+3;
-			dpv=malloc(size);
-			memset(dpv,0,size);
-			htod8a(&dpv[0],len+1);
-			for (i = 0; i < len; i++)
-				htod16a(&dpv[i*2+1],value->unistr[i]);
-			/* terminator is done by memset above */
-
-		}
+		dpv=ptp_get_packed_stringcopy(params, value->str);
 		break;
 	}
 	}

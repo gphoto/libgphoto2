@@ -23,6 +23,7 @@
 
 #include <stdarg.h>
 #include <time.h>
+#include <iconv.h>
 #include "gphoto2-endian.h"
 
 /* PTP datalayer byteorder */
@@ -722,7 +723,6 @@ typedef struct _PTPNIKONWifiProfile PTPNIKONWifiProfile;
 #define PTP_DTC_AINT128		(PTP_DTC_ARRAY_MASK | PTP_DTC_INT128)
 #define PTP_DTC_AUINT128	(PTP_DTC_ARRAY_MASK | PTP_DTC_UINT128)
 
-#define PTP_DTC_UNISTR		0xFFFE	/* internal only */
 #define PTP_DTC_STR		0xFFFF
 
 /* Device Properties Codes */
@@ -1108,6 +1108,10 @@ struct _PTPParams {
 	uint8_t		cameraguid[16];
 	uint32_t	eventpipeid;
 	char		*cameraname;
+
+	/* iconv converters */
+	iconv_t cd_locale_to_ucs2;
+	iconv_t cd_ucs2_to_locale;
 };
 
 /* last, but not least - ptp functions */

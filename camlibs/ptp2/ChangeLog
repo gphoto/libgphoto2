@@ -1,5 +1,13 @@
-2006-08-25  Marcus Meissner  <marcus@jet.franken.de>
-	    Linus Walleij 
+2006-08-25  Linus Walleij  <triad@df.lth.se>
+	    Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptp.c,library.c,ptp.h,ptp-pack.c:
+
+	  Use iconv(3) to convert the UCS-2 used in ptp
+	  strings to the current codeset (detected by
+	  nl_langinfo(3)).
+
+2006-08-27  Marcus Meissner  <marcus@jet.franken.de>
 
 	* ptp.c,ptp.h,ptpip.c: Merged upload from fd patch
 	  from libmtp folks (Linus Walleij).
