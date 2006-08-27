@@ -1,3 +1,9 @@
+2006-08-25  Marcus Meissner  <marcus@jet.franken.de>
+	    Linus Walleij 
+
+	* ptp.c,ptp.h,ptpip.c: Merged upload from fd patch
+	  from libmtp folks (Linus Walleij).
+
 2006-08-20  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* library.c: Do not download 0 sized objects.

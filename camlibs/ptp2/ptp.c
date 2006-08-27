@@ -121,12 +121,17 @@ ptp_usb_sendreq (PTPParams* params, PTPContainer* req)
 	return ret;
 }
 
+/* Used for file transactions */
+#define FILE_BUFFER_SIZE 0x10000
+
 uint16_t
 ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
-			unsigned char *data, unsigned int size)
+		  unsigned char *data, unsigned int size,
+		  int from_fd)
 {
 	uint16_t ret;
 	int wlen, datawlen;
+	size_t written;
 	PTPUSBBulkContainer usbdata;
 
 	/* build appropriate USB container */
@@ -142,8 +147,13 @@ ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
 		/* For all camera devices. */
 		datawlen = (size<PTP_USB_BULK_PAYLOAD_LEN)?size:PTP_USB_BULK_PAYLOAD_LEN;
 		wlen = PTP_USB_BULK_HDR_LEN + datawlen;
-		memcpy(usbdata.payload.data, data, datawlen);
-			
+		if (from_fd == -1) {
+			memcpy(usbdata.payload.data, data, datawlen);
+		} else {
+			written = read(from_fd, usbdata.payload.data, datawlen);
+			if (written != datawlen)
+				return PTP_ERROR_IO;
+		}
 	}
 	/* send first part of data */
 	ret = params->write_func((unsigned char *)&usbdata, wlen, params->data);
@@ -156,7 +166,38 @@ ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
 	}
 	if (size <= datawlen) return ret;
 	/* if everything OK send the rest */
-	ret=params->write_func (data + datawlen, size - datawlen, params->data);
+	if (from_fd == -1) {
+		ret=params->write_func (data + datawlen, size - datawlen, params->data);
+	} else {
+		uint32_t bytes_to_transfer;
+		uint32_t bytes_left_to_transfer;
+		void *temp_buf;
+
+		written = 0;
+		bytes_left_to_transfer = size-datawlen;
+
+		temp_buf = malloc(FILE_BUFFER_SIZE);
+		if (temp_buf == NULL)
+			return PTP_ERROR_IO;
+
+		ret = PTP_RC_OK;
+		while(bytes_left_to_transfer > 0) {
+			if (bytes_left_to_transfer > FILE_BUFFER_SIZE) {
+				bytes_to_transfer = FILE_BUFFER_SIZE;
+			} else {
+				bytes_to_transfer = bytes_left_to_transfer;
+			}
+			written = read(from_fd, temp_buf, bytes_to_transfer);
+			if (written != bytes_to_transfer) {
+				ret = PTP_ERROR_IO;
+				break;
+			}
+			ret=params->write_func (temp_buf, bytes_to_transfer, params->data);
+			bytes_left_to_transfer -= bytes_to_transfer;
+		}
+		free(temp_buf);
+		
+	}
 	if (ret!=PTP_RC_OK) {
 		ret = PTP_ERROR_IO;
 /*		ptp_error (params,
@@ -238,7 +279,6 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp,
 		} else {
 			uint32_t bytes_to_write, written;
 			uint32_t bytes_left_to_transfer;
-			uint32_t temp_buf_size = 0x100000;
 			void *temp_buf;
 						
 			if (readlen)
@@ -255,7 +295,7 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp,
 			if (len + PTP_USB_BULK_HDR_LEN <= rlen)
 				break;
 			
-			temp_buf = malloc(temp_buf_size);
+			temp_buf = malloc(FILE_BUFFER_SIZE);
 			if (temp_buf == NULL) {
 				ret = PTP_ERROR_IO;
 				break;
@@ -265,8 +305,8 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp,
 			bytes_left_to_transfer = len - (rlen - PTP_USB_BULK_HDR_LEN);
 
 			while (bytes_left_to_transfer > 0) {
-				bytes_to_write = ((bytes_left_to_transfer > temp_buf_size) ?
-						  temp_buf_size : bytes_left_to_transfer);
+				bytes_to_write = ((bytes_left_to_transfer > FILE_BUFFER_SIZE) ?
+						  FILE_BUFFER_SIZE : bytes_left_to_transfer);
 				
 				ret = params->read_func(temp_buf,
 							bytes_to_write,
@@ -382,11 +422,11 @@ ptp_usb_getresp (PTPParams* params, PTPContainer* resp)
 static uint16_t
 _ptp_transaction (PTPParams* params, PTPContainer* ptp, 
 		  uint16_t flags, unsigned int sendlen, unsigned char** data,
-		  int to_fd, unsigned int *recvlen)
+		  int fd, unsigned int *recvlen)
 {
 	if ((params==NULL) || (ptp==NULL)) 
 		return PTP_ERROR_BADPARAM;
-	
+
 	ptp->Transaction_ID=params->transaction_id++;
 	ptp->SessionID=params->session_id;
 	/* send request */
@@ -395,11 +435,11 @@ _ptp_transaction (PTPParams* params, PTPContainer* ptp,
 	switch (flags&PTP_DP_DATA_MASK) {
 	case PTP_DP_SENDDATA:
 		CHECK_PTP_RC(params->senddata_func(params, ptp,
-			*data, sendlen));
+			*data, sendlen, fd));
 		break;
 	case PTP_DP_GETDATA:
 		CHECK_PTP_RC(params->getdata_func(params, ptp,
-			(unsigned char**)data, recvlen, to_fd));
+			(unsigned char**)data, recvlen, fd));
 		break;
 	case PTP_DP_NODATA:
 		break;
@@ -421,11 +461,17 @@ ptp_transaction (PTPParams* params, PTPContainer* ptp,
 }
 
 static uint16_t
-ptp_transaction_tofd (PTPParams* params, PTPContainer* ptp, 
+ptp_transaction_fd (PTPParams* params, PTPContainer* ptp, 
 		      uint16_t flags, unsigned int sendlen, 
-		      int to_fd, unsigned int *recvlen)
+		      int fd, unsigned int *recvlen)
 {
-	return _ptp_transaction(params, ptp, flags, sendlen, NULL, to_fd, recvlen);
+	/*
+	 * This dummy data needed since _ptp_transaction()
+	 * will dereference the data argument
+	 */
+	unsigned char *dummydata = NULL;
+	
+	return _ptp_transaction(params, ptp, flags, sendlen, &dummydata, fd, recvlen);
 }
 
 /* Enets handling functions */
@@ -786,7 +832,7 @@ ptp_getobject_tofd (PTPParams* params, uint32_t handle, int fd)
 	ptp.Param1=handle;
 	ptp.Nparam=1;
 	len=0;
-	return ptp_transaction_tofd(params, &ptp, PTP_DP_GETDATA, 0, fd, &len);
+	return ptp_transaction_fd(params, &ptp, PTP_DP_GETDATA, 0, fd, &len);
 }
 
 /**
@@ -930,6 +976,29 @@ ptp_sendobject (PTPParams* params, unsigned char* object, uint32_t size)
 	ptp.Nparam=0;
 
 	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &object, NULL);
+}
+
+/**
+ * ptp_sendobject_fromfd:
+ * params:	PTPParams*
+ *		fd                      - File descriptor to read() object from
+ *              uint32_t size           - File/object size
+ *
+ * Sends object from file descriptor by consecutive reads from this
+ * descriptor.
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
+uint16_t
+ptp_sendobject_fromfd (PTPParams* params, int fd, uint32_t size)
+{
+	PTPContainer ptp;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code=PTP_OC_SendObject;
+	ptp.Nparam=0;
+
+	return ptp_transaction_fd(params, &ptp, PTP_DP_SENDDATA, size, fd, NULL);
 }
 
 

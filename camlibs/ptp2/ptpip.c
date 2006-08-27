@@ -210,12 +210,17 @@ ptp_ptpip_check_event (PTPParams* params) {
 #define WRITE_BLOCKSIZE 65536
 uint16_t
 ptp_ptpip_senddata (PTPParams* params, PTPContainer* ptp,
-			unsigned char *data, unsigned int size)
+			unsigned char *data, unsigned int size,
+			int to_fd)
 {
 	unsigned char	request[16];
 	int		ret, curwrite, towrite;
 	unsigned char*	xdata;
 
+	if (to_fd != -1) {
+		gp_log (GP_LOG_ERROR, "ptpip/senddata", "fd transfers not supported.");
+		return PTP_RC_GeneralError;
+	}
 	htod32a(&request[ptpip_type],PTPIP_START_DATA_PACKET);
 	htod32a(&request[ptpip_len],sizeof(request));
 	htod32a(&request[ptpip_startdata_transid  + 8],ptp->Transaction_ID);

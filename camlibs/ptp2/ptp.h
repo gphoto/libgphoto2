@@ -1042,7 +1042,8 @@ typedef short (* PTPIOWriteFunc)(unsigned char *bytes, unsigned int size,
  */
 typedef uint16_t (* PTPIOSendReq)	(PTPParams* params, PTPContainer* req);
 typedef uint16_t (* PTPIOSendData)	(PTPParams* params, PTPContainer* ptp,
-					unsigned char *data, unsigned int size);
+					 unsigned char *data, unsigned int size,
+					 int from_fd);
 typedef uint16_t (* PTPIOGetResp)	(PTPParams* params, PTPContainer* resp);
 typedef uint16_t (* PTPIOGetData)	(PTPParams* params, PTPContainer* ptp,
 	                                unsigned char **data, unsigned int *recvlen,
@@ -1112,7 +1113,8 @@ struct _PTPParams {
 /* last, but not least - ptp functions */
 uint16_t ptp_usb_sendreq	(PTPParams* params, PTPContainer* req);
 uint16_t ptp_usb_senddata	(PTPParams* params, PTPContainer* ptp,
-				unsigned char *data, unsigned int size);
+				 unsigned char *data, unsigned int size,
+				 int from_fd);
 uint16_t ptp_usb_getresp	(PTPParams* params, PTPContainer* resp);
 uint16_t ptp_usb_getdata	(PTPParams* params, PTPContainer* ptp, 
 				 unsigned char **data, unsigned int *readlen,
@@ -1123,7 +1125,8 @@ uint16_t ptp_usb_event_wait	(PTPParams* params, PTPContainer* event);
 int      ptp_ptpip_connect	(PTPParams* params, const char *port);
 uint16_t ptp_ptpip_sendreq	(PTPParams* params, PTPContainer* req);
 uint16_t ptp_ptpip_senddata	(PTPParams* params, PTPContainer* ptp,
-				unsigned char *data, unsigned int size);
+				unsigned char *data, unsigned int size,
+				int to_fd);
 uint16_t ptp_ptpip_getresp	(PTPParams* params, PTPContainer* resp);
 uint16_t ptp_ptpip_getdata	(PTPParams* params, PTPContainer* ptp, 
 				 unsigned char **data, unsigned int *readlen,
@@ -1168,7 +1171,8 @@ uint16_t ptp_sendobjectinfo	(PTPParams* params, uint32_t* store,
 				uint32_t* parenthandle, uint32_t* handle,
 				PTPObjectInfo* objectinfo);
 uint16_t ptp_sendobject		(PTPParams* params, unsigned char* object,
-				uint32_t size);
+				 uint32_t size);
+uint16_t ptp_sendobject_fromfd  (PTPParams* params, int fd, uint32_t size);
 
 uint16_t ptp_initiatecapture	(PTPParams* params, uint32_t storageid,
 				uint32_t ofc);
