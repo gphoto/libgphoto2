@@ -74,44 +74,31 @@ SED=${SED-sed}
 
 
 try_gp2ddb=false
-msg_gp2ddb="no"
-
-# check whether this is a certain developer's machine
-mysum="$( (hostname; cat /proc/cpuinfo) | md5sum | cut -d" " -f1 )"
-while read testsum; do
-      if test "$testsum" = "mysum"; then
-            try_gp2ddb=true
-	    msg_dp2ddb="yes (developer machine detected)"
-	    break
-      fi
-done<<EOF
-f00fd2f44928f790f4f219b3228e7d20
-292ab148abc02c12a5c52b200fb7d465
-da51c1e79e469b5577741f1a5fb2e9d6
-EOF
+msg_gp2ddb=""
+gp_msg_dp2ddb="no"
 
 AC_ARG_ENABLE([gp2ddb],
 [AS_HELP_STRING([--enable-gp2ddb],
 		[enable EXPERIMENTAL PRE-ALPHA gphoto2 device database code])],[
 	if test "x$enableval" = "xyes"; then
 		try_gp2ddb=true
-		msg_dp2ddb="yes (--enable-gp2ddb detected)"
+		msg_dp2ddb="(--enable-gp2ddb detected)"
 	elif test "x$enableval" = "xno"; then
 		try_gp2ddb=false
-		msg_dp2ddb="no (--disable-gp2ddb detected)"
+		msg_dp2ddb="(--disable-gp2ddb detected)"
 	fi
 ])
-GP_CONFIG_MSG([GP2DDB support], [${try_gp2ddb} (EXPERIMENTAL)])
-
 
 AC_PATH_PROG([FLEX], [flex])
 AC_SUBST([FLEX])
 AC_PATH_PROG([BISON], [bison])
 AC_SUBST([BISON])
-AM_CONDITIONAL([HAVE_FLEX_BISON], ["$try_gp2ddb" && test -x "$FLEX" && test -x "$BISON"])
 
+AC_MSG_CHECKING([whether to enable GP2DDB])
 if "$try_gp2ddb"; then
-   if test -x "$FLEX" && test -x "$BISON"; then :; else
+   if test -x "$FLEX" && test -x "$BISON"; then
+      gp_msg_dp2ddb="yes $msg_dp2ddb"
+   else
       AC_MSG_ERROR([Fatal: GP2DDB support requires flex and bison!
 
 Aborting configuration.
@@ -120,11 +107,19 @@ Install flex and bison into your PATH or run configure with --disable-gp2ddb
 to disable GP2DDB support.
 ])
    fi
+else
+      gp_msg_dp2ddb="no $msg_dp2ddb"
 fi
+AC_MSG_RESULT([${gp_msg_gp2ddb}])
 
-AC_MSG_CHECKING([whether to enable GP2DDB])
-AC_MSG_RESULT([${msg_gp2ddb}])
+AM_CONDITIONAL([HAVE_FLEX_BISON], ["$try_gp2ddb" && test -x "$FLEX" && test -x "$BISON"])
 
+if "$try_gp2ddb" && test -x "$FLEX" && test -x "$BISON"; then
+	gp_msg_gp2ddb="yes $msg_gp2ddb"
+else
+	gp_msg_gp2ddb="no $msg_gp2ddb"
+fi
+GP_CONFIG_MSG([GP2DDB support], [${gp_msg_gp2ddb} (EXPERIMENTAL)])
 
 GP_PKG_CONFIG
 
