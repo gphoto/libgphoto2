@@ -200,22 +200,22 @@ void precalc_table(code_table_t *table)
 		}
 		else if ((i & 0xF0) == 0x80) {
 			/* code 1000 */
-			val = +8;
+			val = +7;
 			len = 4;
 		}
 		else if ((i & 0xF0) == 0x90) {
 			/* code 1001 */
-			val = -8;
+			val = -7;
 			len = 4;
 		}
 		else if ((i & 0xF0) == 0xF0) {
 			/* code 1111 */
-			val = -20;
+			val = -15;
 			len = 4;
 		}
 		else if ((i & 0xF8) == 0xE0) {
 			/* code 11100 */
-			val = +20;
+			val = +15;
 			len = 5;
 		}
 		else if ((i & 0xF8) == 0xE8) {
@@ -230,7 +230,13 @@ void precalc_table(code_table_t *table)
 	}
 }
 
-#define CLAMP(x)	((x)<16?16:((x)>251)?251:(x))
+#define CLAMP(x)	((x)<20?20:((x)>255)?255:(x))
+/* #define	MAX(a,b) 	((a)>(b)?(a):(b)) */
+/* #define 	MIN(a,b)	((a)<(b)?(a):(b)) */
+#define	MAX3(a,b,c) 	MAX(MAX(a,b),c)
+#define	MIN3(a,b,c) 	MIN(MIN(a,b),c)
+#define	MAX4(a,b,c,d) 	MAX(MAX(a,b),MAX(c,d))
+#define	MIN4(a,b,c,d) 	MIN(MIN(a,b),MIN(c,d))
 
 
 int mars_decompress (unsigned char *inp, 
@@ -241,7 +247,7 @@ int mars_decompress (unsigned char *inp,
 	int val;
 	code_table_t table[256];
 	unsigned char *addr;
-	int bitpos;
+	int bitpos, i;
 	unsigned char A,B,C,D, predictor;
 	/* First calculate the Huffman table */
 	precalc_table(table);
@@ -293,10 +299,23 @@ int mars_decompress (unsigned char *inp,
 				}
 				else if (col < 2) {
 					/* left column: relative to top pixel */
-					val += (outp[-2*width] + 
-						    outp[-2*width + 2])/2;
-				
+					/* initial estimate */
+					predictor = (outp[-2*width] +
+						outp[-2*width + 2])/2; 
+					/* corrections */
+					if (row > 3) {
+						B=outp[-2*width ];
+						C=outp[-4*width ];
+						if (MAX((predictor -2*B+C),
+						    (-predictor +2*B-C))
+						    < 1)
+							predictor = 
+							(7*predictor + C)/8;
+					}
+						
+					val += predictor;
 				}
+
 				else if (col > width - 3) {
 					/* left column: relative to top pixel */
 					val += (outp[-2*width] +
@@ -309,19 +328,38 @@ int mars_decompress (unsigned char *inp,
 					C=outp[-2*width-2];
 					B=outp[-2*width ];
 					D=outp[-2*width+2];
-					if (D-A >= 0)
-						predictor= 
-						MIN((D-A)/8, 251-(A+B)/2)+ (A+B)/2;
-				
-					else 
-						predictor= 
-						-MIN((A-D)/8, (A+B)/2-4)+ (A+B)/2;
-					if ((val)&&(predictor > 0xcf))
-						val = (5*val +1)/4;
-					if ((val)&&(predictor < 0x20)) 
-						val = (5*val+3)/4;  	
-				
-					val += predictor;
+					/* initial estimate for predictor */
+					predictor = (2*A + B + D+1)/4;
+					/* possible vertical edge? */
+					if (4*MAX((C -2*B + D), 
+					    (-C + 2*B - D)) < 1)
+						predictor = 
+						    (3*predictor + D+1)/4;
+					/* or horizontal edge? */
+					if (row >= 4) {
+						D=outp[-4*width - 2];
+					if (4*MAX((A -2*C + D), 
+					    (-A + 2*C - D)) < 1)
+						predictor = 
+						    (3*predictor + A+1)/4;
+					}
+					/* decrease changes for close values */
+					if (MAX3(A,B,D) - MIN3(A,B,D) 
+					< 0x20) {
+						if(val > 0)
+							val -= 1;
+						if (val < 0) 
+							val += 1;
+					}
+					/* increase change for widespread values*/
+					if (MAX4(A,B,C,D) - MIN4(A,B,C,D) 
+					> 0x30) {
+						if(val > 0)
+							val += 1;
+						if (val < 0) 
+							val -= 1;
+					}
+					val += predictor;	
 				}
 			}
 
@@ -330,6 +368,9 @@ int mars_decompress (unsigned char *inp,
 			col++;
 		}
 	}
+	/* spread the clamped values upward */
+//	for (i=0; i< sizeof(outp); i++) 
+//		outp[i] = outp[i]*255/236;
 
 	return 0;
 }
