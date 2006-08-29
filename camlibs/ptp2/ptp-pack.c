@@ -169,7 +169,7 @@ ptp_pack_string(PTPParams *params, char *string, unsigned char* data, uint16_t o
 }
 
 static inline unsigned char *
-ptp_get_packed_stringcopy(PTPParams *params, char *string)
+ptp_get_packed_stringcopy(PTPParams *params, char *string, uint32_t *packed_size)
 {
 	uint8_t packed[PTP_MAXSTRLEN+3], len;
 	size_t plen;
@@ -183,9 +183,12 @@ ptp_get_packed_stringcopy(PTPParams *params, char *string)
 	/* Include terminator */
 	plen += 2;
 	retcopy = malloc(plen);
-	if (!retcopy)
+	if (!retcopy) {
+		*packed_size = 0;
 		return NULL;
+	}
 	memcpy(retcopy, packed, plen);
+	*packed_size = plen;
 	return (retcopy);
 }
 
@@ -819,7 +822,7 @@ ptp_pack_DPV (PTPParams *params, PTPPropertyValue* value, unsigned char** dpvptr
 		break;
 	/* XXX: other int types are unimplemented */
 	case PTP_DTC_STR: {
-		dpv=ptp_get_packed_stringcopy(params, value->str);
+		dpv=ptp_get_packed_stringcopy(params, value->str, &size);
 		break;
 	}
 	}
