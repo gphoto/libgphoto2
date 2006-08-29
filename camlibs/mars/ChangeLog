@@ -1,3 +1,14 @@
+2006-08-28  Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Added INNOVAGE Digital Mini. Corrected USB Product
+		     number for Philips Keychain camera (worked anyway, 
+		     but number was wrong). 
+		     Minor tweak to gamma setting.
+		     Improvements to camera_manual(). 
+	* mars.c:    More improvements in mars_decompress().
+	* README:    updated.
+
+
 2006-02-08  Theodore Kilgore <kilgota@auburn.edu>
 
 	* library.c: Added two new cameras. One is the Argus QuickClix, 
