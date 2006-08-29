@@ -159,25 +159,28 @@ ptp_pack_string(PTPParams *params, char *string, unsigned char* data, uint16_t o
 		*len=0;
 		return;
 	}
-	*len = (uint8_t) packedlen;
-
+	
 	/* +1 for the length byte, no zero 0x0000 terminator */
 	htod8a(&data[offset],packedlen+1);
 	for (i=0;i<packedlen && i< PTP_MAXSTRLEN; i++) {
 		htod16a(&data[offset+i*2+1],ucs2str[i]);
 	}
+
+	/* The returned length is in number of characters */
+	*len = (uint8_t) packedlen;
 }
 
 static inline unsigned char *
 ptp_get_packed_stringcopy(PTPParams *params, char *string, uint32_t *packed_size)
 {
-	uint8_t packed[PTP_MAXSTRLEN+3], len;
+uint8_t packed[PTP_MAXSTRLEN+3], len;
 	size_t plen;
 	unsigned char *retcopy = NULL;
 
 	ptp_pack_string(params, string, (unsigned char*) packed, 0, &len);
-	plen = len + 1;
-	/* Assure proper termination */
+	/* returned length is in characters, then one byte for string length */
+	plen = len*2 + 1;
+	/* Assure proper termination, two zero bytes */
 	packed[plen] = 0x00;
 	packed[plen+1] = 0x00;
 	/* Include terminator */
