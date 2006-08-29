@@ -1,3 +1,7 @@
+2006-08-29  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* g3.c: Added Ricoh Caplio R4 id.
+
 2005-12-16  Marcus Meissner  <marcus@jet.franken.de>
 
 	* g3.c: Added Ricoh Caplio R3.
