@@ -64,10 +64,11 @@ struct {
 	{"Haimei Electronics HE-501A", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010e},
 	{"Elta Medi@ digi-cam", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010e},
 	{"Precision Mini, Model HA513A", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f},
-	{"Digital camera, CD302N", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010e},	
+	{"Digital camera, CD302N", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010e},
+	{"INNOVAGE Mini Digital, CD302N", GP_DRIVER_STATUS_TESTING, 0x093a, 0x010e},
 	{"Argus DC-1610", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f}, 
 	{"Argus DC-1620", GP_DRIVER_STATUS_TESTING, 0x093a, 0x010f}, 
-	{"Philips P44417B keychain camera", GP_DRIVER_STATUS_TESTING, 0x093a, 0x010f},
+	{"Philips P44417B keychain camera", GP_DRIVER_STATUS_TESTING, 0x093a, 0x010e},
  	{"Sakar Digital no. 77379", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f},
 	{"Argus QuickClix", GP_DRIVER_STATUS_DEPRECATED, 0x093a, 0x010f},
 	{NULL,0,0,0}
@@ -244,7 +245,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		mars_decompress (data + 12, p_data, w, h);
 	}
 	else memcpy (p_data, data + 12, w*h);		 	
-	gamma_factor = (float)data[7]/128.; 
+	gamma_factor = .55;//(float)data[7]/128.; 
 	free(data);
 
 	/* Now put the data into a PPM image file. */
