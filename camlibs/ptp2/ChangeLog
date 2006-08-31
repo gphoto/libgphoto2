@@ -8,6 +8,8 @@
 	* library.c,ptp-bugs.h:  Mark up capture capable cameras for
 	  the static capabilities.
 
+	* library.c: added Samsung YP-F2J (from libmtp).
+
 2006-08-30  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Added iRiver Clix.
