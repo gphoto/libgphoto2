@@ -3,6 +3,11 @@
 	* library.c: Handle cameras which just have files, but no
 	  directory or root object. Kodak EasyShare C330 for instance.
 
+	* library.c: GP_CAPTURE_IMAGE -> GP_OPERATION_CAPTURE_IMAGE.
+
+	* library.c,ptp-bugs.h:  Mark up capture capable cameras for
+	  the static capabilities.
+
 2006-08-30  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Added iRiver Clix.

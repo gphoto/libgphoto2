@@ -27,6 +27,8 @@
 #define PTPBUG_DELETE_SENDS_EVENT	(1<<1)
 #define PTPBUG_DUPE_FILE		(1<<2)
 #define PTP_MTP				(1<<3)
+#define PTP_CAP				(1<<4)
+#define PTP_CAP_PREVIEW			(1<<5)
 
 #define DCIM_WRONG_PARENT_BUG(x) \
   ((x)->bugs & PTPBUG_DCIM_WRONG_PARENT)

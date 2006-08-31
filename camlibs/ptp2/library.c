@@ -387,7 +387,7 @@ static struct {
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109, 0},
 	/* Nikon Coolpix 5700: A. Tanenbaum, 29 Oct 2002 */
-	{"Nikon:Coolpix 5700 (PTP mode)", 0x04b0, 0x010d, 0},
+	{"Nikon:Coolpix 5700 (PTP mode)", 0x04b0, 0x010d, PTP_CAP},
 	/* Nikon Coolpix 4500: T. Kaproncai, 22 Aug 2003 */
 	{"Nikon Coolpix 4500 (PTP mode)", 0x04b0, 0x010b, 0},
 	/* Nikon Coolpix 4300: Marco Rodriguez, 10 dic 2002 */
@@ -415,13 +415,13 @@ static struct {
 	/* Nikon Coolpix SQ: M. Holzbauer, 07 Jul 2003 */
 	{"Nikon:Coolpix 4100 (PTP mode)", 0x04b0, 0x012d, 0},
 	/* Nikon Coolpix 5600: Andy Shevchenko, 11 Aug 2005 */
-	{"Nikon:Coolpix 5600 (PTP mode)", 0x04b0, 0x012e, 0},
+	{"Nikon:Coolpix 5600 (PTP mode)", 0x04b0, 0x012e, PTP_CAP},
 	/* 4600: Martin Klaffenboeck <martin.klaffenboeck@gmx.at> */
 	{"Nikon:Coolpix 4600 (PTP mode)", 0x04b0, 0x0130, 0},
-	{"Nikon:Coolpix 5900 (PTP mode)", 0x04b0, 0x0135, 0},
-	{"Nikon:Coolpix P1 (PTP mode)",   0x04b0, 0x0140, 0},
+	{"Nikon:Coolpix 5900 (PTP mode)", 0x04b0, 0x0135, PTP_CAP},
+	{"Nikon:Coolpix P1 (PTP mode)",   0x04b0, 0x0140, PTP_CAP},
 	/* Marcus Meissner */
-	{"Nikon:Coolpix P2 (PTP mode)",   0x04b0, 0x0142, 0},
+	{"Nikon:Coolpix P2 (PTP mode)",   0x04b0, 0x0142, PTP_CAP},
 	/* Lowe, John Michael <jomlowe@iupui.edu> */
 	{"Nikon:Coolpix S2 (PTP mode)",   0x04b0, 0x014e, 0},
 	{"Nikon:Coolpix SQ (PTP mode)",   0x04b0, 0x0202, 0},
@@ -439,17 +439,17 @@ static struct {
 	{"Nikon:DSC D100 (PTP mode)",     0x04b0, 0x0402, 0},
 	/* D2H SLR in PTP mode from Steve Drew <stevedrew@gmail.com> */
 	{"Nikon:D2H SLR (PTP mode)",      0x04b0, 0x0404, 0},
-	{"Nikon:DSC D70 (PTP mode)",      0x04b0, 0x0406, 0},
+	{"Nikon:DSC D70 (PTP mode)",      0x04b0, 0x0406, PTP_CAP},
 
 	/* Justin Case <justin_case@gmx.net> */
-	{"Nikon:D2X SLR (PTP mode)",      0x04b0, 0x0408, 0},
+	{"Nikon:D2X SLR (PTP mode)",      0x04b0, 0x0408, PTP_CAP},
 
 	/* Niclas Gustafsson (nulleman @ sf) */
-	{"Nikon:D50 (PTP mode)",          0x04b0, 0x040a, 0},
+	{"Nikon:D50 (PTP mode)",          0x04b0, 0x040a, PTP_CAP},
 
-	{"Nikon:DSC D70s (PTP mode)",     0x04b0, 0x040e, 0},
+	{"Nikon:DSC D70s (PTP mode)",     0x04b0, 0x040e, PTP_CAP},
 	/* Jana Jaeger <jjaeger.suse.de> */
-	{"Nikon:DSC D200 (PTP mode)",     0x04b0, 0x0410, 0},
+	{"Nikon:DSC D200 (PTP mode)",     0x04b0, 0x0410, PTP_CAP},
 
 	/* Sridharan Rengaswamy <sridhar@stsci.edu>, Coolpix L3 */
 	{"Nikon:Coolpix L3 (PTP mode)",   0x04b0, 0x041a, 0},
@@ -499,13 +499,13 @@ static struct {
 	{"Canon:Digital IXUS v3 (PTP mode)",    0x04a9, 0x3071, PTPBUG_DELETE_SENDS_EVENT},
 		/* it's the same as S230 */
 
-	{"Canon:Digital IXUS II (PTP mode)",    0x04a9, 0x3072, PTPBUG_DELETE_SENDS_EVENT},
-	{"Canon:PowerShot SD100 (PTP mode)",    0x04a9, 0x3072, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:Digital IXUS II (PTP mode)",    0x04a9, 0x3072, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:PowerShot SD100 (PTP mode)",    0x04a9, 0x3072, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 
-	{"Canon:PowerShot A70 (PTP)",           0x04a9, 0x3073, PTPBUG_DELETE_SENDS_EVENT},
-	{"Canon:PowerShot A60 (PTP)",           0x04a9, 0x3074, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot A70 (PTP)",           0x04a9, 0x3073, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:PowerShot A60 (PTP)",           0x04a9, 0x3074, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 		/* IXUS 400 has the same PID in both modes, Till Kamppeter */
-	{"Canon:Digital IXUS 400 (PTP mode)",   0x04a9, 0x3075, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:Digital IXUS 400 (PTP mode)",   0x04a9, 0x3075, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:PowerShot S50 (PTP mode)",      0x04a9, 0x3077, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot G5 (PTP mode)",       0x04a9, 0x3085, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:Elura 50 (PTP mode)",           0x04a9, 0x3087, PTPBUG_DELETE_SENDS_EVENT},
@@ -513,27 +513,27 @@ static struct {
 	{"Canon:EOS 300D (PTP mode)",           0x04a9, 0x3099, PTPBUG_DCIM_WRONG_PARENT},
 	{"Canon:EOS Digital Rebel (PTP mode)",  0x04a9, 0x3099, PTPBUG_DCIM_WRONG_PARENT},
 	{"Canon:EOS Kiss Digital (PTP mode)",   0x04a9, 0x3099, PTPBUG_DCIM_WRONG_PARENT},
-	{"Canon:PowerShot A80 (PTP)",           0x04a9, 0x309a, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot A80 (PTP)",           0x04a9, 0x309a, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:Digital IXUS i (PTP mode)",     0x04a9, 0x309b, PTPBUG_DELETE_SENDS_EVENT},
-	{"Canon:PowerShot S1 IS (PTP mode)",    0x04a9, 0x309c, PTPBUG_DELETE_SENDS_EVENT},
-	{"Canon:Powershot S70 (PTP mode)",      0x04a9, 0x30b1, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot S1 IS (PTP mode)",    0x04a9, 0x309c, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:Powershot S70 (PTP mode)",      0x04a9, 0x30b1, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:Powershot S60 (PTP mode)",      0x04a9, 0x30b2, PTPBUG_DELETE_SENDS_EVENT},
-	{"Canon:Powershot G6 (PTP mode)",       0x04a9, 0x30b3, PTPBUG_DELETE_SENDS_EVENT},
-	{"Canon:Digital IXUS 500 (PTP mode)",   0x04a9, 0x30b4, PTPBUG_DELETE_SENDS_EVENT},
-	{"Canon:PowerShot S500 (PTP mode)",     0x04a9, 0x30b4, PTPBUG_DELETE_SENDS_EVENT},
-	{"Canon:PowerShot A75 (PTP mode)",      0x04a9, 0x30b5, PTPBUG_DELETE_SENDS_EVENT},
-	{"Canon:PowerShot SD110 (PTP mode)",    0x04a9, 0x30b6, PTPBUG_DELETE_SENDS_EVENT},
-	{"Canon:Digital IXUS IIs (PTP mode)",   0x04a9, 0x30b6, PTPBUG_DELETE_SENDS_EVENT},
-	{"Canon:PowerShot A400 (PTP mode)",     0x04a9, 0x30b7, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:Powershot G6 (PTP mode)",       0x04a9, 0x30b3, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:Digital IXUS 500 (PTP mode)",   0x04a9, 0x30b4, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:PowerShot S500 (PTP mode)",     0x04a9, 0x30b4, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:PowerShot A75 (PTP mode)",      0x04a9, 0x30b5, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:PowerShot SD110 (PTP mode)",    0x04a9, 0x30b6, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:Digital IXUS IIs (PTP mode)",   0x04a9, 0x30b6, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:PowerShot A400 (PTP mode)",     0x04a9, 0x30b7, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:PowerShot A310 (PTP mode)",     0x04a9, 0x30b8, PTPBUG_DELETE_SENDS_EVENT},
-	{"Canon:PowerShot A85 (PTP mode)",      0x04a9, 0x30b9, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot A85 (PTP mode)",      0x04a9, 0x30b9, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:Digital IXUS 430 (PTP mode)",   0x04a9, 0x30ba, PTPBUG_DELETE_SENDS_EVENT},
- 	{"Canon:PowerShot S410 (PTP mode)",     0x04a9, 0x30ba, PTPBUG_DELETE_SENDS_EVENT},
- 	{"Canon:PowerShot A95 (PTP mode)",      0x04a9, 0x30bb, PTPBUG_DELETE_SENDS_EVENT},
-	{"Canon:Digital IXUS 40 (PTP mode)",    0x04a9, 0x30bf, PTPBUG_DELETE_SENDS_EVENT},
+ 	{"Canon:PowerShot S410 (PTP mode)",     0x04a9, 0x30ba, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
+ 	{"Canon:PowerShot A95 (PTP mode)",      0x04a9, 0x30bb, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:Digital IXUS 40 (PTP mode)",    0x04a9, 0x30bf, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
  	{"Canon:PowerShot SD200 (PTP mode)",    0x04a9, 0x30c0, PTPBUG_DELETE_SENDS_EVENT},
  	{"Canon:Digital IXUS 30 (PTP mode)",    0x04a9, 0x30c0, PTPBUG_DELETE_SENDS_EVENT},
- 	{"Canon:PowerShot A520 (PTP mode)",     0x04a9, 0x30c1, PTPBUG_DELETE_SENDS_EVENT},
+ 	{"Canon:PowerShot A520 (PTP mode)",     0x04a9, 0x30c1, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:PowerShot A510 (PTP mode)",     0x04a9, 0x30c2, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:EOS 1D Mark II (PTP mode)",     0x04a9, 0x30ea, PTPBUG_DCIM_WRONG_PARENT},
  	{"Canon:EOS 20D (PTP mode)",            0x04a9, 0x30ec, PTPBUG_DCIM_WRONG_PARENT},
@@ -545,7 +545,7 @@ static struct {
 	 */
 	{"Canon:EOS 350D (PTP mode)",           0x04a9, 0x30ee, PTPBUG_DCIM_WRONG_PARENT},
 	{"Canon:EOS 350D",                      0x04a9, 0x30ef, PTPBUG_DCIM_WRONG_PARENT},
-	{"Canon:PowerShot S2 IS (PTP mode)",    0x04a9, 0x30f0, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot S2 IS (PTP mode)",    0x04a9, 0x30f0, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:PowerShot SD430 (PTP mode)",    0x04a9, 0x30f1, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:Digital IXUS 700 (PTP mode)",   0x04a9, 0x30f2, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot SD500 (PTP mode)",    0x04a9, 0x30f2, PTPBUG_DELETE_SENDS_EVENT},
@@ -554,9 +554,9 @@ static struct {
 	/* Conan Colx, A410, gphoto-Feature Requests-1342538 */
 	{"Canon:PowerShot A410 (PTP mode)",     0x04a9, 0x30f9, PTPBUG_DELETE_SENDS_EVENT},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1411976&group_id=8874&atid=358874 */
-	{"Canon:PowerShot S80 (PTP mode)",      0x04a9, 0x30fa, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot S80 (PTP mode)",      0x04a9, 0x30fa, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	/* A620, Tom Roelz */
-	{"Canon:PowerShot A620 (PTP mode)",     0x04a9, 0x30fc, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot A620 (PTP mode)",     0x04a9, 0x30fc, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	/* A610, Andriy Kulchytskyy <whoops@ukrtop.com> */
 	{"Canon:PowerShot A610 (PTP mode)",     0x04a9, 0x30fd, PTPBUG_DELETE_SENDS_EVENT},
 	/* Irc Reporter */
@@ -939,7 +939,11 @@ camera_abilities (CameraAbilitiesList *list)
 			a.file_operations   = GP_FILE_OPERATION_DELETE;
 		} else {
 			a.device_type       = GP_DEVICE_STILL_CAMERA;
-			a.operations        = GP_CAPTURE_IMAGE | GP_OPERATION_CONFIG;
+			a.operations        = GP_OPERATION_NONE;
+			if (models[i].known_bugs & PTP_CAP)
+				a.operations |= GP_OPERATION_CAPTURE_IMAGE | GP_OPERATION_CONFIG;
+			if (models[i].known_bugs & PTP_CAP_PREVIEW)
+				a.operations |= GP_OPERATION_CAPTURE_PREVIEW;
 			a.file_operations   = GP_FILE_OPERATION_PREVIEW |
 						GP_FILE_OPERATION_DELETE;
 		}
