@@ -1,3 +1,8 @@
+2006-08-31  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Handle cameras which just have files, but no
+	  directory or root object. Kodak EasyShare C330 for instance.
+
 2006-08-30  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Added iRiver Clix.

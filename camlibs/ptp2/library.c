@@ -3241,9 +3241,27 @@ fallback:
                         GP_DEBUG("Changing DCIM ParentObject ID from 0x%x to 0",
                                  oi->ParentObject);
                         oi->ParentObject = 0;
+			nroot++;
                     }
 		}
             }
+	    /* Some cameras do not have a directory at all, just files or unattached
+	     * directories. In this case associate all unattached to the 0 object.
+	     */
+            if (nroot == 0) {
+		/* look for entries with parentobjects that do not exist */
+		for (i = 0; i < params->handles.n; i++)
+		{
+		    int j;
+                    PTPObjectInfo *oi = &params->objectinfo[i];
+
+		    for (j = 0;j < params->handles.n; j++)
+			if (oi->ParentObject == params->handles.Handler[j])
+				break;
+		    if (j == params->handles.n)
+			oi->ParentObject = 0;
+		}
+	    }
         }
 #if 0
 	add_dir (camera, 0x00000000, 0xff000000, "DIR1");
