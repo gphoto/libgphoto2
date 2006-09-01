@@ -2,7 +2,7 @@
 	
 	* generic/print-camera-list.c:
 
-	  Generator for udev newstyles output. (udev-new-rules)
+	  Generator for udev newstyles output. (udev-rules-0.98)
 
 2002-11-01  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 

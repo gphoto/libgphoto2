@@ -294,7 +294,7 @@ udev_begin_func (const func_params_t *params)
 }
 
 static int
-udev_new_begin_func (const func_params_t *params)
+udev_098_begin_func (const func_params_t *params)
 {
 	printf ("# udev rules file for libgphoto2\n#\n");
 	printf ("SUBSYSTEMS!=\"usb\", ACTION!=\"add\", GOTO=\"libgphoto2_rules_end\"\n\n");
@@ -420,7 +420,7 @@ udev_camera_func (const func_params_t *params,
 }
 
 static int
-udev_new_camera_func (const func_params_t *params, 
+udev_098_camera_func (const func_params_t *params, 
 		  const int i,
 		  const int total,
 		  const CameraAbilities *a)
@@ -1023,12 +1023,12 @@ static const output_format_t formats[] = {
 	 camera_func: udev_camera_func,
 	 end_func: udev_end_func
 	},
-	{name: "udev-new-rules",
+	{name: "udev-rules-0.98",
 	 descr: "udev >= 0.98 rules file",
 	 help: "Put it into /etc/udev/libgphoto2.rules, set file mode, owner, group or add script to run, for udev >= 0.98",
 	 paramdescr: "( <PATH_TO_SCRIPT> | [mode <mode>|owner <owner>|group <group>]* ) ",
-	 begin_func: udev_new_begin_func, 
-	 camera_func: udev_new_camera_func,
+	 begin_func: udev_098_begin_func, 
+	 camera_func: udev_098_camera_func,
 	 end_func: udev_end_func
 	},
 	{name: "idlist",
