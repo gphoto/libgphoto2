@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-06-21 07:30+0200\n"
+"POT-Creation-Date: 2006-08-30 07:53+0200\n"
 "PO-Revision-Date: 2005-05-14 13:32+0200\n"
 "Last-Translator: Iñaki Larrañaga  <dooteo@euskalgnu.org>\n"
 "Language-Team:  <itzulpena@euskalgnu.org>\n"
@@ -16,89 +16,89 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.9.1\n"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:194
+#: libgphoto2_port/gphoto2-port-info-list.c:196
 #, fuzzy, c-format
 msgid "Called for filename '%s'."
 msgstr "Huts egin du '%s' irekitzean (%m)."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:199
+#: libgphoto2_port/gphoto2-port-info-list.c:201
 #, fuzzy, c-format
 msgid "Could not load '%s': '%s'."
 msgstr "Ezin izan da '%s' itxi (%m)."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:207
+#: libgphoto2_port/gphoto2-port-info-list.c:209
 #, fuzzy, c-format
 msgid "Could not find some functions in '%s': '%s'."
 msgstr "Ezin izan da '%s' hustu (%m)."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:219
+#: libgphoto2_port/gphoto2-port-info-list.c:221
 #, c-format
 msgid "'%s' already loaded"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:228
+#: libgphoto2_port/gphoto2-port-info-list.c:230
 #, fuzzy, c-format
 msgid "Could not load port driver list: '%s'."
 msgstr "Ezin izan da '%s' gailua blokeatu"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:235
+#: libgphoto2_port/gphoto2-port-info-list.c:237
 #, c-format
 msgid "Loaded '%s' ('%s') from '%s'."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:264
+#: libgphoto2_port/gphoto2-port-info-list.c:266
 #, c-format
 msgid "Using ltdl to load io-drivers from '%s'..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:290
+#: libgphoto2_port/gphoto2-port-info-list.c:292
 #, c-format
 msgid "Counting entries (%i available)..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:299
+#: libgphoto2_port/gphoto2-port-info-list.c:301
 #, c-format
 msgid "%i regular entries available."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:328
+#: libgphoto2_port/gphoto2-port-info-list.c:330
 #, c-format
 msgid "Looking for path '%s' (%i entries available)..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:340
+#: libgphoto2_port/gphoto2-port-info-list.c:342
 #, c-format
 msgid "Starting regex search for '%s'..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:348
+#: libgphoto2_port/gphoto2-port-info-list.c:350
 #, c-format
 msgid "Trying '%s'..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:369
+#: libgphoto2_port/gphoto2-port-info-list.c:371
 msgid "regcomp failed"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:380
+#: libgphoto2_port/gphoto2-port-info-list.c:382
 #, c-format
 msgid "re_match failed (%i)"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:388
+#: libgphoto2_port/gphoto2-port-info-list.c:390
 msgid "regexec failed"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:394
+#: libgphoto2_port/gphoto2-port-info-list.c:396
 msgid "Generic Port"
 msgstr "Ataka generikoa"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:418
+#: libgphoto2_port/gphoto2-port-info-list.c:420
 #, c-format
 msgid "Looking up entry '%s'..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:448
+#: libgphoto2_port/gphoto2-port-info-list.c:450
 #, c-format
 msgid "Getting info of entry %i (%i available)..."
 msgstr ""
@@ -493,7 +493,7 @@ msgstr ""
 "Ezin izan da USB gailua (0x%x hornitzailea, 0x%x produktua) aurkitu. Ziurta "
 "zaitez gailua ordenagailuari konektatuta dagoela."
 
-#: usb/libusb.c:790
+#: usb/libusb.c:876
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "

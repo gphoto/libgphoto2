@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port 2.2.0\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-06-21 07:30+0200\n"
+"POT-Creation-Date: 2006-08-30 07:53+0200\n"
 "PO-Revision-Date: 2006-06-21 00:23+0200\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -15,89 +15,89 @@ msgstr ""
 "Content-Type: text/plain; charset=ISO-8859-2\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:194
+#: libgphoto2_port/gphoto2-port-info-list.c:196
 #, c-format
 msgid "Called for filename '%s'."
 msgstr "Wywo³ano dla nazwy pliku '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:199
+#: libgphoto2_port/gphoto2-port-info-list.c:201
 #, c-format
 msgid "Could not load '%s': '%s'."
 msgstr "Nie uda³o siê za³adowaæ '%s': '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:207
+#: libgphoto2_port/gphoto2-port-info-list.c:209
 #, c-format
 msgid "Could not find some functions in '%s': '%s'."
 msgstr "Nie uda³o siê odnale¼æ funkcji w '%s': '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:219
+#: libgphoto2_port/gphoto2-port-info-list.c:221
 #, c-format
 msgid "'%s' already loaded"
 msgstr "'%s' ju¿ za³adowany"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:228
+#: libgphoto2_port/gphoto2-port-info-list.c:230
 #, c-format
 msgid "Could not load port driver list: '%s'."
 msgstr "Nie uda³o siê za³adowaæ listy sterowników portów: '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:235
+#: libgphoto2_port/gphoto2-port-info-list.c:237
 #, c-format
 msgid "Loaded '%s' ('%s') from '%s'."
 msgstr "Za³adowano '%s' ('%s') z '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:264
+#: libgphoto2_port/gphoto2-port-info-list.c:266
 #, c-format
 msgid "Using ltdl to load io-drivers from '%s'..."
 msgstr "U¿ycie ltdl do za³adowania sterowników we/wy z '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:290
+#: libgphoto2_port/gphoto2-port-info-list.c:292
 #, c-format
 msgid "Counting entries (%i available)..."
 msgstr "Liczenie wpisów (%i dostêpnych)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:299
+#: libgphoto2_port/gphoto2-port-info-list.c:301
 #, c-format
 msgid "%i regular entries available."
 msgstr "%i dostêpnych zwyk³ych wpisów."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:328
+#: libgphoto2_port/gphoto2-port-info-list.c:330
 #, c-format
 msgid "Looking for path '%s' (%i entries available)..."
 msgstr "Poszukiwanie ¶cie¿ki '%s' (%i dostêpnych wpisów)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:340
+#: libgphoto2_port/gphoto2-port-info-list.c:342
 #, c-format
 msgid "Starting regex search for '%s'..."
 msgstr "Rozpoczêcie szukania wyra¿enia regularnego dla '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:348
+#: libgphoto2_port/gphoto2-port-info-list.c:350
 #, c-format
 msgid "Trying '%s'..."
 msgstr "Próbowanie '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:369
+#: libgphoto2_port/gphoto2-port-info-list.c:371
 msgid "regcomp failed"
 msgstr "regcomp nie powiod³o siê"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:380
+#: libgphoto2_port/gphoto2-port-info-list.c:382
 #, c-format
 msgid "re_match failed (%i)"
 msgstr "re_match nie powiod³o siê (%i)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:388
+#: libgphoto2_port/gphoto2-port-info-list.c:390
 msgid "regexec failed"
 msgstr "regexec nie powiod³o siê"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:394
+#: libgphoto2_port/gphoto2-port-info-list.c:396
 msgid "Generic Port"
 msgstr "Ogólny port"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:418
+#: libgphoto2_port/gphoto2-port-info-list.c:420
 #, c-format
 msgid "Looking up entry '%s'..."
 msgstr "Poszukiwanie wpisu '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:448
+#: libgphoto2_port/gphoto2-port-info-list.c:450
 #, c-format
 msgid "Getting info of entry %i (%i available)..."
 msgstr "Pobieranie informacji z wpisu %i (%i dostêpnych)..."
@@ -495,7 +495,7 @@ msgstr ""
 "Nie uda³o siê odnale¼æ urz±dzenia USB (producent 0x%x, produkt 0x%x). Nale¿y "
 "upewniæ siê, ¿e to urz±dzenie jest pod³±czone do komputera."
 
-#: usb/libusb.c:790
+#: usb/libusb.c:876
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
