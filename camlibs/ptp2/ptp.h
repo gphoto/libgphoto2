@@ -183,8 +183,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 /* 9003 - sends nothing, nothing back  */
 /* no 9004 observed yet */
 /* no 9005 observed yet */
-/* 9006 - sends a ptp string, gets back a uint32 */
-#define PTP_OC_CANON_9006		0x9006
+#define PTP_OC_CANON_LookupObject	0x9006
 /* no 9007 observed yet */
 #define PTP_OC_CANON_StartShootingMode	0x9008
 #define PTP_OC_CANON_EndShootingMode	0x9009
@@ -1241,6 +1240,7 @@ uint16_t ptp_canon_getfolderentries (PTPParams* params, uint32_t store,
 				uint32_t handle, 
 				PTPCANONFolderEntry** entries,
 				uint32_t* entnum);
+uint16_t ptp_canon_lookup_object (PTPParams* params, char* name, uint32_t* objectid);
 uint16_t ptp_canon_theme_download (PTPParams* params, uint32_t themenr,
 				unsigned char **data, unsigned int *size);
 

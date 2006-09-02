@@ -1734,6 +1734,44 @@ ptp_canon_getfolderentries (PTPParams* params, uint32_t store, uint32_t p2,
 }
 
 /**
+ * ptp_canon_lookup_object:
+ *
+ * This command looks up the specified object on the camera.
+ *
+ * Format is "A:\\PATH".
+ *
+ * The 'A' is the VolumeLabel from GetStorageInfo,
+ * my IXUS has "A" for the card and "V" for internal memory.
+ *  
+ * params:	PTPParams*
+ *      char* name - path name
+ *
+ * Return values: Some PTP_RC_* code.
+ *      uint32_t *oid - PTP object id.
+ *
+ **/
+uint16_t
+ptp_canon_lookup_object (PTPParams* params, char* name, uint32_t* objectid)
+{
+	uint16_t ret;
+	PTPContainer ptp;
+	unsigned char *data = NULL;
+	uint8_t len;
+
+	PTP_CNT_INIT (ptp);
+	ptp.Code=PTP_OC_CANON_LookupObject;
+	ptp.Nparam=0;
+	len=0;
+	data = malloc (2*(strlen(name)+1)+2);
+	memset (data, 0, 2*(strlen(name)+1)+2);
+	ptp_pack_string (params, name, data, 0, &len);
+	ret=ptp_transaction (params, &ptp, PTP_DP_SENDDATA, (len+1)*2+1, &data, NULL);
+	free (data);
+	*objectid = ptp.Param1;
+	return ret;
+}
+
+/**
  * ptp_canon_theme_download:
  *
  * This command downloads the specified theme slot, including jpegs
@@ -1761,7 +1799,6 @@ ptp_canon_theme_download (PTPParams* params, uint32_t themenr,
 	ptp.Nparam	= 1;
 	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size); 
 }
-
 
 
 uint16_t

@@ -151,16 +151,15 @@ ptp_pack_string(PTPParams *params, char *string, unsigned char* data, uint16_t o
 	ucs2str[0] = 0x0000U;
 	memset(ucs2strp, 0, PTP_MAXSTRLEN*2+2);
 	nconv = iconv (params->cd_locale_to_ucs2, &stringp, &convlen, &ucs2strp, &convmax);
-	if (nconv == (size_t) -1) {
+	if (nconv == (size_t) -1)
 		ucs2str[0] = 0x0000U;
-	}
 	packedlen = ucs2strlen(ucs2str);
 	if (packedlen > PTP_MAXSTRLEN-1) {
 		*len=0;
 		return;
 	}
 	
-	/* +1 for the length byte, no zero 0x0000 terminator */
+	/* number of characters + leading 0 */
 	htod8a(&data[offset],packedlen+1);
 	for (i=0;i<packedlen && i< PTP_MAXSTRLEN; i++) {
 		htod16a(&data[offset+i*2+1],ucs2str[i]);

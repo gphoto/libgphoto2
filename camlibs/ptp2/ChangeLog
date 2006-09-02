@@ -1,3 +1,8 @@
+2006-09-02  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* library.c: CANON cmd 9006 is "lookup object".
+	  (Could be used later to speed up directory listing.)
+
 2006-08-31  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Handle cameras which just have files, but no
