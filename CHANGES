@@ -2,16 +2,20 @@ libgphoto2 TRUNK
 
 PTP:
    * Improved Nikon remote control
+   * MTP Playlist support (upload and download)
+   * MTP Metadata support (Artist, Title, Playtime ... )
    * MTP fixes
+   * MTP autodetection on Microsoft OS Descriptor.
    * New devices:
           Canon PowerShot A540, A530, S3 IS, SD430, SD700, IXUS 800, IXUS 60,
-          iRiver T20 FM
+          iRiver T20 FM, iClix
           Dell Pocket DJ
           Nikon Coolpix L4, L3
           Kodak Easyshare Z740, P850
           Sony DSC-U10
           Leica D-LUX 2
           JVC Alneo XA-HD500
+	  various Samsung devices
      
 Canon:
    * 5D - 20D experimental capture support
