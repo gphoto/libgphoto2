@@ -2542,6 +2542,84 @@ mtp_get_playlist_string(
 }
 
 static int
+mtp_put_playlist(
+	Camera *camera, char *content, int contentlen, PTPObjectInfo *oi, GPContext *context
+) {
+	char 		*s = content;
+	unsigned char	data[1];
+	uint32_t	storage, objectid, playlistid;
+	uint32_t	*oids = NULL;
+	int		nrofoids = 0;
+	uint16_t	ret;
+
+	while (*s) {
+		char *t = strchr(s,'\n');
+		char *fn, *filename;
+		if (t) {
+			fn = malloc (t-s+1);
+			if (!fn) return GP_ERROR_NO_MEMORY;
+			memcpy (fn, s, t-s);
+			fn[t-s]='\0';
+		} else {
+			fn = malloc (strlen(s)+1);
+			if (!fn) return GP_ERROR_NO_MEMORY;
+			strcpy (fn,s);
+		}
+		filename = strrchr (fn,'/');
+		if (!filename) {
+			free (fn);
+			if (!t) break;
+			s = t+1;
+			continue;
+		}
+		*filename = '\0';filename++;
+
+		/* compute storage ID value from folder patch */
+		folder_to_storage(fn,storage);
+		/* Get file number omiting storage pseudofolder */
+		find_folder_handle(fn, storage, objectid, camera);
+		objectid = find_child(filename, storage, objectid, camera);
+		if (objectid != PTP_HANDLER_SPECIAL) {
+			if (nrofoids) {
+				oids = realloc(oids, sizeof(oids[0])*(nrofoids+1));
+				if (!oids) return GP_ERROR_NO_MEMORY;
+			} else {
+				oids = malloc(sizeof(oids[0]));
+				if (!oids) return GP_ERROR_NO_MEMORY;
+			}
+			oids[nrofoids] = objectid;
+			nrofoids++;
+		} else {
+			/*fprintf (stderr,"%s/%s NOT FOUND!\n", fn, filename);*/
+			gp_log (GP_LOG_ERROR , "mtp playlist upload", "Object %s/%s not found on device.", fn, filename);
+		}
+		free (fn);
+		if (!t) break;
+		s = t+1;
+	}
+	oi->ObjectCompressedSize = 1;
+	oi->ObjectFormat = PTP_OFC_MTP_AbstractAudioVideoPlaylist;
+	ret = ptp_sendobjectinfo(&camera->pl->params, &storage, &oi->ParentObject, &playlistid, oi);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_ERROR, "put mtp playlist", "failed sendobjectinfo of playlist.");
+		return GP_ERROR;
+	}
+	ret = ptp_sendobject(&camera->pl->params, (unsigned char*)data, 1);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_ERROR, "put mtp playlist", "failed dummy sendobject of playlist.");
+		return GP_ERROR;
+	}
+	ret = ptp_mtp_setobjectreferences (&camera->pl->params, playlistid, oids, nrofoids);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_ERROR, "put mtp playlist", "failed setobjectreferences.");
+		return GP_ERROR;
+	}
+	/* update internal structures */
+	add_object(camera, playlistid, context);
+	return GP_OK;
+}
+
+static int
 mtp_get_playlist(
 	Camera *camera, CameraFile *file, uint32_t object_id, GPContext *context
 ) {
@@ -2777,9 +2855,15 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	if (parent==PTP_HANDLER_ROOT) parent=PTP_HANDLER_SPECIAL;
 
 	oi.Filename=(char *)filename;
-	oi.ObjectFormat=get_mimetype(camera, file);
-	oi.ObjectCompressedSize=size;
+	oi.ObjectFormat = get_mimetype(camera, file);
+	oi.ObjectCompressedSize = size;
+	oi.ParentObject = parent;
 	gp_file_get_mtime(file, &oi.ModificationDate);
+
+	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+	    (	strstr(filename,".zpl") || strstr(filename, ".pla") ))
+		return mtp_put_playlist (camera, object, intsize, &oi, context);
+
 	/* if the device is usign PTP_VENDOR_EASTMAN_KODAK extension try
 	 * PTP_OC_EK_SendFileObject
 	 */

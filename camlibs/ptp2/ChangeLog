@@ -1,3 +1,7 @@
+2006-09-03  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Implemented MTP Abstract Playlist upload.
+	
 2006-09-02  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* library.c: CANON cmd 9006 is "lookup object".
