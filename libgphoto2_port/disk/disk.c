@@ -175,7 +175,7 @@ gp_port_library_list (GPPortInfoList *list)
 
 	libhal_free_string_array (volumes);
 	libhal_ctx_free (ctx);
-	dbus_connection_disconnect (dbus_connection);
+	dbus_connection_close (dbus_connection);
 	dbus_connection_unref (dbus_connection);
 #else
 # ifdef HAVE_MNTENT_H
