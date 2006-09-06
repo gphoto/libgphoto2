@@ -1,0 +1,18 @@
+# This file contains a list of types for which we check that the sizes
+# of the C and C# types match.
+#
+# Lines beginning with "#" and empty lines are ignored.
+
+CameraAbilities
+CameraText
+CameraFilePath
+
+# CameraFileInfoAudio
+# CameraFileInfoPreview
+# CameraFileInfoFile
+# CameraFileInfo
+
+# PortSettingsSerial GPPortSettingsSerial
+# PortSettingsUSB GPPortSettingsUSB
+# PortSettingsDisk GPPortSettingsDisk
+# PortSettings GPPortSettings

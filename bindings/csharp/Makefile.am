@@ -48,19 +48,30 @@ libgphoto2-sharp.dll: $(LIBGPHOTO2_SHARP_GENERATED_CSFILES) $(LIBGPHOTO2_SHARP_C
 TestGphoto2Sharp.exe: $(srcdir)/TestGphoto2Sharp.cs libgphoto2-sharp.dll
 	$(MCS) $(MCSFLAGS) -out:$@ -r:libgphoto2-sharp.dll $<
 
-check_SCRIPTS = check-camera-list.sh
-check_DATA = TestGphoto2Sharp.exe
+TestSizes.exe: TestSizes.cs libgphoto2-sharp.dll
+	$(MCS) $(MCSFLAGS) -out:$@ -r:libgphoto2-sharp.dll $<
+
+check_SCRIPTS = check-camera-list.sh check-sizes.sh
+check_DATA = TestGphoto2Sharp.exe TestSizes.exe
+check_PROGRAMS = testsizes
+
+BUILT_SOURCES = testsizes.c TestSizes.cs
+testsizes_SOURCES = testsizes.c
 
 TESTS = $(check_SCRIPTS)
 
 CLEANFILES =							\
 	TestGphoto2Sharp.exe					\
 	TestGphoto2Sharp.exe.mdb				\
+	TestSizes.exe						\
+	TestSizes.mdb						\
 	libgphoto2-sharp.dll.mdb				\
 	libgphoto2-sharp.dll					\
-	$(check_SCRIPTS)
+	$(check_SCRIPTS)					\
+	$(BUILT_SOURCES)
 
 endif
+
 
 EXTRA_DIST =							\
 	libgphoto2-sharp.dll.config				\
@@ -68,11 +79,20 @@ EXTRA_DIST =							\
 	$(LIBGPHOTO2_SHARP_CSFILES)				\
 	AssemblyInfo.cs.in					\
 	TestGphoto2Sharp.cs					\
+	testsizes-typelist.txt					\
+	testsizes-createsource.sh				\
+	check-sizes.in						\
 	check-camera-list.in
 
 clean-local:
 	rm -rf _inst
 	rm -f _camlibs
+
+testsizes.c: testsizes-typelist.txt $(srcdir)/testsizes-createsource.sh
+	sh $(srcdir)/testsizes-createsource.sh c < $< > $@
+
+TestSizes.cs: testsizes-typelist.txt $(srcdir)/testsizes-createsource.sh
+	sh $(srcdir)/testsizes-createsource.sh csharp < $< > $@
 
 %.sh: %.in
 	@echo "Creating $@"

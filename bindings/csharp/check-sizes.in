@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+trap "rm sizes-csharp.tmp sizes-c.tmp" EXIT
+
+$(dirname "$0")/testsizes > sizes-c.tmp
+@MONO@ $(dirname "$0")/TestSizes.exe > sizes-csharp.tmp
+
+diff -u sizes-c.tmp sizes-csharp.tmp
