@@ -347,6 +347,7 @@ static struct {
 	/* Most Sony PTP cameras use the same product/vendor IDs. */
 	{"Sony:PTP",                  0x054c, 0x004e, 0},
 	{"Sony:DSC-H1 (PTP mode)",    0x054c, 0x004e, 0},
+	{"Sony:DSC-H5 (PTP mode)",    0x054c, 0x004e, 0},
 	{"Sony:DSC-P5 (PTP mode)",    0x054c, 0x004e, 0},
 	{"Sony:DSC-P10 (PTP mode)",   0x054c, 0x004e, 0},
 	{"Sony:DSC-F707V (PTP mode)", 0x054c, 0x004e, 0},
