@@ -56,7 +56,8 @@
 
 #define GP_MODULE "PTP2"
 
-#define USB_TIMEOUT 8000
+#define USB_START_TIMEOUT 8000
+#define USB_NORMAL_TIMEOUT 20000
 #define USB_TIMEOUT_CAPTURE 20000
 
 #define CPR(context,result) {short r=(result); if (r!=PTP_RC_OK) {report_result ((context), r, params->deviceinfo.VendorExtensionID); return (translate_ptp_result (r));}}
@@ -1472,7 +1473,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		goto out;
 	{
 		short ret = params->event_wait(params,&event);
-		CR (gp_port_set_timeout (camera->port, USB_TIMEOUT));
+		CR (gp_port_set_timeout (camera->port, USB_NORMAL_TIMEOUT));
 		if (ret!=PTP_RC_OK) goto err;
 	}
 	while (event.Code==PTP_EC_ObjectAdded) {
@@ -3479,11 +3480,10 @@ camera_init (Camera *camera, GPContext *context)
             }
         }
 
-
-	/* On large fiels (over 50M) deletion takes over 3 seconds,
-	 * waiting for event after capture may take some time also
+	/* Choose a shorter timeout on inital setup to avoid
+	 * having the user wait too long.
 	 */
-	CR (gp_port_set_timeout (camera->port, USB_TIMEOUT));
+	CR (gp_port_set_timeout (camera->port, USB_START_TIMEOUT));
 
 	/* Establish a connection to the camera */
 	((PTPData *) camera->pl->params.data)->context = context;
@@ -3505,6 +3505,9 @@ camera_init (Camera *camera, GPContext *context)
 		}
 		break;
 	}
+	/* We have cameras where a response takes 15 seconds(!), so make
+	 * post init timeouts longer */
+	CR (gp_port_set_timeout (camera->port, USB_NORMAL_TIMEOUT));
 
 	/* Seems HP does not like getdevinfo outside of session 
 	   although it's legal to do so */
