@@ -36,6 +36,20 @@
 #ifdef HAVE_MNTENT_H
 # include <mntent.h>
 #endif
+#ifdef HAVE_SYS_MNTENT_H
+# include <sys/mntent.h>
+#endif
+#ifdef HAVE_SYS_MNTTAB_H
+# include <sys/mnttab.h>
+#endif
+
+/* on Solaris */
+#ifndef HAVE_SETMNTENT
+#define setmntent(f,m) fopen(f,m)
+#endif
+#ifndef HAVE_ENDMNTENT
+#define endmntent(f) close(f)
+#endif
 
 #ifdef HAVE_HAL
 #include <hal/libhal.h>
@@ -232,6 +246,62 @@ gp_port_library_list (GPPortInfoList *list)
 		}
 		endmntent(mnt);
 	}
+# else
+#  ifdef HAVE_MNTTAB
+	FILE *mnt;
+	struct mnttab mnttab;
+	char	path[1024];
+	struct stat stbuf;
+
+	info.type = GP_PORT_DISK;
+
+	mnt = fopen ("/etc/fstab", "r");
+	if (mnt) {
+		while (! getmntent (mnt, &mntent)) {
+			/* detect floppies so we don't access them with the stat() below */
+			if (	(NULL != strstr(mnttab.mnt_special,"fd")) ||
+				(NULL != strstr(mnttab.mnt_special,"floppy"))
+			)
+				continue;
+
+			snprintf (path, sizeof(path), "%s/DCIM", mnttab.mnt_mountp);
+			if (-1 == stat(path, &stbuf)) {
+				snprintf (path, sizeof(path), "%s/dcim", mnttab.mnt_mountp);
+				if (-1 == stat(path, &stbuf))
+					continue;
+			}
+			snprintf (info.name, sizeof(info.name), _("Media '%s'"), mntent.mnt_special),
+			snprintf (info.path, sizeof(info.path), "disk:%s", mntent.mnt_mountp);
+			if (gp_port_info_list_lookup_path (list, info.path) >= GP_OK)
+				continue;
+			CHECK (gp_port_info_list_append (list, info));
+		}
+		fclose(mnt);
+	}
+	mnt = fopen ("/etc/mtab", "r");
+	if (mnt) {
+		while (! getmntent (mnt, &mntent)) {
+			/* detect floppies so we don't access them with the stat() below */
+			if (	(NULL != strstr(mnttab.mnt_special,"fd")) ||
+				(NULL != strstr(mnttab.mnt_special,"floppy"))
+			)
+				continue;
+
+			snprintf (path, sizeof(path), "%s/DCIM", mnttab.mnt_mountp);
+			if (-1 == stat(path, &stbuf)) {
+				snprintf (path, sizeof(path), "%s/dcim", mnttab.mnt_mountp);
+				if (-1 == stat(path, &stbuf))
+					continue;
+			}
+			snprintf (info.name, sizeof(info.name), _("Media '%s'"), mntent.mnt_special),
+			snprintf (info.path, sizeof(info.path), "disk:%s", mntent.mnt_mountp);
+			if (gp_port_info_list_lookup_path (list, info.path) >= GP_OK)
+				continue;
+			CHECK (gp_port_info_list_append (list, info));
+		}
+		fclose(mnt);
+	}
+#  endif
 # endif
 #endif
 	/* generic disk:/xxx/ matcher */

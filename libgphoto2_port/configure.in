@@ -128,7 +128,7 @@ AC_C_CONST([])
 AC_CHECK_HEADERS(stdlib.h unistd.h stdio.h fcntl.h errno.h sys/time.h	\
 	sys/param.h termios.h sgetty.h ttold.h ioctl-types.h		\
 	fcntl.h sgtty.h sys/ioctl.h sys/time.h termio.h unistd.h	\
-	endian.h byteswap.h asm/io.h mntent.h)
+	endian.h byteswap.h asm/io.h mntent.h sys/mntent.h sys/mnttab.h)
 	
 dnl FIXME: Provide regex.h with the corresponding object code for 
 dnl        platforms which do not have it, e.g. Windows.
@@ -148,6 +148,27 @@ AC_CHECK_HEADER([dns_sd.h],[
 			AC_DEFINE(HAVE_MDNS_BONJOUR,1,[Define if you have Bonjour/mDNSResponder.])
 		])
 ])
+
+dnl Check for mnt_mountp in struct mnttab
+AC_MSG_CHECKING([for mnt_mountp in struct mnttab])
+AC_COMPILE_IFELSE([dnl
+AC_LANG_PROGRAM([[
+#if defined(HAVE_SYS_MNTENT_H) && defined(HAVE_SYS_MNTTAB_H)
+# include <sys/mntent.h>
+# include <sys/mnttab.h>
+#endif
+]], [[
+struct mnttab mt;
+mt.mnt_mountp;
+]])dnl
+],[
+AC_DEFINE(HAVE_MNTTAB,1,whether struct mnttag has mnt_mountp field)
+AC_MSG_RESULT(yes)
+],[
+AC_MSG_RESULT(no)
+])
+
+
 AC_SUBST(MDNS_LIBS)
 
 dnl Checks for library functions.

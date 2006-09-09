@@ -1,3 +1,11 @@
+2006-09-09  Marcus Meissner  <marcus@jet.franken.de>
+
+	* disk: Merged Solaris mount entry handling from
+	  SF tracker
+http://sourceforge.net/tracker/download.php?group_id=8874&atid=108874&file_id=171553&aid=1427300
+
+          (but pretty modified).
+
 2006-02-19  Marcus Meissner  <marcus@jet.franken.de>
 
 	* Regular expression support added for:
