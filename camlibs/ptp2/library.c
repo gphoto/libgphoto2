@@ -470,6 +470,8 @@ static struct {
 	{"Panasonic:Lumix FZ5",           0x04da, 0x2372, 0},
 
 	{"Panasonic:DMC-FZ20",            0x04da, 0x2374, 0},
+	/* from Tomas Herrdin <tomas.herrdin@swipnet.se> */
+	{"Panasonic:DMC-LS3",             0x04da, 0x2374, 0},
 
 	/* http://callendor.zongo.be/wiki/OlympusMju500 */
 	{"Olympus:mju 500",               0x07b4, 0x0113, 0},
