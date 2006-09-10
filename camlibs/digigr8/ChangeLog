@@ -1,3 +1,9 @@
+2006-06-22   Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Added Praktica Slimpix, reported by
+	  Gervase Markham.
+          See: http://sourceforge.net/mailarchive/message.php?msg_id=20703116
+
 2006-03-26   Theodore Kilgore <kilgota@auburn.edu>
 
 	* library.c: Added Vivitar Vivicam35, reported by self.
