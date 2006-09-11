@@ -1,3 +1,7 @@
+2006-09-11  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* library.c: Added iRIver T10 2GB model.
+
 2006-09-09  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* library.c: Uses short timeout during startup, but
