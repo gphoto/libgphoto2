@@ -666,6 +666,8 @@ static struct {
 	/* Marcoen Hirschberg <marcoen@users.sourceforge.net> */
 	{"Toshiba:Gigabeat",                    0x0930, 0x000c, PTP_MTP},
 	{"Toshiba:Gigabeat MEGF-40",            0x0930, 0x0009, PTP_MTP},
+	/* Reported by Rob Brown */
+	{"Toshiba:Gigabeat P10",                0x0930, 0x0011, PTP_MTP},
 
 	/* Reported by gudul1@users.sourceforge.net */
 	{"Archos 104",				0x0e79, 0x120a, PTP_MTP},
