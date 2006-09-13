@@ -1,3 +1,8 @@
+2006-09-13  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* ptp.[ch]: formatstore function (from libmtp).
+	* library.c: fixed iconv() usage for non glibc etc (from libmtp).
+
 2006-09-11  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* library.c: Added iRIver T10 2GB model.

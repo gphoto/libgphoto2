@@ -50,6 +50,23 @@
 #  define N_(String) (String)
 #endif
 
+/*
+ * On MacOS (Darwin) and *BSD we're not using glibc, but libiconv. 
+ * glibc knows that UCS-2 is to be in the local machine endianness, 
+ * whereas libiconv does not. So we construct this macro to get 
+ * things right. Reportedly, glibc 2.1.3 has a bug so that UCS-2
+ * is always bigendian though, we would need to work around that 
+ * too...
+ */
+#ifndef __GLIBC__
+#define UCS_2_INTERNAL "UCS-2-INTERNAL"
+#else
+#if (__GLIBC__ == 2 && __GLIBC_MINOR__ <= 1 )
+#error "Too old glibc. This versions iconv() implementation cannot be trusted."
+#endif
+#define UCS_2_INTERNAL "UCS-2"
+#endif
+
 #include "ptp.h"
 #include "ptp-bugs.h"
 #include "ptp-private.h"
@@ -3469,8 +3486,8 @@ camera_init (Camera *camera, GPContext *context)
 
 	curloc = nl_langinfo (CODESET);
 	if (!curloc) curloc="UTF-8";
-	camera->pl->params.cd_ucs2_to_locale = iconv_open(curloc, "UCS-2");
-	camera->pl->params.cd_locale_to_ucs2 = iconv_open("UCS-2", curloc);
+	camera->pl->params.cd_ucs2_to_locale = iconv_open(curloc, UCS_2_INTERNAL);
+	camera->pl->params.cd_locale_to_ucs2 = iconv_open(UCS_2_INTERNAL, curloc);
 	if ((camera->pl->params.cd_ucs2_to_locale == (iconv_t) -1) ||
 	    (camera->pl->params.cd_locale_to_ucs2 == (iconv_t) -1)) {
 		gp_log (GP_LOG_ERROR, "iconv", "Failed to create iconv converter.\n");
