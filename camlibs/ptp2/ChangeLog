@@ -1,6 +1,7 @@
 2006-09-15  Hubert Figuiere  <hub@figuiere.net>
 
 	* library.c: Added Canon EOS 400D/Digital Rebel XTi
+	This camera does not have the infamous PTP bug.
 
 2006-09-13  Marcus Meissner  <marcus@jet.franken.de>
 	
