@@ -676,6 +676,8 @@ static struct {
 	{"Creative:Zen MicroPhoto",             0x041e, 0x413c, PTP_MTP},
 	{"Creative:Zen Sleek Photo",		0x041e, 0x413d, PTP_MTP},
 	{"Creative:Zen Vision:M",		0x041e, 0x413e, PTP_MTP},
+	/* Reported by marazm@o2.pl */
+	{"Creative:Zen V",			0x041e, 0x4150, PTP_MTP},  
 
 	/* IRC reporter */
 	{"Dell:DJ Itty",			0x413c, 0x4500, PTP_MTP},
