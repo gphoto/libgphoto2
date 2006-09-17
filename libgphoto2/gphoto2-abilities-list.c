@@ -312,6 +312,9 @@ gp_abilities_list_detect_usb (CameraAbilitiesList *list,
 	for (i = 0; i < count; i++) {
 		int v, p, c, s;
 
+		if (!(list->abilities[i].port & GP_PORT_USB))
+			continue;
+
 		v = list->abilities[i].usb_vendor;
 		p = list->abilities[i].usb_product;
 		if (v) {
