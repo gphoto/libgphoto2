@@ -331,6 +331,8 @@ static struct {
 	{"Kodak:P850",   0x040a, 0x0592, 0}, 
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1547142&group_id=8874&atid=358874 */
 	{"Kodak:C533",   0x040a, 0x05a2, 0}, 
+	/* Ivan Baldo, http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=387998 */
+	{"Kodak:CD33",   0x040a, 0x059c, 0},
 	/* David D. Huff Jr. <David.Huff@computer-critters.com> */
 	{"Kodak:Z650",   0x040a, 0x059e, 0},
 
