@@ -520,37 +520,6 @@ fi
 
 
 # ---------------------------------------------------------------------------
-# create gphoto2/ directory with gphoto2*.h files
-# ---------------------------------------------------------------------------
-# This functionality is duplicated within the top Makefile.am to ensure that
-# new header files are added to gphoto2/ without requiring a ./configure run.
-# Note: Creating gphoto2/ here requires cleaning it in the Makefile.am distclean
-#       target.
-
-AC_MSG_CHECKING([gphoto2/ directory with gphoto2*.h files])
-if test -d gphoto2; then
-	rm -f gphoto2/gphoto2*.h
-	rmdir gphoto2
-	header_dir_msg="updated"
-else
-	header_dir_msg="created"
-fi
-mkdir -p gphoto2
-if test -d gphoto2; then
-	cp \
-		libgphoto2/gphoto2*.h \
-		libgphoto2_port/libgphoto2_port/gphoto2*.h \
-		${srcdir}/libgphoto2/gphoto2*.h \
-		${srcdir}/libgphoto2_port/libgphoto2_port/gphoto2*.h \
-                gphoto2/ > /dev/null 2>&1
-	AC_MSG_RESULT([${header_dir_msg}])
-else
-	AC_MSG_RESULT([failed])
-	AC_MSG_ERROR([could not create gphoto2/ directory])
-fi
-
-
-# ---------------------------------------------------------------------------
 # Create output files
 # ---------------------------------------------------------------------------
 AC_CONFIG_FILES([

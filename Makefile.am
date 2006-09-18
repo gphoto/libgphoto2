@@ -8,7 +8,7 @@ bin_SCRIPTS = gphoto2-config
 EXTRA_DIST = HACKING MAINTAINERS makefile.os2 os2mak.inc TESTERS CHANGES
 
 # Note: @subdirs@ lists all the directories from AC_CONFIG_SUBDIRS()
-SUBDIRS = @subdirs@ libgphoto2 camlibs tests po bindings packaging doc
+SUBDIRS = . @subdirs@ libgphoto2 camlibs tests po bindings packaging doc
 
 doc_DATA = AUTHORS COPYING README CHANGES NEWS
 
@@ -23,9 +23,8 @@ doc_DATA = AUTHORS COPYING README CHANGES NEWS
 #  - Helps build libgphoto2 frontends against libgphoto2 without
 #    installing libgphoto2 first.
 #
-# This functionality is duplicated in configure.in in order to
-# set up the gphoto2/ directory before building other stuff. This
-# makes it possible to consistently use #include <gphoto2/stuff.h>.
+# This functionality requires the "." to be the first item in SUBDIRS
+# and makes it possible to consistently use #include <gphoto2/stuff.h>.
 
 all-local:
 	@echo "Creating/Updating gphoto2/ directory with gphoto2*.h files"
@@ -39,9 +38,6 @@ all-local:
 		gphoto2/ > /dev/null 2>&1 \
 		|| true
 
-# This is also called by distclean, so we don't need a separate
-# distclean-local target as counterpart to the gphoto2/ creation
-# in the configure script.
 clean-local:
 	rm -f gphoto2/gphoto2*.h
 	rmdir gphoto2 || true
