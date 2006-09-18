@@ -64,7 +64,7 @@ CLEANFILES =							\
 	TestGphoto2Sharp.exe					\
 	TestGphoto2Sharp.exe.mdb				\
 	TestSizes.exe						\
-	TestSizes.mdb						\
+	TestSizes.exe.mdb					\
 	libgphoto2-sharp.dll.mdb				\
 	libgphoto2-sharp.dll					\
 	$(check_SCRIPTS)					\

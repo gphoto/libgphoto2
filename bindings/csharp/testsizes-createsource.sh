@@ -50,7 +50,7 @@ esac
 
 # Print type size
 while read type type2; do
-    if test "x$type" = ""; then continue; fi
+    if test "x$type" = "x"; then continue; fi
     if echo "$type" | grep '^#' > /dev/null; then continue; fi
     case "$lang" in
 	c)
