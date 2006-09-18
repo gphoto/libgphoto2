@@ -288,7 +288,7 @@ idlist_camera_func (const func_params_t *params,
 static int
 udev_begin_func (const func_params_t *params)
 {
-	printf ("# udev rules file for libgphoto2\n#\n");
+	printf ("# udev rules file for libgphoto2 devices (udev < 0.98)\n#\n");
 	printf ("BUS!=\"usb\", ACTION!=\"add\", GOTO=\"libgphoto2_rules_end\"\n\n");
 	return 0;
 }
@@ -296,7 +296,7 @@ udev_begin_func (const func_params_t *params)
 static int
 udev_098_begin_func (const func_params_t *params)
 {
-	printf ("# udev rules file for libgphoto2\n#\n");
+	printf ("# udev rules file for libgphoto2 devices (udev >= 0.98)\n#\n");
 	printf ("SUBSYSTEMS!=\"usb\", ACTION!=\"add\", GOTO=\"libgphoto2_rules_end\"\n\n");
 	return 0;
 }
@@ -321,30 +321,33 @@ udev_camera_func (const func_params_t *params,
 	int class = 0, subclass = 0, proto = 0;
 	int usb_vendor = 0, usb_product = 0;
 
-	if (a->usb_vendor) { /* usb product id may be zero! */
-		class = 0;
-		subclass = 0;
-		proto = 0;
-		flags = GP_USB_HOTPLUG_MATCH_VENDOR_ID | GP_USB_HOTPLUG_MATCH_PRODUCT_ID;
-		usb_vendor = a->usb_vendor;
-		usb_product = a->usb_product;
-	} else if (a->usb_class) {
-		class = a->usb_class;
-		subclass = a->usb_subclass;
-		proto = a->usb_protocol;
-		flags = GP_USB_HOTPLUG_MATCH_INT_CLASS;
-		if (subclass != -1)
-			flags |= GP_USB_HOTPLUG_MATCH_INT_SUBCLASS;
-		else
+	if (a->port & GP_PORT_USB) {
+		if (a->usb_vendor) { /* usb product id may be zero! */
+			class = 0;
 			subclass = 0;
-		if (proto != -1)
-			flags |= GP_USB_HOTPLUG_MATCH_INT_PROTOCOL;
-		else
 			proto = 0;
-		usb_vendor = 0;
-		usb_product = 0;
+			flags = (GP_USB_HOTPLUG_MATCH_VENDOR_ID 
+				 | GP_USB_HOTPLUG_MATCH_PRODUCT_ID);
+			usb_vendor = a->usb_vendor;
+			usb_product = a->usb_product;
+		} else if (a->usb_class) {
+			class = a->usb_class;
+			subclass = a->usb_subclass;
+			proto = a->usb_protocol;
+			flags = GP_USB_HOTPLUG_MATCH_INT_CLASS;
+			if (subclass != -1)
+				flags |= GP_USB_HOTPLUG_MATCH_INT_SUBCLASS;
+			else
+				subclass = 0;
+			if (proto != -1)
+				flags |= GP_USB_HOTPLUG_MATCH_INT_PROTOCOL;
+			else
+				proto = 0;
+			usb_vendor = 0;
+			usb_product = 0;
+		}
 	} else {
-		/* not a USB camera */
+		/* not a camera handled by udev */
 		return 0;
 	}
 
@@ -429,30 +432,33 @@ udev_098_camera_func (const func_params_t *params,
 	int class = 0, subclass = 0, proto = 0;
 	int usb_vendor = 0, usb_product = 0;
 
-	if (a->usb_vendor) { /* usb product id may be zero! */
-		class = 0;
-		subclass = 0;
-		proto = 0;
-		flags = GP_USB_HOTPLUG_MATCH_VENDOR_ID | GP_USB_HOTPLUG_MATCH_PRODUCT_ID;
-		usb_vendor = a->usb_vendor;
-		usb_product = a->usb_product;
-	} else if (a->usb_class) {
-		class = a->usb_class;
-		subclass = a->usb_subclass;
-		proto = a->usb_protocol;
-		flags = GP_USB_HOTPLUG_MATCH_INT_CLASS;
-		if (subclass != -1)
-			flags |= GP_USB_HOTPLUG_MATCH_INT_SUBCLASS;
-		else
+	if (a->port & GP_PORT_USB) {
+		if (a->usb_vendor) { /* usb product id may be zero! */
+			class = 0;
 			subclass = 0;
-		if (proto != -1)
-			flags |= GP_USB_HOTPLUG_MATCH_INT_PROTOCOL;
-		else
 			proto = 0;
-		usb_vendor = 0;
-		usb_product = 0;
+			flags = (GP_USB_HOTPLUG_MATCH_VENDOR_ID 
+				 | GP_USB_HOTPLUG_MATCH_PRODUCT_ID);
+			usb_vendor = a->usb_vendor;
+			usb_product = a->usb_product;
+		} else if (a->usb_class) {
+			class = a->usb_class;
+			subclass = a->usb_subclass;
+			proto = a->usb_protocol;
+			flags = GP_USB_HOTPLUG_MATCH_INT_CLASS;
+			if (subclass != -1)
+				flags |= GP_USB_HOTPLUG_MATCH_INT_SUBCLASS;
+			else
+				subclass = 0;
+			if (proto != -1)
+				flags |= GP_USB_HOTPLUG_MATCH_INT_PROTOCOL;
+			else
+				proto = 0;
+			usb_vendor = 0;
+			usb_product = 0;
+		}
 	} else {
-		/* not a USB camera */
+		/* not a camera handled by udev */
 		return 0;
 	}
 
@@ -571,9 +577,6 @@ ddb_camera_func (const func_params_t *params,
 		 const int total,
 		 const CameraAbilities *a)
 {
-	int flags = 0;
-	int class = 0, subclass = 0, proto = 0;
-	int usb_vendor = 0, usb_product = 0;
 	int first = 1;
 	const char *camlib_basename = basename(a->library);
 
@@ -628,11 +631,11 @@ ddb_camera_func (const func_params_t *params,
 				 (void *) &first);
 	printf(";\n");
 
-	if (0 != (a->port & GP_PORT_SERIAL)) {
-		unsigned int i;
+	if ((a->port & GP_PORT_SERIAL)) {
 		int first = 1;
 		printf("    interface serial {\n");
 		if (a->speed[0] != 0) {
+			unsigned int i;
 			printf("        speeds");
 			for (i=0; 
 			     ((i < (sizeof(a->speed)/sizeof(a->speed[0]))) &&
@@ -644,53 +647,29 @@ ddb_camera_func (const func_params_t *params,
 		}
 		printf("    };\n");
 	}
-	if (0 != (a->port & GP_PORT_USB)) {
-		if (a->usb_vendor) { 
-			/* usb product id may be zero! */
-			class = 0;
-			subclass = 0;
-			proto = 0;
-			flags = GP_USB_HOTPLUG_MATCH_VENDOR_ID | GP_USB_HOTPLUG_MATCH_PRODUCT_ID;
-			usb_vendor = a->usb_vendor;
-			usb_product = a->usb_product;
-		} else if (a->usb_class) {
-			class = a->usb_class;
-			subclass = a->usb_subclass;
-			proto = a->usb_protocol;
-			flags = GP_USB_HOTPLUG_MATCH_INT_CLASS;
-			if (subclass != -1)
-				flags |= GP_USB_HOTPLUG_MATCH_INT_SUBCLASS;
-			else
-				subclass = 0;
-			if (proto != -1)
-				flags |= GP_USB_HOTPLUG_MATCH_INT_PROTOCOL;
-			else
-				proto = 0;
-			usb_vendor = 0;
-			usb_product = 0;
-		}
 
-		if (flags & GP_USB_HOTPLUG_MATCH_INT_CLASS) {
-			printf("    interface usb {\n");
-			printf("        class 0x%02x;\n", class);
-			if (flags & GP_USB_HOTPLUG_MATCH_INT_SUBCLASS) {
-				printf("        subclass 0x%02x;\n", subclass);
-			}
-			if (flags & GP_USB_HOTPLUG_MATCH_INT_PROTOCOL) {
-				printf("        protocol 0x%02x;\n", proto);
-			}
-			printf("    };\n");
-		} else {
-			printf("    interface usb {\n");
+	if ((a->port & GP_PORT_USB)) {
+		printf("    interface usb {\n");
+		if (a->usb_vendor) { 
+			/* usb product id may have the legal value zero! */
 			printf("        vendor  0x%04x;\n", a->usb_vendor);
 			printf("        product 0x%04x;\n", a->usb_product);
-			printf("    };\n");
 		}
+		if (a->usb_class) {
+			printf("        class 0x%02x;\n", a->usb_class);
+			if (a->usb_subclass != -1) {
+				printf("        subclass 0x%02x;\n", a->usb_subclass);
+			}
+			if (a->usb_protocol != -1) {
+				printf("        protocol 0x%02x;\n", a->usb_protocol);
+			}
+		}
+		printf("    };\n");
 	}
-	if (0 != (a->port & GP_PORT_DISK)) {
+	if ((a->port & GP_PORT_DISK)) {
 		printf("    interface disk;\n");
 	}
-	if (0 != (a->port & GP_PORT_PTPIP)) {
+	if ((a->port & GP_PORT_PTPIP)) {
 		printf("    interface ptpip;\n");
 	}
 
@@ -750,63 +729,65 @@ fdi_camera_func (const func_params_t *params,
 	}
 	*d = '\0';
 
-	if (a->usb_vendor == 0x07b4 && a->usb_product == 0x105) {
-		/* Marcus says: The Olympus Sierra/Storage dual mode camera firmware.
-		 * Some HAL using software gets deeply confused by this being here
-		 * and also detected as mass storage elsewhere, so blacklist
-		 * it here.
-		 */
-		return 0;
-	}
-	if (a->usb_vendor) { /* usb product id might be 0! */
-		printf("   <match key=\"usb.vendor_id\" int=\"%d\">\n", a->usb_vendor);
-		printf("    <match key=\"usb.product_id\" int=\"%d\">\n", a->usb_product);
-		printf("     <merge key=\"info.category\" type=\"string\">camera</merge>\n");
-		if (a->device_type & GP_DEVICE_AUDIO_PLAYER) {
-			printf("     <append key=\"info.capabilities\" type=\"strlist\">camera</append>\n");
-			printf("     <merge key=\"info.category\" type=\"string\">portable_audio_player</merge>\n");
-			printf("     <append key=\"info.capabilities\" type=\"strlist\">portable_audio_player</append>\n");
-			printf("     <merge key=\"portable_audio_player.access_method\" type=\"string\">libgphoto2</merge>\n");
-			printf("     <merge key=\"portable_audio_player.type\" type=\"string\">user</merge>\n");
-
-			/* FIXME: needs true formats ... But all of them can do MP3 */
-			printf("     <append key=\"portable_audio_player.output_formats\" type=\"strlist\">audio/mpeg</append>\n");
-		} else {
-			printf("     <append key=\"info.capabilities\" type=\"strlist\">camera</append>\n");
-
-			/* HACK alert ... but the HAL / gnome-volume-manager guys want that */
-			if (NULL!=strstr(a->library,"ptp"))
-				printf("     <merge key=\"camera.access_method\" type=\"string\">ptp</merge>\n");
-			else
-				printf("     <merge key=\"camera.access_method\" type=\"string\">proprietary</merge>\n");
+	if ((a->port & GP_PORT_USB)) {
+		if (a->usb_vendor == 0x07b4 && a->usb_product == 0x105) {
+			/* Marcus says: The Olympus Sierra/Storage dual mode camera firmware.
+			 * Some HAL using software gets deeply confused by this being here
+			 * and also detected as mass storage elsewhere, so blacklist
+			 * it here.
+			 */
+			return 0;
 		}
-		/* leave them here even for audio players */
-		printf("     <merge key=\"camera.libgphoto2.name\" type=\"string\">%s</merge>\n", model);
-		printf("     <merge key=\"camera.libgphoto2.support\" type=\"bool\">true</merge>\n");
-		printf("    </match>\n");
-		printf("   </match>\n");
-
-	} else if (a->usb_class) {
-		printf("   <match key=\"usb.interface.class\" int=\"%d\">\n", a->usb_class);
-		printf("    <match key=\"usb.interface.subclass\" int=\"%d\">\n", a->usb_subclass);
-		printf("     <match key=\"usb.interface.protocol\" int=\"%d\">\n", a->usb_protocol);
-		printf("      <merge key=\"info.category\" type=\"string\">camera</merge>\n");
-		printf("      <append key=\"info.capabilities\" type=\"strlist\">camera</append>\n");
-		if (a->usb_class == 6) {
-			printf("      <merge key=\"camera.access_method\" type=\"string\">ptp</merge>\n");
-		} else {
-			if (a->usb_class == 8) {
-				printf("      <merge key=\"camera.access_method\" type=\"string\">storage</merge>\n");
+		if (a->usb_vendor) { /* usb product id might be 0! */
+			printf("   <match key=\"usb.vendor_id\" int=\"%d\">\n", a->usb_vendor);
+			printf("    <match key=\"usb.product_id\" int=\"%d\">\n", a->usb_product);
+			printf("     <merge key=\"info.category\" type=\"string\">camera</merge>\n");
+			if (a->device_type & GP_DEVICE_AUDIO_PLAYER) {
+				printf("     <append key=\"info.capabilities\" type=\"strlist\">camera</append>\n");
+				printf("     <merge key=\"info.category\" type=\"string\">portable_audio_player</merge>\n");
+				printf("     <append key=\"info.capabilities\" type=\"strlist\">portable_audio_player</append>\n");
+				printf("     <merge key=\"portable_audio_player.access_method\" type=\"string\">libgphoto2</merge>\n");
+				printf("     <merge key=\"portable_audio_player.type\" type=\"string\">user</merge>\n");
+				
+				/* FIXME: needs true formats ... But all of them can do MP3 */
+				printf("     <append key=\"portable_audio_player.output_formats\" type=\"strlist\">audio/mpeg</append>\n");
 			} else {
-				printf("      <merge key=\"camera.access_method\" type=\"string\">proprietary</merge>\n");
+				printf("     <append key=\"info.capabilities\" type=\"strlist\">camera</append>\n");
+				
+				/* HACK alert ... but the HAL / gnome-volume-manager guys want that */
+				if (NULL!=strstr(a->library,"ptp"))
+					printf("     <merge key=\"camera.access_method\" type=\"string\">ptp</merge>\n");
+				else
+					printf("     <merge key=\"camera.access_method\" type=\"string\">proprietary</merge>\n");
 			}
+			/* leave them here even for audio players */
+			printf("     <merge key=\"camera.libgphoto2.name\" type=\"string\">%s</merge>\n", model);
+			printf("     <merge key=\"camera.libgphoto2.support\" type=\"bool\">true</merge>\n");
+			printf("    </match>\n");
+			printf("   </match>\n");
+			
+		} else if (a->usb_class) {
+			printf("   <match key=\"usb.interface.class\" int=\"%d\">\n", a->usb_class);
+			printf("    <match key=\"usb.interface.subclass\" int=\"%d\">\n", a->usb_subclass);
+			printf("     <match key=\"usb.interface.protocol\" int=\"%d\">\n", a->usb_protocol);
+			printf("      <merge key=\"info.category\" type=\"string\">camera</merge>\n");
+			printf("      <append key=\"info.capabilities\" type=\"strlist\">camera</append>\n");
+			if (a->usb_class == 6) {
+				printf("      <merge key=\"camera.access_method\" type=\"string\">ptp</merge>\n");
+			} else {
+				if (a->usb_class == 8) {
+					printf("      <merge key=\"camera.access_method\" type=\"string\">storage</merge>\n");
+				} else {
+					printf("      <merge key=\"camera.access_method\" type=\"string\">proprietary</merge>\n");
+				}
+			}
+			printf("      <merge key=\"camera.libgphoto2.name\" type=\"string\">%s</merge>\n", model);
+			printf("      <merge key=\"camera.libgphoto2.support\" type=\"bool\">true</merge>\n");
+			printf("     </match>\n");
+			printf("    </match>\n");
+			printf("   </match>\n");
 		}
-		printf("      <merge key=\"camera.libgphoto2.name\" type=\"string\">%s</merge>\n", model);
-		printf("      <merge key=\"camera.libgphoto2.support\" type=\"bool\">true</merge>\n");
-		printf("     </match>\n");
-		printf("    </match>\n");
-		printf("   </match>\n");
-	}
+	} /* camera has USB connection */
 	return 0;
 }
 
@@ -865,39 +846,43 @@ fdi_device_camera_func (const func_params_t *params,
 		s++;
 	}
 	*d = '\0';
-	if (a->usb_vendor == 0x07b4 && a->usb_product == 0x105) {
-		/* Marcus says: The Olympus Sierra/Storage dual mode camera firmware.
-		 * Some HAL using software gets deeply confused by this being here
-		 * and also detected as mass storage elsewhere, so blacklist
-		 * it here.
-		 */
-		return 0;
-	}
-	if (a->usb_vendor) { /* usb product id might be 0! */
-		/* do not set category. We don't really know what this device really is.
-		 * But we do now that is capable of being a camera, so add to capabilities
-		 */
-		printf("   <match key=\"usb_device.vendor_id\" int=\"%d\">\n", a->usb_vendor);
-		printf("    <match key=\"usb_device.product_id\" int=\"%d\">\n", a->usb_product);
-		if (a->device_type & GP_DEVICE_AUDIO_PLAYER)
-			printf("     <append key=\"info.capabilities\" type=\"strlist\">portable_audio_player</append>\n");
-		else
-			printf("     <append key=\"info.capabilities\" type=\"strlist\">camera</append>\n");
-		printf("    </match>\n");
-		printf("   </match>\n");
-	}
+
+	if ((a->port & GP_PORT_USB)) {
+
+		if (a->usb_vendor == 0x07b4 && a->usb_product == 0x105) {
+			/* Marcus says: The Olympus Sierra/Storage dual mode camera firmware.
+			 * Some HAL using software gets deeply confused by this being here
+			 * and also detected as mass storage elsewhere, so blacklist
+			 * it here.
+			 */
+			return 0;
+		}
+		if (a->usb_vendor) { /* usb product id might be 0! */
+			/* do not set category. We don't really know what this device really is.
+			 * But we do now that is capable of being a camera, so add to capabilities
+			 */
+			printf("   <match key=\"usb_device.vendor_id\" int=\"%d\">\n", a->usb_vendor);
+			printf("    <match key=\"usb_device.product_id\" int=\"%d\">\n", a->usb_product);
+			if (a->device_type & GP_DEVICE_AUDIO_PLAYER)
+				printf("     <append key=\"info.capabilities\" type=\"strlist\">portable_audio_player</append>\n");
+			else
+				printf("     <append key=\"info.capabilities\" type=\"strlist\">camera</append>\n");
+			printf("    </match>\n");
+			printf("   </match>\n");
+		}
 #if 0
-	/* would need to be able to merge upwards ... but cannot currently */
-	else if (a->usb_class) {
-		printf("   <match key=\"usb.interface.class\" int=\"%d\">\n", a->usb_class);
-		printf("    <match key=\"usb.interface.subclass\" int=\"%d\">\n", a->usb_subclass);
-		printf("     <match key=\"usb.interface.protocol\" int=\"%d\">\n", a->usb_protocol);
-		printf("      <append key=\"info.capabilities\" type=\"strlist\">camera</append>\n");
-		printf("     </match>\n");
-		printf("    </match>\n");
-		printf("   </match>\n");
-	}
+		/* would need to be able to merge upwards ... but cannot currently */
+		else if (a->usb_class) {
+			printf("   <match key=\"usb.interface.class\" int=\"%d\">\n", a->usb_class);
+			printf("    <match key=\"usb.interface.subclass\" int=\"%d\">\n", a->usb_subclass);
+			printf("     <match key=\"usb.interface.protocol\" int=\"%d\">\n", a->usb_protocol);
+			printf("      <append key=\"info.capabilities\" type=\"strlist\">camera</append>\n");
+			printf("     </match>\n");
+			printf("    </match>\n");
+			printf("   </match>\n");
+		}
 #endif
+	}
 	return 0;
 }
 
@@ -1016,7 +1001,7 @@ static const output_format_t formats[] = {
 	 end_func: fdi_device_end_func
 	},
 	{name: "udev-rules",
-	 descr: "udev rules file",
+	 descr: "udev < 0.98 rules file",
 	 help: "Put it into /etc/udev/libgphoto2.rules, set file mode, owner, group or add script to run",
 	 paramdescr: "( <PATH_TO_SCRIPT> | [mode <mode>|owner <owner>|group <group>]* ) ",
 	 begin_func: udev_begin_func, 
