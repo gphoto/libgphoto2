@@ -150,28 +150,31 @@ hotplug_camera_func (const func_params_t *params,
 		?((*params->argv)[0])
 		:(GP_USB_HOTPLUG_SCRIPT);
 
-	if (a->usb_vendor) { /* usb product id may be zero! */
-		class = 0;
-		subclass = 0;
-		proto = 0;
-		flags = GP_USB_HOTPLUG_MATCH_VENDOR_ID | GP_USB_HOTPLUG_MATCH_PRODUCT_ID;
-		usb_vendor = a->usb_vendor;
-		usb_product = a->usb_product;
-	} else if (a->usb_class) {
-		class = a->usb_class;
-		subclass = a->usb_subclass;
-		proto = a->usb_protocol;
-		flags = GP_USB_HOTPLUG_MATCH_INT_CLASS;
-		if (subclass != -1)
-			flags |= GP_USB_HOTPLUG_MATCH_INT_SUBCLASS;
-		else
+	if (a->port & GP_PORT_USB) {
+		if (a->usb_vendor) { /* usb product id may be zero! */
+			class = 0;
 			subclass = 0;
-		if (proto != -1)
-			flags |= GP_USB_HOTPLUG_MATCH_INT_PROTOCOL;
-		else
 			proto = 0;
-		usb_vendor = 0;
-		usb_product = 0;
+			flags = (GP_USB_HOTPLUG_MATCH_VENDOR_ID 
+				 | GP_USB_HOTPLUG_MATCH_PRODUCT_ID);
+			usb_vendor = a->usb_vendor;
+			usb_product = a->usb_product;
+		} else if (a->usb_class) {
+			class = a->usb_class;
+			subclass = a->usb_subclass;
+			proto = a->usb_protocol;
+			flags = GP_USB_HOTPLUG_MATCH_INT_CLASS;
+			if (subclass != -1)
+				flags |= GP_USB_HOTPLUG_MATCH_INT_SUBCLASS;
+			else
+				subclass = 0;
+			if (proto != -1)
+				flags |= GP_USB_HOTPLUG_MATCH_INT_PROTOCOL;
+			else
+				proto = 0;
+			usb_vendor = 0;
+			usb_product = 0;
+		}
 	} else {
 		/* not a USB camera */
 		return 0;
