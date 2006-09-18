@@ -18,7 +18,8 @@ EXTRA_DIST = \
 
 # FIXME: Only run this if not cross-compiling
 installcheck-local: $(check_SCRIPTS)
-	@total=0; failed=0; success=0; \
+	@export CAMLIBS="$(DESTDIR)$(camlibdir)"; \
+	total=0; failed=0; success=0; \
 	echo "Running \"installcheck\" test cases..."; \
 	for script in $(check_SCRIPTS); do \
 		echo "Test case: $$script"; \
