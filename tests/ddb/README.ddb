@@ -141,8 +141,11 @@ What would need to be done to go into production with this:
 
  * The DDB device names should be Unicode strings.
 
- * Store other device information in the DDB somehow, e.g. thumbnail
-   images of the devices themselves.
+ * Store other device information in the DDB which may be of interest
+   for a libgphoto2 frontend, e.g.
+    - thumbnail images of the devices themselves.
+    - camera features like capture modes, can delete single files, can
+      delete all files, can mark downloaded files, can upload files
 
 
 ========================================================================
