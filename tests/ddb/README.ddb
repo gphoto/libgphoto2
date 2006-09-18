@@ -132,7 +132,9 @@ What would need to be done to go into production with this:
 
    One solution to the problem could be a directory structure like
 
-      /etc/libgphoto2.d/libgphoto2.ddb # the devices we ship
+      /etc/libgphoto2.d/camlib-agfa.ddb # the devices from the agfa camlib
+      /etc/libgphoto2.d/camlib-canon.ddb # the devices from the canon camlib
+      /etc/libgphoto2.d/camlib-ptp2.ddb # the devices from the ptp2 camlib
       /etc/libgphoto2.d/foo.ddb # devices the user got from somewhere
       /etc/libgphoto2.d/bar.ddb # devices the user got from somewhere
 
@@ -140,6 +142,9 @@ What would need to be done to go into production with this:
    smaller footprint than the 1.2MB of libxml2.
 
  * The DDB device names should be Unicode strings.
+
+ * There must be structured information on device names, e.g. the
+   vendor must be readable without parsing strings.
 
  * Store other device information in the DDB which may be of interest
    for a libgphoto2 frontend, e.g.
