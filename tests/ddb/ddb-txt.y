@@ -343,9 +343,15 @@ interface_usb:
 	;
 
 interface_usb_internal:
+	| interface_usb_vendprod
+	| interface_usb_class_stuff
+	| interface_usb_vendprod
+	  interface_usb_class_stuff
+	;
+
+interface_usb_vendprod:
 	interface_usb_vendor TOK_SEP
 	interface_usb_product TOK_SEP
-	| interface_usb_class_stuff
 	;
 
 interface_usb_vendor:
@@ -363,7 +369,7 @@ interface_usb_product:
 	;
 
 interface_usb_class_stuff:
-	interface_usb_class TOK_SEP
+	| interface_usb_class TOK_SEP
 	| interface_usb_class TOK_SEP
           interface_usb_subclass TOK_SEP
 	| interface_usb_class TOK_SEP 
@@ -552,6 +558,33 @@ uicmp(unsigned int a, unsigned int b)
   else return 0;
 }
 
+static int
+strcmp_colon(const char *a, const char *b)
+{
+  unsigned int i = 0;
+  while (1) {
+    if ((a[i] == '\0') && (b[i] == '\0'))
+      return 0;
+    if (a[i] == '\0')
+      return -1;
+    if (b[i] == '\0')
+      return 1;
+    if (a[i] == b[i])
+      goto next;
+    if (((a[i] == ' ') && (b[i] == ':')) ||
+	((a[i] == ':') && (a[i] == ' ')))
+      goto next;
+    if (a[i] < b[i])
+      return -1;
+    if (a[i] > b[i])
+      return 1;
+    fprintf(stderr, "Internal error in strcmp_colon\n");
+    exit(13);
+  next:
+    ++i;
+  }
+}
+
 
 static int
 compare_camera_abilities(const CameraAbilities *a, 
@@ -559,7 +592,7 @@ compare_camera_abilities(const CameraAbilities *a,
 {
   unsigned int errors = 0;
   int i;
-  CMP_RET_S(strcmp, model);
+  CMP_RET_S(strcmp_colon, model);
   CMP_RET_S(strcmp, library);
   /* CMP_RET_S(strcmp, id); */
   CMP_RET_UI(uicmp, port);

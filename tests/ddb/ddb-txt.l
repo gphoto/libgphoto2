@@ -59,8 +59,8 @@ static void lexer_error(const char *msg);
 			yylval.str_val = strndup(yytext, yyleng);
 			return TOK_STRING;
 		}
-(0x)?[0-9a-fA-F]+    {ECHO; 
-			yylval.ui_val = strtol(yytext, NULL, 0);
+(0x)?[0-9a-fA-F]+    {ECHO;
+			yylval.ui_val = strtoul(yytext, NULL, 0);
 			return TOK_NUMBER;
 		}
 \n              { ECHO; /* ignore newlines */ }
