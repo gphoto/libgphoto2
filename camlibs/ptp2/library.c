@@ -962,8 +962,8 @@ camera_abilities (CameraAbilitiesList *list)
 	int i;
 	CameraAbilities a;
 
-	memset(&a,0, sizeof(a));
 	for (i = 0; i < sizeof(models)/sizeof(models[0]); i++) {
+		memset(&a, 0, sizeof(a));
 		strcpy (a.model, models[i].model);
 		a.status = GP_DRIVER_STATUS_PRODUCTION;
 		a.port   = GP_PORT_USB;
@@ -988,9 +988,9 @@ camera_abilities (CameraAbilitiesList *list)
 			GP_FOLDER_OPERATION_MAKE_DIR |
 			GP_FOLDER_OPERATION_REMOVE_DIR;
 		CR (gp_abilities_list_append (list, a));
-		memset(&a,0, sizeof(a));
 	}
 
+	memset(&a, 0, sizeof(a));
 	strcpy(a.model, "USB PTP Class Camera");
 	a.status = GP_DRIVER_STATUS_TESTING;
 	a.port   = GP_PORT_USB;
@@ -1007,7 +1007,7 @@ camera_abilities (CameraAbilitiesList *list)
 	a.device_type       = GP_DEVICE_STILL_CAMERA;
 	CR (gp_abilities_list_append (list, a));
 
-	memset(&a,0,sizeof(a));
+	memset(&a, 0, sizeof(a));
 	strcpy(a.model, "MTP Device");
 	a.status = GP_DRIVER_STATUS_TESTING;
 	a.port   = GP_PORT_USB;
@@ -1023,7 +1023,7 @@ camera_abilities (CameraAbilitiesList *list)
 	a.device_type       = GP_DEVICE_AUDIO_PLAYER;
 	CR (gp_abilities_list_append (list, a));
 
-	memset(&a,0,sizeof(a));
+	memset(&a, 0, sizeof(a));
 	strcpy(a.model, "PTP/IP Camera");
 	a.status = GP_DRIVER_STATUS_TESTING;
 	a.port   = GP_PORT_PTPIP;
@@ -1036,6 +1036,7 @@ camera_abilities (CameraAbilitiesList *list)
 				GP_FOLDER_OPERATION_REMOVE_DIR;
 	a.device_type       = GP_DEVICE_STILL_CAMERA;
 	CR (gp_abilities_list_append (list, a));
+
 	return (GP_OK);
 }
 
