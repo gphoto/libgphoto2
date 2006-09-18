@@ -524,6 +524,9 @@ reset_ca(void)
 {
   memset(&ca, 0, sizeof(ca));
   speed_index = 0;
+  /* FIXME: These defaults are of dubious quality. */
+  ca.usb_subclass = -1;
+  ca.usb_protocol = -1;
 }
 
 
@@ -596,17 +599,23 @@ compare_camera_abilities(const CameraAbilities *a,
   CMP_RET_S(strcmp, library);
   /* CMP_RET_S(strcmp, id); */
   CMP_RET_UI(uicmp, port);
-  for (i=0; (a->speed[i] != 0) && (a->speed[i] != 0); i++) {
-    CMP_RET_UI(uicmp, speed[i]);
+  if ((a->port & GP_PORT_SERIAL)) {
+    for (i=0; (a->speed[i] != 0) && (a->speed[i] != 0); i++) {
+      CMP_RET_UI(uicmp, speed[i]);
+    }
   }
   CMP_RET_UI(uicmp, operations);
   CMP_RET_UI(uicmp, file_operations);
   CMP_RET_UI(uicmp, folder_operations);
-  CMP_RET_UI(uicmp, usb_vendor);
-  CMP_RET_UI(uicmp, usb_product);
-  CMP_RET_UI(uicmp, usb_class);
-  CMP_RET_UI(uicmp, usb_subclass);
-  CMP_RET_UI(uicmp, usb_protocol);
+  if ((a->port & GP_PORT_USB)) {
+    CMP_RET_UI(uicmp, usb_vendor);
+    CMP_RET_UI(uicmp, usb_product);
+    CMP_RET_UI(uicmp, usb_class);
+    if (a->usb_class != 0) {
+      CMP_RET_UI(uicmp, usb_subclass);
+      CMP_RET_UI(uicmp, usb_protocol);
+    }
+  }
   CMP_RET_UI(uicmp, device_type);
   if (errors == 0) {
     return 0;
