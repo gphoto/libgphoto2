@@ -16,7 +16,29 @@ EXTRA_DIST = \
 	ddb-txt.l \
 	ddb-txt.y
 
-TESTS = $(check_SCRIPTS)
+# FIXME: Only run this if not cross-compiling
+installcheck-local: $(check_SCRIPTS)
+	@total=0; failed=0; success=0; \
+	echo "Running \"installcheck\" test cases..."; \
+	for script in $(check_SCRIPTS); do \
+		echo "Test case: $$script"; \
+		total="$$(expr $$total + 1)"; \
+		if "./$$script"; then \
+			echo "SUCCEEDED: $$script"; \
+			success="$$(expr $$success + 1)"; \
+		else \
+			s="$$?"; \
+			echo "FAILED (return code $$s): $$script"; \
+			failed="$$(expr $$failed + 1)"; \
+		fi; \
+	done; \
+	echo "Test summary: $$success succeeded, $$failed failed, $$total in total."; \
+	if test "$$failed" -gt 0; then \
+		echo "Error: One or more \"installcheck\" testcases have failed."; \
+		exit 1; \
+	fi
+
+# TESTS = $(check_SCRIPTS)
 
 BUILT_SOURCES = $(flexbison_BUILT_SOURCES_)
 CLEANFILES = $(check_SCRIPTS) $(BUILT_SOURCES) $(flexbison_CLEANFILES_) gp2ddb.txt
@@ -49,7 +71,7 @@ clean-local:
 		< "$<" > "$@"
 	@chmod +x $@
 
-check-ddb.sh: check-ddb.in $(top_builddir)/packaging/generic/print-camera-list
+check-ddb.sh: check-ddb.in $(top_builddir)/packaging/generic/print-camera-list test-ddb
 
 $(top_builddir)/packaging/generic/print-camera-list:
 	cd $(top_builddir)/packaging/generic && $(MAKE) print-camera-list
