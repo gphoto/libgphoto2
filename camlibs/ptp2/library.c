@@ -1007,6 +1007,7 @@ camera_abilities (CameraAbilitiesList *list)
 	a.device_type       = GP_DEVICE_STILL_CAMERA;
 	CR (gp_abilities_list_append (list, a));
 
+	memset(&a,0,sizeof(a));
 	strcpy(a.model, "MTP Device");
 	a.status = GP_DRIVER_STATUS_TESTING;
 	a.port   = GP_PORT_USB;
@@ -1022,6 +1023,7 @@ camera_abilities (CameraAbilitiesList *list)
 	a.device_type       = GP_DEVICE_AUDIO_PLAYER;
 	CR (gp_abilities_list_append (list, a));
 
+	memset(&a,0,sizeof(a));
 	strcpy(a.model, "PTP/IP Camera");
 	a.status = GP_DRIVER_STATUS_TESTING;
 	a.port   = GP_PORT_PTPIP;
