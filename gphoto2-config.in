@@ -59,7 +59,7 @@ while test $# -gt 0; do
        	;;
 
     --libs)
-       	echo "-L@libdir@" -lgphoto2 -lm
+        echo "-L@libdir@" -lgphoto2 -lgphoto2_port -lm
        	;;
 
     *)
