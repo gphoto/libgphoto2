@@ -574,15 +574,15 @@ ddb_list_out_func(const char *str, void *data)
 }
 
 
-static int
-ddb_camera_func (const func_params_t *params, 
-		 const int i,
-		 const int total,
-		 const CameraAbilities *a)
+static void
+ddb_delayed_head(
+	const func_params_t *params, 
+	const int i,
+	const int total,
+	const CameraAbilities *a,
+	const char *camlib_basename)
 {
 	int first = 1;
-	const char *camlib_basename = basename(a->library);
-
 	printf("# This is a PRE-ALPHA data format. Do not use it.\n\n");
 
 	if (params->add_comments) {
@@ -633,9 +633,29 @@ ddb_camera_func (const func_params_t *params,
 				 ddb_list_out_func,
 				 (void *) &first);
 	printf(";\n");
+}
+
+
+static int
+ddb_camera_func (const func_params_t *params, 
+		 const int i,
+		 const int total,
+		 const CameraAbilities *a)
+{
+	const char *camlib_basename = basename(a->library);
+	int head_printed = 0;
+#define DELAYED_HEAD() \
+	do { \
+		if (!head_printed) {			      \
+			ddb_delayed_head(params, i, total,    \
+					 a, camlib_basename); \
+			head_printed = 1;		      \
+		} \
+	} while (0)
 
 	if ((a->port & GP_PORT_SERIAL)) {
 		int first = 1;
+		DELAYED_HEAD();
 		printf("    interface serial {\n");
 		if (a->speed[0] != 0) {
 			unsigned int i;
@@ -652,13 +672,17 @@ ddb_camera_func (const func_params_t *params,
 	}
 
 	if ((a->port & GP_PORT_USB)) {
-		printf("    interface usb {\n");
 		if (a->usb_vendor) { 
 			/* usb product id may have the legal value zero! */
+			DELAYED_HEAD();
+			printf("    interface usb {\n");
 			printf("        vendor  0x%04x;\n", a->usb_vendor);
 			printf("        product 0x%04x;\n", a->usb_product);
+			printf("    };\n");
 		}
 		if ((a->usb_class) && (a->usb_class != 666)) {
+			DELAYED_HEAD();
+			printf("    interface usb {\n");
 			printf("        class 0x%02x;\n", a->usb_class);
 			if (a->usb_subclass != -1) {
 				printf("        subclass 0x%02x;\n", a->usb_subclass);
@@ -666,22 +690,27 @@ ddb_camera_func (const func_params_t *params,
 			if (a->usb_protocol != -1) {
 				printf("        protocol 0x%02x;\n", a->usb_protocol);
 			}
+			printf("    };\n");
 		}
-		printf("    };\n");
 	}
 	if ((a->port & GP_PORT_DISK)) {
+		DELAYED_HEAD();
 		printf("    interface disk;\n");
 	}
 	if ((a->port & GP_PORT_PTPIP)) {
+		DELAYED_HEAD();
 		printf("    interface ptpip;\n");
 	}
+#undef DELAYED_HEAD
 
-	printf("    # driver_options {\n");
-	printf("    #      option \"foo\";\n");
-	printf("    #      option \"bar\" \"bla\";\n");
-	printf("    # };\n");
+	if (head_printed) {
+		printf("    # driver_options {\n");
+		printf("    #      option \"foo\";\n");
+		printf("    #      option \"bar\" \"bla\";\n");
+		printf("    # };\n");
 
-	printf("}; # %s\n\n", a->model);
+		printf("}; # %s\n\n", a->model);
+	}
 	return 0;
 }
 
@@ -1088,10 +1117,11 @@ int main(int argc, char *argv[])
 	static char *fmt_argv[16]; /* format specific arguments */
 
 	int i, j;
+	unsigned int ui;
 
 	/* initialize parameters to NULL */
-	for (i=0; i<(sizeof(fmt_argv)/sizeof(fmt_argv[0])); i++) {
-		fmt_argv[i] = NULL;
+	for (ui=0; ui<(sizeof(fmt_argv)/sizeof(fmt_argv[0])); ui++) {
+		fmt_argv[ui] = NULL;
 	}
 
 	/* walk through command line arguments until format is encountered */
@@ -1136,7 +1166,7 @@ int main(int argc, char *argv[])
 
 	/* copy remaining arguments */
 	for (j=i; 
-	     (j<argc) && ((j-i)<((sizeof(fmt_argv)/sizeof(fmt_argv[0]))-1)); 
+	     (j<argc) && ((j-i)<(int)((sizeof(fmt_argv)/sizeof(fmt_argv[0]))-1)); 
 	     j++) {
 		fmt_argv[j-i] = argv[j];
 	}
