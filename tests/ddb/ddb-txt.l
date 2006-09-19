@@ -5,6 +5,7 @@
 
 %{
 #include <stdlib.h>
+#include <errno.h>
 #define _GNU_SOURCE
 #include <string.h>
 #include "ddb-common.h"
@@ -61,6 +62,12 @@ static void lexer_error(const char *msg);
 		}
 (0x)?[0-9a-fA-F]+    {ECHO;
 			yylval.ui_val = strtoul(yytext, NULL, 0);
+			if ((ERANGE == errno) && 
+			    (ULONG_MAX == yylval.ui_val)) {
+				lexer_error("Number out of range");
+			} else if (EINVAL == errno) {
+				lexer_error("Invalid number");
+			}
 			return TOK_NUMBER;
 		}
 \n              { ECHO; /* ignore newlines */ }
