@@ -45,7 +45,7 @@ BUILT_SOURCES = $(flexbison_BUILT_SOURCES_)
 CLEANFILES = $(check_SCRIPTS) $(BUILT_SOURCES) $(flexbison_CLEANFILES_) gp2ddb.txt
 
 #if HAVE_FLEX_BISON
-test_ddb_SOURCES = $(flexbison_BUILT_SOURCES_) ddb-common.c ddb-common.h
+test_ddb_SOURCES = $(flexbison_BUILT_SOURCES_) test-ddb.c ddb-common.c ddb-common.h
 test_ddb_LDADD = \
 	-lfl \
 	$(top_builddir)/libgphoto2/libgphoto2.la \

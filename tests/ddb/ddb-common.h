@@ -3,6 +3,7 @@
 
 #define _GPHOTO2_INTERNAL_CODE
 
+#include <stdio.h>
 #include <gphoto2/gphoto2-abilities-list.h>
 
 typedef union {
@@ -57,6 +58,8 @@ YY_DECL;
 /* #define YYLEX_PARAM void */
 
 // #define YYDEBUG 1
+
+extern FILE *yyin;
 
 void lexer_reset(const char *_filename);
 
