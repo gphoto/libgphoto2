@@ -159,7 +159,7 @@ hotplug_camera_func (const func_params_t *params,
 				 | GP_USB_HOTPLUG_MATCH_PRODUCT_ID);
 			usb_vendor = a->usb_vendor;
 			usb_product = a->usb_product;
-		} else if (a->usb_class) {
+		} else if ((a->usb_class) && (a->usb_class != 666)) {
 			class = a->usb_class;
 			subclass = a->usb_subclass;
 			proto = a->usb_protocol;
@@ -333,7 +333,7 @@ udev_camera_func (const func_params_t *params,
 				 | GP_USB_HOTPLUG_MATCH_PRODUCT_ID);
 			usb_vendor = a->usb_vendor;
 			usb_product = a->usb_product;
-		} else if (a->usb_class) {
+		} else if ((a->usb_class) && (a->usb_class != 666)) {
 			class = a->usb_class;
 			subclass = a->usb_subclass;
 			proto = a->usb_protocol;
@@ -444,7 +444,7 @@ udev_098_camera_func (const func_params_t *params,
 				 | GP_USB_HOTPLUG_MATCH_PRODUCT_ID);
 			usb_vendor = a->usb_vendor;
 			usb_product = a->usb_product;
-		} else if (a->usb_class) {
+		} else if ((a->usb_class) && (a->usb_class != 666)) {
 			class = a->usb_class;
 			subclass = a->usb_subclass;
 			proto = a->usb_protocol;
@@ -658,7 +658,7 @@ ddb_camera_func (const func_params_t *params,
 			printf("        vendor  0x%04x;\n", a->usb_vendor);
 			printf("        product 0x%04x;\n", a->usb_product);
 		}
-		if (a->usb_class) {
+		if ((a->usb_class) && (a->usb_class != 666)) {
 			printf("        class 0x%02x;\n", a->usb_class);
 			if (a->usb_subclass != -1) {
 				printf("        subclass 0x%02x;\n", a->usb_subclass);
@@ -769,7 +769,7 @@ fdi_camera_func (const func_params_t *params,
 			printf("    </match>\n");
 			printf("   </match>\n");
 			
-		} else if (a->usb_class) {
+		} else if ((a->usb_class) && (a->usb_class != 666)) {
 			printf("   <match key=\"usb.interface.class\" int=\"%d\">\n", a->usb_class);
 			printf("    <match key=\"usb.interface.subclass\" int=\"%d\">\n", a->usb_subclass);
 			printf("     <match key=\"usb.interface.protocol\" int=\"%d\">\n", a->usb_protocol);
@@ -875,7 +875,7 @@ fdi_device_camera_func (const func_params_t *params,
 		}
 #if 0
 		/* would need to be able to merge upwards ... but cannot currently */
-		else if (a->usb_class) {
+		else if ((a->usb_class) && (a->usb_class != 666)) {
 			printf("   <match key=\"usb.interface.class\" int=\"%d\">\n", a->usb_class);
 			printf("    <match key=\"usb.interface.subclass\" int=\"%d\">\n", a->usb_subclass);
 			printf("     <match key=\"usb.interface.protocol\" int=\"%d\">\n", a->usb_protocol);
