@@ -715,7 +715,7 @@ gp_camera_init (Camera *camera, GPContext *context)
 		switch (camera->port->type) {
 		case GP_PORT_NONE:
 			gp_context_error (context, _("You have to set the "
-				"port prior initialization of the camera."));
+				"port prior to initialization of the camera."));
 			return (GP_ERROR_UNKNOWN_PORT);
 		case GP_PORT_USB:
 			if (gp_port_usb_find_device (camera->port,
