@@ -125,13 +125,14 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
-		return (dc240_file_action (camera, DC240_ACTION_IMAGE, file,
-					   folder, filename, context));
+	case GP_FILE_TYPE_RAW:
+		return dc240_file_action (camera, DC240_ACTION_IMAGE, file,
+					   folder, filename, context);
 	case GP_FILE_TYPE_PREVIEW:
-		return (dc240_file_action (camera, DC240_ACTION_PREVIEW, file,
-					   folder, (char*) filename, context));
+		return dc240_file_action (camera, DC240_ACTION_PREVIEW, file,
+					   folder, (char*) filename, context);
 	default:
-		return (GP_ERROR_NOT_SUPPORTED);
+		return GP_ERROR_NOT_SUPPORTED;
 	}
 }
 
