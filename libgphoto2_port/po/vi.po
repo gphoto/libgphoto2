@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2 port-2.1.6rc2\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-08-30 07:53+0200\n"
+"POT-Creation-Date: 2006-09-18 20:40-0400\n"
 "PO-Revision-Date: 2005-06-29 19:59+0930\n"
 "Last-Translator: Ngô Trần Thủy <ngotranthuy@gmail.com>\n"
 "Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net>\n"
@@ -507,12 +507,13 @@ msgstr ""
 "Không tìm thấy thiết bị USB (hàng 0x%x, hàng con 0x%x, giao thức 0x%x). Kiểm "
 "tra xem việc kết nối thiết bị với máy tính"
 
-#: disk/disk.c:163 disk/disk.c:204 disk/disk.c:228
+#: disk/disk.c:177 disk/disk.c:219 disk/disk.c:245 disk/disk.c:277
+#: disk/disk.c:300
 #, c-format
 msgid "Media '%s'"
 msgstr ""
 
-#: disk/disk.c:164
+#: disk/disk.c:178
 msgid "(unknown)"
 msgstr ""
 

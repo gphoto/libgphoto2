@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gphoto\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-08-30 07:53+0200\n"
+"POT-Creation-Date: 2006-09-18 20:40-0400\n"
 "PO-Revision-Date: 2005-01-05 23:00+0300\n"
 "Last-Translator: Вячеслав Диконов (Vyacheslav Dikonov) <slava@altlinux.ru>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -505,12 +505,13 @@ msgstr ""
 "Не найдено устройство USB (класс 0x%x, подкласс 0x%x, протокол 0x%x). "
 "Убедитесь, что устройство подключено к компьютеру."
 
-#: disk/disk.c:163 disk/disk.c:204 disk/disk.c:228
+#: disk/disk.c:177 disk/disk.c:219 disk/disk.c:245 disk/disk.c:277
+#: disk/disk.c:300
 #, c-format
 msgid "Media '%s'"
 msgstr ""
 
-#: disk/disk.c:164
+#: disk/disk.c:178
 msgid "(unknown)"
 msgstr ""
 

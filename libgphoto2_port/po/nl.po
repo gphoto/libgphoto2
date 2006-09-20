@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_2.1.6-8_libgphoto2_port-0_nl\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-08-30 07:53+0200\n"
+"POT-Creation-Date: 2006-09-18 20:40-0400\n"
 "PO-Revision-Date: 2006-06-20 20:46+0100\n"
 "Last-Translator: Kurt De Bree <kdebree(AT)telenet(DOT)be>\n"
 "Language-Team: Dutch <debian-l10n-dutch@lists.debian.org>\n"
@@ -518,12 +518,13 @@ msgstr ""
 "Kon het USB-toestel niet vinden (klasse 0x%x, subklasse 0x%x, protocol 0x%"
 "x). Zorg ervoor dat het toestel aan de computer aangesloten is."
 
-#: disk/disk.c:163 disk/disk.c:204 disk/disk.c:228
+#: disk/disk.c:177 disk/disk.c:219 disk/disk.c:245 disk/disk.c:277
+#: disk/disk.c:300
 #, c-format
 msgid "Media '%s'"
 msgstr ""
 
-#: disk/disk.c:164
+#: disk/disk.c:178
 msgid "(unknown)"
 msgstr ""
 

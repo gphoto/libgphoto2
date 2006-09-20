@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-08-30 07:53+0200\n"
+"POT-Creation-Date: 2006-09-18 20:40-0400\n"
 "PO-Revision-Date: 2002-06-18 16:33--500\n"
 "Last-Translator: christophe barbé <christophe@ufies.org>\n"
 "Language-Team: Français <traduc@traduc.org>\n"
@@ -502,12 +502,13 @@ msgstr ""
 "Impossible de trouver le périphérique USB (fabricant 0x%x, sous-classe 0x%x, "
 "produit 0x%x). Assurez-vous qu'il est bien connecté à l'ordinateur."
 
-#: disk/disk.c:163 disk/disk.c:204 disk/disk.c:228
+#: disk/disk.c:177 disk/disk.c:219 disk/disk.c:245 disk/disk.c:277
+#: disk/disk.c:300
 #, c-format
 msgid "Media '%s'"
 msgstr ""
 
-#: disk/disk.c:164
+#: disk/disk.c:178
 msgid "(unknown)"
 msgstr ""
 

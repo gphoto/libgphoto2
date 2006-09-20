@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port 2.1.99\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-08-30 07:53+0200\n"
+"POT-Creation-Date: 2006-09-18 20:40-0400\n"
 "PO-Revision-Date: 2005-12-29 14:25+0100\n"
 "Last-Translator: Mogens Jaeger <mogensjaeger@get2net.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
@@ -503,11 +503,12 @@ msgstr ""
 "Kunne ikke finde USB-enheden (class 0x%x, subclass 0x%x, protokol0x%x). Sikr "
 "dig at enheden er tilsluttet computeren."
 
-#: disk/disk.c:163 disk/disk.c:204 disk/disk.c:228
+#: disk/disk.c:177 disk/disk.c:219 disk/disk.c:245 disk/disk.c:277
+#: disk/disk.c:300
 #, c-format
 msgid "Media '%s'"
 msgstr "Medie '%s'"
 
-#: disk/disk.c:164
+#: disk/disk.c:178
 msgid "(unknown)"
 msgstr "(ukendt)"
