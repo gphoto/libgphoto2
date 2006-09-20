@@ -203,10 +203,12 @@ gp_port_library_list (GPPortInfoList *list)
 	if (mnt) {
 		while ((mntent = getmntent (mnt))) {
 			/* detect floppies so we don't access them with the stat() below */
-			if (	(NULL != strstr(mntent->mnt_fsname,"fd")) ||
-				(NULL != strstr(mntent->mnt_fsname,"floppy"))
-			)
+			if ((NULL != strstr(mntent->mnt_fsname,"fd")) ||
+			    (NULL != strstr(mntent->mnt_fsname,"floppy")) ||
+			    (NULL != strstr(mntent->mnt_fsname, "fuse"))) 
+			{
 				continue;
+			}
 
 			snprintf (path, sizeof(path), "%s/DCIM", mntent->mnt_dir);
 			if (-1 == stat(path, &stbuf)) {
@@ -226,10 +228,12 @@ gp_port_library_list (GPPortInfoList *list)
 	if (mnt) {
 		while ((mntent = getmntent (mnt))) {
 			/* detect floppies so we don't access them with the stat() below */
-			if (	(NULL != strstr(mntent->mnt_fsname,"fd")) ||
-				(NULL != strstr(mntent->mnt_fsname,"floppy"))
-			)
+			if ((NULL != strstr(mntent->mnt_fsname,"fd")) ||
+			    (NULL != strstr(mntent->mnt_fsname,"floppy")) ||
+			    (NULL != strstr(mntent->mnt_fsname, "fuse"))) 
+			{
 				continue;
+			}
 
 			snprintf (path, sizeof(path), "%s/DCIM", mntent->mnt_dir);
 			if (-1 == stat(path, &stbuf)) {

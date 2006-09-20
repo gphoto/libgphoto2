@@ -1,3 +1,8 @@
+2006-09-19  Hubert Figuiere  <hub@figuiere.net>
+
+	* disk.c (gp_port_library_list): ignore FUSE filesystem
+	entries.
+
 2005-06-15  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* disk.c (gp_port_library_list): unref the dbus connection
