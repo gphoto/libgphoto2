@@ -462,15 +462,15 @@ static const RegisterDescriptorType oly3000z_reg_20[] = {
 
 /*
  * Olympus 750uz: Register 20: white balance. The main difference is that
- * we have the flourescent 1 2 and 3:
+ * we have the fluorescent 1 2 and 3:
  */
 static const ValueNameType oly750uz_reg_20_val_names[] = {
 	{ { 0x00 }, N_("Auto") },
 	{ { 0x01 }, N_("Daylight") },
 	{ { 0x03 }, N_("Tungsten") },
-	{ { 0x04 }, N_("Flourescent-1-home-6700K") },
-	{ { 0x05 }, N_("Flourescent-2-desk-5000K") },
-	{ { 0x06 }, N_("Flourescent-3-office-4200K") },
+	{ { 0x04 }, N_("Fluorescent-1-home-6700K") },
+	{ { 0x05 }, N_("Fluorescent-2-desk-5000K") },
+	{ { 0x06 }, N_("Fluorescent-3-office-4200K") },
 	{ { 0xff }, N_("Cloudy") },
 };
 static const RegisterDescriptorType oly750uz_reg_20[] = { 

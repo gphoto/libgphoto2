@@ -2634,8 +2634,8 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("Auto White Balance Bias")},
 		{PTP_DPC_NIKON_WhiteBalanceTungstenBias,	/* 0xD018 */
 		 N_("Tungsten White Balance Bias")},
-		{PTP_DPC_NIKON_WhiteBalanceFlourescentBias,	/* 0xD019 */
-		 N_("Flourescent White Balance Bias")},
+		{PTP_DPC_NIKON_WhiteBalanceFluorescentBias,	/* 0xD019 */
+		 N_("Fluorescent White Balance Bias")},
 		{PTP_DPC_NIKON_WhiteBalanceDaylightBias,	/* 0xD01a */
 		 N_("Daylight White Balance Bias")},
 		{PTP_DPC_NIKON_WhiteBalanceFlashBias,		/* 0xD01b */

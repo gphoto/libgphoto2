@@ -121,7 +121,7 @@ void light_enhance(int vw, int vh, int coarse, int fine,
 	/* fprintf(stderr, "fluorescent)\n"); */
     }
     wb[0][0] = 1.08 * x;  wb[0][1] = 1.00 * x;  wb[0][2] = 0.95 * x; /* natural */
-    wb[1][0] = 1.00 * x;  wb[1][1] = 1.00 * x;  wb[1][2] = 1.00 * x; /* flourescent */
+    wb[1][0] = 1.00 * x;  wb[1][1] = 1.00 * x;  wb[1][2] = 1.00 * x; /* fluorescent */
     wb[2][0] = 0.90 * x;  wb[2][1] = 1.00 * x;  wb[2][2] = 1.11 * x; /* incandescent */
 #else
     if (fine > coarse) {

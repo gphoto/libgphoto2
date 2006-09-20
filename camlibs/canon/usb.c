@@ -258,16 +258,16 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
         i = gp_port_usb_msg_read (camera->port, 0x04, 0x1, 0, (char *)msg, 0x58);
         if (i != 0x58) {
                 if ( i < 0 ) {
-			gp_context_error (context,
-					  _("Step #2 of initialization failed: \"%s\" on read of %i) "
-					    "Camera not operational"), gp_result_as_string(i), 0x58);
+												gp_context_error (context,
+																					_("Step #2 of initialization failed: (\"%s\" on read of %i) "
+																						"Camera not operational"), gp_result_as_string(i), 0x58);
                         return GP_ERROR_OS_FAILURE;
 		}
 		else {
-			gp_context_error (context,
-					  _("Step #2 of initialization failed! (returned %i bytes, expected %i) "
-					    "Camera not operational"), i, 0x58);
-                        return GP_ERROR_CORRUPTED_DATA;
+						gp_context_error (context,
+															_("Step #2 of initialization failed! (returned %i bytes, expected %i) "
+																"Camera not operational"), i, 0x58);
+						return GP_ERROR_CORRUPTED_DATA;
 		}
         }
         /* Get maximum download transfer length from camera, if

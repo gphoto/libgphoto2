@@ -813,7 +813,7 @@ typedef struct _PTPNIKONWifiProfile PTPNIKONWifiProfile;
 #define PTP_DPC_NIKON_RawCompression			0xD016
 #define PTP_DPC_NIKON_WhiteBalanceAutoBias		0xD017
 #define PTP_DPC_NIKON_WhiteBalanceTungstenBias		0xD018
-#define PTP_DPC_NIKON_WhiteBalanceFlourescentBias	0xD019
+#define PTP_DPC_NIKON_WhiteBalanceFluorescentBias	0xD019
 #define PTP_DPC_NIKON_WhiteBalanceDaylightBias		0xD01A
 #define PTP_DPC_NIKON_WhiteBalanceFlashBias		0xD01B
 #define PTP_DPC_NIKON_WhiteBalanceCloudyBias		0xD01C

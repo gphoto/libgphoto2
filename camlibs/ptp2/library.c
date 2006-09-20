@@ -1361,7 +1361,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 
 	if (!ptp_operation_issupported(params, PTP_OC_CANON_InitiateCaptureInMemory)) {
 		gp_context_error (context,
-		_("Sorry, your Canon camera does not support Canon Captureinitiation"));
+		_("Sorry, your Canon camera does not support Canon Capture initiation"));
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 	propval.u16=3; /* 3 */

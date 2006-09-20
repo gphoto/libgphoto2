@@ -1,3 +1,21 @@
+2006-09-19  Hubert Figuiere  <hub@figuiere.net>
+
+	* camlibs/gsmart300/library.c (delete_file_func): Fixed typo
+
+	* camlibs/ptp2/ptp.h (PTP_DPC_NIKON_WhiteBalanceFluorescentBias): 
+	Change typo in the const name
+
+	* camlibs/stv0680/bayer.c (light_enhance),
+	camlibs/minolta/dimagev/dimagev.c,
+	camlibs/konica/qm150.c (camera_manual),
+	camlibs/spca50x/library.c (delete_file_func),
+	camlibs/canon/usb.c (canon_usb_camera_init),
+	camlibs/sierra/olympus-desc.c,
+	camlibs/ptp2/ptp.c (ptp_get_property_description),
+	libgphoto2/gphoto2-camera.c (gp_camera_init),
+	camlibs/ptp2/library.c (camera_canon_capture): Fix typos
+	https://launchpad.net/products/libgphoto/+bug/61163
+
 2006-06-07  Hubert Figuiere  <hub@figuiere.net>
 
 	* AUTHORS: added credits for 5D capture support.

@@ -1206,8 +1206,8 @@ camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 {
 	snprintf(manual->text,sizeof(manual->text),
 		_("About Konica Q-M150:\n"
-		"This camera does not support to do any changes\n"
-		"from the outside. So in the configuration, you could\n"
+		"This camera does not allow any changes\n"
+		"from the outside. So in the configuration, you can\n"
 		"just see what it is configured on the camera\n"
 		"but you can't change anything.\n\n"
 		"If you have some issues with this driver, please\n"

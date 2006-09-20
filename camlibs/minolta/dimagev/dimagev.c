@@ -409,7 +409,7 @@ static int camera_summary (Camera *camera, CameraText *summary, GPContext *conte
 			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, _("Unsuitable card"));
 			break;
 		default:
-			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, _("Bade value for card status %d"), camera->pl->status->card_status);
+			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, _("Bad value for card status %d"), camera->pl->status->card_status);
 			break;
 	}
 	
