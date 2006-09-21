@@ -3118,6 +3118,11 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 	 */
 	if (parent==PTP_HANDLER_ROOT) parent=PTP_HANDLER_SPECIAL;
 
+	handle = folder_to_handle (foldername, storage, parent, camera);
+	if (handle != PTP_HANDLER_SPECIAL) {
+		return GP_ERROR_DIRECTORY_EXISTS;
+	}
+
 	oi.Filename=(char *)foldername;
 
 	oi.ObjectFormat=PTP_OFC_Association;

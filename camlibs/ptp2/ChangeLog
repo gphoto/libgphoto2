@@ -1,6 +1,7 @@
 2006-09-21  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Added Olympus IR-300
+	* library.c: Do not allow "mkdir" of the same directory twice.
 
 2006-09-18  Marcus Meissner  <marcus@jet.franken.de>
 
