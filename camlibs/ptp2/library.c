@@ -506,6 +506,9 @@ static struct {
 	{"Olympus:C-55Z",                 0x07b4, 0x0114, 0},
 	{"Olympus:C-5500Z",               0x07b4, 0x0114, 0},
 
+	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1272944&group_id=8874 */
+	{"Olympus:IR-300",                0x07b4, 0x0114, 0},
+
 	/* IRC report */
 	{"Casio:EX-Z120",                 0x07cf, 0x1042, 0},
 
