@@ -385,6 +385,14 @@ delete_all_folders (CameraFilesystem *fs, const char *folder,
                         if (strlen (fs->folder[x].name) <= strlen (folder))
                                 continue;
 
+			/* Handle "/foo/bar" "/foo/bar bar" style directories,
+			 * where on is contained in the other, but not a subdirectory
+			 */
+			if (	(fs->folder[x].name[strlen(folder)] != '/') &&
+				(fs->folder[x].name[strlen(folder)] != '\0')
+			)
+				continue;
+
                         CR (delete_all_files (fs, x));
                         CR (delete_folder (fs, x));
                         x--;
@@ -976,6 +984,13 @@ gp_filesystem_list_folders (CameraFilesystem *fs, const char *folder,
 			 * itself)?
 			 */
 			if (strlen (fs->folder[x].name) <= len)
+				continue;
+
+			/* handle "/Music/foo " "/Music/foo bar" style directories */
+			if (	(len > 1) &&	/* ignore for / directory, see len calculation above. */
+				(fs->folder[x].name[len] != '/') &&
+				(fs->folder[x].name[len] != '\0')
+			)
 				continue;
 
 			/*
