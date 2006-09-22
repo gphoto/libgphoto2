@@ -2892,6 +2892,11 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	 */
 	if (parent==PTP_HANDLER_ROOT) parent=PTP_HANDLER_SPECIAL;
 
+	/* We don't really want a file to exist with the same name twice. */
+	handle = folder_to_handle (filename, storage, parent, camera);
+	if (handle != PTP_HANDLER_SPECIAL)
+		return GP_ERROR_FILE_EXISTS;
+
 	oi.Filename=(char *)filename;
 	oi.ObjectFormat = get_mimetype(camera, file);
 	oi.ObjectCompressedSize = size;
