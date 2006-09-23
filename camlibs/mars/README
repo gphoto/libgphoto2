@@ -134,6 +134,44 @@ Flphoto works well, too, with no obvious glitches. Flphoto is also willing to
 create thumbnails and does so without any tweaking. 
 
 
+SAVING RAW FILES AND USING THEM LATER (09-23-06)
+
+All raw photos downloaded from the camera come with a signature and a header 
+which is 12 bytes in length. This header has always been retained if the
+photo is saved in raw format. The last few of the bytes in this header seem to 
+pertain to things like brightness and color balance (not usable information, 
+at this time, but may be in the future). The first bytes are always
+
+FF FF 00 FF 96 64
+
+and the next byte (as received from the camera) is either 00 (if the image is 
+uncompressed) or is 50 if the image has been subjected to the "standard" 
+MR97310 compression or is 20 if the image has been subjected to the totally
+unknown Argus QuickClix compression. 
+
+Thus the header of any given image as it comes from the camera tells us in 
+byte 6 of the header whether the image is compressed or if compressed then
+which algorithm has been used. That information uses the most significant nibble 
+of the "compression" byte. But if we do not do something, the pixel dimension of 
+the photo to be obtained from the raw file is not recorded. As the camera also 
+codes this information in one nibble, we place that nibble here, too:
+
+Original raw signature 		pixel dim. 	Saved as 		Comp.
+FF FF 00 FF 96 64 00		176x144		FF FF 00 FF 96 64 00	no
+				352x288		FF FF 00 FF 96 64 02	no
+				320x240		FF FF 00 FF 96 64 06	no
+				640x480		FF FF 00 FF 96 64 08    no
+FF FF 00 FF 96 64 50		176x144		FF FF 00 FF 96 64 50	yes
+				352x288		FF FF 00 FF 96 64 52	yes
+				320x240		FF FF 00 FF 96 64 56	yes
+				640x480		FF FF 00 FF 96 64 58	yes
+
+(similar will happen if compression code is the bad 0x20, as well)
+
+With this small change, the raw file now contains all information within 
+itself that is needed for processing it. 
+				
+				
 FURTHER DETAILS
 
 Further details are given in "protocol.txt". These details have been obtained 
