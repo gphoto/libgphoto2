@@ -131,8 +131,8 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
 	strcpy(manual->text, 
 	_(
         "This driver supports cameras with Mars MR97310 chip (and direct\n"
-        "equivalents ??Pixart PACx07?\?) and should work with gtkam.\n"
-	"The camera does not support deletion of photos, nor uploading\n"
+        "equivalents ??Pixart PACx07?\?).\n"
+	"These cameras do not support deletion of photos, nor uploading\n"
 	"of data. \n"
 	"Decoding of compressed photos may or may not work well\n" 
 	"and does not work equally well for all supported cameras.\n"
@@ -144,8 +144,6 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
 
 	return (GP_OK);
 }
-
-
 
 
 static int
@@ -189,7 +187,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
     	unsigned char *data; 
     	unsigned char  *ppm;
 	unsigned char *p_data = NULL;
-	unsigned char gtable[256];
+	unsigned char gtable[256], photo_code, res_code, compressed;
 	char *ptr;
 	int size = 0;
 	float gamma_factor;
@@ -198,13 +196,19 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
     	/* Get the number of the photo on the camera */
 	k = gp_filesystem_number (camera->fs, "/", filename, context); 
-    	w = mars_get_picture_width (camera->pl->info, k);
-    	switch (w) {
-	case 640: h = 480; break;
-	case 352: h = 288; break;
-	case 320: h = 240; break;
-	case 176: h = 144; break;
-	default:  h = 480; break;
+    	/* Determine the resolution setting from the PAT table */
+	photo_code = camera->pl->info[8*k];
+	res_code = photo_code & 0x0f;
+	/* Compression presence or absence is seen here, and is given again 
+	 * by the camera, in the header of raw data for each photo.
+	 */
+    	compressed = (photo_code >> 4) & 2;
+	switch (res_code) {
+	case 0: w = 176; h = 144; break;
+	case 2: w = 352; h = 288; break;
+	case 6: w = 320; h = 240; break;
+	case 8: w = 640; h = 480; break;
+	default:  w = 640; h = 480; 
 	}
 	
 	GP_DEBUG ("height is %i\n", h); 		
@@ -226,7 +230,13 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	if (GP_FILE_TYPE_RAW == type) {
 
-		/* We keep the SOF marker; actual data starts at byte 12 now */
+		/* We keep the SOF marker. Actual data starts at byte 12.
+		 * Byte 6, upper nibble, is a code for compression mode. We 
+		 * use the lower nibble to store the resolution code.
+		 * Then it is possible to know "everything" from a raw file.
+		 * Purpose of the info in bytes 7 thru 11 is currently unknown. 
+		 */
+		data[6] = (data[6] | res_code);
 		gp_file_set_mime_type(file, GP_MIME_RAW);
 		gp_file_set_name(file, filename);
 		gp_file_set_data_and_size(file, data , b );
@@ -241,11 +251,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	memset (p_data, 0, w * h);
 		
 
-	if (mars_chk_compression (camera->pl->info, k)) {
+	if (compressed) {
 		mars_decompress (data + 12, p_data, w, h);
 	}
 	else memcpy (p_data, data + 12, w*h);		 	
-	gamma_factor = .55;//(float)data[7]/128.; 
+	gamma_factor = (float)data[7]/128.; 
 	free(data);
 
 	/* Now put the data into a PPM image file. */
@@ -264,8 +274,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	gp_bayer_decode (p_data, w , h , ptr, BAYER_TILE_RGGB);
 
-	if( gamma_factor < .3 ) gamma_factor = .3;
-	if( gamma_factor > .7 ) gamma_factor = .7;
+	if (gamma_factor < .4) gamma_factor = .4;
+	if (gamma_factor > .6) gamma_factor = .6;
 	gp_gamma_fill_table (gtable, gamma_factor );
 	gp_gamma_correct_single (gtable, ptr, w * h);
 
@@ -322,9 +332,10 @@ camera_init(Camera *camera, GPContext *context)
 			settings.usb.config = 1;
 			settings.usb.altsetting = 0;
 			settings.usb.interface = 0;
-			settings.usb.inep = 0x82;
+		/*	settings.usb.inep = 0x82;	*/
+		/* inep 0x83 used for commands. Switch to 0x82 for data! */
 			settings.usb.inep = 0x83;
-			settings.usb.outep =0x04;
+			settings.usb.outep = 0x04;
 			break;
 		default:
 			return ( GP_ERROR );
