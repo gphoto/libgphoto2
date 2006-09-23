@@ -1,3 +1,17 @@
+2006-09-23  Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: RAW files saved now with pixelsize information, 
+		     so that the info in them is "self-contained".
+	* mars.c:    usleep() added to mars_routine() to fix a USB timing 
+		     problem reported by conon <troll@arach.net.au>. Changes
+		     to decompression algorithm proposed by conon also 
+		     adopted. Changes to way of handling RAW files imply 
+		     elimination of mars_get_picture_width().
+	* mars.h:    now-extraneous functions de-listed. 	
+	* README:    updated; changes to RAW file header explained.
+	* protocol.txt: updated.
+
+
 2006-08-28  Theodore Kilgore <kilgota@auburn.edu>
 
 	* library.c: Added INNOVAGE Digital Mini. Corrected USB Product
