@@ -16,7 +16,7 @@ giving information.
 
 A command is usually followed by a read request for confirmation. The read 
 request is of a bulk write of the one byte 0x21. The camera responds by 
-sending 16 bytes, in which only the first byte is significant. 
+sending 16 bytes, in which only the first byte seems significant. 
 
 When the single byte 0x19 is sent with no second byte, immediate intention to 
 download data is signalled. The 0x19 which is sent must be followed by an 0x21 
@@ -48,7 +48,7 @@ address)
 sent to the camera in immediately subsequent communications)
 
 19 54	(computer's acknowledgement to camera that a data download has just
-been successfully completed)
+been successfully completed; causes much beeping; mostly not used here)
 
 19 ba  (flag indicating that memory location should be reset, on exit;
 followed by instructions to reset memory pointer to 00 00).
@@ -152,10 +152,7 @@ to the advertised 8 Meg size of the RAM in the camera would seem to imply
 that the memory is addressed as storage blocks, or words, of size 8 bytes. For 
 example, the configuration data, of size 0x2000, would require  
 0x2000/8 = 0x400 storage blocks, and the beginning point for the first photo is 
-listed as location 0x400. Also, the fact that three bytes are used for the 
-storage location indicates that the maximum size of memory which can be 
-addressed under this scheme is 8*16*16*16 bytes. That is, 32 megabytes. The 
-known Mars cameras do not approach this upper memory limit, however. 
+listed as location 0x400. 
 
 The entries in columns 4 through 6 indicate, again in little endian form, the 
 data size for the given photo, in bytes. The actual data size to be requested
@@ -165,10 +162,11 @@ and downloaded from the camera needs to be tne next integer multiple of 0x2000.
 Finally, for the seventh column there is at this time no obvious 
 interpretation. 
 
-A DATA CORRUPTION PROBLEM
+A DATA-SHIFTING PROBLEM
 
-An example of what the same config data can look like if gphoto2 is run
-twice without replugging the camera in between, is as follows:
+An example of what the same config data can look like if gphoto2 (or the OEM
+camera software, too) is run twice without replugging the camera in between, 
+is as follows:
 
 
 0000  5c 73 60 73 5c 71 5d 6e-5c 72 5d 6c 5c 70 5b 6e  
@@ -188,7 +186,7 @@ twice without replugging the camera in between, is as follows:
 00e0  ff ff ff ff ff ff ff ff-ff ff ff ff ff ff ff ff  
 
 
-For some unknown reason, this data corruption occurs if the camera is not
+For some unknown reason, this data shift occurs if the camera is not
 replugged, but the data is always offset either not at all or by exactly 128 
 bytes. Thus the problem can apparently be overcome by checking whether 
 ff 00 ff 00 occurs on line 0000 or on line 0080. 
@@ -259,3 +257,14 @@ Michel Xhaard <mxhaard@magic.fr> for testing.
 the most part successfully. Several new cameras added. One of them is the 
 Argus QuickClix, which uses a *different* compression algorithm! I hope 
 nobody else buys one, unless the purchaser is a decompression expert. 
+
+8. 2006-09-23 A freeze-up using a Vivitar Vivicam 55 has been reported by 
+conon <troll@arach.net.au>, apparently due to a timing issue while switching 
+the USB inep from 0x83 to 0x82. Conon also proposed a fix, in the form of a 
+usleep() command. He reports that this works with his camera, and after 
+extensive testing it does not seem to impair the functioning of other MR97310
+cameras. Patch adopted. Conon has also submitted some simplifications of the 
+decompression algorithm, which seem to work well. These changes also 
+incorporated in current version. 
+NOTE: Vivitar in fact has discontinued this camera. They now offer a 
+Vivicam 55 which uses the SQ905C chip instead (see camlibs/digigr8)!
