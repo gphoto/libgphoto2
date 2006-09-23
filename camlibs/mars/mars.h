@@ -21,6 +21,7 @@
 #ifndef __mars_H__
 #define __mars_H__
 
+#include <unistd.h>
 #include <libgphoto2_port/gphoto2-port.h>
 
 typedef unsigned char Info;
@@ -33,17 +34,14 @@ typedef struct {
 	int val;
 } code_table_t;
 
-
+#define MARS_SLEEP	10000
 
 int mars_init              (Camera *camera, GPPort *port, Info *info);
 int mars_reset	     (GPPort *port);
 int mars_get_num_pics   (Info *info);
-int mars_chk_compression   (Info *info, int n);
-int mars_get_picture_width   (Info *info, int n);
 int mars_get_pic_data_size (Info *info, int n);
 int set_usb_in_endpoint	     (Camera *camera, int inep);
-int set_usb_out_endpoint	     (Camera *camera, int outep);
-int mars_read_data         (Camera *camera, GPPort *port, char *data, int size);
+int mars_read_data         (GPPort *port, char *data, int size);
 int mars_read_picture_data (Camera *camera, Info *info,
 				GPPort *port, char *data, int size, int n);
 int M_READ (GPPort *port, char *data, int size);
@@ -53,7 +51,6 @@ int mars_routine (Info *info, GPPort *port,
 
 /* The following are used for decompression of compressed-mode photos */
 void precalc_table(code_table_t *table);
-unsigned char get_bits(unsigned char *inp, int bitpos);
 int mars_decompress (unsigned char *inp ,unsigned char *outp, int w, int h);
 
 #endif
