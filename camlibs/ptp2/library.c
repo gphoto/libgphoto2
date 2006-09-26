@@ -2253,7 +2253,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
     		if (!strcmp(params->objectinfo[i].Filename, list->entry[j].name))
 		    break;
 	    if (j>=0) {
-		gp_log (GP_LOG_ERROR, "ptp2/file_list_func", "Duplicate filename '%s' in folder '%s'. Ignoring nth entry.\n", folder, params->objectinfo[i].Filename);
+	      gp_log (GP_LOG_ERROR, "ptp2/file_list_func", "Duplicate filename '%s' in folder '%s'. Ignoring nth entry.\n", params->objectinfo[i].Filename, folder);
 		continue;
 	    }
 	}
