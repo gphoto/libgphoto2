@@ -144,8 +144,12 @@ gp_list_append (CameraList *list, const char *name, const char *value)
 {
 	CHECK_NULL (list);
 
-	if (list->count == MAX_ENTRIES)
+	if (list->count == MAX_ENTRIES) {
+		gp_log (GP_LOG_ERROR, "gphoto2-list", "gp_list_append: "
+		"Tried to add more than %d entries to the list, reporting out of memory",
+		MAX_ENTRIES);
 		return (GP_ERROR_NO_MEMORY);
+	}
 
 	if (name) {
 		/* check that the value fits */
