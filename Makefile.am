@@ -70,7 +70,7 @@ pkgconfig_DATA = libgphoto2.pc
 
 EXTRA_DIST = libgphoto2.pc.in gphoto2-library.c libgphoto2.sym
 
-DISTCLEANFILES = _stdint.h gphoto2-endian.h
+DISTCLEANFILES = _stdint.h gphoto2/gphoto2-endian.h
 
 
 # Compatibility for header inclusions.
