@@ -22,14 +22,14 @@
  */
 
 #include "config.h"
-#include "gphoto2-list.h"
-#include "gphoto2-port-log.h"
+#include <gphoto2/gphoto2-list.h>
+#include <gphoto2/gphoto2-port-log.h>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "gphoto2-result.h"
+#include <gphoto2/gphoto2-result.h>
 
 #define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
@@ -146,9 +146,9 @@ gp_list_append (CameraList *list, const char *name, const char *value)
 
 	if (list->count == MAX_ENTRIES) {
 		gp_log (GP_LOG_ERROR, "gphoto2-list", "gp_list_append: "
-		"Tried to add more than %d entries to the list, reporting out of memory",
+		"Tried to add more than %d entries to the list, reporting error.",
 		MAX_ENTRIES);
-		return (GP_ERROR_NO_MEMORY);
+		return (GP_ERROR_FIXED_LIMIT_EXCEEDED);
 	}
 
 	if (name) {

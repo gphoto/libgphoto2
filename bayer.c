@@ -21,7 +21,7 @@
 #include "config.h"
 #include "bayer.h"
 
-#include <gphoto2-result.h>
+#include <gphoto2/gphoto2-result.h>
 
 static int tile_colors[8][4] = {
 	{0, 1, 1, 2},

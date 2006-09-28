@@ -25,7 +25,7 @@
 #define __GPHOTO2_RESULT_H__
 
 /* Additional error codes are defined here */
-#include <gphoto2-port-result.h>
+#include <gphoto2/gphoto2-port-result.h>
 
 #ifdef __cplusplus
 extern "C" {

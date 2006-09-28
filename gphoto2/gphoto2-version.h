@@ -23,7 +23,7 @@
 #ifndef __GPHOTO2_VERSION_H__
 #define __GPHOTO2_VERSION_H__
 
-#include <gphoto2-port-version.h>
+#include <gphoto2/gphoto2-port-version.h>
 
 #ifdef __cplusplus
 extern "C" {

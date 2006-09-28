@@ -34,7 +34,6 @@ libgphoto2_la_SOURCES = 	\
 	gphoto2-list.c		\
 	gphoto2-result.c	\
 	gphoto2-version.c	\
-	gphoto2-version.h	\
 	gphoto2-setting.c	\
 	gphoto2-widget.c
 
@@ -49,23 +48,23 @@ libgphoto2_la_LIBADD =					\
 #	"-dlopen" $(top_builddir)/camlibs/ptp2/....la
 
 libgphoto2_la_DEPENDENCIES = \
+	gphoto2/gphoto2-version.h	\
 	$(srcdir)/libgphoto2.sym \
 	$(LIBLTDL)
 
-libgphoto2includedir = $(includedir)/gphoto2
-libgphoto2include_HEADERS =	\
-	gphoto2.h		\
-	gphoto2-abilities-list.h\
-	gphoto2-camera.h	\
-	gphoto2-context.h	\
-	gphoto2-file.h		\
-	gphoto2-filesys.h	\
-	gphoto2-library.h	\
-	gphoto2-list.h		\
-	gphoto2-result.h	\
-	gphoto2-setting.h	\
-	gphoto2-version.h	\
-	gphoto2-widget.h
+nobase_include_HEADERS =	\
+	gphoto2/gphoto2.h		\
+	gphoto2/gphoto2-abilities-list.h\
+	gphoto2/gphoto2-camera.h	\
+	gphoto2/gphoto2-context.h	\
+	gphoto2/gphoto2-file.h		\
+	gphoto2/gphoto2-filesys.h	\
+	gphoto2/gphoto2-library.h	\
+	gphoto2/gphoto2-list.h		\
+	gphoto2/gphoto2-result.h	\
+	gphoto2/gphoto2-setting.h	\
+	gphoto2/gphoto2-version.h	\
+	gphoto2/gphoto2-widget.h
 
 pkgconfig_DATA = libgphoto2.pc
 
@@ -83,9 +82,9 @@ DISTCLEANFILES = _stdint.h gphoto2-endian.h
 #   #include <gphoto2/gphoto2-camera.h>
 
 install-data-local:
-	$(INSTALL) -m 0755 -d $(DESTDIR)$(libgphoto2includedir)
-	rm -f $(DESTDIR)$(libgphoto2includedir)/gphoto2
-	$(LN_S) . $(DESTDIR)$(libgphoto2includedir)/gphoto2
+	rm -f $(DESTDIR)$(includedir)/gphoto2/gphoto2
+	$(INSTALL) -m 0755 -d $(DESTDIR)$(includedir)/gphoto2
+	$(LN_S) . $(DESTDIR)$(includedir)/gphoto2/gphoto2
 
 uninstall-local:
-	rm -f $(DESTDIR)$(libgphoto2includedir)/gphoto2
+	rm -f $(DESTDIR)$(includedir)/gphoto2/gphoto2
