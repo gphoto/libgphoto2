@@ -13,7 +13,7 @@
 #define MESALIB_H
 
 #include <_stdint.h>
-#include <gphoto2-port.h>
+#include <gphoto2/gphoto2-port.h>
 
 #define CHECK(result) {int res = (result); if (res < 0) return (res);}
 

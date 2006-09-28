@@ -21,8 +21,8 @@
 #ifndef _JD11_SERIAL_H
 #define _JD11_SERIAL_H
 
-#include <gphoto2.h>
-#include <gphoto2-port.h>
+#include <gphoto2/gphoto2.h>
+#include <gphoto2/gphoto2-port.h>
 
 extern int jd11_index_reader(GPPort *port, CameraFilesystem *fs, GPContext *context);
 extern int jd11_get_image_full(Camera *camera,CameraFile *file,int nr,int raw, GPContext *context);

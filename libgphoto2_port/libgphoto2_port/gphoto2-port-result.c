@@ -19,7 +19,7 @@
  */
 
 #include "config.h"
-#include <gphoto2-port-result.h>
+#include <gphoto2/gphoto2-port-result.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -64,6 +64,8 @@ gp_port_result_as_string (int result)
 		return _("Bad parameters");
 	case GP_ERROR_NOT_SUPPORTED:
 		return _("Unsupported operation");
+	case  GP_ERROR_FIXED_LIMIT_EXCEEDED:
+		return _("Fixed limit exceeded");
 	case GP_ERROR_TIMEOUT:
 		return _("Timeout reading from or writing to the port");
 	case GP_ERROR_IO_SUPPORTED_SERIAL:

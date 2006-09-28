@@ -21,14 +21,14 @@
 #define _GPHOTO2_INTERNAL_CODE
 
 #include "config.h"
-#include "gphoto2-port-log.h"
+#include <gphoto2/gphoto2-port-log.h>
 
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
 #include <stdio.h>
 
-#include <gphoto2-port-result.h>
+#include <gphoto2/gphoto2-port-result.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>

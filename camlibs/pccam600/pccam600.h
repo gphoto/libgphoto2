@@ -16,8 +16,8 @@
 #ifndef __PCCAM600_H__
 #define __PCCAM600_H__
 
-#include <gphoto2.h>
-#include <gphoto2-port.h>
+#include <gphoto2/gphoto2.h>
+#include <gphoto2/gphoto2-port.h>
 
 typedef struct {
   unsigned char state; /*delete or ok*/

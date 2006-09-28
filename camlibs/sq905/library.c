@@ -28,7 +28,7 @@
 #include <gamma.h>
 
 
-#include <gphoto2.h>
+#include <gphoto2/gphoto2.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -46,7 +46,7 @@
 
 #include "sq905.h"
 
-#include <gphoto2-port.h>
+#include <gphoto2/gphoto2-port.h>
 
 #define GP_MODULE "sq905"
 

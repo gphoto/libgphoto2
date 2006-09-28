@@ -12,32 +12,7 @@ SUBDIRS = . @subdirs@ libgphoto2 camlibs tests po bindings packaging doc
 
 doc_DATA = AUTHORS COPYING README CHANGES NEWS
 
-# Create gphoto2/ directory and copy all header files into it.
-#
-# Reasons to do that:
-#  - Both libgphoto2 and libgphoto2_port install their *.h files
-#    into $(includedir)/gphoto2
-#  - Example programs can use #include <gphoto2/gphoto2-foobar.h>
-#    like any libgphoto2 frontend is supposed to do.
-#    (Promotes clean API use)
-#  - Helps build libgphoto2 frontends against libgphoto2 without
-#    installing libgphoto2 first.
-#
-# This functionality requires the "." to be the first item in SUBDIRS
-# and makes it possible to consistently use #include <gphoto2/stuff.h>.
-
-all-local:
-	@echo "Creating/Updating gphoto2/ directory with gphoto2*.h files"
-	@rm -f gphoto2/gphoto2*.h
-	@mkdir -p gphoto2
-	@cp \
-		libgphoto2/gphoto2*.h \
-		libgphoto2_port/libgphoto2_port/gphoto2*.h \
-		$(srcdir)/libgphoto2/gphoto2*.h \
-		$(srcdir)/libgphoto2_port/libgphoto2_port/gphoto2*.h \
-		gphoto2/ > /dev/null 2>&1 \
-		|| true
-
+# Remove obsolete directory of copied/symlinked header files
 clean-local:
 	rm -f gphoto2/gphoto2*.h
 	rmdir gphoto2 || true

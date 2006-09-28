@@ -21,8 +21,8 @@
 #ifndef __GPHOTO2_PORT_LIBRARY_H__
 #define __GPHOTO2_PORT_LIBRARY_H__
 
-#include <gphoto2-port-info-list.h>
-#include <gphoto2-port.h>
+#include <gphoto2/gphoto2-port-info-list.h>
+#include <gphoto2/gphoto2-port.h>
 
 typedef struct _GPPortOperations GPPortOperations;
 struct _GPPortOperations {

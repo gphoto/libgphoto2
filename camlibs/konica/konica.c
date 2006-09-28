@@ -25,8 +25,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <gphoto2.h>
-#include <gphoto2-port-log.h>
+#include <gphoto2/gphoto2.h>
+#include <gphoto2/gphoto2-port-log.h>
 
 #include "lowlevel.h"
 

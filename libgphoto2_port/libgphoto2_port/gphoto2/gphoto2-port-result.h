@@ -30,6 +30,7 @@
 #define GP_ERROR_UNKNOWN_PORT		-5
 #define GP_ERROR_NOT_SUPPORTED		-6
 #define GP_ERROR_IO			-7
+#define GP_ERROR_FIXED_LIMIT_EXCEEDED	-8
 
 #define GP_ERROR_TIMEOUT                -10
 

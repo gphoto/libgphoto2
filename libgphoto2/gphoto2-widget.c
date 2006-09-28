@@ -21,13 +21,13 @@
  * Boston, MA 02111-1307, USA.
  */
 #include "config.h"
-#include "gphoto2-widget.h"
+#include <gphoto2/gphoto2-widget.h>
 
 #include <stdlib.h>
 #include <string.h>
 
-#include <gphoto2-result.h>
-#include <gphoto2-port-log.h>
+#include <gphoto2/gphoto2-result.h>
+#include <gphoto2/gphoto2-port-log.h>
 
 #define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 

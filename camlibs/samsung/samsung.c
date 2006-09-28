@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <gphoto2-library.h>
+#include <gphoto2/gphoto2-library.h>
 
 /* The commands */
 #define SDSC_START      0x43

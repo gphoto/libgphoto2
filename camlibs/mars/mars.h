@@ -22,7 +22,7 @@
 #define __mars_H__
 
 #include <unistd.h>
-#include <libgphoto2_port/gphoto2-port.h>
+#include <gphoto2/gphoto2-port.h>
 
 typedef unsigned char Info;
 

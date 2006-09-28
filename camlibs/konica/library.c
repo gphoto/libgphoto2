@@ -25,8 +25,8 @@
 #include <string.h>
 #include <time.h>
 
-#include <gphoto2-library.h>
-#include <gphoto2-port-log.h>
+#include <gphoto2/gphoto2-library.h>
+#include <gphoto2/gphoto2-port-log.h>
 
 #include "konica.h"
 

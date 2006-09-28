@@ -36,9 +36,9 @@
 #  define N_(String) (String)
 #endif
 
-#include <gphoto2-endian.h>
-#include <gphoto2-port-log.h>
-#include <gphoto2-library.h>
+#include <gphoto2/gphoto2-endian.h>
+#include <gphoto2/gphoto2-port-log.h>
+#include <gphoto2/gphoto2-library.h>
 
 #ifndef __FILE__
 #  define __FILE__ "l859.c"

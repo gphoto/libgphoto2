@@ -24,8 +24,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <gphoto2.h>
-#include <gphoto2-port.h>
+#include <gphoto2/gphoto2.h>
+#include <gphoto2/gphoto2-port.h>
 
 #include "stv0674.h"
 #include "library.h"

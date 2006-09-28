@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <gphoto2.h>
+#include <gphoto2/gphoto2.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>

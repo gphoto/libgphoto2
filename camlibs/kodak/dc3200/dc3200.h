@@ -12,7 +12,7 @@
 #ifndef __DC3200_H__
 #define __DC3200_H__
 
-#include <gphoto2-camera.h>
+#include <gphoto2/gphoto2-camera.h>
 
 #define CMD_LIST_FILES		0
 #define CMD_GET_PREVIEW		1

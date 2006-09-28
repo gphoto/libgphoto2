@@ -22,17 +22,17 @@
  */
 
 #include "config.h"
-#include "gphoto2-filesys.h"
+#include <gphoto2/gphoto2-filesys.h>
 
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 #include <unistd.h>
 
-#include "gphoto2-result.h"
-#include "gphoto2-file.h"
-#include "gphoto2-port-log.h"
-#include "gphoto2-setting.h"
+#include <gphoto2/gphoto2-result.h>
+#include <gphoto2/gphoto2-file.h>
+#include <gphoto2/gphoto2-port-log.h>
+#include <gphoto2/gphoto2-setting.h>
 
 #include <limits.h>
 

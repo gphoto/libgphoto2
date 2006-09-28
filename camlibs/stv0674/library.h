@@ -21,7 +21,7 @@
 #ifndef LIBRARY_H
 #define LIBRARY_H
 
-#include <gphoto2-port.h>
+#include <gphoto2/gphoto2-port.h>
 
 int stv0674_ping              (GPPort *);
 int stv0674_summary           (GPPort *, char*);

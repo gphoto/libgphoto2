@@ -24,7 +24,7 @@
 #include <mcheck.h>
 #endif
 
-#include <gphoto2-camera.h>
+#include <gphoto2/gphoto2-camera.h>
 
 #define CHECK(f) {int res = f; if (res < 0) {printf ("ERROR: %s\n", gp_result_as_string (res)); return (1);}}
 

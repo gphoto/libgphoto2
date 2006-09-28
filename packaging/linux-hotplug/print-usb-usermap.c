@@ -54,8 +54,8 @@ ARGV0 " prints the lines for the usb.usermap file on stdout.\n" \
 #include <time.h>
 #include <string.h>
 
-#include <gphoto2-camera.h>
-#include <gphoto2-port-log.h>
+#include <gphoto2/gphoto2-camera.h>
+#include <gphoto2/gphoto2-port-log.h>
 
 #ifndef TRUE
 #define TRUE  (0==0)

@@ -46,7 +46,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include <gphoto2-port-log.h>
+#include <gphoto2/gphoto2-port-log.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>

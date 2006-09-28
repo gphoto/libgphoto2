@@ -22,12 +22,12 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include <gphoto2.h>
+#include <gphoto2/gphoto2.h>
 #include <sys/types.h>
 
 #include "sony.h"
 #include "nls.h"
-#include <gphoto2-camera.h>
+#include <gphoto2/gphoto2-camera.h>
 
 #define GP_MODULE "sonydscf55"
 

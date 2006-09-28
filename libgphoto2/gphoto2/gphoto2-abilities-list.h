@@ -25,11 +25,11 @@
 #ifndef __GPHOTO2_ABILITIES_LIST_H__
 #define __GPHOTO2_ABILITIES_LIST_H__
 
-#include <gphoto2-context.h>
-#include <gphoto2-list.h>
-#include <gphoto2-port-info-list.h>
+#include <gphoto2/gphoto2-context.h>
+#include <gphoto2/gphoto2-list.h>
+#include <gphoto2/gphoto2-port-info-list.h>
 
-#include <gphoto2-port-log.h>
+#include <gphoto2/gphoto2-port-log.h>
 
 #ifdef __cplusplus
 extern "C" {

@@ -26,7 +26,7 @@
 #include <string.h>
 #include <time.h>
 
-#include <gphoto2-port-log.h>
+#include <gphoto2/gphoto2-port-log.h>
 
 #include "sierra.h"
 #include "sierra-usbwrap.h"

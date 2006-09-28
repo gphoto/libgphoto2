@@ -21,7 +21,7 @@
 #ifndef __CASIO_QV_COMMANDS_H__
 #define __CASIO_QV_COMMANDS_H__
 
-#include <gphoto2-library.h>
+#include <gphoto2/gphoto2-library.h>
 
 int QVping     (Camera *camera);
 

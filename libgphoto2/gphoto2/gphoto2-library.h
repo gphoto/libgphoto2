@@ -24,9 +24,9 @@
 #ifndef __GPHOTO2_LIBRARY_H__
 #define __GPHOTO2_LIBRARY_H__
 
-#include <gphoto2-abilities-list.h>
-#include <gphoto2-camera.h>
-#include <gphoto2-context.h>
+#include <gphoto2/gphoto2-abilities-list.h>
+#include <gphoto2/gphoto2-camera.h>
+#include <gphoto2/gphoto2-context.h>
 
 #ifdef __cplusplus
 extern "C" {

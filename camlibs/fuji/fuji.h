@@ -21,8 +21,8 @@
 #ifndef __FUJI_H__
 #define __FUJI_H__
 
-#include <gphoto2-context.h>
-#include <gphoto2-camera.h>
+#include <gphoto2/gphoto2-context.h>
+#include <gphoto2/gphoto2-camera.h>
 
 typedef enum _FujiCmd FujiCmd;
 enum _FujiCmd {

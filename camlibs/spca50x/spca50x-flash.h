@@ -17,8 +17,8 @@
 #ifndef __SPCA50X_FLASH_H__
 #define __SPCA50X_FLASH_H_
 
-#include <gphoto2.h>
-#include <gphoto2-port.h>
+#include <gphoto2/gphoto2.h>
+#include <gphoto2/gphoto2-port.h>
 
 #define CHECK(result) {int res; res = result; if (res < 0) return (res);}
 

@@ -37,7 +37,7 @@
 
 #define GP_MODULE "digita"
 
-#include <gphoto2-port.h>
+#include <gphoto2/gphoto2-port.h>
 
 static void build_command(struct digita_command *cmd, int length, short command)
 {

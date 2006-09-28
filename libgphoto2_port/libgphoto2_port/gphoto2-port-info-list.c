@@ -21,7 +21,7 @@
 #define _GPHOTO2_INTERNAL_CODE
 
 #include "config.h"
-#include "gphoto2-port-info-list.h"
+#include <gphoto2/gphoto2-port-info-list.h>
 
 #include <stdlib.h>
 #include <string.h>
@@ -34,9 +34,9 @@
 
 #include <ltdl.h>
 
-#include <gphoto2-port-result.h>
-#include <gphoto2-port-library.h>
-#include <gphoto2-port-log.h>
+#include <gphoto2/gphoto2-port-result.h>
+#include <gphoto2/gphoto2-port-library.h>
+#include <gphoto2/gphoto2-port-log.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>

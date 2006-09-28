@@ -39,14 +39,14 @@ struct _GPPortInfo {
 	char library_filename[1024];
 };
 
-#include <gphoto2-port.h>
+#include <gphoto2/gphoto2-port.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
 
 #ifdef _GPHOTO2_INTERNAL_CODE
-#include <gphoto2-port-log.h>
+#include <gphoto2/gphoto2-port-log.h>
 extern const StringFlagItem gpi_gphoto_port_type_map[];
 #endif
 

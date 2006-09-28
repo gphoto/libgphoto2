@@ -27,7 +27,7 @@
 #include <bayer.h>
 #include <gamma.h>
 
-#include <gphoto2.h>
+#include <gphoto2/gphoto2.h>
 
 
 #ifdef ENABLE_NLS
@@ -45,7 +45,7 @@
 #  define ngettext(String1,String2,Count) ((Count==1)?String1:String2)
 #endif
 
-#include <gphoto2-port.h>
+#include <gphoto2/gphoto2-port.h>
 #include "sonix.h"
 #include "sakar-avi-header.h"
 #define GP_MODULE "sonix"

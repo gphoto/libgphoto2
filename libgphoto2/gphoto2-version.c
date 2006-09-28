@@ -22,7 +22,7 @@
 
 #include <stdlib.h>
 
-#include <gphoto2-version.h>
+#include <gphoto2/gphoto2-version.h>
 
 const char **gp_library_version(GPVersionVerbosity verbose)
 {

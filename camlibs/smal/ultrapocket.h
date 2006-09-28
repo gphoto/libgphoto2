@@ -21,8 +21,8 @@
 
 #define __ULTRAPOCKET_H__ 1
 
-#include <gphoto2-library.h>
-#include <gphoto2-result.h>
+#include <gphoto2/gphoto2-library.h>
+#include <gphoto2/gphoto2-result.h>
 
 #ifndef CHECK_RESULT
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}

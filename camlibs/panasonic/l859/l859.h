@@ -21,7 +21,7 @@
 #ifndef __L859_H__
 #define __L859_H__
 
-#include <gphoto2-camera.h>
+#include <gphoto2/gphoto2-camera.h>
 
 #define L859_BLOCKSIZE    0x74
 #define L859_BUFSIZE      0x74

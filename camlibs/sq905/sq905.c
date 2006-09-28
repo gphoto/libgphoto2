@@ -26,8 +26,8 @@
 #include <db.h>
 #endif
 
-#include <gphoto2.h>
-#include <gphoto2-port.h>
+#include <gphoto2/gphoto2.h>
+#include <gphoto2/gphoto2-port.h>
 #include "sq905.h"
 
 #define GP_MODULE "sq905" 

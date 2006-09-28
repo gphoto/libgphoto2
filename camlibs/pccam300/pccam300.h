@@ -27,8 +27,8 @@
 #ifndef __PCCAM300_H__
 #define __PCCAM300_H__
 
-#include <gphoto2.h>
-#include <gphoto2-port.h>
+#include <gphoto2/gphoto2.h>
+#include <gphoto2/gphoto2-port.h>
 
 #define CHECK(result) {int res; res = result; if (res < 0) return (res);}
 

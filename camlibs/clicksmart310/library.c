@@ -23,8 +23,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <gphoto2.h>
-#include <gphoto2-port.h>
+#include <gphoto2/gphoto2.h>
+#include <gphoto2/gphoto2-port.h>
 
 #define JPEG_QCIF_FORMAT 0x22
 #define JPEG_CIF_FORMAT 0x21

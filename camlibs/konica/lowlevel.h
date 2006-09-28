@@ -21,8 +21,8 @@
 #ifndef __KONICA_LOWLEVEL_H__
 #define __KONICA_LOWLEVEL_H__
 
-#include <gphoto2-port.h>
-#include <gphoto2-context.h>
+#include <gphoto2/gphoto2-port.h>
+#include <gphoto2/gphoto2-context.h>
 
 int l_ping (GPPort *, GPContext *);
 int l_init (GPPort *, GPContext *);

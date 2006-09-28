@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <gphoto2.h>
+#include <gphoto2/gphoto2.h>
 
 #include "dc120.h"
 #include "library.h"

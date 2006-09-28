@@ -25,9 +25,9 @@
 #include <string.h>
 #include <unistd.h>
 
-#include <gphoto2-library.h>
-#include <gphoto2-result.h>
-#include <gphoto2-port-log.h>
+#include <gphoto2/gphoto2-library.h>
+#include <gphoto2/gphoto2-result.h>
+#include <gphoto2/gphoto2-port-log.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>

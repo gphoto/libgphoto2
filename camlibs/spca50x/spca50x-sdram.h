@@ -26,7 +26,7 @@
 
 #ifndef __SPCA50X_SDRAM_H__
 #define __SPCA50X_SDRAM_H__
-#include <gphoto2-camera.h>
+#include <gphoto2/gphoto2-camera.h>
 
 int spca50x_sdram_get_info (CameraPrivateLibrary * lib);
 int spca50x_sdram_delete_file (CameraPrivateLibrary * lib, unsigned int index);

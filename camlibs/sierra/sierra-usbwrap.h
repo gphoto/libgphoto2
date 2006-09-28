@@ -21,7 +21,7 @@
 #ifndef __SIERRA_USBWRAP_H__
 #define __SIERRA_USBWRAP_H__
 
-#include <gphoto2-port.h>
+#include <gphoto2/gphoto2-port.h>
 
 int usb_wrap_write_packet (GPPort *dev, unsigned int type, char *sierra_msg,      int sierra_len);
 int usb_wrap_read_packet  (GPPort *dev, unsigned int type, char *sierra_response, int sierra_len);

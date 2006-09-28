@@ -26,9 +26,9 @@
 #include <time.h>
 #include <sys/time.h>
 
-#include "gphoto2-port-log.h"
-#include "gphoto2-camera.h"
-#include "gphoto2-port-portability.h"
+#include <gphoto2/gphoto2-port-log.h>
+#include <gphoto2/gphoto2-camera.h>
+#include <gphoto2/gphoto2-port-portability.h>
 
 #define CHECK(f) {int res = f; if (res < 0) {printf ("ERROR: %s\n", gp_result_as_string (res)); return (1);}}
 

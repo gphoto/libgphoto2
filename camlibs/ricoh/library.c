@@ -24,8 +24,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <gphoto2-library.h>
-#include <gphoto2-port-log.h>
+#include <gphoto2/gphoto2-library.h>
+#include <gphoto2/gphoto2-port-log.h>
 
 #include "ricoh.h"
 

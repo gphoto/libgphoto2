@@ -27,9 +27,9 @@
 #include <time.h>
 #include <langinfo.h>
 
-#include <gphoto2-library.h>
-#include <gphoto2-port-log.h>
-#include <gphoto2-setting.h>
+#include <gphoto2/gphoto2-library.h>
+#include <gphoto2/gphoto2-port-log.h>
+#include <gphoto2/gphoto2-setting.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>

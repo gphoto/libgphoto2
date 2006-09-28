@@ -12,7 +12,7 @@
 #ifndef __LIBRARY_H__
 #define __LIBRARY_H__
 
-#include <gphoto2-camera.h>
+#include <gphoto2/gphoto2-camera.h>
 
 /* retries */
 #define READ_RETRIES 2

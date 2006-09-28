@@ -23,7 +23,7 @@
 #ifndef __CLICKSMART_H__
 #define __CLICKSMART_H__
 
-#include <libgphoto2_port/gphoto2-port.h>
+#include <gphoto2/gphoto2-port.h>
 
 struct _CameraPrivateLibrary {
 	unsigned char *catalog;

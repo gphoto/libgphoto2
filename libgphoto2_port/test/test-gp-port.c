@@ -23,10 +23,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <gphoto2-port.h>
-#include <gphoto2-port-log.h>
-#include <gphoto2-port-result.h>
-#include <gphoto2-port-info-list.h>
+#include <gphoto2/gphoto2-port.h>
+#include <gphoto2/gphoto2-port-log.h>
+#include <gphoto2/gphoto2-port-result.h>
+#include <gphoto2/gphoto2-port-info-list.h>
 
 static void
 log_func (GPLogLevel level, const char *domain,

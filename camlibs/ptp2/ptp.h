@@ -24,7 +24,7 @@
 #include <stdarg.h>
 #include <time.h>
 #include <iconv.h>
-#include "gphoto2-endian.h"
+#include <gphoto2/gphoto2-endian.h>
 
 /* PTP datalayer byteorder */
 

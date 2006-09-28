@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
-#include <gphoto2.h>
+#include <gphoto2/gphoto2.h>
 
 #define BINARYFILEMODE
 

@@ -20,7 +20,7 @@
  * Boston, MA 02111-1307, USA.
  */
 #include "config.h"
-#include <gphoto2-port-library.h>
+#include <gphoto2/gphoto2-port-library.h>
 
 #include <stdlib.h>
 #include <unistd.h>
@@ -34,9 +34,9 @@
 
 #include <usb.h>
 
-#include <gphoto2-port.h>
-#include <gphoto2-port-result.h>
-#include <gphoto2-port-log.h>
+#include <gphoto2/gphoto2-port.h>
+#include <gphoto2/gphoto2-port-result.h>
+#include <gphoto2/gphoto2-port-log.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>

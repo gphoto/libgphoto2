@@ -31,7 +31,7 @@
 #include <string.h>
 
 /*#include <usb.h>*/
-#include "gphoto2-port.h"
+#include <gphoto2/gphoto2-port.h>
 
 
 int gp_port_usb_list(gp_port_info *list, int *count);

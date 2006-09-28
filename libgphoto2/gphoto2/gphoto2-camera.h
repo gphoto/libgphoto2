@@ -26,7 +26,7 @@
 #ifndef __GPHOTO2_CAMERA_H__
 #define __GPHOTO2_CAMERA_H__
 
-#include <gphoto2-context.h>
+#include <gphoto2/gphoto2-context.h>
 
 
 /**
@@ -43,16 +43,16 @@
 typedef struct _Camera Camera;
 
 
-#include <gphoto2-port.h>
-#include <gphoto2-port-info-list.h>
+#include <gphoto2/gphoto2-port.h>
+#include <gphoto2/gphoto2-port-info-list.h>
 
-#include <gphoto2-widget.h>
-#include <gphoto2-list.h>
-#include <gphoto2-file.h>
-#include <gphoto2-filesys.h>
-#include <gphoto2-abilities-list.h>
-#include <gphoto2-result.h>
-#include <gphoto2-context.h>
+#include <gphoto2/gphoto2-widget.h>
+#include <gphoto2/gphoto2-list.h>
+#include <gphoto2/gphoto2-file.h>
+#include <gphoto2/gphoto2-filesys.h>
+#include <gphoto2/gphoto2-abilities-list.h>
+#include <gphoto2/gphoto2-result.h>
+#include <gphoto2/gphoto2-context.h>
 
 typedef struct {
 	char text [32 * 1024];

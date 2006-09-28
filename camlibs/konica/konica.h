@@ -21,8 +21,8 @@
 #ifndef __KONICA_H__
 #define __KONICA_H__
 
-#include <gphoto2-port.h>
-#include <gphoto2-context.h>
+#include <gphoto2/gphoto2-port.h>
+#include <gphoto2/gphoto2-context.h>
 
 /*
  * The following are the commands that are supported by the 

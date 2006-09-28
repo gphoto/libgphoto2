@@ -19,16 +19,16 @@
  */
 
 #include "config.h"
-#include "gphoto2-setting.h"
+#include <gphoto2/gphoto2-setting.h>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
-#include "gphoto2-result.h"
-#include "gphoto2-port-log.h"
-#include "gphoto2-port-portability.h"
+#include <gphoto2/gphoto2-result.h>
+#include <gphoto2/gphoto2-port-log.h>
+#include <gphoto2/gphoto2-port-portability.h>
 
 #define GP_MODULE "setting"
 

@@ -21,7 +21,7 @@
 #include "config.h"
 #include <stdlib.h>
 
-#include <gphoto2-port-version.h>
+#include <gphoto2/gphoto2-port-version.h>
 
 const char **gp_port_library_version(GPVersionVerbosity verbose)
 {

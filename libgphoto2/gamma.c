@@ -23,7 +23,7 @@
 
 #include <math.h>
 
-#include <gphoto2-result.h>
+#include <gphoto2/gphoto2-result.h>
 
 static int
 gp_gamma_correct_triple (unsigned char *table_red,

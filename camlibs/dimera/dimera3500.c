@@ -29,7 +29,7 @@
 #include <string.h>
 #include <_stdint.h>
 
-#include <gphoto2.h>
+#include <gphoto2/gphoto2.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>

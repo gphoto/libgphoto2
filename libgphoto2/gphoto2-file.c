@@ -26,7 +26,7 @@
  */
 
 #include "config.h"
-#include "gphoto2-file.h"
+#include <gphoto2/gphoto2-file.h>
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -35,10 +35,10 @@
 #include <sys/stat.h>
 #include <utime.h>
 
-#include <gphoto2-port-log.h>
-#include <gphoto2-port-portability.h>
+#include <gphoto2/gphoto2-port-log.h>
+#include <gphoto2/gphoto2-port-portability.h>
 
-#include "gphoto2-result.h"
+#include <gphoto2/gphoto2-result.h>
 
 #define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}

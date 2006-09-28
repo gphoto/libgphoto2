@@ -19,7 +19,7 @@
  */
 
 #include "config.h"
-#include "gphoto2-library.c"
+#include <gphoto2/gphoto2-library.c>
 
 /**
  * camera_id:

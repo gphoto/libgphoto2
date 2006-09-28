@@ -37,9 +37,9 @@
 
 #include <string.h>
 #include <stdio.h>
-#include <gphoto2-library.h>
-#include <gphoto2-result.h>
-#include <gphoto2-port-log.h>
+#include <gphoto2/gphoto2-library.h>
+#include <gphoto2/gphoto2-result.h>
+#include <gphoto2/gphoto2-port-log.h>
 #include <exif.h>
 
 #ifdef ENABLE_NLS

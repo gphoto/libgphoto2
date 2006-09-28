@@ -22,7 +22,7 @@
 #define __PDRM11_H__
 
 #include "config.h"
-#include <gphoto2.h>
+#include <gphoto2/gphoto2.h>
 #include <_stdint.h>
 
 /* once in a while a gp_port command will fail and then work on a

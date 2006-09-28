@@ -21,7 +21,7 @@
  */
 
 #include "config.h"
-#include "gphoto2-port.h"
+#include <gphoto2/gphoto2-port.h>
 
 #include <stdarg.h>
 #include <stdlib.h>
@@ -30,10 +30,10 @@
 
 #include <ltdl.h>
 
-#include "gphoto2-port-result.h"
-#include "gphoto2-port-info-list.h"
-#include "gphoto2-port-library.h"
-#include "gphoto2-port-log.h"
+#include <gphoto2/gphoto2-port-result.h>
+#include <gphoto2/gphoto2-port-info-list.h>
+#include <gphoto2/gphoto2-port-library.h>
+#include <gphoto2/gphoto2-port-log.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>

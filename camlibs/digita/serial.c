@@ -38,7 +38,7 @@
 
 #define GP_MODULE "digita"
 
-#include <gphoto2-port.h>
+#include <gphoto2/gphoto2-port.h>
 
 #define MAX_BEACON_RETRIES	5
 #define MAX_BEACON_TIMEOUTS	2

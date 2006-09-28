@@ -21,7 +21,7 @@
 #ifndef __EZ200_H__
 #define __EZ200_H__
 
-#include <libgphoto2_port/gphoto2-port.h>
+#include <gphoto2/gphoto2-port.h>
 
 #define PING 		0x05
 #define STATUS		0x06

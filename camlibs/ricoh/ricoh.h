@@ -23,8 +23,8 @@
 
 #include <time.h>
 
-#include <gphoto2-camera.h>
-#include <gphoto2-context.h>
+#include <gphoto2/gphoto2-camera.h>
+#include <gphoto2/gphoto2-context.h>
 
 typedef enum _RicohSpeed RicohSpeed;
 enum _RicohSpeed {

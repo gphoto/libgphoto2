@@ -28,8 +28,8 @@
  * Sending commands and receiving data
  */
 
-#include <gphoto2-library.h>
-#include <gphoto2-result.h>
+#include <gphoto2/gphoto2-library.h>
+#include <gphoto2/gphoto2-result.h>
 
 
 #include "io.h"

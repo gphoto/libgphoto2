@@ -20,8 +20,8 @@
 #include <time.h>
 #include <string.h>
 
-#include <gphoto2.h>
-#include <gphoto2-port-log.h>
+#include <gphoto2/gphoto2.h>
+#include <gphoto2/gphoto2-port-log.h>
 
 #include "canon.h"
 #include "util.h"

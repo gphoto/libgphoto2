@@ -10,8 +10,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <gphoto2.h>
-#include <gphoto2-port.h>
+#include <gphoto2/gphoto2.h>
+#include <gphoto2/gphoto2-port.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>

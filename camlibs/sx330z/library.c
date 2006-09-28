@@ -22,8 +22,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <gphoto2-library.h>
-#include <gphoto2-port-log.h>
+#include <gphoto2/gphoto2-library.h>
+#include <gphoto2/gphoto2-port-log.h>
 
 #include "sx330z.h"
 

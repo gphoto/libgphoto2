@@ -24,7 +24,7 @@
 #ifndef __ICLICK_H__
 #define __ICLICK_H__
 
-#include <libgphoto2_port/gphoto2-port.h>
+#include <gphoto2/gphoto2-port.h>
 
 /* A 'picture' is a single standalone picture.
  * A 'clip' is an autoshoot clip.

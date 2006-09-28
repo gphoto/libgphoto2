@@ -21,7 +21,7 @@
 #ifndef __LG_GSM_H__
 #define __LG_GSM_H__
 
-#include <libgphoto2_port/gphoto2-port.h>
+#include <gphoto2/gphoto2-port.h>
 
 typedef unsigned char Info;
 

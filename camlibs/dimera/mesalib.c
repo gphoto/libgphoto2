@@ -29,8 +29,8 @@
 #include <sys/time.h>
 #include <string.h>
 
-#include <gphoto2.h>
-#include <gphoto2-endian.h>
+#include <gphoto2/gphoto2.h>
+#include <gphoto2/gphoto2-endian.h>
 
 #define GP_MODULE "dimera"
 #define debuglog(e) GP_DEBUG( "%s", (e))
