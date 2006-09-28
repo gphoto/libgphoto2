@@ -94,7 +94,7 @@ testsizes.c: testsizes-typelist.txt $(srcdir)/testsizes-createsource.sh
 TestSizes.cs: testsizes-typelist.txt $(srcdir)/testsizes-createsource.sh
 	sh $(srcdir)/testsizes-createsource.sh csharp < $< > $@
 
-%.sh: %.in
+.in.sh:
 	@echo "Creating $@"
 	@sed \
 		-e 's|@top_builddir\@|$(top_builddir)|g' \

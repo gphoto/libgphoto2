@@ -64,7 +64,7 @@ clean-local:
 	rm -rf _inst
 	rm -f _camlibs
 
-%.sh: %.in
+.in.sh:
 	@echo "Creating $@"
 	@sed \
 		-e 's|@top_builddir\@|$(top_builddir)|g' \

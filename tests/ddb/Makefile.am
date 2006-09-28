@@ -53,18 +53,18 @@ test_ddb_LDADD = \
 	$(LIBEXIF_LIBS) \
 	$(INTLLIBS)
 
-%.yy.c: %.l %.tab.h
+ddb-txt.yy.c: ddb-txt.l ddb-txt.tab.h
 	$(FLEX) -o$@ $<
 
-%.tab.h: %.tab.c
-%.tab.c %.tab.h: %.y
+ddb-txt.tab.h: ddb-txt.tab.c
+ddb-txt.tab.c ddb-txt.tab.h: ddb-txt.y
 	$(BISON) -v $<
 #endif
 
 clean-local:
 	rm -f *.s *.i
 
-%.sh: %.in
+.in.sh:
 	@echo "Creating $@"
 	@sed \
 		-e 's|@top_builddir\@|$(top_builddir)|g' \
