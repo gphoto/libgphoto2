@@ -364,9 +364,9 @@ dnl ---------------------------------------------------------------------------
 dnl camlib installation directory
 dnl ---------------------------------------------------------------------------
 AC_MSG_CHECKING([where to install camlibs])
-AC_ARG_WITH([camlibdir],[dnl
-	AS_HELP_STRING([--with-camlibdir=<path>],
-			[install camlibs in directory <path>])
+AC_ARG_WITH([camlibdir],[AS_HELP_STRING(
+	[--with-camlibdir=<path>],
+	[install camlibs in directory <path>])dnl
 ],[
 	camlibdir="$withval"
 ],[
