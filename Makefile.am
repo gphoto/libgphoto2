@@ -44,7 +44,7 @@ source-code-check:
 # are required in the top level Makefile.am for the automatic 
 # re-building of the build system files.
 
-ACLOCAL_AMFLAGS = -I libgphoto2_port/m4
+ACLOCAL_AMFLAGS = -I m4m
 
 
 ########################################################################
