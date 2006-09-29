@@ -385,8 +385,8 @@ AC_SUBST([CAMLIB_LIBS],["\$(top_builddir)/libgphoto2/libgphoto2.la"])
 dnl ---------------------------------------------------------------------------
 dnl Camera drivers (camlibs)
 dnl ---------------------------------------------------------------------------
-dnl * See libgphoto2_port/m4/gp-camlibs.m4 for usage details, e.g. for
-dnl   marking obsolete camlibs.
+dnl * See m4m/gp-camlibs.m4 for usage details, e.g. for marking camlibs as
+dnl   obsolete.
 dnl * Please add new camlibs in alphabetical order.
 GP_CAMLIB([adc65])dnl
 GP_CAMLIB([agfa-cl20])dnl
