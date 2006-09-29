@@ -1,0 +1,14 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+VERSION=@VERSION@
+driverdir=@camlibdir@
+
+Name: libgphoto2_port
+Description: Device-independent access to serial, USB, and other ports
+URL: http://gphoto.org/proj/libgphoto2/
+Version: @VERSION@
+Requires: libusb >= 0.1.11
+Libs: -L${libdir} -lgphoto2_port -lm
+Cflags: -I${includedir}/gphoto2
