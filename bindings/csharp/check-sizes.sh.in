@@ -1,4 +1,8 @@
 #!/bin/sh
+# "make check" testcase:
+# Compare byte sizes of structures defined in the C and C# versions of
+# libgphoto2.
+# Fails if any size does not match.
 
 set -e
 

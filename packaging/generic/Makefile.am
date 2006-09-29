@@ -1,6 +1,3 @@
-# FIXME: utilsdir be modifiable by a ./configure option to adapt to local
-#       policies
-utilsdir = $(libdir)/$(PACKAGE)
 utils_PROGRAMS = print-camera-list
 
 # print_camera_list_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir)

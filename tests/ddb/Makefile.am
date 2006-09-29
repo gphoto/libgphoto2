@@ -12,32 +12,11 @@ check_SCRIPTS = \
 
 EXTRA_DIST = \
 	README.ddb \
-	check-ddb.in \
+	check-ddb.sh.in \
 	ddb-txt.l \
 	ddb-txt.y
 
-# FIXME: Only run this if not cross-compiling
-installcheck-local: $(check_SCRIPTS)
-	@export CAMLIBS="$(DESTDIR)$(camlibdir)"; \
-	total=0; failed=0; success=0; \
-	echo "Running \"installcheck\" test cases..."; \
-	for script in $(check_SCRIPTS); do \
-		echo "Test case: $$script"; \
-		total="$$(expr $$total + 1)"; \
-		if "./$$script"; then \
-			echo "SUCCEEDED: $$script"; \
-			success="$$(expr $$success + 1)"; \
-		else \
-			s="$$?"; \
-			echo "FAILED (return code $$s): $$script"; \
-			failed="$$(expr $$failed + 1)"; \
-		fi; \
-	done; \
-	echo "Test summary: $$success succeeded, $$failed failed, $$total in total."; \
-	if test "$$failed" -gt 0; then \
-		echo "Error: One or more \"installcheck\" testcases have failed."; \
-		exit 1; \
-	fi
+INSTALL_TESTS = $(check_SCRIPTS)
 
 # TESTS = $(check_SCRIPTS)
 
@@ -64,15 +43,10 @@ ddb-txt.tab.c ddb-txt.tab.h: ddb-txt.y
 clean-local:
 	rm -f *.s *.i
 
-.in.sh:
-	@echo "Creating $@"
-	@sed \
-		-e 's|@top_builddir\@|$(top_builddir)|g' \
-		-e 's|@camlibdir\@|$(camlibdir)|g' \
-		< "$<" > "$@"
-	@chmod +x $@
-
-check-ddb.sh: check-ddb.in $(top_builddir)/packaging/generic/print-camera-list test-ddb
+check-ddb.sh: check-ddb.sh.in $(top_builddir)/packaging/generic/print-camera-list test-ddb
 
 $(top_builddir)/packaging/generic/print-camera-list:
 	cd $(top_builddir)/packaging/generic && $(MAKE) print-camera-list
+
+include $(top_srcdir)/installcheck.mk
+

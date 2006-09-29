@@ -58,7 +58,8 @@ check_PROGRAMS = testsizes
 BUILT_SOURCES = testsizes.c TestSizes.cs
 testsizes_SOURCES = testsizes.c
 
-TESTS = $(check_SCRIPTS)
+TESTS = check-sizes.sh
+INSTALL_TESTS = check-camera-list.sh
 
 CLEANFILES =							\
 	TestGphoto2Sharp.exe					\
@@ -72,7 +73,6 @@ CLEANFILES =							\
 
 endif
 
-
 EXTRA_DIST =							\
 	libgphoto2-sharp.dll.config				\
 	libgphoto2-sharp.pc.in					\
@@ -81,12 +81,8 @@ EXTRA_DIST =							\
 	TestGphoto2Sharp.cs					\
 	testsizes-typelist.txt					\
 	testsizes-createsource.sh				\
-	check-sizes.in						\
-	check-camera-list.in
-
-clean-local:
-	rm -rf _inst
-	rm -f _camlibs
+	check-sizes.sh.in					\
+	check-camera-list.sh.in
 
 testsizes.c: testsizes-typelist.txt $(srcdir)/testsizes-createsource.sh
 	sh $(srcdir)/testsizes-createsource.sh c < $< > $@
@@ -94,15 +90,4 @@ testsizes.c: testsizes-typelist.txt $(srcdir)/testsizes-createsource.sh
 TestSizes.cs: testsizes-typelist.txt $(srcdir)/testsizes-createsource.sh
 	sh $(srcdir)/testsizes-createsource.sh csharp < $< > $@
 
-.in.sh:
-	@echo "Creating $@"
-	@sed \
-		-e 's|@top_builddir\@|$(top_builddir)|g' \
-		-e 's|@camlibdir\@|$(camlibdir)|g' \
-		-e 's|@libdir\@|$(libdir)|g' \
-		-e 's|@DESTDIR\@|$(DESTDIR)|g' \
-		-e 's|@MAKE\@|$(MAKE)|g' \
-		-e 's|@MONO\@|$(MONO)|g' \
-		< "$<" > "$@"
-	@chmod +x $@
-
+include $(top_srcdir)/installcheck.mk

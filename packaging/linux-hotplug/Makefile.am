@@ -8,9 +8,6 @@ if HAVE_LINUX
 hotplugdoc_DATA = usbcam.console usbcam.group usbcam.user usbcam.x11-app
 
 
-# FIXME: utilsdir be modifiable by a ./configure option to adapt to local
-#       policies
-utilsdir = $(libdir)/$(PACKAGE)
 utils_PROGRAMS = print-usb-usermap
 
 print_usb_usermap_SOURCE = print-usb-usermap.c

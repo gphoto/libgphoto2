@@ -350,6 +350,17 @@ dnl ]
 
 
 dnl ---------------------------------------------------------------------------
+dnl utility installation directory
+dnl
+dnl FIXME: Proper definition of libexecdir.
+dnl ---------------------------------------------------------------------------
+
+utilsdir="\${libexecdir}/${PACKAGE_TARNAME}"
+AC_ARG_VAR([utilsdir],[Directory where utilities like print-camera-list will be installed])
+AC_SUBST([utilsdir])
+
+
+dnl ---------------------------------------------------------------------------
 dnl camlib installation directory
 dnl ---------------------------------------------------------------------------
 AC_MSG_CHECKING([where to install camlibs])
@@ -359,7 +370,7 @@ AC_ARG_WITH([camlibdir],[dnl
 ],[
 	camlibdir="$withval"
 ],[
-	camlibdir='$(libdir)/$(PACKAGE_TARNAME)/$(PACKAGE_VERSION)'
+	camlibdir="\${libdir}/${PACKAGE_TARNAME}/${PACKAGE_VERSION}"
 ])
 AC_MSG_RESULT([${camlibdir}])
 AC_SUBST([camlibdir])
@@ -456,7 +467,7 @@ dnl	     a file.
 dnl	     libexif is available from
 dnl	     http://www.sourceforge.net/projects/libexif
 dnl ---------------------------------------------------------------------------
-GP_CHECK_LIBRARY([LIBEXIF],[libexif],[],
+GP_CHECK_LIBRARY([LIBEXIF],[libexif],[>= 0.6.13],
 		 [libexif/exif-data.h],[exif_data_new],[
 # Check for libexif version
 dnl FIXME: Use AC_CHECK_MEMBER?
@@ -531,9 +542,9 @@ rmdir gphoto2 || true
 # Create output files
 # ---------------------------------------------------------------------------
 AC_CONFIG_FILES([
-po/Makefile.in
 README
 Makefile
+gphoto2-config
 camlibs/Makefile
 camlibs/adc65/Makefile
 camlibs/agfa-cl20/Makefile
@@ -593,16 +604,18 @@ camlibs/template/Makefile
 camlibs/toshiba/Makefile
 camlibs/toshiba/pdrm11/Makefile
 camlibs/enigma13/Makefile
-tests/Makefile
-tests/ddb/Makefile
 libgphoto2/Makefile
 libgphoto2/libgphoto2.pc
-gphoto2-config
+tests/Makefile
+tests/check-camera-list.sh
+tests/ddb/Makefile
+tests/ddb/check-ddb.sh
 packaging/Makefile
 packaging/linux-hotplug/Makefile
 packaging/generic/Makefile
 packaging/rpm/Makefile
 packaging/rpm/package.spec
+po/Makefile.in
 doc/Makefile
 doc/Doxyfile
 doc/api/Makefile
@@ -610,8 +623,17 @@ bindings/Makefile
 bindings/csharp/Makefile
 bindings/csharp/AssemblyInfo.cs
 bindings/csharp/libgphoto2-sharp.pc
+bindings/csharp/check-camera-list.sh
+bindings/csharp/check-sizes.sh
+],[
+dnl This relies on this code being called for each of the above files
+dnl with ac_file set to the filename.
+	if echo "$ac_file" | grep '.sh$' > /dev/null; then
+		if test -f "$ac_file"; then
+			chmod +x "$ac_file"
+		fi
+	fi
 ])
-#bindings/java/Makefile
 AC_OUTPUT
 
 GP_CAMLIBS_CHECK_SUBDIRS
