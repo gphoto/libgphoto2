@@ -469,24 +469,28 @@ dnl	     http://www.sourceforge.net/projects/libexif
 dnl ---------------------------------------------------------------------------
 GP_CHECK_LIBRARY([LIBEXIF],[libexif],[>= 0.6.13],
 		 [libexif/exif-data.h],[exif_data_new],[
+AC_MSG_CHECKING([whether we use a version of libexif with ExifData.ifd[[]]])
 # Check for libexif version
 dnl FIXME: Use AC_CHECK_MEMBER?
 CPPFLAGS_save="$CPPFLAGS"
 CPPFLAGS="$LIBEXIF_CFLAGS"
-AC_TRY_COMPILE([
+AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
 /* CC=$CC */
 /* CPPFLAGS=${CPPFLAGS} */
 /* LDFLAGS=${LDFLAGS} */
 #include <libexif/exif-data.h>
 #include <libexif/exif-content.h>
-],[
+]],[[
 	ExifData ed;
 	ExifContent *ec0, *ec1;
 	ec0 = &ed.ifd[0];
 	ec1 = &ed.ifd[1];
-],[dnl
-	AC_DEFINE([HAVE_LIBEXIF_IFD],1,
-		[whether we use a version of libexif with ExifData.ifd[[]]])
+]])], [
+   AC_DEFINE([HAVE_LIBEXIF_IFD],1,
+	     [whether we use a version of libexif with ExifData.ifd[[]]])
+   AC_MSG_RESULT([yes])
+], [
+   AC_MSG_RESULT([no])
 ])
 CPPFLAGS="$CPPFLAGS_save"
 ],[],[default-on],[http://www.sourceforge.net/projects/libexif])dnl
