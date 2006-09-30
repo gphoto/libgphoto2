@@ -1302,7 +1302,11 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		gp_log (GP_LOG_DEBUG, "ptp2", "burstnumber %d", burstnumber);
 	}
 
-	CPR(context,ptp_nikon_capture(params, 0xffffffff));
+	do {
+		ret = ptp_nikon_capture(params, 0xffffffff);
+	} while (ret == PTP_RC_DeviceBusy);
+	CPR (context, ret);
+
 	CR (gp_port_set_timeout (camera->port, USB_TIMEOUT_CAPTURE));
 
 	while (!((ptp_nikon_device_ready(params) == PTP_RC_OK) && hasc101)) {
