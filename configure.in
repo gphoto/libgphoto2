@@ -538,8 +538,7 @@ fi
 # Remove obsolete directory of copied files/symlinks
 # ---------------------------------------------------------------------------
 
-rm -f gphoto2/gphoto2*.h
-rmdir gphoto2 || true
+if test -d gphoto2; then rm -f gphoto2/gphoto2*.h; rmdir gphoto2; fi
 
 
 # ---------------------------------------------------------------------------

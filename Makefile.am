@@ -13,9 +13,10 @@ SUBDIRS = . @subdirs@ libgphoto2 camlibs tests po bindings packaging doc
 doc_DATA = AUTHORS COPYING README CHANGES NEWS
 
 # Remove obsolete directory of copied/symlinked header files
+all-local:
+	if test -d gphoto2; then rm -f gphoto2/gphoto2*.h; rmdir gphoto2; fi
 clean-local:
-	rm -f gphoto2/gphoto2*.h
-	rmdir gphoto2 || true
+	if test -d gphoto2; then rm -f gphoto2/gphoto2*.h; rmdir gphoto2; fi
 
 # we use just ONE .PHONY target in order not to confuse automake
 
