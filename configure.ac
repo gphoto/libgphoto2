@@ -9,7 +9,7 @@ AC_INIT([libgphoto2], [2.2.1.3.trunk], [gphoto-devel@lists.sourceforge.net], [li
 AC_CONFIG_SRCDIR([libgphoto2/gphoto2/gphoto2.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([libgphoto2_port/m4])
-AM_INIT_AUTOMAKE([-Wall -Werror gnu 1.9 dist-bzip2])
+AM_INIT_AUTOMAKE([-Wall gnu 1.9 dist-bzip2])
 
 GP_CHECK_SHELL_ENVIRONMENT
 GP_CONFIG_MSG([Build])
@@ -352,10 +352,12 @@ dnl ]
 dnl ---------------------------------------------------------------------------
 dnl utility installation directory
 dnl
-dnl FIXME: Proper definition of libexecdir.
+dnl If your system wants utilities installed into ${libexecdir} instead, then
+dnl run configure with 'utilsdir=${libexecdir}/${PACKAGE_TARNAME}'.
 dnl ---------------------------------------------------------------------------
 
-utilsdir="\${libexecdir}/${PACKAGE_TARNAME}"
+AC_SUBST([PACKAGE_TARNAME])
+utilsdir="\${libdir}/\${PACKAGE_TARNAME}"
 AC_ARG_VAR([utilsdir],[Directory where utilities like print-camera-list will be installed])
 AC_SUBST([utilsdir])
 

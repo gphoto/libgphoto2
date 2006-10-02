@@ -9,6 +9,7 @@ set -ex
 debug=:
 #debug=false
 
+PACKAGE_TARNAME="${PACKAGE_TARNAME-"@PACKAGE_TARNAME@"}"
 prefix="${prefix-"@prefix@"}"
 exec_prefix="${exec_prefix-"@exec_prefix@"}"
 libdir="${libdir-"@libdir@"}"
