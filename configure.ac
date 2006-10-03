@@ -512,7 +512,7 @@ dnl Turn on all warnings when using gcc
 dnl ---------------------------------------------------------------------------
 if test "x$GCC" = "xyes"; then
 	AM_CPPFLAGS="$AM_CPPFLAGS -Wall"
-	AM_CPPFLAGS="$AM_CPPFLAGS -Wmissing-declarations -Wmissing-prototypes"
+	AM_CFLAGS="$AM_CFLAGS -Wmissing-declarations -Wmissing-prototypes"
 	AM_LDFLAGS="$AM_LDFLAGS -Wall"
 	# FIXME: Check for --enable-debug here
 	AM_CPPFLAGS="$AM_CPPFLAGS -g"
@@ -523,7 +523,13 @@ AM_CONDITIONAL([HAVE_GCC], [test "x$GCC" = "xyes"])
 dnl FIXME: Is this accurate?
 AM_CONDITIONAL([HAVE_CXX], [test -n "$CXX" && test "X$CXX" != "Xno"])
 
+# CPPFLAGS: C PreProcessor flags
 AC_SUBST([AM_CPPFLAGS])
+# CFLAGS: C compiler flags
+AC_SUBST([AM_CFLAGS])
+# CXXFLAGS: C++ compiler flags
+AC_SUBST([AM_CXXFLAGS])
+# LDFLAGS: Linker flags
 AC_SUBST([AM_LDFLAGS])
 
 

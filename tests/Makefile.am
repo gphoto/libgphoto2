@@ -46,15 +46,15 @@ test_camera_list_LDADD = \
 	$(INTLLIBS)
 
 if HAVE_GCC
-PEDANTIC_CFLAGS = -std=c99 -pedantic -W -Wall -Wextra -Werror
-PEDANTIC_CXXFLAGS = -std=c++98 -pedantic -W -Wall -Wextra -Werror
+PEDANTIC_CFLAGS = -std=c99 -pedantic-errors -W -Wall -Wextra -Werror
+PEDANTIC_CXXFLAGS = -ansi -pedantic-errors -W -Wall -Wextra -Werror
 else
 PEDANTIC_CFLAGS = 
 PEDANTIC_CXXFLAGS = 
 endif
 
 test_pedantic_c_SOURCES = test-pedantic-compilation.c
-test_pedantic_c_CPPFLAGS = $(PEDANTIC_CFLAGS) $(AM_CPPFLAGS) $(CPPFLAGS)
+test_pedantic_c_CFLAGS = $(PEDANTIC_CFLAGS) $(AM_CFLAGS) $(CFLAGS)
 test_pedantic_c_LDADD = \
 	$(top_builddir)/libgphoto2/libgphoto2.la \
 	$(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la \
@@ -62,7 +62,7 @@ test_pedantic_c_LDADD = \
 	$(INTLLIBS)
 
 test_pedantic_cxx_SOURCES = test-pedantic-compilation.cxx
-test_pedantic_cxx_CXXFLAGS = $(PEDANTIC_CXXFLAGS) $(AM_CPPFLAGS) $(CPPFLAGS)
+test_pedantic_cxx_CXXFLAGS = $(PEDANTIC_CXXFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 test_pedantic_cxx_LDADD = \
 	$(top_builddir)/libgphoto2/libgphoto2.la \
 	$(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la \
