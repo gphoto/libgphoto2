@@ -2,8 +2,8 @@ SUBDIRS = ddb
 
 check_PROGRAMS = \
 	test-camera-list \
-	test-pedantic-c
-#	test-pedantic-cxx
+	test-pedantic-c \
+	test-pedantic-cxx
 
 check_SCRIPTS = \
 	check-camera-list.sh
@@ -58,12 +58,12 @@ test_pedantic_c_LDADD = \
 	$(LIBEXIF_LIBS) \
 	$(INTLLIBS)
 
-#test_pedantic_cxx_SOURCES = test-pedantic-compilation.cxx
-#test_pedantic_cxx_CXXFLAGS = $(PEDANTIC_CXXFLAGS) $(AM_CPPFLAGS) $(CPPFLAGS)
-#test_pedantic_cxx_LDADD = \
-#	$(top_builddir)/libgphoto2/libgphoto2.la \
-#	$(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la \
-#	$(LIBEXIF_LIBS) \
-#	$(INTLLIBS)
+test_pedantic_cxx_SOURCES = test-pedantic-compilation.cxx
+test_pedantic_cxx_CXXFLAGS = $(PEDANTIC_CXXFLAGS) $(AM_CPPFLAGS) $(CPPFLAGS)
+test_pedantic_cxx_LDADD = \
+	$(top_builddir)/libgphoto2/libgphoto2.la \
+	$(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la \
+	$(LIBEXIF_LIBS) \
+	$(INTLLIBS)
 
 include $(top_srcdir)/installcheck.mk
