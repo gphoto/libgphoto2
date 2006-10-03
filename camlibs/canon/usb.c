@@ -887,8 +887,9 @@ static int canon_usb_poll_interrupt_pipe ( Camera *camera, unsigned char *buf, i
         duration  =   (double)end.tv_sec +   end.tv_usec/1e6;
         duration -= (double)start.tv_sec + start.tv_usec/1e6;
         if ( status <= 0 ) {
-                GP_LOG ( GP_LOG_ERROR, _("canon_usb_poll_interrupt_pipe:"
-					 " interrupt read failed after %i tries, %6.3f sec \"%s\""),
+                gp_log ( GP_LOG_ERROR, "canon/usb.c",
+			 _("canon_usb_poll_interrupt_pipe:"
+			   " interrupt read failed after %i tries, %6.3f sec \"%s\""),
                          i, duration, gp_result_as_string(status) );
 	}
         else
@@ -942,8 +943,9 @@ int canon_usb_poll_interrupt_multiple ( Camera *camera[], int n_cameras,
                                                   (char *)buf, 0x40 );
         }
         if ( status <= 0 )
-                GP_LOG ( GP_LOG_ERROR, _("canon_usb_poll_interrupt_multiple:"
-					 " interrupt read failed after %i tries, \"%s\""),
+                gp_log ( GP_LOG_ERROR, "canon/usb.c",
+			 _("canon_usb_poll_interrupt_multiple:"
+			   " interrupt read failed after %i tries, \"%s\""),
                          i, gp_result_as_string(status) );
         else
                 GP_DEBUG ( "canon_usb_poll_interrupt_multiple:"
@@ -1071,9 +1073,10 @@ canon_usb_capture_dialogue (Camera *camera, unsigned int *return_length, int *ph
                 case 0x08:
                         /* Thumbnail size */
                         if ( status != 0x17 )
-                                GP_LOG ( GP_LOG_ERROR, _("canon_usb_capture_dialogue:"
-							 " bogus length 0x%04x"
-							 " for thumbnail size packet"), status );
+                                gp_log (GP_LOG_ERROR, "canon/usb.c",
+					_("canon_usb_capture_dialogue:"
+					  " bogus length 0x%04x"
+					  " for thumbnail size packet"), status );
                         camera->pl->thumb_length = le32atoh ( buf2+0x11 );
                         camera->pl->image_key = le32atoh ( buf2+0x0c );
                         GP_DEBUG ( "canon_usb_capture_dialogue: thumbnail size %ld, tag=0x%08lx",
@@ -1087,9 +1090,10 @@ canon_usb_capture_dialogue (Camera *camera, unsigned int *return_length, int *ph
                 case 0x0c:
                         /* Full image size */
                         if ( status != 0x17 )
-                                GP_LOG ( GP_LOG_ERROR, _("canon_usb_capture_dialogue:"
-							 " bogus length 0x%04x"
-							 " for full image size packet"), status );
+                                gp_log (GP_LOG_ERROR, "canon/usb.c",
+					_("canon_usb_capture_dialogue:"
+					  " bogus length 0x%04x"
+					  " for full image size packet"), status );
                         camera->pl->image_length = le32atoh ( buf2+0x11 );
                         camera->pl->image_key = le32atoh ( buf2+0x0c );
                         GP_DEBUG ( "canon_usb_capture_dialogue: full image size: 0x%08lx, tag=0x%08lx",
@@ -1105,8 +1109,9 @@ canon_usb_capture_dialogue (Camera *camera, unsigned int *return_length, int *ph
 		case 0x10:
                         /* Secondary image size, key */
 			/* (only for RAW + JPEG modes) */
-			GP_LOG ( GP_LOG_DEBUG, _("canon_usb_capture_dialogue:"
-						 "secondary image descriptor received"));
+			gp_log ( GP_LOG_DEBUG, "canon/usb.c",
+				 _("canon_usb_capture_dialogue:"
+				   "secondary image descriptor received"));
 			
 			camera->pl->image_b_length = le32atoh ( buf2+0x11 );
 			camera->pl->image_b_key = le32atoh ( buf2+0x0c );
@@ -1131,16 +1136,18 @@ canon_usb_capture_dialogue (Camera *camera, unsigned int *return_length, int *ph
                                         camera->pl->capture_step = 1;
                                 }
                                 else {
-                                        GP_LOG ( GP_LOG_ERROR, _("canon_usb_capture_dialogue:"
-								 " first interrupt read out of sequence") );
+                                        gp_log (GP_LOG_ERROR, "canon/usb.c",
+						_("canon_usb_capture_dialogue:"
+						  " first interrupt read out of sequence") );
                                         goto FAIL;
                                 }
                         }
                         else if ( buf2[12] == 0x1d ) {
                                 GP_DEBUG ( "canon_usb_capture_dialogue: second interrupt read (after image sizes)" );
                                 if ( camera->pl->capture_step != 1 ) {
-                                        GP_LOG ( GP_LOG_ERROR, _("canon_usb_capture_dialogue:"
-								 " second interrupt read out of sequence") );
+                                        gp_log (GP_LOG_ERROR, "canon/usb.c",
+						_("canon_usb_capture_dialogue:"
+						  " second interrupt read out of sequence") );
                                         goto FAIL;
                                 }
                                 camera->pl->capture_step++;
@@ -1149,8 +1156,9 @@ canon_usb_capture_dialogue (Camera *camera, unsigned int *return_length, int *ph
                                         goto EXIT;
                         }
                         else if ( buf2[12] == 0x0a ) {
-                                GP_LOG ( GP_LOG_ERROR, _("canon_usb_capture_dialogue:"
-							 " photographic failure signaled, code = 0x%08x"),
+                                gp_log (GP_LOG_ERROR, "canon/usb.c",
+					_("canon_usb_capture_dialogue:"
+					  " photographic failure signaled, code = 0x%08x"),
                                          le32atoh ( buf2+16 ) );
 				*photo_status = le32atoh ( buf2+16 );
                                 goto FAIL2;
@@ -1168,8 +1176,9 @@ canon_usb_capture_dialogue (Camera *camera, unsigned int *return_length, int *ph
                         GP_DEBUG ( "canon_usb_capture_dialogue:"
                                    " EOS flash write complete from interrupt read" );
                         if ( camera->pl->capture_step != 2 && camera->pl->md->model != CANON_CLASS_6 ) {
-                                GP_LOG ( GP_LOG_ERROR, _("canon_usb_capture_dialogue:"
-							 " third EOS interrupt read out of sequence") );
+                                gp_log (GP_LOG_ERROR, "canon/usb.c",
+					_("canon_usb_capture_dialogue:"
+					  " third EOS interrupt read out of sequence"));
                                 goto FAIL;
                         }
                         camera->pl->capture_step++;
@@ -1203,8 +1212,9 @@ canon_usb_capture_dialogue (Camera *camera, unsigned int *return_length, int *ph
                                            " final EOS interrupt read" );
                         }
                         else {
-                                GP_LOG ( GP_LOG_ERROR, _("canon_usb_capture_dialogue:"
-							 " fourth EOS interrupt read out of sequence") );
+                                gp_log (GP_LOG_ERROR, "canon/usb.c",
+					_("canon_usb_capture_dialogue:"
+					  " fourth EOS interrupt read out of sequence") );
                                 goto FAIL;
                         }
                         break;
@@ -1390,7 +1400,7 @@ canon_usb_dialogue_full (Camera *camera, canonCommandIndex canon_funct, unsigned
         }
 
         if ((payload_length + 0x50) > sizeof (packet)) {
-                GP_LOG (GP_LOG_VERBOSE,
+                gp_log (GP_LOG_VERBOSE, "canon/usb.c",
                         _("canon_usb_dialogue:"
 			  " payload too big, won't fit into buffer (%i > %i)"),
                         (payload_length + 0x50), sizeof (packet));
@@ -1497,8 +1507,9 @@ canon_usb_dialogue_full (Camera *camera, canonCommandIndex canon_funct, unsigned
                                   reported_length, reported_length+0x40 );
 
                         if ( reported_length > 0 && reported_length+0x40 != read_bytes ) {
-                                GP_LOG ( GP_LOG_VERBOSE, _("canon_usb_dialogue:"
-                                                           " expected 0x%x bytes, but camera reports 0x%x"),
+                                gp_log (GP_LOG_VERBOSE, "canon/usb.c",
+					_("canon_usb_dialogue:"
+					  " expected 0x%x bytes, but camera reports 0x%x"),
                                          read_bytes, reported_length+0x40 );
                                 read_bytes = reported_length+0x40;
                         }

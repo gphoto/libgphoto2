@@ -68,31 +68,6 @@ void gp_logv     (GPLogLevel level, const char *domain, const char *format,
 ;
 void gp_log_data (const char *domain, const char *data, unsigned int size);
 
-/**
- * GP_LOG:
- * @level: gphoto2 log level to log message under
- * @msg: message to log
- * @params: params to message
- *
- * Calls #gp_log with an automatically generated domain.
- * You have to define GP_MODULE as "mymod" for your module
- * mymod before you can use #GP_LOG().
- **/
-
-#ifdef __GNUC__
-#define GP_LOG(level, msg, params...) \
-        gp_log(level, GP_MODULE "/" __FILE__, msg, ##params)
-
-#elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
-#define GP_LOG(level, ...) \
-        gp_log(level, GP_MODULE "/" __FILE__, __VA_ARGS__)
-
-#else
-# ifdef __GCC__
-#  warning Disabling GP_LOG because variadic macros are not allowed
-# endif
-#define GP_LOG (void) 
-#endif
 
 /**
  * GP_DEBUG:
@@ -105,14 +80,12 @@ void gp_log_data (const char *domain, const char *data, unsigned int size);
  * mymod before using #GP_DEBUG().
  **/
 
-#ifdef __GNUC__
-#define GP_DEBUG(msg, params...) \
-        gp_log(GP_LOG_DEBUG, GP_MODULE "/" __FILE__, msg, ##params)
-
-#elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
 #define GP_DEBUG(...) \
         gp_log(GP_LOG_DEBUG, GP_MODULE "/" __FILE__, __VA_ARGS__)
-
+#elif defined(__GNUC__)
+#define GP_DEBUG(msg, params...) \
+        gp_log(GP_LOG_DEBUG, GP_MODULE "/" __FILE__, msg, ##params)
 #else
 # ifdef __GCC__
 #  warning Disabling GP_DEBUG because variadic macros are not allowed

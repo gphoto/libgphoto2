@@ -38,7 +38,7 @@ adc65_ping(Camera *camera) {
 	char cmd, resp[3];
 	int ret;
 
-	GP_LOG(GP_LOG_DEBUG, "Pinging the camera.\n");
+	GP_DEBUG("Pinging the camera.");
 
 	cmd = 0x30;
 	ret = adc65_exchange (camera, &cmd, 1, resp, 3);
@@ -48,7 +48,7 @@ adc65_ping(Camera *camera) {
 	if (resp[1] != 0x30)
 		return GP_ERROR;
 
-	GP_LOG (GP_LOG_DEBUG, "Ping answered!\n");
+	GP_DEBUG("Ping answered!");
 	return GP_OK;
 }
 
@@ -57,7 +57,7 @@ adc65_file_count (Camera *camera) {
         char cmd, resp[65538];
 	int ret;
 
-        GP_LOG (GP_LOG_DEBUG, "Getting the number of pictures.\n");
+        GP_DEBUG("Getting the number of pictures.");
         cmd = 0x00;
         ret = adc65_exchange(camera, &cmd, 1, resp, 65538);
 	if (ret < 2) /* must have at least a 2 byte reply */
@@ -77,7 +77,7 @@ adc65_read_data (Camera *camera, char *cmd, int cmd_size, int data_type, int *si
 
 	switch (data_type) {
 		case ADC65_DATA_PICTURE:
-			GP_LOG (GP_LOG_DEBUG, "Getting Picture\n");
+			GP_DEBUG("Getting Picture");
 
 			/* get the picture */
 			ret = adc65_exchange (camera, cmd, cmd_size, resp, 2);
@@ -153,7 +153,7 @@ adc65_read_data (Camera *camera, char *cmd, int cmd_size, int data_type, int *si
 				}
 			}
 			*size = z;
-			GP_LOG(GP_LOG_DEBUG, "size=%i\n", *size);
+			GP_DEBUG("size=%i", *size);
 			break;
 		default:
 			break;

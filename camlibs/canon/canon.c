@@ -1692,7 +1692,7 @@ canon_int_set_file_attributes (Camera *camera, const char *file, const char *dir
                 return GP_ERROR_CORRUPTED_DATA;
         }
 
-        GP_LOG (GP_LOG_DATA,
+        gp_log (GP_LOG_DATA, "canon/canon.c",
                 "canon_int_set_file_attributes: returned four bytes as expected, "
                 "we should check if they indicate error or not. Returned data :");
         gp_log_data ("canon", (char *)msg, 4);
@@ -2664,7 +2664,8 @@ gphoto2canonpath (Camera *camera, const char *path, GPContext *context)
         if ((p > tmp) && (*(p - 1) == '\\'))
                 *(p - 1) = '\0';
 
-        GP_LOG (GP_LOG_DATA, "gphoto2canonpath: converted '%s' to '%s'", path, tmp);
+        gp_log (GP_LOG_DATA, "canon/canon.c",
+                "gphoto2canonpath: converted '%s' to '%s'", path, tmp);
 
         return (tmp);
 }
@@ -2710,7 +2711,8 @@ canon2gphotopath (Camera __unused__ *camera, const char *path)
                         *p = '/';
         }
 
-        GP_LOG (GP_LOG_DATA, "canon2gphotopath: converted '%s' to '%s'", path, tmp);
+        gp_log (GP_LOG_DATA, "canon/canon.c",
+                "canon2gphotopath: converted '%s' to '%s'", path, tmp);
 
         return (tmp);
 }
@@ -2905,7 +2907,7 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
                         || ((dirent_attrs & CANON_ATTR_RECURS_ENT_DIR) != 0);
                 is_file = !is_dir;
 
-                GP_LOG (GP_LOG_DATA,
+                gp_log (GP_LOG_DATA, "canon/canon.c",
                         "canon_int_list_directory: "
                         "reading dirent at position %li of %li (0x%lx of 0x%lx)",
                         (long)(pos - dirent_data), (long)(end_of_data - dirent_data),
@@ -2981,7 +2983,7 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 
                 /* 10 bytes of attributes, size and date, a name and a NULL terminating byte */
                 /* don't use GP_DEBUG since we log this with GP_LOG_DATA */
-                GP_LOG (GP_LOG_DATA,
+                gp_log (GP_LOG_DATA, "canon/canon.c",
                         "canon_int_list_directory: dirent determined to be %li=0x%lx bytes :",
                         (long)dirent_ent_size, (long)dirent_ent_size);
                 gp_log_data ("canon", (char *)pos, dirent_ent_size);
