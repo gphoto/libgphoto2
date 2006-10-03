@@ -401,7 +401,7 @@ check_readiness (Camera *camera, GPContext *context)
 		return 1;
 	status = canon_int_ready (camera, context);
 	if ( status == GP_OK ) {
-		GP_DEBUG ("Camera type: %s (%d)\n", camera->pl->md->id_str,
+		GP_DEBUG ("Camera type: %s (%d)", camera->pl->md->id_str,
 			  camera->pl->md->model);
 		camera->pl->cached_ready = 1;
 		return 1;
@@ -1051,7 +1051,7 @@ delete_file_func (CameraFilesystem __unused__ *fs, const char *folder,
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 
-	GP_DEBUG ("delete_file_func: filename: %s\nfolder: %s\n", filename, canonfolder);
+	GP_DEBUG ("delete_file_func: filename: %s, folder: %s", filename, canonfolder);
 	if (canon_int_delete_file (camera, filename, canonfolder, context) != GP_OK) {
 		gp_context_error (context, _("Error deleting file"));
 		return GP_ERROR;
@@ -1063,7 +1063,7 @@ delete_file_func (CameraFilesystem __unused__ *fs, const char *folder,
 	if (!camera->pl->list_all_files) {
 		thumbname = canon_int_filename2thumbname (camera, filename);
 		if ((thumbname != NULL) && (*thumbname != '\0')) {
-			GP_DEBUG ("delete_file_func: thumbname: %s\n folder: %s\n", thumbname, canonfolder);
+			GP_DEBUG ("delete_file_func: thumbname: %s, folder: %s", thumbname, canonfolder);
 			if (canon_int_delete_file (camera, thumbname, canonfolder, context) != GP_OK) {
 				/* XXX should we handle this as an error?
 				 * Probably only in case the camera link died,
@@ -1274,7 +1274,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 		    }
 		}
 		sprintf (destpath, "%s\\%s", dcf_root_dir, dir);
-		GP_DEBUG ("destpath: %s destname: %s\n", destpath, destname);
+		GP_DEBUG ("destpath: %s destname: %s", destpath, destname);
 	}
 
 	GP_DEBUG ("camera_folder_put_file(): destpath=%s", destpath);
@@ -1388,7 +1388,7 @@ put_file_func (CameraFilesystem __unused__ *fs, const char __unused__ *folder,
 
 		sprintf (destpath, "%s%s", dcf_root_dir, dir);
 
-		GP_DEBUG ("destpath: %s destname: %s\n", destpath, destname);
+		GP_DEBUG ("destpath: %s destname: %s", destpath, destname);
 	}
 
 	r = canon_int_directory_operations (camera, dcf_root_dir, DIR_CREATE, context);

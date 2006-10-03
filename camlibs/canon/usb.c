@@ -459,7 +459,7 @@ canon_usb_init (Camera *camera, GPContext *context)
 	int id_mstimeout = IDENTIFY_INIT_TIMEOUT; /* separate timeout for 
 						     identify camera */
 
-        GP_DEBUG ("Initializing the (USB) camera.\n");
+        GP_DEBUG ("Initializing the (USB) camera.");
 
         camstat = canon_usb_camera_init (camera, context);
         if ( camstat < 0 )
@@ -771,8 +771,8 @@ canon_usb_unlock_keys (Camera *camera, GPContext *context)
                         /* Your camera model does not need unlocking, cannot do unlocking or
                          * we don't know how to unlock its keys. 
                          */
-                        GP_DEBUG ("canon_usb_unlock_keys: Key unlocking not implemented for this camera model.\n"
-                                  "If unlocking works when using the Windows software with your camera,\n"
+                        GP_DEBUG ("canon_usb_unlock_keys: Key unlocking not implemented for this camera model. "
+                                  "If unlocking works when using the Windows software with your camera, "
                                   "please contact %s.", MAIL_GPHOTO_DEVEL);
                 }
 
@@ -841,8 +841,8 @@ canon_usb_get_body_id (Camera *camera, GPContext *context)
                 break;
         default:
                 /* As far as we know, only EOS models implement the "get body ID" function. */
-                GP_DEBUG ("canon_usb_get_body_id: \"Get body ID\" not implemented for this camera model.\n"
-                          "If the Windows software can read a body ID (hardware serial number) from your camera,\n"
+                GP_DEBUG ("canon_usb_get_body_id: \"Get body ID\" not implemented for this camera model. "
+                          "If the Windows software can read a body ID (hardware serial number) from your camera, "
                           "please contact %s.", MAIL_GPHOTO_DEVEL);
                 break;
         }
@@ -894,7 +894,7 @@ static int canon_usb_poll_interrupt_pipe ( Camera *camera, unsigned char *buf, i
 	}
         else
                 GP_DEBUG ( "canon_usb_poll_interrupt_pipe:"
-                           " interrupt packet took %d tries, %6.3f sec\n",
+                           " interrupt packet took %d tries, %6.3f sec",
                            i+1, duration );
 
         return status;
@@ -949,7 +949,7 @@ int canon_usb_poll_interrupt_multiple ( Camera *camera[], int n_cameras,
                          i, gp_result_as_string(status) );
         else
                 GP_DEBUG ( "canon_usb_poll_interrupt_multiple:"
-                           " interrupt packet took %d tries\n", i+1 );
+                           " interrupt packet took %d tries", i+1 );
 
         return status;
 }
@@ -1440,7 +1440,7 @@ canon_usb_dialogue_full (Camera *camera, canonCommandIndex canon_funct, unsigned
         status = gp_port_usb_msg_write (camera->port, msgsize > 1 ? 0x04 : 0x0c, 0x10, 0,
                                         (char *)packet, msgsize);
         if (status != msgsize) {
-                GP_DEBUG ("canon_usb_dialogue_full: write failed! (returned %i)\n", status);
+                GP_DEBUG ("canon_usb_dialogue_full: write failed! (returned %i)", status);
                 return NULL;
         }
 
@@ -1706,7 +1706,7 @@ canon_usb_long_dialogue (Camera *camera, canonCommandIndex canon_funct, unsigned
                           bytes_received, read_bytes, read_bytes);
                 bytes_read = gp_port_read (camera->port, (char *)*data + bytes_received, read_bytes);
                 if (bytes_read < 1) {
-                        GP_DEBUG ("canon_usb_long_dialogue: gp_port_read() returned error (%i) or no data\n",
+                        GP_DEBUG ("canon_usb_long_dialogue: gp_port_read() returned error (%i) or no data",
                                   bytes_read);
                         free (*data);
                         *data = NULL;
@@ -2262,7 +2262,7 @@ canon_usb_put_file (Camera *camera, CameraFile *file,
 		status = gp_port_usb_msg_write (camera->port, 0x04, 0x10, 0,
 						packet, 0x40);
 		if (status != 0x40) {
-			GP_DEBUG ("canon_put_file_usb: write 1 failed! (returned %i)\n", status);
+			GP_DEBUG ("canon_put_file_usb: write 1 failed! (returned %i)", status);
 			gp_context_error(context, _("File upload failed."));
 			if(newdata)
 				free(newdata);

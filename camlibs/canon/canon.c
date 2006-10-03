@@ -767,7 +767,7 @@ canon_int_get_battery (Camera *camera, int *pwr_status, int *pwr_source, GPConte
         if (pwr_source)
                 *pwr_source = msg[7];
 
-        GP_DEBUG ("canon_int_get_battery: Status: %02x (%s) / Source: %02x (%s)\n",
+        GP_DEBUG ("canon_int_get_battery: Status: %02x (%s) / Source: %02x (%s)",
                   msg[4], (msg[4]==CAMERA_POWER_OK?"OK":"BAD"),
                   msg[7], (msg[7]&CAMERA_MASK_BATTERY?"BATTERY":"AC") );
 
@@ -1169,7 +1169,7 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, unsigned int *l
                  * "Download Captured Image" command.
                  *
                  */
-                GP_DEBUG ( "canon_int_capture_preview: transfer mode is %x\n", transfermode );
+                GP_DEBUG ( "canon_int_capture_preview: transfer mode is %x", transfermode );
                 status = canon_int_do_control_command (camera,
                                                        CANON_USB_CONTROL_SET_TRANSFER_MODE,
                                                        0x04, transfermode);
@@ -1509,7 +1509,7 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
                  * "Download Captured Image" command.
                  *
                  */
-                GP_DEBUG ( "canon_int_capture_image: transfer mode is %x\n", transfermode );
+                GP_DEBUG ( "canon_int_capture_image: transfer mode is %x", transfermode );
                 status = canon_int_do_control_command (camera,
                                                        CANON_USB_CONTROL_SET_TRANSFER_MODE,
                                                        0x04, transfermode);
@@ -3103,7 +3103,7 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
                                                                           info.file.name, folder, gp_result_as_string (res));
                                                         }
                                                 }
-                                                GP_DEBUG ( "file \"%s\" has preview of MIME type \"%s\"\n",
+                                                GP_DEBUG ( "file \"%s\" has preview of MIME type \"%s\"",
                                                            info.file.name, info.preview.type );
                                         }
                                 }
@@ -3278,7 +3278,10 @@ canon_int_delete_file (Camera *camera, const char *name, const char *dir, GPCont
                         if ( msg == NULL )
                                 return GP_ERROR_OS_FAILURE;
                         else if ( le32atoh ( msg ) != 0 ) {
-                                GP_DEBUG ( "canon_int_delete_file: non-zero return code 0x%x from camera.\n   Possibly tried to delete a nonexistent file.", le32atoh ( msg ) );
+                                GP_DEBUG ( "canon_int_delete_file: "
+                                           "non-zero return code 0x%x from camera. "
+                                           "Possibly tried to delete a nonexistent file.", 
+                                           le32atoh ( msg ) );
                                 return GP_ERROR_FILE_NOT_FOUND;
                         }
 
@@ -3434,29 +3437,29 @@ canon_int_extract_jpeg_thumb (unsigned char *data, const unsigned int datalen,
                 GP_DEBUG ( "canon_int_extract_jpeg_thumb: this is from a CR2 file.");
                 dump_hex ( stderr, data, 32 );
                 ifd0_offset = exif_get_long ( data+4, EXIF_BYTE_ORDER_INTEL );
-                GP_DEBUG ( "canon_int_extract_jpeg_thumb: IFD 0 at 0x%x\n", ifd0_offset );
+                GP_DEBUG ( "canon_int_extract_jpeg_thumb: IFD 0 at 0x%x", ifd0_offset );
                 n_tags = exif_get_short ( data+ifd0_offset, EXIF_BYTE_ORDER_INTEL );
-                GP_DEBUG ( "canon_int_extract_jpeg_thumb: %d tags in IFD 0\n", n_tags );
+                GP_DEBUG ( "canon_int_extract_jpeg_thumb: %d tags in IFD 0", n_tags );
                 ifd1_offset = exif_get_long ( data + ifd0_offset + 2 + 12*n_tags, EXIF_BYTE_ORDER_INTEL );
-                GP_DEBUG ( "canon_int_extract_jpeg_thumb: IFD 1 at 0x%x\n", ifd1_offset );
+                GP_DEBUG ( "canon_int_extract_jpeg_thumb: IFD 1 at 0x%x", ifd1_offset );
                 n_tags = exif_get_short ( data+ifd1_offset, EXIF_BYTE_ORDER_INTEL );
-                GP_DEBUG ( "canon_int_extract_jpeg_thumb: %d tags in IFD 1\n", n_tags );
+                GP_DEBUG ( "canon_int_extract_jpeg_thumb: %d tags in IFD 1", n_tags );
 
                 /* Now go through IFD 1 and find the two tags we need. */
                 for ( i=0; i<n_tags; i++ ) {
                         unsigned char *entry = data+ifd1_offset + 2 + 12*i;
                         short tag = exif_get_short ( entry, EXIF_BYTE_ORDER_INTEL );
-                        GP_DEBUG ( "canon_int_extract_jpeg_thumb: tag %d is %s\n",
+                        GP_DEBUG ( "canon_int_extract_jpeg_thumb: tag %d is %s",
                                    i, exif_tag_get_name ( tag ) );
                         switch ( tag ) {
                         case EXIF_TAG_JPEG_INTERCHANGE_FORMAT_LENGTH:
                                 jpeg_size = exif_get_long ( entry + 8, EXIF_BYTE_ORDER_INTEL );
-                                GP_DEBUG ( "canon_int_extract_jpeg_thumb: JPEG length is %d\n",
+                                GP_DEBUG ( "canon_int_extract_jpeg_thumb: JPEG length is %d",
                                            jpeg_size );
                                 break;
                         case EXIF_TAG_JPEG_INTERCHANGE_FORMAT:
                                 jpeg_offset = exif_get_long ( entry + 8, EXIF_BYTE_ORDER_INTEL );
-                                GP_DEBUG ( "canon_int_extract_jpeg_thumb: JPEG offset is 0x%x\n",
+                                GP_DEBUG ( "canon_int_extract_jpeg_thumb: JPEG offset is 0x%x",
                                            jpeg_offset );
                                 break;
                         default:
@@ -3464,13 +3467,14 @@ canon_int_extract_jpeg_thumb (unsigned char *data, const unsigned int datalen,
                         }
                 }
                 if ( jpeg_size < 0 || jpeg_offset < 0 ) {
-                        GP_DEBUG ( "canon_int_extract_jpeg_thumb: missing a required tag: length=%d, offset=%d\n",
+                        GP_DEBUG ( "canon_int_extract_jpeg_thumb: "
+                                   "missing a required tag: length=%d, offset=%d",
                                    jpeg_size, jpeg_offset );
                         return GP_ERROR_CORRUPTED_DATA;
                 }
 
                 /* Now we should have enough to extract the thumbnail. */
-                GP_DEBUG ( "canon_int_extract_jpeg_thumb: %d bytes of JPEG image\n",
+                GP_DEBUG ( "canon_int_extract_jpeg_thumb: %d bytes of JPEG image",
                             jpeg_size );
                 *retdatalen = jpeg_size;
                 *retdata = malloc ( *retdatalen );
