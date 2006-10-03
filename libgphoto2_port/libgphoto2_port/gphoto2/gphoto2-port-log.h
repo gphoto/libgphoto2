@@ -80,14 +80,18 @@ void gp_log_data (const char *domain, const char *data, unsigned int size);
  * mymod before using #GP_DEBUG().
  **/
 
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+#ifdef GP_DEBUG
+/* GP_DEBUG has already been defined.
+ * That case has only one purpose: Cheating for the -pedantic C++ check.
+ */
+#elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
 #define GP_DEBUG(...) \
         gp_log(GP_LOG_DEBUG, GP_MODULE "/" __FILE__, __VA_ARGS__)
 #elif defined(__GNUC__)
 #define GP_DEBUG(msg, params...) \
         gp_log(GP_LOG_DEBUG, GP_MODULE "/" __FILE__, msg, ##params)
 #else
-# ifdef __GCC__
+# ifdef __GNUC__
 #  warning Disabling GP_DEBUG because variadic macros are not allowed
 # endif
 #define GP_DEBUG (void) 

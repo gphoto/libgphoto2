@@ -1,3 +1,12 @@
+/* Defining GP_DEBUG before including gphoto2-port-log.h prevents the 
+ * latter from defining GP_DEBUG as a variadic macro. Variadic macros
+ * have not been defined in ANSI C, so we are cheating here.
+ *
+ * This should be the only problem we cause, and thus work around it
+ * here.
+ */
+#define GP_DEBUG
+
 #include <gphoto2/gphoto2.h>
 #include <gphoto2/gphoto2-camera.h>
 #include <gphoto2/gphoto2-list.h>
