@@ -8,6 +8,13 @@
 #include <gphoto2/gphoto2-context.h>
 #include <gphoto2/gphoto2-abilities-list.h>
 
+#include <gphoto2/gphoto2-port.h>
+#include <gphoto2/gphoto2-port-info-list.h>
+#include <gphoto2/gphoto2-port-log.h>
+#include <gphoto2/gphoto2-port-portability.h>
+#include <gphoto2/gphoto2-port-result.h>
+#include <gphoto2/gphoto2-port-version.h>
+
 int main()
 {
   return 0;
