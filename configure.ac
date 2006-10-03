@@ -65,6 +65,7 @@ dnl ---------------------------------------------------------------------------
 
 AC_PROG_CC
 AC_PROG_CPP
+AC_PROG_CXX
 AC_PROG_INSTALL
 
 dnl Something with the sequences is not quite alright yet.
@@ -509,7 +510,7 @@ AM_CONDITIONAL(HAVE_LIBUSB,test -n "${LIBUSB_CONFIG}")
 dnl ---------------------------------------------------------------------------
 dnl Turn on all warnings when using gcc
 dnl ---------------------------------------------------------------------------
-if test "$GCC" = "yes"; then
+if test "x$GCC" = "xyes"; then
 	AM_CPPFLAGS="$AM_CPPFLAGS -Wall"
 	AM_CPPFLAGS="$AM_CPPFLAGS -Wmissing-declarations -Wmissing-prototypes"
 	AM_LDFLAGS="$AM_LDFLAGS -Wall"
@@ -517,6 +518,10 @@ if test "$GCC" = "yes"; then
 	AM_CPPFLAGS="$AM_CPPFLAGS -g"
 	AM_LDFLAGS="$AM_LDFLAGS -g"
 fi
+AM_CONDITIONAL([HAVE_GCC], [test "x$GCC" = "xyes"])
+
+dnl FIXME: Is this accurate?
+AM_CONDITIONAL([HAVE_CXX], [test -n "$CXX" && test "X$CXX" != "Xno"])
 
 AC_SUBST([AM_CPPFLAGS])
 AC_SUBST([AM_LDFLAGS])

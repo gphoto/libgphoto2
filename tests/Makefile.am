@@ -2,8 +2,11 @@ SUBDIRS = ddb
 
 check_PROGRAMS = \
 	test-camera-list \
-	test-pedantic-c \
-	test-pedantic-cxx
+	test-pedantic-c
+
+if HAVE_CXX
+check_PROGRAMS += test-pedantic-cxx
+endif
 
 check_SCRIPTS = \
 	check-camera-list.sh
