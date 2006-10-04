@@ -135,17 +135,23 @@ gp_abilities_list_free (CameraAbilitiesList *list)
 }
 
 
+typedef struct {
+	CameraList *list;
+	int result;
+} foreach_data_t;
+
+
 static int
 foreach_func (const char *filename, lt_ptr data)
 {
-	CameraList *list = data;
-	int result;
+	foreach_data_t *fd = data;
+	CameraList *list = fd->list;
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
 		"Found '%s'.", filename);
-	result = gp_list_append (list, filename, NULL);
+	fd->result = gp_list_append (list, filename, NULL);
 
-	return ((result == GP_OK)?0:1);
+	return ((fd->result == GP_OK)?0:1);
 }
 
 
@@ -161,7 +167,6 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 	const char *filename;
 	CameraList *flist;
 	int count;
-	int ret;
 	lt_dlhandle lh;
 
 	CHECK_NULL (list && dir);
@@ -170,17 +175,22 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 		"Using ltdl to load camera libraries from '%s'...", dir);
 	CHECK_RESULT (gp_list_new (&flist));
 	CHECK_RESULT (gp_list_reset (flist));
-	lt_dlinit ();
-	lt_dladdsearchdir (dir);
-	ret = lt_dlforeachfile (dir, foreach_func, flist);
-	lt_dlexit ();
-	if (ret != 0) {
-		gp_log (GP_LOG_ERROR, "gp-abilities-list", 
-			"Internal error looking for camlibs (%d)", ret);
-		gp_context_error (context,
-				  _("Internal error looking for camlibs. "
-				    "(path names too long?)"));
-		return (GP_ERROR);
+	if (1) { /* a new block in which we can define a temporary variable */
+		int ret;
+		foreach_data_t foreach_data = { flist, GP_OK };
+		lt_dlinit ();
+		lt_dladdsearchdir (dir);
+		ret = lt_dlforeachfile (dir, foreach_func, &foreach_data);
+		lt_dlexit ();
+		if (ret != 0) {
+			gp_list_free (flist);
+			gp_log (GP_LOG_ERROR, "gp-abilities-list", 
+				"Internal error looking for camlibs (%d)", ret);
+			gp_context_error (context,
+					  _("Internal error looking for camlibs. "
+					    "(path names too long?)"));
+			return (foreach_data.result!=GP_OK)?foreach_data.result:GP_ERROR;
+		}
 	}
 	CHECK_RESULT (count = gp_list_count (flist));
 	gp_log (GP_LOG_DEBUG, "gp-abilities-list", "Found %i "
