@@ -152,7 +152,7 @@ gp_list_append (CameraList *list, const char *name, const char *value)
 	}
 
 	if (name) {
-		/* check that the value fits */
+		/* check that the 'name' value fits */
 		const size_t buf_len = sizeof (list->entry[list->count].name);
 		const size_t str_len = strlen (name);
 		if (str_len >= buf_len) {
@@ -160,14 +160,14 @@ gp_list_append (CameraList *list, const char *name, const char *value)
 				"gp_list_append: "
 				"'name' value too long (%d >= %d)",
 				str_len, buf_len);
-			return (GP_ERROR_NO_MEMORY);		
+			return (GP_ERROR_FIXED_LIMIT_EXCEEDED);
 		}
 		/* set the value */
 		strncpy (list->entry[list->count].name, name, buf_len);
 		list->entry[list->count].name[buf_len-1] = '\0';
 	}
 	if (value) {
-		/* check that the value fits */
+		/* check that the 'value' value fits */
 		const size_t buf_len = sizeof (list->entry[list->count].value);
 		const size_t str_len = strlen (value);
 		if (str_len >= buf_len) {
@@ -175,7 +175,7 @@ gp_list_append (CameraList *list, const char *name, const char *value)
 				"gp_list_append: "
 				"'value' value too long (%d >= %d)",
 				str_len, buf_len);
-			return (GP_ERROR_NO_MEMORY);		
+			return (GP_ERROR_FIXED_LIMIT_EXCEEDED);
 		}
 		/* set the value */
 		strncpy (list->entry[list->count].value, value, buf_len);
@@ -316,7 +316,7 @@ gp_list_set_value (CameraList *list, int index, const char *value)
 				"gp_list_append: "
 				"'value' value too long (%d >= %d)",
 				str_len, buf_len);
-			return (GP_ERROR_NO_MEMORY);		
+			return (GP_ERROR_FIXED_LIMIT_EXCEEDED);
 		}
 	} while (0);
 
@@ -352,7 +352,7 @@ gp_list_set_name (CameraList *list, int index, const char *name)
 				"gp_list_append: "
 				"'name' value too long (%d >= %d)",
 				str_len, buf_len);
-			return (GP_ERROR_NO_MEMORY);		
+			return (GP_ERROR_FIXED_LIMIT_EXCEEDED);
 		}
 	} while (0);
 
