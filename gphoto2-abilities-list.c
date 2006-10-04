@@ -22,8 +22,6 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#define _GPHOTO2_INTERNAL_CODE
-
 #include "config.h"
 #include <gphoto2/gphoto2-abilities-list.h>
 
