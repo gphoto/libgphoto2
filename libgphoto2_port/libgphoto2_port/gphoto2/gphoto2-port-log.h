@@ -106,16 +106,11 @@ void gp_log_data (const char *domain, const char *data, unsigned int size);
 #define gp_logv(level, domain, format, args) /**/
 #define gp_log_data(domain, data, size) /**/
 
-#ifdef __GNUC__
-#define GP_LOG(level, msg, params...) /**/
-#define GP_DEBUG(msg, params...) /**/
-
-#elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
-#define GP_LOG(level, ...) /**/
-#define GP_DEBUG(...) /**/
-
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+#define GP_DEBUG(...) /* no-op */
+#elif defined(__GNUC__)
+#define GP_DEBUG(msg, params...) /* no-op */
 #else
-#define GP_LOG (void) 
 #define GP_DEBUG (void)
 #endif
 
