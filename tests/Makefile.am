@@ -54,6 +54,9 @@ PEDANTIC_CXXFLAGS =
 endif
 
 test_pedantic_c_SOURCES = test-pedantic-compilation.c
+test_pedantic_c_CPPFLAGS = \
+	$(AM_CPPFLAGS) $(CPPFLAGS) \
+	-U _GPHOTO2_INTERNAL_CODE
 test_pedantic_c_CFLAGS = $(PEDANTIC_CFLAGS) $(AM_CFLAGS) $(CFLAGS)
 test_pedantic_c_LDADD = \
 	$(top_builddir)/libgphoto2/libgphoto2.la \
@@ -62,6 +65,9 @@ test_pedantic_c_LDADD = \
 	$(INTLLIBS)
 
 test_pedantic_cxx_SOURCES = test-pedantic-compilation.cxx
+test_pedantic_cxx_CPPFLAGS = \
+	$(AM_CPPFLAGS) $(CPPFLAGS) \
+	-U _GPHOTO2_INTERNAL_CODE
 test_pedantic_cxx_CXXFLAGS = $(PEDANTIC_CXXFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 test_pedantic_cxx_LDADD = \
 	$(top_builddir)/libgphoto2/libgphoto2.la \

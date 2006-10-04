@@ -23,8 +23,6 @@
 #ifndef __DDB_TXT_H__
 #define __DDB_TXT_H__
 
-#define _GPHOTO2_INTERNAL_CODE
-
 #include <stdio.h>
 #include <gphoto2/gphoto2-abilities-list.h>
 

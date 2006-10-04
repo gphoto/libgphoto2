@@ -24,7 +24,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define _GPHOTO2_INTERNAL_CODE
 #include <gphoto2/gphoto2-abilities-list.h>
 
 #include "ddb-common.h"

@@ -21,9 +21,6 @@
  */
 
 
-#define _GPHOTO2_INTERNAL_CODE
-
-
 #define GP_USB_HOTPLUG_SCRIPT "usbcam"
 
 /* Not sure whether this is the best possible name */

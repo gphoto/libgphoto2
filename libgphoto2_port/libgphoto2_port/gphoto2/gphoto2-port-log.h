@@ -80,11 +80,8 @@ void gp_log_data (const char *domain, const char *data, unsigned int size);
  * mymod before using #GP_DEBUG().
  **/
 
-#ifdef GP_DEBUG
-/* GP_DEBUG has already been defined.
- * That case has only one purpose: Cheating for the -pedantic C++ check.
- */
-#elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+#ifdef _GPHOTO2_INTERNAL_CODE
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
 #define GP_DEBUG(...) \
         gp_log(GP_LOG_DEBUG, GP_MODULE "/" __FILE__, __VA_ARGS__)
 #elif defined(__GNUC__)
@@ -96,6 +93,7 @@ void gp_log_data (const char *domain, const char *data, unsigned int size);
 # endif
 #define GP_DEBUG (void) 
 #endif
+#endif /* _GPHOTO2_INTERNAL_CODE */
 
 #else /* DISABLE_DEBUGGING */
 
@@ -106,6 +104,7 @@ void gp_log_data (const char *domain, const char *data, unsigned int size);
 #define gp_logv(level, domain, format, args) /**/
 #define gp_log_data(domain, data, size) /**/
 
+#ifdef _GPHOTO2_INTERNAL_CODE
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
 #define GP_DEBUG(...) /* no-op */
 #elif defined(__GNUC__)
@@ -113,6 +112,7 @@ void gp_log_data (const char *domain, const char *data, unsigned int size);
 #else
 #define GP_DEBUG (void)
 #endif
+#endif /* _GPHOTO2_INTERNAL_CODE */
 
 #endif /* DISABLE_DEBUGGING */
 

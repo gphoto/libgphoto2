@@ -520,6 +520,8 @@ if test "x$GCC" = "xyes"; then
 fi
 AM_CONDITIONAL([HAVE_GCC], [test "x$GCC" = "xyes"])
 
+AM_CPPFLAGS="$AM_CPPFLAGS -D_GPHOTO2_INTERNAL_CODE"
+
 dnl FIXME: Is this accurate?
 AM_CONDITIONAL([HAVE_CXX], [test -n "$CXX" && test "X$CXX" != "Xno"])
 
