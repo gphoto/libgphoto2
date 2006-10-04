@@ -3,7 +3,7 @@
 # Lists all cameras found by libgphoto2.
 # Fails if no cameras are found.
 
-set -ex
+set -e
 
 debug=:
 #debug=false
@@ -36,4 +36,5 @@ if "$debug"; then
     echo "#####################"
 fi
 
+set -x
 ./test-camera-list
