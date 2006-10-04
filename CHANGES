@@ -28,6 +28,14 @@ Bindings:
    * Mono/.NET bindings are installed if Mono is found
    * Partial Java bindings
 
+libgphoto2 API:
+   * Compiles with -pedantic in gcc's c99 and c++98 modes.
+   * Marked a few definitions as being internal to the gphoto project.
+
+libgphoto2:
+   * Improved error checking and propagation.
+   * New error code for "fixed limit exceeded" (exceptions would be nice)
+
 ----------------------------------------------------------------------------
 
 libgphoto2 2.2.1
