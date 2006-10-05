@@ -23,6 +23,8 @@
 /* config.c */
 int camera_get_config (Camera *camera, CameraWidget **window, GPContext *context);
 int camera_set_config (Camera *camera, CameraWidget *window, GPContext *context);
+int camera_prepare_capture (Camera *camera, GPContext *context);
+int camera_unprepare_capture (Camera *camera, GPContext *context);
 
 /* library.c */
 void report_result (GPContext *context, short result, short vendor);

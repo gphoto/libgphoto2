@@ -1375,15 +1375,29 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		_("Sorry, your Canon camera does not support Canon Capture initiation"));
 		return GP_ERROR_NOT_SUPPORTED;
 	}
+
+	if (!ptp_property_issupported(params, PTP_DPC_CANON_FlashMode)) {
+		/* did not call --set-config capture=on, do it for user */
+		ret = camera_prepare_capture (camera, context);
+		if (ret != GP_OK)
+			return ret;
+		if (!ptp_property_issupported(params, PTP_DPC_CANON_FlashMode)) {
+			gp_context_error (context,
+			_("Sorry, initializing your camera did not work. Please report this."));
+			return GP_ERROR_NOT_SUPPORTED;
+		}
+	}
+
 	propval.u16=3; /* 3 */
 	ret = ptp_setdevicepropvalue(params, PTP_DPC_CANON_D029, &propval, PTP_DTC_UINT16);
 	if (ret != PTP_RC_OK)
 		gp_log (GP_LOG_DEBUG, "ptp", "setdevicepropvalue 0xd029 failed, %d\n", ret);
 
+#if 0
 	/* FIXME: For now, to avoid flash during debug */
 	propval.u8 = 0;
 	ret = ptp_setdevicepropvalue(params, PTP_DPC_CANON_FlashMode, &propval, PTP_DTC_UINT8);
-
+#endif
 	ret = ptp_canon_initiatecaptureinmemory (params);
 	if (ret != PTP_RC_OK) {
 		gp_context_error (context, _("Canon Capture failed: %d"), ret);

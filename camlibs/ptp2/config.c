@@ -55,7 +55,7 @@
 
 #define CPR(context,result) {short r=(result); if (r!=PTP_RC_OK) {report_result ((context), r, params->deviceinfo.VendorExtensionID); return (translate_ptp_result (r));}}
 
-static int
+int
 camera_prepare_capture (Camera *camera, GPContext *context)
 {
 	PTPUSBEventContainer	event;
@@ -149,7 +149,7 @@ camera_prepare_capture (Camera *camera, GPContext *context)
 	return GP_OK;
 }
 
-static int
+int
 camera_unprepare_capture (Camera *camera, GPContext *context)
 {
 	int ret;
