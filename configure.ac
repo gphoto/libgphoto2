@@ -460,7 +460,7 @@ dnl --------------------------------------------------------------------
 dnl guess directory to install *.pc into
 dnl --------------------------------------------------------------------
 pkgconfigdir='${libdir}/pkgconfig'
-AC_SUBST(pkgconfigdir)
+AC_SUBST([pkgconfigdir])
 
 
 dnl ---------------------------------------------------------------------------

@@ -348,6 +348,13 @@ AC_SUBST([iolibdir],["\$(libdir)/\$(PACKAGE_TARNAME)/\$(VERSION)"])
 AM_CPPFLAGS="$AM_CPPFLAGS -DIOLIBS=\\\"${iolibdir}\\\""
 
 
+dnl --------------------------------------------------------------------
+dnl guess directory to install *.pc into
+dnl --------------------------------------------------------------------
+pkgconfigdir='${libdir}/pkgconfig'
+AC_SUBST([pkgconfigdir])
+
+
 dnl ----------------------------------------------------------------------
 dnl GNU regex?
 dnl ----------------------------------------------------------------------
