@@ -2154,6 +2154,9 @@ _get_wifi_profiles_menu (CONFIG_MENU_GET_ARGS)
 	gp_widget_new (GP_WIDGET_SECTION, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
 
+	if (camera->pl->params.deviceinfo.VendorExtensionID != PTP_VENDOR_NIKON)
+		return (GP_ERROR_NOT_SUPPORTED);
+
 	for (submenuno = 0; wifi_profiles_menu[submenuno].name ; submenuno++ ) {
 		struct submenu *cursub = wifi_profiles_menu+submenuno;
 
