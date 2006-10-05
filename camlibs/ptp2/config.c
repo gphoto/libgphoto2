@@ -1710,7 +1710,10 @@ _put_nikon_list_wifi_profiles (CONFIG_PUT_ARGS)
 	char* endptr;
 	long val;
 	int deleted = 0;
-	
+
+	if (camera->pl->params.deviceinfo.VendorExtensionID != PTP_VENDOR_NIKON)
+		return (GP_ERROR_NOT_SUPPORTED);
+
 	for (i = 0; i < gp_widget_count_children(widget); i++) {
 		gp_widget_get_child(widget, i, &child);
 		gp_widget_get_child_by_name(child, "delete", &child2);
@@ -1746,10 +1749,12 @@ _get_nikon_list_wifi_profiles (CONFIG_GET_ARGS)
 	int i;
 	PTPParams *params = &(camera->pl->params);
 
-	ret = ptp_nikon_getwifiprofilelist(params);
-	if (ret != PTP_RC_OK) {
+	if (params->deviceinfo.VendorExtensionID != PTP_VENDOR_NIKON)
 		return (GP_ERROR_NOT_SUPPORTED);
-	}
+
+	ret = ptp_nikon_getwifiprofilelist(params);
+	if (ret != PTP_RC_OK)
+		return (GP_ERROR_NOT_SUPPORTED);
 
 	gp_widget_new (GP_WIDGET_TEXT, "Version", &child);
 	snprintf(buffer, 4096, _("%d"), params->wifi_profiles_version);

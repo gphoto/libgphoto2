@@ -1,9 +1,13 @@
-2006-08-30  Marcus Meissner  <marcus@jet.franken.de>
+2006-10-05  Marcus Meissner  <marcus@jet.franken.de>
+
+	* config.c: Do not call Nikon commands on Canons.
+
+2006-09-30  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* library.c: If PTP is busy, retry Nikon Capture
 	  command.
 
-2006-08-29  Marcus Meissner  <marcus@jet.franken.de>
+2006-09-29  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* library.c: Added Kodak Z612 as reported.
 
