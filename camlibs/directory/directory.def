@@ -1,8 +1,0 @@
-LIBRARY GPDIRECT
-EXPORTS
-
-; From directory.o
-  "extension"
-  "camera_id"
-  "camera_abilities"
-  "camera_init"
