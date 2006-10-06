@@ -4,3 +4,4 @@
 #
 # However, we are only shipping those bindings which actually work.
 SUBDIRS = csharp
+# SUBDIRS = @BINDING_SUBDIRS@
