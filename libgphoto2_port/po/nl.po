@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_2.1.6-8_libgphoto2_port-0_nl\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-09-18 20:40-0400\n"
+"POT-Creation-Date: 2006-10-04 19:42+0200\n"
 "PO-Revision-Date: 2006-06-20 20:46+0100\n"
 "Last-Translator: Kurt De Bree <kdebree(AT)telenet(DOT)be>\n"
 "Language-Team: Dutch <debian-l10n-dutch@lists.debian.org>\n"
@@ -28,89 +28,89 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.1\n"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:196
+#: libgphoto2_port/gphoto2-port-info-list.c:194
 #, c-format
 msgid "Called for filename '%s'."
 msgstr "Gevraagde bestandsnaam '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:201
+#: libgphoto2_port/gphoto2-port-info-list.c:199
 #, c-format
 msgid "Could not load '%s': '%s'."
 msgstr "Kon '%s' niet laden: '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:209
+#: libgphoto2_port/gphoto2-port-info-list.c:207
 #, c-format
 msgid "Could not find some functions in '%s': '%s'."
 msgstr "Kon sommige functies niet vinden in '%s': '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:221
+#: libgphoto2_port/gphoto2-port-info-list.c:219
 #, c-format
 msgid "'%s' already loaded"
 msgstr "'%s' reeds geladen"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:230
+#: libgphoto2_port/gphoto2-port-info-list.c:228
 #, c-format
 msgid "Could not load port driver list: '%s'."
 msgstr "Kon poortstuurprogrammalijst niet laden: '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:237
+#: libgphoto2_port/gphoto2-port-info-list.c:235
 #, c-format
 msgid "Loaded '%s' ('%s') from '%s'."
 msgstr "'%s' ('%s') geladen van '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:266
+#: libgphoto2_port/gphoto2-port-info-list.c:264
 #, c-format
 msgid "Using ltdl to load io-drivers from '%s'..."
 msgstr "Bezig met io-stuurprogramma's te laden van '%s' met ltdl..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:292
+#: libgphoto2_port/gphoto2-port-info-list.c:290
 #, c-format
 msgid "Counting entries (%i available)..."
 msgstr "Bezig met items te tellen (%i beschikbaar)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:301
+#: libgphoto2_port/gphoto2-port-info-list.c:299
 #, c-format
 msgid "%i regular entries available."
 msgstr "%i reguliere items beschikbaar."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:330
+#: libgphoto2_port/gphoto2-port-info-list.c:328
 #, c-format
 msgid "Looking for path '%s' (%i entries available)..."
 msgstr "Bezig met zoeken naar pad '%s' (%i items beschikbaar)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:342
+#: libgphoto2_port/gphoto2-port-info-list.c:340
 #, c-format
 msgid "Starting regex search for '%s'..."
 msgstr "Start met zoeken volgens regex voor '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:350
+#: libgphoto2_port/gphoto2-port-info-list.c:348
 #, c-format
 msgid "Trying '%s'..."
 msgstr "Probeer '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:371
+#: libgphoto2_port/gphoto2-port-info-list.c:369
 msgid "regcomp failed"
 msgstr "regcomp mislukt"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:382
+#: libgphoto2_port/gphoto2-port-info-list.c:380
 #, c-format
 msgid "re_match failed (%i)"
 msgstr "re_match mislukt (%i)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:390
+#: libgphoto2_port/gphoto2-port-info-list.c:388
 msgid "regexec failed"
 msgstr "regexec mislukt"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:396
+#: libgphoto2_port/gphoto2-port-info-list.c:394
 msgid "Generic Port"
 msgstr "Generische poort"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:420
+#: libgphoto2_port/gphoto2-port-info-list.c:418
 #, c-format
 msgid "Looking up entry '%s'..."
 msgstr "Bezig met zoeken van item '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:450
+#: libgphoto2_port/gphoto2-port-info-list.c:448
 #, c-format
 msgid "Getting info of entry %i (%i available)..."
 msgstr "Bezig met ontvangen van info over %i (%i beschikbaar)..."
@@ -136,71 +136,75 @@ msgid "Unsupported operation"
 msgstr "Niet-ondersteunde actie"
 
 #: libgphoto2_port/gphoto2-port-result.c:68
+msgid "Fixed limit exceeded"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-result.c:70
 msgid "Timeout reading from or writing to the port"
 msgstr "Onderbreking bij het lezen van of schrijven naar de poort"
 
-#: libgphoto2_port/gphoto2-port-result.c:70
+#: libgphoto2_port/gphoto2-port-result.c:72
 msgid "Serial port not supported"
 msgstr "Seriële poort wordt niet ondersteund"
 
-#: libgphoto2_port/gphoto2-port-result.c:72
+#: libgphoto2_port/gphoto2-port-result.c:74
 msgid "USB port not supported"
 msgstr "USB-poort wordt niet ondersteund"
 
-#: libgphoto2_port/gphoto2-port-result.c:74
+#: libgphoto2_port/gphoto2-port-result.c:76
 msgid "Unknown port"
 msgstr "Onbekende poort"
 
-#: libgphoto2_port/gphoto2-port-result.c:76
+#: libgphoto2_port/gphoto2-port-result.c:78
 msgid "Out of memory"
 msgstr "Onvoldoende geheugen"
 
-#: libgphoto2_port/gphoto2-port-result.c:78
+#: libgphoto2_port/gphoto2-port-result.c:80
 msgid "Error loading a library"
 msgstr "Fout bij het laden van een bibliotheek"
 
-#: libgphoto2_port/gphoto2-port-result.c:80
+#: libgphoto2_port/gphoto2-port-result.c:82
 msgid "Error initializing the port"
 msgstr "Fout bij het initialiseren van de poort"
 
-#: libgphoto2_port/gphoto2-port-result.c:82
+#: libgphoto2_port/gphoto2-port-result.c:84
 msgid "Error reading from the port"
 msgstr "Fout bij het lezen van de poort"
 
-#: libgphoto2_port/gphoto2-port-result.c:84
+#: libgphoto2_port/gphoto2-port-result.c:86
 msgid "Error writing to the port"
 msgstr "Fout bij het schrijven naar de poort"
 
-#: libgphoto2_port/gphoto2-port-result.c:86
+#: libgphoto2_port/gphoto2-port-result.c:88
 msgid "Error updating the port settings"
 msgstr "Fout tijdens het bijwerken van de poortinstellingen"
 
-#: libgphoto2_port/gphoto2-port-result.c:88
+#: libgphoto2_port/gphoto2-port-result.c:90
 msgid "Error setting the serial port speed"
 msgstr "Fout tijdens het instellen van de poortsnelheid"
 
-#: libgphoto2_port/gphoto2-port-result.c:90
+#: libgphoto2_port/gphoto2-port-result.c:92
 msgid "Error clearing a halt condition on the USB port"
 msgstr ""
 "Foutmelding tijdens het verwijderen van de 'halt'-conditie op de USB-poort"
 
-#: libgphoto2_port/gphoto2-port-result.c:92
+#: libgphoto2_port/gphoto2-port-result.c:94
 msgid "Could not find the requested device on the USB port"
 msgstr "Kon het gevraagde toestel niet vinden op de USB-poort"
 
-#: libgphoto2_port/gphoto2-port-result.c:94
+#: libgphoto2_port/gphoto2-port-result.c:96
 msgid "Could not claim the USB device"
 msgstr "Kon het USB-toestel niet claimen"
 
-#: libgphoto2_port/gphoto2-port-result.c:96
+#: libgphoto2_port/gphoto2-port-result.c:98
 msgid "Could not lock the device"
 msgstr "Kon het toestel niet vergrendelen"
 
-#: libgphoto2_port/gphoto2-port-result.c:98
+#: libgphoto2_port/gphoto2-port-result.c:100
 msgid "libhal error"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:100
+#: libgphoto2_port/gphoto2-port-result.c:102
 msgid "Unknown error"
 msgstr "Ongekende fout"
 

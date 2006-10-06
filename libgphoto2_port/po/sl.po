@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gphoto\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-09-18 20:40-0400\n"
+"POT-Creation-Date: 2006-10-04 19:42+0200\n"
 "PO-Revision-Date: 2002-01-04 19:28+0100\n"
 "Last-Translator: Andraz Tori <andraz.tori1@guest.arnes.si>\n"
 "Language-Team: Slovenian <translation-team-sl@lists.sourceforge.net>\n"
@@ -14,91 +14,91 @@ msgstr ""
 "Content-Type: text/plain; charset=iso-8859-2\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:196
+#: libgphoto2_port/gphoto2-port-info-list.c:194
 #, fuzzy, c-format
 msgid "Called for filename '%s'."
 msgstr "Napaka: nisem uspel odpreti %s"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:201
+#: libgphoto2_port/gphoto2-port-info-list.c:199
 #, fuzzy, c-format
 msgid "Could not load '%s': '%s'."
 msgstr ""
 "Ne morem odpreti:\n"
 " %s"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:209
+#: libgphoto2_port/gphoto2-port-info-list.c:207
 #, c-format
 msgid "Could not find some functions in '%s': '%s'."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:221
+#: libgphoto2_port/gphoto2-port-info-list.c:219
 #, c-format
 msgid "'%s' already loaded"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:230
+#: libgphoto2_port/gphoto2-port-info-list.c:228
 #, fuzzy, c-format
 msgid "Could not load port driver list: '%s'."
 msgstr "Ne morem dobiti vzorca"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:237
+#: libgphoto2_port/gphoto2-port-info-list.c:235
 #, c-format
 msgid "Loaded '%s' ('%s') from '%s'."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:266
+#: libgphoto2_port/gphoto2-port-info-list.c:264
 #, fuzzy, c-format
 msgid "Using ltdl to load io-drivers from '%s'..."
 msgstr "Ne morem dobiti vzorca"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:292
+#: libgphoto2_port/gphoto2-port-info-list.c:290
 #, c-format
 msgid "Counting entries (%i available)..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:301
+#: libgphoto2_port/gphoto2-port-info-list.c:299
 #, c-format
 msgid "%i regular entries available."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:330
+#: libgphoto2_port/gphoto2-port-info-list.c:328
 #, c-format
 msgid "Looking for path '%s' (%i entries available)..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:342
+#: libgphoto2_port/gphoto2-port-info-list.c:340
 #, c-format
 msgid "Starting regex search for '%s'..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:350
+#: libgphoto2_port/gphoto2-port-info-list.c:348
 #, c-format
 msgid "Trying '%s'..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:371
+#: libgphoto2_port/gphoto2-port-info-list.c:369
 msgid "regcomp failed"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:382
+#: libgphoto2_port/gphoto2-port-info-list.c:380
 #, c-format
 msgid "re_match failed (%i)"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:390
+#: libgphoto2_port/gphoto2-port-info-list.c:388
 msgid "regexec failed"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:396
+#: libgphoto2_port/gphoto2-port-info-list.c:394
 msgid "Generic Port"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:420
+#: libgphoto2_port/gphoto2-port-info-list.c:418
 #, c-format
 msgid "Looking up entry '%s'..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:450
+#: libgphoto2_port/gphoto2-port-info-list.c:448
 #, c-format
 msgid "Getting info of entry %i (%i available)..."
 msgstr ""
@@ -124,72 +124,76 @@ msgid "Unsupported operation"
 msgstr ""
 
 #: libgphoto2_port/gphoto2-port-result.c:68
-msgid "Timeout reading from or writing to the port"
+msgid "Fixed limit exceeded"
 msgstr ""
 
 #: libgphoto2_port/gphoto2-port-result.c:70
-msgid "Serial port not supported"
+msgid "Timeout reading from or writing to the port"
 msgstr ""
 
 #: libgphoto2_port/gphoto2-port-result.c:72
-msgid "USB port not supported"
+msgid "Serial port not supported"
 msgstr ""
 
 #: libgphoto2_port/gphoto2-port-result.c:74
-msgid "Unknown port"
+msgid "USB port not supported"
 msgstr ""
 
 #: libgphoto2_port/gphoto2-port-result.c:76
-msgid "Out of memory"
+msgid "Unknown port"
 msgstr ""
 
 #: libgphoto2_port/gphoto2-port-result.c:78
-msgid "Error loading a library"
+msgid "Out of memory"
 msgstr ""
 
 #: libgphoto2_port/gphoto2-port-result.c:80
-msgid "Error initializing the port"
+msgid "Error loading a library"
 msgstr ""
 
 #: libgphoto2_port/gphoto2-port-result.c:82
-msgid "Error reading from the port"
+msgid "Error initializing the port"
 msgstr ""
 
 #: libgphoto2_port/gphoto2-port-result.c:84
-msgid "Error writing to the port"
+msgid "Error reading from the port"
 msgstr ""
 
 #: libgphoto2_port/gphoto2-port-result.c:86
-msgid "Error updating the port settings"
+msgid "Error writing to the port"
 msgstr ""
 
 #: libgphoto2_port/gphoto2-port-result.c:88
-msgid "Error setting the serial port speed"
+msgid "Error updating the port settings"
 msgstr ""
 
 #: libgphoto2_port/gphoto2-port-result.c:90
-msgid "Error clearing a halt condition on the USB port"
+msgid "Error setting the serial port speed"
 msgstr ""
 
 #: libgphoto2_port/gphoto2-port-result.c:92
-msgid "Could not find the requested device on the USB port"
+msgid "Error clearing a halt condition on the USB port"
 msgstr ""
 
 #: libgphoto2_port/gphoto2-port-result.c:94
+msgid "Could not find the requested device on the USB port"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-result.c:96
 #, fuzzy
 msgid "Could not claim the USB device"
 msgstr "Ne morem dobiti vzorca"
 
-#: libgphoto2_port/gphoto2-port-result.c:96
+#: libgphoto2_port/gphoto2-port-result.c:98
 #, fuzzy
 msgid "Could not lock the device"
 msgstr "Ne morem dobiti vzorca"
 
-#: libgphoto2_port/gphoto2-port-result.c:98
+#: libgphoto2_port/gphoto2-port-result.c:100
 msgid "libhal error"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:100
+#: libgphoto2_port/gphoto2-port-result.c:102
 msgid "Unknown error"
 msgstr ""
 

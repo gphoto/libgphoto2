@@ -1,4 +1,4 @@
-EXTRA_DIST = dimera.df makefile.os2 CREDITS Protocol.txt
+EXTRA_DIST = CREDITS Protocol.txt
 
 camlib_LTLIBRARIES = dimera3500.la
 

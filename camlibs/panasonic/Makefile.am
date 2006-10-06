@@ -1,5 +1,3 @@
-EXTRA_DIST = panasonic.df makefile.os2 dc1000.df dc1580.df
-
 SUBDIRS = coolshot l859
 
 camlib_LTLIBRARIES =\

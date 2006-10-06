@@ -2,7 +2,7 @@ SUBDIRS = localization
 
 camlib_LTLIBRARIES = konica.la konica_qm150.la
 
-EXTRA_DIST = EXPERTS konica.df makefile.os2 qm150.txt
+EXTRA_DIST = EXPERTS qm150.txt
 
 DEFS = \
 	-DLOCALIZATION=\"$(datadir)/$(PACKAGE)/$(VERSION)/konica\"

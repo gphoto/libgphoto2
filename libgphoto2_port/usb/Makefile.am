@@ -1,4 +1,4 @@
-EXTRA_DIST = makefile.os2 usb.df usb-os2.c
+EXTRA_DIST = usb-os2.c
 
 iolib_LTLIBRARIES = usb.la
 

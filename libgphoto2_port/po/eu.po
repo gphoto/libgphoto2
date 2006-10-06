@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-09-18 20:40-0400\n"
+"POT-Creation-Date: 2006-10-04 19:42+0200\n"
 "PO-Revision-Date: 2005-05-14 13:32+0200\n"
 "Last-Translator: Iñaki Larrañaga  <dooteo@euskalgnu.org>\n"
 "Language-Team:  <itzulpena@euskalgnu.org>\n"
@@ -16,89 +16,89 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.9.1\n"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:196
+#: libgphoto2_port/gphoto2-port-info-list.c:194
 #, fuzzy, c-format
 msgid "Called for filename '%s'."
 msgstr "Huts egin du '%s' irekitzean (%m)."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:201
+#: libgphoto2_port/gphoto2-port-info-list.c:199
 #, fuzzy, c-format
 msgid "Could not load '%s': '%s'."
 msgstr "Ezin izan da '%s' itxi (%m)."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:209
+#: libgphoto2_port/gphoto2-port-info-list.c:207
 #, fuzzy, c-format
 msgid "Could not find some functions in '%s': '%s'."
 msgstr "Ezin izan da '%s' hustu (%m)."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:221
+#: libgphoto2_port/gphoto2-port-info-list.c:219
 #, c-format
 msgid "'%s' already loaded"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:230
+#: libgphoto2_port/gphoto2-port-info-list.c:228
 #, fuzzy, c-format
 msgid "Could not load port driver list: '%s'."
 msgstr "Ezin izan da '%s' gailua blokeatu"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:237
+#: libgphoto2_port/gphoto2-port-info-list.c:235
 #, c-format
 msgid "Loaded '%s' ('%s') from '%s'."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:266
+#: libgphoto2_port/gphoto2-port-info-list.c:264
 #, c-format
 msgid "Using ltdl to load io-drivers from '%s'..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:292
+#: libgphoto2_port/gphoto2-port-info-list.c:290
 #, c-format
 msgid "Counting entries (%i available)..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:301
+#: libgphoto2_port/gphoto2-port-info-list.c:299
 #, c-format
 msgid "%i regular entries available."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:330
+#: libgphoto2_port/gphoto2-port-info-list.c:328
 #, c-format
 msgid "Looking for path '%s' (%i entries available)..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:342
+#: libgphoto2_port/gphoto2-port-info-list.c:340
 #, c-format
 msgid "Starting regex search for '%s'..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:350
+#: libgphoto2_port/gphoto2-port-info-list.c:348
 #, c-format
 msgid "Trying '%s'..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:371
+#: libgphoto2_port/gphoto2-port-info-list.c:369
 msgid "regcomp failed"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:382
+#: libgphoto2_port/gphoto2-port-info-list.c:380
 #, c-format
 msgid "re_match failed (%i)"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:390
+#: libgphoto2_port/gphoto2-port-info-list.c:388
 msgid "regexec failed"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:396
+#: libgphoto2_port/gphoto2-port-info-list.c:394
 msgid "Generic Port"
 msgstr "Ataka generikoa"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:420
+#: libgphoto2_port/gphoto2-port-info-list.c:418
 #, c-format
 msgid "Looking up entry '%s'..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:450
+#: libgphoto2_port/gphoto2-port-info-list.c:448
 #, c-format
 msgid "Getting info of entry %i (%i available)..."
 msgstr ""
@@ -124,70 +124,74 @@ msgid "Unsupported operation"
 msgstr "Eragiketa ez dago onartuta"
 
 #: libgphoto2_port/gphoto2-port-result.c:68
+msgid "Fixed limit exceeded"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-result.c:70
 msgid "Timeout reading from or writing to the port"
 msgstr "Denbora-muga irungitu da atakan irakurtzean/idaztean"
 
-#: libgphoto2_port/gphoto2-port-result.c:70
+#: libgphoto2_port/gphoto2-port-result.c:72
 msgid "Serial port not supported"
 msgstr "Serieko ataka ez dago onartuta"
 
-#: libgphoto2_port/gphoto2-port-result.c:72
+#: libgphoto2_port/gphoto2-port-result.c:74
 msgid "USB port not supported"
 msgstr "USB ataka ez dago onartuta"
 
-#: libgphoto2_port/gphoto2-port-result.c:74
+#: libgphoto2_port/gphoto2-port-result.c:76
 msgid "Unknown port"
 msgstr "Ataka ezezaguna"
 
-#: libgphoto2_port/gphoto2-port-result.c:76
+#: libgphoto2_port/gphoto2-port-result.c:78
 msgid "Out of memory"
 msgstr "Memoriarik gabe"
 
-#: libgphoto2_port/gphoto2-port-result.c:78
+#: libgphoto2_port/gphoto2-port-result.c:80
 msgid "Error loading a library"
 msgstr "Errorea liburutegia kargatzean"
 
-#: libgphoto2_port/gphoto2-port-result.c:80
+#: libgphoto2_port/gphoto2-port-result.c:82
 msgid "Error initializing the port"
 msgstr "Errorea ataka hasieratzean"
 
-#: libgphoto2_port/gphoto2-port-result.c:82
+#: libgphoto2_port/gphoto2-port-result.c:84
 msgid "Error reading from the port"
 msgstr "Errorea atakatik irakurtzean"
 
-#: libgphoto2_port/gphoto2-port-result.c:84
+#: libgphoto2_port/gphoto2-port-result.c:86
 msgid "Error writing to the port"
 msgstr "Errorea atakan idaztean"
 
-#: libgphoto2_port/gphoto2-port-result.c:86
+#: libgphoto2_port/gphoto2-port-result.c:88
 msgid "Error updating the port settings"
 msgstr "Errorea atakako konfigurazioa eguneratzean"
 
-#: libgphoto2_port/gphoto2-port-result.c:88
+#: libgphoto2_port/gphoto2-port-result.c:90
 msgid "Error setting the serial port speed"
 msgstr "Errorea serieko atakaren abiadura ezartzean"
 
-#: libgphoto2_port/gphoto2-port-result.c:90
+#: libgphoto2_port/gphoto2-port-result.c:92
 msgid "Error clearing a halt condition on the USB port"
 msgstr "Errorea USB atakako itzaltze-baldintza ezabatzean"
 
-#: libgphoto2_port/gphoto2-port-result.c:92
+#: libgphoto2_port/gphoto2-port-result.c:94
 msgid "Could not find the requested device on the USB port"
 msgstr "Ezin izan da eskatutako gailua USB atakan aurkitu"
 
-#: libgphoto2_port/gphoto2-port-result.c:94
+#: libgphoto2_port/gphoto2-port-result.c:96
 msgid "Could not claim the USB device"
 msgstr "Ezin izan da USB gailua aldarrikatu"
 
-#: libgphoto2_port/gphoto2-port-result.c:96
+#: libgphoto2_port/gphoto2-port-result.c:98
 msgid "Could not lock the device"
 msgstr "Ezin izan da gailua blokeatu"
 
-#: libgphoto2_port/gphoto2-port-result.c:98
+#: libgphoto2_port/gphoto2-port-result.c:100
 msgid "libhal error"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:100
+#: libgphoto2_port/gphoto2-port-result.c:102
 msgid "Unknown error"
 msgstr "Errore ezezaguna"
 

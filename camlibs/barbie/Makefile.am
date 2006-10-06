@@ -1,4 +1,4 @@
-EXTRA_DIST = barbie.df makefile.os2 main.c compile
+EXTRA_DIST = main.c compile
 
 camlib_LTLIBRARIES = barbie.la
 

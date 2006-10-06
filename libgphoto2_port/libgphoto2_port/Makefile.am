@@ -65,7 +65,6 @@ nobase_include_HEADERS =	\
 #       be the result of tar not creating archives with >99
 #       characters of path length.
 EXTRA_DIST = \
-	gphoto2/gphoto2-port-portability-os2.h \
 	gphoto2/gphoto2-port-library.h \
 	libgphoto2_port.sym libgphoto2_port.pc.in
 

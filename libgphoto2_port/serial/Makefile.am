@@ -1,5 +1,3 @@
-EXTRA_DIST = makefile.os2 serial.df
-
 ## Compile the IO library into a libtool module shared library
 iolib_LTLIBRARIES = serial.la
 

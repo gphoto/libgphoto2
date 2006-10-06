@@ -1,5 +1,3 @@
-EXTRA_DIST = dimagev.df makefile.os2
-
 camlib_LTLIBRARIES = dimagev.la
 
 dimagev_la_SOURCES = capture.c data.c delete.c dimagev.c dimagev.h \

@@ -1,5 +1,3 @@
-EXTRA_DIST = kodak.df makefile.os2
-
 camlib_LTLIBRARIES = kodak_dc120.la
 
 kodak_dc120_la_SOURCES = dc120.c dc120.h library.c library.h

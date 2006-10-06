@@ -1,4 +1,4 @@
-EXTRA_DIST = stv0680.df makefile.os2 CREDITS LICENCE README.pdf 680_commands_and_communication_sdk.pdf.gz
+EXTRA_DIST = CREDITS LICENCE README.pdf 680_commands_and_communication_sdk.pdf.gz
 
 camlib_LTLIBRARIES = stv0680.la
 

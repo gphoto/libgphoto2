@@ -1,4 +1,4 @@
-EXTRA_DIST = sonydscf1.df makefile.os2 README todo
+EXTRA_DIST = README todo
 
 camlib_LTLIBRARIES = sony_dscf1.la
 

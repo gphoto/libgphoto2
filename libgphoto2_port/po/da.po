@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port 2.1.99\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-09-18 20:40-0400\n"
+"POT-Creation-Date: 2006-10-04 19:42+0200\n"
 "PO-Revision-Date: 2005-12-29 14:25+0100\n"
 "Last-Translator: Mogens Jaeger <mogensjaeger@get2net.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
@@ -15,89 +15,89 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.10.2\n"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:196
+#: libgphoto2_port/gphoto2-port-info-list.c:194
 #, c-format
 msgid "Called for filename '%s'."
 msgstr "Kaldte efter filnavn '%s'. "
 
-#: libgphoto2_port/gphoto2-port-info-list.c:201
+#: libgphoto2_port/gphoto2-port-info-list.c:199
 #, c-format
 msgid "Could not load '%s': '%s'."
 msgstr "Kunne ikke indlæse '%s': '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:209
+#: libgphoto2_port/gphoto2-port-info-list.c:207
 #, c-format
 msgid "Could not find some functions in '%s': '%s'."
 msgstr "Kunne ikke finde visse funktioner i '%s': '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:221
+#: libgphoto2_port/gphoto2-port-info-list.c:219
 #, c-format
 msgid "'%s' already loaded"
 msgstr "'%s' allerede indlæst"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:230
+#: libgphoto2_port/gphoto2-port-info-list.c:228
 #, c-format
 msgid "Could not load port driver list: '%s'."
 msgstr "Kunne ikke indlæse portdriverliste: '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:237
+#: libgphoto2_port/gphoto2-port-info-list.c:235
 #, c-format
 msgid "Loaded '%s' ('%s') from '%s'."
 msgstr "Indlæste '%s' ('%s') fra '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:266
+#: libgphoto2_port/gphoto2-port-info-list.c:264
 #, c-format
 msgid "Using ltdl to load io-drivers from '%s'..."
 msgstr "Bruger ltdl til at indlæse io-drivere fra '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:292
+#: libgphoto2_port/gphoto2-port-info-list.c:290
 #, c-format
 msgid "Counting entries (%i available)..."
 msgstr "Tæller indgange (%i til rådighed)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:301
+#: libgphoto2_port/gphoto2-port-info-list.c:299
 #, c-format
 msgid "%i regular entries available."
 msgstr "%i regulære indgange til rådighed."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:330
+#: libgphoto2_port/gphoto2-port-info-list.c:328
 #, c-format
 msgid "Looking for path '%s' (%i entries available)..."
 msgstr "Ser efter sti '%s' (%i indgange til rådighed)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:342
+#: libgphoto2_port/gphoto2-port-info-list.c:340
 #, c-format
 msgid "Starting regex search for '%s'..."
 msgstr "Starter regex-søgning efter '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:350
+#: libgphoto2_port/gphoto2-port-info-list.c:348
 #, c-format
 msgid "Trying '%s'..."
 msgstr "Prøver '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:371
+#: libgphoto2_port/gphoto2-port-info-list.c:369
 msgid "regcomp failed"
 msgstr "regcomp fejlede"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:382
+#: libgphoto2_port/gphoto2-port-info-list.c:380
 #, c-format
 msgid "re_match failed (%i)"
 msgstr "re_match fejlede (%i)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:390
+#: libgphoto2_port/gphoto2-port-info-list.c:388
 msgid "regexec failed"
 msgstr "regexec fejlede"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:396
+#: libgphoto2_port/gphoto2-port-info-list.c:394
 msgid "Generic Port"
 msgstr "Almindelig port"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:420
+#: libgphoto2_port/gphoto2-port-info-list.c:418
 #, c-format
 msgid "Looking up entry '%s'..."
 msgstr "Ser efter indgang '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:450
+#: libgphoto2_port/gphoto2-port-info-list.c:448
 #, c-format
 msgid "Getting info of entry %i (%i available)..."
 msgstr "Henter information om indgang %i (%i til rådighed)..."
@@ -123,70 +123,74 @@ msgid "Unsupported operation"
 msgstr "Ikke understøttet proces"
 
 #: libgphoto2_port/gphoto2-port-result.c:68
+msgid "Fixed limit exceeded"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-result.c:70
 msgid "Timeout reading from or writing to the port"
 msgstr "Tidsudløb ved læsning/skrivning til porten"
 
-#: libgphoto2_port/gphoto2-port-result.c:70
+#: libgphoto2_port/gphoto2-port-result.c:72
 msgid "Serial port not supported"
 msgstr "Seriel-port ikke understøttet"
 
-#: libgphoto2_port/gphoto2-port-result.c:72
+#: libgphoto2_port/gphoto2-port-result.c:74
 msgid "USB port not supported"
 msgstr "USB-port ikke understøttet"
 
-#: libgphoto2_port/gphoto2-port-result.c:74
+#: libgphoto2_port/gphoto2-port-result.c:76
 msgid "Unknown port"
 msgstr "Ukendt port"
 
-#: libgphoto2_port/gphoto2-port-result.c:76
+#: libgphoto2_port/gphoto2-port-result.c:78
 msgid "Out of memory"
 msgstr "Ikke mere hukommelse"
 
-#: libgphoto2_port/gphoto2-port-result.c:78
+#: libgphoto2_port/gphoto2-port-result.c:80
 msgid "Error loading a library"
 msgstr "Fejl ved indlæsning af bibliotek"
 
-#: libgphoto2_port/gphoto2-port-result.c:80
+#: libgphoto2_port/gphoto2-port-result.c:82
 msgid "Error initializing the port"
 msgstr "Fejl ved initialisering af porten"
 
-#: libgphoto2_port/gphoto2-port-result.c:82
+#: libgphoto2_port/gphoto2-port-result.c:84
 msgid "Error reading from the port"
 msgstr "Fejl ved læsning fra porten"
 
-#: libgphoto2_port/gphoto2-port-result.c:84
+#: libgphoto2_port/gphoto2-port-result.c:86
 msgid "Error writing to the port"
 msgstr "Fejl ved skrivning til porten"
 
-#: libgphoto2_port/gphoto2-port-result.c:86
+#: libgphoto2_port/gphoto2-port-result.c:88
 msgid "Error updating the port settings"
 msgstr "Fejl ved opdatering af portindstillinger"
 
-#: libgphoto2_port/gphoto2-port-result.c:88
+#: libgphoto2_port/gphoto2-port-result.c:90
 msgid "Error setting the serial port speed"
 msgstr "Fejl ved indstilling af den serielle porthastighed"
 
-#: libgphoto2_port/gphoto2-port-result.c:90
+#: libgphoto2_port/gphoto2-port-result.c:92
 msgid "Error clearing a halt condition on the USB port"
 msgstr "Fejl ved nulstilling af en stop-tilstand på USB-porten"
 
-#: libgphoto2_port/gphoto2-port-result.c:92
+#: libgphoto2_port/gphoto2-port-result.c:94
 msgid "Could not find the requested device on the USB port"
 msgstr "Kunne ikke finde den efterspurgte enhed på USB-porten"
 
-#: libgphoto2_port/gphoto2-port-result.c:94
+#: libgphoto2_port/gphoto2-port-result.c:96
 msgid "Could not claim the USB device"
 msgstr "Kunne ikke kræve USB enheden"
 
-#: libgphoto2_port/gphoto2-port-result.c:96
+#: libgphoto2_port/gphoto2-port-result.c:98
 msgid "Could not lock the device"
 msgstr "Kunne ikke låse enheden"
 
-#: libgphoto2_port/gphoto2-port-result.c:98
+#: libgphoto2_port/gphoto2-port-result.c:100
 msgid "libhal error"
 msgstr "libhal fejl"
 
-#: libgphoto2_port/gphoto2-port-result.c:100
+#: libgphoto2_port/gphoto2-port-result.c:102
 msgid "Unknown error"
 msgstr "Ukendt fejl"
 

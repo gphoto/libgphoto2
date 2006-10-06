@@ -1,5 +1,3 @@
-EXTRA_DIST = directory.df directory.def makefile.os2 makedll.cmd
-
 camlib_LTLIBRARIES = directory.la
 
 directory_la_CPPFLAGS = $(CPPFLAGS) $(AM_CPPFLAGS) $(LIBEXIF_CFLAGS)

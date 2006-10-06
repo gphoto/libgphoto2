@@ -1,6 +1,6 @@
 SUBDIRS = doc
 
-EXTRA_DIST = .indent.pro canon.df makefile.os2 ChangeLog urb-interpret
+EXTRA_DIST = .indent.pro ChangeLog urb-interpret
 
 camlib_LTLIBRARIES = canon.la
 

@@ -17,8 +17,7 @@ EXTRA_DIST =   		\
 	NEWS \
 	README \
 	iolib.sym \
-	gphoto2-port-config.in \
-	makefile.os2 lgp2port.df
+	gphoto2-port-config.in
 
 doc_DATA = AUTHORS README NEWS
 

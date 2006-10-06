@@ -1,4 +1,4 @@
-EXTRA_DIST = sierra.df makefile.os2 PROTOCOL
+EXTRA_DIST = PROTOCOL
 
 camlib_LTLIBRARIES = sierra.la
 
