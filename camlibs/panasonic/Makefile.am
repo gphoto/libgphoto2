@@ -15,3 +15,6 @@ panasonic_dc1580_la_LDFLAGS = -module -no-undefined -avoid-version -export-dynam
 	-export-symbols $(top_srcdir)/camlibs/camlib.sym
 panasonic_dc1580_la_DEPENDENCIES = $(top_srcdir)/camlibs/camlib.sym
 panasonic_dc1580_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la
+
+camlibdoc_DATA = README.panasonic
+EXTRA_DIST = README.panasonic

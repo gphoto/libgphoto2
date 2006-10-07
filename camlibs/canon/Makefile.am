@@ -1,6 +1,8 @@
 SUBDIRS = doc
 
-EXTRA_DIST = .indent.pro ChangeLog urb-interpret
+EXTRA_DIST = .indent.pro ChangeLog urb-interpret README.canon
+
+camlibdoc_DATA = README.canon
 
 camlib_LTLIBRARIES = canon.la
 

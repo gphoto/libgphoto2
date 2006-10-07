@@ -1,6 +1,6 @@
 camlib_LTLIBRARIES = mustek.la
 
-EXTRA_DIST = AUTHOR
+EXTRA_DIST = AUTHOR README.mustek
 
 mustek_la_SOURCES = mdc800.c core.c image.c \
 	io.c rs232.c usb.c core.h image.h \
@@ -9,3 +9,5 @@ mustek_la_LDFLAGS = -module -no-undefined -avoid-version -export-dynamic \
 	-export-symbols $(top_srcdir)/camlibs/camlib.sym
 mustek_la_DEPENDENCIES = $(top_srcdir)/camlibs/camlib.sym
 mustek_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la
+
+camlibdoc_DATA = README.mustek

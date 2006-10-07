@@ -1,4 +1,4 @@
-EXTRA_DIST = README todo
+EXTRA_DIST = README.sonydscf1 todo
 
 camlib_LTLIBRARIES = sony_dscf1.la
 
@@ -10,3 +10,5 @@ sony_dscf1_la_LDFLAGS = -module -no-undefined -avoid-version -export-dynamic \
 	-export-symbols $(top_srcdir)/camlibs/camlib.sym
 sony_dscf1_la_DEPENDENCIES = $(top_srcdir)/camlibs/camlib.sym
 sony_dscf1_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la 
+
+camlibdoc_DATA = README.sonydscf1

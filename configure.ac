@@ -448,6 +448,7 @@ dnl --------------------------------------------------------------------
 GP_CHECK_DOC_DIR()dnl
 GP_CHECK_DOXYGEN()dnl
 GP_BUILD_GTK_DOCS()dnl
+AC_SUBST([camlibdocdir], ['${docdir}/camlibs'])
 
 
 dnl --------------------------------------------------------------------

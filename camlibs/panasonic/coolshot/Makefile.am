@@ -5,3 +5,6 @@ panasonic_coolshot_la_LDFLAGS = -module -no-undefined -avoid-version -export-dyn
 	-export-symbols $(top_srcdir)/camlibs/camlib.sym
 panasonic_coolshot_la_DEPENDENCIES = $(top_srcdir)/camlibs/camlib.sym
 panasonic_coolshot_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la
+
+camlibdoc_DATA = README.panasonic-coolshot
+EXTRA_DIST = README.panasonic-coolshot

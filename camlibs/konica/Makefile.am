@@ -2,7 +2,7 @@ SUBDIRS = localization
 
 camlib_LTLIBRARIES = konica.la konica_qm150.la
 
-EXTRA_DIST = EXPERTS qm150.txt
+EXTRA_DIST = EXPERTS qm150.txt README.konica
 
 DEFS = \
 	-DLOCALIZATION=\"$(datadir)/$(PACKAGE)/$(VERSION)/konica\"
@@ -22,3 +22,5 @@ konica_qm150_la_LDFLAGS = -module -no-undefined -avoid-version -export-dynamic \
 	-export-symbols $(top_srcdir)/camlibs/camlib.sym
 konica_qm150_la_DEPENDENCIES = $(top_srcdir)/camlibs/camlib.sym
 konica_qm150_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la
+
+camlibdoc_DATA = README.konica

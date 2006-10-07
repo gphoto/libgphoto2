@@ -6,3 +6,6 @@ dimagev_la_LDFLAGS = -module -no-undefined -avoid-version -export-dynamic \
 	-export-symbols $(top_srcdir)/camlibs/camlib.sym
 dimagev_la_DEPENDENCIES = $(top_srcdir)/camlibs/camlib.sym
 dimagev_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la
+
+camlibdoc_DATA = README.minolta-dimagev
+EXTRA_DIST = README.minolta-dimagev
