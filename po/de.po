@@ -874,7 +874,9 @@ msgstr "Erste Kameraantwort %c/ unerwartet"
 msgid ""
 "Step #2 of initialization failed: (\"%s\" on read of %i) Camera not "
 "operational"
-msgstr "Stufe 2 der Kamerainitialisierung fehlgeschlagen: (»%s« beim Lesen von %i) Kamera funktioniert nicht"
+msgstr ""
+"Stufe 2 der Kamerainitialisierung fehlgeschlagen: (»%s« beim Lesen von %i) "
+"Kamera funktioniert nicht"
 
 #: camlibs/canon/usb.c:268
 #, c-format
@@ -1733,7 +1735,9 @@ msgstr "Konnte Kamera nicht zurücksetzen.\n"
 msgid ""
 "Your camera only supports deleting the last file on the camera. In this "
 "case, this is file '%s'."
-msgstr "Diese Kamera kann nur die jeweils letzte Datei löschen. In diesem Fall ist dies Datei »%s«."
+msgstr ""
+"Diese Kamera kann nur die jeweils letzte Datei löschen. In diesem Fall ist "
+"dies Datei »%s«."
 
 #: camlibs/hp215/hp215.c:440
 #, c-format
@@ -5046,7 +5050,9 @@ msgstr "Diese Kamera unterstützt keine Nikon spezifische Aufnahme von Bildern"
 
 #: camlibs/ptp2/library.c:1375
 msgid "Sorry, your Canon camera does not support Canon Capture initiation"
-msgstr "Diese Kamera versteht leider den Canon-Befehl zum Beginn von Aufnahmen per Fernauslöser nicht"
+msgstr ""
+"Diese Kamera versteht leider den Canon-Befehl zum Beginn von Aufnahmen per "
+"Fernauslöser nicht"
 
 #: camlibs/ptp2/library.c:1386
 msgid "Sorry, initializing your camera did not work. Please report this."
@@ -7773,7 +7779,8 @@ msgstr "Konnte keine Kamera finden"
 
 #: libgphoto2/gphoto2-camera.c:717
 msgid "You have to set the port prior to initialization of the camera."
-msgstr "Sie müssen einen Port setzen, bevor Sie die Kamera initialisieren können"
+msgstr ""
+"Sie müssen einen Port setzen, bevor Sie die Kamera initialisieren können"
 
 #: libgphoto2/gphoto2-camera.c:742
 #, c-format
