@@ -334,7 +334,7 @@ gp_abilities_list_detect_usb (CameraAbilitiesList *list,
 					v, p);
 				*ability = i;
 			} else if (res < 0 && res != GP_ERROR_IO_USB_FIND) {
-				/* another error occured. 
+				/* another error occurred. 
 				 * perhaps we should better
 				 * report this to the calling
 				 * method?
@@ -361,7 +361,7 @@ gp_abilities_list_detect_usb (CameraAbilitiesList *list,
 					c, s, p);
 				*ability = i;
 			} else if (res < 0 && res != GP_ERROR_IO_USB_FIND) {
-				/* another error occured. 
+				/* another error occurred. 
 				 * perhaps we should better
 				 * report this to the calling
 				 * method?

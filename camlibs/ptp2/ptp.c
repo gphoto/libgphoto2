@@ -506,7 +506,7 @@ ptp_usb_event (PTPParams* params, PTPContainer* event, int wait)
 	}
 	if (ret!=PTP_RC_OK) {
 		ptp_error (params,
-			"PTP: reading event an error 0x%04x occured", ret);
+			"PTP: reading event an error 0x%04x occurred", ret);
 		ret = PTP_ERROR_IO;
 		/* reading event error is nonfatal (for example timeout) */
 	} 

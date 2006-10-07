@@ -1,3 +1,12 @@
+2006-10-07  Hubert Figuiere  <hub@figuiere.net>
+
+	* camlibs/canon/canon.c, camlibs/konica/qm150.c,
+	camlibs/ptp2/ptp.c, camlibs/sierra/library.c, 
+	camlibs/sierra/sierra-desc.c, doc/camlib_devel.lyx,
+	libgphoto2/gphoto2-abilities-list.c: s/occured/occurred/
+	From Launchpad bug 61163:
+	https://launchpad.net/distros/ubuntu/+source/libgphoto2/+bug/61163
+
 2006-09-19  Hubert Figuiere  <hub@figuiere.net>
 
 	* camlibs/ptp2/config.c: More typo.

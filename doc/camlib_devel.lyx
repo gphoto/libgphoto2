@@ -184,7 +184,7 @@ Cameras like to ping.
  It usually starts out the communications, as well as confirms each packet
  in any sort of "mass" transfer.
  The opposite, a "NAK", is sent to basically say the last packet was not
- received, or an error has occured.
+ received, or an error has occurred.
  Again, this is usually just a single byte as well.
 \newline 
 

@@ -462,7 +462,7 @@ filename_to_audio(const char *filename, const char __unused__ *newext)
  * @filename: the file for which to get the name of the audio annotation
  *
  * The identifier returned is 
- *  a) NULL if no audio file exists for this file or an internal error occured
+ *  a) NULL if no audio file exists for this file or an internal error occurred
  *  b) pointer to string with file name of the corresponding thumbnail
  *  c) pointer to filename in case filename is a thumbnail itself
  *
@@ -504,7 +504,7 @@ canon_int_filename2audioname (Camera __unused__ *camera, const char *filename)
  * @filename: the file to get the name of the thumbnail of
  *
  * The identifier returned is 
- *  a) NULL if no thumbnail exists for this file or an internal error occured
+ *  a) NULL if no thumbnail exists for this file or an internal error occurred
  *  b) pointer to empty string if thumbnail is contained in the file itself
  *  c) pointer to string with file name of the corresponding thumbnail
  *  d) pointer to filename in case filename is a thumbnail itself

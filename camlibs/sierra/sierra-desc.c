@@ -407,7 +407,7 @@ camera_cam_desc_set_widget (Camera *camera, CameraRegisterType *reg_p,
 				if (ret <= 0) {
 					/*
 					 * Value was set (GP_OK is 0), or
-					 * some an error occured (< 0),
+					 * some an error occurred (< 0),
 					 * don't bother checking any other
 					 * value/name pairs.
 					 */

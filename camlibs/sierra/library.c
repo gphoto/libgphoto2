@@ -629,7 +629,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 
 		/* 
 		 * Read until the end of the packet is reached
-		 * or an error occured.
+		 * or an error occurred.
 		 */
 		while (br < length) {
 			result = gp_port_read (camera->port, packet + br,

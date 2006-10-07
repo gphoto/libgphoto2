@@ -531,7 +531,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 			gp_context_progress_stop (context, id);
 			gp_context_error(context, 
 				_("Can't upload this image to the camera. "
-				"An error has occured."));
+				"An error has occurred."));
 			return (GP_ERROR);
 		}
 		state = NEXTFRAME;
@@ -596,7 +596,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	if (ack != ACK) {
 		gp_context_progress_stop (context, id);
 		gp_context_error(context, _("Can't upload this image to the "
-			"camera. An error has occured."));
+			"camera. An error has occurred."));
 		return (GP_ERROR);
 	}
 	gp_context_progress_stop (context, id);
