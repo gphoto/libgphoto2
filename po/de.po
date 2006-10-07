@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: libgphoto2 2.2.0\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2006-10-07 05:52+0200\n"
-"PO-Revision-Date: 2006-06-21 08:46+0200\n"
+"PO-Revision-Date: 2006-10-07 14:18+0200\n"
 "Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
 "Language-Team: German <translation-team-de@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -764,9 +764,8 @@ msgid "Resetting protocol..."
 msgstr "Setze Protokoll zurück..."
 
 #: camlibs/canon/serial.c:1325
-#, fuzzy
 msgid "Camera OK."
-msgstr "Kamera OK.\n"
+msgstr "Kamera OK."
 
 #: camlibs/canon/serial.c:1338
 msgid "Looking for camera ..."
@@ -871,13 +870,11 @@ msgid "Initial camera response '%c' unrecognized"
 msgstr "Erste Kameraantwort %c/ unerwartet"
 
 #: camlibs/canon/usb.c:262
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Step #2 of initialization failed: (\"%s\" on read of %i) Camera not "
 "operational"
-msgstr ""
-"Stufe nr.2 der Kamerainitialisierung fehlgeschlagen: »%s« beim Lesen von %i) "
-"Kamera funktioniert nicht"
+msgstr "Stufe 2 der Kamerainitialisierung fehlgeschlagen: (»%s« beim Lesen von %i) Kamera funktioniert nicht"
 
 #: camlibs/canon/usb.c:268
 #, c-format
@@ -1732,13 +1729,11 @@ msgid "Could not reset camera.\n"
 msgstr "Konnte Kamera nicht zurücksetzen.\n"
 
 #: camlibs/gsmart300/library.c:343 camlibs/spca50x/library.c:516
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Your camera only supports deleting the last file on the camera. In this "
 "case, this is file '%s'."
-msgstr ""
-"Diese Kamera kann nur die jeweils letzte Datei löschen. In diesem Fall ist "
-"dies Datei »%s«."
+msgstr "Diese Kamera kann nur die jeweils letzte Datei löschen. In diesem Fall ist dies Datei »%s«."
 
 #: camlibs/hp215/hp215.c:440
 #, c-format
@@ -3109,7 +3104,7 @@ msgstr ""
 "Ünterstützung für die französische Konica Q-M150."
 
 #: camlibs/konica/qm150.c:1208
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "About Konica Q-M150:\n"
 "This camera does not allow any changes\n"
@@ -3124,14 +3119,14 @@ msgid ""
 msgstr ""
 "Über Konica Q-M150:\n"
 "Diese Kamera erlaubt keine Einstellungen per Computer.\n"
-"In der Konfiguration kann man nur sehen, was schon\n"
-"an der Kamera eingestellt wird, aber nichts verändern.\n"
+"In der Konfiguration kann man daher nur sehen, wie die\n"
+"Kamera eingestellt ist, aber nichts verändern.\n"
 "\n"
-"Wenn Sie etlicheirgendeine Probleme mit diesem Treiber\n"
-"haben, bitte schicken Sie E-mail zur dieses Treibers\n"
-"Autoren.\n"
+"Wenn Sie irgendwelche Probleme mit diesem Treiber\n"
+"haben, schicken Sie bitte eine E-Mail an die Autoren\n"
+"dieses Treibers.\n"
 "\n"
-"Vielen Dank für ihre Nutzung von GPhoto2 und die\n"
+"Vielen Dank für ihre Nutzung von GPhoto2 und der\n"
 "Betriebssysteme UNIX/Linux.\n"
 
 #: camlibs/largan/lmini/largan.c:228
@@ -3184,7 +3179,6 @@ msgstr ""
 "Es sind %i Fotos auf der Kamera.\n"
 
 #: camlibs/mars/library.c:133
-#, fuzzy
 msgid ""
 "This driver supports cameras with Mars MR97310 chip (and direct\n"
 "equivalents ??Pixart PACx07??).\n"
@@ -3197,16 +3191,17 @@ msgid ""
 "as consecutive still photos.\n"
 "For further details please consult libgphoto2/camlibs/README.\n"
 msgstr ""
-"Dieser Treiber unterstützt Kameras mit Mars MR97310 Chip (und direkten "
-"Equivalenten ??Pixart PAC0x7??) und sollte mit gtkam arbeiten.\n"
-"Der Treiber erlaubt ihnen:\n"
-"   - Thumbnails für gtkam zu holen\n"
-"   - volle Bilder (im 640x480 oder 320x240 PPM Format) (??352x288 & "
-"176x144??)\n"
-"Die Kamera unterstützt nicht das Löschen, auch kein Upload von Daten.\n"
-"Dieser Treiber unterstützt nicht den optionalen Bildkompressionsmodus.\n"
-"Wenn Videoclip Bilder auf der Kamera vorhanden sind, werden diese\n"
-"als fortlaufende Standbilder runtergeladen.\n"
+"Dieser Treiber unterstützt Kameras mit dem Mars MR97310 Chip (und\n"
+"direkten Äquivalenten ??Pixart PAC0x7??).\n"
+"Diese Kameras erlauben es nicht, Dateien zu löschen oder vom\n"
+"Computer auf die Kamera zu kopieren.\n"
+"Die Decodierung komprimierter Bilder kann funktionieren (oder auch\n"
+"nicht) und funktioniert nicht mit allen unterstützten Kameras gleich\n"
+"gut.\n"
+"Die Verarbeitung von Daten für die Argus QuickClix ist NICHT unterstützt.\n"
+"Falls auf der Kamera vorhanden, werden die Rahmen von Videoclips als\n"
+"einzelne Standbilder heruntergeladen.\n"
+"Weitere Details finden Sie in libgphoto2/camlibs/README.\n"
 
 #: camlibs/mars/library.c:152
 msgid ""
@@ -3387,7 +3382,7 @@ msgid "Unsuitable card"
 msgstr "Nicht passende Karte"
 
 #: camlibs/minolta/dimagev/dimagev.c:412
-#, fuzzy, c-format
+#, c-format
 msgid "Bad value for card status %d"
 msgstr "Falscher Wert für Kartenstatus %d"
 
@@ -4447,9 +4442,8 @@ msgid "essid"
 msgstr ""
 
 #: camlibs/ptp2/config.c:1782
-#, fuzzy
 msgid "Display"
-msgstr "Datumsanzeige"
+msgstr "Anzeige"
 
 #: camlibs/ptp2/config.c:1792
 #, c-format
@@ -4457,9 +4451,8 @@ msgid "Creation date: %s, Last usage date: %s"
 msgstr ""
 
 #: camlibs/ptp2/config.c:1798
-#, fuzzy
 msgid "Delete"
-msgstr "Standard"
+msgstr "Löschen"
 
 #: camlibs/ptp2/config.c:1867
 msgid "WEP 64-bit"
@@ -4470,14 +4463,12 @@ msgid "WEP 128-bit"
 msgstr ""
 
 #: camlibs/ptp2/config.c:1915
-#, fuzzy
 msgid "Managed"
-msgstr "Sprache"
+msgstr "Managed"
 
 #: camlibs/ptp2/config.c:1916
-#, fuzzy
 msgid "Ad-hoc"
-msgstr "Automatische Belichtungsnachführung"
+msgstr "Ad-hoc"
 
 #: camlibs/ptp2/config.c:2085
 msgid "Profile name"
@@ -4496,9 +4487,8 @@ msgid "Network mask"
 msgstr ""
 
 #: camlibs/ptp2/config.c:2089
-#, fuzzy
 msgid "Default gateway"
-msgstr "Standard"
+msgstr "Default gateway"
 
 #: camlibs/ptp2/config.c:2090
 #, fuzzy
@@ -4510,23 +4500,20 @@ msgid "Wifi channel"
 msgstr ""
 
 #: camlibs/ptp2/config.c:2092
-#, fuzzy
 msgid "Encryption"
-msgstr "Aktion"
+msgstr "Verschlüsselung"
 
 #: camlibs/ptp2/config.c:2093
 msgid "Encryption key (hex)"
-msgstr ""
+msgstr "Kryptographischer Schlüssel (hex)"
 
 #: camlibs/ptp2/config.c:2094
-#, fuzzy
 msgid "Write"
-msgstr "Weit"
+msgstr "Schreiben"
 
 #: camlibs/ptp2/config.c:2141
-#, fuzzy
 msgid "List Wifi profiles"
-msgstr "Liste alle Dateien"
+msgstr "Liste aller WIFI-Profile"
 
 #: camlibs/ptp2/config.c:2142
 msgid "Create Wifi profile"
@@ -5058,9 +5045,8 @@ msgid "Sorry, your camera does not support Nikon capture"
 msgstr "Diese Kamera unterstützt keine Nikon spezifische Aufnahme von Bildern"
 
 #: camlibs/ptp2/library.c:1375
-#, fuzzy
 msgid "Sorry, your Canon camera does not support Canon Capture initiation"
-msgstr "Diese Kamera unterstützt keinen Canon Aufnahmestart"
+msgstr "Diese Kamera versteht leider den Canon-Befehl zum Beginn von Aufnahmen per Fernauslöser nicht"
 
 #: camlibs/ptp2/library.c:1386
 msgid "Sorry, initializing your camera did not work. Please report this."
@@ -6886,7 +6872,6 @@ msgid "Time format"
 msgstr "Zeitformat"
 
 #: camlibs/sierra/olympus-desc.c:910
-#, fuzzy
 msgid ""
 "Some notes about Olympus cameras:\n"
 "(1) Camera Configuration:\n"
@@ -6906,27 +6891,26 @@ msgid ""
 "    state, you should reconnect the camera to the\n"
 "    PC and switch LCD to 'Off'."
 msgstr ""
-"Einige Bemerkungen:\n"
+"Einige Bemerkungen über Olympus-Kameras:\n"
 "(1) Kamera-Konfiguration:\n"
 "    Ein Wert von 0 verwendet die Vorgabe (Auto).\n"
 "(2) Olympus C-3040Z (und möglicherweise die C-2040Z\n"
-"    und andere) haben einen USB-Kontrollmodus. Um \n"
+"    und andere) haben einen USB-Steuermodus. Um \n"
 "    diesen Modus zu benutzen, muss die Kamera auf \n"
 "    »USB PC control mode« geschaltet sein. Um zum Menü\n"
 "    für diese Einstellung zu gelangen, öffnen sie die\n"
-"    Klappe für die Speicherkarte und halten Sie beide\n"
-"    Menütasten gedrückt, bis das Kontrollmenü erscheint.\n"
-"    Schalten Sie es auf »ON«.\n"
+"    Klappe für die Speicherkarte und halten Sie sowohl\n"
+"    die Menü- als auch LCD-Taste gedrückt, bis das\n"
+"    Kontrollmenü erscheint. Schalten Sie es auf »ON«.\n"
 "(3) Wenn Sie den LCD-Modus auf »Monitor« oder »Normal« \n"
 "    setzen, dann vergessen Sie nicht, ihn wieder auf\n"
 "    »Aus« zu setzen, bevor Sie die Verbindung zur Kamera\n"
-"    trennen. Anderenfalls können Sie die Bedienelemente \n"
+"    trennen. Ansonsten können Sie die Bedienelemente \n"
 "    der Kamera nicht mehr benutzen. In diesem Fall müssen\n"
 "    Sie die Kamera wieder mit dem PC verbinden und den \n"
 "    LCD-Modus auf »Aus« setzen."
 
 #: camlibs/sierra/olympus-desc.c:931
-#, fuzzy
 msgid ""
 "Olympus 750 Ultra Zoom:\n"
 "(1) Olympus 750UZ has a USB PC Control mode. In order\n"
@@ -6943,18 +6927,16 @@ msgid ""
 "    state, you should reconnect the camera to the\n"
 "    PC and switch LCD to 'Off'."
 msgstr ""
-"Einige Bemerkungen:\n"
-"(1) Kamera-Konfiguration:\n"
-"    Ein Wert von 0 verwendet die Vorgabe (Auto).\n"
-"(2) Olympus C-3040Z (und möglicherweise die C-2040Z\n"
-"    und andere) haben einen USB-Kontrollmodus. Um \n"
-"    diesen Modus zu benutzen, muss die Kamera auf \n"
-"    »USB PC control mode« geschaltet sein. Um zum Menü\n"
-"    für diese Einstellung zu gelangen, öffnen sie die\n"
-"    Klappe für die Speicherkarte und halten Sie beide\n"
-"    Menütasten gedrückt, bis das Kontrollmenü erscheint.\n"
-"    Schalten Sie es auf »ON«.\n"
-"(3) Wenn Sie den LCD-Modus auf »Monitor« oder »Normal« \n"
+"Olympus 750 Ultra Zoom:\n"
+"(1) Die Olympus 750UZ hat einen USB einen USB-Steuermodus.\n"
+"    Um diesen Modus zu benutzen, muss die Kamera auf \n"
+"    »USB PC control mode« eingestellt sein. Um zum Menü\n"
+"    für diese Einstellung zu gelangen, schalten Sie die\n"
+"    Kamera an, öffnen Sie die Klappe für die Speicherkarte\n"
+"    und halten Sie sowohl den »ON«- als auch den\n"
+"    »quickview«-Knopf gedrückt, bis das das Kontrollmenü\n"
+"    erscheint. Schalten Sie dieses auf »ON«.\n"
+"(2) Wenn Sie den LCD-Modus auf »Monitor« oder »Normal« \n"
 "    setzen, dann vergessen Sie nicht, ihn wieder auf\n"
 "    »Aus« zu setzen, bevor Sie die Verbindung zur Kamera\n"
 "    trennen. Anderenfalls können Sie die Bedienelemente \n"
@@ -6985,13 +6967,13 @@ msgstr ""
 "    von Bildern auf der Kamera unterstützen.\n"
 "\n"
 "    Kamerakonfigurationen (und Einstellungen)\n"
-"    basieren auf der Olympus 3040, und sind\n"
+"    basieren auf der Olympus 3040 und sind\n"
 "    wahrscheinlich unvollständig. Wenn Sie \n"
 "    feststellen, daß die Konfigurationseinstellungen\n"
-"    für Ihre Kamera komplett sind, oder Sie \n"
-"    Programmcode für eine komplette Konfiguration \n"
-"    haben, dann kontaktieren Sie bitte \n"
-"    die Developer Mailingliste.\n"
+"    für Ihre Kamera vollständig sind, oder Sie \n"
+"    Programmcode für eine vollständige Konfiguration \n"
+"    haben, dann setzen Sie sich bitte mit der\n"
+"    Entwickler-Mailingliste in Verbindung.\n"
 
 #: camlibs/sierra/sierra.c:749 camlibs/soundvision/soundvision.c:411
 msgid "The file to be uploaded has a null length"
@@ -7790,10 +7772,8 @@ msgid "Could not detect any camera"
 msgstr "Konnte keine Kamera finden"
 
 #: libgphoto2/gphoto2-camera.c:717
-#, fuzzy
 msgid "You have to set the port prior to initialization of the camera."
-msgstr ""
-"Sie müssen einen Port setzen, bevor Sie die Kamera initialisieren können"
+msgstr "Sie müssen einen Port setzen, bevor Sie die Kamera initialisieren können"
 
 #: libgphoto2/gphoto2-camera.c:742
 #, c-format
