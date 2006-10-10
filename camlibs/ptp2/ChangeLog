@@ -1,3 +1,9 @@
+2006-10-10  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* library.c: Added Canon Digital IXUS Wireless (same as SD430)
+	  Marked them as capture capable, but capture mode not supported
+	  yet.
+
 2006-10-05  Marcus Meissner  <marcus@jet.franken.de>
 
 	* config.c: Do not call Nikon commands on Canons.
