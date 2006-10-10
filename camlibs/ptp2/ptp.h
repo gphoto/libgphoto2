@@ -92,6 +92,11 @@ struct _PTPUSBEventContainer {
 };
 typedef struct _PTPUSBEventContainer PTPUSBEventContainer;
 
+struct _PTPCanon_directtransfer_entry {
+	uint32_t	oid;
+	char		*str;
+};
+typedef struct _PTPCanon_directtransfer_entry PTPCanon_directtransfer_entry;
 
 /* USB container types */
 
@@ -218,12 +223,16 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_GetChanges		0x9020
 #define PTP_OC_CANON_GetFolderEntries	0x9021
 
-#define PTP_OC_CANON_RequestDirectTransfer 0x9028
+#define PTP_OC_CANON_RequestDirectTransfer 	0x9028
+#define PTP_OC_CANON_GetDirectTransferImages 	0x9029
 /* 902c: no parms, read 3 uint32 in data, no response parms */
 #define PTP_OC_CANON_902C		0x902c
-/* 902d: no parms, read 0x1d4 bytes data, 1 response parm */
+/* 902d: no parms, read <n> bytes data, 1 response parm */
 /* directory ? */
 #define PTP_OC_CANON_902D		0x902d
+
+/* 9034: 1 param, no parms returned */
+#define PTP_OC_CANON_9034		0x9034
 
 /* Nikon extension Operation Codes */
 #define PTP_OC_NIKON_GetProfileAllData	0x9006
@@ -341,6 +350,9 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_EC_CANON_ObjectInfoChanged		0xC008
 #define PTP_EC_CANON_RequestObjectTransfer	0xC009
 #define PTP_EC_CANON_CameraModeChanged		0xC00C
+
+#define PTP_EC_CANON_StartDirectTransfer	0xC011
+#define PTP_EC_CANON_StopDirectTransfer		0xC013
 
 /* Nikon extension Event Codes */
 #define PTP_EC_Nikon_ObjectAddedInSDRAM		0xC101
@@ -553,7 +565,6 @@ typedef struct _PTPObjectInfo PTPObjectInfo;
 
 union _PTPPropertyValue {
 	char		*str;	/* common string, malloced */
-	uint16_t        *unistr; /* UCS2 unicode string, malloced */
 	uint8_t		u8;
 	int8_t		i8;
 	uint16_t	u16;
@@ -1221,6 +1232,7 @@ uint16_t ptp_ek_sendfileobject	(PTPParams* params, unsigned char* object,
 /* Canon PTP extensions */
 uint16_t ptp_canon_9012 (PTPParams* params);
 uint16_t ptp_canon_request_direct_transfer (PTPParams* params, uint32_t* out);
+uint16_t ptp_canon_get_direct_transfer_images (PTPParams* params, PTPCanon_directtransfer_entry**, unsigned int*cnt);
 uint16_t ptp_canon_getobjectsize (PTPParams* params, uint32_t handle,
 				uint32_t p2, uint32_t* size, uint32_t* rp2);
 

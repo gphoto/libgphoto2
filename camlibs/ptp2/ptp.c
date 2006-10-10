@@ -1398,6 +1398,46 @@ ptp_canon_request_direct_transfer (PTPParams* params, uint32_t *out)
 }
 
 /**
+ * ptp_canon_get_direct_transfer_images:
+ * params:	PTPParams*
+ *              PTPCanon_directtransfer_entry **out
+ *              unsigned int *outsize
+ * 
+ * Retrieves direct transfer entries specifying the images to transfer
+ * from the camera (to be retrieved after 0xc011 event).
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_canon_get_direct_transfer_images (PTPParams* params,
+	PTPCanon_directtransfer_entry **entries, unsigned int *cnt)
+{
+	PTPContainer ptp;
+	uint16_t ret;
+	unsigned char *out = NULL, *cur;
+	int i;
+	unsigned int size;
+	
+	PTP_CNT_INIT(ptp);
+	ptp.Code   = PTP_OC_CANON_GetDirectTransferImages;
+	ptp.Nparam = 0;
+	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &out, &size);
+	if (ret != PTP_RC_OK)
+		return ret;
+	*cnt = dtoh32a(out);
+	*entries = malloc(sizeof(PTPCanon_directtransfer_entry)*(*cnt));
+	cur = out+4;
+	for (i=0;i<*cnt;i++) {
+		unsigned char len;
+		(*entries)[i].oid = dtoh32a(cur);
+		(*entries)[i].str = ptp_unpack_string(params, cur, 4, &len);
+		cur += 4+(cur[4]*2+1);
+	}
+	free (out);
+	return PTP_RC_OK;
+}
+/**
  * ptp_canon_endshootingmode:
  * params:	PTPParams*
  * 
