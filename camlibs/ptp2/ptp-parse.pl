@@ -158,6 +158,7 @@ sub get_str {
 }
 
 my $lastfunction;
+my $lasttype = 0;
 
 sub xml_handle_char {
 	my ($expat, $str) = @_;
@@ -191,12 +192,19 @@ sub xml_handle_char {
 	my $length = get_uint32(\@bytes);
 	my $type = get_uint16(\@bytes);
 
+	#if ($length < $#bytes-6) {
+	#	# print STDERR "$length < $#bytes\n";
+	#	@bytes = @bytes[0..$length-7];
+	#}
+
 	if ($type == 1) {
 		print "$curseq: COMMAND: ";
 	} elsif ($type == 2) {
 		# print "str is $str\n";
 		# print "DATA: ";
+		@curdata = ();
 	} elsif ($type == 3) {
+		return if ($urbenc{$curseq} == 1);
 		print "$curseq: RESPONSE: ";
 	} elsif ($type == 4) {
 		print "$curseq: EVENT: ";
