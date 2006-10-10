@@ -510,6 +510,17 @@ ptp_usb_event (PTPParams* params, PTPContainer* event, int wait)
 		ret = PTP_ERROR_IO;
 		/* reading event error is nonfatal (for example timeout) */
 	} 
+	while (dtoh32(usbevent.length) > rlen) {
+		unsigned int newrlen = 0;
+
+		ret=params->check_int_fast_func(((unsigned char*)&usbevent)+rlen,
+			dtoh32(usbevent.length)-rlen,params->data,&newrlen
+		);
+		if (ret != PTP_RC_OK) {
+			break;
+		}
+		rlen+=newrlen;
+	} 
 	/* if we read anything over interrupt endpoint it must be an event */
 	/* build an appropriate PTPContainer */
 	event->Code=dtoh16(usbevent.code);
@@ -518,7 +529,6 @@ ptp_usb_event (PTPParams* params, PTPContainer* event, int wait)
 	event->Param1=dtoh32(usbevent.param1);
 	event->Param2=dtoh32(usbevent.param2);
 	event->Param3=dtoh32(usbevent.param3);
-
 	return ret;
 }
 
@@ -1357,6 +1367,34 @@ ptp_canon_startshootingmode (PTPParams* params)
 	ptp.Code=PTP_OC_CANON_StartShootingMode;
 	ptp.Nparam=0;
 	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+}
+
+/**
+ * ptp_canon_request_direct_transfer:
+ * params:	PTPParams*
+ *              uint32_t *out
+ * 
+ * Switches the camera display to on and lets the user
+ * select what to transfer. Sends a 0xc011 event if user
+ * selected type, and 0xc013 if he presses start.
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_canon_request_direct_transfer (PTPParams* params, uint32_t *out)
+{
+	PTPContainer ptp;
+	uint16_t ret;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code   = PTP_OC_CANON_RequestDirectTransfer;
+	ptp.Nparam = 1;
+	ptp.Param1 = 0xf;
+	ret = ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+	if ((ret == PTP_RC_OK) && (ptp.Nparam>0))
+		*out = ptp.Param1;
+	return ret;
 }
 
 /**

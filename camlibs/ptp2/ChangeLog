@@ -4,6 +4,10 @@
 	  Marked them as capture capable, but capture mode not supported
 	  yet.
 
+	* ptp.c/ptp.h: Added "Request Direct Transfer" opcode for newer Canons.
+	* ptp.c: Read event in multiple parts (necessary for Canons who only read 8 
+	  byte per interrupt).
+
 2006-10-05  Marcus Meissner  <marcus@jet.franken.de>
 
 	* config.c: Do not call Nikon commands on Canons.
