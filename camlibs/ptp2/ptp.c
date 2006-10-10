@@ -1375,8 +1375,8 @@ ptp_canon_startshootingmode (PTPParams* params)
  *              uint32_t *out
  * 
  * Switches the camera display to on and lets the user
- * select what to transfer. Sends a 0xc011 event if user
- * selected type, and 0xc013 if he presses start.
+ * select what to transfer. Sends a 0xc011 event when started 
+ * and 0xc013 if direct transfer aborted.
  *
  * Return values: Some PTP_RC_* code.
  *
