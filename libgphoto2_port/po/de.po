@@ -279,7 +279,7 @@ msgstr "Hole Timeout..."
 #: libgphoto2_port/gphoto2-port.c:534
 #, c-format
 msgid "Current timeout: %i milliseconds"
-msgstr "Derzeitger Timeout: %i Millisekunden"
+msgstr "Derzeitiger Timeout: %i Millisekunden"
 
 #: libgphoto2_port/gphoto2-port.c:556
 msgid "Setting settings..."
