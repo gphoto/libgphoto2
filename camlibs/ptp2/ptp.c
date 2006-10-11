@@ -3333,6 +3333,82 @@ ptp_render_ofc(PTPParams* params, uint16_t ofc, int spaceleft, char *txt)
 }
 
 struct {
+	uint16_t opcode;
+	const char *name;
+} ptp_opcode_trans[] = {
+	{PTP_OC_Undefined,N_("Undefined")},
+	{PTP_OC_GetDeviceInfo,N_("get device info")},
+	{PTP_OC_OpenSession,N_("Open session")},
+	{PTP_OC_CloseSession,N_("Close session")},
+	{PTP_OC_GetStorageIDs,N_("Get storage IDs")},
+	{PTP_OC_GetStorageInfo,N_("Get storage info")},
+	{PTP_OC_GetNumObjects,N_("Get number of objects")},
+	{PTP_OC_GetObjectHandles,N_("Get object handles")},
+	{PTP_OC_GetObjectInfo,N_("Get object info")},
+	{PTP_OC_GetObject,N_("Get object")},
+	{PTP_OC_GetThumb,N_("Get thumbnail")},
+	{PTP_OC_DeleteObject,N_("Delete object")},
+	{PTP_OC_SendObjectInfo,N_("Send object info")},
+	{PTP_OC_SendObject,N_("Send object")},
+	{PTP_OC_InitiateCapture,N_("Initiate capture")},
+	{PTP_OC_FormatStore,N_("Format storage")},
+	{PTP_OC_ResetDevice,N_("Reset device")},
+	{PTP_OC_SelfTest,N_("Self test device")},
+	{PTP_OC_SetObjectProtection,N_("Set object protection")},
+	{PTP_OC_PowerDown,N_("Power down device")},
+	{PTP_OC_GetDevicePropDesc,N_("Get device property description")},
+	{PTP_OC_GetDevicePropValue,N_("Get device property value")},
+	{PTP_OC_SetDevicePropValue,N_("Set device property value")},
+	{PTP_OC_ResetDevicePropValue,N_("Reset device property value")},
+	{PTP_OC_TerminateOpenCapture,N_("Terminate open capture")},
+	{PTP_OC_MoveObject,N_("Move object")},
+	{PTP_OC_CopyObject,N_("Copy object")},
+	{PTP_OC_GetPartialObject,N_("Get partial object")},
+	{PTP_OC_InitiateOpenCapture,N_("Initiate open capture")}
+};
+
+struct {
+	uint16_t opcode;
+	const char *name;
+} ptp_opcode_mtp_trans[] = {
+	{PTP_OC_MTP_GetObjectPropsSupported,N_("Get object properties supported")},
+	{PTP_OC_MTP_GetObjectPropDesc,N_("Get object property description")},
+	{PTP_OC_MTP_GetObjectPropValue,N_("Get object property value")},
+	{PTP_OC_MTP_SetObjectPropValue,N_("Set object property value")},
+	{PTP_OC_MTP_GetObjPropList,N_("Get object property list")},
+	{PTP_OC_MTP_SetObjPropList,N_("Set object property list")},
+	{PTP_OC_MTP_GetInterdependendPropdesc,N_("Get interdependent property description")},
+	{PTP_OC_MTP_SendObjectPropList,N_("Send object property list")},
+	{PTP_OC_MTP_GetObjectReferences,N_("Get object references")},
+	{PTP_OC_MTP_SetObjectReferences,N_("Set object references")},
+	{PTP_OC_MTP_UpdateDeviceFirmware,N_("Update device firmware")},
+	{PTP_OC_MTP_Skip,N_("Skip to next position in playlist")}
+};
+
+int
+ptp_render_opcode(PTPParams* params, uint16_t opcode, int spaceleft, char *txt)
+{
+	int i;
+
+	if (!(opcode & 0x8000)) {
+		for (i=0;i<sizeof(ptp_opcode_trans)/sizeof(ptp_opcode_trans[0]);i++)
+			if (opcode == ptp_opcode_trans[i].opcode)
+				return snprintf(txt, spaceleft,_(ptp_opcode_trans[i].name));
+	} else {
+		switch (params->deviceinfo.VendorExtensionID) {
+		case PTP_VENDOR_MICROSOFT:
+			for (i=0;i<sizeof(ptp_opcode_mtp_trans)/sizeof(ptp_opcode_mtp_trans[0]);i++)
+				if (opcode == ptp_opcode_mtp_trans[i].opcode)
+					return snprintf(txt, spaceleft,_(ptp_opcode_mtp_trans[i].name));
+			break;
+		default:break;
+		}
+	}
+	return snprintf (txt, spaceleft,_("Unknown(%04x)"), opcode);
+}
+
+
+struct {
 	uint16_t id;
 	const char *name;
 } ptp_opc_trans[] = {

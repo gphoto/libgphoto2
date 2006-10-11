@@ -1299,6 +1299,7 @@ int
 ptp_render_property_value(PTPParams* params, uint16_t dpc,
                           PTPDevicePropDesc *dpd, int length, char *out);
 int ptp_render_ofc(PTPParams* params, uint16_t ofc, int spaceleft, char *txt);
+int ptp_render_opcode(PTPParams* params, uint16_t opcode, int spaceleft, char *txt);
 int ptp_render_mtp_propname(uint16_t propid, int spaceleft, char *txt);
 
 /* ptpip.c */
