@@ -334,6 +334,7 @@ dump_ptp_line() {
 			printf "GetDevicePropDesc(1014) prop = %04x\n", $prop;
 		} elsif ($type == 3) {
 			print "GetDevicePropDesc(1014)\n";
+			hexdump(@curdata);
 		}
 		return;
 	} elsif ($code == 0x1006) {
@@ -352,7 +353,8 @@ dump_ptp_line() {
 			my $prop = get_uint32(\@bytes);
 			printf "GetDevicePropValue(1015) prop = %04x\n", $prop;
 		} elsif ($type == 3) {
-			print "GetDevicePropValue(1015) data ". join(",",@bytes) . "\n";
+			print "GetDevicePropValue(1015) data: ";
+			hexdump(@curdata);
 		}
 		return;
 	} elsif ($code == 0x1016) {
@@ -360,7 +362,8 @@ dump_ptp_line() {
 			my $prop = get_uint32(\@bytes);
 			printf "SetDevicePropValue(1016) prop = %04x, " . join(",",@bytes) . "\n", $prop;
 		} elsif ($type == 3) {
-			print "SetDevicePropValue(1016) data ". join(",",@bytes) . "\n";
+			print "SetDevicePropValue(1016) data: ";
+			hexdump(@curdata);
 		}
 		return;
 	} elsif ($code == 0x1007) {
