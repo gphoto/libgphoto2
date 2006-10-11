@@ -223,6 +223,9 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_GetChanges		0x9020
 #define PTP_OC_CANON_GetFolderEntries	0x9021
 
+/* 9023: no parms, no parms */
+#define PTP_OC_CANON_9023 			0x9023
+
 #define PTP_OC_CANON_RequestDirectTransfer 	0x9028
 #define PTP_OC_CANON_GetDirectTransferImages 	0x9029
 /* 902c: no parms, read 3 uint32 in data, no response parms */
