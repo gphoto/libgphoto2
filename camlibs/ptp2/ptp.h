@@ -1243,6 +1243,7 @@ uint16_t ptp_canon_get_target_handles (PTPParams* params, PTPCanon_directtransfe
 uint16_t ptp_canon_getpartialobjectinfo (PTPParams* params, uint32_t handle,
 				uint32_t p2, uint32_t* size, uint32_t* rp2);
 
+uint16_t ptp_canon_get_mac_address (PTPParams* params, unsigned char **mac);
 uint16_t ptp_canon_startshootingmode (PTPParams* params);
 uint16_t ptp_canon_endshootingmode (PTPParams* params);
 

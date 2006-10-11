@@ -1347,6 +1347,29 @@ ptp_canon_getpartialobjectinfo (PTPParams* params, uint32_t handle, uint32_t p2,
 }
 
 /**
+ * ptp_canon_get_mac_address:
+ * params:	PTPParams*
+ *					  value 0 works.
+ * Gets the MAC address of the wireless transmitter.
+ *
+ * Return values: Some PTP_RC_* code.
+ * Upon success : unsigned char* mac	- The MAC address
+ *
+ **/
+uint16_t
+ptp_canon_get_mac_address (PTPParams* params, unsigned char **mac)
+{
+	PTPContainer ptp;
+	unsigned int size = 0;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code=PTP_OC_CANON_GetMACAddress;
+	ptp.Nparam=0;
+	*mac = NULL;
+	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, mac, &size);
+}
+
+/**
  * ptp_canon_startshootingmode:
  * params:	PTPParams*
  * 

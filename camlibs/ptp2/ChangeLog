@@ -4,6 +4,8 @@
 
 	* ptp.c, ptp.h, library.c: Sync CANON opcode names with list
 	  gleamed from camera access library.
+	
+	* ptp.[ch]: Get Canon wireless MAC address wrapper.
 
 2006-10-10  Marcus Meissner  <marcus@jet.franken.de>
 	
