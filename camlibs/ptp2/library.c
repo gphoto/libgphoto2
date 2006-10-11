@@ -1437,7 +1437,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 			}
 
 
-			ret = ptp_canon_reflectchanges(params,7);
+			ret = ptp_canon_aeafawb(params,7);
 			break;
 		}
 	}
@@ -1744,7 +1744,7 @@ canon_theme_get (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	((PTPData *) camera->pl->params.data)->context = context;
 
-	res = ptp_canon_theme_download (params, 1, &xdata, &size);
+	res = ptp_canon_get_customize_data (params, 1, &xdata, &size);
 	if (res != PTP_RC_OK)  {
 		report_result(context, res, params->deviceinfo.VendorExtensionID);
 		return (translate_ptp_result(res));

@@ -1315,7 +1315,7 @@ ptp_ek_sendfileobject (PTPParams* params, unsigned char* object, uint32_t size)
 
 
 /**
- * ptp_canon_getobjectsize:
+ * ptp_canon_getpartialobjectinfo:
  * params:	PTPParams*
  *		uint32_t handle		- ObjectHandle
  *		uint32_t p2 		- Yet unknown parameter,
@@ -1329,14 +1329,14 @@ ptp_ek_sendfileobject (PTPParams* params, unsigned char* object, uint32_t size)
  *
  **/
 uint16_t
-ptp_canon_getobjectsize (PTPParams* params, uint32_t handle, uint32_t p2, 
+ptp_canon_getpartialobjectinfo (PTPParams* params, uint32_t handle, uint32_t p2, 
 			uint32_t* size, uint32_t* rp2) 
 {
 	uint16_t ret;
 	PTPContainer ptp;
 	
 	PTP_CNT_INIT(ptp);
-	ptp.Code=PTP_OC_CANON_GetObjectSize;
+	ptp.Code=PTP_OC_CANON_GetPartialObjectInfo;
 	ptp.Param1=handle;
 	ptp.Param2=p2;
 	ptp.Nparam=2;
@@ -1370,7 +1370,7 @@ ptp_canon_startshootingmode (PTPParams* params)
 }
 
 /**
- * ptp_canon_request_direct_transfer:
+ * ptp_canon_initiate_direct_transfer:
  * params:	PTPParams*
  *              uint32_t *out
  * 
@@ -1382,13 +1382,13 @@ ptp_canon_startshootingmode (PTPParams* params)
  *
  **/
 uint16_t
-ptp_canon_request_direct_transfer (PTPParams* params, uint32_t *out)
+ptp_canon_initiate_direct_transfer (PTPParams* params, uint32_t *out)
 {
 	PTPContainer ptp;
 	uint16_t ret;
 
 	PTP_CNT_INIT(ptp);
-	ptp.Code   = PTP_OC_CANON_RequestDirectTransfer;
+	ptp.Code   = PTP_OC_CANON_InitiateDirectTransferEx2;
 	ptp.Nparam = 1;
 	ptp.Param1 = 0xf;
 	ret = ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
@@ -1398,7 +1398,7 @@ ptp_canon_request_direct_transfer (PTPParams* params, uint32_t *out)
 }
 
 /**
- * ptp_canon_get_direct_transfer_images:
+ * ptp_canon_get_target_handles:
  * params:	PTPParams*
  *              PTPCanon_directtransfer_entry **out
  *              unsigned int *outsize
@@ -1410,7 +1410,7 @@ ptp_canon_request_direct_transfer (PTPParams* params, uint32_t *out)
  *
  **/
 uint16_t
-ptp_canon_get_direct_transfer_images (PTPParams* params,
+ptp_canon_get_target_handles (PTPParams* params,
 	PTPCanon_directtransfer_entry **entries, unsigned int *cnt)
 {
 	PTPContainer ptp;
@@ -1420,7 +1420,7 @@ ptp_canon_get_direct_transfer_images (PTPParams* params,
 	unsigned int size;
 	
 	PTP_CNT_INIT(ptp);
-	ptp.Code   = PTP_OC_CANON_GetDirectTransferImages;
+	ptp.Code   = PTP_OC_CANON_GetTargetHandles;
 	ptp.Nparam = 0;
 	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &out, &size);
 	if (ret != PTP_RC_OK)
@@ -1507,26 +1507,23 @@ ptp_canon_viewfinderoff (PTPParams* params)
 }
 
 /**
- * ptp_canon_reflectchanges:
+ * ptp_canon_aeafawb:
  * params:	PTPParams*
  * 		uint32_t p1 	- Yet unknown parameter,
  * 				  value 7 works
  * 
- * Make viewfinder reflect changes.
- * There is a button for this operation in the Remote Capture app.
- * What it does exactly I don't know. This operation is followed
- * by the CANON_GetChanges(?) operation in the log.
+ * Called AeAfAwb (auto exposure, focus, white balance)
  *
  * Return values: Some PTP_RC_* code.
  *
  **/
 uint16_t
-ptp_canon_reflectchanges (PTPParams* params, uint32_t p1)
+ptp_canon_aeafawb (PTPParams* params, uint32_t p1)
 {
 	PTPContainer ptp;
 	
 	PTP_CNT_INIT(ptp);
-	ptp.Code=PTP_OC_CANON_ReflectChanges;
+	ptp.Code=PTP_OC_CANON_DoAeAfAwb;
 	ptp.Param1=p1;
 	ptp.Nparam=1;
 	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
@@ -1692,7 +1689,7 @@ ptp_canon_getpartialobject (PTPParams* params, uint32_t handle,
 	unsigned int len;
 	
 	PTP_CNT_INIT(ptp);
-	ptp.Code=PTP_OC_CANON_GetPartialObject;
+	ptp.Code=PTP_OC_CANON_GetPartialObjectEx;
 	ptp.Param1=handle;
 	ptp.Param2=offset;
 	ptp.Param3=size;
@@ -1775,7 +1772,7 @@ ptp_canon_getchanges (PTPParams* params, uint16_t** props, uint32_t* propnum)
 }
 
 /**
- * ptp_canon_getfolderentries:
+ * ptp_canon_getobjectinfo:
  *
  * This command reads a specified object's record in a device's filesystem,
  * or the records of all objects belonging to a specified folder (association).
@@ -1798,7 +1795,7 @@ ptp_canon_getchanges (PTPParams* params, uint16_t** props, uint32_t* propnum)
  *
  **/
 uint16_t
-ptp_canon_getfolderentries (PTPParams* params, uint32_t store, uint32_t p2, 
+ptp_canon_getobjectinfo (PTPParams* params, uint32_t store, uint32_t p2, 
 			    uint32_t parent, uint32_t handle, 
 			    PTPCANONFolderEntry** entries, uint32_t* entnum)
 {
@@ -1808,7 +1805,7 @@ ptp_canon_getfolderentries (PTPParams* params, uint32_t store, uint32_t p2,
 	unsigned int len;
 	
 	PTP_CNT_INIT(ptp);
-	ptp.Code=PTP_OC_CANON_GetFolderEntries;
+	ptp.Code=PTP_OC_CANON_GetObjectInfoEx;
 	ptp.Param1=store;
 	ptp.Param2=p2;
 	ptp.Param3=parent;
@@ -1834,7 +1831,7 @@ ptp_canon_getfolderentries (PTPParams* params, uint32_t store, uint32_t p2,
 }
 
 /**
- * ptp_canon_lookup_object:
+ * ptp_canon_get_objecthandle_by_name:
  *
  * This command looks up the specified object on the camera.
  *
@@ -1851,7 +1848,7 @@ ptp_canon_getfolderentries (PTPParams* params, uint32_t store, uint32_t p2,
  *
  **/
 uint16_t
-ptp_canon_lookup_object (PTPParams* params, char* name, uint32_t* objectid)
+ptp_canon_get_objecthandle_by_name (PTPParams* params, char* name, uint32_t* objectid)
 {
 	uint16_t ret;
 	PTPContainer ptp;
@@ -1859,7 +1856,7 @@ ptp_canon_lookup_object (PTPParams* params, char* name, uint32_t* objectid)
 	uint8_t len;
 
 	PTP_CNT_INIT (ptp);
-	ptp.Code=PTP_OC_CANON_LookupObject;
+	ptp.Code=PTP_OC_CANON_GetObjectHandleByName;
 	ptp.Nparam=0;
 	len=0;
 	data = malloc (2*(strlen(name)+1)+2);
@@ -1872,7 +1869,7 @@ ptp_canon_lookup_object (PTPParams* params, char* name, uint32_t* objectid)
 }
 
 /**
- * ptp_canon_theme_download:
+ * ptp_canon_get_customize_data:
  *
  * This command downloads the specified theme slot, including jpegs
  * and wav files.
@@ -1886,7 +1883,7 @@ ptp_canon_lookup_object (PTPParams* params, char* name, uint32_t* objectid)
  *
  **/
 uint16_t
-ptp_canon_theme_download (PTPParams* params, uint32_t themenr,
+ptp_canon_get_customize_data (PTPParams* params, uint32_t themenr,
 		unsigned char **data, unsigned int *size)
 {
 	PTPContainer ptp;
@@ -1894,7 +1891,7 @@ ptp_canon_theme_download (PTPParams* params, uint32_t themenr,
 	*data = NULL;
 	*size = 0;
 	PTP_CNT_INIT(ptp);
-	ptp.Code	= PTP_OC_CANON_ThemeDownload;
+	ptp.Code	= PTP_OC_CANON_GetCustomizeData;
 	ptp.Param1	= themenr;
 	ptp.Nparam	= 1;
 	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size); 

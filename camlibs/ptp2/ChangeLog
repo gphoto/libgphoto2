@@ -2,6 +2,9 @@
 
 	* ptp.c,ptp.h: translate opcodes to strings (merged from libmtp).
 
+	* ptp.c, ptp.h, library.c: Sync CANON opcode names with list
+	  gleamed from camera access library.
+
 2006-10-10  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* library.c: Added Canon Digital IXUS Wireless (same as SD430)
