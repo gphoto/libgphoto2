@@ -5285,7 +5285,7 @@ msgstr "\tMaximale Kapazität: %llu (%lu MB)\n"
 #: camlibs/ptp2/library.c:2052
 #, c-format
 msgid "\tFree Space (Bytes): %llu (%lu MB)\n"
-msgstr "\t Freier Platz (Bytes): %llu (%lu MB)\n"
+msgstr "\tFreier Platz (Bytes): %llu (%lu MB)\n"
 
 #: camlibs/ptp2/library.c:2057
 #, c-format
