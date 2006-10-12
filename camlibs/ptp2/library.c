@@ -589,7 +589,8 @@ static struct {
 	/* A610, Andriy Kulchytskyy <whoops@ukrtop.com> */
 	{"Canon:PowerShot A610 (PTP mode)",     0x04a9, 0x30fd, PTPBUG_DELETE_SENDS_EVENT},
 	/* Irc Reporter */
-	{"Canon:Digital IXUS SD630 (PTP mode)", 0x04a9, 0x30fe, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot SD630 (PTP mode)",	0x04a9, 0x30fe, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:Digital IXUS 65 (PTP mode)",	0x04a9, 0x30fe, PTPBUG_DELETE_SENDS_EVENT},
 	/* Rob Lensen <rob@bsdfreaks.nl> */
 	{"Canon:Digital IXUS 55 (PTP mode)",    0x04a9, 0x30ff, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot SD450 (PTP mode)",    0x04a9, 0x30ff, PTPBUG_DELETE_SENDS_EVENT},

@@ -1,10 +1,15 @@
+2006-10-12  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Corrected SD630 name (its PowerShot brand),
+	  added Digital IXUS 65 alias for same.
+
 2006-10-11  Marcus Meissner  <marcus@jet.franken.de>
 
 	* ptp.c,ptp.h: translate opcodes to strings (merged from libmtp).
 
 	* ptp.c, ptp.h, library.c: Sync CANON opcode names with list
 	  gleamed from camera access library.
-	
+
 	* ptp.[ch]: Get Canon wireless MAC address wrapper.
 
 2006-10-10  Marcus Meissner  <marcus@jet.franken.de>
