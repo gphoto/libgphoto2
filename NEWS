@@ -36,6 +36,8 @@ Bindings:
 libgphoto2 API:
    * Compiles with -pedantic in gcc's c99 and c++98 modes.
    * Marked a few definitions as being internal to the gphoto project.
+   * Added gp_list_find_by_name() function.
+   * Made _CameraList details private.
 
 libgphoto2:
    * Improved error checking and propagation.
