@@ -121,6 +121,7 @@ gp_library_version
 gp_list_append
 gp_list_count
 gp_list_free
+gp_list_find_by_name
 gp_list_get_name
 gp_list_get_value
 gp_list_new
