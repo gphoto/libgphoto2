@@ -1005,11 +1005,11 @@ ptp_unpack_canon_directory (
 	for (i=0;i<cnt;i++)
 		if (ISOBJECT(dir+i*0x4c)) nrofobs++;
 	handles->n = nrofobs;
-	handles->Handler = calloc(sizeof(uint32_t),nrofobs);
+	handles->Handler = calloc(sizeof(handles->Handler[0]),nrofobs);
 	if (!handles->Handler) return PTP_RC_GeneralError;
-	*oinfos = calloc(sizeof(PTPObjectInfo),nrofobs);
+	*oinfos = calloc(sizeof((*oinfos)[0]),nrofobs);
 	if (!*oinfos) return PTP_RC_GeneralError;
-	*flags  = calloc(sizeof(uint32_t),nrofobs);
+	*flags  = calloc(sizeof((*flags)[0]),nrofobs);
 	if (!*flags) return PTP_RC_GeneralError;
 
 	/* Migrate data into objects ids, handles into
@@ -1027,12 +1027,12 @@ ptp_unpack_canon_directory (
 		oi->StorageID		= 0xffffffff;
 		oi->ObjectFormat	= dtoh16a(cur + ptp_canon_dir_ofc);
 		oi->ParentObject	= dtoh32a(cur + ptp_canon_dir_parentid);
-		oi->Filename		= strdup((char*)(cur  + ptp_canon_dir_name));
+		oi->Filename		= strdup((char*)(cur + ptp_canon_dir_name));
 		oi->ObjectCompressedSize= dtoh32a(cur + ptp_canon_dir_size);
 		oi->ThumbCompressedSize	= dtoh32a(cur + ptp_canon_dir_thumbsize);
 		oi->ImagePixWidth	= dtoh32a(cur + ptp_canon_dir_width);
 		oi->ImagePixHeight	= dtoh32a(cur + ptp_canon_dir_height);
-		oi->CaptureDate		= oi->ModificationDate	= dtoh32a(cur + ptp_canon_dir_unixtime);
+		oi->CaptureDate		= oi->ModificationDate = dtoh32a(cur + ptp_canon_dir_unixtime);
 		(*flags)[curob]		= dtoh32a(cur + ptp_canon_dir_flags);
 		curob++;
 	}
@@ -1044,7 +1044,8 @@ ptp_unpack_canon_directory (
 
 		if (ISOBJECT(cur))
 			continue;
-		for (j=0;j<cnt;j++) if (nextchild == handles->Handler[j]) break;
+		for (j=0;j<handles->n;j++) if (nextchild == handles->Handler[j]) break;
+		if (j == handles->n) continue;
 		(*oinfos)[j].StorageID = dtoh32a(cur + ptp_canon_dir_storageid);
 	}
 	/* Walk over all objects and distribute the storage ids */
