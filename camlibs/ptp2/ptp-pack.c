@@ -966,6 +966,30 @@ ptp_pack_EK_text(PTPParams *params, PTPEKTextParams *text, unsigned char **data)
 	return len;
 }
 
+#define ptp_canon_dir_version	0x00
+#define ptp_canon_dir_ofc	0x02
+#define ptp_canon_dir_unk1	0x04
+#define ptp_canon_dir_objectid	0x08
+#define ptp_canon_dir_parentid	0x0c
+#define ptp_canon_dir_previd	0x10	/* in same dir */
+#define ptp_canon_dir_nextid	0x14	/* in same dir */
+#define ptp_canon_dir_nextchild	0x18	/* down one dir */
+#define ptp_canon_dir_storageid	0x1c	/* only in storage entry */
+#define ptp_canon_dir_name	0x20
+#define ptp_canon_dir_flags	0x2c
+#define ptp_canon_dir_size	0x30
+#define ptp_canon_dir_unixtime	0x34
+#define ptp_canon_dir_year	0x38
+#define ptp_canon_dir_month	0x39
+#define ptp_canon_dir_mday	0x3a
+#define ptp_canon_dir_hour	0x3b
+#define ptp_canon_dir_minute	0x3c
+#define ptp_canon_dir_second	0x3d
+#define ptp_canon_dir_unk2	0x3e
+#define ptp_canon_dir_thumbsize	0x40
+#define ptp_canon_dir_width	0x44
+#define ptp_canon_dir_height	0x48
+
 static inline uint16_t
 ptp_unpack_canon_directory (
 	PTPParams		*params,
@@ -977,7 +1001,7 @@ ptp_unpack_canon_directory (
 ) {
 	unsigned int	i, j, nrofobs = 0, curob = 0;
 
-#define ISOBJECT(ptr) (dtoh32a((ptr)+0x1c) == 0xffffffff)
+#define ISOBJECT(ptr) (dtoh32a((ptr)+ptp_canon_dir_storageid) == 0xffffffff)
 	for (i=0;i<cnt;i++)
 		if (ISOBJECT(dir+i*0x4c)) nrofobs++;
 	handles->n = nrofobs;
@@ -999,38 +1023,38 @@ ptp_unpack_canon_directory (
 		if (!ISOBJECT(cur))
 			continue;
 
-		handles->Handler[curob] = dtoh32a(cur + 0x08);
+		handles->Handler[curob] = dtoh32a(cur + ptp_canon_dir_objectid);
 		oi->StorageID		= 0xffffffff;
-		oi->ObjectFormat	= dtoh16a(cur + 0x02);
-		oi->ParentObject	= dtoh32a(cur + 0x0c);
-		oi->Filename		= strdup((char*)(cur  + 0x20));
-		oi->ObjectCompressedSize= dtoh32a(cur + 0x30);
-		oi->ThumbCompressedSize	= dtoh32a(cur + 0x40);
-		oi->ImagePixWidth	= dtoh32a(cur + 0x44);
-		oi->ImagePixHeight	= dtoh32a(cur + 0x48);
-		oi->CaptureDate		= oi->ModificationDate	= dtoh32a(cur + 0x34);
-		(*flags)[curob]		= dtoh32a(cur + 0x2c);
+		oi->ObjectFormat	= dtoh16a(cur + ptp_canon_dir_ofc);
+		oi->ParentObject	= dtoh32a(cur + ptp_canon_dir_parentid);
+		oi->Filename		= strdup((char*)(cur  + ptp_canon_dir_name));
+		oi->ObjectCompressedSize= dtoh32a(cur + ptp_canon_dir_size);
+		oi->ThumbCompressedSize	= dtoh32a(cur + ptp_canon_dir_thumbsize);
+		oi->ImagePixWidth	= dtoh32a(cur + ptp_canon_dir_width);
+		oi->ImagePixHeight	= dtoh32a(cur + ptp_canon_dir_height);
+		oi->CaptureDate		= oi->ModificationDate	= dtoh32a(cur + ptp_canon_dir_unixtime);
+		(*flags)[curob]		= dtoh32a(cur + ptp_canon_dir_flags);
 		curob++;
 	}
 	/* Walk over Storage ID entries and distribute the IDs to
 	 * the parent objects. */
 	for (i=0;i<cnt;i++) {
 		unsigned char	*cur = dir+i*0x4c;
-		uint32_t	nextchild = dtoh32a(cur + 0x18);
+		uint32_t	nextchild = dtoh32a(cur + ptp_canon_dir_nextchild);
 
 		if (ISOBJECT(cur))
 			continue;
 		for (j=0;j<cnt;j++) if (nextchild == handles->Handler[j]) break;
-		(*oinfos)[j].StorageID = dtoh32a(cur + 0x1c);
+		(*oinfos)[j].StorageID = dtoh32a(cur + +ptp_canon_dir_storageid);
 	}
 	/* Walk over all objects and distribute the storage ids */
 	while (1) {
 		int changed = 0;
 		for (i=0;i<cnt;i++) {
 			unsigned char	*cur = dir+i*0x4c;
-			uint32_t	oid = dtoh32a(cur + 0x08);
-			uint32_t	nextoid = dtoh32a(cur + 0x14);
-			uint32_t	nextchild = dtoh32a(cur + 0x18);
+			uint32_t	oid = dtoh32a(cur + ptp_canon_dir_objectid);
+			uint32_t	nextoid = dtoh32a(cur + ptp_canon_dir_nextid);
+			uint32_t	nextchild = dtoh32a(cur + ptp_canon_dir_nextchild);
 			uint32_t	storageid;
 
 			if (!ISOBJECT(cur))
