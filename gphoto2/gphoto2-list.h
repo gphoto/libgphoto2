@@ -1,4 +1,4 @@
-/** \file
+/** \file gphoto2-list.h
  *
  * Lists of files, folders, cameras, etc.
  *
@@ -30,8 +30,6 @@
 extern "C" {
 #endif /* __cplusplus */
 
-#define MAX_ENTRIES 1024
-
 /* Usage pattern for CameraList for users external of
  * libgphoto2, such as libgphoto2 frontends:
  *
@@ -51,14 +49,6 @@ extern "C" {
  * Please do NOT directly access the structure members like this:
  *               list->entry[i].name // DO NOT DO THIS
  */
-struct _CameraList {
-	int  count;
-	struct {
-		char name  [128];
-		char value [128];
-	} entry [MAX_ENTRIES];
-	int ref_count;
-};
 typedef struct _CameraList CameraList;
 
 int     gp_list_new   (CameraList **list);
@@ -71,6 +61,8 @@ int	gp_list_append	   (CameraList *list,
 			    const char *name, const char *value);
 int     gp_list_reset      (CameraList *list);
 int     gp_list_sort       (CameraList *list);
+
+int gp_list_find_by_name (CameraList *list, int *index, const char *name);
 
 int gp_list_get_name  (CameraList *list, int index, const char **name);
 int gp_list_get_value (CameraList *list, int index, const char **value);

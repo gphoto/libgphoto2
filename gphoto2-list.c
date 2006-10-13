@@ -1,4 +1,4 @@
-/** \file
+/** \file gphoto2-list.c
  *
  * \author Copyright 2000 Scott Fritzinger
  *
@@ -34,6 +34,55 @@
 #define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 
+#define CHECK_LIST(list)				\
+  do {							\
+    if (NULL == list) {					\
+      return (GP_ERROR_BAD_PARAMETERS);			\
+    } else if (list->ref_count == 0) {			\
+      /* catch calls to already freed list */		\
+      return (GP_ERROR_BAD_PARAMETERS);			\
+    }							\
+  } while (0)
+
+
+/**
+ * What code to compile
+ **/
+#define CAMERALIST_STRUCT_COMPATIBILITY
+
+
+/**
+ * Internal structure
+ **/
+
+
+#ifdef CAMERALIST_STRUCT_COMPATIBILITY
+
+#define MAX_ENTRIES 1024
+struct _CameraList {
+	int  count;
+	struct {
+		char name  [128];
+		char value [128];
+	} entry [MAX_ENTRIES];
+	int ref_count;
+};
+
+#define CHECK_INDEX_RANGE(list, index)			\
+  do {							\
+    if (index < 0 || index >= list->count) {		\
+      return (GP_ERROR_BAD_PARAMETERS);			\
+    } \
+  } while (0)
+
+#else /* !CAMERALIST_STRUCT_COMPATIBILITY */
+
+struct _CameraList {
+	int ref_count;
+};
+
+#endif /* !CAMERALIST_STRUCT_COMPATIBILITY */
+
 
 /**
  * Creates a new #CameraList.
@@ -47,10 +96,10 @@ gp_list_new (CameraList **list)
 {
 	CHECK_NULL (list);
 
-	*list = malloc (sizeof (CameraList));
-        if (!*list)
+	(*list) = malloc (sizeof (CameraList));
+        if (!(*list))
 		return (GP_ERROR_NO_MEMORY);
-	memset (*list, 0, sizeof (CameraList));
+	memset ((*list), 0, sizeof (CameraList));
 
 	(*list)->ref_count = 1;
 
@@ -67,7 +116,7 @@ gp_list_new (CameraList **list)
 int
 gp_list_ref (CameraList *list)
 {
-	CHECK_NULL (list);
+	CHECK_LIST (list);
 
 	list->ref_count++;
 
@@ -86,7 +135,7 @@ gp_list_ref (CameraList *list)
 int
 gp_list_unref (CameraList *list)
 {
-	CHECK_NULL (list);
+	CHECK_LIST (list);
 
 	list->ref_count--;
 
@@ -106,7 +155,12 @@ gp_list_unref (CameraList *list)
 int
 gp_list_free (CameraList *list) 
 {
-	CHECK_NULL (list);
+	CHECK_LIST (list);
+
+	/* Mark this list as having been freed. That may help us
+	 * prevent access to already freed lists.
+	 */
+	list->ref_count = 0;
 	
 	free (list);
 
@@ -123,7 +177,7 @@ gp_list_free (CameraList *list)
 int
 gp_list_reset (CameraList *list)
 {
-	CHECK_NULL (list);
+	CHECK_LIST (list);
 
 	list->count = 0;
 
@@ -142,7 +196,7 @@ gp_list_reset (CameraList *list)
 int
 gp_list_append (CameraList *list, const char *name, const char *value)
 {
-	CHECK_NULL (list);
+	CHECK_LIST (list);
 
 	if (list->count == MAX_ENTRIES) {
 		gp_log (GP_LOG_ERROR, "gphoto2-list", "gp_list_append: "
@@ -219,7 +273,7 @@ gp_list_sort (CameraList *list)
 {
 	int x, y, z;
 
-	CHECK_NULL (list);
+	CHECK_LIST (list);
 
 	for (x = 0; x < list->count - 1; x++)
 		for (y = x + 1; y < list->count; y++) {
@@ -241,9 +295,43 @@ gp_list_sort (CameraList *list)
 int
 gp_list_count (CameraList *list)
 {
-	CHECK_NULL (list);
+	CHECK_LIST (list);
 
         return (list->count);
+}
+
+/**
+ * Retrieves the \c index of an arbitrary entry with \c name.
+ *
+ * @param list a #CameraList
+ * @param index pointer to the result index (may be NULL, only set if found)
+ * @param name name of the entry
+ * @return a gphoto2 error code: GP_OK if found.
+ *
+ * No guarantees as to the speed of the search, or in what sequence
+ * the list is searched.
+ *
+ **/
+int
+gp_list_find_by_name (CameraList *list, int *index, const char *name)
+{
+	int i;
+	CHECK_LIST (list);
+	CHECK_NULL (name);
+
+	/* We search backwards because our only known user
+	 * camlibs/ptp2/library.c thinks this is faster
+	 */
+	for (i=list->count-1; i >= 0; i--) {
+	  if (0==strcmp(list->entry[i].name, name)) {
+	    if (index) {
+	      (*index) = i;
+	    }
+	    return (GP_OK);
+	  }
+	}
+
+	return (GP_ERROR);
 }
 
 /**
@@ -258,10 +346,9 @@ gp_list_count (CameraList *list)
 int
 gp_list_get_name (CameraList *list, int index, const char **name)
 {
-	CHECK_NULL (list && name);
-
-	if (index < 0 || index >= list->count)
-		return (GP_ERROR_BAD_PARAMETERS);
+	CHECK_LIST (list);
+	CHECK_NULL (name);
+	CHECK_INDEX_RANGE (list, index);
 
 	*name = list->entry[index].name;
 
@@ -280,10 +367,9 @@ gp_list_get_name (CameraList *list, int index, const char **name)
 int
 gp_list_get_value (CameraList *list, int index, const char **value)
 {
-	CHECK_NULL (list && value);
-
-	if (index < 0 || index >= list->count)
-		return (GP_ERROR_BAD_PARAMETERS);
+	CHECK_LIST (list);
+	CHECK_NULL (value);
+	CHECK_INDEX_RANGE (list, index);
 
 	*value = list->entry[index].value;
 
@@ -302,10 +388,9 @@ gp_list_get_value (CameraList *list, int index, const char **value)
 int
 gp_list_set_value (CameraList *list, int index, const char *value)
 {
-	CHECK_NULL (list && value);
-
-	if (index < 0 || index >= list->count)
-		return (GP_ERROR_BAD_PARAMETERS);
+	CHECK_LIST (list);
+	CHECK_NULL (value);
+	CHECK_INDEX_RANGE (list, index);
 
 	do {
 		/* check that the value fits */
@@ -338,10 +423,9 @@ gp_list_set_value (CameraList *list, int index, const char *value)
 int
 gp_list_set_name (CameraList *list, int index, const char *name)
 {
-	CHECK_NULL (list && name);
-
-	if (index >= list->count)
-		return (GP_ERROR_BAD_PARAMETERS);
+	CHECK_LIST (list);
+	CHECK_NULL (name);
+	CHECK_INDEX_RANGE (list, index);
 
 	do {
 		/* check that the value fits */
@@ -382,7 +466,8 @@ gp_list_populate  (CameraList *list, const char *format, int count)
 	int x;
 	char buf[1024];
 
-	CHECK_NULL (list && format);
+	CHECK_LIST (list);
+	CHECK_NULL (format);
 
 	gp_list_reset (list);
 	for (x = 0; x < count; x++) {
