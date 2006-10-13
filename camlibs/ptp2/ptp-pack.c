@@ -249,7 +249,7 @@ ptp_unpack_DI (PTPParams *params, unsigned char* data, PTPDeviceInfo *di, unsign
 	uint8_t len;
 	unsigned int totallen;
 	
-	di->StaqndardVersion = dtoh16a(&data[PTP_di_StandardVersion]);
+	di->StandardVersion = dtoh16a(&data[PTP_di_StandardVersion]);
 	di->VendorExtensionID =
 		dtoh32a(&data[PTP_di_VendorExtensionID]);
 	di->VendorExtensionVersion =
@@ -965,3 +965,115 @@ ptp_pack_EK_text(PTPParams *params, PTPEKTextParams *text, unsigned char **data)
 	}
 	return len;
 }
+
+static inline uint16_t
+ptp_unpack_canon_directory (
+	PTPParams		*params,
+	unsigned char		*dir,
+	uint32_t		cnt,
+	PTPObjectHandles	*handles,
+	PTPObjectInfo		**oinfos,	/* size(handles->n) */
+	uint32_t		**flags		/* size(handles->n) */
+) {
+	unsigned int	i, j, nrofobs = 0, curob = 0;
+
+#define ISOBJECT(ptr) (dtoh32a((ptr)+0x1c) == 0xffffffff)
+	for (i=0;i<cnt;i++)
+		if (ISOBJECT(dir+i*0x4c)) nrofobs++;
+	handles->n = nrofobs;
+	handles->Handler = calloc(sizeof(uint32_t),nrofobs);
+	if (!handles->Handler) return PTP_RC_GeneralError;
+	*oinfos = calloc(sizeof(PTPObjectInfo),nrofobs);
+	if (!*oinfos) return PTP_RC_GeneralError;
+	*flags  = calloc(sizeof(uint32_t),nrofobs);
+	if (!*flags) return PTP_RC_GeneralError;
+
+	/* Migrate data into objects ids, handles into
+	 * the object handler array.
+	 */
+	curob = 0;
+	for (i=0;i<cnt;i++) {
+		unsigned char	*cur = dir+i*0x4c;
+		PTPObjectInfo	*oi = (*oinfos)+curob;
+
+		if (!ISOBJECT(cur))
+			continue;
+
+		handles->Handler[curob] = dtoh32a(cur + 0x08);
+		oi->StorageID		= 0xffffffff;
+		oi->ObjectFormat	= dtoh16a(cur + 0x02);
+		oi->ParentObject	= dtoh32a(cur + 0x0c);
+		oi->Filename		= strdup((char*)(cur  + 0x20));
+		oi->ObjectCompressedSize= dtoh32a(cur + 0x30);
+		oi->ThumbCompressedSize	= dtoh32a(cur + 0x40);
+		oi->ImagePixWidth	= dtoh32a(cur + 0x44);
+		oi->ImagePixHeight	= dtoh32a(cur + 0x48);
+		oi->CaptureDate		= oi->ModificationDate	= dtoh32a(cur + 0x34);
+		(*flags)[curob]		= dtoh32a(cur + 0x2c);
+		curob++;
+	}
+	/* Walk over Storage ID entries and distribute the IDs to
+	 * the parent objects. */
+	for (i=0;i<cnt;i++) {
+		unsigned char	*cur = dir+i*0x4c;
+		uint32_t	nextchild = dtoh32a(cur + 0x18);
+
+		if (ISOBJECT(cur))
+			continue;
+		for (j=0;j<cnt;j++) if (nextchild == handles->Handler[j]) break;
+		(*oinfos)[j].StorageID = dtoh32a(cur + 0x1c);
+	}
+	/* Walk over all objects and distribute the storage ids */
+	while (1) {
+		int changed = 0;
+		for (i=0;i<cnt;i++) {
+			unsigned char	*cur = dir+i*0x4c;
+			uint32_t	oid = dtoh32a(cur + 0x08);
+			uint32_t	nextoid = dtoh32a(cur + 0x14);
+			uint32_t	nextchild = dtoh32a(cur + 0x18);
+			uint32_t	storageid;
+
+			if (!ISOBJECT(cur))
+				continue;
+			for (j=0;j<handles->n;j++) if (oid == handles->Handler[j]) break;
+			if (j == handles->n) {
+				/*fprintf(stderr,"did not find oid in lookup pass for current oid\n");*/
+				continue;
+			}
+	 		storageid = (*oinfos)[j].StorageID;
+			if (storageid == 0xffffffff) continue;
+			if (nextoid != 0xffffffff) {
+				for (j=0;j<handles->n;j++) if (nextoid == handles->Handler[j]) break;
+				if (j == handles->n) {
+					/*fprintf(stderr,"did not find oid in lookup pass for next oid\n");*/
+					continue;
+				}
+				if ((*oinfos)[j].StorageID == 0xffffffff) {
+					(*oinfos)[j].StorageID = storageid;
+					changed++;
+				}
+			}
+			if (nextchild != 0xffffffff) {
+				for (j=0;j<handles->n;j++) if (nextchild == handles->Handler[j]) break;
+				if (j == handles->n) {
+					/*fprintf(stderr,"did not find oid in lookup pass for next child\n");*/
+					continue;
+				}
+				if ((*oinfos)[j].StorageID == 0xffffffff) {
+					(*oinfos)[j].StorageID = storageid;
+					changed++;
+				}
+			}
+		}
+		/* Check if we:
+		 * - changed no entry (nothing more to do)
+		 * - changed all of them at once (usually happens)
+		 * break if we do.
+		 */
+		if (!changed || (changed==nrofobs-1))
+			break;
+	}
+#undef ISOBJECT
+	return PTP_RC_OK;
+}
+

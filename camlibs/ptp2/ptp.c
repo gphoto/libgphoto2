@@ -1318,14 +1318,17 @@ ptp_ek_sendfileobject (PTPParams* params, unsigned char* object, uint32_t size)
  * ptp_canon_getpartialobjectinfo:
  * params:	PTPParams*
  *		uint32_t handle		- ObjectHandle
- *		uint32_t p2 		- Yet unknown parameter,
- *					  value 0 works.
+ *		uint32_t p2 		- Not fully understood parameter
+ *					  0 - returns full size
+ *					  1 - returns thumbnail size (or EXIF?)
  * 
  * Gets form the responder the size of the specified object.
  *
  * Return values: Some PTP_RC_* code.
  * Upon success : uint32_t* size	- The object size
- *		  uint32_t  rp2		- Yet unknown parameter
+ *		  uint32_t* rp2		- Still unknown return parameter
+ *                                        (perhaps upper 32bit of size)
+ *
  *
  **/
 uint16_t
@@ -1368,6 +1371,64 @@ ptp_canon_get_mac_address (PTPParams* params, unsigned char **mac)
 	*mac = NULL;
 	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, mac, &size);
 }
+
+/**
+ * ptp_canon_get_directory:
+ * params:	PTPParams*
+
+ * Gets the full directory of the camera.
+ *
+ * Return values: Some PTP_RC_* code.
+ * Upon success : PTPObjectHandles        *handles	- filled out with handles
+ * 		  PTPObjectInfo           **oinfos	- allocated array of PTP Object Infos
+ * 		  uint32_t                **flags	- allocated array of CANON Flags
+ *
+ **/
+uint16_t
+ptp_canon_get_directory (PTPParams* params,
+	PTPObjectHandles	*handles,
+	PTPObjectInfo		**oinfos,	/* size(handles->n) */
+	uint32_t		**flags		/* size(handles->n) */
+) {
+	PTPContainer	ptp;
+	unsigned char	*dir = NULL;
+	unsigned int	size = 0;
+	uint16_t	ret;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code=PTP_OC_CANON_GetDirectory;
+	ptp.Nparam=0;
+	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &dir, &size);
+	if (ret != PTP_RC_OK)
+		return ret;
+	ret = ptp_unpack_canon_directory(params, dir, ptp.Param1, handles, oinfos, flags);
+	free (dir);
+	return ret;
+}
+
+/**
+ * ptp_canon_setobjectarchive:
+ *
+ * params:	PTPParams*
+ *		uint32_t	objectid
+ *		uint32_t	flags
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_canon_setobjectarchive (PTPParams* params, uint32_t oid, uint32_t flags)
+{
+	PTPContainer ptp;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code=PTP_OC_CANON_SetObjectArchive;
+	ptp.Nparam=2;
+	ptp.Param1=oid;
+	ptp.Param2=flags;
+	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+}
+
 
 /**
  * ptp_canon_startshootingmode:

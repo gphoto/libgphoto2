@@ -227,10 +227,8 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_NotifyProgress 		0x902A
 #define PTP_OC_CANON_NotifyCancelAccepted	0x902B
 /* 902c: no parms, read 3 uint32 in data, no response parms */
-#define PTP_OC_CANON_902C			0x902c
-/* 902d: no parms, read <n> bytes data, 1 response parm */
-/* directory ? */
-#define PTP_OC_CANON_902D			0x902D
+#define PTP_OC_CANON_902C			0x902C
+#define PTP_OC_CANON_GetDirectory		0x902D
 
 #define PTP_OC_CANON_SetPairingInfo		0x9030
 #define PTP_OC_CANON_GetPairingInfo		0x9031
@@ -374,7 +372,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 /* PTP device info structure (returned by GetDevInfo) */
 
 struct _PTPDeviceInfo {
-	uint16_t StaqndardVersion;
+	uint16_t StandardVersion;
 	uint32_t VendorExtensionID;
 	uint16_t VendorExtensionVersion;
 	char	*VendorExtensionDesc;
@@ -1122,6 +1120,9 @@ struct _PTPParams {
 	PTPObjectInfo * objectinfo;
 	PTPDeviceInfo deviceinfo;
 
+	/* Canon specific flags list */
+	uint32_t	*canon_flags; /* size(handles.n) */
+
 	/* Wifi profiles */
 	uint8_t  wifi_profiles_version;
 	uint8_t  wifi_profiles_number;
@@ -1270,8 +1271,11 @@ uint16_t ptp_canon_getobjectinfo (PTPParams* params, uint32_t store,
 				PTPCANONFolderEntry** entries,
 				uint32_t* entnum);
 uint16_t ptp_canon_get_objecthandle_by_name (PTPParams* params, char* name, uint32_t* objectid);
+uint16_t ptp_canon_get_directory (PTPParams* params, PTPObjectHandles *handles, PTPObjectInfo **oinfos, uint32_t **flags);
+uint16_t ptp_canon_setobjectarchive (PTPParams* params, uint32_t oid, uint32_t flags);
 uint16_t ptp_canon_get_customize_data (PTPParams* params, uint32_t themenr,
 				unsigned char **data, unsigned int *size);
+
 
 uint16_t ptp_nikon_curve_download (PTPParams* params, 
 				unsigned char **data, unsigned int *size);

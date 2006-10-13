@@ -2834,6 +2834,17 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		CR (gp_file_set_data_and_size (file, (char*)ximage, size));
 		/* XXX does gp_file_set_data_and_size free() image ptr upon
 		   failure?? */
+
+		/* clear the "new" flag on Canons */
+		if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
+			(params->canon_flags) &&
+			(params->canon_flags[object_id] & 0x2000) &&
+			ptp_operation_issupported(params,PTP_OC_CANON_SetObjectArchive)
+		) {
+			/* seems just a byte (0x20 - new) */
+			ptp_canon_setobjectarchive (params, params->handles.Handler[object_id], (params->canon_flags[object_id] &~0x2000)>>8);
+			params->canon_flags[object_id] &= ~0x2000;
+		}
 		break;
 	}
 	}
@@ -3044,8 +3055,9 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	PTPObjectInfo *oi;
 	uint32_t object_id;
 	uint32_t storage;
+	PTPParams *params = &camera->pl->params;
 
-	((PTPData *) camera->pl->params.data)->context = context;
+	((PTPData *) params->data)->context = context;
 
 	if (!strcmp (folder, "/special"))
 		return (GP_ERROR_BAD_PARAMETERS); /* for now */
@@ -3059,7 +3071,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if ((object_id=handle_to_n(object_id, camera))==PTP_HANDLER_SPECIAL)
 		return (GP_ERROR_BAD_PARAMETERS);
 
-	oi=&camera->pl->params.objectinfo[object_id];
+	oi=&params->objectinfo[object_id];
 
 	info->file.fields = GP_FILE_INFO_SIZE|GP_FILE_INFO_TYPE|GP_FILE_INFO_MTIME;
 
@@ -3072,11 +3084,19 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	}
 	info->file.size   = oi->ObjectCompressedSize;
 
+	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) && params->canon_flags) {
+		info->file.fields |= GP_FILE_INFO_STATUS;
+		if (params->canon_flags[object_id] & 0x2000)
+			info->file.status = GP_FILE_STATUS_NOT_DOWNLOADED;
+		else
+			info->file.status = GP_FILE_STATUS_DOWNLOADED;
+	}
+
 	/* MTP playlists have their own size calculation */
-	if ((camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
 	    (oi->ObjectFormat == PTP_OFC_MTP_AbstractAudioVideoPlaylist)) {
 		int ret, contentlen;
-		ret = mtp_get_playlist_string (camera, camera->pl->params.handles.Handler[object_id], NULL, &contentlen);
+		ret = mtp_get_playlist_string (camera, params->handles.Handler[object_id], NULL, &contentlen);
 		if (ret != GP_OK) return ret;
 		info->file.size = contentlen;
 	}
@@ -3183,6 +3203,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 	int i,id,nroot;
 	PTPParams *params = &camera->pl->params;
 	char buf[1024];
+	uint16_t ret;
 
 	((PTPData *) params->data)->context = context;
 	memset (&params->handles, 0, sizeof(PTPObjectHandles));
@@ -3328,6 +3349,17 @@ init_ptp_fs (Camera *camera, GPContext *context)
 			}
 		}
 		params->handles.n = curhandle;
+		return PTP_RC_OK;
+	}
+
+	/* CANON also has fast directory retrieval. And it is mostly complete, so we can use it as full replacement */
+	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
+	    ptp_operation_issupported(params,PTP_OC_CANON_GetDirectory))
+
+	{
+		ret = ptp_canon_get_directory (params, &params->handles, &params->objectinfo, &params->canon_flags);
+		if (ret != PTP_RC_OK)
+			goto fallback;
 		return PTP_RC_OK;
 	}
 

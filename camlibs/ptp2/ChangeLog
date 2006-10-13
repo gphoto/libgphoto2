@@ -1,3 +1,20 @@
+2006-10-13  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptp.c,ptp.h,ptp-pack.c,library.c:
+
+	  Implement CANON fast directory retrieval (just one 
+	  call for all objects). Should give speed-up if
+	  lots of files are on the camera.
+	  (Apparently needs Canon released in/after 2005).
+
+	* library.c: Implemented "NEW" flag handling for newer
+	  Canons, like with Canon driver.
+
+	* library.c: Do not retrieve storage info unnecessary on
+	  / folder listing. The information is not used at all.
+
+	* ptp.h/ptp-pack.c: Fixed typo in StandardVersion.
+
 2006-10-12  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Corrected SD630 name (its PowerShot brand),
