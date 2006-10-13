@@ -3414,6 +3414,46 @@ fallback:
 	}
 	gp_context_progress_stop (context, id);
 
+	/* for older Canons we now retrieve their object flags, to allow
+	 * "new" image handling. This is not yet a substitute for regular
+	 * OI retrieval.
+	 */
+	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
+	    ptp_operation_issupported(params,PTP_OC_CANON_GetObjectInfoEx)) {
+		uint16_t ret;
+		int i;
+
+		params->canon_flags = calloc(sizeof(params->canon_flags[0]),params->handles.n);
+		/* Look for all directories, since this function apparently only
+		 * returns a directory full of entries and does not recurse
+		 */
+		for (i=0;i<params->handles.n;i++) {
+			int j;
+			PTPCANONFolderEntry	*ents = NULL;
+			uint32_t		numents = 0;
+
+			/* only retrieve for directories */
+			if (!params->objectinfo[i].AssociationType)
+				continue;
+
+			ret = ptp_canon_getobjectinfo(params,
+				params->objectinfo[i].StorageID,0,
+				params->handles.Handler[i],0,
+				&ents,&numents
+			);
+			if (ret != PTP_RC_OK) continue;
+			for (j=0;j<numents;j++) {
+				int k;
+				for (k=0;k<params->handles.n;k++)
+					if (params->handles.Handler[k] == ents[j].ObjectHandle)
+						break;
+				if (k == params->handles.n)
+					continue;
+				params->canon_flags[k] = ents[j].Flags << 8;
+			}
+		}
+	}
+
         if (DCIM_WRONG_PARENT_BUG(camera->pl))
         {
             GP_DEBUG("PTPBUG_DCIM_WRONG_PARENT bug workaround");

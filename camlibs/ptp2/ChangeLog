@@ -15,6 +15,9 @@
 
 	* ptp.h/ptp-pack.c: Fixed typo in StandardVersion.
 
+	* library.c: Implemented "NEW" flag handling also for
+	  older Canons using the older directory retrieval method.
+
 2006-10-12  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Corrected SD630 name (its PowerShot brand),
