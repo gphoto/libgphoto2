@@ -1977,6 +1977,12 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 			if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
 		}
 
+		if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
+		     ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_GetMACAddress)) {
+			n = snprintf (txt, spaceleft,_("\tCanon Wifi support\n"));
+			if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+		}
+
 /* Dump storage information */
 
 	if (ptp_operation_issupported(params,PTP_OC_GetStorageIDs) &&
@@ -2308,12 +2314,8 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		}
 		for (i=0; i<storageids.n; i++) {
 			char fname[PTP_MAXSTRLEN];
-			PTPStorageInfo storageinfo;
+
 			if ((storageids.Storage[i]&0x0000ffff)==0) continue;
-			if (ptp_operation_issupported(params,PTP_OC_GetStorageInfo)) {
-				CPR (context, ptp_getstorageinfo(params,
-					storageids.Storage[i], &storageinfo));
-			}
 			snprintf(fname, strlen(STORAGE_FOLDER_PREFIX)+9,
 				STORAGE_FOLDER_PREFIX"%08x",
 				storageids.Storage[i]);
