@@ -2277,11 +2277,10 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	    /* HP Photosmart 850, the camera tends to duplicate filename in the list.
              * Original patch by clement.rezvoy@gmail.com */
 	    /* search backwards, likely gets hits faster. */
-	    for (j=list->count;j--;)
-    		if (!strcmp(params->objectinfo[i].Filename, list->entry[j].name))
-		    break;
-	    if (j>=0) {
-	      gp_log (GP_LOG_ERROR, "ptp2/file_list_func", "Duplicate filename '%s' in folder '%s'. Ignoring nth entry.\n", params->objectinfo[i].Filename, folder);
+	    if (GP_OK == gp_list_find_by_name(list, NULL, params->objectinfo[i].Filename)) {
+		gp_log (GP_LOG_ERROR, "ptp2/file_list_func", 
+			"Duplicate filename '%s' in folder '%s'. Ignoring nth entry.\n", 
+			params->objectinfo[i].Filename, folder);
 		continue;
 	    }
 	}
