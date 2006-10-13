@@ -2,19 +2,24 @@ libgphoto2 TRUNK
 
 PTP:
    * Improved Nikon remote control
+   * Improved Canon file download
+	- faster directory retrieval (especially on cameras with lots of files)
+	- "new" images are marked (gphoto2 --new, digikam)
    * MTP Playlist support (upload and download)
    * MTP Metadata support (Artist, Title, Playtime ... )
    * MTP fixes
    * MTP autodetection on Microsoft OS Descriptor.
    * New devices:
-          Canon PowerShot A540, A530, S3 IS, SD430, SD700, IXUS 800, IXUS 60, A630,
+          Canon PowerShot A540, A530, S3 IS, SD430, SD700, IXUS 800, IXUS 60, A630, SD630,
+	  Digital IXUS 65, 710IS,
           EOS 400D/Digital Rebel XTi
           iRiver T20 FM, iClix
           Dell Pocket DJ
           Nikon Coolpix L4, L3
-          Kodak Easyshare Z740, P850
+          Kodak Easyshare Z740, P850, Z612
           Sony DSC-U10
           Leica D-LUX 2
+	  Olympus IR-300
           JVC Alneo XA-HD500
 	  various Samsung devices
      
