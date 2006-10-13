@@ -8,7 +8,7 @@ dnl ******* THE NEXT RELEASE VERSION MUST BE 2.2.2 at least or higher!
 AC_INIT([libgphoto2], [2.2.1.4.trunk], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
 AC_CONFIG_SRCDIR([libgphoto2/gphoto2/gphoto2.h])
 AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_MACRO_DIR([libgphoto2_port/m4])
+AC_CONFIG_MACRO_DIR([m4m])
 AC_CONFIG_AUX_DIR([.])
 AM_INIT_AUTOMAKE([-Wall gnu 1.9 dist-bzip2])
 
@@ -503,7 +503,7 @@ CPPFLAGS="$CPPFLAGS_save"
 
 dnl ---------------------------------------------------------------------------
 dnl Check libusb
-dnl FIXME: What for?
+dnl FIXME: What for? Shouldn't this belong into libgphoto2_port?
 dnl ---------------------------------------------------------------------------
 AC_PATH_PROG(LIBUSB_CONFIG,libusb-config)
 AM_CONDITIONAL(HAVE_LIBUSB,test -n "${LIBUSB_CONFIG}")
