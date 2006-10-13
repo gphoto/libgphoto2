@@ -1045,7 +1045,7 @@ ptp_unpack_canon_directory (
 		if (ISOBJECT(cur))
 			continue;
 		for (j=0;j<cnt;j++) if (nextchild == handles->Handler[j]) break;
-		(*oinfos)[j].StorageID = dtoh32a(cur + +ptp_canon_dir_storageid);
+		(*oinfos)[j].StorageID = dtoh32a(cur + ptp_canon_dir_storageid);
 	}
 	/* Walk over all objects and distribute the storage ids */
 	while (1) {
