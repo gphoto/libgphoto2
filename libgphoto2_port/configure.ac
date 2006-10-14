@@ -4,6 +4,7 @@ AC_INIT([libgphoto2 port access library], [0.6.2], [gphoto-devel@lists.sourcefor
 AC_CONFIG_SRCDIR([libgphoto2_port/gphoto2/gphoto2-port.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
+AC_CONFIG_AUX_DIR([.])
 AM_INIT_AUTOMAKE([gnu 1.8 dist-bzip2])
 
 
