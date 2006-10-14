@@ -34,6 +34,7 @@
 #define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 
+/** check that the list is valid */
 #define CHECK_LIST(list)				\
   do {							\
     if (NULL == list) {					\
@@ -46,15 +47,17 @@
 
 
 /**
- * What code to compile
- **/
+ * Whether to preserve binary compatibility for structure internals.
+ *
+ * This is important as there are programs out there which rely on the
+ * internal structure layout. Example: f-spot with its C# bindings.
+ */
 #define CAMERALIST_STRUCT_COMPATIBILITY
 
 
 /**
- * Internal structure
+ * Internal _CameraList data structure
  **/
-
 
 #ifdef CAMERALIST_STRUCT_COMPATIBILITY
 
@@ -68,14 +71,17 @@ struct _CameraList {
 	int ref_count;
 };
 
+/* check that the given index is in the valid range for this list */
 #define CHECK_INDEX_RANGE(list, index)			\
   do {							\
     if (index < 0 || index >= list->count) {		\
       return (GP_ERROR_BAD_PARAMETERS);			\
-    } \
+    }							\
   } while (0)
 
 #else /* !CAMERALIST_STRUCT_COMPATIBILITY */
+
+#error The !CAMERALIST_STRUCT_COMPATIBILITY part has not been implemented yet!
 
 struct _CameraList {
 	int ref_count;
