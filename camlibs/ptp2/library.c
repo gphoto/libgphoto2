@@ -2255,8 +2255,6 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
     find_folder_handle(folder,storage,parent,data);
 
     for (i = 0; i < params->handles.n; i++) {
-	int j;
-
 	/* not our parent -> next */
 	if (params->objectinfo[i].ParentObject!=parent)
 		continue;
@@ -3358,10 +3356,16 @@ init_ptp_fs (Camera *camera, GPContext *context)
 	    ptp_operation_issupported(params,PTP_OC_CANON_GetDirectory))
 
 	{
-		ret = ptp_canon_get_directory (params, &params->handles, &params->objectinfo, &params->canon_flags);
-		if (ret != PTP_RC_OK)
-			goto fallback;
-		return PTP_RC_OK;
+		PTPObjectInfo	*oinfos = NULL;	
+		uint32_t	*flags = NULL;	
+
+		ret = ptp_canon_get_directory (params, &params->handles, &oinfos, &flags);
+		if ((ret == PTP_RC_OK) && params->handles.n) {
+			params->objectinfo = oinfos;
+			params->canon_flags = flags;
+			return PTP_RC_OK;
+		}
+		/* fallthrough */
 	}
 
 fallback:
