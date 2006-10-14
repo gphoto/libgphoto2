@@ -5,7 +5,7 @@ dnl NOTE: Be version style _higher_ than the last release.
 dnl       So lastversion.X.trunk for instance. Bump X if necessary.
 
 dnl ******* THE NEXT RELEASE VERSION MUST BE 2.2.2 at least or higher!
-AC_INIT([libgphoto2], [2.2.1.4.trunk], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
+AC_INIT([libgphoto2], [2.2.1.5.trunk], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
 AC_CONFIG_SRCDIR([libgphoto2/gphoto2/gphoto2.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4m])
@@ -39,9 +39,11 @@ dnl  change does not break upward compatibility (ie it is an addition),
 dnl  increment AGE, Otherwise AGE is reset to 0. If CURRENT has changed, 
 dnl  REVISION is set to 0, otherwise REVISION is incremented.
 dnl ---------------------------------------------------------------------------
-AC_SUBST([LIBGPHOTO2_AGE],      [1])
-AC_SUBST([LIBGPHOTO2_REVISION], [1])
-AC_SUBST([LIBGPHOTO2_CURRENT],  [3])
+dnl A:R:C=1:1:3  libgphoto2-2.2
+dnl A:R:C=2:0:4  libgphoto2-2.3 (since libgphoto2-2.2.1.5.trunk)
+AC_SUBST([LIBGPHOTO2_AGE],      [2])
+AC_SUBST([LIBGPHOTO2_REVISION], [0])
+AC_SUBST([LIBGPHOTO2_CURRENT],  [4])
 AC_SUBST([LIBGPHOTO2_CURRENT_MIN],
          [`expr $LIBGPHOTO2_CURRENT - $LIBGPHOTO2_AGE`])
 AC_SUBST([LIBGPHOTO2_VERSION_INFO],
