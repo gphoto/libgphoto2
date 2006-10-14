@@ -24,7 +24,7 @@
 #define _LARGAN_LIBRARY_H_
 
 #include <gphoto2/gphoto2.h>
-#include <gphoto2/gphoto2-endian.h>
+#include "gphoto2-endian.h"
 
 
 typedef enum {

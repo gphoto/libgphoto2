@@ -29,7 +29,7 @@
 /* strncmp */
 #include <string.h>
 
-#include <gphoto2/gphoto2-endian.h>
+#include "gphoto2-endian.h"
 
 /*convert to correct endianness */
 int 

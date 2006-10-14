@@ -36,7 +36,7 @@
 #  define N_(String) (String)
 #endif
 
-#include <gphoto2/gphoto2-endian.h>
+#include "gphoto2-endian.h"
 #include <gphoto2/gphoto2-port-log.h>
 #include <gphoto2/gphoto2-library.h>
 

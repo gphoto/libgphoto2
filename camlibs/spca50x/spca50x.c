@@ -31,7 +31,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <gphoto2/gphoto2.h>
-#include <gphoto2/gphoto2-endian.h>
+#include "gphoto2-endian.h"
 
 #include "spca50x.h"
 #include "spca50x-registers.h"

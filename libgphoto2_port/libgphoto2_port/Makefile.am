@@ -46,26 +46,16 @@ libgphoto2_port_la_SOURCES =		\
 	gphoto2-port-result.c
 
 libgphoto2_port_la_DEPENDENCIES = \
-	gphoto2/gphoto2-port-version.h		\
-	gphoto2/gphoto2-port-library.h		\
+	$(top_srcdir)/gphoto2/gphoto2-port-version.h		\
+	$(top_srcdir)/gphoto2/gphoto2-port-library.h		\
 	$(LIBLTDL) \
 	$(srcdir)/libgphoto2_port.sym
-
-# ship headers
-nobase_include_HEADERS =	\
-	gphoto2/gphoto2-port.h			\
-	gphoto2/gphoto2-port-info-list.h	\
-	gphoto2/gphoto2-port-log.h		\
-	gphoto2/gphoto2-port-version.h		\
-	gphoto2/gphoto2-port-portability.h	\
-	gphoto2/gphoto2-port-result.h
 
 # Note: If you have problem with this file not being put into
 #       the source tarball correctly at "make dist", this may
 #       be the result of tar not creating archives with >99
 #       characters of path length.
 EXTRA_DIST = \
-	gphoto2/gphoto2-port-library.h \
 	libgphoto2_port.sym libgphoto2_port.pc.in
 
 pkgconfig_DATA = libgphoto2_port.pc
@@ -73,19 +63,3 @@ pkgconfig_DATA = libgphoto2_port.pc
 ../libltdl/libltdlc.la:
 	cd ../libltdl && $(MAKE) libltdlc.la
 
-
-# Compatibility for header inclusions.
-#
-# - Old code has -I/usr/include/gphoto2
-#   #include <gphoto2-camera.h>
-#
-# - New code has -I/usr/include
-#   #include <gphoto2/gphoto2-camera.h>
-
-install-data-local:
-	rm -f $(DESTDIR)$(includedir)/gphoto2/gphoto2
-	$(INSTALL) -m 0755 -d $(DESTDIR)$(includedir)/gphoto2
-	$(LN_S) . $(DESTDIR)$(includedir)/gphoto2/gphoto2
-
-uninstall-local:
-	rm -f $(DESTDIR)$(includedir)/gphoto2/gphoto2

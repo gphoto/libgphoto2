@@ -1,4 +1,4 @@
-libgphoto2 TRUNK
+libgphoto2 2.2.1.5.trunk
 
 PTP:
    * Improved Nikon remote control
@@ -42,6 +42,7 @@ libgphoto2 API:
 libgphoto2:
    * Improved error checking and propagation.
    * New error code for "fixed limit exceeded" (exceptions would be nice)
+   * Added a few internal functions.
 
 ----------------------------------------------------------------------------
 

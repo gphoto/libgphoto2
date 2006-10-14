@@ -26,7 +26,7 @@
 #include <unistd.h>
 
 #include <gphoto2/gphoto2.h>
-#include <gphoto2/gphoto2-endian.h>
+#include "gphoto2-endian.h"
 
 #define	GP_MODULE	"pdrm11"
 #define	ETIMEDOUT	110

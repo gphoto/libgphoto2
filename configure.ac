@@ -6,11 +6,14 @@ dnl       So lastversion.X.trunk for instance. Bump X if necessary.
 
 dnl ******* THE NEXT RELEASE VERSION MUST BE 2.2.2 at least or higher!
 AC_INIT([libgphoto2], [2.2.1.5.trunk], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
-AC_CONFIG_SRCDIR([libgphoto2/gphoto2/gphoto2.h])
+AC_CONFIG_SRCDIR([libgphoto2/gphoto2-version.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4m])
 AC_CONFIG_AUX_DIR([.])
-AM_INIT_AUTOMAKE([-Wall gnu 1.9 dist-bzip2])
+dnl Working around bug in automake <= 1.9.6::
+dnl  - Please do not add filename-length-max=99 here.
+dnl  - Otherwise "make distdist" will fail in gphoto-suite
+AM_INIT_AUTOMAKE([-Wall gnu 1.9 dist-bzip2 check-news])
 
 GP_CHECK_SHELL_ENVIRONMENT
 GP_CONFIG_MSG([Build])
@@ -56,7 +59,7 @@ dnl C only would be CFLAGS, C++ only CXXFLAGS
 AM_CPPFLAGS="$CPPFLAGS"
 
 AM_CPPFLAGS="$AM_CPPFLAGS -I\$(top_srcdir)"
-AM_CPPFLAGS="$AM_CPPFLAGS -I\$(top_srcdir)/libgphoto2_port/libgphoto2_port"
+AM_CPPFLAGS="$AM_CPPFLAGS -I\$(top_builddir)"
 AM_CPPFLAGS="$AM_CPPFLAGS -I\$(top_srcdir)/libgphoto2_port"
 AM_CPPFLAGS="$AM_CPPFLAGS -I\$(top_srcdir)/libgphoto2"
 AM_CPPFLAGS="$AM_CPPFLAGS -I\$(top_builddir)/libgphoto2"
@@ -303,7 +306,7 @@ dnl that will always be available
 AX_NEED_STDINT_H([libgphoto2/_stdint.h])
 
 dnl Create a header file containing NetBSD-style byte swapping macros
-AC_NEED_BYTEORDER_H(libgphoto2/gphoto2/gphoto2-endian.h)
+AC_NEED_BYTEORDER_H([libgphoto2/gphoto2-endian.h])
 
 
 dnl ---------------------------------------------------------------------------

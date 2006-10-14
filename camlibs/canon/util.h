@@ -8,7 +8,7 @@
 #ifndef _CANON_UTIL_H
 #define _CANON_UTIL_H
 
-#include <gphoto2/gphoto2-endian.h>
+#include "gphoto2-endian.h"
 
 #ifndef TRUE
 #define TRUE 1

@@ -12,11 +12,21 @@ SUBDIRS = @subdirs@ libgphoto2 camlibs tests po bindings packaging doc
 
 doc_DATA = AUTHORS COPYING README NEWS
 
-# Remove obsolete directory of copied/symlinked header files
-all-local:
-	if test -d gphoto2; then rm -f gphoto2/gphoto2*.h; rmdir gphoto2; fi
-clean-local:
-	if test -d gphoto2; then rm -f gphoto2/gphoto2*.h; rmdir gphoto2; fi
+nobase_include_HEADERS =	\
+	gphoto2/gphoto2.h		\
+	gphoto2/gphoto2-abilities-list.h\
+	gphoto2/gphoto2-camera.h	\
+	gphoto2/gphoto2-context.h	\
+	gphoto2/gphoto2-file.h		\
+	gphoto2/gphoto2-filesys.h	\
+	gphoto2/gphoto2-library.h	\
+	gphoto2/gphoto2-list.h		\
+	gphoto2/gphoto2-result.h	\
+	gphoto2/gphoto2-setting.h	\
+	gphoto2/gphoto2-version.h	\
+	gphoto2/gphoto2-widget.h
+
+DISTCLEANFILES = libgphoto2/gphoto2-endian.h
 
 # we use just ONE .PHONY target in order not to confuse automake
 
@@ -69,3 +79,21 @@ endif
 # released version
 cvs-tags: Makefile
 	@echo cvs tag "@PACKAGE@-$$(echo '@VERSION@' | sed -e 's/\./_/g' -e 's/rc/-rc/g')"
+
+
+
+# Compatibility for header inclusions.
+#
+# - Old code has -I/usr/include/gphoto2
+#   #include <gphoto2-camera.h>
+#
+# - New code has -I/usr/include
+#   #include <gphoto2/gphoto2-camera.h>
+
+install-data-local:
+	rm -f $(DESTDIR)$(includedir)/gphoto2/gphoto2
+	$(INSTALL) -m 0755 -d $(DESTDIR)$(includedir)/gphoto2
+	$(LN_S) . $(DESTDIR)$(includedir)/gphoto2/gphoto2
+
+uninstall-local:
+	rm -f $(DESTDIR)$(includedir)/gphoto2/gphoto2

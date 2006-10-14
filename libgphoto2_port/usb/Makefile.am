@@ -6,8 +6,9 @@ usb_la_LDFLAGS = -module -no-undefined -avoid-version \
 	-export-dynamic \
         -export-symbols $(top_srcdir)/iolib.sym
 usb_la_CPPFLAGS = \
-	-I$(top_srcdir)/libgphoto2_port $(INTL_CFLAGS) \
-	$(AM_CPPFLAGS) $(CPPFLAGS) $(LIBUSB_CFLAGS)
+	$(INTL_CFLAGS) \
+	$(AM_CPPFLAGS) $(LIBUSB_CFLAGS) \
+	$(CPPFLAGS)
 usb_la_DEPENDENCIES = $(top_srcdir)/iolib.sym
 usb_la_LIBADD = \
 	$(LIBUSB_LIBS)			\
