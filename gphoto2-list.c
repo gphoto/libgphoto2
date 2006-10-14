@@ -49,8 +49,8 @@
 /**
  * Whether to preserve binary compatibility for structure internals.
  *
- * This is important as there are programs out there which rely on the
- * internal structure layout. Example: f-spot with its C# bindings.
+ * FIXME: Find out whether any libgphoto2 frontend relies on those
+ *        internals.
  */
 #define CAMERALIST_STRUCT_COMPATIBILITY
 
