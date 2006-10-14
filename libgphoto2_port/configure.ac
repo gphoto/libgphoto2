@@ -7,7 +7,11 @@ AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([.])
 dnl Working around bug in automake <= 1.9.6:
 dnl  - Please do not add filename-length-max=99 here.
-dnl  - Otherwise "make distdist" will fail in gphoto-suite
+dnl  - Otherwise "make distdir" will fail in libgphoto2
+dnl The generated Makefile rule fails to remove the absolute part at
+dnl the beginning of the /path/to/buildroot/PACKAGE-VERSION/foo/bar
+dnl before determining the string length. However, the only relevant
+dnl string to determine the length of would be PACKAGE-VERSION/foo/bar
 AM_INIT_AUTOMAKE([-Wall gnu 1.9 dist-bzip2 check-news])
 
 

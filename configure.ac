@@ -10,9 +10,9 @@ AC_CONFIG_SRCDIR([libgphoto2/gphoto2-version.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4m])
 AC_CONFIG_AUX_DIR([.])
-dnl Working around bug in automake <= 1.9.6::
+dnl Working around bug in automake <= 1.9.6:
 dnl  - Please do not add filename-length-max=99 here.
-dnl  - Otherwise "make distdist" will fail in gphoto-suite
+dnl  - Otherwise "make distdir" will fail in gphoto-suite
 dnl The generated Makefile rule fails to remove the absolute part at
 dnl the beginning of the /path/to/buildroot/PACKAGE-VERSION/foo/bar
 dnl before determining the string length. However, the only relevant
