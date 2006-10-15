@@ -586,7 +586,7 @@ static int camera_summary (Camera *camera, CameraText *summary,
 		  "Panasonic introduced image capturing technology "
 		  "called PHOTOSHOT for the first time to this series "
 		  "of Palmcorders.  Images are stored in JPEG format on "
-		  "an internal flashcard and can be transfered to a "
+		  "an internal flashcard and can be transferred to a "
 		  "computer through the built-in serial port.  Images "
 		  "are saved in one of two resolutions; NORMAL is "
 		  "320x240 and FINE is 640x480.  The CCD device which "

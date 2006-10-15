@@ -40,8 +40,8 @@ struct _CameraPrivateLibrary {
 	int			size;
 };
 
-#define DSC_BLOCKSIZE	  0x400   /* amount of image data transfered in a single packet */
-#define DSC_BUFSIZE	  0x406   /* largest possible amount of data transfered in a single packet */
+#define DSC_BLOCKSIZE	  0x400   /* amount of image data transferred in a single packet */
+#define DSC_BUFSIZE	  0x406   /* largest possible amount of data transferred in a single packet */
 #define DSC_MAXIMAGESIZE  0xfffff /* largest possible file that can be uploaded */
 #define DSC_FILENAMEFMT	  "dsc%04i.jpg" /* format of image file names */
 #define DSC_THUMBNAMEFMT  "dsc%04i-thumbnail.jpg" /* format of thumbnail file names */

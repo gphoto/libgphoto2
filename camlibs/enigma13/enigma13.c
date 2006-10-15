@@ -217,7 +217,7 @@ static int enigma13_get_toc(Camera *camera, int *filecount, char** toc)
 
         ret=gp_port_read (camera->port, flash_toc, toc_size);
         *toc= flash_toc;
-	gp_log(GP_LOG_DEBUG, "enigma13","Byte transfered :%d ", ret);
+				gp_log(GP_LOG_DEBUG, "enigma13","Byte transferred :%d ", ret);
         return ret;
 
 }

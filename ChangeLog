@@ -1,3 +1,12 @@
+2006-10-14  Hubert Figuiere  <hub@figuiere.net>
+
+	* camlibs/panasonic/l859/l859.c,
+	camlibs/enigma13/enigma13.c (enigma13_get_toc),
+	camlibs/panasonic/l859/README.panasonic-l859,
+	camlibs/panasonic/dc.h: Fixed typo
+	https://launchpad.net/distros/ubuntu/+source/libgphoto2/+bug/61163
+
+
 2006-10-07  Hubert Figuiere  <hub@figuiere.net>
 
 	* camlibs/canon/canon.c, camlibs/konica/qm150.c,
