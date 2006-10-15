@@ -3,5 +3,5 @@
 # the system building the tarball has mono, java, or python installed.
 #
 # However, we are only shipping those bindings which actually work.
-SUBDIRS = csharp
+SUBDIRS = # csharp
 # SUBDIRS = @BINDING_SUBDIRS@
