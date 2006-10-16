@@ -1,3 +1,7 @@
+2006-10-16  Marcus Meissner  <marcus@jet.franken.de>
+	* library.c: Added Creative Zen Vplus, Dunlop MP3 Player 1GB,
+	  EGOMAN MD223AFD (submitted by libmtp folks).
+
 2006-10-14  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* library.c: removed unused variable j

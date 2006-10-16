@@ -690,6 +690,14 @@ static struct {
 	{"Creative:Zen Vision:M",		0x041e, 0x413e, PTP_MTP},
 	/* Reported by marazm@o2.pl */
 	{"Creative:Zen V",			0x041e, 0x4150, PTP_MTP},  
+	/* Reported by Darel on the XNJB forums */
+	{"Creative:Zen V plus",			0x041e, 0x4152, PTP_MTP},
+	/* The 2 below will not work out of the box, since the autoswitch
+	 * to USB Mass Storage once probed.
+	 * https://sourceforge.net/tracker/?func=detail&atid=108874&aid=1577793&group_id=8874
+	 */
+	{"Dunlop:MP3 player 1GB",		0x10d6, 0x2200, PTP_MTP},
+	{"EGOMAN:MD223AFD",			0x10d6, 0x2200, PTP_MTP},
 
 	/* IRC reporter */
 	{"Dell:DJ Itty",			0x413c, 0x4500, PTP_MTP},
