@@ -155,30 +155,6 @@ if false && test -x "$SWIG" && test -x "$JAVAC" && test -x "$JAVA"; then
    bindings="${bindings}${bindings+ }java"
 fi
 
-dnl Check for Mono and Mono C# compiler from f-spot
-
-dnl --- Check for mono and mcs
-dnl --- FIXME: What about when mono and mcs are not found?
-
-AC_PATH_PROG([MONO], [mono])
-AC_PATH_PROG([MCS], [mcs])
-AC_SUBST([MONO])
-AC_SUBST([MCS])
-
-dnl -- Check for mono pc file
-
-AC_MSG_CHECKING([for mono.pc])
-if test -z `$PKG_CONFIG --variable=prefix mono`; then
-  build_binding_csharp="no"
-  AC_MSG_RESULT([missing the mono.pc file, usually found in the mono-devel package])
-else
-  build_binding_csharp="yes"
-  bindings="${bindings}${bindings+ }csharp"
-  AC_MSG_RESULT([found])
-fi
-AC_SUBST([cslibdir],[${libdir}/${PACKAGE_TARNAME}])
-
-AM_CONDITIONAL([HAVE_MONO], [test "x${build_binding_csharp}" = "xyes"])
 GP_CONFIG_MSG([Bindings], [${bindings}])
 
 AC_SUBST([BINDING_SUBDIRS], [${bindings}])
@@ -642,11 +618,6 @@ doc/Makefile
 doc/Doxyfile
 doc/api/Makefile
 bindings/Makefile
-bindings/csharp/Makefile
-bindings/csharp/AssemblyInfo.cs
-bindings/csharp/libgphoto2-sharp.pc
-bindings/csharp/check-camera-list.sh
-bindings/csharp/check-sizes.sh
 ],[
 dnl This relies on this code being called for each of the above files
 dnl with ac_file set to the filename.
