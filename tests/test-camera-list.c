@@ -200,7 +200,14 @@ main (int argc, char *argv[])
 		printf("gp_abilities_list_count error: %d\n", count);
 		return(1);
 	} else if (count == 0) {
-		printf("no camera drivers (camlibs) found in camlib dir\n");
+		/* Copied from gphoto2-abilities-list.c gp_abilities_list_load() */
+		const char *camlib_env = getenv(CAMLIBDIR_ENV);
+		const char *camlibs = (camlib_env != NULL)?camlib_env:CAMLIBS;
+
+		printf("no camera drivers (camlibs) found in camlib dir:\n"
+		       "    CAMLIBS=\`%s', default=\'%s', used=%s\n",
+		       camlib_env?camlib_env:"(null)", CAMLIBS,
+		       (camlib_env!=NULL)?"CAMLIBS":"default");
 		return(1);
 	}
 
