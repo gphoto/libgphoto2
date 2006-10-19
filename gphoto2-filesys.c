@@ -1081,6 +1081,8 @@ gp_filesystem_delete_file (CameraFilesystem *fs, const char *folder,
 	CR (x = gp_filesystem_folder_number (fs, folder, context));
 	CR (y = gp_filesystem_number (fs, folder, filename, context));
 
+	gp_context_status (context, _("Deleting '%s' from folder '%s'..."),
+			   filename, folder);
 	/* Delete the file */
 	CR (fs->delete_file_func (fs, folder, filename,
 				  fs->file_data, context));
