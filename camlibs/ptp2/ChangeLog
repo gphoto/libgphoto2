@@ -3,6 +3,7 @@
 	* ptp.c: Check sequence number sequence. A mismatched response
 		sequence number indicates a problem.
 	* library.c: On read errors, clear USB HALT of the IN EP.
+	* library.c: Added Toshiba Gigabeat S.
 
 2006-10-18  Marcus Meissner  <marcus@jet.franken.de>
 

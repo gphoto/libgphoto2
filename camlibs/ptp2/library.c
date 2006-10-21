@@ -707,8 +707,9 @@ static struct {
 	{"Intel:Bandon Portable Media Center",	0x045e, 0x00c9, PTP_MTP},
 
 	/* Marcoen Hirschberg <marcoen@users.sourceforge.net> */
-	{"Toshiba:Gigabeat",                    0x0930, 0x000c, PTP_MTP},
 	{"Toshiba:Gigabeat MEGF-40",            0x0930, 0x0009, PTP_MTP},
+	{"Toshiba:Gigabeat",                    0x0930, 0x000c, PTP_MTP},
+	{"Toshiba:Gigabeat S",                  0x0930, 0x0010, PTP_MTP},
 	/* Reported by Rob Brown */
 	{"Toshiba:Gigabeat P10",                0x0930, 0x0011, PTP_MTP},
 
