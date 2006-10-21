@@ -832,12 +832,13 @@ ptp_read_func (unsigned char *bytes, unsigned int size, void *data, unsigned int
 	Camera *camera = ((PTPData *)data)->camera;
 	int toread, result = GP_ERROR, curread = 0;
 	int usecontext = (size > CONTEXT_BLOCK_SIZE);
-	int progressid = 0;
+	int progressid = 0, tries = 0;
 	GPContext *context = ((PTPData *)data)->context;
 
 	/* Split into small blocks. Too large blocks (>1x MB) would
 	 * timeout.
 	 */
+retry:
 	if (usecontext)
 		progressid = gp_context_progress_start (context, (size/CONTEXT_BLOCK_SIZE), _("Downloading..."));
 	while (curread < size) {
@@ -864,6 +865,13 @@ ptp_read_func (unsigned char *bytes, unsigned int size, void *data, unsigned int
 		*readbytes = curread;
 		return (PTP_RC_OK);
 	} else {
+		if (result == GP_ERROR_IO_READ) {
+			gp_log (GP_LOG_DEBUG, "ptp2/usbread", "Clearing halt on IN EP and retrying once.\n");
+			gp_port_usb_clear_halt (camera->port, GP_PORT_USB_ENDPOINT_IN);
+			/* retrying only makes sense if we did not read anything yet */
+			if ((tries++ < 1) && (curread == 0))
+				goto retry;
+		}
 		return (translate_gp_result (result));
 	}
 }

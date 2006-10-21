@@ -1,3 +1,9 @@
+2006-10-21  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptp.c: Check sequence number sequence. A mismatched response
+		sequence number indicates a problem.
+	* library.c: On read errors, clear USB HALT of the IN EP.
+
 2006-10-18  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: added HP Photosmart M425

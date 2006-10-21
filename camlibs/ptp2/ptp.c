@@ -449,7 +449,13 @@ _ptp_transaction (PTPParams* params, PTPContainer* ptp,
 	}
 	/* get response */
 	CHECK_PTP_RC(params->getresp_func(params, ptp));
-
+	if (ptp->Transaction_ID != params->transaction_id-1) {
+		ptp_error (params,
+			"PTP: Sequence number mismatch %d vs expected %d.",
+			ptp->Transaction_ID, params->transaction_id-1
+		);
+		return PTP_ERROR_BADPARAM;
+	}
 	return ptp->Code;
 }
 
