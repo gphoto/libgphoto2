@@ -34,8 +34,6 @@
 #include "getuint.h"
 #include "pmp.h"
 
-extern int errno;
-
 #define MAX_PICTURE_NUM 200
 
 u_char picture_index[MAX_PICTURE_NUM];
