@@ -444,7 +444,7 @@ gp_port_serial_open (GPPort *dev)
 	}
 	dev->pl->fd = -1;
 
-#if defined(__FreeBSD__) || defined(__APPLE__)
+#if defined(__FreeBSD__) || defined(__APPLE__) || defined(__DragonFly__)
         dev->pl->fd = open (port, O_RDWR | O_NOCTTY | O_NONBLOCK);
 #elif OS2
         fd = open (port, O_RDWR | O_BINARY);
