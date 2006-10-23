@@ -444,6 +444,8 @@ static struct {
 	{"Nikon:Coolpix 5600 (PTP mode)", 0x04b0, 0x012e, PTP_CAP},
 	/* 4600: Martin Klaffenboeck <martin.klaffenboeck@gmx.at> */
 	{"Nikon:Coolpix 4600 (PTP mode)", 0x04b0, 0x0130, 0},
+	/* 4600: Roberto Costa <roberto.costa@ensta.org>, 22 Oct 2006 */
+	{"Nikon:Coolpix 4600a (PTP mode)", 0x04b0, 0x0131, 0},
 	{"Nikon:Coolpix 5900 (PTP mode)", 0x04b0, 0x0135, PTP_CAP},
 	{"Nikon:Coolpix P1 (PTP mode)",   0x04b0, 0x0140, PTP_CAP},
 	/* Marcus Meissner */
