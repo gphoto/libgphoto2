@@ -1,3 +1,7 @@
+2006-10-23  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptp.c,ptp.h: render more MTP opcodes. (from libmtp).
+
 2006-10-21  Marcus Meissner  <marcus@jet.franken.de>
 
 	* ptp.c: Check sequence number sequence. A mismatched response

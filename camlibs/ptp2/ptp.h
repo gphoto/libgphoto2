@@ -255,6 +255,15 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_NIKON_GetDevicePTPIPInfo	0x90E0
 
 /* Microsoft / MTP extension codes */
+#define PTP_OC_MTP_GetSecureTimeChallenge	0x9101
+#define PTP_OC_MTP_GetSecureTimeResponse	0x9102
+#define PTP_OC_MTP_SetLicenseResponse		0x9103
+#define PTP_OC_MTP_GetSyncList			0x9104
+#define PTP_OC_MTP_SendMeterChallengeQuery	0x9105
+#define PTP_OC_MTP_GetMeterChallenge		0x9106
+#define PTP_OC_MTP_SetMeterResponse		0x9107
+#define PTP_OC_MTP_CleanDataStore		0x9108
+#define PTP_OC_MTP_GetLicenseState		0x9109
 #define PTP_OC_MTP_GetObjectPropsSupported	0x9801
 #define PTP_OC_MTP_GetObjectPropDesc		0x9802
 #define PTP_OC_MTP_GetObjectPropValue		0x9803
@@ -266,7 +275,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_MTP_GetObjectReferences		0x9810
 #define PTP_OC_MTP_SetObjectReferences		0x9811
 #define PTP_OC_MTP_UpdateDeviceFirmware		0x9812
-#define PTP_OC_MTP_Skip                         0x9820
+#define PTP_OC_MTP_Skip				0x9820
 
 /* Proprietary vendor extension operations mask */
 #define PTP_OC_EXTENSION_MASK           0xF000

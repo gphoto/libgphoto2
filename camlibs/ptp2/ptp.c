@@ -3458,6 +3458,15 @@ struct {
 	uint16_t opcode;
 	const char *name;
 } ptp_opcode_mtp_trans[] = {
+	{PTP_OC_MTP_GetSecureTimeChallenge,N_("Get secure time challenge")},
+	{PTP_OC_MTP_GetSecureTimeResponse,N_("Get secure time response")},
+	{PTP_OC_MTP_SetLicenseResponse,N_("Set license response")},
+	{PTP_OC_MTP_GetSyncList,N_("Get sync list")},
+	{PTP_OC_MTP_SendMeterChallengeQuery,N_("Send meter challenge query")},
+	{PTP_OC_MTP_GetMeterChallenge,N_("Get meter challenge")},
+	{PTP_OC_MTP_SetMeterResponse,N_("Get meter response")},
+	{PTP_OC_MTP_CleanDataStore,N_("Clean data store")},
+	{PTP_OC_MTP_GetLicenseState,N_("Get license state")},
 	{PTP_OC_MTP_GetObjectPropsSupported,N_("Get object properties supported")},
 	{PTP_OC_MTP_GetObjectPropDesc,N_("Get object property description")},
 	{PTP_OC_MTP_GetObjectPropValue,N_("Get object property value")},
