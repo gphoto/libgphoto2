@@ -9,10 +9,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -51,11 +51,11 @@
 #endif
 
 /*
- * On MacOS (Darwin) and *BSD we're not using glibc, but libiconv. 
- * glibc knows that UCS-2 is to be in the local machine endianness, 
- * whereas libiconv does not. So we construct this macro to get 
+ * On MacOS (Darwin) and *BSD we're not using glibc, but libiconv.
+ * glibc knows that UCS-2 is to be in the local machine endianness,
+ * whereas libiconv does not. So we construct this macro to get
  * things right. Reportedly, glibc 2.1.3 has a bug so that UCS-2
- * is always bigendian though, we would need to work around that 
+ * is always bigendian though, we would need to work around that
  * too...
  */
 #ifndef __GLIBC__
@@ -327,7 +327,7 @@ static struct {
 	{"Kodak:C340",   0x040a, 0x058d, 0},
 	{"Kodak:V530",   0x040a, 0x058e, 0},
 	/* v550 Jon Burgess <jburgess@uklinux.net> */
-	{"Kodak:V550",   0x040a, 0x058f, 0}, 
+	{"Kodak:V550",   0x040a, 0x058f, 0},
 	{"Kodak:P850",   0x040a, 0x0592, 0},
 	/* Ivan Baldo, http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=387998 */
 	{"Kodak:CD33",   0x040a, 0x059c, 0},
@@ -336,7 +336,7 @@ static struct {
 	/* David D. Huff Jr. <David.Huff@computer-critters.com> */
 	{"Kodak:Z650",   0x040a, 0x059e, 0},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1547142&group_id=8874&atid=358874 */
-	{"Kodak:C533",   0x040a, 0x05a2, 0}, 
+	{"Kodak:C533",   0x040a, 0x05a2, 0},
 
 	/* HP PTP cameras */
 	{"HP:PhotoSmart 812 (PTP mode)", 0x03f0, 0x4202, 0},
@@ -367,6 +367,8 @@ static struct {
 	{"HP:PhotoSmart E317 (PTP mode)", 0x03f0, 0x7d02, 0},
 	/* Robin <diilbert.atlantis@gmail.com> */
 	{"HP:PhotoSmart M425 (PTP mode)", 0x03f0, 0x8002, 0},
+	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1584447&group_id=8874&atid=358874 */
+	{"HP:PhotoSmart R927 (PTP mode)", 0x03f0, 0x8702, 0},
 
 	/* Most Sony PTP cameras use the same product/vendor IDs. */
 	{"Sony:PTP",                  0x054c, 0x004e, 0},
@@ -380,10 +382,10 @@ static struct {
 	{"Sony:DSC-F828 (PTP mode)",  0x054c, 0x004e, 0},
 	{"Sony:DSC-P30 (PTP mode)",   0x054c, 0x004e, 0},
 	/* P32 reported on May 1st by Justin Alexander <justin (at) harshangel.com> */
-	{"Sony:DSC-P31 (PTP mode)",   0x054c, 0x004e, 0}, 
-	{"Sony:DSC-P32 (PTP mode)",   0x054c, 0x004e, 0}, 
-	{"Sony:DSC-P41 (PTP mode)",   0x054c, 0x004e, 0}, 
-	{"Sony:DSC-P43 (PTP mode)",   0x054c, 0x004e, 0}, 
+	{"Sony:DSC-P31 (PTP mode)",   0x054c, 0x004e, 0},
+	{"Sony:DSC-P32 (PTP mode)",   0x054c, 0x004e, 0},
+	{"Sony:DSC-P41 (PTP mode)",   0x054c, 0x004e, 0},
+	{"Sony:DSC-P43 (PTP mode)",   0x054c, 0x004e, 0},
 	{"Sony:DSC-P50 (PTP mode)",   0x054c, 0x004e, 0},
 	{"Sony:DSC-P51 (PTP mode)",   0x054c, 0x004e, 0},
 	{"Sony:DSC-P52 (PTP mode)",   0x054c, 0x004e, 0},
@@ -695,7 +697,7 @@ static struct {
 	{"Creative:Zen Sleek Photo",		0x041e, 0x413d, PTP_MTP},
 	{"Creative:Zen Vision:M",		0x041e, 0x413e, PTP_MTP},
 	/* Reported by marazm@o2.pl */
-	{"Creative:Zen V",			0x041e, 0x4150, PTP_MTP},  
+	{"Creative:Zen V",			0x041e, 0x4150, PTP_MTP},
 	/* Reported by Darel on the XNJB forums */
 	{"Creative:Zen V plus",			0x041e, 0x4152, PTP_MTP},
 	/* The 2 below will not work out of the box, since the autoswitch
@@ -847,7 +849,7 @@ retry:
 	if (usecontext)
 		progressid = gp_context_progress_start (context, (size/CONTEXT_BLOCK_SIZE), _("Downloading..."));
 	while (curread < size) {
-		int oldsize = curread; 
+		int oldsize = curread;
 
 		toread = size - curread;
 		if (toread > 4096)
@@ -897,7 +899,7 @@ ptp_write_func (unsigned char *bytes, unsigned int size, void *data)
 	if (usecontext)
 		progressid = gp_context_progress_start (context, (size/CONTEXT_BLOCK_SIZE), _("Uploading..."));
 	while (curwrite < size) {
-		int oldsize = curwrite; 
+		int oldsize = curwrite;
 
 		towrite = size-curwrite;
 		if (towrite > 4096)
@@ -1184,7 +1186,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 
 	/* Currently disabled, since we must make sure for Canons
 	 * that prepare capture was called.
-	 * Enable: remote 0 &&, run 
+	 * Enable: remote 0 &&, run
 	 * 	gphoto2 --set-config capture=on --capture-preview
 	 */
 	if (camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) {
@@ -1261,8 +1263,8 @@ add_objectid_to_gphotofs(Camera *camera, CameraFilePath *path, GPContext *contex
         if (ret != GP_OK) return ret;
 
 	/* we also get the fs info for free, so just set it */
-	info.file.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME | 
-			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT | 
+	info.file.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME |
+			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
 			GP_FILE_INFO_SIZE;
 	strcpy_mime (info.file.type, oi->ObjectFormat);
 	strcpy(info.file.name,path->name);
@@ -1270,7 +1272,7 @@ add_objectid_to_gphotofs(Camera *camera, CameraFilePath *path, GPContext *contex
 	info.file.height	= oi->ImagePixHeight;
 	info.file.size		= oi->ObjectCompressedSize;
 	info.preview.fields = GP_FILE_INFO_TYPE |
-			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT | 
+			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
 			GP_FILE_INFO_SIZE;
 	strcpy_mime (info.preview.type, oi->ThumbFormat);
 	info.preview.width	= oi->ThumbPixWidth;
@@ -1476,7 +1478,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 			printf("No expected capture complete event\n");
 	}
 	if (i==100) {
-	    gp_log (GP_LOG_DEBUG, "ptp","ERROR: Capture timed out!\n");        
+	    gp_log (GP_LOG_DEBUG, "ptp","ERROR: Capture timed out!\n");
 	    return GP_ERROR_TIMEOUT;
 	}
 
@@ -1552,7 +1554,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	 */
 
 	/* I hate workarounds! Nikon is not 100% PTP compatible here! */
-	if (params->deviceinfo.VendorExtensionID==PTP_VENDOR_NIKON) 
+	if (params->deviceinfo.VendorExtensionID==PTP_VENDOR_NIKON)
 		goto out;
 	{
 		short ret = params->event_wait(params,&event);
@@ -1570,8 +1572,8 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 			_("Capture command completed, but no confirmation received"));
 			goto err;
 		}
-	} 
-	if (event.Code==PTP_EC_CaptureComplete) 
+	}
+	if (event.Code==PTP_EC_CaptureComplete)
 		goto out;
 
 	gp_context_error (context,_("Received event 0x%04x"),event.Code);
@@ -1698,7 +1700,7 @@ _value_to_str(PTPPropertyValue *data, uint16_t dt, char *txt) {
 		}
 	} else {
 		switch (dt) {
-		case PTP_DTC_UNDEF: 
+		case PTP_DTC_UNDEF:
 			sprintf (txt, "Undefined");
 			break;
 		case PTP_DTC_INT8:
@@ -1706,7 +1708,7 @@ _value_to_str(PTPPropertyValue *data, uint16_t dt, char *txt) {
 			break;
 		case PTP_DTC_UINT8:
 			sprintf (txt, "%u", data->u8);
-			break; 
+			break;
 		case PTP_DTC_INT16:
 			sprintf (txt, "%d", data->i16);
 			break;
@@ -1720,10 +1722,10 @@ _value_to_str(PTPPropertyValue *data, uint16_t dt, char *txt) {
 			sprintf (txt, "%u", data->u32);
 			break;
 	/*
-		PTP_DTC_INT64           
-		PTP_DTC_UINT64         
-		PTP_DTC_INT128        
-		PTP_DTC_UINT128      
+		PTP_DTC_INT64
+		PTP_DTC_UINT64
+		PTP_DTC_INT128
+		PTP_DTC_UINT128
 	*/
 		default:
 			sprintf (txt, "Unknown %x", dt);
@@ -2191,7 +2193,7 @@ add_dir (Camera *camera, uint32_t parent, uint32_t handle, const char *foldernam
 	
 	camera->pl->params.objectinfo[n].ParentObject=parent;
 }
-#endif 
+#endif
 
 #if 0
 static void
@@ -2257,7 +2259,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
     PTPParams *params = &camera->pl->params;
     uint32_t parent, storage=0x0000000;
     int i;
-    
+
     /*((PTPData *)((Camera *)data)->pl->params.data)->context = context;*/
     gp_log (GP_LOG_DEBUG, "ptp2", "file_list_func(%s)", folder);
 
@@ -2273,7 +2275,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
     /* compute storage ID value from folder patch */
     folder_to_storage(folder,storage);
-    
+
     /* Get (parent) folder handle omiting storage pseudofolder */
     find_folder_handle(folder,storage,parent,data);
 
@@ -2299,8 +2301,8 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
              * Original patch by clement.rezvoy@gmail.com */
 	    /* search backwards, likely gets hits faster. */
 	    if (GP_OK == gp_list_find_by_name(list, NULL, params->objectinfo[i].Filename)) {
-		gp_log (GP_LOG_ERROR, "ptp2/file_list_func", 
-			"Duplicate filename '%s' in folder '%s'. Ignoring nth entry.\n", 
+		gp_log (GP_LOG_ERROR, "ptp2/file_list_func",
+			"Duplicate filename '%s' in folder '%s'. Ignoring nth entry.\n",
 			params->objectinfo[i].Filename, folder);
 		continue;
 	    }
@@ -2364,7 +2366,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	 */
 	for (i = 0; i < params->handles.n; i++) {
 		if (	(params->objectinfo[i].ParentObject==handler)		&&
-			((!ptp_operation_issupported(params,PTP_OC_GetStorageIDs)) || 
+			((!ptp_operation_issupported(params,PTP_OC_GetStorageIDs)) ||
 			 (params->objectinfo[i].StorageID == storage)
 			)							&&
 			(params->objectinfo[i].ObjectFormat==PTP_OFC_Association)
@@ -2462,7 +2464,7 @@ ptp_mtp_render_metadata (
 	return (GP_OK);
 }
 
-/* To avoid roundtrips for querying prop desc if it is R/O 
+/* To avoid roundtrips for querying prop desc if it is R/O
  * we list all that are by standard means R/O.
  */
 static unsigned short readonly_props [] = {
@@ -2725,7 +2727,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	Camera *camera = data;
 	/* Note that "image" points to unsigned chars whereas all the other
 	 * functions which set image return pointers to chars.
-	 * However, we calculate a number of unsigned values in this function, 
+	 * However, we calculate a number of unsigned values in this function,
 	 * so we cannot make it signed either.
 	 * Therefore, sometimes a "ximage" char* helper, since wild casts of pointers
 	 * confuse the compilers aliasing mechanisms.
@@ -2903,7 +2905,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	}
 
 	memset(&oi, 0, sizeof (PTPObjectInfo));
-	gp_file_get_name (file, &filename); 
+	gp_file_get_name (file, &filename);
 	gp_file_get_type (file, &type);
 
 	if (type == GP_FILE_TYPE_METADATA) {
@@ -2944,7 +2946,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	/* get parent folder id omiting storage pseudofolder */
 	find_folder_handle(folder,storage,parent,data);
 
-	/* if you desire to put file to root folder, you have to use 
+	/* if you desire to put file to root folder, you have to use
 	 * 0xffffffff instead of 0x00000000 (which means responder decide).
 	 */
 	if (parent==PTP_HANDLER_ROOT) parent=PTP_HANDLER_SPECIAL;
@@ -3097,7 +3099,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	info->file.fields = GP_FILE_INFO_SIZE|GP_FILE_INFO_TYPE|GP_FILE_INFO_MTIME;
 
-	/* Avoid buffer overflows on long filenames, just don't copy it 
+	/* Avoid buffer overflows on long filenames, just don't copy it
 	 * if it is too long.
 	 */
 	if (oi->Filename && (strlen(oi->Filename)+1 < sizeof(info->file.name))) {
@@ -3233,7 +3235,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 	/* Nikon supports a fast filesystem retrieval.
 	 * Unfortunately this function returns a flat folder structure
 	 * which cannot be changed to represent the actual FAT layout.
-	 * So if you need to get access to _all_ files on the ptp fs, 
+	 * So if you need to get access to _all_ files on the ptp fs,
 	 * you can change the setting to "false" (gphoto2 --config or
 	 * edit ~/.gphoto2/settings directly).
 	 * A normal user does only download the images ... so the default
@@ -3295,7 +3297,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 			namelen = curptr[0]+(curptr[1]<<8)+(curptr[2]<<16)+(curptr[3]<<24);
 			curptr+=4;
 			if (!strcmp((char*)curptr,"DCIM")) {
-				/* to generated the /DCIM/NNNABCDEF/ structure, handle /DCIM/ 
+				/* to generated the /DCIM/NNNABCDEF/ structure, handle /DCIM/
 				 * differently */
 				diroid = rootoid;
 				roothandle = curhandle;
@@ -3490,7 +3492,7 @@ fallback:
                     nroot++;
 
             GP_DEBUG("Found %d root directory objects", nroot);
-            
+
             /* If no root directory objects, look for "DCIM".  This way, we can
              * handle cameras that report the wrong ParentObject ID for root
              */
@@ -3498,7 +3500,7 @@ fallback:
 		for (i = 0; i < params->handles.n; i++)
 		{
                     PTPObjectInfo *oi = &params->objectinfo[i];
-                    
+
                     if (strcmp(oi->Filename, "DCIM") == 0)
                     {
                         GP_DEBUG("Changing DCIM ParentObject ID from 0x%x to 0",
@@ -3679,7 +3681,7 @@ camera_init (Camera *camera, GPContext *context)
 	 * post init timeouts longer */
 	CR (gp_port_set_timeout (camera->port, USB_NORMAL_TIMEOUT));
 
-	/* Seems HP does not like getdevinfo outside of session 
+	/* Seems HP does not like getdevinfo outside of session
 	   although it's legal to do so */
 	/* get device info */
 	CPR(context, ptp_getdeviceinfo(&camera->pl->params,
