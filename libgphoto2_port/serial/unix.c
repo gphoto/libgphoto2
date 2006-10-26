@@ -366,7 +366,7 @@ gp_port_library_list (GPPortInfoList *list)
 		gp_port_serial_unlock (NULL, path);
 		info.type = GP_PORT_SERIAL;
 		strncpy (info.path, "serial:", sizeof (info.path));
-		strncat (info.path, path, sizeof (info.path));
+		strncat (info.path, path, sizeof (info.path) - strlen (info.path) - 1);
 		snprintf (info.name, sizeof (info.name),
 			  _("Serial Port %i"), x);
 		CHECK (gp_port_info_list_append (list, info));

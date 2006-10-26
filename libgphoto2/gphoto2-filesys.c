@@ -969,8 +969,8 @@ gp_filesystem_list_folders (CameraFilesystem *fs, const char *folder,
 			memset (buf, 0, sizeof (buf));
 			strncpy (buf, folder, MIN (sizeof (buf), len));
 			if (buf[strlen (buf) - 1] != '/')
-				strncat (buf, "/", sizeof (buf));
-			strncat (buf, name, sizeof (buf));
+				strncat (buf, "/", sizeof (buf) - strlen (buf) - 1);
+			strncat (buf, name, sizeof (buf) - strlen (buf) - 1);
 			CR (append_folder (fs, buf, context));
 		}
 		gp_list_reset (list);
@@ -1139,8 +1139,8 @@ gp_filesystem_make_dir (CameraFilesystem *fs, const char *folder,
 
 	strncpy (path, folder, sizeof (path));
 	if (path[strlen (path) - 1] != '/')
-		strncat (path, "/", sizeof (path));
-	strncat (path, name, sizeof (path));
+		strncat (path, "/", sizeof (path) - strlen (path) - 1);
+	strncat (path, name, sizeof (path) - strlen (path) - 1);
 
 	/* Create the directory */
 	CR (fs->make_dir_func (fs, folder, name, fs->folder_data, context));
@@ -1172,8 +1172,8 @@ gp_filesystem_remove_dir (CameraFilesystem *fs, const char *folder,
 	 */
 	strncpy (path, folder, sizeof (path));
 	if (path[strlen (path) - 1] != '/')
-		strncat (path, "/", sizeof (path));
-	strncat (path, name, sizeof (path));
+		strncat (path, "/", sizeof (path) - strlen (path) - 1);
+	strncat (path, name, sizeof (path) - strlen (path) - 1);
 	CL (gp_filesystem_list_folders (fs, path, list, context), list);
 	if (gp_list_count (list)) {
 		gp_context_error (context, _("There are still subfolders in "
@@ -1356,8 +1356,8 @@ gp_filesystem_scan (CameraFilesystem *fs, const char *folder,
 		CL (gp_list_get_name (list, x, &name), list);
 		strncpy (path, folder, sizeof (path));
 		if (path[strlen (path) - 1] != '/')
-			strncat (path, "/", sizeof (path));
-		strncat (path, name, sizeof (path));
+			strncat (path, "/", sizeof (path) - strlen (path) - 1);
+		strncat (path, name, sizeof (path) - strlen (path) - 1);
 		CL (gp_filesystem_scan (fs, path, filename, context), list);
 	}
 	gp_list_free (list);
