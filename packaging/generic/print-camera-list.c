@@ -770,8 +770,8 @@ fdi_camera_func (const func_params_t *params,
 				printf("     <append key=\"info.capabilities\" type=\"strlist\">camera</append>\n");
 				printf("     <merge key=\"info.category\" type=\"string\">portable_audio_player</merge>\n");
 				printf("     <append key=\"info.capabilities\" type=\"strlist\">portable_audio_player</append>\n");
-				printf("     <merge key=\"portable_audio_player.access_method\" type=\"string\">libgphoto2</merge>\n");
-				printf("     <merge key=\"portable_audio_player.type\" type=\"string\">user</merge>\n");
+				printf("     <merge key=\"portable_audio_player.access_method\" type=\"string\">user</merge>\n");
+				printf("     <merge key=\"portable_audio_player.type\" type=\"string\">mtp</merge>\n");
 				
 				/* FIXME: needs true formats ... But all of them can do MP3 */
 				printf("     <append key=\"portable_audio_player.output_formats\" type=\"strlist\">audio/mpeg</append>\n");
