@@ -216,7 +216,7 @@ struct submenu {
 	char		*name;
 	uint16_t	propid;
 	uint16_t	vendorid;
-	uint16_t	type;
+	uint32_t	type;	/* for 32bit alignment */
 	get_func	getfunc;
 	put_func	putfunc;
 };
