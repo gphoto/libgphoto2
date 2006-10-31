@@ -626,7 +626,7 @@ static struct {
 	{"Canon:PowerShot A530 (PTP mode)",     0x04a9, 0x3126, PTPBUG_DELETE_SENDS_EVENT},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1565043&group_id=8874&atid=358874 */
 	{"Canon:PowerShot A710 IS (PTP mode)",  0x04a9, 0x3138, PTPBUG_DELETE_SENDS_EVENT},
-	{"Canon:PowerShot A640 (PTP mode)",     0x04a9, 0x3139, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP},
+	{"Canon:PowerShot A640 (PTP mode)",     0x04a9, 0x3139, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:PowerShot A630 (PTP mode)",     0x04a9, 0x313a, PTPBUG_DELETE_SENDS_EVENT},
 
 	/* Konica-Minolta PTP cameras */
@@ -1039,7 +1039,6 @@ camera_abilities (CameraAbilitiesList *list)
 		GP_FOLDER_OPERATION_REMOVE_DIR;
 	a.device_type       = GP_DEVICE_STILL_CAMERA;
 	CR (gp_abilities_list_append (list, a));
-
 	memset(&a, 0, sizeof(a));
 	strcpy(a.model, "MTP Device");
 	a.status = GP_DRIVER_STATUS_TESTING;
