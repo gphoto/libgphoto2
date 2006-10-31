@@ -1,3 +1,7 @@
+2006-10-31  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* library.c: Added PowerShot A640.
+	
 2006-10-23  Marcus Meissner  <marcus@jet.franken.de>
 
 	* ptp.c,ptp.h: render more MTP opcodes. (from libmtp).
