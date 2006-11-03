@@ -715,6 +715,9 @@ static struct {
 
 	{"Intel:Bandon Portable Media Center",	0x045e, 0x00c9, PTP_MTP},
 
+	/* From Gerhard Mekenkamp */
+	{"Philips:GoGear Audio",		0x0471, 0x0165, PTP_MTP},
+
 	/* Marcoen Hirschberg <marcoen@users.sourceforge.net> */
 	{"Toshiba:Gigabeat MEGF-40",            0x0930, 0x0009, PTP_MTP},
 	{"Toshiba:Gigabeat",                    0x0930, 0x000c, PTP_MTP},
