@@ -1,6 +1,7 @@
 2006-11-04  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* library.c: Added Canon Digital IXUS 850 IS
+	* library.c: removed pragma pack(1) ... umm.
 
 2006-10-31  Marcus Meissner  <marcus@jet.franken.de>
 	

@@ -1752,6 +1752,7 @@ _get_getset(uint8_t gs) {
 	return N_("Unknown");
 }
 
+#if 0 /* leave out ... is confusing -P downloads */
 #pragma pack(1)
 struct canon_theme_entry {
 	uint16_t	unknown1;
@@ -1761,7 +1762,6 @@ struct canon_theme_entry {
 	char		unknown2[8];
 };
 
-#if 0 /* leave out ... is confusing -P downloads */
 static int
 canon_theme_get (CameraFilesystem *fs, const char *folder, const char *filename,
 		 CameraFileType type, CameraFile *file, void *data,
