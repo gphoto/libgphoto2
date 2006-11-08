@@ -355,22 +355,37 @@ static struct {
 	{"HP:PhotoSmart 720 (PTP mode)", 0x03f0, 0x6702, 0},
 	{"HP:PhotoSmart 620 (PTP mode)", 0x03f0, 0x6802, 0},
 	{"HP:PhotoSmart 735 (PTP mode)", 0x03f0, 0x6a02, 0},	
-	{"HP:PhotoSmart R707 (PTP mode)", 0x03f0, 0x6b02, 0},
+	{"HP:PhotoSmart 707 (PTP mode)", 0x03f0, 0x6b02, 0},
+	{"HP:PhotoSmart 733 (PTP mode)", 0x03f0, 0x6c02, 0},
+	{"HP:PhotoSmart 607 (PTP mode)", 0x03f0, 0x6d02, 0},
+	{"HP:PhotoSmart 507 (PTP mode)", 0x03f0, 0x6e02, 0},
         {"HP:PhotoSmart 635 (PTP mode)", 0x03f0, 0x7102, 0},
 	/* report from Federico Prat Villar <fprat@lsi.uji.es> */
 	{"HP:PhotoSmart 43x (PTP mode)", 0x03f0, 0x7202, 0},
 	{"HP:PhotoSmart M307 (PTP mode)", 0x03f0, 0x7302, 0},
-	{"HP:PhotoSmart R817 (PTP mode)", 0x03f0, 0x7702, 0},
+	{"HP:PhotoSmart 407 (PTP mode)",  0x03f0, 0x7402, 0},
+	{"HP:PhotoSmart M22 (PTP mode)",  0x03f0, 0x7502, 0},
+	{"HP:PhotoSmart 717 (PTP mode)",  0x03f0, 0x7602, 0},
+	{"HP:PhotoSmart 817 (PTP mode)",  0x03f0, 0x7702, 0},
+	{"HP:PhotoSmart 417 (PTP mode)",  0x03f0, 0x7802, 0},
+	{"HP:PhotoSmart 517 (PTP mode)",  0x03f0, 0x7902, 0},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1365941&group_id=8874&atid=108874 */
 	{"HP:PhotoSmart M415 (PTP mode)", 0x03f0, 0x7a02, 0},
 	/* irc contact, YGingras */
 	{"HP:PhotoSmart M23 (PTP mode)",  0x03f0, 0x7b02, 0},
+	{"HP:PhotoSmart 217 (PTP mode)",  0x03f0, 0x7c02, 0},
 	/* irc contact */
-	{"HP:PhotoSmart E317 (PTP mode)", 0x03f0, 0x7d02, 0},
+	{"HP:PhotoSmart 317 (PTP mode)",  0x03f0, 0x7d02, 0},
+	{"HP:PhotoSmart 818 (PTP mode)",  0x03f0, 0x7e02, 0},
 	/* Robin <diilbert.atlantis@gmail.com> */
 	{"HP:PhotoSmart M425 (PTP mode)", 0x03f0, 0x8002, 0},
+	{"HP:PhotoSmart M525 (PTP mode)", 0x03f0, 0x8102, 0},
+	{"HP:PhotoSmart M527 (PTP mode)", 0x03f0, 0x8202, 0},
+	{"HP:PhotoSmart M725 (PTP mode)", 0x03f0, 0x8402, 0},
+	{"HP:PhotoSmart M727 (PTP mode)", 0x03f0, 0x8502, 0},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1584447&group_id=8874&atid=358874 */
 	{"HP:PhotoSmart R927 (PTP mode)", 0x03f0, 0x8702, 0},
+	{"HP:PhotoSmart E327 (PTP mode)", 0x03f0, 0x8b02, 0},
 
 	/* Most Sony PTP cameras use the same product/vendor IDs. */
 	{"Sony:PTP",                  0x054c, 0x004e, 0},
