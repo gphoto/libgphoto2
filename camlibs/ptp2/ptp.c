@@ -515,18 +515,22 @@ ptp_usb_event (PTPParams* params, PTPContainer* event, int wait)
 			"PTP: reading event an error 0x%04x occurred", ret);
 		ret = PTP_ERROR_IO;
 		/* reading event error is nonfatal (for example timeout) */
-	} 
-	while (dtoh32(usbevent.length) > rlen) {
-		unsigned int newrlen = 0;
+	}
+	/* Only do the additional reads for "events". Canon IXUS 2 likes to
+	 * send unrelated data.
+	 */
+	if (dtoh16(usbevent.type) == PTP_USB_CONTAINER_EVENT) {
+		while (dtoh32(usbevent.length) > rlen) {
+			unsigned int newrlen = 0;
 
-		ret=params->check_int_fast_func(((unsigned char*)&usbevent)+rlen,
-			dtoh32(usbevent.length)-rlen,params->data,&newrlen
-		);
-		if (ret != PTP_RC_OK) {
-			break;
+			ret=params->check_int_fast_func(((unsigned char*)&usbevent)+rlen,
+				dtoh32(usbevent.length)-rlen,params->data,&newrlen
+			);
+			if (ret != PTP_RC_OK)
+				break;
+			rlen+=newrlen;
 		}
-		rlen+=newrlen;
-	} 
+	}
 	/* if we read anything over interrupt endpoint it must be an event */
 	/* build an appropriate PTPContainer */
 	event->Code=dtoh16(usbevent.code);
