@@ -3,7 +3,7 @@
 	* library.c: Do incremental event read only for
 	  actual PTP events.
 
-	* library.c: added Nikon CoolPix L1.
+	* library.c: added Nikon CoolPix L1, Kodak C530.
 
 2006-11-04  Marcus Meissner  <marcus@jet.franken.de>
 	

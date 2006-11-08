@@ -316,7 +316,7 @@ static struct {
 	/* a sf bugreporter */
 	{"Kodak:Z700",   0x040a, 0x0587, 0},
 	/* EasyShare Z740, Benjamin Mesing <bensmail@gmx.net> */
-	{"Kodak:EasyShare Z740", 0x040a, 0x0588, 0},
+	{"Kodak:Z740",   0x040a, 0x0588, 0},
 	/* EasyShare C360, Guilherme de S. Pastore via Debian */
  	{"Kodak:C360",   0x040a, 0x0589, 0},
 	/* Giulio Salani <ilfunambolo@gmail.com> */
@@ -329,6 +329,8 @@ static struct {
 	/* v550 Jon Burgess <jburgess@uklinux.net> */
 	{"Kodak:V550",   0x040a, 0x058f, 0},
 	{"Kodak:P850",   0x040a, 0x0592, 0},
+	/* https://launchpad.net/distros/ubuntu/+source/libgphoto2/+bug/67532 */
+	{"Kodak:C530",   0x040a, 0x059a, 0},
 	/* Ivan Baldo, http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=387998 */
 	{"Kodak:CD33",   0x040a, 0x059c, 0},
 	/* https://sourceforge.net/tracker/?func=detail&atid=208874&aid=1565144&group_id=8874 */
