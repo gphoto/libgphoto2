@@ -351,13 +351,10 @@ udev_camera_func (const func_params_t *params,
 	}
 
 	if (flags & GP_USB_HOTPLUG_MATCH_INT_CLASS) {
-		printf("SYSFS{bInterfaceClass}==\"%02x\", ", class);
-		if (flags & GP_USB_HOTPLUG_MATCH_INT_SUBCLASS) {
-			printf("SYSFS{bInterfaceSubClass}==\"%02x\", ", subclass);
-		}
-		if (flags & GP_USB_HOTPLUG_MATCH_INT_PROTOCOL) {
-			printf("SYSFS{bInterfaceProtocol}==\"%02x\", ", proto);
-			}
+		if ((flags & (GP_USB_HOTPLUG_MATCH_INT_CLASS|GP_USB_HOTPLUG_MATCH_INT_SUBCLASS|GP_USB_HOTPLUG_MATCH_INT_PROTOCOL)) == (GP_USB_HOTPLUG_MATCH_INT_CLASS|GP_USB_HOTPLUG_MATCH_INT_SUBCLASS|GP_USB_HOTPLUG_MATCH_INT_PROTOCOL))
+			printf("ENV{INTERFACE}==\"%d/%d/%d\", ", class, subclass, proto);
+		else
+			fprintf(stderr,"unhandled interface match flags %x\n", flags);
 	} else {
 		printf ("SYSFS{idVendor}==\"%04x\", SYSFS{idProduct}==\"%04x\", ",
 			a->usb_vendor, a->usb_product);
@@ -461,11 +458,10 @@ udev_098_camera_func (const func_params_t *params,
 		printf ("# %s\n", a->model);
 
 	if (flags & GP_USB_HOTPLUG_MATCH_INT_CLASS) {
-		printf("ATTRS{bInterfaceClass}==\"%02x\", ", class);
-		if (flags & GP_USB_HOTPLUG_MATCH_INT_SUBCLASS)
-			printf("ATTRS{bInterfaceSubClass}==\"%02x\", ", subclass);
-		if (flags & GP_USB_HOTPLUG_MATCH_INT_PROTOCOL)
-			printf("ATTRS{bInterfaceProtocol}==\"%02x\", ", proto);
+		if ((flags & (GP_USB_HOTPLUG_MATCH_INT_CLASS|GP_USB_HOTPLUG_MATCH_INT_SUBCLASS|GP_USB_HOTPLUG_MATCH_INT_PROTOCOL)) == (GP_USB_HOTPLUG_MATCH_INT_CLASS|GP_USB_HOTPLUG_MATCH_INT_SUBCLASS|GP_USB_HOTPLUG_MATCH_INT_PROTOCOL))
+			printf("ENV{INTERFACE}==\"%d/%d/%d\", ", class, subclass, proto);
+		else
+			fprintf(stderr,"unhandled interface match flags %x\n", flags);
 	} else {
 		printf ("ATTRS{idVendor}==\"%04x\", ATTRS{idProduct}==\"%04x\", ",
 			a->usb_vendor, a->usb_product);
