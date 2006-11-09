@@ -271,7 +271,7 @@ int dc3200_get_data(Camera *camera, u_char **data, u_long *data_len, int command
 
 	pkt_cmd[0]  = 0x04; pkt_cmd[1]  =  cb1; /* cmd */
 	pkt_cmd[2]  = 0x00; pkt_cmd[3]  = 0x01;	/* ??? */
-	pkt_cmd[4]  = (camera->pl->cmd_seqnum >> 8) && 0xff; pkt_cmd[5]  = camera->pl->cmd_seqnum && 0xff; /* SEQ */
+	pkt_cmd[4]  = (camera->pl->cmd_seqnum >> 8) & 0xff; pkt_cmd[5]  = camera->pl->cmd_seqnum & 0xff; /* SEQ */
 	pkt_cmd[6]  =  cb2; pkt_cmd[7]  =  cb3;	/* cmd */
 	pkt_cmd[8]  = 0x00; pkt_cmd[9]  = 0x01;	/* ??? */
 	pkt_cmd[10] = 0x00; pkt_cmd[11] = 0x05;	/* ??? */
