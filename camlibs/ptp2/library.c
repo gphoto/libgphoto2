@@ -722,6 +722,8 @@ static struct {
 	{"Creative:Zen Vision:M",		0x041e, 0x413e, PTP_MTP},
 	/* Reported by marazm@o2.pl */
 	{"Creative:Zen V",			0x041e, 0x4150, PTP_MTP},
+	/* Reported by danielw@iinet.net.au */
+	{"Creative:Zen Vision M",		0x041e, 0x4151, PTP_MTP},
 	/* Reported by Darel on the XNJB forums */
 	{"Creative:Zen V plus",			0x041e, 0x4152, PTP_MTP},
 	/* The 2 below will not work out of the box, since the autoswitch
