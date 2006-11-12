@@ -1,3 +1,8 @@
+2006-11-12  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptp.c, ptp.h, ptp-pack.c: Implementation of 
+	MTP_SendObjectproplist from the libmtp folks.
+
 2006-11-07  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Do incremental event read only for

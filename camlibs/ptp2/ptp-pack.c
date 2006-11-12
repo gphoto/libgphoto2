@@ -172,7 +172,7 @@ ptp_pack_string(PTPParams *params, char *string, unsigned char* data, uint16_t o
 static inline unsigned char *
 ptp_get_packed_stringcopy(PTPParams *params, char *string, uint32_t *packed_size)
 {
-uint8_t packed[PTP_MAXSTRLEN+3], len;
+	uint8_t packed[PTP_MAXSTRLEN+3], len;
 	size_t plen;
 	unsigned char *retcopy = NULL;
 
@@ -830,6 +830,63 @@ ptp_pack_DPV (PTPParams *params, PTPPropertyValue* value, unsigned char** dpvptr
 	}
 	*dpvptr=dpv;
 	return size;
+}
+
+#define MAX_MTP_PROPS 127
+static inline uint32_t
+ptp_pack_OPL (PTPParams *params, MTPPropList *proplist, unsigned char** opldataptr, uint32_t objectid)
+{
+	unsigned char* opldata;
+	MTPPropList *propitr;
+	unsigned char *packedprops[MAX_MTP_PROPS];
+	uint32_t packedpropslens[MAX_MTP_PROPS];
+	uint16_t packedpropsids[MAX_MTP_PROPS];
+	uint16_t packedpropstypes[MAX_MTP_PROPS];
+	uint32_t totalsize = 0;
+	uint32_t bufp = 0;
+	uint32_t noitems = 0;
+	uint32_t i;
+
+	totalsize = sizeof(uint32_t); /* 4 bytes to store the number of elements */
+	propitr = proplist;
+	while (propitr != NULL && noitems < MAX_MTP_PROPS) {
+		/* Overhead for each item */
+		totalsize += sizeof(uint32_t); /* Object ID */
+		/* Metadata type */
+		packedpropsids[noitems]=propitr->property;
+		totalsize += sizeof(uint16_t);
+		/* Data type */
+		packedpropstypes[noitems]= propitr->datatype;
+		totalsize += sizeof(uint16_t);
+		/* Add each property to be sent. */
+	        packedpropslens[noitems] = ptp_pack_DPV (params, &propitr->propval, &packedprops[noitems], propitr->datatype);
+		totalsize += packedpropslens[noitems];
+		noitems ++;
+		propitr = propitr->next;
+	}
+
+	/* Allocate memory for the packed property list */
+	opldata = malloc(totalsize);
+
+	htod32a(&opldata[bufp],noitems);
+	bufp += 4;
+
+	/* Copy into a nice packed list */
+	for (i = 0; i < noitems; i++) {
+		/* Object ID */
+		htod32a(&opldata[bufp],objectid);
+		bufp += sizeof(uint32_t);
+		htod16a(&opldata[bufp],packedpropsids[i]);
+		bufp += sizeof(uint16_t);
+		htod16a(&opldata[bufp],packedpropstypes[i]);
+		bufp += sizeof(uint16_t);
+		/* The copy the actual property */
+		memcpy(&opldata[bufp], packedprops[i], packedpropslens[i]);
+		bufp += packedpropslens[i];
+		free(packedprops[i]);
+	}
+	*opldataptr = opldata;
+	return totalsize;
 }
 
 /*

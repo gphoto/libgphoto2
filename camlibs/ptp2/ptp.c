@@ -2531,6 +2531,43 @@ ptp_mtp_setobjectreferences (PTPParams* params, uint32_t handle, uint32_t* ohArr
 	return ret;
 }
 
+uint16_t
+ptp_mtp_sendobjectproplist (PTPParams* params, uint32_t* store, uint32_t* parenthandle, uint32_t* handle,
+			    uint16_t objecttype, uint64_t objectsize, MTPPropList *proplist)
+{
+	uint16_t ret;
+	PTPContainer ptp;
+	int old_split_header_data;
+	unsigned char* opldata=NULL;
+	uint32_t oplsize;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code = PTP_OC_MTP_SendObjectPropList;
+	ptp.Param1 = *store;
+	ptp.Param2 = *parenthandle;
+	ptp.Param3 = (uint32_t) objecttype;
+	ptp.Param4 = (uint32_t) (objectsize >> 32);
+	ptp.Param5 = (uint32_t) (objectsize & 0xffffffffU);
+	ptp.Nparam = 5;
+
+	/* Temporary disable split headers */
+	old_split_header_data = params->split_header_data;
+	params->split_header_data = 0;
+	
+	/* Set object handle to 0 for a new object */
+	oplsize = ptp_pack_OPL(params,proplist,&opldata,*handle);
+	ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, oplsize, &opldata, NULL); 
+	free(opldata);
+	*store = ptp.Param1;
+	*parenthandle = ptp.Param2;
+	*handle = ptp.Param3; 
+
+	/* Restore split headers */
+	params->split_header_data = old_split_header_data;
+
+	return ret;
+}
+
 /* Non PTP protocol functions */
 /* devinfo testing functions */
 

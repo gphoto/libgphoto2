@@ -594,6 +594,15 @@ union _PTPPropertyValue {
 
 typedef union _PTPPropertyValue PTPPropertyValue;
 
+/* Metadata lists for MTP operations */
+struct _MTPPropList {
+	uint16_t 	 	property;
+	uint16_t 	 	datatype;
+	PTPPropertyValue 	propval;
+	struct _MTPPropList 	*next;
+};
+typedef struct _MTPPropList MTPPropList;
+
 struct _PTPPropDescRangeForm {
 	PTPPropertyValue 	MinimumValue;
 	PTPPropertyValue 	MaximumValue;
@@ -1223,6 +1232,7 @@ uint16_t ptp_getdevicepropvalue	(PTPParams* params, uint16_t propcode,
 uint16_t ptp_setdevicepropvalue (PTPParams* params, uint16_t propcode,
                         	PTPPropertyValue* value, uint16_t datatype);
 
+/* Microsoft MTP extensions */
 uint16_t ptp_mtp_getobjectpropdesc (PTPParams* params, uint16_t opc, uint16_t ofc,
 				PTPObjectPropDesc *objectpropertydesc);
 uint16_t ptp_mtp_getobjectpropvalue (PTPParams* params, uint32_t oid, uint16_t opc, 
@@ -1231,7 +1241,8 @@ uint16_t ptp_mtp_setobjectpropvalue (PTPParams* params, uint32_t oid, uint16_t o
 				PTPPropertyValue *value, uint16_t datatype);
 uint16_t ptp_mtp_getobjectreferences (PTPParams* params, uint32_t handle, uint32_t** ohArray, uint32_t* arraylen);
 uint16_t ptp_mtp_setobjectreferences (PTPParams* params, uint32_t handle, uint32_t* ohArray, uint32_t arraylen);
-
+uint16_t ptp_mtp_sendobjectproplist (PTPParams* params, uint32_t* store, uint32_t* parenthandle, uint32_t* handle,
+				     uint16_t objecttype, uint64_t objectsize, MTPPropList *proplist);
 
 /* Eastman Kodak extensions */
 uint16_t ptp_ek_9007 (PTPParams* params, unsigned char **serial, unsigned int *size);
