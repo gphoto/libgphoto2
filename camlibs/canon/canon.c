@@ -195,7 +195,8 @@ const struct canonCamModelData models[] = {
         /* 307b is listed for MV630i, probably in PTP mode. */
         {"Canon:MV630i (normal mode)",  CANON_CLASS_1,  0x04A9, 0x307c, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
-        /* 307f is Optura 20/MVX150i in PTP mode */
+        /* 307f is Optura 20/MVX150i in PTP mode, someone told, but it seems not correct. Specify it here too. */
+        {"Canon:Optura 20", CANON_CLASS_1,  0x04A9, 0x307f, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:Optura 20 (normal mode)", CANON_CLASS_1,  0x04A9, 0x3080, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:MVX150i (normal mode)", CANON_CLASS_1,  0x04A9, 0x3080, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         /* Sighted at
