@@ -169,7 +169,7 @@ typedef enum {
  */
 #define CHECK_PARAM_NULL(param) \
 	if (param == NULL) { \
-		GP_LOG (GP_LOG_ERROR, _("NULL parameter \"%s\" in %s line %i"), #param, __FILE__, __LINE__); \
+		gp_log (GP_LOG_ERROR, "canon/canon.h", _("NULL parameter \"%s\" in %s line %i"), #param, __FILE__, __LINE__); \
 		return GP_ERROR_BAD_PARAMETERS; \
 	}
 
