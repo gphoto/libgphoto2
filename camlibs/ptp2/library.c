@@ -339,6 +339,8 @@ static struct {
 	{"Kodak:Z650",   0x040a, 0x059e, 0},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1547142&group_id=8874&atid=358874 */
 	{"Kodak:C533",   0x040a, 0x05a2, 0},
+	/* Marc Santhoff <M.Santhoff@t-online.de> */
+	{"Kodak:C643",   0x040a, 0x05a7, 0},
 
 	/* HP PTP cameras */
 	{"HP:PhotoSmart 812 (PTP mode)", 0x03f0, 0x4202, 0},

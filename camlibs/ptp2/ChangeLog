@@ -1,3 +1,7 @@
+2006-11-15  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* library.c: Added Kodak C643.
+
 2006-11-12  Marcus Meissner  <marcus@jet.franken.de>
 
 	* ptp.c, ptp.h, ptp-pack.c: Implementation of 
