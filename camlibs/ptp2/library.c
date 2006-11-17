@@ -728,6 +728,8 @@ static struct {
 	{"Creative:Zen Vision M",		0x041e, 0x4151, PTP_MTP},
 	/* Reported by Darel on the XNJB forums */
 	{"Creative:Zen V plus",			0x041e, 0x4152, PTP_MTP},
+	/* From Richard Low of the libmtp devteam */
+	{"Creative:Zen Vision W",		0x041e, 0x4153, PTP_MTP},
 	/* The 2 below will not work out of the box, since the autoswitch
 	 * to USB Mass Storage once probed.
 	 * https://sourceforge.net/tracker/?func=detail&atid=108874&aid=1577793&group_id=8874

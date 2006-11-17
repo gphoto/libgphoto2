@@ -1,6 +1,7 @@
 2006-11-15  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* library.c: Added Kodak C643, Samsung YP-K5.
+	* library.c: added Creative Zen Vision W
 
 2006-11-12  Marcus Meissner  <marcus@jet.franken.de>
 
