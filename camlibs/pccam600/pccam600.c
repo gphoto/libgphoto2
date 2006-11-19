@@ -56,7 +56,7 @@
  *waits until the status value is 0 or 8. 
  *if status == 0xb0 or 0x40 we will wait some more
  */
-void pccam600_wait_for_status(GPPort *port){
+static void pccam600_wait_for_status(GPPort *port){
   int ret;
   unsigned char status = 1;
   while(status != 0x00){

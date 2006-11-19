@@ -61,7 +61,7 @@
 #define QUALITY_ME   0x58
 #define QUALITY_HI   0x45
 
-struct models{
+static const struct models{
   char *name;
   unsigned short idVendor;
   unsigned short idProduct;

@@ -33,7 +33,6 @@ typedef struct {
   unsigned char unk6;
 } FileEntry;
 
-void pccam600_wait_for_status(GPPort *port);
 int pccam600_init(GPPort *port, GPContext *context);
 int pccam600_close(GPPort *port, GPContext *context);
 int pccam600_get_file_list(GPPort *port, GPContext *context);
