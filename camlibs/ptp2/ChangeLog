@@ -6,6 +6,8 @@
 
 	  Handle the PTP violating READ (length 0xffffffff).
 
+	* library.c: Added PowerShot G7.
+
 2006-11-15  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* library.c: Added Kodak C643, Samsung YP-K5.
