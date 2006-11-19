@@ -32,7 +32,7 @@
 #include "gphoto2-endian.h"
 
 /*convert to correct endianness */
-int 
+static int
 sx330z_fill_req(int8_t *buf, struct traveler_req *req)
 {
  *((int16_t*)buf) = htole16(req->always1);     buf += 2;
@@ -46,7 +46,7 @@ sx330z_fill_req(int8_t *buf, struct traveler_req *req)
 } /* sx330z_fill_req */
 
 /*convert to correct endianness */
-int 
+static int
 sx330z_fill_ack(int8_t *buf, struct traveler_ack *ack)
 {
  ack->always3 = le32toh(*(int32_t*)buf);   buf += 4;
@@ -57,7 +57,7 @@ sx330z_fill_ack(int8_t *buf, struct traveler_ack *ack)
 } /* sx330z_fill_ack */
 
 /*convert to correct endianness */
-int 
+static int
 sx330z_fill_toc_page(int8_t *buf, struct traveler_toc_page *toc)
 {
  int cnt;
@@ -93,7 +93,7 @@ sx330z_init(Camera *camera, GPContext *context)
 /*
  * Read block described by req 
  */
-int 
+static int 
 sx330z_read_block(Camera *camera, GPContext *context, struct traveler_req *req, char *buf)
 {
  int ret;

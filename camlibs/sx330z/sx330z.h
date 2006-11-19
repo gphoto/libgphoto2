@@ -100,11 +100,6 @@ struct traveler_ack
 };
 
 
-/* endianness handling */
-int sx330z_fill_req(int8_t *buf,struct traveler_req *req);
-int sx330z_fill_ack(int8_t *buf,struct traveler_ack *ack);
-int sx330z_fill_toc_page(int8_t *buf,struct traveler_toc_page *toc);
-
 /*
  *  There's not a real initialization,
  *  but ...
@@ -117,11 +112,6 @@ int sx330z_init(Camera *camera,GPContext *context);
  */
 int sx330z_get_toc_num_pages(Camera *camera,GPContext *context, int32_t *pages);
 
-
-/*
- * Read a data-block  (TOC / Image)
- */
-int sx330z_read_block(Camera *camera,GPContext *context,struct traveler_req *req,char *buf);
 
 /*
  * Get TOC 

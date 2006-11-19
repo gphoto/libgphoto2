@@ -67,7 +67,7 @@
  *   please report if you have others that are working
  */
  
-static struct
+static const struct
 {
  char *model;
  int usb_vendor;
