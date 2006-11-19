@@ -43,6 +43,7 @@ static const char BMPheader[54]={
   0x0,  0x0,  0x0,  0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
   };
 
+#if 0
 /*
  * baud rate enumerations
  */
@@ -56,6 +57,7 @@ static struct largan_baud_rate {
 	{ 4800, 0x00 },
 	{    0, 0x00 }
 };
+#endif
 
 enum {
 	LARGAN_NUM_PICT_CMD = 0xfa,
@@ -350,11 +352,12 @@ int largan_capture (Camera *camera)
 }
 
 
+#if 0
 /*
  * Tell the camera to change the speed
  * Then set the serial port speed
  */
-int largan_set_serial_speed (Camera * camera, int speed)
+static int largan_set_serial_speed (Camera * camera, int speed)
 {
 	int ret;
 	int i;
@@ -386,6 +389,7 @@ int largan_set_serial_speed (Camera * camera, int speed)
 	GP_DEBUG ("largan_set_serial_speed(): baud rate not found\n");
 	return GP_ERROR;
 }
+#endif
 
 
 /*

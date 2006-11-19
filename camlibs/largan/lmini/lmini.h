@@ -54,8 +54,4 @@ int largan_get_pict (Camera * camera, largan_pict_type type,
 		uint8_t index, largan_pict_info * pict);
 int largan_erase (Camera *camera, int all);
 int largan_capture (Camera *camera);
-
-int largan_set_serial_speed (Camera * camera, int speed);
-
-
 #endif
