@@ -43,6 +43,20 @@
 #define CS_CH_CLEAR	0xd05
 #define CS_READCLOSE	0x8303
 
+static int 
+CLICKSMART_READ (GPPort *port, int index, char *data) 
+{
+	gp_port_usb_msg_interface_read(port, 0, 0, index, data, 1);
+	return GP_OK;
+}
+
+static int 
+CLICKSMART_READ_STATUS (GPPort *port, char *data) 
+{		
+	gp_port_usb_msg_interface_read(port, 0, 0, CS_CH_READY, data, 1);
+	return GP_OK;
+}
+
 int clicksmart_init (GPPort *port, CameraPrivateLibrary *priv)
 {
 	int i, cat_size;
@@ -254,18 +268,4 @@ int create_jpeg_from_data (unsigned char * dst, unsigned char * src,
 	*size = dst - start;
 	return GP_OK;
 
-}
-
-int 
-CLICKSMART_READ (GPPort *port, int index, char *data) 
-{
-	gp_port_usb_msg_interface_read(port, 0, 0, index, data, 1);
-	return GP_OK;
-}
-
-int 
-CLICKSMART_READ_STATUS (GPPort *port, char *data) 
-{		
-	gp_port_usb_msg_interface_read(port, 0, 0, CS_CH_READY, data, 1);
-	return GP_OK;
 }

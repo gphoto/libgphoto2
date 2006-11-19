@@ -41,11 +41,6 @@ int clicksmart_delete_all_pics  (GPPort *port);
 
 int clicksmart_reset      	(GPPort *port);
 
-int clicksmart_decode		(unsigned char * dst, unsigned char * src, 
-				    int width, int height);
-int CLICKSMART_READ 		(GPPort *port, int index, char *data);
-int CLICKSMART_READ_STATUS 	(GPPort *port, char *data);
-
 int create_jpeg_from_data 	(unsigned char * dst, unsigned char * src, 
 					int qIndex, int w, int h, 
 					unsigned char format, 
