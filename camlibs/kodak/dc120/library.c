@@ -43,12 +43,12 @@ char *dc120_packet_new (int command_byte) {
  *  Checks if the response is ok (completed, ready, received) or not ok.
  *  @returns GP_OK if command is ok, GP_ERROR otherwise.
  */
-int dc120_response_ok (char response) {
+int dc120_response_ok (unsigned char response) {
   /* This is stupid. how do you get a constant of type signed char?? (Ralf) */
-	 if( response == '\x00' || /* Command completed */
-	     response == '\x10' || /* Command ready */
-	     response == '\xd1' || /* Command received (ACK) */
-	     response == '\xd2' )  /* Correct packet */
+	 if( response == 0x00 || /* Command completed */
+	     response == 0x10 || /* Command ready */
+	     response == 0xd1 || /* Command received (ACK) */
+	     response == 0xd2 )  /* Correct packet */
 	   return (GP_OK);
          else
 	   return (GP_ERROR);
@@ -63,7 +63,7 @@ int dc120_packet_write (Camera *camera, char *packet, int size, int read_respons
 	/* Writes the packet and returns the result */
 
 	int x=0;
-	char in[2];
+	unsigned char in[2];
 
 write_again:
 	/* If retry, give camera some recup time */
