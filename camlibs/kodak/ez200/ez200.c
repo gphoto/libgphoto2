@@ -35,6 +35,15 @@
 #define WRITE gp_port_usb_msg_write
 #define READ  gp_port_usb_msg_read
 
+static int ez200_wait_status_ok(GPPort *port) {
+	char c = 0;
+	
+	do READ(port, STATUS, 0, 0, &c, 1);
+	while (c != 0); /* Wait */
+	
+	return GP_OK;
+}
+
 
 int ez200_init (GPPort *port, Model *model, Info *info) 
 {
@@ -65,15 +74,6 @@ int ez200_exit (GPPort *port) {
 	return GP_OK;
 }
 	
-int ez200_wait_status_ok(GPPort *port) {
-	char c = 0;
-	
-	do READ(port, STATUS, 0, 0, &c, 1);
-	while (c != 0); /* Wait */
-	
-	return GP_OK;
-}
-
 int ez200_get_num_pics (Info *info) {
 	GP_DEBUG("Running ez200_get_num_pics\n");
 	return info[0];
@@ -97,7 +97,7 @@ int ez200_get_picture_size (GPPort *port, int n) {
 	return size; 
 }
 
-int ez200_read_data (GPPort *port, char *data, int size) { 
+static int ez200_read_data (GPPort *port, char *data, int size) { 
 	int MAX_BULK = 0x1000;
 
 	/* Read Data by blocks */

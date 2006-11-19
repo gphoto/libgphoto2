@@ -42,10 +42,8 @@ typedef enum {
 int ez200_init                (GPPort *port, Model *model, Info *info);
 int ez200_exit                (GPPort *port);
 int ez200_get_num_pics        (Info *info);
-int ez200_read_data           (GPPort *port, char *data, int size);
 int ez200_get_picture_size    (GPPort *port, int n);
 int ez200_read_picture_data   (GPPort *port, char *data, int size, int n);
-int ez200_wait_status_ok      (GPPort *port);
 int ez200_read_picture_header (GPPort *port, char *data);
 
 #endif
