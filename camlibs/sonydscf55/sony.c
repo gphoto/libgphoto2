@@ -44,17 +44,14 @@
 #define SONY_END_CHAR		0xc1
 
 
-static unsigned char START_PACKET = 192;
-static unsigned char END_PACKET = 193;
+static const unsigned char START_PACKET = 192;
+static const unsigned char END_PACKET = 193;
 
-static char ESC_START_STRING[] = { 0x7d, 0xe0 };
-static char ESC_END_STRING[] = { 0x7d, 0xe1 };
-static char ESC_ESC_STRING[] = { 0x7d, 0x5d };
+static const char ESC_START_STRING[] = { 0x7d, 0xe0 };
+static const char ESC_END_STRING[] = { 0x7d, 0xe1 };
+static const char ESC_ESC_STRING[] = { 0x7d, 0x5d };
 
-static unsigned char PacketCodes[2] = { 192, 193 };
-
-Packet CameraInvalid = { 0, 2, {131, 125}, 93 };
-Packet ResendPacket = { 0, 4, {129, 2, '1', 0}, 'L' };
+static const unsigned char PacketCodes[2] = { 192, 193 };
 
 
 #if defined(USE_ALL_TYPES)
