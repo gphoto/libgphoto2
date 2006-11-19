@@ -23,8 +23,6 @@
 #include "command.h"
 #include "chotplay.h"
 
-gp_port *dev;
-
 int camera_id (CameraText *id) {
 
         strcpy(id->text, "sonydscf1-bvl");
@@ -57,9 +55,9 @@ int camera_abilities (CameraAbilitiesList *list) {
 }
 
 static int camera_exit (Camera *camera, GPContext *context) {
-        if(F1ok())
+        if(F1ok(camera->port))
            return(GP_ERROR);
-        return (F1fclose());
+        return (F1fclose(camera->port));
 }
 
 static int get_file_func (CameraFilesystem *fs, const char *folder,
@@ -71,7 +69,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	long int size;
 	char *data = NULL;
         printf("folder: %s, file: %s\n", folder, filename);
-        if(!F1ok())
+        if(!F1ok(camera->port))
            return (GP_ERROR);
 
 	gp_file_set_name (file, filename);
@@ -82,10 +80,10 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
-		size = get_picture (num, &data, JPEG, 0, F1howmany());
+		size = get_picture (camera->port, num, &data, JPEG, 0, F1howmany(camera->port));
 		break;
 	case GP_FILE_TYPE_PREVIEW:
-		size = get_picture (num, &data, JPEG_T, TRUE, F1howmany());
+		size = get_picture (camera->port, num, &data, JPEG_T, TRUE, F1howmany(camera->port));
 		break;
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
@@ -93,9 +91,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 
         if (!data)
                 return GP_ERROR;
-
 	gp_file_set_data_and_size (file, data, size);
-
         return GP_OK;
 }
 
@@ -109,9 +105,9 @@ static int delete_file_func (CameraFilesystem *fs, const char *folder,
         num = gp_filesystem_number(camera->fs, "/", filename, context);
         max = gp_filesystem_count(camera->fs,folder, context);
         printf("sony dscf1: file delete: %d\n",num);
-        if(!F1ok())
+        if(!F1ok(camera->port))
            return (GP_ERROR);
-        delete_picture(num,max);
+        delete_picture(camera->port,num,max);
         return(GP_OK);
         /*return (F1deletepicture(file_number));*/
 }
@@ -120,10 +116,10 @@ static int camera_summary (Camera *camera, CameraText *summary, GPContext *conte
 {
         /*printf("->camera summary");*/
         int i;
-        if(!F1ok())
+        if(!F1ok(camera->port))
            return (GP_ERROR);
-        get_picture_information(&i,2);
-        return (F1newstatus(1, summary->text));
+        get_picture_information(camera->port,&i,2);
+        return (F1newstatus(camera->port, 1, summary->text));
 }
 
 static int camera_about (Camera *camera, CameraText *about, GPContext *context)
@@ -137,17 +133,12 @@ _("Sony DSC-F1 Digital Camera Support\nM. Adam Kendall <joker@penguinpub.com>\nB
 static int file_list_func (CameraFilesystem *fs, const char *folder,
 			   CameraList *list, void *data, GPContext *context)
 {
-/*	Camera *camera = data; */
-        int count;
-        F1ok();
-        /*if(F1ok())
+	Camera *camera = data;
+        F1ok(camera->port);
+        /*if(F1ok(camera->port))
            return(GP_ERROR);*/
-        count = F1howmany();
-
         /* Populate the list */
-        gp_list_populate(list, "PSN%05i.jpg", count);
-
-        return GP_OK;
+        return gp_list_populate(list, "PSN%05i.jpg", F1howmany(camera->port));
 }
 
 static CameraFilesystemFuncs fsfuncs = {
@@ -162,9 +153,6 @@ int camera_init (Camera *camera, GPContext *context) {
         camera->functions->exit         = camera_exit;
         camera->functions->summary      = camera_summary;
         camera->functions->about        = camera_about;
-
-	/* FIXME: This won't work with several frontends. NO GLOBALS PLEASE! */
-	dev = camera->port;
 
 	/* Configure the port */
         gp_port_set_timeout (camera->port, 5000);

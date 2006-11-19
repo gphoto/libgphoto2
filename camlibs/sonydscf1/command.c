@@ -19,9 +19,6 @@
 #define dprintf(x)
 #endif
 
-extern gp_port *dev;
-
-
 /* static int      F1fd = -1; */
 static u_char address = 0;
 static u_char sendaddr[8] = { 0x00, 0x22, 0x44, 0x66, 0x88, 0xaa, 0xcc, 0xee };
@@ -32,24 +29,24 @@ static int pic_num2 = 0;
 static int year, month, date;
 static int hour, minutes;
 
-void wbyte(u_char c)
+static void wbyte(GPPort *port,u_char c)
 {
   char temp[2];
   dprintf((stderr, "> %02x\n", c));
   temp[0]=c;
   temp[1]='\0';
   /* if (writetty(F1fd, &c, 1) < 0) { */
-  if( gp_port_write(dev, (char*)temp, 1) <0) {
+  if( gp_port_write(port, (char*)temp, 1) <0) {
     perror("wbyte");
     /* Exit(1); */
   }
 }
 
-u_char rbyte()
+static u_char rbyte(GPPort *port)
 {
   u_char        c[2];
   /* if (readtty(F1fd, &c, 1) < 0) { */
-  if (gp_port_read(dev,c, 1) <0) {
+  if (gp_port_read(port,c, 1) <0) {
     perror("rbtyte");
     /* Exit(1); */
   }
@@ -58,23 +55,23 @@ u_char rbyte()
   return c[0];
 }
 
-inline void
-wstr(u_char *p, int len)
+static void
+wstr(GPPort *port,u_char *p, int len)
 {
   dprintf((stderr, "> len=%d\n", len));
   /* if (writetty(F1fd, p, len) < 0) { */
-  if( gp_port_write(dev, p, len) <0) {
+  if( gp_port_write(port, p, len) <0) {
     perror("wstr");
     /* Exit(1); */
   }
 }
 
-inline void rstr(u_char *p, int len)
+static void rstr(GPPort *port,u_char *p, int len)
 {
 
   dprintf((stderr, "< len=%d\n", len));
   /* if (readtty(F1fd, p, len) < 0) { */
-  if (gp_port_read(dev,p, len) <0) {
+  if (gp_port_read(port,p, len) <0) {
     perror("rstr");
     /* Exit(1); */
   }
@@ -88,57 +85,57 @@ u_char checksum(u_char addr, u_char *cp, int len)
   return(0x100 -(ret & 0xff) );
 }
 
-void sendcommand(u_char *p, int len)
+static void sendcommand(GPPort *port,u_char *p, int len)
 {
-  wbyte(BOFRAME);
-  wbyte(sendaddr[address]);
-  wstr(p, len);
-  wbyte(checksum(sendaddr[address], p, len));
-  wbyte(EOFRAME);
+  wbyte(port,BOFRAME);
+  wbyte(port,sendaddr[address]);
+  wstr(port,p, len);
+  wbyte(port,checksum(sendaddr[address], p, len));
+  wbyte(port,EOFRAME);
   address ++;
   if(address >7 ) address = 0;
 }
 
-void Abort(void)
+static void Abort(GPPort *port)
 {
   u_char buf[4];
   buf[0] = BOFRAME;
   buf[1] = 0x85;
   buf[2] = 0x7B;
   buf[3] = EOFRAME;
-  wstr(buf, 4);
+  wstr(port, buf, 4);
 }
 
-int recvdata(u_char *p, int len)
+static int recvdata(GPPort *port, u_char *p, int len)
 {
   u_char s, t;
   int sum;
   int i;
 
-  s = rbyte();  /* BOFL */
-  t= rbyte();  /* recvaddr */
+  s = rbyte(port);  /* BOFL */
+  t= rbyte(port);  /* recvaddr */
 #ifdef DEBUG
   fprintf(stderr,"BOFL %02x ", s);
   fprintf(stderr,"Raddr %02x %02x \n", t, recvaddr[address]);
 #endif
 
   if(t != recvaddr[address]){
-    s = rbyte();  /* drain */
-    s = rbyte();  /* drain */
-    s = rbyte();  /* drain */
+    s = rbyte(port);  /* drain */
+    s = rbyte(port);  /* drain */
+    s = rbyte(port);  /* drain */
 #ifdef DEBUG
     fprintf(stderr," abort \n");
 #endif
-    Abort();
+    Abort(port);
     return(-1);
   }
   i = len;
   sum = (int) t;
-  while ((s = rbyte()) != EOFRAME){
+  while ((s = rbyte(port)) != EOFRAME){
     sum = sum + s;
     if(i > 0){
       if(s == CESCAPE){
-        s = rbyte();
+        s = rbyte(port);
         if(0x20 & s)
           s = 0xDF & s;
         else
@@ -166,7 +163,7 @@ int recvdata(u_char *p, int len)
 /*------------------------------------------------------------*/
 
 
-char F1newstatus(int verbose, char *return_buf)
+char F1newstatus(GPPort *port, int verbose, char *return_buf)
 {
   u_char buf[34];
   int i;
@@ -174,13 +171,13 @@ char F1newstatus(int verbose, char *return_buf)
   char tmp_buf[150]="";
   buf[0] = 0x03;
   buf[1] = 0x02;
-  sendcommand(buf, 2);
-  i = recvdata(buf, 33);
+  sendcommand(port,buf, 2);
+  i = recvdata(port, buf, 33);
 #ifdef DEBUG
   fprintf(stderr,"Status: %02x%02x:%02x(len = %d)\n", buf[0], buf[1], buf[2], i);
 #endif
   if((buf[0] != 0x03) || (buf[1] != 0x02) ||(buf[2] != 0)){
-    Abort();
+    Abort(port);
     return(-1);
   }
   sw_mode = buf[3];
@@ -222,7 +219,7 @@ char F1newstatus(int verbose, char *return_buf)
 }
 
 
-int F1status(int verbose)
+int F1status(GPPort *port, int verbose)
 {
 
   u_char buf[34];
@@ -230,13 +227,13 @@ int F1status(int verbose)
 
   buf[0] = 0x03;
   buf[1] = 0x02;
-  sendcommand(buf, 2);
-  i = recvdata(buf, 33);
+  sendcommand(port,buf, 2);
+  i = recvdata(port, buf, 33);
 #ifdef DEBUG
   fprintf(stderr,"Status: %02x%02x:%02x(len = %d)\n", buf[0], buf[1], buf[2], i);
 #endif
   if((buf[0] != 0x03) || (buf[1] != 0x02) ||(buf[2] != 0)){
-    Abort();
+    Abort(port);
     return(-1);
   }
   sw_mode = buf[3];
@@ -271,13 +268,13 @@ int F1status(int verbose)
   return (buf[2]);              /*ok*/
 }
 
-int F1howmany()
+int F1howmany(GPPort *port)
 {
-  F1status(0);
+  F1status(port, 0);
   return(pic_num);
 }
 
-int F1fopen(char *name)
+int F1fopen(GPPort *port, char *name)
 {
   u_char buf[64];
   int len;
@@ -287,10 +284,10 @@ int F1fopen(char *name)
   buf[3] = 0x00;
   snprintf(&buf[4], sizeof(name), "%s", name);
   len = strlen(name) + 5;
-  sendcommand(buf, len);
-  recvdata(buf, 6);
+  sendcommand(port,buf, len);
+  recvdata(port, buf, 6);
   if((buf[0] != 0x02) || (buf[1] != 0x0A) || (buf[2] != 0x00)){
-    Abort();
+    Abort(port);
     fprintf(stderr,"F1fopen fail\n");
     return(-1);
   }
@@ -298,7 +295,7 @@ int F1fopen(char *name)
   return(buf[3]);
 }
 
-int F1fclose()
+int F1fclose(GPPort*port)
 {
   u_char buf[4];
 
@@ -306,20 +303,20 @@ int F1fclose()
   buf[1] = 0x0B;
   buf[2] = 0x00;
   buf[3] = 0x00;
-  sendcommand(buf, 4);
-  recvdata(buf, 3);
+  sendcommand(port,buf, 4);
+  recvdata(port, buf, 3);
 #ifdef DEBUG
   fprintf(stderr,"Fclose: %02x%02x:%02x\n", buf[0], buf[1], buf[2]);
 #endif
   if((buf[0] != 0x02) || (buf[1] != 0x0B) || (buf[2] != 0x00)){
     fprintf(stderr,"F1fclose fail\n");
-    Abort();
+    Abort(port);
     return(-1);
   }
   return (buf[2]);              /* ok == 0 */
 }
 
-long F1fread(u_char *data, long len)
+long F1fread(GPPort *port, u_char *data, long len)
 {
 
   long len2;
@@ -338,23 +335,23 @@ long F1fread(u_char *data, long len)
 
   buf[6] = (len >> 8) & 0xff;
   buf[7] = 0xff & len;
-  sendcommand(buf, 8);
-  rstr(buf, 9);
+  sendcommand(port,buf, 8);
+  rstr(port, buf, 9);
   if((buf[2] != 0x02) || (buf[3] != 0x0C) || (buf[4] != 0x00)){
-    Abort();
+    Abort(port);
     fprintf(stderr,"F1fread fail\n");
     return(-1);
   }
 
   len2 = buf[7] * 0x100 + buf[8]; /* data size */
   if(len2 == 0) {
-    s = rbyte(); /* last block checksum */
-    s = rbyte(); /* last block EOFL */
+    s = rbyte(port); /* last block checksum */
+    s = rbyte(port); /* last block EOFL */
     return(0);
   }
-  while((s = rbyte()) != EOFRAME){
+  while((s = rbyte(port)) != EOFRAME){
     if(s == CESCAPE){
-      s = rbyte();
+      s = rbyte(port);
       if(0x20 & s)
         s = 0xDF & s;
       else
@@ -369,7 +366,7 @@ long F1fread(u_char *data, long len)
   return(i);
 }
 
-long F1fseek(long offset, int base)
+long F1fseek(GPPort *port,long offset, int base)
 {
   u_char buf[10];
 
@@ -386,17 +383,17 @@ long F1fseek(long offset, int base)
   buf[8] = (base >> 8) & 0xff;
   buf[9] = 0xff & base;
 
-  sendcommand(buf, 10);
-  recvdata(buf, 3);
+  sendcommand(port,buf, 10);
+  recvdata(port, buf, 3);
   if((buf[0] != 0x02) || (buf[1] != 0x0E) || (buf[2] != 0x00)){
-    Abort();
+    Abort(port);
     return(-1);
   }
 
   return(buf[2]);
 }
 
-long F1fwrite(u_char *data, long len, u_char b) /* this function not work well */
+long F1fwrite(GPPort *port,u_char *data, long len, u_char b) /* this function not work well */
 {
 
   long i = 0;
@@ -407,16 +404,16 @@ long F1fwrite(u_char *data, long len, u_char b) /* this function not work well *
   int checksum;
 
   p = data;
-  wbyte(BOFRAME);
-  wbyte(sendaddr[address]);
-  wbyte(0x02);
-  wbyte(0x14);
-  wbyte(b);
-  wbyte(0x00);
-  wbyte(0x00);
+  wbyte(port,BOFRAME);
+  wbyte(port,sendaddr[address]);
+  wbyte(port,0x02);
+  wbyte(port,0x14);
+  wbyte(port,b);
+  wbyte(port,0x00);
+  wbyte(port,0x00);
 
-  wbyte((len >> 8) & 0xff);
-  wbyte(0xff & len);
+  wbyte(port,(len >> 8) & 0xff);
+  wbyte(port,0xff & len);
 
   checksum = sendaddr[address] +
     0x02 + 0x14 + b + ((len >> 8) & 0xff) + (0xff & len);
@@ -424,7 +421,7 @@ long F1fwrite(u_char *data, long len, u_char b) /* this function not work well *
   while(i < len){
     s = *p;
     if((s == 0x7D) || (s == 0xC1) || (s == 0xC0)){
-      wbyte(CESCAPE);
+      wbyte(port,CESCAPE);
       if(0x20 & s)
         s = 0xDF & s;
       else
@@ -432,19 +429,19 @@ long F1fwrite(u_char *data, long len, u_char b) /* this function not work well *
       checksum = checksum + CESCAPE;
       i++;
     }
-    wbyte(s);
+    wbyte(port,s);
     checksum = checksum + s;
     i++;
     p++;
   }
-  wbyte(0x100 -(checksum & 0xff) );
-  wbyte(EOFRAME);
+  wbyte(port,0x100 -(checksum & 0xff) );
+  wbyte(port,EOFRAME);
   address ++;
   if(address >7 ) address = 0;
 
-  rstr(buf, 7);
+  rstr(port, buf, 7);
   if((buf[2] != 0x02) || (buf[3] != 0x14) || (buf[4] != 0x00)){
-    Abort();
+    Abort(port);
     fprintf(stderr,"F1fwrite fail\n");
     return(-1);
   }
@@ -452,7 +449,7 @@ long F1fwrite(u_char *data, long len, u_char b) /* this function not work well *
   return(i);
 }
 
-u_long F1finfo(char *name)
+u_long F1finfo(GPPort *port,char *name)
 {
   u_char buf[64];
   int len;
@@ -463,10 +460,10 @@ u_long F1finfo(char *name)
   snprintf(&buf[2], sizeof(name), "%s", name);
   len = strlen(name) + 3;
 
-  sendcommand(buf, len);
-  len = recvdata(buf, 37);
+  sendcommand(port,buf, len);
+  len = recvdata(port, buf, 37);
   if((buf[0] != 0x02) || (buf[1] != 0x0F) || (buf[2] != 00)){
-    Abort();
+    Abort(port);
     return(0);
   }
 
@@ -488,25 +485,25 @@ u_long F1finfo(char *name)
   return(flen);
 }
 
-long F1getdata(char *name, u_char *data, int verbose)
+long F1getdata(GPPort*port,char *name, u_char *data, int verbose)
 {
   long filelen;
   long total = 0;
   long len;
   u_char *p;
 
-  F1status(0);
+  F1status(port,0);
   p = data;
-  filelen = F1finfo(name);
+  filelen = F1finfo(port,name);
   if(filelen < 0)
     return(0);
 
-  if(F1fopen(name) != 0)
+  if(F1fopen(port,name) != 0)
     return(0);
 
-  while((len = F1fread(p, 0x0400)) != 0){
+  while((len = F1fread(port, p, 0x0400)) != 0){
     if(len < 0){
-      F1fclose();
+      F1fclose(port);
       return(0);
     }
     p = p + len;
@@ -517,29 +514,29 @@ long F1getdata(char *name, u_char *data, int verbose)
       fprintf(stderr, "\b\b\b\b\b\b\b\b\b\b\b\b\b");
     }
   }
-  F1fclose();
+  F1fclose(port);
   if(verbose)
     fprintf(stderr, "\n");
   return(total);
 }
 
-int F1deletepicture(int n)
+int F1deletepicture(GPPort *port,int n)
 {
   u_char buf[4];
   buf[0] = 0x02;
   buf[1] = 0x15;
   buf[2] = 0x00;
   buf[3] = 0xff & n;
-  sendcommand(buf, 4);
-  recvdata(buf, 3);
+  sendcommand(port,buf, 4);
+  recvdata(port, buf, 3);
   if((buf[0] != 0x02) || (buf[1] != 0x15) || (buf[2] != 0)){
-    Abort();
+    Abort(port);
     return(-1);
   }
   return(0);
 }
 
-int F1ok()
+int F1ok(GPPort*port)
 {
   int retrycount = RETRY;
   u_char buf[64];
@@ -549,43 +546,33 @@ int F1ok()
   sprintf(&buf[2],"SONY     MKY-1001         1.00");
 
   while(retrycount--){
-    sendcommand(buf, 32);
-    recvdata(buf, 32);
+    sendcommand(port,buf, 32);
+    recvdata(port, buf, 32);
 #ifdef DEBUG
     fprintf(stderr,"OK:%02x%02x:%c%c%c%c\n", buf[0], buf[1],
             buf[3],buf[4],buf[5],buf[6]);
 #endif
     if((buf[0] != 0x01) || (buf[1] != 0x01) || (buf[2] != 0x00) ){
-      Abort();
-      F1reset();
+      Abort(port);
+      F1reset(port);
    } else
       return 1;
   }
   return 0;                     /*ng*/
 }
 
-int F1reset()
+int F1reset(GPPort *port)
 {
   u_char buf[3];
  retryreset:
   buf[0] = 0x01;
   buf[1] = 0x02;
-  sendcommand(buf, 2);
-  recvdata(buf, 3);
+  sendcommand(port,buf, 2);
+  recvdata(port, buf, 3);
 #ifdef DEBUG
   fprintf(stderr,"Reset: %02x%02x:%02x\n", buf[0], buf[1], buf[2]);
 #endif
   if(!((buf[0] == 0x01 ) && (buf[1] == 0x02) && buf[2] == 0x00))
     goto retryreset;
   return (int) buf[2];          /*ok*/
-}
-
-void Exit(code)
-     int code;
-{
-  /* if (!(F1getfd() < 0)){
-    F1reset();
-    closetty(F1getfd());
-  } */
-  /* exit(code); */
 }

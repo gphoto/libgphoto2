@@ -1,3 +1,7 @@
+2006-11-19  Marcus Meissner  <marcus@jet.franken.de>
+
+	* *.[ch]: Pass GPPort*port around to avoid global variables.
+
 2002-03-24  Dan Fandrich <dan@coneharvesters.com>
 
 	* Removed config.h as it clearly should not have been here.

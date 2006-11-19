@@ -65,29 +65,7 @@ void Exit(code)
 }
 #endif
 
-int write_file(u_char *buf, int len, FILE *outfp)
-{
-  int i, l;
-  int result;
-
-  i = 0;
-  while( len > i) {
-    l = ( (len - i) < BUFSIZ) ? (len -i) : BUFSIZ;
-    result = fwrite(&buf[i], sizeof(u_char), l, outfp);
-    if(result != len){
-      perror("chotplay");
-      if(outfp != stdout);
-      fclose(outfp);
-      Exit(2);
-    }
-
-    i = i + l;
-  }
-  return(i);
-}
-
-
-int make_jpeg_comment(u_char *buf, u_char *jpeg_comment)
+static int make_jpeg_comment(u_char *buf, u_char *jpeg_comment)
 {
   int i, cur = 0;
   int reso, shutter;
@@ -193,7 +171,7 @@ int make_jpeg_comment(u_char *buf, u_char *jpeg_comment)
   return cur;
 }
 
-int get_picture_information(int *pmx_num, int outit)
+int get_picture_information(GPPort *port,int *pmx_num, int outit)
 {
   u_char buforg[PMF_MAXSIZ];
   char name[64];
@@ -203,8 +181,8 @@ int get_picture_information(int *pmx_num, int outit)
   char *buf = (char *) &buforg;
 
   sprintf(name, "/PIC_CAM/PIC00000/PIC_INF.PMF");
-  F1ok();
-  len = F1getdata(name, buf, 0);
+  F1ok(port);
+  len = F1getdata(port, name, buf, 0);
 
   n = buf[26] * 256 + buf[27]; /* how many files */
   *pmx_num = buf[31];  /* ??? */
@@ -260,7 +238,7 @@ int get_picture_information(int *pmx_num, int outit)
   return(n);
 }
 
-long get_file(char *name, char **data, int format, int verbose)
+long get_file(GPPort *port,char *name, char **data, int format, int verbose)
 {
   u_long filelen;
   u_long total = 0;
@@ -270,21 +248,21 @@ long get_file(char *name, char **data, int format, int verbose)
   u_char jpeg_comment[256];
 
   /* verbose=1; */
-  F1ok();
+  F1ok(port);
 
-  F1status(0);
+  F1status(port,0);
 
-  filelen = F1finfo(name);
+  filelen = F1finfo(port,name);
   if(filelen == 0)
     return(0);
 
-  if(F1fopen(name) != 0)
+  if(F1fopen(port,name) != 0)
     return(0);
   /* printf("camfile: %s\n",name); */
   if(format == JPEG){
-    len = F1fread(buf, 126);
+    len = F1fread(port, buf, 126);
     if( len < 126){
-      F1fclose();
+      F1fclose(port);
       return(0);
     }
     /*write_file(jpeg_comment, make_jpeg_comment(buf, jpeg_comment), fp);*/
@@ -296,7 +274,7 @@ long get_file(char *name, char **data, int format, int verbose)
     ptr +=memcpylen;
   }
 
-  while((len = F1fread(buf, 0x0400)) != 0){
+  while((len = F1fread(port, buf, 0x0400)) != 0){
     if(len < 0)
       return(0);
     total = total + len;
@@ -313,13 +291,13 @@ long get_file(char *name, char **data, int format, int verbose)
 
   }
 
-  F1fclose();
+  F1fclose(port);
   if(verbose)
     fprintf(stderr, "\n");
   return(total);
 }
 
-long get_thumbnail(char *name, char **data, int format, int verbose, int n)
+long get_thumbnail(GPPort *port,char *name, char **data, int format, int verbose, int n)
 {
   u_long filelen;
   u_long total = 0;
@@ -331,22 +309,22 @@ long get_thumbnail(char *name, char **data, int format, int verbose, int n)
   /* printf("name %s,%d\n",name,n); */
   p = buf;
 
-  F1ok();
-  F1status(0);
+  F1ok(port);
+  F1status(port,0);
 
-  filelen = F1finfo(name);
+  filelen = F1finfo(port,name);
   if(filelen == 0)
     return(0);
 
-  if(F1fopen(name) != 0)
+  if(F1fopen(port,name) != 0)
     return(0);
 
   for( i = 0 ; i < n ; i++)
-    len = F1fseek(0x1000 , 1);
+    len = F1fseek(port, 0x1000, 1);
 
-  while((len = F1fread(p, 0x0400)) != 0){
+  while((len = F1fread(port, p, 0x0400)) != 0){
     if(len < 0){
-      F1fclose();
+      F1fclose(port);
       return(0);
     }
     total = total + len;
@@ -359,7 +337,7 @@ long get_thumbnail(char *name, char **data, int format, int verbose, int n)
     if(total >= 0x1000)
       break;
   }
-  F1fclose();
+  F1fclose(port);
   if(verbose)
     fprintf(stderr, "\n");
 
@@ -374,7 +352,7 @@ long get_thumbnail(char *name, char **data, int format, int verbose, int n)
   return(total);
 }
 
-void get_date_info(char *name, char *outfilename ,char *newfilename)
+void get_date_info(GPPort *port, char *name, char *outfilename ,char *newfilename)
 {
   char *p, *q;
   int year = 0;
@@ -385,12 +363,12 @@ void get_date_info(char *name, char *outfilename ,char *newfilename)
   int second = 0;
   u_char buf[128];
 
-  F1ok();
-  F1status(0);
+  F1ok(port);
+  F1status(port,0);
 
-  (void) F1finfo(name);
-  if(F1fopen(name) ==0){
-    if(F1fread(buf, 126) == 126){
+  (void) F1finfo(port, name);
+  if(F1fopen(port, name) ==0){
+    if(F1fread(port, buf, 126) == 126){
       if(*(buf+PMP_TAKE_YEAR) != 0xff){
         year = (int) *(buf+PMP_TAKE_YEAR);
         month = (int) *(buf+PMP_TAKE_MONTH);
@@ -400,7 +378,7 @@ void get_date_info(char *name, char *outfilename ,char *newfilename)
         second = (int) *(buf+PMP_TAKE_SECOND);
       }
     }
-    F1fclose();
+    F1fclose(port);
   }
 
   p = outfilename;
@@ -456,14 +434,14 @@ void get_date_info(char *name, char *outfilename ,char *newfilename)
 
 }
 
-long get_picture(int n, char **data, int format, int ignore, int all_pic_num)
+long get_picture(GPPort *port, int n, char **data, int format, int ignore, int all_pic_num)
 {
   long  len;
   char name[64];
   char name2[64];
   int i;
 
-  all_pic_num = get_picture_information(&i,0);
+  all_pic_num = get_picture_information(port,&i,0);
 
 retry:
 
@@ -513,10 +491,10 @@ retry:
     }
 
   if(format == JPEG_T)
-    len = get_thumbnail(name, data, format, verbose,
+    len = get_thumbnail(port, name, data, format, verbose,
                         0xff & (picture_thumbnail_index[n] >> 8));
   else
-    len = get_file(name, data, format, verbose);
+    len = get_file(port, name, data, format, verbose);
   if(len == 0 ) {
     if(verbose)
                 fprintf(stderr, "\n");
@@ -529,7 +507,7 @@ retry:
    return(len);
 }
 
-void delete_picture(int n, int all_pic_num)
+void delete_picture(GPPort *port, int n, int all_pic_num)
 {
   if (all_pic_num < n) {
     fprintf(stderr, "picture number %d is too large. %d\n",all_pic_num,n);
@@ -543,7 +521,7 @@ void delete_picture(int n, int all_pic_num)
     return;
   }
 
-  if (F1deletepicture(picture_index[n]) < 0)
+  if (F1deletepicture(port, picture_index[n]) < 0)
     errflg ++;
 }
 
