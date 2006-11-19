@@ -51,7 +51,7 @@
 
 #define GP_MODULE "iclick"
 
-struct {
+static struct {
    	char *name;
 	CameraDriverStatus status;
    	unsigned short idVendor;
