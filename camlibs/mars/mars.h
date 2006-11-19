@@ -44,13 +44,7 @@ int set_usb_in_endpoint	     (Camera *camera, int inep);
 int mars_read_data         (GPPort *port, char *data, int size);
 int mars_read_picture_data (Camera *camera, Info *info,
 				GPPort *port, char *data, int size, int n);
-int M_READ (GPPort *port, char *data, int size);
-int M_COMMAND (GPPort *port, char *command, int size, char *response);
-int mars_routine (Info *info, GPPort *port, 
-					char param, int n); 
 
-/* The following are used for decompression of compressed-mode photos */
-void precalc_table(code_table_t *table);
 int mars_decompress (unsigned char *inp ,unsigned char *outp, int w, int h);
 
 #endif

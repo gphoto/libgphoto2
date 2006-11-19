@@ -37,6 +37,24 @@
 #define INIT 		0xb5
 #define GET_DATA 	0x0f
 
+static int 
+M_READ (GPPort *port, char *data, int size) 
+{
+	gp_port_write(port, "\x21", 1);
+    	gp_port_read(port, data, 16); 	
+	return GP_OK;
+}
+
+static int 
+M_COMMAND (GPPort *port, char *command, int size, char *response) 
+{
+	gp_port_write(port, command, size);
+    	M_READ(port, response, 16); 	
+	return GP_OK;
+}
+
+static int mars_routine (Info *info, GPPort *port, char param, int n);
+
 int 
 mars_init (Camera *camera, GPPort *port, Info *info) 
 {
@@ -146,7 +164,7 @@ mars_reset (GPPort *port)
     	return GP_OK;
 }
 
-void precalc_table(code_table_t *table)
+static void precalc_table(code_table_t *table)
 {
 	int i;
 	int is_abs, val, len;
@@ -278,27 +296,7 @@ int mars_decompress (unsigned char *inp, unsigned char *outp, int width,
 	return GP_OK;
 }
 
-
-
-
-
-int 
-M_READ (GPPort *port, char *data, int size) 
-{
-	gp_port_write(port, "\x21", 1);
-    	gp_port_read(port, data, 16); 	
-	return GP_OK;
-}
-
-int 
-M_COMMAND (GPPort *port, char *command, int size, char *response) 
-{
-	gp_port_write(port, command, size);
-    	M_READ(port, response, 16); 	
-	return GP_OK;
-}
-
-int 
+static int 
 mars_routine (Info *info, GPPort *port, char param, int n) 
 {
 	unsigned char c[16];
@@ -342,6 +340,3 @@ mars_routine (Info *info, GPPort *port, char param, int n)
 
 	return(c[0]);
 }
-
-
-
