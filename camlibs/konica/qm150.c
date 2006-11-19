@@ -125,15 +125,13 @@
 #define PLAY_DATE_DISP_PTR	0x20
 #define DATE_FORMAT_PTR		0x21
 #define TIMESTAMP_PTR		0x22
-extern unsigned char k_calculate_checksum (unsigned char *buf,
-		unsigned long int len);
 
 /** Local functions **********************************************************/
 
 /* 
  * Check the integrity of datas
  */
-unsigned char
+static unsigned char
 k_calculate_checksum (unsigned char *buf, unsigned long int len)
 {
 	int i;
