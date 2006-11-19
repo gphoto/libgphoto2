@@ -50,7 +50,7 @@ struct _CameraPrivateLibrary {
 	Info info[40];
 };
 
-struct {
+static struct {
    	char *name;
 	CameraDriverStatus status;
    	unsigned short idVendor;
