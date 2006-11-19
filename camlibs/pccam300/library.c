@@ -54,7 +54,7 @@
 
 #define GP_MODULE "pccam300"
 
-struct models
+static const struct models
 {
 	char *name;
 	unsigned short idVendor;
