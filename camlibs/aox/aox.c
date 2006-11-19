@@ -108,7 +108,7 @@ int aox_get_picture_size  (GPPort *port, int lo, int hi, int n, int k)
 	return size;
 }
 
-int aox_read_data         (GPPort *port, char *data, int size) 
+static int aox_read_data         (GPPort *port, char *data, int size) 
 { 
 	int MAX_BULK = 0x1000;
 
