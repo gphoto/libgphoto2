@@ -3,7 +3,7 @@
 
 #include <jpeg.h>
 
-jpeg_quantization_table chrominance = {
+static const jpeg_quantization_table chrominance = {
   3,  2,  2,  3,  5,  8, 10, 12,
   2,  2,  3,  4,  5, 12, 12, 11,
   3,  3,  3,  5,  8, 11, 14, 11,
@@ -13,7 +13,7 @@ jpeg_quantization_table chrominance = {
  10, 13, 16, 17, 21, 24, 24, 20,
  14, 18, 19, 20, 22, 20, 21, 20
 };
-jpeg_quantization_table luminance = {
+static const jpeg_quantization_table luminance = {
   3,  4,  5,  9, 20, 20, 20, 20,
   4,  4,  5, 13, 20, 20, 20, 20,
   5,  5, 11, 20, 20, 20, 20, 20,
