@@ -238,6 +238,35 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp,
 			ret = dtoh16(usbdata.code);
 			break;
 		}
+		if (usbdata.length == 0xffffffffU) {
+			/* This only happens for MTP_GetObjPropList */
+			uint32_t	tsize = PTP_USB_BULK_HS_MAX_PACKET_LEN;
+			unsigned char	*tdata = malloc(tsize);
+			uint32_t	curoff = 0;
+
+			while (1) {
+				ret=params->read_func(tdata+curoff,
+						PTP_USB_BULK_HS_MAX_PACKET_LEN, params->data, &rlen);
+				if (ret!=PTP_RC_OK) {
+					ret = PTP_ERROR_IO;
+					break;
+				}
+				if (rlen < PTP_USB_BULK_HS_MAX_PACKET_LEN) {
+					tsize += rlen;
+					break;
+				}
+				tsize += PTP_USB_BULK_HS_MAX_PACKET_LEN;
+				curoff+= PTP_USB_BULK_HS_MAX_PACKET_LEN;
+				tdata	= realloc(tdata, tsize);
+			}
+			if (to_fd == -1) {
+				*data = tdata;
+			} else {
+				write (to_fd, tdata, tsize);
+				free (tdata);
+			}
+			return PTP_RC_OK;
+		}
 		if (rlen > dtoh32(usbdata.length)) {
 			/* I observed this on iRiver MTP devices. -Marcus */
 			ptp_debug (params, "ptp2/ptp_usb_getdata: read %d bytes too much, expect problems!", rlen - dtoh32(usbdata.length)
@@ -2528,6 +2557,30 @@ ptp_mtp_setobjectreferences (PTPParams* params, uint32_t handle, uint32_t* ohArr
 	size = ptp_pack_uint32_t_array(params, ohArray, arraylen, &dpv);
 	ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, (unsigned char **)&dpv, NULL);
 	free(dpv);
+	return ret;
+}
+
+uint16_t
+ptp_mtp_getobjectproplist (PTPParams* params, uint32_t handle, MTPPropList **proplist)
+{
+	uint16_t ret;
+	PTPContainer ptp;
+	int old_split_header_data;
+	unsigned char* opldata = NULL;
+	unsigned int oplsize;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code = PTP_OC_MTP_GetObjPropList;
+	ptp.Param1 = handle;
+	ptp.Param2 = 0x00000000U;  /* 0x00000000U should be "all formats" */
+	ptp.Param3 = 0xFFFFFFFFU;  /* 0xFFFFFFFFU should be "all properties" */
+	ptp.Param4 = 0x00000000U;
+	ptp.Param5 = 0x00000000U;
+	ptp.Nparam = 5;
+	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &opldata, &oplsize);  
+	if (ret == PTP_RC_OK) ptp_unpack_OPL(params, opldata, proplist, oplsize);
+	if (opldata != NULL)
+		free(opldata);
 	return ret;
 }
 

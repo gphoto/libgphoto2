@@ -1,3 +1,11 @@
+2006-11-19  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptp.c,ptp.h,ptp-pack.c:
+	  From Libmtp folks:
+	  Implemented MTP GetObjProplist opcode.
+
+	  Handle the PTP violating READ (length 0xffffffff).
+
 2006-11-15  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* library.c: Added Kodak C643, Samsung YP-K5.

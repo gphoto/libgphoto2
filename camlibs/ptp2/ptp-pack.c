@@ -172,7 +172,7 @@ ptp_pack_string(PTPParams *params, char *string, unsigned char* data, uint16_t o
 static inline unsigned char *
 ptp_get_packed_stringcopy(PTPParams *params, char *string, uint32_t *packed_size)
 {
-	uint8_t packed[PTP_MAXSTRLEN+3], len;
+	uint8_t packed[PTP_MAXSTRLEN*2+3], len;
 	size_t plen;
 	unsigned char *retcopy = NULL;
 
@@ -887,6 +887,47 @@ ptp_pack_OPL (PTPParams *params, MTPPropList *proplist, unsigned char** opldatap
 	}
 	*opldataptr = opldata;
 	return totalsize;
+}
+
+static inline int
+ptp_unpack_OPL (PTPParams *params, unsigned char* data, MTPPropList **proplist, unsigned int len)
+{ 
+	uint32_t prop_count = dtoh32a(data);
+	MTPPropList *prop = NULL;
+	int offset = 0, i;
+
+	if (prop_count == 0) {
+		*proplist = NULL;
+		return 0;
+	}
+	data += sizeof(uint32_t);
+	*proplist = malloc(sizeof(MTPPropList));
+	prop = *proplist;
+	for (i = 0; i < prop_count; i++) {
+		/* we ignore the object handle */
+		data += sizeof(uint32_t);
+		len -= sizeof(uint32_t);
+
+		prop->property = dtoh32a(data);
+		data += sizeof(uint16_t);
+		len -= sizeof(uint16_t);
+
+		prop->datatype = dtoh32a(data);
+		data += sizeof(uint16_t);
+		len -= sizeof(uint16_t);
+
+		offset = 0;
+		ptp_unpack_DPV(params, data, &offset, len, &prop->propval, prop->datatype);
+		data += offset;
+		len -= offset;
+
+		if (i != prop_count - 1) {
+			prop->next = malloc(sizeof(MTPPropList));
+			prop = prop->next;
+		} else
+			prop->next = NULL;
+	}
+	return prop_count;
 }
 
 /*

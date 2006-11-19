@@ -1757,7 +1757,7 @@ _get_nikon_list_wifi_profiles (CONFIG_GET_ARGS)
 		return (GP_ERROR_NOT_SUPPORTED);
 
 	gp_widget_new (GP_WIDGET_TEXT, "Version", &child);
-	snprintf(buffer, 4096, _("%d"), params->wifi_profiles_version);
+	snprintf(buffer, 4096, "%d", params->wifi_profiles_version);
 	gp_widget_set_value(child, buffer);
 	gp_widget_append(*widget, child);
 
@@ -1774,7 +1774,7 @@ _get_nikon_list_wifi_profiles (CONFIG_GET_ARGS)
 			gp_widget_set_value(child2, buffer);
 			gp_widget_append(child, child2);
 
-			gp_widget_new (GP_WIDGET_TEXT, _("essid"), &child2);
+			gp_widget_new (GP_WIDGET_TEXT, _("ESSID"), &child2);
 			snprintf (buffer, 4096, "%s", params->wifi_profiles[i].essid);
 			gp_widget_set_value(child2, buffer);
 			gp_widget_append(child, child2);
