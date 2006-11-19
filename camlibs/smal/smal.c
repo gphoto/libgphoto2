@@ -52,7 +52,7 @@ camera_id (CameraText *id)
 }
 
 
-struct smal_cameras {
+static const struct smal_cameras {
 	char * name;
 	unsigned short idVendor;
 	unsigned short idProduct;
