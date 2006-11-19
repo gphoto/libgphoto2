@@ -80,7 +80,7 @@ struct _CameraPrivateLibrary {
 	unsigned char cmds[0xff];
 };
 
-struct {
+static struct {
         FujiCmd command;
         const char *name;
 } Commands[] = {
@@ -255,7 +255,7 @@ del_file_func (CameraFilesystem *fs, const char *folder,
 	return (GP_OK);
 }
 
-struct {
+static struct {
 	FujiSpeed speed;
 	unsigned int bit_rate;
 } Speeds[] = {
