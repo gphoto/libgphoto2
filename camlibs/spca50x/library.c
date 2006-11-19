@@ -78,7 +78,7 @@ static int cam_has_flash (CameraPrivateLibrary *pl);
 static int cam_has_card (CameraPrivateLibrary *pl);
 
 /* define what cameras we support */
-static struct
+static const struct
 {
 	char *model;
 	int usb_vendor;
