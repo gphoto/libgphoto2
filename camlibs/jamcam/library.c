@@ -55,10 +55,15 @@
 
 #define GP_MODULE
 
-struct jamcam_file jamcam_files[1024];
+static struct jamcam_file jamcam_files[1024];
 static int jamcam_count = 0;
 static int jamcam_mmc_card_size = 0;
 
+static int jamcam_read_packet (Camera *camera, char *packet, int length);
+static int jamcam_write_packet (Camera *camera, char *packet, int length);
+static int jamcam_fetch_memory( Camera *camera, CameraFile *file,
+		char *data, int start, int length, GPContext *context);
+static int jamcam_query_mmc_card (Camera *camera);
 
 static int jamcam_set_int_at_pos( unsigned char *buf, int pos, int value ) {
 	
@@ -314,7 +319,7 @@ int jamcam_file_count (Camera *camera) {
 	return( jamcam_count );
 }
 
-int jamcam_fetch_memory( Camera *camera, CameraFile *file,
+static int jamcam_fetch_memory( Camera *camera, CameraFile *file,
 		char *data, int start, int length, GPContext *context) {
 	char tmp_buf[16];
 	char packet[16];
@@ -538,7 +543,7 @@ int jamcam_request_thumbnail( Camera *camera, CameraFile *file,
 	return( res );
 }
 
-int jamcam_write_packet (Camera *camera, char *packet, int length) {
+static int jamcam_write_packet (Camera *camera, char *packet, int length) {
 	int ret, r;
 
 	GP_DEBUG ("* jamcam_write_packet");
@@ -554,8 +559,7 @@ int jamcam_write_packet (Camera *camera, char *packet, int length) {
 	return (GP_ERROR_TIMEOUT);
 }
 
-
-int jamcam_read_packet (Camera *camera, char *packet, int length) {
+static int jamcam_read_packet (Camera *camera, char *packet, int length) {
 	int r = 0;
 	int bytes_read;
 
@@ -657,7 +661,7 @@ int jamcam_enq (Camera *camera)
 	return (GP_ERROR_TIMEOUT);
 }
 
-int jamcam_query_mmc_card (Camera *camera)
+static int jamcam_query_mmc_card (Camera *camera)
 {
 	int ret, r = 0;
 	char buf[16];
