@@ -2565,7 +2565,6 @@ ptp_mtp_getobjectproplist (PTPParams* params, uint32_t handle, MTPPropList **pro
 {
 	uint16_t ret;
 	PTPContainer ptp;
-	int old_split_header_data;
 	unsigned char* opldata = NULL;
 	unsigned int oplsize;
 
