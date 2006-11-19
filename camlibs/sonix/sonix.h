@@ -49,8 +49,4 @@ int sonix_capture_image      	(GPPort *port);
 int sonix_exit		      	(GPPort *port);
 int sonix_decode		(unsigned char * dst, unsigned char * src, 
 				    int width, int height);
-int SONIX_READ 			(GPPort *port, char *data);
-int SONIX_READ4 		(GPPort *port, char *data);
-int SONIX_COMMAND 		(GPPort *port, char *command);
-
 #endif 

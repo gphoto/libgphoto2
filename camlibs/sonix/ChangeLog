@@ -1,3 +1,7 @@
+2006-11-19   Marcus Meissner  <marcus@jet.franken.de>
+
+	* sonix.c: made 3 functions static
+
 2006-08-17   Theodore Kilgore <kilgota@auburn.edu>
 
 	* library.c: Workaround for gtkam problem if camera empty.

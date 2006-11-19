@@ -33,6 +33,33 @@
 #define GP_MODULE "sonix" 
 
 
+/* Three often-used generic commands */
+
+/* This reads a one-byte "status" response */
+static int
+SONIX_READ (GPPort *port, char *data) 
+{
+	gp_port_usb_msg_interface_read(port, 0, 1, 0, data, 1);
+	return GP_OK;
+}
+
+/* This reads a 4-byte response to a command */
+static int
+SONIX_READ4 (GPPort *port, char *data) 
+{
+	gp_port_usb_msg_interface_read(port, 0, 4, 0, data, 4);
+	return GP_OK;
+}
+
+/* A command to the camera is a 6-byte string, and this sends it. */
+static int
+SONIX_COMMAND (GPPort *port, char *command) 
+{
+	gp_port_usb_msg_interface_write(port, 8, 2, 0, command ,6);	
+	return GP_OK;
+}
+
+
 int sonix_init (GPPort *port, CameraPrivateLibrary *priv)
 {
 	int i, command_done=1;
@@ -364,31 +391,3 @@ sonix_decode(unsigned char * dst, unsigned char * src, int width, int height)
 	}
 	return GP_OK;
 }
-
-/* Three often-used generic commands */
-
-
-/* This reads a one-byte "status" response */
-int 
-SONIX_READ (GPPort *port, char *data) 
-{
-	gp_port_usb_msg_interface_read(port, 0, 1, 0, data, 1);
-	return GP_OK;
-}
-
-/* This reads a 4-byte response to a command */
-int 
-SONIX_READ4 (GPPort *port, char *data) 
-{
-	gp_port_usb_msg_interface_read(port, 0, 4, 0, data, 4);
-	return GP_OK;
-}
-
-/* A command to the camera is a 6-byte string, and this sends it. */
-int 
-SONIX_COMMAND (GPPort *port, char *command) 
-{
-	gp_port_usb_msg_interface_write(port, 8, 2, 0, command ,6);	
-	return GP_OK;
-}
-
