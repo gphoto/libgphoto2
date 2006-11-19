@@ -46,7 +46,7 @@
 
 #define GP_MODULE "stv0674"
 
-struct camera_to_usb {
+static const struct camera_to_usb {
 	  char *name;
 	  unsigned short idVendor;
 	  unsigned short idProduct;
