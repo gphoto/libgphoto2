@@ -15,8 +15,6 @@ typedef enum _BayerTile{
 } BayerTile;
 #endif
 
-int weight (const unsigned char dx, const int alpha);
-
 void demosaic_sharpen (const int width, const int height,
 		       const unsigned char * const src_region, 
 		       unsigned char * const dest_region, 

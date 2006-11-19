@@ -86,7 +86,7 @@ typedef struct _rgbgamma {
  *   a role as well as the electronics that controls the shutter
  *   and the one doing the readout.
  */
-rgbgamma gampar[6][3] = {
+static const rgbgamma gampar[6][3] = {
 	{ { 1.02, 0.56 }, { 1.00, 0.61 }, { 0.99, 0.65 } }, /* cold */
 	{ { 1.01, 0.56 }, { 1.00, 0.58 }, { 1.00, 0.61 } }, /* coldish */
 	{ { 1.00, 0.55 }, { 1.00, 0.57 }, { 1.00, 0.59 } }, /* mid */

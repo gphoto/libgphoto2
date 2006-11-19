@@ -104,7 +104,7 @@ typedef struct _neighbours {
 } neighbours;
 
 /* possible locations */
-neighbours n_pos[8] = {
+static const neighbours n_pos[8] = {
 	{	/* NB_DIAG */
 		4, {
 			{-1,-1},
@@ -154,7 +154,7 @@ typedef enum {
 
 
 /* Transfer matrix pattern to pattern */
-t_coeff pat_to_pat[4] = {
+static const t_coeff pat_to_pat[4] = {
 	{	/* DIAG_TO_LR */
 		{
 			{2, 0, 2, 0},
@@ -186,7 +186,7 @@ t_coeff pat_to_pat[4] = {
 	}
 };
 
-patconv pconvmap[5][5] = {
+static const patconv pconvmap[5][5] = {
 	{ PATCONV_NONE, PATCONV_NONE, DIAG_TO_LR, DIAG_TO_TB, PATCONV_NONE },
 	{ PATCONV_NONE, PATCONV_NONE, PATCONV_NONE, PATCONV_NONE, PATCONV_NONE },
 	{ PATCONV_NONE, PATCONV_NONE, PATCONV_NONE, PATCONV_NONE, PATCONV_NONE },
@@ -204,7 +204,7 @@ typedef struct _bayer_desc {
 
 /* T = Bayer Tile, P = Bayer point no
  *                T  P                */
-bayer_desc bayers[4][4] = {
+static const bayer_desc bayers[4][4] = {
 	{	/* TILE_RGGB */
 		{ RED,   {NB_TLRB2, NB_TLRB, NB_DIAG} },
 		{ GREEN, {NB_DIAG, NB_TB, NB_LR} },
@@ -230,7 +230,7 @@ bayer_desc bayers[4][4] = {
 
 /* Use integer arithmetic. Accuracy is 10^-6, which is good enough */
 #define SHIFT 20
-inline int weight (const unsigned char dx, const int alpha)
+static inline int weight (const unsigned char dx, const int alpha)
 {
 	return (1<<SHIFT)/(alpha + dx);
 }
