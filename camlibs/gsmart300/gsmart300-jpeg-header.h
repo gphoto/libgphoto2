@@ -9,7 +9,7 @@
  *  563 - 564 : Image Width(H Byte,L Byte)
  */
 #define GSMART_JPG_DEFAULT_HEADER_LENGTH	589
-uint8_t Gsmart_300_JPGDefaultHeader[GSMART_JPG_DEFAULT_HEADER_LENGTH] = {
+static uint8_t Gsmart_300_JPGDefaultHeader[GSMART_JPG_DEFAULT_HEADER_LENGTH] = {
 	/* SOI(Start of Image) */
 	0xFF,0xD8,
 	/* DQT(Define Quantization Table) */
@@ -65,7 +65,7 @@ uint8_t Gsmart_300_JPGDefaultHeader[GSMART_JPG_DEFAULT_HEADER_LENGTH] = {
 };
 
 /* Quantization tables for GSmart300 */
-uint8_t Gsmart_300_QTable[10][64]=
+static uint8_t Gsmart_300_QTable[10][64]=
 {
 	/* index 0, Q85 */
 	{   5,  3,  4,  4,  4,  3,  5,  4,  4,  4,  5,  5,  5,  6,  7, 12,
