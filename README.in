@@ -61,7 +61,9 @@ be switched to use a different communication protocol and might be in that case
 useable with libgphoto2.
 
 Other camera support a protocol called PTP or USB Imaging Devices that has
-been developped by Kodak and other. libgphoto2 does support PTP. 
+been developped by Kodak and other. libgphoto2 does support PTP. Also working
+will be cameras labeled as "PictBridge", which is a extension to PTP.
+
 Here is a short incomplete list of camera that use this protocol:
 
  * HP PhotoSmart 318, 612, 715
@@ -70,20 +72,17 @@ Here is a short incomplete list of camera that use this protocol:
  * Sony DSC-P5, DSC-F707, DSC-P30, DSC-P50, DSC-S75, DSC-S85, MVC-CD300
    (all need user configuration of the camera)
 
-PTP camera unknown to libgphoto2 can be detected as a generic PTP camera and
+PTP camera unknown to libgphoto2 will be detected as a generic PTP camera and
 will work as is.
-
-You still may try jPhoto <URL:@URL_JPHOTO_HOME@> for ptp cameras
-alternatively if libgphoto2 fails.
-
+MTP (Microsoft Transfer Protocol) players will also be accessible,
+since MTP is a variant of PTP.
 
 
 Platforms
 ---------
 
 libgphoto2 should compile and run on pretty much all Unix-like platforms.
-Additionally, there is a port for OS/2 available. libgphoto2 has _not_ (yet?) 
-been ported to any operating system from MicroSoft.
+libgphoto2 has _not_ (yet?) been ported to any operating system from MicroSoft.
 
 
 
