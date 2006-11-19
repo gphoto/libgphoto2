@@ -207,8 +207,6 @@ int dc210_delete_picture_by_name (Camera * camera, const char * filename );
 
 /* other actions */
 int dc210_open_card (Camera * camera);
-int dc210_close_card (Camera * camera);
-int dc210_format_card (Camera * camera, char * album_name, GPContext * context);
 
 /* callbacks */
 int dc210_system_time_callback (Camera * camera, CameraWidget * widget, GPContext * context);

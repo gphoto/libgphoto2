@@ -27,12 +27,12 @@
 #  define N_(String) (String)
 #endif
 
-int dc210_cmd_error = 0;
-char ppmheader[] = "P6\n96 72\n255\n";
+static int dc210_cmd_error = 0;
+static const char ppmheader[] = "P6\n96 72\n255\n";
 
 #ifdef DEBUG
-int firststatus = 1;
-char oldstatus[DC210_STATUS_SIZE];
+static int firststatus = 1;
+static char oldstatus[DC210_STATUS_SIZE];
 #endif
 
 /***************************************************************************
@@ -44,20 +44,14 @@ char oldstatus[DC210_STATUS_SIZE];
 static void cfa2ppm 
 (CameraFile * file)
 {
-
 	/* this is a very quick and dirty hack to convert cfa into ppm */
-
 	unsigned char buf[THUMBHEIGHT][THUMBWIDTH];  
 	unsigned char rgb[THUMBHEIGHT][THUMBWIDTH][3];
 	unsigned char val;
 	unsigned int addval;
-
 	const char * data;
 	unsigned long datasize;
-
 	int i, x, y;
-
-	static char ppmheader[] = "P6\n96 72\n255\n";
 
 	/* get data */
 
@@ -600,7 +594,7 @@ int dc210_system_time_callback (Camera * camera, CameraWidget * widget, GPContex
 
 };
 
-int dc210_format_card (Camera * camera, char * album_name, GPContext * context){
+static int dc210_format_card (Camera * camera, char * album_name, GPContext * context){
 
   char data[DC210_CMD_DATA_SIZE];
   char cmd[8];
@@ -929,7 +923,7 @@ int dc210_open_card
 	return GP_OK;
 };
 
-int dc210_close_card
+static int dc210_close_card
 (Camera * camera)
 {
 
