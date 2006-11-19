@@ -1,9 +1,8 @@
 camlib_LTLIBRARIES = 			\
-	sipix_blink.la			\
 	sipix_blink2.la			\
 	sipix_web2.la
 
-EXTRA_DIST = web2.html blink.txt xjpeg.c blink2.txt
+EXTRA_DIST = web2.html blink.c blink.txt xjpeg.c blink2.txt
 
 
 sipix_blink_la_SOURCES	= blink.c
