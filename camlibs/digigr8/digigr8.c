@@ -36,8 +36,6 @@
 #define SQWRITE gp_port_usb_msg_write
 #define SQREAD  gp_port_usb_msg_read
 
-#define zero 	"\x0"
-
 static unsigned char *
 digi_read_data (GPPort *port, unsigned char *data, int size)
 {
@@ -184,7 +182,3 @@ digi_read_picture_data (GPPort *port, unsigned char *data, int size, int n )
 
     	return GP_OK;
 } 
-
-
-
-
