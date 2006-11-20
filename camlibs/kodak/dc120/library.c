@@ -27,7 +27,8 @@
 #  define N_(String) (String)
 #endif
 
-char *dc120_packet_new (int command_byte) {
+static char *
+dc120_packet_new (int command_byte) {
 
 	char *p = (char *)malloc(sizeof(char) * 8);
 
@@ -43,7 +44,8 @@ char *dc120_packet_new (int command_byte) {
  *  Checks if the response is ok (completed, ready, received) or not ok.
  *  @returns GP_OK if command is ok, GP_ERROR otherwise.
  */
-int dc120_response_ok (unsigned char response) {
+static int
+dc120_response_ok (unsigned char response) {
   /* This is stupid. how do you get a constant of type signed char?? (Ralf) */
 	 if( response == 0x00 || /* Command completed */
 	     response == 0x10 || /* Command ready */
@@ -58,7 +60,8 @@ int dc120_response_ok (unsigned char response) {
  *  This function writes a packet to a port determined by camera->port.
  *  When read_response != FALSE it also reads the response.
  */
-int dc120_packet_write (Camera *camera, char *packet, int size, int read_response) {
+static int
+dc120_packet_write (Camera *camera, char *packet, int size, int read_response) {
   
 	/* Writes the packet and returns the result */
 
@@ -96,7 +99,8 @@ write_again:
 	return (GP_OK);
 }
 
-int dc120_packet_read (Camera *camera, char *packet, int size) {
+static int
+dc120_packet_read (Camera *camera, char *packet, int size) {
 
 	return (gp_port_read(camera->port, packet, size));
 }

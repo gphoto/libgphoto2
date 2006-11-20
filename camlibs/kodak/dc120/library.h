@@ -41,10 +41,6 @@ typedef struct {
     char    camera_id[32];      	        /* 90-122 */
 } Kodak_dc120_status;
 
-char *dc120_packet_new   (int command_byte);
-int   dc120_response_ok (char response);
-int   dc120_packet_write (Camera *camera, char *packet, int size, int read_response);
-int   dc120_packet_read  (Camera *camera, char *packet, int size);
 int   dc120_set_speed    (Camera *camera, int speed);
 int   dc120_get_status   (Camera *camera, Kodak_dc120_status *status, GPContext *context);
 int   dc120_get_albums	 (Camera *camera, int from_card, CameraList *list, GPContext *context);
