@@ -430,7 +430,7 @@ void get_date_info(GPPort *port, char *name, char *outfilename ,char *newfilenam
     }else
       *q++ = *p++;
   }
-  *q = (char) NULL;
+  *q = 0;
 
 }
 
