@@ -213,7 +213,7 @@ ultrapocket_getpicture(Camera *camera, GPContext *context, unsigned char **pdata
 	imgstart = 0x29;
 	break;
      default:
-	break;
+	return GP_ERROR;
     }
 
    sprintf (ppmheader, "P6\n"
