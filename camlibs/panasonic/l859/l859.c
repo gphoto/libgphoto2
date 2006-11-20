@@ -444,7 +444,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 
 		if (!(filename = (char*)malloc(30))) {
 			GP_DEBUG ("Unable to allocate memory for filename.");
-			return (int) NULL;
+			return GP_ERROR_NO_MEMORY;
 		}
 
 		sprintf(filename, "%.4i%s%i-%i-%i(%i-%i).jpg", num + 1,
