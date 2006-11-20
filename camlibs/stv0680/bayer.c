@@ -159,7 +159,7 @@ void light_enhance(int vw, int vh, int coarse, int fine,
 
     for (col = 0; col < 3; col++) {
 	double y;
-	rgbgamma *gp = gampar[lt] + col;
+	const rgbgamma *gp = gampar[lt] + col;
 	for(i=0; i<256; ++i) {
 		if (i < ZERO0)
 			y = 0;
