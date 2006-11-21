@@ -686,6 +686,8 @@ static struct {
 
 	{"Sanyo:VPC-C5 (PTP mode)",             0x0474, 0x0230, 0},
 
+	{"Motorola:K1 (PTP mode)",              0x22b8, 0x4811, 0},
+
 	/************ Add MTP devices below this line ***********/
 	/* Jay MacDonald <jay@cheakamus.com> */
 	{"iRiver:T10 (alternate)",              0x4102, 0x1113, PTP_MTP},
