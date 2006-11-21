@@ -686,7 +686,10 @@ static struct {
 
 	{"Sanyo:VPC-C5 (PTP mode)",             0x0474, 0x0230, 0},
 
+	/* This camera speaks _only_ PictBridge, so it is too limited
+	 * for us. -Marcus
 	{"Motorola:K1 (PTP mode)",              0x22b8, 0x4811, 0},
+	*/
 
 	/************ Add MTP devices below this line ***********/
 	/* Jay MacDonald <jay@cheakamus.com> */
