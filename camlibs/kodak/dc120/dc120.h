@@ -92,6 +92,6 @@
 #define PACK0	(unsigned char)0xe3
 #define CANCL	(unsigned char)0xe4
 
-#define TIMEOUT		1000
+#define TIMEOUT		5000
 #define SLEEP_TIMEOUT 	50
 #define RETRIES		5

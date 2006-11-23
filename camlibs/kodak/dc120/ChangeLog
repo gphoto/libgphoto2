@@ -1,3 +1,10 @@
+2006-11-23  Marcus Meissner  <marcus@jet.franken.de>
+
+	* dc120.h: Set TIMEOUT to 5000. 1000 was not sufficient
+	  for a bugreporter.
+
+	* *.[ch]: Some cleanups.
+
 2002-01-15  Lutz Müller <lutz@users.sourceforge.net>
 
 	* dc120.c
