@@ -28,12 +28,8 @@
 
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 
-char *dc120_folder_card   = _("CompactFlash Card");
-
 int camera_id (CameraText *id) {
-
 	strcpy(id->text, "kodak-dc120");
-
 	return (GP_OK);
 }
 
@@ -69,6 +65,7 @@ static int find_folder( Camera *camera, const char *folder,
     const char* album_name;
     int folder_len;
     int i;
+    char *dc120_folder_card   = _("CompactFlash Card");
     
     if( folder[0] != '/' ) {
 	return (GP_ERROR);
@@ -144,6 +141,7 @@ static int folder_list_func (CameraFilesystem *fs, const char *folder,
     int from_card;
     int folder_nr;
     Camera *camera = data;
+    char *dc120_folder_card   = _("CompactFlash Card");
     
     res = find_folder( camera, folder, &from_card, &folder_nr, context);
     if( res != (GP_OK) ) {
