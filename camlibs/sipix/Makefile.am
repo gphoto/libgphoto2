@@ -5,11 +5,11 @@ camlib_LTLIBRARIES = 			\
 EXTRA_DIST = web2.html blink.c blink.txt xjpeg.c blink2.txt
 
 
-sipix_blink_la_SOURCES	= blink.c
-sipix_blink_la_LDFLAGS = -module -no-undefined -avoid-version -export-dynamic \
-	-export-symbols $(top_srcdir)/camlibs/camlib.sym
-sipix_blink_la_DEPENDENCIES = $(top_srcdir)/camlibs/camlib.sym
-sipix_blink_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la
+#sipix_blink_la_SOURCES	= blink.c
+#sipix_blink_la_LDFLAGS = -module -no-undefined -avoid-version -export-dynamic \
+#	-export-symbols $(top_srcdir)/camlibs/camlib.sym
+#sipix_blink_la_DEPENDENCIES = $(top_srcdir)/camlibs/camlib.sym
+#sipix_blink_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la
 
 
 sipix_blink2_la_SOURCES	= blink2.c
