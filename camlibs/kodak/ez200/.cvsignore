@@ -1,0 +1,7 @@
+Makefile.in
+library.lo
+*.la
+ez200.lo
+Makefile
+.libs
+.deps

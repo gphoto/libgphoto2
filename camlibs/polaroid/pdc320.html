@@ -1,0 +1,107 @@
+<html>
+<head><title>PDC320 protocol description</title></head>
+<body>
+<h1>Polaroid PDC320 protocol description</h1>
+<hr>
+Commands are prefixed with 4 E6.<br>
+The commands return 1 reply code byte.
+All commands return an addition 2 byte checksum.
+<hr>
+<table border=1>
+<tr>
+	<td>Name</td>
+	<td>Byte code</td>
+	<td>Arguments</td>
+	<td>Reply code</td>
+	<td>reply length</td>
+	<td>reply desc</td>
+</tr>
+<tr>
+	<td>Init</td>
+	<td>0x00</td>
+	<td>None.</td>
+	<td>0x05</td>
+	<td>None.</td>
+	<td>Nothing.</td>
+</tr>
+<tr>
+	<td>Id</td>
+	<td>0x01</td>
+	<td>None.</td>
+	<td>0x00</td>
+	<td>11 bytes</td>
+	<td>	Returns 11 byte. Byte 0-8 are the string "XIRLINK",
+		these are followed by a 0x02, 0x01 and 2 unknown additional bytes.
+	</td>
+</tr>
+<tr>
+	<td>State</td>
+	<td>0x02</td>
+	<td>None.</td>
+	<td>0x02</td>
+	<td>21</td>
+	<td>Returns 21 bytes. First byte is 0x3f, the following 9 byte
+	    are big endian 16bit values:<br>
+		320,240,5,320,240,5,80,80,0 on the pdc320.
+	</td>
+</tr>
+<tr>
+	<td>Num</td>
+	<td>0x03</td>
+	<td>None.</td>
+	<td>0x03</td>
+	<td>1 Byte</td>
+	<td>Returns 1 bytes, the number of images.</td>
+</tr>
+<tr>
+	<td>Size</td>
+	<td>0x04</td>
+	<td>Imagenr.(starting with 1)</td>
+	<td>0x06</td>
+	<td>4 Bytes</td>
+	<td>Returns 4 bytes, the big endian size of the image.</td>
+</tr>
+<tr>
+	<td>Pic</td>
+	<td>0x05</td>
+	<td>Imagenr.(starting with 1)</td>
+	<td>0x04</td>
+	<td>4 Bytes, then data.</td>
+	<td>	Returns 4 bytes, 2 byte part offset, 2 byte part offset,
+		then data, then 2 byte checksum. Then again a reply until
+		the end of the image.
+	</td>
+</tr>
+<tr>
+	<td>Delete All</td>
+	<td>0x07</td>
+	<td>None.</td>
+	<td>0x08</td>
+	<td>None.</td>
+	<td>Nothing.</td>
+</tr>
+<tr>
+	<td>End Init</td>
+	<td>0x0a</td>
+	<td>None.</td>
+	<td>0x09</td>
+	<td>None.</td>
+	<td>Nothing.</td>
+</tr>
+<tr>
+	<td>Get Image Params</td>
+	<td>0x0c</td>
+	<td>Imagenr. (starting with 1)</td>
+	<td>0x07</td>
+	<td>2 byte bigendian size, then data of this size</td>
+	<td>The data is expected to be 6 byte, which seems to be picture
+	    parameters. Unclear what they mean. The checksum is appended
+	after the data.</td>
+</tr>
+</table>
+For checksum calculation see the sourcecode (for now).
+<p>
+The image data return starts with:<br>
+0xff,0xc0,16 bit bigendian height, 16 bit bigendian width, raw JPEG data.
+
+</body></html>

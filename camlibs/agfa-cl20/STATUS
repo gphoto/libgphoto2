@@ -1,0 +1,9 @@
+Thumbnail and full image support for all resolutions.
+
+Deleting files not yet supported.
+
+Need to experiment more what happens with huge number of pictures.
+Send me a corrupted image if you find any!
+Use gphoto2 to extract the raw data also
+
+

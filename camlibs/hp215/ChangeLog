@@ -1,0 +1,15 @@
+Fri Jul 15 08:15:38 CEST 2005 Marcus Meissner  <marcus@jet.franken.de>
+
+	* hp215.[ch]: Capture works (slider has to be in "camera" position).
+	  	More cleanup of the cmd / reply blob handling.
+		Extract shootmode table... unclear what the values mean (yet).
+
+Sat Jul  9 17:39:28 CEST 2005  Marcus Meissner  <marcus@jet.franken.de>
+
+	* *: Initial import of HP Photosmart 215 driver.
+	     Can download images and previews, can delete single images
+	     and all images.
+
+	* hp215.c:
+	     Switch to generic CRC handling, generized the command blob generation.
+	     Added all command codes from the windows driver.

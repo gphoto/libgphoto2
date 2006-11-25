@@ -1,0 +1,63 @@
+This list of testers is intended for driver developers to 
+find people with the required types of cameras to test their drivers.
+Therefore it is sorted by the camera type.
+
+USING THESE NAMES AND ADDRESSES FOR ANY OTHER PURPOSE THAN DEVELOPMENT
+AND TESTING OF SOFTWARE FROM THE gphoto PROCJECT IS STRICTLY
+PROHIBITED. (Just in case anybody gets stupid ideas.)
+
+If you create some changes to a special driver and have to test the 
+driver on a type of camera you do not have direct access to, you may 
+contact these nice folks.
+
+If you have a camera not yet on this list and want to help develop the 
+gphoto project, we ask you to join the testers. Just tell us at 
+<gphoto-devel@lists.sourceforge.net> to include you on this list.
+
+This will mean your name and e-mail will be distributed with every
+source copy of gphoto2 and be published at http://gphoto.org/. 
+
+It will also mean that you will test software that is UNTESTED AND
+POSSIBLY DANGEROUS TO YOUR HARDWARE OR YOUR HEALTH. You will do this
+on YOUR OWN RESPONSIBILITY. 
+
+But it will also mean that you will be able to help develop the driver
+and possibly be the first one to test the long-awaited working driver
+:-)
+
+This said, we developers also continually test our software risking
+thousands of dollars' worth of hardware and our lives. :-)
+
+========================================================================
+
+Canon EOS D30 - David ROBERT <david@ombrepixel.com>
+Canon EOS D30 - Marco Nierlich <mani@access.unizh.ch>
+Canon Digital Ixus V - Matthias Kramm <matthias.kramm@stud.tu-muenchen.de>
+Canon IXUS 300 - Konrad Hofer <Konrad.Hofer@nortelnetworks.com>
+Canon PowerShot A10 - Jeremy Spykerman <spykermj@student.gvsu.edu>
+Canon PowerShot A50 - Philippe Marzouk <philm@users.sourceforge.net
+Canon PowerShot G2 - Hans Ulrich Niedermann <gp@n-dimensional.de>
+Canon PowerShot S40 - Guillaume Laurent <glaurent@telegraph-road.org>
+Canon EOS 20D - Hubert Figuiere <hfiguiere@teaser.fr>
+
+Epson PhotoPC 850z - Valentin Rusu <sourceforge@valentinrusu.net>
+Epson PhotoPC 3000z - Gilles Grandou <gilles@grandou.net>
+
+Jenoptik JD11 - Marcus Meissner <marcus@jet.franken.de>
+Jenoptik JD350v - Marcus Meissner <marcus@jet.franken.de>
+
+KBGear JamCam v3 - Marcus Meissner <marcus@jet.franken.de>
+KBGear JamCam v3 - Rob Hillis <rob@hillis.dyndns.org>
+
+Kodak DC240 - Hubert Figuiere <hfiguiere@teaser.fr>
+Kodak DC3200 - Kristian Rink <kristian.rink@wirtschaft.tu-chemnitz.de>
+
+Mustek MDC800 - Marcus Meissner <marcus@jet.franken.de>
+
+Olympus C-3030Z - Colin Marquardt <colin@marquardt-home.de>
+
+Praktica QD800 - Marcus Meissner <marcus@jet.franken.de>
+
+SiPix Web2 - Marcus Meissner <marcus@jet.franken.de>
+SiPix Stylecam Blink - Marcus Meissner <marcus@jet.franken.de>
+STV680/ Micromaxx Pencam (USB) - Marcus Meissner <marcus@jet.franken.de>

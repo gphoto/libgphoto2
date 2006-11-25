@@ -1,0 +1,754 @@
+/* 
+ * Some CSS styles for DocBook V4.
+ * (Not exhaustive. Has enough styles to render the LDP Author Guide.)
+ *
+ * If you improve it, please send me (hussein@xmlmind.com) a copy.
+ */
+
+abstract,
+ackno,
+address,
+affiliation,
+alt,
+answer,
+appendix,
+areaspec,
+arg,
+article,
+attribution,
+audioobject,
+author,
+authorblurb,
+authorgroup,
+beginpage,
+bibliodiv,
+biblioentry,
+bibliography,
+bibliomixed,
+bibliomset,
+biblioset,
+blockquote,
+book,
+bookbiblio,
+bridgehead,
+callout,
+calloutlist,
+caption,
+caution,
+chapter,
+city,
+cmdsynopsis,
+collab,
+colophon,
+comment,
+confdates,
+confgroup,
+confnum,
+confsponsor,
+conftitle,
+contractnum,
+contractsponsor,
+contrib,
+copyright,
+corpauthor,
+corpname,
+country,
+dedication,
+edition,
+editor,
+epigraph,
+equation,
+example,
+figure,
+firstname,
+footnote,
+formalpara,
+funcprototype,
+funcsynopsis,
+funcsynopsisinfo,
+glossary,
+glossdef,
+glossentry,
+glosslist,
+glosssee,
+glossseealso,
+graphic,
+graphicco,
+group,
+highlights,
+holder,
+honorific,
+imageobject,
+imageobjectco,
+important,
+index,
+indexdiv,
+indexentry,
+informalequation,
+informalexample,
+informalfigure,
+issuenum,
+itemizedlist,
+itermset,
+jobtitle,
+keywordset,
+legalnotice,
+lineage,
+listitem,
+literallayout,
+lot,
+lotentry,
+mediaobject,
+mediaobjectco,
+member,
+msg,
+msgaud,
+msgentry,
+msgexplan,
+msginfo,
+msglevel,
+msgmain,
+msgorig,
+msgrel,
+msgset,
+msgsub,
+msgtext,
+note,
+orderedlist,
+otheraddr, 
+othercredit,
+othername,
+para,
+part,
+partintro,
+phone,
+pob,
+postcode,
+preface,
+primaryie,
+printhistory,
+procedure,
+programlisting,
+programlistingco,
+publisher,
+publishername,
+qandadiv,
+qandaentry,
+qandaset,
+question,
+refclass,
+refdescriptor,
+refentry,
+refentrytitle,
+reference,
+refmiscinfo,
+refname,
+refnamediv,
+refsect1,
+refsect2,
+refsect3,
+refsynopsisdiv,
+releaseinfo,
+revhistory,
+revision,
+revremark,
+sbr,
+screen,
+screenco,
+screenshot,
+secondaryie,
+sect1,
+sect2, 
+sect3, 
+sect4, 
+sect5, 
+section, 
+seealsoie,
+seeie,
+seglistitem,
+segmentedlist,
+set,
+setindex,
+shortaffil,
+sidebar,
+simpara,
+simplelist,
+simplesect,
+state,
+step,
+street,
+subject,
+subjectset,
+subjectterm,
+substeps,
+subtitle,
+surname,
+synopfragment,
+synopfragmentref,
+synopsis,
+term,
+tertiaryie,
+textobject,
+tip,
+title, 
+toc,
+tocback,
+tocchap,
+tocentry,
+tocfront,
+toclevel1,
+toclevel2,
+toclevel3,
+toclevel4,
+toclevel5,
+tocpart,
+variablelist, 
+varlistentry,
+videoobject, 
+warning {
+    display: block;
+}
+
+/* It is not really useful to style meta-information. */
+articleinfo,
+bookinfo,
+docinfo,
+objectinfo,
+refmeta,
+refsect1info,
+refsect2info,
+refsect3info,
+refsynopsisdivinfo,
+screeninfo,
+sect1info,
+sect2info,
+sect3info,
+sect4info,
+sect5info,
+sectioninfo,
+setinfo,
+titleabbrev,
+indexterm {
+    display: tree;
+}
+
+/*
+ * Title styles
+ */
+
+chapter > title,
+glossary > title,
+appendix > title,
+reference > title {
+    font-size: 2em;
+    font-weight: bold;
+    color: maroon;
+    margin-top: .67ex;
+    margin-bottom: .67ex;
+}
+
+chapter > title:before {
+    content: "Chapter " counter(n-, upper-roman) "\A";
+}
+
+article > title {
+    font-size: 2em;
+    margin-top: .67ex;
+    margin-bottom: .67ex;
+    text-align: center;
+}
+
+subtitle {
+    font-weight: bold;
+    color: maroon;
+    margin-top: 1.33ex;
+    margin-bottom: 1.33ex;
+}
+article > subtitle {
+    text-align: center;
+}
+
+refsynopsisdiv:before {
+    font-size: 1.17em;
+    font-weight: bold;
+    color: maroon;
+    content: "Synopsis";
+}
+
+refsynopsisdiv { 
+    margin-top: .83ex;
+    margin-bottom: .83ex;
+}
+
+sect1 > title, sect2 > title, sect3 > title, sect4 > title, sect5 > title,
+section > title, refsect1 > title { 
+    font-weight: bold;
+    color: maroon;
+}
+sect1 > title,
+refnamediv > refname,
+section > title { 
+    font-size: 1.5em;
+    margin-top: .83ex;
+    margin-bottom: .83ex;
+}
+sect2 > title,
+refsect1 > title,
+section section > title { 
+    font-size: 1.17em;
+    margin-top: 1ex;
+    margin-bottom: 1ex;
+}
+sect3 > title, sect4 > title, sect5 > title,
+section section section > title,
+section section * section > title { 
+    font-size: 1em;
+    margin-top: 1.33ex;
+    margin-bottom: 1.33ex;
+}
+sect1 > title:before,
+section > title:before {
+    content: counter(n-) " ";
+}
+sect2 > title:before,
+section section > title:before {
+    content: counter(nn-) " ";
+}
+sect3 > title:before,
+section section section > title:before {
+    content: counter(nnn-) " ";
+}
+sect4 > title:before,
+section section section section > title:before {
+    content: counter(nnnn-) " ";
+}
+/* No counters for sect5 and up */
+section section section * section > title:before {
+    content: "";
+}
+
+/*
+ * Table style
+ */
+
+table, 
+informaltable {
+    display: block;
+    margin-top: 1.33ex;
+    margin-bottom: 1.33ex;
+}
+table > title {
+    font-style: italic;
+    text-align: center;
+    margin-left: 2ex;
+    margin-right: 2ex;
+    margin-bottom: 2;
+}
+tgroup {
+    display: table;
+    border: 1 outset gray;
+    text-align: eval(attr(align));
+}
+colspec, spanspec {
+    display: table-column;
+}
+thead, tbody, tfoot { 
+    display: table-row-group;
+    vertical-align: eval(attr(valign));
+}
+row { 
+    display: table-row;
+    vertical-align: eval(attr(valign));
+}
+entry { 
+    display: table-cell;
+    text-align: eval(attr(align));
+    vertical-align: eval(attr(valign));
+    border: 1 inset gray;
+    padding: 2;
+}
+entry > *:first-child { 
+    margin-top: 0;
+    margin-bottom: 0;
+}
+entrytbl {
+    display: table;
+    border: 1 inset gray;
+    padding: 2;
+}
+
+/*
+ * Block styles
+ */
+
+para, 
+simpara,
+formalpara { 
+    margin-top: 1.33ex;
+    margin-bottom: 1.33ex;
+}
+
+formalpara > * {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+formalpara > title {
+    font-weight: bold;
+}
+
+listitem > *:first-child { 
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+itemizedlist { 
+    margin-left: 2ex;
+    margin-top: 1.33ex;
+    margin-bottom: 1.33ex;
+}
+itemizedlist > listitem {
+    margin-left: 2.5ex;
+}
+itemizedlist > listitem:before {
+    display: marker;
+    content: disc;
+}
+itemizedlist > listitem itemizedlist > listitem:before {
+    display: marker;
+    content: square;
+}
+itemizedlist > listitem itemizedlist > listitem 
+itemizedlist > listitem:before {
+    display: marker;
+    content: icon(diamond);
+}
+itemizedlist > listitem itemizedlist > listitem itemizedlist > listitem 
+itemizedlist > listitem:before {
+    display: marker;
+    content: circle;
+}
+
+orderedlist { 
+    margin-left: 2ex;
+    margin-top: 1.33ex;
+    margin-bottom: 1.33ex;
+}
+orderedlist > listitem {
+    margin-left: 6ex;
+}
+orderedlist > listitem:before {
+    display: marker;
+    content: counter(n, decimal);
+    font-weight: bold;
+}
+orderedlist[numeration=loweralpha] > listitem:before {
+    display: marker;
+    content: counter(n, lower-alpha);
+}
+orderedlist[numeration=upperalpha] > listitem:before {
+    display: marker;
+    content: counter(n, upper-alpha);
+}
+orderedlist[numeration=lowerroman] > listitem:before {
+    display: marker;
+    content: counter(n, lower-roman);
+}
+orderedlist[numeration=upperroman] > listitem:before {
+    display: marker;
+    content: counter(n, upper-roman);
+}
+
+variablelist { 
+    margin-left: 2ex;
+    margin-top: 1.33ex;
+    margin-bottom: 1.33ex;
+}
+varlistentry > term {
+    font-weight: bold;
+}
+varlistentry > listitem {
+    margin-left: 4ex;
+}
+
+glossentry {
+    margin-top: 1.33ex;
+    margin-bottom: 1.33ex;
+}
+glossentry > glossterm {
+    display: block;
+    font-style: italic;
+}
+glossdef {
+    margin-left: 4ex;
+}
+glossdef > *:first-child { 
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+qandaentry {
+    margin-top: 1.33ex;
+    margin-bottom: 1.33ex;
+}
+question {
+    font-style: italic;
+}
+question,
+answer {
+    margin-left: 4ex;
+}
+question:before { 
+    content: "Q:";
+    display: marker;
+    color: olive;
+    font-weight: bold;
+    font-style: normal;
+}
+answer:before { 
+    content: "A:";
+    display: marker;
+    color: olive;
+    font-weight: bold;
+}
+question > *:first-child,
+answer > *:first-child { 
+    margin-top: 0;
+    margin-bottom: 0;
+}    
+
+simplelist { 
+    margin-left: 4ex;
+}
+member {
+    margin-left: 2.5ex;
+}
+
+note {
+    margin-left: 10ex;
+}
+note:before {
+    content: "note ";
+    display: marker;
+    color: olive;
+}
+
+tip {
+    margin-left: 10ex;
+}
+tip:before {
+    content: "tip ";
+    display: marker;
+    color: olive;
+}
+
+footnote {
+    font-size: .83em;
+    margin-left: 15ex;
+    margin-right: 5ex;
+}
+footnote:before {
+    content: "footnote ";
+    display: marker;
+    color: olive;
+}
+
+programlisting,
+screen { 
+    white-space: pre;
+    background-color: #E0E0E0;
+    border: thin solid gray;
+    font-family: monospace;
+    font-size: .83em;
+    margin-top: 1.33ex;
+    margin-bottom: 1.33ex;
+}
+
+programlistingco {
+    border: 1 solid gray;
+    padding: 1ex;
+    margin-top: 1.33ex;
+    margin-bottom: 1.33ex;
+}
+programlistingco programlisting { 
+    border-style: none;
+}
+areaspec:before {
+    content: "areas ";
+    color: olive;
+}
+area,
+co {
+    content: icon(left-half-disc) counter(n) icon(right-half-disc);
+    color: olive;
+}
+callout {
+    margin-left: 6ex;
+}
+callout > *:first-child { 
+    margin-top: 0;
+    margin-bottom: 0;
+}
+calloutlist > callout:before {
+    display: marker;
+    content: icon(left-half-disc) counter(n) icon(right-half-disc);
+    color: olive;
+}
+
+figure,
+mediaobject {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1.33ex;
+    margin-bottom: 1.33ex;
+}
+figure > title,
+caption {
+    font-style: italic;
+}
+caption > *:first-child { 
+    margin-top: 0;
+    margin-bottom: 0;
+}
+/* 
+ *  Showing a 400x200 thumbnail is sufficient. 
+ *  If you don't like that, replace the content property by a more traditional:
+ *  content: image(attr(fileref));
+ */
+graphic,
+imagedata {
+    content: image(attr(fileref), -400, -200);
+}
+graphic {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+blockquote {
+    margin-left: 10ex;
+    margin-right: 10ex;
+    margin-top: 1.33ex;
+    margin-bottom: 1.33ex;
+}
+blockquote > title,
+attribution {
+    font-style: italic;
+}
+attribution {
+    text-align: right;
+}
+attribution:before {
+    content: "-- "
+}
+
+/*
+ * Inline styles
+ */
+
+emphasis {
+    font-style: italic;
+}
+emphasis[role=bold] {
+    font-style: normal;
+    font-weight: bold;
+}
+
+literal,
+filename,
+command,
+synopsis,
+envar,
+parameter {
+    font-family: monospace;
+    font-size: .83em;
+}
+parameter,
+replaceable {
+    font-style: italic;
+}
+
+anchor:after { 
+    content: icon(left-target); 
+    vertical-align: text-top;
+    color: olive;
+}
+link, 
+ulink,
+email {
+    color: navy;
+    text-decoration: underline;
+}
+xref {
+    content: icon(right-link);
+    vertical-align: text-top;
+    color: navy;
+}
+
+foreignphrase {
+    font-style: italic;
+}
+
+sgmltag {
+    color: red;
+}
+sgmltag[class="starttag"]:before {
+    content: "<";
+}
+sgmltag[class="endtag"]:before {
+    content: "</";
+}
+sgmltag[class="starttag"]:after,
+sgmltag[class="endtag"]:after {
+    content: ">";
+}
+
+quote:before {
+    content: open-quote;
+}
+quote:after {
+    content: close-quote;
+}
+
+@media print {
+    articleinfo,
+    bookinfo,
+    docinfo,
+    objectinfo,
+    refmeta,
+    refsect1info,
+    refsect2info,
+    refsect3info,
+    refsynopsisdivinfo,
+    screeninfo,
+    sect1info,
+    sect2info,
+    sect3info,
+    sect4info,
+    sect5info,
+    sectioninfo,
+    setinfo,
+    titleabbrev,
+    indexterm {
+        display: none;
+    }
+
+    colspec, spanspec {
+        display: none;
+    }
+
+    * {
+	background-color: transparent;
+        line-height: 1.2;
+    }
+
+    programlisting,
+    screen {
+        background-color: #FFFFE0;
+        border: 1 solid #E0E0A0;
+    }
+
+    graphic,
+    imagedata {
+        content: image(attr(fileref), -500, -700, smooth);
+    }
+}

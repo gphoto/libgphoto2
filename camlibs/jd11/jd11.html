@@ -1,0 +1,309 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.61C-CCK-MCD Caldera Systems OpenLinux [en] (X11; I; Linux 2.2.14 i586) [Netscape]">
+   <meta name="license" content="GPL v2">
+   <title>Reverse Engineering the JD11 (JenCam 11) </title>
+</head>
+<body>
+
+<h1>
+Reverse Engineering the JD11 - A drama in n chapters</h1>
+
+<hr>
+<h2>
+What is the JD11?</h2>
+The JD11 is a cheap digital camera produced by JenOptik (apparenly a subsidary
+of Zeiss Jena). It was at the time of writing this available for around
+250 DM.
+<p>There is software available, a windows program called <i>FotoBee</i>
+which is a huge heap of MFC dung. It can be made to run with a small hack
+under the free Windows Emulator <a href="http://winehq.com">WINE</a>.
+<p>WINE was crucial in reverse engineering the camera at all stages of
+the project.
+<h2>
+Chapter 1:The lowlevel serial protocol</h2>
+The JD11 comes with a serial cable with a DB9 connector on the computerside
+and a small klinkenstecker at the camera end. So just 2 lines (RX, TX)
+and GND.
+<p>There is no documenation on the serial protocol in the inlaying documentation.
+<p>The FotoBee.exe program uses the Windows serial communications interface,
+which is fortunately implemented in WINE. By snooping the setup calls,
+the serial parameters are:
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 115200 Baud, no parity, 1 stopbit, 8 bit data, no flow control
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (neither crtscts, nor XON/XOFF)</pre>
+It also setting some large timeouts, since the camera sometimes needs like
+2 seconds to think about something.
+<p>That was rather trivial.
+<h2>
+Chapter 2: The serial data transfer protocol</h2>
+The next step was to find out how the FotoBee software talks to the camera.
+<p>&nbsp;Luckily the program still uses the standard Win32 serial communication
+functions for that, so I added some code to the <tt>ReadFile</tt> and
+<tt>WriteFile</tt>
+functions, which dumps the read/written buffer if it is writing to a serial
+device.
+<p>In general, the program sends a command down the serial line (with optional
+arguments) and receives data back. Every command starts with a <tt>0xFF</tt>
+character.
+
+<table BORDER COLS=4 WIDTH="100%" >
+<tr><td width=10%>Command</td><td width=15%>Arguments</td><td>Returns</td><td width=55%>Description</td></tr>
+
+<tr>
+	<td>0xff 0x08</td>
+	<td>None</td>
+	<td>0xff 0xf1</td>
+	<td>Ping!s the camera.</td>
+</tr>
+
+<tr>
+	<td>0xff 0xa7</td>
+	<td>None</td>
+	<td>A packet with between 10 and 20 bytes is returned.</td>
+	<td>
+		3 float factors are returned, they are calculated:<br>
+		<code>
+		f1=r[1]+r[2]*0.1+r[3]*0.01;<br>
+		f2=r[4]+r[5]*0.1+r[6]*0.01;<br>
+		f3=r[7]+r[8]*0.1+r[9]*0.01;<br>
+		</code><br>
+		Their use is still unknown to me.<br>
+		Twain calls it 'LoadGRB'
+	</td>
+</tr>
+
+<tr>
+	<td>0xff 0xa4</td>
+	<td>None</td>
+	<td>0xff 0x01</td>
+	<td>Select Index Picture to transfer, is followed by packetreading</td>
+</tr>
+
+<tr>
+	<td>0xff 0xa1</td>
+	<td>0xff <i>picturenr</i></td>
+	<td>0xff 0x01</td>
+	<td>Selects Image <i>picturenr</i> to transfer. 3 Bytestreams follow (packetreading has to be called 3 times)</td>
+</tr>
+
+<tr>
+	<td>0xff 0xa8</td>
+	<td>10 bytes of data ... Set floats</td>
+	<td>0xff 0x01</td>
+	<td>Sets the 3 floats. Sends 10 bytes to the camera.<br>
+		The bytestream looks:
+		</code>0xFF A B C D E F G H I</code><br>
+		The floats are: A.BC D.EF G.HI<br>
+		A...I are binary values between 0 and 9.<br>
+		Twain calls it 'SaveGRB'.
+	</td>
+</tr>
+<tr>
+	<td>0xff 0xa6</td>
+	<td>None</td>
+	<td>No return expected.</td>
+	<td>Deletes all images.</td>
+</tr>
+
+<tr>
+	<td>0xff 0xf0</td>
+	<td>None</td>
+	<td>Returns an ASCII hexnumber (starting with two 0x66 ('f'))</td>
+	<td>
+		Returns the size (in bytes) of the image to transfer next. This
+		command is issued after "select index" or "select image"
+		and is followed by (multiple) packet reads.
+	</td>
+</tr>
+
+<tr>
+	<td>0xff 0xf1</td>
+	<td>None</td>
+	<td>Returns 201 or less bytes</td>
+	<td>
+		The packetreader. It is called in a loop after querying the
+		imagesize. If 201 bytes are read, the 201th byte is the checksum
+		(sum of 0-199)&0xff, otherwise there is no checksum.<br>
+		Returns the 200 bytes read.
+	</td>
+</tr>
+<tr>
+	<td>0xff 0xf3</td>
+	<td>None</td>
+	<td>Returns 201 or less bytes</td>
+	<td>
+		The packet resend command. Works exactly like the
+		<tt>0xff 0xf1</tt> packetread command, but the last packet is
+		retransmitted. This is useful for corrupted transmissions.
+	</td>
+</tr>
+<tr>
+	<td>0xff 0x72</td>
+	<td>None</td>
+	<td>0xff 0x71</td>
+	<td>The TestDRAM command according to the Twain drivers. Gets a bool reply.</td>
+</tr>
+<tr>
+	<td>0xff 0x73</td>
+	<td>None</td>
+	<td>0xff 0x70/0x71</td>
+	<td>The TestFLASH command according to the Twain drivers. Gets a bool reply.</td>
+</tr>
+<tr>
+	<td>0xff 0x75</td>
+	<td>None</td>
+	<td>0xff70 or 0xff71 or something else.</td>
+	<td>The TestADC command according to the Twain drivers. Gets a bool reply.</td>
+</tr>
+<tr>
+	<td>0xff 0x78</td>
+	<td>None.</td>
+	<td>Some data.</td>
+	<td>Appears to take a snapshot and then it should read N packets of
+		data. Strange. There is some text generated and printed into
+		a dialog. I only get back 0xff.<br>
+		TWAIN calls it DSC_TestAE.</td>
+</tr>
+<tr>
+	<td>0xff 0x79</td>
+	<td>None</td>
+	<td>0xff 0xXX</td>
+	<td>Function unknown, seems to open/close the shutter in rapid succession.<br>
+		TWAIN calls it DSC_AjustAGC.<br>
+		Reads reply.
+	</td>
+</tr>
+<tr>
+	<td>0xff 0x7a</td>
+	<td>None.</td>
+	<td>Some data.</td>
+	<td>Unclear. GUI enables wait cursor before call and disabled it after.</td>
+</tr>
+<tr>
+	<td>0xff 0x7b</td>
+	<td>0xff value.</td>
+	<td>0xff 0xf1</td>
+	<td>Unclear.</td>
+</tr>
+<tr>
+	<td>0xff 0xa9</td>
+	<td>0xff value.</td>
+	<td>0xff 0xf1</td>
+	<td>Set Bulb Mode. Apparently values between 1 and 9.</td>
+</tr>
+</table>
+<p>
+Following commands can be used on toplevel:
+<ul>
+<li>PING
+<li>FLOAT FACTORS
+<li>SELECT INDEX
+<li>SELECT IMAGE
+<li>...
+</ul>
+For reading the INDEX picture following sequence appears:
+<ul>
+<li>SELECT INDEX
+<li>IMAGE SIZE
+<li>READ PACKET until packets exhausted.
+</ul>
+For reading the IMAGE picture following sequence appears:
+<ul>
+<li>SELECT IMAGE <i>n</i>
+<li>Do 3 times:
+<ul>
+	<li>IMAGE SIZE
+	<li>READ PACKET until packets exhausted.
+</ul>
+</ul>
+Thats all we needed to know about the serial commands.
+
+<h2>Chapter 3: The image compression, stage 1</h2>
+
+Judging from other cameras it is easy to suspect the camera uses the JPEG
+format. It does not unfortunately.
+
+<h3>Chapter 3.1: The format of the index picture</h3>
+Casting a closer look at the raw data of the index picture shows a a stream
+of 8 bit values. Some experimentation later it turns out to a stream of
+64x48 grayscale pictures, upside down.
+Using:<pre>
+	rawtopgm &lt;index 64 (sizeof_index/64) |pnmflip -tb &gt; index.ppm
+</pre>
+we can convert it into a .PPM and convert it further using standard UNIX tools.
+<p>
+
+The size of the index picture also tells us the number of pictures that are
+currently stored in the camera. Just divide the size of the indeximage by 64*48.
+
+<h3>Chapter 3.2: The low quality compressed image format</h3>
+	The camera has two modes to store pictures, either in low or
+	high quality. This is marked by the letters "L" and "H" on the
+	cameras LCD. Default is the low quality format.<p>
+	It is still unclear to me how to detect high/low quality formats,
+	except with the size of the returned image.
+
+<p>
+At first look the data returned from the camera looks like junknoise. So I had
+to peek into the diassembly, which shows a slightly inefficient huffman decompressor, with following bitpatterns:
+<table border>
+<tr><td>Bits</td><td>Value</td></tr>
+<tr><td>00</td>			<td>-2</td></tr>
+<tr><td>01</td>			<td>6</td></tr>
+<tr><td>10</td>			<td>2</td></tr>
+<tr><td>110</td>		<td>6</td></tr>
+<tr><td>1110</td>		<td>11</td></tr>
+<tr><td>1111 0</td>		<td>-11</td></tr>
+<tr><td>1111 10</td>		<td>20</td></tr>
+<tr><td>1111 110</td>		<td>-20</td></tr>
+<tr><td>1111 1110</td>		<td>45</td></tr>
+<tr><td>1111 1111 0</td>	<td>-45</td></tr>
+<tr><td>1111 1111 10</td>	<td>90</td></tr>
+<tr><td>1111 1111 110</td>	<td>-90</td></tr>
+<tr><td>1111 1111 1110</td>	<td>180</td></tr>
+<tr><td>1111 1111 1111 0</td>	<td>-180</td></tr>
+</table>
+The result of this decompression run is 320*480 bytes for the first image,
+and 320*240 for the second and third image. But these are not the pixel values,
+these are differences!
+<br>
+So I had another look. Pixels are 8bit unsigned values and computed like this:
+<ul>
+<li>In the first row of the image: <code>pixel[i] = lastpixel+decompressed_diff;</code><br>
+    The first pixel is based on 0.
+<li>In all other rows (starting lastvalue is pixel[0] of the previous line):
+<ul>
+    <li><code>newpixelvalue = lastvalue + decompressed_diff;</code><br>
+    <li><code>lastvalue = newpixelvalue*0.5 + pixel_lastline[i+1]*0.5;</code>
+    <pre>
+    		0 X 0
+		X N 0
+    </pre>
+    The 'X' pixels influence the 'N' pixel (together with the uncompressed diff)
+</ul>
+</ul>
+Tada. We now have 3 uncompressed images. To view each of them we can use:
+<pre>
+	rawtopgm 320 480 &lt;image0 | pnmflip -tb &gt; image0.ppm
+	rawtopgm 320 240 &lt;image1 | pnmflip -tb &gt; image1.ppm
+	rawtopgm 320 240 &lt;image2 | pnmflip -tb &gt; image2.ppm
+</pre>
+where image0 is the first image read, and image1,image2 the next two images.<p>
+Both give pretty grayscale pictures, but are not yet in color.
+
+<h3>Chapter 3.2: The high quality compressed image format</h3>
+The high quality format uses a very different compression.<p>
+It just compacts all 8bit values to 6bit by shortening out the 2 least
+significant bits.
+So we just restore them (AAAA AABB BBBB CCCC CCDD DDDD -> AAAAAA00, BBBBBB00,
+CCCCCC00, DDDDDD00) and get the same grayscale images as with the lowquality
+compression.
+
+<h3>Chapter 3.3: Getting colors</h3>
+Now we have the green, the red and the blue components, with the green having
+twice as much rows as the others.<br>
+We can apply the bayer algorithm now and get the final 640x480 image.
+</body>
+</html>

@@ -1,0 +1,81 @@
+Scott Fritzinger <scottf@scs.unr.edu>
+Design, core implementation, Sierra Imaging library,
+Directory Browse library, Mattel library, command-line
+interface, gpio design
+
+Mariusz Zynel <mariusz@mizar.org>
+Panasonic DC1000/DC1580 library, command-line interface,
+Solaris patches, bug fixing
+
+Johannes Erdfelt <johannes@erdfelt.com>
+Digita library, gpio USB support, bug fixes
+
+Werner Almesberger <almesber@lrc.di.epfl.ch>
+Canon A50 library
+
+Ole W. Saastad <o.w.saastad@kjemi.uio.no>
+Additions for Canon PowerShot A5 support
+
+Veros Kaplan <xkaplan@informatics.muni.cz>
+Sierra library bug fixes & folder support
+
+Wolfgang Reissnegger
+Canon A50 library
+
+Philippe Marzouk <philm@users.sourceforge.net>
+Canon thumbnail and deletion support
+
+Edouard Lafargue <lafargue@oslo.geco-prakla.slb.com>
+Canon camera detection, fixes, configuration dialog
+
+Ole Aamot <ole@gnu.org>
+GNOME configuration support
+
+Bart van Leeuwen <bart@netage.nl>
+OS/2 Port, Sony DSC-F1 updates
+
+M. Adam Kendall <joker@penguinpub.com>
+Sony DSC-F1 library
+
+Mark Davies <mdavies@dial.pipex.com>
+Sony DSC-F55E library
+
+Beat Christen <spiff@longstreet.ch>
+gpio serial code
+
+Gus Hartmann <hartmann@madison-expat.net>
+Minolta Dimage V library
+
+Raymond Penners <raymond@dotsphinx.com>
+gPhoto2 port of the Sony DSC-F55 library
+
+Marcus Meissner <marcus@jet.franken.de>
+Jenoptik JD11 and SiPix Web2 library, cleanups in the stv680 library.
+
+Lutz Müller <lutz@users.sourceforge.net>
+Konica driver, various clean-up all over the place
+
+Fredrik <fredrik@krixor.xy.org>
+Canon driver, all but serial specific things.
+
+Hans Ulrich Niedermann <gp@n-dimensional.de>
+Canon driver, package building, hotplug, and various other things
+
+Christophe Barbé <christophe.barbe@ufies.org>
+Release building and small fixes.
+
+Dennis Noordsij <dennis.noordsij@wiral.com>, Philipp Poeml <poml@poeml.de>
+Agfa CL20 driver.
+
+Theodore Kilgore <kilgota@auburn.edu>
+aox, clicksmart310, digigr8, iclick, mars, sq905, sonix libraries.
+
+Stephen Pollei<stephen_pollei@comcast.net>
+iclick library.
+
+Paul Walmsley <paul@booyaka.com>
+Canon 5D (class 6) capture support. Thanks to the Internet 
+Archive, <http://www.archive.org/>, for funding the development 
+of this code.  This code is used in the Internet Archive's book 
+scanner.
+

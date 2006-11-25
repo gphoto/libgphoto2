@@ -1,0 +1,17 @@
+2005-03-11  Marcus Meissner  <marcus@jet.franken.de>
+
+	* *: imported to libgphoto2 CVS, cleaned up.
+
+04/19/2001 - Benjamin Moos
+	* Forgot to document any individual changes for 11 days :)
+	* Now outputs RGB ppm's, good enough for guv'mnt work
+
+04/08/2001 - Benjamin Moos
+	* Finished changing all "barbie" references to "adc65"
+	* Rewrote all the functions to use what I know about the adc65
+	  interface
+	* Returns images as raw bytes
+
+04/07/2001 - Benjamin Moos
+	* Copied the Barbie directory and changed all the files to say adc65
+	  instead of barbie :)

@@ -1,0 +1,26 @@
+Generic PictBridge only....
+
+Device info:
+Manufacturer: OLYMPUS CORPORATION
+  model: X450,D535Z,C370Z
+  device version: 1.00
+  serial number: '(null)'
+Vendor extension ID: 0x00000000
+Vendor extension description: (null)
+Supported operations:
+  0x1001
+  0x1002
+  0x1003
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008                       
+  0x1009
+  0x100a
+  0x100c
+  0x100d
+  0x101b
+Events Supported:
+  0x4009
+Device Properties Supported:

@@ -1,0 +1,192 @@
+Functions codes :
+all functions are preceded by escape code (0x1B).
+ - 0x58 = ping (receive 1 byte = ACK or anything else will be an error)
+ - 0x53 = get camera informations (receive 256 bytes of informations. Details after this list)
+ - 0x49 0x3X 0x3X 0x3X 0x3X = get image informations (receive 256 bytes of informations. Details after this list)
+ - 0x42 0x3X = Set broadcast speed :
+ 	0x30 = 9600 bauds
+	0x31 = 19200 bauds
+	0x32 = 38400 bauds
+	0x33 = 57600 bauds
+	0x34 = 115200 bauds
+	(In all case, if ok, receive an ACK (1 byte))
+ - 0x47 0x46 0x3X 0x3X 0x3X 0x3X = Get image 
+ 	receive 1 byte which contains the ACK (0x6 = all is ok | 0x15 = there is an error)
+	And by cycle :
+		receive a part of the picture (512 bytes)
+		receive a checksum (1 byte)
+		we must send the result of the checksum (0x6 = All os OK | 0x15 = seems to be an error is happened)
+		receive information about the transmission (1 byte)
+			0x1 = next buffer will be transmetted just after
+				so we must loop
+			0x4 = finished : we must send an ACK (1 byte) and it's finished
+ - 0x45 0x46 0x3X 0x3X 0x3X 0x3X = Delete an image (Receive an ACK (1 byte)) Here, we must check if image isn't protected
+ - 0x45 0x46 0x30 0x30 0x30 0x30 = Delete all images (Receive an ACK (1 byte))
+ - 0x52 0x90 = Capture an image (Receive an ACK (1 byte)) Here, the camera must be in rec mode !
+
+
+Camera's Information buffer :
+0x00 - 0x02 = Seems to be a signature ? 0x03 0x03 0x02
+0x03 - 0x04 = Len of the memory card (or just 0x04 ?!?)
+0x05 - 0x06 = Ne serait-ce pas la taille du buffer de données ?! NON !!! ERRONE
+0x07        = AC / pile (0 = pile | 1 = AC)
+0x08 - 0x09 = Auto-extinction (en secondes)
+0x0A        = camera's mode (0x0 = play mode | 0x1 = rec mode)
+0x0B        = LCD (0 = on | 1 = off)
+0x0C        = Affichage de la barre sur l'écran du numérique (1 = absente | 0 = présente)
+0x0D        = Flash (0 = automatique | 1 = forcé | 2 = pas de flash)
+0x0E        = Minuterie (0 = off | 1 = on)
+0x0F        = Qualité d'enregistrement (0 = Normal | 1 = forte qualité | 2 = économique)
+0x10        = white balance (0 = auto | 2 = office | 1 = Day-lt)
+0x11        = exposure : 0 à 8 = 0, 0.3, 0.5, 0.8, 1.0, 1.3, 1.5, 1.8, 2.0
+                         0xf8 à 0xff = -2.0, -1.8, -1.5, -1.3, -1.0, -0.8, -0.5, -0.3
+0x12 - 0x13 = Images taken (MBR and LBR)
+0x14 - 0x15 = Image remaining (MBR and LBR)
+0x16        = Sharpness (0 = auto | 1 = sharp | 2 = soft)
+0x17        = Color (0 = auto | 1 = light | 2 = deep | 3 = B/W | 4 = Sepia)
+0x18        = Pre-flash (0 = off | 1 = on)
+0x19        = Focus (0 = auto | 1 = 2.0m | 2 = 0.5m | 3 = 0.1m)
+0x1A        = Macro (0 = off | 1 = on)
+0x1B        = Zoom (0 = off | 1 = on)
+0x1C - 0x1D = Rapport avec la carte mémoire : surement sa présence + sa taille ?? 
+0x1E        = capture (0 = single | 1 = sequence 9)
+0x1F        = Date display (0 = off | 1 = on)
+0x20        = Date display in play mode (0 = on | 1 = off)
+0x21        = Date option (0 = M/D/Y | 1 = D/M/Y | 2 =Y/M/D)
+0x22 - 0x25 = date and the time
+0x25 - 0xFF = seems to be unused
+
+Image's Information buffer :
+0x00 - 0x01 = ???
+0x02 - 0x03 = maybe the number of the next image ?
+0x04 - 0x07 = seems to be Thumbnail size (in bytes)
+0x08 - 0x0B = Image size (in bytes)
+0x0E - 0x0F = Image number associated to this image info
+0x0B - 0x10 = ???
+0x11        = Image protected (0x0 = no protection | 0x1 = Image protected)
+0x12 - 0xFF = seels to be unused
+
+
+
+
+
+Escape codes of the windows driver:
+
+Ping:
+        Writes 2 byte: 1B 58    ESC X   
+        Expects: 1 byte NACK/ACK
+
+Getcaminfo:
+        Writes 2 byte: 1B 53    ESC S
+        Expects: 1 byte NACK or 256 byte data.
+                The 256 byte data must start with bytes: 03 03.
+
+cmd_C: UNSUPPORTED !
+        Writes 6 byte: 1B 43 <nr1> <nr1> <nr2> <nr2>    ESC C x x y y
+
+        Gets 2 numbers as argument.
+        Expects: 1 byte, NACK/ACK
+
+cmd_H: UNSUPPORTED !
+        Writes 4 byte: 1B 48 <hex> <hex>        ESC H x x
+
+        The <hex> numbers are from a 8bit value passed to the command.
+
+        Expects: 1 byte, NACK/ACK.
+
+SetSpeed:
+        Writes 3 byte: 1B 42 <nr>               ESC B x
+        
+        Speeds are mapped to this (ascii) number:
+                0       - 9600
+                1       - 19200
+                2       - 38400
+                3       - 57600
+                4       - 115200
+
+        Expects: 1 byte: NACK/ACK.
+
+ImageInfo 1:
+        Writes 6 byte: 1B 49 <nr> <nr> <nr> <nr>        ESC I xxxx
+
+        Expects: 1 byte NACK or 256 byte data.
+                The 256 byte data must start with 03 03.
+
+ImageInfo 2:
+        Writes 7 byte: 1B 49 46 <nr> <nr> <nr> <nr>     ESC I F xxxx
+
+        Expects: 1 byte NACK or 256 byte data.
+        
+        The data is the same as in ImageInfo 1.
+
+        Unclear what the difference between the 2 commands is.
+
+cmd_P 1: UNSUPPOTED !
+        Writes 10 byte: 1B 50 <nr1><nr1><nr1><nr1> <nr2><nr2><nr2><nr2>
+                                                        ESC P xxxxyyyy
+
+        Expects: 1 byte NACK or 1024 byte data (?).
+
+cmd_P 2: UNSUPPORTED !
+        Writes 11 byte: 1B 50 46 <nr1><nr1><nr1><nr1> <nr2><nr2><nr2><nr2>
+                                                        ESC P F xxxxyyyy
+        Expects: 1 byte NACK or 1024 byte data (?).
+
+
+cmd_V 1: UNSUPPORTED !
+        Writes 6 byte: 1B 56 <nr> <nr> <nr> <nr>        ESC V xxxx
+        Expects: 1 byte NACK/ACK.
+
+cmd_V 2: UNSUPPORTEd !
+        Writes 7 byte: 1B 56 46 <nr> <nr> <nr> <nr>     ESC V F xxxx
+        Expects: 1 byte NACK/ACK.
+
+Erase 1 (not used in win driver):
+        Writes 6 byte: 1B 45 <nr> <nr> <nr> <nr>        ESC E xxxx
+        Expects: 1 byte NACK/ACK
+
+Erase 2 (used):
+        Writes 7 byte: 1B 45 46 <nr> <nr> <nr> <nr>     ESC E F xxxx
+        Expects: 1 byte NACK/ACK
+
+
+cmd_K 1: UNSUPPORTED !
+        Writes 6 byte: 1B 4B <nr> <nr> <nr> <nr>        ESC K xxxx
+        Expects: 1 byte NACK/ACK.
+
+cmd_K 2: UNSUPPORTED !
+        Writes 7 byte: 1B 4B 46 <nr> <nr> <nr> <nr>     ESC K xxxx
+        Expects: 1 byte NACK/ACK.
+
+Capture:
+        Writes 3 byte: 1B 52 <nr>                       ESC R x
+        Expects: 1 byte NACK/ACK.
+
+        <nr> can be '1' or '0'.
+
+Set Time (?): do nothing ?
+        Writes 11 byte: 1B 57 44 <8*nr>                 ESC W D xxxxxxxx
+        Expects: 1 byte NACK/ACK.
+                
+        The number is the current time in seconds sinc 1980 I guess.
+
+Get Thumbnail 1:
+        Writes: 6 byte 1B 54 <4*nr>                     ESC T xxxx
+        Expects: ...  see code 
+
+Get Thumbnail 2:
+        Writes: 7 byte 1B 54 46 <4*nr>                  ESC TF xxxx
+        Expects: ...  see code 
+
+Get Image 1:
+        Writes: 6 byte 1B 47 <4*nr>                     ESC G xxxx
+        Expects: ...  see code 
+
+Get Image 2:
+        Writes: 7 byte 1B 47 46 <4*nr>                  ESC GF xxxx
+        Expects: ...  see code 
+
+Upload:
+        Writes: 2 byte 1B 55                            ESC U
+        Expects: ... see code
+

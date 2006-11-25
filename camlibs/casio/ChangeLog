@@ -1,0 +1,86 @@
+2005-07-22  Lutz Mueller <lutz@users.sourceforge.net>
+
+	Patch by Michael Haardt <michael@moria.de>:
+
+	* casio-qv.c: Fix capture function and name of captured picture. List all
+	authors in about. Fix camera abilities.
+
+2005-01-21  Marcus Meissner <marcus@jet.franken.de>
+
+	* casio-qv.c: marked up strings for translation.
+
+2005-01-10  Michael Haardt <michael@moria.de>
+
+	* casio-qv.c:
+	  corrected preview type to PPM
+		do not explictly append filename of captured image to filesystem
+		reset line speed and power down interface on exit
+	* casio-qv-commands.c:
+	  capture works now
+		ping camera after changing line speed
+
+2004-12-22  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* ycctoppm.c (QVycctoppm): C syntax cleanup
+
+2004-05-03  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* casio-qv.c
+	* casio-qv-commands.[c,h]: New patch by Michael Haardt
+	  <michael@moria.de>. Default speed now 115200.
+
+2004-05-02  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* casio-qv.c (and others): Patch that enables deletion of pictures.
+	  Provided by Michael Haardt.
+
+2004-05-02  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* ycctoppm.[c,h]: New files on request of Michael Haardt.
+	* Makefile.am
+
+2004-04-06  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* cam2jpgtab.h: New.
+	* casio-qv.c: According to Michael Haardt <michael@moria.de>, the
+	  driver now downloads images.
+
+2004-04-06  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* camtojpeg.[c,h]
+	* jpegtab_f.h: New file submitted by Michael Haardt
+	  <michael@moria.de>.
+
+2004-03-23  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* casio-qv.c (camera_init): Patch by Michael Haardt
+	  <michael@moria.de>.
+
+2003-12-03  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* casio-qv.c (camera_init): hardcode speed to 9600 bauds
+
+2003-09-05  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* PROTOCOL.txt: added protocol description
+
+2003-01-08  Lutz Müller <lutz@users.sourceforge.net>
+
+	* casio-qv.c (camera_init): Cosmetic change.
+
+2002-10-03  Lutz Müller <lutz@users.sourceforge.net>
+
+	* Makefile.am: -I$(top_builddir)/libgphoto2
+
+2002-09-19  Lutz Müller <lutz@users.sourceforge.net>
+
+	* casio-qv.c (camera_init): Fix initialization.
+	* casio-qv-commands.[c,h] (QVgetthumb): New.
+
+2002-09-17  Lutz Müller <lutz@users.sourceforge.net>
+
+	* casio-qv-commands.[c,h] (QVsetspeed): New.
+
+2002-09-16  Lutz Müller <lutz@users.sourceforge.net>
+
+	* casio-qv-commands.c (QVping): Fix.

@@ -1,0 +1,192 @@
+Every blob looks like:
+	02 AA BB .... CC CC CC CC 03
+
+	02 - STX
+	AA - cmd byte
+	BB - 0x80 | argumentlength
+	... - argumentlength bytes
+	CC CC CC CC   16 bit CRC split into 4 bit pieces, | 0x80
+	03 - ETX
+
+	Sent by driver:			Sent by camera:
+	-----------------------------------------------
+	cmd blob
+					0x06 (ACK)
+					reply blob
+	0x06 (ACK)
+
+Command codes:
+
+SET_TIME			= 0x86,
+	Argument: 1 uint32
+
+SET_TIME_AS_STR			= 0x87,
+	Argument: 15 byte string
+
+SET_TIME_MODE			= 0x88,
+	Argument: 1 uint8
+
+SET_TIME_PERIOD			= 0x89,
+	Argument: 1 uint8
+
+SET_XFER_PROTOCOL		= 0x8a,
+	Argument: 1 uint8
+
+SET_AUTO_SHUTDOWN_TIME		= 0x8b,
+	Argument: 1 uint16
+
+SET_PHOTO_NO_DISPLAY_MODE	= 0x8c,
+	Argument: 1 uint8
+
+DO_CALIBRATION			= 0x8d,
+	
+	GET_CALIBRATION_PARAM		= 0x8e,
+SET_SHOOT_AUTO			= 0x90,
+	Arguments: 1 uint8
+
+SET_FLASH			= 0x91,
+	Arguments: 1 uint8
+
+SET_EXPOSURE			= 0x92,
+	Arguments: 1 uint16
+
+SET_FOCUS			= 0x93,
+	Arguments: 1 uint8
+
+SET_SHUTTER			= 0x94,
+	Arguments: 1 uint8
+
+SET_RESOLUTION			= 0x95,
+	Arguments: 1 uint8
+
+SET_COMPRESSION			= 0x96,
+	Arguments: 1 uint8
+
+SET_TIMER			= 0x97,
+	Arguments: 1 uint8
+
+SET_EXT_FLASH			= 0x98,
+	Arguments: 1 uint8
+
+SET_PIC_FORMAT			= 0x99,
+	Arguments: 1 uint8
+
+	RECORD_FUNC			= 0xa2,
+	SET_SHOOTING_DEBUG_MODE		= 0xa3,
+
+GET_INTERNAL_SHOOT_AUTO_FUNC	= 0xa4,
+	No Arguments.
+	Reads data?
+
+
+SET_INTERNAL_SHOOT_PARAM	= 0xa6,
+	66 byte arguments	(InternalShootparam table)
+
+	Data in argument:	Offset in passed struct:
+	(uint8	(or 2 uint4)	- offset 0,1
+	 uint16, uint16, uint16, uint16, uint32, uint32, uint32, uint32, uint32, uint32)
+
+	reads data
+	
+SET_SHOOT_PARAM			= 0xa7,
+	SET_REVIEW_MODE			= 0xa8,
+	SET_DISPLAY_PICTURE_NO		= 0xa9,
+	SET_SHOOT_MODE_BY_INDEX		= 0xaa,
+	GET_SHOOT_MODE_TABLE		= 0xab,
+	SET_ACTIVE_SHOOTING_MODE	= 0xac,
+
+TAKE_PHOTO 			= 0xb0,
+	Either no arguments (stores photo on camera)?
+	
+
+	DELETE_PHOTO			= 0xb1,
+
+PROTECT_PHOTO			= 0xb2,
+	n* 16bit arguments	- pictures to protect.
+
+
+DOWNLOAD_THUMBNAIL		= 0xb3,
+	16 bit arg (picnr)
+
+	reads data
+
+DOWNLOAD_PHOTO			= 0xb4,
+	16 bit arg (picnr)
+
+	reads data
+
+
+TAKE_PREVIEW			= 0xb5,
+	Either no arguments, or a single 16 bit 1.
+
+	No arguments -> returns data.
+
+	Returns image date (jpeg) in the large reply blob.
+	Occasionaly causes next command to result in NAK.
+
+
+	SELF_TEST			= 0xb6,
+	DISPLAY_PATTERN			= 0xb7,
+
+UPLOAD_PHOTO			= 0xb8,
+	argument: string/filename (with \0 ?)
+	writes data to the camera
+
+
+	UPLOAD_FIRMWARE			= 0xba,
+	UPDATE_FIRMWARE			= 0xbb,
+
+DOWNLOAD_FILE_BY_NAME		= 0xbd,
+	argument: string/filename (with \0?)
+	reads data
+
+	__UPDATE_FIRMWARE		= 0xbc,
+	DOWNLOAD_PHOTO_FROM_ALBUM	= 0xbe,
+	GET_CAMERA_CAPS			= 0xc0,
+
+GET_CAMERA_CURINFO		= 0xc1,
+	No arguments.
+	
+	Returns lots of data.
+
+	00: 15 byte of date string	-> 0
+	0f: u7				-> 0f
+	10: u7				-> 10
+	/* 11 is unused I think */
+	12: u16				-> 14
+	16: u7				-> 11
+	17: u16				-> 18
+	1b: u16				-> 1c
+	1f: u7				-> 13	(percentage full?)
+	20: u32				-> 24
+	28: u32				-> 28
+	30: u32				-> 2c
+	38: u7				-> 12
+	39: u32		UNIX time.
+	41: u32		Number of free images on CF.
+	49: u32		Number of images on CF.
+	51: u32
+	59: u32		Free memory in Byte on CF.
+
+
+
+	GET_PHOTO_INFO			= 0xc5,
+
+GET_ALBUM_INFO			= 0xc6,
+	Sends 1 argument (16bit), fixed 0x384
+	
+	Returns album info blob.
+		0x20 byte string albumname
+		32bit int number of pictures.
+
+GET_CAMERA_READY		= 0xce,
+	Argument: 1 uint32
+	
+GET_INTERNAL_SHOOT_PARAM	= 0xcf,
+	No arguments.
+
+	Reads reply blob.
+
+	CREATE_ALBUM			= 0xd0,
+	RENAME_ALBUM			= 0xd2,
+	SET_ACTIVE_ALBUM		= 0xd4,

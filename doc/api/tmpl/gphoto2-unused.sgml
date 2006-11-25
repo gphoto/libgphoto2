@@ -1,0 +1,465 @@
+<!-- ##### SECTION ./tmpl/gphoto2-abilities.sgml:Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/gphoto2-abilities.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/gphoto2-abilities.sgml:Short_Description ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/gphoto2-abilities.sgml:Title ##### -->
+CameraAbilities
+
+
+<!-- ##### SECTION ./tmpl/gphoto2-abilitiies.sgml:Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/gphoto2-abilitiies.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/gphoto2-abilitiies.sgml:Short_Description ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/gphoto2-abilitiies.sgml:Title ##### -->
+CameraAbilities
+
+
+<!-- ##### SECTION ./tmpl/gphoto2-context.sgml:Long_Description ##### -->
+<para>
+  This section describes how to monitor and control operations.
+</para>
+
+<para>
+  Operations that involve communication with digital cameras can 
+  take some time. For example, downloading an image over a slow serial
+  line can take several minutes. In order to be able to keep the frontend
+  responsive, to give the user the possibility to cancel operations, and in
+  order to be able to
+  report detailed error messages, #GPContext has been introduced.
+</para>
+
+
+<!-- ##### SECTION ./tmpl/gphoto2-context.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/gphoto2-context.sgml:Short_Description ##### -->
+The structure giving you control over operations
+
+
+<!-- ##### SECTION ./tmpl/gphoto2-context.sgml:Title ##### -->
+GPContext
+
+
+<!-- ##### USER_FUNCTION CameraFileGetConfigFunc ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@file: 
+@widget: 
+@Returns: 
+
+<!-- ##### USER_FUNCTION CameraFileSetConfigFunc ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@file: 
+@widget: 
+@Returns: 
+
+<!-- ##### USER_FUNCTION CameraFilesystemInfoFunc ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@filename: 
+@info: 
+@data: 
+@Returns: 
+
+<!-- ##### USER_FUNCTION CameraFolderGetConfigFunc ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@widget: 
+@Returns: 
+
+<!-- ##### USER_FUNCTION CameraFolderSetConfigFunc ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@widget: 
+@Returns: 
+
+<!-- ##### USER_FUNCTION CameraMessageFunc ##### -->
+<para>
+
+</para>
+
+@Param1: 
+@msg: 
+@data: 
+
+<!-- ##### USER_FUNCTION CameraProgressFunc ##### -->
+<para>
+
+</para>
+
+@Param1: 
+@percentage: 
+@data: 
+
+<!-- ##### USER_FUNCTION CameraResultFunc ##### -->
+<para>
+
+</para>
+
+@camera: 
+@result: 
+@Returns: 
+
+<!-- ##### USER_FUNCTION CameraStatusFunc ##### -->
+<para>
+
+</para>
+
+@Param1: 
+@status: 
+@data: 
+
+<!-- ##### STRUCT GPContext ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO GP_ERROR_IO ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gp_camera_file_get_config ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@file: 
+@window: 
+@Returns: 
+
+<!-- ##### FUNCTION gp_camera_file_set_config ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@file: 
+@window: 
+@Returns: 
+
+<!-- ##### FUNCTION gp_camera_folder_get_config ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@window: 
+@Returns: 
+
+<!-- ##### FUNCTION gp_camera_folder_set_config ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@window: 
+@Returns: 
+
+<!-- ##### FUNCTION gp_camera_get_error ##### -->
+<para>
+
+</para>
+
+@camera: 
+@Returns: 
+
+<!-- ##### FUNCTION gp_camera_message ##### -->
+<para>
+
+</para>
+
+@camera: 
+@format: 
+@Varargs: 
+@Returns: 
+
+<!-- ##### FUNCTION gp_camera_progress ##### -->
+<para>
+
+</para>
+
+@camera: 
+@percentage: 
+@Returns: 
+
+<!-- ##### FUNCTION gp_camera_set_error ##### -->
+<para>
+
+</para>
+
+@camera: 
+@format: 
+@Varargs: 
+@Returns: 
+
+<!-- ##### FUNCTION gp_camera_set_message_func ##### -->
+<para>
+
+</para>
+
+@camera: 
+@func: 
+@data: 
+@Returns: 
+
+<!-- ##### FUNCTION gp_camera_set_progress_func ##### -->
+<para>
+
+</para>
+
+@camera: 
+@func: 
+@data: 
+@Returns: 
+
+<!-- ##### FUNCTION gp_camera_set_status_func ##### -->
+<para>
+
+</para>
+
+@camera: 
+@func: 
+@data: 
+@Returns: 
+
+<!-- ##### FUNCTION gp_camera_status ##### -->
+<para>
+
+</para>
+
+@camera: 
+@format: 
+@Varargs: 
+@Returns: 
+
+<!-- ##### FUNCTION gp_context_cancel ##### -->
+<para>
+
+</para>
+
+@context: 
+@Returns: 
+
+<!-- ##### FUNCTION gp_context_error ##### -->
+<para>
+
+</para>
+
+@context: 
+@format: 
+@Varargs: 
+
+<!-- ##### FUNCTION gp_context_idle ##### -->
+<para>
+
+</para>
+
+@context: 
+
+<!-- ##### FUNCTION gp_context_message ##### -->
+<para>
+
+</para>
+
+@context: 
+@format: 
+@Varargs: 
+
+<!-- ##### FUNCTION gp_context_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION gp_context_progress_start ##### -->
+<para>
+
+</para>
+
+@context: 
+@target: 
+@format: 
+@Varargs: 
+@Returns: 
+
+<!-- ##### FUNCTION gp_context_progress_stop ##### -->
+<para>
+
+</para>
+
+@context: 
+@id: 
+
+<!-- ##### FUNCTION gp_context_progress_update ##### -->
+<para>
+
+</para>
+
+@context: 
+@id: 
+@current: 
+
+<!-- ##### FUNCTION gp_context_question ##### -->
+<para>
+
+</para>
+
+@context: 
+@format: 
+@Varargs: 
+@Returns: 
+
+<!-- ##### FUNCTION gp_context_ref ##### -->
+<para>
+
+</para>
+
+@context: 
+
+<!-- ##### FUNCTION gp_context_set_cancel_func ##### -->
+<para>
+
+</para>
+
+@context: 
+@func: 
+@data: 
+
+<!-- ##### FUNCTION gp_context_set_error_func ##### -->
+<para>
+
+</para>
+
+@context: 
+@func: 
+@data: 
+
+<!-- ##### FUNCTION gp_context_set_idle_func ##### -->
+<para>
+
+</para>
+
+@context: 
+@func: 
+@data: 
+
+<!-- ##### FUNCTION gp_context_set_message_func ##### -->
+<para>
+
+</para>
+
+@context: 
+@func: 
+@data: 
+
+<!-- ##### FUNCTION gp_context_set_progress_funcs ##### -->
+<para>
+
+</para>
+
+@context: 
+@start_func: 
+@update_func: 
+@stop_func: 
+@data: 
+
+<!-- ##### FUNCTION gp_context_set_question_func ##### -->
+<para>
+
+</para>
+
+@context: 
+@func: 
+@data: 
+
+<!-- ##### FUNCTION gp_context_set_status_func ##### -->
+<para>
+
+</para>
+
+@context: 
+@func: 
+@data: 
+
+<!-- ##### FUNCTION gp_context_status ##### -->
+<para>
+
+</para>
+
+@context: 
+@format: 
+@Varargs: 
+
+<!-- ##### FUNCTION gp_context_unref ##### -->
+<para>
+
+</para>
+
+@context: 
+
+<!-- ##### FUNCTION gp_file_get_last_chunk ##### -->
+<para>
+
+</para>
+
+@Param1: 
+@data: 
+@Returns: 
+

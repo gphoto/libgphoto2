@@ -1,0 +1,124 @@
+2004-03-25  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* qm150.c (k_getdata): 
+	(camera_summary): fix C99 stuff for Solaris C compiler
+	See bug #923219.
+
+2003-12-17  Lutz Mueller <lutz@users.sourceforge.net>
+
+	Patch by Andreas Burmester <a.burmester@hamburg.de>:
+
+	* lowlevel.c (l_receive): Don't write beyond allocated memory.
+
+2003-12-17  Lutz Mueller <lutz@users.sourceforge.net>
+
+	Patch by Andreas Burmester <a.burmester@hamburg.de>:
+
+	* konica.c (k_check): unsigned.
+
+2003-12-11  Lutz Mueller <lutz@users.sourceforge.net>
+
+	Patches by Andreas Burmester <a.burmester@hamburg.de>:
+
+	* library.c (camera_[get,set]_config: Months are counted from 1 to 
+	  12 on the C200.
+
+2003-05-25  Marcus Meissner <marcus@jet.franken.de>
+	    Aurélien Croc (AP²C) <programming@ap2c.com>
+
+	* qm150.c: Reverse engineered Konica Q-M150 camera serial
+	  protocol and implemented a basic driver. Still work in progress,
+	  but picture download/deletion already possible.
+
+2003-02-27  Marcus Meissner <marcus@jet.franken.de>
+	
+	* library.c: We support EXIF download.
+
+2002-11-20  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* Makefile.am: also tell driver that i18n stuff is in $(PACKAGE)/$(VERSION)
+
+2002-11-18  Lutz Müller <lutz@users.sourceforge.net>
+
+	* localization/Makefile.am: Install files in a $(PACKAGE)/$(VERSION)
+	  subdir.
+
+2002-11-17  Marcus Meissner <marcus@jet.franken.de>
+	
+	* library.c: Got rid of some broken long*/int*/time_t* casts.
+	  (would break 64bit on big endian).
+
+2002-11-05  Lutz MÜller <lutz@users.sourceforge.net>
+
+	* Makefile.am
+	* localization/Makefile.am: Install files in a $(PACKAGE) subdir.
+
+2002-07-11  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c: Add a couple of 'gp_context_idle's.
+
+2002-07-05  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c: We can't change the name of files.
+
+2002-07-04  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c: (camera_capture): Fix bug.
+
+2002-05-06  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c: ping the camera every minute to prevent shutdown.
+
+2002-03-08  Marcus Meissner <marcus@jet.franken.de>
+	
+	* lowlevel.c: When reading we do not need to escape that much,
+	  the original HP PhotoSmart does not escape all characters.
+
+2002-03-04  Lutz Müller <lutz@users.sourceforge.net>
+
+	With the help of Thomas Ronayne <trona@ameritech.net>:
+
+	* lowlevel.c: DEFAULT_TIMEOUT now 1000 - C200 needs it.
+
+2002-03-04  Lutz Müller <lutz@users.sourceforge.net>
+
+	With the help of Thomas Ronayne <trona@ameritech.net>:
+
+	* konica.c (konica_get_image_info): The C200 needs up to 2 seconds
+	  to respond.
+	* library.c: The image ids for a C200 are 2 bytes long, not 4.
+
+2002-01-29  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.h: Removed.
+	* konica.[c,h]: Prepare support for progress information.
+
+2002-01-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* library.c: More progress reporting. Remove references to 
+	  gp_camera_set_error.
+
+2002-01-11  Dan Fandrich <dan@coneharvesters.com>
+
+	* library.c: fgetc() returns type int, not char.
+
+2002-01-07  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* README: Removed duplicate camera models.
+
+2002-01-06  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* konica.c: #define PACKET_SIZE instead of using a static variable.
+
+2001-12-11  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* lowlevel.c: Clean up.
+
+2001-12-11  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* lowlevel.c: Fix bug introduced with last patch.
+
+2001-12-09  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* lowlevel.c: Do not read one byte after another - that makes
+	  debugging output easier to read.

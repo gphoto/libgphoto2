@@ -1,0 +1,21 @@
+2002-04-05  Marcus Meissner <marcus@jet.franken.de>
+	
+	* samsung.c: Should include name into file info.
+	  Actually update the file data the same way we update the
+	  progress data (helping kio_camera along).
+
+2002-04-04  Marcus Meissner <marcus@jet.franken.de>
+	
+	* samsung.c: Implemented get_info_func, so kio_camera
+	  download images only once. Some logical changes to other
+	  functions which might make them faster on large imagesets.
+
+2002-01-14  Marcus Meissner <marcus@jet.franken.de>
+	
+	* samsung.c: Added progress and abort handling to image download.
+
+2002-01-14  Marcus Meissner <marcus@jet.franken.de>
+	
+	[ I bought a Practika QD800, which is the same model. ]
+	* samsung.c: Fixed the porting bugs, the driver now downloads
+	  images correctly.

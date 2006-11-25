@@ -1,0 +1,216 @@
+<!-- ##### SECTION Title ##### -->
+GPContext
+
+<!-- ##### SECTION Short_Description ##### -->
+The structure giving you control over operations
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+  This section describes how to monitor and control operations.
+</para>
+
+<para>
+  Operations that involve communication with digital cameras can 
+  take some time. For example, downloading an image over a slow serial
+  line can take several minutes. In order to be able to keep the frontend
+  responsive, to give the user the possibility to cancel operations, and in
+  order to be able to
+  report detailed error messages, #GPContext has been introduced.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT GPContext ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gp_context_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_context_ref ##### -->
+<para>
+
+</para>
+
+@context: 
+
+
+<!-- ##### FUNCTION gp_context_unref ##### -->
+<para>
+
+</para>
+
+@context: 
+
+
+<!-- ##### FUNCTION gp_context_set_progress_funcs ##### -->
+<para>
+
+</para>
+
+@context: 
+@start_func: 
+@update_func: 
+@stop_func: 
+@data: 
+
+
+<!-- ##### FUNCTION gp_context_set_cancel_func ##### -->
+<para>
+
+</para>
+
+@context: 
+@func: 
+@data: 
+
+
+<!-- ##### FUNCTION gp_context_set_question_func ##### -->
+<para>
+
+</para>
+
+@context: 
+@func: 
+@data: 
+
+
+<!-- ##### FUNCTION gp_context_set_message_func ##### -->
+<para>
+
+</para>
+
+@context: 
+@func: 
+@data: 
+
+
+<!-- ##### FUNCTION gp_context_set_idle_func ##### -->
+<para>
+
+</para>
+
+@context: 
+@func: 
+@data: 
+
+
+<!-- ##### FUNCTION gp_context_set_error_func ##### -->
+<para>
+
+</para>
+
+@context: 
+@func: 
+@data: 
+
+
+<!-- ##### FUNCTION gp_context_set_status_func ##### -->
+<para>
+
+</para>
+
+@context: 
+@func: 
+@data: 
+
+
+<!-- ##### FUNCTION gp_context_progress_start ##### -->
+<para>
+
+</para>
+
+@context: 
+@target: 
+@format: 
+@Varargs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_context_progress_update ##### -->
+<para>
+
+</para>
+
+@context: 
+@id: 
+@current: 
+
+
+<!-- ##### FUNCTION gp_context_progress_stop ##### -->
+<para>
+
+</para>
+
+@context: 
+@id: 
+
+
+<!-- ##### FUNCTION gp_context_message ##### -->
+<para>
+
+</para>
+
+@context: 
+@format: 
+@Varargs: 
+
+
+<!-- ##### FUNCTION gp_context_status ##### -->
+<para>
+
+</para>
+
+@context: 
+@format: 
+@Varargs: 
+
+
+<!-- ##### FUNCTION gp_context_question ##### -->
+<para>
+
+</para>
+
+@context: 
+@format: 
+@Varargs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_context_error ##### -->
+<para>
+
+</para>
+
+@context: 
+@format: 
+@Varargs: 
+
+
+<!-- ##### FUNCTION gp_context_idle ##### -->
+<para>
+
+</para>
+
+@context: 
+
+
+<!-- ##### FUNCTION gp_context_cancel ##### -->
+<para>
+
+</para>
+
+@context: 
+@Returns: 
+
+

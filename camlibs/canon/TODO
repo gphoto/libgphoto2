@@ -1,0 +1,84 @@
+========================================================================
+List of work that still has to be done on this driver:
+========================================================================
+
+ - switch the camera on again when application exits
+
+ - make file upload work with different file types and names
+
+ - handle thumbnails and sound annotations in a more generic way to
+   reuse the code
+
+ - extend file attributes from 1 octet to 2 octets
+
+ - introduce and use capabilities everywhere (how?)
+
+ - the canon_int* functions often shouldn't use gphoto2 structures
+   the canon_usb* and canon_serial* should even less
+
+ - handle rotated images correctly (how?)
+
+ - A5 support is completely broken, with the new filename based API, the 
+   directory caching mecanism must be completely revisited. On the
+   other hand, when removing the internal caching layer, we perhaps
+   facilitated the solution to this problem.
+
+
+========================================================================
+List of work that has already been done:
+========================================================================
+
+ - make misc. models work on A/C adapter (e.g. G1, Pro 90 IS) [done -swestin]
+
+ - make image capturing work [done -swestin]
+
+ - make sure thumbnail download work on serial cameras 
+   [done according to Philippe -hun]
+
+ - getting other info on file (resolution and stuff)
+   using the new libexif [done -fredrik]
+
+ - rework configuration dialog (also wrt i18n) [done -hun]
+
+ - switch the camera keys and buttons off while connected [done -fredrik]
+
+ - made file upload work [done -hun (Patch from Matthias Kramm)]
+
+ - make sure serial cameras work with new CameraFS based code
+                      [basically works, according to Philippe -hun]
+
+ - deleting files [done -hun]
+
+ - setting attributes in general [done -hun]
+
+ - set "downloaded" attribute after successful download [done -hun}
+
+ - make CameraFilesystem distinguish between files and folders [done -hun]
+
+ - FOLDERS : folders are not supported on the A50 (users have no control on
+   the directory where images are stored on the compact flash) so for the
+   moment the internal directory structure is hidden to gphoto2. [done -hun]
+
+ - make downloading raw images work [done -hun]
+
+
+========================================================================
+Old stuff that is already done was moved down a bit by hun:
+========================================================================
+
+08/08/2000 - Notes by Philippe Marzouk <philm@users.sourceforge.net>
+ - The driver must be changed to be able to talk to various cameras
+   via the Camera *camera struct with each function call (08/15/2000 - done).
+ - USB support is broken as libgpio got changed a bit. I can't test it as
+   I don't have USB :-( (08/20/2000 - done).
+ - Uploading : I'm working on it but there are problems. I will soon 
+   include the preliminary support I got for people with S10 and S20 to test
+   as it seems easier to get them working (s10sh does it).
+   (08/22/2000 - done for serial but slow)
+ - The configuration dialog has to be made with the new toolkit independent
+   functions provided by gphoto2. It should use gp_config_get and
+   gp_config_set to retrieve and store its configuration information.
+   I think it should include : date, owner, battery status, firmware 
+   revision and Compact flash space used/available.
+   I don't know if anything else is needed (08/15/2000 - mostly done).
+ - Starting a Changelog file (done).

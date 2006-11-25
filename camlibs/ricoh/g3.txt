@@ -1,0 +1,68 @@
+-SPWD
+-PRET			- partial retrieve I think, %s %d.
+-CCTL			- control?
+-SINF
+-FMT			- format card?
+-ATTR
+-PWOF			- power off?
+-SDIS <filename>	- set distinction ? what is a distinction? 
+-GDIS			- get distinction ?
+-ABOR			- abort for data transfer?
+QUIT
+-FUPL			- upload?
+-FDWL
+-GFCI
+-GFGI
+-SGID
+
+
+Internal ftp style commands:
+"-VER"			- 200 9.2 01.06
+"-FDAT folder/file"	- 200 date=2003:10:08 16:57:06 for -FDAT.
+			- 200 date=%s for -FDAT.
+
+"-INFO folder/file" 	- 200 %d byte W=%d H=%d K=%d for -INFO
+
+"-GSID"			- 200 SD ID=%02x%02x%02x%02x%02x%02x%02x%02x for -GSID.
+"-GCID"			- 451 -GCID command failure
+			- 200 CameraID=%s for -GCID.
+"-TIME"			- 200 %02d%02d/%02d/%02d %02d:%02d:%02d for -TIME.
+			- 200 2003/10/11 19:47:23 for -TIME.
+
+"-NLST"			- 150 data connection for -NLST.
+			  ... data blocks ...
+			  250 -NLST command success.
+"-GTPN"			- 200 TotalPhotoNo=%d for -GTPN.
+"-RTST"			- 200 RTC status=%d for -RTST.
+"-DCAP /EXT0"		- 200 /EXT0 capacity 63520768 byte,free 39043072 byte.
+
+"-SRET filename"	- 150 %d byte Seek=%d W=%d H=%d S=%d for -SRET.
+			  ... bytes+seek image data ...
+			  250 -SRET command success.
+
+			 => Downloads exif data, at seek position is the thumbnail.
+
+"-STOR size filename"	- 150 ... 
+			  ... data transfer ... 
+			  200 done
+
+Generic ftp style commands:
+
+"CWD folder"		- 501 CWD command failure
+			- 250 CWD command success.
+
+"RETR file"		- 150 data connection for RETR.(%d)
+			  ... data , %d bytes ...
+			  250 RETR command success.
+
+"DELE file"		- 250 DELE command success.
+			- 500 DELE command failure
+
+"RMD dir"		- 250 RMD command success.
+			- 500 RMD command failure
+
+"MKD dir"		- 257 "%s" directory created.
+			- 500 MKD command failure
+
+"RNFR name"
+"RNTO name"

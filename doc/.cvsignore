@@ -1,0 +1,8 @@
+*~ .*~
+Makefile.in
+Makefile
+*.ced
+*.pdf
+manual
+txt
+figures-stamp

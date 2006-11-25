@@ -1,0 +1,967 @@
+2006-11-13  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Readded to Optura 20 (alternate id),
+	  confirmed by reporter.
+
+2006-06-24  David Selmeczi <seldavid@gmail.com>
+
+	* library.c,canon.c: Added more 350D parameters.
+
+2006-06-20  Marcus Meissner  <marcus@jet.franken.de>
+	    Karl Tomlinson  <ktomlinson@users.sf.net>
+
+	* library.c: Keep list_all_files setting permanent.
+
+	* library.c: Also delete thumbnails (but only if
+	  list_all_files is not set.)
+
+2006-06-14  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Mark up strings for translation.
+	  Compare against translated string.
+	
+	  Mark up configuration widgets with symbolic names to
+	  avoid spaces or translated strings in commandline modes.
+
+2006-06-12  Paul Walmsley  <paul@booyaka.com>
+
+	* canon.h: Fix build failure when CANON_EXPERIMENTAL_20D is not
+	defined, by wrapping the release_params array in an '#ifdef
+	CANON_EXPERIMENTAL_20D'
+
+2006-06-11  Paul Walmsley  <paul@booyaka.com>
+
+	* usb.c: Fix the debug messages in canon_usb_dialogue_full() to
+	report the correct function name.
+
+2006-06-11  Paul Walmsley  <paul@booyaka.com>
+
+	* canon.[ch], usb.[ch], serial.[ch], library.c: Fix existing
+	compile-time warnings.  Most of the fixes fell into one of these
+	categories: (A) Converting length fields from signed int/long to
+	unsigned, unless the meaning of the field is overloaded to pass
+	back a gphoto2 error code (which are negative);
+	(B) Converting fields of binary data used in camera interaction
+	from signed char to unsigned char; (C) Casting unsigned char
+	buffers passed to the gphoto2 port code, etc. to signed char;
+	(D) Reviewing comparisons between signed and unsigned numbers, and
+	ensuring that the comparisons are safely restricted to unsigned
+	numbers when necessary.
+
+	* Makefile.am: add '-Wall -Wextra -Wno-unused-parameter
+	-Wno-missing-field-initializers' to CPPFLAGS.
+
+2006-06-09  Paul Walmsley  <paul@booyaka.com>
+
+	* usb.c: Modify identify camera code to retry quickly, and to
+        double the retry delay with each failure.  This seems to work
+        well for at least the Canon EOS 5D, where the first identify
+        often is ignored by the camera, but the second identify camera
+        generates a response, no matter how quickly it is sent after the
+        first.
+
+2006-06-07  Hubert Figuiere  <hub@figuiere.net>
+
+	* doc/5d-capture: new documentation on capture for changes below.
+
+2006-06-07  Paul Walmsley <paul@booyaka.com>
+
+	* canon.c, usb.[ch], library.c: When the camera cannot capture an
+	image due to a 'photographic failure,' return a gphoto2 error code
+	resembling the actual failure code, rather than simply returning a
+	generic error.  Tested on the Canon EOS 5D.
+
+	* canon.[ch], usb.[ch]: Adds support for downloading "secondary
+	images" -- the JPEGs created when the capture resolution is set to
+	the "RAW + JPEG" modes -- for the Canon EOS 5D camera.
+	
+	* canon.[ch], library.c: Adds remote control over "release
+	parameters" -- shutter speed, ISO speed, aperture, resolution,
+	autofocus mode -- for the Canon EOS 5D camera. It might work with
+	other Canon "class 6" cameras
+
+	* canon.[ch], library.c: Add support for querying the camera's
+	shutter speed, ISO speed, aperture, resolution, and focus mode via
+	gphoto2's configuration interface.  Tested on the Canon EOS 5D.
+
+	* canon.[ch]: Add canon_int_do_control_dialogue() and
+	canon_int_do_control_dialogue_payload().  These functions execute
+	a remote capture command on the camera and return the camera's
+	response. canon_int_do_control_dialogue_payload() gives the caller
+	full control over the payload.  We need these to retrieve and set
+	the camera's release parameters.
+
+	* usb.[ch]: Split canon_usb_dialogue() into two functions:
+	canon_usb_dialogue_full(), which returns the full camera response
+	packet, needed by canon_usb_long_dialogue() (and also by
+	canon_int_get_release_params(), later in this patch series).
+	
+	* canon.c: Add the USB ID for the EOS 5D in PC connection mode.
+	
+	* canon.[ch]:  
+	* library.c: gphoto2's Canon driver currently supports two capture
+	modes: canon_int_capture_preview(), which captures a thumbnail to
+	the host computer; and canon_int_capture_image(), which captures a
+	full-sized image to the camera's drive.  We'd like to control each
+	parameter -- the capture image size class and the capture
+	destination -- independently, without breaking compatibility with
+	current applications.  So, add a configuration option, "Capture
+	size class," by which the user can specify whether to operate in
+	"compatibility mode" (the default -- represents the driver's
+	previous behavior), or whether to capture thumbnails, or
+	full-sized images.  capture_preview() then always captures to the
+	host computer, and capture_image() always captures to the camera's
+	drive, no matter what the image's size.
+	Our primary interest is in remote capture of full-sized images to
+	the host computer.  We've observed that on the EOS 5D, with these
+	patches applied, it's possible to capture full-sized images to the
+	host computer or to the camera's drive.  Capturing thumbnails
+	alone is supported only in name by these patches -- further work
+	will be required to make that function.
+
+2006-06-06  Paul Walmsley <paul@booyaka.com>
+
+	* canon.[ch]: Replace the open-coded CANON_USB_CONTROL_INIT and
+	CANON_USB_CONTROL_EXIT commands with functions, and set a flag in
+	the host computer's camera state when the camera is in remote
+	release control.
+ 
+	* usb.c: canon_int_usb_poll_interrupt_pipe() can return a negative
+	  result to indicate an error.  But canon_usb_capture_dialogue()
+	  only checks whether the result was equal to 0 to test for an
+	  error.
+
+2005-11-02  Marcus Meissner  <marcus@jet.franken.de>
+
+	* canon.c: S1 IS and S2 IS in current CVS are not working,
+	  comment out for now :(
+
+2005-07-19  Stephen Westin
+	* canon.c: Corrected "IXY Digital 60" to "IXY Digital 600" now
+		that one has been sighted in the wild.
+		Moved SD500/IXUS 700/IXY 600 from class 1 to class 5,
+		since "get picture abilities" fails.
+
+2005-06-21  Stephen Westin
+	* canon.c: Added ID for PowerShot S2 IS.
+		Revised format specifications in error/log messages:
+		I think that all length-related quantities are now
+		coerced to long, as some systems (e.g. MacOS X) have
+		64-bit length types and 64-bit pointers are coming.
+
+2005-06-10  Stephen Westin
+	* canon.c: The PowerShot SD400/SD500 (aka Digital IXUS 50/60
+		aka IXY Digital 55/60) don't support capture at all,
+		according to Canon software manuals.
+		Added support for a real "is this awake?" query
+		(implemented in usb.c).
+
+2005-06-10  Stephen Westin
+	* canon.c: Moved PowerShot SD200/IXUS 30/IXY 40 from class 1 to
+		class 6 for experimentation. This camera now needs
+		CFLAGS=-DCANON_EXPERIMENTAL_20D to be included in the list.
+		I kinda suspect that the SD400/IXUS 50/IXY 55 will need
+		to go along with them. The A510 has been demonstrated working
+		with the older protocol.
+
+2005-05-05  Stephen Westin
+	* canon.c: We now set and fetch the owner name correctly in new
+		protocol.
+		Error messages are improved.
+		  o more text in place of numeric error codes
+		  o "amount of data" -> "length"
+		I think I now have gotten rid of "gp_context_message"
+		(which stops for interactive input) when we are surprised
+		at the length returned by a command.
+
+2005-05-02  Stephen Westin
+	* canon.c: Initial capability to get JPEG thumbnails from CR2 raw
+		files (but not yet EXIF data).
+
+2005-04-28  Stephen Westin
+	Added several camcorders: Elura 50, Optura 10/MVX100i,
+	   Optura Xi/MVX 3i/FV M1, Optura Xi/MVX 3i/FV M1, Optura 40/MVX25i
+	   based on Web reports and some intelligent (I hope) guesses.
+	Fixed Optura 20/MVX150i ID: 307f is for PTP, but 3080 is for us.
+	   Based on reports from psapsa at users.sourceforge.net.
+	We now attempt to exit from remote control mode on any capture error.
+	Fixed one long vs. int warning.
+	Added message for failure of file delete.
+	Learned more about vendor ID's of several cameras.
+	Moved PowerShot SD200/IXUS 30/Digital IXY 40 from class 4 to class 1
+	  for testing.
+
+2005-04-14  Stephen Westin
+	Included new class 6 cameras in all the EOS conditionals (I think).
+	Flag MVX100i as having no capture capability, which seems to be the case.
+	  (I suspect other camcorders are in the same boat, but can't test the
+	   hypothesis).
+
+2005-04-08  Stephen Westin
+	Backed out 300D changes; we now treat it as a class 4 camera, except
+	  for interrupt messages during capture, which are like a class 6.
+	300D is now in class 6 along with 20D and 350D.
+	Modified canon_int_list_directory so it no longer returns ".." as
+	  a directory.
+	Modified canon_int_list_directory and canon_int_find_new_image
+	  to handle directory ".." better and avoid memory access violations.
+	Fixed log messages in canon_int_list_directory to give complete
+	  function name.
+	Made CR2 a different class of images, since it has no external thumbnail
+	   file.
+	use %ld and (long) casts for time_t values in *printf
+	Moved PowerShot SD200 / Digital IXUS 30 / IXY Digital 40 from class 5
+	  to class 4 (EOS-like) as an experiment.
+	Added check for null pointer in directory walk to avoid access error.
+	Corrected one C++-style comment.
+	EOS Digital Rebel XT/EOS 350D/EOS Digital Kiss N is now a Class 6 camera,
+	   and needs CFLAGS=-DCANON_EXPERIMENTAL_20D to be included in the code.
+	fix unintended consequences of getting rid of warning messages
+	The capacity and available variables are not NULL as verified above.
+	But cap and ava are only set for the USB case, so we have to check for that.
+	If you know the logic better, feel free to improve the code :)
+	Capture from EOS 20D seems to work.
+	We now print the camera firmware version in the debug log message
+	  from "identify camera".
+
+2005-03-31  Stephen Westin
+	"Delete file" now works on EOS 20D.
+	Added conditional CANON_EXPERIMENTAL_20D to enable 20D support, so
+	   naive users won't be misled that this is actually trustworthy code.
+	Camera model changes:
+	 o MVX100i/Optura 20 is now 0x3082, not 0x3081.
+	 o PowerShot A75 moved from class 5 to class 1 as a guess.
+	Allow unexpected length of packet returned from "get picture abilities".
+	Made canon_int_capture_preview() more like canon_int_capture_image().
+	A bit of housekeeping here and there.
+	Corrected vendor ID for EOS 350D/EOS Digital Rebel N/EOS Digital Kiss XT:
+	  30ee is correct for Canon mode, 30ef is for PTP only.
+	Updated and expanded list of models with USB ID's.
+	Corrected bug in canon_int_set_file_attributes: one byte too short on
+	  command (we need two NULs at the end). We now use
+	  canon_usb_set_file_attributes in usb.c.
+	Corrected canon_usb_set_file_attributes, which never could have worked.
+	Fixed one type warning long vs. int
+	Fixed sizes reported by get_disk_info for EOS 20D.
+	Added PowerShot A510.
+
+2005-03-14  Stephen Westin
+	Fixes toward EOS 20D support:
+	 o "flash device ID", "get disk info", and "delete file"
+	   have different command codes.
+	 o "get disk info" seems to return values in K rather than bytes.
+	Moved PowerShot A60 & A70 from class 5 to class 1.
+	Casts on various parameters to avoid warnings both on Linux and
+	  on Mac OS X, which seem to have different sizes for size_t.
+	Changed to use all 32 bytes, if present, from both camera
+	  model and owner name from "identify camera" command.
+	Some realignment.
+
+2005-03-09  Stephen Westin
+	Corrected an infinite loop when checking for filename
+	  of a newly captured image, only if that was the only image
+	  on the camera.
+	Corrected protocol classes for IXUS v (I think it's the same camera
+	   as PowerShot S110, but with different USB ID) and PowerShot S45
+	   (we had reports that it was working with the EOS (class 4) code,
+	   but somehow it was in class 5).
+	Corrected one comment.
+	Move PowerShot A300 from class 4 to class 1.
+	Moved PowerShot A80 from class 4 to class 1.
+	Whoops, I wanted the S400/IXUS 400 in class 1, not 3.
+	Moved PowerShot S400 (Digital IXUS 400) from class 4 (EOS-like) to
+	class 3.
+	Moved PowerShot A400 back to class 5. I have my doubts, but don't
+	know any better candidate.
+	Moved PowerShot S400 from class 1 to class 4, which is where it
+	apparently worked before (May 2003).
+	Corrected a couple of gcc warnings on type of format specifiers
+	(long int vs. int).
+	unknown 4 (gleaned from Mac Info.plist file) should be 3080. It had
+	  duplicated 3081.
+	Moved PowerShot S400 (aka Digital IXUS 400) from class 4 to class 1.
+	Added info on several camera models: both ones we know and ones we
+	  would like to know.
+	Added aliases for several cameras that are sold with different names
+	  in different markets.
+	Moved IXUS v from class 0 to class 1.
+
+2005-01-16  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* canon.c: Added PowerShot SD200.
+
+2005-01-15  Stephen Westin
+
+	* canon.c: Commented out EOS 20D in table, as it doesn't work at all yet.
+	* canon.c: Added audio files to directory listings.
+
+2005-01-04  Stephen Westing
+
+	* *.c: Better status reporting on errors
+	       Minor formatting cleanup
+
+2004-12-19  Marcus Meissner  <marcus@jet.franken.de>
+
+	* canon.[ch]: Added PowerShot S70.
+
+2004-12-16  Stephen H. Westin <westin@graphics.cornell.edu>
+
+	* canon.[ch]: Added new protocol class 6 for EOS 20D (not yet implemented).
+	              Removed macro IS_EOS, which is superseded by CANON_CLASS_4.
+
+2004-12-16  Stephen H. Westin <westin@graphics.cornell.edu>
+
+	* urb-interpret: Added some interpretation of interrupt read packets.
+	 
+	* urb-interpret: Updated to interpret output from SniffUSB v1.8, making it
+	  incompatible with (some) older versions. To interpret output of older versions,
+	  use an older version of urb-interpret.
+
+2004-11-17  Marcus Meissner  <marcus@jet.franken.de>
+
+	* canon.[ch]: Added PowerShot SD20.
+
+2004-11-17  Stephen H. Westin <westin@graphics.cornell.edu>
+
+	* canon.[ch]: Significant restructuring: there are now only 5
+	  types of camera, so we should be able to add new cameras without modifying
+	  canon.h.
+
+	  Cleaned up a few type warnings in log message calls.
+
+2004-10-20  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* canon.[ch]: Added EOS 20D
+
+2004-09-11  Marcus Meissner  <marcus@jet.franken.de>
+
+	* canon.[ch]: Added PowerShot A95 as reported.
+	* canon.[ch]: Added PowerShot A85 as reported.
+
+2004-08-22  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* canon.c,usb.c,library.c: Fixed various gp_log / GP_DEBUG problems.
+
+2004-08-12  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* canon.[ch]: Added Powershot S60
+
+2004-06-05  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* canon.[ch]: Added A310 as reported in patch 966814
+	http://www.gphoto.org/patches/?id=966814
+
+2004-06-01  Marcus Meissner  <marcus@jet.franken.de>
+
+	* canon.[ch]: Added A75 as reported.
+
+2004-05-30  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* canon.[ch]: Added PowerShot S410 / IXUS 430 by
+	applying patch 963229
+	http://www.gphoto.org/patches/?id=963229
+
+2004-05-09  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* canon.[ch]: Added IXUS 500 as reported.
+
+2004-03-07  Marcus Meissner  <marcus@jet.franken.de>
+
+	* canon.c: We check for consecutive 0s, so check for !*temp_ch.
+	
+2004-02-03  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* serial.c, usb.c: Use largest file size limit
+	* canon.c, canon.h: Note improper use of file size limits
+	
+2004-01-31  Marcus Meissner <marcus@jet.franken.de>
+
+	* canon.c, canon.h: Richard Simpson <richard@huskydog.org.uk>
+	  Support for Canon MV650i.
+
+2004-01-14  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* canon.c, canon.h: Add support for Canon ZR-70MC
+	  Thanks for the report by Kevin R. Bulgrien.
+
+2004-01-02  Marcus Meissner <marcus@jet.franken.de>
+
+	* canon.c, usb.c: lock keys and audio support in PowerShot S50, from
+	  rcaputo@users.sf.net
+
+2003-11-08  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* canon.c, canon.h: Added support for Optura 20 (reported by Walt H)
+
+2003-10-27  Marcus Meissner <meissner@suse.de>
+
+	* canon.c: PowerShot S50 and A300 got lost somewhere.
+
+2003-09-20  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* canon.c, canon.h, usb.c, usb.h: Added G5 support
+	  (patches by Andreas Klemm <andreas@FreeBSD.org>)
+
+2003-10-10 Olivier Crete <tester@tester.ca>
+	* library.c: Add Canon A80
+
+2003-09-20  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* canon.c, canon.h, usb.c: Added support for 
+          EOS 300D/Digital Rebel/KISS Digital, thanks to Johan Herland 
+          and T.V.
+
+2003-05-19 Marcus Meissner <marcus@jet.franken.de>
+	
+	* canon.c, canon.h: Added 4 patches with support
+	  for the A300, S400, A60 and A70. (Might not be 100%
+	  correct in specifying subtypes and capture ability.)
+
+	  These seem to parallel support PTP and Canon mode
+	  with 1 USB id according to traces sent. Strange.
+
+2003-05-06 Marcus Meissner <marcus@jet.franken.de>
+	
+	* library.c,canon.c: 2 bug fixes for audio files from
+	  Ben Low <ben@bdlow.net>.
+
+2003-04-07 Stephen H. Westin <westin@graphics.cornell.edu>
+
+	* Update README, TODO, ChangeLog
+	* Support for Optura 200 MC/MVX2i camcorder
+
+2003-04-04 Stephen H. Westin <westin@graphics.cornell.edu>
+
+	* CANON_PS_A70 is now CANON_PS_PRO70, to avoid confusion with new
+	  PowerShot A70, a completely different camera.
+	* Added comments with product ID's for A60, A70, which are PTP-only.
+	* Added ID's for EOS 10D; will use same code as EOS D30/D60.
+	* Image key and size (for immediate download from capture) are now
+	  in the CameraPrivateLibrary structure, so they aren't passed as
+	  explicit parameters.
+	* capture_step moved to CameraPrivateLibrary structure to keep track
+	  of interrupt reads during image capture; this was formerly a local
+	  variable in canon_usb_capture_dialogue().
+	* Fixed comment since we now supply a real serial number with each
+	  command packet.
+	* New function canon_usb_set_file_time() to be used after file upload.
+	* New function canon_usb_set_file_attributes().
+	* New functions canon_usb_get_captured_thumbnail(),
+	  canon_usb_get_captured_image(), canon_int_capture_preview(),
+	  is_audio(), canon_int_filename2audioname().
+	* Transfer mode bits are now in enum canonTransferMode.
+	* New enum canonDownloadImageType.
+	* Converted #define's in usb.h to enums
+	* Moved prototypes to end of usb.h, since they now use the enums.
+	* Max read size USB_BULK_READ_SIZE is now 0x1400 to match
+	  Canon software; was 0x3000.
+	* Moved transfer mode bits to from usb.h to canon.h.
+	* Messed with file upload; now sets file time from host file time.
+	  Still doesn't work any better.
+
+2003-02-28 Stephen H. Westin <westin@graphics.cornell.edu>
+
+	* Removed "capturing" field from CameraPrivateLibrary; it was unused.
+	* EOS capture is no longer flagged as "experimental".
+	* Implemented canon_capture_preview(); it was a no-op.
+
+2003-02-27  Marcus Meissner <marcus@jet.franken.de>
+	
+	* library.c: We support EXIF download.
+
+2003-02-27 Stephen H. Westin <westin@graphics.cornell.edu>
+
+	* Changed all C++-style comments ("//") to C-style "/* ... */".
+          Gcc allows C++ form in C programs, but it's not quite ANSI.
+	* In canon_int_capture_image(), deduce path and file name of
+	  captured image and return as specified in the API
+	* Added function canon_usb_list_all_dirs() to support path and
+	  file name deduction in canon_int_capture_image().
+
+2003-02-18 Stephen H. Westin <westin@graphics.cornell.edu>
+
+	* canon_usb_capture_dialogue() now gets error context
+	* Added extra NUL to end of "delete file" command; this
+	  eliminates an error code 0200000086.
+	* canon_usb_unlock_keys() now gets error context and reports
+	  errors (non-zero status code in 0x50 of reply).
+	* Better error checking in canon_usb_lock_keys(); now we
+	  *do* know what those bytes mean (they are a 32-bit status
+	  code).
+	* Change locking code so that older "default" cameras are
+	  now explicit; the new default is like S45 and G3, on the
+	  assumption that new cameras will probably behave like this.
+	* canon_usb_capture_dialogue() now gets error context to
+	  pass to canon_usb_capture_dialogue().
+
+2003-02-14 Stephen H. Westin <westin@graphics.cornell.edu>
+
+	* Corrected comment explaining path returned from capture.
+	* Added labels for all values of canonCamModel, for gtk-doc.
+	* Added PowerShot G3 to special-case locking: use non-EOS locking,
+          but no "get photo abilities" command.
+
+2003-02-11 Stephen H. Westin <westin@graphics.cornell.edu>
+
+	* Tidy comments (esp. for gtk-doc)
+	* Return "*UNKNOWN*" for both path and file names from capture, since
+	  I don't know how to get the information after capture. Previously,
+	  random garbage was returned.
+	* Flag GP_DEBUG messages with name of originating function.
+	* Clean up better on capture error (exit control mode).
+	* Convert many constant #define's to enum's.
+	* Moved many constant #define's from library.h to canon.h.
+	* Moved macro IS_EOS() to canon.h.
+	* Supply unique serial number in each command.
+	* Alter "already awake" initialization for EOS cameras.
+	  This still doesn't work :(.
+	* Alter key locking. EOS cameras are locked just before
+	  "release shutter" command and unlocked as soon as possible
+	  afterward. PowerShot cameras are unlocked at initialization
+	  and can't be unlocked from software. The user must unplug the
+	  USB cable to unlock the keys on these cameras.
+	* Unify polling of interrupt pipe in canon_usb_poll_interrupt_pipe().
+	* Read interrupt pipe to clear it, both before "release shutter"
+	  command and after an error (interrupt messages out of sequence)
+	  in capture.
+	* Increase timeout for "release shutter" command. EOS cameras
+	  sometimes take a long time (>10sec) to complete this command.
+	  Is this because of a buffer flush?
+	* Improve handling of interrupt messages in "release shutter".
+	* Check status at 0x50 in response, where appropriate, and report
+	  a non-zero status code via GP_DEBUG (in canon_usb_dialogue).
+	* Increase MAX_INTERRUPT_TRIES from 4000 to 12000 to allow worst-case
+	  timing: a D60 writing a raw file to CF.
+
+2003-01-27 Stephen H. Westin <westin@graphics.cornell.edu>
+
+	* Major cleanup of comments to make gtk-doc work.
+	* Moved "defines for error handling" from canon.h to serial.h.
+	* Moved JPEG stream byte #defines from serial.h to canon.h.
+	* Slight update of doc string for screen width (library.c).
+	* Minor improvements to urb-interpret.
+	* Moved MAX_RETRIES from usb.c to usb.h, renamed MAX_INTERRUPT_RETRIES.
+	* Rewrite of interrupt-pipe reads based on new insight
+	  into communication structure.
+	* Now seems to work with EOS D30 as well as PowerShot cameras.
+	  Not yet working with EOS D60.
+	* Commented prototype for dump_hex in util.h, as it isn't actually
+	  defined anywhere.
+	* Created doc/canon-api.sgml, doc/canon-sections.txt
+	  with tentative structure for documentation.
+
+2003-01-13 Stephen H. Westin <westin@graphics.cornell.edu>
+
+	* Improved some debug logging; added interpretation of power status
+	* Re-inserted "get picture abilities" for non-EOS cameras
+	* Created special case for PowerShot S45, which (like EOS) doesn't
+	  implement the "get picture abilities" command, but (like PowerShot)
+	  uses the base "lock keys" command.
+
+2003-01-10  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* canon.[ch]: removed CANON_EXPERIMENTAL_CAPTURE #ifdefs
+	* usb.[ch]: removed CANON_EXPERIMENTAL_CAPTURE #ifdefs
+	* library.[ch]: removed CANON_EXPERIMENTAL_CAPTURE #ifdefs
+	* canon.[ch], serial.c: new serial detection code (with dedicated ID strings)
+
+2003-01-10 Stephen H. Westin <westin@graphics.cornell.edu>
+
+	* Corrected capture sequence, including reads from interrupt pipe.
+	  Tested on PowerShot G2 and S45; *not* working for EOS D30/D60
+	  cameras.
+	* Added function canon_int_get_picture_abilities (currently unused).
+	* New command "EOS get body ID" returns camera serial number.
+	* Added command and response lengths for "Get available shot" and "Get
+	  custom function"
+	* Corrected canon_int_get_battery() when return values are NULL
+	  pointers.
+	* Extended timeout for remote control init, as camera must extend lens.
+	* Corrected spelling in various places.
+	* urb-interpret: fixed a few bugs. Improved handling of interrupt pipe
+	  reads: we now discard those with zero length, but flag and keep others.
+2002-11-20  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* canon.[ch]: support for PowerShot G3 (A. Marinichev)
+
+2002-11-03  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* canon.[ch]: support for PowerShot S230
+
+2002-11-02  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* canon.[ch]: support for PowerShot S45
+
+2002-10-25  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* usb.c: added fix for EOS D60 unlocking by Fredrik (reported to work)
+
+2002-10-03  Lutz Müller <lutz@users.sourceforge.net>
+
+	* Makefile.am: -I$(top_builddir)/libgphoto2
+
+2002-08-28  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* library.c: s/EXPERIMENTAL_/CANON_EXPERIMENTAL_/
+	* canon.[ch], usb.[ch]: s/EXPERIMENTAL_/CANON_EXPERIMENTAL_/
+	* library.c: only report EXPERIMENTAL on USB cams
+	* Makefile.am: removed EXPERIMENTAL_ CFLAGS stuff
+	* README: Added note about new CANON_EXPERIMENTAL_ stuff
+	
+2002-07-29  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* canon.[ch]: support for PowerShot A100, A200
+	
+2002-07-29  Lutz Müller <lutz@users.sourceforge.net>
+
+	* canon.h: Make CVS compile again by adding CANON_PS_A100 to the
+	  enumeration.
+
+2002-07-24  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* canon.c: started to add duplicate cams
+	* library.c: report upload cap only if possible
+	* mkpatch: removed, last change from 2000, and not useful for quite
+		some time now
+
+2002-05-01  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* canon.c, canon.h, usb.c: added support for EOS D60
+
+2002-04-19  Fredrik <fredrik@krixor.xy.org>
+
+	* canon.c, canon.h: Added support for the IXUS 330,
+	  reported working by Oliver Herrmann.
+
+2002-04-08  Fredrik <fredrik@krixor.xy.org>
+
+	* canon.c: better comments, fixed two UTC to localtime
+	  typos in debug messages, better debug messages in
+	  canon_int_set_time().
+
+	* library.c: fixed reporting of camera time difference in
+	  camera_summary() which did not handle DST.
+
+2002-03-29  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* library.c: merged in USB upload patch by Matthias Kramm 
+	                 (using #ifdef EXPERIMENTAL_UPLOAD)
+                     mark driver as experimental when compiled 
+	                 with any of the EXPERIMENTAL_ flags
+	* canon.h: merged in USB upload patch by Matthias Kramm
+	           properly use EXPERIMENTAL_CAPTURE for int capturing;
+	* usb.c: merged in USB upload patch by Matthias Kramm
+	* Makefile.am: define EXPERIMENTAL_UPLOAD if requested
+
+2002-03-23  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* library.c,Makefile.am: made capture stuff a little easier for testing
+	* canon.h: removed last remains from obsolete caching layer
+	* library.c,canon.h,usb.c: accelerate non-capture operations by
+	  omitting sleep(2) hack when not capturing
+	* library.c: added G2 to list of supposedly capture-able cams
+	* canon.h: removed last remains from obsolete caching layer
+
+2002-03-22  Fredrik <fredrik@krixor.xy.org>
+
+	* canon.c, canon.h: Added support for the A40, reported
+	  by David Willmore.
+
+2002-03-18  Fredrik <fredrik@krixor.xy.org>
+
+	* usb.c, usb.h, library.c, canon.c, canon.h:
+	  Committed Emile Snyder's USB remote capture code. This is
+	  work in progress, but to ease distribution and avoid
+	  conflicts it is included here inside
+	  #ifdef EXPERIMENTAL_CAPTURE
+
+	* README: Updated models known to work with the 'new'
+	  driver and added a paragraph about the remote capture code
+	  included today.
+
+2002-03-08  Fredrik <fredrik@krixor.xy.org>
+
+	* canon.{c,h}, library.c:
+	  Implemented EXIF file type support, re-worked thumbnail
+	  handling and got rid of the ../../libgphoto2/exif.*
+	  dependency.
+
+	* usb.c: Don't keylock S10 - it does that by itself when
+	  set to PC mode. Reported by Philipp Kolmann.
+
+2002-01-09  Fredrik <fredrik@krixor.xy.org>
+
+	* *.{c,h}: Re-indented and removed everything
+	  #ifdef OBSOLETE to make sources clean before gPhoto2
+	  2.0 is released.
+
+2002-01-08  christophe barbé <christophe.barbe.ml@online.fr>
+
+	* usb.c: Change model detection to look at model name instead
+	  of USB vendor/product ID since this is required to make the
+	  current implementation of overriding camera model work.
+
+2002-01-21  Fredrik <fredrik@krixor.xy.org>
+
+	* usb.c: Don't key lock Pro 90 IS cameras, they do not support
+	  it. Reported by Karl Thaller.
+
+	* usb.c, Protocol:
+	  Fixed a bug in the init sequence code (write 0x50 bytes like
+	  the Windows driver - not 0x10 like we used to). This actually
+	  made another bug (in the cameras firmware) surface and we had
+	  to mimic the Windows drivers workaround which is to call
+	  'Identify camera' multiple times.
+
+	  If you want to read more about this, go read the gphoto-devel
+	  archives from around this date. Look for messages about trouble
+	  with Canon G1, Pro90IS and EOS D30 cameras.
+
+	* canon.c, canon.h, library.c, serial.c:
+	  Reverted behaviour of canon_int_get_time() to return time in
+	  cameras time instead of converted to UTC since it makes more
+	  sense to display the same time as the camera does on it's
+	  display.
+
+	  Made canon_int_get_time() always return gphoto2 status codes.
+
+2002-01-15  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* *.c: gp_camera_status -> gp_context_status
+
+2002-01-14  Fredrik <fredrik@krixor.xy.org>
+
+	* canon.c, library.c: More carefull buffer size checking in some
+	  places. We should do a real audit of these.
+
+	* library.c: Fixed mkdir and rmdir functions which did not convert
+	  from gphoto paths to canon paths.
+
+2002-01-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* *.[c,h]: Replase last call to gp_camera_set_error (I oversaw one
+	  hidden in the header file).
+
+2002-01-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* *.[c,h]: Replace calls to gp_camera_set_error by gp_context_error.
+
+2002-01-12  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* README: New readme for new driver
+	
+2002-01-11  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* *.[ch]: checked in rewritten driver which uses GPFilesystem
+		  directly (from the hun branch)
+	
+2002-01-08  Dan Fandrich <dan@coneharvesters.com>
+
+	* Makefile.am: Removed redundant CFLAGS and LDFLAGS lines
+
+2002-01-07  Fredrik <fredrik@krixor.xy.org>
+
+	* canon.c: Small fix to Dan's portable timezone code from
+	yesterday. The wrong time was set.
+
+	* library.c: Improved camera_summary() with better error-checking
+	and nicer formatted output.
+
+2002-01-06  Dan Fandrich <dan@coneharvesters.com>
+
+	* util.h: added MIN and MAX definitions
+	* library.c: added support for locale-specific thousands separator
+	* canon.c: added support for tm.tm_gmtoff to get time zone offset
+
+2002-01-04  Fredrik <fredrik@krixor.xy.org>
+
+	* canon.c, canon.h:
+	Changed canon_int_get_time() to convert the time to
+	GMT before returning it to the caller to simplify
+	time operations elsewhere.
+
+	Changed canon_int_set_time() to accept the time to
+	set as a parameter instead of always setting it to
+	the computers time. Also use correct endian code
+	to convert it to little endian before sending it to
+	the camera and hopefully convert the time to local
+	timezone before setting it since Canon cameras
+	know nothing about timezone.
+
+	* library.c: Reflect changes to get/set_time.
+
+	* canon.c, library.c: Improve error checking and
+	debug diagnostics when camera does not return the
+	expected ammount of data.
+
+2002-01-01  Fredrik <fredrik@krixor.xy.org>
+
+	* usb.c: Don't keylock G1 cameras, they do not
+	  support it. Reported by Jarno Elonen.
+
+2001-12-24  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* library.c: stop reporting broken camera abilities
+
+2001-12-23  Fredrik <fredrik@krixor.xy.org>
+
+	* canon.c, canon.h, serial.c, usb.c, util.c, util.h :
+
+	  Patch from Michel Dänzer <daenzer@debian.org>,
+
+	  Handle endian issues when communicating with the
+	  cameras by using the new _byteorder.h include
+	  provided to us by gphoto2 autoconf.
+
+	* canon.c, canon.h, library.c, serial.c, usb.c :
+	  Put all model data in a canonCamModelData structure
+	  in canon.h so that there is only one place that has
+	  to be changed when adding new models. This is also
+	  a start to defining properties/abilities for cameras
+	  in a central place instead of checking what model
+	  we are talking to everywhere in the code.
+
+	  Output cameras time and the difference between it
+	  and the host computers time in --summary.
+
+2001-12-15  Fredrik <fredrik@krixor.xy.org>
+
+	* library.c, canon.h:
+	  Moved models[] from library.c to canon.h and added
+	  canonCamModel model to models[].
+
+	* usb.c, usb.h:
+	  Identify USB cameras based on USB vendor/product ID.
+	  This was necessary because we need to know what
+	  model it is before initializing since some models
+	  do that differently.
+
+	* usb.c:
+	  Add special treatment of EOS D30 cameras to
+	  canon_usb_camera_init() when camstat is 'A'. Simplified
+	  canon_usb_camera_init() in general.
+
+	* usb.c:
+	  Moved the code from canon_usb_ready() to
+	  canon_usb_init() - canon_usb_ready() should send a
+	  'ping' packet to check if the camera is alive instead
+	  of doing stuff like identification and key locking.
+
+	* usb.c:
+	  Changed canon_usb_dialogue() to read responses in two
+	  passes - one that reads as much as possible that is
+	  divideable with 0x40 and then one that reads the
+	  expected number of bytes modulus 0x40. This is what
+	  the windows driver does and it appears some cameras
+	  (EOS D30) likes this better.
+
+2001-12-06  Fredrik <fredrik@krixor.xy.org>
+
+	* canon.c, library.c:
+	  Re-worked file deleting after reports saying it didn't
+	  work. Now it works for me at least.
+
+2001-12-05  Fredrik <fredrik@krixor.xy.org>
+
+	* usb.h:
+	  Added EOS D30 (and possibly other models) commands to
+	  lock and unlock camera keys.
+
+	* usb.c, usb.h:
+	  Renamed canon_usb_keylock() to canon_usb_lock_keys().
+	  Added canon_usb_unlock_keys(), the only camera known to
+	  support this is the EOS D30. This is called from
+	  camera_exit().
+	  Corrected comments about how canon_usb_dialogue() works.
+
+	* canon.c: Improved error checking on return from
+	  canon_{usb,serial}_dialogue() calls and changed some
+	  functions to return GP_ codes instead of hard coded
+	  integer values.
+
+	* library.c:
+	  Call canon_usb_unlock_keys() from camera_exit() if
+	  using USB.
+
+2001-12-04  Fredrik <fredrik@krixor.xy.org>
+	
+	* canon.c: Improved debug output in canon_int_get_time().
+
+	* canon.c, canon.h, serial.c, serial.h, usb.c, usb.h:
+	  Moved canon_int_serial_ready() to serial.c and renamed
+	  it to canon_serial_ready().
+	  Moved canon_int_usb_ready() to usb.c and renamed
+	  it to canon_usb_ready().
+
+	* library.c: Don't say we are switching off camera if
+	  USB, since we are not.
+
+	* usb.c: Make canon_usb_keylock() not try to keylock
+	  EOS D30 cameras, they seem to do keylocking different.
+
+2001-12-01  Fredrik <fredrik@krixor.xy.org>
+
+	* usb.c, usb.h:
+	  Added canon_usb_get_dirents().
+
+	* serial.c, serial.h:
+	  Added canon_serial_get_dirents().
+
+	* canon.h: added CANON_MINIMUM_DIRENT_SIZE.
+
+	* canon.c, canon.h:
+	  Exchanged canon_int_list_directorys() with my
+	  rewritten version. At least some hypothetical bugs
+	  fixed, easier to understand and proper error-checking.
+	  This should hopefully not break serial, since this is
+	  almost the same code as I used when debugging other
+	  serial stuff on Philippes computer/camera from 1600
+	  km distance a few weeks ago.
+
+	* library.c:
+	  Re-wrote _get_file_path() since it was really hard to
+	  understand. The first time I tried to understand it I
+	  got it all wrong and even added some faulty comments.
+
+	Also replaced some random gp_debug_printf() with
+	GP_DEBUG() and re-indented *.c.
+
+2001-11-29  Fredrik <fredrik@krixor.xy.org>
+
+	* usb.c, usb.h:
+	  Implemented canon_usb_keylock() which locks the
+	  cameras keys and turns off the LCD.
+
+	* usb.c:
+	  Changed a read of 0x44 bytes to two, one of 0x40
+	  and one of 0x4 bytes. This seems to fix the problems
+	  we have had with initialization only working every
+	  second time for some cameras.
+
+	  Changed canon_usb_dialogue() to return the number of
+	  bytes the caller is interested in rather than the
+	  total number of bytes read from the camera for
+	  "non-long" reads.
+
+	* canon.c:
+	  Move some more code from canon_int_ready() to
+	  canon_int_serial_ready().
+
+	  Don't show init errors with gp_camera_status(), use
+	  gp_camera_set_error() for that.
+
+	  Updated canon_int_usb_ready() to call new
+	  canon_usb_keylock() and also do things in a slightly
+	  different order.
+
+2001-11-27  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* README: added note about CRW (raw) support
+	* canon.c: added support for PowerShot S40
+	* canon.h: added support for PowerShot S40
+	* library.c: added support for PowerShot S40
+	
+2001-11-27  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* ChangeLog: created new file
+	* Changelog: declared deprecated

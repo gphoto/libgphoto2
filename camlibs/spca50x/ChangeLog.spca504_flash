@@ -1,0 +1,20 @@
+Fre Jan 24 11:47:04 2003  Till Adam  <till@adam-lilienthal.de>
+ * apply patch by Mark Zimmermann <mark@foresthaven.com>
+   fixing thumbnails for low res images
+
+Fri Jan 24 08:15:59 2003  Till Adam  <till@adam-lilienthal.de>
+ * apply patch by Mark Zimmermann <mark@foresthaven.com>
+   fixing reporting of preview height
+
+2002-11-26  Colin Marquardt  <colin@marquardt-home.de>
+
+	* library.c (camera_about): Make sure author names are 7bit ASCII only.
+
+Son Nov 10 21:19:16 2002  Till Adam  <till@adam-lilienthal.de>
+ * import into gphoto cvs
+
+Sam Nov 02 20:09:06 2002  Till Adam  <till@adam-lilienthal.de>
+ * implement -n, -L and -P
+
+Fri Oct 25 17:32:26 2002  Till Adam  <till@adam-lilienthal.de>
+ * start of camlib

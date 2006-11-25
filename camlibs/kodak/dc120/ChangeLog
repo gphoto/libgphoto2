@@ -1,0 +1,18 @@
+2006-11-23  Marcus Meissner  <marcus@jet.franken.de>
+
+	* dc120.h: Set TIMEOUT to 5000. 1000 was not sufficient
+	  for a bugreporter.
+
+	* *.[ch]: Some cleanups.
+
+2002-01-15  Lutz Müller <lutz@users.sourceforge.net>
+
+	* dc120.c
+	* library.[c,h]: gp_camera_progress -> gp_context_progress
+
+2001-12-20  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* dc120.c, library.h, library.c:  cleaned it up a 
+	lot and improved error handling. Patch by 
+	Ralf Engels <ralf-engels@gmx.de>
+

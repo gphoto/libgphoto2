@@ -1,0 +1,16 @@
+$Id$
+
+Outstanding items in the gphoto2 dimera driver:
+
+- make sure multiple, simultaneous requests are handled properly and
+disallowed where necessary (e.g. downloading image)
+- add delete file function
+
+Bugs:
+
+- flash capacity in --summary shows 0 for newer flash cards
+- image quality is lower than it could be due to suboptimal Bayer CCD
+conversion routine
+- some serial port speed settings don't work
+- figure out how to tell if a valid image is in RAM and only put temp.ppm 
+into the file list then

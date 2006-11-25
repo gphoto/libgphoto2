@@ -1,0 +1,12 @@
+2004-01-21  Marcus Meissner <marcus@jet.franken.de>
+
+	* stv0674.c: Added che-ez! snap
+	
+2002-12-03  Marcus Meissner <marcus@jet.franken.de>
+	
+	* License changed to LGPL v2 (with Vincents agreement) 
+
+2002-12-03  Marcus Meissner <marcus@jet.franken.de>
+
+	* Initial import of camlib driver written by
+		Vincent Sanders <vince@kyllikki.org>

@@ -1,0 +1,38 @@
+#!/bin/sh
+# "make installcheck" testcase:
+# Compares camera list printed by by print-camera-list and parsed by
+#test-ddb with the camera list from gp_abilities_list_load().
+# Fails if differences are found.
+
+set -ex
+
+debug=:
+#debug=false
+
+PACKAGE_TARNAME="${PACKAGE_TARNAME-"@PACKAGE_TARNAME@"}"
+prefix="${prefix-"@prefix@"}"
+exec_prefix="${exec_prefix-"@exec_prefix@"}"
+libdir="${libdir-"@libdir@"}"
+libexecdir="${libexecdir-"@libexecdir@"}"
+camlibdir="${camlibdir-"@camlibdir@"}"
+utilsdir="${utilsdir-"@utilsdir@"}"
+CAMLIBS="${DESTDIR}${camlibdir}"
+export CAMLIBS
+LD_LIBRARY_PATH="${DESTDIR}/${libdir}${LD_LIBRARY_PATH+:${LD_LIBRARY_PATH}}"
+export LD_LIBRARY_PATH
+
+if "$debug"; then
+    echo "====================="
+    pwd
+    echo "camlibdir=$camlibdir"
+    echo "libdir=$libdir"
+    echo "utilsdir=$utilsdir"
+    echo "DESTDIR=$DESTDIR"
+    echo "CAMLIBS=$CAMLIBS"
+    echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
+    echo "#####################"
+fi
+
+${DESTDIR}${utilsdir}/print-camera-list gp2ddb > gp2ddb.txt
+
+./test-ddb --compare < gp2ddb.txt

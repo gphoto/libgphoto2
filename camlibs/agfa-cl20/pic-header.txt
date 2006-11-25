@@ -1,0 +1,19 @@
+00000000  01 00 00 10 00 04 02 00  00 31 2e 31 36 00 00 00  |.........1.16...|
+			 -----
+			0x0204		is the number of bulk transfers to be read.
+
+00000010  00 05 00 00 00 08 05 00  00 02 00 00 00 00 00 00  |................|
+	     --		    --
+	     I		   0x05 is the number of pictures on the camera plus 1.
+	     I			so 4 in this case.
+	     --
+		is the resolution.
+		01 lowest
+		03 medium
+		05 highest
+
+00000020  02 78 01 67 02 23 06 50  01 e0 00 60 00 6c 05 00  |.x.g.#.P.à.`.l..|
+	     --    --  
+			this sometimes changes, but I don't know why...
+
+

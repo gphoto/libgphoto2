@@ -1,0 +1,546 @@
+<!-- ##### SECTION Title ##### -->
+CameraFilesystem
+
+<!-- ##### SECTION Short_Description ##### -->
+A virtual filesystem used for caching filesystem information
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+This is a virtual filesystem. It is used as a proxy between the frontends and
+the camera drivers in order to avoid unnecessary communication overhead and 
+prevent synchronization errors.
+</para>
+
+<para>
+Camera drivers need to set up the #CameraFilesystem on #camera_init in order
+to make the #CameraFilesystem capable of getting file or folder listings, 
+retreiving information about a file, etc.
+  <example>
+    <title>Setting up the #CameraFilesystem</title>
+    <programlisting>
+      int
+      file_list_func (#CameraFilesystem *fs, const char *folder,
+                      #CameraList *list, void *data)
+      {
+          #Camera *camera = data;
+
+          #gp_list_append (list, "file1.jpeg", NULL);
+	  #gp_list_append (list, "file2.jpeg", NULL);
+
+	  return (#GP_OK);
+      }
+
+      int
+      #camera_init (#Camera *camera)
+      {
+          #gp_filesystem_set_list_funcs (camera->fs, file_list_func,
+	                                 NULL, camera);
+
+	  return (#GP_OK);
+      }
+    </programlisting>
+  </example>
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+#CameraLibraryInitFunc
+</para>
+
+<!-- ##### STRUCT CameraFilesystem ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM CameraFilePermissions ##### -->
+<para>
+  There are three levels of access permissions: #GP_FILE_PERM_NONE,
+  #GP_FILE_PERM_READ and
+  #GP_FILE_PERM_DELETE. As of now, there is no camera (driver) that 
+  supports first. If #GP_FILE_PERM_DELETE is set, users cannot
+  delete a file using #gp_camera_file_delete or #gp_camera_folder_delete_all.
+</para>
+
+@GP_FILE_PERM_NONE: Neither read nor write access allowed.
+@GP_FILE_PERM_READ: Users can read (download) the file.
+@GP_FILE_PERM_DELETE: Users can delete the file
+@GP_FILE_PERM_ALL: 
+
+<!-- ##### ENUM CameraFileStatus ##### -->
+<para>
+  The #CameraFileStatus tells frontends if a file has already been downloaded
+  (#GP_FILE_STATUS_DOWNLOADED) or not (GP_FILE_STATUS_NOT_DOWNLOADED).
+</para>
+
+@GP_FILE_STATUS_NOT_DOWNLOADED: The file has not yet been downloaded from
+				the camera.
+@GP_FILE_STATUS_DOWNLOADED: The file has been downloaded from the camera
+			    at least once.
+
+<!-- ##### ENUM CameraFileInfoFields ##### -->
+<para>
+  Use this variable to determine which fields of a #CameraFileInfoFile, a
+  #CameraFileInfoPreview, or a #CameraFileInfoAudio are valid.
+</para>
+
+@GP_FILE_INFO_NONE: If set to this value, no field is valid. You would want
+  to use this for example if there are no audio annotations of a picture.
+@GP_FILE_INFO_TYPE: Indicates if there is information about the mime type
+  of a file, the preview, or the audio annotation available.
+@GP_FILE_INFO_NAME: 
+@GP_FILE_INFO_SIZE: Indicates if the size field is valid.
+@GP_FILE_INFO_WIDTH: Indicates if there is information about the width of
+  the file, the preview, or the audio annotation available.
+@GP_FILE_INFO_HEIGHT: Indicates if height field is valid.
+@GP_FILE_INFO_PERMISSIONS: Indicates if the permissions field is valid.
+@GP_FILE_INFO_STATUS: Indicates if the status field is valid.
+@GP_FILE_INFO_MTIME: 
+@GP_FILE_INFO_ALL: 
+
+<!-- ##### STRUCT CameraFileInfoAudio ##### -->
+<para>
+
+</para>
+
+@fields: 
+@status: 
+@size: 
+@type: 
+
+<!-- ##### STRUCT CameraFileInfoPreview ##### -->
+<para>
+
+</para>
+
+@fields: 
+@status: 
+@size: 
+@type: 
+@width: 
+@height: 
+
+<!-- ##### STRUCT CameraFileInfoFile ##### -->
+<para>
+
+</para>
+
+@fields: 
+@status: 
+@size: 
+@type: 
+@width: 
+@height: 
+@name: 
+@permissions: 
+@mtime: 
+
+<!-- ##### STRUCT CameraFileInfo ##### -->
+<para>
+
+</para>
+
+@preview: 
+@file: 
+@audio: 
+
+<!-- ##### FUNCTION gp_filesystem_new ##### -->
+<para>
+
+</para>
+
+@fs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_free ##### -->
+<para>
+
+</para>
+
+@fs: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION CameraFilesystemGetFileFunc ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@filename: 
+@type: 
+@file: 
+@data: 
+@context: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION CameraFilesystemDeleteFileFunc ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@filename: 
+@data: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_set_file_funcs ##### -->
+<para>
+
+</para>
+
+@fs: 
+@get_file_func: 
+@del_file_func: 
+@data: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION CameraFilesystemGetInfoFunc ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@filename: 
+@info: 
+@data: 
+@context: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION CameraFilesystemSetInfoFunc ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@filename: 
+@info: 
+@data: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_set_info_funcs ##### -->
+<para>
+
+</para>
+
+@fs: 
+@get_info_func: 
+@set_info_func: 
+@data: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION CameraFilesystemPutFileFunc ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@file: 
+@data: 
+@context: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION CameraFilesystemDeleteAllFunc ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@data: 
+@context: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION CameraFilesystemDirFunc ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@name: 
+@data: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_set_folder_funcs ##### -->
+<para>
+
+</para>
+
+@fs: 
+@put_file_func: 
+@delete_all_func: 
+@make_dir_func: 
+@remove_dir_func: 
+@data: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION CameraFilesystemListFunc ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@list: 
+@data: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_set_list_funcs ##### -->
+<para>
+
+</para>
+
+@fs: 
+@file_list_func: 
+@folder_list_func: 
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_list_files ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@list: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_list_folders ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@list: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_get_file ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@filename: 
+@type: 
+@file: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_put_file ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@file: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_delete_file ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@filename: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_delete_all ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_make_dir ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@name: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_remove_dir ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@name: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_get_info ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@filename: 
+@info: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_set_info ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@filename: 
+@info: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_set_info_noop ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@info: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_number ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@filename: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_name ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@filenumber: 
+@filename: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_get_folder ##### -->
+<para>
+
+</para>
+
+@fs: 
+@filename: 
+@folder: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_count ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_reset ##### -->
+<para>
+
+</para>
+
+@fs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_append ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@filename: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_set_file_noop ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@file: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_dump ##### -->
+<para>
+
+</para>
+
+@fs: 
+@Returns: 
+
+

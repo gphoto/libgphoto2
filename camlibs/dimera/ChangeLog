@@ -1,0 +1,33 @@
+2003-01-14  Dan Fandrich <dan@coneharvesters.com>
+
+	* dimera3500.c: Made exposure and flash settings configurable.
+
+2002-11-17  Marcus Meissner <marcus@jet.franken.de>
+	
+	* dimera3500.c: Fixed 64bit problems.
+
+2002-10-03  Lutz Müller <lutz@users.sourceforge.net>
+
+	* Makefile.am: -I$(top_builddir)/libgphoto2
+
+2002-01-21  Dan Fandrich <dan@coneharvesters.com.>
+
+	* TODO: changed note about temp.ppm and added one about multiple ops.
+	* mesalib.c: Check for error in mesa_modem_check.
+	* mesalib.h: Added include files.
+	* dimera3500.c: Put temp.ppm file permanently into file list.
+	  Fix percentage given to gp_file_progress.
+	  Simplified debugging macros.
+
+2002-01-16  Colin Marquardt  <colin@marquardt-home.de>
+
+	* dimera3500.c: Fix typo.
+
+2002-01-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* dimera3500.c: Remove references to gp_camera_set_error.
+
+2001-12-31  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* dimera3500.c (capture_image): Tell the filesystem about the 
+	  new (ram) image.

@@ -1,0 +1,116 @@
+
+USB control messages:<nr>
+
+<ul>
+<li>Command	: (cmd &lt;&lt; 8) | param
+<li>Index	: only set for read
+<li>Buffer	: arguments, usually in WORDs
+</ul>
+
+<table>
+<tr>
+    <td>Commandname</td>
+    <td>R/W</td>
+    <td>Code</td>
+    <td>Param</td>
+    <td>Ind.</td>
+    <td>Data</td>
+    <td>Description</td>
+</tr>
+<tr>
+    <td>Init Camera</td>
+    <td>W</td>
+    <td>0xD7</td>
+    <td>1</td>
+    <td>-</td>
+    <td>-</td>
+    <td>Send for opening the camera.</td>
+</tr>
+<tr>
+    <td>Exit Camera</td>
+    <td>W</td>
+    <td>0xD8</td>
+    <td>0</td>
+    <td>-</td>
+    <td>-</td>
+    <td>Send for closing the camera.</td>
+</tr>
+<tr>
+    <td>Select Picture</td>
+    <td>W</td>
+    <td>0xB2</td>
+    <td>0</td>
+    <td>-</td>
+    <td>WORD picnum</td>
+    <td>Select <b>picnum</b> picture (first is 1).</td>
+</tr>
+<tr>
+    <td>Download Image</td>
+    <td>W</td>
+    <td>0x93</td>
+    <td>Flags, 0x10,0x01. 0x00 works just fine.</td>
+    <td>-</td>
+    <td>-</td>
+    <td>Download selected picture by doing bulk reads (until no more data).</td>
+</tr>
+<tr>
+    <td>Download Thumbnail</td>
+    <td>W</td>
+    <td>0x9B</td>
+    <td>0x00 ?</td>
+    <td>-</td>
+    <td>-</td>
+    <td>Download selected thumbnail by doing bulk reads (until no more data).</td>
+</tr>
+<tr>
+    <td>Download Exif</td>
+    <td>W</td>
+    <td>0xE5</td>
+    <td>0x00</td>
+    <td>-</td>
+    <td>-</td>
+    <td>Download EXIF data for selected picture by doing bulk reads (until no more data).</td>
+</tr>
+<tr>
+    <td>Get Picture Info</td>
+    <td>R</td>
+    <td>0xAD</td>
+    <td>0x00</td>
+    <td>picnum</td>
+    <td>4 words: percentage, index number (in camera?), flags, unknown</td>
+    <td>Apparently gets image information about images in camera.</td>
+</tr>
+<tr>
+    <td>Get Picture Fileentry</td>
+    <td>R</td>
+    <td>0xB9</td>
+    <td>0x00</td>
+    <td>-</td>
+    <td>WORD check;<br>CHAR filename[14] (byteflipped) from 2..16<br>DWORD filesize (32bit?), unknown(32bit?) <BR></td>
+    <td>Gets the directory entry of the file.</td>
+</tr>
+<tr>
+    <td>Delete Picture</td>
+    <td>R</td>
+    <td>0xBA</td>
+    <td>WORD flag;</td>
+    <td>-</td>
+    <td>WORD result;</td>
+    <td>Deletes the selected picture. Parameter might be 0x40 (delete?) or 0x00 (?).</td>
+</tr>
+<tr>
+    <td>Get Number of Pictures?</td>
+    <td>R</td>
+    <td>0xB6</td>
+    <td>0x00</td>
+    <td>-</td>
+    <td>WORD unknown<br>
+    	WORD numpics<br>
+    	WORD unknown<br>
+	DWORD freemem?
+    </td>
+    <td>Gets several global parameters, like the number of pictures.The
+        last 32bit appear to be free memory?</td>
+</tr>
+
+</table>

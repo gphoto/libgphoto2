@@ -1,0 +1,159 @@
+Device info:
+Manufacturer: Nikon Corporation
+  model: P3  
+  device version: V1.00
+  serial number: 'nnnnnnnn'
+Vendor extension ID: 0x0000000a
+Vendor extension description: Nikon PTP Extensions
+Supported operations:
+  0x1001
+  0x1002
+  0x1003
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100a
+  0x100b
+  0x100c
+  0x100d
+  0x100e
+  0x1014
+  0x1015
+  0x1016
+  0x1017
+  0x101b
+  0x9001
+  0x9004
+  0x9006
+  0x9007
+  0x9008
+  0x9009
+  0x90c0
+  0x90c7
+  0x90c8
+  0x90e0
+Events Supported:
+  0x4002
+  0x4003
+  0x4004
+  0x4005
+  0x4006
+  0x4009
+  0x400a
+  0x400c
+  0x400d
+  0xc001
+  0xc101
+  0xc102
+  0xc103
+Device Properties Supported:
+  0x5001
+  0x5003
+  0x5004
+  0x5005
+  0x5007
+  0x5008
+  0x500a
+  0x500b
+  0x500c
+  0x500e
+  0x500f
+  0x5010
+  0x5011
+  0x5013
+  0x5016
+  0x501c
+  0xd000
+  0xd002
+  0xd003
+  0xd004
+  0xd005
+  0xd025
+  0xd02a
+  0xd02b
+  0xd02d
+  0xd054
+  0xd06b
+  0xd101
+  0xd108
+  0xd10c
+  0xd121
+  0xd128
+  0xd130
+  0xd161
+
+Camera summary:
+Model: P3  
+  device version: V1.00
+  serial number:  nnnnnnnn
+Vendor extension ID: 0x0000000a
+Vendor extension description: Nikon PTP Extensions
+
+Capture Formats: Undefined Type JPEG
+Display Formats: Undefined Type, Association/Directory, DPOF, MS Wave, JPEG, JFIF
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	Generic Image Capture, No Open Capture, Nikon Capture
+	Nikon Wifi support
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: P3  
+	VolumeLabel: None
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 1015283712 (968 MB)
+	Free Space (Bytes): 832225280 (793 MB)
+	Free Space (Images): 206
+
+Device Property Summary:
+Battery Level(0x5001):(read only) (type=0x2) Range [0 - 100, step 1] value: 80% (80)
+Image Size(0x5003):(readwrite) (type=0xffff) Enumeration [
+	'3264x2448',
+	'2592x1944',
+	'2048x1536',
+	'1024x768',
+	'640x480'
+	] value: '3264x2448'
+Compression Setting(0x5004):(readwrite) (type=0x2) Enumeration [0,1,2] value: JPEG Fine (2)
+White Balance(0x5005):(readwrite) (type=0x4) Enumeration [2,4,5,6,7,32784,32785,32787,32789,32792,32793,32800,32801,32802,32803,32805] value: Auto (2)
+F-Number(0x5007):(read only) (type=0x4) Range [270 - 530, step 26] value: f/0 (0)
+Focal Length(0x5008):(read only) (type=0x6) Enumeration [3600,4100,4800,6200,7500,8900,10300,11700,12600] value: 0 mm (0)
+Focus Mode(0x500a):(readwrite) (type=0x4) Enumeration [2,3,32770,32771] value: 2
+Exposure Metering Mode(0x500b):(readwrite) (type=0x4) Enumeration [2,3,4,32772] value: Matrix (3)
+Flash Mode(0x500c):(readwrite) (type=0x4) Enumeration [1,2,3,4,32785] value: 2
+Exposure Program Mode(0x500e):(read only) (type=0x4) Enumeration [2,3,4] value: P (2)
+Exposure Index (film speed ISO)(0x500f):(readwrite) (type=0x4) Enumeration [65535,50,100,200,400] value: ISO 65535 (65535)
+Exposure Bias Compensation(0x5010):(readwrite) (type=0x3) Range [-2000 - 2000, step 100] value: 0.0 stops (0)
+Date Time(0x5011):(readwrite) (type=0xffff) '20060708T103443'
+Still Capture Mode(0x5013):(read only) (type=0x4) Enumeration [1] value: Single Shot (1)
+Digital Zoom(0x5016):(read only) (type=0x2) Range [10 - 40, step 2] value: 10
+Focus Metering Mode(0x501c):(readwrite) (type=0x4) Enumeration [1,2,32784] value: Dynamic Area (2)
+Property 0xd000:(read only) (type=0xffff) '(null)'
+Property 0xd002:(read only) (type=0x2) Enumeration [1] value: 1
+Property 0xd003:(read only) (type=0x2) Enumeration [0,1] value: 0
+Property 0xd004:(readwrite) (type=0xffff) Enumeration [
+	'640x480',
+	'320x240',
+	'160x120'
+	] value: '640x480'
+Property 0xd005:(read only) (type=0x4) Enumeration [1,2] value: 2
+Property 0xd025:(read only) (type=0x6) Range [0 - 4294967295, step 1] value: 64291552
+Sharpening(0xd02a):(readwrite) (type=0x2) Enumeration [0,1,3,5,6] value: Auto (0)
+Tone Compensation(0xd02b):(readwrite) (type=0x2) Enumeration [0,1,3,5] value: Auto (0)
+Hue Adjustment(0xd02d):(readwrite) (type=0x1) Enumeration [-2,-1,0,1,2] value: 0
+Auto ISO(0xd054):(readwrite) (type=0x2) Enumeration [0,1] value: On (1)
+Long Exposure Noise Reduction(0xd06b):(readwrite) (type=0x2) Enumeration [0,1] value: Off (0)
+Property 0xd101:(read only) (type=0x0) Undefined
+Active AF Sensor(0xd108):(readwrite) (type=0x2) Range [0 - 98, step 1] value: 49
+Property 0xd10c:(read only) (type=0x2) Enumeration [0] value: 0
+Property 0xd121:(read only) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xd128:(readwrite) (type=0x2) Enumeration [0,1,2,3] value: 0
+Property 0xd130:(readwrite) (type=0x2) Enumeration [0,1,2,128,129] value: 0
+Autofocus Mode(0xd161):(readwrite) (type=0x2) Enumeration [0,1] value: On (1)
+

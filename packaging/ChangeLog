@@ -1,0 +1,24 @@
+2006-09-01  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* generic/print-camera-list.c:
+
+	  Generator for udev newstyles output. (udev-rules-0.98)
+
+2002-11-01  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* linux-hotplug/Makefile.am: install print-usb-usermap on target
+					system (for cross-compilation)
+
+2002-10-13  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* linux-hotplug/Makefile.am: made hotplug stuff installation location configurable
+
+2002-09-14  Marcus Meissner <marcus@jet.franken.de>
+	
+	* print-usb-usermap.c: usb_product can be 0 (for instance
+	  with the Jenoptik JD350v).
+
+2002-08-08  Lutz Müller <lutz@users.sourceforge.net>
+
+	* linux-hotplug/Makefile.am: Point to the right correction of
+	  libgphoto2.la.

@@ -1,0 +1,198 @@
+<html>
+<head>
+<title>PTP/IP protocol - briefly reverse engineered</title>
+<meta name="keywords" content="gphoto libgphoto2 linux ptpip ptp/ip ptp">
+</head>
+<body>
+
+<h1>PTP/IP</h1>
+<hr>
+This document briefly describes the PTP/IP transfer layer, as reverse
+engineered from ethereal packet dumps and glanced from the sparely available
+online documentation.
+<p>
+It operates on top of a normal IP networkstack, the connections
+are simple TCP/IP socket connection.
+<p>
+Default port is 15740 (same as the ISO standard number for PTP).
+<p>
+There are 2 connections used:<br>
+<ul>
+<li>control &amp; data connection (Initiator (computer) driven)
+<li>event connection  (Responder (camera) driven)
+</ul>
+<p>
+The participants communicate in packets, their layout is:
+
+<table border=1>
+<tr><th>Length</th><th>Variable</th><th>Notes</th></tr>
+<tr><td>4</td><td>length (little endian)</td><td>Length of the whole packet including the header</td></tr>
+<tr><td>4</td><td>type (little endian)</td><td>Type, listed below</td></tr>
+<tr><td>length - 8</td><td>data</td><td>specific on type</td></tr>
+</table>
+<p>
+Observed types:
+<p>
+<table border=1>
+<tr><th>Type</th><th>Direction</th><th>Name</th><th>Next reply(s)</th><th>Payload</th></tr>
+<tr>
+	<td>1</td>
+	<td>I-&gt;R</td>
+	<td>Init_Command_Request</td>
+	<td>2 or 5</td>
+	<td><ul>
+		<li>16 byte GUID
+		<li>xx byte WCHAR computername with terminating \0
+	</ul>
+	</td>
+</tr>
+<tr>
+	<td>2</td>
+	<td>R-&gt;I</td>
+	<td>Init_Command_Ack</td>
+	<td>5 or MAINLOOP</td>
+	<td><ul>
+	<li>4 byte	ID	(session id, to be used for event connection startup)
+	<li>16 byte	GUID (MAC is used here for my camera, and repeated)
+	<li>xx byte WCHAR Camera Name with terminating \0
+	</td>
+</tr>
+<tr>
+	<td>3</td>
+	<td>I-&gt;R</td>
+	<td>Init_Event_Request</td>
+	<td>4 or 5</td>
+	<td><ul><li>4 byte ID (from Init_Command_Ack)</ul></td>
+</tr>
+<tr>
+	<td>4</td>
+	<td>R-&gt;I</td>
+	<td>Init_Event_Ack</td>
+	<td>EVENTLOOP</td>
+	<td><ul><li>No payload.</ul></td>
+</tr>
+<tr>
+	<td>5</td>
+	<td>I-&gt;R</td>
+	<td>Init_Fail</td>
+	<td>End of communication</td>
+	<td><ul><li>4 byte error code (unclear meaning)</ul></td>
+</tr>
+<tr>
+	<td>6</td>
+	<td>I-&gt;R</td>
+	<td>Cmd_Request</td>
+	<td>9 -&gt; A/C or 7</td>
+	<td><ul>
+	<li>4 byte unknown. set to 1 currently.
+	<li>2 byte PTP command code
+	<li>4 byte Transaction ID
+	<li>n x 4 byte PTP command arguments
+	</ul></td>
+</tr>
+<tr>
+	<td>7</td>
+	<td>R-&gt;I</td>
+	<td>Cmd_Response</td>
+	<td>MAINLOOP</td>
+	<td><ul>
+	<li>2 bytes PTP response code
+	<li>4 bytes Transaction ID
+	<li>nr*4 bytes	arguments (depending on length of response)
+	</ul></td>
+</tr>
+<tr>
+	<td>8</td>
+	<td>R-&gt;I</td>
+	<td>Event</td>
+	<td>EVENTLOOP</td>
+	<td>
+	<ul>
+	<li>2 byte PTP event code
+	<li>...
+	</ul>
+	Not fully investigated, but similar to PTP event.
+	</td>
+</tr>
+<tr>
+	<td>9</td>
+	<td>R&lt;-&gt;I</td>
+	<td>Start_Data_Packet</td>
+	<td>10,12</td>
+	<td><ul>
+	<li>4 byte Transaction ID
+	<li>4 byte Total data download size (without headers)
+	</ul></td>
+</tr>
+<tr>
+	<td>10</td>
+	<td>R&lt;-&gt;I</td>
+	<td>Data_Packet</td>
+	<td>10,12</td>
+	<td><ul>
+	<li>4 byte Transaction ID
+	<li>length-4-8 bytes payload data
+	</ul></td>
+</tr>
+<tr>
+	<td>11</td>
+	<td>I-&gt;R</td>
+	<td>Cancel_Transaction</td>
+	<td>7 ?</td>
+	<td>(Untested yet.)<ul>
+	<li>4 bytes Transaction ID
+	</ul></td>
+</tr>
+<tr>
+	<td>12</td>
+	<td>R&lt;-&gt;I</td>
+	<td>End_Data_Packet</td>
+	<td>7 ?</td>
+	<td><ul>
+	<li>4 byte Transaction ID
+	<li>length-4-8 bytes payload data
+	</ul></td>
+</tr>
+<tr>
+	<td>13</td>
+	<td>R&lt;-&gt;I</td>
+	<td>Ping</td>
+	<td>14</td>
+	<td><ul><li>No payload.</ul></td>
+</tr>
+<tr>
+	<td>13</td>
+	<td>R&lt;-&gt;I</td>
+	<td>Pong</td>
+	<td>EVENTLOOP</td>
+	<td><ul><li>No payload.</ul></td>
+</tr>
+</table>
+<p>
+State transitions:
+<p>
+Initial Phase:
+<p>
+Command Connection:    
+<table border=1>
+<tr><td>1</td><td>-&gt; 2</td><td>-&gt; MAINLOOP</td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;&nbsp;\ 5</td><td>-&gt; EXIT</td><tr>
+</table>
+<p>
+Event Connection:
+<table border=1>
+<tr><td>3</td><td>-&gt; 4</td><td>-&gt; EVENTLOOP</td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;&nbsp;\ 5</td><td>-&gt; EXIT</td><tr>
+</table>
+Cameras using PTP/IP:
+<ul>
+<li>Nikon CoolPix P1
+<li>Nikon CoolPix P2
+<li>Nikon CoolPix P3
+<li>Nikon CoolPix P4
+<li>Nikon CoolPix S6
+<li>Kodak EasyShare One
+<li>Canon PowerShot SD430
+</ul>
+</body>
+</html>

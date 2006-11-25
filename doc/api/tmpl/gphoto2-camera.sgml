@@ -1,0 +1,569 @@
+<!-- ##### SECTION Title ##### -->
+Camera
+
+<!-- ##### SECTION Short_Description ##### -->
+The structure giving you access to your camera
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+This section describes the operations that you can perform on a #Camera.
+</para>
+
+<para>
+Error reporting can be performed using #gp_camera_set_error and #gp_camera_get_error. Before a camera driver generates any error, it should use #gp_camera_set_error to explain why the error occurred and how it can be resolved.
+  <example>
+    <title>Error reporting</title>
+    <programlisting>
+        char c;
+	int result;
+
+        /*
+	 *If any error occurs here, just pass it along because
+	 * the error hasn't been generated here.
+	 */
+	result = #gp_port_read (camera->port, &amp;c, 1);
+	if (result < 0)
+	    return (result);
+	
+	if (c != 0x05) {
+	    
+	    /* Unrecoverable error. Generate an error. */
+	    #gp_camera_set_error (camera, _("'0x%x' has been received, but "
+	        "0x05 has been expected. Error recovery is not possible in "
+		"this situation. Please reset your camera."));
+            return (#GP_ERROR_CORRUPTED_DATA);
+	}
+    </programlisting>
+  </example>
+
+  The frontend can now query the error using #gp_camera_get_error. Note that,
+  in the following example, we explicitly clear the error before calling
+  the function that could generate an error.
+
+  <example>
+    <title>Querying errors</title>
+    <programlisting>
+      int result;
+      #CameraText text;
+
+      #gp_camera_set_error (camera, NULL);
+      result = gp_camera_get_about (camera, &amp;text);
+      if (result < 0)
+          printf ("Error ('%s'): '%s'", #gp_result_as_string (result),
+	          #gp_camera_get_error (camera));
+    </programlisting>
+  </example>
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+#CameraFilesystem, #GPPort
+</para>
+
+<!-- ##### USER_FUNCTION CameraExitFunc ##### -->
+<para>
+  Implement this function in camera drivers if you need to clean up on
+  exit. You need this function for example if you use camera->pl and
+  allocated memory for that on #camera_init. Then, you would free the
+  memory here.
+</para>
+
+@camera:  a #Camera
+@context: 
+@Returns: a GPhoto2 error code
+
+
+<!-- ##### USER_FUNCTION CameraGetConfigFunc ##### -->
+<para>
+  Implement this function if your camera supports some configuration
+  operations (like adjusting exposure).
+</para>
+
+@camera: a #Camera
+@widget: 
+@context: 
+@Returns: a GPhoto2 error code
+
+
+<!-- ##### USER_FUNCTION CameraSetConfigFunc ##### -->
+<para>
+  If you implement the #CameraGetConfigFunc, you should also implement this
+  function in order to make it possible for frontends to actually adjust
+  configuration options. Parse the @widget tree and check for each item
+  if the value has been changed (using #gp_widget_changed). If this is the
+  case, adjust this configuration option on the camera.
+</para>
+
+@camera: a #Camera
+@widget: a #CameraWidget created by #gp_camera_get_config
+@context: 
+@Returns: a GPhoto2 error code
+
+
+<!-- ##### USER_FUNCTION CameraCaptureFunc ##### -->
+<para>
+  Implement this function if your camera supports remote capturing of images.
+  When capturing an image, this image needs to be saved on the camera. The
+  location of the image on the camera should then be written into
+  supplied @path so that the frontend will know where to get the
+  newly captured image from. Don't forget to tell the #CameraFilesystem
+  (camera->fs) that a new picture is on the camera using
+  #gp_filesystem_append.
+</para>
+
+@camera: a #Camera
+@type: a #CameraCaptureType
+@path: a #CameraFilePath
+@context: 
+@Returns: a GPhoto2 error code
+
+
+<!-- ##### USER_FUNCTION CameraCapturePreviewFunc ##### -->
+<para>
+  Implement this function if your camera supports capturing
+  previews of low resolution. Those previews must not be stored on the camera.
+  They need to be written to the supplied @file (using for example
+  #gp_file_set_data_and_size).
+</para>
+
+@camera: a #Camera
+@file: a #CameraFile
+@context: 
+@Returns: a GPhoto2 error code
+
+
+<!-- ##### USER_FUNCTION CameraSummaryFunc ##### -->
+<para>
+  Implement this function if your camera provides static information and
+  non-configurable data like serial number or number of pictures taken. All
+  configurable data should be displayed through #CameraGetConfigFunc
+  instead.
+</para>
+
+@camera: a #Camera
+@text:  a #CameraText
+@context: 
+@Returns: a GPhoto2 error code
+
+
+<!-- ##### USER_FUNCTION CameraManualFunc ##### -->
+<para>
+  Implement this function if you need to give the user instructions on
+  how to use his camera. Here, you can for example inform the user about known
+  limitations of the protocol.
+</para>
+
+@camera: a #Camera
+@text: a #CameraText
+@context: 
+@Returns: a GPhoto2 error code
+
+
+<!-- ##### USER_FUNCTION CameraAboutFunc ##### -->
+<para>
+  Implement this function if you want to give frontends the possibility to
+  inform users who wrote this driver or who contributed to it.
+</para>
+
+@camera: a #Camera
+@text: a #CameraText
+@context: 
+@Returns: a GPhoto2 error code
+
+
+<!-- ##### USER_FUNCTION CameraPrePostFunc ##### -->
+<para>
+
+</para>
+
+@camera: 
+@context: 
+@Returns: 
+
+
+<!-- ##### STRUCT CameraPrivateLibrary ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT CameraPrivateCore ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF CameraText ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT CameraFunctions ##### -->
+<para>
+  Those functions are optionally. Depending on the features of the protocol,
+  you would implement some functions and leave others out. Tell gphoto2
+  what functions you provide on #camera_init.
+</para>
+
+@pre_func: 
+@post_func: 
+@exit: 
+@get_config: 
+@set_config: 
+@capture: 
+@capture_preview: 
+@summary: 
+@manual: 
+@about: 
+@reserved1: 
+@reserved2: 
+@reserved3: 
+@reserved4: 
+@reserved5: 
+@reserved6: 
+@reserved7: 
+@reserved8: 
+
+<!-- ##### STRUCT Camera ##### -->
+<para>
+
+</para>
+
+@port: 
+@fs: 
+@functions: 
+@pl: 
+@pc: 
+
+<!-- ##### FUNCTION gp_camera_new ##### -->
+<para>
+
+</para>
+
+@camera: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_ref ##### -->
+<para>
+
+</para>
+
+@camera: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_unref ##### -->
+<para>
+
+</para>
+
+@camera: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_free ##### -->
+<para>
+
+</para>
+
+@camera: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_set_abilities ##### -->
+<para>
+
+</para>
+
+@camera: 
+@abilities: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_get_abilities ##### -->
+<para>
+
+</para>
+
+@camera: 
+@abilities: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_set_port_info ##### -->
+<para>
+
+</para>
+
+@camera: 
+@info: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_get_port_info ##### -->
+<para>
+
+</para>
+
+@camera: 
+@info: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_get_port_speed ##### -->
+<para>
+
+</para>
+
+@camera: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_set_port_speed ##### -->
+<para>
+
+</para>
+
+@camera: 
+@speed: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_init ##### -->
+<para>
+
+</para>
+
+@camera: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_exit ##### -->
+<para>
+
+</para>
+
+@camera: 
+@context: 
+@Returns: 
+
+
+<!-- ##### TYPEDEF CameraFilePath ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM CameraCaptureType ##### -->
+<para>
+
+</para>
+
+@GP_CAPTURE_IMAGE: 
+@GP_CAPTURE_MOVIE: 
+@GP_CAPTURE_SOUND: 
+
+<!-- ##### FUNCTION gp_camera_capture ##### -->
+<para>
+
+</para>
+
+@camera: 
+@type: 
+@path: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_capture_preview ##### -->
+<para>
+
+</para>
+
+@camera: 
+@file: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_get_config ##### -->
+<para>
+
+</para>
+
+@camera: 
+@window: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_set_config ##### -->
+<para>
+
+</para>
+
+@camera: 
+@window: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_folder_list_files ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@list: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_folder_list_folders ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@list: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_folder_put_file ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@file: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_folder_delete_all ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_folder_make_dir ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@name: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_folder_remove_dir ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@name: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_file_get ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@file: 
+@type: 
+@camera_file: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_file_delete ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@file: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_file_get_info ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@file: 
+@info: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_file_set_info ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@file: 
+@info: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_get_manual ##### -->
+<para>
+
+</para>
+
+@camera: 
+@manual: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_get_summary ##### -->
+<para>
+
+</para>
+
+@camera: 
+@summary: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_get_about ##### -->
+<para>
+
+</para>
+
+@camera: 
+@about: 
+@context: 
+@Returns: 
+
+

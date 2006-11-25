@@ -1,0 +1,153 @@
+<!-- ##### SECTION Title ##### -->
+CameraList
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT CameraList ##### -->
+<para>
+
+</para>
+
+@count: 
+@ref_count: 
+
+<!-- ##### FUNCTION gp_list_new ##### -->
+<para>
+
+</para>
+
+@list: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_list_ref ##### -->
+<para>
+
+</para>
+
+@list: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_list_unref ##### -->
+<para>
+
+</para>
+
+@list: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_list_free ##### -->
+<para>
+
+</para>
+
+@list: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_list_count ##### -->
+<para>
+
+</para>
+
+@list: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_list_set_name ##### -->
+<para>
+
+</para>
+
+@list: 
+@index: 
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_list_set_value ##### -->
+<para>
+
+</para>
+
+@list: 
+@index: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_list_get_name ##### -->
+<para>
+
+</para>
+
+@list: 
+@index: 
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_list_get_value ##### -->
+<para>
+
+</para>
+
+@list: 
+@index: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_list_append ##### -->
+<para>
+
+</para>
+
+@list: 
+@name: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_list_populate ##### -->
+<para>
+
+</para>
+
+@list: 
+@format: 
+@count: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_list_reset ##### -->
+<para>
+
+</para>
+
+@list: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_list_sort ##### -->
+<para>
+
+</para>
+
+@list: 
+@Returns: 
+
+

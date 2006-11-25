@@ -1,0 +1,71 @@
+Sam Dez 07 21:04:46 2002  Till Adam  <till@adam-lilienthal.de>
+
+ * the lowest res of the mini is a different format, cope with that
+ * fix cases where the number of frames advertised by one of the fat pages of
+   an avi exceed the total number of frames it has
+   (Reported by Gerd Flaig <gefla@pond.sub.org>)
+
+Tue Nov 05 12:17:30 2002  Till Adam  <till@adam-lilienthal.de>
+
+ * return unssuported for avi downloading and small and large image
+   resolutions if the bridge is a SPCA500 (gsmart mini).
+
+Sat Oct 19 22:52:34 2002  Till Adam  <till@adam-lilienthal.de>
+
+ * another patch from Piotr Pawlow <pp@sieziba.pl> which omits the standard
+   huffmann tables in the mjpeg thereby reducing them in size. This seems
+   to be a standard extension of the mjpeg "standard" and works with the
+   players I've tested
+
+Mon Oct 14 20:32:08 2002  Till Adam  <till@adam-lilienthal.de>
+
+ * move jpeg creation into function
+ * add experimental support for the "gsmart mini"
+ * bump version number to 0.3
+ * driver status for the spca504a based is now TESTING
+ * patch from Piotr Pawlow <pp@siedziba.pl> adding an index to downloaded
+   avi's and fixing a few bugs.
+ * endianess fixes
+
+Wed Oct 09 19:58:01 2002  Till Adam  <till@adam-lilienthal.de>
+
+ * add experimental support for the "gSmart mini 3" and "So. Show 301"
+ * (identical to the gSmart mini 2)
+
+Tue Oct 08 22:14:04 2002  Till Adam  <till@adam-lilienthal.de>
+
+ * add support for avi downloading
+
+2002-10-03  Lutz Müller <lutz@users.sourceforge.net>
+
+	* Makefile.am: -I$(top_builddir)/libgphoto2
+
+Sam Aug 31 20:15:03 2002  Till Adam  <till@adam-lilienthal.de>
+
+ * return name in the file_info as well. Fixes kamera kio-slave
+ * endianess fix reported by Carl Lunde <chlunde@student.matnat.uio.no>
+ * spelling fix
+
+Thu Aug 22 20:46:02 2002  Till Adam  <till@adam-lilienthal.de>
+
+ * add support for avi thumbnails
+
+Tue Aug 13 21:37:08 2002  Till Adam  <till@adam-lilienthal.de>
+
+ * add a little timeout after deletion of a file. The camera ignores
+   successive deletes otherwise.
+
+Tue Aug 13 14:13:27 2002  Till Adam  <till@adam-lilienthal.de>
+
+ * disallow deletion of anything but the last file on the camera
+
+Sat Aug 10 19:03:31 2002  Till Adam  <till@adam-lilienthal.de>
+
+ * remove debugging calls
+ * allocate space for GsmartFile structures dynamically
+ * sprintf -> snprintf, strcpy -> strncpy, fprintf -> gp_context_error
+ * make internally used functions static and remove them from gsmart.h
+
+Mon Aug 05 00:01:06 2002  Till Adam  <till@adam-lilienthal.de>
+
+ * initial release of the module

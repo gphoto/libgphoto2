@@ -1,0 +1,106 @@
+The protocol deduced, so far.
+
+A break, will reset the protocol, baud rate set to 115200.
+
+Commands are acknowledge by a 21 ( all transmitted data in this description
+is given as bytes of two hex digits)
+
+The commands seen so far, in order of discovery.  All work so far has been
+done with high res images, 640 x 480.
+
+69 <one byte rate specifier>	// set baud rate
+				// 1 = 9600
+				// 2 = 14400
+				// 3 = 19200
+				// 4 = 38400
+				// 5 = 57600
+				// 6 = ??
+				// 7 = 115200
+
+05				// ASCII ENQ no response
+
+41 54 0d			// "AT\r" no response
+
+55				// get status, the response to this command
+				// is two bytes, the lsb of which is the
+				// number of images in the camera, unless
+				// that number can exceed 255, it is not
+				// clear what the second byte is.
+
+61 <image number> 00		// download thumbnail (first image is 0 thes
+				// image number (starts at zero) the
+				// second byte could be the msb of the image
+				// number, if more than 256 images are
+				// possible.  The response is 3844 bytes.
+				// The first three bytes are the same as the
+				// response to the 71 command and are
+				// assumed to have something to do with the
+				// image.  Bit 7 of the third byte indicates
+				// the image mode, set = std, clear = fine.
+				// (this is the current working hypothesis)
+				// This is followed by 3840 bytes
+				// (64*60) and a byte that is assumed to be
+				// a error detection byte.
+
+71 <image number> 00		// 71 and 59 are used to download full
+				// images, the response to 71, is three
+				// bytes.  These three bytes, are the same
+				// as the first three bytes of the
+				// thumbnail.  The ack of the 59 command has
+				// been seen to take more than 10 seconds.
+				// This would indicate that the 71 command
+				// might be some sort of enquiry command and
+				// the 59 command prepares the camera to
+				// download and image (retrieve image from
+				// flash ?)
+				// bit 7 of the third byte of the response
+				// is set for a standard mode image (320x240),
+				// clear for a fine mode image (640x480)
+
+49 <line lsb> <line msb> 1e 00 04 00 a0 00 <number of lines> 80 00 00
+				// the 49 command requests the downloading
+				// of image data.  The first two argument
+				// bytes specify the line to start sending,
+				// the ninth byte specifies the number of
+				// lines to send.  Each line is 640 bytes,
+				// all work so far has been 640 x 480.  The
+				// result to this command is 20481 bytes.
+				// It is assumed that the last byte is an
+				// error detection byte of some sort.  The
+				// image bytes work quite well as grey
+				// scale, it is not clear how color is
+				// encoded.
+				// This command will download fine mode
+				// image, for a std mode image, byte 3 is
+				// 1A, byte 7 is 50, as opposed to 1E and A0
+
+21 80 03 00 <exposure lsb> <exposure msb> fb
+				// send real-time image?  The response is
+				// 6148 bytes, the TWAIN driver displays
+				// this much larger than the thumbnail.
+				// but tacking a pgm header makes this work
+				// as a greyscale.  The exposure control
+				// controls how bright the picture is.  the
+				// higher the number, the brighter the
+				// picture.
+
+Commands seen but not investigated
+35				// the response is 4 bytes 00 10 02 11
+
+5d				// the response is 49 bytes, response seems
+				// include Flash memory size.
+
+6d				// the response is 5 bytes
+
+2d 65 66			// no response ( take picture? )
+
+The following sequnece is used to down load a full fine mode image, after
+the baud rate is set.
+
+41 54 0d
+05
+55
+71 <image number> <image number msb or zero>
+59 <image number> <image number msb or zero>
+49 <image line lsb> <image line msb> 1E 00 04 00 A0 00 <number of image lines> 01 80 00 00
+

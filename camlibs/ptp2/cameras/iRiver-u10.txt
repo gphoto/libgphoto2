@@ -1,0 +1,87 @@
+Device info:
+Manufacturer: iriver
+  model: iriver U10
+  device version: MTP-1.27-N-ENG
+  serial number: 'xxxxxxxxxxxxxxxxxxxxxxxxx'
+Vendor extension ID: 0x00000006
+Vendor extension description: microsoft.com/WMDRMPD: 10.1
+Supported operations:
+  0x1001
+  0x1002
+  0x1003
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100b
+  0x100c
+  0x100d
+  0x100f
+  0x1014
+  0x1015
+  0x9801
+  0x9802
+  0x9803
+  0x9804
+  0x9805
+  0x9810
+  0x9811
+  0x9101
+  0x9102
+  0x9103
+  0x9104
+  0x9105
+  0x9106
+  0x9107
+  0x9108
+  0x9109
+  0x910a
+  0x910b
+Events Supported:
+Device Properties Supported:
+  0x5001
+  0xd401
+  0xd402
+  0xd101
+  0xd102
+
+Kamerazusammenfassung:
+Modell: iriver U10
+  Geräteversion: MTP-1.27-N-ENG
+  Seriennummer: xxxxxxxxxxxxxxxxxxxxxxxxx
+Händler Kennung: 0x00000006
+Händler Beschreibung: microsoft.com/WMDRMPD: 10.1
+
+Aufnahmeformate: MP3
+Anzeigeformate: Association/Directory, MP3, WMA, OGG, Abstract Audio Video Playlist
+Unterstützte MTP Object Properties:
+	Association/Directory/3001: dc01/StorageID dc02/ObjectFormat dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc4f/NonConsumable
+	MP3/3009: dc01/StorageID dc02/ObjectFormat dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc4f/NonConsumable dc46/Artist dc95/MetaGenre de93/SampleRate de94/NumberOfChannels de99/AudioWAVECodec de9a/AudioBitRate
+	WMA/b901: dc01/StorageID dc02/ObjectFormat dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc4f/NonConsumable dc46/Artist dc95/MetaGenre de93/SampleRate de94/NumberOfChannels de99/AudioWAVECodec de9a/AudioBitRate
+	OGG/b902: dc01/StorageID dc02/ObjectFormat dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc4f/NonConsumable
+	Abstract Audio Video Playlist/ba05: dc01/StorageID dc02/ObjectFormat dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc4f/NonConsumable
+
+Fähigkeiten des Geräts:
+	Dateien Download, Löschen von Dateien, Hochladen von Dateien
+	Keine Aufnahme von Bildern, keine Offene Aufnahme, Kein Vendor spezifischer Aufnahmemodus
+
+Informationen über Speichermedium:
+store_00010001:
+	Beschreibung des Speichergeräts: FAT16 System
+	Label des Speichergerätes: zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+	Speichertyp: Eingebauter Speicher
+	Typ des Dateisystems: Generisch hierarchischer Modus
+	Zugriffsmöglichkeiten: Lesen und Schreiben
+	Maximale Kapazität: 1009516544 (962 MB)
+	 Freier Platz (Bytes): 199227028 (189 MB)
+	Freier Speicher (Bilder): -1
+
+Properties des Geräts:
+Batterie Ladezustand(0x5001):(read only) (type=0x2) Range [1 - 4, step 1] value: 4
+Property 0xd401:(read only) (type=0xffff) WMP 10; Napster;  ('WMP 10; Napster; ')
+Property 0xd402:(read only) (type=0xffff) iriver U10 ('iriver U10')
+Property 0xd101:(read only) (type=0x4) 0
+Property 0xd102:(read only) (type=0x4) 0
+

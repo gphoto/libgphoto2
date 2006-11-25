@@ -1,0 +1,123 @@
+2005-02-01  Marcus Meissner  <marcus@jet.franken.de>
+
+	* stv0680.c: Added Creative Go Mini as reported.
+
+2004-09-03  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* stv0680.c: Added DigitalDream l'espion XS
+
+2004-01-21  Marcus Meissner <marcus@jet.franken.de>
+
+	* stv0680.c: Added Che-ez! BABE and SPYZ as reported
+	  by shoota oohara - a4door at sourceforge.
+
+2003-02-28  Marcus Meissner <marcus@jet.franken.de>
+	
+	* stv0680.c: For USB consider this driver production ready.
+	  For serial still experimental, since no testresults appeared :/
+
+2002-11-17  Marcus Meissner <marcus@jet.franken.de>
+
+	* stv0680.c: Fixed long*/int* cast and some warnings.
+
+2002-10-03  Lutz Müller <lutz@users.sourceforge.net>
+
+	* Makefile.am: -I$(top_builddir)/libgphoto2
+
+2002-09-06  Marcus Meissner <marcus@jet.franken.de>
+	
+	* stv680.c: Added Yahoo!Cam.
+
+2002-08-27 Christophe Barbe <christophe.barbe@ufies.org>
+
+	* stv680: Added "Aiptek Palm Cam Trio" IDs
+	  reported by Klaus-M. Klingsporn <klaumikli@tiscali.de>
+
+2002-08-02  Marcus Meissner <meissner@suse.de>
+	
+	* stv680.c: Added Konica e-Mini id.
+
+2002-07-30  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c: Change "!= GP_OK" to "< GP_OK".
+
+2001-07-08  Marcus Meissner <meissner@suse.de>
+	
+	* stv680.c: Added SpyPen Cleo, Axys, Xion, Memo, as reported
+	  by Andrei Boros <andrei@srr.ro>.
+
+2001-04-12  Marcus Meissner <marcus@jet.franken.de>
+	
+	* stv0680.c: Use GP_MIME_PNM instead of (wrong) image/pnm.
+
+2001-04-10  Marcus Meissner <marcus@jet.franken.de>
+	
+	* stv0680.c: Some of those cameras (especially the generic ones 
+	 and the Argus DC-1500) are USB and serial at the same time.
+
+2001-04-10  Marcus Meissner <marcus@jet.franken.de>
+	
+	* stv0680.c: Set the speed on camera_init for serial cameras.
+
+2001-04-05  Marcus Meissner <marcus@jet.franken.de>
+	
+	* library.[ch], stv680.c: Store image data directly in CameraFile,
+	  instead of passing it around unnecessary. (we should add progress
+	  for serial too).
+
+2001-01-23  Kurt Garloff <garloff@suse.de>
+	
+	* library.c, bayer.c: Enhanced the light
+	  processing even more.
+
+2001-01-23  Kurt Garloff <garloff@suse.de>
+	
+	* sharpen.c: Fixed off by one error.
+
+2001-01-15  Kurt Garloff <garloff@suse.de>
+
+	* demosaic_sharpen.c:
+	  Add demosaicing which uses adaptive weighted interpolation
+	  rather than the simplistic bilinear one.
+	  Results in sharper and less noisy pictures.
+	  Further reduce traditional sharpening.
+	  
+2001-01-09  Dan Fandrich <dan@coneharvesters.com>
+
+	* sharpen.c: Added include of string.h to get memcpy prototype
+
+2001-01-08  Marcus Meissner <marcus@jet.franken.de>
+	
+	* bayer.c, saturate.c, library.c:
+
+	  From Kurt Garloff:
+
+	  * The sharpening seems to be overdone a bit -- for darker images,
+	    the noise gets amplified too much and the picutre gets too
+	    snowy/grainy.
+	  * The colour correction sometimes also seems to go too far and
+	    a compormise between the original and the processed image would
+	    seem best.
+
+
+2001-01-06  Marcus Meissner <marcus@jet.franken.de>
+	
+	* bayer.c, library.c: Integrated a speedup of the
+	  preview debayer/scaler routine from Kurt Garloff.
+
+2001-12-29  Marcus Meissner <marcus@jet.franken.de>
+	
+	* saturate.[ch]: Merged from pencam-0.50, which got it from GIMP. 
+	  Adapted to not use global variables.
+	* library.c: Use saturation filter.
+	 
+	  (Done by Kevin, merged by me)
+
+2001-12-21  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* stv0680.c (camera_capture): Tell the filesystem about the new
+	  file.
+
+2001-12-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* library.c: Fix includes

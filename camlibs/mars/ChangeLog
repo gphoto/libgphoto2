@@ -1,0 +1,145 @@
+2006-11-19  Marcus Meissner <marcus@jet.franken.de>
+
+	* mars.c,mars.h: Made some functions static to mars.c
+
+2006-09-23  Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: RAW files saved now with pixelsize information, 
+		     so that the info in them is "self-contained".
+	* mars.c:    usleep() added to mars_routine() to fix a USB timing 
+		     problem reported by conon <troll@arach.net.au>. Changes
+		     to decompression algorithm proposed by conon also 
+		     adopted. Changes to way of handling RAW files imply 
+		     elimination of mars_get_picture_width().
+	* mars.h:    now-extraneous functions de-listed. 	
+	* README:    updated; changes to RAW file header explained.
+	* protocol.txt: updated.
+
+
+2006-08-28  Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Added INNOVAGE Digital Mini. Corrected USB Product
+		     number for Philips Keychain camera (worked anyway, 
+		     but number was wrong). 
+		     Minor tweak to gamma setting.
+		     Improvements to camera_manual(). 
+	* mars.c:    More improvements in mars_decompress().
+	* README:    updated.
+
+
+2006-02-08  Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Added two new cameras. One is the Argus QuickClix, 
+		     which uses a new, still unsolved compression codec and
+		     is therefore marked as DEPRECATED. 
+		     The other cameras I personally own are upgraded to
+		     TESTING, because of improvements in decompression.
+		     Minor code changes in get_file_func().
+		     Improvements to camera_manual(). 
+	* mars.c:    Improvements in mars_decompress().
+		     mars_postprocess() eliminated.
+	* mars.h:    mars_postprocess() eliminated.
+	* README:    updated.
+	* protocol.txt: updated. 
+
+
+2005-09-21  Theodore Kilgore <kilgota@auburn.edu>
+
+	* mars.c:    Removal of two overlooked "//" comment symbols.
+
+
+2005-09-19  Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Added Argus DC-1610 and Philips P44417B keychain camera.
+	* mars.c:    More improvement for decompression, based upon some ideas
+		     of Michel Xhaard <mxhaard@magic.fr>.
+
+2005-09-12  Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Added Argus DC-1620 to list of experimentally supported.
+
+
+2005-09-12  Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Changes to get_file_func() include new computation for 
+		     gamma factor.
+	* mars.c:    Support for compressed mode. Thanks to Bertrik Sikkens 
+		     <bertrik@zonnet.nl> for help with the algorithm and to 
+		     Michel Xhaard <mxhaard@magic.fr> for testing. Minor 
+		     changes to mars_init(); 
+		     mars_postprocess() distinguishes between compressed and 
+		     uncompressed;
+		     mars_get_gamma() eliminated.  
+	* mars.h:    Changes to accommodate changes in mars.c.
+	* README:    Updated.
+	* protocol.txt:    Updated.
+
+
+2005-06-12  Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Added CD302N, reported by Pedro de Oliveira <falso@rdk.homeip.net>
+		     Code cleanup.
+	* mars.c:    Code cleanup. Argus DC-1620 will download raw files now.
+	* mars.h:    Code cleanup.	     
+
+
+2005-01-24  Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Added Precision Mini Model HA513A, reported by Alexander Bostrom.
+		     get_info_func() added, patch from Alexander Bostrom 
+		     <alexander@bostrom.net>
+
+2005-01-17  Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Argus DC-1610/20 do not currently work; commented out.
+
+
+2005-01-14  Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Added Argus DC-1610 and DC-1620.
+
+
+2004-12-22  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* library.c (camera_manual): fixed some trigraph issues.
+
+2004-10-26  Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: ID for Haimei HE-501A, reported by
+		     Scott MacKenzie <irrational@poboxes.com>  
+		     ID for Elta Medi@ digicam, reported by
+		     Nils Naumann, <nau@gmx.net>
+		     Support patch submitted by Scott, tested by Nils.
+	* mars.c:    Scott's patch applied. 
+	* protocol.txt: byte codes for new 352x288 and 176x144 resolution 
+			settings recorded; section "UPDATES and REVISIONS" added. 	     
+
+
+2004-09-04  Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: Vivitar Vivicam 55 added. Credits to 
+		     Sebastien Soilen <sebastien@soilen.net>
+	* mars.c:    init sequence improved; thanks to Sebastien		     
+		     for intensive testing. 	
+
+
+2004-06-09  Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: support for thumbnails; gtkam works now
+	* mars.c: choice routine for gamma factor 
+	* mars.h: choice routine for gamma factor 
+	* README: support for gtkam described
+
+
+2004-05-18  Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Model Emprex PCD3800 added. Credits to 
+		     Hisham Muhammad <hisham@apple2.com> 
+
+
+2004-05-02  Theodore Kilgore <kilgota@auburn.edu>
+
+	* mars.c:    Minor changes to lessen memory footprint.
+	* library.c: Minor changes to lessen memory footprint.
+
+2004-05-01  Theodore Kilgore <kilgota@auburn.edu>
+
+	* *.[c,h]: First check-in. 

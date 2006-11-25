@@ -1,0 +1,72 @@
+2004-06-16  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* dc240.h (TIMEOUT): fix bug 920532
+	http://www.gphoto.org/bugs/?id=920532
+
+2002-10-03  Lutz Müller <lutz@users.sourceforge.net>
+
+	* Makefile.am: -I$(top_builddir)/libgphoto2
+
+2002-08-23  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* library.c: use GP_MIME_JPEG constant instead of a string literal.
+
+2002-03-21  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Fixed 2 assignments to signed chars (was using values
+	             > 127)
+		     Do gp_context_progress_stop at the right places (reported
+		     by Andrea Suatoni).
+
+2002-02-21  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* library.c: removed COMM0 and other strange code and replaced them 
+	with the new DC240_SC_* codes.
+	(dc240_load_status_data_to_table): fixed a signedess issue
+	
+
+2002-02-21  Peter Fales	<psfales@lucent.com>
+
+	* library.c (dc240_packet_read): handle COMM0 error packet
+	(dc240_packet_exchange): handle a GP_ERROR_NOT_SUPPORTED returned by 
+	dc240_packet_read
+	Fix bug #499404
+
+2002-01-19  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c (dc240_capture): free (file) -> gp_file_unref (file)
+
+2002-01-15  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.[c,h]:
+	* dc240.c: gp_camera_status -> gp_context_status
+
+2001-12-26  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* library.c (dc240_set_speed): fixed a memory leak in case of 
+	error, fixed spurious warning caused by API change.
+	* dc240.c (camera_abilities): memset to 0 the ability struct. 
+	See bug 496471. (camera_summary): implemented memory card status
+	* library.[ch]: use _byteorder.h inside the driver.
+	Better error codes.
+
+2001-12-21  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* dc240.c:
+	  (camera_init): Kill some warnings.
+	  (camera_capture): Tell the filesystem about the new file.
+
+2001-12-20  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* library.c (dc240_load_status_data_to_table, dc240_get_status): 
+	changed fdata from char * to unsigned char * 
+
+2001-12-19  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* library.h: 
+	* library.c: 
+	* dc240.c (camera_summary): Implemented summary.
+
+2001-12-06  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* library.c: Definitive fix for bug 438155.

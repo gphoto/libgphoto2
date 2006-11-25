@@ -1,0 +1,51 @@
+2003-06-14  Dan Fandrich <dan@coneharvesters.com>
+	* soundvision.h: Include _stdint.h to get fixed-size integer types.
+
+2002-02-11  Vince Weaver <vince@deater.net>
+        * Completely redid tiger support.  Involved separating out
+	  more functions from Agfa, extensive looking at usb-traces, etc.
+	  delete and image-capture should now work on Tiger.  File upload 
+	  should work but doesn't.  
+	* All attempts to fix the stall upon
+	  subsequent re-running of gphoto2 failed.  It seems to be
+	  somewhat arbitrary.  Sometimes a reset helps, sometimes not.
+        * Agfa-CL18 should work more or less same as before.
+	* Cleaned up a lot of the code.
+
+2002-01-23  Vince Weaver <vince@deater.net>
+	* Add Argus DC-2200
+
+2002-01-16  Vince Weaver <vince@deater.net>
+        * Add Pretec DC530
+	* Bought an Oregon Scientific DShot III to help debug the Tiger class
+	  cameras
+
+2002-01-15  Vince Weaver <vince@deater.net>
+
+        * Add strings for a handful of cameras.
+
+2002-12-30  Vince Weaver <vince@deater.net>
+
+        * Add strings for CoolCam/StarCam CP086
+
+2002-11-29  Vince Weaver <vince@deater.net>
+
+        * Add usb id for Mustek gSmart 350
+
+2002-11-05  Vince Weaver <vince@deater.net>
+
+        * Add strings for FujiFilm @xia iX-100
+
+2002-10-24  Vince Weaver <vince@deater.net>
+
+        * Add usb-id for Scott APX 30.
+
+2002-10-21  Vince Weaver <vince@deater.net>
+
+	* Add usb-id's for RCA CDS1005, and some
+	  name overloading for the Fastflicks driver.
+
+2002-10-03  Lutz Müller <lutz@users.sourceforge.net>
+
+	* Makefile.am: -I$(top_builddir)/libgphoto2
+

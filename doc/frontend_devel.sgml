@@ -1,0 +1,30 @@
+<!doctype linuxdoc system>
+
+<!-- LyX 1.1 created this file. For more info see http://www.lyx.org/ -->
+<article>
+<title>
+gPhoto Front-end Developer's Guide
+</title>
+<author>
+Scott Fritzinger
+2000-07-26
+Revision 1
+</author>
+<toc>
+<sect>
+Understanding the gPhoto2 Structure
+<sect1>
+Role of the gPhoto2 Core
+<sect1>
+Role of the Camera Library
+<sect1>
+Role of the Front-end
+<sect>
+Implementing the Front-end
+<sect1>
+gPhoto2 Core API
+<sect1>
+Functions Required By the Front-end
+
+
+</article>

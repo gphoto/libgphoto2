@@ -1,0 +1,67 @@
+UPDATE: 
+
+Here is an update about what is written below. Most recent Minolta
+digital camera now use USB Mass Storage device protocol for USB
+connectivity. That means that they can be mounted as a disk device
+within the OS without additionnal support (Linux 2.4.x, *BSD,
+etc.). This is a great step forward to having these camera universally
+supported without requiring complex and non-standard device driver
+support.
+
+This list includes Dimage 5, Dimage 7, Dimage X and probably many
+other. I recommend to consult
+<http://www.teaser.fr/~hfiguiere/linux/digicam.html> for an up to date
+compatibility chart.
+
+The bottom line, the text below is probably now really obsolete.
+
+-- Hubert Figuiere <hfiguiere@teaser.fr> - June 19th 2002
+
+
+-----------------------------------------------------------------------------
+
+Below is a message from Minolta regarding the dim possibility of them
+releasing the protocols for their newer cameras. In short, the official line
+is to buy a flash reader when not using a supported system.
+
+
+
+
+Date: Tue, 02 Jan 2001 15:42:42 "GMT"
+From: MinoltaUSA <dphotoinfo@minolta.com>
+To: Customer Service <hartmann@cs.wisc.edu>
+Subject: FAQs
+
+Dear Customer, 
+
+The FAQ you submitted on 12/28/00 has been resolved.
+
+Question: 
+        Hello,
+
+        Approximately eighteen months ago, I contacted Minolta for
+information regarding the serial transfer protocol for the Dimage V,
+with the intent of writing a program that would work under Linux and
+other Unix variants. Minolta was kind enough to provide this to me,
+after I had signed an NDA, but was told that I could &#34;share this
+information freely with the Linux community&#34;. Since then, I have written
+more than one program to access the camera, and my code has since been
+included in a very popular Linux program called gphoto, which aims to
+support cameras from many different vendors. More information on gphoto
+is available at http://www.gphoto.org/ .
+
+        As I am the only developer currently supporting a Minolta driver
+for gphoto, I am often contacted regarding the newer Minolta cameras.
+The most common question I receive is if the same serial driver will
+work on the newer models as on the Dimage V. I don not believe this to
+be the case, but would be interested in finding out an official answer.
+        Additionally, would Minolta be willing to release the serial and
+USB image transfer specifications for any of the other camera models,
+with the same caveats and conditions as before?
+
+        Thanks,
+        Gus
+
+Answer: 
+We recommend the use of Compact Flash Card Readers for acquiring images from
+all of our newer digital cameras on incompatible systems.

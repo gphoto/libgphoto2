@@ -1,0 +1,249 @@
+This document describes the protocol used by the Grandtek/Grandtech 980,
+981,and 9811 chips, supported by the pdc640 driver.
+<p>
+The chip is serial and USB capable, some cameras have only serial
+connections, some have only USB connections.
+<p>
+This document describes the USB communication.
+<p>
+The USB command is at most 3 bytes long: A B C
+and is converted into an USB control message:<br>
+	0xc0 0x10 &lt;A&gt; &lt;B&gt; &lt;C&gt; &lt;checksum&gt; 0x40 
+<p>
+The checksum is calculated by:<br>
+	(A^0x34)+(B^0xcb)+(C^0x67)+0x14f;
+<p>
+All commands return 8 byte of control data, which contains A at
+the start of it.
+<p>
+<table border=1>
+<tr>
+	<td>Name</td>
+	<td>Structure</td>
+	<td>Arguments</td>
+	<td>Result buffer</td>
+</tr>
+<tr>
+	<td>READ VERSION</td>
+	<td>0x05 x x</td>
+	<td>arguments are unspecified</td>
+	<td><ol start=0>
+		<li>0x05 (echo)</li>
+		<li>hardware version</li>
+		<li>firmware version</li>
+		</ol>
+	</td>
+</tr>
+<tr>
+	<td>SELECT PICTURE TYPE</td>
+	<td>0x61 type 0 0</td>
+	<td>type can be:
+	<ul>
+		<li>0x20: GET CALIBRATION PARAM</li>
+		...FIXME: Marcus fill in ...
+	</ul>
+	</td>
+	<td>
+		This is followed by a SEND DRAM command
+		and a bulkread usually, depending on type.
+	</td>
+</tr>
+<tr>
+	<td>NEW BAUD</td>
+	<td>0x69 baudcode</td>
+	<td>baudcode:
+	<ol start=0>
+	<li>2400</li>
+	<li>3600</li>
+	<li>4800</li>
+	<li>7200</li>
+	<li>9600</li>
+	<li>14400</li>
+	<li>19200</li>
+	<li>28800</li>
+	<li>38400</li>
+	<li>57600</li>
+	<li>76800</li>
+	<li>115200</li>
+	<li>153600</li>
+	<li>230400</li>
+	<li>307200</li>
+	<li>460800</li>
+	</ol>
+	</td>
+	<td>Set baudrate. Only useful for serial I guess.</td>
+</tr>
+<tr>
+	<td>AT</td>
+	<td>0x41 0x00 0x00 0x00</td>
+	<td></td>
+	<td>Appears to be some kind of ping command.</td>
+</tr>
+<tr>
+	<td>SELECT PICTURE</td>
+	<td>0xf6 picnum 0x00 0x00</td>
+	<td>picnum is the picture number, starting with 0.</td>
+	<td>Selects the specified picture. At offset 7 of the return buffer is the new picture.</td>
+</tr>
+<tr>
+	<td>SICE DOWNLOAD</td>
+	<td>0xf2 lsb msb</td>
+	<td>lsb/msb is the size? offset? of the uploaded firmware.</td>
+	<td>Function unclear.</td>
+</tr>
+<tr>
+	<td>QUERY STORAGE FULL</td>
+	<td>0x92</td>
+	<td></td>
+	<td>
+		Storage card is:<br>
+		1: Full, otherwise: Empty.
+	</td>
+</tr>
+<tr>
+	<td>SEND PARAMETER</td>
+	<td>0xf8 lsb msb</td>
+	<td>lsb/msb is the size. This is followed by a USB bulk write.</td>
+	<td>Unclear.</td>
+</tr>
+<tr>
+	<td>WRITE REG</td>
+	<td>0x81 reg val</td>
+	<td>Sets register reg to value val</td>
+	<td>See pseudo function below.</td>
+</tr>
+<tr>
+	<td>READ REG</td>
+	<td>0xf9 reg</td>
+	<td>Reads register reg</td>
+	<td>1: return value (1 byte)</td>
+</tr>
+<tr>
+	<td>SIMSCANNER</td>
+	<td>0x86 0 0 0</td>
+	<td></td>
+	<td>Only for serial. Whatever it does.</td>
+</tr>
+<tr>
+	<td>DUAL CAPTURE</td>
+	<td>0x87 0</td>
+	<td></td>
+	<td>0: echo (0x87) 1..4: some values.</td>
+</tr>
+<tr>
+	<td>PUSH BUTTON</td>
+	<td>0xfd 0 0</td>
+	<td></td>
+	<td>0: echo (0xfd) 1: reply value.</td>
+</tr>
+<tr>
+	<td>SNAP</td>
+	<td>0x2d</td>
+	<td></td>
+	<td>0: echo (0xfd) 1: reply value.</td>
+</tr>
+<tr>
+	<td>WAIT EXPOSURE</td>
+	<td>0x93</td>
+	<td></td>
+	<td>0: echo (0xfd) 1: return value. Wait for 1.</td>
+</tr>
+<tr>
+	<td>SEND DRAM</td>
+	<td>0x15 lsb1 msb1 lsb2 msb2</td>
+	<td></td>
+	<td>Followed by bulk read. parameters are a bit unclear.</td>
+</tr>
+<tr>
+	<td>LOCK SNAP</td>
+	<td>0x90</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>FREE SNAP</td>
+	<td>0x91</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>RS232 INIT</td>
+	<td>0x01</td>
+	<td></td>
+	<td>Serial only I guess.</td>
+</tr>
+<tr>
+	<td>ERASE IMAGE</td>
+	<td>0x59 x</td>
+	<td></td>
+	<td>With x:
+	<ol start=0>
+	<li>Delete all images.
+	<li>Delete the last image.
+	</ol>
+	</td>
+</tr>
+<tr>
+	<td>NORMAL EXIT</td>
+	<td>0xfc</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>88 Command</td>
+	<td>0x88</td>
+	<td></td>
+	<td></td>
+</tr>
+</table>
+
+<pre>
+
+void
+DOWNLOAD_DATA(type, buffer, size) {
+	SELECT_PICTURE_TYPE(type);
+	SEND_DRAM(buffer, size);
+}
+
+/* Unclear why and how used */
+void
+SEND_USER_COMMAND(cmd, inputbuffer, inputsize, outputbuffer, outputsize) {
+	SEND_PARAMETER(&cmd, 1);
+	if (inputbuffer && inputsize) {
+		SEND_PARAMETER(inputbuffer, inputsize);
+	}
+	if (outputbuffer && outputsize) {
+		SEND_PARAMETER(&outputsize, 4);
+		DOWNLOAD_DATA(0x21, outputbuffer, outputsize);
+	}
+}
+
+void
+WRITE_REG_Command(byte reg, byte val, int porttype) {
+	// strangely different between USB/SERIAL
+	if (porttype == USB) {
+		byte buf[2];
+		buf[0] = reg;
+		buf[1] = val;
+		SEND_PARAMETERk(buf, 2);
+	} else {
+		call_driver(0x81, reg, val);
+	}
+}
+
+void
+take_picture(int checkstoragefull, int locksnapflag, int waitforexpflag) {
+	byte val;
+
+	if (checkstoragefull) QUERY_STORAGE_FULL():
+	if (locksnapflag) LOCK_SNAP();
+	SNAP();
+	if (waitforexpflag) {
+		do {
+			Sleep(500);
+			WAIT_EXPOSURE(&val);
+		} while (val != 1);
+	}
+	if (locksnapflag) FREE_SNAP();
+}
+</pre>

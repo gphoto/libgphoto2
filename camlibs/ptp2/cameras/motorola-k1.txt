@@ -1,0 +1,71 @@
+Device info:
+Manufacturer: Motorola Inc.
+  model: (null)
+  device version: (null)
+  serial number: '(null)'
+Vendor extension ID: 0x00000000
+Vendor extension description: (null)
+Supported operations:
+  0x1001
+  0x1002
+  0x1003
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100a
+  0x100c
+  0x100d
+  0x101b
+Events Supported:
+  0x4009
+Device Properties Supported:
+  0x5001
+  0x500c
+  0x5011
+  0x5003
+  0x501d
+  0x5018
+  0xd401
+  0xd402
+  0xd101
+  0xd102
+Camera summary:
+Model: (null)
+  device version: (null)
+  serial number:  (null)
+Vendor extension ID: 0x00000000
+Vendor extension description: (null)
+
+Capture Formats: JPEG
+Display Formats: Undefined Type, JPEG, GIF, BMP, JFIF, PNG, MS Wave, MP3, MS AVI, MPEG, ASF, Unknown(b881), Unknown(b900), Unknown(b901), Unknown(b980), Unknown(b981), Unknown(ba00), Unknown(ba01), Unknown(ba02), Unknown(ba03), Unknown(ba04), Unknown(ba05), Unknown(ba06), Unknown(ba07), Unknown(ba10), Unknown(ba11), Unknown(ba12), Unknown(ba13), Unknown(ba14), Unknown(ba80), Unknown(ba81), Unknown(bb00), Unknown(bb01), Unknown(bb80), Unknown(bb81), Unknown(bb82), Unknown(bb83), Unknown(be00), Unknown(be01), Unknown(be02), Unknown(be80)
+
+Device Capabilities:
+	File Download, No File Deletion, File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: None
+	VolumeLabel: None
+	Storage Type: Undefined
+	Filesystemtype: Unknown: 0x0200
+
+	Access Capability: Read-Write
+	Maximum Capability: 18014398509481984 (0 MB)
+	Free Space (Bytes): 18014398509481984 (0 MB)
+	Free Space (Images): -65536
+
+Device Property Summary:
+Battery Level(0x5001):(read only) (type=0x0) Undefined
+Flash Mode(0x500c):(read only) (type=0x0) Undefined
+Date Time(0x5011):(read only) (type=0x0) Undefined
+Image Size(0x5003):(read only) (type=0x0) Undefined
+Upload URL(0x501d):(read only) (type=0x0) Undefined
+Burst Number(0x5018):(read only) (type=0x0) Undefined
+Property 0xd401:(read only) (type=0x0) Undefined
+Property 0xd402:(read only) (type=0x0) Undefined
+Property 0xd101:(read only) (type=0x0) Undefined
+Property 0xd102:(read only) (type=0x0) Undefined

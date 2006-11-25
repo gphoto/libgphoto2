@@ -1,0 +1,197 @@
+This briefly describes the PTP/IP transfer layer.
+
+(It was reverse engineered from a ethereal network packet dump.)
+
+The connections are simple TCP/IP socket connection.
+
+Default port is 15740 (same as the ISO number for PTP).
+
+There are 2 connections used:
+	- control & data connection (initiator (computer) driven)
+	- event connection  (responder (camera) driven)
+
+The participants communicate in packets, their layout is:
+
+	4 byte		length	(little endian)
+	4 byte		type	(little endian)
+	length - 8 byte	data	(type specific)
+
+
+Type:		1	- (to  ) Init_Command_Request
+		2	- (from) Init_Command_Ack
+		3	- (to  ) Init_Event_Request
+		4	- (from) Init_Event_Ack
+		5	- (from) Init_Fail
+
+		6 	- (to  ) Cmd_Request
+		7	- (from) Cmd_Response
+		8	- (from) Event
+		9	- (both) Start_Data_Packet
+		a	- (both) Data_Packet
+		b	- (to  ) Cancel_Transaction
+		c	- (from) End_Data_Packet
+		d	- (to  ) Ping
+		e	- (from) Pong
+
+State transitions:
+
+Initial Phase:
+        Command Connection:     1 (initiator) -> 2 -> PTP traffic
+                                              \> 5 -> exit
+	Event Connection:	3 (initiator) -> 4 -> EVEN traffic
+                                               \ 5 -> exit
+
+
+PTP Traffic:
+	START -> 6 -> 7 -> START
+                  \
+                   9 -> A/C -> 7 -> START
+
+EVENT Traffic:
+	START -> 8 -> START		(EVENT)
+	       \
+	         13 -> 14 -> START	(PING/PONG)
+
+The packet types are:
+
+TYPE 1 (Init_Command_Request)
+	payload sizeof(GUID)+(1+lstrlenW(computername))*sizeof(WCHAR) bytes
+		16 byte GUID
+		xx byte WCHAR computername with terminating \0
+
+	=> Can be followed by type 2 or type 5.
+
+TYPE 2 (Init_Command_Ack)
+	payload 4+sizeof(GUID)+(1+lstrlenW(cameraname))*sizeof(WCHAR) bytes.
+		4 byte	ID	(session id, to be used for event startup)
+		16 byte	GUID (MAC is used here for my camera, and repeated)
+		xx byte WCHAR Camera Name with terminating \0
+
+TYPE 3 (Init_Event_Request)
+	payload 4 bytes.
+		4 byte ID (from Init_Command_Ack)
+
+	=> Can get type 4 or type 5 reply.
+
+TYPE 4 (Init_Event_Ack)
+	No payload.
+	You can start sending PTP traffic now.
+
+TYPE 5 (Init_Fail)
+	payload 4 byte. 
+		4 byte error code (unclear meaning)
+		-> might mean busy / access denied.
+
+
+TYPE 6 (Cmd_Request):
+	payload n bytes.
+		2 bytes PTP command
+		n bytes command arguments
+
+	May be followed by 0x9 (data reader/data sender)
+	Will be followed then by 0x7 (PTP response)
+
+TYPE 7 (Cmd_Response):
+	payload 6 - 26 bytes
+		2 bytes		PTP response code
+		4 bytes 	nr of arguments
+		nr*4 bytes	arguments
+
+
+TYPE 8 (Event)
+	length 14 - 26
+		2 byte	event code
+			ptp event specific data..
+
+TYPE 9 (Start_Data_Packet):
+	8 byte payload.
+
+	4 byte number
+	4 byte download size (without 0e/0a blob size)
+
+	can be followed by 0e, 0a, 0c
+
+TYPE 10 (Data_Packet):
+	4 byte payload.
+		4 byte	xid (transaction id?)
+
+TYPE 11 (Cancel_Transaction):
+	12 byte
+		4 length
+		4 type
+		4 <ID>
+	
+	-> Gets 0x7 ack back.
+
+TYPE 12 (End_Data_Packet):
+	4 byte payload.
+		4 byte	xid (transaction id?)
+
+TYPE 13 (Ping
+	0 byte payload.
+
+TYPE 14 (Pong)
+	0 byte payload.
+
+
+PTP READ DATA:
+	(type can be: 0A, 0C, 07(response))
+
+	0A, 0C:
+		packetlen < 12	-> error
+
+
+Profile creation packet (USB)
+-----------------------------
+0x00	BYTE Version (0x64)
+0x01	0x00	UINT32 length (always 16+1, as 16 is the maximum profilename length)
+0x05	0x04	BYTE profilename[length]
+
+0x16	BYTE	DisplayOrder (always 00)
+0x17	BYTE	DeviceType
+		0 - Computer
+		1 - Printer
+
+0x18	BYTE	IconType (at least 01 is a valid value)
+0x19	0x00	BYTE length_in_characters (always 0x10 == 0x20 bytes : 4(Year) + 2(Month) + 2(Day) + 1('T') + 2(Hour) + 2(Minute) + 2(Second) + 1('\0') = 16)
+0x1A	0x01	UINT16 timestr[length_in_characters]
+0x3A	INT32	IPAddress
+0x3E	BYTE	SubnetMask	(1 byte only? first byte)
+0x3F	INT32	Gateway
+
+0x43	BYTE	AddressSetting
+		0	Manual
+		2	DHCP in ad-hoc mode :
+				Pick a random address in 169.254.1.*
+				(check with several ARP requests that no one use
+				this address)
+		3	DHCP in managed mode : 
+				Send a standard DHCP request, if it gets no
+				answer, switch to mode 2
+
+0x44	BYTE	AccessMode
+		0	Managed/Infrastructure
+		1	Ad-Hoc Mode
+
+0x45	BYTE	Channel
+
+0x46	0x00	UINT32	length (always 32+1, maximum Wifi essid length)
+0x4A	0x04	BYTE 	SSID[length]
+
+0x6B	BYTE	Authentication
+		0	Open (?)
+		1	Shared
+		2	WPA-PSK
+
+0x6C	BYTE	Encryption
+		0 	None (?)
+		1	WEP 64 bits
+		2	WEP 128 bits
+		3	TKIP
+
+0x6D	0x00	UINT32	length (always 64, whatever the key size is)
+0x71	0x04	BYTE	EncryptionKey[length]
+
+0xB1	BYTE	EncryptionKeyNr
+0xB2	BYTE	MachineGUID[0x10]
+0xC2	UINT16	Encryption key length in bytes 0x0005 for WEP64, 0x000d for WEP128 

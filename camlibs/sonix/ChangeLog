@@ -1,0 +1,40 @@
+2006-11-19   Marcus Meissner  <marcus@jet.franken.de>
+
+	* sonix.c: made 3 functions static
+
+2006-08-17   Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Workaround for gtkam problem if camera empty.
+
+	* sonix.c: indentation inside for() statement.
+
+
+
+2006-08-17   Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Workaround for gtkam problems with Sakar 11199.
+
+	* sonix.c: Workaround for gtkam problems with Sakar 11199.
+
+	* sonix.h: Workaround for gtkam problems with Sakar 11199.
+
+	* README: Revisions.
+
+	* sakar-avi-header.h: Forgot to commit this. Here it is!
+
+
+
+2006-08-14   Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Added Sakar Digital Keychain 11199. 
+		     New functionality to support new camera.
+
+	* sonix.c: Rewritten to support new camera.
+
+	* sonix.h: Rewritten to support new camera.
+
+	* README: Revised.
+
+2005-06-09   Theodore Kilgore <kilgota@auburn.edu>
+
+	First check-in.

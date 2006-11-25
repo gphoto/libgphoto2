@@ -1,0 +1,9 @@
+Mon Jan 20 20:45:15 2003  Till Adam  <till@adam-lilienthal.de>
+
+  * remove unused exit handler
+  * write the current date and time to the cam in init, to sync it. It seems
+    to require that occasionally to be able to keep time.
+
+Sam Jan 18 22:00:10 2003  Till Adam  <till@adam-lilienthal.de>
+
+  * initial import

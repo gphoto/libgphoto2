@@ -1,0 +1,31 @@
+--gnu-style
+--indent-level8
+--blank-lines-after-declarations
+--blank-lines-after-procedures
+--braces-on-if-line
+--cuddle-else
+--space-special-semicolon
+--no-blank-before-sizeof
+--no-space-after-parentheses
+--continue-at-parentheses
+--line-length95
+--comment-line-length80
+--honour-newlines
+--case-indentation8
+--space-after-cast
+--space-after-for
+--space-after-if
+--space-after-while
+-T gp_port
+-T Camera
+-T GPPort
+-T CameraFilesystem
+-T CameraList
+-T CameraFileType
+-T CameraFile
+-T CameraText
+-T CameraAbilitiesList
+-T CameraWidget
+-T GPContext
+-T time_t
+-T CameraFileInfo

@@ -1,0 +1,14 @@
+$Id$
+
+Brian Beattie <beattie@aracnet.com> <URL:http://www.beattie-home.net>
+Original gphoto 0.4 driver
+
+Chuck Homic <chuck@vvisions.com>
+Converting raw camera images to RGB
+
+Dan Fandrich <dan@coneharvesters.com>
+Information on protocol, raw image format, gphoto2 port
+
+Gregg Berg <gberg@covconn.net>
+Driver patches
+

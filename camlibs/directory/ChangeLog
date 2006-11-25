@@ -1,0 +1,65 @@
+2006-06-03  Hubert Figuiere  <hub@figuiere.net>
+
+	* directory.c: Added more extensions as file types.
+
+2005-08-17  Marcus Meissner  <marcus@jet.franken.de>
+
+	* directory.c: Use "Mass Storage Camera" to avoid
+	  hardcoded client hacks for "Directory Browse".
+
+2005-08-14  Marcus Meissner  <marcus@jet.franken.de>
+
+	* directory.c: Support GP_PORT_DISK style ports
+	  with offset directories.
+
+2003-02-27  Marcus Meissner <marcus@jet.franken.de>
+
+	* directory.c: We support EXIF download.
+
+2003-01-29  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* directory.c (file_list_func): call GP_SYSTEM_CLOSEDIR() where
+	appropriate to not leak.
+	(folder_list_func): same as above.
+
+2002-11-20  Lutz Müller <lutz@users.sourceforge.net>
+
+	* directory.c: Additional debugging stuff.
+
+2002-11-04  Lutz Müller <lutz@users.sourceforge.net>
+
+	* directory.c: Don't follow links.
+
+2002-07-17  Lutz Müller <lutz@users.sourceforge.net>
+
+	* directory.c: Improve user feedback by calling gp_context_idle.
+
+2002-02-26  Lutz Müller <lutz@users.sourceforge.net>
+
+	* directory.c (delete_file_func): In case of error, tell the user
+	  what went wrong.
+
+2002-02-13  Dan Fandrich <dan@coneharvesters.com>
+
+	* directory.c: Now using MIME type macros.  Replaced // comment.
+
+2002-02-07  Lutz Müller <lutz@users.sourceforge.net>
+
+	* directory.c: Detect *.jpeg files, too.
+
+2002-02-07  Lutz Müller <lutz@users.sourceforge.net>
+
+	* Makefile.am:
+	* directory.c: Support GP_FILE_TYPE_EXIF ifdef HAVE_EXIF
+
+2001-12-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* directory.c: Even more debugging.
+
+2001-12-28  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* directory.c: Debugging stuff, file deletion.
+
+2001-11-27  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* directory.c: Support GP_FILE_TYPE_PREVIEW, too.

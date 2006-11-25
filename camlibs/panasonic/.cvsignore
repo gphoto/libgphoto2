@@ -1,0 +1,8 @@
+*.la
+dc.lo
+dc1580.lo
+dc1000.lo
+.libs
+.deps
+Makefile
+Makefile.in

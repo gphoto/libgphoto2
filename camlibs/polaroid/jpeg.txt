@@ -1,0 +1,99 @@
+This should help understand jpeg headers.
+Warning: I don't understand the jpeg headers or jpegs that well!
+Oh well, I will try to explain here anyway.
+
+Jpeg markers in general:
+------------
+0xFF marker# lenth(2 bytes) data
+length is the size of the information after the 0xFF XX
+
+Quantization tables:
+-------------------
+0xFF 0xDB 0x00 length tables
+Funny.....for what I have the data is all 0x01's.
+I guess there is a precision number in there somewhere, but I don't know.
+For what I have, both quantization tables are precision 0.
+Precision 1 will not be used by us. We need precision 0.
+Jpeg's have two tables. 
+Table 0 should be luminance and table 1 should be chrominance.
+
+Start of Frame 0:
+----------------
+0xFF 0xC0 0x00 length bits-per-pixel 0x00 height(2 bytes) width(2 bytes)
+  #_of_components sets(1 or 3 of them)
+A set would be component# v/h quantization-table-number.
+The v/h is the vertical to horizontal compression ratio.
+I misplaced some info I had on the components here.
+There are a couple of formats that the data could be in.
+The 3 component ones are YCbCr and CMY.
+The 4 component ones are YCbCrK and CMYK.
+The #_of_components is set to 3 or 4 accordingly.
+The component# can be something like 0 through 5
+The component# would refer to Y, Cb, Cr, C, M, or K
+1=Y, 2=Cb, 3=Cr, but I forget what C, M and K are.
+
+Huffman tables:
+--------------
+0xFF 0xC4 0x00 length ACorDC bits(16 bytes) Huffman_values
+length is the size of that huffman table (you don't count the FFCO)
+Repeat until length is exhausted (usually 4 Huffman tables):
+	If ACorDC>=0x10 it is an AC table, otherwise, it is a DC table
+	The length of the Huffman_values is the sum of the previous 16 bytes
+
+Ending piece of header (I have no clue what to call it):
+-------------------------------------------------------
+0xFF 0xDA length(2 bytes) #_of_components(1 byte) sets Ss Se Ah Al
+Ss and Se, I guess are each one byte.
+I guess Ah and Al are one byte total.
+The sets are: component#(1 byte) DC+ACtable#'s
+For DC+ACtable#'s, the high nibble is DC table# and the low nibble is AC table#
+
+        # Quantization tables given in JPEG spec, section K.1
+
+        # This is table 0 (the luminance table):
+          16  11  10  16  24  40  51  61
+          12  12  14  19  26  58  60  55
+          14  13  16  24  40  57  69  56
+          14  17  22  29  51  87  80  62
+          18  22  37  56  68 109 103  77
+          24  35  55  64  81 104 113  92
+          49  64  78  87 103 121 120 101
+          72  92  95  98 112 100 103  99
+
+        # This is table 1 (the chrominance table):
+          17  18  24  47  99  99  99  99
+          18  21  26  66  99  99  99  99
+          24  26  56  99  99  99  99  99
+          47  66  99  99  99  99  99  99
+          99  99  99  99  99  99  99  99
+          99  99  99  99  99  99  99  99
+          99  99  99  99  99  99  99  99
+          99  99  99  99  99  99  99  99
+
+Those are not in the order that it appears in the jpeg.
+Those two tables are accessed in this order:
+	   1   3   4  10  11  21  22  36
+	   2   5   9  12  20  23  35  37
+	   6   8  13  19  24  34  38  49
+	   7  14  18  25  33  39  48  50
+	  15  17  26  32  40  47  51  58
+	  16  27  31  41  46  52  57  59
+	  28  30  42  45  53  56  60  63
+	  29  43  44  54  55  61  62  64
+
+Comparing the before and after of putting a really high and out of place number
+in the table will help you locate bad spots in the table. It will make an
+obvious distortion in the image. Use this technique to find the table entry 
+that affects the pixels that are distorted and then decrease the difference
+between that table entry and the ones around it (look at the order table).
+
+The greater the difference between the numbers in the table, the greater the 
+contrast or annoying shadow. Smaller differences will create smoother 
+transitions between pixels. A table entry of 0 will make the table result be 0.
+Consider the quantization table as a multiplier table. For every dot in every 
+8x8 block of the picture, the input is multiplied by the corresponding value in
+the quantization table. Therefore, you can probably find out what quantization 
+table entry needs to be changed by looking at its coordinates. Keep in mind 
+that different compression ratios are used for different cameras though, so 
+this might not work the same way for all cameras. If you use a bunch of 1's in
+the tables, you will probably come up with a very dull image.

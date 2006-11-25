@@ -1,0 +1,12 @@
+
+Unordered TODO list:
+
+-- free() all malloced memory upon exit!
+
+-- update params.handles and params.objectinfo structures after deletion of
+folders/files
+
+-- lot of internal error handling code is needed and the whole internal
+error reporting scheme has to be reorganized and improved!
+
+-- consider the idea of adding lasterror variable to PTPParams

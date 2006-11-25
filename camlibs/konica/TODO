@@ -1,0 +1,32 @@
+
+Multithreading
+--------------
+The commands can overlap. However, we don't do that right now, although it 
+would be interesting to test it.
+
+Actually, we need a thread that constantly watches the serial port. The camera for example sends packets up to three times when we do nothing but listen to the port (and not acknowledging that we received something). We need a thread that reacts to such packets.
+
+Commands
+--------
+* get_information: You can add additional bytes. For what? They don't have any effect and don't 
+return error "illegal parameter".
+* get_status: You can add additional bytes. For what? If non-zero, all status information 
+is set to zero.
+* see konica.h for two undocumented commands. 
+* Localization: I added some preliminary code and files. It has not been tested yet.
+
+Features
+--------
+How to set
+- small photos
+- TSC / PAL
+- Screen Brightness
+- Zoom
+
+Just in case...
+---------------
+What's the operating system of the camera? It would be neat to port Tetris to it...
+
+
+
+

@@ -1,0 +1,154 @@
+This is a quick and dirty reverse engineer of the ST microelectronics STV0674
+*NOTE* this is *not* the STV0680 that is a completely separate device!
+
+the current web page for this device is
+http://www.vvl.co.uk/products/co-processors/674/674.htm
+
+As is becoming increasingly more common the chip vendors are being
+right pains in the bum and forcing me to reverse engineer their
+protocols from snoops rather than giving me the data sheet. If your in
+a position to get the datasheet for this product please please do
+improve this driver!
+
+So far this driver has only been tested on a l'espion xtra other
+cameras may need more tweaks.
+
+The device has a single interface with several alternate configs,
+alternate 1 has 3 endpoints :bulk in, bulk out and an interrupt.
+
+The driver selects alternate one and uses the bulk in endpoint for
+data.  Several control transactions are used to control the data
+available on the bulk in pipe.
+
+
+Most transactions are associated with an image number this is a 4
+byte MSB value which appears to start at *2* ie the first image is 00
+00 00 02.
+
+The image "header" is a block of data which is not associated with the
+jpeg data at all but contains several pieces of information, some
+important bits are:
+
+ - image length (bytes 0x47(MSB) and 0x48)
+ - x size (0x49 (MSB) 0x4a)
+ - y size (0x4b (MSB) 0x4c
+
+
+Control transactions
+--------------------
+
+Ping
+----
+I assume this transaction is a "ping" as the windows driver seems to
+perform this transaction like a nervous twitch, its done all over for
+no good reason I can see, always with the same result
+
+The host reads a control transaction with 1 byte URB
+bRequest = 0x80
+wValue=0x0000
+wIndex=0x0000
+wLength=0x0001
+
+the returned URB:
+byte 0 is always 0x00
+
+Get header
+----------
+This obtains a block of data which contains the image "header"
+
+The host writes a control transaction with 6 byte buffer
+
+bRequest = 0x0A
+wValue=0x0000
+wIndex=0x0000
+wLength=0x0006
+
+the data buffer has:
+bytes 0-3 are image number
+bytes 4-5 are length (MSB) this is always 0x56 in the doze driver
+
+the client may then read the "length" bytes from the bulk in pipe
+
+Set Image Number
+----------------
+I believe this is used to select the image for some transactions that
+don't explicitly set the image number themselves
+This and the following are done immediately before each image download
+
+The host writes a control transaction with 4 byte buffer
+
+bRequest = 0x03
+wValue=0x0000
+wIndex=0x0000
+wLength=0x0004
+
+the data buffer has:
+bytes 0-3 are image number
+
+Unknown
+-------
+This *always* follows the above
+
+The host reads a control transaction with 2 byte buffer
+bRequest = 0x86
+wValue=0x0000
+wIndex=0x0000
+wLength=0x0004
+
+the data buffer has:
+byte 0 is always 0x03
+byte 0 is always 0x01
+
+Image header read
+-----------------
+This is performed before each image is read, its just a repeat of the
+header obtained with the other request but its useful here for getting
+the image size, the doze driver always does it here and if you don't it
+breaks ;-)
+
+The host writes a control transaction with 8 byte buffer
+
+bRequest = 0x05
+wValue=0x00ff
+wIndex=0x0000
+wLength=0x0008
+
+the written URB contains:
+bytes 0-3 are image number
+bytes 4-7 are the length of data to read (always 0x200 for the header read)
+
+0x200 bytes are then read from the bulk in pipe, this seems to be an
+extended header?
+
+Image read
+----------
+This is identical to the image header read above except the wValue has
+changed from 0xff to 0x08. The windows driver writes a series of these
+commands asking for 0x1000 bytes of data a time, larger seems to
+fail... so reading blocks of 0x1000 and a fragment of smaller seems to
+be the best way to go.
+
+The host writes a control transaction with 8 byte buffer
+
+bRequest = 0x05
+wValue=0x0008
+wIndex=0x0000
+wLength=0x0008
+
+the written URB contains:
+bytes 0-3 are image number
+bytes 4-7 are the length of data to read (0x1000 or less)
+
+read close
+----------
+This transaction is performed at the end of the image read.
+
+The host writes a control transaction with 4 byte buffer
+
+bRequest = 0x09
+wValue=0x0000
+wIndex=0x0000
+wLength=0x0004
+
+the data buffer has:
+bytes 0-3 are image number

@@ -1,0 +1,197 @@
+2006-01-03  Hubert Figuiere  <hub@figuiere.net>
+
+	* library.c: Shark 2-in-1 Mini
+	             Request Ultra Slim
+
+2005-05-18   Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: raw photo download routine segfault fixed.
+
+2005-05-18   Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Several improvements for SQ_MODEL_POCK_CAM
+	* postprocess.c: Several improvements for SQ_MODEL_POCK_CAM	
+	* sq905.c: Several improvements for SQ_MODEL_POCK_CAM, thanks to 
+	Julius Schwartzenberg <julius@zgod.cjb.net> for exhaustive testing!
+
+2005-05-18   Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: bug in compressed photo routine fixed, found by 
+	Cedric Cellier.
+
+2005-04-17   Theodore Kilgore <kilgota@auburn.edu>
+
+	* ChangeLog: Fixed some typos.
+
+2005-04-16   Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: fix sq_decompress() to handle Magpix B350
+	* postprocess.c: fix sq_decompress() to handle Magpix B350	
+	* sq905.h: fix sq_decompress() to handle Magpix B350
+	* sq905.h: fix sq_decompress() to handle Magpix B350	
+
+2005-04-12   Theodore Kilgore <kilgota@auburn.edu>
+
+	* postprocess.c: small oops repaired in sq_decompress()	
+
+2005-04-03   Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: improvements for compressed mode
+	* postprocess.c: improvements for compressed mode	
+	* sq905.h: improvements for compressed mode
+
+2005-01-17   Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: added Shark SDC-513 and SDC-519
+	* postprocess.c: Code cleanup	
+
+2004-12-15   Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: added Concord Eye-Q Duo, Sakar Kidz Cam
+	(get_file_func): Conditionnalize pre-processing
+
+2004-11-11 Theodore Kilgore <kilgota@auburn.edu>
+	
+	* postprocess.c: bugfix for release.
+
+2004-11-11 Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: added ViviCam 5B and SY-2107C cameras.
+
+2004-10-28  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* sq905.c (sq_read_picture_data): Fix build for gcc 2.95
+	(bug #1055868)
+
+2004-08-25 Theodore Kilgore <kilgota@auburn.edu>
+
+	* README.913C: Description of Argus DC-1730 0x2770:0x913c camera.
+	
+	* library.c: Argus DC-1730 0x2770:0x913c added.
+	
+	* sq905.c: data type corrected in sq_access_reg ( )
+	
+	* sq905.h: In sq_access_reg ( ) the "index" is an int. Oops. 
+
+2004-06-29 Theodore Kilgore <kilgota@auburn.edu>
+
+	* sq905.c: Major rewrite. Credit to Cedric Cellier 
+		<rixed@happyleptic.org> for several improvements, in particular
+		sq_rewind ( ), which permits random access to photos on camera.
+	
+	* sq905.h: needed changes declared.
+	
+	* postprocess.c: Anything special done to a photo after download 
+		goes here, especially things which are experimental or 
+		still not complete. 
+	
+	* library.c: Big changes. Video clips and capture-preview supported;
+		delete-all-photos supported for those SQ cameras which will 
+		do it; thumbnails supported for GUI compatibility. 
+		
+	* README: Updated to describe new capabilities of camlib. 
+
+	* TODO: list of things which still need work. 
+	
+	* Makefile.am: postprocess.c added as source file.		
+
+2003-11-21 Theodore Kilgore <kilgota@auburn.edu>
+
+	* sq905.h: SQ_MODEL_MAGPIX added; ID number found by T. K.
+
+2003-11-21 Theodore Kilgore <kilgota@auburn.edu>
+
+	* sq905.c: The following changes are introduced:
+		-- In sq_init the initialization sequence is not repeated; 
+		experience has shown this to be unnecessary. 
+		-- In accordance with general policy, individual credits for 
+		reporting model ID numbers are placed here. Credit to 
+		Fabien Devaux <fab@gnux.org> for the ID of SQ_MODEL_PRECISION.
+
+2003-10-30  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* sq905.c: Give credit to individual people (here 
+	  Paulo Tribolet Abreu <paulotex@gmx.net> who reported a special
+	  model) in the ChangeLog, not all over the code to keep the code
+	  readable.
+
+2003-10-29  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* library.c: Reduce memory requirements by first freeing one variable
+	  before allocating memory for another.
+
+2003-10-29  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* library.c: Substitute memcpy by for (...) { (...) } on 
+	  request of Theodore Kilgore <kilgota@banach.math.auburn.edu>.
+
+2003-10-29  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* sq905.[c.h]: Patch by Thodore Kilgore
+	  <kilgota@banach.math.auburn.edu>: Introduce new SQ_MODEL_PRECISION.
+
+2003-10-29  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* library.c: Patch by Theodore Kilgore
+	  <kilgota@banach.math.auburn.edu>: Fix postprocessing of files
+	  where comp_ration != 2.
+
+2003-10-10  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* library.c: Patch by Theodore Kilgore
+	  <kilgota@banach.math.auburn.edu>: Allocate enough bytes for
+	  image data _and_ header.
+
+2003-10-07  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* sq905.c: Patch by Theodore Kilgore <kilgota@banach.math.auburn.edu>,
+	  without ChangeLog entry, unfortunately not against latest cvs, and
+	  not in 'cvs diff -u3 -p' format. Hence no guaranty that I figured
+	  out the right lines and the right changes. No idea if the code
+	  now works better than before. But it compiles :-)
+
+2003-08-01  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* sq905.c: Additional information by Paulo Tribolet Abreu
+	  <paulotex@gmx.net>.
+
+2003-08-01  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* sq905.c: Additional information by Paulo Tribolet Abreu
+	  <paulotex@gmx.net>.
+
+2003-07-30  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* library.c: Move some variables around to make non-gcc-compilers 
+	happy.
+
+2003-07-15  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* sq905.[c]: Some indentation fixes.
+	  (sq_read_data): Theodore Kilgore
+	  <kilgota@banach.math.auburn.edu> tells me that the
+	  gp_port_write and gp_port_set_timeout is not needed here.
+
+2003-07-12  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* library.c
+	* sq905.[c,h]: New code by Theodore Kilgore
+	  <kilgota@banach.math.auburn.edu>
+
+2003-07-07  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* library.c
+	* sq905.c: Got some more feedback from Theodore Kilgore
+	  <kilgota@banach.math.auburn.edu>
+
+2003-06-30  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* library.c: Implement downloading of pictures.
+
+2003-06-30  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* sq905.[c,h]: Updates by the author.
+
+2003-06-26  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* *.[c,h]: First check-in. Not functional yet.

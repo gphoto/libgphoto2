@@ -1,0 +1,1073 @@
+2006-09-09  Marcus Meissner  <marcus@jet.franken.de>
+
+	* disk: Merged Solaris mount entry handling from
+	  SF tracker
+http://sourceforge.net/tracker/download.php?group_id=8874&atid=108874&file_id=171553&aid=1427300
+
+          (but pretty modified).
+
+2006-02-19  Marcus Meissner  <marcus@jet.franken.de>
+
+	* Regular expression support added for:
+
+	  usb:		(currently supported: usb:XXX,YYY,
+			 can get easily more)
+
+	  disk:		(disk:/full/path/)
+	  ptpip:	(ptpip:ipnr:port)
+
+2006-02-17  Marcus Meissner  <marcus@jet.franken.de>
+
+	* libgphoto2_port/gphoto2-port-info-list.c: Fixed
+	  various problems in regular expression based ports
+	  handling.
+
+2006-02-16  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* ptpip/: New directory for PTP/IP support.
+	* configure.in: added ptpip directory
+	  autodetect mDNSresponder (UNIX version of Bonjour)
+
+2006-01-04  Hubert Figuiere  <hub@figuiere.net>
+
+	* configure.in: buumped .so version. Bumped 
+	  package version.
+
+2005-08-17  Marcus Meissner  <marcus@jet.franken.de>
+
+	* usb/libusb.c: Recurse into the interfaces to see
+	  HID devices and similar so we can skip them.
+
+	  This avoids unnecessary listing of some
+	  non camera devices and usb:XXX,YYY confusion.
+
+2005-08-14  Marcus Meissner  <marcus@jet.franken.de>
+
+	* configure.in: Use "disk" unconditional. 
+	  When we detect HAL , define HAVE_HAL.
+
+	* disk/disk.c: Read /etc/fstab and /etc/mtab and look
+	  for digital camera mounts.
+
+2005-06-12  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* libgphoto2_port/gphoto2-port.h: new disk settings struct.
+
+	* libgphoto2_port/gphoto2-port.c (gp_port_set_info): copy
+	disk port settings
+
+	* libgphoto2_port/gphoto2-port-result.[ch]: 
+	added GP_HAL_ERROR
+
+	* disk/Makefile.am: added HAL flags
+
+	* disk/disk.c (gp_port_library_list): list mounted filesystems 
+	using libhal.
+
+	* configure.in (HAL_CFLAGS): detect libhal
+
+2005-06-11  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* libgphoto2_port/Makefile.am: link libgphoto2_port 
+	  with explicit symbol list
+
+2005-06-11  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* disk/*:
+	* configure.in: added disk/ subdir
+	* libgphoto2_port/gphoto2-port-info-list.h: added GP_PORT_DISK.
+
+2005-06-08  Theodore Kilgota  <kilgota@auburn.edu>
+
+	* usb/libusb.c: added gp_port_usb_msg_interface_write_lib and
+	  gp_port_usb_msg_interface_read_lib functions, and corresponding 
+	  entries in "ops" list, in order to support 0x41 and 0xc1 request 
+	  types needed by Sonix sn9c2028 cameras.
+	* libgphoto2_port/gphoto2_port_library.h: msg_interface_write and 
+	  msg_interface_read declared
+	* libgphoto2_port/gphoto2_port.h: gp_port_usb_msg_interface_write and 
+	  gp_port_usb_msg_interface_read functions declared
+	* libgphoto2_port/gphoto2_port.c: gp_port_usb_msg_interface_write and 
+	  gp_port_usb_msg_interface_read functions added
+	      
+2005-03-04  Marcus Meissner  <marcus@jet.franken.de>
+
+	* serial/unix.c: make IUCLC check more generic.
+	  (from Robert Millan)
+
+2005-02-16  Marcus Meissner  <marcus@jet.franken.de>
+
+	* usb/libusb.c: also detach the usb-storage driver
+	  when we open a USB device. We can support those
+	  cameras.
+
+2005-02-12  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* configure.in: fix shell syntax error I introduced
+	  in 2002-11 and no one noticed except for the Debian
+	  packagers
+
+2005-01-17  Colin Marquardt  <colin@marquardt-home.de>
+
+	* po/ja.po: Update thanks to Takeshi AIHANA.
+
+2005-01-04  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* libpghoto2_port/gphoto2-port.c, gphoto2-port-info-list.c:
+	  Marked up debug strings for translation too.
+	  Removed translation markup from function names.
+
+	* po/*.po: make update-po
+
+	* po/ru.po: Merged new russian translations from Vyacheslav Dikonov. 
+
+2004-10-28  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* libgphoto2_port/gphoto2-port-log.h: Fix build for gcc 2.95
+	  (bug #1055868)
+
+2004-08-22  Marcus Meissner <marcus@jet.franken.de>
+	
+	* libgphoto_port/gphoto-port.h, gphoto-port-log.h:
+
+	  Added attributes so gcc knows gp_log* are varargs
+	  using printf style functions and can warn on bad
+	  format strings.
+
+2004-08-22  Marcus Meissner <marcus@jet.franken.de>
+
+	* Detach USB kernel drivers (unless storage or usbfs)
+	  before claiming interface. This should help stv680
+	  and spca504x cameras (dc2xx driver should be gone
+	  from kernel).
+
+2004-01-06  Marcus Meissner <marcus@jet.franken.de>
+
+	* Multiple USB Devices at once support.
+
+2003-12-11  Lutz Mueller <lutz@users.sourceforge.net>
+
+	Patch by Andreas Burmester <a.burmester@hamburg.de>:
+
+	* serial/unix.c: Do not verify the speed change if we set the 
+	  speed to 0.
+
+2003-08-16  Patrick Mansfield <patmans@users.sourceforge.net>
+
+	* usb/libusb.c: change the mass storage check to output a debug
+	  message and not prevent the camera from being used, as reported
+	  by Marcus Meissner, at the least the olympus 5050z shows up as a
+	  mass storage device, but works fine with gphoto2.
+
+2003-08-10  Patrick Mansfield <patmans@users.sourceforge.net>
+
+	* usb/libusb.c: Fix the check for mass storage devices.
+
+2003-08-10  Patrick Mansfield <patmans@users.sourceforge.net>
+
+	* usb/libusb.c: Check for and do not allow USB mass
+	  storage devices.
+
+2003-05-04  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* libgphoto2_port/gphoto2-port-portability.h: Patch by 
+	  Mike Petullo <mike@flyn.org> for OpenBSD.
+
+2003-01-23  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* libgphoto2_port/gphoto2-port-info-list.c (gp_port_info_list_free): actually 
+	free the list. It was simply leaked. (reported by DigiKam author on IRC).
+
+2002-11-29  Marcus Meissner <meissner@suse.de>
+
+	* serial/unix.c, configure.in: Added support for libresmgr style locking.
+
+2002-11-12  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* libgphoto2_port/gphoto2-port-version.c: Use HAVE_CC only if defined.
+
+2002-11-08  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* configure.in: increased AGE to 1, define HAVE_USB and HAVE_SERIAL
+	* libgphoto2-port/gphoto2-port-version.[ch]: added
+	* libgphoto2-port/Makefile.am: added gphoto2-version.[ch]
+
+2002-09-12  Marcus Meissner <marcus@jet.franken.de>
+	
+	* configure.in, serial/Makefile.am: Do not use xx_LDFLAGS, 
+	  automake is unhappy about that.
+
+2002-07-25  Christophe Barbé <christophe.barbe@ufies.org>
+
+   po files from Stefan Bj|rnelund <stefanb@update.uu.se>
+
+	* libgphoto2_port/po/sv.po: Update Swedish translation.
+			
+2002-07-14  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* ABOUT-NLS: Remove this file, it is generated by gettextize.
+
+2002-07-12  Lutz Müller <lutz@users.sourceforge.net>
+
+	* configure.in: Use ltdl if available.
+
+2002-06-27  Lutz Müller <lutz@users.sourceforge.net>
+
+	* autogen.sh: We don't need this file.
+
+2002-06-21  Christophe Barbé <christophe.barbe@ufies.org>
+
+   po files from Takeshi AIHANA <aihana@jcom.home.ne.jp>
+
+	* libgphoto2_port/po/ja.po: Update Japan translation.
+			
+2002-06-18  Christophe Barbé <christophe.barbe@ufies.org>
+
+   po file from Fabian Mandelbaum <fabman@mandrakesoft.com>
+
+	* libgphoto2_port/po/es.po: Spanish translation.
+
+2002-06-17  Lutz Müller <lutz@users.sourceforge.net>
+
+	* configure.in: Fix indentation.
+
+2002-06-17  Lutz Müller <lutz@users.sourceforge.net>
+
+	Patch by Arnaud Launay <asl@launay.org>, slightly modified:
+
+	* configure.in: Check for usb_busses in -lusb.
+
+2002-06-17  Lutz Müller <lutz@users.sourceforge.net>
+
+	* Makefile.am: Remove 'autogen.sh' from EXTRA_DIST - people 
+	  that compile our tarballs don't need it.
+
+2002-06-14  Lutz Müller <lutz@users.sourceforge.net>
+
+	* libgphoto2_port/gphoto2-port-info-list.c: Cleanup the ltdl-specific
+	  part.
+
+2002-06-14  Lutz Müller <lutz@users.sourceforge.net>
+
+	* libgphoto2_port/Makefile.am:
+	* configure.in: Fix (?) -version-info
+
+2002-06-14  Lutz Müller <lutz@users.sourceforge.net>
+
+	* configure.in: Don't use ltdl.h - libtool is just too broken
+	  (or I am too stupid to use it).
+
+2002-06-13  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* m4/documentation.m4:
+	  - set XMLTO to either xmlto (if present) or false (if not)
+	  - set have_xmltohtml and stuff instead of have_xmltoHTML and stuff
+	  - only set have_xmlto* to true if have_xmlto
+	  - output which formats we will create under which file/dir name
+
+2002-06-12  Lutz Müller <lutz@users.sourceforge.net>
+
+	* configure.in:
+	* libgphoto2_port/gphoto2-port-info-list.c: Make libgphoto2_port
+	  use ltdl.h. I needed to introduce a global variable - code is
+	  marked as UGLY_HACK. If you know how to fix it, please tell me.
+
+2002-06-12  Lutz Müller <lutz@users.sourceforge.net>
+
+	* serial/unix.c: Substitute some '#if's by '#ifdef's.
+
+2002-06-12  Lutz Müller <lutz@users.sourceforge.net>
+
+	* m4/documentation.m4: People reported problems with AC_CHECK_PROG.
+	  Let's try AC_PATH_PROG instead.
+
+2002-06-11  Lutz Müller <lutz@users.sourceforge.net>
+
+	* m4/documentation.m4: Fix checks for xmlto-[html,pdf,man,ps].
+
+2002-06-11  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* m4/packaging.m4: package dependency on libusb only if required
+
+2002-06-06  Lutz Müller <lutz@users.sourceforge.net>
+
+	Patch by Patrick Mansfield <patman@aracnet.com>:
+
+	* libgphoto2_port/gphoto2-port-info-list.c: #ifdef instead of #if
+
+2002-06-06  Lutz Müller <lutz@users.sourceforge.net>
+
+	* m4/documentation.m4: Fix this ugly output all over the place.
+
+2002-06-06  Lutz Müller <lutz@users.sourceforge.net>
+
+        * intl: Remove these files - they should be generated by gettextize.
+        * autogen.sh: Check for and run gettextize.
+
+2002-06-06  Lutz Müller <lutz@users.sourceforge.net>
+
+	* acconfig.h: According to 
+	  http://www.gnu.org/manual/autoconf-2.53/html_mono/autoconf.html,
+	  this file is obsolete.
+	* configure.in: Adapt to above.
+
+2002-06-04  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* m4/documentation.m4: build HTML, PDF, PS manual only if possible
+	* usb/libusb.c: added note about stv680 kernel driver
+
+2002-05-30  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* m4/documentation.m4: fixed fig2dev test,
+		hack: assume xmlto cannot do pdf and ps even if it claims to, 
+		added output message
+
+2002-05-28  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* doc/DocRules.am: API docs belong to API_DIR
+
+2002-05-26  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* m4/documentation.m4: test for xmlto, define API_DIR
+
+2002-05-25  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* m4/documentation.m4: use AC_BEFORE where sensible
+	* serial/unix.c: the locking problems only concern RS232 cams
+
+2002-05-25  Lutz Müller <lutz@users.sourceforge.net>
+
+	Patch by Dave Woodman <dave@naffnet.org>, slightly modified:
+
+	* serial/unix.c: Make sure speed changes have been successful.
+
+2002-05-23  Lutz Müller <lutz@users.sourceforge.net>
+
+	* test/test-gp-port.c: More tests.
+	* libgphoto2_port/gphoto2-port.c: Nicer debugging output.
+
+2002-04-22  Marcus Meissner <marcus@jet.franken.de>
+	
+	* serial/unix.c: Unescape 0xff/0xXX parity framing sequences here.
+
+2002-04-19  Mariusz Woloszyn
+
+	* libgphoto2_port/gphoto2-port-library.h: changed definition of
+	  GPPortOperations.check_int.
+	* libgphoto2_port/gphoto2-port.[ch]: added gp_port_check_int_fast().
+	* usb/libusb.c: changed definition of gp_port_usb_check_int.
+
+2002-04-16  Marcus Meissner <marcus@jet.franken.de>
+
+	* libgphoto_port/gphoto2-port.h, serial/unix.c:
+	  Handle parity, introduced new enum GPPortSerialParity, 
+	  switched one element of the structure from int to enum 
+	  (enums are ints, so it should remain binary compatible).
+
+2002-03-23  Dan Fandrich <dan@coneharvesters.com>
+
+	* m4/byteorder.m4: Added support for cross-compilation.
+	  Changed to look for machine/endian.h instead of sys/endian.h on *BSD.
+
+2003-03-22  Lutz Müller <lutz@users.sourceforge.net>
+
+	* libgphoto2_port/Makefile.am: Remove "-g" from [C,LD]FLAGS. If you
+	  need it, please add it again in configure.in.
+
+2002-03-21  Marcus Meissner <marcus@jet.franken.de>
+	
+	* usb/libusb.c: gp_port_usb_find_bulk no exists, replaced with _ep.
+	                Also look for intep in class based matching.
+			Dump intep in debugoutput.
+			interrupt endpoints are *input* endpoints, not output.
+			Remember we did the altsetting after we did change it.
+
+2002-03-19  Marcus Meissner <marcus@jet.franken.de>
+	
+	*  configure.in, acconfig.h: Fixed some warnings newer autoconf
+	   versions generate. Use AM_PROG_LIBTOOL.
+
+2002-03-14  Dan Fandrich <dan@coneharvesters.com>
+
+	*  m4/byteorder.m4
+	*  m4/stdint.m4: Changed to allow building in non-source directory.
+	   Added support for 64 bit integers.
+
+2002-03-13  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* configure.in: more verbose (and hopefully more
+	  user-understandable) libusb error message and configuration
+	  information, fixed typo
+
+2002-03-12  Mariusz Woloszyn
+
+	* changed all _event, eventep to _int and intep as it describes usb
+	  inerrupt endpoint
+
+2002-03-11  Lutz Müller <lutz@users.sourceforge.net>
+
+	* configure.in: Fix versionning.
+
+2002-03-11  Mariusz Woloszyn
+
+	* libgphoto2_port/gphoto2-port-library.h: added
+	  check_event to GPPortOperationsl
+	* libgphoto2_port/gphoto2-port.h: added eventep to
+	  GPPortSettingsUSB
+	* usb/libusb.c: added gp_port_usb_check_event(),
+	  changed gp_port_usb_find_bulk to gp_port_usb_find_ep(),
+	  added setting of eventsep to gp_port_usb_find_device_lib()
+	* libgphoto2_port/gphoto2-port.[ch]: added gp_port_check_event()
+
+2002-02-23  Dan Fandrich <dan@coneharvesters.com>
+
+	* libgphoto2_port/gphoto2-port-info-list.c: Fixed error test for
+	  non-GNU regex.
+
+2002-02-23  Lutz Müller <lutz@users.sourceforge.net>
+
+	* [serial,usb]/Makefile.am: LIBADD libgphoto2_port.
+
+2002-02-22  Lutz Müller <lutz@users.sourceforge.net>
+
+	* serial/unix.c: Improved IRIX fix to set the speed exactly once after
+	  opening the device.
+
+2002-02-21  Lutz Müller <lutz@users.sourceforge.net>
+
+	* serial/unix.c: IRIX fixes.
+
+2002-02-19  Lutz Müller <lutz@users.sourceforge.net>
+
+	* serial/unix.c (gp_port_library_list): Don't check for return
+	  value when adding generic ports. Fixes #518616.
+
+2002-02-18  Colin Marquardt  <colin@marquardt-home.de>
+
+	* configure.in: Added zh_CN.GB2312 to ALL_LINGUAS.
+
+2002-02-16  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* usb/Makefile.am: Added usb-os2.c to EXTRA_DIST
+	
+2002-02-13  Marcus Meissner <marcus@jet.franken.de>
+	
+	* gphoto2-port.h: placed typedefs after the enums (GPPin and GPLevel)
+	  since g++ does not like it.
+	  
+2002-02-11  Lutz Müller <lutz@users.sourceforge.net>
+
+	* doc/DocRules.am: Fix building docs when $(builddir) == $(srcdir).
+
+2002-02-09 Dan Fandrich <dan@coneharvesters.com>
+
+	* serial/unix.c: Added serial ports for Tru64 UNIX
+
+2002-02-06  Lutz Müller <lutz@users.sourceforge.net>
+
+	* m4/documentation.m4: Fix #510543.
+
+2002-02-06  Lutz Müller <lutz@users.sourceforge.net>
+
+	* libgphoto2_port/gphoto2-port.h: extern C.
+
+2002-01-13  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* configure.in: Added "ja" to ALL_LINGUAS to fix broken "make dist"
+	
+2002-01-31  Lutz Müller <lutz@users.sourceforge.net>
+
+	* libgphoto2_port/gphoto-port.[c,h]: The buffer that is sent using
+	  gp_port_write is "const".
+
+2002-01-24 Dan Fandrich <dan@coneharvesters.com>
+
+	* gphoto2-port-log.h
+	* gphoto2-port.h: Removed config.h include (should be done in .c files)
+	* usb/usb-os2.c
+	* test/test-gp-port.c
+	* gphoto2-port-portability.c: Added include of config.h
+
+2002-01-19 Dan Fandrich <dan@coneharvesters.com>
+
+	* configure.in: Replaced AC_TRY_RUN with AC_TRY_LINK in ttylock test
+	  so cross-compiling is possible.
+
+2002-01-13 Dan Fandrich <dan@coneharvesters.com>
+
+	* libgphoto2_port/gphoto2-port-log.h
+	* libgphoto2_port/gphoto2-port.h: Put #ifdef HAVE_CONFIG_H around
+	  include
+
+2002-01-13  Hans Ulrich Niedermann <gp@n-dimensional.de>
+	
+	* libgphoto2_port/gphoto2-port.[ch]: renamed "class" parameter to "mainclass"
+	  to allow for compilation of C++ programs with libgphoto2_port
+
+2002-01-09 Dan Fandrich <dan@coneharvesters.com>
+
+	* m4/byteorder.m4: Added support for NetBSD swap macros.
+	* m4/Makefile.am: Added byteorder.m4 to file list
+
+2002-01-09 Dan Fandrich <dan@coneharvesters.com>
+
+	* libgphoto2_port/gphoto2-port-log.h: Conditionally use C99 variadic
+	  macros
+
+2002-01-09 Dan Fandrich <dan@coneharvesters.com>
+
+	* libgphoto2_port/gphoto2-port.h: Moved typedefs after the definitions
+	  of the dependent types.
+
+2002-01-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* configure.in: Substitute AM_PROG_LIBTOOL by AC_PROG_LIBTOOL (first
+	  is deprecated).
+
+2002-01-04 Dan Fandrich <dan@coneharvesters.com>
+
+	* configure.in: Only add gcc-specific CFLAGS if we're running gcc.
+	* Minor changes to other files to improve portability.
+
+2002-01-04  Hans Ulrich Niedermann <gp@n-dimensional.de>
+	
+	* usb/libusb.c: fixed error message to contain something to report
+
+2002-01-04  Colin Marquardt  <colin@marquardt-home.de>
+
+	* po/de.po: Update.
+
+2002-01-02  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2_port/Makefile.am:
+	* usb/Makefile.am:
+	* serial/Makefile.am: Install io-drivers into versioned
+	  subdirectories.
+
+2001-12-20  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	Patch from Tim Waugh <twaugh@redhat.com>:
+
+	* usb/libusb.c: "I think this makes it clearer exactly which kernel
+	  module to unload when dc2xx is loaded."
+
+2001-12-14  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* configure.in: Comment out check for ltdl.h. See comment in there.
+
+2001-12-14  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* gphoto2-port-config.in: Added missing -lgphoto2_port
+
+2001-12-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* configure.in: Check if ltdl.h is available and ...
+	* libgphoto2_port: ... use it.
+
+2001-12-12  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	Remove some error codes, and move some variable names into the
+	gp-namespace.
+
+2001-12-11  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2_port/gphoto2-port-result.[c,h]: Remove
+	  GP_ERROR_IO_TIMEOUT - we already have GP_ERROR_TIMEOUT.
+
+2001-12-07  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* libgphoto2_port/gphoto2-port-log.c: ENABLE_DEBUGGING -> DISABLE_DEBUGGING
+	* doc/gphoto2-port-sections.txt: added lots of constants, a few macros and
+	  created new sections about serial and usb specific stuff
+
+2001-12-07  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* configure.in: You won't believe how much dead code there is...
+
+2001-12-07  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* gphoto2-port-config.in: made it work again
+
+2001-12-01  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* configure.in: help cosmetics
+	* m4/documentation.m4: help cosmetics,
+	  added check for transfig and AM_CONDITIONAL BUILD_FIGURES,
+	  simplified mechanism that determines whether to build docs or not
+	* m4/packaging.m4: help cosmetics, renamed PGK_* to GPKG_*,
+	  improved messages
+	
+2001-11-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2_port/gphoto2-port-info-list.c: The logic was still
+	  broken...
+
+2001-11-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2_port/gphoto2-port-info-list.c: Oh god, I checked in a
+	  #if 0 that I used for debugging purposes. Sorry, guys....
+
+2001-11-29  Fredrik <fredrik@krixor.xy.org>
+
+	* libgphoto2_port/gphoto2-port-portability.h: OpenBSD also prepends
+	  underscores to symbols.
+
+2001-11-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2_port/gphoto2-port-info-list.c: Fix regex stuff 
+	  (at least for HAVE_GNU_REGEX).
+
+2001-11-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* configure.in: Check for GNU regex
+	* acconfig.h: HAVE_GNU_REGEX
+	* serial:
+	* libgphoto2_port: First try to implement a regex match. Doesn't work
+	  yet.
+
+2001-11-29  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* libgphoto2_port/m4/packaging.m4: added packaging macro
+
+2001-11-27  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* po/libgphoto2_port.pot: I'm sick of all the diffs
+	* po/de.po: I'm still sick of all the diffs
+
+2001-11-27  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* serial/unix.c (gp_port_library_list): Lock device here before
+	  trying to access a port, too.
+
+2001-11-26  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* configure.in: Fix typo (USB_LIBS, not USB_LDFLAGS) *sigh*
+	* usb/Makefile.am: libgphoto2-port-usb.so needs -lusb, therefore add
+	  it using LIBADD (ldopen is not clever enough to figure that out).
+
+2001-11-25  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* gphoto2-port-config.in: Remove another reference to IOLIB_CFLAGS...
+
+2001-11-25  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* serial/unix.c: Always set the speed at the beginning - don't assume
+	  it to be at 9600.
+
+2001-11-25  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* serial/unix.c: For flush and break, check that the device is open
+	  and at the right speed.
+
+2001-11-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* serial/unix.c: Try to fix logic of speed setting: Now check before
+	  each read/write operation if the current speed is the requested one.
+	  If not, change it and remember it in dev->pl->baudrate.
+
+2001-11-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2_port/Makefile.am: @IOLIB_CFLAGS@ doesn't exist any more.
+
+2001-11-23  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* serial/unix.c: Only set the baudrate if the device is open. If you
+	  set parameters on device 0, you mess up the console...
+
+2001-11-23  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* configure.in:
+	* serial/Makefile.am
+	* usb/Makefile.am: Clean up Makefiles. Avoid version on io-drivers
+	  (we don't check it anyways)
+
+2001-11-22  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	Patch from Marr <marr@shianet.org>:
+
+	* libgphoto2/gphoto2-port.c: Fix bug whereby hexadecimal output is
+	  erroneously shown in decimal format.
+	* serial/unix.c (gp_port_serial_update): Don't open/close the port
+	  here (does this break anything?)
+
+2001-11-17  Colin Marquardt  <colin@marquardt-home.de>
+
+	* configure.in (Module): Added 'de' to ALL_LINGUAS.
+
+2001-11-11  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* configure.in: Look for usb.h in locations specified by
+	  libusb-config.
+
+2001-10-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* usb/libusb.c: memset port->pl to 0 so that we can later detect
+	  errors
+
+2001-10-28  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2_port/gphoto2-port-portability.[c,h] (GP_SYSTEM_RMDIR):
+	  New
+
+2001-10-27  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2: Updated documentation
+
+2001-10-26  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* include: Move everything from here to ...
+	* libgphoto2_port: ... here.
+
+2001-10-26  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* configure.in: Give users the possibility _not_ to compile in USB
+	  support. Same with SERIAL.
+
+2001-10-26  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* include/gphoto2-port.h: Changed the syntax of gp_port_new to
+	  be consistent with gp_camera_new.
+
+2001-10-26  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* network
+	* parallel
+	* ieee1394: Removed. Once someone wants to implement those, they can
+	  be easily resurrected.
+
+2001-10-25  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* usb/libusb.c:
+	* include/gphoto2-port.h: Cleanup.
+
+2001-10-25  Fredrik <fredrik@krixor.xy.org>
+
+	* libgphoto2_port/gp_port.c: Write number of bytes we are going
+	  to read in debug message as this was not shown when the read
+	  failed.
+	  Fix bug when logging data in gp_port_usb_msg_read().
+
+2001-10-25  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2_port/gphoto2-port-core.[c,h]: Replaced by ...
+	* libgphoto2_port/gphoto2-port-info-list.[c,h]: ... this file.
+
+2001-10-23  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2_port/gphoto2-port-log.[c,h]: Remove the history stuff.
+	* libgphoto2_port/gp_port.c (gp_port_set_error), (gp_port_get_error):
+	  New.
+	* serial/unix.c: Use gp_port_set_error
+
+2001-10-22  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2_port/gphoto2-port-log.[c,h]: Use va_list instead of 
+	  a buffers. That means, no more incomplete data dumps.
+
+2001-10-20  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2_port/gp_port.c: Forot to set default speed to 0
+
+2001-10-20  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* configure.in: Add some more warning flags
+	* include/gphoto2-port.h: More cleanup in preparation of documentation
+	* libgphoto2_port/gp_port.c: Move internals into port->pc
+	* serial/unix.c: Move internals into port->pl. If speed in settings
+	  is 0, set to 9600 (default).
+
+2001-10-17  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2_port/gphoto2-port-log.[c,h]: Added GP_LOG_DATA
+
+2001-10-17  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* include/gphoto2-port-debug.h
+	* libgphoto2_port/debug.c: Removed
+
+2001-10-16  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2_port/result.c:
+	* include/gphoto2-port-result.h: #define GP_ERROR_NOT_SUPPORTED
+	* libgphoto2_port/gp_port.c: Clean up in preparation of documentation
+
+2001-10-16  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* ieee1394/Makefile.am:
+	* serial/Makefile.am:
+	* parallel/Makefile.am:
+	* usb/Makefile.am:
+	* network/Makefile.am: -I$(top_srcdir)/libgphoto2_port
+	* include/gphoto2-port-result.h: GP_ERROR_UNKNOWN_PORT instead of
+	  GP_ERROR_IO_UNKNOWN_PORT.
+	* include/gphoto2-port.h: GPPortType, GPPortOperations, GPPort
+	* libgphoto2_port/gphoto2-port-core.[c,h]: New. 
+
+2001-10-16  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* doc: Create framework for documentation.
+	* libgphoto2_port/gphoto2-port-log.[c,h]: Updated
+
+2001-10-14  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* include/gphoto2-port-result.h: GP_ERROR_NO_MEMORY
+	* libgphoto2_port/result.c: GP_ERROR_NO_MEMORY
+
+2001-10-12  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	Patch from Fredrik <fredrik@krixor.xy.org>:
+
+	* libgphoto2_port/gp_port.c: 
+	* usb/libusb.c: Better error checking
+
+2001-10-07  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+        Patch from David Faure <david@mandrakesoft.com>
+
+	* libgphoto2_port/library.c: Fix logic
+
+2001-10-06  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	Suggestions from Hans Ulrich Niedermann <gp@n-dimensional.de>:
+
+	* libgphoto2_port/debug.c: #warn the user #ifndef HAVE_VSNPRINTF and
+	use a #define at the beginning instead of #ifdefs in the code.
+
+2001-10-06  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* include/gphoto2-port-debug.h
+	* libgphoto2_port/debug.c (gp_port_debug_history_get_size): New.
+	(gp_port_debug_printf): Append the msg to the history after calling
+	the debugging function.
+	(gp_port_history_append): Don't try to remove full messages, just 
+	remove as many bytes as needed.
+
+2001-10-06  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* include/gphoto2-port-debug.h
+	* libgphoto2/debug.c (gp_port_debug_get_level): New. In addition,
+	remove port-dependent debug levels as frontends are not able to 
+	change them dynamically. Just use the global one.
+	* include/gphoto2-port.h
+	* libgphoto2_port/gp_port.c: gp_port_init without debug level. That 
+	can and should be done separately.
+	* libgphoto2_port/library.c
+	* test/test-gp-port.c
+	* serial/unix.c: Adjust to above changes
+	* usb/libusb.c: Use gp_port_debug_printf instead of fprintf
+
+2001-10-06  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	Chris Byrne <adapt@ihug.co.nz> found this bug:
+
+	* libgphoto2_port/debug.c: Use "%s" because the string we print can
+	contain characters like "%%%%i%s&%i".
+
+2001-10-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2_port/gp_port.c: Print what we received only if we received
+	something...
+
+2001-10-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	Patch from Hans Ulrich Niedermann <gp@n-dimensional.de>, slightly
+	adapted:
+
+	* include/gphoto2-port-debug.h
+	* libgphoto2_port/debug.c (gp_port_debug_print_data): New
+	* libgphoto2_port/gp_port.c: Use the new function.
+
+2001-10-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2_port/debug.c: #include <config.h>
+
+2001-10-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	Suggestion from Fredrik <fredrik@krixor.xy.org>:
+
+	* configure.in: Check for vsnprintf
+	* libgphoto2_port/debug.c: Use vsnprintf if available
+
+2001-10-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	Patch based on suggestions from Fredrik <fredrik@krixor.xy.org>:
+
+	* libgphoto2_port/debug.c: Make sure we memset the same number of 
+	bytes we malloc.
+
+2001-10-04  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* serial/unix.c: 
+	* usb/libusb.c: Fix includes
+
+2001-10-04  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* include/Makefile.am
+	* include/gphoto2-port-result.h
+	* libgphoto2_port/Makefile.am
+	* libgphoto2_port/result.c: New
+	* include/gphoto2-port-debug.h: Define debug levels here
+	* include/gphoto2-port.h: Clean up
+	* libgphoto2_port/debug.c: Check if history is big enough for message
+
+2001-10-04  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* include/Makefile.am
+	* include/gphoto2-port-debug.h
+	* libgphoto2_port/Makefile.am
+	* libgphoto2_port/debug.c: New files
+	* libgphoto2_port/gp_port.c: Move debugging stuff out of here.
+
+2001-10-04  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* include/gphoto2-port.h:
+	* libgphoto2_port/gp_port.c: Revert the result_as_description thing
+
+2001-10-04  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* acconfig.h:
+	* configure.in:
+	* serial/unix.c: Use baudboy.h if available (Red Hat)
+
+2001-10-04  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	Thanks to Bill Richardson <bill@riverstonenet.com>:
+
+	* test/Makefile.am: Oops, don't use -lgphoto_port
+
+2001-10-03  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* acconfig.h: #undef HAVE_TTYLOCK
+	* configure.in: Improved checks for locking headers/libs
+	* serial/unix.c: Yet another locking lib: ttylock.h
+
+2001-10-03  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* include/gphoto2-port.h:
+	* libgphoto2_port/gp_port.c: Explain to the users why claiming an 
+	interface could fail.
+
+2001-10-03  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* include/gphoto2-port.h:
+	* libgphoto2_port/gp_port.c (gp_port_result_as_description): New
+
+2001-10-03  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* serial/unix.c: Correctly interpret the return value of dev_[un]lock
+
+2001-10-03  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* test/gphoto2-port-test.c: Renamed into 
+	* test/test-gp-port.c
+	* test/Makefile.am: New
+	* Makefile.am: Add test to SUBDIRS
+	* acconfig.h: #undef HAVE_LOCKDEV
+	* configure.in: Check for lockdev and use it if available
+	* serial/Makefile.am: -llockdev if that is available
+	* serial/unix.c: Use lockdev if available
+
+2001-09-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2_port/gp_port.c (gp_port_count): Make sure
+	libgphoto2_port is initialized.
+
+2001-09-22  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	Patch from Fredrik <fredrik@krixor.xy.org>
+
+	* include/gphoto2-port.h:
+	* libgphoto2_port/gp_port.c:
+	* serial/unix.c:
+	* usb/libusb.c: Clean up settings code.
+
+2001-09-22  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	Patch from Carsten Pfeiffer <carpdjih@sp.zrz.tu-berlin.de>
+
+	* libgphoto2_port/library.c: 
+	* libgphoto2_port/portability.c: char *whatever -> const char *whatever
+
+2001-09-18  Chris PInkham <cpinkham@infi.net>
+
+	* include/gphoto2-port.h
+	  libgphoto2_port/gp_port.c
+	  usb/libusb.c: changed *usb_msg_read* and *usb_msg_write* functions
+	  to allow passing in of request and index values.
+
+2001-09-14  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	Patch from Fredrik <fredrik@krixor.xy.org>:
+
+	* usb/libusb.c: Only set configuration stuff on gp_port_usb_update
+	(instead of gp_port_usb_open).
+
+2001-09-14  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2_port/gp_port.c: Set some default settings in case of
+	GP_PORT_USB, too.
+
+2001-09-02  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* include/gphoto2-portability.h:
+	* include/libgphoto2_port/portability.c: const *char
+
+2001-08-30  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* include/gphoto2-port.h: GP_ERROR_IO_LOCK
+	* libgphoto2_port/gp_port.c: Better error reporting.
+	* serial/unix.c: Implement locking of serial ports
+
+2001-08-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	All work from Fabrice Bellet <Fabrice.Bellet@creatis.insa-lyon.fr>:
+
+	* libgphoto2_port/library.c (gp_port_library_list): Don't try to
+	open .*
+	* usb/libusb.c (gp_port_usb_close): Release the interface here.
+
+2001-08-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2_port/gp_port.c: if (!dev) return (GP_OK) instead of
+	accessing dev->whatever... Plus, set the timeout on gp_port_open.
+
+2001-08-27  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	Suggestion from Fabrice Bellet <Fabrice.Bellet@creatis.insa-lyon.fr>:
+
+	* include/gphoto2-port.h:
+	* usb/libusb.c (gp_port_usb_close): Don't report an error if the
+	device has already been closed. Correctly reuse the devices on
+	gp_port_open after gp_port_close.
+
+	* parallel/Makefile.am: Remove some references to libgpio.
+
+2001-03-16  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* gphoto2-port-test.c: Applied patch from Michael 
+	  <michael.spanier@abh.uni-karlsruhe.de> which brings the file
+	  in sync with current API.
+
+2000-07-15  Fabrice Bellet  <Fabrice.Bellet@creatis.insa-lyon.fr>
+
+	* gpio-usb.c : removed useless call to usb_release_interface()
+	  because the usbdev close ioctl already does the job for us.
+	  Compilation warning fix.
+
+2000-07-09  Fabrice Bellet  <Fabrice.Bellet@creatis.insa-lyon.fr>
+
+	* Makefile.am : fixed typo.
+	* gpio-usb.c : cosmetic namespace changes.
+	* gpio.c : fixed compilation warnings.
+
+2000-01-07  Ole Aamot  <oka@ifi.uio.no>
+
+	* Added USB patch from Johannes Erdfelt <jerdfelt@valinux.com> 
+
+1999-12-28  Ole Aamot  <oka@ifi.uio.no>
+
+	* libgpio.spec.in: added
+
+1999-12-27  Ole Aamot  <oka@ifi.uio.no>
+
+	* Added auto* build scripts.

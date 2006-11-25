@@ -1,0 +1,6 @@
+04/19/2001 - Benjamin Moos
+	* Not much, it works finally!
+	* The images are less than perfect, but I like them better than the
+	  overprocessed ones that the Windows driver puts out. I need to
+	  analyze the response curves for each color of CMOS cell for one, and
+	  we could definitely use some judicious smoothing.

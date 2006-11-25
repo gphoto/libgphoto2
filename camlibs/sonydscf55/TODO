@@ -1,0 +1,13 @@
+* Fix all FIXME's
+
+* Add calls to gp_frontend_status()
+
+* In cases where an error occurs during transfer, the driver can get
+out of sync with the device. From that point on, the driver is unable
+to successfully initialise the driver, even for new gPhoto sessions. A
+reboot (power-off, power-on) of the MSAC-SR1 device helps. See if it
+is possible to do a proper init in such a case.
+
+--
+Raymond Penners -*- raymond@dotsphinx.com -*- http://www.dotsphinx.com
+

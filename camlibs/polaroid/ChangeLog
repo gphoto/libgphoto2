@@ -1,0 +1,149 @@
+2005-04-09  Marcus Meissner <marcus@jet.franken.de>
+
+	* pdc320.c: Check for both : and non : names
+	  in model detection.
+
+2004-01-08  Marcus Meissner <marcus@jet.franken.de>
+	
+	From Mark Slemko <slemkom@users.sourceforge.net>
+	* dlink350f.c, dlink350f.h, pdc640.c:
+ 	  Orientation, byte order, and brightness correction for the
+	  D-Link 350F
+
+2004-01-04  Marcus Meissner <marcus@jet.franken.de>
+
+	* pdc640.c: Use different names for Skanhex SX-35, or 
+	  the lower level gets confused.
+
+2003-12-28  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* pdc640.c: Martin Sarfy <sarfy@ics.muni.cz> reports that his camera
+	  (Trust 350FT PowerC@m FLASH, 0x6d6:0x2d) works using the driver
+	  for 0x6d6:0x2e.
+
+2003-09-15  Marcus Meissner <marcus@jet.franken.de>
+	
+	Reported by Andreas Kies:
+
+	* pdc640.c: Remove :, since ability.mode again
+	  contains names without :, or we do not find
+	  our cameras.
+	  Use flip_both for UMAX AstraPix.
+
+2003-05-15  Lutz Mueller <lutz@users.sourceforge.net>
+
+	Patch by Drew Sullivan <drew@pentagon.ss.org>:
+
+	* pdc640.c: Correctly post-process images taken by a SiPix:Stylecam.
+
+2003-05-13  Marcus Meissner <marcus@jet.franken.de>
+	
+	* pdc640.c, jd350e.c, jd350e.h: Applied Trustcam 350FS
+	  fix from Hans de Goede <j.w.r.degoede@hhs.nl>
+
+2003-04-26  Marcus Meissner <marcus@jet.franken.de>
+	
+	* pdc640.c: compression type 1 appears to be just
+	  like compression type 2, at least for the SiPix
+	  Stylecam.
+
+2003-04-17  Marcus Meissner <marcus@jet.franken.de>
+	
+	* pdc640.c: Added SiPix StyleCam (0x0d64/0x1001),
+	  UMAX AstraPix 320s (same) and DLINK DSC-350F
+	  (0xd64/0x1021).
+
+2003-03-02  Marcus Meissner <marcus@jet.franken.de>
+	
+	* pdc640.c,jd350e.[ch]: Meade binocs need filter and
+	  flip vertical. Renamed rotate180 to flip_vertical.
+
+2003-02-25  Marcus Meissner <marcus@jet.franken.de>
+	
+	* pdc320.c,h: Rewritten the command/reply handling
+	  to a large degree after reverse engineering the
+	  windows driver.
+
+	* pdc320.html: Started documenting the command structure.
+
+2003-02-18  Marcus Meissner <marcus@jet.franken.de>
+	
+	* pdc640.c: Added ScopeCam (www.meade.com).
+
+2003-02-04  Marcus Meissner <marcus@jet.franken.de>
+	
+	* pdc640.c: Skanhex-SX 35 IDs added, USB id for
+	  JD350 entrance added (from Joerg Hackenberg).
+
+2003-01-30  Marcus Meissner <marcus@jet.franken.de>
+	
+	* pdc640.c: Added support for Typhoon Stylocam,
+	  required some stability fixes for the USB communication.
+
+2003-01-14  Marcus Meissner <marcus@jet.franken.de>
+		
+	* pdc320.c, pdc640.c, pdc700.c: Translate some strings.
+
+2002-11-17  Marcus Meissner <marcus@jet.franken.de>
+
+	* pdc700.c: Do not cast bween time_t* and int*.
+
+2002-10-03  Lutz Müller <lutz@users.sourceforge.net>
+
+	* Makefile.am: -I$(top_builddir)/libgphoto2
+
+2002-09-15  Marcus Meissner <marcus@jet.franken.de>
+
+	* pdc640.c: Added Jenoptik JD350v(ideo) USB support.
+
+2002-03-22  Lutz Müller <lutz@users.sourceforge.net>
+
+	Patch by Andrea Suatoni <a.suatoni@itaca.it>:
+
+	* pdc640.c: IRIX fixes.
+
+2002-03-19  Greg Ingram <ingram@symsys.com>
+
+	* pdc700.c: Added pdc700_set_date() which appears to work.  Is the
+	  date widget working completely?  Added the ability to select image
+	  size (resolution).  The configuration dialog was getting rather too
+	  tall so I split it up onto three sections (tabs).
+	
+	* pdc700.c: Fix off-by-one thinko in get_config where the 
+	  camera's month datum is one-based but tm.tm_mon is
+	  zero-based.
+
+2002-01-15  Lutz Müller <lutz@users.sourceforge.net>
+
+	* pdc700.c: Introduced a bug in last fix...
+
+2002-01-15  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* pdc700.c: When status is PDC_STATUS_FAIL, the camera will only 
+	  send the checksum, nothing else.
+
+2002-01-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* pdc700.c: Remove references to gp_camera_set_error.
+
+2002-01-09  Dan Fandrich <dan@coneharvesters.com>
+
+	* jd350e.c: Added definitions of MIN and MAX
+
+2001-12-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* pdc640.c: Includes again :-)
+
+2001-12-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* pdc320.h
+	* pdc640.c: Still fixing includes
+
+2001-12-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* pdc640.c: Fix includes.
+
+2001-11-28  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* pdc700.c: Rename PDC700_FIRST into PDC700_FAIL. Try to implement
+	  some error recovery strategy.

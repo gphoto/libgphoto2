@@ -1,0 +1,31 @@
+Manufacturer: Hewlett-Packard
+  model: hp photosmart 120 series
+  device version: 01.00  
+  serial number: '00     '
+Vendor extension ID: 0x00000000
+Vendor extension description: Hewlett-Packard
+Supported operations:
+  0x1001
+  0x1002
+  0x1003
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100a
+  0x100b
+  0x1014
+  0x1015
+  0x1016
+  0x1017
+Events Supported:
+Device Properties Supported:
+  0x5001
+  0x5003
+  0x5011
+
+Property Battery Level(0x5001):Range [0 - , step  value: 10
+Property Bildgröße(0x5003):Enumeration ['1600x1200      ',] value: '1600x1200      '
+Property Date Time(0x5011):(readwrite) '20020101T123400.0      '

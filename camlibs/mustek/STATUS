@@ -1,0 +1,10 @@
+Current Status:
+
+It compiles.
+
+Due to the USB Interrupt reading the driver is not yet working with USB. 
+Sometimes the correct interrupt data is transfered, most time it isn't.
+
+I do not have a serial cable :/
+
+- Marcus

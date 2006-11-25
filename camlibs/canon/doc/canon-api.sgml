@@ -1,0 +1,94 @@
+<!doctype book PUBLIC "-//Davenport//DTD DocBook V3.0//EN" [
+<!entity hash "#">
+<!entity canon SYSTEM "sgml/canon.sgml">
+<!entity internal-functions SYSTEM "sgml/internal-functions.sgml">
+<!entity serial-communication SYSTEM "sgml/serial-communication.sgml">
+<!entity structures SYSTEM "sgml/structures.sgml">
+<!entity library-interface SYSTEM "sgml/library-interface.sgml">
+<!entity usb-control SYSTEM "sgml/usb-control.sgml">
+<!entity macros SYSTEM "sgml/macros.sgml">
+<!entity directory-entries SYSTEM "sgml/directory-entries.sgml">
+<!entity listing-directories SYSTEM "sgml/listing-directories.sgml">
+<!entity power-status SYSTEM "sgml/power-status.sgml">
+<!entity file-attributes SYSTEM "sgml/file-attributes.sgml">
+]>
+<book id="index">
+  <bookinfo>
+    <title>The Canon driver reference</title>
+     <copyright>
+      <year>2003</year>
+      <holder>The Free Software Foundation</holder>
+    </copyright>
+
+    <legalnotice>
+      <para>
+        Permission is granted to copy, distribute and/or modify this
+        document under the terms of the <citetitle>GNU Free
+        Documentation License</citetitle>, Version 1.1 or any later
+        version published by the Free Software Foundation with no
+        Invariant Sections, no Front-Cover Texts, and no Back-Cover
+        Texts. You may obtain a copy of the <citetitle>GNU Free
+        Documentation License</citetitle> from the Free Software
+        Foundation by visiting <ulink type="http"
+        url="http://www.fsf.org">their Web site</ulink> or by writing
+        to:
+
+        <address>
+          The Free Software Foundation, Inc.,
+          <street>59 Temple Place</street> - Suite 330,
+          <city>Boston</city>, <state>MA</state> <postcode>02111-1307</postcode>,
+          <country>USA</country>
+        </address>
+      </para>
+    </legalnotice>
+
+     <abstract>
+      <para>
+	This manual documents the internals of the Canon camera
+	library for gphoto2.
+      </para>
+    </abstract>
+ </bookinfo>
+
+ <chapter id="library-interface">
+   <title>Standard gphoto2 camera interface</title>
+   &library-interface;
+ </chapter>
+ 
+ <chapter id="internal-functions">
+   <title>Internal Glue Functions</title>
+   &internal-functions;
+ </chapter>
+
+ <chapter id="macros">
+   <title>Utility Macros</title>
+   &macros;
+ </chapter>
+
+ <chapter id="serial-communication">
+   <title>Serial Communication</title>
+   &serial-communication;
+ </chapter>
+
+ <chapter id="usb-control">
+   <title>USB communication</title>
+   &usb-control;
+ </chapter>
+
+ <chapter id="directories">
+   <title>Handling Camera Directories</title>
+   &listing-directories;
+   &directory-entries;
+ </chapter>
+
+<chapter id="power-status">
+   <title>Power Status</title>
+   &power-status;
+ </chapter>
+
+ <chapter id="structures">
+   <title>Structures</title>
+   &structures;
+ </chapter>
+
+</book>

@@ -1,0 +1,76 @@
+For further information , see http://photopc.sourceforge.net/protocol.html.
+
+ register	interpretation
+---------------------------------------------------------------------------
+  1		resolution
+  2		date (seconds since 1/1/1970)
+  3		shutter speed
+  4		current image number
+  5		aperture
+  6		color mode
+  7		flash mode
+  8
+  9
+ 10		frames taken
+ 11		frames left
+ 12		size of current image
+ 13		size of thumbnail of current image
+ 14 (s)		current preview (captured)
+ 15
+ 16		battery life
+ 17		speed
+ 18
+ 19		brightness/contrast
+ 20		white balance
+ 21
+ 22 (s)		camera id
+ 23		auto off (host)
+ 24		auto off (field)
+ 25 (s)		serial number
+ 26 (s)		software revision
+ 27
+ 28		memory left
+ 29 (s)		upload data here
+ 30
+ 31
+ 32		set to 0x0FEC000E before uploading a file
+ 33		lens mode
+ 34
+ 35		lcd brightness
+ 36
+ 37
+ 38		lcd auto off
+ 70		spot metering mode
+ 72		zoom (0 = 1x, 8 = 2x, 520 = 1.6x, 1032 = 2.5x)
+ 79 (s)		current filename
+ 83		number of folders in current folder
+ 		current folder number
+ 84 (s)		current folder name
+
+
+ actions	interpretation
+---------------------------------------------------------------------
+ 00 yy zz...	set int register to value zz...
+ 01 yy		get int register yy
+
+ 02 01 00	delete all
+ 02 02 00	capture image
+ 02 03 00
+ 02 04 00	end session
+ 02 05 00	capture preview
+ 02 06 00
+ 02 07 00	delete
+ 02 08 00
+ 02 09 00
+ 02 10 00
+ 02 11 00
+ 02 12 00
+ 02 13 00
+ 02 14 00
+ 02 15 00
+ 02 16 00
+ 02 17 00	upload file (after writing the file into register)
+
+ 03 yy zz...	set string register yy to value zz...
+ 04 yy 		get string register yy
+ 06 yy          get string register yy using 32k packets (USB, extended protocol)

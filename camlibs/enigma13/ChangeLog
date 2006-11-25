@@ -1,0 +1,11 @@
+2004-12-22  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* enigma13.c (enigma13_detect_storage_type): Comment out dead code.
+	(enigma13_get_filecount): Comment out dead code.
+
+2004-10-28  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* enigma13.c (enigma13_flash_delete_all): Fix build for gcc 2.9
+	(bug #1055868)
+	
+

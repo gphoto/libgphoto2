@@ -1,0 +1,14 @@
+2002-10-03  Lutz Müller <lutz@users.sourceforge.net>
+
+	* Makefile.am: -I$(top_builddir)/libgphoto2
+
+2002-01-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* l859.c: Christopher Worley <cworley@chris-n-april.com> reported that
+	  his "Panasonic PV-L691" works with this driver, too.
+	  Fix headers.
+
+2001-12-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* l859.c: gp_camera_progress -> gp_file_progress. Kill warning. 
+	  gp_debug_printf -> gp_log.

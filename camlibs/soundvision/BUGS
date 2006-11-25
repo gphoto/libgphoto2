@@ -1,0 +1,12 @@
+Known Bugs:
+
+overall:
+* Long timeout (and usb read error) on alternate runnings of gphoto2.
+  All attempts to track this down so far have failed.
+
+agfa-specific:
+
+
+tiger-fastflicks specific:
+* File upload for tiger doesn't work [even though it should].
+* Delete-all on tiger sometimes causes problems.

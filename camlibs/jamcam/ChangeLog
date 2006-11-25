@@ -1,0 +1,44 @@
+2002-02-04  Marcus Meissner <marcus@jet.franken.de>
+		
+	* library.c, jamcam.c: Replaced very large stack arrays
+	  by malloc()ed ones. And make them large enough not to
+	  overflow.
+
+2002-01-05  Marcus Meissner <marcus@jet.franken.de>
+	
+	* library.c: We need to read a reply of 8 bytes, or the kernel
+	  reports data overflow.
+
+2002-07-16  Lutz Müller <lutz@users.sourceforge.net>
+
+	* Makefile.am: Don't use glib.
+
+2002-03-21  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* library.c (jamcam_file_count): Patch by Thor Ablestar <thor@irk.ru>
+	  Fix the file count if the camera storage is full.
+
+2002-01-04  Chris Pinkham <cpinkham@infi.net>
+
+	* jamcam.c, library.c, library.h: updated code to use new
+	  gp_file_progress instead of gp_camera_progress.
+
+2001-12-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* jamcam.c: Don't include <libgphoto2/*.>, include <*.h> instead.
+
+2001-11-28  Chris Pinkham <cpinkham@infi.net>
+
+	* jamcam.c: changed driver version to reflect new revision.
+
+2001-11-28  Chris Pinkham <cpinkham@infi.net>
+
+	* README: updated TODO list.
+	* jamcam.c, library.c, library.h: Changed license of source code
+	  from GPL to LPGL.  Various bugfixes to make driver more robust
+	  and to have better error recovery.
+
+2001-11-28  Chris Pinkham <cpinkham@infi.net>
+
+	* ChangeLog: created file.
+

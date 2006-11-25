@@ -1,0 +1,270 @@
+CONNECTION AND COMMAND PROTOCOLS OF THE MARS MR97310
+Theodore Kilgore <kilgota@auburn.edu> April, 2004.
+
+(This camera library and all files in it carry the LGPL license;
+see any of the source files for a more complete statement.)
+
+
+Peculiarly, the MR97310 camera uses bulk endpoint 0x04 (out) to receive
+commands, sending back its responses over bulk endpoint 0x83 (in). Then, it
+uses bulk endpoint 0x82 (in) to send data to the computer. The driver has to 
+switch the pipe appropriately. A command is a bulk write operation of one or 
+two bytes, with the first byte being 0x19. All requests to read a block or 
+blocks of data are performed by sending only the single byte 0x19. Otherwise,  
+the second byte can apparently be either a command, or part of a sequence 
+giving information.
+
+A command is usually followed by a read request for confirmation. The read 
+request is of a bulk write of the one byte 0x21. The camera responds by 
+sending 16 bytes, in which only the first byte seems significant. 
+
+When the single byte 0x19 is sent with no second byte, immediate intention to 
+download data is signalled. The 0x19 which is sent must be followed by an 0x21 
+read request for confirmation. If the response is correct (must begin with 
+0xa8), then the pipe must be switched to 0x82 and the download may be carried 
+out by repetition of
+
+gp_port_read(port,data,size); (where maximum size is 0x2000),
+
+until the intended amount of data has been read. After the data has been
+successfully read, the pipe must be switched back to 0x83 for the next
+command sequence. 
+
+To summarize: bulk inep 0x83 is for receiving responses to commands; bulk 
+inep 0x82 is for receiving data, and bulk outep 0x04 is for sending commands. 
+The camera also has bulk pipe 0x07, which one would reasonably expect could be 
+used to write data to the camera. However, it is not obvious how to do that. 
+It may not be possible. 
+
+The observed command sequences sent to the camera are:
+
+19 51	(starts the initialization sequence, any data download
+initialization sequence, and the exit sequence)
+
+19 b5	(appears during initialization; could also be part of a memory
+address)
+
+19 0f	(flag instructing to move to a memory location which will be
+sent to the camera in immediately subsequent communications)
+
+19 54	(computer's acknowledgement to camera that a data download has just
+been successfully completed; causes much beeping; mostly not used here)
+
+19 ba  (flag indicating that memory location should be reset, on exit;
+followed by instructions to reset memory pointer to 00 00).
+
+Other things are instructions to go to a memory location. For example, to
+download the first photo in the camera, which begins at memory block 0x400,
+the sequence is
+
+send 19 0f
+send 21, read response
+send 19 00
+send 21, read response
+send 19 04 
+send 21, read response; do this repeatedly until first byte of response is
+0x0a, then proceed with next command. My conjecture is that this sequence of
+read requests is causing the memory pointer to move to the right place,
+which is registered as done when the 0x0a comes up. 
+
+After the memory pointer has been successfully moved, the camera must be
+told several other things, by sending one byte at a time, ending with an
+indication of how big is the photo to be downloaded. For example, if a photo
+is 640x480 pixels, equal to 4b000 bytes, then the sequence 
+
+19 b0
+21, read response
+19 04
+21, read response
+
+must be sent. Where this comes from is presented in the next section.
+
+
+THE CONFIGURATION DATA
+
+The MR973120 camera uses a block of configuration data of size 0x2000, which 
+is downloaded during the initialization of the camera. Here is a sample of the 
+first few, relevant lines from the configuration data. We have 9 photos in the 
+camera. 
+
+
+0000  ff 00 ff 00 ff 00 ff 01-00 00 00 00 00 00 00 00  
+0010  08 00 04 00 0c b0 04 cc-86 13 9a 00 0c 2c 01 6c  
+0020  06 a6 bf 00 0c 2c 01 a4-88 39 e5 00 0c b0 04 66  
+0030  06 4c 7b 01 0c 2c 01 07-86 df a0 01 0c 2c 01 3f  
+0040  08 72 c6 01 0c b0 04 01-88 85 5c 02 0c b0 04 2b  
+0050  08 98 f2 02 0c b0 04 54-ff ff ff ff ff ff ff ff  
+0060  ff ff ff ff ff ff ff ff-ff ff ff ff ff ff ff ff  
+
+
+Line 0000 is always the same (or should be -- see next section). 
+The first block of 8 bytes seems to be a marker signifying the configuration 
+block. The second eight-byte block may, it will become later apparent, refer 
+to some data about the block itself -- its type and its memory
+location, perhaps. This would seem paradoxical since one can not know the
+configuration data before downloading it, but not all in life is logical.
+
+
+Lines 0010 through 0050 give data about the photos. There are nine photos in
+the camera in this sample. When we reach byte 0x58 and begin repeating 0xff, 
+we finished reading about these nine photos. Thus, each block of 8 bytes says 
+something about a photo, until the repetition of 0xff begins. After this  
+the rest of the configuration data is simply junk. 
+
+Let's rearrange the sample, throwing away the unhelpful line 0000 and also 
+terminating after byte 0x57:
+
+photo   1	08 00 04 00 0c b0 04 cc
+	2	86 13 9a 00 0c 2c 01 6c  
+	3	06 a6 bf 00 0c 2c 01 a4
+	4	88 39 e5 00 0c b0 04 66  
+	5	06 4c 7b 01 0c 2c 01 07
+	6	86 df a0 01 0c 2c 01 3f  
+	7	08 72 c6 01 0c b0 04 01
+	8	88 85 5c 02 0c b0 04 2b  
+	9	08 98 f2 02 0c b0 04 54
+
+(the columns in this table are numbered from 0 to 7 in what follows)
+
+In this pattern, the entry in the zeroeth column is a code which gives the 
+size of the photo and indicates if there is compression, or not. In 
+this particular example, none of the photos are compressed. The second digit of 
+this byte indicates the size:
+
+    0	->	176x144
+    2	->	352x288
+    6	->	320x240
+    8	->	640x480
+
+The first digit of this byte indicates presence or absence of compression. If 
+it is 2, 3, 6, 7, a, b, d, or f there is compression; otherwise the photo  
+is not compressed. For a photo of given size and compression status, the first
+digit is also dependent upon the location in the line of config data. If in 
+the first position on the line, then that digit is less than 8, and if in the 
+second position then 8 is added. This is seen in our example, where 08 and 88
+both signify 640x480 uncompressed, and 06 and 86 both signify 320x240 
+uncompressed. 
+
+The entries in columns 1, 2, and 3 of our rearranged data seem to indicate the 
+storage location, in (hexadecimal) little endian format. Comparison of these 
+numbers to the sizes of photos and to the size of the configuration data and 
+to the advertised 8 Meg size of the RAM in the camera would seem to imply 
+that the memory is addressed as storage blocks, or words, of size 8 bytes. For 
+example, the configuration data, of size 0x2000, would require  
+0x2000/8 = 0x400 storage blocks, and the beginning point for the first photo is 
+listed as location 0x400. 
+
+The entries in columns 4 through 6 indicate, again in little endian form, the 
+data size for the given photo, in bytes. The actual data size to be requested
+and downloaded from the camera needs to be tne next integer multiple of 0x2000. 
+
+
+Finally, for the seventh column there is at this time no obvious 
+interpretation. 
+
+A DATA-SHIFTING PROBLEM
+
+An example of what the same config data can look like if gphoto2 (or the OEM
+camera software, too) is run twice without replugging the camera in between, 
+is as follows:
+
+
+0000  5c 73 60 73 5c 71 5d 6e-5c 72 5d 6c 5c 70 5b 6e  
+0010  5d 71 5b 71 5e 71 5c 71-5c 72 5d 6e 5c 72 5e 71  
+0020  5c 6f 59 6f 58 67 49 4c-38 43 3a 4c 43 59 49 5b  
+0030  4b 5d 51 64 54 66 54 6b-58 6b 56 66 52 64 53 64  
+0040  56 6d 55 66 57 6a 56 6a-59 6d 57 6b 58 6a 59 6d  
+0050  59 6c 59 67 58 6b 56 6b-57 6a 56 6a 54 63 44 49  
+0060  31 3a 2c 38 2c 39 2c 39-2e 38 30 39 2a 36 2a 37  
+0070  2a 32 2a 34 26 30 29 31-1f 2d 21 29 1e 26 1c 25  
+0080  ff 00 ff 00 ff 00 ff 01-00 00 00 00 00 00 00 00  
+0090  08 00 04 00 0c b0 04 cc-86 13 9a 00 0c 2c 01 6c  
+00a0  06 a6 bf 00 0c 2c 01 a4-88 39 e5 00 0c b0 04 66  
+00b0  06 4c 7b 01 0c 2c 01 07-86 df a0 01 0c 2c 01 3f  
+00c0  08 72 c6 01 0c b0 04 01-88 85 5c 02 0c b0 04 2b  
+00d0  08 98 f2 02 0c b0 04 54-ff ff ff ff ff ff ff ff  
+00e0  ff ff ff ff ff ff ff ff-ff ff ff ff ff ff ff ff  
+
+
+For some unknown reason, this data shift occurs if the camera is not
+replugged, but the data is always offset either not at all or by exactly 128 
+bytes. Thus the problem can apparently be overcome by checking whether 
+ff 00 ff 00 occurs on line 0000 or on line 0080. 
+
+For similarly unknown reasons, the same offset seems to occur at the
+beginning of every download of a photo. One gets 128 bytes of pure junk,
+followed by 12 bytes which include a signature, and only then comes the data. 
+
+
+UPDATES and REVISIONS:
+
+This section is intended to give further explanations of some things which 
+are otherwise mentioned briefly, in the ChangeLog.
+
+1. 2004-05-18 ID number of Emprex PDC3800 contributed by Hisham Muhammad 
+<hisham@apple2.com>.
+
+2. 2004-06-09 Compatibility with gtkam ensured; method of adjusting the gamma
+setting of a photo introduced, based upon photo's config data. 
+
+3. 2004-09-04 The Vivitar Vivicam 55 has the same USB ID as the Emprex PDC3800
+and presumably is therefore the same camera. Turned out that the camera is 
+very finicky about initialization. Extensive efforts to make this camera 
+actually to work resulted in major revisions to the init sequence. Special 
+credit to Sebastien Soilen <sebastien@soilen.net> for sustained, patient, and 
+thorough testing. 
+
+4. 2004-10-26 Support for two new cameras with new ID of 0x093a:0x10e, which use 
+two new resolution settings, of 352x288 and 176x144. The new codes for these 
+resolution settings are:
+
+352x288, uncompressed	0x02 or 0x82
+352x288, compressed 	0x22 or 0xa2
+176x144, uncompressed    0x0 or 0x80
+176x144, compressed 	0x20 or 0xa0
+
+Credits to 
+
+Scott MacKenzie <irrational@poboxes.com> for reporting his camera and for 
+submitting the patch which makes it work.
+Nils Naumann <nau@gmx.net> for reporting his camera 24 hours after Scott, 
+and for testing Scott's patch. 
+
+5. 2005-06-12 Code streamlined considerably. There are several more cameras 
+out there which I call the "new generation." Some of these cameras are 
+compressed-mode only, and some of them have a flashlamp. the flashlamp seems 
+to need new codes for the photos sizes, starting with 1 or 9 (uncompressed), or 
+3 or b (compressed). The "routine" function needed to be rewritten, and it 
+is also discovered that the proper data size for the download of a photo is 
+always an integer multiple of 0x2000. Anything else, some of the new cameras 
+will freeze. The old Aiptek Pencam VGA+ seems to work better this way, too. 
+Some new cameras such as the Argus DC-1620 have the same Vendor:Product IDs 
+as older cameras. 
+
+6. 2005-09-12 Some minor changes to the init routine make it more reliable 
+across the various different cameras. The big change is the support for the 
+compression mode. I got lucky by noticing that the camlibs/sonix routine 
+almost works here. After this, credit to 
+
+Bertrik Sikkens <bertrik@zonnet.nl> for figuring out the rest of the codec, 
+which still needed a lot of tweaking and smoothing after that. The camera uses 
+a quite lossy differential Huffman encoding, and apparently due to the data 
+loss the decompression can get unstable.
+
+Michel Xhaard <mxhaard@magic.fr> for testing.
+
+7. 2006-02-08 "Tweaking and smoothing" of decompression carried out, for 
+the most part successfully. Several new cameras added. One of them is the 
+Argus QuickClix, which uses a *different* compression algorithm! I hope 
+nobody else buys one, unless the purchaser is a decompression expert. 
+
+8. 2006-09-23 A freeze-up using a Vivitar Vivicam 55 has been reported by 
+conon <troll@arach.net.au>, apparently due to a timing issue while switching 
+the USB inep from 0x83 to 0x82. Conon also proposed a fix, in the form of a 
+usleep() command. He reports that this works with his camera, and after 
+extensive testing it does not seem to impair the functioning of other MR97310
+cameras. Patch adopted. Conon has also submitted some simplifications of the 
+decompression algorithm, which seem to work well. These changes also 
+incorporated in current version. 
+NOTE: Vivitar in fact has discontinued this camera. They now offer a 
+Vivicam 55 which uses the SQ905C chip instead (see camlibs/digigr8)!

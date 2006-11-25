@@ -1,0 +1,7 @@
+2005-12-25  Hubert Figuiere  <hub@figuiere.net>
+
+	* library.c, lg_gsm.c: cleanup the code and warning removal
+
+2005-12-16  Guillaume Bedot <littletux@zarb.org>
+	
+	* First attempt to make a gphoto2 driver for the LG T5100

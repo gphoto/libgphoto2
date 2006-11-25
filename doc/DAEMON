@@ -1,0 +1,372 @@
+gPhoto Daemon
+--------------------------------------------------------------------
+
+(note: this is a specification. it is not implemented!)
+
+The gPhoto daemon uses the following protocol description. It provides an
+interactive way for program to talk and use gPhoto without needing to
+have any sort of C bindings.
+
+This document needs better formatting (color syntax highlighting, structure)
+
+Overview
+--------------------------------------------------------------------
+- The program provides gPhoto with a series of commands. gPhoto can
+  also send message to the program through 4 notification commands.
+
+- The arguments to a command are either a number or a string. 
+  If it's a string, you must put double-quotes around it.
+
+- All commands to gPhoto are answered by an "OK" or "ERROR", possibly
+  followed by additional data.
+
+- Designed around simplicity and flexibility.
+
+- Picture numbering begins at ZERO!
+
+- Notification will come after issuing a command. 
+
+Example
+--------------------------------------------------------------------
+
+'>' indicates commands from the program to gPhoto
+'<' indicates commands from gPhoto to the program
+
+To put gphoto2 into a daemon mode, you must run it as "gphoto2 -S".
+You can open a pipe and then read/write to that file descriptor.
+
+here is a session:
+
+>	notification_set 1
+<	OK
+>	camera_list
+<	OK
+<	3
+<	Olympus D-220L
+<	Kodak DC210+
+<	Epson 650Z
+>	camera_Set "Epson 650Z"
+<	OK
+>	folder_list "/"
+<	OK
+<	5
+<	birthday/
+<	PIC0001.JPG
+<	PIC0002.JPG
+<	PIC0003.JPG
+<	PIC0004.JPG
+>	folder_set "/"
+<	OK
+>	file_count
+<	OK
+<	4
+>	file_get 0 "/home/scottf" "file0.jpg"
+<	confirm "Files exists. Overwrite?"
+>	confirm 1
+<	OK
+<	/home/scottf/file0.jpg
+>	file_get 1 "/home/scottf" "file1.jpg"
+<	OK
+<	/home/scottf/file1.jpg
+>	file_get 2 "/home/scottf" "file2.jpg"
+<	confirm "File exists. Overwrite?"
+>	confirm 0
+<	ERROR "Did not save /home/scottf/file2.jpg"
+
+Commands to the gPhoto daemon
+--------------------------------------------------------------------
+setting_set key value
+	Description: Saves the value of "key" as "value"
+	    Outputs: OK or ERROR
+
+	    Example: > setting_set "foo" "bar"
+		     < OK
+	
+setting_get key
+	Description: Retrieves the value of "key"
+	    Outputs: OK or ERROR
+		     if OK, followed by the value of the key
+
+	    Example: > setting_get "foo"
+		     < OK
+		     < bar
+
+notification_set number
+	Description: Turns on (value = 1) or off (value = 0) notification
+	    Default: 0
+	    Outputs: OK or ERROR
+
+	    Example: > debug_set 1
+		     < OK
+	
+
+debug_set number
+	Description: Turns on (value = 1) or off (value = 0) debugging
+	    Default: 0
+	    Outputs: OK or ERROR
+
+	    Example: > debug_set 1
+		     < OK
+
+camera_list
+	Description: Lists the number of cameras and all the camera model names
+	    Outputs: OK or ERROR
+		     if OK, followed by number of cameras, followed by camera models
+
+	    Example: > camera_count
+		     < OK
+		     < 3
+		     < Olympus D-220L
+		     < Kodak DC210+
+		     < Epson 650Z
+camera_set name
+	Description: Sets the camera name as the chosen camera model
+	    Outputs: OK or ERROR
+
+	    Example: > camera_set "Canon S10"
+		     < OK
+
+camera_abilities [name]
+	Description: Determines the camera's abilities. The camera name is optional.
+		     If not specified, uses currently set camera.
+		     Please reference gphoto2-datatypes.h for available abilities and
+		     descriptions.
+	    Outputs: OK or ERROR
+		     if OK, followed by number of abilities, followed by abilities
+
+	    Example: > camera_abilities "Olympus 3030Z"
+		     < OK
+		     < 13
+		     < "usb"=1
+		     < "parallel"=0
+		     < "ieee1394"=0
+		     < "serial"=1
+		     < "speed"=9600
+		     < "speed"=19200
+		     < "speed"=38400
+		     < "speed"=57600
+		     < "speed"=115200
+		     < "file_delete"=1
+		     < "file_preview"=1
+		     < "file_put"=0
+		     < "file_capture"=1
+		     < "config"=1
+
+folder_list path
+	Description: Display the contents of the folder path on the camera.
+	    Outputs: OK or ERROR
+	    	     if OK, followed by number of entries, followed by the list.
+		     an entry in the list has a trailing '/' if it is a folder.
+
+	    Example: > folder_list "/"
+		     < OK
+		     < 4
+		     < birthday/
+		     < mountains/
+		     < PIC001.JPG
+		     < PIC002.JPG
+
+folder_set path
+	Description: Sets the current folder.
+	    Outputs: OK or ERROR
+
+	    Example: > folder_set "/"
+		     < OK
+
+file_count
+	Description: Determines the number of files (pictures, sounds, etc.) in the 
+		     current folder.
+	    Outputs: OK or ERROR
+		     if OK, followed by number of files
+
+	    Example: > file_count
+		     < OK
+		     < 12
+
+file_get number	[directory] [filename]
+	Description: Downloads picture #number from the current folder
+		 	* if directory is specified, picture is saved to that directory using
+			  the camera-recommended filename.
+			* if directory and filename is specified, picture is saved as filename 
+			  in the directory.
+	    Outputs: OK or ERROR
+	    	     if OK:
+			if just number is specified:
+				followed by mime-type, size of picture, and picture data
+		     	if directory and/or filename is specified:
+				followed by path and filename of picture
+
+	    Example: > file_get 12
+		     < OK
+		     < image/jpeg
+		     < 98012
+		     < image data ... . . . ....
+		or
+		     > file_get 12 "/home/scottf/"
+		     < OK
+		     < /home/scottf/PIC0012.JPG
+		or
+		     > file_get 12 "/home/scottf/" "picture12.jpg"
+		     < OK
+		     < /home/scottf/picture12.jpg
+
+file_get_preview number	[directory] [filename]
+	Description: Downloads preview (thumbnail) #number from the current folder
+		 	* if directory is specified, preview is saved to that directory using
+			  the camera-recommended filename.
+			* if directory and filename is specified, picture is saved as filename 
+			  in the directory.
+	    Outputs: OK or ERROR
+	    	     if OK:
+			if just number is specified:
+				followed by mime-type, size of preview, and preview data
+		     	if directory and/or filename is specified:
+				followed by path and filename of preview
+
+	    Example: > file_get_preview 12
+		     < OK
+		     < image/jpeg
+		     < 12453
+		     < image data ... . . . ....
+		or
+		     > file_get_preview 12 "/home/scottf/"
+		     < OK
+		     < /home/scottf/THUMB0012.JPG
+		or
+		     > file_get_preview 12 "/home/scottf/" "thumbnail12.jpg"
+		     < OK
+		     < /home/scottf/thumbnail12.jpg
+
+file_put filename
+	Description: Uploads the file specified by filename to the camera into the current folder
+	    Outputs: OK or ERROR
+
+	    Example: > file_put /home/scottf/picture02.jpg
+		     < OK
+
+file_delete number
+	Description: Deletes the file #number in the current folder
+	    Outputs: OK or ERROR
+
+	    Example: > file_delete 12
+		     < OK
+config_get
+	Description: Gets a set of meta-widgets that describe camera configuration options.
+		     (needs explanation on structure)
+			widget-type "label" value [min max step | choice]
+		     * WINDOW and PAGE are containers. any widget coming after that is put into
+		       the container.
+		     * value is a number, except for TEXT (then value requires double-quotes)
+	    Outputs: OK or ERROR
+		     if OK, followed by number of lines, followed by the meta-widgets
+
+	    Example: > config_get
+		     < OK
+		     < 15
+		     < WINDOW "Olympus Configuration"
+		     < PAGE "Quality"
+		     < RADIO "Resolution" 0 "Standard"
+		     < RADIO "Resolution" 1 "High"
+		     < RADIO "Resolution" 0 "Best"
+		     < RADIO "Compression" 0 "None"
+		     < RADIO "Compression" 0 "Low"
+		     < RADIO "Compression" 1 "High"
+		     < PAGE "Miscellaneous"
+		     < RANGE "Zoom" 3.00 
+		     < TEXT "Camera Name" "Scott's Olympus D-220L"
+		     < MENU "Flash Setting" 0 "Red-eye reduction"
+		     < MENU "Flash Setting" 1 "Auto"
+		     < MENU "Flash Setting" 0 "Forced"
+		     < MENU "Flash Setting" 0 "Blind me"
+
+config_set "label"=[choice|value] "label"=[choice|value] "label"=[choice|value] ...
+	Description: Sets the camera configuration 
+			* if RADIO or MENU, "label"="choice"
+			* for others, "label"=value
+	    Outputs: OK
+
+	    Example: > config_set "Resolution"="Best" "Compression"="None" "Zoom"=0.00
+		     < OK
+
+capture_to_disk path [filename]
+	Description: Causes camera to press the shutter, then download and save to disk.
+		    	filename is optional
+	    Outputs: OK or ERROR
+		     if OK, followed by picture filename
+
+	    Example: > capture_to_disk "/home/scottf"
+		     < OK
+		     < /home/scottf/PIC00012.JPG
+		or
+		     > capture_to_disk "/home/scottf" "livepicture.jpg"
+		     < OK
+		     < /home/scottflivepicture.jpg
+
+about
+	Description: Displays information about the camera library
+	    Outputs: OK or ERROR
+	    	     if OK, followed by number of lines, then camera library information
+
+	    Example: > about
+		     < OK
+		     < 3
+		     < Scott <scottf@unr.edu>
+		     < Camera library for foo-bar cameras
+		     < These cameras are kinda silly.
+
+manual
+	Description: Displays the camera library manual
+	    Outputs: OK or ERROR
+	    	     if OK, followed by number of lines, then camera library manual
+
+	    Example: > manual
+		     < OK
+		     < 5
+		     < This camera library is a good library.
+		     < It does not support capturing image though.
+		     < The company that make the camera helped 
+		     < by providing information about the communication
+		     < protocol.
+
+summary
+	Description: Displays the camera summary
+	    Outputs: OK or ERROR
+	    	     if OK, followed by number of lines, then camera summary
+
+	    Example: > summary
+		     < OK
+		     < 3
+		     < Battery Percent = 65%
+		     < Free memory is 31Meg
+		     < My height is around 6'4"
+
+gPhoto notifications
+--------------------------------------------------------------------
+These depend on whether or not "notification_set" has been called.
+By default, they are turned off. Use "notification_set 1" to turn them
+on.
+
+progress number
+	Description: Should display the percent done in the current operation
+	   Response: none
+	    Example: < progress 50 
+
+message "string"
+	Description: Should display a message to the user (pop-up window)
+	   Response: none
+
+	    Example: < message "Don't you want to be a pepper too?"
+
+status "string"
+	Description: Should display the status to the user (status bar)
+	   Response: none
+
+	    Example: < status "Done with current operation."
+
+confirm "string"
+	Description: Should display a "yes" or "no" confirmation box to the user.
+	   Response: confirm 0 (no), confirm 1 (yes), or ERROR
+
+	    Example: < confirm "Do you want to delete that file?"
+		     > confirm 1
+		     (gPhoto will not answer this).

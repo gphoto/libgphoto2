@@ -1,0 +1,158 @@
+========================================================================
+The gphoto2 device database (gp2ddb)
+========================================================================
+
+Important: This is a prototype the developers can play with. The final
+           version will probably look much different, so don't invest
+           too much in it (yet).
+
+References:
+  [1] http://article.gmane.org/gmane.comp.multimedia.gphoto.devel/2262
+      Hubert's posting from 2006-01-01 proposing storage in XML.
+
+
+Note: We try to talk of "devices" and "drivers" instead of "cameras"
+      and "camlibs" since we also support digital audio players.
+
+
+=============================================
+The idea
+========
+
+ * Maintain a device database (DDB) of cameras (and audio players),
+   their abilities etc. independently from the libgphoto2 drivers.
+
+ * Updates to the database are much easier to publish than updates to
+   the drivers which need to be compiled.
+
+ * libgphoto2 uses the DDB to find out which driver to load for a
+   given device.
+
+ * drivers use the DDB to read special driver specific information on
+   that device.
+
+ * Other software (HAL, udev, hotplug, etc.) is served by converters
+   from DDB.
+
+
+=============================================
+The implementation
+==================
+
+ * A flex/bison based parser for text based config.
+
+ * The specific details of the text format is not completely ironed
+   out yet.
+
+ * It is possible to use some HAL device database instead, but do we
+   really want to require HAL/XML/...? Depends whether we target
+   embedded or desktop environments.
+
+ * print-camera-list prints the current config in the new format
+   (minus driver internal settings ?)
+
+ * driver specific settings can be accommodated using the
+   driver_options { ... }; section.
+
+ * The binary code (stripped) for the test case is about 22KByte. I
+   suppose we could implement this database in about 35 to 40 KByte.
+   However, we can probably get rid of some code in the drivers to
+   compensate. 
+   For comparison:
+    * The current libgphoto2.so is about 120 KByte stripped. 
+    * libxml2.so is 1.2MB (stripped).
+
+
+=============================================
+The testcase
+============
+
+ * The testcase check-ddb.sh checks that the CameraAbilitiesList read
+   from the text database is the same one read from the drivers via
+   gp_abilities_list_load() - for all 700something cameras.
+
+
+=============================================
+How to test it
+==============
+
+ * Add --enable-gp2ddb to your ./configure parameters.
+
+ * Run "make check".
+
+ * Have a look into tests/ddb/.
+
+
+=============================================
+TODO
+====
+
+What would need to be done to go into production with this:
+
+ * Find a way to integrate the gphoto2 DDB with the HAL device 
+   database, possibly using a sub/superset of the HAL device
+   database. However, HAL does its stuff in XML, and we probably don't
+   want libgphoto2 to depend on an XML parser.
+
+ * Add driver specific parameters to DDB.
+
+ * Rewrite gp_abilities_list_load() to read the data currently stored
+   in the CameryAbilities records and all driver specific information
+   from the DDB.
+
+   This should probably use a caching approach, i.e. it should check
+   the mtime of (the files in) /etc/libgphoto2.d/ and compare that to
+   the mtime of a binary cache file in ~/.gphoto/ddb-cache.
+
+   The compiler which creates this cache file needs to be embedded in
+   libgphoto2 itself (so that libgphoto2 can "just work") but should
+   also be available as a separate tool for embedded use cases. These
+   embedded systems could then compile the ddb-cache at build time,
+   just read in the cache, and not ship the parser/compiler at all.
+
+   Another possibility would be to statically compile the binary
+   version of the database into libgphoto2 for small-footprint
+   applications.
+
+ * Rewrite all drivers to read their device specific parameters from
+   the new CameraAbilities record.
+
+ * Maintain binary compatibility for applications.
+
+ * Administration utilities convert the DDB to something HAL, udev, and
+   other similar hotplug-device-management systems use to figure out
+   the device type, what program to launch to handle such devices, and
+   how to set up permissions. This is partly done in print-camera-list.
+
+ * Administration utilities to maintain the DDB in the face of
+
+     - updates from the gphoto project
+     - updates by the user
+     - update by third parties
+
+   One solution to the problem could be a directory structure like
+
+      /etc/libgphoto2.d/camlib-agfa.ddb # the devices from the agfa camlib
+      /etc/libgphoto2.d/camlib-canon.ddb # the devices from the canon camlib
+      /etc/libgphoto2.d/camlib-ptp2.ddb # the devices from the ptp2 camlib
+      /etc/libgphoto2.d/foo.ddb # devices the user got from somewhere
+      /etc/libgphoto2.d/bar.ddb # devices the user got from somewhere
+
+ * Check whether there wouldn't be an XML parsing library with a much
+   smaller footprint than the 1.2MB of libxml2.
+
+ * The DDB device names should be Unicode strings.
+
+ * There must be structured information on device names, e.g. the
+   vendor must be readable without parsing strings.
+
+ * Store other device information in the DDB which may be of interest
+   for a libgphoto2 frontend, e.g.
+    - thumbnail images of the devices themselves.
+    - camera features like capture modes, can delete single files, can
+      delete all files, can mark downloaded files, can upload files
+
+
+========================================================================
+End of file README.ddb.
+========================================================================

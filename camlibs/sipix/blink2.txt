@@ -1,0 +1,125 @@
+Blink2 Protocol
+
+Mostly control messages...
+
+	(control <read/write> bRequest, wValue, wIndex -> buf[wLength])
+
+Get Firmware ID:
+	control read 0x18, 0x03, 0x00	-> buf[6]
+
+	Gets the firmware id.
+
+
+Number of Pictures:
+	control read 0x8, 0x03, 0x00	-> buf[2] (high, low byte)
+
+	Gets number of pictures.
+
+Get Directory:
+	control read 0x0d, 0x03, 0x00	-> buf[1] 
+	bulk read  (((8*(1+numpics))+0x3f) & ~0x3f) bytes.
+
+	Buffer has now: 
+	i = 0 .. numpics:
+		buf[8*(i+1)]	- movie flag
+		buf[8*(i+1)+5 ... 7]	- 3 bytes start, MSB first
+		buf[8*(i+1)+13 ... 15]	- 3 bytes end, MSB first
+
+	Gets the directory entries.
+
+
+Get Memory:
+	Prepare buffer as:
+		buf[0..4]	start	(MSB first)
+		buf[5..7]	length	(MSB first)
+
+	control write 0x0a, 0x03, 0x00, buf[8]
+	bulk read (length)
+
+	Gets the memory (imagedata) as specified.
+
+
+Capture Picture:
+	control read 0x0e, 0x03, 0x00	-> buf[1]
+	do 
+		control read 0x16, 0x03, 0x00 -> buf[1]
+	while buf[0] == 0
+
+	Afterwards the image is in the camera memory.
+
+
+
+Delete All Images:
+	control read 0x12, 0x03, 0x00	-> buf[1]
+
+	All images on the camera are deleted.
+
+
+Delete Last Image:
+	control read 0x11, 0x03, 0x00	-> buf[1]
+
+	Last image on camera is deleted.
+
+
+Start Video:
+	control read 0x4, 0x01, 0x00	-> buf[1]
+
+	This starts the ISO transfers I suspect?
+
+
+Current Video Position (??):
+	control read 0x7, 0x00, 0x00	-> buf[2]
+
+	Unclear, I think it returns amount of data read in buf[2].
+
+
+Initialize Still Mode:
+	control read 0x4, 0x03, 0x00	-> buf[1]
+
+
+Hmm (?) / Resync Routine:
+	control read 0x13, 0x0, 0x00	-> buf[1]
+
+
+Bandwith Allocate(type):
+	320x240: control read 0x14, 0x0, 0x00	-> buf[1]
+	640x480: control read 0x15, 0x0, 0x00	-> buf[1]
+
+	I think this is for ISO transfers, started by 0x04,0x01.
+	You need to change the interface accordingly.
+
+
+Set Exposure Count(value):
+	control read 0x17, 0x03, value	-> buf[1]
+	Unclear.
+
+
+Set Compression(value):
+	control read 0x1b, 0x03, value	-> buf[1]
+	Unclear.
+
+
+Set Whitebalance(value):
+	control read 0x1d, 0x03, value	-> buf[1]
+	Unclear.
+
+
+Set Still Quality(value):
+	control read 0x1a, 0x03, value	-> buf[1]
+	Unclear.
+
+
+Set Flare(value)
+	control read 0x19, 0x03, value	-> buf[1]
+	Unclear.
+
+
+Internal Driver Properties:
+	ID	Name		Range	Default
+	0x01	Brightness	0-50	43
+	0x03	Sharpness	0-255	20
+	0x08	Saturation	0-128	128
+	0x0b	Whitebalance	0-7	7
+	0x0c	Gamma		0-11	9
+	0x0d	Backlight	0-1	0
+	0x0e	Contrast ?	0-14	7

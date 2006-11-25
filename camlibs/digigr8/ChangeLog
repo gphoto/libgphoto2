@@ -1,0 +1,37 @@
+2006-06-22   Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Added Praktica Slimpix, reported by
+	  Gervase Markham.
+          See: http://sourceforge.net/mailarchive/message.php?msg_id=20703116
+
+2006-03-26   Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Added Vivitar Vivicam35, reported by self.
+
+
+2005-12-31  Hubert Figuiere  <hub@figuiere.net>
+
+	* library.c: Added Nexxtech Mini Digital Camera
+	reported by Ken Kennedy
+
+2005-12-29   Theodore Kilgore <kilgota@auburn.edu>
+
+	* digigr8.c: GP_MODULE "didigr8" -> GP_MODULE "digigr8"
+
+2005-12-29   Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Added DC-N130t, reported by 
+		Thierry Leconte <f4dwv@users.sourceforge.net>
+	* README: Some updates. 	
+
+2005-12-22   Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Added two cameras.
+		Soundstar TDC-35 reported by Patrice Mandin
+		<mandin.patrice@wanadoo.fr>
+		Che-Ez Snap SNAP-U reported by  Lou
+		<lou@fixit.nospammail.net>
+
+2005-12-05   Theodore Kilgore <kilgota@auburn.edu>
+
+	First check-in.

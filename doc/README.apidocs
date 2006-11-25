@@ -1,0 +1,8 @@
+Rules for the API docs:
+
+  1. DO NOT DOCUMENT ANYTHING YET
+  2. If you know a method to keep API docs and internal docs apart, with
+     doxygen, please tell us.
+  3. If this has been solved, start documenting the external interface.
+
+Thank you.

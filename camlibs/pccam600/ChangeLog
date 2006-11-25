@@ -1,0 +1,24 @@
+
+	
+
+	This software is based upon usbsniffing, and therefore is
+	marked EXPERIMENTAL.
+	
+	Any comments email me at pbk@odense.kollegienet.dk
+
+2004-09-05 Marcus Meissner <marcus@jet.franken.de>
+	
+	Ambigel http://ambigel.blogia.com/ has a pc cam 350, added
+	Removed explicit size handling of JPEGs for now (not really needed).
+	
+2004-01-27 Marcus Meissner <marcus@jet.franken.de>
+
+	Andres Guerrero reports the PC CAM 750 working with this driver,
+	added id.
+
+2002-08-16
+	Fixed a newline compile error with gcc 2.96. 
+
+2002-08-09
+	Først release of the library.
+	As this is the first release there might be errors, please report them.	

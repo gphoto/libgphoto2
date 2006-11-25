@@ -1,0 +1,38 @@
+2005-01-02  Marcus Meissner <marcus@jet.franken.de>
+
+	* jd11.c: Added names to the properties.
+
+2002-08-01  Marcus Meissner <meissner@suse.de>
+	
+	* jd11.c, serial.c: Fixed gp_port_write() retvalue checking.
+
+2002-04-12  Marcus Meissner <marcus@jet.franken.de>
+	* jd11.c, serial.c: Changed image/pnm to correct GP_MIME_PNM, so 
+	  konqueror displays it again.
+
+2002-04-06  Marcus Meissner <marcus@jet.franken.de>
+	
+	* jd11.c, serial.[ch]:
+	  Use the _noop filesystem functions to store the thumbnail data
+	  we retrieve on getting the number of pictures in the camera, major
+	  speedup for downloading thumbnails.
+	  Provide file info for frontends who use them.
+
+2002-01-04  Marcus Meissner <marcus@jet.franken.de>
+	
+	* jd11.c: Cleaned up comments, say it is ready for
+	  production use.
+	  jd11.html: Added final note on colors.
+
+2001-12-29  Marcus Meissner <marcus@jet.franken.de>
+	
+	* serial.[ch], jd11.c: Use new gp_file_progress.
+	* jd11.c: Initialize CameraAbilities struct with zeroes.
+
+	* serial.c: Made serial transfers much more robust, with retries
+	  and draining of old data.
+	  Also use gp_file_progress correctly (hopefully).
+
+2001-12-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* serial.c: Include <bayer.h>, not "libgphoto2/bayer.h"

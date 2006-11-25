@@ -1,0 +1,16 @@
+TODO
+
+- when problems occur resulting in the camera not
+  being disconnected properly, if the speed was 
+  greater than 9600, the camera must be reset
+  For example: specifying an invalid image #
+- quite of bit of testing has been done, but more
+  is needed
+- support for the image capture features of the
+  camera
+- cleanup.  The driver was based on the Panasonic
+  DC1000 driver.  Much of the structure of the
+  file is still inherited and needs to be reworked
+- JPEG image created by camera appears to be an
+  older format (missing JFIF header tag).  Possibly
+  convert to new format?  Probably not.

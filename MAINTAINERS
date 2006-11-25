@@ -1,0 +1,210 @@
+Below are the addresses of persons working on specific parts of gphoto2.
+If you have specific questions (like why doesn't my HP C20 answer with 0x20
+if I send 0xff as described in whatever/file.c), those are the guys to ask.
+
+libgphoto2_port:
+	Lutz Müller <lutz@users.sourceforge.net>
+	Scott Fritzinger <scottf@unr.edu>
+
+libgphoto2:
+	Lutz Müller <lutz@users.sourceforge.net>
+	Scott Fritzinger <scottf@unr.edu>
+
+--------------------------------------------------------------------------------
+				     PORTS
+--------------------------------------------------------------------------------
+
+OS/2:
+	Bart van Leeuwen <bart_van_leeuwen@netage.nl>
+*BSD:
+	Arnaud Launay <asl@launay.org>
+
+--------------------------------------------------------------------------------
+				 CAMERA DRIVERS
+--------------------------------------------------------------------------------
+
+camlibs/aox:
+	Theodore Kilgore <kilgota@auburn.edu>
+
+camlibs/barbie:
+	Scott Fritzinger <scottf@unr.edu> 
+
+camlibs/benq:
+	Till Adam <till@adam-lilienthal.de>
+
+camlibs/canon:
+	Philippe Marzouk <philm@users.sourceforge.net>
+
+camlibs/clicksmart310:
+	Theodore Kilgore <kilgota@auburn.edu>
+
+camlibs/digigr8:
+	Theodore Kilgore <kilgota@auburn.edu>
+
+camlibs/digita:
+	Johannes Erdfelt <johannes@erdfelt.com>
+
+camlibs/dimera:
+	Dan Fandrich <dan@coneharvesters.com>
+
+camlibs/gsmart:
+	Till Adam <till@adam-lilienthal.de>
+
+camlibs/gsmart300:
+	Jérôme Lodewyck <lodewyck@clipper.ens.fr>
+	Till Adam <till@adam-lilienthal.de>
+
+camlibs/hp215:
+	Marcus Meissner <marcus@jet.franken.de>
+
+camlibs/iclick:
+	Theodore Kilgore <kilgota@auburn.edu>
+
+camlibs/jamcam:
+	Chris Pinkham <cpinkham@infi.net>
+
+camlibs/jd11:
+	Marcus Meissner <marcus@jet.franken.de>
+
+camlibs/konica:
+	Lutz Müller <lutz@users.sf.net>
+
+camlibs/kodak/dc120:
+	Scott Fritzinger <scottf@unr.edu>
+
+camlibs/kodak/dc210:
+	Michael Koltan <koltan@gmx.de>
+
+camlibs/kodak/dc240:
+	Hubert Figuiere <hfiguiere@teaser.fr>
+
+camlibs/largan/lmini
+	Hubert Figuiere <hfiguiere@teaser.fr>
+
+camlibs/mars
+	Theodore Kilgore <kilgota@auburn.edu>
+
+camlibs/mustek:
+	Marcus Meissner <marcus@jet.franken.de>
+
+camlibs/panasonic
+	Mariusz Zynel <mariusz@math.uwb.edu.pl>
+
+camlibs/panasonic/coolshot:
+	Chris Pinkham <cpinkham@infi.net>
+
+camlibs/pccam300:
+	Miah Gregory <mace@darksilence.net>
+
+camlibs/pccam600:
+	Peter Kajberg <pbk@odense.kollegienet.dk>
+
+camlibs/polaroid/pdc320.c:
+	Nathan Stenzel <nathanstenzel@users.sourceforge.net>
+
+camlibs/polaroid/pdc640.c:
+	Chris Byrne <adapt.ihug.co.nz>
+
+camlibs/polaroid/pdc700.c:
+	Greg Ingram <ingram@symsys.com>
+
+camlibs/ptp2:
+	Mariusz Woloszyn <emsi@ipartners.pl>
+
+camlibs/ricoh/g3:
+	Marcus Meissner <marcus@jet.franken.de>
+
+camlibs/samsung:
+	Marcus Meissner <marcus@jet.franken.de>
+
+camlibs/sierra:
+	Patrick Mansfield <patmans@users.sourceforge.net>
+	Scott Fritzinger <scottf@unr.edu>
+
+camlibs/sipix:
+	Marcus Meissner <marcus@jet.franken.de>
+
+camlibs/smal:
+	Lee Benfield <lee@benf.org>
+
+camlibs/sonydscf55:
+	Raymond Penners <raymond@dotsphinx.com>
+
+camlibs/soundvision:
+	Vince Weaver <vince@deater.net>
+
+camlibs/spca504_flash:
+	Till Adam <till@adam-lilienthal.de>
+
+camlibs/sq905
+	Theodore Kilgore <kilgota@auburn.edu>
+
+camlibs/stv0674:
+	Vincent Sanders <vince@kyllikki.org>
+
+camlibs/stv0680:
+	Carsten Weinholz <cweinholz@users.sourceforge.net>
+	Marcus Meissner <marcus@jet.franken.de>
+
+camlibs/sx330z:
+	Dominik Kuhlen <kinimod@users.sourceforge.net>
+
+camlibs/toshiba/pdrm11
+	David Hogue <david@jawa.gotdns.org>
+
+--------------------------------------------------------------------------------
+				   FRONTENDS
+--------------------------------------------------------------------------------
+
+digikam (http://digikam.sourceforge.net):
+	KDE frontend
+	Renchi Raju <renchi@green.tam.uiuc.edu>
+
+kamera:
+	KDE integration (konqueror)
+	Marcus Meissner <marcus@jet.franken.de>
+	Ilya Konstantinov <future@shiny.co.il>
+
+gtkam (http://www.topfrose.de):
+	Simple GTK front-end.
+	Lutz Müller <lutz@users.sourceforge.net>
+
+GnoCam (http://www.uni-karlsruhe.de/~urc8/GnoCam):
+	GNOME integration (nautilus)
+	Lutz Müller <lutz@users.sf.net>
+
+QtKam (?):
+	Front-end for KDE
+	Remko Troncon <spike@kotnet.org>
+
+SANE (?):
+	If configured with --with-gphoto2.
+	Pete Fales <psfales@lucent.com>
+
+--------------------------------------------------------------------------------
+				    SUPPORT
+--------------------------------------------------------------------------------
+
+Build system up to 'configure' (i.e. 'autogen.sh'):
+	Arnaud Launay <asl@launay.org>
+
+Bug reports:
+	Hubert Figuiere <hfiguiere@teaser.fr>
+
+Releases:
+	Christophe Barbé <christophe.barbe@ufies.org>
+
+Packaging (RPM):
+	Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+Translation:
+	Colin Marquardt <colin@marquardt-home.de>
+
+Manual pages:
+	gphoto2 command-line app: Tim Waugh <twaugh@redhat.com>
+
+Other documentation (gphoto2.xml manual):
+        Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+Mailing lists:
+	Hans Ulrich Niedermann <gp@n-dimensional.de>

@@ -1,0 +1,29 @@
+2004-05-13  Raymond Penners  <raymond@dotsphinx.com>
+
+	* *.[ch]: Merged in Sony DSC-F55 patches from Alberto Garlassi:
+	added support for downloading MPEG files, and fixed thumbnail
+	downloading.
+
+2004-04-08  Raymond Penners  <raymond@dotsphinx.com>
+
+	* *.[ch]: Merged in patch from Alberto Garlassi: serial
+	communication fixes on fast CPUs, and the native file names are
+	now used (instead of using the hardcoded "dsc%05d.jpg").
+
+2003-02-27  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* camera.c: We support EXIF download.
+
+2002-07-18  Raymond Penners  <raymond@dotsphinx.com>
+
+	* sony.c: Added calls to gp_context_idle().
+
+2002-05-07  Khalid Akbar <khalid@homechoice.co.uk>
+
+	* *.[ch]: Added support for more than 256 images and "Sony TRV-20E".
+
+2002-03-27  Raymond Penners  <raymond@dotsphinx.com>
+
+	* *.[ch]: Made driver GPContext aware (i.e., operations can now be
+	  cancelled), and added support for EXIF information.
+

@@ -1,0 +1,33 @@
+2004-06-27  Theodore Kilgore <kilgota@auburn.edu>
+	
+	* library.c: Support for PREVIEW added.
+	* README:    Updated to reflect recent changes.
+
+
+2004-04-05  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* aox.c (aox_get_picture_size): Declare variables first 
+	for C89 compliance.
+
+2004-03-05 Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Different names needed for two USB ids.
+
+
+2004-02-25 Theodore Kilgore <kilgota@auburn.edu>
+
+	* aox.c: Yet another portability fix.
+
+
+2004-02-24 Theodore Kilgore <kilgota@auburn.edu>
+
+	* aox.c: Portability improvements, credits to Mika Kousa,
+		    <mkousa@cc.hut.fi>
+
+
+2004-02-24 Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Second USB id, discovered by Jonathan Kozol 
+		    <jamie@rocksolidnetworks.com>
+		    Portability improvements, credits to Mika Kousa,
+		    <mkousa@cc.hut.fi>

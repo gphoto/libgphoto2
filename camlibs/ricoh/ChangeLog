@@ -1,0 +1,223 @@
+2006-08-29  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* g3.c: Added Ricoh Caplio R4 id.
+
+2005-12-16  Marcus Meissner  <marcus@jet.franken.de>
+
+	* g3.c: Added Ricoh Caplio R3.
+	        Adjusted directory handling with 450 returned
+		for -NLST /IROM/.
+
+2005-07-14  Marcus Meissner  <marcus@jet.franken.de>
+
+	* g3.c: Added Ricoh Caplio GX 8.
+
+2005-07-11  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* g3.c: Added Ricoh R2 as reported.
+		Added some casts to supress warnings.
+
+2005-03-21  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* g3.c: Added Ricoh 5000G (sea&sea edition).
+
+2005-03-01  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* g3.c: Split RZ1 and R1 entries to avoid slashes.
+
+2005-02-13  Marcus Meissner  <marcus@jet.franken.de>
+
+	* g3.c: Added Ricoh Caplio R1v as reported by
+	  Johannes Guenther.
+
+2005-01-27  Marcus Meissner  <meissner@suse.de>
+
+	* g3.c: Added Ricoh Caplio R1 / RZ1 as reported.
+
+2004-09-12  Marcus Meissner  <meissner@suse.de>
+
+	* g3.c: Added Ricoh Caplio RX as reported by
+	        Christoph Bauer.
+
+2004-08-11  Marcus Meissner  <meissner@suse.de>
+
+	* g3.c: Get the mtime out of NLST, so we get the
+	  correct time without EXIF download. (might be off
+	  some hours).
+	
+2004-08-09  Marcus Meissner  <meissner@suse.de>
+	
+	* g3.c: fixed buffer handling, we were overwriting
+	  unallocated memory with newer libusb.
+
+2004-05-19  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* g3.c (camera_abilities): Camera is Medion MD 6126
+
+2004-05-19  Marcus Meissner <marcus@jet.franken.de>
+
+	* g3.c: Martin Leopold reported the "Medion MD 6162"
+	  as working too.
+
+2004-01-30  Marcus Meissner <marcus@jet.franken.de>
+
+	* g3.c: Added Caplio 300G model as reported.
+
+2003-11-17  Marcus Meissner <marcus@jet.franken.de>
+
+	* g3.c: 
+	  - Fixed camera access with removed SD card.
+	  - Handle more than 62 files in one directory.
+	  - Do not call -INFO for textfiles.
+	  - Try to read at least 0x800 byte to avoid confusing the
+	    remote USB stack.
+
+2003-10-10  Marcus Meissner <marcus@jet.franken.de>
+	
+	* g3.txt, g3.c, Makefile.am: 
+	
+	  Added new Ricoh Caplio G3 driver.
+
+	  Lots of thanks to Klaus Singvogel for lending me his camera
+	  over the weekend.
+
+	  Status:
+		Directory Listing, download of images, exif data and
+		audio, deleting files, creating and removing directories,
+		summary report works.
+		put file is possibly working too, but confuses the firmware 
+		and this driver a bit.
+
+2002-10-03  Lutz Müller <lutz@users.sourceforge.net>
+
+	* Makefile.am: -I$(top_builddir)/libgphoto2
+
+2002-07-20  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c:
+	* ricoh.[c,h]: Implement upload.
+
+2002-07-16  Lutz Müller <lutz@users.sourceforge.net>
+
+	* ricoh.c: Simplify by using macros.
+
+2002-07-16  Lutz Müller <lutz@users.sourceforge.net>
+
+	Patch by Martin Fischer <martin.fischer@inka.de>:
+
+	* ricoh.c (ricoh_set_date): Fix.
+
+2002-07-16  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c: The camera needs to be in record mode to set settings.
+
+2002-07-16  Lutz Müller <lutz@users.sourceforge.net>
+
+	Patch from Martin Fischer <martin.fischer@inka.de>:
+
+	* ricoh.c: Bug Fixes.
+
+2002-07-11  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c: Initialize some variables to NULL.
+
+2002-07-11  Lutz Müller <lutz@users.sourceforge.net>
+
+	* ricoh.c: Remove 3 direct calls to ricoh_send and ricoh_recv.
+
+2002-07-10  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c (camera_set_config): Fix bug (again).
+
+2002-07-10  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c (camera_set_config): Fix bug.
+
+2002-07-10  Lutz Müller <lutz@users.sourceforge.net>
+
+	Patch by Martin Fischer <martin.fischer@inka.de>:
+
+	* ricoh.c (ricoh_get_pic_date): Corrected.
+	* library.c (get_info_func): Implemented.
+
+2002-07-05  Lutz Müller <lutz@users.sourceforge.net>
+
+	* ricoh.[c,h]:
+	* library.c: More settings.
+
+2002-07-02  LUtz Müller <lutz@users.sourceforge.net>
+
+	* ricoh.[c,h]:
+	* library.c: Exposure setting.
+
+2002-07-02  Lutz Müller <lutz@users.sourceforge.net>
+
+	Patch by Martin Fischer <martin.fischer@inka.de>:
+
+	* ricoh.c:
+	* library.c: Some bug fixes.
+
+2002-06-21  Lutz Müller <lutz@users.sourceforge.net>
+
+	* ricoh.[c,h]:
+	* library.c: More settings.
+
+2002-06-20  Lutz Müller <lutz@users.sourceforge.net>
+
+	* ricoh.[c,h]
+	* library.c: First step towards support of settings.
+
+2002-06-20  Lutz Müller <lutz@users.sourceforge.net>
+
+	* ricoh.h:
+	* library.c: Support a couple of other models.
+
+2002-06-20  Lutz Müller <lutz@users.sourceforge.net>
+
+	Lots of infos from Martin Fischer <martin.fischer@inka.de>:
+
+	* ricoh.[c,h]
+	* library.c: Correct syntax and name of ricoh_connect and
+	  ricoh_bye. Fix typo in ricoh_get_pic_name. Remember the model
+	  that we get on ricoh_connect.
+
+2002-06-19  Lutz Müller <lutz@users.sourceforge.net>
+
+	* ricoh.c: Flesh out ricoh_get_pic_date.
+
+2002-06-19  Lutz Müller <lutz@users.sourceforge.net>
+
+	* ricoh.c: Simplify code by introducing ricoh_transmit. As a side 
+	  effect, this should improve error recovery, too.
+
+2002-06-18  Martin Fischer <martin.fischer@inka.de>
+
+	Patch adapted by Lutz Müller <lutz@users.sourceforge.net>.
+
+	* ricoh.[c,h]
+	* library.c: The driver supports GP_FILE_OPERATION_PREVIEW. 
+	  Support for Philips ESP80 was added. camera_about was added.
+	
+2002-03-14  Lutz Müller <lutz@users.sourceforge.net>
+
+	* ricoh.[c,h]
+	* library.c: This driver supports GP_FILE_OPERATION_DELETE and
+	  GP_OPERATION_CAPTURE_IMAGE. Support for
+	  configuration is still missing. Awaiting patches...
+
+2002-03-14  Lutz Müller <lutz@users.sourceforge.net>
+
+	* ricoh.[c,h]
+	* library.c: Remove CameraPrivateLibrary. Sure, that introduces 
+	  some communication overhead, but the code is cleaner this way.
+
+2002-03-14  Lutz Müller <lutz@users.sourceforge.net>
+
+	Submitted by <cliff@vixen.snipe444.org>. I fixed indentation.
+
+	* ricoh.[c,h]
+	* library.c: Make the driver functional.
+
+2002-01-31  Lutz Müller <lutz@users.sourceforge.net>
+
+	* ricoh.[c,h]: More functions ported.

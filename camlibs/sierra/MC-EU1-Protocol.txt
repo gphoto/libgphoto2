@@ -1,0 +1,181 @@
+From: http://vyskocil.free.fr/coolcom/MC-EU1%20Protocol.txt
+
+
+					Coolpix MC-EU1 Protocol
+
+Here are some informations about the serial protocol used between the Coolpix and the MC-EU1 remote.
+Speed is set to 19200 bauds
+
+* Introduction
+This protocol use 1 or 4 bytes "packets". 4 bytes packets are used to send command to the coolpix and receive information from it.
+1 byte packet are used as acknowledge (0x86), not acknowledge (0x15), "attention packet" (0xFF). 
+Each byte in these packet is divided in two part, bit 0-6 is the value on 7 bits and bit 7 is the odd parity bit (thanks Mark Roberts !)
+Returned value by the coolpix (in the two or three? last byte) have 0x1C offset, and least signifiant byte is sent first, for example
+the number of picture is :
+
+nb picture = ((byte[2] & 0x7F) - 0x1C) + 100 * ((byte[3] & 0x7F) - 0x1C) 
+byte[0] == 0x9B, byte[1] == 0x10
+
+* Going to MC-EU1 protocol
+
+Send                             	Receive				Informations
+
+0x00
+
+					0x15
+
+0x1B,0x53,0x06,0x00,0x00,0x11,0x02,0x00,0x00,0x00,0x13,0x00		Standard SetSpeed to 19200 command packet
+
+					0x06
+
+0x1B,0x53,0x06,0x00,0x00,0x11,0x02,0x00,0x00,0x10,0x23,0x00		Go to MC-EU1 protocol packet, switch LCD ON
+
+					0x06
+
+At first connection after Coolpix has been powerup, first 0x00 don't work, coolpix respond 0xFF 0xFF then nothing
+A second 0x00 do the job.
+
+* Initialisations
+
+Need more informations...
+
+Send                             	Receive				Informations
+
+0x9B, 0x85, 0x1C, 0x1C
+
+					0x9B, 0x13, 0x1C, 0x1C		?
+
+0x86
+
+* Has camera power down ?
+
+Send                             	Receive				Informations
+
+0x9B, 0x08, 0x1C, 0x1C
+
+					0x9B, 0x92, 0x7F, 0x7F		Coolpix is ON
+					or
+					0x9B, 0x19, 0x7F, 0x7F		Coolpix powerdown.
+
+0x86
+
+* Take a shoot :
+
+Send                             	Receive				Informations
+
+0x9B, 0x01, 0x1C, 0x1C							Half press the shutter button.
+
+					0x86
+
+0x9B, 0x01, 0x7F, 0x1C							Full press the shutter button, 
+									take the picture
+					0x86
+
+0x9B, 0x01, 0x7F, 0x7F							Release the shutter button,
+									usefull in bulb mode
+									
+					0x8F
+					
+0x9B, 0x01, 0x1C, 0x7F							Half press release (unlock shutter button).
+			
+					0x86
+					
+* Zoom IN
+
+Send                             	Receive				Informations
+
+0x9B, 0x02, 0x1C, 0x1C							"Press" the zoom in button
+
+					0x86
+					
+0x9B, 0x02, 0x1C, 0x7F							"Release" the zoom in button
+
+					0x86
+
+* Zoom OUT
+
+Send                             	Receive				Informations
+
+0x9B, 0x02, 0x7F, 0x1C							"Press" the zoom out button
+
+					0x86
+					
+0x9B, 0x02, 0x7F, 0x7F							"Release" the zoom out button
+
+					0x86
+					
+* Next picture
+
+Send                             	Receive				Informations
+
+0x9B, 0x04, 0x1C, 0x1C							"Press" right
+
+					0x86
+					
+0x9B, 0x04, 0x1C, 0x7F							"Release" right
+
+					0x86
+
+* Previous picture
+
+Send                             	Receive				Informations
+
+0x9B, 0x04, 0x7F, 0x1C							"Press" left
+
+					0x86
+					
+0x9B, 0x04, 0x7F, 0x7F							"Release" left
+
+					0x86
+					
+* Number of picture left
+
+Send                             	Receive				Informations
+
+0x9B, 0x07, 0x1C, 0x1C
+
+					0x9B, 0x10, 0xXX, 0xYY		(0xXX & 0x7F) - 0x1C + 100 * ((0xYY & 0x7F) - 0x1C) 
+												is the number of pictures left
+
+0x86
+
+* A-REC/M-Rec
+
+Send                             	Receive				Informations
+
+0x9B, 0x89, 0x1C, 0x1C
+
+					0x9B, 0x91, 0x9D, 0x7F		for A Rec mode
+					or
+					0x9B, 0x91, 0x0D, 0x1C		for M Rec mode
+					or
+					0x9B, 0x91, 0x7F, 0x9D		for play mode
+					
+0x86
+					
+* Go back to standard protocol
+
+Send                             	Receive				Informations
+
+0x9B, 0x8A, 0x1C, 0x1C							LCD OFF
+				
+					0x86
+					
+* "Attention" packet 0xFF from coolpix
+
+Coolpix send 0xFF in many cases :
+- After initialisation in response to 0x00.
+- When Coolpix self powerdown (powersave)
+- When Coolpix is powerdown
+- When a picture has been recorded
+- When mode selector is operated (A-Rec, M-Rec, Play)
+
+It's a good idea to send 0x9B, 0x08, 0x1C, 0x1C packet to check
+if coolpix has powerdown when a 0xFF is received, else check the
+picture number and current mode.
+
+* Notes
+
+- Camera send NAK (0x15) in response to bad command packet
+
+- You may send any useful informations about this protocol to : vladimir.vyskocil@wanadoo.fr

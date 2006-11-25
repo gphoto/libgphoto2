@@ -1,0 +1,39 @@
+2004-10-28  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* library.c (camera_init): Fix build for gcc 2.95
+	(bug #105586)
+
+2004-02-22 Till Adam  <till@adam-lilienthal.de>
+  * add support for Dakota disposable cameras. This is the 
+    work of John Maushammer <gphoto2@maushammer.com>
+
+2004-02-22 Till Adam  <till@adam-lilienthal.de>
+  * add support for Pencams without flash via a special camera
+    model. --camera "Pencam without flash" works for those cams
+    which fail upon autodetection as regular pencams.  
+    Thanks to John Feuerstein <bizkit@baze.de> for helping with
+    that.
+
+2004-01-17 Till Adam  <till@adam-lilienthal.de>
+  * fix brokeness for pencams which don't react well to the reset
+    command needed for other firmware one cams. Thanks to 
+    Norbert Möndjen <Norbert.Moendjen@t-online.de> and 
+    Walt Boring <waboring@3gstech.com> for figuring that out
+    and helping debug it.
+
+2003-06-04  Till Adam  <till@adam-lilienthal.de>
+  * add support for spca500 based cams with flash storage, courtesy
+    of Ian MacArthur <ian@imm.uklinux.net>
+
+2003-06-04  Till Adam  <till@adam-lilienthal.de>
+  * use ids to detect the model instead of strcmp which fails
+    after the : change
+  * move jpeg function into spca50x.c|h
+  * return mtime in the info func to save thumbnail uploads
+
+2003-05-17  Till Adam  <till@adam-lilienthal.de>
+  * fix crash in thumbnail generation due to brainfart on my part.
+    Thanks to Hartmut Henkel <hartmut_henkel@gmx.de> for the help.
+
+2003-02-22  Till Adam  <till@adam-lilienthal.de>
+  * merge of the gsmart, spca504_flash and benq camlibs into this one

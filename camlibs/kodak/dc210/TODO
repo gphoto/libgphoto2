@@ -1,0 +1,8 @@
+There are still some minor problems/issues:
+
+- Check the epoch problem that occurs when setting/reading the
+  camera or file time
+- Internationalization
+- Allow switching the thumbnail type in preferences
+- Clean up the code and add some more comments
+- Find the error in reading the battery status

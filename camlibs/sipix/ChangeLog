@@ -1,0 +1,59 @@
+2006-11-19  Marcus Meissner <marcus@jet.franken.de>
+
+	* Makefile.am: do not build blink driver anymore,
+	  not working anyway.
+
+2005-03-23  Marcus Meissner <marcus@jet.franken.de>
+	
+	* blink2.c: added delete all and capture image.
+	* blink2.txt: started documenting.
+
+2004-04-01  Marcus Meissner <marcus@jet.franken.de>
+	
+	* merged patch for Snap from Thomas Coffy <karm@happycoders.org>,
+	  changes some usb lowlevel stuff.
+
+2004-01-19  Marcus Meissner <marcus@jet.franken.de>
+
+	* blink2.c: Some alignment issues, set altsetting.
+	* xjpeg.c: Added APP1, APP2.
+
+2003-06-22  Marcus Meissner <marcus@jet.franken.de>
+	
+	* blink2.c: SiPix Blink2 now downloads viewable
+	  images.
+	* xjpeg.c: Small tool to view jpeg tags with contents, not
+	  compiled.
+
+2003-05-20  Marcus Meissner <marcus@jet.franken.de>
+	
+	* blink2.[ch]: New SiPix Blink2 driver. Downloads
+	  unprocessed JPEG for now (needs a bit work).
+
+	* blink2.c: SiPix Snap should also work, according to
+	  old snoopy trace.
+
+	* Makefile.am: reorganized file layout.
+
+2002-12-04  Marcus Meissner <marcus@jet.franken.de>
+
+        * Intermediate checkin of my current work.
+
+          - Can read bitstream to some degree and extract the DCT tables.
+            Still apparently does not find the endmarker correctly.
+
+2002-09-21  Marcus Meissner <marcus@jet.franken.de>
+        
+        * Imported SiPix StyleCam Blink driver from 
+          Vincent Sanders <vince@kyllikki.org>
+
+        * Cleaned it up and made it work, still dumps compressed images.
+
+2002-04-12  Marcus Meissner <marcus@jet.franken.de>
+	
+	* *: First version of SiPix Web2 driver:
+
+	  The Camera is a 640x480 JPEG camera. The driver 
+	  currently supports:
+	  - Picture, Thumbnail, EXIF download.
+	  - Delete Single Picture

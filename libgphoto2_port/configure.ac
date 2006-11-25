@@ -1,0 +1,434 @@
+dnl Process this file with autoreconf to produce a configure script.
+AC_PREREQ(2.59)
+AC_INIT([libgphoto2 port access library], [0.7.0], [gphoto-devel@lists.sourceforge.net], [libgphoto2_port])
+AC_CONFIG_SRCDIR([libgphoto2_port/gphoto2-port-version.c])
+AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_MACRO_DIR([m4])
+AC_CONFIG_AUX_DIR([.])
+dnl Working around bug in automake <= 1.9.6:
+dnl  - Please do not add filename-length-max=99 here.
+dnl  - Otherwise "make distdir" will fail in libgphoto2
+dnl The generated Makefile rule fails to remove the absolute part at
+dnl the beginning of the /path/to/buildroot/PACKAGE-VERSION/foo/bar
+dnl before determining the string length. However, the only relevant
+dnl string to determine the length of would be PACKAGE-VERSION/foo/bar
+AM_INIT_AUTOMAKE([-Wall gnu 1.9 dist-bzip2 check-news])
+
+
+dnl ---------------------------------------------------------------------------
+dnl Advanced information about versioning:
+dnl   * "Writing shared libraries" by Mike Hearn
+dnl         http://navi.cx/~mike/writing-shared-libraries.html
+dnl   * libtool.info chapter "Versioning"
+dnl   * libtool.info chapter "Updating library version information"
+dnl ---------------------------------------------------------------------------
+dnl Versioning:
+dnl  - CURRENT (Major):  Increment if the interface has changes. AGE is always
+dnl                      *changed* at the same time.
+dnl  - AGE (Micro):      Increment if any interfaces have been added; set to 0
+dnl		         if any interfaces have been removed. Removal has 
+dnl                      precedence over adding, so set to 0 if both happened.
+dnl                      It denotes upward compatibility.
+dnl  - REVISION (Minor): Increment any time the source changes; set to 
+dnl			 0 if you incremented CURRENT.
+dnl
+dnl  To summarize. Any interface *change* increment CURRENT. If that interface
+dnl  change does not break upward compatibility (ie it is an addition), 
+dnl  increment AGE, Otherwise AGE is reset to 0. If CURRENT has changed, 
+dnl  REVISION is set to 0, otherwise REVISION is incremented.
+dnl ---------------------------------------------------------------------------
+dnl A:R:C=6:1:6 libgphoto2_port-0.6.1 libgphoto2-2.2.1
+dnl A:R:C=7:0:7 libgphoto2_port-0.7.0 libgphoto2-2.3
+AC_SUBST([LIBGPHOTO2_PORT_AGE],      [7])
+AC_SUBST([LIBGPHOTO2_PORT_REVISION], [0])
+AC_SUBST([LIBGPHOTO2_PORT_CURRENT],  [7])
+AC_SUBST([LIBGPHOTO2_PORT_CURRENT_MIN],
+         [`expr $LIBGPHOTO2_PORT_CURRENT - $LIBGPHOTO2_PORT_AGE`])
+AC_SUBST([LIBGPHOTO2_PORT_VERSION_INFO],
+         [$LIBGPHOTO2_PORT_CURRENT:$LIBGPHOTO2_PORT_REVISION:$LIBGPHOTO2_PORT_AGE])
+
+
+dnl ---------------------------------------------------------------------------
+dnl Checks for programs.
+dnl ---------------------------------------------------------------------------
+AC_PROG_CC
+AC_PROG_CPP
+AC_PROG_INSTALL
+
+dnl Something with the sequences is not quite alright yet.
+dnl SED is supposed to be set in AC_LIBTOOL_SETUP, but the
+dnl sequence seems to get mixed up.
+SED=${SED-sed}
+
+dnl check for/set up libtool and libltdl
+dnl AC_DISABLE_STATIC
+dnl AC_DISABLE_SHARED
+AC_LIBLTDL_CONVENIENCE([libltdl])
+AC_WITH_LTDL
+AC_LIBTOOL_WIN32_DLL
+AC_LIBTOOL_DLOPEN
+AC_PROG_LIBTOOL
+AC_SUBST([LTDLINCL])
+AC_SUBST([LIBLTDL])
+
+# report on compiler/libtool setup
+GP_CONFIG_MSG([Build])
+GP_CONFIG_MSG([Source directory],[${srcdir}])
+GP_CONFIG_MSG([Compiler],[${CC}])
+GP_CONFIG_MSG([libltdl includes],[$LTDLINCL])
+GP_CONFIG_MSG([libltdl library],[$LIBLTDL])
+
+AC_DEFINE_UNQUOTED(HAVE_CC,"$CC",[The C compiler we're using])
+
+AM_CPPFLAGS="$CPPFLAGS"
+AM_CPPFLAGS="$AM_CPPFLAGS -I\$(top_srcdir)"
+
+
+# ----------------------------------------------------------------------
+# References to external resources (web sites, mailing listes, etc.)
+# ----------------------------------------------------------------------
+
+GP_REFERENCES()dnl
+
+
+dnl ---------------------------------------------------------------------------
+dnl i18n support
+dnl ---------------------------------------------------------------------------
+
+dnl The following is a hack to get gphoto2 to build on gettext-0.10.35
+dnl systems - BUILD_INCLUDED_LIBINTL is set only in gettext-0.10.37 which is
+dnl the gettext version provided with gphoto2.
+dnl BUILD_INCLUDED_LIBINTL=no
+dnl AC_SUBST(BUILD_INCLUDED_LIBINTL)
+dnl USE_INCLUDED_LIBINTL=no
+dnl AC_SUBST(USE_INCLUDED_LIBINTL)
+
+GP_GETTEXT_HACK([${PACKAGE}-${LIBGPHOTO2_PORT_CURRENT_MIN}],[Lutz Mueller and others],[${MAIL_GPHOTO_TRANSLATION}])
+ALL_LINGUAS="cs da de fr es eu it ja nl nb pl pt_BR ru sl sv uk vi zh_CN zh_TW"
+AM_GNU_GETTEXT_VERSION([0.14.1])
+AM_GNU_GETTEXT([external])
+AM_PO_SUBDIRS()
+AM_ICONV()
+GP_GETTEXT_FLAGS()
+
+AC_SUBST([localedir],["\$(datadir)/locale"])
+AM_CPPFLAGS="$AM_CPPFLAGS -DLOCALEDIR=\\\"${localedir}\\\""
+
+AC_CHECK_FUNC(gettext, gettext_without_libintl=true)
+# same trick as with libdl in libgphoto2:
+# if gettext() doesn't require linking against libintl,
+# we don't have to check for gettext in libintl. Otherwise
+# we may even require libintl.
+dnl AC_CHECK_LIB(intl, gettext, [LIBS="$LIBS -lintl"])
+if test "$gettext_without_libintl" != "true" -a "$USE_NLS" = "yes"; then
+        AC_CHECK_LIB(intl, gettext, [INTLLIBS="$INTLLIBS -lintl"])
+fi
+
+
+dnl ---------------------------------------------------------------------------
+dnl Checks for header files.
+dnl ---------------------------------------------------------------------------
+AC_HEADER_DIRENT
+AC_HEADER_STDC
+
+AC_C_INLINE([])
+AC_C_CONST([])
+
+AC_CHECK_HEADERS(stdlib.h unistd.h stdio.h fcntl.h errno.h sys/time.h	\
+	sys/param.h termios.h sgetty.h ttold.h ioctl-types.h		\
+	fcntl.h sgtty.h sys/ioctl.h sys/time.h termio.h unistd.h	\
+	endian.h byteswap.h asm/io.h mntent.h sys/mntent.h sys/mnttab.h)
+	
+dnl FIXME: Provide regex.h with the corresponding object code for 
+dnl        platforms which do not have it, e.g. Windows.
+AC_CHECK_HEADER([regex.h],
+                [AC_DEFINE([HAVE_REGEX],1,[whether we have regex.h])],
+		[AC_MSG_ERROR([
+*** We need regex.h and its object code to compile
+*** But we could not find it.
+])
+])
+
+dnl Apple Bonjour / mDNSResponder multicast DNS queries.
+MDNS_LIBS=
+AC_CHECK_HEADER([dns_sd.h],[
+		AC_CHECK_LIB(dns_sd,DNSServiceResolve,[
+			MDNS_LIBS="-ldns_sd"
+			AC_DEFINE(HAVE_MDNS_BONJOUR,1,[Define if you have Bonjour/mDNSResponder.])
+		])
+])
+
+dnl Check for mnt_mountp in struct mnttab
+AC_MSG_CHECKING([for mnt_mountp in struct mnttab])
+AC_COMPILE_IFELSE([dnl
+AC_LANG_PROGRAM([[
+#if defined(HAVE_SYS_MNTENT_H) && defined(HAVE_SYS_MNTTAB_H)
+# include <sys/mntent.h>
+# include <sys/mnttab.h>
+#endif
+]], [[
+struct mnttab mt;
+mt.mnt_mountp;
+]])dnl
+],[
+AC_DEFINE(HAVE_MNTTAB,1,whether struct mnttag has mnt_mountp field)
+AC_MSG_RESULT(yes)
+],[
+AC_MSG_RESULT(no)
+])
+
+
+AC_SUBST(MDNS_LIBS)
+
+dnl Checks for library functions.
+AC_CHECK_FUNCS(strerror snprintf vsnprintf)
+
+dnl Check if TIOCM_RTS is included in one of several possible files
+AC_TRY_COMPILE([#include <termios.h>], [int foo = TIOCM_RTS;],
+			AC_DEFINE(HAVE_RTS_IOCTL,1,[Define if you have TIOCM_RTS.]))
+AC_TRY_COMPILE([#include <termio.h>], [int foo = TIOCM_RTS;],
+			AC_DEFINE(HAVE_RTS_IOCTL,1,[Define if you have TIOCM_RTS.]))
+AC_TRY_COMPILE([#include <ioctl-types.h>], [int foo = TIOCM_RTS;],
+			AC_DEFINE(HAVE_RTS_IOCTL,1,[Define if you have TIOCM_TRS.]))
+AC_TRY_COMPILE([#include <sys/ioctl.h>], [int foo = TIOCM_RTS;],
+			AC_DEFINE(HAVE_RTS_IOCTL,1,[Define if you have TIOCM_TRS.]))
+
+# Check for va_copy()
+GP_VA_COPY
+
+
+dnl ---------------------------------------------------------------------------
+dnl serial
+dnl ---------------------------------------------------------------------------
+serial_msg=yes
+have_serial=true
+try_baudboy_msg=true
+try_ttylock=true
+try_lockdev=true
+try_resmgr=true
+AC_ARG_ENABLE([serial],
+	[AS_HELP_STRING([--disable-serial],
+			[do not compile in SERIAL support])],
+[
+	if test x$enableval = xno; then
+		have_serial=false
+		serial_msg=no
+		try_baudboy=false
+		try_ttylock=false
+		try_lockdev=false
+		try_resmgr=false
+	fi
+])
+if $have_serial; then
+	IOLIB_SUBDIRS="$IOLIB_SUBDIRS serial"
+	AC_DEFINE([HAVE_SERIAL],1,[Whether you have serial support enabled])
+fi
+GP_CONFIG_MSG([Serial ports])
+GP_CONFIG_MSG([Serial support],[$serial_msg])
+
+SERIAL_LIBS=""
+if $have_serial; then
+
+dnl -----------------------------------------
+dnl Serial port locking: We try to use either
+dnl  (1) resmgr support
+dnl  (2) baudboy.h
+dnl  (3) ttylock.h
+dnl  (4) lockdev.h
+dnl -----------------------------------------
+AC_DEFUN([GP_SERLOCK],[dnl
+# $0([$1])
+AC_ARG_ENABLE([$1],
+[AS_HELP_STRING([--disable-][$1],
+		[do not use ][$1][ library])
+],[
+	if test x$enableval = xno; then
+		try_[$1]=false
+	fi
+])
+])dnl
+GP_SERLOCK([baudboy])dnl
+GP_SERLOCK([ttylock])dnl
+GP_SERLOCK([lockdev])dnl
+GP_SERLOCK([resmgr])dnl
+
+resmgr_msg=no
+if $try_resmgr; then
+	AC_CHECK_HEADER(resmgr.h,[
+		AC_CHECK_LIB(resmgr, rsm_lock_device,[
+			resmgr_msg=yes
+			SERIAL_LIBS="-lresmgr"
+			AC_DEFINE(HAVE_RESMGR,1,[Define if we have the resmgr library.])
+		])
+	])
+fi
+GP_CONFIG_MSG([resmgr locking],[${resmgr_msg}])
+
+baudboy_msg=no
+if $try_baudboy; then
+	AC_CHECK_HEADER(baudboy.h,[
+		baudboy_msg=yes
+		try_ttylock=false
+		try_lockdev=false
+		AC_DEFINE(HAVE_BAUDBOY,1,[Define if you have Baudboy serial locking.])
+	])
+fi
+GP_CONFIG_MSG([baudboy locking],[${baudboy_msg}])
+
+ttylock_msg=no
+if $try_ttylock; then
+	AC_CHECK_HEADER([lockdev.h])
+	AC_CHECK_HEADER([ttylock.h],[
+		lockdev_result="no"
+		AC_TRY_LINK([#include <ttylock.h>],[ttylocked ("/dev/foo");],[
+			lockdev_result="no"
+			AC_DEFINE(HAVE_TTYLOCK,1,[Define if you have ttylock based tty locking.])
+			ttylock_msg=yes
+			try_lockdev=false,
+			LDFLAGS="$LDFLAGS -llockdev"
+			AC_TRY_LINK([#include <ttylock.h>],[ttylocked ("/dev/foo");],[
+				lockdev_result="yes"
+				AC_DEFINE(HAVE_TTYLOCK,1,[Define if you have ttylock based tty locking.])
+				ttylock_msg=yes
+				try_lockdev=false
+				SERIAL_LIBS=-llockdev
+			])
+		])
+		AC_MSG_CHECKING([if ttylock needs lockdev])
+		AC_MSG_RESULT([${lockdev_result}])
+	],[],[#ifdef HAVE_LOCKDEV_H
+# include <lockdev.h>
+#endif
+	])
+fi
+GP_CONFIG_MSG([ttylock locking],[${ttylock_msg}])
+
+lockdev_msg=no
+if $try_lockdev; then
+	AC_CHECK_LIB(lockdev, dev_lock,[
+		AC_CHECK_HEADER(lockdev.h,[
+			AC_DEFINE(HAVE_LOCKDEV,1,[Define if you have dev_lock/lockdev based locking.])
+			lockdev_msg=yes
+			SERIAL_LIBS=-llockdev
+		])
+	])
+fi
+GP_CONFIG_MSG([lockdev locking],[${lockdev_msg}])
+
+fi # have_serial
+
+AC_SUBST([SERIAL_LIBS])
+
+
+dnl ---------------------------------------------------------------------------
+dnl libusb
+dnl ---------------------------------------------------------------------------
+GP_CONFIG_MSG([USB ports])
+GP_CHECK_LIBRARY([LIBUSB],[libusb],[>= 0.1.5],
+		[usb.h],[usb_busses],[
+	IOLIB_SUBDIRS="$IOLIB_SUBDIRS usb"
+],[],
+		[disable-explicitly],
+		[http://libusb.sourceforge.net/]
+)
+
+dnl ---------------------------------------------------------------------------
+dnl disk - hal and various stuff
+dnl ---------------------------------------------------------------------------
+PKG_CHECK_MODULES(HAL, [dbus-1 >= 0.31 hal >= 0.5.0], 
+		       [have_hal=true], 
+		       [have_hal=false])
+if test "x$have_hal" = "xtrue"; then
+   AC_SUBST(HAL_CFLAGS)
+   AC_SUBST(HAL_LIBS)
+   AC_DEFINE(HAVE_HAL,1,[defined if HAL is available])
+fi
+IOLIB_SUBDIRS="$IOLIB_SUBDIRS disk"
+
+dnl ptpip - works 'everywhere' with TCP/IP stack.
+IOLIB_SUBDIRS="$IOLIB_SUBDIRS ptpip"
+
+# ----------------------------------------------------------------------
+# Define IOLIB stuff
+# ----------------------------------------------------------------------
+
+AC_SUBST(IOLIB_SUBDIRS)
+AC_SUBST([iolibdir],["\$(libdir)/\$(PACKAGE_TARNAME)/\$(VERSION)"])
+AM_CPPFLAGS="$AM_CPPFLAGS -DIOLIBS=\\\"${iolibdir}\\\""
+
+
+dnl --------------------------------------------------------------------
+dnl guess directory to install *.pc into
+dnl --------------------------------------------------------------------
+pkgconfigdir='${libdir}/pkgconfig'
+AC_SUBST([pkgconfigdir])
+
+
+dnl ----------------------------------------------------------------------
+dnl GNU regex?
+dnl ----------------------------------------------------------------------
+AC_CHECK_FUNC(re_compile_pattern,
+              AC_DEFINE(HAVE_GNU_REGEX,1,[Define if you have GNU regex.])
+)
+
+
+dnl ----------------------------------------------------------------------
+dnl disable debugging if requested
+dnl ----------------------------------------------------------------------
+AC_ARG_ENABLE([debug],
+  AS_HELP_STRING([--disable-debug],[do not include debugging code]),
+[
+  if test "$enableval" = "no"; then
+    AC_DEFINE(DISABLE_DEBUGGING,1,[Define if you want to disabled debugging.])
+  fi
+])
+
+
+# ----------------------------------------------------------------------
+# gtk-doc?
+# ----------------------------------------------------------------------
+GP_CONFIG_MSG([Documentation])
+GP_CHECK_DOC_DIR()dnl
+GP_BUILD_GTK_DOCS()dnl
+
+
+dnl ---------------------------------------------------------------------------
+dnl Turn on all warnings when using gcc
+dnl ---------------------------------------------------------------------------
+if test "$GCC" = "yes"; then
+	AM_CPPFLAGS="$AM_CPPFLAGS -Wall"
+	AM_CPPFLAGS="$AM_CPPFLAGS -Wmissing-declarations -Wmissing-prototypes"
+	AM_LDFLAGS="$AM_LDFLAGS -Wall"
+	# FIXME: Check for --enable-debug here
+	AM_CPPFLAGS="$AM_CPPFLAGS -g"
+	AM_LDFLAGS="$AM_LDFLAGS -g"
+fi
+
+AM_CPPFLAGS="$AM_CPPFLAGS -D_GPHOTO2_INTERNAL_CODE"
+
+AC_SUBST([AM_CPPFLAGS])
+AC_SUBST([AM_LDFLAGS])
+
+
+# ---------------------------------------------------------------------------
+# Create output files
+# ---------------------------------------------------------------------------
+AC_CONFIG_FILES([
+Makefile
+po/Makefile.in
+libgphoto2_port/Makefile
+libgphoto2_port/libgphoto2_port.pc
+serial/Makefile
+usb/Makefile
+disk/Makefile
+ptpip/Makefile
+gphoto2-port-config
+test/Makefile
+doc/Makefile
+m4/Makefile
+])
+AC_OUTPUT
+
+GP_CONFIG_OUTPUT
+
+# End of file.
