@@ -4,8 +4,8 @@ AC_PREREQ(2.59)
 dnl NOTE: Be version style _higher_ than the last release.
 dnl       So lastversion.X.trunk for instance. Bump X if necessary.
 
-dnl ******* THE NEXT RELEASE VERSION MUST BE 2.2.2 at least or higher!
-AC_INIT([libgphoto2], [2.2.1.5.trunk], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
+dnl ******* THE NEXT RELEASE VERSION MUST BE 2.3.0 at least or higher!
+AC_INIT([libgphoto2], [2.3.0.1.trunk], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
 AC_CONFIG_SRCDIR([libgphoto2/gphoto2-version.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4m])
@@ -48,8 +48,9 @@ dnl  REVISION is set to 0, otherwise REVISION is incremented.
 dnl ---------------------------------------------------------------------------
 dnl A:R:C=1:1:3  libgphoto2-2.2
 dnl A:R:C=2:0:4  libgphoto2-2.3 (since libgphoto2-2.2.1.5.trunk)
+dnl A:R:C=2:1:4  libgphoto2-2.3.1 (since libgphoto2-2.3.0.1.trunk)
 AC_SUBST([LIBGPHOTO2_AGE],      [2])
-AC_SUBST([LIBGPHOTO2_REVISION], [0])
+AC_SUBST([LIBGPHOTO2_REVISION], [1])
 AC_SUBST([LIBGPHOTO2_CURRENT],  [4])
 AC_SUBST([LIBGPHOTO2_CURRENT_MIN],
          [`expr $LIBGPHOTO2_CURRENT - $LIBGPHOTO2_AGE`])
