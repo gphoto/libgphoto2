@@ -834,12 +834,13 @@ ptp_pack_DPV (PTPParams *params, PTPPropertyValue* value, unsigned char** dpvptr
 
 #define MAX_MTP_PROPS 127
 static inline uint32_t
-ptp_pack_OPL (PTPParams *params, MTPPropList *proplist, unsigned char** opldataptr, uint32_t objectid)
+ptp_pack_OPL (PTPParams *params, MTPPropList *proplist, unsigned char** opldataptr)
 {
 	unsigned char* opldata;
 	MTPPropList *propitr;
 	unsigned char *packedprops[MAX_MTP_PROPS];
 	uint32_t packedpropslens[MAX_MTP_PROPS];
+	uint32_t packedobjecthandles[MAX_MTP_PROPS];
 	uint16_t packedpropsids[MAX_MTP_PROPS];
 	uint16_t packedpropstypes[MAX_MTP_PROPS];
 	uint32_t totalsize = 0;
@@ -850,7 +851,8 @@ ptp_pack_OPL (PTPParams *params, MTPPropList *proplist, unsigned char** opldatap
 	totalsize = sizeof(uint32_t); /* 4 bytes to store the number of elements */
 	propitr = proplist;
 	while (propitr != NULL && noitems < MAX_MTP_PROPS) {
-		/* Overhead for each item */
+		/* Object Handle */
+		packedobjecthandles[noitems]=propitr->ObjectHandle;
 		totalsize += sizeof(uint32_t); /* Object ID */
 		/* Metadata type */
 		packedpropsids[noitems]=propitr->property;
@@ -874,7 +876,7 @@ ptp_pack_OPL (PTPParams *params, MTPPropList *proplist, unsigned char** opldatap
 	/* Copy into a nice packed list */
 	for (i = 0; i < noitems; i++) {
 		/* Object ID */
-		htod32a(&opldata[bufp],objectid);
+		htod32a(&opldata[bufp],packedobjecthandles[i]);
 		bufp += sizeof(uint32_t);
 		htod16a(&opldata[bufp],packedpropsids[i]);
 		bufp += sizeof(uint16_t);
@@ -904,15 +906,15 @@ ptp_unpack_OPL (PTPParams *params, unsigned char* data, MTPPropList **proplist, 
 	*proplist = malloc(sizeof(MTPPropList));
 	prop = *proplist;
 	for (i = 0; i < prop_count; i++) {
-		/* we ignore the object handle */
+		prop->ObjectHandle = dtoh32a(data);
 		data += sizeof(uint32_t);
 		len -= sizeof(uint32_t);
 
-		prop->property = dtoh32a(data);
+		prop->property = dtoh16a(data);
 		data += sizeof(uint16_t);
 		len -= sizeof(uint16_t);
 
-		prop->datatype = dtoh32a(data);
+		prop->datatype = dtoh16a(data);
 		data += sizeof(uint16_t);
 		len -= sizeof(uint16_t);
 

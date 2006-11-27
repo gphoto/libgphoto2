@@ -598,6 +598,7 @@ typedef union _PTPPropertyValue PTPPropertyValue;
 struct _MTPPropList {
 	uint16_t 	 	property;
 	uint16_t 	 	datatype;
+	uint32_t 	 	ObjectHandle;
 	PTPPropertyValue 	propval;
 	struct _MTPPropList 	*next;
 };

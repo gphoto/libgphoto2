@@ -2607,7 +2607,7 @@ ptp_mtp_sendobjectproplist (PTPParams* params, uint32_t* store, uint32_t* parent
 	params->split_header_data = 0;
 	
 	/* Set object handle to 0 for a new object */
-	oplsize = ptp_pack_OPL(params,proplist,&opldata,*handle);
+	oplsize = ptp_pack_OPL(params,proplist,&opldata);
 	ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, oplsize, &opldata, NULL); 
 	free(opldata);
 	*store = ptp.Param1;
