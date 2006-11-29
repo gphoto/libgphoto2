@@ -6,31 +6,34 @@ PTP:
 	- faster directory retrieval (especially on cameras with lots of files)
 	- "new" images are marked (gphoto2 --new, digikam)
    * MTP Playlist support (upload and download)
-   * MTP Metadata support (Artist, Title, Playtime ... )
-   * MTP fixes
+   * MTP Metadata support (upload and download, Artist, Title, Playtime ... )
+   * Lots of other MTP related fixes.
    * MTP autodetection on Microsoft OS Descriptor.
    * New devices:
-          Canon PowerShot A540, A530, S3 IS, SD430, SD700, IXUS 800, IXUS 60, A630, SD630,
-	  Digital IXUS 65, 710IS,
-          EOS 400D/Digital Rebel XTi
+          Canon PowerShot A540, A530, S3 IS, SD430, SD700, IXUS 800,
+		IXUS 60, A630, SD630, G7, Digital IXUS 65, 710IS, EOS 400D,
+		Digital Rebel XTi, IXUS 850 IS, PowerShot A640,
+		IXUS Wireless (USB support only currently)
           iRiver T20 FM, iClix
+	  Creative Zen Vision W, Vision M, Vplus, V
           Dell Pocket DJ
-          Nikon Coolpix L4, L3
-          Kodak Easyshare Z740, P850, Z612
+          Nikon Coolpix L4, L3, L1, D80, P3
+          Kodak Easyshare Z740, P850, Z612, C643, C530, Z612, CD33
           Sony DSC-U10
           Leica D-LUX 2
 	  Olympus IR-300
           JVC Alneo XA-HD500
+	  All currently known HP Photosmarts (sync with Windows Driver .INF files)
 	  various Samsung devices
      
 Canon:
-   * 5D - 20D experimental capture support
+   * 5D - 20D experimental capture support (default disabled)
 
 Disk port:
    * fix a crasher
 
 Bindings:
-   * Mono/.NET bindings are installed if Mono is found
+   * Removed the Mono/.NET bindings due to unclear license.
    * Partial Java bindings
 
 libgphoto2 API:
