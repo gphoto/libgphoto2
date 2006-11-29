@@ -1,4 +1,4 @@
-EXTRA_DIST = main.c compile README.barbie
+EXTRA_DIST = main.c
 
 camlib_LTLIBRARIES = barbie.la
 
