@@ -341,6 +341,8 @@ static struct {
 	{"Kodak:C533",   0x040a, 0x05a2, 0},
 	/* Marc Santhoff <M.Santhoff@t-online.de> */
 	{"Kodak:C643",   0x040a, 0x05a7, 0},
+        /* via IRC */
+        {"Kodak:C633",   0x040a, 0x05ba, 0},
 
 	/* HP PTP cameras */
 	{"HP:PhotoSmart 812 (PTP mode)", 0x03f0, 0x4202, 0},
