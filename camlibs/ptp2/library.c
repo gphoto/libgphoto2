@@ -342,7 +342,7 @@ static struct {
 	/* Marc Santhoff <M.Santhoff@t-online.de> */
 	{"Kodak:C643",   0x040a, 0x05a7, 0},
         /* via IRC */
-        {"Kodak:C633",   0x040a, 0x05ba, 0},
+	{"Kodak:C633",   0x040a, 0x05ba, 0},
 
 	/* HP PTP cameras */
 	{"HP:PhotoSmart 812 (PTP mode)", 0x03f0, 0x4202, 0},
@@ -793,6 +793,10 @@ static struct {
 	{"Sandisk:Sansa e200",			0x0781, 0x7420, PTP_MTP},
 	{"Sandisk:Sansa e260",			0x0781, 0x7420, PTP_MTP},
 
+	/* Reported by Farooq Zaman. NOTE: Can just list files currently and might have other problems! */
+	{"Microsoft:Zune",			0x045e, 0x0710, PTP_MTP},
+	/* From Richard Low */
+	{"Sirius:Stiletto",			0x18f6, 0x0102, PTP_MTP }
 };
 
 static struct {
