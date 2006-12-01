@@ -1103,15 +1103,15 @@ typedef void (* PTPDebugFunc) (void *data, const char *format, va_list args)
 
 struct _PTPParams {
 	/* data layer byteorder */
-	uint8_t	byteorder;
+	uint8_t		byteorder;
 
-	/* Data layer IO functions */
+	/* IO: Data layer IO functions */
 	PTPIOReadFunc	read_func;
 	PTPIOWriteFunc	write_func;
 	PTPIOReadFunc	check_int_func;
 	PTPIOReadFunc	check_int_fast_func;
 
-	/* Custom IO functions */
+	/* PTP IO: Custom IO functions */
 	PTPIOSendReq	sendreq_func;
 	PTPIOSendData	senddata_func;
 	PTPIOGetResp	getresp_func;
@@ -1120,42 +1120,48 @@ struct _PTPParams {
 	PTPIOGetResp	event_wait;
 
 	/* Custom error and debug function */
-	PTPErrorFunc error_func;
-	PTPDebugFunc debug_func;
+	PTPErrorFunc	error_func;
+	PTPDebugFunc	debug_func;
 
 	/* Data passed to above functions */
-	void *data;
+	void		*data;
 
 	/* ptp transaction ID */
-	uint32_t transaction_id;
+	uint32_t	transaction_id;
 	/* ptp session ID */
-	uint32_t session_id;
+	uint32_t	session_id;
 
-	/* if we have MTP style split header/data transfers */
-	int	split_header_data;
+	/* PTP IO: if we have MTP style split header/data transfers */
+	int		split_header_data;
 
-	/* internal structures used by ptp driver */
+	/* PTP: internal structures used by ptp driver */
 	PTPObjectHandles handles;
-	PTPObjectInfo * objectinfo;
-	PTPDeviceInfo deviceinfo;
+	PTPObjectInfo	*objectinfo;
+	PTPDeviceInfo	deviceinfo;
 
-	/* Canon specific flags list */
+	/* PTP: Canon specific flags list */
 	uint32_t	*canon_flags; /* size(handles.n) */
 
-	/* Wifi profiles */
-	uint8_t  wifi_profiles_version;
-	uint8_t  wifi_profiles_number;
+	/* PTP: Wifi profiles */
+	uint8_t 	wifi_profiles_version;
+	uint8_t		wifi_profiles_number;
 	PTPNIKONWifiProfile *wifi_profiles;
 
-	/* PTP/IP related data */
+	/* IO: PTP/IP related data */
 	int		cmdfd, evtfd;
 	uint8_t		cameraguid[16];
 	uint32_t	eventpipeid;
 	char		*cameraname;
 
-	/* iconv converters */
-	iconv_t cd_locale_to_ucs2;
+	/* PTP: iconv converters */
+	iconv_t	cd_locale_to_ucs2;
 	iconv_t cd_ucs2_to_locale;
+
+	/* IO: Sometimes the response packet get send in the dataphase
+	 * too. This only happens for a Samsung player now.
+	 */
+	uint8_t		*response_packet;
+	uint16_t	response_packet_size;
 };
 
 /* last, but not least - ptp functions */

@@ -1,8 +1,14 @@
+2006-12-01  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptp.[ch]: MTP devices might send the response packet
+	  during data-in phase. Handle such a case.
+
+	  Patch supplied by libmtp guys and adapted.
+
 2006-11-30  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Added Microsoft Zune (not fully working!)
 	* library.c: Added Sirius Stilletto.
-	
 
 2006-11-27  Marcus Meissner  <marcus@jet.franken.de>
 
