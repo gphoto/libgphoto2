@@ -1,3 +1,7 @@
+2006-12-02  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Added PowerShot SD600.
+
 2006-12-01  Marcus Meissner  <marcus@jet.franken.de>
 
 	* ptp.[ch]: MTP devices might send the response packet
