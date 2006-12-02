@@ -351,6 +351,7 @@ static struct {
 	{"HP:PhotoSmart 935 (PTP mode)", 0x03f0, 0x4402, 0},
 	/* HP:PhotoSmart 945: T. Jelbert, 2004/03/29	*/
 	{"HP:PhotoSmart 945 (PTP mode)", 0x03f0, 0x4502, 0},
+	{"HP:PhotoSmart C500 (PTP mode)", 0x03f0, 0x6002, 0},
 	{"HP:PhotoSmart 318 (PTP mode)", 0x03f0, 0x6302, 0},
 	{"HP:PhotoSmart 612 (PTP mode)", 0x03f0, 0x6302, 0},
 	{"HP:PhotoSmart 715 (PTP mode)", 0x03f0, 0x6402, 0},
