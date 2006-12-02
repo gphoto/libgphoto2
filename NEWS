@@ -10,7 +10,7 @@ PTP:
    * Lots of other MTP related fixes.
    * MTP autodetection on Microsoft OS Descriptor.
    * New devices:
-          Canon PowerShot A540, A530, S3 IS, SD430, SD700, IXUS 800,
+          Canon PowerShot A540, A530, S3 IS, SD430, SD600, SD700, IXUS 800,
 		IXUS 60, A630, SD630, G7, Digital IXUS 65, 710IS, EOS 400D,
 		Digital Rebel XTi, IXUS 850 IS, PowerShot A640,
 		IXUS Wireless (USB support only currently)
