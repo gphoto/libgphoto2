@@ -74,6 +74,7 @@ static struct {
 	{"HP:PhotoSmart C500",	0x03F0, 0x4102 },
 	{"HP:PhotoSmart 618",	0x03F0, 0x4102 },
 	{"HP:PhotoSmart 912",	0x03F0, 0x4102 },
+	{"HP:PhotoSmart C500 2",0xf003, 0x6002 },
 };
 
 int camera_abilities(CameraAbilitiesList *list)
