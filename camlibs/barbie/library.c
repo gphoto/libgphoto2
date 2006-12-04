@@ -10,8 +10,7 @@
 #define GP_MODULE "barbie"
 
 /* Some simple packet templates */
-char packet_1[4]                = {0x02, 0x01, 0x01, 0x03};
-
+static const char packet_1[4]                = {0x02, 0x01, 0x01, 0x03};
 static char *barbie_read_data (GPPort *port, char *cmd, int cmd_size, int data_type, int *size);
 
 /* Utility Functions
@@ -65,6 +64,7 @@ barbie_read_response(GPPort *port, char *response, int size) {
 	return (x > 0);
 }
 
+static
 int barbie_exchange (GPPort *port, char *cmd, int cmd_size, char *resp, int resp_size) {
 
 	int count = 0;

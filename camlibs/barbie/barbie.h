@@ -110,6 +110,5 @@
 /* Utility functions */
 char*	barbie_read_firmware(GPPort *port);
 char*	barbie_read_picture (GPPort *port, int picture_number, int get_thumbnail, int *size);
-int	barbie_exchange     (GPPort *port, char *cmd, int cmd_size, char *resp, int resp_size);
 int	barbie_ping         (GPPort *port);
 int     barbie_file_count (GPPort *port);
