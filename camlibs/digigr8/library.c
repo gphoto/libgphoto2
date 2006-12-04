@@ -50,7 +50,7 @@
 
 #define GP_MODULE "digigr8"
 
-struct {
+static const struct {
    	char *name;
 	CameraDriverStatus status;
    	unsigned short idVendor;
