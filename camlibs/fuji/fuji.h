@@ -90,8 +90,6 @@ int fuji_upload      (Camera *, const unsigned char *data,
 int fuji_id_get      (Camera *camera, const char **id, GPContext *context);
 int fuji_id_set      (Camera *camera, const char  *id, GPContext *context);
 
-int fuji_reset       (Camera *camera, GPContext *context);
-
 typedef struct _FujiDate FujiDate;
 struct _FujiDate {
 	unsigned int year;

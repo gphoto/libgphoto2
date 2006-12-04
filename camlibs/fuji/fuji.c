@@ -102,6 +102,8 @@
 #define FUJI_ACK 0x00
 #define FUJI_NAK 0x01
 
+static int fuji_reset (Camera *camera, GPContext *context);
+
 int
 fuji_ping (Camera *camera, GPContext *context)
 {
@@ -787,7 +789,7 @@ fuji_set_speed (Camera *camera, FujiSpeed speed, GPContext *context)
 	return (GP_OK);
 }
 
-int
+static int
 fuji_reset (Camera *camera, GPContext *context)
 {
 	unsigned char c = EOT;
