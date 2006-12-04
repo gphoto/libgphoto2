@@ -31,6 +31,8 @@
 #define	GP_MODULE	"pdrm11"
 #define	ETIMEDOUT	110
 
+static int pdrm11_select_file(GPPort *port, uint16_t file);
+
 int pdrm11_init(GPPort *port)
 {
 	unsigned char buf[20];
@@ -114,10 +116,7 @@ int pdrm11_get_filenames(GPPort *port, CameraList *list)
 	return(GP_OK);
 }
 
-
-
-
-int pdrm11_select_file(GPPort *port, uint16_t file)
+static int pdrm11_select_file(GPPort *port, uint16_t file)
 {
 	char buf[10];
 
@@ -134,16 +133,15 @@ int pdrm11_select_file(GPPort *port, uint16_t file)
 	return(GP_OK);
 }
 
-
-
-int pdrm11_ping(GPPort *port)
+#if 0
+static int pdrm11_ping(GPPort *port)
 {
 	CHECK( gp_port_usb_msg_write(port, 0x01, PDRM11_CMD_PING1, 1, NULL, 0) );
 	CHECK( gp_port_usb_msg_write(port, 0x01, PDRM11_CMD_PING2, 1, NULL, 0) );
 
 	return(GP_OK);
 }
-
+#endif
 
 
 int pdrm11_get_file(CameraFilesystem *fs, const char *filename, CameraFileType type, 

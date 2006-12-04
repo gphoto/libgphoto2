@@ -62,8 +62,6 @@
 
 
 int pdrm11_init(GPPort *port);
-int pdrm11_select_file(GPPort *port, uint16_t file);
-int pdrm11_ping(GPPort *port);
 int pdrm11_get_file(CameraFilesystem *fs, const char *filename, CameraFileType type, 
 			CameraFile *file, GPPort *port, uint16_t picNum);
 int pdrm11_get_filenames(GPPort *port, CameraList *list);
