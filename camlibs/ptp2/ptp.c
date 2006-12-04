@@ -208,6 +208,25 @@ ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
 	return ret;
 }
 
+static uint16_t ptp_usb_getpacket(PTPParams *params,
+		PTPUSBBulkContainer *packet, unsigned int *rlen)
+{
+	/* read the header and potentially the first data */
+	if (params->response_packet_size > 0) {
+		/* If there is a buffered packet, just use it. */
+		memcpy(packet, params->response_packet, params->response_packet_size);
+		*rlen = params->response_packet_size;
+		free(params->response_packet);
+		params->response_packet = NULL;
+		params->response_packet_size = 0;
+		/* Here this signifies a "virtual read" */
+		return PTP_RC_OK;
+	} else {
+		return params->read_func((unsigned char *)packet,
+					 sizeof(*packet), params->data, rlen);
+	}
+}
+
 uint16_t
 ptp_usb_getdata (PTPParams* params, PTPContainer* ptp,
                  unsigned char **data, unsigned int *readlen,
@@ -224,20 +243,7 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp,
 	do {
 		unsigned int len, rlen;
 
-		/* read the header and potentially the first data */
-		if (params->response_packet_size > 0) {
-			/* If there is a buffered packet, just use it. */
-			memcpy((unsigned char *)&usbdata, params->response_packet, params->response_packet_size);
-			rlen = params->response_packet_size;
-			free(params->response_packet);
-			params->response_packet = NULL;
-			params->response_packet_size = 0;
-			/* Here this signifies a "virtual read" */
-			ret = PTP_RC_OK;
-		} else {
-			ret=params->read_func((unsigned char *)&usbdata,
-					      sizeof(usbdata), params->data, &rlen);
-		}
+		ret = ptp_usb_getpacket(params, &usbdata, &rlen);
 		if (ret!=PTP_RC_OK) {
 			ret = PTP_ERROR_IO;
 			break;
@@ -281,21 +287,24 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp,
 		}
 		if (rlen > dtoh32(usbdata.length)) {
 			/*
-			 * Buffer the surplus response packet if it is >= PTP_USB_BULK_HDR_LEN
+			 * Buffer the surplus response packet if it is >=
+			 * PTP_USB_BULK_HDR_LEN
 			 * (i.e. it is probably an entire package)
-			 * else discard it as erroneous surplus data. This will even
-			 * work if more than 2 packets appear in the same transaction,
-			 * they will just be iteratively handled.
+			 * else discard it as erroneous surplus data.
+			 * This will even work if more than 2 packets appear
+			 * in the same transaction, they will just be handled
+			 * iteratively.
 			 *
-			 * Marcus observed stray bytes on iRiver devices, these are
-			 * still discarded.
+			 * Marcus observed stray bytes on iRiver devices;
+			 * these are still discarded.
 			 */
 			unsigned int packlen = dtoh32(usbdata.length);
 			unsigned int surplen = rlen - packlen;
 
 			if (surplen >= PTP_USB_BULK_HDR_LEN) {
-				params->response_packet = (uint8_t *) malloc(surplen);
-				memcpy(params->response_packet, (uint8_t *) (&usbdata + packlen), surplen);
+				params->response_packet = malloc(surplen);
+				memcpy(params->response_packet,
+				       (uint8_t *) &usbdata + packlen, surplen);
 				params->response_packet_size = surplen;
 			} else {
 				ptp_debug (params, "ptp2/ptp_usb_getdata: read %d bytes too much, expect problems!", rlen - dtoh32(usbdata.length));
@@ -412,8 +421,7 @@ ptp_usb_getresp (PTPParams* params, PTPContainer* resp)
 
 	PTP_CNT_INIT(usbresp);
 	/* read response, it should never be longer than sizeof(usbresp) */
-	ret=params->read_func((unsigned char *)&usbresp,
-				sizeof(usbresp), params->data, &rlen);
+	ret = ptp_usb_getpacket(params, &usbresp, &rlen);
 
 	if (ret!=PTP_RC_OK) {
 		ret = PTP_ERROR_IO;
