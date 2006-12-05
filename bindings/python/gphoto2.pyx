@@ -30,7 +30,7 @@ cdef extern from "time.h":
 
 #------------------------------------------------------------------------------
 
-cdef extern from "gphoto2-port-version.h":
+cdef extern from "gphoto2/gphoto2-port-version.h":
 
   ctypedef enum GPVersionVerbosity:
     GP_VERSION_SHORT
@@ -40,12 +40,12 @@ cdef extern from "gphoto2-port-version.h":
 
 #------------------------------------------------------------------------------
 
-cdef extern from "gphoto2-version.h":
+cdef extern from "gphoto2/gphoto2-version.h":
   char **gp_library_version(GPVersionVerbosity verbose)
 
 #------------------------------------------------------------------------------
 
-cdef extern from "gphoto2-context.h":
+cdef extern from "gphoto2/gphoto2-context.h":
   ctypedef struct GPContext
 
   GPContext *gp_context_new ()
@@ -91,7 +91,7 @@ cdef extern from "gphoto2-context.h":
 
 #------------------------------------------------------------------------------
 
-cdef extern from "gphoto2-port-info-list.h":
+cdef extern from "gphoto2/gphoto2-port-info-list.h":
   ctypedef enum GPPortType:
     GP_PORT_NONE
     GP_PORT_SERIAL
@@ -121,7 +121,7 @@ cdef extern from "gphoto2-port-info-list.h":
 
 #------------------------------------------------------------------------------
 
-cdef extern from "gphoto2-port.h":
+cdef extern from "gphoto2/gphoto2-port.h":
 
   ctypedef enum GPPortSerialParity:
     GP_PORT_SERIAL_PARITY_OFF
@@ -213,7 +213,7 @@ cdef extern from "gphoto2-port.h":
 
 #------------------------------------------------------------------------------
 
-cdef extern from "gphoto2-port-log.h":
+cdef extern from "gphoto2/gphoto2-port-log.h":
   ctypedef enum GPLogLevel:
     GP_LOG_ERROR
     GP_LOG_VERBOSE
@@ -231,7 +231,7 @@ cdef extern from "gphoto2-port-log.h":
 
 #------------------------------------------------------------------------------
 
-cdef extern from "gphoto2-port-result.h":
+cdef extern from "gphoto2/gphoto2-port-result.h":
   ctypedef enum port_result:
     GP_OK
     GP_ERROR
@@ -258,7 +258,7 @@ cdef extern from "gphoto2-port-result.h":
 
 #------------------------------------------------------------------------------
 
-cdef extern from "gphoto2-port-result.h":
+cdef extern from "gphoto2/gphoto2-port-result.h":
   ctypedef enum gphoto2_result:
     GP_ERROR_CORRUPTED_DATA
     GP_ERROR_FILE_EXISTS
@@ -274,7 +274,7 @@ cdef extern from "gphoto2-port-result.h":
 
 #------------------------------------------------------------------------------
 
-cdef extern from "gphoto2-widget.h":
+cdef extern from "gphoto2/gphoto2-widget.h":
   ctypedef struct CameraWidget
 
   ctypedef enum CameraWidgetType:
@@ -334,7 +334,7 @@ cdef extern from "gphoto2-widget.h":
 
 #------------------------------------------------------------------------------
 
-cdef extern from "gphoto2-file.h":
+cdef extern from "gphoto2/gphoto2-file.h":
   ctypedef enum defines_file:
     GP_MIME_WAV
     GP_MIME_RAW
@@ -391,7 +391,7 @@ cdef extern from "gphoto2-file.h":
 
 #------------------------------------------------------------------------------
 
-cdef extern from "gphoto2-list.h":
+cdef extern from "gphoto2/gphoto2-list.h":
   ctypedef enum defines_list:
     MAX_ENTRIES
 
@@ -424,7 +424,7 @@ cdef extern from "gphoto2-list.h":
 
 #------------------------------------------------------------------------------
 
-cdef extern from "gphoto2-filesys.h":
+cdef extern from "gphoto2/gphoto2-filesys.h":
 
   ctypedef enum CameraFileInfoFields:
     GP_FILE_INFO_NONE
@@ -560,7 +560,7 @@ cdef extern from "gphoto2-filesys.h":
 
 #------------------------------------------------------------------------------
 
-cdef extern from "gphoto2-abilities-list.h":
+cdef extern from "gphoto2/gphoto2-abilities-list.h":
   ctypedef enum CameraDriverStatus:
     GP_DRIVER_STATUS_PRODUCTION
     GP_DRIVER_STATUS_TESTING
@@ -625,21 +625,21 @@ cdef extern from "gphoto2-abilities-list.h":
 
 #------------------------------------------------------------------------------
 
-cdef extern from "gphoto2-camera.h":
-  # include <gphoto2-context.h>
+cdef extern from "gphoto2/gphoto2-camera.h":
+  #include <gphoto2/gphoto2-context.h>
 
   ctypedef struct Camera
 
-  #include <gphoto2-port.h>
-  #include <gphoto2-port-info-list.h>
+  #include <gphoto2/gphoto2-port.h>
+  #include <gphoto2/gphoto2-port-info-list.h>
 
-  #include <gphoto2-widget.h>
-  #include <gphoto2-list.h>
-  #include <gphoto2-file.h>
-  #include <gphoto2-filesys.h>
-  #include <gphoto2-abilities-list.h>
-  #include <gphoto2-result.h>
-  #include <gphoto2-context.h>
+  #include <gphoto2/gphoto2-widget.h>
+  #include <gphoto2/gphoto2-list.h>
+  #include <gphoto2/gphoto2-file.h>
+  #include <gphoto2/gphoto2-filesys.h>
+  #include <gphoto2/gphoto2-abilities-list.h>
+  #include <gphoto2/gphoto2-result.h>
+  #include <gphoto2/gphoto2-context.h>
 
   ctypedef struct CameraText:
     char text [32 * 1024]
@@ -753,7 +753,7 @@ cdef extern from "gphoto2-camera.h":
 
 #------------------------------------------------------------------------------
 
-cdef extern from "gphoto2-library.h":
+cdef extern from "gphoto2/gphoto2-library.h":
   ctypedef int (* CameraLibraryIdFunc) (CameraText *id)
   ctypedef int (* CameraLibraryAbilitiesFunc) (CameraAbilitiesList *list)
   ctypedef int (* CameraLibraryInitFunc)      (Camera *camera, GPContext *context)
@@ -763,19 +763,25 @@ cdef extern from "gphoto2-library.h":
 
 #------------------------------------------------------------------------------
 
-cdef extern from "gphoto2-setting.h":
+cdef extern from "gphoto2/gphoto2-setting.h":
   int gp_setting_set (char *id, char *key, char *value)
   int gp_setting_get (char *id, char *key, char *value)
 
 #------------------------------------------------------------------------------
 
-def version(verbose=False):
-  cdef char **cText
+def library_version(verbose):
+  cdef char **arrText
+  cdef int i
+  retval = []
   if verbose==False:
-    cText=<char **>gp_library_version(GP_VERSION_SHORT)
+    arrText=gp_library_version(GP_VERSION_SHORT)
   else:
-    cText=<char **>gp_library_version(GP_VERSION_VERBOSE)
-  return cText[0]
+    arrText=gp_library_version(GP_VERSION_VERBOSE)
+  i = 0
+  while arrText[i] != NULL:
+    retval.append(arrText[i])
+    i=i+1
+  return retval
 
 cdef check(result):
   if result!=0:
@@ -792,7 +798,10 @@ cdef class portInfo:
   cdef GPPortInfo info
 
   def __repr__(self):
-    return self.info.name
+    if self.info.path:
+      return "%s: %s" % (self.info.name, self.info.path)
+    else:
+      return self.info.name
 
 cdef class ports:
   cdef GPPortInfoList *portInfoList
@@ -841,7 +850,7 @@ cdef class cameraAbilities:
     pass
 
   def __repr__(self):
-    return "Model : %s\nStatus : %d\nPort : %d\nOperations : %d\nFile Operations : %d\nFolder Operations : %d\nUSB (vendor/product) : %d/%d\nUSB class : %d/%d/%d\nLibrary : %s\nId : %s\n" % (self.abilitie.model, self.abilitie.status, self.abilitie.port, self.abilitie.operations, self.abilitie.file_operations, self.abilitie.folder_operations, self.abilitie.usb_vendor, self.abilitie.usb_product, self.abilitie.usb_class, self.abilitie.usb_subclass, self.abilitie.usb_protocol, self.abilitie.library, self.abilitie.id)
+    return "Model : %s\nStatus : %d\nPort : %d\nOperations : %d\nFile Operations : %d\nFolder Operations : %d\nUSB (vendor/product) : 0x%x/0x%x\nUSB class : 0x%x/0x%x/0x%x\nLibrary : %s\nId : %s\n" % (self.abilitie.model, self.abilitie.status, self.abilitie.port, self.abilitie.operations, self.abilitie.file_operations, self.abilitie.folder_operations, self.abilitie.usb_vendor, self.abilitie.usb_product, self.abilitie.usb_class, self.abilitie.usb_subclass, self.abilitie.usb_protocol, self.abilitie.library, self.abilitie.id)
 
   property model:
     def __get__(self):

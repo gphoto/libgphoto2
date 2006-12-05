@@ -22,10 +22,19 @@ setup(
   name = "python-gphoto2",
   ext_modules=[
     Extension(
-      "gphoto2", ["gphoto2.pyx"],
-      libraries = ["gphoto2"],
-      include_dirs = ["/usr/include/gphoto2"]
+      "gphoto2",
+      [ "gphoto2.pyx" ],
+      libraries = [ "gphoto2" ],
+      include_dirs = [
+        "@top_srcdir@/libgphoto2",
+        "@top_builddir@/libgphoto2",
+        "@top_srcdir@/libgphoto2_port",
+      ]
       )
     ],
   cmdclass = {'build_ext': build_ext}
 )
+
+# Local Variables:
+# mode: python
+# End:
