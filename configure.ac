@@ -619,6 +619,8 @@ doc/Makefile
 doc/Doxyfile
 doc/api/Makefile
 bindings/Makefile
+bindings/python/Makefile
+bindings/python/setup.py
 ],[
 dnl This relies on this code being called for each of the above files
 dnl with ac_file set to the filename.
