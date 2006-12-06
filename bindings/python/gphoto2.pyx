@@ -1,17 +1,17 @@
 # Copyright (C) 2003-2004 David PHAM-VAN -- david@ab2r.com
 #
 # This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
+# it under the terms of the GNU Lesser General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
 #
-# This program is distributed in the hope that it will be useful,
+# This library is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# GNU Lesser General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
+# along with this library; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #------------------------------------------------------------------------------
@@ -1008,7 +1008,7 @@ cdef class camera:
     check_unref( gp_file_set_name( cfile, destfilename ), cfile )
     check_unref( gp_camera_folder_put_file( self.camera, destfolder, cfile, NULL ), cfile )
     gp_file_unref( cfile )
-    
+
   def download_file_to(self,char *srcfolder,char *srcfilename,char *destpath):
     cdef CameraFile *cfile
     cdef char *data
