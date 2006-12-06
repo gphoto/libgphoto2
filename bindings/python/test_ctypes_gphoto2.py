@@ -20,15 +20,24 @@
 
 import sys
 
+symbols_before = dir()
+from ctypes_gphoto2 import *
+symbols_after = dir()
+
 
 ########################################################################
 
-from ctypes_gphoto2 import *
+import pprint
 
 
 ########################################################################
 
 def main(args, progname=None):
+    for x in symbols_before + ["symbols_before"]:
+        symbols_after.remove(x)
+    symbols_after.sort()
+    pprint.pprint(symbols_after)
+
     for f in [
         gp_library_version(GP_VERSION_SHORT),
         gp_port_library_version(GP_VERSION_SHORT),
