@@ -5,7 +5,10 @@ installcheck-local: $(INSTALL_TESTS)
 	for script in $(INSTALL_TESTS); do \
 		echo "Test case: $$script"; \
 		total="$$(expr $$total + 1)"; \
-		if "./$$script"; then \
+		if test -f "./$$script"; then dir="./"; \
+		elif test -f "$$script"; then dir=""; \
+		else dir="$(srcdir)/"; fi; \
+		if $(INSTALL_TESTS_ENVIRONMENT) "$$dir/$$script"; then \
 			echo "SUCCEEDED: $$script"; \
 			success="$$(expr $$success + 1)"; \
 		else \

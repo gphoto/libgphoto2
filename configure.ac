@@ -140,6 +140,13 @@ dnl --------------------------------------------------------------------
 dnl Check requirements for bindings
 dnl --------------------------------------------------------------------
 
+dnl Check for Python
+GP_PYTHON
+
+if test "x$PYTHON" != "xno"; then
+   bindings="${bindings}${bindings+ }python"
+fi
+
 dnl Check for SWIG
 
 AC_PATH_PROG([SWIG], [swig])
