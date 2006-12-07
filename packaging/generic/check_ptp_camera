@@ -1,0 +1,14 @@
+#!/bin/sh
+# This script is supposed to be hooked into a UDEV matcher.
+#
+res=1
+# Check if any interface of this device is a PTP camera interface (06/01/01)
+# 1 is FALSE, 0 is TRUE in exit() codes.
+for path in /sys/$PHYSDEVPATH/*
+do
+	grep -q -F 06 $path/bInterfaceClass && \
+	grep -q -F 01 $path/bInterfaceSubClass && \
+	grep -q -F 01 $path/bInterfaceProtocol && \
+	res=0
+done
+exit $res
