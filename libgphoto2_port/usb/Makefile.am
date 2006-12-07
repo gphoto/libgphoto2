@@ -9,10 +9,11 @@ usb_la_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
 	$(CPPFLAGS) \
 	$(INTL_CFLAGS) \
-	$(LIBUSB_CFLAGS) \
+	$(LIBUSB_CFLAGS)
+
 usb_la_DEPENDENCIES = $(top_srcdir)/iolib.sym
 usb_la_LIBADD = \
 	$(top_builddir)/libgphoto2_port/libgphoto2_port.la \
 	$(LIBUSB_LIBS)			\
-	$(INTLLIBS)			\
+	$(INTLLIBS)
 usb_la_SOURCES = libusb.c
