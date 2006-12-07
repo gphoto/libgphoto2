@@ -1,4 +1,18 @@
-libgphoto2 2.2.1.5.trunk
+libgphoto2 2.3.0.1.trunk
+
+Build:
+   * Fix sierra and canon drivers picking up old gphoto2 headers.
+
+Bindings:
+   * Preliminary work on Python bindings.
+
+System integration:
+   * Add new script to setup permissions for PTP class cameras not listed
+     explicitly by USB IDs.
+
+------------------------------------------------------------------------
+
+libgphoto2 2.3.0
 
 PTP:
    * Improved Nikon remote control
@@ -6,31 +20,52 @@ PTP:
 	- faster directory retrieval (especially on cameras with lots of files)
 	- "new" images are marked (gphoto2 --new, digikam)
    * MTP Playlist support (upload and download)
-   * MTP Metadata support (Artist, Title, Playtime ... )
-   * MTP fixes
+   * MTP Metadata support (upload and download, Artist, Title, Playtime ... )
+   * Lots of other MTP related fixes.
    * MTP autodetection on Microsoft OS Descriptor.
    * New devices:
-          Canon PowerShot A540, A530, S3 IS, SD430, SD700, IXUS 800, IXUS 60, A630, SD630,
-	  Digital IXUS 65, 710IS,
-          EOS 400D/Digital Rebel XTi
+          Canon PowerShot A540, A530, S3 IS, SD430, SD700, IXUS 800,
+		IXUS 60, A630, SD630, G7, Digital IXUS 65, 710IS, EOS 400D,
+		Digital Rebel XTi, IXUS 850 IS, PowerShot A640,
+		IXUS Wireless (USB support only currently)
           iRiver T20 FM, iClix
+	  Creative Zen Vision W, Vision M, Vplus, V
           Dell Pocket DJ
-          Nikon Coolpix L4, L3
-          Kodak Easyshare Z740, P850, Z612
+          Nikon Coolpix L4, L3, L1, D80, P3
+          Kodak Easyshare Z740, P850, Z612, C633, C643, C530, Z612, CD33
           Sony DSC-U10
           Leica D-LUX 2
 	  Olympus IR-300
           JVC Alneo XA-HD500
+	  All currently known HP Photosmarts (sync with Windows Driver .INF files)
 	  various Samsung devices
-     
+
 Canon:
-   * 5D - 20D experimental capture support
+   * 5D - 20D experimental capture support (default disabled)
+
+Kodak DC120:
+   * Bugfixes to make it work.
+
+Mars:
+   * RAW files saved with size information.
+   * Some new ids, lots of bug fixes.
+
+Ricoh G3:
+   * Added Ricoh Caplio R4 id.
 
 Disk port:
-   * fix a crasher
+   * Addes Solaris filesystem table handling.
+   * Fixed a crasher.
+   * Skip "fuse" filesystem.
+
+SiPix Blink:
+   * Disabled build, since it cannot the downloaded data to usable images.
+
+Sonix:
+   * Bugfixes and support for Sakar Digital Keychain 11999.
 
 Bindings:
-   * Mono/.NET bindings are installed if Mono is found
+   * Removed the Mono/.NET bindings due to unclear license.
    * Partial Java bindings
 
 libgphoto2 API:
@@ -40,6 +75,7 @@ libgphoto2 API:
    * Made _CameraList details private.
 
 libgphoto2:
+   * Fixed some directory handling problems for MTP players.
    * Improved error checking and propagation.
    * New error code for "fixed limit exceeded" (exceptions would be nice)
    * Added a few internal functions.
