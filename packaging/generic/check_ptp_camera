@@ -3,8 +3,6 @@
 # check if any interface of this device is a PTP camera interface (06)
 INTERFACE="${1:-06/01/01}"
 
-echo "$INTERFACE" >>/var/log/xx.log
- 
 BASENAME=${PHYSDEVPATH##*/}
 for d in /sys/${PHYSDEVPATH}/${BASENAME}:*; do
 	[[ -d ${d} ]] || continue
