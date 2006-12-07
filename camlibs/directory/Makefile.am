@@ -1,6 +1,6 @@
 camlib_LTLIBRARIES = directory.la
 
-directory_la_CPPFLAGS = $(CPPFLAGS) $(AM_CPPFLAGS) $(LIBEXIF_CFLAGS)
+directory_la_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS) $(LIBEXIF_CFLAGS)
 directory_la_SOURCES = directory.c
 directory_la_LDFLAGS = -module -no-undefined -avoid-version -export-dynamic \
 	-export-symbols $(top_srcdir)/camlibs/camlib.sym
