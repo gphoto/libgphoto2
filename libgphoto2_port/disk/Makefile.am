@@ -6,8 +6,8 @@ disk_la_LDFLAGS = -module -no-undefined -avoid-version \
 	-export-dynamic \
         -export-symbols $(top_srcdir)/iolib.sym
 disk_la_CPPFLAGS = \
-	$(INTL_CFLAGS) \
 	$(AM_CPPFLAGS) \
+	$(INTL_CFLAGS) \
 	$(LIBUSB_CFLAGS) $(HAL_CFLAGS) \
 	$(CPPFLAGS)
 disk_la_DEPENDENCIES = $(top_srcdir)/iolib.sym
