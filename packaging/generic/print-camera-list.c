@@ -352,7 +352,7 @@ udev_camera_func (const func_params_t *params,
 
 	if (flags & GP_USB_HOTPLUG_MATCH_INT_CLASS) {
 		if ((flags & (GP_USB_HOTPLUG_MATCH_INT_CLASS|GP_USB_HOTPLUG_MATCH_INT_SUBCLASS|GP_USB_HOTPLUG_MATCH_INT_PROTOCOL)) == (GP_USB_HOTPLUG_MATCH_INT_CLASS|GP_USB_HOTPLUG_MATCH_INT_SUBCLASS|GP_USB_HOTPLUG_MATCH_INT_PROTOCOL))
-			printf("ENV{INTERFACE}==\"%d/%d/%d\", ", class, subclass, proto);
+			printf("PROGRAM=\"check_ptp_camera %02d/%02d/%02d\", ", class, subclass, proto);
 		else
 			fprintf(stderr,"unhandled interface match flags %x\n", flags);
 	} else {
@@ -459,7 +459,7 @@ udev_098_camera_func (const func_params_t *params,
 
 	if (flags & GP_USB_HOTPLUG_MATCH_INT_CLASS) {
 		if ((flags & (GP_USB_HOTPLUG_MATCH_INT_CLASS|GP_USB_HOTPLUG_MATCH_INT_SUBCLASS|GP_USB_HOTPLUG_MATCH_INT_PROTOCOL)) == (GP_USB_HOTPLUG_MATCH_INT_CLASS|GP_USB_HOTPLUG_MATCH_INT_SUBCLASS|GP_USB_HOTPLUG_MATCH_INT_PROTOCOL))
-			printf("ENV{INTERFACE}==\"%d/%d/%d\", ", class, subclass, proto);
+			printf("PROGRAM=\"check_ptp_camera %02d/%02d/%02d\", ", class, subclass, proto);
 		else
 			fprintf(stderr,"unhandled interface match flags %x\n", flags);
 	} else {
