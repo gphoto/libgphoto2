@@ -2,13 +2,14 @@ libgphoto2 2.3.0.1.trunk
 
 Build:
    * Fix sierra and canon drivers picking up old gphoto2 headers.
+   * libiconv linking fix for PTP2 driver.
 
 Bindings:
    * Preliminary work on Python bindings.
 
 System integration:
-   * Add new script to setup permissions for PTP class cameras not listed
-     explicitly by USB IDs.
+   * Add new permission setup script doing class based matching for
+     PTP class cameras not listed explicitly by USB IDs.
 
 ------------------------------------------------------------------------
 
