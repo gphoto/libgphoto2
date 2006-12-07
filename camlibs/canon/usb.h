@@ -236,7 +236,8 @@ struct canon_usb_cmdstruct
 
 
 /* USB command data structures defined in usb.c */
-extern const struct canon_usb_cmdstruct canon_usb_cmd[];
+/*extern const struct canon_usb_cmdstruct canon_usb_cmd[];*/
+
 extern const struct canon_usb_control_cmdstruct canon_usb_control_cmd[];
 
 

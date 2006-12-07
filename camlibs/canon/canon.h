@@ -653,30 +653,16 @@ int canon_int_end_remote_control(Camera *camera, GPContext *context);
 /*
  * introduced for capturing
  */
-int
-canon_int_get_picture_abilities (Camera *camera, GPContext *context);
 #ifdef CANON_EXPERIMENTAL_20D
 int canon_int_get_release_params (Camera *camera, GPContext *context);
 #endif
 #ifdef CANON_EXPERIMENTAL_SET_RELEASE_PARAMS
 int canon_int_set_release_params(Camera *camera, GPContext *context);
 #endif
-int
-canon_int_pack_control_subcmd (unsigned char *payload, unsigned int subcmd,
-			       int word0, int word1,
-			       char *desc);
-int
-canon_int_do_control_command (Camera *camera, unsigned int subcmd, int a, int b);
-int
-canon_int_do_control_dialogue (Camera *camera, unsigned int subcmd, int a, int b, unsigned char **response_handle, unsigned int *datalen);
-int
-canon_int_do_control_dialogue_payload (Camera *camera, unsigned char *payload, unsigned int payloadlen, unsigned char **response_handle, unsigned int *datalen);
-
 
 
 /* path conversion - needs drive letter, and therefore cannot be moved
  * to util.c */
-const char *canon2gphotopath(Camera *camera, const char *path);
 const char *gphoto2canonpath(Camera *camera, const char *path, GPContext *context);
 
 const char *canon_int_filename2thumbname (Camera *camera, const char *filename);

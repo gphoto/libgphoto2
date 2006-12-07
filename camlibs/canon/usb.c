@@ -102,7 +102,7 @@ static struct canon_usb_status canon_usb_status_table[] = {
  *   cmd3=202 -> variable length response
  */
 
-const struct canon_usb_cmdstruct canon_usb_cmd[] = {
+static const struct canon_usb_cmdstruct canon_usb_cmd[] = {
 	{CANON_USB_FUNCTION_GET_FILE,		"Get file",			0x01, 0x11, 0x202,	0x40},
 	{CANON_USB_FUNCTION_MKDIR,		"Make directory",		0x05, 0x11, 0x201,	0x54},
 	{CANON_USB_FUNCTION_RMDIR,		"Remove directory",		0x06, 0x11, 0x201,	0x54},

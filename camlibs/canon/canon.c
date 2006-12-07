@@ -339,7 +339,6 @@ const struct canonCamModelData models[] = {
 extern long int timezone;
 #endif
 
-
 /************************************************************************
  * Methods
  ************************************************************************/
@@ -360,6 +359,8 @@ extern long int timezone;
 #else
 # define __unused__
 #endif
+
+static const char * canon2gphotopath (Camera __unused__ *camera, const char *path);
 
 
 /*! \brief Return filename with extension replaced
@@ -796,7 +797,7 @@ canon_int_get_battery (Camera *camera, int *pwr_status, int *pwr_source, GPConte
  * Returns: gphoto2 error code
  *
  */
-int
+static int
 canon_int_get_picture_abilities (Camera *camera, GPContext *context)
 {
         unsigned char *msg;
@@ -849,7 +850,7 @@ canon_int_get_picture_abilities (Camera *camera, GPContext *context)
  *  description in @desc
  *
  */
-int
+static int
 canon_int_pack_control_subcmd (unsigned char *payload, unsigned int subcmd,
                                int word0, int word1,
                                char *desc)
@@ -893,7 +894,7 @@ canon_int_pack_control_subcmd (unsigned char *payload, unsigned int subcmd,
  * Returns: gphoto2 status code
  *
  */
-int
+static int
 canon_int_do_control_command (Camera *camera, unsigned int subcmd, int a, int b)
 {
         unsigned char payload[0x4c];
@@ -933,52 +934,6 @@ canon_int_do_control_command (Camera *camera, unsigned int subcmd, int a, int b)
 }
 
 /**
- * canon_int_do_control_dialogue:
- * @camera: Camera to work on
- * @subcmd: Subcommand for remote capture command
- *   (e.g. %CANON_USB_CONTROL_INIT)
- * @a: 32-bit first word of payload (first command parameter)
- * @b: 32-bit second word of payload (second command parameter)
- * @response_handle: pointer to a pointer where the camera response buffer
- *   address should be stored.  
- * @datalen: the length of the response data from the camera
- *
- * Executes a remote capture command that returns data from the 
- * camera, e.g., get release parameters.
- *
- * Returns: gphoto2 status code, camera response data in @response_handle,
- *          length of the response in @datalen
- *
- */
-int
-canon_int_do_control_dialogue (Camera *camera, unsigned int subcmd, int a, int b,
-                               unsigned char **response_handle, unsigned int *datalen)
-{
-        unsigned char payload[0x4c];
-        char desc[128];
-        int payloadlen;
-        int status;
-
-        payloadlen = canon_int_pack_control_subcmd (payload, subcmd,
-                                                    a, b, desc);
-        GP_DEBUG("%s++ with %x, %x", desc, a, b);
-
-        status = canon_int_do_control_dialogue_payload (camera, payload,
-                                                        payloadlen, 
-                                                        response_handle, datalen);
-
-        if ( status < 0 ) {
-                /* ERROR */
-                GP_DEBUG("%s error: datalen=%x", desc, *datalen);
-                return GP_ERROR_CORRUPTED_DATA;
-        }
-
-        GP_DEBUG("%s--", desc);
-
-        return GP_OK;
-}
-
-/**
  * canon_int_do_control_dialogue_payload:
  * @camera: Camera to work on
  * @subcmd: Subcommand for remote capture command
@@ -997,7 +952,7 @@ canon_int_do_control_dialogue (Camera *camera, unsigned int subcmd, int a, int b
  *          length of the response in @datalen
  *
  */
-int
+static int
 canon_int_do_control_dialogue_payload (Camera *camera, unsigned char *payload,
                                        unsigned int payloadlen,
                                        unsigned char **response_handle, 
@@ -1031,6 +986,52 @@ canon_int_do_control_dialogue_payload (Camera *camera, unsigned char *payload,
         *response_handle = msg;
 
         GP_DEBUG("canon_int_do_control_dialogue_payload--");
+
+        return GP_OK;
+}
+
+/**
+ * canon_int_do_control_dialogue:
+ * @camera: Camera to work on
+ * @subcmd: Subcommand for remote capture command
+ *   (e.g. %CANON_USB_CONTROL_INIT)
+ * @a: 32-bit first word of payload (first command parameter)
+ * @b: 32-bit second word of payload (second command parameter)
+ * @response_handle: pointer to a pointer where the camera response buffer
+ *   address should be stored.  
+ * @datalen: the length of the response data from the camera
+ *
+ * Executes a remote capture command that returns data from the 
+ * camera, e.g., get release parameters.
+ *
+ * Returns: gphoto2 status code, camera response data in @response_handle,
+ *          length of the response in @datalen
+ *
+ */
+static int
+canon_int_do_control_dialogue (Camera *camera, unsigned int subcmd, int a, int b,
+                               unsigned char **response_handle, unsigned int *datalen)
+{
+        unsigned char payload[0x4c];
+        char desc[128];
+        int payloadlen;
+        int status;
+
+        payloadlen = canon_int_pack_control_subcmd (payload, subcmd,
+                                                    a, b, desc);
+        GP_DEBUG("%s++ with %x, %x", desc, a, b);
+
+        status = canon_int_do_control_dialogue_payload (camera, payload,
+                                                        payloadlen, 
+                                                        response_handle, datalen);
+
+        if ( status < 0 ) {
+                /* ERROR */
+                GP_DEBUG("%s error: datalen=%x", desc, *datalen);
+                return GP_ERROR_CORRUPTED_DATA;
+        }
+
+        GP_DEBUG("%s--", desc);
 
         return GP_OK;
 }
@@ -2134,7 +2135,7 @@ canon_int_set_focus_mode (Camera *camera, canonFocusModeState focus_mode,
  * Returns: gphoto2 error code
  *
  */
-int
+static int
 canon_int_set_release_params (Camera *camera, GPContext *context)
 {
         unsigned char payload[0x4c];
@@ -2685,7 +2686,7 @@ gphoto2canonpath (Camera *camera, const char *path, GPContext *context)
  * Returns: immutable string with gphoto2 path
  *
  */
-const char *
+static const char *
 canon2gphotopath (Camera __unused__ *camera, const char *path)
 {
         static char tmp[2000];
