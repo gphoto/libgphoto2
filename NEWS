@@ -7,9 +7,11 @@ Build:
 Bindings:
    * Preliminary work on Python bindings.
 
-System integration:
+Package / System integration:
    * Add new permission setup script doing class based matching for
      PTP class cameras not listed explicitly by USB IDs.
+
+     This script is used by the generated UDEV rules.
 
 ------------------------------------------------------------------------
 
