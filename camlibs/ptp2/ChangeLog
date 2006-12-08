@@ -1,6 +1,7 @@
 2006-12-08  Marcus Meissner  <marcus@jet.franken.de>
 
 	* ptp.c: Get back to split headers in getobjectpropertylist.
+	* ptp-pack.c: Fixed string packing. Include terminating \0.
 
 2006-12-04  Marcus Meissner  <marcus@jet.franken.de>
 
