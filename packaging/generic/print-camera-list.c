@@ -284,7 +284,11 @@ static int
 udev_begin_func (const func_params_t *params)
 {
 	printf ("# udev rules file for libgphoto2 devices (udev < 0.98)\n#\n");
-	printf ("BUS!=\"usb\", ACTION!=\"add\", GOTO=\"libgphoto2_rules_end\"\n\n");
+	/* Note: 2 lines because we need to use || ... having them on the same
+	 * line would mean &&.
+	 */
+	printf ("BUS!=\"usb*\", GOTO=\"libgphoto2_rules_end\"\n");
+	printf ("ACTION!=\"add\", GOTO=\"libgphoto2_rules_end\"\n\n");
 	return 0;
 }
 
@@ -292,7 +296,11 @@ static int
 udev_098_begin_func (const func_params_t *params)
 {
 	printf ("# udev rules file for libgphoto2 devices (udev >= 0.98)\n#\n");
-	printf ("SUBSYSTEMS!=\"usb\", ACTION!=\"add\", GOTO=\"libgphoto2_rules_end\"\n\n");
+	/* Note: 2 lines because we need to use || ... having them on the same
+	 * line would mean &&.
+	 */
+	printf ("SUBSYSTEM!=\"usb*\", GOTO=\"libgphoto2_rules_end\"\n");
+	printf ("ACTION!=\"add\", GOTO=\"libgphoto2_rules_end\"\n\n");
 	return 0;
 }
 
