@@ -1,3 +1,7 @@
+2006-12-08  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptp.c: Get back to split headers in getobjectpropertylist.
+
 2006-12-04  Marcus Meissner  <marcus@jet.franken.de>
 
 	* ptp.c: Fixed the response packet in-data-phase
