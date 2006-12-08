@@ -1,7 +1,9 @@
 ## Process this file with automake to produce Makefile.in
 
 ## Specify some includes and versioning
-INCLUDES = -I@srcdir@ $(VERSION_FLAGS)
+
+AM_CPPFLAGS = -I@srcdir@ $(VERSION_FLAGS)
+
 VERSION_FLAGS = -DLIBGPPORT_VERSION=\"@LIBGPPORT_VERSION@\" -DHAVE_TERMIOS_H
 
 ## Executable files
