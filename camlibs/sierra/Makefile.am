@@ -2,7 +2,7 @@ EXTRA_DIST = PROTOCOL
 
 camlib_LTLIBRARIES = sierra.la
 
-sierra_la_CPPFLAGS = $(CPPFLAGS) $(AM_CPPFLAGS) $(LIBEXIF_CFLAGS)
+sierra_la_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS) $(LIBEXIF_CFLAGS)
 sierra_la_SOURCES =\
 	sierra.c sierra.h \
 	library.c library.h \
