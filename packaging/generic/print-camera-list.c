@@ -177,6 +177,19 @@ typedef int (* end_func_t)    (const func_params_t *params);
 	} while (0)
 
 
+
+static int
+hotplug_begin_func (const func_params_t *params)
+{
+	if (params->add_comments) {
+		printf("# linux-hotplug configuration file "
+		       "for libgphoto2 supported devices\n");
+		print_version_comment(stdout, "# ", "\n", NULL, "#\n");
+	}
+	return 0;
+}
+
+
 /* print_usb_usermap
  *
  * Print out lines that can be included into usb.usermap 
@@ -1078,7 +1091,7 @@ static const output_format_t formats[] = {
 	 help: "If no <scriptname> is given, uses the script name "
 	 "\"" GP_USB_HOTPLUG_SCRIPT "\".\n        Put this into /etc/hotplug/usb/<scriptname>.usermap",
 	 paramdescr: "<NAME_OF_HOTPLUG_SCRIPT>",
-	 begin_func: empty_begin_func,
+	 begin_func: hotplug_begin_func,
 	 camera_func: hotplug_camera_func,
 	 end_func: empty_end_func
 	},
