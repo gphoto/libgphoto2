@@ -284,7 +284,11 @@ static int
 udev_begin_func (const func_params_t *params)
 {
 	printf ("# udev rules file for libgphoto2 devices (udev < 0.98)\n#\n");
-	printf ("BUS!=\"usb\", ACTION!=\"add\", GOTO=\"libgphoto2_rules_end\"\n\n");
+	/* Note: 2 lines because we need to use || ... having them on the same
+	 * line would mean &&.
+	 */
+	printf ("BUS!=\"usb*\", GOTO=\"libgphoto2_rules_end\"\n");
+	printf ("ACTION!=\"add\", GOTO=\"libgphoto2_rules_end\"\n\n");
 	return 0;
 }
 
@@ -292,7 +296,11 @@ static int
 udev_098_begin_func (const func_params_t *params)
 {
 	printf ("# udev rules file for libgphoto2 devices (udev >= 0.98)\n#\n");
-	printf ("SUBSYSTEMS!=\"usb\", ACTION!=\"add\", GOTO=\"libgphoto2_rules_end\"\n\n");
+	/* Note: 2 lines because we need to use || ... having them on the same
+	 * line would mean &&.
+	 */
+	printf ("SUBSYSTEM!=\"usb*\", GOTO=\"libgphoto2_rules_end\"\n");
+	printf ("ACTION!=\"add\", GOTO=\"libgphoto2_rules_end\"\n\n");
 	return 0;
 }
 
@@ -352,7 +360,7 @@ udev_camera_func (const func_params_t *params,
 
 	if (flags & GP_USB_HOTPLUG_MATCH_INT_CLASS) {
 		if ((flags & (GP_USB_HOTPLUG_MATCH_INT_CLASS|GP_USB_HOTPLUG_MATCH_INT_SUBCLASS|GP_USB_HOTPLUG_MATCH_INT_PROTOCOL)) == (GP_USB_HOTPLUG_MATCH_INT_CLASS|GP_USB_HOTPLUG_MATCH_INT_SUBCLASS|GP_USB_HOTPLUG_MATCH_INT_PROTOCOL))
-			printf("ENV{INTERFACE}==\"%d/%d/%d\", ", class, subclass, proto);
+			printf("PROGRAM=\"check_ptp_camera %02d/%02d/%02d\", ", class, subclass, proto);
 		else
 			fprintf(stderr,"unhandled interface match flags %x\n", flags);
 	} else {
@@ -459,7 +467,7 @@ udev_098_camera_func (const func_params_t *params,
 
 	if (flags & GP_USB_HOTPLUG_MATCH_INT_CLASS) {
 		if ((flags & (GP_USB_HOTPLUG_MATCH_INT_CLASS|GP_USB_HOTPLUG_MATCH_INT_SUBCLASS|GP_USB_HOTPLUG_MATCH_INT_PROTOCOL)) == (GP_USB_HOTPLUG_MATCH_INT_CLASS|GP_USB_HOTPLUG_MATCH_INT_SUBCLASS|GP_USB_HOTPLUG_MATCH_INT_PROTOCOL))
-			printf("ENV{INTERFACE}==\"%d/%d/%d\", ", class, subclass, proto);
+			printf("PROGRAM=\"check_ptp_camera %02d/%02d/%02d\", ", class, subclass, proto);
 		else
 			fprintf(stderr,"unhandled interface match flags %x\n", flags);
 	} else {
@@ -1022,7 +1030,7 @@ static const output_format_t formats[] = {
 	},
 	{name: "udev-rules",
 	 descr: "udev < 0.98 rules file",
-	 help: "Put it into /etc/udev/libgphoto2.rules, set file mode, owner, group or add script to run",
+	 help: "Put it into /etc/udev/rules.d/90-libgphoto2.rules, set file mode, owner, group\n        or add script to run. This rule files also uses the\n        check_ptp_camera script included in libgphoto2 source. Either put it to\n        /lib/udev/check_ptp_camera or adjust the path in the generated rules file.",
 	 paramdescr: "( <PATH_TO_SCRIPT> | [mode <mode>|owner <owner>|group <group>]* ) ",
 	 begin_func: udev_begin_func, 
 	 camera_func: udev_camera_func,
@@ -1030,7 +1038,7 @@ static const output_format_t formats[] = {
 	},
 	{name: "udev-rules-0.98",
 	 descr: "udev >= 0.98 rules file",
-	 help: "Put it into /etc/udev/libgphoto2.rules, set file mode, owner, group or add script to run, for udev >= 0.98",
+	 help: "Put it into /etc/udev/rules.d/90-libgphoto2.rules, set file mode, owner, group\n        or add script to run, for udev >= 0.98. This rule files also uses the\n        check_ptp_camera script included in libgphoto2 source. Either put it to\n        /lib/udev/check_ptp_camera or adjust the path in the generated rules file.",
 	 paramdescr: "( <PATH_TO_SCRIPT> | [mode <mode>|owner <owner>|group <group>]* ) ",
 	 begin_func: udev_098_begin_func, 
 	 camera_func: udev_098_camera_func,

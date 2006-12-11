@@ -1,0 +1,20 @@
+#!/bin/sh
+ 
+# check if any interface of this device is a PTP camera interface (06)
+INTERFACE="${1:-06/01/01}"
+
+BASENAME=${PHYSDEVPATH##*/}
+for d in /sys/${PHYSDEVPATH}/${BASENAME}:*; do
+	[[ -d ${d} ]] || continue
+	INTERFACEID="$(< ${d}/bInterfaceClass)"
+	INTERFACEID="${INTERFACEID}/$(< ${d}/bInterfaceSubClass)"
+	INTERFACEID="${INTERFACEID}/$(< ${d}/bInterfaceProtocol)"
+
+	#echo ${d}: ${INTERFACEID}
+	if [[ ${INTERFACE} == ${INTERFACEID} ]]; then
+		# Found interface
+		exit 0
+	fi
+done
+ 
+exit 1
