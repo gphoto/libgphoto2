@@ -1,5 +1,5 @@
 # FIXME: Only run this if not cross-compiling
-installcheck-local: $(INSTALL_TESTS)
+installcheck-local: $(INSTALL_TESTS) $(INSTALLCHECK_DEPS)
 	@total=0; failed=0; success=0; ignored=0; \
 	echo "Running \"installcheck\" test cases..."; \
 	for script in $(INSTALL_TESTS); do \

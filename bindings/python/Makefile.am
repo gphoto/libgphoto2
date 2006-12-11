@@ -51,7 +51,7 @@ INSTALL_TESTS_ENVIRONMENT = env \
 	LD_LIBRARY_PATH=$(DESTDIR)/$(libdir):$(LD_LIBRARY_PATH)
 
 INSTALL_TESTS = test-gp.py
-installcheck-local: $(PYTHON_LIB)
+INSTALLCHECK_DEPS = $(PYTHON_LIB)
 
 # Breaks "make distdir" due to automake expecting all install dirs to
 # depend on $prefix :-(
