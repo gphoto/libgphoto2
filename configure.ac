@@ -137,37 +137,6 @@ GP_CONFIG_MSG([GP2DDB support], [${gp_msg_gp2ddb} (EXPERIMENTAL)])
 GP_PKG_CONFIG
 
 
-dnl --------------------------------------------------------------------
-dnl Check requirements for bindings
-dnl --------------------------------------------------------------------
-
-dnl Check for Python
-GP_PYTHON
-
-if test "x$PYTHON" != "xno"; then
-   bindings="${bindings}${bindings+ }python"
-fi
-
-dnl Check for SWIG
-
-AC_PATH_PROG([SWIG], [swig])
-AC_SUBST([SWIG])
-AM_CONDITIONAL([HAVE_SWIG], [test -x "$SWIG"])
-
-AC_PATH_PROG([JAVAC], [javac])
-AC_SUBST([JAVAC])
-AC_PATH_PROG([JAVA], [java])
-AC_SUBST([JAVA])
-AM_CONDITIONAL([HAVA_JDK], [test -x "$JAVAC" && test -x "$JAVA"])
-
-if false && test -x "$SWIG" && test -x "$JAVAC" && test -x "$JAVA"; then
-   bindings="${bindings}${bindings+ }java"
-fi
-
-GP_CONFIG_MSG([Bindings], [${bindings}])
-
-AC_SUBST([BINDING_SUBDIRS], [${bindings}])
-
 dnl check for/set up libtool and libltdl
 dnl AC_DISABLE_STATIC
 dnl AC_DISABLE_SHARED
@@ -632,9 +601,6 @@ po/Makefile.in
 doc/Makefile
 doc/Doxyfile
 doc/api/Makefile
-bindings/Makefile
-bindings/python/Makefile
-bindings/python/setup.py
 ],[
 dnl This relies on this code being called for each of the above files
 dnl with ac_file set to the filename.
