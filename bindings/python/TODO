@@ -1,2 +1,0 @@
- - make sure that the proper python destructors call the appropriate functions in the gphoto2 API
- - make Python interface more pythonic. E.g., lists should behave as Python lists.
