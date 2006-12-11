@@ -931,7 +931,7 @@ fdi_device_camera_func (const func_params_t *params,
 
 	s = (char *) a->model;
 	d = model;
-	while (*s) {
+	while (*s && (d < &d[sizeof(d)-1])) {
 		if (*s == '&') {
 			strcpy(d,"&amp;");
 			d += strlen(d);
