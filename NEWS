@@ -1,5 +1,19 @@
 libgphoto2 2.3.0
 
+Package / System integration:
+   * Add new permission setup script doing class based matching for
+     PTP class cameras not listed explicitly by USB IDs.
+
+     This script is used by the generated UDEV rules.
+
+     Example usage:
+
+	 print-camera-list udev-rules mode 660 group plugdev > /etc/udev/rules.d/90-libgpoto2.rules
+
+     or similar and copy the "check_ptp_camera" to either /lib/udev/ or adjust
+     the path to check_ptp_camera in the generated /etc/udev/rules.d/90-libgpoto2.rules
+     file.
+
 PTP:
    * Improved Nikon remote control
    * Improved Canon file download
