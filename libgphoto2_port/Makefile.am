@@ -10,7 +10,7 @@ VERSION_FLAGS = -DLIBGPPORT_VERSION=\"@LIBGPPORT_VERSION@\" -DHAVE_TERMIOS_H
 bin_SCRIPTS = gphoto2-port-config
 
 # Note: @subdirs@ lists all the directories from AC_CONFIG_SUBDIRS()
-SUBDIRS = po @subdirs@ libgphoto2_port test @IOLIB_SUBDIRS@ doc m4
+SUBDIRS = po libgphoto2_port test @IOLIB_SUBDIRS@ doc m4
 
 EXTRA_DIST =   		\
 	AUTHORS \

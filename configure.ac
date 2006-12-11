@@ -171,13 +171,19 @@ AC_SUBST([BINDING_SUBDIRS], [${bindings}])
 dnl check for/set up libtool and libltdl
 dnl AC_DISABLE_STATIC
 dnl AC_DISABLE_SHARED
-AC_LIBLTDL_CONVENIENCE([libltdl])
-AC_WITH_LTDL
+dnl AC_LIBLTDL_CONVENIENCE([libltdl])
+dnl AC_WITH_LTDL
+dnl AC_LIB_LTDL
 AC_LIBTOOL_WIN32_DLL
 AC_LIBTOOL_DLOPEN
 AC_PROG_LIBTOOL
-AC_SUBST([LTDLINCL])
-AC_SUBST([LIBLTDL])
+
+dnl We are using our own libltdl checks instead of AC_WITH_LTDL
+dnl because we do not want to ship our own copy of libltdl any more.
+dnl Not shipping libltdl makes it possible to ditch our own autogen.sh
+dnl and relying on standard autoconf's "autoreconf".
+GP_LIB_LTDL
+
 
 # report on compiler/libtool setup
 GP_CONFIG_MSG([Compiler],[${CC}])

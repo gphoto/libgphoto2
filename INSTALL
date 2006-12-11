@@ -25,11 +25,10 @@ If you have obtained your copy of gphoto2 packaged from a .tar.gz or
 .tar.bz2 tarball, SKIP THIS STEP. 
 
 If you have obtained libgphoto2 from SVN, then you will have to
-prepare for step 1 (the configuration of the sources).
+prepare for step 1 (the configuration of the sources) by running
+the autoreconf program.
 
-For that preparation, we supply you with a script named
-'autogen.sh'. It calls several tools in a certain sequence. For
-autogen.sh to work, you require the following tools
+For autoreconf to succeed, you require the following tools:
 
 	automake
 	autoconf
@@ -39,6 +38,10 @@ autogen.sh to work, you require the following tools
 in versions compatible with each other and with libgphoto2. Most
 combinations on current GNU/Linux systems work, whereas BSD systems
 tend to have some compatibility problems.
+
+We recommend you call autoreconf like this
+
+    $ autoreconf --install --symlink
 
 
 =============================

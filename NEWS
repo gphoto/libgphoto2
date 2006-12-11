@@ -3,6 +3,8 @@ libgphoto2 2.3.0.1.trunk
 Build:
    * Fix sierra and canon drivers picking up old gphoto2 headers.
    * libiconv linking fix for PTP2 driver.
+   * Require external libltdl.
+   * Ditched autogen.sh, use standard autoreconf from stock autoconf.
 
 Bindings:
    * Preliminary work on Python bindings.
