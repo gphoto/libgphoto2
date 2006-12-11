@@ -76,48 +76,6 @@ const module_version module_versions[] = {
 	{ NULL, NULL }
 };
 
-/* print_version_comment
- * Print comment to output containing information on library versions
- *
- * out        the file to write the comment to
- * startline  printed at the start of each line, e.g. "# " or "    | "
- * endline    printed as the end of each line,   e.g. "\n" or "\n"
- * firstline  printed before first line,         e.g. NULL or "<!--+\n"
- * lastline   printed after last line,           e.g. "\n" or "    +-->\n"
- */
-
-static void
-print_version_comment(FILE *out,
-		      const char *startline, const char *endline,
-		      const char *firstline, const char *lastline)
-{
-	unsigned int n;
-	if (firstline != NULL) { fputs(firstline, out); }
-	fputs(startline, out);
-	fputs("Created from this library:", out);
-	fputs(endline, out);
-	for (n=0; (module_versions[n].name != NULL) && (module_versions[n].version_func != NULL); n++) {
-		const char *name = module_versions[n].name;
-		GPVersionFunc func = module_versions[n].version_func;
-		const char **v = func(GP_VERSION_SHORT);
-		unsigned int i;
-		if (!v) { continue; }
-		if (!v[0]) { continue; }
-		fputs(startline, out);
-		fputs("  ", out);
-		fprintf(out,"%-15s %-14s ", name, v[0]);
-		for (i=1; v[i] != NULL; i++) {
-			fputs(v[i], out);
-			if (v[i+1] != NULL) {
-				fputs(", ", out);
-			}
-		}
-		fputs(endline, out);
-	}
-	if (lastline != NULL) { fputs(lastline, out); }
-}
-
-
 typedef char *string_array_t[];
 
 typedef string_array_t *string_array_p;
@@ -176,6 +134,48 @@ typedef int (* end_func_t)    (const func_params_t *params);
 		exit(13); \
 	} while (0)
 
+
+/* print_version_comment
+ * Print comment to output containing information on library versions
+ *
+ * out        the file to write the comment to
+ * startline  printed at the start of each line, e.g. "# " or "    | "
+ * endline    printed as the end of each line,   e.g. "\n" or "\n"
+ * firstline  printed before first line,         e.g. NULL or "<!--+\n"
+ * lastline   printed after last line,           e.g. "\n" or "    +-->\n"
+ */
+
+static void
+print_version_comment(FILE *out,
+		      const char *startline, const char *endline,
+		      const char *firstline, const char *lastline)
+{
+	unsigned int n;
+	if (out == NULL) { FATAL("Internal error: NULL out in print_version_comment()"); }
+	if (firstline != NULL) { fputs(firstline, out); }
+	fputs(startline, out);
+	fputs("Created from this library:", out);
+	fputs(endline, out);
+	for (n=0; (module_versions[n].name != NULL) && (module_versions[n].version_func != NULL); n++) {
+		const char *name = module_versions[n].name;
+		GPVersionFunc func = module_versions[n].version_func;
+		const char **v = func(GP_VERSION_SHORT);
+		unsigned int i;
+		if (!v) { continue; }
+		if (!v[0]) { continue; }
+		if (startline != NULL) { fputs(startline, out); }
+		fputs("  ", out);
+		fprintf(out,"%-15s %-14s ", name, v[0]);
+		for (i=1; v[i] != NULL; i++) {
+			fputs(v[i], out);
+			if (v[i+1] != NULL) {
+				fputs(", ", out);
+			}
+		}
+		if (endline != NULL) { fputs(endline, out); }
+	}
+	if (lastline != NULL) { fputs(lastline, out); }
+}
 
 
 static int
@@ -1088,8 +1088,10 @@ static const output_format_t formats[] = {
 	},
 	{name: "usb-usermap",
 	 descr: "usb.usermap include file for linux-hotplug",
-	 help: "If no <scriptname> is given, uses the script name "
-	 "\"" GP_USB_HOTPLUG_SCRIPT "\".\n        Put this into /etc/hotplug/usb/<scriptname>.usermap",
+	 help:
+	 "If no <scriptname> is given, uses the script name "
+	 "\"" GP_USB_HOTPLUG_SCRIPT "\".\n"
+	 "        Put this into /etc/hotplug/usb/<scriptname>.usermap",
 	 paramdescr: "<NAME_OF_HOTPLUG_SCRIPT>",
 	 begin_func: hotplug_begin_func,
 	 camera_func: hotplug_camera_func,
@@ -1113,7 +1115,10 @@ static const output_format_t formats[] = {
 	},
 	{name: "udev-rules",
 	 descr: "udev < 0.98 rules file",
-	 help: "Put it into /etc/udev/rules.d/90-libgphoto2.rules, set file mode, owner, group\n        or add script to run. This rule files also uses the\n        check_ptp_camera script included in libgphoto2 source. Either put it to\n        /lib/udev/check_ptp_camera or adjust the path in the generated rules file.",
+	 help: "Put it into /etc/udev/rules.d/90-libgphoto2.rules, set file mode, owner, group\n"
+	 "        or add script to run. This rule files also uses the\n"
+	 "        check_ptp_camera script included in libgphoto2 source. Either put it to\n"
+	 "        /lib/udev/check_ptp_camera or adjust the path in the generated rules file.",
 	 paramdescr: "( <PATH_TO_SCRIPT> | [mode <mode>|owner <owner>|group <group>]* ) ",
 	 begin_func: udev_begin_func, 
 	 camera_func: udev_camera_func,
@@ -1121,7 +1126,11 @@ static const output_format_t formats[] = {
 	},
 	{name: "udev-rules-0.98",
 	 descr: "udev >= 0.98 rules file",
-	 help: "Put it into /etc/udev/rules.d/90-libgphoto2.rules, set file mode, owner, group\n        or add script to run, for udev >= 0.98. This rule files also uses the\n        check_ptp_camera script included in libgphoto2 source. Either put it to\n        /lib/udev/check_ptp_camera or adjust the path in the generated rules file.",
+	 help:
+	 "Put it into /etc/udev/rules.d/90-libgphoto2.rules, set file mode, owner, group\n"
+	 "        or add script to run, for udev >= 0.98. This rule files also uses the\n"
+	 "        check_ptp_camera script included in libgphoto2 source. Either put it to\n"
+	 "        /lib/udev/check_ptp_camera or adjust the path in the generated rules file.",
 	 paramdescr: "( <PATH_TO_SCRIPT> | [mode <mode>|owner <owner>|group <group>]* ) ",
 	 begin_func: udev_098_begin_func, 
 	 camera_func: udev_098_camera_func,
