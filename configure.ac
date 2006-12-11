@@ -124,10 +124,11 @@ else
 fi
 AC_MSG_RESULT([${gp_msg_gp2ddb}])
 
-AM_CONDITIONAL([HAVE_FLEX_BISON], ["$try_gp2ddb" && test -x "$FLEX" && test -x "$BISON"])
+AM_CONDITIONAL([ENABLED_GP2DDB], ["$try_gp2ddb" && test -x "$FLEX" && test -x "$BISON"])
 
 if "$try_gp2ddb" && test -x "$FLEX" && test -x "$BISON"; then
 	gp_msg_gp2ddb="yes $msg_gp2ddb"
+        AC_DEFINE([ENABLED_GP2DDB], [1], [Whether we have flex and bison for GP2DDB])
 else
 	gp_msg_gp2ddb="no $msg_gp2ddb"
 fi

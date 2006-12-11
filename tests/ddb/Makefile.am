@@ -1,4 +1,4 @@
-if HAVE_FLEX_BISON
+if ENABLED_GP2DDB
 flexbison_PROGRAMS_ = test-ddb
 flexbison_check_SCRIPTS_ = check-ddb.sh
 flexbison_BUILT_SOURCES_ = ddb-txt.tab.c ddb-txt.tab.h ddb-txt.yy.c
