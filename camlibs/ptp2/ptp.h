@@ -1047,6 +1047,7 @@ typedef struct _PTPNIKONWifiProfile PTPNIKONWifiProfile;
 #define PTP_OPC_KeyFrameDistance			0xDE9E
 #define PTP_OPC_BufferSize				0xDE9F
 #define PTP_OPC_EncodingQuality				0xDEA0
+#define PTP_OPC_BuyFlag					0xD901
 
 /* Device Property Form Flag */
 
