@@ -1739,15 +1739,14 @@ _put_nikon_list_wifi_profiles (CONFIG_PUT_ARGS)
 static int
 _get_nikon_list_wifi_profiles (CONFIG_GET_ARGS)
 {
-	gp_widget_new (GP_WIDGET_SECTION, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-
 	CameraWidget *child;
-
 	int ret;
 	char buffer[4096];
 	int i;
 	PTPParams *params = &(camera->pl->params);
+
+	gp_widget_new (GP_WIDGET_SECTION, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
 
 	if (params->deviceinfo.VendorExtensionID != PTP_VENDOR_NIKON)
 		return (GP_ERROR_NOT_SUPPORTED);
