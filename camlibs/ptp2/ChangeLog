@@ -1,5 +1,11 @@
 2006-12-13  Marcus Meissner  <marcus@jet.franken.de>
+
 	* ptp.c,ptp.h: Added "BuyNow" property define and debugoutput.
+	* ptp-pack.c: Handle offset of DPVs of INT64 and INT128 datatype
+	  correct.
+	
+	* library.c: Fast directory tree and metadata retrieval for
+	  MTP devices.
 
 2006-12-08  Marcus Meissner  <marcus@jet.franken.de>
 

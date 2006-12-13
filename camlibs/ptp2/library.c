@@ -2452,6 +2452,64 @@ ptp_mtp_render_metadata (
 	uint32_t propcnt = 0;
 	int j;
 
+	if (params->proplist) { /* use the fast method, without device access since cached.*/
+		char			propname[256];
+		char			text[256];
+		int 			i, n;
+		MTPPropList		*xpl = params->proplist;
+	
+		while (xpl) {
+			if (xpl->ObjectHandle != object_id) {
+				xpl = xpl->next;
+				continue;
+			}
+			for (i=sizeof(uninteresting_props)/sizeof(uninteresting_props[0]);i--;)
+				if (uninteresting_props[i] == xpl->property)
+					break;
+			if (i != -1) {/* Is uninteresting. */
+				xpl = xpl->next;
+				continue;
+			}
+
+			n = ptp_render_mtp_propname(xpl->property, sizeof(propname), propname);
+			gp_file_append (file, "<", 1);
+			gp_file_append (file, propname, n);
+			gp_file_append (file, ">", 1);
+
+			switch (xpl->datatype) {
+			default:sprintf (text, "Unknown type %d", xpl->datatype);
+				break;
+			case PTP_DTC_STR:
+				snprintf (text, sizeof(text), "%s", xpl->propval.str?xpl->propval.str:"");
+				break;
+			case PTP_DTC_INT32:
+				sprintf (text, "%d", xpl->propval.i32);
+				break;
+			case PTP_DTC_INT16:
+				sprintf (text, "%d", xpl->propval.i16);
+				break;
+			case PTP_DTC_INT8:
+				sprintf (text, "%d", xpl->propval.i8);
+				break;
+			case PTP_DTC_UINT32:
+				sprintf (text, "%u", xpl->propval.u32);
+				break;
+			case PTP_DTC_UINT16:
+				sprintf (text, "%u", xpl->propval.u16);
+				break;
+			case PTP_DTC_UINT8:
+				sprintf (text, "%u", xpl->propval.u8);
+				break;
+			}
+			gp_file_append (file, text, strlen(text));
+			gp_file_append (file, "</", 2);
+			gp_file_append (file, propname, n);
+			gp_file_append (file, ">\n", 2);
+			xpl = xpl->next;
+		}
+		return (GP_OK);
+	}
+
 	ret = ptp_mtp_getobjectpropssupported (params, ofc, &propcnt, &props);
 	if (ret != PTP_RC_OK) return (GP_ERROR);
 
@@ -3445,6 +3503,69 @@ init_ptp_fs (Camera *camera, GPContext *context)
 			return PTP_RC_OK;
 		}
 		/* fallthrough */
+	}
+
+	/* Microsoft/MTP also has fast directory retrieval. */
+	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+	    ptp_operation_issupported(params,PTP_OC_MTP_GetObjPropList))
+
+	{
+		PTPObjectInfo	*oinfos = NULL;	
+		int		cnt = 0,i;
+		uint32_t	lasthandle = 0xffffffff;
+		MTPPropList 	*proplist = NULL, *xpl;
+
+		ret = ptp_mtp_getobjectproplist (&camera->pl->params, 0xffffffff, &proplist);
+		if (ret != PTP_RC_OK)
+			goto fallback;
+		params->proplist = proplist; /* cache it */
+
+		/* count the objects */
+		xpl = proplist;
+		while (xpl) {
+			if (lasthandle != xpl->ObjectHandle) {
+				cnt++;
+				lasthandle = xpl->ObjectHandle;
+			}
+			xpl = xpl->next;
+		}
+		lasthandle = 0xffffffff;
+		oinfos = params->objectinfo = malloc (sizeof (PTPObjectInfo) * cnt);
+		memset (oinfos ,0 ,sizeof (PTPObjectInfo) * cnt);
+		params->handles.Handler = malloc (sizeof (uint32_t) * cnt);
+		params->handles.n = cnt;
+
+		xpl = proplist; i = -1;
+		while (xpl) {
+			if (lasthandle != xpl->ObjectHandle) {
+				i++;
+				lasthandle = xpl->ObjectHandle;
+				params->handles.Handler[i] = xpl->ObjectHandle;
+			}
+			switch (xpl->property) {
+			case PTP_OPC_ParentObject:
+				oinfos[i].ParentObject = xpl->propval.u32;
+				break;
+			case PTP_OPC_ObjectFormat:
+				oinfos[i].ObjectFormat = xpl->propval.u16;
+				break;
+			case PTP_OPC_ObjectSize:
+				oinfos[i].ObjectCompressedSize = xpl->propval.u32;
+				break;
+			case PTP_OPC_StorageID:
+				oinfos[i].StorageID = xpl->propval.u32;
+				break;
+			case PTP_OPC_ObjectFileName:
+				oinfos[i].Filename = xpl->propval.str;
+				break;
+			default:
+				if ((xpl->property & 0xfff0) == 0xdc00)
+					gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "case %x type %x unhandled.\n", xpl->property, xpl->datatype);
+				break;
+			}
+			xpl = xpl->next;
+		}
+		return PTP_RC_OK;
 	}
 
 fallback:

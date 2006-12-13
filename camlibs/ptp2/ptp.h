@@ -1135,6 +1135,9 @@ struct _PTPParams {
 	/* PTP IO: if we have MTP style split header/data transfers */
 	int		split_header_data;
 
+	/* PTP: MTP specific structure. */
+	MTPPropList	*proplist;
+
 	/* PTP: internal structures used by ptp driver */
 	PTPObjectHandles handles;
 	PTPObjectInfo	*objectinfo;
