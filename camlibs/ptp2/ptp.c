@@ -326,6 +326,10 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp,
 		if (to_fd == -1) {
 			/* Allocate memory for data. */
 			*data=calloc(len,1);
+			if (!*data) {
+                                ptp_error (params, "PTP: Out of memory on allocating %d bytes.", len);
+                                return PTP_ERROR_IO;
+			}
 			if (readlen)
 				*readlen = len;
 
