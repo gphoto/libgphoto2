@@ -36,14 +36,6 @@
 #define SQWRITE gp_port_usb_msg_write
 #define SQREAD  gp_port_usb_msg_read
 
-static unsigned char *
-digi_read_data (GPPort *port, unsigned char *data, int size)
-{
-	SQWRITE (port, 0x0c, 0x03, size, 0x00, 0); 
-	gp_port_read (port, data, size); 
-	return GP_OK;
-}
-
 int 
 digi_init (GPPort *port, CameraPrivateLibrary *priv)
 {
