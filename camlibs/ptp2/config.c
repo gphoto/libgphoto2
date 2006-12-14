@@ -577,6 +577,7 @@ static struct deviceproptableu16 whitebalance[] = {
 	{ N_("Flash"),			0x0007, 0 },
 	{ N_("Cloudy"),			0x8010, PTP_VENDOR_NIKON },
 	{ N_("Shade"),			0x8011, PTP_VENDOR_NIKON },
+	{ N_("Color Temperature"),	0x8012, PTP_VENDOR_NIKON },
 	{ N_("Preset"),			0x8013, PTP_VENDOR_NIKON },
 	{ NULL },
 };
@@ -1081,12 +1082,14 @@ GENERIC16TABLE(ExposureProgram,exposure_program_modes)
 
 
 static struct deviceproptableu16 capture_mode[] = {
-	{ N_("Single Shot"),	0x0001, 0 },
-	{ N_("Burst"),		0x0002, 0 },
-	{ N_("Timelapse"),	0x0003, 0 },
-	{ N_("Timer"),		0x8011, PTP_VENDOR_NIKON},
-	{ N_("Remote"),		0x8013, PTP_VENDOR_NIKON},
-	{ N_("Timer + Remote"),	0x8014, PTP_VENDOR_NIKON},
+	{ N_("Single Shot"),		0x0001, 0 },
+	{ N_("Burst"),			0x0002, 0 },
+	{ N_("Timelapse"),		0x0003, 0 },
+	{ N_("Continuous Low Speed"),	0x8010, PTP_VENDOR_NIKON},
+	{ N_("Timer"),			0x8011, PTP_VENDOR_NIKON},
+	{ N_("Mirror Up"),		0x8012, PTP_VENDOR_NIKON},
+	{ N_("Remote"),			0x8013, PTP_VENDOR_NIKON},
+	{ N_("Timer + Remote"),		0x8014, PTP_VENDOR_NIKON},
 };
 GENERIC16TABLE(CaptureMode,capture_mode)
 
@@ -1095,6 +1098,7 @@ static struct deviceproptableu16 focus_metering[] = {
 	{ N_("Dynamic Area"),	0x0002, 0 },
 	{ N_("Single Area"),	0x8010, PTP_VENDOR_NIKON},
 	{ N_("Closest Subject"),0x8011, PTP_VENDOR_NIKON},
+	{ N_("Group Dynamic"),  0x8012, PTP_VENDOR_NIKON},
 };
 GENERIC16TABLE(FocusMetering,focus_metering)
 

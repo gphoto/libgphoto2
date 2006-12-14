@@ -1,3 +1,7 @@
+2006-12-14  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptp.h,ptp.c,config.c: Imported some knowledge from libptp2.
+
 2006-12-13  Marcus Meissner  <marcus@jet.franken.de>
 
 	* ptp.c,ptp.h: Added "BuyNow" property define and debugoutput.

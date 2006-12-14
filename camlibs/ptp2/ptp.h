@@ -370,6 +370,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 
 /* Nikon extension Event Codes */
 #define PTP_EC_Nikon_ObjectAddedInSDRAM		0xC101
+#define PTP_EC_Nikon_CaptureOverflow		0xC102
 /* Gets 1 parameter, objectid pointing to DPOF object */
 #define PTP_EC_Nikon_AdvancedTransfer		0xC103
 
@@ -908,6 +909,7 @@ typedef struct _PTPNIKONWifiProfile PTPNIKONWifiProfile;
 #define PTP_DPC_NIKON_E6ManualModeBracketing		0xD079	
 #define PTP_DPC_NIKON_BracketOrder			0xD07A
 #define PTP_DPC_NIKON_E8AutoBracketSelection		0xD07B
+#define PTP_DPC_NIKON_BracketingSet			0xD07C
 #define PTP_DPC_NIKON_F1CenterButtonShootingMode	0xD080
 #define PTP_DPC_NIKON_CenterButtonPlaybackMode		0xD081
 #define PTP_DPC_NIKON_F2Multiselector			0xD082
@@ -925,13 +927,16 @@ typedef struct _PTPNIKONWifiProfile PTPNIKONWifiProfile;
 #define PTP_DPC_NIKON_Bracketing			0xD0C0
 #define PTP_DPC_NIKON_ExposureBracketingIntervalDist	0xD0C1
 #define PTP_DPC_NIKON_BracketingProgram			0xD0C2
+#define PTP_DPC_NIKON_WhiteBalanceBracketStep		0xD0C4
 #define PTP_DPC_NIKON_LensID				0xD0E0
 #define PTP_DPC_NIKON_FocalLengthMin			0xD0E3
 #define PTP_DPC_NIKON_FocalLengthMax			0xD0E4
 #define PTP_DPC_NIKON_MaxApAtMinFocalLength		0xD0E5
 #define PTP_DPC_NIKON_MaxApAtMaxFocalLength		0xD0E6
 #define PTP_DPC_NIKON_ExposureTime			0xD100
+#define PTP_DPC_NIKON_ACPower				0xD101
 #define PTP_DPC_NIKON_MaximumShots			0xD103
+#define PTP_DPC_NIKON_AFLLock				0xD104
 #define PTP_DPC_NIKON_AutoExposureLock			0xD105
 #define PTP_DPC_NIKON_AutoFocusLock			0xD106
 #define PTP_DPC_NIKON_AutofocusLCDTopMode2		0xD107
