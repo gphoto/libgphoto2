@@ -397,16 +397,19 @@ udev_camera_func (const func_params_t *params,
 	int class = 0, subclass = 0, proto = 0;
 	int usb_vendor = 0, usb_product = 0;
 
-	if (a->port & GP_PORT_USB) {
-		if (a->usb_vendor) { /* usb product id may be zero! */
-			class = 0;
-			subclass = 0;
-			proto = 0;
-			flags = (GP_USB_HOTPLUG_MATCH_VENDOR_ID 
-				 | GP_USB_HOTPLUG_MATCH_PRODUCT_ID);
-			usb_vendor = a->usb_vendor;
-			usb_product = a->usb_product;
-		} else if ((a->usb_class) && (a->usb_class != 666)) {
+	if (!(a->port & GP_PORT_USB))
+		return 0;
+
+	if (a->usb_vendor) { /* usb product id may be zero! */
+		class = 0;
+		subclass = 0;
+		proto = 0;
+		flags = (GP_USB_HOTPLUG_MATCH_VENDOR_ID 
+			 | GP_USB_HOTPLUG_MATCH_PRODUCT_ID);
+		usb_vendor = a->usb_vendor;
+		usb_product = a->usb_product;
+	} else {
+		if (a->usb_class) {
 			class = a->usb_class;
 			subclass = a->usb_subclass;
 			proto = a->usb_protocol;
@@ -422,9 +425,6 @@ udev_camera_func (const func_params_t *params,
 			usb_vendor = 0;
 			usb_product = 0;
 		}
-	} else {
-		/* not a camera handled by udev */
-		return 0;
 	}
 
 	if (params->add_comments) {
@@ -432,10 +432,15 @@ udev_camera_func (const func_params_t *params,
 	}
 
 	if (flags & GP_USB_HOTPLUG_MATCH_INT_CLASS) {
-		if ((flags & (GP_USB_HOTPLUG_MATCH_INT_CLASS|GP_USB_HOTPLUG_MATCH_INT_SUBCLASS|GP_USB_HOTPLUG_MATCH_INT_PROTOCOL)) == (GP_USB_HOTPLUG_MATCH_INT_CLASS|GP_USB_HOTPLUG_MATCH_INT_SUBCLASS|GP_USB_HOTPLUG_MATCH_INT_PROTOCOL))
+		if ((flags & (GP_USB_HOTPLUG_MATCH_INT_CLASS|GP_USB_HOTPLUG_MATCH_INT_SUBCLASS|GP_USB_HOTPLUG_MATCH_INT_PROTOCOL)) == (GP_USB_HOTPLUG_MATCH_INT_CLASS|GP_USB_HOTPLUG_MATCH_INT_SUBCLASS|GP_USB_HOTPLUG_MATCH_INT_PROTOCOL)) {
 			printf("PROGRAM=\"check_ptp_camera %02d/%02d/%02d\", ", class, subclass, proto);
-		else
-			fprintf(stderr,"unhandled interface match flags %x\n", flags);
+		} else {
+			if (class == 666) {
+				printf("PROGRAM=\"check_mtp_device\", ");
+			} else {
+				fprintf(stderr,"unhandled interface match flags %x\n", flags);
+			}
+		}
 	} else {
 		printf ("SYSFS{idVendor}==\"%04x\", SYSFS{idProduct}==\"%04x\", ",
 			a->usb_vendor, a->usb_product);
@@ -505,16 +510,18 @@ udev_098_camera_func (const func_params_t *params,
 	int class = 0, subclass = 0, proto = 0;
 	int usb_vendor = 0, usb_product = 0;
 
-	if (a->port & GP_PORT_USB) {
-		if (a->usb_vendor) { /* usb product id may be zero! */
-			class = 0;
-			subclass = 0;
-			proto = 0;
-			flags = (GP_USB_HOTPLUG_MATCH_VENDOR_ID 
-				 | GP_USB_HOTPLUG_MATCH_PRODUCT_ID);
-			usb_vendor = a->usb_vendor;
-			usb_product = a->usb_product;
-		} else if ((a->usb_class) && (a->usb_class != 666)) {
+	if (!(a->port & GP_PORT_USB))
+		return 0;
+	if (a->usb_vendor) { /* usb product id may be zero! */
+		class = 0;
+		subclass = 0;
+		proto = 0;
+		flags = (GP_USB_HOTPLUG_MATCH_VENDOR_ID 
+			 | GP_USB_HOTPLUG_MATCH_PRODUCT_ID);
+		usb_vendor = a->usb_vendor;
+		usb_product = a->usb_product;
+	} else {
+		if (a->usb_class) {
 			class = a->usb_class;
 			subclass = a->usb_subclass;
 			proto = a->usb_protocol;
@@ -530,19 +537,20 @@ udev_098_camera_func (const func_params_t *params,
 			usb_vendor = 0;
 			usb_product = 0;
 		}
-	} else {
-		/* not a camera handled by udev */
-		return 0;
 	}
 
 	if (params->add_comments)
 		printf ("# %s\n", a->model);
 
 	if (flags & GP_USB_HOTPLUG_MATCH_INT_CLASS) {
-		if ((flags & (GP_USB_HOTPLUG_MATCH_INT_CLASS|GP_USB_HOTPLUG_MATCH_INT_SUBCLASS|GP_USB_HOTPLUG_MATCH_INT_PROTOCOL)) == (GP_USB_HOTPLUG_MATCH_INT_CLASS|GP_USB_HOTPLUG_MATCH_INT_SUBCLASS|GP_USB_HOTPLUG_MATCH_INT_PROTOCOL))
+		if ((flags & (GP_USB_HOTPLUG_MATCH_INT_CLASS|GP_USB_HOTPLUG_MATCH_INT_SUBCLASS|GP_USB_HOTPLUG_MATCH_INT_PROTOCOL)) == (GP_USB_HOTPLUG_MATCH_INT_CLASS|GP_USB_HOTPLUG_MATCH_INT_SUBCLASS|GP_USB_HOTPLUG_MATCH_INT_PROTOCOL)) {
 			printf("PROGRAM=\"check_ptp_camera %02d/%02d/%02d\", ", class, subclass, proto);
-		else
-			fprintf(stderr,"unhandled interface match flags %x\n", flags);
+		} else {
+			if (class == 666)
+				printf("PROGRAM=\"check_mtp_device\", ");
+			else
+				fprintf(stderr,"unhandled interface match flags %x\n", flags);
+		}
 	} else {
 		printf ("ATTRS{idVendor}==\"%04x\", ATTRS{idProduct}==\"%04x\", ",
 			a->usb_vendor, a->usb_product);
