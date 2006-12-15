@@ -436,7 +436,7 @@ udev_camera_func (const func_params_t *params,
 			printf("PROGRAM=\"check_ptp_camera %02d/%02d/%02d\", ", class, subclass, proto);
 		} else {
 			if (class == 666) {
-				printf("PROGRAM=\"check_mtp_device\", ");
+				printf("# not working yet: PROGRAM=\"check_mtp_device\", ");
 			} else {
 				fprintf(stderr,"unhandled interface match flags %x\n", flags);
 			}
@@ -547,7 +547,7 @@ udev_098_camera_func (const func_params_t *params,
 			printf("PROGRAM=\"check_ptp_camera %02d/%02d/%02d\", ", class, subclass, proto);
 		} else {
 			if (class == 666)
-				printf("PROGRAM=\"check_mtp_device\", ");
+				printf("# not working yet: PROGRAM=\"check_mtp_device\", ");
 			else
 				fprintf(stderr,"unhandled interface match flags %x\n", flags);
 		}
