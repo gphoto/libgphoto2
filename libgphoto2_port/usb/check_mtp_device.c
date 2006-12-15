@@ -65,13 +65,14 @@ main(int argc, char **arvg)
 	usb_dev_handle *devh;
 	struct usb_device *dev;
 	struct usb_bus *bus;
-	char	*devname, *devpath;
+	char	*devpath;
 	unsigned int xbus, xdev;
 
-	devname = getenv("DEVNAME");
-	if (!devname) goto errout2;
 	devpath = getenv("DEVPATH");
-	if (!devpath) goto errout2;
+	if (!devpath) {
+		fprintf(stderr,"DEVPATH not set\n");
+		goto errout2;
+	}
 
 	s = strstr(devpath,"usbdev");
 	if (!s) goto errout2;
@@ -93,12 +94,16 @@ main(int argc, char **arvg)
 			goto found;
 		}
 	}
+	fprintf(stderr,"Device not found.\n");
 	goto errout2;
 
 found:
+	fprintf (stderr,"dev is %s\n", dev->filename);
 	/* All of them are "vendor specific" device class, or interface defined. */
-	if ((dev->descriptor.bDeviceClass!=0xff) && (dev->descriptor.bDeviceClass!=0))
-		return 0;
+	if ((dev->descriptor.bDeviceClass!=0xff) && (dev->descriptor.bDeviceClass!=0)) {
+		fprintf(stderr,"Non MTP deviceclass?\n");
+		goto errout2;
+	}
 
 	devh = usb_open (dev);
 	/* get string descriptor at 0xEE */
@@ -106,6 +111,7 @@ found:
 	/*if (ret > 0) gp_log_data("get_MS_OSD",buf, ret);*/
 	if (ret < 10) goto errout;
 	if (!((buf[2] == 'M') && (buf[4]=='S') && (buf[6]=='F') && (buf[8]=='T'))) {
+		fprintf(stderr,"MS OS Descriptor request failed.\n");
 		goto errout;
 	}
 	cmd = buf[16];
