@@ -65,7 +65,6 @@ gp_context_unref
 gp_file_adjust_name_for_mime_type
 gp_file_append
 gp_file_clean
-gp_file_convert
 gp_file_copy
 gp_file_detect_mime_type
 gp_file_free
@@ -78,15 +77,11 @@ gp_file_new
 gp_file_open
 gp_file_ref
 gp_file_save
-gp_file_set_color_table
-gp_file_set_conversion_method
 gp_file_set_data_and_size
-gp_file_set_header
 gp_file_set_mime_type
 gp_file_set_mtime
 gp_file_set_name
 gp_file_set_type
-gp_file_set_width_and_height
 gp_filesystem_append
 gp_filesystem_count
 gp_filesystem_delete_all

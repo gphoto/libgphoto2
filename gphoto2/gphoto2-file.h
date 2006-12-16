@@ -121,31 +121,6 @@ int gp_file_set_data_and_size (CameraFile*,       char *data,
 int gp_file_get_data_and_size (CameraFile*, const char **data,
 			       unsigned long int *size);
 
-/* Conversion */
-
-/*
- * Please don't use the following in front-ends and camera drivers that are
- * not in gphoto CVS. We need to do some more work here, and this part of
- * the API is subject to change.
- *
- * If you like to do some work on conversion raw -> image/ *, please
- * step forward and write to gphoto-devel@lists.sourceforge.net.
- */
-typedef enum {
-	GP_FILE_CONVERSION_METHOD_CHUCK
-} CameraFileConversionMethod;
-
-int gp_file_set_color_table  (CameraFile *file,
-			      const unsigned char *red_table,   int red_size,
-			      const unsigned char *green_table, int green_size,
-			      const unsigned char *blue_table,  int blue_size);
-int gp_file_set_width_and_height  (CameraFile *file, int width, int height);
-int gp_file_set_header            (CameraFile *file, const char *header);
-int gp_file_set_conversion_method (CameraFile *file,
-				   CameraFileConversionMethod method);
-
-int gp_file_convert (CameraFile *file, const char *mime_type);
-
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

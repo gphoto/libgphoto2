@@ -62,12 +62,6 @@ struct _CameraFile {
         int ref_count;
 
         time_t mtime;
-
-        CameraFileConversionMethod method;
-        int width, height;
-        unsigned char *red_table, *blue_table, *green_table;
-        int red_size, blue_size, green_size;
-        char header [128];
 };
 
 
@@ -385,32 +379,11 @@ gp_file_clean (CameraFile *file)
         if (file->data != NULL)
                 free(file->data);
         file->data = NULL;
-
         file->size = 0;
         file->bytes_read = 0;
-
 	strcpy (file->name, "");
-	strcpy (file->header, "");
-
-	if (file->red_table) {
-		free (file->red_table);
-		file->red_table = NULL;
-	}
-	if (file->green_table) {
-		free (file->green_table);
-		file->green_table = NULL;
-	}
-	if (file->blue_table) {
-		free (file->blue_table);
-		file->blue_table = NULL;
-	}
-	file->red_size   = 0;
-	file->blue_size  = 0;
-	file->green_size = 0;
-
         return (GP_OK);
 }
-
 
 /**
  * @param destination a #CameraFile
@@ -444,7 +417,6 @@ gp_file_copy (CameraFile *destination, CameraFile *source)
 
 	return (GP_OK);
 }
-
 
 /**
  * @param file a #CameraFile
@@ -622,239 +594,6 @@ gp_file_get_type (CameraFile *file, CameraFileType *type)
 	*type = file->type;
 
 	return (GP_OK);
-}
-
-
-/**
- * @param file a #CameraFile
- * @param red_table
- * @param red_size
- * @param red_table
- * @param green_size
- * @param red_table
- * @param blue_size
- * @return a gphoto2 error code.
- *
- **/
-int
-gp_file_set_color_table (CameraFile *file,
-			 const unsigned char *red_table,   int red_size,
-			 const unsigned char *green_table, int green_size,
-			 const unsigned char *blue_table,  int blue_size)
-{
-	CHECK_NULL (file && red_table && green_table && blue_table);
-
-	if (red_size) {
-		CHECK_MEM (file->red_table = malloc (sizeof (char) * red_size));
-		memcpy (file->red_table, red_table, red_size);
-	}
-	if (green_size) {
-		CHECK_MEM (file->green_table = malloc(sizeof(char)*green_size));
-		memcpy (file->green_table, green_table, green_size);
-	}
-	if (blue_size) {
-		CHECK_MEM (file->blue_table = malloc (sizeof (char)*blue_size));
-		memcpy (file->blue_table, blue_table, blue_size);
-	}
-
-	file->red_size   = red_size;
-	file->green_size = green_size;
-	file->blue_size  = blue_size;
-
-	return (GP_OK);
-}
-
-
-/**
- * @param file a #CameraFile
- * @param width
- * @param height
- * @return a gphoto2 error code.
- *
- **/
-int
-gp_file_set_width_and_height (CameraFile *file, int width, int height)
-{
-	CHECK_NULL (file);
-
-	file->width = width;
-	file->height = height;
-
-	return (GP_OK);
-}
-
-
-/**
- * @param file a #CameraFile
- * @param header
- * @return a gphoto2 error code.
- *
- **/
-int
-gp_file_set_header (CameraFile *file, const char *header)
-{
-	CHECK_NULL (file && header);
-
-	strncpy (file->header, header, sizeof (file->header));
-
-	return (GP_OK);
-}
-
-
-/**
- * @param file a #CameraFile
- * @param method a #CameraFileConversionMethod
- * @return a gphoto2 error code.
- *
- **/
-int
-gp_file_set_conversion_method (CameraFile *file,
-			       CameraFileConversionMethod method)
-{
-	CHECK_NULL (file);
-
-	file->method = method;
-
-	return (GP_OK);
-}
-
-
-/* Chuck Homic's Bayer conversion routine, originally for the Dimera 3500 */
-/**
- * @internal
- **/
-static int
-gp_file_conversion_chuck (CameraFile *file, unsigned char *data)
-{
-	int x, y;
-	int p1, p2, p3, p4;
-	int red, green, blue;
-
-	/*
-	 * Added by Chuck -- 12-May-2000
-	 * Convert the colors based on location, and my wacky color table:
-	 *
-	 * Convert the 4 cells into a single RGB pixel.
-	 * Colors are encoded as follows:
-	 * 
-	 * 		000000000000000000........33
-	 * 		000000000011111111........11
-	 * 		012345678901234567........89
-	 * 		----------------------------
-	 * 	000     RGRGRGRGRGRGRGRGRG........RG
-	 * 	001     GBGBGBGBGBGBGBGBGB........GB
-	 * 	002     RGRGRGRGRGRGRGRGRG........RG
-	 * 	003     GBGBGBGBGBGBGBGBGB........GB
-	 * 	...     ............................
-	 * 	238     RGRGRGRGRGRGRGRGRG........RG
-	 * 	239     GBGBGBGBGBGBGBGBGB........GB
-	 *
-	 * NOTE. Above is 320x240 resolution.  Just expand for 640x480.
-	 *
-	 * Use neighboring cells to generate color values for each pixel.
-	 * The neighbors are the (x-1, y-1), (x, y-1), (x-1, y), and (x, y).
-	 * The exception is when x or y are zero then the neighors used are
-	 * the +1 cells.
-	 */
-	
-	for (y = 0;y < file->height; y++)
-		for (x = 0;x < file->width; x++) {
-			p1 = ((y==0?y+1:y-1)*file->width) + (x==0?x+1:x-1);
-			p2 = ((y==0?y+1:y-1)*file->width) +  x;
-			p3 = ( y            *file->width) + (x==0?x+1:x-1);
-			p4 = ( y            *file->width) +  x;
-
-			switch (((y & 1) << 1) + (x & 1)) {
-			case 0: /* even row, even col, red */
-				blue  = file->blue_table [file->data[p1]];
-				green = file->green_table[file->data[p2]];
-				green+= file->green_table[file->data[p3]];
-				red   = file->red_table  [file->data[p4]];
-				break;
-			case 1: /* even row, odd col, green */
-				green = file->green_table[file->data[p1]];
-				blue  = file->blue_table [file->data[p2]];
-				red   = file->red_table  [file->data[p3]];
-				green+= file->green_table[file->data[p4]];
-				break;
-			case 2: /* odd row, even col, green */
-				green = file->green_table[file->data[p1]];
-				red   = file->red_table  [file->data[p2]];
-				blue  = file->blue_table [file->data[p3]];
-				green+=file->green_table [file->data[p4]];
-				break;
-			case 3: /* odd row, odd col, blue */
-			default:
-				red   = file->red_table  [file->data[p1]];
-				green = file->green_table[file->data[p2]];
-				green+= file->green_table[file->data[p3]];
-				blue  = file->blue_table [file->data[p4]];
-				break;
-			}
-			*data++ = (unsigned char) red;
-			*data++ = (unsigned char) (green/2);
-			*data++ = (unsigned char) blue;
-		}
-
-	return (GP_OK);
-}
-
-
-/**
- * @internal
- **/
-static int
-gp_file_raw_to_ppm (CameraFile *file)
-{
-	unsigned char *new_data, *b;
-	long int new_size;
-	int result;
-
-	CHECK_NULL (file);
-
-	new_size = (file->width * file->height * 3) + strlen (file->header);
-	CHECK_MEM (new_data = malloc (sizeof (char) * new_size));
-
-	strcpy (new_data, file->header);
-
-	b = new_data + strlen (file->header);
-	switch (file->method) {
-	case GP_FILE_CONVERSION_METHOD_CHUCK:
-		result = gp_file_conversion_chuck (file, b);
-		break;
-	default:
-		result = GP_ERROR_NOT_SUPPORTED;
-		break;
-	}
-	if (result != GP_OK) {
-		free (new_data);
-		return (result);
-	}
-
-	CHECK_RESULT (gp_file_set_data_and_size (file, new_data, new_size));
-	CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_PPM));
-
-	return (GP_OK);
-}
-
-
-/**
- * @param file a #CameraFile
- * @param mime_type a MIME type string
- * @return a gphoto2 error code.
- *
- **/
-int
-gp_file_convert (CameraFile *file, const char *mime_type)
-{
-	CHECK_NULL (file && mime_type);
-
-	if (!strcmp (file->mime_type, GP_MIME_RAW) &&
-		 !strcmp (mime_type, GP_MIME_PPM))
-		return (gp_file_raw_to_ppm (file));
-
-	else
-		return (GP_ERROR_NOT_SUPPORTED);
 }
 
 
