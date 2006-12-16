@@ -261,8 +261,9 @@ gp_port_info_list_load (GPPortInfoList *list)
 
 	CHECK_NULL (list);
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list", _("Using ltdl to load io-drivers "
-		"from '%s'..."),iolibs);
+	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list",
+		_("Using ltdl to load io-drivers from '%s'..."),
+		iolibs);
 	lt_dlinit ();
 	lt_dladdsearchdir (iolibs);
 	result = lt_dlforeachfile (iolibs, foreach_func, list);
