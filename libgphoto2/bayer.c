@@ -23,7 +23,7 @@
 
 #include <gphoto2/gphoto2-result.h>
 
-static int tile_colors[8][4] = {
+static const int tile_colors[8][4] = {
 	{0, 1, 1, 2},
 	{1, 0, 2, 1},
 	{2, 1, 1, 0},
@@ -272,5 +272,3 @@ gp_bayer_decode (unsigned char *input, int w, int h, unsigned char *output,
 
 	return (GP_OK);
 }
-
-
