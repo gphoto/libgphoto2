@@ -1,3 +1,10 @@
+2006-12-16  Marcus Meissner  <marcus@jet.franken.de>
+
+	* dimera3500.c: Moved the camera specific bayer conversion out
+	  from libgphoto2 to here to clean up the APIs.
+
+	  Untested, but builds.
+
 2003-01-14  Dan Fandrich <dan@coneharvesters.com>
 
 	* dimera3500.c: Made exposure and flash settings configurable.

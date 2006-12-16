@@ -82,7 +82,7 @@ static const char Dimera_stdhdr[] =
 
 static uint8_t *
 Dimera_Get_Full_Image (int picnum, long *size, int *width, int *height,
-			Camera *camera, CameraFile *file, GPContext *context);
+			Camera *camera, GPContext *context);
 
 static uint8_t *
 Dimera_Get_Thumbnail( int picnum, long *size, Camera *camera );
@@ -182,11 +182,91 @@ static int file_list_func (CameraFilesystem *fs, const char *folder, CameraList 
 	return (gp_list_populate (list, IMAGE_NAME_TEMPLATE, count));
 }
 
-static int get_file_func (CameraFilesystem *fs, const char *folder, const char *filename, CameraFileType type, CameraFile *file, void *user_data, GPContext *context) {
+static int
+conversion_chuck (const unsigned int width, const unsigned int height,
+	const unsigned char *src,unsigned char *dst
+) {
+	int x, y;
+	int p1, p2, p3, p4;
+	int red, green, blue;
+
+	/*
+	 * Added by Chuck -- 12-May-2000
+	 * Convert the colors based on location, and my wacky color table:
+	 *
+	 * Convert the 4 cells into a single RGB pixel.
+	 * Colors are encoded as follows:
+	 * 
+	 * 		000000000000000000........33
+	 * 		000000000011111111........11
+	 * 		012345678901234567........89
+	 * 		----------------------------
+	 * 	000     RGRGRGRGRGRGRGRGRG........RG
+	 * 	001     GBGBGBGBGBGBGBGBGB........GB
+	 * 	002     RGRGRGRGRGRGRGRGRG........RG
+	 * 	003     GBGBGBGBGBGBGBGBGB........GB
+	 * 	...     ............................
+	 * 	238     RGRGRGRGRGRGRGRGRG........RG
+	 * 	239     GBGBGBGBGBGBGBGBGB........GB
+	 *
+	 * NOTE. Above is 320x240 resolution.  Just expand for 640x480.
+	 *
+	 * Use neighboring cells to generate color values for each pixel.
+	 * The neighbors are the (x-1, y-1), (x, y-1), (x-1, y), and (x, y).
+	 * The exception is when x or y are zero then the neighors used are
+	 * the +1 cells.
+	 */
+	
+	for (y = 0;y < height; y++)
+		for (x = 0;x < width; x++) {
+			p1 = ((y==0?y+1:y-1)*width) + (x==0?x+1:x-1);
+			p2 = ((y==0?y+1:y-1)*width) +  x;
+			p3 = ( y            *width) + (x==0?x+1:x-1);
+			p4 = ( y            *width) +  x;
+
+			switch (((y & 1) << 1) + (x & 1)) {
+			case 0: /* even row, even col, red */
+				blue  = blue_table [src[p1]];
+				green = green_table[src[p2]];
+				green+= green_table[src[p3]];
+				red   = red_table  [src[p4]];
+				break;
+			case 1: /* even row, odd col, green */
+				green = green_table[src[p1]];
+				blue  = blue_table [src[p2]];
+				red   = red_table  [src[p3]];
+				green+= green_table[src[p4]];
+				break;
+			case 2: /* odd row, even col, green */
+				green = green_table[src[p1]];
+				red   = red_table  [src[p2]];
+				blue  = blue_table [src[p3]];
+				green+= green_table[src[p4]];
+				break;
+			case 3: /* odd row, odd col, blue */
+			default:
+				red   = red_table  [src[p1]];
+				green = green_table[src[p2]];
+				green+= green_table[src[p3]];
+				blue  = blue_table [src[p4]];
+				break;
+			}
+			*dst++ = (unsigned char) red;
+			*dst++ = (unsigned char) (green/2);
+			*dst++ = (unsigned char) blue;
+		}
+	return (GP_OK);
+}
+
+
+static int
+get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
+	CameraFileType type, CameraFile *file, void *user_data, GPContext *context
+) {
 
 	Camera *camera = user_data;
 	int num, width, height;
-	uint8_t *data;
+	uint8_t *data, *newdata;
 	long int size;
 
 	/* Retrieve the number of the photo on the camera */
@@ -199,57 +279,49 @@ static int get_file_func (CameraFilesystem *fs, const char *folder, const char *
 	if (num < 0)
 		return num;
 
+	gp_file_set_name (file, filename);
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
+		data = Dimera_Get_Full_Image (num, &size,
+					      &width, &height, camera,
+					      context);
+		if (!data)
+			return GP_ERROR;
+		gp_file_set_mime_type (file, GP_MIME_PPM);
+		if (width == 640)
+			gp_file_append (file, Dimera_finehdr, strlen(Dimera_finehdr));
+		else
+			gp_file_append (file, Dimera_stdhdr, strlen(Dimera_stdhdr));
+		newdata = malloc(size*3);
+		if (!newdata) return (GP_ERROR_NO_MEMORY);
+		conversion_chuck (width, height, data, newdata);
+		gp_file_append (file, newdata, size*3);
+		free (newdata);
+		free (data);
+		break;
+		break;
 	case GP_FILE_TYPE_RAW:
 		data = Dimera_Get_Full_Image (num, &size,
 					      &width, &height, camera,
-					      file, context);
+					      context);
+		if (!data)
+			return GP_ERROR;
+		gp_file_set_data_and_size (file, data, size); /* will take over data ptr ownership */
+		gp_file_set_mime_type (file, GP_MIME_RAW); 
+		gp_file_adjust_name_for_mime_type (file);
 		break;
 	case GP_FILE_TYPE_PREVIEW:
 		data = Dimera_Get_Thumbnail (num,  &size, camera);
+		if (!data)
+			return GP_ERROR;
+		gp_file_set_data_and_size (file, data, size); /* will take over data ptr ownership */
+		gp_file_set_mime_type (file, GP_MIME_PGM);
+		gp_file_adjust_name_for_mime_type (file);
 		break;
 	default:
 		gp_context_error (context, _("Image type is not supported"));
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
-
-	if (!data)
-		return GP_ERROR;
-
-	gp_file_set_name (file, filename);
-	gp_file_set_data_and_size (file, data, size);
-
-	switch (type) {
-	case GP_FILE_TYPE_NORMAL:
-
-		/* Let gphoto2 do the conversion */
-		gp_file_set_mime_type (file, GP_MIME_RAW);
-		gp_file_set_color_table (file, red_table,   256,
-					       green_table, 256,
-					       blue_table,  256);
-		gp_file_set_width_and_height (file, width, height);
-		if (width == 640)
-			gp_file_set_header (file, Dimera_finehdr);
-		else
-			gp_file_set_header (file, Dimera_stdhdr);
-		gp_file_set_conversion_method (file,
-					GP_FILE_CONVERSION_METHOD_CHUCK);
-		gp_file_convert (file, GP_MIME_PPM);
-		break;
-
-	case GP_FILE_TYPE_PREVIEW:
-		gp_file_set_mime_type (file, GP_MIME_PGM);
-		gp_file_adjust_name_for_mime_type (file);
-		break;
-	case GP_FILE_TYPE_RAW:
-		gp_file_set_mime_type (file, GP_MIME_RAW); 
-		gp_file_adjust_name_for_mime_type (file);
-		break;
-	default:
-		return (GP_ERROR_NOT_SUPPORTED);
-	}
-
 	return GP_OK;
 }
 
@@ -493,7 +565,7 @@ Dimera_Get_Thumbnail( int picnum, long *size, Camera *camera )
 buffer */
 static uint8_t *
 Dimera_Get_Full_Image (int picnum, long *size, int *width, int *height,
-			Camera *camera, CameraFile *file, GPContext *context)
+			Camera *camera, GPContext *context)
 {
 	static struct mesa_image_arg	ia;
 	int32_t				r;
