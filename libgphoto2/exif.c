@@ -35,14 +35,14 @@
  * "tag name" (tagname)  : name of the tag as defined in the EXIF standard.
  */
 
-int exif_debug=0;
+static int exif_debug=0;
 
 /* Size of various tags */
-static int exif_sizetab[13]={
+static const int exif_sizetab[13]={
   0,1,1,2,4,8,1,1,2,4,8,4,8
 };
 
-static struct tagarray{
+static const struct tagarray{
   int num;
   char* desc;
 } tagnames[]=
@@ -136,21 +136,18 @@ static struct tagarray{
 /*
  * Foward declarations. move to exif.h if you want to export.
  */
-int gpe_getvalue(unsigned char *data,int tagind);
-int gpe_datsize(unsigned char *data,int tagind);
-int gpe_tagnum( char *data,int tagind);
-int gpe_getintval(unsigned char *data, int tagnum);
+static int gpi_getvalue(unsigned char *data,int tagind);
+static int gpi_datsize(unsigned char *data,int tagind);
+static int gpi_tagnum( char *data,int tagind);
+static int gpi_getintval(unsigned char *data, int tagnum);
 
-long gpi_exif_get_lilend(char *data, int size);
-int gpe_theval(char *data,int tagind);
-void gpe_setval(char *data,int tagind,long newval);
+static long gpi_exif_get_lilend(char *data, int size);
+static int gpe_theval(char *data,int tagind);
+static void gpi_setval(char *data,int tagind,long newval);
 
-long exif_next_ifd(unsigned char *exif,int num);
-int gpi_exif_get_comment(exifparser *exifdat, char *comment);
-int exif_set_comment(exifparser *exifdat, char *comment);
-int gpe_dump_ifd(int ifdnum,exifparser *exifdata,char **allpars);
-long gpi_exif_get_slilend(unsigned char *data, int size);
-
+static long exif_next_ifd(unsigned char *exif,int num);
+static int gpi_exif_get_comment(exifparser *exifdat, char *comment);
+static int gpi_exif_get_field( int tag_number, int ifd, exifparser *exifdata, ExifData *tag_data);
 /*
  *  Utility functions: get fields in little-endian format,
  * initialize data structures, etc.
@@ -164,7 +161,7 @@ long gpi_exif_get_slilend(unsigned char *data, int size);
  *
  * Returns : the value
  */
-long gpi_exif_get_lilend(char *data, int size){
+static long gpi_exif_get_lilend(char *data, int size){
   long total;
 
   total=0;
@@ -177,28 +174,9 @@ long gpi_exif_get_lilend(char *data, int size){
 }
 
 /*
- * Convert to  signed Intel-Endian number
- */
-long gpi_exif_get_slilend(unsigned char *data, int size){
-  long total;
-  long unsigned mask=1<<(size*8-1);
-
-  total=0;
-  for (--size;size>=0;size--){
-    total<<=8;
-    total+=data[size];
-  }
-
-  if (total&mask) total-=mask;
-
-  return(total);
-}
-
-
-/*
  *  Return "value" of directory entry at tagind
  */
-int gpe_theval(char *data,int tagind){
+static int gpe_theval(char *data,int tagind){
  return(gpi_exif_get_lilend(data+tagind*12+10,4));
 }
 
@@ -206,10 +184,10 @@ int gpe_theval(char *data,int tagind){
 /*
  *  Set the "value" of directory entry at tagind.
  */
-void gpe_setval(char *data,int tagind,long newval){
+static void gpi_setval(char *data,int tagind,long newval){
   int i;
   for (i=0;i<4;i++) data[tagind*12+10+i]=0xff&(newval>>(i*8));
-  if (gpe_getvalue(data,tagind)!=newval) 
+  if (gpi_getvalue(data,tagind)!=newval) 
     printf("Setptr: error %d inst %ld\n",gpe_theval(data,tagind),newval);
 }
 
@@ -223,7 +201,7 @@ void gpe_setval(char *data,int tagind,long newval){
  *
  * returns: offset of next IFD.
  */
-long exif_next_ifd(unsigned char *exif,int num){
+static long exif_next_ifd(unsigned char *exif,int num){
 
   int offset=(exif[num]+(exif[num+1]<<8))*12+num+2;
   if (exif_debug) printf("next_ifd,offset=%d\n",offset);
@@ -240,7 +218,7 @@ long exif_next_ifd(unsigned char *exif,int num){
  * returns : size of the rest of the file.
  *           -1 if failed.
  */
-int exif_parse_data(exifparser *exifdat) {
+static int exif_parse_data(exifparser *exifdat) {
   long offset=0;
   ExifData tagdat;
 
@@ -315,7 +293,7 @@ int exif_parse_data(exifparser *exifdat) {
  *
  * returns   : 1 on success, 0 on failure
  */
-int gpi_exif_get_field( int tag_number, int ifd, exifparser *exifdata, ExifData *tag_data) {
+static int gpi_exif_get_field( int tag_number, int ifd, exifparser *exifdata, ExifData *tag_data) {
   int numtags,i, tag;
   char *ifdp, *data;
 
@@ -407,72 +385,6 @@ int gpi_exif_get_field( int tag_number, int ifd, exifparser *exifdata, ExifData 
 }
 
 /*
- * Gets an ASCII tag.
- *
- * Specifying an IFD of '-1' will return the first occurence of
- * the tag in the first IFD where it finds it.
- *
- * tag_number: tag that identifies the field
- * ifd       : image file directory where to look for that tag
- * exifdata  : pointer to the EXIF data
- *
- * returns   : pointer to the tag value.
- */
-char * gpi_exif_get_ascii_field( int tag_number, int ifd, exifparser *exifdat) {
-  ExifData tagdat;
-
-  if (exif_parse_data(exifdat)<0) return NULL;
-
-  if ( ! gpi_exif_get_field( tag_number, ifd, exifdat, &tagdat)) {
-    if (exif_debug) printf("No comment field in this image\n");
-    return NULL;
-  } else {
-    return tagdat.data;
-  }
-}
-
-/*
- * Gets a numeric tag.
- *
- * Specifying an IFD of '-1' will return the first occurence of
- * the tag in the first IFD where it finds it.
- *
- * tag_number: tag that identifies the field
- * ifd       : image file directory where to look for that tag
- * exifdata  : pointer to the EXIF data
- *
- * returns   : tag value.
- */
-int gpi_exif_get_int_field( int tag_number, int ifd, exifparser *exifdat) {
-  ExifData tagdat;
-  int tmp;
-
-  if (exif_parse_data(exifdat)<0) return 0;
-
-  if ( ! gpi_exif_get_field( tag_number, ifd, exifdat, &tagdat)) {
-    if (exif_debug) printf("Field not found in this image.\n");
-    return 0;
-  } else {
-    tmp = tagdat.intval;
-    free(tagdat.data);   /* ??? */
-    return tmp;
-  }  
-}
-
-
-/*
- * Returns the name of a given tag number
- */
-char *gpi_exif_get_tagname(int tag_number) {
-  int i=-1;
-  do {
-    i++;
-    if (tagnames[i].num == tag_number) return (tagnames[i].desc);
-  } while (tagnames[i].num);
-  return("Unknown");  
-}
-
-/*
  * Higher-level functions: get/set logical entities, such as
  * comments, thumbnail, etc.
  */
@@ -480,7 +392,7 @@ char *gpi_exif_get_tagname(int tag_number) {
 /*
  * Gets the comment field if it exists.
  */
-int gpi_exif_get_comment(exifparser *exifdat, char *comment) {
+static int gpi_exif_get_comment(exifparser *exifdat, char *comment) {
   ExifData tagdat;
 
   if (exif_parse_data(exifdat)<0) return 0;
@@ -494,26 +406,6 @@ int gpi_exif_get_comment(exifparser *exifdat, char *comment) {
     return tagdat.size;
   }  
 }
-
-/*
- * Sets the comment field if it exists.
- */
-int exif_set_comment(exifparser *exifdat, char *comment) {
-  return 0;
-}
-
-/*
- * Gets the thumbnail of an EXIF image.
- *
- * The returned thumbnail might be in JPEG or TIFF format.
- */
-unsigned char *gpi_exif_get_thumbnail(exifparser *exifdat) {
-
-   long size;
-
-   return gpi_exif_get_thumbnail_and_size(exifdat, &size);
-}
-
 
 /*
  * Gets the thumbnail of an EXIF image.
@@ -576,10 +468,10 @@ unsigned char *gpi_exif_get_thumbnail_and_size(exifparser *exifdat, long *size) 
   if (exif_debug) printf("Entry is %d \n",entry);
 
   /* See if thumb is a JPEG */
-  tmp=gpe_getintval(exifimg,EXIF_JPEGInterchangeFormat); /*imagedata start*/
+  tmp=gpi_getintval(exifimg,EXIF_JPEGInterchangeFormat); /*imagedata start*/
   if (tmp>0) { /* jpeg image */
     if (exif_debug) fprintf(stderr,"Found jpeg thumb data\n");
-    dsize=gpe_getintval(exifimg,EXIF_JPEGInterchangeFormatLength);
+    dsize=gpi_getintval(exifimg,EXIF_JPEGInterchangeFormatLength);
     if (dsize==-1){
       fprintf(stderr,"No Jpeg size tag for thumbnail, skipping\n");
       *size = 0;
@@ -592,7 +484,7 @@ unsigned char *gpi_exif_get_thumbnail_and_size(exifparser *exifdat, long *size) 
   }
 
   /* Try a TIFF */
-  tmp=gpe_getintval(exifimg,EXIF_StripOffsets); /*imagedata start*/
+  tmp=gpi_getintval(exifimg,EXIF_StripOffsets); /*imagedata start*/
   if (tmp==-1) {
     fprintf(stderr,"gpe_get_thumbnail: Tiff or jpeg data not found, skipping\n");
     *size = 0;
@@ -600,7 +492,7 @@ unsigned char *gpi_exif_get_thumbnail_and_size(exifparser *exifdat, long *size) 
   }
   imagedata=exifdat->data+tmp;
 
-  dataptr=gpe_getintval(exifimg,EXIF_StripByteCounts);        /* imagedata size */
+  dataptr=gpi_getintval(exifimg,EXIF_StripByteCounts);        /* imagedata size */
   if (dataptr==-1) {
     printf("Split two\n");
     *size = 0;
@@ -610,15 +502,15 @@ unsigned char *gpi_exif_get_thumbnail_and_size(exifparser *exifdat, long *size) 
   if (exif_debug) printf("Imagedata size is %ld bytes\n",dataptr);
 
   for (i=0;i<entry;i++){
-    dsize=gpe_datsize(exifimg,i);
-    tag=gpe_tagnum(exifimg,i);
+    dsize=gpi_datsize(exifimg,i);
+    tag=gpi_tagnum(exifimg,i);
 
     /*
       if (exif_debug) printf("Datsize %d (tag=%ld) is %ld\n",i,tag,dsize);
     */
 
     if (tag==EXIF_StripOffsets) {
-      gpe_setval(exifimg,i,12*entry+14); /* set to end of directory */
+      gpi_setval(exifimg,i,12*entry+14); /* set to end of directory */
       memcpy(curptr,exifimg+12*i+2,12);
       curptr+=12;
       *size += 12;
@@ -631,8 +523,8 @@ unsigned char *gpi_exif_get_thumbnail_and_size(exifparser *exifdat, long *size) 
 	*size += 12;
       }
       else {
-	datvec=gpe_getvalue(exifimg,i);
-	gpe_setval(exifimg,i,dataptr+12*entry+14);
+	datvec=gpi_getvalue(exifimg,i);
+	gpi_setval(exifimg,i,dataptr+12*entry+14);
 	for (j=0;j<dsize;j++) imagedata[dataptr++]=exifdat->data[datvec+j];
         memcpy(curptr,exifimg+12*i+2,12);
 	curptr+=12;
@@ -656,7 +548,7 @@ unsigned char *gpi_exif_get_thumbnail_and_size(exifparser *exifdat, long *size) 
  *
  * returns: tag ID number
  */
-int gpe_tagnum( char *data,int tagind){
+static int gpi_tagnum( char *data,int tagind){
  return(gpi_exif_get_lilend(data+tagind*12+2,2));
 }
 
@@ -669,7 +561,7 @@ int gpe_tagnum( char *data,int tagind){
  *
  * returns: -1 if the tag is not found.
  */
-int gpe_getintval(unsigned char *data, int tagnum) {
+static int gpi_getintval(unsigned char *data, int tagnum) {
   int numtags,i,tag,tagtype;
 
   numtags=gpi_exif_get_lilend(data,2);
@@ -698,7 +590,7 @@ int gpe_getintval(unsigned char *data, int tagnum) {
  * data  : exif data
  * tagind: tag index
  */
-int gpe_getvalue(unsigned char *data,int tagind){
+static int gpi_getvalue(unsigned char *data,int tagind){
  return(gpi_exif_get_lilend(data+tagind*12+10,4));
 }
 
@@ -717,104 +609,10 @@ int gpe_exif_add_all(exifparser *exifdata,int ifdnum,char **datastrings){
 #endif
 
 
-int gpe_dump_ifd(int ifdnum,exifparser *exifdata,char **allpars){
-  int i,j,tag,numtags,tagtype,count,typelen, value=-1,tmp1,tmp2;
-  char tmpstr[256];
-  unsigned char* thistag;
-  unsigned char* thedata;
-  unsigned char* thisisd;
-  
-  
-    thisisd=exifdata->ifds[ifdnum];
-    numtags=gpi_exif_get_lilend(thisisd,2);
-    printf("has %d tags ----------------------\n",numtags);
-    for (i=0;i<numtags;i++){
-
-      thistag=thisisd+i*12+2;   /* pointer to data for this tag */
-
-      tag=gpi_exif_get_lilend(thistag,2);          /* tag identifier */
-      tagtype=gpi_exif_get_lilend(thistag+2,2);    /* tag type */
-      count = gpi_exif_get_lilend(thistag+4, 4);   /* how many */
-      typelen=exif_sizetab[tagtype];/* length of this type */
-
-      if (exif_debug) printf("(%dX) ",count);
-
-      thedata=thistag+8;
-      if (count*typelen > 4)   /* find it in a data block elsewhere */
-	thedata = exifdata->data+gpi_exif_get_lilend(thistag+8, 4);
-
-      printf("Tag 0x%X %s = ",tag,gpi_exif_get_tagname(tag));
-
-      if (tagtype==2) {
-	/* Do an ASCII tag */
-	  strncpy(tmpstr,thedata,count+1);
-	  tmpstr[count+1]='\0';
-	  printf("'%s'",tmpstr);
-	} 
-      else for (j=0;j<count;j++) {
-
-	if ((tagtype==5)||(tagtype==10)) {/* Fractional */
-	  tmp1=gpi_exif_get_slilend(thedata+j*typelen,4);
-	  tmp2=gpi_exif_get_slilend(thedata+4+j*typelen,4);
-	      printf("%d/%d=%.3g ",tmp1,tmp2,(tmp2==0)?0:(1.0*tmp1/tmp2));
-	}
-	else {
-	  value =gpi_exif_get_lilend(thedata+j*typelen,typelen);
-	  printf("%d ",value);
-	}
-	
-      }
-
-      printf("\n"); /*end of this tag */
-
-/* Print SubIfd tags */
-      if ( tag == 0x8769 ) {
-         printf("Exif SubIFD at offset %d\n", value );
-         exifdata->ifds[exifdata->ifdcnt]     = exifdata->data+value;  
-/*       exifdata->ifds[exifdata->ifdcnt]; */
-         exifdata->ifdtags[exifdata->ifdcnt]=gpi_exif_get_lilend(exifdata->data+value,2);
-         exifdata->ifdcnt++;
-
-}
-/***/
-
-    }
-    return 1;
-}
-
-
-
-/* Walk through EXIF structure, printing values */
-int gpi_exif_dump(exifparser *exifdata){ 
-  int i;
-
-  if (!exifdata->preparsed) 
-    if (gpi_exif_stat(exifdata)) return(-1);
-
-  for (i=0;i<exifdata->ifdcnt;i++){
-    switch (i) {
-       case 0:      
-          printf("IFD %d, %s ",i,"Main Image");
-          break;
-       case 1:
-          printf("IFD %d, %s ",i,"Thumbnail");
-         break;
-       case 2:
-          printf("IFD %d, %s ",i,"Sub IFD");
-          break;
-   
-   }       
-       
-
-    gpe_dump_ifd(i,exifdata,NULL);
-  }
-  return 1;
-}
-
 /**
  * Return data size of directory entry at tagind
  */
-int gpe_datsize(unsigned char *data,int tagind){
+static int gpi_datsize(unsigned char *data,int tagind){
   return(exif_sizetab[gpi_exif_get_lilend(data+tagind*12+4,2)]*gpi_exif_get_lilend(data+tagind*12+6,4));
 }
 

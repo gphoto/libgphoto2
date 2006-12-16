@@ -165,7 +165,6 @@ gp_widget_set_name
 gp_widget_set_range
 gp_widget_set_value
 gp_widget_unref
-gpi_exif_dump
 gpi_exif_get_thumbnail_and_size
 gpi_exif_stat
 gpi_jpeg_header

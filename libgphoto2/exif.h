@@ -57,39 +57,6 @@ typedef struct {
     int intval;
 } ExifData;
 
-extern int exif_debug; /* Non-zero for debug messages */
-
-/*
- * Parse an exif header, return size of the rest of the file.
- */
-int exif_parse_data(exifparser *exifdat);
-
-/*
- * Returns the value of a field, identified by its tag and the IFD.
- */
-int gpi_exif_get_field( int tag_number, int ifd, exifparser *exifdat, ExifData *tag_data);
-
-/*
- * Gets a numeric tag
- */
-int gpi_exif_get_int_field( int tag_number, int ifd, exifparser *exifdat);
-
-/*
- * Gets an ASCII tag.
- */
-char * gpi_exif_get_ascii_field( int tag_number, int ifd, exifparser *exifdat);
-
-/*
- * Returns the name of a given tag number
- */
-char *gpi_exif_get_tagname(int tag_number);
-
-/*
- * Returns a pointer to the thumbnail data if it
- * exists.
- */
-unsigned char *gpi_exif_get_thumbnail(exifparser *exifdat);
-
 /*
  * The same as gpi_exif_get_thumbnail but returns
  * also the thumbnail size
@@ -97,20 +64,9 @@ unsigned char *gpi_exif_get_thumbnail(exifparser *exifdat);
 unsigned char *gpi_exif_get_thumbnail_and_size(exifparser *exifdat, long *size);
 
 /*
- * Gets the comment field if it exists.
- */
-int gpe_get_comment(exifparser *exifdat, char *comment);
-
-/*
- * Sets the comment field.
- */
-int gpe_set_comment(exifparser *exifdat, char *comment);
-
-/*
  * COMMENT ME
  */
 int gpi_exif_stat(exifparser *exifdata);
-int gpe_dump_exif(exifparser *exifdata);
 
 /*
  * Now, all the 'defines'
