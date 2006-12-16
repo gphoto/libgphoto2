@@ -391,6 +391,8 @@ static struct {
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1584447&group_id=8874&atid=358874 */
 	{"HP:PhotoSmart R927 (PTP mode)", 0x03f0, 0x8702, 0},
 	{"HP:PhotoSmart E327 (PTP mode)", 0x03f0, 0x8b02, 0},
+	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1589879&group_id=8874  */
+	{"HP:PhotoSmart E427 (PTP mode)", 0x03f0, 0x8c02, 0},
 
 	/* Most Sony PTP cameras use the same product/vendor IDs. */
 	{"Sony:PTP",                  0x054c, 0x004e, 0},
