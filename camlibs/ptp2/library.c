@@ -1318,6 +1318,9 @@ add_objectid_to_gphotofs(Camera *camera, CameraFilePath *path, GPContext *contex
 	ret = gp_filesystem_set_file_noop(camera->fs, path->folder, file, context);
         if (ret != GP_OK) return ret;
 
+	/* We have now handed over the file, disclaim responsibility by unref. */
+	gp_file_unref (file);
+
 	/* we also get the fs info for free, so just set it */
 	info.file.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME |
 			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
