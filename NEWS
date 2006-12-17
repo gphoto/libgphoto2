@@ -1,3 +1,10 @@
+libgphoto2 2.3.0.1 (will become 2.3.1 eventually)
+
+PTP:
+   * Fixed a memory leak in continuous Nikon / Canon capture mode.
+
+----------------------------------------------------------------------------
+
 libgphoto2 2.3.0
 
 Package / System integration:
@@ -19,7 +26,6 @@ PTP:
    * Improved Canon file download
 	- faster directory retrieval (especially on cameras with lots of files)
 	- "new" images are marked (gphoto2 --new, digikam)
-   * Fixed a memory in continuous Nikon / Canon capture mode.
    * MTP Playlist support (upload and download)
    * MTP Metadata support (upload and download, Artist, Title, Playtime ... )
    * Lots of other MTP related fixes.
