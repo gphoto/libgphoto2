@@ -1,0 +1,38 @@
+========================================================================
+libgphoto2 README.packaging
+========================================================================
+
+This file describes a number of things you should know when building
+packages (.debs, .rpms, ports, emerges, etc. pp.)
+
+
+========================================================================
+Permission setup
+================
+
+You will want to create HAL or UDEV rules by running this utility:
+
+    print-camera-list
+
+This utility requires libgphoto2 and its camlibs being installed,
+either
+   * at package building time by doing a DESTDIR based temporary
+     install somewhere and setting LD_LIBRARY_PATH and CAMLIBS before
+     running print-camera-list
+   * at package installation time as a post installation hook
+
+The UDEV rules require two helper scripts/binaries, which obviously
+need to be installed by the package:
+
+    check_mtp_device
+    check_ptp_camera
+
+You can either use fixed permissions in the generated rules, or call
+your own permission setup script to dynamically decide what to do.
+
+(Contemporary example scripts are not being shipped yet.)
+
+
+========================================================================
+End of file.
+========================================================================
