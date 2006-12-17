@@ -3,10 +3,6 @@ libgphoto2 2.3.0.1 (will become 2.3.1 eventually)
 PTP:
    * Fixed a memory leak in continuous Nikon / Canon capture mode.
 
-----------------------------------------------------------------------------
-
-libgphoto2 2.3.0
-
 Package / System integration:
    * Add new permission setup script doing class based matching for
      PTP class cameras not listed explicitly by USB IDs.
@@ -20,6 +16,10 @@ Package / System integration:
      or similar and copy the "check_ptp_camera" to either /lib/udev/ or adjust
      the path to check_ptp_camera in the generated /etc/udev/rules.d/90-libgpoto2.rules
      file.
+
+----------------------------------------------------------------------------
+
+libgphoto2 2.3.0
 
 PTP:
    * Improved Nikon remote control
