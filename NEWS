@@ -20,6 +20,9 @@ Package / System integration:
 
      This binary (check_mtp_device) is used by the generated UDEV rules.
 
+PTP:
+   * Fixed memory leak in capture code (r9630).
+
 ------------------------------------------------------------------------
 
 libgphoto2 2.3.0
