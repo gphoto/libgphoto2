@@ -19,7 +19,7 @@ Package / System integration:
      This binary (check-mtp-device) is used by the generated UDEV rules.
 
 PTP:
-   * Fixed memory leak in capture code (r9630).
+   * Fixed a memory leak in continuous Nikon / Canon capture mode.
 
 ------------------------------------------------------------------------
 
