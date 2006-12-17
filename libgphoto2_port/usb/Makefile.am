@@ -2,8 +2,8 @@ EXTRA_DIST = usb-os2.c
 
 iolib_LTLIBRARIES = usb.la
 
-sbin_PROGRAMS = check_mtp_device
-check_mtp_device_SOURCE = check_mtp_device.c
+sbin_PROGRAMS = check-mtp-device
+check_mtp_device_SOURCE = check-mtp-device.c
 check_mtp_device_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS) $(LIBUSB_CFLAGS)
 check_mtp_device_LDADD = $(LIBUSB_LIBS)
 

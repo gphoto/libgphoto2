@@ -1,5 +1,6 @@
 utils_PROGRAMS = print-camera-list
-EXTRA_DIST = check_ptp_camera
+sbin_PROGRAMS = check-ptp-camera
+EXTRA_DIST = check-ptp-camera
 
 print_camera_list_SOURCE = print-camera-list.c
 print_camera_list_LDADD = \

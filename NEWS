@@ -13,10 +13,10 @@ Package / System integration:
    * Add README.packaging file.
    * Add new permission setup script doing class based matching for
      PTP class cameras not listed explicitly by USB IDs.
-     This script (check_ptp_camera) is used by the generated UDEV rules.
+     This script (check-ptp-camera) is used by the generated UDEV rules.
    * Add new permission setup binary doing Microsoft OS Descriptor
      retrieval for MTP devices not explicitly listed.
-     This binary (check_mtp_device) is used by the generated UDEV rules.
+     This binary (check-mtp-device) is used by the generated UDEV rules.
 
 PTP:
    * Fixed memory leak in capture code (r9630).
