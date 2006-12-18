@@ -13,7 +13,8 @@ USER=root
 # Note that for this script to work, you'll need all of the following:
 # a) a line in the file /etc/hotplug/usermap that corresponds to the 
 #    camera you are using. You can get the correct lines for all cameras 
-#    supported by libgphoto2 by running "print-usb-usermap".
+#    supported by libgphoto2 by running
+#              $ print-camera-list usb-usermap usbcam
 # b) run your camera software as the user given above
 # c) a Linux kernel supporting hotplug and usbdevfs
 # d) the hotplug package (http://linux-hotplug.sourceforge.net/)

@@ -5,6 +5,8 @@ PTP:
 
 Package / System integration:
    * Add README.packaging file.
+   * Removed obsolete print-usb-usermap. Use
+     "print-camera-list usb-usermap usbcam" instead.
    * Fix libgphoto2 symbol list: Removed gpi_gphoto_port_type_map
    * Add new permission setup script doing class based matching for
      PTP class cameras not listed explicitly by USB IDs.
