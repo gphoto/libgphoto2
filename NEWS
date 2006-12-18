@@ -10,8 +10,7 @@ Package / System integration:
    * Fix libgphoto2 symbol list: Removed gpi_gphoto_port_type_map
    * Add new permission setup script doing class based matching for
      PTP class cameras not listed explicitly by USB IDs.
-
-     This script is used by the generated UDEV rules.
+     This script (check-ptp-camera) is used by the generated UDEV rules.
 
      Example usage:
 	 print-camera-list udev-rules mode 660 group plugdev \
