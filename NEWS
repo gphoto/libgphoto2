@@ -16,8 +16,8 @@ Package / System integration:
 	 print-camera-list udev-rules mode 660 group plugdev \
               > /etc/udev/rules.d/90-libgphoto2.rules
 
-     or similar and copy the "check-ptp-camera" to either /lib/udev/ or adjust
-     the path to check_ptp_camera in the generated /etc/udev/rules.d/90-libgpoto2.rules
+     or similar and set udevscriptdir='/lib/udev' at configure time or adjust
+     the path to check-ptp-camera in the generated /etc/udev/rules.d/90-libgpoto2.rules
      file.
 
 ----------------------------------------------------------------------------
