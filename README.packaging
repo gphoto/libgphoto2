@@ -19,41 +19,47 @@ installing libgphoto2, you always also install libgphoto2_port.
 Installed files
 ===============
 
-A standard install of libgphoto2 into --prefix=/usr does about this:
+A standard install of libgphoto2 does about this:
 
    * The most important files:
-     * /usr/lib/libgphoto2.{a,la,so}
-     * /usr/lib/libgphoto2/<VERSION>/*.{a,la,so}        (camlibs)
-     * /usr/lib/libgphoto2_port.{a,la,so}
-     * /usr/lib/libgphoto2_port/<VERSION>/*.{a,la,so}   (iolibs)
+     * ${libdir}/libgphoto2.{a,la,so}
+     * ${libdir}/libgphoto2/<VERSION>/*.{a,la,so}        (camlibs)
+     * ${libdir}/libgphoto2_port.{a,la,so}
+     * ${libdir}/libgphoto2_port/<VERSION>/*.{a,la,so}   (iolibs)
      In most cases, you can remove the *.a and *.la files from the
      list of files to ship.
    * Packaging helpers:
-     * /usr/lib/libgphoto2/print-camera-list
-     * /usr/lib/libgphoto2/print-usb-usermap (linux-hotplug, obsolete)
-     * /usr/sbin/check-mtp-device
-     * /usr/sbin/check-ptp-camera
+     * ${utilsdir}/libgphoto2/print-camera-list
+     * ${utilsdir}/libgphoto2/print-usb-usermap (linux-hotplug, obsolete)
+     * ${udevscriptdir}/check-mtp-device
+     * ${udevscriptdir}/check-ptp-camera
+     Defaults: utilsdir=${libdir}, ${udevscriptdir}=${libdir}/udev.
+     You probably want to ./configure udevscriptdir=/lib/udev and possibly
+     utilsdir='${libexecdir}', depending on your system.
    * Documentation:
      * Man pages:
-       * /usr/man/man3/libgphoto3.1
-       * /usr/man/man3/libgphoto3_port.1
-     * /usr/share/doc/libgphoto2/camlibs/README.*    (camlib docs)
-     * /usr/share/doc/libgphoto2/{README,AUTHORS,NEWS}
-     * /usr/share/doc/libgphoto2/apidocs.html/       API docs
-     * /usr/share/doc/libgphoto2_port/{README,AUTHORS,NEWS}
+       * ${mandir}/man3/libgphoto3.1
+       * ${mandir}/man3/libgphoto3_port.1
+     * ${docdir}/camlibs/README.*    (camlib docs)
+     * ${docdir}/{README,AUTHORS,NEWS}
+     * ${docdir}/apidocs.html/       API docs
+     * ${docdir}/{README,AUTHORS,NEWS}
      You may want to install these files into your custom locations.
      If you separate library from libfoo-devel packages, the former
      should probably ship with the camlib docs, and the general README
-     and NEWS.
+     and NEWS. Try configure --with-docdir=.
    * Translated strings:
-     * /usr/share/locale/*/LC_MESSAGES/libgphoto2-2.mo
-     * /usr/share/locale/*/LC_MESSAGES/libgphoto2_port-0.mo
-     * /usr/share/libgphoto2/<VERSION>/konica/*
+     * ${datadir}/locale/*/LC_MESSAGES/libgphoto2-2.mo
+     * ${datadir}/locale/*/LC_MESSAGES/libgphoto2_port-0.mo
+     * ${datadir}/libgphoto2/<VERSION>/konica/*
        These files are required for the konica camlib to work at all.
    * For developers:
-     * /usr/include/gphoto2/gphoto2*.h
-     * /usr/lib/libgphoto2.pc
-     * /usr/lib/libgphoto2_port.pc
+     * ${includedir}/gphoto2/gphoto2*.h
+     * ${libdir}/pkgconfig/libgphoto2.pc
+     * ${libdir}/pkgconfig/libgphoto2_port.pc
+
+Note that utilsdir, udevscriptdir, etc. can be set at configure
+time. See "configure --help".
 
 
 ========================================================================
