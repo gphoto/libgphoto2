@@ -10,7 +10,9 @@ Bindings:
    * Preliminary work on Python bindings.
 
 Package / System integration:
-   * Add README.packaging file.
+   * Add README.packaging file for packagers.
+   * Removed obsolete print-usb-usermap. Use
+     "print-camera-list usb-usermap usbcam" instead.
    * Add new permission setup script doing class based matching for
      PTP class cameras not listed explicitly by USB IDs.
      This script (check-ptp-camera) is used by the generated UDEV rules.
