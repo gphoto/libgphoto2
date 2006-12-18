@@ -125,10 +125,9 @@ void gp_log_data (const char *domain, const char *data, unsigned int size);
 
   typedef void (*string_item_func) (const char *str, void *data);
 
-  void 
+  const char * 
   gpi_enum_to_string(const unsigned int _enum, 
-		     const StringFlagItem *map,
-		     string_item_func func, void *data);
+		     const StringFlagItem *map);
 
   int
   gpi_string_to_enum(const char *str,

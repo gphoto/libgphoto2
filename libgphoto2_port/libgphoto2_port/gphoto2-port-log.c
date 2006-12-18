@@ -345,18 +345,18 @@ gp_log (GPLogLevel level, const char *domain, const char *format, ...)
 
 #ifdef _GPHOTO2_INTERNAL_CODE
 
-void
+const char *
 gpi_enum_to_string(unsigned int _enum, 
-		   const StringFlagItem *map,
-		   string_item_func func, void *data)
+		   const StringFlagItem *map)
 {
 	int i;
 	for (i=0; map[i].str != NULL; i++) {
 		if (_enum == map[i].flag) {
-			func(map[i].str, data);
+			return(map[i].str);
 			break;
 		}
 	}
+	return NULL;
 }
 
 int
@@ -436,3 +436,11 @@ gpi_string_list_to_flags(const char *str[],
 }
 
 #endif /* _GPHOTO2_INTERNAL_CODE */
+
+
+/*
+ * Local Variables:
+ * c-file-style:"linux"
+ * indent-tabs-mode:t
+ * End:
+ */
