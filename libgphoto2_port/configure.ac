@@ -90,6 +90,8 @@ AC_DEFINE_UNQUOTED(HAVE_CC,"$CC",[The C compiler we're using])
 AM_CPPFLAGS="$CPPFLAGS"
 AM_CPPFLAGS="$AM_CPPFLAGS -I\$(top_srcdir)"
 
+GP_UDEV
+
 
 # ----------------------------------------------------------------------
 # References to external resources (web sites, mailing listes, etc.)

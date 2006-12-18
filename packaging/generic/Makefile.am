@@ -1,5 +1,5 @@
 utils_PROGRAMS = print-camera-list
-sbin_SCRIPTS = check-ptp-camera
+udevscript_SCRIPTS = check-ptp-camera
 EXTRA_DIST = check-ptp-camera
 
 print_camera_list_SOURCE = print-camera-list.c

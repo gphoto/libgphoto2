@@ -328,9 +328,12 @@ dnl run configure with 'utilsdir=${libexecdir}/${PACKAGE_TARNAME}'.
 dnl ---------------------------------------------------------------------------
 
 AC_SUBST([PACKAGE_TARNAME])
+
 utilsdir="\${libdir}/\${PACKAGE_TARNAME}"
 AC_ARG_VAR([utilsdir],[Directory where utilities like print-camera-list will be installed])
 AC_SUBST([utilsdir])
+
+GP_UDEV
 
 
 dnl ---------------------------------------------------------------------------
