@@ -1,8 +1,8 @@
 ## Process this file with automake to produce Makefile.in
 
 ## Specify some includes and versioning
-INCLUDES = -I@srcdir@ $(VERSION_FLAGS)
 VERSION_FLAGS = -DLIBGPPORT_VERSION=\"@LIBGPPORT_VERSION@\" -DHAVE_TERMIOS_H
+AM_CPPFLAGS = -I@srcdir@ $(VERSION_FLAGS)
 
 ## Executable files
 bin_SCRIPTS = gphoto2-port-config

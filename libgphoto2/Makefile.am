@@ -12,8 +12,8 @@ lib_LTLIBRARIES = libgphoto2.la
 # Yes, this is messy, but we are going to clean this up.
 
 libgphoto2_la_CPPFLAGS =				\
-	$(LTDLINCL)					\
 	$(AM_CPPFLAGS) $(CPPFLAGS)			\
+	$(LTDLINCL)					\
 	$(LIBEXIF_CFLAGS)
 
 libgphoto2_la_LDFLAGS =	\
