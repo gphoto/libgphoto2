@@ -4,6 +4,7 @@ PTP:
    * Fixed a memory leak in continuous Nikon / Canon capture mode.
 
 Package / System integration:
+   * Add README.packaging file.
    * Fix libgphoto2 symbol list: Removed gpi_gphoto_port_type_map
    * Add new permission setup script doing class based matching for
      PTP class cameras not listed explicitly by USB IDs.
