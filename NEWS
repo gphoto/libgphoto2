@@ -3,6 +3,9 @@ libgphoto2 2.3.0.1 (will become 2.3.1 eventually)
 PTP:
    * Fixed a memory leak in continuous Nikon / Canon capture mode.
 
+Bindings:
+   * Moved all bindings into separate packages.
+
 Package / System integration:
    * Add README.packaging file.
    * Removed obsolete print-usb-usermap. Use
