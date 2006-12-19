@@ -227,6 +227,50 @@ static uint16_t ptp_usb_getpacket(PTPParams *params,
 	}
 }
 
+static uint16_t
+ptp_usb_getdata_tofile(PTPParams* params, PTPUSBBulkContainer *usbdata,
+		uint32_t bytes_to_write, int len, int to_fd)
+{
+	uint16_t ret = PTP_RC_OK;
+	void *temp_buf = usbdata->payload.data;
+
+	for (;;) {
+		uint32_t written = write(to_fd, temp_buf, bytes_to_write);
+		if (written != bytes_to_write) {
+			ret = PTP_ERROR_IO;
+			break;
+		}
+
+		len -= written;
+		if (len <= 0)
+			break;
+
+		if (temp_buf == usbdata->payload.data) {
+			temp_buf = malloc(FILE_BUFFER_SIZE);
+			if (!temp_buf) {
+				ret = PTP_ERROR_IO;
+				break;
+			}
+		}
+
+		bytes_to_write = (len > FILE_BUFFER_SIZE) ?
+				  FILE_BUFFER_SIZE : len;
+
+		ret = params->read_func(temp_buf, bytes_to_write,
+					params->data, &bytes_to_write);
+
+		if (ret != PTP_RC_OK) {
+			ret = PTP_ERROR_IO;
+			break;
+		}
+	}
+
+	if (temp_buf != usbdata->payload.data)
+		free(temp_buf);
+
+	return ret;
+}
+
 uint16_t
 ptp_usb_getdata (PTPParams* params, PTPContainer* ptp,
                  unsigned char **data, unsigned int *readlen,
@@ -325,7 +369,7 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp,
 
 		if (to_fd == -1) {
 			/* Allocate memory for data. */
-			*data=calloc(1,len);
+			*data=calloc(len,1);
 			if (!*data) {
                                 ptp_error (params, "PTP: Out of memory on allocating %d bytes.", len);
                                 return PTP_ERROR_IO;
@@ -349,62 +393,10 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp,
 				break;
 			}
 		} else {
-			uint32_t bytes_to_write, written;
-			uint32_t bytes_left_to_transfer;
-			void *temp_buf;
-						
 			if (readlen)
 				*readlen = len;
-
-			bytes_to_write = rlen - PTP_USB_BULK_HDR_LEN;
-
-			ret = write(to_fd, usbdata.payload.data, bytes_to_write);
-			if (ret != bytes_to_write) {
-				ret = PTP_ERROR_IO;
-				break;
-			}
-
-			if (len + PTP_USB_BULK_HDR_LEN <= rlen)
-				break;
-			
-			temp_buf = malloc(FILE_BUFFER_SIZE);
-			if (temp_buf == NULL) {
-				ret = PTP_ERROR_IO;
-				break;
-			}
-
-			ret = PTP_RC_OK;				
-			bytes_left_to_transfer = len - (rlen - PTP_USB_BULK_HDR_LEN);
-
-			while (bytes_left_to_transfer > 0) {
-				bytes_to_write = ((bytes_left_to_transfer > FILE_BUFFER_SIZE) ?
-						  FILE_BUFFER_SIZE : bytes_left_to_transfer);
-				
-				ret = params->read_func(temp_buf,
-							bytes_to_write,
-							params->data, &rlen);
-
-				if (ret != PTP_RC_OK) {
-					ret = PTP_ERROR_IO;
-					break;
-				}
-
-				written = write(to_fd, temp_buf, bytes_to_write);
-				if (written != bytes_to_write) {
-					ret = PTP_ERROR_IO;
-					break;
-				} else {
-					ret = PTP_RC_OK;
-				}
-
-				bytes_left_to_transfer -= bytes_to_write;
-			}
-
-			free(temp_buf);
-
-			if (ret != PTP_RC_OK)
-				break;
-
+			ptp_usb_getdata_tofile(params, &usbdata,
+				rlen - PTP_USB_BULK_HDR_LEN, len, to_fd);
 		}
 	} while (0);
 /*

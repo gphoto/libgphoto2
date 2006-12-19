@@ -1,3 +1,7 @@
+2006-12-19  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptp.c: Fixed FD writing with short files (from libmtp).
+
 2006-12-17  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Fixed leaking CameraFile + data on Canon and Nikon
