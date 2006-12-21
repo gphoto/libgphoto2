@@ -6,6 +6,10 @@ Build:
    * Require external libltdl.
    * Ditched autogen.sh, use standard autoreconf from stock autoconf.
 
+libgphoto2 API:
+   * New gp_file_new_from_fd() ... Which allows mapping CameraFile to
+     UNIX filedescriptors for both reading and writing.
+
 Bindings:
    * Preliminary work on Python bindings.
 

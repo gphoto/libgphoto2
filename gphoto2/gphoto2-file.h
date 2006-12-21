@@ -59,6 +59,11 @@ typedef enum {
 	GP_FILE_TYPE_METADATA
 } CameraFileType;
 
+typedef enum {
+	GP_FILE_ACCESSTYPE_MEMORY,	/* traditional */
+	GP_FILE_ACCESSTYPE_FD
+} CameraFileAccessType;
+
 /*! \class CameraFile
  *
  * The internals of the #CameraFile struct are private.
@@ -66,6 +71,7 @@ typedef enum {
 typedef struct _CameraFile CameraFile;
 
 int gp_file_new            (CameraFile **file);
+int gp_file_new_from_fd    (CameraFile **file, int fd);
 int gp_file_ref            (CameraFile *file);
 int gp_file_unref          (CameraFile *file);
 int gp_file_free           (CameraFile *file);

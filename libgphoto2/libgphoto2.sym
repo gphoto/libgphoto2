@@ -74,6 +74,7 @@ gp_file_get_mtime
 gp_file_get_name
 gp_file_get_type
 gp_file_new
+gp_file_new_from_fd
 gp_file_open
 gp_file_ref
 gp_file_save
