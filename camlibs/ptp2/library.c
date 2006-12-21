@@ -328,6 +328,8 @@ static struct {
 	{"Kodak:V530",   0x040a, 0x058e, 0},
 	/* v550 Jon Burgess <jburgess@uklinux.net> */
 	{"Kodak:V550",   0x040a, 0x058f, 0},
+	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1618878&group_id=8874 */
+	{"Kodak:V570",   0x040a, 0x0591, 0},
 	{"Kodak:P850",   0x040a, 0x0592, 0},
 	/* https://launchpad.net/distros/ubuntu/+source/libgphoto2/+bug/67532 */
 	{"Kodak:C530",   0x040a, 0x059a, 0},
