@@ -707,6 +707,8 @@ static struct {
 	{"iRiver:T10 (alternate)",              0x4102, 0x1113, PTP_MTP},
 	/* Andreas Thienemann <andreas@bawue.de> */
 	{"iRiver:T20 FM",			0x4102, 0x1114, PTP_MTP},
+	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1620359&group_id=8874 */
+	{"iRiver:T20 2",			0x4102, 0x1115, PTP_MTP},
 	/* Roger Pixley <skreech2@gmail.com> */
 	{"iRiver:U10",                          0x4102, 0x1116, PTP_MTP},
 	/* Freaky <freaky@bananateam.nl> */
@@ -717,6 +719,8 @@ static struct {
 	{"iRiver:T30",                          0x4102, 0x1119, PTP_MTP},
 	/* reported by by David Wolpoff */
 	{"iRiver:T10 2GB",			0x4102, 0x1120, PTP_MTP},
+	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1620359&group_id=8874 */
+	{"iRiver:N12",				0x4102, 0x1122, PTP_MTP},
 	/* Reported by Adam Torgerson */
 	{"iRiver:Clix",				0x4102, 0x112a, PTP_MTP},
 	/* Scott Call <scott.call@gmail.com> */
