@@ -1,4 +1,4 @@
-libgphoto2 2.3.0.2.trunk
+libgphoto2 2.3.0.3.trunk
 
 Build:
    * Fix sierra and canon drivers picking up old gphoto2 headers.
@@ -11,13 +11,14 @@ libgphoto2 API:
      UNIX filedescriptors for both reading and writing.
 
 Bindings:
-   * Preliminary work on Python bindings.
+   * Moved all bindings into separate packages.
 
 Package / System integration:
    * Add README.packaging file for packagers.
    * Removed obsolete print-usb-usermap. Use
      "print-camera-list usb-usermap usbcam" instead.
    * New syntax for print-camera-list's udev output. See help output.
+   * Fix libgphoto2 symbol list: Removed gpi_gphoto_port_type_map
    * Add new permission setup script doing class based matching for
      PTP class cameras not listed explicitly by USB IDs.
      This script (check-ptp-camera) is used by the generated UDEV rules.
