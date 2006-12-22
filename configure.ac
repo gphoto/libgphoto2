@@ -229,7 +229,7 @@ AC_HEADER_DIRENT
 # before _HEADER_STDC
 AC_HEADER_STDC
 # after _HEADER_STDC
-AC_CHECK_HEADERS([getopt.h unistd.h mcheck.h])
+AC_CHECK_HEADERS([getopt.h unistd.h mcheck.h limits.h])
 AC_C_INLINE([])
 AC_C_CONST([])
 dnl FIXME: AC_STRUCT_TIMEZONE
