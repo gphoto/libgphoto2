@@ -38,7 +38,7 @@
 #define GET_DATA 	0x0f
 
 static int 
-M_READ (GPPort *port, char *data, int size) 
+m_read (GPPort *port, char *data, int size) 
 {
 	gp_port_write(port, "\x21", 1);
     	gp_port_read(port, data, 16); 	
@@ -46,10 +46,10 @@ M_READ (GPPort *port, char *data, int size)
 }
 
 static int 
-M_COMMAND (GPPort *port, char *command, int size, char *response) 
+m_command (GPPort *port, char *command, int size, char *response) 
 {
 	gp_port_write(port, command, size);
-    	M_READ(port, response, 16); 	
+    	m_read(port, response, 16); 	
 	return GP_OK;
 }
 
@@ -68,7 +68,7 @@ mars_init (Camera *camera, GPPort *port, Info *info)
 	 * camera reports 0x02 it is "jammed" and we must clear it.
 	 */ 
 
-    	M_READ(port, c, 16); 	
+    	m_read(port, c, 16); 	
 	if ( (c[0] == 0x02 ) ) {
 		gp_port_write(port, "\x19", 1);
 		gp_port_read(port, c, 16);
@@ -317,22 +317,22 @@ mars_routine (Info *info, GPPort *port, char param, int n)
 	memset(c,0,sizeof(c));
 
 	/*Routine used in initialization, photo download, and reset. */
-    	M_READ(port, c, 16); 	
-	M_COMMAND(port, start, 2, c);
-	M_COMMAND(port, do_something, 2, c);
-	M_COMMAND(port, address1, 2, c);
+    	m_read(port, c, 16); 	
+	m_command(port, start, 2, c);
+	m_command(port, do_something, 2, c);
+	m_command(port, address1, 2, c);
 
 	c[0] = 0;
 	gp_port_write(port, address2, 2);	
 	/* Moving the memory cursor to the given address? */
 	while (( c[0] != 0xa) ) {	
-    	M_READ(port, c, 16); 	
+    	m_read(port, c, 16); 	
 	}
 	
-	M_COMMAND(port, address3, 2, c);
-	M_COMMAND(port, address4, 2, c);
-	M_COMMAND(port, address5, 2, c);
-	M_COMMAND(port, address6, 2, c);
+	m_command(port, address3, 2, c);
+	m_command(port, address4, 2, c);
+	m_command(port, address5, 2, c);
+	m_command(port, address6, 2, c);
 	gp_port_write(port, "\x19", 1);
 	gp_port_read(port, c , 16);
 	/* Next thing is to switch the inep. Some cameras need a pause here */
