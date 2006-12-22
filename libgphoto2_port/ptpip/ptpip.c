@@ -63,6 +63,7 @@
 #define CHECK(result) {int r=(result); if (r<0) return (r);}
 
 struct _GPPortPrivateLibrary {
+	int dummy;	/* unused yet */
 };
 
 GPPortType
