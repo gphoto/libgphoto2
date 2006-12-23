@@ -1,3 +1,8 @@
+2006-09-23  Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Added "ION digital camera"
+	* README.mars: Added "ION digital camera"
+
 2006-11-19  Marcus Meissner <marcus@jet.franken.de>
 
 	* mars.c,mars.h: Made some functions static to mars.c

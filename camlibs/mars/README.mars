@@ -1,16 +1,14 @@
 MARS MR97310 STILLCAM DRIVER
-Copyright Theodore Kilgore <kilgota@auburn.edu> April, 2004. This README
-revised August 27, 2006.
+Copyright Theodore Kilgore <kilgota@auburn.edu> April, 2004. Latest revision
+of this README December 23, 2006.
 
 (Everything in libgphoto2/camlibs/mars is LGPL-licensed, including this README; 
 see any of the source files for a more complete statement of the license.)
 
 INTRODUCTION
 
-This driver is for a camera which uses the Mars MR97310 chip. I understand 
-that there are several of these. Mine is an Aiptek PenCam VGA+ (Vendor:Product
-ID 0x08ca:0x0111). The interface is proprietary, and these cameras are 
-supported commercially only in Windows.
+This driver is for cameras which use the Mars MR97310 chip, frequently found in 
+budget cameras. 
 
 FEATURES OF THE CAMERAS
 
@@ -86,13 +84,17 @@ be turned on in bad light. The camera will then decide if it wants to use it.
 Sakar Digital #77379: Also compressed mode only. Seems to work pretty well. Has 
 a very high cutoff threshold and will not take photos in the evening, even if 
 one points it at a bright monitor screen. Color mapping is cruddy, though, even 
-running in uncompressed mode.  
+running in uncompressed mode. 640x480 and 320x240 resolution.
 
 Philips Keychain and INNOVAGE Mini Digital: These seem to be clones, even 
 having very similar cases. They will do max resolution 352x488. But for what 
 they are they work very well. It seems that these shoot clips in compressed 
 mode (no matter if you otherwise turned compression on, or not), but at the 
 resolution settings these cameras use the decompression works nicely, too. 
+
+ION digital camera: Compression optional. High cutoff threshold for what the 
+camera considers badlight; will not take photos indoors, sometimes, even on a 
+bright day. Color mapping is unspectacular.
 
 Argus QuickClix: Compressed mode only. The compression algorithm is different 
 from the compression algorithm in the other known Mars cameras, too. I have 
@@ -154,7 +156,7 @@ byte 6 of the header whether the image is compressed or if compressed then
 which algorithm has been used. That information uses the most significant nibble 
 of the "compression" byte. But if we do not do something, the pixel dimension of 
 the photo to be obtained from the raw file is not recorded. As the camera also 
-codes this information in one nibble, we place that nibble here, too:
+codes this information in one nibble, we place that nibble here, thus:
 
 Original raw signature 		pixel dim. 	Saved as 		Comp.
 FF FF 00 FF 96 64 00		176x144		FF FF 00 FF 96 64 00	no
@@ -176,7 +178,10 @@ FURTHER DETAILS
 
 Further details are given in "protocol.txt". These details have been obtained 
 through trial and error and are intended solely to meet the problems of 
-compatibility in other than a Microsoft Windows (trademark) environment. 
+compatibility in other than a Microsoft Windows (trademark) environment. If 
+you would like to see this file and it is not included for some reason in a 
+"released" version of libgphoto2, then it can be found in the SVN source 
+repository.
 
 WARRANTY?
 

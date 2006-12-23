@@ -70,6 +70,7 @@ struct {
 	{"Argus DC-1620", GP_DRIVER_STATUS_TESTING, 0x093a, 0x010f}, 
 	{"Philips P44417B keychain camera", GP_DRIVER_STATUS_TESTING, 0x093a, 0x010e},
  	{"Sakar Digital no. 77379", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f},
+	{"ION digital camera", GP_DRIVER_STATUS_TESTING, 0x093a, 0x010f}, 
 	{"Argus QuickClix", GP_DRIVER_STATUS_DEPRECATED, 0x093a, 0x010f},
 	{NULL,0,0,0}
 };
