@@ -67,6 +67,75 @@ Events Supported:
   0x400c
   0x400e
   0xc001
+Camera summary:
+Model: Canon DIGITAL IXUS 750
+  device version: 1-2.0.1.0
+  serial number:  (null)
+Vendor extension ID: 0x0000000b
+Vendor extension description: (null)
+
+Capture Formats: JPEG
+Display Formats: Script, DPOF, MS AVI, MS Wave, JPEG, Unknown(b101)
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: None
+	VolumeLabel: A
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 990576640 (944 MB)
+	Free Space (Bytes): 758169600 (723 MB)
+	Free Space (Images): -1
+store_80000001:
+	StorageDescription: None
+	VolumeLabel: V
+	Storage Type: Builtin RAM
+	Filesystemtype: Unknown: 0x8001
+
+	Access Capability: Read-Write
+	Maximum Capability: 0 (0 MB)
+	Free Space (Bytes): 0 (0 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Property 0xd045:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7] value: 2
+Property 0xd04a:(readwrite) (type=0x2) Enumeration [0,1,2,3] value: 0
+Property 0xd02e:(read only) (type=0x6) 524288
+Property 0xd02f:(read only) (type=0x6) 262144
+Property 0xd002:(read only) (type=0x4) Enumeration [0,1,2,3,4,5] value: 0
+Viewfinder Mode(0xd003):(read only) (type=0x6) Enumeration [0,1,2,3] value: 1
+UNIX Time(0xd034):(readwrite) (type=0x6) 1167157328
+Property 0xd047:(read only) (type=0x4) 2
+Property 0xd046:(read only) (type=0x4) 257
+Property 0xd02d:(read only) (type=0x4006) a[4] 119,0,159,0
+Size Quality Mode(0xd02c):(read only) (type=0x4006) Enumeration [
+	a[6] 2304,3072,1,0,0,0,
+	a[6] 2304,3072,6,0,0,0,
+	a[6] 2304,3072,11,0,0,0,
+	a[6] 1944,2592,2,0,0,0,
+	a[6] 1944,2592,7,0,0,0,
+	a[6] 1944,2592,12,0,0,0,
+	a[6] 1536,2048,3,0,0,0,
+	a[6] 1536,2048,8,0,0,0,
+	a[6] 1536,2048,13,0,0,0,
+	a[6] 1200,1600,17,0,0,0,
+	a[6] 1200,1600,18,0,0,0,
+	a[6] 1200,1600,19,0,0,0,
+	a[6] 480,640,5,0,0,0,
+	a[6] 480,640,10,0,0,0,
+	a[6] 480,640,15,0,0,0
+	] value: a[6] 0,0,0,0,0,0
+Property 0xd030:(read only) (type=0x6) 256
+Property 0xd049:(read only) (type=0x6) 26214400
+Camera Model(0xd032):(read only) (type=0xffff) 'Canon DIGITAL IXUS 750'
+Camera Owner(0xd033):(readwrite) (type=0x4002) a[1] 0
+Firmware Version(0xd031):(read only) (type=0x6) 16777216
+
   0xc005
   0xc00a
   0xc00f
