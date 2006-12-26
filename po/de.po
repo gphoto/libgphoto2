@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2 2.2.0\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-12-26 21:28+0100\n"
+"POT-Creation-Date: 2006-12-26 23:08+0100\n"
 "PO-Revision-Date: 2006-10-07 14:18+0200\n"
 "Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
 "Language-Team: German <translation-team-de@lists.sourceforge.net>\n"
@@ -3165,7 +3165,7 @@ msgstr ""
 "Generischer Treiber für LG GSM\n"
 "Guillaume Bedot <littletux@zarb.org>\n"
 
-#: camlibs/mars/library.c:117
+#: camlibs/mars/library.c:118
 #, c-format
 msgid ""
 "Mars MR97310 camera.\n"
@@ -3174,7 +3174,7 @@ msgstr ""
 "Mars MR97310 Kamera.\n"
 "Es ist %i Foto auf der Kamera.\n"
 
-#: camlibs/mars/library.c:121
+#: camlibs/mars/library.c:122
 #, c-format
 msgid ""
 "Mars MR97310 camera.\n"
@@ -3183,7 +3183,7 @@ msgstr ""
 "Mars MR97310 Kamera.\n"
 "Es sind %i Fotos auf der Kamera.\n"
 
-#: camlibs/mars/library.c:133
+#: camlibs/mars/library.c:134
 msgid ""
 "This driver supports cameras with Mars MR97310 chip (and direct\n"
 "equivalents ??Pixart PACx07??).\n"
@@ -3208,7 +3208,7 @@ msgstr ""
 "einzelne Standbilder heruntergeladen.\n"
 "Weitere Details finden Sie in libgphoto2/camlibs/README.\n"
 
-#: camlibs/mars/library.c:152
+#: camlibs/mars/library.c:153
 msgid ""
 "Mars MR97310 camera library\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2 2.1.99\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-12-26 21:28+0100\n"
+"POT-Creation-Date: 2006-12-26 23:08+0100\n"
 "PO-Revision-Date: 2006-04-07 12:45+0300\n"
 "Last-Translator: Maxim V. Dziumanenko <mvd@mylinux.com.ua>\n"
 "Language-Team: Ukrainian <translation-team-uk@lists.sourceforge.net>\n"
@@ -3171,7 +3171,7 @@ msgstr ""
 "Базовий драйвер для LG GSM\n"
 "Guillaume Bedot <littletux@zarb.org>\n"
 
-#: camlibs/mars/library.c:117
+#: camlibs/mars/library.c:118
 #, c-format
 msgid ""
 "Mars MR97310 camera.\n"
@@ -3180,7 +3180,7 @@ msgstr ""
 "Фотоапарат Mars MR97310.\n"
 "Містить %i знімків. \n"
 
-#: camlibs/mars/library.c:121
+#: camlibs/mars/library.c:122
 #, c-format
 msgid ""
 "Mars MR97310 camera.\n"
@@ -3189,7 +3189,7 @@ msgstr ""
 "Фотоапарат Mars MR97310.\n"
 "Містить %i знімків. \n"
 
-#: camlibs/mars/library.c:133
+#: camlibs/mars/library.c:134
 #, fuzzy
 msgid ""
 "This driver supports cameras with Mars MR97310 chip (and direct\n"
@@ -3209,7 +3209,7 @@ msgstr ""
 "Якщо фотоапарат зберігає відеозаписи, то окремі кадри можна отримати\n"
 "у вигляді послідовності знімків.\n"
 
-#: camlibs/mars/library.c:152
+#: camlibs/mars/library.c:153
 msgid ""
 "Mars MR97310 camera library\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"

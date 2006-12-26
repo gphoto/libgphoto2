@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-12-26 21:28+0100\n"
+"POT-Creation-Date: 2006-12-26 23:08+0100\n"
 "PO-Revision-Date: 2005-05-12 16:52+0200\n"
 "Last-Translator: Hizkuntza Politikarako Sailburuordetza <hizkpol@ej-gv.es>\n"
 "Language-Team:  <itzulpena@euskalgnu.org>\n"
@@ -3142,7 +3142,7 @@ msgid ""
 "Guillaume Bedot <littletux@zarb.org>\n"
 msgstr ""
 
-#: camlibs/mars/library.c:117
+#: camlibs/mars/library.c:118
 #, c-format
 msgid ""
 "Mars MR97310 camera.\n"
@@ -3151,7 +3151,7 @@ msgstr ""
 "Mars MR97310 kamera.\n"
 "%i argazki ditu. \n"
 
-#: camlibs/mars/library.c:121
+#: camlibs/mars/library.c:122
 #, c-format
 msgid ""
 "Mars MR97310 camera.\n"
@@ -3160,7 +3160,7 @@ msgstr ""
 "Mars MR97310 kamera.\n"
 "%i argazki ditu.\n"
 
-#: camlibs/mars/library.c:133
+#: camlibs/mars/library.c:134
 #, fuzzy
 msgid ""
 "This driver supports cameras with Mars MR97310 chip (and direct\n"
@@ -3187,7 +3187,7 @@ msgstr ""
 "Bideo fotogramak deskarga ditzake, kamerak fotogramak edukiz gero, ondoz "
 "ondoko argazki gisa.\n"
 
-#: camlibs/mars/library.c:152
+#: camlibs/mars/library.c:153
 msgid ""
 "Mars MR97310 camera library\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"

@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-12-26 21:28+0100\n"
+"POT-Creation-Date: 2006-12-26 23:08+0100\n"
 "PO-Revision-Date: 2006-06-20 20:30+0100\n"
 "Last-Translator: Kurt De Bree <kdebree(AT)telenet(DOT)be>\n"
 "Language-Team: Dutch <debian-l10n-dutch@lists.debian.org>\n"
@@ -3155,7 +3155,7 @@ msgid ""
 "Guillaume Bedot <littletux@zarb.org>\n"
 msgstr ""
 
-#: camlibs/mars/library.c:117
+#: camlibs/mars/library.c:118
 #, c-format
 msgid ""
 "Mars MR97310 camera.\n"
@@ -3164,7 +3164,7 @@ msgstr ""
 "Mars MR97310 camera.\n"
 "Er zijn %i foto's op de camera. \n"
 
-#: camlibs/mars/library.c:121
+#: camlibs/mars/library.c:122
 #, c-format
 msgid ""
 "Mars MR97310 camera.\n"
@@ -3173,7 +3173,7 @@ msgstr ""
 "Mars MR97310 camera.\n"
 "Er zijn %i foto's op de camera. \n"
 
-#: camlibs/mars/library.c:133
+#: camlibs/mars/library.c:134
 #, fuzzy
 msgid ""
 "This driver supports cameras with Mars MR97310 chip (and direct\n"
@@ -3198,7 +3198,7 @@ msgstr ""
 "Indien videoclips op de camera aanwezig zijn, worden deze gedownload als \n"
 "opeenvolgende stilstaande beelden.\n"
 
-#: camlibs/mars/library.c:152
+#: camlibs/mars/library.c:153
 msgid ""
 "Mars MR97310 camera library\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
