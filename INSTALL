@@ -39,7 +39,7 @@ in versions compatible with each other and with libgphoto2. Most
 combinations on current GNU/Linux systems work, whereas BSD systems
 tend to have some compatibility problems.
 
-We recommend you call autoreconf like this
+We recommend you call autoreconf like this:
 
     $ autoreconf --install --symlink
 
