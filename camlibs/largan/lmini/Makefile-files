@@ -1,0 +1,12 @@
+EXTRA_DIST += largan/lmini/README.largan-lmini
+camlibdoc_DATA += largan/lmini/README.largan-lmini
+
+EXTRA_LTLIBRARIES += largan.la
+
+largan_la_SOURCES = \
+	largan/lmini/largan.c \
+	largan/lmini/lmini.c largan/lmini/lmini.h \
+	largan/lmini/lmini_ccd.c largan/lmini/lmini_ccd.h
+largan_la_LDFLAGS = $(camlib_ldflags)
+largan_la_DEPENDENCIES = $(camlib_dependencies)
+largan_la_LIBADD = $(camlib_libadd)

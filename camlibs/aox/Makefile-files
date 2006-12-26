@@ -1,0 +1,9 @@
+EXTRA_LTLIBRARIES += aox.la
+camlibdoc_DATA += aox/README.aox
+
+EXTRA_DIST += aox/README.aox
+
+aox_la_SOURCES = aox/library.c aox/aox.c aox/aox.h
+aox_la_LDFLAGS = $(camlib_ldflags)
+aox_la_DEPENDENCIES = $(camlib_dependencies) 
+aox_la_LIBADD = $(camlib_libadd)

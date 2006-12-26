@@ -1,0 +1,6 @@
+EXTRA_LTLIBRARIES += hp215.la
+
+hp215_la_SOURCES = hp215/hp215.c hp215/hp215.h hp215/crctab.h
+hp215_la_LDFLAGS = $(camlib_ldflags)
+hp215_la_DEPENDENCIES = $(camlib_dependencies)
+hp215_la_LIBADD = $(camlib_libadd)

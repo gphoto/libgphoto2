@@ -1,0 +1,9 @@
+EXTRA_DIST += adc65/README.adc65 adc65/TODO adc65/Changelog
+camlibdoc_DATA += adc65/README.adc65
+
+EXTRA_LTLIBRARIES += adc65.la
+
+adc65_la_SOURCES = adc65/adc65.c adc65/adc65.h adc65/library.c
+adc65_la_LDFLAGS = $(camlib_ldflags)
+adc65_la_DEPENDENCIES = $(camlib_dependencies)
+adc65_la_LIBADD = $(camlib_libadd)

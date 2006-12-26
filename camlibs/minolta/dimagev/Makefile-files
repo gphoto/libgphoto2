@@ -1,0 +1,20 @@
+EXTRA_DIST += minolta/dimagev/README.minolta-dimagev
+camlibdoc_DATA += minolta/dimagev/README.minolta-dimagev
+
+EXTRA_LTLIBRARIES += dimagev.la
+
+dimagev_la_SOURCES = \
+	minolta/dimagev/capture.c \
+	minolta/dimagev/data.c \
+	minolta/dimagev/delete.c \
+	minolta/dimagev/dimagev.c \
+	minolta/dimagev/dimagev.h \
+	minolta/dimagev/download.c \
+	minolta/dimagev/info.c \
+	minolta/dimagev/packet.c \
+	minolta/dimagev/status.c \
+	minolta/dimagev/upload.c \
+	minolta/dimagev/util.c
+dimagev_la_LDFLAGS = $(camlib_ldflags)
+dimagev_la_DEPENDENCIES = $(camlib_dependencies)
+dimagev_la_LIBADD = $(camlib_libadd)

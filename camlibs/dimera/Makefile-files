@@ -1,0 +1,11 @@
+EXTRA_DIST += dimera/CREDITS dimera/Protocol.txt
+
+EXTRA_LTLIBRARIES += dimera3500.la
+
+dimera3500_la_SOURCES =\
+	dimera/dimera3500.c \
+	dimera/mesalib.c dimera/mesalib.h\
+	dimera/dimeratab.h
+dimera3500_la_LDFLAGS = $(camlib_ldflags)
+dimera3500_la_DEPENDENCIES = $(camlib_dependencies)
+dimera3500_la_LIBADD = $(camlib_libadd)

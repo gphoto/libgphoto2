@@ -1,0 +1,9 @@
+EXTRA_DIST += sq905/README.913C sq905/README.sq905
+camlibdoc_DATA += sq905/README.913C sq905/README.sq905
+
+EXTRA_LTLIBRARIES += sq905.la
+
+sq905_la_SOURCES = sq905/library.c sq905/sq905.c sq905/sq905.h sq905/postprocess.c 
+sq905_la_LDFLAGS = $(camlib_ldflags)
+sq905_la_DEPENDENCIES = $(camlib_dependencies)
+sq905_la_LIBADD = $(camlib_libadd)

@@ -1,0 +1,8 @@
+EXTRA_LTLIBRARIES += kodak_dc240.la
+
+kodak_dc240_la_SOURCES = \
+	kodak/dc240/dc240.c kodak/dc240/dc240.h \
+	kodak/dc240/library.c kodak/dc240/library.h
+kodak_dc240_la_LDFLAGS = $(camlib_ldflags)
+kodak_dc240_la_DEPENDENCIES = $(camlib_dependencies)
+kodak_dc240_la_LIBADD = $(camlib_libadd)

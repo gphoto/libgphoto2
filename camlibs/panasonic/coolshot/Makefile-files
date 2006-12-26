@@ -1,0 +1,11 @@
+EXTRA_DIST += panasonic/coolshot/README.panasonic-coolshot
+camlibdoc_DATA += panasonic/coolshot/README.panasonic-coolshot
+
+EXTRA_LTLIBRARIES += panasonic_coolshot.la
+
+panasonic_coolshot_la_SOURCES = \
+	panasonic/coolshot/coolshot.c \
+	panasonic/coolshot/library.c panasonic/coolshot/library.h
+panasonic_coolshot_la_LDFLAGS = $(camlib_ldflags)
+panasonic_coolshot_la_DEPENDENCIES = $(camlib_dependencies)
+panasonic_coolshot_la_LIBADD = $(camlib_libadd)

@@ -1,0 +1,9 @@
+EXTRA_DIST += panasonic/l859/README.panasonic-l859
+camlibdoc_DATA += panasonic/l859/README.panasonic-l859
+
+EXTRA_LTLIBRARIES += panasonic_l859.la
+
+panasonic_l859_la_SOURCES = panasonic/l859/l859.c panasonic/l859/l859.h
+panasonic_l859_la_LDFLAGS = $(camlib_ldflags)
+panasonic_l859_la_DEPENDENCIES = $(camlib_dependencies)
+panasonic_l859_la_LIBADD = $(camlib_libadd)

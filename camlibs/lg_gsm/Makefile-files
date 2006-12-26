@@ -1,0 +1,9 @@
+EXTRA_DIST += lg_gsm/README.lg_gsm
+camlibdoc_DATA += lg_gsm/README.lg_gsm
+
+EXTRA_LTLIBRARIES += lg_gsm.la
+
+lg_gsm_la_SOURCES = lg_gsm/library.c lg_gsm/lg_gsm.c lg_gsm/lg_gsm.h
+lg_gsm_la_LDFLAGS = $(camlib_ldflags)
+lg_gsm_la_DEPENDENCIES = $(camlib_dependencies)
+lg_gsm_la_LIBADD = $(camlib_libadd)

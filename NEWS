@@ -1,3 +1,8 @@
+libgphoto2 2.3.1.0.trunk
+
+Build:
+   * Compile camlibs in parallel (make -j2).
+
 libgphoto2 2.3.0.3.trunk
 
 Build:

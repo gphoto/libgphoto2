@@ -1,0 +1,9 @@
+EXTRA_DIST += jamcam/README.jamcam
+camlibdoc_DATA += jamcam/README.jamcam
+
+EXTRA_LTLIBRARIES += jamcam.la
+
+jamcam_la_SOURCES = jamcam/jamcam.c jamcam/library.c jamcam/library.h
+jamcam_la_LDFLAGS = $(camlib_ldflags)
+jamcam_la_DEPENDENCIES = $(camlib_dependencies)
+jamcam_la_LIBADD = $(camlib_libadd)

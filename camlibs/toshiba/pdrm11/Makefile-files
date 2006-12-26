@@ -1,0 +1,11 @@
+EXTRA_DIST += toshiba/pdrm11/README.toshiba-pdrm11
+camlibdoc_DATA += toshiba/pdrm11/README.toshiba-pdrm11
+
+EXTRA_LTLIBRARIES += toshiba_pdrm11.la
+
+toshiba_pdrm11_la_SOURCES = \
+	toshiba/pdrm11/library.c \
+	 toshiba/pdrm11/pdrm11.c toshiba/pdrm11/pdrm11.h
+toshiba_pdrm11_la_LDFLAGS = $(camlib_ldflags)
+toshiba_pdrm11_la_DEPENDENCIES = $(camlib_dependencies)
+toshiba_pdrm11_la_LIBADD = $(camlib_libadd)

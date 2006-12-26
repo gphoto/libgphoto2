@@ -1,0 +1,22 @@
+# If you use this as template for a real camlib (say 'foobar.la'),
+# make sure to change the "noinst_" at the beginning of the following
+# lines:
+#   * "noinst_DATA" into "camlibdoc_DATA"
+#   * "noinst_LTLIBRARIES" into "EXTRA_LTLIBRARIES"
+#
+# Additionally, you must add add an include line to the Makefile-files
+# of the new camlib to camlibs/Makefile.am:
+#   * "include my-new-camlib/Makefile-files"
+#
+# And as the last step, you need to add it to configure.ac:
+#   * GP_CAMLIB([foobar])dnl
+
+EXTRA_DIST += template/README.template
+
+noinst_DATA += template/README.template
+noinst_LTLIBRARIES += template.la
+
+template_la_SOURCES = template/template.c
+template_la_LDFLAGS = $(camlib_ldflags)
+template_la_DEPENDENCIES = $(camlib_dependencies)
+template_la_LIBADD = $(camlib_libadd)

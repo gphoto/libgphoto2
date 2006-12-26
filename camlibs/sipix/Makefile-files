@@ -1,0 +1,26 @@
+EXTRA_DIST += sipix/web2.html sipix/blink.c sipix/blink.txt \
+	sipix/xjpeg.c sipix/blink2.txt
+
+# Seems to be obsolete
+EXTRA_LTLIBRARIES += sipix_blink.la
+
+sipix_blink_la_SOURCES	= sipix/blink.c
+sipix_blink_la_LDFLAGS = $(camlib_ldflags)
+sipix_blink_la_DEPENDENCIES = $(camlib_dependencies)
+sipix_blink_la_LIBADD = $(camlib_libadd)
+
+
+EXTRA_LTLIBRARIES += sipix_blink2.la
+
+sipix_blink2_la_SOURCES	= sipix/blink2.c
+sipix_blink2_la_LDFLAGS = $(camlib_ldflags)
+sipix_blink2_la_DEPENDENCIES = $(camlib_dependencies)
+sipix_blink2_la_LIBADD = $(camlib_libadd) @LIBJPEG@
+
+
+EXTRA_LTLIBRARIES += sipix_web2.la
+
+sipix_web2_la_SOURCES = sipix/web2.c
+sipix_web2_la_LDFLAGS = $(camlib_ldflags)
+sipix_web2_la_DEPENDENCIES = $(camlib_dependencies)
+sipix_web2_la_LIBADD = $(camlib_libadd)

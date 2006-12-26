@@ -1,0 +1,14 @@
+EXTRA_DIST += casio/PROTOCOL.txt
+
+EXTRA_LTLIBRARIES += casio_qv.la
+
+casio_qv_la_SOURCES =		\
+	casio/casio-qv.c				\
+	casio/casio-qv-commands.c casio/casio-qv-commands.h \
+	casio/camtojpeg.c casio/camtojpeg.h			\
+	casio/cam2jpgtab.h casio/jpegtab_f.h		\
+	casio/ycctoppm.c casio/ycctoppm.h
+
+casio_qv_la_LDFLAGS = $(camlib_ldflags)
+casio_qv_la_DEPENDENCIES = $(camlib_dependencies)
+casio_qv_la_LIBADD = $(camlib_libadd)

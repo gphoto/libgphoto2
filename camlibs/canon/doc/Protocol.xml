@@ -447,7 +447,7 @@
       <para>The following figure illustrates the
                         lower layers of the protocol used by some
                         Canon PowerShot cameras:</para>
-      <table id="tbl.SerialLayers" frame="none" cellpadding="0" cellspacing="0"><title>Layers of the serial protocol</title>
+      <table id="tbl.SerialLayers" frame="none"><title>Layers of the serial protocol</title>
 	<tgroup cols="3" align="left">
 	  <colspec colnum="1" colname="col1" align="center"/>
 	  <colspec colnum="2" colname="col2" align="center"/>
@@ -1391,9 +1391,9 @@ do {
                 <entry><para>0x00000086</para></entry>
                 <entry>
               <para>Returned by camera in newer protocol (e.g. EOS
-		20D) from <link
-		linkend="sec.USBnewUnlockKeys">&ldquo;Unlock
-		keys&rdquo;</link> when keys weren't locked.
+		20D) from <!--link
+		linkend="sec.USBnewUnlockKeys" -->&ldquo;Unlock
+		keys&rdquo;<!--/link--> when keys weren't locked.
                 </para>
             </entry >
               </row>

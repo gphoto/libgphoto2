@@ -5,7 +5,7 @@ dnl NOTE: Be version style _higher_ than the last release.
 dnl       So lastversion.X.trunk for instance. Bump X if necessary.
 
 dnl ******* THE NEXT RELEASE VERSION MUST BE 2.3.0 at least or higher!
-AC_INIT([libgphoto2], [2.3.0.3.trunk], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
+AC_INIT([libgphoto2], [2.3.1.0.trunk], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
 AC_CONFIG_SRCDIR([libgphoto2/gphoto2-version.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4m])
@@ -17,7 +17,7 @@ dnl The generated Makefile rule fails to remove the absolute part at
 dnl the beginning of the /path/to/buildroot/PACKAGE-VERSION/foo/bar
 dnl before determining the string length. However, the only relevant
 dnl string to determine the length of would be PACKAGE-VERSION/foo/bar
-AM_INIT_AUTOMAKE([-Wall gnu 1.9 dist-bzip2 check-news])
+AM_INIT_AUTOMAKE([-Wall gnu 1.9 dist-bzip2 check-news subdir-objects])
 
 GP_CHECK_SHELL_ENVIRONMENT
 GP_CONFIG_MSG([Build])
@@ -79,6 +79,7 @@ AC_PROG_CC
 AC_PROG_CPP
 AC_PROG_CXX
 AC_PROG_INSTALL
+AM_PROG_CC_C_O
 
 dnl Something with the sequences is not quite alright yet.
 dnl SED is supposed to be set in AC_LIBTOOL_SETUP, but the
@@ -366,15 +367,15 @@ dnl * See m4m/gp-camlibs.m4 for usage details, e.g. for marking camlibs as
 dnl   obsolete.
 dnl * Please add new camlibs in alphabetical order.
 GP_CAMLIB([adc65])dnl
-GP_CAMLIB([agfa-cl20])dnl
+GP_CAMLIB([agfa_cl20])dnl
 GP_CAMLIB([aox])dnl
 GP_CAMLIB([barbie])dnl
 GP_CAMLIB([canon])dnl
-GP_CAMLIB([casio])dnl
+GP_CAMLIB([casio_qv])dnl
 GP_CAMLIB([clicksmart310])dnl
 GP_CAMLIB([digigr8])dnl
 GP_CAMLIB([digita])dnl
-GP_CAMLIB([dimera])dnl
+GP_CAMLIB([dimera3500])dnl
 GP_CAMLIB([directory])dnl
 GP_CAMLIB([enigma13])dnl
 GP_CAMLIB([fuji])dnl
@@ -383,34 +384,47 @@ GP_CAMLIB([hp215])dnl
 GP_CAMLIB([iclick])dnl
 GP_CAMLIB([jamcam])dnl
 GP_CAMLIB([jd11])dnl
-GP_CAMLIB([kodak])dnl
+GP_CAMLIB([kodak_dc120])dnl
+GP_CAMLIB([kodak_dc210])dnl
+GP_CAMLIB([kodak_dc240])dnl
+GP_CAMLIB([kodak_dc3200])dnl
+GP_CAMLIB([kodak_ez200])dnl
 GP_CAMLIB([konica])dnl
+GP_CAMLIB([konica_qm150])dnl
 GP_CAMLIB([largan])dnl
 GP_CAMLIB([lg_gsm])dnl
 GP_CAMLIB([mars])dnl
-GP_CAMLIB([minolta])dnl
+GP_CAMLIB([dimagev])dnl
 GP_CAMLIB([mustek])dnl
-GP_CAMLIB([panasonic])dnl
+GP_CAMLIB([panasonic_coolshot])dnl
+GP_CAMLIB([panasonic_l859])dnl
+GP_CAMLIB([panasonic_dc1000])dnl
+GP_CAMLIB([panasonic_dc1580])dnl
 GP_CAMLIB([pccam300])dnl
 GP_CAMLIB([pccam600])dnl
-GP_CAMLIB([polaroid])dnl
+GP_CAMLIB([polaroid_pdc320])dnl
+GP_CAMLIB([polaroid_pdc640])dnl
+GP_CAMLIB([polaroid_pdc700])dnl
 GP_CAMLIB([ptp2])dnl
 GP_CAMLIB([ricoh])dnl
+GP_CAMLIB([ricoh_g3])dnl
 GP_CAMLIB([samsung])dnl
 GP_CAMLIB([sierra])dnl
-GP_CAMLIB([sipix])dnl
+GP_CAMLIB([sipix_blink], [obsolete])dnl
+GP_CAMLIB([sipix_blink2])dnl
+GP_CAMLIB([sipix_web2])dnl
 GP_CAMLIB([smal])dnl
 GP_CAMLIB([sonix])dnl
-GP_CAMLIB([sonydscf1])dnl
-GP_CAMLIB([sonydscf55])dnl
+GP_CAMLIB([sony_dscf1])dnl
+GP_CAMLIB([sony_dscf55])dnl
 GP_CAMLIB([soundvision])dnl
 GP_CAMLIB([spca50x])dnl
 GP_CAMLIB([sq905])dnl
 GP_CAMLIB([stv0674])dnl
 GP_CAMLIB([stv0680])dnl
 GP_CAMLIB([sx330z])dnl
-GP_CAMLIB([template])dnl
-GP_CAMLIB([toshiba])dnl
+GP_CAMLIB([template], [obsolete])dnl
+GP_CAMLIB([toshiba_pdrm11])dnl
 dnl
 GP_CAMLIBS_DEFINE()dnl
 
@@ -487,7 +501,7 @@ dnl Turn on all warnings when using gcc
 dnl ---------------------------------------------------------------------------
 if test "x$GCC" = "xyes"; then
 	AM_CPPFLAGS="$AM_CPPFLAGS -Wall"
-	AM_CFLAGS="$AM_CFLAGS -Wmissing-declarations -Wmissing-prototypes"
+	AM_CFLAGS="$AM_CFLAGS -Wmissing-declarations -Wmissing-prototypes -Wno-pointer-sign"
 	AM_LDFLAGS="$AM_LDFLAGS -Wall"
 	# FIXME: Check for --enable-debug here
 	AM_CPPFLAGS="$AM_CPPFLAGS -g"
@@ -532,64 +546,8 @@ README
 Makefile
 gphoto2-config
 camlibs/Makefile
-camlibs/adc65/Makefile
-camlibs/agfa-cl20/Makefile
-camlibs/aox/Makefile
-camlibs/barbie/Makefile
-camlibs/canon/Makefile
 camlibs/canon/doc/Makefile
-camlibs/casio/Makefile
-camlibs/clicksmart310/Makefile
-camlibs/digigr8/Makefile
-camlibs/digita/Makefile
-camlibs/dimera/Makefile
-camlibs/directory/Makefile
-camlibs/fuji/Makefile
-camlibs/gsmart300/Makefile
-camlibs/hp215/Makefile
-camlibs/iclick/Makefile
-camlibs/jamcam/Makefile
-camlibs/jd11/Makefile
-camlibs/kodak/Makefile
-camlibs/kodak/dc120/Makefile
-camlibs/kodak/dc210/Makefile
-camlibs/kodak/dc240/Makefile
-camlibs/kodak/dc3200/Makefile
-camlibs/kodak/ez200/Makefile
-camlibs/konica/Makefile
 camlibs/konica/localization/Makefile
-camlibs/largan/Makefile
-camlibs/largan/lmini/Makefile
-camlibs/lg_gsm/Makefile
-camlibs/mars/Makefile
-camlibs/minolta/Makefile
-camlibs/minolta/dimagev/Makefile
-camlibs/mustek/Makefile
-camlibs/panasonic/Makefile
-camlibs/panasonic/l859/Makefile
-camlibs/panasonic/coolshot/Makefile
-camlibs/pccam300/Makefile
-camlibs/pccam600/Makefile
-camlibs/polaroid/Makefile
-camlibs/ptp2/Makefile
-camlibs/ricoh/Makefile
-camlibs/samsung/Makefile
-camlibs/sierra/Makefile
-camlibs/sipix/Makefile
-camlibs/smal/Makefile
-camlibs/sonix/Makefile
-camlibs/sonydscf1/Makefile
-camlibs/sonydscf55/Makefile
-camlibs/soundvision/Makefile
-camlibs/spca50x/Makefile
-camlibs/sq905/Makefile
-camlibs/stv0674/Makefile
-camlibs/stv0680/Makefile
-camlibs/sx330z/Makefile
-camlibs/template/Makefile
-camlibs/toshiba/Makefile
-camlibs/toshiba/pdrm11/Makefile
-camlibs/enigma13/Makefile
 libgphoto2/Makefile
 libgphoto2/libgphoto2.pc
 tests/Makefile

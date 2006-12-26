@@ -1,0 +1,12 @@
+EXTRA_DIST += gsmart300/README.gsmart300
+camlibdoc_DATA += gsmart300/README.gsmart300
+
+EXTRA_LTLIBRARIES += gsmart300.la
+
+gsmart300_la_SOURCES = \
+	gsmart300/gsmart300.c gsmart300/gsmart300.h \
+	gsmart300/library.c \
+	gsmart300/gsmart300-jpeg-header.h 
+gsmart300_la_LDFLAGS = $(camlib_ldflags)
+gsmart300_la_DEPENDENCIES = $(camlib_dependencies)
+gsmart300_la_LIBADD = $(camlib_libadd)

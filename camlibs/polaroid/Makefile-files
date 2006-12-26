@@ -1,0 +1,29 @@
+EXTRA_DIST += polaroid/jpeg.txt polaroid/jpeghead.h \
+	polaroid/pdc320.html polaroid/gt98x.html
+
+
+EXTRA_LTLIBRARIES += polaroid_pdc320.la
+
+polaroid_pdc320_la_SOURCES = polaroid/pdc320.c polaroid/pdc320.h
+polaroid_pdc320_la_LDFLAGS = $(camlib_ldflags)
+polaroid_pdc320_la_DEPENDENCIES = $(camlib_dependencies)
+polaroid_pdc320_la_LIBADD = $(camlib_libadd)
+
+
+EXTRA_LTLIBRARIES += polaroid_pdc640.la
+
+polaroid_pdc640_la_SOURCES = polaroid/pdc640.c \
+	polaroid/jd350e.h polaroid/jd350e.c \
+	polaroid/jd350e_red.h polaroid/jd350e_blue.h \
+	polaroid/dlink350f.c polaroid/dlink350f.h
+polaroid_pdc640_la_LDFLAGS = $(camlib_ldflags)
+polaroid_pdc640_la_DEPENDENCIES = $(camlib_dependencies)
+polaroid_pdc640_la_LIBADD = $(camlib_libadd)
+
+
+EXTRA_LTLIBRARIES += polaroid_pdc700.la
+
+polaroid_pdc700_la_SOURCES = polaroid/pdc700.c
+polaroid_pdc700_la_LDFLAGS = $(camlib_ldflags)
+polaroid_pdc700_la_DEPENDENCIES = $(camlib_dependencies)
+polaroid_pdc700_la_LIBADD = $(camlib_libadd)

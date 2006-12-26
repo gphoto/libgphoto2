@@ -1,0 +1,11 @@
+EXTRA_DIST += smal/README.smal
+camlibdoc_DATA += smal/README.smal
+
+EXTRA_LTLIBRARIES += smal.la
+
+smal_la_SOURCES = \
+	smal/smal.c smal/ultrapocket.c \
+	smal/smal.h smal/ultrapocket.h
+smal_la_LDFLAGS = $(camlib_ldflags)
+smal_la_DEPENDENCIES = $(camlib_dependencies)
+smal_la_LIBADD = $(camlib_libadd)

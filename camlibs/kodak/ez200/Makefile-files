@@ -1,0 +1,10 @@
+EXTRA_DIST += kodak/ez200/Protocol.txt
+
+EXTRA_LTLIBRARIES += kodak_ez200.la
+
+kodak_ez200_la_SOURCES = \
+	kodak/ez200/library.c \
+	kodak/ez200/ez200.c kodak/ez200/ez200.h
+kodak_ez200_la_LDFLAGS = $(camlib_ldflags)
+kodak_ez200_la_DEPENDENCIES = $(camlib_dependencies)
+kodak_ez200_la_LIBADD = $(camlib_libadd)

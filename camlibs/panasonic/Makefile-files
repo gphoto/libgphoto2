@@ -1,0 +1,22 @@
+# SUBDIRS = coolshot l859
+EXTRA_DIST += panasonic/README.panasonic
+camlibdoc_DATA += panasonic/README.panasonic
+
+EXTRA_LTLIBRARIES += panasonic_dc1000.la
+
+panasonic_dc1000_la_SOURCES = \
+	panasonic/dc1000.c panasonic/dc1000.h \
+	panasonic/dc.c panasonic/dc.h
+panasonic_dc1000_la_LDFLAGS = $(camlib_ldflags)
+panasonic_dc1000_la_DEPENDENCIES = $(camlib_dependencies)
+panasonic_dc1000_la_LIBADD = $(camlib_libadd)
+
+EXTRA_LTLIBRARIES += panasonic_dc1580.la
+
+panasonic_dc1580_la_SOURCES = \
+	panasonic/dc1580.c panasonic/dc1580.h \
+	panasonic/dc.c panasonic/dc.h \
+	panasonic/dc1000.h
+panasonic_dc1580_la_LDFLAGS = $(camlib_ldflags)
+panasonic_dc1580_la_DEPENDENCIES = $(camlib_dependencies)
+panasonic_dc1580_la_LIBADD = $(camlib_libadd)

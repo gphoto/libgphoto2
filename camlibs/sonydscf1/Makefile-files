@@ -1,0 +1,15 @@
+EXTRA_DIST += sonydscf1/README.sonydscf1 sonydscf1/todo
+camlibdoc_DATA += sonydscf1/README.sonydscf1
+
+EXTRA_LTLIBRARIES += sony_dscf1.la
+
+EXTRA_sony_dscf1_la_SOURCES = sonydscf1/dsc_f1.c
+sony_dscf1_la_SOURCES = \
+	sonydscf1/command.c sonydscf1/getuint.c sonydscf1/chotplay.c \
+	sonydscf1/command.h sonydscf1/getuint.h sonydscf1/chotplay.h \
+	sonydscf1/sonydscf1.c sonydscf1/sonydscf1.h \
+	sonydscf1/pmp.h sonydscf1/common.h
+sony_dscf1_la_LDFLAGS = $(camlib_ldflags)
+sony_dscf1_la_DEPENDENCIES = $(camlib_dependencies)
+sony_dscf1_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la 
+

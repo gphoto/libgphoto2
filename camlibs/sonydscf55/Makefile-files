@@ -1,0 +1,8 @@
+EXTRA_LTLIBRARIES += sony_dscf55.la
+
+sony_dscf55_la_SOURCES = \
+	sonydscf55/sony.c sonydscf55/sony.h \
+	sonydscf55/camera.c sonydscf55/nls.h
+sony_dscf55_la_LDFLAGS = $(camlib_ldflags)
+sony_dscf55_la_DEPENDENCIES = $(camlib_dependencies)
+sony_dscf55_la_LIBADD = $(camlib_libadd)

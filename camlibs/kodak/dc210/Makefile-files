@@ -1,0 +1,8 @@
+EXTRA_LTLIBRARIES += kodak_dc210.la
+
+kodak_dc210_la_SOURCES = \
+	kodak/dc210/dc210.c kodak/dc210/dc210.h \
+	kodak/dc210/library.c kodak/dc210/library.h
+kodak_dc210_la_LDFLAGS = $(camlib_ldflags)
+kodak_dc210_la_DEPENDENCIES = $(camlib_dependencies)
+kodak_dc210_la_LIBADD = $(camlib_libadd)

@@ -1,0 +1,10 @@
+EXTRA_DIST += enigma13/STATUS enigma13/protocol.txt enigma13/README.enigma13
+camlibdoc_DATA += enigma13/README.enigma13
+
+EXTRA_LTLIBRARIES += enigma13.la
+
+enigma13_la_SOURCES = enigma13/enigma13.c
+enigma13_la_LDFLAGS = $(camlib_ldflags)
+enigma13_la_DEPENDENCIES = $(camlib_dependencies)
+enigma13_la_LIBADD = $(camlib_libadd)
+

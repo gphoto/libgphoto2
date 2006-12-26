@@ -1,0 +1,8 @@
+EXTRA_DIST += fuji/PROTOCOL
+
+EXTRA_LTLIBRARIES += fuji.la
+
+fuji_la_SOURCES = fuji/library.c fuji/fuji.c fuji/fuji.h
+fuji_la_LDFLAGS = $(camlib_ldflags)
+fuji_la_DEPENDENCIES = $(camlib_dependencies)
+fuji_la_LIBADD = $(camlib_libadd)

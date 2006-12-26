@@ -1,0 +1,12 @@
+EXTRA_DIST += digigr8/README.digigr8
+camlibdoc_DATA += digigr8/README.digigr8
+
+EXTRA_LTLIBRARIES += digigr8.la
+
+digigr8_la_SOURCES = \
+	digigr8/library.c \
+	digigr8/digigr8.c digigr8/digigr8.h \
+	digigr8/digi_postprocess.c 
+digigr8_la_LDFLAGS = $(camlib_ldflags)
+digigr8_la_DEPENDENCIES = $(camlib_dependencies)
+digigr8_la_LIBADD = $(camlib_libadd)

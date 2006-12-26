@@ -1,0 +1,15 @@
+EXTRA_DIST += \
+	agfa-cl20/README.agfa-cl20 \
+	agfa-cl20/STATUS agfa-cl20/ChangeLog \
+	agfa-cl20/protocol.txt agfa-cl20/protocol2.txt \
+	agfa-cl20/commands.txt \
+	agfa-cl20/pic-header.txt agfa-cl20/RANDOM
+
+camlibdoc_DATA += agfa-cl20/README.agfa-cl20
+
+EXTRA_LTLIBRARIES += agfa_cl20.la
+
+agfa_cl20_la_SOURCES = agfa-cl20/agfa_cl20.c
+agfa_cl20_la_LDFLAGS = $(camlib_ldflags)
+agfa_cl20_la_DEPENDENCIES = $(camlib_dependencies)
+agfa_cl20_la_LIBADD = $(camlib_libadd)

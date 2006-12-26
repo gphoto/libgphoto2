@@ -1,0 +1,16 @@
+EXTRA_DIST += spca50x/ChangeLog.benq spca50x/ChangeLog.gsmart spca50x/ChangeLog.spca504_flash spca50x/lsusb-v spca50x/README.spca50x
+
+camlibdoc_DATA += spca50x/README.spca50x
+
+EXTRA_LTLIBRARIES += spca50x.la
+
+spca50x_la_SOURCES = \
+	spca50x/spca50x.c spca50x/spca50x.h \
+	spca50x/spca50x-flash.c spca50x/spca50x-flash.h \
+	spca50x/spca50x-sdram.c spca50x/spca50x-sdram.h \
+	spca50x/library.c \
+	spca50x/spca50x-jpeg-header.h spca50x/spca50x-registers.h \
+	spca50x/spca50x-avi-header.h
+spca50x_la_LDFLAGS = $(camlib_ldflags)
+spca50x_la_DEPENDENCIES = $(camlib_dependencies)
+spca50x_la_LIBADD = $(camlib_libadd)

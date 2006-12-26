@@ -1,0 +1,11 @@
+EXTRA_LTLIBRARIES += digita.la
+
+digita_la_SOURCES = \
+	digita/digita.c \
+	digita/serial.c \
+	digita/usb.c \
+	digita/commands.c \
+	digita/digita.h
+digita_la_LDFLAGS = $(camlib_ldflags)
+digita_la_DEPENDENCIES = $(camlib_dependencies)
+digita_la_LIBADD = $(camlib_libadd)

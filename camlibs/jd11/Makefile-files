@@ -1,0 +1,11 @@
+EXTRA_DIST += jd11/jd11.html
+
+EXTRA_LTLIBRARIES += jd11.la
+
+jd11_la_SOURCES = \
+	jd11/jd11.c \
+	jd11/serial.h jd11/serial.c \
+	jd11/decomp.h jd11/decomp.c
+jd11_la_LDFLAGS = $(camlib_ldflags)
+jd11_la_DEPENDENCIES = $(camlib_dependencies)
+jd11_la_LIBADD = $(camlib_libadd)

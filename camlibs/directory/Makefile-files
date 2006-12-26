@@ -1,0 +1,7 @@
+EXTRA_LTLIBRARIES += directory.la
+
+directory_la_SOURCES = directory/directory.c
+directory_la_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS) $(LIBEXIF_CFLAGS)
+directory_la_LDFLAGS = $(camlib_ldflags)
+directory_la_DEPENDENCIES = $(camlib_dependencies)
+directory_la_LIBADD = $(LIBEXIF_LIBS) $(top_builddir)/libgphoto2/libgphoto2.la

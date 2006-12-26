@@ -1,0 +1,13 @@
+EXTRA_DIST += soundvision/README.soundvision
+camlibdoc_DATA += soundvision/README.soundvision
+
+EXTRA_LTLIBRARIES += soundvision.la
+
+soundvision_la_SOURCES = \
+	soundvision/soundvision.c soundvision/agfa_cl18.c \
+	soundvision/tiger_fastflicks.c \
+	soundvision/commands.c soundvision/commands.h \
+	soundvision/soundvision.h
+soundvision_la_LDFLAGS = $(camlib_ldflags)
+soundvision_la_DEPENDENCIES = $(camlib_dependencies)
+soundvision_la_LIBADD = $(camlib_libadd)

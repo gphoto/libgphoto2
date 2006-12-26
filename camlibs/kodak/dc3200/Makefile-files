@@ -1,0 +1,8 @@
+EXTRA_LTLIBRARIES += kodak_dc3200.la
+
+kodak_dc3200_la_SOURCES = \
+	kodak/dc3200/dc3200.c kodak/dc3200/dc3200.h \
+	kodak/dc3200/library.c kodak/dc3200/library.h
+kodak_dc3200_la_LDFLAGS = $(camlib_ldflags)
+kodak_dc3200_la_DEPENDENCIES = $(camlib_dependencies)
+kodak_dc3200_la_LIBADD = $(camlib_libadd)

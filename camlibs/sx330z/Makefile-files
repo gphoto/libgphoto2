@@ -1,0 +1,6 @@
+EXTRA_LTLIBRARIES += sx330z.la
+
+sx330z_la_SOURCES = sx330z/library.c sx330z/sx330z.c sx330z/sx330z.h
+sx330z_la_LDFLAGS = $(camlib_ldflags)
+sx330z_la_DEPENDENCIES = $(camlib_dependencies)
+sx330z_la_LIBADD = $(camlib_libadd)

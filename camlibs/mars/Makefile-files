@@ -1,0 +1,9 @@
+EXTRA_DIST += mars/protocol.txt mars/README.mars
+camlibdoc_DATA += mars/README.mars
+
+EXTRA_LTLIBRARIES += mars.la
+
+mars_la_SOURCES = mars/library.c mars/mars.c mars/mars.h
+mars_la_LDFLAGS = $(camlib_ldflags)
+mars_la_DEPENDENCIES = $(camlib_dependencies)
+mars_la_LIBADD = $(camlib_libadd)

@@ -1,0 +1,25 @@
+EXTRA_DIST += konica/EXPERTS konica/qm150.txt konica/README.konica
+camlibdoc_DATA += konica/README.konica
+
+konica_defs = \
+	-DLOCALIZATION=\"$(datadir)/$(PACKAGE)/$(VERSION)/konica\"
+
+EXTRA_LTLIBRARIES += konica.la
+
+konica_la_SOURCES = \
+	konica/lowlevel.c konica/lowlevel.h \
+	konica/konica.c konica/konica.h \
+	konica/library.c
+konica_la_CPPFLAGS = $(AM_CPPFLAGS) $(konica_defs) $(CPPFLAGS)
+konica_la_LDFLAGS = $(camlib_ldflags)
+konica_la_DEPENDENCIES = $(camlib_dependencies)
+konica_la_LIBADD = $(camlib_libadd)
+
+
+EXTRA_LTLIBRARIES += konica_qm150.la
+
+konica_qm150_la_SOURCES = konica/qm150.c
+konica_qm150_la_CPPFLAGS = $(AM_CPPFLAGS) $(konica_defs) $(CPPFLAGS)
+konica_qm150_la_LDFLAGS = $(camlib_ldflags)
+konica_qm150_la_DEPENDENCIES = $(camlib_dependencies)
+konica_qm150_la_LIBADD = $(camlib_libadd)

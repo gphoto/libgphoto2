@@ -1,0 +1,26 @@
+EXTRA_LTLIBRARIES += canon.la
+
+camlibdoc_DATA += canon/README.canon
+
+EXTRA_DIST += canon/.indent.pro canon/ChangeLog canon/urb-interpret canon/README.canon
+
+# "ideal" version:
+# + only export the 3 symbols
+# + -no-undefined, (i.e. Win32 support)
+# - needs lengthy definition in every camlib's Makefile.am
+# + nice short name
+#   + makes renaming the exported symbols to canon_LTX_<symbol> realistic
+#     without ## macros
+#   + makes it possible to have the same name the module filename and
+#     the camlib name returned by camera_id()
+canon_la_SOURCES =	\
+	canon/canon.c canon/canon.h		\
+	canon/library.c canon/library.h	\
+	canon/serial.c canon/serial.h	\
+	canon/usb.c canon/usb.h		\
+	canon/crc.c canon/crc.h		\
+	canon/util.c canon/util.h
+canon_la_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS) $(LIBEXIF_CFLAGS)
+canon_la_LDFLAGS = $(camlib_ldflags)
+canon_la_DEPENDENCIES = $(camlib_dependencies)
+canon_la_LIBADD = $(camlib_libadd) $(LIBEXIF_LIBS)

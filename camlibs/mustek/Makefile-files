@@ -1,0 +1,12 @@
+EXTRA_DIST += mustek/AUTHOR  mustek/README.mustek
+camlibdoc_DATA += mustek/README.mustek
+
+EXTRA_LTLIBRARIES += mustek.la
+
+mustek_la_SOURCES = \
+	mustek/mdc800.c mustek/core.c mustek/image.c \
+	mustek/io.c mustek/rs232.c mustek/usb.c mustek/core.h mustek/image.h \
+	mustek/io.h mustek/mdc800_spec.h mustek/print.h mustek/rs232.h mustek/usb.h
+mustek_la_LDFLAGS = $(camlib_ldflags)
+mustek_la_DEPENDENCIES = $(camlib_dependencies)
+mustek_la_LIBADD = $(camlib_libadd)

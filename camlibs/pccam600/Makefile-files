@@ -1,0 +1,9 @@
+EXTRA_DIST += pccam600/README.pccam600
+camlibdoc_DATA += pccam600/README.pccam600
+
+EXTRA_LTLIBRARIES += pccam600.la
+
+pccam600_la_SOURCES = pccam600/pccam600.c pccam600/pccam600.h pccam600/library.c 
+pccam600_la_LDFLAGS = $(camlib_ldflags)
+pccam600_la_DEPENDENCIES = $(camlib_dependencies)
+pccam600_la_LIBADD = $(camlib_libadd)

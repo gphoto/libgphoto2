@@ -1,0 +1,10 @@
+EXTRA_DIST += barbie/main.c
+
+EXTRA_LTLIBRARIES += barbie.la
+
+barbie_la_SOURCES = \
+	barbie/barbie.c barbie/barbie.h \
+	barbie/library.c barbie/library.h
+barbie_la_LDFLAGS = $(camlib_ldflags)
+barbie_la_DEPENDENCIES = $(camlib_dependencies)
+barbie_la_LIBADD = $(camlib_libadd)

@@ -1,0 +1,12 @@
+EXTRA_DIST += sonix/README.sonix
+camlibdoc_DATA += sonix/README.sonix
+
+EXTRA_LTLIBRARIES += sonix.la
+
+sonix_la_SOURCES = \
+	sonix/library.c \
+	sonix/sonix.c sonix/sonix.h \
+	sonix/sakar-avi-header.h
+sonix_la_LDFLAGS = $(camlib_ldflags)
+sonix_la_DEPENDENCIES = $(camlib_dependencies)
+sonix_la_LIBADD = $(camlib_libadd)
