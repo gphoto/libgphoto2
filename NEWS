@@ -1,7 +1,9 @@
 libgphoto2 2.3.1.0.trunk
 
 Build:
-   * Compile camlibs in parallel (make -j2).
+   * Non-recursive camlib build: Makes "make -j2" useful.
+     "./configure --with-drivers=..." still works. Selective camlib
+     rebuild is "make -C camlibs agfa_cl20.la" now.
 
 libgphoto2 2.3.0.3.trunk
 
