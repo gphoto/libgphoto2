@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2 port-2.1.6rc2\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-10-04 19:42+0200\n"
+"POT-Creation-Date: 2006-12-26 21:28+0100\n"
 "PO-Revision-Date: 2005-06-29 19:59+0930\n"
 "Last-Translator: Ngô Trần Thủy <ngotranthuy@gmail.com>\n"
 "Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net>\n"
@@ -45,59 +45,59 @@ msgstr "Không thể nạp được danh sách trình điều khiển thiết b�
 msgid "Loaded '%s' ('%s') from '%s'."
 msgstr "Đã nạp «%s» («%s») từ «%s»."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:264
+#: libgphoto2_port/gphoto2-port-info-list.c:265
 #, c-format
 msgid "Using ltdl to load io-drivers from '%s'..."
 msgstr "Sử dụng «ltdl» để nạp các trình điều khiển nhập xuất từ «%s»..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:290
+#: libgphoto2_port/gphoto2-port-info-list.c:291
 #, c-format
 msgid "Counting entries (%i available)..."
 msgstr "Đang đếm các mục nhập (có %i sẵn sàng)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:299
+#: libgphoto2_port/gphoto2-port-info-list.c:300
 #, c-format
 msgid "%i regular entries available."
 msgstr "%i các mục nhập chính quy sẵn có"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:328
+#: libgphoto2_port/gphoto2-port-info-list.c:329
 #, c-format
 msgid "Looking for path '%s' (%i entries available)..."
 msgstr "Đang tìm kiếm đường dẫn «%s» (có %i mục sẵn sàng)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:340
+#: libgphoto2_port/gphoto2-port-info-list.c:341
 #, c-format
 msgid "Starting regex search for '%s'..."
 msgstr "Bắt đầu quá trình tìm kiếm biểu thức chính quy cho «%s»..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:348
+#: libgphoto2_port/gphoto2-port-info-list.c:349
 #, c-format
 msgid "Trying '%s'..."
 msgstr "Đang thử «%s»..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:369
+#: libgphoto2_port/gphoto2-port-info-list.c:370
 msgid "regcomp failed"
 msgstr "regcomp bị lỗi"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:380
+#: libgphoto2_port/gphoto2-port-info-list.c:381
 #, c-format
 msgid "re_match failed (%i)"
 msgstr "re_match (khớp lại) bị lỗi (%i)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:388
+#: libgphoto2_port/gphoto2-port-info-list.c:389
 msgid "regexec failed"
 msgstr "regexec (thực hiện biểu thức chính quy) bị lỗi"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:394
+#: libgphoto2_port/gphoto2-port-info-list.c:395
 msgid "Generic Port"
 msgstr "Cổng Chung"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:418
+#: libgphoto2_port/gphoto2-port-info-list.c:419
 #, c-format
 msgid "Looking up entry '%s'..."
 msgstr "Tìm kiếm mục «%s»... "
 
-#: libgphoto2_port/gphoto2-port-info-list.c:448
+#: libgphoto2_port/gphoto2-port-info-list.c:449
 #, c-format
 msgid "Getting info of entry %i (%i available)..."
 msgstr "Đang lấy dữ liệu của mục %i (có %i sẵn sàng)"

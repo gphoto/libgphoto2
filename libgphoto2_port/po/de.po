@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port 2.2.0\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-10-04 19:42+0200\n"
+"POT-Creation-Date: 2006-12-26 21:28+0100\n"
 "PO-Revision-Date: 2006-06-20 22:46+0200\n"
 "Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
 "Language-Team: German <translation-team-de@lists.sourceforge.net>\n"
@@ -51,59 +51,59 @@ msgstr "Konnte Port Treiberliste»%s« nicht laden."
 msgid "Loaded '%s' ('%s') from '%s'."
 msgstr "Habe '%s' ('%s') von '%s' geladen."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:264
+#: libgphoto2_port/gphoto2-port-info-list.c:265
 #, c-format
 msgid "Using ltdl to load io-drivers from '%s'..."
 msgstr "Benutze ltdl um I/O Treiber von '%s' zu laden..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:290
+#: libgphoto2_port/gphoto2-port-info-list.c:291
 #, c-format
 msgid "Counting entries (%i available)..."
 msgstr "Zähle Eintrage (%i vorhanden)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:299
+#: libgphoto2_port/gphoto2-port-info-list.c:300
 #, c-format
 msgid "%i regular entries available."
 msgstr "%i reguläre Einträge verfügbar."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:328
+#: libgphoto2_port/gphoto2-port-info-list.c:329
 #, c-format
 msgid "Looking for path '%s' (%i entries available)..."
 msgstr "Suche Pfad '%s' (%i Einträge vorhanden)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:340
+#: libgphoto2_port/gphoto2-port-info-list.c:341
 #, c-format
 msgid "Starting regex search for '%s'..."
 msgstr "Starte Suche mit regulärem Ausdruck '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:348
+#: libgphoto2_port/gphoto2-port-info-list.c:349
 #, c-format
 msgid "Trying '%s'..."
 msgstr "Versuche '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:369
+#: libgphoto2_port/gphoto2-port-info-list.c:370
 msgid "regcomp failed"
 msgstr "regcomp fehlgeschlagen"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:380
+#: libgphoto2_port/gphoto2-port-info-list.c:381
 #, c-format
 msgid "re_match failed (%i)"
 msgstr "re_match fehlgeschlagen (%i)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:388
+#: libgphoto2_port/gphoto2-port-info-list.c:389
 msgid "regexec failed"
 msgstr "regexec fehlgeschlagen"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:394
+#: libgphoto2_port/gphoto2-port-info-list.c:395
 msgid "Generic Port"
 msgstr "Generischer Port"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:418
+#: libgphoto2_port/gphoto2-port-info-list.c:419
 #, c-format
 msgid "Looking up entry '%s'..."
 msgstr "Suche Eintrag '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:448
+#: libgphoto2_port/gphoto2-port-info-list.c:449
 #, c-format
 msgid "Getting info of entry %i (%i available)..."
 msgstr "Hole Informationen von Eintrag %i (%i vorhanden)..."

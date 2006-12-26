@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port 2.1.99\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-10-04 19:42+0200\n"
+"POT-Creation-Date: 2006-12-26 21:28+0100\n"
 "PO-Revision-Date: 2006-04-07 13:20+0300\n"
 "Last-Translator: Maxim V. Dziumanenko <mvd@mylinux.com.ua>\n"
 "Language-Team: Ukrainian <translation-team-uk@lists.sourceforge.net>\n"
@@ -45,59 +45,59 @@ msgstr "Не вдається завантажити список драйвер
 msgid "Loaded '%s' ('%s') from '%s'."
 msgstr "Завантажено '%s' ('%s') з '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:264
+#: libgphoto2_port/gphoto2-port-info-list.c:265
 #, c-format
 msgid "Using ltdl to load io-drivers from '%s'..."
 msgstr "Використовується ltdl для завантаження драйверів портів з '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:290
+#: libgphoto2_port/gphoto2-port-info-list.c:291
 #, c-format
 msgid "Counting entries (%i available)..."
 msgstr "Підрахунок кількості записів (%i доступно)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:299
+#: libgphoto2_port/gphoto2-port-info-list.c:300
 #, c-format
 msgid "%i regular entries available."
 msgstr "доступно %i звичайних записів."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:328
+#: libgphoto2_port/gphoto2-port-info-list.c:329
 #, c-format
 msgid "Looking for path '%s' (%i entries available)..."
 msgstr "Пошук шляху '%s' (доступно %i записів)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:340
+#: libgphoto2_port/gphoto2-port-info-list.c:341
 #, c-format
 msgid "Starting regex search for '%s'..."
 msgstr "Початок пошуку '%s' з використанням регулярних виразів..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:348
+#: libgphoto2_port/gphoto2-port-info-list.c:349
 #, c-format
 msgid "Trying '%s'..."
 msgstr "перевіряється '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:369
+#: libgphoto2_port/gphoto2-port-info-list.c:370
 msgid "regcomp failed"
 msgstr "помилка regcomp"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:380
+#: libgphoto2_port/gphoto2-port-info-list.c:381
 #, c-format
 msgid "re_match failed (%i)"
 msgstr "помилка re_match (%i)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:388
+#: libgphoto2_port/gphoto2-port-info-list.c:389
 msgid "regexec failed"
 msgstr "помилка regexec"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:394
+#: libgphoto2_port/gphoto2-port-info-list.c:395
 msgid "Generic Port"
 msgstr "Звичайний порт"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:418
+#: libgphoto2_port/gphoto2-port-info-list.c:419
 #, c-format
 msgid "Looking up entry '%s'..."
 msgstr "Пошук запису '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:448
+#: libgphoto2_port/gphoto2-port-info-list.c:449
 #, c-format
 msgid "Getting info of entry %i (%i available)..."
 msgstr "отримання інформації про запис %i (доступно %i)..."
