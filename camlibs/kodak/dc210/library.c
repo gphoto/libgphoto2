@@ -923,6 +923,7 @@ int dc210_open_card
 	return GP_OK;
 };
 
+#if 0 /* This function is not used by anybody */
 static int dc210_close_card
 (Camera * camera)
 {
@@ -935,6 +936,7 @@ static int dc210_close_card
 
 	return GP_OK;
 };
+#endif
 
 int dc210_download_picture_by_name
 (Camera * camera, CameraFile *file, const char *filename, dc210_picture_type type, GPContext *context)

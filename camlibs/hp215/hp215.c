@@ -558,7 +558,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileInfo *info, void *data, GPContext *context)
 {
 	Camera		*camera = data;
-	int		ret, msglen, buflen, offset = 13, image_no;
+	int		ret, msglen, buflen, /* offset = 13, */ image_no;
 	unsigned int	val, retcode;
 	unsigned char	*xmsg, *msg, *buf;
 
@@ -653,6 +653,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	return gp_list_populate(list, "image%i.jpg", count);
 }
 
+#if 0 /* This function is not used by anybody */
 static int
 get_shoot_mode_table (Camera *camera) {
 	unsigned char *buf, *msg, *xmsg;
@@ -720,6 +721,7 @@ get_shoot_mode_table (Camera *camera) {
 	free (msg);
 	return GP_OK;
 }
+#endif
 
 static int
 camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
