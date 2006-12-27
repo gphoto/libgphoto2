@@ -244,7 +244,7 @@ static int
 put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	       void *data, GPContext *context)
 {
-	Camera *camera;
+	Camera *camera = data;
 
 	/*
 	 * Upload the file to the camera. Use gp_file_get_data_and_size,
@@ -485,3 +485,10 @@ camera_init (Camera *camera, GPContext *context)
 /*********************************************************************
  * End of camlib template.
  *********************************************************************/
+
+/*
+ * Local Variables:
+ * c-file-style:"linux"
+ * indent-tabs-mode:t
+ * End:
+ */
