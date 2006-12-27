@@ -14,8 +14,6 @@
  * We are working at moving serial and USB specific stuff to serial.c
  * and usb.c, keeping the common protocols/busses support in this
  * file.
- *
- * $Id$
  */
 
 #include "config.h"
