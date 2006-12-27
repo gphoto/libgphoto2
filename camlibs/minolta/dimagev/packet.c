@@ -45,7 +45,7 @@
 
 	 A packet must be at least eight bytes, with at least one byte of payload.
 */
-dimagev_packet *dimagev_make_packet(unsigned char *buffer, unsigned int length, unsigned int seq) {
+dimagev_packet *dimagev_make_packet(const unsigned char *const buffer, unsigned int length, unsigned int seq) {
 	unsigned int i=0, checksum=0;
 	dimagev_packet *p;
 	

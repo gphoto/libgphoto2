@@ -201,7 +201,7 @@ typedef struct _CameraPrivateLibrary {
 } dimagev_t;
 
 /* These functions are in packet.c */
-dimagev_packet *dimagev_make_packet(unsigned char *buffer, unsigned int length, unsigned int seq);
+dimagev_packet *dimagev_make_packet(const unsigned char *const buffer, unsigned int length, unsigned int seq);
 dimagev_packet *dimagev_read_packet(dimagev_t *dimagev);
 int dimagev_verify_packet(dimagev_packet *p);
 dimagev_packet *dimagev_strip_packet(dimagev_packet *p);
