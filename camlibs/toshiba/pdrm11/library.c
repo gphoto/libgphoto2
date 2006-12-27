@@ -142,8 +142,6 @@ static CameraFilesystemFuncs fsfuncs = {
 int
 camera_init (Camera *camera, GPContext *context) 
 {
-	int ret;
-
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;
         camera->functions->about                = camera_about;
