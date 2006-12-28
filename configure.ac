@@ -87,6 +87,39 @@ dnl sequence seems to get mixed up.
 SED=${SED-sed}
 
 
+dnl ---------------------------------------------------------------------------
+dnl Turn on (almost) all warnings when using gcc
+dnl ---------------------------------------------------------------------------
+if test "x$GCC" = "xyes"; then
+	AM_CPPFLAGS="$AM_CPPFLAGS -Wall"
+	AM_CFLAGS="$AM_CFLAGS --std=c99 -Wall -Wextra -Werror -Wno-pointer-sign -Wno-unused -Wno-sign-compare" # -pedantic"
+	AM_CFLAGS="$AM_CFLAGS -Wmissing-declarations -Wmissing-prototypes -Wno-pointer-sign"
+	AM_LDFLAGS="$AM_LDFLAGS -Wall"
+	# FIXME: Check for --enable-debug here
+	AM_CPPFLAGS="$AM_CPPFLAGS -g"
+	AM_LDFLAGS="$AM_LDFLAGS -g"
+	AC_SUBST([NO_UNUSED_CFLAGS], [-Wno-unused])
+fi
+AM_CONDITIONAL([HAVE_GCC], [test "x$GCC" = "xyes"])
+
+AM_CPPFLAGS="$AM_CPPFLAGS -D_GPHOTO2_INTERNAL_CODE"
+
+# CPPFLAGS: C PreProcessor flags
+AC_SUBST([AM_CPPFLAGS])
+# CFLAGS: C compiler flags
+AC_SUBST([AM_CFLAGS])
+# CXXFLAGS: C++ compiler flags
+AC_SUBST([AM_CXXFLAGS])
+# LDFLAGS: Linker flags
+AC_SUBST([AM_LDFLAGS])
+
+# Define compiler flags for later compile tests
+# Note: Do NOT add specific libraries and stuff to the generic _FLAGS.
+#       Put these into LIBFOO_CFLAGS and LIBFOO_LIBS instead.
+CFLAGS="$AM_CFLAGS"
+CPPFLAGS="$AM_CPPFLAGS"
+
+
 try_gp2ddb=false
 msg_gp2ddb=""
 gp_msg_dp2ddb="no"
@@ -496,33 +529,8 @@ AC_PATH_PROG(LIBUSB_CONFIG,libusb-config)
 AM_CONDITIONAL(HAVE_LIBUSB,test -n "${LIBUSB_CONFIG}")
 
 
-dnl ---------------------------------------------------------------------------
-dnl Turn on (almost) all warnings when using gcc
-dnl ---------------------------------------------------------------------------
-if test "x$GCC" = "xyes"; then
-	AM_CPPFLAGS="$AM_CPPFLAGS -Wall"
-	AM_CFLAGS="$AM_CFLAGS -Wmissing-declarations -Wmissing-prototypes -Wno-pointer-sign"
-	AM_LDFLAGS="$AM_LDFLAGS -Wall"
-	# FIXME: Check for --enable-debug here
-	AM_CPPFLAGS="$AM_CPPFLAGS -g"
-	AM_LDFLAGS="$AM_LDFLAGS -g"
-	AC_SUBST([NO_UNUSED_CFLAGS], [-Wno-unused])
-fi
-AM_CONDITIONAL([HAVE_GCC], [test "x$GCC" = "xyes"])
-
-AM_CPPFLAGS="$AM_CPPFLAGS -D_GPHOTO2_INTERNAL_CODE"
-
 dnl FIXME: Is this accurate?
 AM_CONDITIONAL([HAVE_CXX], [test -n "$CXX" && test "X$CXX" != "Xno"])
-
-# CPPFLAGS: C PreProcessor flags
-AC_SUBST([AM_CPPFLAGS])
-# CFLAGS: C compiler flags
-AC_SUBST([AM_CFLAGS])
-# CXXFLAGS: C++ compiler flags
-AC_SUBST([AM_CXXFLAGS])
-# LDFLAGS: Linker flags
-AC_SUBST([AM_LDFLAGS])
 
 
 dnl ---------------------------------------------------------------------------
