@@ -24,6 +24,8 @@
  * This file contains internal functions. Use of these functions from
  * external software modules is considered <strong>deprecated</strong>.
  */
+#define _POSIX_SOURCE
+#define _BSD_SOURCE
 
 #include "config.h"
 #include <gphoto2/gphoto2-file.h>
