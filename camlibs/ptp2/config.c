@@ -17,6 +17,7 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
+#define _BSD_SOURCE
 #include "config.h"
 
 #include <stdlib.h>
@@ -579,7 +580,6 @@ static struct deviceproptableu16 whitebalance[] = {
 	{ N_("Shade"),			0x8011, PTP_VENDOR_NIKON },
 	{ N_("Color Temperature"),	0x8012, PTP_VENDOR_NIKON },
 	{ N_("Preset"),			0x8013, PTP_VENDOR_NIKON },
-	{ NULL },
 };
 GENERIC16TABLE(WhiteBalance,whitebalance)
 
@@ -591,7 +591,6 @@ static struct deviceproptableu8 compression[] = {
 	{ N_("JPEG Fine"), 0x02, PTP_VENDOR_NIKON },
 	{ N_("NEF (Raw)"), 0x04, PTP_VENDOR_NIKON },
 	{ N_("NEF+BASIC"), 0x05, PTP_VENDOR_NIKON },
-	{ NULL },
 };
 GENERIC8TABLE(Compression,compression)
 
@@ -825,7 +824,6 @@ static struct deviceproptableu8 canon_quality[] = {
 	{ N_("normal"),		0x02, 0 },
 	{ N_("fine"),		0x03, 0 },
 	{ N_("super fine"),	0x05, 0 },
-	{ NULL },
 };
 GENERIC8TABLE(Canon_Quality,canon_quality)
 
@@ -927,7 +925,6 @@ static struct deviceproptableu8 canon_size[] = {
 	{ N_("medium 1"),	0x01, 0 },
 	{ N_("medium 2"),	0x03, 0 },
 	{ N_("small"),		0x02, 0 },
-	{ NULL },
 };
 GENERIC8TABLE(Canon_Size,canon_size)
 
@@ -2095,7 +2092,7 @@ static struct submenu create_wifi_profile_submenu[] = {
 	{ N_("Encryption"), "encryption", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_encryption, _put_nikon_wifi_profile_encryption },
 	{ N_("Encryption key (hex)"), "key", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_prop, _put_nikon_wifi_profile_prop },
 	{ N_("Write"), "write", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_write, _put_nikon_wifi_profile_write },
-	{ NULL },
+	{ 0,0,0,0,0,0,0 },
 };
 
 static int
@@ -2143,7 +2140,7 @@ static struct submenu wifi_profiles_menu[] = {
 	/* wifi */
 	{ N_("List Wifi profiles"), "list", 0, PTP_VENDOR_NIKON, 0, _get_nikon_list_wifi_profiles, _put_nikon_list_wifi_profiles },
 	{ N_("Create Wifi profile"), "new", 0, PTP_VENDOR_NIKON, 0, _get_nikon_create_wifi_profile, _put_nikon_create_wifi_profile },
-	{ NULL },
+	{ 0,0,0,0,0,0,0 },
 };
 
 /* Wifi profiles menu is a non-standard menu, because putfunc is always
@@ -2206,7 +2203,7 @@ static struct submenu camera_settings_menu[] = {
 	{ N_("Capture Target"), "capturetarget", 0, PTP_VENDOR_NIKON, 0, _get_CaptureTarget, _put_CaptureTarget },
 	{ N_("Capture Target"), "capturetarget", 0, PTP_VENDOR_CANON, 0, _get_CaptureTarget, _put_CaptureTarget },
 	{ N_("Capture"), "capture", 0, PTP_VENDOR_CANON, 0, _get_Canon_CaptureMode, _put_Canon_CaptureMode},
-	{ NULL },
+	{ 0,0,0,0,0,0,0 },
 };
 
 /* think of this as properties of the "film" */
@@ -2221,7 +2218,7 @@ static struct submenu image_settings_menu[] = {
 	{ N_("Photo Effect"), "photoeffect", PTP_DPC_CANON_PhotoEffect, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_PhotoEffect, _put_Canon_PhotoEffect},
 	{ N_("Color Model"), "colormodel", PTP_DPC_NIKON_ColorModel, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_ColorModel, _put_Nikon_ColorModel},
 	{ N_("Auto ISO"), "autoiso", PTP_DPC_NIKON_ISOAuto, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
-        { NULL },
+        { 0,0,0,0,0,0,0 },
 };
 
 static struct submenu capture_settings_menu[] = {
@@ -2283,7 +2280,7 @@ static struct submenu capture_settings_menu[] = {
         { N_("Saturation"), "saturation", PTP_DPC_NIKON_Saturation, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_Saturation, _put_Nikon_Saturation },
         { N_("Hue Adjustment"), "hueadjustment", PTP_DPC_NIKON_HueAdjustment, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_HueAdjustment, _put_Nikon_HueAdjustment },
 	/* { N_("Viewfinder Mode"), "viewfinder", PTP_DPC_CANON_ViewFinderMode, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_ViewFinderMode, _put_Canon_ViewFinderMode}, */
-	{ NULL },
+	{ 0,0,0,0,0,0,0 },
 };
 
 static struct menu menus[] = {
