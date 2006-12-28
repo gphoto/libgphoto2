@@ -19,6 +19,7 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
+#define _BSD_SOURCE
 #include "config.h"
 
 #include <stdlib.h>
@@ -899,13 +900,16 @@ typedef struct _PTPData PTPData;
 
 #define CONTEXT_BLOCK_SIZE	100000
 static short
-ptp_read_func (unsigned char *bytes, unsigned int size, void *data, unsigned int *readbytes)
-{
+ptp_read_func (
+	unsigned long size, PTPDataHandler *handler,void *data,
+	unsigned long *readlen
+) {
 	Camera *camera = ((PTPData *)data)->camera;
 	int toread, result = GP_ERROR, curread = 0;
 	int usecontext = (size > CONTEXT_BLOCK_SIZE);
 	int progressid = 0, tries = 0;
 	GPContext *context = ((PTPData *)data)->context;
+	unsigned char *bytes;
 
 	/* Split into small blocks. Too large blocks (>1x MB) would
 	 * timeout.
@@ -913,19 +917,23 @@ ptp_read_func (unsigned char *bytes, unsigned int size, void *data, unsigned int
 retry:
 	if (usecontext)
 		progressid = gp_context_progress_start (context, (size/CONTEXT_BLOCK_SIZE), _("Downloading..."));
+	bytes = malloc(4096);
+	if (!bytes) return PTP_RC_GeneralError;
 	while (curread < size) {
 		int oldsize = curread;
+		unsigned long xresult;
 
 		toread = size - curread;
 		if (toread > 4096)
 			toread = 4096;
-		result = gp_port_read (camera->port, (char*)(bytes + curread), toread);
+		result = gp_port_read (camera->port, bytes, toread);
 		if (result == 0) {
-			result = gp_port_read (camera->port, (char*)(bytes + curread), toread);
+			result = gp_port_read (camera->port, bytes, toread);
 		}
 		if (result < 0)
 			break;
-		curread += result;
+		handler->putfunc (data, handler->private, result, bytes, &xresult);
+		curread += xresult;
 		if (usecontext && (oldsize/CONTEXT_BLOCK_SIZE < curread/CONTEXT_BLOCK_SIZE))
 			gp_context_progress_update (context, progressid, curread/CONTEXT_BLOCK_SIZE);
 		if (result < toread) /* short reads are common */
@@ -934,42 +942,60 @@ retry:
 	if (usecontext)
 		gp_context_progress_stop (context, progressid);
 	if (result > 0) {
-		*readbytes = curread;
+		*readlen = curread;
 		return (PTP_RC_OK);
-	} else {
-		if (result == GP_ERROR_IO_READ) {
-			gp_log (GP_LOG_DEBUG, "ptp2/usbread", "Clearing halt on IN EP and retrying once.\n");
-			gp_port_usb_clear_halt (camera->port, GP_PORT_USB_ENDPOINT_IN);
-			/* retrying only makes sense if we did not read anything yet */
-			if ((tries++ < 1) && (curread == 0))
-				goto retry;
-		}
-		return (translate_gp_result (result));
 	}
+	if (result == GP_ERROR_IO_READ) {
+		gp_log (GP_LOG_DEBUG, "ptp2/usbread", "Clearing halt on IN EP and retrying once.\n");
+		gp_port_usb_clear_halt (camera->port, GP_PORT_USB_ENDPOINT_IN);
+		/* retrying only makes sense if we did not read anything yet */
+		if ((tries++ < 1) && (curread == 0))
+			goto retry;
+	}
+	return (translate_gp_result (result));
 }
 
 static short
-ptp_write_func (unsigned char *bytes, unsigned int size, void *data)
-{
+ptp_write_func (
+	unsigned long	size,
+	PTPDataHandler	*handler,
+	void		*data,
+	unsigned long	*written
+) {
 	Camera *camera = ((PTPData *)data)->camera;
-	int towrite, result = GP_ERROR, curwrite = 0;
+	PTPParams *params = &camera->pl->params;
+	unsigned long towrite, curwrite = 0;
+	int result = GP_ERROR;
 	int progressid = 0;
 	int usecontext = (size > CONTEXT_BLOCK_SIZE);
 	GPContext *context = ((PTPData *)data)->context;
+	unsigned char *bytes;
 
 	/*
 	 * gp_port_write returns (in case of success) the number of bytes
 	 * write. Too large blocks (>5x MB) could timeout.
 	 */
+	bytes = malloc (4096);
+	if (!bytes) return PTP_ERROR_IO;
 	if (usecontext)
 		progressid = gp_context_progress_start (context, (size/CONTEXT_BLOCK_SIZE), _("Uploading..."));
 	while (curwrite < size) {
-		int oldsize = curwrite;
+		uint16_t	ret;
+		unsigned long	oldsize = curwrite;
 
 		towrite = size-curwrite;
 		if (towrite > 4096)
 			towrite = 4096;
-		result = gp_port_write (camera->port, (char*)(bytes + curwrite), towrite);
+		ret = handler->getfunc (params, handler->private, towrite, bytes, &towrite);
+		if (ret != PTP_RC_OK) {
+			result = GP_ERROR_IO;
+			break;
+		}
+		if (towrite == 0) {
+			result = GP_ERROR_IO;
+			break;
+		}
+		result = gp_port_write (camera->port, bytes, towrite);
 		if (result < 0)
 			break;
 		curwrite += result;
@@ -980,29 +1006,41 @@ ptp_write_func (unsigned char *bytes, unsigned int size, void *data)
 	}
 	if (usecontext)
 		gp_context_progress_stop (context, progressid);
-	/* Should load wMaxPacketsize from endpoint first. But works fine for all EPs. */
+	free (bytes);
+	/* Should load wMaxPacketsize from endpoint first. :( */
 	if ((size % 512) == 0)
 		gp_port_write (camera->port, "x", 0);
 	if (result < 0)
 		return (translate_gp_result (result));
+	if (written) *written = curwrite;
 	return PTP_RC_OK;
 }
 
 static short
-ptp_check_int (unsigned char *bytes, unsigned int size, void *data, unsigned int *rlen)
-{
-	Camera *camera = ((PTPData *)data)->camera;
-	int result;
+ptp_check_int (
+	unsigned long size,
+	PTPDataHandler *handler,
+	void *data,
+	unsigned long *rlen
+) {
+	Camera	*camera = ((PTPData *)data)->camera;
+	PTPParams *params = &camera->pl->params;
+	int	result;
+	unsigned long	putlen;
+	unsigned char	event[sizeof(PTPUSBEventContainer)];
 
+	if (size > sizeof(event))
+		return PTP_ERROR_IO;
 	/*
 	 * gp_port_check_int returns (in case of success) the number of bytes
 	 * read.
 	 */
 
-	result = gp_port_check_int (camera->port, (char*)bytes, size);
-	if (result==0) result = gp_port_check_int (camera->port, (char*)bytes, size);
+	result = gp_port_check_int (camera->port, event, size);
+	if (result==0) result = gp_port_check_int (camera->port, event, size);
 	if (result >= 0) {
 		*rlen = result;
+		handler->putfunc (params, handler->private, result, event, &putlen);
 		return (PTP_RC_OK);
 	} else {
 		return (translate_gp_result (result));
@@ -1010,20 +1048,29 @@ ptp_check_int (unsigned char *bytes, unsigned int size, void *data, unsigned int
 }
 
 static short
-ptp_check_int_fast (unsigned char *bytes, unsigned int size, void *data, unsigned int *rlen)
-{
-	Camera *camera = ((PTPData *)data)->camera;
-	int result;
+ptp_check_int_fast (
+	unsigned long	size,
+	PTPDataHandler	*handler,
+	void		*data,
+	unsigned long	*rlen
+) {
+	Camera		*camera = ((PTPData *)data)->camera;
+	int		result;
+	char		event[sizeof(PTPUSBEventContainer)];
+	unsigned long	putlen;
+	PTPParams	*params = &camera->pl->params;
 
+	if (size > sizeof(event))
+		return PTP_ERROR_IO;
 	/*
 	 * gp_port_check_int returns (in case of success) the number of bytes
-	 * read. libptp doesn't need that.
+	 * read.
 	 */
-
-	result = gp_port_check_int_fast (camera->port, (char*)bytes, size);
-	if (result==0) result = gp_port_check_int_fast (camera->port, (char*)bytes, size);
+	result = gp_port_check_int_fast (camera->port, event, size);
+	if (result==0) result = gp_port_check_int_fast (camera->port, event, size);
 	if (result >= 0) {
 		*rlen = result;
+		handler->putfunc (params, handler->private, result, event, &putlen);
 		return (PTP_RC_OK);
 	} else {
 		return (translate_gp_result (result));
@@ -2844,6 +2891,57 @@ mtp_get_playlist(
 	return (GP_OK);
 }
 
+typedef struct {
+	CameraFile	*file;
+} PTPCFHandlerPrivate;
+
+static uint16_t
+gpfile_getfunc (PTPParams *params, void *priv,
+	unsigned long wantlen, unsigned char *bytes,
+	unsigned long *gotlen
+) {
+	PTPCFHandlerPrivate* private = (PTPCFHandlerPrivate*)priv;
+	int ret;
+	
+	ret = gp_file_slurp (private->file, bytes, wantlen, gotlen);
+	if (ret != GP_OK)
+		return PTP_ERROR_IO;
+	return PTP_RC_OK;
+}
+
+static uint16_t
+gpfile_putfunc (PTPParams *params, void *priv,
+	unsigned long sendlen, unsigned char *bytes,
+	unsigned long *written
+) {
+	PTPCFHandlerPrivate* private = (PTPCFHandlerPrivate*)priv;
+	int ret;
+	
+	ret = gp_file_append (private->file, bytes, sendlen);
+	if (ret != GP_OK)
+		return PTP_ERROR_IO;
+	*written = sendlen;
+	return PTP_RC_OK;
+}
+
+static uint16_t
+ptp_init_camerafile_handler (PTPDataHandler *handler, CameraFile *file) {
+	PTPCFHandlerPrivate* private = malloc (sizeof(PTPCFHandlerPrivate));
+	if (!private) return PTP_RC_GeneralError;
+	handler->private = private;
+	handler->getfunc = gpfile_getfunc;
+	handler->putfunc = gpfile_putfunc;
+	private->file = file;
+	return PTP_RC_OK;
+}
+
+static uint16_t
+ptp_exit_camerafile_handler (PTPDataHandler *handler) {
+	free (handler->private);
+	return PTP_RC_OK;
+}
+
+
 static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *data,
@@ -2955,9 +3053,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			return ptp_mtp_render_metadata (params,params->handles.Handler[object_id],oi->ObjectFormat,file);
 		return (GP_ERROR_NOT_SUPPORTED);
 	default: {
-		unsigned char *ximage = NULL;
-
-		/* we do not allow downloading unknown type files as in most
+		/* We do not allow downloading unknown type files as in most
 		cases they are special file (like firmware or control) which
 		sometimes _cannot_ be downloaded. doing so we avoid errors.*/
 		if (oi->ObjectFormat == PTP_OFC_Association ||
@@ -2971,18 +3067,20 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 		size=oi->ObjectCompressedSize;
 		if (size) {
-			CPR (context, ptp_getobject(params,
+			PTPDataHandler handler;
+			ptp_init_camerafile_handler (&handler, file);
+			CPR (context, ptp_getobject_to_handler(params,
 			params->handles.Handler[object_id],
-			&ximage));
+			&handler));
+			ptp_exit_camerafile_handler (&handler);
 		} else {
+			unsigned char *ximage = NULL;
 			/* Do not download 0 sized files.
 			 * It is not necessary and even breaks for some camera special files.
 			 */
 			ximage = malloc(1);
+			CR (gp_file_set_data_and_size (file, (char*)ximage, size));
 		}
-		CR (gp_file_set_data_and_size (file, (char*)ximage, size));
-		/* XXX does gp_file_set_data_and_size free() image ptr upon
-		   failure?? */
 
 		/* clear the "new" flag on Canons */
 		if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
@@ -3009,12 +3107,10 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	Camera *camera = data;
 	PTPObjectInfo oi;
 	const char *filename;
-	char *object;
 	uint32_t parent;
 	uint32_t storage;
 	uint32_t handle;
 	unsigned long intsize;
-	uint32_t size;
 	PTPParams* params=&camera->pl->params;
 	CameraFileType	type;
 
@@ -3061,10 +3157,6 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 		gp_context_error (context, _("Metadata only supported for MTP devices."));
 		return GP_ERROR;
 	}
-
-	gp_file_get_data_and_size (file, (const char **)&object, &intsize);
-	size=(uint32_t)intsize;
-
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);
 
@@ -3081,29 +3173,40 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	if (handle != PTP_HANDLER_SPECIAL)
 		return GP_ERROR_FILE_EXISTS;
 
+
 	oi.Filename=(char *)filename;
 	oi.ObjectFormat = get_mimetype(camera, file);
-	oi.ObjectCompressedSize = size;
 	oi.ParentObject = parent;
 	gp_file_get_mtime(file, &oi.ModificationDate);
 
 	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
-	    (	strstr(filename,".zpl") || strstr(filename, ".pla") ))
+	    (	strstr(filename,".zpl") || strstr(filename, ".pla") )) {
+		char *object;
+		gp_file_get_data_and_size (file, (const char**)&object, &intsize);
 		return mtp_put_playlist (camera, object, intsize, &oi, context);
+	}
 
-	/* if the device is usign PTP_VENDOR_EASTMAN_KODAK extension try
-	 * PTP_OC_EK_SendFileObject
+	/* If the device is using PTP_VENDOR_EASTMAN_KODAK extension try
+	 * PTP_OC_EK_SendFileObject.
 	 */
+	gp_file_get_data_and_size (file, NULL, &intsize);
+	oi.ObjectCompressedSize = intsize;
 	if ((params->deviceinfo.VendorExtensionID==PTP_VENDOR_EASTMAN_KODAK) &&
 		(ptp_operation_issupported(params, PTP_OC_EK_SendFileObject)))
 	{
+		PTPDataHandler handler;
 		CPR (context, ptp_ek_sendfileobjectinfo (params, &storage,
 			&parent, &handle, &oi));
-		CPR (context, ptp_ek_sendfileobject (params, (unsigned char*)object, size));
+		ptp_init_camerafile_handler (&handler, file);
+		CPR (context, ptp_ek_sendfileobject_from_handler (params, &handler, intsize));
+		ptp_exit_camerafile_handler (&handler);
 	} else if (ptp_operation_issupported(params, PTP_OC_SendObjectInfo)) {
+		PTPDataHandler handler;
 		CPR (context, ptp_sendobjectinfo (params, &storage,
 			&parent, &handle, &oi));
-		CPR (context, ptp_sendobject (params, (unsigned char*)object, size));
+		ptp_init_camerafile_handler (&handler, file);
+		CPR (context, ptp_sendobject_from_handler (params, &handler, intsize));
+		ptp_exit_camerafile_handler (&handler);
 	} else {
 		GP_DEBUG ("The device does not support uploading files!");
 		return GP_ERROR_NOT_SUPPORTED;

@@ -1078,23 +1078,34 @@ typedef struct _PTPNIKONWifiProfile PTPNIKONWifiProfile;
 
 typedef struct _PTPParams PTPParams;
 
-/* raw write functions */
-typedef short (* PTPIOReadFunc)	(unsigned char *bytes, unsigned int size,
-				 void *data, unsigned int *readlen);
-typedef short (* PTPIOWriteFunc)(unsigned char *bytes, unsigned int size,
-				 void *data);
+
+typedef uint16_t (* PTPDataGetFunc)	(PTPParams* params, void* private,
+					unsigned long wantlen,
+	                                unsigned char *data, unsigned long *gotlen);
+
+typedef uint16_t (* PTPDataPutFunc)	(PTPParams* params, void* private,
+					unsigned long sendlen,
+	                                unsigned char *data, unsigned long *putlen);
+typedef struct _PTPDataHandler {
+	PTPDataGetFunc		getfunc;
+	PTPDataPutFunc		putfunc;
+	void			*private;
+} PTPDataHandler;
+
+/* PTP <-> lowlevel IO layer read/write functions */
+typedef short (* PTPIOReadFunc)	(unsigned long size, PTPDataHandler*, void*, unsigned long*readlen);
+typedef short (* PTPIOWriteFunc)(unsigned long size, PTPDataHandler*, void *data, unsigned long *written);
 /*
  * This functions take PTP oriented arguments and send them over an
  * appropriate data layer doing byteorder conversion accordingly.
  */
 typedef uint16_t (* PTPIOSendReq)	(PTPParams* params, PTPContainer* req);
 typedef uint16_t (* PTPIOSendData)	(PTPParams* params, PTPContainer* ptp,
-					 unsigned char *data, unsigned int size,
-					 int from_fd);
+					 unsigned long size, PTPDataHandler*getter);
+
 typedef uint16_t (* PTPIOGetResp)	(PTPParams* params, PTPContainer* resp);
 typedef uint16_t (* PTPIOGetData)	(PTPParams* params, PTPContainer* ptp,
-	                                unsigned char **data, unsigned int *recvlen,
-	                                int to_fd);
+	                                 PTPDataHandler *putter);
 /* debug functions */
 typedef void (* PTPErrorFunc) (void *data, const char *format, va_list args)
 #if (__GNUC__ >= 3)
@@ -1176,24 +1187,20 @@ struct _PTPParams {
 /* last, but not least - ptp functions */
 uint16_t ptp_usb_sendreq	(PTPParams* params, PTPContainer* req);
 uint16_t ptp_usb_senddata	(PTPParams* params, PTPContainer* ptp,
-				 unsigned char *data, unsigned int size,
-				 int from_fd);
+				 unsigned long size, PTPDataHandler *handler);
 uint16_t ptp_usb_getresp	(PTPParams* params, PTPContainer* resp);
 uint16_t ptp_usb_getdata	(PTPParams* params, PTPContainer* ptp, 
-				 unsigned char **data, unsigned int *readlen,
-	                         int to_fd);
+	                         PTPDataHandler *handler);
 uint16_t ptp_usb_event_check	(PTPParams* params, PTPContainer* event);
 uint16_t ptp_usb_event_wait	(PTPParams* params, PTPContainer* event);
 
 int      ptp_ptpip_connect	(PTPParams* params, const char *port);
 uint16_t ptp_ptpip_sendreq	(PTPParams* params, PTPContainer* req);
 uint16_t ptp_ptpip_senddata	(PTPParams* params, PTPContainer* ptp,
-				unsigned char *data, unsigned int size,
-				int to_fd);
+				unsigned long size, PTPDataHandler *handler);
 uint16_t ptp_ptpip_getresp	(PTPParams* params, PTPContainer* resp);
 uint16_t ptp_ptpip_getdata	(PTPParams* params, PTPContainer* ptp, 
-				 unsigned char **data, unsigned int *readlen,
-	                         int to_fd);
+	                         PTPDataHandler *handler);
 uint16_t ptp_ptpip_event_wait	(PTPParams* params, PTPContainer* event);
 uint16_t ptp_ptpip_event_check	(PTPParams* params, PTPContainer* event);
 
@@ -1223,6 +1230,7 @@ uint16_t ptp_getobjectinfo	(PTPParams *params, uint32_t handle,
 uint16_t ptp_getobject		(PTPParams *params, uint32_t handle,
 				unsigned char** object);
 uint16_t ptp_getobject_tofd     (PTPParams* params, uint32_t handle, int fd);
+uint16_t ptp_getobject_to_handler (PTPParams* params, uint32_t handle, PTPDataHandler*);
 uint16_t ptp_getpartialobject	(PTPParams* params, uint32_t handle, uint32_t offset,
 				uint32_t maxbytes, unsigned char** object);
 uint16_t ptp_getthumb		(PTPParams *params, uint32_t handle,
@@ -1237,6 +1245,7 @@ uint16_t ptp_sendobjectinfo	(PTPParams* params, uint32_t* store,
 uint16_t ptp_sendobject		(PTPParams* params, unsigned char* object,
 				 uint32_t size);
 uint16_t ptp_sendobject_fromfd  (PTPParams* params, int fd, uint32_t size);
+uint16_t ptp_sendobject_from_handler  (PTPParams* params, PTPDataHandler*, uint32_t size);
 
 uint16_t ptp_initiatecapture	(PTPParams* params, uint32_t storageid,
 				uint32_t ofc);
@@ -1272,6 +1281,8 @@ uint16_t ptp_ek_sendfileobjectinfo (PTPParams* params, uint32_t* store,
 				uint32_t* parenthandle, uint32_t* handle,
 				PTPObjectInfo* objectinfo);
 uint16_t ptp_ek_sendfileobject	(PTPParams* params, unsigned char* object,
+				uint32_t size);
+uint16_t ptp_ek_sendfileobject_from_handler	(PTPParams* params, PTPDataHandler*,
 				uint32_t size);
 
 /* Canon PTP extensions */

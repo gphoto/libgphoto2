@@ -26,6 +26,7 @@
  * - Coolpix P3 does not give transfer status (image 000x/000y), and reports an
  *   error when transfers finish correctly.
  */
+#define _BSD_SOURCE
 #include "config.h"
 
 #include <stdlib.h>
@@ -210,17 +211,12 @@ ptp_ptpip_check_event (PTPParams* params) {
 #define WRITE_BLOCKSIZE 65536
 uint16_t
 ptp_ptpip_senddata (PTPParams* params, PTPContainer* ptp,
-			unsigned char *data, unsigned int size,
-			int to_fd)
-{
+		unsigned long size, PTPDataHandler *handler
+) {
 	unsigned char	request[16];
 	int		ret, curwrite, towrite;
 	unsigned char*	xdata;
 
-	if (to_fd != -1) {
-		gp_log (GP_LOG_ERROR, "ptpip/senddata", "fd transfers not supported.");
-		return PTP_RC_GeneralError;
-	}
 	htod32a(&request[ptpip_type],PTPIP_START_DATA_PACKET);
 	htod32a(&request[ptpip_len],sizeof(request));
 	htod32a(&request[ptpip_startdata_transid  + 8],ptp->Transaction_ID);
@@ -237,7 +233,7 @@ ptp_ptpip_senddata (PTPParams* params, PTPContainer* ptp,
 	if (!xdata) return PTP_RC_GeneralError;
 	curwrite = 0;
 	while (curwrite < size) {
-		int type, written, towrite2;
+		unsigned long type, written, towrite2, xtowrite;
 
 		ptp_ptpip_check_event (params);
 
@@ -248,11 +244,15 @@ ptp_ptpip_senddata (PTPParams* params, PTPContainer* ptp,
 		} else {
 			type	= PTPIP_END_DATA_PACKET;
 		}
-		towrite2 = towrite+12;
+		ret = handler->getfunc (params, handler->private, towrite, &xdata[ptpip_data_payload+8], &xtowrite);
+		if (ret == -1) {
+			perror ("getfunc in senddata failed");
+			return PTP_RC_GeneralError;
+		}
+		towrite2 = xtowrite + 12;
 		htod32a(&xdata[ptpip_type], type);
 		htod32a(&xdata[ptpip_len], towrite2);
 		htod32a(&xdata[ptpip_data_transid+8], ptp->Transaction_ID);
-		memcpy (&xdata[ptpip_data_payload+8], data+curwrite, towrite);
 		gp_log_data("ptpip/senddata", (char*)xdata, towrite2);
 		written = 0;
 		while (written > towrite2) {
@@ -269,18 +269,12 @@ ptp_ptpip_senddata (PTPParams* params, PTPContainer* ptp,
 }
 
 uint16_t
-ptp_ptpip_getdata (PTPParams* params, PTPContainer* ptp,
-		unsigned char **data, unsigned int *readlen, int to_fd)
-{
+ptp_ptpip_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler) {
 	PTPIPHeader		hdr;
 	unsigned char		*xdata = NULL;
 	uint16_t 		ret;
-	int			toread, curread;
-
-	if (to_fd != -1) {
-		gp_log (GP_LOG_ERROR, "ptpip/getdata", "fd transfers not handled yet");
-		return PTP_RC_GeneralError;
-	}
+	unsigned long		toread, curread;
+	int			xret;
 
 	ret = ptp_ptpip_cmd_read (params, &hdr, &xdata);
 	if (ret != PTP_RC_OK)
@@ -292,44 +286,56 @@ ptp_ptpip_getdata (PTPParams* params, PTPContainer* ptp,
 	}
 	if (dtoh32(hdr.type) != PTPIP_START_DATA_PACKET) {
 		gp_log (GP_LOG_ERROR, "ptpip/getdata", "got reply type %d\n", dtoh32(hdr.type));
-		free (data);
 		return PTP_RC_GeneralError;
 	}
 	toread = dtoh32a(&xdata[ptpip_data_payload]);
 	free (xdata); xdata = NULL;
-
-	*readlen = toread;
-	*data = malloc(toread);
 	curread = 0;
 	while (curread < toread) {
 		ret = ptp_ptpip_cmd_read (params, &hdr, &xdata);
 		if (ret != PTP_RC_OK)
 			return ret;
 		if (dtoh32(hdr.type) == PTPIP_END_DATA_PACKET) {
-			int datalen = dtoh32(hdr.length)-8-ptpip_data_payload;
+			unsigned long written;
+			unsigned long datalen = dtoh32(hdr.length)-8-ptpip_data_payload;
 			if (datalen > (toread-curread)) {
 				gp_log (GP_LOG_ERROR, "ptpip/getdata",
-					"returned data is too much, expected %d, got %d",
+					"returned data is too much, expected %ld, got %ld",
 					(toread-curread),datalen
 				);
 				break;
 			}
-			memcpy ((*data)+curread, xdata+ptpip_data_payload, datalen);
-			curread += datalen;
+			xret = handler->putfunc (params, handler->private,
+				datalen, xdata+ptpip_data_payload, &written
+			);
+			if (xret == -1) {
+				gp_log (GP_LOG_ERROR, "ptpip/getdata",
+					"failed to putfunc of returned data");
+				break;
+			}
+			curread += written;
 			free (xdata); xdata = NULL;
 			continue;
 		}
 		if (dtoh32(hdr.type) == PTPIP_DATA_PACKET) {
-			int datalen = dtoh32(hdr.length)-8-ptpip_data_payload;
+			unsigned long written;
+			unsigned long datalen = dtoh32(hdr.length)-8-ptpip_data_payload;
 			if (datalen > (toread-curread)) {
 				gp_log (GP_LOG_ERROR, "ptpip/getdata",
-					"returned data is too much, expected %d, got %d",
+					"returned data is too much, expected %ld, got %ld",
 					(toread-curread),datalen
 				);
 				break;
 			}
-			memcpy ((*data)+curread, xdata+ptpip_data_payload, datalen);
-			curread += datalen;
+			xret = handler->putfunc (params, handler->private,
+				datalen, xdata+ptpip_data_payload, &written
+			);
+			if (xret == -1) {
+				gp_log (GP_LOG_ERROR, "ptpip/getdata",
+					"failed to putfunc of returned data");
+				break;
+			}
+			curread += written;
 			free (xdata); xdata = NULL;
 			continue;
 		}

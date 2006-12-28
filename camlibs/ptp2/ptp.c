@@ -20,6 +20,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#define _BSD_SOURCE
 #include <config.h>
 #include "ptp.h"
 
@@ -51,6 +52,11 @@
 #define CHECK_PTP_RC(result)	{uint16_t r=(result); if (r!=PTP_RC_OK) return r;}
 
 #define PTP_CNT_INIT(cnt) {memset(&cnt,0,sizeof(cnt));}
+
+static uint16_t ptp_exit_recv_memory_handler (PTPDataHandler*,unsigned char**,unsigned long*);
+static uint16_t ptp_init_recv_memory_handler(PTPDataHandler*);
+static uint16_t ptp_init_send_memory_handler(PTPDataHandler*,unsigned char*,unsigned long len);
+static uint16_t ptp_exit_send_memory_handler (PTPDataHandler *handler);
 
 static void
 ptp_debug (PTPParams *params, const char *format, ...)
@@ -97,6 +103,8 @@ ptp_usb_sendreq (PTPParams* params, PTPContainer* req)
 {
 	uint16_t ret;
 	PTPUSBBulkContainer usbreq;
+	PTPDataHandler	memhandler;
+	unsigned long written, towrite;
 
 	/* build appropriate USB container */
 	usbreq.length=htod32(PTP_USB_BULK_REQ_LEN-
@@ -110,14 +118,27 @@ ptp_usb_sendreq (PTPParams* params, PTPContainer* req)
 	usbreq.payload.params.param4=htod32(req->Param4);
 	usbreq.payload.params.param5=htod32(req->Param5);
 	/* send it to responder */
-	ret=params->write_func((unsigned char *)&usbreq,
-		PTP_USB_BULK_REQ_LEN-(sizeof(uint32_t)*(5-req->Nparam)),
-		params->data);
+	towrite = PTP_USB_BULK_REQ_LEN-(sizeof(uint32_t)*(5-req->Nparam));
+	ptp_init_send_memory_handler (&memhandler, (unsigned char*)&usbreq, towrite);
+	ret=params->write_func(
+		towrite,
+		&memhandler,
+		params->data,
+		&written
+	);
+	ptp_exit_send_memory_handler (&memhandler);
 	if (ret!=PTP_RC_OK) {
 		ret = PTP_ERROR_IO;
 /*		ptp_error (params,
 			"PTP: request code 0x%04x sending req error 0x%04x",
 			req->Code,ret); */
+	}
+	if (written != towrite) {
+		ptp_error (params, 
+			"PTP: request code 0x%04x sending req wrote only %ld bytes instead of %d",
+			written, towrite
+		);
+		ret = PTP_ERROR_IO;
 	}
 	return ret;
 }
@@ -127,13 +148,14 @@ ptp_usb_sendreq (PTPParams* params, PTPContainer* req)
 
 uint16_t
 ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
-		  unsigned char *data, unsigned int size,
-		  int from_fd)
-{
+		  unsigned long size, PTPDataHandler *handler
+) {
 	uint16_t ret;
 	int wlen, datawlen;
-	size_t written;
+	unsigned long written;
 	PTPUSBBulkContainer usbdata;
+	uint32_t bytes_left_to_transfer;
+	PTPDataHandler memhandler;
 
 	/* build appropriate USB container */
 	usbdata.length	= htod32(PTP_USB_BULK_HDR_LEN+size);
@@ -145,19 +167,20 @@ ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
 		datawlen = 0;
 		wlen = PTP_USB_BULK_HDR_LEN;
 	} else {
+		unsigned long gotlen;
 		/* For all camera devices. */
 		datawlen = (size<PTP_USB_BULK_PAYLOAD_LEN)?size:PTP_USB_BULK_PAYLOAD_LEN;
 		wlen = PTP_USB_BULK_HDR_LEN + datawlen;
-		if (from_fd == -1) {
-			memcpy(usbdata.payload.data, data, datawlen);
-		} else {
-			written = read(from_fd, usbdata.payload.data, datawlen);
-			if (written != datawlen)
-				return PTP_ERROR_IO;
-		}
+		ret = handler->getfunc(params, handler->private, datawlen, usbdata.payload.data, &gotlen);
+		if (ret != PTP_RC_OK)
+			return ret;
+		if (gotlen != datawlen)
+			return PTP_RC_GeneralError;
 	}
+	ptp_init_send_memory_handler (&memhandler, (unsigned char *)&usbdata, wlen);
 	/* send first part of data */
-	ret = params->write_func((unsigned char *)&usbdata, wlen, params->data);
+	ret = params->write_func(wlen, &memhandler, params->data, &written);
+	ptp_exit_send_memory_handler (&memhandler);
 	if (ret!=PTP_RC_OK) {
 		ret = PTP_ERROR_IO;
 /*		ptp_error (params,
@@ -167,50 +190,30 @@ ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
 	}
 	if (size <= datawlen) return ret;
 	/* if everything OK send the rest */
-	if (from_fd == -1) {
-		ret=params->write_func (data + datawlen, size - datawlen, params->data);
-	} else {
-		uint32_t bytes_to_transfer;
-		uint32_t bytes_left_to_transfer;
-		void *temp_buf;
-
-		written = 0;
-		bytes_left_to_transfer = size-datawlen;
-
-		temp_buf = malloc(FILE_BUFFER_SIZE);
-		if (temp_buf == NULL)
-			return PTP_ERROR_IO;
-
-		ret = PTP_RC_OK;
-		while(bytes_left_to_transfer > 0) {
-			if (bytes_left_to_transfer > FILE_BUFFER_SIZE) {
-				bytes_to_transfer = FILE_BUFFER_SIZE;
-			} else {
-				bytes_to_transfer = bytes_left_to_transfer;
-			}
-			written = read(from_fd, temp_buf, bytes_to_transfer);
-			if (written != bytes_to_transfer) {
-				ret = PTP_ERROR_IO;
-				break;
-			}
-			ret=params->write_func (temp_buf, bytes_to_transfer, params->data);
-			bytes_left_to_transfer -= bytes_to_transfer;
+	bytes_left_to_transfer = size-datawlen;
+	ret = PTP_RC_OK;
+	while(bytes_left_to_transfer > 0) {
+		ret = params->write_func (bytes_left_to_transfer, handler, params->data, &written);
+		if (ret != PTP_RC_OK)
+			break;
+		if (written == 0) {
+			ret = PTP_ERROR_IO;
+			break;
 		}
-		free(temp_buf);
-		
+		bytes_left_to_transfer -= written;
 	}
-	if (ret!=PTP_RC_OK) {
+	if (ret!=PTP_RC_OK)
 		ret = PTP_ERROR_IO;
-/*		ptp_error (params,
-		"PTP: request code 0x%04x sending data error 0x%04x",
-			ptp->Code,ret); */
-	}
 	return ret;
 }
 
 static uint16_t ptp_usb_getpacket(PTPParams *params,
-		PTPUSBBulkContainer *packet, unsigned int *rlen)
+		PTPUSBBulkContainer *packet, unsigned long *rlen)
 {
+	PTPDataHandler	memhandler;
+	uint16_t	ret;
+	unsigned char	*x = NULL;
+
 	/* read the header and potentially the first data */
 	if (params->response_packet_size > 0) {
 		/* If there is a buffered packet, just use it. */
@@ -221,71 +224,28 @@ static uint16_t ptp_usb_getpacket(PTPParams *params,
 		params->response_packet_size = 0;
 		/* Here this signifies a "virtual read" */
 		return PTP_RC_OK;
-	} else {
-		return params->read_func((unsigned char *)packet,
-					 sizeof(*packet), params->data, rlen);
 	}
-}
-
-static uint16_t
-ptp_usb_getdata_tofile(PTPParams* params, PTPUSBBulkContainer *usbdata,
-		uint32_t bytes_to_write, int len, int to_fd)
-{
-	uint16_t ret = PTP_RC_OK;
-	void *temp_buf = usbdata->payload.data;
-
-	for (;;) {
-		uint32_t written = write(to_fd, temp_buf, bytes_to_write);
-		if (written != bytes_to_write) {
-			ret = PTP_ERROR_IO;
-			break;
-		}
-
-		len -= written;
-		if (len <= 0)
-			break;
-
-		if (temp_buf == usbdata->payload.data) {
-			temp_buf = malloc(FILE_BUFFER_SIZE);
-			if (!temp_buf) {
-				ret = PTP_ERROR_IO;
-				break;
-			}
-		}
-
-		bytes_to_write = (len > FILE_BUFFER_SIZE) ?
-				  FILE_BUFFER_SIZE : len;
-
-		ret = params->read_func(temp_buf, bytes_to_write,
-					params->data, &bytes_to_write);
-
-		if (ret != PTP_RC_OK) {
-			ret = PTP_ERROR_IO;
-			break;
-		}
+	ptp_init_recv_memory_handler (&memhandler);
+	ret = params->read_func( sizeof(*packet), &memhandler, params->data, rlen);
+	ptp_exit_recv_memory_handler (&memhandler, &x, rlen);
+	if (x) {
+		memcpy (packet, x, *rlen);
+		free (x);
 	}
-
-	if (temp_buf != usbdata->payload.data)
-		free(temp_buf);
-
 	return ret;
 }
 
 uint16_t
-ptp_usb_getdata (PTPParams* params, PTPContainer* ptp,
-                 unsigned char **data, unsigned int *readlen,
-                 int to_fd)
+ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 {
 	uint16_t ret;
 	PTPUSBBulkContainer usbdata;
+	unsigned char	*data;
+	unsigned long	written;
 
 	PTP_CNT_INIT(usbdata);
-
-	if (to_fd == -1 &&  *data != NULL)
-		return PTP_ERROR_BADPARAM;
-
 	do {
-		unsigned int len, rlen;
+		unsigned long len, rlen;
 
 		ret = ptp_usb_getpacket(params, &usbdata, &rlen);
 		if (ret!=PTP_RC_OK) {
@@ -301,31 +261,21 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp,
 			break;
 		}
 		if (usbdata.length == 0xffffffffU) {
-			/* This only happens for MTP_GetObjPropList */
-			uint32_t	tsize = PTP_USB_BULK_HS_MAX_PACKET_LEN;
-			unsigned char	*tdata = malloc(tsize);
-			uint32_t	curoff = 0;
-
+			/* stuff data directly to passed data handler */
 			while (1) {
-				ret=params->read_func(tdata+curoff,
-						PTP_USB_BULK_HS_MAX_PACKET_LEN, params->data, &rlen);
-				if (ret!=PTP_RC_OK) {
-					ret = PTP_ERROR_IO;
+				unsigned long readdata;
+				int xret;
+
+				xret = params->read_func(
+					PTP_USB_BULK_HS_MAX_PACKET_LEN,
+					handler,
+					params->data,
+					&readdata
+				);
+				if (xret == -1)
+					return PTP_ERROR_IO;
+				if (readdata < PTP_USB_BULK_HS_MAX_PACKET_LEN)
 					break;
-				}
-				if (rlen < PTP_USB_BULK_HS_MAX_PACKET_LEN) {
-					tsize += rlen;
-					break;
-				}
-				tsize += PTP_USB_BULK_HS_MAX_PACKET_LEN;
-				curoff+= PTP_USB_BULK_HS_MAX_PACKET_LEN;
-				tdata	= realloc(tdata, tsize);
-			}
-			if (to_fd == -1) {
-				*data = tdata;
-			} else {
-				write (to_fd, tdata, tsize);
-				free (tdata);
 			}
 			return PTP_RC_OK;
 		}
@@ -367,36 +317,23 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp,
 		if (dtoh32(usbdata.length) > 12 && (rlen==12))
 			params->split_header_data = 1;
 
-		if (to_fd == -1) {
-			/* Allocate memory for data. */
-			*data=calloc(len,1);
-			if (!*data) {
-                                ptp_error (params, "PTP: Out of memory on allocating %d bytes.", len);
-                                return PTP_ERROR_IO;
-			}
-			if (readlen)
-				*readlen = len;
+		data = malloc(PTP_USB_BULK_HS_MAX_PACKET_LEN);
+		/* Copy first part of data to 'data' */
+		handler->putfunc(
+			params, handler->private, rlen - PTP_USB_BULK_HDR_LEN, usbdata.payload.data,
+			&written
+		);
 
-			/* Copy first part of data to 'data' */
-			memcpy(*data,usbdata.payload.data,rlen - PTP_USB_BULK_HDR_LEN);
+		/* Is that all of data? */
+		if (len+PTP_USB_BULK_HDR_LEN<=rlen) break;
 
-			/* Is that all of data? */
-			if (len+PTP_USB_BULK_HDR_LEN<=rlen) break;
-
-			/* If not read the rest of it. */
-			ret=params->read_func(((unsigned char *)(*data))+
-					      rlen - PTP_USB_BULK_HDR_LEN,
-					      len-(rlen - PTP_USB_BULK_HDR_LEN),
-					      params->data, &rlen);
-			if (ret!=PTP_RC_OK) {
-				ret = PTP_ERROR_IO;
-				break;
-			}
-		} else {
-			if (readlen)
-				*readlen = len;
-			ptp_usb_getdata_tofile(params, &usbdata,
-				rlen - PTP_USB_BULK_HDR_LEN, len, to_fd);
+		/* If not read the rest of it. */
+		ret=params->read_func(len - (rlen - PTP_USB_BULK_HDR_LEN),
+				      handler,
+				      params->data, &rlen);
+		if (ret!=PTP_RC_OK) {
+			ret = PTP_ERROR_IO;
+			break;
 		}
 	} while (0);
 /*
@@ -412,7 +349,7 @@ uint16_t
 ptp_usb_getresp (PTPParams* params, PTPContainer* resp)
 {
 	uint16_t ret;
-	unsigned int rlen;
+	unsigned long rlen;
 	PTPUSBBulkContainer usbresp;
 
 	PTP_CNT_INIT(usbresp);
@@ -483,10 +420,10 @@ ptp_usb_getresp (PTPParams* params, PTPContainer* resp)
  * all fields filled in.
  **/
 static uint16_t
-_ptp_transaction (PTPParams* params, PTPContainer* ptp, 
-		  uint16_t flags, unsigned int sendlen, unsigned char** data,
-		  int fd, unsigned int *recvlen)
-{
+ptp_transaction_new (PTPParams* params, PTPContainer* ptp, 
+		uint16_t flags, unsigned int sendlen,
+		PTPDataHandler *handler
+) {
 	if ((params==NULL) || (ptp==NULL)) 
 		return PTP_ERROR_BADPARAM;
 
@@ -498,11 +435,10 @@ _ptp_transaction (PTPParams* params, PTPContainer* ptp,
 	switch (flags&PTP_DP_DATA_MASK) {
 	case PTP_DP_SENDDATA:
 		CHECK_PTP_RC(params->senddata_func(params, ptp,
-			*data, sendlen, fd));
+			sendlen, handler));
 		break;
 	case PTP_DP_GETDATA:
-		CHECK_PTP_RC(params->getdata_func(params, ptp,
-			(unsigned char**)data, recvlen, fd));
+		CHECK_PTP_RC(params->getdata_func(params, ptp, handler));
 		break;
 	case PTP_DP_NODATA:
 		break;
@@ -520,30 +456,7 @@ _ptp_transaction (PTPParams* params, PTPContainer* ptp,
 	}
 	return ptp->Code;
 }
-
-static uint16_t
-ptp_transaction (PTPParams* params, PTPContainer* ptp, 
-		 uint16_t flags, unsigned int sendlen, unsigned char** data,
-		 unsigned int *recvlen)
-{
-	return _ptp_transaction(params, ptp, flags, sendlen, data, -1, recvlen);
-}
-
-static uint16_t
-ptp_transaction_fd (PTPParams* params, PTPContainer* ptp, 
-		      uint16_t flags, unsigned int sendlen, 
-		      int fd, unsigned int *recvlen)
-{
-	/*
-	 * This dummy data needed since _ptp_transaction()
-	 * will dereference the data argument
-	 */
-	unsigned char *dummydata = NULL;
-	
-	return _ptp_transaction(params, ptp, flags, sendlen, &dummydata, fd, recvlen);
-}
-
-/* Enets handling functions */
+/* Event handling functions */
 
 /* PTP Events wait for or check mode */
 #define PTP_EVENT_CHECK			0x0000	/* waits for */
@@ -553,45 +466,77 @@ static inline uint16_t
 ptp_usb_event (PTPParams* params, PTPContainer* event, int wait)
 {
 	uint16_t ret;
-	unsigned int rlen;
+	unsigned long rlen, oldrlen;
 	PTPUSBEventContainer usbevent;
+	unsigned char	*x;
+	PTPDataHandler	memhandler;
+
 	PTP_CNT_INIT(usbevent);
 
 	if ((params==NULL) || (event==NULL)) 
 		return PTP_ERROR_BADPARAM;
-	
+	ptp_init_recv_memory_handler (&memhandler);
 	switch(wait) {
-		case PTP_EVENT_CHECK:
-			ret=params->check_int_func((unsigned char*)&usbevent,
-				sizeof(usbevent), params->data, &rlen);
-			break;
-		case PTP_EVENT_CHECK_FAST:
-			ret=params->check_int_fast_func((unsigned char*)
-				&usbevent, sizeof(usbevent), params->data, &rlen);
-			break;
-		default:
-			ret=PTP_ERROR_BADPARAM;
+	case PTP_EVENT_CHECK:
+		ret=params->check_int_func(
+			sizeof(usbevent),
+			&memhandler,
+			params->data,
+			&rlen
+		);
+		break;
+	case PTP_EVENT_CHECK_FAST:
+		ret=params->check_int_fast_func(
+			sizeof(usbevent),
+			&memhandler,
+			params->data,
+			&rlen
+		);
+		break;
+	default:
+		ret=PTP_ERROR_BADPARAM;
+		break;
 	}
+	ptp_exit_recv_memory_handler (&memhandler, &x, &rlen);
 	if (ret!=PTP_RC_OK) {
 		ptp_error (params,
 			"PTP: reading event an error 0x%04x occurred", ret);
-		ret = PTP_ERROR_IO;
-		/* reading event error is nonfatal (for example timeout) */
+		return PTP_ERROR_IO;
 	}
+	if (!x || rlen < 8) {
+		ptp_error (params,
+			"PTP: reading event an short read of %ld bytes occurred", rlen);
+		return PTP_ERROR_IO;
+	}
+	memcpy (&usbevent, x, rlen);
+	free (x);
+
 	/* Only do the additional reads for "events". Canon IXUS 2 likes to
 	 * send unrelated data.
 	 */
-	if (dtoh16(usbevent.type) == PTP_USB_CONTAINER_EVENT) {
-		while (dtoh32(usbevent.length) > rlen) {
-			unsigned int newrlen = 0;
+	if (	(dtoh16(usbevent.type) == PTP_USB_CONTAINER_EVENT) &&
+		(dtoh32(usbevent.length) > rlen)
+	) {
+		unsigned char *x;
 
-			ret=params->check_int_fast_func(((unsigned char*)&usbevent)+rlen,
-				dtoh32(usbevent.length)-rlen,params->data,&newrlen
+		oldrlen = rlen;
+		ptp_init_recv_memory_handler (&memhandler);
+		while (dtoh32(usbevent.length) > rlen) {
+			unsigned long newrlen = 0;
+
+			ret=params->check_int_fast_func(
+				dtoh32(usbevent.length)-rlen,
+				&memhandler,
+				params->data,
+				&newrlen
 			);
 			if (ret != PTP_RC_OK)
 				break;
-			rlen+=newrlen;
+			rlen += newrlen;
 		}
+		ptp_exit_recv_memory_handler (&memhandler, &x, &rlen);
+		memcpy (((char*)&usbevent)+oldrlen, x, rlen);
+		free (x);
 	}
 	/* if we read anything over interrupt endpoint it must be an event */
 	/* build an appropriate PTPContainer */
@@ -616,6 +561,192 @@ ptp_usb_event_wait (PTPParams* params, PTPContainer* event) {
 	return ptp_usb_event (params, event, PTP_EVENT_CHECK);
 }
 
+/* memory data get/put handler */
+typedef struct {
+	unsigned char	*data;
+	unsigned long	size, curoff;
+} PTPMemHandlerPrivate;
+
+static uint16_t
+memory_getfunc(PTPParams* params, void* private,
+	       unsigned long wantlen, unsigned char *data,
+	       unsigned long *gotlen
+) {
+	PTPMemHandlerPrivate* priv = (PTPMemHandlerPrivate*)private;
+	unsigned long tocopy = wantlen;
+
+	if (priv->curoff + tocopy > priv->size)
+		tocopy = priv->size - priv->curoff;
+	memcpy (data, priv->data + priv->curoff, tocopy);
+	priv->curoff += tocopy;
+	*gotlen = tocopy;
+	return PTP_RC_OK;
+}
+
+static uint16_t
+memory_putfunc(PTPParams* params, void* private,
+	       unsigned long sendlen, unsigned char *data,
+	       unsigned long *putlen
+) {
+	PTPMemHandlerPrivate* priv = (PTPMemHandlerPrivate*)private;
+
+	if (priv->curoff + sendlen > priv->size) {
+		priv->data = realloc (priv->data, priv->curoff+sendlen);
+		priv->size = priv->curoff + sendlen;
+	}
+	memcpy (priv->data + priv->curoff, data, sendlen);
+	priv->curoff += sendlen;
+	*putlen = sendlen;
+	return PTP_RC_OK;
+}
+
+/* init private struct for receiving data. */
+static uint16_t
+ptp_init_recv_memory_handler(PTPDataHandler *handler) {
+	PTPMemHandlerPrivate* priv;
+	priv = malloc (sizeof(PTPMemHandlerPrivate));
+	handler->private = priv;
+	handler->getfunc = memory_getfunc;
+	handler->putfunc = memory_putfunc;
+	priv->data = NULL;
+	priv->size = 0;
+	priv->curoff = 0;
+	return PTP_RC_OK;
+}
+
+/* init private struct and put data in for sending data.
+ * data is still owned by caller.
+ */
+static uint16_t
+ptp_init_send_memory_handler(PTPDataHandler *handler,
+	unsigned char *data, unsigned long len
+) {
+	PTPMemHandlerPrivate* priv;
+	priv = malloc (sizeof(PTPMemHandlerPrivate));
+	if (!priv)
+		return PTP_RC_GeneralError;
+	handler->private = priv;
+	handler->getfunc = memory_getfunc;
+	handler->putfunc = memory_putfunc;
+	priv->data = data;
+	priv->size = len;
+	priv->curoff = 0;
+	return PTP_RC_OK;
+}
+
+/* free private struct + data */
+static uint16_t
+ptp_exit_send_memory_handler (PTPDataHandler *handler) {
+	PTPMemHandlerPrivate* priv = (PTPMemHandlerPrivate*)handler->private;
+	/* data is owned by caller */
+	free (priv);
+	return PTP_RC_OK;
+}
+
+/* hand over our internal data to caller */
+static uint16_t
+ptp_exit_recv_memory_handler (PTPDataHandler *handler,
+	unsigned char **data, unsigned long *size
+) {
+	PTPMemHandlerPrivate* priv = (PTPMemHandlerPrivate*)handler->private;
+	*data = priv->data;
+	*size = priv->size;
+	free (priv);
+	return PTP_RC_OK;
+}
+
+/* fd data get/put handler */
+typedef struct {
+	int fd;
+} PTPFDHandlerPrivate;
+
+static uint16_t
+fd_getfunc(PTPParams* params, void* private,
+	       unsigned long wantlen, unsigned char *data,
+	       unsigned long *gotlen
+) {
+	PTPFDHandlerPrivate* priv = (PTPFDHandlerPrivate*)private;
+	int		got;
+
+	got = read (priv->fd, data, wantlen);
+	if (got != -1)
+		*gotlen = got;
+	else
+		return PTP_RC_GeneralError;
+	return PTP_RC_OK;
+}
+
+static uint16_t
+fd_putfunc(PTPParams* params, void* private,
+	       unsigned long sendlen, unsigned char *data,
+	       unsigned long *putlen
+) {
+	int		written;
+	PTPFDHandlerPrivate* priv = (PTPFDHandlerPrivate*)private;
+
+	written = write (priv->fd, data, sendlen);
+	if (written != -1)
+		*putlen = written;
+	else
+		return PTP_RC_GeneralError;
+	return PTP_RC_OK;
+}
+
+static uint16_t
+ptp_init_fd_handler(PTPDataHandler *handler, int fd) {
+	PTPFDHandlerPrivate* priv;
+	priv = malloc (sizeof(PTPFDHandlerPrivate));
+	handler->private = priv;
+	handler->getfunc = fd_getfunc;
+	handler->putfunc = fd_putfunc;
+	priv->fd = fd;
+	return PTP_RC_OK;
+}
+
+static uint16_t
+ptp_exit_fd_handler (PTPDataHandler *handler) {
+	PTPFDHandlerPrivate* priv = (PTPFDHandlerPrivate*)handler->private;
+	close (priv->fd);
+	free (priv);
+	return PTP_RC_OK;
+}
+
+/* Old style transaction, based on memory */
+static uint16_t
+ptp_transaction (PTPParams* params, PTPContainer* ptp, 
+		uint16_t flags, unsigned int sendlen,
+		unsigned char **data, unsigned int *recvlen
+) {
+	PTPDataHandler	handler;
+	uint16_t	ret;
+
+	switch (flags & PTP_DP_DATA_MASK) {
+	case PTP_DP_SENDDATA:
+		ptp_init_send_memory_handler (&handler, *data, sendlen);
+		break;
+	case PTP_DP_GETDATA:
+		ptp_init_recv_memory_handler (&handler);
+		break;
+	default:break;
+	}
+	ret = ptp_transaction_new (params, ptp, flags, sendlen, &handler);
+	switch (flags & PTP_DP_DATA_MASK) {
+	case PTP_DP_SENDDATA:
+		ptp_exit_send_memory_handler (&handler);
+		break;
+	case PTP_DP_GETDATA: {
+		unsigned long len;
+		ptp_exit_recv_memory_handler (&handler, data, &len);
+		if (recvlen)
+			*recvlen = len;
+		break;
+	}
+	default:break;
+	}
+	return ret;
+}
+
+
 /**
  * PTP operation functions
  *
@@ -635,16 +766,19 @@ ptp_usb_event_wait (PTPParams* params, PTPContainer* event) {
 uint16_t
 ptp_getdeviceinfo (PTPParams* params, PTPDeviceInfo* deviceinfo)
 {
-	uint16_t ret;
-	unsigned int len;
-	PTPContainer ptp;
-	unsigned char* di=NULL;
+	uint16_t 	ret;
+	unsigned long	len;
+	PTPContainer	ptp;
+	unsigned char*	di=NULL;
+	PTPDataHandler	handler;
 
+	ptp_init_recv_memory_handler (&handler);
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_GetDeviceInfo;
 	ptp.Nparam=0;
 	len=0;
-	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &di, &len);
+	ret=ptp_transaction_new(params, &ptp, PTP_DP_GETDATA, 0, &handler);
+	ptp_exit_recv_memory_handler (&handler, &di, &len);
 	if (ret == PTP_RC_OK) ptp_unpack_DI(params, di, deviceinfo, len);
 	free(di);
 	return ret;
@@ -681,7 +815,7 @@ ptp_opensession (PTPParams* params, uint32_t session)
 	ptp.Code=PTP_OC_OpenSession;
 	ptp.Param1=session;
 	ptp.Nparam=1;
-	ret=ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+	ret=ptp_transaction_new(params, &ptp, PTP_DP_NODATA, 0, NULL);
 	/* now set the global session id to current session number */
 	params->session_id=session;
 	return ret;
@@ -711,7 +845,7 @@ ptp_closesession (PTPParams* params)
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_CloseSession;
 	ptp.Nparam=0;
-	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+	return ptp_transaction_new(params, &ptp, PTP_DP_NODATA, 0, NULL);
 }
 
 /**
@@ -925,6 +1059,29 @@ ptp_getobject (PTPParams* params, uint32_t handle, unsigned char** object)
 }
 
 /**
+ * ptp_getobject_to_handler:
+ * params:	PTPParams*
+ *		handle			- Object handle
+ *		PTPDataHandler*		- pointer datahandler
+ *
+ * Get object 'handle' from device and store the data in newly
+ * allocated 'object'.
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
+uint16_t
+ptp_getobject_to_handler (PTPParams* params, uint32_t handle, PTPDataHandler *handler)
+{
+	PTPContainer ptp;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code=PTP_OC_GetObject;
+	ptp.Param1=handle;
+	ptp.Nparam=1;
+	return ptp_transaction_new(params, &ptp, PTP_DP_GETDATA, 0, handler);
+}
+
+/**
  * ptp_getobject_tofd:
  * params:	PTPParams*
  *		handle			- Object handle
@@ -938,15 +1095,18 @@ ptp_getobject (PTPParams* params, uint32_t handle, unsigned char** object)
 uint16_t
 ptp_getobject_tofd (PTPParams* params, uint32_t handle, int fd)
 {
-	PTPContainer ptp;
-	unsigned int len;
+	PTPContainer	ptp;
+	PTPDataHandler	handler;
+	uint16_t	ret;
 
+	ptp_init_fd_handler (&handler, fd);
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_GetObject;
 	ptp.Param1=handle;
 	ptp.Nparam=1;
-	len=0;
-	return ptp_transaction_fd(params, &ptp, PTP_DP_GETDATA, 0, fd, &len);
+	ret = ptp_transaction_new(params, &ptp, PTP_DP_GETDATA, 0, &handler);
+	ptp_exit_fd_handler (&handler);
+	return ret;
 }
 
 /**
@@ -1093,6 +1253,29 @@ ptp_sendobject (PTPParams* params, unsigned char* object, uint32_t size)
 }
 
 /**
+ * ptp_sendobject_from_handler:
+ * params:	PTPParams*
+ *		PTPDataHandler*         - File descriptor to read() object from
+ *              uint32_t size           - File/object size
+ *
+ * Sends object from file descriptor by consecutive reads from this
+ * descriptor.
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
+uint16_t
+ptp_sendobject_from_handler (PTPParams* params, PTPDataHandler *handler, uint32_t size)
+{
+	PTPContainer	ptp;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code=PTP_OC_SendObject;
+	ptp.Nparam=0;
+	return ptp_transaction_new(params, &ptp, PTP_DP_SENDDATA, size, handler);
+}
+
+
+/**
  * ptp_sendobject_fromfd:
  * params:	PTPParams*
  *		fd                      - File descriptor to read() object from
@@ -1106,13 +1289,17 @@ ptp_sendobject (PTPParams* params, unsigned char* object, uint32_t size)
 uint16_t
 ptp_sendobject_fromfd (PTPParams* params, int fd, uint32_t size)
 {
-	PTPContainer ptp;
+	PTPContainer	ptp;
+	PTPDataHandler	handler;
+	uint16_t	ret;
 
+	ptp_init_fd_handler (&handler, fd);
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_SendObject;
 	ptp.Nparam=0;
-
-	return ptp_transaction_fd(params, &ptp, PTP_DP_SENDDATA, size, fd, NULL);
+	ret = ptp_transaction_new(params, &ptp, PTP_DP_SENDDATA, size, &handler);
+	ptp_exit_fd_handler (&handler);
+	return ret;
 }
 
 
@@ -1384,6 +1571,28 @@ ptp_ek_sendfileobject (PTPParams* params, unsigned char* object, uint32_t size)
 	ptp.Nparam=0;
 
 	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &object, NULL);
+}
+
+/**
+ * ptp_ek_sendfileobject_from_handler:
+ * params:	PTPParams*
+ *		PTPDataHandler*	handler	- contains the handler of the object that is to be sent
+ *		uint32_t size		- object size
+ *		
+ * Sends object to Responder.
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ */
+uint16_t
+ptp_ek_sendfileobject_from_handler (PTPParams* params, PTPDataHandler*handler, uint32_t size)
+{
+	PTPContainer ptp;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code=PTP_OC_EK_SendFileObject;
+	ptp.Nparam=0;
+	return ptp_transaction_new(params, &ptp, PTP_DP_SENDDATA, size, handler);
 }
 
 /*************************************************************************
