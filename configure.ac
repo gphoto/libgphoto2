@@ -497,7 +497,7 @@ AM_CONDITIONAL(HAVE_LIBUSB,test -n "${LIBUSB_CONFIG}")
 
 
 dnl ---------------------------------------------------------------------------
-dnl Turn on all warnings when using gcc
+dnl Turn on (almost) all warnings when using gcc
 dnl ---------------------------------------------------------------------------
 if test "x$GCC" = "xyes"; then
 	AM_CPPFLAGS="$AM_CPPFLAGS -Wall"
@@ -506,6 +506,7 @@ if test "x$GCC" = "xyes"; then
 	# FIXME: Check for --enable-debug here
 	AM_CPPFLAGS="$AM_CPPFLAGS -g"
 	AM_LDFLAGS="$AM_LDFLAGS -g"
+	AC_SUBST([NO_UNUSED_CFLAGS], [-Wno-unused])
 fi
 AM_CONDITIONAL([HAVE_GCC], [test "x$GCC" = "xyes"])
 
