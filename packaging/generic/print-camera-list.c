@@ -466,7 +466,7 @@ version_str_func(const char *str, void *data)
 	*foo = str;
 }
 
-static inline char *
+static inline const char *
 get_version_str(udev_version_t version)
 {
 	return gpi_enum_to_string(version, udev_version_t_map);
