@@ -167,7 +167,7 @@ gp_log_remove_func (int id)
 void
 gp_log_data (const char *domain, const char *data, unsigned int size)
 {
-	const static char hexchars[16] = "0123456789abcdef";
+	static const char hexchars[16] = "0123456789abcdef";
 	char *curline, *result;
 	int x = HEXDUMP_INIT_X;
 	int y = HEXDUMP_INIT_Y;
