@@ -78,7 +78,7 @@ main(int argc, char **arvg)
 	if (!s) goto errout2;
 	s+=strlen("usbdev");
 
-	if (2!=sscanf(s,"%d.%d",&xbus,&xdev)) {
+	if (2!=sscanf(s,"%u.%u",&xbus,&xdev)) {
 		fprintf (stderr,"Failed to parse %s, xbus %d, xdev %d\n", devpath, xbus, xdev);
 		goto errout2;
 	}
