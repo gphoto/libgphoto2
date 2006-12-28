@@ -64,6 +64,7 @@ gp_context_status
 gp_context_unref
 gp_file_adjust_name_for_mime_type
 gp_file_append
+gp_file_slurp
 gp_file_clean
 gp_file_copy
 gp_file_detect_mime_type

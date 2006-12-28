@@ -65,6 +65,7 @@ struct _CameraFile {
 	/* for GP_FILE_ACCESSTYPE_MEMORY files */
         unsigned long	size;
         unsigned char	*data;
+        unsigned long	offset;	/* read pointer */
 
 	/* for GP_FILE_ACCESSTYPE_FD files */
 	int		fd;
@@ -225,6 +226,54 @@ gp_file_append (CameraFile *file, const char *data,
         return (GP_OK);
 }
 
+/**
+ * @param file a #CameraFile
+ * @param data
+ * @param size
+ * @return a gphoto2 error code.
+ *
+ * Internal.
+ **/
+int
+gp_file_slurp (CameraFile *file, char *data, 
+	unsigned long size, unsigned long *readlen
+) {
+	CHECK_NULL (file);
+
+	switch (file->accesstype) {
+	case GP_FILE_ACCESSTYPE_MEMORY:
+		if (size > file->size-file->offset)
+			size = file->size - file->offset;
+		memcpy (data, &file->data[file->offset], size);
+		file->offset += size;
+		if (readlen) *readlen = size;
+		break;
+	case GP_FILE_ACCESSTYPE_FD: {
+		unsigned long int curread = 0; 
+		while (curread < size) {
+			size_t	res = read (file->fd, data+curread, size-curread);
+			if (res == -1) {
+				gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered error %d reading from fd.", errno);
+				return GP_ERROR_IO_READ;
+			}
+			if (!res) { /* no progress is bad too */
+				gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered 0 bytes reading from fd.");
+				return GP_ERROR_IO_READ;
+			}
+			curread += res;
+			if (readlen)
+				*readlen = curread;
+		}
+		break;
+	}
+	default:
+		gp_log (GP_LOG_ERROR, "gphoto2-file", "Unknown file access type %d", file->accesstype);
+		return GP_ERROR;
+	}
+        return (GP_OK);
+}
+
+
 
 /**
  * @param file a #CameraFile
@@ -250,7 +299,7 @@ gp_file_set_data_and_size (CameraFile *file, char *data,
 		int curwritten = 0;
 
 		/* truncate */
-		if (-1 == lseek (file->fd, SEEK_SET, 0)) {
+		if (-1 == lseek (file->fd, 0, SEEK_SET)) {
 			gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered error %d lseeking to 0.", errno);
 			/* might happen on pipes ... just ignore it */
 		}
@@ -312,17 +361,17 @@ gp_file_get_data_and_size (CameraFile *file, const char **data,
 		off_t	offset;
 		unsigned long int curread = 0;
 
-		if (-1 == lseek (file->fd, SEEK_END, 0)) {
+		if (-1 == lseek (file->fd, 0, SEEK_END)) {
 			if (errno == EBADF) return GP_ERROR_IO;
 			/* Might happen for pipes or sockets. Umm. Hard. */
 			/* FIXME */
 		}
-		if (-1 == (offset = lseek (file->fd, SEEK_CUR, 0))) {
+		if (-1 == (offset = lseek (file->fd, 0, SEEK_CUR))) {
 			/* should not happen if we passed the above case */
 			gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered error %d lseekin to CUR.", errno);
 			return GP_ERROR_IO_READ;
 		}
-		if (-1 == lseek (file->fd, SEEK_SET, 0)) {
+		if (-1 == lseek (file->fd, 0, SEEK_SET)) {
 			/* should not happen if we passed the above cases */
 			gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered error %d lseekin to CUR.", errno);
 			return GP_ERROR_IO_READ;
@@ -390,14 +439,14 @@ gp_file_save (CameraFile *file, const char *filename)
 		unsigned long int curread = 0;
 		off_t	offset;
 
-		if (-1 == lseek (file->fd, SEEK_END, 0))
+		if (-1 == lseek (file->fd, 0, SEEK_END))
 			return GP_ERROR_IO;
-		if (-1 == (offset = lseek (file->fd, SEEK_CUR, 0))) {
+		if (-1 == (offset = lseek (file->fd, 0, SEEK_CUR))) {
 			/* should not happen if we passed the above case */
 			gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered error %d lseekin to CUR.", errno);
 			return GP_ERROR_IO_READ;
 		}
-		if (-1 == lseek (file->fd, SEEK_SET, 0)) {
+		if (-1 == lseek (file->fd, 0, SEEK_SET)) {
 			/* should not happen if we passed the above case */
 			gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered error %d lseekin to BEGIN.", errno);
 			return GP_ERROR_IO_READ;
@@ -516,40 +565,14 @@ gp_file_open (CameraFile *file, const char *filename)
 		file->data[size_read] = 0;
 		break;
 	case GP_FILE_ACCESSTYPE_FD: {
-		unsigned long curread = 0;
-		char *data;
-	
-		data = malloc(65536);
-		if (!data)
-			return GP_ERROR;
-		lseek (file->fd, SEEK_SET, 0);
-		while (curread < size) {
-			int res, toread = 65536;
-			unsigned long curwritten = 0;
-
-			if (toread > (size-curread))
-				toread = size-curread;
-			res = fread (data, (size_t)sizeof(char), (size_t)toread, fp);
-			if (ferror(fp)) {
-				gp_file_clean (file);
-				free (data);
-				fclose (fp);
-				return (GP_ERROR);
-			}
-			while (curwritten < res) {
-				int res2 = write (file->fd, data+curwritten, res-curwritten);
-				if (res2 <= 0) {
-					free (data);
-					fclose (fp);
-					return GP_ERROR_IO_READ;
-				}
-				curwritten += res2;
-			}
-			curread += res;
+		if (file->fd == -1) {
+			file->fd = dup(fileno(fp));
+			fclose (fp);
+			break;
 		}
-		free (data);
+		gp_log (GP_LOG_ERROR, "gp_file_open", "Needs to be initialized with fd=-1 to work");
 		fclose (fp);
-		break;
+		return GP_ERROR;
 	}
 	default:
 		break;
@@ -667,17 +690,17 @@ gp_file_copy (CameraFile *destination, CameraFile *source)
 			free (destination->data);
 			destination->data = NULL;
 		}
-		if (-1 == lseek (source->fd, SEEK_END, 0)) {
+		if (-1 == lseek (source->fd, 0, SEEK_END)) {
 			if (errno == EBADF) return GP_ERROR_IO;
 			/* Might happen for pipes or sockets. Umm. Hard. */
 			/* FIXME */
 		}
-		if (-1 == (offset = lseek (source->fd, SEEK_CUR, 0))) {
+		if (-1 == (offset = lseek (source->fd, 0, SEEK_CUR))) {
 			/* should not happen if we passed the above case */
 			gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered error %d lseekin to CUR.", errno);
 			return GP_ERROR_IO_READ;
 		}
-		if (-1 == lseek (source->fd, SEEK_SET, 0)) {
+		if (-1 == lseek (source->fd, 0, SEEK_SET)) {
 			/* should not happen if we passed the above cases */
 			gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered error %d lseekin to CUR.", errno);
 			return GP_ERROR_IO_READ;
@@ -707,9 +730,9 @@ gp_file_copy (CameraFile *destination, CameraFile *source)
 	) {
 		char *data;
 
-		lseek (destination->fd, SEEK_SET, 0);
+		lseek (destination->fd, 0, SEEK_SET);
 		ftruncate (destination->fd, 0);
-		lseek (source->fd, SEEK_SET, 0);
+		lseek (source->fd, 0, SEEK_SET);
 		data = malloc (65536);
 		while (1) {
 			unsigned long curwritten = 0;
@@ -854,7 +877,7 @@ gp_file_detect_mime_type (CameraFile *file)
 		off_t	offset;
 		int	res;
 
-		offset = lseek (file->fd, SEEK_SET, 0);
+		offset = lseek (file->fd, 0, SEEK_SET);
 		res = read (file->fd, data, sizeof(data));
 		if (res == -1)
 			return GP_ERROR_IO_READ;
@@ -867,7 +890,7 @@ gp_file_detect_mime_type (CameraFile *file)
 			CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_JPEG))
 		else
 			CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_RAW));
-		lseek (file->fd, SEEK_SET, offset);
+		lseek (file->fd, offset, SEEK_SET);
 		break;
 	}
 	default:
