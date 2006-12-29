@@ -1,4 +1,4 @@
-libgphoto2 2.3.1.0.trunk
+libgphoto2 2.3.1.1.trunk
 
 Build:
    * Non-recursive camlib build: Makes "make -j2" useful.
