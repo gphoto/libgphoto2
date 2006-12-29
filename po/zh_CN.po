@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-12-26 23:08+0100\n"
+"POT-Creation-Date: 2006-12-29 09:51+0100\n"
 "PO-Revision-Date: 2002-11-21 11:02+0800\n"
 "Last-Translator: Wang Li <charles@linux.net.cn>\n"
 "Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
@@ -79,34 +79,34 @@ msgstr ""
 " 授权。"
 
 # camlibs/canon/library.c:774
-#: camlibs/canon/canon.c:639
+#: camlibs/canon/canon.c:637
 #, fuzzy, c-format
 msgid "Could not create directory %s."
 msgstr "无法创建目录 \\DCIM。"
 
 # camlibs/canon/library.c:774
-#: camlibs/canon/canon.c:642
+#: camlibs/canon/canon.c:640
 #, fuzzy, c-format
 msgid "Could not remove directory %s."
 msgstr "无法创建目录 \\DCIM。"
 
-#: camlibs/canon/canon.c:1202 camlibs/canon/canon.c:1583
-#: camlibs/canon/usb.c:544
+#: camlibs/canon/canon.c:1207 camlibs/canon/canon.c:1588
+#: camlibs/canon/usb.c:543
 msgid "lock keys failed."
 msgstr ""
 
-#: camlibs/canon/canon.c:1305 camlibs/canon/canon.c:1306
+#: camlibs/canon/canon.c:1310 camlibs/canon/canon.c:1311
 msgid "*UNKNOWN*"
 msgstr ""
 
-#: camlibs/canon/canon.c:1486
+#: camlibs/canon/canon.c:1491
 #, c-format
 msgid ""
 "canon_int_capture_image: initial canon_usb_list_all_dirs() failed with "
 "status %li"
 msgstr ""
 
-#: camlibs/canon/canon.c:1621
+#: camlibs/canon/canon.c:1626
 #, c-format
 msgid ""
 "canon_int_capture_image: final canon_usb_list_all_dirs() failed with status %"
@@ -114,105 +114,105 @@ msgid ""
 msgstr ""
 
 # camlibs/canon/canon.c:651
-#: camlibs/canon/canon.c:2240
+#: camlibs/canon/canon.c:2245
 #, fuzzy, c-format
 msgid "Name '%s' (%li characters) too long, maximum 30 characters are allowed."
 msgstr "名称“%s”(%i 个字符)太长(%i 个字符)，最多允许 30 个字符。"
 
-#: camlibs/canon/canon.c:2658
+#: camlibs/canon/canon.c:2663
 #, c-format
 msgid "Lower case letters in %s not allowed."
 msgstr ""
 
-#: camlibs/canon/canon.c:2840
+#: camlibs/canon/canon.c:2845
 #, c-format
 msgid ""
 "canon_int_list_directory: ERROR: initial message too short (%i < minimum %i)"
 msgstr ""
 
-#: camlibs/canon/canon.c:2862
+#: camlibs/canon/canon.c:2867
 msgid ""
 "canon_int_list_directory: Reached end of packet while examining the first "
 "dirent"
 msgstr ""
 
-#: camlibs/canon/canon.c:2947
+#: camlibs/canon/canon.c:2952
 msgid "canon_int_list_directory: truncated directory entry encountered"
 msgstr ""
 
 # camlibs/canon/canon.c:1490
-#: camlibs/canon/canon.c:3311
+#: camlibs/canon/canon.c:3316
 msgid "File protected."
 msgstr "文件已受到保护。"
 
-#: camlibs/canon/canon.c:3403
+#: camlibs/canon/canon.c:3408
 msgid "Could not extract JPEG thumbnail from data: No beginning/end"
 msgstr ""
 
-#: camlibs/canon/canon.c:3491
+#: camlibs/canon/canon.c:3496
 msgid "Could not extract JPEG thumbnail from data: Data is not JFIF"
 msgstr ""
 
-#: camlibs/canon/canon.h:158 camlibs/canon/canon.h:172
+#: camlibs/canon/canon.h:156 camlibs/canon/canon.h:170
 #, c-format
 msgid "NULL parameter \"%s\" in %s line %i"
 msgstr ""
 
-#: camlibs/canon/canon.h:577
+#: camlibs/canon/canon.h:575
 #, c-format
 msgid ""
 "Don't know how to handle camera->port->type value %i aka 0x%xin %s line %i."
 msgstr ""
 
-#: camlibs/canon/crc.c:237
+#: camlibs/canon/crc.c:234
 #, c-format
 msgid "FATAL ERROR: initial CRC value for length %d unknown\n"
 msgstr ""
 
-#: camlibs/canon/crc.c:250
+#: camlibs/canon/crc.c:247
 #, c-format
 msgid "unable to guess initial CRC value\n"
 msgstr ""
 
-#: camlibs/canon/crc.c:277
+#: camlibs/canon/crc.c:274
 #, c-format
 msgid ""
 "warning: CRC not checked (add len %d, value 0x%04x) "
 "#########################\n"
 msgstr ""
 
-#: camlibs/canon/library.c:98 camlibs/canon/library.c:1478
+#: camlibs/canon/library.c:96 camlibs/canon/library.c:1476
 msgid "Compatibility mode"
 msgstr ""
 
 # camlibs/stv0680/library.c:590
-#: camlibs/canon/library.c:99
+#: camlibs/canon/library.c:97
 #, fuzzy
 msgid "Thumbnail"
 msgstr "缩略图大小：%d\n"
 
 # camlibs/polaroid/pdc700.c:999
-#: camlibs/canon/library.c:100
+#: camlibs/canon/library.c:98
 #, fuzzy
 msgid "Full Image"
 msgstr "图像"
 
 # camlibs/sierra/sierra.c:885 camlibs/sierra/sierra.c:1186
 # camlibs/sierra/sierra.c:1395 camlibs/sierra/sierra.c:1626
-#: camlibs/canon/library.c:204
+#: camlibs/canon/library.c:202
 #, fuzzy
 msgid "Auto focus: one-shot"
 msgstr "聚焦模式"
 
 # camlibs/konica/konica.c:107
-#: camlibs/canon/library.c:205
+#: camlibs/canon/library.c:203
 #, fuzzy
 msgid "Auto focus: AI servo"
 msgstr "自动聚焦错误。"
 
 # camlibs/sierra/sierra.c:885 camlibs/sierra/sierra.c:1186
 # camlibs/sierra/sierra.c:1395 camlibs/sierra/sierra.c:1626
-#: camlibs/canon/library.c:206
+#: camlibs/canon/library.c:204
 #, fuzzy
 msgid "Auto focus: AI focus"
 msgstr "聚焦模式"
@@ -225,64 +225,64 @@ msgstr "聚焦模式"
 # camlibs/sierra/sierra.c:1212 camlibs/sierra/sierra.c:1256
 # camlibs/sierra/sierra.c:1451 camlibs/sierra/sierra.c:1455
 # camlibs/sierra/sierra.c:1668
-#: camlibs/canon/library.c:207
+#: camlibs/canon/library.c:205
 #, fuzzy
 msgid "Manual focus"
 msgstr "无手册"
 
-#: camlibs/canon/library.c:212 camlibs/ptp2/ptp.c:3264
+#: camlibs/canon/library.c:210 camlibs/ptp2/ptp.c:3473
 msgid "RAW"
 msgstr ""
 
-#: camlibs/canon/library.c:214
+#: camlibs/canon/library.c:212
 msgid "Small Normal JPEG"
 msgstr ""
 
-#: camlibs/canon/library.c:216
+#: camlibs/canon/library.c:214
 msgid "Small Fine JPEG"
 msgstr ""
 
-#: camlibs/canon/library.c:218
+#: camlibs/canon/library.c:216
 msgid "Medium Normal JPEG"
 msgstr ""
 
-#: camlibs/canon/library.c:220
+#: camlibs/canon/library.c:218
 msgid "Medium Fine JPEG"
 msgstr ""
 
-#: camlibs/canon/library.c:222
+#: camlibs/canon/library.c:220
 msgid "Large Normal JPEG"
 msgstr ""
 
-#: camlibs/canon/library.c:224
+#: camlibs/canon/library.c:222
 msgid "Large Fine JPEG"
 msgstr ""
 
-#: camlibs/canon/library.c:226
+#: camlibs/canon/library.c:224
 msgid "RAW + Small Normal JPEG"
 msgstr ""
 
-#: camlibs/canon/library.c:228
+#: camlibs/canon/library.c:226
 msgid "RAW + Small Fine JPEG"
 msgstr ""
 
-#: camlibs/canon/library.c:230
+#: camlibs/canon/library.c:228
 msgid "RAW + Medium Normal JPEG"
 msgstr ""
 
-#: camlibs/canon/library.c:232
+#: camlibs/canon/library.c:230
 msgid "RAW + Medium Fine JPEG"
 msgstr ""
 
-#: camlibs/canon/library.c:234
+#: camlibs/canon/library.c:232
 msgid "RAW + Large Normal JPEG"
 msgstr ""
 
-#: camlibs/canon/library.c:236
+#: camlibs/canon/library.c:234
 msgid "RAW + Large Fine JPEG"
 msgstr ""
 
-#: camlibs/canon/library.c:280
+#: camlibs/canon/library.c:278
 msgid ""
 "This is the driver for Canon PowerShot, Digital IXUS, IXY Digital,\n"
 " and EOS Digital cameras in their native (sometimes called \"normal\")\n"
@@ -301,56 +301,56 @@ msgstr ""
 
 # camlibs/canon/library.c:165 camlibs/canon/library.c:889
 # camlibs/canon/library.c:902
-#: camlibs/canon/library.c:409
+#: camlibs/canon/library.c:407
 #, fuzzy, c-format
 msgid "Camera unavailable: %s"
 msgstr "相机不可用"
 
 # camlibs/canon/library.c:176
-#: camlibs/canon/library.c:429
+#: camlibs/canon/library.c:427
 msgid "Switching Camera Off"
 msgstr "关闭相机"
 
 # camlibs/canon/library.c:232
-#: camlibs/canon/library.c:488 camlibs/canon/library.c:525
+#: camlibs/canon/library.c:486 camlibs/canon/library.c:523
 msgid "Error capturing image"
 msgstr "捕获图像出错"
 
 # camlibs/canon/library.c:267
-#: camlibs/canon/library.c:581
+#: camlibs/canon/library.c:579
 #, c-format
 msgid "Could not get disk name: %s"
 msgstr "无法获取磁盘名：%s"
 
 # camlibs/canon/library.c:268
-#: camlibs/canon/library.c:582
+#: camlibs/canon/library.c:580
 msgid "No reason available"
 msgstr "不知缘由"
 
 # camlibs/canon/library.c:275
-#: camlibs/canon/library.c:589
+#: camlibs/canon/library.c:587
 #, c-format
 msgid "Could not get disk info: %s"
 msgstr "无法获取磁盘信息：%s"
 
-#: camlibs/canon/library.c:658
+#: camlibs/canon/library.c:656
 #, c-format
 msgid "Internal error #1 in get_file_func() (%s line %i)"
 msgstr ""
 
 # libgphoto2/gphoto2-filesys.c:1199
-#: camlibs/canon/library.c:681
+#: camlibs/canon/library.c:679
 #, fuzzy, c-format
 msgid "No audio file could be found for %s"
 msgstr "在文件夹“%2$s”中无法找到文件“%1$s”。"
 
-#: camlibs/canon/library.c:729 camlibs/canon/library.c:767
+#: camlibs/canon/library.c:727 camlibs/canon/library.c:765
 #, c-format
 msgid "%s is a file type for which no thumbnail is provided"
 msgstr ""
 
 # camlibs/canon/library.c:568
-#: camlibs/canon/library.c:940
+#: camlibs/canon/library.c:938
 #, c-format
 msgid ""
 "  Drive %s\n"
@@ -363,42 +363,42 @@ msgstr ""
 
 # camlibs/canon/library.c:576 camlibs/canon/library.c:582
 # camlibs/canon/library.c:851 camlibs/canon/library.c:857
-#: camlibs/canon/library.c:948 camlibs/canon/library.c:954
-#: camlibs/canon/library.c:1704 camlibs/canon/library.c:1710
+#: camlibs/canon/library.c:946 camlibs/canon/library.c:952
+#: camlibs/canon/library.c:1702 camlibs/canon/library.c:1708
 msgid "AC adapter"
 msgstr "交流变压器"
 
 # camlibs/canon/library.c:576 camlibs/canon/library.c:582
 # camlibs/canon/library.c:851 camlibs/canon/library.c:857
-#: camlibs/canon/library.c:948 camlibs/canon/library.c:954
-#: camlibs/canon/library.c:1704 camlibs/canon/library.c:1710
+#: camlibs/canon/library.c:946 camlibs/canon/library.c:952
+#: camlibs/canon/library.c:1702 camlibs/canon/library.c:1708
 msgid "on battery"
 msgstr "使用电池"
 
 # camlibs/canon/library.c:578 camlibs/canon/library.c:853
-#: camlibs/canon/library.c:950 camlibs/canon/library.c:1706
+#: camlibs/canon/library.c:948 camlibs/canon/library.c:1704
 msgid "power OK"
 msgstr "电力充足"
 
 # camlibs/canon/library.c:578 camlibs/canon/library.c:853
-#: camlibs/canon/library.c:950 camlibs/canon/library.c:1706
+#: camlibs/canon/library.c:948 camlibs/canon/library.c:1704
 msgid "power bad"
 msgstr "电力不足"
 
 # camlibs/canon/library.c:586
-#: camlibs/canon/library.c:958
+#: camlibs/canon/library.c:956
 #, c-format
 msgid "not available: %s"
 msgstr "不可用：%s"
 
 # camlibs/canon/library.c:598
-#: camlibs/canon/library.c:984
+#: camlibs/canon/library.c:982
 #, c-format
 msgid "%s (host time %s%i seconds)"
 msgstr "%s (主机时间 %s%i 秒)"
 
 # camlibs/canon/library.c:608
-#: camlibs/canon/library.c:994
+#: camlibs/canon/library.c:992
 #, c-format
 msgid ""
 "\n"
@@ -426,7 +426,7 @@ msgstr ""
 "时间：%s\n"
 
 # camlibs/canon/library.c:625
-#: camlibs/canon/library.c:1012
+#: camlibs/canon/library.c:1010
 #, fuzzy
 msgid ""
 "Canon PowerShot series driver by\n"
@@ -448,28 +448,28 @@ msgstr ""
 "Holger Klemm 添加\n"
 
 # camlibs/canon/library.c:664
-#: camlibs/canon/library.c:1056
+#: camlibs/canon/library.c:1054
 msgid "Error deleting file"
 msgstr "删除文件出错"
 
 # camlibs/canon/library.c:680
-#: camlibs/canon/library.c:1072
+#: camlibs/canon/library.c:1070
 msgid "Error deleting associated thumbnail file"
 msgstr "删除相关缩略图文件出错"
 
 # camlibs/canon/library.c:713
-#: camlibs/canon/library.c:1202 camlibs/canon/library.c:1335
+#: camlibs/canon/library.c:1200 camlibs/canon/library.c:1333
 msgid ""
 "Speeds greater than 57600 are not supported for uploading to this camera"
 msgstr "该相机不支持高于 57600 的速度的上载"
 
 # camlibs/canon/library.c:730
-#: camlibs/canon/library.c:1219 camlibs/canon/library.c:1353
+#: camlibs/canon/library.c:1217 camlibs/canon/library.c:1351
 msgid "Could not get flash drive letter"
 msgstr "无法获取闪存驱动字符"
 
 # camlibs/canon/library.c:754
-#: camlibs/canon/library.c:1263 camlibs/canon/library.c:1376
+#: camlibs/canon/library.c:1261 camlibs/canon/library.c:1374
 msgid ""
 "Could not upload, no free folder name available!\n"
 "999CANON folder name exists and has an AUT_9999.JPG picture in it."
@@ -478,42 +478,42 @@ msgstr ""
 "已有 999 个佳能文件夹名称存在而且每个文件夹中都有照片 AUT_9999.JPG。"
 
 # camlibs/canon/library.c:774
-#: camlibs/canon/library.c:1285 camlibs/canon/library.c:1396
+#: camlibs/canon/library.c:1283 camlibs/canon/library.c:1394
 msgid "Could not create \\DCIM directory."
 msgstr "无法创建目录 \\DCIM。"
 
 # camlibs/canon/library.c:780
-#: camlibs/canon/library.c:1291 camlibs/canon/library.c:1402
+#: camlibs/canon/library.c:1289 camlibs/canon/library.c:1400
 msgid "Could not create destination directory."
 msgstr "无法创建目标目录。"
 
 # camlibs/canon/library.c:806
-#: camlibs/canon/library.c:1443 camlibs/ptp2/config.c:2303
-#: camlibs/ptp2/config.c:2405
+#: camlibs/canon/library.c:1441 camlibs/ptp2/config.c:2300
+#: camlibs/ptp2/config.c:2402
 msgid "Camera and Driver Configuration"
 msgstr "相机及驱动器配置"
 
 # camlibs/canon/library.c:808 camlibs/polaroid/pdc700.c:983
-#: camlibs/canon/library.c:1446 camlibs/polaroid/pdc700.c:982
+#: camlibs/canon/library.c:1444 camlibs/polaroid/pdc700.c:982
 msgid "Camera"
 msgstr "相机"
 
 # camlibs/canon/library.c:811
-#: camlibs/canon/library.c:1450
+#: camlibs/canon/library.c:1448
 msgid "Camera Model (readonly)"
 msgstr "相机型号 (只读)"
 
 # camlibs/canon/library.c:815 camlibs/canon/library.c:885
-#: camlibs/canon/library.c:1455 camlibs/canon/library.c:1765
+#: camlibs/canon/library.c:1453 camlibs/canon/library.c:1763
 msgid "Owner name"
 msgstr "所有者姓名"
 
-#: camlibs/canon/library.c:1461 camlibs/canon/library.c:1778
+#: camlibs/canon/library.c:1459 camlibs/canon/library.c:1776
 msgid "Capture size class"
 msgstr ""
 
-#: camlibs/canon/library.c:1495 camlibs/canon/library.c:1805
-#: camlibs/canon/library.c:1820
+#: camlibs/canon/library.c:1493 camlibs/canon/library.c:1803
+#: camlibs/canon/library.c:1818
 #, fuzzy
 msgid "ISO speed"
 msgstr "ISO 速度"
@@ -526,602 +526,602 @@ msgstr "ISO 速度"
 # camlibs/sierra/sierra.c:1413 camlibs/sierra/sierra.c:1436
 # camlibs/sierra/sierra.c:1458 camlibs/sierra/sierra.c:1484
 # camlibs/sierra/sierra.c:1503 camlibs/sierra/sierra.c:1571
-#: camlibs/canon/library.c:1521 camlibs/canon/library.c:1522
-#: camlibs/canon/library.c:1555 camlibs/canon/library.c:1556
-#: camlibs/canon/library.c:1589 camlibs/canon/library.c:1590
-#: camlibs/canon/library.c:1628 camlibs/canon/library.c:1629
-#: camlibs/canon/library.c:1662 camlibs/canon/library.c:1663
-#: camlibs/ptp2/library.c:1810 camlibs/ptp2/library.c:1812
-#: camlibs/ptp2/ptp.c:3382
+#: camlibs/canon/library.c:1519 camlibs/canon/library.c:1520
+#: camlibs/canon/library.c:1553 camlibs/canon/library.c:1554
+#: camlibs/canon/library.c:1587 camlibs/canon/library.c:1588
+#: camlibs/canon/library.c:1626 camlibs/canon/library.c:1627
+#: camlibs/canon/library.c:1660 camlibs/canon/library.c:1661
+#: camlibs/ptp2/library.c:1857 camlibs/ptp2/library.c:1859
+#: camlibs/ptp2/ptp.c:3591
 #, fuzzy
 msgid "Unknown"
 msgstr "%i (未知)"
 
 # camlibs/sierra/sierra.c:814 camlibs/sierra/sierra.c:1137
-#: camlibs/canon/library.c:1529 camlibs/canon/library.c:1802
-#: camlibs/canon/library.c:1860
+#: camlibs/canon/library.c:1527 camlibs/canon/library.c:1800
+#: camlibs/canon/library.c:1858
 #, fuzzy
 msgid "Shutter speed"
 msgstr "快门速度 (秒)"
 
 # camlibs/sierra/sierra.c:826 camlibs/sierra/sierra.c:1146
 # camlibs/sierra/sierra.c:1361 camlibs/sierra/sierra.c:1602
-#: camlibs/canon/library.c:1563 camlibs/canon/library.c:1808
-#: camlibs/canon/library.c:1900 camlibs/ptp2/config.c:2249
-#: camlibs/ptp2/ptp.c:2906 camlibs/sierra/sierra.c:941
-#: camlibs/sierra/sierra.c:1262 camlibs/sierra/sierra.c:1477
-#: camlibs/sierra/sierra.c:1718
+#: camlibs/canon/library.c:1561 camlibs/canon/library.c:1806
+#: camlibs/canon/library.c:1898 camlibs/ptp2/config.c:2246
+#: camlibs/ptp2/ptp.c:3115 camlibs/sierra/sierra.c:945
+#: camlibs/sierra/sierra.c:1266 camlibs/sierra/sierra.c:1481
+#: camlibs/sierra/sierra.c:1722
 msgid "Aperture"
 msgstr "光圈"
 
 # camlibs/konica/library.c:684 camlibs/konica/library.c:896
 # camlibs/sierra/sierra.c:786 camlibs/sierra/sierra.c:1117
 # camlibs/sierra/sierra.c:1468 camlibs/sierra/sierra.c:1677
-#: camlibs/canon/library.c:1597 camlibs/canon/library.c:1811
-#: camlibs/canon/library.c:1940 camlibs/konica/library.c:718
+#: camlibs/canon/library.c:1595 camlibs/canon/library.c:1809
+#: camlibs/canon/library.c:1938 camlibs/konica/library.c:718
 #: camlibs/konica/library.c:932 camlibs/konica/qm150.c:775
-#: camlibs/ricoh/library.c:495 camlibs/sierra/sierra.c:901
-#: camlibs/sierra/sierra.c:1233 camlibs/sierra/sierra.c:1584
-#: camlibs/sierra/sierra.c:1793
+#: camlibs/ricoh/library.c:495 camlibs/sierra/sierra.c:905
+#: camlibs/sierra/sierra.c:1237 camlibs/sierra/sierra.c:1588
+#: camlibs/sierra/sierra.c:1797
 msgid "Resolution"
 msgstr "分辨率"
 
 # camlibs/sierra/sierra.c:885 camlibs/sierra/sierra.c:1186
 # camlibs/sierra/sierra.c:1395 camlibs/sierra/sierra.c:1626
-#: camlibs/canon/library.c:1636 camlibs/canon/library.c:1814
-#: camlibs/canon/library.c:1980
+#: camlibs/canon/library.c:1634 camlibs/canon/library.c:1812
+#: camlibs/canon/library.c:1978
 #, fuzzy
 msgid "Focus mode"
 msgstr "聚焦模式"
 
 # camlibs/canon/library.c:822 camlibs/canon/library.c:826
 # camlibs/canon/library.c:831
-#: camlibs/canon/library.c:1673
+#: camlibs/canon/library.c:1671
 msgid "Date and Time (readonly)"
 msgstr "日期和时间 (只读)"
 
 # camlibs/canon/library.c:827
-#: camlibs/canon/library.c:1680
+#: camlibs/canon/library.c:1678
 msgid "Error"
 msgstr "错误"
 
 # camlibs/canon/library.c:832 camlibs/canon/library.c:859
-#: camlibs/canon/library.c:1683 camlibs/canon/library.c:1712
+#: camlibs/canon/library.c:1681 camlibs/canon/library.c:1710
 msgid "Unavailable"
 msgstr "不可用"
 
 # camlibs/canon/library.c:836 camlibs/canon/library.c:898
-#: camlibs/canon/library.c:1687 camlibs/canon/library.c:2023
+#: camlibs/canon/library.c:1685 camlibs/canon/library.c:2021
 msgid "Set camera date to PC date"
 msgstr "将相机日期设置为 PC 日期"
 
 # camlibs/canon/library.c:839
-#: camlibs/canon/library.c:1691
+#: camlibs/canon/library.c:1689
 msgid "Firmware revision (readonly)"
 msgstr "固件版本 (只读)"
 
 # camlibs/canon/library.c:863
-#: camlibs/canon/library.c:1716 camlibs/ptp2/config.c:2352
-#: camlibs/ptp2/config.c:2381
+#: camlibs/canon/library.c:1714 camlibs/ptp2/config.c:2349
+#: camlibs/ptp2/config.c:2378
 msgid "Power (readonly)"
 msgstr "电源 (只读)"
 
 # camlibs/canon/library.c:867
-#: camlibs/canon/library.c:1721
+#: camlibs/canon/library.c:1719
 msgid "Driver"
 msgstr "驱动器"
 
 # camlibs/canon/library.c:870 camlibs/canon/library.c:912
-#: camlibs/canon/library.c:1725 camlibs/canon/library.c:2037
+#: camlibs/canon/library.c:1723 camlibs/canon/library.c:2035
 msgid "List all files"
 msgstr "列出所有文件"
 
-#: camlibs/canon/library.c:1731 camlibs/canon/library.c:2050
+#: camlibs/canon/library.c:1729 camlibs/canon/library.c:2048
 msgid "Keep filename on upload"
 msgstr "上传时保持文件名"
 
 # camlibs/canon/library.c:165 camlibs/canon/library.c:889
 # camlibs/canon/library.c:902
-#: camlibs/canon/library.c:1769 camlibs/canon/library.c:1824
-#: camlibs/canon/library.c:1864 camlibs/canon/library.c:1904
-#: camlibs/canon/library.c:1944 camlibs/canon/library.c:1984
-#: camlibs/canon/library.c:2027
+#: camlibs/canon/library.c:1767 camlibs/canon/library.c:1822
+#: camlibs/canon/library.c:1862 camlibs/canon/library.c:1902
+#: camlibs/canon/library.c:1942 camlibs/canon/library.c:1982
+#: camlibs/canon/library.c:2025
 msgid "Camera unavailable"
 msgstr "相机不可用"
 
 # camlibs/canon/library.c:892
-#: camlibs/canon/library.c:1772
+#: camlibs/canon/library.c:1770
 msgid "Owner name changed"
 msgstr "所有者姓名已改变"
 
 # camlibs/canon/library.c:894
-#: camlibs/canon/library.c:1774
+#: camlibs/canon/library.c:1772
 msgid "could not change owner name"
 msgstr "无法改变所有者姓名"
 
-#: camlibs/canon/library.c:1786
+#: camlibs/canon/library.c:1784
 msgid "Capture size class changed"
 msgstr ""
 
-#: camlibs/canon/library.c:1793
+#: camlibs/canon/library.c:1791
 msgid "Invalid capture size class setting"
 msgstr ""
 
-#: camlibs/canon/library.c:1844
+#: camlibs/canon/library.c:1842
 msgid "Invalid ISO speed setting"
 msgstr ""
 
 # camlibs/canon/library.c:892
-#: camlibs/canon/library.c:1847
+#: camlibs/canon/library.c:1845
 #, fuzzy
 msgid "ISO speed changed"
 msgstr "所有者姓名已改变"
 
 # camlibs/canon/library.c:894
-#: camlibs/canon/library.c:1849
+#: camlibs/canon/library.c:1847
 #, fuzzy
 msgid "Could not change ISO speed"
 msgstr "无法改变所有者姓名"
 
-#: camlibs/canon/library.c:1884
+#: camlibs/canon/library.c:1882
 msgid "Invalid shutter speed setting"
 msgstr ""
 
 # camlibs/sierra/sierra.c:814 camlibs/sierra/sierra.c:1137
-#: camlibs/canon/library.c:1887
+#: camlibs/canon/library.c:1885
 #, fuzzy
 msgid "Shutter speed changed"
 msgstr "快门速度 (秒)"
 
 # camlibs/canon/library.c:894
-#: camlibs/canon/library.c:1889
+#: camlibs/canon/library.c:1887
 #, fuzzy
 msgid "Could not change shutter speed"
 msgstr "无法改变所有者姓名"
 
 # camlibs/sierra/sierra.c:777 camlibs/sierra/sierra.c:1443
-#: camlibs/canon/library.c:1924
+#: camlibs/canon/library.c:1922
 #, fuzzy
 msgid "Invalid aperture setting"
 msgstr "照片设置"
 
 # camlibs/sierra/sierra.c:777 camlibs/sierra/sierra.c:1443
-#: camlibs/canon/library.c:1927
+#: camlibs/canon/library.c:1925
 #, fuzzy
 msgid "Aperture changed"
 msgstr "照片设置"
 
 # camlibs/canon/library.c:894
-#: camlibs/canon/library.c:1929
+#: camlibs/canon/library.c:1927
 #, fuzzy
 msgid "Could not change aperture"
 msgstr "无法改变所有者姓名"
 
-#: camlibs/canon/library.c:1963
+#: camlibs/canon/library.c:1961
 msgid "Invalid resolution setting"
 msgstr ""
 
 # camlibs/dimera/dimera3500.c:537
-#: camlibs/canon/library.c:1967
+#: camlibs/canon/library.c:1965
 #, fuzzy
 msgid "Resolution changed"
 msgstr "分辨率切换"
 
 # camlibs/canon/library.c:774
-#: camlibs/canon/library.c:1969
+#: camlibs/canon/library.c:1967
 #, fuzzy
 msgid "Could not change resolution"
 msgstr "无法创建目录 \\DCIM。"
 
-#: camlibs/canon/library.c:2004
+#: camlibs/canon/library.c:2002
 msgid "Invalid focus mode setting"
 msgstr ""
 
 # camlibs/sierra/sierra.c:885 camlibs/sierra/sierra.c:1186
 # camlibs/sierra/sierra.c:1395 camlibs/sierra/sierra.c:1626
-#: camlibs/canon/library.c:2007
+#: camlibs/canon/library.c:2005
 #, fuzzy
 msgid "Focus mode changed"
 msgstr "聚焦模式"
 
 # camlibs/canon/library.c:894
-#: camlibs/canon/library.c:2009
+#: camlibs/canon/library.c:2007
 #, fuzzy
 msgid "Could not change focus mode"
 msgstr "无法改变所有者姓名"
 
 # camlibs/canon/library.c:905
-#: camlibs/canon/library.c:2030
+#: camlibs/canon/library.c:2028
 msgid "time set"
 msgstr "时间设置"
 
 # camlibs/canon/library.c:907
-#: camlibs/canon/library.c:2032
+#: camlibs/canon/library.c:2030
 msgid "could not set time"
 msgstr "无法设置时间"
 
 # camlibs/canon/library.c:1107
-#: camlibs/canon/library.c:2264
+#: camlibs/canon/library.c:2262
 #, c-format
 msgid "Unsupported port type %i = 0x%x given. Initialization impossible."
 msgstr "给出未知端口类型 %i = 0x%x。不可能初始化。"
 
 # camlibs/canon/serial.c:625 camlibs/canon/serial.c:690
-#: camlibs/canon/serial.c:709 camlibs/canon/serial.c:774
+#: camlibs/canon/serial.c:707 camlibs/canon/serial.c:772
 msgid "Battery exhausted, camera off."
 msgstr "电池没电，关闭相机。"
 
 # camlibs/canon/serial.c:628
-#: camlibs/canon/serial.c:712
+#: camlibs/canon/serial.c:710
 msgid "ERROR: unexpected message"
 msgstr "错误：未预期的消息"
 
 # camlibs/canon/serial.c:638
-#: camlibs/canon/serial.c:722
+#: camlibs/canon/serial.c:720
 msgid "ERROR: message overrun"
 msgstr "错误：过多的消息"
 
 # camlibs/canon/serial.c:667
-#: camlibs/canon/serial.c:751
+#: camlibs/canon/serial.c:749
 msgid "ERROR: out of sequence."
 msgstr "错误：顺序错误。"
 
 # camlibs/canon/serial.c:672
-#: camlibs/canon/serial.c:756
+#: camlibs/canon/serial.c:754
 msgid "ERROR: unexpected packet type."
 msgstr "错误：未预期的包类型。"
 
 # camlibs/canon/serial.c:682
-#: camlibs/canon/serial.c:766
+#: camlibs/canon/serial.c:764
 msgid "ERROR: message format error."
 msgstr "错误：消息格式错误。"
 
 # camlibs/canon/serial.c:694
-#: camlibs/canon/serial.c:778
+#: camlibs/canon/serial.c:776
 msgid "ERROR: unexpected message2."
 msgstr "错误：未预期的消息2。"
 
 # camlibs/canon/serial.c:888
-#: camlibs/canon/serial.c:993
+#: camlibs/canon/serial.c:991
 msgid "Uploading file..."
 msgstr "正在上载文件..."
 
 # camlibs/canon/serial.c:946 camlibs/digita/digita.c:256
-#: camlibs/canon/serial.c:1064 camlibs/digita/digita.c:259
+#: camlibs/canon/serial.c:1062 camlibs/digita/digita.c:259
 msgid "Getting file..."
 msgstr "正在获取文件..."
 
-#: camlibs/canon/serial.c:1134
+#: camlibs/canon/serial.c:1132
 msgid ""
 "canon_serial_get_dirents: canon_serial_dialogue failed to fetch directory "
 "entries"
 msgstr ""
 
-#: camlibs/canon/serial.c:1142
+#: camlibs/canon/serial.c:1140
 #, c-format
 msgid ""
 "canon_serial_get_dirents: Initial dirent packet too short (only %i bytes)"
 msgstr ""
 
-#: camlibs/canon/serial.c:1162
+#: camlibs/canon/serial.c:1160
 #, c-format
 msgid "canon_serial_get_dirents: Could not allocate %i bytes of memory"
 msgstr ""
 
-#: camlibs/canon/serial.c:1182
+#: camlibs/canon/serial.c:1180
 msgid "canon_serial_get_dirents: Failed to read another directory entry"
 msgstr ""
 
-#: camlibs/canon/serial.c:1200
+#: camlibs/canon/serial.c:1198
 msgid "canon_serial_get_dirents: Truncated directory entry received"
 msgstr ""
 
-#: camlibs/canon/serial.c:1228
+#: camlibs/canon/serial.c:1226
 msgid "canon_serial_get_dirents: Too many dirents, we must be looping."
 msgstr ""
 
-#: camlibs/canon/serial.c:1238
+#: camlibs/canon/serial.c:1236
 #, c-format
 msgid "canon_serial_get_dirents: Could not resize dirent buffer to %i bytes"
 msgstr ""
 
 # camlibs/canon/serial.c:1172
-#: camlibs/canon/serial.c:1307
+#: camlibs/canon/serial.c:1305
 msgid "Error changing speed."
 msgstr "改变速度出错。"
 
 # camlibs/canon/serial.c:1181
-#: camlibs/canon/serial.c:1316
+#: camlibs/canon/serial.c:1314
 msgid "Resetting protocol..."
 msgstr "正在重置协议..."
 
 # camlibs/canon/serial.c:1190
-#: camlibs/canon/serial.c:1325
+#: camlibs/canon/serial.c:1323
 #, fuzzy
 msgid "Camera OK."
 msgstr "相机就绪。\n"
 
 # camlibs/canon/serial.c:1203
-#: camlibs/canon/serial.c:1338
+#: camlibs/canon/serial.c:1336
 msgid "Looking for camera ..."
 msgstr "正在寻找相机..."
 
 # camlibs/canon/serial.c:1213
-#: camlibs/canon/serial.c:1348
+#: camlibs/canon/serial.c:1346
 msgid "Trying to contact camera..."
 msgstr "正试图与相机联络..."
 
 # camlibs/canon/serial.c:1217
-#: camlibs/canon/serial.c:1352
+#: camlibs/canon/serial.c:1350
 msgid "Communication error 1"
 msgstr "通讯错误 1"
 
 # camlibs/canon/serial.c:1227 camlibs/canon/serial.c:1231
 # camlibs/dimera/dimera3500.c:970
-#: camlibs/canon/serial.c:1362 camlibs/canon/serial.c:1366
+#: camlibs/canon/serial.c:1360 camlibs/canon/serial.c:1364
 #: camlibs/dimera/dimera3500.c:999
 msgid "No response from camera"
 msgstr "相机无应答"
 
 # camlibs/canon/serial.c:1235
-#: camlibs/canon/serial.c:1370
+#: camlibs/canon/serial.c:1368
 msgid "Unrecognized response"
 msgstr "不可识别的应答"
 
 # camlibs/canon/usb.c:871
-#: camlibs/canon/serial.c:1390
+#: camlibs/canon/serial.c:1388
 #, fuzzy, c-format
 msgid "Detected a \"%s\" aka \"%s\""
 msgstr "已监测到一个“%s”。"
 
 # libgphoto2/gphoto2-result.c:46
-#: camlibs/canon/serial.c:1398
+#: camlibs/canon/serial.c:1396
 #, fuzzy, c-format
 msgid "Unknown model \"%s\""
 msgstr "未知型号"
 
 # camlibs/canon/serial.c:1278
-#: camlibs/canon/serial.c:1419
+#: camlibs/canon/serial.c:1417
 msgid "Bad EOT"
 msgstr "错误的 EOT"
 
 # camlibs/canon/serial.c:1284
-#: camlibs/canon/serial.c:1425
+#: camlibs/canon/serial.c:1423
 msgid "Communication error 2"
 msgstr "通讯错误 2"
 
 # camlibs/canon/serial.c:1307
-#: camlibs/canon/serial.c:1448
+#: camlibs/canon/serial.c:1446
 msgid "Communication error 3"
 msgstr "通讯错误 3"
 
 # camlibs/canon/serial.c:1311
-#: camlibs/canon/serial.c:1452
+#: camlibs/canon/serial.c:1450
 msgid "Changing speed... wait..."
 msgstr "正在改变速度... 请等待..."
 
 # camlibs/canon/serial.c:1316
-#: camlibs/canon/serial.c:1457
+#: camlibs/canon/serial.c:1455
 msgid "Error changing speed"
 msgstr "改变速度出错"
 
 # camlibs/canon/serial.c:1328
-#: camlibs/canon/serial.c:1468
+#: camlibs/canon/serial.c:1466
 #, fuzzy
 msgid "Error waiting for ACK during initialization retrying"
 msgstr "初始化重试中等待 ACK 时出错"
 
 # camlibs/canon/serial.c:1334
-#: camlibs/canon/serial.c:1474
+#: camlibs/canon/serial.c:1472
 msgid "Error waiting ACK during initialization"
 msgstr "初始化中等待 ACK 时出错"
 
 # camlibs/canon/serial.c:1338
-#: camlibs/canon/serial.c:1478
+#: camlibs/canon/serial.c:1476
 msgid "Connected to camera"
 msgstr "已连接到相机"
 
-#: camlibs/canon/serial.c:1516
+#: camlibs/canon/serial.c:1514
 msgid "ERROR: a fatal error condition was detected, can't continue "
 msgstr ""
 
-#: camlibs/canon/serial.c:1532
+#: camlibs/canon/serial.c:1530
 #, c-format
 msgid "ERROR: %d is too big"
 msgstr ""
 
 # camlibs/canon/serial.c:1400
-#: camlibs/canon/serial.c:1542
+#: camlibs/canon/serial.c:1540
 msgid "Getting thumbnail..."
 msgstr "正在获取缩略图..."
 
-#: camlibs/canon/usb.c:217
+#: camlibs/canon/usb.c:216
 msgid "NOT RECOGNIZED"
 msgstr ""
 
 # camlibs/ricoh/library.c:242
-#: camlibs/canon/usb.c:232
+#: camlibs/canon/usb.c:231
 #, fuzzy
 msgid "Could not establish initial contact with camera"
 msgstr "无法检测到任何相机。"
 
-#: camlibs/canon/usb.c:238
+#: camlibs/canon/usb.c:237
 msgid "Camera was already active"
 msgstr ""
 
-#: camlibs/canon/usb.c:241
+#: camlibs/canon/usb.c:240
 msgid "Camera was woken up"
 msgstr ""
 
 # libgphoto2/gphoto2-result.c:76
-#: camlibs/canon/usb.c:246
+#: camlibs/canon/usb.c:245
 #, fuzzy
 msgid "Unknown (some kind of error)"
 msgstr "未知的相机库错误"
 
-#: camlibs/canon/usb.c:247
+#: camlibs/canon/usb.c:246
 #, c-format
 msgid "Initial camera response '%c' unrecognized"
 msgstr ""
 
-#: camlibs/canon/usb.c:262
+#: camlibs/canon/usb.c:261
 #, c-format
 msgid ""
 "Step #2 of initialization failed: (\"%s\" on read of %i) Camera not "
 "operational"
 msgstr ""
 
-#: camlibs/canon/usb.c:268
+#: camlibs/canon/usb.c:267
 #, c-format
 msgid ""
 "Step #2 of initialization failed! (returned %i bytes, expected %i) Camera "
 "not operational"
 msgstr ""
 
-#: camlibs/canon/usb.c:287
+#: camlibs/canon/usb.c:286
 #, c-format
 msgid ""
 "Step #3 of initialization failed: \"%s\" on read of %i Camera not operational"
 msgstr ""
 
-#: camlibs/canon/usb.c:294 camlibs/canon/usb.c:321
+#: camlibs/canon/usb.c:293 camlibs/canon/usb.c:320
 #, c-format
 msgid ""
 "Step #3 of initialization failed! (returned %i, expected %i) Camera not "
 "operational"
 msgstr ""
 
-#: camlibs/canon/usb.c:314
+#: camlibs/canon/usb.c:313
 #, c-format
 msgid ""
 "Step #3 of initialization failed: \"%s\" on write of %i Camera not "
 "operational"
 msgstr ""
 
-#: camlibs/canon/usb.c:352 camlibs/canon/usb.c:393
+#: camlibs/canon/usb.c:351 camlibs/canon/usb.c:392
 #, c-format
 msgid "Step #4 failed: \"%s\" on read of %i. Camera not operational"
 msgstr ""
 
-#: camlibs/canon/usb.c:359 camlibs/canon/usb.c:400
+#: camlibs/canon/usb.c:358 camlibs/canon/usb.c:399
 #, c-format
 msgid "Step #4 failed! (returned %i, expected %i) Camera not operational"
 msgstr ""
 
 # camlibs/canon/usb.c:240
-#: camlibs/canon/usb.c:497
+#: camlibs/canon/usb.c:496
 #, c-format
 msgid "Camera not ready, multiple 'Identify camera' requests failed: %s"
 msgstr "相机未就绪，多个“鉴别相机”请求均失败：%s"
 
 # camlibs/canon/usb.c:240
-#: camlibs/canon/usb.c:535 camlibs/canon/usb.c:551
+#: camlibs/canon/usb.c:534 camlibs/canon/usb.c:550
 #, fuzzy, c-format
 msgid "Camera not ready, get_battery failed: %s"
 msgstr "相机未就绪，多个“鉴别相机”请求均失败：%s"
 
-#: camlibs/canon/usb.c:616
+#: camlibs/canon/usb.c:615
 #, c-format
 msgid ""
 "canon_usb_lock_keys: Unexpected length returned from \"lock keys\" function "
 "(%i bytes, expected %i)"
 msgstr ""
 
-#: camlibs/canon/usb.c:638 camlibs/canon/usb.c:664 camlibs/canon/usb.c:704
+#: camlibs/canon/usb.c:637 camlibs/canon/usb.c:663 camlibs/canon/usb.c:703
 #, c-format
 msgid "canon_usb_lock_keys: Unexpected length returned (%i bytes, expected %i)"
 msgstr ""
 
-#: camlibs/canon/usb.c:747 camlibs/canon/usb.c:763
+#: camlibs/canon/usb.c:746 camlibs/canon/usb.c:762
 #, c-format
 msgid ""
 "canon_usb_unlock_keys: Unexpected length returned (%i bytes, expected %i)"
 msgstr ""
 
-#: camlibs/canon/usb.c:818 camlibs/canon/usb.c:836
+#: camlibs/canon/usb.c:817 camlibs/canon/usb.c:835
 #, c-format
 msgid ""
 "canon_usb_get_body_id: Unexpected data length returned (%i bytes, expected %"
 "i)"
 msgstr ""
 
-#: camlibs/canon/usb.c:891
+#: camlibs/canon/usb.c:890
 #, c-format
 msgid ""
 "canon_usb_poll_interrupt_pipe: interrupt read failed after %i tries, %6.3f "
 "sec \"%s\""
 msgstr ""
 
-#: camlibs/canon/usb.c:947
+#: camlibs/canon/usb.c:946
 #, c-format
 msgid ""
 "canon_usb_poll_interrupt_multiple: interrupt read failed after %i tries, \"%s"
 "\""
 msgstr ""
 
-#: camlibs/canon/usb.c:1077
+#: camlibs/canon/usb.c:1076
 #, c-format
 msgid ""
 "canon_usb_capture_dialogue: bogus length 0x%04x for thumbnail size packet"
 msgstr ""
 
-#: camlibs/canon/usb.c:1094
+#: camlibs/canon/usb.c:1093
 #, c-format
 msgid ""
 "canon_usb_capture_dialogue: bogus length 0x%04x for full image size packet"
 msgstr ""
 
-#: camlibs/canon/usb.c:1113
+#: camlibs/canon/usb.c:1112
 msgid "canon_usb_capture_dialogue:secondary image descriptor received"
 msgstr ""
 
-#: camlibs/canon/usb.c:1140
+#: camlibs/canon/usb.c:1139
 msgid "canon_usb_capture_dialogue: first interrupt read out of sequence"
 msgstr ""
 
-#: camlibs/canon/usb.c:1149
+#: camlibs/canon/usb.c:1148
 msgid "canon_usb_capture_dialogue: second interrupt read out of sequence"
 msgstr ""
 
-#: camlibs/canon/usb.c:1160
+#: camlibs/canon/usb.c:1159
 #, c-format
 msgid ""
 "canon_usb_capture_dialogue: photographic failure signaled, code = 0x%08x"
 msgstr ""
 
-#: camlibs/canon/usb.c:1180
+#: camlibs/canon/usb.c:1179
 msgid "canon_usb_capture_dialogue: third EOS interrupt read out of sequence"
 msgstr ""
 
-#: camlibs/canon/usb.c:1216
+#: camlibs/canon/usb.c:1215
 msgid "canon_usb_capture_dialogue: fourth EOS interrupt read out of sequence"
 msgstr ""
 
-#: camlibs/canon/usb.c:1404
+#: camlibs/canon/usb.c:1403
 #, c-format
 msgid "canon_usb_dialogue: payload too big, won't fit into buffer (%i > %i)"
 msgstr ""
 
-#: camlibs/canon/usb.c:1511
+#: camlibs/canon/usb.c:1510
 #, c-format
 msgid "canon_usb_dialogue: expected 0x%x bytes, but camera reports 0x%x"
 msgstr ""
 
 # camlibs/canon/usb.c:640
-#: camlibs/canon/usb.c:1677
+#: camlibs/canon/usb.c:1676
 msgid "Receiving data..."
 msgstr "正在接收数据..."
 
-#: camlibs/canon/usb.c:2065 camlibs/canon/usb.c:2212
+#: camlibs/canon/usb.c:2064 camlibs/canon/usb.c:2211
 #, c-format
 msgid "Out of memory: %d bytes needed."
 msgstr ""
 
-#: camlibs/canon/usb.c:2130
+#: camlibs/canon/usb.c:2129
 msgid "canon_usb_set_file_attributes: canon_usb_dialogue failed"
 msgstr ""
 
-#: camlibs/canon/usb.c:2137
+#: camlibs/canon/usb.c:2136
 #, c-format
 msgid ""
 "Warning in canon_usb_set_file_attributes: canon_usb_dialogue returned error "
@@ -1129,51 +1129,51 @@ msgid ""
 msgstr ""
 
 # camlibs/canon/library.c:275
-#: camlibs/canon/usb.c:2223
+#: camlibs/canon/usb.c:2222
 #, fuzzy, c-format
 msgid "Couldn't read from file \"%s\""
 msgstr "无法获取磁盘信息：%s"
 
-#: camlibs/canon/usb.c:2233
+#: camlibs/canon/usb.c:2232
 #, c-format
 msgid "Out of memory: %ld bytes needed."
 msgstr ""
 
 # camlibs/canon/serial.c:888
-#: camlibs/canon/usb.c:2266 camlibs/canon/usb.c:2277 camlibs/canon/usb.c:2313
-#: camlibs/canon/usb.c:2327 camlibs/canon/usb.c:2341
+#: camlibs/canon/usb.c:2265 camlibs/canon/usb.c:2276 camlibs/canon/usb.c:2312
+#: camlibs/canon/usb.c:2326 camlibs/canon/usb.c:2340
 #, fuzzy
 msgid "File upload failed."
 msgstr "正在上载文件..."
 
-#: camlibs/canon/usb.c:2367
+#: camlibs/canon/usb.c:2366
 msgid ""
 "File was too big. You may have to turn your camera off and back on before "
 "uploading more files."
 msgstr "文件太大。你可能需要将相机关闭再打开，才能上传更多文件。"
 
-#: camlibs/canon/usb.c:2414
+#: camlibs/canon/usb.c:2413
 #, c-format
 msgid ""
 "canon_usb_get_dirents: Couldn't fit payload into buffer, '%.96s' (truncated) "
 "too long."
 msgstr ""
 
-#: camlibs/canon/usb.c:2431
+#: camlibs/canon/usb.c:2430
 #, c-format
 msgid ""
 "canon_usb_get_dirents: canon_usb_long_dialogue failed to fetch direntries, "
 "returned %i"
 msgstr ""
 
-#: camlibs/canon/usb.c:2482
+#: camlibs/canon/usb.c:2481
 #, c-format
 msgid ""
 "canon_usb_list_all_dirs: Couldn't fit payload into buffer, "
 "'%.96s' (truncated) too long."
 msgstr ""
 
-#: camlibs/canon/usb.c:2501
+#: camlibs/canon/usb.c:2500
 #, c-format
 msgid ""
 "canon_usb_list_all_dirs: canon_usb_long_dialogue failed to fetch direntries, "
@@ -1181,12 +1181,12 @@ msgid ""
 msgstr ""
 
 # camlibs/canon/usb.c:871
-#: camlibs/canon/usb.c:2578
+#: camlibs/canon/usb.c:2577
 #, c-format
 msgid "Detected a '%s'."
 msgstr "已监测到一个“%s”。"
 
-#: camlibs/canon/usb.c:2584
+#: camlibs/canon/usb.c:2583
 #, c-format
 msgid "Name \"%s\" from camera does not match any known camera"
 msgstr ""
@@ -1220,7 +1220,7 @@ msgstr ""
 # camlibs/sierra/sierra.c:1353
 #: camlibs/casio/casio-qv.c:266 camlibs/dimera/dimera3500.c:843
 #: camlibs/kodak/dc210/dc210.c:172 camlibs/polaroid/pdc700.c:980
-#: camlibs/sierra/sierra.c:891 camlibs/sierra/sierra.c:1469
+#: camlibs/sierra/sierra.c:895 camlibs/sierra/sierra.c:1473
 #: camlibs/sierra/sierra-desc.c:205
 msgid "Camera Configuration"
 msgstr "相机配置"
@@ -1394,8 +1394,8 @@ msgstr ""
 #: camlibs/dimera/dimera3500.c:471 camlibs/dimera/dimera3500.c:857
 #: camlibs/kodak/dc210/dc210.c:257 camlibs/kodak/dc210/dc210.c:425
 #: camlibs/konica/library.c:778 camlibs/konica/library.c:1019
-#: camlibs/konica/qm150.c:852 camlibs/ptp2/config.c:577
-#: camlibs/ptp2/ptp.c:3270 camlibs/ricoh/library.c:500
+#: camlibs/konica/qm150.c:852 camlibs/ptp2/config.c:578
+#: camlibs/ptp2/ptp.c:3479 camlibs/ricoh/library.c:500
 #: camlibs/sierra/nikon-desc.c:286
 msgid "Flash"
 msgstr "闪光灯"
@@ -1724,7 +1724,7 @@ msgstr "相机发送了意外的字节 0x%02x。"
 # camlibs/konica/lowlevel.c:382 camlibs/polaroid/pdc700.c:314
 # camlibs/sierra/library.c:989
 #: camlibs/fuji/fuji.c:319 camlibs/konica/lowlevel.c:382
-#: camlibs/polaroid/pdc700.c:314 camlibs/ptp2/library.c:915
+#: camlibs/polaroid/pdc700.c:314 camlibs/ptp2/library.c:919
 #: camlibs/ricoh/g3.c:345
 msgid "Downloading..."
 msgstr "正在下载..."
@@ -1782,12 +1782,12 @@ msgstr "配置您的 FUJI 相机"
 # camlibs/sierra/sierra.c:1581 camlibs/sierra/sierra.c:1754
 #: camlibs/fuji/library.c:370 camlibs/fuji/library.c:403
 #: camlibs/ricoh/library.c:445 camlibs/ricoh/library.c:447
-#: camlibs/sierra/sierra.c:1697 camlibs/sierra/sierra.c:1870
+#: camlibs/sierra/sierra.c:1701 camlibs/sierra/sierra.c:1874
 msgid "Date & Time"
 msgstr "日期和时间"
 
 #: camlibs/fuji/library.c:385 camlibs/fuji/library.c:418
-#: camlibs/ptp2/config.c:1775
+#: camlibs/ptp2/config.c:1772
 msgid "ID"
 msgstr "ID"
 
@@ -2094,15 +2094,15 @@ msgstr "高 (普通质量)"
 # camlibs/sierra/sierra.c:826 camlibs/sierra/sierra.c:1146
 # camlibs/sierra/sierra.c:1361 camlibs/sierra/sierra.c:1602
 #: camlibs/kodak/dc210/dc210.c:221 camlibs/konica/qm150.c:1051
-#: camlibs/ptp2/config.c:2208
+#: camlibs/ptp2/config.c:2205
 msgid "Capture"
 msgstr "光圈"
 
 # camlibs/sierra/sierra.c:1023 camlibs/sierra/sierra.c:1283
 #: camlibs/kodak/dc210/dc210.c:224 camlibs/kodak/dc210/dc210.c:383
-#: camlibs/konica/qm150.c:1037 camlibs/ptp2/config.c:2230
-#: camlibs/ptp2/ptp.c:2909 camlibs/ricoh/library.c:499
-#: camlibs/sierra/sierra.c:1139 camlibs/sierra/sierra.c:1399
+#: camlibs/konica/qm150.c:1037 camlibs/ptp2/config.c:2227
+#: camlibs/ptp2/ptp.c:3118 camlibs/ricoh/library.c:499
+#: camlibs/sierra/sierra.c:1143 camlibs/sierra/sierra.c:1403
 msgid "Zoom"
 msgstr "缩放"
 
@@ -2110,13 +2110,13 @@ msgstr "缩放"
 # camlibs/sierra/sierra.c:1254 camlibs/sierra/sierra.c:1450
 # camlibs/sierra/sierra.c:1453 camlibs/sierra/sierra.c:1666
 #: camlibs/kodak/dc210/dc210.c:231 camlibs/kodak/dc210/dc210.c:245
-#: camlibs/konica/qm150.c:1023 camlibs/ptp2/config.c:1076
-#: camlibs/ptp2/config.c:1367 camlibs/ptp2/ptp.c:3306
+#: camlibs/konica/qm150.c:1023 camlibs/ptp2/config.c:1073
+#: camlibs/ptp2/config.c:1364 camlibs/ptp2/ptp.c:3515
 #: camlibs/ricoh/library.c:498 camlibs/sierra/epson-desc.c:218
 #: camlibs/sierra/nikon-desc.c:324 camlibs/sierra/olympus-desc.c:488
-#: camlibs/sierra/sierra.c:1094 camlibs/sierra/sierra.c:1099
-#: camlibs/sierra/sierra.c:1370 camlibs/sierra/sierra.c:1566
-#: camlibs/sierra/sierra.c:1569 camlibs/sierra/sierra.c:1782
+#: camlibs/sierra/sierra.c:1098 camlibs/sierra/sierra.c:1103
+#: camlibs/sierra/sierra.c:1374 camlibs/sierra/sierra.c:1570
+#: camlibs/sierra/sierra.c:1573 camlibs/sierra/sierra.c:1786
 msgid "Macro"
 msgstr "巨大"
 
@@ -2165,11 +2165,11 @@ msgstr "曝光补偿"
 #: camlibs/konica/qm150.c:965 camlibs/konica/qm150.c:968
 #: camlibs/konica/qm150.c:983 camlibs/konica/qm150.c:986
 #: camlibs/konica/qm150.c:1003 camlibs/konica/qm150.c:1006
-#: camlibs/ptp2/config.c:920 camlibs/ptp2/config.c:941
-#: camlibs/ptp2/config.c:1073 camlibs/ptp2/config.c:1256
-#: camlibs/ptp2/config.c:1344 camlibs/ptp2/config.c:1355
-#: camlibs/ptp2/config.c:1386 camlibs/ptp2/ptp.c:3266 camlibs/ptp2/ptp.c:3303
-#: camlibs/ptp2/ptp.c:3321 camlibs/ptp2/ptp.c:3362 camlibs/ptp2/ptp.c:3370
+#: camlibs/ptp2/config.c:918 camlibs/ptp2/config.c:938
+#: camlibs/ptp2/config.c:1070 camlibs/ptp2/config.c:1253
+#: camlibs/ptp2/config.c:1341 camlibs/ptp2/config.c:1352
+#: camlibs/ptp2/config.c:1383 camlibs/ptp2/ptp.c:3475 camlibs/ptp2/ptp.c:3512
+#: camlibs/ptp2/ptp.c:3530 camlibs/ptp2/ptp.c:3571 camlibs/ptp2/ptp.c:3579
 #: camlibs/ricoh/library.c:311 camlibs/ricoh/library.c:326
 #: camlibs/ricoh/library.c:367 camlibs/sierra/epson-desc.c:151
 #: camlibs/sierra/epson-desc.c:169 camlibs/sierra/nikon-desc.c:168
@@ -2181,16 +2181,16 @@ msgstr "曝光补偿"
 #: camlibs/sierra/olympus-desc.c:411 camlibs/sierra/olympus-desc.c:430
 #: camlibs/sierra/olympus-desc.c:449 camlibs/sierra/olympus-desc.c:468
 #: camlibs/sierra/olympus-desc.c:489 camlibs/sierra/olympus-desc.c:690
-#: camlibs/sierra/olympus-desc.c:707 camlibs/sierra/sierra.c:902
-#: camlibs/sierra/sierra.c:908 camlibs/sierra/sierra.c:942
-#: camlibs/sierra/sierra.c:948 camlibs/sierra/sierra.c:1002
-#: camlibs/sierra/sierra.c:1009 camlibs/sierra/sierra.c:1063
-#: camlibs/sierra/sierra.c:1070 camlibs/sierra/sierra.c:1237
-#: camlibs/sierra/sierra.c:1266 camlibs/sierra/sierra.c:1306
-#: camlibs/sierra/sierra.c:1349 camlibs/sierra/sierra.c:1512
-#: camlibs/sierra/sierra.c:1518 camlibs/sierra/sierra.c:1540
-#: camlibs/sierra/sierra.c:1545 camlibs/sierra/sierra.c:1745
-#: camlibs/sierra/sierra.c:1765
+#: camlibs/sierra/olympus-desc.c:707 camlibs/sierra/sierra.c:906
+#: camlibs/sierra/sierra.c:912 camlibs/sierra/sierra.c:946
+#: camlibs/sierra/sierra.c:952 camlibs/sierra/sierra.c:1006
+#: camlibs/sierra/sierra.c:1013 camlibs/sierra/sierra.c:1067
+#: camlibs/sierra/sierra.c:1074 camlibs/sierra/sierra.c:1241
+#: camlibs/sierra/sierra.c:1270 camlibs/sierra/sierra.c:1310
+#: camlibs/sierra/sierra.c:1353 camlibs/sierra/sierra.c:1516
+#: camlibs/sierra/sierra.c:1522 camlibs/sierra/sierra.c:1544
+#: camlibs/sierra/sierra.c:1549 camlibs/sierra/sierra.c:1749
+#: camlibs/sierra/sierra.c:1769
 msgid "Auto"
 msgstr "自动"
 
@@ -2200,17 +2200,17 @@ msgstr "自动"
 #: camlibs/kodak/dc210/dc210.c:260 camlibs/kodak/dc210/dc210.c:267
 #: camlibs/sierra/epson-desc.c:152 camlibs/sierra/nikon-desc.c:235
 #: camlibs/sierra/olympus-desc.c:395 camlibs/sierra/olympus-desc.c:412
-#: camlibs/sierra/sierra.c:1003 camlibs/sierra/sierra.c:1011
-#: camlibs/sierra/sierra.c:1308 camlibs/sierra/sierra.c:1513
-#: camlibs/sierra/sierra.c:1520 camlibs/sierra/sierra.c:1747
+#: camlibs/sierra/sierra.c:1007 camlibs/sierra/sierra.c:1015
+#: camlibs/sierra/sierra.c:1312 camlibs/sierra/sierra.c:1517
+#: camlibs/sierra/sierra.c:1524 camlibs/sierra/sierra.c:1751
 msgid "Force"
 msgstr "强制"
 
 # frontends/command-line/actions.c:168
 #: camlibs/kodak/dc210/dc210.c:261 camlibs/kodak/dc210/dc210.c:269
-#: camlibs/ptp2/config.c:1350 camlibs/ptp2/config.c:1869
-#: camlibs/ptp2/library.c:2101 camlibs/ptp2/library.c:2105
-#: camlibs/ptp2/ptp.c:3368 camlibs/ricoh/library.c:346
+#: camlibs/ptp2/config.c:1347 camlibs/ptp2/config.c:1866
+#: camlibs/ptp2/library.c:2148 camlibs/ptp2/library.c:2152
+#: camlibs/ptp2/ptp.c:3577 camlibs/ricoh/library.c:346
 msgid "None"
 msgstr "无"
 
@@ -2230,16 +2230,16 @@ msgstr "红眼闪光灯"
 #: camlibs/konica/qm150.c:813 camlibs/konica/qm150.c:855
 #: camlibs/konica/qm150.c:868 camlibs/konica/qm150.c:1025
 #: camlibs/konica/qm150.c:1032 camlibs/konica/qm150.c:1039
-#: camlibs/konica/qm150.c:1046 camlibs/ptp2/config.c:529
-#: camlibs/ptp2/config.c:531 camlibs/ptp2/config.c:543
-#: camlibs/ptp2/config.c:637 camlibs/ptp2/config.c:639
-#: camlibs/ptp2/config.c:651 camlibs/ptp2/config.c:670
-#: camlibs/ptp2/config.c:672 camlibs/ptp2/config.c:684
-#: camlibs/ptp2/config.c:1258 camlibs/ptp2/ptp.c:3215 camlibs/ptp2/ptp.c:3216
-#: camlibs/ptp2/ptp.c:3323 camlibs/ricoh/library.c:338
+#: camlibs/konica/qm150.c:1046 camlibs/ptp2/config.c:530
+#: camlibs/ptp2/config.c:532 camlibs/ptp2/config.c:544
+#: camlibs/ptp2/config.c:636 camlibs/ptp2/config.c:638
+#: camlibs/ptp2/config.c:650 camlibs/ptp2/config.c:669
+#: camlibs/ptp2/config.c:671 camlibs/ptp2/config.c:683
+#: camlibs/ptp2/config.c:1255 camlibs/ptp2/ptp.c:3424 camlibs/ptp2/ptp.c:3425
+#: camlibs/ptp2/ptp.c:3532 camlibs/ricoh/library.c:338
 #: camlibs/ricoh/library.c:369 camlibs/sierra/nikon-desc.c:305
-#: camlibs/sierra/sierra.c:1119 camlibs/sierra/sierra.c:1125
-#: camlibs/sierra/sierra.c:1388
+#: camlibs/sierra/sierra.c:1123 camlibs/sierra/sierra.c:1129
+#: camlibs/sierra/sierra.c:1392
 msgid "On"
 msgstr "开"
 
@@ -2260,24 +2260,24 @@ msgstr "开"
 #: camlibs/konica/qm150.c:816 camlibs/konica/qm150.c:854
 #: camlibs/konica/qm150.c:861 camlibs/konica/qm150.c:1026
 #: camlibs/konica/qm150.c:1029 camlibs/konica/qm150.c:1040
-#: camlibs/konica/qm150.c:1043 camlibs/ptp2/config.c:530
-#: camlibs/ptp2/config.c:531 camlibs/ptp2/config.c:547
-#: camlibs/ptp2/config.c:638 camlibs/ptp2/config.c:639
-#: camlibs/ptp2/config.c:655 camlibs/ptp2/config.c:671
-#: camlibs/ptp2/config.c:672 camlibs/ptp2/config.c:688
-#: camlibs/ptp2/config.c:1257 camlibs/ptp2/config.c:1366
-#: camlibs/ptp2/config.c:1417 camlibs/ptp2/ptp.c:3215 camlibs/ptp2/ptp.c:3216
-#: camlibs/ptp2/ptp.c:3322 camlibs/ricoh/library.c:339
+#: camlibs/konica/qm150.c:1043 camlibs/ptp2/config.c:531
+#: camlibs/ptp2/config.c:532 camlibs/ptp2/config.c:548
+#: camlibs/ptp2/config.c:637 camlibs/ptp2/config.c:638
+#: camlibs/ptp2/config.c:654 camlibs/ptp2/config.c:670
+#: camlibs/ptp2/config.c:671 camlibs/ptp2/config.c:687
+#: camlibs/ptp2/config.c:1254 camlibs/ptp2/config.c:1363
+#: camlibs/ptp2/config.c:1414 camlibs/ptp2/ptp.c:3424 camlibs/ptp2/ptp.c:3425
+#: camlibs/ptp2/ptp.c:3531 camlibs/ricoh/library.c:339
 #: camlibs/ricoh/library.c:368 camlibs/ricoh/library.c:376
 #: camlibs/sierra/epson-desc.c:153 camlibs/sierra/nikon-desc.c:236
 #: camlibs/sierra/nikon-desc.c:304 camlibs/sierra/nikon-desc.c:359
 #: camlibs/sierra/olympus-desc.c:396 camlibs/sierra/olympus-desc.c:413
 #: camlibs/sierra/olympus-desc.c:509 camlibs/sierra/olympus-desc.c:673
-#: camlibs/sierra/olympus-desc.c:757 camlibs/sierra/sierra.c:1004
-#: camlibs/sierra/sierra.c:1013 camlibs/sierra/sierra.c:1120
-#: camlibs/sierra/sierra.c:1123 camlibs/sierra/sierra.c:1310
-#: camlibs/sierra/sierra.c:1390 camlibs/sierra/sierra.c:1514
-#: camlibs/sierra/sierra.c:1522 camlibs/sierra/sierra.c:1749
+#: camlibs/sierra/olympus-desc.c:757 camlibs/sierra/sierra.c:1008
+#: camlibs/sierra/sierra.c:1017 camlibs/sierra/sierra.c:1124
+#: camlibs/sierra/sierra.c:1127 camlibs/sierra/sierra.c:1314
+#: camlibs/sierra/sierra.c:1394 camlibs/sierra/sierra.c:1518
+#: camlibs/sierra/sierra.c:1526 camlibs/sierra/sierra.c:1753
 msgid "Off"
 msgstr "关"
 
@@ -2528,15 +2528,15 @@ msgstr ""
 msgid "Waiting..."
 msgstr "正在等待..."
 
-#: camlibs/kodak/dc210/library.c:1363
+#: camlibs/kodak/dc210/library.c:1365
 msgid "Parameter 1"
 msgstr "参数 1"
 
-#: camlibs/kodak/dc210/library.c:1367
+#: camlibs/kodak/dc210/library.c:1369
 msgid "Parameter 2"
 msgstr "参数 2"
 
-#: camlibs/kodak/dc210/library.c:1371
+#: camlibs/kodak/dc210/library.c:1373
 msgid "Parameter 3"
 msgstr "参数 3"
 
@@ -2643,7 +2643,7 @@ msgid "No card"
 msgstr "无卡"
 
 # camlibs/kodak/dc3200/dc3200.c:38
-#: camlibs/kodak/dc3200/dc3200.c:38
+#: camlibs/kodak/dc3200/dc3200.c:43
 msgid ""
 "There is currently an operation in progress. This camera only supports one "
 "operation at a time. Please wait until the current operation has finished."
@@ -2652,13 +2652,13 @@ msgstr ""
 "成。"
 
 # camlibs/kodak/dc3200/dc3200.c:142
-#: camlibs/kodak/dc3200/dc3200.c:142
+#: camlibs/kodak/dc3200/dc3200.c:147
 #, c-format
 msgid "camera inactive for > 9 seconds, re-initing.\n"
 msgstr "相机非活跃时间大于 9 秒，正在重新初始化。\n"
 
 # camlibs/kodak/dc3200/dc3200.c:431
-#: camlibs/kodak/dc3200/dc3200.c:431
+#: camlibs/kodak/dc3200/dc3200.c:436
 msgid ""
 "Known problems:\n"
 "\n"
@@ -2673,7 +2673,7 @@ msgstr ""
 "化。如果您发现相机没有应答，请重新选择相机。这将导致相机重新初始化。"
 
 # camlibs/kodak/dc3200/dc3200.c:444
-#: camlibs/kodak/dc3200/dc3200.c:444
+#: camlibs/kodak/dc3200/dc3200.c:449
 msgid ""
 "Kodak DC3200 Driver\n"
 "Donn Morrison <dmorriso@gulf.uvic.ca>\n"
@@ -2974,7 +2974,7 @@ msgstr "本地化"
 # camlibs/sierra/sierra.c:1544 camlibs/sierra/sierra.c:1728
 #: camlibs/konica/library.c:744 camlibs/konica/library.c:951
 #: camlibs/sierra/epson-desc.c:246 camlibs/sierra/nikon-desc.c:434
-#: camlibs/sierra/sierra.c:1660 camlibs/sierra/sierra.c:1844
+#: camlibs/sierra/sierra.c:1664 camlibs/sierra/sierra.c:1848
 msgid "Language"
 msgstr "语言"
 
@@ -3061,8 +3061,8 @@ msgstr "聚焦"
 # camlibs/sierra/sierra.c:1425 camlibs/sierra/sierra.c:1431
 # camlibs/sierra/sierra.c:1651
 #: camlibs/konica/library.c:813 camlibs/konica/library.c:820
-#: camlibs/sierra/epson-desc.c:170 camlibs/sierra/sierra.c:1541
-#: camlibs/sierra/sierra.c:1547 camlibs/sierra/sierra.c:1767
+#: camlibs/sierra/epson-desc.c:170 camlibs/sierra/sierra.c:1545
+#: camlibs/sierra/sierra.c:1551 camlibs/sierra/sierra.c:1771
 msgid "Fixed"
 msgstr "固定"
 
@@ -3095,19 +3095,19 @@ msgstr "自动定时 (仅用于下一张照片)"
 # camlibs/sierra/sierra.c:1668
 #: camlibs/konica/library.c:834 camlibs/konica/library.c:841
 #: camlibs/konica/qm150.c:1096 camlibs/konica/qm150.c:1103
-#: camlibs/minolta/dimagev/dimagev.c:400 camlibs/ptp2/config.c:1332
-#: camlibs/ptp2/config.c:1345 camlibs/ptp2/config.c:1356
-#: camlibs/ptp2/config.c:1452 camlibs/ptp2/ptp.c:3353 camlibs/ptp2/ptp.c:3363
-#: camlibs/ptp2/ptp.c:3371 camlibs/ptp2/ptp.c:3378 camlibs/ricoh/library.c:348
+#: camlibs/minolta/dimagev/dimagev.c:400 camlibs/ptp2/config.c:1329
+#: camlibs/ptp2/config.c:1342 camlibs/ptp2/config.c:1353
+#: camlibs/ptp2/config.c:1449 camlibs/ptp2/ptp.c:3562 camlibs/ptp2/ptp.c:3572
+#: camlibs/ptp2/ptp.c:3580 camlibs/ptp2/ptp.c:3587 camlibs/ricoh/library.c:348
 #: camlibs/sierra/epson-desc.c:219 camlibs/sierra/nikon-desc.c:253
 #: camlibs/sierra/nikon-desc.c:325 camlibs/sierra/olympus-desc.c:376
-#: camlibs/sierra/olympus-desc.c:511 camlibs/sierra/sierra.c:972
-#: camlibs/sierra/sierra.c:979 camlibs/sierra/sierra.c:1033
-#: camlibs/sierra/sierra.c:1040 camlibs/sierra/sierra.c:1095
-#: camlibs/sierra/sierra.c:1101 camlibs/sierra/sierra.c:1285
-#: camlibs/sierra/sierra.c:1328 camlibs/sierra/sierra.c:1372
-#: camlibs/sierra/sierra.c:1567 camlibs/sierra/sierra.c:1571
-#: camlibs/sierra/sierra.c:1784
+#: camlibs/sierra/olympus-desc.c:511 camlibs/sierra/sierra.c:976
+#: camlibs/sierra/sierra.c:983 camlibs/sierra/sierra.c:1037
+#: camlibs/sierra/sierra.c:1044 camlibs/sierra/sierra.c:1099
+#: camlibs/sierra/sierra.c:1105 camlibs/sierra/sierra.c:1289
+#: camlibs/sierra/sierra.c:1332 camlibs/sierra/sierra.c:1376
+#: camlibs/sierra/sierra.c:1571 camlibs/sierra/sierra.c:1575
+#: camlibs/sierra/sierra.c:1788
 #, c-format
 msgid "Normal"
 msgstr "普通"
@@ -3184,17 +3184,17 @@ msgstr "相机无应答"
 # camlibs/sierra/sierra.c:828 camlibs/sierra/sierra.c:835
 # camlibs/sierra/sierra.c:1152
 #: camlibs/konica/qm150.c:777 camlibs/konica/qm150.c:785
-#: camlibs/ptp2/config.c:1346 camlibs/ptp2/ptp.c:3364
-#: camlibs/sierra/nikon-desc.c:203 camlibs/sierra/sierra.c:943
-#: camlibs/sierra/sierra.c:950 camlibs/sierra/sierra.c:1268
+#: camlibs/ptp2/config.c:1343 camlibs/ptp2/ptp.c:3573
+#: camlibs/sierra/nikon-desc.c:203 camlibs/sierra/sierra.c:947
+#: camlibs/sierra/sierra.c:954 camlibs/sierra/sierra.c:1272
 msgid "Low"
 msgstr "低"
 
 # camlibs/sierra/sierra.c:829 camlibs/sierra/sierra.c:837
 # camlibs/sierra/sierra.c:1154
 #: camlibs/konica/qm150.c:778 camlibs/konica/qm150.c:788
-#: camlibs/sierra/nikon-desc.c:204 camlibs/sierra/sierra.c:944
-#: camlibs/sierra/sierra.c:952 camlibs/sierra/sierra.c:1270
+#: camlibs/sierra/nikon-desc.c:204 camlibs/sierra/sierra.c:948
+#: camlibs/sierra/sierra.c:956 camlibs/sierra/sierra.c:1274
 msgid "Medium"
 msgstr "中"
 
@@ -3202,10 +3202,10 @@ msgstr "中"
 # camlibs/sierra/sierra.c:830 camlibs/sierra/sierra.c:839
 # camlibs/sierra/sierra.c:1125 camlibs/sierra/sierra.c:1156
 #: camlibs/konica/qm150.c:779 camlibs/konica/qm150.c:782
-#: camlibs/ptp2/config.c:1349 camlibs/ptp2/ptp.c:3367
-#: camlibs/sierra/sierra.c:904 camlibs/sierra/sierra.c:912
-#: camlibs/sierra/sierra.c:945 camlibs/sierra/sierra.c:954
-#: camlibs/sierra/sierra.c:1241 camlibs/sierra/sierra.c:1272
+#: camlibs/ptp2/config.c:1346 camlibs/ptp2/ptp.c:3576
+#: camlibs/sierra/sierra.c:908 camlibs/sierra/sierra.c:916
+#: camlibs/sierra/sierra.c:949 camlibs/sierra/sierra.c:958
+#: camlibs/sierra/sierra.c:1245 camlibs/sierra/sierra.c:1276
 msgid "High"
 msgstr "高"
 
@@ -3259,7 +3259,7 @@ msgstr "关"
 msgid "Day-lt"
 msgstr "日光"
 
-#: camlibs/konica/qm150.c:979 camlibs/ptp2/ptp.c:2864
+#: camlibs/konica/qm150.c:979 camlibs/ptp2/ptp.c:3073
 msgid "Sharpness"
 msgstr ""
 
@@ -3303,10 +3303,10 @@ msgstr "黑白"
 # camlibs/sierra/sierra.c:858 camlibs/sierra/sierra.c:867
 # camlibs/sierra/sierra.c:1173
 #: camlibs/konica/qm150.c:1002 camlibs/konica/qm150.c:1018
-#: camlibs/ptp2/config.c:1150 camlibs/ptp2/config.c:1421
+#: camlibs/ptp2/config.c:1147 camlibs/ptp2/config.c:1418
 #: camlibs/ricoh/library.c:331 camlibs/sierra/olympus-desc.c:378
-#: camlibs/sierra/sierra.c:974 camlibs/sierra/sierra.c:983
-#: camlibs/sierra/sierra.c:1289
+#: camlibs/sierra/sierra.c:978 camlibs/sierra/sierra.c:987
+#: camlibs/sierra/sierra.c:1293
 msgid "Sepia"
 msgstr "棕褐色"
 
@@ -3516,8 +3516,8 @@ msgstr ""
 "闪光灯模式：\t\t"
 
 # camlibs/minolta/dimagev/dimagev.c:299
-#: camlibs/minolta/dimagev/dimagev.c:292 camlibs/ptp2/config.c:1091
-#: camlibs/ptp2/ptp.c:3314
+#: camlibs/minolta/dimagev/dimagev.c:292 camlibs/ptp2/config.c:1088
+#: camlibs/ptp2/ptp.c:3523
 msgid "Remote"
 msgstr "远程"
 
@@ -3531,7 +3531,7 @@ msgstr "本地"
 # frontends/command-line/gphoto2-cmd-config.c:372
 #: camlibs/minolta/dimagev/dimagev.c:293 camlibs/minolta/dimagev/dimagev.c:295
 #: camlibs/minolta/dimagev/dimagev.c:299 camlibs/minolta/dimagev/dimagev.c:302
-#: camlibs/ptp2/ptp.c:3217
+#: camlibs/ptp2/ptp.c:3426
 msgid "Yes"
 msgstr "是"
 
@@ -3540,15 +3540,15 @@ msgstr "是"
 # frontends/command-line/gphoto2-cmd-config.c:372
 #: camlibs/minolta/dimagev/dimagev.c:293 camlibs/minolta/dimagev/dimagev.c:295
 #: camlibs/minolta/dimagev/dimagev.c:299 camlibs/minolta/dimagev/dimagev.c:302
-#: camlibs/ptp2/ptp.c:3217
+#: camlibs/ptp2/ptp.c:3426
 msgid "No"
 msgstr "否"
 
 # camlibs/minolta/dimagev/dimagev.c:307 camlibs/sierra/sierra.c:1470
 # camlibs/sierra/sierra.c:1477 camlibs/sierra/sierra.c:1682
 #: camlibs/minolta/dimagev/dimagev.c:300 camlibs/sierra/nikon-desc.c:283
-#: camlibs/sierra/sierra.c:1586 camlibs/sierra/sierra.c:1593
-#: camlibs/sierra/sierra.c:1798
+#: camlibs/sierra/sierra.c:1590 camlibs/sierra/sierra.c:1597
+#: camlibs/sierra/sierra.c:1802
 msgid "Fine"
 msgstr "精细"
 
@@ -3556,10 +3556,10 @@ msgstr "精细"
 # camlibs/sierra/sierra.c:795 camlibs/sierra/sierra.c:1123
 # camlibs/sierra/sierra.c:1469 camlibs/sierra/sierra.c:1475
 # camlibs/sierra/sierra.c:1680
-#: camlibs/minolta/dimagev/dimagev.c:300 camlibs/ptp2/config.c:1148
-#: camlibs/sierra/sierra.c:903 camlibs/sierra/sierra.c:910
-#: camlibs/sierra/sierra.c:1239 camlibs/sierra/sierra.c:1585
-#: camlibs/sierra/sierra.c:1591 camlibs/sierra/sierra.c:1796
+#: camlibs/minolta/dimagev/dimagev.c:300 camlibs/ptp2/config.c:1145
+#: camlibs/sierra/sierra.c:907 camlibs/sierra/sierra.c:914
+#: camlibs/sierra/sierra.c:1243 camlibs/sierra/sierra.c:1589
+#: camlibs/sierra/sierra.c:1595 camlibs/sierra/sierra.c:1800
 msgid "Standard"
 msgstr "标准"
 
@@ -3612,7 +3612,7 @@ msgstr "未满"
 
 # camlibs/minolta/dimagev/dimagev.c:367 camlibs/minolta/dimagev/dimagev.c:410
 #: camlibs/minolta/dimagev/dimagev.c:360 camlibs/minolta/dimagev/dimagev.c:403
-#: camlibs/ptp2/config.c:850 camlibs/ptp2/ptp.c:3330
+#: camlibs/ptp2/config.c:848 camlibs/ptp2/ptp.c:3539
 #, c-format
 msgid "Full"
 msgstr "满"
@@ -3818,7 +3818,7 @@ msgstr "文件大小为 %i 字节。可以上载的文件最大为：%i 字节�
 
 # camlibs/panasonic/dc1000.c:476 camlibs/panasonic/dc1580.c:599
 #: camlibs/panasonic/dc1000.c:474 camlibs/panasonic/dc1580.c:597
-#: camlibs/ptp2/library.c:965 camlibs/ricoh/ricoh.c:837
+#: camlibs/ptp2/library.c:981 camlibs/ricoh/ricoh.c:837
 msgid "Uploading..."
 msgstr "正在上载..."
 
@@ -4005,14 +4005,14 @@ msgid ""
 msgstr ""
 
 # camlibs/polaroid/pdc700.c:159
-#: camlibs/polaroid/pdc700.c:159 camlibs/ptp2/config.c:2214
-#: camlibs/ptp2/config.c:2215 camlibs/ptp2/ptp.c:2897
+#: camlibs/polaroid/pdc700.c:159 camlibs/ptp2/config.c:2211
+#: camlibs/ptp2/config.c:2212 camlibs/ptp2/ptp.c:3106
 msgid "Image Quality"
 msgstr "图像质量"
 
 # camlibs/polaroid/pdc700.c:160
-#: camlibs/polaroid/pdc700.c:160 camlibs/ptp2/config.c:2216
-#: camlibs/ptp2/config.c:2217 camlibs/ptp2/ptp.c:2844 camlibs/ptp2/ptp.c:2898
+#: camlibs/polaroid/pdc700.c:160 camlibs/ptp2/config.c:2213
+#: camlibs/ptp2/config.c:2214 camlibs/ptp2/ptp.c:3053 camlibs/ptp2/ptp.c:3107
 msgid "Image Size"
 msgstr "图像大小"
 
@@ -4032,12 +4032,12 @@ msgid "Information"
 msgstr "信息"
 
 # camlibs/polaroid/pdc700.c:167
-#: camlibs/polaroid/pdc700.c:167 camlibs/ptp2/config.c:825
+#: camlibs/polaroid/pdc700.c:167 camlibs/ptp2/config.c:824
 msgid "normal"
 msgstr "普通"
 
 # camlibs/polaroid/pdc700.c:167
-#: camlibs/polaroid/pdc700.c:167 camlibs/ptp2/config.c:826
+#: camlibs/polaroid/pdc700.c:167 camlibs/ptp2/config.c:825
 msgid "fine"
 msgstr "精细"
 
@@ -4048,23 +4048,23 @@ msgstr "超精细"
 
 # camlibs/polaroid/pdc700.c:169 camlibs/sierra/sierra.c:1368
 # camlibs/sierra/sierra.c:1382 camlibs/sierra/sierra.c:1617
-#: camlibs/polaroid/pdc700.c:169 camlibs/ptp2/config.c:835
-#: camlibs/ptp2/config.c:1428 camlibs/sierra/epson-desc.c:116
-#: camlibs/sierra/sierra.c:1484 camlibs/sierra/sierra.c:1498
-#: camlibs/sierra/sierra.c:1733
+#: camlibs/polaroid/pdc700.c:169 camlibs/ptp2/config.c:833
+#: camlibs/ptp2/config.c:1425 camlibs/sierra/epson-desc.c:116
+#: camlibs/sierra/sierra.c:1488 camlibs/sierra/sierra.c:1502
+#: camlibs/sierra/sierra.c:1737
 msgid "auto"
 msgstr "自动"
 
 # camlibs/polaroid/pdc700.c:169 camlibs/polaroid/pdc700.c:170
 #: camlibs/polaroid/pdc700.c:169 camlibs/polaroid/pdc700.c:170
-#: camlibs/ptp2/config.c:836 camlibs/sierra/nikon-desc.c:565
+#: camlibs/ptp2/config.c:834 camlibs/sierra/nikon-desc.c:565
 #: camlibs/sierra/nikon-desc.c:570
 msgid "on"
 msgstr "开"
 
 # camlibs/polaroid/pdc700.c:169 camlibs/polaroid/pdc700.c:170
 #: camlibs/polaroid/pdc700.c:169 camlibs/polaroid/pdc700.c:170
-#: camlibs/ptp2/config.c:834 camlibs/sierra/nikon-desc.c:564
+#: camlibs/ptp2/config.c:832 camlibs/sierra/nikon-desc.c:564
 #: camlibs/sierra/nikon-desc.c:569
 msgid "off"
 msgstr "关"
@@ -4197,22 +4197,22 @@ msgid "The requested port type (%i) is not supported by this driver."
 msgstr "该驱动程序不支持请求的端口类型 (%i)。"
 
 # libgphoto2/gphoto2-camera.c:850
-#: camlibs/ptp2/config.c:73 camlibs/ptp2/config.c:162
+#: camlibs/ptp2/config.c:74 camlibs/ptp2/config.c:163
 #, fuzzy
 msgid "Sorry, your Canon camera does not support Canon capture"
 msgstr "您的相机不支持文件改名。"
 
 # libgphoto2/gphoto2-filesys.c:1442 libgphoto2/gphoto2-filesys.c:1764
-#: camlibs/ptp2/config.c:277 camlibs/ptp2/config.c:303
-#: camlibs/ptp2/config.c:350 camlibs/ptp2/config.c:381
-#: camlibs/ptp2/config.c:409
+#: camlibs/ptp2/config.c:278 camlibs/ptp2/config.c:304
+#: camlibs/ptp2/config.c:351 camlibs/ptp2/config.c:382
+#: camlibs/ptp2/config.c:410
 #, fuzzy, c-format
 msgid "Unknown value %04x"
 msgstr "未知的文件类型 %i。"
 
 # camlibs/canon/serial.c:672
-#: camlibs/ptp2/config.c:438 camlibs/ptp2/config.c:455
-#: camlibs/ptp2/config.c:561
+#: camlibs/ptp2/config.c:439 camlibs/ptp2/config.c:456
+#: camlibs/ptp2/config.c:562
 #, fuzzy, c-format
 msgid "unexpected datatype %i"
 msgstr "错误：未预期的包类型。"
@@ -4225,29 +4225,29 @@ msgstr "错误：未预期的包类型。"
 # camlibs/sierra/sierra.c:1212 camlibs/sierra/sierra.c:1256
 # camlibs/sierra/sierra.c:1451 camlibs/sierra/sierra.c:1455
 # camlibs/sierra/sierra.c:1668
-#: camlibs/ptp2/config.c:571 camlibs/ptp2/config.c:844
-#: camlibs/ptp2/config.c:1376 camlibs/ptp2/ptp.c:3328
+#: camlibs/ptp2/config.c:572 camlibs/ptp2/config.c:842
+#: camlibs/ptp2/config.c:1373 camlibs/ptp2/ptp.c:3537
 #: camlibs/sierra/olympus-desc.c:490
 #, fuzzy
 msgid "Manual"
 msgstr "无手册"
 
 # camlibs/minolta/dimagev/dimagev.c:323
-#: camlibs/ptp2/config.c:572 camlibs/ptp2/config.c:1377
+#: camlibs/ptp2/config.c:573 camlibs/ptp2/config.c:1374
 #, fuzzy
 msgid "Automatic"
 msgstr "自动\n"
 
 # camlibs/minolta/dimagev/dimagev.c:323
-#: camlibs/ptp2/config.c:573
+#: camlibs/ptp2/config.c:574
 #, fuzzy
 msgid "One-push Automatic"
 msgstr "自动\n"
 
 # camlibs/sierra/sierra.c:948 camlibs/sierra/sierra.c:956
 # camlibs/sierra/sierra.c:1235
-#: camlibs/ptp2/config.c:574 camlibs/ptp2/config.c:1387
-#: camlibs/ptp2/ptp.c:3269 camlibs/sierra/olympus-desc.c:431
+#: camlibs/ptp2/config.c:575 camlibs/ptp2/config.c:1384
+#: camlibs/ptp2/ptp.c:3478 camlibs/sierra/olympus-desc.c:431
 #: camlibs/sierra/olympus-desc.c:450 camlibs/sierra/olympus-desc.c:469
 #, fuzzy
 msgid "Daylight"
@@ -4255,50 +4255,50 @@ msgstr "日光"
 
 # camlibs/sierra/sierra.c:949 camlibs/sierra/sierra.c:958
 # camlibs/sierra/sierra.c:1237
-#: camlibs/ptp2/config.c:575 camlibs/ptp2/config.c:1390
-#: camlibs/ptp2/ptp.c:3268 camlibs/ricoh/library.c:328
+#: camlibs/ptp2/config.c:576 camlibs/ptp2/config.c:1387
+#: camlibs/ptp2/ptp.c:3477 camlibs/ricoh/library.c:328
 #: camlibs/sierra/nikon-desc.c:285 camlibs/sierra/olympus-desc.c:432
-#: camlibs/sierra/olympus-desc.c:451 camlibs/sierra/sierra.c:1065
-#: camlibs/sierra/sierra.c:1074 camlibs/sierra/sierra.c:1353
+#: camlibs/sierra/olympus-desc.c:451 camlibs/sierra/sierra.c:1069
+#: camlibs/sierra/sierra.c:1078 camlibs/sierra/sierra.c:1357
 msgid "Fluorescent"
 msgstr "荧光"
 
 # camlibs/sierra/sierra.c:950 camlibs/sierra/sierra.c:960
 # camlibs/sierra/sierra.c:1239
-#: camlibs/ptp2/config.c:576 camlibs/ptp2/config.c:1389
+#: camlibs/ptp2/config.c:577 camlibs/ptp2/config.c:1386
 #: camlibs/sierra/olympus-desc.c:433 camlibs/sierra/olympus-desc.c:452
-#: camlibs/sierra/olympus-desc.c:470 camlibs/sierra/sierra.c:1066
-#: camlibs/sierra/sierra.c:1076 camlibs/sierra/sierra.c:1355
+#: camlibs/sierra/olympus-desc.c:470 camlibs/sierra/sierra.c:1070
+#: camlibs/sierra/sierra.c:1080 camlibs/sierra/sierra.c:1359
 msgid "Tungsten"
 msgstr "钨"
 
 # camlibs/sierra/sierra.c:951 camlibs/sierra/sierra.c:963
 # camlibs/sierra/sierra.c:1241
-#: camlibs/ptp2/config.c:578 camlibs/ptp2/config.c:1388
-#: camlibs/ptp2/ptp.c:3271 camlibs/sierra/nikon-desc.c:288
+#: camlibs/ptp2/config.c:579 camlibs/ptp2/config.c:1385
+#: camlibs/ptp2/ptp.c:3480 camlibs/sierra/nikon-desc.c:288
 #: camlibs/sierra/olympus-desc.c:434 camlibs/sierra/olympus-desc.c:453
-#: camlibs/sierra/olympus-desc.c:474 camlibs/sierra/sierra.c:1067
-#: camlibs/sierra/sierra.c:1079 camlibs/sierra/sierra.c:1357
+#: camlibs/sierra/olympus-desc.c:474 camlibs/sierra/sierra.c:1071
+#: camlibs/sierra/sierra.c:1083 camlibs/sierra/sierra.c:1361
 msgid "Cloudy"
 msgstr "多云"
 
-#: camlibs/ptp2/config.c:579 camlibs/ptp2/ptp.c:3272
+#: camlibs/ptp2/config.c:580 camlibs/ptp2/ptp.c:3481
 msgid "Shade"
 msgstr ""
 
-#: camlibs/ptp2/config.c:580 camlibs/ptp2/ptp.c:2881 camlibs/ptp2/ptp.c:3273
+#: camlibs/ptp2/config.c:581 camlibs/ptp2/ptp.c:3090 camlibs/ptp2/ptp.c:3482
 msgid "Color Temperature"
 msgstr ""
 
 # camlibs/sierra/sierra.c:1552 camlibs/sierra/sierra.c:1568
 # camlibs/sierra/sierra.c:1745
-#: camlibs/ptp2/config.c:581 camlibs/ptp2/ptp.c:3274
+#: camlibs/ptp2/config.c:582 camlibs/ptp2/ptp.c:3483
 #: camlibs/sierra/nikon-desc.c:287
 #, fuzzy
 msgid "Preset"
 msgstr "葡萄牙语"
 
-#: camlibs/ptp2/config.c:589 camlibs/ptp2/ptp.c:3261
+#: camlibs/ptp2/config.c:589 camlibs/ptp2/ptp.c:3470
 msgid "JPEG Basic"
 msgstr ""
 
@@ -4315,7 +4315,7 @@ msgstr ""
 msgid "JPEG Normal"
 msgstr "普通"
 
-#: camlibs/ptp2/config.c:591 camlibs/ptp2/ptp.c:3263
+#: camlibs/ptp2/config.c:591 camlibs/ptp2/ptp.c:3472
 #, fuzzy
 msgid "JPEG Fine"
 msgstr "JPEG"
@@ -4329,72 +4329,72 @@ msgid "NEF+BASIC"
 msgstr ""
 
 # camlibs/polaroid/pdc700.c:167
-#: camlibs/ptp2/config.c:827
+#: camlibs/ptp2/config.c:826
 #, fuzzy
 msgid "super fine"
 msgstr "超精细"
 
-#: camlibs/ptp2/config.c:837
+#: camlibs/ptp2/config.c:835
 msgid "auto red eye"
 msgstr ""
 
-#: camlibs/ptp2/config.c:838
+#: camlibs/ptp2/config.c:836
 msgid "on red eye"
 msgstr ""
 
-#: camlibs/ptp2/config.c:843
+#: camlibs/ptp2/config.c:841
 msgid "iTTL"
 msgstr ""
 
 # camlibs/konica/konica.c:131
-#: camlibs/ptp2/config.c:845 camlibs/ptp2/ptp.c:3329
+#: camlibs/ptp2/config.c:843 camlibs/ptp2/ptp.c:3538
 #, fuzzy
 msgid "Commander"
 msgstr "命令顺序错误。"
 
-#: camlibs/ptp2/config.c:860
+#: camlibs/ptp2/config.c:858
 msgid "spot"
 msgstr ""
 
 # camlibs/sierra/sierra.c:826 camlibs/sierra/sierra.c:1146
 # camlibs/sierra/sierra.c:1361 camlibs/sierra/sierra.c:1602
-#: camlibs/ptp2/config.c:919
+#: camlibs/ptp2/config.c:917
 #, fuzzy
 msgid "Center"
 msgstr "光圈"
 
 # camlibs/polaroid/pdc700.c:999
-#: camlibs/ptp2/config.c:926
+#: camlibs/ptp2/config.c:924
 #, fuzzy
 msgid "large"
 msgstr "图像"
 
 # camlibs/sierra/sierra.c:829 camlibs/sierra/sierra.c:837
 # camlibs/sierra/sierra.c:1154
-#: camlibs/ptp2/config.c:927
+#: camlibs/ptp2/config.c:925
 #, fuzzy
 msgid "medium 1"
 msgstr "中"
 
 # camlibs/sierra/sierra.c:829 camlibs/sierra/sierra.c:837
 # camlibs/sierra/sierra.c:1154
-#: camlibs/ptp2/config.c:928
+#: camlibs/ptp2/config.c:926
 #, fuzzy
 msgid "medium 2"
 msgstr "中"
 
-#: camlibs/ptp2/config.c:929
+#: camlibs/ptp2/config.c:927
 msgid "small"
 msgstr ""
 
 # camlibs/sierra/sierra.c:948 camlibs/sierra/sierra.c:956
 # camlibs/sierra/sierra.c:1235
-#: camlibs/ptp2/config.c:936 camlibs/ptp2/config.c:1398
+#: camlibs/ptp2/config.c:933 camlibs/ptp2/config.c:1395
 #, fuzzy
 msgid "Factory Default"
 msgstr "日光"
 
-#: camlibs/ptp2/config.c:1070
+#: camlibs/ptp2/config.c:1067
 msgid "Creative"
 msgstr ""
 
@@ -4410,164 +4410,164 @@ msgstr ""
 # camlibs/sierra/sierra.c:1396 camlibs/sierra/sierra.c:1402
 # camlibs/sierra/sierra.c:1424 camlibs/sierra/sierra.c:1429
 # camlibs/sierra/sierra.c:1629 camlibs/sierra/sierra.c:1649
-#: camlibs/ptp2/config.c:1071
+#: camlibs/ptp2/config.c:1068
 #, fuzzy
 msgid "Action"
 msgstr "自动"
 
 # camlibs/sierra/sierra.c:921 camlibs/sierra/sierra.c:932
 # camlibs/sierra/sierra.c:1220
-#: camlibs/ptp2/config.c:1072 camlibs/ptp2/config.c:1074
-#: camlibs/ptp2/config.c:1337 camlibs/ptp2/ptp.c:3304 camlibs/ptp2/ptp.c:3358
+#: camlibs/ptp2/config.c:1069 camlibs/ptp2/config.c:1071
+#: camlibs/ptp2/config.c:1334 camlibs/ptp2/ptp.c:3513 camlibs/ptp2/ptp.c:3567
 #, fuzzy
 msgid "Portrait"
 msgstr "对比度-"
 
-#: camlibs/ptp2/config.c:1075 camlibs/ptp2/config.c:1338
-#: camlibs/ptp2/ptp.c:3305 camlibs/ptp2/ptp.c:3359
+#: camlibs/ptp2/config.c:1072 camlibs/ptp2/config.c:1335
+#: camlibs/ptp2/ptp.c:3514 camlibs/ptp2/ptp.c:3568
 msgid "Landscape"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1077 camlibs/ptp2/ptp.c:3307
+#: camlibs/ptp2/config.c:1074 camlibs/ptp2/ptp.c:3516
 msgid "Sports"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1078 camlibs/ptp2/ptp.c:3309
+#: camlibs/ptp2/config.c:1075 camlibs/ptp2/ptp.c:3518
 msgid "Night Portrait"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1079 camlibs/ptp2/ptp.c:3308
+#: camlibs/ptp2/config.c:1076 camlibs/ptp2/ptp.c:3517
 msgid "Night Landscape"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1085 camlibs/ptp2/ptp.c:3310
+#: camlibs/ptp2/config.c:1082 camlibs/ptp2/ptp.c:3519
 msgid "Single Shot"
 msgstr ""
 
 # camlibs/sierra/sierra.c:790 camlibs/sierra/sierra.c:799
 # camlibs/sierra/sierra.c:1127
-#: camlibs/ptp2/config.c:1086
+#: camlibs/ptp2/config.c:1083
 #, fuzzy
 msgid "Burst"
 msgstr "最佳"
 
-#: camlibs/ptp2/config.c:1087
+#: camlibs/ptp2/config.c:1084
 msgid "Timelapse"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1088 camlibs/ptp2/ptp.c:3312
+#: camlibs/ptp2/config.c:1085 camlibs/ptp2/ptp.c:3521
 msgid "Continuous Low Speed"
 msgstr ""
 
 # camlibs/konica/library.c:797 camlibs/konica/library.c:1018
 # camlibs/polaroid/pdc700.c:163
-#: camlibs/ptp2/config.c:1089 camlibs/ptp2/ptp.c:3313
+#: camlibs/ptp2/config.c:1086 camlibs/ptp2/ptp.c:3522
 #, fuzzy
 msgid "Timer"
 msgstr "自动定时"
 
-#: camlibs/ptp2/config.c:1090 camlibs/ptp2/ptp.c:3315
+#: camlibs/ptp2/config.c:1087 camlibs/ptp2/ptp.c:3524
 msgid "Mirror Up"
 msgstr ""
 
 # camlibs/minolta/dimagev/dimagev.c:299
-#: camlibs/ptp2/config.c:1092 camlibs/ptp2/ptp.c:3316
+#: camlibs/ptp2/config.c:1089 camlibs/ptp2/ptp.c:3525
 #, fuzzy
 msgid "Timer + Remote"
 msgstr "远程"
 
-#: camlibs/ptp2/config.c:1098 camlibs/ptp2/ptp.c:3280
+#: camlibs/ptp2/config.c:1095 camlibs/ptp2/ptp.c:3489
 msgid "Dynamic Area"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1099 camlibs/ptp2/ptp.c:3281
+#: camlibs/ptp2/config.c:1096 camlibs/ptp2/ptp.c:3490
 msgid "Single Area"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1100 camlibs/ptp2/ptp.c:3282
+#: camlibs/ptp2/config.c:1097 camlibs/ptp2/ptp.c:3491
 msgid "Closest Subject"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1101 camlibs/ptp2/ptp.c:3283
+#: camlibs/ptp2/config.c:1098 camlibs/ptp2/ptp.c:3492
 msgid "Group Dynamic"
 msgstr ""
 
 # camlibs/sierra/sierra.c:921 camlibs/sierra/sierra.c:932
 # camlibs/sierra/sierra.c:1220
-#: camlibs/ptp2/config.c:1107
+#: camlibs/ptp2/config.c:1104
 #, fuzzy
 msgid "sRGB (portrait)"
 msgstr "对比度-"
 
-#: camlibs/ptp2/config.c:1108
+#: camlibs/ptp2/config.c:1105
 msgid "AdobeRGB"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1109
+#: camlibs/ptp2/config.c:1106
 msgid "sRGB (nature)"
 msgstr ""
 
 # camlibs/sierra/sierra.c:826 camlibs/sierra/sierra.c:1146
 # camlibs/sierra/sierra.c:1361 camlibs/sierra/sierra.c:1602
-#: camlibs/ptp2/config.c:1115 camlibs/ptp2/ptp.c:3348
+#: camlibs/ptp2/config.c:1112 camlibs/ptp2/ptp.c:3557
 #, fuzzy
 msgid "Centre"
 msgstr "光圈"
 
-#: camlibs/ptp2/config.c:1116 camlibs/ptp2/ptp.c:3349
+#: camlibs/ptp2/config.c:1113 camlibs/ptp2/ptp.c:3558
 msgid "Top"
 msgstr ""
 
 # camlibs/sierra/sierra.c:1023 camlibs/sierra/sierra.c:1283
-#: camlibs/ptp2/config.c:1117 camlibs/ptp2/ptp.c:3350
+#: camlibs/ptp2/config.c:1114 camlibs/ptp2/ptp.c:3559
 #, fuzzy
 msgid "Bottom"
 msgstr "缩放"
 
-#: camlibs/ptp2/config.c:1118 camlibs/ptp2/ptp.c:3351
+#: camlibs/ptp2/config.c:1115 camlibs/ptp2/ptp.c:3560
 msgid "Left"
 msgstr ""
 
 # camlibs/sierra/sierra.c:789 camlibs/sierra/sierra.c:797
 # camlibs/sierra/sierra.c:830 camlibs/sierra/sierra.c:839
 # camlibs/sierra/sierra.c:1125 camlibs/sierra/sierra.c:1156
-#: camlibs/ptp2/config.c:1119 camlibs/ptp2/ptp.c:3352
+#: camlibs/ptp2/config.c:1116 camlibs/ptp2/ptp.c:3561
 #, fuzzy
 msgid "Right"
 msgstr "高"
 
-#: camlibs/ptp2/config.c:1125
+#: camlibs/ptp2/config.c:1122
 msgid "Average"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1126 camlibs/ptp2/ptp.c:3296
+#: camlibs/ptp2/config.c:1123 camlibs/ptp2/ptp.c:3505
 msgid "Center Weighted"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1127
+#: camlibs/ptp2/config.c:1124
 msgid "Multi Spot"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1128
+#: camlibs/ptp2/config.c:1125
 msgid "Center Spot"
 msgstr ""
 
 # camlibs/minolta/dimagev/dimagev.c:323
-#: camlibs/ptp2/config.c:1134
+#: camlibs/ptp2/config.c:1131
 #, fuzzy
 msgid "Automatic Flash"
 msgstr "自动\n"
 
 # camlibs/sierra/sierra.c:885 camlibs/sierra/sierra.c:1186
 # camlibs/sierra/sierra.c:1395 camlibs/sierra/sierra.c:1626
-#: camlibs/ptp2/config.c:1135
+#: camlibs/ptp2/config.c:1132
 #, fuzzy
 msgid "Flash off"
 msgstr "闪光灯模式"
 
 # camlibs/dimera/dimera3500.c:533 camlibs/konica/library.c:744
 # camlibs/konica/library.c:984
-#: camlibs/ptp2/config.c:1136
+#: camlibs/ptp2/config.c:1133
 #, fuzzy
 msgid "Fill flash"
 msgstr "闪光灯"
@@ -4575,25 +4575,25 @@ msgstr "闪光灯"
 # camlibs/sierra/sierra.c:889 camlibs/sierra/sierra.c:899
 # camlibs/sierra/sierra.c:1196 camlibs/sierra/sierra.c:1399
 # camlibs/sierra/sierra.c:1408 camlibs/sierra/sierra.c:1635
-#: camlibs/ptp2/config.c:1137
+#: camlibs/ptp2/config.c:1134
 #, fuzzy
 msgid "Red-eye automatic"
 msgstr "消红眼"
 
-#: camlibs/ptp2/config.c:1138
+#: camlibs/ptp2/config.c:1135
 #, fuzzy
 msgid "Red-eye fill"
 msgstr "红眼闪光灯"
 
 # camlibs/dimera/dimera3500.c:549
-#: camlibs/ptp2/config.c:1139
+#: camlibs/ptp2/config.c:1136
 #, fuzzy
 msgid "External sync"
 msgstr "外部"
 
 # camlibs/sierra/sierra.c:948 camlibs/sierra/sierra.c:956
 # camlibs/sierra/sierra.c:1235
-#: camlibs/ptp2/config.c:1140 camlibs/ptp2/ptp.c:3275
+#: camlibs/ptp2/config.c:1137 camlibs/ptp2/ptp.c:3484
 #, fuzzy
 msgid "Default"
 msgstr "日光"
@@ -4601,289 +4601,289 @@ msgstr "日光"
 # camlibs/sierra/sierra.c:890 camlibs/sierra/sierra.c:901
 # camlibs/sierra/sierra.c:1198 camlibs/sierra/sierra.c:1400
 # camlibs/sierra/sierra.c:1410 camlibs/sierra/sierra.c:1637
-#: camlibs/ptp2/config.c:1141 camlibs/ptp2/ptp.c:3278
-#: camlibs/sierra/epson-desc.c:155 camlibs/sierra/sierra.c:1006
-#: camlibs/sierra/sierra.c:1017 camlibs/sierra/sierra.c:1314
-#: camlibs/sierra/sierra.c:1516 camlibs/sierra/sierra.c:1526
-#: camlibs/sierra/sierra.c:1753
+#: camlibs/ptp2/config.c:1138 camlibs/ptp2/ptp.c:3487
+#: camlibs/sierra/epson-desc.c:155 camlibs/sierra/sierra.c:1010
+#: camlibs/sierra/sierra.c:1021 camlibs/sierra/sierra.c:1318
+#: camlibs/sierra/sierra.c:1520 camlibs/sierra/sierra.c:1530
+#: camlibs/sierra/sierra.c:1757
 msgid "Slow Sync"
 msgstr "慢同步"
 
-#: camlibs/ptp2/config.c:1142 camlibs/ptp2/ptp.c:3279
+#: camlibs/ptp2/config.c:1139 camlibs/ptp2/ptp.c:3488
 msgid "Rear Curtain Sync + Slow Sync"
 msgstr ""
 
 # camlibs/sierra/sierra.c:889 camlibs/sierra/sierra.c:899
 # camlibs/sierra/sierra.c:1196 camlibs/sierra/sierra.c:1399
 # camlibs/sierra/sierra.c:1408 camlibs/sierra/sierra.c:1635
-#: camlibs/ptp2/config.c:1143 camlibs/ptp2/ptp.c:3277
+#: camlibs/ptp2/config.c:1140 camlibs/ptp2/ptp.c:3486
 #, fuzzy
 msgid "Red-eye Reduction + Slow Sync"
 msgstr "消红眼"
 
 # camlibs/sierra/sierra.c:1496 camlibs/sierra/sierra.c:1500
 # camlibs/sierra/sierra.c:1700
-#: camlibs/ptp2/config.c:1149 camlibs/ricoh/library.c:330
+#: camlibs/ptp2/config.c:1146 camlibs/ricoh/library.c:330
 #: camlibs/sierra/epson-desc.c:137
 msgid "Black & White"
 msgstr "黑白"
 
 # camlibs/sierra/sierra.c:885 camlibs/sierra/sierra.c:1186
 # camlibs/sierra/sierra.c:1395 camlibs/sierra/sierra.c:1626
-#: camlibs/ptp2/config.c:1264 camlibs/ptp2/ptp.c:3290
+#: camlibs/ptp2/config.c:1261 camlibs/ptp2/ptp.c:3499
 #, fuzzy
 msgid "AE/AF Lock"
 msgstr "聚焦模式"
 
-#: camlibs/ptp2/config.c:1265 camlibs/ptp2/ptp.c:3292
+#: camlibs/ptp2/config.c:1262 camlibs/ptp2/ptp.c:3501
 msgid "AE Lock only"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1266
+#: camlibs/ptp2/config.c:1263
 msgid "AF Lock Only"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1267 camlibs/ptp2/ptp.c:3293
+#: camlibs/ptp2/config.c:1264 camlibs/ptp2/ptp.c:3502
 msgid "AF Lock Hold"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1268 camlibs/ptp2/ptp.c:3294
+#: camlibs/ptp2/config.c:1265 camlibs/ptp2/ptp.c:3503
 msgid "AF On"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1269
+#: camlibs/ptp2/config.c:1266
 msgid "Flash Level Lock"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1274 camlibs/ptp2/config.c:1294
+#: camlibs/ptp2/config.c:1271 camlibs/ptp2/config.c:1291
 msgid "10 seconds"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1275 camlibs/ptp2/config.c:1295
+#: camlibs/ptp2/config.c:1272 camlibs/ptp2/config.c:1292
 msgid "20 seconds"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1276 camlibs/ptp2/config.c:1324
+#: camlibs/ptp2/config.c:1273 camlibs/ptp2/config.c:1321
 #, fuzzy
 msgid "1 minute"
 msgstr "41 mm"
 
-#: camlibs/ptp2/config.c:1277 camlibs/ptp2/config.c:1325
+#: camlibs/ptp2/config.c:1274 camlibs/ptp2/config.c:1322
 msgid "5 minutes"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1278 camlibs/ptp2/config.c:1326
+#: camlibs/ptp2/config.c:1275 camlibs/ptp2/config.c:1323
 #, fuzzy
 msgid "10 minutes"
 msgstr "41 mm"
 
-#: camlibs/ptp2/config.c:1283
+#: camlibs/ptp2/config.c:1280
 msgid "4 seconds"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1284
+#: camlibs/ptp2/config.c:1281
 msgid "6 seconds"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1285
+#: camlibs/ptp2/config.c:1282
 msgid "8 seconds"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1286
+#: camlibs/ptp2/config.c:1283
 msgid "16 seconds"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1287
+#: camlibs/ptp2/config.c:1284
 msgid "30 minutes"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1292
+#: camlibs/ptp2/config.c:1289
 msgid "2 seconds"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1293
+#: camlibs/ptp2/config.c:1290
 msgid "5 seconds"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1300
+#: camlibs/ptp2/config.c:1297
 #, fuzzy
 msgid "6 mm"
 msgstr "29 mm"
 
-#: camlibs/ptp2/config.c:1301
+#: camlibs/ptp2/config.c:1298
 #, fuzzy
 msgid "8 mm"
 msgstr "58 mm"
 
-#: camlibs/ptp2/config.c:1302
+#: camlibs/ptp2/config.c:1299
 #, fuzzy
 msgid "10 mm"
 msgstr "51 mm"
 
-#: camlibs/ptp2/config.c:1303
+#: camlibs/ptp2/config.c:1300
 #, fuzzy
 msgid "20 mm"
 msgstr "29 mm"
 
-#: camlibs/ptp2/config.c:1308
+#: camlibs/ptp2/config.c:1305
 msgid "1/60"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1309
+#: camlibs/ptp2/config.c:1306
 msgid "1/30"
 msgstr ""
 
 # camlibs/polaroid/pdc700.c:174
-#: camlibs/ptp2/config.c:1310
+#: camlibs/ptp2/config.c:1307
 #, fuzzy
 msgid "1/15"
 msgstr "115200"
 
-#: camlibs/ptp2/config.c:1311
+#: camlibs/ptp2/config.c:1308
 msgid "1/8"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1312
+#: camlibs/ptp2/config.c:1309
 msgid "1/4"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1313
+#: camlibs/ptp2/config.c:1310
 msgid "1/2"
 msgstr ""
 
 # camlibs/sierra/sierra.c:1024 camlibs/sierra/sierra.c:1030
-#: camlibs/ptp2/config.c:1314
+#: camlibs/ptp2/config.c:1311
 #, fuzzy
 msgid "1"
 msgstr "1x"
 
 # camlibs/sierra/sierra.c:1362 camlibs/sierra/sierra.c:1370
 # camlibs/sierra/sierra.c:1605
-#: camlibs/ptp2/config.c:1315
+#: camlibs/ptp2/config.c:1312
 #, fuzzy
 msgid "2"
 msgstr "F2"
 
 # camlibs/sierra/sierra.c:1365 camlibs/sierra/sierra.c:1376
 # camlibs/sierra/sierra.c:1611
-#: camlibs/ptp2/config.c:1316
+#: camlibs/ptp2/config.c:1313
 #, fuzzy
 msgid "4"
 msgstr "F4"
 
 # camlibs/sierra/sierra.c:1367 camlibs/sierra/sierra.c:1380
 # camlibs/sierra/sierra.c:1615
-#: camlibs/ptp2/config.c:1317
+#: camlibs/ptp2/config.c:1314
 #, fuzzy
 msgid "8"
 msgstr "F8"
 
-#: camlibs/ptp2/config.c:1318
+#: camlibs/ptp2/config.c:1315
 #, fuzzy
 msgid "15"
 msgstr "1.5"
 
-#: camlibs/ptp2/config.c:1319
+#: camlibs/ptp2/config.c:1316
 msgid "30"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1327
+#: camlibs/ptp2/config.c:1324
 #, fuzzy
 msgid "15 minutes"
 msgstr "41 mm"
 
-#: camlibs/ptp2/config.c:1333 camlibs/ptp2/config.c:1418
-#: camlibs/ptp2/ptp.c:3354
+#: camlibs/ptp2/config.c:1330 camlibs/ptp2/config.c:1415
+#: camlibs/ptp2/ptp.c:3563
 msgid "Vivid"
 msgstr ""
 
 # camlibs/minolta/dimagev/dimagev.c:371
-#: camlibs/ptp2/config.c:1334 camlibs/ptp2/ptp.c:3355
+#: camlibs/ptp2/config.c:1331 camlibs/ptp2/ptp.c:3564
 #, fuzzy
 msgid "Sharper"
 msgstr "正在充电"
 
-#: camlibs/ptp2/config.c:1335 camlibs/ptp2/ptp.c:3356
+#: camlibs/ptp2/config.c:1332 camlibs/ptp2/ptp.c:3565
 msgid "Softer"
 msgstr ""
 
 # libgphoto2/gphoto2-result.c:49
-#: camlibs/ptp2/config.c:1336 camlibs/ptp2/ptp.c:3357
+#: camlibs/ptp2/config.c:1333 camlibs/ptp2/ptp.c:3566
 #, fuzzy
 msgid "Direct Print"
 msgstr "目录存在"
 
 # camlibs/sierra/sierra.c:1426 camlibs/sierra/sierra.c:1433
 # camlibs/sierra/sierra.c:1653
-#: camlibs/ptp2/config.c:1339 camlibs/ptp2/config.c:1361
-#: camlibs/ptp2/config.c:1392 camlibs/ptp2/ptp.c:3360 camlibs/ptp2/ptp.c:3376
-#: camlibs/sierra/epson-desc.c:171 camlibs/sierra/sierra.c:1542
-#: camlibs/sierra/sierra.c:1549 camlibs/sierra/sierra.c:1769
+#: camlibs/ptp2/config.c:1336 camlibs/ptp2/config.c:1358
+#: camlibs/ptp2/config.c:1389 camlibs/ptp2/ptp.c:3569 camlibs/ptp2/ptp.c:3585
+#: camlibs/sierra/epson-desc.c:171 camlibs/sierra/sierra.c:1546
+#: camlibs/sierra/sierra.c:1553 camlibs/sierra/sierra.c:1773
 msgid "Custom"
 msgstr "定制"
 
 # camlibs/sierra/sierra.c:829 camlibs/sierra/sierra.c:837
 # camlibs/sierra/sierra.c:1154
-#: camlibs/ptp2/config.c:1347 camlibs/ptp2/ptp.c:3365
+#: camlibs/ptp2/config.c:1344 camlibs/ptp2/ptp.c:3574
 #, fuzzy
 msgid "Medium Low"
 msgstr "中"
 
 # camlibs/sierra/sierra.c:829 camlibs/sierra/sierra.c:837
 # camlibs/sierra/sierra.c:1154
-#: camlibs/ptp2/config.c:1348 camlibs/ptp2/config.c:1359
-#: camlibs/ptp2/ptp.c:3366 camlibs/ptp2/ptp.c:3374
+#: camlibs/ptp2/config.c:1345 camlibs/ptp2/config.c:1356
+#: camlibs/ptp2/ptp.c:3575 camlibs/ptp2/ptp.c:3583
 #, fuzzy
 msgid "Medium high"
 msgstr "中"
 
 # camlibs/sierra/sierra.c:921 camlibs/sierra/sierra.c:932
 # camlibs/sierra/sierra.c:1220
-#: camlibs/ptp2/config.c:1357 camlibs/ptp2/ptp.c:3372
+#: camlibs/ptp2/config.c:1354 camlibs/ptp2/ptp.c:3581
 #, fuzzy
 msgid "Low contrast"
 msgstr "对比度-"
 
 # camlibs/sierra/sierra.c:829 camlibs/sierra/sierra.c:837
 # camlibs/sierra/sierra.c:1154
-#: camlibs/ptp2/config.c:1358 camlibs/ptp2/ptp.c:3373
+#: camlibs/ptp2/config.c:1355 camlibs/ptp2/ptp.c:3582
 #, fuzzy
 msgid "Medium low"
 msgstr "中"
 
-#: camlibs/ptp2/config.c:1360 camlibs/ptp2/ptp.c:3375
+#: camlibs/ptp2/config.c:1357 camlibs/ptp2/ptp.c:3584
 msgid "High control"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1368
+#: camlibs/ptp2/config.c:1365
 #, fuzzy
 msgid "Long distance"
 msgstr "聚焦位置"
 
 # camlibs/ptp/library.c:90
-#: camlibs/ptp2/config.c:1375 camlibs/ptp2/library.c:2110
-#: camlibs/ptp2/library.c:2124 camlibs/ptp2/ptp.c:3561
+#: camlibs/ptp2/config.c:1372 camlibs/ptp2/library.c:2157
+#: camlibs/ptp2/library.c:2171 camlibs/ptp2/ptp.c:3770
 #, fuzzy
 msgid "Undefined"
 msgstr "未定义的 PTP 错误"
 
 # camlibs/minolta/dimagev/dimagev.c:323
-#: camlibs/ptp2/config.c:1378
+#: camlibs/ptp2/config.c:1375
 #, fuzzy
 msgid "Automatic Macro"
 msgstr "自动\n"
 
-#: camlibs/ptp2/config.c:1379
+#: camlibs/ptp2/config.c:1376
 msgid "AF-S"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1380
+#: camlibs/ptp2/config.c:1377
 msgid "AF-C"
 msgstr ""
 
 # camlibs/sierra/sierra.c:949 camlibs/sierra/sierra.c:958
 # camlibs/sierra/sierra.c:1237
-#: camlibs/ptp2/config.c:1391
+#: camlibs/ptp2/config.c:1388
 #, fuzzy
 msgid "Fluorescent H"
 msgstr "荧光"
@@ -4896,149 +4896,149 @@ msgstr "荧光"
 # camlibs/sierra/sierra.c:1212 camlibs/sierra/sierra.c:1256
 # camlibs/sierra/sierra.c:1451 camlibs/sierra/sierra.c:1455
 # camlibs/sierra/sierra.c:1668
-#: camlibs/ptp2/config.c:1419
+#: camlibs/ptp2/config.c:1416
 #, fuzzy
 msgid "Neutral"
 msgstr "普通"
 
 # camlibs/minolta/dimagev/dimagev.c:371
-#: camlibs/ptp2/config.c:1420
+#: camlibs/ptp2/config.c:1417
 #, fuzzy
 msgid "Low sharpening"
 msgstr "正在充电"
 
 # camlibs/sierra/sierra.c:1496 camlibs/sierra/sierra.c:1500
 # camlibs/sierra/sierra.c:1700
-#: camlibs/ptp2/config.c:1422
+#: camlibs/ptp2/config.c:1419
 #, fuzzy
 msgid "Black & white"
 msgstr "黑白"
 
 # camlibs/dimera/dimera3500.c:533
-#: camlibs/ptp2/config.c:1444
+#: camlibs/ptp2/config.c:1441
 #, fuzzy
 msgid "AE & Flash"
 msgstr "无闪光灯"
 
 # camlibs/dimera/dimera3500.c:543
-#: camlibs/ptp2/config.c:1445
+#: camlibs/ptp2/config.c:1442
 #, fuzzy
 msgid "AE only"
 msgstr "就绪"
 
 # camlibs/sierra/sierra.c:885 camlibs/sierra/sierra.c:1186
 # camlibs/sierra/sierra.c:1395 camlibs/sierra/sierra.c:1626
-#: camlibs/ptp2/config.c:1446
+#: camlibs/ptp2/config.c:1443
 #, fuzzy
 msgid "Flash only"
 msgstr "闪光灯模式"
 
 # camlibs/konica/library.c:770 camlibs/konica/library.c:1002
-#: camlibs/ptp2/config.c:1447
+#: camlibs/ptp2/config.c:1444
 #, fuzzy
 msgid "WB bracketing"
 msgstr "曝光测定"
 
-#: camlibs/ptp2/config.c:1453 camlibs/ptp2/ptp.c:3379
+#: camlibs/ptp2/config.c:1450 camlibs/ptp2/ptp.c:3588
 msgid "Moderate"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1454 camlibs/ptp2/ptp.c:3380
+#: camlibs/ptp2/config.c:1451 camlibs/ptp2/ptp.c:3589
 msgid "Enhanced"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1460
+#: camlibs/ptp2/config.c:1457
 msgid "MTR > Under"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1461
+#: camlibs/ptp2/config.c:1458
 msgid "Under > MTR"
 msgstr ""
 
 # camlibs/dimera/dimera3500.c:549
-#: camlibs/ptp2/config.c:1667
+#: camlibs/ptp2/config.c:1664
 #, fuzzy
 msgid "Internal RAM"
 msgstr "内部"
 
 # camlibs/kodak/dc240/library.c:618
-#: camlibs/ptp2/config.c:1668
+#: camlibs/ptp2/config.c:1665
 #, fuzzy
 msgid "Memory card"
 msgstr "无卡"
 
-#: camlibs/ptp2/config.c:1780
+#: camlibs/ptp2/config.c:1777
 msgid "ESSID"
 msgstr ""
 
 # camlibs/polaroid/pdc700.c:171
-#: camlibs/ptp2/config.c:1785
+#: camlibs/ptp2/config.c:1782
 #, fuzzy
 msgid "Display"
 msgstr "播放"
 
-#: camlibs/ptp2/config.c:1795
+#: camlibs/ptp2/config.c:1792
 #, c-format
 msgid "Creation date: %s, Last usage date: %s"
 msgstr ""
 
 # camlibs/sierra/sierra.c:948 camlibs/sierra/sierra.c:956
 # camlibs/sierra/sierra.c:1235
-#: camlibs/ptp2/config.c:1801
+#: camlibs/ptp2/config.c:1798
 #, fuzzy
 msgid "Delete"
 msgstr "日光"
 
-#: camlibs/ptp2/config.c:1870
+#: camlibs/ptp2/config.c:1867
 msgid "WEP 64-bit"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1871
+#: camlibs/ptp2/config.c:1868
 msgid "WEP 128-bit"
 msgstr ""
 
 # camlibs/konica/library.c:710 camlibs/konica/library.c:915
 # camlibs/sierra/sierra.c:1544 camlibs/sierra/sierra.c:1728
-#: camlibs/ptp2/config.c:1918
+#: camlibs/ptp2/config.c:1915
 #, fuzzy
 msgid "Managed"
 msgstr "语言"
 
-#: camlibs/ptp2/config.c:1919
+#: camlibs/ptp2/config.c:1916
 msgid "Ad-hoc"
 msgstr ""
 
-#: camlibs/ptp2/config.c:2088
+#: camlibs/ptp2/config.c:2085
 msgid "Profile name"
 msgstr ""
 
-#: camlibs/ptp2/config.c:2089
+#: camlibs/ptp2/config.c:2086
 msgid "Wifi essid"
 msgstr ""
 
-#: camlibs/ptp2/config.c:2090
+#: camlibs/ptp2/config.c:2087
 msgid "IP address (empty for DHCP)"
 msgstr ""
 
-#: camlibs/ptp2/config.c:2091
+#: camlibs/ptp2/config.c:2088
 msgid "Network mask"
 msgstr ""
 
 # camlibs/sierra/sierra.c:948 camlibs/sierra/sierra.c:956
 # camlibs/sierra/sierra.c:1235
-#: camlibs/ptp2/config.c:2092
+#: camlibs/ptp2/config.c:2089
 #, fuzzy
 msgid "Default gateway"
 msgstr "日光"
 
 # camlibs/sierra/sierra.c:885 camlibs/sierra/sierra.c:1186
 # camlibs/sierra/sierra.c:1395 camlibs/sierra/sierra.c:1626
-#: camlibs/ptp2/config.c:2093
+#: camlibs/ptp2/config.c:2090
 #, fuzzy
 msgid "Access mode"
 msgstr "聚焦模式"
 
-#: camlibs/ptp2/config.c:2094
+#: camlibs/ptp2/config.c:2091
 msgid "Wifi channel"
 msgstr ""
 
@@ -5054,111 +5054,111 @@ msgstr ""
 # camlibs/sierra/sierra.c:1396 camlibs/sierra/sierra.c:1402
 # camlibs/sierra/sierra.c:1424 camlibs/sierra/sierra.c:1429
 # camlibs/sierra/sierra.c:1629 camlibs/sierra/sierra.c:1649
-#: camlibs/ptp2/config.c:2095
+#: camlibs/ptp2/config.c:2092
 #, fuzzy
 msgid "Encryption"
 msgstr "自动"
 
-#: camlibs/ptp2/config.c:2096
+#: camlibs/ptp2/config.c:2093
 msgid "Encryption key (hex)"
 msgstr ""
 
-#: camlibs/ptp2/config.c:2097
+#: camlibs/ptp2/config.c:2094
 msgid "Write"
 msgstr ""
 
 # camlibs/canon/library.c:870 camlibs/canon/library.c:912
-#: camlibs/ptp2/config.c:2144
+#: camlibs/ptp2/config.c:2141
 #, fuzzy
 msgid "List Wifi profiles"
 msgstr "列出所有文件"
 
-#: camlibs/ptp2/config.c:2145
+#: camlibs/ptp2/config.c:2142
 msgid "Create Wifi profile"
 msgstr ""
 
 # camlibs/canon/serial.c:1190
-#: camlibs/ptp2/config.c:2193 camlibs/ptp2/ptp.c:2913
+#: camlibs/ptp2/config.c:2190 camlibs/ptp2/ptp.c:3122
 #, fuzzy
 msgid "Camera Owner"
 msgstr "相机就绪。\n"
 
 # camlibs/sierra/sierra.c:1806
-#: camlibs/ptp2/config.c:2194 camlibs/ptp2/ptp.c:2912
+#: camlibs/ptp2/config.c:2191 camlibs/ptp2/ptp.c:3121
 #, fuzzy
 msgid "Camera Model"
 msgstr "%s相机型号：%s\n"
 
 # camlibs/stv0680/library.c:525
-#: camlibs/ptp2/config.c:2195 camlibs/ptp2/ptp.c:2911
+#: camlibs/ptp2/config.c:2192 camlibs/ptp2/ptp.c:3120
 #, fuzzy
 msgid "Firmware Version"
 msgstr "固件版本：%d.%d\n"
 
 # camlibs/canon/library.c:808 camlibs/polaroid/pdc700.c:983
-#: camlibs/ptp2/config.c:2196 camlibs/ptp2/config.c:2197
+#: camlibs/ptp2/config.c:2193 camlibs/ptp2/config.c:2194
 #, fuzzy
 msgid "Camera Time"
 msgstr "相机"
 
 # camlibs/sierra/sierra.c:977 camlibs/sierra/sierra.c:1250
 # camlibs/sierra/sierra.c:1449 camlibs/sierra/sierra.c:1662
-#: camlibs/ptp2/config.c:2198 camlibs/ptp2/ptp.c:2884 camlibs/ptp2/ptp.c:2895
+#: camlibs/ptp2/config.c:2195 camlibs/ptp2/ptp.c:3093 camlibs/ptp2/ptp.c:3104
 #, fuzzy
 msgid "Beep Mode"
 msgstr "LED 模式"
 
-#: camlibs/ptp2/config.c:2199
+#: camlibs/ptp2/config.c:2196
 #, fuzzy
 msgid "Image Comment"
 msgstr "图像调整"
 
 # camlibs/konica/library.c:670 camlibs/konica/library.c:879
-#: camlibs/ptp2/config.c:2200 camlibs/ptp2/ptp.c:3002
+#: camlibs/ptp2/config.c:2197 camlibs/ptp2/ptp.c:3211
 #, fuzzy
 msgid "LCD Off Time"
 msgstr "自动关机时间"
 
 # camlibs/konica/library.c:670 camlibs/konica/library.c:879
-#: camlibs/ptp2/config.c:2201
+#: camlibs/ptp2/config.c:2198
 #, fuzzy
 msgid "Meter Off Time"
 msgstr "自动关机时间"
 
-#: camlibs/ptp2/config.c:2202 camlibs/ptp2/ptp.c:3080
+#: camlibs/ptp2/config.c:2199 camlibs/ptp2/ptp.c:3289
 msgid "CSM Menu"
 msgstr ""
 
-#: camlibs/ptp2/config.c:2205
+#: camlibs/ptp2/config.c:2202
 msgid "Fast Filesystem"
 msgstr ""
 
 # camlibs/sierra/sierra.c:777 camlibs/sierra/sierra.c:1443
-#: camlibs/ptp2/config.c:2206 camlibs/ptp2/config.c:2207
+#: camlibs/ptp2/config.c:2203 camlibs/ptp2/config.c:2204
 #, fuzzy
 msgid "Capture Target"
 msgstr "照片设置"
 
-#: camlibs/ptp2/config.c:2218 camlibs/ptp2/config.c:2241
-#: camlibs/ptp2/ptp.c:2905 camlibs/sierra/olympus-desc.c:698
+#: camlibs/ptp2/config.c:2215 camlibs/ptp2/config.c:2238
+#: camlibs/ptp2/ptp.c:3114 camlibs/sierra/olympus-desc.c:698
 #: camlibs/sierra/olympus-desc.c:716
 msgid "ISO Speed"
 msgstr "ISO 速度"
 
 # camlibs/sierra/sierra.c:946 camlibs/sierra/sierra.c:1229
 # camlibs/sierra/sierra.c:1423 camlibs/sierra/sierra.c:1646
-#: camlibs/ptp2/config.c:2219 camlibs/ptp2/config.c:2220
+#: camlibs/ptp2/config.c:2216 camlibs/ptp2/config.c:2217
 #, fuzzy
 msgid "WhiteBalance"
 msgstr "白平衡"
 
-#: camlibs/ptp2/config.c:2221 camlibs/ptp2/ptp.c:2916
+#: camlibs/ptp2/config.c:2218 camlibs/ptp2/ptp.c:3125
 msgid "Photo Effect"
 msgstr ""
 
 # camlibs/sierra/sierra.c:855 camlibs/sierra/sierra.c:1165
 # camlibs/sierra/sierra.c:1494 camlibs/sierra/sierra.c:1695
-#: camlibs/ptp2/config.c:2222 camlibs/ptp2/ptp.c:2946
+#: camlibs/ptp2/config.c:2219 camlibs/ptp2/ptp.c:3155
 #, fuzzy
 msgid "Color Model"
 msgstr "彩色模式"
@@ -5175,28 +5175,28 @@ msgstr "彩色模式"
 # camlibs/sierra/sierra.c:1396 camlibs/sierra/sierra.c:1402
 # camlibs/sierra/sierra.c:1424 camlibs/sierra/sierra.c:1429
 # camlibs/sierra/sierra.c:1629 camlibs/sierra/sierra.c:1649
-#: camlibs/ptp2/config.c:2223 camlibs/ptp2/ptp.c:2982
+#: camlibs/ptp2/config.c:2220 camlibs/ptp2/ptp.c:3191
 #, fuzzy
 msgid "Auto ISO"
 msgstr "自动"
 
-#: camlibs/ptp2/config.c:2228
+#: camlibs/ptp2/config.c:2225
 msgid "Long Exp Noise Reduction"
 msgstr ""
 
 # camlibs/sierra/sierra.c:885 camlibs/sierra/sierra.c:1186
 # camlibs/sierra/sierra.c:1395 camlibs/sierra/sierra.c:1626
-#: camlibs/ptp2/config.c:2229
+#: camlibs/ptp2/config.c:2226
 #, fuzzy
 msgid "Auto Focus Mode"
 msgstr "聚焦模式"
 
-#: camlibs/ptp2/config.c:2231 camlibs/ptp2/config.c:2232
-#: camlibs/ptp2/ptp.c:2917
+#: camlibs/ptp2/config.c:2228 camlibs/ptp2/config.c:2229
+#: camlibs/ptp2/ptp.c:3126
 msgid "Assist Light"
 msgstr ""
 
-#: camlibs/ptp2/config.c:2233 camlibs/ptp2/ptp.c:2908 camlibs/ptp2/ptp.c:2990
+#: camlibs/ptp2/config.c:2230 camlibs/ptp2/ptp.c:3117 camlibs/ptp2/ptp.c:3199
 #: camlibs/sierra/nikon-desc.c:459 camlibs/sierra/nikon-desc.c:482
 #: camlibs/sierra/olympus-desc.c:617
 msgid "Exposure Compensation"
@@ -5204,520 +5204,520 @@ msgstr "曝光补偿"
 
 # camlibs/sierra/sierra.c:885 camlibs/sierra/sierra.c:1186
 # camlibs/sierra/sierra.c:1395 camlibs/sierra/sierra.c:1626
-#: camlibs/ptp2/config.c:2234 camlibs/ptp2/config.c:2235
-#: camlibs/ptp2/config.c:2248 camlibs/ptp2/ptp.c:2853 camlibs/ptp2/ptp.c:2899
-#: camlibs/ptp2/ptp.c:3024 camlibs/ptp2/ptp.c:3096
-#: camlibs/sierra/sierra.c:1001 camlibs/sierra/sierra.c:1302
-#: camlibs/sierra/sierra.c:1511 camlibs/sierra/sierra.c:1742
+#: camlibs/ptp2/config.c:2231 camlibs/ptp2/config.c:2232
+#: camlibs/ptp2/config.c:2245 camlibs/ptp2/ptp.c:3062 camlibs/ptp2/ptp.c:3108
+#: camlibs/ptp2/ptp.c:3233 camlibs/ptp2/ptp.c:3305
+#: camlibs/sierra/sierra.c:1005 camlibs/sierra/sierra.c:1306
+#: camlibs/sierra/sierra.c:1515 camlibs/sierra/sierra.c:1746
 msgid "Flash Mode"
 msgstr "闪光灯模式"
 
-#: camlibs/ptp2/config.c:2236 camlibs/ptp2/ptp.c:3094
+#: camlibs/ptp2/config.c:2233 camlibs/ptp2/ptp.c:3303
 msgid "AF Area Illumination"
 msgstr ""
 
 # camlibs/sierra/sierra.c:977 camlibs/sierra/sierra.c:1250
 # camlibs/sierra/sierra.c:1449 camlibs/sierra/sierra.c:1662
-#: camlibs/ptp2/config.c:2237 camlibs/ptp2/ptp.c:3082
+#: camlibs/ptp2/config.c:2234 camlibs/ptp2/ptp.c:3291
 #, fuzzy
 msgid "AF Beep Mode"
 msgstr "LED 模式"
 
-#: camlibs/ptp2/config.c:2238
+#: camlibs/ptp2/config.c:2235
 msgid "F Number"
 msgstr ""
 
-#: camlibs/ptp2/config.c:2239 camlibs/ptp2/ptp.c:2849
+#: camlibs/ptp2/config.c:2236 camlibs/ptp2/ptp.c:3058
 msgid "Focal Length"
 msgstr ""
 
 # camlibs/sierra/sierra.c:885 camlibs/sierra/sierra.c:1186
 # camlibs/sierra/sierra.c:1395 camlibs/sierra/sierra.c:1626
-#: camlibs/ptp2/config.c:2240 camlibs/ptp2/ptp.c:2851
+#: camlibs/ptp2/config.c:2237 camlibs/ptp2/ptp.c:3060
 #: camlibs/sierra/nikon-desc.c:331 camlibs/sierra/olympus-desc.c:495
 msgid "Focus Mode"
 msgstr "聚焦模式"
 
 # camlibs/jd11/jd11.c:207 camlibs/jd11/jd11.c:255
-#: camlibs/ptp2/config.c:2242 camlibs/ptp2/ptp.c:2854
+#: camlibs/ptp2/config.c:2239 camlibs/ptp2/ptp.c:3063
 #, fuzzy
 msgid "Exposure Time"
 msgstr "闪光灯闪光时间"
 
 # camlibs/minolta/dimagev/dimagev.c:308
-#: camlibs/ptp2/config.c:2243 camlibs/ptp2/ptp.c:2866
+#: camlibs/ptp2/config.c:2240 camlibs/ptp2/ptp.c:3075
 #, fuzzy
 msgid "Effect Mode"
 msgstr "录制模式"
 
 # camlibs/konica/library.c:770 camlibs/konica/library.c:1002
-#: camlibs/ptp2/config.c:2244
+#: camlibs/ptp2/config.c:2241
 #, fuzzy
 msgid "Exposure Program"
 msgstr "曝光测定"
 
-#: camlibs/ptp2/config.c:2245 camlibs/ptp2/ptp.c:2862
+#: camlibs/ptp2/config.c:2242 camlibs/ptp2/ptp.c:3071
 msgid "Still Capture Mode"
 msgstr ""
 
 # camlibs/sierra/sierra.c:1001 camlibs/sierra/sierra.c:1268
-#: camlibs/ptp2/config.c:2246 camlibs/ptp2/ptp.c:2871
+#: camlibs/ptp2/config.c:2243 camlibs/ptp2/ptp.c:3080
 #, fuzzy
 msgid "Focus Metering Mode"
 msgstr "场景测量模式"
 
 # camlibs/konica/library.c:770 camlibs/konica/library.c:1002
-#: camlibs/ptp2/config.c:2247 camlibs/ptp2/ptp.c:2852
+#: camlibs/ptp2/config.c:2244 camlibs/ptp2/ptp.c:3061
 #, fuzzy
 msgid "Exposure Metering Mode"
 msgstr "曝光测定"
 
 # camlibs/konica/konica.c:62
-#: camlibs/ptp2/config.c:2250 camlibs/ptp2/ptp.c:2903
+#: camlibs/ptp2/config.c:2247 camlibs/ptp2/ptp.c:3112
 #, fuzzy
 msgid "Focusing Point"
 msgstr "聚焦错误。"
 
 # camlibs/sierra/sierra.c:814 camlibs/sierra/sierra.c:1137
-#: camlibs/ptp2/config.c:2251
+#: camlibs/ptp2/config.c:2248
 #, fuzzy
 msgid "Shutter Speed"
 msgstr "快门速度 (秒)"
 
 # camlibs/sierra/sierra.c:1001 camlibs/sierra/sierra.c:1268
-#: camlibs/ptp2/config.c:2252 camlibs/ptp2/ptp.c:2901
+#: camlibs/ptp2/config.c:2249 camlibs/ptp2/ptp.c:3110
 #, fuzzy
 msgid "Metering Mode"
 msgstr "场景测量模式"
 
-#: camlibs/ptp2/config.c:2253 camlibs/ptp2/ptp.c:2902
+#: camlibs/ptp2/config.c:2250 camlibs/ptp2/ptp.c:3111
 #, fuzzy
 msgid "AF Distance"
 msgstr "聚焦位置"
 
 # camlibs/sierra/sierra.c:885 camlibs/sierra/sierra.c:1186
 # camlibs/sierra/sierra.c:1395 camlibs/sierra/sierra.c:1626
-#: camlibs/ptp2/config.c:2254 camlibs/ptp2/ptp.c:2978
+#: camlibs/ptp2/config.c:2251 camlibs/ptp2/ptp.c:3187
 #, fuzzy
 msgid "Focus Area Wrap"
 msgstr "聚焦模式"
 
 # camlibs/konica/library.c:770 camlibs/konica/library.c:1002
-#: camlibs/ptp2/config.c:2255 camlibs/ptp2/ptp.c:2994
+#: camlibs/ptp2/config.c:2252 camlibs/ptp2/ptp.c:3203
 #, fuzzy
 msgid "Exposure Lock"
 msgstr "曝光"
 
-#: camlibs/ptp2/config.c:2256
+#: camlibs/ptp2/config.c:2253
 msgid "AE-L/AF-L Mode"
 msgstr ""
 
-#: camlibs/ptp2/config.c:2257 camlibs/ptp2/ptp.c:3012
+#: camlibs/ptp2/config.c:2254 camlibs/ptp2/ptp.c:3221
 msgid "File Number Sequencing"
 msgstr ""
 
 # camlibs/polaroid/pdc700.c:161
-#: camlibs/ptp2/config.c:2258 camlibs/ptp2/ptp.c:3100
+#: camlibs/ptp2/config.c:2255 camlibs/ptp2/ptp.c:3309
 #, fuzzy
 msgid "Flash Sign"
 msgstr "闪光灯设置"
 
-#: camlibs/ptp2/config.c:2259
+#: camlibs/ptp2/config.c:2256
 msgid "Viewfinder Grid"
 msgstr ""
 
 # camlibs/polaroid/pdc700.c:160
-#: camlibs/ptp2/config.c:2260 camlibs/ptp2/ptp.c:3090
+#: camlibs/ptp2/config.c:2257 camlibs/ptp2/ptp.c:3299
 #, fuzzy
 msgid "Image Review"
 msgstr "图像大小"
 
 # camlibs/sierra/sierra.c:1048 camlibs/sierra/sierra.c:1510
-#: camlibs/ptp2/config.c:2261
+#: camlibs/ptp2/config.c:2258
 #, fuzzy
 msgid "Image Rotation Flag"
 msgstr "相机设置"
 
-#: camlibs/ptp2/config.c:2262
+#: camlibs/ptp2/config.c:2259
 msgid "Release without CF card"
 msgstr ""
 
 # camlibs/sierra/sierra.c:885 camlibs/sierra/sierra.c:1186
 # camlibs/sierra/sierra.c:1395 camlibs/sierra/sierra.c:1626
-#: camlibs/ptp2/config.c:2263 camlibs/ptp2/ptp.c:3098
+#: camlibs/ptp2/config.c:2260 camlibs/ptp2/ptp.c:3307
 #, fuzzy
 msgid "Flash Mode Manual Power"
 msgstr "闪光灯模式"
 
 # camlibs/sierra/sierra.c:885 camlibs/sierra/sierra.c:1186
 # camlibs/sierra/sierra.c:1395 camlibs/sierra/sierra.c:1626
-#: camlibs/ptp2/config.c:2264
+#: camlibs/ptp2/config.c:2261
 #, fuzzy
 msgid "Auto Focus Area"
 msgstr "聚焦模式"
 
-#: camlibs/ptp2/config.c:2265 camlibs/ptp2/ptp.c:3102
+#: camlibs/ptp2/config.c:2262 camlibs/ptp2/ptp.c:3311
 #, fuzzy
 msgid "Flash Exposure Compensation"
 msgstr "曝光补偿"
 
 # camlibs/konica/library.c:750 camlibs/konica/library.c:762
-#: camlibs/ptp2/config.c:2266 camlibs/ptp2/ptp.c:3028
+#: camlibs/ptp2/config.c:2263 camlibs/ptp2/ptp.c:3237
 #, fuzzy
 msgid "Bracket Set"
 msgstr "自动，消红眼"
 
-#: camlibs/ptp2/config.c:2267 camlibs/ptp2/ptp.c:3032
+#: camlibs/ptp2/config.c:2264 camlibs/ptp2/ptp.c:3241
 msgid "Bracket Order"
 msgstr ""
 
-#: camlibs/ptp2/config.c:2268 camlibs/ptp2/ptp.c:2867
+#: camlibs/ptp2/config.c:2265 camlibs/ptp2/ptp.c:3076
 msgid "Burst Number"
 msgstr ""
 
 # camlibs/sierra/sierra.c:946 camlibs/sierra/sierra.c:1229
 # camlibs/sierra/sierra.c:1423 camlibs/sierra/sierra.c:1646
-#: camlibs/ptp2/config.c:2269
+#: camlibs/ptp2/config.c:2266
 #, fuzzy
 msgid "Auto Whitebalance Bias"
 msgstr "白平衡"
 
 # camlibs/sierra/sierra.c:946 camlibs/sierra/sierra.c:1229
 # camlibs/sierra/sierra.c:1423 camlibs/sierra/sierra.c:1646
-#: camlibs/ptp2/config.c:2270
+#: camlibs/ptp2/config.c:2267
 #, fuzzy
 msgid "Tungsten Whitebalance Bias"
 msgstr "白平衡"
 
 # camlibs/sierra/sierra.c:946 camlibs/sierra/sierra.c:1229
 # camlibs/sierra/sierra.c:1423 camlibs/sierra/sierra.c:1646
-#: camlibs/ptp2/config.c:2271
+#: camlibs/ptp2/config.c:2268
 #, fuzzy
 msgid "Fluorescent Whitebalance Bias"
 msgstr "白平衡"
 
 # camlibs/sierra/sierra.c:946 camlibs/sierra/sierra.c:1229
 # camlibs/sierra/sierra.c:1423 camlibs/sierra/sierra.c:1646
-#: camlibs/ptp2/config.c:2272
+#: camlibs/ptp2/config.c:2269
 #, fuzzy
 msgid "Daylight Whitebalance Bias"
 msgstr "白平衡"
 
 # camlibs/sierra/sierra.c:946 camlibs/sierra/sierra.c:1229
 # camlibs/sierra/sierra.c:1423 camlibs/sierra/sierra.c:1646
-#: camlibs/ptp2/config.c:2273
+#: camlibs/ptp2/config.c:2270
 #, fuzzy
 msgid "Flash Whitebalance Bias"
 msgstr "白平衡"
 
 # camlibs/sierra/sierra.c:946 camlibs/sierra/sierra.c:1229
 # camlibs/sierra/sierra.c:1423 camlibs/sierra/sierra.c:1646
-#: camlibs/ptp2/config.c:2274
+#: camlibs/ptp2/config.c:2271
 #, fuzzy
 msgid "Cloudy Whitebalance Bias"
 msgstr "白平衡"
 
 # camlibs/sierra/sierra.c:946 camlibs/sierra/sierra.c:1229
 # camlibs/sierra/sierra.c:1423 camlibs/sierra/sierra.c:1646
-#: camlibs/ptp2/config.c:2275
+#: camlibs/ptp2/config.c:2272
 #, fuzzy
 msgid "Shade Whitebalance Bias"
 msgstr "白平衡"
 
 # camlibs/konica/library.c:663 camlibs/konica/library.c:871
-#: camlibs/ptp2/config.c:2276
+#: camlibs/ptp2/config.c:2273
 #, fuzzy
 msgid "Selftimer Delay"
 msgstr "自动定时器时间"
 
-#: camlibs/ptp2/config.c:2277
+#: camlibs/ptp2/config.c:2274
 msgid "Center Weight Area"
 msgstr ""
 
 # camlibs/sierra/sierra.c:814 camlibs/sierra/sierra.c:1137
-#: camlibs/ptp2/config.c:2278 camlibs/ptp2/ptp.c:3022
+#: camlibs/ptp2/config.c:2275 camlibs/ptp2/ptp.c:3231
 #, fuzzy
 msgid "Flash Shutter Speed"
 msgstr "快门速度 (秒)"
 
 # camlibs/sierra/sierra.c:1581 camlibs/sierra/sierra.c:1754
-#: camlibs/ptp2/config.c:2279 camlibs/ptp2/ptp.c:3104
+#: camlibs/ptp2/config.c:2276 camlibs/ptp2/ptp.c:3313
 #, fuzzy
 msgid "Remote Timeout"
 msgstr "日期和时间"
 
-#: camlibs/ptp2/config.c:2280 camlibs/ptp2/ptp.c:3076
+#: camlibs/ptp2/config.c:2277 camlibs/ptp2/ptp.c:3285
 msgid "Optimize Image"
 msgstr ""
 
 # camlibs/minolta/dimagev/dimagev.c:371
-#: camlibs/ptp2/config.c:2281 camlibs/ptp2/ptp.c:2942
+#: camlibs/ptp2/config.c:2278 camlibs/ptp2/ptp.c:3151
 #, fuzzy
 msgid "Sharpening"
 msgstr "正在充电"
 
-#: camlibs/ptp2/config.c:2282 camlibs/ptp2/ptp.c:2944
+#: camlibs/ptp2/config.c:2279 camlibs/ptp2/ptp.c:3153
 #, fuzzy
 msgid "Tone Compensation"
 msgstr "曝光补偿"
 
 # camlibs/polaroid/pdc700.c:981 camlibs/sierra/sierra.c:776
 # camlibs/sierra/sierra.c:1353
-#: camlibs/ptp2/config.c:2283 camlibs/ptp2/ptp.c:3078
+#: camlibs/ptp2/config.c:2280 camlibs/ptp2/ptp.c:3287
 #, fuzzy
 msgid "Saturation"
 msgstr "配置"
 
-#: camlibs/ptp2/config.c:2284 camlibs/ptp2/ptp.c:2948
+#: camlibs/ptp2/config.c:2281 camlibs/ptp2/ptp.c:3157
 #, fuzzy
 msgid "Hue Adjustment"
 msgstr "图像调整"
 
 # camlibs/sierra/sierra.c:1048 camlibs/sierra/sierra.c:1510
-#: camlibs/ptp2/config.c:2290 camlibs/sierra/epson-desc.c:282
+#: camlibs/ptp2/config.c:2287 camlibs/sierra/epson-desc.c:282
 #: camlibs/sierra/nikon-desc.c:662 camlibs/sierra/nikon-desc.c:673
 #: camlibs/sierra/olympus-desc.c:834 camlibs/sierra/olympus-desc.c:889
-#: camlibs/sierra/olympus-desc.c:903 camlibs/sierra/sierra.c:1164
-#: camlibs/sierra/sierra.c:1626
+#: camlibs/sierra/olympus-desc.c:903 camlibs/sierra/sierra.c:1168
+#: camlibs/sierra/sierra.c:1630
 msgid "Camera Settings"
 msgstr "相机设置"
 
 # camlibs/sierra/sierra.c:1048 camlibs/sierra/sierra.c:1510
-#: camlibs/ptp2/config.c:2291
+#: camlibs/ptp2/config.c:2288
 #, fuzzy
 msgid "Image Settings"
 msgstr "相机设置"
 
 # camlibs/sierra/sierra.c:777 camlibs/sierra/sierra.c:1443
-#: camlibs/ptp2/config.c:2292
+#: camlibs/ptp2/config.c:2289
 #, fuzzy
 msgid "Capture Settings"
 msgstr "照片设置"
 
-#: camlibs/ptp2/config.c:2293
+#: camlibs/ptp2/config.c:2290
 msgid "Wifi profiles"
 msgstr ""
 
 # camlibs/stv0680/library.c:572
-#: camlibs/ptp2/config.c:2361
+#: camlibs/ptp2/config.c:2358
 #, fuzzy
 msgid "Number of values"
 msgstr "图像数量：%d\n"
 
-#: camlibs/ptp2/config.c:2365
+#: camlibs/ptp2/config.c:2362
 msgid "Supported values"
 msgstr ""
 
-#: camlibs/ptp2/config.c:2373
+#: camlibs/ptp2/config.c:2370
 msgid "Current value"
 msgstr ""
 
-#: camlibs/ptp2/library.c:129
+#: camlibs/ptp2/library.c:130
 msgid "You need to specify a folder starting with /store_xxxxxxxxx/"
 msgstr ""
 
 # camlibs/ptp/library.c:90
-#: camlibs/ptp2/library.c:168
+#: camlibs/ptp2/library.c:169
 msgid "PTP Undefined Error"
 msgstr "未定义的 PTP 错误"
 
 # camlibs/ptp/library.c:91
-#: camlibs/ptp2/library.c:169
+#: camlibs/ptp2/library.c:170
 msgid "PTP OK!"
 msgstr "PTP OK！"
 
 # camlibs/ptp/library.c:92
-#: camlibs/ptp2/library.c:170
+#: camlibs/ptp2/library.c:171
 msgid "PTP General Error"
 msgstr "PTP 通用错误"
 
 # camlibs/ptp/library.c:93
-#: camlibs/ptp2/library.c:171
+#: camlibs/ptp2/library.c:172
 msgid "PTP Session Not Open"
 msgstr "PTP 会话未打开"
 
 # camlibs/ptp/library.c:94
-#: camlibs/ptp2/library.c:172
+#: camlibs/ptp2/library.c:173
 msgid "PTP Invalid Transaction ID"
 msgstr "非法的 PTP 传输 ID"
 
 # camlibs/ptp/library.c:95
-#: camlibs/ptp2/library.c:173
+#: camlibs/ptp2/library.c:174
 msgid "PTP Operation Not Supported"
 msgstr "不支持的 PTP 操作"
 
 # camlibs/ptp/library.c:96
-#: camlibs/ptp2/library.c:174
+#: camlibs/ptp2/library.c:175
 msgid "PTP Parameter Not Supported"
 msgstr "不支持的 PTP 参数"
 
 # camlibs/ptp/library.c:97
-#: camlibs/ptp2/library.c:175
+#: camlibs/ptp2/library.c:176
 msgid "PTP Incomplete Transfer"
 msgstr "未完成的 PTP 传输"
 
 # camlibs/ptp/library.c:98
-#: camlibs/ptp2/library.c:176
+#: camlibs/ptp2/library.c:177
 msgid "PTP Invalid Storage ID"
 msgstr "非法的 PTP 存储 ID"
 
 # camlibs/ptp/library.c:99
-#: camlibs/ptp2/library.c:177
+#: camlibs/ptp2/library.c:178
 msgid "PTP Invalid Object Handle"
 msgstr "非法的 PTP 对象句柄"
 
 # camlibs/ptp/library.c:100
-#: camlibs/ptp2/library.c:178
+#: camlibs/ptp2/library.c:179
 msgid "PTP Device Prop Not Supported"
 msgstr "不支持的 PTP 设备属性"
 
 # camlibs/ptp/library.c:101
-#: camlibs/ptp2/library.c:179
+#: camlibs/ptp2/library.c:180
 msgid "PTP Invalid Object Format Code"
 msgstr "非法的 PTP 对象格式代码"
 
 # camlibs/ptp/library.c:102
-#: camlibs/ptp2/library.c:180
+#: camlibs/ptp2/library.c:181
 msgid "PTP Store Full"
 msgstr "PTP 存储已满"
 
 # camlibs/ptp/library.c:103
-#: camlibs/ptp2/library.c:181
+#: camlibs/ptp2/library.c:182
 msgid "PTP Object Write Protected"
 msgstr "PTP 对象已写保护"
 
 # camlibs/ptp/library.c:104
-#: camlibs/ptp2/library.c:182
+#: camlibs/ptp2/library.c:183
 msgid "PTP Store Read Only"
 msgstr "只读的 PTP 存储"
 
 # camlibs/ptp/library.c:105
-#: camlibs/ptp2/library.c:183
+#: camlibs/ptp2/library.c:184
 msgid "PTP Access Denied"
 msgstr "PTP 访问遭拒绝"
 
 # camlibs/ptp/library.c:106
-#: camlibs/ptp2/library.c:184
+#: camlibs/ptp2/library.c:185
 msgid "PTP No Thumbnail Present"
 msgstr "不存在 PTP 缩略图"
 
 # camlibs/ptp/library.c:107
-#: camlibs/ptp2/library.c:185
+#: camlibs/ptp2/library.c:186
 msgid "PTP Self Test Failed"
 msgstr "PTP 自检失败"
 
 # camlibs/ptp/library.c:108
-#: camlibs/ptp2/library.c:186
+#: camlibs/ptp2/library.c:187
 msgid "PTP Partial Deletion"
 msgstr "PTP 部分删除"
 
 # camlibs/ptp/library.c:109
-#: camlibs/ptp2/library.c:187
+#: camlibs/ptp2/library.c:188
 msgid "PTP Store Not Available"
 msgstr "PTP 存储不可用"
 
 # camlibs/ptp/library.c:111
-#: camlibs/ptp2/library.c:189
+#: camlibs/ptp2/library.c:190
 msgid "PTP Specification By Format Unsupported"
 msgstr "不支持的 PTP 格式规范"
 
 # camlibs/ptp/library.c:112
-#: camlibs/ptp2/library.c:190
+#: camlibs/ptp2/library.c:191
 msgid "PTP No Valid Object Info"
 msgstr "没有合法的 PTP 对象信息"
 
 # camlibs/ptp/library.c:113
-#: camlibs/ptp2/library.c:191
+#: camlibs/ptp2/library.c:192
 msgid "PTP Invalid Code Format"
 msgstr "非法的 PTP 代码格式"
 
 # camlibs/ptp/library.c:114
-#: camlibs/ptp2/library.c:192
+#: camlibs/ptp2/library.c:193
 msgid "PTP Unknown Vendor Code"
 msgstr "未知的 PTP 厂家代码"
 
 # camlibs/ptp/library.c:116
-#: camlibs/ptp2/library.c:194
+#: camlibs/ptp2/library.c:195
 msgid "PTP Capture Already Terminated"
 msgstr "PTP 捕获已终止"
 
 # camlibs/ptp/library.c:117
-#: camlibs/ptp2/library.c:195
+#: camlibs/ptp2/library.c:196
 #, fuzzy
 msgid "PTP Device Busy"
 msgstr "PTP 设备总线"
 
 # camlibs/ptp/library.c:118
-#: camlibs/ptp2/library.c:196
+#: camlibs/ptp2/library.c:197
 msgid "PTP Invalid Parent Object"
 msgstr "非法的 PTP 父对象"
 
 # camlibs/ptp/library.c:119
-#: camlibs/ptp2/library.c:197
+#: camlibs/ptp2/library.c:198
 msgid "PTP Invalid Device Prop Format"
 msgstr "非法的 PTP 设备属性格式"
 
 # camlibs/ptp/library.c:120
-#: camlibs/ptp2/library.c:198
+#: camlibs/ptp2/library.c:199
 msgid "PTP Invalid Device Prop Value"
 msgstr "非法的 PTP 设备属性值"
 
 # camlibs/ptp/library.c:121
-#: camlibs/ptp2/library.c:199
+#: camlibs/ptp2/library.c:200
 msgid "PTP Invalid Parameter"
 msgstr "非法的 PTP 参数"
 
 # camlibs/ptp/library.c:122
-#: camlibs/ptp2/library.c:200
+#: camlibs/ptp2/library.c:201
 msgid "PTP Session Already Opened"
 msgstr "PTP 会话已打开"
 
 # camlibs/ptp/library.c:123
-#: camlibs/ptp2/library.c:201
+#: camlibs/ptp2/library.c:202
 msgid "PTP Transaction Canceled"
 msgstr "PTP 传输已取消"
 
 # camlibs/ptp/library.c:125
-#: camlibs/ptp2/library.c:203
+#: camlibs/ptp2/library.c:204
 msgid "PTP Specification Of Destination Unsupported"
 msgstr "不支持的 PTP 目标规范"
 
 # camlibs/ptp/library.c:126
-#: camlibs/ptp2/library.c:204
+#: camlibs/ptp2/library.c:205
 msgid "PTP EK Filename Required"
 msgstr "需要 PTP EK 文件名"
 
 # camlibs/ptp/library.c:127
-#: camlibs/ptp2/library.c:205
+#: camlibs/ptp2/library.c:206
 msgid "PTP EK Filename Conflicts"
 msgstr "PTP EK 文件名冲突"
 
 # camlibs/ptp/library.c:128
-#: camlibs/ptp2/library.c:206
+#: camlibs/ptp2/library.c:207
 msgid "PTP EK Filename Invalid"
 msgstr "非法的 PTP EK 文件名"
 
 # camlibs/ptp/library.c:130
-#: camlibs/ptp2/library.c:208
+#: camlibs/ptp2/library.c:209
 msgid "PTP I/O error"
 msgstr "PTP I/O 错误"
 
 # camlibs/ptp/library.c:131
-#: camlibs/ptp2/library.c:209
+#: camlibs/ptp2/library.c:210
 msgid "PTP Error: bad parameter"
 msgstr "PTP 错误：错误的参数"
 
 # camlibs/ptp/library.c:132
-#: camlibs/ptp2/library.c:210
+#: camlibs/ptp2/library.c:211
 msgid "PTP Protocol error, data expected"
 msgstr "PTP 协议错误，需要数据"
 
 # camlibs/ptp/library.c:133
-#: camlibs/ptp2/library.c:211
+#: camlibs/ptp2/library.c:212
 msgid "PTP Protocol error, response expected"
 msgstr "PTP 协议错误，需要响应"
 
-#: camlibs/ptp2/library.c:1182
+#: camlibs/ptp2/library.c:1229
 msgid ""
 "PTP2 driver\n"
 "(c)2001-2005 by Mariusz Woloszyn <emsi@ipartners.pl>.\n"
@@ -5732,73 +5732,73 @@ msgid ""
 msgstr ""
 
 # libgphoto2/gphoto2-camera.c:850
-#: camlibs/ptp2/library.c:1259
+#: camlibs/ptp2/library.c:1306
 #, fuzzy
 msgid "Sorry, your Canon camera does not support Canon Viewfinder mode"
 msgstr "您的相机不支持文件改名。"
 
-#: camlibs/ptp2/library.c:1264
+#: camlibs/ptp2/library.c:1311
 #, c-format
 msgid "Canon enable viewfinder failed: %d"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1269
+#: camlibs/ptp2/library.c:1316
 #, c-format
 msgid "Canon get viewfinder image failed: %d"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1279
+#: camlibs/ptp2/library.c:1326
 #, c-format
 msgid "Canon disable viewfinder failed: %d"
 msgstr ""
 
 # libgphoto2/gphoto2-camera.c:850
-#: camlibs/ptp2/library.c:1384
+#: camlibs/ptp2/library.c:1431
 #, fuzzy
 msgid "Sorry, your camera does not support Nikon capture"
 msgstr "您的相机不支持文件改名。"
 
 # libgphoto2/gphoto2-camera.c:850
-#: camlibs/ptp2/library.c:1469
+#: camlibs/ptp2/library.c:1516
 #, fuzzy
 msgid "Sorry, your Canon camera does not support Canon Capture initiation"
 msgstr "您的相机不支持文件改名。"
 
-#: camlibs/ptp2/library.c:1480
+#: camlibs/ptp2/library.c:1527
 msgid "Sorry, initializing your camera did not work. Please report this."
 msgstr ""
 
-#: camlibs/ptp2/library.c:1497
+#: camlibs/ptp2/library.c:1544
 #, c-format
 msgid "Canon Capture failed: %d"
 msgstr ""
 
 # libgphoto2/gphoto2-camera.c:850
-#: camlibs/ptp2/library.c:1591
+#: camlibs/ptp2/library.c:1638
 #, fuzzy
 msgid "Sorry, your camera does not support generic capture"
 msgstr "您的相机不支持文件改名。"
 
-#: camlibs/ptp2/library.c:1639
+#: camlibs/ptp2/library.c:1686
 msgid "Capture command completed, but no confirmation received"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1646
+#: camlibs/ptp2/library.c:1693
 #, c-format
 msgid "Received event 0x%04x"
 msgstr ""
 
 # camlibs/dimera/dimera3500.c:543
-#: camlibs/ptp2/library.c:1808
+#: camlibs/ptp2/library.c:1855
 #, fuzzy
 msgid "read only"
 msgstr "就绪"
 
-#: camlibs/ptp2/library.c:1809
+#: camlibs/ptp2/library.c:1856
 msgid "readwrite"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1940
+#: camlibs/ptp2/library.c:1987
 #, c-format
 msgid ""
 "Model: %s\n"
@@ -5809,7 +5809,7 @@ msgid ""
 msgstr ""
 
 # camlibs/konica/library.c:729 camlibs/konica/library.c:960
-#: camlibs/ptp2/library.c:1958
+#: camlibs/ptp2/library.c:2005
 #, fuzzy, c-format
 msgid ""
 "\n"
@@ -5817,29 +5817,29 @@ msgid ""
 msgstr "日期格式"
 
 # camlibs/konica/library.c:729 camlibs/konica/library.c:960
-#: camlibs/ptp2/library.c:1972
+#: camlibs/ptp2/library.c:2019
 #, fuzzy, c-format
 msgid "Display Formats: "
 msgstr "日期格式"
 
-#: camlibs/ptp2/library.c:1988
+#: camlibs/ptp2/library.c:2035
 #, c-format
 msgid "Supported MTP Object Properties:\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2004
+#: camlibs/ptp2/library.c:2051
 #, c-format
 msgid " PTP error %04x on query"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2021
+#: camlibs/ptp2/library.c:2068
 #, c-format
 msgid ""
 "\n"
 "Device Capabilities:\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2025
+#: camlibs/ptp2/library.c:2072
 #, c-format
 msgid "\tFile Download, "
 msgstr ""
@@ -5847,7 +5847,7 @@ msgstr ""
 # camlibs/konica/library.c:684 camlibs/konica/library.c:896
 # camlibs/sierra/sierra.c:786 camlibs/sierra/sierra.c:1117
 # camlibs/sierra/sierra.c:1468 camlibs/sierra/sierra.c:1677
-#: camlibs/ptp2/library.c:2028
+#: camlibs/ptp2/library.c:2075
 #, fuzzy, c-format
 msgid "File Deletion, "
 msgstr "文件分辨率"
@@ -5855,997 +5855,997 @@ msgstr "文件分辨率"
 # camlibs/konica/library.c:684 camlibs/konica/library.c:896
 # camlibs/sierra/sierra.c:786 camlibs/sierra/sierra.c:1117
 # camlibs/sierra/sierra.c:1468 camlibs/sierra/sierra.c:1677
-#: camlibs/ptp2/library.c:2030
+#: camlibs/ptp2/library.c:2077
 #, fuzzy, c-format
 msgid "No File Deletion, "
 msgstr "文件分辨率"
 
 # camlibs/canon/serial.c:888
-#: camlibs/ptp2/library.c:2034
+#: camlibs/ptp2/library.c:2081
 #, fuzzy, c-format
 msgid "File Upload\n"
 msgstr "正在上载文件..."
 
-#: camlibs/ptp2/library.c:2036
+#: camlibs/ptp2/library.c:2083
 #, c-format
 msgid "No File Upload\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2041
+#: camlibs/ptp2/library.c:2088
 #, c-format
 msgid "\tGeneric Image Capture, "
 msgstr ""
 
-#: camlibs/ptp2/library.c:2043
+#: camlibs/ptp2/library.c:2090
 #, c-format
 msgid "\tNo Image Capture, "
 msgstr ""
 
 # camlibs/sierra/sierra.c:826 camlibs/sierra/sierra.c:1146
 # camlibs/sierra/sierra.c:1361 camlibs/sierra/sierra.c:1602
-#: camlibs/ptp2/library.c:2046
+#: camlibs/ptp2/library.c:2093
 #, fuzzy, c-format
 msgid "Open Capture, "
 msgstr "光圈"
 
-#: camlibs/ptp2/library.c:2048
+#: camlibs/ptp2/library.c:2095
 #, c-format
 msgid "No Open Capture, "
 msgstr ""
 
 # camlibs/sierra/sierra.c:826 camlibs/sierra/sierra.c:1146
 # camlibs/sierra/sierra.c:1361 camlibs/sierra/sierra.c:1602
-#: camlibs/ptp2/library.c:2054
+#: camlibs/ptp2/library.c:2101
 #, fuzzy, c-format
 msgid "Canon Capture\n"
 msgstr "光圈"
 
 # camlibs/sierra/sierra.c:826 camlibs/sierra/sierra.c:1146
 # camlibs/sierra/sierra.c:1361 camlibs/sierra/sierra.c:1602
-#: camlibs/ptp2/library.c:2058
+#: camlibs/ptp2/library.c:2105
 #, fuzzy, c-format
 msgid "Nikon Capture\n"
 msgstr "光圈"
 
-#: camlibs/ptp2/library.c:2060
+#: camlibs/ptp2/library.c:2107
 #, c-format
 msgid "No vendor specific capture\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2068
+#: camlibs/ptp2/library.c:2115
 #, c-format
 msgid "\tNikon Wifi support\n"
 msgstr ""
 
 # camlibs/konica/konica.c:83
-#: camlibs/ptp2/library.c:2074
+#: camlibs/ptp2/library.c:2121
 #, fuzzy, c-format
 msgid "\tCanon Wifi support\n"
 msgstr "不支持的卡。"
 
-#: camlibs/ptp2/library.c:2085
+#: camlibs/ptp2/library.c:2132
 #, c-format
 msgid ""
 "\n"
 "Storage Devices Summary:\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2100
+#: camlibs/ptp2/library.c:2147
 #, c-format
 msgid "\tStorageDescription: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2104
+#: camlibs/ptp2/library.c:2151
 #, c-format
 msgid "\tVolumeLabel: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2111
+#: camlibs/ptp2/library.c:2158
 msgid "Builtin ROM"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2112
+#: camlibs/ptp2/library.c:2159
 msgid "Removable ROM"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2113
+#: camlibs/ptp2/library.c:2160
 msgid "Builtin RAM"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2114
+#: camlibs/ptp2/library.c:2161
 msgid "Removable RAM (memory card)"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2116 camlibs/ptp2/library.c:2129
-#: camlibs/ptp2/library.c:2141
+#: camlibs/ptp2/library.c:2163 camlibs/ptp2/library.c:2176
+#: camlibs/ptp2/library.c:2188
 #, fuzzy, c-format
 msgid "Unknown: 0x%04x\n"
 msgstr "未知 (0x%02x)"
 
-#: camlibs/ptp2/library.c:2120
+#: camlibs/ptp2/library.c:2167
 #, c-format
 msgid "\tStorage Type: %s\n"
 msgstr ""
 
 # camlibs/polaroid/pdc700.c:167
-#: camlibs/ptp2/library.c:2125
+#: camlibs/ptp2/library.c:2172
 #, fuzzy
 msgid "Generic Flat"
 msgstr "普通"
 
-#: camlibs/ptp2/library.c:2126
+#: camlibs/ptp2/library.c:2173
 msgid "Generic Hierarchical"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2127
+#: camlibs/ptp2/library.c:2174
 msgid "Digital Camera Layout (DCIM)"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2133
+#: camlibs/ptp2/library.c:2180
 #, c-format
 msgid "\tFilesystemtype: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2137
+#: camlibs/ptp2/library.c:2184
 msgid "Read-Write"
 msgstr ""
 
 # camlibs/minolta/dimagev/dimagev.c:371
-#: camlibs/ptp2/library.c:2138
+#: camlibs/ptp2/library.c:2185
 #, fuzzy
 msgid "Read-Only"
 msgstr "就绪"
 
-#: camlibs/ptp2/library.c:2139
+#: camlibs/ptp2/library.c:2186
 msgid "Read Only with Object deletion"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2145
+#: camlibs/ptp2/library.c:2192
 #, c-format
 msgid "\tAccess Capability: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2147
+#: camlibs/ptp2/library.c:2194
 #, c-format
 msgid "\tMaximum Capability: %llu (%lu MB)\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2152
+#: camlibs/ptp2/library.c:2199
 #, c-format
 msgid "\tFree Space (Bytes): %llu (%lu MB)\n"
 msgstr ""
 
 # camlibs/stv0680/library.c:572
-#: camlibs/ptp2/library.c:2157
+#: camlibs/ptp2/library.c:2204
 #, fuzzy, c-format
 msgid "\tFree Space (Images): %d\n"
 msgstr "图像数量：%d\n"
 
-#: camlibs/ptp2/library.c:2162
+#: camlibs/ptp2/library.c:2209
 #, c-format
 msgid ""
 "\n"
 "Device Property Summary:\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:3051 camlibs/ptp2/library.c:3055
+#: camlibs/ptp2/library.c:3147 camlibs/ptp2/library.c:3151
 #, c-format
 msgid "File '%s/%s' does not exist."
 msgstr ""
 
-#: camlibs/ptp2/library.c:3061
+#: camlibs/ptp2/library.c:3157
 msgid "Metadata only supported for MTP devices."
 msgstr ""
 
 # camlibs/canon/library.c:176
-#: camlibs/ptp2/library.c:3586
+#: camlibs/ptp2/library.c:3689
 #, fuzzy
 msgid "Initializing Camera"
 msgstr "关闭相机"
 
 # camlibs/ptp/library.c:918
-#: camlibs/ptp2/library.c:3753
+#: camlibs/ptp2/library.c:3856
 #, fuzzy, c-format
 msgid ""
 "PTP is only implemented for USB and PTP/IP cameras currently, port type %x"
 msgstr "PTP 仅为 USB 相机实现。"
 
 # camlibs/ptp/library.c:90
-#: camlibs/ptp2/ptp.c:2780
+#: camlibs/ptp2/ptp.c:2989
 #, fuzzy
 msgid "PTP: Undefined Error"
 msgstr "未定义的 PTP 错误"
 
 # camlibs/ptp/library.c:91
-#: camlibs/ptp2/ptp.c:2781
+#: camlibs/ptp2/ptp.c:2990
 #, fuzzy
 msgid "PTP: OK!"
 msgstr "PTP OK！"
 
 # camlibs/ptp/library.c:92
-#: camlibs/ptp2/ptp.c:2782
+#: camlibs/ptp2/ptp.c:2991
 #, fuzzy
 msgid "PTP: General Error"
 msgstr "PTP 通用错误"
 
 # camlibs/ptp/library.c:93
-#: camlibs/ptp2/ptp.c:2783
+#: camlibs/ptp2/ptp.c:2992
 #, fuzzy
 msgid "PTP: Session Not Open"
 msgstr "PTP 会话未打开"
 
 # camlibs/ptp/library.c:94
-#: camlibs/ptp2/ptp.c:2784
+#: camlibs/ptp2/ptp.c:2993
 #, fuzzy
 msgid "PTP: Invalid Transaction ID"
 msgstr "非法的 PTP 传输 ID"
 
 # camlibs/ptp/library.c:95
-#: camlibs/ptp2/ptp.c:2785
+#: camlibs/ptp2/ptp.c:2994
 #, fuzzy
 msgid "PTP: Operation Not Supported"
 msgstr "不支持的 PTP 操作"
 
 # camlibs/ptp/library.c:96
-#: camlibs/ptp2/ptp.c:2786
+#: camlibs/ptp2/ptp.c:2995
 #, fuzzy
 msgid "PTP: Parameter Not Supported"
 msgstr "不支持的 PTP 参数"
 
 # camlibs/ptp/library.c:97
-#: camlibs/ptp2/ptp.c:2787
+#: camlibs/ptp2/ptp.c:2996
 #, fuzzy
 msgid "PTP: Incomplete Transfer"
 msgstr "未完成的 PTP 传输"
 
 # camlibs/ptp/library.c:98
-#: camlibs/ptp2/ptp.c:2788
+#: camlibs/ptp2/ptp.c:2997
 #, fuzzy
 msgid "PTP: Invalid Storage ID"
 msgstr "非法的 PTP 存储 ID"
 
 # camlibs/ptp/library.c:99
-#: camlibs/ptp2/ptp.c:2789
+#: camlibs/ptp2/ptp.c:2998
 #, fuzzy
 msgid "PTP: Invalid Object Handle"
 msgstr "非法的 PTP 对象句柄"
 
 # camlibs/ptp/library.c:100
-#: camlibs/ptp2/ptp.c:2790
+#: camlibs/ptp2/ptp.c:2999
 #, fuzzy
 msgid "PTP: Device Prop Not Supported"
 msgstr "不支持的 PTP 设备属性"
 
 # camlibs/ptp/library.c:101
-#: camlibs/ptp2/ptp.c:2791
+#: camlibs/ptp2/ptp.c:3000
 #, fuzzy
 msgid "PTP: Invalid Object Format Code"
 msgstr "非法的 PTP 对象格式代码"
 
 # camlibs/ptp/library.c:102
-#: camlibs/ptp2/ptp.c:2792
+#: camlibs/ptp2/ptp.c:3001
 #, fuzzy
 msgid "PTP: Store Full"
 msgstr "PTP 存储已满"
 
 # camlibs/ptp/library.c:103
-#: camlibs/ptp2/ptp.c:2793
+#: camlibs/ptp2/ptp.c:3002
 #, fuzzy
 msgid "PTP: Object Write Protected"
 msgstr "PTP 对象已写保护"
 
 # camlibs/ptp/library.c:104
-#: camlibs/ptp2/ptp.c:2794
+#: camlibs/ptp2/ptp.c:3003
 #, fuzzy
 msgid "PTP: Store Read Only"
 msgstr "只读的 PTP 存储"
 
 # camlibs/ptp/library.c:105
-#: camlibs/ptp2/ptp.c:2795
+#: camlibs/ptp2/ptp.c:3004
 #, fuzzy
 msgid "PTP: Access Denied"
 msgstr "PTP 访问遭拒绝"
 
 # camlibs/ptp/library.c:106
-#: camlibs/ptp2/ptp.c:2796
+#: camlibs/ptp2/ptp.c:3005
 #, fuzzy
 msgid "PTP: No Thumbnail Present"
 msgstr "不存在 PTP 缩略图"
 
 # camlibs/ptp/library.c:107
-#: camlibs/ptp2/ptp.c:2797
+#: camlibs/ptp2/ptp.c:3006
 #, fuzzy
 msgid "PTP: Self Test Failed"
 msgstr "PTP 自检失败"
 
 # camlibs/ptp/library.c:108
-#: camlibs/ptp2/ptp.c:2798
+#: camlibs/ptp2/ptp.c:3007
 #, fuzzy
 msgid "PTP: Partial Deletion"
 msgstr "PTP 部分删除"
 
 # camlibs/ptp/library.c:109
-#: camlibs/ptp2/ptp.c:2799
+#: camlibs/ptp2/ptp.c:3008
 #, fuzzy
 msgid "PTP: Store Not Available"
 msgstr "PTP 存储不可用"
 
 # camlibs/ptp/library.c:111
-#: camlibs/ptp2/ptp.c:2801
+#: camlibs/ptp2/ptp.c:3010
 #, fuzzy
 msgid "PTP: Specification By Format Unsupported"
 msgstr "不支持的 PTP 格式规范"
 
 # camlibs/ptp/library.c:112
-#: camlibs/ptp2/ptp.c:2802
+#: camlibs/ptp2/ptp.c:3011
 #, fuzzy
 msgid "PTP: No Valid Object Info"
 msgstr "没有合法的 PTP 对象信息"
 
 # camlibs/ptp/library.c:113
-#: camlibs/ptp2/ptp.c:2803
+#: camlibs/ptp2/ptp.c:3012
 #, fuzzy
 msgid "PTP: Invalid Code Format"
 msgstr "非法的 PTP 代码格式"
 
 # camlibs/ptp/library.c:114
-#: camlibs/ptp2/ptp.c:2804
+#: camlibs/ptp2/ptp.c:3013
 #, fuzzy
 msgid "PTP: Unknown Vendor Code"
 msgstr "未知的 PTP 厂家代码"
 
 # camlibs/ptp/library.c:116
-#: camlibs/ptp2/ptp.c:2806
+#: camlibs/ptp2/ptp.c:3015
 #, fuzzy
 msgid "PTP: Capture Already Terminated"
 msgstr "PTP 捕获已终止"
 
 # camlibs/ptp/library.c:117
-#: camlibs/ptp2/ptp.c:2807
+#: camlibs/ptp2/ptp.c:3016
 #, fuzzy
 msgid "PTP: Device Busy"
 msgstr "PTP 设备总线"
 
 # camlibs/ptp/library.c:118
-#: camlibs/ptp2/ptp.c:2808
+#: camlibs/ptp2/ptp.c:3017
 #, fuzzy
 msgid "PTP: Invalid Parent Object"
 msgstr "非法的 PTP 父对象"
 
 # camlibs/ptp/library.c:119
-#: camlibs/ptp2/ptp.c:2809
+#: camlibs/ptp2/ptp.c:3018
 #, fuzzy
 msgid "PTP: Invalid Device Prop Format"
 msgstr "非法的 PTP 设备属性格式"
 
 # camlibs/ptp/library.c:120
-#: camlibs/ptp2/ptp.c:2810
+#: camlibs/ptp2/ptp.c:3019
 #, fuzzy
 msgid "PTP: Invalid Device Prop Value"
 msgstr "非法的 PTP 设备属性值"
 
 # camlibs/ptp/library.c:121
-#: camlibs/ptp2/ptp.c:2811
+#: camlibs/ptp2/ptp.c:3020
 #, fuzzy
 msgid "PTP: Invalid Parameter"
 msgstr "非法的 PTP 参数"
 
 # camlibs/ptp/library.c:122
-#: camlibs/ptp2/ptp.c:2812
+#: camlibs/ptp2/ptp.c:3021
 #, fuzzy
 msgid "PTP: Session Already Opened"
 msgstr "PTP 会话已打开"
 
 # camlibs/ptp/library.c:123
-#: camlibs/ptp2/ptp.c:2813
+#: camlibs/ptp2/ptp.c:3022
 #, fuzzy
 msgid "PTP: Transaction Canceled"
 msgstr "PTP 传输已取消"
 
 # camlibs/ptp/library.c:125
-#: camlibs/ptp2/ptp.c:2815
+#: camlibs/ptp2/ptp.c:3024
 #, fuzzy
 msgid "PTP: Specification Of Destination Unsupported"
 msgstr "不支持的 PTP 目标规范"
 
 # camlibs/ptp/library.c:126
-#: camlibs/ptp2/ptp.c:2816
+#: camlibs/ptp2/ptp.c:3025
 #, fuzzy
 msgid "PTP: EK Filename Required"
 msgstr "需要 PTP EK 文件名"
 
 # camlibs/ptp/library.c:127
-#: camlibs/ptp2/ptp.c:2817
+#: camlibs/ptp2/ptp.c:3026
 #, fuzzy
 msgid "PTP: EK Filename Conflicts"
 msgstr "PTP EK 文件名冲突"
 
 # camlibs/ptp/library.c:128
-#: camlibs/ptp2/ptp.c:2818
+#: camlibs/ptp2/ptp.c:3027
 #, fuzzy
 msgid "PTP: EK Filename Invalid"
 msgstr "非法的 PTP EK 文件名"
 
 # camlibs/ptp/library.c:130
-#: camlibs/ptp2/ptp.c:2820
+#: camlibs/ptp2/ptp.c:3029
 #, fuzzy
 msgid "PTP: I/O error"
 msgstr "PTP I/O 错误"
 
 # camlibs/ptp/library.c:131
-#: camlibs/ptp2/ptp.c:2821
+#: camlibs/ptp2/ptp.c:3030
 #, fuzzy
 msgid "PTP: Error: bad parameter"
 msgstr "PTP 错误：错误的参数"
 
 # camlibs/ptp/library.c:132
-#: camlibs/ptp2/ptp.c:2822
+#: camlibs/ptp2/ptp.c:3031
 #, fuzzy
 msgid "PTP: Protocol error, data expected"
 msgstr "PTP 协议错误，需要数据"
 
 # camlibs/ptp/library.c:133
-#: camlibs/ptp2/ptp.c:2823
+#: camlibs/ptp2/ptp.c:3032
 #, fuzzy
 msgid "PTP: Protocol error, response expected"
 msgstr "PTP 协议错误，需要响应"
 
 # camlibs/ptp/library.c:90
-#: camlibs/ptp2/ptp.c:2841
+#: camlibs/ptp2/ptp.c:3050
 #, fuzzy
 msgid "Undefined PTP Property"
 msgstr "未定义的 PTP 错误"
 
 # camlibs/sierra/sierra.c:1830
-#: camlibs/ptp2/ptp.c:2842
+#: camlibs/ptp2/ptp.c:3051
 #, fuzzy
 msgid "Battery Level"
 msgstr "%s电池寿命：%i\n"
 
 # frontends/command-line/gphoto2-cmd-capture.c:218
 # libgphoto2/gphoto2-result.c:51
-#: camlibs/ptp2/ptp.c:2843
+#: camlibs/ptp2/ptp.c:3052
 #, fuzzy
 msgid "Functional Mode"
 msgstr "操作模式"
 
-#: camlibs/ptp2/ptp.c:2845
+#: camlibs/ptp2/ptp.c:3054
 #, fuzzy
 msgid "Compression Setting"
 msgstr "压缩"
 
 # camlibs/sierra/sierra.c:946 camlibs/sierra/sierra.c:1229
 # camlibs/sierra/sierra.c:1423 camlibs/sierra/sierra.c:1646
-#: camlibs/ptp2/ptp.c:2846 camlibs/ptp2/ptp.c:2904
+#: camlibs/ptp2/ptp.c:3055 camlibs/ptp2/ptp.c:3113
 #: camlibs/sierra/epson-desc.c:176 camlibs/sierra/nikon-desc.c:293
 #: camlibs/sierra/olympus-desc.c:439 camlibs/sierra/olympus-desc.c:458
-#: camlibs/sierra/olympus-desc.c:479 camlibs/sierra/sierra.c:1062
-#: camlibs/sierra/sierra.c:1345 camlibs/sierra/sierra.c:1539
-#: camlibs/sierra/sierra.c:1762
+#: camlibs/sierra/olympus-desc.c:479 camlibs/sierra/sierra.c:1066
+#: camlibs/sierra/sierra.c:1349 camlibs/sierra/sierra.c:1543
+#: camlibs/sierra/sierra.c:1766
 msgid "White Balance"
 msgstr "白平衡"
 
-#: camlibs/ptp2/ptp.c:2847
+#: camlibs/ptp2/ptp.c:3056
 msgid "RGB Gain"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:2848
+#: camlibs/ptp2/ptp.c:3057
 msgid "F-Number"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:2850
+#: camlibs/ptp2/ptp.c:3059
 #, fuzzy
 msgid "Focus Distance"
 msgstr "聚焦位置"
 
 # camlibs/konica/library.c:770 camlibs/konica/library.c:1002
-#: camlibs/ptp2/ptp.c:2855
+#: camlibs/ptp2/ptp.c:3064
 #, fuzzy
 msgid "Exposure Program Mode"
 msgstr "曝光测定"
 
-#: camlibs/ptp2/ptp.c:2857
+#: camlibs/ptp2/ptp.c:3066
 msgid "Exposure Index (film speed ISO)"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:2859
+#: camlibs/ptp2/ptp.c:3068
 #, fuzzy
 msgid "Exposure Bias Compensation"
 msgstr "曝光补偿"
 
 # camlibs/sierra/sierra.c:1581 camlibs/sierra/sierra.c:1754
-#: camlibs/ptp2/ptp.c:2860
+#: camlibs/ptp2/ptp.c:3069
 #, fuzzy
 msgid "Date Time"
 msgstr "日期和时间"
 
-#: camlibs/ptp2/ptp.c:2861
+#: camlibs/ptp2/ptp.c:3070
 msgid "Pre-Capture Delay"
 msgstr ""
 
 # camlibs/sierra/sierra.c:921 camlibs/sierra/sierra.c:932
 # camlibs/sierra/sierra.c:1220
-#: camlibs/ptp2/ptp.c:2863
+#: camlibs/ptp2/ptp.c:3072
 #, fuzzy
 msgid "Contrast"
 msgstr "对比度-"
 
-#: camlibs/ptp2/ptp.c:2865 camlibs/sierra/nikon-desc.c:553
+#: camlibs/ptp2/ptp.c:3074 camlibs/sierra/nikon-desc.c:553
 #: camlibs/sierra/nikon-desc.c:576
 msgid "Digital Zoom"
 msgstr "数字缩放"
 
-#: camlibs/ptp2/ptp.c:2868
+#: camlibs/ptp2/ptp.c:3077
 msgid "Burst Interval"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:2869
+#: camlibs/ptp2/ptp.c:3078
 msgid "Timelapse Number"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:2870
+#: camlibs/ptp2/ptp.c:3079
 msgid "Timelapse Interval"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:2872
+#: camlibs/ptp2/ptp.c:3081
 msgid "Upload URL"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:2873
+#: camlibs/ptp2/ptp.c:3082
 msgid "Artist"
 msgstr ""
 
 # camlibs/sierra/sierra.c:918 camlibs/sierra/sierra.c:926
 # camlibs/sierra/sierra.c:1214
-#: camlibs/ptp2/ptp.c:2874
+#: camlibs/ptp2/ptp.c:3083
 #, fuzzy
 msgid "Copyright Info"
 msgstr "版权"
 
 # camlibs/konica/library.c:729 camlibs/konica/library.c:960
-#: camlibs/ptp2/ptp.c:2883
+#: camlibs/ptp2/ptp.c:3092
 #, fuzzy
 msgid "Date Time Stamp Format"
 msgstr "日期格式"
 
-#: camlibs/ptp2/ptp.c:2885
+#: camlibs/ptp2/ptp.c:3094
 msgid "Video Out"
 msgstr ""
 
 # camlibs/dimera/dimera3500.c:539
-#: camlibs/ptp2/ptp.c:2886
+#: camlibs/ptp2/ptp.c:3095
 #, fuzzy
 msgid "Power Saving"
 msgstr "无电源指示灯"
 
 # camlibs/konica/library.c:710 camlibs/konica/library.c:915
 # camlibs/sierra/sierra.c:1544 camlibs/sierra/sierra.c:1728
-#: camlibs/ptp2/ptp.c:2887
+#: camlibs/ptp2/ptp.c:3096
 #, fuzzy
 msgid "UI Language"
 msgstr "语言"
 
-#: camlibs/ptp2/ptp.c:2896
+#: camlibs/ptp2/ptp.c:3105
 msgid "Viewfinder Mode"
 msgstr ""
 
 # camlibs/sierra/sierra.c:814 camlibs/sierra/sierra.c:1137
-#: camlibs/ptp2/ptp.c:2900
+#: camlibs/ptp2/ptp.c:3109
 #, fuzzy
 msgid "Shooting Mode"
 msgstr "快门速度 (秒)"
 
 # camlibs/sierra/sierra.c:814 camlibs/sierra/sierra.c:1137
-#: camlibs/ptp2/ptp.c:2907
+#: camlibs/ptp2/ptp.c:3116
 #, fuzzy
 msgid "ShutterSpeed"
 msgstr "快门速度 (秒)"
 
 # camlibs/polaroid/pdc700.c:159
-#: camlibs/ptp2/ptp.c:2910
+#: camlibs/ptp2/ptp.c:3119
 #, fuzzy
 msgid "Size Quality Mode"
 msgstr "图像质量"
 
-#: camlibs/ptp2/ptp.c:2914
+#: camlibs/ptp2/ptp.c:3123
 msgid "UNIX Time"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:2915
+#: camlibs/ptp2/ptp.c:3124
 #, fuzzy
 msgid "Digital Zoom Magnification"
 msgstr "数字缩放"
 
 # camlibs/sierra/sierra.c:946 camlibs/sierra/sierra.c:1229
 # camlibs/sierra/sierra.c:1423 camlibs/sierra/sierra.c:1646
-#: camlibs/ptp2/ptp.c:2926
+#: camlibs/ptp2/ptp.c:3135
 #, fuzzy
 msgid "Auto White Balance Bias"
 msgstr "白平衡"
 
 # camlibs/sierra/sierra.c:946 camlibs/sierra/sierra.c:1229
 # camlibs/sierra/sierra.c:1423 camlibs/sierra/sierra.c:1646
-#: camlibs/ptp2/ptp.c:2928
+#: camlibs/ptp2/ptp.c:3137
 #, fuzzy
 msgid "Tungsten White Balance Bias"
 msgstr "白平衡"
 
 # camlibs/sierra/sierra.c:946 camlibs/sierra/sierra.c:1229
 # camlibs/sierra/sierra.c:1423 camlibs/sierra/sierra.c:1646
-#: camlibs/ptp2/ptp.c:2930
+#: camlibs/ptp2/ptp.c:3139
 #, fuzzy
 msgid "Fluorescent White Balance Bias"
 msgstr "白平衡"
 
 # camlibs/sierra/sierra.c:946 camlibs/sierra/sierra.c:1229
 # camlibs/sierra/sierra.c:1423 camlibs/sierra/sierra.c:1646
-#: camlibs/ptp2/ptp.c:2932
+#: camlibs/ptp2/ptp.c:3141
 #, fuzzy
 msgid "Daylight White Balance Bias"
 msgstr "白平衡"
 
 # camlibs/sierra/sierra.c:946 camlibs/sierra/sierra.c:1229
 # camlibs/sierra/sierra.c:1423 camlibs/sierra/sierra.c:1646
-#: camlibs/ptp2/ptp.c:2934
+#: camlibs/ptp2/ptp.c:3143
 #, fuzzy
 msgid "Flash White Balance Bias"
 msgstr "白平衡"
 
 # camlibs/sierra/sierra.c:946 camlibs/sierra/sierra.c:1229
 # camlibs/sierra/sierra.c:1423 camlibs/sierra/sierra.c:1646
-#: camlibs/ptp2/ptp.c:2936
+#: camlibs/ptp2/ptp.c:3145
 #, fuzzy
 msgid "Cloudy White Balance Bias"
 msgstr "白平衡"
 
 # camlibs/sierra/sierra.c:946 camlibs/sierra/sierra.c:1229
 # camlibs/sierra/sierra.c:1423 camlibs/sierra/sierra.c:1646
-#: camlibs/ptp2/ptp.c:2938
+#: camlibs/ptp2/ptp.c:3147
 #, fuzzy
 msgid "Shady White Balance Bias"
 msgstr "白平衡"
 
-#: camlibs/ptp2/ptp.c:2940
+#: camlibs/ptp2/ptp.c:3149
 msgid "White Balance Colour Temperature"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:2950
+#: camlibs/ptp2/ptp.c:3159
 msgid "Lens Focal Length (Non CPU)"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:2952
+#: camlibs/ptp2/ptp.c:3161
 msgid "Lens Max. Aperture (Non CPU)"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:2980
+#: camlibs/ptp2/ptp.c:3189
 msgid "Vertical AF On"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:2984
+#: camlibs/ptp2/ptp.c:3193
 #, fuzzy
 msgid "ISO Step"
 msgstr "ISO 速度"
 
 # camlibs/jd11/jd11.c:207 camlibs/jd11/jd11.c:255
-#: camlibs/ptp2/ptp.c:2986
+#: camlibs/ptp2/ptp.c:3195
 #, fuzzy
 msgid "Exposure Step"
 msgstr "闪光灯闪光时间"
 
-#: camlibs/ptp2/ptp.c:2988
+#: camlibs/ptp2/ptp.c:3197
 #, fuzzy
 msgid "Exposure Compensation (EV)"
 msgstr "曝光补偿"
 
-#: camlibs/ptp2/ptp.c:2992
+#: camlibs/ptp2/ptp.c:3201
 msgid "Centre Weight Area"
 msgstr ""
 
 # camlibs/sierra/sierra.c:885 camlibs/sierra/sierra.c:1186
 # camlibs/sierra/sierra.c:1395 camlibs/sierra/sierra.c:1626
-#: camlibs/ptp2/ptp.c:2996
+#: camlibs/ptp2/ptp.c:3205
 #, fuzzy
 msgid "Focus Lock"
 msgstr "聚焦模式"
 
 # camlibs/konica/library.c:670 camlibs/konica/library.c:879
-#: camlibs/ptp2/ptp.c:2998
+#: camlibs/ptp2/ptp.c:3207
 #, fuzzy
 msgid "Auto Meter Off Time"
 msgstr "自动关机时间"
 
 # camlibs/konica/library.c:663 camlibs/konica/library.c:871
-#: camlibs/ptp2/ptp.c:3000
+#: camlibs/ptp2/ptp.c:3209
 #, fuzzy
 msgid "Self Timer Delay"
 msgstr "自动定时器时间"
 
 # camlibs/sierra/sierra.c:814 camlibs/sierra/sierra.c:1137
-#: camlibs/ptp2/ptp.c:3004
+#: camlibs/ptp2/ptp.c:3213
 #, fuzzy
 msgid "Shooting Speed"
 msgstr "快门速度 (秒)"
 
-#: camlibs/ptp2/ptp.c:3006
+#: camlibs/ptp2/ptp.c:3215
 msgid "Max. Shots"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3010
+#: camlibs/ptp2/ptp.c:3219
 #, fuzzy
 msgid "Long Exposure Noise Reduction"
 msgstr "曝光补偿"
 
-#: camlibs/ptp2/ptp.c:3020
+#: camlibs/ptp2/ptp.c:3229
 msgid "Flash Sync. Speed"
 msgstr ""
 
 # camlibs/minolta/dimagev/dimagev.c:331
-#: camlibs/ptp2/ptp.c:3026
+#: camlibs/ptp2/ptp.c:3235
 #, fuzzy
 msgid "Modeling Flash"
 msgstr "强制闪光\n"
 
-#: camlibs/ptp2/ptp.c:3030
+#: camlibs/ptp2/ptp.c:3239
 msgid "Manual Mode Bracketing"
 msgstr ""
 
 # camlibs/konica/library.c:750 camlibs/konica/library.c:762
-#: camlibs/ptp2/ptp.c:3034
+#: camlibs/ptp2/ptp.c:3243
 #, fuzzy
 msgid "Auto Bracket Selection"
 msgstr "自动，消红眼"
 
 # camlibs/sierra/sierra.c:1001 camlibs/sierra/sierra.c:1268
-#: camlibs/ptp2/ptp.c:3036
+#: camlibs/ptp2/ptp.c:3245
 #, fuzzy
 msgid "Center Button Shooting Mode"
 msgstr "场景测量模式"
 
-#: camlibs/ptp2/ptp.c:3038
+#: camlibs/ptp2/ptp.c:3247
 #, fuzzy
 msgid "Center Button Playback Mode"
 msgstr "当前模式：回放模式\n"
 
-#: camlibs/ptp2/ptp.c:3040
+#: camlibs/ptp2/ptp.c:3249
 msgid "Multiselector"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3042
+#: camlibs/ptp2/ptp.c:3251
 msgid "Photo Info. Playback"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3044
+#: camlibs/ptp2/ptp.c:3253
 msgid "Assign Func. Button"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3046
+#: camlibs/ptp2/ptp.c:3255
 msgid "Customise Command Dials"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3048
+#: camlibs/ptp2/ptp.c:3257
 msgid "Reverse Command Dial"
 msgstr ""
 
 # camlibs/sierra/sierra.c:777 camlibs/sierra/sierra.c:1443
-#: camlibs/ptp2/ptp.c:3050
+#: camlibs/ptp2/ptp.c:3259
 #, fuzzy
 msgid "Aperture Setting"
 msgstr "照片设置"
 
-#: camlibs/ptp2/ptp.c:3052
+#: camlibs/ptp2/ptp.c:3261
 msgid "Menus and Playback"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3054
+#: camlibs/ptp2/ptp.c:3263
 msgid "Buttons and Dials"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3056
+#: camlibs/ptp2/ptp.c:3265
 msgid "No CF Card Release"
 msgstr ""
 
 # camlibs/sierra/sierra.c:1048 camlibs/sierra/sierra.c:1510
-#: camlibs/ptp2/ptp.c:3058
+#: camlibs/ptp2/ptp.c:3267
 #, fuzzy
 msgid "Image Rotation"
 msgstr "相机设置"
 
 # camlibs/konica/library.c:770 camlibs/konica/library.c:1002
-#: camlibs/ptp2/ptp.c:3060
+#: camlibs/ptp2/ptp.c:3269
 #, fuzzy
 msgid "Exposure Bracketing"
 msgstr "曝光测定"
 
 # camlibs/konica/library.c:770 camlibs/konica/library.c:1002
-#: camlibs/ptp2/ptp.c:3062
+#: camlibs/ptp2/ptp.c:3271
 #, fuzzy
 msgid "Exposure Bracketing Distance"
 msgstr "曝光测定"
 
 # camlibs/konica/library.c:770 camlibs/konica/library.c:1002
-#: camlibs/ptp2/ptp.c:3064
+#: camlibs/ptp2/ptp.c:3273
 #, fuzzy
 msgid "Exposure Bracketing Number"
 msgstr "曝光测定"
 
 # camlibs/sierra/sierra.c:977 camlibs/sierra/sierra.c:1250
 # camlibs/sierra/sierra.c:1449 camlibs/sierra/sierra.c:1662
-#: camlibs/ptp2/ptp.c:3066
+#: camlibs/ptp2/ptp.c:3275
 #, fuzzy
 msgid "AF LCD Top Mode 2"
 msgstr "LCD 模式"
 
-#: camlibs/ptp2/ptp.c:3068
+#: camlibs/ptp2/ptp.c:3277
 msgid "Active AF Sensor"
 msgstr ""
 
 # camlibs/konica/library.c:770 camlibs/konica/library.c:1002
-#: camlibs/ptp2/ptp.c:3070
+#: camlibs/ptp2/ptp.c:3279
 #, fuzzy
 msgid "Exposure Meter"
 msgstr "曝光测定"
 
 # camlibs/konica/library.c:770 camlibs/konica/library.c:1002
-#: camlibs/ptp2/ptp.c:3072
+#: camlibs/ptp2/ptp.c:3281
 #, fuzzy
 msgid "Exposure Aperture Lock"
 msgstr "曝光测定"
 
-#: camlibs/ptp2/ptp.c:3074
+#: camlibs/ptp2/ptp.c:3283
 msgid "Maximum Shots"
 msgstr ""
 
 # camlibs/sierra/sierra.c:885 camlibs/sierra/sierra.c:1186
 # camlibs/sierra/sierra.c:1395 camlibs/sierra/sierra.c:1626
-#: camlibs/ptp2/ptp.c:3084
+#: camlibs/ptp2/ptp.c:3293
 #, fuzzy
 msgid "Autofocus Mode"
 msgstr "聚焦模式"
 
-#: camlibs/ptp2/ptp.c:3086
+#: camlibs/ptp2/ptp.c:3295
 msgid "AF Assist Lamp"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3088
+#: camlibs/ptp2/ptp.c:3297
 msgid "Auto ISO P/A/DVP Setting"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3092
+#: camlibs/ptp2/ptp.c:3301
 msgid "Viewfinder Grid Display"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3106
+#: camlibs/ptp2/ptp.c:3315
 #, fuzzy
 msgid "Image Comment String"
 msgstr "图像调整"
 
 # camlibs/sierra/sierra.c:885 camlibs/sierra/sierra.c:1186
 # camlibs/sierra/sierra.c:1395 camlibs/sierra/sierra.c:1626
-#: camlibs/ptp2/ptp.c:3108
+#: camlibs/ptp2/ptp.c:3317
 #, fuzzy
 msgid "Flash Open"
 msgstr "闪光灯模式"
 
 # camlibs/kodak/dc120/dc120.c:31
-#: camlibs/ptp2/ptp.c:3110
+#: camlibs/ptp2/ptp.c:3319
 #, fuzzy
 msgid "Flash Charged"
 msgstr "闪存卡"
 
 # camlibs/sierra/sierra.c:977 camlibs/sierra/sierra.c:1250
 # camlibs/sierra/sierra.c:1449 camlibs/sierra/sierra.c:1662
-#: camlibs/ptp2/ptp.c:3112
+#: camlibs/ptp2/ptp.c:3321
 #, fuzzy
 msgid "Lens ID"
 msgstr "镜头模式"
 
-#: camlibs/ptp2/ptp.c:3114
+#: camlibs/ptp2/ptp.c:3323
 msgid "Min. Focal Length"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3116
+#: camlibs/ptp2/ptp.c:3325
 msgid "Max. Focal Length"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3118
+#: camlibs/ptp2/ptp.c:3327
 msgid "Max. Aperture at Min. Focal Length"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3120
+#: camlibs/ptp2/ptp.c:3329
 msgid "Max. Aperture at Max. Focal Length"
 msgstr ""
 
 # camlibs/sierra/sierra.c:789 camlibs/sierra/sierra.c:797
 # camlibs/sierra/sierra.c:830 camlibs/sierra/sierra.c:839
 # camlibs/sierra/sierra.c:1125 camlibs/sierra/sierra.c:1156
-#: camlibs/ptp2/ptp.c:3122
+#: camlibs/ptp2/ptp.c:3331
 #, fuzzy
 msgid "Low Light"
 msgstr "高"
 
-#: camlibs/ptp2/ptp.c:3123
+#: camlibs/ptp2/ptp.c:3332
 msgid "AC Power"
 msgstr ""
 
 # camlibs/konica/library.c:750 camlibs/konica/library.c:762
-#: camlibs/ptp2/ptp.c:3124
+#: camlibs/ptp2/ptp.c:3333
 #, fuzzy
 msgid "NIKON Auto Bracketing Set"
 msgstr "自动，消红眼"
 
 # camlibs/sierra/sierra.c:946 camlibs/sierra/sierra.c:1229
 # camlibs/sierra/sierra.c:1423 camlibs/sierra/sierra.c:1646
-#: camlibs/ptp2/ptp.c:3125
+#: camlibs/ptp2/ptp.c:3334
 #, fuzzy
 msgid "NIKON White Balance Bracket Step"
 msgstr "白平衡"
 
-#: camlibs/ptp2/ptp.c:3126
+#: camlibs/ptp2/ptp.c:3335
 msgid "NIKON AF-L Locked"
 msgstr ""
 
 # camlibs/jd11/jd11.c:207 camlibs/jd11/jd11.c:255
-#: camlibs/ptp2/ptp.c:3133
+#: camlibs/ptp2/ptp.c:3342
 #, fuzzy
 msgid "Secure Time"
 msgstr "闪光灯闪光时间"
 
-#: camlibs/ptp2/ptp.c:3134
+#: camlibs/ptp2/ptp.c:3343
 msgid "Device Certificate"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3136
+#: camlibs/ptp2/ptp.c:3345
 msgid "Synchronization Partner"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3138
+#: camlibs/ptp2/ptp.c:3347
 msgid "Device Friendly Name"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3139
+#: camlibs/ptp2/ptp.c:3348
 msgid "Volume Level"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3140
+#: camlibs/ptp2/ptp.c:3349
 msgid "Device Icon"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3141
+#: camlibs/ptp2/ptp.c:3350
 msgid "Playback Rate"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3142
+#: camlibs/ptp2/ptp.c:3351
 msgid "Playback Object"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3144
+#: camlibs/ptp2/ptp.c:3353
 msgid "Playback Container Index"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3145
+#: camlibs/ptp2/ptp.c:3354
 msgid "Playback Position"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3245 camlibs/ptp2/ptp.c:3246 camlibs/ptp2/ptp.c:3247
+#: camlibs/ptp2/ptp.c:3454 camlibs/ptp2/ptp.c:3455 camlibs/ptp2/ptp.c:3456
 #, c-format
 msgid "%.1f stops"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3248
+#: camlibs/ptp2/ptp.c:3457
 #, c-format
 msgid "%.0f mm"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3262
+#: camlibs/ptp2/ptp.c:3471
 #, fuzzy
 msgid "JPEG Norm"
 msgstr "JPEG"
 
-#: camlibs/ptp2/ptp.c:3265
+#: camlibs/ptp2/ptp.c:3474
 msgid "RAW + JPEG Basic"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3267 camlibs/ricoh/library.c:329
+#: camlibs/ptp2/ptp.c:3476 camlibs/ricoh/library.c:329
 #: camlibs/sierra/nikon-desc.c:284
 msgid "Incandescent"
 msgstr ""
@@ -6853,10 +6853,10 @@ msgstr ""
 # camlibs/sierra/sierra.c:889 camlibs/sierra/sierra.c:899
 # camlibs/sierra/sierra.c:1196 camlibs/sierra/sierra.c:1399
 # camlibs/sierra/sierra.c:1408 camlibs/sierra/sierra.c:1635
-#: camlibs/ptp2/ptp.c:3276 camlibs/sierra/epson-desc.c:154
-#: camlibs/sierra/sierra.c:1005 camlibs/sierra/sierra.c:1015
-#: camlibs/sierra/sierra.c:1312 camlibs/sierra/sierra.c:1515
-#: camlibs/sierra/sierra.c:1524 camlibs/sierra/sierra.c:1751
+#: camlibs/ptp2/ptp.c:3485 camlibs/sierra/epson-desc.c:154
+#: camlibs/sierra/sierra.c:1009 camlibs/sierra/sierra.c:1019
+#: camlibs/sierra/sierra.c:1316 camlibs/sierra/sierra.c:1519
+#: camlibs/sierra/sierra.c:1528 camlibs/sierra/sierra.c:1755
 msgid "Red-eye Reduction"
 msgstr "消红眼"
 
@@ -6868,407 +6868,407 @@ msgstr "消红眼"
 # camlibs/sierra/sierra.c:1212 camlibs/sierra/sierra.c:1256
 # camlibs/sierra/sierra.c:1451 camlibs/sierra/sierra.c:1455
 # camlibs/sierra/sierra.c:1668
-#: camlibs/ptp2/ptp.c:3284
+#: camlibs/ptp2/ptp.c:3493
 #, fuzzy
 msgid "Manual Focus"
 msgstr "无手册"
 
-#: camlibs/ptp2/ptp.c:3291
+#: camlibs/ptp2/ptp.c:3500
 msgid "AF Lock only"
 msgstr ""
 
 # camlibs/sierra/sierra.c:885 camlibs/sierra/sierra.c:1186
 # camlibs/sierra/sierra.c:1395 camlibs/sierra/sierra.c:1626
-#: camlibs/ptp2/ptp.c:3295
+#: camlibs/ptp2/ptp.c:3504
 #, fuzzy
 msgid "Flash Lock"
 msgstr "闪光灯模式"
 
-#: camlibs/ptp2/ptp.c:3297 camlibs/sierra/nikon-desc.c:493
+#: camlibs/ptp2/ptp.c:3506 camlibs/sierra/nikon-desc.c:493
 #: camlibs/sierra/olympus-desc.c:627
 msgid "Matrix"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3298 camlibs/sierra/nikon-desc.c:492
+#: camlibs/ptp2/ptp.c:3507 camlibs/sierra/nikon-desc.c:492
 #: camlibs/sierra/olympus-desc.c:626
 msgid "Spot"
 msgstr ""
 
 # camlibs/dimera/dimera3500.c:539
-#: camlibs/ptp2/ptp.c:3311
+#: camlibs/ptp2/ptp.c:3520
 #, fuzzy
 msgid "Power Wind"
 msgstr "无电源指示灯"
 
-#: camlibs/ptp2/ptp.c:3336
+#: camlibs/ptp2/ptp.c:3545
 #, fuzzy
 msgid "1 min"
 msgstr "41 mm"
 
-#: camlibs/ptp2/ptp.c:3337
+#: camlibs/ptp2/ptp.c:3546
 msgid "5 mins"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3338
+#: camlibs/ptp2/ptp.c:3547
 msgid "10 mins"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3339
+#: camlibs/ptp2/ptp.c:3548
 msgid "15 mins"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3489
+#: camlibs/ptp2/ptp.c:3698
 msgid "Firmware"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3490
+#: camlibs/ptp2/ptp.c:3699
 msgid "WindowsImageFormat"
 msgstr ""
 
 # camlibs/ptp/library.c:90
-#: camlibs/ptp2/ptp.c:3491
+#: camlibs/ptp2/ptp.c:3700
 #, fuzzy
 msgid "Undefined Audio"
 msgstr "未定义的 PTP 错误"
 
-#: camlibs/ptp2/ptp.c:3494
+#: camlibs/ptp2/ptp.c:3703
 msgid "Audible.com Codec"
 msgstr ""
 
 # camlibs/ptp/library.c:90
-#: camlibs/ptp2/ptp.c:3495
+#: camlibs/ptp2/ptp.c:3704
 #, fuzzy
 msgid "Undefined Video"
 msgstr "未定义的 PTP 错误"
 
 # camlibs/ptp/library.c:90
-#: camlibs/ptp2/ptp.c:3498
+#: camlibs/ptp2/ptp.c:3707
 #, fuzzy
 msgid "Undefined Collection"
 msgstr "未定义的 PTP 错误"
 
-#: camlibs/ptp2/ptp.c:3499
+#: camlibs/ptp2/ptp.c:3708
 msgid "Abstract Multimedia Album"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3500
+#: camlibs/ptp2/ptp.c:3709
 msgid "Abstract Image Album"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3501
+#: camlibs/ptp2/ptp.c:3710
 msgid "Abstract Audio Album"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3502
+#: camlibs/ptp2/ptp.c:3711
 msgid "Abstract Video Album"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3503
+#: camlibs/ptp2/ptp.c:3712
 msgid "Abstract Audio Video Playlist"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3504
+#: camlibs/ptp2/ptp.c:3713
 msgid "Abstract Contact Group"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3505
+#: camlibs/ptp2/ptp.c:3714
 msgid "Abstract Message Folder"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3506
+#: camlibs/ptp2/ptp.c:3715
 msgid "Abstract Chaptered Production"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3507
+#: camlibs/ptp2/ptp.c:3716
 msgid "WPL Playlist"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3508
+#: camlibs/ptp2/ptp.c:3717
 msgid "M3U Playlist"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3509
+#: camlibs/ptp2/ptp.c:3718
 msgid "MPL Playlist"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3510
+#: camlibs/ptp2/ptp.c:3719
 msgid "ASX Playlist"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3511
+#: camlibs/ptp2/ptp.c:3720
 msgid "PLS Playlist"
 msgstr ""
 
 # camlibs/ptp/library.c:90
-#: camlibs/ptp2/ptp.c:3512
+#: camlibs/ptp2/ptp.c:3721
 #, fuzzy
 msgid "UndefinedDocument"
 msgstr "未定义的 PTP 错误"
 
-#: camlibs/ptp2/ptp.c:3513
+#: camlibs/ptp2/ptp.c:3722
 msgid "AbstractDocument"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3514
+#: camlibs/ptp2/ptp.c:3723
 msgid "UndefinedMessage"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3515
+#: camlibs/ptp2/ptp.c:3724
 msgid "AbstractMessage"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3516
+#: camlibs/ptp2/ptp.c:3725
 msgid "UndefinedContact"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3517
+#: camlibs/ptp2/ptp.c:3726
 msgid "AbstractContact"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3518
+#: camlibs/ptp2/ptp.c:3727
 msgid "vCard2"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3519
+#: camlibs/ptp2/ptp.c:3728
 msgid "vCard3"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3520
+#: camlibs/ptp2/ptp.c:3729
 msgid "UndefinedCalendarItem"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3521
+#: camlibs/ptp2/ptp.c:3730
 msgid "AbstractCalendarItem"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3522
+#: camlibs/ptp2/ptp.c:3731
 msgid "vCalendar1"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3523
+#: camlibs/ptp2/ptp.c:3732
 msgid "vCalendar2"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3524
+#: camlibs/ptp2/ptp.c:3733
 msgid "Undefined Windows Executable"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3541
+#: camlibs/ptp2/ptp.c:3750
 #, c-format
 msgid "M3U"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3554 camlibs/ptp2/ptp.c:3638
+#: camlibs/ptp2/ptp.c:3763 camlibs/ptp2/ptp.c:3847
 #, fuzzy, c-format
 msgid "Unknown(%04x)"
 msgstr "未知 (0x%02x)"
 
-#: camlibs/ptp2/ptp.c:3562
+#: camlibs/ptp2/ptp.c:3771
 msgid "get device info"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3563
+#: camlibs/ptp2/ptp.c:3772
 #, fuzzy
 msgid "Open session"
 msgstr "压缩"
 
-#: camlibs/ptp2/ptp.c:3564
+#: camlibs/ptp2/ptp.c:3773
 #, fuzzy
 msgid "Close session"
 msgstr "压缩"
 
-#: camlibs/ptp2/ptp.c:3565
+#: camlibs/ptp2/ptp.c:3774
 msgid "Get storage IDs"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3566
+#: camlibs/ptp2/ptp.c:3775
 msgid "Get storage info"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3567
+#: camlibs/ptp2/ptp.c:3776
 msgid "Get number of objects"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3568
+#: camlibs/ptp2/ptp.c:3777
 msgid "Get object handles"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3569
+#: camlibs/ptp2/ptp.c:3778
 msgid "Get object info"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3570
+#: camlibs/ptp2/ptp.c:3779
 msgid "Get object"
 msgstr ""
 
 # camlibs/canon/serial.c:1400
-#: camlibs/ptp2/ptp.c:3571
+#: camlibs/ptp2/ptp.c:3780
 #, fuzzy
 msgid "Get thumbnail"
 msgstr "正在获取缩略图..."
 
 # camlibs/sierra/sierra.c:948 camlibs/sierra/sierra.c:956
 # camlibs/sierra/sierra.c:1235
-#: camlibs/ptp2/ptp.c:3572
+#: camlibs/ptp2/ptp.c:3781
 #, fuzzy
 msgid "Delete object"
 msgstr "日光"
 
-#: camlibs/ptp2/ptp.c:3573
+#: camlibs/ptp2/ptp.c:3782
 msgid "Send object info"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3574
+#: camlibs/ptp2/ptp.c:3783
 msgid "Send object"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3575
+#: camlibs/ptp2/ptp.c:3784
 msgid "Initiate capture"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3576
+#: camlibs/ptp2/ptp.c:3785
 msgid "Format storage"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3577
+#: camlibs/ptp2/ptp.c:3786
 msgid "Reset device"
 msgstr ""
 
 # camlibs/ptp/library.c:107
-#: camlibs/ptp2/ptp.c:3578
+#: camlibs/ptp2/ptp.c:3787
 #, fuzzy
 msgid "Self test device"
 msgstr "PTP 自检失败"
 
-#: camlibs/ptp2/ptp.c:3579
+#: camlibs/ptp2/ptp.c:3788
 msgid "Set object protection"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3580
+#: camlibs/ptp2/ptp.c:3789
 msgid "Power down device"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3581
+#: camlibs/ptp2/ptp.c:3790
 msgid "Get device property description"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3582
+#: camlibs/ptp2/ptp.c:3791
 msgid "Get device property value"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3583
+#: camlibs/ptp2/ptp.c:3792
 msgid "Set device property value"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3584
+#: camlibs/ptp2/ptp.c:3793
 msgid "Reset device property value"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3585
+#: camlibs/ptp2/ptp.c:3794
 msgid "Terminate open capture"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3586
+#: camlibs/ptp2/ptp.c:3795
 msgid "Move object"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3587
+#: camlibs/ptp2/ptp.c:3796
 msgid "Copy object"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3588
+#: camlibs/ptp2/ptp.c:3797
 msgid "Get partial object"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3589
+#: camlibs/ptp2/ptp.c:3798
 msgid "Initiate open capture"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3596
+#: camlibs/ptp2/ptp.c:3805
 msgid "Get secure time challenge"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3597
+#: camlibs/ptp2/ptp.c:3806
 msgid "Get secure time response"
 msgstr ""
 
 # camlibs/canon/serial.c:1235
-#: camlibs/ptp2/ptp.c:3598
+#: camlibs/ptp2/ptp.c:3807
 #, fuzzy
 msgid "Set license response"
 msgstr "不可识别的应答"
 
-#: camlibs/ptp2/ptp.c:3599
+#: camlibs/ptp2/ptp.c:3808
 msgid "Get sync list"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3600
+#: camlibs/ptp2/ptp.c:3809
 msgid "Send meter challenge query"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3601
+#: camlibs/ptp2/ptp.c:3810
 msgid "Get meter challenge"
 msgstr ""
 
 # camlibs/polaroid/pdc700.c:242
-#: camlibs/ptp2/ptp.c:3602
+#: camlibs/ptp2/ptp.c:3811
 #, fuzzy
 msgid "Get meter response"
 msgstr "收到意外应答"
 
-#: camlibs/ptp2/ptp.c:3603
+#: camlibs/ptp2/ptp.c:3812
 msgid "Clean data store"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3604
+#: camlibs/ptp2/ptp.c:3813
 msgid "Get license state"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3605
+#: camlibs/ptp2/ptp.c:3814
 msgid "Get object properties supported"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3606
+#: camlibs/ptp2/ptp.c:3815
 msgid "Get object property description"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3607
+#: camlibs/ptp2/ptp.c:3816
 msgid "Get object property value"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3608
+#: camlibs/ptp2/ptp.c:3817
 msgid "Set object property value"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3609
+#: camlibs/ptp2/ptp.c:3818
 msgid "Get object property list"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3610
+#: camlibs/ptp2/ptp.c:3819
 msgid "Set object property list"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3611
+#: camlibs/ptp2/ptp.c:3820
 msgid "Get interdependent property description"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3612
+#: camlibs/ptp2/ptp.c:3821
 msgid "Send object property list"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3613
+#: camlibs/ptp2/ptp.c:3822
 msgid "Get object references"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3614
+#: camlibs/ptp2/ptp.c:3823
 msgid "Set object references"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3615
+#: camlibs/ptp2/ptp.c:3824
 msgid "Update device firmware"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3616
+#: camlibs/ptp2/ptp.c:3825
 msgid "Skip to next position in playlist"
 msgstr ""
 
@@ -7478,8 +7478,8 @@ msgid "Character & Sound"
 msgstr "人物和音效"
 
 # camlibs/sierra/sierra.c:1026 camlibs/sierra/sierra.c:1032
-#: camlibs/ricoh/library.c:377 camlibs/sierra/sierra.c:1142
-#: camlibs/sierra/sierra.c:1148
+#: camlibs/ricoh/library.c:377 camlibs/sierra/sierra.c:1146
+#: camlibs/sierra/sierra.c:1152
 msgid "2x"
 msgstr "2x"
 
@@ -7670,8 +7670,8 @@ msgstr "照片设置"
 # camlibs/sierra/sierra.c:855 camlibs/sierra/sierra.c:1165
 # camlibs/sierra/sierra.c:1494 camlibs/sierra/sierra.c:1695
 #: camlibs/sierra/epson-desc.c:142 camlibs/sierra/nikon-desc.c:225
-#: camlibs/sierra/sierra.c:971 camlibs/sierra/sierra.c:1281
-#: camlibs/sierra/sierra.c:1610 camlibs/sierra/sierra.c:1811
+#: camlibs/sierra/sierra.c:975 camlibs/sierra/sierra.c:1285
+#: camlibs/sierra/sierra.c:1614 camlibs/sierra/sierra.c:1815
 msgid "Color Mode"
 msgstr "彩色模式"
 
@@ -7695,68 +7695,68 @@ msgstr "相机型号 (只读)"
 
 # camlibs/sierra/sierra.c:977 camlibs/sierra/sierra.c:1250
 # camlibs/sierra/sierra.c:1449 camlibs/sierra/sierra.c:1662
-#: camlibs/sierra/epson-desc.c:224 camlibs/sierra/sierra.c:1093
-#: camlibs/sierra/sierra.c:1366 camlibs/sierra/sierra.c:1565
-#: camlibs/sierra/sierra.c:1778
+#: camlibs/sierra/epson-desc.c:224 camlibs/sierra/sierra.c:1097
+#: camlibs/sierra/sierra.c:1370 camlibs/sierra/sierra.c:1569
+#: camlibs/sierra/sierra.c:1782
 msgid "Lens Mode"
 msgstr "镜头模式"
 
 # camlibs/sierra/sierra.c:1545 camlibs/sierra/sierra.c:1554
 # camlibs/sierra/sierra.c:1731
-#: camlibs/sierra/epson-desc.c:233 camlibs/sierra/sierra.c:1661
-#: camlibs/sierra/sierra.c:1670 camlibs/sierra/sierra.c:1847
+#: camlibs/sierra/epson-desc.c:233 camlibs/sierra/sierra.c:1665
+#: camlibs/sierra/sierra.c:1674 camlibs/sierra/sierra.c:1851
 msgid "Korean"
 msgstr "韩语"
 
 # camlibs/sierra/sierra.c:1546 camlibs/sierra/sierra.c:1556
 # camlibs/sierra/sierra.c:1733
 #: camlibs/sierra/epson-desc.c:234 camlibs/sierra/nikon-desc.c:419
-#: camlibs/sierra/sierra.c:1662 camlibs/sierra/sierra.c:1672
-#: camlibs/sierra/sierra.c:1849
+#: camlibs/sierra/sierra.c:1666 camlibs/sierra/sierra.c:1676
+#: camlibs/sierra/sierra.c:1853
 msgid "English"
 msgstr "英语"
 
 # camlibs/sierra/sierra.c:1547 camlibs/sierra/sierra.c:1558
 # camlibs/sierra/sierra.c:1735
 #: camlibs/sierra/epson-desc.c:235 camlibs/sierra/nikon-desc.c:420
-#: camlibs/sierra/sierra.c:1663 camlibs/sierra/sierra.c:1674
-#: camlibs/sierra/sierra.c:1851
+#: camlibs/sierra/sierra.c:1667 camlibs/sierra/sierra.c:1678
+#: camlibs/sierra/sierra.c:1855
 msgid "French"
 msgstr "法语"
 
 # camlibs/sierra/sierra.c:1548 camlibs/sierra/sierra.c:1560
 # camlibs/sierra/sierra.c:1737
 #: camlibs/sierra/epson-desc.c:236 camlibs/sierra/nikon-desc.c:421
-#: camlibs/sierra/sierra.c:1664 camlibs/sierra/sierra.c:1676
-#: camlibs/sierra/sierra.c:1853
+#: camlibs/sierra/sierra.c:1668 camlibs/sierra/sierra.c:1680
+#: camlibs/sierra/sierra.c:1857
 msgid "German"
 msgstr "德语"
 
 # camlibs/sierra/sierra.c:1549 camlibs/sierra/sierra.c:1562
 # camlibs/sierra/sierra.c:1739
-#: camlibs/sierra/epson-desc.c:237 camlibs/sierra/sierra.c:1665
-#: camlibs/sierra/sierra.c:1678 camlibs/sierra/sierra.c:1855
+#: camlibs/sierra/epson-desc.c:237 camlibs/sierra/sierra.c:1669
+#: camlibs/sierra/sierra.c:1682 camlibs/sierra/sierra.c:1859
 msgid "Italian"
 msgstr "意大利语"
 
 # camlibs/sierra/sierra.c:1550 camlibs/sierra/sierra.c:1564
 # camlibs/sierra/sierra.c:1741
-#: camlibs/sierra/epson-desc.c:238 camlibs/sierra/sierra.c:1666
-#: camlibs/sierra/sierra.c:1680 camlibs/sierra/sierra.c:1857
+#: camlibs/sierra/epson-desc.c:238 camlibs/sierra/sierra.c:1670
+#: camlibs/sierra/sierra.c:1684 camlibs/sierra/sierra.c:1861
 msgid "Japanese"
 msgstr "日语"
 
 # camlibs/sierra/sierra.c:1551 camlibs/sierra/sierra.c:1566
 # camlibs/sierra/sierra.c:1743
-#: camlibs/sierra/epson-desc.c:239 camlibs/sierra/sierra.c:1667
-#: camlibs/sierra/sierra.c:1682 camlibs/sierra/sierra.c:1859
+#: camlibs/sierra/epson-desc.c:239 camlibs/sierra/sierra.c:1671
+#: camlibs/sierra/sierra.c:1686 camlibs/sierra/sierra.c:1863
 msgid "Spanish"
 msgstr "西班牙语"
 
 # camlibs/sierra/sierra.c:1552 camlibs/sierra/sierra.c:1568
 # camlibs/sierra/sierra.c:1745
-#: camlibs/sierra/epson-desc.c:240 camlibs/sierra/sierra.c:1668
-#: camlibs/sierra/sierra.c:1684 camlibs/sierra/sierra.c:1861
+#: camlibs/sierra/epson-desc.c:240 camlibs/sierra/sierra.c:1672
+#: camlibs/sierra/sierra.c:1688 camlibs/sierra/sierra.c:1865
 msgid "Portugese"
 msgstr "葡萄牙语"
 
@@ -7764,7 +7764,7 @@ msgstr "葡萄牙语"
 #: camlibs/sierra/epson-desc.c:278 camlibs/sierra/nikon-desc.c:658
 #: camlibs/sierra/nikon-desc.c:669 camlibs/sierra/olympus-desc.c:830
 #: camlibs/sierra/olympus-desc.c:885 camlibs/sierra/olympus-desc.c:896
-#: camlibs/sierra/sierra.c:892 camlibs/sierra/sierra.c:1559
+#: camlibs/sierra/sierra.c:896 camlibs/sierra/sierra.c:1563
 msgid "Picture Settings"
 msgstr "照片设置"
 
@@ -7928,15 +7928,15 @@ msgstr "慢同步"
 
 # camlibs/sierra/sierra.c:920 camlibs/sierra/sierra.c:930
 # camlibs/sierra/sierra.c:1218
-#: camlibs/sierra/nikon-desc.c:254 camlibs/sierra/sierra.c:1036
-#: camlibs/sierra/sierra.c:1046 camlibs/sierra/sierra.c:1334
+#: camlibs/sierra/nikon-desc.c:254 camlibs/sierra/sierra.c:1040
+#: camlibs/sierra/sierra.c:1050 camlibs/sierra/sierra.c:1338
 msgid "Contrast+"
 msgstr "对比度+"
 
 # camlibs/sierra/sierra.c:921 camlibs/sierra/sierra.c:932
 # camlibs/sierra/sierra.c:1220
-#: camlibs/sierra/nikon-desc.c:255 camlibs/sierra/sierra.c:1037
-#: camlibs/sierra/sierra.c:1048 camlibs/sierra/sierra.c:1336
+#: camlibs/sierra/nikon-desc.c:255 camlibs/sierra/sierra.c:1041
+#: camlibs/sierra/sierra.c:1052 camlibs/sierra/sierra.c:1340
 msgid "Contrast-"
 msgstr "对比度-"
 
@@ -7993,7 +7993,7 @@ msgstr "操作模式"
 
 # camlibs/sierra/sierra.c:1083 camlibs/sierra/sierra.c:1322
 #: camlibs/sierra/nikon-desc.c:392 camlibs/sierra/olympus-desc.c:531
-#: camlibs/sierra/sierra.c:1199 camlibs/sierra/sierra.c:1438
+#: camlibs/sierra/sierra.c:1203 camlibs/sierra/sierra.c:1442
 msgid "LCD Brightness"
 msgstr "LCD 亮度"
 
@@ -8279,30 +8279,30 @@ msgstr ""
 "    gphoto-devel@gphoto.net\n"
 
 # camlibs/sierra/sierra.c:635
-#: camlibs/sierra/sierra.c:749 camlibs/soundvision/soundvision.c:411
+#: camlibs/sierra/sierra.c:753 camlibs/soundvision/soundvision.c:411
 msgid "The file to be uploaded has a null length"
 msgstr "要上载的文件具有空长度"
 
 # camlibs/sierra/sierra.c:649
-#: camlibs/sierra/sierra.c:763
+#: camlibs/sierra/sierra.c:767
 msgid "Not enough memory available on the memory card"
 msgstr "内存卡上没有足够的内存"
 
 # camlibs/sierra/sierra.c:656
-#: camlibs/sierra/sierra.c:770
+#: camlibs/sierra/sierra.c:774
 msgid "Cannot retrieve the name of the folder containing the pictures"
 msgstr "无法检索含有照片的文件夹名称"
 
 # camlibs/sierra/sierra.c:663
-#: camlibs/sierra/sierra.c:777
+#: camlibs/sierra/sierra.c:781
 #, c-format
 msgid "Upload is supported into the '%s' folder only"
 msgstr "只支持上载到文件夹“%s”"
 
 # camlibs/sierra/sierra.c:790 camlibs/sierra/sierra.c:799
 # camlibs/sierra/sierra.c:1127
-#: camlibs/sierra/sierra.c:905 camlibs/sierra/sierra.c:914
-#: camlibs/sierra/sierra.c:1243
+#: camlibs/sierra/sierra.c:909 camlibs/sierra/sierra.c:918
+#: camlibs/sierra/sierra.c:1247
 msgid "Best"
 msgstr "最佳"
 
@@ -8314,106 +8314,106 @@ msgstr "最佳"
 # camlibs/sierra/sierra.c:1413 camlibs/sierra/sierra.c:1436
 # camlibs/sierra/sierra.c:1458 camlibs/sierra/sierra.c:1484
 # camlibs/sierra/sierra.c:1503 camlibs/sierra/sierra.c:1571
-#: camlibs/sierra/sierra.c:917 camlibs/sierra/sierra.c:957
-#: camlibs/sierra/sierra.c:990 camlibs/sierra/sierra.c:1020
-#: camlibs/sierra/sierra.c:1051 camlibs/sierra/sierra.c:1082
-#: camlibs/sierra/sierra.c:1106 camlibs/sierra/sierra.c:1128
-#: camlibs/sierra/sierra.c:1157 camlibs/sierra/sierra.c:1501
-#: camlibs/sierra/sierra.c:1529 camlibs/sierra/sierra.c:1552
-#: camlibs/sierra/sierra.c:1574 camlibs/sierra/sierra.c:1600
-#: camlibs/sierra/sierra.c:1619 camlibs/sierra/sierra.c:1687
+#: camlibs/sierra/sierra.c:921 camlibs/sierra/sierra.c:961
+#: camlibs/sierra/sierra.c:994 camlibs/sierra/sierra.c:1024
+#: camlibs/sierra/sierra.c:1055 camlibs/sierra/sierra.c:1086
+#: camlibs/sierra/sierra.c:1110 camlibs/sierra/sierra.c:1132
+#: camlibs/sierra/sierra.c:1161 camlibs/sierra/sierra.c:1505
+#: camlibs/sierra/sierra.c:1533 camlibs/sierra/sierra.c:1556
+#: camlibs/sierra/sierra.c:1578 camlibs/sierra/sierra.c:1604
+#: camlibs/sierra/sierra.c:1623 camlibs/sierra/sierra.c:1691
 #, c-format
 msgid "%i (unknown)"
 msgstr "%i (未知)"
 
 # camlibs/sierra/sierra.c:814 camlibs/sierra/sierra.c:1137
-#: camlibs/sierra/sierra.c:929 camlibs/sierra/sierra.c:1253
+#: camlibs/sierra/sierra.c:933 camlibs/sierra/sierra.c:1257
 msgid "Shutter Speed (microseconds, 0 auto)"
 msgstr "快门速度 (微秒，0 表示自动)"
 
 # camlibs/sierra/sierra.c:857 camlibs/sierra/sierra.c:865
 # camlibs/sierra/sierra.c:1171
-#: camlibs/sierra/sierra.c:973 camlibs/sierra/sierra.c:981
-#: camlibs/sierra/sierra.c:1287
+#: camlibs/sierra/sierra.c:977 camlibs/sierra/sierra.c:985
+#: camlibs/sierra/sierra.c:1291
 msgid "Black/White"
 msgstr "黑白"
 
 # camlibs/sierra/sierra.c:859 camlibs/sierra/sierra.c:869
 # camlibs/sierra/sierra.c:1175
-#: camlibs/sierra/sierra.c:975 camlibs/sierra/sierra.c:985
-#: camlibs/sierra/sierra.c:1291
+#: camlibs/sierra/sierra.c:979 camlibs/sierra/sierra.c:989
+#: camlibs/sierra/sierra.c:1295
 msgid "White Board"
 msgstr "白板"
 
 # camlibs/sierra/sierra.c:860 camlibs/sierra/sierra.c:871
 # camlibs/sierra/sierra.c:1177
-#: camlibs/sierra/sierra.c:976 camlibs/sierra/sierra.c:987
-#: camlibs/sierra/sierra.c:1293
+#: camlibs/sierra/sierra.c:980 camlibs/sierra/sierra.c:991
+#: camlibs/sierra/sierra.c:1297
 msgid "Black Board"
 msgstr "黑板"
 
 # camlibs/sierra/sierra.c:915 camlibs/sierra/sierra.c:1208
-#: camlibs/sierra/sierra.c:1031 camlibs/sierra/sierra.c:1324
+#: camlibs/sierra/sierra.c:1035 camlibs/sierra/sierra.c:1328
 msgid "Brightness/Contrast"
 msgstr "亮度/对比度"
 
 # camlibs/sierra/sierra.c:918 camlibs/sierra/sierra.c:926
 # camlibs/sierra/sierra.c:1214
-#: camlibs/sierra/sierra.c:1034 camlibs/sierra/sierra.c:1042
-#: camlibs/sierra/sierra.c:1330
+#: camlibs/sierra/sierra.c:1038 camlibs/sierra/sierra.c:1046
+#: camlibs/sierra/sierra.c:1334
 msgid "Bright+"
 msgstr "亮度+"
 
 # camlibs/sierra/sierra.c:919 camlibs/sierra/sierra.c:928
 # camlibs/sierra/sierra.c:1216
-#: camlibs/sierra/sierra.c:1035 camlibs/sierra/sierra.c:1044
-#: camlibs/sierra/sierra.c:1332
+#: camlibs/sierra/sierra.c:1039 camlibs/sierra/sierra.c:1048
+#: camlibs/sierra/sierra.c:1336
 msgid "Bright-"
 msgstr "亮度-"
 
 # camlibs/sierra/sierra.c:948 camlibs/sierra/sierra.c:956
 # camlibs/sierra/sierra.c:1235
-#: camlibs/sierra/sierra.c:1064 camlibs/sierra/sierra.c:1072
-#: camlibs/sierra/sierra.c:1351
+#: camlibs/sierra/sierra.c:1068 camlibs/sierra/sierra.c:1076
+#: camlibs/sierra/sierra.c:1355
 msgid "Skylight"
 msgstr "日光"
 
 # camlibs/sierra/sierra.c:980 camlibs/sierra/sierra.c:987
 # camlibs/sierra/sierra.c:1258
-#: camlibs/sierra/sierra.c:1096 camlibs/sierra/sierra.c:1103
-#: camlibs/sierra/sierra.c:1374
+#: camlibs/sierra/sierra.c:1100 camlibs/sierra/sierra.c:1107
+#: camlibs/sierra/sierra.c:1378
 msgid "Infinity/Fish-eye"
 msgstr "无限/鱼眼"
 
 # camlibs/sierra/sierra.c:1001 camlibs/sierra/sierra.c:1268
-#: camlibs/sierra/sierra.c:1117 camlibs/sierra/sierra.c:1384
+#: camlibs/sierra/sierra.c:1121 camlibs/sierra/sierra.c:1388
 msgid "Spot Metering Mode"
 msgstr "场景测量模式"
 
 # camlibs/sierra/sierra.c:1024 camlibs/sierra/sierra.c:1030
-#: camlibs/sierra/sierra.c:1140 camlibs/sierra/sierra.c:1146
+#: camlibs/sierra/sierra.c:1144 camlibs/sierra/sierra.c:1150
 msgid "1x"
 msgstr "1x"
 
 # camlibs/sierra/sierra.c:1025 camlibs/sierra/sierra.c:1035
-#: camlibs/sierra/sierra.c:1141 camlibs/sierra/sierra.c:1151
+#: camlibs/sierra/sierra.c:1145 camlibs/sierra/sierra.c:1155
 msgid "1.6x"
 msgstr "1.6x"
 
 # camlibs/sierra/sierra.c:1027 camlibs/sierra/sierra.c:1038
-#: camlibs/sierra/sierra.c:1143 camlibs/sierra/sierra.c:1154
+#: camlibs/sierra/sierra.c:1147 camlibs/sierra/sierra.c:1158
 msgid "2.5x"
 msgstr "2.5x"
 
 # camlibs/sierra/sierra.c:1055 camlibs/sierra/sierra.c:1302
 # camlibs/sierra/sierra.c:1517 camlibs/sierra/sierra.c:1709
-#: camlibs/sierra/sierra.c:1171 camlibs/sierra/sierra.c:1418
-#: camlibs/sierra/sierra.c:1633 camlibs/sierra/sierra.c:1825
+#: camlibs/sierra/sierra.c:1175 camlibs/sierra/sierra.c:1422
+#: camlibs/sierra/sierra.c:1637 camlibs/sierra/sierra.c:1829
 msgid "Auto Off (host) (in seconds)"
 msgstr "自动关机 (连接) (秒)"
 
 # camlibs/sierra/sierra.c:1057 camlibs/sierra/sierra.c:1519
-#: camlibs/sierra/sierra.c:1173 camlibs/sierra/sierra.c:1635
+#: camlibs/sierra/sierra.c:1177 camlibs/sierra/sierra.c:1639
 msgid ""
 "How long will it take until the camera powers off when connected to the "
 "computer?"
@@ -8421,171 +8421,171 @@ msgstr "在相机连接到计算机以后，须等待多长时间再自动关机
 
 # camlibs/sierra/sierra.c:1069 camlibs/sierra/sierra.c:1312
 # camlibs/sierra/sierra.c:1531 camlibs/sierra/sierra.c:1719
-#: camlibs/sierra/sierra.c:1185 camlibs/sierra/sierra.c:1428
-#: camlibs/sierra/sierra.c:1647 camlibs/sierra/sierra.c:1835
+#: camlibs/sierra/sierra.c:1189 camlibs/sierra/sierra.c:1432
+#: camlibs/sierra/sierra.c:1651 camlibs/sierra/sierra.c:1839
 msgid "Auto Off (field) (in seconds)"
 msgstr "自动关机 (未连接) (秒)"
 
 # camlibs/sierra/sierra.c:1071 camlibs/sierra/sierra.c:1533
-#: camlibs/sierra/sierra.c:1187 camlibs/sierra/sierra.c:1649
+#: camlibs/sierra/sierra.c:1191 camlibs/sierra/sierra.c:1653
 msgid ""
 "How long will it take until the camera powers off when not connected to the "
 "computer?"
 msgstr "在未连接到计算机时，须等待多长时间再自动关机？"
 
 # camlibs/sierra/sierra.c:1093 camlibs/sierra/sierra.c:1331
-#: camlibs/sierra/sierra.c:1209 camlibs/sierra/sierra.c:1447
+#: camlibs/sierra/sierra.c:1213 camlibs/sierra/sierra.c:1451
 msgid "LCD Auto Off (in seconds)"
 msgstr "LCD 自动关闭 (以秒为单位)"
 
 # camlibs/sierra/sierra.c:1355
-#: camlibs/sierra/sierra.c:1471
+#: camlibs/sierra/sierra.c:1475
 msgid "Shot Settings"
 msgstr "拍摄设置"
 
 # camlibs/sierra/sierra.c:1362 camlibs/sierra/sierra.c:1370
 # camlibs/sierra/sierra.c:1605
-#: camlibs/sierra/sierra.c:1478 camlibs/sierra/sierra.c:1486
-#: camlibs/sierra/sierra.c:1721
+#: camlibs/sierra/sierra.c:1482 camlibs/sierra/sierra.c:1490
+#: camlibs/sierra/sierra.c:1725
 msgid "F2"
 msgstr "F2"
 
 # camlibs/sierra/sierra.c:1363 camlibs/sierra/sierra.c:1372
 # camlibs/sierra/sierra.c:1607
-#: camlibs/sierra/sierra.c:1479 camlibs/sierra/sierra.c:1488
-#: camlibs/sierra/sierra.c:1723
+#: camlibs/sierra/sierra.c:1483 camlibs/sierra/sierra.c:1492
+#: camlibs/sierra/sierra.c:1727
 msgid "F2.3"
 msgstr "F2.3"
 
 # camlibs/sierra/sierra.c:1364 camlibs/sierra/sierra.c:1374
 # camlibs/sierra/sierra.c:1609
-#: camlibs/sierra/sierra.c:1480 camlibs/sierra/sierra.c:1490
-#: camlibs/sierra/sierra.c:1725
+#: camlibs/sierra/sierra.c:1484 camlibs/sierra/sierra.c:1494
+#: camlibs/sierra/sierra.c:1729
 msgid "F2.8"
 msgstr "F2.8"
 
 # camlibs/sierra/sierra.c:1365 camlibs/sierra/sierra.c:1376
 # camlibs/sierra/sierra.c:1611
-#: camlibs/sierra/sierra.c:1481 camlibs/sierra/sierra.c:1492
-#: camlibs/sierra/sierra.c:1727
+#: camlibs/sierra/sierra.c:1485 camlibs/sierra/sierra.c:1496
+#: camlibs/sierra/sierra.c:1731
 msgid "F4"
 msgstr "F4"
 
 # camlibs/sierra/sierra.c:1366 camlibs/sierra/sierra.c:1378
 # camlibs/sierra/sierra.c:1613
-#: camlibs/sierra/sierra.c:1482 camlibs/sierra/sierra.c:1494
-#: camlibs/sierra/sierra.c:1729
+#: camlibs/sierra/sierra.c:1486 camlibs/sierra/sierra.c:1498
+#: camlibs/sierra/sierra.c:1733
 msgid "F5.6"
 msgstr "F5.6"
 
 # camlibs/sierra/sierra.c:1367 camlibs/sierra/sierra.c:1380
 # camlibs/sierra/sierra.c:1615
-#: camlibs/sierra/sierra.c:1483 camlibs/sierra/sierra.c:1496
-#: camlibs/sierra/sierra.c:1731
+#: camlibs/sierra/sierra.c:1487 camlibs/sierra/sierra.c:1500
+#: camlibs/sierra/sierra.c:1735
 msgid "F8"
 msgstr "F8"
 
 # camlibs/sierra/sierra.c:1471 camlibs/sierra/sierra.c:1479
 # camlibs/sierra/sierra.c:1684
-#: camlibs/sierra/sierra.c:1587 camlibs/sierra/sierra.c:1595
-#: camlibs/sierra/sierra.c:1800
+#: camlibs/sierra/sierra.c:1591 camlibs/sierra/sierra.c:1599
+#: camlibs/sierra/sierra.c:1804
 msgid "SuperFine"
 msgstr "超精细"
 
 # camlibs/sierra/sierra.c:1472 camlibs/sierra/sierra.c:1481
 # camlibs/sierra/sierra.c:1686
-#: camlibs/sierra/sierra.c:1588 camlibs/sierra/sierra.c:1597
-#: camlibs/sierra/sierra.c:1802
+#: camlibs/sierra/sierra.c:1592 camlibs/sierra/sierra.c:1601
+#: camlibs/sierra/sierra.c:1806
 msgid "HyPict"
 msgstr "合成照片"
 
 # camlibs/sierra/sierra.c:1495 camlibs/sierra/sierra.c:1498
 # camlibs/sierra/sierra.c:1698
-#: camlibs/sierra/sierra.c:1611 camlibs/sierra/sierra.c:1614
-#: camlibs/sierra/sierra.c:1814
+#: camlibs/sierra/sierra.c:1615 camlibs/sierra/sierra.c:1618
+#: camlibs/sierra/sierra.c:1818
 msgid "color"
 msgstr "彩色"
 
 # camlibs/sierra/sierra.c:1496 camlibs/sierra/sierra.c:1500
 # camlibs/sierra/sierra.c:1700
-#: camlibs/sierra/sierra.c:1612 camlibs/sierra/sierra.c:1616
-#: camlibs/sierra/sierra.c:1816
+#: camlibs/sierra/sierra.c:1616 camlibs/sierra/sierra.c:1620
+#: camlibs/sierra/sierra.c:1820
 msgid "black & white"
 msgstr "黑白"
 
-#: camlibs/sierra/sierra.c:1918
+#: camlibs/sierra/sierra.c:1922
 msgid "Note: no memory card present, some values may be invalid\n"
 msgstr "注意：没有内存卡，有些值可能是无效的\n"
 
 # camlibs/sierra/sierra.c:1806
-#: camlibs/sierra/sierra.c:1926
+#: camlibs/sierra/sierra.c:1930
 #, c-format
 msgid "%sCamera Model: %s\n"
 msgstr "%s相机型号：%s\n"
 
 # camlibs/sierra/sierra.c:1810
-#: camlibs/sierra/sierra.c:1928
+#: camlibs/sierra/sierra.c:1932
 #, c-format
 msgid "%sManufacturer: %s\n"
 msgstr "%s制造商：%s\n"
 
 # camlibs/sierra/sierra.c:1814
-#: camlibs/sierra/sierra.c:1930
+#: camlibs/sierra/sierra.c:1934
 #, c-format
 msgid "%sCamera ID: %s\n"
 msgstr "%s相机 ID：%s\n"
 
 # camlibs/sierra/sierra.c:1818
-#: camlibs/sierra/sierra.c:1932
+#: camlibs/sierra/sierra.c:1936
 #, c-format
 msgid "%sSerial Number: %s\n"
 msgstr "%s序列号：%s\n"
 
 # camlibs/sierra/sierra.c:1822
-#: camlibs/sierra/sierra.c:1934
+#: camlibs/sierra/sierra.c:1938
 #, c-format
 msgid "%sSoftware Rev.: %s\n"
 msgstr "%s软件版本号：%s\n"
 
 # camlibs/sierra/sierra.c:1826
-#: camlibs/sierra/sierra.c:1939 camlibs/sierra/sierra.c:1942
+#: camlibs/sierra/sierra.c:1943 camlibs/sierra/sierra.c:1946
 #, c-format
 msgid "%sFrames Taken: %i\n"
 msgstr "%s已用帧：%i\n"
 
 # camlibs/sierra/sierra.c:1828
-#: camlibs/sierra/sierra.c:1945
+#: camlibs/sierra/sierra.c:1949
 #, c-format
 msgid "%sFrames Left: %i\n"
 msgstr "%s剩余帧：%i\n"
 
 # camlibs/sierra/sierra.c:1830
-#: camlibs/sierra/sierra.c:1947
+#: camlibs/sierra/sierra.c:1951
 #, c-format
 msgid "%sBattery Life: %i\n"
 msgstr "%s电池寿命：%i\n"
 
 # camlibs/sierra/sierra.c:1832
-#: camlibs/sierra/sierra.c:1949
+#: camlibs/sierra/sierra.c:1953
 #, c-format
 msgid "%sMemory Left: %i bytes\n"
 msgstr "%s内存剩余：%i 字节\n"
 
 # camlibs/sierra/sierra.c:1836
-#: camlibs/sierra/sierra.c:1954
+#: camlibs/sierra/sierra.c:1958
 #, c-format
 msgid "%sDate: %s"
 msgstr "%s日期：%s"
 
 # camlibs/canon/library.c:165 camlibs/canon/library.c:889
 # camlibs/canon/library.c:902
-#: camlibs/sierra/sierra.c:1970
+#: camlibs/sierra/sierra.c:1974
 #, fuzzy
 msgid "No camera manual available.\n"
 msgstr "相机不可用"
 
 # camlibs/sierra/sierra.c:1852
-#: camlibs/sierra/sierra.c:1977
+#: camlibs/sierra/sierra.c:1981
 #, fuzzy, c-format
 msgid ""
 "Some notes about Epson cameras:\n"
@@ -8607,7 +8607,7 @@ msgstr ""
 "  <gphoto-devel@lists.sourceforge.net> 发送电子邮件 (用英语)\n"
 
 # camlibs/sierra/sierra.c:1864
-#: camlibs/sierra/sierra.c:1989
+#: camlibs/sierra/sierra.c:1993
 #, fuzzy
 msgid ""
 "Some notes about Olympus cameras (and others?):\n"
@@ -8647,7 +8647,7 @@ msgstr ""
 "    到“关闭”。"
 
 # camlibs/sierra/sierra.c:1887
-#: camlibs/sierra/sierra.c:2018
+#: camlibs/sierra/sierra.c:2022
 #, fuzzy
 msgid ""
 "sierra SPARClite library\n"
@@ -9193,31 +9193,31 @@ msgid "This camera does not support event handling."
 msgstr "该相机不支持速度 %i。"
 
 # libgphoto2/gphoto2-filesys.c:214
-#: libgphoto2/gphoto2-filesys.c:280
+#: libgphoto2/gphoto2-filesys.c:282
 #, c-format
 msgid "The path '%s' is not absolute."
 msgstr "路径“%s”不是绝对路径。"
 
 # libgphoto2/gphoto2-filesys.c:514
-#: libgphoto2/gphoto2-filesys.c:604
+#: libgphoto2/gphoto2-filesys.c:606
 #, c-format
 msgid "Could not find folder '%s'."
 msgstr "无法找到文件夹“%s”。"
 
 # libgphoto2/gphoto2-filesys.c:531
-#: libgphoto2/gphoto2-filesys.c:621
+#: libgphoto2/gphoto2-filesys.c:623
 #, c-format
 msgid "Folder '%s' does not contain a folder '%s'."
 msgstr "文件夹“%s”不含有文件夹“%s”。"
 
 # libgphoto2/gphoto2-filesys.c:594
-#: libgphoto2/gphoto2-filesys.c:685
+#: libgphoto2/gphoto2-filesys.c:687
 #, c-format
 msgid "Could not append '%s' to folder '%s' because this file already exists."
 msgstr "由于“%s”已存在，所以无法将其附加到文件夹“%s”中。"
 
 # libgphoto2/gphoto2-filesys.c:970
-#: libgphoto2/gphoto2-filesys.c:1074
+#: libgphoto2/gphoto2-filesys.c:1076
 #, c-format
 msgid ""
 "You have been trying to delete '%s' from folder '%s', but the filesystem "
@@ -9225,31 +9225,31 @@ msgid ""
 msgstr "您试图从文件夹“%2$s”中删除“%1$s”，但文件系统不支持删除文件。"
 
 # libgphoto2/gphoto2-filesys.c:1446
-#: libgphoto2/gphoto2-filesys.c:1084
+#: libgphoto2/gphoto2-filesys.c:1086
 #, fuzzy, c-format
 msgid "Deleting '%s' from folder '%s'..."
 msgstr "正在从文件夹“%2$s”下载“%1$s”..."
 
 # libgphoto2/gphoto2-filesys.c:1077
-#: libgphoto2/gphoto2-filesys.c:1179
+#: libgphoto2/gphoto2-filesys.c:1181
 #, c-format
 msgid ""
 "There are still subfolders in folder '%s' that you are trying to remove."
 msgstr "您正试图删除的文件夹“%s”中还有子文件夹。"
 
 # libgphoto2/gphoto2-filesys.c:1071
-#: libgphoto2/gphoto2-filesys.c:1186
+#: libgphoto2/gphoto2-filesys.c:1188
 #, c-format
 msgid "There are still files in folder '%s' that you are trying to remove."
 msgstr "您正试图删除的文件夹“%s”中还有文件。"
 
 # libgphoto2/gphoto2-filesys.c:1117
-#: libgphoto2/gphoto2-filesys.c:1228
+#: libgphoto2/gphoto2-filesys.c:1230
 msgid "The filesystem does not support upload of files."
 msgstr "文件系统不支持上载文件。"
 
 # libgphoto2/gphoto2-filesys.c:1158
-#: libgphoto2/gphoto2-filesys.c:1269
+#: libgphoto2/gphoto2-filesys.c:1271
 #, c-format
 msgid ""
 "Folder '%s' does only contain %i files, but you requested a file with number "
@@ -9257,47 +9257,47 @@ msgid ""
 msgstr "文件夹“%s”只含有 %i 个文件，但您请求编号为 %i 的文件。"
 
 # libgphoto2/gphoto2-filesys.c:1199
-#: libgphoto2/gphoto2-filesys.c:1314
+#: libgphoto2/gphoto2-filesys.c:1316
 #, c-format
 msgid "File '%s' could not be found in folder '%s'."
 msgstr "在文件夹“%2$s”中无法找到文件“%1$s”。"
 
 # libgphoto2/gphoto2-filesys.c:1282
-#: libgphoto2/gphoto2-filesys.c:1401
+#: libgphoto2/gphoto2-filesys.c:1403
 #, c-format
 msgid "Could not find file '%s'."
 msgstr "无法找到文件“%s”。"
 
 # libgphoto2/gphoto2-filesys.c:1407
-#: libgphoto2/gphoto2-filesys.c:1526
+#: libgphoto2/gphoto2-filesys.c:1528
 msgid "The filesystem doesn't support getting files"
 msgstr "文件系统不支持获取文件"
 
 # libgphoto2/gphoto2-filesys.c:1442 libgphoto2/gphoto2-filesys.c:1764
-#: libgphoto2/gphoto2-filesys.c:1566 libgphoto2/gphoto2-filesys.c:2065
-#: libgphoto2/gphoto2-filesys.c:2224
+#: libgphoto2/gphoto2-filesys.c:1568 libgphoto2/gphoto2-filesys.c:2067
+#: libgphoto2/gphoto2-filesys.c:2226
 #, c-format
 msgid "Unknown file type %i."
 msgstr "未知的文件类型 %i。"
 
 # libgphoto2/gphoto2-filesys.c:1446
-#: libgphoto2/gphoto2-filesys.c:1570
+#: libgphoto2/gphoto2-filesys.c:1572
 #, c-format
 msgid "Downloading '%s' from folder '%s'..."
 msgstr "正在从文件夹“%2$s”下载“%1$s”..."
 
 # libgphoto2/gphoto2-filesys.c:1656
-#: libgphoto2/gphoto2-filesys.c:1819
+#: libgphoto2/gphoto2-filesys.c:1821
 msgid "The filesystem doesn't support getting file information"
 msgstr "文件系统不支持获取文件信息"
 
 # libgphoto2/gphoto2-filesys.c:1867
-#: libgphoto2/gphoto2-filesys.c:2327
+#: libgphoto2/gphoto2-filesys.c:2329
 msgid "The filesystem doesn't support setting file information"
 msgstr "文件系统不支持设置文件信息"
 
 # libgphoto2/gphoto2-filesys.c:1890
-#: libgphoto2/gphoto2-filesys.c:2350
+#: libgphoto2/gphoto2-filesys.c:2352
 msgid "Read-only file attributes like width and height can not be changed."
 msgstr "无法改变像宽度和高度这样的只读文件属性。"
 
