@@ -130,7 +130,7 @@ gp_file_new_from_fd (CameraFile **file, int fd)
 int gp_file_free (CameraFile *file)
 {
 	CHECK_NULL (file);
-	
+
 	CHECK_RESULT (gp_file_clean (file));
 	
 	if (file->accesstype == GP_FILE_ACCESSTYPE_FD)
@@ -775,6 +775,7 @@ gp_file_copy (CameraFile *destination, CameraFile *source)
 				return GP_ERROR_IO_WRITE;
 			curwritten += res;
 		}
+		return GP_OK;
 	}
 	gp_log (GP_LOG_ERROR, "gphoto2-file", "Unhandled cases in gp_copy_file. Bad!");
 	return GP_ERROR;
