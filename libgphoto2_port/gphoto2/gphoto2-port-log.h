@@ -84,7 +84,7 @@ void gp_log_data (const char *domain, const char *data, unsigned int size);
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
 #define GP_DEBUG(...) \
         gp_log(GP_LOG_DEBUG, GP_MODULE "/" __FILE__, __VA_ARGS__)
-#elif defined(__GNUC__)
+#elif defined(__GNUC__) &&  __GNUC__ >= 2
 #define GP_DEBUG(msg, params...) \
         gp_log(GP_LOG_DEBUG, GP_MODULE "/" __FILE__, msg, ##params)
 #else
