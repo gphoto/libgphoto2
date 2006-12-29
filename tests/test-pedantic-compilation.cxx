@@ -15,7 +15,12 @@
 #include <gphoto2/gphoto2-port-result.h>
 #include <gphoto2/gphoto2-port-version.h>
 
+#include <stdio.h>
+
+unsigned long cxx_version = __cplusplus;
+
 int main()
 {
+  printf("cxx_version = %lu\n", cxx_version);
   return 0;
 }

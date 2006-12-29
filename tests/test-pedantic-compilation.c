@@ -15,7 +15,12 @@
 #include <gphoto2/gphoto2-port-result.h>
 #include <gphoto2/gphoto2-port-version.h>
 
+#include <stdio.h>
+
+unsigned long stdc_version = __STDC_VERSION__;
+
 int main()
 {
+  printf("stdc_version = %lu\n", stdc_version);
   return 0;
 }
