@@ -1,8 +1,18 @@
+########################################################################
+# Usage instructions
+########################################################################
 # If you only want to build a single camlib (say agfa_cl20), run
-#     gmake -C camlibs agfa-cl20.la
+#     gmake -C camlibs agfa_cl20.la
 # or
-#     ( cd camlibs && make agfa-cl20.la )
+#     ( cd camlibs && make agfa_cl20.la )
 #
+# If you only want to install a single camlib or two, run
+#     make DRIVERS="canon.la agfa_cl20.la" install
+# in the camlibs/ subdir or in the libgphoto2 top-level directory.
+########################################################################
+
+
+########################################################################
 # The only SUBDIRS here are "." (to run all-local checking the
 # definition of the camlibs) and the special ones for building docs
 # and stuff.
@@ -11,6 +21,8 @@
 # included below.
 SUBDIRS = . canon/doc konica/localization
 
+
+########################################################################
 # Define the common variables added to in the included Makefile-files
 CLEANFILES =
 EXTRA_DIST = camlib.sym
@@ -21,12 +33,16 @@ noinst_DATA =
 noinst_LTLIBRARIES =
 EXTRA_LTLIBRARIES =
 
+
+########################################################################
 # All camlibs are defined as EXTRA_LTLIBRARIES. This requires that
 # all camlibs have -rpath set explicitly in foobar_la_LDFLAGS.
 # You're probably best off by using the camlib_* variables defined
 # below.
 camlib_LTLIBRARIES = $(BUILD_THESE_CAMLIBS)
 
+
+########################################################################
 # Define the compile/link/etc. flags common to all camlibs in one place,
 # i.e. here.
 
@@ -36,6 +52,8 @@ camlib_ldflags = -module -no-undefined -avoid-version -export-dynamic \
 	-rpath '$(camlibdir)'
 camlib_libadd = $(top_builddir)/libgphoto2/libgphoto2.la
 
+
+########################################################################
 # You can generate this Makefile-files include list by running
 # find . -name Makefile-files -exec echo include {} \; | sort | sed 's| ./| |g' 
 include adc65/Makefile-files
@@ -94,6 +112,8 @@ include template/Makefile-files
 include toshiba/pdrm11/Makefile-files
 # End of list of Makefile-files
 
+
+########################################################################
 # Print list of GP_CAMLIB() definitions suitable for adding to
 # configure.ac
 print-camlibs: Makefile
@@ -102,6 +122,8 @@ print-camlibs: Makefile
 		echo "GP_CAMLIB([$$y])dnl"; \
 	done
 
+
+########################################################################
 # Make sure that the list of camlibs defined in configure.ac using
 # GP_CAMLIB(...) and the list of camlibs defined in */Makefile-files
 # match.
@@ -119,4 +141,14 @@ all-local: Makefile
 		exit 1; \
 	fi
 
+
+########################################################################
+# Shortcut for installation of a subset of camlibs/drivers
+# Usage: make DRIVER="canon.la ptp2.la" install-drivers
+
+install-drivers:
+	$(MAKE) BUILD_THESE_CAMLIBS="$(DRIVERS)" install-camlibLTLIBRARIES
+
+
+########################################################################
 # End of camlibs/Makefile.am

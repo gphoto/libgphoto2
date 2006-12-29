@@ -3,7 +3,8 @@ libgphoto2 2.3.1.0.trunk
 Build:
    * Non-recursive camlib build: Makes "make -j2" useful.
      "./configure --with-drivers=..." still works. Selective camlib
-     rebuild is "make -C camlibs agfa_cl20.la" now.
+     rebuild is "make -C camlibs agfa_cl20.la" now. Selective camlib
+     install is "make DRIVERS='canon.la ptp2.la' install-drivers".
    * Fix sierra and canon drivers picking up old gphoto2 headers.
    * libiconv linking fix for PTP2 driver.
    * Require external libltdl.

@@ -30,7 +30,7 @@ DISTCLEANFILES = libgphoto2/gphoto2-endian.h
 
 # we use just ONE .PHONY target in order not to confuse automake
 
-.PHONY: rpm cvs-tags source-code-check
+.PHONY: rpm cvs-tags source-code-check install-drivers
 
 ########################################################################
 # source code check maintenance task
@@ -49,6 +49,15 @@ source-code-check:
 	find . -type f -name '*.[ch]' -exec egrep -H 'http:/\*' {} \;
 	@echo "######## Finding explicit libintl.h references"
 	find . -type f -name '*.[ch]' -exec egrep -H '^#.*include.*libintl\.h' {} \;
+
+
+########################################################################
+# Shortcut for installation of a subset of camlibs/drivers
+# Usage: make DRIVER="canon.la ptp2.la" install-drivers
+
+install-drivers:
+	cd camlibs && $(MAKE) DRIVERS="$(DRIVERS)" install-drivers
+
 
 ########################################################################
 # The following default options for aclocal and automake
@@ -82,6 +91,7 @@ cvs-tags: Makefile
 
 
 
+########################################################################
 # Compatibility for header inclusions.
 #
 # - Old code has -I/usr/include/gphoto2
