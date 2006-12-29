@@ -1495,7 +1495,7 @@ _put_BurstNumber(CONFIG_PUT_ARGS) {
 
 static int
 _get_BatteryLevel(CONFIG_GET_ARGS) {
-	float value_float , start=0.0, end=0.0, step=0.0;
+	unsigned char value_float , start, end, step;
 	char	buffer[20];
 
 	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
@@ -1508,7 +1508,7 @@ _get_BatteryLevel(CONFIG_GET_ARGS) {
 	start = dpd->FORM.Range.MinimumValue.u8;
 	end = dpd->FORM.Range.MaximumValue.u8;
 	value_float = dpd->CurrentValue.u8;
-	sprintf (buffer, "%d%%", (int)((value_float-start)*100.0/(end-start)));
+	sprintf (buffer, "%d%%", (int)((value_float-start+1)*100/(end-start+1)));
 	gp_widget_set_value(*widget, buffer);
 	return (GP_OK);
 }
