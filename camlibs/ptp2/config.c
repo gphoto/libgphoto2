@@ -1494,6 +1494,27 @@ _put_BurstNumber(CONFIG_PUT_ARGS) {
 }
 
 static int
+_get_BatteryLevel(CONFIG_GET_ARGS) {
+	float value_float , start=0.0, end=0.0, step=0.0;
+	char	buffer[20];
+
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+
+	if (!(dpd->FormFlag & PTP_DPFF_Range))
+		return (GP_ERROR);
+	if (dpd->DataType != PTP_DTC_UINT8)
+		return (GP_ERROR);
+	start = dpd->FORM.Range.MinimumValue.u8;
+	end = dpd->FORM.Range.MaximumValue.u8;
+	value_float = dpd->CurrentValue.u8;
+	sprintf (buffer, "%d%%", (int)((value_float-start)*100.0/(end-start)));
+	gp_widget_set_value(*widget, buffer);
+	return (GP_OK);
+}
+
+
+static int
 _get_UINT32_as_time(CONFIG_GET_ARGS) {
 	time_t	camtime;
 
@@ -1698,7 +1719,6 @@ _put_CaptureTarget(CONFIG_PUT_ARGS) {
 	}
 	return GP_OK;
 }
-
 /* Wifi profiles functions */
 
 static int
@@ -2197,6 +2217,7 @@ static struct submenu camera_settings_menu[] = {
         { N_("LCD Off Time"), "lcdofftime", PTP_DPC_NIKON_MonitorOff, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_LCDOffTime, _put_Nikon_LCDOffTime },
         { N_("Meter Off Time"), "meterofftime", PTP_DPC_NIKON_MeterOff, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_MeterOffTime, _put_Nikon_MeterOffTime },
         { N_("CSM Menu"), "csmmenu", PTP_DPC_NIKON_CSMMenu, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8 },
+        { N_("Battery Level"), "battery", PTP_DPC_BatteryLevel, 0, PTP_DTC_UINT8, _get_BatteryLevel, _put_None },
 
 /* virtual */
 	{ N_("Fast Filesystem"), "fastfs", 0, PTP_VENDOR_NIKON, 0, _get_Nikon_FastFS, _put_Nikon_FastFS },
