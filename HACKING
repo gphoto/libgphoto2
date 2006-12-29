@@ -84,6 +84,22 @@ Please keep track of the changes to the sillycam camlib in the file
 
    camlib/sillycam/ChangeLog
 
+For test compiling and installing only the sillycam and doofuscam
+camlibs, you can use
+
+   make -C camlibs sillycam.la doofuscam.la
+
+and
+
+   make DRIVERS="sillycam.la doofuscam.la" install-drivers
+
+respectively.
+
+Compiling all camlibs is sped up considerably on N CPU core
+computers using "make -jN".
+
+
+
 
 libgphoto2
 ----------

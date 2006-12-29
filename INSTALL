@@ -98,6 +98,8 @@ will have to run "gmake" or something similar.
 The classic way to compile the program is just to run
 
     make
+ or
+    make -jN    (if you have N CPU cores)
 
 and wait until the source is built.
 
