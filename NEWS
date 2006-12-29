@@ -13,12 +13,19 @@ Build:
 libgphoto2 API:
    * New gp_file_new_from_fd() ... Which allows mapping CameraFile to
      UNIX filedescriptors for both reading and writing.
+   * New gp_file_slurp() function (for camlib use) to sequentially
+     read out CameraFiles.
 
 Package / System integration:
    * New syntax for print-camera-list's udev output. See help output.
    * Add new permission setup binary doing Microsoft OS Descriptor
      retrieval for MTP devices not explicitly listed.
      This binary (check-mtp-device) is used by the generated UDEV rules.
+
+PTP2 driver:
+   * New dataflow engine, making it possible to upload/download images
+     or songs without taking up any system memory. (think multi GB movies
+     on small devices).
 
 ------------------------------------------------------------------------
 
