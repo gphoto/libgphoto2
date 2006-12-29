@@ -39,6 +39,11 @@
 #  define N_(String) (String)
 #endif
 
+/*
+ * FIXME: Use properly sized integer types. The dc3200 code used lots
+ *        of u_char, u_long, u_int, which may be wrong on non-32bit systems.
+ */
+
 /* #define DEBUG */
 
 /*
@@ -50,7 +55,7 @@
 int dc3200_set_speed(Camera *camera, int baudrate)
 {
 	int baudcode = C9600;
-	u_char resp[INI_PACKET_LEN], msg[INI_PACKET_LEN];
+	unsigned char resp[INI_PACKET_LEN], msg[INI_PACKET_LEN];
 	int resp_len = INI_PACKET_LEN, msg_len = INI_PACKET_LEN;
 
 	msg[0] = 0xAF;
@@ -133,10 +138,10 @@ int dc3200_setup(Camera *camera)
 	 *
 	 */
 
-	u_char cmd1[5] = {0x01, dc3200_calc_seqnum(camera), 0x01, 0x00, 0x0F};
-	u_char cmd2[8] = {0x01, dc3200_calc_seqnum(camera), 0x80, 0x00, 0x01, 0x81, 0x00, 0x03};
+	unsigned char cmd1[5] = {0x01, dc3200_calc_seqnum(camera), 0x01, 0x00, 0x0F};
+	unsigned char cmd2[8] = {0x01, dc3200_calc_seqnum(camera), 0x80, 0x00, 0x01, 0x81, 0x00, 0x03};
 
-	u_char ack[ACK_PACKET_LEN], resp[DEF_PACKET_LEN];
+	unsigned char ack[ACK_PACKET_LEN], resp[DEF_PACKET_LEN];
 	int ack_len = ACK_PACKET_LEN, resp_len = DEF_PACKET_LEN;
 
 	if(dc3200_send_command(camera, cmd1, sizeof(cmd1), ack, &ack_len) == GP_ERROR)
@@ -174,38 +179,38 @@ int dc3200_setup(Camera *camera)
  */
 
 	/* command to retrieve directory listing
-	u_char list_pkt[DEF_PACKET_LEN] = {0x01, dc3200_calc_seqnum(camera), 0x80, 0x00, 0x20, 0x03, 26 + strlen(filename),
+	unsigned char list_pkt[DEF_PACKET_LEN] = {0x01, dc3200_calc_seqnum(camera), 0x80, 0x00, 0x20, 0x03, 26 + strlen(filename),
 							0xc1, 0x50, 0x00, 0x00, 0x00, 0x00, 19 + strlen(filename),
 							0x04, 0x01, 0x00, 0x01, 0x00, 0x01, 0x60, 0x01, 0x00, 0x01, 0x00, 0x05,
 							0x00, 0x00, 0x00, 2 + strlen(filename), 0x01};
 	*/
 	/* command to get the picture
-	u_char get_pkt[DEF_PACKET_LEN] = {0x01, calc_seqnum(), 0x80, 0x00, 0x20, 0x03, 26 + strlen(filename),
+	unsigned char get_pkt[DEF_PACKET_LEN] = {0x01, calc_seqnum(), 0x80, 0x00, 0x20, 0x03, 26 + strlen(filename),
 	                        0xC1, 0x50, 0x00, 0x00, 0x00, 0x00, 19 + strlen(filename),
 							0x04, 0x01,	0x00, 0x01, 0x01, 0x04, 0x60, 0x10, 0x00, 0x01, 0x00, 0x05,
 							0x00, 0x00, 0x00, 2 + strlen(filename), 0x01};
 	*/
 
-int dc3200_get_data(Camera *camera, u_char **data, u_long *data_len, int command, const char *folder, const char *filename)
+int dc3200_get_data(Camera *camera, unsigned char **data, unsigned long *data_len, int command, const char *folder, const char *filename)
 {
-	u_char ack[ACK_PACKET_LEN], resp[DEF_PACKET_LEN];
+	unsigned char ack[ACK_PACKET_LEN], resp[DEF_PACKET_LEN];
 	int ack_len = ACK_PACKET_LEN, resp_len = DEF_PACKET_LEN;
-	u_long num_left = 0;
-	u_long total = 0;
+	unsigned long num_left = 0;
+	unsigned long total = 0;
 	int data_start_pos = 0;
-	u_char *ptr_data = NULL;
-	u_int pid = 0;
+	unsigned char *ptr_data = NULL;
+	unsigned int pid = 0;
 
 	/* command bytes */
-	u_char cb1=0x00,cb2=0x00,cb3=0x00;
+	unsigned char cb1=0x00,cb2=0x00,cb3=0x00;
 
 	/* packet parts */
-	u_char pkt_hdr[7];
-	u_char pkt_typ[7];
-	u_char pkt_cmd[12];
-	u_char pkt_len[5];
+	unsigned char pkt_hdr[7];
+	unsigned char pkt_typ[7];
+	unsigned char pkt_cmd[12];
+	unsigned char pkt_len[5];
 
-	u_char *packet;
+	unsigned char *packet;
 	int packet_len;
 	char *file = NULL;
 	char *ptr = NULL;
@@ -467,9 +472,9 @@ int dc3200_get_data(Camera *camera, u_char **data, u_long *data_len, int command
  */
 int dc3200_cancel_get_data(Camera *camera)
 {
-	u_char pkt[20] = {0x01, dc3200_calc_seqnum(camera), 0x80, 0x00, 0x20, 0x03, 0x0d, 0xc1, 0x50, 0xc0,
+	unsigned char pkt[20] = {0x01, dc3200_calc_seqnum(camera), 0x80, 0x00, 0x20, 0x03, 0x0d, 0xc1, 0x50, 0xc0,
 		0x00, 0x00, 0x00, 0x06, 0x04, 0x01, 0x00, 0x01, (camera->pl->cmd_seqnum >> 8) & 0xff, camera->pl->cmd_seqnum & 0xff};
-	u_char ack[ACK_PACKET_LEN], resp[DEF_PACKET_LEN];
+	unsigned char ack[ACK_PACKET_LEN], resp[DEF_PACKET_LEN];
 	int ack_len = ACK_PACKET_LEN, resp_len = DEF_PACKET_LEN;
 	struct timeval timeout;
 	timeout.tv_sec = 0;
@@ -481,7 +486,7 @@ int dc3200_cancel_get_data(Camera *camera)
 	/* clear the buffer */
 	dc3200_clear_read_buffer(camera);
 
-	if(dc3200_send_command(camera, (u_char *)pkt, 20, ack, &ack_len) == GP_ERROR)
+	if(dc3200_send_command(camera, (unsigned char *)pkt, 20, ack, &ack_len) == GP_ERROR)
 		return GP_ERROR;
 
 	if(dc3200_recv_response(camera, resp, &resp_len) == GP_ERROR)
@@ -505,14 +510,14 @@ int dc3200_cancel_get_data(Camera *camera)
  * otherwise, it sends a command and waits for an acknowledgement
  *
  */
-int dc3200_send_command(Camera *camera, u_char *cmd, int cmd_len, u_char *ack, int *ack_len)
+int dc3200_send_command(Camera *camera, unsigned char *cmd, int cmd_len, unsigned char *ack, int *ack_len)
 {
 	int sends, reads;
 	int buff_len = *ack_len;
 	int received = 0;
-	u_char *buff = NULL;
+	unsigned char *buff = NULL;
 
-	buff = malloc(sizeof(u_char) * *ack_len);
+	buff = malloc(sizeof(unsigned char) * *ack_len);
 	if(buff == NULL) {
 		return GP_ERROR;
 	}
@@ -569,7 +574,7 @@ int dc3200_send_command(Camera *camera, u_char *cmd, int cmd_len, u_char *ack, i
  * receives a response from a previous command
  *
  */
-int dc3200_recv_response(Camera *camera, u_char *resp, int *resp_len)
+int dc3200_recv_response(Camera *camera, unsigned char *resp, int *resp_len)
 {
 	return dc3200_send_command(camera, NULL, 0, resp, resp_len);
 }
@@ -582,7 +587,7 @@ int dc3200_recv_response(Camera *camera, u_char *resp, int *resp_len)
  */
 int dc3200_send_ack(Camera *camera, int seqnum)
 {
-	u_char ack[ACK_PACKET_LEN];
+	unsigned char ack[ACK_PACKET_LEN];
 	ack[0] = 0x01;
 	ack[1] = seqnum + 16;
 
@@ -595,7 +600,7 @@ int dc3200_send_ack(Camera *camera, int seqnum)
  * checks an ack packet (well ok not really)
  *
  */
-int dc3200_check_ack(Camera *camera, u_char *ack, int ack_len)
+int dc3200_check_ack(Camera *camera, unsigned char *ack, int ack_len)
 {
 	return GP_OK;
 }
@@ -606,14 +611,14 @@ int dc3200_check_ack(Camera *camera, u_char *ack, int ack_len)
  * compiles a packet from data and sends it
  *
  */
-int dc3200_send_packet(Camera *camera, u_char *data, int data_len)
+int dc3200_send_packet(Camera *camera, unsigned char *data, int data_len)
 {
 	int res;
 
 	int buff_len = data_len;
-	u_char *buff = NULL;
+	unsigned char *buff = NULL;
 
-	buff = malloc(sizeof(u_char) * buff_len);
+	buff = malloc(sizeof(unsigned char) * buff_len);
 	if(!buff)
 		return GP_ERROR;
 
@@ -638,15 +643,15 @@ int dc3200_send_packet(Camera *camera, u_char *data, int data_len)
  * waits for a packet to arrive, checks it, and returns it
  *
  */
-int dc3200_recv_packet(Camera *camera, u_char *data, int *data_len)
+int dc3200_recv_packet(Camera *camera, unsigned char *data, int *data_len)
 {
 	int complete = 0;
 	int num_read = 0, res = 0, fails = 0;
 
 	/* allocate storage for size, checksum, and EOP */
-	u_char *buff = NULL;
+	unsigned char *buff = NULL;
 
-	buff = malloc(sizeof(u_char) * (*data_len + 3));
+	buff = malloc(sizeof(unsigned char) * (*data_len + 3));
 	if(buff == NULL) {
 		return GP_ERROR;
 	}
@@ -715,16 +720,16 @@ int dc3200_recv_packet(Camera *camera, u_char *data, int *data_len)
  * adds packet length, checksum, and EOP (0xFF)
  *
  */
-int dc3200_compile_packet(Camera *camera, u_char **data, int *data_len)
+int dc3200_compile_packet(Camera *camera, unsigned char **data, int *data_len)
 {
 	int count, i, j;
-	u_char *new_data = NULL;
-	u_char *tmp_ptr  = NULL;
+	unsigned char *new_data = NULL;
+	unsigned char *tmp_ptr  = NULL;
 
 	/* realloc + 2 for len and checksum */
 	*data_len += 2;
 
-	tmp_ptr = (u_char*)realloc(*data, *data_len);
+	tmp_ptr = (unsigned char*)realloc(*data, *data_len);
 	if(tmp_ptr == NULL)
 		return GP_ERROR;
 
@@ -753,7 +758,7 @@ int dc3200_compile_packet(Camera *camera, u_char **data, int *data_len)
 			count++;
 	}
 
-	new_data = (u_char*)malloc(*data_len + count + 3); /* 3 for length, checksum, EOP */
+	new_data = (unsigned char*)malloc(*data_len + count + 3); /* 3 for length, checksum, EOP */
 	if(!new_data)
 		return GP_ERROR;
 
@@ -791,18 +796,18 @@ int dc3200_compile_packet(Camera *camera, u_char **data, int *data_len)
  * checks & removes packet length, checksum, EOP (0xFF)
  *
  */
-int dc3200_process_packet(Camera *camera, u_char *data, int *data_len)
+int dc3200_process_packet(Camera *camera, unsigned char *data, int *data_len)
 {
 	int count = 0, i;
 	int length, checksum;
-	u_char *buff;
+	unsigned char *buff;
 
 	if(data == NULL || *data_len < 1) {
 		return GP_ERROR;
 	}
 
 	/* allocate a new buffer */
-	buff = (u_char*)malloc(sizeof(u_char) * *data_len);
+	buff = (unsigned char*)malloc(sizeof(unsigned char) * *data_len);
 	if(!buff)
 		return GP_ERROR;
 
@@ -897,8 +902,8 @@ int dc3200_calc_seqnum(Camera *camera)
  */
 int dc3200_keep_alive(Camera *camera)
 {
-	u_char ka[ACK_PACKET_LEN]; /* keepalive */
-	u_char ak[ACK_PACKET_LEN]; /* keepalive ack */
+	unsigned char ka[ACK_PACKET_LEN]; /* keepalive */
+	unsigned char ak[ACK_PACKET_LEN]; /* keepalive ack */
 	int ak_len = ACK_PACKET_LEN;
 
 	ka[0] = 0xCF;
@@ -927,7 +932,7 @@ int dc3200_keep_alive(Camera *camera)
  */
 int dc3200_clear_read_buffer(Camera *camera)
 {
-	u_char byte;
+	unsigned char byte;
 	int count = 0;
 
 	gp_port_set_timeout(camera->port, 0);
@@ -986,9 +991,9 @@ int dump_buffer(unsigned char * buffer, int len, char * title, int bytesperline)
 	return GP_OK;
 }
 
-u_long bytes_to_l(int a, int b, int c, int d)
+unsigned long bytes_to_l(int a, int b, int c, int d)
 {
-	u_long res = a;
+	unsigned long res = a;
 	res = res << 24 | b << 16 | c << 8 | d;
 	return res;
 }

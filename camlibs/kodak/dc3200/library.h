@@ -51,22 +51,22 @@
 int dc3200_set_speed(Camera *camera, int baudrate);
 int dc3200_setup(Camera *camera);
 
-int dc3200_get_data(Camera *camera, u_char **data, u_long *data_len, int command, const char *folder, const char *filename);
+int dc3200_get_data(Camera *camera, unsigned char **data, unsigned long *data_len, int command, const char *folder, const char *filename);
 int dc3200_cancel_get_data(Camera *camera);
 
-int dc3200_send_command(Camera *camera, u_char *cmd, int cmd_len, u_char *ack, int *ack_len);
-int dc3200_recv_response(Camera *camera, u_char *resp, int *resp_len);
+int dc3200_send_command(Camera *camera, unsigned char *cmd, int cmd_len, unsigned char *ack, int *ack_len);
+int dc3200_recv_response(Camera *camera, unsigned char *resp, int *resp_len);
 
-int dc3200_send_packet(Camera *camera, u_char *data, int data_len);
-int dc3200_recv_packet(Camera *camera, u_char *data, int *data_len);
+int dc3200_send_packet(Camera *camera, unsigned char *data, int data_len);
+int dc3200_recv_packet(Camera *camera, unsigned char *data, int *data_len);
 
-int dc3200_compile_packet(Camera *camera, u_char **data, int *data_len);
-int dc3200_process_packet(Camera *camera, u_char *data, int *data_len);
+int dc3200_compile_packet(Camera *camera, unsigned char **data, int *data_len);
+int dc3200_process_packet(Camera *camera, unsigned char *data, int *data_len);
 
 int dc3200_send_ack(Camera *camera, int seqnum);
-int dc3200_check_ack(Camera *camera, u_char *ack, int ack_len);
+int dc3200_check_ack(Camera *camera, unsigned char *ack, int ack_len);
 
-int dc3200_calc_checksum(Camera *camera, u_char *data, int data_len);
+int dc3200_calc_checksum(Camera *camera, unsigned char *data, int data_len);
 int dc3200_calc_seqnum(Camera *camera);
 
 int dc3200_keep_alive(Camera *camera);

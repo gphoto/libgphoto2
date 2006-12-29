@@ -35,6 +35,11 @@
 #  define N_(String) (String)
 #endif
 
+/*
+ * FIXME: Use properly sized integer types. The dc3200 code used lots
+ *        of u_char, u_long, u_int, which may be wrong on non-32bit systems.
+ */
+
 #define CONTEXT_EXISTS _("There is currently an operation in progress. \
 This camera only supports one operation \
 at a time. Please wait until the current \
@@ -151,9 +156,9 @@ static int folder_list_func (CameraFilesystem *fs, const char *folder,
 			     GPContext *context)
 {
 	Camera 		*camera = user_data;
-	u_char		*data = NULL;
+	unsigned char	*data = NULL;
 	long		data_len = 0;
-	u_char		*ptr_data_buff;
+	unsigned char	*ptr_data_buff;
 	char		filename[13], *ptr;
 	int		res, i;
 
@@ -232,9 +237,9 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 			   GPContext *context)
 {
 	Camera		*camera = user_data;
-	u_char		*data = NULL;
+	unsigned char	*data = NULL;
 	long		data_len = 0;
-	u_char		*ptr_data_buff;
+	unsigned char	*ptr_data_buff;
 	char		filename[13];
 	int		res, i;
 
@@ -311,7 +316,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 			  GPContext *context)
 {
 	Camera		*camera = user_data;
-	u_char		*data = NULL;
+	unsigned char	*data = NULL;
 	long		data_len = 0;
 	int		res;
 
@@ -367,7 +372,7 @@ get_info_func (CameraFilesystem *fs, const char *folder,
 	       GPContext *context)
 {
 	Camera		*camera = user_data;
-	u_char		*data = NULL;
+	unsigned char	*data = NULL;
 	long		data_len = 0;
 	int		res;
 	char		file[1024];
