@@ -55,6 +55,7 @@ dnl ---------------------------------------------------------------------------
 AC_PROG_CC
 AC_PROG_CPP
 AC_PROG_INSTALL
+AM_PROG_CC_C_O
 
 dnl Something with the sequences is not quite alright yet.
 dnl SED is supposed to be set in AC_LIBTOOL_SETUP, but the
