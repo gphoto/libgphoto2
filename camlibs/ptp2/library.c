@@ -344,6 +344,8 @@ static struct {
 	{"Kodak:C533",   0x040a, 0x05a2, 0},
 	/* Marc Santhoff <M.Santhoff@t-online.de> */
 	{"Kodak:C643",   0x040a, 0x05a7, 0},
+	/* Eric Kibbee <eric@kibbee.ca> */
+	{"Kodak:C875",   0x040a, 0x05a9, 0},
         /* via IRC */
 	{"Kodak:C633",   0x040a, 0x05ba, 0},
 

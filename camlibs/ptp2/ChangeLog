@@ -1,3 +1,7 @@
+2006-12-29  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Added Kodak C875.
+
 2006-12-28  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c, ptp.h, ptp.c, ptpip.c:
