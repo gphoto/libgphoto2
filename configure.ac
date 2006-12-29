@@ -50,6 +50,7 @@ dnl A:R:C=1:1:3  libgphoto2-2.2
 dnl A:R:C=2:0:4  libgphoto2-2.3 (since libgphoto2-2.2.1.5.trunk)
 dnl A:R:C=2:1:4  libgphoto2-2.3.1 (since libgphoto2-2.3.0.1.trunk)
 dnl A:R:C=3:0:5  libgphoto2-2.3.0.3.trunk (new gp_file_new_from_fd() function)
+dnl              libgphoto2-2.3.1.1.trunk (new gp_file_slurp() function)
 AC_SUBST([LIBGPHOTO2_AGE],      [3])
 AC_SUBST([LIBGPHOTO2_REVISION], [0])
 AC_SUBST([LIBGPHOTO2_CURRENT],  [5])
