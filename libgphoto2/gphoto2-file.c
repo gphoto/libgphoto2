@@ -238,7 +238,7 @@ gp_file_append (CameraFile *file, const char *data,
  **/
 int
 gp_file_slurp (CameraFile *file, char *data, 
-	unsigned long size, unsigned long *readlen
+	size_t size, size_t *readlen
 ) {
 	CHECK_NULL (file);
 

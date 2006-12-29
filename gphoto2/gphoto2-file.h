@@ -122,6 +122,8 @@ int gp_file_adjust_name_for_mime_type (CameraFile *file);
 
 int gp_file_append            (CameraFile*, const char *data,
 			       unsigned long int size);
+int gp_file_slurp             (CameraFile*, char *data,
+			       size_t size, size_t *readlen);
 int gp_file_set_data_and_size (CameraFile*,       char *data,
 			       unsigned long int size);
 int gp_file_get_data_and_size (CameraFile*, const char **data,
