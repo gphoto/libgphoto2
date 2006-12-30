@@ -93,9 +93,10 @@ dnl Turn on (almost) all warnings when using gcc
 dnl ---------------------------------------------------------------------------
 if test "x$GCC" = "xyes"; then
 	AM_CPPFLAGS="$AM_CPPFLAGS -Wall"
-	# AM_CFLAGS="$AM_CFLAGS --std=c99 -Wall -Wextra -Werror -Wno-pointer-sign -Wno-unused -Wno-sign-compare -pedantic"
-	AM_CFLAGS="$AM_CFLAGS -Wall -Wno-pointer-sign -Wno-unused -Wno-sign-compare"
-	AM_CFLAGS="$AM_CFLAGS -Wmissing-declarations -Wmissing-prototypes -Wno-pointer-sign"
+	# AM_CFLAGS="$AM_CFLAGS --std=c99 -Wall -Wextra -Werror -pedantic"
+	AM_CFLAGS="$AM_CFLAGS -Wall"
+	# AM_CFLAGS="$AM_CFLAGS -Wno-pointer-sign -Wno-unused -Wno-sign-compare"
+	AM_CFLAGS="$AM_CFLAGS -Wmissing-declarations -Wmissing-prototypes"
 	AM_LDFLAGS="$AM_LDFLAGS -Wall"
 	# FIXME: Check for --enable-debug here
 	AM_CPPFLAGS="$AM_CPPFLAGS -g"
