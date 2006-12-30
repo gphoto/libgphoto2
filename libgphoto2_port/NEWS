@@ -1,3 +1,10 @@
+libgphoto2_port 0.7.2
+
+Build:
+   * Put auto* files into auto-aux/ and auto-m4/.
+
+------------------------------------------------------------------------
+
 libgphoto2_port 0.7.1
 
 Build:

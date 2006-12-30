@@ -1,10 +1,10 @@
 dnl Process this file with autoreconf to produce a configure script.
 AC_PREREQ(2.59)
-AC_INIT([libgphoto2 port access library], [0.7.1], [gphoto-devel@lists.sourceforge.net], [libgphoto2_port])
+AC_INIT([libgphoto2 port access library], [0.7.2], [gphoto-devel@lists.sourceforge.net], [libgphoto2_port])
 AC_CONFIG_SRCDIR([libgphoto2_port/gphoto2-port-version.c])
 AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_MACRO_DIR([m4])
-AC_CONFIG_AUX_DIR([.])
+AC_CONFIG_MACRO_DIR([auto-m4])
+AC_CONFIG_AUX_DIR([auto-aux])
 dnl Working around bug in automake <= 1.9.6:
 dnl  - Please do not add filename-length-max=99 here.
 dnl  - Otherwise "make distdir" will fail in libgphoto2

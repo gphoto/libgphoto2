@@ -23,7 +23,7 @@ EXTRA_DIST =   		\
 
 doc_DATA = AUTHORS README NEWS
 
-ACLOCAL_AMFLAGS = -I m4
+ACLOCAL_AMFLAGS = -I auto-m4 -I m4
 
 # ship headers
 nobase_include_HEADERS =	\
