@@ -90,7 +90,12 @@ main(int argc, char **arvg)
 		int busno = strtol(bus->dirname,NULL,10);
 		if (busno != xbus) continue;
 		for (dev = bus->devices; dev; dev = dev->next) {
-			if (dev->devnum != xdev) continue;
+			char *s = strchr(dev->filename,'/');
+			int devno;
+
+			if (!s) s = dev->filename;
+			devno = strtol(s,NULL,10);
+			if (devno != xdev) continue;
 			goto found;
 		}
 	}
