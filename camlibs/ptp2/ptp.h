@@ -255,15 +255,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_NIKON_GetDevicePTPIPInfo	0x90E0
 
 /* Microsoft / MTP extension codes */
-#define PTP_OC_MTP_GetSecureTimeChallenge	0x9101
-#define PTP_OC_MTP_GetSecureTimeResponse	0x9102
-#define PTP_OC_MTP_SetLicenseResponse		0x9103
-#define PTP_OC_MTP_GetSyncList			0x9104
-#define PTP_OC_MTP_SendMeterChallengeQuery	0x9105
-#define PTP_OC_MTP_GetMeterChallenge		0x9106
-#define PTP_OC_MTP_SetMeterResponse		0x9107
-#define PTP_OC_MTP_CleanDataStore		0x9108
-#define PTP_OC_MTP_GetLicenseState		0x9109
+
 #define PTP_OC_MTP_GetObjectPropsSupported	0x9801
 #define PTP_OC_MTP_GetObjectPropDesc		0x9802
 #define PTP_OC_MTP_GetObjectPropValue		0x9803
@@ -276,6 +268,67 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_MTP_SetObjectReferences		0x9811
 #define PTP_OC_MTP_UpdateDeviceFirmware		0x9812
 #define PTP_OC_MTP_Skip				0x9820
+
+/*
+ * Windows Media Digital Rights Management for Portable Devices 
+ * Extension Codes (microsoft.com/WMDRMPD: 10.1)
+ */
+#define PTP_OC_MTP_WMDRMPD_GetSecureTimeChallenge	0x9101
+#define PTP_OC_MTP_WMDRMPD_GetSecureTimeResponse	0x9102
+#define PTP_OC_MTP_WMDRMPD_SetLicenseResponse	0x9103
+#define PTP_OC_MTP_WMDRMPD_GetSyncList		0x9104
+#define PTP_OC_MTP_WMDRMPD_SendMeterChallengeQuery	0x9105
+#define PTP_OC_MTP_WMDRMPD_GetMeterChallenge	0x9106
+#define PTP_OC_MTP_WMDRMPD_SetMeterResponse		0x9107
+#define PTP_OC_MTP_WMDRMPD_CleanDataStore		0x9108
+#define PTP_OC_MTP_WMDRMPD_GetLicenseState		0x9109
+#define PTP_OC_MTP_WMDRMPD_SendWMDRMPDCommand	0x910A
+#define PTP_OC_MTP_WMDRMPD_SendWMDRMPDRequest	0x910B
+
+/* 
+ * Windows Media Digital Rights Management for Portable Devices 
+ * Extension Codes (microsoft.com/WMDRMPD: 10.1)
+ * Below are operations that have no public documented identifier 
+ * associated with them "Vendor-defined Command Code"
+ */
+#define PTP_OC_MTP_WMDRMPD_SendWMDRMPDAppRequest	0x9212
+#define PTP_OC_MTP_WMDRMPD_GetWMDRMPDAppResponse	0x9213
+#define PTP_OC_MTP_WMDRMPD_EnableTrustedFilesOperations	0x9214
+#define PTP_OC_MTP_WMDRMPD_DisableTrustedFilesOperations 0x9215
+#define PTP_OC_MTP_WMDRMPD_EndTrustedAppSession		0x9216
+/* ^^^ guess ^^^ */
+
+/*
+ * Windows Media Digital Rights Management for Network Devices 
+ * Extensions (microsoft.com/WMDRMND: 1.0) MTP/IP?
+ */
+#define PTP_OC_MTP_WMDRMND_OpenMediaSession1		0x9170
+#define PTP_OC_MTP_WMDRMND_OpenMediaSession2		0x9171
+#define PTP_OC_MTP_WMDRMND_GetNextDataBlock		0x9172
+#define PTP_OC_MTP_WMDRMND_SetCurrentTimePosition	0x9173
+#define PTP_OC_MTP_WMDRMND_SendRegistrationRequest	0x9180
+#define PTP_OC_MTP_WMDRMND_GetRegistrationResponse	0x9181
+#define PTP_OC_MTP_WMDRMND_GetProximityChallenge	0x9182
+#define PTP_OC_MTP_WMDRMND_SendProximityResponse	0x9183
+#define PTP_OC_MTP_WMDRMND_SendWMDRMNDLicenseRequest	0x9184
+#define PTP_OC_MTP_WMDRMND_GetWMDRMNDLicenseResponse	0x9185
+
+/* 
+ * Windows Media Player Portiable Devices 
+ * Extension Codes (microsoft.com/WMPPD: 11.1)
+ */
+#define PTP_OC_MTP_WMPPD_ReportAddedDeletedItems	0x9201
+#define PTP_OC_MTP_WMPPD_ReportAcquiredItems 	        0x9202
+#define PTP_OC_MTP_WMPPD_PlaylistObjectPref		0x9203
+
+/*
+ * Undocumented Zune Operation Codes 
+ * maybe related to WMPPD extension set?
+ */
+#define PTP_OC_MTP_ZUNE_GETUNDEFINED001		        0x9204
+
+/* WiFi Provisioning MTP Extension Codes (microsoft.com/WPDWCN: 1.0) */
+#define PTP_OC_MTP_WPDWCN_ProcessWFCObject		0x9122
 
 /* Proprietary vendor extension operations mask */
 #define PTP_OC_EXTENSION_MASK           0xF000
@@ -334,6 +387,10 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_RC_MTP_Invalid_Dataset		0xA806
 #define PTP_RC_MTP_Specification_By_Group_Unsupported		0xA808
 #define PTP_RC_MTP_Object_Too_Large		0xA809
+
+/* WiFi Provisioning MTP Extension Error Codes (microsoft.com/WPDWCN: 1.0) */
+#define PTP_RC_MTP_Invalid_WFC_Syntax		0xA121
+#define PTP_RC_MTP_WFC_Version_Not_Supported	0xA122
 
 /* libptp2 extended ERROR codes */
 #define PTP_ERROR_IO			0x02FF
@@ -470,6 +527,7 @@ typedef struct _PTPObjectInfo PTPObjectInfo;
 
 /* ancillary formats */
 #define PTP_OFC_Undefined			0x3000
+#define PTP_OFC_Defined				0x3800
 #define PTP_OFC_Association			0x3001
 #define PTP_OFC_Script				0x3002
 #define PTP_OFC_Executable			0x3003
@@ -503,15 +561,25 @@ typedef struct _PTPObjectInfo PTPObjectInfo;
 /* Eastman Kodak extension ancillary format */
 #define PTP_OFC_EK_M3U				0xb002
 /* MTP extensions */
+#define PTP_OFC_MTP_MediaCard			0xb211
+#define PTP_OFC_MTP_MediaCardGroup		0xb212
+#define PTP_OFC_MTP_Encounter			0xb213
+#define PTP_OFC_MTP_EncounterBox		0xb214
+#define PTP_OFC_MTP_M4A				0xb215
+#define PTP_OFC_MTP_ZUNEUNDEFINED		0xb217 /* Unknown file type */
 #define PTP_OFC_MTP_Firmware			0xb802
-#define PTP_OFC_MTP_WindowsImageFormat		0xb882
+#define PTP_OFC_MTP_WindowsImageFormat		0xb881
 #define PTP_OFC_MTP_UndefinedAudio		0xb900
 #define PTP_OFC_MTP_WMA				0xb901
 #define PTP_OFC_MTP_OGG				0xb902
+#define PTP_OFC_MTP_AAC				0xb903
 #define PTP_OFC_MTP_AudibleCodec		0xb904
+#define PTP_OFC_MTP_FLAC			0xb906
 #define PTP_OFC_MTP_UndefinedVideo		0xb980
 #define PTP_OFC_MTP_WMV				0xb981
 #define PTP_OFC_MTP_MP4				0xb982
+#define PTP_OFC_MTP_MP2				0xb983
+#define PTP_OFC_MTP_3GP				0xb984
 #define PTP_OFC_MTP_UndefinedCollection		0xba00
 #define PTP_OFC_MTP_AbstractMultimediaAlbum	0xba01
 #define PTP_OFC_MTP_AbstractImageAlbum		0xba02
@@ -521,6 +589,9 @@ typedef struct _PTPObjectInfo PTPObjectInfo;
 #define PTP_OFC_MTP_AbstractContactGroup	0xba06
 #define PTP_OFC_MTP_AbstractMessageFolder	0xba07
 #define PTP_OFC_MTP_AbstractChapteredProduction	0xba08
+#define PTP_OFC_MTP_AbstractAudioPlaylist	0xba09
+#define PTP_OFC_MTP_AbstractVideoPlaylist	0xba0a
+#define PTP_OFC_MTP_AbstractMediacast		0xba0b
 #define PTP_OFC_MTP_WPLPlaylist			0xba10
 #define PTP_OFC_MTP_M3UPlaylist			0xba11
 #define PTP_OFC_MTP_MPLPlaylist			0xba12
@@ -528,6 +599,11 @@ typedef struct _PTPObjectInfo PTPObjectInfo;
 #define PTP_OFC_MTP_PLSPlaylist			0xba14
 #define PTP_OFC_MTP_UndefinedDocument		0xba80
 #define PTP_OFC_MTP_AbstractDocument		0xba81
+#define PTP_OFC_MTP_XMLDocument			0xba82
+#define PTP_OFC_MTP_MSWordDocument		0xba83
+#define PTP_OFC_MTP_MHTCompiledHTMLDocument	0xba84
+#define PTP_OFC_MTP_MSExcelSpreadsheetXLS	0xba85
+#define PTP_OFC_MTP_MSPowerpointPresentationPPT	0xba86
 #define PTP_OFC_MTP_UndefinedMessage		0xbb00
 #define PTP_OFC_MTP_AbstractMessage		0xbb01
 #define PTP_OFC_MTP_UndefinedContact		0xbb80
@@ -539,6 +615,7 @@ typedef struct _PTPObjectInfo PTPObjectInfo;
 #define PTP_OFC_MTP_vCalendar1			0xbe02
 #define PTP_OFC_MTP_vCalendar2			0xbe03
 #define PTP_OFC_MTP_UndefinedWindowsExecutable	0xbe80
+
 
 /* PTP Association Types */
 #define PTP_AT_Undefined			0x0000
@@ -806,7 +883,11 @@ typedef struct _PTPNIKONWifiProfile PTPNIKONWifiProfile;
 #define PTP_DPC_EXTENSION_MASK		0xF000
 #define PTP_DPC_EXTENSION		0xD000
 
-/* Vendor Extensions device property codes */
+/* Zune extension device property codes */
+#define PTP_DPC_MTP_ZUNE_UNKNOWN1	0xD181
+#define PTP_DPC_MTP_ZUNE_UNKNOWN2	0xD132
+#define PTP_DPC_MTP_ZUNE_UNKNOWN3	0xD215
+#define PTP_DPC_MTP_ZUNE_UNKNOWN4	0xD216
 
 /* Eastman Kodak extension device property codes */
 #define PTP_DPC_EK_ColorTemperature	0xD001
@@ -969,6 +1050,7 @@ typedef struct _PTPNIKONWifiProfile PTPNIKONWifiProfile;
 /* Microsoft/MTP specific */
 #define PTP_DPC_MTP_SecureTime                          0xD101
 #define PTP_DPC_MTP_DeviceCertificate                   0xD102
+#define PTP_DPC_MTP_RevocationInfo                      0xD103
 #define PTP_DPC_MTP_SynchronizationPartner              0xD401
 #define PTP_DPC_MTP_DeviceFriendlyName                  0xD402
 #define PTP_DPC_MTP_VolumeLevel                         0xD403
@@ -977,6 +1059,10 @@ typedef struct _PTPNIKONWifiProfile PTPNIKONWifiProfile;
 #define PTP_DPC_MTP_PlaybackObject                      0xD411
 #define PTP_DPC_MTP_PlaybackContainerIndex              0xD412
 #define PTP_DPC_MTP_PlaybackPosition                    0xD413
+#define PTP_DPC_MTP_PlaysForSureID                      0xD131
+
+/* Zune specific property codes */
+#define PTP_DPC_MTP_Zune_UnknownVersion			0xD181
 
 /* MTP specific Object Properties */
 #define PTP_OPC_StorageID				0xDC01
@@ -990,6 +1076,9 @@ typedef struct _PTPNIKONWifiProfile PTPNIKONWifiProfile;
 #define PTP_OPC_DateModified				0xDC09
 #define PTP_OPC_Keywords				0xDC0A
 #define PTP_OPC_ParentObject				0xDC0B
+#define PTP_OPC_AllowedFolderContents			0xDC0C
+#define PTP_OPC_Hidden					0xDC0D
+#define PTP_OPC_SystemObject				0xDC0E
 #define PTP_OPC_PersistantUniqueObjectIdentifier	0xDC41
 #define PTP_OPC_SyncID					0xDC42
 #define PTP_OPC_PropertyBag				0xDC43
@@ -1006,6 +1095,7 @@ typedef struct _PTPNIKONWifiProfile PTPNIKONWifiProfile;
 #define PTP_OPC_DateAdded				0xDC4E
 #define PTP_OPC_NonConsumable				0xDC4F
 #define PTP_OPC_CorruptOrUnplayable			0xDC50
+#define PTP_OPC_ProducerSerialNumber			0xDC51
 #define PTP_OPC_RepresentativeSampleFormat		0xDC81
 #define PTP_OPC_RepresentativeSampleSize		0xDC82
 #define PTP_OPC_RepresentativeSampleHeight		0xDC83
@@ -1038,6 +1128,94 @@ typedef struct _PTPNIKONWifiProfile PTPNIKONWifiProfile;
 #define PTP_OPC_SubDescription				0xDC9E
 #define PTP_OPC_IsCropped				0xDCD1
 #define PTP_OPC_IsColorCorrected			0xDCD2
+#define PTP_OPC_ImageBitDepth				0xDCD3
+#define PTP_OPC_Fnumber					0xDCD4
+#define PTP_OPC_ExposureTime				0xDCD5
+#define PTP_OPC_ExposureIndex				0xDCD6
+#define PTP_OPC_DisplayName				0xDCE0
+#define PTP_OPC_BodyText				0xDCE1
+#define PTP_OPC_Subject					0xDCE2
+#define PTP_OPC_Prority					0xDCE3
+#define PTP_OPC_GivenName				0xDD00
+#define PTP_OPC_MiddleNames				0xDD01
+#define PTP_OPC_FamilyName				0xDD02
+#define PTP_OPC_Prefix					0xDD03
+#define PTP_OPC_Suffix					0xDD04
+#define PTP_OPC_PhoneticGivenName			0xDD05
+#define PTP_OPC_PhoneticFamilyName			0xDD06
+#define PTP_OPC_EmailPrimary				0xDD07
+#define PTP_OPC_EmailPersonal1				0xDD08
+#define PTP_OPC_EmailPersonal2				0xDD09
+#define PTP_OPC_EmailBusiness1				0xDD0A
+#define PTP_OPC_EmailBusiness2				0xDD0B
+#define PTP_OPC_EmailOthers				0xDD0C
+#define PTP_OPC_PhoneNumberPrimary			0xDD0D
+#define PTP_OPC_PhoneNumberPersonal			0xDD0E
+#define PTP_OPC_PhoneNumberPersonal2			0xDD0F
+#define PTP_OPC_PhoneNumberBusiness			0xDD10
+#define PTP_OPC_PhoneNumberBusiness2			0xDD11
+#define PTP_OPC_PhoneNumberMobile			0xDD12
+#define PTP_OPC_PhoneNumberMobile2			0xDD13
+#define PTP_OPC_FaxNumberPrimary			0xDD14
+#define PTP_OPC_FaxNumberPersonal			0xDD15
+#define PTP_OPC_FaxNumberBusiness			0xDD16
+#define PTP_OPC_PagerNumber				0xDD17
+#define PTP_OPC_PhoneNumberOthers			0xDD18
+#define PTP_OPC_PrimaryWebAddress			0xDD19
+#define PTP_OPC_PersonalWebAddress			0xDD1A
+#define PTP_OPC_BusinessWebAddress			0xDD1B
+#define PTP_OPC_InstantMessengerAddress			0xDD1C
+#define PTP_OPC_InstantMessengerAddress2		0xDD1D
+#define PTP_OPC_InstantMessengerAddress3		0xDD1E
+#define PTP_OPC_PostalAddressPersonalFull		0xDD1F
+#define PTP_OPC_PostalAddressPersonalFullLine1		0xDD20
+#define PTP_OPC_PostalAddressPersonalFullLine2		0xDD21
+#define PTP_OPC_PostalAddressPersonalFullCity		0xDD22
+#define PTP_OPC_PostalAddressPersonalFullRegion		0xDD23
+#define PTP_OPC_PostalAddressPersonalFullPostalCode	0xDD24
+#define PTP_OPC_PostalAddressPersonalFullCountry	0xDD25
+#define PTP_OPC_PostalAddressBusinessFull		0xDD26
+#define PTP_OPC_PostalAddressBusinessLine1		0xDD27
+#define PTP_OPC_PostalAddressBusinessLine2		0xDD28
+#define PTP_OPC_PostalAddressBusinessCity		0xDD29
+#define PTP_OPC_PostalAddressBusinessRegion		0xDD2A
+#define PTP_OPC_PostalAddressBusinessPostalCode		0xDD2B
+#define PTP_OPC_PostalAddressBusinessCountry		0xDD2C
+#define PTP_OPC_PostalAddressOtherFull			0xDD2D
+#define PTP_OPC_PostalAddressOtherLine1			0xDD2E
+#define PTP_OPC_PostalAddressOtherLine2			0xDD2F
+#define PTP_OPC_PostalAddressOtherCity			0xDD30
+#define PTP_OPC_PostalAddressOtherRegion		0xDD31
+#define PTP_OPC_PostalAddressOtherPostalCode		0xDD32
+#define PTP_OPC_PostalAddressOtherCountry		0xDD33
+#define PTP_OPC_OrganizationName			0xDD34
+#define PTP_OPC_PhoneticOrganizationName		0xDD35
+#define PTP_OPC_Role					0xDD36
+#define PTP_OPC_Birthdate				0xDD37
+#define PTP_OPC_MessageTo				0xDD40
+#define PTP_OPC_MessageCC				0xDD41
+#define PTP_OPC_MessageBCC				0xDD42
+#define PTP_OPC_MessageRead				0xDD43
+#define PTP_OPC_MessageReceivedTime			0xDD44
+#define PTP_OPC_MessageSender				0xDD45
+#define PTP_OPC_ActivityBeginTime			0xDD50
+#define PTP_OPC_ActivityEndTime				0xDD51
+#define PTP_OPC_ActivityLocation			0xDD52
+#define PTP_OPC_ActivityRequiredAttendees		0xDD54
+#define PTP_OPC_ActivityOptionalAttendees		0xDD55
+#define PTP_OPC_ActivityResources			0xDD56
+#define PTP_OPC_ActivityAccepted			0xDD57
+#define PTP_OPC_Owner					0xDD5D
+#define PTP_OPC_Editor					0xDD5E
+#define PTP_OPC_Webmaster				0xDD5F
+#define PTP_OPC_URLSource				0xDD60
+#define PTP_OPC_URLDestination				0xDD61
+#define PTP_OPC_TimeBookmark				0xDD62
+#define PTP_OPC_ObjectBookmark				0xDD63
+#define PTP_OPC_ByteBookmark				0xDD64
+#define PTP_OPC_LastBuildDate				0xDD70
+#define PTP_OPC_TimetoLive				0xDD71
+#define PTP_OPC_MediaGUID				0xDD72
 #define PTP_OPC_TotalBitRate				0xDE91
 #define PTP_OPC_BitRateType				0xDE92
 #define PTP_OPC_SampleRate				0xDE93
@@ -1053,6 +1231,9 @@ typedef struct _PTPNIKONWifiProfile PTPNIKONWifiProfile;
 #define PTP_OPC_BufferSize				0xDE9F
 #define PTP_OPC_EncodingQuality				0xDEA0
 #define PTP_OPC_BuyFlag					0xD901
+
+/* WiFi Provisioning MTP Extension property codes */
+#define PTP_OPC_WirelessConfigurationFile		0xB104
 
 /* Device Property Form Flag */
 

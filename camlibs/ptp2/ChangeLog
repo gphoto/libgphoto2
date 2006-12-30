@@ -1,3 +1,9 @@
+2006-12-30  Marcus Meissner  <marcus@jet.franken.de>
+
+	From libmtp developers.
+	* ptp.c,ptp.h: Lots of new MTP defines and
+	  debug output.
+
 2006-12-29  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Added Kodak C875, HP Photosmart R967.
