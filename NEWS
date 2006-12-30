@@ -27,6 +27,9 @@ PTP2 driver:
      or songs without taking up any system memory. (think multi GB movies
      on small devices).
 
+Canon driver:
+   * Enable formerly experimental 20D support code by default.
+
 ------------------------------------------------------------------------
 
 libgphoto2 2.3.1
