@@ -4,9 +4,12 @@
 	  known to support MTP GetObjectPropertyList
 	  correctly. Do not call it for others.
 
-	From libmtp developers.
+	From libmtp developers:
+	2006-12-30  Orson Teodoro <orsonteodoro@yahoo.com>
 	* ptp.c,ptp.h: Lots of new MTP defines and
 	  debug output.
+
+	2006-12-29  Richard Low <richard@wentnet.com>
 	* ptp-pack.c: Fixed bugs in ObjectInfo packing
 	  magic.
 
