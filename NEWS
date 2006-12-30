@@ -1,4 +1,4 @@
-libgphoto2 2.3.1.1.trunk
+libgphoto2 2.3.1.2.trunk
 
 Build:
    * Non-recursive camlib build: Makes "make -j2" useful.
@@ -9,6 +9,7 @@ Build:
    * libiconv linking fix for PTP2 driver.
    * Require external libltdl.
    * Ditched autogen.sh, use standard autoreconf from stock autoconf.
+   * Put auto* files into auto-aux/ and auto-m4/.
 
 libgphoto2 API:
    * New gp_file_new_from_fd() ... Which allows mapping CameraFile to
