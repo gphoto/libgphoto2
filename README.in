@@ -73,9 +73,9 @@ Here is a short incomplete list of camera that use this protocol:
    (all need user configuration of the camera)
 
 PTP camera unknown to libgphoto2 will be detected as a generic PTP camera and
-will work as is.
+will work as-is without any changes.
 MTP (Microsoft Transfer Protocol) players will also be accessible,
-since MTP is a variant of PTP.
+since MTP is based on PTP.
 
 
 Platforms
@@ -113,9 +113,12 @@ gphoto2 is a command line frontend which is quite powerful,
 especially in combination with scripts. See The gPhoto2 Manual 
 for a short description. 
 
-For the GUI lovers, there are for example gtkam (GTK based), and
-GnoCam (GNOME). Additionally, there are plugins for other programs
-available like kio_gphoto (KDE - Konqueror).
+For the GUI lovers, there are for example digikam (KDE), gthumb (GNOME),
+f-spot (GNOME / Mono) and more. We also have a GTK2 reference GUI
+called gtkam, which is unmaintained, its only special features are
+capture abilitiy.
+Additionally, there are plugins for other programs available like
+kio_camera (KDE - Konqueror) and a fuse plugin, gphotofs.
 
 
 
@@ -136,7 +139,7 @@ the following:
 
    if you're using the gtkam frontend or running:
 
-      env LC_ALL=C gphoto2 --debug <options>
+      env LC_ALL=C gphoto2 --debug-logfile=logfile.log --debug <options>
 
    using the gphoto2 command line interface.
 
