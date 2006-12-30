@@ -364,19 +364,23 @@ ptp_unpack_SI (PTPParams *params, unsigned char* data, PTPStorageInfo *si, unsig
 #define PTP_oi_filenamelen		52
 #define PTP_oi_Filename			53
 
+/* the max length assuming zero length dates. We have need 3 */
+/* bytes for these. */
+#define PTP_oi_MaxLen PTP_oi_Filename+(PTP_MAXSTRLEN+1)*2+3
+
 static inline uint32_t
 ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, unsigned char** oidataptr)
 {
 	unsigned char* oidata;
 	uint8_t filenamelen;
 	uint8_t capturedatelen=0;
-	/* let's allocate some memory first; XXX i'm sure it's wrong */
-	oidata=malloc(PTP_oi_Filename+(strlen(oi->Filename)+1)*2+4);
+	/* let's allocate some memory first; correct assuming zero length dates */
+	oidata=malloc(PTP_oi_MaxLen);
 	/* the caller should free it after use! */
 #if 0
 	char *capture_date="20020101T010101"; /* XXX Fake date */
 #endif
-	memset (oidata, 0, (PTP_oi_Filename+(strlen(oi->Filename)+1)*2+4));
+	memset (oidata, 0, PTP_oi_MaxLen);
 	htod32a(&oidata[PTP_oi_StorageID],oi->StorageID);
 	htod16a(&oidata[PTP_oi_ObjectFormat],oi->ObjectFormat);
 	htod16a(&oidata[PTP_oi_ProtectionStatus],oi->ProtectionStatus);
@@ -423,7 +427,7 @@ ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, unsigned char** oidataptr)
 	/* XXX this function should return dataset length */
 	
 	*oidataptr=oidata;
-	return (PTP_oi_Filename+(filenamelen+1)*2+(capturedatelen+1)*4);
+	return (PTP_oi_Filename+filenamelen*2+(capturedatelen+1)*3);
 }
 
 static inline void
