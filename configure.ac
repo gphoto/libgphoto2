@@ -586,8 +586,6 @@ dnl with ac_file set to the filename.
 ])
 AC_OUTPUT
 
-GP_CAMLIBS_CHECK_SUBDIRS
-
 if test "x$CDPATH" != "x"
 then
         echo
