@@ -1,5 +1,9 @@
 2006-12-30  Marcus Meissner  <marcus@jet.franken.de>
 
+	* library.c,ptp-bugs.h: Mark up MTP devices
+	  known to support MTP GetObjectPropertyList
+	  correctly. Do not call it for others.
+
 	From libmtp developers.
 	* ptp.c,ptp.h: Lots of new MTP defines and
 	  debug output.

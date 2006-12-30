@@ -735,85 +735,85 @@ static struct {
 	{"iRiver:Portable Media Center",	0x1006, 0x4002, PTP_MTP},
 	{"iRiver:Portable Media Center",	0x1006, 0x4003, PTP_MTP},
 	/* From: thanosz@softhome.net */
-	{"Philipps:HDD6320",                    0x0471, 0x01eb, PTP_MTP},
-	{"Philipps:HDD6320 2",                  0x0471, 0x014b, PTP_MTP},
-	{"Philipps:HDD6130/17",                 0x0471, 0x014c, PTP_MTP},
+	{"Philipps:HDD6320",                    0x0471, 0x01eb, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"Philipps:HDD6320 2",                  0x0471, 0x014b, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"Philipps:HDD6130/17",                 0x0471, 0x014c, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	/* From Gerhard Mekenkamp */
+	{"Philips:GoGear Audio",		0x0471, 0x0165, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+
 	/* borrowed from libmtp source */
-	{"Creative:Zen Vision",			0x041e, 0x411f, PTP_MTP},
-	{"Creative:Portable Media Center",	0x041e, 0x4123, PTP_MTP},
-	{"Creative:Zen Xtra",			0x041e, 0x4128, PTP_MTP},
-	{"Second generation Dell DJ",		0x041e, 0x412f, PTP_MTP},
-	{"Creative:Zen Micro",			0x041e, 0x4130, PTP_MTP},
-	{"Creative:Zen Touch",			0x041e, 0x4131, PTP_MTP},
+	{"Creative:Zen Vision",			0x041e, 0x411f, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"Creative:Portable Media Center",	0x041e, 0x4123, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"Creative:Zen Xtra",			0x041e, 0x4128, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"Second generation Dell DJ",		0x041e, 0x412f, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"Creative:Zen Micro",			0x041e, 0x4130, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"Creative:Zen Touch",			0x041e, 0x4131, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	{"Dell:Pocket DJ",			0x041e, 0x4132, PTP_MTP},
-	{"Creative:Zen Sleek",			0x041e, 0x4137, PTP_MTP},
+	{"Creative:Zen Sleek",			0x041e, 0x4137, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* Jennifer Scalf <oneferna@gmail.com> */
-	{"Creative:Zen MicroPhoto",             0x041e, 0x413c, PTP_MTP},
-	{"Creative:Zen Sleek Photo",		0x041e, 0x413d, PTP_MTP},
-	{"Creative:Zen Vision:M",		0x041e, 0x413e, PTP_MTP},
+	{"Creative:Zen MicroPhoto",             0x041e, 0x413c, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"Creative:Zen Sleek Photo",		0x041e, 0x413d, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"Creative:Zen Vision:M",		0x041e, 0x413e, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* Reported by marazm@o2.pl */
-	{"Creative:Zen V",			0x041e, 0x4150, PTP_MTP},
+	{"Creative:Zen V",			0x041e, 0x4150, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* Reported by danielw@iinet.net.au */
-	{"Creative:Zen Vision M",		0x041e, 0x4151, PTP_MTP},
+	{"Creative:Zen Vision M",		0x041e, 0x4151, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* Reported by Darel on the XNJB forums */
-	{"Creative:Zen V plus",			0x041e, 0x4152, PTP_MTP},
+	{"Creative:Zen V plus",			0x041e, 0x4152, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* From Richard Low of the libmtp devteam */
-	{"Creative:Zen Vision W",		0x041e, 0x4153, PTP_MTP},
+	{"Creative:Zen Vision W",		0x041e, 0x4153, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* The 2 below will not work out of the box, since the autoswitch
 	 * to USB Mass Storage once probed.
 	 * https://sourceforge.net/tracker/?func=detail&atid=108874&aid=1577793&group_id=8874
 	 */
-	{"Dunlop:MP3 player 1GB",		0x10d6, 0x2200, PTP_MTP},
-	{"EGOMAN:MD223AFD",			0x10d6, 0x2200, PTP_MTP},
+	{"Dunlop:MP3 player 1GB",		0x10d6, 0x2200, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"EGOMAN:MD223AFD",			0x10d6, 0x2200, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 
 	/* IRC reporter */
-	{"Dell:DJ Itty",			0x413c, 0x4500, PTP_MTP},
+	{"Dell:DJ Itty",			0x413c, 0x4500, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 
-	{"Intel:Bandon Portable Media Center",	0x045e, 0x00c9, PTP_MTP},
-
-	/* From Gerhard Mekenkamp */
-	{"Philips:GoGear Audio",		0x0471, 0x0165, PTP_MTP},
+	{"Intel:Bandon Portable Media Center",	0x045e, 0x00c9, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 
 	/* Marcoen Hirschberg <marcoen@users.sourceforge.net> */
-	{"Toshiba:Gigabeat MEGF-40",            0x0930, 0x0009, PTP_MTP},
-	{"Toshiba:Gigabeat",                    0x0930, 0x000c, PTP_MTP},
-	{"Toshiba:Gigabeat S",                  0x0930, 0x0010, PTP_MTP},
+	{"Toshiba:Gigabeat MEGF-40",            0x0930, 0x0009, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"Toshiba:Gigabeat",                    0x0930, 0x000c, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"Toshiba:Gigabeat S",                  0x0930, 0x0010, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* Reported by Rob Brown */
-	{"Toshiba:Gigabeat P10",                0x0930, 0x0011, PTP_MTP},
+	{"Toshiba:Gigabeat P10",                0x0930, 0x0011, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 
 	/* Reported by gudul1@users.sourceforge.net */
-	{"Archos 104",				0x0e79, 0x120a, PTP_MTP},
+	{"Archos 104",				0x0e79, 0x120a, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 
 	/* From Mark Veinot */
-	{"JVC:Alneo XA-HD500", 			0x04f1, 0x6105, PTP_MTP},
+	{"JVC:Alneo XA-HD500", 			0x04f1, 0x6105, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1474056&group_id=8874&atid=108874 */
-	{"Samsung:YP-T7J", 			0x04e8, 0x5047, PTP_MTP},
-	{"Samsung:YH-820",			0x04e8, 0x502e, PTP_MTP},
-	{"Samsung:YH-925",			0x04e8, 0x502f, PTP_MTP},
+	{"Samsung:YP-T7J", 			0x04e8, 0x5047, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"Samsung:YH-820",			0x04e8, 0x502e, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"Samsung:YH-925",			0x04e8, 0x502f, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* Reported by cstrickler@gmail.com */
-	{"Samsung:YP-U2J (YP-U2JXB/XAA)",	0x04e8, 0x5054, PTP_MTP},
+	{"Samsung:YP-U2J (YP-U2JXB/XAA)",	0x04e8, 0x5054, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* Reported by Andrew Benson */
-	{"Samsung:YP-F2J",			0x04e8, 0x5057, PTP_MTP},
+	{"Samsung:YP-F2J",			0x04e8, 0x5057, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* Reported by Patrick <skibler@gmail.com> */
-	{"Samsung:YP-K5",			0x04e8, 0x505a, PTP_MTP},
+	{"Samsung:YP-K5",			0x04e8, 0x505a, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* Reported by Matthew Wilcox <matthew@wil.cx> */
-	{"Samsung Yepp T9",			0x04e8, 0x507f, PTP_MTP},
+	{"Samsung Yepp T9",			0x04e8, 0x507f, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 
-	{"Samsung:YH-999 Portable Media Center",0x04e8, 0x5a0f, PTP_MTP},
+	{"Samsung:YH-999 Portable Media Center",0x04e8, 0x5a0f, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 
 	/* Reported by Brian Robison */
-	{"SanDisk:Sansa m240",			0x0781, 0x7400, PTP_MTP},
+	{"SanDisk:Sansa m240",			0x0781, 0x7400, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* Reported by tangent_@users.sourceforge.net */
-	{"SanDisk:Sansa c150",			0x0781, 0x7410, PTP_MTP},
+	{"SanDisk:Sansa c150",			0x0781, 0x7410, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1515815&group_id=8874&atid=358874 */
-	{"Sandisk:Sansa e200",			0x0781, 0x7420, PTP_MTP},
-	{"Sandisk:Sansa e260",			0x0781, 0x7420, PTP_MTP},
+	{"Sandisk:Sansa e200",			0x0781, 0x7420, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"Sandisk:Sansa e260",			0x0781, 0x7420, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 
 	/* Reported by Farooq Zaman. NOTE: Can just list files currently and might have other problems! */
-	{"Microsoft:Zune",			0x045e, 0x0710, PTP_MTP},
+	{"Microsoft:Zune",			0x045e, 0x0710, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* From Richard Low */
-	{"Sirius:Stiletto",			0x18f6, 0x0102, PTP_MTP }
+	{"Sirius:Stiletto",			0x18f6, 0x0102, PTP_MTP|PTP_MTP_PROPLIST_WORKS}
 };
 
 static struct {
@@ -2906,8 +2906,10 @@ gpfile_getfunc (PTPParams *params, void *priv,
 ) {
 	PTPCFHandlerPrivate* private = (PTPCFHandlerPrivate*)priv;
 	int ret;
-	
-	ret = gp_file_slurp (private->file, bytes, wantlen, gotlen);
+	size_t	gotlensize;
+
+	ret = gp_file_slurp (private->file, bytes, wantlen, &gotlensize);
+	*gotlen = gotlensize;
 	if (ret != GP_OK)
 		return PTP_ERROR_IO;
 	return PTP_RC_OK;
@@ -3627,9 +3629,9 @@ init_ptp_fs (Camera *camera, GPContext *context)
 
 	/* Microsoft/MTP also has fast directory retrieval. */
 	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
-	    ptp_operation_issupported(params,PTP_OC_MTP_GetObjPropList))
-
-	{
+	    ptp_operation_issupported(params,PTP_OC_MTP_GetObjPropList) &&
+	    (camera->pl->bugs & PTP_MTP_PROPLIST_WORKS)
+	) {
 		PTPObjectInfo	*oinfos = NULL;	
 		int		cnt = 0,i;
 		uint32_t	lasthandle = 0xffffffff;
