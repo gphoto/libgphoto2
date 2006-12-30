@@ -8,8 +8,8 @@ dnl ******* THE NEXT RELEASE VERSION MUST BE 2.3.2 at least or higher!
 AC_INIT([libgphoto2], [2.3.1.1.trunk], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
 AC_CONFIG_SRCDIR([libgphoto2/gphoto2-version.c])
 AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_MACRO_DIR([m4m])
-AC_CONFIG_AUX_DIR([.])
+AC_CONFIG_MACRO_DIR([auto-m4])
+AC_CONFIG_AUX_DIR([auto-aux])
 dnl Working around bug in automake <= 1.9.6:
 dnl  - Please do not add filename-length-max=99 here.
 dnl  - Otherwise "make distdir" will fail in gphoto-suite
