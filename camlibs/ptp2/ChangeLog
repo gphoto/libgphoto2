@@ -12,6 +12,8 @@
 	2006-12-29  Richard Low <richard@wentnet.com>
 	* ptp-pack.c: Fixed bugs in ObjectInfo packing
 	  magic.
+	
+	* library.c: Added Philips SA9200.
 
 2006-12-29  Marcus Meissner  <marcus@jet.franken.de>
 

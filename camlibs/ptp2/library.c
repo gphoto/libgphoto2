@@ -735,11 +735,14 @@ static struct {
 	{"iRiver:Portable Media Center",	0x1006, 0x4002, PTP_MTP},
 	{"iRiver:Portable Media Center",	0x1006, 0x4003, PTP_MTP},
 	/* From: thanosz@softhome.net */
-	{"Philipps:HDD6320",                    0x0471, 0x01eb, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"Philipps:HDD6320 2",                  0x0471, 0x014b, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"Philipps:HDD6130/17",                 0x0471, 0x014c, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"Philips:HDD6320",			0x0471, 0x01eb, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"Philips:HDD6320 2",			0x0471, 0x014b, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"Philips:HDD6130/17",			0x0471, 0x014c, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	/* from XNJB forum */
+	{"Philips:GoGear SA9200",		0x0471, 0x014f, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* From Gerhard Mekenkamp */
 	{"Philips:GoGear Audio",		0x0471, 0x0165, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+
 
 	/* borrowed from libmtp source */
 	{"Creative:Zen Vision",			0x041e, 0x411f, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
