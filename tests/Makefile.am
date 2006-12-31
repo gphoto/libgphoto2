@@ -1,4 +1,4 @@
-SUBDIRS = ddb
+SUBDIRS =
 
 check_PROGRAMS = \
 	test-camera-list \

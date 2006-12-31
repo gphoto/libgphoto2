@@ -205,7 +205,7 @@ main (int argc, char *argv[])
 		const char *camlibs = (camlib_env != NULL)?camlib_env:CAMLIBS;
 
 		printf("no camera drivers (camlibs) found in camlib dir:\n"
-		       "    CAMLIBS=\`%s', default=\'%s', used=%s\n",
+		       "    CAMLIBS='%s', default='%s', used=%s\n",
 		       camlib_env?camlib_env:"(null)", CAMLIBS,
 		       (camlib_env!=NULL)?"CAMLIBS":"default");
 		return(1);
