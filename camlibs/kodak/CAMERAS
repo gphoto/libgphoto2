@@ -20,8 +20,8 @@ dc20 [***]
 
 
 
-[*] PTP is a new standardized protocol. Currently only
-implemented in jphoto. http://jphoto.sourceforge.net/
+[*] PTP is a new standardized protocol, implemented by the ptp2
+    driver.
 [**] DC-3800 can't be connected to a computer. Use CompactFlash
 reader instead.
 [***] dc20 no longer exists in gphoto2.
