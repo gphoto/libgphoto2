@@ -5,7 +5,7 @@ dnl NOTE: Be version style _higher_ than the last release.
 dnl       So lastversion.X.trunk for instance. Bump X if necessary.
 
 dnl ******* THE NEXT RELEASE VERSION MUST BE 2.3.2 at least or higher!
-AC_INIT([libgphoto2], [2.3.1.2.trunk], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
+AC_INIT([libgphoto2], [2.3.1.3.trunk], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
 AC_CONFIG_SRCDIR([libgphoto2/gphoto2-version.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([auto-m4])
@@ -51,6 +51,7 @@ dnl A:R:C=2:0:4  libgphoto2-2.3 (since libgphoto2-2.2.1.5.trunk)
 dnl A:R:C=2:1:4  libgphoto2-2.3.1 (since libgphoto2-2.3.0.1.trunk)
 dnl A:R:C=3:0:5  libgphoto2-2.3.0.3.trunk (new gp_file_new_from_fd() function)
 dnl              libgphoto2-2.3.1.1.trunk (new gp_file_slurp() function)
+dnl              libgphoto2-2.3.1.2.trunk (new gp_camera_get_storageinfo() function + enums + struct)
 AC_SUBST([LIBGPHOTO2_AGE],      [3])
 AC_SUBST([LIBGPHOTO2_REVISION], [0])
 AC_SUBST([LIBGPHOTO2_CURRENT],  [5])
@@ -236,6 +237,7 @@ dnl fi
 AC_SUBST([localedir],["\$(datadir)/locale"])
 AM_CPPFLAGS="$AM_CPPFLAGS -DLOCALEDIR=\\\"${localedir}\\\""
 
+AC_SYS_LARGEFILE
 
 dnl ---------------------------------------------------------------------------
 dnl FIXME: What is this good for?
