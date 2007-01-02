@@ -299,13 +299,18 @@ typedef struct _PTPIPHeader PTPIPHeader;
 /* ^^^ guess ^^^ */
 
 /*
+ * Microsoft Advanced Audio/Video Transfer 
+ * Extensions (microsoft.com/AAVT: 1.0)
+ */
+#define PTP_OC_MTP_AAVT_OpenMediaSession		0x9170
+#define PTP_OC_MTP_AAVT_CloseMediaSession		0x9171
+#define PTP_OC_MTP_AAVT_GetNextDataBlock		0x9172
+#define PTP_OC_MTP_AAVT_SetCurrentTimePosition		0x9173
+
+/*
  * Windows Media Digital Rights Management for Network Devices 
  * Extensions (microsoft.com/WMDRMND: 1.0) MTP/IP?
  */
-#define PTP_OC_MTP_WMDRMND_OpenMediaSession1		0x9170
-#define PTP_OC_MTP_WMDRMND_OpenMediaSession2		0x9171
-#define PTP_OC_MTP_WMDRMND_GetNextDataBlock		0x9172
-#define PTP_OC_MTP_WMDRMND_SetCurrentTimePosition	0x9173
 #define PTP_OC_MTP_WMDRMND_SendRegistrationRequest	0x9180
 #define PTP_OC_MTP_WMDRMND_GetRegistrationResponse	0x9181
 #define PTP_OC_MTP_WMDRMND_GetProximityChallenge	0x9182
@@ -387,6 +392,12 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_RC_MTP_Invalid_Dataset		0xA806
 #define PTP_RC_MTP_Specification_By_Group_Unsupported		0xA808
 #define PTP_RC_MTP_Object_Too_Large		0xA809
+
+/* Microsoft Advanced Audio/Video Transfer response codes 
+(microsoft.com/AAVT 1.0) */
+#define PTP_RC_MTP_Invalid_Media_Session_ID	0xA170	
+#define PTP_RC_MTP_Media_Session_Limit_Reached	0xA171
+#define PTP_RC_MTP_No_More_Data			0xA172
 
 /* WiFi Provisioning MTP Extension Error Codes (microsoft.com/WPDWCN: 1.0) */
 #define PTP_RC_MTP_Invalid_WFC_Syntax		0xA121

@@ -3,6 +3,9 @@
 	* library.c: Report storage information 
 	  dynamically using the new API.
 
+	* ptp.c,ptp.h: From libmtp folks:
+	  Renamed some defines of MTP commands.
+
 2006-12-30  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c,ptp-bugs.h: Mark up MTP devices

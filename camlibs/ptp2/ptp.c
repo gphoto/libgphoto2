@@ -3860,11 +3860,13 @@ struct {
 	{PTP_OC_MTP_WMDRMPD_DisableTrustedFilesOperations,N_("Disable trusted file operations")},
 	{PTP_OC_MTP_WMDRMPD_EndTrustedAppSession,N_("End trusted application session")},
 
+	/* AAVT Extensions */
+	{PTP_OC_MTP_AAVT_OpenMediaSession,N_("Open Media Session")},
+	{PTP_OC_MTP_AAVT_CloseMediaSession,N_("Close Media Session")},
+	{PTP_OC_MTP_AAVT_GetNextDataBlock,N_("Get Next Data Block")},
+	{PTP_OC_MTP_AAVT_SetCurrentTimePosition,N_("Set Current Time Position")},
+
 	/* WMDRMND Extensions */
-	{PTP_OC_MTP_WMDRMND_OpenMediaSession1,N_("Open Media Session")},
-	{PTP_OC_MTP_WMDRMND_OpenMediaSession2,N_("Open Media Session")},
-	{PTP_OC_MTP_WMDRMND_GetNextDataBlock,N_("Get Next Data Block")},
-	{PTP_OC_MTP_WMDRMND_SetCurrentTimePosition,N_("Set Current Time Position")},
 	{PTP_OC_MTP_WMDRMND_SendRegistrationRequest,N_("Send Registration Request")},
 	{PTP_OC_MTP_WMDRMND_GetRegistrationResponse,N_("Get Registration Response")},
 	{PTP_OC_MTP_WMDRMND_GetProximityChallenge,N_("Get Proximity Challenge")},
