@@ -1,4 +1,4 @@
-/***************************************************************************
+/**************************************************************************
  *
  * library.c
  *
@@ -997,6 +997,33 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 
 	return GP_OK;
 }
+
+static int
+storage_info_func (
+	CameraFilesystem *fs,
+	CameraStorageInformation **sinfos, int *nrofsinfos,
+	void *data, GPContext *context
+) {
+	Camera *camera = (Camera*)data;
+
+	if (!check_readiness (camera, context))
+		return GP_ERROR_IO;
+
+	*sinfos = (CameraStorageInformation*) calloc (sizeof (CameraStorageInformation), 1);
+	*nrofsinfos = 1;
+	(*sinfos)->fields = GP_STORAGEINFO_BASE;
+	strcpy ((*sinfos)->basedir, "/");
+	if (camera->pl->cached_drive) {
+		(*sinfos)->fields = GP_STORAGEINFO_LABEL;
+		strcpy ((*sinfos)->basedir, camera->pl->cached_drive);
+	}
+	(*sinfos)->fields |= GP_STORAGEINFO_MAXCAPACITY;
+	(*sinfos)->capacitykbytes = camera->pl->cached_capacity / 1024;
+	(*sinfos)->fields |= GP_STORAGEINFO_FREESPACEKBYTES;
+	(*sinfos)->capacitykbytes = camera->pl->cached_available / 1024;
+	return GP_OK;
+}
+	
 
 /****************************************************************************/
 
@@ -2197,7 +2224,8 @@ static CameraFilesystemFuncs fsfuncs = {
 	.del_file_func = delete_file_func,
 	.put_file_func = put_file_func,
 	.make_dir_func = make_dir_func,
-	.remove_dir_func = remove_dir_func
+	.remove_dir_func = remove_dir_func,
+	.storage_info_func = storage_info_func
 };
 
 int

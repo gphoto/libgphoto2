@@ -15,7 +15,7 @@
  * and usb.c, keeping the common protocols/busses support in this
  * file.
  */
-
+#define _BSD_SOURCE
 #include "config.h"
 
 #include <stdlib.h>
@@ -952,7 +952,6 @@ canon_int_do_control_command (Camera *camera, unsigned int subcmd, int a, int b)
  *          length of the response in @datalen
  *
  */
-#if 0 /* This function is not used by anybody */
 static int
 canon_int_do_control_dialogue_payload (Camera *camera, unsigned char *payload,
                                        unsigned int payloadlen,
@@ -990,7 +989,6 @@ canon_int_do_control_dialogue_payload (Camera *camera, unsigned char *payload,
 
         return GP_OK;
 }
-#endif
 
 /**
  * canon_int_do_control_dialogue:
@@ -1010,7 +1008,6 @@ canon_int_do_control_dialogue_payload (Camera *camera, unsigned char *payload,
  *          length of the response in @datalen
  *
  */
-#if 0 /* This function is not used by anybody */
 static int
 canon_int_do_control_dialogue (Camera *camera, unsigned int subcmd, int a, int b,
                                unsigned char **response_handle, unsigned int *datalen)
@@ -1038,7 +1035,6 @@ canon_int_do_control_dialogue (Camera *camera, unsigned int subcmd, int a, int b
 
         return GP_OK;
 }
-#endif
 
 
 /**
