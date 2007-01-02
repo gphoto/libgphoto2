@@ -357,6 +357,24 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	return GP_OK;
 }
 
+/**
+ * Get information on all available storages in the camera.
+ *
+ * This function is a CameraFilesystem method.
+ */
+static int
+storage_info_func (CameraFilesystem *fs,
+		CameraStorageInformation **storageinformations,
+		int *nrofstorageinformations, void *data,
+		GPContext *context) 
+{
+	Camera *camera = data;
+
+	/* List your storages here */
+
+	return GP_ERROR_NOT_SUPPORTED;
+}
+
 /*@}*/
 
 
@@ -438,6 +456,7 @@ static CameraFilesystemFuncs fsfuncs = {
 	.del_file_func = delete_file_func,
 	.put_file_func = put_file_func,
 	.delete_all_func = delete_all_func,
+	.storage_info_func = storage_info_func
 };
 
 /**
