@@ -44,6 +44,9 @@ order to set up a #Camera, you need to call #gp_camera_set_abilities. The
 #CameraLibraryAbilitiesFunc
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### ENUM CameraDriverStatus ##### -->
 <para>
   This flag indicates the stability of the driver.
@@ -57,6 +60,7 @@ order to set up a #Camera, you need to call #gp_camera_set_abilities. The
 @GP_DRIVER_STATUS_TESTING: Driver is functional, but needs testing.
 @GP_DRIVER_STATUS_EXPERIMENTAL: Driver is experimental and does not yet
 				work properly.
+@GP_DRIVER_STATUS_DEPRECATED: 
 
 <!-- ##### ENUM CameraOperation ##### -->
 <para>
@@ -100,7 +104,7 @@ order to set up a #Camera, you need to call #gp_camera_set_abilities. The
 @GP_FOLDER_OPERATION_MAKE_DIR: The camera can create directories.
 @GP_FOLDER_OPERATION_REMOVE_DIR: The camera can remove directories.
 
-<!-- ##### TYPEDEF CameraAbilities ##### -->
+<!-- ##### STRUCT CameraAbilities ##### -->
 <para>
   This structure is used to inform frontends about what abilities a
   specific camera model has. In addition, it is used by gphoto2 to
@@ -110,6 +114,28 @@ order to set up a #Camera, you need to call #gp_camera_set_abilities. The
   the system for drivers. Then, retreive the #CameraAbilities from this list.
 </para>
 
+@model: 
+@status: 
+@port: 
+@speed: 
+@operations: 
+@file_operations: 
+@folder_operations: 
+@usb_vendor: 
+@usb_product: 
+@usb_class: 
+@usb_subclass: 
+@usb_protocol: 
+@library: 
+@id: 
+@reserved1: 
+@reserved2: 
+@reserved3: 
+@reserved4: 
+@reserved5: 
+@reserved6: 
+@reserved7: 
+@reserved8: 
 
 <!-- ##### STRUCT CameraAbilitiesList ##### -->
 <para>

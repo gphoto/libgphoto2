@@ -47,6 +47,9 @@ retreiving information about a file, etc.
 #CameraLibraryInitFunc
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### STRUCT CameraFilesystem ##### -->
 <para>
 

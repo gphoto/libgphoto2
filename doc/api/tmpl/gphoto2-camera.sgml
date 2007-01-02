@@ -60,6 +60,9 @@ Error reporting can be performed using #gp_camera_set_error and #gp_camera_get_e
 #CameraFilesystem, #GPPort
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### USER_FUNCTION CameraExitFunc ##### -->
 <para>
   Implement this function in camera drivers if you need to clean up on
@@ -193,11 +196,12 @@ Error reporting can be performed using #gp_camera_set_error and #gp_camera_get_e
 </para>
 
 
-<!-- ##### TYPEDEF CameraText ##### -->
+<!-- ##### STRUCT CameraText ##### -->
 <para>
 
 </para>
 
+@text: 
 
 <!-- ##### STRUCT CameraFunctions ##### -->
 <para>
@@ -216,6 +220,7 @@ Error reporting can be performed using #gp_camera_set_error and #gp_camera_get_e
 @summary: 
 @manual: 
 @about: 
+@wait_for_event: 
 @reserved1: 
 @reserved2: 
 @reserved3: 
@@ -223,7 +228,6 @@ Error reporting can be performed using #gp_camera_set_error and #gp_camera_get_e
 @reserved5: 
 @reserved6: 
 @reserved7: 
-@reserved8: 
 
 <!-- ##### STRUCT Camera ##### -->
 <para>
@@ -351,11 +355,13 @@ Error reporting can be performed using #gp_camera_set_error and #gp_camera_get_e
 @Returns: 
 
 
-<!-- ##### TYPEDEF CameraFilePath ##### -->
+<!-- ##### STRUCT CameraFilePath ##### -->
 <para>
 
 </para>
 
+@name: 
+@folder: 
 
 <!-- ##### ENUM CameraCaptureType ##### -->
 <para>

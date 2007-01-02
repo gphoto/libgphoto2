@@ -16,6 +16,9 @@ An abstraction of files
   #CameraFileSystem
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### STRUCT CameraFile ##### -->
 <para>
 
@@ -136,6 +139,7 @@ An abstraction of files
 @GP_FILE_TYPE_AUDIO: A file of this type contains audio data that is 
 		     connected to another file.
 @GP_FILE_TYPE_EXIF: 
+@GP_FILE_TYPE_METADATA: 
 
 <!-- ##### FUNCTION gp_file_get_type ##### -->
 <para>

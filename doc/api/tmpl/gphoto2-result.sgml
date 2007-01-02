@@ -57,6 +57,9 @@ the ones defined in gphoto2-port.
 #gp_port_result_as_string
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### MACRO GP_ERROR_CORRUPTED_DATA ##### -->
 <para>
 
