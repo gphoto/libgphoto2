@@ -241,6 +241,9 @@ int gp_camera_wait_for_event     (Camera *camera, int timeout,
 		                  CameraEventType *eventtype, void **eventdata,
 			          GPContext *context);
 
+int gp_camera_get_storageinfo    (Camera *camera, CameraStorageInformation**,
+				   int *, GPContext *context);
+
 /**@}*/
 
 

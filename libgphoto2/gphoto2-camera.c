@@ -1381,6 +1381,34 @@ gp_camera_folder_remove_dir (Camera *camera, const char *folder,
 }
 
 /**
+ * Gets information on the camera attached storage.
+ *
+ * @param camera a #Camera
+ * @param folder the folder from which to remove the directory
+ * @param name the name of the directory to be removed
+ * @param context a #GPContext
+ * @return a gphoto2 error code
+ *
+ */
+int
+gp_camera_get_storageinfo (
+	Camera *camera, CameraStorageInformation **sifs,
+	int *nrofsifs, GPContext *context)
+{
+	CHECK_NULL (camera && sifs && nrofsifs);
+	CHECK_INIT (camera, context);
+
+	CHECK_RESULT_OPEN_CLOSE (camera,
+		gp_filesystem_get_storageinfo (
+			camera->fs, sifs, nrofsifs, context
+		),
+		context
+	);
+	CAMERA_UNUSED (camera, context);
+	return (GP_OK);
+}
+
+/**
  * @param camera a Camera
  * @param start_func
  * @param stop_func

@@ -240,6 +240,8 @@ struct _CameraFilesystem {
 	CameraFilesystemDirFunc make_dir_func;
 	CameraFilesystemDirFunc remove_dir_func;
 	void *folder_data;
+
+	CameraFilesystemStorageInfoFunc	storage_info_func;
 };
 
 #undef  MIN
@@ -1786,6 +1788,7 @@ gp_filesystem_set_funcs	(CameraFilesystem *fs,
 	fs->get_file_func	= funcs->get_file_func;
 	fs->file_data = data;
 
+	fs->storage_info_func	= funcs->storage_info_func;
 	return (GP_OK);
 }
 
@@ -2392,4 +2395,25 @@ gp_filesystem_set_info (CameraFilesystem *fs, const char *folder,
 	}
 
 	return (GP_OK);
+}
+
+int
+gp_filesystem_get_storageinfo (
+	CameraFilesystem *fs,
+	CameraStorageInformation **storageinfo,
+	int *nrofstorageinfos,
+	GPContext *context
+) {
+	CHECK_NULL (fs && storageinfo && nrofstorageinfos);
+	CC (context);
+
+	if (!fs->storage_info_func) {
+		gp_context_error (context,
+			_("The filesystem doesn't support getting storage "
+			  "information"));
+		return (GP_ERROR_NOT_SUPPORTED);
+	}
+	return fs->storage_info_func (fs, 
+		storageinfo, nrofstorageinfos,
+		fs->info_data, context);
 }

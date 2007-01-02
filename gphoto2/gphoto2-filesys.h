@@ -101,6 +101,53 @@ struct _CameraFileInfo {
 	CameraFileInfoAudio   audio;
 };
 
+typedef enum {
+	GP_STORAGEINFO_BASE		= (1<<0),
+	GP_STORAGEINFO_LABEL		= (1<<1),
+	GP_STORAGEINFO_DESCRIPTION	= (1<<2),
+	GP_STORAGEINFO_ACCESS		= (1<<3),
+	GP_STORAGEINFO_STORAGETYPE	= (1<<4),
+	GP_STORAGEINFO_FILESYSTEMTYPE	= (1<<5),
+	GP_STORAGEINFO_MAXCAPACITY	= (1<<6),
+	GP_STORAGEINFO_FREESPACEKBYTES	= (1<<7),
+	GP_STORAGEINFO_FREESPACEIMAGES	= (1<<8)
+} CameraStorageInfoFields;
+
+typedef enum { /* same as PTP_ST_xxx */
+	GP_STORAGEINFO_ST_UNKNOWN	= 0,
+	GP_STORAGEINFO_ST_FIXED_ROM	= 1,
+	GP_STORAGEINFO_ST_REMOVABLE_ROM= 2,
+	GP_STORAGEINFO_ST_FIXED_RAM	= 3,
+	GP_STORAGEINFO_ST_REMOVABLE_RAM= 4
+} CameraStorageType;
+
+typedef enum { /* same as PTP_AC_xxxx */
+	GP_STORAGEINFO_AC_READWRITE		= 0,
+	GP_STORAGEINFO_AC_READONLY		= 1,
+	GP_STORAGEINFO_AC_READONLY_WITH_DELETE	= 2,
+} CameraStorageAccessType;
+
+typedef enum { /* same as PTP_FST_xxxx */
+	GP_STORAGEINFO_FST_UNDEFINED		= 0,
+	GP_STORAGEINFO_FST_GENERICFLAT		= 1,
+	GP_STORAGEINFO_FST_GENERICHIERARCHICAL	= 2,
+	GP_STORAGEINFO_FST_DCF			= 3
+} CameraStorageFilesystemType;
+
+typedef struct _CameraStorageInformation CameraStorageInformation;
+struct _CameraStorageInformation {
+	CameraStorageInfoFields		fields;
+	char				basedir[256];	/* "/" for single entry */
+	char				label[256];
+	char				description[256];
+	CameraStorageType		type;
+	CameraStorageFilesystemType	fstype;
+	CameraStorageAccessType		access;
+	unsigned long			capacitykbytes;
+	unsigned long			freekbytes;
+	unsigned long			freeimages;
+};
+
 /* You don't really want to know what's inside, do you? */
 typedef struct _CameraFilesystem CameraFilesystem;
 
@@ -204,6 +251,16 @@ int gp_filesystem_set_folder_funcs (CameraFilesystem *fs,
 				  CameraFilesystemDirFunc remove_dir_func,
 				  void *data);
 
+typedef int (*CameraFilesystemStorageInfoFunc) (CameraFilesystem *fs,
+					      CameraStorageInformation **,
+					      int *nrofstorageinformations,
+					      void *data, GPContext *context);
+
+int gp_filesystem_get_storageinfo (CameraFilesystem *fs,
+				   CameraStorageInformation **,
+				   int *nrofstorageinformations,
+				   GPContext *context);
+
 typedef struct _CameraFilesystemFuncs CameraFilesystemFuncs;
 struct _CameraFilesystemFuncs {
 	CameraFilesystemListFunc	file_list_func;
@@ -217,8 +274,10 @@ struct _CameraFilesystemFuncs {
 	CameraFilesystemGetFileFunc	get_file_func;
 	CameraFilesystemDeleteFileFunc	del_file_func;
 
+	CameraFilesystemStorageInfoFunc	storage_info_func;
+
 	/* for later use. Remove one if you add a new function */
-	void				*unused[32];
+	void				*unused[31];
 };
 int gp_filesystem_set_funcs	(CameraFilesystem *fs,
 				 CameraFilesystemFuncs *funcs,
