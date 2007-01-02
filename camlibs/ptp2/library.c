@@ -3459,6 +3459,116 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 }
 
 static int
+storage_info_func (CameraFilesystem *fs,
+		CameraStorageInformation **sinfos,
+		int *nrofsinfos,
+		void *data, GPContext *context
+) {
+	Camera *camera 		= data;
+	PTPParams *params 	= &camera->pl->params;
+	PTPStorageInfo		si;
+	PTPStorageIDs		sids;
+	int			i;
+	uint16_t		ret;
+	CameraStorageInformation*sif;
+
+	if (!ptp_operation_issupported (params, PTP_OC_GetStorageIDs))
+		return (GP_ERROR_NOT_SUPPORTED);
+
+	ret = ptp_getstorageids (params, &sids);
+	if (ret != PTP_RC_OK)
+		return translate_ptp_result (ret);
+	*nrofsinfos = sids.n;
+	*sinfos = (CameraStorageInformation*)
+		calloc (sizeof (CameraStorageInformation),sids.n);
+	for (i = 0; i<sids.n; i++) {
+		sif = (*sinfos)+i;
+		ret = ptp_getstorageinfo (params, sids.Storage[i], &si);
+		if (ret != PTP_RC_OK) {
+			gp_log (GP_LOG_ERROR, "ptp2/storage_info_func", "ptp getstorageinfo failed: 0x%x", ret);
+			return GP_ERROR;
+		}
+		sif->fields |= GP_STORAGEINFO_BASE;
+		sprintf (sif->basedir, "/"STORAGE_FOLDER_PREFIX"%08x", sids.Storage[i]);
+		
+		if (si.VolumeLabel && strlen(si.VolumeLabel)) {
+			sif->fields |= GP_STORAGEINFO_LABEL;
+			strcpy (sif->label, si.VolumeLabel);
+			free (si.VolumeLabel);
+		}
+		if (si.StorageDescription && strlen(si.StorageDescription)) {
+			sif->fields |= GP_STORAGEINFO_DESCRIPTION;
+			strcpy (sif->description, si.StorageDescription);
+			free (si.StorageDescription);
+		}
+		sif->fields |= GP_STORAGEINFO_STORAGETYPE;
+		switch (si.StorageType) {
+		case PTP_ST_Undefined:
+			sif->type = GP_STORAGEINFO_ST_UNKNOWN;
+			break;
+		case PTP_ST_FixedROM:
+			sif->type = GP_STORAGEINFO_ST_FIXED_ROM;
+			break;
+		case PTP_ST_FixedRAM:
+			sif->type = GP_STORAGEINFO_ST_FIXED_RAM;
+			break;
+		case PTP_ST_RemovableRAM:
+			sif->type = GP_STORAGEINFO_ST_REMOVABLE_RAM;
+			break;
+		case PTP_ST_RemovableROM:
+			sif->type = GP_STORAGEINFO_ST_REMOVABLE_ROM;
+			break;
+		default:
+			gp_log (GP_LOG_DEBUG, "ptp2/storage_info_func", "unknown storagetype 0x%x", si.StorageType);
+			sif->type = GP_STORAGEINFO_ST_UNKNOWN;
+			break;
+		}
+		sif->fields |= GP_STORAGEINFO_ACCESS;
+		switch (si.AccessCapability) {
+		case PTP_AC_ReadWrite:
+			sif->access = GP_STORAGEINFO_AC_READWRITE;
+			break;
+		case PTP_AC_ReadOnly:
+			sif->access = GP_STORAGEINFO_AC_READONLY;
+			break;
+		case PTP_AC_ReadOnly_with_Object_Deletion:
+			sif->access = GP_STORAGEINFO_AC_READONLY_WITH_DELETE;
+			break;
+		default:
+			gp_log (GP_LOG_DEBUG, "ptp2/storage_info_func", "unknown accesstype 0x%x", si.AccessCapability);
+			sif->access = GP_STORAGEINFO_AC_READWRITE;
+			break;
+		}
+		sif->fields |= GP_STORAGEINFO_FILESYSTEMTYPE;
+		switch (si.FilesystemType) {
+		default:
+		case PTP_FST_Undefined:
+			sif->fstype = GP_STORAGEINFO_FST_UNDEFINED;
+			break;
+		case PTP_FST_GenericFlat:
+			sif->fstype = GP_STORAGEINFO_FST_GENERICFLAT;
+			break;
+		case PTP_FST_GenericHierarchical:
+			sif->fstype = GP_STORAGEINFO_FST_GENERICHIERARCHICAL;
+			break;
+		case PTP_FST_DCF:
+			sif->fstype = GP_STORAGEINFO_FST_DCF;
+			break;
+		}
+		sif->fields |= GP_STORAGEINFO_MAXCAPACITY;
+		sif->capacitykbytes = si.MaxCapability / 1024;
+		sif->fields |= GP_STORAGEINFO_FREESPACEKBYTES;
+		sif->freekbytes = si.FreeSpaceInBytes / 1024;
+		if (si.FreeSpaceInImages != -1) {
+			sif->fields |= GP_STORAGEINFO_FREESPACEIMAGES;
+			sif->freeimages = si.FreeSpaceInImages;
+		}
+	}
+	free (sids.Storage);
+	return (GP_OK);
+}
+
+static int
 init_ptp_fs (Camera *camera, GPContext *context)
 {
 	int i,id,nroot;
@@ -3849,7 +3959,8 @@ static CameraFilesystemFuncs fsfuncs = {
 	.del_file_func		= delete_file_func,
 	.put_file_func		= put_file_func,
 	.make_dir_func		= make_dir_func,
-	.remove_dir_func	= remove_dir_func
+	.remove_dir_func	= remove_dir_func,
+	.storage_info_func	= storage_info_func
 };
 
 int
