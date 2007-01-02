@@ -1004,10 +1004,22 @@ storage_info_func (
 	CameraStorageInformation **sinfos, int *nrofsinfos,
 	void *data, GPContext *context
 ) {
+	char root[10];
 	Camera *camera = (Camera*)data;
+	int ret;
 
 	if (!check_readiness (camera, context))
 		return GP_ERROR_IO;
+
+	camera->pl->cached_drive = canon_int_get_disk_name (camera, context);
+	if (!camera->pl->cached_drive) {
+		gp_context_error (context, _("Could not get disk name: %s"),
+				  _("No reason available"));
+		return GP_ERROR_IO;
+	}
+	snprintf (root, sizeof (root), "%s\\", camera->pl->cached_drive);
+	canon_int_get_disk_name_info (camera, root, &camera->pl->cached_capacity,
+				    &camera->pl->cached_available, context);
 
 	*sinfos = (CameraStorageInformation*) calloc (sizeof (CameraStorageInformation), 1);
 	*nrofsinfos = 1;
@@ -1020,7 +1032,7 @@ storage_info_func (
 	(*sinfos)->fields |= GP_STORAGEINFO_MAXCAPACITY;
 	(*sinfos)->capacitykbytes = camera->pl->cached_capacity / 1024;
 	(*sinfos)->fields |= GP_STORAGEINFO_FREESPACEKBYTES;
-	(*sinfos)->capacitykbytes = camera->pl->cached_available / 1024;
+	(*sinfos)->freekbytes = camera->pl->cached_available / 1024;
 	return GP_OK;
 }
 	
