@@ -69,9 +69,9 @@ struct _GPPortSettingsSerial {
 typedef struct _GPPortSettingsUSB GPPortSettingsUSB;
 struct _GPPortSettingsUSB {
 	int inep, outep, intep;
-	int config;
-	int interface;
-	int altsetting;
+	int config, interface, altsetting;
+
+	int maxpacketsize; /* r/o */
 
 	/* must be last to avoid binary incompatibility.
 	 * luckily we just need to make sure this struct does not 

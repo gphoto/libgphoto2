@@ -617,6 +617,8 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 
 				/* Set the defaults */
 				if (dev->config) {
+					int i;
+
 					if (dev->config[config].interface[interface].altsetting[altsetting].bInterfaceClass
 					    == USB_CLASS_MASS_STORAGE) {
 						gp_log (GP_LOG_VERBOSE, "gphoto2-port-usb",
@@ -632,6 +634,13 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 					port->settings.usb.inep = gp_port_usb_find_ep(dev, config, interface, altsetting, USB_ENDPOINT_IN, USB_ENDPOINT_TYPE_BULK);
 					port->settings.usb.outep = gp_port_usb_find_ep(dev, config, interface, altsetting, USB_ENDPOINT_OUT, USB_ENDPOINT_TYPE_BULK);
 					port->settings.usb.intep = gp_port_usb_find_ep(dev, config, interface, altsetting, USB_ENDPOINT_IN, USB_ENDPOINT_TYPE_INTERRUPT);
+
+					for (i=0;i<dev->config[config].interface[interface].altsetting[altsetting].bNumEndpoints;i++) {
+						if (port->settings.usb.inep == dev->config[config].interface[interface].altsetting[altsetting].endpoint[i].bEndpointAddress) {
+							port->settings.usb.maxpacketsize = dev->config[config].interface[interface].altsetting[altsetting].endpoint[i].wMaxPacketSize;
+							break;
+						}
+					}
 					gp_log (GP_LOG_VERBOSE, "gphoto2-port-usb",
 						"Detected defaults: config %d, "
 						"interface %d, altsetting %d, "

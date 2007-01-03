@@ -3,6 +3,10 @@ libgphoto2_port 0.7.2
 Build:
    * Put auto* files into auto-aux/ and auto-m4/.
 
+USB:
+   * Reported wMaxPacketsize of the IN endpoint to the camlib
+     via GPPortSettings.
+
 ------------------------------------------------------------------------
 
 libgphoto2_port 0.7.1
