@@ -820,99 +820,107 @@ static struct {
 };
 
 static struct {
-	unsigned short format_code;
+	uint16_t	format_code;
+	uint16_t	vendor_code;
 	const char *txt;
 } object_formats[] = {
-	{PTP_OFC_Undefined,	"application/x-unknown"},
-	{PTP_OFC_Association,	"application/x-association"},
-	{PTP_OFC_Script,	"application/x-script"},
-	{PTP_OFC_Executable,	"application/octet-stream"},
-	{PTP_OFC_Text,		"text/plain"},
-	{PTP_OFC_HTML,		"text/html"},
-	{PTP_OFC_DPOF,		"text/plain"},
-	{PTP_OFC_AIFF,		"audio/x-aiff"},
-	{PTP_OFC_WAV,		GP_MIME_WAV},
-	{PTP_OFC_MP3,		"audio/mpeg"},
-	{PTP_OFC_AVI,		GP_MIME_AVI},
-	{PTP_OFC_MPEG,		"video/mpeg"},
-	{PTP_OFC_ASF,		"video/x-ms-asf"},
-	{PTP_OFC_QT,		"video/quicktime"},
-	{PTP_OFC_EXIF_JPEG,	GP_MIME_JPEG},
-	{PTP_OFC_TIFF_EP,	"image/x-tiffep"},
-	{PTP_OFC_FlashPix,	"image/x-flashpix"},
-	{PTP_OFC_BMP,		GP_MIME_BMP},
-	{PTP_OFC_CIFF,		"image/x-ciff"},
-	{PTP_OFC_Undefined_0x3806, "application/x-unknown"},
-	{PTP_OFC_GIF,		"image/gif"},
-	{PTP_OFC_JFIF,		GP_MIME_JPEG},
-	{PTP_OFC_PCD,		"image/x-pcd"},
-	{PTP_OFC_PICT,		"image/x-pict"},
-	{PTP_OFC_PNG,		GP_MIME_PNG},
-	{PTP_OFC_Undefined_0x380C, "application/x-unknown"},
-	{PTP_OFC_TIFF,		GP_MIME_TIFF},
-	{PTP_OFC_TIFF_IT,	"image/x-tiffit"},
-	{PTP_OFC_JP2,		"image/x-jpeg2000bff"},
-	{PTP_OFC_JPX,		"image/x-jpeg2000eff"},
-	{PTP_OFC_MTP_OGG,	"application/ogg"},
-	{PTP_OFC_MTP_FLAC,	"audio/x-flac"},
-	{PTP_OFC_MTP_MP2,	"video/mpeg"},
-	{PTP_OFC_MTP_M4A,	"audio/x-m4a"},
-	{PTP_OFC_MTP_MP4,	"video/mp4"},
-	{PTP_OFC_MTP_3GP,	"audio/3gpp"},
-	{PTP_OFC_MTP_WMV,	"video/x-ms-wmv"},
-	{PTP_OFC_MTP_WMA,	"audio/x-ms-wma"},
-	{PTP_OFC_MTP_AAC,	"audio/MP4A-LATM"},
-	{PTP_OFC_MTP_XMLDocument, "text/xml"},
-	{PTP_OFC_MTP_MSWordDocument, "application/msword"},
-	{PTP_OFC_MTP_MSExcelSpreadsheetXLS, "vnd.ms-excel"},
-	{PTP_OFC_MTP_MSPowerpointPresentationPPT, "vnd.ms-powerpoint"},
-	{PTP_OFC_MTP_vCard2, "text/directory"},
-	{PTP_OFC_MTP_vCard3, "text/directory"},
-	{PTP_OFC_MTP_vCalendar1, "text/calendar"},
-	{PTP_OFC_MTP_vCalendar2, "text/calendar"},
-	{0,			NULL}
+	{PTP_OFC_Undefined,		0, "application/x-unknown"},
+	{PTP_OFC_Association,		0, "application/x-association"},
+	{PTP_OFC_Script,		0, "application/x-script"},
+	{PTP_OFC_Executable,		0, "application/octet-stream"},
+	{PTP_OFC_Text,			0, "text/plain"},
+	{PTP_OFC_HTML,			0, "text/html"},
+	{PTP_OFC_DPOF,			0, "text/plain"},
+	{PTP_OFC_AIFF,			0, "audio/x-aiff"},
+	{PTP_OFC_WAV,			0, GP_MIME_WAV},
+	{PTP_OFC_MP3,			0, "audio/mpeg"},
+	{PTP_OFC_AVI,			0, GP_MIME_AVI},
+	{PTP_OFC_MPEG,			0, "video/mpeg"},
+	{PTP_OFC_ASF,			0, "video/x-ms-asf"},
+	{PTP_OFC_QT,			0, "video/quicktime"},
+	{PTP_OFC_EXIF_JPEG,		0, GP_MIME_JPEG},
+	{PTP_OFC_TIFF_EP,		0, "image/x-tiffep"},
+	{PTP_OFC_FlashPix,		0, "image/x-flashpix"},
+	{PTP_OFC_BMP,			0, GP_MIME_BMP},
+	{PTP_OFC_CIFF,			0, "image/x-ciff"},
+	{PTP_OFC_Undefined_0x3806,	0, "application/x-unknown"},
+	{PTP_OFC_GIF,			0, "image/gif"},
+	{PTP_OFC_JFIF,			0, GP_MIME_JPEG},
+	{PTP_OFC_PCD,			0, "image/x-pcd"},
+	{PTP_OFC_PICT,			0, "image/x-pict"},
+	{PTP_OFC_PNG,			0, GP_MIME_PNG},
+	{PTP_OFC_Undefined_0x380C,	0, "application/x-unknown"},
+	{PTP_OFC_TIFF,			0, GP_MIME_TIFF},
+	{PTP_OFC_TIFF_IT,		0, "image/x-tiffit"},
+	{PTP_OFC_JP2,			0, "image/x-jpeg2000bff"},
+	{PTP_OFC_JPX,			0, "image/x-jpeg2000eff"},
+
+	{PTP_OFC_MTP_OGG,		PTP_VENDOR_MICROSOFT, "application/ogg"},
+	{PTP_OFC_MTP_FLAC,		PTP_VENDOR_MICROSOFT, "audio/x-flac"},
+	{PTP_OFC_MTP_MP2,		PTP_VENDOR_MICROSOFT, "video/mpeg"},
+	{PTP_OFC_MTP_M4A,		PTP_VENDOR_MICROSOFT, "audio/x-m4a"},
+	{PTP_OFC_MTP_MP4,		PTP_VENDOR_MICROSOFT, "video/mp4"},
+	{PTP_OFC_MTP_3GP,		PTP_VENDOR_MICROSOFT, "audio/3gpp"},
+	{PTP_OFC_MTP_WMV,		PTP_VENDOR_MICROSOFT, "video/x-ms-wmv"},
+	{PTP_OFC_MTP_WMA,		PTP_VENDOR_MICROSOFT, "audio/x-ms-wma"},
+	{PTP_OFC_MTP_AAC,		PTP_VENDOR_MICROSOFT, "audio/MP4A-LATM"},
+	{PTP_OFC_MTP_XMLDocument,	PTP_VENDOR_MICROSOFT, "text/xml"},
+	{PTP_OFC_MTP_MSWordDocument,	PTP_VENDOR_MICROSOFT, "application/msword"},
+	{PTP_OFC_MTP_MSExcelSpreadsheetXLS, PTP_VENDOR_MICROSOFT, "vnd.ms-excel"},
+	{PTP_OFC_MTP_MSPowerpointPresentationPPT, PTP_VENDOR_MICROSOFT, "vnd.ms-powerpoint"},
+	{PTP_OFC_MTP_vCard2,		PTP_VENDOR_MICROSOFT, "text/directory"},
+	{PTP_OFC_MTP_vCard3,		PTP_VENDOR_MICROSOFT, "text/directory"},
+	{PTP_OFC_MTP_vCalendar1,	PTP_VENDOR_MICROSOFT, "text/calendar"},
+	{PTP_OFC_MTP_vCalendar2,	PTP_VENDOR_MICROSOFT, "text/calendar"},
+	{0,				0, NULL}
 };
 
 static int
-set_mimetype (Camera *camera, CameraFile *file, uint16_t ofc)
+set_mimetype (Camera *camera, CameraFile *file, uint16_t vendorcode, uint16_t ofc)
 {
 	int i;
 
-	for (i = 0; object_formats[i].format_code; i++)
-		if (object_formats[i].format_code == ofc)
-		{
-			CR (gp_file_set_mime_type (file, object_formats[i].txt));
-			return (GP_OK);
-		}
-
-	CR (gp_file_set_mime_type (file, "application/x-unknown"));
-	return (GP_OK);
+	for (i = 0; object_formats[i].format_code; i++) {
+		if (object_formats[i].vendor_code && /* 0 means generic */
+		    (object_formats[i].vendor_code != vendorcode))
+			continue;
+		if (object_formats[i].format_code != ofc)
+			continue;
+		return gp_file_set_mime_type (file, object_formats[i].txt);
+	}
+	return gp_file_set_mime_type (file, "application/x-unknown");
 }
 
-
-
 static void
-strcpy_mime(char * dest, uint16_t ofc) {
+strcpy_mime(char * dest, uint16_t vendor_code, uint16_t ofc) {
 	int i;
 
-	for (i = 0; object_formats[i].format_code; i++)
+	for (i = 0; object_formats[i].format_code; i++) {
+		if (object_formats[i].vendor_code && /* 0 means generic */
+		    (object_formats[i].vendor_code != vendor_code))
+			continue;
 		if (object_formats[i].format_code == ofc) {
 			strcpy(dest, object_formats[i].txt);
 			return;
 		}
+	}
 	strcpy(dest, "application/x-unknown");
 }
 
 static uint32_t
-get_mimetype (Camera *camera, CameraFile *file)
+get_mimetype (Camera *camera, CameraFile *file, uint16_t vendor_code)
 {
 	int i;
 	const char *mimetype;
 
 	gp_file_get_mime_type (file, &mimetype);
-	for (i = 0; object_formats[i].format_code; i++)
+	for (i = 0; object_formats[i].format_code; i++) {
+		if (object_formats[i].vendor_code && /* 0 means generic */
+		    (object_formats[i].vendor_code != vendor_code))
+			continue;
 		if (!strcmp(mimetype,object_formats[i].txt))
 			return (object_formats[i].format_code);
+	}
 	return (PTP_OFC_Undefined);
 }
 	
@@ -1388,7 +1396,7 @@ add_objectid_to_gphotofs(Camera *camera, CameraFilePath *path, GPContext *contex
 	if (ret!=GP_OK) return ret;
 	gp_file_set_type (file, GP_FILE_TYPE_NORMAL);
 	gp_file_set_name(file, path->name);
-	set_mimetype (camera, file, oi->ObjectFormat);
+	set_mimetype (camera, file, params->deviceinfo.VendorExtensionID, oi->ObjectFormat);
 	CPR (context, ptp_getobject(params, newobject, &ximage));
 	ret = gp_file_set_data_and_size(file, (char*)ximage, oi->ObjectCompressedSize);
 	if (ret != GP_OK) return ret;
@@ -1404,7 +1412,7 @@ add_objectid_to_gphotofs(Camera *camera, CameraFilePath *path, GPContext *contex
 	info.file.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME |
 			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
 			GP_FILE_INFO_SIZE;
-	strcpy_mime (info.file.type, oi->ObjectFormat);
+	strcpy_mime (info.file.type, params->deviceinfo.VendorExtensionID, oi->ObjectFormat);
 	strcpy(info.file.name,path->name);
 	info.file.width		= oi->ImagePixWidth;
 	info.file.height	= oi->ImagePixHeight;
@@ -1412,7 +1420,7 @@ add_objectid_to_gphotofs(Camera *camera, CameraFilePath *path, GPContext *contex
 	info.preview.fields = GP_FILE_INFO_TYPE |
 			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
 			GP_FILE_INFO_SIZE;
-	strcpy_mime (info.preview.type, oi->ThumbFormat);
+	strcpy_mime (info.preview.type, params->deviceinfo.VendorExtensionID, oi->ThumbFormat);
 	info.preview.width	= oi->ThumbPixWidth;
 	info.preview.height	= oi->ThumbPixHeight;
 	info.preview.size	= oi->ThumbCompressedSize;
@@ -3121,9 +3129,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		break;
 	}
 	}
-	CR (set_mimetype (camera, file, oi->ObjectFormat));
-
-	return (GP_OK);
+	return set_mimetype (camera, file, params->deviceinfo.VendorExtensionID, oi->ObjectFormat);
 }
 
 static int
@@ -3201,7 +3207,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 
 
 	oi.Filename=(char *)filename;
-	oi.ObjectFormat = get_mimetype(camera, file);
+	oi.ObjectFormat = get_mimetype(camera, file, params->deviceinfo.VendorExtensionID);
 	oi.ParentObject = parent;
 	gp_file_get_mtime(file, &oi.ModificationDate);
 
@@ -3379,7 +3385,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		info->file.size = contentlen;
 	}
 
-	strcpy_mime (info->file.type, oi->ObjectFormat);
+	strcpy_mime (info->file.type, params->deviceinfo.VendorExtensionID, oi->ObjectFormat);
 	if (oi->ModificationDate != 0) {
 		info->file.mtime = oi->ModificationDate;
 	} else {
@@ -3389,7 +3395,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	/* if object is an image */
 	if ((oi->ObjectFormat & 0x0800) != 0) {
 		info->preview.fields = 0;
-		strcpy_mime(info->preview.type, oi->ThumbFormat);
+		strcpy_mime(info->preview.type, params->deviceinfo.VendorExtensionID, oi->ThumbFormat);
 		if (strlen(info->preview.type)) {
 			info->preview.fields |= GP_FILE_INFO_TYPE;
 		}

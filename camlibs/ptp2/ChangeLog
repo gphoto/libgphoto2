@@ -1,3 +1,10 @@
+2007-01-03  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: More MTP mime types (from libmtp folks).
+
+	* library.c: Rewrote the MIME type handling to
+	  take vendorextensionid into account. (me)
+
 2007-01-02  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Report storage information 
