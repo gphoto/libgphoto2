@@ -1,7 +1,8 @@
 /* directory.c
  *
- * Copyright © 2001 Lutz Müller <lutz@users.sf.net>
- * Copyright © 2005 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright (c) 2001 Lutz Müller <lutz@users.sf.net>
+ * Copyright (c) 2005 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright (c) 2007 Hubert Figuiere <hub@figuiere.net>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -175,10 +176,12 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 			return GP_OK;
 	} else {
 		/* old style access */
-		if (folder[strlen(folder)-1] != '/')
-			sprintf (f, "%s%c", folder, '/');
-		else
-			strcpy (f, folder);
+		if (folder[strlen(folder)-1] != '/') {
+			snprintf (f, sizeof(f), "%s%c", folder, '/');
+		}
+		else {
+			strncpy (f, folder, sizeof(f));
+		}
 	}
 	dir = gp_system_opendir ((char*) f);
 	if (!dir)
@@ -199,7 +202,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 				"'%s'..."), f);
 	n = 0;
 	while ((de = gp_system_readdir(dir))) {
-
+		const char * filename = NULL;
 		/* Give some feedback */
 		gp_context_progress_update (context, id, n + 1);
 		gp_context_idle (context);
@@ -208,12 +211,12 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 			return (GP_ERROR_CANCEL);
 		}
 
-		if (strcmp(gp_system_filename(de), "." ) &&
-		    strcmp(gp_system_filename(de), "..")) {
-			sprintf (buf, "%s%s", f, gp_system_filename (de));
-			if (gp_system_is_file (buf) && (get_mime_type (buf)))
-				gp_list_append (list, gp_system_filename (de),
-						NULL);
+		filename = gp_system_filename(de);
+		if (*filename != '.') {
+			snprintf (buf, sizeof(buf), "%s%s", f, filename);
+			if (gp_system_is_file (buf) && (get_mime_type (buf))) {
+				gp_list_append (list, filename,	NULL);
+			}
 		}
 		n++;
 	}
@@ -251,14 +254,16 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	} else {
 		/* old style access */
 		/* Make sure we have 1 delimiter */
-		if (folder[strlen(folder)-1] != '/')
-			sprintf (f, "%s%c", folder, '/');
-		else
-			strcpy (f, folder);
+		if (folder[strlen(folder)-1] != '/') {
+			snprintf (f, sizeof(f), "%s%c", folder, '/');
+		}
+		else {
+			strncpy (f, folder, sizeof(f));
+		}
 	}
 	dir = gp_system_opendir ((char*) f);
 	if (!dir)
-		return (GP_ERROR);
+		return GP_ERROR;
 	/* Count the files */
 	n = 0;
 	while (gp_system_readdir (dir))
@@ -267,32 +272,33 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 	dir = gp_system_opendir (f);
 	if (!dir)
-		return (GP_ERROR);
+		return GP_ERROR;
 	id = gp_context_progress_start (context, n, _("Listing folders in "
 					"'%s'..."), folder);
 	n = 0;
 	while ((de = gp_system_readdir (dir))) {
+		const char * filename = NULL;
+
 		/* Give some feedback */
 		gp_context_progress_update (context, id, n + 1);
 		gp_context_idle (context);
 		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL) {
 			gp_system_closedir (dir);
-			return (GP_ERROR_CANCEL);
+			return GP_ERROR_CANCEL;
 		}
-		if ((strcmp (gp_system_filename (de), "." ) != 0) &&
-		    (strcmp (gp_system_filename (de), "..") != 0)) {
-			sprintf (buf, "%s%s", f, gp_system_filename (de));
-
+		filename = gp_system_filename (de);
+		if (*filename != '.') {
+			snprintf (buf, sizeof(buf), "%s%s", f, filename);
+			
 			/* lstat ... do not follow symlinks */
 			if (lstat (buf, &st) != 0) {
 				gp_context_error (context, _("Could not get information "
-						  "about '%s' (%m)."), buf);
-				return (GP_ERROR);
+																		 "about '%s' (%m)."), buf);
+				return GP_ERROR;
 			}
-			if (S_ISDIR (st.st_mode))
-				gp_list_append (list,
-						gp_system_filename (de),
-						NULL);
+			if (S_ISDIR (st.st_mode)) {
+				gp_list_append(list,	filename,	NULL);
+			}
 		}
 		n++;
 	}

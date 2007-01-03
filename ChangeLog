@@ -1,3 +1,10 @@
+2007-01-03  Hubert Figuiere  <hub@figuiere.net>
+
+	* camlibs/directory/directory.c (file_list_func): ignore entries
+	that start with '.'
+	(folder_list_func): ignore entries that start with '.'
+	Some code style cleaning.
+
 2006-11-25  Hubert Figuiere  <hub@figuiere.net>
 
 	* libgphoto2_port/configure.ac: bump soname for libgphoto2_port
