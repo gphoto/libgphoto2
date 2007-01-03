@@ -1,5 +1,8 @@
 2007-01-03  Hubert Figuiere  <hub@figuiere.net>
 
+	* libgphoto2_port/disk/disk.c (gp_port_library_list): handle
+	automounter properly when there is no HAL.
+
 	* camlibs/directory/directory.c (file_list_func): ignore entries
 	that start with '.'
 	(folder_list_func): ignore entries that start with '.'

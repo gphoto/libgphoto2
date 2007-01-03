@@ -1,9 +1,9 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 8; tab-width: 8 -*- */
 /* gphoto2-port-usb.c
  *
- * Copyright © 2001 Lutz Müller <lutz@users.sf.net>
- * Copyright © 1999-2000 Johannes Erdfelt <johannes@erdfelt.com>
- * Copyright (c) 2005 Hubert Figuiere <hub@figuiere.net>
+ * Copyright (c) 2001 Lutz Müller <lutz@users.sf.net>
+ * Copyright (c) 1999-2000 Johannes Erdfelt <johannes@erdfelt.com>
+ * Copyright (c) 2005, 2007 Hubert Figuiere <hub@figuiere.net>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -203,13 +203,15 @@ gp_port_library_list (GPPortInfoList *list)
 	if (mnt) {
 		while ((mntent = getmntent (mnt))) {
 			/* detect floppies so we don't access them with the stat() below */
+			gp_log(GP_LOG_DEBUG, "gphoto2-port/disk",
+			       "found fstab fsname %s", mntent->mnt_fsname);
+
 			if ((NULL != strstr(mntent->mnt_fsname,"fd")) ||
 			    (NULL != strstr(mntent->mnt_fsname,"floppy")) ||
-			    (NULL != strstr(mntent->mnt_fsname, "fuse"))) 
+			    (NULL != strstr(mntent->mnt_fsname, "fuse")))
 			{
 				continue;
 			}
-
 			snprintf (path, sizeof(path), "%s/DCIM", mntent->mnt_dir);
 			if (-1 == stat(path, &stbuf)) {
 				snprintf (path, sizeof(path), "%s/dcim", mntent->mnt_dir);
@@ -228,9 +230,12 @@ gp_port_library_list (GPPortInfoList *list)
 	if (mnt) {
 		while ((mntent = getmntent (mnt))) {
 			/* detect floppies so we don't access them with the stat() below */
+			gp_log(GP_LOG_DEBUG, "gphoto2-port/disk",
+			       "found mtab fsname %s", mntent->mnt_fsname);
+
 			if ((NULL != strstr(mntent->mnt_fsname,"fd")) ||
 			    (NULL != strstr(mntent->mnt_fsname,"floppy")) ||
-			    (NULL != strstr(mntent->mnt_fsname, "fuse"))) 
+			    (NULL != strstr(mntent->mnt_fsname, "fuse")))
 			{
 				continue;
 			}
@@ -240,6 +245,13 @@ gp_port_library_list (GPPortInfoList *list)
 				snprintf (path, sizeof(path), "%s/dcim", mntent->mnt_dir);
 				if (-1 == stat(path, &stbuf))
 					continue;
+			}
+			/* automount should be blacklist here, but we still need
+			 * to look it up first otherwise the automounted camera
+			 * won't appear.
+			 */
+			if (NULL != strstr(mntent->mnt_fsname, "automount")) {
+				continue;
 			}
 			info.type = GP_PORT_DISK;
 			snprintf (info.name, sizeof(info.name), _("Media '%s'"), mntent->mnt_fsname),
