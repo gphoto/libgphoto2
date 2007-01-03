@@ -5,6 +5,13 @@
 	* library.c: Rewrote the MIME type handling to
 	  take vendorextensionid into account. (me)
 
+	* library.c: Various new USB ids out of Ubuntu launchpad
+	  bugreports.
+		Canon PowerShot SD40
+		Kodak EasyShare C433
+		Kodak EasyShare V705
+		Casio EX-Z700
+
 2007-01-02  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Report storage information 

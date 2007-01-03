@@ -346,6 +346,10 @@ static struct {
 	{"Kodak:C643",   0x040a, 0x05a7, 0},
 	/* Eric Kibbee <eric@kibbee.ca> */
 	{"Kodak:C875",   0x040a, 0x05a9, 0},
+	/* https://launchpad.net/bugs/64146 */
+	{"Kodak:C433",   0x040a, 0x05aa, 0},
+	/* https://launchpad.net/bugs/64146 */
+	{"Kodak:V705",   0x040a, 0x05ab, 0},
         /* via IRC */
 	{"Kodak:C633",   0x040a, 0x05ba, 0},
 
@@ -556,6 +560,8 @@ static struct {
 
 	/* IRC report */
 	{"Casio:EX-Z120",                 0x07cf, 0x1042, 0},
+	/* https://launchpad.net/bugs/64146 */
+	{"Casio:EX-Z700",                 0x07cf, 0x104c, 0},
 
 	/* (at least some) newer Canon cameras can be switched between
 	 * PTP and "normal" (i.e. Canon) mode
@@ -667,6 +673,8 @@ static struct {
 	{"Canon:PowerShot A530 (PTP mode)",     0x04a9, 0x3126, PTPBUG_DELETE_SENDS_EVENT},
 	/* Jerome Vizcaino <vizcaino_jerome@yahoo.fr> */
 	{"Canon:Digital IXUS 850 IS (PTP mode)",0x04a9, 0x3136, PTPBUG_DELETE_SENDS_EVENT},
+	/* https://launchpad.net/bugs/64146 */
+	{"Canon:PowerShot SD40 (PTP mode)",	0x04a9, 0x3137, PTPBUG_DELETE_SENDS_EVENT},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1565043&group_id=8874&atid=358874 */
 	{"Canon:PowerShot A710 IS (PTP mode)",  0x04a9, 0x3138, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot A640 (PTP mode)",     0x04a9, 0x3139, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
