@@ -143,9 +143,6 @@ ptp_usb_sendreq (PTPParams* params, PTPContainer* req)
 	return ret;
 }
 
-/* Used for file transactions */
-#define FILE_BUFFER_SIZE 0x10000
-
 uint16_t
 ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
 		  unsigned long size, PTPDataHandler *handler
@@ -810,6 +807,9 @@ ptp_opensession (PTPParams* params, uint32_t session)
 	/* zero out response packet buffer */
 	params->response_packet = NULL;
 	params->response_packet_size = 0;
+	/* no split headers */
+	params->split_header_data = 0;
+
 	
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_OpenSession;
