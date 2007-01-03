@@ -1,5 +1,8 @@
 2007-01-03  Marcus Meissner  <marcus@jet.franken.de>
 
+	* library.c: Get endpoint maxpacketsize from the USB
+	  port settings and use it in 0 write detection code.
+
 	* library.c: More MTP mime types (from libmtp folks).
 
 	* library.c: Rewrote the MIME type handling to

@@ -1048,7 +1048,7 @@ ptp_write_func (
 		gp_context_progress_stop (context, progressid);
 	free (bytes);
 	/* Should load wMaxPacketsize from endpoint first. :( */
-	if ((size % 512) == 0)
+	if ((size % params->maxpacketsize) == 0)
 		gp_port_write (camera->port, "x", 0);
 	if (result < 0)
 		return (translate_gp_result (result));
@@ -4001,7 +4001,9 @@ camera_init (Camera *camera, GPContext *context)
 	int ret, i, retried = 0;
 	PTPParams *params;
 	char *curloc;
+	GPPortSettings	settings;
 
+	gp_port_get_settings (camera->port, &settings);
 	/* Make sure our port is either USB or PTP/IP. */
 	if ((camera->port->type != GP_PORT_USB) && (camera->port->type != GP_PORT_PTPIP)) {
 		gp_context_error (context, _("PTP is only implemented for "
@@ -4030,6 +4032,7 @@ camera_init (Camera *camera, GPContext *context)
 	memset (camera->pl->params.data, 0, sizeof (PTPData));
 	((PTPData *) camera->pl->params.data)->camera = camera;
 	camera->pl->params.byteorder = PTP_DL_LE;
+	camera->pl->params.maxpacketsize = settings.usb.maxpacketsize;
 
 	switch (camera->port->type) {
 	case GP_PORT_USB:
@@ -4173,5 +4176,6 @@ camera_init (Camera *camera, GPContext *context)
 		break;
 	}
 	CR (gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera));
+
 	return (GP_OK);
 }

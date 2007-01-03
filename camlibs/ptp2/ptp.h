@@ -1313,6 +1313,7 @@ typedef void (* PTPDebugFunc) (void *data, const char *format, va_list args)
 struct _PTPParams {
 	/* data layer byteorder */
 	uint8_t		byteorder;
+	uint16_t	maxpacketsize;
 
 	/* IO: Data layer IO functions */
 	PTPIOReadFunc	read_func;
