@@ -167,7 +167,7 @@ Build system (packagers beware!):
      This obsoletes print-usb-usermap and print-udev-rules.
 
      The hal FDI file should be put into:
-	/usr/share/hal/fdi/information/10freedesktop/10-camera-libgphoto2.fdi
+	/usr/share/hal/fdi/information/20thirdparty/10-camera-libgphoto2.fdi
 
      If you need to generate different stuff based on the cameras, please add
      it to the "print-camera-list" helper.
