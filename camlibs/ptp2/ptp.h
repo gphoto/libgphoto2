@@ -51,11 +51,12 @@ typedef struct _PTPContainer PTPContainer;
 
 /* PTP USB Bulk-Pipe container */
 /* USB bulk max packet length for high speed endpoints */
-/* I have changed this from 512 to 4096 now. The spec says
+/* The max packet is set to 512 bytes. The spec says
  * "end of data transfers are signaled by short packets or NULL
- * packets". It never says anything about 512.
- * So it should work like this and the MTP folks will be happier...
- * -Marcus
+ * packets". It never says anything about 512, but current
+ * implementations seem to have chosen this value, which also
+ * happens to be the size of an USB 2.0 HS endpoint, even though
+ * this is not necessary.
  */
 #define PTP_USB_BULK_HS_MAX_PACKET_LEN	512
 #define PTP_USB_BULK_HDR_LEN		(2*sizeof(uint32_t)+2*sizeof(uint16_t))
