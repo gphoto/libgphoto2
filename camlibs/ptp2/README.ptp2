@@ -22,20 +22,20 @@ Copyright        2005 Hubert Figuire.
 =====================
 
 This folder contains following code:
+generic:
 ptp.c		- the main libptp2 code; this library is used to communicate
-		  with PTP devices
-ptp.h		- libptp2 header files
+		  with PTP devices. This is not libgphoto2 specific, but used
+		  in libmtp too.
+ptp.h		- header file for the above.
 ptp-pack.c	- this file is included into ptp.c (internal structure
 		  pack/unpack code)
+
+libgphoto2 specific:
+config.c	- Contains the device and driver configuration management code.
+usb.c		- The USB Imaging Class interface code.
+ptpip.c		- The PTP/IP interfacing code (for wireless devices).
 library.c	- gphoto2 PTP2 driver (used by gphoto2 to communicate with
 		  PTP devices)
-
-The libptp2 library is under developement yet, but is considered to be
-functional and quite stable.
-It was written to be used with gphoto2, but can be easily used with any other
-software.
-
-
 
 ===================
 *Supported Cameras*
@@ -66,6 +66,7 @@ Kodak CX4200		| 0x040a  |  0x0560  |
 Kodak CX4210		| 0x040a  |  0x0560  |
 Kodak CX4230		| 0x040a  |  0x0535  |
 Kodak CX4300		| 0x040a  |  0x0566  |
+Kodak Easyshare *any*	| 0x040a  |  any     |
 ------------------------+---------+----------+
 HP PhotoSmart 120	| 0x03f0  |  0x6502  |
 HP PhotoSmart 318	| 0x03f0  |  0x6302  |

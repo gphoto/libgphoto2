@@ -57,7 +57,7 @@ typedef struct _PTPContainer PTPContainer;
  * So it should work like this and the MTP folks will be happier...
  * -Marcus
  */
-#define PTP_USB_BULK_HS_MAX_PACKET_LEN	4096
+#define PTP_USB_BULK_HS_MAX_PACKET_LEN	512
 #define PTP_USB_BULK_HDR_LEN		(2*sizeof(uint32_t)+2*sizeof(uint16_t))
 #define PTP_USB_BULK_PAYLOAD_LEN	(PTP_USB_BULK_HS_MAX_PACKET_LEN-PTP_USB_BULK_HDR_LEN)
 #define PTP_USB_BULK_REQ_LEN	(PTP_USB_BULK_HDR_LEN+5*sizeof(uint32_t))
@@ -1284,9 +1284,6 @@ typedef struct _PTPDataHandler {
 	void			*private;
 } PTPDataHandler;
 
-/* PTP <-> lowlevel IO layer read/write functions */
-typedef short (* PTPIOReadFunc)	(unsigned long size, PTPDataHandler*, void*, unsigned long*readlen);
-typedef short (* PTPIOWriteFunc)(unsigned long size, PTPDataHandler*, void *data, unsigned long *written);
 /*
  * This functions take PTP oriented arguments and send them over an
  * appropriate data layer doing byteorder conversion accordingly.
@@ -1314,12 +1311,6 @@ struct _PTPParams {
 	/* data layer byteorder */
 	uint8_t		byteorder;
 	uint16_t	maxpacketsize;
-
-	/* IO: Data layer IO functions */
-	PTPIOReadFunc	read_func;
-	PTPIOWriteFunc	write_func;
-	PTPIOReadFunc	check_int_func;
-	PTPIOReadFunc	check_int_fast_func;
 
 	/* PTP IO: Custom IO functions */
 	PTPIOSendReq	sendreq_func;

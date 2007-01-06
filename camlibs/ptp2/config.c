@@ -1495,7 +1495,7 @@ _put_BurstNumber(CONFIG_PUT_ARGS) {
 
 static int
 _get_BatteryLevel(CONFIG_GET_ARGS) {
-	unsigned char value_float , start, end, step;
+	unsigned char value_float , start, end;
 	char	buffer[20];
 
 	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);

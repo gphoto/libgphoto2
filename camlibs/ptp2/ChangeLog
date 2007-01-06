@@ -1,3 +1,12 @@
+2007-01-06  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c, ptp.c, ptp.h, ptp-private.h, usb.c:
+
+	  Rewrote the USB lowlevel communication layer.
+	  Merged  write_func, read_func, check_int and check_int_fast
+	  into the ptp_usb_sendreq etc.
+	  Split the latter into its own file, usb.c.
+
 2007-01-03  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Get endpoint maxpacketsize from the USB

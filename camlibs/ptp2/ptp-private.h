@@ -19,6 +19,7 @@
  */
 
 /* ptp2 camlib private functions */
+#include <gphoto2/gphoto2-library.h>
 
 /* config.c */
 int camera_get_config (Camera *camera, CameraWidget **window, GPContext *context);
@@ -34,3 +35,9 @@ struct _CameraPrivateLibrary {
 	PTPParams params;
 	unsigned long bugs;
 };
+
+struct _PTPData {
+	Camera *camera;
+	GPContext *context;
+};
+typedef struct _PTPData PTPData;

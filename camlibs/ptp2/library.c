@@ -693,6 +693,8 @@ static struct {
 	{"Fuji:FinePix A330 (PictBridge mode)", 0x04cb, 0x014a, 0},
 	{"Fuji:FinePix E900 (PictBridge mode)", 0x04cb, 0x0193, 0},
 	{"Fuji:FinePix F30 (PictBridge mode)",  0x04cb, 0x019b, 0},
+	/* launchpad 67532 */
+	{"Fuji:FinePix F31fd (PictBridge mode)",0x04cb, 0x01c1, 0},
 
 	/* Ricoh Caplio GX */
 	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
@@ -931,192 +933,6 @@ get_mimetype (Camera *camera, CameraFile *file, uint16_t vendor_code)
 	}
 	return (PTP_OFC_Undefined);
 }
-	
-struct _PTPData {
-	Camera *camera;
-	GPContext *context;
-};
-typedef struct _PTPData PTPData;
-
-#define CONTEXT_BLOCK_SIZE	100000
-static short
-ptp_read_func (
-	unsigned long size, PTPDataHandler *handler,void *data,
-	unsigned long *readlen
-) {
-	Camera *camera = ((PTPData *)data)->camera;
-	int toread, result = GP_ERROR, curread = 0;
-	int usecontext = (size > CONTEXT_BLOCK_SIZE);
-	int progressid = 0, tries = 0;
-	GPContext *context = ((PTPData *)data)->context;
-	unsigned char *bytes;
-
-	/* Split into small blocks. Too large blocks (>1x MB) would
-	 * timeout.
-	 */
-retry:
-	if (usecontext)
-		progressid = gp_context_progress_start (context, (size/CONTEXT_BLOCK_SIZE), _("Downloading..."));
-	bytes = malloc(4096);
-	if (!bytes) return PTP_RC_GeneralError;
-	while (curread < size) {
-		int oldsize = curread;
-		unsigned long xresult;
-
-		toread = size - curread;
-		if (toread > 4096)
-			toread = 4096;
-		result = gp_port_read (camera->port, bytes, toread);
-		if (result == 0) {
-			result = gp_port_read (camera->port, bytes, toread);
-		}
-		if (result < 0)
-			break;
-		handler->putfunc (data, handler->private, result, bytes, &xresult);
-		curread += xresult;
-		if (usecontext && (oldsize/CONTEXT_BLOCK_SIZE < curread/CONTEXT_BLOCK_SIZE))
-			gp_context_progress_update (context, progressid, curread/CONTEXT_BLOCK_SIZE);
-		if (result < toread) /* short reads are common */
-			break;
-	}
-	if (usecontext)
-		gp_context_progress_stop (context, progressid);
-	if (result > 0) {
-		*readlen = curread;
-		return (PTP_RC_OK);
-	}
-	if (result == GP_ERROR_IO_READ) {
-		gp_log (GP_LOG_DEBUG, "ptp2/usbread", "Clearing halt on IN EP and retrying once.\n");
-		gp_port_usb_clear_halt (camera->port, GP_PORT_USB_ENDPOINT_IN);
-		/* retrying only makes sense if we did not read anything yet */
-		if ((tries++ < 1) && (curread == 0))
-			goto retry;
-	}
-	return (translate_gp_result (result));
-}
-
-static short
-ptp_write_func (
-	unsigned long	size,
-	PTPDataHandler	*handler,
-	void		*data,
-	unsigned long	*written
-) {
-	Camera *camera = ((PTPData *)data)->camera;
-	PTPParams *params = &camera->pl->params;
-	unsigned long towrite, curwrite = 0;
-	int result = GP_ERROR;
-	int progressid = 0;
-	int usecontext = (size > CONTEXT_BLOCK_SIZE);
-	GPContext *context = ((PTPData *)data)->context;
-	unsigned char *bytes;
-
-	/*
-	 * gp_port_write returns (in case of success) the number of bytes
-	 * write. Too large blocks (>5x MB) could timeout.
-	 */
-	bytes = malloc (4096);
-	if (!bytes) return PTP_ERROR_IO;
-	if (usecontext)
-		progressid = gp_context_progress_start (context, (size/CONTEXT_BLOCK_SIZE), _("Uploading..."));
-	while (curwrite < size) {
-		uint16_t	ret;
-		unsigned long	oldsize = curwrite;
-
-		towrite = size-curwrite;
-		if (towrite > 4096)
-			towrite = 4096;
-		ret = handler->getfunc (params, handler->private, towrite, bytes, &towrite);
-		if (ret != PTP_RC_OK) {
-			result = GP_ERROR_IO;
-			break;
-		}
-		if (towrite == 0) {
-			result = GP_ERROR_IO;
-			break;
-		}
-		result = gp_port_write (camera->port, bytes, towrite);
-		if (result < 0)
-			break;
-		curwrite += result;
-		if (usecontext && (oldsize/CONTEXT_BLOCK_SIZE < curwrite/CONTEXT_BLOCK_SIZE))
-			gp_context_progress_update (context, progressid, curwrite/CONTEXT_BLOCK_SIZE);
-		if (result < towrite) /* short writes happen */
-			break;
-	}
-	if (usecontext)
-		gp_context_progress_stop (context, progressid);
-	free (bytes);
-	/* Should load wMaxPacketsize from endpoint first. :( */
-	if ((size % params->maxpacketsize) == 0)
-		gp_port_write (camera->port, "x", 0);
-	if (result < 0)
-		return (translate_gp_result (result));
-	if (written) *written = curwrite;
-	return PTP_RC_OK;
-}
-
-static short
-ptp_check_int (
-	unsigned long size,
-	PTPDataHandler *handler,
-	void *data,
-	unsigned long *rlen
-) {
-	Camera	*camera = ((PTPData *)data)->camera;
-	PTPParams *params = &camera->pl->params;
-	int	result;
-	unsigned long	putlen;
-	unsigned char	event[sizeof(PTPUSBEventContainer)];
-
-	if (size > sizeof(event))
-		return PTP_ERROR_IO;
-	/*
-	 * gp_port_check_int returns (in case of success) the number of bytes
-	 * read.
-	 */
-
-	result = gp_port_check_int (camera->port, event, size);
-	if (result==0) result = gp_port_check_int (camera->port, event, size);
-	if (result >= 0) {
-		*rlen = result;
-		handler->putfunc (params, handler->private, result, event, &putlen);
-		return (PTP_RC_OK);
-	} else {
-		return (translate_gp_result (result));
-	}
-}
-
-static short
-ptp_check_int_fast (
-	unsigned long	size,
-	PTPDataHandler	*handler,
-	void		*data,
-	unsigned long	*rlen
-) {
-	Camera		*camera = ((PTPData *)data)->camera;
-	int		result;
-	char		event[sizeof(PTPUSBEventContainer)];
-	unsigned long	putlen;
-	PTPParams	*params = &camera->pl->params;
-
-	if (size > sizeof(event))
-		return PTP_ERROR_IO;
-	/*
-	 * gp_port_check_int returns (in case of success) the number of bytes
-	 * read.
-	 */
-	result = gp_port_check_int_fast (camera->port, event, size);
-	if (result==0) result = gp_port_check_int_fast (camera->port, event, size);
-	if (result >= 0) {
-		*rlen = result;
-		handler->putfunc (params, handler->private, result, event, &putlen);
-		return (PTP_RC_OK);
-	} else {
-		return (translate_gp_result (result));
-	}
-}
-
 
 static void
 #ifdef __GNUC__
@@ -4042,11 +3858,6 @@ camera_init (Camera *camera, GPContext *context)
 		camera->pl->params.getdata_func		= ptp_usb_getdata;
 		camera->pl->params.event_wait		= ptp_usb_event_wait;
 		camera->pl->params.event_check		= ptp_usb_event_check;
-
-		camera->pl->params.write_func		= ptp_write_func;
-		camera->pl->params.read_func		= ptp_read_func;
-		camera->pl->params.check_int_func	= ptp_check_int;
-		camera->pl->params.check_int_fast_func	= ptp_check_int_fast;
 		break;
 	case GP_PORT_PTPIP: {
 		GPPortInfo	pinfo;
@@ -4067,11 +3878,6 @@ camera_init (Camera *camera, GPContext *context)
 		camera->pl->params.getdata_func		= ptp_ptpip_getdata;
 		camera->pl->params.event_wait		= ptp_ptpip_event_wait;
 		camera->pl->params.event_check		= ptp_ptpip_event_check;
-
-		camera->pl->params.write_func		= NULL;
-		camera->pl->params.read_func		= NULL;
-		camera->pl->params.check_int_func	= NULL;
-		camera->pl->params.check_int_fast_func	= NULL;
 		break;
 	}
 	default:

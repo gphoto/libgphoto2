@@ -6,7 +6,7 @@ EXTRA_LTLIBRARIES += ptp2.la
 
 ptp2_la_SOURCES = \
 	ptp2/ptp.c ptp2/ptp.h \
-	ptp2/library.c ptp2/ptp-bugs.h \
+	ptp2/library.c ptp2/usb.c ptp2/ptp-bugs.h \
 	ptp2/ptp-private.h ptp2/ptpip.c ptp2/config.c
 ptp2_la_LDFLAGS = $(camlib_ldflags)
 ptp2_la_DEPENDENCIES = $(camlib_dependencies)
