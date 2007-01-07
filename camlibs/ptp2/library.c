@@ -240,19 +240,6 @@ translate_ptp_result (short result)
 	}
 }
 
-static short
-translate_gp_result (int result)
-{
-	switch (result) {
-	case GP_OK:
-		return (PTP_RC_OK);
-	case GP_ERROR:
-	default:
-		GP_DEBUG ("PTP: gp_port_* function returned 0x%04x \t %i",result,result);
-		return (PTP_RC_GeneralError);
-	}
-}
-
 static struct {
 	const char *model;
 	unsigned short usb_vendor;
