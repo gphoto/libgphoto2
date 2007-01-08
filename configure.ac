@@ -92,6 +92,11 @@ SED=${SED-sed}
 dnl ---------------------------------------------------------------------------
 dnl Turn on (almost) all warnings when using gcc
 dnl ---------------------------------------------------------------------------
+
+AM_CPPFLAGS="$AM_CPPFLAGS $CPPFLAGS"
+AM_CFLAGS="$AM_CFLAGS $CFLAGS"
+AM_CXXFLAGS="$AM_CXXFLAGS $CXXFLAGS"
+
 if test "x$GCC" = "xyes"; then
 	AM_CPPFLAGS="$AM_CPPFLAGS -Wall"
 	# AM_CFLAGS="$AM_CFLAGS --std=c99 -Wall -Wextra -Werror -pedantic"

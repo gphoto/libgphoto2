@@ -406,6 +406,11 @@ GP_BUILD_GTK_DOCS()dnl
 dnl ---------------------------------------------------------------------------
 dnl Turn on all warnings when using gcc
 dnl ---------------------------------------------------------------------------
+
+AM_CPPFLAGS="$AM_CPPFLAGS $CPPFLAGS"
+AM_CFLAGS="$AM_CFLAGS $CFLAGS"
+AM_CXXFLAGS="$AM_CXXFLAGS $CXXFLAGS"
+
 if test "$GCC" = "yes"; then
 	AM_CPPFLAGS="$AM_CPPFLAGS -Wall"
 	AM_CPPFLAGS="$AM_CPPFLAGS -Wmissing-declarations -Wmissing-prototypes"
@@ -418,6 +423,8 @@ fi
 AM_CPPFLAGS="$AM_CPPFLAGS -D_GPHOTO2_INTERNAL_CODE"
 
 AC_SUBST([AM_CPPFLAGS])
+AC_SUBST([AM_CFLAGS])
+AC_SUBST([AM_CXXFLAGS])
 AC_SUBST([AM_LDFLAGS])
 
 
