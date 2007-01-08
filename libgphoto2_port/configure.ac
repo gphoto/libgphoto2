@@ -403,14 +403,16 @@ GP_CHECK_DOC_DIR()dnl
 GP_BUILD_GTK_DOCS()dnl
 
 
-dnl ---------------------------------------------------------------------------
-dnl Turn on all warnings when using gcc
-dnl ---------------------------------------------------------------------------
-
+# Make sure that the *FLAGS given at ./configure time will be active by
+# default in AM_*FLAGS
 AM_CPPFLAGS="$AM_CPPFLAGS $CPPFLAGS"
 AM_CFLAGS="$AM_CFLAGS $CFLAGS"
 AM_CXXFLAGS="$AM_CXXFLAGS $CXXFLAGS"
+AM_LDFLAGS="$AM_LDFLAGS $LDFLAGS"
 
+dnl ---------------------------------------------------------------------------
+dnl Turn on all warnings when using gcc
+dnl ---------------------------------------------------------------------------
 if test "$GCC" = "yes"; then
 	AM_CPPFLAGS="$AM_CPPFLAGS -Wall"
 	AM_CPPFLAGS="$AM_CPPFLAGS -Wmissing-declarations -Wmissing-prototypes"
@@ -420,11 +422,16 @@ if test "$GCC" = "yes"; then
 	AM_LDFLAGS="$AM_LDFLAGS -g"
 fi
 
+# Activate internal code
 AM_CPPFLAGS="$AM_CPPFLAGS -D_GPHOTO2_INTERNAL_CODE"
 
+# CPPFLAGS: C PreProcessor flags
 AC_SUBST([AM_CPPFLAGS])
+# CFLAGS: C compiler flags
 AC_SUBST([AM_CFLAGS])
+# CXXFLAGS: C++ compiler flags
 AC_SUBST([AM_CXXFLAGS])
+# LDFLAGS: Linker flags
 AC_SUBST([AM_LDFLAGS])
 
 

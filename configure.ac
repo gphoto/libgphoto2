@@ -89,14 +89,16 @@ dnl sequence seems to get mixed up.
 SED=${SED-sed}
 
 
-dnl ---------------------------------------------------------------------------
-dnl Turn on (almost) all warnings when using gcc
-dnl ---------------------------------------------------------------------------
-
+# Make sure that the *FLAGS given at ./configure time will be active by
+# default in AM_*FLAGS
 AM_CPPFLAGS="$AM_CPPFLAGS $CPPFLAGS"
 AM_CFLAGS="$AM_CFLAGS $CFLAGS"
 AM_CXXFLAGS="$AM_CXXFLAGS $CXXFLAGS"
+AM_LDFLAGS="$AM_LDFLAGS $LDFLAGS"
 
+dnl ---------------------------------------------------------------------------
+dnl Turn on (almost) all warnings when using gcc
+dnl ---------------------------------------------------------------------------
 if test "x$GCC" = "xyes"; then
 	AM_CPPFLAGS="$AM_CPPFLAGS -Wall"
 	# AM_CFLAGS="$AM_CFLAGS --std=c99 -Wall -Wextra -Werror -pedantic"
@@ -111,6 +113,7 @@ if test "x$GCC" = "xyes"; then
 fi
 AM_CONDITIONAL([HAVE_GCC], [test "x$GCC" = "xyes"])
 
+# Activate internal code
 AM_CPPFLAGS="$AM_CPPFLAGS -D_GPHOTO2_INTERNAL_CODE"
 
 # CPPFLAGS: C PreProcessor flags
