@@ -3607,6 +3607,12 @@ init_ptp_fs (Camera *camera, GPContext *context)
 		xpl = proplist; i = -1;
 		while (xpl) {
 			if (lasthandle != xpl->ObjectHandle) {
+				if (i >= 0) {
+					if (!oinfos[i].Filename) {
+						/* i have one such file on my Creative */
+						oinfos[i].Filename = strdup("<null>");
+					}
+				}
 				i++;
 				lasthandle = xpl->ObjectHandle;
 				params->handles.Handler[i] = xpl->ObjectHandle;

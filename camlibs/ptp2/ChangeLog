@@ -1,3 +1,7 @@
+2007-01-10  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Added NULL check in MTP objlist reader.
+
 2007-01-06  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c, ptp.c, ptp.h, ptp-private.h, usb.c:
