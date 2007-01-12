@@ -680,6 +680,8 @@ static struct {
 	{"Fuji:FinePix A330 (PictBridge mode)", 0x04cb, 0x014a, 0},
 	{"Fuji:FinePix E900 (PictBridge mode)", 0x04cb, 0x0193, 0},
 	{"Fuji:FinePix F30 (PictBridge mode)",  0x04cb, 0x019b, 0},
+	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1620750&group_id=8874 */
+	{"Fuji:FinePix S6500fd (PictBridge mode)",0x04cb, 0x01bf, 0},
 	/* launchpad 67532 */
 	{"Fuji:FinePix F31fd (PictBridge mode)",0x04cb, 0x01c1, 0},
 
