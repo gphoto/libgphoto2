@@ -3,6 +3,11 @@
 	* usb.c: read in 64kb blobs again (512 bytes read are
 	  ineffecient).
 
+	* library.c: On delete and rmdir also remove the
+	  information from the internal handles and objectinfos.
+	  Otherwise remove, upload, remove, upload cycles
+	  will not work ... and gphotofs needs them.
+
 2007-01-10  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Added NULL check in MTP objlist reader.

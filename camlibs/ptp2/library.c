@@ -2973,6 +2973,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	memset(&oi, 0, sizeof (PTPObjectInfo));
 	gp_file_get_name (file, &filename);
 	gp_file_get_type (file, &type);
+	gp_log ( GP_LOG_DEBUG, "ptp2/put_file_func", "folder=%s, filename=%s", folder, filename);
 
 	if (type == GP_FILE_TYPE_METADATA) {
 		if ((params->deviceinfo.VendorExtensionID==PTP_VENDOR_MICROSOFT) &&
@@ -3015,9 +3016,10 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 
 	/* We don't really want a file to exist with the same name twice. */
 	handle = folder_to_handle (filename, storage, parent, camera);
-	if (handle != PTP_HANDLER_SPECIAL)
+	if (handle != PTP_HANDLER_SPECIAL) {
+		gp_log ( GP_LOG_DEBUG, "ptp2/put_file_func", "%s/%s exists.", folder, filename);
 		return GP_ERROR_FILE_EXISTS;
-
+	}
 
 	oi.Filename=(char *)filename;
 	oi.ObjectFormat = get_mimetype(camera, file, params->deviceinfo.VendorExtensionID);
@@ -3097,6 +3099,17 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	CPR (context, ptp_deleteobject(params,
 		params->handles.Handler[object_id],0));
 
+	/* Remove it from the internal structures. */
+	memcpy (params->handles.Handler+object_id,
+		params->handles.Handler+object_id+1,
+		(params->handles.n-object_id-1)*sizeof(params->handles.Handler[0])
+	);
+	memcpy (params->objectinfo+object_id,
+		params->objectinfo+object_id+1,
+		(params->handles.n-object_id-1)*sizeof(params->objectinfo[0])
+	);
+	params->handles.n--;
+
 	/* On some Canon firmwares, a DeleteObject causes a ObjectRemoved event
 	 * to be sent. At least on Digital IXUS II and PowerShot A85. But
          * not on 350D.
@@ -3141,6 +3154,17 @@ remove_dir_func (CameraFilesystem *fs, const char *folder,
 		return (GP_ERROR_BAD_PARAMETERS);
 
 	CPR (context, ptp_deleteobject(params, params->handles.Handler[object_id],0));
+
+	/* Remove it from the internal structures. */
+	memcpy (params->handles.Handler+object_id,
+		params->handles.Handler+object_id+1,
+		(params->handles.n-object_id-1)*sizeof(params->handles.Handler[0])
+	);
+	memcpy (params->objectinfo+object_id,
+		params->objectinfo+object_id+1,
+		(params->handles.n-object_id-1)*sizeof(params->objectinfo[0])
+	);
+	params->handles.n--;
 	return (GP_OK);
 }
 
