@@ -216,6 +216,8 @@ retry:
 	return PTP_ERROR_IO;
 }
 
+#define READLEN 64*1024 /* read blob size */
+
 uint16_t
 ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 {
@@ -309,7 +311,8 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 
 		/* If not read the rest of it. */
 retry:
-		data = malloc(PTP_USB_BULK_HS_MAX_PACKET_LEN);
+		oldsize = 0;
+		data = malloc(READLEN);
 		bytes_to_read = len - (rlen - PTP_USB_BULK_HDR_LEN);
 		usecontext = (bytes_to_read > CONTEXT_BLOCK_SIZE);
 		ret = PTP_RC_OK;
@@ -320,8 +323,14 @@ retry:
 			unsigned long toread = bytes_to_read;
 			int res;
 
-			if (toread > PTP_USB_BULK_HS_MAX_PACKET_LEN)
-				toread = PTP_USB_BULK_HS_MAX_PACKET_LEN;
+			/* read in large blobs.
+			 * if smaller than large blob, read all but the last short packet
+			 * depending on EP packetsize.
+			 */
+			if (toread > READLEN)
+				toread = READLEN;
+			else if (toread > params->maxpacketsize)
+				toread = toread - (toread % params->maxpacketsize);
 			res = gp_port_read (camera->port, (char*)data, toread);
 			if (res < 0) {
 				ret = PTP_ERROR_IO;

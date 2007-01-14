@@ -1,3 +1,8 @@
+2007-01-14  Marcus Meissner  <marcus@jet.franken.de>
+
+	* usb.c: read in 64kb blobs again (512 bytes read are
+	  ineffecient).
+
 2007-01-10  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Added NULL check in MTP objlist reader.
