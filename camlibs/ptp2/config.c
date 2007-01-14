@@ -1775,6 +1775,9 @@ _get_nikon_list_wifi_profiles (CONFIG_GET_ARGS)
 	if (params->deviceinfo.VendorExtensionID != PTP_VENDOR_NIKON)
 		return (GP_ERROR_NOT_SUPPORTED);
 
+	if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_GetProfileAllData)) 
+		return (GP_ERROR_NOT_SUPPORTED);
+
 	ret = ptp_nikon_getwifiprofilelist(params);
 	if (ret != PTP_RC_OK)
 		return (GP_ERROR_NOT_SUPPORTED);
