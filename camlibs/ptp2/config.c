@@ -586,11 +586,13 @@ GENERIC16TABLE(WhiteBalance,whitebalance)
 
 /* Everything is camera specific. */
 static struct deviceproptableu8 compression[] = {
-	{ N_("JPEG Basic"), 0x00, PTP_VENDOR_NIKON },
-	{ N_("JPEG Normal"), 0x01, PTP_VENDOR_NIKON },
-	{ N_("JPEG Fine"), 0x02, PTP_VENDOR_NIKON },
-	{ N_("NEF (Raw)"), 0x04, PTP_VENDOR_NIKON },
-	{ N_("NEF+BASIC"), 0x05, PTP_VENDOR_NIKON },
+	{ N_("JPEG Basic"),	0x00, PTP_VENDOR_NIKON },
+	{ N_("JPEG Normal"),	0x01, PTP_VENDOR_NIKON },
+	{ N_("JPEG Fine"),	0x02, PTP_VENDOR_NIKON },
+	{ N_("NEF (Raw)"),	0x03, PTP_VENDOR_NIKON },
+	{ N_("NEF+Basic"),	0x04, PTP_VENDOR_NIKON },
+	{ N_("NEF+Normal"),	0x05, PTP_VENDOR_NIKON },
+	{ N_("NEF+Fine"),	0x06, PTP_VENDOR_NIKON },
 };
 GENERIC8TABLE(Compression,compression)
 
@@ -1375,6 +1377,7 @@ static struct deviceproptableu16 focusmodes[] = {
 	{ N_("Automatic Macro"),0x0003, 0 },
 	{ N_("AF-S"),		0x8010, PTP_VENDOR_NIKON },
 	{ N_("AF-C"),		0x8011, PTP_VENDOR_NIKON },
+	{ N_("AF-A"),		0x8012, PTP_VENDOR_NIKON },
 };
 GENERIC16TABLE(FocusMode,focusmodes)
 
