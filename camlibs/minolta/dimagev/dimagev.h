@@ -58,20 +58,20 @@
 #define DIMAGEV_CAN 0x18
 
 /* These are the commands. */
-#define DIMAGEV_INQUIRY "\x01"
-#define DIMAGEV_DRIVE_READY "\x02"
-#define DIMAGEV_GET_DIR "\x03"
-#define DIMAGEV_GET_IMAGE "\x04"
-#define DIMAGEV_ERASE_IMAGE "\x05"
-#define DIMAGEV_ERASE_ALL "\x06"
-#define DIMAGEV_GET_STATUS "\x07"
-#define DIMAGEV_SET_DATA "\x08"
-#define DIMAGEV_GET_DATA "\x09"
-#define DIMAGEV_SHUTTER "\x0a"
-#define DIMAGEV_FORMAT "\x0b"
-#define DIMAGEV_DIAG "\x0c"
-#define DIMAGEV_GET_THUMB "\x0d"
-#define DIMAGEV_SET_IMAGE "\x0e"
+#define DIMAGEV_INQUIRY (unsigned char*)"\x01"
+#define DIMAGEV_DRIVE_READY (unsigned char*)"\x02"
+#define DIMAGEV_GET_DIR (unsigned char*)"\x03"
+#define DIMAGEV_GET_IMAGE (unsigned char*)"\x04"
+#define DIMAGEV_ERASE_IMAGE (unsigned char*)"\x05"
+#define DIMAGEV_ERASE_ALL (unsigned char*)"\x06"
+#define DIMAGEV_GET_STATUS (unsigned char*)"\x07"
+#define DIMAGEV_SET_DATA (unsigned char*)"\x08"
+#define DIMAGEV_GET_DATA (unsigned char*)"\x09"
+#define DIMAGEV_SHUTTER (unsigned char*)"\x0a"
+#define DIMAGEV_FORMAT (unsigned char*)"\x0b"
+#define DIMAGEV_DIAG (unsigned char*)"\x0c"
+#define DIMAGEV_GET_THUMB (unsigned char*)"\x0d"
+#define DIMAGEV_SET_IMAGE (unsigned char*)"\x0e"
 
 /* Using five digits is a bit forward-thinking, since I've never even gotten
    enough pictures on a card to fill two digits, but I may as well use all

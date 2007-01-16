@@ -482,10 +482,11 @@ int camera_init (Camera *camera, GPContext *context)
                 return GP_ERROR_IO;
         }
 
-        /* Let's make this non-fatal. An incorrect date doesn't affect much. */
-        if ( dimagev_set_date(camera->pl) < GP_OK ) {
+	/* Apparently, trying to set the clock now leaves the camera in an
+	   unstable state. Skiping it for now. */
+        /* if ( dimagev_set_date(camera->pl) < GP_OK ) {
                 GP_DEBUG( "camera_init::unable to set camera to system time");
-        }
+        } */
 
 	/* Set up the filesystem */
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);

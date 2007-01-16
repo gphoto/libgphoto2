@@ -31,7 +31,7 @@ int dimagev_put_file(dimagev_t* dimagev, CameraFile *file) {
 	unsigned char total_packets= (unsigned char) 0, sent_packets= (unsigned char) 0;
 	int left_to_send=0;
 	const char *data;
-	long int size;
+	unsigned long int size;
 
 	dimagev_packet *p;
 	unsigned char char_buffer, command_buffer[3], *packet_buffer;
