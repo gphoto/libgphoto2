@@ -291,7 +291,7 @@ dnl Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_SIZE_T
 
 dnl Checks for library functions.
-AC_CHECK_FUNCS([getopt getopt_long mkdir strdup strncpy strcpy snprintf sprintf vsnprintf gmtime_r])
+AC_CHECK_FUNCS([getopt getopt_long mkdir strdup strncpy strcpy snprintf sprintf vsnprintf gmtime_r statfs])
 
 dnl Find out how to get struct tm
 AC_STRUCT_TM
@@ -313,6 +313,35 @@ AC_MSG_RESULT(yes)
 AC_MSG_RESULT(no)
 ])
 
+AC_CHECK_HEADERS([sys/mount.h sys/statfs.h sys/user.h sys/vfs.h],,,[
+#include <sys/types.h>
+#if HAVE_SYS_PARAM_H
+# include <sys/param.h>
+#endif
+])
+
+dnl Check for statfs members
+AC_CHECK_MEMBERS([struct statfs.f_bfree, struct statfs.f_bavail, struct statfs.f_favail],,,[
+#include <sys/types.h>
+#ifdef HAVE_SYS_PARAM_H
+# include <sys/param.h>
+#endif
+#ifdef HAVE_SYS_MOUNT_H
+# include <sys/mount.h>
+#endif
+#ifdef HAVE_SYS_VFS_H
+# include <sys/vfs.h>
+#endif
+#ifdef HAVE_SYS_STATFS_H
+# include <sys/statfs.h>
+#endif
+])
+
+AC_CHECK_MEMBERS([struct statvfs.f_blocks],,,[
+#ifdef HAVE_SYS_STATVFS_H
+# include <sys/statvfs.h>
+#endif
+])
 
 dnl Create a stdint.h-like file containing size-specific integer definitions
 dnl that will always be available
