@@ -28,6 +28,22 @@
 #include <sys/types.h>
 #include <utime.h>
 #include <unistd.h>
+#ifdef HAVE_SYS_STATVFS_H
+# include <sys/statvfs.h>
+#endif
+#ifdef HAVE_SYS_PARAM_H
+# include <sys/param.h>
+#endif
+#ifdef HAVE_SYS_VFS_H
+# include <sys/vfs.h>
+#endif
+#ifdef HAVE_SYS_MOUNT_H
+# include <sys/mount.h>
+#endif
+#ifdef HAVE_SYS_STATFS_H
+# include <sys/statfs.h>
+#endif
+
 
 #ifdef HAVE_LIBEXIF
 #include <libexif/exif-data.h>
@@ -680,6 +696,55 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 }
 #endif
 
+static int
+storage_info_func (CameraFilesystem *fs,
+                CameraStorageInformation **sinfos,
+                int *nrofsinfos,
+                void *data, GPContext *context
+) {
+	Camera 		*camera          = data;
+	GPPortSettings	settings;
+	CameraStorageInformation	*sfs;
+
+#if defined(linux) && defined(HAVE_STATFS)
+	struct	statfs		stfs;
+
+	gp_port_get_settings (camera->port, &settings);
+	if (-1 == statfs (settings.disk.mountpoint, &stfs))
+		return GP_ERROR_NOT_SUPPORTED;
+
+	sfs = malloc (sizeof (CameraStorageInformation));
+	if (!sfs)
+		return GP_ERROR_NO_MEMORY;
+	*sinfos = sfs;
+	*nrofsinfos = 1;
+
+	sfs->fields =	GP_STORAGEINFO_BASE		|
+			GP_STORAGEINFO_DESCRIPTION	|
+			GP_STORAGEINFO_STORAGETYPE	|
+			GP_STORAGEINFO_FILESYSTEMTYPE	|
+			GP_STORAGEINFO_ACCESS		|
+			GP_STORAGEINFO_MAXCAPACITY	|
+			GP_STORAGEINFO_FREESPACEKBYTES;
+	;
+	strcpy (sfs->basedir, "/");
+	strcpy (sfs->description, "Directory Driver");
+	sfs->type		= GP_STORAGEINFO_ST_REMOVABLE_RAM;
+	sfs->fstype		= GP_STORAGEINFO_FST_GENERICHIERARCHICAL;
+	sfs->access		= GP_STORAGEINFO_AC_READWRITE;
+	if (stfs.f_bsize >= 1024) {
+		sfs->capacitykbytes	= stfs.f_blocks*(stfs.f_bsize/1024);
+		sfs->freekbytes		= stfs.f_bavail*(stfs.f_bsize/1024);
+	} else {
+		sfs->capacitykbytes	= stfs.f_blocks/(1024/stfs.f_bsize);
+		sfs->freekbytes		= stfs.f_bavail/(1024/stfs.f_bsize);
+	}
+	return GP_OK;
+#endif
+
+	return GP_ERROR_NOT_SUPPORTED;
+} 
+
 static CameraFilesystemFuncs fsfuncs = {
 	.file_list_func = file_list_func,
 	.folder_list_func = folder_list_func,
@@ -690,6 +755,7 @@ static CameraFilesystemFuncs fsfuncs = {
 	.del_file_func = delete_file_func,
 	.make_dir_func = make_dir_func,
 	.remove_dir_func = remove_dir_func,
+	.storage_info_func = storage_info_func,
 };
 
 int

@@ -1,3 +1,7 @@
+2007-01-17  Marcus Meissner  <marcus@jet.franken.de>
+
+	* directory.c: Added getting of Storage Information.
+
 2006-06-03  Hubert Figuiere  <hub@figuiere.net>
 
 	* directory.c: Added more extensions as file types.
