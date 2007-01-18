@@ -1040,12 +1040,16 @@ static int
 camera_exit (Camera *camera, GPContext *context)
 {
 	if (camera->pl!=NULL) {
+		PTPParams *params = &camera->pl->params;
 		/* close iconv converters */
 		iconv_close(camera->pl->params.cd_ucs2_to_locale);
 		iconv_close(camera->pl->params.cd_locale_to_ucs2);
 		/* close ptp session */
-		ptp_closesession (&camera->pl->params);
-		free (camera->pl);
+		ptp_closesession (params);
+		ptp_free_params(params);
+		free (params->data);
+		free (camera->pl); /* also frees params */
+		params = NULL;
 		camera->pl = NULL;
 	}
 	if (camera->port!=NULL)  {
@@ -1057,10 +1061,6 @@ camera_exit (Camera *camera, GPContext *context)
 		gp_port_usb_clear_halt
 				(camera->port, GP_PORT_USB_ENDPOINT_INT);
 	}
-
-	/* FIXME: free all camera->pl->params.objectinfo[] and
-	   other malloced data, like wifi profiles */
-
 	return (GP_OK);
 }
 
@@ -2289,23 +2289,29 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		if (ptp_operation_issupported(params,PTP_OC_GetStorageIDs)) {
 			CPR (context, ptp_getstorageids(params,
 				&storageids));
-		} else {
-			storageids.n = 1;
-			storageids.Storage[0]=0xdeadbeef;
-		}
-		for (i=0; i<storageids.n; i++) {
-			char fname[PTP_MAXSTRLEN];
+			for (i=0; i<storageids.n; i++) {
+				char fname[PTP_MAXSTRLEN];
 
-			if ((storageids.Storage[i]&0x0000ffff)==0) continue;
+				if ((storageids.Storage[i]&0x0000ffff)==0) continue;
+				snprintf(fname, strlen(STORAGE_FOLDER_PREFIX)+9,
+					STORAGE_FOLDER_PREFIX"%08x",
+					storageids.Storage[i]);
+				CR (gp_list_append (list, fname, NULL));
+			}
+		} else {
+			char fname[PTP_MAXSTRLEN];
 			snprintf(fname, strlen(STORAGE_FOLDER_PREFIX)+9,
-				STORAGE_FOLDER_PREFIX"%08x",
-				storageids.Storage[i]);
-			CR (gp_list_append (list, fname, NULL));
+					STORAGE_FOLDER_PREFIX"%08x",
+					0xdeadbeef
+			);
+			gp_list_append (list, fname, NULL);
 		}
 
 		if (nrofspecial_files)
 			CR (gp_list_append (list, "special", NULL));
 
+		if (storageids.Storage[0] != 0xdeadbeef)
+			free (storageids.Storage);
 		return (GP_OK);
 	}
 
@@ -2641,6 +2647,7 @@ mtp_get_playlist_string(
 	else
 		free (content);
 	*xcontentlen = contentlen;
+	free (objects);
 	return (GP_OK);
 }
 

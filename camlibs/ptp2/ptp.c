@@ -461,6 +461,33 @@ ptp_closesession (PTPParams* params)
 }
 
 /**
+ * ptp_free_params:
+ * params:	PTPParams*
+ *
+ * Frees all data within the PTPParams struct.
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
+void
+ptp_free_params (PTPParams *params) {
+	while (params->proplist) {
+		MTPPropList		*xpl = params->proplist;
+
+		if ((xpl->datatype == PTP_DTC_STR) && (xpl->propval.str))
+			free (xpl->propval.str);
+		params->proplist = xpl->next;
+		free (xpl);
+	}
+	if (params->canon_flags) free (params->canon_flags);
+	if (params->cameraname) free (params->cameraname);
+	if (params->wifi_profiles) free (params->wifi_profiles);
+	free (params->handles.Handler);
+	free (params->objectinfo);
+	ptp_free_DI (&params->deviceinfo);
+}
+
+
+/**
  * ptp_getststorageids:
  * params:	PTPParams*
  *

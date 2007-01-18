@@ -294,6 +294,20 @@ ptp_unpack_DI (PTPParams *params, unsigned char* data, PTPDeviceInfo *di, unsign
 		PTP_di_OperationsSupported+totallen,
 		&len);
 }
+
+static void
+ptp_free_DI (PTPDeviceInfo *di) {
+	if (di->SerialNumber) free (di->SerialNumber);
+	if (di->DeviceVersion) free (di->DeviceVersion);
+	if (di->Model) free (di->Model);
+	if (di->Manufacturer) free (di->Manufacturer);
+	if (di->ImageFormats) free (di->ImageFormats);
+	if (di->CaptureFormats) free (di->CaptureFormats);
+	if (di->VendorExtensionDesc) free (di->VendorExtensionDesc);
+	if (di->OperationsSupported) free (di->OperationsSupported);
+	if (di->EventsSupported) free (di->EventsSupported);
+	if (di->DevicePropertiesSupported) free (di->DevicePropertiesSupported);
+}
 	
 /* ObjectHandles array pack/unpack */
 
