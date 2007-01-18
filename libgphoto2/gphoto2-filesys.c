@@ -390,9 +390,11 @@ delete_all_folders (CameraFilesystem *fs, const char *folder,
                                 continue;
 
 			/* Handle "/foo/bar" "/foo/bar bar" style directories,
-			 * where on is contained in the other, but not a subdirectory
+			 * where on is contained in the other, but not a subdirectory.
+			 * But make sure "/" still supercedes "/foo".
 			 */
-			if (	(fs->folder[x].name[strlen(folder)] != '/') &&
+			if (	(folder[strlen(folder)-1] != '/') &&
+				(fs->folder[x].name[strlen(folder)] != '/') &&
 				(fs->folder[x].name[strlen(folder)] != '\0')
 			)
 				continue;
