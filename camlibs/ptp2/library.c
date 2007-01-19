@@ -71,6 +71,7 @@
 #include "ptp.h"
 #include "ptp-bugs.h"
 #include "ptp-private.h"
+#include "ptp-pack.c"
 
 #define GP_MODULE "PTP2"
 
@@ -2048,7 +2049,10 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
 			n = snprintf (txt, spaceleft,_("\tFree Space (Images): %d\n"), (unsigned int)storageinfo.FreeSpaceInImages);
 			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+			if (storageinfo.StorageDescription) free (storageinfo.StorageDescription);
+			if (storageinfo.VolumeLabel) free (storageinfo.VolumeLabel);
 		}
+		free (storageids.Storage);
 	}
 
 	n = snprintf (txt, spaceleft,_("\nDevice Property Summary:\n"));
@@ -2130,6 +2134,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 		sprintf(txt,"\n");
 		txt += strlen(txt);
         }
+	ptp_free_DI (&pdi);
 	return (GP_OK);
 }
 
@@ -3361,12 +3366,10 @@ storage_info_func (CameraFilesystem *fs,
 		if (si.VolumeLabel && strlen(si.VolumeLabel)) {
 			sif->fields |= GP_STORAGEINFO_LABEL;
 			strcpy (sif->label, si.VolumeLabel);
-			free (si.VolumeLabel);
 		}
 		if (si.StorageDescription && strlen(si.StorageDescription)) {
 			sif->fields |= GP_STORAGEINFO_DESCRIPTION;
 			strcpy (sif->description, si.StorageDescription);
-			free (si.StorageDescription);
 		}
 		sif->fields |= GP_STORAGEINFO_STORAGETYPE;
 		switch (si.StorageType) {
@@ -3430,6 +3433,8 @@ storage_info_func (CameraFilesystem *fs,
 			sif->fields |= GP_STORAGEINFO_FREESPACEIMAGES;
 			sif->freeimages = si.FreeSpaceInImages;
 		}
+		if (si.StorageDescription) free (si.StorageDescription);
+		if (si.VolumeLabel) free (si.VolumeLabel);
 	}
 	free (sids.Storage);
 	return (GP_OK);
@@ -3586,6 +3591,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 				curhandle++;
 			}
 		}
+		free (ids.Storage);
 		params->handles.n = curhandle;
 		return PTP_RC_OK;
 	}
