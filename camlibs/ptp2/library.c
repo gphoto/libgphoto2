@@ -2133,6 +2133,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 		txt += strlen(txt);
 		sprintf(txt,"\n");
 		txt += strlen(txt);
+		ptp_free_devicepropdesc (&dpd);
         }
 	ptp_free_DI (&pdi);
 	return (GP_OK);
