@@ -186,7 +186,7 @@ load_settings (void)
 			strcpy(glob_setting[glob_setting_count++].value, "");
 		}
 	}
-
+	fclose (f);
 	return (GP_OK);
 }
 
