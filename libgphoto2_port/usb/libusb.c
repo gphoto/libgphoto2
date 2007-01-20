@@ -267,7 +267,6 @@ gp_port_usb_open (GPPort *port)
 			port->settings.usb.interface, "sdc2xx, stv680, spca50x");
 		return GP_ERROR_IO_USB_CLAIM;
 	}
-
 	return GP_OK;
 }
 
@@ -361,7 +360,7 @@ gp_port_usb_check_int (GPPort *port, char *bytes, int size, int timeout)
 	if (!port || !port->pl->dh || timeout < 0)
 		return GP_ERROR_BAD_PARAMETERS;
 
-	ret = usb_bulk_read(port->pl->dh, port->settings.usb.intep,
+	ret = usb_interrupt_read(port->pl->dh, port->settings.usb.intep,
 			     bytes, size, timeout);
         if (ret < 0)
 		return GP_ERROR_IO_READ;

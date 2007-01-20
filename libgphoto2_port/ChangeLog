@@ -1,3 +1,8 @@
+2007-01-20  Marcus Meissner  <marcus@jet.franken.de>
+
+	* usb/libusb.c: Use usb_interrupt_read instead
+	  of usb_bulk_read.
+
 2006-09-09  Marcus Meissner  <marcus@jet.franken.de>
 
 	* disk: Merged Solaris mount entry handling from
