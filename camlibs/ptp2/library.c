@@ -643,6 +643,7 @@ static struct {
 	{"Canon:EOS 400D (PTP mode)",           0x04a9, 0x3110, 0},
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1456391&group_id=8874 */
 	{"Canon:EOS 30D (PTP mode)",            0x04a9, 0x3113, PTPBUG_DCIM_WRONG_PARENT},
+	{"Canon:Digital IXUS 900Ti (PTP mode)", 0x04a9, 0x3115, PTPBUG_DCIM_WRONG_PARENT},
 	{"Canon:Digital IXUS 750 (PTP mode)",   0x04a9, 0x3116, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot A700 (PTP mode)",     0x04a9, 0x3117, PTPBUG_DELETE_SENDS_EVENT},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1498577&group_id=8874&atid=358874 */
