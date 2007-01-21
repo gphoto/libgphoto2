@@ -1,3 +1,8 @@
+2007-01-20  Marcus Meissner  <marcus@jet.franken.de>
+
+	* Added Canon PowerShot A420.
+	* Added Canon Digital IXUS 900Ti.
+
 2007-01-18  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c, ptp.c, ptp-pack.c, ptp.h:
