@@ -1,3 +1,8 @@
+2007-01-21  Marcus Meissner  <marcus@jet.franken.de>
+
+	* libgphoto2/gphoto2-filesys.c: 
+	  Bugfixes for LRU double linked list handling.
+
 2007-01-03  Hubert Figuiere  <hub@figuiere.net>
 
 	* libgphoto2_port/disk/disk.c (gp_port_library_list): handle

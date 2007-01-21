@@ -500,6 +500,8 @@ append_file (CameraFilesystem *fs, int x, CameraFile *file, GPContext *context)
 	strcpy (fs->folder[x].file[fs->folder[x].count - 1].name, name);
 	fs->folder[x].file[fs->folder[x].count - 1].info_dirty = 1;
 	fs->folder[x].file[fs->folder[x].count - 1].normal = file;
+	fs->folder[x].file[fs->folder[x].count - 1].lru_prev = NULL;
+	fs->folder[x].file[fs->folder[x].count - 1].lru_next = NULL;
 	gp_file_ref (file);
 
 	return (GP_OK);
@@ -1901,6 +1903,9 @@ gp_filesystem_lru_remove_one (CameraFilesystem *fs, CameraFilesystemFile *item)
 	if (item->lru_prev == NULL)
 		return (GP_ERROR);
 
+	/* Update the prev and next pointers. */
+	if (item->lru_prev) item->lru_prev->lru_next = item->lru_next;
+	if (item->lru_next) item->lru_next->lru_prev = item->lru_prev;
 	if (fs->lru_last == item) {
 		if (fs->lru_first == item) {
 
@@ -1910,22 +1915,17 @@ gp_filesystem_lru_remove_one (CameraFilesystem *fs, CameraFilesystemFile *item)
 			 */
 			fs->lru_last  = NULL;
 			fs->lru_first = NULL;
-
 		} else {
 
 			/* Case 2: ITEM is the last in the list. */
 			fs->lru_last = item->lru_prev;
-
 		}
 	} else if (fs->lru_first == item) {
 
 		/* Case 3: ITEM is the first in the list. */
 		fs->lru_first = item->lru_next;
-
-	} else {
-
-		/* Case 4: ITEM is in the middle of the list. */
-		item->lru_prev->lru_next = item->lru_next;
+		/* the first item prev links back to itself */
+		fs->lru_first->lru_prev = fs->lru_first;
 	}
 
 	/* Clear the pointers */
@@ -1973,7 +1973,7 @@ gp_filesystem_lru_free (CameraFilesystem *fs)
 		gp_file_unref (ptr->audio);
 		ptr->audio = NULL;
 	}
-
+	ptr->lru_next = ptr->lru_prev = NULL;
 	return (GP_OK);
 }
 
@@ -2093,6 +2093,7 @@ gp_filesystem_lru_update (CameraFilesystem *fs, const char *folder,
 		fs->folder[x].file[y].lru_prev = &fs->folder[x].file[y];
 
 	} else {
+		fs->folder[x].file[y].lru_next = NULL;
 		fs->folder[x].file[y].lru_prev = fs->lru_last;
 		fs->lru_last->lru_next = &fs->folder[x].file[y];
 		fs->lru_last = &fs->folder[x].file[y];
