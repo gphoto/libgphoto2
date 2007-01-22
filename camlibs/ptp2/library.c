@@ -746,9 +746,9 @@ static struct {
 	{"Philips:GoGear SA9200",		0x0471, 0x014f, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* From Gerhard Mekenkamp */
 	{"Philips:GoGear Audio",		0x0471, 0x0165, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	/* from XNJB user (libmtp) */
+	{"Philips:PSA235",			0x0471, 0x7e01, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 
-
-	/* borrowed from libmtp source */
 	{"Creative:Zen Vision",			0x041e, 0x411f, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	{"Creative:Portable Media Center",	0x041e, 0x4123, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	{"Creative:Zen Xtra",			0x041e, 0x4128, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
@@ -794,10 +794,12 @@ static struct {
 	/* From Mark Veinot */
 	{"JVC:Alneo XA-HD500", 			0x04f1, 0x6105, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 
-	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1474056&group_id=8874&atid=108874 */
-	{"Samsung:YP-T7J", 			0x04e8, 0x5047, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	/* Contributed by aronvanammers on SourceForge (libmtp) */
+	{"Samsung:YH-925GS",			0x04e8, 0x5024, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	{"Samsung:YH-820",			0x04e8, 0x502e, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	{"Samsung:YH-925",			0x04e8, 0x502f, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1474056&group_id=8874&atid=108874 */
+	{"Samsung:YP-T7J", 			0x04e8, 0x5047, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* Reported by cstrickler@gmail.com */
 	{"Samsung:YP-U2J (YP-U2JXB/XAA)",	0x04e8, 0x5054, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* Reported by Andrew Benson */
