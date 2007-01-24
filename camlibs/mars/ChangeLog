@@ -1,4 +1,12 @@
-2006-09-23  Theodore Kilgore <kilgota@auburn.edu>
+2007-01-24  Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Added "Sakar 56399 Spyshot"
+		     Added "Pixart Gemini Keychain Camera"
+		     reported by R P Herrold <herrold@owlriver.com>
+	* README.mars: Added these cameras there, too. 
+
+
+2006-12-23  Theodore Kilgore <kilgota@auburn.edu>
 
 	* library.c: Added "ION digital camera"
 	* README.mars: Added "ION digital camera"

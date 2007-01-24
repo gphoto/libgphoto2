@@ -86,11 +86,14 @@ a very high cutoff threshold and will not take photos in the evening, even if
 one points it at a bright monitor screen. Color mapping is cruddy, though, even 
 running in uncompressed mode. 640x480 and 320x240 resolution.
 
-Philips Keychain and INNOVAGE Mini Digital: These seem to be clones, even 
+Philips Keychain, INNOVAGE Mini Digital: These seem to be clones, even 
 having very similar cases. They will do max resolution 352x488. But for what 
 they are they work very well. It seems that these shoot clips in compressed 
 mode (no matter if you otherwise turned compression on, or not), but at the 
 resolution settings these cameras use the decompression works nicely, too. 
+Probably the CD302N and the Pixart Gemini are the same, too, but I do not have
+direct experience. The Sakar Digital 56379 also contains a microphone and will
+capture sound; that interface is not implemented here.
 
 ION digital camera: Compression optional. High cutoff threshold for what the 
 camera considers badlight; will not take photos indoors, sometimes, even on a 

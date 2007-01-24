@@ -72,6 +72,8 @@ struct {
  	{"Sakar Digital no. 77379", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f},
 	{"ION digital camera", GP_DRIVER_STATUS_TESTING, 0x093a, 0x010f}, 
 	{"Argus QuickClix", GP_DRIVER_STATUS_DEPRECATED, 0x093a, 0x010f},
+	{"Pixart Gemini Keychain Camera", GP_DRIVER_STATUS_TESTING, 0x093a, 0x010e},
+	{"Sakar Digital no. 56379 Spyshot", GP_DRIVER_STATUS_TESTING, 0x093a, 0x010e},	
 	{NULL,0,0,0}
 };
 
