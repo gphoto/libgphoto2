@@ -3889,6 +3889,8 @@ camera_init (Camera *camera, GPContext *context)
 	((PTPData *) camera->pl->params.data)->camera = camera;
 	camera->pl->params.byteorder = PTP_DL_LE;
 	camera->pl->params.maxpacketsize = settings.usb.maxpacketsize;
+	if (!camera->pl->params.maxpacketsize)
+		camera->pl->params.maxpacketsize = 64; /* assume USB 1.0 */
 
 	switch (camera->port->type) {
 	case GP_PORT_USB:
