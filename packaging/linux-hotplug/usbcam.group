@@ -25,7 +25,9 @@ GROUP=camera
 # "usbcam" like this script.
 # 
 
-if [ "${ACTION}" = "add" ] && [ -f "${DEVICE}" ]
+[ -z "${DEVICE}" ] && DEVICE="${DEVNAME}"
+
+if [ "${ACTION}" = "add" ] && [ -e "${DEVICE}" ]
 then
     chmod o-rwx "${DEVICE}"
     chgrp "${GROUP}" "${DEVICE}"
