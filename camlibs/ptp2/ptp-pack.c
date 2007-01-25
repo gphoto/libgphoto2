@@ -116,8 +116,17 @@ ptp_unpack_string(PTPParams *params, unsigned char* data, uint16_t offset, uint8
 		nconv = iconv (params->cd_ucs2_to_locale, &stringp, &convlen, &locp, &convmax);
 		/* FIXME: handle size errors */
 		loclstr[PTP_MAXSTRLEN*3] = '\0';
-		if (nconv == (size_t) -1)
-			return NULL;
+		if (nconv == (size_t) -1) {
+			int i;
+			/* try the old way, in case iconv is broken */
+			for (i=0;i<loclen;i++) {
+				if (string[i]>127)
+					loclstr[i] = '?';
+				else
+					loclstr[i] = string[i];
+			}
+			string[loclen] = 0;
+		}
 		return strdup(loclstr);
 	}
 	return NULL;
