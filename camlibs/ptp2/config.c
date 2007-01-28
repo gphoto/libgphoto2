@@ -258,6 +258,19 @@ _get_Generic16Table(CONFIG_GET_ARGS, struct deviceproptableu16* tbl, int tblsize
 		return (GP_ERROR);
 	if (dpd->DataType != PTP_DTC_UINT16)
 		return (GP_ERROR);
+	if (!dpd->FORM.Enum.NumberOfValues) {
+		/* fill in with all values we have in the table. */
+		for (j=0;j<tblsize;j++) {
+			if ((tbl[j].vendor_id == 0) ||
+		     	    (tbl[j].vendor_id == camera->pl->params.deviceinfo.VendorExtensionID)
+			) {
+				gp_widget_add_choice (*widget, _(tbl[j].label));
+				if (tbl[j].value == dpd->CurrentValue.u16)
+					gp_widget_set_value (*widget, _(tbl[j].label));
+			}
+		}
+		return GP_OK;
+	}
 	for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
 		int isset = FALSE;
 
@@ -298,12 +311,16 @@ _put_Generic16Table(CONFIG_PUT_ARGS, struct deviceproptableu16* tbl, int tblsize
 		    ((tbl[i].vendor_id == 0) || (tbl[i].vendor_id == camera->pl->params.deviceinfo.VendorExtensionID))
 		) {
 			propval->u16 = tbl[i].value;
+			gp_log (GP_LOG_DEBUG, "ptp2/config:g16tbl", "returning %d for %s", propval->u16, value);
 			return GP_OK;
 		}
 	}
-	if (!sscanf(value, _("Unknown value %04x"), &intval))
+	if (!sscanf(value, _("Unknown value %04x"), &intval)) {
+		gp_log (GP_LOG_ERROR, "ptp2/config", "failed to find value %s in list", value);
 		return (GP_ERROR);
+	}
 	propval->u16 = intval;
+	gp_log (GP_LOG_DEBUG, "ptp2/config:g16tbl", "returning %d for %s", propval->u16, value);
 	return GP_OK;
 }
 
@@ -2321,7 +2338,6 @@ int
 camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 {
 	CameraWidget *section, *widget;
-	PTPDevicePropDesc dpd;
 	int menuno, submenuno, ret;
 
 	gp_widget_new (GP_WIDGET_WINDOW, _("Camera and Driver Configuration"), window);
@@ -2346,6 +2362,8 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 			if (!have_prop(camera,cursub->vendorid,cursub->propid))
 				continue;
 			if (cursub->propid) {
+				PTPDevicePropDesc	dpd;
+
 				memset(&dpd,0,sizeof(dpd));
 				ptp_getdevicepropdesc(&camera->pl->params,cursub->propid,&dpd);
 				ret = cursub->getfunc (camera, &widget, cursub, &dpd);
