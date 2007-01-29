@@ -1649,6 +1649,36 @@ _put_Canon_CaptureMode(CONFIG_PUT_ARGS) {
 }
 
 static int
+_get_Canon_FocusLock(CONFIG_GET_ARGS) {
+	int val;
+
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+	val = 2; /* always changed */
+	gp_widget_set_value  (*widget, &val);
+	return (GP_OK);
+}
+
+static int
+_put_Canon_FocusLock(CONFIG_PUT_ARGS)
+{
+	PTPParams *params = &(camera->pl->params);
+	int val, ret;
+
+	ret = gp_widget_get_value (widget, &val);
+	if (ret != GP_OK)
+		return ret;
+	if (val)
+		ret = ptp_canon_focuslock (params);
+	else
+		ret = ptp_canon_focusunlock (params);
+	if (ret == PTP_RC_OK)
+		return (GP_OK);
+	return (GP_ERROR);
+}
+
+
+static int
 _get_Nikon_BeepMode(CONFIG_GET_ARGS) {
 	int val;
 
@@ -2324,6 +2354,7 @@ static struct submenu capture_settings_menu[] = {
         { N_("Saturation"), "saturation", PTP_DPC_NIKON_Saturation, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_Saturation, _put_Nikon_Saturation },
         { N_("Hue Adjustment"), "hueadjustment", PTP_DPC_NIKON_HueAdjustment, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_HueAdjustment, _put_Nikon_HueAdjustment },
 	/* { N_("Viewfinder Mode"), "viewfinder", PTP_DPC_CANON_ViewFinderMode, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_ViewFinderMode, _put_Canon_ViewFinderMode}, */
+	{ N_("Focus Lock"), "focuslock", 0, PTP_VENDOR_CANON, 0, _get_Canon_FocusLock, _put_Canon_FocusLock},
 	{ 0,0,0,0,0,0,0 },
 };
 
