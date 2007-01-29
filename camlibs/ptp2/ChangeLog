@@ -2,12 +2,17 @@
 
 	* library.c: Added focuslock toggle option.
 
+2007-01-25  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptp-pack.c: Use a fallback method if iconv is not correct.
+
 2007-01-20  Marcus Meissner  <marcus@jet.franken.de>
 
 	* Added Canon PowerShot A420.
 	* Added Canon Digital IXUS 900Ti.
 	* Added Philips PSA235 and Samsung YH-925GS from libmtp.
 	* Added SanDisk Sansa c250.
+	* Added Nikon CoolPix S6.
 
 2007-01-18  Marcus Meissner  <marcus@jet.franken.de>
 
