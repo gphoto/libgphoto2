@@ -1,15 +1,15 @@
 # Italian messages for libgphoto2_port.
-# Copyright (C) 2000, 2005, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2005, 2006, 2007 Free Software Foundation, Inc.
 # This file is distributed under the same license as the libgphoto2 package.
-# Marco Colombo <m.colombo@ed.ac.uk>, 2005, 2006.
+# Marco Colombo <m.colombo@ed.ac.uk>, 2005, 2006, 2007.
 # Daniele Medri <madrid@linux.it>, 2000.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libgphoto2_port 2.1.99\n"
+"Project-Id-Version: libgphoto2_port 2.3.0\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-12-29 01:31+0100\n"
-"PO-Revision-Date: 2006-01-09 16:14+0000\n"
+"POT-Creation-Date: 2006-11-29 21:33-0500\n"
+"PO-Revision-Date: 2007-01-12 12:36+0000\n"
 "Last-Translator: Marco Colombo <m.colombo@ed.ac.uk>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
 "MIME-Version: 1.0\n"
@@ -46,59 +46,59 @@ msgstr "Impossibile caricare l'elenco dei driver per la porta: \"%s\"."
 msgid "Loaded '%s' ('%s') from '%s'."
 msgstr "Caricato \"%s\" (\"%s\") da \"%s\"."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:265
+#: libgphoto2_port/gphoto2-port-info-list.c:264
 #, c-format
 msgid "Using ltdl to load io-drivers from '%s'..."
 msgstr "Si usa ltdl per caricare i driver di I/O da \"%s\"..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:291
+#: libgphoto2_port/gphoto2-port-info-list.c:290
 #, c-format
 msgid "Counting entries (%i available)..."
 msgstr "Conteggio delle voci (%i disponibili)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:300
+#: libgphoto2_port/gphoto2-port-info-list.c:299
 #, c-format
 msgid "%i regular entries available."
 msgstr "%i voci regolari disponibili."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:329
+#: libgphoto2_port/gphoto2-port-info-list.c:328
 #, c-format
 msgid "Looking for path '%s' (%i entries available)..."
 msgstr "Ricerca del percorso \"%s\" (%i voci disponibili)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:341
+#: libgphoto2_port/gphoto2-port-info-list.c:340
 #, c-format
 msgid "Starting regex search for '%s'..."
 msgstr "Avvio ricerca con espressioni regolari per \"%s\"..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:349
+#: libgphoto2_port/gphoto2-port-info-list.c:348
 #, c-format
 msgid "Trying '%s'..."
 msgstr "Si sta provando \"%s\"..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:370
+#: libgphoto2_port/gphoto2-port-info-list.c:369
 msgid "regcomp failed"
 msgstr "regcomp non riuscito"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:381
+#: libgphoto2_port/gphoto2-port-info-list.c:380
 #, c-format
 msgid "re_match failed (%i)"
 msgstr "re_match non riuscito (%i)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:389
+#: libgphoto2_port/gphoto2-port-info-list.c:388
 msgid "regexec failed"
 msgstr "regexec non riuscito"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:395
+#: libgphoto2_port/gphoto2-port-info-list.c:394
 msgid "Generic Port"
 msgstr "Porta generica"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:419
+#: libgphoto2_port/gphoto2-port-info-list.c:418
 #, c-format
 msgid "Looking up entry '%s'..."
 msgstr "Consultazione della voce \"%s\" in corso..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:449
+#: libgphoto2_port/gphoto2-port-info-list.c:448
 #, c-format
 msgid "Getting info of entry %i (%i available)..."
 msgstr "Lettura delle informazioni sulla voce %i (%i disponibili)..."
@@ -125,7 +125,7 @@ msgstr "Operazione non gestita"
 
 #: libgphoto2_port/gphoto2-port-result.c:68
 msgid "Fixed limit exceeded"
-msgstr ""
+msgstr "Limite fisso superato"
 
 #: libgphoto2_port/gphoto2-port-result.c:70
 msgid "Timeout reading from or writing to the port"
@@ -324,14 +324,12 @@ msgstr "Pulitura halt..."
 #: libgphoto2_port/gphoto2-port.c:748
 #, c-format
 msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr ""
-"Scrittura messaggio (richiesta=0x%x valore=0x%x indice=0x%x dim.=%i=0x%x)..."
+msgstr "Scrittura messaggio (richiesta=0x%x valore=0x%x indice=0x%x dim.=%i=0x%x)..."
 
 #: libgphoto2_port/gphoto2-port.c:769
 #, c-format
 msgid "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr ""
-"Lettura messaggio (richiesta=0x%x valore=0x%x indice=0x%x dim.=%i=0x%x)..."
+msgstr "Lettura messaggio (richiesta=0x%x valore=0x%x indice=0x%x dim.=%i=0x%x)..."
 
 # FIXME UPSTREAM
 #: libgphoto2_port/gphoto2-port.c:776
@@ -355,9 +353,7 @@ msgstr "Il dispositivo \"%s\" è bloccato dal pid %d"
 #: serial/unix.c:243
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
-msgstr ""
-"Non è stato possibile bloccare il dispositivo \"%s\" (dev_lock ha restituito "
-"%d)"
+msgstr "Non è stato possibile bloccare il dispositivo \"%s\" (dev_lock ha restituito %d)"
 
 #: serial/unix.c:277
 #, c-format
@@ -367,16 +363,12 @@ msgstr "Non è stato possibile sbloccare il dispositivo \"%s\"."
 #: serial/unix.c:289
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
-msgstr ""
-"Non è stato possibile sbloccare il dispositivo \"%s\" perché bloccato dal "
-"pid %d."
+msgstr "Non è stato possibile sbloccare il dispositivo \"%s\" perché bloccato dal pid %d."
 
 #: serial/unix.c:293
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
-msgstr ""
-"Non è stato possibile sbloccare il dispositivo \"%s\" (dev_unlock ha "
-"restituito %d)"
+msgstr "Non è stato possibile sbloccare il dispositivo \"%s\" (dev_unlock ha restituito %d)"
 
 #: serial/unix.c:371
 #, c-format
@@ -458,14 +450,8 @@ msgstr "Impossibile interrogare il driver del kernel per il dispositivo."
 
 #: usb/libusb.c:263
 #, c-format
-msgid ""
-"Could not claim interface %d (%m). Make sure no other program or kernel "
-"module (such as %s) is using the device and you have read/write access to "
-"the device."
-msgstr ""
-"Impossibile reclamare l'interfaccia %d (%m). Assicurarsi che nessun altro "
-"programma o un modulo del kernel (come %s) stia usando il dispositivo, e che "
-"si abbia accesso in lettura e scrittura al dispositivo."
+msgid "Could not claim interface %d (%m). Make sure no other program or kernel module (such as %s) is using the device and you have read/write access to the device."
+msgstr "Impossibile reclamare l'interfaccia %d (%m). Assicurarsi che nessun altro programma o un modulo del kernel (come %s) stia usando il dispositivo, e che si abbia accesso in lettura e scrittura al dispositivo."
 
 #: usb/libusb.c:282
 #, c-format
@@ -495,31 +481,18 @@ msgstr "L'id del vendor o del prodotto (0x%x,0x%x) fornito non è valido."
 
 #: usb/libusb.c:623
 #, c-format
-msgid ""
-"USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
-"not function with gphoto2. Reference: %s"
-msgstr ""
-"Il dispositivo USB (vendor 0x%x, prodotto 0x%x) è un dispositivo di "
-"archiviazione di massa, e potrebbe non funzionare con gphoto2. Riferimento: %"
-"s"
+msgid "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might not function with gphoto2. Reference: %s"
+msgstr "Il dispositivo USB (vendor 0x%x, prodotto 0x%x) è un dispositivo di archiviazione di massa, e potrebbe non funzionare con gphoto2. Riferimento: %s"
 
 #: usb/libusb.c:656
 #, c-format
-msgid ""
-"Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
-"is connected to the computer."
-msgstr ""
-"Impossibile trovare il dispositivo USB (vendor 0x%x, prodotto 0x%x). "
-"Assicurarsi che il dispositivo sia connesso al computer."
+msgid "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device is connected to the computer."
+msgstr "Impossibile trovare il dispositivo USB (vendor 0x%x, prodotto 0x%x). Assicurarsi che il dispositivo sia connesso al computer."
 
 #: usb/libusb.c:876
 #, c-format
-msgid ""
-"Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
-"sure this device is connected to the computer."
-msgstr ""
-"Impossibile trovare il dispositivo USB (classe 0x%x, sottoclasse 0x%x, "
-"protocollo 0x%x). Assicurarsi che il dispositivo sia connesso al computer."
+msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
+msgstr "Impossibile trovare il dispositivo USB (classe 0x%x, sottoclasse 0x%x, protocollo 0x%x). Assicurarsi che il dispositivo sia connesso al computer."
 
 #: disk/disk.c:177 disk/disk.c:219 disk/disk.c:245 disk/disk.c:277
 #: disk/disk.c:300
@@ -535,9 +508,7 @@ msgstr "(sconosciuto)"
 #~ msgstr "Caricamento dei driver di I/O da \"%s\" senza ltdl..."
 
 #~ msgid "Could not load any io-library because '%s' could not be opened (%m)"
-#~ msgstr ""
-#~ "Impossibile caricare le librerie di I/O perché \"%s\" non può essere "
-#~ "aperto (%m)"
+#~ msgstr "Impossibile caricare le librerie di I/O perché \"%s\" non può essere aperto (%m)"
 
 #~ msgid "'%s' is not a library (%s)"
 #~ msgstr "\"%s\" non è una libreria (%s)"
