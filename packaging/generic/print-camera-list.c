@@ -333,7 +333,7 @@ udev_camera_func (const func_params_t *params,
 				 | GP_USB_HOTPLUG_MATCH_PRODUCT_ID);
 			usb_vendor = a->usb_vendor;
 			usb_product = a->usb_product;
-		} else if ((a->usb_class) && (a->usb_class != 666)) {
+		} else if (a->usb_class) {
 			class = a->usb_class;
 			subclass = a->usb_subclass;
 			proto = a->usb_protocol;
@@ -446,7 +446,7 @@ udev_098_camera_func (const func_params_t *params,
 				 | GP_USB_HOTPLUG_MATCH_PRODUCT_ID);
 			usb_vendor = a->usb_vendor;
 			usb_product = a->usb_product;
-		} else if ((a->usb_class) && (a->usb_class != 666)) {
+		} else if (a->usb_class) {
 			class = a->usb_class;
 			subclass = a->usb_subclass;
 			proto = a->usb_protocol;
