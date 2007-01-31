@@ -489,6 +489,7 @@ static struct {
 	{"Nikon:Coolpix 5200 (PTP mode)", 0x04b0, 0x0206, 0},
 	/* https://launchpad.net/bugs/63473 */
 	{"Nikon:Coolpix L1 (PTP mode)",   0x04b0, 0x0208, 0},
+	{"Nikon:Coolpix P4 (PTP mode)",   0x04b0, 0x020c, 0},
 	/* Nikon Coolpix 2000 */
 	{"Nikon:Coolpix 2000 (PTP mode)", 0x04b0, 0x0302, 0},
 
