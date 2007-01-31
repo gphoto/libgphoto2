@@ -562,8 +562,8 @@ udev_camera_func (const func_params_t *params,
 			}
 		}
 	} else {
-		printf (pdata->usbcam_string,
-			a->usb_vendor, a->usb_product);
+		if (a->usb_vendor)
+			printf (pdata->usbcam_string, a->usb_vendor, a->usb_product);
 	}
 	if (pdata->script != NULL) {
 		printf("RUN+=\"%s\"\n", pdata->script);
