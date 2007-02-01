@@ -320,6 +320,7 @@ static struct {
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1618878&group_id=8874 */
 	{"Kodak:V570",   0x040a, 0x0591, 0},
 	{"Kodak:P850",   0x040a, 0x0592, 0},
+	{"Kodak:P880",   0x040a, 0x0593, 0},
 	/* https://launchpad.net/distros/ubuntu/+source/libgphoto2/+bug/67532 */
 	{"Kodak:C530",   0x040a, 0x059a, 0},
 	/* Ivan Baldo, http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=387998 */
