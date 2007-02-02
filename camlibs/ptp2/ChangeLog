@@ -1,9 +1,3 @@
-2007-02-02  Marcus Meissner  <marcus@jet.franken.de>
-
-	* library.c: Rewritten UCS-2 handling to not
-	  use strange hacks, but UCS-2LE directly.
-	  (from Chuck Cranor)
-
 2007-01-29  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Added focuslock toggle option.

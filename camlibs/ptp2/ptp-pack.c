@@ -89,45 +89,58 @@ dtoh64ap (PTPParams *params, unsigned char *a)
 static inline char*
 ptp_unpack_string(PTPParams *params, unsigned char* data, uint16_t offset, uint8_t *len)
 {
-	uint8_t length;
+	int i;
+	uint8_t loclen;
 	uint16_t string[PTP_MAXSTRLEN+1];
-	/* allow for UTF-8: max of 3 bytes per UCS-2 char, plus final null */
-	char loclstr[PTP_MAXSTRLEN*3+1]; 
-	size_t nconv, srclen, destlen;
-	char *src, *dest;
+	char *stringp = (char *) string;
+	char loclstr[PTP_MAXSTRLEN*3+1]; /* UTF-8 encoding is max 3 bytes per UCS2 char. */
+	char *locp = loclstr;
+	size_t nconv;
+	size_t convlen;
+	size_t convmax = PTP_MAXSTRLEN*3;
 
-	length = dtoh8a(&data[offset]);	/* PTP_MAXSTRLEN == 255, 8 bit len */
-	*len = length;
-	if (length == 0)		/* nothing to do? */
-		return(NULL);
-
-	/* copy to string[] to ensure correct alignment for iconv(3) */
-	memcpy(string, &data[offset+1], length * sizeof(string[0]));
-	string[length] = 0x0000U;   /* be paranoid!  add a terminator. */
-	loclstr[0] = '\0';
-    
-	/* convert from camera UCS-2 to our locale */
-	src = (char *)string;
-	srclen = length * sizeof(string[0]);
-	dest = loclstr;
-	destlen = sizeof(loclstr)-1;
-	nconv = iconv(params->cd_ucs2_to_locale, &src, &srclen, 
-			&dest, &destlen);
-	if (nconv == (size_t) -1) { /* do it the hard way */
+	/* Cannot exceed 255 (PTP_MAXSTRLEN) since it is a single byte, duh ... */
+	loclen = dtoh8a(&data[offset]);
+	/* This len is used to advance the buffer pointer */
+	*len = loclen;
+	if (!loclen)
+		return NULL;
+	convlen = loclen * 2; /* UCS-2 is 16 bit wide */
+	if (params->cd_endian_correct) {
+		memcpy (string, &data[offset+1], loclen*2);
+	} else {
+		for (i=0;i<loclen;i++)
+			string[i]=dtoh16a(&data[offset+i*2+1]);
+	}
+	/* be paranoid! Add a terminator. :( */
+	string[loclen]=0x0000U;
+	loclstr[0]='\0';
+	/* loclstr=ucs2_to_utf8(string); */
+	/* Do the conversion.  */
+	nconv = iconv (params->cd_ucs2_to_locale, &stringp, &convlen, &locp, &convmax);
+	/* FIXME: handle size errors */
+	loclstr[PTP_MAXSTRLEN*3] = '\0';
+	if (nconv == (size_t) -1) {
 		int i;
 		/* try the old way, in case iconv is broken */
-		for (i=0;i<length;i++) {
-			if (dtoh16a(&data[offset+1+2*i])>127)
-				loclstr[i] = '?';
-			else
-				loclstr[i] = dtoh16a(&data[offset+1+2*i]);
+		for (i=0;i<loclen;i++) {
+			if (params->cd_endian_correct) {
+				if (dtoh16a(&data[offset+i*2+1])>127)
+					loclstr[i] = '?';
+				else
+					loclstr[i] = dtoh16a(&data[offset+i*2+1]);
+			} else {
+				if (string[i]>127)
+					loclstr[i] = '?';
+				else
+					loclstr[i] = string[i];
+			}
 		}
-		dest = loclstr+length;
+		loclstr[loclen] = 0;
 	}
-	*dest = '\0';
-	loclstr[sizeof(loclstr)-1] = '\0';   /* be safe? */
-	return(strdup(loclstr));
+	return strdup(loclstr);
 }
+
 
 static inline int
 ucs2strlen(uint16_t const * const unicstr)
@@ -143,6 +156,7 @@ ucs2strlen(uint16_t const * const unicstr)
 static inline void
 ptp_pack_string(PTPParams *params, char *string, unsigned char* data, uint16_t offset, uint8_t *len)
 {
+	int i;
 	int packedlen;
 	uint16_t ucs2str[PTP_MAXSTRLEN+1];
 	char *ucs2strp = (char *) ucs2str;
@@ -152,15 +166,11 @@ ptp_pack_string(PTPParams *params, char *string, unsigned char* data, uint16_t o
 	size_t convmax = PTP_MAXSTRLEN * 2; /* Includes the terminator */
 
 	/* Cannot exceed 255 (PTP_MAXSTRLEN) since it is a single byte, duh ... */
-	memset(ucs2strp, 0, sizeof(ucs2str));  /* XXX: necessary? */
-	nconv = iconv(params->cd_locale_to_ucs2, &stringp, &convlen,
-		&ucs2strp, &convmax);
+	ucs2str[0] = 0x0000U;
+	memset(ucs2strp, 0, PTP_MAXSTRLEN*2+2);
+	nconv = iconv (params->cd_locale_to_ucs2, &stringp, &convlen, &ucs2strp, &convmax);
 	if (nconv == (size_t) -1)
 		ucs2str[0] = 0x0000U;
-	/*
-	 * XXX: isn't packedlen just ( (uint16_t *)ucs2strp - ucs2str )?
-	 *      why do we need ucs2strlen()?
-	 */
 	packedlen = ucs2strlen(ucs2str);
 	if (packedlen > PTP_MAXSTRLEN-1) {
 		*len=0;
@@ -169,8 +179,10 @@ ptp_pack_string(PTPParams *params, char *string, unsigned char* data, uint16_t o
 	
 	/* number of characters including terminating 0 (PTP standard confirmed) */
 	htod8a(&data[offset],packedlen+1);
-	memcpy(&data[offset+1], &ucs2str[0], packedlen * sizeof(ucs2str[0]));
-	htod16a(&data[offset+packedlen*2+1], 0x0000);  /* terminate 0 */
+	for (i=0;i<packedlen && i< PTP_MAXSTRLEN; i++) {
+		htod16a(&data[offset+i*2+1],ucs2str[i]);
+	}
+	htod16a(&data[offset+i*2+1],0x0000);
 
 	/* The returned length is in number of characters */
 	*len = (uint8_t) packedlen+1;
