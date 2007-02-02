@@ -1365,7 +1365,6 @@ struct _PTPParams {
 	/* PTP: iconv converters */
 	iconv_t	cd_locale_to_ucs2;
 	iconv_t cd_ucs2_to_locale;
-	int	cd_endian_correct;
 
 	/* IO: Sometimes the response packet get send in the dataphase
 	 * too. This only happens for a Samsung player now.
