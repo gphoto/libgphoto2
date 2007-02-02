@@ -51,23 +51,6 @@
 #  define N_(String) (String)
 #endif
 
-/*
- * On MacOS (Darwin) and *BSD we're not using glibc, but libiconv.
- * glibc knows that UCS-2 is to be in the local machine endianness,
- * whereas libiconv does not. So we construct this macro to get
- * things right. Reportedly, glibc 2.1.3 has a bug so that UCS-2
- * is always bigendian though, we would need to work around that
- * too...
- */
-#ifndef __GLIBC__
-#define UCS_2_INTERNAL "UCS-2-INTERNAL"
-#else
-#if (__GLIBC__ == 2 && __GLIBC_MINOR__ <= 1 )
-#error "Too old glibc. This versions iconv() implementation cannot be trusted."
-#endif
-#define UCS_2_INTERNAL "UCS-2"
-#endif
-
 #include "ptp.h"
 #include "ptp-bugs.h"
 #include "ptp-private.h"
@@ -3861,7 +3844,7 @@ camera_init (Camera *camera, GPContext *context)
     	CameraAbilities a;
 	int ret, i, retried = 0;
 	PTPParams *params;
-	char *curloc;
+	char *curloc, *camloc;
 	GPPortSettings	settings;
 
 	gp_port_get_settings (camera->port, &settings);
@@ -3893,6 +3876,11 @@ camera_init (Camera *camera, GPContext *context)
 	memset (camera->pl->params.data, 0, sizeof (PTPData));
 	((PTPData *) camera->pl->params.data)->camera = camera;
 	camera->pl->params.byteorder = PTP_DL_LE;
+	if (camera->pl->params.byteorder == PTP_DL_LE)
+		camloc = "UCS-2LE";
+	else
+		camloc = "UCS-2BE";
+
 	camera->pl->params.maxpacketsize = settings.usb.maxpacketsize;
 	if (!camera->pl->params.maxpacketsize)
 		camera->pl->params.maxpacketsize = 64; /* assume USB 1.0 */
@@ -3933,8 +3921,8 @@ camera_init (Camera *camera, GPContext *context)
 
 	curloc = nl_langinfo (CODESET);
 	if (!curloc) curloc="UTF-8";
-	camera->pl->params.cd_ucs2_to_locale = iconv_open(curloc, UCS_2_INTERNAL);
-	camera->pl->params.cd_locale_to_ucs2 = iconv_open(UCS_2_INTERNAL, curloc);
+	camera->pl->params.cd_ucs2_to_locale = iconv_open(curloc, camloc);
+	camera->pl->params.cd_locale_to_ucs2 = iconv_open(camloc, curloc);
 	if ((camera->pl->params.cd_ucs2_to_locale == (iconv_t) -1) ||
 	    (camera->pl->params.cd_locale_to_ucs2 == (iconv_t) -1)) {
 		gp_log (GP_LOG_ERROR, "iconv", "Failed to create iconv converter.\n");
