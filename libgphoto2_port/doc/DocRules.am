@@ -22,10 +22,10 @@ scan:
 templates: scan
 	cd $(srcdir) && gtkdoc-mktmpl --module=$(DOC_MODULE)
 
-sgml:
+sgml: templates
 	cd $(srcdir) && gtkdoc-mkdb --module=$(DOC_MODULE) --source-dir=$(DOC_SOURCE_DIR)
 
-html:
+html: sgml
 	if ! test -d html ; then mkdir html ; fi
 	cd html && gtkdoc-mkhtml $(DOC_MODULE) ../$(srcdir)/$(DOC_MAIN_SGML_FILE)
 
