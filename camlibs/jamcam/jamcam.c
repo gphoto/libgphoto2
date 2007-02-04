@@ -56,7 +56,7 @@
 #define JAMCAM_LAST_MOD "11/28/2001 14:51 EST"
 
 /* define what cameras we support */
-static struct {
+static const struct {
 	char *model;
 	int usb_vendor;
 	int usb_product;
