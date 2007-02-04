@@ -40,7 +40,3 @@
 #define ADC65_DATA_PICTURE	2
 
 #define PICTURE_SIZE	65535
-
-char*	adc65_read_picture	(Camera *camera, int picture_number, int *size);
-int	adc65_ping		(Camera *camera);
-int     adc65_file_count	(Camera *);

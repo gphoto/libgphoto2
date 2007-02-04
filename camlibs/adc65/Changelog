@@ -1,3 +1,7 @@
+2007-02-04  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c, adc65.c, adc65.h: Merged library.c into adc65.c.
+
 2005-03-11  Marcus Meissner  <marcus@jet.franken.de>
 
 	* *: imported to libgphoto2 CVS, cleaned up.
