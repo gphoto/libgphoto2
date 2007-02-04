@@ -85,7 +85,7 @@ either
 The UDEV rules require two helper scripts/binaries, which obviously
 need to be installed by the package:
 
-   * check-mtp-device
+   * check-mtp-device (not working yet)
    * check-ptp-camera
 
 You can either use fixed permissions in the generated rules, or call
