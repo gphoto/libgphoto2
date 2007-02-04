@@ -562,8 +562,12 @@ udev_camera_func (const func_params_t *params,
 			}
 		}
 	} else {
-		if (a->usb_vendor)
+		if (flags & GP_USB_HOTPLUG_MATCH_VENDOR_ID)
 			printf (pdata->usbcam_string, a->usb_vendor, a->usb_product);
+		else
+			fprintf (stderr, "Error: Trying to output device %d/%d with incorrect match flags.\n",
+				a->usb_vendor, a->usb_product
+			);
 	}
 	if (pdata->script != NULL) {
 		printf("RUN+=\"%s\"\n", pdata->script);
