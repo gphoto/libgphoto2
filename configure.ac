@@ -504,7 +504,6 @@ GP_CAMLIB([toshiba_pdrm11])dnl
 dnl
 GP_CAMLIBS_DEFINE()dnl
 
-
 dnl --------------------------------------------------------------------
 dnl documentation
 dnl --------------------------------------------------------------------
@@ -636,6 +635,16 @@ then
 fi
 
 GP_CONFIG_OUTPUT
+
+dnl Catch the Gentoo folks that think just enabling "canon" makes their
+dnl Canon camera work.
+if test "$BUILD_THESE_CAMLIBS" = " canon.la" ; then
+	echo 
+	echo "*** Note: Newer Canon Cameras are supported by the ptp2 camera driver."
+	echo "***       'canon' is used for older models."
+	echo "***       If you are unsure, please enable both the canon and ptp2 driver."
+	echo 
+fi
 
 echo "
 Please check whether the configuration I detected matches what you
