@@ -49,9 +49,20 @@
 /**
  * Whether to preserve binary compatibility for structure internals.
  *
- * FIXME: Find out whether any libgphoto2 frontend relies on those
- *        internals.
+ * Question: Find out whether any libgphoto2 frontend relies on those
+ *           internals.
+ * Answer: They do, at least by instantiation a "struct CameraList foo;".
+ *
+ * Binary compatibility and problems:
+ *   * fixed string size for name and value
+ *   * fixed max number of entries
+ *   * some apps instantiate a "struct CameraList foo;" directly and
+ *     thus reserve a specific amount of memory
+ *   * FIXME: Do frontends rely on the memory layout and size of their 
+ *     "struct CameraList" or "struct CameraList *" when accessing
+ *     its members? They *SHOULD* use access functions.
  */
+#undef CAMERALIST_STRUCT_COMPATIBILITY
 #define CAMERALIST_STRUCT_COMPATIBILITY
 
 
@@ -82,6 +93,11 @@ struct _CameraList {
 #else /* !CAMERALIST_STRUCT_COMPATIBILITY */
 
 #error The !CAMERALIST_STRUCT_COMPATIBILITY part has not been implemented yet!
+
+struct _CamaraSubList {
+	int count;
+  foo bar;
+};
 
 struct _CameraList {
 	int ref_count;
@@ -482,3 +498,12 @@ gp_list_populate  (CameraList *list, const char *format, int count)
 
 	return (GP_OK);
 }
+
+
+
+/*
+ * Local Variables:
+ * c-file-style:"linux"
+ * indent-tabs-mode:nil
+ * End:
+ */
