@@ -30,6 +30,8 @@
 
 #include "adc65.h"
 
+#define GP_MODULE "adc65"
+
 /* colorspace structure */
 typedef struct {
   unsigned char R;
