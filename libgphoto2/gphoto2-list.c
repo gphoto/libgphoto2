@@ -143,11 +143,10 @@ gp_list_unref (CameraList *list)
 {
 	CHECK_LIST (list);
 
-	list->ref_count--;
-
-	if (!list->ref_count)
+	if (list->ref_count == 1) /* time to free */
 		gp_list_free (list);
-
+	else
+		list->ref_count--;
 	return (GP_OK);
 }
 
