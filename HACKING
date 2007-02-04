@@ -12,14 +12,7 @@ distribute gphoto2 under the LGPL as well.
 patches
 -------
 
-... are always welcome. Please have something like 
-
-cvs -z4 -q
-diff -u3 -p
-update -dP
-checkout -P
-
-in $HOME/.cvsrc and send us the output of "cvs diff some_file.c".
+... are always welcome.
 
 We prefer patches against the current SVN trunk very much over
 patches against old released versions, but these are also welcome :-)
