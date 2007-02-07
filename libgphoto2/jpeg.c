@@ -66,6 +66,8 @@ chunk *gpi_jpeg_chunk_new_filled(int length, char *data)
     chunk *mychunk;
     printf("Entered gpi_jpeg_chunk_new_filled\n");
     mychunk = gpi_jpeg_chunk_new(length);
+    if (!mychunk)
+	return NULL;
     printf("Filling the chunk data via chunk_new_filled\n");
     memcpy(mychunk->data, data, length);
     return mychunk;
@@ -157,9 +159,11 @@ void gpi_jpeg_add_marker(jpeg *myjpeg, chunk *picture, int start, int end)
     int length;
     nullpointerabortvoid(picture, "Picture");
     length=(int)(end-start+1);
-/*    printf("Add marker #%i starting from %i and ending at %i for a length of %i\n", myjpeg->count, start, end, length); */
+/*  printf("Add marker #%i starting from %i and ending at %i for a length of %i\n", myjpeg->count, start, end, length); */
     myjpeg->marker[myjpeg->count] = gpi_jpeg_chunk_new(length);
-/*    printf("Read length is: %i\n", myjpeg->marker[myjpeg->count].size); */
+    if (!myjpeg->marker[myjpeg->count])
+	return;
+/*  printf("Read length is: %i\n", myjpeg->marker[myjpeg->count].size); */
     memcpy(myjpeg->marker[myjpeg->count]->data, picture->data+start, length);
     gpi_jpeg_chunk_print(myjpeg->marker[myjpeg->count]);
     myjpeg->count++;
@@ -258,6 +262,7 @@ chunk *gpi_jpeg_makeSsSeAhAl(int huffset1, int huffset2, int huffset3)
     printf("About to call gpi_jpeg_chunk_new_filled\n");
     target= gpi_jpeg_chunk_new_filled(14, "\xFF\xDA\x00\x0C\x03\x01\x00\x02"
         "\x00\x03\x00\x00\x3F\x00");
+    if (!target) return NULL;
     target->data[6] = huffset1;
     target->data[8] = huffset2;
     target->data[10] = huffset3;
@@ -285,6 +290,7 @@ chunk *gpi_jpeg_make_quantization(jpeg_quantization_table *table, char number)
     chunk *temp;
     char x,y,z,c;
     temp = gpi_jpeg_chunk_new(5+64);
+    if (!temp) return NULL;
     memcpy(temp->data, "\xFF\xDB\x00\x43\x01", 5);
     temp->data[4]=number;
     for (c=z=0; z<8; z++)
