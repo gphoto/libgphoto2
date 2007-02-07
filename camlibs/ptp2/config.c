@@ -65,7 +65,8 @@ camera_prepare_capture (Camera *camera, GPContext *context)
 	uint16_t		val16;
 	int 			i, ret, isevent;
 	PTPParams		*params = &camera->pl->params;
-
+	int oldtimeout;
+	
 	gp_log (GP_LOG_DEBUG, "ptp", "prepare_capture\n");
 	switch (params->deviceinfo.VendorExtensionID) {
 	case PTP_VENDOR_CANON:
@@ -109,6 +110,9 @@ camera_prepare_capture (Camera *camera, GPContext *context)
 
 		CPR (context, ptp_canon_startshootingmode (params));
 
+		gp_port_get_timeout (camera->port, &oldtimeout);
+		gp_port_set_timeout (camera->port, 1000);
+
 		/* Catch event */
 		if (PTP_RC_OK==(val16=params->event_wait (params, &evc))) {
 			if (evc.Code==PTP_EC_StorageInfoChanged)
@@ -142,6 +146,7 @@ camera_prepare_capture (Camera *camera, GPContext *context)
 		}
 		/* Reget device info, they change on the Canons. */
 		ptp_getdeviceinfo(&camera->pl->params, &camera->pl->params.deviceinfo);
+		gp_port_set_timeout (camera->port, oldtimeout);
 		return GP_OK;
 	default:
 		/* generic capture does not need preparation */
