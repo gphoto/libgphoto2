@@ -1,3 +1,8 @@
+2007-02-07  Marcus Meissner  <marcus@jet.franken.de>
+
+	* config.c: Handle exptime using integers,
+	  not floats.
+
 2007-02-02  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Rewritten UCS-2 handling to not

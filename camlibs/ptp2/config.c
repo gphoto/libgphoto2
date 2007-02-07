@@ -1063,7 +1063,13 @@ _get_ExpTime(CONFIG_GET_ARGS) {
         for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
 		char	buf[20];
 
-		sprintf(buf,"%.2g",dpd->FORM.Enum.SupportedValue[i].u32*0.00001);
+		if (dpd->FORM.Enum.SupportedValue[i].u32%1000)
+			sprintf (buf,"%d.%03d",
+				dpd->FORM.Enum.SupportedValue[i].u32/1000,
+				dpd->FORM.Enum.SupportedValue[i].u32%1000
+			);
+		else
+			sprintf (buf,"%d",dpd->FORM.Enum.SupportedValue[i].u32/1000);
                 gp_widget_add_choice (*widget,buf);
 		if (dpd->FORM.Enum.SupportedValue[i].u32 == dpd->CurrentValue.u32)
                 	gp_widget_set_value (*widget,buf);
@@ -1074,19 +1080,25 @@ _get_ExpTime(CONFIG_GET_ARGS) {
 static int
 _put_ExpTime(CONFIG_PUT_ARGS)
 {
-	int	ret;
+	int	ret, val;
 	char	*value;
-	float	f;
 
 	ret = gp_widget_get_value (widget, &value);
 	if (ret != GP_OK)
 		return ret;
 
-	if (sscanf(value, "%g", &f)) {
-		propval->u32 = f*10000;
-		return GP_OK;
+	if (strchr(value,'.')) {
+		int val2;
+
+		if (!sscanf(value,"%d.%d",&val,&val2))
+			return (GP_ERROR);
+		propval->u32 = val*1000+val2;
+		return (GP_OK);
 	}
-	return GP_ERROR;
+	if (!sscanf(value,"%d",&val))
+		return (GP_ERROR);
+	propval->u32 = val*1000;
+	return (GP_OK);
 }
 
 static struct deviceproptableu16 exposure_program_modes[] = {
