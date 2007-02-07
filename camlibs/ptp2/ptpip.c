@@ -597,6 +597,8 @@ ptp_ptpip_connect (PTPParams* params, const char *address) {
 	if (NULL == strchr (address,':'))
 		return GP_ERROR_BAD_PARAMETERS;
 	addr = strdup (address);
+	if (!addr)
+		return GP_ERROR_NO_MEMORY;
 	s = strchr (addr,':'); *s = '\0';
 	p = strchr (s+1,':');
 	port = 15740;

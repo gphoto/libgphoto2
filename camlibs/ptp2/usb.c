@@ -143,6 +143,8 @@ ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
 	if (usecontext)
 		progressid = gp_context_progress_start (context, (size/CONTEXT_BLOCK_SIZE), _("Uploading..."));
 	bytes = malloc (4096);
+	if (!bytes)
+		return PTP_RC_GeneralError;
 	/* if everything OK send the rest */
 	bytes_left_to_transfer = size-datawlen;
 	ret = PTP_RC_OK;
@@ -248,6 +250,7 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 		}
 		if (usbdata.length == 0xffffffffU) {
 			unsigned char	*data = malloc (PTP_USB_BULK_HS_MAX_PACKET_LEN);
+			if (!data) return PTP_RC_GeneralError;
 			/* stuff data directly to passed data handler */
 			while (1) {
 				unsigned long written;
@@ -281,6 +284,7 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 
 			if (surplen >= PTP_USB_BULK_HDR_LEN) {
 				params->response_packet = malloc(surplen);
+				if (!params->response_packet) return PTP_RC_GeneralError;
 				memcpy(params->response_packet,
 				       (uint8_t *) &usbdata + packlen, surplen);
 				params->response_packet_size = surplen;
@@ -313,6 +317,7 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 retry:
 		oldsize = 0;
 		data = malloc(READLEN);
+		if (!data) return PTP_RC_GeneralError;
 		bytes_to_read = len - (rlen - PTP_USB_BULK_HDR_LEN);
 		usecontext = (bytes_to_read > CONTEXT_BLOCK_SIZE);
 		ret = PTP_RC_OK;

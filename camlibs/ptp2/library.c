@@ -136,6 +136,8 @@ add_special_file (char *name, getfunc_t getfunc, putfunc_t putfunc) {
 		special_files = malloc (sizeof(special_files[0]));
 
 	special_files[nrofspecial_files].name = strdup(name);
+	if (!special_files[nrofspecial_files].name)
+		return (GP_ERROR_NO_MEMORY);
 	special_files[nrofspecial_files].putfunc = putfunc;
 	special_files[nrofspecial_files].getfunc = getfunc;
 	nrofspecial_files++;
@@ -2548,6 +2550,8 @@ ptp_mtp_parse_metadata (
 		*end = '\0';
 		content = strdup(begin);
 		*end = '<';
+		if (!content)
+			continue;
 		gp_log (GP_LOG_DEBUG, "ptp2", "found tag %s, content %s", propname, content);
 		ret = ptp_mtp_getobjectpropdesc (params, props[j], ofc, &opd);
 		if (ret != PTP_RC_OK) {

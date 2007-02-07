@@ -491,6 +491,8 @@ _put_STR(CONFIG_PUT_ARGS) {
         if (ret != GP_OK)
                 return ret;
         propval->str = strdup (string);
+	if (!propval->str)
+		return (GP_ERROR_NO_MEMORY);
         return (GP_OK);
 }
 
@@ -505,6 +507,8 @@ _put_AUINT8_as_CHAR_ARRAY(CONFIG_PUT_ARGS) {
 	memset(propval,0,sizeof(PTPPropertyValue));
 	/* add \0 ? */
 	propval->a.v = malloc((strlen(value)+1)*sizeof(PTPPropertyValue));
+	if (!propval->a.v)
+		return (GP_ERROR_NO_MEMORY);
 	propval->a.count = strlen(value)+1;
 	for (i=0;i<strlen(value)+1;i++)
 		propval->a.v[i].u8 = value[i];
@@ -645,6 +649,8 @@ _put_ImageSize(CONFIG_PUT_ARGS) {
         if(ret != GP_OK)
                 return ret;
         propval->str = strdup (value);
+	if (!propval->str)
+		return (GP_ERROR_NO_MEMORY);
         return(GP_OK);
 }
 
@@ -1621,6 +1627,8 @@ _put_STR_as_time(CONFIG_PUT_ARGS) {
 	/* 20020101T123400.0 is returned by the HP Photosmart */
 	sprintf(asctime,"%04d%02d%02dT%02d%02d%02d.0",pxtm->tm_year+1900,pxtm->tm_mon+1,pxtm->tm_mday,pxtm->tm_hour,pxtm->tm_min,pxtm->tm_sec);
 	propval->str = strdup(asctime);
+	if (!propval->str)
+		return (GP_ERROR_NO_MEMORY);
 	return (GP_OK);
 }
 
