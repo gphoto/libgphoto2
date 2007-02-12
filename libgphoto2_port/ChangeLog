@@ -1,3 +1,9 @@
+2007-02-12  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptpip/ptpip.c: mDNS auto discovery disabled,
+	  since the mDNS compat module of avahi crashes autodetect
+	  if used incorrectly.
+
 2007-01-20  Marcus Meissner  <marcus@jet.franken.de>
 
 	* usb/libusb.c: Use usb_interrupt_read instead
