@@ -72,6 +72,8 @@ gp_port_library_type (void)
         return GP_PORT_PTPIP;
 }
 
+/* thanks to Avahi this makes more trouble than its worth */
+#undef HAVE_MDNS_BONJOUR
 #ifdef HAVE_MDNS_BONJOUR
 
 #include <netinet/in.h>
