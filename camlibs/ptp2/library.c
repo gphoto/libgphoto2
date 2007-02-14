@@ -778,8 +778,9 @@ static struct {
 	/* Reported by Rob Brown */
 	{"Toshiba:Gigabeat P10",                0x0930, 0x0011, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 
+	{"Archos:XS202 (MTP mode)",		0x0e79, 0x1208, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* Reported by gudul1@users.sourceforge.net */
-	{"Archos 104",				0x0e79, 0x120a, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"Archos:104",				0x0e79, 0x120a, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 
 	/* From Mark Veinot */
 	{"JVC:Alneo XA-HD500", 			0x04f1, 0x6105, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
@@ -797,9 +798,10 @@ static struct {
 	/* Reported by Patrick <skibler@gmail.com> */
 	{"Samsung:YP-K5",			0x04e8, 0x505a, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* Reported by Matthew Wilcox <matthew@wil.cx> */
-	{"Samsung Yepp T9",			0x04e8, 0x507f, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-
+	{"Samsung:Yepp T9",			0x04e8, 0x507f, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	{"Samsung:YH-999 Portable Media Center",0x04e8, 0x5a0f, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	/* From Lionel Bouton */
+	{"Samsung:X830 Mobile Phone",		0x04e8, 0x6702, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 
 	/* Reported by Brian Robison */
 	{"SanDisk:Sansa m240",			0x0781, 0x7400, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
@@ -813,7 +815,11 @@ static struct {
 	/* Reported by Farooq Zaman. NOTE: Can just list files currently and might have other problems! */
 	{"Microsoft:Zune",			0x045e, 0x0710, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* From Richard Low */
-	{"Sirius:Stiletto",			0x18f6, 0x0102, PTP_MTP|PTP_MTP_PROPLIST_WORKS}
+	{"Sirius:Stiletto",			0x18f6, 0x0102, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+
+	/* https://sourceforge.net/tracker/?func=detail&atid=108874&aid=1659608&group_id=8874 */
+	{"Nokia:Mobile Phones (MTP mode)",	0x0421, 0x04e1, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"Logik:LOG DAX MP3 and DAB Player",	0x13d1, 0x7002, PTP_MTP|PTP_MTP_PROPLIST_WORKS}
 };
 
 static struct {
