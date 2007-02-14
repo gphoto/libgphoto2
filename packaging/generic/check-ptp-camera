@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
  
 # check if any interface of this device is a PTP camera interface (06)
 INTERFACE="${1:-06/01/01}"
