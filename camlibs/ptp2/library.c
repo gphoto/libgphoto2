@@ -465,6 +465,8 @@ static struct {
 	{"Nikon:Coolpix P1 (PTP mode)",   0x04b0, 0x0140, PTP_CAP},
 	/* Marcus Meissner */
 	{"Nikon:Coolpix P2 (PTP mode)",   0x04b0, 0x0142, PTP_CAP},
+	/* Richard SCHNEIDER <Richard.SCHNEIDER@tilak.at> */
+	{"Nikon:Coolpix S4 (PTP mode)",   0x04b0, 0x0144, 0},
 	/* Lowe, John Michael <jomlowe@iupui.edu> */
 	{"Nikon:Coolpix S2 (PTP mode)",   0x04b0, 0x014e, 0},
 	{"Nikon:Coolpix S6 (PTP mode)",   0x04b0, 0x014e, 0},
