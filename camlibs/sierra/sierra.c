@@ -201,6 +201,8 @@ static struct {
 				SIERRA_WRAP_USB_OLYMPUS, &oly3040_cam_desc},
 	{"Olympus", "D-535Z", 	SIERRA_MODEL_CAM_DESC,	0x07b4, 0x109,
 				SIERRA_WRAP_USB_OLYMPUS, &oly3040_cam_desc},
+	{"Olympus", "fe-200", 	SIERRA_MODEL_CAM_DESC,	0x07b4, 0x109,
+				SIERRA_WRAP_USB_OLYMPUS, &oly3040_cam_desc},
 
 	{"Panasonic", "Coolshot NV-DCF5E", SIERRA_MODEL_DEFAULT, 0, 0, 0, NULL },
 
