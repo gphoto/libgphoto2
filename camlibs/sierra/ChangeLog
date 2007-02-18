@@ -1,3 +1,7 @@
+2007-02-13	Chandra Curtis <chandracurtis@ntu.edu.sg>
+	*sierra.c, sierra-desc.h, olympus-desc.c: Added support for Olympus SP-500UZ.  
+	(Works with gtkam, still some issue with gphoto2)
+
 2006-08-08  Marcus Meissner  <marcus@jet.franken.de>
 
 	* sierra.c: Added Nikon CoolPix 2100, from

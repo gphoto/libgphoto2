@@ -138,6 +138,35 @@ static const RegisterDescriptorType oly750uz_reg_01[] = {
 	}
 };
 
+static const ValueNameType olysp500uz_reg_01_val_names[] = {
+	{ { 0x00 }, "SQ2-640x480-NORMAL" },
+	{ { 0x01 }, "SQ2-1024x768-NORMAL" },
+	{ { 0x02 }, "SQ2-1280x960-NORMAL" },
+	{ { 0x03 }, "SQ1-1600x1200-NORMAL" },
+	{ { 0x04 }, "SQ1-2048x1536-NORMAL" },
+	{ { 0x05 }, "SQ1-2288x1712-NORMAL" },
+	{ { 0x06 }, "SQ1-2592x1944-NORMAL" },
+	{ { 0x07 }, "RAW?-2816x2112-NORMAL" },
+	{ { 0x100 }, "SQ2-640x480-HIGH" },
+	{ { 0x101 }, "SQ2-1024x768-HIGH" },
+	{ { 0x102 }, "SQ2-1280x960-HIGH" },
+	{ { 0x103 }, "SQ1-1600x1200-HIGH" },
+	{ { 0x104 }, "SQ1-2048x1536-HIGH" },
+	{ { 0x105 }, "SQ1-2288x1712-HIGH" },
+	{ { 0x106 }, "SQ1-2592x1944-HIGH" },
+	{ { 0x1007 }, "HQ?-2816x1880-NORMAL" },
+	{ { 0x10007 }, "HQ?-2816x1880-NORMAL" },
+	{ { 0x10107 }, "HQ?-2816x1880-3:2" },
+	{ { 0x107 }, "HQ?-2816x2112-3:2" },
+};
+static const RegisterDescriptorType olysp500uz_reg_01[] = { 
+	{
+		GP_WIDGET_MENU, GP_REG_NO_MASK, 
+		"resolution", N_("Resolution plus Size"),
+		VAL_NAME_INIT (olysp500uz_reg_01_val_names)
+	}
+};
+
 /*
  * Register 2: Date and time.
  */
@@ -203,56 +232,49 @@ static const RegisterDescriptorType oly3040_reg_03[] = {
 };
 
 static const ValueNameType oly750uz_reg_03_val_names[] = { 
-	/*
-	 * Right now, we are limited to 32 (see "choice [32] [64]" in
-	 * libgphoto2/gphoto2-widget.c.
-	 *
-	 * We have 44, so skip 12 of these. (Don't know why, we can only
-	 * do 31, I must be counting wrong somehow!)
-	 */
 	{ {       0 }, N_("Auto") },
 	{ {    1000 }, "1/1000" },
 	{ {    1250 }, "1/800" },
 	{ {    1538 }, "1/650" },
 	{ {    2000 }, "1/500" },
 	{ {    2500 }, "1/400" },
-	/* { {    3125 }, "1/320" }, skip 1 */
+	{ {    3125 }, "1/320" },
 	{ {    4000 }, "1/250" },
 	{ {    5000 }, "1/200" },
-	/* { {    6250 }, "1/160" }, skip 2 */
+	{ {    6250 }, "1/160" },
 	{ {    8000 }, "1/125" },
 	{ {   10000 }, "1/100" },
 	{ {   12500 }, "1/80" },
-	/* { {   16666 }, "1/60" }, skip 3 */
+	{ {   16666 }, "1/60" },
 	{ {   20000 }, "1/50" },
 	{ {   25000 }, "1/40" },
 	{ {   33333 }, "1/30" },
-	/* { {   40000 }, "1/25" }, skip 4 */
+	{ {   40000 }, "1/25" },
 	{ {   50000 }, "1/20" },
 	{ {   66667 }, "1/15" },
-	/* { {   76923 }, "1/13" }, skip 5 */
+	{ {   76923 }, "1/13" },
 	{ {  100000 }, "1/10" },
 	{ {  125000 }, "1/8" },
-	/* { {  166667 }, "1/6" }, skip 6 */
-	/* { {  200000 }, "1/5" }, skip 7 */
+	{ {  166667 }, "1/6" },
+	{ {  200000 }, "1/5" },
 	{ {  250000 }, "1/4" },
 	{ {  333333 }, "1/3" },
 	{ {  400000 }, "1/2.5" },
 	{ {  500000 }, "1/2" },
-	/* { {  625000 }, "1/1.6" }, skip 8 */
-	/* { {  769230 }, "1/1.3" }, skip 9 */
+	{ {  625000 }, "1/1.6" },
+	{ {  769230 }, "1/1.3" },
 	{ { 1000000 }, "1" },
-	/* { { 1300000 }, "1.3" }, skip 10 */
-	/* { { 1600000 }, "1.6" }, skip 11 */
+	{ { 1300000 }, "1.3" },
+	{ { 1600000 }, "1.6" },
 	{ { 2000000 }, "2" },
-	/* { { 2500000 }, "2.5" }, skip 12 */
+	{ { 2500000 }, "2.5" },
 	{ { 3200000 }, "3.2" },
 	{ { 4000000 }, "4" },
 	{ { 5000000 }, "5" },
 	{ { 6000000 }, "6" },
 	{ { 8000000 }, "8" },
 	{ {10000000 }, "10" },
-	/* { {13000000 }, "13" }, skip 13 */
+	{ {13000000 }, "13" },
 	{ {16000000 }, "16" },
 };
 static const RegisterDescriptorType oly750uz_reg_03[] = { 
@@ -263,6 +285,65 @@ static const RegisterDescriptorType oly750uz_reg_03[] = {
 	}
 };
 
+static const ValueNameType olysp500uz_reg_03_val_names[] = { 
+	{ {       0 }, N_("Auto") },
+	{ {     250 }, "1/4000" },
+	{ {     313 }, "1/3200" },	
+	{ {     400 }, "1/2500" },
+	{ {     500 }, "1/2000" },
+	{ {     625 }, "1/1600" },	
+	{ {     800 }, "1/1250" },
+	{ {    1000 }, "1/1000" },
+	{ {    1250 }, "1/800" },
+	{ {    1538 }, "1/650" },
+	{ {    2000 }, "1/500" },
+	{ {    2500 }, "1/400" },
+	{ {    3125 }, "1/320" },
+	{ {    4000 }, "1/250" },
+	{ {    5000 }, "1/200" },
+	{ {    6250 }, "1/160" },
+	{ {    8000 }, "1/125" },
+	{ {   10000 }, "1/100" },
+	{ {   12500 }, "1/80" },
+	{ {   16666 }, "1/60" },
+	{ {   20000 }, "1/50" },
+	{ {   25000 }, "1/40" },
+	{ {   33333 }, "1/30" },
+	{ {   40000 }, "1/25" },
+	{ {   50000 }, "1/20" },
+	{ {   66667 }, "1/15" },
+	{ {   76923 }, "1/13" },
+	{ {  100000 }, "1/10" },
+	{ {  125000 }, "1/8" },
+	{ {  166667 }, "1/6" },
+	{ {  200000 }, "1/5" },
+	{ {  250000 }, "1/4" },
+	{ {  333333 }, "1/3" },
+	{ {  400000 }, "1/2.5" },
+	{ {  500000 }, "1/2" },
+	{ {  625000 }, "1/1.6" },
+	{ {  769230 }, "1/1.3" },
+	{ { 1000000 }, "1" },
+	{ { 1300000 }, "1.3" },
+	{ { 1600000 }, "1.6" },
+	{ { 2000000 }, "2" },
+	{ { 2500000 }, "2.5" },
+	{ { 3200000 }, "3.2" },
+	{ { 4000000 }, "4" },
+	{ { 5000000 }, "5" },
+	{ { 6000000 }, "6" },
+	{ { 8000000 }, "8" },
+	{ {10000000 }, "10" },
+	{ {13000000 }, "13" },
+	{ {16000000 }, "16" },
+};
+static const RegisterDescriptorType olysp500uz_reg_03[] = { 
+	{
+		GP_WIDGET_MENU, GP_REG_NO_MASK, 
+		"shutter", N_("Shutter Speed (in seconds)"),
+		VAL_NAME_INIT (olysp500uz_reg_03_val_names)
+	}
+};
 /*
  * Past behaviour is that you have to pick a supported value, you can't
  * arbitrarily set this to some value and have it work, so using a range
@@ -370,6 +451,29 @@ static const RegisterDescriptorType oly750uz_reg_05[] = {
 };
 
 /*
+ * Olympus SP-500uz Register 5: aperature settings.
+ */
+static const ValueNameType olysp500uz_reg_05_val_names[] = {
+	{ { 0 }, N_("Auto") },
+	{ { 28 }, "F2.8" },
+	{ { 32 }, "F3.2" },
+	{ { 35 }, "F3.5" },
+	{ { 40 }, "F4.0" },
+	{ { 45 }, "F4.5" },
+	{ { 50 }, "F5.0" },
+	{ { 56 }, "F5.6" },
+	{ { 63 }, "F6.3" },
+	{ { 80 }, "F8.0" },
+	{ { 90 }, "F9.0" },
+};
+static const RegisterDescriptorType olysp500uz_reg_05[] = { 
+	{
+		GP_WIDGET_MENU, GP_REG_NO_MASK, 
+		"aperature", N_("Aperature Settings"),
+		VAL_NAME_INIT (olysp500uz_reg_05_val_names)
+	}
+};
+/*
  * Register 6: color mode
  */
 static const ValueNameType oly3040_reg_06_val_names[] = {
@@ -424,6 +528,27 @@ static const RegisterDescriptorType oly750uz_reg_07[] = {
 };
 
 /*
+ * Olumpus SP-500uz Register 7: flash settings
+ */
+static const ValueNameType olysp500uz_reg_07_val_names[] = {
+	{ { 0 }, N_("Auto") },
+	{ { 1 }, N_("Force") },
+	{ { 2 }, N_("Off") },
+	{ { 3 }, N_("Anti-redeye") },
+	{ { 4 }, N_("Slow") }, 
+	/* This is always 4 for slow 1, 2, or slow with redeye */
+	{ { 6 }, N_("Anti-redeye Fill") }, 
+};
+
+static const RegisterDescriptorType olysp500uz_reg_07[] = { 
+	{
+		GP_WIDGET_RADIO, GP_REG_NO_MASK,
+		"flash", N_("Flash Settings"), 
+		VAL_NAME_INIT (olysp500uz_reg_07_val_names)
+	}
+};
+
+/*
  * Olympus 3040: Register 20: white balance.
  */
 static const ValueNameType oly3040_reg_20_val_names[] = {
@@ -462,15 +587,15 @@ static const RegisterDescriptorType oly3000z_reg_20[] = {
 
 /*
  * Olympus 750uz: Register 20: white balance. The main difference is that
- * we have the fluorescent 1 2 and 3:
+ * we have the flourescent 1 2 and 3:
  */
 static const ValueNameType oly750uz_reg_20_val_names[] = {
 	{ { 0x00 }, N_("Auto") },
 	{ { 0x01 }, N_("Daylight") },
 	{ { 0x03 }, N_("Tungsten") },
-	{ { 0x04 }, N_("Fluorescent-1-home-6700K") },
-	{ { 0x05 }, N_("Fluorescent-2-desk-5000K") },
-	{ { 0x06 }, N_("Fluorescent-3-office-4200K") },
+	{ { 0x04 }, N_("Flourescent-1-home-6700K") },
+	{ { 0x05 }, N_("Flourescent-2-desk-5000K") },
+	{ { 0x06 }, N_("Flourescent-3-office-4200K") },
 	{ { 0xff }, N_("Cloudy") },
 };
 static const RegisterDescriptorType oly750uz_reg_20[] = { 
@@ -478,6 +603,30 @@ static const RegisterDescriptorType oly750uz_reg_20[] = {
 		GP_WIDGET_RADIO, GP_REG_NO_MASK,
 		"whitebalance", N_("White Balance"),
 		VAL_NAME_INIT (oly750uz_reg_20_val_names)
+	}
+};
+
+/*
+ * Olympus SP 500uz: Register 20: white balance. The main difference is that
+ * we have the flourescent 1 2 and 3:
+ */
+static const ValueNameType olysp500uz_reg_20_val_names[] = {
+	{ { 0x00 }, N_("Auto") },
+	{ { 0x01 }, N_("Daylight") },
+	{ { 0x03 }, N_("Tungsten") },
+	{ { 0x04 }, N_("Flourescent-1-home-6700K") },
+	{ { 0x05 }, N_("Flourescent-2-desk-5000K") },
+	{ { 0x06 }, N_("Flourescent-3-office-4200K") },
+	{ { 0x09 }, N_("Dusk") },
+	{ { 0x0a }, N_("Preset") },
+	{ { 0xff }, N_("Cloudy") },
+};
+
+static const RegisterDescriptorType olysp500uz_reg_20[] = { 
+	{
+		GP_WIDGET_RADIO, GP_REG_NO_MASK,
+		"whitebalance", N_("White Balance"),
+		VAL_NAME_INIT (olysp500uz_reg_20_val_names)
 	}
 };
 
@@ -635,6 +784,24 @@ static const RegisterDescriptorType oly3040_reg_70[] = {
 };
 
 /*
+ * Olympus SP-500uz Register 70: exposure meter.
+ */
+static const ValueNameType olysp500uz_reg_70_val_names[] = {
+	{ { 0x02 }, N_("Center Weighted") },
+	{ { 0x03 }, N_("Spot") },
+	{ { 0x04 }, N_("ESP") },
+	{ { 0x05 }, N_("Matrix") },
+};
+
+static const RegisterDescriptorType olysp500uz_reg_70[] = { 
+	{
+		GP_WIDGET_RADIO, GP_REG_NO_MASK,
+		"exp-meter", N_("Exposure Metering"), 
+		VAL_NAME_INIT (olysp500uz_reg_70_val_names)
+	}
+};
+
+/*
  * Oly 750 uz Register 71: optical zoom value.
  */
 static const ValueNameType oly750uz_reg_71_val_names[] = {
@@ -647,6 +814,22 @@ static const RegisterDescriptorType oly750uz_reg_71[] = {
 		GP_WIDGET_RANGE, GP_REG_NO_MASK, 
 		"zoom", N_("Zoom (in millimeters)"),
 		VAL_NAME_INIT (oly750uz_reg_71_val_names)
+	}
+};
+
+/*
+ * Oly SP-500 uz Register 71: optical zoom value.
+ */
+static const ValueNameType olysp500uz_reg_71_val_names[] = {
+	{
+		{ range: { 6.3, 63.0, .3 } }, NULL
+	}
+};
+static const RegisterDescriptorType olysp500uz_reg_71[] = { 
+	{
+		GP_WIDGET_RANGE, GP_REG_NO_MASK, 
+		"zoom", N_("Zoom (in millimeters)"),
+		VAL_NAME_INIT (olysp500uz_reg_71_val_names)
 	}
 };
 
@@ -880,6 +1063,61 @@ static const CameraRegisterType oly750uz_cam_regs[] = {
 	CAM_REG_TYPE_INIT (oly3040, 41, 4, CAM_DESC_DEFAULT, 0), /* time format, read only */
 };
 
+/*
+ * Olympus SP-500UZ: All of the register used to modify picture settings.
+ */
+static CameraRegisterType olysp500uz_pic_regs[] =  {
+	/* camera prefix, register number, size of register */
+	CAM_REG_TYPE_INIT (olysp500uz, 01, 4, CAM_DESC_DEFAULT, 0), /* resolution/size */
+	CAM_REG_TYPE_INIT (olysp500uz, 03, 4, CAM_DESC_DEFAULT, 0), /* shutter */
+	CAM_REG_TYPE_INIT (oly750uz, 05, 4, CAM_DESC_DEFAULT, 0), /* aperature (f-stop) */
+	CAM_REG_TYPE_INIT (oly3040, 06, 4, CAM_DESC_DEFAULT, 0), /* color mode */
+	CAM_REG_TYPE_INIT (olysp500uz, 07, 4, CAM_DESC_DEFAULT, 0), /* flash */
+	CAM_REG_TYPE_INIT (olysp500uz, 20, 4, CAM_DESC_DEFAULT, 0), /* white balance */
+	CAM_REG_TYPE_INIT (oly3040, 33, 4, CAM_DESC_DEFAULT, 0), /* focus mode */
+	/*
+	 * Note: in "super macro" focus mode, the camera can only auto
+	 * focus. Could not figure out how to set or get super macro mode.
+	 */
+	CAM_REG_TYPE_INIT (oly3040,103, 4, CAM_DESC_DEFAULT, 0), /* focus position */
+	CAM_REG_TYPE_INIT (oly3040, 69, 8, CAM_DESC_DEFAULT, 0), /* exposure compensation */
+	CAM_REG_TYPE_INIT (olysp500uz, 70, 4, CAM_DESC_DEFAULT, 0), /* exposure metering */
+	/*
+	 * Could not figure out how or if mulit-metering can be set for
+	 * the exposure metering.
+	 */
+	CAM_REG_TYPE_INIT (oly750uz, 71, 8, CAM_DESC_DEFAULT, 0), /* optical zoom */
+	CAM_REG_TYPE_INIT (oly3040, 72, 4, CAM_DESC_DEFAULT, 0), /* digital zoom + lense +  AE lock */
+	CAM_REG_TYPE_INIT (oly750uz, 85, 4, CAM_DESC_DEFAULT, 0), /* ISO Speed, read only  */
+};
+
+/*
+ * All of the register used to modify camera settings.
+ *
+ * All the same as 3040.
+ */
+static const CameraRegisterType olysp500uz_cam_regs[] = {
+	CAM_REG_TYPE_INIT (oly3040, 02, 4, CAM_DESC_DEFAULT, 0), /* date-time */
+	CAM_REG_TYPE_INIT (oly3040, 34, 4, CAM_DESC_SUBACTION, 
+			  SIERRA_ACTION_LCD_MODE), /* lcd mode */
+	CAM_REG_TYPE_INIT (oly3040, 35, 4, CAM_DESC_DEFAULT, 0), /* LCD brightness */
+	CAM_REG_TYPE_INIT (oly3040, 38, 4, CAM_DESC_DEFAULT, 0), /* LCD auto shutoff */
+	CAM_REG_TYPE_INIT (oly3040, 24, 4, CAM_DESC_DEFAULT, 0), /* Camera power save */
+	CAM_REG_TYPE_INIT (oly3040, 23, 4, CAM_DESC_DEFAULT, 0), /* Host power save */
+	CAM_REG_TYPE_INIT (oly3040, 41, 4, CAM_DESC_DEFAULT, 0), /* time format, read only */
+};
+
+static const CameraRegisterSetType olysp500uz_desc[] = {
+		{ 
+			N_("Picture Settings"), 
+			SIZE_ADDR (CameraRegisterType, olysp500uz_pic_regs)
+		},
+		{ 
+			N_("Camera Settings"), 
+			SIZE_ADDR (CameraRegisterType, olysp500uz_cam_regs)
+		},
+};
+
 static const CameraRegisterSetType oly750uz_desc[] = {
 		{ 
 			N_("Picture Settings"), 
@@ -890,7 +1128,6 @@ static const CameraRegisterSetType oly750uz_desc[] = {
 			SIZE_ADDR (CameraRegisterType, oly750uz_cam_regs)
 		},
 };
-
 static const CameraRegisterSetType oly3000z_desc[] = {
 		{ 
 			N_("Picture Settings"), 
@@ -958,7 +1195,8 @@ N_(
 "    code to support complete configuration,\n"
 "    please contact the developer mailing list.\n"
 );
-
+const CameraDescType olysp500uz_cam_desc = { olysp500uz_desc, oly750uz_manual,
+	SIERRA_EXT_PROTO, };
 const CameraDescType oly750uz_cam_desc = { oly750uz_desc, oly750uz_manual,
 	SIERRA_EXT_PROTO, };
 const CameraDescType oly3040_cam_desc = { oly3040_desc, oly3040_manual,

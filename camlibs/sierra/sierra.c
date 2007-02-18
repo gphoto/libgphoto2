@@ -195,6 +195,8 @@ static struct {
 					SIERRA_WRAP_USB_OLYMPUS, &oly3040_cam_desc},
 	{"Olympus", "C-5050Z", 	SIERRA_MODEL_CAM_DESC,	0x07b4, 0x105,
 					SIERRA_WRAP_USB_OLYMPUS, &oly3040_cam_desc},
+	{"Olympus", "SP-500UZ", 	SIERRA_MODEL_CAM_DESC,	0x07b4, 0x109,
+				SIERRA_WRAP_USB_OLYMPUS, &olysp500uz_cam_desc},
 	{"Olympus", "C-370Z", 	SIERRA_MODEL_CAM_DESC,	0x07b4, 0x109,
 				SIERRA_WRAP_USB_OLYMPUS, &oly3040_cam_desc},
 	{"Olympus", "X-450", 	SIERRA_MODEL_CAM_DESC,	0x07b4, 0x109,
