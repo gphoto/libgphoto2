@@ -364,7 +364,7 @@ static const RegisterDescriptorType olyrange_reg_03[] = {
 };
 
 /*
- * Olympus 3040 Register 5: aperature settings. Works only in A or M mode
+ * Olympus 3040 Register 5: aperture settings. Works only in A or M mode
  * In A mode, shutter speed is compensated
  */
 static const ValueNameType oly3040_reg_05_val_names[] = {
@@ -389,13 +389,13 @@ static const ValueNameType oly3040_reg_05_val_names[] = {
 static const RegisterDescriptorType oly3040_reg_05[] = { 
 	{
 		GP_WIDGET_MENU, GP_REG_NO_MASK, 
-		"aperature", N_("Aperature Settings"),
+		"aperture", N_("Aperture Settings"),
 		VAL_NAME_INIT (oly3040_reg_05_val_names)
 	}
 };
 
 /*
- * Olympus 3000z Register 5: aperature settings. Unknown if this comment
+ * Olympus 3000z Register 5: aperture settings. Unknown if this comment
  * applies: Works only in A or M mode In A mode, shutter speed is
  * compensated
  */
@@ -421,13 +421,13 @@ static const ValueNameType oly3000z_reg_05_val_names[] = {
 static const RegisterDescriptorType oly3000z_reg_05[] = { 
 	{
 		GP_WIDGET_MENU, GP_REG_NO_MASK, 
-		"aperature", N_("Aperature Settings"),
+		"aperture", N_("Aperture Settings"),
 		VAL_NAME_INIT (oly3000z_reg_05_val_names)
 	}
 };
 
 /*
- * Olympus 750uz Register 5: aperature settings.
+ * Olympus 750uz Register 5: aperture settings.
  */
 static const ValueNameType oly750uz_reg_05_val_names[] = {
 	{ { 0 }, N_("Auto") },
@@ -445,13 +445,13 @@ static const ValueNameType oly750uz_reg_05_val_names[] = {
 static const RegisterDescriptorType oly750uz_reg_05[] = { 
 	{
 		GP_WIDGET_MENU, GP_REG_NO_MASK, 
-		"aperature", N_("Aperature Settings"),
+		"aperture", N_("Aperture Settings"),
 		VAL_NAME_INIT (oly750uz_reg_05_val_names)
 	}
 };
 
 /*
- * Olympus SP-500uz Register 5: aperature settings.
+ * Olympus SP-500uz Register 5: aperture settings.
  */
 static const ValueNameType olysp500uz_reg_05_val_names[] = {
 	{ { 0 }, N_("Auto") },
@@ -469,7 +469,7 @@ static const ValueNameType olysp500uz_reg_05_val_names[] = {
 static const RegisterDescriptorType olysp500uz_reg_05[] = { 
 	{
 		GP_WIDGET_MENU, GP_REG_NO_MASK, 
-		"aperature", N_("Aperature Settings"),
+		"aperture", N_("Aperture Settings"),
 		VAL_NAME_INIT (olysp500uz_reg_05_val_names)
 	}
 };
@@ -960,7 +960,7 @@ static CameraRegisterType oly3040_pic_regs[] =  {
 	/* camera prefix, register number, size of register */
 	CAM_REG_TYPE_INIT (oly3040, 01, 4, CAM_DESC_DEFAULT, 0), /* resolution/size */
 	CAM_REG_TYPE_INIT (oly3040, 03, 4, CAM_DESC_DEFAULT, 0), /* shutter */
-	CAM_REG_TYPE_INIT (oly3040, 05, 4, CAM_DESC_DEFAULT, 0), /* aperature (f-stop) */
+	CAM_REG_TYPE_INIT (oly3040, 05, 4, CAM_DESC_DEFAULT, 0), /* aperture (f-stop) */
 	CAM_REG_TYPE_INIT (oly3040, 06, 4, CAM_DESC_DEFAULT, 0), /* color mode */
 	CAM_REG_TYPE_INIT (oly3040, 07, 4, CAM_DESC_DEFAULT, 0), /* flash */
 	CAM_REG_TYPE_INIT (oly3040, 20, 4, CAM_DESC_DEFAULT, 0), /* white balance */
@@ -981,7 +981,7 @@ static CameraRegisterType oly3000z_pic_regs[] =  {
 	/* camera prefix, register number, size of register */
 	CAM_REG_TYPE_INIT (oly3040, 01, 4, CAM_DESC_DEFAULT, 0), /* resolution/size */
 	CAM_REG_TYPE_INIT (oly3040, 03, 4, CAM_DESC_DEFAULT, 0), /* shutter */
-	CAM_REG_TYPE_INIT (oly3000z, 05, 4, CAM_DESC_DEFAULT, 0), /* aperature (f-stop) */
+	CAM_REG_TYPE_INIT (oly3000z, 05, 4, CAM_DESC_DEFAULT, 0), /* aperture (f-stop) */
 	CAM_REG_TYPE_INIT (oly3040, 06, 4, CAM_DESC_DEFAULT, 0), /* color mode */
 	CAM_REG_TYPE_INIT (oly3040, 07, 4, CAM_DESC_DEFAULT, 0), /* flash */
 	CAM_REG_TYPE_INIT (oly3000z, 20, 4, CAM_DESC_DEFAULT, 0), /* white balance */
@@ -1026,7 +1026,7 @@ static CameraRegisterType oly750uz_pic_regs[] =  {
 	/* camera prefix, register number, size of register */
 	CAM_REG_TYPE_INIT (oly750uz, 01, 4, CAM_DESC_DEFAULT, 0), /* resolution/size */
 	CAM_REG_TYPE_INIT (oly750uz, 03, 4, CAM_DESC_DEFAULT, 0), /* shutter */
-	CAM_REG_TYPE_INIT (oly750uz, 05, 4, CAM_DESC_DEFAULT, 0), /* aperature (f-stop) */
+	CAM_REG_TYPE_INIT (oly750uz, 05, 4, CAM_DESC_DEFAULT, 0), /* aperture (f-stop) */
 	CAM_REG_TYPE_INIT (oly3040, 06, 4, CAM_DESC_DEFAULT, 0), /* color mode */
 	CAM_REG_TYPE_INIT (oly750uz, 07, 4, CAM_DESC_DEFAULT, 0), /* flash */
 	CAM_REG_TYPE_INIT (oly750uz, 20, 4, CAM_DESC_DEFAULT, 0), /* white balance */
@@ -1070,7 +1070,7 @@ static CameraRegisterType olysp500uz_pic_regs[] =  {
 	/* camera prefix, register number, size of register */
 	CAM_REG_TYPE_INIT (olysp500uz, 01, 4, CAM_DESC_DEFAULT, 0), /* resolution/size */
 	CAM_REG_TYPE_INIT (olysp500uz, 03, 4, CAM_DESC_DEFAULT, 0), /* shutter */
-	CAM_REG_TYPE_INIT (oly750uz, 05, 4, CAM_DESC_DEFAULT, 0), /* aperature (f-stop) */
+	CAM_REG_TYPE_INIT (oly750uz, 05, 4, CAM_DESC_DEFAULT, 0), /* aperture (f-stop) */
 	CAM_REG_TYPE_INIT (oly3040, 06, 4, CAM_DESC_DEFAULT, 0), /* color mode */
 	CAM_REG_TYPE_INIT (olysp500uz, 07, 4, CAM_DESC_DEFAULT, 0), /* flash */
 	CAM_REG_TYPE_INIT (olysp500uz, 20, 4, CAM_DESC_DEFAULT, 0), /* white balance */

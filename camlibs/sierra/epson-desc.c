@@ -110,7 +110,7 @@ static const RegisterDescriptorType ep3000z_reg_02[] = {
  */
 
 /*
- * Register 5: aperature settings. 
+ * Register 5: aperture settings. 
  */
 static const ValueNameType ep3000z_reg_05_val_names[] = {
 	{ { 6 }, N_("auto") },
@@ -124,7 +124,7 @@ static const ValueNameType ep3000z_reg_05_val_names[] = {
 static const RegisterDescriptorType ep3000z_reg_05[] = { 
 	{
 		GP_WIDGET_RADIO, GP_REG_NO_MASK, 
-		"aperature", N_("Aperature Settings"),
+		"aperture", N_("Aperture Settings"),
 		VAL_NAME_INIT (ep3000z_reg_05_val_names)
 	}
 };
@@ -256,7 +256,7 @@ static const RegisterDescriptorType ep3000z_reg_53[] = {
 static CameraRegisterType ep3000z_pic_regs[] =  {
 	/* camera prefix, register number, size of register */
 	CAM_REG_TYPE_INIT (ep3000z, 01, 4, CAM_DESC_DEFAULT, 0), /* resolution/size */
-	CAM_REG_TYPE_INIT (ep3000z, 05, 4, CAM_DESC_DEFAULT, 0), /* aperature (f-stop) */
+	CAM_REG_TYPE_INIT (ep3000z, 05, 4, CAM_DESC_DEFAULT, 0), /* aperture (f-stop) */
 	CAM_REG_TYPE_INIT (ep3000z, 06, 4, CAM_DESC_DEFAULT, 0), /* color mode */
 	CAM_REG_TYPE_INIT (ep3000z, 07, 4, CAM_DESC_DEFAULT, 0), /* flash */
 	CAM_REG_TYPE_INIT (ep3000z, 20, 4, CAM_DESC_DEFAULT, 0), /* white balance */

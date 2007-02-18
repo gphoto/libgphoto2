@@ -196,7 +196,7 @@ static const RegisterDescriptorType cp880_reg_03[] = {
 };
 
 /*
- * Register 5: aperature settings (f-stop)
+ * Register 5: aperture settings (f-stop)
  */
 static const ValueNameType cp880_reg_05_val_names[] = {
 	{ { 0 }, N_("Auto") },
@@ -207,7 +207,7 @@ static const ValueNameType cp880_reg_05_val_names[] = {
 static const RegisterDescriptorType cp880_reg_05[] = { 
 	{
 		GP_WIDGET_RADIO, GP_REG_NO_MASK, 
-		"aperature", N_("Aperature Settings"),
+		"aperture", N_("Aperture Settings"),
 		VAL_NAME_INIT (cp880_reg_05_val_names)
 	}
 };
@@ -592,7 +592,7 @@ static CameraRegisterType cp880_pic_regs[] =  {
 	/* camera prefix, register number, size of register */
 	CAM_REG_TYPE_INIT (cp880, 01, 4, CAM_DESC_DEFAULT, 0), /* resolution/size */
 	CAM_REG_TYPE_INIT (cp880, 03, 4, CAM_DESC_DEFAULT, 0), /* shutter */
-	CAM_REG_TYPE_INIT (cp880, 05, 4, CAM_DESC_DEFAULT, 0), /* aperature (f-stop) */
+	CAM_REG_TYPE_INIT (cp880, 05, 4, CAM_DESC_DEFAULT, 0), /* aperture (f-stop) */
 	CAM_REG_TYPE_INIT (cp880, 06, 4, CAM_DESC_DEFAULT, 0), /* color mode */
 	CAM_REG_TYPE_INIT (cp880, 07, 4, CAM_DESC_DEFAULT, 0), /* flash */
 	CAM_REG_TYPE_INIT (cp880, 19, 4, CAM_DESC_DEFAULT, 0), /* brightness/contrast */
