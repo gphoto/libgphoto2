@@ -802,6 +802,8 @@ static struct {
 	{"Samsung:YP-K5",			0x04e8, 0x505a, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* Reported by Matthew Wilcox <matthew@wil.cx> */
 	{"Samsung:Yepp T9",			0x04e8, 0x507f, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	/* paul <pclinch@gmail.com> */
+	{"Samsung:YP-K3",			0x04e8, 0x5081, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	{"Samsung:YH-999 Portable Media Center",0x04e8, 0x5a0f, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* From Lionel Bouton */
 	{"Samsung:X830 Mobile Phone",		0x04e8, 0x6702, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
