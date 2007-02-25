@@ -111,6 +111,7 @@ ptp_ptpip_sendreq (PTPParams* params, PTPContainer* req)
 	}
 	gp_log_data ( "ptpip/oprequest", (char*)request, len);
 	ret = write (params->cmdfd, request, len);
+	free (request);
 	if (ret == -1)
 		perror ("sendreq/write to cmdfd");
 	if (ret != len) {
@@ -247,6 +248,7 @@ ptp_ptpip_senddata (PTPParams* params, PTPContainer* ptp,
 		ret = handler->getfunc (params, handler->private, towrite, &xdata[ptpip_data_payload+8], &xtowrite);
 		if (ret == -1) {
 			perror ("getfunc in senddata failed");
+			free (xdata);
 			return PTP_RC_GeneralError;
 		}
 		towrite2 = xtowrite + 12;
@@ -259,12 +261,14 @@ ptp_ptpip_senddata (PTPParams* params, PTPContainer* ptp,
 			ret = write (params->cmdfd, xdata+written, towrite2-written);
 			if (ret == -1) {
 				perror ("write in senddata failed");
+				free (xdata);
 				return PTP_RC_GeneralError;
 			}
 			written += ret;
 		}
 		curwrite += towrite;
 	}
+	free (xdata);
 	return PTP_RC_OK;
 }
 
@@ -414,6 +418,7 @@ ptp_ptpip_init_command_request (PTPParams* params)
 
 	gp_log_data ( "ptpip/init_cmd", (char*)cmdrequest, len);
 	ret = write (params->cmdfd, cmdrequest, len);
+	free (cmdrequest);
 	if (ret == -1) {
 		perror("write init cmd request");
 		return PTP_RC_GeneralError;
