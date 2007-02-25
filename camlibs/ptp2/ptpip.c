@@ -439,10 +439,9 @@ ptp_ptpip_init_command_ack (PTPParams* params)
 	int		i;
 	unsigned short	*name;
 
-	ret = ptp_ptpip_cmd_read (params, &hdr, &data);
-	if (ret != PTP_RC_OK) {
+	ret = ptp_ptpip_generic_read (params, params->cmdfd, &hdr, &data);
+	if (ret != PTP_RC_OK)
 		return ret;
-	}
 	if (hdr.type != dtoh32(PTPIP_INIT_COMMAND_ACK)) {
 		gp_log (GP_LOG_ERROR, "ptpip/init_cmd_ack", "bad type returned %d", htod32(hdr.type));
 		return PTP_RC_GeneralError;
