@@ -777,6 +777,8 @@ static struct {
 	/* Marcoen Hirschberg <marcoen@users.sourceforge.net> */
 	{"Toshiba:Gigabeat MEGF-40",            0x0930, 0x0009, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	{"Toshiba:Gigabeat",                    0x0930, 0x000c, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	/* Reported by Nicholas Tripp to libmtp */
+	{"Toshiba:Gigabeat P20",                0x0930, 0x000f, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	{"Toshiba:Gigabeat S",                  0x0930, 0x0010, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* Reported by Rob Brown */
 	{"Toshiba:Gigabeat P10",                0x0930, 0x0011, PTP_MTP|PTP_MTP_PROPLIST_WORKS},

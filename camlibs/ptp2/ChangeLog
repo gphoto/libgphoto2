@@ -1,3 +1,8 @@
+2007-02-26  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptpip.c: Some small bugfixes, removed memory leaks.
+	* library.c: Added Toshiba Gigabeat P20 (from libmtp).
+
 2007-02-14  Marcus Meissner  <marcus@jet.franken.de>
 
 	* Added Minolta DIMAGE x21 (pictbridge mode)
