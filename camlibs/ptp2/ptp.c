@@ -315,7 +315,6 @@ ptp_init_fd_handler(PTPDataHandler *handler, int fd) {
 static uint16_t
 ptp_exit_fd_handler (PTPDataHandler *handler) {
 	PTPFDHandlerPrivate* priv = (PTPFDHandlerPrivate*)handler->private;
-	close (priv->fd);
 	free (priv);
 	return PTP_RC_OK;
 }
