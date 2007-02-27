@@ -61,9 +61,11 @@ typedef struct _PTPContainer PTPContainer;
  * Previously we had this as 4096 for MTP devices. We have found
  * and fixed the bugs that made this necessary and it can be 512 again.
  */
-#define PTP_USB_BULK_HS_MAX_PACKET_LEN	512
+#define PTP_USB_BULK_HS_MAX_PACKET_LEN_WRITE	512
+#define PTP_USB_BULK_HS_MAX_PACKET_LEN_READ   4096
 #define PTP_USB_BULK_HDR_LEN		(2*sizeof(uint32_t)+2*sizeof(uint16_t))
-#define PTP_USB_BULK_PAYLOAD_LEN	(PTP_USB_BULK_HS_MAX_PACKET_LEN-PTP_USB_BULK_HDR_LEN)
+#define PTP_USB_BULK_PAYLOAD_LEN_WRITE	(PTP_USB_BULK_HS_MAX_PACKET_LEN_WRITE-PTP_USB_BULK_HDR_LEN)
+#define PTP_USB_BULK_PAYLOAD_LEN_READ	(PTP_USB_BULK_HS_MAX_PACKET_LEN_READ-PTP_USB_BULK_HDR_LEN)
 #define PTP_USB_BULK_REQ_LEN	(PTP_USB_BULK_HDR_LEN+5*sizeof(uint32_t))
 
 struct _PTPUSBBulkContainer {
@@ -79,7 +81,9 @@ struct _PTPUSBBulkContainer {
 			uint32_t param4;
 			uint32_t param5;
 		} params;
-		unsigned char data[PTP_USB_BULK_PAYLOAD_LEN];
+       /* this must be set to the maximum of PTP_USB_BULK_PAYLOAD_LEN_WRITE 
+        * and PTP_USB_BULK_PAYLOAD_LEN_READ */
+		unsigned char data[PTP_USB_BULK_PAYLOAD_LEN_READ];
 	} payload;
 };
 typedef struct _PTPUSBBulkContainer PTPUSBBulkContainer;

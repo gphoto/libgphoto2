@@ -2,6 +2,7 @@
 
 	* ptpip.c: Some small bugfixes, removed memory leaks.
 	* library.c: Added Toshiba Gigabeat P20 (from libmtp).
+	* Use different read/write block sizes (to help some MTP devices).
 
 2007-02-14  Marcus Meissner  <marcus@jet.franken.de>
 
