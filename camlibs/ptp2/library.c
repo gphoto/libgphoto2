@@ -3990,6 +3990,13 @@ camera_init (Camera *camera, GPContext *context)
 	CPR(context, ptp_getdeviceinfo(&camera->pl->params,
 	&camera->pl->params.deviceinfo));
 
+	/* Newer Canons say that they are MTP devices. Restore Canon vendor extid. */
+	if (	(camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+		(camera->port->type == GP_PORT_USB) &&
+		(a.usb_vendor == 0x4a9)
+	)
+		camera->pl->params.deviceinfo.VendorExtensionID = PTP_VENDOR_CANON;
+
 	GP_DEBUG ("Device info:");
 	GP_DEBUG ("Manufacturer: %s",camera->pl->params.deviceinfo.Manufacturer);
 	GP_DEBUG ("  model: %s", camera->pl->params.deviceinfo.Model);
