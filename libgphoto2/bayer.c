@@ -2,15 +2,19 @@
  *
  * Copyright 2001 Lutz Müller <lutz@users.sf.net>
  *
+ * gp_bayer_accrue() Copyright @ 2007 Theodore Kilgore <kilgota@auburn.edu>;
+ * contains suggestions by B. R. Harris (e-mail address disappeared) and
+ * Werner Eugster <eugster@giub.unibe.ch>
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -23,7 +27,7 @@
 
 #include <gphoto2/gphoto2-result.h>
 
-static const int tile_colors[8][4] = {
+static const int tile_colours[8][4] = {
 	{0, 1, 1, 2},
 	{1, 0, 2, 1},
 	{2, 1, 1, 0},
@@ -37,26 +41,30 @@ static const int tile_colors[8][4] = {
 #define GREEN 1
 #define BLUE 2
 
+static int
+gp_bayer_accrue (unsigned char *image, int w, int h, int x0, int y0,
+		int x1, int y1, int x2, int y2, int x3, int y3, int colour);
+
 int
 gp_bayer_expand (unsigned char *input, int w, int h, unsigned char *output,
 		 BayerTile tile)
 {
 	int x, y, i;
 	int colour, bayer;
-	char *ptr = (char*)input;
+	unsigned char *ptr = input;
 
 	switch (tile) {
 
 		case BAYER_TILE_RGGB:
 		case BAYER_TILE_GRBG:
 		case BAYER_TILE_BGGR:
-		case BAYER_TILE_GBRG: 
+		case BAYER_TILE_GBRG:
 
 			for (y = 0; y < h; ++y)
 				for (x = 0; x < w; ++x, ++ptr) {
 					bayer = (x&1?0:1) + (y&1?0:2);
 
-					colour = tile_colors[tile][bayer];
+					colour = tile_colours[tile][bayer];
 
 					i = (y * w + x) * 3;
 
@@ -71,13 +79,13 @@ gp_bayer_expand (unsigned char *input, int w, int h, unsigned char *output,
 		case BAYER_TILE_GRBG_INTERLACED:
 		case BAYER_TILE_BGGR_INTERLACED:
 		case BAYER_TILE_GBRG_INTERLACED:
- 
+
 
 			for (y = 0; y < h; ++y, ptr+=w)
 				for (x = 0; x < w; ++x) {
 					bayer = (x&1?0:1) + (y&1?0:2);
-	
-					colour = tile_colors[tile][bayer];
+
+					colour = tile_colours[tile][bayer];
 	
 					i = (y * w + x) * 3;
 
@@ -99,7 +107,7 @@ gp_bayer_interpolate (unsigned char *image, int w, int h, BayerTile tile)
 {
 	int x, y, bayer;
 	int p0, p1, p2, p3;
-	int div, value;
+	int value, div ;
 
 	switch (tile) {
 	default:
@@ -116,7 +124,7 @@ gp_bayer_interpolate (unsigned char *image, int w, int h, BayerTile tile)
 		p0 = 3; p1 = 2; p2 = 1; p3 = 0;
 		break;
 	case BAYER_TILE_GBRG:
-	case BAYER_TILE_GBRG_INTERLACED:	
+	case BAYER_TILE_GBRG_INTERLACED:
 		p0 = 2; p1 = 3; p2 = 0; p3 = 1;
 		break;
 	}
@@ -124,49 +132,18 @@ gp_bayer_interpolate (unsigned char *image, int w, int h, BayerTile tile)
 	for (y = 0; y < h; y++)
 		for (x = 0; x < w; x++) {
 			bayer = (x&1?0:1) + (y&1?0:2);
-			if ( bayer == p0 ) {
-				
-				/* red. green lrtb, blue diagonals */
-				div = value = 0;
-				if (y) {
-					value += image[AD(x,y-1,w)+GREEN];
-					div++;
-				}
-				if (y < (h - 1)) {
-					value += image[AD(x,y+1,w)+GREEN];
-					div++;
-				}
-				if (x) {
-					value += image[AD(x-1,y,w)+GREEN];
-					div++;
-				}
-				if (x < (w - 1)) {
-					value += image[AD(x+1,y,w)+GREEN];
-					div++;
-				}
-				image[AD(x,y,w)+GREEN] = value / div;
 
-				div = value = 0;
-				if ((y < (h - 1)) && (x < (w - 1))) {
-					value += image[AD(x+1,y+1,w)+BLUE];
-					div++;
-				}
-				if ((y) && (x)) {
-					value += image[AD(x-1,y-1,w)+BLUE];
-					div++;
-				}
-				if ((y < (h - 1)) && (x)) {
-					value += image[AD(x-1,y+1,w)+BLUE];
-					div++;
-				}
-				if ((y) && (x < (w - 1))) {
-					value += image[AD(x+1,y-1,w)+BLUE];
-					div++;
-				}
-				image[AD(x,y,w)+BLUE] = value / div;
+			if ( bayer == p0 ) {
+
+				/* red. green lrtb, blue diagonals */
+				image[AD(x,y,w)+GREEN] =
+					gp_bayer_accrue(image, w, h, x-1, y, x+1, y, x, y-1, x, y+1, GREEN) ;
+
+				image[AD(x,y,w)+BLUE] =
+					gp_bayer_accrue(image, w, h, x+1, y+1, x-1, y-1, x-1, y+1, x+1, y-1, BLUE) ;
 
 			} else if (bayer == p1) {
-				
+
 				/* green. red lr, blue tb */
 				div = value = 0;
 				if (x < (w - 1)) {
@@ -191,10 +168,10 @@ gp_bayer_interpolate (unsigned char *image, int w, int h, BayerTile tile)
 				image[AD(x,y,w)+BLUE] = value / div;
 
 			} else if ( bayer == p2 ) {
-				
+
 				/* green. blue lr, red tb */
 				div = value = 0;
-				
+
 				if (x < (w - 1)) {
 					value += image[AD(x+1,y,w)+BLUE];
 					div++;
@@ -217,51 +194,116 @@ gp_bayer_interpolate (unsigned char *image, int w, int h, BayerTile tile)
 				image[AD(x,y,w)+RED] = value / div;
 
 			} else {
-				
+
 				/* blue. green lrtb, red diagonals */
-				div = value = 0;
+				image[AD(x,y,w)+GREEN] =
+					gp_bayer_accrue (image, w, h, x-1, y, x+1, y, x, y-1, x, y+1, GREEN) ;
 
-				if (y) {
-					value += image[AD(x,y-1,w)+GREEN];
-					div++;
-				}
-				if (y < (h - 1)) {
-					value += image[AD(x,y+1,w)+GREEN];
-					div++;
-				}
-				if (x) {
-					value += image[AD(x-1,y,w)+GREEN];
-					div++;
-				}
-				if (x < (w - 1)) {
-					value += image[AD(x+1,y,w)+GREEN];
-					div++;
-				}
-				image[AD(x,y,w)+GREEN] = value / div;
-
-				div = value = 0;
-				if ((y < (h - 1)) && (x < (w - 1))) {
-					value += image[AD(x+1,y+1,w)+RED];
-					div++;
-				}
-				if ((y) && (x)) {
-					value += image[AD(x-1,y-1,w)+RED];
-					div++;
-				}
-				if ((y < (h - 1)) && (x)) {
-					value += image[AD(x-1,y+1,w)+RED];
-					div++;
-				}
-				if ((y) && (x < (w - 1))) {
-					value += image[AD(x+1,y-1,w)+RED];
-					div++;
-				}
-				image[AD(x,y,w)+RED] = value / div;
+				image[AD(x,y,w)+RED] =
+					gp_bayer_accrue (image, w, h, x+1, y+1, x-1, y-1, x-1, y+1, x+1, y-1, RED) ;
 			}
 		}
 
 	return (GP_OK);
 }
+/*
+ * For red and blue data, compare the four surrounding values.  If three
+ * values are all one side of the mean value, the fourth value is ignored.
+ * This will sharpen boundaries. Treatment of green data looks for vertical and
+ * horizontal edges. Any such which are discovered get special treatment.
+ * Otherwise, the same comparison test is applied which is applied for red
+ * and blue. Standard algorithm is applied without change at edges of the image.
+ */
+static int
+gp_bayer_accrue (unsigned char *image, int w, int h, int x0, int y0,
+		int x1, int y1, int x2, int y2, int x3, int y3, int colour)
+{	int x [4] ;
+	int y [4] ;
+	int value [4] ;
+	int above [4] ;
+	int counter   ;
+	int sum_of_values;
+	int average ;
+	int i ;
+	x[0] = x0 ; x[1] = x1 ; x[2] = x2 ; x[3] = x3 ;
+	y[0] = y0 ; y[1] = y1 ; y[2] = y2 ; y[3] = y3 ;
+	
+	/* special treatment for green */
+	counter = sum_of_values = 0 ;
+	if(colour == GREEN)
+	{
+	  	/* We need to make sure that horizontal or vertical lines
+		 * become horizontal and vertical lines even in this
+		 * interpolation procedure. Therefore, we determine whether
+		 * we might have such a line structure.
+		 */
+	  	
+		for (i = 0 ; i < 4 ; i++)
+	  	{	if ((x[i] >= 0) && (x[i] < w) && (y[i] >= 0) && (y[i] < h))
+			{
+				value [i] = image[AD(x[i],y[i],w) + colour] ;
+				counter++;
+			}
+			else
+			{
+				value [i] = -1 ;
+			}
+	  	}
+		if(counter == 4)
+		{	
+			/* It is assumed that x0,y0 and x1,y1 are on a
+			 * horizontal line and
+			 * x2,y2 and x3,y3 are on a vertical line
+			 */
+			int hdiff ;
+			int vdiff ;
+			hdiff = value [1] - value [0] ;
+			hdiff *= hdiff ;	/* Make value positive by squaring */
+			vdiff = value [3] - value [2] ;
+			vdiff *= vdiff ;	/* Make value positive by squaring */
+			if(hdiff > 2*vdiff)
+			{
+				/* We might have a vertical structure here */
+				return (value [3] + value [2])/2 ;
+			}
+			if(vdiff > 2*hdiff)
+			{
+				/* we might have a horizontal structure here */
+				return (value [1] + value [0])/2 ;
+			}
+			/* else we proceed as with blue and red */
+		}
+		/* if we do not have four points then we proceed as we do for
+		 * blue and red */
+	}
+	
+	/* for blue and red */
+	counter = sum_of_values = 0 ;
+	for (i = 0 ; i < 4 ; i++)
+	{	if ((x[i] >= 0) && (x[i] < w) && (y[i] >= 0) && (y[i] < h))
+		{	value [i] = image[AD(x[i],y[i],w) + colour] ;
+			sum_of_values += value [i] ;
+			counter++ ;
+		}
+	}
+	average = sum_of_values / counter ;
+	if (counter < 4) return average ;
+	/* Less than four surrounding - just take average */
+	counter = 0 ;
+	for (i = 0 ; i < 4 ; i++)
+	{	above[i] = value[i] > average ;
+		if (above[i]) counter++ ;
+	}
+	/* Note: counter == 0 indicates all values the same */
+	if ((counter == 2) || (counter == 0)) return average ;
+	sum_of_values = 0 ;
+	for (i = 0 ; i < 4 ; i++)
+	{	if ((counter == 3) == above[i])
+		{	sum_of_values += value[i] ; }
+	}
+	return sum_of_values / 3 ;
+}
+
 
 int
 gp_bayer_decode (unsigned char *input, int w, int h, unsigned char *output,

@@ -40,7 +40,4 @@ int gp_bayer_expand (unsigned char *input, int w, int h, unsigned char *output,
 int gp_bayer_decode (unsigned char *input, int w, int h, unsigned char *output,
 		     BayerTile tile);
 int gp_bayer_interpolate (unsigned char *image, int w, int h, BayerTile tile);
-
 #endif /* __BAYER_H__ */
-
-
