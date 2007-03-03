@@ -3613,7 +3613,11 @@ init_ptp_fs (Camera *camera, GPContext *context)
 		return PTP_RC_OK;
 	}
 
+#if 0
 	/* CANON also has fast directory retrieval. And it is mostly complete, so we can use it as full replacement */
+	/* Unfortunately this fails on the PowerShot A430. 
+	 * And I don't want to whitelist everyone, because I just don't own all of them.
+	 * *sigh* -Marcus */
 	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
 	    ptp_operation_issupported(params,PTP_OC_CANON_GetDirectory))
 
@@ -3629,6 +3633,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 		}
 		/* fallthrough */
 	}
+#endif
 
 	/* Microsoft/MTP also has fast directory retrieval. */
 	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
