@@ -707,6 +707,8 @@ static struct {
 	*/
 
 	/************ Add MTP devices below this line ***********/
+	/* from libmtp  */
+	{"iRiver:iFP-800",                      0x4102, 0x1008, PTP_MTP},
 	/* Jay MacDonald <jay@cheakamus.com> */
 	{"iRiver:T10 (alternate)",              0x4102, 0x1113, PTP_MTP},
 	/* Andreas Thienemann <andreas@bawue.de> */
@@ -4043,6 +4045,5 @@ camera_init (Camera *camera, GPContext *context)
 		break;
 	}
 	CR (gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera));
-
 	return (GP_OK);
 }
