@@ -1,3 +1,9 @@
+2007-03-05  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Added Fuji FinePix F20.
+	* usb.c: Adjusted PTP error reporting not to spew on the 
+	  gp_context_error channel. 
+
 2007-03-03  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Disable Canon fast directory retrieval,

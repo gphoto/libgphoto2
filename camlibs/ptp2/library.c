@@ -676,14 +676,16 @@ static struct {
 	{"Konica-Minolta:DiMAGE Z5 (PictBridge mode)", 0x132b, 0x0022, 0},
 
 	/* Fuji PTP cameras */
-	{"Fuji:FinePix S7000 (PictBridge mode)",0x04cb, 0x0142, 0},
-	{"Fuji:FinePix A330 (PictBridge mode)", 0x04cb, 0x014a, 0},
-	{"Fuji:FinePix E900 (PictBridge mode)", 0x04cb, 0x0193, 0},
-	{"Fuji:FinePix F30 (PictBridge mode)",  0x04cb, 0x019b, 0},
+	{"Fuji:FinePix S7000",			0x04cb, 0x0142, 0},
+	{"Fuji:FinePix A330",			0x04cb, 0x014a, 0},
+	{"Fuji:FinePix E900",			0x04cb, 0x0193, 0},
+	{"Fuji:FinePix F30",			0x04cb, 0x019b, 0},
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1620750&group_id=8874 */
-	{"Fuji:FinePix S6500fd (PictBridge mode)",0x04cb, 0x01bf, 0},
+	{"Fuji:FinePix S6500fd",		0x04cb, 0x01bf, 0},
+	/* https://launchpad.net/bugs/89743 */
+	{"Fuji:FinePix F20",			0x04cb, 0x01c0, 0},
 	/* launchpad 67532 */
-	{"Fuji:FinePix F31fd (PictBridge mode)",0x04cb, 0x01c1, 0},
+	{"Fuji:FinePix F31fd",			0x04cb, 0x01c1, 0},
 
 	/* Ricoh Caplio GX */
 	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},

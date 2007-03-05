@@ -387,7 +387,7 @@ ptp_usb_getresp (PTPParams* params, PTPContainer* resp)
 	uint16_t ret;
 	unsigned long rlen;
 	PTPUSBBulkContainer usbresp;
-	GPContext		*context = ((PTPData *)params->data)->context;
+	/*GPContext		*context = ((PTPData *)params->data)->context;*/
 
 	PTP_CNT_INIT(usbresp);
 	/* read response, it should never be longer than sizeof(usbresp) */
@@ -403,7 +403,7 @@ ptp_usb_getresp (PTPParams* params, PTPContainer* resp)
 		ret = dtoh16(usbresp.code);
 	}
 	if (ret!=PTP_RC_OK) {
-		gp_context_error (context, "ptp2/usb_getresp: request code 0x%04x getting resp error 0x%04x", resp->Code, ret);
+		gp_log (GP_LOG_ERROR, "ptp2/usb_getresp","request code 0x%04x getting resp error 0x%04x", resp->Code, ret);
 		return ret;
 	}
 	/* build an appropriate PTPContainer */
