@@ -1,3 +1,8 @@
+2007-03-07  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Avoid emitting the d029 property if the camera does
+	  not have it.
+
 2007-03-05  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Added Fuji FinePix F20.

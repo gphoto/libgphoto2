@@ -1391,10 +1391,12 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		}
 	}
 
-	propval.u16=3; /* 3 */
-	ret = ptp_setdevicepropvalue(params, PTP_DPC_CANON_D029, &propval, PTP_DTC_UINT16);
-	if (ret != PTP_RC_OK)
-		gp_log (GP_LOG_DEBUG, "ptp", "setdevicepropvalue 0xd029 failed, %d\n", ret);
+	if (ptp_property_issupported(params, PTP_DPC_CANON_D029)) {
+		propval.u16=3; /* 3 */
+		ret = ptp_setdevicepropvalue(params, PTP_DPC_CANON_D029, &propval, PTP_DTC_UINT16);
+		if (ret != PTP_RC_OK)
+			gp_log (GP_LOG_DEBUG, "ptp", "setdevicepropvalue 0xd029 failed, %d\n", ret);
+	}
 
 #if 0
 	/* FIXME: For now, to avoid flash during debug */
