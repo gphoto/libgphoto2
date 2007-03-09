@@ -1,3 +1,11 @@
+2007-03-09   Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Decompression support re-done. 
+	* postprocess.c: Decompression support re-done. 	
+	* sq905.c: Decompression support re-done. 
+	* sq905.h: Decompression support re-done. 
+
+
 2006-01-03  Hubert Figuiere  <hub@figuiere.net>
 
 	* library.c: Shark 2-in-1 Mini

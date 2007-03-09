@@ -57,10 +57,9 @@ sq_preprocess		(SQModel model, int comp_ratio,
 				unsigned char *data, int w, int h);
 int
 sq_decompress 		(SQModel model, unsigned char *output, unsigned char *data, 
-				int w, int h, int n);
-int sq_postprocess	(CameraPrivateLibrary *priv, 
-				int width, int height, 
-				unsigned char* rgb, int n);
-
+				int w, int h);
+int 
+decode_panel	(unsigned char *panel_out, unsigned char *panel,               
+                    		int panelwidth, int height, int color);
 #endif
 

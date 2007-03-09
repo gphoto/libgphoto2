@@ -44,14 +44,13 @@ WHAT CHIP IS ACTUALLY IN THESE CAMERAS?
 The brief answer is that I do not know. 
 
 The website of SQ Technologies <www.sq.com.tw> lists several camera
-controller chips in addition to the SQ905, and some of the cameras could
-possibly use some of those other chips. All of the SQ cameras discovered so
-far seem to have the same USB ID and to use the same control sequences. The 
-lower-resolution cameras all seem to use the same Hynix video sensor chip. 
-The video chips in higher-resolution cameras do not all behave the same way 
-and thus probably come from several sources. Fortunately, it seems that the 
-"chip id" is a sufficiently reliable indicator of how to process data from 
-the camera.
+controller chips in addition to the SQ905, which is now (2007) 
+discontinued. All of the SQ cameras which have the same USB ID do use the 
+same control sequences, however. The lower-resolution cameras all seem to use 
+the same Hynix video sensor chip. The video chips in higher-resolution cameras 
+do not all behave the same way and thus probably come from several sources. 
+Fortunately, it seems that the "chip id" is a sufficiently reliable indicator 
+of how to process data from the camera.
 
 
 THE MODEL OR CHIP ID NUMBER
@@ -90,8 +89,8 @@ WHAT FEATURES DO THESE CAMERAS HAVE, AND WHAT DOES THIS DRIVER SUPPORT?
 -- USB connection to computer
 -- High resolution 352x288 or 640x480, uncompressed 			Y						
 -- Low resolution 176x144 or 320x240, uncompressed			Y		
--- High resolution 352x288 or 640x480, compressed 			P
--- Low resolution 176x144 or 320x240, compressed			P
+-- High resolution 352x288 or 640x480, compressed 			Y
+-- Low resolution 176x144 or 320x240, compressed			Y
 -- Ability to "switch" resolution between pictures 			Y
 -- Ability to download all pictures on camera				Y
 -- Ability to download the first k pictures, where 
@@ -120,9 +119,6 @@ All known sq905 cameras use only 320x240 in capture mode. Also, capture
 never uses high compression, even if it is otherwise turned on. Please
 report any behavior different from this.
 
-For compression, "P" means that it is currently possible to get raw pictures 
-from the compressed data, or PPM pictures which give a good image, but the  
-colors are not yet correctly mapped. 
 
 "Video clip capability" is implemented for all known SQ cameras. "Video
 clip" output is always uncompressed, ignoring the "compression" setting.
@@ -201,19 +197,7 @@ compromise between what happens with outdoor photos and what happens with
 indoor photos. Conceivably, the program could support a choice between two
 or more gamma settings, optimizing for different conditions. 
 
-3. 	A still-experimental postprocessing routine is added, to provide
-some sharpening and color correction for different lighting conditions. The
-routine can easily be turned off if one wishes, and because it is
-experimental you may so wish. To disable it, just comment out the line in
-get_file_func ( ) in library.c where the function sq_postprocess ( ) is
-called. Then (still from within the sq905 directory) do "make install" to
-install your change.
-
-4. 	To unscramble the "High Compression" setting which exists on some
-of these cameras and is the only possible setting on the Magpix B350  
-is obviously the biggest unsolved problem.  
-
-5. 	Please get back to me with reports about other SQ cameras, with their
+4. 	Please get back to me with reports about other SQ cameras, with their
 specifications (what it says in the manual about resolution and number of
 pictures, as well as make and model, ID reported, and whether it works or
 not would be enough), and with a log file if there are problems. 
@@ -266,4 +250,4 @@ WARRANTY?
 
 
 Theodore Kilgore
-07/07/03 (revised 06/26/04)
+07/07/03 (latest revision 03/09/07)

@@ -252,6 +252,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	unsigned char *ppm, *ptr;
 	unsigned char gtable[256];
 	int size;
+	int this_cam_tile;
 
 	if (GP_FILE_TYPE_EXIF ==type) return GP_ERROR_FILE_EXISTS;
 
@@ -363,27 +364,30 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			"255\n", w, h);
 		size = strlen (ppm);
 		ptr = ppm + size;
-		if (comp_ratio>1) {
-			sq_decompress (camera->pl->model, ptr, frame_data, w, h, entry);			
-			sq_postprocess(camera->pl,w, h, ptr, entry);
-		}
-		size = size + (w * h * 3);
-		GP_DEBUG ("size = %i\n", size);
 
-		if ( comp_ratio == 1) {
 			switch (camera->pl->model) {
 			case SQ_MODEL_POCK_CAM:
-				gp_bayer_decode (frame_data, w , h , 
-						    ptr, BAYER_TILE_GBRG);
+			case SQ_MODEL_MAGPIX:
+				this_cam_tile = BAYER_TILE_GBRG;
 				break;
 			default:
-				gp_bayer_decode (frame_data, w , h , 
-						    ptr, BAYER_TILE_BGGR);
+				this_cam_tile = BAYER_TILE_BGGR;
 				break;
 			}
-			gp_gamma_fill_table (gtable, .5); 
-			gp_gamma_correct_single (gtable, ptr, w * h); 
-    		} 
+		size = size + (w * h * 3);
+		GP_DEBUG ("size = %i\n", size);
+		if (comp_ratio>1) {
+			rawdata = malloc (w*h);
+			if (!rawdata) return GP_ERROR_NO_MEMORY;
+			sq_decompress (camera->pl->model, rawdata, 
+						frame_data, w, h);			
+			gp_gamma_fill_table (gtable, .65); 
+		} else {
+			rawdata = frame_data;
+			gp_gamma_fill_table (gtable, .55); 
+		}
+		gp_bayer_decode (rawdata, w , h , ptr, this_cam_tile);
+		gp_gamma_correct_single (gtable, ptr, w * h); 
 
 		gp_file_set_mime_type (file, GP_MIME_PPM);
     		gp_file_set_name (file, filename); 
@@ -464,12 +468,11 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	}
 	
 	/* TO DO: 
-	 * Adapt postprocessing routine to work here, because results can   
-	 * vary greatly, depending both on lighting conditions and on 
+	 * Adapt some postprocessing routine to work here, because results 
+	 * can vary greatly, depending both on lighting conditions and on 
 	 * camera model.
 	 */
 
-	/* sq_postprocess(camera->pl,w, h, ptr, 1); */
 	gp_gamma_fill_table (gtable, .5); 
 	gp_gamma_correct_single (gtable, ptr, w * h); 
 	gp_file_set_mime_type (file, GP_MIME_PPM);

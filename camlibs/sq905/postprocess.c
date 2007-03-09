@@ -33,327 +33,13 @@
 
 #define GP_MODULE "sq905" 
 
+#define RED 0
+#define GREEN 1
+#define BLUE 2
 
+//#define SWAP(a,b) {unsigned char t=(a); (a)=(b); (b)=t;}
 
-int
-sq_decompress (SQModel model, unsigned char *output, unsigned char *data,
-	    int w, int h, int n)
-{
-	/*
-	 * Data arranged in planar form. The format seems 
-	 * to be some kind of differential encoding of four-bit data.
-	 * The top row of each colorplane seems to represent unmodified 
-	 * data, used to initialize the subsequent encoding, which proceeds 
-	 * down columns. Here, we try to "decompress" the raw data first and
-	 * then to do Bayer interpolation afterwards. The byte-reversal 
-	 * routine having been done already, the planes are in the order 
-	 * RBG. The R and B planes are of size b/4, and the G of size b/2. 
-	 */
-
-	unsigned char *red, *green, *blue;
-	unsigned char *mark_redblue; /* Even stores red; odd stores blue */ 
-	unsigned char *mark_green;
-	unsigned char mark = 0, datum = 0; 
-	int i, j, m;
-
-
-		/* First we spread out the data to size w*h. */
-		for ( i=1; i <= w*h/2 ; i++ ) data[2*(w*h/2 -i)] 
-						    = data[w*h/2 - i];
-		/* Then split the bytes ("backwards" because we 
-		 * reversed the data) into the first digits of 2 bytes.*/
-		for ( i=0; i < w*h/2 ; i++ ) {
-			data[2*i + 1] = 16*(data[2*i]/16);
-			data[2*i]     = 16*(data[2*i]%16);
-		}
-
-	/* Now, having done this, we have, in order, a red plane of dimension 
-	 * w/2 * h/2, followed by a blue plane the same size, and then a green
-	 * plane of dimension w/2 * h. We need to separate them to work on, 
-	 * then at the end put them together. 
-	 */  
-
-	red = malloc(w*h/4);
-	if (!red) return GP_ERROR_NO_MEMORY;
-	memcpy (red,data, w*h/4);
-
-	blue = malloc(w*h/4);
-	if (!blue) return GP_ERROR_NO_MEMORY;
-	memcpy (blue,data+w*h/4, w*h/4);
-
-
-	green = malloc(w*h/2);
-	if (!green) return GP_ERROR_NO_MEMORY;
-	memcpy (green,data + w*h/2, w*h/2);
-
-	memset(data, 0x0, w*h);
-
-	mark_redblue  = malloc(w);
-	if (!(mark_redblue)) return GP_ERROR_NO_MEMORY;
-	memset (mark_redblue,0x0,w);
-
-	mark_green= malloc(w);
-	if (!(mark_green)) return GP_ERROR_NO_MEMORY;
-	memset (mark_green,0x0,w);
-
-	/* Unscrambling the respective colorplanes. Then putting them 
-	 * back together. 
-	 */
-
-	for (m = 0; m < h/2; m++) {
-
-		for (j = 0; j < 2; j++) {
-
-			for (i = 0; i < w/2 ; i++) {
-				/*		
-				 * First the greens on the even lines at 
-				 * indices 2*i+1, when j=0. Then the greens
-				 * on the odd lines at indices 2*i, when j=1. 
-				 */ 
-			
-				datum = green[(2*m+j)*w/2 + i];
-				
-				if (!m && !j) {
-
-					mark_green[2*i] =
-					data[2*i+1] =  
-					MIN(MAX(datum, 0x0), 0xff);    
-
-
-				} else {
-					mark= mark_green[2*i + 1-j];
-			
-					if (datum >= 0x80) {
-						mark_green[2*i +j] =
-						data[(2*m+j)*w + 2*i +1 - j] =
-						MIN(2*(mark + datum - 0x80) 
-						- (mark*datum)/128., 0xff);
-					} else {
-						mark_green[2*i +j] =
-						data[(2*m+j)*w + 2*i +1 - j] =
-		    				MAX((mark*datum)/128, 0x0);
-					}
-				}
-
-				mark_green[2*i +j] =
-				data[(2*m+j)*w + 2*i +1 - j] =
-		    		MIN( 256 *
-				pow((float)mark_green[2*i + j]/256., .95),
-				0xff);
-		    
-				/*
-        			 * Here begin the reds and blues. 
-				 * Reds in even slots on even-numbered lines.
-				 * Blues in odd slots on odd-numbered lines. 
-				 */
-				
-				if (j)	datum =  blue[m*w/2 + i ] ;
-
-				else 	datum =  red[m*w/2 + i ] ;
-			
-				if(!m) {
-					mark_redblue[2*i+j]= 
-					data[j*w +2*i+j]=  
-					MIN(MAX(datum, 0x0), 0xff);
-				} else {
-					mark = mark_redblue[2*i + j];
-					if (datum >= 0x80) {
-						mark_redblue[2*i +j] =
-						data[(2*m+j)*w + 2*i + j] =
-						MIN(2*(mark + datum - 0x80) 
-						- (mark*datum)
-						/128., 0xff);
-					    
-					} else {
-					
-						mark_redblue[2*i +j] =
-						data[(2*m+j)*w + 2*i + j] =
-						MAX((mark*datum)/128,0x0);
-					}
-
-				}
-
-				mark_redblue[2*i + j] =
-				data[(2*m+j)*w + 2*i + j] =
-		    		MIN( 256 *
-				pow((float)mark_redblue[2*i + j]/256., .95),
-				0xff);
-			
-
-
-			}					
-
-			/* Averaging of data inputs */
-
-			for (i = 1; i < w/2-1; i++ ) {
-				if(m)	
-				mark_redblue[2*i + j] =
-				data[(2*m+j)*w + 2*i + j] =
-				(data[(2*m+j)*w + 2*i + j] +
-				data[(2*m+j)*w + 2*i -2 + j])/2;
-
-				if (m &&j) {
-					mark_green[2*i + j] =
-					data[(2*m+j)*w + 2*i +1 - j] =
-					(data[(2*m+j)*w + 2*i +1 - j] +
-					data[(2*m+j)*w + 2*i -1 - j])/2;
-				} else if(m) {
-					mark_green[2*i + j] =
-					data[(2*m+j)*w + 2*i +1 - j] =
-					(data[(2*m+j)*w + 2*i +1 - j] +
-					data[(2*m+j)*w + 2*i +3 - j])/2;
-				}
-			}
-			mark_green[j] =
-			data[(2*m+j)*w +1-j] =
-			(data[(2*m+j)*w +1-j] +
-			data[(2*m+j)*w +3-j])/2;
-
-			mark_green[w - 2 +j] =
-			data[(2*m+j)*w + w - 2 +1-j] =
-			(data[(2*m+j)*w + w - 2 +1-j] +
-			data[(2*m+j)*w + w - 2 -1-j])/2;
-
-
-			mark_redblue[w -2 + j] =
-			data[(2*m+j)*w + w- 2 + j] =
-			(data[(2*m+j)*w + w-2 + j] +
-			data[(2*m+j)*w + w- 2  -2 + j])/2;
-
-			mark_redblue[ j] =
-			data[(2*m+j)*w + j] =
-			(data[(2*m+j)*w + j] +
-			data[(2*m+j)*w + 2 + j])/2;
-		}
-	}
-	free (green);
-	free (red);
-	free (blue);
-
-	/* Some horizontal Bayer interpolation. */
-
-	for (m = 0; m < h/2; m++) {
-		for (j = 0; j < 2; j++) {
-			for (i = 0; i < w/2; i++) {
-
-				/* the known greens */
-				output[3*((2*m+j)*w + 2*i +1 - j) +1] =	
-				data[(2*m+j)*w + 2*i +1 - j];
-				/* known reds and known blues */
-				output[3*((2*m+j)*w + 2*i + j) + 2*j] =
-				data[(2*m+j)*w + 2*i + j];
-
-			}
-			/*
-			 * the interpolated greens (at the even pixels on 
-			 * even lines and odd pixels on odd lines)
-			 */
-			output[3*((2*m+j)*w+1-j) +1] =	
-			data[(2*m+j)*w + 1 -j];
-			output[3*((2*m+j)*w + w - 1 - j) +1] =	
-			data[(2*m+j)*w + w - 1 - j];
-			
-			for (i= 1; i < w/2 - 1; i++)		
-				output[3*((2*m+j)*w + 2*i - j) + 1] =
-				(output[3*((2*m+j)*w + 2*i -1 - j) + 1] +
-				output[3*((2*m+j)*w + 2*i +1 - j) + 1])/2;					
-			/*		
-			 * the interpolated reds on even (red-green) lines and
-			 * the interpolated blues on odd (green-blue) lines
-			 */
-			output[3*((2*m+j)*w +j) +2*j] =	
-			data[(2*m+j)*w + j];
-			output[3*((2*m+j)*w + w - 1+j) +2*j] =	
-			data[(2*m+j)*w + w - 1 - 1 + j];
-
-			for (i= 1; i < w/2 -1; i++)		
-	    			output[3*((2*m+j)*w + 2*i +1 -j ) +2*j] =	
-				(output[3*((2*m+j)*w + 2*i - j) + 2*j] +
-				output[3*((2*m+j)*w + 2*i +2 - j) + 2*j])/2;					
-		}
-	}
-	/*
-	 * finally the missing blues, on even-numbered lines
-	 * and reds on odd-numbered lines.
-	 * We just interpolate diagonally for both.
-	 */
-	for (m = 0; m < h/2; m++) {
-
-		if ((m) && (h/2 - 1 - m))
-		for (i= 0; i < w; i++)	{	
-		
-			output[3*((2*m)*w + i) +2] =	
-			(output[3*((2*m-1)*w + i-1) + 2] +
-			output[3*((2*m+1)*w +i+1 ) + 2]+ 
-			output[3*((2*m-1)*w + i+1) + 2] +
-			output[3*((2*m+1)*w +i-1 ) + 2])/4;
-		
-			output[3*((2*m+1)*w + i) +0] =	
-			(output[3*(2*m*w + i-1) + 0] +
-			output[3*((2*m+2)*w +i+1) + 0]+ 			output[3*(2*m*w + i+1) + 0] +
-			output[3*((2*m+2)*w +i-1) + 0])/4;
-
-		}
-	}		
-
-	/* Diagonal smoothing */
-
-	for (m = 1; m < h - 1; m++) {
-		
-		for (i= 1; i < w-1; i++)	{	
-		
-				output[3*(m*w + i) +0] =	
-				(output[3*((m-1)*w + i-1) + 0] +
-				2*output[3*(m*w + i) +0] +
-				output[3*((m+1)*w +i+1 ) + 0])/4;
-
-				output[3*(m*w + i) +1] =	
-				(output[3*((m-1)*w + i-1) + 1] +
-				2*output[3*(m*w + i) +1] +
-				output[3*((m+1)*w +i+1 ) + 1])/4;
-
-				output[3*(m*w + i) +2] =	
-				(output[3*((m-1)*w + i-1) + 2] +
-				2*output[3*(m*w + i) + 2] +
-				output[3*((m+1)*w +i+1 ) + 2])/4;
-		
-
-			}
-	}		
-	
-	/* De-mirroring for some models */
-	switch(model) {
-	case(SQ_MODEL_MAGPIX):
-	case(SQ_MODEL_POCK_CAM):	
-		for (m=0; m<h; m++){
-			for(i=0; i<w/2; i++){
-				for(j=0; j<3; j++) {
-					datum = output[3*(m*w +i) + j];
-					output[3*(m*w +i) +j] 
-					    = output[3*(m*w +w - 1 -i) +j];
-					output[3*(m*w +w - 1 -i) +j] = datum;
-				}
-			}
-		}
-		break;
-	default: ; 		/* default is "do nothing" */
-	}
-	return(GP_OK);
-}
-
-/* Brightness correction routine adapted from 
- * camlibs/polaroid/jd350e.c, copyright © 2001 Michael Trawny 
- * <trawny99@users.sourceforge.net>
- */
-
-
-#define RED(p,x,y,w) *((p)+3*((y)*(w)+(x))  )
-#define GREEN(p,x,y,w) *((p)+3*((y)*(w)+(x))+1)
-#define BLUE(p,x,y,w) *((p)+3*((y)*(w)+(x))+2)
-
-#define SWAP(a,b) {unsigned char t=(a); (a)=(b); (b)=t;}
-
-#define MINMAX(a,min,max) { (min)=MIN(min,a); (max)=MAX(max,a); }
+//#define MINMAX(a,min,max) { (min)=MIN(min,a); (max)=MAX(max,a); }
 
 #ifndef MAX
 # define MAX(a, b) ((a) > (b) ? (a) : (b))
@@ -363,65 +49,206 @@ sq_decompress (SQModel model, unsigned char *output, unsigned char *data,
 #endif
 
 
-int 
-sq_postprocess(CameraPrivateLibrary *priv, int width, int height, 
-					unsigned char* rgb, int n)
+
+int
+sq_decompress (SQModel model, unsigned char *output, unsigned char *data,
+	    int w, int h)
 {
-	int
-		x,y,
-		red_min=255, red_max=0, 
-		blue_min=255, blue_max=0, 
-		green_min=255, green_max=0;
-	double
-		min, max, amplify; 
+	/*
+	 * Data arranged in planar form. We decompress the raw data first, 
+	 * one colorplane at a time, and put the results into a standard 
+	 * Bayer pattern. The byte-reversal routine having been done already,
+	 * the planes are in the order RBG. The R and B planes  each have 
+	 * dimensions (w/4)*(h/2), and the G is (w/4)*h. 
+	 */
 
-	/* determine min and max per color... */
+	unsigned char *red, *green, *blue, *red_out, *green_out, *blue_out;
+	int i, m;
+	unsigned char temp;
 
-	for( y=0; y<height; y++){
-		for( x=0; x<width; x++ ){
-			MINMAX( RED(rgb,x,y,width), red_min,   red_max  );
-			MINMAX( GREEN(rgb,x,y,width), green_min, green_max);
-			MINMAX( BLUE(rgb,x,y,width), blue_min,  blue_max );
+	red = data;
+	blue = data + w*h/8;
+	green = data + w*h/4;
+
+	red_out = malloc(w*h/4);
+	if (!red_out) {
+		free (red_out);
+		return -1;
+	}
+	blue_out = malloc(w*h/4);
+	if (!blue_out) {
+		free (blue_out);
+		return -1;
+	}
+	green_out = malloc(w*h/2);
+	if (!green_out) {
+		free (green_out);
+		return -1;
+	}
+	decode_panel (red_out, red, w/2, h/2, RED);
+	decode_panel (blue_out, blue, w/2, h/2, BLUE);		
+	decode_panel (green_out, green, w/2, h, GREEN);
+
+
+	/* Now, put things in their proper places */
+	
+	for ( m = 0; m < h/2 ; m++ ) {
+		for ( i = 0; i < w/2; i++ ) {
+			/* Reds in even rows, even columns */
+			output[(2*m)*w+2*i ] = red_out[m*w/2+i ];
+			/* Blues in odd rows, odd columns */
+			output[(2*m+1)*w+2*i +1] = blue_out[m*w/2+i];
+			/* For the greens (note m*w = (2*m)*w/2) we 
+			 * get first the even rows, odd columns */
+			output[(2*m)*w+ 2*i+1] = green_out[m*w +i];
+			/* and then, the greens on odd rows, even columns. */
+			output[(2*m+1)*w+ 2*i] = green_out[(2*m+1)*w/2 +i];
 		}
 	}
+	
 
-	/* determine min and max per color... */
 
-	for( y=0; y<height; y++){
-		for( x=0; x<width; x++ ){
-			MINMAX( RED(rgb,x,y,width), red_min,   red_max  );
-			MINMAX( GREEN(rgb,x,y,width), green_min, green_max);
-			MINMAX( BLUE(rgb,x,y,width), blue_min,  blue_max );
-		}
+	/* De-mirroring for some models */
+	switch(model) {
+	case(SQ_MODEL_MAGPIX):
+	case(SQ_MODEL_POCK_CAM):
+        for (i = 0; i < h; i++) {                                              
+	        for (m = 0 ; m < w/2; m++) {
+	                temp = output[w*i +m];
+	                output[w*i + m] = output[w*i + w -1 -m];
+	                output[w*i + w - 1 - m] = temp;
+	        }
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	/* Normalize brightness ... */
-
-	max = MAX( MAX( red_max, green_max ), blue_max);
-	min = MIN( MIN( red_min, green_min ), blue_min);
-	amplify = 255.0/(max-min);
-
-	for( y=0; y<height; y++){
-		for( x=0; x<width; x++ ){
-			RED(rgb,x,y,width)= MIN(amplify*(double)(RED(rgb,x,y,width)-min),255);
-			GREEN(rgb,x,y,width)= MIN(amplify*(double)(GREEN(rgb,x,y,width)-min),255);
-			BLUE(rgb,x,y,width)= MIN(amplify*(double)(BLUE(rgb,x,y,width)-min),255);
-		}
+		break;
+	default: ; 		/* default is "do nothing" */
 	}
-
-	return GP_OK;
+	return(GP_OK);
 }
+
+int decode_panel (unsigned char *panel_out, unsigned char *panel,
+			int panelwidth, int height, int color) {
+	/* Here, "panelwidth" signifies width of panel_out 
+	 * which is w/2, and height equals h */
+
+	int diff = 0;
+	int tempval = 0;
+	int i, m;
+	unsigned char delta_left = 0;
+	unsigned char delta_right = 0;
+	int input_counter = 0;
+
+	int delta_table[] = {-144,-110,-77,-53,-35,-21,-11,-3,
+				2,10,20,34,52,76,110,144};
+
+	unsigned char *temp_line;	
+	temp_line = malloc(panelwidth);
+
+
+	if (!temp_line) {
+		free(temp_line);
+		return -1;
+	}	
+
+	for(i=0; i < panelwidth; i++){
+	    temp_line[i] = 0x80;
+	}
+
+	if (color != GREEN) {
+		for (m=0; m < height; m++) {
+
+			for (i=0; i< panelwidth/2; i++) {
+
+				delta_left = panel[input_counter] &0x0f;
+				delta_right = (panel[input_counter]>>4)&0xff;
+				input_counter ++;
+				/* left pixel */
+				diff = delta_table[delta_left];
+				if (!i) 
+					tempval = (temp_line[2*i]) + diff;
+				else 
+					tempval = (temp_line[2*i]
+				        + panel_out[m*panelwidth+2*i-1])/2 + diff;
+				tempval = MIN(tempval, 0xff);
+				tempval = MAX(tempval, 0);
+				panel_out[m*panelwidth+2*i] = tempval;
+				temp_line[2*i] = panel_out[m*panelwidth + 2*i];
+				/* right pixel */
+				diff = delta_table[delta_right];
+				tempval = (temp_line[2*i+1]
+					+ panel_out[m*panelwidth+2*i])/2 + diff;
+				tempval = MIN(tempval, 0xff);
+				tempval = MAX(tempval, 0);
+				panel_out[m*panelwidth+2*i+1] = tempval;
+				temp_line[2*i+1] = panel_out[m*panelwidth + 2*i+1];
+			}
+		}
+		return 0;
+	} else {	/* greens */
+		for (m=0; m < height/2; m++) {
+			/* First we do an even line */
+			for (i=0; i< panelwidth/2; i++) {
+				delta_left = panel[input_counter] &0x0f;
+				delta_right = (panel[input_counter]>>4)&0xff;
+				input_counter ++;
+				/* left pixel */
+				diff = delta_table[delta_left];
+				if (!i) 
+					tempval = (temp_line[0]+temp_line[1])/2 + diff;
+				else 
+					tempval = (temp_line[2*i+1]
+				        + panel_out[2*m*panelwidth+2*i-1])/2 + diff;
+				tempval = MIN(tempval, 0xff);
+				tempval = MAX(tempval, 0);
+				panel_out[2*m*panelwidth+2*i] = tempval;
+				temp_line[2*i] = tempval;
+				/* right pixel */
+				diff = delta_table[delta_right];
+				if (2*i == panelwidth - 2 ) 
+					tempval = (temp_line[2*i+1]
+						+ panel_out
+							[2*m*panelwidth+2*i])/2 
+							+ diff;
+				else
+					tempval = (temp_line[2*i+2]
+						+ panel_out
+							[2*m*panelwidth+2*i])/2 
+							+ diff;
+				tempval = MIN(tempval, 0xff);
+				tempval = MAX(tempval, 0);
+				panel_out[2*m*panelwidth+2*i+1] = tempval;
+				temp_line[2*i+1] = tempval;
+			}
+			/* then an odd line */
+			for (i=0; i< panelwidth/2; i++) {
+				delta_left = panel[input_counter] &0x0f;
+				delta_right = (panel[input_counter]>>4)&0xff;
+				input_counter ++;
+				/* left pixel */
+				diff = delta_table[delta_left];
+				if (!i) 
+					tempval = (temp_line[2*i]) + diff;
+				else 
+					tempval = (temp_line[2*i]
+				    	    + panel_out
+						[(2*m+1)*panelwidth+2*i-1])/2 
+						+ diff;
+				tempval = MIN(tempval, 0xff);
+				tempval = MAX(tempval, 0);
+				panel_out[(2*m+1)*panelwidth+2*i] = tempval;
+				temp_line[2*i] = tempval;
+				/* right pixel */
+				diff = delta_table[delta_right];
+				tempval = (temp_line[2*i+1]
+					+ panel_out[(2*m+1)*panelwidth+2*i])/2 
+					+ diff;
+				tempval = MIN(tempval, 0xff);
+				tempval = MAX(tempval, 0);
+				panel_out[(2*m+1)*panelwidth+2*i+1] = tempval;
+				temp_line[2*i+1] = tempval;
+			}
+		}
+		return GP_OK;
+	}	
+}
+
 
