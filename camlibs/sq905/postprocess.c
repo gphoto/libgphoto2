@@ -37,10 +37,6 @@
 #define GREEN 1
 #define BLUE 2
 
-//#define SWAP(a,b) {unsigned char t=(a); (a)=(b); (b)=t;}
-
-//#define MINMAX(a,min,max) { (min)=MIN(min,a); (max)=MAX(max,a); }
-
 #ifndef MAX
 # define MAX(a, b) ((a) > (b) ? (a) : (b))
 #endif
