@@ -1,3 +1,7 @@
+2007-03-12  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Added Canon MV750i.
+
 2007-03-07  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Avoid emitting the d029 property if the camera does
