@@ -1,3 +1,8 @@
+2007-03-13  Marcus Meissner  <marcus@jet.franken.de>
+
+	* canon.c: Handle A95 and S50 in ptp2 driver.
+	  http://sourceforge.net/tracker/index.php?func=detail&aid=1629132&group_id=8874&atid=108874
+
 2007-01-02  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Return storage information programmatically.
