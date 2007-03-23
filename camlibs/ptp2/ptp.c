@@ -2501,6 +2501,25 @@ ptp_mtp_sendobjectproplist (PTPParams* params, uint32_t* store, uint32_t* parent
 	return ret;
 }
 
+uint16_t
+ptp_mtp_setobjectproplist (PTPParams* params, MTPPropList *proplist)
+{
+	uint16_t ret;
+	PTPContainer ptp;
+	unsigned char* opldata=NULL;
+	uint32_t oplsize;
+  
+	PTP_CNT_INIT(ptp);
+	ptp.Code = PTP_OC_MTP_SetObjPropList;
+	ptp.Nparam = 0;
+  
+	oplsize = ptp_pack_OPL(params,proplist,&opldata);
+	ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, oplsize, &opldata, NULL); 
+	free(opldata);
+	
+	return ret;
+}
+
 /* Non PTP protocol functions */
 /* devinfo testing functions */
 

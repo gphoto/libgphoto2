@@ -1462,6 +1462,7 @@ uint16_t ptp_mtp_setobjectreferences (PTPParams* params, uint32_t handle, uint32
 uint16_t ptp_mtp_getobjectproplist (PTPParams* params, uint32_t handle, MTPPropList **proplist);
 uint16_t ptp_mtp_sendobjectproplist (PTPParams* params, uint32_t* store, uint32_t* parenthandle, uint32_t* handle,
 				     uint16_t objecttype, uint64_t objectsize, MTPPropList *proplist);
+uint16_t ptp_mtp_setobjectproplist (PTPParams* params, MTPPropList *proplist);
 
 /* Eastman Kodak extensions */
 uint16_t ptp_ek_9007 (PTPParams* params, unsigned char **serial, unsigned int *size);
