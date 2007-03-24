@@ -1517,7 +1517,7 @@ uint16_t ptp_canon_get_directory (PTPParams* params, PTPObjectHandles *handles, 
 uint16_t ptp_canon_setobjectarchive (PTPParams* params, uint32_t oid, uint32_t flags);
 uint16_t ptp_canon_get_customize_data (PTPParams* params, uint32_t themenr,
 				unsigned char **data, unsigned int *size);
-
+uint16_t ptp_canon_get_pairinginfo (PTPParams* params, int nr, unsigned char**, unsigned int*);
 
 uint16_t ptp_nikon_curve_download (PTPParams* params, 
 				unsigned char **data, unsigned int *size);

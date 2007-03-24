@@ -1410,6 +1410,34 @@ ptp_canon_initiate_direct_transfer (PTPParams* params, uint32_t *out)
 }
 
 /**
+ * ptp_canon_get_pairinginfo:
+ * params:	PTPParams*
+ *              int nr
+ * 
+ * Get the pairing information.
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_canon_get_pairinginfo (PTPParams* params, int nr, unsigned char **data, unsigned int *size)
+{
+	PTPContainer ptp;
+	uint16_t ret;
+	
+	PTP_CNT_INIT(ptp);
+	ptp.Code   = PTP_OC_CANON_GetPairingInfo;
+	ptp.Nparam = 1;
+	ptp.Param1 = nr;
+	*data = NULL;
+	*size = 0;
+	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
+	if (ret != PTP_RC_OK)
+		return ret;
+	return PTP_RC_OK;
+}
+
+/**
  * ptp_canon_get_target_handles:
  * params:	PTPParams*
  *              PTPCanon_directtransfer_entry **out
