@@ -1,6 +1,6 @@
 /* config.c
  *
- * Copyright (C) 2003-2006 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright (C) 2003-2007 Marcus Meissner <marcus@jet.franken.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -857,6 +857,13 @@ static struct deviceproptableu8 canon_quality[] = {
 };
 GENERIC8TABLE(Canon_Quality,canon_quality)
 
+static struct deviceproptableu8 canon_shootmode[] = {
+	{ N_("Automatic"),	0x01, 0 },
+	{ N_("Mode 2"),		0x02, 0 },
+	{ N_("Mode 3"),		0x03, 0 },
+	{ N_("Manual"),		0x04, 0 },
+};
+GENERIC8TABLE(Canon_ShootMode,canon_shootmode)
 
 static struct deviceproptableu8 canon_flash[] = {
 	{ N_("off"),	0, 0 },
@@ -2339,6 +2346,7 @@ static struct submenu capture_settings_menu[] = {
         { N_("Effect Mode"), "effectmode", PTP_DPC_EffectMode, 0, PTP_DTC_UINT16, _get_EffectMode, _put_EffectMode},
         { N_("Exposure Program"), "expprogram", PTP_DPC_ExposureProgramMode, 0, PTP_DTC_UINT16, _get_ExposureProgram, _put_ExposureProgram},
         { N_("Still Capture Mode"), "capturemode", PTP_DPC_StillCaptureMode, 0, PTP_DTC_UINT16, _get_CaptureMode, _put_CaptureMode},
+        { N_("Canon Shooting Mode"), "shootingmode", PTP_DPC_CANON_ShootingMode, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ShootMode, _put_Canon_ShootMode},
         { N_("Focus Metering Mode"), "focusmetermode", PTP_DPC_FocusMeteringMode, 0, PTP_DTC_UINT16, _get_FocusMetering, _put_FocusMetering},
         { N_("Exposure Metering Mode"), "exposuremetermode", PTP_DPC_ExposureMeteringMode, 0, PTP_DTC_UINT16, _get_ExposureMetering, _put_ExposureMetering},
         { N_("Flash Mode"), "flashmode", PTP_DPC_FlashMode, 0, PTP_DTC_UINT16, _get_FlashMode, _put_FlashMode},
