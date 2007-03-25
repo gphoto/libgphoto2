@@ -858,9 +858,9 @@ static struct deviceproptableu8 canon_quality[] = {
 GENERIC8TABLE(Canon_Quality,canon_quality)
 
 static struct deviceproptableu8 canon_shootmode[] = {
-	{ N_("Automatic"),	0x01, 0 },
-	{ N_("Mode 2"),		0x02, 0 },
-	{ N_("Mode 3"),		0x03, 0 },
+	{ N_("Auto"),		0x01, 0 },
+	{ N_("Tv"),		0x02, 0 },
+	{ N_("Av"),		0x03, 0 },
 	{ N_("Manual"),		0x04, 0 },
 };
 GENERIC8TABLE(Canon_ShootMode,canon_shootmode)
