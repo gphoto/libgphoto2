@@ -1,19 +1,4 @@
-libgphoto2 2.3.1.3.trunk
-
-directory driver:
-   * ignore anything not starting by '.' because it is not DCF compliant
-   and it is use for things like Trash of metadata...
-
-disk port:
-   * handle automounter properly.
-
-libgphoto2 API:
-   * New gp_camera_get_storageinfo() API added to get programmatically
-     the storage information(s), like capability, free space and labels.
-
-     On cameras not supporting it returns GP_ERROR_NOT_SUPPORTED.
-
-libgphoto2 2.3.1.2.trunk
+libgphoto2 2.3.1.4.trunk
 
 Build:
    * Non-recursive camlib build: Makes "make -j2" useful.
@@ -31,6 +16,11 @@ libgphoto2 API:
      UNIX filedescriptors for both reading and writing.
    * New gp_file_slurp() function (for camlib use) to sequentially
      read out CameraFiles.
+   * New gp_camera_get_storageinfo() API added to get programmatically
+     the storage information(s), like capability, free space and labels.
+
+     On cameras not supporting it returns GP_ERROR_NOT_SUPPORTED.
+   * Enhanced Bayer algorithm added globally.
 
 Package / System integration:
    * New syntax for print-camera-list's udev output. See help output.
@@ -38,7 +28,17 @@ Package / System integration:
      retrieval for MTP devices not explicitly listed.
      This binary (check-mtp-device) is used by the generated UDEV rules.
 
+disk port:
+   * handle automounter properly.
+
+directory driver:
+   * ignore anything not starting by '.' because it is not DCF compliant
+   and it is use for things like Trash of metadata...
+
 PTP2 driver:
+   * For Canon capture capable cameras, enable shutter and aperture control
+     using "shootingmode" property (PTP d00c).
+
    * New dataflow engine, making it possible to upload/download images
      or songs without taking up any system memory. (think multi GB movies
      on small devices).
