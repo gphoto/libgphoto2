@@ -2088,6 +2088,18 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 		}
 		if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
 
+
+		/* Do not read the 0xd201 property (found on Creative Zen series).
+		 * It seems to cause hangs.
+		 */
+		if (params->deviceinfo.VendorExtensionID==PTP_VENDOR_MICROSOFT) {
+			if (dpc == 0xd201) {
+				n = snprintf(txt, spaceleft, _(" not read out.\n"));
+				if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+				continue;
+			}
+		}
+
 		memset (&dpd, 0, sizeof (dpd));
 		ptp_getdevicepropdesc (params, dpc, &dpd);
 

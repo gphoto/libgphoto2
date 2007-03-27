@@ -1,3 +1,8 @@
+2007-03-27  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Check for overflows in --summary.
+	* library.c: Skip the 0xd201 property, it causes hangs.
+
 2007-03-24  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Added configuration of shooting mode.
