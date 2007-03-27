@@ -337,7 +337,7 @@ retry:
 			else if (toread > params->maxpacketsize)
 				toread = toread - (toread % params->maxpacketsize);
 			res = gp_port_read (camera->port, (char*)data, toread);
-			if (res < 0) {
+			if (res <= 0) {
 				ret = PTP_ERROR_IO;
 				break;
 			}
