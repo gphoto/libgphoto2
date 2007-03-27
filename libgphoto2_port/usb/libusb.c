@@ -152,6 +152,7 @@ gp_port_library_list (GPPortInfoList *list)
 	bus = usb_get_busses();
 	while (bus) {
 		for (dev = bus->devices; dev; dev = dev->next) {
+			char *s;
 			/* Devices which are definitely not cameras. */
 			if (	(dev->descriptor.bDeviceClass == USB_CLASS_HUB)		||
 				(dev->descriptor.bDeviceClass == USB_CLASS_HID)		||
@@ -184,6 +185,8 @@ gp_port_library_list (GPPortInfoList *list)
 			 * and the Ricoh erronously reports it.
 			 */ 
 			sprintf (info.path, "usb:%s,%s", bus->dirname, dev->filename);
+			/* On MacOS X we might get usb:006,002-04a9-3139-00-00. */
+			s = strchr(info.path, '-');if (s) *s='\0';
 			CHECK (gp_port_info_list_append (list, info));
 		}
 		bus = bus->next;
@@ -597,7 +600,9 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 			continue;
 
 		for (dev = bus->devices; dev; dev = dev->next) {
-			if ((devname[0] != '\0') && strcmp(devname, dev->filename))
+			if (	(devname[0] != '\0') &&
+				(dev->filename != strstr(dev->filename, devname))
+			)
 				continue;
 
 			if ((dev->descriptor.idVendor == idvendor) &&
@@ -634,6 +639,8 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 					port->settings.usb.outep = gp_port_usb_find_ep(dev, config, interface, altsetting, USB_ENDPOINT_OUT, USB_ENDPOINT_TYPE_BULK);
 					port->settings.usb.intep = gp_port_usb_find_ep(dev, config, interface, altsetting, USB_ENDPOINT_IN, USB_ENDPOINT_TYPE_INTERRUPT);
 
+					port->settings.usb.maxpacketsize = 0;
+					gp_log (GP_LOG_DEBUG, "gphoto2-port-usb", "inep to look for is %d", port->settings.usb.inep);
 					for (i=0;i<dev->config[config].interface[interface].altsetting[altsetting].bNumEndpoints;i++) {
 						if (port->settings.usb.inep == dev->config[config].interface[interface].altsetting[altsetting].endpoint[i].bEndpointAddress) {
 							port->settings.usb.maxpacketsize = dev->config[config].interface[interface].altsetting[altsetting].endpoint[i].wMaxPacketSize;
