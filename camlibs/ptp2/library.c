@@ -1660,48 +1660,41 @@ camera_wait_for_event (Camera *camera, int timeout,
 	return GP_OK;
 }
 
-static void
-_value_to_str(PTPPropertyValue *data, uint16_t dt, char *txt) {
-	if (dt == PTP_DTC_STR) {
-		sprintf (txt, "'%s'", data->str);
-		return;
-	}
+static int
+_value_to_str(PTPPropertyValue *data, uint16_t dt, char *txt, int spaceleft) {
+	int n;
+
+	if (dt == PTP_DTC_STR)
+		return snprintf (txt, spaceleft, "'%s'", data->str);
 	if (dt & PTP_DTC_ARRAY_MASK) {
 		int i;
 
-		sprintf (txt, "a[%d] ", data->a.count);
-		txt += strlen(txt);
+		n = snprintf (txt, spaceleft, "a[%d] ", data->a.count);
+		if (n >= spaceleft) return 0; spaceleft -= n; txt += n;
 		for ( i=0; i<data->a.count; i++) {
-			_value_to_str(&data->a.v[i], dt & ~PTP_DTC_ARRAY_MASK, txt);
-			txt += strlen(txt);
+			n = _value_to_str(&data->a.v[i], dt & ~PTP_DTC_ARRAY_MASK, txt, spaceleft);
+			if (n >= spaceleft) return 0; spaceleft -= n; txt += n;
 			if (i!=data->a.count-1) {
-				sprintf (txt, ",");
-				txt++;
+				n = snprintf (txt, spaceleft, ",");
+				if (n >= spaceleft) return 0; spaceleft -= n; txt += n;
 			}
 		}
 	} else {
 		switch (dt) {
 		case PTP_DTC_UNDEF:
-			sprintf (txt, "Undefined");
-			break;
+			return snprintf (txt, spaceleft, "Undefined");
 		case PTP_DTC_INT8:
-			sprintf (txt, "%d", data->i8);
-			break;
+			return snprintf (txt, spaceleft, "%d", data->i8);
 		case PTP_DTC_UINT8:
-			sprintf (txt, "%u", data->u8);
-			break;
+			return snprintf (txt, spaceleft, "%u", data->u8);
 		case PTP_DTC_INT16:
-			sprintf (txt, "%d", data->i16);
-			break;
+			return snprintf (txt, spaceleft, "%d", data->i16);
 		case PTP_DTC_UINT16:
-			sprintf (txt, "%u", data->u16);
-			break;
+			return snprintf (txt, spaceleft, "%u", data->u16);
 		case PTP_DTC_INT32:
-			sprintf (txt, "%d", data->i32);
-			break;
+			return snprintf (txt, spaceleft, "%d", data->i32);
 		case PTP_DTC_UINT32:
-			sprintf (txt, "%u", data->u32);
-			break;
+			return snprintf (txt, spaceleft, "%u", data->u32);
 	/*
 		PTP_DTC_INT64
 		PTP_DTC_UINT64
@@ -1709,11 +1702,10 @@ _value_to_str(PTPPropertyValue *data, uint16_t dt, char *txt) {
 		PTP_DTC_UINT128
 	*/
 		default:
-			sprintf (txt, "Unknown %x", dt);
-			break;
+			return snprintf (txt, spaceleft, "Unknown %x", dt);
 		}
 	}
-	return;
+	return 0;
 }
 
 static const char *
@@ -2090,70 +2082,80 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 
 		if (propname) {
 			/* string registered for i18n in ptp.c. */
-			sprintf(txt, "%s(0x%04x):", _(propname), dpc);
+			n = snprintf(txt, spaceleft, "%s(0x%04x):", _(propname), dpc);
 		} else {
-			sprintf(txt, "Property 0x%04x:", dpc);
+			n = snprintf(txt, spaceleft, "Property 0x%04x:", dpc);
 		}
-		txt = txt+strlen(txt);
-		
+		if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+
 		memset (&dpd, 0, sizeof (dpd));
 		ptp_getdevicepropdesc (params, dpc, &dpd);
 
-		sprintf (txt, "(%s) ",_get_getset(dpd.GetSet));txt += strlen (txt);
-		sprintf (txt, "(type=0x%x) ",dpd.DataType);txt += strlen (txt);
+		n = snprintf (txt, spaceleft, "(%s) ",_get_getset(dpd.GetSet));
+		if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+		n = snprintf (txt, spaceleft, "(type=0x%x) ",dpd.DataType);
+		if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
 		switch (dpd.FormFlag) {
 		case PTP_DPFF_None:	break;
 		case PTP_DPFF_Range: {
-			sprintf (txt, "Range [");txt += strlen(txt);
-			_value_to_str (&dpd.FORM.Range.MinimumValue, dpd.DataType, txt);
-			txt += strlen(txt);
-			sprintf (txt, " - ");txt += strlen(txt);
-			_value_to_str (&dpd.FORM.Range.MaximumValue, dpd.DataType, txt);
-			txt += strlen(txt);
-			sprintf (txt, ", step ");txt += strlen(txt);
-			_value_to_str (&dpd.FORM.Range.StepSize, dpd.DataType, txt);
-			txt += strlen(txt);
-			sprintf (txt, "] value: ");txt += strlen(txt);
-			txt += strlen(txt);
+			n = snprintf (txt, spaceleft, "Range [");
+			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+			n = _value_to_str (&dpd.FORM.Range.MinimumValue, dpd.DataType, txt, spaceleft);
+			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+			n = snprintf (txt, spaceleft, " - ");
+			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+			n= _value_to_str (&dpd.FORM.Range.MaximumValue, dpd.DataType, txt, spaceleft);
+			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+			n = snprintf (txt, spaceleft, ", step ");
+			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+			n= _value_to_str (&dpd.FORM.Range.StepSize, dpd.DataType, txt, spaceleft);
+			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+			n = snprintf (txt, spaceleft, "] value: ");
+			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
 			break;
 		}
 		case PTP_DPFF_Enumeration:
-			sprintf (txt, "Enumeration [");txt += strlen(txt);
+			n = snprintf (txt, spaceleft, "Enumeration [");
+			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
 			if ((dpd.DataType & PTP_DTC_ARRAY_MASK) == PTP_DTC_ARRAY_MASK)  {
-				sprintf (txt, "\n\t");txt += strlen(txt);
+				n = snprintf (txt, spaceleft, "\n\t");
+				if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
 			}
 			for (j = 0; j<dpd.FORM.Enum.NumberOfValues; j++) {
-				_value_to_str(dpd.FORM.Enum.SupportedValue+j,dpd.DataType,txt);
-				txt += strlen(txt);
+				n = _value_to_str(dpd.FORM.Enum.SupportedValue+j,dpd.DataType,txt, spaceleft);
+				if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
 				if (j != dpd.FORM.Enum.NumberOfValues-1) {
-					sprintf (txt, ",");txt += strlen(txt);
+					n = snprintf (txt, spaceleft, ",");
+					if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
 					if ((dpd.DataType & PTP_DTC_ARRAY_MASK) == PTP_DTC_ARRAY_MASK)  {
-						sprintf (txt, "\n\t");txt += strlen(txt);
+						n = snprintf (txt, spaceleft, "\n\t");
+						if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
 					}
 				}
 			}
 			if ((dpd.DataType & PTP_DTC_ARRAY_MASK) == PTP_DTC_ARRAY_MASK)  {
-				sprintf (txt, "\n\t");txt += strlen(txt);
+				n = snprintf (txt, spaceleft, "\n\t");
+				if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
 			}
-			sprintf (txt, "] value: ");txt += strlen(txt);
+			n = snprintf (txt, spaceleft, "] value: ");
+			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
 			break;
 		}
-		txt += strlen (txt);
-		ptp_render_property_value(params, dpc, &dpd, sizeof(summary->text) - strlen(summary->text) - 1, txt);
-		if (strlen(txt)) {
-			txt += strlen (txt);
-			sprintf(txt, " (");
-			txt+=2;
-			_value_to_str (&dpd.CurrentValue, dpd.DataType, txt);
-			txt += strlen (txt);
-			sprintf(txt, ")");
-			txt++;
+		n = ptp_render_property_value(params, dpc, &dpd, sizeof(summary->text) - strlen(summary->text) - 1, txt);
+		if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+		if (n) {
+			n = snprintf(txt, spaceleft, " (");
+			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+			n = _value_to_str (&dpd.CurrentValue, dpd.DataType, txt, spaceleft);
+			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+			n = snprintf(txt, spaceleft, ")");
+			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
 		} else {
-			_value_to_str (&dpd.CurrentValue, dpd.DataType, txt);
+			n = _value_to_str (&dpd.CurrentValue, dpd.DataType, txt, spaceleft);
+			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
 		}
-		txt += strlen(txt);
-		sprintf(txt,"\n");
-		txt += strlen(txt);
+		n = snprintf(txt, spaceleft, "\n");
+		if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
 		ptp_free_devicepropdesc (&dpd);
         }
 	ptp_free_DI (&pdi);
