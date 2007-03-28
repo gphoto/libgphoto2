@@ -1,3 +1,12 @@
+2007-03-28   Theodore Kilgore <kilgota@auburn.edu>
+
+	* digi_postprocess.c: a decompression algorithm is installed. 
+	* digigr8.c: small changes to accommodate decompression
+	* library.c: small changes in get_file_func() to accommodate 
+	use of decompression.
+	* digigr8.h: new functions added for stage 1 and stage 2 decompression
+	* README.digigr8: updated to describe new functionality
+
 2006-12-13   Theodore Kilgore <kilgota@auburn.edu>
 
 	* digigr8.c: removed superfluous function digi_read_data()..

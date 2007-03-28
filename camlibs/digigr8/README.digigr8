@@ -13,22 +13,28 @@ They have USB Vendor:Product number 0x2770:0x905c. These cameras are cheap
 and basic. Their functioning resembles that of the cameras supported by the 
 sq905 camera library, but is a bit different. 
 
-At this time, The only camera which I know of with this USB ID is the 
-Digigr8 from RadioShack. For information about any other cameras with the 
-same USB ID, I am totally dependent on reports from users and testers. If you
-have another 0x2770:0x905c camera and want it to work and it currently does
-not, then I will be very glad to hear from you. Saying this a different way:
-further progress with your camera will depend upon your input.
+The first camera which I knew of with this USB ID was the Digigr8 from 
+RadioShack. Hence comes the name of this camera library. Several more cameras 
+have since been reported, including one which has the same make/model painted
+on the plastic case as that of a camera which previously used an sq905 chip 
+and used the sq905 Vendor:Product number instead of this one. SQ Technologies 
+seems to have discontinued the SQ905 and this chip is apparently its successor. 
 
-(update 12/29/05) Several more cameras reported, including one which is the 
-same make/model as one which previously used an sq905 chip and used the sq905 
-Vendor:Product number. SQ Technologies seems to have discontinued the SQ905
-and this chip is apparently its successor. 
+For information about additional cameras with the same USB ID, I am totally 
+dependent on reports from users and testers. If you have another 0x2770:0x905c 
+camera and want it to work and it currently does not, then I will be very glad 
+to hear from you. Saying this a different way: further progress with your 
+camera will depend upon your input. If on the other hand your camera does work
+and is not explicitly listed, I would still like to know about it for the sake
+of completeness. I will give it an explicit line listing in library.c and I 
+will credit you as the finder of the camera, in the ChangeLog file. 
+
 
 WHAT CHIP IS ACTUALLY IN THESE CAMERAS? 
 
-I do not know. I did not take mine apart to look inside. 
-(update) Someone has reported to me that he did, and it is an SQ905C chip. 
+I do not know. I did not take mine apart to look inside. (update) Someone has 
+reported to me that he did take his camera apart, and it really is an SQ905C 
+chip inside. 
 
 WHAT FEATURES DO THESE CAMERAS HAVE, AND WHAT DOES THIS DRIVER SUPPORT?
 
@@ -36,14 +42,14 @@ WHAT FEATURES DO THESE CAMERAS HAVE, AND WHAT DOES THIS DRIVER SUPPORT?
 -- USB connection to computer
 -- High resolution 640x480, uncompressed 				Y
 -- Low resolution 320x240, uncompressed					Y
--- High resolution 640x480, compressed 					N
--- Low resolution 320x240, compressed					N
+-- High resolution 640x480, compressed 					P
+-- Low resolution 320x240, compressed					P
 -- Ability to "switch" resolution between pictures 			Y
 -- Ability to download all pictures on camera				Y
 -- Ability to download the first k pictures, where 
 	k is less than the number on the camera 			Y
 -- Ability to download individual photos				Y (faked, but works)
--- Internal battery, which recharges through the USB port		N/A
+-- Internal battery, which recharges through the USB port	(some models)
 
 -------------------------------------------------------------------------
 The following things can be done with button-pushes on the camera:
@@ -61,7 +67,8 @@ The following things can be done with button-pushes on the camera:
 	Also gphoto2 will download the AVI frames as if they were ordinary 
 	photos. Apparently, AVI frames are always 320x240 regardless of the 
 	resolution setting. AVI mode does honor the compression setting, 
-	though, if it happens to be turned on. 
+	though, if it happens to be turned on. However, compressed AVI 
+	processing is _not_ implemented at this time. 
 
 Notes:  
 
@@ -72,13 +79,15 @@ work. There is some similarity with the sq905 cameras, and I kept that part
 of the code here. Specifically, if the camera has 352x288 and 176x144 
 resolution settings, these might work but are not tested. If your camera does 
 not work due to unknown resolution settings, then the new resolution settings 
-need to be listed in digigr8.c in digi_get_picture_width (). Please report them. 
+need to be listed in digigr8.c in digi_get_picture_width (). Please report any
+such problem. I will ask you to run a gphoto2 command in debug mode and we can
+easily find the information we need -- which information, understand, I do not 
+possess unless you share it with me. 
 
 The pictures obtained on the uncompressed settings can often be superior to
 those obtained using the software which came with the camera, but not
 always. Generally, considering that they are cheap, low resolution cameras,
-these cameras give relatively good pictures,
-
+these cameras give relatively good pictures.
 
 The digigr8 cameras can also function as webcams, but that is outside the 
 scope of gphoto2. 
@@ -86,21 +95,39 @@ scope of gphoto2.
 
 HARDWARE LIMITATIONS AND CONSTRAINTS
 
-1. 	The downloading of "thumbnails" as special files is totally 
-unsupported by the hardware. The manufacturer's driver will only download
-all photos and display them. It then lets the user to "save" the photos 
-which the user selects. Through a bit of fakery which involves 
-downloading data and throwing it away, this primitive behavior is 
-improved a bit, here, and gphoto2 -p will work. 
+The SQ905C chip, like the SQ905 before it, is a minimalist controller chip; if 
+any of its functionality at all were removed, it would probably be impossible to 
+use it to run a digital camera. To program around the limitations of the chip, 
+therefore, is a special challenge. Here are some examples. 
 
+1. 	The manufacturer's driver will do nothing but to download all photos 
+on the camera, and display them, keeping temporary copies in C:\TEMP, to be
+deleted when the camera access program is closed. After downloading everything, 
+then, the OEM program allows the user to "select" and to "save" any or all of
+the photos which have, in fact, already been downloaded (indeed the displayed
+"thumbnails" came from the files in C:\TEMP, too). Now, gphoto2 does not 
+operate thus, has preconceived notions about how any respectable camera should 
+act, and regards such a primitive camera controller chip as an untamed beast. 
+Thus, many of the gphoto2 functions will not work unless, through a bit of 
+fakery which involves downloading data and throwing it away and on some 
+occasions resetting the camera, this primitive behavior is somewhat improved.
+That all has to be done in the driver, with fakery invisible to the user. These
+remarks apply not only to getting thumbnails, but also to many other gphoto2 
+options as well. See item 2. 
 
 2.	The camera's data storage provides only sequential access, not
 random access. In other words, it acts as though it were a tape drive
 instead of a disk. Worse, it's like a tape drive with no fast forward and 
-no reverse controls. The constraints which this places are obvious. It means 
-for example that "gphoto2 -p 2" would NOT download the second photo on the 
-camera, unless the support for it is so written as to download the previous 
-photo and throw the data away. 
+no rewind controls. The constraints which this places are obvious. It means 
+for example that to download all the photos on the camera to display thumbnails 
+requires the camera to be reset afterwards, because that is the only way to do
+the "rewind" required before any of the photos can be accessed again. It also 
+menas that "gphoto2 -p 2" would NOT download the second photo on the camera, 
+unless the support for it is so written as to download the first photo, then 
+the second photo, and to process only the second one, having consigned the 
+data from the first photo to /dev/null. The camera simply cannot do better. 
+The gphoto2 -p 2 command option does work, of course, but only because the 
+necessary jury-rigging has been built into the download function. 
 
 3.	Considering the way the communication protocols of these cameras
 seem to work, it would seem nearly impossible to copy any data to the camera
@@ -124,7 +151,9 @@ the program and having chosen the right camera).
 
 NOTES  
 
-1.	The program is set up to put out pictures in PPM or raw format.  
+1.	The program is set up to put out pictures in PPM or raw format. The OEM
+program offers JPEGs, which the user can easily create on Linux with lots of 
+other software. 
 
 2.	 The gamma setting (actually seems to be one over gamma) used for
 the construction of PPM image files has been obtained by trial and error. It
@@ -138,10 +167,12 @@ some sharpening and color correction for different lighting conditions. The
 routine can easily be turned off if one wishes, and because it is
 experimental you may so wish. To disable it, just comment out the line in
 get_file_func ( ) in library.c where the function digi_postprocess ( ) is
-called. Then (still from within the sq905 directory) do "make install" to
-install your change.
+called. Then do "make install" to install your change.
 
-4. 	To unscramble the "High Compression" setting is an unsolved problem.  
+4. 	The "High Compression" setting is approximately 98% resolved. There 
+do remain occasional problems starting at the left edge of the image, where
+things seem to be a bit unstable. However, very few of my test photos have shown
+any problems in this regard. 
 
 5. 	Please get back to me with reports about other SQ cameras (any cameras 
 with Vendor number 0x2770), with their specifications (what it says in the OEM 
@@ -170,4 +201,4 @@ WARRANTY?
 
 Theodore Kilgore
 12/05/05
-(revised 12/29/05)
+(revised 12/29/05, 03/28/07)

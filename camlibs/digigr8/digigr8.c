@@ -82,17 +82,17 @@ digi_get_comp_ratio (CameraPrivateLibrary *priv, int entry)
 	case 0x61:
 	case 0x62:
 	case 0x63:
-	case 0x76: return 2;
+	case 0x76: return 1;
 	case 0x41:
 	case 0x42:
 	case 0x43:
 	case 0x52:
 	case 0x53:
 	case 0x56: 
-	case 0x72: return 1;
+	case 0x72: return 0;
 	default:
 		GP_DEBUG ("Your camera has unknown resolution settings.\n");
-			return 0;
+			return GP_ERROR;
 	}
 }
 

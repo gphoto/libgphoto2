@@ -166,11 +166,12 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	int w, h, b; 
 	int k, next;
 	unsigned char comp_ratio;
-	unsigned char *data; 
+	unsigned char *data, *p_data; 
 	unsigned char *ppm;
 	unsigned char *ptr;
 	unsigned char gtable[256];
 	int size;
+	int bayer_tile = BAYER_TILE_BGGR;
 
 	/* Get the entry number of the photo on the camera */
     	k = gp_filesystem_number (camera->fs, "/", filename, context); 
@@ -235,9 +236,17 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	ptr = ppm + size;
 	size = size + (w * h * 3);
 	GP_DEBUG ("size = %i\n", size);				
-	/*	digi_decompress (ptr, data, w, h, k);	*/
-	gp_bayer_decode (data, w , h , ptr, BAYER_TILE_BGGR);
-	gp_gamma_fill_table (gtable, .5); 
+	p_data = malloc( w*h );
+	if (!p_data) 
+		return GP_ERROR_NO_MEMORY;
+	if(comp_ratio) {
+		digi_decompress (p_data, data, w, h);
+		bayer_tile = BAYER_TILE_GBRG;
+	} else
+		memcpy(p_data, data, w*h);
+	gp_bayer_decode (p_data, w , h , ptr, bayer_tile);
+	free(p_data);
+	gp_gamma_fill_table (gtable, .65); 
 	gp_gamma_correct_single (gtable, ptr, w * h); 
 	digi_postprocess(camera->pl,w, h, ptr, k);
 	gp_file_set_mime_type (file, GP_MIME_PPM);
