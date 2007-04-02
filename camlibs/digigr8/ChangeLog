@@ -1,5 +1,10 @@
 2007-03-28   Theodore Kilgore <kilgota@auburn.edu>
 
+	* digi_postprocess.c: small improvements to decompression algorithm.
+	* library.c: small improvements to decompression algorithm.
+
+2007-03-28   Theodore Kilgore <kilgota@auburn.edu>
+
 	* digi_postprocess.c: a decompression algorithm is installed. 
 	* digigr8.c: small changes to accommodate decompression
 	* library.c: small changes in get_file_func() to accommodate 

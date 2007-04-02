@@ -151,10 +151,7 @@ digi_second_decompress (unsigned char *uncomp, unsigned char *in,
 			/* left pixel (red) */
 			diff = delta_table[delta_left];
 			if (!i) 
-				tempval = 
-					(3*templine_red[0]
-					    +templine_blue[0])/4 
-						+ diff;
+				tempval = templine_red[0] + diff;
 			else 
 				tempval = (templine_red[i]
 				        + uncomp[2*m*width+2*i-2])/2 + diff;
@@ -165,16 +162,13 @@ digi_second_decompress (unsigned char *uncomp, unsigned char *in,
 			/* right pixel (green) */
 			diff = delta_table[delta_right];
 			if (!i) 
-				tempval = 
-					(3*templine_green[0]
-					    +templine_red[0])/4 
-						+ diff;
+				tempval = templine_green[1] + diff;
 			else if (2*i == width - 2 ) 
-				tempval = (templine_green[i-1]
+				tempval = (templine_green[i]
 						+ uncomp[2*m*width+2*i-1])/2 
 							+ diff;
 			else
-				tempval = (templine_green[i]
+				tempval = (templine_green[i+1]
 						+ uncomp[2*m*width+2*i-1])/2 
 							+ diff;
 			tempval = MIN(tempval, 0xff);
@@ -190,12 +184,9 @@ digi_second_decompress (unsigned char *uncomp, unsigned char *in,
 			/* left pixel (green) */
 			diff = delta_table[delta_left];
 			if (!i) 
-				tempval = 
-					(3*templine_green[0]
-					    +templine_blue[0])/4
-						+diff;
+				tempval = templine_green[0] + diff;
 			else 
-				tempval = (templine_green[i+1]
+				tempval = (templine_green[i]
 				    	    + uncomp[(2*m+1)*width+2*i-2])/2 
 						+ diff;
 			tempval = MIN(tempval, 0xff);
@@ -205,9 +196,7 @@ digi_second_decompress (unsigned char *uncomp, unsigned char *in,
 			/* right pixel (blue) */
 			diff = delta_table[delta_right];
 			if (!i) 
-				tempval = (3*templine_blue[0]
-					    +templine_red[0])/4 
-						+ diff;
+				tempval = templine_blue[0] + diff;
 			else 
 				tempval = (templine_blue[i]
 					    + uncomp[(2*m+1)*width+2*i-1])/2 
@@ -236,14 +225,6 @@ digi_decompress (unsigned char *out_data, unsigned char *data,
 	GP_DEBUG("Stage one done\n");
 	digi_second_decompress (out_data, temp_data, w, h);
 	GP_DEBUG("Stage two done\n");
-	/* It seems that columns are reversed in the output, so let's fix that */
-	for (row = 0; row < h; row++) {
-		for (i = 0; i < w/2; i++) {
-			temp = out_data[w*row + 2*i];
-			out_data[w*row + 2*i] = out_data[w*row + 2*i+1];
-			out_data[w*row + 2*i+1] = temp;
-		} 
-	}
 	free(temp_data);
 	return(GP_OK);
 }
