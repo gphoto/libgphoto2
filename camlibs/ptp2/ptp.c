@@ -1410,7 +1410,7 @@ ptp_canon_initiate_direct_transfer (PTPParams* params, uint32_t *out)
 }
 
 /**
- * ptp_canon_get_pairinginfo:
+ * ptp_canon_getpairinginfo:
  * params:	PTPParams*
  *              int nr
  * 
@@ -1420,7 +1420,7 @@ ptp_canon_initiate_direct_transfer (PTPParams* params, uint32_t *out)
  *
  **/
 uint16_t
-ptp_canon_get_pairinginfo (PTPParams* params, int nr, unsigned char **data, unsigned int *size)
+ptp_canon_getpairinginfo (PTPParams* params, uint32_t nr, unsigned char **data, unsigned int *size)
 {
 	PTPContainer ptp;
 	uint16_t ret;

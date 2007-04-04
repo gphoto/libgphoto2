@@ -1,3 +1,8 @@
+2007-04-04  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Added Canon PowerShot A550
+	* ptpip.c: Added major/minor version reporting.
+
 2007-03-27  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Check for overflows in --summary.

@@ -44,6 +44,8 @@
 #include <gphoto2/gphoto2-port-log.h>
 #include <gphoto2/gphoto2-setting.h>
 
+#define PTPIP_VERSION_MAJOR 0x0001
+#define PTPIP_VERSION_MINOR 0x0000
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -400,7 +402,6 @@ ptp_ptpip_init_command_request (PTPParams* params)
 	unsigned char	guid[16];
 	
 	ptp_nikon_getptpipguid(guid);
-	
 	if (gethostname (hostname, sizeof(hostname)))
 		return PTP_RC_GeneralError;
 	len = ptpip_initcmd_name + (strlen(hostname)+1)*2 + 4;
@@ -415,6 +416,8 @@ ptp_ptpip_init_command_request (PTPParams* params)
 		cmdrequest[ptpip_initcmd_name+i*2] = hostname[i];
 		cmdrequest[ptpip_initcmd_name+i*2+1] = 0;
 	}
+	htod16a(&cmdrequest[ptpip_initcmd_name+(strlen(hostname)+1)*2],PTPIP_VERSION_MAJOR);
+	htod16a(&cmdrequest[ptpip_initcmd_name+(strlen(hostname)+1)*2+2],PTPIP_VERSION_MINOR);
 
 	gp_log_data ( "ptpip/init_cmd", (char*)cmdrequest, len);
 	ret = write (params->cmdfd, cmdrequest, len);
