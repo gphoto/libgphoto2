@@ -3,12 +3,16 @@ If you have specific questions (like why doesn't my HP C20 answer with 0x20
 if I send 0xff as described in whatever/file.c), those are the guys to ask.
 
 libgphoto2_port:
-	Lutz Müller <lutz@users.sourceforge.net>
-	Scott Fritzinger <scottf@unr.edu>
+	Lutz Müller <lutz@users.sourceforge.net> (old maintainer)
+	Scott Fritzinger <scottf@unr.edu>	(old maintainer)
+	Hubert Figuiere <hfiguiere@teaser.fr>
+	Marcus Meissner <marcus@jet.franken.de>
 
 libgphoto2:
-	Lutz Müller <lutz@users.sourceforge.net>
-	Scott Fritzinger <scottf@unr.edu>
+	Lutz Müller <lutz@users.sourceforge.net> (old maintainer)
+	Scott Fritzinger <scottf@unr.edu>	(old maintainer)
+	Hubert Figuiere <hfiguiere@teaser.fr>
+	Marcus Meissner <marcus@jet.franken.de>
 
 --------------------------------------------------------------------------------
 				     PORTS
@@ -109,8 +113,8 @@ camlibs/polaroid/pdc700.c:
 	Greg Ingram <ingram@symsys.com>
 
 camlibs/ptp2:
-	Marcus Meissner <marcus@jet.franken.de>
-	Originally: Mariusz Woloszyn <emsi@ipartners.pl>
+	Marcus Meissner <marcus@jet.franken.de> (current maintainer)
+	Mariusz Woloszyn <emsi@ipartners.pl> (previous maintainer)
 
 camlibs/ricoh/g3:
 	Marcus Meissner <marcus@jet.franken.de>
@@ -181,6 +185,9 @@ QtKam (?):
 SANE (?):
 	If configured with --with-gphoto2.
 	Pete Fales <psfales@lucent.com>
+
+Wine (TWAIN):
+	Marcus Meissner <marcus@jet.franken.de>
 
 --------------------------------------------------------------------------------
 				    SUPPORT
