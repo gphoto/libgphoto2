@@ -31,12 +31,8 @@
 
 */
 
-#define MAX_PICTURES	6
-
 #define ACK		0x15
 
 #define ADC65_DATA_FIRMWARE	0
 #define ADC65_DATA_THUMBNAIL	1
 #define ADC65_DATA_PICTURE	2
-
-#define PICTURE_SIZE	65535
