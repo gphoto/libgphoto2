@@ -1,8 +1,13 @@
+2007-04-08  Hubert Figuiere  <hub@figuiere.net>
+
+	* camlibs/directory/directory.c: added more RAW types.
+	Should fix bug #1696551
+	http://gphoto.org/bugs/?id=1696551
+
 2007-03-01  Marcus Meissner  <marcus@jet.franken.de>
 	    Theodore Kilgore <kilgota@banach.math.auburn.edu>
 
 	* libgphoto2/bayer.{c,h}: Enhanced bayer algorithm.
-
 
 2007-01-31  Hubert Figuiere  <hub@figuiere.net>
 
