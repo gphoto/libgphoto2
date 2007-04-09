@@ -104,7 +104,7 @@ camera_abilities (CameraAbilitiesList *list)
 			a.operations = GP_OPERATION_CAPTURE_IMAGE;
        		a.folder_operations = GP_FOLDER_OPERATION_NONE;
        		a.file_operations   = GP_FILE_OPERATION_PREVIEW 
-					+ GP_FILE_OPERATION_RAW; 
+					| GP_FILE_OPERATION_RAW; 
        		gp_abilities_list_append (list, a);
     	}
     	return GP_OK;
@@ -128,7 +128,6 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
     	return GP_OK;
 }
 
-
 static int camera_manual (Camera *camera, CameraText *manual, GPContext *context) 
 {
 	strcpy(manual->text, 
@@ -148,7 +147,6 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
 	return (GP_OK);
 }
 
-
 static int
 camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
@@ -164,9 +162,17 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
                 void *data, GPContext *context)
 {
         Camera *camera = data; 
-	int n;
-	n = mars_get_num_pics (camera->pl->info);
-    	gp_list_populate (list, "mrpic%03i.ppm", n);
+	int i = 0, n;
+	char name[16];
+
+	n = mars_get_num_pics(camera->pl->info);
+	for (i=0; i < n; i++) {
+		if ((camera->pl->info[8*i]&0x0f) == 1) {
+			sprintf (name, "mr%03isnd.wav", i+1);
+		} else 
+			sprintf (name, "mr%03ipic.ppm", i+1);
+	    	gp_list_append (list, name, NULL);
+    	}
     	return GP_OK;
 }
 
@@ -191,11 +197,16 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
     	unsigned char  *ppm;
 	unsigned char *p_data = NULL;
 	unsigned char gtable[256], photo_code, res_code, compressed;
+	unsigned char audio = 0;
 	char *ptr;
-	int size = 0;
+	int size = 0, raw_size = 0;
 	float gamma_factor;
 
     	GP_DEBUG ("Downloading pictures!\n");
+
+	/* These are cheap cameras. There ain't no EXIF data. */
+	if (GP_FILE_TYPE_EXIF == type) return GP_ERROR_FILE_EXISTS;
+
 
     	/* Get the number of the photo on the camera */
 	k = gp_filesystem_number (camera->fs, "/", filename, context); 
@@ -208,6 +219,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
     	compressed = (photo_code >> 4) & 2;
 	switch (res_code) {
 	case 0: w = 176; h = 144; break;
+	case 1: audio = 1; break;
 	case 2: w = 352; h = 288; break;
 	case 6: w = 320; h = 240; break;
 	case 8: w = 640; h = 480; break;
@@ -217,7 +229,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	GP_DEBUG ("height is %i\n", h); 		
     
 	b = mars_get_pic_data_size(camera->pl->info, k);
-
+	raw_size = b;
 	/* Now increase b from "actual size" to _downloaded_ size. */
 	b = ((b+ 0x1b0)/0x2000 + 1) * 0x2000;
 
@@ -230,6 +242,37 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 					    camera->port, data, b, k);
 	/* The first 128 bytes are junk, so we toss them.*/
 	memmove(data, data+128, b - 128);
+	if (audio) {	
+		p_data = malloc (raw_size+256);
+		if (!p_data) {free (data); return GP_ERROR_NO_MEMORY;}
+		memset (p_data, 0, raw_size+256);
+    		sprintf (p_data, "RIFF");
+		p_data[4] = (raw_size+36)&0xff;
+		p_data[5] = ((raw_size+36)>>8)&0xff;
+		p_data[6] = ((raw_size+36)>>16)&0xff;
+		p_data[7] = ((raw_size+36)>>24)&0xff;
+    		sprintf (p_data+8, "WAVE");\
+    		sprintf (p_data+12, "fmt ");
+		p_data[16] = 0x10;
+		p_data[20] = 1;
+		p_data[22] = 1;
+		p_data[24] = 0x40;
+		p_data[25] = 0x1F;
+		p_data[28] = 0x40;
+		p_data[29] = 0x1F;
+		p_data[32] = 1;
+		p_data[34] = 8;
+    		sprintf (p_data+36, "data");
+		p_data[40] = (raw_size)&0xff;
+		p_data[41] = ((raw_size)>>8)&0xff;
+		p_data[42] = ((raw_size)>>16)&0xff;
+		p_data[43] = ((raw_size)>>24)&0xff;		
+		memcpy (p_data+44, data, raw_size);
+		gp_file_set_mime_type(file, GP_MIME_WAV);
+		gp_file_set_name(file, filename);
+		gp_file_set_data_and_size(file, p_data , raw_size+44);
+		return GP_OK;
+	}
 
 	if (GP_FILE_TYPE_RAW == type) {
 
@@ -238,22 +281,21 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		 * use the lower nibble to store the resolution code.
 		 * Then it is possible to know "everything" from a raw file.
 		 * Purpose of the info in bytes 7 thru 11 is currently unknown. 
+		 * A "raw" audio file will also have the WAV header prepended.
+		 * So do nothing to an audio file. 
 		 */
-		data[6] = (data[6] | res_code);
+		if (!audio) 
+			data[6] = (data[6] | res_code);
 		gp_file_set_mime_type(file, GP_MIME_RAW);
 		gp_file_set_name(file, filename);
-		gp_file_set_data_and_size(file, data , b );
+		gp_file_set_data_and_size(file, data , raw_size );
 		return GP_OK;
 	}
 
-	/* These are cheap cameras. There ain't no EXIF data. */
-	if (GP_FILE_TYPE_EXIF == type) return GP_ERROR_FILE_EXISTS;
-	
 	p_data = malloc (w * h);
 	if (!p_data) {free (data); return GP_ERROR_NO_MEMORY;}
 	memset (p_data, 0, w * h);
 		
-
 	if (compressed) {
 		mars_decompress (data + 12, p_data, w, h);
 	}
@@ -281,7 +323,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (gamma_factor > .6) gamma_factor = .6;
 	gp_gamma_fill_table (gtable, gamma_factor );
 	gp_gamma_correct_single (gtable, ptr, w * h);
-
 
         gp_file_set_mime_type (file, GP_MIME_PPM);
         gp_file_set_name (file, filename); 

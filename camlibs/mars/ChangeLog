@@ -1,10 +1,15 @@
+2007-04-07  Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Added support for downloading audio files, as some 
+		     of the Mars cameras have such abilities. 
+	* README.mars: revisions. 
+
 2007-01-24  Theodore Kilgore <kilgota@auburn.edu>
 
 	* library.c: Added "Sakar 56399 Spyshot"
 		     Added "Pixart Gemini Keychain Camera"
 		     reported by R P Herrold <herrold@owlriver.com>
 	* README.mars: Added these cameras there, too. 
-
 
 2006-12-23  Theodore Kilgore <kilgota@auburn.edu>
 

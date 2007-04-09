@@ -1,6 +1,6 @@
 MARS MR97310 STILLCAM DRIVER
 Copyright Theodore Kilgore <kilgota@auburn.edu> April, 2004. Latest revision
-of this README December 23, 2006.
+of this README April 7, 2007.
 
 (Everything in libgphoto2/camlibs/mars is LGPL-licensed, including this README; 
 see any of the source files for a more complete statement of the license.)
@@ -14,8 +14,8 @@ FEATURES OF THE CAMERAS
 
 The first MR97310 camera which I encountered was the Aiptek PenCam VGA+,
 a "budget" camera with resolution settings of 640x480 and 320x240.  
-This camera and the other MR97310 cameras can also be used as webcams 
-(not supportable here; would require a kernel module) or to make a "video 
+This camera and the other MR97310 cameras can also be used as webcams (not 
+supportable by gphoto2; would require a kernel module) or to make a "video 
 clip." Some of the other cameras automatically will run in compressed mode 
 when shooting clips, but on the Aiptek it is optional to compress clips.  
 Clips download nicely on all these cameras as a succession of PPM files. 
@@ -30,8 +30,8 @@ mode, at least some of the time. For this, the camera seems to function best
 at outdoor use. 
 
 Update 08/28/06: Decompression algorithm much improved, after much trial 
-and error. I would say it is now somewhere between 90% to 100% good now. Seems
-to work almost perfectly outdoors and in strong light. Works even better at low 
+and error. I would say it is somewhere between 90% to 100% good now. Seems to
+work almost perfectly outdoors and in strong light. Works even better at low 
 resolution settings, that is, 352x288 or lower. 
 
 The camera uses a configuration "block," as do the sq905 cameras. However, 
@@ -39,18 +39,21 @@ here the information can be used to run options such as gphoto2 -p 3 and
 gphoto2 -p 3-5. The OEM software provided with the various cameras does not 
 take advantage even of the mentioned abilities. With the OEM driver, one has 
 the choice either to download all photos, or none. If all are downloaded, then 
-thumbnails are created. The user can then do previews and decide what to save. 
+thumbnails are created from temporry image files in C:\TEMP. Thereby, the user 
+can decide what to "save" in some more permanent place. 
 
 
 STATUS NOTES ON SUPPORTED CAMERAS (7 Feb. 2006, revised 28 Aug. 2006)
 
 First, a special note: On many of these cameras, the LED will read "PC" when 
 the camera is hooked to a live USB connector. It seems locked in this position.
-But all of the cameras which do this, which I have tested, will come up with 
-all of the other camera button commands if one runs any gphoto2 option which 
-accesses the camera. Consequently, one can use the camera thus tethered, 
-without any battery in it, to shoot and download photos. The photos will die
-soon if the camera is unhooked without a good battery in it, though, because 
+But all of the cameras which do this, which I have tested, will permit this 
+lock to be cleared if one runs any gphoto2 option (for example, gphoto2 -n or
+gphoto2 --summary will clear the "PC" lock very nicely), and after this 
+everything on the camera can be made to work, just as if the camera were not 
+tethered. Consequently, one can use the camera thus tethered, without any 
+battery in it, to shoot and download photos. The photos will die soon if the 
+camera is unhooked without a good battery in it, though, because 
 the camera uses volatile memory for its data storage. 
 
 The only problem with using any of these cameras is the compression codec. 
@@ -92,12 +95,22 @@ they are they work very well. It seems that these shoot clips in compressed
 mode (no matter if you otherwise turned compression on, or not), but at the 
 resolution settings these cameras use the decompression works nicely, too. 
 Probably the CD302N and the Pixart Gemini are the same, too, but I do not have
-direct experience. The Sakar Digital 56379 also contains a microphone and will
-capture sound; that interface is not implemented here.
+direct experience. 
+
+Sakar Digital 56379 "Spy Shot": Another keychain camera, but also contains a 
+microphone and will capture sound. There is a toggle switch on the camera, 
+which is labelled "photo" on one side and "voice" on the other. If the 
+"voice" toggle is chosen, then actual recording is turned on and off with a 
+press of the shutter button. The output is kept in the camera. This feature 
+is supported as of 04/07/07; the audio output may be downloaded as a WAVE file 
+with the usual options gphoto2 -P or gphoto2 -p (number). Note: the option
+--capture-sound and the various "audio" options are _not_ supported. In any 
+event, the usual options do make sound files accessible in a GUI environment.
 
 ION digital camera: Compression optional. High cutoff threshold for what the 
-camera considers badlight; will not take photos indoors, sometimes, even on a 
-bright day. Color mapping is unspectacular.
+camera considers bad light; will not take photos indoors, sometimes, even on a 
+bright day. Color mapping is unspectacular. Camera case looks like there is a 
+microphone on it, but there isn't.
 
 Argus QuickClix: Compressed mode only. The compression algorithm is different 
 from the compression algorithm in the other known Mars cameras, too. I have 
@@ -129,17 +142,26 @@ use gtkam for the first time with any camera, you must choose the camera.
 For this purpose, after starting gtkam click on "Camera." Then choose 
 "Add Camera." Then "Detect." Click on the name of the camera to get photos. 
 Gtkam creates its own thumbnails for cameras which do not offer them. These 
-cameras do not offer thumbnails. 
+cameras do not offer thumbnails. Sound files are "seen" by name, with no 
+thumbnail, and can otherwise be selected, deleted, or saved, just like image 
+files. The default option in gtkam is to save to $PWD. I like that. You can
+change that behavior if you want, I understand. 
 
-Digikam as a frontend works, too. But for some reason 
-digikam seems unable to display thumbnails from this camera. Anyone who knows 
-what the problem is here, please let me know. 
+Digikam as a frontend works, too. But for some reason digikam seems unable to 
+display thumbnails from this camera. Anyone who knows what the problem is 
+here, please let me know. 
 
 Flphoto works well, too, with no obvious glitches. Flphoto is also willing to 
-create thumbnails and does so without any tweaking. 
+create thumbnails and does so without any tweaking. Sound files are handled 
+pretty much as in gtkam. You will get a whine on saving, that the file cannot 
+be put into the "album" but it will be saved to the chosen directory 
+nevertheless. Flphoto will not automatically save in $PWD but instead will 
+open the directory it used last time. I hate that. Someone out there must love 
+that behavior, though. Or it wouldn't be set up that way. Otherwise, flphoto
+is really slick. 
 
 
-SAVING RAW FILES AND USING THEM LATER (09-23-06)
+SAVING RAW PHOTO FILES AND USING THEM LATER (09-23-06)
 
 All raw photos downloaded from the camera come with a signature and a header 
 which is 12 bytes in length. This header has always been retained if the
@@ -190,5 +212,5 @@ WARRANTY?
 
 Absolutely none. Remember, I did not sell you this software. I have written 
 this driver for my own edification and in the sincere hope that it might help 
-you to use of your camera. Please see also the warranty clauses 
-in the LGPL license. 
+you to use of your camera. Please see also the warranty clauses in the LGPL 
+license, which do not appear to me to conflict with my own statement here. 
