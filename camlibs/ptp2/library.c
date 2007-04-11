@@ -796,6 +796,8 @@ static struct {
 	{"Archos:XS202 (MTP mode)",		0x0e79, 0x1208, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* Reported by gudul1@users.sourceforge.net */
 	{"Archos:104",				0x0e79, 0x120a, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	/* reported to libmtp-devel by chauchot.etienne@free.fr */
+	{"Archos:504",				0x0e79, 0x1307, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 
 	/* From Mark Veinot */
 	{"JVC:Alneo XA-HD500", 			0x04f1, 0x6105, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
