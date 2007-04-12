@@ -231,7 +231,7 @@ camera_init(Camera *camera, GPContext *context)
 
 	switch (camera->port->type) {
 	case GP_PORT_USB:
-		settings.usb.config	= 1;
+		settings.usb.config	= 0;
 		settings.usb.altsetting	= 0;
 		settings.usb.interface	= 1;
 		settings.usb.inep	= 0x82;
