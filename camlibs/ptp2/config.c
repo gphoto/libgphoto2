@@ -1461,6 +1461,23 @@ static struct deviceproptableu8 canon_expcompensation[] = {
 };
 GENERIC8TABLE(Canon_ExpCompensation,canon_expcompensation)
 
+static struct deviceproptableu8 canon_expcompensation2[] = {
+      { "0",	0x00, 0 },
+      { "0.3",	0x03, 0 },
+      { "0.6",	0x05, 0 },
+      { "1.0",	0x08, 0 },
+      { "1.3",	0x0b, 0 },
+      { "1.6",	0x0d, 0 },
+      { "2",	0x10, 0 },
+      { "-0.3",	0xfd, 0 },
+      { "-0.6",	0xfb, 0 },
+      { "-1.0",	0xf8, 0 },
+      { "-1.3",	0xf5, 0 },
+      { "-1.6",	0xf3, 0 },
+      { "-2",	0xf0, 0 },
+};
+GENERIC8TABLE(Canon_ExpCompensation2,canon_expcompensation2)
+
 
 static struct deviceproptableu16 canon_photoeffect[] = {
       { N_("Off"),		0, 0 },
@@ -2350,6 +2367,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Assist Light"), "assistlight", PTP_DPC_CANON_AssistLight, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_AssistLight, _put_Canon_AssistLight},
 	{ N_("Assist Light"), "assistlight", PTP_DPC_NIKON_AFAssist, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ N_("Exposure Compensation"), "exposurecompensation", PTP_DPC_CANON_ExpCompensation, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_ExpCompensation, _put_Canon_ExpCompensation},
+	{ N_("Exposure Compensation"), "exposurecompensation", PTP_DPC_CANON_ExpCompensation2, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_ExpCompensation2, _put_Canon_ExpCompensation2},
 	{ N_("Flash Mode"), "canonflashmode", PTP_DPC_CANON_FlashMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_FlashMode, _put_Canon_FlashMode},
 	{ N_("Flash Mode"), "nikonflashmode", PTP_DPC_NIKON_FlashMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashMode, _put_Nikon_FlashMode},
 	{ N_("AF Area Illumination"), "af-area-illumination", PTP_DPC_NIKON_AFAreaIllumination, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_AFAreaIllum, _put_Nikon_AFAreaIllum},
