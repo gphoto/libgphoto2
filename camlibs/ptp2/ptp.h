@@ -247,6 +247,9 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_PairingComplete		0x9035
 #define PTP_OC_CANON_GetWirelessMAXChannel	0x9036
 
+/* from EOS 400D */
+#define	PTP_OC_CANON_GetDeviceProperty		0x9110
+
 /* Nikon extension Operation Codes */
 #define PTP_OC_NIKON_GetProfileAllData	0x9006
 #define PTP_OC_NIKON_SendProfileData	0x9007
@@ -946,6 +949,14 @@ typedef struct _PTPNIKONWifiProfile PTPNIKONWifiProfile;
 #define PTP_DPC_CANON_AssistLight	0xD041
 #define PTP_DPC_CANON_D045		0xD045
 #define PTP_DPC_CANON_AverageFilesizes	0xD048
+
+/* From EOS 400D trace. */
+#define PTP_DPC_CANON_Aperture2		0xD101
+#define PTP_DPC_CANON_ShutterSpeed2	0xD102
+#define PTP_DPC_CANON_ISOSpeed2		0xD103
+#define PTP_DPC_CANON_ExpCompensation2	0xD104
+#define PTP_DPC_CANON_MeteringMode2	0xD107
+#define PTP_DPC_CANON_WhiteBalance2	0xD11C
 
 /* Nikon extension device property codes */
 #define PTP_DPC_NIKON_ShootingBank			0xD010

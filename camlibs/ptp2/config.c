@@ -972,6 +972,8 @@ static struct deviceproptableu16 canon_isospeed[] = {
 	{ "100",		0x0048, 0 },
 	{ "200",		0x0050, 0 },
 	{ "400",		0x0058, 0 },
+	{ "800",		0x0060, 0 },
+	{ "1600",		0x0068, 0 },
 	{ N_("Auto"),		0x0000, 0 },
 };
 GENERIC16TABLE(Canon_ISO,canon_isospeed)
@@ -1473,6 +1475,10 @@ GENERIC16TABLE(Canon_PhotoEffect,canon_photoeffect)
 
 static struct deviceproptableu16 canon_aperture[] = {
       { N_("auto"),	0xffff, 0 },
+      { "1.8",		0x0015, 0 },
+      { "2.0",		0x0018, 0 },
+      { "2.2",		0x001b, 0 },
+      { "2.5",		0x001d, 0 },
       { "2.8",		0x0020, 0 },
       { "3.2",		0x0023, 0 },
       { "3.5",		0x0025, 0 },
@@ -1483,6 +1489,15 @@ static struct deviceproptableu16 canon_aperture[] = {
       { "6.3",		0x0033, 0 },
       { "7.1",		0x0035, 0 },
       { "8.0",		0x0038, 0 },
+      { "9.0",		0x003b, 0 },
+      { "10",		0x003d, 0 },
+      { "11",		0x0040, 0 },
+      { "13",		0x0043, 0 },
+      { "14",		0x0045, 0 },
+      { "16",		0x0048, 0 },
+      { "18",		0x004b, 0 },
+      { "20",		0x004d, 0 },
+      { "22",		0x0050, 0 },
 };
 GENERIC16TABLE(Canon_Aperture,canon_aperture)
 
@@ -2319,6 +2334,7 @@ static struct submenu image_settings_menu[] = {
         { N_("Image Size"), "imgsize", PTP_DPC_ImageSize, 0, PTP_DTC_STR, _get_ImageSize, _put_ImageSize},
         { N_("Image Size"), "imgsize", PTP_DPC_CANON_ImageSize, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_Size, _put_Canon_Size},
         { N_("ISO Speed"), "iso", PTP_DPC_CANON_ISOSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ISO, _put_Canon_ISO},
+        { N_("ISO Speed"), "iso", PTP_DPC_CANON_ISOSpeed2, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ISO, _put_Canon_ISO},
 	{ N_("WhiteBalance"), "whitebalance", PTP_DPC_CANON_WhiteBalance, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_WhiteBalance, _put_Canon_WhiteBalance},
 	{ N_("WhiteBalance"), "whitebalance", PTP_DPC_WhiteBalance, 0, PTP_DTC_UINT16, _get_WhiteBalance, _put_WhiteBalance},
 	{ N_("Photo Effect"), "photoeffect", PTP_DPC_CANON_PhotoEffect, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_PhotoEffect, _put_Canon_PhotoEffect},
@@ -2351,6 +2367,7 @@ static struct submenu capture_settings_menu[] = {
         { N_("Exposure Metering Mode"), "exposuremetermode", PTP_DPC_ExposureMeteringMode, 0, PTP_DTC_UINT16, _get_ExposureMetering, _put_ExposureMetering},
         { N_("Flash Mode"), "flashmode", PTP_DPC_FlashMode, 0, PTP_DTC_UINT16, _get_FlashMode, _put_FlashMode},
 	{ N_("Aperture"), "aperture", PTP_DPC_CANON_Aperture, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_Aperture, _put_Canon_Aperture},
+	{ N_("Aperture"), "aperture", PTP_DPC_CANON_Aperture2, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_Aperture, _put_Canon_Aperture},
 	{ N_("Focusing Point"), "focusingpoint", PTP_DPC_CANON_FocusingPoint, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_FocusingPoint, _put_Canon_FocusingPoint},
 	{ N_("Shutter Speed"), "shutterspeed", PTP_DPC_CANON_ShutterSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ShutterSpeed, _put_Canon_ShutterSpeed},
 	{ N_("Metering Mode"), "meteringmode", PTP_DPC_CANON_MeteringMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_MeteringMode, _put_Canon_MeteringMode},

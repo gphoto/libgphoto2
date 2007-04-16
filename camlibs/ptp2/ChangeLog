@@ -1,4 +1,10 @@
+2007-04-16  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptp.h, library.c: Added some Canon EOS specific properties
+	  and values.
+
 2007-04-11  Marcus Meissner  <marcus@jet.franken.de>
+
 	* Added Archos 504 MTP player.
 
 2007-04-04  Marcus Meissner  <marcus@jet.franken.de>
