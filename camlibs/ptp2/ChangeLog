@@ -3,6 +3,8 @@
 	* ptp.h, library.c: Added some Canon EOS specific properties
 	  and values.
 
+	* library.c: Added PowerShot SD1000 aka IXUS 70.
+
 2007-04-11  Marcus Meissner  <marcus@jet.franken.de>
 
 	* Added Archos 504 MTP player.
