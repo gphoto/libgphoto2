@@ -453,6 +453,21 @@ gp_port_usb_update (GPPort *port)
 	memcpy(&port->settings.usb, &port->settings_pending.usb,
 		sizeof(port->settings.usb));
 
+	/* The interface changed. release the old, claim the new ... */
+	if (port->settings.usb.interface != port->pl->interface) {
+		if (usb_release_interface (port->pl->dh,
+					   port->pl->config) < 0) {
+			gp_log (GP_LOG_DEBUG, "gphoto2-port-usb","releasing the iface for config failed.");
+			/* Not a hard error for now. -Marcus */
+		} else {
+			ret = usb_claim_interface (port->pl->dh,
+						   port->settings.usb.interface);
+			if (ret < 0) {
+				gp_log (GP_LOG_DEBUG, "gphoto2-port-usb","reclaiming the iface for config failed.");
+				return GP_ERROR_IO_UPDATE;
+			}
+		}
+	}
 	if (port->settings.usb.config != port->pl->config) {
 		/* This can only be changed with the interface released. 
 		 * This is a hard requirement since 2.6.12.
