@@ -840,9 +840,7 @@ fdi_camera_func (const func_params_t *params,
 		if (a->usb_vendor) { /* usb product id might be 0! */
 			printf("   <match key=\"usb.vendor_id\" int=\"%d\">\n", a->usb_vendor);
 			printf("    <match key=\"usb.product_id\" int=\"%d\">\n", a->usb_product);
-			printf("     <merge key=\"info.category\" type=\"string\">camera</merge>\n");
 			if (a->device_type & GP_DEVICE_AUDIO_PLAYER) {
-				printf("     <append key=\"info.capabilities\" type=\"strlist\">camera</append>\n");
 				printf("     <merge key=\"info.category\" type=\"string\">portable_audio_player</merge>\n");
 				printf("     <append key=\"info.capabilities\" type=\"strlist\">portable_audio_player</append>\n");
 				printf("     <merge key=\"portable_audio_player.access_method\" type=\"string\">user</merge>\n");
@@ -851,6 +849,7 @@ fdi_camera_func (const func_params_t *params,
 				/* FIXME: needs true formats ... But all of them can do MP3 */
 				printf("     <append key=\"portable_audio_player.output_formats\" type=\"strlist\">audio/mpeg</append>\n");
 			} else {
+				printf("     <merge key=\"info.category\" type=\"string\">camera</merge>\n");
 				printf("     <append key=\"info.capabilities\" type=\"strlist\">camera</append>\n");
 				
 				/* HACK alert ... but the HAL / gnome-volume-manager guys want that */
