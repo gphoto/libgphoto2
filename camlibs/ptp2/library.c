@@ -747,6 +747,8 @@ static struct {
 	{"Philips:HDD6320",			0x0471, 0x01eb, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	{"Philips:HDD6320 2",			0x0471, 0x014b, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	{"Philips:HDD6130/17",			0x0471, 0x014c, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	/* from libmtp forum */
+	{"Philips:HDD085/00",			0x0471, 0x014d, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* from XNJB forum */
 	{"Philips:GoGear SA9200",		0x0471, 0x014f, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* From Gerhard Mekenkamp */
@@ -808,6 +810,8 @@ static struct {
 	{"Samsung:YH-925GS",			0x04e8, 0x5024, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	{"Samsung:YH-820",			0x04e8, 0x502e, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	{"Samsung:YH-925",			0x04e8, 0x502f, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	/* From XNJB user */
+	{"Samsung:YP-Z5",			0x04e8, 0x5041, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1474056&group_id=8874&atid=108874 */
 	{"Samsung:YP-T7J", 			0x04e8, 0x5047, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* Reported by cstrickler@gmail.com */
@@ -832,6 +836,8 @@ static struct {
 	{"Sandisk:Sansa e200",			0x0781, 0x7420, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	{"Sandisk:Sansa e260",			0x0781, 0x7420, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	{"SanDisk:Sansa c250",			0x0781, 0x7450, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	/* Reported by XNJB user, and Miguel de Icaza <miguel@gnome.org> */
+	{"SanDisk:Sansa Connect",		0x0781, 0x7480, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 
 	/* Reported by Farooq Zaman. NOTE: Can just list files currently and might have other problems! */
 	{"Microsoft:Zune",			0x045e, 0x0710, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
