@@ -248,9 +248,10 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_GetWirelessMAXChannel	0x9036
 
 /* from EOS 400D */
-#define	PTP_OC_CANON_GetPartialObject		0x9107
-#define	PTP_OC_CANON_GetDeviceProperty		0x9110
-#define	PTP_OC_CANON_GetAllDeviceProperties	0x9116
+#define PTP_OC_CANON_GetPartialObject		0x9107
+#define PTP_OC_CANON_CaptureImage		0x910F
+#define PTP_OC_CANON_GetDeviceProperty		0x9110
+#define PTP_OC_CANON_GetAllDeviceProperties	0x9116
 
 /* Nikon extension Operation Codes */
 #define PTP_OC_NIKON_GetProfileAllData	0x9006
