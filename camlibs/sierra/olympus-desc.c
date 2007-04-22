@@ -997,7 +997,7 @@ static CameraRegisterType oly3000z_pic_regs[] =  {
 /*
  * All of the register used to modify camera settings.
  */
-static const CameraRegisterType oly3040_cam_regs[] = {
+static CameraRegisterType oly3040_cam_regs[] = {
 	CAM_REG_TYPE_INIT (oly3040, 02, 4, CAM_DESC_DEFAULT, 0), /* date-time */
 	CAM_REG_TYPE_INIT (oly3040, 34, 4, CAM_DESC_SUBACTION, 
 			  SIERRA_ACTION_LCD_MODE), /* lcd mode */
@@ -1052,7 +1052,7 @@ static CameraRegisterType oly750uz_pic_regs[] =  {
  *
  * All the same as 3040.
  */
-static const CameraRegisterType oly750uz_cam_regs[] = {
+static CameraRegisterType oly750uz_cam_regs[] = {
 	CAM_REG_TYPE_INIT (oly3040, 02, 4, CAM_DESC_DEFAULT, 0), /* date-time */
 	CAM_REG_TYPE_INIT (oly3040, 34, 4, CAM_DESC_SUBACTION, 
 			  SIERRA_ACTION_LCD_MODE), /* lcd mode */
@@ -1096,7 +1096,7 @@ static CameraRegisterType olysp500uz_pic_regs[] =  {
  *
  * All the same as 3040.
  */
-static const CameraRegisterType olysp500uz_cam_regs[] = {
+static CameraRegisterType olysp500uz_cam_regs[] = {
 	CAM_REG_TYPE_INIT (oly3040, 02, 4, CAM_DESC_DEFAULT, 0), /* date-time */
 	CAM_REG_TYPE_INIT (oly3040, 34, 4, CAM_DESC_SUBACTION, 
 			  SIERRA_ACTION_LCD_MODE), /* lcd mode */

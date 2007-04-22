@@ -1,3 +1,8 @@
+2007-04-22	Marcus Meissner <marcus@jet.franken.de>
+
+	* *-desc.c: Removed "const" from some structures that 
+	  are written to by the configuration handling code.
+
 2007-02-13	Chandra Curtis <chandracurtis@ntu.edu.sg>
 	*sierra.c, sierra-desc.h, olympus-desc.c: Added support for Olympus SP-500UZ.  
 	(Works with gtkam, still some issue with gphoto2)
