@@ -466,6 +466,7 @@ gp_port_usb_update (GPPort *port)
 				gp_log (GP_LOG_DEBUG, "gphoto2-port-usb","reclaiming the iface for config failed.");
 				return GP_ERROR_IO_UPDATE;
 			}
+			port->pl->interface = port->settings.usb.interface;
 		}
 	}
 	if (port->settings.usb.config != port->pl->config) {
