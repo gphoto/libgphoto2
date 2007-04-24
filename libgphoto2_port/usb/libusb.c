@@ -483,11 +483,14 @@ gp_port_usb_update (GPPort *port)
 		ret = usb_set_configuration(port->pl->dh,
 				     port->settings.usb.config);
 		if (ret < 0) {
+#if 0 /* setting the configuration failure is not fatal */
 			gp_port_set_error (port,
 				_("Could not set config %d/%d (%m)"),
 				port->settings.usb.interface,
 				port->settings.usb.config);
 			return GP_ERROR_IO_UPDATE;	
+#endif
+			gp_log (GP_LOG_ERROR, "gphoto2-port-usb","setting configuration to %d failed with ret = %d, but continue...", ret);
 		}
 
 		gp_log (GP_LOG_DEBUG, "gphoto2-port-usb",
