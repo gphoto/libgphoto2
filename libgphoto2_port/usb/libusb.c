@@ -456,7 +456,7 @@ gp_port_usb_update (GPPort *port)
 	/* The interface changed. release the old, claim the new ... */
 	if (port->settings.usb.interface != port->pl->interface) {
 		if (usb_release_interface (port->pl->dh,
-					   port->pl->config) < 0) {
+					   port->pl->interface) < 0) {
 			gp_log (GP_LOG_DEBUG, "gphoto2-port-usb","releasing the iface for config failed.");
 			/* Not a hard error for now. -Marcus */
 		} else {
