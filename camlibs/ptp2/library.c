@@ -328,6 +328,8 @@ static struct {
 	{"Kodak:V705",   0x040a, 0x05ab, 0},
 	/* https://launchpad.net/bugs/67532 */
 	{"Kodak:V610",   0x040a, 0x05ac, 0},
+	/* from Thomas <tomtechguy@gmail.com> */
+	{"Kodak:C743",   0x040a, 0x05ae, 0},
         /* via IRC */
 	{"Kodak:C633",   0x040a, 0x05ba, 0},
 

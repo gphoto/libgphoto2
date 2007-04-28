@@ -4,6 +4,7 @@
 	  and values.
 
 	* library.c: Added PowerShot SD1000 aka IXUS 70.
+	* library.c: Added Kodak Easyshare C743
 
 2007-04-11  Marcus Meissner  <marcus@jet.franken.de>
 
