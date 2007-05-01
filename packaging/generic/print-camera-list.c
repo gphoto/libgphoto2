@@ -1071,69 +1071,68 @@ iterate_camera_list (const int add_comments,
 
 /** list of supported output formats */
 static const output_format_t formats[] = {
-	{name: "human-readable",
-	 descr: "human readable list of cameras",
-	 help: NULL,
-	 paramdescr: NULL,
-	 begin_func: human_begin_func,
-	 camera_func: human_camera_func,
-	 end_func: human_end_func
+	{"human-readable",
+	 "human readable list of cameras",
+	 NULL,
+	 NULL,
+	 human_begin_func,
+	 human_camera_func,
+	 human_end_func
 	},
-	{name: "usb-usermap",
-	 descr: "usb.usermap include file for linux-hotplug",
-	 help:
+	{"usb-usermap",
+	 "usb.usermap include file for linux-hotplug",
 	 "If no <scriptname> is given, uses the script name "
 	 "\"" GP_USB_HOTPLUG_SCRIPT "\".\n"
 	 "        Put this into /etc/hotplug/usb/<scriptname>.usermap",
-	 paramdescr: "<NAME_OF_HOTPLUG_SCRIPT>",
-	 begin_func: hotplug_begin_func,
-	 camera_func: hotplug_camera_func,
-	 end_func: empty_end_func
+	 "<NAME_OF_HOTPLUG_SCRIPT>",
+	 hotplug_begin_func,
+	 hotplug_camera_func,
+	 empty_end_func
 	},
-	{name: "hal-fdi",
-	 descr: "fdi file for HAL",
-	 help: "Put it into /usr/share/hal/fdi/information/20thirdparty/10-camera-libgphoto2.fdi",
-	 paramdescr: NULL,
-	 begin_func: fdi_begin_func,
-	 camera_func: fdi_camera_func,
-	 end_func: fdi_end_func
+	{"hal-fdi",
+	 "fdi file for HAL",
+	 "Put it into /usr/share/hal/fdi/information/20thirdparty/10-camera-libgphoto2.fdi",
+	 NULL,
+	 fdi_begin_func,
+	 fdi_camera_func,
+	 fdi_end_func
 	},
-	{name: "hal-fdi-device",
-	 descr: "fdi device file for HAL",
-	 help: "Put it into /usr/share/hal/fdi/information/20thirdparty/10-camera-libgphoto2-device.fdi",
-	 paramdescr: NULL,
-	 begin_func: fdi_device_begin_func,
-	 camera_func: fdi_device_camera_func,
-	 end_func: fdi_device_end_func
+	{"hal-fdi-device",
+	 "fdi device file for HAL",
+	 "Put it into /usr/share/hal/fdi/information/20thirdparty/10-camera-libgphoto2-device.fdi",
+	 NULL,
+	 fdi_device_begin_func,
+	 fdi_device_camera_func,
+	 fdi_device_end_func
 	},
-	{name: "udev-rules",
-	 descr: "udev rules file either for pre-0.98 or 0.98 and later",
-	 help: "Put it into /etc/udev/rules.d/90-libgphoto2.rules, set file mode, owner, group\n"
+	{"udev-rules",
+	 "udev rules file either for pre-0.98 or 0.98 and later",
+	 "Put it into /etc/udev/rules.d/90-libgphoto2.rules, set file mode, owner, group\n"
 	 "        or add script to run. This rule files also uses the\n"
 	 "        check-ptp-camera script included in libgphoto2 source. Either put it to\n"
 	 "        /lib/udev/check-ptp-camera or adjust the path in the generated rules file.\n"
 	 "        If you give a script parameter, the mode, owner, group parameters will be ignored.",
-	 paramdescr: "[script <PATH_TO_SCRIPT>|version <version>|mode <mode>|owner <owner>|group <group>]*",
-	 begin_func: udev_begin_func, 
-	 camera_func: udev_camera_func,
-	 end_func: udev_end_func
+	 "[script <PATH_TO_SCRIPT>|version <version>|mode <mode>|owner <owner>|group <group>]*",
+	 udev_begin_func, 
+	 udev_camera_func,
+	 udev_end_func
 	},
-	{name: "idlist",
-	 descr: "list of IDs and names",
-	 help: "grep for an ID to find the device name",
-	 paramdescr: NULL,
-	 begin_func: empty_begin_func, 
-	 camera_func: idlist_camera_func,
-	 end_func: empty_end_func
+	{"idlist",
+	 "list of IDs and names",
+	 "grep for an ID to find the device name",
+	 NULL,
+	 empty_begin_func, 
+	 idlist_camera_func,
+	 empty_end_func
 	},
 #ifdef ENABLED_GP2DDB
-	{name: "gp2ddb",
-	 descr: "gphoto2 device database (PRE-ALPHA)",
-	 help: "PRE-ALPHA test stage, do not use for production! Machine parseable.",
-	 paramdescr: NULL,
-	 begin_func: ddb_begin_func,
-	 camera_func: ddb_camera_func,
-	 end_func: ddb_end_func
+	{"gp2ddb",
+	 "gphoto2 device database (PRE-ALPHA)",
+	 "PRE-ALPHA test stage, do not use for production! Machine parseable.",
+	 NULL,
+	 ddb_begin_func,
+	 ddb_camera_func,
+	 ddb_end_func
 	},
 #endif
 	{NULL, NULL, NULL, NULL, 
