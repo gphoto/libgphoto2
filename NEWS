@@ -20,6 +20,7 @@ libgphoto2 API:
      the storage information(s), like capability, free space and labels.
 
      On cameras not supporting it returns GP_ERROR_NOT_SUPPORTED.
+
    * Enhanced Bayer algorithm added globally.
 
 Package / System integration:
@@ -27,25 +28,52 @@ Package / System integration:
    * Add new permission setup binary doing Microsoft OS Descriptor
      retrieval for MTP devices not explicitly listed.
      This binary (check-mtp-device) is used by the generated UDEV rules.
+     (Not working currently since udev does not create the device before
+     calling it.)
 
 disk port:
    * handle automounter properly.
 
 directory driver:
    * ignore anything not starting by '.' because it is not DCF compliant
-   and it is use for things like Trash of metadata...
+     and it is use for things like Trash of metadata...
 
 PTP2 driver:
    * For Canon capture capable cameras, enable shutter and aperture control
-     using "shootingmode" property (PTP d00c).
+     using "shootingmode" property (PTP d00c), and focuslock mode.
 
    * New dataflow engine, making it possible to upload/download images
      or songs without taking up any system memory. (think multi GB movies
      on small devices).
 
+   * Enhanced MTP protocol handling.
+
+   * New USB IDs for cameras:
+
+ 	Canon PowerShot SD1000, A450, A550, A420, SD40
+	Canon Digitial IXUS 70, 900Ti, 
+	Canon MV750i
+	Nikon CoolPix S4, S6, P4
+	Kodak EasyShare C743, C433, V705, C875, V570, P880, V603, V610
+	HP Photosmart R967
+	Minolta DiMAGE x21
+	Fuji FinePix F20
+	Casio EX-Z700
+	Sony DSC N2
+
+   * Several new USB IDs for MTP players, including
+     all from libmtp:
+	iRiver T20, N12
+	Archos 504, Toshiba Gigabeat P20
+	Philips PSA235, SA9200
+	Samsung YH-925GS
+        SanDisk Sansa c250
+
 Canon driver:
    * Enable formerly experimental 20D support code by default.
 
+   * Moved handling of some cameras to PTP2 driver, since they cause
+     as yet unidentified errors.
 ------------------------------------------------------------------------
 
 libgphoto2 2.3.1
