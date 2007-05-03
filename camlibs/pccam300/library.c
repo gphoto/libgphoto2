@@ -318,7 +318,7 @@ camera_init (Camera *camera, GPContext *context)
 			settings.usb.inep = 0x82;
 			settings.usb.outep = 0x03;
 			settings.usb.config = 1;
-			settings.usb.interface = 1;
+			settings.usb.interface = 0;
 			settings.usb.altsetting = 0;
 			ret = gp_port_set_settings (camera->port, settings);
 			if (ret < 0)

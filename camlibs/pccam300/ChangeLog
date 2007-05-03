@@ -1,6 +1,12 @@
+2007-05-02  Marcus Meissner <meissner@suse.de>
+
+	* library.c: Change interface to be 0 instead of 1.
+	  Newer kernels seem to be more picky here. Cross checked
+	  with lsusb output from a user.
+
 2004-08-04  Marcus Meissner <meissner@suse.de>
 
-	* library: added Intel Pocket PC Camera as reported.
+	* library.c: added Intel Pocket PC Camera as reported.
 
 2003-06-26  Lutz Mueller <lutz@users.sourceforge.net>
 
