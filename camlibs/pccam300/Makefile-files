@@ -1,4 +1,4 @@
-EXTRA_DIST += pccam300/README.pccam300
+EXTRA_DIST += pccam300/README.pccam300 pccam300/pccam300-lsusb.txt
 camlibdoc_DATA += pccam300/README.pccam300
 
 EXTRA_LTLIBRARIES += pccam300.la
