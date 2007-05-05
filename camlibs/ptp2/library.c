@@ -686,6 +686,8 @@ static struct {
 	/* Fuji PTP cameras */
 	{"Fuji:FinePix S7000",			0x04cb, 0x0142, 0},
 	{"Fuji:FinePix A330",			0x04cb, 0x014a, 0},
+	/* Hans-Joachim Baader <hjb@pro-linux.de> */
+	{"Fuji:FinePix S9500",			0x04cb, 0x018f, 0},
 	{"Fuji:FinePix E900",			0x04cb, 0x0193, 0},
 	{"Fuji:FinePix F30",			0x04cb, 0x019b, 0},
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1620750&group_id=8874 */
