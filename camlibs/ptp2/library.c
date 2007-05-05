@@ -694,6 +694,7 @@ static struct {
 	{"Fuji:FinePix F20",			0x04cb, 0x01c0, 0},
 	/* launchpad 67532 */
 	{"Fuji:FinePix F31fd",			0x04cb, 0x01c1, 0},
+	{"Fuji:FinePix F40 fd (PictBridge mode)", 0x04cb, 0x01c5, 0},
 
 	/* Ricoh Caplio GX */
 	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
