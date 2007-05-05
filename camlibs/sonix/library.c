@@ -56,16 +56,18 @@ static const struct {
    	unsigned short idVendor;
    	unsigned short idProduct;
 } models[] = {
-        {"Vivitar Vivicam3350B", GP_DRIVER_STATUS_EXPERIMENTAL, 0x0c45, 0x800a},
         {"DC31VC", GP_DRIVER_STATUS_EXPERIMENTAL, 0x0c45, 0x8000},	
-        {"Sakar Keychain Digital 11199", GP_DRIVER_STATUS_EXPERIMENTAL, 0x0c45, 0x8003},		
+        {"Sakar Digital Keychain 11199", GP_DRIVER_STATUS_EXPERIMENTAL, 
+	    0x0c45, 0x8003},
+        {"Mini Shotz ms-350", GP_DRIVER_STATUS_EXPERIMENTAL, 0x0c45, 0x8008},
+        {"Vivitar Vivicam3350B", GP_DRIVER_STATUS_EXPERIMENTAL, 0x0c45, 0x800a},
  	{NULL,0,0,0}
 };
 
 int
 camera_id (CameraText *id)
 {
-    	strcpy (id->text, "Vivitar ViviCam3350B");
+	strcpy (id->text, "Vivitar ViviCam3350B"); 
     	return GP_OK;
 }
 
@@ -165,8 +167,8 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		return GP_OK;
 	}
 	for (i=0; i<camera->pl->num_pics; i++) {
-		avitype = camera->pl->size_code[i];
-		if (avitype == 9) {
+		avitype = (camera->pl->size_code[i])&8;
+		if (avitype) {
 			sprintf (name, "sonix%03i.avi", i+1);
 			avitype = 0;
 		} else 
@@ -183,15 +185,19 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       GPContext *context)
 {
     	Camera *camera = user_data; 
-    	int w, h = 0, b = 0, i, j, k;
+    	int w, h = 0, buffersize = 0, i, k, rawsize = 0;
     	unsigned char *data = NULL; 
-    	unsigned char  *ppm, *ptr, *avi=NULL;
-	unsigned char *p_data = NULL, *temp_line=NULL;
-	unsigned char temp;
+    	unsigned char  *ppm, *ptr, *avi=NULL, *frame_data = NULL;
+	unsigned char *p_data = NULL, *p_buf = NULL;
 	unsigned char gtable[256];
-	unsigned int num_frames;
-	unsigned long int size = 0, frame_size = 0;
+	unsigned int numframes = 0;
+	unsigned int endpoint, bytes_used = 0;
+	unsigned int framedatasize[1024];
+	unsigned int framestart[1024];	
+	unsigned int size = 0, frame_size = 0;
 	unsigned int avitype = 0;
+	unsigned int offset=0;
+	unsigned int cam_offset;	
 	char name[16];
 	int ret = 0;
 	
@@ -208,6 +214,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return GP_OK;
 	}	
 
+	cam_offset = camera->pl->offset;
+
     	/* Get the number of the photo on the camera */
 	k = gp_filesystem_number (camera->fs, "/", filename, context); 
 
@@ -218,7 +226,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	case 0: w=352; h = 288; break; 	/* always uncompressed? */
 	case 9: avitype = 1;		/* multiframe, always uncompressed? */
 	case 1: w=176; h = 144; break;	/* always uncompressed? */
+	case 0x0a: avitype = 1;		/* multiframe, always compressed? */	
 	case 2: w=640; h = 480; break;	/* always compressed?   */
+	case 0x0b: avitype = 1;		/* multiframe, always compressed? */
 	case 3: w=320; h = 240; break;	/* always compressed?   */
 	default:  GP_DEBUG ("Size code unknown\n"); 
 		
@@ -227,77 +237,137 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	GP_DEBUG( "avitype is %d\n", avitype);
 	GP_DEBUG ("height of picture %i is %i\n", k+1,h); 		
-	b =sonix_read_data_size (camera, camera->port, data, k);
-	if(b%0x40) 
-		b = b-(b%0x40) + 0x40;
-
-	data = malloc (b+64);
+	rawsize = sonix_read_data_size (camera->port, k);
+	GP_DEBUG("rawsize = 0x%x = %i\n", rawsize, rawsize);
+	if(rawsize%0x40) 
+		buffersize = rawsize - (rawsize%0x40) + 0x40;
+	else 
+		buffersize = rawsize;	
+	data = malloc (buffersize+64);
 	if (!data) return GP_ERROR_NO_MEMORY;
     	memset (data, 0, sizeof(data));
-	gp_port_read(camera->port, data, b);
-	
+	gp_port_read(camera->port, data, buffersize);
+
 	switch(type) {
 	case GP_FILE_TYPE_NORMAL:
-		/* Only AVI files need separate treatment */
+		/* AVI files need separate treatment */
 		if (avitype) {
-			/* "Photo" contains multiple frames. Believe it or not, 
-			 * the camera does not tell us how many frames are 
-			 * present. 
-			 */
-			num_frames = b/(w*h+0x40);
 			frame_size = w*h;
-			size = num_frames*(3*frame_size+ 8) + 224;
-			temp_line = malloc(w);
-			if(!temp_line) {free(temp_line); return GP_ERROR_NO_MEMORY;}
+			p_data = data;
+			/* count end of frame markers to know the number of 
+			 *frames and the size and starting offset of each */
+			endpoint = 0;
+			numframes = 0;
+			framestart[0] = 0;
+			p_buf = data;
+			while (p_buf < data + buffersize+64) {
+				endpoint = 12;
+				while ( !((p_buf[endpoint-12]==0xff) &&
+						(p_buf[endpoint-11]==0xff) &&
+						(p_buf[endpoint-10]==0x00) &&
+						(p_buf[endpoint-9]==0xc4) &&
+						(p_buf[endpoint-8]==0xc4) ) &&
+						(endpoint < buffersize +64 
+							    - bytes_used)) 
+					endpoint ++ ;
+				if ( !((p_buf[endpoint-12]==0xff) &&
+						(p_buf[endpoint-11]==0xff) &&
+						(p_buf[endpoint-10]==0x00) &&
+						(p_buf[endpoint-9]==0xc4) &&
+						(p_buf[endpoint-8]==0xc4) ) ) {
+					GP_DEBUG("Finished counting frames!\n");
+					break;    
+				}
+				framedatasize[numframes] = endpoint;
+				framestart[numframes+1] = 
+					framestart[numframes] + endpoint;
+				p_buf += endpoint;		
+				bytes_used += endpoint;
+				numframes ++;
+			}
+			GP_DEBUG("number of frames is %i\n",numframes);
+			frame_data = malloc(frame_size);
+			if (!frame_data) {
+				free (frame_data);
+				return -1;
+			}
+			size = (numframes)*(3*frame_size+ 8) + 224;
+			GP_DEBUG("size = %i\n", size);
 			avi = malloc(size);
-			if (!avi) {free(avi); return GP_ERROR_NO_MEMORY;}
+			if (!avi) {free(avi); return -1;}
 			memset(avi, 0, size);
+
 			memcpy (avi,SakarAviHeader,224);
 			avi[0x04] = (size -4)&0xff;
 			avi[0x05] = ((size -4)&0xff00) >> 8;
 			avi[0x06] = ((size -4)&0xff0000) >> 16;
 			avi[0x07] = ((size -4)&0xff000000) >> 24;
 			avi[0x40] = w&0xff;
+			avi[0x41] = (w>>8)&0xff;	
 			avi[0x44] = h&0xff;
+			avi[0x45] = (h>>8)&0xff;	
 			avi[0xb0] = w&0xff;
+			avi[0xb1] = (w>>8)&0xff;
 			avi[0xb4] = h&0xff;
-			avi[0x30] = num_frames&0xff;
-			avi[0x8c] = num_frames&0xff;
+			avi[0xb5] = (h>>8)&0xff;	
+			avi[0x30] = numframes&0xff;
+			avi[0x8c] = numframes&0xff;
 			ptr=avi;
 			ptr += 224;
-			for (i=0; i < num_frames; i++) {
+
+			for (i=0; i < numframes; i++) {
 				memcpy(ptr,SakarAviFrameHeader,8);
 				ptr[4] = (3*frame_size)&0xff;
 				ptr[5] = ((3*frame_size)&0xff00) >> 8;
 				ptr[6] = ((3*frame_size)&0xff0000) >> 16;
 				ptr +=8;
-				/* I don't see why this is needed :( 
-				 * but in AVI files it seems to be 
-				 * _assumed_ that the frame is upside down.
-				 * So we take the frame, which was right-
-				 * side-up, and flip it so the AVI viewer can
-				 *flip it back again! Bad. Bad. Bad.
-				 */
-				for (j=0; j < h/2; j++) {
-					memcpy (temp_line, data+8+j*w,w);
-					memcpy (data+8+j*w, data+8+(h-j-1)*w,w);
-					memcpy (data+8+(h-j-1)*w,temp_line,w);
+				GP_DEBUG("Doing frame number %i\n",i+1);
+				memset (frame_data, 0, frame_size);
+				offset = 0x40*(framestart[i]/0x40)+0x40;
+				if (offset == framestart[i] + 0x40)
+					offset -= 0x40;
+				GP_DEBUG("framestart[%i] = 0x%x\n", i, 
+						framestart[i]);
+				GP_DEBUG("offset = 0x%x\n", offset);
 
-				}
+				switch (camera->pl->post) {
+				case DECOMP|REVERSE:
+					sonix_decode (frame_data, 
+					data+offset+cam_offset, w, h); 
+					sonix_cols_reverse(frame_data, w, h);
+					gp_bayer_decode(frame_data, w, h, ptr, 
+							    BAYER_TILE_RGGB);
+					break;
+				case DECOMP:
+					sonix_decode (frame_data, 
+					data+offset+cam_offset, w, h); 
+					sonix_rows_reverse(frame_data, w, h);
+					gp_bayer_decode(frame_data, w, h, ptr, 
+							    BAYER_TILE_GRBG);
+					break;
+
+				default:	 
+					memcpy(frame_data, data +offset+cam_offset, 
+							frame_size);
+					sonix_rows_reverse(frame_data, w, h);
+					gp_bayer_decode(frame_data, w, h, ptr, 
+							    BAYER_TILE_GRBG);
+				}	
 				gp_gamma_fill_table(gtable, .65);
 				gp_gamma_correct_single(gtable, ptr, w * h);
-				gp_bayer_decode(data + 8, w, h, ptr, 
-							    BAYER_TILE_GRBG);
-				data += frame_size+0x40;
+				p_data += framedatasize[i] + 0x40;
 				ptr += 3*frame_size;
 			}
-	    		gp_file_set_mime_type (file, GP_MIME_AVI);
+			gp_file_set_mime_type (file, GP_MIME_AVI);
 			gp_file_set_name (file, name); 
 			gp_file_set_data_and_size (file, avi, size);
+		
 			avitype = 0;
+			free(data);		
 			return GP_OK;		
 		} 
-
+		
+		
 	case GP_FILE_TYPE_PREVIEW:
 		if (k == camera->pl->num_pics - 1) {
 			camera->pl->sonix_init_done = 1;
@@ -323,19 +393,26 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		ptr = ppm + strlen (ppm);
 		size = strlen (ppm) + (w * h * 3);
 
-		if (b < w*h) { /* Surely, this indicates compression in use */
-			sonix_decode (p_data, data, w, h);
-			/* Compressed images are upside down. We fix. */
-			for (i=0; i< w*h /2 ; ++i){
-				temp = p_data[i];
-				p_data[i] = p_data[w*h - 1 - i];
-				p_data[w*h - 1 - i] = temp;
-			}
-			gp_bayer_decode (p_data, w , h , ptr, BAYER_TILE_GBRG);
-		} else {
-			memcpy (p_data, data+8, w*h);
+		switch (camera->pl->post)
+		case DECOMP|REVERSE:
+			/* Images for Vivicam 3350b are upside down. */
+			if (camera->pl->post&REVERSE) {
+			sonix_decode (p_data, data+offset+cam_offset, w, h);
+			sonix_byte_reverse(p_data, w*h);
+			gp_bayer_decode (p_data, w , h , ptr, 
+						    BAYER_TILE_BGGR);
+			break; 
+		case DECOMP:
+			sonix_decode (p_data, data+offset, w, h);
+			gp_bayer_decode (p_data, w , h , ptr, 
+						    BAYER_TILE_RGGB);
+			break;
+		default:
+			memcpy (p_data, data+offset, w*h);
 			gp_bayer_decode (p_data, w , h , ptr, BAYER_TILE_RGGB);
+	
 		}
+	
 		gp_gamma_fill_table(gtable, .65);
 		gp_gamma_correct_single(gtable, ptr, w * h);
 		gp_file_set_mime_type (file, GP_MIME_PPM);
@@ -350,9 +427,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	case GP_FILE_TYPE_RAW: 
 		gp_file_set_mime_type(file, GP_MIME_RAW);
 		gp_file_set_name(file, filename);
-		gp_file_append( file, data, b);
+		gp_file_append( file, data, rawsize);
 		free(data);
-		GP_DEBUG("b= 0x%x = %i\n", b, b);
+		GP_DEBUG("rawsize= 0x%x = %i\n", rawsize, rawsize);
 		return GP_OK;
 
 	default:
@@ -392,6 +469,8 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 		free(camera->pl);
 		return ret;
 	}	
+	if ((camera->pl->fwversion == 0x0a))
+		return GP_ERROR_NOT_SUPPORTED;
 	k = gp_filesystem_number (camera->fs, "/", filename, context);     
 	if (k+1 != camera->pl->num_pics)
 		return GP_ERROR_NOT_SUPPORTED;
@@ -451,7 +530,13 @@ int
 camera_init(Camera *camera, GPContext *context)
 {
 	GPPortSettings settings;
+	CameraAbilities abilities;
 	int ret = 0;
+
+	ret = gp_camera_get_abilities(camera,&abilities);
+	if (ret < 0) return ret;	
+	GP_DEBUG("product number is 0x%x\n", abilities.usb_product);
+
 
 	/* First, set up all the function pointers */
         camera->functions->capture              = camera_capture;
@@ -495,6 +580,25 @@ camera_init(Camera *camera, GPContext *context)
 	camera->pl->full = 1;
 	camera->pl->avitype = 0;
 	camera->pl->sonix_init_done = 0;
+	camera->pl->post = 0;
+	switch (abilities.usb_product) {
+		case 0x8003:
+			camera->pl->post = 0;
+			camera->pl->offset = 8;
+			break; 
+		case 0x8008:
+			camera->pl->post = DECOMP;
+			camera->pl->offset = 0;
+			break;
+		case 0x8000:	/* Please report if inaccurate ! */
+		case 0x800a:
+			camera->pl->post = DECOMP|REVERSE;
+			camera->pl->offset = 8;
+			break;
+		default:
+			return(GP_ERROR);
+	}
+	GP_DEBUG("post code is 0x%x\n", camera->pl->post);
 	/* Connect to the camera only if something is actually being done,
 	 * because otherwise the Sakar Digital Keychain camera is put into 
 	 * some kind of active mode when gtkam is run, and will not leave 

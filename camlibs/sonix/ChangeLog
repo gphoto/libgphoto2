@@ -1,3 +1,16 @@
+2007-05-05   Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Added Mini Shotz ms-350. Thanks to 
+		     Gines Carrascal de las Heras <gines_carrascal@yahoo.es>
+		     for reporting the camera, and for testing the needed 
+		     code changes to support the camera. 
+	
+	* sonix.c: functions added for reversing byte strings, rows, and 
+		   columns.
+	* sonix.h: the new functions declared. 
+	* README.sonix: Updated.
+
+
 2006-11-19   Marcus Meissner  <marcus@jet.franken.de>
 
 	* sonix.c: made 3 functions static

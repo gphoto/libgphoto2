@@ -103,10 +103,13 @@ int sonix_init (GPPort *port, CameraPrivateLibrary *priv)
 	 * We are supposed to get c[0]=0x8c here; in general the reply
 	 * string ought to start with the command byte c[0], plus 0x80
 	 */
+	memset(reading, 0, 4);
 	SONIX_READ4 (port, reading);	
 	SONIX_READ(port, &status);
 
-	memset (c,0,6);
+	memset (c, 0, 6);
+
+	while (!reading[1]&&!reading[2]&&!reading[3]) {
 	c[0]=0x16; 
 
 	SONIX_COMMAND ( port, c );
@@ -116,15 +119,17 @@ int sonix_init (GPPort *port, CameraPrivateLibrary *priv)
 	 * 96 0a 76 07. This could be a firmware version. The  
 	 * webcam-osx driver says the 0x0a gives the sensor type, which 
 	 * is OV7630. For the Sakar Digital Keychain 11199 the string is 
-	 * 96 03 31 08, instead. Since the two cameras have different 
-	 * abilities, we must distinguish. 
+	 * 96 03 31 08, instead. For the Mini-Shotz ms350 it is 
+	 * 96 08 26 09. Since the cameras have different 
+	 * abilities, we ought to distinguish. 
 	 */
 	 
 	SONIX_READ4 (port, reading);
-
+	}
 	GP_DEBUG("Above is the 4-byte ID string of your camera.");
 	GP_DEBUG("Please report if it is anything other than");
-	GP_DEBUG("96 0a 76 07   or   96 03 31 08	Thanks!\n" );		
+	GP_DEBUG("96 0a 76 07   or   96 03 31 08  or  96 08 26 09\n");
+	GP_DEBUG("Thanks!\n" );		
 	priv->fwversion = reading[1];
 	SONIX_READ(port, &status);
 
@@ -186,13 +191,13 @@ int sonix_init (GPPort *port, CameraPrivateLibrary *priv)
 }
 
 int 
-sonix_read_data_size (Camera *camera, GPPort *port, char *data, int n) 
+sonix_read_data_size (GPPort *port, int n) 
 {
 	char status;
 	unsigned char c[6];
 	unsigned char reading[4];
 
-	GP_DEBUG("running sonix_read_picture_data for picture %i\n", n+1);
+	GP_DEBUG("running sonix_read_data_size for picture %i\n", n+1);
 	memset (c, 0, 6);
 	c[0] = 0x1a;
 	c[1] = (n+1)%256;
@@ -252,7 +257,7 @@ sonix_capture_image      (GPPort *port)
 	unsigned char c[6];
 	unsigned char reading[4];
 	memset (c,0,6);
-	c[0]=0x0e; 	
+	c[0]=0x0e; 
 	SONIX_READ(port, &status);
 	SONIX_COMMAND ( port, c );
 	SONIX_READ(port, &status);
@@ -370,24 +375,63 @@ sonix_decode(unsigned char * dst, unsigned char * src, int width, int height)
 	unsigned long bitBuf = 0;
 	unsigned long bitBufCount = 0;
 
-	src += 8;
-	
+	/* Columns were reversed during compression ! */
 	for (y = starting_row; y < height; y++) {
 		PEEK_BITS(8, bits);
 		EAT_BITS(8);
-		c1val = bits & 0xff;
-
+		c2val = bits & 0xff;
 		PEEK_BITS(8, bits);
 		EAT_BITS(8);
-		c2val = bits & 0xff;
-
+		c1val = bits & 0xff;
 		PUT_PIXEL_PAIR;
 
 		for (x = 2; x < width ; x += 2) {
+
+ 			PARSE_PIXEL(c2val);
     			PARSE_PIXEL(c1val);
-    			PARSE_PIXEL(c2val);
+
     			PUT_PIXEL_PAIR;
 		}
 	}
 	return GP_OK;
+}
+
+int sonix_byte_reverse (unsigned char *imagedata, int datasize) 
+{
+	int i;
+	unsigned char temp;
+	for (i=0; i< datasize/2 ; ++i) {                            
+                temp = imagedata[i];                               
+                imagedata[i] = imagedata[datasize - 1 - i];                
+                imagedata[datasize - 1 - i] = temp;                     
+        }
+        return GP_OK;
+}
+
+int sonix_rows_reverse (unsigned char *imagedata, int width, int height) 
+{
+	int col, row;
+	unsigned char temp;
+	for (col = 0; col < width; col++)
+		for (row=0; row< height /2 ; row++) {
+	                temp = imagedata[row*width+col];
+    	        	imagedata[row*width+col] = 
+    	        		    imagedata[(height-row-1)*width +col];
+        	        imagedata[(height-row-1)*width + col] = temp; 
+        }
+        return GP_OK;
+}
+
+int sonix_cols_reverse (unsigned char *imagedata, int width, int height) 
+{
+	int col, row;
+	unsigned char temp;
+	for (row=0; row < height ; row++) {
+		for (col =0; col< width/2 ; col++) {                            
+    	            temp = imagedata[row*width + col];                               
+        	        imagedata[row*width + col] = imagedata[row*width - 1 - col];                
+	                imagedata[row*width - 1 - col] = temp;                     
+	        }
+        }
+        return GP_OK;
 }

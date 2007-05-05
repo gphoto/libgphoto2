@@ -23,10 +23,8 @@
 
 #include <gphoto2/gphoto2-port.h>
 
-/*
- *typedef enum {MODEL_VIVICAM
- *	} Model;
- */
+#define DECOMP	1
+#define REVERSE	2
 
 struct _CameraPrivateLibrary {
 /*	Model model; */ 	/* "model" and "fwversion" functionally equal */
@@ -35,18 +33,22 @@ struct _CameraPrivateLibrary {
 	unsigned char fwversion;
 	unsigned char full;
 	unsigned char avitype;
+	unsigned char post;
+	unsigned char offset;
 	int sonix_init_done;
 };
 
 
 int sonix_init              	(GPPort *port, CameraPrivateLibrary *priv);
 int sonix_get_picture_size   	(GPPort *port, int n);
-int sonix_read_data_size 	(Camera *camera, GPPort *port, char *data, 
-				    int n);
+int sonix_read_data_size 	(GPPort *port, int n);
 int sonix_delete_all_pics      	(GPPort *port);
 int sonix_delete_last      	(GPPort *port);
 int sonix_capture_image      	(GPPort *port); 
 int sonix_exit		      	(GPPort *port);
 int sonix_decode		(unsigned char * dst, unsigned char * src, 
 				    int width, int height);
+int sonix_byte_reverse (unsigned char *imagedata, int datasize);
+int sonix_rows_reverse (unsigned char *imagedata, int width, int height);
+int sonix_cols_reverse (unsigned char *imagedata, int width, int height);
 #endif 
