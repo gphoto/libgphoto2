@@ -1,7 +1,7 @@
 2007-05-05  Hubert Figuiere  <hub@figuiere.net>
 
 	* camlibs/ptp2/library.c: Added FujiFilm F40 fd
-	http://www.gphoto.org/bugs/?1713438
+	http://gphoto.org/bugs/?id=1713438
 
 2007-04-08  Hubert Figuiere  <hub@figuiere.net>
 
