@@ -490,7 +490,7 @@ gp_port_usb_update (GPPort *port)
 				port->settings.usb.config);
 			return GP_ERROR_IO_UPDATE;	
 #endif
-			gp_log (GP_LOG_ERROR, "gphoto2-port-usb","setting configuration to %d failed with ret = %d, but continue...", ret);
+			gp_log (GP_LOG_ERROR, "gphoto2-port-usb","setting configuration to %d failed with ret = %d, but continue...", port->settings.usb.config, ret);
 		}
 
 		gp_log (GP_LOG_DEBUG, "gphoto2-port-usb",
