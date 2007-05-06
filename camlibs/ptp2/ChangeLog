@@ -1,3 +1,8 @@
+2007-05-06  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Added Canon IXUS 75 aka PowerShot SD750.
+	* library.c: Added Fuji FinePix S9500.
+
 2007-04-16  Marcus Meissner  <marcus@jet.franken.de>
 
 	* ptp.h, library.c: Added some Canon EOS specific properties

@@ -563,7 +563,6 @@ static struct {
 
 	{"Canon:Digital IXUS II (PTP mode)",    0x04a9, 0x3072, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:PowerShot SD100 (PTP mode)",    0x04a9, 0x3072, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
-
 	{"Canon:PowerShot A70 (PTP)",           0x04a9, 0x3073, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:PowerShot A60 (PTP)",           0x04a9, 0x3074, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 		/* IXUS 400 has the same PID in both modes, Till Kamppeter */
@@ -668,6 +667,9 @@ static struct {
 	{"Canon:PowerShot A710 IS (PTP mode)",  0x04a9, 0x3138, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot A640 (PTP mode)",     0x04a9, 0x3139, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:PowerShot A630 (PTP mode)",     0x04a9, 0x313a, PTPBUG_DELETE_SENDS_EVENT},
+	/* mailreport from sec@dschroeder.info */
+	{"Canon:Digital IXUS 75 (PTP mode)",    0x04a9, 0x314e, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot SD750 (PTP mode)",    0x04a9, 0x314e, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:Digital IXUS 70 (PTP mode)",    0x04a9, 0x314f, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot SD1000 (PTP mode)",   0x04a9, 0x314f, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot A550 (PTP mode)",     0x04a9, 0x3150, PTPBUG_DELETE_SENDS_EVENT},
