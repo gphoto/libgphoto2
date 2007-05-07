@@ -720,6 +720,8 @@ static struct {
 	 * for us. -Marcus
 	{"Motorola:K1 (PTP mode)",              0x22b8, 0x4811, 0},
 	*/
+	/* Hans-Joachim Baader <hjb@pro-linux.de> */
+	{"Motorola:A1200 (MTP mode)",           0x22b8, 0x60ca, 0},
 
 	/************ Add MTP devices below this line ***********/
 	/* from libmtp  */

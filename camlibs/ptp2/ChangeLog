@@ -2,6 +2,7 @@
 
 	* library.c: Added Canon IXUS 75 aka PowerShot SD750.
 	* library.c: Added Fuji FinePix S9500.
+	* library.c: Added Motorola A1200 smart phone in MTP.
 
 2007-04-16  Marcus Meissner  <marcus@jet.franken.de>
 
