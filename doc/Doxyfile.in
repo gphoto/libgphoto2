@@ -450,7 +450,7 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories 
 # with spaces.
 
-INPUT                  = @top_srcdir@/libgphoto2 @top_srcdir@/libgphoto2_port/libgphoto2_port @top_srcdir@/camlibs/template
+INPUT                  = @top_srcdir@/libgphoto2 @top_srcdir@/gphoto2 @top_srcdir@/libgphoto2_port/gphoto2 @top_srcdir@/libgphoto2_port/libgphoto2_port @top_srcdir@/camlibs/template
 
 # If the value of the INPUT tag contains directories, you can use the 
 # FILE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp 
