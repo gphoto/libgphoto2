@@ -3032,6 +3032,10 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 
 	((PTPData *) camera->pl->params.data)->context = context;
 
+	gp_file_get_name (file, &filename);
+	gp_file_get_type (file, &type);
+	gp_log ( GP_LOG_DEBUG, "ptp2/put_file_func", "folder=%s, filename=%s", folder, filename);
+
 	if (!strcmp (folder, "/special")) {
 		int i;
 
@@ -3040,12 +3044,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 				return special_files[i].putfunc (fs, folder, file, data, context);
 		return (GP_ERROR_BAD_PARAMETERS); /* file not found */
 	}
-
 	memset(&oi, 0, sizeof (PTPObjectInfo));
-	gp_file_get_name (file, &filename);
-	gp_file_get_type (file, &type);
-	gp_log ( GP_LOG_DEBUG, "ptp2/put_file_func", "folder=%s, filename=%s", folder, filename);
-
 	if (type == GP_FILE_TYPE_METADATA) {
 		if ((params->deviceinfo.VendorExtensionID==PTP_VENDOR_MICROSOFT) &&
 		    ptp_operation_issupported(params,PTP_OC_MTP_GetObjectPropsSupported)
