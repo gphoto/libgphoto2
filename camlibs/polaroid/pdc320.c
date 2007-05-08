@@ -418,26 +418,27 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		break;
 	case GP_FILE_TYPE_NORMAL:
 	default:
-	GP_DEBUG ("Using Nathan Stenzel's experimental jpeg.c\n");
-	GP_DEBUG ("About to make jpeg header\n");
-    width = data[4]*256 + data[5];
-    height = data[2]*256 + data[3];
-	GP_DEBUG ("Width=%i\tHeight=%i\n", width, height);
-    myjpeg = gpi_jpeg_header(width,height/2, 0x11,0x11,0x21, 1,0,0, &chrominance, &luminance,
-            0,0,0, gpi_jpeg_chunk_new_filled(HUFF_00),
-	    gpi_jpeg_chunk_new_filled(HUFF_10), NULL, NULL);
-	GP_DEBUG ("Turning the picture data into a chunk data type\n");
-    tempchunk = gpi_jpeg_chunk_new(size);
-    tempchunk->data = data;
-	GP_DEBUG ("Adding the picture data to the jpeg structure\n");
-    gpi_jpeg_add_marker(myjpeg, tempchunk, 6, size-1);
-	GP_DEBUG ("Writing the jpeg file\n");
-    gpi_jpeg_write(file, filename, myjpeg);
-	GP_DEBUG ("Cleaning up the mess\n");
-    gpi_jpeg_destroy(myjpeg);
-
-    }
-    return (GP_OK);
+		GP_DEBUG ("Using Nathan Stenzel's experimental jpeg.c\n");
+		GP_DEBUG ("About to make jpeg header\n");
+		width = data[4]*256 + data[5];
+		height = data[2]*256 + data[3];
+		GP_DEBUG ("Width=%i\tHeight=%i\n", width, height);
+		myjpeg = gpi_jpeg_header(width,height/2, 0x11,0x11,0x21, 1,0,0, &chrominance, &luminance,
+		    0,0,0, gpi_jpeg_chunk_new_filled(HUFF_00),
+		    gpi_jpeg_chunk_new_filled(HUFF_10), NULL, NULL);
+		GP_DEBUG ("Turning the picture data into a chunk data type\n");
+		tempchunk = gpi_jpeg_chunk_new(size);
+		tempchunk->data = data;
+		GP_DEBUG ("Adding the picture data to the jpeg structure\n");
+		gpi_jpeg_add_marker(myjpeg, tempchunk, 6, size-1);
+		GP_DEBUG ("Writing the jpeg file\n");
+		gpi_jpeg_write(file, filename, myjpeg);
+		GP_DEBUG ("Cleaning up the mess\n");
+		gpi_jpeg_destroy(myjpeg);
+		free (tempchunk);
+		break;
+    	}
+	return (GP_OK);
 }
 
 static int
