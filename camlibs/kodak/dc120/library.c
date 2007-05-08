@@ -354,6 +354,7 @@ int dc120_get_albums (Camera *camera, int from_card, CameraList *list, GPContext
 	if (dc120_packet_read_data(camera, file, p, &size, 256, context)==GP_ERROR) {
 		gp_file_free(file);
 		free (p);
+		return GP_ERROR;
 	}
 	gp_file_get_data_and_size (file, &file_data, &file_size);
 
