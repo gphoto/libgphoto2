@@ -375,7 +375,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		if (ret < GP_OK)
 			return ret;
 		sleep(1);
-	} while (buf[1] == 0x00);
+	} while (buf[0] == 0x00);
 
 	ret = blink2_getnumpics (camera->port, context, &numpics);
 	if (ret < GP_OK)
