@@ -78,7 +78,8 @@ int clicksmart_init (GPPort *port, CameraPrivateLibrary *priv)
 	short_read = c%2;
 	cat_size = c*0x10;
 	temp_catalog = malloc(cat_size);
-	if (!temp_catalog) return GP_ERROR_NO_MEMORY;
+	if (!temp_catalog) 
+		return GP_ERROR_NO_MEMORY;
 	memset (temp_catalog, 0, cat_size);
 
 	/* now we need to get and put away the catalog data. */
@@ -88,7 +89,10 @@ int clicksmart_init (GPPort *port, CameraPrivateLibrary *priv)
 	while (c != 1)
 		CLICKSMART_READ_STATUS (port, &c);
 	buffer = malloc(0x200);
-	if (!buffer) return GP_ERROR_NO_MEMORY;
+	if (!buffer) {
+		free (temp_catalog);
+		return GP_ERROR_NO_MEMORY;
+	}
 	/*
 	 * The catalog data is downloaded in reverse order, which needs to be 
 	 * straightened out.
@@ -105,16 +109,13 @@ int clicksmart_init (GPPort *port, CameraPrivateLibrary *priv)
 		gp_port_read(port, buffer, 0x100);
 		memcpy (temp_catalog, buffer, 0x10);
 	}
-	if (temp_catalog) 
-		priv->catalog = temp_catalog;
-	else
-		priv->catalog = NULL;	
+	priv->catalog = temp_catalog;
 
 	clicksmart_reset(port);
 	free (buffer);
 	GP_DEBUG("Leaving clicksmart_init\n");
 
-        return GP_OK;
+	return GP_OK;
 }
 
 
