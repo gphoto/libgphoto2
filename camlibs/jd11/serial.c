@@ -400,8 +400,10 @@ jd11_index_reader(GPPort *port, CameraFilesystem *fs, GPContext *context) {
 	CameraFileInfo	info;
 	
 	ret = gp_file_new(&file);
-	if (ret!=GP_OK)
+	if (ret!=GP_OK) {
+	    free(indexbuf);
 	    return ret;
+	}
 	sprintf(fn,"image%02i.pgm",i);
 	gp_file_set_type (file, GP_FILE_TYPE_PREVIEW);
 	gp_file_set_name(file, fn);
