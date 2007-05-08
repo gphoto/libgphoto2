@@ -3672,6 +3672,8 @@ init_ptp_fs (Camera *camera, GPContext *context)
 			params->canon_flags = flags;
 			return PTP_RC_OK;
 		}
+		if (oinfos) free (oinfos);
+		if (flags) free (flags);
 		/* fallthrough */
 	}
 #endif
