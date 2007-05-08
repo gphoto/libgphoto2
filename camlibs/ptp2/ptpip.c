@@ -606,7 +606,12 @@ ptp_ptpip_connect (PTPParams* params, const char *address) {
 	addr = strdup (address);
 	if (!addr)
 		return GP_ERROR_NO_MEMORY;
-	s = strchr (addr,':'); *s = '\0';
+	s = strchr (addr,':');
+	if (!s) {
+		gp_log (GP_LOG_ERROR,"ptpip/connect", "addr %s should contain a :", address);
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+	*s = '\0';
 	p = strchr (s+1,':');
 	port = 15740;
 	if (p) {
