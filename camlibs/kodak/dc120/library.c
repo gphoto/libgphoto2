@@ -199,11 +199,16 @@ read_data_write_again:
 
 }
 
-int dc120_set_speed (Camera *camera, int speed) {
-
-	char *p = dc120_packet_new(0x41);
+int dc120_set_speed (Camera *camera, int speed) 
+{
+	int error = GP_OK;
 	GPPortSettings settings;
+	char *p = dc120_packet_new(0x41);
 
+	if(p == NULL) {
+		/* unlikely to happen, FFS */
+		return GP_ERROR;
+	}
 	gp_port_get_settings(camera->port, &settings);
 
 	switch (speed) {
@@ -241,20 +246,28 @@ int dc120_set_speed (Camera *camera, int speed) {
 			break;
 */
 		default:
-			return (GP_ERROR);
+			error = GP_ERROR;
+			goto fail;
+			break;
 	}
 
-	if (dc120_packet_write(camera, p, 8, 1) == GP_ERROR)
-		return (GP_ERROR);
+	if (dc120_packet_write(camera, p, 8, 1) == GP_ERROR) 
+	{
+		error = GP_ERROR;
+		goto fail;
+	}
 
 	gp_port_set_settings (camera->port, settings);
 
-	free (p);
 
 	GP_SYSTEM_SLEEP(300);
 
 	/* Speed change went OK. */
-	return (GP_OK);
+	error = GP_OK;
+
+ fail:
+	free (p);
+	return error;
 }
 
 int dc120_get_status (Camera *camera, Kodak_dc120_status *status, GPContext *context) {
