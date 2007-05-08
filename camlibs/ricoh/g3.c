@@ -660,7 +660,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		!strcmp(info->file.type,GP_MIME_AVI)
 	) {
 		sprintf(cmd, "-INFO %s/%s", folder,filename);
-		g3_ftp_command_and_reply(camera->port, cmd, &reply);
+		ret = g3_ftp_command_and_reply(camera->port, cmd, &reply);
 		if (ret < GP_OK) goto out;
 
 		/* 200 1330313 byte W=2048 H=1536 K=0 for -INFO */
@@ -712,7 +712,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		}
 		ret = g3_channel_read(camera->port, &channel, &buf, &len); /* data. */
 		if (ret < GP_OK) goto out;
-		g3_channel_read(camera->port, &channel, &reply, &rlen); /* next reply  */
+		ret = g3_channel_read(camera->port, &channel, &reply, &rlen); /* next reply  */
 		if (ret < GP_OK) goto out;
 		gp_log(GP_LOG_DEBUG, "g3" , "reply %s", reply);
 
@@ -857,7 +857,6 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 out:
 	if (buf) free(buf);
 	if (reply) free(reply);
-	if (cmd) free(cmd);
 	return (GP_OK);
 }
 
