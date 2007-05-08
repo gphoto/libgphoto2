@@ -184,69 +184,74 @@ static int camera_file_action (Camera *camera, int action, CameraFile *file,
 			       const char *folder, const char *filename,
 			       GPContext *context) 
 {
-    CameraList *files = NULL;
-    const char* file_name;
-    int file_nr;
-    int i;
-    char *dot;
-    int picnum=0;
-    
-    /*  first find the file */
-    int res;
-    int from_card;
-    int folder_nr;
-    
-    res = find_folder( camera, folder, &from_card, &folder_nr, context );
-    if( res != (GP_OK) ) {
-	return res;
-    }
-    
-    if( gp_list_new( &files ) != (GP_OK) ) {
-	gp_list_free( files );
-	return (GP_ERROR);
-    }
-    
-    res = dc120_get_filenames(camera, from_card, folder_nr, files, context);
-    if( res != (GP_OK) ) {
-	return res;
-    }
-
-    
-    /* now we have the list, search for the file. */
-    file_nr = -1;
-    for( i = 0; i<gp_list_count( files ); i++ ) {
-	gp_list_get_name( files, i, &file_name );
-	if( strcmp( file_name, filename ) == 0 ) {
+	CameraList *files = NULL;
+	const char* file_name;
+	int file_nr;
+	int i;
+	char *dot;
+	int picnum=0;
+	int result = GP_OK;
+	
+	/*  first find the file */
+	int from_card;
+	int folder_nr;
+	
+	result = find_folder( camera, folder, &from_card, &folder_nr, context );
+	if( result != (GP_OK) ) {
+		return result;
+	}
+	
+	result = gp_list_new( &files );
+	if( result != GP_OK ) {
+		goto fail;
+	}
+	
+	result = dc120_get_filenames(camera, from_card, folder_nr, files, context);
+	if( result != GP_OK ) {
+		goto fail;
+	}
+	
+	
+	/* now we have the list, search for the file. */
+	file_nr = -1;
+	for( i = 0; i<gp_list_count( files ); i++ ) {
+		gp_list_get_name( files, i, &file_name );
+		if( strcmp( file_name, filename ) == 0 ) {
 	    file_nr = i;  /* ok, we found it. */
 	    break;
+		}
 	}
-    }
-    gp_list_free( files );
-    
-    
-    
-    if( file_nr == -1 ) { /* not found */
-	return (GP_ERROR);
-    }
-    
-    
-    picnum = gp_filesystem_number(camera->fs, folder, filename, context);
-    if (picnum < 0)
-	    return (picnum);
-
- 
-    if (action == DC120_ACTION_PREVIEW) {
-	dot = strrchr(filename, '.');
-	if( dot && strlen( dot )>3 ) {
+	gp_list_free( files );
+	
+	
+	if( file_nr == -1 ) { /* not found */
+		return GP_ERROR;
+	}
+	
+	
+	picnum = gp_filesystem_number(camera->fs, folder, filename, context);
+	if (picnum < 0)
+		return picnum;
+	
+	
+	if (action == DC120_ACTION_PREVIEW) {
+		dot = strrchr(filename, '.');
+		if( dot && strlen( dot )>3 ) {
 	    strcpy( dot+1, "ppm");
+		}
 	}
-    }
-    
-    if( file ) {
-	gp_file_set_name (file, filename);
-    }
-    
-    return (dc120_file_action(camera, action, from_card, folder_nr, picnum+1, file, context));
+	
+	if( file ) {
+		gp_file_set_name (file, filename);
+	}
+	
+	return (dc120_file_action(camera, action, from_card, folder_nr, picnum+1, file, context));
+	/* yes, after that it is to handle failures. */
+ fail:
+	if (files)
+		gp_list_free( files );
+	return result;
+
 }
 
 
