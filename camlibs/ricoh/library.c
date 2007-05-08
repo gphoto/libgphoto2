@@ -414,9 +414,10 @@ static struct {
 	if (gp_widget_changed (w)) {					\
 		CR (gp_widget_get_value (w, &v));			\
 		for (i = 0; i < N_ELEMENTS (ricoh_##n##s); i++)		\
-			if (!strcmp (v, _(ricoh_##n##s[i].name)))	\
+			if (!strcmp (v, _(ricoh_##n##s[i].name))) {	\
+				CR (ricoh_set_##n (c, co, ricoh_##n##s[i].n));		\
 				break;					\
-		CR (ricoh_set_##n (c, co, ricoh_##n##s[i].n));		\
+			}						\
 	}								\
 }
 
