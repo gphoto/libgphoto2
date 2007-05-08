@@ -414,9 +414,16 @@ jd11_index_reader(GPPort *port, CameraFilesystem *fs, GPContext *context) {
 		thumb[47*64-off+(63-x)] = src[off+x];
 	}
 	ret = gp_file_append(file,thumb,sizeof(thumb));
-	if (ret != GP_OK) return ret;
+	if (ret != GP_OK) {
+		gp_file_free (file);
+		return ret;
+	}
 	ret = gp_filesystem_append(fs, "/", fn, context);
-	if (ret != GP_OK) return ret;
+	if (ret != GP_OK) {
+		/* should perhaps remove the entry again */
+		gp_file_free (file);
+		return ret;
+	}
 	ret = gp_filesystem_set_file_noop(fs, "/", file, context);
 	if (ret != GP_OK) return ret;
 
