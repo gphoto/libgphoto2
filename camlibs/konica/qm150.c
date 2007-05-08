@@ -381,10 +381,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 				&long_len);
 			free(d);
 			d = thumbnail;
-			if (ret < GP_OK) {
-				free(d);
-				return ret;
-			}
 			break;
 		case GP_FILE_TYPE_EXIF:
 			len = file_info.preview.size;
