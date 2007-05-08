@@ -95,6 +95,7 @@ int digita_get_file_list(CameraPrivateLibrary *dev)
 	struct get_file_list gfl;
 	char *buffer;
 	int ret, taken, buflen;
+	int err;
 
 	if (digita_get_storage_status(dev, &taken, NULL, NULL) < 0)
 		return -1;
@@ -114,13 +115,15 @@ int digita_get_file_list(CameraPrivateLibrary *dev)
 	ret = dev->send(dev, (void *)&gfl, sizeof(gfl));
 	if (ret < 0) {
 		GP_DEBUG("digita_get_file_list: error sending command (ret = %d)", ret);
-		return -1;
+		err = -1;
+		goto end;
 	}
 
 	ret = dev->read(dev, (void *)buffer, buflen);
 	if (ret < 0) {
 		GP_DEBUG("digita_get_file_list: error receiving data (ret = %d)", ret);
-		return -1;
+		err = -1;
+		goto end;
 	}
 
 	if (dev->file_list)
@@ -129,14 +132,17 @@ int digita_get_file_list(CameraPrivateLibrary *dev)
 	dev->file_list = malloc(taken * sizeof(struct file_item));
 	if (!dev->file_list) {
 		GP_DEBUG("digita_get_file_list: error allocating file_list memory (ret = %d)", ret);
-		return -1;
+		err = -1;
+		goto end;
 	}
 
 	memcpy(dev->file_list, buffer + sizeof(cmd) + 4, taken * sizeof(struct file_item));
 
+	err = 0;
+ end:
 	free(buffer);
 
-	return 0;
+	return err;
 }
 
 #define GFD_BUFSIZE 19432
@@ -166,6 +172,7 @@ int digita_get_file_data(CameraPrivateLibrary *dev, int thumbnail,
 	ret = dev->send(dev, &gfds, sizeof(gfds));
 	if (ret < 0) {
 		GP_DEBUG("digita_get_file_data: error sending command (ret = %d)", ret);
+		free(tbuf);
 		return -1;
 	}
 
