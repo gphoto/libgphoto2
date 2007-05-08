@@ -112,8 +112,8 @@ picture_decomp_v1(char *compressed,char *uncompressed,int width,int height) {
 	line	= (int*)malloc(sizeof(int)*width);
 	lastline= (int*)malloc(sizeof(int)*width);
 	curbyte=0;
-	memset(line,0,sizeof(line));
-	memset(lastline,0,sizeof(line));
+	memset(line,0,sizeof(int)*width);
+	memset(lastline,0,sizeof(int)*width);
 	for (i=0;i<width;i++) {
 		diff = decomp_1byte(&cs);
 		curbyte+=diff;
