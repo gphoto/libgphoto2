@@ -467,6 +467,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 		return ret;
 
 	cmd = malloc(strlen("DELE ")+strlen(filename)+1);
+	if (!cmd) return GP_ERROR_NO_MEMORY;
 	sprintf(cmd,"DELE %s",filename);
 	ret = g3_ftp_command_and_reply(camera->port, cmd, &reply);
 	if (ret < GP_OK)
@@ -494,6 +495,7 @@ rmdir_func (CameraFilesystem *fs, const char *folder,
 		return ret;
 
 	cmd = realloc(cmd,strlen("RMD ")+strlen(name)+1);
+	if (!cmd) return GP_ERROR_NO_MEMORY;
 	sprintf(cmd,"RMD %s",name);
 	ret = g3_ftp_command_and_reply(camera->port, cmd, &reply);
 	if (ret < GP_OK)
@@ -521,6 +523,7 @@ mkdir_func (CameraFilesystem *fs, const char *folder,
 		return ret;
 
 	cmd = realloc(cmd,strlen("MKD ")+strlen(name)+1);
+	if (!cmd) return GP_ERROR_NO_MEMORY;
 	sprintf(cmd,"MKD %s",name);
 	ret = g3_ftp_command_and_reply(camera->port, cmd, &reply);
 	if (ret < GP_OK)
