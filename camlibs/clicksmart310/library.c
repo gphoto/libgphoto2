@@ -201,7 +201,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	}
 
 	data = malloc (w*h);
-	if(!data) return GP_ERROR_NO_MEMORY;
+	if(!data) 
+		return GP_ERROR_NO_MEMORY;
 
 	GP_DEBUG("Fetch entry %i\n", k);
 	b = clicksmart_read_pic_data (camera->pl, camera->port, data, k);
@@ -214,7 +215,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		if (k +1 == camera->pl->num_pics) {
 	    		clicksmart_reset (camera->port);	
 		}
-		return(GP_OK);
+		return GP_OK;
 	}
 		
 	GP_DEBUG ("size = %i\n", b);	
@@ -225,20 +226,24 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	file_size = b + 589 + 1024 * 10;
 
 	jpeg_out = malloc(file_size);
-	if (!jpeg_out) return GP_ERROR_NO_MEMORY;
+	if (!jpeg_out) {
+		free(data);
+		return GP_ERROR_NO_MEMORY;
+	}
 
 	GP_DEBUG("width:  %d, height:  %d, data size:  %d\n", w, h, b); 
 	create_jpeg_from_data (jpeg_out, data, 3, w, h, jpeg_format, 
 		    b, &file_size, 0, 0);
 
 	gp_file_set_mime_type (file, GP_MIME_JPEG);
-    	gp_file_set_name (file, filename); 
+	gp_file_set_name (file, filename); 
 	gp_file_set_data_and_size (file, jpeg_out, file_size);
 	/* Reset camera when done, for more graceful exit. */
 	if (k +1 == camera->pl->num_pics) {
     		clicksmart_reset (camera->port);
 	}
-        return GP_OK;
+	free(data);
+	return GP_OK;
 }
 
 static int
