@@ -122,18 +122,16 @@ int init(Camera *camera)
 
 static int camera_exit (Camera *camera, GPContext *context)
 {
-	if(camera->pl->context)
-	{
-		gp_context_error(context, CONTEXT_EXISTS);
-		return GP_ERROR;
-	}
-
 	if (camera->pl) {
+		if(camera->pl->context) {
+			gp_context_error(context, CONTEXT_EXISTS);
+			return GP_ERROR;
+		}
 		free (camera->pl);
 		camera->pl = NULL;
 	}
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 int check_last_use(Camera *camera)
