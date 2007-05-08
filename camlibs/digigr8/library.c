@@ -162,11 +162,13 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *user_data,
 	       GPContext *context)
 {
-    	Camera *camera = user_data; 
+	int status = GP_OK;
+	Camera *camera = user_data; 
 	int w, h, b; 
 	int k, next;
 	unsigned char comp_ratio;
-	unsigned char *data, *p_data; 
+	unsigned char *data = NULL;
+	unsigned char *p_data = NULL; 
 	unsigned char *ppm;
 	unsigned char *ptr;
 	unsigned char gtable[256];
@@ -225,8 +227,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	 * Now put the data into a PPM image file. 
 	 */
 	ppm = malloc (w * h * 3 + 256); /* room for data + header */
-	if (!ppm) { return GP_ERROR_NO_MEMORY; }
-    	sprintf (ppm,
+	if (!ppm) { 
+		status = GP_ERROR_NO_MEMORY; 
+		goto end;
+	}
+	sprintf (ppm,
 			"P6\n"
 			"# CREATOR: gphoto2, SQ905C library\n"
 			"%d %d\n"
@@ -236,8 +241,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	size = size + (w * h * 3);
 	GP_DEBUG ("size = %i\n", size);				
 	p_data = malloc( w*h );
-	if (!p_data) 
-		return GP_ERROR_NO_MEMORY;
+	if (!p_data) {
+		status =  GP_ERROR_NO_MEMORY;
+		goto end;
+	} 
 	if(comp_ratio) {
 		digi_decompress (p_data, data, w, h);
 	} else
@@ -250,13 +257,15 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	}
 	digi_postprocess(camera->pl,w, h, ptr, k);
 	gp_file_set_mime_type (file, GP_MIME_PPM);
-    	gp_file_set_name (file, filename); 
+	gp_file_set_name (file, filename); 
 	gp_file_set_data_and_size (file, ppm, size);
 	/* Reset camera when done, for more graceful exit. */
 	if (k +1 == camera->pl->nb_entries) {
     		digi_rewind (camera->port, camera->pl);
 	}
-        return GP_OK;
+ end:
+	free(data);
+	return status;
 }
 
 /*************** Exit and Initialization Functions ******************/
