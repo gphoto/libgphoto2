@@ -51,14 +51,17 @@ const char *JPEG_MARKERNAMES[] = {
 
 chunk *gpi_jpeg_chunk_new(int length)
 {
-chunk *mychunk;
-    printf("Entered gpi_jpeg_chunk_new\n");
-    mychunk =  (chunk *) malloc(sizeof(chunk));
-    mychunk->size=length;
+	chunk *mychunk;
+	printf("Entered gpi_jpeg_chunk_new\n");
+	mychunk =  (chunk *) malloc(sizeof(chunk));
+	if (mychunk==NULL) {
+		printf("Failed to allocate new chunk!\n");
+		return NULL;
+	}
+	mychunk->size=length;
 /*    printf("New chunk of size %i\n", mychunk->size); */
-    mychunk->data = (char *)malloc(length);
-    if (mychunk==NULL) printf("Failed to allocate new chunk!\n");
-    return mychunk;
+	mychunk->data = (char *)malloc(length);
+	return mychunk;
 }
 
 chunk *gpi_jpeg_chunk_new_filled(int length, char *data)
