@@ -262,9 +262,16 @@ int stv0680_get_image(GPPort *port, int image_no, CameraFile *file)
 
 	data = malloc(size * 3);
 	tmpdata1 = malloc(size * 3);
-	if (!tmpdata1) return GP_ERROR_NO_MEMORY;
+	if (!tmpdata1) {
+		free (data);
+		return GP_ERROR_NO_MEMORY;
+	}
 	tmpdata2 = malloc(size * 3);
-	if (!tmpdata2) return GP_ERROR_NO_MEMORY;
+	if (!tmpdata2) {
+		free (data);
+		free (tmpdata1);
+		return GP_ERROR_NO_MEMORY;
+	}
 	gp_bayer_expand (raw, w, h, tmpdata1, BAYER_TILE_GBRG_INTERLACED);
 	light_enhance(w,h,coarse,imghdr.avg_pixel_value,fine,tmpdata1);
 	/* gp_bayer_interpolate (tmpdata1, w, h, BAYER_TILE_GBRG_INTERLACED); */
