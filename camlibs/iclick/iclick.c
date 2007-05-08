@@ -84,12 +84,15 @@ icl_init (GPPort *port, CameraPrivateLibrary *priv)
 
 	/* Photo list starts with line 0040. List terminates when we 
 	 * the first entry of an even-numbered line is zero. */
-	for (i=0; i<0x8000 && catalog[i+64] ; i+=32) ;
+	for (i=0; i< (0x8000 - 64) && catalog[i+64] ; i+=32) 
+		;
 	priv->nb_entries = i>>5;
 	catalog_tmp = realloc(catalog, i);
 	if (i) {
-	if (catalog_tmp) priv->catalog = catalog_tmp;
-	else priv->catalog = catalog;
+		if (catalog_tmp) 
+			priv->catalog = catalog_tmp;
+		else 
+			priv->catalog = catalog;
 	} else {
 		priv->catalog = NULL;	/* We just have freed catalog_tmp */
 	}
