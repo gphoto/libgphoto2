@@ -111,8 +111,8 @@ adc65_read_data (Camera *camera, char *cmd, int cmd_size, int data_type, int *si
 			/* Turn right-side-up and invert*/
 			for (x=0; x<32768; x++) {
 			    temp = us[x];
-				us[x] = 255 - us[65536-x];
-				us[65536-x] = 255 - temp;
+				us[x] = 255 - us[65535-x];
+				us[65535-x] = 255 - temp;
 			}
 			s  = (char *)malloc (sizeof(char)*65536*3+strlen(ppmhead));
 			/* Camera uses this color array (upside-down):
