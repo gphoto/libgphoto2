@@ -44,6 +44,8 @@ gp_port_usb_msg_interface_read
 gp_port_usb_msg_interface_write
 gp_port_usb_msg_read
 gp_port_usb_msg_write
+gp_port_usb_msg_class_write
+gp_port_usb_msg_class_read
 gp_port_write
 gp_system_mkdir
 gp_system_rmdir

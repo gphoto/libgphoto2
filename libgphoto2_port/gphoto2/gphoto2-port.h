@@ -168,6 +168,10 @@ int gp_port_usb_msg_interface_write    (GPPort *port, int request,
 			    int value, int index, char *bytes, int size);
 int gp_port_usb_msg_interface_read    (GPPort *port, int request, 
 			    int value, int index, char *bytes, int size);
+int gp_port_usb_msg_class_write    (GPPort *port, int request, 
+			    int value, int index, char *bytes, int size);
+int gp_port_usb_msg_class_read    (GPPort *port, int request, 
+			    int value, int index, char *bytes, int size);
 
 /* Error reporting */
 int         gp_port_set_error (GPPort *port, const char *format, ...)

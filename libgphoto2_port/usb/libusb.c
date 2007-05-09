@@ -425,6 +425,35 @@ gp_port_usb_msg_interface_read_lib(GPPort *port, int request,
 }
 
 
+/* The next two functions support the nonstandard request types 0x21 (write) 
+ * and 0xa1 (read), which are occasionally needed. 
+ */
+
+static int
+gp_port_usb_msg_class_write_lib(GPPort *port, int request, 
+	int value, int index, char *bytes, int size)
+{
+	if (!port || !port->pl->dh)
+		return GP_ERROR_BAD_PARAMETERS;
+
+	return usb_control_msg(port->pl->dh, 
+		USB_TYPE_CLASS | USB_RECIP_INTERFACE,
+		request, value, index, bytes, size, port->timeout);
+}
+
+
+static int
+gp_port_usb_msg_class_read_lib(GPPort *port, int request, 
+	int value, int index, char *bytes, int size)
+{
+	if (!port || !port->pl->dh)
+		return GP_ERROR_BAD_PARAMETERS;
+
+	return usb_control_msg(port->pl->dh, 
+		USB_TYPE_CLASS | USB_RECIP_INTERFACE | USB_ENDPOINT_IN,
+		request, value, index, bytes, size, port->timeout);
+}
+
 /*
  * This function applys changes to the device.
  *
@@ -936,6 +965,8 @@ gp_port_library_operations (void)
 	ops->msg_read   = gp_port_usb_msg_read_lib;
 	ops->msg_interface_write  = gp_port_usb_msg_interface_write_lib;
 	ops->msg_interface_read   = gp_port_usb_msg_interface_read_lib;
+	ops->msg_class_write  = gp_port_usb_msg_class_write_lib;
+	ops->msg_class_read   = gp_port_usb_msg_class_read_lib;
 	ops->find_device = gp_port_usb_find_device_lib;
 	ops->find_device_by_class = gp_port_usb_find_device_by_class_lib;
 
