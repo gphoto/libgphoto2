@@ -1253,11 +1253,20 @@ add_objectid_to_gphotofs(Camera *camera, CameraFilePath *path, GPContext *contex
 	set_mimetype (camera, file, params->deviceinfo.VendorExtensionID, oi->ObjectFormat);
 	CPR (context, ptp_getobject(params, newobject, &ximage));
 	ret = gp_file_set_data_and_size(file, (char*)ximage, oi->ObjectCompressedSize);
-	if (ret != GP_OK) return ret;
+	if (ret != GP_OK) {
+		gp_file_free (file);
+		return ret;
+	}
 	ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
-        if (ret != GP_OK) return ret;
+        if (ret != GP_OK) {
+		gp_file_free (file);
+		return ret;
+	}
 	ret = gp_filesystem_set_file_noop(camera->fs, path->folder, file, context);
-        if (ret != GP_OK) return ret;
+        if (ret != GP_OK) {
+		gp_file_free (file);
+		return ret;
+	}
 
 	/* We have now handed over the file, disclaim responsibility by unref. */
 	gp_file_unref (file);
