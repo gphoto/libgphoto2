@@ -1,3 +1,7 @@
+2007-05-09  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptp.h, usb.c: Send/Receive control messages to class.
+
 2007-05-06  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Added Canon IXUS 75 aka PowerShot SD750.

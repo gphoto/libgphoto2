@@ -1411,6 +1411,11 @@ uint16_t ptp_usb_getdata	(PTPParams* params, PTPContainer* ptp,
 uint16_t ptp_usb_event_check	(PTPParams* params, PTPContainer* event);
 uint16_t ptp_usb_event_wait	(PTPParams* params, PTPContainer* event);
 
+uint16_t ptp_usb_control_get_extended_event_data (PTPParams *params, char *buffer, int *size);
+uint16_t ptp_usb_control_device_reset_request (PTPParams *params);
+uint16_t ptp_usb_control_get_device_status (PTPParams *params, char *buffer, int *size);
+
+
 int      ptp_ptpip_connect	(PTPParams* params, const char *port);
 uint16_t ptp_ptpip_sendreq	(PTPParams* params, PTPContainer* req);
 uint16_t ptp_ptpip_senddata	(PTPParams* params, PTPContainer* ptp,

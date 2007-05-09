@@ -495,3 +495,42 @@ ptp_usb_event_wait (PTPParams* params, PTPContainer* event) {
 
 	return ptp_usb_event (params, event, PTP_EVENT_CHECK);
 }
+
+uint16_t
+ptp_usb_control_get_extended_event_data (PTPParams *params, char *buffer, int *size) {
+	Camera	*camera = ((PTPData *)params->data)->camera;
+	int	ret;
+
+	gp_log (GP_LOG_DEBUG, "ptp2/get_extended_event_data", "get event data");
+	ret = gp_port_usb_msg_class_read (camera->port, 0x65, 0x0000, 0x0000, buffer, *size);
+	if (ret < GP_OK)
+		return PTP_ERROR_IO;
+	*size = ret;
+	gp_log_data ("ptp2/get_extended_event_data", buffer, ret);
+	return PTP_RC_OK;
+}
+
+uint16_t
+ptp_usb_control_device_reset_request (PTPParams *params) {
+	Camera	*camera = ((PTPData *)params->data)->camera;
+	int	ret;
+
+	gp_log (GP_LOG_DEBUG, "ptp2/device_reset_request", "sending reset");
+	ret = gp_port_usb_msg_class_write (camera->port, 0x66, 0x0000, 0x0000, NULL, 0);
+	if (ret < GP_OK)
+		return PTP_ERROR_IO;
+	return PTP_RC_OK;
+}
+
+uint16_t
+ptp_usb_control_get_device_status (PTPParams *params, char *buffer, int *size) {
+	Camera	*camera = ((PTPData *)params->data)->camera;
+	int	ret;
+
+	ret = gp_port_usb_msg_class_read (camera->port, 0x67, 0x0000, 0x0000, buffer, *size);
+	if (ret < GP_OK)
+		return PTP_ERROR_IO;
+	gp_log_data ("ptp2/get_device_status", buffer, ret);
+	*size = ret;
+	return PTP_RC_OK;
+}
