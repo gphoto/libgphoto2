@@ -666,7 +666,7 @@ int dc3200_recv_packet(Camera *camera, unsigned char *data, int *data_len)
 
 	res = gp_port_read(camera->port, &buff[num_read], 1);
 
-	while(res > 0 && fails < READ_RETRIES) {
+	while(res >= 0 && fails < READ_RETRIES) {
 		if(res == 0) {
 			/* read nothing */
 			fails++;
@@ -846,6 +846,7 @@ int dc3200_process_packet(Camera *camera, unsigned char *data, int *data_len)
 	/* make sure its a valid packet */
 	if(length != count - 3 || checksum != dc3200_calc_checksum(camera, data, count - 2)) {
 		printf("%02x=%02x %02x=%02x\n", length, count - 3, checksum, dc3200_calc_checksum(camera, data, count - 2));
+		free(buff);
 		return GP_ERROR;
 	}
 
