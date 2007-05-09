@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port 2.3.0\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-12-29 01:31+0100\n"
+"POT-Creation-Date: 2007-05-09 22:01+0200\n"
 "PO-Revision-Date: 2006-12-08 23:12+0100\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -331,7 +331,7 @@ msgstr ""
 msgid "msg_read"
 msgstr "msg_read"
 
-#: libgphoto2_port/gphoto2-port.c:892
+#: libgphoto2_port/gphoto2-port.c:948
 msgid "No error description available"
 msgstr "Opis b³êdu niedostêpny"
 
@@ -421,30 +421,30 @@ msgstr "Nie uda³o siê przeczy¶ciæ '%s' (%m)."
 msgid "Could not set the baudrate to %d"
 msgstr "Nie uda³o siê ustawiæ liczby bodów na %d"
 
-#: usb/libusb.c:236
+#: usb/libusb.c:239
 #, c-format
 msgid "Could not open USB device (%m)."
 msgstr "Nie uda³o siê otworzyæ urz±dzenia USB (%m)."
 
-#: usb/libusb.c:246
+#: usb/libusb.c:249
 msgid "Camera is already in use."
 msgstr "Aparat jest ju¿ w u¿yciu."
 
-#: usb/libusb.c:251
+#: usb/libusb.c:254
 #, c-format
 msgid "Device has driver '%s' attached, detaching it now."
 msgstr "Urz±dzenie ma pod³±czony sterownik '%s', od³±czanie go."
 
-#: usb/libusb.c:254
+#: usb/libusb.c:257
 #, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
 msgstr "Nie uda³o siê od³±czyæ sterownika j±dra '%s' od aparatu."
 
-#: usb/libusb.c:256
+#: usb/libusb.c:259
 msgid "Could not query kernel driver of device."
 msgstr "Nie uda³o siê zapytaæ j±dra o sterownik urz±dzenia."
 
-#: usb/libusb.c:263
+#: usb/libusb.c:266
 #, c-format
 msgid ""
 "Could not claim interface %d (%m). Make sure no other program or kernel "
@@ -455,33 +455,33 @@ msgstr ""
 "inny program lub modu³ j±dra (taki jak %s) nie u¿ywa tego urz±dzenia i mamy "
 "prawa odczytu/zapisu do urz±dzenia."
 
-#: usb/libusb.c:282
+#: usb/libusb.c:284
 #, c-format
 msgid "Could not release interface %d (%m)."
 msgstr "Nie uda³o siê oddaæ interfejsu %d (%m)."
 
-#: usb/libusb.c:289
+#: usb/libusb.c:291
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr "Nie uda³o siê zamkn±æ portu USB (%m)."
 
-#: usb/libusb.c:469
+#: usb/libusb.c:517
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "Nie uda³o siê ustawiæ konfiguracji %d/%d (%m)"
 
-#: usb/libusb.c:499
+#: usb/libusb.c:549
 #, c-format
 msgid "Could not set altsetting %d/%d (%m)"
 msgstr "Nie uda³o siê ustawiæ altsetting %d/%d (%m)"
 
-#: usb/libusb.c:591
+#: usb/libusb.c:641
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr ""
 "Podany identyfikator producenta lub produktu (0x%x,0x%x) nie jest poprawny."
 
-#: usb/libusb.c:623
+#: usb/libusb.c:677
 #, c-format
 msgid ""
 "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
@@ -490,7 +490,7 @@ msgstr ""
 "Urz±dzenie USB (producent 0x%x, produkt 0x%x) to urz±dzenie przechowuj±ce "
 "dane i mo¿e nie dzia³aæ z gphoto2. Odno¶nik: %s"
 
-#: usb/libusb.c:656
+#: usb/libusb.c:719
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
@@ -499,7 +499,7 @@ msgstr ""
 "Nie uda³o siê odnale¼æ urz±dzenia USB (producent 0x%x, produkt 0x%x). Nale¿y "
 "upewniæ siê, ¿e to urz±dzenie jest pod³±czone do komputera."
 
-#: usb/libusb.c:876
+#: usb/libusb.c:939
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
@@ -508,8 +508,8 @@ msgstr ""
 "Nie uda³o siê odnale¼æ urz±dzenia USB (klasa 0x%x, podklasa 0x%x, protokó³ 0x"
 "%x). Nale¿y upewniæ siê, ¿e to urz±dzenie jest pod³±czone do komputera)."
 
-#: disk/disk.c:177 disk/disk.c:219 disk/disk.c:245 disk/disk.c:277
-#: disk/disk.c:300
+#: disk/disk.c:177 disk/disk.c:221 disk/disk.c:257 disk/disk.c:289
+#: disk/disk.c:312
 #, c-format
 msgid "Media '%s'"
 msgstr "No¶nik '%s'"

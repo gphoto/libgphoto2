@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gphoto 0.4.3\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-12-29 01:31+0100\n"
+"POT-Creation-Date: 2007-05-09 22:01+0200\n"
 "PO-Revision-Date: 2000-04-11 10:12+02:00\n"
 "Last-Translator: Kjartan Maraas <kmaraas@online.no>\n"
 "Language-Team: Norwegian <i18n-nb@lister.ping.uio.no>\n"
@@ -334,7 +334,7 @@ msgstr ""
 msgid "msg_read"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:892
+#: libgphoto2_port/gphoto2-port.c:948
 msgid "No error description available"
 msgstr ""
 
@@ -424,31 +424,31 @@ msgstr ""
 msgid "Could not set the baudrate to %d"
 msgstr "Kunne ikke hente antall bilder"
 
-#: usb/libusb.c:236
+#: usb/libusb.c:239
 #, fuzzy, c-format
 msgid "Could not open USB device (%m)."
 msgstr "Kunne ikke hente forhåndsvisning"
 
-#: usb/libusb.c:246
+#: usb/libusb.c:249
 msgid "Camera is already in use."
-msgstr ""
-
-#: usb/libusb.c:251
-#, c-format
-msgid "Device has driver '%s' attached, detaching it now."
 msgstr ""
 
 #: usb/libusb.c:254
 #, c-format
+msgid "Device has driver '%s' attached, detaching it now."
+msgstr ""
+
+#: usb/libusb.c:257
+#, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
 msgstr ""
 
-#: usb/libusb.c:256
+#: usb/libusb.c:259
 #, fuzzy
 msgid "Could not query kernel driver of device."
 msgstr "Kunne ikke hente forhåndsvisning"
 
-#: usb/libusb.c:263
+#: usb/libusb.c:266
 #, c-format
 msgid ""
 "Could not claim interface %d (%m). Make sure no other program or kernel "
@@ -456,54 +456,54 @@ msgid ""
 "the device."
 msgstr ""
 
-#: usb/libusb.c:282
+#: usb/libusb.c:284
 #, c-format
 msgid "Could not release interface %d (%m)."
 msgstr ""
 
-#: usb/libusb.c:289
+#: usb/libusb.c:291
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr ""
 
-#: usb/libusb.c:469
+#: usb/libusb.c:517
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr ""
 
-#: usb/libusb.c:499
+#: usb/libusb.c:549
 #, fuzzy, c-format
 msgid "Could not set altsetting %d/%d (%m)"
 msgstr "Kunne ikke hente #%i"
 
-#: usb/libusb.c:591
+#: usb/libusb.c:641
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr ""
 
-#: usb/libusb.c:623
+#: usb/libusb.c:677
 #, c-format
 msgid ""
 "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
 "not function with gphoto2. Reference: %s"
 msgstr ""
 
-#: usb/libusb.c:656
+#: usb/libusb.c:719
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
 "is connected to the computer."
 msgstr ""
 
-#: usb/libusb.c:876
+#: usb/libusb.c:939
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
 "sure this device is connected to the computer."
 msgstr ""
 
-#: disk/disk.c:177 disk/disk.c:219 disk/disk.c:245 disk/disk.c:277
-#: disk/disk.c:300
+#: disk/disk.c:177 disk/disk.c:221 disk/disk.c:257 disk/disk.c:289
+#: disk/disk.c:312
 #, c-format
 msgid "Media '%s'"
 msgstr ""

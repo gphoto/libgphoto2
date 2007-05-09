@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port 2.3.0\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-11-29 21:33-0500\n"
+"POT-Creation-Date: 2007-05-09 22:01+0200\n"
 "PO-Revision-Date: 2007-01-04 13:20+0300\n"
 "Last-Translator: Maxim V. Dziumanenko <dziumanenko@gmail.com>\n"
 "Language-Team: Ukrainian <translation-team-uk@lists.sourceforge.net>\n"
@@ -45,59 +45,59 @@ msgstr "Не вдається завантажити список драйвер
 msgid "Loaded '%s' ('%s') from '%s'."
 msgstr "Завантажено '%s' ('%s') з '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:264
+#: libgphoto2_port/gphoto2-port-info-list.c:265
 #, c-format
 msgid "Using ltdl to load io-drivers from '%s'..."
 msgstr "Використовується ltdl для завантаження драйверів портів з '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:290
+#: libgphoto2_port/gphoto2-port-info-list.c:291
 #, c-format
 msgid "Counting entries (%i available)..."
 msgstr "Підрахунок кількості записів (%i доступно)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:299
+#: libgphoto2_port/gphoto2-port-info-list.c:300
 #, c-format
 msgid "%i regular entries available."
 msgstr "доступно %i звичайних записів."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:328
+#: libgphoto2_port/gphoto2-port-info-list.c:329
 #, c-format
 msgid "Looking for path '%s' (%i entries available)..."
 msgstr "Пошук шляху '%s' (доступно %i записів)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:340
+#: libgphoto2_port/gphoto2-port-info-list.c:341
 #, c-format
 msgid "Starting regex search for '%s'..."
 msgstr "Початок пошуку '%s' з використанням регулярних виразів..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:348
+#: libgphoto2_port/gphoto2-port-info-list.c:349
 #, c-format
 msgid "Trying '%s'..."
 msgstr "перевіряється '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:369
+#: libgphoto2_port/gphoto2-port-info-list.c:370
 msgid "regcomp failed"
 msgstr "помилка regcomp"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:380
+#: libgphoto2_port/gphoto2-port-info-list.c:381
 #, c-format
 msgid "re_match failed (%i)"
 msgstr "помилка re_match (%i)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:388
+#: libgphoto2_port/gphoto2-port-info-list.c:389
 msgid "regexec failed"
 msgstr "помилка regexec"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:394
+#: libgphoto2_port/gphoto2-port-info-list.c:395
 msgid "Generic Port"
 msgstr "Звичайний порт"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:418
+#: libgphoto2_port/gphoto2-port-info-list.c:419
 #, c-format
 msgid "Looking up entry '%s'..."
 msgstr "Пошук запису '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:448
+#: libgphoto2_port/gphoto2-port-info-list.c:449
 #, c-format
 msgid "Getting info of entry %i (%i available)..."
 msgstr "Отримання інформації про запис %i (доступно %i)..."
@@ -318,18 +318,20 @@ msgstr "Очистити ознаку halt..."
 #: libgphoto2_port/gphoto2-port.c:748
 #, c-format
 msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr "Запис повідомлення (запит=0x%x значення=0x%x індекс=0x%x розмір=%i=0x%x)..."
+msgstr ""
+"Запис повідомлення (запит=0x%x значення=0x%x індекс=0x%x розмір=%i=0x%x)..."
 
 #: libgphoto2_port/gphoto2-port.c:769
 #, c-format
 msgid "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr "Читання повідомлення (запит=0x%x значення=0x%x індекс=0x%x розмір=%i=0x%x)..."
+msgstr ""
+"Читання повідомлення (запит=0x%x значення=0x%x індекс=0x%x розмір=%i=0x%x)..."
 
 #: libgphoto2_port/gphoto2-port.c:776
 msgid "msg_read"
 msgstr "msg_read"
 
-#: libgphoto2_port/gphoto2-port.c:892
+#: libgphoto2_port/gphoto2-port.c:948
 msgid "No error description available"
 msgstr "Опис помилки недоступний"
 
@@ -356,12 +358,15 @@ msgstr "Пристрій '%s' неможливо розблокувати."
 #: serial/unix.c:289
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
-msgstr "Пристрій '%s' неможливо розблокувати, оскільки він заблокований процесом %d."
+msgstr ""
+"Пристрій '%s' неможливо розблокувати, оскільки він заблокований процесом %d."
 
 #: serial/unix.c:293
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
-msgstr "пристрій '%s' неможливо розблокувати (функція dev_unlock повернула значення %d)"
+msgstr ""
+"пристрій '%s' неможливо розблокувати (функція dev_unlock повернула значення %"
+"d)"
 
 #: serial/unix.c:371
 #, c-format
@@ -417,76 +422,94 @@ msgstr "Не вдається скинути буфери пристрою '%s' 
 msgid "Could not set the baudrate to %d"
 msgstr "Неможливо встановити швидкість %d"
 
-#: usb/libusb.c:236
+#: usb/libusb.c:239
 #, c-format
 msgid "Could not open USB device (%m)."
 msgstr "Не вдається відкрити пристрій USB (%m)."
 
-#: usb/libusb.c:246
+#: usb/libusb.c:249
 msgid "Camera is already in use."
 msgstr "Фотоапарат вже зайнятий."
 
-#: usb/libusb.c:251
+#: usb/libusb.c:254
 #, c-format
 msgid "Device has driver '%s' attached, detaching it now."
 msgstr "Підключено драйвер '%s'. Виконується відключення драйвера."
 
-#: usb/libusb.c:254
+#: usb/libusb.c:257
 #, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
 msgstr "Не вдається відключити драйвера ядра '%s' для пристрою фотоапарату."
 
-#: usb/libusb.c:256
+#: usb/libusb.c:259
 msgid "Could not query kernel driver of device."
 msgstr "Не вдається опитати драйвер ядра для пристрою."
 
-#: usb/libusb.c:263
+#: usb/libusb.c:266
 #, c-format
-msgid "Could not claim interface %d (%m). Make sure no other program or kernel module (such as %s) is using the device and you have read/write access to the device."
-msgstr "Не вдається захопити інтерфейс %d (%m). Перевірте, що пристрій не зайнятий іншою програмою або модулем ядра (таким як %s), та що у вас є доступ читання та запису до пристрою."
+msgid ""
+"Could not claim interface %d (%m). Make sure no other program or kernel "
+"module (such as %s) is using the device and you have read/write access to "
+"the device."
+msgstr ""
+"Не вдається захопити інтерфейс %d (%m). Перевірте, що пристрій не зайнятий "
+"іншою програмою або модулем ядра (таким як %s), та що у вас є доступ читання "
+"та запису до пристрою."
 
-#: usb/libusb.c:282
+#: usb/libusb.c:284
 #, c-format
 msgid "Could not release interface %d (%m)."
 msgstr "Не вдається звільнити інтерфейс %d (%m)."
 
-#: usb/libusb.c:289
+#: usb/libusb.c:291
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr "Не вдається зарити порт USB (%m)."
 
-#: usb/libusb.c:469
+#: usb/libusb.c:517
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "Не вдається змінити конфігурацію %d/%d (%m)"
 
-#: usb/libusb.c:499
+#: usb/libusb.c:549
 #, c-format
 msgid "Could not set altsetting %d/%d (%m)"
 msgstr "Не вдається встановити альтернативну конфігурацію %d/%d (%m)"
 
-#: usb/libusb.c:591
+#: usb/libusb.c:641
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr "неправильний ідентифікатор виробника та продукту (0x%x,0x%x)."
 
-#: usb/libusb.c:623
+#: usb/libusb.c:677
 #, c-format
-msgid "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might not function with gphoto2. Reference: %s"
-msgstr "Пристрій USB (виробник 0x%x, продукт 0x%x) працює як пристрій зберігання даних. Програма gphoto2 не може його використовувати: %s"
+msgid ""
+"USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
+"not function with gphoto2. Reference: %s"
+msgstr ""
+"Пристрій USB (виробник 0x%x, продукт 0x%x) працює як пристрій зберігання "
+"даних. Програма gphoto2 не може його використовувати: %s"
 
-#: usb/libusb.c:656
+#: usb/libusb.c:719
 #, c-format
-msgid "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device is connected to the computer."
-msgstr "Не вдається знайти пристрій USB (виробник 0x%x, продукт 0x%x). Перевірте, що пристрій з'єднаний з комп'ютером."
+msgid ""
+"Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
+"is connected to the computer."
+msgstr ""
+"Не вдається знайти пристрій USB (виробник 0x%x, продукт 0x%x). Перевірте, що "
+"пристрій з'єднаний з комп'ютером."
 
-#: usb/libusb.c:876
+#: usb/libusb.c:939
 #, c-format
-msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
-msgstr "Не вдається знайти пристрій USB (клас 0x%x, підклас 0x%x, протокол 0x%x). Перевірте, що пристрій з'єднаний з комп'ютером."
+msgid ""
+"Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
+"sure this device is connected to the computer."
+msgstr ""
+"Не вдається знайти пристрій USB (клас 0x%x, підклас 0x%x, протокол 0x%x). "
+"Перевірте, що пристрій з'єднаний з комп'ютером."
 
-#: disk/disk.c:177 disk/disk.c:219 disk/disk.c:245 disk/disk.c:277
-#: disk/disk.c:300
+#: disk/disk.c:177 disk/disk.c:221 disk/disk.c:257 disk/disk.c:289
+#: disk/disk.c:312
 #, c-format
 msgid "Media '%s'"
 msgstr "Носій '%s'"

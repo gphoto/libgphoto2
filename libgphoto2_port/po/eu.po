@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-12-29 01:31+0100\n"
+"POT-Creation-Date: 2007-05-09 22:01+0200\n"
 "PO-Revision-Date: 2005-05-14 13:32+0200\n"
 "Last-Translator: Iñaki Larrañaga  <dooteo@euskalgnu.org>\n"
 "Language-Team:  <itzulpena@euskalgnu.org>\n"
@@ -331,7 +331,7 @@ msgstr ""
 msgid "msg_read"
 msgstr "msg_read"
 
-#: libgphoto2_port/gphoto2-port.c:892
+#: libgphoto2_port/gphoto2-port.c:948
 msgid "No error description available"
 msgstr "Errorearen azalpena ez dago eskuragarri"
 
@@ -419,30 +419,30 @@ msgstr "Ezin izan da '%s' hustu (%m)."
 msgid "Could not set the baudrate to %d"
 msgstr "Ezin izan da %d(r)en baudio-tasa ezarri"
 
-#: usb/libusb.c:236
+#: usb/libusb.c:239
 #, c-format
 msgid "Could not open USB device (%m)."
 msgstr "Ezin izan da USB gailua ireki (%m)."
 
-#: usb/libusb.c:246
+#: usb/libusb.c:249
 msgid "Camera is already in use."
 msgstr "Kamera jadanik erabiltzen ari da"
 
-#: usb/libusb.c:251
+#: usb/libusb.c:254
 #, c-format
 msgid "Device has driver '%s' attached, detaching it now."
 msgstr "Gailuak '%s' kontrolatzailea erantsita du, askatu orain."
 
-#: usb/libusb.c:254
+#: usb/libusb.c:257
 #, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
 msgstr "Ezin izan da kamera gailuaren kerneleko '%s' kontrolatzailea askatu"
 
-#: usb/libusb.c:256
+#: usb/libusb.c:259
 msgid "Could not query kernel driver of device."
 msgstr "Ezin izan da gailuaren kontrolatzailea kernelari eskatu"
 
-#: usb/libusb.c:263
+#: usb/libusb.c:266
 #, c-format
 msgid ""
 "Could not claim interface %d (%m). Make sure no other program or kernel "
@@ -453,33 +453,33 @@ msgstr ""
 "batek edo kerneleko modulo batek (%s bezalakoak) gailua erabiltzen ari ez "
 "dela, eta gailuan irakurtzeko/idazteko baimenak dituzula."
 
-#: usb/libusb.c:282
+#: usb/libusb.c:284
 #, c-format
 msgid "Could not release interface %d (%m)."
 msgstr "Ezin izan da %d interfazea askatu (%m)."
 
-#: usb/libusb.c:289
+#: usb/libusb.c:291
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr "Ezin izan da USB ataka itxi (%m)."
 
-#: usb/libusb.c:469
+#: usb/libusb.c:517
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "Ezin izan da %d/%d konfigurazioa ezarri (%m)."
 
-#: usb/libusb.c:499
+#: usb/libusb.c:549
 #, c-format
 msgid "Could not set altsetting %d/%d (%m)"
 msgstr "Ezin izan da %d/%d aukerazko konfigurazioa ezarri (%m)"
 
-#: usb/libusb.c:591
+#: usb/libusb.c:641
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr ""
 "Zehaztutako hornitzailearen edo produktuaren IDa (0x%x,0x%x) ez da baliozkoa."
 
-#: usb/libusb.c:623
+#: usb/libusb.c:677
 #, c-format
 msgid ""
 "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
@@ -488,7 +488,7 @@ msgstr ""
 "USB gailua (0x%x hornitzailea, 0x%x produktua) biltegiratze-gailua da, eta "
 "ez du gphoto2-rekin funtzionatuko. Erreferentzia: %s"
 
-#: usb/libusb.c:656
+#: usb/libusb.c:719
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
@@ -497,7 +497,7 @@ msgstr ""
 "Ezin izan da USB gailua (0x%x hornitzailea, 0x%x produktua) aurkitu. Ziurta "
 "zaitez gailua ordenagailuari konektatuta dagoela."
 
-#: usb/libusb.c:876
+#: usb/libusb.c:939
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
@@ -506,8 +506,8 @@ msgstr ""
 "Ezin izan da USB gailua aurkitu (0x%x klasea, 0x%x azpiklasea, 0x%x "
 "protokoloa). Ziurta zaitez gailua ordenagailura konektatuta dagoela."
 
-#: disk/disk.c:177 disk/disk.c:219 disk/disk.c:245 disk/disk.c:277
-#: disk/disk.c:300
+#: disk/disk.c:177 disk/disk.c:221 disk/disk.c:257 disk/disk.c:289
+#: disk/disk.c:312
 #, c-format
 msgid "Media '%s'"
 msgstr ""

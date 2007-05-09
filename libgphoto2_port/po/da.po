@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port 2.3.0\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-11-29 21:33-0500\n"
+"POT-Creation-Date: 2007-05-09 22:01+0200\n"
 "PO-Revision-Date: 2007-03-27 12:46+0200\n"
 "Last-Translator: Mogens Jaeger <mogens@jaeger.tf>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
@@ -45,59 +45,59 @@ msgstr "Kunne ikke indlæse portdriverliste: '%s'."
 msgid "Loaded '%s' ('%s') from '%s'."
 msgstr "Indlæste '%s' ('%s') fra '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:264
+#: libgphoto2_port/gphoto2-port-info-list.c:265
 #, c-format
 msgid "Using ltdl to load io-drivers from '%s'..."
 msgstr "Bruger ltdl til at indlæse io-drivere fra '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:290
+#: libgphoto2_port/gphoto2-port-info-list.c:291
 #, c-format
 msgid "Counting entries (%i available)..."
 msgstr "Tæller indgange (%i til rådighed)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:299
+#: libgphoto2_port/gphoto2-port-info-list.c:300
 #, c-format
 msgid "%i regular entries available."
 msgstr "%i regulære indgange til rådighed."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:328
+#: libgphoto2_port/gphoto2-port-info-list.c:329
 #, c-format
 msgid "Looking for path '%s' (%i entries available)..."
 msgstr "Ser efter sti '%s' (%i indgange til rådighed)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:340
+#: libgphoto2_port/gphoto2-port-info-list.c:341
 #, c-format
 msgid "Starting regex search for '%s'..."
 msgstr "Starter regex-søgning efter '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:348
+#: libgphoto2_port/gphoto2-port-info-list.c:349
 #, c-format
 msgid "Trying '%s'..."
 msgstr "Prøver '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:369
+#: libgphoto2_port/gphoto2-port-info-list.c:370
 msgid "regcomp failed"
 msgstr "regcomp fejlede"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:380
+#: libgphoto2_port/gphoto2-port-info-list.c:381
 #, c-format
 msgid "re_match failed (%i)"
 msgstr "re_match fejlede (%i)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:388
+#: libgphoto2_port/gphoto2-port-info-list.c:389
 msgid "regexec failed"
 msgstr "regexec fejlede"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:394
+#: libgphoto2_port/gphoto2-port-info-list.c:395
 msgid "Generic Port"
 msgstr "Almindelig port"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:418
+#: libgphoto2_port/gphoto2-port-info-list.c:419
 #, c-format
 msgid "Looking up entry '%s'..."
 msgstr "Ser efter indgang '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:448
+#: libgphoto2_port/gphoto2-port-info-list.c:449
 #, c-format
 msgid "Getting info of entry %i (%i available)..."
 msgstr "Henter information om indgang %i (%i til rådighed)..."
@@ -318,18 +318,21 @@ msgstr "Ryd stop..."
 #: libgphoto2_port/gphoto2-port.c:748
 #, c-format
 msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr "Skriver besked (forespørgsel=0x%x værdi=0x%x indeks=0x%x størrelse=%i=0x%x)..."
+msgstr ""
+"Skriver besked (forespørgsel=0x%x værdi=0x%x indeks=0x%x størrelse=%i=0x%"
+"x)..."
 
 #: libgphoto2_port/gphoto2-port.c:769
 #, c-format
 msgid "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr "Læser besked (forespørgsel=0x%x værdi=0x%x indeks=0x%x størrelse=%i=0x%x)..."
+msgstr ""
+"Læser besked (forespørgsel=0x%x værdi=0x%x indeks=0x%x størrelse=%i=0x%x)..."
 
 #: libgphoto2_port/gphoto2-port.c:776
 msgid "msg_read"
 msgstr "msg_read"
 
-#: libgphoto2_port/gphoto2-port.c:892
+#: libgphoto2_port/gphoto2-port.c:948
 msgid "No error description available"
 msgstr "Ingen fejlbeskrivelse tilgængelig"
 
@@ -417,76 +420,95 @@ msgstr "Kunne ikke tømme '%s' (%m)."
 msgid "Could not set the baudrate to %d"
 msgstr "Kunne ikke sætte baudrate til %d"
 
-#: usb/libusb.c:236
+#: usb/libusb.c:239
 #, c-format
 msgid "Could not open USB device (%m)."
 msgstr "Kunne ikke åbne USB enheden (%m)."
 
-#: usb/libusb.c:246
+#: usb/libusb.c:249
 msgid "Camera is already in use."
 msgstr "Kameraet er allerede i brug."
 
-#: usb/libusb.c:251
+#: usb/libusb.c:254
 #, c-format
 msgid "Device has driver '%s' attached, detaching it now."
 msgstr "Enheden har driver '%s' tilknyttet, frigør det nu."
 
-#: usb/libusb.c:254
+#: usb/libusb.c:257
 #, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
 msgstr "Kunne ikke frigøre kerneldriver '%s' fra kameraenheden."
 
-#: usb/libusb.c:256
+#: usb/libusb.c:259
 msgid "Could not query kernel driver of device."
 msgstr "Kunne ikke forespørge kerneldriver fra enheden."
 
-#: usb/libusb.c:263
+#: usb/libusb.c:266
 #, c-format
-msgid "Could not claim interface %d (%m). Make sure no other program or kernel module (such as %s) is using the device and you have read/write access to the device."
-msgstr "Kunne ikke kræve grænseflade %d (%m). Sikr dig at ingen andre programmer eller kerneldrivere (som f.eks. %s) bruger enheden, og at du har læse/skrive rettigheder til enheden."
+msgid ""
+"Could not claim interface %d (%m). Make sure no other program or kernel "
+"module (such as %s) is using the device and you have read/write access to "
+"the device."
+msgstr ""
+"Kunne ikke kræve grænseflade %d (%m). Sikr dig at ingen andre programmer "
+"eller kerneldrivere (som f.eks. %s) bruger enheden, og at du har læse/skrive "
+"rettigheder til enheden."
 
-#: usb/libusb.c:282
+#: usb/libusb.c:284
 #, c-format
 msgid "Could not release interface %d (%m)."
 msgstr "Kunne ikke frigøre grænseflade %d (%m)."
 
-#: usb/libusb.c:289
+#: usb/libusb.c:291
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr "Kunne ikke lukke USB-port (%m)."
 
-#: usb/libusb.c:469
+#: usb/libusb.c:517
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "Kunne ikke sætte konfiguration %d/%d (%m)"
 
-#: usb/libusb.c:499
+#: usb/libusb.c:549
 #, c-format
 msgid "Could not set altsetting %d/%d (%m)"
 msgstr "Kunne ikke sætte alt-indstillinger %d/%d (%m)"
 
-#: usb/libusb.c:591
+#: usb/libusb.c:641
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
-msgstr "Det leverede fremstiller- eller produkt-id (0x%x,0x%x) er ikke gyldigt."
+msgstr ""
+"Det leverede fremstiller- eller produkt-id (0x%x,0x%x) er ikke gyldigt."
 
-#: usb/libusb.c:623
+#: usb/libusb.c:677
 #, c-format
-msgid "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might not function with gphoto2. Reference: %s"
-msgstr "USB-enheden (fremstiller 0x%x, produkt 0x%x) er en masselagerenhed, og virker måske ikke med gphoto2. Reference: %s"
+msgid ""
+"USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
+"not function with gphoto2. Reference: %s"
+msgstr ""
+"USB-enheden (fremstiller 0x%x, produkt 0x%x) er en masselagerenhed, og "
+"virker måske ikke med gphoto2. Reference: %s"
 
-#: usb/libusb.c:656
+#: usb/libusb.c:719
 #, c-format
-msgid "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device is connected to the computer."
-msgstr "Kunne ikke finde USB-enheden (fremstiller 0x%x, produkt 0x%x). Sikr dig at enheden er tilsluttet computeren."
+msgid ""
+"Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
+"is connected to the computer."
+msgstr ""
+"Kunne ikke finde USB-enheden (fremstiller 0x%x, produkt 0x%x). Sikr dig at "
+"enheden er tilsluttet computeren."
 
-#: usb/libusb.c:876
+#: usb/libusb.c:939
 #, c-format
-msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
-msgstr "Kunne ikke finde USB-enheden (class 0x%x, subclass 0x%x, protokol0x%x). Sikr dig at enheden er tilsluttet computeren."
+msgid ""
+"Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
+"sure this device is connected to the computer."
+msgstr ""
+"Kunne ikke finde USB-enheden (class 0x%x, subclass 0x%x, protokol0x%x). Sikr "
+"dig at enheden er tilsluttet computeren."
 
-#: disk/disk.c:177 disk/disk.c:219 disk/disk.c:245 disk/disk.c:277
-#: disk/disk.c:300
+#: disk/disk.c:177 disk/disk.c:221 disk/disk.c:257 disk/disk.c:289
+#: disk/disk.c:312
 #, c-format
 msgid "Media '%s'"
 msgstr "Medie '%s'"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-12-29 01:31+0100\n"
+"POT-Creation-Date: 2007-05-09 22:01+0200\n"
 "PO-Revision-Date: 2002-11-21 13:11+0800\n"
 "Last-Translator: Wang Li <charles@linux.net.cn>\n"
 "Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
@@ -329,7 +329,7 @@ msgstr ""
 msgid "msg_read"
 msgstr "读消息"
 
-#: libgphoto2_port/gphoto2-port.c:892
+#: libgphoto2_port/gphoto2-port.c:948
 msgid "No error description available"
 msgstr "没有可用的错误描述"
 
@@ -417,31 +417,31 @@ msgstr "无法刷新‘%s’(%m)。"
 msgid "Could not set the baudrate to %d"
 msgstr "无法设置将波特率设置为 %d"
 
-#: usb/libusb.c:236
+#: usb/libusb.c:239
 #, c-format
 msgid "Could not open USB device (%m)."
 msgstr "无法打开 USB 设备 (%m)。"
 
-#: usb/libusb.c:246
+#: usb/libusb.c:249
 msgid "Camera is already in use."
-msgstr ""
-
-#: usb/libusb.c:251
-#, c-format
-msgid "Device has driver '%s' attached, detaching it now."
 msgstr ""
 
 #: usb/libusb.c:254
 #, c-format
+msgid "Device has driver '%s' attached, detaching it now."
+msgstr ""
+
+#: usb/libusb.c:257
+#, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
 msgstr ""
 
-#: usb/libusb.c:256
+#: usb/libusb.c:259
 #, fuzzy
 msgid "Could not query kernel driver of device."
 msgstr "无法锁定设备"
 
-#: usb/libusb.c:263
+#: usb/libusb.c:266
 #, fuzzy, c-format
 msgid ""
 "Could not claim interface %d (%m). Make sure no other program or kernel "
@@ -451,46 +451,46 @@ msgstr ""
 "无法请求界面 %d (%m)。请确认没有其它程序或内核模块 (例如 dc2xx 或 stv680) 正"
 "在使用该设备并且您有对该设备的读/写权。"
 
-#: usb/libusb.c:282
+#: usb/libusb.c:284
 #, c-format
 msgid "Could not release interface %d (%m)."
 msgstr "无法释放界面 %d (%m)。"
 
-#: usb/libusb.c:289
+#: usb/libusb.c:291
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr "无法关闭 USB 端口 (%m)。"
 
-#: usb/libusb.c:469
+#: usb/libusb.c:517
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "无法设定配置 %d/%d (%m)"
 
-#: usb/libusb.c:499
+#: usb/libusb.c:549
 #, c-format
 msgid "Could not set altsetting %d/%d (%m)"
 msgstr "无法设定补充设置 %d/%d (%m)"
 
-#: usb/libusb.c:591
+#: usb/libusb.c:641
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr "给出的供应商或产品 id (0x%x、0x%x) 不合法。"
 
-#: usb/libusb.c:623
+#: usb/libusb.c:677
 #, fuzzy, c-format
 msgid ""
 "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
 "not function with gphoto2. Reference: %s"
 msgstr "无法找到 USB 设备 (供应商 0x%x、产品 0x%x)。确信该设备已连接到计算机。"
 
-#: usb/libusb.c:656
+#: usb/libusb.c:719
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
 "is connected to the computer."
 msgstr "无法找到 USB 设备 (供应商 0x%x、产品 0x%x)。确信该设备已连接到计算机。"
 
-#: usb/libusb.c:876
+#: usb/libusb.c:939
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
@@ -498,8 +498,8 @@ msgid ""
 msgstr ""
 "无法找到 USB 设备 (类 0x%x、子类 0x%x、协议 0x%x)。确信该设备已连接到计算机。"
 
-#: disk/disk.c:177 disk/disk.c:219 disk/disk.c:245 disk/disk.c:277
-#: disk/disk.c:300
+#: disk/disk.c:177 disk/disk.c:221 disk/disk.c:257 disk/disk.c:289
+#: disk/disk.c:312
 #, c-format
 msgid "Media '%s'"
 msgstr ""

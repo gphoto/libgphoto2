@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2006-12-29 01:31+0100\n"
+"POT-Creation-Date: 2007-05-09 22:01+0200\n"
 "PO-Revision-Date: 2002-12-03 17:00+0100\n"
 "Last-Translator: Evandro Gardenali <evandro@fasternet.com.br>\n"
 "Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
@@ -329,7 +329,7 @@ msgstr ""
 msgid "msg_read"
 msgstr "ler mensagem"
 
-#: libgphoto2_port/gphoto2-port.c:892
+#: libgphoto2_port/gphoto2-port.c:948
 msgid "No error description available"
 msgstr "Descrição do erro não disponível"
 
@@ -417,31 +417,31 @@ msgstr "Não foi possível descarregar '%s' (%m)."
 msgid "Could not set the baudrate to %d"
 msgstr "Não foi possível ajustar a taxa de baud para %d"
 
-#: usb/libusb.c:236
+#: usb/libusb.c:239
 #, c-format
 msgid "Could not open USB device (%m)."
 msgstr "Não foi possível abrir o dispositivo USB"
 
-#: usb/libusb.c:246
+#: usb/libusb.c:249
 msgid "Camera is already in use."
-msgstr ""
-
-#: usb/libusb.c:251
-#, c-format
-msgid "Device has driver '%s' attached, detaching it now."
 msgstr ""
 
 #: usb/libusb.c:254
 #, c-format
+msgid "Device has driver '%s' attached, detaching it now."
+msgstr ""
+
+#: usb/libusb.c:257
+#, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
 msgstr ""
 
-#: usb/libusb.c:256
+#: usb/libusb.c:259
 #, fuzzy
 msgid "Could not query kernel driver of device."
 msgstr "Não foi possível travar o dispositivo"
 
-#: usb/libusb.c:263
+#: usb/libusb.c:266
 #, fuzzy, c-format
 msgid ""
 "Could not claim interface %d (%m). Make sure no other program or kernel "
@@ -452,32 +452,32 @@ msgstr ""
 "programa ou kernel module (e.g. dc2xx ou stv680) está usando o dispositivo e "
 "você tem acesso de leitura e escrita para o dispositivo."
 
-#: usb/libusb.c:282
+#: usb/libusb.c:284
 #, c-format
 msgid "Could not release interface %d (%m)."
 msgstr "Não foi possível liberar a interface %d (%m)."
 
-#: usb/libusb.c:289
+#: usb/libusb.c:291
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr "Não foi possível fechar a porta USB"
 
-#: usb/libusb.c:469
+#: usb/libusb.c:517
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "Não foi possível ajustar a configuração %d/%d (%m)"
 
-#: usb/libusb.c:499
+#: usb/libusb.c:549
 #, c-format
 msgid "Could not set altsetting %d/%d (%m)"
 msgstr "Não foi possível ajustar a configuração alternativa %d/%d (%m)"
 
-#: usb/libusb.c:591
+#: usb/libusb.c:641
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr "O fabricante ou o ID do produto (0x%x,0x%x) não é valido"
 
-#: usb/libusb.c:623
+#: usb/libusb.c:677
 #, fuzzy, c-format
 msgid ""
 "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
@@ -486,7 +486,7 @@ msgstr ""
 "Não foi possível encontrar dispostivos USB (fabricante 0x%x, produto 0x%x),"
 "Tenha certeza que esse dispositivo está conectado ao computador."
 
-#: usb/libusb.c:656
+#: usb/libusb.c:719
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
@@ -495,7 +495,7 @@ msgstr ""
 "Não foi possível encontrar dispostivos USB (fabricante 0x%x, produto 0x%x),"
 "Tenha certeza que esse dispositivo está conectado ao computador."
 
-#: usb/libusb.c:876
+#: usb/libusb.c:939
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
@@ -504,8 +504,8 @@ msgstr ""
 "Não foi possível encontrar dispositivo USB (classe 0x%x, subclasse 0x%x, "
 "protocolo 0x%x)"
 
-#: disk/disk.c:177 disk/disk.c:219 disk/disk.c:245 disk/disk.c:277
-#: disk/disk.c:300
+#: disk/disk.c:177 disk/disk.c:221 disk/disk.c:257 disk/disk.c:289
+#: disk/disk.c:312
 #, c-format
 msgid "Media '%s'"
 msgstr ""
