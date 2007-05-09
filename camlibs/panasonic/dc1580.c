@@ -462,20 +462,14 @@ int camera_abilities (CameraAbilitiesList *list) {
 }
 
 static int camera_exit (Camera *camera, GPContext *context) {
-        
         gp_context_status(context, _("Disconnecting camera."));
-
         dsc2_disconnect(camera);
-
-	if (camera->pl) {
-		if (camera->pl->buf) {
-			free (camera->pl->buf);
-			camera->pl->buf = NULL;
-		}
+	if (camera->pl->buf) {
 		free (camera->pl->buf);
 		camera->pl->buf = NULL;
 	}
-
+	free (camera->pl);
+	camera->pl = NULL;
         return (GP_OK);
 }
 
