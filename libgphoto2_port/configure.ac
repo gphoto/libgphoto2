@@ -40,9 +40,10 @@ dnl ---------------------------------------------------------------------------
 dnl A:R:C=6:1:6 libgphoto2_port-0.6.1 libgphoto2-2.2.1
 dnl A:R:C=7:0:7 libgphoto2_port-0.7.0 libgphoto2-2.3
 dnl A:R:C=7:1:7 libgphoto2_port-0.7.1 libgphoto2-2.3.x
-AC_SUBST([LIBGPHOTO2_PORT_AGE],      [7])
-AC_SUBST([LIBGPHOTO2_PORT_REVISION], [1])
-AC_SUBST([LIBGPHOTO2_PORT_CURRENT],  [7])
+dnl A:R:C=8:0:8 libgphoto2_port-0.7.1 libgphoto2-2.4.x
+AC_SUBST([LIBGPHOTO2_PORT_AGE],      [8])
+AC_SUBST([LIBGPHOTO2_PORT_REVISION], [0])
+AC_SUBST([LIBGPHOTO2_PORT_CURRENT],  [8])
 AC_SUBST([LIBGPHOTO2_PORT_CURRENT_MIN],
          [`expr $LIBGPHOTO2_PORT_CURRENT - $LIBGPHOTO2_PORT_AGE`])
 AC_SUBST([LIBGPHOTO2_PORT_VERSION_INFO],
