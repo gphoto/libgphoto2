@@ -1,3 +1,11 @@
+2007-05-09  Marcus Meissner  <marcus@jet.franken.de>
+
+	* gphoto2/gphoto2-port.h, gphoto2/gphoto2-port-library.h,
+	  libgphoto2_port/gphoto2-port.c, libgphoto2_port/libgphoto2_port.sym,
+	  usb/libusb.c:
+
+	  Added USB class based control read and write (for PTP driver).
+
 2007-02-12  Marcus Meissner  <marcus@jet.franken.de>
 
 	* ptpip/ptpip.c: mDNS auto discovery disabled,
