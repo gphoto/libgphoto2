@@ -73,21 +73,21 @@
 
 #define CR(c,result,ctx)						\
 {									\
-	int r = (result);						\
+	int r1 = (result);						\
 									\
-	if (r < 0) {							\
+	if (r1 < 0) {							\
 									\
 		/* libgphoto2_port doesn't have a GPContext */		\
-		if (r > -100)						\
+		if (r1 > -100)						\
 			gp_context_error ((ctx), _("An error occurred "	\
 				"in the io-library ('%s'): %s"),	\
-				gp_port_result_as_string (r),		\
+				gp_port_result_as_string (r1),		\
 				(c) ? gp_port_get_error ((c)->port) :	\
 				      _("No additional information "	\
 				      "available."));			\
 		if (c)							\
 			CAMERA_UNUSED((c),(ctx));			\
-		return (r);						\
+		return (r1);						\
 	}								\
 }
 
@@ -122,100 +122,94 @@
 #ifdef HAVE_MULTI
 #define CHECK_OPEN(c,ctx)						\
 {									\
-	int r;								\
+	int r2;								\
 									\
 	if (strcmp ((c)->pc->a.model,"Directory Browse")) {		\
-		r = gp_port_open ((c)->port);				\
-		if (r < 0) {						\
+		r2 = gp_port_open ((c)->port);				\
+		if (r2 < 0) {						\
 			CAMERA_UNUSED (c,ctx);				\
-			return (r);					\
+			return (r2);					\
 		}							\
 	}								\
 	if ((c)->functions->pre_func) {					\
-		r = (c)->functions->pre_func (c,ctx);			\
-		if (r < 0) {						\
+		r2 = (c)->functions->pre_func (c,ctx);			\
+		if (r2 < 0) {						\
 			CAMERA_UNUSED (c,ctx);				\
-			return (r);					\
+			return (r2);					\
 		}							\
 	}								\
 }
 #else
 #define CHECK_OPEN(c,ctx)						\
 {                                                                       \
-	int r;								\
-									\
-	if ((c)->functions->pre_func) {                                 \
-		r = (c)->functions->pre_func (c,ctx);                   \
-		if (r < 0) {                                            \
+	if ((c)->functions->pre_func) {					\
+		int r2 = (c)->functions->pre_func (c,ctx);		\
+		if (r2 < 0) {                                           \
 			CAMERA_UNUSED (c,ctx);				\
-			return (r);                                     \
+			return (r2);                                    \
 		}                                                       \
 	}                                                               \
 }
 #endif
 
 #ifdef HAVE_MULTI
-#define CHECK_CLOSE(c,ctx)						\
-{									\
-	int r;								\
-									\
-	if (strcmp ((c)->pc->a.model,"Directory Browse"))		\
-		gp_port_close ((c)->port);				\
-	if ((c)->functions->post_func) {				\
-		r = (c)->functions->post_func (c,ctx);			\
-		if (r < 0) {						\
-			CAMERA_UNUSED (c,ctx);				\
-			return (r);					\
-		}							\
-	}								\
+#define CHECK_CLOSE(c,ctx)					\
+{								\
+	if (strcmp ((c)->pc->a.model,"Directory Browse"))	\
+		gp_port_close ((c)->port);			\
+	if ((c)->functions->post_func) {			\
+		int r3 = (c)->functions->post_func (c,ctx);	\
+		if (r3 < 0) {					\
+			CAMERA_UNUSED (c,ctx);			\
+			return (r3);				\
+		}						\
+	}							\
 }
 #else
-#define CHECK_CLOSE(c,ctx)                                              \
-{                                                                       \
-	int r;								\
-									\
-	if ((c)->functions->post_func) {                                \
-		r = (c)->functions->post_func (c,ctx);                  \
-		if (r < 0) {                                            \
-			CAMERA_UNUSED (c,ctx);				\
-			return (r);                                     \
-		}							\
-	}                                                               \
+#define CHECK_CLOSE(c,ctx)					\
+{								\
+	if ((c)->functions->post_func) {			\
+		int r3 = (c)->functions->post_func (c,ctx);	\
+		if (r3 < 0) {					\
+			CAMERA_UNUSED (c,ctx);			\
+			return (r3);				\
+		}						\
+	}							\
 }
 #endif
 
 #define CRS(c,res,ctx)							\
 {									\
-	int r = (res);							\
+	int r4 = (res);							\
 									\
-	if (r < 0) {							\
+	if (r4 < 0) {							\
 		CAMERA_UNUSED (c,ctx);                              	\
-		return (r);						\
+		return (r4);						\
 	}								\
 }
 
 #define CRSL(c,res,ctx,list)						\
 {									\
-	int r = (res);							\
+	int r5 = (res);							\
 									\
-	if (r < 0) {							\
+	if (r5 < 0) {							\
 		CAMERA_UNUSED (c,ctx);                              	\
 		gp_list_free (list);					\
-		return (r);						\
+		return (r5);						\
 	}								\
 }
 
 #define CHECK_RESULT_OPEN_CLOSE(c,result,ctx)				\
 {									\
-	int r;								\
+	int r6;								\
 									\
 	CHECK_OPEN (c,ctx);						\
-	r = (result);							\
-	if (r < 0) {							\
+	r6 = (result);							\
+	if (r6 < 0) {							\
 		CHECK_CLOSE (c,ctx);					\
 		gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Operation failed!");\
 		CAMERA_UNUSED (c,ctx);                              	\
-		return (r);						\
+		return (r6);						\
 	}								\
 	CHECK_CLOSE (c,ctx);						\
 }
