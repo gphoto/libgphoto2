@@ -98,7 +98,7 @@ int sierra_change_folder (Camera *camera, const char *folder, GPContext *context
 
 	/* We will later need a path ending with '/'. */
 	memset (target, 0, sizeof (target));
-	if (folder && folder[0])
+	if (folder[0])
 		strncpy (target, folder, sizeof (target) - 1);
 	if (target[strlen (target) - 1] != '/')
 		strcat (target, "/");
