@@ -216,8 +216,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		buf[6] = (len >>  8) & 0xff;
 		buf[7] =  len        & 0xff;
 		result = gp_port_usb_msg_write (camera->port,BLINK2_GET_MEMORY,0x03,0,buf,8);
-		if (result < GP_OK)
+		if (result < GP_OK) {
+			free (jpegdata);
 			break;
+		}
 		len	*= 8;
 		curread  = 0;
 		do {
@@ -242,8 +244,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		jpeg_create_decompress(&dinfo);
 		dinfo.src		= &xjsm;
 		ret = jpeg_read_header(&dinfo,TRUE);
-		if (ret != JPEG_HEADER_OK)
+		if (ret != JPEG_HEADER_OK) {
+			jpeg_destroy_decompress(&dinfo);
+			free (jpegdata);
 			break;
+		}
 		dinfo.out_color_space = JCS_RGB;
 		jpeg_start_decompress(&dinfo);
 
