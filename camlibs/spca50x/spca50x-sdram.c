@@ -212,7 +212,7 @@ spca50x_get_image (CameraPrivateLibrary * lib, uint8_t ** buf,
 	uint8_t qIndex = 0, format;
 	uint32_t start;
 	uint8_t *mybuf;
-	int size, o_size, file_size;
+	int size, o_size, file_size, ret;
 	int omit_escape = 0;
 
 	p = g_file->fat;
@@ -252,7 +252,11 @@ spca50x_get_image (CameraPrivateLibrary * lib, uint8_t ** buf,
 		return GP_ERROR_NO_MEMORY;
 
 	if (lib->bridge == BRIDGE_SPCA504) {
-		CHECK (spca50x_download_data (lib, start, size, mybuf));
+		ret = spca50x_download_data (lib, start, size, mybuf);
+		if (ret < GP_OK) {
+			free (mybuf);
+			return ret;
+		}
 	} else if (lib->bridge == BRIDGE_SPCA500) {
 		/* find the file index on the camera */
 		int index;
@@ -260,18 +264,28 @@ spca50x_get_image (CameraPrivateLibrary * lib, uint8_t ** buf,
 		index = (g_file->fat - lib->fats) / SPCA50X_FAT_PAGE_SIZE;
 		spca50x_reset (lib);
 		/* trigger upload of image at that index */
-		CHECK (gp_port_usb_msg_write (lib->gpdev, 0x06,
-					      0x70FF - index, 0x01, NULL, 0));
+		ret = gp_port_usb_msg_write (lib->gpdev, 0x06,
+					      0x70FF - index, 0x01, NULL, 0);
+		if (ret < GP_OK) {
+			free (mybuf);
+			return ret;
+		}
 		sleep (1);
-		CHECK (gp_port_read (lib->gpdev, mybuf, size));
+		ret = gp_port_read (lib->gpdev, mybuf, size);
+		if (ret < GP_OK) {
+			free (mybuf);
+			return ret;
+		}
 		/* the smallest ones are in a different format */
 		if ((p[20] & 0xff) == 2)
 			format = 0x22;
 	}
 	/* now build a jpeg */
 	lp_jpg = malloc (file_size);
-	if (!lp_jpg)
+	if (!lp_jpg) {
+		free (mybuf);
 		return GP_ERROR_NO_MEMORY;
+	}
 	create_jpeg_from_data (lp_jpg, mybuf, qIndex, g_file->width,
 			       g_file->height, format, o_size, &file_size,
 			       0, omit_escape);
@@ -288,7 +302,7 @@ static int
 spca50x_get_avi (CameraPrivateLibrary * lib, uint8_t ** buf,
 		unsigned int *len, struct SPCA50xFile *g_file)
 {
-	int i, j, length;
+	int i, j, length, ret;
 	int frame_count = 0, frames_per_fat = 0, fn = 0;
 	int size = 0;
 	int file_size;
@@ -351,7 +365,12 @@ spca50x_get_avi (CameraPrivateLibrary * lib, uint8_t ** buf,
 		return GP_ERROR_NO_MEMORY;
 	}
 
-	CHECK (spca50x_download_data (lib, start, size, mybuf));
+	ret = spca50x_download_data (lib, start, size, mybuf);
+	if (ret < GP_OK) {
+		free (avi_index);
+		free (mybuf);
+		return ret;
+	}
 
 	/* Now write our data to a file with an avi header */
 	file_size = size + SPCA50X_AVI_HEADER_LENGTH
@@ -360,8 +379,11 @@ spca50x_get_avi (CameraPrivateLibrary * lib, uint8_t ** buf,
 		+ 1024 * 10 * frame_count;
 
 	avi = malloc (file_size);
-	if (!avi)
+	if (!avi) {
+		free (avi_index);
+		free (mybuf);
 		return GP_ERROR_NO_MEMORY;
+	}
 
 	start_of_file = avi;
 
@@ -498,7 +520,7 @@ spca50x_get_avi_thumbnail (CameraPrivateLibrary * lib, uint8_t ** buf,
 	uint32_t start;
 	uint8_t *mybuf;
 	int size, o_size, file_size;
-	int w, h;
+	int w, h, ret;
 
 	/* FIXME */
 	if (lib->bridge == BRIDGE_SPCA500)
@@ -529,12 +551,18 @@ spca50x_get_avi_thumbnail (CameraPrivateLibrary * lib, uint8_t ** buf,
 	if (!mybuf)
 		return GP_ERROR_NO_MEMORY;
 
-	CHECK (spca50x_download_data (lib, start, size, mybuf));
+	ret = spca50x_download_data (lib, start, size, mybuf);
+	if (ret < GP_OK) {
+		free (mybuf);
+		return ret;
+	}
 
 	/* now build a jpeg */
 	lp_jpg = malloc (file_size);
-	if (!lp_jpg)
+	if (!lp_jpg) {
+		free (mybuf);
 		return GP_ERROR_NO_MEMORY;
+	}
 
 	create_jpeg_from_data (lp_jpg, mybuf, qIndex, g_file->width,
 			       g_file->height, 0x22, o_size, &file_size, 0, 0);
@@ -559,7 +587,7 @@ spca50x_get_image_thumbnail (CameraPrivateLibrary * lib, uint8_t ** buf,
 	unsigned int t_width, t_height;
 	uint8_t *yuv_p;
 	uint8_t *rgb_p;
-	int headerlength;
+	int headerlength, ret;
 
 	p = g_file->fat;
 
@@ -581,7 +609,11 @@ spca50x_get_image_thumbnail (CameraPrivateLibrary * lib, uint8_t ** buf,
 	mybuf = malloc (size);
 
 	if (lib->bridge == BRIDGE_SPCA504) {
-		CHECK (spca50x_download_data (lib, start, size, mybuf));
+		ret = spca50x_download_data (lib, start, size, mybuf);
+		if (ret < GP_OK) {
+			free (mybuf);
+			return ret;
+		}
 	} else if (lib->bridge == BRIDGE_SPCA500) {
 		/* find the file index on the camera */
 		int index;
@@ -589,15 +621,25 @@ spca50x_get_image_thumbnail (CameraPrivateLibrary * lib, uint8_t ** buf,
 		index = (g_file->fat - lib->fats) / SPCA50X_FAT_PAGE_SIZE;
 		spca50x_reset (lib);
 		/* trigger upload of thumbnail at that index */
-		CHECK (gp_port_usb_msg_write (lib->gpdev, 0x06,
-					      0x70FF - index, 0x09, NULL, 0));
+		ret = gp_port_usb_msg_write (lib->gpdev, 0x06,
+					      0x70FF - index, 0x09, NULL, 0);
+		if (ret < GP_OK) {
+			free (mybuf);
+			return ret;
+		}
 		sleep (1);
-		CHECK (gp_port_read (lib->gpdev, mybuf, size));
+		ret = gp_port_read (lib->gpdev, mybuf, size);
+		if (ret < GP_OK) {
+			free (mybuf);
+			return ret;
+		}
 	}
 	*len = t_width * t_height * 3 + headerlength;
 	*buf = malloc (*len);
-	if (!*buf)
+	if (!*buf) {
+		free (mybuf);
 		return (GP_ERROR_NO_MEMORY);
+	}
 
 	tmp = *buf;
 	snprintf (tmp, *len, "P6 %d %d 255\n", t_width, t_height);
