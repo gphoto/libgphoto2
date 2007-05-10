@@ -1,7 +1,7 @@
 /* library.c
  *
  * Copyright (C) 2001-2005 Mariusz Woloszyn <emsi@ipartners.pl>
- * Copyright (C) 2003-2006 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright (C) 2003-2007 Marcus Meissner <marcus@jet.franken.de>
  * Copyright (C) 2005 Hubert Figuiere <hfiguiere@teaser.fr>
  *
  * This library is free software; you can redistribute it and/or
@@ -2629,6 +2629,7 @@ ptp_mtp_parse_metadata (
 		}
 		if (opd.GetSet == 0) {
 			gp_log (GP_LOG_DEBUG, "ptp2", "Tag %s is read only, sorry.", propname);
+			free (content); content = NULL;
 			continue;
 		}	
 		switch (opd.DataType) {
