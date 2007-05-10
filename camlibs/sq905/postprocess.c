@@ -67,18 +67,17 @@ sq_decompress (SQModel model, unsigned char *output, unsigned char *data,
 	green = data + w*h/4;
 
 	red_out = malloc(w*h/4);
-	if (!red_out) {
-		free (red_out);
+	if (!red_out)
 		return -1;
-	}
 	blue_out = malloc(w*h/4);
 	if (!blue_out) {
-		free (blue_out);
+		free (red_out);
 		return -1;
 	}
 	green_out = malloc(w*h/2);
 	if (!green_out) {
-		free (green_out);
+		free (red_out);
+		free (blue_out);
 		return -1;
 	}
 	decode_panel (red_out, red, w/2, h/2, RED);
@@ -118,6 +117,9 @@ sq_decompress (SQModel model, unsigned char *output, unsigned char *data,
 		break;
 	default: ; 		/* default is "do nothing" */
 	}
+	free (red_out);
+	free (green_out);
+	free (blue_out);
 	return(GP_OK);
 }
 
@@ -140,10 +142,8 @@ int decode_panel (unsigned char *panel_out, unsigned char *panel,
 	temp_line = malloc(panelwidth);
 
 
-	if (!temp_line) {
-		free(temp_line);
+	if (!temp_line)
 		return -1;
-	}	
 
 	for(i=0; i < panelwidth; i++){
 	    temp_line[i] = 0x80;
