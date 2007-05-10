@@ -165,8 +165,10 @@ int stv0674_get_image(GPPort *port, int image_no, CameraFile *file)
 				     0,
 				     imagno,
 				     8);
-	if (ret < GP_OK)
+	if (ret < GP_OK) {
+	    free (data);
 	    return ret;
+	}
 
 	gp_port_read(port, &data[current*0x1000], 0x1000);
     }
@@ -180,8 +182,10 @@ int stv0674_get_image(GPPort *port, int image_no, CameraFile *file)
 				     0,
 				     imagno,
 				     8);
-	if (ret < GP_OK)
+	if (ret < GP_OK) {
+	    free (data);
 	    return ret;
+	}
 
 	gp_port_read(port, &data[current*0x1000], remain);
 
