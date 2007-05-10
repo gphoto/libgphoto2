@@ -1099,8 +1099,10 @@ localization_file_read (Camera *camera, const char *file_name,
         /* Allocate the memory */
         *data_size = 0;
         *data = malloc (sizeof (char) * 65536);
-        if (!*data)
+        if (!*data) {
+		fclose (file);
                 return (GP_ERROR_NO_MEMORY);
+	}
 
         j = 0;
         line_number = 1;
