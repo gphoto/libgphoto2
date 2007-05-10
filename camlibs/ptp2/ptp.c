@@ -1,7 +1,7 @@
 /* ptp.c
  *
  * Copyright (C) 2001-2004 Mariusz Woloszyn <emsi@ipartners.pl>
- * Copyright (C) 2003-2006 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright (C) 2003-2007 Marcus Meissner <marcus@jet.franken.de>
  * Copyright (C) 2006 Linus Walleij <triad@df.lth.se>
  *
  * This library is free software; you can redistribute it and/or
@@ -2148,11 +2148,13 @@ ptp_nikon_getwifiprofilelist (PTPParams* params)
 
 		buffer = ptp_unpack_string(params, data, pos, &len);
 		strncpy(params->wifi_profiles[profn].creation_date, buffer, sizeof(params->wifi_profiles[profn].creation_date));
+		free (buffer);
 		pos += (len*2+1);
 		if (pos+1 >= size) return PTP_RC_Undefined;
 		/* FIXME: check if it is really last usage date */
 		buffer = ptp_unpack_string(params, data, pos, &len);
 		strncpy(params->wifi_profiles[profn].lastusage_date, buffer, sizeof(params->wifi_profiles[profn].lastusage_date));
+		free (buffer);
 		pos += (len*2+1);
 		if (pos+5 >= size) return PTP_RC_Undefined;
 		
