@@ -502,6 +502,9 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	if (cam_has_flash(camera->pl) || cam_has_card(camera->pl) ) {
 		CHECK (spca50x_flash_get_filecount
 					(camera->pl, &flash_file_count));
+	} else {
+		/* should not happen really */
+		return GP_ERROR;
 	}
 	if (n < flash_file_count) {
 		return spca500_flash_delete_file (camera->pl, n);
