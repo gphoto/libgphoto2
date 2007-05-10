@@ -563,8 +563,10 @@ spca50x_process_thumbnail (CameraPrivateLibrary *lib,	/*  context */
  */
 	hdrlen = snprintf(tmp, alloc_size, "P6 %d %d 255\n", w, h);
 	true_size = w * h * 3 + hdrlen;
-	if ( true_size > alloc_size )
+	if ( true_size > alloc_size ) {
+		free (tmp);
 		return GP_ERROR;
+	}
 
 	yuv_p = buf;
 	rgb_p = tmp + hdrlen;
@@ -793,7 +795,7 @@ spca50x_flash_get_file (CameraPrivateLibrary *lib, GPContext *context,
 	uint32_t file_size = 0, aligned_size = 0;
 	uint8_t *p, *buf;
 	int file_number;
-	int align_to;
+	int align_to, ret;
 
 	if (lib->bridge == BRIDGE_SPCA500) { /* for dsc 350 cams */
 		return spca500_flash_84D_get_file (lib, data, len, index, thumbnail);
@@ -851,12 +853,24 @@ spca50x_flash_get_file (CameraPrivateLibrary *lib, GPContext *context,
 	if (!buf)
 		return GP_ERROR_NO_MEMORY;
 
-	CHECK (spca50x_flash_wait_for_ready(lib));
-	CHECK (gp_port_read (lib->gpdev, buf, aligned_size));
+	ret = spca50x_flash_wait_for_ready(lib);
+	if (ret < GP_OK) {
+		free (buf);
+		return ret;
+	}
+	ret = gp_port_read (lib->gpdev, buf, aligned_size);
+	if (ret < GP_OK) {
+		free (buf);
+		return ret;
+	}
 	/* For images, we are done now, thumbnails need to be converted from
 	 * yuv to rgb and a pbm header added. */
 	if (thumbnail) {
-		CHECK(spca50x_process_thumbnail (lib, data, len, buf, file_size, index));
+		ret = spca50x_process_thumbnail (lib, data, len, buf, file_size, index);
+		if (ret < GP_OK) {
+			free (buf);
+			return ret;
+		}
 	} else {
 		*data = buf;
 		*len = file_size;
