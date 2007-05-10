@@ -241,6 +241,7 @@ static unsigned char *digita_file_get(Camera *camera, const char *folder,
 
 	if (digita_get_file_data(camera->pl, thumbnail, &fn, &tag, data) < 0) {
 		GP_DEBUG( "digita_get_picture: digita_get_file_data failed");
+		free (data);
 		return NULL;
 	}
 
@@ -268,6 +269,7 @@ static unsigned char *digita_file_get(Camera *camera, const char *folder,
 
 		if (digita_get_file_data(camera->pl, thumbnail, &fn, &tag, data + pos) < 0) {
 			GP_DEBUG ("digita_get_file_data failed.");
+			free (data);
 			return NULL;
 		}
 		pos += ntohl(tag.length);
