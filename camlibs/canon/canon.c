@@ -1665,10 +1665,9 @@ int
 canon_int_set_file_attributes (Camera *camera, const char *file, const char *dir,
                                canonDirentAttributeBits attrs, GPContext *context)
 {
-        unsigned char *payload;
         unsigned char *msg;
         unsigned char attr[4];
-        unsigned int len, payload_length;
+        unsigned int len;
 
         GP_DEBUG ("canon_int_set_file_attributes() called for '%s' '%s', attributes 0x%x",
                   dir, file, attrs);
@@ -1678,11 +1677,6 @@ canon_int_set_file_attributes (Camera *camera, const char *file, const char *dir
 
         switch (camera->port->type) {
                 case GP_PORT_USB:
-                        payload_length = 4 + strlen (dir) + 1 + strlen (file) + 2;
-                        payload = (unsigned char*) calloc ( payload_length, sizeof(unsigned char) );
-                        /* create payload (yes, path and filename are two different strings
-                         * and not meant to be concatenated)
-                         */
                         return canon_usb_set_file_attributes ( camera, attrs, dir, file, context );
                         break;
                 case GP_PORT_SERIAL:
@@ -1731,7 +1725,7 @@ canon_int_set_file_attributes (Camera *camera, const char *file, const char *dir
 int
 canon_int_get_release_params (Camera *camera, GPContext *context)
 {
-        unsigned char *response;
+        unsigned char *response = NULL;
         unsigned int len = 0x8c;
         int status;
 

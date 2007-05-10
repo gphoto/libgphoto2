@@ -2071,13 +2071,12 @@ int canon_usb_set_file_time ( Camera *camera, char *camera_filename, time_t time
         htole32a ( payload, time );          /* Load specified time for camera directory. */
         result_buffer = canon_usb_dialogue ( camera, CANON_USB_FUNCTION_SET_FILE_TIME,
 					     &bytes_read, payload, payload_size );
+        free ( payload );
         if ( result_buffer == NULL ) {
                 GP_DEBUG ( "canon_usb_set_file_time:"
                            " dialogue failed." );
                 return GP_ERROR_OS_FAILURE;
         }
-
-        free ( payload );
         return GP_OK;
 }
 
