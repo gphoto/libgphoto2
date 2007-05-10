@@ -1,6 +1,4 @@
 # translation of de.po to
-# translation of de.po to deutsch
-# translation of de.po to Deutsch
 # German Translation.
 # Copyright © 2000-2002 Scott Fritzinger <scottf@unr.edu> et al.
 #
@@ -10,16 +8,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libgphoto2_port 2.2.0\n"
+"Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2007-05-09 22:01+0200\n"
-"PO-Revision-Date: 2006-06-20 22:46+0200\n"
-"Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
-"Language-Team: German <translation-team-de@lists.sourceforge.net>\n"
+"PO-Revision-Date: 2007-05-10 11:07+0200\n"
+"Last-Translator: \n"
+"Language-Team:  <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.10\n"
+"X-Generator: KBabel 1.11.4\n"
 
 #: libgphoto2_port/gphoto2-port-info-list.c:194
 #, c-format
@@ -130,7 +128,7 @@ msgstr "Nicht unterstützte Funktion"
 
 #: libgphoto2_port/gphoto2-port-result.c:68
 msgid "Fixed limit exceeded"
-msgstr ""
+msgstr "Festes Limit überschritten."
 
 #: libgphoto2_port/gphoto2-port-result.c:70
 msgid "Timeout reading from or writing to the port"
@@ -324,8 +322,7 @@ msgstr "Lösche Halt..."
 #: libgphoto2_port/gphoto2-port.c:748
 #, c-format
 msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr ""
-"Schreibe Nachricht (request=0x%x, Wert=0x%x, Index=0x%x, Größe=%i=0x%x)..."
+msgstr "Schreibe Nachricht (request=0x%x, Wert=0x%x, Index=0x%x, Größe=%i=0x%x)..."
 
 #: libgphoto2_port/gphoto2-port.c:769
 #, c-format
@@ -486,8 +483,7 @@ msgstr "Konnte Alternativ-Setting %d/%d nicht setzen (%m)"
 #: usb/libusb.c:641
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
-msgstr ""
-"Die angegebene Hersteller- oder Produkt-ID (0x%x,0x%x) ist nicht gültig."
+msgstr "Die angegebene Hersteller- oder Produkt-ID (0x%x,0x%x) ist nicht gültig."
 
 #: usb/libusb.c:677
 #, c-format
@@ -529,3 +525,4 @@ msgstr "Medium »%s«"
 #: disk/disk.c:178
 msgid "(unknown)"
 msgstr "(unbekannt)"
+
