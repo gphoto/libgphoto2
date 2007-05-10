@@ -384,7 +384,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 
 		ppm = malloc (w * h * 3 + 256); /* room for data + header */
-		if (!ppm) { return GP_ERROR_NO_MEMORY; }
+		if (!ppm) {
+			free (data);
+			free (p_data);
+			return GP_ERROR_NO_MEMORY;
+		}
     		sprintf (ppm,
 			"P6\n"
 			"# CREATOR: gphoto2, SONIX library\n"
