@@ -604,7 +604,8 @@ camera_init (Camera *camera, GPContext *context)
 			int same;
 			char *m = strdup( models[x].model );
 			char *p = strchr (m, ':' );
-			*p = ' ';
+
+			if (p) *p = ' ';
 			same = !strcmp (m, abilities.model);
 			free (m);
 			if (same) {
