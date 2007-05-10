@@ -123,7 +123,7 @@ gsmart300_request_file (CameraPrivateLibrary * lib, uint8_t ** buf,
 	uint8_t *p, *lp_jpg, *start_of_file;
 	uint8_t qIndex, value;
 	uint8_t *mybuf;
-	int i;
+	int i, ret;
 	/* NOTE : these varialbes are slightly renamed */
 	int flash_size, data_size, file_size;
 
@@ -145,13 +145,19 @@ gsmart300_request_file (CameraPrivateLibrary * lib, uint8_t ** buf,
 	if (!mybuf)
 		return GP_ERROR_NO_MEMORY;
 
-	CHECK (gsmart300_download_data (lib, __GS300_PIC, g_file->index,
-				        flash_size, mybuf));
+	ret = gsmart300_download_data (lib, __GS300_PIC, g_file->index,
+				        flash_size, mybuf);
+	if (ret < GP_OK) {
+		free (mybuf);
+		return ret;
+	}
 
 	/* now build a jpeg */
 	lp_jpg = malloc (file_size);
-	if (!lp_jpg)
+	if (!lp_jpg) {
+		free (mybuf);
 		return GP_ERROR_NO_MEMORY;
+	}
 	start_of_file = lp_jpg;
 
 	/* copy the header from the template */
@@ -222,6 +228,7 @@ gsmart300_get_image_thumbnail (CameraPrivateLibrary * lib, uint8_t ** buf,
 	uint8_t *yuv_p;
 	uint8_t *rgb_p;
 	unsigned char pbm_header[14];
+	int ret;
 
 	p = g_file->fat;
 
@@ -238,16 +245,23 @@ gsmart300_get_image_thumbnail (CameraPrivateLibrary * lib, uint8_t ** buf,
 	size = 9728;
 
 	mybuf = malloc (size);
-	CHECK (gsmart300_download_data (lib, __GS300_THUMB, g_file->index,
-				        size, mybuf));
-
+	if (!mybuf)
+		return (GP_ERROR_NO_MEMORY);
+	ret = gsmart300_download_data (lib, __GS300_THUMB, g_file->index,
+				        size, mybuf);
+	if (ret < GP_OK) {
+		free (mybuf);
+		return ret;
+	}
 	/* effective size of file */
 	size = 9600;
 
 	*len = t_width * t_height * 3 + sizeof (pbm_header);
 	*buf = malloc (*len);
-	if (!*buf)
+	if (!*buf) {
+		free (mybuf);
 		return (GP_ERROR_NO_MEMORY);
+	}
 
 	tmp = *buf;
 	snprintf (tmp, sizeof (pbm_header), "%s", pbm_header);
@@ -276,7 +290,6 @@ gsmart300_get_image_thumbnail (CameraPrivateLibrary * lib, uint8_t ** buf,
 
 		yuv_p += 4;
 	}
-
 	free (mybuf);
 	return (GP_OK);
 }
