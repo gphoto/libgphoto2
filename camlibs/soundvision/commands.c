@@ -44,16 +44,11 @@ int32_t soundvision_send_command(uint32_t command, uint32_t argument,
     /* Filenames are always 12 bytes long */
 int32_t soundvision_send_file_command(const char *filename, 
 				       CameraPrivateLibrary *dev) {
-    
-    uint8_t file_cmd[16];
-    int result;
-   
+    char file_cmd[16];
+
     htole32a(&file_cmd[0],0xc);        /* Length is 12 little-endian 32 bits */
     strncpy(&file_cmd[4],filename,12); /* Filename is 12 bytes at the end */
-					  
-    result=gp_port_write(dev->gpdev,(char *)&file_cmd,sizeof(file_cmd));
-    if (result<0) return result;
-    return GP_OK;
+    return gp_port_write (dev->gpdev, file_cmd, sizeof(file_cmd));
 }
 
     /* USB-only */
@@ -192,88 +187,48 @@ int soundvision_photos_taken(CameraPrivateLibrary *dev) {
 error_photos_taken:
     GP_DEBUG("Error getting number of photos taken.\n");
     return ret;
-   
 }
 
-
 int soundvision_get_file_list(CameraPrivateLibrary *dev) {
-
-    int result;
-   
-    if (dev->device_type==SOUNDVISION_TIGERFASTFLICKS) {
-       result=tiger_get_file_list(dev);
-    }
-    else {
-       result=agfa_get_file_list(dev);
-    }
-   
-    return result;
-         
+    if (dev->device_type==SOUNDVISION_TIGERFASTFLICKS)
+       return tiger_get_file_list(dev);
+    else
+       return agfa_get_file_list(dev);
 }
 
 int soundvision_get_thumb_size(CameraPrivateLibrary *dev, const char *filename) {
- 
-    int32_t ret;
-
     if (dev->device_type==SOUNDVISION_TIGERFASTFLICKS) 
-       ret=tiger_get_thumb_size(dev,filename);
+       return tiger_get_thumb_size(dev,filename);
     else
-       ret=agfa_get_thumb_size(dev,filename);
-   
-    return ret;
-   
+       return agfa_get_thumb_size(dev,filename);
 }
 
 int soundvision_get_thumb(CameraPrivateLibrary *dev, const char *filename,
 		   unsigned char *data,int size) {
-
-    int32_t ret; 
-
     if (dev->device_type==SOUNDVISION_TIGERFASTFLICKS) 
-       ret=tiger_get_thumb(dev,filename,data,size);
+       return tiger_get_thumb(dev,filename,data,size);
     else
-       ret=agfa_get_thumb(dev,filename,data,size);
-   
-    return ret;
-   
+       return agfa_get_thumb(dev,filename,data,size);
 }
 
 int soundvision_get_pic_size(CameraPrivateLibrary *dev, const char *filename) {
- 
-    int32_t ret;
-
     if (dev->device_type==SOUNDVISION_TIGERFASTFLICKS) 
-       ret=tiger_get_pic_size(dev,filename);
+       return tiger_get_pic_size(dev,filename);
     else
-       ret=agfa_get_pic_size(dev,filename);
-   
-    return ret;
-   
+       return agfa_get_pic_size(dev,filename);
 }
 
 int soundvision_get_pic(CameraPrivateLibrary *dev, const char *filename,
 		   unsigned char *data,int size) {
-   
-    int32_t ret; 
-   
     if (dev->device_type==SOUNDVISION_TIGERFASTFLICKS) 
-       ret=tiger_get_pic(dev,filename,data,size);
+       return tiger_get_pic(dev,filename,data,size);
     else
-       ret=agfa_get_pic(dev,filename,data,size);
-   
-    return ret;
-   
+       return agfa_get_pic(dev,filename,data,size);
 }
 
 int soundvision_delete_picture(CameraPrivateLibrary *dev, const char *filename) {
-   
-    int result;
-   
     if (dev->device_type==SOUNDVISION_TIGERFASTFLICKS) 
-       result=tiger_delete_picture(dev,filename);
+       return tiger_delete_picture(dev,filename);
     else
-       result=agfa_delete_picture(dev,filename);
-   
-    return result;
-
+       return agfa_delete_picture(dev,filename);
 }

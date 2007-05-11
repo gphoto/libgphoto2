@@ -196,8 +196,8 @@ static int soundvision_file_get (Camera *camera, const char *filename, int thumb
        result=tiger_set_pc_mode(camera->pl);
        if (thumbnail) buflen=soundvision_get_thumb_size(camera->pl,filename);
        else buflen=soundvision_get_pic_size(camera->pl,filename);
-    }
-    else {   
+       if (buflen < 0) return buflen;
+    } else {
        soundvision_reset(camera->pl,NULL,NULL);
           
           /* Always have to check num photos,
