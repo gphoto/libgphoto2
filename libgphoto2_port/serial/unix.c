@@ -486,6 +486,7 @@ gp_port_serial_close (GPPort *dev)
 
 	/* Unlock the port */
 	path = strchr (dev->settings.serial.port, ':');
+	if (!path) return GP_ERROR_BAD_PARAMETERS;
 	path++;
 	CHECK (gp_port_serial_unlock (dev, path));
 
