@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port 2.1.6\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2007-05-09 22:01+0200\n"
+"POT-Creation-Date: 2007-05-11 20:48+0200\n"
 "PO-Revision-Date: 2005-08-29 13:47+0800\n"
 "Last-Translator: Wei-Lun Chao <chaoweilun@pcmail.com.tw>\n"
 "Language-Team: Chinese (traditional) <zh-l10n@linux.org.tw>\n"
@@ -379,41 +379,41 @@ msgstr "開啟「%s」(%m)失敗。"
 msgid "Could not close '%s' (%m)."
 msgstr "無法關閉「%s」(%m)。"
 
-#: serial/unix.c:533
+#: serial/unix.c:534
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "無法寫入連接埠 (%m)"
 
-#: serial/unix.c:605
+#: serial/unix.c:606
 msgid "Parity error."
 msgstr "奇偶檢查錯誤。"
 
-#: serial/unix.c:609
+#: serial/unix.c:610
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "意外的奇偶應答序列 0xff 0x%02x。"
 
-#: serial/unix.c:652
+#: serial/unix.c:653
 #, c-format
 msgid "Unknown pin %i."
 msgstr "不明針腳 %i。"
 
-#: serial/unix.c:674
+#: serial/unix.c:675
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "無法獲取針腳 %i 的層級 (%m)。"
 
-#: serial/unix.c:709
+#: serial/unix.c:710
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "無法將針腳 %i 的層級設定為 %i (%m)。"
 
-#: serial/unix.c:734
+#: serial/unix.c:735
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "無法重新整理「%s」(%m)。"
 
-#: serial/unix.c:847
+#: serial/unix.c:848
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "無法將鮑率設定為 %d"

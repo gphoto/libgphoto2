@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2007-05-09 22:01+0200\n"
+"POT-Creation-Date: 2007-05-11 20:48+0200\n"
 "PO-Revision-Date: 2002-06-18 16:33--500\n"
 "Last-Translator: christophe barbé <christophe@ufies.org>\n"
 "Language-Team: Français <traduc@traduc.org>\n"
@@ -379,41 +379,41 @@ msgstr "Impossible d'ouvrir '%s' (%m)."
 msgid "Could not close '%s' (%m)."
 msgstr "Impossible de fermer '%s' (%m)."
 
-#: serial/unix.c:533
+#: serial/unix.c:534
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "Impossible d'écrire sur le port (%m)"
 
-#: serial/unix.c:605
+#: serial/unix.c:606
 msgid "Parity error."
 msgstr "Erreur de parité."
 
-#: serial/unix.c:609
+#: serial/unix.c:610
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Séquence de réponse de parité 0xff 0x%02x inattendue."
 
-#: serial/unix.c:652
+#: serial/unix.c:653
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Borne inconnue %i."
 
-#: serial/unix.c:674
+#: serial/unix.c:675
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Impossible de connaître le niveau de la borne %i (%m)."
 
-#: serial/unix.c:709
+#: serial/unix.c:710
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "Impossible de configurer le niveau de la borne %i à %i (%m)."
 
-#: serial/unix.c:734
+#: serial/unix.c:735
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "Impossible de vider '%s' (%m)."
 
-#: serial/unix.c:847
+#: serial/unix.c:848
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Impossible de configurer le débit à %d"

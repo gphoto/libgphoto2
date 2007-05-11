@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2007-05-09 22:01+0200\n"
+"POT-Creation-Date: 2007-05-11 20:48+0200\n"
 "PO-Revision-Date: 2007-05-10 11:07+0200\n"
 "Last-Translator: \n"
 "Language-Team:  <de@li.org>\n"
@@ -322,7 +322,8 @@ msgstr "Lösche Halt..."
 #: libgphoto2_port/gphoto2-port.c:748
 #, c-format
 msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr "Schreibe Nachricht (request=0x%x, Wert=0x%x, Index=0x%x, Größe=%i=0x%x)..."
+msgstr ""
+"Schreibe Nachricht (request=0x%x, Wert=0x%x, Index=0x%x, Größe=%i=0x%x)..."
 
 #: libgphoto2_port/gphoto2-port.c:769
 #, c-format
@@ -386,41 +387,41 @@ msgstr "Konnte »%s« nicht öffnen (%m)."
 msgid "Could not close '%s' (%m)."
 msgstr "Konnte »%s« nicht schließen (%m)."
 
-#: serial/unix.c:533
+#: serial/unix.c:534
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "Konnte nicht auf Port schreiben (%m)"
 
-#: serial/unix.c:605
+#: serial/unix.c:606
 msgid "Parity error."
 msgstr "Paritätsfehler."
 
-#: serial/unix.c:609
+#: serial/unix.c:610
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Unerwartete Paritätsantwort, Sequenz 0xff 0x%02x."
 
-#: serial/unix.c:652
+#: serial/unix.c:653
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Unbekannter Pin %i."
 
-#: serial/unix.c:674
+#: serial/unix.c:675
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Konnte Level von Pin %i nicht holen (%m)."
 
-#: serial/unix.c:709
+#: serial/unix.c:710
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "Konnte Level von Pin %i nicht auf %i setzen (%m)."
 
-#: serial/unix.c:734
+#: serial/unix.c:735
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "Konnte »%s« nicht leeren (%m)."
 
-#: serial/unix.c:847
+#: serial/unix.c:848
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Konnte Baudrate nicht auf %d setzen"
@@ -483,7 +484,8 @@ msgstr "Konnte Alternativ-Setting %d/%d nicht setzen (%m)"
 #: usb/libusb.c:641
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
-msgstr "Die angegebene Hersteller- oder Produkt-ID (0x%x,0x%x) ist nicht gültig."
+msgstr ""
+"Die angegebene Hersteller- oder Produkt-ID (0x%x,0x%x) ist nicht gültig."
 
 #: usb/libusb.c:677
 #, c-format
@@ -525,4 +527,3 @@ msgstr "Medium »%s«"
 #: disk/disk.c:178
 msgid "(unknown)"
 msgstr "(unbekannt)"
-

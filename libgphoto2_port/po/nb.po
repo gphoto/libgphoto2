@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gphoto 0.4.3\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2007-05-09 22:01+0200\n"
+"POT-Creation-Date: 2007-05-11 20:48+0200\n"
 "PO-Revision-Date: 2000-04-11 10:12+02:00\n"
 "Last-Translator: Kjartan Maraas <kmaraas@online.no>\n"
 "Language-Team: Norwegian <i18n-nb@lister.ping.uio.no>\n"
@@ -385,41 +385,41 @@ msgstr ""
 "Kunne ikke åpne:\n"
 "%s"
 
-#: serial/unix.c:533
+#: serial/unix.c:534
 #, fuzzy, c-format
 msgid "Could not write to port (%m)"
 msgstr "Kunne ikke hente #%i"
 
-#: serial/unix.c:605
+#: serial/unix.c:606
 msgid "Parity error."
 msgstr ""
 
-#: serial/unix.c:609
+#: serial/unix.c:610
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr ""
 
-#: serial/unix.c:652
+#: serial/unix.c:653
 #, c-format
 msgid "Unknown pin %i."
 msgstr ""
 
-#: serial/unix.c:674
+#: serial/unix.c:675
 #, fuzzy, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Kunne ikke hente #%i"
 
-#: serial/unix.c:709
+#: serial/unix.c:710
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr ""
 
-#: serial/unix.c:734
+#: serial/unix.c:735
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr ""
 
-#: serial/unix.c:847
+#: serial/unix.c:848
 #, fuzzy, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Kunne ikke hente antall bilder"

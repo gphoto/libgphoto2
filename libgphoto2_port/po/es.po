@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2007-05-09 22:01+0200\n"
+"POT-Creation-Date: 2007-05-11 20:48+0200\n"
 "PO-Revision-Date: 2002-06-18 22:59-0300\n"
 "Last-Translator: Fabian Mandelbaum <fabman@mandrakesoft.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -379,41 +379,41 @@ msgstr "No se pudo abrir '%s' (%m)."
 msgid "Could not close '%s' (%m)."
 msgstr "No se pudo cerrar '%s' (%m)."
 
-#: serial/unix.c:533
+#: serial/unix.c:534
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "No se pudo escribir en el puerto (%m)"
 
-#: serial/unix.c:605
+#: serial/unix.c:606
 msgid "Parity error."
 msgstr "Error de paridad."
 
-#: serial/unix.c:609
+#: serial/unix.c:610
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Secuencia de respuesta de paridad 0xff, 0x%02x no esperada."
 
-#: serial/unix.c:652
+#: serial/unix.c:653
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Pin %i desconocido."
 
-#: serial/unix.c:674
+#: serial/unix.c:675
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "No se pudo obtener el nivel de pin %i (%m)."
 
-#: serial/unix.c:709
+#: serial/unix.c:710
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "No se pudo configurar el nivel de pin %i como %i (%m)."
 
-#: serial/unix.c:734
+#: serial/unix.c:735
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "No se pudo vaciar '%s' (%m)."
 
-#: serial/unix.c:847
+#: serial/unix.c:848
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "No se pudo configurar la tasa de baud en %d"
