@@ -453,17 +453,14 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 
 		gp_list_append (list, filename, NULL);
 /*		GP_DEBUG ("Num %i Filename %s", num, filename); */
-
+		free (filename);
 		num = num + 1;
 		if (l859_sendcmd(camera, L859_CMD_PREVIEW_NEXT) != GP_OK)
 			return GP_ERROR;
 		if (l859_retrcmd(camera) == GP_ERROR)
 			return GP_ERROR;
-
 	}
-
 	GP_DEBUG ("Camera List Files Done");
-
 	return GP_OK;
 }
 
