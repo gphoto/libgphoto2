@@ -1038,10 +1038,19 @@ iterate_camera_list (const int add_comments,
 	CameraAbilities a;
 	func_params_t params;
 	void *data = NULL;
+	int ret;
 
 	CR (gp_abilities_list_new (&al));
-	CR (gp_abilities_list_load (al, NULL)); /* use NULL context */
-	CR (number_of_cameras = gp_abilities_list_count (al));
+	ret = gp_abilities_list_load (al, NULL); /* use NULL context */
+	if (ret < GP_OK) {
+		gp_abilities_list_free (al);
+		return ret;
+	}
+	number_of_cameras = gp_abilities_list_count (al);
+	if (number_of_cameras < GP_OK) {
+		gp_abilities_list_free (al);
+		return ret;
+	}
 
 	params.add_comments = add_comments;
 	params.number_of_cameras = number_of_cameras;
@@ -1054,7 +1063,9 @@ iterate_camera_list (const int add_comments,
 	if (format->camera_func != NULL) {
 		int i;
 		for (i = 0; i < number_of_cameras; i++) {
-			CR (gp_abilities_list_get_abilities (al, i, &a));
+			ret = gp_abilities_list_get_abilities (al, i, &a);
+			if (ret < GP_OK)
+				continue;
 			format->camera_func(&params, i, number_of_cameras, &a, data);
 		}
 	}
