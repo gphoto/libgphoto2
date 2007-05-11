@@ -113,9 +113,11 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
   char *temp;
   char buffer[512];
   FileEntry *file_entry;
-  file_entry = (malloc(sizeof(FileEntry)));
+
+  file_entry = malloc(sizeof(FileEntry));
   if ( (nr_of_blocks = pccam600_get_file_list(camera->port, context)) < 0 ){
     gp_log(GP_LOG_DEBUG,"pccam600","pccam600->get_file_list return <0");
+    free (file_entry);
     return GP_ERROR;
   }
   for (n = 0; n != nr_of_blocks; n++)
