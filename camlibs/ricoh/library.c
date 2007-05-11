@@ -51,6 +51,7 @@
 #endif
 
 #define CR(result) {int r=(result); if (r<0) return r;}
+#define CRW(result,widget) {int r=(result); if (r<0) { gp_widget_free (widget); return r; } }
 
 static struct {
 	RicohModel id;
@@ -444,15 +445,15 @@ camera_get_config (Camera *c, CameraWidget **window, GPContext *co)
 
 	/* Date */
 	CR (gp_widget_new (GP_WIDGET_DATE, _("Date & Time"), &w));
-	CR (gp_widget_set_name (w, "date"));
-	CR (gp_widget_set_info (w, _("Date & Time")));
-	CR (gp_widget_append (s, w));
+	CRW (gp_widget_set_name (w, "date"), w);
+	CRW (gp_widget_set_info (w, _("Date & Time")), w);
+	CRW (gp_widget_append (s, w), w);
 	CR (ricoh_get_date (c, co, &time));
 	CR (gp_widget_set_value (w, &time));
 
 	/* Picture related settings */
 	CR (gp_widget_new (GP_WIDGET_SECTION, _("Pictures"), &s));
-	CR (gp_widget_append (*window, s));
+	CRW (gp_widget_append (*window, s), w);
 
 	R_ADD_RADIO (c, co, s, RicohResolution,  resolution,  "Resolution")
 	R_ADD_RADIO (c, co, s, RicohExposure,    exposure,    "Exposure")
