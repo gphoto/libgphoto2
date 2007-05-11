@@ -55,6 +55,7 @@
 
 
 #define CHECK(result) {int res; res = result; if (res < 0) return (res);}
+#define CHECK_AND_FREE(result, buf) {int res; res = result; if (res < 0) { free(buf); return (res); }}
 
 
 /* the table of content of the camera
@@ -235,87 +236,77 @@ static int enigma13_get_toc(Camera *camera, int *filecount, char** toc)
  */
 static int enigma13_download_img(Camera *camera, char *toc, int index, char **img_data, int *img_size)
 {
-        uint8_t *p;
+	uint8_t *p;
 	uint32_t file_size = 0, aligned_size = 0;
-        char* buf=NULL; 
-        int align=0;
-        char  retbuf[2];
+	char* buf=NULL; 
+	int align=0;
+	char  retbuf[2];
 
-        gp_log(GP_LOG_DEBUG, "enigma13","DOWNLOADING IMAGE NO %d",index);
+	gp_log(GP_LOG_DEBUG, "enigma13","DOWNLOADING IMAGE NO %d",index);
 
-
-        /* Offset for image informations .
-           Each image has 16 bytes for name and 16 for size, and others*/
+	/* Offset for image informations .
+	Each image has 16 bytes for name and 16 for size, and others*/
 	p = toc + (index*2)*32;
 
+	/* real size from toc*/
+	aligned_size = file_size =
+		(p[0x1c] & 0xff)
+		+ (p[0x1d] & 0xff) * 0x100
+		+ (p[0x1e] & 0xff) * 0x10000;
 
+	CHECK (gp_port_usb_msg_read (camera->port, 0x23,
+		0x0000, 0x64,
+		retbuf, 0x01));
+	if (retbuf[0]==0x20){
+		align=ENIGMA13_BLK_CARD_ALIGN;
+		gp_log(GP_LOG_DEBUG, "enigma13"," Image from card, alignement is set to %d bytes ",align);
+	} else if (retbuf[0]==0x10){
+		align=ENIGMA13_BLK_FLASH_ALIGN;
+		gp_log(GP_LOG_DEBUG, "enigma13"," Image from flash, alignement is set to %d bytes",align);
+	} else {
+		return GP_ERROR;
+	}
 
-        /* real size from toc*/
-        aligned_size = file_size =
-                  (p[0x1c] & 0xff)
-                + (p[0x1d] & 0xff) * 0x100
-                + (p[0x1e] & 0xff) * 0x10000;
+	if (file_size % align != 0)
+		aligned_size = ((file_size / align) + 1) * align;
 
+	buf = (char*) malloc (aligned_size);
+	if (!buf)
+		return GP_ERROR_NO_MEMORY;
 
-       CHECK (gp_port_usb_msg_read (camera->port, 0x23,
-                           0x0000, 0x64,
-                         retbuf, 0x01));
-       if (retbuf[0]==0x20){
-        align=ENIGMA13_BLK_CARD_ALIGN;
-        gp_log(GP_LOG_DEBUG, "enigma13"," Image from card, alignement is set to %d bytes ",align);
-       } 
-       else if (retbuf[0]==0x10){
-        align=ENIGMA13_BLK_FLASH_ALIGN;
-        gp_log(GP_LOG_DEBUG, "enigma13"," Image from flash, alignement is set to %d bytes",align);
-       } else {
-        return GP_ERROR;
-       }
-
-
-
-        if (file_size % align != 0)
-                aligned_size = ((file_size / align) + 1) * align;
-
-        buf = (char*) malloc (aligned_size);
-        if (!buf)
-                return GP_ERROR_NO_MEMORY;
-
-
-        CHECK (gp_port_usb_msg_write (camera->port,
-               0x54, index+1, 2, NULL, 0x00));
+	CHECK_AND_FREE (gp_port_usb_msg_write (camera->port,
+	0x54, index+1, 2, NULL, 0x00), buf);
 	usleep(ENIGMA13_WAIT_IMAGE_READY_MS);
 
+	CHECK_AND_FREE (gp_port_usb_msg_read (camera->port, 0x21,
+		0x0000, 0x0000,
+		buf, 0x01), buf);
+	if (buf[0]!=0x41) {
+		free (buf);
+		return GP_ERROR;
+	}
 
-        CHECK (gp_port_usb_msg_read (camera->port, 0x21,
-                           0x0000, 0x0000,
-                          buf, 0x01));
-        if (buf[0]!=0x41) return GP_ERROR;
+	CHECK_AND_FREE (gp_port_usb_msg_read (camera->port, 0x21,
+		0x0000, 0x0002,
+		buf, 0x01), buf);
+	if (buf[0]!=0x01) {
+		free (buf);
+		return GP_ERROR;
+	}
 
-       CHECK (gp_port_usb_msg_read (camera->port, 0x21,
-                           0x0000, 0x0002,
-                          buf, 0x01));
-        if (buf[0]!=0x01) return GP_ERROR;
-
-       CHECK (gp_port_usb_msg_read (camera->port, 0x21,
-                           0x0000, 0x0002,
-                          buf, 0x01));
-        if (buf[0]!=0x01) return GP_ERROR;
-
-        gp_log(GP_LOG_DEBUG, "enigma13","READY FOR TRANSFER");
-        CHECK (gp_port_read (camera->port, buf, aligned_size));
-
-        *img_data=buf;
-        *img_size=file_size;
-
-        return GP_OK;
-
+	CHECK_AND_FREE (gp_port_usb_msg_read (camera->port, 0x21,
+		0x0000, 0x0002,
+		buf, 0x01), buf);
+	if (buf[0]!=0x01) {
+		free (buf);
+		return GP_ERROR;
+	}
+	gp_log(GP_LOG_DEBUG, "enigma13","READY FOR TRANSFER");
+	CHECK_AND_FREE (gp_port_read (camera->port, buf, aligned_size), buf);
+	*img_data=buf;
+	*img_size=file_size;
+	return GP_OK;
 }
-
-
-
-
-
-
 
 
 /*
@@ -337,9 +328,6 @@ static int file_list_func (CameraFilesystem *fs, const char *folder, CameraList 
 	}
 	return (GP_OK);
 }
-
-
-
 
 
 
