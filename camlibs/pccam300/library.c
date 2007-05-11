@@ -115,7 +115,7 @@ file_list_func (CameraFilesystem *fs, const char *folder,
 	CameraFile *file;
 	CameraFileInfo info;
 	unsigned char *buffer = NULL;
-	int n_img=0, n_avi=0, n_wav=0;
+	int ret, n_img=0, n_avi=0, n_wav=0;
 
 	CHECK (pccam300_get_filecount (camera->port, &filecount));
 
@@ -126,8 +126,12 @@ file_list_func (CameraFilesystem *fs, const char *folder,
 		/* Get information */
 		gp_file_new (&file);
 	
-		CHECK (pccam300_get_file (camera->port, context, i,
-		                          &buffer, &size, &type));
+		ret = pccam300_get_file (camera->port, context, i,
+		                          &buffer, &size, &type);
+		if (ret < GP_OK) {
+			gp_file_free (file);
+			return ret;
+		}
 
 		info.audio.fields = GP_FILE_INFO_NONE;
 		info.preview.fields = GP_FILE_INFO_NONE;
