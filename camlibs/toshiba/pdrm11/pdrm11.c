@@ -197,9 +197,9 @@ int pdrm11_get_file(CameraFilesystem *fs, const char *filename, CameraFileType t
 
 
 	if(type == GP_FILE_TYPE_PREVIEW) {
-		CHECK( gp_port_usb_msg_write(port, 0x01, PDRM11_CMD_GET_THUMB, picNum, NULL, 0) );
+		CHECK_AND_FREE( gp_port_usb_msg_write(port, 0x01, PDRM11_CMD_GET_THUMB, picNum, NULL, 0), image );
 	} else {
-		CHECK( gp_port_usb_msg_write(port, 0x01, PDRM11_CMD_GET_PIC, picNum, NULL, 0) );
+		CHECK_AND_FREE( gp_port_usb_msg_write(port, 0x01, PDRM11_CMD_GET_PIC, picNum, NULL, 0), image );
 	}
 
 	ret = gp_port_read(port, image, size);
@@ -208,6 +208,7 @@ int pdrm11_get_file(CameraFilesystem *fs, const char *filename, CameraFileType t
 		ret = gp_port_read(port, image, size);
 		if(ret != size) {
 			GP_DEBUG("gp_port_read returned %d 0x%x.  size: %d 0x%x", ret, ret, size, size);
+			free (image);
 			return(GP_ERROR_IO_READ);
 		}
 	}

@@ -40,6 +40,20 @@
 	} \
 }
 
+#define CHECK_AND_FREE(result, buf) { \
+	int res; \
+	res = result; \
+	if (res < 0) { \
+		res = result; \
+		if (res < 0) { \
+			GP_DEBUG("%s--%d: %s returned 0x%x", __FILE__, __LINE__, __STRING(result), res); \
+			free (buf); \
+			return res; \
+		} \
+	} \
+}
+
+
 #define PDRM11_CMD_INIT1	htole16( 0x1f40 )
 #define PDRM11_CMD_INIT2	htole16( 0x1f30 )
 #define PDRM11_CMD_GET_PIC	htole16( 0x9300 )
