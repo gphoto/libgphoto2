@@ -30,7 +30,7 @@ typedef enum {
 } Model;
 
 int lg_gsm_init              (GPPort *port, Model *model, Info *info);
-int lg_gsm_get_picture_size  (GPPort *port, int pic);
+unsigned int lg_gsm_get_picture_size  (GPPort *port, int pic);
 int lg_gsm_read_picture_data (GPPort *port, char *data, int size, int n);
 int lg_gsm_list_files (GPPort *port, CameraList *list);
 

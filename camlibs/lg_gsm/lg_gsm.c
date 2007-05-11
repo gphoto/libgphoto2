@@ -74,7 +74,7 @@ int lg_gsm_init (GPPort *port, Model *model, Info *info)
         return GP_OK;
 }
 
-int lg_gsm_get_picture_size  (GPPort *port, int pic) 
+unsigned int lg_gsm_get_picture_size  (GPPort *port, int pic) 
 {
 
         unsigned int size;
@@ -103,7 +103,7 @@ int lg_gsm_get_picture_size  (GPPort *port, int pic)
 	READ(port, photonumber, 0x16);
 	//then read 142
 	READ(port, photodesc, 0x8e);
-	size = (int)photodesc[138] + (int)photodesc[139]*0x100 + (int)photodesc[140]*0x10000+(int)photodesc[141]*0x1000000;
+	size = (unsigned int)photodesc[138] + (unsigned int)photodesc[139]*0x100 + (unsigned int)photodesc[140]*0x10000+(unsigned int)photodesc[141]*0x1000000;
 	GP_DEBUG(" size of picture %i is 0x%x\n", pic, size);
 	// max. 1280x960x24bits ?
 	if ( (size >= 0x384000 ) ) {return GP_ERROR;} 
@@ -111,7 +111,6 @@ int lg_gsm_get_picture_size  (GPPort *port, int pic)
 	WRITE(port, sync_stop, 6);
 	READ(port, oknok, 6);
 	GP_DEBUG("Leaving lg_gsm_get_picture_size\n");
-
 	return size;
 }
 
