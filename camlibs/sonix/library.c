@@ -218,6 +218,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
     	/* Get the number of the photo on the camera */
 	k = gp_filesystem_number (camera->fs, "/", filename, context); 
+	if (k < GP_OK) return k;
 
 	if(type == GP_FILE_TYPE_EXIF) return GP_ERROR_FILE_EXISTS;
 
@@ -243,9 +244,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		buffersize = rawsize - (rawsize%0x40) + 0x40;
 	else 
 		buffersize = rawsize;	
-	data = malloc (buffersize+64);
+	data = calloc (buffersize+64, 1);
 	if (!data) return GP_ERROR_NO_MEMORY;
-    	memset (data, 0, sizeof(data));
 	gp_port_read(camera->port, data, buffersize);
 
 	switch(type) {
