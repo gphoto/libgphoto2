@@ -192,6 +192,7 @@ const struct canon_usb_control_cmdstruct canon_usb_control_cmd[] = {
 	{ 0, NULL, 0, 0, 0 }
 };
 
+static int canon_usb_identify (Camera *camera, GPContext *context);
 
 /**
  * canon_usb_camera_init:
@@ -207,7 +208,7 @@ const struct canon_usb_control_cmdstruct canon_usb_control_cmd[] = {
  *               response was other than expected.
  *
  */
-int
+static int
 canon_usb_camera_init (Camera *camera, GPContext *context)
 {
         unsigned char msg[0x58];
@@ -436,7 +437,7 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 }
 
 /* Forward reference for use within canon_usb_init() */
-int canon_usb_get_body_id (Camera *camera, GPContext *context);
+static int canon_usb_get_body_id (Camera *camera, GPContext *context);
 
 /**
  * canon_usb_init:
@@ -789,7 +790,7 @@ canon_usb_unlock_keys (Camera *camera, GPContext *context)
  *          error code.
  *
  */
-int
+static int
 canon_usb_get_body_id (Camera *camera, GPContext *context)
 {
         unsigned char *c_res;
@@ -923,7 +924,8 @@ static int canon_usb_poll_interrupt_pipe ( Camera *camera, unsigned char *buf, i
  *  gphoto2 error code from read that results in an I/O error.
  *
  */
-int canon_usb_poll_interrupt_multiple ( Camera *camera[], int n_cameras,
+static int
+canon_usb_poll_interrupt_multiple ( Camera *camera[], int n_cameras,
                                         int camera_flags[],
                                         unsigned char *buf, int n_tries,
                                         int *which )
@@ -2547,7 +2549,7 @@ canon_usb_ready (Camera *camera, GPContext __unused__ *context)
  * Returns: gphoto2 error code
  *
  */
-int
+static int
 canon_usb_identify (Camera *camera, GPContext *context)
 {
         CameraAbilities a;

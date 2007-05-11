@@ -252,7 +252,6 @@ struct canon_usb_status {
  ****************************************************************************/
 
 int canon_usb_init (Camera *camera, GPContext *context);
-int canon_usb_camera_init (Camera *camera, GPContext *context);
 int canon_usb_set_file_time ( Camera *camera, char *camera_filename, time_t time, GPContext *context);
 int canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath, 
 	        GPContext *context);
@@ -266,10 +265,6 @@ int canon_usb_long_dialogue (Camera *camera, canonCommandIndex canon_funct, unsi
 		unsigned int payload_length, int display_status, GPContext *context);
 int canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, unsigned int *length, GPContext *context);
 int canon_usb_get_thumbnail (Camera *camera, const char *name, unsigned char **data, unsigned int *length, GPContext *context);
-int canon_usb_poll_interrupt_multiple ( Camera *camera[], int n_cameras,
-					int camera_flags[],
-					unsigned char *buf, int n_tries,
-					int *which );
 int canon_usb_get_captured_image (Camera *camera, const int key, unsigned char **data, unsigned int *length, GPContext *context);
 #ifdef CANON_EXPERIMENTAL_SECONDARY_IMAGE
 int canon_usb_get_captured_secondary_image (Camera *camera, const int key, unsigned char **data, unsigned int *length, GPContext *context);
@@ -285,7 +280,6 @@ int canon_usb_set_file_attributes (Camera *camera,
 				   const char *dir, const char *file,
 				   GPContext *context);
 int canon_usb_ready (Camera *camera, GPContext *context);
-int canon_usb_identify (Camera *camera, GPContext *context);
 
 #endif /* _CANON_USB_H */
 
