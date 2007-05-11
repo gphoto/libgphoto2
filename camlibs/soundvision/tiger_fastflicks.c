@@ -412,7 +412,7 @@ int tiger_get_thumb_size(CameraPrivateLibrary *dev, const char *filename) {
     ret = soundvision_read(dev, &temp, sizeof(temp));        
     if (ret<0) goto thumb_size_error;
        
-    soundvision_send_file_command(filename,dev);
+    ret = soundvision_send_file_command(filename,dev);
     if (ret<0) goto thumb_size_error;
    
     ret = soundvision_read(dev, &size, sizeof(size));        

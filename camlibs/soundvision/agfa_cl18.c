@@ -281,7 +281,7 @@ int agfa_get_thumb_size(CameraPrivateLibrary *dev, const char *filename) {
     ret = soundvision_read(dev, &temp, sizeof(temp));        
     if (ret<0) return ret;
        
-    soundvision_send_file_command(filename,dev);
+    ret = soundvision_send_file_command(filename,dev);
     if (ret<0) return ret;
    
     ret = soundvision_read(dev, &size, sizeof(size));        
