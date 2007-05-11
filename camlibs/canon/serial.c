@@ -74,7 +74,7 @@
  * Dummy function.
  *
  */
-void
+static void
 serial_flush_input (GPPort __unused__ *gdev)
 {
 }
@@ -86,7 +86,7 @@ serial_flush_input (GPPort __unused__ *gdev)
  * Dummy function.
  *
  */
-void
+static void
 serial_flush_output (GPPort __unused__ *gdev)
 {
 }
@@ -103,7 +103,7 @@ serial_flush_output (GPPort __unused__ *gdev)
  *
  */
 
-int
+static int
 canon_serial_change_speed (GPPort *gdev, int speed)
 {
 	gp_port_settings settings;
@@ -131,7 +131,7 @@ canon_serial_change_speed (GPPort *gdev, int speed)
  *          0 on CTS low.
  *
  */
-int
+static int
 canon_serial_get_cts (GPPort *gdev)
 {
 	GPLevel level;
@@ -184,7 +184,7 @@ canon_serial_init (Camera *camera)
  * Returns: 0 on success, -1 on error.
  *
  */
-int
+static int
 canon_serial_send (Camera *camera, const unsigned char *buf, int len, int sleep)
 {
 	int i;
@@ -213,7 +213,7 @@ canon_serial_send (Camera *camera, const unsigned char *buf, int len, int sleep)
  * Sets the timeout, in miliseconds.
  *
  */
-void
+static void
 serial_set_timeout (GPPort *gdev, int to)
 {
 	gp_port_set_timeout (gdev, to);
@@ -230,7 +230,7 @@ serial_set_timeout (GPPort *gdev, int to)
  * Returns: the byte on success, -1 on error.
  *
  */
-int
+static int
 canon_serial_get_byte (GPPort *gdev)
 {
 	static unsigned char cache[512];
@@ -270,7 +270,7 @@ canon_serial_get_byte (GPPort *gdev)
  * Returns: 1 if canon_serial_send() succeeds, 0 if it fails
  *
  */
-int
+static int
 canon_serial_send_frame (Camera *camera, const unsigned char *pkt, int len)
 {
 	static unsigned char buffer[2100];
@@ -310,7 +310,7 @@ canon_serial_send_frame (Camera *camera, const unsigned char *pkt, int len)
  *          On success, @len will contain the length of the buffer.
  *
  */
-unsigned char *
+static unsigned char *
 canon_serial_recv_frame (Camera *camera, int *len)
 {
 	static unsigned char buffer[5000];
@@ -364,7 +364,7 @@ canon_serial_recv_frame (Camera *camera, int *len)
  * Returns: status from canon_serial_send_frame()
  *
  */
-int
+static int
 canon_serial_send_packet (Camera *camera, unsigned char type, unsigned char seq,
 			  unsigned char *pkt, int len)
 {
@@ -412,7 +412,7 @@ canon_serial_send_packet (Camera *camera, unsigned char type, unsigned char seq,
  *   number in @seq, and length in @len.
  *
  */
-unsigned char *
+static unsigned char *
 canon_serial_recv_packet (Camera *camera, unsigned char *type, unsigned char *seq, int *len)
 {
 	unsigned char *pkt;
@@ -441,8 +441,7 @@ canon_serial_recv_packet (Camera *camera, unsigned char *type, unsigned char *se
 		GP_DEBUG ("ERROR: CRC error");
 		return NULL;
 	}
-	if (type)
-		*type = pkt[PKT_TYPE];
+	*type = pkt[PKT_TYPE];
 	if (seq)
 		*seq = pkt[PKT_SEQ];
 	if (len)
@@ -466,7 +465,7 @@ canon_serial_recv_packet (Camera *camera, unsigned char *type, unsigned char *se
  *  0 : communication error (no reply received for example)
  * -1 : NACK received.
  */
-int
+static int
 canon_serial_wait_for_ack (Camera *camera)
 {
 	unsigned char *pkt;
@@ -659,7 +658,7 @@ canon_serial_send_msg (Camera *camera, unsigned char mtype, unsigned char dir, v
  *  char* pointer to the message payload; NULL on failure.
  *
  */
-unsigned char *
+static unsigned char *
 canon_serial_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, unsigned int *total,
 		       GPContext *context)
 {
@@ -893,7 +892,7 @@ canon_serial_dialogue (Camera *camera, GPContext *context, unsigned char mtype,
  * Returns: %GP_OK
  *
  */
-int
+static int
 canon_serial_end (Camera *camera)
 {
 	canon_serial_send (camera, (unsigned char *)"\xC0\x00\x02\x55\x2C\xC1", 6, USLEEP2);

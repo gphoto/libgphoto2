@@ -92,7 +92,7 @@ extern long int timezone;
 #define UPLOAD_BOOL FALSE
 #endif
 
-const struct canonCaptureSizeClassStruct captureSizeArray[] = {
+static const struct canonCaptureSizeClassStruct captureSizeArray[] = {
         {CAPTURE_COMPATIBILITY, N_("Compatibility mode")},
         {CAPTURE_THUMB, N_("Thumbnail")},
         {CAPTURE_FULL_IMAGE, N_("Full Image")},
@@ -101,7 +101,7 @@ const struct canonCaptureSizeClassStruct captureSizeArray[] = {
 
 #ifdef CANON_EXPERIMENTAL_20D
 
-const struct canonIsoStateStruct isoStateArray[] = {
+static const struct canonIsoStateStruct isoStateArray[] = {
         {ISO_100, "ISO 100"},
         {ISO_125, "ISO 125"},
         {ISO_160, "ISO 160"},
@@ -118,7 +118,7 @@ const struct canonIsoStateStruct isoStateArray[] = {
 	{0, NULL},
 };
 
-const struct canonShutterSpeedStateStruct shutterSpeedStateArray[] = {
+static const struct canonShutterSpeedStateStruct shutterSpeedStateArray[] = {
         {SHUTTER_SPEED_BULB, "Bulb"},
         {SHUTTER_SPEED_30_SEC, "30 seconds"},
         {SHUTTER_SPEED_25_SEC, "25 seconds"},
@@ -175,7 +175,7 @@ const struct canonShutterSpeedStateStruct shutterSpeedStateArray[] = {
 	{0, NULL},
 };
 
-const struct canonApertureStateStruct apertureStateArray[] = {
+static const struct canonApertureStateStruct apertureStateArray[] = {
         {APERTURE_F2_8, "f2.8"},
         {APERTURE_F3_2, "f3.2"},
         {APERTURE_F3_5, "f3.5"},
@@ -198,7 +198,7 @@ const struct canonApertureStateStruct apertureStateArray[] = {
 	{0, NULL},
 };
 
-const struct canonFocusModeStateStruct focusModeStateArray[] = {
+static const struct canonFocusModeStateStruct focusModeStateArray[] = {
         {AUTO_FOCUS_ONE_SHOT, N_("Auto focus: one-shot")},
         {AUTO_FOCUS_AI_SERVO, N_("Auto focus: AI servo")},
         {AUTO_FOCUS_AI_FOCUS, N_("Auto focus: AI focus")},
@@ -206,7 +206,7 @@ const struct canonFocusModeStateStruct focusModeStateArray[] = {
 	{0, NULL},
 };
 
-const struct canonResolutionStateStruct resolutionStateArray[] = {
+static const struct canonResolutionStateStruct resolutionStateArray[] = {
 	{RESOLUTION_RAW, N_("RAW"),
 	 0x04, 0x02, 0x00},
 	{RESOLUTION_SMALL_NORMAL_JPEG, N_("Small Normal JPEG"),
@@ -1006,7 +1006,6 @@ storage_info_func (
 ) {
 	char root[10];
 	Camera *camera = (Camera*)data;
-	int ret;
 
 	if (!check_readiness (camera, context))
 		return GP_ERROR_IO;

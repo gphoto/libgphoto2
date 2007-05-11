@@ -638,7 +638,6 @@ int canon_int_set_aperture(Camera *camera, canonApertureState aperture, GPContex
 int canon_int_set_focus_mode (Camera *camera, canonFocusModeState focus_mode, GPContext *context);
 int canon_int_set_resolution (Camera *camera, unsigned char res_byte1, unsigned char res_byte2, unsigned char res_byte3, GPContext *context);
 #endif
-int canon_serial_end(Camera *camera);
 int canon_serial_off(Camera *camera);
 int canon_int_get_time(Camera *camera, time_t *camera_time, GPContext *context);
 int canon_int_set_time(Camera *camera, time_t date, GPContext *context);
