@@ -258,21 +258,23 @@ long get_file(GPPort *port,char *name, char **data, int format, int verbose)
 
   if(F1fopen(port,name) != 0)
     return(0);
+
   /* printf("camfile: %s\n",name); */
-  if(format == JPEG){
-    len = F1fread(port, buf, 126);
-    if( len < 126){
-      F1fclose(port);
-      return(0);
-    }
-    /*write_file(jpeg_comment, make_jpeg_comment(buf, jpeg_comment), fp);*/
-    memcpylen=make_jpeg_comment(buf, jpeg_comment);
-    ptr = malloc(memcpylen+filelen);
-    *data=ptr;
-    ptr = memcpy(ptr,jpeg_comment,memcpylen);
-    total = 126;
-    ptr +=memcpylen;
+  if(format != JPEG)
+    return(0);
+
+  len = F1fread(port, buf, 126);
+  if( len < 126){
+    F1fclose(port);
+    return(0);
   }
+  /*write_file(jpeg_comment, make_jpeg_comment(buf, jpeg_comment), fp);*/
+  memcpylen=make_jpeg_comment(buf, jpeg_comment);
+  ptr = malloc(memcpylen+filelen);
+  *data=ptr;
+  ptr = memcpy(ptr,jpeg_comment,memcpylen);
+  total = 126;
+  ptr +=memcpylen;
 
   while((len = F1fread(port, buf, 0x0400)) != 0){
     if(len < 0)
