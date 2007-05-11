@@ -77,6 +77,8 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 
         /* Retrieve the number of the photo on the camera */
 	num = gp_filesystem_number(camera->fs, "/", filename, context);
+	if (num < GP_OK)
+		return num;
 
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
@@ -103,8 +105,12 @@ static int delete_file_func (CameraFilesystem *fs, const char *folder,
         int max, num;
 
         num = gp_filesystem_number(camera->fs, "/", filename, context);
+	if (num<GP_OK)
+	   return num;
         max = gp_filesystem_count(camera->fs,folder, context);
-        printf("sony dscf1: file delete: %d\n",num);
+	if (max<GP_OK)
+	   return max;
+        gp_log (GP_LOG_DEBUG, "sonydscf1", "file delete: %d",num);
         if(!F1ok(camera->port))
            return (GP_ERROR);
         delete_picture(camera->port,num,max);
