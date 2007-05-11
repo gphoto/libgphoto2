@@ -449,6 +449,7 @@ append_folder (CameraFilesystem *fs, const char *folder, GPContext *context)
 		if (x == fs->count)
 			CR (append_folder (fs, buf, context))
         }
+	free(buf);
 
         /* Allocate the folder pointer and the actual folder */
         if (fs->count)
@@ -470,7 +471,6 @@ append_folder (CameraFilesystem *fs, const char *folder, GPContext *context)
         fs->folder[fs->count - 1].files_dirty = 1;
         fs->folder[fs->count - 1].folders_dirty = 1;
 
-	free(buf);
         return (GP_OK);
 }
 
