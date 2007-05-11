@@ -128,7 +128,12 @@ getpicture_generic(Camera *camera, GPContext *context, unsigned char **rd,int *r
 
     memcpy(rawdata, retdata, 0x1000 * sizeof(char));
     for (pc=1;pc<ptc;pc++) {
-	CHECK_RESULT(ultrapocket_command(port, 0, retdata, 0x1000));
+	int ret = ultrapocket_command(port, 0, retdata, 0x1000);
+	if (ret < GP_OK) {
+	     free (rawdata);
+	     gp_context_progress_stop(context, id);
+	     return ret;
+	}
 	gp_context_progress_update(context, id, pc);
 	memcpy(rawdata + (pc * 0x1000), retdata, 0x1000 * sizeof(char));
     }
@@ -174,7 +179,12 @@ getpicture_logitech_pd(Camera *camera, GPContext *context, unsigned char **rd, c
 
     memcpy(rawdata, retdata, 0x8000 * sizeof(char));
     for (pc=1;pc<ptc;pc++) {
-	CHECK_RESULT(ultrapocket_command(port, 0, retdata, 0x8000));
+	int ret = ultrapocket_command(port, 0, retdata, 0x8000);
+	if (ret < GP_OK) {
+    	    gp_context_progress_stop(context, id);
+	    free (rawdata);
+	    return ret;
+	}
 	gp_context_progress_update(context, id, pc);
 	memcpy(rawdata + (pc * 0x8000), retdata, 0x8000 * sizeof(char));
     }
@@ -225,8 +235,10 @@ ultrapocket_getpicture(Camera *camera, GPContext *context, unsigned char **pdata
    pmmhdr_len = strlen(ppmheader);
    outsize = (width+4) * height * 3 + pmmhdr_len + 1;
    outdata = malloc(outsize);
-   if (!outdata)
+   if (!outdata) {
+     free (rawdata);
      return (GP_ERROR_NO_MEMORY);
+   }
 
    /* Set header */
    strcpy(outdata, ppmheader);
