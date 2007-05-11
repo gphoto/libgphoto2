@@ -162,7 +162,7 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 	CameraLibraryIdFunc id;
 	CameraLibraryAbilitiesFunc ab;
 	CameraText text;
-	int x, old_count, new_count;
+	int ret, x, old_count, new_count;
 	unsigned int i, p;
 	const char *filename;
 	CameraList *flist;
@@ -174,7 +174,11 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 	gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
 		"Using ltdl to load camera libraries from '%s'...", dir);
 	CHECK_RESULT (gp_list_new (&flist));
-	CHECK_RESULT (gp_list_reset (flist));
+	ret = gp_list_reset (flist);
+	if (ret < GP_OK) {
+		gp_list_free (flist);
+		return ret;
+	}
 	if (1) { /* a new block in which we can define a temporary variable */
 		int ret;
 		foreach_data_t foreach_data = { flist, GP_OK };
@@ -192,14 +196,22 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 			return (foreach_data.result!=GP_OK)?foreach_data.result:GP_ERROR;
 		}
 	}
-	CHECK_RESULT (count = gp_list_count (flist));
+	count = gp_list_count (flist);
+	if (count < GP_OK) {
+		gp_list_free (flist);
+		return ret;
+	}
 	gp_log (GP_LOG_DEBUG, "gp-abilities-list", "Found %i "
 		"camera drivers.", count);
 	lt_dlinit ();
 	p = gp_context_progress_start (context, count,
 		_("Loading camera drivers from '%s'..."), dir);
 	for (i = 0; i < count; i++) {
-		CHECK_RESULT (gp_list_get_name (flist, i, &filename));
+		ret = gp_list_get_name (flist, i, &filename);
+		if (ret < GP_OK) {
+			gp_list_free (flist);
+			return ret;
+		}
 		lh = lt_dlopenext (filename);
 		if (!lh) {
 			gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
