@@ -1,6 +1,7 @@
 2007-05-09  Marcus Meissner  <marcus@jet.franken.de>
 
 	* ptp.h, usb.c: Send/Receive control messages to class.
+	* library.c: Added Kodak C653
 
 2007-05-06  Marcus Meissner  <marcus@jet.franken.de>
 

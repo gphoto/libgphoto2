@@ -330,6 +330,8 @@ static struct {
 	{"Kodak:V610",   0x040a, 0x05ac, 0},
 	/* from Thomas <tomtechguy@gmail.com> */
 	{"Kodak:C743",   0x040a, 0x05ae, 0},
+	/* via IRC */
+	{"Kodak:C653",   0x040a, 0x05af, 0},
         /* via IRC */
 	{"Kodak:C633",   0x040a, 0x05ba, 0},
 
