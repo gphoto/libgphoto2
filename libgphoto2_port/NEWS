@@ -2,6 +2,7 @@ libgphoto2_port 0.7.2
 
 Build:
    * Put auto* files into auto-aux/ and auto-m4/.
+   * Introduce libgphoto2_port-uninstalled.pc pkgconfig file (#1643245).
 
 USB:
    * Reported wMaxPacketsize of the IN endpoint to the camlib
