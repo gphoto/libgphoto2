@@ -1,6 +1,9 @@
 # Note: As this file is sitting in ${top_builddir},
-#           ${top_builddir} = ${pcfiledir}
-#	and ${top_srcdir}   = ${pcfiledir}/@srcdir@
+#           ${top_builddir} ~= ${pcfiledir}
+#	and ${top_srcdir}   ~= ${pcfiledir}/@srcdir@
+# Note: This referes to directory matches, not to string matches.
+# Note: ${pcfiledir} already is an absolute path name, so there is
+#       no much sense prepending a ${pc_top_builddir} before it.
 
 prefix=@prefix@
 exec_prefix=@exec_prefix@
