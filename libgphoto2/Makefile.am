@@ -48,9 +48,8 @@ libgphoto2_la_LIBADD =					\
 #	"-dlopen" $(top_builddir)/camlibs/ptp2/....la
 
 libgphoto2_la_DEPENDENCIES = \
-	$(top_srcdir)/gphoto2/gphoto2-version.h	\
-	$(srcdir)/libgphoto2.sym \
-	$(LIBLTDL)
+	$(top_srcdir)/gphoto2/gphoto2-version.h \
+	$(srcdir)/libgphoto2.sym
 
 EXTRA_DIST = gphoto2-library.c libgphoto2.sym
 

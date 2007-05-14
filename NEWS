@@ -12,6 +12,7 @@ Build:
    * Put auto* files into auto-aux/ and auto-m4/.
    * Accept utilsdir and udevscriptdir set by user (#1646520).
    * Introduce libgphoto2-uninstalled.pc pkgconfig file (#1643245).
+   * Remove make dependency on $(LIBLTDL) ("-lltdl") any more (#1548195).
 
 libgphoto2 API:
    * New gp_file_new_from_fd() ... Which allows mapping CameraFile to

@@ -48,7 +48,6 @@ libgphoto2_port_la_SOURCES =		\
 libgphoto2_port_la_DEPENDENCIES = \
 	$(top_srcdir)/gphoto2/gphoto2-port-version.h		\
 	$(top_srcdir)/gphoto2/gphoto2-port-library.h		\
-	$(LIBLTDL) \
 	$(srcdir)/libgphoto2_port.sym
 
 # Note: If you have problem with this file not being put into
