@@ -407,7 +407,7 @@ dnl ---------------------------------------------------------------------------
 
 AC_SUBST([PACKAGE_TARNAME])
 
-utilsdir="\${libdir}/\${PACKAGE_TARNAME}"
+if test "x${utilsdir}" = "x"; then utilsdir="\${libdir}/\${PACKAGE_TARNAME}"; fi
 AC_ARG_VAR([utilsdir],[Directory where utilities like print-camera-list will be installed])
 AC_SUBST([utilsdir])
 
