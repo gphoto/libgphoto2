@@ -580,7 +580,6 @@ dnl Configure subprojects
 dnl ---------------------------------------------------------------------------
 if test -d "$srcdir/libgphoto2_port"; then
 	AC_CONFIG_SUBDIRS([libgphoto2_port])
-	GP_AUTOGEN_SUBDIR([libgphoto2_port])
 else
 	AC_MSG_ERROR([
 *** Hey, where have you hidden my libgphoto2_port?
@@ -600,7 +599,8 @@ camlibs/Makefile
 camlibs/canon/doc/Makefile
 camlibs/konica/localization/Makefile
 libgphoto2/Makefile
-libgphoto2/libgphoto2.pc
+libgphoto2.pc
+libgphoto2-uninstalled.pc
 tests/Makefile
 tests/check-camera-list.sh
 tests/ddb/Makefile

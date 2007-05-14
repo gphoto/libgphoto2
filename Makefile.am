@@ -10,6 +10,12 @@ EXTRA_DIST = HACKING MAINTAINERS TESTERS installcheck.mk
 # Note: @subdirs@ lists all the directories from AC_CONFIG_SUBDIRS()
 SUBDIRS = @subdirs@ libgphoto2 camlibs tests po packaging doc
 
+EXTRA_DIST    += libgphoto2.pc.in
+pkgconfig_DATA = libgphoto2.pc
+
+EXTRA_DIST += libgphoto2-uninstalled.pc.in
+noinst_DATA = libgphoto2-uninstalled.pc
+
 doc_DATA = AUTHORS COPYING README NEWS
 
 nobase_include_HEADERS =	\

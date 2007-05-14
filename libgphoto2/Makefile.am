@@ -52,9 +52,6 @@ libgphoto2_la_DEPENDENCIES = \
 	$(srcdir)/libgphoto2.sym \
 	$(LIBLTDL)
 
-pkgconfig_DATA = libgphoto2.pc
-
-EXTRA_DIST = libgphoto2.pc.in gphoto2-library.c libgphoto2.sym
+EXTRA_DIST = gphoto2-library.c libgphoto2.sym
 
 DISTCLEANFILES = _stdint.h
-

@@ -443,7 +443,8 @@ AC_CONFIG_FILES([
 Makefile
 po/Makefile.in
 libgphoto2_port/Makefile
-libgphoto2_port/libgphoto2_port.pc
+libgphoto2_port.pc
+libgphoto2_port-uninstalled.pc
 serial/Makefile
 usb/Makefile
 disk/Makefile

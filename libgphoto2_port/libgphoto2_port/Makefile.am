@@ -56,9 +56,7 @@ libgphoto2_port_la_DEPENDENCIES = \
 #       be the result of tar not creating archives with >99
 #       characters of path length.
 EXTRA_DIST = \
-	libgphoto2_port.sym libgphoto2_port.pc.in
-
-pkgconfig_DATA = libgphoto2_port.pc
+	libgphoto2_port.sym
 
 ../libltdl/libltdlc.la:
 	cd ../libltdl && $(MAKE) libltdlc.la

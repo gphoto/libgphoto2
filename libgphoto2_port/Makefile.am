@@ -25,6 +25,13 @@ doc_DATA = AUTHORS README NEWS
 
 ACLOCAL_AMFLAGS = -I auto-m4 -I m4
 
+EXTRA_DIST    += libgphoto2_port.pc.in
+pkgconfig_DATA = libgphoto2_port.pc
+
+EXTRA_DIST += libgphoto2_port-uninstalled.pc.in
+noinst_DATA = libgphoto2_port-uninstalled.pc
+
+
 # ship headers
 nobase_include_HEADERS =	\
 	gphoto2/gphoto2-port.h			\
