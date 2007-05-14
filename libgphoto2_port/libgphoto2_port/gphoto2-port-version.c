@@ -29,7 +29,7 @@ const char **gp_port_library_version(GPVersionVerbosity verbose)
 	   ones, but the current method is easier for now :-) */
 	static const char *shrt[] =
 		{
-			VERSION,
+			PACKAGE_VERSION,
 #ifdef HAVE_CC
 			HAVE_CC,
 #else
@@ -67,7 +67,7 @@ const char **gp_port_library_version(GPVersionVerbosity verbose)
 		};
 	static const char *verb[] =
 		{
-			VERSION,
+			PACKAGE_VERSION,
 #ifdef HAVE_CC
 			HAVE_CC " (C compiler used)",
 #else
