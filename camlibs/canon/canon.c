@@ -366,6 +366,10 @@ extern long int timezone;
 # define __unused__
 #endif
 
+#ifdef CANON_EXPERIMENTAL_SET_RELEASE_PARAMS
+static int canon_int_set_release_params (Camera *camera, GPContext *context);
+#endif
+
 static const char * canon2gphotopath (Camera __unused__ *camera, const char *path);
 
 

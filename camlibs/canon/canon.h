@@ -653,9 +653,6 @@ int canon_int_end_remote_control(Camera *camera, GPContext *context);
 #ifdef CANON_EXPERIMENTAL_20D
 int canon_int_get_release_params (Camera *camera, GPContext *context);
 #endif
-#ifdef CANON_EXPERIMENTAL_SET_RELEASE_PARAMS
-int canon_int_set_release_params(Camera *camera, GPContext *context);
-#endif
 
 
 /* path conversion - needs drive letter, and therefore cannot be moved
