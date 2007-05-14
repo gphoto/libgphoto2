@@ -1,3 +1,7 @@
+# Note: As this file is sitting in ${top_builddir},
+#           ${top_builddir} = ${pcfiledir}
+#	and ${top_srcdir}   = ${pcfiledir}/@srcdir@
+
 prefix=@prefix@
 exec_prefix=@exec_prefix@
 libdir=@libdir@
@@ -8,6 +12,6 @@ Name: libgphoto2
 Description: Library for easy access to digital cameras
 URL: http://gphoto.org/proj/libgphoto2/
 Version: ${VERSION}
-Requires: libgphoto2_port >= 0.6.2, @REQUIREMENTS_FOR_LIBEXIF@
-Libs: ${pc_top_builddir}/${pcfiledir}/libgphoto2.la -lm
-Cflags: -I${pc_top_srcdir}/libgphoto2
+Requires: libgphoto2_port >= 0.7.2, @REQUIREMENTS_FOR_LIBEXIF@
+Libs: ${pc_top_builddir}/libgphoto2/libgphoto2.la -lm
+Cflags: -I${pcfiledir}/@srcdir@/libgphoto2
