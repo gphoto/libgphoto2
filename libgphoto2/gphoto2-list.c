@@ -73,11 +73,12 @@
 #ifdef CAMERALIST_STRUCT_COMPATIBILITY
 
 #define MAX_ENTRIES 1024
+#define MAX_LIST_STRING_LENGTH 128
 struct _CameraList {
 	int  count;
 	struct {
-		char name  [128];
-		char value [128];
+		char name  [MAX_LIST_STRING_LENGTH];
+		char value [MAX_LIST_STRING_LENGTH];
 	} entry [MAX_ENTRIES];
 	int ref_count;
 };
