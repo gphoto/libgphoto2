@@ -13,5 +13,5 @@ Description: Library for easy access to digital cameras
 URL: http://gphoto.org/proj/libgphoto2/
 Version: @VERSION@
 Requires: libusb >= 0.1.11
-Libs: ${pc_top_builddir}/libgphoto2_port/libgphoto2_port.la -lm
+Libs: ${pcfiledir}/libgphoto2_port/libgphoto2_port.la -lm
 Cflags: -I${pcfiledir}/@srcdir@
