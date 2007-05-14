@@ -14,4 +14,4 @@ URL: http://gphoto.org/proj/libgphoto2/
 Version: ${VERSION}
 Requires: libgphoto2_port >= 0.7.2, @REQUIREMENTS_FOR_LIBEXIF@
 Libs: ${pc_top_builddir}/libgphoto2/libgphoto2.la -lm
-Cflags: -I${pcfiledir}/@srcdir@/libgphoto2
+Cflags: -I${pcfiledir}/@srcdir@
