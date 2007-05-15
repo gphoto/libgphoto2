@@ -64,7 +64,7 @@ camera_id (CameraText *id)
 }
 
 
-struct largan_cameras {
+static const struct largan_cameras {
 	char * name;
 	unsigned short idVendor;
 	unsigned short idProduct;

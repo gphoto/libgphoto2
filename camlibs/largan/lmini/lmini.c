@@ -94,7 +94,8 @@ void largan_pict_free (largan_pict_info * ptr)
 }
 
 
-void largan_pict_alloc_data (largan_pict_info * ptr, uint32_t size)
+static void
+largan_pict_alloc_data (largan_pict_info * ptr, uint32_t size)
 {
 	ptr->data = realloc (ptr->data, size);
 	ptr->data_size = size;

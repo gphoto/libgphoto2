@@ -45,7 +45,6 @@ typedef struct {
 
 largan_pict_info * largan_pict_new (void);
 void largan_pict_free (largan_pict_info *);
-void largan_pict_alloc_data (largan_pict_info *, uint32_t);
 
 
 int largan_open (Camera * camera);
