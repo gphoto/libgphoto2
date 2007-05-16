@@ -58,8 +58,5 @@ sq_preprocess		(SQModel model, int comp_ratio,
 int
 sq_decompress 		(SQModel model, unsigned char *output, unsigned char *data, 
 				int w, int h);
-int 
-decode_panel	(unsigned char *panel_out, unsigned char *panel,               
-                    		int panelwidth, int height, int color);
 #endif
 
