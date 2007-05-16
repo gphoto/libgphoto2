@@ -59,7 +59,7 @@
  */
 extern double round(double x);
 
-int 
+static int 
 camera_cam_desc_get_value (ValueNameType *val_name_p, CameraWidgetType widge, 
 			   uint32_t reg_len, void *buff, int mask, 
 			   CameraWidget *child)
@@ -108,7 +108,7 @@ camera_cam_desc_get_value (ValueNameType *val_name_p, CameraWidgetType widge,
 	return (GP_OK);
 }
 
-int
+static int
 camera_cam_desc_get_widget (Camera *camera, CameraRegisterType *reg_p, 
 			    CameraWidget *section, GPContext *context)
 {
@@ -219,7 +219,7 @@ camera_get_config_cam_desc (Camera *camera, CameraWidget **window,
 	return (GP_OK);
 }
 
-int
+static int
 cam_desc_set_register (Camera *camera, CameraRegisterType *reg_p,
 		       void *value, GPContext *context)
 {

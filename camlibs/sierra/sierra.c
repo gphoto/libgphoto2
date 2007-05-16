@@ -53,7 +53,7 @@
 
 #define GP_MODULE "sierra"
 
-int get_jpeg_data(const char *data, int data_size, char **jpeg_data, int *jpeg_size);
+static int get_jpeg_data(const char *data, int data_size, char **jpeg_data, int *jpeg_size);
 
 /* Useful markers */
 static const char JPEG_SOI_MARKER[]  = { (char)0xFF, (char)0xD8, '\0' };
