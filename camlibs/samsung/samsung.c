@@ -136,7 +136,7 @@ camera_id (CameraText *id)
 	return (GP_OK);
 }
 
-static struct {
+static const struct {
 	const char *model;
 } models[] = {
 	{"Samsung:digimax 800k"},
