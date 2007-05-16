@@ -49,7 +49,7 @@
 
 #define GP_MODULE
 
-static struct {
+static const struct {
 	char *model;
 	int usb_vendor;
 	int usb_product;
@@ -279,7 +279,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 				result = (unsigned char *)calloc(1, 128 * 96 * 4 * 4 + 100 );
 				
-				sprintf(result, "P3\n128 96\n255\n");
+				strcpy(result, "P3\n128 96\n255\n");
 				offset = offset + 14;
 
 				temp1 = data[ thumb_start + pixel_count ];
@@ -527,26 +527,12 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 	}
 		
 	if (has_compact_flash == 0) {
-		sprintf( summary->text, "Camera appears to not be using CompactFlash storage\n"
-						"Unfortunately we do not support that at the moment :-(\n");
+		sprintf( summary->text, _("Camera appears to not be using CompactFlash storage\n"
+						"Unfortunately we do not support that at the moment :-(\n"));
 	} else {
-		sprintf( summary->text, "Camera has taken %d pictures, and is using CompactFlash storage\n", count);
+		sprintf( summary->text, _("Camera has taken %d pictures, and is using CompactFlash storage.\n"), count);
 	}
 	return GP_OK;
-}
-
-static int
-camera_manual (Camera *camera, CameraText *manual, GPContext *context)
-{
-	/*
-	 * If you would like to tell the user some information about how
-	 * to use the camera or the driver, this is the place to do.
-	 */
-
-	GP_DEBUG(" * camera_manual()\n"
-			 "   This camera is easy to use!\n");
-
-	return (GP_OK);
 }
 
 static int
@@ -668,7 +654,6 @@ camera_init (Camera *camera, GPContext *context)
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;
         camera->functions->summary              = camera_summary;
-        camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;
 
 	/* Now, tell the filesystem where to get lists, files and info */
