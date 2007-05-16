@@ -248,11 +248,6 @@ static int camera_summary(Camera *camera, CameraText *summary, GPContext *contex
   return GP_OK;
 }
 
-static int camera_manual(Camera *camera, CameraText *manual, GPContext *context){
-  strcpy(manual->text, _("Manual Not Implemented Yet"));
-  return GP_OK;
-}
-
 static int camera_about(Camera *camera, CameraText *about, GPContext *context)
 {
   strcpy(about->text, 
@@ -290,7 +285,6 @@ int camera_init(Camera *camera, GPContext *context){
   int ret = 0;
   camera->functions->exit         = camera_exit;
   camera->functions->summary      = camera_summary;
-  camera->functions->manual       = camera_manual;
   camera->functions->about        = camera_about;
   gp_log (GP_LOG_DEBUG, "pccam", "Initializing the camera\n");
   switch (camera->port->type) 
