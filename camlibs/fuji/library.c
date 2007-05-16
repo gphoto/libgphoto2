@@ -54,7 +54,7 @@
 
 #define CR(result) {int r = (result); if (r < 0) return (r);}
 
-static struct {
+static const struct {
 	const char *model;
 } models[] = {
 	{"Apple:QuickTake 200"},
@@ -80,7 +80,7 @@ struct _CameraPrivateLibrary {
 	unsigned char cmds[0xff];
 };
 
-static struct {
+static const struct {
         FujiCmd command;
         const char *name;
 } Commands[] = {
@@ -255,7 +255,7 @@ del_file_func (CameraFilesystem *fs, const char *folder,
 	return (GP_OK);
 }
 
-static struct {
+static const struct {
 	FujiSpeed speed;
 	unsigned int bit_rate;
 } Speeds[] = {
