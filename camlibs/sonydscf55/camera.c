@@ -36,7 +36,7 @@ struct ModelInfo {
 	const char *model_str;
 };
 
-static struct ModelInfo models[] = {
+static const struct ModelInfo models[] = {
 	{ SONY_MODEL_MSAC_SR1, "Sony:MSAC-SR1" },
 	{ SONY_MODEL_DCR_PC100, "Sony:DCR-PC100" },
 	{ SONY_MODEL_TRV_20E,   "Sony:TRV-20E" },
