@@ -55,7 +55,26 @@
 
 #define	COOL_SLEEP	10000
 
-int packet_size = 500;
+#define	RETRIES			10
+
+#define COOLSHOT_DONE	0x00
+#define COOLSHOT_PKT	0x01
+#define COOLSHOT_ENQ	0x05
+#define COOLSHOT_ACK	0x06
+#define COOLSHOT_NAK	0x15
+
+
+static int coolshot_ack	(Camera *camera);
+static int coolshot_nak	(Camera *camera);
+static int coolshot_sp	(Camera *camera);
+static int coolshot_fs( Camera *camera, int number );
+static int coolshot_write_packet (Camera *camera, char *packet);
+static int coolshot_read_packet (Camera *camera, char *packet);
+static int coolshot_check_checksum( char *packet, int length );
+static int coolshot_download_image( Camera *camera, CameraFile *file,
+		char *buf, int *len, int thumbnail, GPContext *context );
+
+static int packet_size = 500;
 
 /* ??set mode?? */
 int coolshot_sm( Camera *camera ) {
@@ -156,6 +175,7 @@ int coolshot_sb( Camera *camera, int speed ) {
 	return (GP_OK);
 }
 
+static
 int coolshot_fs( Camera *camera, int number ) {
 	char buf[16];
 
@@ -184,6 +204,7 @@ int coolshot_fs( Camera *camera, int number ) {
 	return( GP_OK );
 }
 
+static
 int coolshot_sp( Camera *camera ) {
 	char buf[16];
 
@@ -314,6 +335,7 @@ int coolshot_request_thumbnail( Camera *camera, CameraFile *file,
 	return( GP_OK );
 }
 
+static
 int coolshot_check_checksum( char *packet, int length ) {
 	int checksum = 0;
 	int p_csum = 0;
@@ -412,6 +434,7 @@ int coolshot_download_image( Camera *camera, CameraFile *file,
 	return( GP_OK );
 }
 
+static
 int coolshot_write_packet (Camera *camera, char *packet) {
 	int x, ret, r, checksum=0, length;
 
@@ -449,7 +472,7 @@ int coolshot_write_packet (Camera *camera, char *packet) {
 	return (GP_ERROR_TIMEOUT);
 }
 
-
+static
 int coolshot_read_packet (Camera *camera, char *packet) {
 	int r = 0, x = 0, ret, done, length=0;
 	int blocksize, bytes_read;
@@ -551,7 +574,7 @@ read_packet_again:
 	return (GP_ERROR_TIMEOUT);
 }
 
-
+static
 int coolshot_ack (Camera *camera)
 {
 	int ret, r = 0;
@@ -572,6 +595,7 @@ int coolshot_ack (Camera *camera)
 	return (GP_ERROR_TIMEOUT);
 }
 
+static
 int coolshot_nak (Camera *camera)
 {
 	int ret, r = 0;
