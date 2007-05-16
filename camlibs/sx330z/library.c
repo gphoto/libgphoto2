@@ -235,16 +235,6 @@ camera_id(CameraText *id)
 
 
 /*
- * Camera Summary 
- */
-static int 
-camera_summary(Camera *camera,CameraText *summary,GPContext *context)
-{
- return(GP_ERROR_NOT_SUPPORTED);
-} /* camera summary */
-
-
-/*
  * Camera about 
  */
 static int 
@@ -289,7 +279,6 @@ camera_init(Camera *camera,GPContext *context)
  /*CR(gp_port_get_settings(camera->port,&settings));*/
  
  camera->functions->about=camera_about; 
- camera->functions->summary=camera_summary; 
  camera->functions->exit=camera_exit;
  gp_port_get_settings(camera->port,&settings);
  if (camera->port->type!=GP_PORT_USB)
