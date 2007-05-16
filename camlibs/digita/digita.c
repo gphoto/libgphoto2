@@ -62,7 +62,7 @@
 # define MIN(a, b) ((a) < (b) ? (a) : (b))
 #endif
 
-static struct {
+static const struct {
 	char *model;
 	int usb_vendor;
 	int usb_product;
