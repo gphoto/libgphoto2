@@ -40,8 +40,6 @@ int mars_init              (Camera *camera, GPPort *port, Info *info);
 int mars_reset	     (GPPort *port);
 int mars_get_num_pics   (Info *info);
 int mars_get_pic_data_size (Info *info, int n);
-int set_usb_in_endpoint	     (Camera *camera, int inep);
-int mars_read_data         (GPPort *port, char *data, int size);
 int mars_read_picture_data (Camera *camera, Info *info,
 				GPPort *port, char *data, int size, int n);
 

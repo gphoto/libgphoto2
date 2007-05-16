@@ -114,7 +114,7 @@ mars_get_pic_data_size (Info *info, int n)
 	return (info[8*n+6]*0x100 + info[8*n+5])*0x100 + info[8*n+4];
 }
 
-int 
+static int 
 set_usb_in_endpoint	(Camera *camera, int inep) 
 {
 	GPPortSettings settings;
@@ -125,7 +125,7 @@ set_usb_in_endpoint	(Camera *camera, int inep)
 }	
 
 
-int 
+static int 
 mars_read_data         (GPPort *port, char *data, int size) 
 { 
 	int MAX_BULK = 0x2000;
