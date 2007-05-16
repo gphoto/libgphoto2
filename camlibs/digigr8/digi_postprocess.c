@@ -33,7 +33,7 @@
 
 #define GP_MODULE "digigr8" 
 
-int
+static int
 digi_first_decompress (unsigned char *output, unsigned char *input,
 					    unsigned int outputsize)
 {
@@ -101,7 +101,7 @@ digi_first_decompress (unsigned char *output, unsigned char *input,
         return GP_OK;
 }
 
-int
+static int
 digi_second_decompress (unsigned char *uncomp, unsigned char *in, 
 						    int width, int height)
 {

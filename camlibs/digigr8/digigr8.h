@@ -38,10 +38,6 @@ char digi_get_comp_ratio      	     (CameraPrivateLibrary *, int entry);
 int digi_get_data_size             (CameraPrivateLibrary *, int entry);
 int digi_get_picture_width             (CameraPrivateLibrary *, int entry);
 int digi_is_clip                       (CameraPrivateLibrary *, int entry);
-int digi_first_decompress (unsigned char *output, unsigned char *input,
-                                        	unsigned int outputsize);
-int digi_second_decompress (unsigned char *uncomp, unsigned char *in,
-                                                    int width, int height);
 int digi_decompress (unsigned char *out_data, unsigned char *data, 
 							    int w, int h);
 int digi_postprocess	(CameraPrivateLibrary *priv, 
