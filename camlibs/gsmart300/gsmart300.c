@@ -70,7 +70,7 @@ static int gsmart300_get_image_thumbnail (CameraPrivateLibrary * lib,
 #define __GS300_PIC		2
 #define __GS300_INIT		3
 
-int
+static int
 gsmart300_get_file_count (CameraPrivateLibrary * lib)
 {
 	char buf[0x100];

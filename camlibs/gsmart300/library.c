@@ -68,7 +68,7 @@ static int get_info_func (CameraFilesystem *fs, const char *folder,
 			  void *data, GPContext *context);
 
 /* define what cameras we support */
-static struct
+static const struct
 {
 	char *model;
 	int usb_vendor;

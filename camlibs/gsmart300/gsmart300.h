@@ -55,7 +55,6 @@ struct _CameraPrivateLibrary
 };
 
 int gsmart300_reset (CameraPrivateLibrary * lib);
-int gsmart300_get_file_count (CameraPrivateLibrary * lib);
 int gsmart300_get_info (CameraPrivateLibrary * lib);
 int gsmart300_delete_file (CameraPrivateLibrary * lib, unsigned int index);
 int gsmart300_delete_all (CameraPrivateLibrary * lib);
