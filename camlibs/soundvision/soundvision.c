@@ -45,7 +45,7 @@
 
 #define GP_MODULE "soundvision"
 
-struct {
+static const struct {
    char *name;
    unsigned short idVendor;
    unsigned short idProduct;
