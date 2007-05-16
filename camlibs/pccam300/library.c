@@ -100,13 +100,6 @@ camera_abilities (CameraAbilitiesList *list)
 }
 
 static int
-camera_exit (Camera *camera, GPContext *context)
-{
-	/* Nothing to do, really, simply get out of here. */
-	return GP_OK;
-}
-
-static int
 file_list_func (CameraFilesystem *fs, const char *folder,
 		CameraList *list, void *data, GPContext *context)
 {
@@ -247,13 +240,6 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 }
 
 static int
-camera_manual (Camera *camera, CameraText *manual, GPContext *context)
-{
-	strcpy (manual->text, _("Manual Not Implemented Yet"));
-	return GP_OK;
-}
-
-static int
 camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
 	strcpy (about->text,
@@ -309,9 +295,7 @@ camera_init (Camera *camera, GPContext *context)
 	GPPortSettings settings;
 	int ret = 0;
 
-	camera->functions->exit = camera_exit;
 	camera->functions->summary = camera_summary;
-	camera->functions->manual = camera_manual;
 	camera->functions->about = camera_about;
 	gp_log (GP_LOG_DEBUG, "pccam 300", "Initializing the camera\n");
 	switch (camera->port->type) {
