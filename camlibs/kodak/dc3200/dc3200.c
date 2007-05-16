@@ -74,6 +74,7 @@ int camera_abilities (CameraAbilitiesList *list)
 	return (GP_OK);
 }
 
+static
 int init(Camera *camera)
 {
 	GPPortSettings settings;

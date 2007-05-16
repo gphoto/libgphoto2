@@ -29,7 +29,6 @@ struct _CameraPrivateLibrary {
 	GPContext		*context;	/* for progress updates */
 };
 
-int init(Camera *camera);
 int check_last_use(Camera *camera);
 
 #endif
