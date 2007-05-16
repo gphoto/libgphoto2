@@ -445,6 +445,7 @@ camera_init (Camera *camera, GPContext *context)
 
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 	gp_port_get_settings( camera->port, &settings);
+	settings.usb.config = 1;
 	settings.usb.interface = 0;
 	settings.usb.altsetting = 0;
 	ret = gp_port_set_settings (camera->port, settings);
