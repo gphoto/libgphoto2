@@ -227,6 +227,7 @@ gp_port_usb_open (GPPort *port)
 	int ret;
 	char name[64];
 
+	gp_log (GP_LOG_DEBUG,"libusb","gp_port_usb_open()");
 	if (!port || !port->pl->d)
 		return GP_ERROR_BAD_PARAMETERS;
 
@@ -256,10 +257,12 @@ gp_port_usb_open (GPPort *port)
 		if (ret < 0)
 			gp_port_set_error (port, _("Could not detach kernel driver '%s' of camera device."),name);
 	} else {
-		gp_port_set_error (port, _("Could not query kernel driver of device."));
+		if (errno != ENODATA) /* ENODATA - just no driver there */
+			gp_port_set_error (port, _("Could not query kernel driver of device."));
 	}
 #endif
 
+	gp_log (GP_LOG_DEBUG,"libusb","claiming interface %d", port->settings.usb.interface);
 	ret = usb_claim_interface (port->pl->dh,
 				   port->settings.usb.interface);
 	if (ret < 0) {
@@ -469,8 +472,20 @@ gp_port_usb_update (GPPort *port)
 {
 	int ret, ifacereleased = FALSE;
 
+	gp_log (GP_LOG_DEBUG, "libusb", "gp_port_usb_update(old int=%d, conf=%d, alt=%d), (new int=%d, conf=%d, alt=%d)",
+		port->settings.usb.interface,
+		port->settings.usb.config,
+		port->settings.usb.altsetting,
+		port->settings_pending.usb.interface,
+		port->settings_pending.usb.config,
+		port->settings_pending.usb.altsetting
+	);
 	if (!port)
 		return GP_ERROR_BAD_PARAMETERS;
+
+	if (port->pl->interface == -1) port->pl->interface = port->settings.usb.interface;
+	if (port->pl->config == -1) port->pl->config = port->settings.usb.config;
+	if (port->pl->altsetting == -1) port->pl->altsetting = port->settings.usb.altsetting;
 
 	/* The portname can also be changed with the device still fully closed. */
 	memcpy(&port->settings.usb.port, &port->settings_pending.usb.port,
@@ -484,11 +499,16 @@ gp_port_usb_update (GPPort *port)
 
 	/* The interface changed. release the old, claim the new ... */
 	if (port->settings.usb.interface != port->pl->interface) {
+		gp_log (GP_LOG_DEBUG, "libusb", "changing interface %d -> %d",
+			port->pl->interface,
+			port->settings.usb.interface
+		);
 		if (usb_release_interface (port->pl->dh,
 					   port->pl->interface) < 0) {
 			gp_log (GP_LOG_DEBUG, "gphoto2-port-usb","releasing the iface for config failed.");
 			/* Not a hard error for now. -Marcus */
 		} else {
+			gp_log (GP_LOG_DEBUG,"libusb","claiming interface %d", port->settings.usb.interface);
 			ret = usb_claim_interface (port->pl->dh,
 						   port->settings.usb.interface);
 			if (ret < 0) {
@@ -499,6 +519,10 @@ gp_port_usb_update (GPPort *port)
 		}
 	}
 	if (port->settings.usb.config != port->pl->config) {
+		gp_log (GP_LOG_DEBUG, "libusb", "changing config %d -> %d",
+			port->pl->config,
+			port->settings.usb.config
+		);
 		/* This can only be changed with the interface released. 
 		 * This is a hard requirement since 2.6.12.
 		 */
@@ -519,7 +543,7 @@ gp_port_usb_update (GPPort *port)
 				port->settings.usb.config);
 			return GP_ERROR_IO_UPDATE;	
 #endif
-			gp_log (GP_LOG_ERROR, "gphoto2-port-usb","setting configuration to %d failed with ret = %d, but continue...", port->settings.usb.config, ret);
+			gp_log (GP_LOG_ERROR, "gphoto2-port-usb","setting configuration from %d to %d failed with ret = %d, but continue...", port->pl->config, port->settings.usb.config, ret);
 		}
 
 		gp_log (GP_LOG_DEBUG, "gphoto2-port-usb",
@@ -528,6 +552,7 @@ gp_port_usb_update (GPPort *port)
 			port->settings.usb.config);
 
 		if (ifacereleased) {
+			gp_log (GP_LOG_DEBUG,"libusb","claiming interface %d", port->settings.usb.interface);
 			ret = usb_claim_interface (port->pl->dh,
 						   port->settings.usb.interface);
 			if (ret < 0) {
@@ -546,9 +571,9 @@ gp_port_usb_update (GPPort *port)
 		ret = usb_set_altinterface(port->pl->dh, port->settings.usb.altsetting);
 		if (ret < 0) {
 			gp_port_set_error (port, 
-				_("Could not set altsetting "
-				"%d/%d (%m)"),
-				port->settings.usb.interface,
+				_("Could not set altsetting from %d "
+				"to %d (%m)"),
+				port->pl->altsetting,
 				port->settings.usb.altsetting);
 			return GP_ERROR_IO_UPDATE;
 		}
