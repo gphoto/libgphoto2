@@ -24,7 +24,7 @@
 
 #define GP_MODULE "barbie"
 
-extern char packet_1[];
+static const char packet_1[4]                = {0x02, 0x01, 0x01, 0x03};
 
 static char *models[] = {
         "Barbie",
