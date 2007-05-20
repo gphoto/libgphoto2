@@ -1,6 +1,6 @@
 /** \file
  *
- * Implement Camera object representing a camera attached to the system.
+ * \brief Implement Camera object representing a camera attached to the system.
  *
  * \author Copyright 2000 Scott Fritzinger
  *
@@ -54,26 +54,54 @@ typedef struct _Camera Camera;
 #include <gphoto2/gphoto2-result.h>
 #include <gphoto2/gphoto2-context.h>
 
+/** 
+ * \brief CameraText structure used in various functions.
+ *
+ * A text structure containing translated text returned
+ * by various functions (about, manual, summary). You should
+ * not assume a size.
+ */
 typedef struct {
-	char text [32 * 1024];
+	char text [32 * 1024]; /**< \brief Character string containing the translated text. */
 } CameraText;
 
+/** 
+ * \brief A structure created by the capture operation.
+ *
+ * A structure containing the folder and filename of an object
+ * after a successful capture and is passed as reference to the
+ * gp_camera_capture() function.
+ */
 typedef struct {
-	char name [128];
-	char folder [1024];
+	char name [128];	/**< \brief Name of the captured file. */
+	char folder [1024];	/**< \brief Name of the folder of the captured file. */
 } CameraFilePath;
 
+/**
+ * \brief Type of the capture to do.
+ *
+ * Specifies the type of capture the user wants to do with the
+ * gp_camera_capture() function.
+ */
 typedef enum {
-	GP_CAPTURE_IMAGE,
-	GP_CAPTURE_MOVIE,
-	GP_CAPTURE_SOUND
+	GP_CAPTURE_IMAGE,	/**< \brief Capture an image. */
+	GP_CAPTURE_MOVIE,	/**< \brief Capture a movie. */
+	GP_CAPTURE_SOUND	/**< \brief Capture audio. */
 } CameraCaptureType;
 
+/**
+ * \brief Specify what event we received from the camera.
+ *
+ * Used by gp_camera_wait_for_event() to specify what
+ * event happened on the camera.
+ * This functionality is still in development and might change.
+ *
+ */
 typedef enum {
-	GP_EVENT_UNKNOWN,	/* unknown and unhandled event */
-	GP_EVENT_TIMEOUT,	/* timeout, no arguments */
-	GP_EVENT_FILE_ADDED,	/* CameraFilePath* = file path on camfs */
-	GP_EVENT_FOLDER_ADDED	/* CameraFilePath* = folder on camfs */
+	GP_EVENT_UNKNOWN,	/**< unknown and unhandled event */
+	GP_EVENT_TIMEOUT,	/**< timeout, no arguments */
+	GP_EVENT_FILE_ADDED,	/**< CameraFilePath* = file path on camfs */
+	GP_EVENT_FOLDER_ADDED	/**< CameraFilePath* = folder on camfs */
 } CameraEventType;
 
 /**
@@ -93,6 +121,9 @@ typedef int (*CameraCaptureFunc)   (Camera *camera, CameraCaptureType type,
 				    CameraFilePath *path, GPContext *context);
 typedef int (*CameraCapturePreviewFunc) (Camera *camera, CameraFile *file,
 					 GPContext *context);
+typedef int (*CameraCaptureToFileFunc) (Camera *camera, CameraCaptureType type,
+					CameraFile **files, int nroffiles,
+					GPContext *context);
 typedef int (*CameraSummaryFunc)   (Camera *camera, CameraText *text,
 				    GPContext *context);
 typedef int (*CameraManualFunc)    (Camera *camera, CameraText *text,
@@ -147,8 +178,10 @@ struct _CameraFunctions {
 	/* Event Interface */
 	CameraWaitForEvent wait_for_event;
 
+	/* Additional capture functionality */
+	CameraCaptureToFileFunc	capture_to_file;
+
 	/* Reserved space to use in the future without changing the struct size */
-	void *reserved1;
 	void *reserved2;
 	void *reserved3;
 	void *reserved4;
@@ -235,6 +268,8 @@ int gp_camera_get_about		 (Camera *camera, CameraText *about,
 				  GPContext *context);
 int gp_camera_capture 		 (Camera *camera, CameraCaptureType type,
 				  CameraFilePath *path, GPContext *context);
+int gp_camera_capture_to_file 	 (Camera *camera, CameraCaptureType type,
+				  CameraFile **files, int *nroffiles, GPContext *context);
 int gp_camera_capture_preview 	 (Camera *camera, CameraFile *file,
 				  GPContext *context);
 int gp_camera_wait_for_event     (Camera *camera, int timeout,
