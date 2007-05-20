@@ -31,6 +31,13 @@
 extern "C" {
 #endif /* __cplusplus */
 
+/**
+ * \brief The gphoto context structure.
+ *
+ * This structure allows callback handling, passing error contexts back, 
+ * progress handling and download cancellation and similar things.
+ * It is usually passed around the functions.
+ */
 typedef struct _GPContext GPContext;
 
 GPContext *gp_context_new (void);
@@ -38,11 +45,17 @@ GPContext *gp_context_new (void);
 void gp_context_ref   (GPContext *context);
 void gp_context_unref (GPContext *context);
 
-enum _GPContextFeedback {
-	GP_CONTEXT_FEEDBACK_OK,
-	GP_CONTEXT_FEEDBACK_CANCEL
-};
-typedef enum _GPContextFeedback GPContextFeedback;
+/**
+ * \brief Return codes that can be returned by progress handling.
+ *
+ * An application can return special values back to the libgphoto2
+ * progress callback handling functions. If "Cancel" is selected,
+ * libgphoto2 and the camera driver will try to cancel transfer.
+ */
+typedef enum _GPContextFeedback {
+	GP_CONTEXT_FEEDBACK_OK,		/**< Everything ok... proceed. */
+	GP_CONTEXT_FEEDBACK_CANCEL	/**< Please cancel the current transfer if possible. */
+} GPContextFeedback;
 
 /* Functions */
 typedef void (* GPContextIdleFunc)     (GPContext *context, void *data);
