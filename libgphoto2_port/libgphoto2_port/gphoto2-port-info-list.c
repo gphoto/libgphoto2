@@ -1,4 +1,4 @@
-/* gphoto2-port-info-list.c:
+/** \file
  *
  * Copyright © 2001 Lutz Müller <lutz@users.sf.net>
  *

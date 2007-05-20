@@ -1,5 +1,4 @@
-/* gphoto2-port-portability.c
- */
+/** \file */
 
 #include "config.h"
 #include <stdio.h>

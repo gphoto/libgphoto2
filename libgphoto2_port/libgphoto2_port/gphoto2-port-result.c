@@ -1,4 +1,4 @@
-/* result.c
+/** \file
  *
  * Copyright © 2001 Lutz Müller <lutz@users.sf.net>
  *
