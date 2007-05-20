@@ -121,9 +121,6 @@ typedef int (*CameraCaptureFunc)   (Camera *camera, CameraCaptureType type,
 				    CameraFilePath *path, GPContext *context);
 typedef int (*CameraCapturePreviewFunc) (Camera *camera, CameraFile *file,
 					 GPContext *context);
-typedef int (*CameraCaptureToFileFunc) (Camera *camera, CameraCaptureType type,
-					CameraFile **files, int nroffiles,
-					GPContext *context);
 typedef int (*CameraSummaryFunc)   (Camera *camera, CameraText *text,
 				    GPContext *context);
 typedef int (*CameraManualFunc)    (Camera *camera, CameraText *text,
@@ -178,10 +175,8 @@ struct _CameraFunctions {
 	/* Event Interface */
 	CameraWaitForEvent wait_for_event;
 
-	/* Additional capture functionality */
-	CameraCaptureToFileFunc	capture_to_file;
-
 	/* Reserved space to use in the future without changing the struct size */
+	void *reserved1;
 	void *reserved2;
 	void *reserved3;
 	void *reserved4;
@@ -268,8 +263,6 @@ int gp_camera_get_about		 (Camera *camera, CameraText *about,
 				  GPContext *context);
 int gp_camera_capture 		 (Camera *camera, CameraCaptureType type,
 				  CameraFilePath *path, GPContext *context);
-int gp_camera_capture_to_file 	 (Camera *camera, CameraCaptureType type,
-				  CameraFile **files, int *nroffiles, GPContext *context);
 int gp_camera_capture_preview 	 (Camera *camera, CameraFile *file,
 				  GPContext *context);
 int gp_camera_wait_for_event     (Camera *camera, int timeout,
