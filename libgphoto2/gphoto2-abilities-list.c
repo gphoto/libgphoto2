@@ -71,10 +71,14 @@ struct _CameraAbilitiesList {
 	CameraAbilities *abilities;
 };
 
+/** \internal */
 static int gp_abilities_list_lookup_id (CameraAbilitiesList *, const char *);
+/** \internal */
 static int gp_abilities_list_sort      (CameraAbilitiesList *);
 
 /**
+ * \brief Set the current character codeset libgphoto2 is operating in.
+ *
  * Set the codeset for all messages returned by libgphoto2.
  * \param codeset New codeset for the messages. For instance "utf-8".
  * \return old codeset as returned from bind_textdomain_codeset().
@@ -90,7 +94,9 @@ gp_message_codeset (const char *codeset)
 }
 
 /**
- * Allocate the memory for a new abilities list.
+ * \brief Allocate the memory for a new abilities list.
+ *
+ * Function to allocate the memory for a new abilities list.
  * \param list CameraAbilitiesList object to initialize
  * \return gphoto2 error code
  *
@@ -636,9 +642,10 @@ gp_abilities_list_lookup_model (CameraAbilitiesList *list, const char *model)
 
 /**
  * \brief Retrieve the camera abilities of entry with supplied index number.
+ *
  * \param list a CameraAbilitiesList
  * \param index index
- * \param abilities CameraAbilities
+ * \param abilities pointer to CameraAbilities for returned data.
  * \return a gphoto2 error code
  *
  * Retrieves the camera @abilities of entry with supplied

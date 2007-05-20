@@ -1,3 +1,14 @@
+/** \file
+ *
+ * EXIF file format support library. This API allows to parse, read and
+ * modify EXIF data structures. It provides a low-level API which allows
+ * to manipulate EXIF tags in a generic way, and a higher-level API which
+ * provides more advanced functions such as comment editing, thumbnail
+ * extraction, etc.
+ *
+ * In the future, vendor-proprietary exif extensions might be supported.
+ */
+
 #ifndef _gphoto_exif_
 #define _gphoto_exif_ 
 #include <stdio.h>
@@ -7,16 +18,6 @@
 #include <sys/time.h>
 #include <sys/times.h>
 #include <fcntl.h>
-
-/*
- * EXIF file format support library. This API allows to parse, read and
- * modify EXIF data structures. It provides a low-level API which allows
- * to manipulate EXIF tags in a generic way, and a higher-level API which
- * provides more advanced functions such as comment editing, thumbnail
- * extraction, etc.
- *
- * In the future, vendor-proprietary exif extensions might be supported.
- */
 
 
 /*

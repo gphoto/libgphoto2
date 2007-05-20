@@ -1,4 +1,4 @@
-/* gphoto2-filesys.c
+/* \file gphoto2-filesys.c
  *
  * Copyright 2000 Scott Fritzinger
  *
@@ -1211,7 +1211,7 @@ gp_filesystem_remove_dir (CameraFilesystem *fs, const char *folder,
 /**
  * gp_filesystem_put_file:
  * @fs: a #CameraFilesystem
- * @folder: the folder where to put the @file into
+ * @folder: the folder where to put the file into
  * @file: the file
  * @context: a #GPContext
  *

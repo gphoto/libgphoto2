@@ -1,21 +1,27 @@
-/* bayer.c
+/** \file bayer.c
+ * \brief Bayer array conversion routines.
  *
- * Copyright 2001 Lutz Müller <lutz@users.sf.net>
+ * \author Copyright 2001 Lutz Müller <lutz@users.sf.net>
+ * \author Copyright 2007 Theodore Kilgore <kilgota@auburn.edu>
  *
- * gp_bayer_accrue() Copyright @ 2007 Theodore Kilgore <kilgota@auburn.edu>;
+ * \par
+ * gp_bayer_accrue() from Theodore Kilgore <kilgota@auburn.edu>
  * contains suggestions by B. R. Harris (e-mail address disappeared) and
  * Werner Eugster <eugster@giub.unibe.ch>
  *
+ * \par License
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
+ * \par
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
+ * \par
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
@@ -45,6 +51,17 @@ static int
 gp_bayer_accrue (unsigned char *image, int w, int h, int x0, int y0,
 		int x1, int y1, int x2, int y2, int x3, int y3, int colour);
 
+/**
+ * \brief Expand a bayer raster style image to a RGB raster.
+ *
+ * A regular CCD uses a raster of 2 green, 1 blue and 1 red components to
+ * cover a 2x2 pixel area. The camera or the driver then interpolates a
+ * 2x2 RGB pixel set out of this data.
+ *
+ * This function expands the bayer array to 3 times larger bitmap with
+ * RGB values copied as-is. Pixels were no sensor was there are 0.
+ * The data is supposed to be processed further by for instance gp_bayer_interpolate().
+ */
 int
 gp_bayer_expand (unsigned char *input, int w, int h, unsigned char *output,
 		 BayerTile tile)

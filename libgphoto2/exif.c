@@ -1,7 +1,7 @@
-#include "exif.h"
-/*
-  EXIF file library for GPHOTO package
-  Copyright © 1999 Matthew G. Martin
+/** \file
+  \brief EXIF file library for GPHOTO package
+
+  \author Copyright 1999 Matthew G. Martin
 
   Generic gphoto implementation and extension by Edouard Lafargue.
 
@@ -10,20 +10,24 @@
 
   Thanks to Paul Wood <pwood@cs.bris.ac.uk> for sub-ifd parsing.
 
+  \par License
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2 of the License, or
   (at your option) any later version.
   
+  \par
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-  
+   
+  \par
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
+#include "exif.h"
 
 
 /*

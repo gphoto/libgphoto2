@@ -1,4 +1,4 @@
-/* gphoto2-result.c
+/** \file
  *
  * Copyright 2000 Scott Fritzinger
  *
