@@ -35,11 +35,14 @@
 extern "C" {
 #endif /* __cplusplus */
 
+/**
+ * Current implementation status of the camera driver.
+ */
 typedef enum {
-        GP_DRIVER_STATUS_PRODUCTION,
-        GP_DRIVER_STATUS_TESTING,
-	GP_DRIVER_STATUS_EXPERIMENTAL,
-	GP_DRIVER_STATUS_DEPRECATED
+	GP_DRIVER_STATUS_PRODUCTION,	/**< Driver is production ready. */
+	GP_DRIVER_STATUS_TESTING,	/**< Driver is beta quality. */
+	GP_DRIVER_STATUS_EXPERIMENTAL,	/**< Driver is alpha quality and might even not work. */
+	GP_DRIVER_STATUS_DEPRECATED	/**< Driver is no longer recommended to use and will be removed. */
 } CameraDriverStatus;
 
 /**
@@ -47,36 +50,45 @@ typedef enum {
  * and MTP Audio Players.
  */
 typedef enum {
-        GP_DEVICE_STILL_CAMERA          = 0,
-        GP_DEVICE_AUDIO_PLAYER          = 1 << 0
+        GP_DEVICE_STILL_CAMERA          = 0,	 /**< Traditional still camera */
+        GP_DEVICE_AUDIO_PLAYER          = 1 << 0 /**< Audio player */
 } GphotoDeviceType;
 
+/**
+ * A bitmask of remote control related operations of the device.
+ * Some drivers might support additional dynamic capabilities (like the PTP driver).
+ */
 typedef enum {
-        GP_OPERATION_NONE               = 0,
-        GP_OPERATION_CAPTURE_IMAGE      = 1 << 0,
-        GP_OPERATION_CAPTURE_VIDEO      = 1 << 1,
-        GP_OPERATION_CAPTURE_AUDIO      = 1 << 2,
-        GP_OPERATION_CAPTURE_PREVIEW    = 1 << 3,
-        GP_OPERATION_CONFIG             = 1 << 4
+        GP_OPERATION_NONE       	= 0,	  /**< No remote control operation supported. */
+        GP_OPERATION_CAPTURE_IMAGE      = 1 << 0, /**< Capturing images supported. */
+        GP_OPERATION_CAPTURE_VIDEO      = 1 << 1, /**< Capturing videos supported. */
+        GP_OPERATION_CAPTURE_AUDIO      = 1 << 2, /**< Capturing audio supported. */
+        GP_OPERATION_CAPTURE_PREVIEW    = 1 << 3, /**< Capturing image previews supported. */
+        GP_OPERATION_CONFIG             = 1 << 4  /**< Camera and Driver configuration supported. */
 } CameraOperation;
 
+/**
+ * A bitmask of image related operations of the device.
+ */
 typedef enum {
-        GP_FILE_OPERATION_NONE          = 0,
-        GP_FILE_OPERATION_DELETE        = 1 << 1,
-        GP_FILE_OPERATION_PREVIEW       = 1 << 3,
-        GP_FILE_OPERATION_RAW           = 1 << 4,
-        GP_FILE_OPERATION_AUDIO         = 1 << 5,
-        GP_FILE_OPERATION_EXIF          = 1 << 6
+        GP_FILE_OPERATION_NONE          = 0,      /**< No special file operations, just download. */
+        GP_FILE_OPERATION_DELETE        = 1 << 1, /**< Deletion of files is possible. */
+        GP_FILE_OPERATION_PREVIEW       = 1 << 3, /**< Previewing viewfinder content is possible. */
+        GP_FILE_OPERATION_RAW           = 1 << 4, /**< Raw retrieval is possible (used by non-JPEG cameras) */
+        GP_FILE_OPERATION_AUDIO         = 1 << 5, /**< Audio retrieval is possible. */
+        GP_FILE_OPERATION_EXIF          = 1 << 6  /**< EXIF retrieval is possible. */
 } CameraFileOperation;
 
+/**
+ * A bitmask of filesystem related operations of the device.
+ */
 typedef enum {
-        GP_FOLDER_OPERATION_NONE        = 0, 
-        GP_FOLDER_OPERATION_DELETE_ALL  = 1 << 0,
-        GP_FOLDER_OPERATION_PUT_FILE    = 1 << 1,
-        GP_FOLDER_OPERATION_MAKE_DIR    = 1 << 2,
-        GP_FOLDER_OPERATION_REMOVE_DIR  = 1 << 3
+        GP_FOLDER_OPERATION_NONE        = 0,	  /**< No special filesystem operation. */
+        GP_FOLDER_OPERATION_DELETE_ALL  = 1 << 0, /**< Deletion of all files on the device. */
+        GP_FOLDER_OPERATION_PUT_FILE    = 1 << 1, /**< Upload of files to the device possible. */
+        GP_FOLDER_OPERATION_MAKE_DIR    = 1 << 2, /**< Making directories on the device possible. */
+        GP_FOLDER_OPERATION_REMOVE_DIR  = 1 << 3  /**< Removing directories from the device possible. */
 } CameraFolderOperation;
-
 
 #ifdef _GPHOTO2_INTERNAL_CODE
 
@@ -105,31 +117,31 @@ typedef enum {
  * camlibs, but the status regarding use by frontends is questionable.
  */
 typedef struct {
-        char model [128];			/**< name of camera model */
-        CameraDriverStatus status;		/**< driver quality */
+        char model [128];			/**< \brief name of camera model */
+        CameraDriverStatus status;		/**< \brief driver quality */
 
-	/** Supported port. */
+	/** \brief Supported port types. */
 	GPPortType port;
-	/** Supported port speeds (terminated with a value of 0). */
+	/** \brief Supported serial port speeds (terminated with a value of 0). */
         int speed [64];
 
         /* Supported operations */
-        CameraOperation       operations;	/**< camera operation funcs */
-        CameraFileOperation   file_operations;  /**< camera file op funcs */
-        CameraFolderOperation folder_operations;/**< camera folder op funcs */
+        CameraOperation       operations;	/**< \brief Camera operation funcs */
+        CameraFileOperation   file_operations;  /**< \brief Camera file op funcs */
+        CameraFolderOperation folder_operations;/**< \brief Camera folder op funcs */
 
-	int usb_vendor;		/**< USB Vendor D */
-	int usb_product;	/**< USB Product ID */
-	int usb_class;          /**< USB device class */
-	int usb_subclass;	/**< USB device subclass */
-	int usb_protocol;	/**< USB device protocol */
+	int usb_vendor;		/**< \brief USB Vendor D */
+	int usb_product;	/**< \brief USB Product ID */
+	int usb_class;          /**< \brief USB device class */
+	int usb_subclass;	/**< \brief USB device subclass */
+	int usb_protocol;	/**< \brief USB device protocol */
 
         /* For core use */
         char library [1024];	/**< \internal */
         char id [1024];		/**< \internal */
 
-	GphotoDeviceType 	device_type;	/**< Device type. */
-	/* Reserved space to use in the future w/out changing the 
+	GphotoDeviceType 	device_type;	/**< \brief Device type. */
+	/** Reserved space to use in the future w/out changing the 
 	 * struct size */
         int reserved2;		/**< reserved space \internal */
         int reserved3;		/**< reserved space \internal */

@@ -1,4 +1,5 @@
 /** \file
+ * \brief Filesystem related operations and declarations.
  *
  * \author Copyright 2000 Scott Fritzinger
  *
@@ -38,115 +39,191 @@
 extern "C" {
 #endif /* __cplusplus */
 
+/** 
+ * \brief Bitmask on what fields are set in the CameraFileInfo structure.
+ *
+ * Bitmask to mark up which fields are set in the CameraFileInfo
+ * structure. The other fields might be uninitialized.
+ * If you set information via gp_camera_file_set_info() you 
+ * need to set those flags. If you retrieve information via
+ * gp_camera_file_get_info() you need to check those flags.
+ * They are seperate for both "normal" and "preview" parts
+ * and are mostly image related.
+ */
 typedef enum {
-	GP_FILE_INFO_NONE            = 0,
-	GP_FILE_INFO_TYPE            = 1 << 0,
-	GP_FILE_INFO_NAME            = 1 << 1,
-	GP_FILE_INFO_SIZE            = 1 << 2,
-	GP_FILE_INFO_WIDTH           = 1 << 3,
-	GP_FILE_INFO_HEIGHT          = 1 << 4,
-	GP_FILE_INFO_PERMISSIONS     = 1 << 5,
-	GP_FILE_INFO_STATUS	     = 1 << 6,
-	GP_FILE_INFO_MTIME	     = 1 << 7,
-	GP_FILE_INFO_ALL             = 0xFF
+	GP_FILE_INFO_NONE            = 0,	/**< \brief No fields set. */
+	GP_FILE_INFO_TYPE            = 1 << 0,	/**< \brief The MIME type is set. */
+	GP_FILE_INFO_NAME            = 1 << 1,	/**< \brief The name is set. */
+	GP_FILE_INFO_SIZE            = 1 << 2,	/**< \brief The filesize is set. */
+	GP_FILE_INFO_WIDTH           = 1 << 3,	/**< \brief The width is set. */
+	GP_FILE_INFO_HEIGHT          = 1 << 4,	/**< \brief The height is set. */
+	GP_FILE_INFO_PERMISSIONS     = 1 << 5,	/**< \brief The access permissions are set. */
+	GP_FILE_INFO_STATUS	     = 1 << 6,	/**< \brief The status is set (downloaded). */
+	GP_FILE_INFO_MTIME	     = 1 << 7,	/**< \brief The modification time is set. */
+	GP_FILE_INFO_ALL             = 0xFF	/**< \brief All possible fields set. Internal. */
 } CameraFileInfoFields;
 
+/**
+ * \brief Bitmask containing the file permission flags.
+ *
+ * Possible flag values of the permission entry in the file information.
+ */
 typedef enum {
-	GP_FILE_PERM_NONE       = 0,
-	GP_FILE_PERM_READ       = 1 << 0,
-	GP_FILE_PERM_DELETE     = 1 << 1,
-	GP_FILE_PERM_ALL        = 0xFF
+	GP_FILE_PERM_NONE       = 0,		/**< \brief No permissions. */
+	GP_FILE_PERM_READ       = 1 << 0,	/**< \brief Read permissions. */
+	GP_FILE_PERM_DELETE     = 1 << 1,	/**< \brief Write permissions */
+	GP_FILE_PERM_ALL        = 0xFF		/**< \brief Internal. */
 } CameraFilePermissions;
 
+/**
+ * \brief Possible status values.
+ *
+ * Bitmask of possible stati. Currently only download is supported.
+ */
 typedef enum {
-	GP_FILE_STATUS_NOT_DOWNLOADED,
-	GP_FILE_STATUS_DOWNLOADED
+	GP_FILE_STATUS_NOT_DOWNLOADED,	/**< File is not downloaded. */
+	GP_FILE_STATUS_DOWNLOADED	/**< File is already downloaded. */
 } CameraFileStatus;
 
-typedef struct _CameraFileInfoFile CameraFileInfoFile;
-struct _CameraFileInfoFile {
-	CameraFileInfoFields fields;
-	CameraFileStatus status;
-	unsigned long size;
-	char type[64];
+/**
+ * \brief File information of a regular file.
+ *
+ * Contains information a regular file with fields being
+ * set depending on the bitmask in the fields member.
+ */
+typedef struct _CameraFileInfoFile {
+	CameraFileInfoFields fields;	/**< \brief Bitmask containing the set members. */
+	CameraFileStatus status;	/**< \brief Status of the file. */
+	unsigned long size;		/**< \brief Size of the file. */
+	char type[64];			/**< \brief MIME type of the file. */
 
-	unsigned int width, height;
-	char name[64];
-	CameraFilePermissions permissions;
-	time_t mtime;
-};
+	unsigned int width;		/**< \brief Height of the file. */
+	unsigned int height;		/**< \brief Width of the file. */
+	char name[64];			/**< \brief Filename of the file. */
+	CameraFilePermissions permissions;/**< \brief Permissions of the file. */
+	time_t mtime;			/**< \brief Modification time of the file. */
+} CameraFileInfoFile;
 
-typedef struct _CameraFileInfoPreview CameraFileInfoPreview;
-struct _CameraFileInfoPreview {
-	CameraFileInfoFields fields;
-	CameraFileStatus status;
-	unsigned long size;
-	char type[64];
+/**
+ * \brief File information of a preview file.
+ *
+ * Contains information of a preview file with fields being
+ * set depending on the bitmask in the fields member.
+ */
+typedef struct _CameraFileInfoPreview {
+	CameraFileInfoFields fields;	/**< \brief Bitmask containing the set members. */
+	CameraFileStatus status;	/**< \brief Status of the preview. */
+	unsigned long size;		/**< \brief Size of the preview. */
+	char type[64];			/**< \brief MIME type of the preview. */
 
-	unsigned int width, height;
-};
+	unsigned int width;		/**< \brief Width of the preview. */
+	unsigned int height;		/**< \brief Height of the preview. */
+} CameraFileInfoPreview;
 
-typedef struct _CameraFileInfoAudio CameraFileInfoAudio;
-struct _CameraFileInfoAudio {
-	CameraFileInfoFields fields;
-	CameraFileStatus status;
-	unsigned long size;
-	char type[64];
-};
+/**
+ * \brief File information of a preview file.
+ *
+ * Contains information of a preview file with fields being
+ * set depending on the bitmask in the fields member.
+ */
+typedef struct _CameraFileInfoAudio {
+	CameraFileInfoFields fields;	/**< \brief Bitmask containing the set members. */
+	CameraFileStatus status;	/**< \brief Status of the preview file. */
+	unsigned long size;		/**< \brief Size of the audio file. */
+	char type[64];			/**< \brief MIME type of the audio file. */
+} CameraFileInfoAudio;
 
-typedef struct _CameraFileInfo CameraFileInfo;
-struct _CameraFileInfo {
+/** 
+ * \brief File information structure.
+ *
+ * Contains the normal, preview and audio file information structures
+ * for a specific file.
+ */
+typedef struct _CameraFileInfo {
 	CameraFileInfoPreview preview;
 	CameraFileInfoFile    file;
 	CameraFileInfoAudio   audio;
-};
+} CameraFileInfo;
 
+/** 
+ * \brief Storage information flags.
+ *
+ * Bitmask to specify which entries of the filesystem
+ * storage information is set.
+ */
 typedef enum {
-	GP_STORAGEINFO_BASE		= (1<<0),
-	GP_STORAGEINFO_LABEL		= (1<<1),
-	GP_STORAGEINFO_DESCRIPTION	= (1<<2),
-	GP_STORAGEINFO_ACCESS		= (1<<3),
-	GP_STORAGEINFO_STORAGETYPE	= (1<<4),
-	GP_STORAGEINFO_FILESYSTEMTYPE	= (1<<5),
-	GP_STORAGEINFO_MAXCAPACITY	= (1<<6),
-	GP_STORAGEINFO_FREESPACEKBYTES	= (1<<7),
-	GP_STORAGEINFO_FREESPACEIMAGES	= (1<<8)
+	GP_STORAGEINFO_BASE		= (1<<0),	/**< \brief The base directory. 
+							 * Usually / if just 1 storage is attached.
+							 */
+	GP_STORAGEINFO_LABEL		= (1<<1),	/**< \brief Label of the filesystem.
+							 * Could also be a DOS label.
+							 */
+	GP_STORAGEINFO_DESCRIPTION	= (1<<2),	/**< \brief More verbose description. */
+	GP_STORAGEINFO_ACCESS		= (1<<3),	/**< \brief Access permissions. */
+	GP_STORAGEINFO_STORAGETYPE	= (1<<4),	/**< \brief Hardware type. */
+	GP_STORAGEINFO_FILESYSTEMTYPE	= (1<<5),	/**< \brief Filesystem type. */
+	GP_STORAGEINFO_MAXCAPACITY	= (1<<6),	/**< \brief Maximum capacity in kbytes */
+	GP_STORAGEINFO_FREESPACEKBYTES	= (1<<7),	/**< \brief Free space in kbytes. */
+	GP_STORAGEINFO_FREESPACEIMAGES	= (1<<8)	/**< \brief Free space in images. */
 } CameraStorageInfoFields;
 
-typedef enum { /* same as PTP_ST_xxx */
-	GP_STORAGEINFO_ST_UNKNOWN	= 0,
-	GP_STORAGEINFO_ST_FIXED_ROM	= 1,
-	GP_STORAGEINFO_ST_REMOVABLE_ROM	= 2,
-	GP_STORAGEINFO_ST_FIXED_RAM	= 3,
-	GP_STORAGEINFO_ST_REMOVABLE_RAM	= 4
+/**
+ * \brief Hardware storage types.
+ * 
+ * Type of hardware this storage is on. The types and values
+ * are the same as the PTP standard uses (PTP_ST_xxx).
+ */
+typedef enum {
+	GP_STORAGEINFO_ST_UNKNOWN	= 0,	/**< \brief Unknown storage type. */
+	GP_STORAGEINFO_ST_FIXED_ROM	= 1,	/**< \brief A fixed ROM storage. */
+	GP_STORAGEINFO_ST_REMOVABLE_ROM	= 2,	/**< \brief A removable ROM storage. */
+	GP_STORAGEINFO_ST_FIXED_RAM	= 3,	/**< \brief A fixed RAM storage. (e.g. SDRAM) */
+	GP_STORAGEINFO_ST_REMOVABLE_RAM	= 4	/**< \brief A removable RAM storage. (any kind of cards etc) */
 } CameraStorageType;
 
-typedef enum { /* same as PTP_AC_xxxx */
-	GP_STORAGEINFO_AC_READWRITE		= 0,
-	GP_STORAGEINFO_AC_READONLY		= 1,
-	GP_STORAGEINFO_AC_READONLY_WITH_DELETE	= 2
+/**
+ * \brief Storage access modes.
+ * 
+ * The modes we can access the storage with. Uses the same
+ * types and values as the PTP standard (PTP_AC_xxx).
+ */
+typedef enum {
+	GP_STORAGEINFO_AC_READWRITE		= 0,	/**< \brief Storage is Read / Write. */
+	GP_STORAGEINFO_AC_READONLY		= 1,	/**< \brief Storage is Ready Only. */
+	GP_STORAGEINFO_AC_READONLY_WITH_DELETE	= 2	/**< \brief Storage is Ready Only, but allows Delete.*/
 } CameraStorageAccessType;
 
-typedef enum { /* same as PTP_FST_xxxx */
-	GP_STORAGEINFO_FST_UNDEFINED		= 0,
-	GP_STORAGEINFO_FST_GENERICFLAT		= 1,
-	GP_STORAGEINFO_FST_GENERICHIERARCHICAL	= 2,
-	GP_STORAGEINFO_FST_DCF			= 3
+/**
+ * \brief Filesystem hierarchy types.
+ * 
+ * The type of the filesystem hierarchy the devices uses.
+ * Same types and values as the PTP standard defines (PTP_FST_xxx).
+ */
+typedef enum {
+	GP_STORAGEINFO_FST_UNDEFINED		= 0,	/**< \brief Undefined or unknown filesystem hierarchy. */
+	GP_STORAGEINFO_FST_GENERICFLAT		= 1,	/**< \brief Generic flat storage (all in 1 directory). */
+	GP_STORAGEINFO_FST_GENERICHIERARCHICAL	= 2,	/**< \brief Generic tree hierarchy. */
+	GP_STORAGEINFO_FST_DCF			= 3	/**< \brief DCIM style storage. */
 } CameraStorageFilesystemType;
 
-typedef struct _CameraStorageInformation CameraStorageInformation;
-struct _CameraStorageInformation {
-	CameraStorageInfoFields		fields;
-	char				basedir[256];	/* "/" for single entry */
-	char				label[256];
-	char				description[256];
-	CameraStorageType		type;
-	CameraStorageFilesystemType	fstype;
-	CameraStorageAccessType		access;
-	unsigned long			capacitykbytes;
-	unsigned long			freekbytes;
-	unsigned long			freeimages;
-};
+/**
+ * \brief Storage information structue.
+ *
+ * This structure contains the information of a specific camera storage.
+ * Only the members as specified by the \a fields member are valid.
+ */
+typedef struct _CameraStorageInformation {
+	CameraStorageInfoFields		fields;	/**< \brief Bitmask of struct members that are specified. */
+	char				basedir[256];	/**< \brief Basedirectory of the storage. Will be "/" if just 1 storage on the camera. */
+	char				label[256];	/**< \brief Label of the storage. Similar to DOS label. */
+	char				description[256];/**< \brief Description of the storage. */
+	CameraStorageType		type;		/**< \brief Hardware type of the storage. */
+	CameraStorageFilesystemType	fstype;		/**< \brief Hierarchy type of the filesystem. */
+	CameraStorageAccessType		access;		/**< \brief Access permissions. */
+	unsigned long			capacitykbytes;	/**< \brief Total capacity in kbytes. */
+	unsigned long			freekbytes;	/**< \brief Free space in kbytes. */
+	unsigned long			freeimages;	/**< \brief Free space in images (guessed by camera). */
+} CameraStorageInformation;
 
 /* You don't really want to know what's inside, do you? */
 typedef struct _CameraFilesystem CameraFilesystem;
