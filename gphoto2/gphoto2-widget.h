@@ -26,23 +26,32 @@
 
 #include <gphoto2/gphoto2-context.h>
 
-/* You don't really want to know what's inside, do you? */
+/** \internal internal structure please use the accessors. */
 typedef struct _CameraWidget CameraWidget;
 
 #include <gphoto2/gphoto2-camera.h>
 
-typedef enum {			/* Value (get/set):	*/
-	GP_WIDGET_WINDOW,
-	GP_WIDGET_SECTION,
-	GP_WIDGET_TEXT,		/* char *		*/
-	GP_WIDGET_RANGE,	/* float		*/
-	GP_WIDGET_TOGGLE,	/* int			*/
-	GP_WIDGET_RADIO,	/* char *		*/
-	GP_WIDGET_MENU,		/* char *		*/
-	GP_WIDGET_BUTTON,	/* CameraWidgetCallback */
-	GP_WIDGET_DATE		/* int			*/
+/**
+ * \brief Type of the widget to be created.
+ *
+ * The actual widget type we want to create. The type of the value
+ * it supports depends on this type.
+ */
+typedef enum {									/* Value (get/set):	*/
+	GP_WIDGET_WINDOW,	/**< \brief Window widget */
+	GP_WIDGET_SECTION,	/**< \brief Section widget (think Tab) */
+	GP_WIDGET_TEXT,		/**< \brief Text widget. */			/* char *		*/
+	GP_WIDGET_RANGE,	/**< \brief Slider widget. */			/* float		*/
+	GP_WIDGET_TOGGLE,	/**< \brief Toggle widget (think check box) */	/* int			*/
+	GP_WIDGET_RADIO,	/**< \brief Radio button widget. */		/* char *		*/
+	GP_WIDGET_MENU,		/**< \brief Menu widget (same as RADIO). */	/* char *		*/
+	GP_WIDGET_BUTTON,	/**< \brief Button press widget. */		/* CameraWidgetCallback */
+	GP_WIDGET_DATE		/**< \brief Date entering widget. */		/* int			*/
 } CameraWidgetType;
 
+/**
+ * \brief Callback handler for Button widgets.
+ */
 typedef int (* CameraWidgetCallback) (Camera *, CameraWidget *, GPContext *);
 
 int 	gp_widget_new 	(CameraWidgetType type, const char *label, 
