@@ -98,6 +98,12 @@ extern "C" {
  **/
 #define GP_ERROR_PATH_NOT_ABSOLUTE   -111
 
+/**
+ * \brief Cancellation successful.
+ *
+ * A cancellation requestion by the frontend via progress callback and
+ * GP_CONTEXT_FEEDBACK_CANCEL was successful and the transfer has been aborted.
+ */
 #define GP_ERROR_CANCEL              -112
 
 /**
