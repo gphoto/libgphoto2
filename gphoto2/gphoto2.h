@@ -1,5 +1,5 @@
 /** \file
- * Convenience header for gphoto2
+ * \brief Convenience header for gphoto2
  *
  * \author Copyright 2001 Lutz Müller <lutz@users.sf.net>
  *

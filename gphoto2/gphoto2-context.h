@@ -1,4 +1,5 @@
 /** \file 
+ * \brief Context callback operation functions.
  *
  * \author Copyright 2001 Lutz Müller <lutz@users.sourceforge.net>
  *

@@ -1,4 +1,5 @@
 /** \file
+ * \brief Camery driver header.
  * 
  * \author Copyright 2000 Scott Fritzinger
  *
