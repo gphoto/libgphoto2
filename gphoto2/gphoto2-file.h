@@ -1,4 +1,5 @@
 /** \file
+ * \brief Abstracted gphoto2 file operations.
  *
  * \author Copyright 2000 Scott Fritzinger
  *
@@ -50,18 +51,36 @@ extern "C" {
 #define GP_MIME_ASF       "audio/x-asf"
 #define GP_MIME_MPEG      "video/mpeg"
 
+/**
+ * \brief The type of view on the specified file.
+ *
+ * Specifies the file of the current file, usually passed
+ * to the gp_camera_file_get() and gp_camera_file_put()
+ * functions. This is useful for multiple views of one
+ * file, like that an single image file has "raw", "normal",
+ * "exif" and "preview" views, or a media file has "normal"
+ * and "metadata" file views.
+ */
 typedef enum {
-	GP_FILE_TYPE_PREVIEW,
-	GP_FILE_TYPE_NORMAL,
-	GP_FILE_TYPE_RAW,
-	GP_FILE_TYPE_AUDIO,
-	GP_FILE_TYPE_EXIF,
-	GP_FILE_TYPE_METADATA
+	GP_FILE_TYPE_PREVIEW,	/**< A preview of an image. */
+	GP_FILE_TYPE_NORMAL,	/**< The regular normal data of a file. */
+	GP_FILE_TYPE_RAW,	/**< The raw mode of a file, for instance the raw bayer data for cameras
+				 * where postprocessing is done in the driver. The RAW files of modern
+				 * DSLRs are GP_FILE_TYPE_NORMAL usually. */
+	GP_FILE_TYPE_AUDIO,	/**< The audio view of a file. Perhaps an embedded comment or similar. */
+	GP_FILE_TYPE_EXIF,	/**< The embedded EXIF data of an image. */
+	GP_FILE_TYPE_METADATA	/**< The metadata of a file, like Metadata of files on MTP devices. */
 } CameraFileType;
 
+/**
+ * \brief File storage type.
+ *
+ * The file storage type. Only used internally for now, but might
+ * be exposed later on. See gp_file_new() and gp_file_new_from_fd().
+ */
 typedef enum {
-	GP_FILE_ACCESSTYPE_MEMORY,	/* traditional */
-	GP_FILE_ACCESSTYPE_FD
+	GP_FILE_ACCESSTYPE_MEMORY,	/**< File is in system memory. */
+	GP_FILE_ACCESSTYPE_FD		/**< File is associated with a UNIX filedescriptor. */
 } CameraFileAccessType;
 
 /*! \class CameraFile
