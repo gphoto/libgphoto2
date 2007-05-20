@@ -1,4 +1,4 @@
-/* gphoto2-port-version.h
+/** \file gphoto2-port-version.h
  *
  * Copyright © 2002 Hans Ulrich Niedermann <gp@n-dimensional.de>
  *

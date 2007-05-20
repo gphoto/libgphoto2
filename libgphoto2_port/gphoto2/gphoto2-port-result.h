@@ -1,4 +1,4 @@
-/* gphoto2-port-result.h
+/** \file gphoto2-port-result.h
  *
  * Copyright © 2001 Lutz Müller <lutz@users.sf.net>
  *

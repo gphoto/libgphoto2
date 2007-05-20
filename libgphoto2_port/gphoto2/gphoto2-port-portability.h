@@ -1,3 +1,4 @@
+/** \file */
 #ifndef __GPHOTO2_PORT_PORTABILITY_H__
 #define __GPHOTO2_PORT_PORTABILITY_H__
 

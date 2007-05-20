@@ -1,4 +1,4 @@
-/* gphoto2-port-library.h
+/** \file gphoto2-port-library.h
  *
  * Copyright © 2001 Lutz Müller <lutz@users.sf.net>
  *
