@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <gphoto2/gphoto2-library.h>
+#include <gphoto2/gphoto2-file.h>
 
 /* call example:nullpictureabort(picture,"Picture",0); */
 #define nullpointerabort(pointer,name,val) \
