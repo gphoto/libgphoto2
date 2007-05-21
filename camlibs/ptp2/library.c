@@ -507,6 +507,8 @@ static struct {
 	{"Nikon:DSC D200 (PTP mode)",     0x04b0, 0x0410, PTP_CAP},
 	/* Christian Deckelmann @ SUSE */
 	{"Nikon:DSC D80 (PTP mode)",      0x04b0, 0x0412, PTP_CAP},
+	/* Huy Hoang <hoang027@umn.edu> */
+	{"Nikon:DSC D40 (PTP mode)",      0x04b0, 0x0414, PTP_CAP},
 
 	/* Sridharan Rengaswamy <sridhar@stsci.edu>, Coolpix L3 */
 	{"Nikon:Coolpix L3 (PTP mode)",   0x04b0, 0x041a, 0},
@@ -4061,6 +4063,13 @@ camera_init (Camera *camera, GPContext *context)
 		(a.usb_vendor == 0x4a9)
 	)
 		camera->pl->params.deviceinfo.VendorExtensionID = PTP_VENDOR_CANON;
+
+	/* Newer Nikons (D40) say that they are MTP devices. Restore Nikon vendor extid. */
+	if (	(camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+		(camera->port->type == GP_PORT_USB) &&
+		(a.usb_vendor == 0x4b0)
+	)
+		camera->pl->params.deviceinfo.VendorExtensionID = PTP_VENDOR_NIKON;
 
 	GP_DEBUG ("Device info:");
 	GP_DEBUG ("Manufacturer: %s",camera->pl->params.deviceinfo.Manufacturer);
