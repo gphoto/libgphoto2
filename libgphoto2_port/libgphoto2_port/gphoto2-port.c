@@ -68,14 +68,16 @@ struct _GPPortPrivateCore {
 };
 
 /**
- * gp_port_new:
- * @port:
+ * \brief Create new GPPort
  *
- * Allocates the memory for a new #GPPort. After you called this function, 
+ * Allocate and initialize the memory for a new #GPPort.
+ *
+ * After you called this function, 
  * you probably want to call #gp_port_set_info in order to make the newly
  * created @port functional.
  *
- * Return value: a gphoto2 error code
+ * \param port Pointer the #GPPort* pointer
+ * \return a gphoto2 error code
  **/
 int
 gp_port_new (GPPort **port)
