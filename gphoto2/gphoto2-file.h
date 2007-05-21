@@ -83,9 +83,11 @@ typedef enum {
 	GP_FILE_ACCESSTYPE_FD		/**< File is associated with a UNIX filedescriptor. */
 } CameraFileAccessType;
 
-/*! \class CameraFile
+/*! \struct CameraFile
+ * \brief File structure.
  *
- * The internals of the #CameraFile struct are private.
+ * The internals of the CameraFile struct are private, please use
+ * the accessor functions.
  */
 typedef struct _CameraFile CameraFile;
 

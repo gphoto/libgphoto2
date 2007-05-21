@@ -121,9 +121,9 @@ typedef struct _CameraFileInfoPreview {
 } CameraFileInfoPreview;
 
 /**
- * \brief File information of a preview file.
+ * \brief File information of an audio file.
  *
- * Contains information of a preview file with fields being
+ * Contains information of an audio file with fields being
  * set depending on the bitmask in the fields member.
  */
 typedef struct _CameraFileInfoAudio {
@@ -225,7 +225,13 @@ typedef struct _CameraStorageInformation {
 	unsigned long			freeimages;	/**< \brief Free space in images (guessed by camera). */
 } CameraStorageInformation;
 
-/* You don't really want to know what's inside, do you? */
+/** 
+ * \brief Filesystem structure, only exposed to camera drivers.
+ *
+ * Internal structure, contents not exposed to frontends. Camera
+ * drivers get these passed to filesystem related functions and
+ * are supposed to use it only via the accessor functions.
+ */
 typedef struct _CameraFilesystem CameraFilesystem;
 
 int gp_filesystem_new	 (CameraFilesystem **fs);
