@@ -119,6 +119,13 @@ gp_bayer_expand (unsigned char *input, int w, int h, unsigned char *output,
 
 #define AD(x, y, w) ((y)*(w)*3+3*(x))
 
+/**
+ * \brief Interpolate a expanded bayer array into an RGB image.
+ *
+ * This function interpolates a bayer array which has been pre-expanded
+ * by gp_bayer_expand() to an RGB image. It uses various interpolation
+ * methods, also see gp_bayer_accrue().
+ */
 int
 gp_bayer_interpolate (unsigned char *image, int w, int h, BayerTile tile)
 {
