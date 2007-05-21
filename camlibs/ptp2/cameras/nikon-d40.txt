@@ -1,0 +1,87 @@
+Camera 
+summary:                                                               
+Model: D40
+  device version: V1.10
+  serial number:  nnnnnnn
+Vendor extension ID: 0x00000006
+Vendor extension description: microsoft.com: 1.0
+
+Capture Formats: JPEG Undefined Type
+Display Formats: JPEG, Undefined Type, Association/Directory, DPOF, Script
+Supported MTP Object Properties:
+        JPEG/3801: dc01/StorageID dc02/ObjectFormat 
+dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName 
+dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name 
+dc87/Width dc88/Height dcd3/unknown(dcd3) dc08/DateCreated 
+dc09/DateModified dc81/RepresentativeSampleFormat 
+dc82/RepresentativeSampleSize dc83/RepresentativeSampleHeight 
+dc84/RepresentativeSampleWidth dc86/RepresentativeSampleData
+        Undefined Type/3000: dc01/StorageID dc02/ObjectFormat 
+dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName 
+dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name 
+dc08/DateCreated dc09/DateModified
+        Association/Directory/3001: dc01/StorageID dc02/ObjectFormat 
+dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName 
+dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name 
+dc08/DateCreated dc09/DateModified
+        DPOF/3006: dc01/StorageID dc02/ObjectFormat 
+dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName 
+dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name 
+dc08/DateCreated dc09/DateModified
+        Script/3002: PTP error 02fe on query
+
+Device Capabilities:
+        File Download, File Deletion, File Upload
+        Generic Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+        StorageDescription: None
+        VolumeLabel: NIKON D40
+        Storage Type: Removable RAM (memory card)
+        Filesystemtype: Digital Camera Layout (DCIM)
+        Access Capability: Read Only with Object deletion
+        Maximum Capability: 1023541248 (976 MB)
+        Free Space (Bytes): 385630208 (367 MB)
+        Free Space (Images): 202
+
+Device Property Summary:
+Battery Level(0x5001):(read only) (type=0x2) Range [0 - 100, step 1] 
+value: 100
+Image Size(0x5003):(readwrite) (type=0xffff) Enumeration [
+        '3008x2000',
+        '2256x1496',
+        '1504x1000'
+        ] value: '3008x2000'
+Compression Setting(0x5004):(readwrite) (type=0x2) Enumeration 
+[0,1,2,3,4] value: 1
+White Balance(0x5005):(readwrite) (type=0x4) Enumeration 
+[2,4,5,6,7,32784,32785,32787] value: 2
+F-Number(0x5007):(readwrite) (type=0x4) Enumeration 
+[380,400,450,500,560,630,710,800,900,1000,1100,1300,1400,1600,1800,2000,2200] 
+value: 380
+Focal Length(0x5008):(read only) (type=0x6) Range [1800 - 5500, step 1] 
+value: 2000
+Focus Mode(0x500a):(read only) (type=0x4) Enumeration 
+[1,32784,32785,32786] value: 32786
+Exposure Metering Mode(0x500b):(readwrite) (type=0x4) Enumeration 
+[2,3,4] value: 3
+Flash Mode(0x500c):(readwrite) (type=0x4) Enumeration [2] value: 2
+Exposure Time(0x500d):(read only) (type=0x6) Enumeration [2,16000] 
+value: 16000
+Exposure Program Mode(0x500e):(read only) (type=0x4) Enumeration 
+[1,2,3,4,32784,32792,32785,32786,32791,32788,32787,32789] value: 32788
+Exposure Index (film speed ISO)(0x500f):(readwrite) (type=0x4) 
+Enumeration [200,400,800,1600,3200] value: 200
+Exposure Bias Compensation(0x5010):(readwrite) (type=0x3) Enumeration 
+[-5000,-4666,-4333,-4000,-3666,-3333,-3000,-2666,-2333,-2000,-1666,-1333,-1000,-666,-333,0,333,666,1000,1333,1666,2000,2333,2666,3000,3333,3666,4000,4333,4666,5000] 
+value: 0
+Date Time(0x5011):(readwrite) (type=0xffff) '20070521T211123'
+Still Capture Mode(0x5013):(readwrite) (type=0x4) Enumeration 
+[1,2,32785,32787,32788] value: 1
+Burst Number(0x5018):(readwrite) (type=0x4) Range [1 - 60, step 1] value: 1
+Focus Metering Mode(0x501c):(readwrite) (type=0x4) Enumeration 
+[2,32784,32785] value: 2
+Property 0xd406:(readwrite) (type=0xffff) 'Windows/6.0.5330.0 
+MTPClassDriver/6.0.5330.0'
+Property 0xd407:(read only) (type=0x6) 1
