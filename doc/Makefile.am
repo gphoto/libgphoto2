@@ -34,7 +34,7 @@ install-apidocs: $(DOXYGEN_OUTPUT_DIR).stamp
 	$(INSTALL) -m 0644 $(DOXYGEN_OUTPUT_DIR)/$(HTML_APIDOC_DIR)/* $(DESTDIR)$(docdir)/$(DOC_APIDOC_HTML)/
 
 uninstall-apidocs:
-	rm -f $(DESTDIR)$(docdir)/$(DOC_APIDOC_HTML)/*
+	cd "$(DESTDIR)$(docdir)" && rm -f $(DOC_APIDOC_HTML)/*
 	rmdir $(DESTDIR)$(docdir)/$(DOC_APIDOC_HTML)
 
 clean-apidocs:
