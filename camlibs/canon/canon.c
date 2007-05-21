@@ -182,7 +182,9 @@ const struct canonCamModelData models[] = {
         {"Canon:Digital IXUS II (normal mode)", CANON_CLASS_5,  0x04A9, 0x3072, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 #endif
 
+#if 0 /* served better by PTP2 driver, especially for capture */
         {"Canon:PowerShot A70",         CANON_CLASS_1,  0x04A9, 0x3073, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+#endif
         {"Canon:PowerShot A60",         CANON_CLASS_1,  0x04A9, 0x3074, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:Digital IXUS 400",      CANON_CLASS_1,  0x04A9, 0x3075, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:PowerShot S400",        CANON_CLASS_1,  0x04A9, 0x3075, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
@@ -235,7 +237,9 @@ const struct canonCamModelData models[] = {
 
         /* 0x3099 is the EOS 300D/Digital Rebel in PTP mode */
         /* A80 seems to share the ID for PTP and Canon modes */
+#if 0 /* served better by PTP2 driver, especially for capture */
         {"Canon:PowerShot A80 (normal mode)",   CANON_CLASS_1,  0x04A9, 0x309A, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+#endif
         /* 0x309b is the SD10 Digital ELPH/Digital IXUS i/IXY Digital L
            in PTP mode; will it work in Canon mode? */
         {"Canon:PowerShot SD10 Digital ELPH (normal mode)",   CANON_CLASS_1,  0x04A9, 0x309B, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},

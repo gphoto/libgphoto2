@@ -20,7 +20,7 @@ canon_la_SOURCES =	\
 	canon/usb.c canon/usb.h		\
 	canon/crc.c canon/crc.h		\
 	canon/util.c canon/util.h
-canon_la_CPPFLAGS = -DCANON_EXPERIMENTAL_20D $(AM_CPPFLAGS) $(CPPFLAGS) $(LIBEXIF_CFLAGS)
+canon_la_CPPFLAGS = -DCANON_EXPERIMENTAL_SET_RELEASE_PARAMS -DCANON_EXPERIMENTAL_20D $(AM_CPPFLAGS) $(CPPFLAGS) $(LIBEXIF_CFLAGS)
 canon_la_LDFLAGS = $(camlib_ldflags)
 canon_la_DEPENDENCIES = $(camlib_dependencies)
 canon_la_LIBADD = $(camlib_libadd) $(LIBEXIF_LIBS)
