@@ -218,13 +218,11 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
 }
 
 /**
- * gp_port_get_info:
- * @port: a #GPPort
- * @info: a #GPPortInfo
+ * \brief Retreives information about the port.
  *
- * Retreives @info about the port.
- *
- * Return value: a gphoto2 error code
+ * \param port a GPPort
+ * \param info GPPortInfo
+ * \return a gphoto2 error code
  **/
 int
 gp_port_get_info (GPPort *port, GPPortInfo *info)
