@@ -1,7 +1,7 @@
 /* usb.c
  *
  * Copyright (C) 2001-2004 Mariusz Woloszyn <emsi@ipartners.pl>
- * Copyright (C) 2003-2006 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright (C) 2003-2007 Marcus Meissner <marcus@jet.franken.de>
  * Copyright (C) 2006 Linus Walleij <triad@df.lth.se>
  *
  * This library is free software; you can redistribute it and/or
@@ -241,7 +241,17 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 			break;
 		}
 		if (dtoh16(usbdata.type)!=PTP_USB_CONTAINER_DATA) {
-			ret = PTP_ERROR_DATA_EXPECTED;
+			/* We might have got a response instead. On error for instance. */
+			if (dtoh16(usbdata.type) == PTP_USB_CONTAINER_RESPONSE) {
+				params->response_packet = malloc(dtoh32(usbdata.length));
+				if (!params->response_packet) return PTP_RC_GeneralError;
+				memcpy(params->response_packet,
+				       (uint8_t *) &usbdata, dtoh32(usbdata.length));
+				params->response_packet_size = dtoh32(usbdata.length);
+				ret = PTP_RC_OK;
+			} else {
+				ret = PTP_ERROR_DATA_EXPECTED;
+			}
 			break;
 		}
 		if (dtoh16(usbdata.code)!=ptp->Code) {
