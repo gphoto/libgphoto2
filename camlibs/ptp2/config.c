@@ -656,6 +656,41 @@ _put_ImageSize(CONFIG_PUT_ARGS) {
 
 
 static int
+_get_ExpCompensation(CONFIG_GET_ARGS) {
+        int j;
+	char buf[10];
+
+        gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+        gp_widget_set_name (*widget, menu->name);
+        if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
+                return(GP_ERROR);
+        if (dpd->DataType != PTP_DTC_INT16)
+                return(GP_ERROR);
+        for (j=0;j<dpd->FORM.Enum.NumberOfValues; j++) {
+		sprintf(buf, "%d", dpd->FORM.Enum.SupportedValue[j].i16);
+                gp_widget_add_choice (*widget,buf);
+        }
+	sprintf(buf, "%d", dpd->CurrentValue.i16);
+        gp_widget_set_value (*widget,buf);
+        return GP_OK;
+}
+
+static int
+_put_ExpCompensation(CONFIG_PUT_ARGS) {
+        char *value;
+        int ret, x;
+
+        ret = gp_widget_get_value (widget,&value);
+        if(ret != GP_OK)
+                return ret;
+	if (1 != sscanf(value,"%d", &x))
+		return (GP_ERROR);
+        propval->i16 = x;
+        return(GP_OK);
+}
+
+
+static int
 _get_Canon_AssistLight(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
@@ -2376,6 +2411,7 @@ static struct submenu capture_settings_menu[] = {
         { N_("Focal Length"), "focallength", PTP_DPC_FocalLength, 0, PTP_DTC_UINT32, _get_FocalLength, _put_FocalLength},
         { N_("Focus Mode"), "focusmode", PTP_DPC_FocusMode, 0, PTP_DTC_UINT16, _get_FocusMode, _put_FocusMode},
         { N_("ISO Speed"), "iso", PTP_DPC_ExposureIndex, 0, PTP_DTC_UINT16, _get_ISO, _put_ISO},
+        { N_("Exposure Bias Compensation"), "exposurebiascompensation", PTP_DPC_ExposureBiasCompensation, 0, PTP_DTC_INT16, _get_ExpCompensation, _put_ExpCompensation},
         { N_("Exposure Time"), "exptime", PTP_DPC_ExposureTime, 0, PTP_DTC_UINT32, _get_ExpTime, _put_ExpTime},
         { N_("Effect Mode"), "effectmode", PTP_DPC_EffectMode, 0, PTP_DTC_UINT16, _get_EffectMode, _put_EffectMode},
         { N_("Exposure Program"), "expprogram", PTP_DPC_ExposureProgramMode, 0, PTP_DTC_UINT16, _get_ExposureProgram, _put_ExposureProgram},
