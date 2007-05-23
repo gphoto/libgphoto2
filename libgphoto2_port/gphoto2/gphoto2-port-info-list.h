@@ -1,17 +1,20 @@
-/** \file gphoto2-port-info-list.h:
+/** \file
  *
- * Copyright © 2001 Lutz Müller <lutz@users.sf.net>
+ * \author Copyright 2001 Lutz Mueller <lutz@users.sf.net>
  *
+ * \par License
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
+ * \par
  * This library is distributed in the hope that it will be useful, 
  * but WITHOUT ANY WARRANTY; without even the implied warranty of 
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details. 
  *
+ * \par
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
@@ -21,23 +24,38 @@
 #ifndef __GPHOTO2_PORT_INFO_LIST_H__
 #define __GPHOTO2_PORT_INFO_LIST_H__
 
+/**
+ * \brief The gphoto port type.
+ *
+ * Enumeration specifying the port type.
+ * The enum is providing bitmasks, but most code uses it as
+ * just the one specific values.
+ */
 typedef enum { 
-	GP_PORT_NONE        =      0,
-	GP_PORT_SERIAL      = 1 << 0,
-	GP_PORT_USB         = 1 << 2,
-	GP_PORT_DISK        = 1 << 3,
-	GP_PORT_PTPIP       = 1 << 4
+	GP_PORT_NONE        =      0,	/**< \brief No specific type associated. */
+	GP_PORT_SERIAL      = 1 << 0,	/**< \brief Serial port. */
+	GP_PORT_USB         = 1 << 2,	/**< \brief USB port. */
+	GP_PORT_DISK        = 1 << 3,	/**< \brief Disk / local mountpoint port. */
+	GP_PORT_PTPIP       = 1 << 4	/**< \brief PTP/IP port. */
 } GPPortType;
 
-typedef struct _GPPortInfo GPPortInfo;
-struct _GPPortInfo {
-	GPPortType type;
-	char name[64];
-	char path[64];
+/**
+ * \brief Information about the current port.
+ * 
+ * Specific information about the current port. Usually taken from the
+ * "--port=XXXX" setting from the frontend.
+ *
+ * This is not to be confused with the driver configurable port settings
+ * in \ref GPPortSettings.
+ */
+typedef struct _GPPortInfo {
+	GPPortType type;	/**< \brief The type of this port. */
+	char name[64];		/**< \brief The name of this port (usb:) */
+	char path[64];		/**< \brief The path of this port (whatever is after the :) */
 
 	/* Private */
-	char library_filename[1024];
-};
+	char library_filename[1024];	/**< \brief Internal pathname of the port driver. Do not use outside of the port library. */
+} GPPortInfo;
 
 #include <gphoto2/gphoto2-port.h>
 
