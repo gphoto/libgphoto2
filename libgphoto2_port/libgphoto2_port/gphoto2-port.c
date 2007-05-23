@@ -1,19 +1,22 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 8; tab-width: 8 -*- */
 /** \file
  * 
- * Copyright © 2001 Lutz Müller <lutz@users.sf.net>
- * Copyright © 1999 Scott Fritzinger <scottf@unr.edu>
+ * \author Copyright 2001 Lutz Müller <lutz@users.sf.net>
+ * \author Copyright 1999 Scott Fritzinger <scottf@unr.edu>
  *
+ * \par License
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
+ * \par
  * This library is distributed in the hope that it will be useful, 
  * but WITHOUT ANY WARRANTY; without even the implied warranty of 
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details. 
  *
+ * \par
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
@@ -55,8 +58,6 @@
 #define CHECK_INIT(p) {if (!(p)->pc->ops) {gp_port_set_error ((p), _("The port has not yet been initialized")); return (GP_ERROR_BAD_PARAMETERS);}}
 
 /**
- * GPPortPrivateCore:
- *
  * This structure contains private data.
  **/
 struct _GPPortPrivateCore {
@@ -126,14 +127,15 @@ gp_port_exit (GPPort *port)
 }
 
 /**
- * gp_port_set_info:
- * @port: a #GPPort
- * @info: the #GPPortInfo
+ * \brief Configure a port
  *
- * Makes a @port functional. After calling this function, you can 
- * access the port using for example #gp_port_open.
+ * Makes a port functional. After calling this function, you can 
+ * access the port using for example gp_port_open().
+ * 
+ * \param port a GPPort
+ * \param info the GPPortInfo to set
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int
 gp_port_set_info (GPPort *port, GPPortInfo info)
