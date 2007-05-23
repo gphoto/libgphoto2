@@ -1,17 +1,20 @@
-/** \file gphoto2-port.h
+/** \file 
  *
- * Copyright © 2001 Lutz Müller <lutz@users.sf.net>
+ * \author Copyright 2001 Lutz Mueller <lutz@users.sf.net>
  *
+ * \par License
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
+ * \par
  * This library is distributed in the hope that it will be useful, 
  * but WITHOUT ANY WARRANTY; without even the implied warranty of 
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details. 
  *
+ * \par
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
@@ -43,77 +46,104 @@ extern "C" {
 #endif
 
 /**
- * Use Parity. Enable/Disable, and Odd/Even.
+ * \brief Serial parity
+ * 
+ * Parity of the serial port.
  */
-
 typedef enum _GPPortSerialParity
 {
-    GP_PORT_SERIAL_PARITY_OFF = 0,
-    GP_PORT_SERIAL_PARITY_EVEN,
-    GP_PORT_SERIAL_PARITY_ODD
+    GP_PORT_SERIAL_PARITY_OFF = 0,	/**< \brief Parity is off (disabled) */
+    GP_PORT_SERIAL_PARITY_EVEN,		/**< \brief Parity is even. */
+    GP_PORT_SERIAL_PARITY_ODD		/**< \brief Parity is odd. */
 } GPPortSerialParity;
 
+/** \brief Maximum length of receive buffer */
+#define GP_PORT_MAX_BUF_LEN 4096             
 
-#define GP_PORT_MAX_BUF_LEN 4096             /* max length of receive buffer */
-
-typedef struct _GPPortSettingsSerial GPPortSettingsSerial;
-struct _GPPortSettingsSerial {
-	char port[128];		/** The portname (/dev/ttyX)*/
-	int speed;		/** The baudrate of the device. */
-	int bits;		/** How many bits data. */
-	GPPortSerialParity parity;	/** parity data, see GP_PORT_SERIAL_PARITY_ 
+/**
+ * \brief Port settings for serial ports.
+ */
+typedef struct _GPPortSettingsSerial {
+	char port[128];		/**< The portname (/dev/ttyX)*/
+	int speed;		/**< The baudrate of the device. */
+	int bits;		/**< How many bits data. */
+	GPPortSerialParity parity;	/**< parity data, see GP_PORT_SERIAL_PARITY_ 
 				  defines */
-	int stopbits;		/** How many stop bits are used. */
-};
+	int stopbits;		/**< How many stop bits are used. */
+} GPPortSettingsSerial;
 
-typedef struct _GPPortSettingsUSB GPPortSettingsUSB;
-struct _GPPortSettingsUSB {
-	int inep, outep, intep;
-	int config, interface, altsetting;
+/**
+ * \brief Port settings for USB ports.
+ */
+typedef struct _GPPortSettingsUSB {
+	int inep;		/**< \brief Bulk IN endpoint used. */
+	int outep;		/**< \brief Bulk OUT endpoint used. */
+	int intep;		/**< \brief Interrupt endpoint used. */
+	int config;		/**< \brief USB bConfigurationValue used. */
+	int interface;		/**< \brief USB Interface number used. */
+	int altsetting;		/**< \brief USB Alternative Setting used. */
 
-	int maxpacketsize; /* r/o */
+	int maxpacketsize;	/**< \brief Maximum USB packetsize of the IN endpoint. (r/o) */
 
 	/* must be last to avoid binary incompatibility.
 	 * luckily we just need to make sure this struct does not 
 	 * get larger than _GPPortSettingsSerial. */
-	char port[64];
-};
+	char port[64];		/**< \brief USB Portname. Specific to lowlevel USB. */
+} GPPortSettingsUSB;
 
-typedef struct _GPPortSettingsDisk GPPortSettingsDisk;
-struct _GPPortSettingsDisk {
-	char mountpoint[128];
-};
+/**
+ * \brief Port settings for the local disk (directories) port.
+ */
+typedef struct _GPPortSettingsDisk {
+	char mountpoint[128];	/**< \brief Path in the UNIX fs which corresponds to gphoto2 / */
+} GPPortSettingsDisk;
 
-typedef union _GPPortSettings GPPortSettings;
-union _GPPortSettings {
+/**
+ * \brief Union of port settings.
+ *
+ * This contains a shared union of possible settings for ports needing
+ * them.
+ */
+typedef union _GPPortSettings {
 	GPPortSettingsSerial serial;
 	GPPortSettingsUSB usb;
 	GPPortSettingsDisk disk;
-};
+} GPPortSettings;
 
 enum {
-        GP_PORT_USB_ENDPOINT_IN,
-        GP_PORT_USB_ENDPOINT_OUT,
-        GP_PORT_USB_ENDPOINT_INT
+        GP_PORT_USB_ENDPOINT_IN,	/**< \brief USB bulk IN ep */
+        GP_PORT_USB_ENDPOINT_OUT,	/**< \brief USB bulk OUT ep */
+        GP_PORT_USB_ENDPOINT_INT	/**< \brief USB Interrupt ep */
 };
 
 typedef struct _GPPortPrivateLibrary GPPortPrivateLibrary;
 typedef struct _GPPortPrivateCore    GPPortPrivateCore;
 
-typedef struct _GPPort           GPPort;
-struct _GPPort {
-
+/**
+ * \brief The GPhoto port structure.
+ *
+ * This structure tracks the physical connection of the device.
+ * It can correspond the various methods of lowlevel access, serial
+ * usb and others and abstracts them as much as possible.
+ *
+ * Frontends should consider this structure opaque and only use accessor
+ * functions.
+ *
+ * Camera drivers should only access the type and pl members directly,
+ * and use accessor functions for the rest.
+ */
+typedef struct _GPPort {
 	/* For your convenience */
-	GPPortType type;
+	GPPortType type;		/**< \brief Actual type of this port */
 
-        GPPortSettings settings;
-        GPPortSettings settings_pending;
+ 	GPPortSettings settings;	/**< \brief Current port settings. */
+        GPPortSettings settings_pending;/**< \brief Settings to be committed. */
 
-        int timeout; /* in milliseconds */
+        int timeout; 			/**< \brief Port timeout in milliseconds. */
 
-	GPPortPrivateLibrary *pl;
-	GPPortPrivateCore    *pc;
-};
+	GPPortPrivateLibrary *pl;	/**< \brief Camera driver private data pointer. */
+	GPPortPrivateCore    *pc;	/**< \brief Port library private data pointer. */
+} GPPort;
 
 int gp_port_new         (GPPort **port);
 int gp_port_free        (GPPort *port);
@@ -135,21 +165,30 @@ int gp_port_set_timeout  (GPPort *port, int  timeout);
 int gp_port_set_settings (GPPort *port, GPPortSettings  settings);
 int gp_port_get_settings (GPPort *port, GPPortSettings *settings);
 
-enum _GPPin {
-	GP_PIN_RTS,
-	GP_PIN_DTR,
-	GP_PIN_CTS,
-	GP_PIN_DSR,
-	GP_PIN_CD,
-	GP_PIN_RING
-};
-typedef enum _GPPin GPPin;
+/**
+ * \brief Serial pins.
+ * 
+ * A number of serial pins to trigger and pull. This is necessary
+ * for some devices that have more than just the regular 3 or 4 wires.
+ */
+typedef enum _GPPin {
+	GP_PIN_RTS,	/**< \brief RTS line */
+	GP_PIN_DTR,	/**< \brief DTR line */
+	GP_PIN_CTS,	/**< \brief CTS line */
+	GP_PIN_DSR,	/**< \brief DSR line */
+	GP_PIN_CD,	/**< \brief Carrier Detect line */
+	GP_PIN_RING	/**< \brief RING (Modem) line */
+} GPPin;
 
-enum _GPLevel {
-	GP_LEVEL_LOW  = 0,
-	GP_LEVEL_HIGH = 1
-};
-typedef enum _GPLevel GPLevel;
+/**
+ * \brief Level to pull specific lines.
+ * 
+ * The level on which to pull some of the serial lines.
+ */
+typedef enum _GPLevel {
+	GP_LEVEL_LOW  = 0,	/**< \brief Pull to low (0V) */
+	GP_LEVEL_HIGH = 1	/**< \brief Pull to high (nV) */
+} GPLevel;
 
 int gp_port_get_pin   (GPPort *port, GPPin pin, GPLevel *level);
 int gp_port_set_pin   (GPPort *port, GPPin pin, GPLevel level);
