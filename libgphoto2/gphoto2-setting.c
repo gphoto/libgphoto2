@@ -35,6 +35,9 @@
 
 #define GP_MODULE "setting"
 
+/**
+ * Internal struct to store settings.
+ */
 typedef struct {
 	/* key = value settings */
 	char id[256];
@@ -53,7 +56,18 @@ static int save_settings (void);
 
 static int load_settings (void);
 
-int gp_setting_get (char *id, char *key, char *value)
+/**
+ * \brief Retrieve a specific gphoto setting.
+ * \param id the frontend id of the caller
+ * \param key the key the frontend queries
+ * \param value retrieved value
+ * \return GPhoto error code
+ *
+ * This function retrieves the setting key for a specific frontend
+ * id and copies the value into the passed value pointer.
+ */
+int
+gp_setting_get (char *id, char *key, char *value)
 {
         int x;
 
@@ -73,6 +87,17 @@ int gp_setting_get (char *id, char *key, char *value)
         return(GP_ERROR);
 }
 
+/**
+ * \brief Set a specific gphoto setting.
+ *
+ * \param id the frontend id of the caller
+ * \param key the key the frontend queries
+ * \param value retrieved value
+ * \return GPhoto error code
+ *
+ * This function sets the setting key for a specific frontend
+ * id to the value.
+ */
 int
 gp_setting_set (char *id, char *key, char *value)
 {
