@@ -137,8 +137,8 @@ typedef struct {
 	int usb_protocol;	/**< \brief USB device protocol */
 
         /* For core use */
-        char library [1024];	/**< \internal */
-        char id [1024];		/**< \internal */
+        char library [1024];	/**< \brief (Internal) library filename */
+        char id [1024];		/**< \brief (Internal) camera ID name */
 
 	GphotoDeviceType 	device_type;	/**< \brief Device type. */
 	/** Reserved space to use in the future w/out changing the 
