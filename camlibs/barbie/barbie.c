@@ -41,24 +41,17 @@
 
 /* Some simple packet templates */
 static const char packet_1[4]                = {0x02, 0x01, 0x01, 0x03};
-static char *barbie_read_data (GPPort *port, char *cmd, int cmd_size, int data_type, int *size);
 
-/* Utility Functions
-   =======================================================================
-*/
-
+/* Utility Functions */
 static int
 barbie_read_response(GPPort *port, char *response, int size) {
-
 	int x;
 	char ack = 0;
 
 	/* Read the ACK */
 	x=gp_port_read(port, &ack, 1);
-
 	if ((ack != ACK)||(x<0))
 		return (0);
-
 	/* Read the Response */
 	memset(response, 0, size);
 	x=gp_port_read(port,response, size);
@@ -67,9 +60,7 @@ barbie_read_response(GPPort *port, char *response, int size) {
 
 static
 int barbie_exchange (GPPort *port, char *cmd, int cmd_size, char *resp, int resp_size) {
-
 	int count = 0;
-
 	while (count++ < 10) {
 		if (gp_port_write(port, cmd, cmd_size) < GP_OK)
 			return (0);
@@ -81,7 +72,6 @@ int barbie_exchange (GPPort *port, char *cmd, int cmd_size, char *resp, int resp
 		/* if busy, sleep 2 seconds */
 		GP_SYSTEM_SLEEP(2000);
 	}
-
 	return (0);
 }
 
@@ -111,50 +101,12 @@ barbie_file_count (GPPort *port) {
         GP_DEBUG ("Getting the number of pictures...");
 
         memcpy(cmd, packet_1, 4);
-
         cmd[COMMAND_BYTE] = 'I';
         cmd[DATA1_BYTE]   = 0;
 
         if (barbie_exchange(port, cmd, 4, resp, 4) != 1)
                 return (0);
-
         return (resp[DATA1_BYTE]);
-}
-
-static char *
-barbie_read_firmware(GPPort *port) {
-
-	char cmd[4];
-	int x;
-	
-	memcpy(cmd, packet_1, 4);
-	cmd[COMMAND_BYTE] = 'V';
-	cmd[DATA1_BYTE]   = '0';
-	
-	return (barbie_read_data(port, cmd, 4, BARBIE_DATA_FIRMWARE, &x));
-}
-
-static char *
-barbie_read_picture(GPPort *port, int picture_number, int get_thumbnail, int *size) {
-
-	char cmd[4], resp[4];
-
-	memcpy(cmd, packet_1, 4);
-	cmd[COMMAND_BYTE] = 'A';
-	cmd[DATA1_BYTE]   = picture_number;
-
-	if (barbie_exchange(port, cmd, 4, resp, 4) != 1)
-		return (NULL);
-	
-	memcpy(cmd, packet_1, 4);
-	if (get_thumbnail)
-		cmd[COMMAND_BYTE] = 'M';
-	   else
-		cmd[COMMAND_BYTE] = 'U';
-
-	cmd[DATA1_BYTE] = 0;
-
-	return (barbie_read_data(port, cmd, 4, BARBIE_DATA_PICTURE, size));
 }
 
 static char *
@@ -193,7 +145,6 @@ barbie_read_data (GPPort *port, char *cmd, int cmd_size, int data_type, int *siz
 			statusbytes = (unsigned char)c;
 			*size = PICTURE_SIZE(cols, blackrows, visrows, statusbytes);
 			sprintf(ppmhead, "P6\n# test.ppm\n%i %i\n255\n", cols-4, visrows);
-printf("\tcols=%i blackrows=%i visrows=%i statusbytes=%i size=%i\n", cols, blackrows ,visrows, statusbytes, *size);
 			us = (char *)malloc(sizeof(char)*(*size));
 			rg = (char *)malloc(sizeof(char)*(*size));
 			s  = (char *)malloc(sizeof(char)*cols*(blackrows+visrows)*3+strlen(ppmhead));
@@ -245,6 +196,41 @@ printf("\tcols=%i blackrows=%i visrows=%i statusbytes=%i size=%i\n", cols, black
 	}
 	return(s);
 }
+
+static char *
+barbie_read_firmware(GPPort *port) {
+
+	char cmd[4];
+	int x;
+	
+	memcpy(cmd, packet_1, 4);
+	cmd[COMMAND_BYTE] = 'V';
+	cmd[DATA1_BYTE]   = '0';
+	return (barbie_read_data(port, cmd, 4, BARBIE_DATA_FIRMWARE, &x));
+}
+
+static char *
+barbie_read_picture(GPPort *port, int picture_number, int get_thumbnail, int *size) {
+
+	char cmd[4], resp[4];
+
+	memcpy(cmd, packet_1, 4);
+	cmd[COMMAND_BYTE] = 'A';
+	cmd[DATA1_BYTE]   = picture_number;
+
+	if (barbie_exchange(port, cmd, 4, resp, 4) != 1)
+		return (NULL);
+
+	memcpy(cmd, packet_1, 4);
+	if (get_thumbnail)
+		cmd[COMMAND_BYTE] = 'M';
+	   else
+		cmd[COMMAND_BYTE] = 'U';
+	cmd[DATA1_BYTE] = 0;
+
+	return (barbie_read_data(port, cmd, 4, BARBIE_DATA_PICTURE, size));
+}
+
 
 /* GPhoto specific stuff */
 static char *models[] = {
@@ -310,7 +296,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
         num = gp_filesystem_number (camera->fs, "/", filename, context);
 	if (num < GP_OK)
 		return num;
-
         switch (type) {
         case GP_FILE_TYPE_NORMAL:
                 data = barbie_read_picture (camera->port, num, 0, &size);
@@ -321,7 +306,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
         default:
                 return (GP_ERROR_NOT_SUPPORTED);
         }
-
         if (!data)
                 return GP_ERROR;
 
