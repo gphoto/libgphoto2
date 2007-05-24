@@ -105,9 +105,9 @@ typedef struct _GPPortSettingsDisk {
  * them.
  */
 typedef union _GPPortSettings {
-	GPPortSettingsSerial serial;
-	GPPortSettingsUSB usb;
-	GPPortSettingsDisk disk;
+	GPPortSettingsSerial serial;	/**< \brief Serial specific settings */
+	GPPortSettingsUSB usb;		/**< \brief USB specific settings */
+	GPPortSettingsDisk disk;	/**< \brief Disk port specific settings */
 } GPPortSettings;
 
 enum {
