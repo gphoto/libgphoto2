@@ -38,7 +38,6 @@ int
 camera_id (CameraText *id)
 {
         strcpy(id->text, "barbie");
-
         return (GP_OK);
 }
 
@@ -73,12 +72,8 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
                 void *data, GPContext *context)
 {
         Camera *camera = data;
-        int count;
 
-        count = barbie_file_count (camera->port);
-        gp_list_populate (list, "mattel%02i.ppm", count);
-
-        return GP_OK;
+        return gp_list_populate (list, "mattel%02i.ppm", barbie_file_count (camera->port));
 }
 
 static int
@@ -92,6 +87,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
         /* Retrieve the number of the photo on the camera */
         num = gp_filesystem_number (camera->fs, "/", filename, context);
+	if (num < GP_OK)
+		return num;
 
         switch (type) {
         case GP_FILE_TYPE_NORMAL:
@@ -110,7 +107,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
         gp_file_set_name (file, filename);
         gp_file_set_mime_type (file, "image/ppm");
         gp_file_set_data_and_size (file, data, size);
-
         return GP_OK;
 }
 
