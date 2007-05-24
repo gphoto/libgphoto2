@@ -57,7 +57,7 @@
 #endif
 
 /**
- * GPPortInfoList:
+ * \internal GPPortInfoList:
  *
  * The internals of this list are private.
  **/

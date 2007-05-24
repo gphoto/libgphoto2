@@ -58,6 +58,7 @@
 #define CHECK_INIT(p) {if (!(p)->pc->ops) {gp_port_set_error ((p), _("The port has not yet been initialized")); return (GP_ERROR_BAD_PARAMETERS);}}
 
 /**
+ * \internal
  * This structure contains private data.
  **/
 struct _GPPortPrivateCore {
