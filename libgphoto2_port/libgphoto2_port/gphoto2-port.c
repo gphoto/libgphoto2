@@ -324,14 +324,13 @@ gp_port_free (GPPort *port)
 }
 
 /**
- * gp_port_write:
- * @port: a #GPPort
- * @data: the data to write to the port
- * @size: the number of bytes to write to the port
+ * \brief Writes a specified amount of data to a port.
+ * \param port a #GPPort
+ * \param data the data to write to the port
+ * \param size the number of bytes to write to the port
  *
- * Writes a specified amount of @data to a @port.
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int
 gp_port_write (GPPort *port, const char *data, int size)
@@ -358,14 +357,15 @@ gp_port_write (GPPort *port, const char *data, int size)
 }
 
 /**
- * gp_port_read:
- * @port: a #GPPort
- * @data: a pointer to an allocated buffer
- * @size: the number of bytes that should be read
+ * \brief Read data from port
+ *
+ * \param port a #GPPort
+ * \param data a pointer to an allocated buffer
+ * \param size the number of bytes that should be read
  *
  * Reads a specified number of bytes from the port into the supplied buffer.
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int
 gp_port_read (GPPort *port, char *data, int size)
@@ -392,16 +392,17 @@ gp_port_read (GPPort *port, char *data, int size)
 }
 
 /**
- * gp_port_check_int:
- * @port: a #GPPort
- * @data: a pointer to an allocated buffer
- * @size: the number of bytes that should be read
+ * \brief Check for intterupt.
+ *
+ * \param port a GPPort
+ * \param data a pointer to an allocated buffer
+ * \param size the number of bytes that should be read
  *
  * Reads a specified number of bytes from the inerrupt endpoint
  * into the supplied buffer.
  * Function waits port->timeout miliseconds for data on interrupt endpoint.
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int
 gp_port_check_int (GPPort *port, char *data, int size)
@@ -427,19 +428,19 @@ gp_port_check_int (GPPort *port, char *data, int size)
 	return (retval);
 }
 
+#define FAST_TIMEOUT	50
 /**
- * gp_port_check_int_fast:
- * @port: a #GPPort
- * @data: a pointer to an allocated buffer
- * @size: the number of bytes that should be read
+ * \brief Check for interrupt without wait
+ * \param port a GPPort
+ * \param data a pointer to an allocated buffer
+ * \param size the number of bytes that should be read
  *
  * Reads a specified number of bytes from the inerrupt endpoint
  * into the supplied buffer.
  * Function waits 50 miliseconds for data on interrupt endpoint.
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
-#define FAST_TIMEOUT	50
 int
 gp_port_check_int_fast (GPPort *port, char *data, int size)
 {
@@ -480,15 +481,15 @@ gp_port_check_int_fast (GPPort *port, char *data, int size)
 
 
 /**
- * gp_port_set_timeout:
- * @port: a #GPPort
- * @timeout: the timeout
+ * \brief Set timeout of port 
+ * \param port a #GPPort
+ * \param timeout the timeout
  *
  * Sets the @timeout of a @port. #gp_port_read will wait @timeout milliseconds
  * for data. If no data will be received in that period, %GP_ERROR_TIMEOUT
  * will be returned.
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int
 gp_port_set_timeout (GPPort *port, int timeout)
@@ -503,14 +504,14 @@ gp_port_set_timeout (GPPort *port, int timeout)
         return GP_OK;
 }
 
-/* Deprecated */
+/** Deprecated */
 int gp_port_timeout_set (GPPort *, int);
 int gp_port_timeout_set (GPPort *port, int timeout)
 {
 	return (gp_port_set_timeout (port, timeout));
 }
 
-/* Deprecated */
+/** Deprecated */
 int gp_port_timeout_get (GPPort *, int *);
 int gp_port_timeout_get (GPPort *port, int *timeout)
 {
@@ -518,13 +519,13 @@ int gp_port_timeout_get (GPPort *port, int *timeout)
 }
 
 /**
- * gp_port_get_timeout:
- * @port: a #GPPort
- * @timeout:
+ * \brief Get the current port timeout.
+ * \param port a #GPPort
+ * \param timeout pointer to timeout
  *
  * Retreives the current timeout of the port.
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int
 gp_port_get_timeout (GPPort *port, int *timeout)
@@ -542,15 +543,15 @@ gp_port_get_timeout (GPPort *port, int *timeout)
 }
 
 /**
- * gp_port_set_settings:
- * @port: a #GPPort
- * @settings: the #GPPortSettings to be set
+ * \brief Set port settings
+ * \param port a #GPPort
+ * \param settings the #GPPortSettings to be set
  *
  * Adjusts the settings of a port. You should always call
  * #gp_port_get_settings, adjust the values depending on the type of the port,
  * and then call #gp_port_set_settings.
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int
 gp_port_set_settings (GPPort *port, GPPortSettings settings)
@@ -572,12 +573,13 @@ gp_port_set_settings (GPPort *port, GPPortSettings settings)
         return (GP_OK);
 }
 
-/* Deprecated */
+/** Deprecated */
 int gp_port_settings_get (GPPort *, GPPortSettings *);
 int gp_port_settings_get (GPPort *port, GPPortSettings *settings)
 {
 	return (gp_port_get_settings (port, settings));
 }
+/** Deprecated */
 int gp_port_settings_set (GPPort *, GPPortSettings);
 int gp_port_settings_set (GPPort *port, GPPortSettings settings)
 {
@@ -585,13 +587,13 @@ int gp_port_settings_set (GPPort *port, GPPortSettings settings)
 }
 
 /**
- * gp_port_get_settings:
- * @port: a #GPPort
- * @settings:
+ * \brief Get the current port settings.
+ * \param port a #GPPort
+ * \param settings pointer to the retrieved settings
  *
- * Retreives the current @settings of a @port.
+ * Retreives the current @settings of a port.
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int
 gp_port_get_settings (GPPort *port, GPPortSettings *settings)
@@ -603,6 +605,15 @@ gp_port_get_settings (GPPort *port, GPPortSettings *settings)
         return GP_OK;
 }
 
+/**
+ * \brief Get setting of specific serial PIN
+ *
+ * \param port a GPPort
+ * \param pin the serial pin to be retrieved
+ * \param level the setting of the pin
+ * 
+ * \return a gphoto2 error code
+ */
 int
 gp_port_get_pin (GPPort *port, GPPin pin, GPLevel *level)
 {
@@ -646,6 +657,17 @@ static struct {
 	{0, NULL}
 };
 
+/**
+ * \brief Set specified serial PIN to value
+ *
+ * \param port a GPPort
+ * \param pin the serial pin to be retrieved
+ * \param level the setting of the pin
+ *
+ * Pulls the specified pin of a serial port to the specified level.
+ *
+ * \return a gphoto2 error code
+ */
 int
 gp_port_set_pin (GPPort *port, GPPin pin, GPLevel level)
 {
@@ -671,6 +693,16 @@ gp_port_set_pin (GPPort *port, GPPin pin, GPLevel level)
 	return (GP_OK);
 }
 
+/**
+ * \brief Send a break over a serial port
+ *
+ * \param port a GPPort
+ * \param duration duration of break in milliseconds
+ *
+ * Sends a break with the specified duration in milliseconds.
+ *
+ * \return a gphoto2 error code
+ */
 int
 gp_port_send_break (GPPort *port, int duration)
 {
@@ -686,6 +718,17 @@ gp_port_send_break (GPPort *port, int duration)
 	return (GP_OK);
 }
 
+/**
+ * \brief Flush data on serial port
+ *
+ * \param port a GPPort
+ * \param direction the direction of the flush
+ *
+ * Flushes the serial output or input (depending on direction)
+ * of the serial port.
+ *
+ * \return a gphoto2 error code
+ */
 int
 gp_port_flush (GPPort *port, int direction)
 {
@@ -703,6 +746,17 @@ gp_port_flush (GPPort *port, int direction)
 /* USB-specific functions */
 /* ------------------------------------------------------------------ */
 
+/**
+ * \brief Find USB device by vendor/product
+ *
+ * \param port a GPPort
+ * \param idvendor USB vendor id
+ * \param idproduct USB product id
+ *
+ * Find the USB device with the specified vendor:product id pair.
+ *
+ * \return a gphoto2 error code
+ */
 int
 gp_port_usb_find_device (GPPort *port, int idvendor, int idproduct)
 {
@@ -715,6 +769,18 @@ gp_port_usb_find_device (GPPort *port, int idvendor, int idproduct)
         return (GP_OK);
 }
 
+/**
+ * \brief Find USB device by interface class
+ *
+ * \param port a GPPort
+ * \param class the USB interface class
+ * \param subclass the USB interface subclass
+ * \param protocol the USB interface protocol
+ *
+ * Find the USB device with the specified vendor:product id pair.
+ *
+ * \return a gphoto2 error code
+ */
 int
 gp_port_usb_find_device_by_class (GPPort *port, int mainclass, int subclass, int protocol)
 {
@@ -727,6 +793,16 @@ gp_port_usb_find_device_by_class (GPPort *port, int mainclass, int subclass, int
         return (GP_OK);
 }
 
+/**
+ * \brief Clear USB endpoint HALT condition
+ *
+ * \param port a GPPort
+ * \param ep endpoint to clear HALT
+ *
+ * Clears the HALT (stall?) endpoint condition of the specified endpoint.
+ *
+ * \return a gphoto2 error code
+ */
 int
 gp_port_usb_clear_halt (GPPort *port, int ep)
 {
@@ -741,6 +817,20 @@ gp_port_usb_clear_halt (GPPort *port, int ep)
         return (GP_OK);
 }
 
+/**
+ * \brief Send a USB control message with output data
+ *
+ * \param port a GPPort
+ * \param request control request code
+ * \param value control value
+ * \param index control index
+ * \param bytes pointer to data
+ * \param size size of the data
+ *
+ * Sends a specific USB control command and write associated data.
+ *
+ * \return a gphoto2 error code
+ */
 int
 gp_port_usb_msg_write (GPPort *port, int request, int value, int index,
 	char *bytes, int size)
@@ -762,6 +852,20 @@ gp_port_usb_msg_write (GPPort *port, int request, int value, int index,
         return (retval);
 }
 
+/**
+ * \brief Send a USB control message with input data
+ *
+ * \param port a GPPort
+ * \param request control request code
+ * \param value control value
+ * \param index control index
+ * \param bytes pointer to data
+ * \param size size of the data
+ *
+ * Sends a specific USB interface control command and read associated data.
+ *
+ * \return a gphoto2 error code
+ */
 int
 gp_port_usb_msg_read (GPPort *port, int request, int value, int index,
 	char *bytes, int size)
@@ -792,7 +896,20 @@ gp_port_usb_msg_read (GPPort *port, int request, int value, int index,
  * The next two functions handle the request types 0x41 for write 
  * and 0xc1 for read.
  */
-
+/**
+ * \brief Send a USB interface control message with output data
+ *
+ * \param port a GPPort
+ * \param request control request code
+ * \param value control value
+ * \param index control index
+ * \param bytes pointer to data
+ * \param size size of the data
+ *
+ * Sends a specific USB interface control command and write associated data.
+ *
+ * \return a gphoto2 error code
+ */
 int
 gp_port_usb_msg_interface_write (GPPort *port, int request, 
 	int value, int index, char *bytes, int size)
@@ -816,6 +933,20 @@ gp_port_usb_msg_interface_write (GPPort *port, int request,
 }
 
 
+/**
+ * \brief Send a USB interface control message with input data
+ *
+ * \param port a GPPort
+ * \param request control request code
+ * \param value control value
+ * \param index control index
+ * \param bytes pointer to data
+ * \param size size of the data
+ *
+ * Sends a specific USB control command and read associated data.
+ *
+ * \return a gphoto2 error code
+ */
 int
 gp_port_usb_msg_interface_read (GPPort *port, int request, int value, int index,
 	char *bytes, int size)
@@ -849,6 +980,20 @@ gp_port_usb_msg_interface_read (GPPort *port, int request, int value, int index,
  * and 0xa1 for read.
  */
 
+/**
+ * \brief Send a USB class control message with output data
+ *
+ * \param port a GPPort
+ * \param request control request code
+ * \param value control value
+ * \param index control index
+ * \param bytes pointer to data
+ * \param size size of the data
+ *
+ * Sends a specific USB class control command and write associated data.
+ *
+ * \return a gphoto2 error code
+ */
 int
 gp_port_usb_msg_class_write (GPPort *port, int request, 
 	int value, int index, char *bytes, int size)
@@ -872,6 +1017,20 @@ gp_port_usb_msg_class_write (GPPort *port, int request,
 }
 
 
+/**
+ * \brief Send a USB class control message with input data
+ *
+ * \param port a GPPort
+ * \param request control request code
+ * \param value control value
+ * \param index control index
+ * \param bytes pointer to data
+ * \param size size of the data
+ *
+ * Sends a specific USB class control command and read associated data.
+ *
+ * \return a gphoto2 error code
+ */
 int
 gp_port_usb_msg_class_read (GPPort *port, int request, int value, int index,
 	char *bytes, int size)
@@ -901,14 +1060,14 @@ gp_port_usb_msg_class_read (GPPort *port, int request, int value, int index,
 
 
 /**
- * gp_port_set_error:
- * @port: a #GPPort
- * @format:
- * @...:
+ * \brief Set verbose port error message
+ * \param port a #GPPort
+ * \param format printf style format string
+ * \param ... variable arguments depending on format string
  *
  * Sets an error message that can later be retrieved using #gp_port_get_error.
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int
 gp_port_set_error (GPPort *port, const char *format, ...)
@@ -931,15 +1090,15 @@ gp_port_set_error (GPPort *port, const char *format, ...)
 }
 
 /**
- * gp_port_get_error:
- * @port: a #GPPort
+ * \brief Get verbose port error message
+ * \param port a #GPPort
  *
  * Retrieves an error message from a @port. If you want to make sure that
  * you get correct error messages, you need to call #gp_port_set_error with
  * an error message of %NULL each time before calling another port-related
  * function of which you want to check the return value.
  *
- * Return value: an error message
+ * \return a translated error message
  **/
 const char *
 gp_port_get_error (GPPort *port)
