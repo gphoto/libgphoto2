@@ -235,13 +235,13 @@ gp_port_get_info (GPPort *port, GPPortInfo *info)
 }
 
 /**
- * gp_port_open:
- * @port: a #GPPort
+ * \brief Open a port.
+ * \param port a #GPPort
  *
  * Opens a port which should have been created with #gp_port_new and 
  * configured with #gp_port_set_info and #gp_port_set_settings
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int
 gp_port_open (GPPort *port)
@@ -260,13 +260,13 @@ gp_port_open (GPPort *port)
 }
 
 /**
- * gp_port_close:
- * @port: a #GPPort
+ * \brief Close a port.
+ * \param port a #GPPort
  *
  * Closes a @port temporarily. It can afterwards be reopened using
  * #gp_port_open.
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int
 gp_port_close (GPPort *port)
@@ -283,12 +283,12 @@ gp_port_close (GPPort *port)
 }
 
 /**
- * gp_port_free:
- * @port: a #GPPort
+ * \brief Free the port structure
+ * \param port a #GPPort
  *
  * Closes the @port and frees the memory.
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int
 gp_port_free (GPPort *port)
