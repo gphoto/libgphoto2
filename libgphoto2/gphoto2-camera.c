@@ -365,7 +365,7 @@ gp_camera_new (Camera **camera)
 
 
 /**
- * Sets the camera abilities. 
+ * \brief Sets the camera abilities. 
  *
  * @param camera a #Camera
  * @param abilities the #CameraAbilities to be set
