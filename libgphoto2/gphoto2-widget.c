@@ -2,19 +2,19 @@
  *
  * \author Copyright 2000 Scott Fritzinger
  *
- * \note
+ * \par License
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * \note
+ * \par
  * This library is distributed in the hope that it will be useful, 
  * but WITHOUT ANY WARRANTY; without even the implied warranty of 
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details. 
  *
- * \note
+ * \par
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
@@ -77,6 +77,8 @@ struct _CameraWidget {
 };
 
 /**
+ * \brief Create a new widget.
+ *
  * The function creates a new #CameraWidget of specified type and with
  * given label.
  *
@@ -122,7 +124,7 @@ gp_widget_new (CameraWidgetType type, const char *label,
 }
 
 /**
- * Frees a #CameraWidget
+ * \brief Frees a CameraWidget
  *
  * @param widget the #CameraWidget to be freed
  * @return a gphoto2 error code.
@@ -150,7 +152,7 @@ gp_widget_free (CameraWidget *widget)
 }
 
 /**
- * Increments the reference count for the #CameraWidget
+ * \brief Increments the reference count for the CameraWidget
  *
  * @param widget a #CameraWidget you want to ref-count
  * @return a gphoto2 error code.
@@ -167,9 +169,9 @@ gp_widget_ref (CameraWidget *widget)
 }
 
 /**
- * Decrements the reference count for the #CameraWidget
+ * \brief Decrements the reference count for the CameraWidget
  *
- * @param widget a #CameraWidget you want to unref
+ * @param widget a CameraWidget you want to unref
  * @return a gphoto2 error code.
  *
  **/
@@ -187,7 +189,7 @@ gp_widget_unref (CameraWidget *widget)
 }
 
 /**
- * Retrieves the information about the widget
+ * \brief Retrieves the information about the widget
  *
  * @param widget a #CameraWidget
  * @param info
@@ -205,7 +207,7 @@ gp_widget_get_info (CameraWidget *widget, const char **info)
 
 
 /**
- * Sets the information about the widget
+ * \brief Sets the information about the widget
  *
  * @param widget a #CameraWidget
  * @param info Information about above widget
@@ -222,7 +224,7 @@ gp_widget_set_info (CameraWidget *widget, const char *info)
 }
 
 /**
- * Gets the name of the widget
+ * \brief Gets the name of the widget
  *
  * @param widget a #CameraWidget
  * @param name Name of above widget
@@ -239,7 +241,7 @@ gp_widget_get_name (CameraWidget *widget, const char **name)
 }
 
 /**
- * Sets the name of the widget
+ * \brief Sets the name of the widget
  *
  * @param widget a #CameraWidget
  * @param name Name of above widget
@@ -258,7 +260,7 @@ gp_widget_set_name (CameraWidget *widget, const char *name)
 
 
 /**
- * Retrieves the unique id of the #CameraWidget
+ * \brief Retrieves the unique id of the #CameraWidget
  *
  * @param widget a #CameraWidget
  * @param id 
@@ -274,6 +276,17 @@ gp_widget_get_id (CameraWidget *widget, int *id)
 	return (GP_OK);
 }
 
+/**
+ * \brief Tells that the widget has been changed
+ *
+ * @param widget a #CameraWidget
+ * @param changed a boolean whether we changed or not
+ * @return a gphoto2 error code
+ *
+ * Sets the changed of the CameraWidget depending on 
+ * the changed parameter.
+ *
+ **/
 int
 gp_widget_set_changed (CameraWidget *widget, int changed)
 {
@@ -284,7 +297,7 @@ gp_widget_set_changed (CameraWidget *widget, int changed)
 }
 
 /**
- * Retrieves the type of the #CameraWidget
+ * \brief Retrieves the type of the #CameraWidget
  *
  * @param widget a #CameraWidget
  * @param type
@@ -301,7 +314,7 @@ gp_widget_get_type (CameraWidget *widget, CameraWidgetType *type)
 }
 
 /**
- * Retrieves the label of the #CameraWidget
+ * \brief Retrieves the label of the #CameraWidget
  *
  * @param widget a #CameraWidget
  * @param label
@@ -318,7 +331,7 @@ gp_widget_get_label (CameraWidget *widget, const char **label)
 }
 
 /**
- * Sets the value of the widget
+ * \brief Sets the value of the widget
  *
  * @param widget a #CameraWidget
  * @param value 
@@ -374,7 +387,7 @@ gp_widget_set_value (CameraWidget *widget, const void *value)
 }
 
 /**
- * Retrieves the value of the #CameraWidget
+ * \brief Retrieves the value of the #CameraWidget
  *
  * @param widget a #CameraWidget
  * @param value
@@ -410,7 +423,7 @@ gp_widget_get_value (CameraWidget *widget, void *value)
 }
 
 /**
- * Appends a #CameraWidget to a #CameraWidget
+ * \brief Appends a #CameraWidget to a #CameraWidget
  *
  * @param widget a #CameraWidget
  * @param child the #CameraWidget you would like to append to above
@@ -436,7 +449,7 @@ gp_widget_append (CameraWidget *widget, CameraWidget *child)
 }
 
 /**
- * Prepends a #CameraWidget to a #CameraWidget
+ * \brief Prepends a #CameraWidget to a #CameraWidget
  *
  * @param widget a #CameraWidget
  * @param child the #CameraWidget you would like to prepend to above
@@ -469,7 +482,7 @@ gp_widget_prepend (CameraWidget *widget, CameraWidget *child)
 }
 
 /**
- * Counts the children of the #CameraWidget
+ * \brief Counts the children of the #CameraWidget
  *
  * @param widget a #CameraWidget
  * @return a gphoto2 error code or number of children
@@ -484,7 +497,7 @@ gp_widget_count_children (CameraWidget *widget)
 }
 
 /**
- * Retrieves the child number \c child_number of the parent
+ * \brief Retrieves the child number \c child_number of the parent
  *
  * @param widget a #CameraWidget
  * @param child_number the number of the child
@@ -506,7 +519,7 @@ gp_widget_get_child (CameraWidget *widget, int child_number,
 }
 
 /**
- * Retrieves the child with label \c label of the #CameraWidget
+ * \brief Retrieves the child with label \c label of the #CameraWidget
  *
  * @param widget a #CameraWidget
  * @param label the label of the child
@@ -543,7 +556,7 @@ gp_widget_get_child_by_label (CameraWidget *widget, const char *label,
 }
 
 /**
- * Retrieves the child with id \c id of the widget
+ * \brief Retrieves the child with id \c id of the widget
  *
  * @param widget a #CameraWidget
  * @param id the id of the child
@@ -579,7 +592,7 @@ gp_widget_get_child_by_id (CameraWidget *widget, int id, CameraWidget **child)
 }
 
 /**
- * Retrieves the child with name \c name of the widget
+ * \brief Retrieves the child with name \c name of the widget
  *
  * @param widget a #CameraWidget
  * @param name the name of the child
@@ -614,6 +627,14 @@ gp_widget_get_child_by_name (CameraWidget *widget, const char *name,
 	return (GP_ERROR_BAD_PARAMETERS);
 }
 
+/**
+ * \brief Retrieves the parent of a CameraWidget
+ *
+ * @param widget a #CameraWidget
+ * @param parent the pointer to the parent to return
+ * @return a gphoto2 error code.
+ *
+ **/
 int
 gp_widget_get_parent (CameraWidget *widget, CameraWidget **parent)
 {
@@ -625,7 +646,7 @@ gp_widget_get_parent (CameraWidget *widget, CameraWidget **parent)
 }
 
 /**
- * Retrieves the root of the #CameraWidget
+ * \brief Retrieves the root of the #CameraWidget
  *
  * @param widget a #CameraWidget
  * @param root
@@ -646,7 +667,7 @@ gp_widget_get_root (CameraWidget *widget, CameraWidget **root)
 }
 
 /**
- * Sets some range parameters of the #CameraWidget
+ * \brief Sets some range parameters of the #CameraWidget
  *
  * @param range a #CameraWidget of type GP_WIDGET_RANGE
  * @param min
@@ -671,7 +692,7 @@ gp_widget_set_range (CameraWidget *range, float min, float max, float increment)
 }
 
 /**
- * Retrieves some range parameters of the #CameraWidget
+ * \brief Retrieves some range parameters of the #CameraWidget
  *
  * @param range a #CameraWidget of type GP_WIDGET_RANGE
  * @param min
@@ -696,7 +717,7 @@ gp_widget_get_range (CameraWidget *range, float *min, float *max,
 }
 
 /**
- * Adds a choice to the #CameraWidget
+ * \brief Adds a choice to the #CameraWidget
  *
  * @param widget a #CameraWidget of type GP_WIDGET_RADIO or GP_WIDGET_MENU
  * @param choice
@@ -722,7 +743,7 @@ gp_widget_add_choice (CameraWidget *widget, const char *choice)
 }
 
 /**
- * Counts the choices of the #CameraWidget
+ * \brief Counts the choices of the #CameraWidget
  *
  * @param widget a #CameraWidget of type GP_WIDGET_RADIO or GP_WIDGET_MENU
  * @return a gphoto2 error code or number of choices.
@@ -740,7 +761,7 @@ gp_widget_count_choices (CameraWidget *widget)
 }
 
 /**
- * Retrieves the choice number \c choice_number
+ * \brief Retrieves the choice number \c choice_number
  *
  * @param widget a #CameraWidget of type GP_WIDGET_RADIO or GP_WIDGET_MENU
  * @param choice_number
@@ -765,7 +786,7 @@ gp_widget_get_choice (CameraWidget *widget, int choice_number,
 }
 
 /**
- * Tells if the widget has been changed
+ * \brief Tells if the widget has been changed
  *
  * @param widget a #CameraWidget
  * @return a gphoto2 error code or changed flag.
