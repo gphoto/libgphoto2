@@ -61,11 +61,11 @@ struct _GPContext
 };
 
 /**
- * gp_context_new:
+ * \brief Creates a new context.
  *
- * Creates a new context.
+ * To be used by the frontend.
  *
- * Return value: a #GPContext.
+ * \return a GPContext.
  **/
 GPContext *
 gp_context_new (void)
@@ -83,10 +83,9 @@ gp_context_new (void)
 }
 
 /**
- * gp_context_ref:
- * @context: a #GPContext
+ * Increments the reference count of the context.
  *
- * Increments the reference count of the @context.
+ * \param context The context to bump the reference
  **/
 void
 gp_context_ref (GPContext *context)
@@ -107,10 +106,11 @@ gp_context_free (GPContext *context)
 }
 
 /**
- * gp_context_unref (GPContext *context)
- * @context: a #GPContext
+ * \brief Decrements reference count of a context.
+ * 
+ * Decrement the reference count of a context and free if it goes to 0.
  *
- * Decrements the reference count of the @context.
+ * \param context The context to drop the reference count.
  **/
 void
 gp_context_unref (GPContext *context)
@@ -124,12 +124,13 @@ gp_context_unref (GPContext *context)
 }
 
 /**
- * gp_context_idle:
- * @context: a #GPContext
+ * \brief Notify frontend of a brief idle time.
+ * 
+ * Tells the frontend that it can do other processing at this moment, like refresh
+ * the UI. Backends should call this function every time when an
+ * interruption of the transfer is possible.
  *
- * Tells the frontend that it can do other processing at this moment. Backends
- * should call this function every time when an interruption of the transfer
- * is possible.
+ * \param context a GPContext
  **/
 void
 gp_context_idle (GPContext *context)
@@ -141,6 +142,16 @@ gp_context_idle (GPContext *context)
 		context->idle_func (context, context->idle_func_data);
 }
 
+/**
+ * \brief Start progress tracking.
+ * 
+ * This function starts up a new progress tracking for a specified context.
+ * Several nested progress reports can happen at once, depending on the backend.
+ *
+ * \param context The context in which to start the progress.
+ * \param target The 100% value.
+ * \param format A sprintf style string to print out, including the following variable arguments.
+ */
 unsigned int
 gp_context_progress_start (GPContext *context, float target,
 			   const char *format, ...)
@@ -226,6 +237,18 @@ gp_context_status (GPContext *context, const char *format, ...)
 	}
 }
 
+/**
+ * \brief Print a message to the context
+ *
+ * This sends a message to the passed context, to be printed by
+ * it in some kind of way, but do no other action.
+ * 
+ * To be used by camera drivers.
+ *
+ * \param context A GPContext
+ * \param format A sprintf style format string
+ * \param ... variable argument list depending on format string
+ */
 void
 gp_context_message (GPContext *context, const char *format, ...)
 {
@@ -248,14 +271,17 @@ gp_context_message (GPContext *context, const char *format, ...)
 }
 
 /**
- * gp_context_question:
- * @context: a #GPContext
- * @format:
- * @...:
+ * \brief Ask frontend user a question
  *
  * Asks the user a question that he must answer either with "Ok" or "Cancel".
  *
- * Return value: The user's answer in form of a #GPContextFeedback.
+ * To be used by a camera driver. (So far no camera driver is using it,
+ * but this might change later.)
+ *
+ * \param context a GPContext
+ * \param format a sprintf format string
+ * \param ... variable arguments for format string
+ * \return The user's answer in form of a GPContextFeedback.
  **/
 GPContextFeedback
 gp_context_question (GPContext *context, const char *format, ...)
