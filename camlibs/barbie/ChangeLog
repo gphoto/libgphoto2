@@ -5,3 +5,6 @@
 	   Use global bayer routines.
 
 	* library.c, barbie.c: Largish clean up.
+
+	* library.c,barbie.h: Merged into barbie.c
+	* Protocol.txt: Extracted from barbie.h

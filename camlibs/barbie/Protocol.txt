@@ -90,25 +90,3 @@
 		0x25	BUSY_COUNTER	counter being reset (to nonzero value)
 
 */
-
-#define MAX_PICTURES	6
-
-#define ACK		0x06
-#define NAK		0x15
-
-#define COMMAND_BYTE	1
-#define RESPONSE_BYTE	1
-#define DATA1_BYTE	2
-#define DATA2_BYTE	3
-
-#define BARBIE_DATA_FIRMWARE	0
-#define BARBIE_DATA_THUMBNAIL	1
-#define BARBIE_DATA_PICTURE	2
-
-#define PICTURE_SIZE(n1, n2, n3, n4)	(n1*(n2+n3)+n4)
-
-/* Utility functions */
-char*	barbie_read_firmware(GPPort *port);
-char*	barbie_read_picture (GPPort *port, int picture_number, int get_thumbnail, int *size);
-int	barbie_ping         (GPPort *port);
-int     barbie_file_count (GPPort *port);
