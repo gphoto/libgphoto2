@@ -3,8 +3,7 @@
 	* config.c: Allow configuration of Exposure Bias Compensation
 
 	* usb.c: Handle response instead of data answer (happens on failure).
-	* library.c: Handle StoreNotAvailable errors as non critical after
-	  GetObjectHandles
+	* ptp.c: Handle GetObjectHandles errors as non critical (Just as "0 handles").
 
 2007-05-09  Marcus Meissner  <marcus@jet.franken.de>
 

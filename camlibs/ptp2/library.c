@@ -3765,22 +3765,8 @@ init_ptp_fs (Camera *camera, GPContext *context)
 fallback:
 	/* Get file handles array for filesystem */
 	id = gp_context_progress_start (context, 100, _("Initializing Camera"));
-
 	/* Get objecthandles of all objects from all stores */
-	{
-		short r = ptp_getobjecthandles (params, 0xffffffff, 0x000000, 0x000000, &params->handles);
-		if (r!=PTP_RC_OK) {
-			if ( r == PTP_RC_StoreNotAvailable) {
-				gp_log (GP_LOG_DEBUG, "ptp2/getobjecthandles", "store not available, just assuming 0 handles.");
-				params->handles.n = 0;
-				params->handles.Handler = NULL;
-			} else {
-				report_result ((context), r, params->deviceinfo.VendorExtensionID);
-				return (translate_ptp_result (r));
-			}
-		}
-	}
-
+	CPR (context, ptp_getobjecthandles (params, 0xffffffff, 0x000000, 0x000000, &params->handles));
 	gp_context_progress_update (context, id, 10);
 	/* wee need that for fileststem */
 	params->objectinfo = (PTPObjectInfo*)malloc(sizeof(PTPObjectInfo)*

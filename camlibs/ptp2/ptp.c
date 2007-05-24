@@ -596,7 +596,21 @@ ptp_getobjecthandles (PTPParams* params, uint32_t storage,
 	ptp.Nparam=3;
 	len=0;
 	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &oh, &len);
-	if (ret == PTP_RC_OK) ptp_unpack_OH(params, oh, objecthandles, len);
+	if (ret == PTP_RC_OK) {
+		ptp_unpack_OH(params, oh, objecthandles, len);
+	} else {
+		if (	(storage == 0xffffffff) &&
+			(objectformatcode == 0) &&
+			(associationOH == 0)
+		) {
+			/* When we query all object handles on all stores and
+			 * get an error -> just handle it as "0 handles".
+			 */
+			objecthandles->Handler = NULL;
+			objecthandles->n = 0;
+			ret = PTP_RC_OK;
+		}
+	}
 	free(oh);
 	return ret;
 }
