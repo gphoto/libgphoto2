@@ -221,8 +221,11 @@ int         gp_port_set_error (GPPort *port, const char *format, ...)
 const char *gp_port_get_error (GPPort *port);
 
 /* DEPRECATED */
+/** \deprecated internal typedef */
 typedef GPPort gp_port;
+/** \deprecated internal typedef */
 typedef GPPortSettings gp_port_settings;
+/** \deprecated internal define */
 #define PIN_CTS GP_PIN_CTS
 
 #ifdef __cplusplus

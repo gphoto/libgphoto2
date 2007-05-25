@@ -173,7 +173,7 @@ typedef struct {
 # include <sys/stat.h>
 # include <unistd.h>
 
-/* Sleep functionality */
+/** Sleep passed amount of milliseconds. */
 # define GP_SYSTEM_SLEEP(_ms)			      \
   do {						      \
     const struct timespec req = {		      \
@@ -184,8 +184,11 @@ typedef struct {
   } while (0)
 
 /* Directory-oriented functions */
+/** A system directory handle */
 # define gp_system_dir           DIR *
+/** A system directory entry */
 # define gp_system_dirent	 struct dirent *
+/** The directory delimiter character on this platform. */
 # define gp_system_dir_delim	 '/'
 
 /************************************************************************

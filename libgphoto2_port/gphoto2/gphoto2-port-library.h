@@ -1,17 +1,20 @@
 /** \file gphoto2-port-library.h
  *
- * Copyright © 2001 Lutz Müller <lutz@users.sf.net>
+ * \author Copyright 2001 Lutz Müller <lutz@users.sf.net>
  *
+ * \par License
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
+ * \par
  * This library is distributed in the hope that it will be useful, 
  * but WITHOUT ANY WARRANTY; without even the implied warranty of 
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details. 
  *
+ * \par
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
@@ -24,8 +27,16 @@
 #include <gphoto2/gphoto2-port-info-list.h>
 #include <gphoto2/gphoto2-port.h>
 
-typedef struct _GPPortOperations GPPortOperations;
-struct _GPPortOperations {
+/**
+ * \brief The port operations
+ * 
+ * These operations are to be implemented and set by the port library,
+ * which drives the lowlevel protocol (serial, usb, etc.).
+ *
+ * They are acessed using the accessor functions, like gp_port_open(),
+ * gp_port_read() and gp_port_write().
+ */
+typedef struct _GPPortOperations {
         int (*init)     (GPPort *);
         int (*exit)     (GPPort *);
         int (*open)     (GPPort *);
@@ -60,7 +71,7 @@ struct _GPPortOperations {
                                 int value, int index, char *bytes, int size);
         int (*msg_class_read) (GPPort * dev, int request, 
                                 int value, int index, char *bytes, int size);
-};
+} GPPortOperations;
 
 typedef GPPortType (* GPPortLibraryType) (void);
 typedef int (* GPPortLibraryList)       (GPPortInfoList *list);
