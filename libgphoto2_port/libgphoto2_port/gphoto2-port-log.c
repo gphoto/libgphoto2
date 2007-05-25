@@ -1,17 +1,20 @@
 /** \file
  *
- * Copyright © 2001 Lutz Müller <lutz@users.sf.net>
+ * \author Copyright 2001 Lutz Müller <lutz@users.sf.net>
  *
+ * \par License
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
+ * \par
  * This library is distributed in the hope that it will be useful, 
  * but WITHOUT ANY WARRANTY; without even the implied warranty of 
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details. 
  *
+ * \par
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
@@ -54,17 +57,18 @@ static LogFunc *log_funcs = NULL;
 static unsigned int log_funcs_count = 0;
 
 /**
- * gp_log_add_func:
- * @level: a #GPLogLevel
- * @func: a #GPLogFunc
- * @data: data
+ * \brief Add a function to get logging information
+ *
+ * \param level a #GPLogLevel
+ * \param func a #GPLogFunc
+ * \param data data
  *
  * Adds a log function that will be called for each log message that is flagged
- * with a log level that appears in given log @level. This function returns
+ * with a log level that appears in given log level. This function returns
  * an id that you can use for removing the log function again (using
  * #gp_log_remove_func).
  *
- * Return value: an id or a gphoto2 error code
+ * \return an id or a gphoto2 error code
  **/
 int
 gp_log_add_func (GPLogLevel level, GPLogFunc func, void *data)
@@ -94,12 +98,12 @@ gp_log_add_func (GPLogLevel level, GPLogFunc func, void *data)
 }
 
 /**
- * gp_log_remove_func:
- * @id: an id (return value of #gp_log_add_func)
+ * \brief Remove a logging receiving function
+ * \param id an id (return value of #gp_log_add_func)
  *
- * Removes the log function with given @id.
+ * Removes the log function with given id.
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int
 gp_log_remove_func (int id)
@@ -113,31 +117,31 @@ gp_log_remove_func (int id)
 	return (GP_OK);
 }
 
-/*
+/**
  * Width of offset field in characters. Note that HEXDUMP_COMPLETE_LINE 
  * needs to be changed when this value is changed.
  */
 #define HEXDUMP_OFFSET_WIDTH 4
 
-/*
+/**
  * Distance between offset, hexdump and ascii blocks. Note that
  * HEXDUMP_COMPLETE_LINE needs to be changed when this value is changed.
  */
 #define HEXDUMP_BLOCK_DISTANCE 2
 
-/* Initial value for x "pointer" (for hexdump) */
+/** Initial value for x "pointer" (for hexdump) */
 #define HEXDUMP_INIT_X (HEXDUMP_OFFSET_WIDTH + HEXDUMP_BLOCK_DISTANCE)
 
-/* Initial value for y "pointer" (for ascii values) */
+/** Initial value for y "pointer" (for ascii values) */
 #define HEXDUMP_INIT_Y (HEXDUMP_INIT_X + 3 * 16 - 1 + HEXDUMP_BLOCK_DISTANCE)
 
-/* Used to switch to next line */
+/** Used to switch to next line */
 #define HEXDUMP_LINE_WIDTH (HEXDUMP_INIT_Y + 16)
 
-/* Used to put the '-' character in the middle of the hexdumps */
+/** Used to put the '-' character in the middle of the hexdumps */
 #define HEXDUMP_MIDDLE (HEXDUMP_INIT_X + 3 * 8 - 1)
 
-/*
+/**
  * We are lazy and do our typing only once. Please note that you have
  * to add/remove some lines when increasing/decreasing the values of 
  * HEXDUMP_BLOCK_DISTANCE and/or HEXDUMP_OFFSET_WIDTH.
@@ -156,12 +160,12 @@ gp_log_remove_func (int id)
         curline = curline + (HEXDUMP_LINE_WIDTH + 1);}
 
 /**
- * gp_log_data:
- * @domain: the domain
- * @data: the data to be logged
- * @size: the size of the @data
+ * \brief Log data
+ * \brief domain the domain
+ * \brief data the data to be logged
+ * \brief size the size of the data
  *
- * Takes the @data and creates a formatted hexdump string. If you would like
+ * Takes the data and creates a formatted hexdump string. If you would like
  * to log text messages, use #gp_log instead.
  **/
 void
@@ -237,13 +241,13 @@ gp_log_data (const char *domain, const char *data, unsigned int size)
 #undef HEXDUMP_OFFSET_WIDTH
 
 /**
- * gp_logv:
- * @level: gphoto2 log level
- * @domain: the domain
- * @format: the format
- * @args: the va_list corresponding to @format
+ * \brief Log a debug or error message with va_list
+ * \param level gphoto2 log level
+ * \param domain the domain
+ * \param format the format
+ * \param args the va_list corresponding to format
  *
- * Logs a message at the given log @level. You would normally use this
+ * Logs a message at the given log level. You would normally use this
  * function to log as yet unformatted strings. 
  **/
 void
@@ -270,14 +274,14 @@ gp_logv (GPLogLevel level, const char *domain, const char *format,
 }
 
 /**
- * gp_log:
- * @level: gphoto2 log level
- * @domain: the domain
- * @format: the format
- * @...:
+ * \brief Log a debug or error message
+ * \param level gphoto2 log level
+ * \param domain the log domain
+ * \param format a printf style format string
+ * \param ... the variable argumentlist for above format string
  *
- * Logs a message at the given log @level. You would normally use this
- * function to log strings.
+ * Logs a message at the given log level. You would normally use this
+ * function to log general debug output in a printf way.
  **/
 void
 gp_log (GPLogLevel level, const char *domain, const char *format, ...)
@@ -345,6 +349,9 @@ gp_log (GPLogLevel level, const char *domain, const char *format, ...)
 
 #ifdef _GPHOTO2_INTERNAL_CODE
 
+/** 
+ * \brief (Internal) translate a enumeration code to a string
+ */
 const char *
 gpi_enum_to_string(unsigned int _enum, 
 		   const StringFlagItem *map)
@@ -359,6 +366,9 @@ gpi_enum_to_string(unsigned int _enum,
 	return NULL;
 }
 
+/** 
+ * \brief (Internal) translate a string to an enumeration code
+ */
 int
 gpi_string_to_enum(const char *str,
 		   unsigned int *result,

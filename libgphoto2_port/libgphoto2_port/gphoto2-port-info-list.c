@@ -1,17 +1,20 @@
 /** \file
  *
- * Copyright © 2001 Lutz Müller <lutz@users.sf.net>
+ * \author Copyright 2001 Lutz Müller <lutz@users.sf.net>
  *
+ * \par License
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
+ * \par
  * This library is distributed in the hope that it will be useful, 
  * but WITHOUT ANY WARRANTY; without even the implied warranty of 
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details. 
  *
+ * \par
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
@@ -78,19 +81,32 @@ struct _GPPortInfoList {
  **/
 #define IOLIBDIR_ENV "IOLIBS"
 
+/**
+ * \brief Specify codeset for translations
+ *
+ * This function specifies the codeset that are used for the translated
+ * strings that are passed back by the libgphoto2_port functions.
+ *
+ * This function is called by the gp_message_codeset() function, there is
+ * no need to call it yourself.
+ * 
+ * \param codeset new codeset to use
+ * \return the previous codeset
+ */
 const char*
 gp_port_message_codeset (const char *codeset) {
 	return bind_textdomain_codeset (GETTEXT_PACKAGE, codeset);
 }
 
 /**
- * gp_port_info_list_new:
- * @list:
+ * \brief Create a new GPPortInfoList
+ *
+ * \param list pointer to a GPPortInfoList* which is allocated
  *
  * Creates a new list which can later be filled with port infos (#GPPortInfo)
  * using #gp_port_info_list_load.
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int
 gp_port_info_list_new (GPPortInfoList **list)
@@ -112,12 +128,12 @@ gp_port_info_list_new (GPPortInfoList **list)
 }
 
 /**
- * gp_port_info_list_free:
- * @list: a #GPPortInfoList
+ * \brief Free a GPPortInfo list
+ * \param list a #GPPortInfoList
  *
- * Frees a @list.
+ * Frees a GPPortInfoList structure and its internal data structures.
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int
 gp_port_info_list_free (GPPortInfoList *list)
@@ -136,19 +152,20 @@ gp_port_info_list_free (GPPortInfoList *list)
 }
 
 /**
- * gp_port_info_list_append:
- * @list: a #GPPortInfoList
- * @info: the info to append
+ * \brief Append a portinfo to the port information list
  *
- * Appends an entry to the @list. This function is typically called by
+ * \param list a #GPPortInfoList
+ * \param info the info to append
+ *
+ * Appends an entry to the list. This function is typically called by
  * an io-driver during #gp_port_library_list. If you leave info.name blank,
  * #gp_port_info_list_lookup_path will try to match non-existent paths
  * against info.path and - if successfull - will append this entry to the 
  * list.
  *
- * NOTE: This returns index - number of generic entries, not the correct index.
+ * \note This returns index - number of generic entries, not the correct index.
  *
- * Return value: A non-negative number or a gphoto2 error code
+ * \return A non-negative number or a gphoto2 error code
  **/
 int
 gp_port_info_list_append (GPPortInfoList *list, GPPortInfo info)
@@ -243,14 +260,16 @@ foreach_func (const char *filename, lt_ptr data)
 
 
 /**
- * gp_port_info_list_load:
- * @list: a #GPPortInfoList
+ * \brief Load system ports
+ * 
+ * \param list a #GPPortInfoList
  *
  * Searches the system for io-drivers and appends them to the list. You would
  * normally call this function once after #gp_port_info_list_new and then
- * use this list in order to supply #gp_port_set_info with parameters.
+ * use this list in order to supply #gp_port_set_info with parameters or to do
+ * autodetection.
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int
 gp_port_info_list_load (GPPortInfoList *list)
@@ -274,12 +293,12 @@ gp_port_info_list_load (GPPortInfoList *list)
 }
 
 /**
- * gp_port_info_list_count:
- * @list: a #GPPortInfoList
+ * \brief Number of ports in the list
+ * \param list a #GPPortInfoList
  *
- * Returns the number of entries in the @list.
+ * Returns the number of entries in the passed list.
  *
- * Return value: The number of entries or a gphoto2 error code
+ * \return The number of entries or a gphoto2 error code
  **/
 int
 gp_port_info_list_count (GPPortInfoList *list)
@@ -303,15 +322,16 @@ gp_port_info_list_count (GPPortInfoList *list)
 }
 
 /**
- * gp_port_info_list_lookup_path:
- * @list: a #GPPortInfoList
- * @path: a path
+ * \brief Lookup a specific path in the list
  *
- * Looks for an entry in the list with the supplied @path. If no exact match
+ * \param list a #GPPortInfoList
+ * \param path a path
+ *
+ * Looks for an entry in the list with the supplied path. If no exact match
  * can be found, a regex search will be performed in the hope some driver
  * claimed ports like "serial:*".
  *
- * Return value: The index of the entry or a gphoto2 error code
+ * \return The index of the entry or a gphoto2 error code
  **/
 int
 gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
@@ -401,13 +421,13 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 }
 
 /**
- * gp_port_info_list_lookup_name:
- * @list: a #GPPortInfoList
- * @name: a name
+ * \brief Look up a name in the list
+ * \param list a #GPPortInfoList
+ * \param name a name
  *
- * Looks for an entry in the @list with the given @name.
+ * Looks for an entry in the list with the exact given name.
  *
- * Return value: The index of the entry or a gphoto2 error code
+ * \return The index of the entry or a gphoto2 error code
  **/
 int
 gp_port_info_list_lookup_name (GPPortInfoList *list, const char *name)
@@ -430,14 +450,14 @@ gp_port_info_list_lookup_name (GPPortInfoList *list, const char *name)
 }
 
 /**
- * gp_port_info_list_get_info:
- * @list: a #GPPortInfoList
- * @n: the index of the entry
- * @info:
+ * \brief Get port information of specific entry
+ * \param list a #GPPortInfoList
+ * \param n the index of the entry
+ * \param info the returned information
  *
- * Retreives an entry from the @list.
+ * Retreives an entry from the list and stores it into info.
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int
 gp_port_info_list_get_info (GPPortInfoList *list, int n, GPPortInfo *info)
@@ -467,6 +487,12 @@ gp_port_info_list_get_info (GPPortInfoList *list, int n, GPPortInfo *info)
 
 
 #ifdef _GPHOTO2_INTERNAL_CODE
+/**
+ * \brief Internal map between GP_PORT and name
+ * 
+ * Internal map between the GP_PORT_xxx enumeration and
+ * string names (usb,serial,disk,ptpip,...).
+ */
 const StringFlagItem gpi_gphoto_port_type_map[] = {
 	{ "none",   GP_PORT_NONE },
 	{ "serial", GP_PORT_SERIAL },

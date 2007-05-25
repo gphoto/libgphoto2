@@ -1,4 +1,4 @@
-/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 8; tab-width: 8 -*- */
+main/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 8; tab-width: 8 -*- */
 /** \file
  * 
  * \author Copyright 2001 Lutz Müller <lutz@users.sf.net>
@@ -60,11 +60,11 @@
  * This structure contains private data.
  **/
 struct _GPPortPrivateCore {
-	char error[2048];
+	char error[2048];	/**< Internal kept error message. */
 
-	GPPortInfo info;
-	GPPortOperations *ops;
-	lt_dlhandle lh;
+	GPPortInfo info;	/**< Internal port information of this port. */
+	GPPortOperations *ops;	/**< Internal port operations. */
+	lt_dlhandle lh;		/**< Internal libtool library handle. */
 };
 
 /**
@@ -74,7 +74,7 @@ struct _GPPortPrivateCore {
  *
  * After you called this function, 
  * you probably want to call #gp_port_set_info in order to make the newly
- * created @port functional.
+ * created port functional.
  *
  * \param port Pointer the #GPPort* pointer
  * \return a gphoto2 error code
@@ -266,7 +266,7 @@ gp_port_open (GPPort *port)
  * \brief Close a port.
  * \param port a #GPPort
  *
- * Closes a @port temporarily. It can afterwards be reopened using
+ * Closes a port temporarily. It can afterwards be reopened using
  * #gp_port_open.
  *
  * \return a gphoto2 error code
@@ -289,7 +289,7 @@ gp_port_close (GPPort *port)
  * \brief Free the port structure
  * \param port a #GPPort
  *
- * Closes the @port and frees the memory.
+ * Closes the port and frees the memory.
  *
  * \return a gphoto2 error code
  **/
@@ -493,7 +493,7 @@ gp_port_check_int_fast (GPPort *port, char *data, int size)
  * \param port a #GPPort
  * \param timeout the timeout
  *
- * Sets the @timeout of a @port. #gp_port_read will wait @timeout milliseconds
+ * Sets the timeout of a port. #gp_port_read will wait timeout milliseconds
  * for data. If no data will be received in that period, %GP_ERROR_TIMEOUT
  * will be returned.
  *
@@ -599,7 +599,7 @@ int gp_port_settings_set (GPPort *port, GPPortSettings settings)
  * \param port a #GPPort
  * \param settings pointer to the retrieved settings
  *
- * Retreives the current @settings of a port.
+ * Retreives the current settings of a port.
  *
  * \return a gphoto2 error code
  **/
@@ -781,7 +781,7 @@ gp_port_usb_find_device (GPPort *port, int idvendor, int idproduct)
  * \brief Find USB device by interface class
  *
  * \param port a GPPort
- * \param class the USB interface class
+ * \param mainclass the USB interface class
  * \param subclass the USB interface subclass
  * \param protocol the USB interface protocol
  *
@@ -1101,7 +1101,7 @@ gp_port_set_error (GPPort *port, const char *format, ...)
  * \brief Get verbose port error message
  * \param port a #GPPort
  *
- * Retrieves an error message from a @port. If you want to make sure that
+ * Retrieves an error message from a port. If you want to make sure that
  * you get correct error messages, you need to call #gp_port_set_error with
  * an error message of %NULL each time before calling another port-related
  * function of which you want to check the return value.

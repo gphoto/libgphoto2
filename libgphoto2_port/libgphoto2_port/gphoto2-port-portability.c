@@ -1,4 +1,9 @@
-/** \file */
+/** \file
+ * \brief Various portability functions.
+ *
+ * This file contains various portability functions that
+ * make non UNIX (Windows) ports easier.
+ */
 
 #include "config.h"
 #include <stdio.h>
@@ -134,6 +139,14 @@ int gp_system_is_dir (const char *dirname) {
 
 #else
 
+/** 
+ * \brief mkdir UNIX functionality
+ * \param dirname directory to create
+ * 
+ * Creates a new directory.
+ *
+ * \return a gphoto error code
+ */
 int gp_system_mkdir (const char *dirname) {
 
         if (mkdir(dirname, 0700)<0)
@@ -141,6 +154,14 @@ int gp_system_mkdir (const char *dirname) {
         return (GP_OK);
 }
 
+/**
+ * \brief rmdir UNIX functionality
+ * \param dirname directory to remove
+ * 
+ * Removes a empty directory.
+ *
+ * \return a gphoto error code
+ */
 int gp_system_rmdir (const char *dirname) {
 
 	if (rmdir (dirname) < 0)
@@ -149,23 +170,67 @@ int gp_system_rmdir (const char *dirname) {
 	return (GP_OK);
 }
 
+/**
+ * \brief opendir UNIX functionality
+ * \param dirname directory to open
+ * 
+ * Opens a directory for readdir and later closedir operations, 
+ * to enumerate its contents.
+ *
+ * \return a directory handle for use in gp_system_readdir() and gp_system_closedir()
+ */
 gp_system_dir gp_system_opendir (const char *dirname) {
         return (opendir(dirname));
 }
 
+/**
+ * \brief readdir UNIX functionality
+ * \param d directory to enumerate
+ * 
+ * Reads one directory entry from the specified directory handle
+ * as returned from gp_system_opendir(). Use gp_system_filename()
+ * to extract the filename from the returned value.
+ *
+ * \return a new gp_system_dirent or NULL
+ */
 gp_system_dirent gp_system_readdir (gp_system_dir d) {
         return (readdir(d));
 }
 
+/**
+ * \brief retrieve UNIX filename out of a directory entry
+ * \param de directory entry as returned from gp_system_readdir()
+ * 
+ * Extracts a filename out of the passed directory entry.
+ *
+ * \return the filename of the directory entry
+ */
 const char *gp_system_filename (gp_system_dirent de) {
         return (de->d_name);
 }
 
+/**
+ * \brief closedir UNIX functionality
+ * \param dir directory to close
+ * 
+ * Closes a directory after readdir operations. 
+ *
+ * \return a gphoto error code
+ */
 int gp_system_closedir (gp_system_dir dir) {
         closedir(dir);
         return (GP_OK);
 }
 
+/**
+ * \brief check if passed filename is a file
+ * \param filename file name to check
+ * 
+ * Checks whether the passed in filename is
+ * a file and returns this as boolean.
+ *
+ * \return boolean flag whether passed filename is a file.
+ */
 int gp_system_is_file (const char *filename) {
         struct stat st;
 
@@ -174,6 +239,15 @@ int gp_system_is_file (const char *filename) {
         return (!S_ISDIR(st.st_mode));
 }
 
+/**
+ * \brief check if passed filename is a directory
+ * \param dirname file name to check
+ * 
+ * Checks whether the passed in dirname is
+ * a directory and returns this as boolean.
+ *
+ * \return boolean flag whether passed filename is a directory.
+ */
 int gp_system_is_dir (const char *dirname) {
         struct stat st;
 
