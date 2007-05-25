@@ -1,4 +1,4 @@
-main/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 8; tab-width: 8 -*- */
+/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 8; tab-width: 8 -*- */
 /** \file
  * 
  * \author Copyright 2001 Lutz Müller <lutz@users.sf.net>
