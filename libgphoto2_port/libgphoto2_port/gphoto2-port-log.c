@@ -65,7 +65,7 @@ static unsigned int log_funcs_count = 0;
 /**
  * \brief Add a function to get logging information
  *
- * \param level a #GPLogLevel
+ * \param level the maximum level of logging it will get, up to and including the passed value
  * \param func a #GPLogFunc
  * \param data data
  *

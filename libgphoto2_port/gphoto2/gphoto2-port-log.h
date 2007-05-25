@@ -53,7 +53,7 @@ typedef enum {
  * removed using gp_log_remove_func() and will then receive the logging
  * messages of the level specified.
  *
- * \param level the maximum level of logging it will get, up to and including the passed value 
+ * \param level the log level of the passed message, as set by the camera driver or libgphoto2
  * \param domain the logging domain as set by the camera driver, or libgphoto2 function
  * \param format the printf style format string of the logmessage, without linefeed
  * \param args the arguments as va_list, depending on the format string
