@@ -451,6 +451,8 @@ struct _CameraPrivateLibrary
 	canonCaptureSizeClass capture_size; /* Size class for remote-
                                                captured images */
 
+	unsigned int body_id;	/* hardware serial number for some cameras */
+
 #ifdef CANON_EXPERIMENTAL_20D
 	unsigned char release_params[RELEASE_PARAMS_LEN]; /* "Release 
 							     parameters:"

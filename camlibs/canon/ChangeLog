@@ -1,3 +1,10 @@
+2007-05-25  Paul Walmsley <paul@booyaka.com>
+
+	* usb.c: fix canon_usb_get_body_id() and caller to handle body IDs
+	  > INT32_MAX (as seen in some recent Canon EOS 5D bodies)
+
+	* canon.h: add body_id field to the CameraPrivateLibrary structure
+
 2007-05-21  Marcus Meissner  <marcus@jet.franken.de>
 
 	* canon.c: Handle A70 and A80 in ptp2 driver, since this one

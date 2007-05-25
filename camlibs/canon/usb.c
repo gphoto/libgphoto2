@@ -510,7 +510,7 @@ canon_usb_init (Camera *camera, GPContext *context)
                 /* Get body ID here */
                 GP_DEBUG ( "canon_usb_init: camera uses newer protocol, so we get body ID" );
                 res = canon_usb_get_body_id ( camera, context );
-                if ( res <= 0 ) {
+                if ( res < 0 ) {
                         GP_DEBUG ( "canon_usb_init: \"Get body ID\" failed, code %d", res );
                         return ( res );
                 }
@@ -811,8 +811,9 @@ canon_usb_get_body_id (Camera *camera, GPContext *context)
                                 /* EOS D30 is a special case */
                                 GP_DEBUG ("canon_usb_get_body_id: body ID is %04x%05d", (body_id>>16)&0xffff, body_id&0xffff );
                         else
-                                GP_DEBUG ("canon_usb_get_body_id: body ID is %d", body_id );
-                        return ( body_id );
+                                GP_DEBUG ("canon_usb_get_body_id: body ID is %u", body_id );
+                        camera->pl->body_id = body_id;
+                        return GP_OK;
                 } else {
                         gp_context_error (context,
                                           _("canon_usb_get_body_id: "
@@ -827,10 +828,11 @@ canon_usb_get_body_id (Camera *camera, GPContext *context)
                 if ( c_res == NULL )
                         return GP_ERROR_OS_FAILURE;
                 else if (bytes_read == 0x8) {
-                        int body_id = le32atoh ( c_res+0x4 );
+                        unsigned int body_id = le32atoh ( c_res+0x4 );
                         GP_DEBUG ("canon_usb_get_body_id: Got the expected length back.");
-                        GP_DEBUG ("canon_usb_get_body_id: body ID is %010d", body_id );
-                        return ( body_id );
+                        GP_DEBUG ("canon_usb_get_body_id: body ID is %010u", body_id );
+                        camera->pl->body_id = body_id;
+                        return GP_OK;
                 } else {
                         gp_context_error (context,
                                           _("canon_usb_get_body_id: "
