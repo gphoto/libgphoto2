@@ -23,11 +23,15 @@
 
 #include <stdarg.h>
 
+/**
+ * \brief Logging level
+ * Specifies the logging severity level.
+ */
 typedef enum {
-	GP_LOG_ERROR = 0,
-	GP_LOG_VERBOSE = 1,
-	GP_LOG_DEBUG = 2,
-	GP_LOG_DATA = 3
+	GP_LOG_ERROR = 0,	/**< \brief Log message is an error infomation. */
+	GP_LOG_VERBOSE = 1,	/**< \brief Log message is an verbose debug infomation. */
+	GP_LOG_DEBUG = 2,	/**< \brief Log message is an debug infomation. */
+	GP_LOG_DATA = 3		/**< \brief Log message is a data hex dump. */
 } GPLogLevel;
 
 /**
@@ -41,6 +45,20 @@ typedef enum {
  **/
 #define GP_LOG_ALL GP_LOG_DATA
 
+/**
+ * \brief Logging function hook
+ * 
+ * This is the function frontends can use to receive logging information
+ * from the libgphoto2 framework. It is set using gp_log_add_func() and 
+ * removed using gp_log_remove_func() and will then receive the logging
+ * messages of the level specified.
+ *
+ * \param level the maximum level of logging it will get, up to and including the passed value 
+ * \param domain the logging domain as set by the camera driver, or libgphoto2 function
+ * \param format the printf style format string of the logmessage, without linefeed
+ * \param args the arguments as va_list, depending on the format string
+ * \param data the caller private data that was passed to gp_log_add_func()
+ */
 typedef void (* GPLogFunc) (GPLogLevel level, const char *domain,
 			    const char *format, va_list args, void *data)
 #if (__GNUC__ >= 3)
@@ -69,16 +87,16 @@ void gp_logv     (GPLogLevel level, const char *domain, const char *format,
 void gp_log_data (const char *domain, const char *data, unsigned int size);
 
 
-/**
+/*
  * GP_DEBUG:
- * @msg: message to log
- * @params: params to message
+ * msg: message to log
+ * params: params to message
  *
  * Logs message at log level #GP_LOG_DEBUG by calling #gp_log() with
  * an automatically generated domain
  * You have to define GP_MODULE as "mymod" for your module
  * mymod before using #GP_DEBUG().
- **/
+ */
 
 #ifdef _GPHOTO2_INTERNAL_CODE
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
