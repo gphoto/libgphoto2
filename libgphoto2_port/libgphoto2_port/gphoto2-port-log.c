@@ -46,11 +46,17 @@
 #endif
 
 #ifndef DISABLE_DEBUGGING
+/** 
+ * \brief Internal logging function entry.
+ * 
+ * Internal structure to remember the logging functions.
+ * Use gp_log_add_func() and gp_log_remove_func() to access it.
+ */
 typedef struct {
-	unsigned int id;
-	GPLogLevel   level;
-	GPLogFunc    func;
-	void        *data;
+	unsigned int id;	/**< Internal id */
+	GPLogLevel   level;	/**< Internal loglevel */
+	GPLogFunc    func;	/**< Internal function pointer to call */
+	void        *data;	/**< Private data supplied by caller */
 } LogFunc;
 
 static LogFunc *log_funcs = NULL;
