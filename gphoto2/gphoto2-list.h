@@ -30,9 +30,17 @@
 extern "C" {
 #endif /* __cplusplus */
 
-/* Usage pattern for CameraList for users external of
+/** 
+ * \brief A generic list
+ * 
+ * This structure provides a list with \a name:value pairs that is used in various
+ * parts of libgphoto2. Its details are internal, please use the
+ * gp_list_xxx accessor functions.
+ * 
+ * Usage pattern for CameraList for users external of
  * libgphoto2, such as libgphoto2 frontends:
  *
+ * \code
  *    CameraList *list;
  *    gp_list_new (&list);
  *    init_list_somehow (list);
@@ -43,11 +51,17 @@ extern "C" {
  *        do_something_with (name, value);
  *    }
  *    gp_list_free (list);
+ * \endcode
  *
  * Please do NOT directly instantiate a CameraList object like this:
+ * \code
  *               CameraList foo;     // DO NOT DO THIS
+ * \endcode
+ * 
  * Please do NOT directly access the structure members like this:
+ * \code
  *               list->entry[i].name // DO NOT DO THIS
+ * \endcode
  */
 typedef struct _CameraList CameraList;
 
