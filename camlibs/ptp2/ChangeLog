@@ -1,3 +1,7 @@
+2007-05-25  Paul Walmsley <paul@booyaka.com>
+
+	* library.c: fix bogus Canon EOS 5D USB product ID
+
 2007-05-23  Marcus Meissner  <marcus@jet.franken.de>
 
 	* config.c: Allow configuration of Exposure Bias Compensation

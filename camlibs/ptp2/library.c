@@ -637,7 +637,7 @@ static struct {
 	{"Canon:PowerShot SD450 (PTP mode)",    0x04a9, 0x30ff, PTPBUG_DELETE_SENDS_EVENT},
  	{"Canon:Optura 600 (PTP mode)",         0x04a9, 0x3105, 0},
 	/* Jeff Mock <jeff@mock.com> */
- 	{"Canon:EOS 5D (PTP mode)",             0x04a9, 0x3101, PTPBUG_DCIM_WRONG_PARENT},
+ 	{"Canon:EOS 5D (PTP mode)",             0x04a9, 0x3102, PTPBUG_DCIM_WRONG_PARENT},
 	/* Nick Richards <nick@nedrichards.com> */
 	{"Canon:Digital IXUS 50 (PTP mode)",    0x04a9, 0x310e, PTPBUG_DELETE_SENDS_EVENT},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1640547&group_id=8874&atid=358874 */
