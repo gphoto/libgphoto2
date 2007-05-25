@@ -24,7 +24,6 @@
  */
 
 #include "config.h"
-#include <gphoto2/gphoto2-port.h>
 
 #include <stdarg.h>
 #include <stdlib.h>
@@ -34,7 +33,6 @@
 #include <ltdl.h>
 
 #include <gphoto2/gphoto2-port-result.h>
-#include <gphoto2/gphoto2-port-info-list.h>
 #include <gphoto2/gphoto2-port-library.h>
 #include <gphoto2/gphoto2-port-log.h>
 
@@ -58,7 +56,7 @@
 #define CHECK_INIT(p) {if (!(p)->pc->ops) {gp_port_set_error ((p), _("The port has not yet been initialized")); return (GP_ERROR_BAD_PARAMETERS);}}
 
 /**
- * \internal
+ * \brief Internal private libgphoto2_port data.
  * This structure contains private data.
  **/
 struct _GPPortPrivateCore {
@@ -130,8 +128,10 @@ gp_port_exit (GPPort *port)
 /**
  * \brief Configure a port
  *
- * Makes a port functional. After calling this function, you can 
- * access the port using for example gp_port_open().
+ * Makes a port functional by passing in the necessary path
+ * information (from the serial:/dev/ttyS0 or similar variables).
+ * After calling this function, you can access the port using for
+ * example gp_port_open().
  * 
  * \param port a GPPort
  * \param info the GPPortInfo to set
@@ -220,6 +220,8 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
 
 /**
  * \brief Retreives information about the port.
+ *
+ * Retrieves the informations set by gp_port_set_info().
  *
  * \param port a GPPort
  * \param info GPPortInfo
@@ -326,12 +328,15 @@ gp_port_free (GPPort *port)
 
 /**
  * \brief Writes a specified amount of data to a port.
+
  * \param port a #GPPort
  * \param data the data to write to the port
  * \param size the number of bytes to write to the port
  *
+ * Writes data to the port. On non-serial ports the amount of data
+ * written is returned (and not just GP_OK).
  *
- * \return a gphoto2 error code
+ * \return a negative gphoto2 error code or the amount of data written.
  **/
 int
 gp_port_write (GPPort *port, const char *data, int size)
@@ -365,8 +370,9 @@ gp_port_write (GPPort *port, const char *data, int size)
  * \param size the number of bytes that should be read
  *
  * Reads a specified number of bytes from the port into the supplied buffer.
+ * It returns the number of bytes read or a negative error code.
  *
- * \return a gphoto2 error code
+ * \return a gphoto2 error code or the amount of data read
  **/
 int
 gp_port_read (GPPort *port, char *data, int size)
@@ -399,7 +405,7 @@ gp_port_read (GPPort *port, char *data, int size)
  * \param data a pointer to an allocated buffer
  * \param size the number of bytes that should be read
  *
- * Reads a specified number of bytes from the inerrupt endpoint
+ * Reads a specified number of bytes from the interrupt endpoint
  * into the supplied buffer.
  * Function waits port->timeout miliseconds for data on interrupt endpoint.
  *
@@ -429,6 +435,7 @@ gp_port_check_int (GPPort *port, char *data, int size)
 	return (retval);
 }
 
+/** The timeout in milliseconds for fast interrupt reads. */
 #define FAST_TIMEOUT	50
 /**
  * \brief Check for interrupt without wait
