@@ -28,9 +28,13 @@
 #  define N_(String) (String)
 #endif
 
-#include "adc65.h"
-
 #define GP_MODULE "adc65"
+
+#define ACK		0x15
+
+#define ADC65_DATA_FIRMWARE	0
+#define ADC65_DATA_THUMBNAIL	1
+#define ADC65_DATA_PICTURE	2
 
 /* colorspace structure */
 typedef struct {
