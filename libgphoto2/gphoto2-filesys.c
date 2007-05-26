@@ -1,20 +1,21 @@
 /* \file gphoto2-filesys.c
  *
- * Copyright 2000 Scott Fritzinger
+ * \author Copyright 2000 Scott Fritzinger
+ * \author Contributions Lutz Müller <lutz@users.sf.net> (2001)
  *
- * Contributions:
- *      Lutz Müller <lutz@users.sf.net> (2001)
- *
+ * \par License
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
+ * \par
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
+ * \par
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
@@ -210,7 +211,7 @@ gp_filesystem_get_exif_mtime (CameraFilesystem *fs, const char *folder,
 #endif
 
 /**
- * CameraFilesystem:
+ * \brief The internal camera filesystem structure
  *
  * The internals of the #CameraFilesystem are only visible to gphoto2. You
  * can only access them using the functions provided by gphoto2.
@@ -508,13 +509,13 @@ append_file (CameraFilesystem *fs, int x, CameraFile *file, GPContext *context)
 }
 
 /**
- * gp_filesystem_reset:
- * @fs: a #CameraFilesystem
+ * \brief Clear the filesystem
+ * \param fs the filesystem to be cleared
  *
  * Resets the filesystem. All cached information including the folder tree
  * will get lost and will be queried again on demand.
  *
- * Return value: a gphoto2 error code.
+ * \return a gphoto2 error code.
  **/
 int
 gp_filesystem_reset (CameraFilesystem *fs)
@@ -532,12 +533,13 @@ gp_filesystem_reset (CameraFilesystem *fs)
 }
 
 /**
- * gp_filesystem_new:
- * @fs: a pointer to a #CameraFilesystem
+ * \brief Create a new filesystem struct
+ * 
+ * \param fs a pointer to a #CameraFilesystem
  *
  * Creates a new empty #CameraFilesystem
  *
- * Return value: a gphoto2 error code.
+ * \return a gphoto2 error code.
  **/
 int
 gp_filesystem_new (CameraFilesystem **fs)
@@ -560,12 +562,12 @@ gp_filesystem_new (CameraFilesystem **fs)
 }
 
 /**
- * gp_filesystem_free:
- * @fs: a #CameraFilesystem
+ * \brief Free filesystem struct
+ * \param fs a #CameraFilesystem
  *
  * Frees the #CameraFilesystem
  *
- * Return value: a gphoto2 error code.
+ * \return a gphoto2 error code.
  **/
 int
 gp_filesystem_free (CameraFilesystem *fs)
@@ -644,18 +646,18 @@ gp_filesystem_folder_number (CameraFilesystem *fs, const char *folder,
 }
 
 /**
- * gp_filesystem_append:
- * @fs: a #CameraFilesystem
- * @folder: the folder where to put the file in
- * @filename: filename of the file
- * @context: a #GPContext
+ * \brief Append a file to a folder in a filesystem
+ * \param fs a #CameraFilesystem
+ * \param folder the folder where to put the file in
+ * \param filename filename of the file
+ * \param context a #GPContext
  *
- * Tells the @fs that there is a file called @filename in folder 
- * called @folder. Usually, camera drivers will call this function after
- * capturing an image in order to tell the @fs about the new file.
+ * Tells the fs that there is a file called filename in folder 
+ * called folder. Usually camera drivers will call this function after
+ * capturing an image in order to tell the fs about the new file.
  * A front-end should not use this function.
  *
- * Return value: a gphoto2 error code.
+ * \return a gphoto2 error code.
  **/
 int
 gp_filesystem_append (CameraFilesystem *fs, const char *folder, 
@@ -718,6 +720,13 @@ gp_filesystem_append (CameraFilesystem *fs, const char *folder,
         return (GP_OK);
 }
 
+/** 
+ * \brief Dump the current filesystem.
+ * \param fs the #CameraFilesystem
+ * \return a gphoto error code
+ *
+ * Internal function to dump the current filesystem.
+ */
 int
 gp_filesystem_dump (CameraFilesystem *fs)
 {
@@ -802,17 +811,18 @@ gp_filesystem_delete_all_one_by_one (CameraFilesystem *fs, const char *folder,
 }
 
 /**
- * gp_filesystem_delete_all
- * @fs: a #CameraFilesystem
- * @folder: the folder in which to delete all files
- * @context: a #GPContext
+ * \brief Delete all files in specified folder.
  *
- * Deletes all files in the given @folder from the @fs. If the @fs has not
+ * \param fs a #CameraFilesystem
+ * \param folder the folder in which to delete all files
+ * \param context a #GPContext
+ *
+ * Deletes all files in the given folder from the fs. If the fs has not
  * been supplied with a delete_all_func, it tries to delete the files
  * one by one using the delete_file_func. If that function has not been
  * supplied neither, an error is returned.
  *
- * Return value: a gphoto2 error code.
+ * \return a gphoto2 error code.
  **/
 int
 gp_filesystem_delete_all (CameraFilesystem *fs, const char *folder,
@@ -864,17 +874,17 @@ gp_filesystem_delete_all (CameraFilesystem *fs, const char *folder,
 }
 
 /**
- * gp_filesystem_list_files:
- * @fs: a #CameraFilesystem
- * @folder: a folder of which a file list should be generated
- * @list: a #CameraList where to put the list of files into
- * @context: a #GPContext
+ * \brief Get the list of files in a folder
+ * \param fs a #CameraFilesystem
+ * \param folder a folder of which a file list should be generated
+ * \param list a #CameraList where to put the list of files into
+ * \param context a #GPContext
  *
- * Lists the files in @folder using either cached values or (if there
+ * Lists the files in folder using either cached values or (if there
  * aren't any) the file_list_func which (hopefully) has been previously
  * supplied.
  *
- * Return value: a gphoto2 error code.
+ * \return a gphoto2 error code.
  **/
 int
 gp_filesystem_list_files (CameraFilesystem *fs, const char *folder, 
@@ -927,18 +937,18 @@ gp_filesystem_list_files (CameraFilesystem *fs, const char *folder,
 }
 
 /**
- * gp_filesystem_list_folders:
- * @fs: a #CameraFilesystem
- * @folder: a folder
- * @list: a #CameraList where subfolders should be listed
- * @context: a #GPContext
+ * \brief List all subfolders within a filesystem folder
+ * \param fs a #CameraFilesystem
+ * \param folder a folder
+ * \param list a #CameraList where subfolders should be listed
+ * \param context a #GPContext
  *
- * Generates a list of subfolders of the supplied @folder either using 
+ * Generates a list of subfolders of the supplied folder either using 
  * cached values (if there are any) or the folder_list_func if it has been 
  * supplied previously. If not, it is assumed that only a root folder 
  * exists (which is the case for many cameras).
  *
- * Return value: a gphoto2 error code.
+ * \return a gphoto2 error code.
  **/
 int
 gp_filesystem_list_folders (CameraFilesystem *fs, const char *folder,
@@ -1030,14 +1040,14 @@ gp_filesystem_list_folders (CameraFilesystem *fs, const char *folder,
 }
 
 /**
- * gp_filesystem_count:
- * @fs: a #CameraFilesystem
- * @folder: a folder in which to count the files
- * @context: a #GPContext
+ * \brief Count files a folder of a filesystem.
+ * \param fs a #CameraFilesystem
+ * \param folder a folder in which to count the files
+ * \param context a #GPContext
  *
- * Counts the files in the @folder.
+ * Counts the files in the folder.
  *
- * Return value: The number of files in the @folder or a gphoto2 error code.
+ * \return The number of files in the folder or a gphoto2 error code.
  **/
 int
 gp_filesystem_count (CameraFilesystem *fs, const char *folder,
@@ -1055,17 +1065,17 @@ gp_filesystem_count (CameraFilesystem *fs, const char *folder,
 }
 
 /**
- * gp_filesystem_delete_file:
- * @fs: a #CameraFilesystem
- * @folder: a folder in which to delete the file
- * @filename: the name of the file to delete
- * @context: a #GPContext
+ * \brief Delete a file from a folder.
+ * \param fs a #CameraFilesystem
+ * \param folder a folder in which to delete the file
+ * \param filename the name of the file to delete
+ * \param context a #GPContext
  *
- * If a delete_file_func has been supplied to the @fs, this function will
+ * If a delete_file_func has been supplied to the fs, this function will
  * be called and, if this function returns without error, the file will be 
- * removed from the @fs.
+ * removed from the fs.
  *
- * Return value: a gphoto2 error code.
+ * \return a gphoto2 error code.
  **/
 int
 gp_filesystem_delete_file (CameraFilesystem *fs, const char *folder, 
@@ -1099,6 +1109,19 @@ gp_filesystem_delete_file (CameraFilesystem *fs, const char *folder,
 	return (GP_OK);
 }
 
+/**
+ * \brief Delete a virtal file from a folder in the filesystem
+ * \param fs a #CameraFilesystem
+ * \param folder a folder in which to delete the file
+ * \param filename the name of the file to delete
+ * \param context a #GPContext
+ *
+ * Remove a file from the filesystem. Compared to gp_filesystem_delete_file()
+ * this just removes the file from the libgphoto2 view of the filesystem, but
+ * does not call the camera driver to delete it from the physical device.
+ *
+ * \return a gphoto2 error code.
+ **/
 int
 gp_filesystem_delete_file_noop (CameraFilesystem *fs, const char *folder,
 				const char *filename, GPContext *context)
@@ -1118,15 +1141,15 @@ gp_filesystem_delete_file_noop (CameraFilesystem *fs, const char *folder,
 }
 
 /**
- * gp_filesystem_make_dir:
- * @fs: a #CameraFilesystem
- * @folder: the folder in which the directory should be created
- * @name: the name of the directory to be created
- * @context: a #GPContext
+ * \brief Create a subfolder within a folder
+ * \param fs a #CameraFilesystem
+ * \param folder the folder in which the directory should be created
+ * \param name the name of the directory to be created
+ * \param context a #GPContext
  *
- * Creates a new directory called @name in given @folder.
+ * Creates a new directory called name in given folder.
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int
 gp_filesystem_make_dir (CameraFilesystem *fs, const char *folder,
@@ -1157,6 +1180,17 @@ gp_filesystem_make_dir (CameraFilesystem *fs, const char *folder,
 	return (GP_OK);
 }
 
+/**
+ * \brief Remove a subfolder from within a folder
+ * \param fs a #CameraFilesystem
+ * \param folder the folder in which the directory should be created
+ * \param name the name of the directory to be created
+ * \param context a #GPContext
+ *
+ * Removes a directory called name from the given folder.
+ *
+ * \return a gphoto2 error code
+ **/
 int
 gp_filesystem_remove_dir (CameraFilesystem *fs, const char *folder,
 			  const char *name, GPContext *context)
@@ -1209,17 +1243,17 @@ gp_filesystem_remove_dir (CameraFilesystem *fs, const char *folder,
 }
 
 /**
- * gp_filesystem_put_file:
- * @fs: a #CameraFilesystem
- * @folder: the folder where to put the file into
- * @file: the file
- * @context: a #GPContext
+ * \brief Upload a file to a folder on the device filesystem
+ * \param fs a #CameraFilesystem
+ * \param folder the folder where to put the file into
+ * \param file the file
+ * \param context a #GPContext
  *
  * Uploads a file to the camera if a put_file_func has been previously 
- * supplied to the @fs. If the upload is successful, the file will get
- * cached in the @fs.
+ * supplied to the fs. If the upload is successful, the file will get
+ * cached in the fs.
  *
- * Return value: a gphoto2 error code.
+ * \return a gphoto2 error code.
  **/
 int
 gp_filesystem_put_file (CameraFilesystem *fs, const char *folder,
@@ -1249,17 +1283,17 @@ gp_filesystem_put_file (CameraFilesystem *fs, const char *folder,
 }
 
 /**
- * gp_filesystem_name:
- * @fs: a #CameraFilesystem
- * @folder: the folder where to look up the file with the @filenumber
- * @filenumber: the number of the file
- * @filename:
- * @context: a #GPContext
+ * \brief Lookup the filename of an indexed file within a folder.
+ * \param fs a #CameraFilesystem
+ * \param folder the folder where to look up the file with the filenumber
+ * \param filenumber the number of the file
+ * \param filename pointer to a filename where the result is stored
+ * \param context a #GPContext
  *
- * Looks up the @filename of file with given @filenumber in given @folder.
+ * Looks up the filename of file with given filenumber in given folder.
  * See gp_filesystem_number for exactly the opposite functionality.
  * 
- * Return value: a gphoto2 error code.
+ * \return a gphoto2 error code.
  **/
 int
 gp_filesystem_name (CameraFilesystem *fs, const char *folder, int filenumber,
@@ -1285,16 +1319,16 @@ gp_filesystem_name (CameraFilesystem *fs, const char *folder, int filenumber,
 }
 
 /**
- * gp_filesystem_number:
- * @fs: a #CameraFilesystem
- * @folder: the folder where to look for file called @filename
- * @filename: the file to look for
- * @context: a #GPContext
+ * \brief Get the index of a file in specified folder
+ * \param fs a #CameraFilesystem
+ * \param folder the folder where to look for file called filename
+ * \param filename the file to look for
+ * \param context a #GPContext
  *
- * Looks for a file called @filename in the given @folder. See
+ * Looks for a file called filename in the given folder. See
  * gp_filesystem_name for exactly the opposite functionality.
  *
- * Return value: a gphoto2 error code.
+ * \return a gphoto2 error code.
  **/
 int
 gp_filesystem_number (CameraFilesystem *fs, const char *folder, 
@@ -1373,20 +1407,23 @@ gp_filesystem_scan (CameraFilesystem *fs, const char *folder,
 }
 
 /**
- * gp_filesystem_get_folder:
- * @fs: a #CameraFilesystem
- * @filename: the name of the file to search in the @fs
- * @folder:
- * @context: a #GPContext
+ * \brief Search a folder that contains a given filename
+ * \param fs a #CameraFilesystem
+ * \param filename the name of the file to search in the fs
+ * \param folder pointer to value where the string is stored in
+ * \param context a #GPContext
  *
- * Searches a file called @filename in the @fs and returns the first 
+ * Searches a file called filename in the fs and returns the first 
  * occurrency. This functionality is needed for camera drivers that cannot
  * figure out where a file gets created after capturing an image although the
  * name of the image is known. Usually, those drivers will call
- * gp_filesystem_reset in order to tell the @fs that something has 
+ * gp_filesystem_reset in order to tell the fs that something has 
  * changed and then gp_filesystem_get_folder in order to find the file.
  *
- * Return value: a gphoto2 error code.
+ * Note that you get a reference to the string stored in the filesystem structure,
+ * so do not free it yourself.
+ *
+ * \return a gphoto2 error code.
  **/
 int
 gp_filesystem_get_folder (CameraFilesystem *fs, const char *filename, 
@@ -1411,20 +1448,20 @@ gp_filesystem_get_folder (CameraFilesystem *fs, const char *filename,
 }
 
 /**
- * gp_filesystem_set_list_funcs:
- * @fs: a #CameraFilesystem
- * @file_list_func: the function that will return listings of files
- * @folder_list_func: the function that will return listings of folders
- * @data:
+ * \brief Set the functions to list folders and files
+ * \param fs a #CameraFilesystem
+ * \param file_list_func the function that will return listings of files
+ * \param folder_list_func the function that will return listings of folders
+ * \param data private data structure
  *
- * Tells the @fs which functions to use to retrieve listings of folders 
+ * Tells the fs which functions to use to retrieve listings of folders 
  * and/or files. Typically, a camera driver would call this function
  * on initialization. Each function can be NULL indicating that this 
  * functionality is not supported. For example, many cameras don't support
  * folders. In this case, you would supply NULL for folder_list_func. Then,
- * the @fs assumes that there is only a root folder.
+ * the fs assumes that there is only a root folder.
  *
- * Return value: a gphoto2 error code.
+ * \return a gphoto2 error code.
  **/
 int
 gp_filesystem_set_list_funcs (CameraFilesystem *fs,
@@ -1442,19 +1479,19 @@ gp_filesystem_set_list_funcs (CameraFilesystem *fs,
 }
 
 /**
- * gp_filesystem_set_file_funcs:
- * @fs: a #CameraFilesystem
- * @get_file_func: the function downloading files
- * @del_file_func: the function deleting files
- * @data:
+ * \brief Set camera filesystem file related functions
+ * \param fs a #CameraFilesystem
+ * \param get_file_func the function downloading files
+ * \param del_file_func the function deleting files
+ * \param data private data structure
  *
- * Tells the @fs which functions to use for file download or file deletion.
+ * Tells the fs which functions to use for file download or file deletion.
  * Typically, a camera driver would call this function on initialization.
  * A function can be NULL indicating that this functionality is not supported.
  * For example, if a camera does not support file deletion, you would supply 
  * NULL for del_file_func.
  *
- * Return value: a gphoto2 error code.
+ * \return a gphoto2 error code.
  **/
 int
 gp_filesystem_set_file_funcs (CameraFilesystem *fs,
@@ -1472,26 +1509,26 @@ gp_filesystem_set_file_funcs (CameraFilesystem *fs,
 }
 
 /**
- * gp_filesystem_set_folder_funcs:
- * @fs: a #CameraFilesystem
- * @put_file_func: function used to upload files
- * @delete_all_func: function used to delete all files in a folder
- * @make_dir_func: function used to create a new directory
- * @remove_dir_func: function used to remove an existing directory
- * @data: a data object that will passed to all called functions
+ * \brief Set folder related functions of the filesystem
+ * \param fs a #CameraFilesystem
+ * \param put_file_func function used to upload files
+ * \param delete_all_func function used to delete all files in a folder
+ * \param make_dir_func function used to create a new directory
+ * \param remove_dir_func function used to remove an existing directory
+ * \param data a data object that will passed to all called functions
  *
  * Tells the filesystem which functions to call for file upload, deletion
  * of all files in a given folder, creation or removal of a folder. 
  * Typically, a camera driver would call this function on initialization. 
  * If one functionality is not supported, NULL can be supplied. 
- * If you don't call this function, the @fs will assume that neither
+ * If you don't call this function, the fs will assume that neither
  * of these features is supported.
  *
- * The @fs will try to compensate missing @delete_all_func
+ * The fs will try to compensate missing delete_all_func
  * functionality with the delete_file_func if such a function has been
  * supplied.
  *
- * Return value: a gphoto2 error code.
+ * \return a gphoto2 error code.
  **/
 int
 gp_filesystem_set_folder_funcs (CameraFilesystem *fs,
@@ -1598,19 +1635,20 @@ gp_filesystem_get_file_impl (CameraFilesystem *fs, const char *folder,
 }
 
 /**
- * gp_filesystem_get_file:
- * @fs: a #CameraFilesystem
- * @folder: the folder in which the file can be found
- * @filename: the name of the file to download
- * @type: the type of the file
- * @file:
- * @context: a #GPContext
+ * \brief Get file data from the filesystem
+ * \param fs a #CameraFilesystem
+ * \param folder the folder in which the file can be found
+ * \param filename the name of the file to download
+ * \param type the type of the file
+ * \param file the file that receives the data
+ * \param context a #GPContext
  *
- * Downloads the file called @filename from the @folder using the 
+ * Downloads the file called filename from the folder using the 
  * get_file_func if such a function has been previously supplied. If the 
  * file has been previously downloaded, the file is retrieved from cache.
+ * The result is stored in the passed file structure.
  *
- * Return value: a gphoto2 error code.
+ * \return a gphoto2 error code.
  **/
 int
 gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
@@ -1729,17 +1767,17 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 }
 
 /**
- * gp_filesystem_set_info_funcs:
- * @fs: a #CameraFilesystem
- * @get_info_func: the function to retrieve file information
- * @set_info_func: the function to set file information
- * @data:
+ * \brief Set file information functions
+ * \param fs a #CameraFilesystem
+ * \param get_info_func the function to retrieve file information
+ * \param set_info_func the function to set file information
+ * \param data private data
  *
  * Tells the filesystem which functions to call when file information 
  * about a file should be retrieved or set. Typically, this function will
  * get called by the camera driver on initialization. 
  *
- * Return value: a gphoto2 error code.
+ * \return a gphoto2 error code.
  **/
 int
 gp_filesystem_set_info_funcs (CameraFilesystem *fs,
@@ -1757,15 +1795,15 @@ gp_filesystem_set_info_funcs (CameraFilesystem *fs,
 }
 
 /**
- * gp_filesystem_set_funcs:
- * @fs: a #CameraFilesystem
- * @funcs: pointer to a struct of filesystem functions
- * @data:
+ * \brief Set all filesystem related function pointers
+ * \param fs a #CameraFilesystem
+ * \param funcs pointer to a struct of filesystem functions
+ * \param data private data
  *
  * Tells the filesystem which functions to call for camera/filesystem specific 
- * functions.
+ * functions, like listing, retrieving, uploading files and so on.
  *
- * Return value: a gphoto2 error code.
+ * \return a gphoto2 error code.
  **/
 int
 gp_filesystem_set_funcs	(CameraFilesystem *fs,
@@ -1797,14 +1835,14 @@ gp_filesystem_set_funcs	(CameraFilesystem *fs,
 }
 
 /**
- * gp_filesystem_get_info:
- * @fs: a #CameraFilesystem
- * @folder:
- * @filename:
- * @info:
- * @context: a #GPContext
+ * \brief Get information about the specified file
+ * \param fs a #CameraFilesystem
+ * \param folder the folder that contains the file
+ * \param filename the filename
+ * \param info pointer to #CameraFileInfo that receives the information
+ * \param context a #GPContext
  *
- * Return value: a gphoto2 error code.
+ * \return a gphoto2 error code.
  **/
 int
 gp_filesystem_get_info (CameraFilesystem *fs, const char *folder,
@@ -2139,17 +2177,18 @@ gp_filesystem_lru_check (CameraFilesystem *fs)
 }
 
 /**
- * gp_filesystem_set_file_noop:
- * @fs: a #CameraFilesystem
- * @folder:
- * @file: a #CameraFile
- * @context: a #GPContext
+ * \brief Attach file content to a specified file.
+ * 
+ * \param fs a #CameraFilesystem
+ * \param folder a folder in the filesystem
+ * \param file a #CameraFile
+ * \param context: a #GPContext
  *
- * Tells the @fs about a file. Typically, camera drivers will call this
+ * Tells the fs about a file. Typically, camera drivers will call this
  * function in case they get information about a file (i.e. preview) "for free"
- * on #gp_camera_capture or #gp_camera_folder_list_files.
+ * on gp_camera_capture() or gp_camera_folder_list_files().
  *
- * Return value: a gphoto2 error code.
+ * \return a gphoto2 error code.
  **/
 int
 gp_filesystem_set_file_noop (CameraFilesystem *fs, const char *folder,
@@ -2276,18 +2315,18 @@ gp_filesystem_set_file_noop (CameraFilesystem *fs, const char *folder,
 }
 
 /**
- * gp_filesystem_set_info_noop:
- * @fs: a #CameraFilesystem
- * @folder:
- * @info:
- * @context: a #GPContext
+ * \brief Store the file information in the virtual fs
+ * \param fs a #CameraFilesystem
+ * \param folder the foldername
+ * \param info the #CameraFileInfo to store
+ * \param context a #GPContext
  *
  * In contrast to #gp_filesystem_set_info, #gp_filesystem_set_info_noop
- * will only change the file information in the @fs. Typically, camera
+ * will only change the file information in the fs. Typically, camera
  * drivers will use this function in case they get file information "for free"
  * on #gp_camera_capture or #gp_camera_folder_list_files.
  *
- * Return value: a gphoto2 error code
+ * \return a gphoto2 error code
  **/
 int
 gp_filesystem_set_info_noop (CameraFilesystem *fs, const char *folder,
@@ -2310,14 +2349,16 @@ gp_filesystem_set_info_noop (CameraFilesystem *fs, const char *folder,
 }
 
 /**
- * gp_filesystem_set_info:
- * @fs: a #CameraFilesystem
- * @folder:
- * @filename:
- * @info:
- * @context: a #GPContext
+ * \brief Set information about a file
+ * \param fs a #CameraFilesystem
+ * \param folder foldername where the file resides
+ * \param filename the files name
+ * \param info the #CameraFileInfo to set
+ * \param context a #GPContext
  *
- * Return value: a gphoto2 error code.
+ * Sets information about a file in the camera.
+ *
+ * \return a gphoto2 error code.
  **/
 int
 gp_filesystem_set_info (CameraFilesystem *fs, const char *folder,
@@ -2400,6 +2441,18 @@ gp_filesystem_set_info (CameraFilesystem *fs, const char *folder,
 	return (GP_OK);
 }
 
+/**
+ * \brief Get the storage information about this filesystem
+ * \param fs the filesystem
+ * \param storageinfo pointer to receive the array of informations
+ * \param nrofstorageinfos pointer to receive number of array entries
+ * \param context a #GPContext
+ * 
+ * Retrieves the storage information, like maximum and free space, for
+ * the specified filesystem, if supported by the device.
+ * 
+ * \return a gphoto error code
+ **/
 int
 gp_filesystem_get_storageinfo (
 	CameraFilesystem *fs,
