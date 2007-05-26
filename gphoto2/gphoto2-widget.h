@@ -26,7 +26,7 @@
 
 #include <gphoto2/gphoto2-context.h>
 
-/** \internal internal structure please use the accessors. */
+/** \brief internal structure please use the accessors. */
 typedef struct _CameraWidget CameraWidget;
 
 #include <gphoto2/gphoto2-camera.h>
