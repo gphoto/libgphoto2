@@ -32,7 +32,7 @@ extern "C" {
 #endif /* __cplusplus */
 
 /**
- * GP_ERROR_CORRUPTED_DATA:
+ * \brief Corrupted data received
  *
  * Data is corrupt. This error is reported by camera drivers if corrupted
  * data has been received that can not be automatically handled. Normally,
@@ -42,7 +42,7 @@ extern "C" {
 #define GP_ERROR_CORRUPTED_DATA      -102 /* Corrupted data             */
 
 /**
- * GP_ERROR_FILE_EXISTS:
+ * \brief File already exists
  *
  * An operation failed because a file existed. This error is reported for
  * example when the user tries to create a file that already exists.
@@ -50,7 +50,7 @@ extern "C" {
 #define GP_ERROR_FILE_EXISTS         -103
 
 /**
- * GP_ERROR_MODEL_NOT_FOUND:
+ * \brief Specified camera model was not found
  *
  * The specified model could not be found. This error is reported when
  * the user specified a model that does not seem to be supported by 
@@ -59,7 +59,7 @@ extern "C" {
 #define GP_ERROR_MODEL_NOT_FOUND     -105
 
 /**
- * GP_ERROR_DIRECTORY_NOT_FOUND:
+ * \brief Specified directory was not found
  *
  * The specified directory could not be found. This error is reported when
  * the user specified a directory that is non-existent.
@@ -67,7 +67,7 @@ extern "C" {
 #define GP_ERROR_DIRECTORY_NOT_FOUND -107
 
 /**
- * GP_ERROR_FILE_NOT_FOUND:
+ * \brief Specified file was not found
  *
  * The specified file could not be found. This error is reported when
  * the user wants to access a file that is non-existent.
@@ -75,7 +75,7 @@ extern "C" {
 #define GP_ERROR_FILE_NOT_FOUND      -108
 
 /**
- * GP_ERROR_DIRECTORY_EXISTS:
+ * \brief Specified directory already exists
  *
  * The specified directory already exists. This error is reported for example 
  * when the user wants to create a directory that already exists.
@@ -83,14 +83,14 @@ extern "C" {
 #define GP_ERROR_DIRECTORY_EXISTS    -109
 
 /**
- * GP_ERROR_CAMERA_BUSY:
+ * \brief The camera is already busy 
  *
  * Camera I/O or a command is in progress.
  **/
 #define GP_ERROR_CAMERA_BUSY    -110
 
 /**
- * GP_ERROR_PATH_NOT_ABSOLUTE:
+ * \brief Path is not absolute
  * 
  * The specified path is not absolute. This error is reported when the user
  * specifies paths that are not absolute, i.e. paths like "path/to/directory".
@@ -107,7 +107,7 @@ extern "C" {
 #define GP_ERROR_CANCEL              -112
 
 /**
- * GP_ERROR_CAMERA_ERROR:
+ * \brief Unspecified camera error
  *
  * The camera reported some kind of error. This can be either a
  * photographic error, such as failure to autofocus, underexposure, or
@@ -117,7 +117,7 @@ extern "C" {
 #define GP_ERROR_CAMERA_ERROR	     -113
 
 /**
- * GP_ERROR_OS_FAILURE:
+ * \brief Unspecified failure of the operating system
  *
  * There was some sort of OS error in communicating with the camera,
  * e.g. lack of permission for an operation.
