@@ -105,9 +105,59 @@ typedef enum {
  *
  * @{
  */
+/**
+ * \brief The camera exit function
+ *
+ * \param camera the current camera
+ * \param context a #GPContext
+ *
+ * This functions is called in the camera driver for closing the camera
+ * connection. It should do the necessary cleanups of the internal camera
+ * state, free allocated private structures and similar.
+ *
+ * The driver does not need to close the #GPPort, this is done by libgphoto2
+ * itself.
+ *
+ * Implement this function if you need to any of this stuff, otherwise leave
+ * it out.
+ *
+ * \returns a gphoto error code 
+ */
 typedef int (*CameraExitFunc)      (Camera *camera, GPContext *context);
+/**
+ * \brief Get a configuration tree for the camera and its driver
+ *
+ * \param camera the current camera
+ * \param widget pointer to store the toplevel widget of the tree
+ * \param context the active #GPContext
+ *
+ * A camera driver can support configuration of either its own behaviour
+ * or the camera device itself. To allow a flexible driver framework,
+ * the camera driver provides a generic configuration widget tree to the
+ * frontend, which then renders it, allows user input and sends it back
+ * via the #CameraSetConfigFunc function to have the driver configure itself
+ * or the camera.
+ *
+ * If you do not have configuration ability, there is no need to specify this
+ * function.
+ *
+ * \returns a gphoto error code
+ */
 typedef int (*CameraGetConfigFunc) (Camera *camera, CameraWidget **widget,
 				    GPContext *context);
+/**
+ * \brief Set the configuration in the camera
+ *
+ * \param camera the current camera 
+ * \param widget the configuration widget tree that was changed
+ * \param context the active #GPContext
+ *
+ * This function is called in the driver after the configuration is set.
+ * It is called directly after setting the value and might called multiple
+ * times (or never) after just one #CameraGetConfigFunc.
+ * 
+ * \returns a gphoto error code
+ */
 typedef int (*CameraSetConfigFunc) (Camera *camera, CameraWidget  *widget,
 				    GPContext *context);
 typedef int (*CameraCaptureFunc)   (Camera *camera, CameraCaptureType type,
@@ -142,41 +192,49 @@ typedef int (*CameraWaitForEvent)  (Camera *camera, int timeout,
  */
 typedef int (*CameraPrePostFunc) (Camera *camera, GPContext *context);
 
+/**
+ * \brief Various camera specific functions.
+ *
+ * This structure contains various pointers to functions that apply to
+ * the camera itself, and not the filesystem (which is handled by the
+ * filesystem functions). Set the ones you want to provide, leave the rest
+ * unset.
+ *
+ * This structure should only used by the driver itself, the frontend
+ * should use the gp_camera_xxx wrapper functions for it, who handle
+ * opening and locking around those hooks.
+ */
+typedef struct _CameraFunctions {
+	CameraPrePostFunc pre_func;	/**< \brief Function called before each camera operation. */
+	CameraPrePostFunc post_func;	/**< \brief Function called after each camera operation. */
 
-typedef struct _CameraFunctions CameraFunctions;
-struct _CameraFunctions {
-
-	/* Those will be called before and after each operation */
-	CameraPrePostFunc pre_func;
-	CameraPrePostFunc post_func;
-
-	CameraExitFunc exit;
+	CameraExitFunc exit;		/**< \brief Function called on closing the camera. */
 
 	/* Configuration */
-	CameraGetConfigFunc       get_config;
-	CameraSetConfigFunc       set_config;
+	CameraGetConfigFunc       get_config;	/**< \brief Called for requesting the configuration widgets. */
+	CameraSetConfigFunc       set_config;	/**< \brief Called after a configuration was changed */
 
 	/* Capturing */
-	CameraCaptureFunc        capture;
-	CameraCapturePreviewFunc capture_preview;
+	CameraCaptureFunc        capture;	/**< \brief Remote control the camera to capture */
+	CameraCapturePreviewFunc capture_preview;/**< \brief Preview viewfinder content. */
 
 	/* Textual information */
-	CameraSummaryFunc summary;
-	CameraManualFunc  manual;
-	CameraAboutFunc   about;
+	CameraSummaryFunc summary;		/**< \brief Give a summary about the current camera status, translated. */
+	CameraManualFunc  manual;		/**< \brief Give a brief manual about any specific items a user has to know, translated. */
+	CameraAboutFunc   about;		/**< \brief A little About text, including authors and credits. */
 
 	/* Event Interface */
-	CameraWaitForEvent wait_for_event;
+	CameraWaitForEvent wait_for_event;	/**< \brief Wait for a specific event from the camera */
 
 	/* Reserved space to use in the future without changing the struct size */
-	void *reserved1;
-	void *reserved2;
-	void *reserved3;
-	void *reserved4;
-	void *reserved5;
-	void *reserved6;
-	void *reserved7;
-};
+	void *reserved1;			/**< \brief reserved for future use */
+	void *reserved2;			/**< \brief reserved for future use */
+	void *reserved3;			/**< \brief reserved for future use */
+	void *reserved4;			/**< \brief reserved for future use */
+	void *reserved5;			/**< \brief reserved for future use */
+	void *reserved6;			/**< \brief reserved for future use */
+	void *reserved7;			/**< \brief reserved for future use */
+} CameraFunctions;
 
 /* Those are DEPRECATED */
 typedef GPPort     CameraPort;
