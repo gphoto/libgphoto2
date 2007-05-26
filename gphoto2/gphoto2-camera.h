@@ -26,9 +26,6 @@
 #ifndef __GPHOTO2_CAMERA_H__
 #define __GPHOTO2_CAMERA_H__
 
-#include <gphoto2/gphoto2-context.h>
-
-
 /**
  * \brief Object representing a camera attached to the system.
  *
@@ -43,16 +40,12 @@
 typedef struct _Camera Camera;
 
 
+#include <gphoto2/gphoto2-abilities-list.h>
 #include <gphoto2/gphoto2-port.h>
-#include <gphoto2/gphoto2-port-info-list.h>
 
 #include <gphoto2/gphoto2-widget.h>
-#include <gphoto2/gphoto2-list.h>
-#include <gphoto2/gphoto2-file.h>
 #include <gphoto2/gphoto2-filesys.h>
-#include <gphoto2/gphoto2-abilities-list.h>
 #include <gphoto2/gphoto2-result.h>
-#include <gphoto2/gphoto2-context.h>
 
 /** 
  * \brief CameraText structure used in various functions.

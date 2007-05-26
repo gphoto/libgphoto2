@@ -27,7 +27,6 @@
 
 #include <gphoto2/gphoto2-abilities-list.h>
 #include <gphoto2/gphoto2-camera.h>
-#include <gphoto2/gphoto2-context.h>
 
 #ifdef __cplusplus
 extern "C" {
