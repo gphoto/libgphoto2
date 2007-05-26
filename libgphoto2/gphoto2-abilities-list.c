@@ -403,13 +403,14 @@ gp_abilities_list_detect_usb (CameraAbilitiesList *list,
 
 /**
  * \param list a CameraAbilitiesList
- * \param info_list a GPPortInfoList
- * \param l a CameraList
- * \return a gphoto2 error code
+ * \param info_list the GPPortInfoList of ports to use for detection
+ * \param l a #CameraList that contains the autodetected cameras after the call
+ * \param context a #GPContext
  *
  * Tries to detect any camera connected to the computer using the supplied
  * list of supported cameras and the supplied info_list of ports.
  *
+ * \return a gphoto2 error code
  */
 int
 gp_abilities_list_detect (CameraAbilitiesList *list,
@@ -564,8 +565,8 @@ gp_abilities_list_reset (CameraAbilitiesList *list)
 
 /**
  * \brief Count the entries in the supplied list.
- * \param a CameraAbilitiesList
- * \return The number of entries or a gphoto2 error code
+ * \param list a #CameraAbilitiesList
+ * \returns The number of entries or a gphoto2 error code
  */
 int
 gp_abilities_list_count (CameraAbilitiesList *list)
@@ -648,7 +649,7 @@ gp_abilities_list_lookup_model (CameraAbilitiesList *list, const char *model)
  * \param abilities pointer to CameraAbilities for returned data.
  * \return a gphoto2 error code
  *
- * Retrieves the camera @abilities of entry with supplied
+ * Retrieves the camera abilities of entry with supplied
  * index number. Typically, you would call gp_camera_set_abilities()
  * afterwards in order to prepare the initialization of a camera.
  */
