@@ -1,6 +1,6 @@
 /** \file
  *
- * \file Copyright 2002 Hans Ulrich Niedermann <gp@n-dimensional.de
+ * \author Copyright 2002 Hans Ulrich Niedermann <gp@n-dimensional.de
  *
  * \par License
  * This library is free software; you can redistribute it and/or

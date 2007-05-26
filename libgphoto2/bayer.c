@@ -54,6 +54,12 @@ gp_bayer_accrue (unsigned char *image, int w, int h, int x0, int y0,
 /**
  * \brief Expand a bayer raster style image to a RGB raster.
  *
+ * \param input the bayer CCD array as linear input
+ * \param w width of the above array
+ * \param h height of the above array
+ * \param output RGB output array (linear, 3 bytes of R,G,B for every pixel)
+ * \param tile how the 2x2 bayer array is layed out
+ *
  * A regular CCD uses a raster of 2 green, 1 blue and 1 red components to
  * cover a 2x2 pixel area. The camera or the driver then interpolates a
  * 2x2 RGB pixel set out of this data.
@@ -61,6 +67,8 @@ gp_bayer_accrue (unsigned char *image, int w, int h, int x0, int y0,
  * This function expands the bayer array to 3 times larger bitmap with
  * RGB values copied as-is. Pixels were no sensor was there are 0.
  * The data is supposed to be processed further by for instance gp_bayer_interpolate().
+ * 
+ * \return a gphoto error code
  */
 int
 gp_bayer_expand (unsigned char *input, int w, int h, unsigned char *output,
@@ -122,9 +130,16 @@ gp_bayer_expand (unsigned char *input, int w, int h, unsigned char *output,
 /**
  * \brief Interpolate a expanded bayer array into an RGB image.
  *
+ * \param image the linear RGB array as both input and output
+ * \param w width of the above array
+ * \param h height of the above array
+ * \param tile how the 2x2 bayer array is layed out
+ *
  * This function interpolates a bayer array which has been pre-expanded
  * by gp_bayer_expand() to an RGB image. It uses various interpolation
  * methods, also see gp_bayer_accrue().
+ *
+ * \return a gphoto error code
  */
 int
 gp_bayer_interpolate (unsigned char *image, int w, int h, BayerTile tile)
@@ -230,7 +245,9 @@ gp_bayer_interpolate (unsigned char *image, int w, int h, BayerTile tile)
 
 	return (GP_OK);
 }
-/*
+/**
+ * \brief interpolate one pixel from a bayer 2x2 raster
+ * 
  * For red and blue data, compare the four surrounding values.  If three
  * values are all one side of the mean value, the fourth value is ignored.
  * This will sharpen boundaries. Treatment of green data looks for vertical and
@@ -328,7 +345,24 @@ gp_bayer_accrue (unsigned char *image, int w, int h, int x0, int y0,
 	return sum_of_values / 3 ;
 }
 
-
+/**
+ * \brief Convert a bayer raster style image to a RGB raster.
+ *
+ * \param input the bayer CCD array as linear input
+ * \param w width of the above array
+ * \param h height of the above array
+ * \param output RGB output array (linear, 3 bytes of R,G,B for every pixel)
+ * \param tile how the 2x2 bayer array is layed out
+ *
+ * A regular CCD uses a raster of 2 green, 1 blue and 1 red components to
+ * cover a 2x2 pixel area. The camera or the driver then interpolates a
+ * 2x2 RGB pixel set out of this data.
+ *
+ * This function expands and interpolates the bayer array to 3 times larger
+ * bitmap with RGB values interpolated.
+ * 
+ * \return a gphoto error code
+ */
 int
 gp_bayer_decode (unsigned char *input, int w, int h, unsigned char *output,
 		 BayerTile tile)
