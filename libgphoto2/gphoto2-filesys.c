@@ -1,4 +1,4 @@
-/* \file gphoto2-filesys.c
+/** \file
  *
  * \author Copyright 2000 Scott Fritzinger
  * \author Contributions Lutz Müller <lutz@users.sf.net> (2001)
@@ -33,7 +33,6 @@
 #include <unistd.h>
 
 #include <gphoto2/gphoto2-result.h>
-#include <gphoto2/gphoto2-file.h>
 #include <gphoto2/gphoto2-port-log.h>
 #include <gphoto2/gphoto2-setting.h>
 
@@ -90,7 +89,15 @@ typedef struct {
 	CameraFilesystemFile *file;
 } CameraFilesystemFolder;
 
+/**
+ * The default number of pictures to keep in the internal cache,
+ * can be overriden by settings.
+ */
 #define PICTURES_TO_KEEP	2
+/**
+ * The current number of pictures to keep in the internal cache,
+ * either from #PICTURES_TO_KEEP or from the settings.
+ */
 static int pictures_to_keep = -1;
 
 static int gp_filesystem_lru_clear (CameraFilesystem *fs);
