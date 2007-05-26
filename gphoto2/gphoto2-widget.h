@@ -38,7 +38,9 @@ typedef struct _CameraWidget CameraWidget;
  * it supports depends on this type.
  */
 typedef enum {									/* Value (get/set):	*/
-	GP_WIDGET_WINDOW,	/**< \brief Window widget */
+	GP_WIDGET_WINDOW,	/**< \brief Window widget
+				 *   This is the toplevel configuration widget. It should likely contain multiple #GP_WIDGET_SECTION entries.
+				 */
 	GP_WIDGET_SECTION,	/**< \brief Section widget (think Tab) */
 	GP_WIDGET_TEXT,		/**< \brief Text widget. */			/* char *		*/
 	GP_WIDGET_RANGE,	/**< \brief Slider widget. */			/* float		*/
