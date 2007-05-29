@@ -1,3 +1,8 @@
+2007-05-29  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c, canon.c, canon.h,Makefile-files:
+	  Removed CANON_EXPERIMENTAL_20D define, now default included.
+
 2007-05-25  Paul Walmsley <paul@booyaka.com>
 
 	* usb.c: fix canon_usb_get_body_id() and caller to handle body IDs

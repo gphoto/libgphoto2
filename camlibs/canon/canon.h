@@ -191,7 +191,6 @@ typedef enum {
 } canonCaptureSupport;
 
 
-#ifdef CANON_EXPERIMENTAL_20D
 /**
  * These ISO, shutter speed, aperture, etc. settings are correct for the 
  * EOS 5D; unsure about other cameras.
@@ -342,11 +341,6 @@ struct canonFocusModeStateStruct {
 	char *label;
 };
 
-
-#endif /* CANON_EXPERIMENTAL_20D */
-
-/* The following defines are for the CANON_EXPERIMENTAL_20D */
-
 /* Size of the release parameter block */
 #define RELEASE_PARAMS_LEN  0x2f
 
@@ -359,9 +353,6 @@ struct canonFocusModeStateStruct {
 #define ISO_INDEX           0x1a
 #define APERTURE_INDEX      0x1c
 #define SHUTTERSPEED_INDEX  0x1e
-
-/* end of CANON_EXPERIMENTAL_20D defines */
-
 
 /**
  * canonCaptureSizeClass:
@@ -453,12 +444,10 @@ struct _CameraPrivateLibrary
 
 	unsigned int body_id;	/* hardware serial number for some cameras */
 
-#ifdef CANON_EXPERIMENTAL_20D
 	unsigned char release_params[RELEASE_PARAMS_LEN]; /* "Release 
 							     parameters:"
 							     ISO, aperture, 
 							     etc */
-#endif
 
 	int secondary_image; /* Should we attempt to download a 
 				secondary image? (e.g., RAW + JPEG) */
@@ -652,9 +641,7 @@ int canon_int_end_remote_control(Camera *camera, GPContext *context);
 /*
  * introduced for capturing
  */
-#ifdef CANON_EXPERIMENTAL_20D
 int canon_int_get_release_params (Camera *camera, GPContext *context);
-#endif
 
 
 /* path conversion - needs drive letter, and therefore cannot be moved

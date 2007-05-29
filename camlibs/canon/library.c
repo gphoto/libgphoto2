@@ -99,8 +99,6 @@ static const struct canonCaptureSizeClassStruct captureSizeArray[] = {
 	{0, NULL}
 };
 
-#ifdef CANON_EXPERIMENTAL_20D
-
 static const struct canonIsoStateStruct isoStateArray[] = {
         {ISO_100, "ISO 100"},
         {ISO_125, "ISO 125"},
@@ -235,8 +233,6 @@ static const struct canonResolutionStateStruct resolutionStateArray[] = {
 	 0x34, 0x12, 0x00},
 	{0, NULL, 0, 0, 0},
 };
-
-#endif /* CANON_EXPERIMENTAL_20D */
 
 /**
  * camera_id:
@@ -1463,11 +1459,8 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	CameraWidget *t, *section;
 	char power_str[128], firm[64];
 
-#ifdef CANON_EXPERIMENTAL_20D
 	int iso, shutter_speed, aperture, focus_mode;
 	int res_byte1, res_byte2, res_byte3;
-#endif
-
 	int pwr_status, pwr_source, res, i, menuval;
 	time_t camtime;
 
@@ -1515,8 +1508,6 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 	gp_widget_append (section, t);
 
-
-#ifdef CANON_EXPERIMENTAL_20D
 
 	/********************* Release params **********************/
 
@@ -1703,9 +1694,6 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 	/************************ end release params ************************/
 
-#endif /* CANON_EXPERIMENTAL_20D */
-
-
 	gp_widget_new (GP_WIDGET_TEXT, _("Date and Time (readonly)"), &t);
 	gp_widget_set_name (t, "datetime");
 	if (camera->pl->cached_ready == 1) {
@@ -1770,13 +1758,11 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_append (section, t);
 #endif /* CANON_EXPERIMENTAL_UPLOAD */
 
-#ifdef CANON_EXPERIMENTAL_20D
 	if (camera->pl->remote_control) {
 		res = canon_int_end_remote_control (camera, context);
 		if (res != GP_OK)   
 			return GP_ERROR;
 	};
-#endif
 
 	return GP_OK;
 }
@@ -1788,11 +1774,9 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	CameraWidget *w;
 	char *wvalue;
 	int i, val;
-#ifdef CANON_EXPERIMENTAL_20D
 #ifdef CANON_EXPERIMENTAL_SET_RELEASE_PARAMS
 	int res;
 	unsigned char iso, shutter_speed, aperture, focus_mode;
-#endif
 #endif
 	char str[16];
 
@@ -1830,7 +1814,6 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 
 	}
 
-#ifdef CANON_EXPERIMENTAL_20D
 # ifndef CANON_EXPERIMENTAL_SET_RELEASE_PARAMS
 
 	/* Return errors if the user attempts to change any of the release
@@ -2054,8 +2037,6 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	}
 
 # endif /* CANON_EXPERIMENTAL_SET_RELEASE_PARAMS */
-#endif /* CANON_EXPERIMENTAL_20D */
-
 	gp_widget_get_child_by_label (window, _("Set camera date to PC date"), &w);
 	if (gp_widget_changed (w)) {
 		gp_widget_get_value (w, &wvalue);

@@ -286,11 +286,9 @@ const struct canonCamModelData models[] = {
 
         /* 0x30bf is PowerShot SD300/Digital IXUS 40 in PTP mode */
         /* Another block of cameras that share the ID for PTP and Canon modes */
-#ifdef CANON_EXPERIMENTAL_20D
         {"Canon:PowerShot SD200 (normal mode)", CANON_CLASS_6,  0x04A9, 0x30c0, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:Digital IXUS 30 (normal mode)", CANON_CLASS_6,  0x04A9, 0x30c0, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:IXY Digital 40 (normal mode)",  CANON_CLASS_6,  0x04A9, 0x30c0, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-#endif /* CANON_EXPERIMENTAL_20D */
         {"Canon:PowerShot SD400 (normal mode)", CANON_CLASS_4,  0x04A9, 0x30c1, CAP_NON, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:Digital IXUS 50 (normal mode)", CANON_CLASS_4,  0x04A9, 0x30c1, CAP_NON, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:IXY Digital 55 (normal mode)",  CANON_CLASS_4,  0x04A9, 0x30c1, CAP_NON, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
@@ -304,7 +302,6 @@ const struct canonCamModelData models[] = {
         /* Is 0x30e9 EOS 1D Mark II in Canon mode? */
         /* 0x30ea is EOS 1D Mark II in PTP mode */
 
-#ifdef CANON_EXPERIMENTAL_20D
         {"Canon:EOS 20D (normal mode)",         CANON_CLASS_6,  0x04A9, 0x30eb, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB_CR2, SL_PICTURE, NULL},
         /* 0x30ec is EOS 20D in PTP mode */
 
@@ -313,7 +310,6 @@ const struct canonCamModelData models[] = {
         {"Canon:EOS Kiss Digital N (normal mode)",              CANON_CLASS_6,  0x04A9, 0x30ee, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB_CR2, SL_PICTURE, NULL},
         /* 30ef is EOS 350D/Digital Rebel XT/EOS Kiss Digital N in PTP mode. */
         {"Canon:EOS 5D (normal mode)",          CANON_CLASS_6,  0x04A9, 0x3101, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-#endif /* CANON_EXPERIMENTAL_20D */
 
 #if 0
 /* reportedly not working ... comment out for now - Marcus */
@@ -1714,8 +1710,6 @@ canon_int_set_file_attributes (Camera *camera, const char *file, const char *dir
 }
 
 
-#ifdef CANON_EXPERIMENTAL_20D
-
 /**
  * canon_int_get_release_params
  * @camera: the camera to work on
@@ -1810,8 +1804,6 @@ canon_int_get_release_params (Camera *camera, GPContext *context)
 
         return GP_OK;
 }
-
-#endif /* CANON_EXPERIMENTAL_20D */
 
 #ifdef CANON_EXPERIMENTAL_SET_RELEASE_PARAMS
 
