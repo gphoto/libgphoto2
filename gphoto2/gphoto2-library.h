@@ -33,32 +33,32 @@ extern "C" {
 #endif /* __cplusplus */
 
 /**
- * Returns a unique @id for the camera driver.
+ * \brief Returns a unique id for the camera driver.
  *
- * @param id a #CameraText
- * @return a gphoto2 error code
+ * \param id a #CameraText
+ * \return a gphoto2 error code
  *
  **/
 typedef int (* CameraLibraryIdFunc)        (CameraText *id);
 
 /**
- * Adds the abilities of the supported models to the supplied @list.
+ * \brief Adds the abilities of the supported models to the supplied list.
  *
- * @param list a #CameraAbilitiesList
- * @return a gphoto2 error code
+ * \param list a #CameraAbilitiesList
+ * \return a gphoto2 error code
  *
  **/
 typedef int (* CameraLibraryAbilitiesFunc) (CameraAbilitiesList *list);
 
 /**
- * Initializes the camera.
+ * \brief Initializes the camera.
  *
- * @param camera a #Camera
- * @param context a #GPContext
- * @return a gphoto2 error code
+ * \param camera a #Camera
+ * \param context a #GPContext
+ * \return a gphoto2 error code
  *
  * The camera driver will establish a first connection
- * to the camera and configure the @camera variable (i.e. using 
+ * to the camera and configure the camera variable (i.e. using 
  * #gp_filesystem_set_list_funcs or #gp_port_get_settings).
  *
  **/
