@@ -1299,13 +1299,13 @@ gp_camera_file_get (Camera *camera, const char *folder, const char *file,
 }
 
 /**
- * Deletes the file from \c @folder.
+ * Deletes the file from \c folder.
  *
- * @param camera a #Camera
- * @param folder a folder
- * @param file the name of a file
- * @param context a #GPContext
- * @return a gphoto2 error code
+ * \param camera a #Camera
+ * \param folder a folder
+ * \param file the name of a file
+ * \param context a #GPContext
+ * \return a gphoto2 error code
  *
  **/
 int
