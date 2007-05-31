@@ -88,7 +88,7 @@
  *
  * This function is a method of the Camera object.
  */
-static int
+int
 camera_exit (Camera *camera, GPContext *context) 
 {
 	return GP_OK;
@@ -100,7 +100,7 @@ camera_exit (Camera *camera, GPContext *context)
  *
  * This function is a method of the Camera object.
  */
-static int
+int
 camera_config_get (Camera *camera, CameraWidget **window, GPContext *context) 
 {
 	gp_widget_new (GP_WIDGET_WINDOW, "Camera Configuration", window);
@@ -118,7 +118,7 @@ camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
  *
  * This function is a method of the Camera object.
  */
-static int
+int
 camera_config_set (Camera *camera, CameraWidget *window, GPContext *context) 
 {
 	/*
@@ -137,7 +137,7 @@ camera_config_set (Camera *camera, CameraWidget *window, GPContext *context)
  *
  * This function is a method of the Camera object.
  */
-static int
+int
 camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 {
 	return GP_OK;
@@ -150,7 +150,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
  *
  * This function is a method of the Camera object.
  */
-static int
+int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		GPContext *context)
 {
@@ -164,7 +164,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
  *
  * This function is a method of the Camera object.
  */
-static int
+int
 camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
 	return GP_OK;
@@ -178,7 +178,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
  *
  * This function is a method of the Camera object.
  */
-static int
+int
 camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 {
 	return GP_OK;
@@ -191,7 +191,7 @@ camera_manual (Camera *camera, CameraText *manual, GPContext *context)
  *
  * This function is a method of the Camera object.
  */
-static int
+int
 camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
 	strcpy (about->text, _("Library Name\n"
@@ -219,7 +219,7 @@ camera_about (Camera *camera, CameraText *about, GPContext *context)
  *
  * This function is a CameraFilesystem method.
  */
-static int
+int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *data,
 	       GPContext *context)
@@ -240,7 +240,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
  *
  * This function is a CameraFilesystem method.
  */
-static int
+int
 put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	       void *data, GPContext *context)
 {
@@ -260,7 +260,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
  *
  * This function is a CameraFilesystem method.
  */
-static int
+int
 delete_file_func (CameraFilesystem *fs, const char *folder,
 		  const char *filename, void *data, GPContext *context)
 {
@@ -277,7 +277,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
  *
  * This function is a CameraFilesystem method.
  */
-static int
+int
 delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 		 GPContext *context)
 {
@@ -297,7 +297,7 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
  *
  * This function is a CameraFilesystem method.
  */
-static int
+int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileInfo *info, void *data, GPContext *context)
 {
@@ -312,7 +312,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
  *
  * This function is a CameraFilesystem method.
  */
-static int
+int
 set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	       CameraFileInfo info, void *data, GPContext *context)
 {
@@ -329,7 +329,7 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
  *
  * This function is a CameraFilesystem method.
  */
-static int
+int
 folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		  void *data, GPContext *context)
 {
@@ -346,7 +346,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
  *
  * This function is a CameraFilesystem method.
  */
-static int
+int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data, GPContext *context)
 {
@@ -362,7 +362,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
  *
  * This function is a CameraFilesystem method.
  */
-static int
+int
 storage_info_func (CameraFilesystem *fs,
 		CameraStorageInformation **storageinformations,
 		int *nrofstorageinformations, void *data,
@@ -447,7 +447,7 @@ camera_abilities (CameraAbilitiesList *list)
  * are NULL.
  *
  */
-static CameraFilesystemFuncs fsfuncs = {
+CameraFilesystemFuncs fsfuncs = {
 	.file_list_func = file_list_func,
 	.folder_list_func = folder_list_func,
 	.get_info_func = get_info_func,
