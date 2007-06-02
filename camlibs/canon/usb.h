@@ -266,9 +266,7 @@ int canon_usb_long_dialogue (Camera *camera, canonCommandIndex canon_funct, unsi
 int canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, unsigned int *length, GPContext *context);
 int canon_usb_get_thumbnail (Camera *camera, const char *name, unsigned char **data, unsigned int *length, GPContext *context);
 int canon_usb_get_captured_image (Camera *camera, const int key, unsigned char **data, unsigned int *length, GPContext *context);
-#ifdef CANON_EXPERIMENTAL_SECONDARY_IMAGE
 int canon_usb_get_captured_secondary_image (Camera *camera, const int key, unsigned char **data, unsigned int *length, GPContext *context);
-#endif
 int canon_usb_get_captured_thumbnail (Camera *camera, const int key, unsigned char **data, unsigned int *length, GPContext *context);
 int canon_usb_lock_keys(Camera *camera, GPContext *context);
 int canon_usb_unlock_keys(Camera *camera, GPContext *context);

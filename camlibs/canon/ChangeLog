@@ -2,6 +2,8 @@
 
 	* library.c, canon.c, canon.h,Makefile-files:
 	  Removed CANON_EXPERIMENTAL_20D define, now default included.
+	  Removed CANON_EXPERIMENTAL_SECONDARY_IMAGE and CANON_EXPERIMENTAL_SET_RELEASE_PARAMS
+	  ifdefs, now also default included.
 
 2007-05-25  Paul Walmsley <paul@booyaka.com>
 

@@ -1774,10 +1774,8 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	CameraWidget *w;
 	char *wvalue;
 	int i, val;
-#ifdef CANON_EXPERIMENTAL_SET_RELEASE_PARAMS
 	int res;
 	unsigned char iso, shutter_speed, aperture, focus_mode;
-#endif
 	char str[16];
 
 	GP_DEBUG ("camera_set_config()");
@@ -1813,28 +1811,6 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			gp_context_status (context, _("Invalid capture size class setting"));
 
 	}
-
-# ifndef CANON_EXPERIMENTAL_SET_RELEASE_PARAMS
-
-	/* Return errors if the user attempts to change any of the release
-	   parameters. */
-	gp_widget_get_child_by_label (window, _("Shutter speed"), &w);
-	if (gp_widget_changed (w)) 
-		return GP_ERROR;
-	gp_widget_get_child_by_label (window, _("ISO speed"), &w);
-	if (gp_widget_changed (w)) 
-		return GP_ERROR;
-	gp_widget_get_child_by_label (window, _("Aperture"), &w);
-	if (gp_widget_changed (w)) 
-		return GP_ERROR;
-	gp_widget_get_child_by_label (window, _("Resolution"), &w);
-	if (gp_widget_changed (w)) 
-		return GP_ERROR;
-	gp_widget_get_child_by_label (window, _("Focus mode"), &w);
-	if (gp_widget_changed (w)) 
-		return GP_ERROR;
-
-# else 
 
 	gp_widget_get_child_by_label (window, _("ISO speed"), &w);
 	if (gp_widget_changed (w)) {
@@ -2036,7 +2012,6 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		}
 	}
 
-# endif /* CANON_EXPERIMENTAL_SET_RELEASE_PARAMS */
 	gp_widget_get_child_by_label (window, _("Set camera date to PC date"), &w);
 	if (gp_widget_changed (w)) {
 		gp_widget_get_value (w, &wvalue);

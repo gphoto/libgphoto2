@@ -366,9 +366,7 @@ extern long int timezone;
 # define __unused__
 #endif
 
-#ifdef CANON_EXPERIMENTAL_SET_RELEASE_PARAMS
 static int canon_int_set_release_params (Camera *camera, GPContext *context);
-#endif
 
 static const char * canon2gphotopath (Camera __unused__ *camera, const char *path);
 
@@ -1250,7 +1248,6 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, unsigned int *l
                                 }
                         }
                         
-#ifdef CANON_EXPERIMENTAL_SECONDARY_IMAGE 
                         /* Download the secondary image, if one exists */
                         if ( camera->pl->image_b_length > 0 ) {
                                 status = canon_usb_get_captured_secondary_image ( camera, camera->pl->image_b_key, b_data, b_length, context );
@@ -1265,7 +1262,6 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, unsigned int *l
                                  * to do something else with it */
                                 free(b_data_orig);
                         }
-#endif /* CANON_EXPERIMENTAL_SECONDARY_IMAGE */
                         
                 } else if (transfermode == REMOTE_CAPTURE_THUMB_TO_PC) {
                         
@@ -1784,14 +1780,12 @@ canon_int_get_release_params (Camera *camera, GPContext *context)
                   camera->pl->release_params[FOCUS_MODE_INDEX]);
 
         camera->pl->secondary_image = 0;
-#ifdef CANON_EXPERIMENTAL_SECONDARY_IMAGE
 	/* Based on the resolution settings in the release params, 
 	   determine whether we expect one or two images to be returned
 	   by the camera. 
            I am not sure if this will work correctly for non-EOS 5D 
            cameras - I would appreciate testing feedback from other
-           Canon camera users.  To test, define 
-           CANON_EXPERIMENTAL_SECONDARY_IMAGE, then try capturing an image 
+           Canon camera users.  To test try capturing an image 
            to the host computer in a single format (e.g., RAW or Large Fine 
            JPEG).  Also try capturing an image when the camera is set to 
            a dual format, e.g., RAW + Large Fine JPEG. Note that currently, we 
@@ -1800,12 +1794,10 @@ canon_int_get_release_params (Camera *camera, GPContext *context)
         */
 	if (camera->pl->release_params[RESOLUTION_2_INDEX] & 0xf0) 
 		camera->pl->secondary_image = 1;
-#endif
 
         return GP_OK;
 }
 
-#ifdef CANON_EXPERIMENTAL_SET_RELEASE_PARAMS
 
 /**
  * canon_int_set_shutter_speed
@@ -2214,8 +2206,6 @@ canon_int_set_release_params (Camera *camera, GPContext *context)
         return GP_OK;
 
 }
-
-#endif /* CANON_EXPERIMENTAL_SET_RELEASE_PARAMS */
 
 /**
  * canon_int_set_owner_name:
