@@ -1138,12 +1138,10 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, unsigned int *l
         int status;
         unsigned int return_length;
 
-        /*
         unsigned int b_length_orig = 0;
         unsigned int *b_length = &b_length_orig;
         unsigned char *b_data_orig = NULL;
         unsigned char **b_data = &b_data_orig; 
-         */
 
         int photo_status;
 
