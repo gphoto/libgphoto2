@@ -28,6 +28,11 @@ libgphoto2 API:
 
 Package / System integration:
    * New syntax for print-camera-list's udev output. See help output.
+     
+     Note that we generate udev >= 0.98 output by default.
+
+     Use "version pre-0.98" on the commandline to generate the old version.
+
    * Add new permission setup binary doing Microsoft OS Descriptor
      retrieval for MTP devices not explicitly listed.
      This binary (check-mtp-device) is used by the generated UDEV rules.
