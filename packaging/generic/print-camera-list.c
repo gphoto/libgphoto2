@@ -392,7 +392,7 @@ udev_parse_params (const func_params_t *params, void **data)
 {
 	udev_persistent_data_t *pdata;
 	pdata = calloc(1, sizeof(udev_persistent_data_t));
-	pdata->version = UDEV_PRE_0_98;
+	pdata->version = UDEV_0_98;
 	ASSERT(data != NULL);
 	*data = (void *) pdata;
 	if (1) {
