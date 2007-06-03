@@ -58,6 +58,10 @@
 
 #define PTP_CNT_INIT(cnt) {memset(&cnt,0,sizeof(cnt));}
 
+/* PTP2_FAST_TIMEOUT: how long (in milliseconds) we should wait for
+ * an URB to come back on an interrupt endpoint */
+#define PTP2_FAST_TIMEOUT       50
+
 /* Pack / unpack functions */
 
 #include "ptp-pack.c"
@@ -437,7 +441,7 @@ ptp_usb_getresp (PTPParams* params, PTPContainer* resp)
 static inline uint16_t
 ptp_usb_event (PTPParams* params, PTPContainer* event, int wait)
 {
-	int			result;
+	int			result, timeout;
 	unsigned long		rlen;
 	PTPUSBEventContainer	usbevent;
 	Camera			*camera = ((PTPData *)params->data)->camera;
@@ -453,7 +457,10 @@ ptp_usb_event (PTPParams* params, PTPContainer* event, int wait)
 		if (result <= 0) result = gp_port_check_int (camera->port, (char*)&usbevent, sizeof(usbevent));
 		break;
 	case PTP_EVENT_CHECK_FAST:
-		result = gp_port_check_int_fast (camera->port, (char*)&usbevent, sizeof(usbevent));
+		gp_port_get_timeout (camera->port, &timeout);
+		gp_port_set_timeout (camera->port, PTP2_FAST_TIMEOUT);
+		result = gp_port_check_int (camera->port, (char*)&usbevent, sizeof(usbevent));
+		gp_port_set_timeout (camera->port, timeout);
 		break;
 	default:
 		return PTP_ERROR_BADPARAM;
@@ -476,12 +483,15 @@ ptp_usb_event (PTPParams* params, PTPContainer* event, int wait)
 		(dtoh32(usbevent.length) > rlen)
 	) {
 		gp_log (GP_LOG_DEBUG, "ptp2/usb_event","Canon incremental read (done: %ld, todo: %d)", rlen, dtoh32(usbevent.length));
+		gp_port_get_timeout (camera->port, &timeout);
+		gp_port_set_timeout (camera->port, PTP2_FAST_TIMEOUT);
 		while (dtoh32(usbevent.length) > rlen) {
-			result = gp_port_check_int_fast (camera->port, ((char*)&usbevent)+rlen, sizeof(usbevent)-rlen);
+			result = gp_port_check_int (camera->port, ((char*)&usbevent)+rlen, sizeof(usbevent)-rlen);
 			if (result <= 0)
 				break;
 			rlen += result;
 		}
+		gp_port_set_timeout (camera->port, timeout);
 	}
 	/* if we read anything over interrupt endpoint it must be an event */
 	/* build an appropriate PTPContainer */
