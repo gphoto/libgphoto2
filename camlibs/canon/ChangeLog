@@ -1,3 +1,7 @@
+2007-06-03  Paul Walmsley  <paul@booyaka.com>
+
+	* usb.c: remove one last CANON_EXPERIMENTAL_SECONDARY_IMAGE ifdef
+
 2007-06-02  Paul Walmsley  <paul@booyaka.com>
 
 	* usb.c: replace gp_port_usb_check_int_fast() calls with

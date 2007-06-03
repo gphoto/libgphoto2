@@ -1969,8 +1969,6 @@ canon_usb_get_captured_image (Camera *camera, const int key, unsigned char **dat
         return GP_OK;
 }
 
-#ifdef CANON_EXPERIMENTAL_SECONDARY_IMAGE
-
 /**
  * canon_usb_get_captured_secondary_image:
  * @camera: camera to work on
@@ -2022,8 +2020,6 @@ canon_usb_get_captured_secondary_image (Camera *camera, const int key, unsigned 
 
         return GP_OK;
 }
-
-#endif /* CANON_EXPERIMENTAL_SECONDARY_IMAGE */
 
 /**
  * canon_usb_get_captured_thumbnail:
