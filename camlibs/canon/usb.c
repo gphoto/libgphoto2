@@ -70,6 +70,10 @@
  * to the camera, until we give up for lack of response. */
 #define IDENTIFY_MAX_ATTEMPTS 10
 
+/* CANON_FAST_TIMEOUT: how long (in milliseconds) we should wait for
+ * an URB to come back on an interrupt endpoint */
+#define CANON_FAST_TIMEOUT 75
+
 /* WARNING: This destroys reentrancy of the code. Better to put this
  * in the camera descriptor somewhere. */
 static int serial_code = 0;
@@ -213,7 +217,7 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 {
         unsigned char msg[0x58];
         unsigned char buffer[0x44];
-        int i, read_bytes;
+        int i, read_bytes, timeout;
         char *camstat_str = _("NOT RECOGNIZED");
         unsigned char camstat;
 
@@ -406,12 +410,19 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
                 }
 
                 read_bytes = 0;
+
+		gp_port_get_timeout ( camera->port, &timeout );
+		gp_port_set_timeout ( camera->port, CANON_FAST_TIMEOUT );
+
                 do {
                         GP_DEBUG ( "canon_usb_camera_init() read_bytes=0x%x", read_bytes );
-                        i = gp_port_check_int_fast ( camera->port, (char *)buffer, 0x10 );
+                        i = gp_port_check_int ( camera->port, (char *)buffer, 0x10 );
                         if ( i > 0 )
                                 read_bytes += i;
                 } while ( read_bytes < 0x10 && i >= 0 );
+
+		gp_port_set_timeout ( camera->port, timeout );
+
                 if ( read_bytes < 0x10 ) {
                         GP_DEBUG ( "canon_usb_camera_init() interrupt read returned only %d bytes, status=%d", read_bytes, i );
                         if ( i < 0 )
@@ -871,21 +882,28 @@ canon_usb_get_body_id (Camera *camera, GPContext *context)
  */
 static int canon_usb_poll_interrupt_pipe ( Camera *camera, unsigned char *buf, int n_tries )
 {
-        int i, status = 0;
+        int i, status = 0, timeout;
         struct timeval start, end;
         double duration;
 
         memset ( buf, 0x81, 0x40 ); /* Put weird stuff in buffer */
-        gettimeofday ( &start, NULL );
+
+	gp_port_get_timeout ( camera->port, &timeout );
+	gp_port_set_timeout ( camera->port, CANON_FAST_TIMEOUT );
+
         /* Read repeatedly until we get either an
            error or a non-zero size. */
+        gettimeofday ( &start, NULL );
         for ( i=0; i<n_tries; i++ ) {
-                status = gp_port_check_int_fast ( camera->port,
+                status = gp_port_check_int ( camera->port,
                                                   (char *)buf, 0x40 );
                 if ( status != 0 ) /* Either some real data, or failure */
                         break;
         }
         gettimeofday ( &end, NULL );
+
+	gp_port_set_timeout ( camera->port, timeout );
+
         duration  =   (double)end.tv_sec +   end.tv_usec/1e6;
         duration -= (double)start.tv_sec + start.tv_usec/1e6;
         if ( status <= 0 ) {
@@ -932,19 +950,35 @@ canon_usb_poll_interrupt_multiple ( Camera *camera[], int n_cameras,
                                         unsigned char *buf, int n_tries,
                                         int *which )
 {
-        int i = 0, status = 0;
+        int i = 0, status = 0, timeout;
 
         memset ( buf, 0x81, 0x40 ); /* Put weird stuff in buffer */
         *which = 0;                          /* Start with the first camera */
+
         /* Read repeatedly until we get either an
            error or a non-zero size. */
         while ( status == 0 && i < n_tries ) {
                 while ( !camera_flags[*which] )
                         *which = (*which+1) % n_cameras;
 
-                status = gp_port_check_int_fast ( camera[*which]->port,
-                                                  (char *)buf, 0x40 );
+		/*
+		 * Ideally this timeout code should be hoisted above the
+		 * while() loop.  But since this entire function is
+		 * dead code, I am loath to put a lot of effort into
+		 * it.  We should probably just remove the entire function.
+		 * -pjw
+		 */
+		gp_port_get_timeout ( camera[*which]->port, &timeout );
+		gp_port_set_timeout ( camera[*which]->port, CANON_FAST_TIMEOUT );
+
+                status = gp_port_check_int ( camera[*which]->port,
+					     (char *)buf, 0x40 );
+
+		gp_port_set_timeout ( camera[*which]->port, timeout );
+
         }
+
+
         if ( status <= 0 )
                 gp_log ( GP_LOG_ERROR, "canon/usb.c",
 			 _("canon_usb_poll_interrupt_multiple:"

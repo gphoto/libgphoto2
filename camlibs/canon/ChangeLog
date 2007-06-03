@@ -1,3 +1,8 @@
+2007-06-02  Paul Walmsley  <paul@booyaka.com>
+
+	* usb.c: replace gp_port_usb_check_int_fast() calls with
+	timeout save/change/restore and gp_port_usb_check_int()
+
 2007-05-29  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c, canon.c, canon.h,Makefile-files:
