@@ -250,8 +250,41 @@ typedef struct _PTPIPHeader PTPIPHeader;
 /* from EOS 400D */
 #define PTP_OC_CANON_GetPartialObject		0x9107
 #define PTP_OC_CANON_CaptureImage		0x910F
+
+/* 9101: no args, 8 byte data (01 00 00 00 00 00 00 00), no resp data. */
+#define PTP_OC_CANON_9101			0x9101
+/* 9102: 1 arg (0)
+ * 0x28 bytes of data:
+    00000000: 34 00 00 00 02 00 02 91 0a 00 00 00 04 00 03 00
+    00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+    00000020: 00 00 ff ff ff ff 03 43 00 46 00 00 00 03 41 00
+    00000030: 3a 00 00 00
+ * no resp args
+ */
+#define PTP_OC_CANON_9102			0x9102
+/* Marcus: looks more like "Set DeviceProperty" in the trace. 
+ *
+ * no cmd args
+ * data phase (0xc, 0xd11c, 0x1)
+ * no resp args 
+ */
+/* 910f: no args, no data, 1 response arg (0). */
+#define PTP_OC_CANON_Capture			0x910F
 #define PTP_OC_CANON_GetDeviceProperty		0x9110
+/* 9114: 1 arg (0x1), no data, no resp data. */
+#define PTP_OC_CANON_9114			0x9114
+/* 9115: 1 arg (0x1), no data, no resp data. */
+#define PTP_OC_CANON_9115			0x9115
+/* 9116: no args, data phase, no resp data. */
 #define PTP_OC_CANON_GetAllDeviceProperties	0x9116
+
+/* 9117: 3 args (objectid?, startoffset, size), data phase, no resp data. */
+/* 9117: 1 arg (objectid?), data phase, no resp data - signals end. */
+#define PTP_OC_CANON_GetImageData		0x9117
+
+/* 911a: 3 args (0xfffffff7, 0x00001000, 0x00000001), no data, no resp data. */
+/* 911a: 3 args (0x001dfc60, 0x00001000, 0x00000001), no data, no resp data. */
+#define PTP_OC_CANON_911A			0x911A
 
 /* Nikon extension Operation Codes */
 #define PTP_OC_NIKON_GetProfileAllData	0x9006
