@@ -4,3 +4,4 @@
 	  into 1 file, ez200.c
 
 	* ez200.c: Cleaned up, tightened code.
+	* ez200.c: Added delete-all.

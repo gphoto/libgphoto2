@@ -31,6 +31,7 @@
 #define PING 		0x05
 #define STATUS		0x06
 #define PICTURE		0x08
+#define ERASE		0x09
 #define PICTURE_HEAD	0x0b
 #define ACTIVE		0xe0
 
@@ -77,7 +78,7 @@ static int
 ez200_init (GPPort *port, Model *model, Info *info) {
 	char c = 0;
 
-	GP_DEBUG("Running ez200_init\n");
+	GP_DEBUG("Running ez200_init");
 
 	WRITE(port, ACTIVE, 0, 1, NULL, 0);  /*  index = 1; */
 	ez200_wait_status_ok(port);
@@ -85,7 +86,7 @@ ez200_init (GPPort *port, Model *model, Info *info) {
 	/*  get number of pictures */
 	READ(port, PICTURE, 0, 0, &c, 1);
 	memcpy (info, &c, 1);
-	GP_DEBUG("number of pics : %i\n", c);
+	GP_DEBUG("number of pics : %i", c);
         return GP_OK;
 }
 
@@ -105,12 +106,12 @@ ez200_get_picture_size (GPPort *port, int n) {
         unsigned int size = 0;
 	memset (c,0,sizeof(c));
 
-	GP_DEBUG("Running ez200_get_picture_size\n");
+	GP_DEBUG("Running ez200_get_picture_size");
 
     	READ(port, PICTURE, n, 1, c, 3);
 	size = (int)c[0] + (int)c[1]*0x100 + (int)c[2]*0x10000;
 
-	GP_DEBUG(" size of picture %i is 0x%x = %i byte(s)\n", n, size, size);
+	GP_DEBUG(" size of picture %i is 0x%x = %i byte(s)", n, size, size);
 	if ( (size >= 0xfffff ) ) { return GP_ERROR; }
 	return size;
 }
@@ -185,7 +186,7 @@ camera_abilities (CameraAbilitiesList *list)
        		a.usb_vendor = models[i].idVendor;
        		a.usb_product= models[i].idProduct;
 		a.operations = GP_OPERATION_NONE;
-       		a.folder_operations = GP_FOLDER_OPERATION_NONE;
+       		a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
        		a.file_operations   = GP_FILE_OPERATION_NONE;
        		gp_abilities_list_append (list, a);
     	}
@@ -204,6 +205,32 @@ static int
 camera_about (Camera *camera, CameraText *about, GPContext *context) {
     	strcpy (about->text, _("Kodak EZ200 driver\nBucas Jean-Francois <jfbucas@tuxfamily.org>\n"));
     	return GP_OK;
+}
+
+/*
+ * doesnt work, just creates a empty file.
+static int
+camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
+                GPContext *context) {
+	unsigned char c[3];
+	int size;
+	char *data;
+	WRITE(camera->port,0,0x8003,0,NULL,0);
+	WRITE(camera->port,5,0x0000,0,NULL,0);
+
+        return GP_OK;
+}
+*/
+
+
+static int
+delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
+                 GPContext *context) {
+        Camera *camera = data;
+
+	WRITE (camera->port, ERASE, 0, 1, NULL, 0);
+	ez200_wait_status_ok(camera->port);
+        return GP_OK;
 }
 
 static int
@@ -228,13 +255,13 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return n;
 
 	len = ez200_get_picture_size (camera->port, n);
-	GP_DEBUG("len = %i\n", len);
+	GP_DEBUG("len = %i", len);
 
 	data = (char *)malloc(len + HEADER_SIZE + 1);
 	if (!data) return GP_ERROR_NO_MEMORY;
 
 	data_start = data + (HEADER_SIZE - DATA_HEADER_SIZE);
-	GP_DEBUG("data - data_start : %p %p : %lx\n",data, data_start, data_start - data);
+	GP_DEBUG("data - data_start : %p %p : %lx",data, data_start, data_start - data);
 
     	ez200_read_picture_data   (camera->port, data_start, len, n);
 	ez200_read_picture_header (camera->port, data);
@@ -256,8 +283,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 }
 
 static int
-camera_exit (Camera *camera, GPContext *context)
-{
+camera_exit (Camera *camera, GPContext *context) {
 	GP_DEBUG ("Kodak EZ200 camera_exit");
 	ez200_exit (camera->port);
 	if (camera->pl) {
@@ -270,6 +296,7 @@ camera_exit (Camera *camera, GPContext *context)
 static CameraFilesystemFuncs fsfuncs = {
 	.file_list_func = file_list_func,
 	.get_file_func = get_file_func,
+	.delete_all_func = delete_all_func,
 };
 
 int
@@ -282,8 +309,9 @@ camera_init(Camera *camera, GPContext *context)
 	camera->functions->summary	= camera_summary;
 	camera->functions->about	= camera_about;
 	camera->functions->exit		= camera_exit;
+	/*camera->functions->capture	= camera_capture;*/
 
-	GP_DEBUG ("Initializing Kodak EZ200\n");
+	GP_DEBUG ("Initializing Kodak EZ200");
 	ret = gp_port_get_settings(camera->port, &settings);
 	if (ret < 0) return ret;
 
@@ -302,9 +330,9 @@ camera_init(Camera *camera, GPContext *context)
 	ret = gp_port_set_settings(camera->port,settings);
 	if (ret < 0) return ret;
 
-	GP_DEBUG("interface = %i\n", settings.usb.interface);
-	GP_DEBUG("inep = %x\n", settings.usb.inep);
-	GP_DEBUG("outep = %x\n", settings.usb.outep);
+	GP_DEBUG("interface = %i", settings.usb.interface);
+	GP_DEBUG("inep = %x", settings.usb.inep);
+	GP_DEBUG("outep = %x", settings.usb.outep);
 
         /* Tell the CameraFilesystem where to get lists from */
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
@@ -315,6 +343,6 @@ camera_init(Camera *camera, GPContext *context)
 
 	/* Connect to the camera */
 	ez200_init (camera->port, &camera->pl->model, camera->pl->info);
-	GP_DEBUG("fin_camera_init\n");
+	GP_DEBUG("fin_camera_init");
 	return GP_OK;
 }
