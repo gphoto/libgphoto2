@@ -1,0 +1,6 @@
+2007-06-04  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ez200.c, ez200.h, library.c: Collapsed the driver
+	  into 1 file, ez200.c
+
+	* ez200.c: Cleaned up, tightened code.
