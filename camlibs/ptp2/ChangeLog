@@ -1,7 +1,9 @@
 2007-06-05  Marcus Meissner  <marcus@jet.franken.de>
 
-	* ptp.c, ptp.h, ptp-pack.c, library.c:
+	* ptp.c, ptp.h, ptp-pack.c, library.c, config.c:
 	  Started EOS 400D+ style capture support.
+
+	* ptp.h: Added lots of new Canon Powershot specific defines.
 
 2007-05-28  Paul Walmsley <paul@booyaka.com>
 
