@@ -192,7 +192,9 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_GetPartialObjectInfo	0x9001
 #define PTP_OC_CANON_SetObjectArchive		0x9002
 /* 9002 - sends 2 uint32, nothing back  */
-#define PTP_OC_CANON_9003			0x9003
+#define PTP_OC_CANON_KeepDeviceOn		0x9003
+#define PTP_OC_CANON_LockDeviceUI		0x9004
+#define PTP_OC_CANON_UnlockDeviceUI		0x9005
 /* 9003 - sends nothing, nothing back  */
 /* no 9004 observed yet */
 /* no 9005 observed yet */
@@ -201,7 +203,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_StartShootingMode		0x9008
 #define PTP_OC_CANON_EndShootingMode		0x9009
 /* 900a - sends nothing, nothing back */
-#define PTP_OC_CANON_900a			0x900A
+#define PTP_OC_CANON_TerminatePlaybackMode	0x900A
 #define PTP_OC_CANON_ViewfinderOn		0x900B
 #define PTP_OC_CANON_ViewfinderOff		0x900C
 #define PTP_OC_CANON_DoAeAfAwb			0x900D
@@ -211,25 +213,28 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_GetCustomizeItemInfo	0x900F
 #define PTP_OC_CANON_GetCustomizeData		0x9010
 #define PTP_OC_CANON_SetCustomizeData		0x9011
-
-/* initiate movie capture:
-   9010 startmoviecapture?
-   9003 stopmoviecapture?
-*/
-
+#define PTP_OC_CANON_GetCaptureStatus		0x9012
 #define PTP_OC_CANON_CheckEvent			0x9013
 #define PTP_OC_CANON_FocusLock			0x9014
 #define PTP_OC_CANON_FocusUnlock		0x9015
+#define PTP_OC_CANON_GetLocalReleaseParam	0x9016
+#define PTP_OC_CANON_SetLocalReleaseParam	0x9017
+#define PTP_OC_CANON_AskAboutPcEvf		0x9018
+#define PTP_OC_CANON_SendPartialObject		0x9019
 #define PTP_OC_CANON_InitiateCaptureInMemory	0x901A
 #define PTP_OC_CANON_GetPartialObjectEx		0x901B
 #define PTP_OC_CANON_SetObjectTime		0x901C
 #define PTP_OC_CANON_GetViewfinderImage		0x901D
+#define PTP_OC_CANON_GetObjectAttributes	0x901E
 #define PTP_OC_CANON_ChangeUSBProtocol		0x901F
 #define PTP_OC_CANON_GetChanges			0x9020
 #define PTP_OC_CANON_GetObjectInfoEx		0x9021
-
+#define PTP_OC_CANON_InitiateDirectTransfer	0x9022
 #define PTP_OC_CANON_TerminateDirectTransfer 	0x9023
-
+#define PTP_OC_CANON_SendObjectInfoByPath 	0x9024
+#define PTP_OC_CANON_SendObjectByPath 		0x9025
+#define PTP_OC_CANON_InitiateDirectTansferEx	0x9026
+#define PTP_OC_CANON_GetAncillaryObjectHandles	0x9027
 #define PTP_OC_CANON_InitiateDirectTransferEx2 	0x9028
 #define PTP_OC_CANON_GetTargetHandles 		0x9029
 #define PTP_OC_CANON_NotifyProgress 		0x902A
@@ -259,6 +264,30 @@ typedef struct _PTPIPHeader PTPIPHeader;
  */
 #define PTP_OC_CANON_9102			0x9102
 #define PTP_OC_CANON_GetPartialObject		0x9107
+
+/* sample1:
+ * 3 cmdargs: 1,0xffffffff,00 00 10 00;
+ * data:
+    00000000: 48 00 00 00 02 00 09 91 12 00 00 00 01 00 00 00
+    00000010: 38 00 00 00 00 00 00 30 01 00 00 00 01 30 00 00
+    00000020: 01 00 00 00 10 00 00 00 00 00 00 00 00 00 00 20
+    00000030: 00 00 00 30 44 43 49 4d 00 00 00 00 00 00 00 00	DCIM
+    00000040: 00 00 00 00 cc c3 01 46
+ * 2 respargs: 0x0, 0x3c
+ * 
+ * sample2:
+ *
+    00000000: 18 00 00 00 01 00 09 91 15 00 00 00 01 00 00 00
+    00000010: 00 00 00 30 00 00 10 00
+
+    00000000: 48 00 00 00 02 00 09 91 15 00 00 00 01 00 00 00
+    00000010: 38 00 00 00 00 00 9c 33 01 00 00 00 01 30 00 00
+    00000020: 01 00 00 00 10 00 00 00 00 00 00 00 00 00 00 30
+    00000030: 00 00 9c 33 32 33 31 43 41 4e 4f 4e 00 00 00 00	 231CANON
+    00000040: 00 00 00 00 cc c3 01 46
+
+ */
+#define PTP_OC_CANON_9109			0x9109
 
 /* Marcus: looks more like "Set DeviceProperty" in the trace. 
  *
