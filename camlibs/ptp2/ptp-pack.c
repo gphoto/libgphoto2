@@ -1041,6 +1041,63 @@ ptp_unpack_Canon_FE (PTPParams *params, unsigned char* data, PTPCANONFolderEntry
 }
 
 /*
+    PTP EOS Changes Entry unpack
+*/
+#define PTP_ece_Size		0
+#define PTP_ece_Type		4
+#define PTP_ece_Prop_Subtype	8	/* only for properties */
+
+#define PTP_ece_OI_ObjectID	8	/* only for objectinfos */
+#define PTP_ece_OI_OFC		0x0c	/* only for objectinfos */
+#define PTP_ece_OI_Size		0x14	/* only for objectinfos */
+#define PTP_ece_OI_Name		0x1c	/* only for objectinfos */
+
+static inline int
+ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, PTPCanon_changes_entry **ce)
+{
+	int	i = 0, entries = 0;
+	unsigned char	*curdata = data;
+
+	if (data==NULL)
+		return 0;
+	while (curdata - data < datasize) {
+		uint32_t	size = dtoh32a(&curdata[PTP_ece_Size]);
+		uint32_t	type = dtoh32a(&curdata[PTP_ece_Type]);
+
+		curdata += size;
+		if ((size == 8) && (type == 0))
+			break;
+		entries++;
+	}
+	*ce = malloc (sizeof(PTPCanon_changes_entry)*entries);
+	if (!*ce) return 0;
+
+	curdata = data;
+	while (curdata - data < datasize) {
+		uint32_t	size = dtoh32a(&curdata[PTP_ece_Size]);
+		uint32_t	type = dtoh32a(&curdata[PTP_ece_Type]);
+
+		switch (type) {
+		case  0xc186: {	/* objectinfo from capture */
+			(*ce)[i].type = PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO;
+			(*ce)[i].u.object.oid    	= dtoh32a(&curdata[PTP_ece_OI_ObjectID]);
+			(*ce)[i].u.object.oi.ObjectFormat 	= dtoh16a(&curdata[PTP_ece_OI_OFC]);
+			(*ce)[i].u.object.oi.ObjectCompressedSize = dtoh32a(&curdata[PTP_ece_OI_Size]);
+			(*ce)[i].u.object.oi.Filename 		= strdup(((char*)&curdata[PTP_ece_OI_Name]));
+			break;
+		}
+		default:
+			(*ce)[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
+			break;
+		}
+		curdata += size;
+		i++;
+	}
+
+	return entries;
+}
+
+/*
     PTP USB Event container unpack for Nikon events.
 */
 #define PTP_nikon_ec_Length		0

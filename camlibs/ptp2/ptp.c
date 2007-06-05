@@ -1702,6 +1702,58 @@ ptp_canon_initiatecaptureinmemory (PTPParams* params)
 	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
 }
 
+/**
+ * ptp_canon_eos_capture:
+ * 
+ * This starts a EOS400D style capture. You have to use the
+ * 0x9116 command to poll for its completion.
+ * The image is saved on the CF Card currently.
+ *
+ * params:	PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_canon_eos_capture (PTPParams* params)
+{
+	PTPContainer ptp;
+	
+	PTP_CNT_INIT(ptp);
+	ptp.Code=PTP_OC_CANON_EOS_CaptureImage;
+	ptp.Nparam=0;
+	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+}
+
+/**
+ * ptp_canon_9116:
+ * 
+ * This retrieves configuration status/updates/changes
+ * on EOS cameras. It reads a datablock which has a list of variable
+ * sized structures.
+ *
+ * params:	PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_canon_eos_getchanges (PTPParams* params, PTPCanon_changes_entry **entries, int *nrofentries)
+{
+	PTPContainer ptp;
+	uint16_t	ret;
+	unsigned int 	size = 0;
+	unsigned char	*data = NULL;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code = PTP_OC_CANON_EOS_GetChanges;
+	ptp.Nparam = 0;
+	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size);
+	if (ret != PTP_RC_OK) return ret;
+        *nrofentries = ptp_unpack_CANON_changes(params,data,size,entries);
+	return PTP_RC_OK;
+}
+
 uint16_t
 ptp_canon_9012 (PTPParams* params)
 {

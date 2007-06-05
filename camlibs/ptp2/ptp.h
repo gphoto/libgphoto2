@@ -247,10 +247,6 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_PairingComplete		0x9035
 #define PTP_OC_CANON_GetWirelessMAXChannel	0x9036
 
-/* from EOS 400D */
-#define PTP_OC_CANON_GetPartialObject		0x9107
-#define PTP_OC_CANON_CaptureImage		0x910F
-
 /* 9101: no args, 8 byte data (01 00 00 00 00 00 00 00), no resp data. */
 #define PTP_OC_CANON_9101			0x9101
 /* 9102: 1 arg (0)
@@ -262,6 +258,8 @@ typedef struct _PTPIPHeader PTPIPHeader;
  * no resp args
  */
 #define PTP_OC_CANON_9102			0x9102
+#define PTP_OC_CANON_GetPartialObject		0x9107
+
 /* Marcus: looks more like "Set DeviceProperty" in the trace. 
  *
  * no cmd args
@@ -269,14 +267,14 @@ typedef struct _PTPIPHeader PTPIPHeader;
  * no resp args 
  */
 /* 910f: no args, no data, 1 response arg (0). */
-#define PTP_OC_CANON_Capture			0x910F
+#define PTP_OC_CANON_EOS_CaptureImage		0x910F
 #define PTP_OC_CANON_GetDeviceProperty		0x9110
 /* 9114: 1 arg (0x1), no data, no resp data. */
 #define PTP_OC_CANON_9114			0x9114
 /* 9115: 1 arg (0x1), no data, no resp data. */
 #define PTP_OC_CANON_9115			0x9115
 /* 9116: no args, data phase, no resp data. */
-#define PTP_OC_CANON_GetAllDeviceProperties	0x9116
+#define PTP_OC_CANON_EOS_GetChanges		0x9116
 
 /* 9117: 3 args (objectid?, startoffset, size), data phase, no resp data. */
 /* 9117: 1 arg (objectid?), data phase, no resp data - signals end. */
@@ -872,6 +870,22 @@ struct _PTPNIKONWifiProfile {
 };
 
 typedef struct _PTPNIKONWifiProfile PTPNIKONWifiProfile;
+
+#define PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN	0
+#define PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO	1
+
+struct _PTPCanon_New_Object {
+	uint32_t		oid;
+	PTPObjectInfo	oi;
+};
+struct _PTPCanon_changes_entry {
+	int	type;
+	union {
+		struct _PTPCanon_New_Object	object;	/* TYPE_OBJECTINFO */
+	} u;
+};
+typedef struct _PTPCanon_changes_entry PTPCanon_changes_entry;
+
 
 /* DataType Codes */
 
@@ -1561,6 +1575,8 @@ uint16_t ptp_canon_checkevent (PTPParams* params,
 uint16_t ptp_canon_focuslock (PTPParams* params);
 uint16_t ptp_canon_focusunlock (PTPParams* params);
 uint16_t ptp_canon_initiatecaptureinmemory (PTPParams* params);
+uint16_t ptp_canon_eos_capture (PTPParams* params);
+uint16_t ptp_canon_eos_getchanges (PTPParams* params, PTPCanon_changes_entry **entries, int *nrofentries);
 uint16_t ptp_canon_getpartialobject (PTPParams* params, uint32_t handle, 
 				uint32_t offset, uint32_t size,
 				uint32_t pos, unsigned char** block, 

@@ -1,3 +1,8 @@
+2007-06-05  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptp.c, ptp.h, ptp-pack.c, library.c:
+	  Started EOS 400D+ style capture support.
+
 2007-05-28  Paul Walmsley <paul@booyaka.com>
 
 	* usb.c: replace gp_port_usb_check_int_fast() calls with

@@ -1393,6 +1393,80 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	return GP_OK;
 }
 
+/* This is currently the capture method used by the EOS 400D
+ * ... in development.
+ */
+static int
+camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
+		GPContext *context)
+{
+	int			ret;
+	PTPParams		*params = &camera->pl->params;
+	uint32_t		newobject = 0x0;
+	PTPCanon_changes_entry	*entries = NULL;
+	int			nrofentries = 0;
+	int			tries = 50;
+
+	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_CaptureImage)) {
+		gp_context_error (context,
+		_("Sorry, your Canon camera does not support Canon EOS Capture"));
+		return GP_ERROR_NOT_SUPPORTED;
+	}
+
+	ret = ptp_canon_eos_capture (params);
+	if (ret != PTP_RC_OK) {
+		gp_context_error (context, _("Canon EOS Capture failed: %d"), ret);
+		return GP_ERROR;
+	}
+	newobject = 0;
+	while (tries--) {
+		int i;
+		ret = ptp_canon_eos_getchanges (params, &entries, &nrofentries);
+		if (ret != PTP_RC_OK) {
+			gp_context_error (context, _("Canon EOS Get Changes failed: %d"), ret);
+			return GP_ERROR;
+		}
+		if (!nrofentries) {
+			gp_log (GP_LOG_ERROR, "ptp2/canon_eos_capture", "Empty list found?");
+			free (entries);
+			continue;
+		}
+		for (i=0;i<nrofentries;i++) {
+			if (entries[i].type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO) {
+				gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "Found new object! OID %ux, name %s", (unsigned int)entries[i].u.object.oid, entries[i].u.object.oi.Filename);
+				newobject = entries[i].u.object.oid;
+				add_object (camera, entries[i].u.object.oid, context);
+				free (entries);
+				break;
+			}
+		}
+		free (entries);
+	}
+	if (newobject == 0)
+		return GP_ERROR;
+
+	if (newobject != 0) {
+		int i;
+
+		for (i = params->handles.n ; i--; ) {
+			PTPObjectInfo	*obinfo;
+
+			if (params->handles.Handler[i] != newobject)
+				continue;
+			obinfo = &camera->pl->params.objectinfo[i];
+			strcpy  (path->name,  obinfo->Filename);
+			sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)obinfo->StorageID);
+			get_folder_from_handle (camera, obinfo->StorageID, obinfo->ParentObject, path->folder);
+			/* delete last / or we get confused later. */
+			path->folder[ strlen(path->folder)-1 ] = '\0';
+			CR (gp_filesystem_append (camera->fs, path->folder,
+				path->name, context));
+			break;
+		}
+	}
+	return GP_OK;
+}
+
 /* To use:
  *	gphoto2 --set-config capture=on --config --capture-image
  *	gphoto2  -f /store_80000001 -p 1
@@ -1532,6 +1606,12 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		char buf[1024];
 		if ((GP_OK != gp_setting_get("ptp2","capturetarget",buf)) || !strcmp(buf,"sdram"))
 			return camera_canon_capture (camera, type, path, context);
+	}
+
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
+		ptp_operation_issupported(params, PTP_OC_CANON_EOS_CaptureImage)
+	) {
+		return camera_canon_eos_capture (camera, type, path, context);
 	}
 
 	if (type != GP_CAPTURE_IMAGE)
