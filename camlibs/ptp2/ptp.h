@@ -1016,6 +1016,7 @@ typedef struct _PTPCanon_changes_entry PTPCanon_changes_entry;
 #define PTP_DPC_CANON_ImageSize		0xD008
 #define PTP_DPC_CANON_SelfTime		0xD009
 #define PTP_DPC_CANON_FlashMode		0xD00A
+#define PTP_DPC_CANON_Beep		0xD00B
 #define PTP_DPC_CANON_ShootingMode	0xD00C
 #define PTP_DPC_CANON_ImageMode		0xD00D
 #define PTP_DPC_CANON_DriveMode		0xD00E

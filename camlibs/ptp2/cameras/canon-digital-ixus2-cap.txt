@@ -160,9 +160,9 @@ store_00010001:
 	Storage Type: Removable RAM (memory card)
 	Filesystemtype: Digital Camera Layout (DCIM)
 	Access Capability: Read-Write
-	Maximum Capability: 125861888 (120 MB)
-	Free Space (Bytes): 125747200 (119 MB)
-	Free Space (Images): 134
+	Maximum Capability: 14696448 (14 MB)
+	Free Space (Bytes): 12894208 (12 MB)
+	Free Space (Images): 13
 store_80000001:
 	StorageDescription: None
 	VolumeLabel: V
@@ -176,81 +176,77 @@ store_80000001:
 
 Device Property Summary:
 Beep Mode(0xd001):(readwrite) (type=0x2) Enumeration [0,1] value: 1
-Viewfinder Mode(0xd003):(read only) (type=0x6) Enumeration [0,1,2,3] value: 1
+Battery Kind(0xd002):(read only) (type=0x4) Enumeration [0,1,2,3,4,5] value: 2
+Battery Mode(0xd003):(read only) (type=0x6) Enumeration [0,1,2,3] value: 1
+Camera Mode(0xd005):(read only) (type=0x2) 32
 Image Quality(0xd006):(readwrite) (type=0x2) Enumeration [2,3,5] value: 3
+Full View File Format(0xd007):(readwrite) (type=0x2) Enumeration [1] value: 1
 Image Size(0xd008):(readwrite) (type=0x2) Enumeration [0,1,3,2] value: 0
+Self Time(0xd009):(read only) (type=0x4) 100
 Flash Mode(0xd00a):(readwrite) (type=0x2) Enumeration [0,1,2,4,5] value: 5
+Beep(0xd00b):(read only) (type=0x2) 0
 Shooting Mode(0xd00c):(readwrite) (type=0x2) Enumeration [1] value: 1
+Drive Mode(0xd00e):(read only) (type=0x2) 0
+Zoom(0xd00f):(read only) (type=0x2) 0
 Metering Mode(0xd010):(readwrite) (type=0x2) Enumeration [0,1,3] value: 3
 AF Distance(0xd011):(readwrite) (type=0x2) Enumeration [1,3,7] value: 1
 Focusing Point(0xd012):(readwrite) (type=0x4) Enumeration [12291,12289] value: 12289
 White Balance(0xd013):(readwrite) (type=0x2) Enumeration [0,1,2,3,4,7,6] value: 0
+AF Mode(0xd015):(read only) (type=0x2) 0
+Contrast(0xd017):(readwrite) (type=0x1) Enumeration [0] value: 0
+Color Gain(0xd018):(readwrite) (type=0x1) Enumeration [0] value: 0
+Sharpness(0xd019):(readwrite) (type=0x1) Enumeration [0] value: 0
 ISO Speed(0xd01c):(readwrite) (type=0x4) Enumeration [64,72,80,88,0] value: 64
 Aperture(0xd01d):(readwrite) (type=0x4) Enumeration [] value: 32
 ShutterSpeed(0xd01e):(readwrite) (type=0x4) Enumeration [] value: 112
 Exposure Compensation(0xd01f):(readwrite) (type=0x2) Enumeration [8,11,13,16,19,21,24,27,29,32,35,37,40] value: 24
+Av Open(0xd023):(read only) (type=0x4) 32
+Av Max(0xd024):(read only) (type=0x4) 53
+Focal Length(0xd025):(read only) (type=0x4) 173
+Focal Length Tele(0xd026):(read only) (type=0x4) 346
+Focal Length Wide(0xd027):(read only) (type=0x4) 173
+Focal Length Denominator(0xd028):(read only) (type=0x4) 32
+Capture Transfer Mode(0xd029):(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15] value: 3
 Zoom(0xd02a):(readwrite) (type=0x4) Range [0 - 9, step 1] value: 0
 Size Quality Mode(0xd02c):(read only) (type=0x4006) Enumeration [
-	a[6] 1536,2048,1,0,0,0,
-	a[6] 1536,2048,6,0,0,0,
-	a[6] 1536,2048,11,0,0,0,
-	a[6] 1200,1600,2,0,0,0,
-	a[6] 1200,1600,7,0,0,0,
-	a[6] 1200,1600,12,0,0,0,
-	a[6] 768,1024,3,0,0,0,
-	a[6] 768,1024,8,0,0,0,
-	a[6] 768,1024,13,0,0,0,
-	a[6] 480,640,5,0,0,0,
-	a[6] 480,640,10,0,0,0,
-	a[6] 480,640,15,0,0,0
-	] value: a[6] 1536,2048,6,0,0,0
+	,
+	,
+	,
+	,
+	,
+	,
+	,
+	,
+	,
+	,
+	,
+	
+	] value: 
+Supported Thumb Size(0xd02d):(read only) (type=0x4006) Enumeration [
+	
+	] value: 
+Size of Output Data from Camera(0xd02e):(read only) (type=0x6) 20480
+Size of Input Data to Camera(0xd02f):(read only) (type=0x6) 5120
+Remote API Version(0xd030):(read only) (type=0x6) 256
 Firmware Version(0xd031):(read only) (type=0x6) 33554688
 Camera Model(0xd032):(read only) (type=0xffff) 'Canon PowerShot SD100'
-Camera Owner(0xd033):(readwrite) (type=0x4002) a[16] 77,97,114,99,117,115,32,77,101,105,115,115,110,101,114,0
-UNIX Time(0xd034):(readwrite) (type=0x6) 1139163456
+Camera Owner(0xd033):(readwrite) (type=0x4002) 
+UNIX Time(0xd034):(readwrite) (type=0x6) 1181084254
+Disp Av(0xd037):(read only) (type=0x4) 0
+Av Open Apex(0xd038):(read only) (type=0x3) 32
 Digital Zoom Magnification(0xd039):(read only) (type=0x4) 2048
+Ml Spot Position(0xd03a):(read only) (type=0x4) 0
+Disp Av Max(0xd03b):(read only) (type=0x4) 0
+Av Max Apex(0xd03c):(read only) (type=0x4) 53
+EZoom Start Position(0xd03d):(read only) (type=0x4) 5
+Focal Length of Tele(0xd03e):(read only) (type=0x4) 346
+EZoom Size of Tele(0xd03f):(read only) (type=0x4) 640
 Photo Effect(0xd040):(readwrite) (type=0x4) Enumeration [0,1,2,3,4,5] value: 0
 Assist Light(0xd041):(readwrite) (type=0x4) Enumeration [0,1] value: 1
-
-
-Property 0xd002:(read only) (type=0x4) Enumeration [0,1,2,3,4,5] value: 2
-Property 0xd005:(read only) (type=0x2) 32
-Property 0xd009:(read only) (type=0x4) 100
-Property 0xd00b:(read only) (type=0x2) 0
-Property 0xd00e:(read only) (type=0x2) 0
-Property 0xd00f:(read only) (type=0x2) 0
-Property 0xd015:(read only) (type=0x2) 0
-Property 0xd023:(read only) (type=0x4) 32
-Property 0xd024:(read only) (type=0x4) 53
-Property 0xd025:(read only) (type=0x4) 173
-Property 0xd026:(read only) (type=0x4) 346
-Property 0xd027:(read only) (type=0x4) 173
-Property 0xd028:(read only) (type=0x4) 32
-Property 0xd02d:(read only) (type=0x4006) Enumeration [
-	a[4] 119,0,159,0
-	] value: a[4] 119,0,159,0
-Property 0xd02e:(read only) (type=0x6) 20480
-Property 0xd02f:(read only) (type=0x6) 5120
-Property 0xd030:(read only) (type=0x6) 256
-Property 0xd037:(read only) (type=0x4) 0
-Property 0xd038:(read only) (type=0x3) 32
-Property 0xd03a:(read only) (type=0x4) 0
-Property 0xd03b:(read only) (type=0x4) 0
-Property 0xd03c:(read only) (type=0x4) 53
-Property 0xd03d:(read only) (type=0x4) 5
-Property 0xd03e:(read only) (type=0x4) 346
-Property 0xd03f:(read only) (type=0x4) 640
-Property 0xd043:(read only) (type=0x4) 0
-Property 0xd046:(read only) (type=0x4) 257
-Property 0xd047:(read only) (type=0x4) 2
-Property 0xd048:(read only) (type=0x4006) a[16] 1640448,1026048,583680,0,254976,914432,571392,327680,0,153600,455680,284672,174080,0,86016,2097152
-Property 0xd049:(read only) (type=0x6) 19070976
-
-
-Property 0xd007:(readwrite) (type=0x2) Enumeration [1] value: 1
-Property 0xd017:(readwrite) (type=0x1) Enumeration [0] value: 0
-Property 0xd018:(readwrite) (type=0x1) Enumeration [0] value: 0
-Property 0xd019:(readwrite) (type=0x1) Enumeration [0] value: 0
-Property 0xd029:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15] value: 3
-Property 0xd044:(readwrite) (type=0x4) Enumeration [0,1] value: 0
-Property 0xd045:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7] value: 4
+Rotation Angle(0xd043):(read only) (type=0x4) 0
+Rotation Scene(0xd044):(readwrite) (type=0x4) Enumeration [0,1] value: 0
+Event Emulate Mode(0xd045):(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7] value: 4
+DPOF Version(0xd046):(read only) (type=0x4) 257
+Type of Slideshow(0xd047):(read only) (type=0x4) 2
+Average Filesizes(0xd048):(read only) (type=0x4006) 
+Model ID(0xd049):(read only) (type=0x6) 19070976
