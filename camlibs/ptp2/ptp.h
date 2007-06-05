@@ -268,7 +268,14 @@ typedef struct _PTPIPHeader PTPIPHeader;
  */
 /* 910f: no args, no data, 1 response arg (0). */
 #define PTP_OC_CANON_EOS_CaptureImage		0x910F
-#define PTP_OC_CANON_GetDeviceProperty		0x9110
+/*
+ * no cmd args
+ * data (send) phase: 
+ *
+ * no resp args
+ */
+#define PTP_OC_CANON_SetDeviceProperty		0x9110
+
 /* 9114: 1 arg (0x1), no data, no resp data. */
 #define PTP_OC_CANON_9114			0x9114
 /* 9115: 1 arg (0x1), no data, no resp data. */
@@ -1596,6 +1603,12 @@ uint16_t ptp_canon_setobjectarchive (PTPParams* params, uint32_t oid, uint32_t f
 uint16_t ptp_canon_get_customize_data (PTPParams* params, uint32_t themenr,
 				unsigned char **data, unsigned int *size);
 uint16_t ptp_canon_getpairinginfo (PTPParams* params, uint32_t nr, unsigned char**, unsigned int*);
+
+uint16_t ptp_canon_9101 (PTPParams* params);
+uint16_t ptp_canon_9102 (PTPParams* params, uint32_t p1);
+uint16_t ptp_canon_9110 (PTPParams* params, unsigned char* data, unsigned int size);
+uint16_t ptp_canon_9114 (PTPParams* params, uint32_t p1);
+uint16_t ptp_canon_9115 (PTPParams* params, uint32_t p1);
 
 uint16_t ptp_nikon_curve_download (PTPParams* params, 
 				unsigned char **data, unsigned int *size);

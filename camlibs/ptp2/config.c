@@ -56,9 +56,8 @@
 
 #define CPR(context,result) {short r=(result); if (r!=PTP_RC_OK) {report_result ((context), r, params->deviceinfo.VendorExtensionID); return (translate_ptp_result (r));}}
 
-int
-camera_prepare_capture (Camera *camera, GPContext *context)
-{
+static int
+camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 	PTPUSBEventContainer	event;
 	PTPContainer		evc;
 	PTPPropertyValue	propval;
@@ -66,88 +65,186 @@ camera_prepare_capture (Camera *camera, GPContext *context)
 	int 			i, ret, isevent;
 	PTPParams		*params = &camera->pl->params;
 	int oldtimeout;
+
+	propval.u16 = 0;
+	ret = ptp_getdevicepropvalue(params, 0xd045, &propval, PTP_DTC_UINT16);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_DEBUG, "ptp", "failed get 0xd045\n");
+		return GP_ERROR;
+	}
+	gp_log (GP_LOG_DEBUG, "ptp","prop 0xd045 value is 0x%4X\n",propval.u16);
+
+	propval.u16=1;
+	ret = ptp_setdevicepropvalue(params, 0xd045, &propval, PTP_DTC_UINT16);
+	ret = ptp_getdevicepropvalue(params, 0xd02e, &propval, PTP_DTC_UINT32);
+	gp_log (GP_LOG_DEBUG, "ptp", "prop 0xd02e value is 0x%8X, ret %d\n",propval.u32, ret);
+	ret = ptp_getdevicepropvalue(params, 0xd02f, &propval, PTP_DTC_UINT32);
+	gp_log (GP_LOG_DEBUG, "ptp", "prop 0xd02f value is 0x%8X, ret %d\n",propval.u32, ret);
+
+	ret = ptp_getdeviceinfo (params, &params->deviceinfo);
+	ret = ptp_getdeviceinfo (params, &params->deviceinfo);
+
+	ret = ptp_getdevicepropvalue(params, 0xd02e, &propval, PTP_DTC_UINT32);
+	gp_log (GP_LOG_DEBUG, "ptp", "prop 0xd02e value is 0x%8x, ret %d\n",propval.u32, ret);
+	ret = ptp_getdevicepropvalue(params, 0xd02f, &propval, PTP_DTC_UINT32);
+	gp_log (GP_LOG_DEBUG, "ptp", "prop 0xd02f value is 0x%8x, ret %d\n",propval.u32,ret);
+	ret = ptp_getdeviceinfo (params, &params->deviceinfo);
+	ret = ptp_getdevicepropvalue(params, 0xd045, &propval, PTP_DTC_UINT16);
+	gp_log (GP_LOG_DEBUG, "ptp","prop 0xd045 value is 0x%4x, ret %d\n",propval.u16,ret);
+
+	gp_log (GP_LOG_DEBUG, "ptp","Magic code ends.\n");
+
+	gp_log (GP_LOG_DEBUG, "ptp","Setting prop. 0xd045 to 4\n");
+	propval.u16=4;
+	ret = ptp_setdevicepropvalue(params, PTP_DPC_CANON_D045, &propval, PTP_DTC_UINT16);
+
+	CPR (context, ptp_canon_startshootingmode (params));
+
+	gp_port_get_timeout (camera->port, &oldtimeout);
+	gp_port_set_timeout (camera->port, 1000);
+
+	/* Catch event */
+	if (PTP_RC_OK==(val16=params->event_wait (params, &evc))) {
+		if (evc.Code==PTP_EC_StorageInfoChanged)
+			gp_log (GP_LOG_DEBUG, "ptp", "Event: entering  shooting mode. \n");
+		else 
+			gp_log (GP_LOG_DEBUG, "ptp", "Event: 0x%X\n", evc.Code);
+	} else {
+		printf("No event yet, we'll try later.\n");
+	}
+
+	/* Emptying event stack */
+	for (i=0;i<2;i++) {
+		ret = ptp_canon_checkevent (params,&event,&isevent);
+		if (ret != PTP_RC_OK) {
+			gp_log (GP_LOG_DEBUG, "ptp", "error during check event: %d\n", ret);
+		}
+		if (isevent)
+			gp_log (GP_LOG_DEBUG, "ptp", "evdata: L=0x%X, T=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X\n",
+				event.length,event.type,event.code,event.trans_id,
+				event.param1, event.param2, event.param3);
+	}
+	/* Catch event, attempt  2 */
+	if (val16!=PTP_RC_OK) {
+		if (PTP_RC_OK==params->event_wait (params, &evc)) {
+			if (evc.Code == PTP_EC_StorageInfoChanged)
+				gp_log (GP_LOG_DEBUG, "ptp","Event: entering shooting mode.\n");
+			else
+				gp_log (GP_LOG_DEBUG, "ptp","Event: 0x%X\n", evc.Code);
+		} else
+			gp_log (GP_LOG_DEBUG, "ptp", "No expected mode change event.\n");
+	}
+	/* Reget device info, they change on the Canons. */
+	ptp_getdeviceinfo(&camera->pl->params, &camera->pl->params.deviceinfo);
+	gp_port_set_timeout (camera->port, oldtimeout);
+	return GP_OK;
+}
+
+static int
+camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
+	PTPParams		*params = &camera->pl->params;
+	uint16_t		ret;
+	PTPCanon_changes_entry	*entries = NULL;
+	int			nrofentries = 0;
+	unsigned char		startup9110[12];
+
+	ret = ptp_canon_9115(params, 1);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9115 failed!");
+		return GP_ERROR;
+	}
+	ret = ptp_canon_9114(params, 1);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9114 failed!");
+		return GP_ERROR;
+	}
+	/* Get the initial bulk set of 0x9116 property data */
+	while (1) {
+		ret = ptp_canon_eos_getchanges (params, &entries, &nrofentries);
+		if (ret != PTP_RC_OK) {
+			gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9116 failed!");
+			return GP_ERROR;
+		}
+		if (nrofentries == 0)
+			break;
+		free (entries);
+		nrofentries = 0;
+		entries = NULL;
+	}
+	startup9110[0] = 0x0c; startup9110[1] = 0x00; startup9110[2] = 0x00; startup9110[3] = 0x00;
+	startup9110[4] = 0x1c; startup9110[5] = 0xd1; startup9110[6] = 0x00; startup9110[7] = 0x00;
+	startup9110[8] = 0x01; startup9110[9] = 0x00; startup9110[10] = 0x00; startup9110[11] = 0x00;
+	ret = ptp_canon_9110 (params, startup9110, 12);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9110 of d11c to 1 failed!");
+		return GP_ERROR;
+	}
+	ret = ptp_getdeviceinfo(&camera->pl->params, &camera->pl->params.deviceinfo);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getdeviceinfo failed!");
+		return GP_ERROR;
+	}
+	ret = ptp_canon_9101(params);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9101 failed!");
+		return GP_ERROR;
+	}
+	ret = ptp_canon_9102(params, 0);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9102 failed!");
+		return GP_ERROR;
+	}
+	ret = ptp_canon_9101(params);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9101 failed!");
+		return GP_ERROR;
+	}
+	ret = ptp_canon_9102(params, 0);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9102 failed!");
+		return GP_ERROR;
+	}
+	/* just exchange the value to 4 */
+	startup9110[8] = 0x04; startup9110[9] = 0x00; startup9110[10] = 0x00; startup9110[11] = 0x00;
+	ret = ptp_canon_9110 (params, startup9110, 12);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9110 of d11c to 4 failed!");
+		return GP_ERROR;
+	}
+
+	/* FIXME: 9114 call missing here! */
+
+	/* Get the second bulk set of 0x9116 property data */
+	while (1) {
+		ret = ptp_canon_eos_getchanges (params, &entries, &nrofentries);
+		if (ret != PTP_RC_OK) {
+			gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9116 failed!");
+			return GP_ERROR;
+		}
+		if (nrofentries == 0)
+			break;
+		free (entries);
+		nrofentries = 0;
+		entries = NULL;
+	}
+	return GP_OK;
+}
+
+int
+camera_prepare_capture (Camera *camera, GPContext *context)
+{
+	PTPParams		*params = &camera->pl->params;
 	
 	gp_log (GP_LOG_DEBUG, "ptp", "prepare_capture\n");
 	switch (params->deviceinfo.VendorExtensionID) {
 	case PTP_VENDOR_CANON:
-		if (!ptp_operation_issupported(params, PTP_OC_CANON_StartShootingMode)) {
-			gp_context_error(context,
-			_("Sorry, your Canon camera does not support Canon capture"));
-			return GP_ERROR_NOT_SUPPORTED;
-		}
-		
-		propval.u16 = 0;
-    		ret = ptp_getdevicepropvalue(params, 0xd045, &propval, PTP_DTC_UINT16);
-		if (ret != PTP_RC_OK) {
-			gp_log (GP_LOG_DEBUG, "ptp", "failed get 0xd045\n");
-			return GP_ERROR;
-		}
-		gp_log (GP_LOG_DEBUG, "ptp","prop 0xd045 value is 0x%4X\n",propval.u16);
+		if (ptp_operation_issupported(params, PTP_OC_CANON_StartShootingMode))
+			return camera_prepare_canon_powershot_capture(camera,context);
 
-    		propval.u16=1;
-		ret = ptp_setdevicepropvalue(params, 0xd045, &propval, PTP_DTC_UINT16);
-		ret = ptp_getdevicepropvalue(params, 0xd02e, &propval, PTP_DTC_UINT32);
-		gp_log (GP_LOG_DEBUG, "ptp", "prop 0xd02e value is 0x%8X, ret %d\n",propval.u32, ret);
-		ret = ptp_getdevicepropvalue(params, 0xd02f, &propval, PTP_DTC_UINT32);
-		gp_log (GP_LOG_DEBUG, "ptp", "prop 0xd02f value is 0x%8X, ret %d\n",propval.u32, ret);
-
-		ret = ptp_getdeviceinfo (params, &params->deviceinfo);
-		ret = ptp_getdeviceinfo (params, &params->deviceinfo);
-
-		ret = ptp_getdevicepropvalue(params, 0xd02e, &propval, PTP_DTC_UINT32);
-		gp_log (GP_LOG_DEBUG, "ptp", "prop 0xd02e value is 0x%8x, ret %d\n",propval.u32, ret);
-		ret = ptp_getdevicepropvalue(params, 0xd02f, &propval, PTP_DTC_UINT32);
-		gp_log (GP_LOG_DEBUG, "ptp", "prop 0xd02f value is 0x%8x, ret %d\n",propval.u32,ret);
-		ret = ptp_getdeviceinfo (params, &params->deviceinfo);
-		ret = ptp_getdevicepropvalue(params, 0xd045, &propval, PTP_DTC_UINT16);
-		gp_log (GP_LOG_DEBUG, "ptp","prop 0xd045 value is 0x%4x, ret %d\n",propval.u16,ret);
-
-		gp_log (GP_LOG_DEBUG, "ptp","Magic code ends.\n");
-        
-		gp_log (GP_LOG_DEBUG, "ptp","Setting prop. 0xd045 to 4\n");
-		propval.u16=4;
-		ret = ptp_setdevicepropvalue(params, PTP_DPC_CANON_D045, &propval, PTP_DTC_UINT16);
-
-		CPR (context, ptp_canon_startshootingmode (params));
-
-		gp_port_get_timeout (camera->port, &oldtimeout);
-		gp_port_set_timeout (camera->port, 1000);
-
-		/* Catch event */
-		if (PTP_RC_OK==(val16=params->event_wait (params, &evc))) {
-			if (evc.Code==PTP_EC_StorageInfoChanged)
-				gp_log (GP_LOG_DEBUG, "ptp", "Event: entering  shooting mode. \n");
-			else 
-				gp_log (GP_LOG_DEBUG, "ptp", "Event: 0x%X\n", evc.Code);
-		} else {
-			printf("No event yet, we'll try later.\n");
-		}
-    
-		/* Emptying event stack */
-		for (i=0;i<2;i++) {
-			ret = ptp_canon_checkevent (params,&event,&isevent);
-			if (ret != PTP_RC_OK) {
-				gp_log (GP_LOG_DEBUG, "ptp", "error during check event: %d\n", ret);
-			}
-			if (isevent)
-				gp_log (GP_LOG_DEBUG, "ptp", "evdata: L=0x%X, T=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X\n",
-					event.length,event.type,event.code,event.trans_id,
-					event.param1, event.param2, event.param3);
-		}
-		/* Catch event, attempt  2 */
-		if (val16!=PTP_RC_OK) {
-			if (PTP_RC_OK==params->event_wait (params, &evc)) {
-				if (evc.Code == PTP_EC_StorageInfoChanged)
-					gp_log (GP_LOG_DEBUG, "ptp","Event: entering shooting mode.\n");
-				else
-					gp_log (GP_LOG_DEBUG, "ptp","Event: 0x%X\n", evc.Code);
-			} else
-				gp_log (GP_LOG_DEBUG, "ptp", "No expected mode change event.\n");
-		}
-		/* Reget device info, they change on the Canons. */
-		ptp_getdeviceinfo(&camera->pl->params, &camera->pl->params.deviceinfo);
-		gp_port_set_timeout (camera->port, oldtimeout);
-		return GP_OK;
+		if (ptp_operation_issupported(params, PTP_OC_CANON_SetDeviceProperty))
+			return camera_prepare_canon_eos_capture(camera,context);
+		gp_context_error(context, _("Sorry, your Canon camera does not support Canon capture"));
+		return GP_ERROR_NOT_SUPPORTED;
 	default:
 		/* generic capture does not need preparation */
 		return GP_OK;

@@ -1755,6 +1755,77 @@ ptp_canon_eos_getchanges (PTPParams* params, PTPCanon_changes_entry **entries, i
 }
 
 uint16_t
+ptp_canon_9101 (PTPParams* params)
+{
+	PTPContainer ptp;
+	unsigned char	*data = NULL;
+	unsigned int	size = 0;
+	uint16_t	ret;
+	
+	PTP_CNT_INIT(ptp);
+	ptp.Code 	= PTP_OC_CANON_9101;
+	ptp.Nparam	= 0;
+	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size);
+	/* FIXME: do stuff with data */
+	return ret;
+}
+
+uint16_t
+ptp_canon_9102 (PTPParams* params, uint32_t p1)
+{
+	PTPContainer ptp;
+	unsigned char	*data = NULL;
+	unsigned int	size = 0;
+	uint16_t	ret;
+	
+	PTP_CNT_INIT(ptp);
+	ptp.Code 	= PTP_OC_CANON_9102;
+	ptp.Nparam	= 1;
+	ptp.Param1	= p1;
+	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size);
+	/* FIXME: do stuff with data */
+	return ret;
+}
+
+uint16_t
+ptp_canon_9110 (PTPParams* params, unsigned char* data, unsigned int size)
+{
+	PTPContainer	ptp;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code 	= PTP_OC_CANON_SetDeviceProperty;
+	ptp.Nparam	= 0;
+	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &data, NULL);
+}
+
+
+uint16_t
+ptp_canon_9114 (PTPParams* params, uint32_t p1)
+{
+	PTPContainer	ptp;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code 	= PTP_OC_CANON_9114;
+	ptp.Nparam	= 1;
+	ptp.Param1	= p1;
+	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+}
+
+
+uint16_t
+ptp_canon_9115 (PTPParams* params, uint32_t p1)
+{
+	PTPContainer	ptp;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code 	= PTP_OC_CANON_9115;
+	ptp.Nparam	= 1;
+	ptp.Param1	= p1;
+	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+}
+
+
+uint16_t
 ptp_canon_9012 (PTPParams* params)
 {
 	PTPContainer ptp;
