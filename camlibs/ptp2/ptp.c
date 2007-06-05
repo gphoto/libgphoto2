@@ -2926,7 +2926,7 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		const char *txt;
 	} ptp_device_properties_Canon[] = {
 		{PTP_DPC_CANON_BeepMode,	N_("Beep Mode")},
-		{PTP_DPC_CANON_ViewfinderMode,	N_("Viewfinder Mode")},
+		{PTP_DPC_CANON_BatteryStatus,	N_("Battery Mode")},
 		{PTP_DPC_CANON_ImageQuality,	N_("Image Quality")},
 		{PTP_DPC_CANON_ImageSize,	N_("Image Size")},
 		{PTP_DPC_CANON_FlashMode,	N_("Flash Mode")},
