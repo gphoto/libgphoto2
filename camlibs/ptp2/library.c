@@ -1449,6 +1449,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	}
 	if (newobject == 0)
 		return GP_ERROR;
+	gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "object has OFC 0x%x", oi.ObjectFormat);
 
 	strcpy  (path->folder,"/");
 	sprintf (path->name, "capt%04d.jpg", capcnt++);
