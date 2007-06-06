@@ -1798,6 +1798,20 @@ ptp_canon_9110 (PTPParams* params, unsigned char* data, unsigned int size)
 	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &data, NULL);
 }
 
+uint16_t
+ptp_canon_911a (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3)
+{
+	PTPContainer	ptp;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code 	= PTP_OC_CANON_911A;
+	ptp.Nparam	= 3;
+	ptp.Param1	= p1;
+	ptp.Param2	= p2;
+	ptp.Param3	= p3;
+	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+}
+
 
 uint16_t
 ptp_canon_9114 (PTPParams* params, uint32_t p1)

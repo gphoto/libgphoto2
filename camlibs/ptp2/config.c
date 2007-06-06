@@ -171,6 +171,11 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 		nrofentries = 0;
 		entries = NULL;
 	}
+	ret = ptp_canon_911a(params, 0x7fffffff, 0x00001000, 0x00000001);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "911A failed!");
+		return GP_ERROR;
+	}
 	startup9110[0] = 0x0c; startup9110[1] = 0x00; startup9110[2] = 0x00; startup9110[3] = 0x00;
 	startup9110[4] = 0x1c; startup9110[5] = 0xd1; startup9110[6] = 0x00; startup9110[7] = 0x00;
 	startup9110[8] = 0x01; startup9110[9] = 0x00; startup9110[10] = 0x00; startup9110[11] = 0x00;
@@ -189,7 +194,7 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9101 failed!");
 		return GP_ERROR;
 	}
-	ret = ptp_canon_9102(params, 0);
+	ret = ptp_canon_9102(params, 1);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9102 failed!");
 		return GP_ERROR;
@@ -199,7 +204,7 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9101 failed!");
 		return GP_ERROR;
 	}
-	ret = ptp_canon_9102(params, 0);
+	ret = ptp_canon_9102(params, 1);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9102 failed!");
 		return GP_ERROR;
@@ -209,6 +214,11 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	ret = ptp_canon_9110 (params, startup9110, 12);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9110 of d11c to 4 failed!");
+		return GP_ERROR;
+	}
+	ret = ptp_canon_911a (params, 0x001dfc60, 0x1000, 0x1);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "911a to 0x001dfc60 failed!");
 		return GP_ERROR;
 	}
 

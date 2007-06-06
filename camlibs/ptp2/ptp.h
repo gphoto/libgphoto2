@@ -1681,6 +1681,7 @@ uint16_t ptp_canon_9102 (PTPParams* params, uint32_t p1);
 uint16_t ptp_canon_9110 (PTPParams* params, unsigned char* data, unsigned int size);
 uint16_t ptp_canon_9114 (PTPParams* params, uint32_t p1);
 uint16_t ptp_canon_9115 (PTPParams* params, uint32_t p1);
+uint16_t ptp_canon_911a (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3);
 
 uint16_t ptp_nikon_curve_download (PTPParams* params, 
 				unsigned char **data, unsigned int *size);
