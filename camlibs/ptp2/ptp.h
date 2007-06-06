@@ -1678,6 +1678,7 @@ uint16_t ptp_canon_getpairinginfo (PTPParams* params, uint32_t nr, unsigned char
 
 uint16_t ptp_canon_9101 (PTPParams* params);
 uint16_t ptp_canon_9102 (PTPParams* params, uint32_t p1);
+uint16_t ptp_canon_9107 (PTPParams* params, uint32_t oid, unsigned int xsize, unsigned char**data);
 uint16_t ptp_canon_9110 (PTPParams* params, unsigned char* data, unsigned int size);
 uint16_t ptp_canon_9114 (PTPParams* params, uint32_t p1);
 uint16_t ptp_canon_9115 (PTPParams* params, uint32_t p1);

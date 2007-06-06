@@ -1788,6 +1788,22 @@ ptp_canon_9102 (PTPParams* params, uint32_t p1)
 }
 
 uint16_t
+ptp_canon_9107 (PTPParams* params, uint32_t oid, unsigned int xsize, unsigned char**data)
+{
+	PTPContainer	ptp;
+	unsigned int	size = 0;
+
+	*data = NULL;
+	PTP_CNT_INIT(ptp);
+	ptp.Code 	= PTP_OC_CANON_GetPartialObject;
+	ptp.Nparam	= 3;
+	ptp.Param1	= oid;
+	ptp.Param2	= 0;
+	ptp.Param3	= xsize;
+	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, &size);
+}
+
+uint16_t
 ptp_canon_9110 (PTPParams* params, unsigned char* data, unsigned int size)
 {
 	PTPContainer	ptp;

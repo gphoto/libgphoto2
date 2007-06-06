@@ -1406,6 +1406,10 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	PTPCanon_changes_entry	*entries = NULL;
 	int			nrofentries = 0;
 	int			tries = 50;
+	CameraFile		*file = NULL;
+	unsigned char		*ximage = NULL;
+	static int		capcnt = 0;
+	PTPObjectInfo		oi;
 
 	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_CaptureImage)) {
 		gp_context_error (context,
@@ -1435,34 +1439,45 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 			if (entries[i].type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO) {
 				gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "Found new object! OID %ux, name %s", (unsigned int)entries[i].u.object.oid, entries[i].u.object.oi.Filename);
 				newobject = entries[i].u.object.oid;
-				add_object (camera, entries[i].u.object.oid, context);
+				memcpy (&oi, &entries[i].u.object.oi, sizeof(oi));
 				break;
 			}
 		}
 		free (entries);
+		if (newobject)
+			break;
 	}
 	if (newobject == 0)
 		return GP_ERROR;
 
-	if (newobject != 0) {
-		int i;
+	strcpy  (path->folder,"/");
+	sprintf (path->name, "capt%04d.jpg", capcnt++);
 
-		for (i = params->handles.n ; i--; ) {
-			PTPObjectInfo	*obinfo;
+	ret = gp_file_new(&file);
+	if (ret!=GP_OK) return ret;
+	gp_file_set_type (file, GP_FILE_TYPE_NORMAL);
+	gp_file_set_name(file, path->name);
+	gp_file_set_mime_type (file, GP_MIME_JPEG);
 
-			if (params->handles.Handler[i] != newobject)
-				continue;
-			obinfo = &camera->pl->params.objectinfo[i];
-			strcpy  (path->name,  obinfo->Filename);
-			sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)obinfo->StorageID);
-			get_folder_from_handle (camera, obinfo->StorageID, obinfo->ParentObject, path->folder);
-			/* delete last / or we get confused later. */
-			path->folder[ strlen(path->folder)-1 ] = '\0';
-			CR (gp_filesystem_append (camera->fs, path->folder,
-				path->name, context));
-			break;
-		}
+	gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "trying to get object size=0x%x", oi.ObjectCompressedSize);
+	CPR (context, ptp_canon_9107 (params, newobject, oi.ObjectCompressedSize, &ximage));
+	ret = gp_file_set_data_and_size(file, (char*)ximage, oi.ObjectCompressedSize);
+	if (ret != GP_OK) {
+		gp_file_free (file);
+		return ret;
 	}
+	ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
+	if (ret != GP_OK) {
+		gp_file_free (file);
+		return ret;
+	}
+	ret = gp_filesystem_set_file_noop(camera->fs, path->folder, file, context);
+	if (ret != GP_OK) {
+		gp_file_free (file);
+		return ret;
+	}
+	/* We have now handed over the file, disclaim responsibility by unref. */
+	gp_file_unref (file);
 	return GP_OK;
 }
 
