@@ -1436,7 +1436,6 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 				gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "Found new object! OID %ux, name %s", (unsigned int)entries[i].u.object.oid, entries[i].u.object.oi.Filename);
 				newobject = entries[i].u.object.oid;
 				add_object (camera, entries[i].u.object.oid, context);
-				free (entries);
 				break;
 			}
 		}
