@@ -253,7 +253,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_GetWirelessMAXChannel	0x9036
 
 /* 9101: no args, 8 byte data (01 00 00 00 00 00 00 00), no resp data. */
-#define PTP_OC_CANON_9101			0x9101
+#define PTP_OC_CANON_EOS_GetStorageIDs		0x9101
 /* 9102: 1 arg (0)
  * 0x28 bytes of data:
     00000000: 34 00 00 00 02 00 02 91 0a 00 00 00 04 00 03 00
@@ -262,8 +262,13 @@ typedef struct _PTPIPHeader PTPIPHeader;
     00000030: 3a 00 00 00
  * no resp args
  */
-#define PTP_OC_CANON_9102			0x9102
-#define PTP_OC_CANON_EOS_StartDirectTransfer	0x9107
+#define PTP_OC_CANON_EOS_GetStorageInfo		0x9102
+#define PTP_OC_CANON_EOS_GetObjectInfo		0x9103
+#define PTP_OC_CANON_EOS_GetObject		0x9104
+#define PTP_OC_CANON_EOS_DeleteObject		0x9105
+#define PTP_OC_CANON_EOS_FormatStore		0x9106
+#define PTP_OC_CANON_EOS_GetPartialObject	0x9107
+#define PTP_OC_CANON_EOS_GetDeviceInfoEx	0x9108
 
 /* sample1:
  * 3 cmdargs: 1,0xffffffff,00 00 10 00;
@@ -287,42 +292,40 @@ typedef struct _PTPIPHeader PTPIPHeader;
     00000040: 00 00 00 00 cc c3 01 46
 
  */
-#define PTP_OC_CANON_9109			0x9109
+#define PTP_OC_CANON_EOS_GetObjectInfoEx	0x9109
+#define PTP_OC_CANON_EOS_GetThumbEx		0x910A
+#define PTP_OC_CANON_EOS_SetObjectAttributes	0x910C
 
+/* 910f: no args, no data, 1 response arg (0). */
+#define PTP_OC_CANON_EOS_RemoteRelease		0x910F
 /* Marcus: looks more like "Set DeviceProperty" in the trace. 
  *
  * no cmd args
  * data phase (0xc, 0xd11c, 0x1)
  * no resp args 
  */
-/* 910f: no args, no data, 1 response arg (0). */
-#define PTP_OC_CANON_EOS_CaptureImage		0x910F
-/*
- * no cmd args
- * data (send) phase: 
- *
- * no resp args
- */
-#define PTP_OC_CANON_SetDeviceProperty		0x9110
-
+#define PTP_OC_CANON_EOS_SetDevicePropValueEx	0x9110
+#define PTP_OC_CANON_EOS_GetRemoteMode		0x9113
 /* 9114: 1 arg (0x1), no data, no resp data. */
-#define PTP_OC_CANON_9114			0x9114
+#define PTP_OC_CANON_EOS_SetRemoteMode		0x9114
 /* 9115: 1 arg (0x1), no data, no resp data. */
-#define PTP_OC_CANON_9115			0x9115
+#define PTP_OC_CANON_EOS_SetEventMode		0x9115
 /* 9116: no args, data phase, no resp data. */
-#define PTP_OC_CANON_EOS_GetChanges		0x9116
-#define PTP_OC_CANON_EOS_EndDirectTransfer	0x9117
+#define PTP_OC_CANON_EOS_GetEvent		0x9116
+#define PTP_OC_CANON_EOS_TransferComplete	0x9117
+#define PTP_OC_CANON_EOS_CancelTransfer		0x9118
+#define PTP_OC_CANON_EOS_ResetTransfer		0x9119
 
 /* 911a: 3 args (0xfffffff7, 0x00001000, 0x00000001), no data, no resp data. */
 /* 911a: 3 args (0x001dfc60, 0x00001000, 0x00000001), no data, no resp data. */
-#define PTP_OC_CANON_911A			0x911A
+#define PTP_OC_CANON_EOS_PCHDDCapacity		0x911A
 
 /* 911b: no cmd args, no data, no resp args */
-/* send on closing down the camera */
-#define PTP_OC_CANON_911B			0x911B
+#define PTP_OC_CANON_EOS_SetUILock		0x911B
 /* 911c: no cmd args, no data, no resp args */
-/* also send on closing down the camera */
-#define PTP_OC_CANON_911C			0x911C
+#define PTP_OC_CANON_EOS_ResetUILock		0x911C
+#define PTP_OC_CANON_EOS_KeepDeviceOn		0x911D
+#define PTP_OC_CANON_EOS_SetNullPacketMode	0x911E
 
 /* Nikon extension Operation Codes */
 #define PTP_OC_NIKON_GetProfileAllData	0x9006
@@ -1659,7 +1662,7 @@ uint16_t ptp_canon_focuslock (PTPParams* params);
 uint16_t ptp_canon_focusunlock (PTPParams* params);
 uint16_t ptp_canon_initiatecaptureinmemory (PTPParams* params);
 uint16_t ptp_canon_eos_capture (PTPParams* params);
-uint16_t ptp_canon_eos_getchanges (PTPParams* params, PTPCanon_changes_entry **entries, int *nrofentries);
+uint16_t ptp_canon_eos_getevent (PTPParams* params, PTPCanon_changes_entry **entries, int *nrofentries);
 uint16_t ptp_canon_getpartialobject (PTPParams* params, uint32_t handle, 
 				uint32_t offset, uint32_t size,
 				uint32_t pos, unsigned char** block, 
@@ -1680,14 +1683,14 @@ uint16_t ptp_canon_get_customize_data (PTPParams* params, uint32_t themenr,
 				unsigned char **data, unsigned int *size);
 uint16_t ptp_canon_getpairinginfo (PTPParams* params, uint32_t nr, unsigned char**, unsigned int*);
 
-uint16_t ptp_canon_9101 (PTPParams* params);
-uint16_t ptp_canon_9102 (PTPParams* params, uint32_t p1);
-uint16_t ptp_canon_eos_startdirecttransfer (PTPParams* params, uint32_t oid, uint32_t off, uint32_t xsize, unsigned char**data);
-uint16_t ptp_canon_9110 (PTPParams* params, unsigned char* data, unsigned int size);
-uint16_t ptp_canon_9114 (PTPParams* params, uint32_t p1);
-uint16_t ptp_canon_9115 (PTPParams* params, uint32_t p1);
-uint16_t ptp_canon_eos_enddirecttransfer (PTPParams* params, uint32_t oid);
-uint16_t ptp_canon_911a (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3);
+uint16_t ptp_canon_eos_getstorageids (PTPParams* params);
+uint16_t ptp_canon_eos_getstorageinfo (PTPParams* params, uint32_t p1);
+uint16_t ptp_canon_eos_getpartialobject (PTPParams* params, uint32_t oid, uint32_t off, uint32_t xsize, unsigned char**data);
+uint16_t ptp_canon_eos_setdevicepropvalueex (PTPParams* params, unsigned char* data, unsigned int size);
+uint16_t ptp_canon_eos_setremotemode (PTPParams* params, uint32_t p1);
+uint16_t ptp_canon_eos_seteventmode (PTPParams* params, uint32_t p1);
+uint16_t ptp_canon_eos_transfercomplete (PTPParams* params, uint32_t oid);
+uint16_t ptp_canon_eos_pchddcapacity (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3);
 
 uint16_t ptp_nikon_curve_download (PTPParams* params, 
 				unsigned char **data, unsigned int *size);

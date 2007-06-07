@@ -1720,13 +1720,13 @@ ptp_canon_eos_capture (PTPParams* params)
 	PTPContainer ptp;
 	
 	PTP_CNT_INIT(ptp);
-	ptp.Code=PTP_OC_CANON_EOS_CaptureImage;
+	ptp.Code=PTP_OC_CANON_EOS_RemoteRelease;
 	ptp.Nparam=0;
 	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
 }
 
 /**
- * ptp_canon_9116:
+ * ptp_canon_eos_getevent:
  * 
  * This retrieves configuration status/updates/changes
  * on EOS cameras. It reads a datablock which has a list of variable
@@ -1738,7 +1738,7 @@ ptp_canon_eos_capture (PTPParams* params)
  *
  **/
 uint16_t
-ptp_canon_eos_getchanges (PTPParams* params, PTPCanon_changes_entry **entries, int *nrofentries)
+ptp_canon_eos_getevent (PTPParams* params, PTPCanon_changes_entry **entries, int *nrofentries)
 {
 	PTPContainer ptp;
 	uint16_t	ret;
@@ -1746,7 +1746,7 @@ ptp_canon_eos_getchanges (PTPParams* params, PTPCanon_changes_entry **entries, i
 	unsigned char	*data = NULL;
 
 	PTP_CNT_INIT(ptp);
-	ptp.Code = PTP_OC_CANON_EOS_GetChanges;
+	ptp.Code = PTP_OC_CANON_EOS_GetEvent;
 	ptp.Nparam = 0;
 	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size);
 	if (ret != PTP_RC_OK) return ret;
@@ -1755,7 +1755,7 @@ ptp_canon_eos_getchanges (PTPParams* params, PTPCanon_changes_entry **entries, i
 }
 
 uint16_t
-ptp_canon_9101 (PTPParams* params)
+ptp_canon_eos_getstorageids (PTPParams* params)
 {
 	PTPContainer ptp;
 	unsigned char	*data = NULL;
@@ -1763,7 +1763,7 @@ ptp_canon_9101 (PTPParams* params)
 	uint16_t	ret;
 	
 	PTP_CNT_INIT(ptp);
-	ptp.Code 	= PTP_OC_CANON_9101;
+	ptp.Code 	= PTP_OC_CANON_EOS_GetStorageIDs;
 	ptp.Nparam	= 0;
 	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size);
 	/* FIXME: do stuff with data */
@@ -1771,7 +1771,7 @@ ptp_canon_9101 (PTPParams* params)
 }
 
 uint16_t
-ptp_canon_9102 (PTPParams* params, uint32_t p1)
+ptp_canon_eos_getstorageinfo (PTPParams* params, uint32_t p1)
 {
 	PTPContainer ptp;
 	unsigned char	*data = NULL;
@@ -1779,7 +1779,7 @@ ptp_canon_9102 (PTPParams* params, uint32_t p1)
 	uint16_t	ret;
 	
 	PTP_CNT_INIT(ptp);
-	ptp.Code 	= PTP_OC_CANON_9102;
+	ptp.Code 	= PTP_OC_CANON_EOS_GetStorageInfo;
 	ptp.Nparam	= 1;
 	ptp.Param1	= p1;
 	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size);
@@ -1788,7 +1788,7 @@ ptp_canon_9102 (PTPParams* params, uint32_t p1)
 }
 
 /**
- * ptp_canon_eos_startdirecttransfer:
+ * ptp_canon_eos_getpartialobject:
  * 
  * This retrieves a part of an PTP object which you specify as object id.
  * The id originates from 0x9116 call.
@@ -1804,14 +1804,14 @@ ptp_canon_9102 (PTPParams* params, uint32_t p1)
  *
  */
 uint16_t
-ptp_canon_eos_startdirecttransfer (PTPParams* params, uint32_t oid, uint32_t offset, uint32_t xsize, unsigned char**data)
+ptp_canon_eos_getpartialobject (PTPParams* params, uint32_t oid, uint32_t offset, uint32_t xsize, unsigned char**data)
 {
 	PTPContainer	ptp;
 	unsigned int	size = 0;
 
 	*data = NULL;
 	PTP_CNT_INIT(ptp);
-	ptp.Code 	= PTP_OC_CANON_EOS_StartDirectTransfer;
+	ptp.Code 	= PTP_OC_CANON_EOS_GetPartialObject;
 	ptp.Nparam	= 3;
 	ptp.Param1	= oid;
 	ptp.Param2	= offset;
@@ -1820,7 +1820,7 @@ ptp_canon_eos_startdirecttransfer (PTPParams* params, uint32_t oid, uint32_t off
 }
 
 /**
- * ptp_canon_eos_enddirecttransfer:
+ * ptp_canon_eos_transfercomplete:
  * 
  * This ends a direct object transfer from an EOS camera.
  *
@@ -1831,35 +1831,35 @@ ptp_canon_eos_startdirecttransfer (PTPParams* params, uint32_t oid, uint32_t off
  *
  */
 uint16_t
-ptp_canon_eos_enddirecttransfer (PTPParams* params, uint32_t oid)
+ptp_canon_eos_transfercomplete (PTPParams* params, uint32_t oid)
 {
 	PTPContainer	ptp;
 
 	PTP_CNT_INIT(ptp);
-	ptp.Code 	= PTP_OC_CANON_EOS_EndDirectTransfer;
+	ptp.Code 	= PTP_OC_CANON_EOS_TransferComplete;
 	ptp.Nparam	= 1;
 	ptp.Param1	= oid;
 	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
 }
 
 uint16_t
-ptp_canon_9110 (PTPParams* params, unsigned char* data, unsigned int size)
+ptp_canon_eos_setdevicepropvalueex (PTPParams* params, unsigned char* data, unsigned int size)
 {
 	PTPContainer	ptp;
 
 	PTP_CNT_INIT(ptp);
-	ptp.Code 	= PTP_OC_CANON_SetDeviceProperty;
+	ptp.Code 	= PTP_OC_CANON_EOS_SetDevicePropValueEx;
 	ptp.Nparam	= 0;
 	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &data, NULL);
 }
 
 uint16_t
-ptp_canon_911a (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3)
+ptp_canon_eos_pchddcapacity (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3)
 {
 	PTPContainer	ptp;
 
 	PTP_CNT_INIT(ptp);
-	ptp.Code 	= PTP_OC_CANON_911A;
+	ptp.Code 	= PTP_OC_CANON_EOS_PCHDDCapacity;
 	ptp.Nparam	= 3;
 	ptp.Param1	= p1;
 	ptp.Param2	= p2;
@@ -1869,12 +1869,12 @@ ptp_canon_911a (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3)
 
 
 uint16_t
-ptp_canon_9114 (PTPParams* params, uint32_t p1)
+ptp_canon_eos_setremotemode (PTPParams* params, uint32_t p1)
 {
 	PTPContainer	ptp;
 
 	PTP_CNT_INIT(ptp);
-	ptp.Code 	= PTP_OC_CANON_9114;
+	ptp.Code 	= PTP_OC_CANON_EOS_SetRemoteMode;
 	ptp.Nparam	= 1;
 	ptp.Param1	= p1;
 	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
@@ -1882,12 +1882,12 @@ ptp_canon_9114 (PTPParams* params, uint32_t p1)
 
 
 uint16_t
-ptp_canon_9115 (PTPParams* params, uint32_t p1)
+ptp_canon_eos_seteventmode (PTPParams* params, uint32_t p1)
 {
 	PTPContainer	ptp;
 
 	PTP_CNT_INIT(ptp);
-	ptp.Code 	= PTP_OC_CANON_9115;
+	ptp.Code 	= PTP_OC_CANON_EOS_SetEventMode;
 	ptp.Nparam	= 1;
 	ptp.Param1	= p1;
 	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);

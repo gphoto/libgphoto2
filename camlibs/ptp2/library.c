@@ -1411,7 +1411,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	static int		capcnt = 0;
 	PTPObjectInfo		oi;
 
-	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_CaptureImage)) {
+	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease)) {
 		gp_context_error (context,
 		_("Sorry, your Canon camera does not support Canon EOS Capture"));
 		return GP_ERROR_NOT_SUPPORTED;
@@ -1425,7 +1425,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	newobject = 0;
 	while (tries--) {
 		int i;
-		ret = ptp_canon_eos_getchanges (params, &entries, &nrofentries);
+		ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
 		if (ret != PTP_RC_OK) {
 			gp_context_error (context, _("Canon EOS Get Changes failed: %d"), ret);
 			return GP_ERROR;
@@ -1461,8 +1461,8 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	gp_file_set_mime_type (file, GP_MIME_JPEG);
 
 	gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "trying to get object size=0x%x", oi.ObjectCompressedSize);
-	CPR (context, ptp_canon_eos_startdirecttransfer (params, newobject, 0, oi.ObjectCompressedSize, &ximage));
-	CPR (context, ptp_canon_eos_enddirecttransfer (params, newobject));
+	CPR (context, ptp_canon_eos_getpartialobject (params, newobject, 0, oi.ObjectCompressedSize, &ximage));
+	CPR (context, ptp_canon_eos_transfercomplete (params, newobject));
 	ret = gp_file_set_data_and_size(file, (char*)ximage, oi.ObjectCompressedSize);
 	if (ret != GP_OK) {
 		gp_file_free (file);
@@ -1625,7 +1625,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	}
 
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
-		ptp_operation_issupported(params, PTP_OC_CANON_EOS_CaptureImage)
+		ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease)
 	) {
 		return camera_canon_eos_capture (camera, type, path, context);
 	}

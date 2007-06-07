@@ -148,19 +148,19 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	int			nrofentries = 0;
 	unsigned char		startup9110[12];
 
-	ret = ptp_canon_9115(params, 1);
+	ret = ptp_canon_eos_setremotemode(params, 1);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9115 failed!");
 		return GP_ERROR;
 	}
-	ret = ptp_canon_9114(params, 1);
+	ret = ptp_canon_eos_seteventmode(params, 1);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9114 failed!");
 		return GP_ERROR;
 	}
 	/* Get the initial bulk set of 0x9116 property data */
 	while (1) {
-		ret = ptp_canon_eos_getchanges (params, &entries, &nrofentries);
+		ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
 		if (ret != PTP_RC_OK) {
 			gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9116 failed!");
 			return GP_ERROR;
@@ -171,7 +171,7 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 		nrofentries = 0;
 		entries = NULL;
 	}
-	ret = ptp_canon_911a(params, 0x7fffffff, 0x00001000, 0x00000001);
+	ret = ptp_canon_eos_pchddcapacity(params, 0x7fffffff, 0x00001000, 0x00000001);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "911A failed!");
 		return GP_ERROR;
@@ -179,7 +179,7 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	startup9110[0] = 0x0c; startup9110[1] = 0x00; startup9110[2] = 0x00; startup9110[3] = 0x00;
 	startup9110[4] = 0x1c; startup9110[5] = 0xd1; startup9110[6] = 0x00; startup9110[7] = 0x00;
 	startup9110[8] = 0x01; startup9110[9] = 0x00; startup9110[10] = 0x00; startup9110[11] = 0x00;
-	ret = ptp_canon_9110 (params, startup9110, 12);
+	ret = ptp_canon_eos_setdevicepropvalueex (params, startup9110, 12);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9110 of d11c to 1 failed!");
 		return GP_ERROR;
@@ -189,34 +189,34 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getdeviceinfo failed!");
 		return GP_ERROR;
 	}
-	ret = ptp_canon_9101(params);
+	ret = ptp_canon_eos_getstorageids(params);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9101 failed!");
 		return GP_ERROR;
 	}
-	ret = ptp_canon_9102(params, 1);
+	ret = ptp_canon_eos_getstorageinfo(params, 1);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9102 failed!");
 		return GP_ERROR;
 	}
-	ret = ptp_canon_9101(params);
+	ret = ptp_canon_eos_getstorageids(params);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9101 failed!");
 		return GP_ERROR;
 	}
-	ret = ptp_canon_9102(params, 1);
+	ret = ptp_canon_eos_getstorageinfo(params, 1);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9102 failed!");
 		return GP_ERROR;
 	}
 	/* just exchange the value to 4 */
 	startup9110[8] = 0x04; startup9110[9] = 0x00; startup9110[10] = 0x00; startup9110[11] = 0x00;
-	ret = ptp_canon_9110 (params, startup9110, 12);
+	ret = ptp_canon_eos_setdevicepropvalueex (params, startup9110, 12);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9110 of d11c to 4 failed!");
 		return GP_ERROR;
 	}
-	ret = ptp_canon_911a (params, 0x001dfc60, 0x1000, 0x1);
+	ret = ptp_canon_eos_pchddcapacity (params, 0x001dfc60, 0x1000, 0x1);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "911a to 0x001dfc60 failed!");
 		return GP_ERROR;
@@ -226,7 +226,7 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 
 	/* Get the second bulk set of 0x9116 property data */
 	while (1) {
-		ret = ptp_canon_eos_getchanges (params, &entries, &nrofentries);
+		ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
 		if (ret != PTP_RC_OK) {
 			gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9116 failed!");
 			return GP_ERROR;
@@ -251,7 +251,7 @@ camera_prepare_capture (Camera *camera, GPContext *context)
 		if (ptp_operation_issupported(params, PTP_OC_CANON_StartShootingMode))
 			return camera_prepare_canon_powershot_capture(camera,context);
 
-		if (ptp_operation_issupported(params, PTP_OC_CANON_SetDeviceProperty))
+		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease))
 			return camera_prepare_canon_eos_capture(camera,context);
 		gp_context_error(context, _("Sorry, your Canon camera does not support Canon capture"));
 		return GP_ERROR_NOT_SUPPORTED;
@@ -284,7 +284,7 @@ camera_unprepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	int			nrofentries = 0;
 	unsigned char		startup9110[12];
 
-	ret = ptp_canon_911a(params, 0xffffef40, 0x00001000, 0x00000001);
+	ret = ptp_canon_eos_pchddcapacity(params, 0xffffef40, 0x00001000, 0x00000001);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_unprepare_eos_capture", "911A to 0xffffef40 failed!");
 		return GP_ERROR;
@@ -295,7 +295,7 @@ camera_unprepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	startup9110[0] = 0x0c; startup9110[1] = 0x00; startup9110[2] = 0x00; startup9110[3] = 0x00;
 	startup9110[4] = 0x1c; startup9110[5] = 0xd1; startup9110[6] = 0x00; startup9110[7] = 0x00;
 	startup9110[8] = 0x01; startup9110[9] = 0x00; startup9110[10] = 0x00; startup9110[11] = 0x00;
-	ret = ptp_canon_9110 (params, startup9110, 12);
+	ret = ptp_canon_eos_setdevicepropvalueex (params, startup9110, 12);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_unprepare_eos_capture", "9110 of d11c to 1 failed!");
 		return GP_ERROR;
@@ -303,7 +303,7 @@ camera_unprepare_canon_eos_capture(Camera *camera, GPContext *context) {
 
 	/* Drain the rest set of the 0x9116 property data */
 	while (1) {
-		ret = ptp_canon_eos_getchanges (params, &entries, &nrofentries);
+		ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
 		if (ret != PTP_RC_OK) {
 			gp_log (GP_LOG_ERROR,"ptp2_unprepare_eos_capture", "9116 failed!");
 			return GP_ERROR;
@@ -315,12 +315,12 @@ camera_unprepare_canon_eos_capture(Camera *camera, GPContext *context) {
 		entries = NULL;
 	}
 
-	ret = ptp_canon_9115(params, 0);
+	ret = ptp_canon_eos_setremotemode(params, 0);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_unprepare_eos_capture", "9115 failed!");
 		return GP_ERROR;
 	}
-	ret = ptp_canon_9114(params, 0);
+	ret = ptp_canon_eos_seteventmode(params, 0);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_unprepare_eos_capture", "9114 failed!");
 		return GP_ERROR;
@@ -337,7 +337,7 @@ camera_unprepare_capture (Camera *camera, GPContext *context)
 		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EndShootingMode))
 			return camera_unprepare_canon_powershot_capture (camera, context);
 
-		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_SetDeviceProperty))
+		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_RemoteRelease))
 			return camera_unprepare_canon_eos_capture (camera, context);
 
 		gp_context_error(context,
