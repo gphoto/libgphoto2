@@ -317,6 +317,13 @@ typedef struct _PTPIPHeader PTPIPHeader;
 /* 911a: 3 args (0x001dfc60, 0x00001000, 0x00000001), no data, no resp data. */
 #define PTP_OC_CANON_911A			0x911A
 
+/* 911b: no cmd args, no data, no resp args */
+/* send on closing down the camera */
+#define PTP_OC_CANON_911B			0x911B
+/* 911c: no cmd args, no data, no resp args */
+/* also send on closing down the camera */
+#define PTP_OC_CANON_911C			0x911C
+
 /* Nikon extension Operation Codes */
 #define PTP_OC_NIKON_GetProfileAllData	0x9006
 #define PTP_OC_NIKON_SendProfileData	0x9007

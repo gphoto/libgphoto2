@@ -262,27 +262,87 @@ camera_prepare_capture (Camera *camera, GPContext *context)
 	return GP_OK;
 }
 
+static int
+camera_unprepare_canon_powershot_capture(Camera *camera, GPContext *context) {
+	uint16_t	ret;
+
+	ret = ptp_canon_endshootingmode (&camera->pl->params);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_DEBUG, "ptp", "end shooting mode error %d\n", ret);
+		return GP_ERROR;
+	}
+	/* Reget device info, they change on the Canons. */
+	ptp_getdeviceinfo(&camera->pl->params, &camera->pl->params.deviceinfo);
+	return GP_OK;
+}
+
+static int
+camera_unprepare_canon_eos_capture(Camera *camera, GPContext *context) {
+	PTPParams		*params = &camera->pl->params;
+	uint16_t		ret;
+	PTPCanon_changes_entry	*entries = NULL;
+	int			nrofentries = 0;
+	unsigned char		startup9110[12];
+
+	ret = ptp_canon_911a(params, 0xffffef40, 0x00001000, 0x00000001);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_ERROR,"ptp2_unprepare_eos_capture", "911A to 0xffffef40 failed!");
+		return GP_ERROR;
+	}
+
+	/* then emits 911b and 911c ... not done yet ... */
+
+	startup9110[0] = 0x0c; startup9110[1] = 0x00; startup9110[2] = 0x00; startup9110[3] = 0x00;
+	startup9110[4] = 0x1c; startup9110[5] = 0xd1; startup9110[6] = 0x00; startup9110[7] = 0x00;
+	startup9110[8] = 0x01; startup9110[9] = 0x00; startup9110[10] = 0x00; startup9110[11] = 0x00;
+	ret = ptp_canon_9110 (params, startup9110, 12);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_ERROR,"ptp2_unprepare_eos_capture", "9110 of d11c to 1 failed!");
+		return GP_ERROR;
+	}
+
+	/* Drain the rest set of the 0x9116 property data */
+	while (1) {
+		ret = ptp_canon_eos_getchanges (params, &entries, &nrofentries);
+		if (ret != PTP_RC_OK) {
+			gp_log (GP_LOG_ERROR,"ptp2_unprepare_eos_capture", "9116 failed!");
+			return GP_ERROR;
+		}
+		if (nrofentries == 0)
+			break;
+		free (entries);
+		nrofentries = 0;
+		entries = NULL;
+	}
+
+	ret = ptp_canon_9115(params, 0);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_ERROR,"ptp2_unprepare_eos_capture", "9115 failed!");
+		return GP_ERROR;
+	}
+	ret = ptp_canon_9114(params, 0);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_ERROR,"ptp2_unprepare_eos_capture", "9114 failed!");
+		return GP_ERROR;
+	}
+	return GP_OK;
+}
+
 int
 camera_unprepare_capture (Camera *camera, GPContext *context)
 {
-	int ret;
-
 	gp_log (GP_LOG_DEBUG, "ptp", "Unprepare_capture\n");
 	switch (camera->pl->params.deviceinfo.VendorExtensionID) {
 	case PTP_VENDOR_CANON:
-		if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EndShootingMode)) {
-			gp_context_error(context,
-			_("Sorry, your Canon camera does not support Canon capture"));
-			return GP_ERROR_NOT_SUPPORTED;
-		}
-		ret = ptp_canon_endshootingmode (&camera->pl->params);
-		if (ret != PTP_RC_OK) {
-			gp_log (GP_LOG_DEBUG, "ptp", "end shooting mode error %d\n", ret);
-			return GP_ERROR;
-		}
-		/* Reget device info, they change on the Canons. */
-		ptp_getdeviceinfo(&camera->pl->params, &camera->pl->params.deviceinfo);
-		return GP_OK;
+		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EndShootingMode))
+			return camera_unprepare_canon_powershot_capture (camera, context);
+
+		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_SetDeviceProperty))
+			return camera_unprepare_canon_eos_capture (camera, context);
+
+		gp_context_error(context,
+		_("Sorry, your Canon camera does not support Canon capture"));
+		return GP_ERROR_NOT_SUPPORTED;
 	default:
 		/* generic capture does not need unpreparation */
 		return GP_OK;
@@ -2733,4 +2793,3 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	}
 	return GP_OK;
 }
-
