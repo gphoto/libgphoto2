@@ -263,7 +263,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
  * no resp args
  */
 #define PTP_OC_CANON_9102			0x9102
-#define PTP_OC_CANON_GetPartialObject		0x9107
+#define PTP_OC_CANON_EOS_StartDirectTransfer	0x9107
 
 /* sample1:
  * 3 cmdargs: 1,0xffffffff,00 00 10 00;
@@ -311,10 +311,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_9115			0x9115
 /* 9116: no args, data phase, no resp data. */
 #define PTP_OC_CANON_EOS_GetChanges		0x9116
-
-/* 9117: 3 args (objectid?, startoffset, size), data phase, no resp data. */
-/* 9117: 1 arg (objectid?), data phase, no resp data - signals end. */
-#define PTP_OC_CANON_GetImageData		0x9117
+#define PTP_OC_CANON_EOS_EndDirectTransfer	0x9117
 
 /* 911a: 3 args (0xfffffff7, 0x00001000, 0x00000001), no data, no resp data. */
 /* 911a: 3 args (0x001dfc60, 0x00001000, 0x00000001), no data, no resp data. */
@@ -1678,10 +1675,11 @@ uint16_t ptp_canon_getpairinginfo (PTPParams* params, uint32_t nr, unsigned char
 
 uint16_t ptp_canon_9101 (PTPParams* params);
 uint16_t ptp_canon_9102 (PTPParams* params, uint32_t p1);
-uint16_t ptp_canon_9107 (PTPParams* params, uint32_t oid, unsigned int xsize, unsigned char**data);
+uint16_t ptp_canon_eos_startdirecttransfer (PTPParams* params, uint32_t oid, uint32_t off, uint32_t xsize, unsigned char**data);
 uint16_t ptp_canon_9110 (PTPParams* params, unsigned char* data, unsigned int size);
 uint16_t ptp_canon_9114 (PTPParams* params, uint32_t p1);
 uint16_t ptp_canon_9115 (PTPParams* params, uint32_t p1);
+uint16_t ptp_canon_eos_enddirecttransfer (PTPParams* params, uint32_t oid);
 uint16_t ptp_canon_911a (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3);
 
 uint16_t ptp_nikon_curve_download (PTPParams* params, 

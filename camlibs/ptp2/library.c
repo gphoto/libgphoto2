@@ -1461,7 +1461,8 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	gp_file_set_mime_type (file, GP_MIME_JPEG);
 
 	gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "trying to get object size=0x%x", oi.ObjectCompressedSize);
-	CPR (context, ptp_canon_9107 (params, newobject, oi.ObjectCompressedSize, &ximage));
+	CPR (context, ptp_canon_eos_startdirecttransfer (params, newobject, 0, oi.ObjectCompressedSize, &ximage));
+	CPR (context, ptp_canon_eos_enddirecttransfer (params, newobject));
 	ret = gp_file_set_data_and_size(file, (char*)ximage, oi.ObjectCompressedSize);
 	if (ret != GP_OK) {
 		gp_file_free (file);

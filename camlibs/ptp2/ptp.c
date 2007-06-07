@@ -1787,20 +1787,59 @@ ptp_canon_9102 (PTPParams* params, uint32_t p1)
 	return ret;
 }
 
+/**
+ * ptp_canon_eos_startdirecttransfer:
+ * 
+ * This retrieves a part of an PTP object which you specify as object id.
+ * The id originates from 0x9116 call.
+ * After finishing it, we seem to need to call ptp_canon_eos_enddirecttransfer.
+ *
+ * params:	PTPParams*
+ * 		oid		Object ID
+ * 		offset		The offset where to start the data transfer 
+ *		xsize		Size in bytes of the transfer to do
+ *		data		Pointer that receives the malloc()ed memory of the transfer.
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ */
 uint16_t
-ptp_canon_9107 (PTPParams* params, uint32_t oid, unsigned int xsize, unsigned char**data)
+ptp_canon_eos_startdirecttransfer (PTPParams* params, uint32_t oid, uint32_t offset, uint32_t xsize, unsigned char**data)
 {
 	PTPContainer	ptp;
 	unsigned int	size = 0;
 
 	*data = NULL;
 	PTP_CNT_INIT(ptp);
-	ptp.Code 	= PTP_OC_CANON_GetPartialObject;
+	ptp.Code 	= PTP_OC_CANON_EOS_StartDirectTransfer;
 	ptp.Nparam	= 3;
 	ptp.Param1	= oid;
-	ptp.Param2	= 0;
+	ptp.Param2	= offset;
 	ptp.Param3	= xsize;
 	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, &size);
+}
+
+/**
+ * ptp_canon_eos_enddirecttransfer:
+ * 
+ * This ends a direct object transfer from an EOS camera.
+ *
+ * params:	PTPParams*
+ * 		oid		Object ID
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ */
+uint16_t
+ptp_canon_eos_enddirecttransfer (PTPParams* params, uint32_t oid)
+{
+	PTPContainer	ptp;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code 	= PTP_OC_CANON_EOS_EndDirectTransfer;
+	ptp.Nparam	= 1;
+	ptp.Param1	= oid;
+	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
 }
 
 uint16_t
