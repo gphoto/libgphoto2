@@ -1393,6 +1393,9 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	return GP_OK;
 }
 
+/* 60 seconds timeout ... (for long cycles) */
+#define EOS_CAPTURE_TIMEOUT 60
+
 /* This is currently the capture method used by the EOS 400D
  * ... in development.
  */
@@ -1405,11 +1408,11 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	uint32_t		newobject = 0x0;
 	PTPCanon_changes_entry	*entries = NULL;
 	int			nrofentries = 0;
-	int			tries = 50;
 	CameraFile		*file = NULL;
 	unsigned char		*ximage = NULL;
 	static int		capcnt = 0;
 	PTPObjectInfo		oi;
+	time_t                  capture_start=time(NULL);
 
 	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease)) {
 		gp_context_error (context,
@@ -1423,7 +1426,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		return GP_ERROR;
 	}
 	newobject = 0;
-	while (tries--) {
+	while ((time(NULL)-capture_start)<=EOS_CAPTURE_TIMEOUT) {
 		int i;
 		ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
 		if (ret != PTP_RC_OK) {
@@ -1431,8 +1434,9 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 			return GP_ERROR;
 		}
 		if (!nrofentries) {
-			gp_log (GP_LOG_ERROR, "ptp2/canon_eos_capture", "Empty list found?");
+			gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "Empty list found?");
 			free (entries);
+			gp_context_idle (context);
 			continue;
 		}
 		for (i=0;i<nrofentries;i++) {
@@ -1446,6 +1450,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		free (entries);
 		if (newobject)
 			break;
+		gp_context_idle (context);
 	}
 	if (newobject == 0)
 		return GP_ERROR;
@@ -1548,6 +1553,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 
 	/* checking events in stack. */
 	for (i=0;i<100;i++) {
+		gp_context_idle (context);
 		ret = ptp_canon_checkevent (params,&usbevent,&isevent);
 		if (ret!=PTP_RC_OK)
 			continue;

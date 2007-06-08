@@ -1087,22 +1087,22 @@ typedef struct _PTPCanon_changes_entry PTPCanon_changes_entry;
 #define PTP_DPC_CANON_ModelID		0xD049
 
 /* From EOS 400D trace. */
-#define PTP_DPC_CANON_Aperture2		0xD101
-#define PTP_DPC_CANON_ShutterSpeed2	0xD102
-#define PTP_DPC_CANON_ISOSpeed2		0xD103
-#define PTP_DPC_CANON_ExpCompensation2	0xD104
-#define PTP_DPC_CANON_EOS_CameraMode	0xD105
-#define PTP_DPC_CANON_MeteringMode2	0xD107
-#define PTP_DPC_CANON_Focus2		0xD108
-#define PTP_DPC_CANON_WhiteBalance2	0xD109
-#define PTP_DPC_CANON_WhiteBalanceAdjustA	0xD10B
-#define PTP_DPC_CANON_WhiteBalanceAdjustB	0xD10C
-#define PTP_DPC_CANON_ColorSpace	0xD10F
-#define PTP_DPC_CANON_PictureStyle	0xD110
-#define PTP_DPC_CANON_TransferOption	0xD111
-#define PTP_DPC_CANON_CameraTime	0xD113
-#define PTP_DPC_CANON_Owner		0xD115
-#define PTP_DPC_CANON_ImageFormat	0xD120
+#define PTP_DPC_CANON_EOS_Aperture		0xD101
+#define PTP_DPC_CANON_EOS_ShutterSpeed		0xD102
+#define PTP_DPC_CANON_EOS_ISOSpeed		0xD103
+#define PTP_DPC_CANON_EOS_ExpCompensation	0xD104
+#define PTP_DPC_CANON_EOS_CameraMode		0xD105
+#define PTP_DPC_CANON_EOS_MeteringMode		0xD107
+#define PTP_DPC_CANON_EOS_Focus			0xD108
+#define PTP_DPC_CANON_EOS_WhiteBalance		0xD109
+#define PTP_DPC_CANON_EOS_WhiteBalanceAdjustA	0xD10B
+#define PTP_DPC_CANON_EOS_WhiteBalanceAdjustB	0xD10C
+#define PTP_DPC_CANON_EOS_ColorSpace		0xD10F
+#define PTP_DPC_CANON_EOS_PictureStyle		0xD110
+#define PTP_DPC_CANON_EOS_TransferOption	0xD111
+#define PTP_DPC_CANON_EOS_CameraTime		0xD113
+#define PTP_DPC_CANON_EOS_Owner			0xD115
+#define PTP_DPC_CANON_EOS_ImageFormat		0xD120
 
 /* Nikon extension device property codes */
 #define PTP_DPC_NIKON_ShootingBank			0xD010
