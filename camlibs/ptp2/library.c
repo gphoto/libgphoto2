@@ -3005,11 +3005,13 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	((PTPData *) params->data)->context = context;
 
+#if 0
 	/* The new Canons like to switch themselves off in the middle. */
 	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) {
 		if (ptp_operation_issupported(params, PTP_OC_CANON_KeepDeviceOn))
 			ptp_canon_keepdeviceon (params);
 	}
+#endif
 
 	if (!strcmp (folder, "/special")) {
 		int i;
