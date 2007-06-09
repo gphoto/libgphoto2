@@ -190,19 +190,15 @@ typedef struct _PTPIPHeader PTPIPHeader;
 
 /* Canon extension Operation Codes */
 #define PTP_OC_CANON_GetPartialObjectInfo	0x9001
-#define PTP_OC_CANON_SetObjectArchive		0x9002
 /* 9002 - sends 2 uint32, nothing back  */
+#define PTP_OC_CANON_SetObjectArchive		0x9002
 #define PTP_OC_CANON_KeepDeviceOn		0x9003
 #define PTP_OC_CANON_LockDeviceUI		0x9004
 #define PTP_OC_CANON_UnlockDeviceUI		0x9005
-/* 9003 - sends nothing, nothing back  */
-/* no 9004 observed yet */
-/* no 9005 observed yet */
 #define PTP_OC_CANON_GetObjectHandleByName	0x9006
 /* no 9007 observed yet */
-#define PTP_OC_CANON_StartShootingMode		0x9008
-#define PTP_OC_CANON_EndShootingMode		0x9009
-/* 900a - sends nothing, nothing back */
+#define PTP_OC_CANON_InitiateReleaseControl	0x9008
+#define PTP_OC_CANON_TerminateReleaseControl	0x9009
 #define PTP_OC_CANON_TerminatePlaybackMode	0x900A
 #define PTP_OC_CANON_ViewfinderOn		0x900B
 #define PTP_OC_CANON_ViewfinderOff		0x900C
@@ -235,8 +231,8 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_SendObjectByPath 		0x9025
 #define PTP_OC_CANON_InitiateDirectTansferEx	0x9026
 #define PTP_OC_CANON_GetAncillaryObjectHandles	0x9027
-#define PTP_OC_CANON_InitiateDirectTransferEx2 	0x9028
-#define PTP_OC_CANON_GetTargetHandles 		0x9029
+#define PTP_OC_CANON_GetTreeInfo 		0x9028
+#define PTP_OC_CANON_GetTreeSize 		0x9029
 #define PTP_OC_CANON_NotifyProgress 		0x902A
 #define PTP_OC_CANON_NotifyCancelAccepted	0x902B
 /* 902c: no parms, read 3 uint32 in data, no response parms */
@@ -659,6 +655,8 @@ typedef struct _PTPObjectInfo PTPObjectInfo;
 #define PTP_OFC_JPX				0x3810
 /* Eastman Kodak extension ancillary format */
 #define PTP_OFC_EK_M3U				0xb002
+/* Canon extension */
+#define PTP_OFC_CANON_CRW			0xb101
 /* MTP extensions */
 #define PTP_OFC_MTP_MediaCard			0xb211
 #define PTP_OFC_MTP_MediaCardGroup		0xb212
@@ -1643,8 +1641,8 @@ uint16_t ptp_ek_sendfileobject_from_handler	(PTPParams* params, PTPDataHandler*,
 
 /* Canon PTP extensions */
 uint16_t ptp_canon_9012 (PTPParams* params);
-uint16_t ptp_canon_initiate_direct_transfer (PTPParams* params, uint32_t* out);
-uint16_t ptp_canon_get_target_handles (PTPParams* params, PTPCanon_directtransfer_entry**, unsigned int*cnt);
+uint16_t ptp_canon_gettreeinfo (PTPParams* params, uint32_t* out);
+uint16_t ptp_canon_gettreesize (PTPParams* params, PTPCanon_directtransfer_entry**, unsigned int*cnt);
 uint16_t ptp_canon_getpartialobjectinfo (PTPParams* params, uint32_t handle,
 				uint32_t p2, uint32_t* size, uint32_t* rp2);
 
@@ -1660,6 +1658,7 @@ uint16_t ptp_canon_checkevent (PTPParams* params,
 				PTPUSBEventContainer* event, int* isevent);
 uint16_t ptp_canon_focuslock (PTPParams* params);
 uint16_t ptp_canon_focusunlock (PTPParams* params);
+uint16_t ptp_canon_keepdeviceon (PTPParams* params);
 uint16_t ptp_canon_initiatecaptureinmemory (PTPParams* params);
 uint16_t ptp_canon_eos_capture (PTPParams* params);
 uint16_t ptp_canon_eos_getevent (PTPParams* params, PTPCanon_changes_entry **entries, int *nrofentries);

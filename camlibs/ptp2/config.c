@@ -248,7 +248,7 @@ camera_prepare_capture (Camera *camera, GPContext *context)
 	gp_log (GP_LOG_DEBUG, "ptp", "prepare_capture\n");
 	switch (params->deviceinfo.VendorExtensionID) {
 	case PTP_VENDOR_CANON:
-		if (ptp_operation_issupported(params, PTP_OC_CANON_StartShootingMode))
+		if (ptp_operation_issupported(params, PTP_OC_CANON_InitiateReleaseControl))
 			return camera_prepare_canon_powershot_capture(camera,context);
 
 		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease))
@@ -334,7 +334,7 @@ camera_unprepare_capture (Camera *camera, GPContext *context)
 	gp_log (GP_LOG_DEBUG, "ptp", "Unprepare_capture\n");
 	switch (camera->pl->params.deviceinfo.VendorExtensionID) {
 	case PTP_VENDOR_CANON:
-		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EndShootingMode))
+		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_TerminateReleaseControl))
 			return camera_unprepare_canon_powershot_capture (camera, context);
 
 		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_RemoteRelease))

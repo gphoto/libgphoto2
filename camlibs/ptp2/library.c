@@ -1801,7 +1801,8 @@ camera_wait_for_event (Camera *camera, int timeout,
 
 static int
 _value_to_str(PTPPropertyValue *data, uint16_t dt, char *txt, int spaceleft) {
-	int n;
+	int	n;
+	char	*origtxt = txt;
 
 	if (dt == PTP_DTC_STR)
 		return snprintf (txt, spaceleft, "'%s'", data->str);
@@ -1818,6 +1819,7 @@ _value_to_str(PTPPropertyValue *data, uint16_t dt, char *txt, int spaceleft) {
 				if (n >= spaceleft) return 0; spaceleft -= n; txt += n;
 			}
 		}
+		return txt - origtxt;
 	} else {
 		switch (dt) {
 		case PTP_DTC_UNDEF:
@@ -3002,6 +3004,12 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	PTPParams *params = &camera->pl->params;
 
 	((PTPData *) params->data)->context = context;
+
+	/* The new Canons like to switch themselves off in the middle. */
+	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) {
+		if (ptp_operation_issupported(params, PTP_OC_CANON_KeepDeviceOn))
+			ptp_canon_keepdeviceon (params);
+	}
 
 	if (!strcmp (folder, "/special")) {
 		int i;

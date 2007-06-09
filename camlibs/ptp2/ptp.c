@@ -1390,13 +1390,13 @@ ptp_canon_startshootingmode (PTPParams* params)
 	PTPContainer ptp;
 	
 	PTP_CNT_INIT(ptp);
-	ptp.Code=PTP_OC_CANON_StartShootingMode;
+	ptp.Code=PTP_OC_CANON_InitiateReleaseControl;
 	ptp.Nparam=0;
 	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
 }
 
 /**
- * ptp_canon_initiate_direct_transfer:
+ * ptp_canon_gettreeinfo:
  * params:	PTPParams*
  *              uint32_t *out
  * 
@@ -1408,13 +1408,13 @@ ptp_canon_startshootingmode (PTPParams* params)
  *
  **/
 uint16_t
-ptp_canon_initiate_direct_transfer (PTPParams* params, uint32_t *out)
+ptp_canon_gettreeinfo (PTPParams* params, uint32_t *out)
 {
 	PTPContainer ptp;
 	uint16_t ret;
 
 	PTP_CNT_INIT(ptp);
-	ptp.Code   = PTP_OC_CANON_InitiateDirectTransferEx2;
+	ptp.Code   = PTP_OC_CANON_GetTreeInfo;
 	ptp.Nparam = 1;
 	ptp.Param1 = 0xf;
 	ret = ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
@@ -1464,7 +1464,7 @@ ptp_canon_getpairinginfo (PTPParams* params, uint32_t nr, unsigned char **data, 
  *
  **/
 uint16_t
-ptp_canon_get_target_handles (PTPParams* params,
+ptp_canon_gettreesize (PTPParams* params,
 	PTPCanon_directtransfer_entry **entries, unsigned int *cnt)
 {
 	PTPContainer ptp;
@@ -1474,7 +1474,7 @@ ptp_canon_get_target_handles (PTPParams* params,
 	unsigned int size;
 	
 	PTP_CNT_INIT(ptp);
-	ptp.Code   = PTP_OC_CANON_GetTargetHandles;
+	ptp.Code   = PTP_OC_CANON_GetTreeSize;
 	ptp.Nparam = 0;
 	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &out, &size);
 	if (ret != PTP_RC_OK)
@@ -1510,7 +1510,7 @@ ptp_canon_endshootingmode (PTPParams* params)
 	PTPContainer ptp;
 	
 	PTP_CNT_INIT(ptp);
-	ptp.Code=PTP_OC_CANON_EndShootingMode;
+	ptp.Code=PTP_OC_CANON_TerminateReleaseControl;
 	ptp.Nparam=0;
 	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
 }
@@ -1670,6 +1670,27 @@ ptp_canon_focusunlock (PTPParams* params)
 	
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_CANON_FocusUnlock;
+	ptp.Nparam=0;
+	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+}
+
+/**
+ * ptp_canon_keepdeviceon:
+ *
+ * This operation sends a "ping" style message to the camera.
+ * 
+ * params:	PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_canon_keepdeviceon (PTPParams* params)
+{
+	PTPContainer ptp;
+	
+	PTP_CNT_INIT(ptp);
+	ptp.Code=PTP_OC_CANON_KeepDeviceOn;
 	ptp.Nparam=0;
 	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
 }
@@ -3710,7 +3731,15 @@ ptp_render_ofc(PTPParams* params, uint16_t ofc, int spaceleft, char *txt)
 		case PTP_VENDOR_EASTMAN_KODAK:
 			switch (ofc) {
 			case PTP_OFC_EK_M3U:
-				return snprintf (txt, spaceleft,_("M3U"));
+				return snprintf (txt, spaceleft,"M3U");
+			default:
+				break;
+			}
+			break;
+		case PTP_VENDOR_CANON:
+			switch (ofc) {
+			case PTP_OFC_CANON_CRW:
+				return snprintf (txt, spaceleft,"CRW");
 			default:
 				break;
 			}
