@@ -290,6 +290,11 @@ gp_port_usb_close (GPPort *port)
 		return (GP_ERROR_IO);
 	}
 
+	if (usb_reset (port->pl->dh) < 0) {
+		gp_port_set_error (port, _("Could not reset USB port (%m)."));
+		return (GP_ERROR_IO);
+	}
+
 	if (usb_close (port->pl->dh) < 0) {
 		gp_port_set_error (port, _("Could not close USB port (%m)."));
 		return (GP_ERROR_IO);
