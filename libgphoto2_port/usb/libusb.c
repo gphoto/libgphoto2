@@ -290,9 +290,14 @@ gp_port_usb_close (GPPort *port)
 		return (GP_ERROR_IO);
 	}
 
-	if (usb_reset (port->pl->dh) < 0) {
-		gp_port_set_error (port, _("Could not reset USB port (%m)."));
-		return (GP_ERROR_IO);
+	/* This is only for our very special Canon cameras which need a good
+	 * whack after close, otherwise they get timeouts on reconnect.
+	 */
+	if (port->pl->d->descriptor.idVendor == 0x04a9) {
+		if (usb_reset (port->pl->dh) < 0) {
+			gp_port_set_error (port, _("Could not reset USB port (%m)."));
+			return (GP_ERROR_IO);
+		}
 	}
 
 	if (usb_close (port->pl->dh) < 0) {
