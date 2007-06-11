@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port 2.2.0\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2007-05-11 20:48+0200\n"
+"POT-Creation-Date: 2007-06-11 10:38+0200\n"
 "PO-Revision-Date: 2007-01-21 03:06+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
@@ -17,89 +17,89 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:194
+#: libgphoto2_port/gphoto2-port-info-list.c:211
 #, c-format
 msgid "Called for filename '%s'."
 msgstr "Frågade efter filnamnet \"%s\"."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:199
+#: libgphoto2_port/gphoto2-port-info-list.c:216
 #, c-format
 msgid "Could not load '%s': '%s'."
 msgstr "Kunde inte läsa in \"%s\": \"%s\"."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:207
+#: libgphoto2_port/gphoto2-port-info-list.c:224
 #, c-format
 msgid "Could not find some functions in '%s': '%s'."
 msgstr "Kunde inte hitta vissa funktioner i \"%s\": \"%s\"."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:219
+#: libgphoto2_port/gphoto2-port-info-list.c:236
 #, c-format
 msgid "'%s' already loaded"
 msgstr "\"%s\" redan inläst"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:228
+#: libgphoto2_port/gphoto2-port-info-list.c:245
 #, c-format
 msgid "Could not load port driver list: '%s'."
 msgstr "Kunde inte läsa in lista av portdrivrutiner: \"%s\"."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:235
+#: libgphoto2_port/gphoto2-port-info-list.c:252
 #, c-format
 msgid "Loaded '%s' ('%s') from '%s'."
 msgstr "Läste in \"%s\" (\"%s\") från \"%s\"."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:265
+#: libgphoto2_port/gphoto2-port-info-list.c:284
 #, c-format
 msgid "Using ltdl to load io-drivers from '%s'..."
 msgstr "Använder ltdl för att läsa in io-drivrutiner från \"%s\"..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:291
+#: libgphoto2_port/gphoto2-port-info-list.c:310
 #, c-format
 msgid "Counting entries (%i available)..."
 msgstr "Räknar poster (%i tillgängliga)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:300
+#: libgphoto2_port/gphoto2-port-info-list.c:319
 #, c-format
 msgid "%i regular entries available."
 msgstr "%i vanliga poster tillgängliga."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:329
+#: libgphoto2_port/gphoto2-port-info-list.c:349
 #, c-format
 msgid "Looking for path '%s' (%i entries available)..."
 msgstr "Letar efter sökvägen \"%s\" (%i poster tillgängliga)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:341
+#: libgphoto2_port/gphoto2-port-info-list.c:361
 #, c-format
 msgid "Starting regex search for '%s'..."
 msgstr "Startar sökning med reguljärt uttryck efter \"%s\"..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:349
+#: libgphoto2_port/gphoto2-port-info-list.c:369
 #, c-format
 msgid "Trying '%s'..."
 msgstr "Provar \"%s\"..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:370
+#: libgphoto2_port/gphoto2-port-info-list.c:390
 msgid "regcomp failed"
 msgstr "regcomp misslyckades"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:381
+#: libgphoto2_port/gphoto2-port-info-list.c:401
 #, c-format
 msgid "re_match failed (%i)"
 msgstr "re_match misslyckades (%i)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:389
+#: libgphoto2_port/gphoto2-port-info-list.c:409
 msgid "regexec failed"
 msgstr "regexec misslyckades"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:395
+#: libgphoto2_port/gphoto2-port-info-list.c:415
 msgid "Generic Port"
 msgstr "Allmän port"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:419
+#: libgphoto2_port/gphoto2-port-info-list.c:439
 #, c-format
 msgid "Looking up entry '%s'..."
 msgstr "Slår upp posten \"%s\"..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:449
+#: libgphoto2_port/gphoto2-port-info-list.c:469
 #, c-format
 msgid "Getting info of entry %i (%i available)..."
 msgstr "Får information om posten %i (%i tillgängliga)..."
@@ -196,146 +196,146 @@ msgstr "libhal-fel"
 msgid "Unknown error"
 msgstr "Okänt fel"
 
-#: libgphoto2_port/gphoto2-port.c:54
+#: libgphoto2_port/gphoto2-port.c:55
 #, c-format
 msgid "The operation '%s' is not supported by this device"
 msgstr "Operationen \"%s\" stöds inte av denna enhet"
 
-#: libgphoto2_port/gphoto2-port.c:55
+#: libgphoto2_port/gphoto2-port.c:56
 msgid "The port has not yet been initialized"
 msgstr "Porten har ännu inte blivit initierad"
 
-#: libgphoto2_port/gphoto2-port.c:85
+#: libgphoto2_port/gphoto2-port.c:87
 msgid "Creating new device..."
 msgstr "Skapar ny enhet..."
 
-#: libgphoto2_port/gphoto2-port.c:160
+#: libgphoto2_port/gphoto2-port.c:165
 #, c-format
 msgid "Could not load '%s' ('%s')."
 msgstr "Kunde inte läsa in \"%s\" (\"%s)\"."
 
-#: libgphoto2_port/gphoto2-port.c:170
+#: libgphoto2_port/gphoto2-port.c:175
 #, c-format
 msgid "Could not find 'gp_port_library_operations' in '%s' ('%s')"
 msgstr "Kunde inte finna \"gp_port_library_operations\" i \"%s\" (\"%s\")"
 
-#: libgphoto2_port/gphoto2-port.c:250
+#: libgphoto2_port/gphoto2-port.c:255
 #, c-format
 msgid "Opening %s port..."
 msgstr "Öppnar porten %s..."
 
-#: libgphoto2_port/gphoto2-port.c:272
+#: libgphoto2_port/gphoto2-port.c:277
 msgid "Closing port..."
 msgstr "Stänger port..."
 
-#: libgphoto2_port/gphoto2-port.c:294
+#: libgphoto2_port/gphoto2-port.c:299
 msgid "Freeing port..."
 msgstr "Frigör port..."
 
-#: libgphoto2_port/gphoto2-port.c:339
+#: libgphoto2_port/gphoto2-port.c:346
 #, c-format
 msgid "Writing %i=0x%x byte(s) to port..."
 msgstr "Skriver %i=0x%x byte till port..."
 
-#: libgphoto2_port/gphoto2-port.c:352
+#: libgphoto2_port/gphoto2-port.c:359
 #, c-format
 msgid "Could only write %i out of %i byte(s)"
 msgstr "Kunde endast skriva %i av totalt %i byte"
 
-#: libgphoto2_port/gphoto2-port.c:373
+#: libgphoto2_port/gphoto2-port.c:382
 #, c-format
 msgid "Reading %i=0x%x bytes from port..."
 msgstr "Läser %i=0x%x byte från port..."
 
-#: libgphoto2_port/gphoto2-port.c:384 libgphoto2_port/gphoto2-port.c:420
-#: libgphoto2_port/gphoto2-port.c:459 libgphoto2_port/gphoto2-port.c:781
+#: libgphoto2_port/gphoto2-port.c:393 libgphoto2_port/gphoto2-port.c:430
+#: libgphoto2_port/gphoto2-port.c:470 libgphoto2_port/gphoto2-port.c:895
 #, c-format
 msgid "Could only read %i out of %i byte(s)"
 msgstr "Kunde endast läsa %i ut av totalt %i byte"
 
 # Intressant engelska. Vad menas?
-#: libgphoto2_port/gphoto2-port.c:409
+#: libgphoto2_port/gphoto2-port.c:419
 #, c-format
 msgid "Reading %i=0x%x bytes from interrupt endpoint..."
 msgstr "Läser %i=0x%x byte från avbruten ändpunkt..."
 
 # Intressant engelska igen..
-#: libgphoto2_port/gphoto2-port.c:469
+#: libgphoto2_port/gphoto2-port.c:480
 #, c-format
 msgid "Reading %i=0x%x bytes from interrupt endpoint (fast)..."
 msgstr "Läser %i=0x%x byte från avbruten ändpunkt (snabbt)..."
 
-#: libgphoto2_port/gphoto2-port.c:494
+#: libgphoto2_port/gphoto2-port.c:505
 #, c-format
 msgid "Setting timeout to %i millisecond(s)..."
 msgstr "Ställer in timeout till %i millisekund(er)..."
 
-#: libgphoto2_port/gphoto2-port.c:530
+#: libgphoto2_port/gphoto2-port.c:541
 msgid "Getting timeout..."
 msgstr "Får timeout..."
 
-#: libgphoto2_port/gphoto2-port.c:534
+#: libgphoto2_port/gphoto2-port.c:545
 #, c-format
 msgid "Current timeout: %i milliseconds"
 msgstr "Aktuell timeout: %i millisekunder"
 
-#: libgphoto2_port/gphoto2-port.c:556
+#: libgphoto2_port/gphoto2-port.c:567
 msgid "Setting settings..."
 msgstr "Ställer in inställningar..."
 
-#: libgphoto2_port/gphoto2-port.c:607
+#: libgphoto2_port/gphoto2-port.c:628
 #, c-format
 msgid "Getting level of pin %i..."
 msgstr "Hämtar nivån av pin %i..."
 
-#: libgphoto2_port/gphoto2-port.c:616
+#: libgphoto2_port/gphoto2-port.c:637
 #, c-format
 msgid "Level of pin %i: %i"
 msgstr "Nivå av pin %i: %i"
 
-#: libgphoto2_port/gphoto2-port.c:642
+#: libgphoto2_port/gphoto2-port.c:663
 msgid "low"
 msgstr "låg"
 
-#: libgphoto2_port/gphoto2-port.c:643
+#: libgphoto2_port/gphoto2-port.c:664
 msgid "high"
 msgstr "hög"
 
-#: libgphoto2_port/gphoto2-port.c:658
+#: libgphoto2_port/gphoto2-port.c:690
 #, c-format
 msgid "Setting pin %i (%s: '%s') to '%s'..."
 msgstr "Ställer in pin %i (%s: \"%s\") till \"%s\"..."
 
-#: libgphoto2_port/gphoto2-port.c:675
+#: libgphoto2_port/gphoto2-port.c:717
 #, c-format
 msgid "Sending break (%i milliseconds)..."
 msgstr "Skickar avbrott (%i millisekunder)..."
 
-#: libgphoto2_port/gphoto2-port.c:690
+#: libgphoto2_port/gphoto2-port.c:743
 msgid "Flushing port..."
 msgstr "Tömmer port..."
 
-#: libgphoto2_port/gphoto2-port.c:731
+#: libgphoto2_port/gphoto2-port.c:817
 msgid "Clear halt..."
 msgstr "Rensa stopp..."
 
-#: libgphoto2_port/gphoto2-port.c:748
+#: libgphoto2_port/gphoto2-port.c:848
 #, c-format
 msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
 msgstr ""
 "Skriver meddelande (begäran=0x%x värde=0x%x index=0x%x storlek=%i=0x%x)..."
 
-#: libgphoto2_port/gphoto2-port.c:769
+#: libgphoto2_port/gphoto2-port.c:883
 #, c-format
 msgid "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
 msgstr ""
 "Läser meddelande (begäran=0x%x värde=0x%x index=0x%x storlek=%i=0x%x)..."
 
-#: libgphoto2_port/gphoto2-port.c:776
+#: libgphoto2_port/gphoto2-port.c:890
 msgid "msg_read"
 msgstr "medd_läs"
 
-#: libgphoto2_port/gphoto2-port.c:948
+#: libgphoto2_port/gphoto2-port.c:1117
 msgid "No error description available"
 msgstr "Ingen felbeskrivning tillgänglig"
 
@@ -424,30 +424,30 @@ msgstr "Kunde inte spola ut \"%s\" (%m)."
 msgid "Could not set the baudrate to %d"
 msgstr "Kunde inte ställa in bithastigheten till %d"
 
-#: usb/libusb.c:239
+#: usb/libusb.c:240
 #, c-format
 msgid "Could not open USB device (%m)."
 msgstr "Kunde inte öppna USB-enheten (%m)"
 
-#: usb/libusb.c:249
+#: usb/libusb.c:250
 msgid "Camera is already in use."
 msgstr "Kameran används redan."
 
-#: usb/libusb.c:254
+#: usb/libusb.c:255
 #, c-format
 msgid "Device has driver '%s' attached, detaching it now."
 msgstr "Enheten har drivrutinen \"%s\" ansluten, kopplar loss den nu."
 
-#: usb/libusb.c:257
+#: usb/libusb.c:258
 #, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
 msgstr "Kunde inte koppla loss kärndrivrutinen \"%s\" för kameraenhet."
 
-#: usb/libusb.c:259
+#: usb/libusb.c:261
 msgid "Could not query kernel driver of device."
 msgstr "Kunde inte fråga kärndrivrutinen efter enheten."
 
-#: usb/libusb.c:266
+#: usb/libusb.c:269
 #, c-format
 msgid ""
 "Could not claim interface %d (%m). Make sure no other program or kernel "
@@ -458,33 +458,38 @@ msgstr ""
 "program eller kärnmodul (såsom %s) använder enheten och att du du har skriv/"
 "läsrättigheter för enheten."
 
-#: usb/libusb.c:284
+#: usb/libusb.c:287
 #, c-format
 msgid "Could not release interface %d (%m)."
 msgstr "Kunde inte släppa gränssnittet %d (%m)."
 
-#: usb/libusb.c:291
+#: usb/libusb.c:298
+#, fuzzy, c-format
+msgid "Could not reset USB port (%m)."
+msgstr "Kunde inte stänga USB-porten (%m)."
+
+#: usb/libusb.c:304
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr "Kunde inte stänga USB-porten (%m)."
 
-#: usb/libusb.c:517
+#: usb/libusb.c:551
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "Kunde inte ställa in konfiguration %d/%d (%m)"
 
-#: usb/libusb.c:549
-#, c-format
-msgid "Could not set altsetting %d/%d (%m)"
+#: usb/libusb.c:584
+#, fuzzy, c-format
+msgid "Could not set altsetting from %d to %d (%m)"
 msgstr "Kunde inte ställa in alternativinställning %d/%d (%m)"
 
-#: usb/libusb.c:641
+#: usb/libusb.c:676
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr ""
 "Den angivna tillverkare- eller produktidentiteten (0x%x,0x%x) är inte giltig."
 
-#: usb/libusb.c:677
+#: usb/libusb.c:712
 #, c-format
 msgid ""
 "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
@@ -493,7 +498,7 @@ msgstr ""
 "USB-enheten (tillverkare 0x%x, produkt 0x%x) är en masslagringsenhet och "
 "kanske inte fungerar med gphoto2. Referens: %s"
 
-#: usb/libusb.c:719
+#: usb/libusb.c:754
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
@@ -502,7 +507,7 @@ msgstr ""
 "Kunde inte finna USB-enheten (tillverkare 0x%x, produkt 0x%x). Kontrollera "
 "att enheten är ansluten till datorn."
 
-#: usb/libusb.c:939
+#: usb/libusb.c:974
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
