@@ -723,7 +723,7 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 					port->settings.usb.intep = gp_port_usb_find_ep(dev, config, interface, altsetting, USB_ENDPOINT_IN, USB_ENDPOINT_TYPE_INTERRUPT);
 
 					port->settings.usb.maxpacketsize = 0;
-					gp_log (GP_LOG_DEBUG, "gphoto2-port-usb", "inep to look for is %d", port->settings.usb.inep);
+					gp_log (GP_LOG_DEBUG, "gphoto2-port-usb", "inep to look for is %02x", port->settings.usb.inep);
 					for (i=0;i<dev->config[config].interface[interface].altsetting[altsetting].bNumEndpoints;i++) {
 						if (port->settings.usb.inep == dev->config[config].interface[interface].altsetting[altsetting].endpoint[i].bEndpointAddress) {
 							port->settings.usb.maxpacketsize = dev->config[config].interface[interface].altsetting[altsetting].endpoint[i].wMaxPacketSize;
