@@ -1109,6 +1109,9 @@ GENERIC8TABLE(Canon_MeteringMode,canon_meteringmode)
 
 static struct deviceproptableu16 canon_shutterspeed[] = {
       {  "auto",0x0000,0 },
+      {  "30\"",0x0010,0 },
+      {  "25\"",0x0013,0 },
+      {  "20\"",0x0015,0 },
       {  "15\"",0x0018,0 },
       {  "13\"",0x001b,0 },
       {  "10\"",0x001d,0 },
@@ -1155,6 +1158,9 @@ static struct deviceproptableu16 canon_shutterspeed[] = {
       {  "1/1250",0x008b,0 },
       {  "1/1600",0x008d,0 },
       {  "1/2000",0x0090,0 },
+      {  "1/2500",0x0093,0 },
+      {  "1/3200",0x0095,0 },
+      {  "1/4000",0x0098,0 },
 };
 GENERIC16TABLE(Canon_ShutterSpeed,canon_shutterspeed)
 
@@ -2598,6 +2604,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Aperture"), "aperture", PTP_DPC_CANON_EOS_Aperture, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_Aperture, _put_Canon_Aperture},
 	{ N_("Focusing Point"), "focusingpoint", PTP_DPC_CANON_FocusingPoint, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_FocusingPoint, _put_Canon_FocusingPoint},
 	{ N_("Shutter Speed"), "shutterspeed", PTP_DPC_CANON_ShutterSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ShutterSpeed, _put_Canon_ShutterSpeed},
+	{ N_("Shutter Speed"), "shutterspeed", PTP_DPC_CANON_EOS_ShutterSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ShutterSpeed, _put_Canon_ShutterSpeed},
 	{ N_("Metering Mode"), "meteringmode", PTP_DPC_CANON_MeteringMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_MeteringMode, _put_Canon_MeteringMode},
         { N_("AF Distance"), "afdistance", PTP_DPC_CANON_AFDistance, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_AFDistance, _put_Canon_AFDistance},
 	{ N_("Focus Area Wrap"), "focusareawrap", PTP_DPC_NIKON_FocusAreaWrap, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
