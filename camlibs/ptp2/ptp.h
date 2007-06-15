@@ -919,6 +919,7 @@ struct _PTPCanon_New_Object {
 	uint32_t		oid;
 	PTPObjectInfo	oi;
 };
+
 struct _PTPCanon_changes_entry {
 	int	type;
 	union {
@@ -926,6 +927,13 @@ struct _PTPCanon_changes_entry {
 	} u;
 };
 typedef struct _PTPCanon_changes_entry PTPCanon_changes_entry;
+
+typedef struct _PTPCanon_Property {
+	uint32_t	size;
+	uint32_t	type;
+	uint32_t	proptype;
+	unsigned char	*data;
+} PTPCanon_Property;
 
 
 /* DataType Codes */
@@ -1509,6 +1517,8 @@ struct _PTPParams {
 
 	/* PTP: Canon specific flags list */
 	uint32_t	*canon_flags; /* size(handles.n) */
+	PTPCanon_Property	*canon_props;
+	int			nrofcanon_props;
 
 	/* PTP: Wifi profiles */
 	uint8_t 	wifi_profiles_version;

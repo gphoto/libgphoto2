@@ -2809,11 +2809,16 @@ ptp_event_issupported(PTPParams* params, uint16_t event)
 int
 ptp_property_issupported(PTPParams* params, uint16_t property)
 {
-	int i=0;
+	int i;
 
-	for (;i<params->deviceinfo.DevicePropertiesSupported_len;i++)
+	for (i=0;i<params->deviceinfo.DevicePropertiesSupported_len;i++)
 		if (params->deviceinfo.DevicePropertiesSupported[i]==property)
 			return 1;
+	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) {
+		for (i=0;i<params->nrofcanon_props;i++)
+			if (params->canon_props[i].proptype==property)
+				return 1;
+	}
 	return 0;
 }
 

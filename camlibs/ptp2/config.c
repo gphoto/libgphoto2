@@ -367,6 +367,13 @@ have_prop(Camera *camera, uint16_t vendor, uint16_t prop) {
 		if (camera->pl->params.deviceinfo.VendorExtensionID==vendor)
 			return 1;
 	}
+        if ((camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
+	    (vendor == PTP_VENDOR_CANON)
+	) {
+                for (i=0;i<camera->pl->params.nrofcanon_props;i++)
+                        if (camera->pl->params.canon_props[i].proptype == prop)
+                                return 1;
+        }
 	return 0;
 }
 

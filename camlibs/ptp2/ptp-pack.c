@@ -1046,6 +1046,7 @@ ptp_unpack_Canon_FE (PTPParams *params, unsigned char* data, PTPCANONFolderEntry
 #define PTP_ece_Size		0
 #define PTP_ece_Type		4
 #define PTP_ece_Prop_Subtype	8	/* only for properties */
+#define PTP_ece_Prop_Data	0xc	/* only for properties */
 
 #define PTP_ece_OI_ObjectID	8	/* only for objectinfos */
 #define PTP_ece_OI_OFC		0x0c	/* only for objectinfos */
@@ -1085,6 +1086,36 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			(*ce)[i].u.object.oi.ObjectCompressedSize = dtoh32a(&curdata[PTP_ece_OI_Size]);
 			(*ce)[i].u.object.oi.Filename 		= strdup(((char*)&curdata[PTP_ece_OI_Name]));
 			break;
+		}
+		case  0xc189:
+		case  0xc18a:
+			if (size >= 0xc) {	/* property info */
+				int j;
+				uint32_t	proptype = dtoh32a(&curdata[PTP_ece_Prop_Subtype]);
+				unsigned char	*data = &curdata[PTP_ece_Prop_Data];
+
+				for (j=0;j<params->nrofcanon_props;j++)
+					if (params->canon_props[j].proptype == proptype)
+						break;
+				if (j<params->nrofcanon_props) {
+					if (	(params->canon_props[j].size != size) ||
+						(memcmp(params->canon_props[j].data,data,size-PTP_ece_Prop_Data))) {
+						params->canon_props[j].data = realloc(params->canon_props[j].data,size-PTP_ece_Prop_Data);
+						memcpy (params->canon_props[j].data,data,size-PTP_ece_Prop_Data);
+					}
+				} else {
+					if (j)
+						params->canon_props = realloc(params->canon_props, sizeof(params->canon_props[0])*(j+1));
+					else
+						params->canon_props = malloc(sizeof(params->canon_props[0]));
+					params->canon_props[j].type = type;
+					params->canon_props[j].proptype = proptype;
+					params->canon_props[j].size = size;
+					params->canon_props[j].data = malloc(size-PTP_ece_Prop_Data);
+					memcpy(params->canon_props[j].data, data, size-PTP_ece_Prop_Data);
+					params->nrofcanon_props = j+1;
+				}
+				break;
 		}
 		default:
 			(*ce)[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
