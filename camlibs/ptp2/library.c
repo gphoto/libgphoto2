@@ -1673,9 +1673,43 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	 * the camera.
 	 */
 
-	/* I hate workarounds! Nikon is not 100% PTP compatible here! */
-	if (params->deviceinfo.VendorExtensionID==PTP_VENDOR_NIKON)
+	/* The Nikon way: Does not send AddObject event ... so try else */
+	if (params->deviceinfo.VendorExtensionID==PTP_VENDOR_NIKON) {
+		PTPObjectHandles	handles;
+		int tries = 5;
+
+		while (tries--) {
+			int i;
+			uint16_t ret = ptp_getobjecthandles (params, 0xffffffff, 0x000000, 0x000000, &handles);
+			if (ret != PTP_RC_OK)
+				break;
+
+			/* if (handles.n == params->handles.n)
+			 *	continue;
+			 * While this is a potential optimization, lets skip it for now.
+			 */
+			newobject = 0;
+			for (i=0;i<handles.n;i++) {
+				int j;
+				for (j=0;j<params->handles.n;j++) {
+					if (params->handles.Handler[j] == handles.Handler[i])
+						break;
+				}
+				if (j==params->handles.n) {
+					newobject = handles.Handler[i];
+					add_object (camera, newobject, context);
+					break;
+				}
+			}
+			free (handles.Handler);
+			if (newobject)
+				break;
+			sleep(1);
+		}
 		goto out;
+	}
+
+	/* standard defined way ... wait for AddObject event. */
 	{
 		short ret = params->event_wait(params,&event);
 		CR (gp_port_set_timeout (camera->port, USB_NORMAL_TIMEOUT));
