@@ -367,15 +367,21 @@ have_prop(Camera *camera, uint16_t vendor, uint16_t prop) {
 		if (camera->pl->params.deviceinfo.VendorExtensionID==vendor)
 			return 1;
 	}
+	return 0;
+}
+
+static int
+have_eos_prop(Camera *camera, uint16_t vendor, uint16_t prop) {
+	int i;
 
 	/* The special Canon EOS property set gets special treatment. */
-        if ((camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
-	    (vendor == PTP_VENDOR_CANON)
-	) {
-                for (i=0;i<camera->pl->params.nrofcanon_props;i++)
-                        if (camera->pl->params.canon_props[i].proptype == prop)
-                                return 1;
-        }
+        if ((camera->pl->params.deviceinfo.VendorExtensionID != PTP_VENDOR_CANON) ||
+	    (vendor != PTP_VENDOR_CANON)
+	)
+		return 0;
+	for (i=0;i<camera->pl->params.nrofcanon_props;i++)
+		if (camera->pl->params.canon_props[i].proptype == prop)
+			return 1;
 	return 0;
 }
 
@@ -2677,21 +2683,34 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 			struct submenu *cursub = menus[menuno].submenus+submenuno;
 			widget = NULL;
 
-			if (!have_prop(camera,cursub->vendorid,cursub->propid))
+			if (have_prop(camera,cursub->vendorid,cursub->propid)) {
+				if (cursub->propid) {
+					PTPDevicePropDesc	dpd;
+
+					memset(&dpd,0,sizeof(dpd));
+					ptp_getdevicepropdesc(&camera->pl->params,cursub->propid,&dpd);
+					ret = cursub->getfunc (camera, &widget, cursub, &dpd);
+					ptp_free_devicepropdesc(&dpd);
+				} else {
+					ret = cursub->getfunc (camera, &widget, cursub, NULL);
+				}
+				if (ret != GP_OK)
+					continue;
+				gp_widget_append (section, widget);
 				continue;
-			if (cursub->propid) {
+			}
+			if (have_eos_prop(camera,cursub->vendorid,cursub->propid)) {
 				PTPDevicePropDesc	dpd;
 
 				memset(&dpd,0,sizeof(dpd));
-				ptp_getdevicepropdesc(&camera->pl->params,cursub->propid,&dpd);
+				ptp_canon_eos_getdevicepropdesc (&camera->pl->params,cursub->propid, &dpd);
 				ret = cursub->getfunc (camera, &widget, cursub, &dpd);
 				ptp_free_devicepropdesc(&dpd);
-			} else {
-				ret = cursub->getfunc (camera, &widget, cursub, NULL);
-			}
-			if (ret != GP_OK)
+				if (ret != GP_OK)
+					continue;
+				gp_widget_append (section, widget);
 				continue;
-			gp_widget_append (section, widget);
+			}
 		}
 	}
 	return GP_OK;
@@ -2723,9 +2742,6 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			PTPPropertyValue	propval;
 
 			struct submenu *cursub = menus[menuno].submenus+submenuno;
-			if (!have_prop(camera,cursub->vendorid,cursub->propid))
-				continue;
-
 			ret = gp_widget_get_child_by_label (section, _(cursub->label), &widget);
 			if (ret != GP_OK)
 				continue;
@@ -2733,18 +2749,23 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			if (!gp_widget_changed (widget))
 				continue;
 
-			if (cursub->propid) {
-				PTPDevicePropDesc dpd;
+			if (have_prop(camera,cursub->vendorid,cursub->propid)) {
+				if (cursub->propid) {
+					PTPDevicePropDesc dpd;
 
-				memset(&dpd,0,sizeof(dpd));
-				ptp_getdevicepropdesc(&camera->pl->params,cursub->propid,&dpd);
-				ret = cursub->putfunc (camera, widget, &propval, &dpd);
-				if (ret == GP_OK)
-					ptp_setdevicepropvalue (&camera->pl->params, cursub->propid, &propval, cursub->type);
-				ptp_free_devicepropvalue (cursub->type, &propval);
-				ptp_free_devicepropdesc(&dpd);
-			} else {
-				ret = cursub->putfunc (camera, widget, NULL, NULL);
+					memset(&dpd,0,sizeof(dpd));
+					ptp_getdevicepropdesc(&camera->pl->params,cursub->propid,&dpd);
+					ret = cursub->putfunc (camera, widget, &propval, &dpd);
+					if (ret == GP_OK)
+						ptp_setdevicepropvalue (&camera->pl->params, cursub->propid, &propval, cursub->type);
+					ptp_free_devicepropvalue (cursub->type, &propval);
+					ptp_free_devicepropdesc(&dpd);
+				} else {
+					ret = cursub->putfunc (camera, widget, NULL, NULL);
+				}
+			}
+			if (have_eos_prop(camera,cursub->vendorid,cursub->propid)) {
+				/* FIXME: marcus, add */
 			}
 		}
 	}

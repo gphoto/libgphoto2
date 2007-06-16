@@ -1776,6 +1776,60 @@ ptp_canon_eos_getevent (PTPParams* params, PTPCanon_changes_entry **entries, int
 }
 
 uint16_t
+ptp_canon_eos_getdevicepropdesc (PTPParams* params, uint16_t propcode,
+	PTPDevicePropDesc *dpd)
+{
+	int i;
+
+	for (i=0;i<params->nrofcanon_props;i++)
+		if (params->canon_props[i].proptype == propcode)
+			break;
+	if (params->nrofcanon_props == i)
+		return PTP_RC_Undefined;
+	/* Fill out dpd. */
+	dpd->DevicePropertyCode = propcode;
+	switch (propcode) {
+	case PTP_DPC_CANON_EOS_Aperture:
+	case PTP_DPC_CANON_EOS_ShutterSpeed:
+	case PTP_DPC_CANON_EOS_ISOSpeed:
+		dpd->DataType = PTP_DTC_UINT16;
+		break;
+	case PTP_DPC_CANON_EOS_ExpCompensation:
+		dpd->DataType = PTP_DTC_UINT8;
+		break;
+	case PTP_DPC_CANON_EOS_Owner:
+		dpd->DataType = PTP_DTC_STR;
+		break;
+	default:
+		fprintf(stderr,"data type for 0x%04x is unknown, fill in.\n", propcode);
+		break;
+	}
+	dpd->GetSet = 1;
+        dpd->FormFlag = PTP_DPFF_None;
+	switch (dpd->DataType) {
+	case PTP_DTC_UINT16:
+		dpd->FactoryDefaultValue.u16	= dtoh16a(params->canon_props[i].data);
+		dpd->CurrentValue.u16		= dtoh16a(params->canon_props[i].data);
+		break;
+	case PTP_DTC_UINT8:
+		dpd->FactoryDefaultValue.u8	= dtoh8a(params->canon_props[i].data);
+		dpd->CurrentValue.u8		= dtoh8a(params->canon_props[i].data);
+		break;
+	case PTP_DTC_STR: {
+		uint8_t len = 0;
+		dpd->FactoryDefaultValue.str	= ptp_unpack_string(params, params->canon_props[i].data, 0, &len);
+		dpd->CurrentValue.str		= ptp_unpack_string(params, params->canon_props[i].data, 0, &len);
+		break;
+	}
+	default:
+		fprintf(stderr,"data type 0x%04x unhandled, fill in.\n", dpd->DataType);
+		break;
+	}
+	return PTP_RC_OK;
+}
+
+
+uint16_t
 ptp_canon_eos_getstorageids (PTPParams* params)
 {
 	PTPContainer ptp;
@@ -2814,11 +2868,6 @@ ptp_property_issupported(PTPParams* params, uint16_t property)
 	for (i=0;i<params->deviceinfo.DevicePropertiesSupported_len;i++)
 		if (params->deviceinfo.DevicePropertiesSupported[i]==property)
 			return 1;
-	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) {
-		for (i=0;i<params->nrofcanon_props;i++)
-			if (params->canon_props[i].proptype==property)
-				return 1;
-	}
 	return 0;
 }
 
