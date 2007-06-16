@@ -367,6 +367,8 @@ have_prop(Camera *camera, uint16_t vendor, uint16_t prop) {
 		if (camera->pl->params.deviceinfo.VendorExtensionID==vendor)
 			return 1;
 	}
+
+	/* The special Canon EOS property set gets special treatment. */
         if ((camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
 	    (vendor == PTP_VENDOR_CANON)
 	) {
@@ -2692,65 +2694,6 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 			gp_widget_append (section, widget);
 		}
 	}
-#if 0
-	char value[255];
-	if (have_prop(camera,0,PTP_DPC_BatteryLevel)) {
-		memset(&dpd,0,sizeof(dpd));
-		ptp_getdevicepropdesc(&camera->pl->params,PTP_DPC_BatteryLevel,&dpd);
-		GP_DEBUG ("Data Type = 0x%04x",dpd.DataType);
-		GP_DEBUG ("Get/Set = 0x%02x",dpd.GetSet);
-		GP_DEBUG ("Form Flag = 0x%02x",dpd.FormFlag);
-		if (dpd.DataType!=PTP_DTC_UINT8) {
-			ptp_free_devicepropdesc(&dpd);
-			return GP_ERROR_NOT_SUPPORTED;
-		}
-		GP_DEBUG ("Factory Default Value = %0.2x",dpd.FactoryDefaultValue.u8);
-		GP_DEBUG ("Current Value = %0.2x",dpd.CurrentValue.u8);
-
-		gp_widget_new (GP_WIDGET_SECTION, _("Power (readonly)"), &section);
-		gp_widget_append (*window, section);
-		switch (dpd.FormFlag) {
-		case PTP_DPFF_Enumeration: {
-			uint16_t i;
-			char tmp[64];
-
-			GP_DEBUG ("Number of values %i",
-				dpd.FORM.Enum.NumberOfValues);
-			gp_widget_new (GP_WIDGET_TEXT, _("Number of values"),&widget);
-			snprintf (value,255,"%i",dpd.FORM.Enum.NumberOfValues);
-			gp_widget_set_value (widget,value);
-			gp_widget_append (section,widget);
-			gp_widget_new (GP_WIDGET_TEXT, _("Supported values"),&widget);
-			value[0]='\0';
-			for (i=0;i<dpd.FORM.Enum.NumberOfValues;i++){
-				snprintf (tmp,6,"|%.3i|",dpd.FORM.Enum.SupportedValue[i].u8);
-				strncat(value,tmp,6);
-			}
-			gp_widget_set_value (widget,value);
-			gp_widget_append (section,widget);
-			gp_widget_new (GP_WIDGET_TEXT, _("Current value"),&widget);
-			snprintf (value,255,"%i",dpd.CurrentValue.u8);
-			gp_widget_set_value (widget,value);
-			gp_widget_append (section,widget);
-			break;
-		}
-		case PTP_DPFF_Range: {
-			float value_float;
-			gp_widget_new (GP_WIDGET_RANGE, _("Power (readonly)"), &widget);
-			gp_widget_append (section,widget);
-			gp_widget_set_range (widget, dpd.FORM.Range.MinimumValue.u8, dpd.FORM.Range.MaximumValue.u8, dpd.FORM.Range.StepSize.u8);
-			/* this is a write only capability */
-			value_float = dpd.CurrentValue.u8;
-			gp_widget_set_value (widget, &value_float);
-			gp_widget_changed(widget);
-			break;
-		}
-		case PTP_DPFF_None:
-			break;
-		default: break;
-		}
-	}
-#endif
 	return GP_OK;
 }
 
