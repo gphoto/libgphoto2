@@ -1775,11 +1775,33 @@ ptp_canon_eos_getevent (PTPParams* params, PTPCanon_changes_entry **entries, int
 	return PTP_RC_OK;
 }
 
+static const uint16_t all_EOS_isos[] = {
+	0xffff, 0x0040, 0x0048, 0x0050, 0x0058, 0x0060, 0x0068, 0x0000,
+};
+
+static const uint16_t all_EOS_shutterspeeds[] = {
+	0x0000, 0x0010, 0x0013, 0x0015, 0x0018, 0x001b, 0x001d, 0x0020,
+	0x0023, 0x0025, 0x0028, 0x002b, 0x002d, 0x0030, 0x0033, 0x0035,
+	0x0038, 0x003b, 0x003d, 0x0040, 0x0043, 0x0045, 0x0048, 0x004b,
+	0x004d, 0x0050, 0x0053, 0x0055, 0x0058, 0x005b, 0x005d, 0x0060,
+	0x0063, 0x0065, 0x0068, 0x006b, 0x006d, 0x0070, 0x0073, 0x0075,
+	0x0078, 0x007b, 0x007d, 0x0080, 0x0083, 0x0085, 0x0088, 0x008b,
+	0x008d, 0x0090, 0x0093, 0x0095, 0x0098,
+};
+
+static const uint16_t all_EOS_apertures[] = {
+	0xffff, 0x0015, 0x0018, 0x001b, 0x001d, 0x0020, 0x0023, 0x0025,
+	0x0028, 0x002b, 0x002d, 0x0030, 0x0033, 0x0035, 0x0038, 0x003b,
+	0x003d, 0x0040, 0x0043, 0x0045, 0x0048, 0x004b, 0x004d, 0x0050,
+};
+
 uint16_t
 ptp_canon_eos_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 	PTPDevicePropDesc *dpd)
 {
 	int i;
+	const uint16_t	*vars = NULL;
+	int		nrofvars = 0;
 
 	for (i=0;i<params->nrofcanon_props;i++)
 		if (params->canon_props[i].proptype == propcode)
@@ -1790,9 +1812,19 @@ ptp_canon_eos_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 	dpd->DevicePropertyCode = propcode;
 	switch (propcode) {
 	case PTP_DPC_CANON_EOS_Aperture:
+		dpd->DataType = PTP_DTC_UINT16;
+		vars = all_EOS_apertures;
+		nrofvars = sizeof (all_EOS_apertures) / sizeof (all_EOS_apertures[0]);
+		break;
 	case PTP_DPC_CANON_EOS_ShutterSpeed:
+		dpd->DataType = PTP_DTC_UINT16;
+		vars = all_EOS_shutterspeeds;
+		nrofvars = sizeof (all_EOS_shutterspeeds) / sizeof (all_EOS_shutterspeeds[0]);
+		break;
 	case PTP_DPC_CANON_EOS_ISOSpeed:
 		dpd->DataType = PTP_DTC_UINT16;
+		vars = all_EOS_isos;
+		nrofvars = sizeof (all_EOS_isos) / sizeof (all_EOS_isos[0]);
 		break;
 	case PTP_DPC_CANON_EOS_ExpCompensation:
 		dpd->DataType = PTP_DTC_UINT8;
@@ -1810,6 +1842,13 @@ ptp_canon_eos_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 	case PTP_DTC_UINT16:
 		dpd->FactoryDefaultValue.u16	= dtoh16a(params->canon_props[i].data);
 		dpd->CurrentValue.u16		= dtoh16a(params->canon_props[i].data);
+		if (vars) {
+			dpd->FormFlag = PTP_DPFF_Enumeration;
+			dpd->FORM.Enum.NumberOfValues = nrofvars;
+			dpd->FORM.Enum.SupportedValue = malloc (nrofvars * sizeof(PTPPropertyValue));
+			for (i=0;i<nrofvars;i++)
+				dpd->FORM.Enum.SupportedValue[i].u16 = vars[i];
+		}
 		break;
 	case PTP_DTC_UINT8:
 		dpd->FactoryDefaultValue.u8	= dtoh8a(params->canon_props[i].data);
