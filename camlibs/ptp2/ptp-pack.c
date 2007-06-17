@@ -1094,6 +1094,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				uint32_t	proptype = dtoh32a(&curdata[PTP_ece_Prop_Subtype]);
 				unsigned char	*data = &curdata[PTP_ece_Prop_Data];
 
+				fprintf (stderr, "Adding EOS property %04x, datasize is %d\n", proptype, size-size-PTP_ece_Prop_Data);
 				for (j=0;j<params->nrofcanon_props;j++)
 					if (params->canon_props[j].proptype == proptype)
 						break;
@@ -1118,6 +1119,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				break;
 		}
 		default:
+			fprintf (stderr, "unknown EOS property type %04x\n", type);
 			(*ce)[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
 			break;
 		}
