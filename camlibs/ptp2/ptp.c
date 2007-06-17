@@ -1795,12 +1795,19 @@ static const uint16_t all_EOS_apertures[] = {
 	0x003d, 0x0040, 0x0043, 0x0045, 0x0048, 0x004b, 0x004d, 0x0050,
 };
 
+static const uint8_t all_EOS_expcomp[] = {
+	0x10, 0x0d, 0x0c, 0x0b, 0x08, 0x05, 0x04, 0x03,
+	0x00,
+	0xfd, 0xfc, 0xfb, 0xf8, 0xf5, 0xf4, 0xf3, 0xf0,
+};
+
 uint16_t
 ptp_canon_eos_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 	PTPDevicePropDesc *dpd)
 {
 	int i;
-	const uint16_t	*vars = NULL;
+	const uint16_t	*vars16 = NULL;
+	const uint8_t	*vars8 = NULL;
 	int		nrofvars = 0;
 
 	for (i=0;i<params->nrofcanon_props;i++)
@@ -1813,21 +1820,23 @@ ptp_canon_eos_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 	switch (propcode) {
 	case PTP_DPC_CANON_EOS_Aperture:
 		dpd->DataType = PTP_DTC_UINT16;
-		vars = all_EOS_apertures;
+		vars16 = all_EOS_apertures;
 		nrofvars = sizeof (all_EOS_apertures) / sizeof (all_EOS_apertures[0]);
 		break;
 	case PTP_DPC_CANON_EOS_ShutterSpeed:
 		dpd->DataType = PTP_DTC_UINT16;
-		vars = all_EOS_shutterspeeds;
+		vars16 = all_EOS_shutterspeeds;
 		nrofvars = sizeof (all_EOS_shutterspeeds) / sizeof (all_EOS_shutterspeeds[0]);
 		break;
 	case PTP_DPC_CANON_EOS_ISOSpeed:
 		dpd->DataType = PTP_DTC_UINT16;
-		vars = all_EOS_isos;
+		vars16 = all_EOS_isos;
 		nrofvars = sizeof (all_EOS_isos) / sizeof (all_EOS_isos[0]);
 		break;
 	case PTP_DPC_CANON_EOS_ExpCompensation:
 		dpd->DataType = PTP_DTC_UINT8;
+		vars8 = all_EOS_expcomp;
+		nrofvars = sizeof (all_EOS_expcomp) / sizeof (all_EOS_expcomp[0]);
 		break;
 	case PTP_DPC_CANON_EOS_Owner:
 		dpd->DataType = PTP_DTC_STR;
@@ -1842,17 +1851,24 @@ ptp_canon_eos_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 	case PTP_DTC_UINT16:
 		dpd->FactoryDefaultValue.u16	= dtoh16a(params->canon_props[i].data);
 		dpd->CurrentValue.u16		= dtoh16a(params->canon_props[i].data);
-		if (vars) {
+		if (vars16) {
 			dpd->FormFlag = PTP_DPFF_Enumeration;
 			dpd->FORM.Enum.NumberOfValues = nrofvars;
 			dpd->FORM.Enum.SupportedValue = malloc (nrofvars * sizeof(PTPPropertyValue));
 			for (i=0;i<nrofvars;i++)
-				dpd->FORM.Enum.SupportedValue[i].u16 = vars[i];
+				dpd->FORM.Enum.SupportedValue[i].u16 = vars16[i];
 		}
 		break;
 	case PTP_DTC_UINT8:
 		dpd->FactoryDefaultValue.u8	= dtoh8a(params->canon_props[i].data);
 		dpd->CurrentValue.u8		= dtoh8a(params->canon_props[i].data);
+		if (vars8) {
+			dpd->FormFlag = PTP_DPFF_Enumeration;
+			dpd->FORM.Enum.NumberOfValues = nrofvars;
+			dpd->FORM.Enum.SupportedValue = malloc (nrofvars * sizeof(PTPPropertyValue));
+			for (i=0;i<nrofvars;i++)
+				dpd->FORM.Enum.SupportedValue[i].u8 = vars8[i];
+		}
 		break;
 	case PTP_DTC_STR: {
 		uint8_t len = 0;
