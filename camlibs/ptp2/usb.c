@@ -191,8 +191,10 @@ ptp_usb_getpacket(PTPParams *params,
 	int		tries = 0, result;
 	Camera		*camera = ((PTPData *)params->data)->camera;
 
+	gp_log (GP_LOG_DEBUG, "ptp2/ptp_usb_getpacket", "getting next ptp packet");
 	/* read the header and potentially the first data */
 	if (params->response_packet_size > 0) {
+		gp_log (GP_LOG_DEBUG, "ptp2/ptp_usb_getpacket", "queuing buffered response packet");
 		/* If there is a buffered packet, just use it. */
 		memcpy(packet, params->response_packet, params->response_packet_size);
 		*rlen = params->response_packet_size;
@@ -235,6 +237,7 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 	int usecontext, progressid = 0, tries = 0, res;
 	GPContext *context = ((PTPData *)params->data)->context;
 
+	gp_log (GP_LOG_DEBUG, "ptp2/ptp_usb_getdata", "reading data");
 	PTP_CNT_INIT(usbdata);
 	do {
 		unsigned long len, rlen;
@@ -403,6 +406,7 @@ ptp_usb_getresp (PTPParams* params, PTPContainer* resp)
 	PTPUSBBulkContainer usbresp;
 	/*GPContext		*context = ((PTPData *)params->data)->context;*/
 
+	gp_log (GP_LOG_DEBUG, "ptp2/ptp_usb_getresp", "reading response");
 	PTP_CNT_INIT(usbresp);
 	/* read response, it should never be longer than sizeof(usbresp) */
 	ret = ptp_usb_getpacket(params, &usbresp, &rlen);

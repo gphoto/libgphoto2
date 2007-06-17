@@ -4184,6 +4184,12 @@ camera_init (Camera *camera, GPContext *context)
 			ret=ptp_opensession (&camera->pl->params, 1);
 		}
 		if (ret!=PTP_RC_SessionAlreadyOpened && ret!=PTP_RC_OK) {
+			gp_log (GP_LOG_ERROR, "ptp2/camera_init", "ptp_opensession returns %x", ret);
+			if ((ret == PTP_ERROR_RESP_EXPECTED) || (ret == PTP_ERROR_IO)) {
+				/* Try whacking PTP device */
+				if (camera->port->type == GP_PORT_USB)
+					ptp_usb_control_device_reset_request (&camera->pl->params);
+			}
 			if (retried < 2) { /* try again */
 				retried++;
 				continue;
