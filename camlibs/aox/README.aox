@@ -28,7 +28,7 @@ stated to me in e-mail that Endpoints was willing to share some information
 with him about how to access the SE401 and SE402 chips in webcam mode. However, 
 my own request for similar information about the still camera functionality has 
 not been answered, as of 11/04/03. This camlib, therefore, has been constructed 
-by means of close observation of the camera, combined with guesswork. 
+by means of observation, combined with guesswork. 
 
 Features and quirks of the camera:
 
@@ -41,10 +41,9 @@ Here, high-resolution pictures will be saved in PPM format.
 
 The low-resolution pictures are 320x240. According to the manual, these
 pictures are compressed in the camera and are downloaded as JPEG images.
-However, the JPEG compression used is a bit non-standard and can not be
-decompressed with standard tools. Thus, it is currently not possible to make
-pictures from the resulting files. You can just download them. Or, better
-yet, figure out what the format is and let me know. The low-compression
+However, the compression used is unknown. Thus, it is currently not possible 
+to make pictures from the resulting files. You can just download them. Or, 
+better yet, figure out what the format is and let me know. The low-compression
 data download is not of fixed size, but may vary from one picture to the
 next. All low-resolution photos will be saved as RAW files, until such time 
 as they are better understood. 
@@ -53,12 +52,12 @@ If you have a random mixture of low-resolution and high-resolution photos on
 the camera, then the camera will always download the low-resolution pictures
 first and the high-resolution photos only after that. In other words, in
 that situation the pictures will not be downloaded in the order in which you
-took them. 
+shot them. 
 
 The camera also supports "video clip" mode, in which the camera keeps taking 
 frames so long as one holds down the shutter button. Unfortunately, there is 
-not much point in implementing that until the low-resolution non-standard JPEG 
-format is better understood, because that is what it uses. 
+not much point in implementing that until the low-resolution non-standard 
+encoded format is better understood, because that is what it uses. 
 
 Some things which work for me, with various gphoto2 options:
 
@@ -112,6 +111,12 @@ The bad news:
 The camera has "video clip" capability, meaning that with a certain camera 
 setting it is possible to hold down the shutter button and keep shooting 
 frames (the only limitation being the amount of free memory in the camera). 
-Unfortunately, the clip mode uses the non-standard JPEG compression, and thus 
-there is no point in trying to implement clip mode until the compression mode 
+Unfortunately, the clip mode uses the non-standard compression, and thus 
+there is no point in trying to implement clip mode until the compression 
 is understood. 
+
+June 17, 2006: 
+
+New camera  D-MAX DM3588 - 0x03e8:0x2130 found by Amauri Magagna 
+<amaurimagagna@gmail.com>. The new camera seems to differ only in minor 
+details from the previously known cameras, but requires a separate model entry.

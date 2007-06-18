@@ -72,6 +72,7 @@ int aox_init (GPPort *port, Model *model, Info *info)
         return GP_OK;
 }
 
+
 int aox_get_num_lo_pics      (Info *info) 
 {
 	GP_DEBUG("Running aox_get_num_lo_pics\n");
@@ -91,7 +92,7 @@ int aox_get_picture_size  (GPPort *port, int lo, int hi, int n, int k)
         unsigned int size;
 	memset (c,0,4);
 
-	GP_DEBUG("Running aox_get_picture_size\n");
+	GP_DEBUG("Running aox_get_picture_size for aox_pic%03i\n", k+1);
 
 	if ( ( (lo) && ( n ==k ) && (k ==0)) ) {
 	    	READ(port, 0x04, 0x1, 0x1, c, 2);	

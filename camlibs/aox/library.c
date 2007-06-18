@@ -60,8 +60,9 @@ static struct {
    	unsigned short idProduct;
 } models[] = {
         {"Concord EyeQMini_1", GP_DRIVER_STATUS_EXPERIMENTAL, 0x03e8, 0x2182},
-        {"Concord EyeQMini_2", GP_DRIVER_STATUS_EXPERIMENTAL, 0x03e8, 0x2180},	
-	{NULL,0,0}
+        {"Concord EyeQMini_2", GP_DRIVER_STATUS_EXPERIMENTAL, 0x03e8, 0x2180},
+        {"D-MAX DM3588", GP_DRIVER_STATUS_EXPERIMENTAL, 0x03e8, 0x2130},        
+	{NULL,0,0,0}
 };
 
 int
@@ -156,8 +157,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
     	Camera *camera = user_data; 
 
 /* The camera will always download the low-resolution pictures first, if any.
- * As those are JPEG compressed, they are not of fixed size. Unfortunately, 
- * their JPEG format seems to be not quite standard. 
+ * As those are compressed, they are not of fixed size. Unfortunately, the 
+ * compression method is not known. 
  * For a high-resolution picture, the size is always the same. 
  * Every picture file has a header, which is of length 0x98. The high-
  * resolution pictures are just Bayer data; their headers will be discarded.  
@@ -174,10 +175,14 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	unsigned char gtable[256];
 
 	k = gp_filesystem_number(camera->fs, "/", filename, context);
-	if (k < GP_OK)
-		return k;
+
+
 	num_lo_pics = aox_get_num_lo_pics(camera->pl->info);
 	num_hi_pics = aox_get_num_hi_pics(camera->pl->info);
+
+
+	GP_DEBUG("There are %i compressed photos\n", num_lo_pics);
+	GP_DEBUG("There are %i hi-res photos\n", num_hi_pics);
 
 	if ( (k < num_lo_pics) ) { 
 		n = k; 
@@ -191,7 +196,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	len = aox_get_picture_size (camera->port, num_lo_pics, 
 						num_hi_pics, n, k);
-	if (len < GP_OK) return len;
 	GP_DEBUG("len = %i\n", len);
 	data = malloc(len);
 	if (!data) {
@@ -199,6 +203,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
     	aox_read_picture_data (camera->port, data, len, n);
 
 	switch (type) {
+	case GP_FILE_TYPE_EXIF:
+		return (GP_ERROR_FILE_EXISTS);
+
 	case GP_FILE_TYPE_PREVIEW:
 	case GP_FILE_TYPE_NORMAL:
 		if ((w == 320)) {
@@ -234,25 +241,29 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 				"255\n", w, h);
 
 			output = malloc(3*w*h);
-			if (output) {
-				gp_bayer_decode (p_data, w, h, 
+			if(!output) {
+				free(output);
+				return GP_ERROR_NO_MEMORY;
+			}	
+			if (camera->pl->model == AOX_MODEL_DMAX)
+			    gp_bayer_decode (p_data, w, h, 
+					output, BAYER_TILE_RGGB);
+			else
+			    gp_bayer_decode (p_data, w, h, 
 					output, BAYER_TILE_GRBG);
-				/* gamma correction of .65 may not be optimal. */
-				gp_gamma_fill_table (gtable, .65);
-				gp_gamma_correct_single (gtable, output, w * h);
-    				gp_file_set_mime_type (file, GP_MIME_PPM);
-    				gp_file_append (file, header, header_len);
-				gp_file_append (file, output, 3*w*h);
-			}
+			/* gamma correction of .70 may not be optimal. */
+			gp_gamma_fill_table (gtable, .65);
+			gp_gamma_correct_single (gtable, output, w * h);
+    			gp_file_set_mime_type (file, GP_MIME_PPM);
+    			gp_file_append (file, header, header_len);
+			gp_file_append (file, output, 3*w*h);
 		}
-		free (data);
 		free (output);
-		break;
+		return GP_OK;
 	case GP_FILE_TYPE_RAW:
 		gp_file_set_data_and_size (file, data, len);
 		gp_file_set_mime_type (file, GP_MIME_RAW);
 		gp_file_adjust_name_for_mime_type(file);
-		free(data);
 		break;
 	default:
 		return (GP_ERROR_NOT_SUPPORTED); 	
@@ -286,6 +297,7 @@ int
 camera_init(Camera *camera, GPContext *context)
 {
 	GPPortSettings settings;
+	CameraAbilities abilities;
 	int ret = 0;
 
 	/* First, set up all the function pointers */
@@ -325,6 +337,12 @@ camera_init(Camera *camera, GPContext *context)
 	if (!camera->pl) return GP_ERROR_NO_MEMORY;
 	memset (camera->pl, 0, sizeof (CameraPrivateLibrary));
 
+	switch(abilities.usb_product) {
+	case 0x2130:
+		camera->pl->model = AOX_MODEL_DMAX;
+	default:
+		camera->pl->model = AOX_MODEL_MINI;
+	}
 	/* Connect to the camera */
 	aox_init (camera->port, &camera->pl->model, camera->pl->info);
 

@@ -1,3 +1,11 @@
+2007-06-17  Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: D-MAX DM3588 camera added, found by 
+		     Amauri Magagna <amaurimagagna@gmail.com>.
+	* aox.c:     Minor changes.
+	* aox.h:     Model entry added for new camera. 
+	* README.aox: updated.	     
+
+
 2004-06-27  Theodore Kilgore <kilgota@auburn.edu>
 	
 	* library.c: Support for PREVIEW added.

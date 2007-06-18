@@ -26,12 +26,14 @@
 typedef unsigned char Info;
 
 typedef enum {
-	MODEL_MINI
+	AOX_MODEL_MINI,
+	AOX_MODEL_DMAX
 } Model;
 
 int aox_init              (GPPort *port, Model *model, Info *info);
 int aox_get_num_lo_pics   (Info *info);
 int aox_get_num_hi_pics   (Info *info);
+
 int aox_get_picture_size  (GPPort *port, int lo, int hi, int n, int k);
 int aox_read_picture_data (GPPort *port, char *data, int size, int n);
 
