@@ -1,3 +1,7 @@
+2007-06-21  Hubert Figuiere  <hub@figuiere.net>
+
+	* camlibs/ptp2/library.c: Added Canon A560
+
 2007-05-28  Hubert Figuiere  <hub@figuiere.net>
 
 	* camlibs/ptp2/library.c: Added Nikon Coolpix L10.
