@@ -430,6 +430,8 @@ static struct {
 	{"Sony:MVC-CD300 (PTP mode)", 0x054c, 0x004e, 0},
 	{"Sony:MVC-CD500 (PTP mode)", 0x054c, 0x004e, 0},
 	{"Sony:DSC-U10 (PTP mode)",   0x054c, 0x004e, 0},
+	/* new id?! Reported by Ruediger Oertel. */
+	{"Sony:DSC-W200 (PTP mode)",  0x054c, 0x02f8, 0},
 
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109, 0},
@@ -4113,6 +4115,7 @@ camera_init (Camera *camera, GPContext *context)
 		camloc = "UCS-2BE";
 
 	camera->pl->params.maxpacketsize = settings.usb.maxpacketsize;
+	gp_log (GP_LOG_DEBUG, "ptp2", "maxpacketsize %d", settings.usb.maxpacketsize);
 	if (!camera->pl->params.maxpacketsize)
 		camera->pl->params.maxpacketsize = 64; /* assume USB 1.0 */
 
