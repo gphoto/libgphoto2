@@ -1851,6 +1851,7 @@ ptp_canon_eos_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 	case PTP_DTC_UINT16:
 		dpd->FactoryDefaultValue.u16	= dtoh16a(params->canon_props[i].data);
 		dpd->CurrentValue.u16		= dtoh16a(params->canon_props[i].data);
+		fprintf (stderr,"currentvalue is %x\n", dpd->CurrentValue.u16);
 		if (vars16) {
 			dpd->FormFlag = PTP_DPFF_Enumeration;
 			dpd->FORM.Enum.NumberOfValues = nrofvars;
@@ -1862,6 +1863,7 @@ ptp_canon_eos_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 	case PTP_DTC_UINT8:
 		dpd->FactoryDefaultValue.u8	= dtoh8a(params->canon_props[i].data);
 		dpd->CurrentValue.u8		= dtoh8a(params->canon_props[i].data);
+		fprintf (stderr,"currentvalue is %x\n", dpd->CurrentValue.u8);
 		if (vars8) {
 			dpd->FormFlag = PTP_DPFF_Enumeration;
 			dpd->FORM.Enum.NumberOfValues = nrofvars;
