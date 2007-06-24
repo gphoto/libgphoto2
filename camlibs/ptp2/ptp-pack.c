@@ -322,7 +322,12 @@ ptp_free_DI (PTPDeviceInfo *di) {
 static inline void
 ptp_unpack_OH (PTPParams *params, unsigned char* data, PTPObjectHandles *oh, unsigned int len)
 {
-	oh->n = ptp_unpack_uint32_t_array(params, data, PTP_oh, &oh->Handler);
+	if (len) {
+		oh->n = ptp_unpack_uint32_t_array(params, data, PTP_oh, &oh->Handler);
+	} else {
+		oh->n = 0;
+		oh->Handler = NULL;
+	} 
 }
 
 /* StoreIDs array pack/unpack */
