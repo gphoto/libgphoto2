@@ -1617,6 +1617,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	PTPContainer event;
 	PTPParams *params = &camera->pl->params;
 	uint32_t newobject = 0x0;
+	int done;
 
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
 		ptp_operation_issupported(params, PTP_OC_NIKON_Capture)
@@ -1711,34 +1712,36 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		}
 		goto out;
 	}
-
-	/* standard defined way ... wait for AddObject event. */
-	{
+	/* the standard defined way ... wait for some capture related events. */
+	done = 0;
+	while (!done) {
 		short ret = params->event_wait(params,&event);
 		CR (gp_port_set_timeout (camera->port, USB_NORMAL_TIMEOUT));
-		if (ret!=PTP_RC_OK) goto err;
-	}
-	while (event.Code==PTP_EC_ObjectAdded) {
-		/* add newly created object to internal structures */
-		add_object (camera, event.Param1, context);
-		newobject = event.Param1;
-
-		if (params->event_wait (params, &event)!=PTP_RC_OK)
-		{
-			gp_context_error (context,
-			_("Capture command completed, but no confirmation received"));
-			goto err;
+		if (ret!=PTP_RC_OK) {
+			gp_context_error (context,_("No event received, error %x."), ret);
+			/* we're not setting *path on error! */
+			return GP_ERROR;
+		}
+		fprintf (stderr, "event %x\n", event.Code);
+		switch (event.Code) {
+		case PTP_EC_ObjectRemoved:
+			/* Perhaps from previous Canon based capture + delete. Ignore. */
+			break;
+		case PTP_EC_ObjectAdded: {
+			/* add newly created object to internal structures */
+			add_object (camera, event.Param1, context);
+			newobject = event.Param1;
+			break;
+		}
+		case PTP_EC_CaptureComplete:
+			done=1;
+			break;
+		default:
+			gp_log (GP_LOG_DEBUG,"ptp2/capture", "Received event 0x%04x, ignoring (please report).",event.Code);
+			/* done = 1; */
+			break;
 		}
 	}
-	if (event.Code==PTP_EC_CaptureComplete)
-		goto out;
-
-	gp_context_error (context,_("Received event 0x%04x"),event.Code);
-
-err:
-	/* we're not setting *path on error! */
-	return GP_ERROR;
-
 out:
 	/* clear path, so we get defined results even without object info */
 	path->name[0]='\0';
