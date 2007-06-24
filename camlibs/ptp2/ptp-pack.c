@@ -1095,7 +1095,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 		case  0xc189:
 		case  0xc18a:
 			if (size >= 0xc) {	/* property info */
-				int j;
+				int j, k;
 				uint32_t	proptype = dtoh32a(&curdata[PTP_ece_Prop_Subtype]);
 				unsigned char	*data = &curdata[PTP_ece_Prop_Data];
 
@@ -1119,6 +1119,9 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					params->canon_props[j].size = size;
 					params->canon_props[j].data = malloc(size-PTP_ece_Prop_Data);
 					memcpy(params->canon_props[j].data, data, size-PTP_ece_Prop_Data);
+					for (k=0;k<size-PTP_ece_Prop_Data;k++) {
+						fprintf (stderr, "%02x", data[k]);
+					}
 					params->nrofcanon_props = j+1;
 				}
 				break;
