@@ -1853,11 +1853,12 @@ ptp_canon_eos_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 		dpd->CurrentValue.u16		= dtoh16a(params->canon_props[i].data);
 		fprintf (stderr,"currentvalue is %x\n", dpd->CurrentValue.u16);
 		if (vars16) {
+			int j;
 			dpd->FormFlag = PTP_DPFF_Enumeration;
 			dpd->FORM.Enum.NumberOfValues = nrofvars;
 			dpd->FORM.Enum.SupportedValue = malloc (nrofvars * sizeof(PTPPropertyValue));
-			for (i=0;i<nrofvars;i++)
-				dpd->FORM.Enum.SupportedValue[i].u16 = vars16[i];
+			for (j=0;j<nrofvars;j++)
+				dpd->FORM.Enum.SupportedValue[j].u16 = vars16[j];
 		}
 		break;
 	case PTP_DTC_UINT8:
@@ -1865,11 +1866,12 @@ ptp_canon_eos_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 		dpd->CurrentValue.u8		= dtoh8a(params->canon_props[i].data);
 		fprintf (stderr,"currentvalue is %x\n", dpd->CurrentValue.u8);
 		if (vars8) {
+			int j;
 			dpd->FormFlag = PTP_DPFF_Enumeration;
 			dpd->FORM.Enum.NumberOfValues = nrofvars;
 			dpd->FORM.Enum.SupportedValue = malloc (nrofvars * sizeof(PTPPropertyValue));
-			for (i=0;i<nrofvars;i++)
-				dpd->FORM.Enum.SupportedValue[i].u8 = vars8[i];
+			for (j=0;j<nrofvars;j++)
+				dpd->FORM.Enum.SupportedValue[j].u8 = vars8[j];
 		}
 		break;
 	case PTP_DTC_STR: {
