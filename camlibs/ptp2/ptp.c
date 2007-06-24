@@ -1851,7 +1851,7 @@ ptp_canon_eos_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 	case PTP_DTC_UINT16:
 		dpd->FactoryDefaultValue.u16	= dtoh16a(params->canon_props[i].data);
 		dpd->CurrentValue.u16		= dtoh16a(params->canon_props[i].data);
-		fprintf (stderr,"currentvalue is %x\n", dpd->CurrentValue.u16);
+		fprintf (stderr,"currentvalue is %x, i is %d\n", dpd->CurrentValue.u16, i);
 		if (vars16) {
 			int j;
 			dpd->FormFlag = PTP_DPFF_Enumeration;

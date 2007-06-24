@@ -1119,9 +1119,11 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					params->canon_props[j].size = size;
 					params->canon_props[j].data = malloc(size-PTP_ece_Prop_Data);
 					memcpy(params->canon_props[j].data, data, size-PTP_ece_Prop_Data);
+					fprintf (stderr, "Data (index %d)\n", j);
 					for (k=0;k<size-PTP_ece_Prop_Data;k++) {
 						fprintf (stderr, "%02x", data[k]);
 					}
+					fprintf (stderr, "\n");
 					params->nrofcanon_props = j+1;
 				}
 				break;
