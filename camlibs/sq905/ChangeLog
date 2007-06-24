@@ -1,3 +1,8 @@
+2007-06-24   Theodore Kilgore <kilgota@auburn.edu>
+	* library.c:
+	* sq905.c:
+	* sq905.h: fixed compile warnings about signedness. 
+
 2007-05-10   Marcus Meissner <marcus@jet.franken.de>
 
 	* postprocess.c: Fixed some free() calls and some memory leaks.

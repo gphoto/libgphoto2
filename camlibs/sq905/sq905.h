@@ -41,13 +41,13 @@ int sq_access_reg 		     (GPPort *, int reg);
 int sq_reset             		(GPPort *);
 int sq_rewind                        (GPPort *, CameraPrivateLibrary *);
 int sq_init                          (GPPort *, CameraPrivateLibrary *);
-unsigned char *sq_read_picture_data  (GPPort *, unsigned char *data, int size);
+int sq_read_picture_data  (GPPort *, unsigned char *data, int size);
 int sq_delete_all                    (GPPort *, CameraPrivateLibrary *);
 
 /* Those functions don't need data transfer with the camera */
 int sq_get_num_frames                (CameraPrivateLibrary *, int entry);
-unsigned 
-char sq_get_comp_ratio      	     (CameraPrivateLibrary *, int entry);
+ 
+int sq_get_comp_ratio      	     (CameraPrivateLibrary *, int entry);
 int sq_get_picture_width             (CameraPrivateLibrary *, int entry);
 int sq_is_clip                       (CameraPrivateLibrary *, int entry);
 

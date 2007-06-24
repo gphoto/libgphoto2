@@ -1,3 +1,7 @@
+2007-06-24  Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: compile warnings about signed variables fixed. 
+	* aox.c:	ditto
+
 2007-06-17  Theodore Kilgore <kilgota@auburn.edu>
 	* library.c: D-MAX DM3588 camera added, found by 
 		     Amauri Magagna <amaurimagagna@gmail.com>.

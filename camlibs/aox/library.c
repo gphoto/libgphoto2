@@ -200,7 +200,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	data = malloc(len);
 	if (!data) {
 		printf("Malloc failed\n"); return 0;}
-    	aox_read_picture_data (camera->port, data, len, n);
+    	aox_read_picture_data (camera->port, (char *)data, len, n);
 
 	switch (type) {
 	case GP_FILE_TYPE_EXIF:
@@ -210,7 +210,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	case GP_FILE_TYPE_NORMAL:
 		if ((w == 320)) {
 			gp_file_detect_mime_type (file); /* Detected as "raw"*/
-			gp_file_set_data_and_size (file, data, len);
+			gp_file_set_data_and_size (file, (char *)data, len);
 			gp_file_adjust_name_for_mime_type (file);
 		}
 		if ((w == 640)){
@@ -256,12 +256,12 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			gp_gamma_correct_single (gtable, output, w * h);
     			gp_file_set_mime_type (file, GP_MIME_PPM);
     			gp_file_append (file, header, header_len);
-			gp_file_append (file, output, 3*w*h);
+			gp_file_append (file, (char *)output, 3*w*h);
 		}
 		free (output);
 		return GP_OK;
 	case GP_FILE_TYPE_RAW:
-		gp_file_set_data_and_size (file, data, len);
+		gp_file_set_data_and_size (file, (char *)data, len);
 		gp_file_set_mime_type (file, GP_MIME_RAW);
 		gp_file_adjust_name_for_mime_type(file);
 		break;
@@ -304,10 +304,14 @@ camera_init(Camera *camera, GPContext *context)
 	camera->functions->summary      = camera_summary;
 	camera->functions->about        = camera_about;
 	camera->functions->exit	    = camera_exit;
-   
+
 	GP_DEBUG ("Initializing the camera\n");
 	ret = gp_port_get_settings(camera->port,&settings);
 	if (ret < 0) return ret; 
+
+        ret = gp_camera_get_abilities(camera,&abilities);                       
+        if (ret < 0) return ret;                                                
+        GP_DEBUG("product number is 0x%x\n", abilities.usb_product);
 
 	switch (camera->port->type) {
 		case GP_PORT_SERIAL:

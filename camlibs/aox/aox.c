@@ -38,7 +38,7 @@
 
 int aox_init (GPPort *port, Model *model, Info *info) 
 {
-	unsigned char c[4];
+	char c[4];
 	unsigned char hi[2];
 	unsigned char lo[2];
 	memset(c,0,sizeof(c));
@@ -51,7 +51,7 @@ int aox_init (GPPort *port, Model *model, Info *info)
 	WRITE(port, 8, 1, 0, c, 0x10);
         READ(port, 0xff, 0x07, 0xfffc, c, 4); /* Returns version number, apparently */	
         READ(port, 0x06, 0x0, 0x0, c, 2);	
-        READ(port, 0x04, 0x1, 0x1, lo, 2);	
+        READ(port, 0x04, 0x1, 0x1, (char *)lo, 2);	
 	GP_DEBUG("%02x %02x number of lo-res pics\n", lo[0],lo[1]); 
 	/* We need to keep this information. We presume that 
 	 * more than 255 pictures is impossible with this camera. 
@@ -60,7 +60,7 @@ int aox_init (GPPort *port, Model *model, Info *info)
         READ(port, 0x04, 0x2, 0x1, c, 2);	
         READ(port, 0x04, 0x3, 0x1, c, 2);	
         READ(port, 0x04, 0x4, 0x1, c, 2);	
-        READ(port, 0x04, 0x5, 0x1, hi, 2);	
+        READ(port, 0x04, 0x5, 0x1, (char *)hi, 2);	
 	GP_DEBUG("%02i %02i number of hi-res pics\n", hi[0], hi[1]); 
 	/* This information, too. */
 	memcpy (info +1, &hi[0], 1);
@@ -95,12 +95,12 @@ int aox_get_picture_size  (GPPort *port, int lo, int hi, int n, int k)
 	GP_DEBUG("Running aox_get_picture_size for aox_pic%03i\n", k+1);
 
 	if ( ( (lo) && ( n ==k ) && (k ==0)) ) {
-	    	READ(port, 0x04, 0x1, 0x1, c, 2);	
+	    	READ(port, 0x04, 0x1, 0x1, (char *)c, 2);	
 	}
 	if ( ( (hi) && ( n < k ) && (n == 0))   ) {
-	        READ(port, 0x04, 0x5, 0x1, c, 2);	
+	        READ(port, 0x04, 0x5, 0x1, (char *)c, 2);	
 	}
-	READ(port, 0x05, n+1, 0x1, c, 4);	       
+	READ(port, 0x05, n+1, 0x1, (char *)c, 4);	       
 	size = (int)c[0] + (int)c[1]*0x100 + (int)c[2]*0x10000;
 	GP_DEBUG(" size of picture %i is 0x%x\n", k, size);
 	if ( (size >= 0xfffff ) ) {return GP_ERROR;} 

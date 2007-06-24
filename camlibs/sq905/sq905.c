@@ -37,11 +37,11 @@
 
 #define zero 	"\x0"
 
-static unsigned char *
+static int
 sq_read_data (GPPort *port, unsigned char *data, int size)
 {
 	SQWRITE (port, 0x0c, 0x03, size, zero, 1); 
-	gp_port_read (port, data, size); 
+	gp_port_read (port, (char *)data, size); 
 	return GP_OK;
 }
 
@@ -120,7 +120,7 @@ sq_get_num_frames (CameraPrivateLibrary *priv, int entry)
 }
 
 
-unsigned char
+int
 sq_get_comp_ratio (CameraPrivateLibrary *priv, int entry)
 {
 	switch (priv->catalog[16*entry]) {
@@ -206,7 +206,7 @@ sq_reset (GPPort *port)
     	return GP_OK;
 }
 
-unsigned char *
+int
 sq_read_picture_data (GPPort *port, unsigned char *data, int size )
 {
 	int remainder = size % 0x8000;

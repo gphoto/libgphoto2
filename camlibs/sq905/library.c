@@ -357,12 +357,12 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		 */
 		ppm = malloc (w * h * 3 + 256); /* room for data + header */
 		if (!ppm) { return GP_ERROR_NO_MEMORY; }
-    		sprintf (ppm,
+    		sprintf ((char *)ppm,
 			"P6\n"
 			"# CREATOR: gphoto2, SQ905 library\n"
 			"%d %d\n"
 			"255\n", w, h);
-		size = strlen (ppm);
+		size = strlen ((char *)ppm);
 		ptr = ppm + size;
 
 			switch (camera->pl->model) {
@@ -391,7 +391,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 		gp_file_set_mime_type (file, GP_MIME_PPM);
     		gp_file_set_name (file, filename); 
-		gp_file_set_data_and_size (file, ppm, size);
+		gp_file_set_data_and_size (file, (char *)ppm, size);
 
 	} else {	/* type is GP_FILE_TYPE_RAW */
 		size = w*h/comp_ratio;
@@ -400,7 +400,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		memcpy (rawdata, frame_data, size);
 		gp_file_set_mime_type (file, GP_MIME_RAW);
 		gp_file_set_name (file, filename);
-	        gp_file_set_data_and_size (file, rawdata, size);  
+	        gp_file_set_data_and_size (file, (char *)rawdata, size);  
 	}
 	/* Reset camera when done, for more graceful exit. */
 	if ((!(is_in_clip)&&(entry +1 == camera->pl->nb_entries)) 
@@ -450,13 +450,13 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	/* Now put the data into a PPM image file. */
 	ppm = malloc (w * h * 3 + 256); 
 	if (!ppm) { return GP_ERROR_NO_MEMORY; }
-    	sprintf (ppm,
+    	sprintf ((char *)ppm,
 		"P6\n"
 		"# CREATOR: gphoto2, SQ905 library\n"
 		"%d %d\n"
 		"255\n", w, h);
-	ptr = ppm + strlen (ppm);	
-	size = strlen (ppm) + (w * h * 3);
+	ptr = ppm + strlen ((char*)ppm);	
+	size = strlen ((char*)ppm) + (w * h * 3);
 	GP_DEBUG ("size = %i\n", size);
 	switch (camera->pl->model) {
 	case SQ_MODEL_POCK_CAM:
@@ -477,7 +477,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	gp_gamma_correct_single (gtable, ptr, w * h); 
 	gp_file_set_mime_type (file, GP_MIME_PPM);
 	gp_file_set_name (file, filename); 
-	gp_file_set_data_and_size (file, ppm, size);
+	gp_file_set_data_and_size (file, (char *)ppm, size);
 
 	sq_reset(camera->port);
         sq_access_reg(camera->port, CAPTURE);
