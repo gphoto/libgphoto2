@@ -1787,6 +1787,15 @@ ptp_canon_eos_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 	if (params->nrofcanon_props == i)
 		return PTP_RC_Undefined;
 	memcpy (dpd, &params->canon_props[i].dpd, sizeof (*dpd));
+	if (dpd->FormFlag == PTP_DPFF_Enumeration) {
+		/* need to duplicate the Enumeration alloc */
+		dpd->FORM.Enum.SupportedValue = malloc (sizeof (PTPPropertyValue)*dpd->FORM.Enum.NumberOfValues);
+		memcpy (dpd->FORM.Enum.SupportedValue,
+			params->canon_props[i].dpd.FORM.Enum.SupportedValue,
+			sizeof (PTPPropertyValue)*dpd->FORM.Enum.NumberOfValues
+		);
+		/* FIXME: duplicate strings if type is STR. */
+	}
 	return PTP_RC_OK;
 }
 
