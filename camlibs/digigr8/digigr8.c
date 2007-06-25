@@ -39,7 +39,7 @@
 int 
 digi_init (GPPort *port, CameraPrivateLibrary *priv)
 {
-	unsigned char c[0x14];
+	char c[0x14];
 	int i;
 	unsigned char *catalog = malloc(0x4000);
 	unsigned char *catalog_tmp;
@@ -54,7 +54,7 @@ digi_init (GPPort *port, CameraPrivateLibrary *priv)
 	gp_port_read (port, c, 0x14); 	
 	digi_reset(port);
 	SQWRITE (port, 0x0c, 0x20, 0x40, NULL, 0);
-	gp_port_read(port, catalog, 0x4000); /* We need 16 bytes for each photo. */
+	gp_port_read(port, (char *)catalog, 0x4000); /* We need 16 bytes for each photo. */
 	digi_reset (port);
 
 	/* The first occurence of a zero denotes end of files entries */
@@ -128,7 +128,7 @@ digi_get_picture_width (CameraPrivateLibrary *priv, int entry)
 int
 digi_rewind (GPPort *port, CameraPrivateLibrary *priv)
 {
-	static unsigned char dummy_buf[0x4000];
+	static char dummy_buf[0x4000];
 	
 	
 	GP_DEBUG("REWIND cam's data pointer");
@@ -167,10 +167,10 @@ digi_read_picture_data (GPPort *port, unsigned char *data, int size, int n )
     		SQWRITE (port, 0x0c, 0x30, 0x00, NULL, 0); 
 	}	
 	while ((offset + 0x8000 < size)) {
-		gp_port_read (port, data + offset, 0x8000);
+		gp_port_read (port, (char *)data + offset, 0x8000);
 			offset = offset + 0x8000;
 	}
- 	gp_port_read (port, data + offset, remainder);
+ 	gp_port_read (port, (char *)data + offset, remainder);
 
     	return GP_OK;
 } 

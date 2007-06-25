@@ -214,8 +214,7 @@ int
 digi_decompress (unsigned char *out_data, unsigned char *data,
 	    int w, int h)
 {
-	int size, row, i;
-	unsigned char temp;
+	int size;
 	unsigned char *temp_data;
 	size = w*h/2;
 	temp_data = malloc(size);

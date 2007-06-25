@@ -1,3 +1,9 @@
+2007-06-25   Theodore Kilgore <kilgota@auburn.edu>
+	* digi_postprocess.c: removal of superfluous variables. 
+	* digigr8.c: signedness warnings fixed
+	* library.c: ditto 
+
+
 2007-03-28   Theodore Kilgore <kilgota@auburn.edu>
 
 	* digi_postprocess.c: small improvements to decompression algorithm.

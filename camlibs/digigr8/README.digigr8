@@ -42,8 +42,8 @@ WHAT FEATURES DO THESE CAMERAS HAVE, AND WHAT DOES THIS DRIVER SUPPORT?
 -- USB connection to computer
 -- High resolution 640x480, uncompressed 				Y
 -- Low resolution 320x240, uncompressed					Y
--- High resolution 640x480, compressed 					P
--- Low resolution 320x240, compressed					P
+-- High resolution 640x480, compressed 					Y
+-- Low resolution 320x240, compressed					Y
 -- Ability to "switch" resolution between pictures 			Y
 -- Ability to download all pictures on camera				Y
 -- Ability to download the first k pictures, where 
@@ -152,8 +152,8 @@ the program and having chosen the right camera).
 NOTES  
 
 1.	The program is set up to put out pictures in PPM or raw format. The OEM
-program offers JPEGs, which the user can easily create on Linux with lots of 
-other software. 
+program offers JPEGs, which the user can easily create on Linux, using other   
+software which exists independently from libgphoto2. 
 
 2.	 The gamma setting (actually seems to be one over gamma) used for
 the construction of PPM image files has been obtained by trial and error. It
@@ -169,10 +169,8 @@ experimental you may so wish. To disable it, just comment out the line in
 get_file_func ( ) in library.c where the function digi_postprocess ( ) is
 called. Then do "make install" to install your change.
 
-4. 	The "High Compression" setting is approximately 98% resolved. There 
-do remain occasional problems starting at the left edge of the image, where
-things seem to be a bit unstable. However, very few of my test photos have shown
-any problems in this regard. 
+4. 	The "High Compression" setting uses an unpublished compression 
+algorithm; decompression seems now to work pretty well.  
 
 5. 	Please get back to me with reports about other SQ cameras (any cameras 
 with Vendor number 0x2770), with their specifications (what it says in the OEM 
@@ -201,4 +199,4 @@ WARRANTY?
 
 Theodore Kilgore
 12/05/05
-(revised 12/29/05, 03/28/07)
+(revised 12/29/05, 03/28/07, 06/25/07)

@@ -215,7 +215,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		size = b; 
 		gp_file_set_mime_type (file, GP_MIME_RAW);
 		gp_file_set_name (file, filename);
-	        gp_file_set_data_and_size (file, data, size);  
+	        gp_file_set_data_and_size (file, (char *)data, size);  
 		/* Reset camera when done, for more graceful exit. */
 		if (k +1 == camera->pl->nb_entries) {
 	    		digi_rewind (camera->port, camera->pl);	
@@ -231,12 +231,12 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		status = GP_ERROR_NO_MEMORY; 
 		goto end;
 	}
-	sprintf (ppm,
+	sprintf ((char *)ppm,
 			"P6\n"
 			"# CREATOR: gphoto2, SQ905C library\n"
 			"%d %d\n"
 			"255\n", w, h);
-	size = strlen (ppm);
+	size = strlen ((char *)ppm);
 	ptr = ppm + size;
 	size = size + (w * h * 3);
 	GP_DEBUG ("size = %i\n", size);				
@@ -258,7 +258,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	digi_postprocess(camera->pl,w, h, ptr, k);
 	gp_file_set_mime_type (file, GP_MIME_PPM);
 	gp_file_set_name (file, filename); 
-	gp_file_set_data_and_size (file, ppm, size);
+	gp_file_set_data_and_size (file, (char *)ppm, size);
 	/* Reset camera when done, for more graceful exit. */
 	if (k +1 == camera->pl->nb_entries) {
     		digi_rewind (camera->port, camera->pl);
