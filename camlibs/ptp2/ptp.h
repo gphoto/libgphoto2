@@ -929,10 +929,13 @@ struct _PTPCanon_changes_entry {
 typedef struct _PTPCanon_changes_entry PTPCanon_changes_entry;
 
 typedef struct _PTPCanon_Property {
-	uint32_t	size;
-	uint32_t	type;
-	uint32_t	proptype;
-	unsigned char	*data;
+	uint32_t		size;
+	uint32_t		type;
+	uint32_t		proptype;
+	unsigned char		*data;
+
+	/* fill out for queries */
+	PTPDevicePropDesc	dpd;
 } PTPCanon_Property;
 
 

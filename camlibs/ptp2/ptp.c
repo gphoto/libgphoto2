@@ -1775,115 +1775,18 @@ ptp_canon_eos_getevent (PTPParams* params, PTPCanon_changes_entry **entries, int
 	return PTP_RC_OK;
 }
 
-static const uint16_t all_EOS_isos[] = {
-	0xffff, 0x0040, 0x0048, 0x0050, 0x0058, 0x0060, 0x0068, 0x0000,
-};
-
-static const uint16_t all_EOS_shutterspeeds[] = {
-	0x0000, 0x0010, 0x0013, 0x0015, 0x0018, 0x001b, 0x001d, 0x0020,
-	0x0023, 0x0025, 0x0028, 0x002b, 0x002d, 0x0030, 0x0033, 0x0035,
-	0x0038, 0x003b, 0x003d, 0x0040, 0x0043, 0x0045, 0x0048, 0x004b,
-	0x004d, 0x0050, 0x0053, 0x0055, 0x0058, 0x005b, 0x005d, 0x0060,
-	0x0063, 0x0065, 0x0068, 0x006b, 0x006d, 0x0070, 0x0073, 0x0075,
-	0x0078, 0x007b, 0x007d, 0x0080, 0x0083, 0x0085, 0x0088, 0x008b,
-	0x008d, 0x0090, 0x0093, 0x0095, 0x0098,
-};
-
-static const uint16_t all_EOS_apertures[] = {
-	0xffff, 0x0015, 0x0018, 0x001b, 0x001d, 0x0020, 0x0023, 0x0025,
-	0x0028, 0x002b, 0x002d, 0x0030, 0x0033, 0x0035, 0x0038, 0x003b,
-	0x003d, 0x0040, 0x0043, 0x0045, 0x0048, 0x004b, 0x004d, 0x0050,
-};
-
-static const uint8_t all_EOS_expcomp[] = {
-	0x10, 0x0d, 0x0c, 0x0b, 0x08, 0x05, 0x04, 0x03,
-	0x00,
-	0xfd, 0xfc, 0xfb, 0xf8, 0xf5, 0xf4, 0xf3, 0xf0,
-};
-
 uint16_t
 ptp_canon_eos_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 	PTPDevicePropDesc *dpd)
 {
 	int i;
-	const uint16_t	*vars16 = NULL;
-	const uint8_t	*vars8 = NULL;
-	int		nrofvars = 0;
 
 	for (i=0;i<params->nrofcanon_props;i++)
 		if (params->canon_props[i].proptype == propcode)
 			break;
 	if (params->nrofcanon_props == i)
 		return PTP_RC_Undefined;
-	/* Fill out dpd. */
-	dpd->DevicePropertyCode = propcode;
-	switch (propcode) {
-	case PTP_DPC_CANON_EOS_Aperture:
-		dpd->DataType = PTP_DTC_UINT16;
-		vars16 = all_EOS_apertures;
-		nrofvars = sizeof (all_EOS_apertures) / sizeof (all_EOS_apertures[0]);
-		break;
-	case PTP_DPC_CANON_EOS_ShutterSpeed:
-		dpd->DataType = PTP_DTC_UINT16;
-		vars16 = all_EOS_shutterspeeds;
-		nrofvars = sizeof (all_EOS_shutterspeeds) / sizeof (all_EOS_shutterspeeds[0]);
-		break;
-	case PTP_DPC_CANON_EOS_ISOSpeed:
-		dpd->DataType = PTP_DTC_UINT16;
-		vars16 = all_EOS_isos;
-		nrofvars = sizeof (all_EOS_isos) / sizeof (all_EOS_isos[0]);
-		break;
-	case PTP_DPC_CANON_EOS_ExpCompensation:
-		dpd->DataType = PTP_DTC_UINT8;
-		vars8 = all_EOS_expcomp;
-		nrofvars = sizeof (all_EOS_expcomp) / sizeof (all_EOS_expcomp[0]);
-		break;
-	case PTP_DPC_CANON_EOS_Owner:
-		dpd->DataType = PTP_DTC_STR;
-		break;
-	default:
-		fprintf(stderr,"data type for 0x%04x is unknown, fill in.\n", propcode);
-		break;
-	}
-	dpd->GetSet = 1;
-        dpd->FormFlag = PTP_DPFF_None;
-	switch (dpd->DataType) {
-	case PTP_DTC_UINT16:
-		dpd->FactoryDefaultValue.u16	= dtoh16a(params->canon_props[i].data);
-		dpd->CurrentValue.u16		= dtoh16a(params->canon_props[i].data);
-		fprintf (stderr,"currentvalue is %x, i is %d\n", dpd->CurrentValue.u16, i);
-		if (vars16) {
-			int j;
-			dpd->FormFlag = PTP_DPFF_Enumeration;
-			dpd->FORM.Enum.NumberOfValues = nrofvars;
-			dpd->FORM.Enum.SupportedValue = malloc (nrofvars * sizeof(PTPPropertyValue));
-			for (j=0;j<nrofvars;j++)
-				dpd->FORM.Enum.SupportedValue[j].u16 = vars16[j];
-		}
-		break;
-	case PTP_DTC_UINT8:
-		dpd->FactoryDefaultValue.u8	= dtoh8a(params->canon_props[i].data);
-		dpd->CurrentValue.u8		= dtoh8a(params->canon_props[i].data);
-		fprintf (stderr,"currentvalue is %x\n", dpd->CurrentValue.u8);
-		if (vars8) {
-			int j;
-			dpd->FormFlag = PTP_DPFF_Enumeration;
-			dpd->FORM.Enum.NumberOfValues = nrofvars;
-			dpd->FORM.Enum.SupportedValue = malloc (nrofvars * sizeof(PTPPropertyValue));
-			for (j=0;j<nrofvars;j++)
-				dpd->FORM.Enum.SupportedValue[j].u8 = vars8[j];
-		}
-		break;
-	case PTP_DTC_STR: {
-		uint8_t len = 0;
-		dpd->FactoryDefaultValue.str	= ptp_unpack_string(params, params->canon_props[i].data, 0, &len);
-		dpd->CurrentValue.str		= ptp_unpack_string(params, params->canon_props[i].data, 0, &len);
-		break;
-	}
-	default:
-		fprintf(stderr,"data type 0x%04x unhandled, fill in.\n", dpd->DataType);
-		break;
-	}
+	memcpy (dpd, &params->canon_props[i].dpd, sizeof (*dpd));
 	return PTP_RC_OK;
 }
 
