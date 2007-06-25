@@ -1117,24 +1117,26 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				fprintf (stderr, "propxtype is %x for %x, unhandled.\n", propxtype, proptype);
 				break;
 			}
-			dpd->FormFlag = PTP_DPFF_Enumeration;
-			dpd->FORM.Enum.NumberOfValues = propxcnt;
-			dpd->FORM.Enum.SupportedValue = malloc (sizeof (PTPPropertyValue)*propxcnt);
-			for (j=0;j<propxcnt;j++) {
-				switch (dpd->DataType) {
-				case PTP_DTC_UINT16:
-					dpd->FORM.Enum.SupportedValue[j].u16	= dtoh16a(data);
-					fprintf (stderr,"suppvalue[%d] of %x is %x\n", j, proptype, dtoh16a(data));
-					break;
-				case PTP_DTC_UINT8:
-					dpd->FORM.Enum.SupportedValue[j].u8	= dtoh8a(data);
-					fprintf (stderr,"suppvalue[%d] of %x is %x\n", j, proptype, dtoh8a(data));
-					break;
-				default:
-					fprintf(stderr,"data type 0x%04x of %x unhandled, fill in.\n", dpd->DataType, proptype);
-					break;
+			if (propxcnt) {
+				dpd->FormFlag = PTP_DPFF_Enumeration;
+				dpd->FORM.Enum.NumberOfValues = propxcnt;
+				dpd->FORM.Enum.SupportedValue = malloc (sizeof (PTPPropertyValue)*propxcnt);
+				for (j=0;j<propxcnt;j++) {
+					switch (dpd->DataType) {
+					case PTP_DTC_UINT16:
+						dpd->FORM.Enum.SupportedValue[j].u16	= dtoh16a(data);
+						fprintf (stderr,"suppvalue[%d] of %x is %x\n", j, proptype, dtoh16a(data));
+						break;
+					case PTP_DTC_UINT8:
+						dpd->FORM.Enum.SupportedValue[j].u8	= dtoh8a(data);
+						fprintf (stderr,"suppvalue[%d] of %x is %x\n", j, proptype, dtoh8a(data));
+						break;
+					default:
+						fprintf(stderr,"data type 0x%04x of %x unhandled, fill in.\n", dpd->DataType, proptype);
+						break;
+					}
+					data += 4; /* might only be for propxtype 3 */
 				}
-				data += 4; /* might only be for propxtype 3 */
 			}
 			break;
 		}
