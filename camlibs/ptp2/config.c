@@ -1114,6 +1114,25 @@ static struct deviceproptableu8 canon_meteringmode[] = {
 };
 GENERIC8TABLE(Canon_MeteringMode,canon_meteringmode)
 
+static struct deviceproptableu8 canon_eos_meteringmode[] = {
+	{ N_("Evaluative metering"),			3, 0 },
+	{ N_("Partial metering"),			4, 0 },
+	{ N_("Center Weighted average metering"),	5, 0 },
+};
+GENERIC8TABLE(Canon_EOS_MeteringMode,canon_eos_meteringmode)
+
+static struct deviceproptableu8 canon_eos_picturestyle[] = {
+	{ N_("Standard"),	0x81, 0 },
+	{ N_("Portrait"),	0x82, 0 },
+	{ N_("Landscape"),	0x83, 0 },
+	{ N_("Neutral"),	0x84, 0 },
+	{ N_("Faithful"),	0x85, 0 },
+	{ N_("Monochrome"),	0x86, 0 },
+	{ N_("User defined 1"),	0x21, 0 },
+	{ N_("User defined 2"),	0x22, 0 },
+	{ N_("User defined 3"),	0x23, 0 },
+};
+GENERIC8TABLE(Canon_EOS_PictureStyle,canon_eos_picturestyle)
 
 static struct deviceproptableu16 canon_shutterspeed[] = {
       {  "auto",0x0000,0 },
@@ -1664,6 +1683,18 @@ static struct deviceproptableu8 canon_whitebalance[] = {
       { N_("Custom"),		6, 0 },
 };
 GENERIC8TABLE(Canon_WhiteBalance,canon_whitebalance)
+
+static struct deviceproptableu8 canon_eos_whitebalance[] = {
+      { N_("Auto"),		0, 0 },
+      { N_("Daylight"),		1, 0 },
+      { N_("Shade"),		2, 0 },
+      { N_("Cloudy"),		3, 0 },
+      { N_("Tungsten"),		4, 0 },
+      { N_("Fluorescent"),	5, 0 },
+      { N_("Flash"),		6, 0 },
+      { N_("Custom"),		8, 0 },
+};
+GENERIC8TABLE(Canon_EOS_WhiteBalance,canon_eos_whitebalance)
 
 
 static struct deviceproptableu8 canon_expcompensation[] = {
@@ -2576,6 +2607,7 @@ static struct submenu image_settings_menu[] = {
         { N_("ISO Speed"), "iso", PTP_DPC_CANON_ISOSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ISO, _put_Canon_ISO},
         { N_("ISO Speed"), "iso", PTP_DPC_CANON_EOS_ISOSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ISO, _put_Canon_ISO},
 	{ N_("WhiteBalance"), "whitebalance", PTP_DPC_CANON_WhiteBalance, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_WhiteBalance, _put_Canon_WhiteBalance},
+	{ N_("WhiteBalance"), "whitebalance", PTP_DPC_CANON_EOS_WhiteBalance, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_EOS_WhiteBalance, _put_Canon_EOS_WhiteBalance},
 	{ N_("WhiteBalance"), "whitebalance", PTP_DPC_WhiteBalance, 0, PTP_DTC_UINT16, _get_WhiteBalance, _put_WhiteBalance},
 	{ N_("Photo Effect"), "photoeffect", PTP_DPC_CANON_PhotoEffect, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_PhotoEffect, _put_Canon_PhotoEffect},
 	{ N_("Color Model"), "colormodel", PTP_DPC_NIKON_ColorModel, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_ColorModel, _put_Nikon_ColorModel},
@@ -2605,6 +2637,7 @@ static struct submenu capture_settings_menu[] = {
         { N_("Exposure Program"), "expprogram", PTP_DPC_ExposureProgramMode, 0, PTP_DTC_UINT16, _get_ExposureProgram, _put_ExposureProgram},
         { N_("Still Capture Mode"), "capturemode", PTP_DPC_StillCaptureMode, 0, PTP_DTC_UINT16, _get_CaptureMode, _put_CaptureMode},
         { N_("Canon Shooting Mode"), "shootingmode", PTP_DPC_CANON_ShootingMode, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ShootMode, _put_Canon_ShootMode},
+        { N_("Picture Style"), "picturestyle", PTP_DPC_CANON_EOS_PictureStyle, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_EOS_PictureStyle, _put_Canon_EOS_PictureStyle},
         { N_("Focus Metering Mode"), "focusmetermode", PTP_DPC_FocusMeteringMode, 0, PTP_DTC_UINT16, _get_FocusMetering, _put_FocusMetering},
         { N_("Exposure Metering Mode"), "exposuremetermode", PTP_DPC_ExposureMeteringMode, 0, PTP_DTC_UINT16, _get_ExposureMetering, _put_ExposureMetering},
         { N_("Flash Mode"), "flashmode", PTP_DPC_FlashMode, 0, PTP_DTC_UINT16, _get_FlashMode, _put_FlashMode},
@@ -2614,6 +2647,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Shutter Speed"), "shutterspeed", PTP_DPC_CANON_ShutterSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ShutterSpeed, _put_Canon_ShutterSpeed},
 	{ N_("Shutter Speed"), "shutterspeed", PTP_DPC_CANON_EOS_ShutterSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ShutterSpeed, _put_Canon_ShutterSpeed},
 	{ N_("Metering Mode"), "meteringmode", PTP_DPC_CANON_MeteringMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_MeteringMode, _put_Canon_MeteringMode},
+	{ N_("Metering Mode"), "meteringmode", PTP_DPC_CANON_EOS_MeteringMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_EOS_MeteringMode, _put_Canon_EOS_MeteringMode},
         { N_("AF Distance"), "afdistance", PTP_DPC_CANON_AFDistance, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_AFDistance, _put_Canon_AFDistance},
 	{ N_("Focus Area Wrap"), "focusareawrap", PTP_DPC_NIKON_FocusAreaWrap, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ N_("Exposure Lock"), "exposurelock", PTP_DPC_NIKON_AELockMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},

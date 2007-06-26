@@ -1132,7 +1132,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 						fprintf (stderr,"suppvalue[%d] of %x is %x\n", j, proptype, dtoh8a(data));
 						break;
 					default:
-						fprintf(stderr,"data type 0x%04x of %x unhandled, fill in.\n", dpd->DataType, proptype);
+						fprintf(stderr,"data type 0x%04x of %x unhandled, fill in (val=%x).\n", dpd->DataType, proptype, dtoh32a(data));
 						break;
 					}
 					data += 4; /* might only be for propxtype 3 */
@@ -1147,7 +1147,6 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				unsigned char	*data = &curdata[PTP_ece_Prop_Val_Data];
 				PTPDevicePropDesc	*dpd;
 
-				fprintf (stderr, "Adding EOS property %04x, datasize is %d\n", proptype, size-PTP_ece_Prop_Val_Data);
 				for (j=0;j<params->nrofcanon_props;j++)
 					if (params->canon_props[j].proptype == proptype)
 						break;
@@ -1179,6 +1178,9 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				case PTP_DPC_CANON_EOS_ISOSpeed:
 					dpd->DataType = PTP_DTC_UINT16;
 					break;
+				case PTP_DPC_CANON_EOS_PictureStyle:
+				case PTP_DPC_CANON_EOS_WhiteBalance:
+				case PTP_DPC_CANON_EOS_MeteringMode:
 				case PTP_DPC_CANON_EOS_ExpCompensation:
 					dpd->DataType = PTP_DTC_UINT8;
 					break;
@@ -1186,19 +1188,19 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					dpd->DataType = PTP_DTC_STR;
 					break;
 				default:
-					fprintf (stderr, "unknown proptype %x\n", proptype);
+					fprintf (stderr, "Unknown EOS property %04x, datasize is %d\n", proptype, size-PTP_ece_Prop_Val_Data);
 					break;
 				}
 				switch (dpd->DataType) {
 				case PTP_DTC_UINT16:
 					dpd->FactoryDefaultValue.u16	= dtoh16a(data);
 					dpd->CurrentValue.u16		= dtoh16a(data);
-					fprintf (stderr,"currentvalue of %x is %x\n", proptype, dpd->CurrentValue.u16);
+					/*fprintf (stderr,"currentvalue of %x is %x\n", proptype, dpd->CurrentValue.u16);*/
 					break;
 				case PTP_DTC_UINT8:
 					dpd->FactoryDefaultValue.u8	= dtoh8a(data);
 					dpd->CurrentValue.u8		= dtoh8a(data);
-					fprintf (stderr,"currentvalue of %x is %x\n", proptype, dpd->CurrentValue.u8);
+					/*fprintf (stderr,"currentvalue of %x is %x\n", proptype, dpd->CurrentValue.u8);*/
 					break;
 				case PTP_DTC_STR: {
 					uint8_t len = 0;
@@ -1207,7 +1209,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					break;
 				}
 				default:
-					fprintf(stderr,"data type 0x%04x of %x unhandled, fill in.\n", dpd->DataType, proptype);
+					/* debug is printed in switch above this one */
 					break;
 				}
 				break;
