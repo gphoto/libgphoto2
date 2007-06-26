@@ -149,8 +149,8 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 	gp_list_reset (list);
 	for (i = 0; i < camera->pl->nb_entries; i++) {
-		snprintf(buf, sizeof(buf), "img%03i.ppm", i + 1);
-		gp_list_append (list, buf, NULL);
+		snprintf((char *)buf, sizeof(buf), "img%03i.ppm", i + 1);
+		gp_list_append (list, (char *)buf, NULL);
 	}
 
 	return GP_OK;
@@ -241,6 +241,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	framesize = datasize;
 
 	frame_data = malloc(datasize);
+	if (!frame_data) return GP_ERROR_NO_MEMORY;
 	icl_read_picture_data(camera->port, frame_data, datasize);
 	camera->pl->data_offset += datasize;
 
@@ -259,19 +260,19 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		gp_file_set_mime_type (file, GP_MIME_RAW);
 		gp_file_set_name (file, filename);
 		gp_file_adjust_name_for_mime_type (file);
-	        gp_file_set_data_and_size (file, frame_data, datasize);
+	        gp_file_set_data_and_size (file, (char *)frame_data, datasize);
 		return (GP_OK);
 	default:
 		return GP_ERROR_NOT_SUPPORTED; 
 	}
 
 	/* Write the frame(s) */
-	snprintf(buf, sizeof(buf),
+	snprintf((char *)buf, sizeof(buf),
 		"P6\n"
 		"# CREATOR: gphoto2, iClick library\n"
 		"%d %d\n"
 		"255\n", w, h);
-	hdrsize = strlen(buf);
+	hdrsize = strlen((char *)buf);
 
 	ppmsize = (hdrsize + w*h*3) * nb_frames;
 	GP_DEBUG ("ppmsize = %i\n", ppmsize);
@@ -296,7 +297,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	gp_file_set_mime_type (file, GP_MIME_PPM);
 	gp_file_set_name (file, filename);
-	gp_file_set_data_and_size (file, ppm, ppmsize);
+	gp_file_set_data_and_size (file, (char *)ppm, ppmsize);
 
 	free (frame_data);
 

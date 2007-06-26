@@ -64,7 +64,7 @@ int clicksmart_init (GPPort *port, CameraPrivateLibrary *priv)
 	int short_read;
 	unsigned char *temp_catalog;
 	unsigned char *buffer;
-	unsigned char c = 0;
+	char c = 0;
 
 	GP_DEBUG("Running clicksmart_init\n");
 
@@ -73,10 +73,10 @@ int clicksmart_init (GPPort *port, CameraPrivateLibrary *priv)
 	CLICKSMART_READ(port, CS_INIT2, &c);
 	CLICKSMART_READ(port, CS_NUM_PICS, &c);
 
-	priv->num_pics =  c; 
-	full_reads = c/2;
-	short_read = c%2;
-	cat_size = c*0x10;
+	priv->num_pics =  (unsigned)c; 
+	full_reads = (unsigned)c/2;
+	short_read = (unsigned)c%2;
+	cat_size = (unsigned)c*0x10;
 	temp_catalog = malloc(cat_size);
 	if (!temp_catalog) 
 		return GP_ERROR_NO_MEMORY;
@@ -99,14 +99,14 @@ int clicksmart_init (GPPort *port, CameraPrivateLibrary *priv)
 	 */    
 	for (i=0; i < full_reads; i++) {
 		memset (buffer, 0, 0x200);
-		gp_port_read(port, buffer, 0x200);
+		gp_port_read(port, (char *)buffer, 0x200);
 		memcpy (temp_catalog + cat_size - (2*i+1)*0x10, buffer, 0x10);
 		memcpy (temp_catalog + cat_size - (2*i+2)*0x10, buffer+0x100, 
 									0x10);
 	}
 	if (short_read) {
 		memset (buffer, 0, 0x200);		
-		gp_port_read(port, buffer, 0x100);
+		gp_port_read(port, (char *)buffer, 0x100);
 		memcpy (temp_catalog, buffer, 0x10);
 	}
 	priv->catalog = temp_catalog;
@@ -134,7 +134,7 @@ clicksmart_read_pic_data (CameraPrivateLibrary *priv, GPPort *port,
 					unsigned char *data, int n) 
 {
 	int offset=0;
-	unsigned char c;
+	char c;
 	unsigned int size = 0;
 	unsigned int remainder = 0;
 
@@ -164,14 +164,14 @@ clicksmart_read_pic_data (CameraPrivateLibrary *priv, GPPort *port,
 	/* Download the data */
 	while (offset < size-remainder) {
 	  GP_DEBUG("offset: %x\n", offset);
-	  gp_port_read(port, data + offset, 0x200);
+	  gp_port_read(port, (char *)data + offset, 0x200);
 	  offset = offset + 0x200;
 	}
 
 	remainder=((remainder+0xff)/0x100)*0x100;
 	GP_DEBUG("Second remainder: %x\n", remainder);
 	if (remainder) 
-		gp_port_read(port, data + offset, remainder);
+		gp_port_read(port, (char *)data + offset, remainder);
 
 	gp_port_usb_msg_interface_read(port, 0, 0, CS_READCLOSE, &c, 1);
 	gp_port_usb_msg_interface_write(port, 0, 2, CS_CH_READY, NULL, 0);
@@ -200,7 +200,7 @@ clicksmart_delete_all_pics      (GPPort *port)
 int
 clicksmart_reset (GPPort *port)
 {
-	unsigned char c;
+	char c;
 	/* Release current register */
 	CLICKSMART_READ (port, CS_READCLOSE, &c); 
 	gp_port_usb_msg_interface_write(port, 0, 2, CS_CH_READY, NULL, 0);

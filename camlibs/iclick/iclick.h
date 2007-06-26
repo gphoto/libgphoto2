@@ -82,7 +82,7 @@ int icl_access_reg 		     (GPPort *, enum icl_cmnd_type);
 int icl_reset             		(GPPort *);
 int icl_rewind                        (GPPort *, CameraPrivateLibrary *);
 int icl_init                          (GPPort *, CameraPrivateLibrary *);
-unsigned char *icl_read_picture_data  (GPPort *, unsigned char *data, int size);
+int icl_read_picture_data  (GPPort *, unsigned char *data, int size);
 
 /* Those functions don't need data transfer with the camera */
 

@@ -246,7 +246,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		buffersize = rawsize;	
 	data = calloc (buffersize+64, 1);
 	if (!data) return GP_ERROR_NO_MEMORY;
-	gp_port_read(camera->port, data, buffersize);
+	gp_port_read(camera->port, (char *)data, buffersize);
 
 	switch(type) {
 	case GP_FILE_TYPE_NORMAL:
@@ -360,7 +360,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			}
 			gp_file_set_mime_type (file, GP_MIME_AVI);
 			gp_file_set_name (file, name); 
-			gp_file_set_data_and_size (file, avi, size);
+			gp_file_set_data_and_size (file, (char *)avi, size);
 		
 			avitype = 0;
 			free(data);		
@@ -389,13 +389,13 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			free (p_data);
 			return GP_ERROR_NO_MEMORY;
 		}
-    		sprintf (ppm,
+    		sprintf ((char *)ppm,
 			"P6\n"
 			"# CREATOR: gphoto2, SONIX library\n"
 			"%d %d\n"
 			"255\n", w, h);
-		ptr = ppm + strlen (ppm);
-		size = strlen (ppm) + (w * h * 3);
+		ptr = ppm + strlen ((char *)ppm);
+		size = strlen ((char *)ppm) + (w * h * 3);
 
 		switch (camera->pl->post)
 		case DECOMP|REVERSE:
@@ -421,7 +421,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		gp_gamma_correct_single(gtable, ptr, w * h);
 		gp_file_set_mime_type (file, GP_MIME_PPM);
     		gp_file_set_name (file, filename); 
-		gp_file_set_data_and_size (file, ppm, size);
+		gp_file_set_data_and_size (file, (char *)ppm, size);
 
 		free (p_data);
 		free (data);
@@ -431,7 +431,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	case GP_FILE_TYPE_RAW: 
 		gp_file_set_mime_type(file, GP_MIME_RAW);
 		gp_file_set_name(file, filename);
-		gp_file_append( file, data, rawsize);
+		gp_file_append( file, (char *)data, rawsize);
 		free(data);
 		GP_DEBUG("rawsize= 0x%x = %i\n", rawsize, rawsize);
 		return GP_OK;

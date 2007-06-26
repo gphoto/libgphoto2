@@ -58,7 +58,7 @@ static int mars_routine (Info *info, GPPort *port, char param, int n);
 int 
 mars_init (Camera *camera, GPPort *port, Info *info) 
 {
-	unsigned char c[16];
+	char c[16];
 	unsigned char status = 0;
 	memset(info,0, sizeof(info)); 
 	memset(c,0,sizeof(c));
@@ -79,7 +79,7 @@ mars_init (Camera *camera, GPPort *port, Info *info)
 	}
 
 	/* Not a typo. This _will_ download the config data ;) */
-	mars_read_picture_data (camera, info, port, info, 0x2000, 0); 
+	mars_read_picture_data (camera, info, port, (char *)info, 0x2000, 0); 
 
 	/* Removing extraneous line(s) of data. See "protocol.txt" */
 	 
@@ -299,16 +299,16 @@ int mars_decompress (unsigned char *inp, unsigned char *outp, int width,
 static int 
 mars_routine (Info *info, GPPort *port, char param, int n) 
 {
-	unsigned char c[16];
-	unsigned char start[2] = {0x19, 0x51};
-	unsigned char do_something[2]; 
+	char c[16];
+	char start[2] = {0x19, 0x51};
+	char do_something[2]; 
 	/* See protocol.txt for my theories about what these mean. */
-	unsigned char address1[2] = {0x19, info[8*n+1]};
-	unsigned char address2[2] = {0x19, info[8*n+2]};
-	unsigned char address3[2] = {0x19, info[8*n+3]};
-	unsigned char address4[2] = {0x19, info[8*n+4]};
-	unsigned char address5[2] = {0x19, info[8*n+5]};
-	unsigned char address6[2] = {0x19, info[8*n+6]};
+	char address1[2] = {0x19, info[8*n+1]};
+	char address2[2] = {0x19, info[8*n+2]};
+	char address3[2] = {0x19, info[8*n+3]};
+	char address4[2] = {0x19, info[8*n+4]};
+	char address5[2] = {0x19, info[8*n+5]};
+	char address6[2] = {0x19, info[8*n+6]};
 
 	do_something[0]= 0x19; 
 	do_something[1]=param;

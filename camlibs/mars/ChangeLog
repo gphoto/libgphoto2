@@ -1,4 +1,8 @@
 2007-04-07  Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: Clean up signedness errors
+	* mars.c:    ditto
+
+2007-04-07  Theodore Kilgore <kilgota@auburn.edu>
 
 	* library.c: Added support for downloading audio files, as some 
 		     of the Mars cameras have such abilities. 

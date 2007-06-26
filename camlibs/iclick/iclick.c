@@ -77,7 +77,7 @@ icl_init (GPPort *port, CameraPrivateLibrary *priv)
 	icl_reset (port);
 
 	icl_access_reg(port, CONFIG);	     /* Access config */
-	gp_port_read(port, catalog, 0x8000); 
+	gp_port_read(port, (char *)catalog, 0x8000); 
 	/* Config data is in lines of 16 bytes. Each photo uses two lines. */
 	icl_read_picture_data(port, dummy_buf, 0x28000);
 	icl_reset (port);
@@ -160,18 +160,18 @@ icl_reset (GPPort *port)
     	return GP_OK;
 }
 
-unsigned char *
+int 
 icl_read_picture_data (GPPort *port, unsigned char *data, int size )
 {
 	int remainder = size % 0x8000;
 	int offset = 0;
 
 	while ((offset + 0x8000) <= size) {
-		gp_port_read (port, data + offset, 0x8000);
+		gp_port_read (port, (char *)data + offset, 0x8000);
 		offset += 0x8000;
 	}
 	if (remainder)
-		gp_port_read (port, data + offset, remainder);
+		gp_port_read (port, (char *)data + offset, remainder);
 
     	return GP_OK;
 } 

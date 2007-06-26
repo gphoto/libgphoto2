@@ -192,13 +192,13 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       GPContext *context)
 {
     	Camera *camera = user_data; 
-  	int w, h = 0, b = 0, k;
+  	int w=0, h = 0, b = 0, k;
     	unsigned char *data; 
     	unsigned char  *ppm;
 	unsigned char *p_data = NULL;
 	unsigned char gtable[256], photo_code, res_code, compressed;
 	unsigned char audio = 0;
-	char *ptr;
+	unsigned char *ptr;
 	int size = 0, raw_size = 0;
 	float gamma_factor;
 
@@ -239,20 +239,20 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	GP_DEBUG ("buffersize= %i = 0x%x butes\n", b,b); 
 
 	mars_read_picture_data (camera, camera->pl->info, 
-					    camera->port, data, b, k);
+					    camera->port, (char *)data, b, k);
 	/* The first 128 bytes are junk, so we toss them.*/
 	memmove(data, data+128, b - 128);
 	if (audio) {	
 		p_data = malloc (raw_size+256);
 		if (!p_data) {free (data); return GP_ERROR_NO_MEMORY;}
 		memset (p_data, 0, raw_size+256);
-    		sprintf (p_data, "RIFF");
+    		sprintf ((char *)p_data, "RIFF");
 		p_data[4] = (raw_size+36)&0xff;
 		p_data[5] = ((raw_size+36)>>8)&0xff;
 		p_data[6] = ((raw_size+36)>>16)&0xff;
 		p_data[7] = ((raw_size+36)>>24)&0xff;
-    		sprintf (p_data+8, "WAVE");\
-    		sprintf (p_data+12, "fmt ");
+    		sprintf ((char *)p_data+8, "WAVE");\
+    		sprintf ((char *)p_data+12, "fmt ");
 		p_data[16] = 0x10;
 		p_data[20] = 1;
 		p_data[22] = 1;
@@ -262,7 +262,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		p_data[29] = 0x1F;
 		p_data[32] = 1;
 		p_data[34] = 8;
-    		sprintf (p_data+36, "data");
+    		sprintf ((char *)p_data+36, "data");
 		p_data[40] = (raw_size)&0xff;
 		p_data[41] = ((raw_size)>>8)&0xff;
 		p_data[42] = ((raw_size)>>16)&0xff;
@@ -270,7 +270,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		memcpy (p_data+44, data, raw_size);
 		gp_file_set_mime_type(file, GP_MIME_WAV);
 		gp_file_set_name(file, filename);
-		gp_file_set_data_and_size(file, p_data , raw_size+44);
+		gp_file_set_data_and_size(file, (char *)p_data , raw_size+44);
 		return GP_OK;
 	}
 
@@ -288,7 +288,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			data[6] = (data[6] | res_code);
 		gp_file_set_mime_type(file, GP_MIME_RAW);
 		gp_file_set_name(file, filename);
-		gp_file_set_data_and_size(file, data , raw_size );
+		gp_file_set_data_and_size(file, (char *)data , raw_size );
 		return GP_OK;
 	}
 
@@ -308,13 +308,13 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	ppm = malloc (w * h * 3 + 256);  /* Data + header */
 	if (!ppm) {free (p_data); return GP_ERROR_NO_MEMORY;}
 	memset (ppm, 0, w * h * 3 + 256);
-    	sprintf (ppm,
+    	sprintf ((char *)ppm,
 		"P6\n"
 		"# CREATOR: gphoto2, Mars library\n"
 		"%d %d\n"
 		"255\n", w, h);
-	ptr = ppm + strlen (ppm);	
-	size = strlen (ppm) + (w * h * 3);
+	ptr = ppm + strlen ((char *)ppm);	
+	size = strlen ((char *)ppm) + (w * h * 3);
 	GP_DEBUG ("size = %i\n", size);
 
 	gp_bayer_decode (p_data, w , h , ptr, BAYER_TILE_RGGB);
@@ -326,7 +326,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
         gp_file_set_mime_type (file, GP_MIME_PPM);
         gp_file_set_name (file, filename); 
-	gp_file_set_data_and_size (file, ppm, size);
+	gp_file_set_data_and_size (file, (char *)ppm, size);
 	free (p_data);
 
         return GP_OK;

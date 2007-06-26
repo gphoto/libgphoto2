@@ -63,8 +63,8 @@ SONIX_COMMAND (GPPort *port, char *command)
 int sonix_init (GPPort *port, CameraPrivateLibrary *priv)
 {
 	int i, command_done=1;
-	unsigned char c[6];
-	unsigned char status;
+	char c[6];
+	char status;
 	unsigned char reading[4];
 
 	memset(c,0,sizeof(c));
@@ -79,10 +79,10 @@ int sonix_init (GPPort *port, CameraPrivateLibrary *priv)
 	 * needs to be reset to 0 and massaged until it is 2. 
 	*/
 	
-	if (status) {
+	if ((unsigned)status) {
 		i = 0;
 		
-		while (status > 0)  {
+		while ((unsigned)status > 0)  {
 			SONIX_READ(port, &status);
 			i++;
 			if (i==1000) break;
@@ -104,7 +104,7 @@ int sonix_init (GPPort *port, CameraPrivateLibrary *priv)
 	 * string ought to start with the command byte c[0], plus 0x80
 	 */
 	memset(reading, 0, 4);
-	SONIX_READ4 (port, reading);	
+	SONIX_READ4 (port, (char *)reading);	
 	SONIX_READ(port, &status);
 
 	memset (c, 0, 6);
@@ -124,7 +124,7 @@ int sonix_init (GPPort *port, CameraPrivateLibrary *priv)
 	 * abilities, we ought to distinguish. 
 	 */
 	 
-	SONIX_READ4 (port, reading);
+	SONIX_READ4 (port, (char *)reading);
 	}
 	GP_DEBUG("Above is the 4-byte ID string of your camera.");
 	GP_DEBUG("Please report if it is anything other than");
@@ -147,7 +147,7 @@ int sonix_init (GPPort *port, CameraPrivateLibrary *priv)
 
 	SONIX_READ(port, &status);
 
-	SONIX_READ4 (port, reading);		
+	SONIX_READ4 (port, (char *)reading);		
 	if (reading[0] != 0x98)
 		return GP_ERROR_CAMERA_ERROR;	
 	
@@ -176,7 +176,7 @@ int sonix_init (GPPort *port, CameraPrivateLibrary *priv)
 	
 		SONIX_COMMAND ( port, c );
 		SONIX_READ(port, &status);
-		SONIX_READ4 (port, reading);		
+		SONIX_READ4 (port, (char *)reading);		
 		if (reading[0] != 0x99)
 			return GP_ERROR_CAMERA_ERROR;	
 		SONIX_READ(port, &status);
@@ -202,9 +202,9 @@ sonix_read_data_size (GPPort *port, int n)
 	c[0] = 0x1a;
 	c[1] = (n+1)%256;
 	c[2] = (n+1)/256;
-	SONIX_COMMAND ( port, c );
+	SONIX_COMMAND ( port, (char *)c );
 	SONIX_READ(port, &status);
-	SONIX_READ4 (port, reading);	
+	SONIX_READ4 (port, (char *)reading);	
 	if (reading[0] != 0x9a)
 		return GP_ERROR_CAMERA_ERROR;	
 	return (reading[1] + reading[2]*0x100 + reading[3] *0x10000);
@@ -214,7 +214,7 @@ int
 sonix_delete_all_pics      (GPPort *port) 
 {
 	char status;
-	unsigned char c[6];
+	char c[6];
 	unsigned char reading[4];
 
 	memset (c,0,6);
@@ -223,7 +223,7 @@ sonix_delete_all_pics      (GPPort *port)
 	SONIX_READ(port, &status);
 	SONIX_COMMAND ( port, c );
 	SONIX_READ(port, &status);
-	SONIX_READ4 (port, reading);	
+	SONIX_READ4 (port, (char *)reading);	
 	if (reading[0] != 0x85)
 		return GP_ERROR_CAMERA_ERROR;	
 
@@ -234,7 +234,7 @@ int
 sonix_delete_last      (GPPort *port) 
 {
 	char status;
-	unsigned char c[6];
+	char c[6];
 	unsigned char reading[4];
 	
 	memset (c,0,6);
@@ -243,7 +243,7 @@ sonix_delete_last      (GPPort *port)
 	SONIX_READ(port, &status);
 	SONIX_COMMAND ( port, c );
 	SONIX_READ(port, &status);
-	SONIX_READ4 (port, reading);	
+	SONIX_READ4 (port, (char *)reading);	
 	if (reading[0] != 0x85)
 		return GP_ERROR_CAMERA_ERROR;	
 
@@ -254,14 +254,14 @@ int
 sonix_capture_image      (GPPort *port) 
 {
 	char status;
-	unsigned char c[6];
+	char c[6];
 	unsigned char reading[4];
 	memset (c,0,6);
 	c[0]=0x0e; 
 	SONIX_READ(port, &status);
 	SONIX_COMMAND ( port, c );
 	SONIX_READ(port, &status);
-	SONIX_READ4 (port, reading);	
+	SONIX_READ4 (port, (char *)reading);	
 	if (reading[0] != 0x8e)
 		return GP_ERROR_CAMERA_ERROR;	
 	return GP_OK;
@@ -271,7 +271,7 @@ int
 sonix_exit      (GPPort *port) 
 {
 	char status;
-	unsigned char c[6];
+	char c[6];
 
 	memset (c,0,6);
 	c[0]=0x14;

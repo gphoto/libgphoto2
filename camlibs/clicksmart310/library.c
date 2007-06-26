@@ -210,7 +210,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (GP_FILE_TYPE_RAW == type) {	/* type is GP_FILE_TYPE_RAW */
 		gp_file_set_mime_type (file, GP_MIME_RAW);
 		gp_file_set_name (file, filename);
-	        gp_file_set_data_and_size (file, data, b);  
+	        gp_file_set_data_and_size (file, (char *)data, b);  
 		/* Reset camera when done, for more graceful exit. */
 		if (k +1 == camera->pl->num_pics) {
 	    		clicksmart_reset (camera->port);	
@@ -237,7 +237,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	gp_file_set_mime_type (file, GP_MIME_JPEG);
 	gp_file_set_name (file, filename); 
-	gp_file_set_data_and_size (file, jpeg_out, file_size);
+	gp_file_set_data_and_size (file, (char *)jpeg_out, file_size);
 	/* Reset camera when done, for more graceful exit. */
 	if (k +1 == camera->pl->num_pics) {
     		clicksmart_reset (camera->port);
