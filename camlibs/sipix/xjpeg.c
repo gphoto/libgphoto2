@@ -1,6 +1,7 @@
 /* Simple JPEG tag extractor and viewer. (c) Marcus Meissner 2003, LGPL */
 #include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include <string.h>
 
 #define APP0	0xe0
