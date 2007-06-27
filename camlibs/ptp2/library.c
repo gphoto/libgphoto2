@@ -645,8 +645,9 @@ static struct {
 	{"Canon:Digital IXUS 50 (PTP mode)",    0x04a9, 0x310e, PTPBUG_DELETE_SENDS_EVENT},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1640547&group_id=8874&atid=358874 */
 	{"Canon:PowerShot A420 (PTP mode)",     0x04a9, 0x310f, PTPBUG_DELETE_SENDS_EVENT},
-	/* Canon 400D does not have the infamous PTP bug */
-	{"Canon:EOS 400D (PTP mode)",           0x04a9, 0x3110, 0},
+	/* Some Canon 400D do not have the infamous PTP bug, but some do.
+	 * see http://bugs.kde.org/show_bug.cgi?id=141577 -Marcus */
+	{"Canon:EOS 400D (PTP mode)",           0x04a9, 0x3110, PTPBUG_DCIM_WRONG_PARENT},
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1456391&group_id=8874 */
 	{"Canon:EOS 30D (PTP mode)",            0x04a9, 0x3113, PTPBUG_DCIM_WRONG_PARENT},
 	{"Canon:Digital IXUS 900Ti (PTP mode)", 0x04a9, 0x3115, PTPBUG_DCIM_WRONG_PARENT},
