@@ -469,6 +469,8 @@ ptp_closesession (PTPParams* params)
  **/
 void
 ptp_free_params (PTPParams *params) {
+	int i;
+
 	while (params->proplist) {
 		MTPPropList		*xpl = params->proplist;
 
@@ -481,6 +483,8 @@ ptp_free_params (PTPParams *params) {
 	if (params->cameraname) free (params->cameraname);
 	if (params->wifi_profiles) free (params->wifi_profiles);
 	free (params->handles.Handler);
+	for (i=0;i<params->handles.n;i++)
+		ptp_free_objectinfo (&params->objectinfo[i]);
 	free (params->objectinfo);
 	ptp_free_DI (&params->deviceinfo);
 }
@@ -2914,6 +2918,14 @@ ptp_free_objectpropdesc(PTPObjectPropDesc* opd)
 		fprintf (stderr, "Unknown OPFF type %d\n", opd->FormFlag);
 		break;
 	}
+}
+
+void
+ptp_free_objectinfo (PTPObjectInfo *oi)
+{
+	if (!oi) return;
+        free (oi->Filename);
+        free (oi->Keywords);
 }
 
 void 
