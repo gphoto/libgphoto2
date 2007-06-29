@@ -3691,6 +3691,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 
 	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
 	    (ptp_operation_issupported(params, PTP_OC_NIKON_GetFileInfoInBlock)) &&
+	    (camera->port->type == GP_PORT_USB) &&
 	    ((GP_OK != gp_setting_get("ptp2","nikon.fastfilesystem",buf)) || atoi(buf))
         )
 	{
