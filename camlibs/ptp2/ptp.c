@@ -2924,8 +2924,8 @@ void
 ptp_free_objectinfo (PTPObjectInfo *oi)
 {
 	if (!oi) return;
-        free (oi->Filename);
-        free (oi->Keywords);
+        free (oi->Filename); oi->Filename = NULL;
+        free (oi->Keywords); oi->Keywords = NULL;
 }
 
 void 

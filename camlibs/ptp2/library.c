@@ -3907,7 +3907,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 				oinfos[i].StorageID = xpl->propval.u32;
 				break;
 			case PTP_OPC_ObjectFileName:
-				oinfos[i].Filename = xpl->propval.str;
+				oinfos[i].Filename = strdup(xpl->propval.str);
 				break;
 			default:
 				if ((xpl->property & 0xfff0) == 0xdc00)
