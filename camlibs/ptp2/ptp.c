@@ -1904,6 +1904,52 @@ ptp_canon_eos_setdevicepropvalueex (PTPParams* params, unsigned char* data, unsi
 }
 
 uint16_t
+ptp_canon_eos_setdevicepropvalue (PTPParams* params,
+	uint16_t propcode, PTPPropertyValue *value, uint16_t datatype
+) {
+	PTPContainer	ptp;
+	uint16_t	ret;
+	int 		i;
+	unsigned char	*data;
+	unsigned int	size;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code 	= PTP_OC_CANON_EOS_SetDevicePropValueEx;
+	ptp.Nparam	= 0;
+	for (i=0;i<params->nrofcanon_props;i++)
+		if (params->canon_props[i].proptype == propcode)
+			break;
+	if (params->nrofcanon_props == i)
+		return PTP_RC_Undefined;
+	if (datatype != PTP_DTC_STR) {
+		data = malloc(sizeof(uint32_t)*3);
+		size = sizeof(uint32_t)*3;
+	} else {
+		 /* FIXME! */
+		return PTP_RC_Undefined;
+	}
+	htod32a(&data[0], size);
+	htod32a(&data[4], propcode);
+	switch (datatype) {
+	case PTP_DTC_UINT8:
+		fprintf (stderr, "%x -> %d\n", propcode, value->u8);
+		htod8a(&data[8], value->u8);
+		break;
+	case PTP_DTC_UINT16:
+		fprintf (stderr, "%x -> %d\n", propcode, value->u16);
+		htod16a(&data[8], value->u16);
+		break;
+	case PTP_DTC_UINT32:
+		fprintf (stderr, "%x -> %d\n", propcode, value->u32);
+		htod32a(&data[8], value->u32);
+		break;
+	}
+	ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &data, NULL);
+	free (data);
+	return ret;
+}
+
+uint16_t
 ptp_canon_eos_pchddcapacity (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3)
 {
 	PTPContainer	ptp;

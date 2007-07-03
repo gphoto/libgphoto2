@@ -2800,7 +2800,16 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 				}
 			}
 			if (have_eos_prop(camera,cursub->vendorid,cursub->propid)) {
-				/* FIXME: marcus, add */
+				PTPDevicePropDesc	dpd;
+
+				gp_log (GP_LOG_DEBUG, "camera_set_config", "Found and setting EOS Property %04x (%s)", cursub->propid, cursub->label);
+				memset(&dpd,0,sizeof(dpd));
+				ptp_canon_eos_getdevicepropdesc (&camera->pl->params,cursub->propid, &dpd);
+				ret = cursub->putfunc (camera, widget, &propval, &dpd);
+				if (ret == GP_OK)
+					ptp_canon_eos_setdevicepropvalue (&camera->pl->params, cursub->propid, &propval, cursub->type);
+				ptp_free_devicepropdesc(&dpd);
+				ptp_free_devicepropvalue(cursub->type, &propval);
 			}
 		}
 	}
