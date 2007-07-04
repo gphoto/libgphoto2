@@ -2781,9 +2781,11 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			if (ret != GP_OK)
 				continue;
 
+			gp_log (GP_LOG_DEBUG, "camera_set_config", "Checking Property %04x (%s)", cursub->propid, cursub->label);
 			if (!gp_widget_changed (widget))
 				continue;
 
+			gp_log (GP_LOG_DEBUG, "camera_set_config", "Found and setting Property %04x (%s)", cursub->propid, cursub->label);
 			if (have_prop(camera,cursub->vendorid,cursub->propid)) {
 				if (cursub->propid) {
 					PTPDevicePropDesc dpd;
