@@ -757,6 +757,8 @@ static struct {
 	{"iRiver:T10 2GB",			0x4102, 0x1120, PTP_MTP},
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1620359&group_id=8874 */
 	{"iRiver:N12",				0x4102, 0x1122, PTP_MTP},
+	/* Reported by Philip Antoniades <philip@mysql.com> */
+	{"iRiver:Clix2",			0x4102, 0x1126, PTP_MTP},
 	/* Reported by Adam Torgerson */
 	{"iRiver:Clix",				0x4102, 0x112a, PTP_MTP},
 	/* Scott Call <scott.call@gmail.com> */
