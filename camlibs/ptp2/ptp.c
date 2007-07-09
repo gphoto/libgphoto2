@@ -1922,7 +1922,7 @@ ptp_canon_eos_setdevicepropvalue (PTPParams* params,
 	if (params->nrofcanon_props == i)
 		return PTP_RC_Undefined;
 	if (datatype != PTP_DTC_STR) {
-		data = malloc(sizeof(uint32_t)*3);
+		data = calloc(sizeof(uint32_t),3);
 		size = sizeof(uint32_t)*3;
 	} else {
 		 /* FIXME! */
@@ -1934,14 +1934,17 @@ ptp_canon_eos_setdevicepropvalue (PTPParams* params,
 	case PTP_DTC_UINT8:
 		fprintf (stderr, "%x -> %d\n", propcode, value->u8);
 		htod8a(&data[8], value->u8);
+		params->canon_props[i].dpd.CurrentValue.u8 = value->u8;
 		break;
 	case PTP_DTC_UINT16:
 		fprintf (stderr, "%x -> %d\n", propcode, value->u16);
 		htod16a(&data[8], value->u16);
+		params->canon_props[i].dpd.CurrentValue.u16 = value->u16;
 		break;
 	case PTP_DTC_UINT32:
 		fprintf (stderr, "%x -> %d\n", propcode, value->u32);
 		htod32a(&data[8], value->u32);
+		params->canon_props[i].dpd.CurrentValue.u32 = value->u32;
 		break;
 	}
 	ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &data, NULL);
