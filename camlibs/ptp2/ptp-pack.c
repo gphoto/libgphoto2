@@ -1104,17 +1104,17 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			int		j;
 			PTPDevicePropDesc	*dpd;
 
-			fprintf (stderr, "Adding EOS property %04x desc record, datasize is %d\n", proptype, size-PTP_ece_Prop_Desc_Data);
+			/*fprintf (stderr, "Adding EOS property %04x desc record, datasize is %d\n", proptype, size-PTP_ece_Prop_Desc_Data);*/
 			for (j=0;j<params->nrofcanon_props;j++)
 				if (params->canon_props[j].proptype == proptype)
 					break;
 			if (j==params->nrofcanon_props) {
-				fprintf (stderr, "should have received default value for %x first!\n", proptype);
+				/*fprintf (stderr, "should have received default value for %x first!\n", proptype);*/
 				break;
 			}
 			dpd = &params->canon_props[j].dpd;
 			if (propxtype != 3) {
-				fprintf (stderr, "propxtype is %x for %x, unhandled.\n", propxtype, proptype);
+				/*fprintf (stderr, "propxtype is %x for %x, unhandled.\n", propxtype, proptype);*/
 				break;
 			}
 			if (propxcnt) {
@@ -1125,14 +1125,14 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					switch (dpd->DataType) {
 					case PTP_DTC_UINT16:
 						dpd->FORM.Enum.SupportedValue[j].u16	= dtoh16a(data);
-						fprintf (stderr,"suppvalue[%d] of %x is %x\n", j, proptype, dtoh16a(data));
+						/*fprintf (stderr,"suppvalue[%d] of %x is %x\n", j, proptype, dtoh16a(data));*/
 						break;
 					case PTP_DTC_UINT8:
 						dpd->FORM.Enum.SupportedValue[j].u8	= dtoh8a(data);
-						fprintf (stderr,"suppvalue[%d] of %x is %x\n", j, proptype, dtoh8a(data));
+						/*fprintf (stderr,"suppvalue[%d] of %x is %x\n", j, proptype, dtoh8a(data));*/
 						break;
 					default:
-						fprintf(stderr,"data type 0x%04x of %x unhandled, fill in (val=%x).\n", dpd->DataType, proptype, dtoh32a(data));
+						/*fprintf(stderr,"data type 0x%04x of %x unhandled, fill in (val=%x).\n", dpd->DataType, proptype, dtoh32a(data));*/
 						break;
 					}
 					data += 4; /* might only be for propxtype 3 */
@@ -1188,7 +1188,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					dpd->DataType = PTP_DTC_STR;
 					break;
 				default:
-					fprintf (stderr, "Unknown EOS property %04x, datasize is %d\n", proptype, size-PTP_ece_Prop_Val_Data);
+					/*fprintf (stderr, "Unknown EOS property %04x, datasize is %d\n", proptype, size-PTP_ece_Prop_Val_Data);*/
 					break;
 				}
 				switch (dpd->DataType) {
@@ -1215,7 +1215,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				break;
 		}
 		default:
-			fprintf (stderr, "unknown EOS property type %04x\n", type);
+			/* fprintf (stderr, "unknown EOS property type %04x\n", type); */
 			(*ce)[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
 			break;
 		}
