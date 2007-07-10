@@ -1203,6 +1203,7 @@ static struct deviceproptableu8 canon_size[] = {
 	{ N_("large"),		0x00, 0 },
 	{ N_("medium 1"),	0x01, 0 },
 	{ N_("medium 2"),	0x03, 0 },
+	{ N_("medium 3"),	0x07, 0 },
 	{ N_("small"),		0x02, 0 },
 };
 GENERIC8TABLE(Canon_Size,canon_size)
