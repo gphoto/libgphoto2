@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2007-06-11 10:39+0200\n"
+"POT-Creation-Date: 2007-07-10 08:57+0200\n"
 "PO-Revision-Date: 2007-05-11 21:59+0200\n"
 "Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
 "Language-Team:  <de@li.org>\n"
@@ -53,7 +53,7 @@ msgstr ""
 "****Email an cl20@poeml.de***\n"
 "*Besuchen Sie uns auf http://cl20.poeml.de/*"
 
-#: camlibs/aox/library.c:106
+#: camlibs/aox/library.c:107
 #, c-format
 msgid ""
 "Your USB camera has an Aox chipset.\n"
@@ -66,7 +66,7 @@ msgstr ""
 "Anzahl großer Bilder = %i\n"
 "Anzahl Bilder = %i\n"
 
-#: camlibs/aox/library.c:119
+#: camlibs/aox/library.c:120
 msgid ""
 "Aox generic driver\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
@@ -244,7 +244,7 @@ msgstr "Autofokus: AI Fokus"
 msgid "Manual focus"
 msgstr "Manueller Fokus"
 
-#: camlibs/canon/library.c:208 camlibs/ptp2/ptp.c:3439
+#: camlibs/canon/library.c:208 camlibs/ptp2/ptp.c:3525
 msgid "RAW"
 msgstr "RAW"
 
@@ -491,8 +491,8 @@ msgstr "Konnte Verzeichnis \\\\DCIM nicht anlegen."
 msgid "Could not create destination directory."
 msgstr "Konnte Zielverzeichnis nicht anlegen."
 
-#: camlibs/canon/library.c:1472 camlibs/ptp2/config.c:2645
-#: camlibs/ptp2/config.c:2749
+#: camlibs/canon/library.c:1472 camlibs/ptp2/config.c:2701
+#: camlibs/ptp2/config.c:2760
 msgid "Camera and Driver Configuration"
 msgstr "Kamera- und Treiber-Konfiguration"
 
@@ -521,8 +521,8 @@ msgstr "ISO Geschwindigkeit"
 #: camlibs/canon/library.c:1616 camlibs/canon/library.c:1617
 #: camlibs/canon/library.c:1655 camlibs/canon/library.c:1656
 #: camlibs/canon/library.c:1689 camlibs/canon/library.c:1690
-#: camlibs/ptp2/library.c:1857 camlibs/ptp2/library.c:1859
-#: camlibs/ptp2/ptp.c:3557
+#: camlibs/ptp2/library.c:1901 camlibs/ptp2/library.c:1903
+#: camlibs/ptp2/ptp.c:3643
 msgid "Unknown"
 msgstr "Unbekannt"
 
@@ -531,10 +531,9 @@ msgid "Shutter speed"
 msgstr "Belichtungszeit"
 
 #: camlibs/canon/library.c:1590 camlibs/canon/library.c:1895
-#: camlibs/ptp2/config.c:2590 camlibs/ptp2/config.c:2591
-#: camlibs/ptp2/ptp.c:3046 camlibs/sierra/sierra.c:949
-#: camlibs/sierra/sierra.c:1270 camlibs/sierra/sierra.c:1485
-#: camlibs/sierra/sierra.c:1726
+#: camlibs/ptp2/config.c:2644 camlibs/ptp2/ptp.c:3132
+#: camlibs/sierra/sierra.c:949 camlibs/sierra/sierra.c:1270
+#: camlibs/sierra/sierra.c:1485 camlibs/sierra/sierra.c:1726
 msgid "Aperture"
 msgstr "Blende"
 
@@ -570,8 +569,7 @@ msgstr "Setze Kameradatum auf das Datum des PCs"
 msgid "Firmware revision (readonly)"
 msgstr "Firmware-Revision (Nur-Lesen)"
 
-#: camlibs/canon/library.c:1740 camlibs/ptp2/config.c:2696
-#: camlibs/ptp2/config.c:2725
+#: camlibs/canon/library.c:1740
 msgid "Power (readonly)"
 msgstr "Energie (Nur-Lesen)"
 
@@ -1359,9 +1357,9 @@ msgstr ""
 #: camlibs/dimera/dimera3500.c:471 camlibs/dimera/dimera3500.c:857
 #: camlibs/kodak/dc210/dc210.c:257 camlibs/kodak/dc210/dc210.c:425
 #: camlibs/konica/library.c:778 camlibs/konica/library.c:1019
-#: camlibs/konica/qm150.c:848 camlibs/ptp2/config.c:771
-#: camlibs/ptp2/ptp.c:3445 camlibs/ricoh/library.c:502
-#: camlibs/sierra/nikon-desc.c:286
+#: camlibs/konica/qm150.c:848 camlibs/ptp2/config.c:786
+#: camlibs/ptp2/config.c:1694 camlibs/ptp2/ptp.c:3531
+#: camlibs/ricoh/library.c:502 camlibs/sierra/nikon-desc.c:286
 msgid "Flash"
 msgstr "Blitz"
 
@@ -1702,7 +1700,7 @@ msgid "Date & Time"
 msgstr "Datum und Zeit"
 
 #: camlibs/fuji/library.c:385 camlibs/fuji/library.c:418
-#: camlibs/ptp2/config.c:2111
+#: camlibs/ptp2/config.c:2163
 msgid "ID"
 msgstr "ID"
 
@@ -1979,20 +1977,20 @@ msgid "High (good quality)"
 msgstr "Hoch (gute Qualität)"
 
 #: camlibs/kodak/dc210/dc210.c:221 camlibs/konica/qm150.c:1047
-#: camlibs/ptp2/config.c:2545
+#: camlibs/ptp2/config.c:2597
 msgid "Capture"
 msgstr "Aufnahme"
 
 #: camlibs/kodak/dc210/dc210.c:224 camlibs/kodak/dc210/dc210.c:383
-#: camlibs/konica/qm150.c:1033 camlibs/ptp2/config.c:2568
-#: camlibs/ptp2/ptp.c:3032 camlibs/ptp2/ptp.c:3058 camlibs/ricoh/library.c:501
+#: camlibs/konica/qm150.c:1033 camlibs/ptp2/config.c:2621
+#: camlibs/ptp2/ptp.c:3118 camlibs/ptp2/ptp.c:3144 camlibs/ricoh/library.c:501
 #: camlibs/sierra/sierra.c:1147 camlibs/sierra/sierra.c:1407
 msgid "Zoom"
 msgstr "Zoom"
 
 #: camlibs/kodak/dc210/dc210.c:231 camlibs/kodak/dc210/dc210.c:245
-#: camlibs/konica/qm150.c:1019 camlibs/ptp2/config.c:1326
-#: camlibs/ptp2/config.c:1617 camlibs/ptp2/ptp.c:3481
+#: camlibs/konica/qm150.c:1019 camlibs/ptp2/config.c:1366
+#: camlibs/ptp2/config.c:1657 camlibs/ptp2/ptp.c:3567
 #: camlibs/ricoh/library.c:500 camlibs/sierra/epson-desc.c:218
 #: camlibs/sierra/nikon-desc.c:324 camlibs/sierra/olympus-desc.c:637
 #: camlibs/sierra/sierra.c:1102 camlibs/sierra/sierra.c:1107
@@ -2034,34 +2032,35 @@ msgstr "Belichtungskompensation"
 #: camlibs/konica/qm150.c:961 camlibs/konica/qm150.c:964
 #: camlibs/konica/qm150.c:979 camlibs/konica/qm150.c:982
 #: camlibs/konica/qm150.c:999 camlibs/konica/qm150.c:1002
-#: camlibs/ptp2/config.c:1063 camlibs/ptp2/config.c:1157
-#: camlibs/ptp2/config.c:1179 camlibs/ptp2/config.c:1323
-#: camlibs/ptp2/config.c:1506 camlibs/ptp2/config.c:1594
-#: camlibs/ptp2/config.c:1605 camlibs/ptp2/config.c:1637
-#: camlibs/ptp2/ptp.c:3441 camlibs/ptp2/ptp.c:3478 camlibs/ptp2/ptp.c:3496
-#: camlibs/ptp2/ptp.c:3537 camlibs/ptp2/ptp.c:3545 camlibs/ricoh/library.c:312
-#: camlibs/ricoh/library.c:327 camlibs/ricoh/library.c:368
-#: camlibs/sierra/epson-desc.c:151 camlibs/sierra/epson-desc.c:169
-#: camlibs/sierra/nikon-desc.c:168 camlibs/sierra/nikon-desc.c:202
-#: camlibs/sierra/nikon-desc.c:234 camlibs/sierra/nikon-desc.c:252
-#: camlibs/sierra/nikon-desc.c:282 camlibs/sierra/olympus-desc.c:196
-#: camlibs/sierra/olympus-desc.c:235 camlibs/sierra/olympus-desc.c:289
-#: camlibs/sierra/olympus-desc.c:371 camlibs/sierra/olympus-desc.c:403
-#: camlibs/sierra/olympus-desc.c:433 camlibs/sierra/olympus-desc.c:457
-#: camlibs/sierra/olympus-desc.c:498 camlibs/sierra/olympus-desc.c:515
-#: camlibs/sierra/olympus-desc.c:534 camlibs/sierra/olympus-desc.c:555
-#: camlibs/sierra/olympus-desc.c:574 camlibs/sierra/olympus-desc.c:593
-#: camlibs/sierra/olympus-desc.c:614 camlibs/sierra/olympus-desc.c:638
-#: camlibs/sierra/olympus-desc.c:873 camlibs/sierra/olympus-desc.c:890
-#: camlibs/sierra/sierra.c:910 camlibs/sierra/sierra.c:916
-#: camlibs/sierra/sierra.c:950 camlibs/sierra/sierra.c:956
-#: camlibs/sierra/sierra.c:1010 camlibs/sierra/sierra.c:1017
-#: camlibs/sierra/sierra.c:1071 camlibs/sierra/sierra.c:1078
-#: camlibs/sierra/sierra.c:1245 camlibs/sierra/sierra.c:1274
-#: camlibs/sierra/sierra.c:1314 camlibs/sierra/sierra.c:1357
-#: camlibs/sierra/sierra.c:1520 camlibs/sierra/sierra.c:1526
-#: camlibs/sierra/sierra.c:1548 camlibs/sierra/sierra.c:1553
-#: camlibs/sierra/sierra.c:1753 camlibs/sierra/sierra.c:1773
+#: camlibs/ptp2/config.c:1078 camlibs/ptp2/config.c:1197
+#: camlibs/ptp2/config.c:1219 camlibs/ptp2/config.c:1363
+#: camlibs/ptp2/config.c:1546 camlibs/ptp2/config.c:1634
+#: camlibs/ptp2/config.c:1645 camlibs/ptp2/config.c:1677
+#: camlibs/ptp2/config.c:1688 camlibs/ptp2/ptp.c:3527 camlibs/ptp2/ptp.c:3564
+#: camlibs/ptp2/ptp.c:3582 camlibs/ptp2/ptp.c:3623 camlibs/ptp2/ptp.c:3631
+#: camlibs/ricoh/library.c:312 camlibs/ricoh/library.c:327
+#: camlibs/ricoh/library.c:368 camlibs/sierra/epson-desc.c:151
+#: camlibs/sierra/epson-desc.c:169 camlibs/sierra/nikon-desc.c:168
+#: camlibs/sierra/nikon-desc.c:202 camlibs/sierra/nikon-desc.c:234
+#: camlibs/sierra/nikon-desc.c:252 camlibs/sierra/nikon-desc.c:282
+#: camlibs/sierra/olympus-desc.c:196 camlibs/sierra/olympus-desc.c:235
+#: camlibs/sierra/olympus-desc.c:289 camlibs/sierra/olympus-desc.c:371
+#: camlibs/sierra/olympus-desc.c:403 camlibs/sierra/olympus-desc.c:433
+#: camlibs/sierra/olympus-desc.c:457 camlibs/sierra/olympus-desc.c:498
+#: camlibs/sierra/olympus-desc.c:515 camlibs/sierra/olympus-desc.c:534
+#: camlibs/sierra/olympus-desc.c:555 camlibs/sierra/olympus-desc.c:574
+#: camlibs/sierra/olympus-desc.c:593 camlibs/sierra/olympus-desc.c:614
+#: camlibs/sierra/olympus-desc.c:638 camlibs/sierra/olympus-desc.c:873
+#: camlibs/sierra/olympus-desc.c:890 camlibs/sierra/sierra.c:910
+#: camlibs/sierra/sierra.c:916 camlibs/sierra/sierra.c:950
+#: camlibs/sierra/sierra.c:956 camlibs/sierra/sierra.c:1010
+#: camlibs/sierra/sierra.c:1017 camlibs/sierra/sierra.c:1071
+#: camlibs/sierra/sierra.c:1078 camlibs/sierra/sierra.c:1245
+#: camlibs/sierra/sierra.c:1274 camlibs/sierra/sierra.c:1314
+#: camlibs/sierra/sierra.c:1357 camlibs/sierra/sierra.c:1520
+#: camlibs/sierra/sierra.c:1526 camlibs/sierra/sierra.c:1548
+#: camlibs/sierra/sierra.c:1553 camlibs/sierra/sierra.c:1753
+#: camlibs/sierra/sierra.c:1773
 msgid "Auto"
 msgstr "Auto"
 
@@ -2076,9 +2075,9 @@ msgid "Force"
 msgstr "Immer"
 
 #: camlibs/kodak/dc210/dc210.c:261 camlibs/kodak/dc210/dc210.c:269
-#: camlibs/ptp2/config.c:1600 camlibs/ptp2/config.c:2205
-#: camlibs/ptp2/library.c:2148 camlibs/ptp2/library.c:2152
-#: camlibs/ptp2/ptp.c:3543 camlibs/ricoh/library.c:347
+#: camlibs/ptp2/config.c:1640 camlibs/ptp2/config.c:2257
+#: camlibs/ptp2/library.c:2192 camlibs/ptp2/library.c:2196
+#: camlibs/ptp2/ptp.c:3629 camlibs/ricoh/library.c:347
 msgid "None"
 msgstr "Keine"
 
@@ -2094,13 +2093,13 @@ msgstr "Rote-Augen-Blitz"
 #: camlibs/konica/qm150.c:809 camlibs/konica/qm150.c:851
 #: camlibs/konica/qm150.c:864 camlibs/konica/qm150.c:1021
 #: camlibs/konica/qm150.c:1028 camlibs/konica/qm150.c:1035
-#: camlibs/konica/qm150.c:1042 camlibs/ptp2/config.c:723
-#: camlibs/ptp2/config.c:725 camlibs/ptp2/config.c:737
-#: camlibs/ptp2/config.c:868 camlibs/ptp2/config.c:870
-#: camlibs/ptp2/config.c:882 camlibs/ptp2/config.c:901
-#: camlibs/ptp2/config.c:903 camlibs/ptp2/config.c:915
-#: camlibs/ptp2/config.c:1508 camlibs/ptp2/ptp.c:3390 camlibs/ptp2/ptp.c:3391
-#: camlibs/ptp2/ptp.c:3498 camlibs/ricoh/library.c:339
+#: camlibs/konica/qm150.c:1042 camlibs/ptp2/config.c:738
+#: camlibs/ptp2/config.c:740 camlibs/ptp2/config.c:752
+#: camlibs/ptp2/config.c:883 camlibs/ptp2/config.c:885
+#: camlibs/ptp2/config.c:897 camlibs/ptp2/config.c:916
+#: camlibs/ptp2/config.c:918 camlibs/ptp2/config.c:930
+#: camlibs/ptp2/config.c:1548 camlibs/ptp2/ptp.c:3476 camlibs/ptp2/ptp.c:3477
+#: camlibs/ptp2/ptp.c:3584 camlibs/ricoh/library.c:339
 #: camlibs/ricoh/library.c:370 camlibs/sierra/nikon-desc.c:305
 #: camlibs/sierra/sierra.c:1127 camlibs/sierra/sierra.c:1133
 #: camlibs/sierra/sierra.c:1396
@@ -2116,14 +2115,14 @@ msgstr "An"
 #: camlibs/konica/qm150.c:812 camlibs/konica/qm150.c:850
 #: camlibs/konica/qm150.c:857 camlibs/konica/qm150.c:1022
 #: camlibs/konica/qm150.c:1025 camlibs/konica/qm150.c:1036
-#: camlibs/konica/qm150.c:1039 camlibs/ptp2/config.c:724
-#: camlibs/ptp2/config.c:725 camlibs/ptp2/config.c:741
-#: camlibs/ptp2/config.c:869 camlibs/ptp2/config.c:870
-#: camlibs/ptp2/config.c:886 camlibs/ptp2/config.c:902
-#: camlibs/ptp2/config.c:903 camlibs/ptp2/config.c:919
-#: camlibs/ptp2/config.c:1507 camlibs/ptp2/config.c:1616
-#: camlibs/ptp2/config.c:1685 camlibs/ptp2/ptp.c:3390 camlibs/ptp2/ptp.c:3391
-#: camlibs/ptp2/ptp.c:3497 camlibs/ricoh/library.c:340
+#: camlibs/konica/qm150.c:1039 camlibs/ptp2/config.c:739
+#: camlibs/ptp2/config.c:740 camlibs/ptp2/config.c:756
+#: camlibs/ptp2/config.c:884 camlibs/ptp2/config.c:885
+#: camlibs/ptp2/config.c:901 camlibs/ptp2/config.c:917
+#: camlibs/ptp2/config.c:918 camlibs/ptp2/config.c:934
+#: camlibs/ptp2/config.c:1547 camlibs/ptp2/config.c:1656
+#: camlibs/ptp2/config.c:1737 camlibs/ptp2/ptp.c:3476 camlibs/ptp2/ptp.c:3477
+#: camlibs/ptp2/ptp.c:3583 camlibs/ricoh/library.c:340
 #: camlibs/ricoh/library.c:369 camlibs/ricoh/library.c:377
 #: camlibs/sierra/epson-desc.c:153 camlibs/sierra/nikon-desc.c:236
 #: camlibs/sierra/nikon-desc.c:304 camlibs/sierra/nikon-desc.c:359
@@ -2714,7 +2713,7 @@ msgid "Date and Time"
 msgstr "Datum und Zeit"
 
 #: camlibs/konica/library.c:681 camlibs/konica/library.c:895
-#: camlibs/ptp2/ptp.c:3028
+#: camlibs/ptp2/ptp.c:3114
 msgid "Beep"
 msgstr "Ton"
 
@@ -2846,10 +2845,10 @@ msgstr "Selbstauslöser (nur nächstes Bild)"
 
 #: camlibs/konica/library.c:834 camlibs/konica/library.c:841
 #: camlibs/konica/qm150.c:1092 camlibs/konica/qm150.c:1099
-#: camlibs/minolta/dimagev/dimagev.c:400 camlibs/ptp2/config.c:1582
-#: camlibs/ptp2/config.c:1595 camlibs/ptp2/config.c:1606
-#: camlibs/ptp2/config.c:1733 camlibs/ptp2/ptp.c:3528 camlibs/ptp2/ptp.c:3538
-#: camlibs/ptp2/ptp.c:3546 camlibs/ptp2/ptp.c:3553 camlibs/ricoh/library.c:349
+#: camlibs/minolta/dimagev/dimagev.c:400 camlibs/ptp2/config.c:1622
+#: camlibs/ptp2/config.c:1635 camlibs/ptp2/config.c:1646
+#: camlibs/ptp2/config.c:1785 camlibs/ptp2/ptp.c:3614 camlibs/ptp2/ptp.c:3624
+#: camlibs/ptp2/ptp.c:3632 camlibs/ptp2/ptp.c:3639 camlibs/ricoh/library.c:349
 #: camlibs/sierra/epson-desc.c:219 camlibs/sierra/nikon-desc.c:253
 #: camlibs/sierra/nikon-desc.c:325 camlibs/sierra/olympus-desc.c:480
 #: camlibs/sierra/olympus-desc.c:660 camlibs/sierra/sierra.c:980
@@ -2924,7 +2923,7 @@ msgid "No answer from the camera."
 msgstr "Keine Antwort von der Kamera."
 
 #: camlibs/konica/qm150.c:773 camlibs/konica/qm150.c:781
-#: camlibs/ptp2/config.c:1596 camlibs/ptp2/ptp.c:3539
+#: camlibs/ptp2/config.c:1636 camlibs/ptp2/ptp.c:3625
 #: camlibs/sierra/nikon-desc.c:203 camlibs/sierra/sierra.c:951
 #: camlibs/sierra/sierra.c:958 camlibs/sierra/sierra.c:1276
 msgid "Low"
@@ -2937,7 +2936,7 @@ msgid "Medium"
 msgstr "Mittel"
 
 #: camlibs/konica/qm150.c:775 camlibs/konica/qm150.c:778
-#: camlibs/ptp2/config.c:1599 camlibs/ptp2/ptp.c:3542
+#: camlibs/ptp2/config.c:1639 camlibs/ptp2/ptp.c:3628
 #: camlibs/sierra/sierra.c:912 camlibs/sierra/sierra.c:920
 #: camlibs/sierra/sierra.c:953 camlibs/sierra/sierra.c:962
 #: camlibs/sierra/sierra.c:1249 camlibs/sierra/sierra.c:1280
@@ -2976,7 +2975,7 @@ msgstr "Büro"
 msgid "Day-lt"
 msgstr "Tageslicht"
 
-#: camlibs/konica/qm150.c:975 camlibs/ptp2/ptp.c:2987 camlibs/ptp2/ptp.c:3042
+#: camlibs/konica/qm150.c:975 camlibs/ptp2/ptp.c:3073 camlibs/ptp2/ptp.c:3128
 msgid "Sharpness"
 msgstr "Schärfe"
 
@@ -3006,7 +3005,7 @@ msgid "Black and White"
 msgstr "schwarz/weiß"
 
 #: camlibs/konica/qm150.c:998 camlibs/konica/qm150.c:1014
-#: camlibs/ptp2/config.c:1400 camlibs/ptp2/config.c:1689
+#: camlibs/ptp2/config.c:1440 camlibs/ptp2/config.c:1741
 #: camlibs/ricoh/library.c:332 camlibs/sierra/olympus-desc.c:482
 #: camlibs/sierra/sierra.c:982 camlibs/sierra/sierra.c:991
 #: camlibs/sierra/sierra.c:1297
@@ -3255,8 +3254,8 @@ msgstr ""
 "Karten-ID:\t\t%d\n"
 "Blitzmodus:\t\t"
 
-#: camlibs/minolta/dimagev/dimagev.c:292 camlibs/ptp2/config.c:1341
-#: camlibs/ptp2/ptp.c:3489
+#: camlibs/minolta/dimagev/dimagev.c:292 camlibs/ptp2/config.c:1381
+#: camlibs/ptp2/ptp.c:3575
 msgid "Remote"
 msgstr "Entfernt"
 
@@ -3266,13 +3265,13 @@ msgstr "Lokal"
 
 #: camlibs/minolta/dimagev/dimagev.c:293 camlibs/minolta/dimagev/dimagev.c:295
 #: camlibs/minolta/dimagev/dimagev.c:299 camlibs/minolta/dimagev/dimagev.c:302
-#: camlibs/ptp2/ptp.c:3392
+#: camlibs/ptp2/ptp.c:3478
 msgid "Yes"
 msgstr "Ja"
 
 #: camlibs/minolta/dimagev/dimagev.c:293 camlibs/minolta/dimagev/dimagev.c:295
 #: camlibs/minolta/dimagev/dimagev.c:299 camlibs/minolta/dimagev/dimagev.c:302
-#: camlibs/ptp2/ptp.c:3392
+#: camlibs/ptp2/ptp.c:3478
 msgid "No"
 msgstr "Nein"
 
@@ -3282,10 +3281,11 @@ msgstr "Nein"
 msgid "Fine"
 msgstr "Fein"
 
-#: camlibs/minolta/dimagev/dimagev.c:300 camlibs/ptp2/config.c:1398
-#: camlibs/sierra/sierra.c:911 camlibs/sierra/sierra.c:918
-#: camlibs/sierra/sierra.c:1247 camlibs/sierra/sierra.c:1593
-#: camlibs/sierra/sierra.c:1599 camlibs/sierra/sierra.c:1804
+#: camlibs/minolta/dimagev/dimagev.c:300 camlibs/ptp2/config.c:1125
+#: camlibs/ptp2/config.c:1438 camlibs/sierra/sierra.c:911
+#: camlibs/sierra/sierra.c:918 camlibs/sierra/sierra.c:1247
+#: camlibs/sierra/sierra.c:1593 camlibs/sierra/sierra.c:1599
+#: camlibs/sierra/sierra.c:1804
 msgid "Standard"
 msgstr "Standard"
 
@@ -3331,7 +3331,7 @@ msgid "Not Full"
 msgstr "Nicht voll"
 
 #: camlibs/minolta/dimagev/dimagev.c:360 camlibs/minolta/dimagev/dimagev.c:403
-#: camlibs/ptp2/config.c:1087 camlibs/ptp2/ptp.c:3505
+#: camlibs/ptp2/config.c:1102 camlibs/ptp2/ptp.c:3591
 #, c-format
 msgid "Full"
 msgstr "Voll"
@@ -3692,13 +3692,13 @@ msgstr ""
 "Jenoptik JD350e durch Michael Trawny <trawny99@users.sourceforge.net>. "
 "Bugfixes von Marcus Meißner <marcus@jet.franken.de>."
 
-#: camlibs/polaroid/pdc700.c:159 camlibs/ptp2/config.c:2551
-#: camlibs/ptp2/config.c:2552 camlibs/ptp2/ptp.c:3023
+#: camlibs/polaroid/pdc700.c:159 camlibs/ptp2/config.c:2603
+#: camlibs/ptp2/config.c:2604 camlibs/ptp2/ptp.c:3109
 msgid "Image Quality"
 msgstr "Bildqualität"
 
-#: camlibs/polaroid/pdc700.c:160 camlibs/ptp2/config.c:2553
-#: camlibs/ptp2/config.c:2554 camlibs/ptp2/ptp.c:2967 camlibs/ptp2/ptp.c:3025
+#: camlibs/polaroid/pdc700.c:160 camlibs/ptp2/config.c:2605
+#: camlibs/ptp2/config.c:2606 camlibs/ptp2/ptp.c:3053 camlibs/ptp2/ptp.c:3111
 msgid "Image Size"
 msgstr "Bildgröße"
 
@@ -3714,11 +3714,11 @@ msgstr "Autom. Abschaltung (in Minuten)"
 msgid "Information"
 msgstr "Informationen"
 
-#: camlibs/polaroid/pdc700.c:167 camlibs/ptp2/config.c:1056
+#: camlibs/polaroid/pdc700.c:167 camlibs/ptp2/config.c:1071
 msgid "normal"
 msgstr "normal"
 
-#: camlibs/polaroid/pdc700.c:167 camlibs/ptp2/config.c:1057
+#: camlibs/polaroid/pdc700.c:167 camlibs/ptp2/config.c:1072
 msgid "fine"
 msgstr "fein"
 
@@ -3726,21 +3726,21 @@ msgstr "fein"
 msgid "superfine"
 msgstr "superfein"
 
-#: camlibs/polaroid/pdc700.c:169 camlibs/ptp2/config.c:1072
-#: camlibs/ptp2/config.c:1696 camlibs/sierra/epson-desc.c:116
+#: camlibs/polaroid/pdc700.c:169 camlibs/ptp2/config.c:1087
+#: camlibs/ptp2/config.c:1748 camlibs/sierra/epson-desc.c:116
 #: camlibs/sierra/sierra.c:1492 camlibs/sierra/sierra.c:1506
 #: camlibs/sierra/sierra.c:1741
 msgid "auto"
 msgstr "auto"
 
 #: camlibs/polaroid/pdc700.c:169 camlibs/polaroid/pdc700.c:170
-#: camlibs/ptp2/config.c:1073 camlibs/sierra/nikon-desc.c:565
+#: camlibs/ptp2/config.c:1088 camlibs/sierra/nikon-desc.c:565
 #: camlibs/sierra/nikon-desc.c:570
 msgid "on"
 msgstr "an"
 
 #: camlibs/polaroid/pdc700.c:169 camlibs/polaroid/pdc700.c:170
-#: camlibs/ptp2/config.c:1071 camlibs/sierra/nikon-desc.c:564
+#: camlibs/ptp2/config.c:1086 camlibs/sierra/nikon-desc.c:564
 #: camlibs/sierra/nikon-desc.c:569
 msgid "off"
 msgstr "aus"
@@ -3866,314 +3866,359 @@ msgstr ""
 msgid "Sorry, your Canon camera does not support Canon capture"
 msgstr "Diese Canon Kamera unterstützt nicht den Canon Aufnahme Modus"
 
-#: camlibs/ptp2/config.c:463 camlibs/ptp2/config.c:490
-#: camlibs/ptp2/config.c:540 camlibs/ptp2/config.c:571
-#: camlibs/ptp2/config.c:599
+#: camlibs/ptp2/config.c:478 camlibs/ptp2/config.c:505
+#: camlibs/ptp2/config.c:555 camlibs/ptp2/config.c:586
+#: camlibs/ptp2/config.c:614
 #, c-format
 msgid "Unknown value %04x"
 msgstr "Unbekannter Wert %04x"
 
-#: camlibs/ptp2/config.c:628 camlibs/ptp2/config.c:645
-#: camlibs/ptp2/config.c:755
+#: camlibs/ptp2/config.c:643 camlibs/ptp2/config.c:660
+#: camlibs/ptp2/config.c:770
 #, c-format
 msgid "unexpected datatype %i"
 msgstr "unerwarteter Datentyp %i"
 
-#: camlibs/ptp2/config.c:765 camlibs/ptp2/config.c:1066
-#: camlibs/ptp2/config.c:1081 camlibs/ptp2/config.c:1626
-#: camlibs/ptp2/ptp.c:3503 camlibs/sierra/olympus-desc.c:639
+#: camlibs/ptp2/config.c:780 camlibs/ptp2/config.c:1081
+#: camlibs/ptp2/config.c:1096 camlibs/ptp2/config.c:1666
+#: camlibs/ptp2/ptp.c:3589 camlibs/sierra/olympus-desc.c:639
 msgid "Manual"
 msgstr "Manuell"
 
-#: camlibs/ptp2/config.c:766 camlibs/ptp2/config.c:1627
+#: camlibs/ptp2/config.c:781 camlibs/ptp2/config.c:1667
 msgid "Automatic"
 msgstr "Automatisch"
 
-#: camlibs/ptp2/config.c:767
+#: camlibs/ptp2/config.c:782
 msgid "One-push Automatic"
 msgstr "Vollautomatik"
 
-#: camlibs/ptp2/config.c:768 camlibs/ptp2/config.c:1638
-#: camlibs/ptp2/ptp.c:3444 camlibs/sierra/olympus-desc.c:556
-#: camlibs/sierra/olympus-desc.c:575 camlibs/sierra/olympus-desc.c:594
-#: camlibs/sierra/olympus-desc.c:615
+#: camlibs/ptp2/config.c:783 camlibs/ptp2/config.c:1678
+#: camlibs/ptp2/config.c:1689 camlibs/ptp2/ptp.c:3530
+#: camlibs/sierra/olympus-desc.c:556 camlibs/sierra/olympus-desc.c:575
+#: camlibs/sierra/olympus-desc.c:594 camlibs/sierra/olympus-desc.c:615
 msgid "Daylight"
 msgstr "Tageslicht"
 
-#: camlibs/ptp2/config.c:769 camlibs/ptp2/config.c:1641
-#: camlibs/ptp2/ptp.c:3443 camlibs/ricoh/library.c:329
-#: camlibs/sierra/nikon-desc.c:285 camlibs/sierra/olympus-desc.c:557
-#: camlibs/sierra/olympus-desc.c:576 camlibs/sierra/sierra.c:1073
-#: camlibs/sierra/sierra.c:1082 camlibs/sierra/sierra.c:1361
+#: camlibs/ptp2/config.c:784 camlibs/ptp2/config.c:1681
+#: camlibs/ptp2/config.c:1693 camlibs/ptp2/ptp.c:3529
+#: camlibs/ricoh/library.c:329 camlibs/sierra/nikon-desc.c:285
+#: camlibs/sierra/olympus-desc.c:557 camlibs/sierra/olympus-desc.c:576
+#: camlibs/sierra/sierra.c:1073 camlibs/sierra/sierra.c:1082
+#: camlibs/sierra/sierra.c:1361
 msgid "Fluorescent"
 msgstr "Kunstlicht - Fluoreszenzlampe"
 
-#: camlibs/ptp2/config.c:770 camlibs/ptp2/config.c:1640
-#: camlibs/sierra/olympus-desc.c:558 camlibs/sierra/olympus-desc.c:577
-#: camlibs/sierra/olympus-desc.c:595 camlibs/sierra/olympus-desc.c:616
-#: camlibs/sierra/sierra.c:1074 camlibs/sierra/sierra.c:1084
-#: camlibs/sierra/sierra.c:1363
+#: camlibs/ptp2/config.c:785 camlibs/ptp2/config.c:1680
+#: camlibs/ptp2/config.c:1692 camlibs/sierra/olympus-desc.c:558
+#: camlibs/sierra/olympus-desc.c:577 camlibs/sierra/olympus-desc.c:595
+#: camlibs/sierra/olympus-desc.c:616 camlibs/sierra/sierra.c:1074
+#: camlibs/sierra/sierra.c:1084 camlibs/sierra/sierra.c:1363
 msgid "Tungsten"
 msgstr "Kunstlicht - Glühlampe"
 
-#: camlibs/ptp2/config.c:772 camlibs/ptp2/config.c:1639
-#: camlibs/ptp2/ptp.c:3446 camlibs/sierra/nikon-desc.c:288
-#: camlibs/sierra/olympus-desc.c:559 camlibs/sierra/olympus-desc.c:578
-#: camlibs/sierra/olympus-desc.c:599 camlibs/sierra/olympus-desc.c:622
-#: camlibs/sierra/sierra.c:1075 camlibs/sierra/sierra.c:1087
-#: camlibs/sierra/sierra.c:1365
+#: camlibs/ptp2/config.c:787 camlibs/ptp2/config.c:1679
+#: camlibs/ptp2/config.c:1691 camlibs/ptp2/ptp.c:3532
+#: camlibs/sierra/nikon-desc.c:288 camlibs/sierra/olympus-desc.c:559
+#: camlibs/sierra/olympus-desc.c:578 camlibs/sierra/olympus-desc.c:599
+#: camlibs/sierra/olympus-desc.c:622 camlibs/sierra/sierra.c:1075
+#: camlibs/sierra/sierra.c:1087 camlibs/sierra/sierra.c:1365
 msgid "Cloudy"
 msgstr "Wolkig"
 
-#: camlibs/ptp2/config.c:773 camlibs/ptp2/ptp.c:3447
+#: camlibs/ptp2/config.c:788 camlibs/ptp2/config.c:1690
+#: camlibs/ptp2/ptp.c:3533
 msgid "Shade"
 msgstr "Schatten"
 
-#: camlibs/ptp2/config.c:774 camlibs/ptp2/ptp.c:3004 camlibs/ptp2/ptp.c:3448
+#: camlibs/ptp2/config.c:789 camlibs/ptp2/ptp.c:3090 camlibs/ptp2/ptp.c:3534
 msgid "Color Temperature"
 msgstr "Farbtemperatur"
 
-#: camlibs/ptp2/config.c:775 camlibs/ptp2/ptp.c:3449
+#: camlibs/ptp2/config.c:790 camlibs/ptp2/ptp.c:3535
 #: camlibs/sierra/nikon-desc.c:287 camlibs/sierra/olympus-desc.c:621
 msgid "Preset"
 msgstr "Voreinstellung"
 
-#: camlibs/ptp2/config.c:782 camlibs/ptp2/ptp.c:3436
+#: camlibs/ptp2/config.c:797 camlibs/ptp2/ptp.c:3522
 msgid "JPEG Basic"
 msgstr "JPEG Basic"
 
-#: camlibs/ptp2/config.c:783
+#: camlibs/ptp2/config.c:798
 msgid "JPEG Normal"
 msgstr "JPEG Normal"
 
-#: camlibs/ptp2/config.c:784 camlibs/ptp2/ptp.c:3438
+#: camlibs/ptp2/config.c:799 camlibs/ptp2/ptp.c:3524
 msgid "JPEG Fine"
 msgstr "JPEG Fein"
 
-#: camlibs/ptp2/config.c:785
+#: camlibs/ptp2/config.c:800
 msgid "NEF (Raw)"
 msgstr "NEF (Raw)"
 
-#: camlibs/ptp2/config.c:786
+#: camlibs/ptp2/config.c:801
 msgid "NEF+Basic"
 msgstr "NEF+Basic"
 
-#: camlibs/ptp2/config.c:787
+#: camlibs/ptp2/config.c:802
 msgid "NEF+Normal"
 msgstr "NEF+Normal"
 
-#: camlibs/ptp2/config.c:788
+#: camlibs/ptp2/config.c:803
 msgid "NEF+Fine"
 msgstr "NEF+Fein"
 
-#: camlibs/ptp2/config.c:1058
+#: camlibs/ptp2/config.c:1073
 msgid "super fine"
 msgstr "superfein"
 
-#: camlibs/ptp2/config.c:1064
+#: camlibs/ptp2/config.c:1079
 msgid "Tv"
 msgstr "Tv"
 
-#: camlibs/ptp2/config.c:1065
+#: camlibs/ptp2/config.c:1080
 msgid "Av"
 msgstr "Av"
 
-#: camlibs/ptp2/config.c:1074
+#: camlibs/ptp2/config.c:1089
 msgid "auto red eye"
 msgstr "Automatische Anti-Rotaugen"
 
-#: camlibs/ptp2/config.c:1075
+#: camlibs/ptp2/config.c:1090
 msgid "on red eye"
 msgstr "Anti-Rotaugen"
 
-#: camlibs/ptp2/config.c:1080
+#: camlibs/ptp2/config.c:1095
 msgid "iTTL"
 msgstr "iTTL"
 
-#: camlibs/ptp2/config.c:1082 camlibs/ptp2/ptp.c:3504
+#: camlibs/ptp2/config.c:1097 camlibs/ptp2/ptp.c:3590
 msgid "Commander"
 msgstr "Commander"
 
-#: camlibs/ptp2/config.c:1097
+#: camlibs/ptp2/config.c:1112
 msgid "spot"
 msgstr "Punkt"
 
-#: camlibs/ptp2/config.c:1156
-msgid "Center"
-msgstr "Zentrum"
+#: camlibs/ptp2/config.c:1118
+#, fuzzy
+msgid "Evaluative metering"
+msgstr "Flüchtige Einstellungen"
 
-#: camlibs/ptp2/config.c:1163
-msgid "large"
-msgstr "groß"
+#: camlibs/ptp2/config.c:1119
+#, fuzzy
+msgid "Partial metering"
+msgstr "Parameter 1"
 
-#: camlibs/ptp2/config.c:1164
-msgid "medium 1"
-msgstr "mittel 1"
+#: camlibs/ptp2/config.c:1120
+#, fuzzy
+msgid "Center Weighted average metering"
+msgstr "Mittelpunkt/Gewichtet Bereich"
 
-#: camlibs/ptp2/config.c:1165
-msgid "medium 2"
-msgstr "mittel 2"
-
-#: camlibs/ptp2/config.c:1166
-msgid "small"
-msgstr "klein"
-
-#: camlibs/ptp2/config.c:1172 camlibs/ptp2/config.c:1649
-msgid "Factory Default"
-msgstr "Werkseinstellung"
-
-#: camlibs/ptp2/config.c:1320
-msgid "Creative"
-msgstr "Kreativ"
-
-#: camlibs/ptp2/config.c:1321
-msgid "Action"
-msgstr "Aktion"
-
-#: camlibs/ptp2/config.c:1322 camlibs/ptp2/config.c:1324
-#: camlibs/ptp2/config.c:1587 camlibs/ptp2/ptp.c:3479 camlibs/ptp2/ptp.c:3533
+#: camlibs/ptp2/config.c:1126 camlibs/ptp2/config.c:1362
+#: camlibs/ptp2/config.c:1364 camlibs/ptp2/config.c:1627
+#: camlibs/ptp2/ptp.c:3565 camlibs/ptp2/ptp.c:3619
 msgid "Portrait"
 msgstr "Portrait"
 
-#: camlibs/ptp2/config.c:1325 camlibs/ptp2/config.c:1588
-#: camlibs/ptp2/ptp.c:3480 camlibs/ptp2/ptp.c:3534
+#: camlibs/ptp2/config.c:1127 camlibs/ptp2/config.c:1365
+#: camlibs/ptp2/config.c:1628 camlibs/ptp2/ptp.c:3566 camlibs/ptp2/ptp.c:3620
 msgid "Landscape"
 msgstr "Landschaft"
 
-#: camlibs/ptp2/config.c:1327 camlibs/ptp2/ptp.c:3482
+#: camlibs/ptp2/config.c:1128 camlibs/ptp2/config.c:1739
+msgid "Neutral"
+msgstr "Neutral"
+
+#: camlibs/ptp2/config.c:1129
+msgid "Faithful"
+msgstr ""
+
+#: camlibs/ptp2/config.c:1130
+msgid "Monochrome"
+msgstr ""
+
+#: camlibs/ptp2/config.c:1131
+#, fuzzy
+msgid "User defined 1"
+msgstr "Undefiniert"
+
+#: camlibs/ptp2/config.c:1132
+#, fuzzy
+msgid "User defined 2"
+msgstr "Undefiniert"
+
+#: camlibs/ptp2/config.c:1133
+#, fuzzy
+msgid "User defined 3"
+msgstr "Undefiniert"
+
+#: camlibs/ptp2/config.c:1196
+msgid "Center"
+msgstr "Zentrum"
+
+#: camlibs/ptp2/config.c:1203
+msgid "large"
+msgstr "groß"
+
+#: camlibs/ptp2/config.c:1204
+msgid "medium 1"
+msgstr "mittel 1"
+
+#: camlibs/ptp2/config.c:1205
+msgid "medium 2"
+msgstr "mittel 2"
+
+#: camlibs/ptp2/config.c:1206
+msgid "small"
+msgstr "klein"
+
+#: camlibs/ptp2/config.c:1212 camlibs/ptp2/config.c:1701
+msgid "Factory Default"
+msgstr "Werkseinstellung"
+
+#: camlibs/ptp2/config.c:1360
+msgid "Creative"
+msgstr "Kreativ"
+
+#: camlibs/ptp2/config.c:1361
+msgid "Action"
+msgstr "Aktion"
+
+#: camlibs/ptp2/config.c:1367 camlibs/ptp2/ptp.c:3568
 msgid "Sports"
 msgstr "Sport"
 
-#: camlibs/ptp2/config.c:1328 camlibs/ptp2/ptp.c:3484
+#: camlibs/ptp2/config.c:1368 camlibs/ptp2/ptp.c:3570
 msgid "Night Portrait"
 msgstr "Nachtportrait"
 
-#: camlibs/ptp2/config.c:1329 camlibs/ptp2/ptp.c:3483
+#: camlibs/ptp2/config.c:1369 camlibs/ptp2/ptp.c:3569
 msgid "Night Landscape"
 msgstr "Nachtlandschaft"
 
-#: camlibs/ptp2/config.c:1335 camlibs/ptp2/ptp.c:3485
+#: camlibs/ptp2/config.c:1375 camlibs/ptp2/ptp.c:3571
 msgid "Single Shot"
 msgstr "Einzelbild"
 
-#: camlibs/ptp2/config.c:1336
+#: camlibs/ptp2/config.c:1376
 msgid "Burst"
 msgstr "Mehrbild"
 
-#: camlibs/ptp2/config.c:1337
+#: camlibs/ptp2/config.c:1377
 msgid "Timelapse"
 msgstr "Zeitraffer"
 
-#: camlibs/ptp2/config.c:1338 camlibs/ptp2/ptp.c:3487
+#: camlibs/ptp2/config.c:1378 camlibs/ptp2/ptp.c:3573
 msgid "Continuous Low Speed"
 msgstr "Kontinuierlicher Langsame Geschwindigkeit"
 
-#: camlibs/ptp2/config.c:1339 camlibs/ptp2/ptp.c:3488
+#: camlibs/ptp2/config.c:1379 camlibs/ptp2/ptp.c:3574
 msgid "Timer"
 msgstr "Selbstauslöser"
 
-#: camlibs/ptp2/config.c:1340 camlibs/ptp2/ptp.c:3490
+#: camlibs/ptp2/config.c:1380 camlibs/ptp2/ptp.c:3576
 msgid "Mirror Up"
 msgstr "Spiegel hochklappen"
 
-#: camlibs/ptp2/config.c:1342 camlibs/ptp2/ptp.c:3491
+#: camlibs/ptp2/config.c:1382 camlibs/ptp2/ptp.c:3577
 msgid "Timer + Remote"
 msgstr "Selbstauslöser + Entfernt"
 
-#: camlibs/ptp2/config.c:1348 camlibs/ptp2/ptp.c:3455
+#: camlibs/ptp2/config.c:1388 camlibs/ptp2/ptp.c:3541
 msgid "Dynamic Area"
 msgstr "Dynamischer Bereich"
 
-#: camlibs/ptp2/config.c:1349 camlibs/ptp2/ptp.c:3456
+#: camlibs/ptp2/config.c:1389 camlibs/ptp2/ptp.c:3542
 msgid "Single Area"
 msgstr "Einzelbereich"
 
-#: camlibs/ptp2/config.c:1350 camlibs/ptp2/ptp.c:3457
+#: camlibs/ptp2/config.c:1390 camlibs/ptp2/ptp.c:3543
 msgid "Closest Subject"
 msgstr "Nächstes Subjekt"
 
-#: camlibs/ptp2/config.c:1351 camlibs/ptp2/ptp.c:3458
+#: camlibs/ptp2/config.c:1391 camlibs/ptp2/ptp.c:3544
 msgid "Group Dynamic"
 msgstr "Gruppendynamik"
 
-#: camlibs/ptp2/config.c:1357
+#: camlibs/ptp2/config.c:1397
 msgid "sRGB (portrait)"
 msgstr "sRGB (Portrait optimiert)"
 
-#: camlibs/ptp2/config.c:1358
+#: camlibs/ptp2/config.c:1398
 msgid "AdobeRGB"
 msgstr "AdobeRGB"
 
-#: camlibs/ptp2/config.c:1359
+#: camlibs/ptp2/config.c:1399
 msgid "sRGB (nature)"
 msgstr "sRGB (Natur optimiert)"
 
-#: camlibs/ptp2/config.c:1365 camlibs/ptp2/ptp.c:3523
+#: camlibs/ptp2/config.c:1405 camlibs/ptp2/ptp.c:3609
 msgid "Centre"
 msgstr "Zentrum"
 
-#: camlibs/ptp2/config.c:1366 camlibs/ptp2/ptp.c:3524
+#: camlibs/ptp2/config.c:1406 camlibs/ptp2/ptp.c:3610
 msgid "Top"
 msgstr "Oben"
 
-#: camlibs/ptp2/config.c:1367 camlibs/ptp2/ptp.c:3525
+#: camlibs/ptp2/config.c:1407 camlibs/ptp2/ptp.c:3611
 msgid "Bottom"
 msgstr "Unten"
 
-#: camlibs/ptp2/config.c:1368 camlibs/ptp2/ptp.c:3526
+#: camlibs/ptp2/config.c:1408 camlibs/ptp2/ptp.c:3612
 msgid "Left"
 msgstr "Links"
 
-#: camlibs/ptp2/config.c:1369 camlibs/ptp2/ptp.c:3527
+#: camlibs/ptp2/config.c:1409 camlibs/ptp2/ptp.c:3613
 msgid "Right"
 msgstr "Rechts"
 
-#: camlibs/ptp2/config.c:1375
+#: camlibs/ptp2/config.c:1415
 msgid "Average"
 msgstr "Durchschnitt"
 
-#: camlibs/ptp2/config.c:1376 camlibs/ptp2/ptp.c:3471
+#: camlibs/ptp2/config.c:1416 camlibs/ptp2/ptp.c:3557
 #: camlibs/sierra/olympus-desc.c:790
 msgid "Center Weighted"
 msgstr "Mittelpunkt/Gewichtet"
 
-#: camlibs/ptp2/config.c:1377
+#: camlibs/ptp2/config.c:1417
 msgid "Multi Spot"
 msgstr "Mehrpunkt"
 
-#: camlibs/ptp2/config.c:1378
+#: camlibs/ptp2/config.c:1418
 msgid "Center Spot"
 msgstr "Zentral Punkt"
 
-#: camlibs/ptp2/config.c:1384
+#: camlibs/ptp2/config.c:1424
 msgid "Automatic Flash"
 msgstr "Automatischer Blitz"
 
-#: camlibs/ptp2/config.c:1385
+#: camlibs/ptp2/config.c:1425
 msgid "Flash off"
 msgstr "Blitz aus"
 
-#: camlibs/ptp2/config.c:1386
+#: camlibs/ptp2/config.c:1426
 msgid "Fill flash"
 msgstr "Auffüll Blitz"
 
-#: camlibs/ptp2/config.c:1387
+#: camlibs/ptp2/config.c:1427
 msgid "Red-eye automatic"
 msgstr "automatische Rote-Augen-Vermeidung"
 
-#: camlibs/ptp2/config.c:1388
+#: camlibs/ptp2/config.c:1428
 msgid "Red-eye fill"
 msgstr "Rote-Augen-Blitz Füllmodus"
 
-#: camlibs/ptp2/config.c:1389
+#: camlibs/ptp2/config.c:1429
 msgid "External sync"
 msgstr "Externer Sync"
 
-#: camlibs/ptp2/config.c:1390 camlibs/ptp2/ptp.c:3450
+#: camlibs/ptp2/config.c:1430 camlibs/ptp2/ptp.c:3536
 msgid "Default"
 msgstr "Standard"
 
-#: camlibs/ptp2/config.c:1391 camlibs/ptp2/ptp.c:3453
+#: camlibs/ptp2/config.c:1431 camlibs/ptp2/ptp.c:3539
 #: camlibs/sierra/epson-desc.c:155 camlibs/sierra/sierra.c:1014
 #: camlibs/sierra/sierra.c:1025 camlibs/sierra/sierra.c:1322
 #: camlibs/sierra/sierra.c:1524 camlibs/sierra/sierra.c:1534
@@ -4181,664 +4226,696 @@ msgstr "Standard"
 msgid "Slow Sync"
 msgstr "Langsamer Sync"
 
-#: camlibs/ptp2/config.c:1392 camlibs/ptp2/ptp.c:3454
+#: camlibs/ptp2/config.c:1432 camlibs/ptp2/ptp.c:3540
 msgid "Rear Curtain Sync + Slow Sync"
 msgstr "Hinterer Vorhang Sync+Langsamer Sync"
 
-#: camlibs/ptp2/config.c:1393 camlibs/ptp2/ptp.c:3452
+#: camlibs/ptp2/config.c:1433 camlibs/ptp2/ptp.c:3538
 msgid "Red-eye Reduction + Slow Sync"
 msgstr "Rote-Augen-Vermeidung + Langsamer Sync"
 
-#: camlibs/ptp2/config.c:1399 camlibs/ricoh/library.c:331
+#: camlibs/ptp2/config.c:1439 camlibs/ricoh/library.c:331
 #: camlibs/sierra/epson-desc.c:137
 msgid "Black & White"
 msgstr "Schwarz & Weiß"
 
-#: camlibs/ptp2/config.c:1514 camlibs/ptp2/ptp.c:3465
+#: camlibs/ptp2/config.c:1554 camlibs/ptp2/ptp.c:3551
 msgid "AE/AF Lock"
 msgstr "AE/AF Lock"
 
-#: camlibs/ptp2/config.c:1515 camlibs/ptp2/ptp.c:3467
+#: camlibs/ptp2/config.c:1555 camlibs/ptp2/ptp.c:3553
 msgid "AE Lock only"
 msgstr "nur AE Lock"
 
-#: camlibs/ptp2/config.c:1516
+#: camlibs/ptp2/config.c:1556
 msgid "AF Lock Only"
 msgstr "Nur AF Lock"
 
-#: camlibs/ptp2/config.c:1517 camlibs/ptp2/ptp.c:3468
+#: camlibs/ptp2/config.c:1557 camlibs/ptp2/ptp.c:3554
 msgid "AF Lock Hold"
 msgstr "AF Lock halten"
 
-#: camlibs/ptp2/config.c:1518 camlibs/ptp2/ptp.c:3469
+#: camlibs/ptp2/config.c:1558 camlibs/ptp2/ptp.c:3555
 msgid "AF On"
 msgstr "AF an"
 
-#: camlibs/ptp2/config.c:1519
+#: camlibs/ptp2/config.c:1559
 msgid "Flash Level Lock"
 msgstr "Blitzstärke Lock"
 
-#: camlibs/ptp2/config.c:1524 camlibs/ptp2/config.c:1544
+#: camlibs/ptp2/config.c:1564 camlibs/ptp2/config.c:1584
 msgid "10 seconds"
 msgstr "10 Sekunden"
 
-#: camlibs/ptp2/config.c:1525 camlibs/ptp2/config.c:1545
+#: camlibs/ptp2/config.c:1565 camlibs/ptp2/config.c:1585
 msgid "20 seconds"
 msgstr "20 Sekunden"
 
-#: camlibs/ptp2/config.c:1526 camlibs/ptp2/config.c:1574
+#: camlibs/ptp2/config.c:1566 camlibs/ptp2/config.c:1614
 msgid "1 minute"
 msgstr "1 Minute"
 
-#: camlibs/ptp2/config.c:1527 camlibs/ptp2/config.c:1575
+#: camlibs/ptp2/config.c:1567 camlibs/ptp2/config.c:1615
 msgid "5 minutes"
 msgstr "5 Minuten"
 
-#: camlibs/ptp2/config.c:1528 camlibs/ptp2/config.c:1576
+#: camlibs/ptp2/config.c:1568 camlibs/ptp2/config.c:1616
 msgid "10 minutes"
 msgstr "10 Minuten"
 
-#: camlibs/ptp2/config.c:1533
+#: camlibs/ptp2/config.c:1573
 msgid "4 seconds"
 msgstr "4 Sekunden"
 
-#: camlibs/ptp2/config.c:1534
+#: camlibs/ptp2/config.c:1574
 msgid "6 seconds"
 msgstr "6 Sekunden"
 
-#: camlibs/ptp2/config.c:1535
+#: camlibs/ptp2/config.c:1575
 msgid "8 seconds"
 msgstr "8 Sekunden"
 
-#: camlibs/ptp2/config.c:1536
+#: camlibs/ptp2/config.c:1576
 msgid "16 seconds"
 msgstr "16 Sekunden"
 
-#: camlibs/ptp2/config.c:1537
+#: camlibs/ptp2/config.c:1577
 msgid "30 minutes"
 msgstr "30 Minuten"
 
-#: camlibs/ptp2/config.c:1542
+#: camlibs/ptp2/config.c:1582
 msgid "2 seconds"
 msgstr "2 Sekunden"
 
-#: camlibs/ptp2/config.c:1543
+#: camlibs/ptp2/config.c:1583
 msgid "5 seconds"
 msgstr "5 Sekunden"
 
-#: camlibs/ptp2/config.c:1550
+#: camlibs/ptp2/config.c:1590
 msgid "6 mm"
 msgstr "6 mm"
 
-#: camlibs/ptp2/config.c:1551
+#: camlibs/ptp2/config.c:1591
 msgid "8 mm"
 msgstr "8 mm"
 
-#: camlibs/ptp2/config.c:1552
+#: camlibs/ptp2/config.c:1592
 msgid "10 mm"
 msgstr "10 mm"
 
-#: camlibs/ptp2/config.c:1553
+#: camlibs/ptp2/config.c:1593
 msgid "20 mm"
 msgstr "20 mm"
 
-#: camlibs/ptp2/config.c:1558
+#: camlibs/ptp2/config.c:1598
 msgid "1/60"
 msgstr "1/60"
 
-#: camlibs/ptp2/config.c:1559
+#: camlibs/ptp2/config.c:1599
 msgid "1/30"
 msgstr "1/30"
 
-#: camlibs/ptp2/config.c:1560
+#: camlibs/ptp2/config.c:1600
 msgid "1/15"
 msgstr "1/15"
 
-#: camlibs/ptp2/config.c:1561
+#: camlibs/ptp2/config.c:1601
 msgid "1/8"
 msgstr "1/8"
 
-#: camlibs/ptp2/config.c:1562
+#: camlibs/ptp2/config.c:1602
 msgid "1/4"
 msgstr "1/4"
 
-#: camlibs/ptp2/config.c:1563
+#: camlibs/ptp2/config.c:1603
 msgid "1/2"
 msgstr "1/2"
 
-#: camlibs/ptp2/config.c:1564
+#: camlibs/ptp2/config.c:1604
 msgid "1"
 msgstr "1"
 
-#: camlibs/ptp2/config.c:1565
+#: camlibs/ptp2/config.c:1605
 msgid "2"
 msgstr "2"
 
-#: camlibs/ptp2/config.c:1566
+#: camlibs/ptp2/config.c:1606
 msgid "4"
 msgstr "4"
 
-#: camlibs/ptp2/config.c:1567
+#: camlibs/ptp2/config.c:1607
 msgid "8"
 msgstr "8"
 
-#: camlibs/ptp2/config.c:1568
+#: camlibs/ptp2/config.c:1608
 msgid "15"
 msgstr "15"
 
-#: camlibs/ptp2/config.c:1569
+#: camlibs/ptp2/config.c:1609
 msgid "30"
 msgstr "30"
 
-#: camlibs/ptp2/config.c:1577
+#: camlibs/ptp2/config.c:1617
 msgid "15 minutes"
 msgstr "15 Minuten"
 
-#: camlibs/ptp2/config.c:1583 camlibs/ptp2/config.c:1686
-#: camlibs/ptp2/ptp.c:3529
+#: camlibs/ptp2/config.c:1623 camlibs/ptp2/config.c:1738
+#: camlibs/ptp2/ptp.c:3615
 msgid "Vivid"
 msgstr "Lebhaft"
 
-#: camlibs/ptp2/config.c:1584 camlibs/ptp2/ptp.c:3530
+#: camlibs/ptp2/config.c:1624 camlibs/ptp2/ptp.c:3616
 msgid "Sharper"
 msgstr "Schärfer"
 
-#: camlibs/ptp2/config.c:1585 camlibs/ptp2/ptp.c:3531
+#: camlibs/ptp2/config.c:1625 camlibs/ptp2/ptp.c:3617
 msgid "Softer"
 msgstr "Weicher"
 
-#: camlibs/ptp2/config.c:1586 camlibs/ptp2/ptp.c:3532
+#: camlibs/ptp2/config.c:1626 camlibs/ptp2/ptp.c:3618
 msgid "Direct Print"
 msgstr "Direkt Druck"
 
-#: camlibs/ptp2/config.c:1589 camlibs/ptp2/config.c:1611
-#: camlibs/ptp2/config.c:1643 camlibs/ptp2/ptp.c:3535 camlibs/ptp2/ptp.c:3551
+#: camlibs/ptp2/config.c:1629 camlibs/ptp2/config.c:1651
+#: camlibs/ptp2/config.c:1683 camlibs/ptp2/config.c:1695
+#: camlibs/ptp2/ptp.c:3621 camlibs/ptp2/ptp.c:3637
 #: camlibs/sierra/epson-desc.c:171 camlibs/sierra/sierra.c:1550
 #: camlibs/sierra/sierra.c:1557 camlibs/sierra/sierra.c:1777
 msgid "Custom"
 msgstr "Benutzerdefiniert"
 
-#: camlibs/ptp2/config.c:1597 camlibs/ptp2/ptp.c:3540
+#: camlibs/ptp2/config.c:1637 camlibs/ptp2/ptp.c:3626
 msgid "Medium Low"
 msgstr "Mittel Niedrig"
 
-#: camlibs/ptp2/config.c:1598 camlibs/ptp2/config.c:1609
-#: camlibs/ptp2/ptp.c:3541 camlibs/ptp2/ptp.c:3549
+#: camlibs/ptp2/config.c:1638 camlibs/ptp2/config.c:1649
+#: camlibs/ptp2/ptp.c:3627 camlibs/ptp2/ptp.c:3635
 msgid "Medium high"
 msgstr "Mittel Hoch"
 
-#: camlibs/ptp2/config.c:1607 camlibs/ptp2/ptp.c:3547
+#: camlibs/ptp2/config.c:1647 camlibs/ptp2/ptp.c:3633
 msgid "Low contrast"
 msgstr "Niedriger Kontrast"
 
-#: camlibs/ptp2/config.c:1608 camlibs/ptp2/ptp.c:3548
+#: camlibs/ptp2/config.c:1648 camlibs/ptp2/ptp.c:3634
 msgid "Medium low"
 msgstr "Mittel niedrig"
 
-#: camlibs/ptp2/config.c:1610 camlibs/ptp2/ptp.c:3550
+#: camlibs/ptp2/config.c:1650 camlibs/ptp2/ptp.c:3636
 msgid "High control"
 msgstr "Hoch kontrolliert"
 
-#: camlibs/ptp2/config.c:1618
+#: camlibs/ptp2/config.c:1658
 msgid "Long distance"
 msgstr "Weite Entfernung"
 
-#: camlibs/ptp2/config.c:1625 camlibs/ptp2/library.c:2157
-#: camlibs/ptp2/library.c:2171 camlibs/ptp2/ptp.c:3762
+#: camlibs/ptp2/config.c:1665 camlibs/ptp2/library.c:2201
+#: camlibs/ptp2/library.c:2215 camlibs/ptp2/ptp.c:3848
 msgid "Undefined"
 msgstr "Undefiniert"
 
-#: camlibs/ptp2/config.c:1628
+#: camlibs/ptp2/config.c:1668
 msgid "Automatic Macro"
 msgstr "Automatischer Makro"
 
-#: camlibs/ptp2/config.c:1629
+#: camlibs/ptp2/config.c:1669
 msgid "AF-S"
 msgstr "AF-S"
 
-#: camlibs/ptp2/config.c:1630
+#: camlibs/ptp2/config.c:1670
 msgid "AF-C"
 msgstr "AF-C"
 
-#: camlibs/ptp2/config.c:1631
+#: camlibs/ptp2/config.c:1671
 msgid "AF-A"
 msgstr "AF-A"
 
-#: camlibs/ptp2/config.c:1642
+#: camlibs/ptp2/config.c:1682
 msgid "Fluorescent H"
 msgstr "Fluoreszenz H"
 
-#: camlibs/ptp2/config.c:1687
-msgid "Neutral"
-msgstr "Neutral"
-
-#: camlibs/ptp2/config.c:1688
+#: camlibs/ptp2/config.c:1740
 msgid "Low sharpening"
 msgstr "Wenig Schärfe"
 
-#: camlibs/ptp2/config.c:1690
+#: camlibs/ptp2/config.c:1742
 msgid "Black & white"
 msgstr "Schwarz und Weiss"
 
-#: camlibs/ptp2/config.c:1725
+#: camlibs/ptp2/config.c:1777
 msgid "AE & Flash"
 msgstr "AE & Blitz"
 
-#: camlibs/ptp2/config.c:1726
+#: camlibs/ptp2/config.c:1778
 msgid "AE only"
 msgstr "nur AE"
 
-#: camlibs/ptp2/config.c:1727
+#: camlibs/ptp2/config.c:1779
 msgid "Flash only"
 msgstr "nur Blitz"
 
-#: camlibs/ptp2/config.c:1728
+#: camlibs/ptp2/config.c:1780
 msgid "WB bracketing"
 msgstr "Weißabgleichabstufung"
 
-#: camlibs/ptp2/config.c:1734 camlibs/ptp2/ptp.c:3554
+#: camlibs/ptp2/config.c:1786 camlibs/ptp2/ptp.c:3640
 msgid "Moderate"
 msgstr "Mittel"
 
-#: camlibs/ptp2/config.c:1735 camlibs/ptp2/ptp.c:3555
+#: camlibs/ptp2/config.c:1787 camlibs/ptp2/ptp.c:3641
 msgid "Enhanced"
 msgstr "Erweitert"
 
-#: camlibs/ptp2/config.c:1741
+#: camlibs/ptp2/config.c:1793
 msgid "MTR > Under"
 msgstr "MTR > Unter"
 
-#: camlibs/ptp2/config.c:1742
+#: camlibs/ptp2/config.c:1794
 msgid "Under > MTR"
 msgstr "Unter > MTR"
 
-#: camlibs/ptp2/config.c:2001
+#: camlibs/ptp2/config.c:2053
 msgid "Internal RAM"
 msgstr "interner Speicher"
 
-#: camlibs/ptp2/config.c:2002
+#: camlibs/ptp2/config.c:2054
 msgid "Memory card"
 msgstr "Speicherkarte"
 
-#: camlibs/ptp2/config.c:2116
+#: camlibs/ptp2/config.c:2168
 msgid "ESSID"
 msgstr "ESSID"
 
-#: camlibs/ptp2/config.c:2121
+#: camlibs/ptp2/config.c:2173
 msgid "Display"
 msgstr "Anzeige"
 
-#: camlibs/ptp2/config.c:2131
+#: camlibs/ptp2/config.c:2183
 #, c-format
 msgid "Creation date: %s, Last usage date: %s"
 msgstr "Anlegedatum: %s, Letzte Benutzung: %s"
 
-#: camlibs/ptp2/config.c:2137
+#: camlibs/ptp2/config.c:2189
 msgid "Delete"
 msgstr "Löschen"
 
-#: camlibs/ptp2/config.c:2206
+#: camlibs/ptp2/config.c:2258
 msgid "WEP 64-bit"
 msgstr "WEP 64-bit"
 
-#: camlibs/ptp2/config.c:2207
+#: camlibs/ptp2/config.c:2259
 msgid "WEP 128-bit"
 msgstr "WEP 128-bit"
 
-#: camlibs/ptp2/config.c:2254
+#: camlibs/ptp2/config.c:2306
 msgid "Managed"
 msgstr "Managed"
 
-#: camlibs/ptp2/config.c:2255
+#: camlibs/ptp2/config.c:2307
 msgid "Ad-hoc"
 msgstr "Ad-hoc"
 
-#: camlibs/ptp2/config.c:2424
+#: camlibs/ptp2/config.c:2476
 msgid "Profile name"
 msgstr "Profilname"
 
-#: camlibs/ptp2/config.c:2425
+#: camlibs/ptp2/config.c:2477
 msgid "Wifi essid"
 msgstr "WiFi ESSID"
 
-#: camlibs/ptp2/config.c:2426
+#: camlibs/ptp2/config.c:2478
 msgid "IP address (empty for DHCP)"
 msgstr "IP Addresse (leer bei DHCP)"
 
-#: camlibs/ptp2/config.c:2427
+#: camlibs/ptp2/config.c:2479
 msgid "Network mask"
 msgstr "Netzwerkmaske"
 
-#: camlibs/ptp2/config.c:2428
+#: camlibs/ptp2/config.c:2480
 msgid "Default gateway"
 msgstr "Default gateway"
 
-#: camlibs/ptp2/config.c:2429
+#: camlibs/ptp2/config.c:2481
 msgid "Access mode"
 msgstr "Zugriffsmodus"
 
-#: camlibs/ptp2/config.c:2430
+#: camlibs/ptp2/config.c:2482
 msgid "Wifi channel"
 msgstr "WiFi Kanal"
 
-#: camlibs/ptp2/config.c:2431
+#: camlibs/ptp2/config.c:2483
 msgid "Encryption"
 msgstr "Verschlüsselung"
 
-#: camlibs/ptp2/config.c:2432
+#: camlibs/ptp2/config.c:2484
 msgid "Encryption key (hex)"
 msgstr "Kryptographischer Schlüssel (hex)"
 
-#: camlibs/ptp2/config.c:2433
+#: camlibs/ptp2/config.c:2485
 msgid "Write"
 msgstr "Schreiben"
 
-#: camlibs/ptp2/config.c:2480
+#: camlibs/ptp2/config.c:2532
 msgid "List Wifi profiles"
 msgstr "Liste aller WIFI-Profile"
 
-#: camlibs/ptp2/config.c:2481
+#: camlibs/ptp2/config.c:2533
 msgid "Create Wifi profile"
 msgstr "Lege WiFI Profil an"
 
-#: camlibs/ptp2/config.c:2529 camlibs/ptp2/ptp.c:3067
+#: camlibs/ptp2/config.c:2581 camlibs/ptp2/ptp.c:3153
 msgid "Camera Owner"
 msgstr "Kamerabesitzer"
 
-#: camlibs/ptp2/config.c:2530 camlibs/ptp2/ptp.c:3066
+#: camlibs/ptp2/config.c:2582 camlibs/ptp2/ptp.c:3152
 msgid "Camera Model"
 msgstr "Kameramodell"
 
-#: camlibs/ptp2/config.c:2531 camlibs/ptp2/ptp.c:3065
+#: camlibs/ptp2/config.c:2583 camlibs/ptp2/ptp.c:3151
 msgid "Firmware Version"
 msgstr "Firmware Revision"
 
-#: camlibs/ptp2/config.c:2532 camlibs/ptp2/config.c:2533
+#: camlibs/ptp2/config.c:2584 camlibs/ptp2/config.c:2585
 msgid "Camera Time"
 msgstr "Kamerazeit"
 
-#: camlibs/ptp2/config.c:2534 camlibs/ptp2/ptp.c:3007 camlibs/ptp2/ptp.c:3018
+#: camlibs/ptp2/config.c:2586 camlibs/ptp2/ptp.c:3093 camlibs/ptp2/ptp.c:3104
 msgid "Beep Mode"
 msgstr "Signalton Modus"
 
-#: camlibs/ptp2/config.c:2535
+#: camlibs/ptp2/config.c:2587
 msgid "Image Comment"
 msgstr "Bild Kommentar"
 
-#: camlibs/ptp2/config.c:2536 camlibs/ptp2/ptp.c:3175
+#: camlibs/ptp2/config.c:2588 camlibs/ptp2/ptp.c:3261
 msgid "LCD Off Time"
 msgstr "Zeit für automatische Abschaltung des LCD"
 
-#: camlibs/ptp2/config.c:2537
+#: camlibs/ptp2/config.c:2589
 msgid "Meter Off Time"
 msgstr "Sensorabschaltzeit"
 
-#: camlibs/ptp2/config.c:2538 camlibs/ptp2/ptp.c:3253
+#: camlibs/ptp2/config.c:2590 camlibs/ptp2/ptp.c:3339
 msgid "CSM Menu"
 msgstr "CSM Menü"
 
-#: camlibs/ptp2/config.c:2539 camlibs/ptp2/ptp.c:2965
+#: camlibs/ptp2/config.c:2591 camlibs/ptp2/ptp.c:3051
 msgid "Battery Level"
 msgstr "Batterie Ladezustand"
 
-#: camlibs/ptp2/config.c:2542
+#: camlibs/ptp2/config.c:2594
 msgid "Fast Filesystem"
 msgstr "Schnelles Dateisystem"
 
-#: camlibs/ptp2/config.c:2543 camlibs/ptp2/config.c:2544
+#: camlibs/ptp2/config.c:2595 camlibs/ptp2/config.c:2596
 msgid "Capture Target"
 msgstr "Aufnahmeziel"
 
-#: camlibs/ptp2/config.c:2555 camlibs/ptp2/config.c:2556
-#: camlibs/ptp2/config.c:2580 camlibs/ptp2/ptp.c:3045
-#: camlibs/sierra/olympus-desc.c:881 camlibs/sierra/olympus-desc.c:899
+#: camlibs/ptp2/config.c:2607 camlibs/ptp2/config.c:2633
+#: camlibs/ptp2/ptp.c:3131 camlibs/sierra/olympus-desc.c:881
+#: camlibs/sierra/olympus-desc.c:899
 msgid "ISO Speed"
 msgstr "ISO-Geschwindigkeit"
 
-#: camlibs/ptp2/config.c:2557 camlibs/ptp2/config.c:2558
+#: camlibs/ptp2/config.c:2608
+#, fuzzy
+msgid "EOS ISO Speed"
+msgstr "ISO-Geschwindigkeit"
+
+#: camlibs/ptp2/config.c:2609 camlibs/ptp2/config.c:2611
 msgid "WhiteBalance"
 msgstr "Weißabgleich"
 
-#: camlibs/ptp2/config.c:2559 camlibs/ptp2/ptp.c:3080
+#: camlibs/ptp2/config.c:2610
+#, fuzzy
+msgid "EOS WhiteBalance"
+msgstr "Weißabgleich"
+
+#: camlibs/ptp2/config.c:2612 camlibs/ptp2/ptp.c:3166
 msgid "Photo Effect"
 msgstr "Foto Effekt"
 
-#: camlibs/ptp2/config.c:2560 camlibs/ptp2/ptp.c:3119
+#: camlibs/ptp2/config.c:2613 camlibs/ptp2/ptp.c:3205
 msgid "Color Model"
 msgstr "Farbmodell"
 
-#: camlibs/ptp2/config.c:2561 camlibs/ptp2/ptp.c:3155
+#: camlibs/ptp2/config.c:2614 camlibs/ptp2/ptp.c:3241
 msgid "Auto ISO"
 msgstr "Auto ISO"
 
-#: camlibs/ptp2/config.c:2566
+#: camlibs/ptp2/config.c:2619
 msgid "Long Exp Noise Reduction"
 msgstr "Rauschunterdrückung bei Langzeit Aufnahme"
 
-#: camlibs/ptp2/config.c:2567
+#: camlibs/ptp2/config.c:2620
 msgid "Auto Focus Mode"
 msgstr "Autofokusmodus"
 
-#: camlibs/ptp2/config.c:2569 camlibs/ptp2/config.c:2570
-#: camlibs/ptp2/ptp.c:3081
+#: camlibs/ptp2/config.c:2622 camlibs/ptp2/config.c:2623
+#: camlibs/ptp2/ptp.c:3167
 msgid "Assist Light"
 msgstr "Autofokus Hilfslicht"
 
-#: camlibs/ptp2/config.c:2571 camlibs/ptp2/config.c:2572
-#: camlibs/ptp2/ptp.c:3048 camlibs/ptp2/ptp.c:3163
+#: camlibs/ptp2/config.c:2624 camlibs/ptp2/ptp.c:3134 camlibs/ptp2/ptp.c:3249
 #: camlibs/sierra/nikon-desc.c:459 camlibs/sierra/nikon-desc.c:482
 #: camlibs/sierra/olympus-desc.c:766
 msgid "Exposure Compensation"
 msgstr "Belichtungskompensation"
 
-#: camlibs/ptp2/config.c:2573 camlibs/ptp2/config.c:2574
-#: camlibs/ptp2/config.c:2589 camlibs/ptp2/ptp.c:2976 camlibs/ptp2/ptp.c:3027
-#: camlibs/ptp2/ptp.c:3197 camlibs/ptp2/ptp.c:3269
+#: camlibs/ptp2/config.c:2625
+#, fuzzy
+msgid "EOS Exposure Compensation"
+msgstr "Belichtungskompensation"
+
+#: camlibs/ptp2/config.c:2626 camlibs/ptp2/config.c:2627
+#: camlibs/ptp2/config.c:2643 camlibs/ptp2/ptp.c:3062 camlibs/ptp2/ptp.c:3113
+#: camlibs/ptp2/ptp.c:3283 camlibs/ptp2/ptp.c:3355
 #: camlibs/sierra/sierra.c:1009 camlibs/sierra/sierra.c:1310
 #: camlibs/sierra/sierra.c:1519 camlibs/sierra/sierra.c:1750
 msgid "Flash Mode"
 msgstr "Blitzmodus"
 
-#: camlibs/ptp2/config.c:2575 camlibs/ptp2/ptp.c:3267
+#: camlibs/ptp2/config.c:2628 camlibs/ptp2/ptp.c:3353
 msgid "AF Area Illumination"
 msgstr "AF Bereich Aufhellung"
 
-#: camlibs/ptp2/config.c:2576 camlibs/ptp2/ptp.c:3255
+#: camlibs/ptp2/config.c:2629 camlibs/ptp2/ptp.c:3341
 msgid "AF Beep Mode"
 msgstr "AF Signalton Modus"
 
-#: camlibs/ptp2/config.c:2577
+#: camlibs/ptp2/config.c:2630
 msgid "F Number"
 msgstr "F Nummer"
 
-#: camlibs/ptp2/config.c:2578 camlibs/ptp2/ptp.c:2972 camlibs/ptp2/ptp.c:3053
+#: camlibs/ptp2/config.c:2631 camlibs/ptp2/ptp.c:3058 camlibs/ptp2/ptp.c:3139
 msgid "Focal Length"
 msgstr "Fokus Tiefe"
 
-#: camlibs/ptp2/config.c:2579 camlibs/ptp2/ptp.c:2974
+#: camlibs/ptp2/config.c:2632 camlibs/ptp2/ptp.c:3060
 #: camlibs/sierra/nikon-desc.c:331 camlibs/sierra/olympus-desc.c:644
 msgid "Focus Mode"
 msgstr "Fokusmodus"
 
-#: camlibs/ptp2/config.c:2581 camlibs/ptp2/ptp.c:2982
+#: camlibs/ptp2/config.c:2634 camlibs/ptp2/ptp.c:3068
 msgid "Exposure Bias Compensation"
 msgstr "Belichtungskompensation"
 
-#: camlibs/ptp2/config.c:2582 camlibs/ptp2/ptp.c:2977
+#: camlibs/ptp2/config.c:2635 camlibs/ptp2/ptp.c:3063
 msgid "Exposure Time"
 msgstr "Belichtungszeit"
 
-#: camlibs/ptp2/config.c:2583 camlibs/ptp2/ptp.c:2989
+#: camlibs/ptp2/config.c:2636 camlibs/ptp2/ptp.c:3075
 msgid "Effect Mode"
 msgstr "Effektmodus"
 
-#: camlibs/ptp2/config.c:2584
+#: camlibs/ptp2/config.c:2637
 msgid "Exposure Program"
 msgstr "Belichtungs Programm"
 
-#: camlibs/ptp2/config.c:2585 camlibs/ptp2/ptp.c:2985
+#: camlibs/ptp2/config.c:2638 camlibs/ptp2/ptp.c:3071
 msgid "Still Capture Mode"
 msgstr "Bildaufnahme Modus"
 
-#: camlibs/ptp2/config.c:2586
+#: camlibs/ptp2/config.c:2639
 msgid "Canon Shooting Mode"
 msgstr "Canon Aufnahme Modus"
 
+#: camlibs/ptp2/config.c:2640
+#, fuzzy
+msgid "Picture Style"
+msgstr "Bildeinstellungen"
+
 # Translation thanks to Martin Kroeker. [Colin]
-#: camlibs/ptp2/config.c:2587 camlibs/ptp2/ptp.c:2994
+#: camlibs/ptp2/config.c:2641 camlibs/ptp2/ptp.c:3080
 msgid "Focus Metering Mode"
 msgstr "Entfernungs Messungs Modus"
 
-#: camlibs/ptp2/config.c:2588 camlibs/ptp2/ptp.c:2975
+#: camlibs/ptp2/config.c:2642 camlibs/ptp2/ptp.c:3061
 msgid "Exposure Metering Mode"
 msgstr "Belichtungsmessmodus"
 
-#: camlibs/ptp2/config.c:2592 camlibs/ptp2/ptp.c:3035
+#: camlibs/ptp2/config.c:2645
+#, fuzzy
+msgid "EOS Aperture"
+msgstr "Blende"
+
+#: camlibs/ptp2/config.c:2646 camlibs/ptp2/ptp.c:3121
 msgid "Focusing Point"
 msgstr "Fokuspunkt"
 
-#: camlibs/ptp2/config.c:2593
+#: camlibs/ptp2/config.c:2647
 msgid "Shutter Speed"
 msgstr "Belichtungszeit"
 
+#: camlibs/ptp2/config.c:2648
+#, fuzzy
+msgid "EOS Shutter Speed"
+msgstr "Belichtungszeit"
+
 # Translation thanks to Martin Kroeker. [Colin]
-#: camlibs/ptp2/config.c:2594 camlibs/ptp2/ptp.c:3033
+#: camlibs/ptp2/config.c:2649 camlibs/ptp2/ptp.c:3119
 msgid "Metering Mode"
 msgstr "Spotmessung"
 
-#: camlibs/ptp2/config.c:2595 camlibs/ptp2/ptp.c:3034
+# Translation thanks to Martin Kroeker. [Colin]
+#: camlibs/ptp2/config.c:2650
+#, fuzzy
+msgid "EOS Metering Mode"
+msgstr "Spotmessung"
+
+#: camlibs/ptp2/config.c:2651 camlibs/ptp2/ptp.c:3120
 msgid "AF Distance"
 msgstr "Autofokus Entfernung"
 
-#: camlibs/ptp2/config.c:2596 camlibs/ptp2/ptp.c:3151
+#: camlibs/ptp2/config.c:2652 camlibs/ptp2/ptp.c:3237
 msgid "Focus Area Wrap"
 msgstr "Fokus Bereich Wraparound"
 
-#: camlibs/ptp2/config.c:2597 camlibs/ptp2/ptp.c:3167
+#: camlibs/ptp2/config.c:2653 camlibs/ptp2/ptp.c:3253
 msgid "Exposure Lock"
 msgstr "Belichtungs Lock"
 
-#: camlibs/ptp2/config.c:2598
+#: camlibs/ptp2/config.c:2654
 msgid "AE-L/AF-L Mode"
 msgstr "AE-L/AF-L Modus"
 
-#: camlibs/ptp2/config.c:2599 camlibs/ptp2/ptp.c:3185
+#: camlibs/ptp2/config.c:2655 camlibs/ptp2/ptp.c:3271
 msgid "File Number Sequencing"
 msgstr "Bildnummer Zählung"
 
-#: camlibs/ptp2/config.c:2600 camlibs/ptp2/ptp.c:3273
+#: camlibs/ptp2/config.c:2656 camlibs/ptp2/ptp.c:3359
 msgid "Flash Sign"
 msgstr "Blitzzeichen"
 
-#: camlibs/ptp2/config.c:2601
+#: camlibs/ptp2/config.c:2657
 msgid "Viewfinder Grid"
 msgstr "Gitterlinien im Sucher"
 
-#: camlibs/ptp2/config.c:2602 camlibs/ptp2/ptp.c:3263
+#: camlibs/ptp2/config.c:2658 camlibs/ptp2/ptp.c:3349
 msgid "Image Review"
 msgstr "BIldvorschau"
 
-#: camlibs/ptp2/config.c:2603
+#: camlibs/ptp2/config.c:2659
 msgid "Image Rotation Flag"
 msgstr "Rotationsmarkierung"
 
-#: camlibs/ptp2/config.c:2604
+#: camlibs/ptp2/config.c:2660
 msgid "Release without CF card"
 msgstr "Auslösen ohne CF Karte"
 
-#: camlibs/ptp2/config.c:2605 camlibs/ptp2/ptp.c:3271
+#: camlibs/ptp2/config.c:2661 camlibs/ptp2/ptp.c:3357
 msgid "Flash Mode Manual Power"
 msgstr "Blitzmodus mit manuelle Energie"
 
-#: camlibs/ptp2/config.c:2606
+#: camlibs/ptp2/config.c:2662
 msgid "Auto Focus Area"
 msgstr "Autofokusbereich"
 
-#: camlibs/ptp2/config.c:2607 camlibs/ptp2/ptp.c:3275
+#: camlibs/ptp2/config.c:2663 camlibs/ptp2/ptp.c:3361
 msgid "Flash Exposure Compensation"
 msgstr "Blitz Belichtungskompensation"
 
-#: camlibs/ptp2/config.c:2608 camlibs/ptp2/ptp.c:3201
+#: camlibs/ptp2/config.c:2664 camlibs/ptp2/ptp.c:3287
 msgid "Bracket Set"
 msgstr "Abstufungsbereich"
 
-#: camlibs/ptp2/config.c:2609 camlibs/ptp2/ptp.c:3205
+#: camlibs/ptp2/config.c:2665 camlibs/ptp2/ptp.c:3291
 msgid "Bracket Order"
 msgstr "Abstufungsrichtung"
 
-#: camlibs/ptp2/config.c:2610 camlibs/ptp2/ptp.c:2990
+#: camlibs/ptp2/config.c:2666 camlibs/ptp2/ptp.c:3076
 msgid "Burst Number"
 msgstr "Bildzahl im Burstmodus"
 
-#: camlibs/ptp2/config.c:2611
+#: camlibs/ptp2/config.c:2667
 msgid "Auto Whitebalance Bias"
 msgstr "Automatische Weißabgleich Abweichung"
 
-#: camlibs/ptp2/config.c:2612
+#: camlibs/ptp2/config.c:2668
 msgid "Tungsten Whitebalance Bias"
 msgstr "Tungsten Weißabgleich Abweichung"
 
-#: camlibs/ptp2/config.c:2613
+#: camlibs/ptp2/config.c:2669
 msgid "Fluorescent Whitebalance Bias"
 msgstr "Floureszierend Weißabgleich Abweichung"
 
-#: camlibs/ptp2/config.c:2614
+#: camlibs/ptp2/config.c:2670
 msgid "Daylight Whitebalance Bias"
 msgstr "Tageslicht Weißabgleich Abweichung"
 
-#: camlibs/ptp2/config.c:2615
+#: camlibs/ptp2/config.c:2671
 msgid "Flash Whitebalance Bias"
 msgstr "Blitz Weißabgleich Abweichung"
 
-#: camlibs/ptp2/config.c:2616
+#: camlibs/ptp2/config.c:2672
 msgid "Cloudy Whitebalance Bias"
 msgstr "Wolkig Weißabgleich Abweichung"
 
-#: camlibs/ptp2/config.c:2617
+#: camlibs/ptp2/config.c:2673
 msgid "Shade Whitebalance Bias"
 msgstr "Schattig Weißabgleich Abweichung"
 
-#: camlibs/ptp2/config.c:2618
+#: camlibs/ptp2/config.c:2674
 msgid "Selftimer Delay"
 msgstr "Selbstauslöserzeit"
 
-#: camlibs/ptp2/config.c:2619
+#: camlibs/ptp2/config.c:2675
 msgid "Center Weight Area"
 msgstr "Mittelpunkt/Gewichtet Bereich"
 
-#: camlibs/ptp2/config.c:2620 camlibs/ptp2/ptp.c:3195
+#: camlibs/ptp2/config.c:2676 camlibs/ptp2/ptp.c:3281
 msgid "Flash Shutter Speed"
 msgstr "Blitz Belichtungszeit"
 
-#: camlibs/ptp2/config.c:2621 camlibs/ptp2/ptp.c:3277
+#: camlibs/ptp2/config.c:2677 camlibs/ptp2/ptp.c:3363
 msgid "Remote Timeout"
 msgstr "Fernsteuerungsabschaltzeit"
 
-#: camlibs/ptp2/config.c:2622 camlibs/ptp2/ptp.c:3249
+#: camlibs/ptp2/config.c:2678 camlibs/ptp2/ptp.c:3335
 msgid "Optimize Image"
 msgstr "Bild Optimierung"
 
-#: camlibs/ptp2/config.c:2623 camlibs/ptp2/ptp.c:3115
+#: camlibs/ptp2/config.c:2679 camlibs/ptp2/ptp.c:3201
 msgid "Sharpening"
 msgstr "Schärfen"
 
-#: camlibs/ptp2/config.c:2624 camlibs/ptp2/ptp.c:3117
+#: camlibs/ptp2/config.c:2680 camlibs/ptp2/ptp.c:3203
 msgid "Tone Compensation"
 msgstr "Ton Anpassung"
 
-#: camlibs/ptp2/config.c:2625 camlibs/ptp2/ptp.c:3251
+#: camlibs/ptp2/config.c:2681 camlibs/ptp2/ptp.c:3337
 msgid "Saturation"
 msgstr "Sättigung"
 
-#: camlibs/ptp2/config.c:2626 camlibs/ptp2/ptp.c:3121
+#: camlibs/ptp2/config.c:2682 camlibs/ptp2/ptp.c:3207
 msgid "Hue Adjustment"
 msgstr "Farbton Anpassung"
 
-#: camlibs/ptp2/config.c:2628 camlibs/ptp2/ptp.c:3169
+#: camlibs/ptp2/config.c:2684 camlibs/ptp2/ptp.c:3255
 msgid "Focus Lock"
 msgstr "Fokus Lock"
 
-#: camlibs/ptp2/config.c:2633 camlibs/sierra/epson-desc.c:282
+#: camlibs/ptp2/config.c:2689 camlibs/sierra/epson-desc.c:282
 #: camlibs/sierra/nikon-desc.c:662 camlibs/sierra/nikon-desc.c:673
 #: camlibs/sierra/olympus-desc.c:1017 camlibs/sierra/olympus-desc.c:1116
 #: camlibs/sierra/olympus-desc.c:1127 camlibs/sierra/olympus-desc.c:1140
@@ -4846,29 +4923,17 @@ msgstr "Fokus Lock"
 msgid "Camera Settings"
 msgstr "Kameraeinstellungen"
 
-#: camlibs/ptp2/config.c:2634
+#: camlibs/ptp2/config.c:2690
 msgid "Image Settings"
 msgstr "Bildeinstellungen"
 
-#: camlibs/ptp2/config.c:2635
+#: camlibs/ptp2/config.c:2691
 msgid "Capture Settings"
 msgstr "Aufnahme Einstellungen"
 
-#: camlibs/ptp2/config.c:2636
+#: camlibs/ptp2/config.c:2692
 msgid "Wifi profiles"
 msgstr "WiFi Profile"
-
-#: camlibs/ptp2/config.c:2705
-msgid "Number of values"
-msgstr "Anzahl der Werte"
-
-#: camlibs/ptp2/config.c:2709
-msgid "Supported values"
-msgstr "Unterstützte Werte"
-
-#: camlibs/ptp2/config.c:2717
-msgid "Current value"
-msgstr "Aktueller Wert"
 
 #: camlibs/ptp2/library.c:114
 msgid "You need to specify a folder starting with /store_xxxxxxxxx/"
@@ -5034,7 +5099,7 @@ msgstr "PTP- Protokollfehler: Daten erwartet"
 msgid "PTP Protocol error, response expected"
 msgstr "PTP-Protokollfehler: Antwort erwartet"
 
-#: camlibs/ptp2/library.c:1122
+#: camlibs/ptp2/library.c:1129
 msgid ""
 "PTP2 driver\n"
 "(c)2001-2005 by Mariusz Woloszyn <emsi@ipartners.pl>.\n"
@@ -5059,83 +5124,79 @@ msgstr ""
 "\n"
 "Viel Spaß!"
 
-#: camlibs/ptp2/library.c:1199
+#: camlibs/ptp2/library.c:1206
 msgid "Sorry, your Canon camera does not support Canon Viewfinder mode"
 msgstr "Diese Kamera unterstützt nicht den Canon Viewfinder Modus"
 
-#: camlibs/ptp2/library.c:1204
+#: camlibs/ptp2/library.c:1211
 #, c-format
 msgid "Canon enable viewfinder failed: %d"
 msgstr "Anschalten des Viewfinder fehlgeschlagen: %d"
 
-#: camlibs/ptp2/library.c:1209
+#: camlibs/ptp2/library.c:1216
 #, c-format
 msgid "Canon get viewfinder image failed: %d"
 msgstr "Holen des Viewfinder Bildes fehlgeschlagen: %d"
 
-#: camlibs/ptp2/library.c:1219
+#: camlibs/ptp2/library.c:1226
 #, c-format
 msgid "Canon disable viewfinder failed: %d"
 msgstr "Abschalten des Viewfinders fehlgeschlagen: %d"
 
-#: camlibs/ptp2/library.c:1333
+#: camlibs/ptp2/library.c:1340
 msgid "Sorry, your camera does not support Nikon capture"
 msgstr "Diese Kamera unterstützt keine Nikon spezifische Aufnahme von Bildern"
 
-#: camlibs/ptp2/library.c:1419
+#: camlibs/ptp2/library.c:1426
 #, fuzzy
 msgid "Sorry, your Canon camera does not support Canon EOS Capture"
 msgstr "Diese Canon Kamera unterstützt nicht den Canon Aufnahme Modus"
 
-#: camlibs/ptp2/library.c:1425
+#: camlibs/ptp2/library.c:1432
 #, fuzzy, c-format
 msgid "Canon EOS Capture failed: %d"
 msgstr "Canon Aufnahme fehlgeschlagen: %d"
 
-#: camlibs/ptp2/library.c:1433
+#: camlibs/ptp2/library.c:1440
 #, fuzzy, c-format
 msgid "Canon EOS Get Changes failed: %d"
 msgstr "Canon Aufnahme fehlgeschlagen: %d"
 
-#: camlibs/ptp2/library.c:1513
+#: camlibs/ptp2/library.c:1520
 msgid "Sorry, your Canon camera does not support Canon Capture initiation"
 msgstr ""
 "Diese Kamera versteht leider den Canon-Befehl zum Beginn von Aufnahmen per "
 "Fernauslöser nicht"
 
-#: camlibs/ptp2/library.c:1524
+#: camlibs/ptp2/library.c:1531
 msgid "Sorry, initializing your camera did not work. Please report this."
 msgstr ""
 "Das Initialisieren Ihrer Kamera hat nicht funktioniert. Bitte reporten Sie "
 "dies."
 
-#: camlibs/ptp2/library.c:1543
+#: camlibs/ptp2/library.c:1550
 #, c-format
 msgid "Canon Capture failed: %d"
 msgstr "Canon Aufnahme fehlgeschlagen: %d"
 
-#: camlibs/ptp2/library.c:1644
+#: camlibs/ptp2/library.c:1652
 msgid "Sorry, your camera does not support generic capture"
 msgstr "Diese Kamera unterstützt keine Aufnahme von Bildern"
 
-#: camlibs/ptp2/library.c:1692
-msgid "Capture command completed, but no confirmation received"
-msgstr "Aufnahme abgeschlossen, aber keine Bestätigung erhalten"
-
-#: camlibs/ptp2/library.c:1699
+#: camlibs/ptp2/library.c:1725
 #, c-format
-msgid "Received event 0x%04x"
-msgstr "Ereignis 0x%04x erhalten"
+msgid "No event received, error %x."
+msgstr ""
 
-#: camlibs/ptp2/library.c:1855
+#: camlibs/ptp2/library.c:1899
 msgid "read only"
 msgstr "schreibgeschützt"
 
-#: camlibs/ptp2/library.c:1856
+#: camlibs/ptp2/library.c:1900
 msgid "readwrite"
 msgstr "schreibbar"
 
-#: camlibs/ptp2/library.c:1987
+#: camlibs/ptp2/library.c:2031
 #, c-format
 msgid ""
 "Model: %s\n"
@@ -5150,7 +5211,7 @@ msgstr ""
 "Händler Kennung: 0x%08x\n"
 "Händler Beschreibung: %s\n"
 
-#: camlibs/ptp2/library.c:2005
+#: camlibs/ptp2/library.c:2049
 #, c-format
 msgid ""
 "\n"
@@ -5159,22 +5220,22 @@ msgstr ""
 "\n"
 "Aufnahmeformate: "
 
-#: camlibs/ptp2/library.c:2019
+#: camlibs/ptp2/library.c:2063
 #, c-format
 msgid "Display Formats: "
 msgstr "Anzeigeformate: "
 
-#: camlibs/ptp2/library.c:2035
+#: camlibs/ptp2/library.c:2079
 #, c-format
 msgid "Supported MTP Object Properties:\n"
 msgstr "Unterstützte MTP Object Properties:\n"
 
-#: camlibs/ptp2/library.c:2051
+#: camlibs/ptp2/library.c:2095
 #, c-format
 msgid " PTP error %04x on query"
 msgstr "PTP Fehler %04x beim Abfragen"
 
-#: camlibs/ptp2/library.c:2068
+#: camlibs/ptp2/library.c:2112
 #, c-format
 msgid ""
 "\n"
@@ -5183,77 +5244,77 @@ msgstr ""
 "\n"
 "Fähigkeiten des Geräts:\n"
 
-#: camlibs/ptp2/library.c:2072
+#: camlibs/ptp2/library.c:2116
 #, c-format
 msgid "\tFile Download, "
 msgstr "\tDateien Download, "
 
-#: camlibs/ptp2/library.c:2075
+#: camlibs/ptp2/library.c:2119
 #, c-format
 msgid "File Deletion, "
 msgstr "Löschen von Dateien, "
 
-#: camlibs/ptp2/library.c:2077
+#: camlibs/ptp2/library.c:2121
 #, c-format
 msgid "No File Deletion, "
 msgstr "kein Löschen von Dateien, "
 
-#: camlibs/ptp2/library.c:2081
+#: camlibs/ptp2/library.c:2125
 #, c-format
 msgid "File Upload\n"
 msgstr "Hochladen von Dateien\n"
 
-#: camlibs/ptp2/library.c:2083
+#: camlibs/ptp2/library.c:2127
 #, c-format
 msgid "No File Upload\n"
 msgstr "kein Hochladen von Dateien\n"
 
-#: camlibs/ptp2/library.c:2088
+#: camlibs/ptp2/library.c:2132
 #, c-format
 msgid "\tGeneric Image Capture, "
 msgstr "\tGenerische Bild Aufnahme, "
 
-#: camlibs/ptp2/library.c:2090
+#: camlibs/ptp2/library.c:2134
 #, c-format
 msgid "\tNo Image Capture, "
 msgstr "\tKeine Aufnahme von Bildern, "
 
-#: camlibs/ptp2/library.c:2093
+#: camlibs/ptp2/library.c:2137
 #, c-format
 msgid "Open Capture, "
 msgstr "Offene Aufnahme, "
 
-#: camlibs/ptp2/library.c:2095
+#: camlibs/ptp2/library.c:2139
 #, c-format
 msgid "No Open Capture, "
 msgstr "keine Offene Aufnahme, "
 
-#: camlibs/ptp2/library.c:2101
+#: camlibs/ptp2/library.c:2145
 #, c-format
 msgid "Canon Capture\n"
 msgstr "Canon Aufnahme\n"
 
-#: camlibs/ptp2/library.c:2105
+#: camlibs/ptp2/library.c:2149
 #, c-format
 msgid "Nikon Capture\n"
 msgstr "Nikon Aufnahme\n"
 
-#: camlibs/ptp2/library.c:2107
+#: camlibs/ptp2/library.c:2151
 #, c-format
 msgid "No vendor specific capture\n"
 msgstr "Kein Vendor spezifischer Aufnahmemodus\n"
 
-#: camlibs/ptp2/library.c:2115
+#: camlibs/ptp2/library.c:2159
 #, c-format
 msgid "\tNikon Wifi support\n"
 msgstr "\tNikon WiFi Unterstützung\n"
 
-#: camlibs/ptp2/library.c:2121
+#: camlibs/ptp2/library.c:2165
 #, c-format
 msgid "\tCanon Wifi support\n"
 msgstr "\tCanon WiFI Unterstützung\n"
 
-#: camlibs/ptp2/library.c:2132
+#: camlibs/ptp2/library.c:2176
 #, c-format
 msgid ""
 "\n"
@@ -5262,93 +5323,93 @@ msgstr ""
 "\n"
 "Informationen über Speichermedium:\n"
 
-#: camlibs/ptp2/library.c:2147
+#: camlibs/ptp2/library.c:2191
 #, c-format
 msgid "\tStorageDescription: %s\n"
 msgstr "\tBeschreibung des Speichergeräts: %s\n"
 
-#: camlibs/ptp2/library.c:2151
+#: camlibs/ptp2/library.c:2195
 #, c-format
 msgid "\tVolumeLabel: %s\n"
 msgstr "\tLabel des Speichergerätes: %s\n"
 
-#: camlibs/ptp2/library.c:2158
+#: camlibs/ptp2/library.c:2202
 msgid "Builtin ROM"
 msgstr "Eingebautes ROM"
 
-#: camlibs/ptp2/library.c:2159
+#: camlibs/ptp2/library.c:2203
 msgid "Removable ROM"
 msgstr "Entfernbares ROM"
 
-#: camlibs/ptp2/library.c:2160
+#: camlibs/ptp2/library.c:2204
 msgid "Builtin RAM"
 msgstr "Eingebauter Speicher"
 
-#: camlibs/ptp2/library.c:2161
+#: camlibs/ptp2/library.c:2205
 msgid "Removable RAM (memory card)"
 msgstr "Entfernbarer Speicher (Karte)"
 
-#: camlibs/ptp2/library.c:2163 camlibs/ptp2/library.c:2176
-#: camlibs/ptp2/library.c:2188
+#: camlibs/ptp2/library.c:2207 camlibs/ptp2/library.c:2220
+#: camlibs/ptp2/library.c:2232
 #, c-format
 msgid "Unknown: 0x%04x\n"
 msgstr "Unbekannt: 0x%04x\n"
 
-#: camlibs/ptp2/library.c:2167
+#: camlibs/ptp2/library.c:2211
 #, c-format
 msgid "\tStorage Type: %s\n"
 msgstr "\tSpeichertyp: %s\n"
 
-#: camlibs/ptp2/library.c:2172
+#: camlibs/ptp2/library.c:2216
 msgid "Generic Flat"
 msgstr "Generisch flacher Modus"
 
-#: camlibs/ptp2/library.c:2173
+#: camlibs/ptp2/library.c:2217
 msgid "Generic Hierarchical"
 msgstr "Generisch hierarchischer Modus"
 
-#: camlibs/ptp2/library.c:2174
+#: camlibs/ptp2/library.c:2218
 msgid "Digital Camera Layout (DCIM)"
 msgstr "Standard Digital Kamera Layout (DCIM)"
 
-#: camlibs/ptp2/library.c:2180
+#: camlibs/ptp2/library.c:2224
 #, c-format
 msgid "\tFilesystemtype: %s\n"
 msgstr "\tTyp des Dateisystems: %s\n"
 
-#: camlibs/ptp2/library.c:2184
+#: camlibs/ptp2/library.c:2228
 msgid "Read-Write"
 msgstr "Lesen und Schreiben"
 
-#: camlibs/ptp2/library.c:2185
+#: camlibs/ptp2/library.c:2229
 msgid "Read-Only"
 msgstr "nur Lesen"
 
-#: camlibs/ptp2/library.c:2186
+#: camlibs/ptp2/library.c:2230
 msgid "Read Only with Object deletion"
 msgstr "Nur Lesen und Löschen"
 
-#: camlibs/ptp2/library.c:2192
+#: camlibs/ptp2/library.c:2236
 #, c-format
 msgid "\tAccess Capability: %s\n"
 msgstr "\tZugriffsmöglichkeiten: %s\n"
 
-#: camlibs/ptp2/library.c:2194
+#: camlibs/ptp2/library.c:2238
 #, c-format
 msgid "\tMaximum Capability: %llu (%lu MB)\n"
 msgstr "\tMaximale Kapazität: %llu (%lu MB)\n"
 
-#: camlibs/ptp2/library.c:2199
+#: camlibs/ptp2/library.c:2243
 #, c-format
 msgid "\tFree Space (Bytes): %llu (%lu MB)\n"
 msgstr "\tFreier Platz (Bytes): %llu (%lu MB)\n"
 
-#: camlibs/ptp2/library.c:2204
+#: camlibs/ptp2/library.c:2248
 #, c-format
 msgid "\tFree Space (Images): %d\n"
 msgstr "\tFreier Speicher (Bilder): %d\n"
 
-#: camlibs/ptp2/library.c:2212
+#: camlibs/ptp2/library.c:2256
 #, c-format
 msgid ""
 "\n"
@@ -5357,204 +5418,204 @@ msgstr ""
 "\n"
 "Properties des Geräts:\n"
 
-#: camlibs/ptp2/library.c:2238
+#: camlibs/ptp2/library.c:2282
 #, c-format
 msgid " not read out.\n"
 msgstr " nicht ausgelesen.\n"
 
-#: camlibs/ptp2/library.c:3192 camlibs/ptp2/library.c:3196
+#: camlibs/ptp2/library.c:3236 camlibs/ptp2/library.c:3240
 #, c-format
 msgid "File '%s/%s' does not exist."
 msgstr "Datei »%s/%s« existiert nicht"
 
-#: camlibs/ptp2/library.c:3202
+#: camlibs/ptp2/library.c:3246
 msgid "Metadata only supported for MTP devices."
 msgstr "Der Metadaten Dateityp ist nur für MTP Geräte unterstützt."
 
-#: camlibs/ptp2/library.c:3881
+#: camlibs/ptp2/library.c:3929
 msgid "Initializing Camera"
 msgstr "Initialisiere Kamera"
 
-#: camlibs/ptp2/library.c:4049
+#: camlibs/ptp2/library.c:4097
 #, c-format
 msgid ""
 "PTP is only implemented for USB and PTP/IP cameras currently, port type %x"
 msgstr ""
 "PTP- Ist nur für USB und PTP/IP Kameras implementiert, Port Typ ist %x."
 
-#: camlibs/ptp2/ptp.c:2903
+#: camlibs/ptp2/ptp.c:2989
 msgid "PTP: Undefined Error"
 msgstr "PTP: Undefinierter Fehler"
 
-#: camlibs/ptp2/ptp.c:2904
+#: camlibs/ptp2/ptp.c:2990
 msgid "PTP: OK!"
 msgstr "PTP: OK!"
 
-#: camlibs/ptp2/ptp.c:2905
+#: camlibs/ptp2/ptp.c:2991
 msgid "PTP: General Error"
 msgstr "PTP: Allgemeiner Fehler"
 
-#: camlibs/ptp2/ptp.c:2906
+#: camlibs/ptp2/ptp.c:2992
 msgid "PTP: Session Not Open"
 msgstr "PTP: Sitzung nicht geöffnet"
 
-#: camlibs/ptp2/ptp.c:2907
+#: camlibs/ptp2/ptp.c:2993
 msgid "PTP: Invalid Transaction ID"
 msgstr "PTP: Fehlerhafte Transaktions-ID"
 
-#: camlibs/ptp2/ptp.c:2908
+#: camlibs/ptp2/ptp.c:2994
 msgid "PTP: Operation Not Supported"
 msgstr "PTP: Operation nicht unterstützt"
 
-#: camlibs/ptp2/ptp.c:2909
+#: camlibs/ptp2/ptp.c:2995
 msgid "PTP: Parameter Not Supported"
 msgstr "PTP: Parameter nicht unterstützt"
 
-#: camlibs/ptp2/ptp.c:2910
+#: camlibs/ptp2/ptp.c:2996
 msgid "PTP: Incomplete Transfer"
 msgstr "PTP :Unvollständiger Transfer"
 
-#: camlibs/ptp2/ptp.c:2911
+#: camlibs/ptp2/ptp.c:2997
 msgid "PTP: Invalid Storage ID"
 msgstr "PTP: Fehlerhafte Storage-ID"
 
-#: camlibs/ptp2/ptp.c:2912
+#: camlibs/ptp2/ptp.c:2998
 msgid "PTP: Invalid Object Handle"
 msgstr "PTP: Ungültiges Object Handle"
 
-#: camlibs/ptp2/ptp.c:2913
+#: camlibs/ptp2/ptp.c:2999
 msgid "PTP: Device Prop Not Supported"
 msgstr "PTP: Geräteeigenschaft nicht unterstützt"
 
-#: camlibs/ptp2/ptp.c:2914
+#: camlibs/ptp2/ptp.c:3000
 msgid "PTP: Invalid Object Format Code"
 msgstr "PTP: Ungültiger Object Formatcode"
 
-#: camlibs/ptp2/ptp.c:2915
+#: camlibs/ptp2/ptp.c:3001
 msgid "PTP: Store Full"
 msgstr "PTP: Speicher voll"
 
-#: camlibs/ptp2/ptp.c:2916
+#: camlibs/ptp2/ptp.c:3002
 msgid "PTP: Object Write Protected"
 msgstr "PTP: Objekt schreibgeschützt"
 
-#: camlibs/ptp2/ptp.c:2917
+#: camlibs/ptp2/ptp.c:3003
 msgid "PTP: Store Read Only"
 msgstr "PTP: Speicher-schreibgeschützt"
 
-#: camlibs/ptp2/ptp.c:2918
+#: camlibs/ptp2/ptp.c:3004
 msgid "PTP: Access Denied"
 msgstr "PTP: Zugriff verweigert"
 
-#: camlibs/ptp2/ptp.c:2919
+#: camlibs/ptp2/ptp.c:3005
 msgid "PTP: No Thumbnail Present"
 msgstr "PTP: Kein Thumbnail vorhanden"
 
-#: camlibs/ptp2/ptp.c:2920
+#: camlibs/ptp2/ptp.c:3006
 msgid "PTP: Self Test Failed"
 msgstr "PTP: Selbsttest fehlgeschlagen"
 
-#: camlibs/ptp2/ptp.c:2921
+#: camlibs/ptp2/ptp.c:3007
 msgid "PTP: Partial Deletion"
 msgstr "PTP: Partiell gelöscht"
 
-#: camlibs/ptp2/ptp.c:2922
+#: camlibs/ptp2/ptp.c:3008
 msgid "PTP: Store Not Available"
 msgstr "PTP: Speicher nicht verfügbar"
 
-#: camlibs/ptp2/ptp.c:2924
+#: camlibs/ptp2/ptp.c:3010
 msgid "PTP: Specification By Format Unsupported"
 msgstr "PTP: Spezifikation durch Format nicht unterstützt"
 
-#: camlibs/ptp2/ptp.c:2925
+#: camlibs/ptp2/ptp.c:3011
 msgid "PTP: No Valid Object Info"
 msgstr "PTP: Keine gültige Object Information"
 
-#: camlibs/ptp2/ptp.c:2926
+#: camlibs/ptp2/ptp.c:3012
 msgid "PTP: Invalid Code Format"
 msgstr "PTP: Ungültiges Codeformat"
 
-#: camlibs/ptp2/ptp.c:2927
+#: camlibs/ptp2/ptp.c:3013
 msgid "PTP: Unknown Vendor Code"
 msgstr "PTP: Unbekannter Händlercode"
 
-#: camlibs/ptp2/ptp.c:2929
+#: camlibs/ptp2/ptp.c:3015
 msgid "PTP: Capture Already Terminated"
 msgstr "PTP: Aufnahme bereits beendet"
 
-#: camlibs/ptp2/ptp.c:2930
+#: camlibs/ptp2/ptp.c:3016
 msgid "PTP: Device Busy"
 msgstr "PTP: Device belegt"
 
-#: camlibs/ptp2/ptp.c:2931
+#: camlibs/ptp2/ptp.c:3017
 msgid "PTP: Invalid Parent Object"
 msgstr "PTP: Ungültiges Vaterobjekt"
 
-#: camlibs/ptp2/ptp.c:2932
+#: camlibs/ptp2/ptp.c:3018
 msgid "PTP: Invalid Device Prop Format"
 msgstr "PTP: Ungültiges Geräteeigenschaften Format"
 
-#: camlibs/ptp2/ptp.c:2933
+#: camlibs/ptp2/ptp.c:3019
 msgid "PTP: Invalid Device Prop Value"
 msgstr "PTP: Ungültiger Geräteeigenschaftswert"
 
-#: camlibs/ptp2/ptp.c:2934
+#: camlibs/ptp2/ptp.c:3020
 msgid "PTP: Invalid Parameter"
 msgstr "PTP: Ungültiger Parameter"
 
-#: camlibs/ptp2/ptp.c:2935
+#: camlibs/ptp2/ptp.c:3021
 msgid "PTP: Session Already Opened"
 msgstr "PTP: Sitzung bereits geöffnet."
 
-#: camlibs/ptp2/ptp.c:2936
+#: camlibs/ptp2/ptp.c:3022
 msgid "PTP: Transaction Canceled"
 msgstr "PTP: Transaktion abgebrochen"
 
-#: camlibs/ptp2/ptp.c:2938
+#: camlibs/ptp2/ptp.c:3024
 msgid "PTP: Specification Of Destination Unsupported"
 msgstr "PTP: Spezifikation des Zieles nicht unterstützt"
 
-#: camlibs/ptp2/ptp.c:2939
+#: camlibs/ptp2/ptp.c:3025
 msgid "PTP: EK Filename Required"
 msgstr "PTP: EK-Filename erforderlich"
 
-#: camlibs/ptp2/ptp.c:2940
+#: camlibs/ptp2/ptp.c:3026
 msgid "PTP: EK Filename Conflicts"
 msgstr "PTP: EK Filenamenskonflikt"
 
-#: camlibs/ptp2/ptp.c:2941
+#: camlibs/ptp2/ptp.c:3027
 msgid "PTP: EK Filename Invalid"
 msgstr "PTP: EK-Filename ungültig"
 
-#: camlibs/ptp2/ptp.c:2943
+#: camlibs/ptp2/ptp.c:3029
 msgid "PTP: I/O error"
 msgstr "PTP: Ein/Ausgabefehler"
 
-#: camlibs/ptp2/ptp.c:2944
+#: camlibs/ptp2/ptp.c:3030
 msgid "PTP: Error: bad parameter"
 msgstr "PTP: Fehler: Ungültiger Parameter"
 
-#: camlibs/ptp2/ptp.c:2945
+#: camlibs/ptp2/ptp.c:3031
 msgid "PTP: Protocol error, data expected"
 msgstr "PTP: Protokollfehler: Daten erwartet"
 
-#: camlibs/ptp2/ptp.c:2946
+#: camlibs/ptp2/ptp.c:3032
 msgid "PTP: Protocol error, response expected"
 msgstr "PTP: Protokollfehler: Antwort erwartet"
 
-#: camlibs/ptp2/ptp.c:2964
+#: camlibs/ptp2/ptp.c:3050
 msgid "Undefined PTP Property"
 msgstr "Undefinierte PTP Property"
 
-#: camlibs/ptp2/ptp.c:2966
+#: camlibs/ptp2/ptp.c:3052
 msgid "Functional Mode"
 msgstr "Funktionsmodus"
 
-#: camlibs/ptp2/ptp.c:2968
+#: camlibs/ptp2/ptp.c:3054
 msgid "Compression Setting"
 msgstr "Kompressions Parameter"
 
-#: camlibs/ptp2/ptp.c:2969 camlibs/ptp2/ptp.c:3036
+#: camlibs/ptp2/ptp.c:3055 camlibs/ptp2/ptp.c:3122
 #: camlibs/sierra/epson-desc.c:176 camlibs/sierra/nikon-desc.c:293
 #: camlibs/sierra/olympus-desc.c:564 camlibs/sierra/olympus-desc.c:583
 #: camlibs/sierra/olympus-desc.c:604 camlibs/sierra/olympus-desc.c:628
@@ -5563,1137 +5624,1137 @@ msgstr "Kompressions Parameter"
 msgid "White Balance"
 msgstr "Weißabgleich"
 
-#: camlibs/ptp2/ptp.c:2970
+#: camlibs/ptp2/ptp.c:3056
 msgid "RGB Gain"
 msgstr "RGB Wert"
 
-#: camlibs/ptp2/ptp.c:2971
+#: camlibs/ptp2/ptp.c:3057
 msgid "F-Number"
 msgstr "F-Nummer"
 
-#: camlibs/ptp2/ptp.c:2973
+#: camlibs/ptp2/ptp.c:3059
 msgid "Focus Distance"
 msgstr "Fokus Entfernung"
 
-#: camlibs/ptp2/ptp.c:2978
+#: camlibs/ptp2/ptp.c:3064
 msgid "Exposure Program Mode"
 msgstr "Belichtungs Programm Modus"
 
-#: camlibs/ptp2/ptp.c:2980
+#: camlibs/ptp2/ptp.c:3066
 msgid "Exposure Index (film speed ISO)"
 msgstr "Belichtungs Index (nach ISO)"
 
-#: camlibs/ptp2/ptp.c:2983
+#: camlibs/ptp2/ptp.c:3069
 msgid "Date Time"
 msgstr "Datum / Zeit"
 
-#: camlibs/ptp2/ptp.c:2984
+#: camlibs/ptp2/ptp.c:3070
 msgid "Pre-Capture Delay"
 msgstr "Aufnahmeverzögerung"
 
-#: camlibs/ptp2/ptp.c:2986 camlibs/ptp2/ptp.c:3040
+#: camlibs/ptp2/ptp.c:3072 camlibs/ptp2/ptp.c:3126
 msgid "Contrast"
 msgstr "Kontrast"
 
-#: camlibs/ptp2/ptp.c:2988 camlibs/sierra/nikon-desc.c:553
+#: camlibs/ptp2/ptp.c:3074 camlibs/sierra/nikon-desc.c:553
 #: camlibs/sierra/nikon-desc.c:576
 msgid "Digital Zoom"
 msgstr "Digitalzoom"
 
-#: camlibs/ptp2/ptp.c:2991
+#: camlibs/ptp2/ptp.c:3077
 msgid "Burst Interval"
 msgstr "Burst Abstand"
 
-#: camlibs/ptp2/ptp.c:2992
+#: camlibs/ptp2/ptp.c:3078
 msgid "Timelapse Number"
 msgstr "Zeitraffer Nummer"
 
-#: camlibs/ptp2/ptp.c:2993
+#: camlibs/ptp2/ptp.c:3079
 msgid "Timelapse Interval"
 msgstr "Zeitraffer Intervall"
 
-#: camlibs/ptp2/ptp.c:2995
+#: camlibs/ptp2/ptp.c:3081
 msgid "Upload URL"
 msgstr "Upload URL"
 
-#: camlibs/ptp2/ptp.c:2996
+#: camlibs/ptp2/ptp.c:3082
 msgid "Artist"
 msgstr "Künstler"
 
-#: camlibs/ptp2/ptp.c:2997
+#: camlibs/ptp2/ptp.c:3083
 msgid "Copyright Info"
 msgstr "Copyright Information"
 
-#: camlibs/ptp2/ptp.c:3006
+#: camlibs/ptp2/ptp.c:3092
 msgid "Date Time Stamp Format"
 msgstr "Datums- und Zeitformat"
 
-#: camlibs/ptp2/ptp.c:3008
+#: camlibs/ptp2/ptp.c:3094
 msgid "Video Out"
 msgstr "Video Ausgang"
 
-#: camlibs/ptp2/ptp.c:3009
+#: camlibs/ptp2/ptp.c:3095
 msgid "Power Saving"
 msgstr "Stromsparmodus"
 
-#: camlibs/ptp2/ptp.c:3010
+#: camlibs/ptp2/ptp.c:3096
 msgid "UI Language"
 msgstr "Benutzerinterface Sprache"
 
-#: camlibs/ptp2/ptp.c:3019
+#: camlibs/ptp2/ptp.c:3105
 #, fuzzy
 msgid "Battery Kind"
 msgstr "Batterie"
 
-#: camlibs/ptp2/ptp.c:3020
+#: camlibs/ptp2/ptp.c:3106
 #, fuzzy
 msgid "Battery Mode"
 msgstr "Batterie"
 
-#: camlibs/ptp2/ptp.c:3021
+#: camlibs/ptp2/ptp.c:3107
 msgid "UILockType"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3022
+#: camlibs/ptp2/ptp.c:3108
 #, fuzzy
 msgid "Camera Mode"
 msgstr "Kameramodell"
 
-#: camlibs/ptp2/ptp.c:3024
+#: camlibs/ptp2/ptp.c:3110
 msgid "Full View File Format"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3026
+#: camlibs/ptp2/ptp.c:3112
 #, fuzzy
 msgid "Self Time"
 msgstr "Selbstauslöser"
 
-#: camlibs/ptp2/ptp.c:3029
+#: camlibs/ptp2/ptp.c:3115
 msgid "Shooting Mode"
 msgstr "Aufnahme Modus"
 
-#: camlibs/ptp2/ptp.c:3030
+#: camlibs/ptp2/ptp.c:3116
 #, fuzzy
 msgid "Image Mode"
 msgstr "Bildgröße"
 
-#: camlibs/ptp2/ptp.c:3031
+#: camlibs/ptp2/ptp.c:3117
 #, fuzzy
 msgid "Drive Mode"
 msgstr "LED-Modus"
 
-#: camlibs/ptp2/ptp.c:3037
+#: camlibs/ptp2/ptp.c:3123
 #, fuzzy
 msgid "Slow Shutter Setting"
 msgstr "Aufnahme-Einstellungen"
 
-#: camlibs/ptp2/ptp.c:3038
+#: camlibs/ptp2/ptp.c:3124
 #, fuzzy
 msgid "AF Mode"
 msgstr "AF Signalton Modus"
 
-#: camlibs/ptp2/ptp.c:3039
+#: camlibs/ptp2/ptp.c:3125
 #, fuzzy
 msgid "Image Stabilization"
 msgstr "Bildrotationsflag"
 
-#: camlibs/ptp2/ptp.c:3041
+#: camlibs/ptp2/ptp.c:3127
 #, fuzzy
 msgid "Color Gain"
 msgstr "Farbeinstellungen"
 
-#: camlibs/ptp2/ptp.c:3043
+#: camlibs/ptp2/ptp.c:3129
 msgid "Sensitivity"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3044
+#: camlibs/ptp2/ptp.c:3130
 #, fuzzy
 msgid "Parameter Set"
 msgstr "Parameter 1"
 
-#: camlibs/ptp2/ptp.c:3047
+#: camlibs/ptp2/ptp.c:3133
 msgid "ShutterSpeed"
 msgstr "Belichtungszeit"
 
-#: camlibs/ptp2/ptp.c:3049
+#: camlibs/ptp2/ptp.c:3135
 #, fuzzy
 msgid "Flash Compensation"
 msgstr "Blitz Belichtungskompensation"
 
-#: camlibs/ptp2/ptp.c:3050
+#: camlibs/ptp2/ptp.c:3136
 #, fuzzy
 msgid "AEB Exposure Compensation"
 msgstr "Belichtungskompensation"
 
-#: camlibs/ptp2/ptp.c:3051
+#: camlibs/ptp2/ptp.c:3137
 #, fuzzy
 msgid "Av Open"
 msgstr "AF an"
 
-#: camlibs/ptp2/ptp.c:3052
+#: camlibs/ptp2/ptp.c:3138
 msgid "Av Max"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3054
+#: camlibs/ptp2/ptp.c:3140
 #, fuzzy
 msgid "Focal Length Tele"
 msgstr "Fokus Tiefe"
 
-#: camlibs/ptp2/ptp.c:3055
+#: camlibs/ptp2/ptp.c:3141
 #, fuzzy
 msgid "Focal Length Wide"
 msgstr "Fokus Tiefe"
 
-#: camlibs/ptp2/ptp.c:3056
+#: camlibs/ptp2/ptp.c:3142
 #, fuzzy
 msgid "Focal Length Denominator"
 msgstr "Fokus Tiefe"
 
-#: camlibs/ptp2/ptp.c:3057
+#: camlibs/ptp2/ptp.c:3143
 #, fuzzy
 msgid "Capture Transfer Mode"
 msgstr "Aufnahmeziel"
 
-#: camlibs/ptp2/ptp.c:3059
+#: camlibs/ptp2/ptp.c:3145
 msgid "Name Prefix"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3060
+#: camlibs/ptp2/ptp.c:3146
 msgid "Size Quality Mode"
 msgstr "Bildgröße und -qualität"
 
-#: camlibs/ptp2/ptp.c:3061
+#: camlibs/ptp2/ptp.c:3147
 #, fuzzy
 msgid "Supported Thumb Size"
 msgstr "Unterstützte Werte"
 
-#: camlibs/ptp2/ptp.c:3062
+#: camlibs/ptp2/ptp.c:3148
 msgid "Size of Output Data from Camera"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3063
+#: camlibs/ptp2/ptp.c:3149
 msgid "Size of Input Data to Camera"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3064
+#: camlibs/ptp2/ptp.c:3150
 msgid "Remote API Version"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3068
+#: camlibs/ptp2/ptp.c:3154
 msgid "UNIX Time"
 msgstr "UNIX Zeit"
 
-#: camlibs/ptp2/ptp.c:3069
+#: camlibs/ptp2/ptp.c:3155
 #, fuzzy
 msgid "Camera Body ID"
 msgstr "Kameramodell"
 
-#: camlibs/ptp2/ptp.c:3070
+#: camlibs/ptp2/ptp.c:3156
 #, fuzzy
 msgid "Camera Output"
 msgstr "Kamera OK."
 
-#: camlibs/ptp2/ptp.c:3071
+#: camlibs/ptp2/ptp.c:3157
 msgid "Disp Av"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3072
+#: camlibs/ptp2/ptp.c:3158
 msgid "Av Open Apex"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3073
+#: camlibs/ptp2/ptp.c:3159
 msgid "Digital Zoom Magnification"
 msgstr "Digitalzoom Vergrößerung"
 
-#: camlibs/ptp2/ptp.c:3074
+#: camlibs/ptp2/ptp.c:3160
 #, fuzzy
 msgid "Ml Spot Position"
 msgstr "Abspielposition"
 
-#: camlibs/ptp2/ptp.c:3075
+#: camlibs/ptp2/ptp.c:3161
 msgid "Disp Av Max"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3076
+#: camlibs/ptp2/ptp.c:3162
 msgid "Av Max Apex"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3077
+#: camlibs/ptp2/ptp.c:3163
 msgid "EZoom Start Position"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3078
+#: camlibs/ptp2/ptp.c:3164
 #, fuzzy
 msgid "Focal Length of Tele"
 msgstr "Fokus Tiefe"
 
-#: camlibs/ptp2/ptp.c:3079
+#: camlibs/ptp2/ptp.c:3165
 msgid "EZoom Size of Tele"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3082 camlibs/ptp2/ptp.c:3083
+#: camlibs/ptp2/ptp.c:3168 camlibs/ptp2/ptp.c:3169
 msgid "Flash Quanity Count"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3084
+#: camlibs/ptp2/ptp.c:3170
 #, fuzzy
 msgid "Rotation Angle"
 msgstr "Auflösung geändert"
 
-#: camlibs/ptp2/ptp.c:3085
+#: camlibs/ptp2/ptp.c:3171
 #, fuzzy
 msgid "Rotation Scene"
 msgstr "Auflösung geändert"
 
-#: camlibs/ptp2/ptp.c:3086
+#: camlibs/ptp2/ptp.c:3172
 msgid "Event Emulate Mode"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3087
+#: camlibs/ptp2/ptp.c:3173
 #, fuzzy
 msgid "DPOF Version"
 msgstr "Version: "
 
-#: camlibs/ptp2/ptp.c:3088
+#: camlibs/ptp2/ptp.c:3174
 msgid "Type of Slideshow"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3089
+#: camlibs/ptp2/ptp.c:3175
 msgid "Average Filesizes"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:3090
+#: camlibs/ptp2/ptp.c:3176
 #, fuzzy
 msgid "Model ID"
 msgstr "Modell:"
 
-#: camlibs/ptp2/ptp.c:3099
+#: camlibs/ptp2/ptp.c:3185
 msgid "Auto White Balance Bias"
 msgstr "Automatische Weißabgleich Abweichung"
 
-#: camlibs/ptp2/ptp.c:3101
+#: camlibs/ptp2/ptp.c:3187
 msgid "Tungsten White Balance Bias"
 msgstr "Tungsten Weißabgleich Abweichung"
 
-#: camlibs/ptp2/ptp.c:3103
+#: camlibs/ptp2/ptp.c:3189
 msgid "Fluorescent White Balance Bias"
 msgstr "Floureszierend Weißabgleich Abweichung"
 
-#: camlibs/ptp2/ptp.c:3105
+#: camlibs/ptp2/ptp.c:3191
 msgid "Daylight White Balance Bias"
 msgstr "Tageslicht Weißabgleich Abweichung"
 
-#: camlibs/ptp2/ptp.c:3107
+#: camlibs/ptp2/ptp.c:3193
 msgid "Flash White Balance Bias"
 msgstr "Blitz Weißabgleich Abweichung"
 
-#: camlibs/ptp2/ptp.c:3109
+#: camlibs/ptp2/ptp.c:3195
 msgid "Cloudy White Balance Bias"
 msgstr "Wolkig Weißabgleich Abweichung"
 
-#: camlibs/ptp2/ptp.c:3111
+#: camlibs/ptp2/ptp.c:3197
 msgid "Shady White Balance Bias"
 msgstr "Schattig Weißabgleich Abweichung"
 
-#: camlibs/ptp2/ptp.c:3113
+#: camlibs/ptp2/ptp.c:3199
 msgid "White Balance Colour Temperature"
 msgstr "Weißabgleich Farbtemperatur"
 
-#: camlibs/ptp2/ptp.c:3123
+#: camlibs/ptp2/ptp.c:3209
 msgid "Lens Focal Length (Non CPU)"
 msgstr "Fokus Tiefe der Linse (Nicht CPU)"
 
-#: camlibs/ptp2/ptp.c:3125
+#: camlibs/ptp2/ptp.c:3211
 msgid "Lens Max. Aperture (Non CPU)"
 msgstr "Maximale Blende der Linse (Nicht CPU)"
 
-#: camlibs/ptp2/ptp.c:3153
+#: camlibs/ptp2/ptp.c:3239
 msgid "Vertical AF On"
 msgstr "Vertikaler Autofokus An"
 
-#: camlibs/ptp2/ptp.c:3157
+#: camlibs/ptp2/ptp.c:3243
 msgid "ISO Step"
 msgstr "ISO-Schritt"
 
-#: camlibs/ptp2/ptp.c:3159
+#: camlibs/ptp2/ptp.c:3245
 msgid "Exposure Step"
 msgstr "Belichtungszeitschritt"
 
-#: camlibs/ptp2/ptp.c:3161
+#: camlibs/ptp2/ptp.c:3247
 msgid "Exposure Compensation (EV)"
 msgstr "Belichtungskompensation (EV)"
 
-#: camlibs/ptp2/ptp.c:3165
+#: camlibs/ptp2/ptp.c:3251
 msgid "Centre Weight Area"
 msgstr "Mittelpunkt/Gewichtet Bereich"
 
-#: camlibs/ptp2/ptp.c:3171
+#: camlibs/ptp2/ptp.c:3257
 msgid "Auto Meter Off Time"
 msgstr "Zeit für automatische Sensor Abschaltung"
 
-#: camlibs/ptp2/ptp.c:3173
+#: camlibs/ptp2/ptp.c:3259
 msgid "Self Timer Delay"
 msgstr "Selbstauslöserzeit"
 
-#: camlibs/ptp2/ptp.c:3177
+#: camlibs/ptp2/ptp.c:3263
 msgid "Shooting Speed"
 msgstr "Abstand bei Mehrfachbelichtung"
 
-#: camlibs/ptp2/ptp.c:3179
+#: camlibs/ptp2/ptp.c:3265
 msgid "Max. Shots"
 msgstr "Maximale Anzahl an Aufnahmen"
 
-#: camlibs/ptp2/ptp.c:3183
+#: camlibs/ptp2/ptp.c:3269
 msgid "Long Exposure Noise Reduction"
 msgstr "Langzeitbelichtungsrauschkompensation"
 
-#: camlibs/ptp2/ptp.c:3193
+#: camlibs/ptp2/ptp.c:3279
 msgid "Flash Sync. Speed"
 msgstr "Blitzsynchronisations Geschwindigkeit"
 
-#: camlibs/ptp2/ptp.c:3199
+#: camlibs/ptp2/ptp.c:3285
 msgid "Modeling Flash"
 msgstr "Modellierblitz"
 
-#: camlibs/ptp2/ptp.c:3203
+#: camlibs/ptp2/ptp.c:3289
 msgid "Manual Mode Bracketing"
 msgstr "Manueller Abstufungsmodus"
 
-#: camlibs/ptp2/ptp.c:3207
+#: camlibs/ptp2/ptp.c:3293
 msgid "Auto Bracket Selection"
 msgstr "Automatischer Abstufungsselektion"
 
 # Translation thanks to Martin Kroeker. [Colin]
-#: camlibs/ptp2/ptp.c:3209
+#: camlibs/ptp2/ptp.c:3295
 msgid "Center Button Shooting Mode"
 msgstr "Mittlerer Button Aufnahme Modus"
 
-#: camlibs/ptp2/ptp.c:3211
+#: camlibs/ptp2/ptp.c:3297
 msgid "Center Button Playback Mode"
 msgstr "Mittlerer Button Playback Modus"
 
-#: camlibs/ptp2/ptp.c:3213
+#: camlibs/ptp2/ptp.c:3299
 msgid "Multiselector"
 msgstr "Multiselektor"
 
-#: camlibs/ptp2/ptp.c:3215
+#: camlibs/ptp2/ptp.c:3301
 msgid "Photo Info. Playback"
 msgstr "Photo Info. Playback"
 
-#: camlibs/ptp2/ptp.c:3217
+#: camlibs/ptp2/ptp.c:3303
 msgid "Assign Func. Button"
 msgstr "Weise Func. Button zu"
 
-#: camlibs/ptp2/ptp.c:3219
+#: camlibs/ptp2/ptp.c:3305
 msgid "Customise Command Dials"
 msgstr "Passe Kommando Dials an"
 
-#: camlibs/ptp2/ptp.c:3221
+#: camlibs/ptp2/ptp.c:3307
 msgid "Reverse Command Dial"
 msgstr "Umgedrehtes Kommando Rad"
 
-#: camlibs/ptp2/ptp.c:3223
+#: camlibs/ptp2/ptp.c:3309
 msgid "Aperture Setting"
 msgstr "Blendeneinstellung"
 
-#: camlibs/ptp2/ptp.c:3225
+#: camlibs/ptp2/ptp.c:3311
 msgid "Menus and Playback"
 msgstr "Menüs und Abspielen"
 
-#: camlibs/ptp2/ptp.c:3227
+#: camlibs/ptp2/ptp.c:3313
 msgid "Buttons and Dials"
 msgstr "Knöpfe und Räder"
 
-#: camlibs/ptp2/ptp.c:3229
+#: camlibs/ptp2/ptp.c:3315
 msgid "No CF Card Release"
 msgstr "Auslösen ohne CF Karte"
 
-#: camlibs/ptp2/ptp.c:3231
+#: camlibs/ptp2/ptp.c:3317
 msgid "Image Rotation"
 msgstr "Bildrotationsflag"
 
-#: camlibs/ptp2/ptp.c:3233
+#: camlibs/ptp2/ptp.c:3319
 msgid "Exposure Bracketing"
 msgstr "Belichtungs Abstufung"
 
-#: camlibs/ptp2/ptp.c:3235
+#: camlibs/ptp2/ptp.c:3321
 msgid "Exposure Bracketing Distance"
 msgstr "Belichtungsabstufungsschritt"
 
-#: camlibs/ptp2/ptp.c:3237
+#: camlibs/ptp2/ptp.c:3323
 msgid "Exposure Bracketing Number"
 msgstr "Belichtungsabstufungs Anzahl"
 
-#: camlibs/ptp2/ptp.c:3239
+#: camlibs/ptp2/ptp.c:3325
 msgid "AF LCD Top Mode 2"
 msgstr "AF LCD Top Modus 2"
 
-#: camlibs/ptp2/ptp.c:3241
+#: camlibs/ptp2/ptp.c:3327
 msgid "Active AF Sensor"
 msgstr "Aktiver AF Sensor"
 
-#: camlibs/ptp2/ptp.c:3243
+#: camlibs/ptp2/ptp.c:3329
 msgid "Exposure Meter"
 msgstr "Belichtungsmesser"
 
-#: camlibs/ptp2/ptp.c:3245
+#: camlibs/ptp2/ptp.c:3331
 msgid "Exposure Aperture Lock"
 msgstr "Belichtung Blende Lock"
 
-#: camlibs/ptp2/ptp.c:3247
+#: camlibs/ptp2/ptp.c:3333
 msgid "Maximum Shots"
 msgstr "Maximale Bildanzahl"
 
-#: camlibs/ptp2/ptp.c:3257
+#: camlibs/ptp2/ptp.c:3343
 msgid "Autofocus Mode"
 msgstr "Autofokus Modus"
 
-#: camlibs/ptp2/ptp.c:3259
+#: camlibs/ptp2/ptp.c:3345
 msgid "AF Assist Lamp"
 msgstr "Autofokus Hilfslicht"
 
-#: camlibs/ptp2/ptp.c:3261
+#: camlibs/ptp2/ptp.c:3347
 msgid "Auto ISO P/A/DVP Setting"
 msgstr "Auto ISO P/A/DVP Einstellung"
 
-#: camlibs/ptp2/ptp.c:3265
+#: camlibs/ptp2/ptp.c:3351
 msgid "Viewfinder Grid Display"
 msgstr "Gitterlinien im Sucher"
 
-#: camlibs/ptp2/ptp.c:3279
+#: camlibs/ptp2/ptp.c:3365
 msgid "Image Comment String"
 msgstr "Bild Kommentar"
 
-#: camlibs/ptp2/ptp.c:3281
+#: camlibs/ptp2/ptp.c:3367
 msgid "Flash Open"
 msgstr "Blitz offen"
 
-#: camlibs/ptp2/ptp.c:3283
+#: camlibs/ptp2/ptp.c:3369
 msgid "Flash Charged"
 msgstr "Blitz geladen"
 
-#: camlibs/ptp2/ptp.c:3285
+#: camlibs/ptp2/ptp.c:3371
 msgid "Lens ID"
 msgstr "Objektiv Kennung"
 
-#: camlibs/ptp2/ptp.c:3287
+#: camlibs/ptp2/ptp.c:3373
 msgid "Min. Focal Length"
 msgstr "Minimale Brennweite"
 
-#: camlibs/ptp2/ptp.c:3289
+#: camlibs/ptp2/ptp.c:3375
 msgid "Max. Focal Length"
 msgstr "Maximale Brennweite"
 
-#: camlibs/ptp2/ptp.c:3291
+#: camlibs/ptp2/ptp.c:3377
 msgid "Max. Aperture at Min. Focal Length"
 msgstr "Maximale Blende bei Minimaler Brennweite"
 
-#: camlibs/ptp2/ptp.c:3293
+#: camlibs/ptp2/ptp.c:3379
 msgid "Max. Aperture at Max. Focal Length"
 msgstr "Maximale Blende bei maximaler Brennweite"
 
-#: camlibs/ptp2/ptp.c:3295
+#: camlibs/ptp2/ptp.c:3381
 msgid "Low Light"
 msgstr "Wenig Licht"
 
-#: camlibs/ptp2/ptp.c:3296
+#: camlibs/ptp2/ptp.c:3382
 msgid "AC Power"
 msgstr "Netzanschluss"
 
-#: camlibs/ptp2/ptp.c:3297
+#: camlibs/ptp2/ptp.c:3383
 msgid "NIKON Auto Bracketing Set"
 msgstr "NIKON Automatischer Abstufungsselektion"
 
-#: camlibs/ptp2/ptp.c:3298
+#: camlibs/ptp2/ptp.c:3384
 msgid "NIKON White Balance Bracket Step"
 msgstr "NIKON Automatische Weißabgleich Abweichung"
 
-#: camlibs/ptp2/ptp.c:3299
+#: camlibs/ptp2/ptp.c:3385
 msgid "NIKON AF-L Locked"
 msgstr "NIKON AF-L Feststellung"
 
-#: camlibs/ptp2/ptp.c:3306
+#: camlibs/ptp2/ptp.c:3392
 msgid "Secure Time"
 msgstr "SIchere Zeit"
 
-#: camlibs/ptp2/ptp.c:3307
+#: camlibs/ptp2/ptp.c:3393
 msgid "Device Certificate"
 msgstr "Geräte Zertifikat"
 
-#: camlibs/ptp2/ptp.c:3309
+#: camlibs/ptp2/ptp.c:3395
 msgid "Synchronization Partner"
 msgstr "Synchronisationspartner"
 
-#: camlibs/ptp2/ptp.c:3311
+#: camlibs/ptp2/ptp.c:3397
 msgid "Device Friendly Name"
 msgstr "Anzeigbarer Gerätename"
 
-#: camlibs/ptp2/ptp.c:3312
+#: camlibs/ptp2/ptp.c:3398
 msgid "Volume Level"
 msgstr "Lautstärke"
 
-#: camlibs/ptp2/ptp.c:3313
+#: camlibs/ptp2/ptp.c:3399
 msgid "Device Icon"
 msgstr "Geräte Icon"
 
-#: camlibs/ptp2/ptp.c:3314
+#: camlibs/ptp2/ptp.c:3400
 msgid "Playback Rate"
 msgstr "Abspielgeschwindigkeit"
 
-#: camlibs/ptp2/ptp.c:3315
+#: camlibs/ptp2/ptp.c:3401
 msgid "Playback Object"
 msgstr "Abgespieltes Objekt"
 
-#: camlibs/ptp2/ptp.c:3317
+#: camlibs/ptp2/ptp.c:3403
 msgid "Playback Container Index"
 msgstr "Abspiel Container Index"
 
-#: camlibs/ptp2/ptp.c:3318
+#: camlibs/ptp2/ptp.c:3404
 msgid "Playback Position"
 msgstr "Abspielposition"
 
-#: camlibs/ptp2/ptp.c:3319
+#: camlibs/ptp2/ptp.c:3405
 msgid "RevocationInfo"
 msgstr "Revokationsinformation"
 
-#: camlibs/ptp2/ptp.c:3320
+#: camlibs/ptp2/ptp.c:3406
 msgid "PlaysForSureID"
 msgstr "PlaysForSureID"
 
-#: camlibs/ptp2/ptp.c:3420 camlibs/ptp2/ptp.c:3421 camlibs/ptp2/ptp.c:3422
+#: camlibs/ptp2/ptp.c:3506 camlibs/ptp2/ptp.c:3507 camlibs/ptp2/ptp.c:3508
 #, c-format
 msgid "%.1f stops"
 msgstr "%.1f Schritte"
 
-#: camlibs/ptp2/ptp.c:3423
+#: camlibs/ptp2/ptp.c:3509
 #, c-format
 msgid "%.0f mm"
 msgstr "%.0f mm"
 
-#: camlibs/ptp2/ptp.c:3437
+#: camlibs/ptp2/ptp.c:3523
 msgid "JPEG Norm"
 msgstr "JPEG Normal"
 
-#: camlibs/ptp2/ptp.c:3440
+#: camlibs/ptp2/ptp.c:3526
 msgid "RAW + JPEG Basic"
 msgstr "RAW + JPEG Basic"
 
-#: camlibs/ptp2/ptp.c:3442 camlibs/ricoh/library.c:330
+#: camlibs/ptp2/ptp.c:3528 camlibs/ricoh/library.c:330
 #: camlibs/sierra/nikon-desc.c:284
 msgid "Incandescent"
 msgstr "Kunstlicht - Glühlampe"
 
-#: camlibs/ptp2/ptp.c:3451 camlibs/sierra/epson-desc.c:154
+#: camlibs/ptp2/ptp.c:3537 camlibs/sierra/epson-desc.c:154
 #: camlibs/sierra/sierra.c:1013 camlibs/sierra/sierra.c:1023
 #: camlibs/sierra/sierra.c:1320 camlibs/sierra/sierra.c:1523
 #: camlibs/sierra/sierra.c:1532 camlibs/sierra/sierra.c:1759
 msgid "Red-eye Reduction"
 msgstr "Rote-Augen-Vermeidung"
 
-#: camlibs/ptp2/ptp.c:3459
+#: camlibs/ptp2/ptp.c:3545
 msgid "Manual Focus"
 msgstr "Manueller Fokus"
 
-#: camlibs/ptp2/ptp.c:3466
+#: camlibs/ptp2/ptp.c:3552
 msgid "AF Lock only"
 msgstr "nur AF Lock"
 
-#: camlibs/ptp2/ptp.c:3470
+#: camlibs/ptp2/ptp.c:3556
 msgid "Flash Lock"
 msgstr "Blitz Lock"
 
-#: camlibs/ptp2/ptp.c:3472 camlibs/sierra/nikon-desc.c:493
+#: camlibs/ptp2/ptp.c:3558 camlibs/sierra/nikon-desc.c:493
 #: camlibs/sierra/olympus-desc.c:776 camlibs/sierra/olympus-desc.c:793
 msgid "Matrix"
 msgstr "Matrix"
 
-#: camlibs/ptp2/ptp.c:3473 camlibs/sierra/nikon-desc.c:492
+#: camlibs/ptp2/ptp.c:3559 camlibs/sierra/nikon-desc.c:492
 #: camlibs/sierra/olympus-desc.c:775 camlibs/sierra/olympus-desc.c:791
 msgid "Spot"
 msgstr "Punkt"
 
-#: camlibs/ptp2/ptp.c:3486
+#: camlibs/ptp2/ptp.c:3572
 msgid "Power Wind"
 msgstr "Schnellaufzug"
 
-#: camlibs/ptp2/ptp.c:3511
+#: camlibs/ptp2/ptp.c:3597
 msgid "1 min"
 msgstr "1 Minute"
 
-#: camlibs/ptp2/ptp.c:3512
+#: camlibs/ptp2/ptp.c:3598
 msgid "5 mins"
 msgstr "5 Minuten"
 
-#: camlibs/ptp2/ptp.c:3513
+#: camlibs/ptp2/ptp.c:3599
 msgid "10 mins"
 msgstr "10 Minuten"
 
-#: camlibs/ptp2/ptp.c:3514
+#: camlibs/ptp2/ptp.c:3600
 msgid "15 mins"
 msgstr "15 Minuten"
 
-#: camlibs/ptp2/ptp.c:3665
+#: camlibs/ptp2/ptp.c:3751
 msgid "MediaCard"
 msgstr "MediaCard"
 
-#: camlibs/ptp2/ptp.c:3666
+#: camlibs/ptp2/ptp.c:3752
 msgid "MediaCardGroup"
 msgstr "MediaCardGruppe"
 
-#: camlibs/ptp2/ptp.c:3667
+#: camlibs/ptp2/ptp.c:3753
 msgid "Encounter"
 msgstr "Encounter"
 
-#: camlibs/ptp2/ptp.c:3668
+#: camlibs/ptp2/ptp.c:3754
 msgid "EncounterBox"
 msgstr "EncounterBox"
 
-#: camlibs/ptp2/ptp.c:3669
+#: camlibs/ptp2/ptp.c:3755
 msgid "M4A"
 msgstr "M4A"
 
-#: camlibs/ptp2/ptp.c:3670
+#: camlibs/ptp2/ptp.c:3756
 msgid "Firmware"
 msgstr "Firmware"
 
-#: camlibs/ptp2/ptp.c:3671
+#: camlibs/ptp2/ptp.c:3757
 msgid "WindowsImageFormat"
 msgstr "Windows Bild Format"
 
-#: camlibs/ptp2/ptp.c:3672
+#: camlibs/ptp2/ptp.c:3758
 msgid "Undefined Audio"
 msgstr "Undefiniertes Audioformat"
 
-#: camlibs/ptp2/ptp.c:3676
+#: camlibs/ptp2/ptp.c:3762
 msgid "Audible.com Codec"
 msgstr "Audible.com Codec"
 
-#: camlibs/ptp2/ptp.c:3678
+#: camlibs/ptp2/ptp.c:3764
 msgid "Undefined Video"
 msgstr "Undefiniertes Videoformat"
 
-#: camlibs/ptp2/ptp.c:3683
+#: camlibs/ptp2/ptp.c:3769
 msgid "Undefined Collection"
 msgstr "Undefinierte Sammlung"
 
-#: camlibs/ptp2/ptp.c:3684
+#: camlibs/ptp2/ptp.c:3770
 msgid "Abstract Multimedia Album"
 msgstr "Abstraktes Multimedia Album"
 
-#: camlibs/ptp2/ptp.c:3685
+#: camlibs/ptp2/ptp.c:3771
 msgid "Abstract Image Album"
 msgstr "Abstraktes Bild Album"
 
-#: camlibs/ptp2/ptp.c:3686
+#: camlibs/ptp2/ptp.c:3772
 msgid "Abstract Audio Album"
 msgstr "Abstraktes Musik Album"
 
-#: camlibs/ptp2/ptp.c:3687
+#: camlibs/ptp2/ptp.c:3773
 msgid "Abstract Video Album"
 msgstr "Abstraktes Video Album"
 
-#: camlibs/ptp2/ptp.c:3688
+#: camlibs/ptp2/ptp.c:3774
 msgid "Abstract Audio Video Playlist"
 msgstr "Astrakte Audio Video Playlist"
 
-#: camlibs/ptp2/ptp.c:3689
+#: camlibs/ptp2/ptp.c:3775
 msgid "Abstract Contact Group"
 msgstr "Abstrakte Addressen Gruppe"
 
-#: camlibs/ptp2/ptp.c:3690
+#: camlibs/ptp2/ptp.c:3776
 msgid "Abstract Message Folder"
 msgstr "Abstrakter Nachrichten Ordner"
 
-#: camlibs/ptp2/ptp.c:3691
+#: camlibs/ptp2/ptp.c:3777
 msgid "Abstract Chaptered Production"
 msgstr "Abstrakte Produktion mit Kapiteln"
 
-#: camlibs/ptp2/ptp.c:3692
+#: camlibs/ptp2/ptp.c:3778
 msgid "Abstract Audio Playlist"
 msgstr "Astrakte Audio Playlist"
 
-#: camlibs/ptp2/ptp.c:3693
+#: camlibs/ptp2/ptp.c:3779
 msgid "Abstract Video Playlist"
 msgstr "Astrakte Video Playlist"
 
-#: camlibs/ptp2/ptp.c:3694
+#: camlibs/ptp2/ptp.c:3780
 msgid "Abstract Mediacast"
 msgstr "Abstrakter MediaCast"
 
-#: camlibs/ptp2/ptp.c:3695
+#: camlibs/ptp2/ptp.c:3781
 msgid "WPL Playlist"
 msgstr "WPL Playlist"
 
-#: camlibs/ptp2/ptp.c:3696
+#: camlibs/ptp2/ptp.c:3782
 msgid "M3U Playlist"
 msgstr "M3U Playlist"
 
-#: camlibs/ptp2/ptp.c:3697
+#: camlibs/ptp2/ptp.c:3783
 msgid "MPL Playlist"
 msgstr "MPL Playlist"
 
-#: camlibs/ptp2/ptp.c:3698
+#: camlibs/ptp2/ptp.c:3784
 msgid "ASX Playlist"
 msgstr "ASX Playlist"
 
-#: camlibs/ptp2/ptp.c:3699
+#: camlibs/ptp2/ptp.c:3785
 msgid "PLS Playlist"
 msgstr "PLS Playlist"
 
-#: camlibs/ptp2/ptp.c:3700
+#: camlibs/ptp2/ptp.c:3786
 msgid "UndefinedDocument"
 msgstr "Undefiniertes Dokument"
 
-#: camlibs/ptp2/ptp.c:3701
+#: camlibs/ptp2/ptp.c:3787
 msgid "AbstractDocument"
 msgstr "Abstraktes Dokument"
 
-#: camlibs/ptp2/ptp.c:3702
+#: camlibs/ptp2/ptp.c:3788
 msgid "XMLDocument"
 msgstr "XMLDokument"
 
-#: camlibs/ptp2/ptp.c:3703
+#: camlibs/ptp2/ptp.c:3789
 msgid "Microsoft Word Document"
 msgstr "Microsoft Word Dokument"
 
-#: camlibs/ptp2/ptp.c:3704
+#: camlibs/ptp2/ptp.c:3790
 msgid "MHT Compiled HTML Document"
 msgstr "MHT Kompiliertes HTML Dokument"
 
-#: camlibs/ptp2/ptp.c:3705
+#: camlibs/ptp2/ptp.c:3791
 msgid "Microsoft Excel Spreadsheet (.xls)"
 msgstr "Microsoft Excel Tabelle (.xls)"
 
-#: camlibs/ptp2/ptp.c:3706
+#: camlibs/ptp2/ptp.c:3792
 msgid "Microsoft Powerpoint (.ppt)"
 msgstr "Microsoft PowerPoint (.ppt)"
 
-#: camlibs/ptp2/ptp.c:3707
+#: camlibs/ptp2/ptp.c:3793
 msgid "UndefinedMessage"
 msgstr "Undefinierte Nachricht"
 
-#: camlibs/ptp2/ptp.c:3708
+#: camlibs/ptp2/ptp.c:3794
 msgid "AbstractMessage"
 msgstr "Abstrakte Nachricht"
 
-#: camlibs/ptp2/ptp.c:3709
+#: camlibs/ptp2/ptp.c:3795
 msgid "UndefinedContact"
 msgstr "Undefinierter Addresseintrag"
 
-#: camlibs/ptp2/ptp.c:3710
+#: camlibs/ptp2/ptp.c:3796
 msgid "AbstractContact"
 msgstr "Abstrakter Adresseintrag"
 
-#: camlibs/ptp2/ptp.c:3711
+#: camlibs/ptp2/ptp.c:3797
 msgid "vCard2"
 msgstr "vCard2"
 
-#: camlibs/ptp2/ptp.c:3712
+#: camlibs/ptp2/ptp.c:3798
 msgid "vCard3"
 msgstr "vCard3"
 
-#: camlibs/ptp2/ptp.c:3713
+#: camlibs/ptp2/ptp.c:3799
 msgid "UndefinedCalendarItem"
 msgstr "Undefinierte Kalendereintrag"
 
-#: camlibs/ptp2/ptp.c:3714
+#: camlibs/ptp2/ptp.c:3800
 msgid "AbstractCalendarItem"
 msgstr "Abstrakter Kalendereintrag"
 
-#: camlibs/ptp2/ptp.c:3715
+#: camlibs/ptp2/ptp.c:3801
 msgid "vCalendar1"
 msgstr "vCalendar1"
 
-#: camlibs/ptp2/ptp.c:3716
+#: camlibs/ptp2/ptp.c:3802
 msgid "vCalendar2"
 msgstr "vCalendar2"
 
-#: camlibs/ptp2/ptp.c:3717
+#: camlibs/ptp2/ptp.c:3803
 msgid "Undefined Windows Executable"
 msgstr "Undefiniertes Windows Executable"
 
-#: camlibs/ptp2/ptp.c:3755 camlibs/ptp2/ptp.c:3872
+#: camlibs/ptp2/ptp.c:3841 camlibs/ptp2/ptp.c:3958
 #, c-format
 msgid "Unknown(%04x)"
 msgstr "Unbekannt (%04x)"
 
-#: camlibs/ptp2/ptp.c:3763
+#: camlibs/ptp2/ptp.c:3849
 msgid "get device info"
 msgstr "Get Device Info"
 
-#: camlibs/ptp2/ptp.c:3764
+#: camlibs/ptp2/ptp.c:3850
 msgid "Open session"
 msgstr "Open Session"
 
-#: camlibs/ptp2/ptp.c:3765
+#: camlibs/ptp2/ptp.c:3851
 msgid "Close session"
 msgstr "Close Session"
 
-#: camlibs/ptp2/ptp.c:3766
+#: camlibs/ptp2/ptp.c:3852
 msgid "Get storage IDs"
 msgstr "Get storage IDs"
 
-#: camlibs/ptp2/ptp.c:3767
+#: camlibs/ptp2/ptp.c:3853
 msgid "Get storage info"
 msgstr "Get storage info"
 
-#: camlibs/ptp2/ptp.c:3768
+#: camlibs/ptp2/ptp.c:3854
 msgid "Get number of objects"
 msgstr "Get number of objects"
 
-#: camlibs/ptp2/ptp.c:3769
+#: camlibs/ptp2/ptp.c:3855
 msgid "Get object handles"
 msgstr "Get object handles"
 
-#: camlibs/ptp2/ptp.c:3770
+#: camlibs/ptp2/ptp.c:3856
 msgid "Get object info"
 msgstr "Get object info"
 
-#: camlibs/ptp2/ptp.c:3771
+#: camlibs/ptp2/ptp.c:3857
 msgid "Get object"
 msgstr "Get object"
 
-#: camlibs/ptp2/ptp.c:3772
+#: camlibs/ptp2/ptp.c:3858
 msgid "Get thumbnail"
 msgstr "Get thumbnail"
 
-#: camlibs/ptp2/ptp.c:3773
+#: camlibs/ptp2/ptp.c:3859
 msgid "Delete object"
 msgstr "Delete object"
 
-#: camlibs/ptp2/ptp.c:3774
+#: camlibs/ptp2/ptp.c:3860
 msgid "Send object info"
 msgstr "Send object info"
 
-#: camlibs/ptp2/ptp.c:3775
+#: camlibs/ptp2/ptp.c:3861
 msgid "Send object"
 msgstr "Send object"
 
-#: camlibs/ptp2/ptp.c:3776
+#: camlibs/ptp2/ptp.c:3862
 msgid "Initiate capture"
 msgstr "Initiate capture"
 
-#: camlibs/ptp2/ptp.c:3777
+#: camlibs/ptp2/ptp.c:3863
 msgid "Format storage"
 msgstr "Format storage"
 
-#: camlibs/ptp2/ptp.c:3778
+#: camlibs/ptp2/ptp.c:3864
 msgid "Reset device"
 msgstr "Reset device"
 
-#: camlibs/ptp2/ptp.c:3779
+#: camlibs/ptp2/ptp.c:3865
 msgid "Self test device"
 msgstr "Self test device"
 
-#: camlibs/ptp2/ptp.c:3780
+#: camlibs/ptp2/ptp.c:3866
 msgid "Set object protection"
 msgstr "Set object protection"
 
-#: camlibs/ptp2/ptp.c:3781
+#: camlibs/ptp2/ptp.c:3867
 msgid "Power down device"
 msgstr "Power down device"
 
-#: camlibs/ptp2/ptp.c:3782
+#: camlibs/ptp2/ptp.c:3868
 msgid "Get device property description"
 msgstr "Get device property description"
 
-#: camlibs/ptp2/ptp.c:3783
+#: camlibs/ptp2/ptp.c:3869
 msgid "Get device property value"
 msgstr "Get device property value"
 
-#: camlibs/ptp2/ptp.c:3784
+#: camlibs/ptp2/ptp.c:3870
 msgid "Set device property value"
 msgstr "Set device property value"
 
-#: camlibs/ptp2/ptp.c:3785
+#: camlibs/ptp2/ptp.c:3871
 msgid "Reset device property value"
 msgstr "Reset device property value"
 
-#: camlibs/ptp2/ptp.c:3786
+#: camlibs/ptp2/ptp.c:3872
 msgid "Terminate open capture"
 msgstr "Terminate open capture"
 
-#: camlibs/ptp2/ptp.c:3787
+#: camlibs/ptp2/ptp.c:3873
 msgid "Move object"
 msgstr "Move object"
 
-#: camlibs/ptp2/ptp.c:3788
+#: camlibs/ptp2/ptp.c:3874
 msgid "Copy object"
 msgstr "Copy object"
 
-#: camlibs/ptp2/ptp.c:3789
+#: camlibs/ptp2/ptp.c:3875
 msgid "Get partial object"
 msgstr "Get partial object"
 
-#: camlibs/ptp2/ptp.c:3790
+#: camlibs/ptp2/ptp.c:3876
 msgid "Initiate open capture"
 msgstr "Initiate open capture"
 
-#: camlibs/ptp2/ptp.c:3797
+#: camlibs/ptp2/ptp.c:3883
 msgid "Get object properties supported"
 msgstr "Get object properties supported"
 
-#: camlibs/ptp2/ptp.c:3798
+#: camlibs/ptp2/ptp.c:3884
 msgid "Get object property description"
 msgstr "Get object property description"
 
-#: camlibs/ptp2/ptp.c:3799
+#: camlibs/ptp2/ptp.c:3885
 msgid "Get object property value"
 msgstr "Get object property value"
 
-#: camlibs/ptp2/ptp.c:3800
+#: camlibs/ptp2/ptp.c:3886
 msgid "Set object property value"
 msgstr "Setze Object Property Wert"
 
-#: camlibs/ptp2/ptp.c:3801
+#: camlibs/ptp2/ptp.c:3887
 msgid "Get object property list"
 msgstr "Hole Object Property Liste"
 
-#: camlibs/ptp2/ptp.c:3802
+#: camlibs/ptp2/ptp.c:3888
 msgid "Set object property list"
 msgstr "Setze Object Property Liste"
 
-#: camlibs/ptp2/ptp.c:3803
+#: camlibs/ptp2/ptp.c:3889
 msgid "Get interdependent property description"
 msgstr "Get interdependent property description"
 
-#: camlibs/ptp2/ptp.c:3804
+#: camlibs/ptp2/ptp.c:3890
 msgid "Send object property list"
 msgstr "Sende Object Property Liste"
 
-#: camlibs/ptp2/ptp.c:3805
+#: camlibs/ptp2/ptp.c:3891
 msgid "Get object references"
 msgstr "Hole Object References"
 
-#: camlibs/ptp2/ptp.c:3806
+#: camlibs/ptp2/ptp.c:3892
 msgid "Set object references"
 msgstr "Setze object references"
 
-#: camlibs/ptp2/ptp.c:3807
+#: camlibs/ptp2/ptp.c:3893
 msgid "Update device firmware"
 msgstr "Update device firmware"
 
-#: camlibs/ptp2/ptp.c:3808
+#: camlibs/ptp2/ptp.c:3894
 msgid "Skip to next position in playlist"
 msgstr "Skip zur nächsten Position in der Playliste"
 
-#: camlibs/ptp2/ptp.c:3811
+#: camlibs/ptp2/ptp.c:3897
 msgid "Get secure time challenge"
 msgstr "Hole Secure Time Challenge"
 
-#: camlibs/ptp2/ptp.c:3812
+#: camlibs/ptp2/ptp.c:3898
 msgid "Get secure time response"
 msgstr "Hole Secure Time Anfrage"
 
-#: camlibs/ptp2/ptp.c:3813
+#: camlibs/ptp2/ptp.c:3899
 msgid "Set license response"
 msgstr "Setze Lizenz Antwort"
 
-#: camlibs/ptp2/ptp.c:3814
+#: camlibs/ptp2/ptp.c:3900
 msgid "Get sync list"
 msgstr "Hole Sync List"
 
-#: camlibs/ptp2/ptp.c:3815
+#: camlibs/ptp2/ptp.c:3901
 msgid "Send meter challenge query"
 msgstr "Sende Meter Challenge Anfrage"
 
-#: camlibs/ptp2/ptp.c:3816
+#: camlibs/ptp2/ptp.c:3902
 msgid "Get meter challenge"
 msgstr "Hole Meter Challenge"
 
-#: camlibs/ptp2/ptp.c:3817
+#: camlibs/ptp2/ptp.c:3903
 msgid "Get meter response"
 msgstr "Hole Meter Response"
 
-#: camlibs/ptp2/ptp.c:3818
+#: camlibs/ptp2/ptp.c:3904
 msgid "Clean data store"
 msgstr "Lösche Daten Store"
 
-#: camlibs/ptp2/ptp.c:3819
+#: camlibs/ptp2/ptp.c:3905
 msgid "Get license state"
 msgstr "Hole Lizenz Status"
 
-#: camlibs/ptp2/ptp.c:3820
+#: camlibs/ptp2/ptp.c:3906
 msgid "Send WMDRM-PD Command"
 msgstr "Sende WMDRM-PD Kommando"
 
-#: camlibs/ptp2/ptp.c:3821
+#: camlibs/ptp2/ptp.c:3907
 msgid "Send WMDRM-PD Request"
 msgstr "Sende WMDRM-PD Anfrage"
 
-#: camlibs/ptp2/ptp.c:3824
+#: camlibs/ptp2/ptp.c:3910
 msgid "Report Added/Deleted Items"
 msgstr "Report Added/Deleted Items"
 
-#: camlibs/ptp2/ptp.c:3825
+#: camlibs/ptp2/ptp.c:3911
 msgid "Report Acquired Items"
 msgstr "Report Acquired Items"
 
-#: camlibs/ptp2/ptp.c:3826
+#: camlibs/ptp2/ptp.c:3912
 msgid "Get type of playlists that are allowed to be transfered"
 msgstr "Hole Typ der Playlisten die das Gerät zu transferieren erlaubt"
 
-#: camlibs/ptp2/ptp.c:3829
+#: camlibs/ptp2/ptp.c:3915
 msgid "Send WMDRM-PD Application Request"
 msgstr "Sende WMDRM-PD Applikationsanfrage"
 
-#: camlibs/ptp2/ptp.c:3830
+#: camlibs/ptp2/ptp.c:3916
 msgid "Get WMDRM-PD Application Response"
 msgstr "Hole WMDRM-PD Applikations Antwort"
 
-#: camlibs/ptp2/ptp.c:3831
+#: camlibs/ptp2/ptp.c:3917
 msgid "Enable trusted file operations"
 msgstr "Schalte Trusted File Operationen an"
 
-#: camlibs/ptp2/ptp.c:3832
+#: camlibs/ptp2/ptp.c:3918
 msgid "Disable trusted file operations"
 msgstr "Schalte Trusted File Operations aus"
 
-#: camlibs/ptp2/ptp.c:3833
+#: camlibs/ptp2/ptp.c:3919
 msgid "End trusted application session"
 msgstr "Beende Trusted Application Sitzung"
 
-#: camlibs/ptp2/ptp.c:3836
+#: camlibs/ptp2/ptp.c:3922
 msgid "Open Media Session"
 msgstr " ffne Media Sitzung          Ö"
 
-#: camlibs/ptp2/ptp.c:3837
+#: camlibs/ptp2/ptp.c:3923
 msgid "Close Media Session"
 msgstr "Schließe Media Sitzung"
 
-#: camlibs/ptp2/ptp.c:3838
+#: camlibs/ptp2/ptp.c:3924
 msgid "Get Next Data Block"
 msgstr "Hole nächsten Daten Block"
 
-#: camlibs/ptp2/ptp.c:3839
+#: camlibs/ptp2/ptp.c:3925
 msgid "Set Current Time Position"
 msgstr "Setze derzeitige Zeitposition"
 
-#: camlibs/ptp2/ptp.c:3842
+#: camlibs/ptp2/ptp.c:3928
 msgid "Send Registration Request"
 msgstr "Sende Registrierungs Request"
 
-#: camlibs/ptp2/ptp.c:3843
+#: camlibs/ptp2/ptp.c:3929
 msgid "Get Registration Response"
 msgstr "Hole Registrierungsantwort"
 
-#: camlibs/ptp2/ptp.c:3844
+#: camlibs/ptp2/ptp.c:3930
 msgid "Get Proximity Challenge"
 msgstr "Hole Proximity Challenge"
 
-#: camlibs/ptp2/ptp.c:3845
+#: camlibs/ptp2/ptp.c:3931
 msgid "Send Proximity Response"
 msgstr "Sende Proximity Challenge"
 
-#: camlibs/ptp2/ptp.c:3846
+#: camlibs/ptp2/ptp.c:3932
 msgid "Send WMDRM-ND License Request"
 msgstr "Sende WMDRM-ND Lizenz Anfrage"
 
-#: camlibs/ptp2/ptp.c:3847
+#: camlibs/ptp2/ptp.c:3933
 msgid "Get WMDRM-ND License Response"
 msgstr "Hole WMDRM-ND Lizenz Antwort"
 
-#: camlibs/ptp2/ptp.c:3850
+#: camlibs/ptp2/ptp.c:3936
 msgid "Process WFC Object"
 msgstr "Bearbeite WFC Objekt"
 
@@ -8586,6 +8647,21 @@ msgstr "Unbekannter Fehler des Kamera-Treibers"
 #: libgphoto2/gphoto2-result.c:88
 msgid "Unknown error"
 msgstr "Unbekannter Fehler"
+
+#~ msgid "Number of values"
+#~ msgstr "Anzahl der Werte"
+
+#~ msgid "Supported values"
+#~ msgstr "Unterstützte Werte"
+
+#~ msgid "Current value"
+#~ msgstr "Aktueller Wert"
+
+#~ msgid "Capture command completed, but no confirmation received"
+#~ msgstr "Aufnahme abgeschlossen, aber keine Bestätigung erhalten"
+
+#~ msgid "Received event 0x%04x"
+#~ msgstr "Ereignis 0x%04x erhalten"
 
 #~ msgid "Viewfinder Mode"
 #~ msgstr "Suchermodus"
