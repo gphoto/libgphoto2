@@ -11,7 +11,9 @@ INTRODUCTION:
 The cameras supported here have a controller chip from S&Q Technologies. 
 They have USB Vendor:Product number 0x2770:0x905c. These cameras are cheap 
 and basic. Their functioning resembles that of the cameras supported by the 
-sq905 camera library, but is a bit different. 
+sq905 camera library, but is a bit different. More recently (07/11/2007) I 
+have discovered a camera with Product ID 0x9050 which will also function with 
+the same driver library. I will describe it further at the end of this document.
 
 The first camera which I knew of with this USB ID was the Digigr8 from 
 RadioShack. Hence comes the name of this camera library. Several more cameras 
@@ -179,6 +181,23 @@ whether it works or not with any libgphoto2 driver or not, would be enough),
 and with a log file if it seems it is supposed to work but there are problems. 
 
 
+More concerning the newly discovered 0x2770:0x9050 camera:
+
+This camera is the "Disney pix micro," found at KB Toys. Its functionality 
+is very basic. On the package it says the camera is able to take 20 photos, but 
+in fact the number of photos is variable. For, they are all compressed. Since 
+the compression algorithm is the same as that in the 0x905C cameras, this new 
+camera is quite usable, for what it is. Resolution for this camera is fixed at 
+352x288 and can not be adjusted. In fact, the only thing on the camera which 
+can be controlled at all, aside from snapping photos one at a time, is to 
+delete photos one at a time, starting from the last one (one has to press the 
+delete button on the camera and the shutter button on the camera to delete one
+picture). No clip option, no delayed-shooting option, no multiple frames for AVI
+images. In summary, this is a very rudimentary camera, even more so than other 
+SQ cameras. 
+
+
+
 WARRANTY? 
 
 	Absolutely not. No warranty. Never. Not responsible for any actual
@@ -199,4 +218,4 @@ WARRANTY?
 
 Theodore Kilgore
 12/05/05
-(revised 12/29/05, 03/28/07, 06/25/07)
+(revised 12/29/05, 03/28/07, 06/25/07, 07/12/07)

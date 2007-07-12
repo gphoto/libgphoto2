@@ -63,6 +63,7 @@ static const struct {
 	{"Nexxtech Mini Digital Camera", GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
         {"Vivitar Vivicam35",   GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
         {"Praktica Slimpix",    GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
+        {"Disney pix micro",    GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9050}, 
 	{NULL,0,0,0}
 };
 

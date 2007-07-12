@@ -1,3 +1,8 @@
+2007-07-12   Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: "Disney pix micro" camera, 0x2770:0x9050, works 
+	with this driver. Added it. 
+
+
 2007-06-25   Theodore Kilgore <kilgota@auburn.edu>
 	* digi_postprocess.c: removal of superfluous variables. 
 	* digigr8.c: signedness warnings fixed
