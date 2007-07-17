@@ -75,7 +75,7 @@ digi_init (GPPort *port, CameraPrivateLibrary *priv)
 }
 
 
-unsigned char
+int
 digi_get_comp_ratio (CameraPrivateLibrary *priv, int entry)
 {
 	switch (priv->catalog[16*entry]) {
@@ -156,7 +156,8 @@ digi_reset (GPPort *port)
     	return GP_OK;
 }
 
-unsigned char *
+
+int
 digi_read_picture_data (GPPort *port, unsigned char *data, int size, int n )
 {
 
@@ -174,3 +175,48 @@ digi_read_picture_data (GPPort *port, unsigned char *data, int size, int n )
 
     	return GP_OK;
 } 
+
+int digi_delete_all     (GPPort *port, CameraPrivateLibrary *priv) 
+{
+	int i;
+	int size;
+	int num_pics;
+	unsigned char *get_size;
+	unsigned char *junk=NULL;
+	get_size=malloc(0x50);
+	if(!get_size) 
+		return GP_ERROR_NO_MEMORY;
+	num_pics = priv->nb_entries;
+	GP_DEBUG("number of entries is %i\n", num_pics);
+	digi_reset (port);
+	digi_reset (port);
+	if(!num_pics) {
+		GP_DEBUG("Camera is already empty!\n");
+		return GP_OK;
+	}	
+	SQWRITE (port, 0x0c, 0x1440, 0x110f, NULL, 0);
+	i=0;
+    	while (i < 19) {
+		gp_port_read(port, (char *)get_size, 0x50);
+		GP_DEBUG("get_size[0x40] = 0x%x\n", get_size[0x40]);	
+		size = get_size[0x40]+(get_size[0x41]*0x100);
+		GP_DEBUG("size = 0x%x\n", size);
+		if(size <= 0xff) {
+			free(get_size);
+			GP_DEBUG("Size not read. Downloading to clear camera not needed.\n");
+			digi_reset(port);
+			return GP_OK;
+		}
+		junk = malloc(size);
+		if(! junk) {
+			GP_DEBUG("allocation of junk space failed\n");
+			return GP_ERROR_NO_MEMORY;	
+		}
+		gp_port_read(port, (char *)junk, size);
+		free(junk); 
+		i ++;
+	}
+	digi_reset (port);
+	return GP_OK;
+}
+

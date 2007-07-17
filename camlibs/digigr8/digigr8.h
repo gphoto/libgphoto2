@@ -22,19 +22,19 @@ struct _CameraPrivateLibrary {
 	unsigned char *catalog;
 	int nb_entries;
 	int last_fetched_entry;
+	int delete_all;
 };
 
 
 int digi_reset             		(GPPort *);
 int digi_init                          (GPPort *, CameraPrivateLibrary *);
 int digi_rewind (GPPort *port, CameraPrivateLibrary *priv);
-unsigned char *digi_read_picture_data  (GPPort *, unsigned char *data, 
+int digi_read_picture_data  (GPPort *, unsigned char *data, 
 					    int size, int n);
 
 /* Those functions don't need data transfer with the camera */
 int digi_get_num_frames                (CameraPrivateLibrary *, int entry);
-unsigned 
-char digi_get_comp_ratio      	     (CameraPrivateLibrary *, int entry);
+int digi_get_comp_ratio      	     (CameraPrivateLibrary *, int entry);
 int digi_get_data_size             (CameraPrivateLibrary *, int entry);
 int digi_get_picture_width             (CameraPrivateLibrary *, int entry);
 int digi_is_clip                       (CameraPrivateLibrary *, int entry);
@@ -43,5 +43,6 @@ int digi_decompress (unsigned char *out_data, unsigned char *data,
 int digi_postprocess	(CameraPrivateLibrary *priv, 
 				int width, int height, 
 				unsigned char* rgb, int n);
+int digi_delete_all	(GPPort *, CameraPrivateLibrary *priv);
 #endif
 

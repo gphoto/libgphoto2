@@ -1,3 +1,10 @@
+2007-07-16   Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: "Disney pix micro" camera supports "delete all."
+	Also, digigr8 cameras will do capture_preview. These two functions added.
+	0x9050 cameras need to be distinguished from 0x905C cameras. 
+	* digigr8.c: camera functions to support deletion and capture.
+	* digigr8.h: necessary changes. 
+
 2007-07-12   Theodore Kilgore <kilgota@auburn.edu>
 	* library.c: "Disney pix micro" camera, 0x2770:0x9050, works 
 	with this driver. Added it. 

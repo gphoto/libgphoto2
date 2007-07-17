@@ -51,6 +51,7 @@ WHAT FEATURES DO THESE CAMERAS HAVE, AND WHAT DOES THIS DRIVER SUPPORT?
 -- Ability to download the first k pictures, where 
 	k is less than the number on the camera 			Y
 -- Ability to download individual photos				Y (faked, but works)
+-- Shoot a frame and save image to computer				Y
 -- Internal battery, which recharges through the USB port	(some models)
 
 -------------------------------------------------------------------------
@@ -74,12 +75,17 @@ The following things can be done with button-pushes on the camera:
 
 Notes:  
 
+One camera has been discovered, in July 2007, to which the above list does 
+not correspond. See the section "More concerning the newly discovered 
+0x2770:0x9050 camera".
+
 The only known cameras supported by the camlibs/digigr8 have a 640x480 
 high-resolution setting and a 320x240 low-resolution setting. If your
 0x2770:0x905c camera uses another resolution setting, then it might still 
 work. There is some similarity with the sq905 cameras, and I kept that part 
 of the code here. Specifically, if the camera has 352x288 and 176x144 
-resolution settings, these might work but are not tested. If your camera does 
+resolution settings, these might work but are not tested (Note added July 2007:
+the code for 352x288 _does_ continue to work; see below). If your camera does 
 not work due to unknown resolution settings, then the new resolution settings 
 need to be listed in digigr8.c in digi_get_picture_width (). Please report any
 such problem. I will ask you to run a gphoto2 command in debug mode and we can
@@ -190,11 +196,17 @@ the compression algorithm is the same as that in the 0x905C cameras, this new
 camera is quite usable, for what it is. Resolution for this camera is fixed at 
 352x288 and can not be adjusted. In fact, the only thing on the camera which 
 can be controlled at all, aside from snapping photos one at a time, is to 
-delete photos one at a time, starting from the last one (one has to press the 
-delete button on the camera and the shutter button on the camera to delete one
-picture). No clip option, no delayed-shooting option, no multiple frames for AVI
-images. In summary, this is a very rudimentary camera, even more so than other 
-SQ cameras. 
+delete photos one at a time or to delete all.  To delete one photo with the 
+delete button on the camera, press the button. To delete all, hold it down 
+longer. The camera has no clip option, no delayed-shooting option, and no 
+multi-frame clips intended for AVI images. However, the camera will do 
+software deletion of all photos using the option gphoto2 -D, while for the 
+other cameras supported in camlibs/digigr8 the gphoto2 -D option does nothing 
+at all. However:
+
+The USB command to delete is the same as the command to shoot a frame 
+(gphoto2 option is --capture-preview). If you shoot a frame with the Disney 
+pix micro, it will deledte whatever photos are on the camera !!!
 
 
 
@@ -218,4 +230,4 @@ WARRANTY?
 
 Theodore Kilgore
 12/05/05
-(revised 12/29/05, 03/28/07, 06/25/07, 07/12/07)
+(revised 12/29/05, 03/28/07, 06/25/07, 07/16/07)

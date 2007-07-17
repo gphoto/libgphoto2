@@ -94,8 +94,9 @@ camera_abilities (CameraAbilitiesList *list)
 			a.operations = GP_OPERATION_NONE;
 		else
 			a.operations = GP_OPERATION_CAPTURE_PREVIEW;
-       		a.folder_operations = GP_FOLDER_OPERATION_NONE;
-		a.file_operations   = GP_FILE_OPERATION_PREVIEW + GP_FILE_OPERATION_RAW; 
+       		a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
+		a.file_operations   = GP_FILE_OPERATION_PREVIEW 
+					+ GP_FILE_OPERATION_RAW;
        		gp_abilities_list_append (list, a);
     	}
 
@@ -105,7 +106,7 @@ camera_abilities (CameraAbilitiesList *list)
 static int
 camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
-    	sprintf (summary->text,_("Your USB camera has an SQ905C chipset.\n" 
+    	sprintf (summary->text,_("Your USB camera seems to have an SQ905C chipset.\n" 
 				"The total number of pictures in it is %i\n"
 				), 
 
@@ -119,13 +120,12 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
 	strcpy(manual->text, 
 	_(
 	"For cameras with SQ905C Technologies chip.\n"
-	"Should work with gtkam. Photos will be saved in PPM format.\n\n"
-	"IMPORTANT: CAMERA DOES NOT SUPPORT PHOTO SELECTION!\n"
-	"YOU MUST DOWNLOAD ALL PHOTOS AND CULL THEM LATER !!!\n"
-	"These cameras do not allow deletion of all photos.\n"
-	"Uploading of data to the camera is not supported.\n"
-	"Compression mode is UNSUPPORTED. A compressed photo\n" 
-	"is guaranteed to download as pure junk.\n" 
+	"Photos will be saved in PPM format.\n\n"
+	"Some of these cameras allow software deletion of all photos.\n"
+	"Others do not, depending on the chip revision. \n" 
+	"If deletion does work, then gphoto2 -- capture image will \n"
+	"have the side-effect that it also deletes what is on the camera.\n"
+	"Uploading of data to the camera not supported by hardware.\n"
 	)); 
 
 	return (GP_OK);
@@ -269,6 +269,79 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	return status;
 }
 
+static int
+delete_all_func (CameraFilesystem *fs, const char *folder, void *data, 
+		GPContext *context) 
+{
+	Camera *camera = data;
+	if(!camera->pl->delete_all)
+		return GP_ERROR_NOT_SUPPORTED;
+	digi_delete_all (camera->port, camera->pl);
+	return GP_OK;
+}
+
+static int
+camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
+
+
+{
+	unsigned char get_size[0x50];
+	unsigned char *raw_data; 
+	unsigned char *frame_data; 
+	unsigned char *ppm, *ptr;
+	unsigned char gtable[256];
+	char filename[14] = "digi_cap.ppm";
+	int size;
+	int w = 320;
+	int h = 240;
+	int b;
+
+        digi_reset (camera->port);                                                      
+        gp_port_usb_msg_write (camera->port, 0x0c, 0x1440, 0x110f, NULL, 0);                          
+        gp_port_read(camera->port, (char *)get_size, 0x50);                       
+        GP_DEBUG("get_size[0x40] = 0x%x\n", get_size[0x40]);                    
+        b = get_size[0x40]+(get_size[0x41]*0x100);         
+	GP_DEBUG("b = 0x%x\n", b);
+        raw_data = malloc(b);
+        if(!raw_data) { 
+    		free(raw_data); 
+    		return GP_ERROR_NO_MEMORY;
+    	}
+    	gp_port_read(camera->port, (char *)raw_data, b);
+	frame_data = malloc(w*h);
+	if (!frame_data) {
+		free(frame_data);
+		return GP_ERROR_NO_MEMORY;
+	}	
+	digi_decompress (frame_data, raw_data, w, h);	
+
+	/* Now put the data into a PPM image file. */
+
+	ppm = malloc (w * h * 3 + 256); 
+	if (!ppm) { return GP_ERROR_NO_MEMORY; }
+    	sprintf ((char *)ppm,
+		"P6\n"
+		"# CREATOR: gphoto2, SQ905C library\n"
+		"%d %d\n"
+		"255\n", w, h);
+	ptr = ppm + strlen ((char*)ppm);	
+	size = strlen ((char*)ppm) + (w * h * 3);
+	GP_DEBUG ("size = %i\n", size);
+	gp_bayer_decode (frame_data, w , h , ptr, BAYER_TILE_BGGR);
+	
+
+	gp_gamma_fill_table (gtable, .5); 
+	gp_gamma_correct_single (gtable, ptr, w * h); 
+	gp_file_set_mime_type (file, GP_MIME_PPM);
+	gp_file_set_name (file, filename); 
+	gp_file_set_data_and_size (file, (char *)ppm, size);
+
+	digi_reset(camera->port);
+
+	return (GP_OK);
+}
+
+
 /*************** Exit and Initialization Functions ******************/
 
 static int
@@ -288,19 +361,27 @@ camera_exit (Camera *camera, GPContext *context)
 
 static CameraFilesystemFuncs fsfuncs = {
 	.file_list_func = file_list_func,
-	.get_file_func = get_file_func
+	.get_file_func = get_file_func,
+	.delete_all_func = delete_all_func
 };
 
 int
 camera_init(Camera *camera, GPContext *context)
 {
 	GPPortSettings settings;
+	CameraAbilities abilities;
 	int ret = 0;
 
-	/* First, set up all the function pointers */
+	ret = gp_camera_get_abilities(camera,&abilities);
+	if (ret < 0) return ret;	
+	GP_DEBUG("product number is 0x%x\n", abilities.usb_product);
+
+	/* Now, set up all the function pointers */
 	camera->functions->summary      = camera_summary;
         camera->functions->manual	= camera_manual;
 	camera->functions->about        = camera_about;
+	camera->functions->capture_preview	
+					= camera_capture_preview;
 	camera->functions->exit	    	= camera_exit;
    
 	GP_DEBUG ("Initializing the camera\n");
@@ -317,6 +398,14 @@ camera_init(Camera *camera, GPContext *context)
 	if (!camera->pl) return GP_ERROR_NO_MEMORY;
 	camera->pl->catalog = NULL;
 	camera->pl->nb_entries = 0;
+	switch (abilities.usb_product) {
+		case 0x9050:
+			camera->pl->delete_all = 1;
+			break; 
+		default:
+			camera->pl->delete_all = 0;
+	}
+
 
 	/* Connect to the camera */
 	ret = digi_init (camera->port, camera->pl);
