@@ -489,6 +489,26 @@ ptp_free_params (PTPParams *params) {
 	ptp_free_DI (&params->deviceinfo);
 }
 
+/**
+ * ptp_resetdevice:
+ * params:	PTPParams*
+ *		
+ * Uses the built-in function to reset the device
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ */
+uint16_t
+ptp_resetdevice (PTPParams* params)
+{
+	PTPContainer ptp;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code=PTP_OC_ResetDevice;
+	ptp.Nparam=0;
+
+	return ptp_transaction_new(params, &ptp, PTP_DP_NODATA, 0, NULL);
+}
 
 /**
  * ptp_getststorageids:

@@ -530,6 +530,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_GOH_ALL_STORAGE 0xffffffff
 #define PTP_GOH_ALL_FORMATS 0x00000000
 #define PTP_GOH_ALL_ASSOCS  0x00000000
+#define PTP_GOH_ROOT_PARENT 0xffffffff
 
 /* PTP device info structure (returned by GetDevInfo) */
 
@@ -1575,6 +1576,7 @@ uint16_t ptp_getdeviceinfo	(PTPParams* params, PTPDeviceInfo* deviceinfo);
 uint16_t ptp_opensession	(PTPParams *params, uint32_t session);
 uint16_t ptp_closesession	(PTPParams *params);
 
+uint16_t ptp_resetdevice	(PTPParams* params);
 uint16_t ptp_getstorageids	(PTPParams* params, PTPStorageIDs* storageids);
 uint16_t ptp_getstorageinfo 	(PTPParams* params, uint32_t storageid,
 				PTPStorageInfo* storageinfo);
