@@ -1173,6 +1173,9 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				}
 				dpd = &params->canon_props[j].dpd;
 				switch (proptype) {
+				case PTP_DPC_CANON_EOS_CameraTime:
+					dpd->DataType = PTP_DTC_UINT32;
+					break;
 				case PTP_DPC_CANON_EOS_Aperture:
 				case PTP_DPC_CANON_EOS_ShutterSpeed:
 				case PTP_DPC_CANON_EOS_ISOSpeed:
@@ -1192,6 +1195,11 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					break;
 				}
 				switch (dpd->DataType) {
+				case PTP_DTC_UINT32:
+					dpd->FactoryDefaultValue.u32	= dtoh32a(data);
+					dpd->CurrentValue.u32		= dtoh32a(data);
+					/*fprintf (stderr,"currentvalue of %x is %x\n", proptype, dpd->CurrentValue.u16);*/
+					break;
 				case PTP_DTC_UINT16:
 					dpd->FactoryDefaultValue.u16	= dtoh16a(data);
 					dpd->CurrentValue.u16		= dtoh16a(data);

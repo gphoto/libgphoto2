@@ -1,3 +1,9 @@
+2007-07-18  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptp.c,ptp.h: Added PTP reset handling (from libmtp).
+
+	* ptp-pack.c, config.c: Handle EOS CameraTime (just a UNIX timestamp again)
+
 2007-07-17  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Added Canon PowerShot S5 IS.
