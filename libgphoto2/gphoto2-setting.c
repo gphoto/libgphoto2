@@ -172,19 +172,19 @@ load_settings (void)
 	/* Make sure the directories are created */
 	GP_DEBUG ("Creating $HOME/.gphoto");
 #ifdef WIN32
-	GetWindowsDirectory (buf, 1024);
+	GetWindowsDirectory (buf, sizeof(buf));
 	strcat (buf, "\\gphoto");
 #else
-	sprintf (buf, "%s/.gphoto", getenv ("HOME"));
+	snprintf (buf, sizeof(buf), "%s/.gphoto", getenv ("HOME"));
 #endif
 	(void)gp_system_mkdir (buf);
 
 	glob_setting_count = 0;
 #ifdef WIN32
-	GetWindowsDirectory(buf, 1024);
+	GetWindowsDirectory(buf, sizeof(buf));
 	strcat(buf, "\\gphoto\\settings");
 #else
-	sprintf(buf, "%s/.gphoto/settings", getenv("HOME"));
+	snprintf(buf, sizeof(buf), "%s/.gphoto/settings", getenv("HOME"));
 #endif
 
 	if (verify_settings(buf) != GP_OK)
@@ -226,7 +226,7 @@ save_settings (void)
 	char buf[1024];
 	int x=0;
 
-	sprintf (buf, "%s/.gphoto/settings", getenv ("HOME"));
+	sprintf (buf, 1024, "%s/.gphoto/settings", getenv ("HOME"));
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-setting",
 		"Saving %i setting(s) to file \"%s\"",
