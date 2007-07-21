@@ -226,7 +226,7 @@ save_settings (void)
 	char buf[1024];
 	int x=0;
 
-	sprintf (buf, 1024, "%s/.gphoto/settings", getenv ("HOME"));
+	snprintf (buf, sizeof(buf), "%s/.gphoto/settings", getenv ("HOME"));
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-setting",
 		"Saving %i setting(s) to file \"%s\"",
