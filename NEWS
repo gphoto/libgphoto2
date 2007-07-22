@@ -56,22 +56,26 @@ PTP2 driver:
 
    * Enhanced MTP protocol handling.
 
+   * Cleanups and bugfixes.
+
    * New USB IDs for cameras:
 
- 	Canon PowerShot SD1000, A450, A550, A420, SD40, SD750
-	Canon Digitial IXUS 70, 900Ti, 75
+ 	Canon PowerShot SD1000, SD900, A450, A550, A560, A570, A420, SD40, SD750
+ 	Canon PowerShot S5 IS, SD1000
+	Canon Digitial IXUS 70, 75, 900Ti
 	Canon MV750i
-	Nikon CoolPix S4, S6, P4
-	Kodak EasyShare C743, C433, V705, C875, V570, P880, V603, V610
+	Nikon CoolPix S4, S6, P4, L10
+	Nikon DSC D40, 
+	Kodak EasyShare C433, C613, C653, C743, C875, V570, V610, V705, P880, V603
 	HP Photosmart R967
 	Minolta DiMAGE x21
 	Fuji FinePix F20, F40, S9500
 	Casio EX-Z700
-	Sony DSC N2
+	Sony DSC N2, W35, W200
 
    * Several new USB IDs for MTP players, including
      all from libmtp:
-	iRiver T20, N12
+	iRiver T20, N12, iFP-800, T20 2, Clix2
 	Archos 504, Toshiba Gigabeat P20
 	Philips PSA235, SA9200
 	Samsung YH-925GS
