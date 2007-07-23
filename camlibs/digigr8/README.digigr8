@@ -147,7 +147,7 @@ deletion: delete the last photo taken, or delete all. Each action is
 performed by an appropriate sequence of button pushes on the camera.
 
 
-WHAT GUI FRONTENDS DOES THIS CAMERA LIBRARY SUOPPORT?
+WHAT GUI FRONTENDS DOES THIS CAMERA LIBRARY SUPPORT?
 
 Gtkam seems to work well for me with this library. Some of the other various
 frontends do not seem to work quite so well for me. But one of them may work 
@@ -209,6 +209,31 @@ The USB command to delete is the same as the command to shoot a frame
 pix micro, it will deledte whatever photos are on the camera !!!
 
 
+A note on capture:
+
+These cameras will perform "gphoto2 --capture-preview" which means, to shoot a 
+frame and download it to the computer immediately. On the 0x9050 camera, the 
+same USB command is what is used to delete all frames on the camera. On the 
+0x905C cameras, the capture function works, too, but will not affect whatever
+is on the camera. The default resolution setting for capture with all these 
+cameras is 320x240. For those cameras which will do 640x480 resolution in 
+still photo mode, there is a tweak which can cause the camera to do the 
+capture at 640x480 as well. It is as follows:
+
+Look through the code in camlibs/library.c for the capture function. You will 
+see a USB command in which the digit 0x1440 appears. Change that to 0x2840 and 
+re-compile and re-install. It is also possible to get 160x120 resolution, but 
+that is not so interesting. Evidently, the "40" means to do capture, and the 
+previous two digits are the resolution setting in hexadecimal, with the final 
+"0" removed. For example, 640=0x280 -> 0x2840 and 320=0x140 -> 0x1440 (which, 
+again, is the default setting). I am not sure what would happen if the 
+resolution setting here is too high for the camera (the known 0x9050 camera
+will only do 352x288 at max resolution in still mode, for instance). Therefore,
+this tweak is not implemented. However, it does work for me with those cameras 
+for which it works. It should be repeated, too, that this tweak is not 
+documented by any manufacturer and is not available in the OEM driver for any 
+of these cameras. 
+
 
 WARRANTY? 
 
@@ -230,4 +255,4 @@ WARRANTY?
 
 Theodore Kilgore
 12/05/05
-(revised 12/29/05, 03/28/07, 06/25/07, 07/16/07)
+(revised 12/29/05, 03/28/07, 06/25/07, 07/16/07, 07/23/07)

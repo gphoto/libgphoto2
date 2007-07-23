@@ -1,3 +1,7 @@
+2007-07-23   Theodore Kilgore <kilgota@auburn.edu>
+	* README.digigr8: Notes on how to change the capture-preview 
+	resolution setting added. 
+
 2007-07-16   Theodore Kilgore <kilgota@auburn.edu>
 	* library.c: "Disney pix micro" camera supports "delete all."
 	Also, digigr8 cameras will do capture_preview. These two functions added.
