@@ -1,0 +1,25 @@
+Device info:
+Manufacturer: Apple Inc.
+  model: Apple iPhone
+  device version: 1.0.0
+  serial number: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+Vendor extension ID: 0x00000000
+Vendor extension description: Device has no vendor extensions
+Supported operations:
+  0x1001
+  0x1002
+  0x1003
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100a
+  0x100b
+  0x1014
+  0x1015
+  0x101b
+Events Supported:
+  0x4006
+Device Properties Supported:
