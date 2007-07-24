@@ -731,11 +731,10 @@ static struct {
 
 	{"Sanyo:VPC-C5 (PTP mode)",             0x0474, 0x0230, 0},
 
-
-	/************ Add MTP devices below this line ***********/
 	/* from Mike Meyer <mwm@mired.org> */
 	{"Apple:iPhone (PTP mode)",		0x05ac, 0x1290, PTPBUG_DCIM_WRONG_PARENT},
 
+	/************ Add MTP devices below this line ***********/
 	/* This camera speaks _only_ PictBridge, so it is too limited
 	 * for us. -Marcus
 	{"Motorola:K1 (PTP mode)",              0x22b8, 0x4811, 0},
