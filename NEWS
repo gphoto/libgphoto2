@@ -72,6 +72,7 @@ PTP2 driver:
 	Fuji FinePix F20, F40, S9500
 	Casio EX-Z700
 	Sony DSC N2, W35, W200
+	Apple iPhone
 
    * Several new USB IDs for MTP players, including
      all from libmtp:
