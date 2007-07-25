@@ -334,8 +334,11 @@ static struct {
 	{"Kodak:C743",   0x040a, 0x05ae, 0},
 	/* via IRC */
 	{"Kodak:C653",   0x040a, 0x05af, 0},
+	/* Nicolas Brodu <nicolas.brodu@free.fr> */
+	{"Kodak:Z712 IS",0x040a, 0x05b4, 0},
+	/* */
 	{"Kodak:C613",   0x040a, 0x05b7, 0},
-        /* via IRC */
+	/* via IRC */
 	{"Kodak:C633",   0x040a, 0x05ba, 0},
 
 	/* HP PTP cameras */
