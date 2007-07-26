@@ -766,17 +766,16 @@ static struct {
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1620359&group_id=8874 */
 	{"iRiver:N12",				0x4102, 0x1122, PTP_MTP},
 	/* Reported by Philip Antoniades <philip@mysql.com> */
-	{"iRiver:Clix2",			0x4102, 0x1126, PTP_MTP},
+	{"iRiver:Clix2",			0x4102, 0x1126, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* Reported by Adam Torgerson */
-	{"iRiver:Clix",				0x4102, 0x112a, PTP_MTP},
+	{"iRiver:Clix",				0x4102, 0x112a, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"iRiver:X20",				0x4102, 0x1132, PTP_MTP},
 	/* Scott Call <scott.call@gmail.com> */
 	{"iRiver:H10 20GB",                     0x4102, 0x2101, PTP_MTP},
 	/* Petr Spatka spatka@luzanky.cz */
 	{"iRiver:H10",                          0x4102, 0x2102, PTP_MTP},
 	{"iRiver:Portable Media Center",	0x1006, 0x4002, PTP_MTP},
-	{"iRiver:Portable Media Center",	0x1006, 0x4003, PTP_MTP},
-	/* From: thanosz@softhome.net */
-	{"Philips:HDD6320",			0x0471, 0x01eb, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"iRiver:Portable Media Center 2",	0x1006, 0x4003, PTP_MTP},
 	{"Philips:HDD6320 2",			0x0471, 0x014b, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	{"Philips:HDD6130/17",			0x0471, 0x014c, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* from libmtp forum */
@@ -785,6 +784,10 @@ static struct {
 	{"Philips:GoGear SA9200",		0x0471, 0x014f, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* From Gerhard Mekenkamp */
 	{"Philips:GoGear Audio",		0x0471, 0x0165, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	/* from npedrosa */
+	{"Philips:PSA610",			0x0471, 0x0181, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	/* From: thanosz@softhome.net */
+	{"Philips:HDD6320",			0x0471, 0x01eb, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* from XNJB user (libmtp) */
 	{"Philips:PSA235",			0x0471, 0x7e01, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 
@@ -829,6 +832,7 @@ static struct {
 	/* Reported by Rob Brown */
 	{"Toshiba:Gigabeat P10",                0x0930, 0x0011, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 
+	{"Archos:Gmini XS100",			0x0e79, 0x1207, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	{"Archos:XS202 (MTP mode)",		0x0e79, 0x1208, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* Reported by gudul1@users.sourceforge.net */
 	{"Archos:104",				0x0e79, 0x120a, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
@@ -838,10 +842,13 @@ static struct {
 	/* From Mark Veinot */
 	{"JVC:Alneo XA-HD500", 			0x04f1, 0x6105, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 
+	{"Samsung:YH-920",			0x04e8, 0x5022, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* Contributed by aronvanammers on SourceForge (libmtp) */
 	{"Samsung:YH-925GS",			0x04e8, 0x5024, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	{"Samsung:YH-820",			0x04e8, 0x502e, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	{"Samsung:YH-925",			0x04e8, 0x502f, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"Samsung:YH-J70J",			0x04e8, 0x5033, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"Samsung:YP-Z5",			0x04e8, 0x503c, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* From XNJB user */
 	{"Samsung:YP-Z5",			0x04e8, 0x5041, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1474056&group_id=8874&atid=108874 */
@@ -852,6 +859,8 @@ static struct {
 	{"Samsung:YP-F2J",			0x04e8, 0x5057, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* Reported by Patrick <skibler@gmail.com> */
 	{"Samsung:YP-K5",			0x04e8, 0x505a, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	/* "m.eik michalke" <m@openmusiccontest.org> */
+	{"Samsung:YP-U3",			0x04e8, 0x507d, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* Reported by Matthew Wilcox <matthew@wil.cx> */
 	{"Samsung:Yepp T9",			0x04e8, 0x507f, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* paul <pclinch@gmail.com> */
@@ -859,6 +868,7 @@ static struct {
 	{"Samsung:YH-999 Portable Media Center",0x04e8, 0x5a0f, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* From Lionel Bouton */
 	{"Samsung:X830 Mobile Phone",		0x04e8, 0x6702, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"Samsung:U600 Mobile Phone",		0x04e8, 0x6709, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 
 	/* Reported by Brian Robison */
 	{"SanDisk:Sansa m240",			0x0781, 0x7400, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
@@ -868,7 +878,11 @@ static struct {
 	{"Sandisk:Sansa e200",			0x0781, 0x7420, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	{"Sandisk:Sansa e250",			0x0781, 0x7420, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	{"Sandisk:Sansa e260",			0x0781, 0x7420, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"Sandisk:Sansa e270",			0x0781, 0x7420, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"Sandisk:Sansa e280",			0x0781, 0x7421, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	{"SanDisk:Sansa c250",			0x0781, 0x7450, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	/* Reported by Troy Curtis Jr. */
+	{"SanDisk:Sansa Express",		0x0781, 0x7460, PTP_MTP},
 	/* Reported by XNJB user, and Miguel de Icaza <miguel@gnome.org> */
 	{"SanDisk:Sansa Connect",		0x0781, 0x7480, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 
@@ -877,9 +891,25 @@ static struct {
 	/* From Richard Low */
 	{"Sirius:Stiletto",			0x18f6, 0x0102, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 
+	{"Nokia:5300 Mobile Phone (MTP mode)",	0x0421, 0x04ba, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* https://sourceforge.net/tracker/?func=detail&atid=108874&aid=1659608&group_id=8874 */
-	{"Nokia:Mobile Phones (MTP mode)",	0x0421, 0x04e1, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"Logik:LOG DAX MP3 and DAB Player",	0x13d1, 0x7002, PTP_MTP|PTP_MTP_PROPLIST_WORKS}
+	{"Nokia:Mobile Phones",			0x0421, 0x04e1, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"Nokia:N80 Internet Edition",		0x0421, 0x04f1, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+
+	{"Logik:LOG DAX MP3 and DAB Player",	0x13d1, 0x7002, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+
+	{"Thomson:Opal",			0x069b, 0x0777, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"RCA:Lyra MC4002",			0x069b, 0x0777, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+
+	{"FOMA:F903iX HIGH-SPEED",		0x04c5, 0x1140, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+
+	/* Reported by Peter Gyongyosi <gyp@impulzus.com> to libmtp */
+	{"Palm:Handspring Pocket Tunes",	0x1703, 0x0001, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+
+	/* Reported by Stefan Voss <svoss@web.de> to libmtp */
+	{"Trekstor:Vibez 8/12GB",		0x066f, 0x842a, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+
+	{"Disney:MixMax",			0x0aa6, 0x6021, PTP_MTP|PTP_MTP_PROPLIST_WORKS}
 };
 
 static struct {
