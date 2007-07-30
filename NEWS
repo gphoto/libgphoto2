@@ -1,4 +1,4 @@
-libgphoto2 2.3.1.4.trunk
+libgphoto2 2.4.0
 
 Build:
    * Non-recursive camlib build: Makes "make -j2" useful.
@@ -44,7 +44,7 @@ disk port:
 
 directory driver:
    * ignore anything not starting by '.' because it is not DCF compliant
-     and it is use for things like Trash of metadata...
+     and it is used for things like Trash of metadata...
 
 PTP2 driver:
    * For Canon capture capable cameras, enable shutter and aperture control

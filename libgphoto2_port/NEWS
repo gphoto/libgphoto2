@@ -1,3 +1,15 @@
+libgphoto2_port 0.8.0
+
+   * various bug fixes and doxygenation
+
+USB:
+   * reset the USB device on close.  This cures the infamous "Canon hang 
+     on second init" problem.
+
+Disk:
+   * handle automounter properly.
+
+
 libgphoto2_port 0.7.2
 
 Build:
