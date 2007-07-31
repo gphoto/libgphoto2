@@ -719,7 +719,9 @@ static struct {
 	{"Fuji:FinePix F20",			0x04cb, 0x01c0, 0},
 	/* launchpad 67532 */
 	{"Fuji:FinePix F31fd",			0x04cb, 0x01c1, 0},
-	{"Fuji:FinePix F40fd", 0x04cb, 0x01c5, 0},
+	{"Fuji:FinePix F40fd",			0x04cb, 0x01c5, 0},
+	/* g4@catking.net */
+	{"Fuji:FinePix A800",			0x04cb, 0x01d2, 0},
 
 	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
 	{"Ricoh:Caplio R3 (PTP mode)",          0x05ca, 0x032f, 0},
