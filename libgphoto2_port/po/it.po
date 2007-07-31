@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port 2.3.0\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2007-06-11 10:38+0200\n"
+"POT-Creation-Date: 2007-07-21 12:38+0200\n"
 "PO-Revision-Date: 2007-01-12 12:36+0000\n"
 "Last-Translator: Marco Colombo <m.colombo@ed.ac.uk>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
@@ -517,7 +517,7 @@ msgstr ""
 "Impossibile trovare il dispositivo USB (vendor 0x%x, prodotto 0x%x). "
 "Assicurarsi che il dispositivo sia connesso al computer."
 
-#: usb/libusb.c:974
+#: usb/libusb.c:984
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "

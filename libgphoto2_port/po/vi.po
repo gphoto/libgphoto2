@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2 port-2.1.6rc2\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2007-06-11 10:38+0200\n"
+"POT-Creation-Date: 2007-07-21 12:38+0200\n"
 "PO-Revision-Date: 2005-06-29 19:59+0930\n"
 "Last-Translator: Ngô Trần Thủy <ngotranthuy@gmail.com>\n"
 "Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net>\n"
@@ -507,7 +507,7 @@ msgstr ""
 "Không tìm thấy thiết bị USB (nhà bán 0x%x, sản phẩm 0x%x). Kiểm tra xem việc "
 "kết nối thiết bị với máy tính."
 
-#: usb/libusb.c:974
+#: usb/libusb.c:984
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "

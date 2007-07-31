@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_2.1.6-8_libgphoto2_port-0_nl\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2007-06-11 10:38+0200\n"
+"POT-Creation-Date: 2007-07-21 12:38+0200\n"
 "PO-Revision-Date: 2006-06-20 20:46+0100\n"
 "Last-Translator: Kurt De Bree <kdebree(AT)telenet(DOT)be>\n"
 "Language-Team: Dutch <debian-l10n-dutch@lists.debian.org>\n"
@@ -518,7 +518,7 @@ msgstr ""
 "Kon het USB-toestel niet vinden (handelaar 0x%x, product 0x%x). Zorg ervoor "
 "dat het toestel aan de computer aangesloten is."
 
-#: usb/libusb.c:974
+#: usb/libusb.c:984
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
