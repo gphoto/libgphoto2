@@ -573,14 +573,6 @@ CPPFLAGS="$CPPFLAGS_save"
 ],[],[default-on],[http://www.sourceforge.net/projects/libexif])dnl
 
 
-dnl ---------------------------------------------------------------------------
-dnl Check libusb
-dnl FIXME: What for? Shouldn't this belong into libgphoto2_port?
-dnl ---------------------------------------------------------------------------
-AC_PATH_PROG(LIBUSB_CONFIG,libusb-config)
-AM_CONDITIONAL(HAVE_LIBUSB,test -n "${LIBUSB_CONFIG}")
-
-
 dnl FIXME: Is this accurate?
 AM_CONDITIONAL([HAVE_CXX], [test -n "$CXX" && test "X$CXX" != "Xno"])
 
