@@ -69,6 +69,7 @@ dnl AC_DISABLE_SHARED
 dnl AC_LIBLTDL_CONVENIENCE([libltdl])
 dnl AC_WITH_LTDL
 dnl AC_LIB_LTDL
+dnl Disable building static library, as no one uses it anyway.
 AC_DISABLE_STATIC
 AC_LIBTOOL_WIN32_DLL
 AC_LIBTOOL_DLOPEN
