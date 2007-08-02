@@ -382,14 +382,31 @@ typedef struct {
 	char *owner;
 	char *group;
 	char *script;
-	char *begin_string;
-	char *usbcam_string;
+	const char *begin_string;
+	const char *usbcam_string;
 } udev_persistent_data_t;
 
 
 static void
 udev_parse_params (const func_params_t *params, void **data)
 {
+	/* Note: 2 lines because we need to use || ... having them on the same
+	 * line would mean &&.
+	 */
+	static const char * const begin_strings[] = {
+		/* UDEV_PRE_0_98 */
+		"BUS!=\"usb_device\", GOTO=\"libgphoto2_rules_end\"\n"
+		"ACTION!=\"add\", GOTO=\"libgphoto2_rules_end\"\n\n",
+		/* UDEV_0_98 */
+		"SUBSYSTEM!=\"usb_device\", GOTO=\"libgphoto2_rules_end\"\n"
+		"ACTION!=\"add\", GOTO=\"libgphoto2_rules_end\"\n\n"
+	};
+	static const char * const usbcam_strings[] = {
+		/* UDEV_PRE_0_98 */
+		"SYSFS{idVendor}==\"%04x\", SYSFS{idProduct}==\"%04x\", ",
+		/* UDEV_0_98 */
+		"ATTRS{idVendor}==\"%04x\", ATTRS{idProduct}==\"%04x\", ",
+	};
 	udev_persistent_data_t *pdata;
 	pdata = calloc(1, sizeof(udev_persistent_data_t));
 	pdata->version = UDEV_0_98;
@@ -436,37 +453,12 @@ udev_parse_params (const func_params_t *params, void **data)
 		FATAL("The <script> parameter conflicts with the <mode,group,owner> parameters.");
 	}
 
-	/* Note: 2 lines because we need to use || ... having them on the same
-	 * line would mean &&.
-	 */
-	static char *begin_strings[] = {
-		/* UDEV_PRE_0_98 */
-		"BUS!=\"usb_device\", GOTO=\"libgphoto2_rules_end\"\n"
-		"ACTION!=\"add\", GOTO=\"libgphoto2_rules_end\"\n\n",
-		/* UDEV_0_98 */
-		"SUBSYSTEM!=\"usb_device\", GOTO=\"libgphoto2_rules_end\"\n"
-		"ACTION!=\"add\", GOTO=\"libgphoto2_rules_end\"\n\n"
-	};
-	static char *usbcam_strings[] = {
-		/* UDEV_PRE_0_98 */
-		"SYSFS{idVendor}==\"%04x\", SYSFS{idProduct}==\"%04x\", ",
-		/* UDEV_0_98 */
-		"ATTRS{idVendor}==\"%04x\", ATTRS{idProduct}==\"%04x\", ",
-	};
 	pdata->begin_string = begin_strings[pdata->version];
 	pdata->usbcam_string = usbcam_strings[pdata->version];
 }
 
-static void
-version_str_func(const char *str, void *data)
-{
-	const char **foo = (const char **)data;
-	fprintf(stdout, "V[%s]", str);
-	fflush(stdout);
-	*foo = str;
-}
 
-static inline const char *
+static const char *
 get_version_str(udev_version_t version)
 {
 	return gpi_enum_to_string(version, udev_version_t_map);
