@@ -30,6 +30,7 @@
 #include "config.h"
 #include <gphoto2/gphoto2-port-library.h>
 
+/* Solaris needs this */
 #define __EXTENSIONS__
 
 #include <stdlib.h>
