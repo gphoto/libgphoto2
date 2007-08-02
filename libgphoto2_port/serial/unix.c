@@ -30,6 +30,8 @@
 #include "config.h"
 #include <gphoto2/gphoto2-port-library.h>
 
+#define __EXTENSIONS__
+
 #include <stdlib.h>
 #include <stdio.h>
 #ifdef HAVE_UNISTD_H
