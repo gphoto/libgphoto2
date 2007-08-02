@@ -43,7 +43,7 @@
  * the name/value union, and so it is the default value initialized.
  *
  * To init to a range, use:
- *	{ range: { 100.1, 2000.0, 10 } }, NULL 
+ *	{ .range = { 100.1, 2000.0, 10 } }, NULL 
  *
  * Casts are used to avoid warnings about using a const.
  *
@@ -352,7 +352,7 @@ static const RegisterDescriptorType olysp500uz_reg_03[] = {
  */
 static const ValueNameType olyrange_reg_03_val_names[] = { 
 	{
-		{ range: { 0, 16000000, 100 } }, NULL 
+		{ .range = { 0, 16000000, 100 } }, NULL 
 	}
 };
 static const RegisterDescriptorType olyrange_reg_03[] = { 
@@ -672,7 +672,7 @@ static const RegisterDescriptorType oly3040_reg_34[] = {
  * Register 35: lcd brightness.
  */
 static const ValueNameType oly3040_reg_35_val_names[] = {
-	{ { range: { 0, 7 } }, NULL },
+	{ { .range = { 0, 7 } }, NULL },
 };
 static const RegisterDescriptorType oly3040_reg_35[] = { 
 	{
@@ -686,7 +686,7 @@ static const RegisterDescriptorType oly3040_reg_35[] = {
  * Register 24: camera power save (idle time before entering power save mode)
  */
 static const ValueNameType oly3040_reg_24_val_names[] = {
-	{ { range: { 30, 600, 30  } }, NULL },
+	{ { .range = { 30, 600, 30  } }, NULL },
 };
 static const RegisterDescriptorType oly3040_reg_24[] = { 
 	{
@@ -701,7 +701,7 @@ static const RegisterDescriptorType oly3040_reg_24[] = {
  * (idle time before entering power save mode)
  */
 static const ValueNameType oly3040_reg_23_val_names[] = {
-	{ { range: { 30, 600, 30  } }, NULL },
+	{ { .range = { 30, 600, 30  } }, NULL },
 };
 static const RegisterDescriptorType oly3040_reg_23[] = { 
 	{
@@ -714,7 +714,7 @@ static const RegisterDescriptorType oly3040_reg_23[] = {
  * Register 38: lcd auto shut off time
  */
 static const ValueNameType oly3040_reg_38_val_names[] = {
-	{ { range: { 30, 600, 30  } }, NULL },
+	{ { .range = { 30, 600, 30  } }, NULL },
 };
 static const RegisterDescriptorType oly3040_reg_38[] = { 
 	{
@@ -806,7 +806,7 @@ static const RegisterDescriptorType olysp500uz_reg_70[] = {
  */
 static const ValueNameType oly750uz_reg_71_val_names[] = {
 	{
-		{ range: { 6.3, 63.0, .1 } }, NULL
+		{ .range = { 6.3, 63.0, .1 } }, NULL
 	}
 };
 static const RegisterDescriptorType oly750uz_reg_71[] = { 
@@ -822,7 +822,7 @@ static const RegisterDescriptorType oly750uz_reg_71[] = {
  */
 static const ValueNameType olysp500uz_reg_71_val_names[] = {
 	{
-		{ range: { 6.3, 63.0, .3 } }, NULL
+		{ .range = { 6.3, 63.0, .3 } }, NULL
 	}
 };
 static const RegisterDescriptorType olysp500uz_reg_71[] = { 
@@ -838,7 +838,7 @@ static const RegisterDescriptorType olysp500uz_reg_71[] = {
  */
 static const ValueNameType oly3040_reg_71_val_names[] = {
 	{
-		{ range: { 7.3, 21.0, .1 } }, NULL
+		{ .range = { 7.3, 21.0, .1 } }, NULL
 	}
 };
 static const RegisterDescriptorType oly3040_reg_71[] = { 
@@ -907,7 +907,7 @@ static const RegisterDescriptorType oly750uz_reg_85[] = {
  *   121 to 240: normal positions
  */
 static const ValueNameType oly3040_reg_103_val_names[] = {
-	{ { range: { 1, 240, 1 } }, NULL },
+	{ { .range = { 1, 240, 1 } }, NULL },
 };
 static const RegisterDescriptorType oly3040_reg_103[] = { 
 	{
@@ -923,7 +923,7 @@ static const RegisterDescriptorType oly3040_reg_103[] = {
  *      0 to 120: non-macro mode
  */
 static const ValueNameType oly750uz_reg_103_val_names[] = {
-	{ { range: { 1, 120, 1 } }, NULL },
+	{ { .range = { 1, 120, 1 } }, NULL },
 };
 static const RegisterDescriptorType oly750uz_reg_103[] = { 
 	{

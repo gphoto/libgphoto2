@@ -38,7 +38,7 @@
  * the name/value union, and so it is the default value initialized.
  *
  * To init to a range, use:
- *	{ range: { 100.1, 2000.0, 10 } }, NULL 
+ *	{ .range = { 100.1, 2000.0, 10 } }, NULL 
  *
  * Casts are used to avoid warnings about using a const.
  *
@@ -153,7 +153,7 @@ static const RegisterDescriptorType cp880_reg_02[] = {
 #ifdef RANGE_FOR_SHUTTER
 static const ValueNameType cp880_reg_03_val_names[] = { 
 	{
-		{ range: { 0, 8000000 } }, NULL 
+		{ .range = { 0, 8000000 } }, NULL 
 	}
 };
 static const RegisterDescriptorType cp880_reg_03[] = { 
@@ -384,7 +384,7 @@ static const RegisterDescriptorType cp880_reg_34[] = {
  * Register 35: lcd brightness.
  */
 static const ValueNameType cp880_reg_35_val_names[] = {
-	{ { range: { 0, 7 } }, NULL },
+	{ { .range = { 0, 7 } }, NULL },
 };
 static const RegisterDescriptorType cp880_reg_35[] = { 
 	{
@@ -399,7 +399,7 @@ static const RegisterDescriptorType cp880_reg_35[] = {
  * what the maximum range should be.
  */
 static const ValueNameType cp880_reg_38_val_names[] = {
-	{ { range: { 0, 255 /* XXX? */ } }, NULL },
+	{ { .range = { 0, 255 /* XXX? */ } }, NULL },
 };
 static const RegisterDescriptorType cp880_reg_38[] = { 
 	{
@@ -450,7 +450,7 @@ static const RegisterDescriptorType cp880_reg_53[] = {
 #ifdef RANGE_FOR_EXPOSURE
 static const ValueNameType cp880_reg_69_val_names[] = {
 	{
-		{ range: { -2.0, 2.0, .1 } }, NULL,
+		{ .range = { -2.0, 2.0, .1 } }, NULL,
 	}
 };
 static const RegisterDescriptorType cp880_reg_69[] = { 
@@ -508,7 +508,7 @@ static const RegisterDescriptorType cp880_reg_70[] = {
  */
 static const ValueNameType cp880_reg_71_val_names[] = {
 	{
-		{ range: { 8.0, 20.0, .1 } }, NULL
+		{ .range = { 8.0, 20.0, .1 } }, NULL
 	}
 };
 static const RegisterDescriptorType cp880_reg_71[] = { 
