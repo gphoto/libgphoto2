@@ -34,6 +34,13 @@ const char **gp_library_version(GPVersionVerbosity verbose)
 	static const char *shrt[] =
 		{
 			PACKAGE_VERSION,
+#ifdef INCOMPLETE_CAMLIB_SET
+			"INCOMPLETE CAMLIB SET ("
+			INCOMPLETE_CAMLIB_SET
+			")",
+#else
+			"all camlibs",
+#endif
 #ifdef HAVE_CC
 			HAVE_CC,
 #else
@@ -54,6 +61,13 @@ const char **gp_library_version(GPVersionVerbosity verbose)
 	static const char *verb[] =
 		{
 			PACKAGE_VERSION,
+#ifdef INCOMPLETE_CAMLIB_SET
+			"INCOMPLETE CAMLIB SET ("
+			INCOMPLETE_CAMLIB_SET
+			")",
+#else
+			"all camlibs",
+#endif
 #ifdef HAVE_CC
 			HAVE_CC " (C compiler used)",
 #else

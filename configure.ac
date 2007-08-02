@@ -638,14 +638,22 @@ fi
 
 GP_CONFIG_OUTPUT
 
-dnl Catch the Gentoo folks that think just enabling "canon" makes their
-dnl Canon camera work.
-if test "$BUILD_THESE_CAMLIBS" = " canon.la" ; then
-	echo 
-	echo "*** Note: Newer Canon Cameras are supported by the ptp2 camera driver."
-	echo "***       'canon' is used for older models."
-	echo "***       If you are unsure, please enable both the canon and ptp2 driver."
-	echo 
+dnl Catch the Gentoo folks about to shoot themselves in the foot.
+dnl Just enabling "foo" often does not make a camera made by
+dnl manufacturer "Foo" work.
+if test "x$camlibs" = "xall"; then
+   :
+else
+   AC_MSG_WARN([
+# Caution: You have chosen not to build all camlibs.
+#          Your camera may need one of those camlibs you disabled.
+#          YOUR CAMERA MAY NOT WORK!
+# 
+# Many cameras of many brands are supported by a camlib with a 
+# name different from brand or camera name. If you are unsure, please
+#   * enable at least the "ptp2" camlib
+#   * or even better, just build "all" camlibs.
+])
 fi
 
 echo "
