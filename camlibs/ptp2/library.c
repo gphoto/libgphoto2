@@ -912,6 +912,8 @@ static struct {
 
 	/* Reported by Stefan Voss <svoss@web.de> to libmtp */
 	{"Trekstor:Vibez 8/12GB",		0x066f, 0x842a, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	/* Cristi Magherusan <majeru@gentoo.ro> to libmtp */
+	{"Trekstor:i.Beat sweez 2GB",		0x0402, 0x0611, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 
 	{"Disney:MixMax",			0x0aa6, 0x6021, PTP_MTP|PTP_MTP_PROPLIST_WORKS}
 };
