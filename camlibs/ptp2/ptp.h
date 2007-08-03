@@ -761,7 +761,9 @@ union _PTPPropertyValue {
 	int16_t		i16;
 	uint32_t	u32;
 	int32_t		i32;
-	/* XXXX: 64bit and 128 bit signed and unsigned missing */
+	uint64_t	u64;
+	int64_t		i64;
+	/* XXXX: 128 bit signed and unsigned missing */
 	struct array {
 		uint32_t	count;
 		union _PTPPropertyValue	*v;	/* malloced, count elements */
