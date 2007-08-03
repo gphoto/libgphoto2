@@ -1,4 +1,12 @@
-libgphoto2 2.3.1.4.trunk
+libgphoto2 2.4.0.1.trunk
+
+PTP2 driver:
+   * Fixed bugs in packing of PTP arrays, unpack / pack 64 bit entities.
+
+   * Devices added:
+     - Canon IXUS iZ
+------------------------------------------------------------------------
+libgphoto2 2.4.0 release
 
 Build:
    * Non-recursive camlib build: Makes "make -j2" useful.
