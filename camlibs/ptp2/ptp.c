@@ -2983,6 +2983,7 @@ ptp_free_objectpropdesc(PTPObjectPropDesc* opd)
 				ptp_free_devicepropvalue (opd->DataType, opd->FORM.Enum.SupportedValue+i);
 			free (opd->FORM.Enum.SupportedValue);
 		}
+		break;
 	default:
 		fprintf (stderr, "Unknown OPFF type %d\n", opd->FormFlag);
 		break;
