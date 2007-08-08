@@ -1668,6 +1668,10 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	uint32_t newobject = 0x0;
 	int done;
 
+	/* adjust if we ever do sound or movie capture */
+	if (type != GP_CAPTURE_IMAGE)
+		return GP_ERROR_NOT_SUPPORTED;
+
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
 		ptp_operation_issupported(params, PTP_OC_NIKON_Capture)
 	){
@@ -1688,9 +1692,6 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	) {
 		return camera_canon_eos_capture (camera, type, path, context);
 	}
-
-	if (type != GP_CAPTURE_IMAGE)
-		return GP_ERROR_NOT_SUPPORTED;
 
 	if (!ptp_operation_issupported(params,PTP_OC_InitiateCapture)) {
 		gp_context_error(context,
