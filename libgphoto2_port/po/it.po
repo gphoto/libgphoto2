@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port 2.3.0\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2007-06-11 10:38+0200\n"
+"POT-Creation-Date: 2007-07-29 19:38-0400\n"
 "PO-Revision-Date: 2007-01-12 12:36+0000\n"
 "Last-Translator: Marco Colombo <m.colombo@ed.ac.uk>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
@@ -482,23 +482,23 @@ msgstr "Impossibile chiudere la porta USB (%m)."
 msgid "Could not close USB port (%m)."
 msgstr "Impossibile chiudere la porta USB (%m)."
 
-#: usb/libusb.c:551
+#: usb/libusb.c:553
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "Impossibile impostare la configurazione %d/%d (%m)"
 
 # FIXME
-#: usb/libusb.c:584
+#: usb/libusb.c:586
 #, fuzzy, c-format
 msgid "Could not set altsetting from %d to %d (%m)"
 msgstr "Impossibile impostare altsetting %d/%d (%m)"
 
-#: usb/libusb.c:676
+#: usb/libusb.c:678
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr "L'id del vendor o del prodotto (0x%x,0x%x) fornito non è valido."
 
-#: usb/libusb.c:712
+#: usb/libusb.c:714
 #, c-format
 msgid ""
 "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
@@ -508,7 +508,7 @@ msgstr ""
 "archiviazione di massa, e potrebbe non funzionare con gphoto2. Riferimento: %"
 "s"
 
-#: usb/libusb.c:754
+#: usb/libusb.c:756
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
@@ -517,7 +517,7 @@ msgstr ""
 "Impossibile trovare il dispositivo USB (vendor 0x%x, prodotto 0x%x). "
 "Assicurarsi che il dispositivo sia connesso al computer."
 
-#: usb/libusb.c:974
+#: usb/libusb.c:986
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "

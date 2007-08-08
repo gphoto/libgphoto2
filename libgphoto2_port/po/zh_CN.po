@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2007-06-11 10:38+0200\n"
+"POT-Creation-Date: 2007-07-29 19:38-0400\n"
 "PO-Revision-Date: 2002-11-21 13:11+0800\n"
 "Last-Translator: Wang Li <charles@linux.net.cn>\n"
 "Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
@@ -466,36 +466,36 @@ msgstr "无法关闭 USB 端口 (%m)。"
 msgid "Could not close USB port (%m)."
 msgstr "无法关闭 USB 端口 (%m)。"
 
-#: usb/libusb.c:551
+#: usb/libusb.c:553
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "无法设定配置 %d/%d (%m)"
 
-#: usb/libusb.c:584
+#: usb/libusb.c:586
 #, fuzzy, c-format
 msgid "Could not set altsetting from %d to %d (%m)"
 msgstr "无法设定补充设置 %d/%d (%m)"
 
-#: usb/libusb.c:676
+#: usb/libusb.c:678
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr "给出的供应商或产品 id (0x%x、0x%x) 不合法。"
 
-#: usb/libusb.c:712
+#: usb/libusb.c:714
 #, fuzzy, c-format
 msgid ""
 "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
 "not function with gphoto2. Reference: %s"
 msgstr "无法找到 USB 设备 (供应商 0x%x、产品 0x%x)。确信该设备已连接到计算机。"
 
-#: usb/libusb.c:754
+#: usb/libusb.c:756
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
 "is connected to the computer."
 msgstr "无法找到 USB 设备 (供应商 0x%x、产品 0x%x)。确信该设备已连接到计算机。"
 
-#: usb/libusb.c:974
+#: usb/libusb.c:986
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "

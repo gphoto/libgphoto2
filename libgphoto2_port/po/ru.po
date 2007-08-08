@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gphoto\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2007-06-11 10:38+0200\n"
+"POT-Creation-Date: 2007-07-29 19:38-0400\n"
 "PO-Revision-Date: 2005-01-05 23:00+0300\n"
 "Last-Translator: Вячеслав Диконов (Vyacheslav Dikonov) <slava@altlinux.ru>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -472,22 +472,22 @@ msgstr "Невозможно закрыть порт USB (%m)."
 msgid "Could not close USB port (%m)."
 msgstr "Невозможно закрыть порт USB (%m)."
 
-#: usb/libusb.c:551
+#: usb/libusb.c:553
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "Невозможно изменить конфигурацию %d/%d (%m)"
 
-#: usb/libusb.c:584
+#: usb/libusb.c:586
 #, fuzzy, c-format
 msgid "Could not set altsetting from %d to %d (%m)"
 msgstr "Невозможно установить альтернативную конфигурацию %d/%d (%m)"
 
-#: usb/libusb.c:676
+#: usb/libusb.c:678
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr "Неверный идентификатор производителя или продукта (0x%x,0x%x)."
 
-#: usb/libusb.c:712
+#: usb/libusb.c:714
 #, c-format
 msgid ""
 "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
@@ -496,7 +496,7 @@ msgstr ""
 "USB устройство (производитель 0x%x, продукт 0x%x) работает как устройство "
 "хранения данных.Программа gphoto2 не может его использовать. См.: %s"
 
-#: usb/libusb.c:754
+#: usb/libusb.c:756
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
@@ -505,7 +505,7 @@ msgstr ""
 "Не найдено устройство USB (производитель 0x%x, продукт 0x%x). Убедитесь, что "
 "устройство подключено к компьютеру."
 
-#: usb/libusb.c:974
+#: usb/libusb.c:986
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
