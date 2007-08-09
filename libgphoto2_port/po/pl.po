@@ -1,14 +1,14 @@
 # Polish translation for libgphoto2_port.
-# Copyright (C) 2005, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2005, 2006, 2007 Free Software Foundation, Inc.
 # This file is distributed under the same license as the libgphoto package.
-# Jakub Bogusz <qboosh@pld-linux.org>, 2005-2006.
+# Jakub Bogusz <qboosh@pld-linux.org>, 2005-2007.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libgphoto2_port 2.3.0\n"
+"Project-Id-Version: libgphoto2_port 2.4.0\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2007-07-21 12:38+0200\n"
-"PO-Revision-Date: 2006-12-08 23:12+0100\n"
+"POT-Creation-Date: 2007-07-29 19:38-0400\n"
+"PO-Revision-Date: 2007-08-09 00:11+0200\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -318,14 +318,12 @@ msgstr "Zerowanie stopu..."
 #: libgphoto2_port/gphoto2-port.c:848
 #, c-format
 msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr ""
-"Zapis komunikatu (¿±danie=0x%x warto¶æ=0x%x indeks=0x%x rozmiar=%i=0x%x)..."
+msgstr "Zapis komunikatu (¿±danie=0x%x warto¶æ=0x%x indeks=0x%x rozmiar=%i=0x%x)..."
 
 #: libgphoto2_port/gphoto2-port.c:883
 #, c-format
 msgid "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr ""
-"Odczyt komunikatu (¿±danie=0x%x warto¶æ=0x%x indeks=0x%x rozmiar=%i=0x%x)..."
+msgstr "Odczyt komunikatu (¿±danie=0x%x warto¶æ=0x%x indeks=0x%x rozmiar=%i=0x%x)..."
 
 #: libgphoto2_port/gphoto2-port.c:890
 msgid "msg_read"
@@ -358,9 +356,7 @@ msgstr "Urz±dzenie '%s' nie mo¿e zostaæ odblokowane."
 #: serial/unix.c:289
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
-msgstr ""
-"Urz±dzenie '%s' nie mo¿e zostaæ odblokowane, bo jest zablokowane przez pid %"
-"d."
+msgstr "Urz±dzenie '%s' nie mo¿e zostaæ odblokowane, bo jest zablokowane przez pid %d."
 
 #: serial/unix.c:293
 #, c-format
@@ -446,14 +442,8 @@ msgstr "Nie uda³o siê zapytaæ j±dra o sterownik urz±dzenia."
 
 #: usb/libusb.c:269
 #, c-format
-msgid ""
-"Could not claim interface %d (%m). Make sure no other program or kernel "
-"module (such as %s) is using the device and you have read/write access to "
-"the device."
-msgstr ""
-"Nie uda³o siê zaw³aszczyæ interfejsu %d (%m). Nale¿y upewniæ siê, czy ¿aden "
-"inny program lub modu³ j±dra (taki jak %s) nie u¿ywa tego urz±dzenia i mamy "
-"prawa odczytu/zapisu do urz±dzenia."
+msgid "Could not claim interface %d (%m). Make sure no other program or kernel module (such as %s) is using the device and you have read/write access to the device."
+msgstr "Nie uda³o siê zaw³aszczyæ interfejsu %d (%m). Nale¿y upewniæ siê, czy ¿aden inny program lub modu³ j±dra (taki jak %s) nie u¿ywa tego urz±dzenia i mamy prawa odczytu/zapisu do urz±dzenia."
 
 #: usb/libusb.c:287
 #, c-format
@@ -461,57 +451,44 @@ msgid "Could not release interface %d (%m)."
 msgstr "Nie uda³o siê oddaæ interfejsu %d (%m)."
 
 #: usb/libusb.c:298
-#, fuzzy, c-format
+#, c-format
 msgid "Could not reset USB port (%m)."
-msgstr "Nie uda³o siê zamkn±æ portu USB (%m)."
+msgstr "Nie uda³o siê zresetowaæ portu USB (%m)."
 
 #: usb/libusb.c:304
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr "Nie uda³o siê zamkn±æ portu USB (%m)."
 
-#: usb/libusb.c:551
+#: usb/libusb.c:553
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "Nie uda³o siê ustawiæ konfiguracji %d/%d (%m)"
 
-#: usb/libusb.c:584
-#, fuzzy, c-format
+#: usb/libusb.c:586
+#, c-format
 msgid "Could not set altsetting from %d to %d (%m)"
-msgstr "Nie uda³o siê ustawiæ altsetting %d/%d (%m)"
+msgstr "Nie uda³o siê przestawiæ altsetting z %d na %d (%m)"
 
-#: usb/libusb.c:676
+#: usb/libusb.c:678
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
-msgstr ""
-"Podany identyfikator producenta lub produktu (0x%x,0x%x) nie jest poprawny."
+msgstr "Podany identyfikator producenta lub produktu (0x%x,0x%x) nie jest poprawny."
 
-#: usb/libusb.c:712
+#: usb/libusb.c:714
 #, c-format
-msgid ""
-"USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
-"not function with gphoto2. Reference: %s"
-msgstr ""
-"Urz±dzenie USB (producent 0x%x, produkt 0x%x) to urz±dzenie przechowuj±ce "
-"dane i mo¿e nie dzia³aæ z gphoto2. Odno¶nik: %s"
+msgid "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might not function with gphoto2. Reference: %s"
+msgstr "Urz±dzenie USB (producent 0x%x, produkt 0x%x) to urz±dzenie przechowuj±ce dane i mo¿e nie dzia³aæ z gphoto2. Odno¶nik: %s"
 
-#: usb/libusb.c:754
+#: usb/libusb.c:756
 #, c-format
-msgid ""
-"Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
-"is connected to the computer."
-msgstr ""
-"Nie uda³o siê odnale¼æ urz±dzenia USB (producent 0x%x, produkt 0x%x). Nale¿y "
-"upewniæ siê, ¿e to urz±dzenie jest pod³±czone do komputera."
+msgid "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device is connected to the computer."
+msgstr "Nie uda³o siê odnale¼æ urz±dzenia USB (producent 0x%x, produkt 0x%x). Nale¿y upewniæ siê, ¿e to urz±dzenie jest pod³±czone do komputera."
 
-#: usb/libusb.c:984
+#: usb/libusb.c:986
 #, c-format
-msgid ""
-"Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
-"sure this device is connected to the computer."
-msgstr ""
-"Nie uda³o siê odnale¼æ urz±dzenia USB (klasa 0x%x, podklasa 0x%x, protokó³ 0x"
-"%x). Nale¿y upewniæ siê, ¿e to urz±dzenie jest pod³±czone do komputera)."
+msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
+msgstr "Nie uda³o siê odnale¼æ urz±dzenia USB (klasa 0x%x, podklasa 0x%x, protokó³ 0x%x). Nale¿y upewniæ siê, ¿e to urz±dzenie jest pod³±czone do komputera)."
 
 #: disk/disk.c:177 disk/disk.c:221 disk/disk.c:257 disk/disk.c:289
 #: disk/disk.c:312
