@@ -1,16 +1,16 @@
 # Swedish translation of libgphoto2_port
-# Copyright ©2000, 2006 Free Software Foundation, Inc.
-# Daniel Nylander <po@danielnylander.se>, 2006.
+# Copyright © 2000, 2006, 2007 Free Software Foundation, Inc.
+# Daniel Nylander <po@danielnylander.se>, 2006, 2007.
 # Andreas Hyden <a.hyden@cyberpoint.se> 2000.
 # Stefan Björnelund <stefanb@Update.UU.SE>, 2002.
 # Sverker Wiberg <sverkerw@update.uu.se>, 2002.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libgphoto2_port 2.2.0\n"
+"Project-Id-Version: libgphoto2_port 2.4.0\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2007-07-29 19:38-0400\n"
-"PO-Revision-Date: 2007-01-21 03:06+0100\n"
+"PO-Revision-Date: 2007-08-09 00:44+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
@@ -313,23 +313,21 @@ msgstr "Skickar avbrott (%i millisekunder)..."
 
 #: libgphoto2_port/gphoto2-port.c:743
 msgid "Flushing port..."
-msgstr "Tömmer port..."
+msgstr "Spolar port..."
 
 #: libgphoto2_port/gphoto2-port.c:817
 msgid "Clear halt..."
-msgstr "Rensa stopp..."
+msgstr "Rensa stopp"
 
 #: libgphoto2_port/gphoto2-port.c:848
 #, c-format
 msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr ""
-"Skriver meddelande (begäran=0x%x värde=0x%x index=0x%x storlek=%i=0x%x)..."
+msgstr "Skriver meddelande (begäran=0x%x värde=0x%x index=0x%x storlek=%i=0x%x)..."
 
 #: libgphoto2_port/gphoto2-port.c:883
 #, c-format
 msgid "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr ""
-"Läser meddelande (begäran=0x%x värde=0x%x index=0x%x storlek=%i=0x%x)..."
+msgstr "Läser meddelande (begäran=0x%x värde=0x%x index=0x%x storlek=%i=0x%x)..."
 
 #: libgphoto2_port/gphoto2-port.c:890
 msgid "msg_read"
@@ -449,14 +447,8 @@ msgstr "Kunde inte fråga kärndrivrutinen efter enheten."
 
 #: usb/libusb.c:269
 #, c-format
-msgid ""
-"Could not claim interface %d (%m). Make sure no other program or kernel "
-"module (such as %s) is using the device and you have read/write access to "
-"the device."
-msgstr ""
-"Kunde inte göra anspråk på gränssnittet %d (%m). Kontrollera att inget annat "
-"program eller kärnmodul (såsom %s) använder enheten och att du du har skriv/"
-"läsrättigheter för enheten."
+msgid "Could not claim interface %d (%m). Make sure no other program or kernel module (such as %s) is using the device and you have read/write access to the device."
+msgstr "Kunde inte göra anspråk på gränssnittet %d (%m). Kontrollera att inget annat program eller kärnmodul (såsom %s) använder enheten och att du du har skriv/läsrättigheter för enheten."
 
 #: usb/libusb.c:287
 #, c-format
@@ -464,9 +456,9 @@ msgid "Could not release interface %d (%m)."
 msgstr "Kunde inte släppa gränssnittet %d (%m)."
 
 #: usb/libusb.c:298
-#, fuzzy, c-format
+#, c-format
 msgid "Could not reset USB port (%m)."
-msgstr "Kunde inte stänga USB-porten (%m)."
+msgstr "Kunde inte nollställa USB-porten (%m)."
 
 #: usb/libusb.c:304
 #, c-format
@@ -479,42 +471,29 @@ msgid "Could not set config %d/%d (%m)"
 msgstr "Kunde inte ställa in konfiguration %d/%d (%m)"
 
 #: usb/libusb.c:586
-#, fuzzy, c-format
+#, c-format
 msgid "Could not set altsetting from %d to %d (%m)"
-msgstr "Kunde inte ställa in alternativinställning %d/%d (%m)"
+msgstr "Kunde inte ställa in alternativinställning %d till %d (%m)"
 
 #: usb/libusb.c:678
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
-msgstr ""
-"Den angivna tillverkare- eller produktidentiteten (0x%x,0x%x) är inte giltig."
+msgstr "Den angivna tillverkare- eller produktidentiteten (0x%x,0x%x) är inte giltig."
 
 #: usb/libusb.c:714
 #, c-format
-msgid ""
-"USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
-"not function with gphoto2. Reference: %s"
-msgstr ""
-"USB-enheten (tillverkare 0x%x, produkt 0x%x) är en masslagringsenhet och "
-"kanske inte fungerar med gphoto2. Referens: %s"
+msgid "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might not function with gphoto2. Reference: %s"
+msgstr "USB-enheten (tillverkare 0x%x, produkt 0x%x) är en masslagringsenhet och kanske inte fungerar med gphoto2. Referens: %s"
 
 #: usb/libusb.c:756
 #, c-format
-msgid ""
-"Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
-"is connected to the computer."
-msgstr ""
-"Kunde inte finna USB-enheten (tillverkare 0x%x, produkt 0x%x). Kontrollera "
-"att enheten är ansluten till datorn."
+msgid "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device is connected to the computer."
+msgstr "Kunde inte finna USB-enheten (tillverkare 0x%x, produkt 0x%x). Kontrollera att enheten är ansluten till datorn."
 
 #: usb/libusb.c:986
 #, c-format
-msgid ""
-"Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
-"sure this device is connected to the computer."
-msgstr ""
-"Kunde inte finna USB-enheten  (klass 0x%x, underklass 0x%x, protokoll 0x%x). "
-"Kontrollera att enheten är ansluten till datorn."
+msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
+msgstr "Kunde inte finna USB-enheten  (klass 0x%x, underklass 0x%x, protokoll 0x%x). Kontrollera att enheten är ansluten till datorn."
 
 #: disk/disk.c:177 disk/disk.c:221 disk/disk.c:257 disk/disk.c:289
 #: disk/disk.c:312
@@ -526,31 +505,8 @@ msgstr "Media \"%s\""
 msgid "(unknown)"
 msgstr "(okänt)"
 
-#~ msgid "No hexdump (NULL buffer)"
-#~ msgstr "Ingen hexdump (NULL-buffert)"
-
-#~ msgid "Empty hexdump of empty buffer"
-#~ msgstr "Tom hexdump för tom buffert"
-
-#~ msgid "Truncating dump from %d bytes to 1MB"
-#~ msgstr "Kapar av dump från %d byte to 1 MB"
-
-#~ msgid "Malloc for %i bytes failed"
-#~ msgstr "Malloc för %i byte misslyckades"
-
-#~ msgid ""
-#~ "Hexdump of %i = 0x%x bytes follows:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Hexdump på %i = 0x%x byte följer:\n"
-#~ "%s"
-
-#~ msgid "PTP/IP Connection"
-#~ msgstr "PTP/IP-anslutning"
-
 #~ msgid "Could not load any io-library because '%s' could not be opened (%m)"
-#~ msgstr ""
-#~ "Kunde inte ladda något io-bibliotek eftersom '%s' inte kunde öppnas (%m)"
+#~ msgstr "Kunde inte ladda något io-bibliotek eftersom '%s' inte kunde öppnas (%m)"
 
 #, fuzzy
 #~ msgid "Could not find some functions in '%s' (%s)"
