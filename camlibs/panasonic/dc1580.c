@@ -626,7 +626,7 @@ static int delete_file_func (CameraFilesystem *fs, const char *folder,
 static int camera_about (Camera *camera, CameraText *about, GPContext *context) 
 {
         strcpy(about->text,
-                        _("Panasonic DC1580 gPhoto library\n"
+                        _("Panasonic DC1580 gPhoto2 library\n"
                         "Mariusz Zynel <mariusz@mizar.org>\n\n"
                         "Based on dc1000 program written by\n"
                         "Fredrik Roubert <roubert@df.lth.se> and\n"
