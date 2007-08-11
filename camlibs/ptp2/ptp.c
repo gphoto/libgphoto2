@@ -3123,7 +3123,7 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		const char *txt;
 	} ptp_device_properties_Canon[] = {
 		{PTP_DPC_CANON_BeepMode,	N_("Beep Mode")},
-		{PTP_DPC_CANON_BatteryKind,	N_("Battery Kind")},
+		{PTP_DPC_CANON_BatteryKind,	N_("Battery Type")},
 		{PTP_DPC_CANON_BatteryStatus,	N_("Battery Mode")},
 		{PTP_DPC_CANON_UILockType,	N_("UILockType")},
 		{PTP_DPC_CANON_CameraMode,	N_("Camera Mode")},
@@ -3151,7 +3151,7 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_CANON_ParameterSet,	N_("Parameter Set")},
 		{PTP_DPC_CANON_ISOSpeed,	N_("ISO Speed")},
 		{PTP_DPC_CANON_Aperture,	N_("Aperture")},
-		{PTP_DPC_CANON_ShutterSpeed,	N_("ShutterSpeed")},
+		{PTP_DPC_CANON_ShutterSpeed,	N_("Shutter Speed")},
 		{PTP_DPC_CANON_ExpCompensation,	N_("Exposure Compensation")},
 		{PTP_DPC_CANON_FlashCompensation,	N_("Flash Compensation")},
 		{PTP_DPC_CANON_AEBExposureCompensation,	N_("AEB Exposure Compensation")},
@@ -3182,7 +3182,7 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_CANON_DispAvMax,	N_("Disp Av Max")},
 		{PTP_DPC_CANON_AvMaxApex,	N_("Av Max Apex")},
 		{PTP_DPC_CANON_EZoomStartPosition,	N_("EZoom Start Position")},
-		{PTP_DPC_CANON_FocalLengthOfTele,	N_("Focal Length of Tele")},
+		{PTP_DPC_CANON_FocalLengthOfTele,	N_("Focal Length Tele")},
 		{PTP_DPC_CANON_EZoomSizeOfTele,	N_("EZoom Size of Tele")},
 		{PTP_DPC_CANON_PhotoEffect,	N_("Photo Effect")},
 		{PTP_DPC_CANON_AssistLight,	N_("Assist Light")},
@@ -3283,7 +3283,7 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_NIKON_D1ShootingSpeed,			/* 0xD068 */
 		 N_("Shooting Speed")},
 		{PTP_DPC_NIKON_D2MaximumShots,			/* 0xD069 */
-		 N_("Max. Shots")},
+		 N_("Maximum Shots")},
 		{PTP_DPC_NIKON_D3ExpDelayMode,			/* 0xD06a */
 		 "PTP_DPC_NIKON_D3ExpDelayMode"},
 		{PTP_DPC_NIKON_LongExposureNoiseReduction,	/* 0xD06b */
@@ -3415,7 +3415,7 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_MTP_SynchronizationPartner,
 		 N_("Synchronization Partner")},
 		{PTP_DPC_MTP_DeviceFriendlyName,
-		 N_("Device Friendly Name")},
+		 N_("Friendly Device Name")},
 		{PTP_DPC_MTP_VolumeLevel,       N_("Volume Level")},
 		{PTP_DPC_MTP_DeviceIcon,        N_("Device Icon")},
 		{PTP_DPC_MTP_PlaybackRate,      N_("Playback Rate")},
@@ -3423,8 +3423,8 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_MTP_PlaybackContainerIndex,
 		 N_("Playback Container Index")},
 		{PTP_DPC_MTP_PlaybackPosition,  N_("Playback Position")},
-		{PTP_DPC_MTP_RevocationInfo,    N_("RevocationInfo")},
-		{PTP_DPC_MTP_PlaysForSureID,    N_("PlaysForSureID")},
+		{PTP_DPC_MTP_RevocationInfo,    N_("Revocation Info")},
+		{PTP_DPC_MTP_PlaysForSureID,    N_("PlaysForSure ID")},
 		{0,NULL}
         };
 
@@ -3769,13 +3769,13 @@ struct {
 	uint16_t ofc;
 	const char *format;
 } ptp_ofc_mtp_trans[] = {
-	{PTP_OFC_MTP_MediaCard,N_("MediaCard")},
-	{PTP_OFC_MTP_MediaCardGroup,N_("MediaCardGroup")},
+	{PTP_OFC_MTP_MediaCard,N_("Media Card")},
+	{PTP_OFC_MTP_MediaCardGroup,N_("Media Card Group")},
 	{PTP_OFC_MTP_Encounter,N_("Encounter")},
-	{PTP_OFC_MTP_EncounterBox,N_("EncounterBox")},
+	{PTP_OFC_MTP_EncounterBox,N_("Encounter Box")},
 	{PTP_OFC_MTP_M4A,N_("M4A")},
 	{PTP_OFC_MTP_Firmware,N_("Firmware")},
-	{PTP_OFC_MTP_WindowsImageFormat,N_("WindowsImageFormat")},
+	{PTP_OFC_MTP_WindowsImageFormat,N_("Windows Image Format")},
 	{PTP_OFC_MTP_UndefinedAudio,N_("Undefined Audio")},
 	{PTP_OFC_MTP_WMA,"WMA"},
 	{PTP_OFC_MTP_OGG,"OGG"},
@@ -3804,21 +3804,21 @@ struct {
 	{PTP_OFC_MTP_MPLPlaylist,N_("MPL Playlist")},
 	{PTP_OFC_MTP_ASXPlaylist,N_("ASX Playlist")},
 	{PTP_OFC_MTP_PLSPlaylist,N_("PLS Playlist")},
-	{PTP_OFC_MTP_UndefinedDocument,N_("UndefinedDocument")},
-	{PTP_OFC_MTP_AbstractDocument,N_("AbstractDocument")},
+	{PTP_OFC_MTP_UndefinedDocument,N_("Undefined Document")},
+	{PTP_OFC_MTP_AbstractDocument,N_("Abstract Document")},
 	{PTP_OFC_MTP_XMLDocument,N_("XMLDocument")},
 	{PTP_OFC_MTP_MSWordDocument,N_("Microsoft Word Document")},
 	{PTP_OFC_MTP_MHTCompiledHTMLDocument,N_("MHT Compiled HTML Document")},
 	{PTP_OFC_MTP_MSExcelSpreadsheetXLS,N_("Microsoft Excel Spreadsheet (.xls)")},
 	{PTP_OFC_MTP_MSPowerpointPresentationPPT,N_("Microsoft Powerpoint (.ppt)")},
-	{PTP_OFC_MTP_UndefinedMessage,N_("UndefinedMessage")},
-	{PTP_OFC_MTP_AbstractMessage,N_("AbstractMessage")},
-	{PTP_OFC_MTP_UndefinedContact,N_("UndefinedContact")},
-	{PTP_OFC_MTP_AbstractContact,N_("AbstractContact")},
+	{PTP_OFC_MTP_UndefinedMessage,N_("Undefined Message")},
+	{PTP_OFC_MTP_AbstractMessage,N_("Abstract Message")},
+	{PTP_OFC_MTP_UndefinedContact,N_("Undefined Contact")},
+	{PTP_OFC_MTP_AbstractContact,N_("Abstract Contact")},
 	{PTP_OFC_MTP_vCard2,N_("vCard2")},
 	{PTP_OFC_MTP_vCard3,N_("vCard3")},
-	{PTP_OFC_MTP_UndefinedCalendarItem,N_("UndefinedCalendarItem")},
-	{PTP_OFC_MTP_AbstractCalendarItem,N_("AbstractCalendarItem")},
+	{PTP_OFC_MTP_UndefinedCalendarItem,N_("Undefined Calendar Item")},
+	{PTP_OFC_MTP_AbstractCalendarItem,N_("Abstract Calendar Item")},
 	{PTP_OFC_MTP_vCalendar1,N_("vCalendar1")},
 	{PTP_OFC_MTP_vCalendar2,N_("vCalendar2")},
 	{PTP_OFC_MTP_UndefinedWindowsExecutable,N_("Undefined Windows Executable")},
@@ -3930,7 +3930,7 @@ struct {
 	/* WMPPD Extensions */
 	{PTP_OC_MTP_WMPPD_ReportAddedDeletedItems,N_("Report Added/Deleted Items")},
 	{PTP_OC_MTP_WMPPD_ReportAcquiredItems,N_("Report Acquired Items")},
-	{PTP_OC_MTP_WMPPD_PlaylistObjectPref,N_("Get type of playlists that are allowed to be transfered")},
+	{PTP_OC_MTP_WMPPD_PlaylistObjectPref,N_("Get transferable playlist types")},
 
 	/* WMDRMPD Extensions... these have no identifiers associated with them */
 	{PTP_OC_MTP_WMDRMPD_SendWMDRMPDAppRequest,N_("Send WMDRM-PD Application Request")},
@@ -3976,7 +3976,7 @@ ptp_render_opcode(PTPParams* params, uint16_t opcode, int spaceleft, char *txt)
 		default:break;
 		}
 	}
-	return snprintf (txt, spaceleft,_("Unknown(%04x)"), opcode);
+	return snprintf (txt, spaceleft,_("Unknown (%04x)"), opcode);
 }
 
 

@@ -1172,8 +1172,8 @@ camera_about (Camera *camera, CameraText *text, GPContext *context)
 	 */
 	strncpy (text->text,
 	 _("PTP2 driver\n"
-	   "(c)2001-2005 by Mariusz Woloszyn <emsi@ipartners.pl>.\n"
-	   "(c)2003-2006 by Marcus Meissner <marcus@jet.franken.de>.\n"
+	   "(c) 2001-2005 by Mariusz Woloszyn <emsi@ipartners.pl>.\n"
+	   "(c) 2003-2007 by Marcus Meissner <marcus@jet.franken.de>.\n"
 	   "This driver supports cameras that support PTP or PictBridge(tm), and\n"
 	   "Media Players that support the Media Transfer Protocol (MTP).\n"
 	   "\n"
@@ -4140,7 +4140,7 @@ camera_init (Camera *camera, GPContext *context)
 	gp_port_get_settings (camera->port, &settings);
 	/* Make sure our port is either USB or PTP/IP. */
 	if ((camera->port->type != GP_PORT_USB) && (camera->port->type != GP_PORT_PTPIP)) {
-		gp_context_error (context, _("PTP is only implemented for "
+		gp_context_error (context, _("Currently, PTP is only implemented for "
 			"USB and PTP/IP cameras currently, port type %x"), camera->port->type);
 		return (GP_ERROR_UNKNOWN_PORT);
 	}
