@@ -1076,8 +1076,8 @@ GENERIC8TABLE(Canon_Quality,canon_quality)
 
 static struct deviceproptableu8 canon_shootmode[] = {
 	{ N_("Auto"),		0x01, 0 },
-	{ N_("Tv"),		0x02, 0 },
-	{ N_("Av"),		0x03, 0 },
+	{ N_("TV"),		0x02, 0 },
+	{ N_("AV"),		0x03, 0 },
 	{ N_("Manual"),		0x04, 0 },
 };
 GENERIC8TABLE(Canon_ShootMode,canon_shootmode)
@@ -2475,12 +2475,12 @@ _put_nikon_wifi_profile_write(CONFIG_PUT_ARGS) {
 
 static struct submenu create_wifi_profile_submenu[] = {
 	{ N_("Profile name"), "name", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_prop, _put_nikon_wifi_profile_prop },
-	{ N_("Wifi essid"), "essid", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_prop, _put_nikon_wifi_profile_prop },
+	{ N_("WIFI ESSID"), "essid", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_prop, _put_nikon_wifi_profile_prop },
 	{ N_("IP address (empty for DHCP)"), "ipaddr", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_prop, _put_nikon_wifi_profile_prop },
 	{ N_("Network mask"), "netmask", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_prop, _put_nikon_wifi_profile_prop },
 	{ N_("Default gateway"), "gw", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_prop, _put_nikon_wifi_profile_prop },
 	{ N_("Access mode"), "accessmode", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_accessmode, _put_nikon_wifi_profile_accessmode },
-	{ N_("Wifi channel"), "channel", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_channel, _put_nikon_wifi_profile_channel },
+	{ N_("WIFI channel"), "channel", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_channel, _put_nikon_wifi_profile_channel },
 	{ N_("Encryption"), "encryption", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_encryption, _put_nikon_wifi_profile_encryption },
 	{ N_("Encryption key (hex)"), "key", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_prop, _put_nikon_wifi_profile_prop },
 	{ N_("Write"), "write", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_write, _put_nikon_wifi_profile_write },
@@ -2692,7 +2692,7 @@ static struct menu menus[] = {
 	{ N_("Camera Settings"), "settings", camera_settings_menu, NULL, NULL },
 	{ N_("Image Settings"), "imgsettings", image_settings_menu, NULL, NULL },
 	{ N_("Capture Settings"), "capturesettings", capture_settings_menu, NULL, NULL },
-	{ N_("Wifi profiles"), "wifiprofiles", NULL, _get_wifi_profiles_menu, _put_wifi_profiles_menu },
+	{ N_("WIFI profiles"), "wifiprofiles", NULL, _get_wifi_profiles_menu, _put_wifi_profiles_menu },
 };
 
 int
