@@ -251,14 +251,7 @@ static int camera_summary(Camera *camera, CameraText *summary, GPContext *contex
 static int camera_about(Camera *camera, CameraText *about, GPContext *context)
 {
   strcpy(about->text, 
-	 _("Creative PC-CAM600\n Author: Peter Kajberg\n email: <pbk@odense.kollegienet.dk>\n"));
-  return GP_OK;
-}
-static int
-get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
-               CameraFileInfo *info, void *data, GPContext *context)
-{
-
+	 _("Creative PC-CAM600\nAuthor: Peter Kajberg <pbk@odense.kollegienet.dk>\n"));
   return GP_OK;
 }
 
@@ -274,7 +267,6 @@ static int delete_file_func(CameraFilesystem *fs, const char *folder,
 }
 
 static CameraFilesystemFuncs fsfuncs = {
-	.get_info_func = get_info_func,
 	.get_file_func = get_file_func,
 	.file_list_func = file_list_func,
 	.del_file_func = delete_file_func,
