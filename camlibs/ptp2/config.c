@@ -1070,7 +1070,7 @@ _put_Nikon_HueAdjustment(CONFIG_PUT_ARGS)
 static struct deviceproptableu8 canon_quality[] = {
 	{ N_("normal"),		0x02, 0 },
 	{ N_("fine"),		0x03, 0 },
-	{ N_("super fine"),	0x05, 0 },
+	{ N_("superfine"),	0x05, 0 },
 };
 GENERIC8TABLE(Canon_Quality,canon_quality)
 
