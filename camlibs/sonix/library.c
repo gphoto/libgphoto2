@@ -121,7 +121,7 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
 {
 	strcpy(manual->text, 
 	_(
-	"This driver supports some cameras with Sonix sn9c2028 chip.\n"
+	"This driver supports some cameras that use the Sonix sn9c2028 chip.\n"
 	"The following operations are supported:\n"
 	"   - thumbnails for a GUI frontend\n"
 	"   - full images in PPM format\n"
@@ -129,11 +129,10 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
 	"   - delete last image (may not work on all Sonix cameras)\n"
 	"   - image capture to camera (		ditto		)\n"
 	"If present on the camera, video clip frames are downloaded \n"
-	"as consecutive still photos or as AVI files, depending on model.\n"
+	"as consecutive still photos or as AVI files, depending on the model.\n"
 	"Thumbnails for AVIs are still photos made from the first frame.\n" 
 	"A single image cannot be deleted unless it is the last one.\n"
 	)); 
-
 	return (GP_OK);
 }
 
