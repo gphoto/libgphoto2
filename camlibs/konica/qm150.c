@@ -632,13 +632,13 @@ camera_capture (Camera* camera, CameraCaptureType type, CameraFilePath* path,
 	if (ack == NACK) {
 		if (buf[CAMERA_MODE_PTR] != REC_MODE)
 			gp_context_error(context, _("You must be in record "
-				"mode to capture image."));
+				"mode to capture images."));
 		else if (!nbr_images)
 			gp_context_error(context, _("No space available "
-				"to capture new image. You must delete some "
+				"to capture new images. You must delete some "
 				"images."));
 		else
-			gp_context_error(context, _("Can't capture new image. "
+			gp_context_error(context, _("Can't capture new images. "
 				"Unknown error"));
 		return (GP_ERROR);
 	}
@@ -934,22 +934,22 @@ camera_get_config (Camera* camera, CameraWidget** window, GPContext *context)
        /* Focus */
         gp_widget_new (GP_WIDGET_RADIO, _("Focus"), &widget);
         gp_widget_append (section, widget);
-        gp_widget_add_choice (widget, _("2.0m"));
-	gp_widget_add_choice (widget, _("0.5m"));
-	gp_widget_add_choice (widget, _("0.1m"));
+        gp_widget_add_choice (widget, _("2.0 m"));
+	gp_widget_add_choice (widget, _("0.5 m"));
+	gp_widget_add_choice (widget, _("0.1 m"));
         gp_widget_add_choice (widget, _("Auto"));
         switch (buf[FOCUS_PTR]) {
 		case 0:
 			gp_widget_set_value (widget, _("Auto"));
 			break;
 		case 1:
-	                gp_widget_set_value (widget, _("2.0m"));
+	                gp_widget_set_value (widget, _("2.0 m"));
 	                break;
 	        case 2:
-        	        gp_widget_set_value (widget, _("0.5m"));
+        	        gp_widget_set_value (widget, _("0.5 m"));
                 	break;
 	        case 3:
-        	        gp_widget_set_value (widget, _("0.1m"));
+        	        gp_widget_set_value (widget, _("0.1 m"));
                 	break;
         }
 
