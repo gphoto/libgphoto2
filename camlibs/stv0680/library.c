@@ -521,7 +521,7 @@ int stv0680_summary(GPPort *port, char *txt)
     struct stv680_image_info imginfo;
     int ret;
 
-    strcpy(txt,_("Information for STV0680 based camera:\n"));
+    strcpy(txt,_("Information on STV0680-based camera:\n"));
     /* Get Camera Information */
     if ((ret = stv0680_try_cmd(port, CMDID_GET_CAMERA_INFO,
 				0, (void*)&caminfo, sizeof(caminfo)) < 0))
@@ -540,7 +540,7 @@ int stv0680_summary(GPPort *port, char *txt)
     );
     /* HWCONFIG_COMMSLINK_MASK ... not really needed, the user knows, he
      * plugged it in. */
-    sprintf(txt+strlen(txt),_("Camera is configured for lights flickering with %dHz.\n"),
+    sprintf(txt+strlen(txt),_("Camera is configured for lights flickering by %dHz.\n"),
     	(caminfo.hardware_config & HWCONFIG_FLICKERFREQ_60HZ)?60:50
     );
     sprintf(txt+strlen(txt),_("Memory in camera: %d Mbit.\n"),
