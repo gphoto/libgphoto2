@@ -30,7 +30,14 @@
 #include <gphoto2/gphoto2-camera.h>
 #include <gphoto2/gphoto2-port-portability.h>
 
-#define CHECK(f) {int res = f; if (res < 0) {printf ("ERROR: %s\n", gp_result_as_string (res)); return (1);}}
+#define CHECK(f) \
+	do { \
+		int res = f; \
+		if (res < 0) { \
+			printf ("ERROR: %s\n", gp_result_as_string (res)); \
+			return (1); \
+		} \
+	} while (0)
 
 
 #ifdef __GNUC__
@@ -204,7 +211,7 @@ main (int argc, char *argv[])
 		const char *camlib_env = getenv(CAMLIBDIR_ENV);
 		const char *camlibs = (camlib_env != NULL)?camlib_env:CAMLIBS;
 
-		printf("no camera drivers (camlibs) found in camlib dir:\n"
+		printf("No camera drivers (camlibs) found in camlib dir:\n"
 		       "    CAMLIBS='%s', default='%s', used=%s\n",
 		       camlib_env?camlib_env:"(null)", CAMLIBS,
 		       (camlib_env!=NULL)?"CAMLIBS":"default");
