@@ -333,7 +333,7 @@ static int get_file_func(CameraFilesystem *fs, const char *folder,
 		data = digita_file_get(camera, folder, filename, 1, &buflen, context);
 		break;
 	default:
-		gp_context_error(context, _("Unsupported image type"));
+		gp_context_error(context, _("Image type is not supported"));
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 
