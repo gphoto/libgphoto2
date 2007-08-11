@@ -16,7 +16,7 @@ libexecdir="${libexecdir-"@libexecdir@"}"
 camlibdir="${camlibdir-"@camlibdir@"}"
 CAMLIBS="${DESTDIR}${camlibdir}"
 export CAMLIBS
-LD_LIBRARY_PATH="${DESTDIR}/${libdir}${LD_LIBRARY_PATH+:${LD_LIBRARY_PATH}}"
+LD_LIBRARY_PATH="${DESTDIR}${libdir}${LD_LIBRARY_PATH+:${LD_LIBRARY_PATH}}"
 export LD_LIBRARY_PATH
 
 
