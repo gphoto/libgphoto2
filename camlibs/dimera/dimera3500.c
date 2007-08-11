@@ -457,30 +457,30 @@ static int camera_summary (Camera *camera, CameraText *summary, GPContext *conte
 			mesa_battery_check(camera->port));
 
 	snprintf( summary->text, sizeof(summary->text),
-			_("Dimera 3500 ver. %s %d/%d %d:%d\n"
-			"%d pictures used of approximately %d (high res) or %d (low res)\n"
+			_("Dimera 3500 ver. %s %d/%d %d:%d.\n"
+			"%d pictures used of approximately %d (high res) or %d (low res).\n"
 			"Camera features: "
-			  "%s, %s, %s, %s\n"
-			"Flash is %s, is %s and is %s\n"
-			"Resolution is set to %s\n"
-			"Camera is %s powered%s\n"),
+			  "%s, %s, %s, %s.\n"
+			"Flash is %s, is %s and is %s.\n"
+			"Resolution is set to %s.\n"
+			"Camera is %s powered %s.\n"),
 
 			version_string, Id.year, Id.week, Id.man, Id.ver,
 			num, hi_pics_max, lo_pics_max,
 			(features.feature_bits_lo & HAVE_FLASH) ?
-				_("Flash") : _("NO Flash"),
+				_("Flash") : _("No Flash"),
 			(features.feature_bits_lo & DUAL_IRIS) ?
-				_("Dual Iris") : _("NO Dual Iris"),
+				_("Dual Iris") : _("No Dual Iris"),
 			(features.feature_bits_lo & HAVE_RES_SW) ?
-				_("Resolution Switch") : _("NO Resolution Switch"),
+				_("Resolution Switch") : _("No Resolution Switch"),
 			(features.feature_bits_hi & NO_PWR_LIGHT) ?
-				_("NO Power Light") : "Power Light",
+				_("No Power Light") : "Power Light",
 			(features.feature_bits_lo & FLASH_ON) ?
 				_("ON") : _("OFF"),
 			(features.feature_bits_lo & FLASH_READY) ?
-				_("ready") : _("NOT ready"),
+				_("ready") : _("Not ready"),
 			(features.feature_bits_lo & FLASH_FILL) ?
-				_("in fill mode") : _("NOT in fill mode"),
+				_("in fill mode") : _("Not in fill mode"),
 			(features.feature_bits_lo & LOW_RES) ?
 				_("low (320x240)") : _("high (640x480)"),
 			(features.feature_bits_lo & AC_PRESENT) ?
