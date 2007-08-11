@@ -1088,7 +1088,7 @@ camera_get_config (Camera* camera, CameraWidget** window, GPContext *context)
         /* Self Timer */
         gp_widget_new (GP_WIDGET_RADIO, _("Self Timer"), &widget);
         gp_widget_append (section, widget);
-        gp_widget_add_choice (widget, _("Self Timer (only next picture)"));
+        gp_widget_add_choice (widget, _("Self Timer (next picture only)"));
         gp_widget_add_choice (widget, _("Normal"));
         switch (buf[TIMER_PTR]) {
 	        case 1:
