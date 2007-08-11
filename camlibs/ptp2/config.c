@@ -1646,8 +1646,8 @@ static struct deviceproptableu8 nikon_tonecompensation[] = {
 	{ N_("Auto"),		0x00, 0 },
 	{ N_("Normal"),		0x01, 0 },
 	{ N_("Low contrast"),	0x02, 0 },
-	{ N_("Medium low"),	0x03, 0 },
-	{ N_("Medium high"),	0x04, 0 },
+	{ N_("Medium Low"),	0x03, 0 },
+	{ N_("Medium High"),	0x04, 0 },
 	{ N_("High control"),	0x05, 0 },
 	{ N_("Custom"),		0x06, 0 },
 };
