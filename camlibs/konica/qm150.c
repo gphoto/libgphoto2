@@ -957,14 +957,14 @@ camera_get_config (Camera* camera, CameraWidget** window, GPContext *context)
         gp_widget_new (GP_WIDGET_RADIO, _("White balance"), &widget);
         gp_widget_append (section, widget);
         gp_widget_add_choice (widget, _("Office"));
-	gp_widget_add_choice (widget, _("Day-lt"));
+	gp_widget_add_choice (widget, _("Daylight"));
 	gp_widget_add_choice (widget, _("Auto"));
         switch (buf[WHITE_BALANCE_PTR]) {
 	        case 0:
         	        gp_widget_set_value (widget, _("Auto"));
                 	break;
 	        case 1:
-        	        gp_widget_set_value (widget, _("Day-lt"));
+        	        gp_widget_set_value (widget, _("Daylight"));
                 	break;
 	        case 2:
         	        gp_widget_set_value (widget, _("Office"));
@@ -1162,9 +1162,9 @@ camera_summary (Camera *camera, CameraText *text, GPContext *context)
 	}
 	snprintf(text->text, sizeof(text->text), 
 			_("Model: %s\n"
-			"Capacity: %iMo\n"
+			"Capacity: %i Mb\n"
 			"Power: %s\n"
-			"Auto Off Time: %imin\n"
+			"Auto Off Time: %i min\n"
 			"Mode: %s\n"
 			"Images: %i/%i\n"
 			"Date display: %s\n"
@@ -1199,14 +1199,13 @@ static int
 camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 {
 	snprintf(manual->text,sizeof(manual->text),
-		_("About Konica Q-M150:\n"
-		"This camera does not allow any changes\n"
-		"from the outside. So in the configuration, you can\n"
-		"just see what it is configured on the camera\n"
-		"but you can't change anything.\n\n"
-		"If you have some issues with this driver, please\n"
-		"send an e-mail to the authors of this driver.\n\n"
-		"Thanks to use GPhoto2 and UNIX/Linux Operating systems.\n"));
+	_("About Konica Q-M150:\n"
+	"This camera does not allow any changes\n"
+	"from the outside. So in the configuration, you can\n"
+	"only see what it is configured on the camera\n"
+	"but you can not change anything.\n\n"
+	"If you have some issues with this driver, please e-mail its authors.\n"
+	));
 	return (GP_OK);
 }
 
