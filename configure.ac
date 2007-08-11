@@ -604,7 +604,6 @@ libgphoto2/Makefile
 libgphoto2.pc
 libgphoto2-uninstalled.pc
 tests/Makefile
-tests/check-camera-list.sh
 tests/ddb/Makefile
 tests/ddb/check-ddb.sh
 packaging/Makefile
