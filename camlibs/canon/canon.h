@@ -564,7 +564,7 @@ typedef enum {
 #define GP_PORT_DEFAULT_RETURN_INTERNAL(return_statement) \
 		default: \
 			gp_context_error (context, _("Don't know how to handle " \
-					     "camera->port->type value %i aka 0x%x" \
+					     "camera->port->type value %i aka 0x%x " \
 					     "in %s line %i."), camera->port->type, \
 					     camera->port->type, __FILE__, __LINE__); \
 			return_statement; \

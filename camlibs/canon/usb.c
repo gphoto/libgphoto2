@@ -263,13 +263,13 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
         if (i != 0x58) {
                 if ( i < 0 ) {
 												gp_context_error (context,
-																					_("Step #2 of initialization failed: (\"%s\" on read of %i) "
+																					_("Step #2 of initialization failed: (\"%s\" on read of %i). "
 																						"Camera not operational"), gp_result_as_string(i), 0x58);
                         return GP_ERROR_OS_FAILURE;
 		}
 		else {
 						gp_context_error (context,
-															_("Step #2 of initialization failed! (returned %i bytes, expected %i) "
+															_("Step #2 of initialization failed! (returned %i bytes, expected %i). "
 																"Camera not operational"), i, 0x58);
 						return GP_ERROR_CORRUPTED_DATA;
 		}
@@ -289,14 +289,14 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
                         if ( i < 0 ) {
 				gp_context_error (context,
 						  _("Step #3 of initialization failed: "
-						    "\"%s\" on read of %i "
+						    "\"%s\" on read of %i. "
 						    "Camera not operational"), gp_result_as_string(i), 0x50);
                                 return GP_ERROR_OS_FAILURE;
 			}
                         else {
 				gp_context_error (context,
 						  _("Step #3 of initialization failed! "
-						    "(returned %i, expected %i) "
+						    "(returned %i, expected %i). "
 						    "Camera not operational"), i, 0x50);
                                 return GP_ERROR_CORRUPTED_DATA;
 			}
@@ -316,14 +316,14 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
                         if ( i < 0 ) {
 				gp_context_error (context,
 						  _("Step #3 of initialization failed: "
-						    "\"%s\" on write of %i "
+						    "\"%s\" on write of %i. "
 						    "Camera not operational"), gp_result_as_string(i), 0x50);
                                 return GP_ERROR_OS_FAILURE;
 			}
                         else {
 				gp_context_error (context,
 						  _("Step #3 of initialization failed! "
-						    "(returned %i, expected %i) "
+						    "(returned %i, expected %i). "
 						    "Camera not operational"), i, 0x50);
                                 return GP_ERROR_CORRUPTED_DATA;
 			}
@@ -360,8 +360,8 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 					}
                                         else {
 						gp_context_error (context,
-								  _("Step #4 failed! "
-								    "(returned %i, expected %i) Camera not operational"),
+								  _("Step #4 failed "
+								    "(returned %i, expected %i). Camera not operational"),
 								  i, 0x40);
                                                 return GP_ERROR_CORRUPTED_DATA;
 					}
@@ -401,8 +401,8 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 				}
 				else {
 					gp_context_error (context,
-							  _("Step #4 failed! "
-							    "(returned %i, expected %i) Camera not operational"),
+							  _("Step #4 failed "
+							    "(returned %i, expected %i). Camera not operational"),
 							  i, 0x44);
 					return GP_ERROR_CORRUPTED_DATA;
 				}
@@ -1147,7 +1147,7 @@ canon_usb_capture_dialogue (Camera *camera, unsigned int *return_length, int *ph
                         /* Secondary image size, key */
 			/* (only for RAW + JPEG modes) */
 			gp_log ( GP_LOG_DEBUG, "canon/usb.c",
-				 _("canon_usb_capture_dialogue:"
+				 _("canon_usb_capture_dialogue: "
 				   "secondary image descriptor received"));
 			
 			camera->pl->image_b_length = le32atoh ( buf2+0x11 );
