@@ -73,7 +73,6 @@ camlibs/sipix/web2.c
 camlibs/smal/smal.c
 camlibs/smal/ultrapocket.c
 camlibs/sonix/library.c
-camlibs/sonydscf1/dsc_f1.c
 camlibs/sonydscf1/sonydscf1.c
 camlibs/sonydscf55/camera.c
 camlibs/soundvision/soundvision.c
