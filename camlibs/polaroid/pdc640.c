@@ -107,7 +107,7 @@ static struct {
 	{"Jenoptik JD350 video", 0xd96, 0x0000, {
 		 	jd350e,
 			BAYER_TILE_BGGR,
-			&jd350e_postprocessing,
+			NULL /*&jd350e_postprocessing*/,
 			"jd350v%04i.ppm"
 		}
 	},
@@ -905,8 +905,8 @@ camera_about (Camera *camera, CameraText *about, GPContext *context)
 		"and adapted for gphoto2 by Lutz Mueller "
 		"<lutz@users.sf.net>."
 		"Protocol enhancements and postprocessing "
-		" for Jenoptik JD350e by Michael Trawny "
-		"<trawny99@users.sourceforge.net>."
+		"for Jenoptik JD350e by Michael Trawny "
+		"<trawny99@users.sourceforge.net>. "
 		"Bugfixes by Marcus Meissner <marcus@jet.franken.de>."));
 
 	return (GP_OK);
