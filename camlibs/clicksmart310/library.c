@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -28,7 +28,7 @@
 
 #define JPEG_QCIF_FORMAT 0x22
 #define JPEG_CIF_FORMAT 0x21
-         
+
 #ifdef ENABLE_NLS
 #  include <libintl.h>
 #  undef _
@@ -41,6 +41,7 @@
 #else
 #  define _(String) (String)
 #  define N_(String) (String)
+#  define ngettext(String1,String2,Count) ((Count==1)?String1:String2)
 #endif
 
 #include "clicksmart.h"
@@ -60,7 +61,7 @@ int
 camera_id (CameraText *id)
 {
     	strcpy (id->text, "Logitech Clicksmart 310");
-        
+
     	return GP_OK;
 }
 
@@ -68,7 +69,7 @@ camera_id (CameraText *id)
 int
 camera_abilities (CameraAbilitiesList *list)
 {
-    	int i;    
+    	int i;
     	CameraAbilities a;
 
     	for (i = 0; models[i].name; i++) {
@@ -85,8 +86,8 @@ camera_abilities (CameraAbilitiesList *list)
 			a.operations = GP_OPERATION_NONE;
        		a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
 ;
-		a.file_operations   = GP_FILE_OPERATION_PREVIEW 
-						+ GP_FILE_OPERATION_RAW; 
+		a.file_operations   = GP_FILE_OPERATION_PREVIEW
+						+ GP_FILE_OPERATION_RAW;
        		gp_abilities_list_append (list, a);
     	}
 
@@ -96,15 +97,19 @@ camera_abilities (CameraAbilitiesList *list)
 static int
 camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
-    	sprintf (summary->text,_("Your Logitech Clicksmart 310 has %i pictures in it.\n"), 
-				camera->pl->num_pics);  
+    	sprintf (summary->text,ngettext(
+			"Your Logitech Clicksmart 310 has %i picture in it.\n",
+			"Your Logitech Clicksmart 310 has %i pictures in it.\n",
+			camera->pl->num_pics
+			),
+		camera->pl->num_pics);
     	return GP_OK;
 }
 
 
-static int camera_manual (Camera *camera, CameraText *manual, GPContext *context) 
+static int camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 {
-	strcpy(manual->text, 
+	strcpy(manual->text,
 	_(
 	"There are two resolution settings, 352x288 and 176x144. Photo data \n"
 	"is in JPEG format when downloaded and thus has no predetermined\n"
@@ -114,18 +119,18 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
 	"the hardware will not support:\n"
 	"	Deletion of individual or selected photos (gphoto2 -d)\n"
 	"	Capture (gphoto2 --capture or --capture-image)\n"
-	"However, capture is possible using the webcam interface,\n" 
+	"However, capture is possible using the webcam interface,\n"
 	"supported by the spca50x kernel module.\n"
-	"GUI access using gtkam has been tested, and works. However,\n" 
+	"GUI access using gtkam has been tested, and works. However,\n"
 	"the camera does not produce separate thumbnails. Since the images\n"
 	"are in any event already small and of low resolution, the driver\n"
-	"merely downloads the actual images to use as thumbnails.\n" 
+	"merely downloads the actual images to use as thumbnails.\n"
 	"The camera can shoot in 'video clip' mode. The resulting frames\n"
 	"are saved here as a succession of still photos. The user can \n"
 	"animate them using (for example) ImageMagick's 'animate' function.\n"
 	"For more details on the camera's functions, please consult\n"
 	"libgphoto2/camlibs/README.\n"
-	)); 
+	));
 
 	return (GP_OK);
 }
@@ -146,7 +151,7 @@ static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
                 void *data, GPContext *context)
 {
-        Camera *camera = data; 
+        Camera *camera = data;
 	int n;
 	GP_DEBUG ("List files in %s\n", folder);
     	n = camera->pl->num_pics;	
@@ -160,16 +165,16 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *user_data,
 	       GPContext *context)
 {
-    	Camera *camera = user_data; 
-	int w=0, h=0, b=0; 
+    	Camera *camera = user_data;
+	int w=0, h=0, b=0;
 	int k, res;
-	unsigned char *data; 
+	unsigned char *data;
 	unsigned char *jpeg_out = NULL;
 	int file_size;
 	unsigned char jpeg_format;
 
 	/* Get the entry number of the photo on the camera */
-    	k = gp_filesystem_number (camera->fs, "/", filename, context); 
+    	k = gp_filesystem_number (camera->fs, "/", filename, context);
     	
 	if (GP_FILE_TYPE_EXIF ==type) return GP_ERROR_FILE_EXISTS;
 
@@ -183,10 +188,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
     	switch (res) {
 	case 0: w = 352;
-		h = 288; 
+		h = 288;
 		jpeg_format = JPEG_CIF_FORMAT;
 		break;
-	case 1: 
+	case 1:
 	case 3:
 		w = 176;
 		h = 144;
@@ -197,7 +202,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	}
 
 	data = malloc (w*h);
-	if(!data) 
+	if(!data)
 		return GP_ERROR_NO_MEMORY;
 
 	GP_DEBUG("Fetch entry %i\n", k);
@@ -206,7 +211,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (GP_FILE_TYPE_RAW == type) {	/* type is GP_FILE_TYPE_RAW */
 		gp_file_set_mime_type (file, GP_MIME_RAW);
 		gp_file_set_name (file, filename);
-	        gp_file_set_data_and_size (file, (char *)data, b);  
+	        gp_file_set_data_and_size (file, (char *)data, b);
 		/* Reset camera when done, for more graceful exit. */
 		if (k +1 == camera->pl->num_pics) {
 	    		clicksmart_reset (camera->port);	
@@ -227,12 +232,12 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return GP_ERROR_NO_MEMORY;
 	}
 
-	GP_DEBUG("width:  %d, height:  %d, data size:  %d\n", w, h, b); 
-	create_jpeg_from_data (jpeg_out, data, 3, w, h, jpeg_format, 
+	GP_DEBUG("width:  %d, height:  %d, data size:  %d\n", w, h, b);
+	create_jpeg_from_data (jpeg_out, data, 3, w, h, jpeg_format,
 		    b, &file_size, 0, 0);
 
 	gp_file_set_mime_type (file, GP_MIME_JPEG);
-	gp_file_set_name (file, filename); 
+	gp_file_set_name (file, filename);
 	gp_file_set_data_and_size (file, (char *)jpeg_out, file_size);
 	/* Reset camera when done, for more graceful exit. */
 	if (k +1 == camera->pl->num_pics) {
@@ -243,8 +248,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 }
 
 static int
-delete_all_func (CameraFilesystem *fs, const char *folder, void *data, 
-		GPContext *context) 
+delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
+		GPContext *context)
 {
 	Camera *camera = data;
 	clicksmart_delete_all_pics (camera->port);
@@ -285,11 +290,11 @@ camera_init(Camera *camera, GPContext *context)
         camera->functions->manual	= camera_manual;
 	camera->functions->about        = camera_about;
 	camera->functions->exit	    	= camera_exit;
-   
+
 	GP_DEBUG ("Initializing the camera\n");
 
 	ret = gp_port_get_settings(camera->port,&settings);
-	if (ret < 0) return ret; 
+	if (ret < 0) return ret;
 	switch (camera->port->type) {
 		case GP_PORT_SERIAL:
 			return ( GP_ERROR );
@@ -303,10 +308,10 @@ camera_init(Camera *camera, GPContext *context)
 			return ( GP_ERROR );
 	}
 
- 
+
 
 	ret = gp_port_set_settings(camera->port,settings);
-	if (ret < 0) return ret; 
+	if (ret < 0) return ret;
 
         /* Tell the CameraFilesystem where to get lists from */
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
@@ -321,7 +326,5 @@ camera_init(Camera *camera, GPContext *context)
 		free(camera->pl);
 		return ret;
 	};
-
-
 	return GP_OK;
 }
