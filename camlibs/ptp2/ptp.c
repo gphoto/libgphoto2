@@ -3087,7 +3087,7 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 					N_("Exposure Index (film speed ISO)")},
 		{PTP_DPC_ExposureBiasCompensation,
 					N_("Exposure Bias Compensation")},
-		{PTP_DPC_DateTime,		N_("Date Time")},
+		{PTP_DPC_DateTime,		N_("Date & Time")},
 		{PTP_DPC_CaptureDelay,		N_("Pre-Capture Delay")},
 		{PTP_DPC_StillCaptureMode,	N_("Still Capture Mode")},
 		{PTP_DPC_Contrast,		N_("Contrast")},
