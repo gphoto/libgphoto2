@@ -226,9 +226,7 @@ static int
 camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
 	strcpy (about->text, _("Largan driver\n"
-			       "Hubert Figuiere <hfiguiere@teaser.fr>\n\n"
-			       "Handles Largan Lmini camera.\n"
-			       ""));
+			       "Hubert Figuiere <hfiguiere@teaser.fr>\n"));
 
 	return (GP_OK);
 }
