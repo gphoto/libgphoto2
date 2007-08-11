@@ -1315,7 +1315,7 @@ gp_filesystem_name (CameraFilesystem *fs, const char *folder, int filenumber,
 	CR (x = gp_filesystem_folder_number (fs, folder, context));
 	
 	if (filenumber > fs->folder[x].count) {
-		gp_context_error (context, _("Folder '%s' does only contain "
+		gp_context_error (context, _("Folder '%s' only contains "
 			"%i files, but you requested a file with number %i."),
 			folder, fs->folder[x].count, filenumber);
 		return (GP_ERROR_FILE_NOT_FOUND);

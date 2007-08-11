@@ -799,7 +799,7 @@ gp_camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 	if (!camera->functions->get_config) {
 		gp_context_error (context, _("This camera does "
-			"not offer any configuration options."));
+			"not provide any configuration options."));
 		CAMERA_UNUSED (camera, context);
                 return (GP_ERROR_NOT_SUPPORTED);
 	}
@@ -895,7 +895,7 @@ gp_camera_get_manual (Camera *camera, CameraText *manual, GPContext *context)
 
 	if (!camera->functions->manual) {
 		gp_context_error (context, _("This camera "
-			"does not offer a manual."));
+			"does not provide a manual."));
 		CAMERA_UNUSED (camera, context);
                 return (GP_ERROR_NOT_SUPPORTED);
 	}
