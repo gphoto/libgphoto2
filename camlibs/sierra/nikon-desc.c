@@ -555,7 +555,7 @@ static const RegisterDescriptorType cp880_reg_72[] = {
 	},
 	{ 
 		GP_WIDGET_RADIO, 0x00ff, 
-		"misc-exp-lenses", N_("Misc exposure/lense settings"), 
+		"misc-exp-lenses", N_("Misc exposure/lens settings"), 
 		VAL_NAME_INIT (cp880_reg_72_mask_lo_val_names)
 	},
 };

@@ -765,7 +765,7 @@ sierra_transmit_ack (Camera *camera, char *packet, GPContext *context)
 			GP_DEBUG ("Transmission successful.");
 			return GP_OK;
 		case SIERRA_PACKET_INVALID:
-			gp_context_error (context, _("Packet got rejected "
+			gp_context_error (context, _("Packet was rejected "
 				"by camera. Please contact "
 				"%s."), MAIL_GPHOTO_DEVEL);
 			return GP_ERROR;

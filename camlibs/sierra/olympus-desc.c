@@ -593,9 +593,9 @@ static const ValueNameType oly750uz_reg_20_val_names[] = {
 	{ { 0x00 }, N_("Auto") },
 	{ { 0x01 }, N_("Daylight") },
 	{ { 0x03 }, N_("Tungsten") },
-	{ { 0x04 }, N_("Flourescent-1-home-6700K") },
-	{ { 0x05 }, N_("Flourescent-2-desk-5000K") },
-	{ { 0x06 }, N_("Flourescent-3-office-4200K") },
+	{ { 0x04 }, N_("Fluorescent-1-home-6700K") },
+	{ { 0x05 }, N_("Fluorescent-2-desk-5000K") },
+	{ { 0x06 }, N_("Fluorescent-3-office-4200K") },
 	{ { 0xff }, N_("Cloudy") },
 };
 static const RegisterDescriptorType oly750uz_reg_20[] = { 
@@ -1146,39 +1146,35 @@ static const char oly3040_manual[] =
 N_(
 "Some notes about Olympus cameras:\n"
 "(1) Camera Configuration:\n"
-"    A value of 0 will take the default one (auto).\n"
+"    A zero value will take the default one (auto).\n"
 "(2) Olympus C-3040Z (and possibly also the C-2040Z\n"
-"    and others) have a USB PC Control mode. In order\n"
-"    to use this mode, the camera must be switched\n"
-"    into 'USB PC control mode'. To get to the menu\n"
-"    for switching modes, turn on the camera, open\n"
+"    and others) have a USB PC Control mode. To switch\n"
+"    into 'USB PC control mode', turn on the camera, open\n"
 "    the memory card access door and then press and\n"
 "    hold both of the menu and LCD buttons until the\n"
 "    camera control menu appears. Set it to ON.\n"
 "(3) If you switch the 'LCD mode' to 'Monitor' or\n"
 "    'Normal', don't forget to switch it back to 'Off'\n"
-"    before disconnecting. Otherwise you cannot use\n"
-"    the camera's buttons. If you end up with this\n"
+"    before disconnecting. Otherwise you can't use\n"
+"    the camera buttons. If you end up in this\n"
 "    state, you should reconnect the camera to the\n"
-"    PC and switch LCD to 'Off'."
+"    PC, then switch LCD to 'Off'."
 );
 
 static const char oly750uz_manual[] =
 N_(
 "Olympus 750 Ultra Zoom:\n"
-"(1) Olympus 750UZ has a USB PC Control mode. In order\n"
-"    to use this mode, the camera must be switched\n"
-"    into 'USB PC control mode'. To get to the menu\n"
-"    for switching modes, turn on the camera, open\n"
+"(1) Olympus 750UZ has a USB PC Control mode. To switch\n"
+"    into 'USB PC control mode', turn on the camera, open\n"
 "    the memory card access door and then press and\n"
 "    hold both the 'OK' and 'quickview' buttons until the\n"
 "    camera control menu appears. Set it to control mode.\n"
 "(2) If you switch the 'LCD mode' to 'Monitor' or\n"
 "    'Normal', don't forget to switch it back to 'Off'\n"
-"    before disconnecting. Otherwise you cannot use\n"
-"    the camera's buttons. If you end up with this\n"
+"    before disconnecting. Otherwise you can't use\n"
+"    the camera buttons. If you end up in this\n"
 "    state, you should reconnect the camera to the\n"
-"    PC and switch LCD to 'Off'."
+"    PC, then switch LCD to 'Off'."
 );
 
 static const char default_manual[] = 
