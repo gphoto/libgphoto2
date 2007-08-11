@@ -41,6 +41,7 @@
 #else
 #  define _(String) (String)
 #  define N_(String) (String)
+#  define ngettext(String1,String2,Count) ((Count==1)?String1:String2)
 #endif
 
 #include "mars.h"
@@ -113,18 +114,13 @@ camera_abilities (CameraAbilitiesList *list)
 static int
 camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
-	int num_pics;
-	num_pics = mars_get_num_pics(camera->pl->info);
-	switch(num_pics) {
-	case 1:
-    	sprintf (summary->text,_("Mars MR97310 camera.\n" 
-			"There is %i photo in it. \n"), num_pics);  
-	break;
-	default:
-    	sprintf (summary->text,_("Mars MR97310 camera.\n" 
-			"There are %i photos in it. \n"), num_pics);  
-	}	
+	int num_pics = mars_get_num_pics(camera->pl->info);
 
+    	sprintf (summary->text,ngettext(
+		"Mars MR97310 camera.\nThere is %i photo in it.\n",
+    		"Mars MR97310 camera.\nThere are %i photos in it.\n",
+		num_pics), num_pics
+	);  
     	return GP_OK;
 }
 
@@ -135,7 +131,7 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
         "This driver supports cameras with Mars MR97310 chip (and direct\n"
         "equivalents ??Pixart PACx07?\?).\n"
 	"These cameras do not support deletion of photos, nor uploading\n"
-	"of data. \n"
+	"of data.\n"
 	"Decoding of compressed photos may or may not work well\n" 
 	"and does not work equally well for all supported cameras.\n"
 	"Photo data processing for Argus QuickClix is NOT SUPPORTED.\n"
