@@ -96,12 +96,8 @@ camera_abilities (CameraAbilitiesList *list)
 static int
 camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
-    	sprintf (summary->text,_("Your Logitech Clicksmart 310\n" 
-				"has  %i pictures in it.\n"
-				), 
-
+    	sprintf (summary->text,_("Your Logitech Clicksmart 310 has %i pictures in it.\n"), 
 				camera->pl->num_pics);  
-
     	return GP_OK;
 }
 
@@ -110,7 +106,7 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
 {
 	strcpy(manual->text, 
 	_(
-	"Two resolution settings, 352x288 and 176x144. Photo data \n"
+	"There are two resolution settings, 352x288 and 176x144. Photo data \n"
 	"is in JPEG format when downloaded and thus has no predetermined\n"
 	"size. Therefore, the advertised maximum number of photos the\n"
 	"camera can hold must be understood as an approximation.\n"
