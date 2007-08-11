@@ -8,10 +8,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -65,7 +65,7 @@ int
 camera_id (CameraText *id)
 {
     	strcpy (id->text, "iClick 5X");
-        
+
     	return GP_OK;
 }
 
@@ -73,7 +73,7 @@ camera_id (CameraText *id)
 int
 camera_abilities (CameraAbilitiesList *list)
 {
-    	int i;    
+    	int i;
     	CameraAbilities a;
 
     	for (i = 0; models[i].name; i++) {
@@ -89,7 +89,7 @@ camera_abilities (CameraAbilitiesList *list)
 		else
 			a.operations = GP_OPERATION_CAPTURE_PREVIEW;
        		a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
-		a.file_operations   = GP_FILE_OPERATION_PREVIEW + GP_FILE_OPERATION_RAW; 
+		a.file_operations   = GP_FILE_OPERATION_PREVIEW + GP_FILE_OPERATION_RAW;
        		gp_abilities_list_append (list, a);
     	}
 
@@ -99,27 +99,27 @@ camera_abilities (CameraAbilitiesList *list)
 static int
 camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
-    	sprintf (summary->text,_("Your USB camera is an iClick 5X.\n" 
-				"The total number of pictures taken is %i\n"), 
+    	sprintf (summary->text,_("Your USB camera is an iClick 5X.\n"
+				"The total number of pictures taken is %i\n"),
 
-				camera->pl->nb_entries);  
+				camera->pl->nb_entries);
 
     	return GP_OK;
 }
 
-static int camera_manual (Camera *camera, CameraText *manual, GPContext *context) 
+static int camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 {
 	strcpy(manual->text, 	
-	_( 
-	"For cameras with ID 0x2770:0x9153.\n\n"
+	_(
+	"Information regarding cameras with ID 0x2770:0x9153.\n\n"
 	"We do not recommend the use of a GUI program to access\n"
 	"this camera, unless you are just having fun or trying to\n"
 	"see if you can blow a fuse.\n"
-	"If you seriously want your photos, try\n" 
+	"For production use, try\n"
 	"gphoto2 -P\n"
 	"from the command line.\n"
-	"Also don't even try to download video clips.\n")
-	);  
+	"Note: it is not possible to download video clips.\n")
+	);
 
 	return (GP_OK);
 }
@@ -142,7 +142,7 @@ static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
                 void *data, GPContext *context)
 {
-        Camera *camera = data; 
+        Camera *camera = data;
 	int i;
 	unsigned char buf[1024];
 	GP_DEBUG ("List files in %s\n", folder);
@@ -201,8 +201,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return GP_ERROR_FILE_NOT_FOUND;
 
 	/* Fetch entries until the one we need, and toss all but the one we need.
-	 * TODO: Either find out how to use the location info in the catalog to 
-	 * download just the entry needed, or show it is as impossible as it seems. 
+	 * TODO: Either find out how to use the location info in the catalog to
+	 * download just the entry needed, or show it is as impossible as it seems.
 	 */
 
 	/* Change register to DATA, but only if necessary */
@@ -214,11 +214,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	}
 
 	start = icl_get_start (camera->pl, entry);
-	datasize = icl_get_size (camera->pl, entry); 
-	/* datasize exceeds the actual datasize by 0x100 bytes, which seems to be 
+	datasize = icl_get_size (camera->pl, entry);
+	/* datasize exceeds the actual datasize by 0x100 bytes, which seems to be
 	 * 0x100 bytes of filler at the beginning. For now we will treat this extra
 	 * 0x100 bytes as junk and just ditch it.
-	 */ 
+	 */
 
 	GP_DEBUG ("data offset at %d, picture at %d\n", camera->pl->data_offset, start);
 
@@ -263,7 +263,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	        gp_file_set_data_and_size (file, (char *)frame_data, datasize);
 		return (GP_OK);
 	default:
-		return GP_ERROR_NOT_SUPPORTED; 
+		return GP_ERROR_NOT_SUPPORTED;
 	}
 
 	/* Write the frame(s) */
@@ -280,7 +280,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	ptr = ppm = malloc(ppmsize);
 
 	frame_ptr = frame_data + 0x100;
-	/* Here, we just threw away the "superfluous" first 0x100 bytes */	    
+	/* Here, we just threw away the "superfluous" first 0x100 bytes */
 	memcpy(ptr, buf, hdrsize);
 	ptr += hdrsize;
 
@@ -341,14 +341,14 @@ camera_init(Camera *camera, GPContext *context)
         camera->functions->manual	= camera_manual;
 	camera->functions->about        = camera_about;
 	camera->functions->exit	    	= camera_exit;
-   
+
 	GP_DEBUG ("Initializing the camera\n");
 
 	ret = gp_port_get_settings(camera->port,&settings);
-	if (ret < 0) return ret; 
- 
+	if (ret < 0) return ret;
+
 	ret = gp_port_set_settings(camera->port,settings);
-	if (ret < 0) return ret; 
+	if (ret < 0) return ret;
 
         /* Tell the CameraFilesystem where to get lists from */
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
