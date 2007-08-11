@@ -119,13 +119,13 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
 {
 	strcpy(manual->text, 
 	_(
-	"For cameras with SQ905C Technologies chip.\n"
-	"Photos will be saved in PPM format.\n\n"
+	"For cameras with SQ905C Technologies chip,\n"
+	"photos will be saved in PPM format.\n\n"
 	"Some of these cameras allow software deletion of all photos.\n"
 	"Others do not, depending on the chip revision. \n" 
 	"If deletion does work, then gphoto2 -- capture image will \n"
 	"have the side-effect that it also deletes what is on the camera.\n"
-	"Uploading of data to the camera not supported by hardware.\n"
+	"Uploading of data to the camera is not supported by the hardware.\n"
 	)); 
 
 	return (GP_OK);
