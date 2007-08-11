@@ -1590,17 +1590,17 @@ camera_get_config_epson (Camera *camera, CameraWidget **window, GPContext *conte
 	ret = sierra_get_int_register (camera, 1, &value, context);
         if (ret >= 0) {
 		gp_widget_new (GP_WIDGET_RADIO, _("Resolution"), &child);
-		gp_widget_add_choice (child, _("Standard"));
-		gp_widget_add_choice (child, _("Fine"));
-		gp_widget_add_choice (child, _("SuperFine"));
+		gp_widget_add_choice (child, _("standard"));
+		gp_widget_add_choice (child, _("fine"));
+		gp_widget_add_choice (child, _("superfine"));
 		gp_widget_add_choice (child, _("HyPict"));
 		
                 switch (value) {
-		case 1: strcpy (t, _("Standard"));
+		case 1: strcpy (t, _("standard"));
 			break;
-                case 2: strcpy (t, _("Fine"));
+                case 2: strcpy (t, _("fine"));
 			break;
-                case 3: strcpy (t, _("SuperFine"));
+                case 3: strcpy (t, _("superfine"));
 			break;
                 case 34: strcpy (t, _("HyPict"));
 			break;
@@ -1801,11 +1801,11 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 	if ((gp_widget_get_child_by_label (window, _("Resolution"), &child)
 	     >= 0) && gp_widget_changed (child)) {
 		gp_widget_get_value (child, &value);
-		if (strcmp (value, _("Standard")) == 0) {
+		if (strcmp (value, _("standard")) == 0) {
 			i = 1;
-		} else if (strcmp (value, _("Fine")) == 0) {
+		} else if (strcmp (value, _("fine")) == 0) {
 			i = 2;
-		} else if (strcmp (value, _("SuperFine")) == 0) {
+		} else if (strcmp (value, _("superfine")) == 0) {
 			i = 3;
 		} else if (strcmp (value, _("HyPict")) == 0) {
 			i = 34;
