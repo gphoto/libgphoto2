@@ -6,6 +6,12 @@ AM_CPPFLAGS = -I@srcdir@ $(VERSION_FLAGS)
 
 VERSION_FLAGS = -DLIBGPPORT_VERSION=\"@LIBGPPORT_VERSION@\" -DHAVE_TERMIOS_H
 
+iolib_dependencies = $(top_srcdir)/iolib.sym
+iolib_ldflags = -module -no-undefined -avoid-version \
+	-export-dynamic \
+        -export-symbols $(top_srcdir)/iolib.sym
+iolib_libadd = $(top_builddir)/libgphoto2_port/libgphoto2_port.la
+
 ## Executable files
 bin_SCRIPTS = gphoto2-port-config
 
