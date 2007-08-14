@@ -5,6 +5,10 @@ PTP2 driver:
 
    * Devices added:
      - Canon IXUS iZ
+
+Test cases:
+   * Test camlib loading of both uninstalled and installed camlibs.
+
 ------------------------------------------------------------------------
 libgphoto2 2.4.0 release
 
