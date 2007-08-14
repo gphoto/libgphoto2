@@ -90,6 +90,19 @@ const char *gp_port_message_codeset (const char*);
 /* DEPRECATED */
 typedef GPPortInfo gp_port_info;
 
+
+/**
+ * Name of the environment variable which may contain the path where
+ * to look for the IO libs. If this environment variable is not defined,
+ * use the compiled-in default constant.
+ *
+ * \internal Internal use only.
+ */
+#ifdef _GPHOTO2_INTERNAL_CODE
+#define IOLIBDIR_ENV "IOLIBS"
+#endif /* _GPHOTO2_INTERNAL_CODE */
+
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

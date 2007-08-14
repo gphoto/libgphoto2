@@ -67,19 +67,12 @@
 struct _GPPortInfoList {
 	GPPortInfo *info;
 	unsigned int count;
+	unsigned int iolib_count;
 };
 
 #define CHECK_NULL(x) {if (!(x)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CR(x)         {int r=(x);if (r<0) return (r);}
 
-/**
- * IOLIBDIR_ENV:
- *
- * Name of the environment variable which may contain the path where
- * to look for the IO libs. If this environment variable is not defined,
- * use the compiled-in default constant.
- **/
-#define IOLIBDIR_ENV "IOLIBS"
 
 /**
  * \brief Specify codeset for translations
@@ -247,6 +240,8 @@ foreach_func (const char *filename, lt_ptr data)
 		return (0);
 	}
 
+	list->iolib_count++;
+
 	for (j = old_size; j < list->count; j++){
 		gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list",
 			_("Loaded '%s' ('%s') from '%s'."),
@@ -289,6 +284,10 @@ gp_port_info_list_load (GPPortInfoList *list)
 	lt_dlexit ();
 	if (result < 0)
 		return (result);
+	if (list->iolib_count == 0) {
+		gp_log (GP_LOG_ERROR, "No iolibs found in '%s'", iolibs);
+		return GP_ERROR_LIBRARY;
+	}
         return (GP_OK);
 }
 
