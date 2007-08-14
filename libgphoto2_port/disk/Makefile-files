@@ -1,18 +1,15 @@
-EXTRA_DIST = 
+# -*- Makefile -*-
 
-iolib_LTLIBRARIES = disk.la
+EXTRA_LTLIBRARIES += disk.la
 
-disk_la_LDFLAGS = -module -no-undefined -avoid-version \
-	-export-dynamic \
-        -export-symbols $(top_srcdir)/iolib.sym
+disk_la_LDFLAGS = $(iolib_ldflags)
 disk_la_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
 	$(INTL_CFLAGS) \
-	$(LIBUSB_CFLAGS) $(HAL_CFLAGS) \
+	$(LIBUSB_CFLAGS) \
+	$(HAL_CFLAGS) \
 	$(CPPFLAGS)
-disk_la_DEPENDENCIES = $(top_srcdir)/iolib.sym
-disk_la_LIBADD = \
-	$(top_builddir)/libgphoto2_port/libgphoto2_port.la \
-	$(INTLLIBS) \
-	$(HAL_LIBS)
-disk_la_SOURCES = disk.c
+disk_la_DEPENDENCIES = $(iolib_dependencies)
+disk_la_LIBADD = $(iolib_libadd)
+disk_la_LIBADD += $(INTLLIBS) $(HAL_LIBS)
+disk_la_SOURCES = disk/disk.c

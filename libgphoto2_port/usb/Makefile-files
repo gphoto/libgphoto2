@@ -1,24 +1,21 @@
-EXTRA_DIST = usb-os2.c
+# -*- Makefile -*-
 
-iolib_LTLIBRARIES = usb.la
+EXTRA_DIST += usb/usb-os2.c
 
-udevscript_PROGRAMS = check-mtp-device
-check_mtp_device_SOURCE = check-mtp-device.c
+EXTRA_LTLIBRARIES += usb.la
+
+udevscript_PROGRAMS += check-mtp-device
+check_mtp_device_SOURCES = usb/check-mtp-device.c
 check_mtp_device_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS) $(LIBUSB_CFLAGS)
 check_mtp_device_LDADD = $(LIBUSB_LIBS)
 
-usb_la_LDFLAGS = -module -no-undefined -avoid-version \
-	-export-dynamic \
-        -export-symbols $(top_srcdir)/iolib.sym
+usb_la_LDFLAGS = $(iolib_ldflags)
 usb_la_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
-	$(CPPFLAGS) \
 	$(INTL_CFLAGS) \
-	$(LIBUSB_CFLAGS)
-
-usb_la_DEPENDENCIES = $(top_srcdir)/iolib.sym
-usb_la_LIBADD = \
-	$(top_builddir)/libgphoto2_port/libgphoto2_port.la \
-	$(LIBUSB_LIBS)			\
-	$(INTLLIBS)
-usb_la_SOURCES = libusb.c
+	$(LIBUSB_CFLAGS) \
+	$(CPPFLAGS)
+usb_la_DEPENDENCIES = $(iolib_dependencies)
+usb_la_LIBADD = $(iolib_libadd)
+usb_la_LIBADD += $(LIBUSB_LIBS)	$(INTLLIBS)
+usb_la_SOURCES = usb/libusb.c

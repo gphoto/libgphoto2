@@ -1,14 +1,13 @@
-EXTRA_DIST = 
+# -*- Makefile -*-
 
-iolib_LTLIBRARIES = ptpip.la
+EXTRA_LTLIBRARIES += ptpip.la
 
-ptpip_la_LDFLAGS = -module -no-undefined -avoid-version \
-	-export-dynamic \
-        -export-symbols $(top_srcdir)/iolib.sym
+ptpip_la_LDFLAGS = $(iolib_ldflags)
 ptpip_la_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
 	$(INTL_CFLAGS) \
 	$(CPPFLAGS) 
-ptpip_la_DEPENDENCIES = $(top_srcdir)/iolib.sym
-ptpip_la_LIBADD = $(top_builddir)/libgphoto2_port/libgphoto2_port.la @MDNS_LIBS@
-ptpip_la_SOURCES = ptpip.c
+ptpip_la_DEPENDENCIES = $(iolib_dependencies)
+ptpip_la_LIBADD = $(iolib_libadd)
+ptpip_la_LIBADD += @MDNS_LIBS@
+ptpip_la_SOURCES = ptpip/ptpip.c

@@ -1,6 +1,6 @@
 dnl Process this file with autoreconf to produce a configure script.
 AC_PREREQ(2.59)
-AC_INIT([libgphoto2 port access library], [0.7.2], [gphoto-devel@lists.sourceforge.net], [libgphoto2_port])
+AC_INIT([libgphoto2 port access library], [0.7.3], [gphoto-devel@lists.sourceforge.net], [libgphoto2_port])
 AC_CONFIG_SRCDIR([libgphoto2_port/gphoto2-port-version.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([auto-m4])
@@ -233,7 +233,7 @@ AC_ARG_ENABLE([serial],
 	fi
 ])
 if $have_serial; then
-	IOLIB_SUBDIRS="$IOLIB_SUBDIRS serial"
+	IOLIB_LIST="$IOLIB_LIST serial"
 	AC_DEFINE([HAVE_SERIAL],1,[Whether you have serial support enabled])
 fi
 GP_CONFIG_MSG([Serial ports])
@@ -339,7 +339,7 @@ dnl ---------------------------------------------------------------------------
 GP_CONFIG_MSG([USB ports])
 GP_CHECK_LIBRARY([LIBUSB],[libusb],[>= 0.1.5],
 		[usb.h],[usb_busses],[
-	IOLIB_SUBDIRS="$IOLIB_SUBDIRS usb"
+	IOLIB_LIST="$IOLIB_LIST usb"
 ],[],
 		[disable-explicitly],
 		[http://libusb.sourceforge.net/]
@@ -356,16 +356,20 @@ if test "x$have_hal" = "xtrue"; then
    AC_SUBST(HAL_LIBS)
    AC_DEFINE(HAVE_HAL,1,[defined if HAL is available])
 fi
-IOLIB_SUBDIRS="$IOLIB_SUBDIRS disk"
+IOLIB_LIST="$IOLIB_LIST disk"
 
 dnl ptpip - works 'everywhere' with TCP/IP stack.
-IOLIB_SUBDIRS="$IOLIB_SUBDIRS ptpip"
+IOLIB_LIST="$IOLIB_LIST ptpip"
 
 # ----------------------------------------------------------------------
 # Define IOLIB stuff
 # ----------------------------------------------------------------------
 
-AC_SUBST(IOLIB_SUBDIRS)
+AC_SUBST(IOLIB_LIST)
+for x in ${IOLIB_LIST}; do
+    IOLIB_LTLIST="${IOLIB_LTLIST} ${x}.la"
+done
+AC_SUBST(IOLIB_LTLIST)
 AC_SUBST([iolibdir],["\$(libdir)/\$(PACKAGE_TARNAME)/\$(VERSION)"])
 AM_CPPFLAGS="$AM_CPPFLAGS -DIOLIBS=\\\"${iolibdir}\\\""
 
@@ -446,10 +450,6 @@ po/Makefile.in
 libgphoto2_port/Makefile
 libgphoto2_port.pc
 libgphoto2_port-uninstalled.pc
-serial/Makefile
-usb/Makefile
-disk/Makefile
-ptpip/Makefile
 gphoto2-port-config
 test/Makefile
 doc/Makefile

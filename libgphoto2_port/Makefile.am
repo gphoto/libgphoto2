@@ -1,24 +1,61 @@
-## Process this file with automake to produce Makefile.in
+########################################################################
+# Usage instructions
+########################################################################
+# If you only want to build a single iolib (say usb.la), run
+#     gmake usb.la
+# or  make usb.la
+#
+# If you only want to install a single camlib or two, run
+#     make DRIVERS="usb.la ptpip.la" install-iolibLTLIBRARIES
+########################################################################
 
+
+CLEANFILES =
+EXTRA_DIST =
+EXTRA_LTLIBRARIES =
+udevscript_PROGRAMS =
+
+
+## These two definitions look obsolete:
 ## Specify some includes and versioning
-
-AM_CPPFLAGS = -I@srcdir@ $(VERSION_FLAGS)
-
-VERSION_FLAGS = -DLIBGPPORT_VERSION=\"@LIBGPPORT_VERSION@\" -DHAVE_TERMIOS_H
-
-iolib_dependencies = $(top_srcdir)/iolib.sym
-iolib_ldflags = -module -no-undefined -avoid-version \
-	-export-dynamic \
-        -export-symbols $(top_srcdir)/iolib.sym
-iolib_libadd = $(top_builddir)/libgphoto2_port/libgphoto2_port.la
+#AM_CPPFLAGS = -I@srcdir@ $(VERSION_FLAGS)
+#VERSION_FLAGS = -DLIBGPPORT_VERSION=\"@LIBGPPORT_VERSION@\" -DHAVE_TERMIOS_H
 
 ## Executable files
 bin_SCRIPTS = gphoto2-port-config
 
-# Note: @subdirs@ lists all the directories from AC_CONFIG_SUBDIRS()
-SUBDIRS = po libgphoto2_port test @IOLIB_SUBDIRS@ doc m4
+# The . stands for the current dir, i.e. the iolibs to build.
+SUBDIRS = po libgphoto2_port test . doc m4
 
-EXTRA_DIST =   		\
+
+########################################################################
+# All iolibs are defined as EXTRA_LTLIBRARIES. This requires that
+# all iolibs have -rpath set explicitly in foobar_la_LDFLAGS.
+# You're probably best off by using the iolib_* variables defined
+# below.
+iolib_LTLIBRARIES = $(IOLIB_LTLIST)
+
+
+########################################################################
+# Define the compile/link/etc. flags common to all iolibs in one place,
+# i.e. here.
+iolib_dependencies = $(top_srcdir)/iolib.sym
+iolib_ldflags = -module -no-undefined -avoid-version \
+	-export-dynamic \
+        -export-symbols $(top_srcdir)/iolib.sym \
+	-rpath '$(iolibdir)'
+iolib_libadd = $(top_builddir)/libgphoto2_port/libgphoto2_port.la
+
+include disk/Makefile-files
+include ptpip/Makefile-files
+include serial/Makefile-files
+include usb/Makefile-files
+
+
+########################################################################
+# Miscellaneous stuff
+
+EXTRA_DIST +=   		\
 	AUTHORS \
 	ChangeLog \
 	COPYING.LIB \
