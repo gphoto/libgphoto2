@@ -513,6 +513,8 @@ GP_CAMLIB([template], [obsolete])dnl
 GP_CAMLIB([toshiba_pdrm11])dnl
 dnl
 GP_CAMLIBS_DEFINE()dnl
+GP_CONFIG_MSG([Camlibs],[${camlibs}])
+
 
 dnl --------------------------------------------------------------------
 dnl documentation
