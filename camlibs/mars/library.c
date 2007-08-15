@@ -60,6 +60,7 @@ static const struct {
    	unsigned short idProduct;
 } models[] = {
         {"Aiptek PenCam VGA+", GP_DRIVER_STATUS_TESTING, 0x08ca, 0x0111},
+	{"Trust Spyc@m 100", GP_DRIVER_STATUS_TESTING, 0x08ca, 0x0110},
  	{"Emprex PCD3600", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f},
 	{"Vivitar Vivicam 55", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f},
 	{"Haimei Electronics HE-501A", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010e},

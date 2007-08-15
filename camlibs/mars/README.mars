@@ -69,7 +69,10 @@ conditions. After the tweaks I have added as of August 2006, though, the
 situation with compression mode is improved quite a bit.
 
 Here is a report on the cameras which I own. I can not say anything 
-about the others unless their performance in compressed mode is reported to me:
+about the others unless their performance is reported to me. This especially 
+applies in case that the camera uses compressed mode, since there are two 
+compression algorithms in use and we can handle only one of them to any extent
+at all. 
 
 Aiptek Pencam VGA+: Compressed mode is very sensitive to bad lighting, 
 especially when there are dark colors in the image (08/27/06: better now). 
@@ -95,7 +98,11 @@ they are they work very well. It seems that these shoot clips in compressed
 mode (no matter if you otherwise turned compression on, or not), but at the 
 resolution settings these cameras use the decompression works nicely, too. 
 Probably the CD302N and the Pixart Gemini are the same, too, but I do not have
-direct experience. 
+direct experience. Trust SpyC@m 100: Reported as working, seems from 
+manufacturer's description to be another camera similar to the Philips KeyChain. 
+Furthermore, www.trust.com (the manufacturer) says that the Trust SpyC@m 100s 
+is the same camera inside, so it is also presumed to work. 
+
 
 Sakar Digital 56379 "Spy Shot": Another keychain camera, but also contains a 
 microphone and will capture sound. There is a toggle switch on the camera, 
