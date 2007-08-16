@@ -1,19 +1,19 @@
-# translation of libgphoto2_port-2.3.0.po to Danish
+# translation of libgphoto2_port-2.4.0.po to Danish
 # Copyright (C) 2005, 2007 Free Software Foundation, Inc.
 #
 # Mogens Jaeger <mogens@jaeger.tf>, 2005, 2007.
 msgid ""
 msgstr ""
-"Project-Id-Version: libgphoto2_port 2.3.0\n"
+"Project-Id-Version: libgphoto2_port 2.4.0\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2007-07-21 12:38+0200\n"
-"PO-Revision-Date: 2007-03-27 12:46+0200\n"
+"POT-Creation-Date: 2007-07-29 19:38-0400\n"
+"PO-Revision-Date: 2007-08-15 12:45+0200\n"
 "Last-Translator: Mogens Jaeger <mogens@jaeger.tf>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.11.2\n"
+"X-Generator: KBabel 1.11.4\n"
 
 #: libgphoto2_port/gphoto2-port-info-list.c:211
 #, c-format
@@ -318,15 +318,12 @@ msgstr "Ryd stop..."
 #: libgphoto2_port/gphoto2-port.c:848
 #, c-format
 msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr ""
-"Skriver besked (forespørgsel=0x%x værdi=0x%x indeks=0x%x størrelse=%i=0x%"
-"x)..."
+msgstr "Skriver besked (forespørgsel=0x%x værdi=0x%x indeks=0x%x størrelse=%i=0x%x)..."
 
 #: libgphoto2_port/gphoto2-port.c:883
 #, c-format
 msgid "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr ""
-"Læser besked (forespørgsel=0x%x værdi=0x%x indeks=0x%x størrelse=%i=0x%x)..."
+msgstr "Læser besked (forespørgsel=0x%x værdi=0x%x indeks=0x%x størrelse=%i=0x%x)..."
 
 #: libgphoto2_port/gphoto2-port.c:890
 msgid "msg_read"
@@ -445,14 +442,8 @@ msgstr "Kunne ikke forespørge kerneldriver fra enheden."
 
 #: usb/libusb.c:269
 #, c-format
-msgid ""
-"Could not claim interface %d (%m). Make sure no other program or kernel "
-"module (such as %s) is using the device and you have read/write access to "
-"the device."
-msgstr ""
-"Kunne ikke kræve grænseflade %d (%m). Sikr dig at ingen andre programmer "
-"eller kerneldrivere (som f.eks. %s) bruger enheden, og at du har læse/skrive "
-"rettigheder til enheden."
+msgid "Could not claim interface %d (%m). Make sure no other program or kernel module (such as %s) is using the device and you have read/write access to the device."
+msgstr "Kunne ikke kræve grænseflade %d (%m). Sikr dig at ingen andre programmer eller kerneldrivere (som f.eks. %s) bruger enheden, og at du har læse/skrive rettigheder til enheden."
 
 #: usb/libusb.c:287
 #, c-format
@@ -460,57 +451,44 @@ msgid "Could not release interface %d (%m)."
 msgstr "Kunne ikke frigøre grænseflade %d (%m)."
 
 #: usb/libusb.c:298
-#, fuzzy, c-format
+#, c-format
 msgid "Could not reset USB port (%m)."
-msgstr "Kunne ikke lukke USB-port (%m)."
+msgstr "Kunne ikke resette USB-port (%m)."
 
 #: usb/libusb.c:304
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr "Kunne ikke lukke USB-port (%m)."
 
-#: usb/libusb.c:551
+#: usb/libusb.c:553
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "Kunne ikke sætte konfiguration %d/%d (%m)"
 
-#: usb/libusb.c:584
-#, fuzzy, c-format
+#: usb/libusb.c:586
+#, c-format
 msgid "Could not set altsetting from %d to %d (%m)"
-msgstr "Kunne ikke sætte alt-indstillinger %d/%d (%m)"
+msgstr "Kunne ikke sætte alt-indstillinger %d til /%d (%m)"
 
-#: usb/libusb.c:676
+#: usb/libusb.c:678
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
-msgstr ""
-"Det leverede fremstiller- eller produkt-id (0x%x,0x%x) er ikke gyldigt."
+msgstr "Det leverede fremstiller- eller produkt-id (0x%x,0x%x) er ikke gyldigt."
 
-#: usb/libusb.c:712
+#: usb/libusb.c:714
 #, c-format
-msgid ""
-"USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
-"not function with gphoto2. Reference: %s"
-msgstr ""
-"USB-enheden (fremstiller 0x%x, produkt 0x%x) er en masselagerenhed, og "
-"virker måske ikke med gphoto2. Reference: %s"
+msgid "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might not function with gphoto2. Reference: %s"
+msgstr "USB-enheden (fremstiller 0x%x, produkt 0x%x) er en masselagerenhed, og virker måske ikke med gphoto2. Reference: %s"
 
-#: usb/libusb.c:754
+#: usb/libusb.c:756
 #, c-format
-msgid ""
-"Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
-"is connected to the computer."
-msgstr ""
-"Kunne ikke finde USB-enheden (fremstiller 0x%x, produkt 0x%x). Sikr dig at "
-"enheden er tilsluttet computeren."
+msgid "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device is connected to the computer."
+msgstr "Kunne ikke finde USB-enheden (fremstiller 0x%x, produkt 0x%x). Sikr dig at enheden er tilsluttet computeren."
 
-#: usb/libusb.c:984
+#: usb/libusb.c:986
 #, c-format
-msgid ""
-"Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
-"sure this device is connected to the computer."
-msgstr ""
-"Kunne ikke finde USB-enheden (class 0x%x, subclass 0x%x, protokol0x%x). Sikr "
-"dig at enheden er tilsluttet computeren."
+msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
+msgstr "Kunne ikke finde USB-enheden (class 0x%x, subclass 0x%x, protokol0x%x). Sikr dig at enheden er tilsluttet computeren."
 
 #: disk/disk.c:177 disk/disk.c:221 disk/disk.c:257 disk/disk.c:289
 #: disk/disk.c:312
