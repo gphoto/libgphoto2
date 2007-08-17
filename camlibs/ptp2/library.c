@@ -559,6 +559,8 @@ static struct {
 
 	/* IRC report */
 	{"Casio:EX-Z120",                 0x07cf, 0x1042, 0},
+	/* Andrej Semen (at suse) */
+	{"Casio:EX-S770",                 0x07cf, 0x1049, 0},
 	/* https://launchpad.net/bugs/64146 */
 	{"Casio:EX-Z700",                 0x07cf, 0x104c, 0},
 
@@ -724,6 +726,7 @@ static struct {
 	{"Fuji:FinePix A800",			0x04cb, 0x01d2, 0},
 
 	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
+	{"Sea & Sea:5000G (PTP mode)",		0x05ca, 0x0327, 0},
 	{"Ricoh:Caplio R3 (PTP mode)",          0x05ca, 0x032f, 0},
 	{"Ricoh:Caplio R5 (PTP mode)",          0x05ca, 0x0110, 0},
 
