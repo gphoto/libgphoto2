@@ -791,6 +791,8 @@ static struct {
 	{"Philips:GoGear SA9200",		0x0471, 0x014f, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* From Gerhard Mekenkamp */
 	{"Philips:GoGear Audio",		0x0471, 0x0165, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	/* David Holm <wormie@alberg.dk> */
+	{"Philips:ShoqBox",			0x0471, 0x0172, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* from npedrosa */
 	{"Philips:PSA610",			0x0471, 0x0181, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* From: thanosz@softhome.net */
