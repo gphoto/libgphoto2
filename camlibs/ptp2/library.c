@@ -746,13 +746,13 @@ static struct {
 
 	/************ Add MTP devices below this line ***********/
 	/* libmtp - Kay McCormick <kaym@modsystems.com> */
-	{"Insignia:NS-DV45",			0x119f, 0x0303, 0},
+	{"Insignia:NS-DV45",			0x119f, 0x0303, PTP_MTP},
 	/* This camera speaks _only_ PictBridge, so it is too limited
 	 * for us. -Marcus
-	{"Motorola:K1 (PTP mode)",              0x22b8, 0x4811, 0},
+	{"Motorola:K1 (PTP mode)",              0x22b8, 0x4811, PTP_MTP},
 	*/
 	/* Hans-Joachim Baader <hjb@pro-linux.de> */
-	{"Motorola:A1200 (MTP mode)",           0x22b8, 0x60ca, 0},
+	{"Motorola:A1200 (MTP mode)",           0x22b8, 0x60ca, PTP_MTP},
 
 	/* from libmtp  */
 	{"iRiver:iFP-800",                      0x4102, 0x1008, PTP_MTP},
