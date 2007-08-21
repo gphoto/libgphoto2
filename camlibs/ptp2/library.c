@@ -745,6 +745,8 @@ static struct {
 	{"Apple:iPhone (PTP mode)",		0x05ac, 0x1290, PTPBUG_DCIM_WRONG_PARENT},
 
 	/************ Add MTP devices below this line ***********/
+	/* libmtp - Kay McCormick <kaym@modsystems.com> */
+	{"Insignia:NS-DV45",			0x119f, 0x0303, 0},
 	/* This camera speaks _only_ PictBridge, so it is too limited
 	 * for us. -Marcus
 	{"Motorola:K1 (PTP mode)",              0x22b8, 0x4811, 0},
