@@ -49,3 +49,33 @@ Device Properties Supported:
   0xd005
   0xd407
   0xd406
+Camera summary:
+Model: S200
+  device version: COOLPIX S200V1.0
+    serial number:  0000XXXXXXXX
+Vendor extension ID: 0x0000000a
+Vendor extension description: microsoft.com: 1.0; Nikon PTP Extensions
+
+Capture Formats: JPEG
+Display Formats: JPEG, Association/Directory, DPOF, MS Wave, Apple Quicktime, MS AVI, Defined Type
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	Generic Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: None
+	VolumeLabel: None
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 2012872704 (1919 MB)
+	Free Space (Bytes): 1880424448 (1793 MB)
+	Free Space (Images): 1434
+
+Device Property Summary:
+Date & Time(0x5011):(readwrite) (type=0xffff) '(null)'
+Property 0xd005:(read only) (type=0x4) Enumeration [1,2] value: 2
+Property 0xd407:(read only) (type=0x6) 1
+Property 0xd406:(readwrite) (type=0xffff) '(null)'
