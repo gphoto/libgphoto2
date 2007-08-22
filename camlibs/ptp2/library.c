@@ -485,6 +485,8 @@ static struct {
 	/* Lowe, John Michael <jomlowe@iupui.edu> */
 	{"Nikon:Coolpix S2 (PTP mode)",   0x04b0, 0x014e, 0},
 	{"Nikon:Coolpix S6 (PTP mode)",   0x04b0, 0x014e, 0},
+	/* Marius Groeger <marius.groeger@web.de> */
+	{"Nikon:Coolpix S200 (PTP mode)", 0x04b0, 0x0161, PTP_CAP},
 	{"Nikon:Coolpix SQ (PTP mode)",   0x04b0, 0x0202, 0},
 	/* lars marowski bree, 16.8.2004 */
 	{"Nikon:Coolpix 4200 (PTP mode)", 0x04b0, 0x0204, 0},
@@ -495,7 +497,6 @@ static struct {
 	{"Nikon:Coolpix P4 (PTP mode)",   0x04b0, 0x020c, 0},
 	/* Nikon Coolpix 2000 */
 	{"Nikon:Coolpix 2000 (PTP mode)", 0x04b0, 0x0302, 0},
-
 	/* From IRC reporter. */
 	{"Nikon:Coolpix L4 (PTP mode)",   0x04b0, 0x0305, 0},
 	/* From IRC reporter. */
@@ -505,13 +506,10 @@ static struct {
 	/* D2H SLR in PTP mode from Steve Drew <stevedrew@gmail.com> */
 	{"Nikon:D2H SLR (PTP mode)",      0x04b0, 0x0404, 0},
 	{"Nikon:DSC D70 (PTP mode)",      0x04b0, 0x0406, PTP_CAP},
-
 	/* Justin Case <justin_case@gmx.net> */
 	{"Nikon:D2X SLR (PTP mode)",      0x04b0, 0x0408, PTP_CAP},
-
 	/* Niclas Gustafsson (nulleman @ sf) */
 	{"Nikon:D50 (PTP mode)",          0x04b0, 0x040a, PTP_CAP},
-
 	{"Nikon:DSC D70s (PTP mode)",     0x04b0, 0x040e, PTP_CAP},
 	/* Jana Jaeger <jjaeger.suse.de> */
 	{"Nikon:DSC D200 (PTP mode)",     0x04b0, 0x0410, PTP_CAP},
@@ -519,7 +517,6 @@ static struct {
 	{"Nikon:DSC D80 (PTP mode)",      0x04b0, 0x0412, PTP_CAP},
 	/* Huy Hoang <hoang027@umn.edu> */
 	{"Nikon:DSC D40 (PTP mode)",      0x04b0, 0x0414, PTP_CAP},
-
 	/* Sridharan Rengaswamy <sridhar@stsci.edu>, Coolpix L3 */
 	{"Nikon:Coolpix L3 (PTP mode)",   0x04b0, 0x041a, 0},
 
