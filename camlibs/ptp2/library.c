@@ -920,6 +920,9 @@ static struct {
 	/* Cristi Magherusan <majeru@gentoo.ro> to libmtp */
 	{"Trekstor:i.Beat sweez 2GB",		0x0402, 0x0611, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 
+	/* from libmtp, Patrik Johansson <Patrik.Johansson@qivalue.com> */
+	{"Cowon:iAudio U3 (MTP mode)",		0x0e21, 0x0701, PTP_MTP},
+
 	{"Disney:MixMax",			0x0aa6, 0x6021, PTP_MTP|PTP_MTP_PROPLIST_WORKS}
 };
 
