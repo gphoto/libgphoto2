@@ -1,0 +1,45 @@
+/* This is a second README file for libgphoto2/camlibs/digigr8. This README is an 
+ * integral part of the libgphoto2/camlibs/digigr8 library source code and is 
+ * distributed with that source code under the LGPL license. a copy of which 
+ * license may be seen in any of the source files in libgphoto2/camlibs/digigr8, 
+ * or in the head directory of libgphoto2. 
+ * Copyright by Theodore Kilgore, 08/24/07.
+ */ 
+
+
+
+On 08/23/2007, I discovered a new camera with USB ID 0x2770:0x913c. The
+basic functions of this camera are the same as those of the 0x2770:0x905c
+cameras which are the main ones supported in libgphoto2/camlibs/digigr8, but
+there are some small differences. For certain details and for the basic
+functionality, the reader should also read README.digigr8, therefore. Only
+the basic features and the differences with the previously-supported cameras
+are listed here:
+
+Features of the Suprema Digital Keychain Camera:
+
+	-- 640x480 and 320x240 resolution settings
+	-- supports gphoto2 --capture-preview option (presumed that the size
+		of the output image can be adjusted in code, default
+`		320x240; see README.digigr8 for details of that.
+	-- apparently does _not_ support multiframe AVI capability, or if so
+		it is not mentioned in the written manual. 
+	-- a setting does exist for shooting three frames with one shutter
+		press, but three only, not more. 
+	-- has a viewfinder and preview window on the back, which is very
+		nice but presumably eats battery. 
+	-- saves photos in volatile SDRAM, so don't let the batteries die. 
+	-- permits deletion of individual photos on the camera, by pushing
+		some buttons. This feature is not present on the other
+		supported cameras and is thus the big difference. Because of
+		the way this deletion is done, the function which counts
+		photos needed a serious rewrite to accommodate the deletion.
+		It will probably not ever be possible, unfortunately, to
+		support deletion of any photos or images on the camera, by
+		means of software control from the computer.
+	-- webcam functionality. The webcam function is obviously
+		supportable (gphoto2 --capture-image uses it to shoot one
+		frame), but libgphoto2 does not do webcams, so that can't be
+		done here. 
+
+Theodore Kilgore, 08/24/07

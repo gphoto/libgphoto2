@@ -64,6 +64,7 @@ static const struct {
         {"Vivitar Vivicam35",   GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
         {"Praktica Slimpix",    GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
         {"Disney pix micro",    GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9050}, 
+        {"Suprema Digital Keychain Camera",    GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x913d}, 
 	{NULL,0,0,0}
 };
 
@@ -205,6 +206,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	default:  h = 288; break;
 	}
 	b = digi_get_data_size (camera->pl, k);
+	if (!b) {
+		GP_DEBUG("Photo number %i deleted?\n",k+1);
+		camera->pl->last_fetched_entry = k;
+		return GP_OK;
+	}	
 	data = malloc (w*h);
 	if(!data) return GP_ERROR_NO_MEMORY;
 

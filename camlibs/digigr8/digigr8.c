@@ -40,11 +40,12 @@ int
 digi_init (GPPort *port, CameraPrivateLibrary *priv)
 {
 	char c[0x14];
-	int i;
-	unsigned char *catalog = malloc(0x4000);
+	int i,j=0;
+	unsigned char *catalog = calloc(0x4010,1);
 	unsigned char *catalog_tmp;
 	if (!catalog) return GP_ERROR_NO_MEMORY;
 
+	
 	SQWRITE (port, 0x0c, 0x14f4, 0x0, NULL, 0);
 	SQREAD (port, 0x0c, 0xf5, 0x00, c, 0x14);
 	SQWRITE (port, 0x0c, 0x1440, 0x110f, NULL, 0);
@@ -58,12 +59,26 @@ digi_init (GPPort *port, CameraPrivateLibrary *priv)
 	digi_reset (port);
 
 	/* The first occurence of a zero denotes end of files entries */
-	for (i=0; i<0x4000 && catalog[i]; i+=16) ;
+	for (i=0; i<0x4000 && catalog[i]; i+=16);
 	priv->nb_entries = i>>4;
-	catalog_tmp = realloc(catalog, i);
+	catalog_tmp = realloc(catalog, i+16);
+	memset (catalog_tmp+i, 0, 16);
 	if (i) {
-	if (catalog_tmp) priv->catalog = catalog_tmp;
-	else priv->catalog = catalog;
+		/*
+		 * 0x913c cameras allow individual photo deletion. This causes 
+		 * the relevant catalog line to start with 0x64. So the related
+		 * lines of config data must be removed, and the deleted 
+		 * images need to be cast out from the count.
+		 */
+
+		for (j=0; j<i; j+=16) {
+			if ((!catalog[j])||(catalog_tmp[j] == 0x64)) {
+				memcpy(catalog_tmp+j, catalog_tmp+j+16, i+16-j);
+				priv->nb_entries -- ;
+			}
+		}
+		if (catalog_tmp) priv->catalog = catalog_tmp;
+		else priv->catalog = catalog;
 	} else {
 		priv->catalog = NULL;	/* We just have freed catalog_tmp */
 	}
