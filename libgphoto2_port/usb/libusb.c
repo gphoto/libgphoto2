@@ -290,6 +290,8 @@ gp_port_usb_close (GPPort *port)
 		return (GP_ERROR_IO);
 	}
 
+#if 0
+	/* This does break Canon EOS and some PowerShots ... -Marcus */
 	/* This is only for our very special Canon cameras which need a good
 	 * whack after close, otherwise they get timeouts on reconnect.
 	 */
@@ -299,7 +301,7 @@ gp_port_usb_close (GPPort *port)
 			return (GP_ERROR_IO);
 		}
 	}
-
+#endif
 	if (usb_close (port->pl->dh) < 0) {
 		gp_port_set_error (port, _("Could not close USB port (%m)."));
 		return (GP_ERROR_IO);
