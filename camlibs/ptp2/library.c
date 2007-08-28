@@ -535,6 +535,7 @@ static struct {
 	{"Panasonic:Lumix FZ5",           0x04da, 0x2372, 0},
 
 	{"Panasonic:DMC-FZ20",            0x04da, 0x2374, 0},
+	{"Panasonic:DMC-FZ50",            0x04da, 0x2374, 0},
 	/* from Tomas Herrdin <tomas.herrdin@swipnet.se> */
 	{"Panasonic:DMC-LS3",             0x04da, 0x2374, 0},
 
