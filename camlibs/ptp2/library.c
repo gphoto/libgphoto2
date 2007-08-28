@@ -880,20 +880,20 @@ static struct {
 	{"Samsung:U600 Mobile Phone",		0x04e8, 0x6709, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 
 	/* Reported by Brian Robison */
-	{"SanDisk:Sansa m240",			0x0781, 0x7400, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"SanDisk:Sansa m240",			0x0781, 0x7400, PTP_MTP},
 	/* Reported by tangent_@users.sourceforge.net */
-	{"SanDisk:Sansa c150",			0x0781, 0x7410, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"SanDisk:Sansa c150",			0x0781, 0x7410, PTP_MTP},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1515815&group_id=8874&atid=358874 */
-	{"Sandisk:Sansa e200",			0x0781, 0x7420, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"Sandisk:Sansa e250",			0x0781, 0x7420, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"Sandisk:Sansa e260",			0x0781, 0x7420, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"Sandisk:Sansa e270",			0x0781, 0x7420, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"Sandisk:Sansa e280",			0x0781, 0x7421, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"SanDisk:Sansa c250",			0x0781, 0x7450, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"Sandisk:Sansa e200",			0x0781, 0x7420, PTP_MTP},
+	{"Sandisk:Sansa e250",			0x0781, 0x7420, PTP_MTP},
+	{"Sandisk:Sansa e260",			0x0781, 0x7420, PTP_MTP},
+	{"Sandisk:Sansa e270",			0x0781, 0x7420, PTP_MTP},
+	{"Sandisk:Sansa e280",			0x0781, 0x7421, PTP_MTP},
+	{"SanDisk:Sansa c250",			0x0781, 0x7450, PTP_MTP},
 	/* Reported by Troy Curtis Jr. */
 	{"SanDisk:Sansa Express",		0x0781, 0x7460, PTP_MTP},
 	/* Reported by XNJB user, and Miguel de Icaza <miguel@gnome.org> */
-	{"SanDisk:Sansa Connect",		0x0781, 0x7480, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"SanDisk:Sansa Connect",		0x0781, 0x7480, PTP_MTP},
 
 	/* Reported by Farooq Zaman. NOTE: Can just list files currently and might have other problems! */
 	{"Microsoft:Zune",			0x045e, 0x0710, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
