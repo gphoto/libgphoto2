@@ -902,6 +902,8 @@ static struct {
 	{"Sirius:Stiletto",			0x18f6, 0x0102, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 
 	{"Nokia:5300 Mobile Phone (MTP mode)",	0x0421, 0x04ba, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	/* Christian Arnold <webmaster@arctic-media.de> to libmtp list */
+	{"Nokia:N73",				0x0421, 0x04d1, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* https://sourceforge.net/tracker/?func=detail&atid=108874&aid=1659608&group_id=8874 */
 	{"Nokia:Mobile Phones",			0x0421, 0x04e1, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	{"Nokia:N80 Internet Edition",		0x0421, 0x04f1, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
