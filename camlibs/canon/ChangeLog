@@ -1,3 +1,7 @@
+2007-09-02  Marcus Meissner  <marcus@jet.franken.de>
+
+	* canon.c: Handle IXUS 30 also in ptp driver.
+
 2007-06-03  Paul Walmsley  <paul@booyaka.com>
 
 	* usb.c: remove one last CANON_EXPERIMENTAL_SECONDARY_IMAGE ifdef
