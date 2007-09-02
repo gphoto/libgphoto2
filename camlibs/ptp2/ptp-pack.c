@@ -983,7 +983,8 @@ static inline int
 ptp_unpack_OPL (PTPParams *params, unsigned char* data, MTPPropList **proplist, unsigned int len)
 { 
 	uint32_t prop_count = dtoh32a(data);
-	MTPPropList *prop = NULL;
+	MTPPropList *props = NULL;
+	MTPPropList *prop;
 	int offset = 0, i;
 
 	if (prop_count == 0) {
@@ -991,9 +992,8 @@ ptp_unpack_OPL (PTPParams *params, unsigned char* data, MTPPropList **proplist, 
 		return 0;
 	}
 	data += sizeof(uint32_t);
-	*proplist = malloc(sizeof(MTPPropList));
-	prop = *proplist;
 	for (i = 0; i < prop_count; i++) {
+		prop = malloc(sizeof(MTPPropList));
 		prop->ObjectHandle = dtoh32a(data);
 		data += sizeof(uint32_t);
 		len -= sizeof(uint32_t);
@@ -1011,12 +1011,39 @@ ptp_unpack_OPL (PTPParams *params, unsigned char* data, MTPPropList **proplist, 
 		data += offset;
 		len -= offset;
 
-		if (i != prop_count - 1) {
-			prop->next = malloc(sizeof(MTPPropList));
-			prop = prop->next;
-		} else
+		/* Insert so the list is always sorted */
+		if (props == NULL) {
+			/* First element */
+			props = prop;
 			prop->next = NULL;
+		} else {
+			MTPPropList *last = NULL;
+			MTPPropList *tmp = props;
+			while (tmp->next != NULL && 
+			       tmp->ObjectHandle < prop->ObjectHandle) {
+				last = tmp;
+				tmp = tmp->next;
+			}
+			if (tmp->next == NULL &&
+			    tmp->ObjectHandle < prop->ObjectHandle) {
+				/* Last pos in list */
+				tmp->next = prop;
+				prop->next = NULL;
+			} else {
+				/* Somewhere in the list */
+				if (last == NULL) {
+					/* First pos in list */
+					props = prop;
+					prop->next = tmp;
+				} else {
+					last->next = prop;
+					prop->next = tmp;
+				}
+			}
+			
+		}
 	}
+	*proplist = props;
 	return prop_count;
 }
 
