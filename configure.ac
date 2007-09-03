@@ -450,8 +450,12 @@ dnl ---------------------------------------------------------------------------
 dnl Camera drivers (camlibs)
 dnl ---------------------------------------------------------------------------
 dnl * See m4m/gp-camlibs.m4 for usage details, e.g. for marking camlibs as
-dnl   obsolete.
+dnl   unlisted.
 dnl * Please add new camlibs in alphabetical order.
+dnl * Selective build:
+dnl   $ make -C camlibs canon.la ptp2.la
+dnl * Selective install:
+dnl   $ make -C camlibs CAMLIBS="canon.la ptp2.la" install-camlibs
 GP_CAMLIB([adc65])dnl
 GP_CAMLIB([agfa_cl20])dnl
 GP_CAMLIB([aox])dnl
@@ -496,7 +500,7 @@ GP_CAMLIB([ricoh])dnl
 GP_CAMLIB([ricoh_g3])dnl
 GP_CAMLIB([samsung])dnl
 GP_CAMLIB([sierra])dnl
-GP_CAMLIB([sipix_blink], [obsolete])dnl
+GP_CAMLIB([sipix_blink], [unlisted])dnl
 GP_CAMLIB([sipix_blink2])dnl
 GP_CAMLIB([sipix_web2])dnl
 GP_CAMLIB([smal])dnl
@@ -509,7 +513,7 @@ GP_CAMLIB([sq905])dnl
 GP_CAMLIB([stv0674])dnl
 GP_CAMLIB([stv0680])dnl
 GP_CAMLIB([sx330z])dnl
-GP_CAMLIB([template], [obsolete])dnl
+GP_CAMLIB([template], [unlisted])dnl
 GP_CAMLIB([toshiba_pdrm11])dnl
 dnl
 GP_CAMLIBS_DEFINE()dnl
@@ -645,20 +649,10 @@ dnl manufacturer "Foo" work.
 if test "x$camlibs" = "xall"; then
    :
 else
-   AC_MSG_WARN([
-# Caution: You have chosen not to build all camlibs.
-#          Your camera may need one of those camlibs you disabled.
-#          YOUR CAMERA MAY NOT WORK!
-# 
-# Many cameras of many brands are supported by a camlib with a 
-# name different from brand or camera name. If you are unsure, please
-#   * enable at least the "ptp2" camlib
-#   * or even better, just build "all" camlibs.
-])
+   GP_CAMLIBS_WARNING
 fi
 
-echo "
-Please check whether the configuration I detected matches what you
+echo "Please check whether the configuration I detected matches what you
 would like to have. E.g. make sure that USB support is there if you
 intend to use USB cameras with $PACKAGE_NAME.
 
