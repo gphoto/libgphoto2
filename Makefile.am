@@ -59,10 +59,10 @@ source-code-check:
 
 ########################################################################
 # Shortcut for installation of a subset of camlibs/drivers
-# Usage: make DRIVER="canon.la ptp2.la" install-drivers
+# Usage: make CAMLIBS="canon.la ptp2.la" install-camlibs
 
-install-drivers:
-	cd camlibs && $(MAKE) DRIVERS="$(DRIVERS)" install-drivers
+install-camlibs:
+	cd camlibs && $(MAKE) CAMLIBS="$(CAMLIBS)" install-camlibs
 
 
 ########################################################################

@@ -455,7 +455,7 @@ dnl * Please add new camlibs in alphabetical order.
 dnl * Selective build:
 dnl   $ make -C camlibs canon.la ptp2.la
 dnl * Selective install:
-dnl   $ make -C camlibs CAMLIBS="canon.la ptp2.la" install-camlibs
+dnl   $ make CAMLIBS="canon.la ptp2.la" install-camlibs
 GP_CAMLIB([adc65])dnl
 GP_CAMLIB([agfa_cl20])dnl
 GP_CAMLIB([aox])dnl

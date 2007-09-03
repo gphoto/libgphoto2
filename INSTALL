@@ -115,7 +115,7 @@ directories on your system.
 
 If you want to install only one or two specific camlibs, run something like
 
-    $ make -C camlibs CAMLIBS="canon.la ptp2.la" install-camlibs
+    $ make CAMLIBS="canon.la ptp2.la" install-camlibs
 
 
 ====================================================
