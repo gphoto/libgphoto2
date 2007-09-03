@@ -84,7 +84,7 @@ camlibs, you can use
 
 and
 
-   make DRIVERS="sillycam.la doofuscam.la" install-drivers
+   make CAMLIBS="sillycam.la doofuscam.la" install-camlibs
 
 respectively.
 
@@ -157,7 +157,7 @@ following stuff into their .emacs file:
 compatibility
 -------------
 
-One gphoto2 has been officially launched as a 2.0 version, it is important
+Once gphoto2 has been officially launched as a 2.0 version, it is important
 that the API does not change frequently.  It is annoying to users when they
 have to upgrade all sort of libraries and applications just to get an
 upgraded camera driver.  Once the 2.0 release has been made, try to
