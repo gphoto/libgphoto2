@@ -1,5 +1,5 @@
 ########################################################################
-# This file describes how to install libgphoto2.
+# This file describes how to compile and install libgphoto2.
 ########################################################################
 
 Follow these steps to build and install libgphoto2 from the source
@@ -48,19 +48,9 @@ We recommend you call autoreconf like this:
 Step 1: Configure the sources
 =============================
 
-Now run either one of
-
-
-  ./configure --prefix=/usr/local
+  $ ./configure --prefix=/usr/local
 
      to prepare a tarball source tree for installation in (e.g.) /usr/local
-
-
-  ./configure --prefix=/home/me/root --with-drivers=ptp2,canon
-
-       to prepare a tarball source tree for installation in
-       /home/me/root and for compilation only of the drivers 
-       for PTP and Canon cameras.
 
 or run ./configure --help in order to find out about more
 configuration parameters.
@@ -97,11 +87,15 @@ will have to run "gmake" or something similar.
 
 The classic way to compile the program is just to run
 
-    make
+    $ make
  or
-    make -jN    (if you have N CPU cores)
+    $ make -jN    (if you have N CPU cores)
 
 and wait until the source is built.
+
+If you want to compile only one or two specific camlibs, run something like
+
+    $ make -C camlibs canon.la ptp2.la
 
 
 ==============================
@@ -111,13 +105,17 @@ Step 3: Installing the program
 To install the stuff you just compiled by running "make", you can just
 run 
 
-   make install
+    $ make install
 
 now. If installing to a directory which is not writable by your
 current user, you will have to run it as root.
 
 This installs the software and documentation into the proper
 directories on your system.
+
+If you want to install only one or two specific camlibs, run something like
+
+    $ make -C camlibs CAMLIBS="canon.la ptp2.la" install-camlibs
 
 
 ====================================================
@@ -161,9 +159,10 @@ General Hints:
     configure with the --without-usb flag.  
   - If 'make' reports an error, try using GNU make (often called gmake
     or gnumake) instead of the make that comes with your system.
-  - If one camera driver has compilation errors, re-run configure with
-    an appropriate --with-drivers= flag to prevent that driver from
-    being compiled.
+  - If one camera driver (camlib) has compilation errors, re-run
+    configure with an appropriate --with-camlibs= flag to prevent that
+    specific camlib from being compiled.
+
 
 The list of working systems is a little outdated as of 2002-11-20, but
 we have still left it here as a reference.

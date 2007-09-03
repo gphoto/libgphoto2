@@ -143,11 +143,11 @@ all-local: Makefile
 
 
 ########################################################################
-# Shortcut for installation of a subset of camlibs/drivers
-# Usage: make DRIVER="canon.la ptp2.la" install-drivers
+# Shortcut for installation of a subset of camlibs
+# Usage: make CAMLIBS="canon.la ptp2.la" install-camlibs
 
-install-drivers:
-	$(MAKE) BUILD_THESE_CAMLIBS="$(DRIVERS)" install-camlibLTLIBRARIES
+install-camlibs:
+	$(MAKE) BUILD_THESE_CAMLIBS="$(CAMLIBS)" install-camlibLTLIBRARIES
 
 
 ########################################################################
