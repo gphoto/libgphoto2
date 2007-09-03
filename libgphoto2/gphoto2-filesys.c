@@ -2451,13 +2451,19 @@ gp_filesystem_set_info (CameraFilesystem *fs, const char *folder,
 /**
  * \brief Get the storage information about this filesystem
  * \param fs the filesystem
- * \param storageinfo pointer to receive the array of informations
- * \param nrofstorageinfos pointer to receive number of array entries
+ * \param storageinfo Pointer to receive a pointer to/array of storage info items
+ * \param nrofstorageinfos Pointer to receive number of array entries
  * \param context a #GPContext
  * 
  * Retrieves the storage information, like maximum and free space, for
- * the specified filesystem, if supported by the device.
- * 
+ * the specified filesystem, if supported by the device. The storage
+ * information is returned in an newly allocated array of
+ * #CameraStorageInformation objects. The variable pointed to by
+ * #nrofstorageinfos will be set to the number of elements in that
+ * array.
+ *
+ * It is the caller's responsibility to free the memory of the array.
+ *
  * \return a gphoto error code
  **/
 int
