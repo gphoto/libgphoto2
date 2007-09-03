@@ -5,7 +5,7 @@ dnl NOTE: Be version style _higher_ than the last release.
 dnl       So lastversion.X.trunk for instance. Bump X if necessary.
 
 dnl ******* THE NEXT RELEASE VERSION MUST BE 2.4.1 at least or higher!
-AC_INIT([libgphoto2 photo camera library], [2.4.0.2.trunk], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
+AC_INIT([libgphoto2 photo camera library], [2.4.0.3], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
 AC_CONFIG_SRCDIR([libgphoto2/gphoto2-version.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([auto-m4])
@@ -17,7 +17,7 @@ dnl The generated Makefile rule fails to remove the absolute part at
 dnl the beginning of the /path/to/buildroot/PACKAGE-VERSION/foo/bar
 dnl before determining the string length. However, the only relevant
 dnl string to determine the length of would be PACKAGE-VERSION/foo/bar
-AM_INIT_AUTOMAKE([-Wall gnu 1.9 dist-bzip2 check-news subdir-objects])
+AM_INIT_AUTOMAKE([-Wall foreign 1.9 dist-bzip2 check-news subdir-objects])
 
 GP_CHECK_SHELL_ENVIRONMENT
 GP_CONFIG_MSG([Build])

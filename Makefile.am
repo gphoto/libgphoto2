@@ -16,7 +16,15 @@ pkgconfig_DATA = libgphoto2.pc
 EXTRA_DIST += libgphoto2-uninstalled.pc.in
 noinst_DATA = libgphoto2-uninstalled.pc
 
-doc_DATA = AUTHORS COPYING README NEWS
+EXTRA_DIST += ChangeLog
+EXTRA_DIST += INSTALL
+doc_DATA = AUTHORS COPYING NEWS
+
+EXTRA_DIST += README.in README
+doc_DATA   += README
+
+EXTRA_DIST += README.packaging
+doc_DATA   += README.packaging
 
 nobase_include_HEADERS =	\
 	gphoto2/gphoto2.h		\
