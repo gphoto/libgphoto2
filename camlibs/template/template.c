@@ -303,7 +303,9 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 
 
 /**
- * Get the file info here and write it into <info>
+ * Get the file info here and write it to space provided by caller.
+ * 
+ * \param info Space provided by caller in which file info is written.
  *
  * This function is a CameraFilesystem method.
  */
