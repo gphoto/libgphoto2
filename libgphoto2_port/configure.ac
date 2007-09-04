@@ -1,6 +1,6 @@
 dnl Process this file with autoreconf to produce a configure script.
 AC_PREREQ(2.59)
-AC_INIT([libgphoto2 port access library], [0.7.3], [gphoto-devel@lists.sourceforge.net], [libgphoto2_port])
+AC_INIT([libgphoto2 port access library], [0.8.1], [gphoto-devel@lists.sourceforge.net], [libgphoto2_port])
 AC_CONFIG_SRCDIR([libgphoto2_port/gphoto2-port-version.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([auto-m4])
@@ -40,7 +40,7 @@ dnl ---------------------------------------------------------------------------
 dnl A:R:C=6:1:6 libgphoto2_port-0.6.1 libgphoto2-2.2.1
 dnl A:R:C=7:0:7 libgphoto2_port-0.7.0 libgphoto2-2.3
 dnl A:R:C=7:1:7 libgphoto2_port-0.7.1 libgphoto2-2.3.x
-dnl A:R:C=8:0:8 libgphoto2_port-0.7.1 libgphoto2-2.4.x
+dnl A:R:C=8:0:8 libgphoto2_port-0.8.0 libgphoto2-2.4.x
 AC_SUBST([LIBGPHOTO2_PORT_AGE],      [8])
 AC_SUBST([LIBGPHOTO2_PORT_REVISION], [0])
 AC_SUBST([LIBGPHOTO2_PORT_CURRENT],  [8])

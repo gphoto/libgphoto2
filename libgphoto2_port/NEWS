@@ -1,11 +1,11 @@
-libgphoto2_port 0.7.3
+libgphoto2_port 0.8.1
 
 Build:
    * Non-recursive iolib build: Makes "make -j2" useful, and dynamic
      load checks without install possible.
      Selective iolib rebuild is "make usb.la" now.
      Selective iolib install is
-     "make DRIVERS='usb.la disk.la' install-camlibLTLIBRARIES".
+     "make DRIVERS='usb.la disk.la' install-iolibLTLIBRARIES".
 
 Library Loader:
    * Return error if not a single iolib can be found and loaded.
@@ -13,6 +13,19 @@ Library Loader:
 Tests:
    * "make check" makes sure that loading iolibs from build tree works.
    * "make installcheck" makes sure that loading installed iolibs works.
+
+------------------------------------------------------------------------
+
+libgphoto2_port 0.8.0
+
+   * various bug fixes and doxygenation
+
+USB:
+   * reset the USB device on close.  This cures the infamous "Canon hang 
+     on second init" problem.
+
+Disk:
+   * handle automounter properly.
 
 ------------------------------------------------------------------------
 
