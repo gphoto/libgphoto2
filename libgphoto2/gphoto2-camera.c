@@ -631,11 +631,11 @@ gp_camera_free (Camera *camera)
  * @return a gphoto2 error code
  *
  * Before calling this function, the
- * \c camera should be set up using #gp_camera_set_port_path or
- * #gp_camera_set_port_name and #gp_camera_set_abilities. If that has been
+ * \c camera should be set up using gp_camera_set_port_path() or
+ * gp_camera_set_port_name() and gp_camera_set_abilities(). If that has been
  * omitted, gphoto2 tries to autodetect any cameras and chooses the first one
  * if any cameras are found. It is generally a good idea to call
- * #gp_camera_exit after transactions have been completed in order to give
+ * gp_camera_exit() after transactions have been completed in order to give
  * other applications the chance to access the camera, too.
  *
  */
@@ -981,8 +981,8 @@ gp_camera_capture (Camera *camera, CameraCaptureType type,
  * @param context a #GPContext
  * @return a gphoto2 error code
  *
- * For example, you could use #gp_capture_preview for taking some sample
- * pictures before calling #gp_capture.
+ * For example, you could use gp_capture_preview() for taking some sample
+ * pictures before calling gp_capture().
  *
  **/
 int

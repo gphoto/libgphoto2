@@ -48,7 +48,7 @@ camera_id (CameraText *id)
  * This function should use #gp_abilities_list_append as many times as the 
  * number of models the camera driver supports. That is, fill out (in a loop)
  * the #CameraAbilities for each model and append each of those to the
- * supplied list using #gp_abilities_list_append. Then, return %GP_OK.
+ * supplied list using gp_abilities_list_append(). Then, return #GP_OK.
  *
  * \returns a gphoto2 error code
  **/
@@ -68,14 +68,14 @@ camera_abilities (CameraAbilitiesList *list)
  * to the camera. That is, access camera->functions directly and set them
  * to your implementation (if you have any). Then, tell the #CameraFilesystem 
  * (available in #camera->fs) how to retrieve lists
- * (#gp_filesystem_set_list_funcs), how to retrieve or set file information
- * (#gp_filesystem_set_info_funcs), how to get or delete files
- * (#gp_filesystem_set_file_funcs), or how to put files or delete all files
+ * (gp_filesystem_set_list_funcs()), how to retrieve or set file information
+ * (gp_filesystem_set_info_funcs()), how to get or delete files
+ * (gp_filesystem_set_file_funcs()), or how to put files or delete all files
  * in a folder (#gp_filesystem_set_folder_funcs). After that, configure
- * the port (%camera->port) which is already opened by gphoto2. You just have
- * to call #gp_port_settings_get, adjust the settings, call
- * #gp_port_settings_set, and try to write to and read from the port.
- * If the camera responds, return %GP_OK. If not, return some
+ * the port (#camera->port) which is already opened by gphoto2. You just have
+ * to call gp_port_settings_get(), adjust the settings, call
+ * gp_port_settings_set(), and try to write to and read from the port.
+ * If the camera responds, return #GP_OK. If not, return some
  * meaningful error code.
  *
  * \returns a gphoto2 error code
