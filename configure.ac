@@ -474,6 +474,7 @@ GP_CAMLIB([hp215])dnl
 GP_CAMLIB([iclick])dnl
 GP_CAMLIB([jamcam])dnl
 GP_CAMLIB([jd11])dnl
+GP_CAMLIB([jl2005c], [unlisted])dnl experimental dev stage, needs lot of work
 GP_CAMLIB([kodak_dc120])dnl
 GP_CAMLIB([kodak_dc210])dnl
 GP_CAMLIB([kodak_dc240])dnl
@@ -500,7 +501,7 @@ GP_CAMLIB([ricoh])dnl
 GP_CAMLIB([ricoh_g3])dnl
 GP_CAMLIB([samsung])dnl
 GP_CAMLIB([sierra])dnl
-GP_CAMLIB([sipix_blink], [unlisted])dnl
+GP_CAMLIB([sipix_blink], [unlisted])dnl superseded by sipix_blink2
 GP_CAMLIB([sipix_blink2])dnl
 GP_CAMLIB([sipix_web2])dnl
 GP_CAMLIB([smal])dnl
