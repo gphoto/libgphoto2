@@ -2,13 +2,19 @@ libgphoto2 2.4.0.3
 
 PTP2 driver:
    * Fixed bugs in packing of PTP arrays, unpack / pack 64 bit entities.
-
    * Devices added:
      - Canon IXUS iZ
 
 Build:
    * Removed dummy README file from SVN.
    * Ship README.packaging in dist tarball for the first time.
+   * Allow building "all plus non-default" camlibs.
+   * Fix libltdl test compile for cases with LDFLAGS defined.
+
+Documentation:
+   * Optionally (--enable-internal-docs) build internal doxygen docs
+     with call graphs and all the dirty details.
+   * Improved docs on how to selectively build camlibs.
 
 Test cases:
    * Test camlib loading of both uninstalled and installed camlibs.
