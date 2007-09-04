@@ -1,0 +1,119 @@
+JEILIN STILLCAM DRIVER
+Copyright Theodore Kilgore <kilgota@auburn.edu> September 4, 2007. 
+
+(Everything in libgphoto2/camlibs/jeilin is LGPL-licensed, including this 
+README. See any of the source files for a more complete statement of the 
+license.)
+
+INTRODUCTION
+
+This driver is intended to support cameras containing the JL2005C chip from 
+Jeilin Technologies. The interface is proprietary, and these cameras are 
+supported commercially only in Windows. Jeilin Technologies also manufactures
+chips which go into mass storage cameras. Those cameras, not to be confused 
+with these, can be accessed directly using mass storage support. 
+
+THIS IS EXPERIMENTAL CODE
+
+This code in this directory does not get compiled and installed by default. 
+To install it, you need the current SVN tree of libgphoto2. To get said 
+code, go to <gphoto.sourceforge.net> and click on download, then on Code, then 
+on SVN, and follow instructions to get a copy of the source tree. If you are a 
+developer with commit privileges, then PLEASE MAKE ANOTHER COPY of your 
+libgphoto2 source tree, so that you do not cause any accident!
+
+After you get the libgphoto2 source tree from SVN, you have to follow the 
+instructions in INSTALL to compile and install it. If you have never done 
+this procedure, then perhaps you would be very well advised to try to do this
+first without attempting to install support for JL2005C cameras. The code in 
+libgphoto2/camlibs/jl2005c does not compile by default if you do the things 
+above, as I said, so do not expect it to compile if you did not do anything to 
+make it compile. 
+
+If you really want to compile and install the support for the JL2005C cameras, 
+then there are at least two methods:
+
+1. At the ./configure step, the option 
+
+./configure --with-camlibs=all,jl2005c 
+
+is supposed to "turn on" the camlib. Then you can proceed as normally by doing
+make, then make install, and it will be made and installed with all the rest.
+
+An alternative is 
+
+2. When you have installed the entire libgphoto2 (except for the jl2005c library)
+you can go into libgphoto2/camlibs and from in there do 
+
+make CAMLIBS="jeilin.la" install-camlibs
+
+I am told that this will work, too. 
+
+At any rate, once you have installed support for the jl2005c you should be 
+ready to try out the camera and to help me to figure out a decent decompression 
+algorithm. 
+
+Oh, if you are not experienced in libgphoto2 type things, you will notice that 
+at this point you can only use this camera as root. To solve that problem, 
+follow the instructions in libgphoto2/packaging/generic if you are using udev
+(usually associated with using a recent 2.6.x Linux kernel), or if you know 
+you are using hotplugging then follow the instructions in 
+libgphoto2/packaging/linux-hotplug (probably you use hotplugging only if you 
+are still using a 2.4.x Linux kernel). You can either set up a group called 
+"camera" or let all users use the camera. Me, I let all users use all cameras
+hooked to my home system, because "all users" pretty much consists of me, 
+myself, and I. 
+
+
+WHAT DOES THIS CAMERA LIBRARY CURRENTLY DO?
+
+The answer is, not much. It will hook up the camera, and you can download a 
+dump of any photo data in it (we hope). The only reason for doing this right
+now is to experiment with what the still-unknown decompression algorithm is 
+doing.
+
+I _think_ that I got the data size for the photos all correct, but I am not 
+sure about that, for the obvious reason that I cannot do finished photos. 
+The camera does download without glitches all the photos in it, even if it is 
+full, and will save them as raw files. I have taken the trouble to make each 
+raw file slightly longer; I put at the end the single character (produced by
+the camera, actually) which contains encoded information about the intended 
+size of the raw photo and about whether it is using low compression or high 
+compression (at both of which settings the data is in fact compressed). The 
+last byte will be one of 0x00, 0x01, 0x10, or 0x11, and the meanings are as 
+follows:
+
+    00	640x480, low compression
+    10	640x480, high compression
+    01	320x240, low compression
+    11	320x240, high compression
+    
+That is, a 1 in the first digit represents high compression, and a 1 in the 
+second digit represents the smaller dimensions. This data will be found, as I 
+said, at the end of every raw file which is produced.      
+
+The reason why one cannot make finished photos right now is that these 
+cameras use a proprietary compression algorithm which Jeilin Technologies is 
+currently not interested in sharing with us. Thus, the main purpose of 
+posting this driver is to publish the code so that further experimentation and
+development can more easily take place. 
+
+
+!!!!!!!!!!!!!!! A SPECIAL WARNING !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+In view of the current uncertainty about how to compute the size of a photo's
+raw data to be downloaded, anyone testing out some theory about how to do 
+decompression ought to stick to using the first photo in the camera. Just 
+please reset the length of the photo to be equal to the total data to be 
+downloaded, and you will be sure to capture it all. This until someone figures
+out for certain exactly how to compute the size of the raw data.
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+WARRANTY?
+
+Absolutely none. Remember, I did not sell you this software. I have written 
+this driver for my own edification and in the sincere hope that it might help 
+you to use of your camera. Please see also the warranty clauses 
+in the LGPL license. 

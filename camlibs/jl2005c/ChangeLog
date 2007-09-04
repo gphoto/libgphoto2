@@ -1,0 +1,6 @@
+2007-09-04  Theodore Kilgore <kilgota@auburn.edu>
+
+	* *.[c,h]: First check-in of experimental driver code. Nothing 
+		   much works exactly right. Driver will download data 
+		   without freezing the camera, and that's about it. 
+
