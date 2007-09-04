@@ -16,48 +16,84 @@ man_MANS = libgphoto2.3 libgphoto2_port.3
 
 if HAVE_DOXYGEN
 
-DOXYGEN_FILES =
-DOXYGEN_STAMPS = $(DOXYGEN_OUTPUT_DIR).stamp
+DOXYGEN_STAMPS =
+LOCAL_INSTALL =
+LOCAL_UNINSTALL =
+LOCAL_CLEAN =
+
 
 # FIXME: Depend on source files.
-$(DOXYGEN_OUTPUT_DIR).stamp: Doxyfile
+DOXYGEN_STAMPS += $(HTML_APIDOC_DIR).stamp
+$(HTML_APIDOC_DIR).stamp: Doxyfile
 	doxygen Doxyfile
 	echo > $@
 
-$(HTML_APIDOC_DIR).tar.gz: $(DOXYGEN_OUTPUT_DIR).stamp
+$(HTML_APIDOC_DIR).tar.gz: $(HTML_APIDOC_DIR).stamp
 	(cd $(DOXYGEN_OUTPUT_DIR) && $(AMTAR) chof - $(HTML_APIDOC_DIR) | GZIP=--best gzip -c) > $@
 
+$(HTML_APIDOC_INTERNALS_DIR).tar.gz: $(HTML_APIDOC_INTERNALS_DIR).stamp
+	(cd $(DOXYGEN_OUTPUT_DIR) && $(AMTAR) chof - $(HTML_APIDOC_INTERNALS_DIR) | GZIP=--best gzip -c) > $@
+
 DOC_APIDOC_HTML = apidocs.html
+DOC_APIDOC_INTERNALS_HTML = internal-docs.html
 
-install-apidocs: $(DOXYGEN_OUTPUT_DIR).stamp
-	$(INSTALL) -m 0755 -d $(DESTDIR)$(docdir)/$(DOC_APIDOC_HTML)
-	$(INSTALL) -m 0644 $(DOXYGEN_OUTPUT_DIR)/$(HTML_APIDOC_DIR)/* $(DESTDIR)$(docdir)/$(DOC_APIDOC_HTML)/
+LOCAL_INSTALL += install-apidocs
+install-apidocs: $(HTML_APIDOC_DIR).stamp
+	$(INSTALL) -m 0755 -d "$(DESTDIR)$(docdir)/$(DOC_APIDOC_HTML)"
+	cd "$(DOXYGEN_OUTPUT_DIR)/$(HTML_APIDOC_DIR)/" && $(INSTALL) -m 0644 * "$(DESTDIR)$(docdir)/$(DOC_APIDOC_HTML)/"
 
+LOCAL_UNINSTALL += uninstall-apidocs
 uninstall-apidocs:
-	cd "$(DESTDIR)$(docdir)" && rm -f $(DOC_APIDOC_HTML)/*
-	rmdir $(DESTDIR)$(docdir)/$(DOC_APIDOC_HTML)
+	cd "$(DESTDIR)$(docdir)/$(DOC_APIDOC_HTML)" && rm -f *
+	rmdir "$(DESTDIR)$(docdir)/$(DOC_APIDOC_HTML)"
 
+LOCAL_CLEAN += clean-apidocs
 clean-apidocs:
-	rm -rf $(DOXYGEN_OUTPUT_DIR)
-	rm -f $(DOXYGEN_OUTPUT_DIR).stamp
+	rm -rf "$(DOXYGEN_OUTPUT_DIR)/$(HTML_APIDOC_DIR)"
+	rm -f $(HTML_APIDOC_DIR).stamp
 	rm -f $(HTML_APIDOC_DIR).tar.gz
 
+if ENABLE_INTERNAL_DOCS
 
-# if we ever have more targets, move those out...
+DOXYGEN_STAMPS += $(HTML_APIDOC_INTERNALS_DIR).stamp
+# FIXME: Depend on source files.
+$(HTML_APIDOC_INTERNALS_DIR).stamp: Doxyfile-internals
+	doxygen Doxyfile-internals
+	echo > $@
+
+LOCAL_INSTALL += install-apidocs-internals
+install-apidocs-internals: $(HTML_APIDOC_INTERNALS_DIR).stamp
+	$(INSTALL) -m 0755 -d "$(DESTDIR)$(docdir)/$(DOC_APIDOC_INTERNALS_HTML)"
+	cd "$(DOXYGEN_OUTPUT_DIR)/$(HTML_APIDOC_INTERNALS_DIR)" && \
+		$(INSTALL) -m 0644 * "$(DESTDIR)$(docdir)/$(DOC_APIDOC_INTERNALS_HTML)/"
+
+LOCAL_UNINSTALL += uninstall-apidocs-internals
+uninstall-apidocs-internals:
+	cd "$(DESTDIR)$(docdir)/$(DOC_APIDOC_INTERNALS_HTML)" && rm -f *
+	rmdir "$(DESTDIR)$(docdir)/$(DOC_APIDOC_INTERNALS_HTML)"
+
+LOCAL_CLEAN += clean-apidocs-internals
+clean-apidocs-internals:
+	rm -rf "$(DOXYGEN_OUTPUT_DIR)/$(HTML_APIDOC_INTERNALS_DIR)"
+	rm -f $(HTML_APIDOC_INTERNALS_DIR).stamp
+	rm -f $(HTML_APIDOC_INTERNALS_DIR).tar.gz
+
+endif
 
 all-local: $(DOXYGEN_STAMPS)
 
-install-data-local: install-apidocs
+install-data-local: $(LOCAL_INSTALL)
 
-uninstall-local: uninstall-apidocs
+uninstall-local: $(LOCAL_UNINSTALL)
 
-clean-local: clean-apidocs
+clean-local: $(LOCAL_CLEAN)
+	rm -rf $(DOXYGEN_OUTPUT_DIR)
 
-doc_EXTRA_DIST = $(HTML_APIDOC_DIR).tar.gz 
+doc_EXTRA_DIST = $(HTML_APIDOC_DIR).tar.gz
 
-doc_DATA = $(DOXYGEN_FILES) README.apidocs
+doc_DATA = README.apidocs
 
-CLEANFILES = $(DOXYGEN_FILES) $(DOXYGEN_STAMPS)
+CLEANFILES = $(DOXYGEN_STAMPS)
 
 endif
 

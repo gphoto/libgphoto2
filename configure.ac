@@ -525,6 +525,7 @@ dnl documentation
 dnl --------------------------------------------------------------------
 GP_CHECK_DOC_DIR()dnl
 GP_CHECK_DOXYGEN()dnl
+GP_INTERNAL_DOCS()dnl
 GP_BUILD_GTK_DOCS()dnl
 AC_SUBST([camlibdocdir], ['${docdir}/camlibs'])
 
@@ -620,6 +621,7 @@ packaging/rpm/package.spec
 po/Makefile.in
 doc/Makefile
 doc/Doxyfile
+doc/Doxyfile-internals
 doc/api/Makefile
 ],[
 dnl This relies on this code being called for each of the above files
