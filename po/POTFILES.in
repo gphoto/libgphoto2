@@ -24,6 +24,7 @@ camlibs/jamcam/jamcam.c
 camlibs/jamcam/library.c
 camlibs/jd11/jd11.c
 camlibs/jd11/serial.c
+camlibs/jl2005c/library.c
 camlibs/kodak/dc120/dc120.c
 camlibs/kodak/dc120/library.c
 camlibs/kodak/dc210/dc210.c
