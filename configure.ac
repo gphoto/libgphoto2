@@ -501,7 +501,7 @@ GP_CAMLIB([ricoh])dnl
 GP_CAMLIB([ricoh_g3])dnl
 GP_CAMLIB([samsung])dnl
 GP_CAMLIB([sierra])dnl
-GP_CAMLIB([sipix_blink], [unlisted])dnl superseded by sipix_blink2
+GP_CAMLIB([sipix_blink], [unlisted])dnl did not find out the correct decompressor, unfinished
 GP_CAMLIB([sipix_blink2])dnl
 GP_CAMLIB([sipix_web2])dnl
 GP_CAMLIB([smal])dnl
