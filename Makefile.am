@@ -19,6 +19,7 @@ noinst_DATA = libgphoto2-uninstalled.pc
 EXTRA_DIST += ChangeLog
 EXTRA_DIST += INSTALL
 doc_DATA = AUTHORS COPYING NEWS
+doc_DATA += ABOUT-NLS ChangeLog
 
 EXTRA_DIST += README.in README
 doc_DATA   += README
