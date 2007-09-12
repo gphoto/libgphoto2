@@ -1,13 +1,14 @@
 # Note: As this file is sitting in ${top_builddir},
 #           ${top_builddir} ~= ${pcfiledir}
 #	and ${top_srcdir}   ~= ${pcfiledir}/@srcdir@
-# Note: This referes to directory matches, not to string matches.
+# Note: This refers to directory matches, not to string matches.
 # Note: ${pcfiledir} already is an absolute path name, so there is
 #       no much sense prepending a ${pc_top_builddir} before it.
 
 prefix=@prefix@
 exec_prefix=@exec_prefix@
 libdir=@libdir@
+includedir=@includedir@
 VERSION=@VERSION@
 driverdir=@camlibdir@
 
@@ -16,5 +17,9 @@ Description: Library for easy access to digital cameras
 URL: http://gphoto.org/proj/libgphoto2/
 Version: @VERSION@
 Requires: libusb >= 0.1.11
+# This is what works for gphoto-suite
 Libs: ${pcfiledir}/libgphoto2_port/libgphoto2_port.la -lm
 Cflags: -I${pcfiledir}/@srcdir@
+# This is what Sun wants (and does not work with gphoto-suite)
+# Libs: ${pc_top_builddir}/${pcfiledir}/libgphoto2_port/libgphoto2_port.la -lm
+# Cflags: -I${pc_top_builddir}/${pcfiledir}
