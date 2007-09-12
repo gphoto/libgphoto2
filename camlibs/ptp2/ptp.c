@@ -471,14 +471,13 @@ void
 ptp_free_params (PTPParams *params) {
 	int i;
 
-	while (params->proplist) {
-		MTPPropList		*xpl = params->proplist;
+	for (i=0;i<params->nrofprops;i++) {
+		MTPProperties	*xpl = &params->props[i];
 
 		if ((xpl->datatype == PTP_DTC_STR) && (xpl->propval.str))
 			free (xpl->propval.str);
-		params->proplist = xpl->next;
-		free (xpl);
 	}
+	if (params->props) free (params->props);
 	if (params->canon_flags) free (params->canon_flags);
 	if (params->cameraname) free (params->cameraname);
 	if (params->wifi_profiles) free (params->wifi_profiles);
@@ -2805,7 +2804,7 @@ ptp_mtp_setobjectreferences (PTPParams* params, uint32_t handle, uint32_t* ohArr
 }
 
 uint16_t
-ptp_mtp_getobjectproplist (PTPParams* params, uint32_t handle, MTPPropList **proplist)
+ptp_mtp_getobjectproplist (PTPParams* params, uint32_t handle, MTPProperties **props, int *nrofprops)
 {
 	uint16_t ret;
 	PTPContainer ptp;
@@ -2821,7 +2820,7 @@ ptp_mtp_getobjectproplist (PTPParams* params, uint32_t handle, MTPPropList **pro
 	ptp.Param5 = 0x00000000U;
 	ptp.Nparam = 5;
 	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &opldata, &oplsize);  
-	if (ret == PTP_RC_OK) ptp_unpack_OPL(params, opldata, proplist, oplsize);
+	if (ret == PTP_RC_OK) *nrofprops = ptp_unpack_OPL(params, opldata, props, oplsize);
 	if (opldata != NULL)
 		free(opldata);
 	return ret;
@@ -2829,7 +2828,7 @@ ptp_mtp_getobjectproplist (PTPParams* params, uint32_t handle, MTPPropList **pro
 
 uint16_t
 ptp_mtp_sendobjectproplist (PTPParams* params, uint32_t* store, uint32_t* parenthandle, uint32_t* handle,
-			    uint16_t objecttype, uint64_t objectsize, MTPPropList *proplist)
+			    uint16_t objecttype, uint64_t objectsize, MTPProperties *props, int nrofprops)
 {
 	uint16_t ret;
 	PTPContainer ptp;
@@ -2846,7 +2845,7 @@ ptp_mtp_sendobjectproplist (PTPParams* params, uint32_t* store, uint32_t* parent
 	ptp.Nparam = 5;
 
 	/* Set object handle to 0 for a new object */
-	oplsize = ptp_pack_OPL(params,proplist,&opldata);
+	oplsize = ptp_pack_OPL(params,props,nrofprops,&opldata);
 	ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, oplsize, &opldata, NULL); 
 	free(opldata);
 	*store = ptp.Param1;
@@ -2857,7 +2856,7 @@ ptp_mtp_sendobjectproplist (PTPParams* params, uint32_t* store, uint32_t* parent
 }
 
 uint16_t
-ptp_mtp_setobjectproplist (PTPParams* params, MTPPropList *proplist)
+ptp_mtp_setobjectproplist (PTPParams* params, MTPProperties *props, int nrofprops)
 {
 	uint16_t ret;
 	PTPContainer ptp;
@@ -2868,10 +2867,10 @@ ptp_mtp_setobjectproplist (PTPParams* params, MTPPropList *proplist)
 	ptp.Code = PTP_OC_MTP_SetObjPropList;
 	ptp.Nparam = 0;
   
-	oplsize = ptp_pack_OPL(params,proplist,&opldata);
+	oplsize = ptp_pack_OPL(params,props,nrofprops,&opldata);
 	ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, oplsize, &opldata, NULL); 
 	free(opldata);
-	
+
 	return ret;
 }
 

@@ -1,3 +1,11 @@
+2007-09-11  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptp-pack.c, ptp.h, ptp.c, library.c:
+	  Change MTP proplist to a proparray.
+	  Rename MTPPropList to MTPProperties to match the 
+	  Use qsort() instead of a O(n^2) insertion sort.
+	  state.
+
 2007-08-28  Marcus Meissner  <marcus@jet.franken.de>
 
 	* ptp-pack.c: Pack NULL strings same as "" (from libmtp).

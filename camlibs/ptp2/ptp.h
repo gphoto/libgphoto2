@@ -773,14 +773,13 @@ union _PTPPropertyValue {
 typedef union _PTPPropertyValue PTPPropertyValue;
 
 /* Metadata lists for MTP operations */
-struct _MTPPropList {
+struct _MTPProperties {
 	uint16_t 	 	property;
 	uint16_t 	 	datatype;
 	uint32_t 	 	ObjectHandle;
 	PTPPropertyValue 	propval;
-	struct _MTPPropList 	*next;
 };
-typedef struct _MTPPropList MTPPropList;
+typedef struct _MTPProperties MTPProperties;
 
 struct _PTPPropDescRangeForm {
 	PTPPropertyValue 	MinimumValue;
@@ -1514,7 +1513,8 @@ struct _PTPParams {
 	int		split_header_data;
 
 	/* PTP: MTP specific structure. */
-	MTPPropList	*proplist;
+	MTPProperties	*props;
+	int		nrofprops;
 
 	/* PTP: internal structures used by ptp driver */
 	PTPObjectHandles handles;
@@ -1636,10 +1636,10 @@ uint16_t ptp_mtp_setobjectpropvalue (PTPParams* params, uint32_t oid, uint16_t o
 				PTPPropertyValue *value, uint16_t datatype);
 uint16_t ptp_mtp_getobjectreferences (PTPParams* params, uint32_t handle, uint32_t** ohArray, uint32_t* arraylen);
 uint16_t ptp_mtp_setobjectreferences (PTPParams* params, uint32_t handle, uint32_t* ohArray, uint32_t arraylen);
-uint16_t ptp_mtp_getobjectproplist (PTPParams* params, uint32_t handle, MTPPropList **proplist);
+uint16_t ptp_mtp_getobjectproplist (PTPParams* params, uint32_t handle, MTPProperties **props, int *nrofprops);
 uint16_t ptp_mtp_sendobjectproplist (PTPParams* params, uint32_t* store, uint32_t* parenthandle, uint32_t* handle,
-				     uint16_t objecttype, uint64_t objectsize, MTPPropList *proplist);
-uint16_t ptp_mtp_setobjectproplist (PTPParams* params, MTPPropList *proplist);
+				     uint16_t objecttype, uint64_t objectsize, MTPProperties *props, int nrofprops);
+uint16_t ptp_mtp_setobjectproplist (PTPParams* params, MTPProperties *props, int nrofprops);
 
 /* Eastman Kodak extensions */
 uint16_t ptp_ek_9007 (PTPParams* params, unsigned char **serial, unsigned int *size);

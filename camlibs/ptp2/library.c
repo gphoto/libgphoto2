@@ -2646,24 +2646,21 @@ ptp_mtp_render_metadata (
 	uint32_t propcnt = 0;
 	int j;
 
-	if (params->proplist) { /* use the fast method, without device access since cached.*/
+	if (params->props) { /* use the fast method, without device access since cached.*/
 		char			propname[256];
 		char			text[256];
-		int 			i, n;
-		MTPPropList		*xpl = params->proplist;
+		int 			i, j, n;
 	
-		while (xpl) {
-			if (xpl->ObjectHandle != object_id) {
-				xpl = xpl->next;
+		for (j=0;j<params->nrofprops;j++) {
+			MTPProperties		*xpl = &params->props[j];
+
+			if (xpl->ObjectHandle != object_id)
 				continue;
-			}
 			for (i=sizeof(uninteresting_props)/sizeof(uninteresting_props[0]);i--;)
 				if (uninteresting_props[i] == xpl->property)
 					break;
-			if (i != -1) {/* Is uninteresting. */
-				xpl = xpl->next;
+			if (i != -1) /* Is uninteresting. */
 				continue;
-			}
 
 			n = ptp_render_mtp_propname(xpl->property, sizeof(propname), propname);
 			gp_file_append (file, "<", 1);
@@ -2699,7 +2696,6 @@ ptp_mtp_render_metadata (
 			gp_file_append (file, "</", 2);
 			gp_file_append (file, propname, n);
 			gp_file_append (file, ">\n", 2);
-			xpl = xpl->next;
 		}
 		return (GP_OK);
 	}
@@ -3915,23 +3911,23 @@ init_ptp_fs (Camera *camera, GPContext *context)
 	    (camera->pl->bugs & PTP_MTP_PROPLIST_WORKS)
 	) {
 		PTPObjectInfo	*oinfos = NULL;	
-		int		cnt = 0,i;
+		int		cnt = 0, i, j, nrofprops = 0;
 		uint32_t	lasthandle = 0xffffffff;
-		MTPPropList 	*proplist = NULL, *xpl;
+		MTPProperties 	*props = NULL, *xpl;
 
-		ret = ptp_mtp_getobjectproplist (&camera->pl->params, 0xffffffff, &proplist);
+		ret = ptp_mtp_getobjectproplist (&camera->pl->params, 0xffffffff, &props, &nrofprops);
 		if (ret != PTP_RC_OK)
 			goto fallback;
-		params->proplist = proplist; /* cache it */
+		params->props = props; /* cache it */
+		params->nrofprops = nrofprops; /* cache it */
 
 		/* count the objects */
-		xpl = proplist;
-		while (xpl) {
+		for (i=0;i<nrofprops;i++) {
+			xpl = &props[i];
 			if (lasthandle != xpl->ObjectHandle) {
 				cnt++;
 				lasthandle = xpl->ObjectHandle;
 			}
-			xpl = xpl->next;
 		}
 		lasthandle = 0xffffffff;
 		oinfos = params->objectinfo = malloc (sizeof (PTPObjectInfo) * cnt);
@@ -3939,8 +3935,9 @@ init_ptp_fs (Camera *camera, GPContext *context)
 		params->handles.Handler = malloc (sizeof (uint32_t) * cnt);
 		params->handles.n = cnt;
 
-		xpl = proplist; i = -1;
-		while (xpl) {
+		i = -1;
+		for (j=0;j<nrofprops;j++) {
+			xpl = &props[j];
 			if (lasthandle != xpl->ObjectHandle) {
 				if (i >= 0) {
 					if (!oinfos[i].Filename) {
@@ -3976,7 +3973,6 @@ init_ptp_fs (Camera *camera, GPContext *context)
 					gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "case %x type %x unhandled.\n", xpl->property, xpl->datatype);
 				break;
 			}
-			xpl = xpl->next;
 		}
 		return PTP_RC_OK;
 	}
