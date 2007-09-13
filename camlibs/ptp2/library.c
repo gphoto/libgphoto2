@@ -3353,12 +3353,17 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 		CPR (context, ptp_ek_sendfileobject_from_handler (params, &handler, intsize));
 		ptp_exit_camerafile_handler (&handler);
 	} else if (ptp_operation_issupported(params, PTP_OC_SendObjectInfo)) {
+		uint16_t	ret;
 		PTPDataHandler handler;
+
 		CPR (context, ptp_sendobjectinfo (params, &storage,
 			&parent, &handle, &oi));
 		ptp_init_camerafile_handler (&handler, file);
-		CPR (context, ptp_sendobject_from_handler (params, &handler, intsize));
+		ret = ptp_sendobject_from_handler (params, &handler, intsize);
 		ptp_exit_camerafile_handler (&handler);
+		if (ret == PTP_ERROR_CANCEL)
+			return (GP_ERROR_CANCEL);
+		CPR (context, ret);
 	} else {
 		GP_DEBUG ("The device does not support uploading files!");
 		return GP_ERROR_NOT_SUPPORTED;

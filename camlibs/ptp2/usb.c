@@ -174,7 +174,7 @@ ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
 			gp_context_progress_update (context, progressid, written/CONTEXT_BLOCK_SIZE);
 #if 0 /* Does not work this way... Hmm. */
 		if (gp_context_cancel(context) == GP_CONTEXT_FEEDBACK_CANCEL) {
-			ret = ptp_usb_control_cancel_request(params,dtoh32(usbdata.trans_id));
+			ret = ptp_usb_control_cancel_request (params,ptp->Transaction_ID);
 			if (ret == PTP_RC_OK)
 				ret = PTP_ERROR_CANCEL;
 			break;
