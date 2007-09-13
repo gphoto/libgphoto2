@@ -379,7 +379,6 @@ retry:
 			if (usecontext && (oldsize/CONTEXT_BLOCK_SIZE < curread/CONTEXT_BLOCK_SIZE))
 				gp_context_progress_update (context, progressid, curread/CONTEXT_BLOCK_SIZE);
 			if (gp_context_cancel(context) == GP_CONTEXT_FEEDBACK_CANCEL) {
-				/* MARCUS: FIXME */
 				ret = ptp_usb_control_cancel_request(params,dtoh32(usbdata.trans_id));
 				if (ret == PTP_RC_OK)
 					ret = PTP_ERROR_CANCEL;
