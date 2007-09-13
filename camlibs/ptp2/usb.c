@@ -172,21 +172,22 @@ ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
 		written += res;
 		if (usecontext && (oldwritten/CONTEXT_BLOCK_SIZE < written/CONTEXT_BLOCK_SIZE))
 			gp_context_progress_update (context, progressid, written/CONTEXT_BLOCK_SIZE);
+#if 0 /* Does not work this way... Hmm. */
 		if (gp_context_cancel(context) == GP_CONTEXT_FEEDBACK_CANCEL) {
-			/* MARCUS: FIXME */
-			/*
-			ret = PTP_ERROR_CANCEL;
+			ret = ptp_usb_control_cancel_request(params,dtoh32(usbdata.trans_id));
+			if (ret == PTP_RC_OK)
+				ret = PTP_ERROR_CANCEL;
 			break;
-			 */
 		}
+#endif
 	}
 	if (usecontext)
 		gp_context_progress_stop (context, progressid);
 	free (bytes);
 finalize:
-	if ((written % params->maxpacketsize) == 0)
+	if ((ret == PTP_RC_OK) && ((written % params->maxpacketsize) == 0))
 		gp_port_write (camera->port, "x", 0);
-	if (ret!=PTP_RC_OK)
+	if ((ret!=PTP_RC_OK) && (ret!=PTP_ERROR_CANCEL))
 		ret = PTP_ERROR_IO;
 	return ret;
 }
