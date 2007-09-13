@@ -193,6 +193,7 @@ static struct {
 	{PTP_RC_EK_FilenameInvalid,	PTP_VENDOR_EASTMAN_KODAK, N_("PTP EK Filename Invalid")},
 
 	{PTP_ERROR_IO,		  0, N_("PTP I/O error")},
+	{PTP_ERROR_CANCEL,	  0, N_("PTP Cancel request")},
 	{PTP_ERROR_BADPARAM,	  0, N_("PTP Error: bad parameter")},
 	{PTP_ERROR_DATA_EXPECTED, 0, N_("PTP Protocol error, data expected")},
 	{PTP_ERROR_RESP_EXPECTED, 0, N_("PTP Protocol error, response expected")},
@@ -219,6 +220,8 @@ translate_ptp_result (short result)
 		return (GP_ERROR_BAD_PARAMETERS);
 	case PTP_RC_DeviceBusy:
 		return (GP_ERROR_CAMERA_BUSY);
+	case PTP_ERROR_CANCEL:
+		return (GP_ERROR_CANCEL);
 	case PTP_ERROR_BADPARAM:
 		return (GP_ERROR_BAD_PARAMETERS);
 	case PTP_RC_OK:
@@ -3211,12 +3214,18 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 		size=oi->ObjectCompressedSize;
 		if (size) {
-			PTPDataHandler handler;
+			uint16_t	ret;
+			PTPDataHandler	handler;
+
 			ptp_init_camerafile_handler (&handler, file);
-			CPR (context, ptp_getobject_to_handler(params,
-			params->handles.Handler[object_id],
-			&handler));
+			ret = ptp_getobject_to_handler(params,
+				params->handles.Handler[object_id],
+				&handler
+			);
 			ptp_exit_camerafile_handler (&handler);
+			if (ret == PTP_ERROR_CANCEL)
+				return GP_ERROR_CANCEL;
+			CPR(context, ret);
 		} else {
 			unsigned char *ximage = NULL;
 			/* Do not download 0 sized files.

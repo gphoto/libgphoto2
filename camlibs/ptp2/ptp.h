@@ -492,6 +492,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_ERROR_DATA_EXPECTED		0x02FE
 #define PTP_ERROR_RESP_EXPECTED		0x02FD
 #define PTP_ERROR_BADPARAM		0x02FC
+#define PTP_ERROR_CANCEL		0x02FB
 
 /* PTP Event Codes */
 
@@ -1561,6 +1562,7 @@ uint16_t ptp_usb_event_wait	(PTPParams* params, PTPContainer* event);
 uint16_t ptp_usb_control_get_extended_event_data (PTPParams *params, char *buffer, int *size);
 uint16_t ptp_usb_control_device_reset_request (PTPParams *params);
 uint16_t ptp_usb_control_get_device_status (PTPParams *params, char *buffer, int *size);
+uint16_t ptp_usb_control_cancel_request (PTPParams *params, uint32_t transid);
 
 
 int      ptp_ptpip_connect	(PTPParams* params, const char *port);

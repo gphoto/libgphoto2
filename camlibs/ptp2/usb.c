@@ -172,6 +172,13 @@ ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
 		written += res;
 		if (usecontext && (oldwritten/CONTEXT_BLOCK_SIZE < written/CONTEXT_BLOCK_SIZE))
 			gp_context_progress_update (context, progressid, written/CONTEXT_BLOCK_SIZE);
+		if (gp_context_cancel(context) == GP_CONTEXT_FEEDBACK_CANCEL) {
+			/* MARCUS: FIXME */
+			/*
+			ret = PTP_ERROR_CANCEL;
+			break;
+			 */
+		}
 	}
 	if (usecontext)
 		gp_context_progress_stop (context, progressid);
@@ -371,6 +378,13 @@ retry:
 			curread += res;
 			if (usecontext && (oldsize/CONTEXT_BLOCK_SIZE < curread/CONTEXT_BLOCK_SIZE))
 				gp_context_progress_update (context, progressid, curread/CONTEXT_BLOCK_SIZE);
+			if (gp_context_cancel(context) == GP_CONTEXT_FEEDBACK_CANCEL) {
+				/* MARCUS: FIXME */
+				ret = ptp_usb_control_cancel_request(params,dtoh32(usbdata.trans_id));
+				if (ret == PTP_RC_OK)
+					ret = PTP_ERROR_CANCEL;
+				break;
+			}
 			oldsize = curread;
 		}
 		free (data);
@@ -384,13 +398,13 @@ retry:
 				goto retry;
 		}
 
-		if (ret!=PTP_RC_OK) {
+		if ((ret!=PTP_RC_OK) && (ret!=PTP_ERROR_CANCEL)) {
 			ret = PTP_ERROR_IO;
 			break;
 		}
 	} while (0);
 
-	if (ret!=PTP_RC_OK) {
+	if ((ret!=PTP_RC_OK) && (ret!=PTP_ERROR_CANCEL)) {
 		gp_log (GP_LOG_DEBUG, "ptp2/usb_getdata",
 		"request code 0x%04x getting data error 0x%04x",
 			ptp->Code, ret);
@@ -556,5 +570,19 @@ ptp_usb_control_get_device_status (PTPParams *params, char *buffer, int *size) {
 		return PTP_ERROR_IO;
 	gp_log_data ("ptp2/get_device_status", buffer, ret);
 	*size = ret;
+	return PTP_RC_OK;
+}
+
+uint16_t
+ptp_usb_control_cancel_request (PTPParams *params, uint32_t transactionid) {
+	Camera	*camera = ((PTPData *)params->data)->camera;
+	int	ret;
+	unsigned char	buffer[6];
+
+	htod16a(&buffer[0],0x4001);
+	htod32a(&buffer[2],transactionid);
+	ret = gp_port_usb_msg_class_write (camera->port, 0x64, 0x0000, 0x0000, (char*)buffer, sizeof (buffer));
+	if (ret < GP_OK)
+		return PTP_ERROR_IO;
 	return PTP_RC_OK;
 }
