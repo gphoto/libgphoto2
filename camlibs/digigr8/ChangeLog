@@ -1,6 +1,9 @@
-2007-09-04   Theodore Kilgore <kilgota@auburn.edu>
-	* library.c: ZINA Mini Digital Keychain Camera added, reported
-		     by Alvin Austin <alvin.austin@gmail.com>.
+2007-08-24   Theodore Kilgore <kilgota@auburn.edu>  
+	* library.c: Suprema Digital Keychain Camera added, which has 
+	new product ID 0x913C, and is able to delete individual photos. 
+	* digigr8.c: changes required here, too, to support individual 
+	photo deletion. 
+
 
 2007-07-23   Theodore Kilgore <kilgota@auburn.edu>
 	* README.digigr8: Notes on how to change the capture-preview 
