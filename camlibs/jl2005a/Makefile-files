@@ -1,0 +1,11 @@
+EXTRA_DIST += jeilin/README.jl2005a
+camlibdoc_DATA += jl2005a/README.jl2005a
+
+EXTRA_LTLIBRARIES += jl2005a.la
+
+jl2005a_la_SOURCES = jl2005a/library.c\
+		    jl2005a/jl2005a.c\
+		    jl2005a/jl2005a.h
+jl2005a_la_LDFLAGS = $(camlib_ldflags)
+jl2005a_la_DEPENDENCIES = $(camlib_dependencies)
+jl2005a_la_LIBADD = $(camlib_libadd)
