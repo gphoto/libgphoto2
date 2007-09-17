@@ -469,6 +469,7 @@ GP_CAMLIB([hp215])dnl
 GP_CAMLIB([iclick])dnl
 GP_CAMLIB([jamcam])dnl
 GP_CAMLIB([jd11])dnl
+GP_CAMLIB([jl2005a], [unlisted])dnl experimental dev stage, needs lot of work
 GP_CAMLIB([jl2005c], [unlisted])dnl experimental dev stage, needs lot of work
 GP_CAMLIB([kodak_dc120])dnl
 GP_CAMLIB([kodak_dc210])dnl
