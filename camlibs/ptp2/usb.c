@@ -577,7 +577,7 @@ ptp_usb_control_cancel_request (PTPParams *params, uint32_t transactionid) {
 	int	ret;
 	unsigned char	buffer[6];
 
-	htod16a(&buffer[0],0x4001);
+	htod16a(&buffer[0],PTP_EC_CancelTransaction);
 	htod32a(&buffer[2],transactionid);
 	ret = gp_port_usb_msg_class_write (camera->port, 0x64, 0x0000, 0x0000, (char*)buffer, sizeof (buffer));
 	if (ret < GP_OK)
