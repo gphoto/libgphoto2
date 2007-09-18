@@ -1,3 +1,8 @@
+2007-09-18  Linus Walleij  <triad@df.lth.se>
+
+	* usb.c, library.c, ptp.c, ptp.h:
+	  Split out cancel handling to shared code.
+
 2007-09-13  Marcus Meissner  <marcus@jet.franken.de>
 
 	* usb.c, library.c: Added cancellation support for read transfers.

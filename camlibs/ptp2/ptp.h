@@ -1473,6 +1473,8 @@ typedef uint16_t (* PTPIOSendData)	(PTPParams* params, PTPContainer* ptp,
 typedef uint16_t (* PTPIOGetResp)	(PTPParams* params, PTPContainer* resp);
 typedef uint16_t (* PTPIOGetData)	(PTPParams* params, PTPContainer* ptp,
 	                                 PTPDataHandler *putter);
+typedef uint16_t (* PTPIOCancelReq)	(PTPParams* params, uint32_t transaction_id);
+
 /* debug functions */
 typedef void (* PTPErrorFunc) (void *data, const char *format, va_list args)
 #if (__GNUC__ >= 3)
@@ -1497,6 +1499,7 @@ struct _PTPParams {
 	PTPIOGetData	getdata_func;
 	PTPIOGetResp	event_check;
 	PTPIOGetResp	event_wait;
+	PTPIOCancelReq	cancelreq_func;
 
 	/* Custom error and debug function */
 	PTPErrorFunc	error_func;

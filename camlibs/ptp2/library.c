@@ -4205,6 +4205,7 @@ camera_init (Camera *camera, GPContext *context)
 		camera->pl->params.getdata_func		= ptp_usb_getdata;
 		camera->pl->params.event_wait		= ptp_usb_event_wait;
 		camera->pl->params.event_check		= ptp_usb_event_check;
+		camera->pl->params.cancelreq_func	= ptp_usb_control_cancel_request;
 		break;
 	case GP_PORT_PTPIP: {
 		GPPortInfo	pinfo;
