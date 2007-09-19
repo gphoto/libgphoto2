@@ -1323,7 +1323,7 @@ typedef struct _PTPCanon_Property {
 #define PTP_OPC_DisplayName				0xDCE0
 #define PTP_OPC_BodyText				0xDCE1
 #define PTP_OPC_Subject					0xDCE2
-#define PTP_OPC_Prority					0xDCE3
+#define PTP_OPC_Priority				0xDCE3
 #define PTP_OPC_GivenName				0xDD00
 #define PTP_OPC_MiddleNames				0xDD01
 #define PTP_OPC_FamilyName				0xDD02

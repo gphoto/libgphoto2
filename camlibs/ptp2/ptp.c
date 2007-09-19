@@ -4075,7 +4075,7 @@ struct {
 	{PTP_OPC_DisplayName,"DisplayName"},
 	{PTP_OPC_BodyText,"BodyText"},
 	{PTP_OPC_Subject,"Subject"},
-	{PTP_OPC_Prority,"Prority"},
+	{PTP_OPC_Priority,"Priority"},
 	{PTP_OPC_GivenName,"GivenName"},
 	{PTP_OPC_MiddleNames,"MiddleNames"},
 	{PTP_OPC_FamilyName,"FamilyName"},
