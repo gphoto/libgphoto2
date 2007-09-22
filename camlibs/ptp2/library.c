@@ -488,6 +488,8 @@ static struct {
 	/* Lowe, John Michael <jomlowe@iupui.edu> */
 	{"Nikon:Coolpix S2 (PTP mode)",   0x04b0, 0x014e, 0},
 	{"Nikon:Coolpix S6 (PTP mode)",   0x04b0, 0x014e, 0},
+	/* Ole Aamot <ole@gnome.org> */
+	{"Nikon:Coolpix P5000 (PTP mode)",0x04b0, 0x015b, PTP_CAP},
 	{"Nikon:Coolpix L12 (PTP mode)",  0x04b0, 0x015f, 0},
 	/* Marius Groeger <marius.groeger@web.de> */
 	{"Nikon:Coolpix S200 (PTP mode)", 0x04b0, 0x0161, PTP_CAP},
