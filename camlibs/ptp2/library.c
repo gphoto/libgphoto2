@@ -345,6 +345,8 @@ static struct {
 	{"Kodak:C633",   0x040a, 0x05ba, 0},
 
 	/* HP PTP cameras */
+	/* found in random web forum */
+	{"HP:PhotoSmart M407 (PTP mode)", 0x03f0, 0x4002, 0},
 	{"HP:PhotoSmart 812 (PTP mode)", 0x03f0, 0x4202, 0},
 	{"HP:PhotoSmart 850 (PTP mode)", 0x03f0, 0x4302, PTPBUG_DUPE_FILE},
 	/* HP PhotoSmart 935: T. Kaproncai, 25 Jul 2003*/
