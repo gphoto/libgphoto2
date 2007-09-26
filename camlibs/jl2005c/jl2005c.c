@@ -165,8 +165,7 @@ jl2005c_get_pic_data_size (Info *info, int n)
 {
 	int size;
 	GP_DEBUG("info[48+16*n+7] = %02X\n", info[48+16*n+7]);
-	GP_DEBUG("info[48+16*n+8] = %02X\n", info[48+16*n+8]);
-	size = (info[48+16*n+7]*0x200 + info[48+16*n+8]*0x2);
+	size = (info[48+16*n+7]*0x200);
 	GP_DEBUG("size = 0x%x = %d\n", size, size);
 	return (size);
 }
@@ -174,14 +173,12 @@ jl2005c_get_pic_data_size (Info *info, int n)
 unsigned long
 jl2005c_get_start_of_photo(Info *info, unsigned int n)
 {
-	int j = 0;
 	unsigned long start = 0;
-	if (!n) 
-		return 0;
-	while (j < n) {
-		start += jl2005c_get_pic_data_size(info,j);
-		j++;
-	}
+	start = (info[48+16*n+12]&0xff)*0x100;
+	start -= 0x400;
+	start += info[48+16*n+13]&0xff;
+	start *= 0x200;
+
 	return start;
 }		
 
