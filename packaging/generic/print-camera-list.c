@@ -398,7 +398,7 @@ udev_parse_params (const func_params_t *params, void **data)
 		"BUS!=\"usb_device\", GOTO=\"libgphoto2_rules_end\"\n"
 		"ACTION!=\"add\", GOTO=\"libgphoto2_rules_end\"\n\n",
 		/* UDEV_0_98 */
-		"SUBSYSTEM!=\"usb_device\", GOTO=\"libgphoto2_rules_end\"\n"
+		"SUBSYSTEM!=\"usb|usb_device\", GOTO=\"libgphoto2_rules_end\"\n"
 		"ACTION!=\"add\", GOTO=\"libgphoto2_rules_end\"\n\n"
 	};
 	static const char * const usbcam_strings[] = {
