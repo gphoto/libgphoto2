@@ -593,6 +593,7 @@ static struct {
 	{"Canon:PowerShot S50 (PTP mode)",      0x04a9, 0x3077, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot G5 (PTP mode)",       0x04a9, 0x3085, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:Elura 50 (PTP mode)",           0x04a9, 0x3087, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:MVX3i (PTP mode)",              0x04a9, 0x308d, PTPBUG_DELETE_SENDS_EVENT},
 		/* 0x3084 is the EOS 300D/Digital Rebel in normal (canon) mode */
 	{"Canon:EOS 300D (PTP mode)",           0x04a9, 0x3099, PTPBUG_DCIM_WRONG_PARENT},
 	{"Canon:EOS Digital Rebel (PTP mode)",  0x04a9, 0x3099, PTPBUG_DCIM_WRONG_PARENT},
