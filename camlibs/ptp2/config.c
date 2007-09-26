@@ -1136,6 +1136,7 @@ GENERIC8TABLE(Canon_EOS_PictureStyle,canon_eos_picturestyle)
 
 static struct deviceproptableu16 canon_shutterspeed[] = {
       {  "auto",0x0000,0 },
+      {  "bulb",0x0004,0 },
       {  "30\"",0x0010,0 },
       {  "25\"",0x0013,0 },
       {  "20\"",0x0015,0 },
@@ -1770,6 +1771,8 @@ static struct deviceproptableu16 canon_aperture[] = {
       { "18",		0x004b, 0 },
       { "20",		0x004d, 0 },
       { "22",		0x0050, 0 },
+      { "25",		0x0053, 0 },
+      { "29",		0x0055, 0 },
 };
 GENERIC16TABLE(Canon_Aperture,canon_aperture)
 
