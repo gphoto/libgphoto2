@@ -66,6 +66,8 @@ static const struct {
         {"Praktica Slimpix",    GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
         {"ZINA Mini Digital Keychain Camera",    GP_DRIVER_STATUS_EXPERIMENTAL, 
     							    0x2770, 0x905c},        
+        {"Pixie Princess Jelly-Soft",    GP_DRIVER_STATUS_EXPERIMENTAL, 
+    							    0x2770, 0x905c},    
         {"Disney pix micro",    GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9050}, 
         {"Suprema Digital Keychain Camera",    GP_DRIVER_STATUS_EXPERIMENTAL, 
     								0x2770, 0x913d}, 
