@@ -697,6 +697,8 @@ static struct {
 	/* reported by Ferry Huberts */
 	{"Canon:EOS 40D (PTP mode)",    	0x04a9, 0x3146, 0}, /* user had it working without problem */
 	{"Canon:PowerShot S5 IS (PTP mode)",    0x04a9, 0x3148, PTP_CAP|PTP_CAP_PREVIEW},
+	/* Tobias Blaser <tblaser@gmx.ch> */
+	{"Canon:Digital IXUS 950 IS (PTP mode)",0x04a9, 0x314b, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot A570 IS (PTP mode)",  0x04a9, 0x314c, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot A560 (PTP mode)",  0x04a9, 0x314d, PTPBUG_DELETE_SENDS_EVENT},
 	/* mailreport from sec@dschroeder.info */
@@ -4254,7 +4256,7 @@ camera_init (Camera *camera, GPContext *context)
 	}
 	
         gp_camera_get_abilities(camera, &a);
-        for (i = 0; sizeof(models)/sizeof(models[0]); i++) {
+        for (i = 0; i<sizeof(models)/sizeof(models[0]); i++) {
             if ((a.usb_vendor == models[i].usb_vendor) &&
                 (a.usb_product == models[i].usb_product)){
                 camera->pl->bugs = models[i].known_bugs;
