@@ -1,4 +1,4 @@
-EXTRA_DIST += jeilin/README.jl2005a
+EXTRA_DIST += jl2005a/README.jl2005a
 camlibdoc_DATA += jl2005a/README.jl2005a
 
 EXTRA_LTLIBRARIES += jl2005a.la
