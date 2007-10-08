@@ -770,6 +770,9 @@ static struct {
 	/* Hans-Joachim Baader <hjb@pro-linux.de> */
 	{"Motorola:A1200 (MTP mode)",           0x22b8, 0x60ca, PTP_MTP},
 
+	/* libmtp report, Endre Oma <endre.88.oma@gmail.com> */
+	{"Sony:NWZ-S618F",			0x054c, 0x0327, PTP_MTP},
+
 	/* from libmtp  */
 	{"iRiver:iFP-800",                      0x4102, 0x1008, PTP_MTP},
 	/* Jay MacDonald <jay@cheakamus.com> */
