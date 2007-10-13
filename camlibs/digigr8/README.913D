@@ -8,7 +8,7 @@
 
 
 
-On 08/23/2007, I discovered a new camera with USB ID 0x2770:0x913c. The
+On 08/23/2007, I discovered a new camera with USB ID 0x2770:0x913d. The
 basic functions of this camera are the same as those of the 0x2770:0x905c
 cameras which are the main ones supported in libgphoto2/camlibs/digigr8, but
 there are some small differences. For certain details and for the basic
@@ -42,4 +42,9 @@ Features of the Suprema Digital Keychain Camera:
 		frame), but libgphoto2 does not do webcams, so that can't be
 		done here. 
 
-Theodore Kilgore, 08/24/07
+On 10/13/07 I discovered that the Sakar Styleshot (Sakar ID no. 28290) is 
+also supported, and I have added it to the list of cameras in library.c. Aside 
+from appearance, the main difference between the Styleshot and the Suprema 
+described above is that the Styleshot has an internal rechargeable battery. 
+
+Theodore Kilgore, 08/24/07, revised 10/13/07

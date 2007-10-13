@@ -207,7 +207,7 @@ at all. However:
 
 The USB command to delete is the same as the command to shoot a frame 
 (gphoto2 option is --capture-preview). If you shoot a frame with the Disney 
-pix micro, it will deledte whatever photos are on the camera !!!
+pix micro, it will delete whatever photos are on the camera !!!
 
 
 A note on capture:
