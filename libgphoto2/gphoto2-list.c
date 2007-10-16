@@ -47,64 +47,28 @@
 
 
 /**
- * Whether to preserve binary compatibility for structure internals.
- *
- * Question: Find out whether any libgphoto2 frontend relies on those
- *           internals.
- * Answer: They do, at least by instantiation a "struct CameraList foo;".
- *
- * Binary compatibility and problems:
- *   * fixed string size for name and value
- *   * fixed max number of entries
- *   * some apps instantiate a "struct CameraList foo;" directly and
- *     thus reserve a specific amount of memory
- *   * FIXME: Do frontends rely on the memory layout and size of their 
- *     "struct CameraList" or "struct CameraList *" when accessing
- *     its members? They *SHOULD* use access functions.
- */
-#undef CAMERALIST_STRUCT_COMPATIBILITY
-#define CAMERALIST_STRUCT_COMPATIBILITY
-
-
-/**
  * Internal _CameraList data structure
  **/
 
-#ifdef CAMERALIST_STRUCT_COMPATIBILITY
+struct _entry {
+	char *name;
+	char *value;
+};
 
-#define MAX_ENTRIES 1024
-#define MAX_LIST_STRING_LENGTH 128
 struct _CameraList {
-	int  count;
-	struct {
-		char name  [MAX_LIST_STRING_LENGTH];
-		char value [MAX_LIST_STRING_LENGTH];
-	} entry [MAX_ENTRIES];
-	int ref_count;
+	int	used;	/* used entries */
+	int	max;	/* allocated entries */
+	struct _entry *entry;
+	int	ref_count;
 };
 
 /* check that the given index is in the valid range for this list */
 #define CHECK_INDEX_RANGE(list, index)			\
   do {							\
-    if (index < 0 || index >= list->count) {		\
+    if (index < 0 || index >= list->used) {		\
       return (GP_ERROR_BAD_PARAMETERS);			\
     }							\
   } while (0)
-
-#else /* !CAMERALIST_STRUCT_COMPATIBILITY */
-
-#error The !CAMERALIST_STRUCT_COMPATIBILITY part has not been implemented yet!
-
-struct _CamaraSubList {
-	int count;
-  foo bar;
-};
-
-struct _CameraList {
-	int ref_count;
-};
-
-#endif /* !CAMERALIST_STRUCT_COMPATIBILITY */
 
 
 /**
@@ -177,15 +141,21 @@ gp_list_unref (CameraList *list)
 int
 gp_list_free (CameraList *list) 
 {
+	int	i;
 	CHECK_LIST (list);
 
+	for (i=0;i<list->used;i++) {
+		if (list->entry[i].name) free (list->entry[i].name);
+		list->entry[i].name = NULL;
+		if (list->entry[i].value) free (list->entry[i].value);
+		list->entry[i].value = NULL;
+	}
+	free (list->entry);
 	/* Mark this list as having been freed. That may help us
 	 * prevent access to already freed lists.
 	 */
 	list->ref_count = 0;
-	
 	free (list);
-
         return (GP_OK);
 }
 
@@ -199,10 +169,17 @@ gp_list_free (CameraList *list)
 int
 gp_list_reset (CameraList *list)
 {
+	int i;
 	CHECK_LIST (list);
 
-	list->count = 0;
-
+	for (i=0;i<list->used;i++) {
+		if (list->entry[i].name) free (list->entry[i].name);
+		list->entry[i].name = NULL;
+		if (list->entry[i].value) free (list->entry[i].value);
+		list->entry[i].value = NULL;
+	}
+	/* keeps -> entry allocated for reuse. */
+	list->used = 0;
 	return (GP_OK);
 }
 
@@ -220,46 +197,31 @@ gp_list_append (CameraList *list, const char *name, const char *value)
 {
 	CHECK_LIST (list);
 
-	if (list->count == MAX_ENTRIES) {
-		gp_log (GP_LOG_ERROR, "gphoto2-list", "gp_list_append: "
-		"Tried to add more than %d entries to the list, reporting error.",
-		MAX_ENTRIES);
-		return (GP_ERROR_FIXED_LIMIT_EXCEEDED);
+	if (list->used == list->max) {
+		struct _entry *new;
+
+		new = realloc(list->entry,(list->max+100)*sizeof(struct _entry));
+		if (!new)
+			return GP_ERROR_NO_MEMORY;
+		list->entry = new;
+		list->max += 100;
 	}
 
 	if (name) {
-		/* check that the 'name' value fits */
-		const size_t buf_len = sizeof (list->entry[list->count].name);
-		const size_t str_len = strlen (name);
-		if (str_len >= buf_len) {
-			gp_log (GP_LOG_ERROR, "gphoto2-list", 
-				"gp_list_append: "
-				"'name' value too long (%d >= %d)",
-				str_len, buf_len);
-			return (GP_ERROR_FIXED_LIMIT_EXCEEDED);
-		}
-		/* set the value */
-		strncpy (list->entry[list->count].name, name, buf_len);
-		list->entry[list->count].name[buf_len-1] = '\0';
+		list->entry[list->used].name = strdup (name);
+		if (!list->entry[list->used].name)
+			return GP_ERROR_NO_MEMORY;
+	} else {
+		list->entry[list->used].name = NULL;
 	}
 	if (value) {
-		/* check that the 'value' value fits */
-		const size_t buf_len = sizeof (list->entry[list->count].value);
-		const size_t str_len = strlen (value);
-		if (str_len >= buf_len) {
-			gp_log (GP_LOG_ERROR, "gphoto2-list", 
-				"gp_list_append: "
-				"'value' value too long (%d >= %d)",
-				str_len, buf_len);
-			return (GP_ERROR_FIXED_LIMIT_EXCEEDED);
-		}
-		/* set the value */
-		strncpy (list->entry[list->count].value, value, buf_len);
-		list->entry[list->count].value[buf_len-1] = '\0';
+		list->entry[list->used].value = strdup (value);
+		if (!list->entry[list->used].value)
+			return GP_ERROR_NO_MEMORY;
+	} else {
+		list->entry[list->used].value = NULL;
 	}
-
-        list->count++;
-
+        list->used++;
         return (GP_OK);
 }
 
@@ -269,18 +231,15 @@ gp_list_append (CameraList *list, const char *name, const char *value)
 static void
 exchange (CameraList *list, int x, int y)
 {
-	char name  [128];
-	char value [128];
+	char *tmp;
 
-	/* here we use memcpy to avoid unterminated strings *
-	 * stored in the list. 128 is hardcoded. use a constant *
-	 * for cleaness */
-	memcpy (name,  list->entry[x].name, 128);
-	memcpy (value, list->entry[x].value, 128);
-	memcpy (list->entry[x].name,  list->entry[y].name, 128);
-	memcpy (list->entry[x].value, list->entry[y].value, 128);
-	memcpy (list->entry[y].name,  name, 128);
-	memcpy (list->entry[y].value, value, 128);
+	tmp = list->entry[x].name;
+	list->entry[x].name = list->entry[y].name;
+	list->entry[y].name = tmp;
+
+	tmp = list->entry[x].value;
+	list->entry[x].value = list->entry[y].value;
+	list->entry[y].value = tmp;
 }
 
 /**
@@ -294,11 +253,10 @@ int
 gp_list_sort (CameraList *list)
 {
 	int x, y, z;
-
 	CHECK_LIST (list);
 
-	for (x = 0; x < list->count - 1; x++)
-		for (y = x + 1; y < list->count; y++) {
+	for (x = 0; x < list->used - 1; x++)
+		for (y = x + 1; y < list->used; y++) {
 			z = strcmp (list->entry[x].name, list->entry[y].name);
 			if (z > 0)
 				exchange (list, x, y);
@@ -319,7 +277,7 @@ gp_list_count (CameraList *list)
 {
 	CHECK_LIST (list);
 
-        return (list->count);
+        return (list->used);
 }
 
 /**
@@ -344,7 +302,7 @@ gp_list_find_by_name (CameraList *list, int *index, const char *name)
 	/* We search backwards because our only known user
 	 * camlibs/ptp2/library.c thinks this is faster
 	 */
-	for (i=list->count-1; i >= 0; i--) {
+	for (i=list->used-1; i >= 0; i--) {
 	  if (0==strcmp(list->entry[i].name, name)) {
 	    if (index) {
 	      (*index) = i;
@@ -410,26 +368,17 @@ gp_list_get_value (CameraList *list, int index, const char **value)
 int
 gp_list_set_value (CameraList *list, int index, const char *value)
 {
+	char *newval;
 	CHECK_LIST (list);
 	CHECK_NULL (value);
 	CHECK_INDEX_RANGE (list, index);
 
-	do {
-		/* check that the value fits */
-		const size_t buf_len = sizeof (list->entry[index].value);
-		const size_t str_len = strlen (value);
-		if (str_len >= buf_len) {
-			gp_log (GP_LOG_ERROR, "gphoto2-list", 
-				"gp_list_append: "
-				"'value' value too long (%d >= %d)",
-				str_len, buf_len);
-			return (GP_ERROR_FIXED_LIMIT_EXCEEDED);
-		}
-	} while (0);
-
-	/* set the value */
-	strcpy (list->entry[index].value, value);
-
+	newval = strdup(value);
+	if (!newval)
+		return GP_ERROR_NO_MEMORY;
+	if (list->entry[index].value)
+		free (list->entry[index].value);
+	list->entry[index].value = newval;
 	return (GP_OK);
 }
 
@@ -445,26 +394,17 @@ gp_list_set_value (CameraList *list, int index, const char *value)
 int
 gp_list_set_name (CameraList *list, int index, const char *name)
 {
+	char *newname;
 	CHECK_LIST (list);
 	CHECK_NULL (name);
 	CHECK_INDEX_RANGE (list, index);
 
-	do {
-		/* check that the value fits */
-		const size_t buf_len = sizeof (list->entry[index].name);
-		const size_t str_len = strlen (name);
-		if (str_len >= buf_len) {
-			gp_log (GP_LOG_ERROR, "gphoto2-list", 
-				"gp_list_append: "
-				"'name' value too long (%d >= %d)",
-				str_len, buf_len);
-			return (GP_ERROR_FIXED_LIMIT_EXCEEDED);
-		}
-	} while (0);
-
-	/* set the value */
-	strcpy (list->entry[index].name, name);
-
+	newname = strdup(name);
+	if (!newname)
+		return GP_ERROR_NO_MEMORY;
+	if (list->entry[index].name)
+		free (list->entry[index].name);
+	list->entry[index].name = newname;
 	return (GP_OK);
 }
 
