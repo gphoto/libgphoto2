@@ -82,6 +82,14 @@ use this function, then, and get an animation, that can easily be done using
 the "animate" function from the ImageMagick toolkit, or with a similar tool 
 from a similar image processing suite. 
 
+ANOTHER JL2005A CAMERA, WHICH IN ADDITION TO THE ABOVE, USES COMPRESSION
+
+has been discovered by Jeronimo Barraco <jerobarraco@yahoo.com.ar>. That 
+camera is the TDC-15, sold by NogaNet in Argentina. Work is under way to 
+support the compressed mode, which is optional on this camera. Unless and 
+until the compressed mode is supported, the camera is still usable in the 
+non-compressed mode which has already been supported. 
+
 WARRANTY?
 
 Absolutely none. Remember, I did not sell you this software. I have written 
@@ -89,3 +97,4 @@ this driver for my own edification and in the sincere hope that it might help
 you to use of your camera. Please see also the warranty clauses 
 in the LGPL license. 
 
+Updated 10/15/2007

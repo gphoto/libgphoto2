@@ -74,6 +74,8 @@ jl2005a_get_pic_data_size (GPPort *port, int n)
 	GP_DEBUG("size = 0x%x\n", size);
 	response = (jl2005a_read_info_byte(port, 2 ))&0xff;
 	size = ((response&0xff)<<16)|size;
+	if (size == 0x3100)
+		size += 0x80;
 	GP_DEBUG("size = 0x%x\n", size);
 	return (size); 
 }
@@ -121,7 +123,15 @@ jl2005a_read_picture_data (Camera *camera, GPPort *port,
 
 	response = (jl2005a_read_info_byte(port, 7) )&0xff;
 	/* Always 0x80. Purpose unknown */
-	response = (jl2005a_read_info_byte(port, 0xa0) )&0xff;
+	response = (jl2005a_read_info_byte(port, 0x0a) )&0xff;
+	/* Previous byte is 0x11 if what is to be downloaded is the first
+	 * frame in a clip, is 0x01 if it is any clip frame after the initial
+	 * one, and is zero if what is to be downloaded is a standalone photo.
+	 * If clips will in the future be processed as AVI files, then there is
+	 * not any information to know how many frames are present, prior to 
+	 * downloading them. There is only a starting point and an indicator
+	 * for each frame. 
+	 */
         gp_port_write (port, "\xab\x00", 2);
         gp_port_write (port, "\xa1\x04", 2);
         gp_port_write (port, "\xab\x00", 2);
