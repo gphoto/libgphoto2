@@ -29,6 +29,7 @@ test_ddb_LDADD = \
 	-lfl \
 	$(top_builddir)/libgphoto2/libgphoto2.la \
 	$(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la \
+	$(LIBLTDL) \
 	$(LIBEXIF_LIBS) \
 	$(INTLLIBS)
 

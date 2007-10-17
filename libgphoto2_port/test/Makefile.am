@@ -23,6 +23,9 @@ INSTALL_TESTS += test-port-list
 check_PROGRAMS += test-port-list
 test_port_list_CPPFLAGS = $(AM_CPPFLAGS) $(LTDLINCL) $(CPPFLAGS)
 test_port_list_SOURCE = test-gp-port.c
-test_port_list_LDFLAGS = $(top_builddir)/libgphoto2_port/libgphoto2_port.la $(LIBLTDL) $(INTLLIBS)
+test_port_list_LDFLAGS = \
+	$(top_builddir)/libgphoto2_port/libgphoto2_port.la \
+	$(LIBLTDL) \
+	$(INTLLIBS)
 
 include $(top_srcdir)/installcheck.mk

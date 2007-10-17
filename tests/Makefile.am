@@ -28,6 +28,7 @@ test_gphoto2_SOURCE = test-gphoto2.c
 test_gphoto2_LDADD = \
 	$(top_builddir)/libgphoto2/libgphoto2.la \
 	$(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la \
+	$(LIBLTDL) \
 	$(LIBEXIF_LIBS) \
 	$(INTLLIBS)
 
@@ -36,6 +37,7 @@ test_filesys_SOURCE = test-filesys.c
 test_filesys_LDADD = \
 	$(top_builddir)/libgphoto2/libgphoto2.la \
 	$(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la \
+	$(LIBLTDL) \
 	$(LIBEXIF_LIBS) \
 	$(INTLLIBS)
 
@@ -48,6 +50,7 @@ test_camera_list_SOURCE = test-camera-list.c
 test_camera_list_LDADD = \
 	$(top_builddir)/libgphoto2/libgphoto2.la \
 	$(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la \
+	$(LIBLTDL) \
 	$(LIBEXIF_LIBS) \
 	$(INTLLIBS)
 
@@ -72,6 +75,7 @@ test_pedantic_c_CFLAGS = \
 test_pedantic_c_LDADD = \
 	$(top_builddir)/libgphoto2/libgphoto2.la \
 	$(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la \
+	$(LIBLTDL) \
 	$(LIBEXIF_LIBS) \
 	$(INTLLIBS)
 
@@ -92,6 +96,7 @@ test_pedantic_cxx_CXXFLAGS = \
 test_pedantic_cxx_LDADD = \
 	$(top_builddir)/libgphoto2/libgphoto2.la \
 	$(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la \
+	$(LIBLTDL) \
 	$(LIBEXIF_LIBS) \
 	$(INTLLIBS)
 
