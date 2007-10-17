@@ -67,11 +67,15 @@ static const struct {
         {"ZINA Mini Digital Keychain Camera",    GP_DRIVER_STATUS_EXPERIMENTAL, 
     							    0x2770, 0x905c},        
         {"Pixie Princess Jelly-Soft",    GP_DRIVER_STATUS_EXPERIMENTAL, 
-    							    0x2770, 0x905c},    
+    							    0x2770, 0x905c},
+        {"Sakar Micro Digital 2428x",    GP_DRIVER_STATUS_EXPERIMENTAL, 
+    							    0x2770, 0x905c},
         {"Disney pix micro",    GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9050}, 
         {"Suprema Digital Keychain Camera",    GP_DRIVER_STATUS_EXPERIMENTAL, 
     								0x2770, 0x913d},
         {"Sakar 28290 Digital Concepts Styleshot",    GP_DRIVER_STATUS_EXPERIMENTAL, 
+    								0x2770, 0x913d},
+        {"Sakar 23070  Crayola Digital Camera",    GP_DRIVER_STATUS_EXPERIMENTAL, 
     								0x2770, 0x913d},
 	{NULL,0,0,0}
 };

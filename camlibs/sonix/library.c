@@ -59,6 +59,10 @@ static const struct {
         {"DC31VC", GP_DRIVER_STATUS_EXPERIMENTAL, 0x0c45, 0x8000},	
         {"Sakar Digital Keychain 11199", GP_DRIVER_STATUS_EXPERIMENTAL, 
 	    0x0c45, 0x8003},
+        {"Sakar Digital no, 6637x", GP_DRIVER_STATUS_EXPERIMENTAL, 
+	    0x0c45, 0x8003},
+        {"Sakar Digital no, 67480", GP_DRIVER_STATUS_EXPERIMENTAL, 
+	    0x0c45, 0x8003},
         {"Mini Shotz ms-350", GP_DRIVER_STATUS_EXPERIMENTAL, 0x0c45, 0x8008},
         {"Vivitar Vivicam3350B", GP_DRIVER_STATUS_EXPERIMENTAL, 0x0c45, 0x800a},
  	{NULL,0,0,0}

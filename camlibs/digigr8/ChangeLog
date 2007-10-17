@@ -1,3 +1,6 @@
+2007-10-16   Theodore Kilgore <kilgota@auburn.edu>  
+	* library.c: Several cameras from Sakar added to list.
+
 2007-09-04   Theodore Kilgore <kilgota@auburn.edu>  
 	* library.c: ZINA Mini Digital Keychain Camera, reported by 
 	 Alvin Austin <alvin.austin@gmail.com>

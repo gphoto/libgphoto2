@@ -1,4 +1,7 @@
 2007-06-24   Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: Several Sakar cameras added.
+
+2007-06-24   Theodore Kilgore <kilgota@auburn.edu>
 	* library.c:
 	* sq905.c:
 	* sq905.h: fixed compile warnings about signedness. 
