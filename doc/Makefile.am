@@ -34,18 +34,18 @@ $(HTML_APIDOC_DIR).tar.gz: $(HTML_APIDOC_DIR).stamp
 $(HTML_APIDOC_INTERNALS_DIR).tar.gz: $(HTML_APIDOC_INTERNALS_DIR).stamp
 	(cd $(DOXYGEN_OUTPUT_DIR) && $(AMTAR) chof - $(HTML_APIDOC_INTERNALS_DIR) | GZIP=--best gzip -c) > $@
 
-DOC_APIDOC_HTML = apidocs.html
-DOC_APIDOC_INTERNALS_HTML = internal-docs.html
-
 LOCAL_INSTALL += install-apidocs
 install-apidocs: $(HTML_APIDOC_DIR).stamp
-	$(INSTALL) -m 0755 -d "$(DESTDIR)$(docdir)/$(DOC_APIDOC_HTML)"
-	cd "$(DOXYGEN_OUTPUT_DIR)/$(HTML_APIDOC_DIR)/" && $(INSTALL) -m 0644 * "$(DESTDIR)$(docdir)/$(DOC_APIDOC_HTML)/"
+	mkdir -p "$(DESTDIR)$(docdir)"
+	find "$(DOXYGEN_OUTPUT_DIR)/$(HTML_APIDOC_DIR)" \
+		\( -type d -exec chmod 0755 {} \; \) -or \
+		\( -type f -exec chmod 0644 {} \; \)
+	(unset CDPATH; cd "$(DOXYGEN_OUTPUT_DIR)" && tar cpf - "$(HTML_APIDOC_DIR)") \
+		| (cd "$(DESTDIR)$(docdir)" && tar xpf -)
 
 LOCAL_UNINSTALL += uninstall-apidocs
 uninstall-apidocs:
-	cd "$(DESTDIR)$(docdir)/$(DOC_APIDOC_HTML)" && rm -f *
-	rmdir "$(DESTDIR)$(docdir)/$(DOC_APIDOC_HTML)"
+	rm -rf "$(DESTDIR)$(docdir)/$(HTML_APIDOC_DIR)"
 
 LOCAL_CLEAN += clean-apidocs
 clean-apidocs:
@@ -63,14 +63,16 @@ $(HTML_APIDOC_INTERNALS_DIR).stamp: Doxyfile-internals
 
 LOCAL_INSTALL += install-apidocs-internals
 install-apidocs-internals: $(HTML_APIDOC_INTERNALS_DIR).stamp
-	$(INSTALL) -m 0755 -d "$(DESTDIR)$(docdir)/$(DOC_APIDOC_INTERNALS_HTML)"
-	cd "$(DOXYGEN_OUTPUT_DIR)/$(HTML_APIDOC_INTERNALS_DIR)" && \
-		$(INSTALL) -m 0644 * "$(DESTDIR)$(docdir)/$(DOC_APIDOC_INTERNALS_HTML)/"
+	mkdir -p "$(DESTDIR)$(docdir)"
+	find "$(DOXYGEN_OUTPUT_DIR)/$(HTML_APIDOC_INTERNALS_DIR)" \
+		\( -type d -exec chmod 0755 {} \; \) -or \
+		\( -type f -exec chmod 0644 {} \; \)
+	(unset CDPATH; cd "$(DOXYGEN_OUTPUT_DIR)" && tar cpf - "$(HTML_APIDOC_INTERNALS_DIR)") \
+		| (cd "$(DESTDIR)$(docdir)" && tar xpf -)
 
 LOCAL_UNINSTALL += uninstall-apidocs-internals
 uninstall-apidocs-internals:
-	cd "$(DESTDIR)$(docdir)/$(DOC_APIDOC_INTERNALS_HTML)" && rm -f *
-	rmdir "$(DESTDIR)$(docdir)/$(DOC_APIDOC_INTERNALS_HTML)"
+	rm -rf "$(DESTDIR)$(docdir)/$(HTML_APIDOC_INTERNALS_DIR)"
 
 LOCAL_CLEAN += clean-apidocs-internals
 clean-apidocs-internals:
