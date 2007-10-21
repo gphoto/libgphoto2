@@ -1,3 +1,13 @@
+2007-10-21  Marcus Meissner  <marcus@jet.franken.de>
+
+	* gphoto2/gphoto2-filesys.h: Change long
+	  to uint64_t, int to uint32_t to fix the struct
+	  sizes to a better known value (mostly for C#).
+	  Include <stdint.h>, a ISO C99 feature.
+
+	  This changes the "CameraFileInfo" and "CameraStorageInformation"
+	  struct sizes on all platforms.
+
 2007-10-16  Marcus Meissner  <marcus@jet.franken.de>
 
 	* libgphoto2/gphoto2-list.c: Removed artificial limit 
@@ -5,6 +15,8 @@
 	  the artificial limit on name/value (now dynamic).
 
 	  This is source code compatible, but not ABI compatible.
+
+	  Bumped SO version to 6 (with libtool increment rules).
 
 2007-07-25  Hubert Figuiere  <hub@figuiere.net>
 

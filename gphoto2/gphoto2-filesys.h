@@ -30,6 +30,7 @@
 #define __GPHOTO2_FILESYS_H__
 
 #include <time.h>
+#include <stdint.h>
 
 #include <gphoto2/gphoto2-context.h>
 #include <gphoto2/gphoto2-list.h>
@@ -94,11 +95,10 @@ typedef enum {
 typedef struct _CameraFileInfoFile {
 	CameraFileInfoFields fields;	/**< \brief Bitmask containing the set members. */
 	CameraFileStatus status;	/**< \brief Status of the file. */
-	unsigned long size;		/**< \brief Size of the file. */
+	uint64_t size;			/**< \brief Size of the file. */
 	char type[64];			/**< \brief MIME type of the file. */
-
-	unsigned int width;		/**< \brief Height of the file. */
-	unsigned int height;		/**< \brief Width of the file. */
+	uint32_t width;			/**< \brief Height of the file. */
+	uint32_t height;		/**< \brief Width of the file. */
 	char name[64];			/**< \brief Filename of the file. */
 	CameraFilePermissions permissions;/**< \brief Permissions of the file. */
 	time_t mtime;			/**< \brief Modification time of the file. */
@@ -113,11 +113,11 @@ typedef struct _CameraFileInfoFile {
 typedef struct _CameraFileInfoPreview {
 	CameraFileInfoFields fields;	/**< \brief Bitmask containing the set members. */
 	CameraFileStatus status;	/**< \brief Status of the preview. */
-	unsigned long size;		/**< \brief Size of the preview. */
+	uint64_t size;			/**< \brief Size of the preview. */
 	char type[64];			/**< \brief MIME type of the preview. */
 
-	unsigned int width;		/**< \brief Width of the preview. */
-	unsigned int height;		/**< \brief Height of the preview. */
+	uint32_t width;			/**< \brief Width of the preview. */
+	uint32_t height;		/**< \brief Height of the preview. */
 } CameraFileInfoPreview;
 
 /**
@@ -129,7 +129,7 @@ typedef struct _CameraFileInfoPreview {
 typedef struct _CameraFileInfoAudio {
 	CameraFileInfoFields fields;	/**< \brief Bitmask containing the set members. */
 	CameraFileStatus status;	/**< \brief Status of the preview file. */
-	unsigned long size;		/**< \brief Size of the audio file. */
+	uint64_t size;		/**< \brief Size of the audio file. */
 	char type[64];			/**< \brief MIME type of the audio file. */
 } CameraFileInfoAudio;
 
@@ -220,9 +220,9 @@ typedef struct _CameraStorageInformation {
 	CameraStorageType		type;		/**< \brief Hardware type of the storage. */
 	CameraStorageFilesystemType	fstype;		/**< \brief Hierarchy type of the filesystem. */
 	CameraStorageAccessType		access;		/**< \brief Access permissions. */
-	unsigned long			capacitykbytes;	/**< \brief Total capacity in kbytes. */
-	unsigned long			freekbytes;	/**< \brief Free space in kbytes. */
-	unsigned long			freeimages;	/**< \brief Free space in images (guessed by camera). */
+	uint64_t			capacitykbytes;	/**< \brief Total capacity in kbytes. */
+	uint64_t			freekbytes;	/**< \brief Free space in kbytes. */
+	uint64_t			freeimages;	/**< \brief Free space in images (guessed by camera). */
 } CameraStorageInformation;
 
 /** 
