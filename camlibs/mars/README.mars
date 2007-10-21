@@ -1,6 +1,6 @@
 MARS MR97310 STILLCAM DRIVER
 Copyright Theodore Kilgore <kilgota@auburn.edu> April, 2004. Latest revision
-of this README April 7, 2007.
+of this README October 21, 2007.
 
 (Everything in libgphoto2/camlibs/mars is LGPL-licensed, including this README; 
 see any of the source files for a more complete statement of the license.)
@@ -92,16 +92,16 @@ a very high cutoff threshold and will not take photos in the evening, even if
 one points it at a bright monitor screen. Color mapping is cruddy, though, even 
 running in uncompressed mode. 640x480 and 320x240 resolution.
 
-Philips Keychain, INNOVAGE Mini Digital: These seem to be clones, even 
-having very similar cases. They will do max resolution 352x488. But for what 
-they are they work very well. It seems that these shoot clips in compressed 
-mode (no matter if you otherwise turned compression on, or not), but at the 
-resolution settings these cameras use the decompression works nicely, too. 
-Probably the CD302N and the Pixart Gemini are the same, too, but I do not have
-direct experience. Trust SpyC@m 100: Reported as working, seems from 
+Philips Keychain, INNOVAGE Mini Digital Vivitar Mini Digital: These seem to be 
+clones, even having very similar cases. They will do max resolution 352x488. 
+But for what they are they work very well. It seems that these shoot clips in 
+compressed mode (no matter if you otherwise turned compression on, or not), but 
+at the resolution settings these cameras use the decompression works nicely, 
+too. Probably the CD302N and the Pixart Gemini are the same, too, but I do not 
+have direct experience. Trust SpyC@m 100: Reported as working, seems from 
 manufacturer's description to be another camera similar to the Philips KeyChain. 
 Furthermore, www.trust.com (the manufacturer) says that the Trust SpyC@m 100s 
-is the same camera inside, so it is also presumed to work. 
+is the same camera inside, too, so it is also presumed to work. 
 
 
 Sakar Digital 56379 "Spy Shot": Another keychain camera, but also contains a 

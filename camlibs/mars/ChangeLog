@@ -1,3 +1,7 @@
+2007-10-21  Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: Added Vivitar Mini Digital Camera 
+	* README.mars: Description of new camera added. 
+
 2007-08-14  Theodore Kilgore <kilgota@auburn.edu>
 	* library.c: Added Trust Spycam 100, reported by 
 		     Aurelien Jacobs <aurel@gnuage.org>
