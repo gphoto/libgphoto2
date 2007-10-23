@@ -820,6 +820,8 @@ static struct {
 	{"Philips:PSA610",			0x0471, 0x0181, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* From: thanosz@softhome.net */
 	{"Philips:HDD6320",			0x0471, 0x01eb, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	/* libmtp list, Detlef Meier <dm@emlix.com> */
+	{"Philips:SA 6045",			0x0471, 0x084e, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* from XNJB user (libmtp) */
 	{"Philips:PSA235",			0x0471, 0x7e01, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 
