@@ -478,25 +478,25 @@ static struct {
 	/* Nikon Coolpix SQ: M. Holzbauer, 07 Jul 2003 */
 	{"Nikon:Coolpix 4100 (PTP mode)", 0x04b0, 0x012d, 0},
 	/* Nikon Coolpix 5600: Andy Shevchenko, 11 Aug 2005 */
-	{"Nikon:Coolpix 5600 (PTP mode)", 0x04b0, 0x012e, PTP_CAP},
+	{"Nikon:Coolpix 5600 (PTP mode)", 0x04b0, 0x012e, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	/* 4600: Martin Klaffenboeck <martin.klaffenboeck@gmx.at> */
 	{"Nikon:Coolpix 4600 (PTP mode)", 0x04b0, 0x0130, 0},
 	/* 4600: Roberto Costa <roberto.costa@ensta.org>, 22 Oct 2006 */
 	{"Nikon:Coolpix 4600a (PTP mode)", 0x04b0, 0x0131, 0},
-	{"Nikon:Coolpix 5900 (PTP mode)", 0x04b0, 0x0135, PTP_CAP},
-	{"Nikon:Coolpix P1 (PTP mode)",   0x04b0, 0x0140, PTP_CAP},
+	{"Nikon:Coolpix 5900 (PTP mode)", 0x04b0, 0x0135, PTP_CAP|PTP_NIKON_BROKEN_CAP},
+	{"Nikon:Coolpix P1 (PTP mode)",   0x04b0, 0x0140, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	/* Marcus Meissner */
-	{"Nikon:Coolpix P2 (PTP mode)",   0x04b0, 0x0142, PTP_CAP},
+	{"Nikon:Coolpix P2 (PTP mode)",   0x04b0, 0x0142, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	/* Richard SCHNEIDER <Richard.SCHNEIDER@tilak.at> */
 	{"Nikon:Coolpix S4 (PTP mode)",   0x04b0, 0x0144, 0},
 	/* Lowe, John Michael <jomlowe@iupui.edu> */
 	{"Nikon:Coolpix S2 (PTP mode)",   0x04b0, 0x014e, 0},
 	{"Nikon:Coolpix S6 (PTP mode)",   0x04b0, 0x014e, 0},
 	/* Ole Aamot <ole@gnome.org> */
-	{"Nikon:Coolpix P5000 (PTP mode)",0x04b0, 0x015b, PTP_CAP},
+	{"Nikon:Coolpix P5000 (PTP mode)",0x04b0, 0x015b, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	{"Nikon:Coolpix L12 (PTP mode)",  0x04b0, 0x015f, 0},
 	/* Marius Groeger <marius.groeger@web.de> */
-	{"Nikon:Coolpix S200 (PTP mode)", 0x04b0, 0x0161, PTP_CAP},
+	{"Nikon:Coolpix S200 (PTP mode)", 0x04b0, 0x0161, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	{"Nikon:Coolpix SQ (PTP mode)",   0x04b0, 0x0202, 0},
 	/* lars marowski bree, 16.8.2004 */
 	{"Nikon:Coolpix 4200 (PTP mode)", 0x04b0, 0x0204, 0},
@@ -1765,10 +1765,13 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	 */
 
 	/* The Nikon way: Does not send AddObject event ... so try else */
-	if (params->deviceinfo.VendorExtensionID==PTP_VENDOR_NIKON) {
+	if ((params->deviceinfo.VendorExtensionID==PTP_VENDOR_NIKON) &&
+		NIKON_BROKEN_CAP(camera->pl)
+	) {
 		PTPObjectHandles	handles;
 		int tries = 5;
 
+            	GP_DEBUG("PTPBUG_NIKON_BROKEN_CAPTURE bug workaround");
 		while (tries--) {
 			int i;
 			uint16_t ret = ptp_getobjecthandles (params, 0xffffffff, 0x000000, 0x000000, &handles);
@@ -1809,7 +1812,6 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 			/* we're not setting *path on error! */
 			return GP_ERROR;
 		}
-		fprintf (stderr, "event %x\n", event.Code);
 		switch (event.Code) {
 		case PTP_EC_ObjectRemoved:
 			/* Perhaps from previous Canon based capture + delete. Ignore. */

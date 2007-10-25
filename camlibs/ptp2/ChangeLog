@@ -1,3 +1,9 @@
+2007-10-25  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c, ptp-bugs.h: The newer Nikons have the regular
+	  capture events just fine, just the old ones suck a bit here.
+	  Mark them broken for now.
+
 2007-09-18  Linus Walleij  <triad@df.lth.se>
 
 	* usb.c, library.c, ptp.c, ptp.h:
