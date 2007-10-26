@@ -56,6 +56,8 @@
 
 #define CPR(context,result) {short r=(result); if (r!=PTP_RC_OK) {report_result ((context), r, params->deviceinfo.VendorExtensionID); return (translate_ptp_result (r));}}
 
+#define SET_CONTEXT(camera, ctx) ((PTPData *) camera->pl->params.data)->context = ctx
+
 static int
 camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 	PTPUSBEventContainer	event;
@@ -2703,6 +2705,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 {
 	CameraWidget *section, *widget;
 	int menuno, submenuno, ret;
+	SET_CONTEXT(camera, context);
 
 	gp_widget_new (GP_WIDGET_WINDOW, _("Camera and Driver Configuration"), window);
 	gp_widget_set_name (*window, "main");
@@ -2762,6 +2765,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 {
 	CameraWidget *section, *widget, *subwindow;
 	int menuno, submenuno, ret;
+	SET_CONTEXT(camera, context);
 
 	ret = gp_widget_get_child_by_label (window, _("Camera and Driver Configuration"), &subwindow);
 	if (ret != GP_OK)

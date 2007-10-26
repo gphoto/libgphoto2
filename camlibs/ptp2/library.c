@@ -62,6 +62,9 @@
 #define USB_NORMAL_TIMEOUT 20000
 #define USB_TIMEOUT_CAPTURE 20000
 
+#define	SET_CONTEXT(camera, ctx) ((PTPData *) camera->pl->params.data)->context = ctx
+#define	SET_CONTEXT_P(p, ctx) ((PTPData *) p->data)->context = ctx
+
 #define CPR(context,result) {short r=(result); if (r!=PTP_RC_OK) {report_result ((context), r, params->deviceinfo.VendorExtensionID); return (translate_ptp_result (r));}}
 
 #define CPR_free(context,result, freeptr) {\
@@ -1178,6 +1181,7 @@ camera_exit (Camera *camera, GPContext *context)
 {
 	if (camera->pl!=NULL) {
 		PTPParams *params = &camera->pl->params;
+		SET_CONTEXT_P(params, context);
 		/* close iconv converters */
 		iconv_close(camera->pl->params.cd_ucs2_to_locale);
 		iconv_close(camera->pl->params.cd_locale_to_ucs2);
@@ -1288,14 +1292,17 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			_("Sorry, your Canon camera does not support Canon Viewfinder mode"));
 			return GP_ERROR_NOT_SUPPORTED;
 		}
+		SET_CONTEXT_P(params, context);
 		ret = ptp_canon_viewfinderon (params);
 		if (ret != PTP_RC_OK) {
 			gp_context_error (context, _("Canon enable viewfinder failed: %d"), ret);
+			SET_CONTEXT_P(params, NULL);
 			return GP_ERROR;
 		}
 		ret = ptp_canon_getviewfinderimage (params, &data, &size);
 		if (ret != PTP_RC_OK) {
 			gp_context_error (context, _("Canon get viewfinder image failed: %d"), ret);
+			SET_CONTEXT_P(params, NULL);
 			return GP_ERROR;
 		}
 		gp_file_set_data_and_size ( file, (char*)data, size );
@@ -1306,8 +1313,10 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		ret = ptp_canon_viewfinderoff (params);
 		if (ret != PTP_RC_OK) {
 			gp_context_error (context, _("Canon disable viewfinder failed: %d"), ret);
+			SET_CONTEXT_P(params, NULL);
 			return GP_ERROR;
 		}
+		SET_CONTEXT_P(params, NULL);
 		return GP_OK;
 	}
 	return GP_ERROR_NOT_SUPPORTED;
@@ -1709,6 +1718,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	if (type != GP_CAPTURE_IMAGE)
 		return GP_ERROR_NOT_SUPPORTED;
 
+	SET_CONTEXT_P(params, context);
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
 		ptp_operation_issupported(params, PTP_OC_NIKON_Capture)
 	){
@@ -1869,6 +1879,7 @@ camera_wait_for_event (Camera *camera, int timeout,
         int i, oldtimeout;
 	uint16_t ret;
 
+	SET_CONTEXT(camera, context);
 	memset (&event, 0, sizeof(event));
 	gp_port_get_timeout (camera->port, &oldtimeout);
 	gp_port_set_timeout (camera->port, timeout);
@@ -2011,7 +2022,7 @@ canon_theme_get (CameraFilesystem *fs, const char *folder, const char *filename,
 	int i;
 	struct canon_theme_entry	*ent;
 
-	((PTPData *) camera->pl->params.data)->context = context;
+	SET_CONTEXT(camera, context);
 
 	res = ptp_canon_get_customize_data (params, 1, &xdata, &size);
 	if (res != PTP_RC_OK)  {
@@ -2056,6 +2067,7 @@ nikon_curve_get (CameraFilesystem *fs, const char *folder, const char *filename,
 	char		*charptr;
 	double		*doubleptr;
 	((PTPData *) camera->pl->params.data)->context = context;
+	SET_CONTEXT(camera, context);
 
 	res = ptp_nikon_curve_download (params, &xdata, &size);
 	if (res != PTP_RC_OK)  {
@@ -2110,6 +2122,8 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 	PTPParams *params = &(camera->pl->params);
 	PTPDeviceInfo pdi;
 	PTPStorageIDs storageids;
+
+	SET_CONTEXT(camera, context);
 
 	spaceleft = sizeof(summary->text);
 	n = snprintf (summary->text, sizeof (summary->text),
@@ -2529,8 +2543,8 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
     PTPParams *params = &camera->pl->params;
     uint32_t parent, storage=0x0000000;
     int i;
+    SET_CONTEXT_P(params, context);
 
-    /*((PTPData *)((Camera *)data)->pl->params.data)->context = context;*/
     gp_log (GP_LOG_DEBUG, "ptp2", "file_list_func(%s)", folder);
 
     /* There should be NO files in root folder */
@@ -2590,7 +2604,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	int i;
 	uint32_t handler,storage;
 
-	/*((PTPData *)((Camera *)data)->pl->params.data)->context = context;*/
+	SET_CONTEXT_P(params, context);
 	gp_log (GP_LOG_DEBUG, "ptp2", "folder_list_func(%s)", folder);
 
 	/* add storage pseudofolders in root folder */
@@ -3128,7 +3142,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	PTPObjectInfo * oi;
 	PTPParams *params = &camera->pl->params;
 
-	((PTPData *) params->data)->context = context;
+	SET_CONTEXT_P(params, context);
 
 #if 0
 	/* The new Canons like to switch themselves off in the middle. */
@@ -3290,7 +3304,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	PTPParams* params=&camera->pl->params;
 	CameraFileType	type;
 
-	((PTPData *) camera->pl->params.data)->context = context;
+	SET_CONTEXT_P(params, context);
 
 	gp_file_get_name (file, &filename);
 	gp_file_get_type (file, &type);
@@ -3407,7 +3421,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	uint32_t storage;
 	PTPParams *params = &camera->pl->params;
 
-	((PTPData *) params->data)->context = context;
+	SET_CONTEXT_P(params, context);
 
 	if (!ptp_operation_issupported(params, PTP_OC_DeleteObject))
 		return GP_ERROR_NOT_SUPPORTED;
@@ -3474,7 +3488,7 @@ remove_dir_func (CameraFilesystem *fs, const char *folder,
 	uint32_t storage;
 	PTPParams *params = &camera->pl->params;
 
-	((PTPData *) params->data)->context = context;
+	SET_CONTEXT_P(params, context);
 
 	if (!ptp_operation_issupported(params, PTP_OC_DeleteObject))
 		return GP_ERROR_NOT_SUPPORTED;
@@ -3513,7 +3527,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	uint32_t storage;
 	PTPParams *params = &camera->pl->params;
 
-	((PTPData *) params->data)->context = context;
+	SET_CONTEXT_P(params, context);
 
 	if (!strcmp (folder, "/special"))
 		return (GP_ERROR_BAD_PARAMETERS); /* for now */
@@ -3609,7 +3623,7 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 	if (!strcmp (folder, "/special"))
 		return GP_ERROR_NOT_SUPPORTED;
 
-	((PTPData *) camera->pl->params.data)->context = context;
+	SET_CONTEXT_P(params, context);
 	memset(&oi, 0, sizeof (PTPObjectInfo));
 
 	/* compute storage ID value from folder patch */
@@ -3670,6 +3684,7 @@ storage_info_func (CameraFilesystem *fs,
 	if (!ptp_operation_issupported (params, PTP_OC_GetStorageIDs))
 		return (GP_ERROR_NOT_SUPPORTED);
 
+	SET_CONTEXT_P(params, context);
 	ret = ptp_getstorageids (params, &sids);
 	if (ret != PTP_RC_OK)
 		return translate_ptp_result (ret);
@@ -3771,7 +3786,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 	char buf[1024];
 	uint16_t ret;
 
-	((PTPData *) params->data)->context = context;
+	SET_CONTEXT_P(params, context);
 	memset (&params->handles, 0, sizeof(PTPObjectHandles));
 
 	/* Nikon supports a fast filesystem retrieval.
@@ -4282,7 +4297,7 @@ camera_init (Camera *camera, GPContext *context)
 	CR (gp_port_set_timeout (camera->port, USB_START_TIMEOUT));
 
 	/* Establish a connection to the camera */
-	((PTPData *) camera->pl->params.data)->context = context;
+	SET_CONTEXT(camera, context);
 
 	retried = 0;
 	while (1) {
@@ -4375,5 +4390,6 @@ camera_init (Camera *camera, GPContext *context)
 		break;
 	}
 	CR (gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera));
+	SET_CONTEXT(camera, NULL);
 	return (GP_OK);
 }

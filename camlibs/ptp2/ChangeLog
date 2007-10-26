@@ -1,3 +1,9 @@
+2007-10-26  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* library.c, config.c: Set GPContext consistently
+	  in the Params struct, otherwise we might resuse
+	  already free contexts.
+
 2007-10-25  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c, ptp-bugs.h: The newer Nikons have the regular
