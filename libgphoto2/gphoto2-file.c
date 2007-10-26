@@ -345,6 +345,9 @@ gp_file_set_data_and_size (CameraFile *file, char *data,
  *
  * Both data and size can be NULL and will then be ignored.
  *
+ * The pointer to data that is returned is still owned by libgphoto2
+ * and its lifetime is the same as the #file.
+ *
  **/
 int
 gp_file_get_data_and_size (CameraFile *file, const char **data,
