@@ -43,6 +43,7 @@
 #ifdef HAVE_SYS_STATFS_H
 # include <sys/statfs.h>
 #endif
+#include <fcntl.h>
 
 
 #ifdef HAVE_LIBEXIF
@@ -467,9 +468,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 {
         char path[1024];
 	int result = GP_OK;
-#ifdef DEBUG
-	unsigned int i, id;
-#endif
+	struct stat stbuf;
+	int fd, id;
+	unsigned int curread, toread;
 #ifdef HAVE_LIBEXIF
 	ExifData *data;
 	unsigned char *buf;
@@ -493,13 +494,13 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
-		result = gp_file_open (file, path);
-		break;
 #ifdef DEBUG
 	case GP_FILE_TYPE_PREVIEW:
-		result = gp_file_open (file, path);
-		break;
 #endif
+		fd = open (path,O_RDONLY);
+		if (fd == -1)
+			return GP_ERROR_IO_READ;
+		break;
 #ifdef HAVE_LIBEXIF
 	case GP_FILE_TYPE_EXIF:
 		data = exif_data_new_from_file (path);
@@ -516,22 +517,52 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
-	if (result < 0)
-		return (result);
 
-#ifdef DEBUG
-	id = gp_context_progress_start (context, 500., "Getting file...");
+	if (-1 == fstat(fd,&stbuf)) {
+		close (fd);
+		return GP_ERROR_IO_READ;
+	}
+#define BLOCKSIZE 65536
+	/* do it in 64kb blocks */
+	buf = malloc(BLOCKSIZE);
+	if (!buf) {
+		close (fd);
+		return GP_ERROR_NO_MEMORY;
+	}
+
+	curread = 0;
+	id = gp_context_progress_start (context, (1.0*stbuf.st_size/BLOCKSIZE), _("Getting file..."));
 	GP_DEBUG ("Progress id: %i", id);
-	for (i = 0; i < 500; i++) {
-		gp_context_progress_update (context, id, i + 1);
+	result = GP_OK;
+	while (curread < stbuf.st_size) {
+		int ret;
+
+		toread = stbuf.st_size-curread;
+		if (toread>BLOCKSIZE) toread = BLOCKSIZE;
+		ret = read(fd,buf,toread);
+		if (ret == -1) {
+			result = GP_ERROR_IO_READ;
+			break;
+		}
+		curread += ret;
+		gp_file_append (file, buf, ret);
+		gp_context_progress_update (context, id, (1.0*curread/BLOCKSIZE));
 		gp_context_idle (context);
-		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
-			return (GP_ERROR_CANCEL);
-		usleep (10);
+		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL) {
+			result = GP_ERROR_CANCEL;
+			break;
+		}
+#if 0
+		/* We could take 2 seconds to download this image. everytime. */
+		/* But actually this driver is used in production by some frontends,
+		 * so do not delay at all
+		 */
+		usleep(2000000/(stbuf.st_size/BLOCKSIZE));
+#endif
 	}
 	gp_context_progress_stop (context, id);
-#endif
-
+	free (buf);
+	close (fd);
 	return (GP_OK);
 }
 
