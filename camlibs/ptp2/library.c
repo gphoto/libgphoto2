@@ -765,6 +765,8 @@ static struct {
 	/* from Mike Meyer <mwm@mired.org> */
 	{"Apple:iPhone (PTP mode)",		0x05ac, 0x1290, PTPBUG_DCIM_WRONG_PARENT},
 
+
+#if 0
 	/************ Add MTP devices below this line ***********/
 	/* libmtp - Kay McCormick <kaym@modsystems.com> */
 	{"Insignia:NS-DV45",			0x119f, 0x0303, PTP_MTP},
@@ -774,6 +776,8 @@ static struct {
 	*/
 	/* Hans-Joachim Baader <hjb@pro-linux.de> */
 	{"Motorola:A1200 (MTP mode)",           0x22b8, 0x60ca, PTP_MTP},
+	/* Reported by anonymous user */
+	{"Motorola:RAZR2 V8 (MTP mode)",	0x22b8, 0x6415, PTP_MTP},
 
 	/* libmtp report, Endre Oma <endre.88.oma@gmail.com> */
 	{"Sony:NWZ-S618F",			0x054c, 0x0327, PTP_MTP},
@@ -803,6 +807,8 @@ static struct {
 	/* Reported by Adam Torgerson */
 	{"iRiver:Clix",				0x4102, 0x112a, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	{"iRiver:X20",				0x4102, 0x1132, PTP_MTP},
+	/* Reported by Robert Ugo <robert_ugo@users.sourceforge.net> */
+	{"iRiver:T60",				0x4102, 0x1134, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* Scott Call <scott.call@gmail.com> */
 	{"iRiver:H10 20GB",                     0x4102, 0x2101, PTP_MTP},
 	/* Petr Spatka spatka@luzanky.cz */
@@ -815,6 +821,8 @@ static struct {
 	{"Philips:HDD085/00",			0x0471, 0x014d, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* from XNJB forum */
 	{"Philips:GoGear SA9200",		0x0471, 0x014f, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	/* From John Coppens <jcoppens@users.sourceforge.net> */
+	{"Philips:SA1115/55",			0x0471, 0x0164, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* From Gerhard Mekenkamp */
 	{"Philips:GoGear Audio",		0x0471, 0x0165, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* David Holm <wormie@alberg.dk> */
@@ -850,6 +858,8 @@ static struct {
 	{"Creative:Zen Vision W",		0x041e, 0x4153, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* Tero Putkonen <tero.putkonen@tiimi.org> */
 	{"Creative:Zen 4GB",			0x041e, 0x4157, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	/* Reported by Ringofan <mcroman@users.sourceforge.net> */
+	{"Creative:Zen V 2GB",			0x041e, 0x4158, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* The 2 below will not work out of the box, since the autoswitch
 	 * to USB Mass Storage once probed.
 	 * https://sourceforge.net/tracker/?func=detail&atid=108874&aid=1577793&group_id=8874
@@ -870,6 +880,8 @@ static struct {
 	{"Toshiba:Gigabeat S",                  0x0930, 0x0010, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* Reported by Rob Brown */
 	{"Toshiba:Gigabeat P10",                0x0930, 0x0011, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	/* Reported by Michael Davis <slithy@yahoo.com> */
+	{"Toshiba:Gigabeat U",			0x0930, 0x0016, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 
 	{"Archos:Gmini XS100",			0x0e79, 0x1207, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	{"Archos:XS202 (MTP mode)",		0x0e79, 0x1208, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
@@ -877,6 +889,8 @@ static struct {
 	{"Archos:104",				0x0e79, 0x120a, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* reported to libmtp-devel by chauchot.etienne@free.fr */
 	{"Archos:504",				0x0e79, 0x1307, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	/* Reported by Kay McCormick <kaym@modsystems.com> */
+	{"Archos:704 mobile dvr",		0x0e79, 0x130d, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 
 	/* From Mark Veinot */
 	{"JVC:Alneo XA-HD500", 			0x04f1, 0x6105, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
@@ -919,17 +933,21 @@ static struct {
 	{"Sandisk:Sansa e260",			0x0781, 0x7420, PTP_MTP},
 	{"Sandisk:Sansa e270",			0x0781, 0x7420, PTP_MTP},
 	{"Sandisk:Sansa e280",			0x0781, 0x7421, PTP_MTP},
+	{"SanDisk:Sansa m240 2",		0x0781, 0x7430, PTP_MTP},
 	{"SanDisk:Sansa c250",			0x0781, 0x7450, PTP_MTP},
 	/* Reported by Troy Curtis Jr. */
 	{"SanDisk:Sansa Express",		0x0781, 0x7460, PTP_MTP},
 	/* Reported by XNJB user, and Miguel de Icaza <miguel@gnome.org> */
 	{"SanDisk:Sansa Connect",		0x0781, 0x7480, PTP_MTP},
+	{"SanDisk:Sansa View",			0x0781, 0x74b0, PTP_MTP},
 
 	/* Reported by Farooq Zaman. NOTE: Can just list files currently and might have other problems! */
 	{"Microsoft:Zune",			0x045e, 0x0710, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* From Richard Low */
 	{"Sirius:Stiletto",			0x18f6, 0x0102, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 
+	/* DoomHammer <gaczek@users.sourceforge.net> */
+	{"Nokia:3110c Mobile Phone",		0x0421, 0x005f, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	{"Nokia:5300 Mobile Phone (MTP mode)",	0x0421, 0x04ba, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* Christian Arnold <webmaster@arctic-media.de> to libmtp list */
 	{"Nokia:N73",				0x0421, 0x04d1, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
@@ -939,6 +957,8 @@ static struct {
 
 	{"Logik:LOG DAX MP3 and DAB Player",	0x13d1, 0x7002, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 
+	/* kiki <omkiki@users.sourceforge.net> */
+	{"Thomson:EM28 Series",			0x069b, 0x0774, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	{"Thomson:Opal",			0x069b, 0x0777, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	{"RCA:Lyra MC4002",			0x069b, 0x0777, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 
@@ -946,6 +966,7 @@ static struct {
 
 	/* Reported by Peter Gyongyosi <gyp@impulzus.com> to libmtp */
 	{"Palm:Handspring Pocket Tunes",	0x1703, 0x0001, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"Palm:Handspring Pocket Tunes 4",	0x1703, 0x0002, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 
 	/* Reported by Stefan Voss <svoss@web.de> to libmtp */
 	{"Trekstor:Vibez 8/12GB",		0x066f, 0x842a, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
@@ -954,8 +975,38 @@ static struct {
 
 	/* from libmtp, Patrik Johansson <Patrik.Johansson@qivalue.com> */
 	{"Cowon:iAudio U3 (MTP mode)",		0x0e21, 0x0701, PTP_MTP},
+	/* Reported by Roberth Karman */
+	{"Cowon:iAudio 7 (MTP mode)",		0x0e21, 0x0751, PTP_MTP},
+	/* Reported by TJ Something <tjbk_tjb@users.sourceforge.net> */
+	{"Cowon:iAudio D2 (MTP mode)",		0x0e21, 0x0801, PTP_MTP},
+
+	/* "brad" (anonymous, sourceforge) */
+	{"Insignia:Pilot 4GB",			0x19ff, 0x0309, PTP_MTP},
 
 	{"Disney:MixMax",			0x0aa6, 0x6021, PTP_MTP|PTP_MTP_PROPLIST_WORKS}
+#endif
+};
+
+/* The list of music players is shared with libmtp. They also have some different
+ * flags, but never mind this for now. */
+#define DEVICE_FLAG_NONE				0x00000000
+#define DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL	0x00000001
+#define DEVICE_FLAG_UNLOAD_DRIVER			0x00000002
+#define DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST		0x00000004
+#define DEVICE_FLAG_NO_ZERO_READS			0x00000008
+#define DEVICE_FLAG_IRIVER_OGG_ALZHEIMER		0x00000010
+#define DEVICE_FLAG_ONLY_7BIT_FILENAMES			0x00000020
+#define DEVICE_FLAG_NO_RELEASE_INTERFACE		0x00000040
+#define DEVICE_FLAG_IGNORE_HEADER_ERRORS		0x00000080
+#define DEVICE_FLAG_BROKEN_SET_OBJECT_PROPLIST		0x00000100
+static struct {
+	const char *vendor;
+	unsigned short usb_vendor;
+	const char *model;
+	unsigned short usb_product;
+	unsigned long flags;
+} mtp_models[] = {
+#include "music-players.h"
 };
 
 static struct {
@@ -1094,28 +1145,38 @@ camera_abilities (CameraAbilitiesList *list)
 	for (i = 0; i < sizeof(models)/sizeof(models[0]); i++) {
 		memset(&a, 0, sizeof(a));
 		strcpy (a.model, models[i].model);
-		a.status = GP_DRIVER_STATUS_PRODUCTION;
-		a.port   = GP_PORT_USB;
-		a.speed[0] = 0;
-		a.usb_vendor = models[i].usb_vendor;
-		a.usb_product= models[i].usb_product;
-		if (models[i].known_bugs & PTP_MTP) {
-			a.operations        = GP_OPERATION_NONE;
-			a.device_type       = GP_DEVICE_AUDIO_PLAYER;
-			a.file_operations   = GP_FILE_OPERATION_DELETE;
-		} else {
-			a.device_type       = GP_DEVICE_STILL_CAMERA;
-			a.operations        = GP_OPERATION_NONE;
-			if (models[i].known_bugs & PTP_CAP)
-				a.operations |= GP_OPERATION_CAPTURE_IMAGE | GP_OPERATION_CONFIG;
-			if (models[i].known_bugs & PTP_CAP_PREVIEW)
-				a.operations |= GP_OPERATION_CAPTURE_PREVIEW;
-			a.file_operations   = GP_FILE_OPERATION_PREVIEW |
-						GP_FILE_OPERATION_DELETE;
-		}
-		a.folder_operations = GP_FOLDER_OPERATION_PUT_FILE |
-			GP_FOLDER_OPERATION_MAKE_DIR |
-			GP_FOLDER_OPERATION_REMOVE_DIR;
+		a.status		= GP_DRIVER_STATUS_PRODUCTION;
+		a.port			= GP_PORT_USB;
+		a.speed[0]		= 0;
+		a.usb_vendor		= models[i].usb_vendor;
+		a.usb_product		= models[i].usb_product;
+		a.device_type		= GP_DEVICE_STILL_CAMERA;
+		a.operations		= GP_OPERATION_NONE;
+		if (models[i].known_bugs & PTP_CAP)
+			a.operations |= GP_OPERATION_CAPTURE_IMAGE | GP_OPERATION_CONFIG;
+		if (models[i].known_bugs & PTP_CAP_PREVIEW)
+			a.operations |= GP_OPERATION_CAPTURE_PREVIEW;
+		a.file_operations	= GP_FILE_OPERATION_PREVIEW |
+					GP_FILE_OPERATION_DELETE;
+		a.folder_operations	= GP_FOLDER_OPERATION_PUT_FILE |
+					GP_FOLDER_OPERATION_MAKE_DIR |
+					GP_FOLDER_OPERATION_REMOVE_DIR;
+		CR (gp_abilities_list_append (list, a));
+	}
+	for (i = 0; i < sizeof(mtp_models)/sizeof(mtp_models[0]); i++) {
+		memset(&a, 0, sizeof(a));
+		sprintf (a.model, "%s:%s", mtp_models[i].vendor, mtp_models[i].model);
+		a.status		= GP_DRIVER_STATUS_PRODUCTION;
+		a.port			= GP_PORT_USB;
+		a.speed[0]		= 0;
+		a.usb_vendor		= mtp_models[i].usb_vendor;
+		a.usb_product		= mtp_models[i].usb_product;
+		a.operations		= GP_OPERATION_NONE;
+		a.device_type		= GP_DEVICE_AUDIO_PLAYER;
+		a.file_operations	= GP_FILE_OPERATION_DELETE;
+		a.folder_operations	= GP_FOLDER_OPERATION_PUT_FILE |
+					GP_FOLDER_OPERATION_MAKE_DIR |
+					GP_FOLDER_OPERATION_REMOVE_DIR;
 		CR (gp_abilities_list_append (list, a));
 	}
 
@@ -4287,6 +4348,18 @@ camera_init (Camera *camera, GPContext *context)
             if ((a.usb_vendor == models[i].usb_vendor) &&
                 (a.usb_product == models[i].usb_product)){
                 camera->pl->bugs = models[i].known_bugs;
+                break;
+            }
+        }
+	/* map the libmtp flags to ours. Currently its just 1 flag. */
+        for (i = 0; i<sizeof(mtp_models)/sizeof(mtp_models[0]); i++) {
+            if ((a.usb_vendor == mtp_models[i].usb_vendor) &&
+                (a.usb_product == mtp_models[i].usb_product)){
+                	camera->pl->bugs = PTP_MTP;
+
+		if (!(mtp_models[i].flags & DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL))
+			camera->pl->bugs |= PTP_MTP_PROPLIST_WORKS;
+
                 break;
             }
         }
