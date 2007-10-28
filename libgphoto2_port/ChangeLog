@@ -1,3 +1,12 @@
+2007-10-28  Marcus Meissner  <marcus@jet.franken.de>
+
+	* gphoto2/gphoto2-port-info-list.c: GPPortInfo.path
+	  increased to 4096, since disk: for instance can take
+	  paths.
+
+	  This breaks libgphoto2_port binary compatibility,
+	  so bumping interface.
+
 2007-06-09  Marcus Meissner  <marcus@jet.franken.de>
 
 	* usb/libusb.c: Reset the USB port before close.

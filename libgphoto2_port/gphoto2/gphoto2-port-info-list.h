@@ -51,7 +51,7 @@ typedef enum {
 typedef struct _GPPortInfo {
 	GPPortType type;	/**< \brief The type of this port. */
 	char name[64];		/**< \brief The name of this port (usb:) */
-	char path[64];		/**< \brief The path of this port (whatever is after the :) */
+	char path[4096];	/**< \brief The path of this port (whatever is after the :) */
 
 	/* Private */
 	char library_filename[1024];	/**< \brief Internal pathname of the port driver. Do not use outside of the port library. */
