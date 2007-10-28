@@ -1088,6 +1088,7 @@ static struct deviceproptableu8 canon_flash[] = {
 	{ N_("off"),	0, 0 },
 	{ N_("auto"),	1, 0 },
 	{ N_("on"),	2, 0 },
+	{ N_("fill in"), 4, 0 },
 	{ N_("auto red eye"), 5, 0 },
 	{ N_("on red eye"), 6, 0 },
 };
