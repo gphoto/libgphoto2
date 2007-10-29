@@ -237,17 +237,22 @@ foreach_func (const char *filename, lt_ptr data)
 		gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list",
 			_("Could not load port driver list: '%s'."),
 			gp_port_result_as_string (result));
-		return (0);
 	}
 
-	list->iolib_count++;
+	if (old_size != list->count) {
+		/*
+		 * It doesn't matter if lib_list returned a failure code,
+		 * at least some entries were added
+		 */
+		list->iolib_count++;
 
-	for (j = old_size; j < list->count; j++){
-		gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list",
-			_("Loaded '%s' ('%s') from '%s'."),
-			list->info[j].name, list->info[j].path,
-			filename);
-		strcpy (list->info[j].library_filename, filename);
+		for (j = old_size; j < list->count; j++){
+			gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list",
+				_("Loaded '%s' ('%s') from '%s'."),
+				list->info[j].name, list->info[j].path,
+				filename);
+			strcpy (list->info[j].library_filename, filename);
+		}
 	}
 
 	return (0);
@@ -473,11 +478,11 @@ gp_port_info_list_get_info (GPPortInfoList *list, int n, GPPortInfo *info)
 
 	/* Ignore generic entries */
 	for (i = 0; i <= n; i++)
-		if (!strlen (list->info[i].name))
+		if (!strlen (list->info[i].name)) {
 			n++;
-
-	if (n >= list->count)
-		return (GP_ERROR_BAD_PARAMETERS);
+			if (n >= list->count)
+				return (GP_ERROR_BAD_PARAMETERS);
+		}
 
 	memcpy (info, &(list->info[n]), sizeof (GPPortInfo));
 

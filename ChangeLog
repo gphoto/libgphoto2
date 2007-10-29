@@ -1,3 +1,7 @@
+2007-10-28  Dan Fandrich <dan@coneharvesters.com>
+	* libgphoto2_port/libgphoto2_port/gphoto2-port-info-list.c: Be
+	  more resiliant in case of errors enumerating a port library.
+
 2007-10-21  Marcus Meissner  <marcus@jet.franken.de>
 
 	* gphoto2/gphoto2-filesys.h: Change long
