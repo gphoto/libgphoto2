@@ -1051,6 +1051,8 @@ static struct {
 	{PTP_OFC_MTP_M4A,		PTP_VENDOR_MICROSOFT, "audio/x-m4a"},
 	{PTP_OFC_MTP_MP4,		PTP_VENDOR_MICROSOFT, "video/mp4"},
 	{PTP_OFC_MTP_3GP,		PTP_VENDOR_MICROSOFT, "audio/3gpp"},
+	{PTP_OFC_MTP_WMV,		PTP_VENDOR_MICROSOFT, "video/x-wmv"},
+	{PTP_OFC_MTP_WMA,		PTP_VENDOR_MICROSOFT, "audio/x-wma"},
 	{PTP_OFC_MTP_WMV,		PTP_VENDOR_MICROSOFT, "video/x-ms-wmv"},
 	{PTP_OFC_MTP_WMA,		PTP_VENDOR_MICROSOFT, "audio/x-ms-wma"},
 	{PTP_OFC_MTP_AAC,		PTP_VENDOR_MICROSOFT, "audio/MP4A-LATM"},
@@ -1078,6 +1080,7 @@ set_mimetype (Camera *camera, CameraFile *file, uint16_t vendorcode, uint16_t of
 			continue;
 		return gp_file_set_mime_type (file, object_formats[i].txt);
 	}
+	gp_log (GP_LOG_DEBUG, "ptp2/setmimetype", "Failed to find mime type for %04x\n", ofc);
 	return gp_file_set_mime_type (file, "application/x-unknown");
 }
 
@@ -1094,6 +1097,7 @@ strcpy_mime(char * dest, uint16_t vendor_code, uint16_t ofc) {
 			return;
 		}
 	}
+	gp_log (GP_LOG_DEBUG, "ptp2/strcpymimetype", "Failed to find mime type for %04x\n", ofc);
 	strcpy(dest, "application/x-unknown");
 }
 
@@ -1111,6 +1115,7 @@ get_mimetype (Camera *camera, CameraFile *file, uint16_t vendor_code)
 		if (!strcmp(mimetype,object_formats[i].txt))
 			return (object_formats[i].format_code);
 	}
+	gp_log (GP_LOG_DEBUG, "ptp2/strcpymimetype", "Failed to find mime type for %s\n", mimetype);
 	return (PTP_OFC_Undefined);
 }
 
