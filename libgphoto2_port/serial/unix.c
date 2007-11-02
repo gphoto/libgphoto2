@@ -76,6 +76,10 @@
 #  include <lockdev.h>
 #endif
 
+#ifndef O_NDELAY
+# define O_NDELAY 0
+#endif
+
 #include <gphoto2/gphoto2-port-result.h>
 #include <gphoto2/gphoto2-port-log.h>
 #include <gphoto2/gphoto2-port.h>
