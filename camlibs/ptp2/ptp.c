@@ -3005,6 +3005,13 @@ ptp_free_objectpropdesc(PTPObjectPropDesc* opd)
 			free (opd->FORM.Enum.SupportedValue);
 		}
 		break;
+	case PTP_OPFF_DateTime:
+	case PTP_OPFF_FixedLengthArray:
+	case PTP_OPFF_RegularExpression:
+	case PTP_OPFF_ByteArray:
+	case PTP_OPFF_LongString:
+		/* Ignore these presently, we cannot unpack them, so there is nothing to be freed. */
+		break;
 	default:
 		fprintf (stderr, "Unknown OPFF type %d\n", opd->FormFlag);
 		break;

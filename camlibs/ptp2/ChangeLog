@@ -1,3 +1,8 @@
+2007-11-06  Linus Walleij  <triad@df.lth.se>
+
+	* ptp.c: Do not print to stderr on not yet supported
+	  OPFF types.
+
 2007-10-31  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: also check for audio/x-wma and audio/x-wmv
