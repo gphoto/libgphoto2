@@ -1,6 +1,6 @@
 MARS MR97310 STILLCAM DRIVER
 Copyright Theodore Kilgore <kilgota@auburn.edu> April, 2004. Latest revision
-of this README October 21, 2007.
+of this README November 12, 2007.
 
 (Everything in libgphoto2/camlibs/mars is LGPL-licensed, including this README; 
 see any of the source files for a more complete statement of the license.)
@@ -33,6 +33,9 @@ Update 08/28/06: Decompression algorithm much improved, after much trial
 and error. I would say it is somewhere between 90% to 100% good now. Seems to
 work almost perfectly outdoors and in strong light. Works even better at low 
 resolution settings, that is, 352x288 or lower. 
+
+Update 11/12/07: Decompression algorithm greatly improved. I would now rate it
+as at least 99% good. Seems now to give very good images even in bad light. 
 
 The camera uses a configuration "block," as do the sq905 cameras. However, 
 here the information can be used to run options such as gphoto2 -p 3 and 

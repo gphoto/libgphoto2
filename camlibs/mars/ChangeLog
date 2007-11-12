@@ -1,3 +1,8 @@
+2007-11-12  Theodore Kilgore <kilgota@auburn.edu>
+	* mars.c: Change to the computation of the predictor during 
+		  decompression and changes in the Huffman table 
+		  computation give better decompression. 
+
 2007-10-21  Theodore Kilgore <kilgota@auburn.edu>
 	* library.c: Added Vivitar Mini Digital Camera 
 	* README.mars: Description of new camera added. 

@@ -187,19 +187,19 @@ static void precalc_table(code_table_t *table)
     			len = 3;
 		}else if ((i & 0xF0) == 0x80) {
     			/* code 1000 */
-    			val = +7;
+    			val = +8;
     			len = 4;
 		}else if ((i & 0xF0) == 0x90) {
     			/* code 1001 */
-    			val = -7;
+    			val = -8;
     			len = 4;
 		}else if ((i & 0xF0) == 0xF0) {
     			/* code 1111 */
-    			val = -15;
+    			val = -20;
     			len = 4;
 		}else if ((i & 0xF8) == 0xE0) {
     			/* code 11100 */
-    			val = +15;
+    			val = +20;
     			len = 5;
 		}else if ((i & 0xF8) == 0xE8) {
     			/* code 11101xxxxx */
@@ -227,7 +227,7 @@ int mars_decompress (unsigned char *inp, unsigned char *outp, int width,
 	code_table_t table[256];
 	unsigned char *addr;
 	int bitpos;
-	unsigned char lp,tp,tlp,trp;
+	unsigned char lp=0,tp=0,tlp=0,trp=0;
 	/* First calculate the Huffman table */
 	precalc_table(table);
 
@@ -270,7 +270,8 @@ int mars_decompress (unsigned char *inp, unsigned char *outp, int width,
     				if (row > 1) {
         				tlp = outp[-2*width-2];
         				tp  = outp[-2*width];
-        				trp = outp[-2*width+2];
+        				if (col < width-2)
+        					trp = outp[-2*width+2];
     				}
     				if (row < 2) {
         				/* top row: relative to left pixel */
@@ -278,14 +279,16 @@ int mars_decompress (unsigned char *inp, unsigned char *outp, int width,
     				}else if (col < 2) {
         				/* left column: relative to top pixel */
         				/* initial estimate */
-        				val += (2*tp + 2*trp +1)/4; 
+        				val += (tp + trp)/2; 
     				}else if (col > width - 3) {
         				/* left column: relative to top pixel */
-        				val += (2*tp + 2*tlp +1)/4;
+        				val += (tp + lp + tlp +1)/3;
 					/* main area: average of left and top pixel */
     				}else {
         				/* initial estimate for predictor */
-					val += (2*lp + tp + trp + 1)/4;
+					tlp>>=1;
+					trp>>=1;
+					val += (lp + tp + tlp + trp +1)/3;
     				}
     			}
     			/* store pixel */
