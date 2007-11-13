@@ -46,15 +46,16 @@
   { "Creative", 0x041e, "ZEN Touch (MTP mode)", 0x4131, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
   { "Dell", 0x041e, "Dell Pocket DJ (MTP mode)", 0x4132, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
   { "Creative", 0x041e, "ZEN Sleek (MTP mode)", 0x4137, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
-  { "Creative", 0x041e, "ZEN MicroPhoto", 0x413c, DEVICE_FLAG_NONE },
-  { "Creative", 0x041e, "ZEN Sleek Photo", 0x413d, DEVICE_FLAG_NONE },
-  { "Creative", 0x041e, "ZEN Vision:M", 0x413e, DEVICE_FLAG_NO_RELEASE_INTERFACE },
+  { "Creative", 0x041e, "ZEN MicroPhoto", 0x413c, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
+  { "Creative", 0x041e, "ZEN Sleek Photo", 0x413d, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
+  { "Creative", 0x041e, "ZEN Vision:M", 0x413e, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
   // Reported by marazm@o2.pl
-  { "Creative", 0x041e, "ZEN V", 0x4150, DEVICE_FLAG_NONE },
+  { "Creative", 0x041e, "ZEN V", 0x4150, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
   // Reported by danielw@iinet.net.au
   // This version of the Vision:M needs the no release interface flag,
   // unclear whether the other version above need it too or not.
-  { "Creative", 0x041e, "ZEN Vision:M (DVP-HD0004)", 0x4151, DEVICE_FLAG_NO_RELEASE_INTERFACE },
+  { "Creative", 0x041e, "ZEN Vision:M (DVP-HD0004)", 0x4151, 
+      DEVICE_FLAG_NO_RELEASE_INTERFACE | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL},
   // Reported by Darel on the XNJB forums
   { "Creative", 0x041e, "ZEN V Plus", 0x4152, DEVICE_FLAG_NONE },
   { "Creative", 0x041e, "ZEN Vision W", 0x4153, DEVICE_FLAG_NONE },
@@ -97,6 +98,10 @@
   { "Samsung", 0x04e8, "YP-T9", 0x507f, DEVICE_FLAG_NONE },
   // From Paul Clinch
   { "Samsung", 0x04e8, "YP-K3", 0x5081, DEVICE_FLAG_NONE },
+  // From XNJB user
+  { "Samsung", 0x04e8, "YP-P2", 0x5083, DEVICE_FLAG_NONE },
+  // From Paul Clinch
+  { "Samsung", 0x04e8, "YP-T10", 0x508a, DEVICE_FLAG_NONE },
   // From a rouge .INF file,
   // this device ID seems to have been recycled for the Samsung SGH-A707 Cingular cellphone
   { "Samsung", 0x04e8, "YH-999 Portable Media Center / SGH-A707", 0x5a0f, DEVICE_FLAG_NONE },
@@ -104,6 +109,8 @@
   { "Samsung", 0x04e8, "X830 Mobile Phone", 0x6702, DEVICE_FLAG_NONE },
   // From James <jamestech@gmail.com>
   { "Samsung", 0x04e8, "U600 Mobile Phone", 0x6709, DEVICE_FLAG_UNLOAD_DRIVER },
+  // From Charlie Todd  2007-10-31
+  { "Samsung", 0x04e8, "Juke (SCH-U470)", 0x6734, DEVICE_FLAG_UNLOAD_DRIVER},
 
   /*
    * Intel
@@ -137,7 +144,7 @@
   // From libgphoto2 source
   { "Philips", 0x0471, "HDD6320", 0x01eb, DEVICE_FLAG_NONE },
   // From Detlef Meier <dm@emlix.com>
-  { "Philips", 0x0471, "SA6045", 0x084e, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "Philips", 0x0471, "SA6014/SA6015/SA6024/SA6025/SA6044/SA6045", 0x084e, DEVICE_FLAG_UNLOAD_DRIVER },
   // from XNJB user
   { "Philips", 0x0471, "PSA235", 0x7e01, DEVICE_FLAG_NONE },
 
@@ -279,6 +286,8 @@
   { "Toshiba", 0x0930, "Gigabeat S", 0x0010, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
   // Reported by Rob Brown
   { "Toshiba", 0x0930, "Gigabeat P10", 0x0011, DEVICE_FLAG_NONE },
+  // Reported by solanum@users.sourceforge.net
+  { "Toshiba", 0x0930, "Gigabeat V30", 0x0014, DEVICE_FLAG_NONE },
   // Reported by Michael Davis <slithy@yahoo.com>
   { "Toshiba", 0x0930, "Gigabeat U", 0x0016, DEVICE_FLAG_NONE },
   
@@ -338,8 +347,11 @@
   { "Nokia", 0x0421, "N73 Mobile Phone", 0x04d1, DEVICE_FLAG_UNLOAD_DRIVER },
   // From Swapan <swapan@yahoo.com>
   { "Nokia", 0x0421, "N75 Mobile Phone", 0x04e1, DEVICE_FLAG_NONE },
+  // From Anonymous Sourceforge User
+  { "Nokia", 0x0421, "N95 Mobile Phone", 0x04ef, DEVICE_FLAG_NONE },
   // From: Pat Nicholls <pat@patandannie.co.uk>
   { "Nokia", 0x0421, "N80 Internet Edition (Media Player)", 0x04f1, DEVICE_FLAG_UNLOAD_DRIVER },
+
 
   /*
    * LOGIK
@@ -376,9 +388,12 @@
    * unload the attached drivers here.
    */
   // Reported by Stefan Voss <svoss@web.de>
-  { "TrekStor", 0x066f, "Vibez 8/12GB", 0x842a, DEVICE_FLAG_UNLOAD_DRIVER },
+  // This is a Sigmatel SoC with a hard disk.
+  { "TrekStor", 0x066f, "Vibez 8/12GB", 0x842a, 
+      DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by Cristi Magherusan <majeru@gentoo.ro>
-  { "TrekStor", 0x0402, "Vibez i.Beat sweez FM", 0x0611, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "TrekStor", 0x0402, "i.Beat Sweez FM", 0x0611, 
+      DEVICE_FLAG_UNLOAD_DRIVER },
   
   /*
    * Disney (have had no reports of this actually working.)
@@ -421,6 +436,8 @@
   /*
    * SonyEricsson
    */
+  // Reported by Øyvind Stegard <stegaro@users.sourceforge.net>
+  { "SonyEricsson", 0x0fce, "K850i", 0x0075, DEVICE_FLAG_NONE },
   // Reported by Michael Eriksson
   { "SonyEricsson", 0x0fce, "W910", 0x0076, DEVICE_FLAG_NONE },
 
