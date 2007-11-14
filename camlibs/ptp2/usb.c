@@ -24,6 +24,7 @@
 #include <config.h>
 #include "ptp.h"
 #include "ptp-private.h"
+#include "ptp-bugs.h"
 
 #include <stdlib.h>
 #include <stdarg.h>
@@ -270,8 +271,21 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 			break;
 		}
 		if (dtoh16(usbdata.code)!=ptp->Code) {
-			ret = dtoh16(usbdata.code);
-			break;
+			/* A creative Zen device breaks down here, by leaving out
+			 * Code and Transaction ID */
+			if (MTP_ZEN_BROKEN_HEADER(camera->pl)) {
+				gp_log (GP_LOG_DEBUG, "ptp2/ptp_usb_getdata", "Read broken PTP header (Code is %04x vs %04x), compensating.",
+					dtoh16(usbdata.code), ptp->Code
+				);
+				usbdata.code = dtoh16(ptp->Code);
+				usbdata.trans_id = htod32(ptp->Transaction_ID);
+			} else {
+				gp_log (GP_LOG_ERROR, "ptp2/ptp_usb_getdata", "Read broken PTP header (Code is %04x vs %04x).",
+					dtoh16(usbdata.code), ptp->Code
+				);
+				ret = PTP_ERROR_IO;
+				break;
+			}
 		}
 		if (usbdata.length == 0xffffffffU) {
 			unsigned char	*data = malloc (PTP_USB_BULK_HS_MAX_PACKET_LEN_READ);

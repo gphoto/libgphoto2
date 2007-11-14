@@ -4365,7 +4365,8 @@ camera_init (Camera *camera, GPContext *context)
 
 		if (!(mtp_models[i].flags & DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL))
 			camera->pl->bugs |= PTP_MTP_PROPLIST_WORKS;
-
+		if (mtp_models[i].flags & DEVICE_FLAG_IGNORE_HEADER_ERRORS)
+			camera->pl->bugs |= PTP_MTP_ZEN_BROKEN_HEADER;
                 break;
             }
         }
