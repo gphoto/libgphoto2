@@ -433,7 +433,7 @@ u_long F1finfo(GPPort *port,char *name)
   return(flen);
 }
 
-long F1getdata(GPPort*port,char *name, u_char *data, int verbose)
+long F1getdata(GPPort*port,char *name, u_char *data)
 {
   long filelen;
   long total = 0;
@@ -456,15 +456,8 @@ long F1getdata(GPPort*port,char *name, u_char *data, int verbose)
     }
     p = p + len;
     total = total + len;
-    if(verbose){
-      fprintf(stderr, "%6ld/", total);
-      fprintf(stderr, "%6ld", filelen);
-      fprintf(stderr, "\b\b\b\b\b\b\b\b\b\b\b\b\b");
-    }
   }
   F1fclose(port);
-  if(verbose)
-    fprintf(stderr, "\n");
   return(total);
 }
 

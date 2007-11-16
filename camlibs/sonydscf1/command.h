@@ -4,7 +4,7 @@
 #include "common.h"
 
 int     F1ok (GPPort*);
-long F1getdata (GPPort*,char *, u_char *, int);
+long F1getdata (GPPort*,char *, u_char *);
 int	F1status (GPPort*,int);
 char	F1newstatus (GPPort *port, int, char *);
 int	F1howmany (GPPort *);

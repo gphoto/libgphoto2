@@ -153,7 +153,7 @@ get_picture_information(GPPort *port,int *pmx_num, int outit)
 
   strcpy(name, "/PIC_CAM/PIC00000/PIC_INF.PMF");
   F1ok(port);
-  len = F1getdata(port, name, buf, 0);
+  len = F1getdata(port, name, buf);
 
   n = buf[26] * 256 + buf[27]; /* how many files */
   *pmx_num = buf[31];  /* ??? */
