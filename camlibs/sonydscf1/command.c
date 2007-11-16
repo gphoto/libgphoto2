@@ -42,17 +42,16 @@ static void wbyte(GPPort *port,u_char c)
   }
 }
 
-static u_char rbyte(GPPort *port)
+static u_char rbyte(GPPort *port, u_char *c)
 {
-  u_char        c[2];
-  /* if (readtty(F1fd, &c, 1) < 0) { */
-  if (gp_port_read(port,c, 1) <0) {
-    perror("rbtyte");
-    /* Exit(1); */
-  }
-  dprintf((stderr, "< %02x\n", c));
+  int 		ret;
 
-  return c[0];
+  if ((ret=gp_port_read(port,c, 1)) <0) {
+    gp_log(GP_LOG_ERROR,"dscf1/rbyte","failed read of 1 byte, %d",ret); 
+    return ret;
+  }
+  dprintf((stderr, "< %02x\n", *c));
+  return GP_OK;
 }
 
 static void
@@ -112,17 +111,17 @@ static int recvdata(GPPort *port, u_char *p, int len)
   int sum;
   int i;
 
-  s = rbyte(port);  /* BOFL */
-  t= rbyte(port);  /* recvaddr */
+  rbyte(port, &s);  /* BOFL */
+  rbyte(port, &t);  /* recvaddr */
 #ifdef DEBUG
   fprintf(stderr,"BOFL %02x ", s);
   fprintf(stderr,"Raddr %02x %02x \n", t, recvaddr[address]);
 #endif
 
   if(t != recvaddr[address]){
-    s = rbyte(port);  /* drain */
-    s = rbyte(port);  /* drain */
-    s = rbyte(port);  /* drain */
+    rbyte(port, &s);  /* drain */
+    rbyte(port, &s);  /* drain */
+    rbyte(port, &s);  /* drain */
 #ifdef DEBUG
     fprintf(stderr," abort \n");
 #endif
@@ -131,11 +130,11 @@ static int recvdata(GPPort *port, u_char *p, int len)
   }
   i = len;
   sum = (int) t;
-  while ((s = rbyte(port)) != EOFRAME){
+  while ((GP_OK == rbyte(port, &s)) && (s != EOFRAME)) {
     sum = sum + s;
     if(i > 0){
       if(s == CESCAPE){
-        s = rbyte(port);
+        rbyte(port, &s);
         if(0x20 & s)
           s = 0xDF & s;
         else
@@ -282,7 +281,7 @@ int F1fopen(GPPort *port, char *name)
   buf[1] = 0x0A;
   buf[2] = 0x00;
   buf[3] = 0x00;
-  snprintf(&buf[4], sizeof(name), "%s", name);
+  snprintf(&buf[4], sizeof(buf)-4, "%s", name);
   len = strlen(name) + 5;
   sendcommand(port,buf, len);
   recvdata(port, buf, 6);
@@ -345,13 +344,13 @@ long F1fread(GPPort *port, u_char *data, long len)
 
   len2 = buf[7] * 0x100 + buf[8]; /* data size */
   if(len2 == 0) {
-    s = rbyte(port); /* last block checksum */
-    s = rbyte(port); /* last block EOFL */
+    rbyte(port, &s); /* last block checksum */
+    rbyte(port, &s); /* last block EOFL */
     return(0);
   }
-  while((s = rbyte(port)) != EOFRAME){
+  while((GP_OK== rbyte(port, &s)) && (s != EOFRAME)){
     if(s == CESCAPE){
-      s = rbyte(port);
+      rbyte(port, &s);
       if(0x20 & s)
         s = 0xDF & s;
       else
@@ -457,7 +456,7 @@ u_long F1finfo(GPPort *port,char *name)
 
   buf[0] = 0x02;
   buf[1] = 0x0F;
-  snprintf(&buf[2], sizeof(name), "%s", name);
+  snprintf(&buf[2], sizeof(buf)-2, "%s", name);
   len = strlen(name) + 3;
 
   sendcommand(port,buf, len);
