@@ -3,20 +3,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
-#if HAVE_UNISTD_H
 #include <unistd.h>
-#endif
 
 #include <gphoto2/gphoto2.h>
 
 #include "command.h"
 #include "common.h"
-
-#ifdef DEBUG
-#define dprintf(x) printf x
-#else
-#define dprintf(x)
-#endif
 
 static u_char address = 0;
 static const u_char sendaddr[8] = { 0x00, 0x22, 0x44, 0x66, 0x88, 0xaa, 0xcc, 0xee };
@@ -32,12 +24,11 @@ static const u_char EOFRAME = 0xC1;
 
 static int F1reset(GPPort *port);
 
-static void wbyte(GPPort *port,u_char c)
+static int
+wbyte(GPPort *port,u_char c)
 {
   u_char temp = c;
-  if( gp_port_write(port, (char*)&temp, 1) <0) {
-    perror("wbyte");
-  }
+  return gp_port_write(port, (char*)&temp, 1);
 }
 
 static u_char

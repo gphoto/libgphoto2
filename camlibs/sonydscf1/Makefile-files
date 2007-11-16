@@ -4,8 +4,7 @@ camlibdoc_DATA += sonydscf1/README.sonydscf1
 EXTRA_LTLIBRARIES += sony_dscf1.la
 
 sony_dscf1_la_SOURCES = \
-	sonydscf1/command.c sonydscf1/chotplay.c \
-	sonydscf1/command.h sonydscf1/chotplay.h \
+	sonydscf1/command.c sonydscf1/command.h \
 	sonydscf1/sonydscf1.c \
 	sonydscf1/pmp.h sonydscf1/common.h
 sony_dscf1_la_LDFLAGS = $(camlib_ldflags)
