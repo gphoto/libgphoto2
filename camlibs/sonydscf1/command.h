@@ -3,10 +3,6 @@
 
 #include "common.h"
 
-void	F1setfd (GPPort*,int);
-int	F1getfd  (GPPort*);
-int	F1reset (GPPort*);
-u_char checksum(u_char addr, u_char *cp, int len);
 int     F1ok (GPPort*);
 long F1getdata (GPPort*,char *, u_char *, int);
 int	F1status (GPPort*,int);
@@ -20,6 +16,4 @@ u_long     F1finfo (GPPort *,char *);
 int	F1fclose (GPPort *);
 
 int	F1deletepicture (GPPort*,int);
-int F1ffs (GPPort*);
-
 #endif /* __COMMAND_H__ */

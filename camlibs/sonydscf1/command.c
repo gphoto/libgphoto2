@@ -30,6 +30,8 @@ static int hour, minutes;
 static const u_char BOFRAME = 0xC0;
 static const u_char EOFRAME = 0xC1;
 
+static int F1reset(GPPort *port);
+
 static void wbyte(GPPort *port,u_char c)
 {
   u_char temp = c;
@@ -38,7 +40,8 @@ static void wbyte(GPPort *port,u_char c)
   }
 }
 
-u_char checksum(u_char addr, u_char *cp, int len)
+static u_char
+checksum(u_char addr, u_char *cp, int len)
 {
   int ret = addr;
   while(len --)
@@ -46,7 +49,8 @@ u_char checksum(u_char addr, u_char *cp, int len)
   return(0x100 -(ret & 0xff) );
 }
 
-static void sendcommand(GPPort *port,u_char *p, int len)
+static void
+sendcommand(GPPort *port,u_char *p, int len)
 {
   wbyte(port,BOFRAME);
   wbyte(port,sendaddr[address]);
@@ -57,7 +61,8 @@ static void sendcommand(GPPort *port,u_char *p, int len)
   if(address >7 ) address = 0;
 }
 
-static void Abort(GPPort *port)
+static void
+Abort(GPPort *port)
 {
   u_char buf[4];
   buf[0] = BOFRAME;
@@ -517,7 +522,8 @@ int F1ok(GPPort*port)
   return 0;                     /*ng*/
 }
 
-int F1reset(GPPort *port)
+static int
+F1reset(GPPort *port)
 {
   u_char buf[3];
   gp_log (GP_LOG_DEBUG, "F1reset", "Resetting camera...");
