@@ -2534,11 +2534,16 @@ ptp_mtp_render_metadata (
 	uint32_t propcnt = 0;
 	int j;
 
+	/* ... use little helper call to see if we missed anything in the global
+	 * retrieval. */
+	ret = ptp_mtp_getobjectpropssupported (params, ofc, &propcnt, &props);
+	if (ret != PTP_RC_OK) return (GP_ERROR);
+	
 	if (params->props) { /* use the fast method, without device access since cached.*/
 		char			propname[256];
 		char			text[256];
 		int 			i, j, n;
-	
+
 		for (j=0;j<params->nrofprops;j++) {
 			MTPProperties		*xpl = &params->props[j];
 
@@ -2549,6 +2554,13 @@ ptp_mtp_render_metadata (
 					break;
 			if (i != -1) /* Is uninteresting. */
 				continue;
+			for(i=0;i<propcnt;i++) {
+				/* Mark handled property as 0 */
+				if (props[i] == xpl->property) {
+					props[i]=0;
+					break;
+				}
+			}
 
 			n = ptp_render_mtp_propname(xpl->property, sizeof(propname), propname);
 			gp_file_append (file, "<", 1);
@@ -2585,17 +2597,16 @@ ptp_mtp_render_metadata (
 			gp_file_append (file, propname, n);
 			gp_file_append (file, ">\n", 2);
 		}
-		return (GP_OK);
+		/* fallthrough */
 	}
-
-	ret = ptp_mtp_getobjectpropssupported (params, ofc, &propcnt, &props);
-	if (ret != PTP_RC_OK) return (GP_ERROR);
 
 	for (j=0;j<propcnt;j++) {
 		char			propname[256];
 		char			text[256];
 		PTPObjectPropDesc	opd;
 		int 			i, n;
+
+		if (!props[j]) continue; /* handle above */
 
 		for (i=sizeof(uninteresting_props)/sizeof(uninteresting_props[0]);i--;)
 			if (uninteresting_props[i] == props[j])
@@ -4142,7 +4153,7 @@ camera_init (Camera *camera, GPContext *context)
                 (a.usb_product == mtp_models[i].usb_product)){
                 	camera->pl->bugs = PTP_MTP;
 
-		if (!(mtp_models[i].flags & DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL))
+		/*if (!(mtp_models[i].flags & DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL))*/
 			camera->pl->bugs |= PTP_MTP_PROPLIST_WORKS;
 		if (mtp_models[i].flags & DEVICE_FLAG_IGNORE_HEADER_ERRORS)
 			camera->pl->bugs |= PTP_MTP_ZEN_BROKEN_HEADER;
