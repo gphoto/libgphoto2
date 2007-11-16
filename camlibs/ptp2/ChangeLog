@@ -1,3 +1,8 @@
+2007-11-16  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* library.c: Made metadata reading more intelligent, 
+	  and fall back to lowlevel methods if necessary.
+
 2007-11-14  Marcus Meissner  <marcus@jet.franken.de>
 
 	* usb.c, ptp-bugs.h, library.c: Handle Creative Zen 8GB broken

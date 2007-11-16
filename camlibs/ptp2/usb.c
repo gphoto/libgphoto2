@@ -427,9 +427,10 @@ retry:
 uint16_t
 ptp_usb_getresp (PTPParams* params, PTPContainer* resp)
 {
-	uint16_t ret;
-	unsigned long rlen;
-	PTPUSBBulkContainer usbresp;
+	uint16_t 		ret;
+	unsigned long		rlen;
+	Camera			*camera = ((PTPData *)params->data)->camera;
+	PTPUSBBulkContainer	usbresp;
 	/*GPContext		*context = ((PTPData *)params->data)->context;*/
 
 	gp_log (GP_LOG_DEBUG, "ptp2/ptp_usb_getresp", "reading response");
@@ -454,6 +455,16 @@ ptp_usb_getresp (PTPParams* params, PTPContainer* resp)
 	resp->Code=dtoh16(usbresp.code);
 	resp->SessionID=params->session_id;
 	resp->Transaction_ID=dtoh32(usbresp.trans_id);
+	if (resp->Transaction_ID != params->transaction_id - 1) {
+		if (MTP_ZEN_BROKEN_HEADER(camera->pl)) {
+			gp_log (GP_LOG_DEBUG, "ptp2/ptp_usb_getresp", "Read broken PTP header (transid is %08x vs %08x), compensating.",
+				resp->Transaction_ID, params->transaction_id - 1
+			);
+			resp->Transaction_ID=params->transaction_id-1;
+		}
+		/* else will be handled by ptp.c as error. */
+	}
+
 	resp->Param1=dtoh32(usbresp.payload.params.param1);
 	resp->Param2=dtoh32(usbresp.payload.params.param2);
 	resp->Param3=dtoh32(usbresp.payload.params.param3);
