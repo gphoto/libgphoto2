@@ -462,49 +462,25 @@ retry:
    return(len);
 }
 
-static int
-delete_picture(GPPort *port, int n, int all_pic_num) {
-	if (all_pic_num < n) {
-		gp_log (GP_LOG_ERROR, "delete_picture", "picture number %d is too large. %d",n,all_pic_num);
-		return GP_ERROR;
-	}
-
-	if(picture_protect[n-1] != 0x00){
-		gp_log (GP_LOG_DEBUG, "delete_picture", "picture %d is protected.", n);
-		return GP_ERROR;
-	}
-	return F1deletepicture(port, picture_index[n]);
-}
-
 int camera_id (CameraText *id) {
-
         strcpy(id->text, "sonydscf1-bvl");
-
         return (GP_OK);
 }
 
 int camera_abilities (CameraAbilitiesList *list) {
-
-        /* *count = 1; */
         CameraAbilities a;
 
-        /* Fill in each camera model's abilities */
-        /* Make separate entries for each conneciton type (usb, serial, etc...)
-           if a camera supported multiple ways. */
 	memset (&a, 0, sizeof(a));
         strcpy(a.model, "Sony:DSC-F1");
 	a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
-        a.port=GP_PORT_SERIAL;
+        a.port	= GP_PORT_SERIAL;
         a.speed[0] = 9600;
         a.speed[1] = 19200;
         a.speed[2] = 38400;
         a.operations        =  GP_OPERATION_NONE;
-        a.file_operations   =  GP_FILE_OPERATION_DELETE |
-                                GP_FILE_OPERATION_PREVIEW;
+        a.file_operations   =  GP_FILE_OPERATION_DELETE;
         a.folder_operations =  GP_FOLDER_OPERATION_NONE;
-        gp_abilities_list_append(list, a);
-
-        return (GP_OK);
+        return gp_abilities_list_append(list, a);
 }
 
 static int camera_exit (Camera *camera, GPContext *context) {
@@ -558,18 +534,23 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	     GPContext *context)
 {
 	Camera *camera = data;
-        int max, num;
+	int max, num;
 
-        num = gp_filesystem_number(camera->fs, "/", filename, context);
+	gp_log (GP_LOG_DEBUG, "sonydscf1/delete_file_func", "%s / %s", folder, filename);
+	num = gp_filesystem_number(camera->fs, "/", filename, context);
 	if (num<GP_OK)
-	   return num;
-        max = gp_filesystem_count(camera->fs,folder, context);
+		return num;
+	max = gp_filesystem_count(camera->fs,folder, context);
 	if (max<GP_OK)
-	   return max;
-        gp_log (GP_LOG_DEBUG, "sonydscf1", "file delete: %d",num);
-        if(!F1ok(camera->port))
-           return (GP_ERROR);
-        return delete_picture(camera->port,num,max);
+		return max;
+	gp_log (GP_LOG_DEBUG, "sonydscf1/delete_file_func", "file nr %d", num);
+	if(!F1ok(camera->port))
+		return GP_ERROR;
+	if(picture_protect[num] != 0x00){
+		gp_log (GP_LOG_ERROR, "sonydscf1/delete_file_func", "picture %d is protected.", num);
+		return GP_ERROR;
+	}
+	return F1deletepicture(camera->port, picture_index[num]);
 }
 
 static int
