@@ -14,7 +14,6 @@
 #include "chotplay.h"
 #include "common.h"
 #include "command.h"
-#include "getuint.h"
 #include "pmp.h"
 
 #define MAX_PICTURE_NUM 200
@@ -77,7 +76,7 @@ make_jpeg_comment(u_char *buf, u_char *jpeg_comment)
   }
 
   /* shutter speed */
-  shutter = (int)get_u_short(buf+PMP_SPEED);
+  shutter = (buf[PMP_SPEED]<<8)|buf[PMP_SPEED+1];
 
   i = 0;
   while (1) {
