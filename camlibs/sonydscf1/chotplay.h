@@ -4,4 +4,4 @@ long get_thumbnail(GPPort*,char *name, char **data, int format, int verbose, int
 void get_date_info (GPPort*,char *, char * ,char *);
 long get_picture (GPPort*,int, char **, int, int, int);
 void get_all_pictures (GPPort*,int, int, char *, int, int);
-void delete_picture (GPPort*,int, int);
+int delete_picture (GPPort*,int, int);

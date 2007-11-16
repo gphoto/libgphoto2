@@ -4,29 +4,12 @@
 #include <errno.h>
 #include <gphoto2/gphoto2.h>
 
-#define BINARYFILEMODE
-
-#ifdef BINARYFILEMODE
-#include <fcntl.h>  /* for setmode() */
-#endif
-
 #include <stdlib.h>
-#include <time.h>
 
 #if HAVE_UNISTD_H
 # include <sys/types.h>
 # include <unistd.h>
 #endif
-
-#if HAVE_SYS_PARAM_H
-# include <sys/param.h>
-#else
-# ifndef MAXPATHLEN
-#  define MAXPATHLEN 256
-# endif
-#endif
-
-#include <termios.h>
 
 #include "chotplay.h"
 #include "common.h"
@@ -36,36 +19,16 @@
 
 #define MAX_PICTURE_NUM 200
 
-u_char picture_index[MAX_PICTURE_NUM];
-u_short picture_thumbnail_index[MAX_PICTURE_NUM];
-u_char picture_protect[MAX_PICTURE_NUM];
-u_char picture_rotate[MAX_PICTURE_NUM];
+static u_char picture_index[MAX_PICTURE_NUM];
+static u_short picture_thumbnail_index[MAX_PICTURE_NUM];
+static u_char picture_protect[MAX_PICTURE_NUM];
+static u_char picture_rotate[MAX_PICTURE_NUM];
 
-#ifdef BINARYFILEMODE
-#define WMODE "wb"
-#define RMODE "rb"
-#else
-#define WMODE "w"
-#define RMODE "r"
-#endif
-extern int      optind, opterr;
-extern char     *optarg;
 static int      verbose = 0;
 static  int     errflg = 0;
 
-#if 0
-void Exit(code)
-     int code;
-{
-  if (!(F1getfd() < 0)){
-    F1reset();
-    closetty(F1getfd());
-  }
-  exit(code);
-}
-#endif
-
-static int make_jpeg_comment(u_char *buf, u_char *jpeg_comment)
+static int
+make_jpeg_comment(u_char *buf, u_char *jpeg_comment)
 {
   int i, cur = 0;
   int reso, shutter;
@@ -180,7 +143,7 @@ int get_picture_information(GPPort *port,int *pmx_num, int outit)
   int j, k;
   char *buf = (char *) &buforg;
 
-  sprintf(name, "/PIC_CAM/PIC00000/PIC_INF.PMF");
+  strcpy(name, "/PIC_CAM/PIC00000/PIC_INF.PMF");
   F1ok(port);
   len = F1getdata(port, name, buf, 0);
 
@@ -509,21 +472,16 @@ retry:
    return(len);
 }
 
-void delete_picture(GPPort *port, int n, int all_pic_num)
-{
-  if (all_pic_num < n) {
-    fprintf(stderr, "picture number %d is too large. %d\n",all_pic_num,n);
-    errflg ++;
-    return;
-  }
+int
+delete_picture(GPPort *port, int n, int all_pic_num) {
+	if (all_pic_num < n) {
+		gp_log (GP_LOG_ERROR, "delete_picture", "picture number %d is too large. %d",n,all_pic_num);
+		return GP_ERROR;
+	}
 
-  if(picture_protect[n -1] != 0x00){
-    fprintf(stderr, "picture %d is protected.\n", n);
-    errflg ++;
-    return;
-  }
-
-  if (F1deletepicture(port, picture_index[n]) < 0)
-    errflg ++;
+	if(picture_protect[n-1] != 0x00){
+		gp_log (GP_LOG_DEBUG, "delete_picture", "picture %d is protected.", n);
+		return GP_ERROR;
+	}
+	return F1deletepicture(port, picture_index[n]);
 }
-

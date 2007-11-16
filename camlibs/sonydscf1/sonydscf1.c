@@ -68,7 +68,9 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
         int num;
 	long int size;
 	char *data = NULL;
-        printf("folder: %s, file: %s\n", folder, filename);
+
+        gp_log (GP_LOG_DEBUG, "sonyf1/get_file_func","folder: %s, file: %s", folder, filename);
+
         if(!F1ok(camera->port))
            return (GP_ERROR);
 
@@ -97,9 +99,10 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
         return GP_OK;
 }
 
-static int delete_file_func (CameraFilesystem *fs, const char *folder,
-			     const char *filename, void *data,
-			     GPContext *context)
+static int
+delete_file_func (CameraFilesystem *fs, const char *folder,
+	     const char *filename, void *data,
+	     GPContext *context)
 {
 	Camera *camera = data;
         int max, num;
@@ -113,15 +116,14 @@ static int delete_file_func (CameraFilesystem *fs, const char *folder,
         gp_log (GP_LOG_DEBUG, "sonydscf1", "file delete: %d",num);
         if(!F1ok(camera->port))
            return (GP_ERROR);
-        delete_picture(camera->port,num,max);
-        return(GP_OK);
-        /*return (F1deletepicture(file_number));*/
+        return delete_picture(camera->port,num,max);
 }
 
-static int camera_summary (Camera *camera, CameraText *summary, GPContext *context)
+static int
+camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
-        /*printf("->camera summary");*/
         int i;
+
         if(!F1ok(camera->port))
            return (GP_ERROR);
         get_picture_information(camera->port,&i,2);
