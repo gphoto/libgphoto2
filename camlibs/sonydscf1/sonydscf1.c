@@ -27,12 +27,10 @@
 
 #define MAX_PICTURE_NUM 200
 
-static u_char picture_index[MAX_PICTURE_NUM];
+static u_char  picture_index[MAX_PICTURE_NUM];
 static u_short picture_thumbnail_index[MAX_PICTURE_NUM];
-static u_char picture_protect[MAX_PICTURE_NUM];
-static u_char picture_rotate[MAX_PICTURE_NUM];
-
-static  int     errflg = 0;
+static u_char  picture_protect[MAX_PICTURE_NUM];
+static u_char  picture_rotate[MAX_PICTURE_NUM];
 
 static int
 make_jpeg_comment(u_char *buf, u_char *jpeg_comment)
@@ -209,57 +207,60 @@ get_picture_information(GPPort *port,int *pmx_num, int outit)
   return(n);
 }
 
-static long
-get_file(GPPort *port,char *name, char **data, int format)
+static int
+get_file(GPPort *port, char *name, CameraFile *file, int format, GPContext *context)
 {
   u_long filelen;
   u_long total = 0;
-  long len,memcpylen;
-  char *ptr = NULL;
+  long len,jpegcommentlen;
   u_char buf[0x400];
   u_char jpeg_comment[256];
+  int ret, id;
 
   F1ok(port);
   F1status(port,0);
 
   filelen = F1finfo(port,name);
   if(filelen == 0)
-    return(0);
+    return GP_ERROR;
 
   if(F1fopen(port,name) != 0)
-    return(0);
+    return GP_ERROR_IO;
 
   if(format != JPEG)
-    return(0);
+    return GP_ERROR;
 
   len = F1fread(port, buf, 126);
   if( len < 126){
     F1fclose(port);
-    return(0);
+    return GP_ERROR_IO_READ;
   }
-  memcpylen=make_jpeg_comment(buf, jpeg_comment);
-  ptr = malloc(memcpylen+filelen);
-  *data=ptr;
-  ptr = memcpy(ptr,jpeg_comment,memcpylen);
-  total = 126;
-  ptr +=memcpylen;
+  jpegcommentlen = make_jpeg_comment(buf, jpeg_comment);
+  ret = gp_file_append (file, jpeg_comment, jpegcommentlen);
+  if (ret < GP_OK) return ret;
 
+  total = 126;
+  id = gp_context_progress_start (context, filelen,
+                                    _("Downloading data..."));
+  ret = GP_OK;
   while((len = F1fread(port, buf, 0x0400)) != 0){
     if(len < 0)
-      return(0);
+      return GP_ERROR_IO_READ;
     total = total + len;
-/* gp_camera_progress(camera, ((float)total / (float)filelen)); */
-    memcpylen=len;
-    ptr = memcpy(ptr,buf,memcpylen);
-    ptr +=memcpylen;
-
+    gp_file_append (file, buf, len);
+    gp_context_progress_update (context, id, total);
+    if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL) {
+	ret = GP_ERROR_CANCEL;
+        break;
+    }
   }
+  gp_context_progress_stop (context, id);
   F1fclose(port);
-  return(total);
+  return ret;
 }
 
 static long
-get_thumbnail(GPPort *port,char *name, char **data, int format, int n)
+get_thumbnail(GPPort *port,char *name, CameraFile *file, int format, int n)
 {
   u_long filelen;
   u_long total = 0;
@@ -267,8 +268,7 @@ get_thumbnail(GPPort *port,char *name, char **data, int format, int n)
   int i;
   u_char buf[0x1000];
   u_char *p;
-  char *ptr;
-  /* printf("name %s,%d\n",name,n); */
+
   p = buf;
 
   F1ok(port);
@@ -276,10 +276,10 @@ get_thumbnail(GPPort *port,char *name, char **data, int format, int n)
 
   filelen = F1finfo(port,name);
   if(filelen == 0)
-    return(0);
+    return GP_ERROR_IO;
 
   if(F1fopen(port,name) != 0)
-    return(0);
+    return GP_ERROR_IO;
 
   for( i = 0 ; i < n ; i++)
     len = F1fseek(port, 0x1000, 1);
@@ -287,7 +287,7 @@ get_thumbnail(GPPort *port,char *name, char **data, int format, int n)
   while((len = F1fread(port, p, 0x0400)) != 0){
     if(len < 0){
       F1fclose(port);
-      return(0);
+      return GP_ERROR_IO_READ;
     }
     total = total + len;
     p = p + len;
@@ -299,12 +299,7 @@ get_thumbnail(GPPort *port,char *name, char **data, int format, int n)
   filelen = buf[12] * 0x1000000 + buf[13] * 0x10000 +
     buf[14] * 0x100 + buf[15];
 
-  ptr = malloc(filelen);
-  *data=ptr;
-  ptr = memcpy(ptr,&buf[256],filelen);
-
-  /* write_file(&buf[256], (int) filelen, fp); */
-  return(total);
+  return gp_file_append (file, &buf[256], filelen);
 }
 
 static void
@@ -390,21 +385,24 @@ get_date_info(GPPort *port, char *name, char *outfilename ,char *newfilename)
 
 }
 
-static long
-get_picture(GPPort *port, int n, char **data, int format, int ignore, int all_pic_num)
+static int
+get_picture(GPPort *port, int n, CameraFile *file, int format, int ignore, int all_pic_num,
+GPContext *context)
 {
   long  len;
   char name[64];
   char name2[64];
   int i;
 
+  fprintf(stderr,"all_pic_num 1 %d\n", all_pic_num);
   all_pic_num = get_picture_information(port,&i,0);
+  fprintf(stderr,"all_pic_num 2 %d\n", all_pic_num);
+
 
 retry:
 
   if (all_pic_num < n) {
     fprintf(stderr, "picture number %d is too large. %d\n",all_pic_num,n);
-    errflg ++;
     return(GP_ERROR);
    }
 
@@ -448,18 +446,14 @@ retry:
     }
 
   if(format == JPEG_T)
-    len = get_thumbnail(port, name, data, format,
+    len = get_thumbnail(port, name, file, format,
                         0xff & (picture_thumbnail_index[n] >> 8));
   else
-    len = get_file(port, name, data, format);
-  if(len == 0 ) {
+    len = get_file(port, name, file, format, context);
+  if(len < GP_OK )
     goto retry;
-  }
 
-  if (len < 0)
-    errflg ++;
-
-   return(len);
+  return(len);
 }
 
 int camera_id (CameraText *id) {
@@ -495,8 +489,6 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 {
 	Camera *camera = user_data;
         int num;
-	long int size;
-	char *data = NULL;
 
         gp_log (GP_LOG_DEBUG, "sonyf1/get_file_func","folder: %s, file: %s", folder, filename);
 
@@ -513,18 +505,12 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
-		size = get_picture (camera->port, num, &data, JPEG, 0, F1howmany(camera->port));
-		break;
+		return get_picture (camera->port, num, file, JPEG, 0, F1howmany(camera->port), context);
 	case GP_FILE_TYPE_PREVIEW:
-		size = get_picture (camera->port, num, &data, JPEG_T, TRUE, F1howmany(camera->port));
-		break;
+		return get_picture (camera->port, num, file, JPEG_T, TRUE, F1howmany(camera->port), context);
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
-
-        if (!data)
-                return GP_ERROR;
-	gp_file_set_data_and_size (file, data, size);
         return GP_OK;
 }
 

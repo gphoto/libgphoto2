@@ -481,7 +481,7 @@ int F1deletepicture(GPPort *port,int n)
 
 int F1ok(GPPort*port)
 {
-  int retrycount = RETRY;
+  int retrycount = 100;
   u_char buf[64];
 
   gp_log (GP_LOG_DEBUG, "F1ok", "Asking for OK...");

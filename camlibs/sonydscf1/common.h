@@ -5,7 +5,4 @@
 #define PMP 2
 #define PMX 3
 
-void    Exit(int);
-
-#define RETRY   100	
 #define PMF_MAXSIZ 3*1024
