@@ -8,7 +8,6 @@
 #include <gphoto2/gphoto2.h>
 
 #include "command.h"
-#include "common.h"
 
 static u_char address = 0;
 static const u_char sendaddr[8] = { 0x00, 0x22, 0x44, 0x66, 0x88, 0xaa, 0xcc, 0xee };
@@ -21,6 +20,7 @@ static int hour, minutes;
 
 static const u_char BOFRAME = 0xC0;
 static const u_char EOFRAME = 0xC1;
+#define CESCAPE 0x7D
 
 static int F1reset(GPPort *port);
 
@@ -167,7 +167,7 @@ char F1newstatus(GPPort *port, int verbose, char *return_buf)
 }
 
 
-int F1status(GPPort *port, int verbose)
+int F1status(GPPort *port)
 {
 
   u_char buf[34];
@@ -193,7 +193,7 @@ int F1status(GPPort *port, int verbose)
   hour = (buf[13] >> 4 ) * 10 + (buf[13] & 0x0f);
   minutes = (buf[14] >> 4 ) * 10 + (buf[14] & 0x0f);
 
-  if(verbose){
+  if(0){
     fprintf(stdout, "FnDial: ");
     switch (sw_mode){
     case 1:
@@ -218,7 +218,7 @@ int F1status(GPPort *port, int verbose)
 
 int F1howmany(GPPort *port)
 {
-  F1status(port, 0);
+  F1status(port);
   return(pic_num);
 }
 
@@ -440,7 +440,7 @@ long F1getdata(GPPort*port,char *name, u_char *data)
   long len;
   u_char *p;
 
-  F1status(port,0);
+  F1status(port);
   p = data;
   filelen = F1finfo(port,name);
   if(filelen < 0)

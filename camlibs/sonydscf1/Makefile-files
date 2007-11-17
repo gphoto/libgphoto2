@@ -5,8 +5,7 @@ EXTRA_LTLIBRARIES += sony_dscf1.la
 
 sony_dscf1_la_SOURCES = \
 	sonydscf1/command.c sonydscf1/command.h \
-	sonydscf1/sonydscf1.c \
-	sonydscf1/pmp.h sonydscf1/common.h
+	sonydscf1/sonydscf1.c sonydscf1/pmp.h 
 sony_dscf1_la_LDFLAGS = $(camlib_ldflags)
 sony_dscf1_la_DEPENDENCIES = $(camlib_dependencies)
 sony_dscf1_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la 

@@ -1,5 +1,4 @@
 #include "config.h"
-#include "common.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -21,12 +20,17 @@
 #  define N_(String) (String)
 #endif
 
-#include "common.h"
 #include "command.h"
 #include "pmp.h"
 
-#define MAX_PICTURE_NUM 200
+#define JPEG 0
+#define JPEG_T 1
+#define PMP 2
+#define PMX 3
 
+#define PMF_MAXSIZ 3*1024
+
+#define MAX_PICTURE_NUM 200
 static u_char  picture_index[MAX_PICTURE_NUM];
 static u_short picture_thumbnail_index[MAX_PICTURE_NUM];
 static u_char  picture_protect[MAX_PICTURE_NUM];
@@ -218,7 +222,7 @@ get_file(GPPort *port, char *name, CameraFile *file, int format, GPContext *cont
   int ret, id;
 
   F1ok(port);
-  F1status(port,0);
+  F1status(port);
 
   filelen = F1finfo(port,name);
   if(filelen == 0)
@@ -272,7 +276,7 @@ get_thumbnail(GPPort *port,char *name, CameraFile *file, int format, int n)
   p = buf;
 
   F1ok(port);
-  F1status(port,0);
+  F1status(port);
 
   filelen = F1finfo(port,name);
   if(filelen == 0)
@@ -315,7 +319,7 @@ get_date_info(GPPort *port, char *name, char *outfilename ,char *newfilename)
   u_char buf[128];
 
   F1ok(port);
-  F1status(port,0);
+  F1status(port);
 
   (void) F1finfo(port, name);
   if(F1fopen(port, name) ==0){

@@ -1,11 +1,9 @@
 #ifndef __COMMAND_H__
 #define __COMMAND_H__
 
-#include "common.h"
-
 int	F1ok (GPPort*);
 long	F1getdata (GPPort*,char *, u_char *);
-int	F1status (GPPort*,int);
+int	F1status (GPPort*);
 char	F1newstatus (GPPort *port, int, char *);
 int	F1howmany (GPPort *);
 int	F1fopen (GPPort *,char *);
