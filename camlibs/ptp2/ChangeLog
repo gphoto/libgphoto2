@@ -8,6 +8,10 @@
 	* usb.c, ptp-bugs.h, library.c: Handle Creative Zen 8GB broken
 	  header devices.
 
+2007-11-12  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Added Canon A460, Nikon D40X.
+
 2007-11-06  Linus Walleij  <triad@df.lth.se>
 
 	* ptp.c: Do not print to stderr on not yet supported

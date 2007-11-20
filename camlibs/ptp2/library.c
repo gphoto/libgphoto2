@@ -531,6 +531,8 @@ static struct {
 	{"Nikon:DSC D80 (PTP mode)",      0x04b0, 0x0412, PTP_CAP},
 	/* Huy Hoang <hoang027@umn.edu> */
 	{"Nikon:DSC D40 (PTP mode)",      0x04b0, 0x0414, PTP_CAP},
+	/* Luca Gervasi <luca.gervasi@gmail.com> */
+	{"Nikon:DSC D40x (PTP mode)",     0x04b0, 0x0418, PTP_CAP},
 	/* Sridharan Rengaswamy <sridhar@stsci.edu>, Coolpix L3 */
 	{"Nikon:Coolpix L3 (PTP mode)",   0x04b0, 0x041a, 0},
 
@@ -703,6 +705,8 @@ static struct {
 	/* reported by Ferry Huberts */
 	{"Canon:EOS 40D (PTP mode)",    	0x04a9, 0x3146, 0}, /* user had it working without problem */
 	{"Canon:PowerShot S5 IS (PTP mode)",    0x04a9, 0x3148, PTP_CAP|PTP_CAP_PREVIEW},
+	/* AlannY <alanny@starlink.ru> */
+	{"Canon:PowerShot A460 (PTP mode)",	0x04a9, 0x3149, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Tobias Blaser <tblaser@gmx.ch> */
 	{"Canon:Digital IXUS 950 IS (PTP mode)",0x04a9, 0x314b, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot A570 IS (PTP mode)",  0x04a9, 0x314c, PTPBUG_DELETE_SENDS_EVENT},
