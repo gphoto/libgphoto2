@@ -662,8 +662,8 @@ static struct {
 	{"Canon:PowerShot SD630 (PTP mode)",	0x04a9, 0x30fe, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:Digital IXUS 65 (PTP mode)",	0x04a9, 0x30fe, PTPBUG_DELETE_SENDS_EVENT},
 	/* Rob Lensen <rob@bsdfreaks.nl> */
-	{"Canon:Digital IXUS 55 (PTP mode)",    0x04a9, 0x30ff, PTPBUG_DELETE_SENDS_EVENT},
-	{"Canon:PowerShot SD450 (PTP mode)",    0x04a9, 0x30ff, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:Digital IXUS 55 (PTP mode)",    0x04a9, 0x30ff, 0},
+	{"Canon:PowerShot SD450 (PTP mode)",    0x04a9, 0x30ff, 0},
  	{"Canon:Optura 600 (PTP mode)",         0x04a9, 0x3105, 0},
 	/* Jeff Mock <jeff@mock.com> */
  	{"Canon:EOS 5D (PTP mode)",             0x04a9, 0x3102, PTPBUG_DCIM_WRONG_PARENT},
@@ -684,7 +684,7 @@ static struct {
 	{"Canon:PowerShot SD700 (PTP mode)",    0x04a9, 0x3119, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:Digital IXUS 800 (PTP mode)",   0x04a9, 0x3119, PTPBUG_DELETE_SENDS_EVENT},
 	/* Gert Vervoort <gert.vervoort@hccnet.nl> */
-	{"Canon:PowerShot S3 IS (PTP mode)",    0x04a9, 0x311a, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:PowerShot S3 IS (PTP mode)",    0x04a9, 0x311a, PTP_CAP|PTP_CAP_PREVIEW},
 	/* David Goodenough <david.goodenough at linkchoose.co.uk> */
 	{"Canon:PowerShot A540 (PTP mode)",     0x04a9, 0x311b, PTPBUG_DELETE_SENDS_EVENT},
 	/* Irc reporter */
