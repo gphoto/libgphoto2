@@ -38,7 +38,7 @@
 
 int aox_init (GPPort *port, Model *model, Info *info) 
 {
-	char c[4];
+	char c[16];
 	unsigned char hi[2];
 	unsigned char lo[2];
 	memset(c,0,sizeof(c));
