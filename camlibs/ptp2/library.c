@@ -4157,7 +4157,8 @@ camera_init (Camera *camera, GPContext *context)
                 (a.usb_product == mtp_models[i].usb_product)){
                 	camera->pl->bugs = PTP_MTP;
 
-		/*if (!(mtp_models[i].flags & DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL))*/
+		/* some players really need it */
+		if (!(mtp_models[i].flags & DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL))
 			camera->pl->bugs |= PTP_MTP_PROPLIST_WORKS;
 		if (mtp_models[i].flags & DEVICE_FLAG_IGNORE_HEADER_ERRORS)
 			camera->pl->bugs |= PTP_MTP_ZEN_BROKEN_HEADER;
