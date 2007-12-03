@@ -1,0 +1,136 @@
+Device info:
+Manufacturer: Nikon Corporation
+  model: D300
+  device version: V1.00
+  serial number: 'nnnnnnn'
+Vendor extension ID: 0x0000000a
+Vendor extension description: microsoft.com: 1.0
+Supported operations:
+  0x1001
+  0x1002
+  0x1003
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100a
+  0x100b
+  0x100c
+  0x100d
+  0x100e
+  0x100f
+  0x1014
+  0x1015
+  0x1016
+  0x101b
+  0x90c0
+  0x90c1
+  0x90c2
+  0x90c3
+  0x90c4
+  0x90c7
+  0x90c8
+  0x90c9
+  0x90ca
+  0x90cb
+  0x90cc
+  0x90cd
+  0x90ce
+  0x90cf
+  0x9200
+  0x9201
+  0x9202
+  0x9203
+  0x9204
+  0x9205
+  0x9206
+  0x9801
+  0x9802
+  0x9803
+  0x9805
+Events Supported:
+  0x4001
+  0x4002
+  0x4004
+  0x4005
+  0x4006
+  0x4009
+  0x400a
+  0x400c
+  0x400d
+  0x4008
+  0xc101
+  0xc102
+  0xc104
+Device Properties Supported:
+  0x5001
+  0x5003
+  0x5004
+  0x5005
+  0x5007
+  0x5008
+  0x500a
+  0x500b
+  0x500c
+  0x500d
+  0x500e
+  0x500f
+  0x5010
+  0x5011
+  0x5013
+  0x5018
+  0x501c
+  0xd406
+  0xd407
+
+Kamerazusammenfassung:
+Modell: D300
+  Geräteversion: V1.00
+  Seriennummer: nnnnnnn
+Händler Kennung: 0x0000000a
+Händler Beschreibung: microsoft.com: 1.0
+
+Aufnahmeformate: JPEG Undefined Type TIFF
+Anzeigeformate: JPEG, Undefined Type, Association/Directory, TIFF, DPOF, Script
+
+Fähigkeiten des Geräts:
+	Dateien Download, Löschen von Dateien, Hochladen von Dateien
+	Generische Bild Aufnahme, keine Offene Aufnahme, Nikon Aufnahme
+
+Informationen über Speichermedium:
+store_00010001:
+	Beschreibung des Speichergeräts: Keine
+	Label des Speichergerätes: NIKON D200
+	Speichertyp: Entfernbarer Speicher (Karte)
+	Typ des Dateisystems: Standard Digital Kamera Layout (DCIM)
+	Zugriffsmöglichkeiten: Nur Lesen und Löschen
+	Maximale Kapazität: 1024655360 (977 MB)
+	Freier Platz (Bytes): 964902912 (920 MB)
+	Freier Speicher (Bilder): 130
+
+Properties des Geräts:
+Batterie Ladezustand(0x5001):(read only) (type=0x2) Range [0 - 100, step 1] value: 80% (80)
+Bildgröße(0x5003):(readwrite) (type=0xffff) Enumeration [
+	'4288x2848',
+	'3216x2136',
+	'2144x1424'
+	] value: '4288x2848'
+Kompressions Parameter(0x5004):(readwrite) (type=0x2) Enumeration [0,1,2,3,4,5,6,7] value: JPEG Fine (2)
+Weißabgleich(0x5005):(readwrite) (type=0x4) Enumeration [2,4,5,6,7,32784,32785,32786,32787] value: Auto (2)
+F-Nummer(0x5007):(read only) (type=0x4) Enumeration [350,400,450,500,560,630,710,800,900,1000,1100,1300,1400,1600,1800,2000,2200] value: f/3,5 (350)
+Fokus Tiefe(0x5008):(read only) (type=0x6) Range [1800 - 20000, step 1] value: 18 mm (1800)
+Fokusmodus(0x500a):(read only) (type=0x4) Enumeration [1,32784,32785] value: AF-S (32784)
+Belichtungsmessmodus(0x500b):(read only) (type=0x4) Enumeration [2,3,4] value: Matrix (3)
+Blitzmodus(0x500c):(readwrite) (type=0x4) Enumeration [4,32784,32785,32786,32787] value: Default (32784)
+Belichtungszeit(0x500d):(read only) (type=0x6) Enumeration [1,2,3,4,5,6,8,10,12,15,20,25,31,40,50,62,80,100,125,166,200,250,333,400,500,666,769,1000,1250,1666,2000,2500,3333,4000,5000,6250,7692,10000,13000,16000,20000,25000,30000,40000,50000,60000,80000,100000,130000,150000,200000,250000,300000] value: 0,05 sec (5000)
+Belichtungs Programm Modus(0x500e):(readwrite) (type=0x4) Enumeration [1,2,3,4] value: P (2)
+Belichtungs Index (nach ISO)(0x500f):(readwrite) (type=0x4) Enumeration [100,125,160,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400] value: ISO 1600 (1600)
+Belichtungskompensation(0x5010):(readwrite) (type=0x3) Enumeration [-5000,-4666,-4333,-4000,-3666,-3333,-3000,-2666,-2333,-2000,-1666,-1333,-1000,-666,-333,0,333,666,1000,1333,1666,2000,2333,2666,3000,3333,3666,4000,4333,4666,5000] value: 0,0 stops (0)
+Datum / Zeit(0x5011):(readwrite) (type=0xffff) '20071203T110123'
+Bildaufnahme Modus(0x5013):(read only) (type=0x4) Enumeration [1,2,32784,32785,32786,32787] value: Continuous Low Speed (32784)
+Bildzahl im Burstmodus(0x5018):(readwrite) (type=0x4) Range [1 - 100, step 1] value: 1
+Entfernungs Messungs Modus(0x501c):(read only) (type=0x4) Enumeration [2,32784,32785] value: Closest Subject (32785)
+Property 0xd406:(readwrite) (type=0xffff) 'Windows/6.0.5330.0 MTPClassDriver/6.0.5330.0'
+Property 0xd407:(read only) (type=0x6) 1
