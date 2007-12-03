@@ -533,6 +533,8 @@ static struct {
 	{"Nikon:DSC D40 (PTP mode)",      0x04b0, 0x0414, PTP_CAP},
 	/* Luca Gervasi <luca.gervasi@gmail.com> */
 	{"Nikon:DSC D40x (PTP mode)",     0x04b0, 0x0418, PTP_CAP},
+	/* Andreas Jaeger <aj@suse.de> */
+	{"Nikon:DSC D300 (PTP mode)",	  0x04b0, 0x041a, PTP_CAP},
 	/* Sridharan Rengaswamy <sridhar@stsci.edu>, Coolpix L3 */
 	{"Nikon:Coolpix L3 (PTP mode)",   0x04b0, 0x041a, 0},
 
