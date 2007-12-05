@@ -422,7 +422,7 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	}
 
 	if (info.file.fields & GP_FILE_INFO_NAME) {
-        	if (!strcmp (info.file.name, file))
+        	if (!stricmp (info.file.name, file))
         	        return (GP_OK);
 
 	        /* We really have to rename the poor file... */
@@ -471,9 +471,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	struct stat stbuf;
 	int fd, id;
 	unsigned int curread, toread;
+	unsigned char *buf;
 #ifdef HAVE_LIBEXIF
 	ExifData *data;
-	unsigned char *buf;
 	unsigned int buf_len;
 #endif /* HAVE_LIBEXIF */
 	Camera *camera = (Camera*)user_data;
