@@ -198,3 +198,26 @@ int jl2005a_shortquery(GPPort *port, int n)
 	gp_port_read (port, &response, 1); 
 	return response&0xff;    
 }
+
+int jl2005a_decompress (unsigned char *inp, unsigned char *outp, int width,
+   int height)
+{
+	int i,j;
+	for (i=0; i < height/2; i+=2) {
+		memcpy(outp+2*i*width,inp+i*width, 2*width);
+	}
+	memcpy(outp+(height-2)*width,outp+(height-4)*width, 2*width);
+	for (i=0; i < height/4-1; i++) {
+		for (j=0; j < width; j++) {
+			outp[(4*i+2)*width+j]=(inp[(2*i)*width+j]+
+						inp[(2*i+2)*width+j])/2;
+				outp[(4*i+3)*width+j]=(outp[(4*i+1)*width+j]+
+						outp[(4*i+5)*width+j])/2;
+		}
+	}
+	if (width == 176) 
+		memmove(outp+6*width, outp, (height-6)*width);
+
+	return 0;
+}
+

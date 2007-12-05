@@ -85,10 +85,20 @@ from a similar image processing suite.
 ANOTHER JL2005A CAMERA, WHICH IN ADDITION TO THE ABOVE, USES COMPRESSION
 
 has been discovered by Jeronimo Barraco <jerobarraco@yahoo.com.ar>. That 
-camera is the TDC-15, sold by NogaNet in Argentina. Work is under way to 
-support the compressed mode, which is optional on this camera. Unless and 
-until the compressed mode is supported, the camera is still usable in the 
-non-compressed mode which has already been supported. 
+camera is the TDC-15, sold by NogaNet in Argentina. The compressed mode is 
+optional on this camera; one is not forced to use it. On closer investigation, 
+the compression is not actual compression at all, but data truncation. What has
+been done is that every four lines of data have been "compressed" to two lines. 
+by the simple expedient of suppressing two of them. The same photo still comes
+out if nothing at all is done to it, but the vertical dimension is divided by 
+two. As an inevitable result, the "decompression" is necessarily some kind of
+interpolation of the missing lines of data. I have used simple linear 
+interpolation. If someone comes up with a better way which gives nicer-looking 
+images from these cameras, then please let me know. Actually, from the samples 
+which I have on hand the results do not look too bad most of the time. However, 
+the user is advised that occasional raggedness is inevitable from data which 
+has been thus truncated. 
+
 
 WARRANTY?
 
@@ -97,4 +107,4 @@ this driver for my own edification and in the sincere hope that it might help
 you to use of your camera. Please see also the warranty clauses 
 in the LGPL license. 
 
-Updated 10/15/2007
+Updated 12/02/2007

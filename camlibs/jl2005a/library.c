@@ -166,9 +166,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
   	int w, h = 0, k;
   	int i,j;
 	int b = 0;
+	int compressed = 0;
 	unsigned char header[5] = "\xff\xff\xff\xff\x55";
 	unsigned int size;
     	unsigned char *data;
+	unsigned char *image_start;
     	unsigned char *p_data=NULL;
     	unsigned char *ppm=NULL, *ptr=NULL;
         unsigned char gtable[256];
@@ -203,24 +205,39 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return GP_OK;
 	}
 
-	/* Now put the data into a PPM image file. */
+	/* Now get ready to put the data into a PPM image file. */
 	p_data = malloc( w*h );
 	if (!p_data) {
 		status =  GP_ERROR_NO_MEMORY;
 		goto end;
 	} 
-	memcpy(p_data, data+5, w*h);
+	image_start=data+5;
 	if (w == 176) {
-
 		for (i=1; i < h; i +=4){
 			for (j=1; j< w; j ++){
-				temp=p_data[i*w+j];
-				p_data[i*w+j] = p_data[(i+1)*w+j];
-				p_data[(i+1)*w+j] = temp;
+				temp=image_start[i*w+j];
+				image_start[i*w+j] = image_start[(i+1)*w+j];
+				image_start[(i+1)*w+j] = temp;
 			}
 		}
-	}
-
+		if (h == 72) {
+			compressed = 1;
+			h = 144;
+		}
+	} else 
+		if (h == 144) {
+			compressed = 1;
+			h = 288;
+		}
+	p_data = malloc( w*h );
+	if (!p_data) {
+		status =  GP_ERROR_NO_MEMORY;
+		goto end;
+	} 
+	if (compressed)
+		jl2005a_decompress (image_start, p_data, w, h);
+	else 
+		memcpy(p_data, image_start, w*h);
 	ppm = malloc (w * h * 3 + 256); /* room for data and header */
 	if (!ppm) { 
 		status = GP_ERROR_NO_MEMORY; 

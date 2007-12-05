@@ -47,6 +47,8 @@ int jl2005a_read_picture_data ( Camera *camera,
 int jl2005a_reset	     (Camera *camera, GPPort *port);
 int jl2005a_read_info_byte(GPPort *port, int n);
 int jl2005a_shortquery(GPPort *port, int n);
+int jl2005a_decompress (unsigned char *inp, unsigned char *outp, int width,
+				int height);
 
 #endif
 

@@ -1,3 +1,10 @@
+2007-12-04  Theodore Kilgore <kilgota@auburn.edu>
+	README.jl2005a: Updated
+	jl2005a.c: A decompression function has been added, to accommodate
+		   the needs of the Noganet TDC-15, based upon raw files 
+		   sent by J. Barraco.
+	library.c: Decompression function hooked up.
+
 2007-10-15  Theodore Kilgore <kilgota@auburn.edu>
 	library.c: NogaNet TDC-15 added, reported by 
 		   Jeronimo Barraco <jerobarraco@yahoo.com.ar>
