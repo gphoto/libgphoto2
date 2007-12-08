@@ -488,6 +488,8 @@ static struct {
 	/* 4600: Roberto Costa <roberto.costa@ensta.org>, 22 Oct 2006 */
 	{"Nikon:Coolpix 4600a (PTP mode)", 0x04b0, 0x0131, 0},
 	{"Nikon:Coolpix 5900 (PTP mode)", 0x04b0, 0x0135, PTP_CAP|PTP_NIKON_BROKEN_CAP},
+	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1846012&group_id=8874&atid=358874 */
+	{"Nikon:Coolpix 7900 (PTP mode)", 0x04b0, 0x0137, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	{"Nikon:Coolpix P1 (PTP mode)",   0x04b0, 0x0140, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	/* Marcus Meissner */
 	{"Nikon:Coolpix P2 (PTP mode)",   0x04b0, 0x0142, PTP_CAP|PTP_NIKON_BROKEN_CAP},
