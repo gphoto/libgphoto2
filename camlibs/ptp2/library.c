@@ -775,18 +775,7 @@ static struct {
 	{"Apple:iPhone (PTP mode)",		0x05ac, 0x1290, PTPBUG_DCIM_WRONG_PARENT},
 };
 
-/* The list of music players is shared with libmtp. They also have some different
- * flags, but never mind this for now. */
-#define DEVICE_FLAG_NONE				0x00000000
-#define DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL	0x00000001
-#define DEVICE_FLAG_UNLOAD_DRIVER			0x00000002
-#define DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST		0x00000004
-#define DEVICE_FLAG_NO_ZERO_READS			0x00000008
-#define DEVICE_FLAG_IRIVER_OGG_ALZHEIMER		0x00000010
-#define DEVICE_FLAG_ONLY_7BIT_FILENAMES			0x00000020
-#define DEVICE_FLAG_NO_RELEASE_INTERFACE		0x00000040
-#define DEVICE_FLAG_IGNORE_HEADER_ERRORS		0x00000080
-#define DEVICE_FLAG_BROKEN_SET_OBJECT_PROPLIST		0x00000100
+#include "device-flags.h"
 static struct {
 	const char *vendor;
 	unsigned short usb_vendor;

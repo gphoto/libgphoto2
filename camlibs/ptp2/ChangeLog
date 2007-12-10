@@ -1,3 +1,9 @@
+2007-12-10  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c, music-players.h, device-flags.h:
+	  New devices from libmtp project.
+	  New device-flags.h from libmtp project.
+
 2007-12-03  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Added Nikon DSC D300, Coolpix 7900.

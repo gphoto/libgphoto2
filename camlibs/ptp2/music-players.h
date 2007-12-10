@@ -36,7 +36,10 @@
    * Initially the Creative devices was all we supported so these are
    * the most thoroughly tested devices. Presumably only the devices
    * with older firmware (the ones that have 32bit object size) will
-   * need the DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL flag.
+   * need the DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL flag. This bug
+   * manifest itself when you have a lot of folders on the device,
+   * some of the folders will start to disappear when getting all objects
+   * and properties.
    */
   { "Creative", 0x041e, "ZEN Vision", 0x411f, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
   { "Creative", 0x041e, "Portable Media Center", 0x4123, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
@@ -67,7 +70,12 @@
   /*
    * Samsung
    * We suspect that more of these are dual mode.
+   * We suspect more of these might need DEVICE_FLAG_NO_ZERO_READS
+   * YP-NEU, YP-NDU, YP-20, YP-800, YP-MF Series, YP-100, YP-30
+   * YP-700 and YP-90 are NOT MTP, but use a Samsung custom protocol.
    */
+  // From anonymous SourceForge user, not verified
+  { "Samsung", 0x04e8, "YP-900", 0x0409, DEVICE_FLAG_NONE },
   // From Soren O'Neill
   { "Samsung", 0x04e8, "YH-920", 0x5022, DEVICE_FLAG_UNLOAD_DRIVER },
   // Contributed by aronvanammers on SourceForge
@@ -99,9 +107,9 @@
   // From Paul Clinch
   { "Samsung", 0x04e8, "YP-K3", 0x5081, DEVICE_FLAG_NONE },
   // From XNJB user
-  { "Samsung", 0x04e8, "YP-P2", 0x5083, DEVICE_FLAG_NONE },
+  { "Samsung", 0x04e8, "YP-P2", 0x5083, DEVICE_FLAG_NO_ZERO_READS },
   // From Paul Clinch
-  { "Samsung", 0x04e8, "YP-T10", 0x508a, DEVICE_FLAG_NONE },
+  { "Samsung", 0x04e8, "YP-T10", 0x508a, DEVICE_FLAG_OGG_IS_UNKNOWN },
   // From a rouge .INF file,
   // this device ID seems to have been recycled for the Samsung SGH-A707 Cingular cellphone
   { "Samsung", 0x04e8, "YH-999 Portable Media Center / SGH-A707", 0x5a0f, DEVICE_FLAG_NONE },
@@ -176,9 +184,16 @@
     DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL |
     DEVICE_FLAG_NO_RELEASE_INTERFACE },
   // Reported by XNJB user
+  { "SanDisk", 0x0781, "Sansa e280 v2", 0x7422, 
+    DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL |
+    DEVICE_FLAG_NO_RELEASE_INTERFACE },
+  // Reported by XNJB user
   { "SanDisk", 0x0781, "Sansa m240", 0x7430, 
     DEVICE_FLAG_UNLOAD_DRIVER |  DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL |
     DEVICE_FLAG_NO_RELEASE_INTERFACE },
+  // Reported by Eugene Brevdo <ebrevdo@princeton.edu>
+  { "SanDisk", 0x0781, "Sansa Clip", 0x7432, DEVICE_FLAG_UNLOAD_DRIVER |
+    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by anonymous user at sourceforge.net
   { "SanDisk", 0x0781, "Sansa c240/c250", 0x7450, 
     DEVICE_FLAG_UNLOAD_DRIVER |  DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL |
@@ -194,8 +209,7 @@
   // Reported by anonymous SourceForge user
   { "SanDisk", 0x0781, "Sansa View", 0x74b0, 
     DEVICE_FLAG_UNLOAD_DRIVER |  DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL |
-    DEVICE_FLAG_NO_RELEASE_INTERFACE },
-  
+    DEVICE_FLAG_NO_RELEASE_INTERFACE },  
 
   /*
    * iRiver
@@ -290,6 +304,8 @@
   { "Toshiba", 0x0930, "Gigabeat V30", 0x0014, DEVICE_FLAG_NONE },
   // Reported by Michael Davis <slithy@yahoo.com>
   { "Toshiba", 0x0930, "Gigabeat U", 0x0016, DEVICE_FLAG_NONE },
+  // Reported by Rolf <japan (at) dl3lar.de>
+  { "Toshiba", 0x0930, "Gigabeat T", 0x0019, DEVICE_FLAG_NONE },
   
   /*
    * Archos
@@ -307,6 +323,8 @@
   { "Archos", 0x0e79, "504 (MTP mode)", 0x1307, DEVICE_FLAG_UNLOAD_DRIVER },
   // Reported by Kay McCormick <kaym@modsystems.com>
   { "Archos", 0x0e79, "704 mobile dvr", 0x130d, DEVICE_FLAG_UNLOAD_DRIVER },
+  // Reported by Joe Rabinoff
+  { "Archos", 0x0e79, "605 (MTP mode)", 0x1313, DEVICE_FLAG_UNLOAD_DRIVER },
 
   /*
    * Dunlop (OEM of EGOMAN ltd?) reported by Nanomad
@@ -417,6 +435,8 @@
    * Insignia, dual-mode.
    */
   { "Insignia", 0x19ff, "NS-DV45", 0x0303, DEVICE_FLAG_UNLOAD_DRIVER },
+  // Reported by Rajan Bella <rajanbella@yahoo.com>
+  { "Insignia", 0x19ff, "Sport Player", 0x0307, DEVICE_FLAG_UNLOAD_DRIVER },
   // Reported by "brad" (anonymous, sourceforge)
   { "Insignia", 0x19ff, "Pilot 4GB", 0x0309, DEVICE_FLAG_UNLOAD_DRIVER },
 
@@ -451,6 +471,12 @@
   { "Motorola", 0x22b8, "A1200", 0x60ca, DEVICE_FLAG_BROKEN_SET_OBJECT_PROPLIST },
   // Reported by anonymous user
   { "Motorola", 0x22b8, "RAZR2 V8", 0x6415, DEVICE_FLAG_BROKEN_SET_OBJECT_PROPLIST },
+
+  /*
+   * Media Keg
+   */
+  // Reported by Rajan Bella <rajanbella@yahoo.com>
+  { "Kenwood", 0x0b28, "Media Keg HD10GB7 Sport Player", 0x100c, DEVICE_FLAG_UNLOAD_DRIVER},
 
   /*
    * Other strange stuff.
