@@ -30,11 +30,13 @@ struct _CameraPrivateLibrary {
 /*	Model model; */ 	/* "model" and "fwversion" functionally equal */
 	int num_pics;
 	unsigned char size_code[512];
-	unsigned char fwversion;
+	unsigned char fwversion[4];
 	unsigned char full;
 	unsigned char avitype;
 	unsigned char post;
 	unsigned char offset;
+	unsigned char avi_offset;
+	unsigned char can_do_capture;
 	int sonix_init_done;
 };
 
@@ -44,7 +46,7 @@ int sonix_get_picture_size   	(GPPort *port, int n);
 int sonix_read_data_size 	(GPPort *port, int n);
 int sonix_delete_all_pics      	(GPPort *port);
 int sonix_delete_last      	(GPPort *port);
-int sonix_capture_image      	(GPPort *port); 
+int sonix_capture_image      	(GPPort *port);
 int sonix_exit		      	(GPPort *port);
 int sonix_decode		(unsigned char * dst, unsigned char * src, 
 				    int width, int height);

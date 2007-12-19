@@ -1,3 +1,24 @@
+2007-12-18   Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: Processing of AVI output changed, so that output is 
+		     written to file one frame at a time, to reduce 
+		     memory footprint. 
+
+2007-12-09   Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: Added Genius Smart 300. Thanks to 
+		     Norayr Chilingaryan <gnorayr@gmail.com>
+		     for reporting the camera and for testing. New camera 
+		     uses optional compression and uses an offset in the 
+		     still photos, but not in frames for AVI output. 
+		     Also changed from using the USB Product number to
+		     distinguish between camera models and will use the 
+		     firmware version code reported during sonix_init()
+		     instead. So the ID-ing of cameras is moved from 
+		     camera_init() to sonix_init()
+		     Also cleaned up the camera_capture function. 
+	* sonix.c:   Incorporated above changes in sonix_init().
+	* sonix.h:   Changed fwversion variable from 1 byte to the 4
+		     actually reported. 
+
 2007-10-16   Theodore Kilgore <kilgota@auburn.edu>
 	* library.c: Several Sakar cameras added
 
