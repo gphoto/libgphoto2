@@ -77,6 +77,8 @@ static const struct {
     								0x2770, 0x913d},
         {"Sakar 23070  Crayola Digital Camera",    GP_DRIVER_STATUS_EXPERIMENTAL, 
     								0x2770, 0x913d},
+        {"Sakar 92045  Spiderman",    GP_DRIVER_STATUS_EXPERIMENTAL, 
+    								0x2770, 0x913d},
 	{NULL,0,0,0}
 };
 

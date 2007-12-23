@@ -1,3 +1,7 @@
+2007-12-23   Theodore Kilgore <kilgota@auburn.edu>  
+	* library.c: Added Sakar no. 92045 Spiderman, reported by 
+	Martin Laberge <mlsoft@videotron.ca>.
+
 2007-10-16   Theodore Kilgore <kilgota@auburn.edu>  
 	* library.c: Several cameras from Sakar added to list.
 
@@ -7,7 +11,7 @@
 
 2007-08-24   Theodore Kilgore <kilgota@auburn.edu>  
 	* library.c: Suprema Digital Keychain Camera added, which has 
-	new product ID 0x913C, and is able to delete individual photos. 
+	new product ID 0x913D, and is able to delete individual photos. 
 	* digigr8.c: changes required here, too, to support individual 
 	photo deletion. 
 

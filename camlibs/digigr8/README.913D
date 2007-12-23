@@ -47,4 +47,9 @@ also supported, and I have added it to the list of cameras in library.c. Aside
 from appearance, the main difference between the Styleshot and the Suprema 
 described above is that the Styleshot has an internal rechargeable battery. 
 
-Theodore Kilgore, 08/24/07, revised 10/13/07
+On 12/23/07 the Sakar Spiderman (no. 92045) has been reported by Martin Laberge 
+<mlsoft@videotron.ca>. THERE IS POTENTIAL NAME CONFUSION WITH THIS CAMERA. The
+Sakar Amazing Spiderman (no. 94044) has in it a JL2005C chip which is currently
+not supported in libgphoto2. Buyer beware!
+
+Theodore Kilgore, 08/24/07, revised 12/23/07
