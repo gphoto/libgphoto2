@@ -1,3 +1,8 @@
+2007-12-27  Daniel M German <dmg@uvic.ca>
+
+	* canon.h, library.c: More configuration values for some
+	  newer cameras / objectives.
+
 2007-11-06  Marcus Meissner  <marcus@jet.franken.de>
 
 	* usb.c: Bumped timeout to 175.
