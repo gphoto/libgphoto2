@@ -1221,6 +1221,7 @@ static struct deviceproptableu16 canon_isospeed[] = {
 	{ "400",		0x0058, 0 },
 	{ "800",		0x0060, 0 },
 	{ "1600",		0x0068, 0 },
+	{ "3200",		0x0070, 0 },
 	{ N_("Auto"),		0x0000, 0 },
 };
 GENERIC16TABLE(Canon_ISO,canon_isospeed)
@@ -1751,6 +1752,8 @@ GENERIC16TABLE(Canon_PhotoEffect,canon_photoeffect)
 
 static struct deviceproptableu16 canon_aperture[] = {
       { N_("auto"),	0xffff, 0 },
+      { "1.4",		0x0010, 0 },
+      { "1.6",		0x0013, 0 },
       { "1.8",		0x0015, 0 },
       { "2.0",		0x0018, 0 },
       { "2.2",		0x001b, 0 },
@@ -1776,6 +1779,7 @@ static struct deviceproptableu16 canon_aperture[] = {
       { "22",		0x0050, 0 },
       { "25",		0x0053, 0 },
       { "29",		0x0055, 0 },
+      { "32",		0x0058, 0 },
 };
 GENERIC16TABLE(Canon_Aperture,canon_aperture)
 
