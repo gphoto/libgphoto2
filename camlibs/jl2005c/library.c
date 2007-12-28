@@ -57,7 +57,9 @@ struct {
    	unsigned short idProduct;
 } models[] = {
         {"Argus DC1512e", GP_DRIVER_STATUS_EXPERIMENTAL, 0x0979, 0x0227},
-/*        {"American Idol", GP_DRIVER_STATUS_EXPERIMENTAL, 0x0979, 0x0224},*/
+        {"Amazing Spiderman",     GP_DRIVER_STATUS_EXPERIMENTAL, 0x0979, 0x0227},
+        {"Sakar no. 75379",     GP_DRIVER_STATUS_EXPERIMENTAL, 0x0979, 0x0227},
+        {"Sakar Kidz-Cam no. 88379",     GP_DRIVER_STATUS_EXPERIMENTAL, 0x0979, 0x0227},
 	{NULL,0,0,0}
 };
 
@@ -100,8 +102,9 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 	int num_pics;
 	num_pics = camera->pl->nb_entries;
 	GP_DEBUG("camera->pl->nb_entries = %i\n",camera->pl->nb_entries);
-    	sprintf (summary->text,_("This camera contains a Jeilin JL2005C chipset.\n" 
-			"The number of photos in it is %i. \n"), num_pics);  
+    	sprintf (summary->text,_("This camera contains a Jeilin JL2005%c chipset.\n" 
+			"The number of photos in it is %i. \n"), 
+			camera->pl->model, num_pics);  
     	return GP_OK;
 }
 
@@ -198,11 +201,12 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return GP_ERROR; 
 	}
 	
-	GP_DEBUG ("height is %i\n", h); 		
+	GP_DEBUG ("height is %i\n", h);
     
-	b = jl2005c_get_pic_data_size(camera->pl->info, k);
+	b = jl2005c_get_pic_data_size(camera->pl, camera->pl->info, k);
 	GP_DEBUG("b = %i = 0x%x bytes\n", b,b);
-	start_of_photo = jl2005c_get_start_of_photo(camera->pl->info, k);	
+	start_of_photo = jl2005c_get_start_of_photo(camera->pl, 
+						    camera->pl->info, k);
 	GP_DEBUG("start_of_photo number %i = 0x%lx \n", k,start_of_photo);
 	pic_data = malloc (b+1);
 	if (!pic_data) return GP_ERROR_NO_MEMORY;

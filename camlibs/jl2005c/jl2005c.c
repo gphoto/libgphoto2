@@ -39,6 +39,7 @@ jl2005c_init (Camera *camera, GPPort *port, CameraPrivateLibrary *priv)
 {
 	unsigned char command[2];
 	char response;
+	char model_string[4];
 	unsigned char info[0xe000];
 	int info_block_size = 0;
 	memset(info,0, sizeof(info)); 
@@ -52,22 +53,24 @@ jl2005c_init (Camera *camera, GPPort *port, CameraPrivateLibrary *priv)
 	gp_port_write (port, "\x95\x60", 2); 
 	usleep (10000);
 	gp_port_read (port, &response, 1);
-
+	model_string[0]=response;
 	usleep (10000);
 	gp_port_write (port, "\x95\x61", 2); 
 	usleep (10000);
 	gp_port_read (port, &response, 1);
-
+	model_string[1]=response;
 	usleep (10000);
 	gp_port_write (port, "\x95\x62", 2); 
 	usleep (10000);
 	gp_port_read (port, &response, 1);
-
+	model_string[2]=response;
 	usleep (10000);
 	gp_port_write (port,"\x95\x63" , 2); 
 	usleep (10000);
 	gp_port_read (port, &response, 1);
-
+	model_string[3]=response;
+	GP_DEBUG("Model string is %02x%02x%02x%02x\n",model_string[0], model_string[1],
+			    model_string[2], model_string[3]);
 	usleep (10000);
 	gp_port_write (port, "\x95\x64", 2); 
 	usleep (10000);	
@@ -85,7 +88,7 @@ jl2005c_init (Camera *camera, GPPort *port, CameraPrivateLibrary *priv)
 		info_block_size += 0x200 - (info_block_size%0x200);
 	usleep (10000);
 
-	gp_port_write (port, "\x95\x66", 2); 	
+	gp_port_write (port, "\x95\x66", 2);
 	usleep (10000);
 	gp_port_read (port, &response, 1); 
 	usleep (10000);
@@ -152,35 +155,61 @@ jl2005c_init (Camera *camera, GPPort *port, CameraPrivateLibrary *priv)
 	usleep (10000);
 	gp_port_read(port, (char *)info, info_block_size);
 	usleep (10000);
-	gp_port_write (port, "\x0b\x00",2);	
+	gp_port_write (port, "\x0b\x00",2);
 	usleep (10000);
 	memmove(priv->info, info, info_block_size);
+	priv->model=info[6];
+	
 	GP_DEBUG("Leaving jl2005c_init\n");
         return GP_OK;
 }
 
 
 int
-jl2005c_get_pic_data_size (Info *info, int n)
+jl2005c_get_pic_data_size (CameraPrivateLibrary *priv, Info *info, int n)
 {
 	int size;
+	unsigned char model=priv->model;
 	GP_DEBUG("info[48+16*n+7] = %02X\n", info[48+16*n+7]);
-	size = (info[48+16*n+7]*0x200);
+	size = info[0x30+0x10*n+6]*0x100+info[0x30+0x10*n+7];
+	switch (model) {
+	case 0x43:
+		size *= 0x200;
+		break;
+	case 0x42:
+		size *= 0x80;
+		break;
+	default:
+		GP_DEBUG("Unknown model, unknown size\n");
+		return GP_ERROR_NOT_SUPPORTED;
+	}
 	GP_DEBUG("size = 0x%x = %d\n", size, size);
 	return (size);
 }
 
 unsigned long
-jl2005c_get_start_of_photo(Info *info, unsigned int n)
+jl2005c_get_start_of_photo(CameraPrivateLibrary *priv, Info *info, 
+							unsigned int n)
 {
-	unsigned long start = 0;
-	start = (info[48+16*n+12]&0xff)*0x100;
-	start -= 0x400;
-	start += info[48+16*n+13]&0xff;
-	start *= 0x200;
-
+	unsigned long start;
+	unsigned char model = priv->model;
+	start = info[0x30+0x10*n+0x0c]*0x100+
+			info[0x30+0x10*n+0x0d];
+	start -= info[0x30+0x0c]*0x100+
+			info[0x30+0x0d];
+	switch (model) {
+	case 0x43:
+		start *= 0x200;
+		break;
+	case 0x42:
+		start *= 0x80;
+		break;
+	default:
+		GP_DEBUG("Unknown model\n");
+		return GP_ERROR_NOT_SUPPORTED;
+	}
 	return start;
-}		
+}
 
 
 int 

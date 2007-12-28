@@ -1,3 +1,15 @@
+2007-12-28  Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: Added support for "Amazing Spiderman" reported by 
+		     Victor Hodge <vhodge@sympatico.ca> and for 
+		     Sakar no. 75379 reported by 
+		     Patrick Simmons <linuxrocks123@netscape.net> and for
+		     Sakar Kidz-Cam no. 88379 reported by 
+		     Martin Laberge <mlsoft@videotron.ca>. 
+	* *.[c,h]:   Introduced changes to give unified support to both 
+		     JL2005C and JL2005B in the same functions. 
+		     NOTE: All these cameras use compression, and how to 
+		     decompress is still unknown. 
+
 2007-09-04  Theodore Kilgore <kilgota@auburn.edu>
 
 	* *.[c,h]: First check-in of experimental driver code. Nothing 

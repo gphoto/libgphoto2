@@ -27,6 +27,7 @@
 typedef unsigned char Info;
 
 struct _CameraPrivateLibrary {
+	unsigned char model;
 	unsigned char *catalog;
 	int nb_entries;
 	int last_fetched_entry;
@@ -48,8 +49,9 @@ int jl2005c_get_resolution      (Info *info, int n);
 
 int jl2005c_get_compression (Info *info, int n);
 int jl2005c_get_width (Info *info, int n);
-int jl2005c_get_pic_data_size (Info *info, int n);
-unsigned long jl2005c_get_start_of_photo(Info *info, unsigned int n);
+int jl2005c_get_pic_data_size (CameraPrivateLibrary *priv, Info *info, int n);
+unsigned long jl2005c_get_start_of_photo(CameraPrivateLibrary *priv, 
+						Info *info, unsigned int n);
 int set_usb_in_endpoint	     (Camera *camera, int inep);
 int jl2005c_get_picture_data (GPPort *port, char *data, int size);
 #endif
