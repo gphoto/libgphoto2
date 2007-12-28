@@ -32,6 +32,10 @@
 
 #include <ltdl.h>
 
+#ifdef HAVE_ASM_SYMVERS
+# define __LIBGPHOTO2_INCLUDE_OLD_VERSIONS
+#endif
+
 #include <gphoto2/gphoto2-port-result.h>
 #include <gphoto2/gphoto2-port-library.h>
 #include <gphoto2/gphoto2-port-log.h>
@@ -139,7 +143,11 @@ gp_port_exit (GPPort *port)
  * \return a gphoto2 error code
  **/
 int
+#ifdef __LIBGPHOTO2_INCLUDE_OLD_VERSIONS
+gp_port_set_info_v250 (GPPort *port, GPPortInfo info)
+#else
 gp_port_set_info (GPPort *port, GPPortInfo info)
+#endif
 {
 	GPPortLibraryOperations ops_func;
 
@@ -218,6 +226,20 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
 	return (GP_OK);
 }
 
+#ifdef __LIBGPHOTO2_INCLUDE_OLD_VERSIONS
+int
+gp_port_set_info_v240 (GPPort *port, GPPortInfo_v240 info)
+{
+	GPPortInfo	newinfo;
+
+	newinfo.type = info.type;
+	strcpy (newinfo.name, info.name);
+	strncpy(newinfo.path, info.path, sizeof(newinfo.path));
+	strcpy (newinfo.library_filename, info.library_filename);
+	return gp_port_set_info_v250 (port, newinfo);
+}
+#endif
+
 /**
  * \brief Retreives information about the port.
  *
@@ -228,7 +250,11 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
  * \return a gphoto2 error code
  **/
 int
+#ifdef __LIBGPHOTO2_INCLUDE_OLD_VERSIONS
+gp_port_get_info_v250 (GPPort *port, GPPortInfo *info)
+#else
 gp_port_get_info (GPPort *port, GPPortInfo *info)
+#endif
 {
 	CHECK_NULL (port && info);
 
@@ -236,6 +262,24 @@ gp_port_get_info (GPPort *port, GPPortInfo *info)
 
 	return (GP_OK);
 }
+
+#ifdef __LIBGPHOTO2_INCLUDE_OLD_VERSIONS
+int
+gp_port_get_info_v240 (GPPort *port, GPPortInfo_v240 *info)
+{
+	int ret;
+	GPPortInfo newinfo;
+
+	ret = gp_port_get_info_v250 (port, &newinfo);
+	if (ret != GP_OK)
+		return ret;
+	info->type = newinfo.type;
+	strcpy (info->name, newinfo.name);
+	strncpy (info->path, newinfo.path, sizeof(info->path));
+	strcpy (info->library_filename, newinfo.library_filename);
+	return GP_OK;
+}
+#endif
 
 /**
  * \brief Open a port.

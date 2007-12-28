@@ -57,6 +57,17 @@ typedef struct _GPPortInfo {
 	char library_filename[1024];	/**< \brief Internal pathname of the port driver. Do not use outside of the port library. */
 } GPPortInfo;
 
+#ifdef __LIBGPHOTO2_INCLUDE_OLD_VERSIONS
+typedef struct _GPPortInfo_v240 {
+        GPPortType type;
+        char name[64];
+        char path[64];
+
+        /* Private */
+        char library_filename[1024];
+} GPPortInfo_v240;
+#endif
+
 #include <gphoto2/gphoto2-port.h>
 
 #ifdef __cplusplus
@@ -90,6 +101,19 @@ const char *gp_port_message_codeset (const char*);
 /* DEPRECATED */
 typedef GPPortInfo gp_port_info;
 
+#ifdef __LIBGPHOTO2_INCLUDE_OLD_VERSIONS
+int gp_port_info_list_append_v240 (GPPortInfoList *list, GPPortInfo_v240 info);
+int gp_port_info_list_append_v250 (GPPortInfoList *list, GPPortInfo info);
+asm(".symver gp_port_info_list_append_v240, gp_port_info_list_append@LIBGPHOTO2_0_0");
+asm(".symver gp_port_info_list_append_v250, gp_port_info_list_append@@LIBGPHOTO2_5_0");
+#define gp_port_info_list_append gp_port_info_list_append_v250
+
+int gp_port_info_list_get_info_v240 (GPPortInfoList *list, int n, GPPortInfo_v240 *info);
+int gp_port_info_list_get_info_v250 (GPPortInfoList *list, int n, GPPortInfo *info);
+asm(".symver gp_port_info_list_get_info_v240, gp_port_info_list_get_info@LIBGPHOTO2_0_0");
+asm(".symver gp_port_info_list_get_info_v250, gp_port_info_list_get_info@@LIBGPHOTO2_5_0");
+#define gp_port_info_list_get_info gp_port_info_list_get_info_v250
+#endif
 
 /**
  * Name of the environment variable which may contain the path where

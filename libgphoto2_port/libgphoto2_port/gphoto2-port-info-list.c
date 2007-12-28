@@ -22,6 +22,11 @@
  */
 
 #include "config.h"
+
+#ifdef HAVE_ASM_SYMVERS
+# define __LIBGPHOTO2_INCLUDE_OLD_VERSIONS
+#endif
+
 #include <gphoto2/gphoto2-port-info-list.h>
 
 #include <stdlib.h>
@@ -161,7 +166,11 @@ gp_port_info_list_free (GPPortInfoList *list)
  * \return A non-negative number or a gphoto2 error code
  **/
 int
+#ifdef __LIBGPHOTO2_INCLUDE_OLD_VERSIONS
+gp_port_info_list_append_v250 (GPPortInfoList *list, GPPortInfo info)
+#else
 gp_port_info_list_append (GPPortInfoList *list, GPPortInfo info)
+#endif
 {
 	int generic, i;
 	GPPortInfo *new_info;
@@ -188,6 +197,21 @@ gp_port_info_list_append (GPPortInfoList *list, GPPortInfo info)
 	return (list->count - 1 - generic);
 }
 
+#ifdef __LIBGPHOTO2_INCLUDE_OLD_VERSIONS
+int
+gp_port_info_list_append_v240 (GPPortInfoList *list, GPPortInfo_v240 info)
+{
+	GPPortInfo newinfo;
+	int ret;
+
+	newinfo.type = info.type;
+	strcpy (newinfo.name,info.name);
+	strncpy (newinfo.path,info.path, sizeof(newinfo.path));
+	strcpy (newinfo.library_filename,info.library_filename);
+	ret =  gp_port_info_list_append_v250 (list, newinfo);
+	return ret;
+}
+#endif
 
 static int
 foreach_func (const char *filename, lt_ptr data)
@@ -464,7 +488,11 @@ gp_port_info_list_lookup_name (GPPortInfoList *list, const char *name)
  * \return a gphoto2 error code
  **/
 int
+#ifdef __LIBGPHOTO2_INCLUDE_OLD_VERSIONS
+gp_port_info_list_get_info_v250 (GPPortInfoList *list, int n, GPPortInfo *info)
+#else
 gp_port_info_list_get_info (GPPortInfoList *list, int n, GPPortInfo *info)
+#endif
 {
 	int i;
 
@@ -489,6 +517,35 @@ gp_port_info_list_get_info (GPPortInfoList *list, int n, GPPortInfo *info)
 	return (GP_OK);
 }
 
+#ifdef __LIBGPHOTO2_INCLUDE_OLD_VERSIONS
+/**
+ * \brief Get port information of specific entry
+ * \param list a #GPPortInfoList
+ * \param n the index of the entry
+ * \param info the returned information
+ *
+ * Retreives an entry from the list and stores it into info.
+ * This is the version used before libgphoto2 2.5.0
+ *
+ * \return a gphoto2 error code
+ **/
+int
+gp_port_info_list_get_info_v240 (GPPortInfoList *list, int n, GPPortInfo_v240 *info)
+{
+	int ret;
+	GPPortInfo	newinfo;
+
+	ret = gp_port_info_list_get_info_v250 (list, n, &newinfo);
+	if (ret != GP_OK)
+		return ret;
+	info->type = newinfo.type;
+	strcpy(info->name, newinfo.name); /* same size */
+	/* FIXME: handle overflows by error return? */
+	strncpy(info->path, newinfo.path, sizeof(info->path)); /* larger size */
+	strcpy(info->library_filename, newinfo.library_filename); /* same size */
+	return (GP_OK);
+}
+#endif
 
 #ifdef _GPHOTO2_INTERNAL_CODE
 /**
