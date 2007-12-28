@@ -1,3 +1,18 @@
+libgphoto2_port 0.8.2
+
+Build:
+   * Switch build to use ELF symbol versions to avoid
+     major version bumps. Introduced LIBGPHOTO2_0_0
+     and LIBGPHOTO2_5_0 ELF versions.
+
+     libgphoto2_port.sym is now libgphoto2_port.ver
+     but with similar tasks.
+
+Library Loader:
+   * Bumped the GPPortInfo path size to 4096, since 64byte
+     is not sufficient for paths on UNIX systems when using
+     disk:
+
 libgphoto2_port 0.8.1
 
 Build:

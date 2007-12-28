@@ -41,9 +41,9 @@ dnl A:R:C=6:1:6 libgphoto2_port-0.6.1 libgphoto2-2.2.1
 dnl A:R:C=7:0:7 libgphoto2_port-0.7.0 libgphoto2-2.3
 dnl A:R:C=7:1:7 libgphoto2_port-0.7.1 libgphoto2-2.3.x
 dnl A:R:C=8:0:8 libgphoto2_port-0.8.0 libgphoto2-2.4.x
-dnl A:R:C=9:0:9 libgphoto2_port-0.9.0 libgphoto2-2.5.x
-AC_SUBST([LIBGPHOTO2_PORT_AGE],      [0])
-AC_SUBST([LIBGPHOTO2_PORT_REVISION], [0])
+dnl A:R:C=9:1:9 libgphoto2_port-0.9.1 libgphoto2-2.5.x
+AC_SUBST([LIBGPHOTO2_PORT_AGE],      [9])
+AC_SUBST([LIBGPHOTO2_PORT_REVISION], [1])
 AC_SUBST([LIBGPHOTO2_PORT_CURRENT],  [9])
 AC_SUBST([LIBGPHOTO2_PORT_CURRENT_MIN],
          [`expr $LIBGPHOTO2_PORT_CURRENT - $LIBGPHOTO2_PORT_AGE`])
@@ -171,6 +171,26 @@ AC_CHECK_HEADER([dns_sd.h],[
 			AC_DEFINE(HAVE_MDNS_BONJOUR,1,[Define if you have Bonjour/mDNSResponder.])
 		])
 ])
+AC_SUBST(MDNS_LIBS)
+
+AC_MSG_CHECKING([for asm .symver support])
+AC_COMPILE_IFELSE([dnl
+	AC_LANG_PROGRAM([[]],[[
+		int f1() { }
+		int f2() { }
+		asm(".symver f1, f@VER1");
+		asm(".symver f2, f@@VER2");
+		int main(int argc, char **argv) { }
+	]])dnl
+],[
+	AC_DEFINE([HAVE_ASM_SYMVERS],1,[Define if there is asm .symver support.])
+	VERSIONMAPLDFLAGS="-Wl,--version-script=\$(srcdir)/libgphoto2_port.ver"
+	AC_MSG_RESULT(yes)
+],[
+	VERSIONMAPLDFLAGS=""
+	AC_MSG_RESULT(no)
+])
+AC_SUBST(VERSIONMAPLDFLAGS)
 
 dnl Check for mnt_mountp in struct mnttab
 AC_MSG_CHECKING([for mnt_mountp in struct mnttab])
@@ -192,7 +212,6 @@ AC_MSG_RESULT(no)
 ])
 
 
-AC_SUBST(MDNS_LIBS)
 
 dnl Checks for library functions.
 AC_CHECK_FUNCS(strerror snprintf vsnprintf)
