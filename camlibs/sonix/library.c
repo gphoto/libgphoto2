@@ -56,7 +56,9 @@ static const struct {
 	unsigned short idVendor;
 	unsigned short idProduct;
 } models[] = {
-	{"DC31VC", GP_DRIVER_STATUS_EXPERIMENTAL, 0x0c45, 0x8000},	
+	{"DC31VC", GP_DRIVER_STATUS_EXPERIMENTAL, 0x0c45, 0x8000},
+	{"Wild Planet Digital Spy Camera 70137", GP_DRIVER_STATUS_EXPERIMENTAL, 
+	    0x0c45, 0x8001},
 	{"Sakar Digital Keychain 11199", GP_DRIVER_STATUS_EXPERIMENTAL, 
 	    0x0c45, 0x8003},
 	{"Sakar Digital no, 6637x", GP_DRIVER_STATUS_EXPERIMENTAL, 

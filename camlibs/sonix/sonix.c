@@ -119,15 +119,18 @@ int sonix_init (GPPort *port, CameraPrivateLibrary *priv)
 		 * type, which is OV7630. For the Sakar Digital Keychain 
 		 * 11199 the string is 96 03 31 08, instead. For the 
 		 * Mini-Shotz ms350 it is 96 08 26 09. For the Genius 
-		 * Smart 300 it is 96 00 67 09. Since the cameras have 
-		 * different abilities, we ought to distinguish. 
+		 * Smart 300 it is 96 00 67 09 and for the Digital
+		 * Spy Camera 70137 it is 96 01 31 09.  Since the cameras
+		 * have different abilities, we ought to distinguish. 
 		 */
 		SONIX_READ4 (port, (char *)reading);
 	}
-	GP_DEBUG("Above is the 4-byte ID string of your camera.");
-	GP_DEBUG("Please report if it is anything other than");
-	GP_DEBUG("96 0a 76 07   or   96 03 31 08  or  96 08 26 09\n");
-	GP_DEBUG("or  96 00 67 09\n");
+	GP_DEBUG("%02x %02x %02x %02x\n", reading[0], reading[1],
+		 reading[2], reading[3]);
+	GP_DEBUG("Above is the 4-byte ID string of your camera. ");
+	GP_DEBUG("Please report if it is anything other than\n");
+	GP_DEBUG("96 0a 76 07  or  96 03 31 08  or  96 08 26 09\n");
+	GP_DEBUG("or  96 00 67 09  or  96 01 31 09\n");
 	GP_DEBUG("Thanks!\n" );
 	for(i=0;i<4;i++)
 		priv->fwversion[i] = reading[i];
@@ -150,6 +153,12 @@ int sonix_init (GPPort *port, CameraPrivateLibrary *priv)
 	case 0x00:
 		priv->offset=0;
 		priv->avi_offset=0;
+		priv->can_do_capture=0;
+		priv->post=0;
+		break;
+	case 0x01:
+		priv->offset=8;
+		priv->avi_offset=8;
 		priv->can_do_capture=0;
 		priv->post=0;
 		break;
