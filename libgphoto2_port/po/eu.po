@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2007-07-21 12:38+0200\n"
+"POT-Creation-Date: 2007-12-28 23:39+0100\n"
 "PO-Revision-Date: 2005-05-14 13:32+0200\n"
 "Last-Translator: Iñaki Larrañaga  <dooteo@euskalgnu.org>\n"
 "Language-Team:  <itzulpena@euskalgnu.org>\n"
@@ -16,89 +16,89 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.9.1\n"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:211
+#: libgphoto2_port/gphoto2-port-info-list.c:228
 #, fuzzy, c-format
 msgid "Called for filename '%s'."
 msgstr "Huts egin du '%s' irekitzean (%m)."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:216
+#: libgphoto2_port/gphoto2-port-info-list.c:233
 #, fuzzy, c-format
 msgid "Could not load '%s': '%s'."
 msgstr "Ezin izan da '%s' itxi (%m)."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:224
+#: libgphoto2_port/gphoto2-port-info-list.c:241
 #, fuzzy, c-format
 msgid "Could not find some functions in '%s': '%s'."
 msgstr "Ezin izan da '%s' hustu (%m)."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:236
+#: libgphoto2_port/gphoto2-port-info-list.c:253
 #, c-format
 msgid "'%s' already loaded"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:245
+#: libgphoto2_port/gphoto2-port-info-list.c:262
 #, fuzzy, c-format
 msgid "Could not load port driver list: '%s'."
 msgstr "Ezin izan da '%s' gailua blokeatu"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:252
+#: libgphoto2_port/gphoto2-port-info-list.c:275
 #, c-format
 msgid "Loaded '%s' ('%s') from '%s'."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:284
+#: libgphoto2_port/gphoto2-port-info-list.c:308
 #, c-format
 msgid "Using ltdl to load io-drivers from '%s'..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:310
+#: libgphoto2_port/gphoto2-port-info-list.c:338
 #, c-format
 msgid "Counting entries (%i available)..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:319
+#: libgphoto2_port/gphoto2-port-info-list.c:347
 #, c-format
 msgid "%i regular entries available."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:349
+#: libgphoto2_port/gphoto2-port-info-list.c:377
 #, c-format
 msgid "Looking for path '%s' (%i entries available)..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:361
+#: libgphoto2_port/gphoto2-port-info-list.c:389
 #, c-format
 msgid "Starting regex search for '%s'..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:369
+#: libgphoto2_port/gphoto2-port-info-list.c:397
 #, c-format
 msgid "Trying '%s'..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:390
+#: libgphoto2_port/gphoto2-port-info-list.c:418
 msgid "regcomp failed"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:401
+#: libgphoto2_port/gphoto2-port-info-list.c:429
 #, c-format
 msgid "re_match failed (%i)"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:409
+#: libgphoto2_port/gphoto2-port-info-list.c:437
 msgid "regexec failed"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:415
+#: libgphoto2_port/gphoto2-port-info-list.c:443
 msgid "Generic Port"
 msgstr "Ataka generikoa"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:439
+#: libgphoto2_port/gphoto2-port-info-list.c:467
 #, c-format
 msgid "Looking up entry '%s'..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:469
+#: libgphoto2_port/gphoto2-port-info-list.c:501
 #, c-format
 msgid "Getting info of entry %i (%i available)..."
 msgstr ""
@@ -195,226 +195,226 @@ msgstr ""
 msgid "Unknown error"
 msgstr "Errore ezezaguna"
 
-#: libgphoto2_port/gphoto2-port.c:55
+#: libgphoto2_port/gphoto2-port.c:59
 #, c-format
 msgid "The operation '%s' is not supported by this device"
 msgstr "Gailu honek ez du '%s' eragiketa onartzen"
 
-#: libgphoto2_port/gphoto2-port.c:56
+#: libgphoto2_port/gphoto2-port.c:60
 msgid "The port has not yet been initialized"
 msgstr "Ez da ataka hasieratu oraindik"
 
-#: libgphoto2_port/gphoto2-port.c:87
+#: libgphoto2_port/gphoto2-port.c:91
 msgid "Creating new device..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:165
+#: libgphoto2_port/gphoto2-port.c:173
 #, fuzzy, c-format
 msgid "Could not load '%s' ('%s')."
 msgstr "Ezin izan da '%s' itxi (%m)."
 
-#: libgphoto2_port/gphoto2-port.c:175
+#: libgphoto2_port/gphoto2-port.c:183
 #, c-format
 msgid "Could not find 'gp_port_library_operations' in '%s' ('%s')"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:255
+#: libgphoto2_port/gphoto2-port.c:299
 #, c-format
 msgid "Opening %s port..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:277
+#: libgphoto2_port/gphoto2-port.c:321
 msgid "Closing port..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:299
+#: libgphoto2_port/gphoto2-port.c:343
 msgid "Freeing port..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:346
+#: libgphoto2_port/gphoto2-port.c:390
 #, c-format
 msgid "Writing %i=0x%x byte(s) to port..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:359
+#: libgphoto2_port/gphoto2-port.c:403
 #, fuzzy, c-format
 msgid "Could only write %i out of %i byte(s)"
 msgstr "Ezin izan da atakan idatzi (%m)"
 
-#: libgphoto2_port/gphoto2-port.c:382
+#: libgphoto2_port/gphoto2-port.c:426
 #, c-format
 msgid "Reading %i=0x%x bytes from port..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:393 libgphoto2_port/gphoto2-port.c:430
-#: libgphoto2_port/gphoto2-port.c:470 libgphoto2_port/gphoto2-port.c:895
+#: libgphoto2_port/gphoto2-port.c:437 libgphoto2_port/gphoto2-port.c:474
+#: libgphoto2_port/gphoto2-port.c:514 libgphoto2_port/gphoto2-port.c:939
 #, c-format
 msgid "Could only read %i out of %i byte(s)"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:419
+#: libgphoto2_port/gphoto2-port.c:463
 #, c-format
 msgid "Reading %i=0x%x bytes from interrupt endpoint..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:480
+#: libgphoto2_port/gphoto2-port.c:524
 #, c-format
 msgid "Reading %i=0x%x bytes from interrupt endpoint (fast)..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:505
+#: libgphoto2_port/gphoto2-port.c:549
 #, c-format
 msgid "Setting timeout to %i millisecond(s)..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:541
+#: libgphoto2_port/gphoto2-port.c:585
 msgid "Getting timeout..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:545
+#: libgphoto2_port/gphoto2-port.c:589
 #, c-format
 msgid "Current timeout: %i milliseconds"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:567
+#: libgphoto2_port/gphoto2-port.c:611
 msgid "Setting settings..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:628
+#: libgphoto2_port/gphoto2-port.c:672
 #, fuzzy, c-format
 msgid "Getting level of pin %i..."
 msgstr "Ezin izan da %i pin-aren maila lortu (%m)."
 
-#: libgphoto2_port/gphoto2-port.c:637
+#: libgphoto2_port/gphoto2-port.c:681
 #, c-format
 msgid "Level of pin %i: %i"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:663
+#: libgphoto2_port/gphoto2-port.c:707
 msgid "low"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:664
+#: libgphoto2_port/gphoto2-port.c:708
 msgid "high"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:690
+#: libgphoto2_port/gphoto2-port.c:734
 #, c-format
 msgid "Setting pin %i (%s: '%s') to '%s'..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:717
+#: libgphoto2_port/gphoto2-port.c:761
 #, c-format
 msgid "Sending break (%i milliseconds)..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:743
+#: libgphoto2_port/gphoto2-port.c:787
 msgid "Flushing port..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:817
+#: libgphoto2_port/gphoto2-port.c:861
 #, fuzzy
 msgid "Clear halt..."
 msgstr "clear_halt"
 
-#: libgphoto2_port/gphoto2-port.c:848
+#: libgphoto2_port/gphoto2-port.c:892
 #, c-format
 msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:883
+#: libgphoto2_port/gphoto2-port.c:927
 #, c-format
 msgid "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:890
+#: libgphoto2_port/gphoto2-port.c:934
 msgid "msg_read"
 msgstr "msg_read"
 
-#: libgphoto2_port/gphoto2-port.c:1117
+#: libgphoto2_port/gphoto2-port.c:1161
 msgid "No error description available"
 msgstr "Errorearen azalpena ez dago eskuragarri"
 
-#: serial/unix.c:230
+#: serial/unix.c:233
 #, c-format
 msgid "Could not lock device '%s'"
 msgstr "Ezin izan da '%s' gailua blokeatu"
 
-#: serial/unix.c:240
+#: serial/unix.c:243
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr "'%s' gailua %d pid-ek blokeatuta dauka"
 
-#: serial/unix.c:243
+#: serial/unix.c:246
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr "Ezin izan da '%s' gailua blokeatu (dev_lock-ek %d itzuli du)"
 
-#: serial/unix.c:277
+#: serial/unix.c:280
 #, c-format
 msgid "Device '%s' could not be unlocked."
 msgstr "Ezin izan da '%s' gailua desblokeatu."
 
-#: serial/unix.c:289
+#: serial/unix.c:292
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr "Ezin izan da '%s' gailua desblokeatu, %d pid-ak blokeatuta baitauka."
 
-#: serial/unix.c:293
+#: serial/unix.c:296
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr "Ezin izan da '%s' desblokeatu (dev_unlock-ek %d itzuli du)"
 
-#: serial/unix.c:371
+#: serial/unix.c:374
 #, c-format
 msgid "Serial Port %i"
 msgstr "Serieko ataka: %i"
 
-#: serial/unix.c:462
+#: serial/unix.c:465
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Huts egin du '%s' irekitzean (%m)."
 
-#: serial/unix.c:480
+#: serial/unix.c:483
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Ezin izan da '%s' itxi (%m)."
 
-#: serial/unix.c:534
+#: serial/unix.c:537
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "Ezin izan da atakan idatzi (%m)"
 
-#: serial/unix.c:606
+#: serial/unix.c:609
 msgid "Parity error."
 msgstr "Paritate-errorea."
 
-#: serial/unix.c:610
+#: serial/unix.c:613
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Ustegabeko 0xff 0x%02x paritate-erantzuna sekuentzia."
 
-#: serial/unix.c:653
+#: serial/unix.c:656
 #, c-format
 msgid "Unknown pin %i."
 msgstr "%i PIN ezezaguna."
 
-#: serial/unix.c:675
+#: serial/unix.c:678
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Ezin izan da %i pin-aren maila lortu (%m)."
 
-#: serial/unix.c:710
+#: serial/unix.c:713
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "Ezin izan da %i pin-aren maila %i gisa ezarri (%m)."
 
-#: serial/unix.c:735
+#: serial/unix.c:738
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "Ezin izan da '%s' hustu (%m)."
 
-#: serial/unix.c:848
+#: serial/unix.c:851
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Ezin izan da %d(r)en baudio-tasa ezarri"
@@ -458,33 +458,33 @@ msgstr ""
 msgid "Could not release interface %d (%m)."
 msgstr "Ezin izan da %d interfazea askatu (%m)."
 
-#: usb/libusb.c:298
+#: usb/libusb.c:300
 #, fuzzy, c-format
 msgid "Could not reset USB port (%m)."
 msgstr "Ezin izan da USB ataka itxi (%m)."
 
-#: usb/libusb.c:304
+#: usb/libusb.c:306
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr "Ezin izan da USB ataka itxi (%m)."
 
-#: usb/libusb.c:551
+#: usb/libusb.c:555
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "Ezin izan da %d/%d konfigurazioa ezarri (%m)."
 
-#: usb/libusb.c:584
+#: usb/libusb.c:588
 #, fuzzy, c-format
 msgid "Could not set altsetting from %d to %d (%m)"
 msgstr "Ezin izan da %d/%d aukerazko konfigurazioa ezarri (%m)"
 
-#: usb/libusb.c:676
+#: usb/libusb.c:680
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr ""
 "Zehaztutako hornitzailearen edo produktuaren IDa (0x%x,0x%x) ez da baliozkoa."
 
-#: usb/libusb.c:712
+#: usb/libusb.c:716
 #, c-format
 msgid ""
 "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
@@ -493,7 +493,7 @@ msgstr ""
 "USB gailua (0x%x hornitzailea, 0x%x produktua) biltegiratze-gailua da, eta "
 "ez du gphoto2-rekin funtzionatuko. Erreferentzia: %s"
 
-#: usb/libusb.c:754
+#: usb/libusb.c:758
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
@@ -502,7 +502,7 @@ msgstr ""
 "Ezin izan da USB gailua (0x%x hornitzailea, 0x%x produktua) aurkitu. Ziurta "
 "zaitez gailua ordenagailuari konektatuta dagoela."
 
-#: usb/libusb.c:984
+#: usb/libusb.c:988
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
