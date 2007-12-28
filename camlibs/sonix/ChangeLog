@@ -1,3 +1,8 @@
+2007-12-27   Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: added Wild Planet Digital Spy Camera, contributed by 
+		     Jorma Laaksonen <jorma.laaksonen@tkk.fi>
+	* sonix.c:   Features of new camera listed. 
+
 2007-12-18   Theodore Kilgore <kilgota@auburn.edu>
 	* library.c: Processing of AVI output changed, so that output is 
 		     written to file one frame at a time, to reduce 

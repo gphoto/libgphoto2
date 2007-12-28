@@ -1,3 +1,7 @@
+2007-12-27   Theodore Kilgore <kilgota@auburn.edu>  
+	* library.c: Added Jazz JDC9, reported by 
+	Victor Hodge <vhodge@sympatico.ca>.
+
 2007-12-23   Theodore Kilgore <kilgota@auburn.edu>  
 	* library.c: Added Sakar no. 92045 Spiderman, reported by 
 	Martin Laberge <mlsoft@videotron.ca>.
