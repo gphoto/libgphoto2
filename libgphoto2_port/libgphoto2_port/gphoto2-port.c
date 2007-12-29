@@ -143,11 +143,7 @@ gp_port_exit (GPPort *port)
  * \return a gphoto2 error code
  **/
 int
-#ifdef __LIBGPHOTO2_INCLUDE_OLD_VERSIONS
-gp_port_set_info_v250 (GPPort *port, GPPortInfo info)
-#else
 gp_port_set_info (GPPort *port, GPPortInfo info)
-#endif
 {
 	GPPortLibraryOperations ops_func;
 
@@ -250,11 +246,7 @@ gp_port_set_info_v240 (GPPort *port, GPPortInfo_v240 info)
  * \return a gphoto2 error code
  **/
 int
-#ifdef __LIBGPHOTO2_INCLUDE_OLD_VERSIONS
-gp_port_get_info_v250 (GPPort *port, GPPortInfo *info)
-#else
 gp_port_get_info (GPPort *port, GPPortInfo *info)
-#endif
 {
 	CHECK_NULL (port && info);
 

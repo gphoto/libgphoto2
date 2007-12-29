@@ -25,6 +25,7 @@
 
 #ifdef HAVE_ASM_SYMVERS
 # define __LIBGPHOTO2_INCLUDE_OLD_VERSIONS
+# define __LIBGPHOTO2_INCLUDE_OLD_VERSIONS_INFOLIST
 #endif
 
 #include <gphoto2/gphoto2-port-info-list.h>
@@ -166,11 +167,7 @@ gp_port_info_list_free (GPPortInfoList *list)
  * \return A non-negative number or a gphoto2 error code
  **/
 int
-#ifdef __LIBGPHOTO2_INCLUDE_OLD_VERSIONS
-gp_port_info_list_append_v250 (GPPortInfoList *list, GPPortInfo info)
-#else
 gp_port_info_list_append (GPPortInfoList *list, GPPortInfo info)
-#endif
 {
 	int generic, i;
 	GPPortInfo *new_info;
@@ -488,11 +485,7 @@ gp_port_info_list_lookup_name (GPPortInfoList *list, const char *name)
  * \return a gphoto2 error code
  **/
 int
-#ifdef __LIBGPHOTO2_INCLUDE_OLD_VERSIONS
-gp_port_info_list_get_info_v250 (GPPortInfoList *list, int n, GPPortInfo *info)
-#else
 gp_port_info_list_get_info (GPPortInfoList *list, int n, GPPortInfo *info)
-#endif
 {
 	int i;
 

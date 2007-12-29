@@ -104,15 +104,20 @@ typedef GPPortInfo gp_port_info;
 #ifdef __LIBGPHOTO2_INCLUDE_OLD_VERSIONS
 int gp_port_info_list_append_v240 (GPPortInfoList *list, GPPortInfo_v240 info);
 int gp_port_info_list_append_v250 (GPPortInfoList *list, GPPortInfo info);
-asm(".symver gp_port_info_list_append_v240, gp_port_info_list_append@LIBGPHOTO2_0_0");
-asm(".symver gp_port_info_list_append_v250, gp_port_info_list_append@@LIBGPHOTO2_5_0");
-#define gp_port_info_list_append gp_port_info_list_append_v250
+
 
 int gp_port_info_list_get_info_v240 (GPPortInfoList *list, int n, GPPortInfo_v240 *info);
 int gp_port_info_list_get_info_v250 (GPPortInfoList *list, int n, GPPortInfo *info);
+
+#ifdef __LIBGPHOTO2_INCLUDE_OLD_VERSIONS_INFOLIST
+asm(".symver gp_port_info_list_append_v240, gp_port_info_list_append@LIBGPHOTO2_0_0");
+asm(".symver gp_port_info_list_append_v250, gp_port_info_list_append@@LIBGPHOTO2_5_0");
+#define gp_port_info_list_append gp_port_info_list_append_v250
 asm(".symver gp_port_info_list_get_info_v240, gp_port_info_list_get_info@LIBGPHOTO2_0_0");
 asm(".symver gp_port_info_list_get_info_v250, gp_port_info_list_get_info@@LIBGPHOTO2_5_0");
 #define gp_port_info_list_get_info gp_port_info_list_get_info_v250
+#endif
+
 #endif
 
 /**
