@@ -34,6 +34,7 @@
 
 #ifdef HAVE_ASM_SYMVERS
 # define __LIBGPHOTO2_INCLUDE_OLD_VERSIONS
+# define __LIBGPHOTO2_INCLUDE_OLD_VERSIONS_PORT
 #endif
 
 #include <gphoto2/gphoto2-port-result.h>

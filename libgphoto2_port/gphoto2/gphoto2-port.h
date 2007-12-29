@@ -223,14 +223,17 @@ const char *gp_port_get_error (GPPort *port);
 #ifdef __LIBGPHOTO2_INCLUDE_OLD_VERSIONS
 int gp_port_set_info_v240    (GPPort *port, GPPortInfo_v240  info);
 int gp_port_set_info_v250    (GPPort *port, GPPortInfo  info);
+int gp_port_get_info_v240    (GPPort *port, GPPortInfo_v240 *info);
+int gp_port_get_info_v250    (GPPort *port, GPPortInfo *info);
+
+#ifdef __LIBGPHOTO2_INCLUDE_OLD_VERSIONS_PORT
 asm(".symver gp_port_set_info_v240, gp_port_set_info@LIBGPHOTO2_0_0");
 asm(".symver gp_port_set_info_v250, gp_port_set_info@@LIBGPHOTO2_5_0");
 #define gp_port_set_info gp_port_set_info_v250
-int gp_port_get_info_v240    (GPPort *port, GPPortInfo_v240 *info);
-int gp_port_get_info_v250    (GPPort *port, GPPortInfo *info);
 asm(".symver gp_port_get_info_v240, gp_port_get_info@LIBGPHOTO2_0_0");
 asm(".symver gp_port_get_info_v250, gp_port_get_info@@LIBGPHOTO2_5_0");
 #define gp_port_get_info gp_port_get_info_v250
+#endif
 #endif
 
 /* DEPRECATED */
