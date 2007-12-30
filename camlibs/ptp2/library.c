@@ -2943,7 +2943,7 @@ gpfile_getfunc (PTPParams *params, void *priv,
 	int ret;
 	size_t	gotlensize;
 
-	ret = gp_file_slurp (private->file, bytes, wantlen, &gotlensize);
+	ret = gp_file_slurp (private->file, (char*)bytes, wantlen, &gotlensize);
 	*gotlen = gotlensize;
 	if (ret != GP_OK)
 		return PTP_ERROR_IO;
@@ -2958,7 +2958,7 @@ gpfile_putfunc (PTPParams *params, void *priv,
 	PTPCFHandlerPrivate* private = (PTPCFHandlerPrivate*)priv;
 	int ret;
 	
-	ret = gp_file_append (private->file, bytes, sendlen);
+	ret = gp_file_append (private->file, (char*)bytes, sendlen);
 	if (ret != GP_OK)
 		return PTP_ERROR_IO;
 	*written = sendlen;
