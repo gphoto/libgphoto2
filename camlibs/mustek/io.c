@@ -49,7 +49,7 @@
  * the Baudrate of Rs232.
  * if quiet is true, the function won't print notes
  */
-int mdc800_io_sendCommand_with_retry (GPPort *port,char* command, char* buffer, int length, int maxtries,int quiet)
+int mdc800_io_sendCommand_with_retry (GPPort *port,unsigned char* command, unsigned char* buffer, int length, int maxtries,int quiet)
 {
 	int try=0;
 	int ret=GP_OK;
@@ -79,9 +79,9 @@ int mdc800_io_sendCommand_with_retry (GPPort *port,char* command, char* buffer, 
  * buffer: Strores the answer
  * length: length of answer or null
  */
-int mdc800_io_sendCommand (GPPort*port,char commandid,char par1,char par2,char par3, char* buffer, int length)
+int mdc800_io_sendCommand (GPPort*port,unsigned char commandid,unsigned char par1,unsigned char par2,unsigned char par3, unsigned char* buffer, int length)
 {
-	char command [8];
+	unsigned char command [8];
 	command[0]=COMMAND_BEGIN;
 	command[1]=commandid;
 	command[2]=par1;
@@ -97,9 +97,9 @@ int mdc800_io_sendCommand (GPPort*port,char commandid,char par1,char par2,char p
  * Helper function for rs232 and usb
  * It returns a timeout for the specified command
  */
-int mdc800_io_getCommandTimeout (char command)
+int mdc800_io_getCommandTimeout (unsigned char command)
 {
-	switch ((unsigned char) command)
+	switch (command)
 	{
 		case COMMAND_SET_STORAGE_SOURCE:
 		case COMMAND_SET_TARGET:

@@ -11,7 +11,7 @@
 #define MDC800_FLASHLIGHT_AUTO		0
 
 struct _CameraPrivateLibrary {
-    char system_flags[4];
+    unsigned char system_flags[4];
     int  system_flags_valid;
     int  memory_source;
 };
@@ -59,7 +59,7 @@ int mdc800_setFlashLight (Camera*,int );
 
 char* mdc800_getFlashLightString (int);
 
-int mdc800_getImageQuality (Camera*,char *retval);
+int mdc800_getImageQuality (Camera*,unsigned char *retval);
 int mdc800_setImageQuality (Camera*,int);
 
 int mdc800_getWBandExposure (Camera*,int*, int*);

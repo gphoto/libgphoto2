@@ -52,11 +52,11 @@
  * function will probe for the baudrate.
  */
 static int
-mdc800_sendInitialCommand (Camera *camera, char* answer)
+mdc800_sendInitialCommand (Camera *camera, unsigned char* answer)
 {
 	int	baud_rates[3]={19200,57600,115200};
 	int	rate,ret;
-	char	command [8]={COMMAND_BEGIN,COMMAND_INIT_CONNECT,0,0,0,COMMAND_END,0,0};
+	unsigned char	command [8]={COMMAND_BEGIN,COMMAND_INIT_CONNECT,0,0,0,COMMAND_END,0,0};
 
 	if (camera->port->type == GP_PORT_USB)
 	    return mdc800_io_sendCommand_with_retry(camera->port,command,answer,8,1,1);
@@ -86,7 +86,7 @@ mdc800_sendInitialCommand (Camera *camera, char* answer)
  */
 int mdc800_openCamera (Camera *camera)
 {
-	char answer [8];
+	unsigned char answer [8];
 	int  i,ret;
 
 	if (camera->port->type == GP_PORT_USB) {
@@ -110,7 +110,7 @@ int mdc800_openCamera (Camera *camera)
 	}
 	printCoreNote ("Firmware info (last 5 Bytes) : ");
 	for (i=0; i<8; i++)
-		printCoreNote ("%i ",(unsigned char) answer[i]);
+		printCoreNote ("%i ", answer[i]);
 	printCoreNote ("\n");
 	camera->pl->system_flags_valid=0;
 	camera->pl->memory_source=-1;
@@ -335,7 +335,7 @@ int mdc800_isCFCardPresent(Camera *camera)
 {
 	mdc800_getSystemStatus(camera);
 	if (camera->pl->system_flags_valid)
-		return (((unsigned char)camera->pl->system_flags[0]&1) == 0);
+		return ((camera->pl->system_flags[0]&1) == 0);
 	else
 	{
 		printCoreError ("(mdc800_isCFCardPresent) detection fails.\n");
@@ -347,7 +347,7 @@ int mdc800_isCFCardPresent(Camera *camera)
 int mdc800_isBatteryOk(Camera *camera)
 {
 	mdc800_getSystemStatus(camera);
-	return (((unsigned char)camera->pl->system_flags[0]&4) == 0)?1:0;
+	return ((camera->pl->system_flags[0]&4) == 0)?1:0;
 }
 
 
@@ -358,8 +358,8 @@ int mdc800_isBatteryOk(Camera *camera)
 int mdc800_getMode(Camera *camera)
 {
 	mdc800_getSystemStatus(camera);
-	if (((unsigned char)camera->pl->system_flags[1]&16) == 0)
-		return (((unsigned char)camera->pl->system_flags[1]&32) == 0)?1:0;
+	if ((camera->pl->system_flags[1]&16) == 0)
+		return ((camera->pl->system_flags[1]&32) == 0)?1:0;
 	else
 		return 2;
 }
@@ -372,27 +372,27 @@ int mdc800_getMode(Camera *camera)
 int mdc800_getFlashLightStatus(Camera *camera)
 {
 	mdc800_getSystemStatus(camera);
-	return ((unsigned char)camera->pl->system_flags[3]&7);
+	return (camera->pl->system_flags[3]&7);
 }
 
 
 int mdc800_isLCDEnabled(Camera *camera)
 {
 	mdc800_getSystemStatus(camera);
-	return (((unsigned char)camera->pl->system_flags[1]&4) == 4);
+	return ((camera->pl->system_flags[1]&4) == 4);
 }
 
 
 int mdc800_isMenuOn(Camera *camera)
 {
 	mdc800_getSystemStatus(camera);
-	return (((unsigned char)camera->pl->system_flags[1]&1) == 1);
+	return ((camera->pl->system_flags[1]&1) == 1);
 }
 
 int mdc800_isAutoOffEnabled(Camera *camera)
 {
 	mdc800_getSystemStatus(camera);
-	return (((unsigned char)camera->pl->system_flags[1]&8) == 8);
+	return ((camera->pl->system_flags[1]&8) == 8);
 }
 
 /* ----- Other fine functions------------------------------------------------- */
@@ -654,7 +654,7 @@ int mdc800_getRemainFreeImageCount (Camera *camera,int* h,int* s,int *e)
 	unsigned char data [6];
 	int ret;
 
-	ret = mdc800_io_sendCommand (camera->port,COMMAND_GET_REMAIN_FREE_IMAGE_COUNT,0,0,0,(char*)data,6);
+	ret = mdc800_io_sendCommand (camera->port,COMMAND_GET_REMAIN_FREE_IMAGE_COUNT,0,0,0,data,6);
 	if (ret != GP_OK)
 	{
 		printCoreError ("(mdc800_getRemainFreeImageCount) Error sending Command.\n");
@@ -675,7 +675,7 @@ int mdc800_getRemainFreeImageCount (Camera *camera,int* h,int* s,int *e)
  * Get Image Quallity
  * 0: Economic, 1:Standard, 2:High
  */
-int mdc800_getImageQuality (Camera *camera, char *retval)
+int mdc800_getImageQuality (Camera *camera, unsigned char *retval)
 {
 	int ret;
 	ret = mdc800_io_sendCommand (camera->port,COMMAND_GET_IMAGE_QUALITY,0,0,0,retval,1);
@@ -713,7 +713,7 @@ int mdc800_setWB (Camera *camera, int v)
  */
 int mdc800_getWBandExposure (Camera *camera,int* exp, int* wb)
 {
-	char retval[2];
+	unsigned char retval[2];
 	int ret;
 
 	/* What's that here is a real diffenrence between USB and RS232 */
@@ -722,8 +722,8 @@ int mdc800_getWBandExposure (Camera *camera,int* exp, int* wb)
 	ret = mdc800_io_sendCommand(camera->port,COMMAND_GET_WB_AND_EXPOSURE,0,0,0,retval,2);
 	if (ret == GP_OK)
 	{
-		(*exp)=(unsigned char) retval[toggle]-2;
-		(*wb)=(unsigned char) retval[1-toggle];
+		(*exp)= retval[toggle]-2;
+		(*wb)= retval[1-toggle];
 		return 1;
 	}
 	printCoreError ("(mdc800_getWBandExposure) fails.\n");
@@ -798,12 +798,12 @@ int mdc800_number_of_pictures (Camera *camera, int *nrofpics)
 	}
 */
 
-	ret = mdc800_io_sendCommand(camera->port,COMMAND_GET_NUM_IMAGES,0,0,0,(char*)answer,2);
+	ret = mdc800_io_sendCommand(camera->port,COMMAND_GET_NUM_IMAGES,0,0,0,answer,2);
 	if (ret != GP_OK)
 	{
 		printAPIError ("(mdc800_getNumberOfImages) request Number of Pictures fails.\n");
 		return ret;
 	}
-	*nrofpics=(int)answer[0]*256+answer [1];
+	*nrofpics=answer[0]*256+answer [1];
 	return GP_OK;
 }

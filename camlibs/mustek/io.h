@@ -20,11 +20,11 @@
 #define MDC800_TAKE_PICTURE_TIMEOUT  			20000
 
 
-int mdc800_io_sendCommand_with_retry(GPPort *, char*, char* , int, int,int);
+int mdc800_io_sendCommand_with_retry(GPPort *, unsigned char*, unsigned char* , int, int,int);
 
 /* The API to the upper Layer */
-int mdc800_io_sendCommand(GPPort *, char ,char,char,char,char *,int );
+int mdc800_io_sendCommand(GPPort *, unsigned char ,unsigned char,unsigned char,unsigned char,unsigned char *,int );
 
 /* Helper Function for rs232 and usb */
-int mdc800_io_getCommandTimeout(char);
+int mdc800_io_getCommandTimeout(unsigned char);
 #endif

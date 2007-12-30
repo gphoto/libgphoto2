@@ -41,11 +41,11 @@
 /*
  * Checks wether the camera responds busy
  */
-static int mdc800_usb_isBusy (char* ch)
+static int mdc800_usb_isBusy (unsigned char* ch)
 {
 	int i;
 	for (i=0;i<8;i++)
-		if (ch [i] != (char)0x99)
+		if (ch [i] != 0x99)
 			return 0;
 	return 1;
 }
@@ -54,11 +54,11 @@ static int mdc800_usb_isBusy (char* ch)
 /*
  * Checks wether the Camera is ready
  */
-static int mdc800_usb_isReady (char *ch)
+static int mdc800_usb_isReady (unsigned char *ch)
 {
 	int i;
 	for (i=0;i<8;i++)
-		if (ch [i] != (char)0xbb)
+		if (ch [i] != 0xbb)
 			return 0;
 	return 1;
 }
@@ -71,7 +71,7 @@ static int mdc800_usb_isReady (char *ch)
  * The function stores the readen 8 Bytes in data.
  * and return 0 on success else -1.
  */
-static int mdc800_usb_readFromIrq (GPPort *port,int type,char* data,int timeout)
+static int mdc800_usb_readFromIrq (GPPort *port,int type,unsigned char* data,int timeout)
 {
 	int ret;
 	struct timeval tv;
@@ -82,7 +82,7 @@ static int mdc800_usb_readFromIrq (GPPort *port,int type,char* data,int timeout)
 	while (timeout>=0)
 	{
 		/* try a read */
-		ret = gp_port_check_int(port,data,8);
+		ret = gp_port_check_int(port,(char*)data,8);
 		if (ret!=8)
 		{
 			printCError ("(mdc800_usb_readFromIRQ) reading bytes from irq fails (%d)\n",ret);
@@ -93,7 +93,7 @@ static int mdc800_usb_readFromIrq (GPPort *port,int type,char* data,int timeout)
 			printf ("irq :");
 			for (i=0; i<8; i++)
 			{
-				printf ("%i ", (unsigned char)data [i]);
+				printf ("%i ", data [i]);
 			}
 			printf ("\n");
 		}
@@ -137,9 +137,9 @@ static int mdc800_usb_readFromIrq (GPPort *port,int type,char* data,int timeout)
 	return GP_ERROR_IO;
 }
 
-int mdc800_usb_sendCommand(GPPort*port,char*command,char*buffer,int length)
+int mdc800_usb_sendCommand(GPPort*port,unsigned char*command,unsigned char*buffer,int length)
 {
-	char tmp_buffer [16];
+	unsigned char tmp_buffer [16];
 	GPPortSettings settings;
 	int ret;
 
@@ -156,19 +156,19 @@ int mdc800_usb_sendCommand(GPPort*port,char*command,char*buffer,int length)
 	    fprintf(stderr,"Camera did not get ready before mdc800_usb_sendCommand!\n");
 	}
 	
-	if ((ret=gp_port_write(port,command,8)) != 8)
+	if ((ret=gp_port_write(port,(char*)command,8)) != 8)
 	{
 		printCError ("(mdc800_usb_sendCommand) sending Command fails (%d)!\n",ret);
 		return ret;
 	}
 
 	/* receive the answer */
-	switch ((unsigned char) command [1])
+	switch (command [1])
 	{
 	case COMMAND_GET_THUMBNAIL:
 	case COMMAND_GET_IMAGE:
 		gp_port_set_timeout (port, 2000);
-		if (gp_port_read (port,buffer,64) != 64)
+		if (gp_port_read (port,(char*)buffer,64) != 64)
 		{
 			printCError ("(mdc800_usb_sendCommand) requesting 64Byte dummy data fails.\n");
 			return GP_ERROR_IO;
@@ -178,7 +178,7 @@ int mdc800_usb_sendCommand(GPPort*port,char*command,char*buffer,int length)
 			int readen=0;
 			while (readen < length)
 			{
-				if (gp_port_read(port,buffer+readen,64) != 64)
+				if (gp_port_read(port,(char*)(buffer+readen),64) != 64)
 				{
 					printCError ("(mdc800_usb_sendCommand) reading image data fails.\n");
 					return 0;

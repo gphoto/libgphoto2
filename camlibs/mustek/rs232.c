@@ -39,7 +39,7 @@
  * buffer: Strores the answer
  * length: length of answer or null
  */
-int mdc800_rs232_sendCommand(GPPort *port,char* command, char* buffer, int length)
+int mdc800_rs232_sendCommand(GPPort *port,unsigned char* command, unsigned char* buffer, int length)
 {
 	char answer;
 	int fault=0,ret;
@@ -53,7 +53,7 @@ int mdc800_rs232_sendCommand(GPPort *port,char* command, char* buffer, int lengt
 	/* Send command */
 	for (i=0; i<6; i++)
 	{
-		if (gp_port_write (port, &command[i] ,1) < GP_OK)
+		if (gp_port_write (port, (char*)&command[i] ,1) < GP_OK)
 		{
 			printCError ("(mdc800_rs232_sendCommand) sending Byte %i fails!\n",i);
 			fault=1;
@@ -143,12 +143,12 @@ int mdc800_rs232_waitForCommit (GPPort *port,char commandid)
 /*
  * receive Bytes from camera
  */
-int mdc800_rs232_receive (GPPort *port,char* buffer, int b)
+int mdc800_rs232_receive (GPPort *port,unsigned char* buffer, int b)
 {
 	int ret;
 	gp_port_set_timeout (port,MDC800_DEFAULT_TIMEOUT );
 
-	ret=gp_port_read(port,buffer,b);
+	ret=gp_port_read(port,(char*)buffer,b);
 	if (ret!=b)
 	{
 		printCError ("(mdc800_rs232_receive) can't read %i Bytes !\n",b);
@@ -162,10 +162,11 @@ int mdc800_rs232_receive (GPPort *port,char* buffer, int b)
  * downloads data from camera and send
  * a checksum every 512 bytes.
  */
-int mdc800_rs232_download (GPPort *port,char* buffer, int size)
+int mdc800_rs232_download (GPPort *port,unsigned char* buffer, int size)
 {
-	int checksum,readen=0,i;
-	char DSC_checksum;
+	int readen=0,i;
+	unsigned char checksum;
+	unsigned char DSC_checksum;
 	int numtries=0;
 
 	gp_port_set_timeout(port, MDC800_DEFAULT_TIMEOUT );
@@ -176,7 +177,7 @@ int mdc800_rs232_download (GPPort *port,char* buffer, int size)
 			return readen;
 		checksum=0;
 		for (i=0; i<512; i++)
-			checksum=(checksum+(unsigned char) buffer [readen+i])%256;
+			checksum=(checksum+buffer[readen+i])%256;
 		if (gp_port_write (port,(char*) &checksum,1) < GP_OK)
 			return readen;
 
@@ -184,10 +185,10 @@ int mdc800_rs232_download (GPPort *port,char* buffer, int size)
 			return readen;
 
 
-		if ((char) checksum != DSC_checksum)
+		if (checksum != DSC_checksum)
 		{
 			numtries++;
-			printCError ("(mdc800_rs232_download) checksum: software %i, DSC %i , reload block! (%i) \n",checksum,(unsigned char)DSC_checksum,numtries);
+			printCError ("(mdc800_rs232_download) checksum: software %i, DSC %i , reload block! (%i) \n",checksum,DSC_checksum,numtries);
 			if (numtries > 10)
 			{
 				printCError ("(mdc800_rs232_download) to many retries, giving up..");
@@ -204,12 +205,11 @@ int mdc800_rs232_download (GPPort *port,char* buffer, int size)
 
 	{
 		int i,j;
-		unsigned char* b=(unsigned char*) buffer;
 		for (i=0; i<4; i++)
 		{
 			printCError ("%i: ",i);
 			for (j=0; j<8; j++)
-				printCError (" %i", b[i*8+j]);
+				printCError (" %i", buffer[i*8+j]);
 			printCError ("\n");
 		}
 	}
