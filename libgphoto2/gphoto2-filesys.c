@@ -210,7 +210,7 @@ gp_filesystem_get_exif_mtime (CameraFilesystem *fs, const char *folder,
         }
 
         gp_file_get_data_and_size (file, &data, &size);
-        t = get_exif_mtime (data, size);
+        t = get_exif_mtime ((unsigned char*)data, size);
         gp_file_unref (file);
 
         return (t);
@@ -1689,7 +1689,7 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 		CU (gp_filesystem_get_file_impl (fs, folder, filename,
 				GP_FILE_TYPE_EXIF, efile, context), efile);
 		CU (gp_file_get_data_and_size (efile, &data, &size), efile);
-		ed = exif_data_new_from_data (data, size);
+		ed = exif_data_new_from_data ((unsigned char*)data, size);
 		gp_file_unref (efile);
 		if (!ed) {
 			GP_DEBUG ("Could not parse EXIF data of "
@@ -1706,7 +1706,7 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 		 * We found a thumbnail in EXIF data! Those 
 		 * thumbnails are always JPEG. Set up the file.
 		 */
-		r = gp_file_set_data_and_size (file, ed->data, ed->size);
+		r = gp_file_set_data_and_size (file, (char*)ed->data, ed->size);
 		if (r < 0) {
 			exif_data_unref (ed);
 			return (r);
@@ -1739,7 +1739,7 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 		CU (gp_filesystem_get_file_impl (fs, folder, filename,
 				GP_FILE_TYPE_PREVIEW, efile, context), efile);
 		CU (gp_file_get_data_and_size (efile, &data, &size), efile);
-		ed = exif_data_new_from_data (data, size);
+		ed = exif_data_new_from_data ((unsigned char*)data, size);
 		gp_file_unref (efile);
 		if (!ed) {
 			GP_DEBUG ("Could not parse EXIF data of thumbnail of "
@@ -1748,7 +1748,7 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 		}
 		exif_data_save_data (ed, &buf, &buf_size);
 		exif_data_unref (ed);
-		r = gp_file_set_data_and_size (file, buf, buf_size);
+		r = gp_file_set_data_and_size (file, (char*)buf, buf_size);
 		if (r < 0) {
 			free (buf);
 			return (r);
@@ -2300,7 +2300,7 @@ gp_filesystem_set_file_noop (CameraFilesystem *fs, const char *folder,
         if (!t && (type == GP_FILE_TYPE_NORMAL)) {
 		GP_DEBUG ("Searching data for mtime...");
 		CR (gp_file_get_data_and_size (file, &data, &size));
-		t = get_exif_mtime (data, size);
+		t = get_exif_mtime ((unsigned char*)data, size);
 	}
 #endif
 
