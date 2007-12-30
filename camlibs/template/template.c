@@ -98,6 +98,7 @@
  *
  * This function is a method of the Camera object.
  */
+int camera_exit (Camera *camera, GPContext *context);
 int
 camera_exit (Camera *camera, GPContext *context) 
 {
@@ -110,6 +111,7 @@ camera_exit (Camera *camera, GPContext *context)
  *
  * This function is a method of the Camera object.
  */
+int camera_config_get (Camera *camera, CameraWidget **window, GPContext *context);
 int
 camera_config_get (Camera *camera, CameraWidget **window, GPContext *context) 
 {
@@ -128,6 +130,7 @@ camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
  *
  * This function is a method of the Camera object.
  */
+int camera_config_set (Camera *camera, CameraWidget *window, GPContext *context);
 int
 camera_config_set (Camera *camera, CameraWidget *window, GPContext *context) 
 {
@@ -147,6 +150,7 @@ camera_config_set (Camera *camera, CameraWidget *window, GPContext *context)
  *
  * This function is a method of the Camera object.
  */
+int camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context);
 int
 camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 {
@@ -162,6 +166,9 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
  */
 int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
+		GPContext *context);
+int
+camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		GPContext *context)
 {
 	return GP_OK;
@@ -174,6 +181,8 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
  *
  * This function is a method of the Camera object.
  */
+int
+camera_summary (Camera *camera, CameraText *summary, GPContext *context);
 int
 camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
@@ -189,6 +198,8 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
  * This function is a method of the Camera object.
  */
 int
+camera_manual (Camera *camera, CameraText *manual, GPContext *context);
+int
 camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 {
 	return GP_OK;
@@ -201,6 +212,8 @@ camera_manual (Camera *camera, CameraText *manual, GPContext *context)
  *
  * This function is a method of the Camera object.
  */
+int
+camera_about (Camera *camera, CameraText *about, GPContext *context);
 int
 camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
@@ -232,9 +245,13 @@ camera_about (Camera *camera, CameraText *about, GPContext *context)
 int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *data,
+	       GPContext *context);
+int
+get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
+	       CameraFileType type, CameraFile *file, void *data,
 	       GPContext *context)
 {
-	Camera *camera = data;
+	/*Camera *camera = data;*/
 
 	/*
 	 * Get the file from the camera. Use gp_file_set_mime_type,
@@ -252,9 +269,12 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
  */
 int
 put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
+	       void *data, GPContext *context);
+int
+put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	       void *data, GPContext *context)
 {
-	Camera *camera = data;
+	/*Camera *camera = data;*/
 
 	/*
 	 * Upload the file to the camera. Use gp_file_get_data_and_size,
@@ -272,9 +292,12 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
  */
 int
 delete_file_func (CameraFilesystem *fs, const char *folder,
+		  const char *filename, void *data, GPContext *context);
+int
+delete_file_func (CameraFilesystem *fs, const char *folder,
 		  const char *filename, void *data, GPContext *context)
 {
-	Camera *camera = data;
+	/*Camera *camera = data;*/
 
 	/* Delete the file from the camera. */
 
@@ -289,9 +312,12 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
  */
 int
 delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
+		 GPContext *context);
+int
+delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 		 GPContext *context)
 {
-	Camera *camera = data;
+	/*Camera *camera = data;*/
 
 	/*
 	 * Delete all files in the given folder. If your camera doesn't have
@@ -311,9 +337,12 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
  */
 int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
+	       CameraFileInfo *info, void *data, GPContext *context);
+int
+get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileInfo *info, void *data, GPContext *context)
 {
-	Camera *camera = data;
+	/*Camera *camera = data;*/
 
 	return GP_OK;
 }
@@ -326,9 +355,12 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
  */
 int
 set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
+	       CameraFileInfo info, void *data, GPContext *context);
+int
+set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	       CameraFileInfo info, void *data, GPContext *context)
 {
-	Camera *camera = data;
+	/*Camera *camera = data;*/
 
 	/* Set the file info here from <info> */
 
@@ -343,9 +375,12 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
  */
 int
 folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
+		  void *data, GPContext *context);
+int
+folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		  void *data, GPContext *context)
 {
-	Camera *camera = data;
+	/*Camera *camera = data;*/
 
 	/* List your folders here */
 
@@ -360,9 +395,12 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
  */
 int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
+		void *data, GPContext *context);
+int
+file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data, GPContext *context)
 {
-	Camera *camera = data;
+	/*Camera *camera = data;*/
 
 	/* List your files here */
 
@@ -378,9 +416,14 @@ int
 storage_info_func (CameraFilesystem *fs,
 		CameraStorageInformation **storageinformations,
 		int *nrofstorageinformations, void *data,
+		GPContext *context);
+int
+storage_info_func (CameraFilesystem *fs,
+		CameraStorageInformation **storageinformations,
+		int *nrofstorageinformations, void *data,
 		GPContext *context) 
 {
-	Camera *camera = data;
+	/*Camera *camera = data;*/
 
 	/* List your storages here */
 
