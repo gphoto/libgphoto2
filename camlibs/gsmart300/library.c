@@ -258,19 +258,17 @@ get_file_func (CameraFilesystem *fs, const char *folder,
 	       CameraFile *file, void *user_data, GPContext *context)
 {
 	Camera *camera = user_data;
-	unsigned char *data = NULL;
-	int size, number, filetype;
+	int number, filetype;
 
 	CHECK (number = gp_filesystem_number (camera->fs, folder, filename, 
 				              context));
 	switch (type) {
 		case GP_FILE_TYPE_NORMAL:
-			CHECK (gsmart300_request_file (camera->pl, &data, 
-						       &size, number));
+			CHECK (gsmart300_request_file (camera->pl, file, number));
 			break;
 		case GP_FILE_TYPE_PREVIEW:
 			CHECK (gsmart300_request_thumbnail
-			       (camera->pl, &data, &size, number, &filetype));
+			       (camera->pl, file, number, &filetype));
 			if (filetype == GSMART_FILE_TYPE_IMAGE) {
 				CHECK (gp_file_set_mime_type (file, GP_MIME_BMP));
 			}
@@ -278,13 +276,7 @@ get_file_func (CameraFilesystem *fs, const char *folder,
 		default:
 			return GP_ERROR_NOT_SUPPORTED;
 	}
-
-	if (!data)
-		return GP_ERROR;
-
-	CHECK (gp_file_set_data_and_size (file, data, size));
 	CHECK (gp_file_set_name (file, filename));
-
 	return GP_OK;
 }
 

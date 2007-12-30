@@ -1,3 +1,8 @@
+2007-12-10  Marcus Meissner  <marcus@jet.franken.de>
+
+	* *.[ch]: use gp_file_append(), removed some signedness warnings.
+
+
 Sam Jan 18 11:28:57 2003  Till Adam  <till@adam-lilienthal.de>
 
   * initial import

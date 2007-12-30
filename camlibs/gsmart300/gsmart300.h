@@ -60,9 +60,9 @@ int gsmart300_delete_file (CameraPrivateLibrary * lib, unsigned int index);
 int gsmart300_delete_all (CameraPrivateLibrary * lib);
 int gsmart300_get_file_info (CameraPrivateLibrary * lib, unsigned int index,
 			  struct GsmartFile **file);
-int gsmart300_request_file (CameraPrivateLibrary * lib, uint8_t ** buf,
-			 unsigned int *len, unsigned int number);
-int gsmart300_request_thumbnail (CameraPrivateLibrary * lib, uint8_t ** buf,
-			      unsigned int *len, unsigned int number, int *type);
+int gsmart300_request_file (CameraPrivateLibrary * lib, CameraFile *file,
+			 unsigned int number);
+int gsmart300_request_thumbnail (CameraPrivateLibrary * lib, CameraFile *file,
+			      unsigned int number, int *type);
 
 #endif /* __GSMART300_H__ */
