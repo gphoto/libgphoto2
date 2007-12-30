@@ -142,15 +142,15 @@ static const struct tagarray{
  */
 static int gpi_getvalue(unsigned char *data,int tagind);
 static int gpi_datsize(unsigned char *data,int tagind);
-static int gpi_tagnum( char *data,int tagind);
+static int gpi_tagnum( unsigned char *data,int tagind);
 static int gpi_getintval(unsigned char *data, int tagnum);
 
-static long gpi_exif_get_lilend(char *data, int size);
-static int gpe_theval(char *data,int tagind);
-static void gpi_setval(char *data,int tagind,long newval);
+static long gpi_exif_get_lilend(unsigned char *data, int size);
+static int gpe_theval(unsigned char *data,int tagind);
+static void gpi_setval(unsigned char *data,int tagind,long newval);
 
 static long exif_next_ifd(unsigned char *exif,int num);
-static int gpi_exif_get_comment(exifparser *exifdat, char *comment);
+static int gpi_exif_get_comment(exifparser *exifdat, char **comment);
 static int gpi_exif_get_field( int tag_number, int ifd, exifparser *exifdata, ExifData *tag_data);
 /*
  *  Utility functions: get fields in little-endian format,
@@ -165,7 +165,7 @@ static int gpi_exif_get_field( int tag_number, int ifd, exifparser *exifdata, Ex
  *
  * Returns : the value
  */
-static long gpi_exif_get_lilend(char *data, int size){
+static long gpi_exif_get_lilend(unsigned char *data, int size){
   long total;
 
   total=0;
@@ -180,7 +180,7 @@ static long gpi_exif_get_lilend(char *data, int size){
 /*
  *  Return "value" of directory entry at tagind
  */
-static int gpe_theval(char *data,int tagind){
+static int gpe_theval(unsigned char *data,int tagind){
  return(gpi_exif_get_lilend(data+tagind*12+10,4));
 }
 
@@ -188,7 +188,7 @@ static int gpe_theval(char *data,int tagind){
 /*
  *  Set the "value" of directory entry at tagind.
  */
-static void gpi_setval(char *data,int tagind,long newval){
+static void gpi_setval(unsigned char *data,int tagind,long newval){
   int i;
   for (i=0;i<4;i++) data[tagind*12+10+i]=0xff&(newval>>(i*8));
   if (gpi_getvalue(data,tagind)!=newval) 
@@ -234,8 +234,8 @@ static int exif_parse_data(exifparser *exifdat) {
 
   /* First, verify that we really have an EXIF file */
   /* Note: maybe we could also generalize to TIFF... */
-  if ((strncmp("Exif",exifdat->header+6,4)) ||
-      strncmp("\377\330\377\341",exifdat->header,4)){
+  if ((memcmp("Exif",exifdat->header+6,4)) ||
+      memcmp("\377\330\377\341",exifdat->header,4)){
     fprintf(stderr,"Not exif data\n");
     return(-1);
   }
@@ -299,7 +299,7 @@ static int exif_parse_data(exifparser *exifdat) {
  */
 static int gpi_exif_get_field( int tag_number, int ifd, exifparser *exifdata, ExifData *tag_data) {
   int numtags,i, tag;
-  char *ifdp, *data;
+  unsigned char *ifdp, *data;
 
   /* Sanity check first: */
   exif_debug=1;
@@ -396,7 +396,7 @@ static int gpi_exif_get_field( int tag_number, int ifd, exifparser *exifdata, Ex
 /*
  * Gets the comment field if it exists.
  */
-static int gpi_exif_get_comment(exifparser *exifdat, char *comment) {
+static int gpi_exif_get_comment(exifparser *exifdat, char **comment) {
   ExifData tagdat;
 
   if (exif_parse_data(exifdat)<0) return 0;
@@ -406,7 +406,8 @@ static int gpi_exif_get_comment(exifparser *exifdat, char *comment) {
     if (exif_debug) printf("No comment field in this image\n");
     return 0;
   } else {
-    comment = tagdat.data;
+    *comment = malloc (tagdat.size+1);
+    memcpy(*comment,tagdat.data,tagdat.size);
     return tagdat.size;
   }  
 }
@@ -444,8 +445,8 @@ unsigned char *gpi_exif_get_thumbnail_and_size(exifparser *exifdat, long *size) 
       printf("Decoding EXIF fields in thumbnail\n");
       gpi_exif_get_field( EXIF_Model, -1, exifdat, &owner);
       printf("Camera model: %s\n",owner.data);
-      printf("Comment for this picture (%d chars)",gpi_exif_get_comment( exifdat, comment));
-      /*printf(" -> %s\n",comment); Not OK on Linux */
+      printf("Comment for this picture (%d chars)",gpi_exif_get_comment( exifdat, &comment));
+      if (comment) printf(" -> %s\n",comment);
       gpi_exif_get_field( EXIF_SubjectDistance, 2, exifdat, &owner);
       /*      dump_exif(exifdat);       */
   }
@@ -552,7 +553,7 @@ unsigned char *gpi_exif_get_thumbnail_and_size(exifparser *exifdat, long *size) 
  *
  * returns: tag ID number
  */
-static int gpi_tagnum( char *data,int tagind){
+static int gpi_tagnum( unsigned char *data,int tagind){
  return(gpi_exif_get_lilend(data+tagind*12+2,2));
 }
 
