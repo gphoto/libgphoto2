@@ -106,7 +106,7 @@ web2_getexif(GPPort *port, GPContext *context, CameraFile *file)
     ret = web2_command(port, 1, WEB2_GET_EXIF, 0x00, 0, NULL, 0);
     if (ret!=GP_OK)
 	return ret;
-    gp_file_append(file, ExifHeader, sizeof(ExifHeader));
+    gp_file_append(file, (char*)ExifHeader, sizeof(ExifHeader));
     ret = gp_port_read(port, xbuf, sizeof(xbuf));
     if (ret < GP_OK) {
 	gp_file_clean(file);
@@ -131,7 +131,7 @@ web2_getthumb(GPPort *port, GPContext *context, CameraFile *file)
     ret = web2_command(port, 1, WEB2_GET_THUMBNAIL, 0x00, 0, NULL, 0);
     if (ret!=GP_OK)
 	return ret;
-    ret = gp_port_read(port, buf, sizeof(buf));
+    ret = gp_port_read(port, (char*)buf, sizeof(buf));
     if (ret < GP_OK)
 	return ret;
     for (i=0;i<ret;i+=2) {
@@ -139,7 +139,7 @@ web2_getthumb(GPPort *port, GPContext *context, CameraFile *file)
 	buf[i] = buf[i+1];
 	buf[i+1] = tmp;
     }
-    gp_file_append(file, buf, ret);
+    gp_file_append(file, (char*)buf, ret);
     return GP_OK;
 }
 
@@ -147,7 +147,7 @@ static int
 web2_get_file_info(GPPort *port, GPContext *context, char *name, int *filesize) {
     unsigned char cmdbuf[26];
     int i, hmm, ret;
-    ret = web2_command(port, 0, WEB2_GET_DIRENTRY, 0, 0, cmdbuf, 26);
+    ret = web2_command(port, 0, WEB2_GET_DIRENTRY, 0, 0, (char*)cmdbuf, 26);
 
     /* 0 usually? */
     hmm = cmdbuf[0]  | (cmdbuf[1] << 8);
