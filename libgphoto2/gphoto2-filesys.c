@@ -113,12 +113,12 @@ get_time_from_exif_tag(ExifEntry *e) {
 	struct tm ts;
 
         e->data[4] = e->data[ 7] = e->data[10] = e->data[13] = e->data[16] = 0;
-        ts.tm_year = atoi (e->data) - 1900;
-        ts.tm_mon  = atoi (e->data + 5) - 1;
-        ts.tm_mday = atoi (e->data + 8);
-        ts.tm_hour = atoi (e->data + 11);
-        ts.tm_min  = atoi (e->data + 14);
-        ts.tm_sec  = atoi (e->data + 17);
+        ts.tm_year = atoi ((char*)e->data) - 1900;
+        ts.tm_mon  = atoi ((char*)(e->data + 5)) - 1;
+        ts.tm_mday = atoi ((char*)(e->data + 8));
+        ts.tm_hour = atoi ((char*)(e->data + 11));
+        ts.tm_min  = atoi ((char*)(e->data + 14));
+        ts.tm_sec  = atoi ((char*)(e->data + 17));
 
         return mktime (&ts);
 }

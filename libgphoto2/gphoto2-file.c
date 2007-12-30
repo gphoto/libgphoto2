@@ -200,7 +200,7 @@ gp_file_append (CameraFile *file, const char *data,
 			t = realloc (file->data, sizeof (char) * (file->size + size));
 			if (!t)
 				return GP_ERROR_NO_MEMORY;
-			file->data = t;
+			file->data = (unsigned char*)t;
 		}
 		memcpy (&file->data[file->size], data, size);
 		file->size += size;
@@ -294,7 +294,7 @@ gp_file_set_data_and_size (CameraFile *file, char *data,
 	case GP_FILE_ACCESSTYPE_MEMORY:
 		if (file->data)
 			free (file->data);
-		file->data = data;
+		file->data = (unsigned char*)data;
 		file->size = size;
 		break;
 	case GP_FILE_ACCESSTYPE_FD: {
@@ -358,7 +358,7 @@ gp_file_get_data_and_size (CameraFile *file, const char **data,
 	switch (file->accesstype) {
 	case GP_FILE_ACCESSTYPE_MEMORY:
 		if (data)
-			*data = file->data;
+			*data = (char*)file->data;
 		if (size)
 			*size = file->size;
 		break;
