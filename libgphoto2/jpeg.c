@@ -63,7 +63,7 @@ chunk *gpi_jpeg_chunk_new(int length)
 	}
 	mychunk->size=length;
 /*    printf("New chunk of size %i\n", mychunk->size); */
-	mychunk->data = (char *)malloc(length);
+	mychunk->data = malloc(length);
 	return mychunk;
 }
 
@@ -368,7 +368,7 @@ char gpi_jpeg_write(CameraFile *file, const char *filename, jpeg *myjpeg)
     CHECK_RESULT (gp_file_set_name (file, filename));
     CHECK_RESULT (gp_file_set_mime_type(file, GP_MIME_JPEG));
     for (x=0; x<myjpeg->count; x++)
-        CHECK_RESULT (gp_file_append(file, myjpeg->marker[x]->data, myjpeg->marker[x]->size));
+        CHECK_RESULT (gp_file_append(file, (char*)myjpeg->marker[x]->data, myjpeg->marker[x]->size));
     return 1;
 }
 #endif
