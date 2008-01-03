@@ -62,8 +62,10 @@
   // Reported by Darel on the XNJB forums
   { "Creative", 0x041e, "ZEN V Plus", 0x4152, DEVICE_FLAG_NONE },
   { "Creative", 0x041e, "ZEN Vision W", 0x4153, DEVICE_FLAG_NONE },
+  // Reported by Mat Hunt <mat@hyperkahler.co.uk>
+  { "Creative", 0x041e, "ZEN 8GB", 0x4155, DEVICE_FLAG_NONE },
   // Reported by Paul Kurczaba <paul@kurczaba.com>
-  { "Creative", 0x041e, "ZEN 8GB", 0x4157, DEVICE_FLAG_IGNORE_HEADER_ERRORS },
+  { "Creative", 0x041e, "ZEN 8GB 2nd id", 0x4157, DEVICE_FLAG_IGNORE_HEADER_ERRORS },
   // Reported by Ringofan <mcroman@users.sourceforge.net>
   { "Creative", 0x041e, "ZEN V 2GB", 0x4158, DEVICE_FLAG_NONE },
 
@@ -99,7 +101,9 @@
   { "Samsung", 0x04e8, "YP-F2J", 0x5057, DEVICE_FLAG_UNLOAD_DRIVER },
   // Reported by Patrick <skibler@gmail.com>
   { "Samsung", 0x04e8, "YP-K5", 0x505a, DEVICE_FLAG_NO_ZERO_READS },
-  // From dev.local@gmail.com - 0x4e8/0x507c is the UMS mode, don't add this.
+  // From dev.local@gmail.com - 0x4e8/0x507c is the UMS mode, apparently
+  // also an MTP mode according to some accounts, need this verified.
+  { "Samsung", 0x04e8, "YP-U3Q", 0x507c, DEVICE_FLAG_NONE },
   // From m.eik michalke
   { "Samsung", 0x04e8, "YP-U3", 0x507d, DEVICE_FLAG_NONE },
   // Reported by Matthew Wilcox <matthew@wil.cx>
@@ -448,10 +452,16 @@
 
   /*
    * Sony
+   * It could be that these PIDs are one-per hundred series, so
+   * NWZ-A8xx is 0325, NWZ-S5xx is 0x326 etc. We need more devices
+   * reported to see a pattern here.
    */
+  // Reported by Alessandro Radaelli >alessandro.radaelli@aruba.it>
+  { "Sony", 0x054c, "Walkman NWZ-A815", 0x0325, DEVICE_FLAG_UNLOAD_DRIVER },
+  // Reported by anonymous Sourceforge user.
+  { "Sony", 0x054c, "Walkman NWZ-S516", 0x0326, DEVICE_FLAG_UNLOAD_DRIVER },
   // Reported by Endre Oma <endre.88.oma@gmail.com>
-  // (possibly this is for the A-series too)
-  { "Sony", 0x054c, "Walkman S-series", 0x0327, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "Sony", 0x054c, "Walkman NWZ-S615F/NWZ-S618F", 0x0327, DEVICE_FLAG_UNLOAD_DRIVER },
 
   /*
    * SonyEricsson
