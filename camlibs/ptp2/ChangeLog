@@ -1,3 +1,8 @@
+2008-01-03  Linus Walleij  <triad@df.lth.se>
+
+	* ptp.c,ptp.h: Moved mtp property caching and
+	  removing into this file. (not currently hooked up).
+
 2007-12-10  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* library.c: Disabled LUMIX FZ-20 (alternate ID),

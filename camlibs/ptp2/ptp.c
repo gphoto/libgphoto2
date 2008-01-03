@@ -3,6 +3,7 @@
  * Copyright (C) 2001-2004 Mariusz Woloszyn <emsi@ipartners.pl>
  * Copyright (C) 2003-2007 Marcus Meissner <marcus@jet.franken.de>
  * Copyright (C) 2006-2007 Linus Walleij <triad@df.lth.se>
+ * Copyright (C) 2007 Tero Saarni <tero.saarni@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -4189,4 +4190,184 @@ ptp_render_mtp_propname(uint16_t propid, int spaceleft, char *txt) {
 		if (propid == ptp_opc_trans[i].id)
 			return snprintf(txt, spaceleft,ptp_opc_trans[i].name);
 	return snprintf (txt, spaceleft,"unknown(%04x)", propid);
+}
+
+/*
+ * Allocate and default-initialize a few object properties.
+ */
+MTPProperties *
+ptp_get_new_object_prop_entry(MTPProperties **props, int *nrofprops) {
+	MTPProperties *newprops;
+	MTPProperties *prop;
+
+	if (*props == NULL) {
+		newprops = malloc(sizeof(MTPProperties)*(*nrofprops+1));
+	} else {
+		newprops = realloc(*props,sizeof(MTPProperties)*(*nrofprops+1));
+	}
+	if (newprops == NULL)
+		return NULL;
+	prop = &newprops[*nrofprops];
+	prop->property = PTP_OPC_StorageID; /* Should be "unknown" */
+	prop->datatype = PTP_DTC_UNDEF;
+	prop->ObjectHandle = 0x00000000U;
+	prop->propval.str = NULL;
+	
+	(*props) = newprops;
+	(*nrofprops)++;
+	return prop;
+}
+
+void 
+ptp_destroy_object_prop(MTPProperties *prop)
+{
+  if (!prop)
+    return;
+  
+  if (prop->datatype == PTP_DTC_STR && prop->propval.str != NULL)
+    free(prop->propval.str);
+  else if ((prop->datatype == PTP_DTC_AINT8 || prop->datatype == PTP_DTC_AINT16 ||
+            prop->datatype == PTP_DTC_AINT32 || prop->datatype == PTP_DTC_AINT64 || prop->datatype == PTP_DTC_AINT128 ||
+            prop->datatype == PTP_DTC_AUINT8 || prop->datatype == PTP_DTC_AUINT16 ||
+            prop->datatype == PTP_DTC_AUINT32 || prop->datatype == PTP_DTC_AUINT64 || prop->datatype ==  PTP_DTC_AUINT128)
+            && prop->propval.a.v != NULL)
+    free(prop->propval.a.v);
+}
+
+void 
+ptp_destroy_object_prop_list(MTPProperties *props, int nrofprops)
+{
+  int i;
+  MTPProperties *prop = props;
+
+  for (i=0;i<nrofprops;i++,prop++)
+    ptp_destroy_object_prop(prop);
+  free(props);
+}
+
+/*
+ * Find a certain object property in the cache, i.e. a certain metadata
+ * item for a certain object handle.
+ */
+MTPProperties *
+ptp_find_object_prop_in_cache(PTPParams *params, uint32_t const handle, uint32_t const attribute_id)
+{
+	int i;
+	MTPProperties *prop = params->props;
+	
+	if (!prop)
+		return NULL;
+	
+	for (i=0;i<params->nrofprops;i++) {
+		if (handle == prop->ObjectHandle && attribute_id == prop->property)
+			return prop;
+		prop ++;
+	}
+	return NULL;
+}
+
+void
+ptp_remove_object_from_cache(PTPParams *params, uint32_t handle)
+{
+	int i;
+
+	/* remove object from object info cache */
+	for (i = 0; i < params->handles.n; i++) {
+		if (params->handles.Handler[i] == handle) {
+			ptp_free_objectinfo(&params->objectinfo[i]);
+			memmove(params->handles.Handler+i, params->handles.Handler+i+1,
+				(params->handles.n-i-1)*sizeof(uint32_t));
+			memmove(params->objectinfo+i, params->objectinfo+i+1,
+				(params->handles.n-i-1)*sizeof(PTPObjectInfo));
+			params->handles.n--;
+			/* We use less memory than before so this shouldn't fail */
+			params->handles.Handler = realloc(params->handles.Handler, sizeof(uint32_t)*params->handles.n);
+			params->objectinfo = realloc(params->objectinfo, sizeof(PTPObjectInfo)*params->handles.n);
+		}
+	}
+	
+	/* delete cached object properties if metadata cache exists */
+	if (params->props != NULL) {
+		int nrofoldprops = 0;
+		int firstoldprop = 0;
+		
+		for (i=0; i<params->nrofprops; i++) {
+			MTPProperties *prop = &params->props[i];
+			if (prop->ObjectHandle == handle)
+				{
+					nrofoldprops++;
+					if (nrofoldprops == 1) {
+						firstoldprop = i;
+					}
+				}
+		}
+		for (i=firstoldprop;i<(firstoldprop+nrofoldprops);i++) {
+			ptp_destroy_object_prop(&params->props[i]);
+		}
+		memmove(&params->props[firstoldprop], 
+			&params->props[firstoldprop+nrofoldprops], 
+			(params->nrofprops-firstoldprop-nrofoldprops)*sizeof(MTPProperties));
+		/* We use less memory than before so this shouldn't fail */
+		params->props = realloc(params->props, 
+					(params->nrofprops - nrofoldprops)*sizeof(MTPProperties));
+		params->nrofprops -= nrofoldprops;
+	}
+}
+
+uint16_t
+ptp_add_object_to_cache(PTPParams *params, uint32_t handle)
+{
+	uint32_t n;
+	uint32_t *xhandler;
+	PTPObjectInfo *xoi;
+	
+	/* We have a new handle */
+	params->handles.n++;
+	n = params->handles.n;
+	
+	/* Insert the new handle */
+	xhandler = (uint32_t*) realloc(params->handles.Handler,
+				       sizeof(uint32_t)*n);
+	if (!xhandler) {
+		/* Well, out of memory is no I/O error really... */
+		return PTP_ERROR_IO;
+	}
+	params->handles.Handler = xhandler;
+	params->handles.Handler[n-1] = handle;
+	
+	/* Insert a new object info struct and populate it */
+	xoi = (PTPObjectInfo*)realloc(params->objectinfo,
+				      sizeof(PTPObjectInfo)*n);
+	if (!xoi) {
+		/* Well, out of memory is no I/O error really... */
+		return PTP_ERROR_IO;
+	}
+	params->objectinfo = xoi;
+	memset(&params->objectinfo[n-1], 0, sizeof(PTPObjectInfo));
+	ptp_getobjectinfo(params, handle, &params->objectinfo[n-1]);
+
+	/* Update proplist if we use cached props */
+	if (params->props != NULL) {
+		MTPProperties *props = NULL;
+		MTPProperties *xprops;
+		int no_new_props = 0;
+		uint16_t ret;
+		
+		ret = ptp_mtp_getobjectproplist(params, handle, &props, &no_new_props);
+		if (ret != PTP_RC_OK) {
+			return ret;
+		}
+		xprops = realloc(params->props, (params->nrofprops+no_new_props)*sizeof(MTPProperties));
+		if (!xprops) {
+			free(props);
+			/* Well, out of memory is no I/O error really... */
+			return PTP_ERROR_IO;
+		}
+		params->props = xprops;
+		memcpy(&params->props[params->nrofprops],&props[0],no_new_props*sizeof(MTPProperties));
+		/* do not free the sub strings, we copied them above! Only free the array. */
+		free(props);
+		params->nrofprops += no_new_props;
+	}
+	return PTP_RC_OK;
 }
