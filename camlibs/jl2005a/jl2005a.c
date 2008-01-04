@@ -88,7 +88,7 @@ jl2005a_get_pic_width (GPPort *port)
 	response = (jl2005a_read_info_byte(port, 3))&0xff;
 	width = (response&0xff);
 	response = (jl2005a_read_info_byte(port, 4) )&0xff;
-	width = ((response&0xff) << 8)|width;                             	       
+	width = ((response&0xff) << 8)|width;
 	return (width); 
 }
 
@@ -119,8 +119,9 @@ jl2005a_read_picture_data (Camera *camera, GPPort *port,
 					unsigned char *data, unsigned int size) 
 {
         char response;
+	unsigned char *to_read;
 	int maxdl = 0xfa00;
-
+	to_read=data;
 	response = (jl2005a_read_info_byte(port, 7) )&0xff;
 	/* Always 0x80. Purpose unknown */
 	response = (jl2005a_read_info_byte(port, 0x0a) )&0xff;
@@ -144,21 +145,21 @@ jl2005a_read_picture_data (Camera *camera, GPPort *port,
 	/* Switch the inep over to 0x81. */ 
 	set_usb_in_endpoint	(camera, 0x81); 
 	while (size > maxdl) {
-		gp_port_read(port, (char *)data, maxdl);	
-		data += maxdl;
+		gp_port_read(port, (char *)to_read, maxdl);
+		to_read += maxdl;
 		size -= maxdl;
 	}
-	gp_port_read(port, (char *)data, size);
+	gp_port_read(port, (char *)to_read, size);
 	/* Switch the inep back to 0x84. */ 
-	set_usb_in_endpoint	(camera, 0x84); 	
-    	return GP_OK;
-} 
+	set_usb_in_endpoint	(camera, 0x84);
+	return GP_OK;
+}
 
 int
 jl2005a_reset (Camera *camera, GPPort *port)
 {
 	int i; 
-	gp_port_write (port,"\xab\x00" , 2);     
+	gp_port_write (port,"\xab\x00" , 2);
 	gp_port_write (port, "\xa1\x00", 2);
 	gp_port_write (port, "\xab\x00", 2);
 	gp_port_write (port, "\xa2\x02", 2);
@@ -189,14 +190,14 @@ int jl2005a_shortquery(GPPort *port, int n)
 {
 	char response;
 	char command[2] = {0xa2, (char)(n&0xff)};
-	gp_port_write (port, "\xab\x00", 2);     
-	gp_port_write (port, command, 2);     
-	gp_port_write (port, "\xab\x00", 2);     
-	gp_port_write (port, "\xa3\xa1", 2);     
-	gp_port_write (port, "\xab\x00", 2);     
-	gp_port_write (port, "\xab\x00", 2);     
-	gp_port_read (port, &response, 1); 
-	return response&0xff;    
+	gp_port_write (port, "\xab\x00", 2);
+	gp_port_write (port, command, 2);
+	gp_port_write (port, "\xab\x00", 2);
+	gp_port_write (port, "\xa3\xa1", 2);
+	gp_port_write (port, "\xab\x00", 2);
+	gp_port_write (port, "\xab\x00", 2);
+	gp_port_read (port, &response, 1);
+	return response&0xff;
 }
 
 int jl2005a_decompress (unsigned char *inp, unsigned char *outp, int width,

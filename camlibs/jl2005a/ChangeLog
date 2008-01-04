@@ -1,3 +1,6 @@
+2008-01-03  Theodore Kilgore <kilgota@auburn.edu>
+	jl2005a.c: Improvements in jl2005a_read_picture_data().
+
 2007-12-04  Theodore Kilgore <kilgota@auburn.edu>
 	README.jl2005a: Updated
 	jl2005a.c: A decompression function has been added, to accommodate
