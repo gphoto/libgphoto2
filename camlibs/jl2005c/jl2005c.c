@@ -45,10 +45,8 @@ jl2005c_init (Camera *camera, GPPort *port, CameraPrivateLibrary *priv)
 	memset(info,0, sizeof(info)); 
 	memset(command,0,sizeof(command));
 	GP_DEBUG("Running jl2005c_init\n");
-
-
+	set_usb_in_endpoint	(camera, 0x84); 
 	gp_port_write (port, "\x08\x00", 2); 
-
 	usleep (10000);
 	gp_port_write (port, "\x95\x60", 2); 
 	usleep (10000);
@@ -67,7 +65,7 @@ jl2005c_init (Camera *camera, GPPort *port, CameraPrivateLibrary *priv)
 	usleep (10000);
 	gp_port_write (port,"\x95\x63" , 2); 
 	usleep (10000);
-	gp_port_read (port, &response, 1);
+gp_port_read (port, &response, 1);
 	model_string[3]=response;
 	GP_DEBUG("Model string is %02x%02x%02x%02x\n",model_string[0], model_string[1],
 			    model_string[2], model_string[3]);
@@ -147,7 +145,7 @@ jl2005c_init (Camera *camera, GPPort *port, CameraPrivateLibrary *priv)
 	gp_port_read (port, &response, 1);
 
 	usleep (10000);
-	gp_port_write (port, "\x0a\x00", 2); 	
+	gp_port_write (port, "\x0a\x00", 2);
 
 	usleep (10000);
 	/* Switch the inep over to 0x82. It stays there ever after. */ 
@@ -159,8 +157,127 @@ jl2005c_init (Camera *camera, GPPort *port, CameraPrivateLibrary *priv)
 	usleep (10000);
 	memmove(priv->info, info, info_block_size);
 	priv->model=info[6];
-	
+
 	GP_DEBUG("Leaving jl2005c_init\n");
+        return GP_OK;
+}
+
+
+int 
+jl2005c_rewind (Camera *camera, GPPort *port) 
+{
+//	gp_port_write (port, "\x0b\x00",2);
+	unsigned char command[2];
+	char response;
+	unsigned char info[0xe000];
+	int info_block_size = 0;
+	int junk_to_read = 0;
+	memset(info,0, sizeof(info)); 
+	memset(command,0,sizeof(command));
+	GP_DEBUG("Running jl2005c_rewind\n");
+	gp_port_close(port);
+	usleep (100000);
+	gp_port_open(port);
+
+	set_usb_in_endpoint	(camera, 0x84); 
+	gp_port_write (port, "\x08\x00", 2); 
+
+	usleep (10000);
+	gp_port_write (port, "\x95\x60", 2); 
+	usleep (10000);
+	gp_port_read (port, &response, 1);
+	usleep (10000);
+	gp_port_write (port, "\x95\x61", 2); 
+	usleep (10000);
+	gp_port_read (port, &response, 1);
+	usleep (10000);
+	gp_port_write (port, "\x95\x62", 2); 
+	usleep (10000);
+	gp_port_read (port, &response, 1);
+	usleep (10000);
+	gp_port_write (port,"\x95\x63" , 2); 
+	usleep (10000);
+	gp_port_read (port, &response, 1);
+	usleep (10000);
+	gp_port_write (port, "\x95\x64", 2); 
+	usleep (10000);	
+	gp_port_read (port, &response, 1);
+
+	usleep (10000);	
+	gp_port_write (port, "\x95\x65", 2);
+	usleep (10000);
+	gp_port_read (port, &response, 1); 
+	info_block_size = ((unsigned)response * 0x10) + 2;
+	if (info_block_size%0x200) 
+		info_block_size += 0x200 - (info_block_size%0x200);
+	usleep (10000);
+
+	gp_port_write (port, "\x95\x66", 2);
+	usleep (10000);
+	gp_port_read (port, &response, 1); 
+	usleep (10000);
+
+	gp_port_write (port, "\x95\x67", 2); 
+	usleep (10000);
+	gp_port_read (port, &response, 1);
+	usleep (10000);
+
+	gp_port_write (port, "\x95\x68", 2); 
+	usleep (10000);
+	gp_port_read (port, &response, 1);
+	usleep (10000);
+
+	gp_port_write (port, "\x95\x69", 2); 
+	usleep (10000);
+	gp_port_read (port, &response, 1);
+	usleep (10000);
+
+	gp_port_write (port, "\x95\x6a", 2); 
+	usleep (10000);
+	gp_port_read (port, &response, 1);
+	usleep (10000);
+
+	gp_port_write (port, "\x95\x6b", 2); 
+	usleep (10000);
+	gp_port_read (port, &response, 1);
+	usleep (10000);
+
+	gp_port_write (port, "\x95\x6c", 2); 
+	usleep (10000);
+	gp_port_read (port, &response, 1);
+
+	junk_to_read = (response &0xff)*0x100;
+
+	gp_port_write (port, "\x95\x6d", 2); 
+	usleep (10000);
+	gp_port_read (port, &response, 1);
+	usleep (10000);
+
+	junk_to_read += (response&0xff);
+	junk_to_read *= 0x200;
+	gp_port_write (port, "\x95\x6e", 2); 
+	usleep (10000);
+	gp_port_read (port, &response, 1);
+	usleep (10000);
+	gp_port_write (port, "\x95\x6f", 2); 
+	usleep (10000);
+	gp_port_read (port, &response, 1);
+	usleep (10000);
+	gp_port_write (port, "\x0a\x00", 2);
+
+	usleep (10000);
+
+	/* Switch the inep over to 0x82. It stays there ever after. */ 
+	set_usb_in_endpoint	(camera, 0x82); 
+	usleep (10000);
+	gp_port_read(port, (char *)info, info_block_size);
+
+	usleep (10000);
+	gp_port_write (port, "\x0b\x00",2);
+	usleep (10000);
+
+	GP_DEBUG("Completing jl2005c_rewind\n");
+
         return GP_OK;
 }
 
@@ -174,6 +291,7 @@ jl2005c_get_pic_data_size (CameraPrivateLibrary *priv, Info *info, int n)
 	size = info[0x30+0x10*n+6]*0x100+info[0x30+0x10*n+7];
 	switch (model) {
 	case 0x43:
+	case 0x44:
 		size *= 0x200;
 		break;
 	case 0x42:
@@ -199,6 +317,7 @@ jl2005c_get_start_of_photo(CameraPrivateLibrary *priv, Info *info,
 			info[0x30+0x0d];
 	switch (model) {
 	case 0x43:
+	case 0x44:
 		start *= 0x200;
 		break;
 	case 0x42:
@@ -217,9 +336,10 @@ set_usb_in_endpoint	(Camera *camera, int inep)
 {
 	GPPortSettings settings;
 	gp_port_get_settings ( camera ->port, &settings);
-	settings.usb.inep = inep;
+	if(settings.usb.inep!=inep)
+		settings.usb.inep = inep;
 	GP_DEBUG("inep reset to %02X\n", inep);
-	return gp_port_set_settings ( camera ->port, settings);
+	return gp_port_set_settings ( camera->port, settings);
 }	
 
 
@@ -236,13 +356,36 @@ jl2005c_get_picture_data (GPPort *port,
 	/*Data transfer begins*/
 	gp_port_read (port, data, size); 
 	usleep (10000);
-    	return GP_OK;
+	return GP_OK;
 } 
 
 int
 jl2005c_reset (Camera *camera, GPPort *port)
 {
-	gp_port_write(port, "\x07\x00", 2);	
-    	return GP_OK;
+	int blocksize = 0xfa00;
+	/* These cameras want all data to be dumped. If that is not yet done,
+	 * then do it now, before exiting! */
+	while (camera->pl->bytes_read_from_camera < 
+				    camera->pl->total_data_in_camera ) {
+		if (! camera->pl->data_cache )
+			camera->pl->data_cache = malloc (0xfa00);
+		blocksize=0xfa00;
+		if (camera->pl->bytes_read_from_camera +0xfa00 >=
+				    camera->pl->total_data_in_camera ) 
+			blocksize = camera->pl->total_data_in_camera -
+					camera->pl->bytes_read_from_camera;
+		if(blocksize) 
+			jl2005c_get_picture_data (
+					    camera->port, 
+					    (char *) camera->pl->data_cache, 
+					    blocksize);
+		camera->pl->bytes_read_from_camera 
+						+= blocksize;
+		
+	}
+
+
+	gp_port_write(port, "\x07\x00", 2);
+	return GP_OK;
 }
 

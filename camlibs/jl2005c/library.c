@@ -164,43 +164,26 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *user_data,
 	       GPContext *context)
 {
-    	Camera *camera = user_data; 
-  	int w, h = 0, b = 0, k;
-    	unsigned char *pic_data; 
-	int res_code;
-	unsigned char photo_code, compressed;
+	Camera *camera = user_data; 
+	int w, h = 0, b = 0, k;
+	unsigned char *pic_data, *pic_buffer; 
+	int HEADERSIZE=16;
+	unsigned char compressed;
 	unsigned long start_of_photo;
 	unsigned int blocksize = 0;
 	int filled = 0;
 
-    	GP_DEBUG ("Downloading pictures!\n");
+	GP_DEBUG ("Downloading pictures!\n");
 	/* These are cheap cameras. There ain't no EXIF data. */
 	if (GP_FILE_TYPE_EXIF == type) return GP_ERROR_FILE_EXISTS;
 
-
-    	/* Get the number of the photo on the camera */
+	/* Get the number of the photo on the camera */
 	k = gp_filesystem_number (camera->fs, "/", filename, context); 
-    	/* Determine the resolution setting from the PAT table */
-	photo_code = camera->pl->info[48+16*k+2];
-	res_code = photo_code & 0x0f;
-	/* Compression presence or absence is seen here, and is given again 
-	 * by the camera, in the header of raw data for each photo.
-	 */
-    	compressed = (photo_code >> 4) & 0x0f;
-	switch (res_code) {
-	case 0: 
-		w = 640; 
-		h = 480; 
-		break;
-	case 1: 
-		w = 320;
-		h = 240; 
-		break;
-	default:  
-		GP_DEBUG("width is unknown\n");
-		return GP_ERROR; 
-	}
-	
+	/* Determine the "compression" setting from the PAT table */
+	compressed = (camera->pl->info[48+16*k+2]>>4) & 0x0f;
+	h = camera->pl->info[48+16*k+4];
+	w = camera->pl->info[48+16*k+5];
+
 	GP_DEBUG ("height is %i\n", h);
     
 	b = jl2005c_get_pic_data_size(camera->pl, camera->pl->info, k);
@@ -208,17 +191,16 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	start_of_photo = jl2005c_get_start_of_photo(camera->pl, 
 						    camera->pl->info, k);
 	GP_DEBUG("start_of_photo number %i = 0x%lx \n", k,start_of_photo);
-	pic_data = malloc (b+1);
-	if (!pic_data) return GP_ERROR_NO_MEMORY;
-    	memset (pic_data, 0, b+1);
-	GP_DEBUG ("buffersize b = %i = 0x%x bytes\n", b+1,b+1); 
-	pic_data[b] = photo_code;
-	GP_DEBUG("photo_code = %02x and pic_data[b+1] = %02x\n", photo_code, pic_data[b]);
-
-	/* Camera downloads in blocks of 0xfa00, with last block possibly short. 
-	 * So first we set up the permanent cache (if not done already).
+	pic_buffer = malloc (b+16);
+	if (!pic_buffer) return GP_ERROR_NO_MEMORY;
+	memset (pic_buffer, 0, b+16);
+	GP_DEBUG ("buffersize b+16 = %i = 0x%x bytes\n", b+16,b+16); 
+	/* copy info line for photo from allocation table, as header */
+	memcpy(pic_buffer, camera->pl->info+48+16*k, 16);
+	/* Camera can download in blocks of 0xfa00, with last block possibly short. 
+	 * So first we set up a cache (if not done already) to hold raw data.
 	 */
-	
+	pic_data = pic_buffer+HEADERSIZE;
 	if (! camera->pl->data_cache ) {
 		camera->pl->data_cache = malloc (0xfa00);
 	}
@@ -231,11 +213,42 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	 * current photo, immediately. Update settings. But first a sanity check. 
 	 */
 
-	if (start_of_photo != camera->pl->bytes_put_away) {
+	if (start_of_photo < camera->pl->bytes_put_away) {
 		GP_DEBUG("photo number %i starts in a funny place!\n",k);
+//		camera->pl->bytes_put_away=start_of_photo;
+//		memset(camera->pl->data_cache, 0, 0xfa00);
+		jl2005c_reset(camera, camera->port);
+		jl2005c_rewind (camera, camera->port);
+		camera->pl->bytes_read_from_camera=0;
+//		return (GP_ERROR);
+	}
+	if (start_of_photo+b > camera->pl->total_data_in_camera) {
+		GP_DEBUG("photo number %i ends in a funny place!\n",k);
+		GP_DEBUG("Allocation unit size may be wrong for this camera\n");
 		return (GP_ERROR);
 	}
-	/* OK, good. */
+
+	/* This while loop is entered if the photo number k-1 was not requested 
+	 * and thus has not been downloaded. The camera's rudimentary hardware 
+	 * obliges us to download the corresponding data anyway and toss it. 
+	 */
+	while (camera->pl->bytes_read_from_camera <= start_of_photo) {
+
+		camera->pl->data_to_read = camera->pl->total_data_in_camera
+			    - camera->pl->bytes_read_from_camera;
+		blocksize = 0xfa00;
+		if (camera->pl->data_to_read < blocksize)
+			blocksize = camera->pl->data_to_read; 
+		GP_DEBUG("blocksize = 0x%x\n", blocksize);
+		if(blocksize)
+			jl2005c_get_picture_data (
+					    camera->port, 
+					    (char *) camera->pl->data_cache, 
+					    blocksize);
+		camera->pl->bytes_read_from_camera += blocksize;
+	}
+
+	camera->pl->bytes_put_away=start_of_photo;
 
 	if (camera->pl->bytes_read_from_camera > start_of_photo) {
 		if(start_of_photo + b <= camera->pl->bytes_read_from_camera) {
@@ -247,7 +260,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			 * Jump immediately to process the photo. 
 		         */
 		} else {
-
+			/* photo starts in one block and ends in another */
 			filled = camera->pl->bytes_read_from_camera 
 				    - start_of_photo;
 
@@ -257,7 +270,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 			camera->pl->bytes_put_away += filled;
 		}
-	}	
+	}
 	while (camera->pl->bytes_put_away < start_of_photo + b ) {
 
 		camera->pl->data_to_read = camera->pl->total_data_in_camera
@@ -272,6 +285,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 					    (char *) camera->pl->data_cache, 
 					    blocksize);
 		camera->pl->bytes_read_from_camera += blocksize;
+		
 		if (camera->pl->bytes_read_from_camera >= start_of_photo + b ) {
 			GP_DEBUG("THIS ONE?\n");
 			memcpy(pic_data+filled, camera->pl->data_cache, 
@@ -279,7 +293,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			camera->pl->bytes_put_away += b - filled;
 			break;
 		} else {	
-			GP_DEBUG("THIS ONE??\n");		    
+			GP_DEBUG("THIS ONE??\n");
 			if (!blocksize)
 				break;
 			memcpy(pic_data+filled, camera->pl->data_cache, blocksize);
@@ -288,15 +302,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		}
 	}
 
-
-
 	if (GP_FILE_TYPE_RAW == type) {
-		memcpy (pic_data+b, &photo_code,1);
-		GP_DEBUG("photo_code = %02x and pic_data[b+1] = %02x\n", 
-						photo_code, pic_data[b]);
 		gp_file_set_mime_type(file, GP_MIME_RAW);
 		gp_file_set_name(file, filename);
-		gp_file_set_data_and_size(file, (char *)pic_data , b+1 );
+		gp_file_set_data_and_size(file, (char *)pic_buffer , b+16 );
 		return GP_OK;
 	} else return GP_ERROR_NOT_SUPPORTED;
 	
@@ -315,7 +324,29 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 static int
 camera_exit (Camera *camera, GPContext *context)
 {
+//	int blocksize = 0xfa00;
 	GP_DEBUG ("jl2005c camera_exit");
+	/* These cameras want all data to be dumped. If that is not yet done,
+	 * then do it now, before exiting! */
+/*	while (camera->pl->bytes_read_from_camera < 
+				    camera->pl->total_data_in_camera ) {
+		if (! camera->pl->data_cache )
+			camera->pl->data_cache = malloc (0xfa00);
+		blocksize=0xfa00;
+		if (camera->pl->bytes_read_from_camera +0xfa00 >=
+				    camera->pl->total_data_in_camera ) 
+			blocksize = camera->pl->total_data_in_camera -
+					camera->pl->bytes_read_from_camera;
+		if(blocksize) 
+			jl2005c_get_picture_data (
+					    camera->port, 
+					    (char *) camera->pl->data_cache, 
+					    blocksize);
+		camera->pl->bytes_read_from_camera 
+						+= blocksize;
+		
+	}
+*/
 	jl2005c_reset(camera, camera->port);
 	gp_port_close(camera->port);
 	if (camera->pl) {

@@ -1,5 +1,6 @@
 JEILIN STILLCAM DRIVER
-Copyright Theodore Kilgore <kilgota@auburn.edu> September 4, 2007. 
+Copyright Theodore Kilgore <kilgota@auburn.edu> September 4, 2007. Most recent
+update is Janyary 6, 2008.
 
 (Everything in libgphoto2/camlibs/jeilin is LGPL-licensed, including this 
 README. See any of the source files for a more complete statement of the 
@@ -8,7 +9,8 @@ license.)
 INTRODUCTION
 
 This driver is intended to support cameras containing the JL2005C chip from 
-Jeilin Technologies. The interface is proprietary, and these cameras are 
+Jeilin Technologies and also the similar cameras which have in them the 
+JL2005B or the JL2005D. The interface is proprietary, and these cameras are 
 supported commercially only in Windows. Jeilin Technologies also manufactures
 chips which go into mass storage cameras. Those cameras, not to be confused 
 with these, can be accessed directly using mass storage support. 
@@ -67,30 +69,32 @@ myself, and I.
 
 WHAT DOES THIS CAMERA LIBRARY CURRENTLY DO?
 
-The answer is, not much. It will hook up the camera, and you can download a 
-dump of any photo data in it (we hope). The only reason for doing this right
-now is to experiment with what the still-unknown decompression algorithm is 
-doing.
+It will hook up the camera, and you ought to be able to download a dump of any 
+photo data in it using the command gphoto2 --get-all-raw-data. The main reason 
+you might want to do this right now is to participate in the development of 
+support for these cameras by experimenting with the still-unknown decompression 
+algorithm which they use. Also, some other infrastructural work has been done.
+The cameras will run gphoto --shell and even ought to honor a sequence such as 
+
+get-raw jl_026.ppm
+
+followed by the next gphoto2 shell command 
+
+get-raw jl_001.ppm
+
+without corruption of data. 
 
 I _think_ that I got the data size for the photos all correct, but I am not 
 sure about that, for the obvious reason that I cannot do finished photos. 
-The camera does download without glitches all the photos in it, even if it is 
-full, and will save them as raw files. I have taken the trouble to make each 
-raw file slightly longer; I put at the end the single character (produced by
-the camera, actually) which contains encoded information about the intended 
-size of the raw photo and about whether it is using low compression or high 
-compression (at both of which settings the data is in fact compressed). The 
-last byte will be one of 0x00, 0x01, 0x10, or 0x11, and the meanings are as 
-follows:
+(Update 01/05/08: It has been verified for the JL2005D, the raw image data 
+obtained by the OEM driver is the same as what this code is providing. I have 
+been unable to verify this for a JL2005B camera, also unable to verify for a 
+JL2005C). The camera does download without glitches all the photos in it, even 
+if it is full, and will save them as raw files. I have taken the trouble to 
+make each raw file slightly longer by adding the 16-byte line related to it 
+which is found in the photo allocation table, the first block of data to be 
+downloaded from the camera. 
 
-    00	640x480, low compression
-    10	640x480, high compression
-    01	320x240, low compression
-    11	320x240, high compression
-    
-That is, a 1 in the first digit represents high compression, and a 1 in the 
-second digit represents the smaller dimensions. This data will be found, as I 
-said, at the end of every raw file which is produced.      
 
 The reason why one cannot make finished photos right now is that these 
 cameras use a proprietary compression algorithm which Jeilin Technologies is 
@@ -101,14 +105,67 @@ development can more easily take place.
 
 !!!!!!!!!!!!!!! A SPECIAL WARNING !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-In view of the current uncertainty about how to compute the size of a photo's
-raw data to be downloaded, anyone testing out some theory about how to do 
-decompression ought to stick to using the first photo in the camera. Just 
-please reset the length of the photo to be equal to the total data to be 
-downloaded, and you will be sure to capture it all. This until someone figures
-out for certain exactly how to compute the size of the raw data.
+How to compute the size and location of a photo's raw data to be downloaded, 
+is probably correct now for all of these cameras. However, the basis for this 
+computation remains in the realm of guesswork. Be on the lookout for the 
+camera taking an inordinate amount of time to do some simple task such as to 
+count the number of photos in it using gphoto2 -n. That is probably a sign of 
+something previously gone wrong, which has jammed the camera. It may be needed
+to replug it in order to clear the jam. 
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+ADDITIONAL REMARKS:
+
+These cameras use a proprietary compression algorithm, as already said. As a 
+result, progress in the development of this driver will inevitably be slow. 
+
+Another challenge is that these cameras use an extremely primitive command 
+structure. The only thing that the camera knows how to do is to prepare to 
+download all data on it, download all data on it, and to reset prior to being 
+disconnected. Therefore, any other functionality has to be based on software 
+fakery which fools the hardware. Suppose, for example, that there are ten 
+photos in the camera. Then what the camera will do is:
+	-- report the number of photos (ten)
+	-- tell how much data needs to be downloaded in all (depends on how 
+	much room was taken up by the raw data for the photos)
+	-- provide a table with one line for each photo, giving its size, start
+	location, output height and width, and some kind of code for the 
+	compression method used on it. 
+In the next step, one must request all the image data to be downloaded, in 
+increments of which there is a maximum size. This does not need to be done 
+all at once, so it is possible to download some initial block of the data and 
+operate on whatever photos are already obtained, and then download another block. 
+However, ALL of the data has to be downloaded before the driver program exits. 
+One consequence of this is that the only way a command such as 
+
+gphoto2 --get-raw-data 3 
+
+can work is to download photos number 1 and 2 and throw away the data before
+downloading the desired number 3 which is to be kept as a raw file, 
+and then downloading any data in the camera which comes after photo number 3 
+after that, as a standard part of the exit routine. Another consequence is 
+that the sequence of downloading number 10, say, followed by number 1 is even 
+more complicated. The actual steps required are:
+	-- initialize the camera
+	-- download enough data to get photo number 10, throwing away all data 
+	which is not part of photo number 10 but precedes it
+	-- download the data required for photo number 10
+	-- download the rest of the data
+	-- send a reset sequence to the camera
+	-- close and reopen the camera's port
+	-- run a "rewind" function consisting of a fake repetition of the 
+	initialization sequence, including downloading again the allocation table
+	-- download enough data to process photo number 1
+	-- download all the rest of the data and throw it away. 
+	-- send the reset sequence again, and, finally, disconnect
+
+Finally, if and when the decompression problem is resolved, then it ought to 
+become possible to use other programs with this camera, such as a GUI frontend 
+for libgphoto2. Any such program used with this camera must be willing to call 
+and actually to use the camera_exit() function which is contained in this 
+library, else, given the above constraints, it is obvious that the camera would
+not work properly with that frontend program. 
 
 
 WARRANTY?
@@ -116,4 +173,5 @@ WARRANTY?
 Absolutely none. Remember, I did not sell you this software. I have written 
 this driver for my own edification and in the sincere hope that it might help 
 you to use of your camera. Please see also the warranty clauses 
-in the LGPL license. 
+in the LGPL license.
+

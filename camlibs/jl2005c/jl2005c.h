@@ -28,7 +28,7 @@ typedef unsigned char Info;
 
 struct _CameraPrivateLibrary {
 	unsigned char model;
-	unsigned char *catalog;
+//	unsigned char *catalog;
 	int nb_entries;
 	int last_fetched_entry;
 	unsigned long total_data_in_camera;
@@ -36,13 +36,14 @@ struct _CameraPrivateLibrary {
 	unsigned char *data_cache;
 	unsigned long bytes_read_from_camera;
 	int data_used_from_block;
-	unsigned long bytes_put_away;	
+	unsigned long bytes_put_away;
 	Info info[0xe000];
 };
 
 
 int jl2005c_init              (Camera *camera, GPPort *port, 
 					    CameraPrivateLibrary *priv);
+int jl2005c_rewind              (Camera *camera, GPPort *port);
 int jl2005c_reset	     (Camera *camera, GPPort *port);
 int jl2005c_get_num_pics   (Info *info);
 int jl2005c_get_resolution      (Info *info, int n);
