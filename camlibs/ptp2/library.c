@@ -1,7 +1,7 @@
 /* library.c
  *
  * Copyright (C) 2001-2005 Mariusz Woloszyn <emsi@ipartners.pl>
- * Copyright (C) 2003-2007 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright (C) 2003-2008 Marcus Meissner <marcus@jet.franken.de>
  * Copyright (C) 2005 Hubert Figuiere <hfiguiere@teaser.fr>
  *
  * This library is free software; you can redistribute it and/or
@@ -322,6 +322,8 @@ static struct {
 	{"Kodak:Z612",   0x040a, 0x059d, 0},
 	/* David D. Huff Jr. <David.Huff@computer-critters.com> */
 	{"Kodak:Z650",   0x040a, 0x059e, 0},
+	/* Sonja Krause-Harder */
+	{"Kodak:M753",   0x040a, 0x059f, 0},
 	/* irc reporter */
 	{"Kodak:V603",   0x040a, 0x05a0, 0},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1547142&group_id=8874&atid=358874 */
