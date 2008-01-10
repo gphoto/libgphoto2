@@ -738,6 +738,8 @@ static struct {
 	{"Canon:PowerShot A450 (PTP mode)",     0x04a9, 0x3155, PTPBUG_DELETE_SENDS_EVENT},
 	/* Harald Dunkel <harald.dunkel@t-online.de> */                                                        
 	{"Canon:PowerShot G9 (PTP mode)",       0x04a9, 0x315a, PTPBUG_DELETE_SENDS_EVENT},
+	/* Roger Lynn <roger@rilynn.demon.co.uk> */
+	{"Canon:PowerShot A720 IS (PTP mode)",	0x04a9, 0x315d, PTPBUG_DELETE_SENDS_EVENT},
 
 
 	/* Konica-Minolta PTP cameras */
