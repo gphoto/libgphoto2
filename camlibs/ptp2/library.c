@@ -404,6 +404,8 @@ static struct {
 	{"HP:PhotoSmart E327 (PTP mode)", 0x03f0, 0x8b02, 0},
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1589879&group_id=8874  */
 	{"HP:PhotoSmart E427 (PTP mode)", 0x03f0, 0x8c02, 0},
+	/* Martin Laberge <mlsoft@videotron.ca> */
+	{"HP:PhotoSmart M737 (PTP mode)", 0x03f0, 0x9602, 0},
 	/* https://bugs.launchpad.net/bugs/178916 */
 	{"HP:PhotoSmart R742 (PTP mode)", 0x03f0, 0x9702, 0},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1814147&group_id=8874&atid=358874 */
