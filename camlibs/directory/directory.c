@@ -422,7 +422,7 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	}
 
 	if (info.file.fields & GP_FILE_INFO_NAME) {
-        	if (!stricmp (info.file.name, file))
+        	if (!strcasecmp (info.file.name, file))
         	        return (GP_OK);
 
 	        /* We really have to rename the poor file... */
