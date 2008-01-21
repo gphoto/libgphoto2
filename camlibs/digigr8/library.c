@@ -75,7 +75,8 @@ static const struct {
         {"Disney pix micro",    GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9050}, 
         {"Suprema Digital Keychain Camera",    GP_DRIVER_STATUS_EXPERIMENTAL, 
     								0x2770, 0x913d},
-        {"Sakar 28290 Digital Concepts Styleshot",    GP_DRIVER_STATUS_EXPERIMENTAL, 
+        {"Sakar 28290 and 28292  Digital Concepts Styleshot",    
+    						GP_DRIVER_STATUS_EXPERIMENTAL, 
     								0x2770, 0x913d},
         {"Sakar 23070  Crayola Digital Camera",    GP_DRIVER_STATUS_EXPERIMENTAL, 
     								0x2770, 0x913d},
@@ -238,17 +239,21 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		size = b; 
 		gp_file_set_mime_type (file, GP_MIME_RAW);
 		gp_file_set_name (file, filename);
-	        gp_file_set_data_and_size (file, (char *)data, size);  
+		gp_file_append(file, (char *)data, size);
+		/* Save photo's catalog entry as a footer for the raw file */
+		gp_file_append(file, (char *)camera->pl->catalog + k*0x10, 0x10);
 		/* Reset camera when done, for more graceful exit. */
 		if (k +1 == camera->pl->nb_entries) {
-	    		digi_rewind (camera->port, camera->pl);	
+			digi_rewind (camera->port, camera->pl);	
 		}
+		free(data);
 		return(GP_OK);
 	}
-		
+
 	/*
 	 * Now put the data into a PPM image file. 
 	 */
+
 	ppm = malloc (w * h * 3 + 256); /* room for data + header */
 	if (!ppm) { 
 		status = GP_ERROR_NO_MEMORY; 
@@ -262,7 +267,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	size = strlen ((char *)ppm);
 	ptr = ppm + size;
 	size = size + (w * h * 3);
-	GP_DEBUG ("size = %i\n", size);				
+	GP_DEBUG ("size = %i\n", size);
 	p_data = malloc( w*h );
 	if (!p_data) {
 		status =  GP_ERROR_NO_MEMORY;
@@ -284,7 +289,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	gp_file_set_data_and_size (file, (char *)ppm, size);
 	/* Reset camera when done, for more graceful exit. */
 	if (k +1 == camera->pl->nb_entries) {
-    		digi_rewind (camera->port, camera->pl);
+		digi_rewind (camera->port, camera->pl);
 	}
  end:
 	free(data);
@@ -305,64 +310,64 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 static int
 camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 
-
 {
 	unsigned char get_size[0x50];
 	unsigned char *raw_data; 
 	unsigned char *frame_data; 
 	unsigned char *ppm, *ptr;
 	unsigned char gtable[256];
+	FILE *fp_dest;
 	char filename[14] = "digi_cap.ppm";
 	int size;
 	int w = 320;
 	int h = 240;
 	int b;
 
-        digi_reset (camera->port);                                                      
-        gp_port_usb_msg_write (camera->port, 0x0c, 0x1440, 0x110f, NULL, 0);                          
-        gp_port_read(camera->port, (char *)get_size, 0x50);                       
-        GP_DEBUG("get_size[0x40] = 0x%x\n", get_size[0x40]);                    
-        b = get_size[0x40]+(get_size[0x41]*0x100);         
+        digi_reset (camera->port);
+        gp_port_usb_msg_write (camera->port, 0x0c, 0x1440, 0x110f, NULL, 0);
+        gp_port_read(camera->port, (char *)get_size, 0x50);
+        GP_DEBUG("get_size[0x40] = 0x%x\n", get_size[0x40]);
+        b = get_size[0x40]+(get_size[0x41]*0x100);
 	GP_DEBUG("b = 0x%x\n", b);
         raw_data = malloc(b);
         if(!raw_data) { 
-    		free(raw_data); 
-    		return GP_ERROR_NO_MEMORY;
-    	}
-    	gp_port_read(camera->port, (char *)raw_data, b);
+		free(raw_data); 
+		return GP_ERROR_NO_MEMORY;
+	}
+	gp_port_read(camera->port, (char *)raw_data, b);
 	frame_data = malloc(w*h);
 	if (!frame_data) {
 		free(frame_data);
 		return GP_ERROR_NO_MEMORY;
-	}	
-	digi_decompress (frame_data, raw_data, w, h);	
+	}
+	digi_decompress (frame_data, raw_data, w, h);
 
 	/* Now put the data into a PPM image file. */
 
 	ppm = malloc (w * h * 3 + 256); 
 	if (!ppm) { return GP_ERROR_NO_MEMORY; }
-    	sprintf ((char *)ppm,
+	sprintf ((char *)ppm,
 		"P6\n"
 		"# CREATOR: gphoto2, SQ905C library\n"
 		"%d %d\n"
 		"255\n", w, h);
-	ptr = ppm + strlen ((char*)ppm);	
+	ptr = ppm + strlen ((char*)ppm);
 	size = strlen ((char*)ppm) + (w * h * 3);
 	GP_DEBUG ("size = %i\n", size);
 	gp_bayer_decode (frame_data, w , h , ptr, BAYER_TILE_BGGR);
-	
-
-	gp_gamma_fill_table (gtable, .5); 
+	gp_gamma_fill_table (gtable, .65); 
 	gp_gamma_correct_single (gtable, ptr, w * h); 
-	gp_file_set_mime_type (file, GP_MIME_PPM);
-	gp_file_set_name (file, filename); 
-	gp_file_set_data_and_size (file, (char *)ppm, size);
 
+	if ( (fp_dest = fopen((char *)filename, "wb") ) == NULL ) {
+                GP_DEBUG("Error opening dest file.\n");
+                return GP_OK;
+        } 
+	fwrite(ppm, 1, size, fp_dest);
+        fclose (fp_dest);
+        free (ppm);
 	digi_reset(camera->port);
-
 	return (GP_OK);
 }
-
 
 /*************** Exit and Initialization Functions ******************/
 

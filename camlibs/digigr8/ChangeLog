@@ -1,3 +1,14 @@
+2008-01-21   Theodore Kilgore <kilgota@auburn.edu>  
+	* library.c: Raw files now carry a 16 byte footer consisting of the 
+	allocation table's line for the corresponding photo. This is done to
+	facilitate development of a standalone raw processor; information is 
+	now saved in the raw file concerning the compression and resolution 
+	settings, as well as certain information which may become useful for 
+	doing color balance, brightness, and contrast adjustments. 
+	* README.digigr8: Renamed README.905C.
+	* README.9050: Split from README.digigr8.
+
+
 2007-12-27   Theodore Kilgore <kilgota@auburn.edu>  
 	* library.c: Added Jazz JDC9, reported by 
 	Victor Hodge <vhodge@sympatico.ca>.
