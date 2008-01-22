@@ -1,3 +1,7 @@
+2008-01-22   Theodore Kilgore <kilgota@auburn.edu>  
+	* digi_postprocess.c: Fixed memory leak in second-stage decompression
+	function. 
+
 2008-01-21   Theodore Kilgore <kilgota@auburn.edu>  
 	* library.c: Raw files now carry a 16 byte footer consisting of the 
 	allocation table's line for the corresponding photo. This is done to
