@@ -31,6 +31,15 @@ The USB command to delete is the same as the command to shoot a frame
 pix micro, it will delete whatever photos are on the camera !!!
 
 
+PLEASE TEST THE STANDALONE RAW PHOTO CONVERTER/DISPLAYER
+
+An experimental program for processing raw files into finished photos is
+available now, in gphoto2/trunk/playground/raw_converters/sq_raw_converter
+Please try this program. If the results are good, I will incorporate the
+routines used there directly into libgphot02/camlibs/digigr8. I like the
+results, but they need testing.
+
+
 WARRANTY? 
 
 	Absolutely not. No warranty. Never. Not responsible for any actual
@@ -50,4 +59,4 @@ WARRANTY?
 
 
 Theodore Kilgore
-01/21/2008
+01/21/2008, revised 01/22/2008

@@ -14,14 +14,18 @@ They have USB Vendor:Product number 0x2770:0x905c. These cameras are cheap
 and basic. Their functioning resembles that of the cameras supported by the 
 sq905 camera library, but is a bit different. More recently (07/11/2007) I 
 have discovered a camera with Product ID 0x9050 which will also function with 
-the same driver library. I will describe it further at the end of this document.
+the same driver library. A more specific description of this camera can be 
+found in README.9050. Still more recently, several cameras with USB ID 
+0x2770:0x913D also came onto the market. These cameras also can be made to 
+function with the same code base, in spite of some differences. They are 
+more specifically described in README.913D.
 
-The first camera which I knew of with this USB ID was the Digigr8 from 
+The first camera which I knew of with USB ID 0x2770:0x905C was the Digigr8 from 
 RadioShack. Hence comes the name of this camera library. Several more cameras 
 have since been reported, including one which has the same make/model painted
 on the plastic case as that of a camera which previously used an sq905 chip 
 and used the sq905 Vendor:Product number instead of this one. SQ Technologies 
-seems to have discontinued the SQ905 and this chip is apparently its successor. 
+seems to have discontinued the SQ905 and the SQ905C is apparently its successor. 
 
 For information about additional cameras with the same USB ID, I am totally 
 dependent on reports from users and testers. If you have another 0x2770:0x905c 
@@ -35,7 +39,7 @@ will credit you as the finder of the camera, in the ChangeLog file.
 
 WHAT CHIP IS ACTUALLY IN THESE CAMERAS? 
 
-I do not know. I did not take mine apart to look inside. (update) Someone has 
+I do not know. I did not take one apart to look inside. (update) Someone has 
 reported to me that he did take his camera apart, and it really is an SQ905C 
 chip inside. 
 
@@ -64,23 +68,26 @@ The following things can be done with button-pushes on the camera:
 -- "Clip" mode will shoot three frames. The camera "sees" these frames as 
 	ordinary photos. Also the photo counter on the LED counts them.
 -- "AVI" mode shoots until the shutter button is released, or until the 
-	camera is full. The photo counter does NOT count the AVI frames, 
-	but thinks all of the frames are part of one photo. Otherwise, the
-	camera sees the frames as ordinary photos, so gphoto2 will give the 
-	actual count of all frames, whether photos or part of an AVI clip,
-	Also gphoto2 will download the AVI frames as if they were ordinary 
-	photos. Apparently, AVI frames are always 320x240 regardless of the 
-	resolution setting. AVI mode does honor the compression setting, 
-	though, if it happens to be turned on. However, compressed AVI 
-	processing is _not_ implemented at this time. 
+	camera is full. The photo counter on the camera does NOT count the 
+	AVI frames as separate items, but thinks all of the frames are part 
+	of one photo. Otherwise, the camera in fact sees the frames as 
+	ordinary photos, so gphoto2 will give the actual count of all frames, 
+	no matter whether photos or part of an AVI clip. Accordingly, gphoto2 
+	will download the AVI frames as if they were ordinary photos and will
+	sequentially number the frames in the course of numbering the photos
+	which come out of the camera. The user can easily create a movie from 
+	the AVI frames, using an animation program, such as the "animate" 
+	command from the ImageMagick package. The default resolution for AVI 
+	frames is always 320x240 regardless of the resolution setting chosen 
+	for still photos. AVI mode will use compression if it otherwise 
+	happens to be turned on. 
 
 Notes:  
 
-One camera has been discovered, in July 2007, to which the above list does 
-not correspond. See the section "More concerning the newly discovered 
-0x2770:0x9050 camera".
+The 0x2770:0x9050 and 0x2770:913D cameras differ from the above description in 
+some particulars. Please see the respective README files for details. 
 
-The only known cameras supported by the camlibs/digigr8 have a 640x480 
+Almost all known cameras supported by the camlibs/digigr8 have a 640x480 
 high-resolution setting and a 320x240 low-resolution setting. If your
 0x2770:0x905c camera uses another resolution setting, then it might still 
 work. There is some similarity with the sq905 cameras, and I kept that part 
@@ -150,75 +157,76 @@ performed by an appropriate sequence of button pushes on the camera.
 
 WHAT GUI FRONTENDS DOES THIS CAMERA LIBRARY SUPPORT?
 
-Gtkam seems to work well for me with this library. Some of the other various
-frontends do not seem to work quite so well for me. But one of them may work 
-nicely for you, and you are hereby encouraged to try it. If you want to use 
-either gtkam or digikam, you are encouraged to read the camera's manual (in 
-gtkam, right-click on the name of the camera in the left panel, after starting 
-the program and having chosen the right camera). 
+Gtkam seems to work well for me with this library, and also flphoto. Some of 
+the other various frontends do not seem to work quite so well for me. But one 
+of them may work nicely for you, and you are hereby encouraged to try whichever 
+one is your favorite. If you want to use either gtkam or digikam, you are 
+encouraged to read the camera's manual (in gtkam, right-click on the name of 
+the camera in the left panel, after starting the program and having chosen the 
+correct camera). 
 
 
 NOTES  
 
 1.	The program is set up to put out pictures in PPM or raw format. The OEM
-program offers JPEGs, which the user can easily create on Linux, using other   
-software which exists independently from libgphoto2. 
+program offers JPEGs. If the user desires JPEG output, then that can easily 
+be done on Linux, using other software which exists independently from 
+libgphoto2. 
 
-2.	 The gamma setting (actually seems to be one over gamma) used for
+2.	As of 01/20/2008, all raw files downloaded from these cameras will 
+have a "footer" of length 16 bytes. This footer consists of the line from the 
+camera's allocation table, which gives some information about the photo. The 
+information includes a code for the resolution and compression setting
+and some information which may be useful in the future relating to color and 
+lighting. Unfortunately, the meaning of the color and lighting information is 
+not well enough understood to be useful at this time, but it may be useful in 
+the future, so why not preserve the information?
+
+3.	 The gamma setting (actually seems to be one over gamma) used for
 the construction of PPM image files has been obtained by trial and error. It
 seems to work very well for outdoor pictures, but the setting is a
 compromise between what happens with outdoor photos and what happens with
 indoor photos. Conceivably, the program could support a choice between two
 or more gamma settings, optimizing for different conditions. 
 
-3. 	A still-experimental postprocessing routine is added, to provide
+
+4. 	A still-experimental postprocessing routine is added, to provide
 some sharpening and color correction for different lighting conditions. The
 routine can easily be turned off if one wishes, and because it is
 experimental you may so wish. To disable it, just comment out the line in
 get_file_func ( ) in library.c where the function digi_postprocess ( ) is
 called. Then do "make install" to install your change.
 
-4. 	The "High Compression" setting uses an unpublished compression 
-algorithm; decompression seems now to work pretty well.  
 
-5. 	Please get back to me with reports about other SQ cameras (any cameras 
+5.	An experimental program for processing raw files into finished photos 
+is available now, in gphoto2/trunk/playground/raw_converters/sq_raw_converter
+Please try this program. If the results are good, I will incorporate the
+routines used there directly into libgphot02/camlibs/digigr8. I like the
+results, but they need testing.
+
+
+6. 	The "High Compression" setting uses an unpublished compression 
+algorithm. However, after serious effort the decompression seems to work 
+pretty well. There are at this time (01/20/2008) no known issues with it. 
+
+7. 	Please get back to me with reports about other SQ cameras (any cameras 
 with Vendor number 0x2770), with their specifications (what it says in the OEM 
 manual about resolution and number of pictures, as well as make and model, and 
 whether it works or not with any libgphoto2 driver or not, would be enough), 
 and with a log file if it seems it is supposed to work but there are problems. 
 
 
-More concerning the newly discovered 0x2770:0x9050 camera:
-
-This camera is the "Disney pix micro," found at KB Toys. Its functionality 
-is very basic. On the package it says the camera is able to take 20 photos, but 
-in fact the number of photos is variable. For, they are all compressed. Since 
-the compression algorithm is the same as that in the 0x905C cameras, this new 
-camera is quite usable, for what it is. Resolution for this camera is fixed at 
-352x288 and can not be adjusted. In fact, the only thing on the camera which 
-can be controlled at all, aside from snapping photos one at a time, is to 
-delete photos one at a time or to delete all.  To delete one photo with the 
-delete button on the camera, press the button. To delete all, hold it down 
-longer. The camera has no clip option, no delayed-shooting option, and no 
-multi-frame clips intended for AVI images. However, the camera will do 
-software deletion of all photos using the option gphoto2 -D, while for the 
-other cameras supported in camlibs/digigr8 the gphoto2 -D option does nothing 
-at all. However:
-
-The USB command to delete is the same as the command to shoot a frame 
-(gphoto2 option is --capture-preview). If you shoot a frame with the Disney 
-pix micro, it will delete whatever photos are on the camera !!!
-
-
-A note on capture:
+A NOTE ON CAPTURE AND ON CHANGING THE RESOLUTION SETTING FOR CAPTURE
 
 These cameras will perform "gphoto2 --capture-preview" which means, to shoot a 
 frame and download it to the computer immediately. On the 0x9050 camera, the 
-same USB command is what is used to delete all frames on the camera. On the 
-0x905C cameras, the capture function works, too, but will not affect whatever
-is on the camera. The default resolution setting for capture with all these 
-cameras is 320x240. For those cameras which will do 640x480 resolution in 
-still photo mode, there is a tweak which can cause the camera to do the 
+same USB command which trips the shutter will simultaneously delete all frames 
+on the camera. On the 0x905C cameras, capture works, but will not affect whatever
+is on the camera. 
+
+The default resolution setting for capture with all these cameras is 320x240. 
+For those cameras which will do 640x480 resolution in still photo mode, there 
+is a tweak which can cause the camera to do the 
 capture at 640x480 as well. It is as follows:
 
 Look through the code in camlibs/library.c for the capture function. You will 
@@ -256,4 +264,4 @@ WARRANTY?
 
 Theodore Kilgore
 12/05/05
-(revised 12/29/05, 03/28/07, 06/25/07, 07/16/07, 07/23/07)
+(revised 12/29/05, 03/28/07, 06/25/07, 07/16/07, 07/23/07, 01/21/08, 01/22/08)
