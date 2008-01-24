@@ -1,9 +1,9 @@
 /* This is the README file for libgphoto2/camlibs/digigr8. This README is an 
  * integral part of the libgphoto2/camlibs/digigr8 library source code and is 
- * distributed with that source code under the LGPL license. a copy of which 
- * license may be seen in any of the source files in libgphoto2/camlibs/digigr8, 
- * or in the head directory of libgphoto2.
- * Original file copyright Theodore Kilgore, 12/05/05.
+ * distributed with that source code under the LGPL license, a copy of which 
+ * license may be seen in the head directory of libgphoto2, in the file 
+ * COPYING.
+ * Original of this file copyright Theodore Kilgore, 12/05/05.
  */ 
  
  

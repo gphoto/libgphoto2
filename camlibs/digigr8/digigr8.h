@@ -6,7 +6,8 @@
  * Copyright (c) 2005 Theodore Kilgore <kilgota@auburn.edu>
  * Camera library support under libgphoto2.1.1 for camera(s) 
  * with chipset from Service & Quality Technologies, Taiwan. 
- * The chip supported by this driver is suspected to be the SQ914,  
+ * Cameras supported by this driver have Product ID 0x905C, 0x9050, or 
+ * 0x913D.
  *
  * Licensed under GNU Lesser General Public License, as part of Gphoto
  * camera support project. For a copy of the license, see the file 
@@ -23,6 +24,7 @@ struct _CameraPrivateLibrary {
 	int nb_entries;
 	int last_fetched_entry;
 	int delete_all;
+	unsigned char init_done;
 };
 
 

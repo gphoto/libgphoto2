@@ -1,3 +1,11 @@
+2008-01-23   Theodore Kilgore <kilgota@auburn.edu>  
+	* library.c: camera_capture_preview() revised to be in line with recent
+	revisions of gphoto2. Also digi_init() is now not called unless needed,
+	because camera_capture_preview() does not need it. Functions which need
+	it now check init_done and ask for digi_init() if init_done is still 0.
+	* digigr8.c: init_done parameter is set now to 1 in digi_init().
+	* digigr8.h: init_done parameter added to CameraPrivateLibrary.
+
 2008-01-22   Theodore Kilgore <kilgota@auburn.edu>  
 	* digi_postprocess.c: Fixed memory leak in second-stage decompression
 	function. 
