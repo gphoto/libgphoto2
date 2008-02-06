@@ -1886,6 +1886,20 @@ _put_UINT32_as_time(CONFIG_PUT_ARGS) {
 }
 
 static int
+_get_Canon_SyncTime(CONFIG_GET_ARGS) {
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+	return (GP_OK);
+}
+
+static int
+_put_Canon_SyncTime(CONFIG_PUT_ARGS) {
+	/* Just set the time if the entry changes. */
+	propval->u32 = time(NULL);
+	return (GP_OK);
+}
+
+static int
 _get_STR_as_time(CONFIG_GET_ARGS) {
 	time_t		camtime;
 	struct tm	tm;
@@ -2593,7 +2607,9 @@ static struct submenu camera_settings_menu[] = {
 	{ N_("Camera Model"), "model", PTP_DPC_CANON_CameraModel, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_None },
 	{ N_("Firmware Version"), "firmwareversion", PTP_DPC_CANON_FirmwareVersion, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_CANON_FirmwareVersion, _put_None },
 	{ N_("Camera Time"),  "time", PTP_DPC_CANON_UnixTime,     PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_UINT32_as_time, _put_UINT32_as_time },
+	{ N_("Set camera time to PC time"),  "synctime", PTP_DPC_CANON_UnixTime,     PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
 	{ N_("Camera Time"),  "eos-time", PTP_DPC_CANON_EOS_CameraTime,     PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_UINT32_as_time, _put_UINT32_as_time },
+	{ N_("Set camera time to PC time"),  "eos-synctime", PTP_DPC_CANON_EOS_CameraTime,     PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
 	{ N_("Camera Time"),  "time", PTP_DPC_DateTime,           0,                PTP_DTC_STR, _get_STR_as_time, _put_STR_as_time },
 	{ N_("Beep Mode"),  "beep",   PTP_DPC_CANON_BeepMode,     PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_BeepMode, _put_Canon_BeepMode },
         { N_("Image Comment"), "imgcomment", PTP_DPC_NIKON_ImageCommentString, PTP_VENDOR_NIKON, PTP_DTC_STR, _get_STR, _put_STR },

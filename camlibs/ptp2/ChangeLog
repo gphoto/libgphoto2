@@ -1,3 +1,12 @@
+2008-02-06  Marcus Meissner  <marcus@jet.franken.de>
+
+	* config.c: Allow synchronising the system time to
+	  the camera. Just do:
+
+		gphoto2 --set-config synctime=on
+
+	  Confirmed to work for Canon IXUS.
+
 2008-01-03  Linus Walleij  <triad@df.lth.se>
 
 	* ptp.c,ptp.h: Moved mtp property caching and
