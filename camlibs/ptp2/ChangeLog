@@ -1,3 +1,7 @@
+2008-02-07  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Added Canon IXUS 860 IS as reported.
+
 2008-02-06  Marcus Meissner  <marcus@jet.franken.de>
 
 	* config.c: Allow synchronising the system time to

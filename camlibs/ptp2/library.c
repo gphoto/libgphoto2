@@ -742,6 +742,8 @@ static struct {
 	{"Canon:PowerShot G9 (PTP mode)",       0x04a9, 0x315a, PTPBUG_DELETE_SENDS_EVENT},
 	/* Roger Lynn <roger@rilynn.demon.co.uk> */
 	{"Canon:PowerShot A720 IS (PTP mode)",	0x04a9, 0x315d, PTPBUG_DELETE_SENDS_EVENT},
+	/* Ruben Vandamme <vandamme.ruben@belgacom.net> */
+	{"Canon:Digital IXUS 860 IS",		0x04a9, 0x3160, PTPBUG_DELETE_SENDS_EVENT},
 
 
 	/* Konica-Minolta PTP cameras */
