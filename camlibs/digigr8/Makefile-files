@@ -1,6 +1,6 @@
 EXTRA_DIST += digigr8/README.905C
 EXTRA_DIST += digigr8/README.9050
-EXTRA_DIST += digigr8/README.913C
+EXTRA_DIST += digigr8/README.913D
 camlibdoc_DATA += digigr8/README.905C
 camlibdoc_DATA += digigr8/README.9050
 camlibdoc_DATA += digigr8/README.913D
