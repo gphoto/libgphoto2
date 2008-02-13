@@ -1,3 +1,8 @@
+2008-02-13  Marcus Meissner  <meissner@suse.de>
+
+	* disk/disk.c: Do not check "gphotofs" filesystems, to avoid
+	  recursion in gphotofs.
+
 2007-12-28  Marcus Meissner  <marcus@jet.franken.de>
 
 	* Migrated libgphoto2_port to use symbol versions.

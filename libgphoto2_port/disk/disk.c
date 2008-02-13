@@ -206,10 +206,11 @@ gp_port_library_list (GPPortInfoList *list)
 			gp_log(GP_LOG_DEBUG, "gphoto2-port/disk",
 			       "found fstab fsname %s", mntent->mnt_fsname);
 
-			if ((NULL != strstr(mntent->mnt_fsname,"fd")) ||
+			if ((NULL != strstr(mntent->mnt_fsname,"fd"))	||
 			    (NULL != strstr(mntent->mnt_fsname,"floppy")) ||
-			    (NULL != strstr(mntent->mnt_fsname, "fuse")))
-			{
+			    (NULL != strstr(mntent->mnt_fsname,"fuse"))	||
+			    (NULL != strstr(mntent->mnt_fsname,"gphotofs"))
+			) {
 				continue;
 			}
 			snprintf (path, sizeof(path), "%s/DCIM", mntent->mnt_dir);
@@ -233,10 +234,11 @@ gp_port_library_list (GPPortInfoList *list)
 			gp_log(GP_LOG_DEBUG, "gphoto2-port/disk",
 			       "found mtab fsname %s", mntent->mnt_fsname);
 
-			if ((NULL != strstr(mntent->mnt_fsname,"fd")) ||
+			if ((NULL != strstr(mntent->mnt_fsname,"fd"))	||
 			    (NULL != strstr(mntent->mnt_fsname,"floppy")) ||
-			    (NULL != strstr(mntent->mnt_fsname, "fuse")))
-			{
+			    (NULL != strstr(mntent->mnt_fsname,"fuse"))	||
+			    (NULL != strstr(mntent->mnt_fsname,"gphotofs"))
+			) {
 				continue;
 			}
 
