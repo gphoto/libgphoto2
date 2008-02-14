@@ -259,7 +259,7 @@ ptp_ptpip_senddata (PTPParams* params, PTPContainer* ptp,
 		htod32a(&xdata[ptpip_data_transid+8], ptp->Transaction_ID);
 		gp_log_data("ptpip/senddata", (char*)xdata, towrite2);
 		written = 0;
-		while (written > towrite2) {
+		while (written < towrite2) {
 			ret = write (params->cmdfd, xdata+written, towrite2-written);
 			if (ret == -1) {
 				perror ("write in senddata failed");
