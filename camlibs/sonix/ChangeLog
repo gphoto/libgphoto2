@@ -1,3 +1,6 @@
+2008-02-16   Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: Camera ID byte saved in rawfile footers. 
+
 2007-12-27   Theodore Kilgore <kilgota@auburn.edu>
 	* library.c: added Wild Planet Digital Spy Camera, contributed by 
 		     Jorma Laaksonen <jorma.laaksonen@tkk.fi>

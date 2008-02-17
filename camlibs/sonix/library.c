@@ -445,6 +445,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		free (data);
 		return GP_OK;
 	case GP_FILE_TYPE_RAW: 
+				/* Save the fwversion code in the data */
+				data[endpoint-10]=camera->pl->fwversion[1];
+
 		gp_file_set_mime_type(file, GP_MIME_RAW);
 		gp_file_set_name(file, filename);
 		gp_file_append( file, (char *)data, rawsize);
