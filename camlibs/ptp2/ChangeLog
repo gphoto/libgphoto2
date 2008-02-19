@@ -1,3 +1,8 @@
+2008-02-19  Marcus Meissner  <marcus@jet.franken.de>
+
+	* config.c: Do not clear the "changed" flag when its not the
+	  widget we want.
+
 2008-02-07  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Added Canon IXUS 860 IS as reported.

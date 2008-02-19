@@ -2816,8 +2816,12 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			if (!gp_widget_changed (widget))
 				continue;
 
+			/* restore the "changed flag" */
+			gp_widget_set_changed (widget, TRUE);
+
 			gp_log (GP_LOG_DEBUG, "camera_set_config", "Found and setting Property %04x (%s)", cursub->propid, cursub->label);
 			if (have_prop(camera,cursub->vendorid,cursub->propid)) {
+				gp_widget_changed (widget); /* clear flag */
 				if (cursub->propid) {
 					PTPDevicePropDesc dpd;
 
@@ -2835,6 +2839,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			if (have_eos_prop(camera,cursub->vendorid,cursub->propid)) {
 				PTPDevicePropDesc	dpd;
 
+				gp_widget_changed (widget); /* clear flag */
 				gp_log (GP_LOG_DEBUG, "camera_set_config", "Found and setting EOS Property %04x (%s)", cursub->propid, cursub->label);
 				memset(&dpd,0,sizeof(dpd));
 				ptp_canon_eos_getdevicepropdesc (&camera->pl->params,cursub->propid, &dpd);
