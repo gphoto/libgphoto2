@@ -27,34 +27,34 @@ Supported operations:
   0x1015	GetDevicePropValue
   0x1016	SetDevicePropValue
   0x101b	GetPartialObject
-  0x9001	GetObjectSize
-  0x9002
-  0x9003
-  0x9006
-  0x9008	StartShootingMode
-  0x9009	EndShootingMode
-  0x900a
+  0x9001	GetPartialObjectInfo
+  0x9002	SetObjectArchive
+  0x9003	KeepDeviceOn
+  0x9006	GetObjectHandleByName
+  0x9008	InitiateReleaseControl
+  0x9009	TerminateReleaseControl
+  0x900a        TerminatePlaybackMode
   0x900b	ViewFinderOn
   0x900c	ViewFinderOff
-  0x900d	ReflectChanges
-  0x900e
-  0x900f
-  0x9010	ThemeDownload
-  0x9011	ThemeUpload
-  0x9012
+  0x900d	DoAeAfAwb
+  0x900e	GetCustomizeSpec
+  0x900f	GetCustomizeItemInfo
+  0x9010	GetCustomizeData
+  0x9011	SetCustomizeData
+  0x9012	GetCaptureStatus
   0x9013	CheckEvent
   0x9014	FocusLock
   0x9015	FocusUnlock
-  0x9018	
-  0x9019
+  0x9018	AskAboutPcEvf
+  0x9019	SendPartialObject
   0x901a	InitiateCaptureIntoMemory
-  0x901b	GetPartialObject
-  0x901c
+  0x901b	GetPartialObjectEx
+  0x901c	SetObjectTime
   0x901d	GetViewFinderImage
-  0x901e	
-  0x901f
+  0x901e	GetObjectAttributes
+  0x901f	ChangeUSBProtocol
   0x9020	GetChanges
-  0x9021	GetFolderEntries
+  0x9021	GetObjectInfoEx
 Events Supported:
   0x4001	CancelTransaction
   0x4002	ObjectAdded
