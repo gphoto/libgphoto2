@@ -1,3 +1,11 @@
+2008-02-22  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c, ptp.h:
+	  Always use Canon capture mode if available.
+
+	  Allow the Canon capture mode to store its stuff on the card
+	  by using the 0xd029 property (CaptureTransferMode).
+
 2008-02-19  Marcus Meissner  <marcus@jet.franken.de>
 
 	* config.c: Do not clear the "changed" flag when its not the

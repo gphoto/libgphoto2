@@ -1065,6 +1065,8 @@ typedef struct _PTPCanon_Property {
 #define PTP_DPC_CANON_FocalLengthWide	0xD027
 #define PTP_DPC_CANON_FocalLengthDenominator	0xD028
 #define PTP_DPC_CANON_CaptureTransferMode		0xD029
+#define CANON_TRANSFER_MEMORY	3
+#define CANON_TRANSFER_CARD	9
 #define PTP_DPC_CANON_Zoom		0xD02A
 #define PTP_DPC_CANON_NamePrefix	0xD02B
 #define PTP_DPC_CANON_SizeQualityMode	0xD02C

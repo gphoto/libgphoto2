@@ -1461,7 +1461,7 @@ static int
 camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		GPContext *context)
 {
-	static int capcnt = 0;
+	static int 		capcnt = 0;
 	PTPObjectInfo		oi;
 	int			i, ret, isevent;
 	PTPParams		*params = &camera->pl->params;
@@ -1471,6 +1471,8 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	PTPContainer		event;
 	PTPUSBEventContainer	usbevent;
 	uint32_t		handle;
+	char 			buf[1024];
+	int			xmode = CANON_TRANSFER_CARD;
 
 	if (!ptp_operation_issupported(params, PTP_OC_CANON_InitiateCaptureInMemory)) {
 		gp_context_error (context,
@@ -1491,7 +1493,10 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	}
 
 	if (ptp_property_issupported(params, PTP_DPC_CANON_CaptureTransferMode)) {
-		propval.u16=3; /* 3 */
+		if ((GP_OK == gp_setting_get("ptp2","capturetarget",buf)) && !strcmp(buf,"sdram"))
+			propval.u16 = xmode = CANON_TRANSFER_MEMORY;
+		else
+			propval.u16 = xmode = CANON_TRANSFER_CARD;
 		ret = ptp_setdevicepropvalue(params, PTP_DPC_CANON_CaptureTransferMode, &propval, PTP_DTC_UINT16);
 		if (ret != PTP_RC_OK)
 			gp_log (GP_LOG_DEBUG, "ptp", "setdevicepropvalue CaptureTransferMode failed, %d\n", ret);
@@ -1563,12 +1568,26 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	/* FIXME: handle multiple images (as in BurstMode) */
 	ret = ptp_getobjectinfo (params, newobject, &oi);
 	if (ret != PTP_RC_OK) return GP_ERROR_IO;
+
 	if (oi.ParentObject != 0) {
-		fprintf(stderr,"Parentobject is 0x%lx now?\n", (unsigned long)oi.ParentObject);
+		if (xmode != CANON_TRANSFER_CARD) {
+			fprintf (stderr,"parentobject is 0x%x, but not in card mode?\n", oi.ParentObject);
+		}
+		add_object (camera, newobject, context);
+		strcpy  (path->name,  oi.Filename);
+		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)oi.StorageID);
+		get_folder_from_handle (camera, oi.StorageID, oi.ParentObject, path->folder);
+		/* delete last / or we get confused later. */
+		path->folder[ strlen(path->folder)-1 ] = '\0';
+		return GP_OK;
+	} else {
+		if (xmode == CANON_TRANSFER_CARD) {
+			fprintf (stderr,"parentobject is 0, but not in memory mode?\n");
+		}
+		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)oi.StorageID);
+		sprintf (path->name, "capt%04d.jpg", capcnt++);
+		return add_objectid_to_gphotofs(camera, path, context, newobject, &oi);
 	}
-	sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)oi.StorageID);
-	sprintf (path->name, "capt%04d.jpg", capcnt++);
-	return add_objectid_to_gphotofs(camera, path, context, newobject, &oi);
 }
 
 static int
@@ -1595,9 +1614,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
 		ptp_operation_issupported(params, PTP_OC_CANON_InitiateCaptureInMemory)
 	) {
-		char buf[1024];
-		if ((GP_OK != gp_setting_get("ptp2","capturetarget",buf)) || !strcmp(buf,"sdram"))
-			return camera_canon_capture (camera, type, path, context);
+		return camera_canon_capture (camera, type, path, context);
 	}
 
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
