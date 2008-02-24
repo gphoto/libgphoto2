@@ -1386,7 +1386,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 
 	ret = ptp_canon_eos_capture (params);
 	if (ret != PTP_RC_OK) {
-		gp_context_error (context, _("Canon EOS Capture failed: %d"), ret);
+		gp_context_error (context, _("Canon EOS Capture failed: %x"), ret);
 		return GP_ERROR;
 	}
 	newobject = 0;
@@ -1394,7 +1394,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		int i;
 		ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
 		if (ret != PTP_RC_OK) {
-			gp_context_error (context, _("Canon EOS Get Changes failed: %d"), ret);
+			gp_context_error (context, _("Canon EOS Get Changes failed: %x"), ret);
 			return GP_ERROR;
 		}
 		if (!nrofentries) {
@@ -1499,7 +1499,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 			propval.u16 = xmode = CANON_TRANSFER_CARD;
 		ret = ptp_setdevicepropvalue(params, PTP_DPC_CANON_CaptureTransferMode, &propval, PTP_DTC_UINT16);
 		if (ret != PTP_RC_OK)
-			gp_log (GP_LOG_DEBUG, "ptp", "setdevicepropvalue CaptureTransferMode failed, %d\n", ret);
+			gp_log (GP_LOG_DEBUG, "ptp", "setdevicepropvalue CaptureTransferMode failed, %x\n", ret);
 	}
 
 #if 0
@@ -1509,7 +1509,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 #endif
 	ret = ptp_canon_initiatecaptureinmemory (params);
 	if (ret != PTP_RC_OK) {
-		gp_context_error (context, _("Canon Capture failed: %d"), ret);
+		gp_context_error (context, _("Canon Capture failed: %x"), ret);
 		return GP_ERROR;
 	}
 	/* Catch event */
