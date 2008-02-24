@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2 2.3.0\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2008-02-11 10:55+0100\n"
+"POT-Creation-Date: 2008-02-24 21:16+0100\n"
 "PO-Revision-Date: 2007-01-04 12:45+0300\n"
 "Last-Translator: Maxim V. Dziumanenko <dziumanenko@gmail.com>\n"
 "Language-Team: Ukrainian <translation-team-uk@lists.sourceforge.net>\n"
@@ -523,7 +523,7 @@ msgstr "Швидкість ISO"
 #: camlibs/canon/library.c:1626 camlibs/canon/library.c:1627
 #: camlibs/canon/library.c:1665 camlibs/canon/library.c:1666
 #: camlibs/canon/library.c:1699 camlibs/canon/library.c:1700
-#: camlibs/ptp2/library.c:1863 camlibs/ptp2/library.c:1865
+#: camlibs/ptp2/library.c:1882 camlibs/ptp2/library.c:1884
 #: camlibs/ptp2/ptp.c:3693
 msgid "Unknown"
 msgstr "Невідомо"
@@ -2127,7 +2127,7 @@ msgstr "Примусово"
 
 #: camlibs/kodak/dc210/dc210.c:261 camlibs/kodak/dc210/dc210.c:269
 #: camlibs/ptp2/config.c:1646 camlibs/ptp2/config.c:2282
-#: camlibs/ptp2/library.c:2157 camlibs/ptp2/library.c:2161
+#: camlibs/ptp2/library.c:2176 camlibs/ptp2/library.c:2180
 #: camlibs/ptp2/ptp.c:3679 camlibs/ricoh/library.c:347
 msgid "None"
 msgstr "Немає"
@@ -2560,7 +2560,7 @@ msgstr ""
 "\n"
 "Запитання та відгуки приймаються із вдячністю."
 
-#: camlibs/kodak/ez200/ez200.c:198
+#: camlibs/kodak/ez200/ez200.c:177
 #, c-format
 msgid ""
 "Your USB camera is a Kodak EZ200.\n"
@@ -2569,7 +2569,7 @@ msgstr ""
 "Модель вашого USB-фотоапарата - Kodak EZ200.\n"
 "Число зображень = %i\n"
 
-#: camlibs/kodak/ez200/ez200.c:206
+#: camlibs/kodak/ez200/ez200.c:185
 msgid ""
 "Kodak EZ200 driver\n"
 "Bucas Jean-Francois <jfbucas@tuxfamily.org>\n"
@@ -3545,7 +3545,7 @@ msgstr ""
 "%i байт."
 
 #: camlibs/panasonic/dc1000.c:471 camlibs/panasonic/dc1580.c:591
-#: camlibs/ricoh/ricoh.c:837
+#: camlibs/ricoh/ricoh.c:843
 msgid "Uploading..."
 msgstr "Завантаження..."
 
@@ -4484,8 +4484,8 @@ msgstr "Високий"
 msgid "Long distance"
 msgstr "Велика відстань"
 
-#: camlibs/ptp2/config.c:1671 camlibs/ptp2/library.c:2166
-#: camlibs/ptp2/library.c:2180 camlibs/ptp2/ptp.c:3898
+#: camlibs/ptp2/config.c:1671 camlibs/ptp2/library.c:2185
+#: camlibs/ptp2/library.c:2199 camlibs/ptp2/ptp.c:3898
 msgid "Undefined"
 msgstr "Не визначено"
 
@@ -5181,7 +5181,7 @@ msgstr "Помилка протоколу PTP, очікувались дані"
 msgid "PTP Protocol error, response expected"
 msgstr "Помилку протоколу PTP, очікувалась відповідь"
 
-#: camlibs/ptp2/library.c:1081
+#: camlibs/ptp2/library.c:1083
 #, fuzzy
 msgid ""
 "PTP2 driver\n"
@@ -5205,75 +5205,75 @@ msgstr ""
 "\n"
 "Насолоджуйтесь!"
 
-#: camlibs/ptp2/library.c:1158
+#: camlibs/ptp2/library.c:1160
 msgid "Sorry, your Canon camera does not support Canon Viewfinder mode"
 msgstr "Ваш фотоапарат Canon не підтримує режим видошукача Canon"
 
-#: camlibs/ptp2/library.c:1164
+#: camlibs/ptp2/library.c:1166
 #, c-format
 msgid "Canon enable viewfinder failed: %d"
 msgstr "Не вдається увімкнути видошукача Canon: %d"
 
-#: camlibs/ptp2/library.c:1170
+#: camlibs/ptp2/library.c:1172
 #, c-format
 msgid "Canon get viewfinder image failed: %d"
 msgstr "Не вдається отримати зображення видошукача Canon: %d"
 
-#: camlibs/ptp2/library.c:1181
+#: camlibs/ptp2/library.c:1183
 #, c-format
 msgid "Canon disable viewfinder failed: %d"
 msgstr "Помилка вимикання видошукача Canon: %d"
 
-#: camlibs/ptp2/library.c:1297
+#: camlibs/ptp2/library.c:1299
 msgid "Sorry, your camera does not support Nikon capture"
 msgstr "Ваш фотоапарат не підтримує захоплення Nikon"
 
-#: camlibs/ptp2/library.c:1383
+#: camlibs/ptp2/library.c:1385
 #, fuzzy
 msgid "Sorry, your Canon camera does not support Canon EOS Capture"
 msgstr "Ваш фотоапарат Canon не підтримує режим захоплення Canon"
 
-#: camlibs/ptp2/library.c:1389
+#: camlibs/ptp2/library.c:1391
 #, fuzzy, c-format
-msgid "Canon EOS Capture failed: %d"
+msgid "Canon EOS Capture failed: %x"
 msgstr "Помилка захоплення Canon: %d"
 
-#: camlibs/ptp2/library.c:1397
+#: camlibs/ptp2/library.c:1399
 #, fuzzy, c-format
-msgid "Canon EOS Get Changes failed: %d"
+msgid "Canon EOS Get Changes failed: %x"
 msgstr "Помилка захоплення Canon: %d"
 
-#: camlibs/ptp2/library.c:1477
+#: camlibs/ptp2/library.c:1481
 msgid "Sorry, your Canon camera does not support Canon Capture initiation"
 msgstr "Ваш фотоапарат Canon не підтримує ініціалізацію Canon Capture"
 
-#: camlibs/ptp2/library.c:1488
+#: camlibs/ptp2/library.c:1492
 msgid "Sorry, initializing your camera did not work. Please report this."
 msgstr "Не вдається ініціалізувати фотоапарат. Сповістіть про це."
 
-#: camlibs/ptp2/library.c:1507
-#, c-format
-msgid "Canon Capture failed: %d"
+#: camlibs/ptp2/library.c:1514
+#, fuzzy, c-format
+msgid "Canon Capture failed: %x"
 msgstr "Помилка захоплення Canon: %d"
 
-#: camlibs/ptp2/library.c:1611
+#: camlibs/ptp2/library.c:1630
 msgid "Sorry, your camera does not support generic capture"
 msgstr "Ваш фотоапарат не підтримує загальне захоплення"
 
-#: camlibs/ptp2/library.c:1687
+#: camlibs/ptp2/library.c:1706
 #, c-format
 msgid "No event received, error %x."
 msgstr ""
 
-#: camlibs/ptp2/library.c:1861
+#: camlibs/ptp2/library.c:1880
 msgid "read only"
 msgstr "лише для читання"
 
-#: camlibs/ptp2/library.c:1862
+#: camlibs/ptp2/library.c:1881
 msgid "readwrite"
 msgstr "читання та запис"
 
-#: camlibs/ptp2/library.c:1996
+#: camlibs/ptp2/library.c:2015
 #, c-format
 msgid ""
 "Model: %s\n"
@@ -5288,7 +5288,7 @@ msgstr ""
 "ID фірмового доповнення: 0x%08x\n"
 "Опис фірмового доповнення: %s\n"
 
-#: camlibs/ptp2/library.c:2014
+#: camlibs/ptp2/library.c:2033
 #, c-format
 msgid ""
 "\n"
@@ -5297,22 +5297,22 @@ msgstr ""
 "\n"
 "Формати захоплення: "
 
-#: camlibs/ptp2/library.c:2028
+#: camlibs/ptp2/library.c:2047
 #, c-format
 msgid "Display Formats: "
 msgstr "Формати відображення: "
 
-#: camlibs/ptp2/library.c:2044
+#: camlibs/ptp2/library.c:2063
 #, c-format
 msgid "Supported MTP Object Properties:\n"
 msgstr "Підтримувані властивості об'єкту MTP:\n"
 
-#: camlibs/ptp2/library.c:2060
+#: camlibs/ptp2/library.c:2079
 #, c-format
 msgid " PTP error %04x on query"
 msgstr " Помилка PTP %04x при запиті"
 
-#: camlibs/ptp2/library.c:2077
+#: camlibs/ptp2/library.c:2096
 #, c-format
 msgid ""
 "\n"
@@ -5321,77 +5321,77 @@ msgstr ""
 "\n"
 "Можливості пристрою:\n"
 
-#: camlibs/ptp2/library.c:2081
+#: camlibs/ptp2/library.c:2100
 #, c-format
 msgid "\tFile Download, "
 msgstr "\tЗавантаження файлів, "
 
-#: camlibs/ptp2/library.c:2084
+#: camlibs/ptp2/library.c:2103
 #, c-format
 msgid "File Deletion, "
 msgstr "Видалення файлів, "
 
-#: camlibs/ptp2/library.c:2086
+#: camlibs/ptp2/library.c:2105
 #, c-format
 msgid "No File Deletion, "
 msgstr "Немає видалення файлів, "
 
-#: camlibs/ptp2/library.c:2090
+#: camlibs/ptp2/library.c:2109
 #, c-format
 msgid "File Upload\n"
 msgstr "Відвантаження файлів\n"
 
-#: camlibs/ptp2/library.c:2092
+#: camlibs/ptp2/library.c:2111
 #, c-format
 msgid "No File Upload\n"
 msgstr "Немає відвантаження файлів\n"
 
-#: camlibs/ptp2/library.c:2097
+#: camlibs/ptp2/library.c:2116
 #, c-format
 msgid "\tGeneric Image Capture, "
 msgstr "\tЗагальне захоплення зображень, "
 
-#: camlibs/ptp2/library.c:2099
+#: camlibs/ptp2/library.c:2118
 #, c-format
 msgid "\tNo Image Capture, "
 msgstr "\tНемає захоплення зображень, "
 
-#: camlibs/ptp2/library.c:2102
+#: camlibs/ptp2/library.c:2121
 #, c-format
 msgid "Open Capture, "
 msgstr "Відкрите захоплення, "
 
-#: camlibs/ptp2/library.c:2104
+#: camlibs/ptp2/library.c:2123
 #, c-format
 msgid "No Open Capture, "
 msgstr "Немає відкритого захоплення, "
 
-#: camlibs/ptp2/library.c:2110
+#: camlibs/ptp2/library.c:2129
 #, c-format
 msgid "Canon Capture\n"
 msgstr "Захоплення Canon\n"
 
-#: camlibs/ptp2/library.c:2114
+#: camlibs/ptp2/library.c:2133
 #, c-format
 msgid "Nikon Capture\n"
 msgstr "Захоплення Nikon\n"
 
-#: camlibs/ptp2/library.c:2116
+#: camlibs/ptp2/library.c:2135
 #, c-format
 msgid "No vendor specific capture\n"
 msgstr "Без залежного від виробника захоплення\n"
 
-#: camlibs/ptp2/library.c:2124
+#: camlibs/ptp2/library.c:2143
 #, c-format
 msgid "\tNikon Wifi support\n"
 msgstr "\tПідтримка Nikon Wifi\n"
 
-#: camlibs/ptp2/library.c:2130
+#: camlibs/ptp2/library.c:2149
 #, c-format
 msgid "\tCanon Wifi support\n"
 msgstr "\tПідтримка Canon Wifi\n"
 
-#: camlibs/ptp2/library.c:2141
+#: camlibs/ptp2/library.c:2160
 #, c-format
 msgid ""
 "\n"
@@ -5400,93 +5400,93 @@ msgstr ""
 "\n"
 "Зведена інформація про накопичувачі:\n"
 
-#: camlibs/ptp2/library.c:2156
+#: camlibs/ptp2/library.c:2175
 #, c-format
 msgid "\tStorageDescription: %s\n"
 msgstr "\tОпис накопичувача: %s\n"
 
-#: camlibs/ptp2/library.c:2160
+#: camlibs/ptp2/library.c:2179
 #, c-format
 msgid "\tVolumeLabel: %s\n"
 msgstr "\tМітка тому: %s\n"
 
-#: camlibs/ptp2/library.c:2167
+#: camlibs/ptp2/library.c:2186
 msgid "Builtin ROM"
 msgstr "Вбудована ROM"
 
-#: camlibs/ptp2/library.c:2168
+#: camlibs/ptp2/library.c:2187
 msgid "Removable ROM"
 msgstr "Змінна ROM"
 
-#: camlibs/ptp2/library.c:2169
+#: camlibs/ptp2/library.c:2188
 msgid "Builtin RAM"
 msgstr "Вбудована RAM"
 
-#: camlibs/ptp2/library.c:2170
+#: camlibs/ptp2/library.c:2189
 msgid "Removable RAM (memory card)"
 msgstr "Змінна RAM (картка пам'яті)"
 
-#: camlibs/ptp2/library.c:2172 camlibs/ptp2/library.c:2185
-#: camlibs/ptp2/library.c:2197
+#: camlibs/ptp2/library.c:2191 camlibs/ptp2/library.c:2204
+#: camlibs/ptp2/library.c:2216
 #, c-format
 msgid "Unknown: 0x%04x\n"
 msgstr "Невідомо: 0x%04x\n"
 
-#: camlibs/ptp2/library.c:2176
+#: camlibs/ptp2/library.c:2195
 #, c-format
 msgid "\tStorage Type: %s\n"
 msgstr "\tТип носія: %s\n"
 
-#: camlibs/ptp2/library.c:2181
+#: camlibs/ptp2/library.c:2200
 msgid "Generic Flat"
 msgstr "Загальний плоский"
 
-#: camlibs/ptp2/library.c:2182
+#: camlibs/ptp2/library.c:2201
 msgid "Generic Hierarchical"
 msgstr "Загальний ієрархічний"
 
-#: camlibs/ptp2/library.c:2183
+#: camlibs/ptp2/library.c:2202
 msgid "Digital Camera Layout (DCIM)"
 msgstr "Digital Camera Layout (DCIM)"
 
-#: camlibs/ptp2/library.c:2189
+#: camlibs/ptp2/library.c:2208
 #, c-format
 msgid "\tFilesystemtype: %s\n"
 msgstr "\tТип Файлової системи: %s\n"
 
-#: camlibs/ptp2/library.c:2193
+#: camlibs/ptp2/library.c:2212
 msgid "Read-Write"
 msgstr "читання-запис"
 
-#: camlibs/ptp2/library.c:2194
+#: camlibs/ptp2/library.c:2213
 msgid "Read-Only"
 msgstr "Лише читання"
 
-#: camlibs/ptp2/library.c:2195
+#: camlibs/ptp2/library.c:2214
 msgid "Read Only with Object deletion"
 msgstr "Лише читання з видаленням об'єктів'"
 
-#: camlibs/ptp2/library.c:2201
+#: camlibs/ptp2/library.c:2220
 #, c-format
 msgid "\tAccess Capability: %s\n"
 msgstr "\tДоступна ємність: %s\n"
 
-#: camlibs/ptp2/library.c:2203
+#: camlibs/ptp2/library.c:2222
 #, c-format
 msgid "\tMaximum Capability: %llu (%lu MB)\n"
 msgstr "\tМаксимальна ємність: %llu (%lu МБ)\n"
 
-#: camlibs/ptp2/library.c:2208
+#: camlibs/ptp2/library.c:2227
 #, c-format
 msgid "\tFree Space (Bytes): %llu (%lu MB)\n"
 msgstr "\tВільний простір (байтів): %llu (%lu МБ)\n"
 
-#: camlibs/ptp2/library.c:2213
+#: camlibs/ptp2/library.c:2232
 #, c-format
 msgid "\tFree Space (Images): %d\n"
 msgstr "\tВільний простір (зображень): %d\n"
 
-#: camlibs/ptp2/library.c:2221
+#: camlibs/ptp2/library.c:2240
 #, c-format
 msgid ""
 "\n"
@@ -5495,25 +5495,25 @@ msgstr ""
 "\n"
 "Інформація про властивості пристрою:\n"
 
-#: camlibs/ptp2/library.c:2247
+#: camlibs/ptp2/library.c:2266
 #, c-format
 msgid " not read out.\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:3214 camlibs/ptp2/library.c:3218
+#: camlibs/ptp2/library.c:3233 camlibs/ptp2/library.c:3237
 #, c-format
 msgid "File '%s/%s' does not exist."
 msgstr "Файл '%s/%s' не існує."
 
-#: camlibs/ptp2/library.c:3224
+#: camlibs/ptp2/library.c:3243
 msgid "Metadata only supported for MTP devices."
 msgstr "Метадані підтримуються лише для пристроїв MTP."
 
-#: camlibs/ptp2/library.c:3913
+#: camlibs/ptp2/library.c:3932
 msgid "Initializing Camera"
 msgstr "Ініціалізація фотоапарату"
 
-#: camlibs/ptp2/library.c:4081
+#: camlibs/ptp2/library.c:4100
 #, fuzzy, c-format
 msgid ""
 "Currently, PTP is only implemented for USB and PTP/IP cameras currently, "
@@ -7084,7 +7084,7 @@ msgstr "Очікувалось 0x%x, отримано 0x%x. Зв'яжіться 
 msgid "Bad characters (0x%x, 0x%x). Please contact %s."
 msgstr "Неправильні символи (0x%x, 0x%x). Зв'яжіться з %s."
 
-#: camlibs/ricoh/ricoh.c:256 camlibs/ricoh/ricoh.c:325
+#: camlibs/ricoh/ricoh.c:256 camlibs/ricoh/ricoh.c:331
 #, c-format
 msgid "Camera busy. If the problem persists, please contact %s."
 msgstr ""
@@ -7100,22 +7100,22 @@ msgstr "Таймаут навіть після 2 спроб. Зв'яжіться
 msgid "Communication error even after 2 retries. Please contact %s."
 msgstr "Помилка зв'язку навіть після 2 спроб. Зв'яжіться з %s."
 
-#: camlibs/ricoh/ricoh.c:339
+#: camlibs/ricoh/ricoh.c:345
 #, c-format
 msgid "Camera is in wrong mode. Please contact %s."
 msgstr "Фотоапарат у неправильному режимі. Зв'яжіться з %s."
 
-#: camlibs/ricoh/ricoh.c:348
+#: camlibs/ricoh/ricoh.c:354
 #, c-format
 msgid "Camera did not accept the parameters. Please contact %s."
 msgstr "Фотоапарат не приймає параметри. Зв'яжіться з %s."
 
-#: camlibs/ricoh/ricoh.c:354
+#: camlibs/ricoh/ricoh.c:360
 #, c-format
 msgid "An unknown error occurred. Please contact %s."
 msgstr "Невідома помилка. Зв'яжіться з %s."
 
-#: camlibs/ricoh/ricoh.c:816
+#: camlibs/ricoh/ricoh.c:822
 #, c-format
 msgid ""
 "The filename's length must not exceed 12 characters ('%s' has %i characters)."
