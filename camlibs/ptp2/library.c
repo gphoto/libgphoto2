@@ -773,6 +773,8 @@ static struct {
 	{"Fuji:FinePix A820",			0x04cb, 0x01c6, 0},
 	/* g4@catking.net */
 	{"Fuji:FinePix A800",			0x04cb, 0x01d2, 0},
+	/* Teppo Jalava <tjjalava@gmail.com> */
+	{"Fuji:FinePix F50fd",			0x04cb, 0x01d4, 0},
 
 	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
 	{"Sea & Sea:5000G (PTP mode)",		0x05ca, 0x0327, 0},
