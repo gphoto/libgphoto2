@@ -1,0 +1,263 @@
+Device info:
+Manufacturer: Canon Inc.
+  model: Canon PowerShot A95
+  device version: 1-1.0.0.0
+  serial number: '(null)'
+Vendor extension ID: 0x0000000b
+Vendor extension description: (null)
+Supported operations:
+  0x1001
+  0x1002
+  0x1003
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100a
+  0x100b
+  0x100c
+  0x100d
+  0x100e
+  0x100f
+  0x1012
+  0x1014
+  0x1015
+  0x1016
+  0x101b
+  0x9001
+  0x9002
+  0x9003
+  0x9006
+  0x9008
+  0x9009
+  0x900a
+  0x900b
+  0x900c
+  0x900d
+  0x900e
+  0x900f
+  0x9010
+  0x9011
+  0x9012
+  0x9013
+  0x9014
+  0x9015
+  0x9018
+  0x9019
+  0x901a
+  0x901b
+  0x901c
+  0x901d
+  0x901e
+  0x901f
+  0x9020
+  0x9021
+  0x9022
+  0x9023
+  0x9024
+  0x9025
+  0x9026
+  0x9027
+Events Supported:
+  0x4001
+  0x4002
+  0x4003
+  0x4004
+  0x4005
+  0x4006
+  0x4008
+  0x4009
+  0x400a
+  0x400c
+  0x400d
+  0xc001
+  0xc005
+  0xc008
+  0xc009
+  0xc00a
+  0xc00b
+  0xc00c
+  0xc00d
+  0xc00f
+Device Properties Supported:
+  0xd001
+  0xd002
+  0xd003
+  0xd005
+  0xd006
+  0xd007
+  0xd008
+  0xd009
+  0xd00a
+  0xd00b
+  0xd00c
+  0xd00e
+  0xd00f
+  0xd010
+  0xd011
+  0xd012
+  0xd013
+  0xd015
+  0xd017
+  0xd018
+  0xd019
+  0xd01c
+  0xd01d
+  0xd01e
+  0xd01f
+  0xd023
+  0xd024
+  0xd025
+  0xd026
+  0xd027
+  0xd028
+  0xd029
+  0xd02a
+  0xd02c
+  0xd02d
+  0xd02e
+  0xd02f
+  0xd030
+  0xd031
+  0xd032
+  0xd033
+  0xd034
+  0xd036
+  0xd037
+  0xd038
+  0xd039
+  0xd03a
+  0xd03b
+  0xd03c
+  0xd03d
+  0xd03e
+  0xd03f
+  0xd040
+  0xd041
+  0xd042
+  0xd043
+  0xd044
+  0xd045
+  0xd046
+  0xd047
+  0xd048
+  0xd049
+  0xd04b
+
+Camera summary:                                                                
+Model: Canon PowerShot A95
+  device version: 1-1.0.0.0
+  serial number:  (null)
+Vendor extension ID: 0x0000000b
+Vendor extension description: (null)
+
+Capture Formats: JPEG
+Display Formats: Association/Directory, JPEG, MS AVI, MS Wave, CRW, Script
+
+Device Capabilities:
+        File Download, File Deletion, File Upload
+        Generic Image Capture, No Open Capture, Canon Capture
+
+Storage Devices Summary:
+store_00010001:
+        StorageDescription: None
+        VolumeLabel: D
+        Storage Type: Removable RAM (memory card)
+        Filesystemtype: Digital Camera Layout (DCIM)
+        Access Capability: Read-Write
+        Maximum Capability: 514760704 (490 MB)
+        Free Space (Bytes): 509345792 (485 MB)
+        Free Space (Images): 352
+store_80000001:
+        StorageDescription: None
+        VolumeLabel: V
+        Storage Type: Builtin RAM
+        Filesystemtype: Unknown: 0x8001
+
+        Access Capability: Read-Write
+        Maximum Capability: 0 (0 MB)
+        Free Space (Bytes): 0 (0 MB)
+        Free Space (Images): -1
+
+Device Property Summary:
+Beep Mode(0xd001):(readwrite) (type=0x2) Enumeration [0,1] value: 1
+Battery Kind(0xd002):(read only) (type=0x4) Enumeration [0,1,2,3,4,5] value: 2
+Battery Mode(0xd003):(read only) (type=0x6) Enumeration [0,1,2,3] value: 1
+Camera Mode(0xd005):(read only) (type=0x2) 32
+Image Quality(0xd006):(readwrite) (type=0x2) Enumeration [2,3,5] value: 3
+Full View File Format(0xd007):(readwrite) (type=0x2) Enumeration [1] value: 1
+Image Size(0xd008):(readwrite) (type=0x2) Enumeration [0,1,3,2] value: 0
+Self Time(0xd009):(read only) (type=0x4) 100
+Flash Mode(0xd00a):(readwrite) (type=0x2) Enumeration [0,1,2,5,6] value: 0
+Beep(0xd00b):(readwrite) (type=0x2) Enumeration [0,1] value: 0
+Shooting Mode(0xd00c):(readwrite) (type=0x2) Enumeration [1,2,3,4] value: 1
+Drive Mode(0xd00e):(read only) (type=0x2) 0
+Zoom(0xd00f):(read only) (type=0x2) 0
+Metering Mode(0xd010):(readwrite) (type=0x2) Enumeration [0,1,3] value: 3
+AF Distance(0xd011):(readwrite) (type=0x2) Enumeration [1,3] value: 1
+Focusing Point(0xd012):(readwrite) (type=0x4) Enumeration [12291,12289] value: 12289
+White Balance(0xd013):(readwrite) (type=0x2) Enumeration [0,1,2,3,4,7,6] value: 0
+AF Mode(0xd015):(read only) (type=0x2) 0
+Contrast(0xd017):(readwrite) (type=0x1) Enumeration [0] value: 0
+Color Gain(0xd018):(readwrite) (type=0x1) Enumeration [0] value: 0
+Sharpness(0xd019):(readwrite) (type=0x1) Enumeration [0] value: 0
+ISO Speed(0xd01c):(readwrite) (type=0x4) Enumeration [64,72,80,88,0] value: 64
+Aperture(0xd01d):(readwrite) (type=0x4) Enumeration [] value: 40
+ShutterSpeed(0xd01e):(readwrite) (type=0x4) Enumeration [] value: 112
+Exposure Compensation(0xd01f):(readwrite) (type=0x2) Enumeration [8,11,13,16,19,21,24,27,29,32,35,37,40] value: 24
+Av Open(0xd023):(read only) (type=0x4) 32
+Av Max(0xd024):(read only) (type=0x4) 56
+Focal Length(0xd025):(read only) (type=0x4) 250
+Focal Length Tele(0xd026):(read only) (type=0x4) 749
+Focal Length Wide(0xd027):(read only) (type=0x4) 250
+Focal Length Denominator(0xd028):(read only) (type=0x4) 32
+Capture Transfer Mode(0xd029):(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15] value: 3
+Zoom(0xd02a):(readwrite) (type=0x4) Range [0 - 12, step 1] value: 0
+Size Quality Mode(0xd02c):(read only) (type=0x4006) Enumeration [
+        a[6] 1944,2592,1,0,0,0,
+        a[6] 1944,2592,6,0,0,0,
+        a[6] 1944,2592,11,0,0,0,
+        a[6] 1536,2048,2,0,0,0,
+        a[6] 1536,2048,7,0,0,0,
+        a[6] 1536,2048,12,0,0,0,
+        a[6] 1200,1600,3,0,0,0,
+        a[6] 1200,1600,8,0,0,0,
+        a[6] 1200,1600,13,0,0,0,
+        a[6] 480,640,5,0,0,0,
+        a[6] 480,640,10,0,0,0,
+        a[6] 480,640,15,0,0,0
+        ] value: a[6] 1944,2592,6,0,0,0
+Supported Thumb Size(0xd02d):(read only) (type=0x4006) Enumeration [
+        a[4] 119,0,159,0
+        ] value: a[4] 119,0,159,0
+Size of Output Data from Camera(0xd02e):(read only) (type=0x6) 20480
+Size of Input Data to Camera(0xd02f):(read only) (type=0x6) 5120
+Remote API Version(0xd030):(read only) (type=0x6) 256
+Firmware Version(0xd031):(read only) (type=0x6) 16777216
+Camera Model(0xd032):(read only) (type=0xffff) 'Canon PowerShot A95'
+Camera Owner(0xd033):(readwrite) (type=0x4002) a[0] 
+UNIX Time(0xd034):(readwrite) (type=0x6) 1203880608
+Camera Output(0xd036):(readwrite) (type=0x2) Enumeration [1,2,3] value: 3
+Disp Av(0xd037):(read only) (type=0x4) 0
+Av Open Apex(0xd038):(read only) (type=0x3) 32
+Digital Zoom Magnification(0xd039):(read only) (type=0x4) 2592
+Ml Spot Position(0xd03a):(read only) (type=0x4) 0
+Disp Av Max(0xd03b):(read only) (type=0x4) 0
+Av Max Apex(0xd03c):(read only) (type=0x4) 56
+EZoom Start Position(0xd03d):(read only) (type=0x4) 7
+Focal Length of Tele(0xd03e):(read only) (type=0x4) 749
+EZoom Size of Tele(0xd03f):(read only) (type=0x4) 640
+Photo Effect(0xd040):(readwrite) (type=0x4) Enumeration [0,1,2,3,4,5] value: 0
+Assist Light(0xd041):(readwrite) (type=0x4) Enumeration [1,0] value: 1
+Flash Quanity Count(0xd042):(readwrite) (type=0x4) Enumeration [] value: 65535
+Rotation Angle(0xd043):(read only) (type=0x4) 0
+Rotation Scene(0xd044):(readwrite) (type=0x4) Enumeration [0,1] value: 0
+Event Emulate Mode(0xd045):(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7] value: 4
+DPOF Version(0xd046):(read only) (type=0x4) 257
+Type of Slideshow(0xd047):(read only) (type=0x4) 0
+Average Filesizes(0xd048):(read only) (type=0x4006) a[19] 2563072,1640448,1026048,0,254976,1428480,914432,571392,0,153600,711680,455680,284672,0,86016,4405248,0,0,0
+Model ID(0xd049):(read only) (type=0x6) 22216704
+Property 0xd04b:(read only) (type=0x2) 0
+
