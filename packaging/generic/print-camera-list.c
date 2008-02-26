@@ -790,7 +790,7 @@ fdi_begin_func (const func_params_t *params, void **data)
 	print_version_comment(stdout, "    | ", "\n", "<!--+\n", "    +-->\n");
 	printf("<deviceinfo version=\"0.2\">\n");
 	printf(" <device>\n");
-	printf("  <match key=\"info.bus\" string=\"usb\">\n");
+	printf("  <match key=\"info.subsystem\" string=\"usb\">\n");
 	return 0;
 }
 
@@ -909,7 +909,7 @@ fdi_device_begin_func (const func_params_t *params, void **data)
 	print_version_comment(stdout, "    | ", "\n", "<!--+\n", "    +-->\n");
 	printf("<deviceinfo version=\"0.2\">\n");
 	printf(" <device>\n");
-	printf("  <match key=\"info.bus\" string=\"usb\">\n");
+	printf("  <match key=\"info.subsystem\" string=\"usb\">\n");
 	return 0;
 }
 
