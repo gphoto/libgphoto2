@@ -346,6 +346,8 @@ static struct {
 	{"Kodak:C653",   0x040a, 0x05af, 0},
 	/* Nicolas Brodu <nicolas.brodu@free.fr> */
 	{"Kodak:Z712 IS",0x040a, 0x05b4, 0},
+	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1904224&group_id=8874&atid=358874 */
+	{"Kodak:Z812 IS",0x040a, 0x05b5, 0},
 	/* */
 	{"Kodak:C613",   0x040a, 0x05b7, 0},
 	/* via IRC */
