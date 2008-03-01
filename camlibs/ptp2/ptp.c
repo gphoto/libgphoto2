@@ -2797,13 +2797,23 @@ ptp_mtp_getobjectreferences (PTPParams* params, uint32_t handle, uint32_t** ohAr
 	PTPContainer ptp;
 	uint16_t ret;
 	unsigned char* dpv=NULL;
+	unsigned int dpvlen = 0;
 
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_MTP_GetObjectReferences;
 	ptp.Param1=handle;
 	ptp.Nparam=1;
-	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &dpv, NULL);
-	if (ret == PTP_RC_OK) *arraylen = ptp_unpack_uint32_t_array(params, dpv, 0, ohArray);
+	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &dpv, &dpvlen);
+	if (ret == PTP_RC_OK) {
+		/* Sandisk Sansa skips the DATA phase, but returns OK as response.
+		 * this will gives us a NULL here. Handle it. -Marcus */
+		if ((dpv == NULL) || (dpvlen == 0)) {
+			*arraylen = 0;
+			*ohArray = NULL;
+		} else {
+			*arraylen = ptp_unpack_uint32_t_array(params, dpv, 0, ohArray);
+		}
+	}
 	free(dpv);
 	return ret;
 }

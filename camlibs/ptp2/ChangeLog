@@ -1,3 +1,10 @@
+2008-03-01  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptp.c: MTP GetObjectReferences on Sansa MTP device
+	  can skip the dataphase, but return OK as response.
+
+	  Handle this strange case here.
+
 2008-02-22  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c, ptp.h:
