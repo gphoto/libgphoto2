@@ -3,7 +3,7 @@
  * List of music players as USB ids.
  *
  * Copyright (C) 2005-2007 Richard A. Low <richard@wentnet.com>
- * Copyright (C) 2005-2007 Linus Walleij <triad@df.lth.se>
+ * Copyright (C) 2005-2008 Linus Walleij <triad@df.lth.se>
  * Copyright (C) 2006-2007 Marcus Meissner
  * Copyright (C) 2007 Ted Bullock
  *
@@ -62,10 +62,9 @@
   // Reported by Darel on the XNJB forums
   { "Creative", 0x041e, "ZEN V Plus", 0x4152, DEVICE_FLAG_NONE },
   { "Creative", 0x041e, "ZEN Vision W", 0x4153, DEVICE_FLAG_NONE },
-  // Reported by Mat Hunt <mat@hyperkahler.co.uk>
-  { "Creative", 0x041e, "ZEN 8GB", 0x4155, DEVICE_FLAG_NONE },
+  // Don't add 0x4155: this is a Zen Stone device which is not MTP
   // Reported by Paul Kurczaba <paul@kurczaba.com>
-  { "Creative", 0x041e, "ZEN 8GB 2nd id", 0x4157, DEVICE_FLAG_IGNORE_HEADER_ERRORS },
+  { "Creative", 0x041e, "ZEN 8GB", 0x4157, DEVICE_FLAG_IGNORE_HEADER_ERRORS },
   // Reported by Ringofan <mcroman@users.sourceforge.net>
   { "Creative", 0x041e, "ZEN V 2GB", 0x4158, DEVICE_FLAG_NONE },
 
@@ -102,8 +101,7 @@
   // Reported by Patrick <skibler@gmail.com>
   { "Samsung", 0x04e8, "YP-K5", 0x505a, DEVICE_FLAG_NO_ZERO_READS },
   // From dev.local@gmail.com - 0x4e8/0x507c is the UMS mode, apparently
-  // also an MTP mode according to some accounts, need this verified.
-  { "Samsung", 0x04e8, "YP-U3Q", 0x507c, DEVICE_FLAG_NONE },
+  // do not add that device.
   // From m.eik michalke
   { "Samsung", 0x04e8, "YP-U3", 0x507d, DEVICE_FLAG_NONE },
   // Reported by Matthew Wilcox <matthew@wil.cx>
@@ -113,10 +111,16 @@
   // From XNJB user
   { "Samsung", 0x04e8, "YP-P2", 0x5083, DEVICE_FLAG_NO_ZERO_READS },
   // From Paul Clinch
-  { "Samsung", 0x04e8, "YP-T10", 0x508a, DEVICE_FLAG_OGG_IS_UNKNOWN },
+  { "Samsung", 0x04e8, "YP-T10", 0x508a, DEVICE_FLAG_OGG_IS_UNKNOWN | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // From a rouge .INF file,
-  // this device ID seems to have been recycled for the Samsung SGH-A707 Cingular cellphone
-  { "Samsung", 0x04e8, "YH-999 Portable Media Center / SGH-A707", 0x5a0f, DEVICE_FLAG_NONE },
+  // this device ID seems to have been recycled for:
+  // the Samsung SGH-A707 Cingular cellphone
+  // the Samsung L760-V cellphone
+  { "Samsung", 0x04e8, "YH-999 Portable Media Center/SGH-A707/SGH-L760V", 0x5a0f, DEVICE_FLAG_NONE },
+  // From Santi Béjar <sbejar@gmail.com> - not sure this is MTP...
+  // { "Samsung", 0x04e8, "Z170 Mobile Phone", 0x6601, DEVICE_FLAG_UNLOAD_DRIVER },
+  // From Santi Béjar <sbejar@gmail.com> - not sure this is MTP...
+  // { "Samsung", 0x04e8, "E250 Mobile Phone", 0x663e, DEVICE_FLAG_UNLOAD_DRIVER },
   // From Lionel Bouton
   { "Samsung", 0x04e8, "X830 Mobile Phone", 0x6702, DEVICE_FLAG_NONE },
   // From James <jamestech@gmail.com>
@@ -144,7 +148,7 @@
   // from discussion forum
   { "Philips", 0x0471, "HDD085/00 or HDD082/17", 0x014d, DEVICE_FLAG_NONE },
   // from XNJB forum
-  { "Philips", 0x0471, "GoGear SA9200", 0x014f, DEVICE_FLAG_NONE },
+  { "Philips", 0x0471, "GoGear SA9200", 0x014f, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
   // From John Coppens <jcoppens@users.sourceforge.net>
   { "Philips", 0x0471, "SA1115/55", 0x0164, DEVICE_FLAG_NONE },
   // From Gerhard Mekenkamp
@@ -157,6 +161,8 @@
   { "Philips", 0x0471, "HDD6320", 0x01eb, DEVICE_FLAG_NONE },
   // From Detlef Meier <dm@emlix.com>
   { "Philips", 0x0471, "SA6014/SA6015/SA6024/SA6025/SA6044/SA6045", 0x084e, DEVICE_FLAG_UNLOAD_DRIVER },
+  // From anonymous Sourceforge user SA5145/02
+  { "Philips", 0x0471, "SA5145", 0x0857, DEVICE_FLAG_UNLOAD_DRIVER },
   // from XNJB user
   { "Philips", 0x0471, "PSA235", 0x7e01, DEVICE_FLAG_NONE },
 
@@ -308,8 +314,11 @@
   { "Toshiba", 0x0930, "Gigabeat V30", 0x0014, DEVICE_FLAG_NONE },
   // Reported by Michael Davis <slithy@yahoo.com>
   { "Toshiba", 0x0930, "Gigabeat U", 0x0016, DEVICE_FLAG_NONE },
+  // Reported by Devon Jacobs <devo@godevo.com>
+  { "Toshiba", 0x0930, "Gigabeat MEU202", 0x0018, DEVICE_FLAG_NO_RELEASE_INTERFACE },
   // Reported by Rolf <japan (at) dl3lar.de>
   { "Toshiba", 0x0930, "Gigabeat T", 0x0019, DEVICE_FLAG_NONE },
+
   
   /*
    * Archos
@@ -323,6 +332,8 @@
   { "Archos", 0x0e79, "XS202 (MTP mode)", 0x1208, DEVICE_FLAG_NONE },
   // Reported by gudul1@users.sourceforge.net
   { "Archos", 0x0e79, "104 (MTP mode)", 0x120a, DEVICE_FLAG_NONE },
+  // Reported by anonymous Sourceforge user.
+  { "Archos", 0x0e79, "404 (MTP mode)", 0x1301, DEVICE_FLAG_UNLOAD_DRIVER },
   // Reported by Etienne Chauchot <chauchot.etienne@free.fr>
   { "Archos", 0x0e79, "504 (MTP mode)", 0x1307, DEVICE_FLAG_UNLOAD_DRIVER },
   // Reported by Kay McCormick <kaym@modsystems.com>
@@ -360,9 +371,14 @@
 
   /*
    * Nokia
+   * Please verify the low device IDs here, I suspect these might be for
+   * things like USB storage or modem mode actually, whereas the higher
+   * range (0x04nn) could be for MTP.
    */
   // From: DoomHammer <gaczek@users.sourceforge.net>
   { "Nokia", 0x0421, "3110c Mobile Phone", 0x005f, DEVICE_FLAG_NONE },
+  // From: robin (AT) headbank D0Tco DOTuk
+  { "Nokia", 0x0421, "N95 Mobile Phone 8GB", 0x006e, DEVICE_FLAG_NONE },
   // From: Mitchell Hicks <mitchix@yahoo.com>
   { "Nokia", 0x0421, "5300 Mobile Phone", 0x04ba, DEVICE_FLAG_NONE },
   // From Christian Arnold <webmaster@arctic-media.de>
@@ -386,10 +402,13 @@
    */
   // From kiki <omkiki@users.sourceforge.net>
   { "Thomson", 0x069b, "EM28 Series", 0x0774, DEVICE_FLAG_NONE },
-  { "Thomson / RCA", 0x069b, "Opal / Lyrca MC4002", 0x0777, DEVICE_FLAG_NONE },
+  { "Thomson / RCA", 0x069b, "Opal / Lyra MC4002", 0x0777, DEVICE_FLAG_NONE },
+  { "Thomson", 0x069b, "RCA H106", 0x301a, DEVICE_FLAG_UNLOAD_DRIVER },
   // From Svenna <svenna@svenna.de>
   // Not confirmed to be MTP.
   { "Thomson", 0x069b, "scenium E308", 0x3028, DEVICE_FLAG_NONE },
+  // From XNJB user
+  { "Thomson / RCA", 0x069b, "Lyra HC308A", 0x3035, DEVICE_FLAG_NONE },
   
   /*
    * NTT DoCoMo
@@ -418,10 +437,12 @@
       DEVICE_FLAG_UNLOAD_DRIVER },
   
   /*
-   * Disney (have had no reports of this actually working.)
+   * Disney/Tevion (have had no reports of these actually working.)
    */
   // Reported by XNJB user
   { "Disney", 0x0aa6, "MixMax", 0x6021, DEVICE_FLAG_NONE },
+  // Reported by anonymous Sourceforge user 
+  { "Tevion", 0x0aa6, "MD 81488", 0x3011, DEVICE_FLAG_NONE },
 
   /*
    * Cowon Systems, Inc.
@@ -457,7 +478,7 @@
    * reported to see a pattern here.
    */
   // Reported by Alessandro Radaelli >alessandro.radaelli@aruba.it>
-  { "Sony", 0x054c, "Walkman NWZ-A815", 0x0325, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "Sony", 0x054c, "Walkman NWZ-A815/NWZ-A818", 0x0325, DEVICE_FLAG_UNLOAD_DRIVER },
   // Reported by anonymous Sourceforge user.
   { "Sony", 0x054c, "Walkman NWZ-S516", 0x0326, DEVICE_FLAG_UNLOAD_DRIVER },
   // Reported by Endre Oma <endre.88.oma@gmail.com>
@@ -487,6 +508,13 @@
    */
   // Reported by Rajan Bella <rajanbella@yahoo.com>
   { "Kenwood", 0x0b28, "Media Keg HD10GB7 Sport Player", 0x100c, DEVICE_FLAG_UNLOAD_DRIVER},
+
+  /*
+   * Micro-Star International (MSI)
+   */
+  // Reported by anonymous sourceforge user.
+  { "Micro-Star International", 0x0db0, "P610/Model MS-5557", 0x5572, DEVICE_FLAG_NONE },
+
 
   /*
    * Other strange stuff.
