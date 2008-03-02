@@ -821,7 +821,7 @@ fdi_camera_func (const func_params_t *params,
 	*d = '\0';
 
 	if ((a->port & GP_PORT_USB)) {
-		if (a->usb_vendor == 0x07b4 && a->usb_product == 0x105) {
+		if (a->usb_vendor == 0x07b4 && (a->usb_product == 0x105 || a->usb_product == 0x109) ) {
 			/* Marcus says: The Olympus Sierra/Storage dual mode camera firmware.
 			 * Some HAL using software gets deeply confused by this being here
 			 * and also detected as mass storage elsewhere, so blacklist
@@ -941,7 +941,7 @@ fdi_device_camera_func (const func_params_t *params,
 
 	if ((a->port & GP_PORT_USB)) {
 
-		if (a->usb_vendor == 0x07b4 && a->usb_product == 0x105) {
+		if (a->usb_vendor == 0x07b4 && (a->usb_product == 0x105 || a->usb_product == 0x109)) {
 			/* Marcus says: The Olympus Sierra/Storage dual mode camera firmware.
 			 * Some HAL using software gets deeply confused by this being here
 			 * and also detected as mass storage elsewhere, so blacklist
