@@ -512,6 +512,7 @@ GP_CAMLIB([stv0674])dnl
 GP_CAMLIB([stv0680])dnl
 GP_CAMLIB([sx330z])dnl
 GP_CAMLIB([template], [unlisted])dnl
+GP_CAMLIB([topfield])dnl
 GP_CAMLIB([toshiba_pdrm11])dnl
 dnl
 GP_CAMLIBS_DEFINE()dnl
