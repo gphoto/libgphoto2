@@ -1812,6 +1812,8 @@ ptp_canon_eos_getevent (PTPParams* params, PTPCanon_changes_entry **entries, int
 	unsigned int 	size = 0;
 	unsigned char	*data = NULL;
 
+	*nrofentries = 0;
+	*entries = NULL;
 	PTP_CNT_INIT(ptp);
 	ptp.Code = PTP_OC_CANON_EOS_GetEvent;
 	ptp.Nparam = 0;
