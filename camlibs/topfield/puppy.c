@@ -31,18 +31,8 @@
 #ifdef ENABLE_NLS
 #  include <libintl.h>
 #  undef _
-/**
- * This define is the string translation macro used in
- * libgphoto2. It will resolve to a dcgettext() function call and
- * does both the translation itself and also marks up the string
- * for the collector (xgettext).
- */
 #  define _(String) dgettext (GETTEXT_PACKAGE, String)
 #  ifdef gettext_noop
-/**
- * This is the noop translation macro, which does not translate the
- * string, but marks it up for the extraction of translatable strings.
- */
 #    define N_(String) gettext_noop (String)
 #  else
 #    define N_(String) (String)
@@ -65,6 +55,9 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+#include <iconv.h>
+#include <langinfo.h>
+
 #include "usb_io.h"
 #include "tf_bytes.h"
 
@@ -72,8 +65,17 @@
 #define GET 1
 
 static int quiet = 0;
-struct tf_packet packet;
-struct tf_packet reply;
+static iconv_t cd_locale_to_latin1;
+static iconv_t cd_latin1_to_locale;
+
+struct _mapnames {
+	char *tfname;
+	char *lgname;
+};
+struct _CameraPrivateLibrary {
+	struct _mapnames *names;
+	int nrofnames;
+};
 
 static void
 backslash(char *path) {
@@ -82,6 +84,122 @@ backslash(char *path) {
 	while ((s = strchr (s, '/')))
 		*s='\\';
 }
+
+static char*
+strdup_to_latin1 (const char *str) {
+	size_t	ret, srclen, dstlen, ndstlen;
+	char	*src, *dst, *dest = NULL;
+
+	ndstlen = strlen(str)*2;
+	while (1) {
+		srclen = strlen(str); /* +1 ? */
+		src = (char*)str;
+		dstlen = ndstlen;
+		free (dest);
+		dst = dest = malloc (dstlen);
+		if (!dst) return NULL;
+		ret = iconv (cd_locale_to_latin1, &src, &srclen, &dst, &dstlen);
+		if ((ret == -1) && (errno == E2BIG)) {
+			ndstlen *= 2;
+			continue;
+		}
+		if (ret == -1) {
+			perror("iconv");
+			free (dest);
+			dest = NULL;
+		}
+		break;
+	}
+	return dest;
+}
+
+static char*
+strdup_to_locale (char *str) {
+	size_t	ret, srclen, dstlen, ndstlen;
+	char	*dst, *dest = NULL, *src;
+
+	if (str[0] == 5) /* Special Movie Marker on Topfield */
+		str++;
+	ndstlen = strlen(str)*2+1;
+	while (1) {
+		srclen = strlen(str)+1; /* +1 ? */
+		src = str;
+		dstlen = ndstlen;
+		free (dest);
+		dst = dest = malloc (dstlen);
+		if (!dst) return NULL;
+		ret = iconv (cd_latin1_to_locale, &src, &srclen, &dst, &dstlen);
+		if ((ret == -1) && (errno == E2BIG)) {
+			ndstlen *= 2;
+			continue;
+		}
+		if (ret == -1) {
+			perror("iconv");
+			free (dest);
+			dest = NULL;
+		}
+		break;
+	}
+	return dest;
+}
+
+static char*
+_convert_and_logname(Camera *camera, char *tfname) {
+	int i;
+	struct _mapnames *map;
+
+	/* search for it in list */
+	for (i=0;i<camera->pl->nrofnames;i++) {
+		if (!strcmp(tfname, camera->pl->names[i].tfname))
+			return camera->pl->names[i].lgname;
+	}
+	camera->pl->names = realloc (camera->pl->names, (camera->pl->nrofnames+1)*sizeof(camera->pl->names[0]));
+	map = &camera->pl->names[camera->pl->nrofnames];
+	map->tfname = strdup(tfname);
+	map->lgname = strdup_to_locale(tfname);
+	camera->pl->nrofnames++;
+	return map->lgname;
+}
+
+static char*
+_convert_for_device(Camera *camera, const char *lgname) {
+	int i;
+
+	/* search for it in list */
+	for (i=0;i<camera->pl->nrofnames;i++) {
+		if (!strcmp(lgname, camera->pl->names[i].lgname))
+			return camera->pl->names[i].tfname;
+	}
+	/* should be here ... */
+	return NULL;
+}
+
+
+
+static char *
+get_path (Camera *camera, const char *folder, const char *filename) {
+	char 	*path;
+	char	*xfolder, *xfilename;
+
+	xfolder = strdup_to_latin1 (folder);
+	if (!xfolder)
+		return NULL;
+	xfilename = _convert_for_device (camera, filename);
+	if (!xfilename) {
+		free (xfolder);
+		return NULL;
+	}
+	path = malloc(strlen(xfolder)+1+strlen(xfilename)+1);
+	if (!path) {
+		free (xfolder);
+		return NULL;
+	}
+	sprintf (path, "%s/%s", xfolder, xfilename);
+	free (xfolder);
+	backslash(path);
+	return path;
+}
+
 
 static char *
 decode_error(struct tf_packet *packet)
@@ -116,6 +234,7 @@ do_cmd_turbo(Camera *camera, char *state, GPContext *context)
 {
 	int r;
 	int turbo_on = atoi(state);
+	struct tf_packet reply;
 
 	if(0 == strcasecmp("ON", state))
 		turbo_on = 1;
@@ -146,6 +265,7 @@ static int
 do_cmd_reset(Camera *camera, GPContext *context)
 {
 	int r;
+	struct tf_packet reply;
 
 	r = send_cmd_reset(camera,context);
 	if(r < 0)
@@ -176,6 +296,7 @@ static int
 do_cmd_ready(Camera *camera, GPContext *context)
 {
 	int r;
+	struct tf_packet reply;
 
 	r = send_cmd_ready(camera,context);
 	if(r < 0)
@@ -206,6 +327,7 @@ static int
 do_cancel(Camera *camera, GPContext *context)
 {
 	int r;
+	struct tf_packet reply;
 
 	r = send_cancel(camera,context);
 	if(r < 0)
@@ -234,11 +356,12 @@ do_cancel(Camera *camera, GPContext *context)
 
 
 static void
-decode_dir(struct tf_packet *p, int listdirs, CameraList *list)
+decode_dir(Camera *camera, struct tf_packet *p, int listdirs, CameraList *list)
 {
 	unsigned short count = (get_u16(&p->length) - PACKET_HEAD_SIZE) / sizeof(struct typefile);
 	struct typefile *entries = (struct typefile *) p->data;
 	int i;
+	char *name;
 
 	for(i = 0; i < count; i++) {
 		switch (entries[i].filetype) {
@@ -250,8 +373,10 @@ decode_dir(struct tf_packet *p, int listdirs, CameraList *list)
 			}
 			break;
 		case 2:
-			if (!listdirs)
-				gp_list_append (list, (char*)entries[i].name, NULL);
+			if (!listdirs) {
+				name = _convert_and_logname (camera, (char*)entries[i].name);
+				gp_list_append (list, name, NULL);
+			}
 			break;
 		default:
 			break;
@@ -272,6 +397,7 @@ static int
 do_hdd_rename(Camera *camera, char *srcPath, char *dstPath, GPContext *context)
 {
 	int r;
+	struct tf_packet reply;
 
 	r = send_cmd_hdd_rename(camera, srcPath, dstPath, context);
 	if(r < 0)
@@ -389,13 +515,13 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	int r, pid = 0, update = 0;
 	__u64 byteCount = 0;
 	struct utimbuf mod_utime_buf = { 0, 0 };
-	char *path = malloc(strlen(folder)+1+strlen(filename)+1);
+	char *path;
+	struct tf_packet reply;
 
 	if (type != GP_FILE_TYPE_NORMAL)
 		return GP_ERROR_NOT_SUPPORTED;
 
-	sprintf (path, "%s/%s", folder, filename);
-	backslash(path);
+	path = get_path(camera, folder, filename);
 	r = send_cmd_hdd_file_send(camera, GET, path, context);
 	free (path);
 	if(r < 0)
@@ -511,13 +637,11 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	__u64 byteCount = 0;
 	const char *filename;
 	char *path;
+	struct tf_packet reply;
 
 	r = gp_file_get_name (file, &filename);
 	if (r < GP_OK)
 		return r;
-	path = malloc(strlen(folder)+1+strlen(filename)+1);
-	sprintf (path, "%s/%s", folder, filename);
-	backslash(path);
 
 	if(0 != fstat(src, &srcStat))
 	{
@@ -535,6 +659,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 		goto out;
 	}
 
+	path = get_path (camera, folder, filename);
 	r = send_cmd_hdd_file_send(camera, PUT, path, context);
 	if(r < 0)
 		goto out;
@@ -649,11 +774,10 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 		  const char *filename, void *data, GPContext *context)
 {
 	Camera *camera = data;
-	char	*path = malloc (strlen(folder)+1+strlen(filename)+1);
 	int	r;
+	char	*path = get_path (camera, folder, filename);
+	struct tf_packet reply;
 
-	sprintf (path, "%s/%s", folder, filename);
-	backslash(path);
 	r = send_cmd_hdd_del(camera, path, context);
 	free (path);
 	if(r < 0)
@@ -722,6 +846,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 {
 	Camera *camera = data;
 	int r;
+	struct tf_packet reply;
 	char *xfolder = strdup (folder);
 
 	backslash (xfolder);
@@ -733,7 +858,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	while(0 < get_tf_packet(camera, &reply, context)) {
 		switch (get_u32(&reply.cmd)) {
 		case DATA_HDD_DIR:
-			decode_dir(&reply,1,list);
+			decode_dir(camera, &reply,1,list);
 			send_success(camera,context);
 			break;
 		case DATA_HDD_DIR_END:
@@ -758,6 +883,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 {
 	Camera *camera = data;
 	int r;
+	struct tf_packet reply;
 	char *xfolder = strdup (folder);
 
 	backslash (xfolder);
@@ -770,7 +896,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	while(0 < get_tf_packet(camera, &reply, context)) {
 		switch (get_u32(&reply.cmd)) {
 		case DATA_HDD_DIR:
-			decode_dir(&reply,0,list);
+			decode_dir(camera, &reply,0,list);
 			send_success(camera,context);
 			break;
 		case DATA_HDD_DIR_END:
@@ -799,6 +925,7 @@ storage_info_func (CameraFilesystem *fs,
 {
 	Camera *camera = data;
 	int r;
+	struct tf_packet reply;
 	CameraStorageInformation	*sif;
 
 	/* List your storages here */
@@ -852,13 +979,12 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
                void *data, GPContext *context)
 {
         Camera *camera = data;
-	char *path;
+	char *path = get_path (camera, folder, foldername);
+	struct tf_packet reply;
 	int r;
 
-	path = malloc (strlen (folder) + 1 + strlen (foldername) + 1);
-	sprintf (path,"%s/%s", folder, foldername);
-	backslash(path);
 	r = send_cmd_hdd_create_dir(camera, path, context);
+	free (path);
 	if(r < 0)
 		return r;
 
@@ -925,18 +1051,40 @@ CameraFilesystemFuncs fsfuncs = {
 	.make_dir_func = make_dir_func
 };
 
+static int
+camera_exit (Camera *camera, GPContext *context)
+{
+	iconv_close (cd_latin1_to_locale);
+	iconv_close (cd_locale_to_latin1);
+	free (camera->pl->names);
+	free (camera->pl);
+	return GP_OK;
+}
+
 int
 camera_init (Camera *camera, GPContext *context) 
 {
-        /* First, set up all the function pointers */
-        camera->functions->get_config           = camera_config_get;
-        camera->functions->set_config           = camera_config_set;
-        camera->functions->summary              = camera_summary;
-        camera->functions->about                = camera_about;
+	char *curloc;
+	/* First, set up all the function pointers */
+	camera->functions->get_config	= camera_config_get;
+	camera->functions->set_config	= camera_config_set;
+	camera->functions->summary	= camera_summary;
+	camera->functions->about	= camera_about;
+	camera->functions->exit		= camera_exit;
 
 	/* Now, tell the filesystem where to get lists, files and info */
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 
 	gp_port_set_timeout (camera->port, TF_PROTOCOL_TIMEOUT);
+
+	camera->pl = calloc (sizeof (CameraPrivateLibrary),1);
+	if (!camera->pl) return GP_ERROR_NO_MEMORY;
+
+	curloc = nl_langinfo (CODESET);
+	if (!curloc) curloc="UTF-8";
+	cd_latin1_to_locale = iconv_open(curloc, "iso-8859-1");
+	if (!cd_latin1_to_locale) return GP_ERROR_NO_MEMORY;
+	cd_locale_to_latin1 = iconv_open("iso-8859-1", curloc);
+	if (!cd_locale_to_latin1) return GP_ERROR_NO_MEMORY;
 	return GP_OK;
 }
