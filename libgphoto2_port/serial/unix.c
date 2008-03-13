@@ -64,10 +64,6 @@
 #  include <sgtty.h>
 #endif
 
-#ifdef HAVE_RESMGR
-#  include <resmgr.h>
-#endif
-
 #ifdef HAVE_BAUDBOY
 #  include <baudboy.h>
 #elif defined(HAVE_TTYLOCK)
@@ -219,14 +215,6 @@ gp_port_serial_lock (GPPort *dev, const char *path)
 	gp_log (GP_LOG_DEBUG, "gphoto2-port-serial",
 		"Trying to lock '%s'...", path);
 
-#ifdef HAVE_RESMGR
-	if (!rsm_lock_device(path)) {
-		return GP_OK;
-	}
-	/* fallthrough */
-#define __HAVE_LOCKING	
-#endif
-
 #if defined(HAVE_TTYLOCK) || defined(HAVE_BAUDBOY)
 	if (ttylock ((char*) path)) {
 		if (dev)
@@ -268,11 +256,6 @@ gp_port_serial_lock (GPPort *dev, const char *path)
 static int
 gp_port_serial_unlock (GPPort *dev, const char *path)
 {
-#ifdef HAVE_RESMGR
-	if (!rsm_unlock_device(path))
-		return GP_OK;
-	/* fallback through other unlock styles */
-#endif
 
 #if defined(HAVE_TTYLOCK) || defined(HAVE_BAUDBOY)
 	if (ttyunlock ((char*) path)) {
@@ -346,16 +329,7 @@ gp_port_library_list (GPPortInfoList *list)
 			continue;
 			
 		/* Device locked. Try to open the device. */
-		fd = -1;
-#ifdef HAVE_RESMGR
-		/* resmgr has its own API, which calls to a server and
-		 * communicates over UNIX domain sockets.
-		 */
-		fd = rsm_open_device(path, O_RDONLY | O_NDELAY);
-		/* fall through to standard open if this failed */
-#endif
-		if (fd == -1)
-			fd = open (path, O_RDONLY | O_NDELAY);
+		fd = open (path, O_RDONLY | O_NDELAY);
 		if (fd < 0) {
 			gp_port_serial_unlock (NULL, path);
 			continue;
@@ -454,10 +428,6 @@ gp_port_serial_open (GPPort *dev)
 	dev->pl->fd = open (port, O_RDWR | O_BINARY);
         close(fd);
 #else
-# ifdef HAVE_RESMGR
-        dev->pl->fd = rsm_open_device (port, O_RDWR | O_NOCTTY | O_SYNC | O_NONBLOCK);
-	/* fall back trying old style open if not possible */
-# endif
 	if (dev->pl->fd == -1)
 		dev->pl->fd = open (port, O_RDWR | O_NOCTTY | O_SYNC | O_NONBLOCK);
 #endif
