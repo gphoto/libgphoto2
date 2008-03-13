@@ -524,7 +524,9 @@ static struct {
 	{"Nikon:Coolpix L3 (PTP mode)",   0x04b0, 0x041a, 0},
 
 	/* Thomas Luzat <thomas.luzat@gmx.net> */
+	/* disable it, it is mass storage and made quite a lot of problems.
 	{"Panasonic:DMC-FZ20 (alternate id)", 0x04da, 0x2372, 0},
+	*/
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1350226&group_id=8874&atid=208874 */
 	{"Panasonic:DMC-LZ2",             0x04da, 0x2372, 0},
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=1405541&group_id=8874&atid=358874 */
