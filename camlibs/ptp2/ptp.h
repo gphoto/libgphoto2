@@ -714,7 +714,8 @@ typedef struct _PTPObjectInfo PTPObjectInfo;
 #define PTP_OFC_MTP_vCalendar1			0xbe02
 #define PTP_OFC_MTP_vCalendar2			0xbe03
 #define PTP_OFC_MTP_UndefinedWindowsExecutable	0xbe80
-
+#define PTP_OFC_MTP_MediaCast			0xbe81
+#define PTP_OFC_MTP_Section			0xbe82
 
 /* PTP Association Types */
 #define PTP_AT_Undefined			0x0000

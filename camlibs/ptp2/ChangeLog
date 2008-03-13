@@ -1,3 +1,7 @@
+2008-03-13  Linus Walleij  <triad@df.lth.se>
+
+	* ptp.c/ptp.h: Added 2 new MTP object format codes.
+
 2008-03-02  Marcus Meissner  <marcus@jet.franken.de>
 
 	* music-players.h: Synced from libmtp.

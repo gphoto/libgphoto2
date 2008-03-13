@@ -3863,6 +3863,8 @@ struct {
 	{PTP_OFC_MTP_vCalendar1,N_("vCalendar1")},
 	{PTP_OFC_MTP_vCalendar2,N_("vCalendar2")},
 	{PTP_OFC_MTP_UndefinedWindowsExecutable,N_("Undefined Windows Executable")},
+	{PTP_OFC_MTP_MediaCast,N_("Media Cast")},
+	{PTP_OFC_MTP_Section,N_("Section")},
 };
 
 int
