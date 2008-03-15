@@ -48,25 +48,8 @@ typedef enum {
  * This is not to be confused with the driver configurable port settings
  * in \ref GPPortSettings.
  */
-typedef struct _GPPortInfo {
-	GPPortType type;	/**< \brief The type of this port. */
-	char name[64];		/**< \brief The name of this port (usb:) */
-	char path[4096];	/**< \brief The path of this port (whatever is after the :) */
-
-	/* Private */
-	char library_filename[1024];	/**< \brief Internal pathname of the port driver. Do not use outside of the port library. */
-} GPPortInfo;
-
-#ifdef __LIBGPHOTO2_INCLUDE_OLD_VERSIONS
-typedef struct _GPPortInfo_v240 {
-        GPPortType type;
-        char name[64];
-        char path[64];
-
-        /* Private */
-        char library_filename[1024];
-} GPPortInfo_v240;
-#endif
+struct _GPPortInfo;
+typedef struct _GPPortInfo *GPPortInfo;
 
 #include <gphoto2/gphoto2-port.h>
 
@@ -78,6 +61,16 @@ extern "C" {
 #include <gphoto2/gphoto2-port-log.h>
 extern const StringFlagItem gpi_gphoto_port_type_map[];
 #endif
+
+int gp_port_info_new (GPPortInfo *info);
+int gp_port_info_get_name (GPPortInfo info, char **name);
+int gp_port_info_set_name (GPPortInfo info, const char *name);
+int gp_port_info_get_path (GPPortInfo info, char **path);
+int gp_port_info_set_path (GPPortInfo info, const char *path);
+int gp_port_info_get_type (GPPortInfo info, GPPortType *type);
+int gp_port_info_set_type (GPPortInfo info, const GPPortType type);
+int gp_port_info_get_library_filename (GPPortInfo info, char **lib);
+int gp_port_info_set_library_filename (GPPortInfo info, char *lib);
 
 /* Internals are private */
 typedef struct _GPPortInfoList GPPortInfoList;
@@ -97,28 +90,6 @@ int gp_port_info_list_lookup_name (GPPortInfoList *list, const char *name);
 int gp_port_info_list_get_info (GPPortInfoList *list, int n, GPPortInfo *info);
 
 const char *gp_port_message_codeset (const char*);
-
-/* DEPRECATED */
-typedef GPPortInfo gp_port_info;
-
-#ifdef __LIBGPHOTO2_INCLUDE_OLD_VERSIONS
-int gp_port_info_list_append_v240 (GPPortInfoList *list, GPPortInfo_v240 info);
-int gp_port_info_list_append_v250 (GPPortInfoList *list, GPPortInfo info);
-
-
-int gp_port_info_list_get_info_v240 (GPPortInfoList *list, int n, GPPortInfo_v240 *info);
-int gp_port_info_list_get_info_v250 (GPPortInfoList *list, int n, GPPortInfo *info);
-
-#ifdef __LIBGPHOTO2_INCLUDE_OLD_VERSIONS_INFOLIST
-asm(".symver gp_port_info_list_append_v240, gp_port_info_list_append@LIBGPHOTO2_0_0");
-asm(".symver gp_port_info_list_append_v250, gp_port_info_list_append@@LIBGPHOTO2_5_0");
-#define gp_port_info_list_append gp_port_info_list_append_v250
-asm(".symver gp_port_info_list_get_info_v240, gp_port_info_list_get_info@LIBGPHOTO2_0_0");
-asm(".symver gp_port_info_list_get_info_v250, gp_port_info_list_get_info@@LIBGPHOTO2_5_0");
-#define gp_port_info_list_get_info gp_port_info_list_get_info_v250
-#endif
-
-#endif
 
 /**
  * Name of the environment variable which may contain the path where

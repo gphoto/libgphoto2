@@ -1,9 +1,41 @@
-libgphoto2 2.4.0.4
+libgphoto2 2.4.0.5 release
 
 PTP2 driver:
    * Fixed bugs in packing of PTP arrays, unpack / pack 64 bit entities.
    * Devices added:
      - Canon IXUS iZ
+     - <fill in from diff>
+
+Topfield driver:
+   * New driver to access Topfield PVRs (harddisc recorders).
+
+Sony DSC-F1 driver:
+   * Did not work, now does work. Also cleaned up the code.
+
+Directory driver:
+   * Use GPPortInfo instead of settings to pass basepath in.
+   * Abstracted common functionality.
+
+libgphoto2 API:
+
+   * Adjusted to new GPPortInfo handling.
+
+libgphoto2_port API:
+   * GPPortInfo is now abstracted and internal.
+     
+     If you need to retrieve name, path or type, use
+	     gp_port_info_get_xx (info, &x);
+     to get the value.
+     Name and path strings continue to be owned by libgphoto2_port,
+     do not modify and do not free.
+
+     You are not supposed to create / append new ones to GPPortInfoList.
+
+   * Disk Settings have been removed from the Settings union. Should
+     not affect frontends at all.
+
+
+   * Started using symbol versions.
 
 Build:
    * Removed dummy README file from SVN.

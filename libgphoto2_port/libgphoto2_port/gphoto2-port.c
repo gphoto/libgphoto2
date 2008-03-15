@@ -32,14 +32,11 @@
 
 #include <ltdl.h>
 
-#ifdef HAVE_ASM_SYMVERS
-# define __LIBGPHOTO2_INCLUDE_OLD_VERSIONS
-# define __LIBGPHOTO2_INCLUDE_OLD_VERSIONS_PORT
-#endif
-
 #include <gphoto2/gphoto2-port-result.h>
 #include <gphoto2/gphoto2-port-library.h>
 #include <gphoto2/gphoto2-port-log.h>
+
+#include "gphoto2-port-info.h"
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -67,7 +64,7 @@
 struct _GPPortPrivateCore {
 	char error[2048];	/**< Internal kept error message. */
 
-	GPPortInfo info;	/**< Internal port information of this port. */
+	struct _GPPortInfo info;	/**< Internal port information of this port. */
 	GPPortOperations *ops;	/**< Internal port operations. */
 	lt_dlhandle lh;		/**< Internal libtool library handle. */
 };
@@ -150,8 +147,12 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
 
 	CHECK_NULL (port);
 
-	memcpy (&port->pc->info, &info, sizeof (GPPortInfo));
-	port->type = info.type;
+	port->pc->info.name = strdup (info->name);
+	port->pc->info.path = strdup (info->path);
+	port->pc->info.type = info->type;
+	port->pc->info.library_filename = strdup (info->library_filename);
+
+	port->type = info->type;
 
 	/* Clean up */
 	if (port->pc->ops) {
@@ -165,10 +166,10 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
 	}
 
 	lt_dlinit ();
-	port->pc->lh = lt_dlopenext (info.library_filename);
+	port->pc->lh = lt_dlopenext (info->library_filename);
 	if (!port->pc->lh) {
 		gp_log (GP_LOG_ERROR, "gphoto2-port", _("Could not load "
-			"'%s' ('%s')."), info.library_filename,
+			"'%s' ('%s')."), info->library_filename,
 			lt_dlerror ());
 		lt_dlexit ();
 		return (GP_ERROR_LIBRARY);
@@ -179,7 +180,7 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
 	if (!ops_func) {
 		gp_log (GP_LOG_ERROR, "gphoto2-port", _("Could not find "
 			"'gp_port_library_operations' in '%s' ('%s')"),
-			info.library_filename, lt_dlerror ());
+			info->library_filename, lt_dlerror ());
 		lt_dlclose (port->pc->lh);
 		lt_dlexit ();
 		port->pc->lh = NULL;
@@ -189,10 +190,8 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
 	gp_port_init (port);
 
 	/* Initialize the settings to some default ones */
-	switch (info.type) {
+	switch (info->type) {
 	case GP_PORT_SERIAL:
-		strncpy (port->settings.serial.port, info.path,
-			 sizeof (port->settings.serial.port));
 		port->settings.serial.speed = 0;
 		port->settings.serial.bits = 8;
 		port->settings.serial.parity = 0;
@@ -200,7 +199,7 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
 		gp_port_set_timeout (port, 500);
 		break;
 	case GP_PORT_USB:
-		strncpy (port->settings.usb.port, info.path,
+		strncpy (port->settings.usb.port, info->path,
 			 sizeof (port->settings.usb.port));
 		port->settings.usb.inep = -1;
 		port->settings.usb.outep = -1;
@@ -208,11 +207,6 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
 		port->settings.usb.interface = 0;
 		port->settings.usb.altsetting = -1;
 		gp_port_set_timeout (port, 5000);
-		break;
-	case GP_PORT_DISK:
-		strncpy(port->settings.disk.mountpoint, 
-			strchr(info.path, ':') + 1, 
-			sizeof(port->settings.disk.mountpoint));
 		break;
 	default:
 		/* Nothing in here */
@@ -222,20 +216,6 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
 
 	return (GP_OK);
 }
-
-#ifdef __LIBGPHOTO2_INCLUDE_OLD_VERSIONS
-int
-gp_port_set_info_v240 (GPPort *port, GPPortInfo_v240 info)
-{
-	GPPortInfo	newinfo;
-
-	newinfo.type = info.type;
-	strcpy (newinfo.name, info.name);
-	strncpy(newinfo.path, info.path, sizeof(newinfo.path));
-	strcpy (newinfo.library_filename, info.library_filename);
-	return gp_port_set_info_v250 (port, newinfo);
-}
-#endif
 
 /**
  * \brief Retreives information about the port.
@@ -251,28 +231,9 @@ gp_port_get_info (GPPort *port, GPPortInfo *info)
 {
 	CHECK_NULL (port && info);
 
-	memcpy (info, &port->pc->info, sizeof (GPPortInfo));
-
+	*info = &port->pc->info;
 	return (GP_OK);
 }
-
-#ifdef __LIBGPHOTO2_INCLUDE_OLD_VERSIONS
-int
-gp_port_get_info_v240 (GPPort *port, GPPortInfo_v240 *info)
-{
-	int ret;
-	GPPortInfo newinfo;
-
-	ret = gp_port_get_info_v250 (port, &newinfo);
-	if (ret != GP_OK)
-		return ret;
-	info->type = newinfo.type;
-	strcpy (info->name, newinfo.name);
-	strncpy (info->path, newinfo.path, sizeof(info->path));
-	strcpy (info->library_filename, newinfo.library_filename);
-	return GP_OK;
-}
-#endif
 
 /**
  * \brief Open a port.

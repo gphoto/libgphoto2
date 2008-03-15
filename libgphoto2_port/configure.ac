@@ -1,6 +1,6 @@
 dnl Process this file with autoreconf to produce a configure script.
 AC_PREREQ(2.59)
-AC_INIT([libgphoto2 port access library], [0.8.2], [gphoto-devel@lists.sourceforge.net], [libgphoto2_port])
+AC_INIT([libgphoto2 port access library], [0.9.0], [gphoto-devel@lists.sourceforge.net], [libgphoto2_port])
 AC_CONFIG_SRCDIR([libgphoto2_port/gphoto2-port-version.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([auto-m4])
@@ -23,14 +23,14 @@ dnl   * libtool.info chapter "Versioning"
 dnl   * libtool.info chapter "Updating library version information"
 dnl ---------------------------------------------------------------------------
 dnl Versioning:
-dnl  - CURRENT (Major):  Increment if the interface has changes. AGE is always
-dnl                      *changed* at the same time.
 dnl  - AGE (Micro):      Increment if any interfaces have been added; set to 0
 dnl		         if any interfaces have been removed. Removal has 
 dnl                      precedence over adding, so set to 0 if both happened.
 dnl                      It denotes upward compatibility.
 dnl  - REVISION (Minor): Increment any time the source changes; set to 
 dnl			 0 if you incremented CURRENT.
+dnl  - CURRENT (Major):  Increment if the interface has changes. AGE is always
+dnl                      *changed* at the same time.
 dnl
 dnl  To summarize. Any interface *change* increment CURRENT. If that interface
 dnl  change does not break upward compatibility (ie it is an addition), 
@@ -42,8 +42,8 @@ dnl A:R:C=7:0:7 libgphoto2_port-0.7.0 libgphoto2-2.3
 dnl A:R:C=7:1:7 libgphoto2_port-0.7.1 libgphoto2-2.3.x
 dnl A:R:C=8:0:8 libgphoto2_port-0.8.0 libgphoto2-2.4.x
 dnl A:R:C=9:1:9 libgphoto2_port-0.9.1 libgphoto2-2.5.x
-AC_SUBST([LIBGPHOTO2_PORT_AGE],      [9])
-AC_SUBST([LIBGPHOTO2_PORT_REVISION], [1])
+AC_SUBST([LIBGPHOTO2_PORT_AGE],      [0])
+AC_SUBST([LIBGPHOTO2_PORT_REVISION], [0])
 AC_SUBST([LIBGPHOTO2_PORT_CURRENT],  [9])
 AC_SUBST([LIBGPHOTO2_PORT_CURRENT_MIN],
          [`expr $LIBGPHOTO2_PORT_CURRENT - $LIBGPHOTO2_PORT_AGE`])

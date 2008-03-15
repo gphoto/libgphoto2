@@ -96,9 +96,10 @@ _ptpip_resolved (
 ) {
 	struct hostent*	hent;
 	struct in_addr	inaddr;
-	GPPortInfo	info;
+	GPPortInfo	*info;
 	int		i, cnt;
 	struct mdnsinfo	*mdnsi = context;
+	char		path[200];
 
 	if (errorCode != kDNSServiceErr_NoError) {
 		gp_log (GP_LOG_ERROR, "ptpip", "Error on 2nd level query.");
@@ -121,14 +122,11 @@ _ptpip_resolved (
 		return;
 	}
 	memcpy(&inaddr.s_addr,hent->h_addr_list[0],hent->h_length);
-	info.type = GP_PORT_PTPIP;
-	snprintf (info.name, sizeof(info.name), mdnsi->name);
-	snprintf (info.path, sizeof(info.path), "ptpip:%s:%d", inet_ntoa(inaddr), htons(port));
-	gp_port_info_list_append (mdnsi->list, info);
-
-	/* regexp matcher */
-	memset (info.name, 0, sizeof(info.name));
-	snprintf (info.path, sizeof(info.path), "^ptpip:");
+	gp_port_info_new (&info);
+	gp_port_info_set_type (info, GP_PORT_PTPIP);
+	gp_port_info_set_name (info, mdnsi->name);
+	snprintf (path, sizeof(path), "ptpip:%s:%d", inet_ntoa(inaddr), htons(port));
+	gp_port_info_set_path (info, path);
 	gp_port_info_list_append (mdnsi->list, info);
 }
 
@@ -175,14 +173,17 @@ gp_port_library_list (GPPortInfoList *list)
 	struct timeval		tv;
 #endif
 
-	info.type = GP_PORT_PTPIP;
-	snprintf (info.name, sizeof(info.name), _("PTP/IP Connection"));
-	snprintf (info.path, sizeof(info.path), "ptpip:");
+	gp_port_info_new (&info);
+	gp_port_info_set_type (info, GP_PORT_PTPIP);
+	gp_port_info_set_name (info, _("PTP/IP Connection"));
+	gp_port_info_set_path (info, "ptpip:");
 	CHECK (gp_port_info_list_append (list, info));
 
 	/* Generic matcher so you can pass any IP address */
-	memset (info.name, 0, sizeof(info.name));
-	snprintf (info.path, sizeof(info.path), "^ptpip");
+	gp_port_info_new (&info);
+	gp_port_info_set_type (info, GP_PORT_PTPIP);
+	gp_port_info_set_name (info, "");
+	gp_port_info_set_path (info, "^ptpip:");
 	CHECK (gp_port_info_list_append (list, info));
 
 #ifdef HAVE_MDNS_BONJOUR

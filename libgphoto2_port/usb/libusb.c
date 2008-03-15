@@ -83,21 +83,22 @@ gp_port_library_list (GPPortInfoList *list)
 	int nrofdevices = 0, i, i1, i2, unknownint;
 
 	/* default port first */
-	info.type = GP_PORT_USB;
-	strcpy (info.name, "Universal Serial Bus");
-	strcpy (info.path, "usb:");
+	gp_port_info_new (&info);
+	gp_port_info_set_type (info, GP_PORT_USB);
+	gp_port_info_set_name (info, "Universal Serial Bus");
+	gp_port_info_set_path (info, "usb:");
 	CHECK (gp_port_info_list_append (list, info));
 
 	/* generic matcher. This will catch passed XXX,YYY entries for instance. */
-	memset (info.name, 0, sizeof(info.name));
-	strcpy (info.path, "^usb:");
+	gp_port_info_new (&info);
+	gp_port_info_set_type (info, GP_PORT_USB);
+	gp_port_info_set_name (info, "");
+	gp_port_info_set_path (info, "^usb:");
 	CHECK (gp_port_info_list_append (list, info));
 
 	usb_init ();
 	usb_find_busses ();
 	usb_find_devices ();
-
-	strcpy (info.name, "Universal Serial Bus");
 
 	bus = usb_get_busses();
 
@@ -153,6 +154,7 @@ gp_port_library_list (GPPortInfoList *list)
 	while (bus) {
 		for (dev = bus->devices; dev; dev = dev->next) {
 			char *s;
+			char path[200];
 			/* Devices which are definitely not cameras. */
 			if (	(dev->descriptor.bDeviceClass == USB_CLASS_HUB)		||
 				(dev->descriptor.bDeviceClass == USB_CLASS_HID)		||
@@ -184,9 +186,13 @@ gp_port_library_list (GPPortInfoList *list)
 			/* Note: We do not skip USB storage. Some devices can support both,
 			 * and the Ricoh erronously reports it.
 			 */ 
-			sprintf (info.path, "usb:%s,%s", bus->dirname, dev->filename);
+			gp_port_info_new (&info);
+			gp_port_info_set_type (info, GP_PORT_USB);
+			gp_port_info_set_name (info, "Universal Serial Bus");
+			snprintf (path,sizeof(path), "usb:%s,%s", bus->dirname, dev->filename);
 			/* On MacOS X we might get usb:006,002-04a9-3139-00-00. */
-			s = strchr(info.path, '-');if (s) *s='\0';
+			s = strchr(path, '-');if (s) *s='\0';
+			gp_port_info_set_path (info, path);
 			CHECK (gp_port_info_list_append (list, info));
 		}
 		bus = bus->next;

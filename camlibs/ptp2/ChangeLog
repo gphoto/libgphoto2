@@ -1,3 +1,7 @@
+2008-03-15  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Adjust for GPPortInfo change.
+
 2008-03-13  Linus Walleij  <triad@df.lth.se>
 
 	* ptp.c/ptp.h: Added 2 new MTP object format codes.

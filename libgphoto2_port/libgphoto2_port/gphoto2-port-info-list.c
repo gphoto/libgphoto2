@@ -23,11 +23,6 @@
 
 #include "config.h"
 
-#ifdef HAVE_ASM_SYMVERS
-# define __LIBGPHOTO2_INCLUDE_OLD_VERSIONS
-# define __LIBGPHOTO2_INCLUDE_OLD_VERSIONS_INFOLIST
-#endif
-
 #include <gphoto2/gphoto2-port-info-list.h>
 
 #include <stdlib.h>
@@ -44,6 +39,8 @@
 #include <gphoto2/gphoto2-port-result.h>
 #include <gphoto2/gphoto2-port-library.h>
 #include <gphoto2/gphoto2-port-log.h>
+
+#include "gphoto2-port-info.h"
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -185,30 +182,15 @@ gp_port_info_list_append (GPPortInfoList *list, GPPortInfo info)
 	list->info = new_info;
 	list->count++;
 
-	memcpy (&(list->info[list->count - 1]), &info, sizeof (GPPortInfo));
+	list->info[list->count - 1] = info;
 
 	/* Ignore generic entries */
 	for (generic = i = 0; i < list->count; i++)
-		if (!strlen (list->info[i].name))
+		if (!strlen (list->info[i]->name))
 			generic++;
 	return (list->count - 1 - generic);
 }
 
-#ifdef __LIBGPHOTO2_INCLUDE_OLD_VERSIONS
-int
-gp_port_info_list_append_v240 (GPPortInfoList *list, GPPortInfo_v240 info)
-{
-	GPPortInfo newinfo;
-	int ret;
-
-	newinfo.type = info.type;
-	strcpy (newinfo.name,info.name);
-	strncpy (newinfo.path,info.path, sizeof(newinfo.path));
-	strcpy (newinfo.library_filename,info.library_filename);
-	ret =  gp_port_info_list_append_v250 (list, newinfo);
-	return ret;
-}
-#endif
 
 static int
 foreach_func (const char *filename, lt_ptr data)
@@ -243,7 +225,7 @@ foreach_func (const char *filename, lt_ptr data)
 
 	type = lib_type ();
 	for (j = 0; j < list->count; j++)
-		if (list->info[j].type == type)
+		if (list->info[j]->type == type)
 			break;
 	if (j != list->count) {
 		gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list",
@@ -270,9 +252,9 @@ foreach_func (const char *filename, lt_ptr data)
 		for (j = old_size; j < list->count; j++){
 			gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list",
 				_("Loaded '%s' ('%s') from '%s'."),
-				list->info[j].name, list->info[j].path,
+				list->info[j]->name, list->info[j]->path,
 				filename);
-			strcpy (list->info[j].library_filename, filename);
+			list->info[j]->library_filename = strdup (filename);
 		}
 	}
 
@@ -338,7 +320,7 @@ gp_port_info_list_count (GPPortInfoList *list)
 	/* Ignore generic entries */
 	count = list->count;
 	for (i = 0; i < list->count; i++)
-		if (!strlen (list->info[i].name))
+		if (!strlen (list->info[i]->name))
 			count--;
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list", _("%i regular entries "
@@ -376,9 +358,9 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 
 	/* Exact match? */
 	for (generic = i = 0; i < list->count; i++)
-		if (!strlen (list->info[i].name))
+		if (!strlen (list->info[i]->name))
 			generic++;
-		else if (!strcmp (list->info[i].path, path))
+		else if (!strcmp (list->info[i]->path, path))
 			return (i - generic);
 
 	/* Regex match? */
@@ -387,24 +369,24 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 	for (i = 0; i < list->count; i++) {
 		GPPortInfo newinfo;
 
-		if (strlen (list->info[i].name))
+		if (strlen (list->info[i]->name))
 			continue;
 
 		gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list",
-			_("Trying '%s'..."), list->info[i].path);
+			_("Trying '%s'..."), list->info[i]->path);
 
 		/* Compile the pattern */
 #ifdef HAVE_GNU_REGEX
 		memset (&pattern, 0, sizeof (pattern));
-		rv = re_compile_pattern (list->info[i].path,
-					 strlen (list->info[i].path), &pattern);
+		rv = re_compile_pattern (list->info[i]->path,
+					 strlen (list->info[i]->path), &pattern);
 		if (rv) {
 			gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list",
 				"%s", rv);
 			continue;
 		}
 #else
-		result = regcomp (&pattern, list->info[i].path, REG_ICASE);
+		result = regcomp (&pattern, list->info[i]->path, REG_ICASE);
 		if (result) {
 			char buf[1024];
 			if (regerror (result, &pattern, buf, sizeof (buf)))
@@ -435,9 +417,11 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 			continue;
 		}
 #endif
-		memcpy (&newinfo, &list->info[i], sizeof(newinfo));
-		strncpy (newinfo.path, path, sizeof (newinfo.path));
-		strncpy (newinfo.name, _("Generic Port"), sizeof (newinfo.name));
+		gp_port_info_new (&newinfo);
+		gp_port_info_set_type (newinfo, list->info[i]->type);
+		newinfo->library_filename = strdup(list->info[i]->library_filename);
+		gp_port_info_set_name (newinfo, _("Generic Port"));
+		gp_port_info_set_path (newinfo, path);
 		CR (result = gp_port_info_list_append (list, newinfo));
 		return result;
 	}
@@ -466,9 +450,9 @@ gp_port_info_list_lookup_name (GPPortInfoList *list, const char *name)
 
 	/* Ignore generic entries */
 	for (generic = i = 0; i < list->count; i++)
-		if (!strlen (list->info[i].name))
+		if (!strlen (list->info[i]->name))
 			generic++;
-		else if (!strcmp (list->info[i].name, name))
+		else if (!strcmp (list->info[i]->name, name))
 			return (i - generic);
 
 	return (GP_ERROR_UNKNOWN_PORT);
@@ -480,7 +464,7 @@ gp_port_info_list_lookup_name (GPPortInfoList *list, const char *name)
  * \param n the index of the entry
  * \param info the returned information
  *
- * Retreives an entry from the list and stores it into info.
+ * Returns a pointer to the current port entry.
  *
  * \return a gphoto2 error code
  **/
@@ -499,60 +483,123 @@ gp_port_info_list_get_info (GPPortInfoList *list, int n, GPPortInfo *info)
 
 	/* Ignore generic entries */
 	for (i = 0; i <= n; i++)
-		if (!strlen (list->info[i].name)) {
+		if (!strlen (list->info[i]->name)) {
 			n++;
 			if (n >= list->count)
 				return (GP_ERROR_BAD_PARAMETERS);
 		}
 
-	memcpy (info, &(list->info[n]), sizeof (GPPortInfo));
-
+	*info = list->info[n];
 	return (GP_OK);
 }
 
-#ifdef __LIBGPHOTO2_INCLUDE_OLD_VERSIONS
+
 /**
- * \brief Get port information of specific entry
- * \param list a #GPPortInfoList
- * \param n the index of the entry
- * \param info the returned information
+ * \brief Get name of a specific port entry
+ * \param info a #GPPortInfo
+ * \param name a pointer to a char* which will receive the name
  *
- * Retreives an entry from the list and stores it into info.
- * This is the version used before libgphoto2 2.5.0
+ * Retreives the name of the passed in GPPortInfo, by reference.
  *
  * \return a gphoto2 error code
  **/
 int
-gp_port_info_list_get_info_v240 (GPPortInfoList *list, int n, GPPortInfo_v240 *info)
-{
-	int ret;
-	GPPortInfo	newinfo;
-
-	ret = gp_port_info_list_get_info_v250 (list, n, &newinfo);
-	if (ret != GP_OK)
-		return ret;
-	info->type = newinfo.type;
-	strcpy(info->name, newinfo.name); /* same size */
-	/* FIXME: handle overflows by error return? */
-	strncpy(info->path, newinfo.path, sizeof(info->path)); /* larger size */
-	strcpy(info->library_filename, newinfo.library_filename); /* same size */
-	return (GP_OK);
+gp_port_info_get_name (GPPortInfo info, char **name) {
+	*name = info->name;
+	return GP_OK;
 }
-#endif
 
-#ifdef _GPHOTO2_INTERNAL_CODE
 /**
- * \brief Internal map between GP_PORT and name
- * 
- * Internal map between the GP_PORT_xxx enumeration and
- * string names (usb,serial,disk,ptpip,...).
- */
-const StringFlagItem gpi_gphoto_port_type_map[] = {
-	{ "none",   GP_PORT_NONE },
-	{ "serial", GP_PORT_SERIAL },
-	{ "usb",    GP_PORT_USB },
-	{ "disk",   GP_PORT_DISK },
-	{ "ptpip",  GP_PORT_PTPIP },
-	{ NULL, 0 },
-};
-#endif /* _GPHOTO2_INTERNAL_CODE */
+ * \brief Set name of a specific port entry
+ * \param info a #GPPortInfo
+ * \param name a char* pointer which will receive the name
+ *
+ * Sets the name of the passed in GPPortInfo
+ * This is a libgphoto2_port internal function.
+ *
+ * \return a gphoto2 error code
+ **/
+int
+gp_port_info_set_name (GPPortInfo info, const char *name) {
+	info->name = strdup (name);
+	return GP_OK;
+}
+
+/**
+ * \brief Get path of a specific port entry
+ * \param info a #GPPortInfo
+ * \param path a pointer to a char* which will receive the path
+ *
+ * Retreives the path of the passed in GPPortInfo, by reference.
+ *
+ * \return a gphoto2 error code
+ **/
+int
+gp_port_info_get_path (GPPortInfo info, char **path) {
+	*path = info->path;
+	return GP_OK;
+}
+
+/**
+ * \brief Set path of a specific port entry
+ * \param info a #GPPortInfo
+ * \param path a char* pointer which will receive the path
+ *
+ * Sets the path of the passed in GPPortInfo
+ * This is a libgphoto2_port internal function.
+ *
+ * \return a gphoto2 error code
+ **/
+int
+gp_port_info_set_path (GPPortInfo info, const char *path) {
+	info->path = strdup (path);
+	return GP_OK;
+}
+
+/**
+ * \brief Get type of a specific port entry
+ * \param info a #GPPortInfo
+ * \param type a pointer to a GPPortType variable which will receive the type
+ *
+ * Retreives the type of the passed in GPPortInfo
+ *
+ * \return a gphoto2 error code
+ **/
+int
+gp_port_info_get_type (GPPortInfo info, GPPortType *type) {
+	*type = info->type;
+	return GP_OK;
+}
+
+/**
+ * \brief Set type of a specific port entry
+ * \param info a #GPPortInfo
+ * \param type a GPPortType variable which will has the type
+ *
+ * Sets the type of the passed in GPPortInfo
+ * This is a libgphoto2_port internal function.
+ *
+ * \return a gphoto2 error code
+ **/
+int
+gp_port_info_set_type (GPPortInfo info, GPPortType type) {
+	info->type = type;
+	return GP_OK;
+}
+
+/**
+ * \brief Create a new portinfo
+ * \param info pointer to a #GPPortInfo
+ *
+ * Allocates and initializes a GPPortInfo structure.
+ * This is a libgphoto2_port internal function.
+ *
+ * \return a gphoto2 error code
+ **/
+int
+gp_port_info_new (GPPortInfo *info) {
+	*info = calloc (sizeof(struct _GPPortInfo),1);
+	if (!*info)
+		return GP_ERROR_NO_MEMORY;
+	return GP_OK;
+}

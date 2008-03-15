@@ -434,6 +434,7 @@ int
 gp_camera_set_port_info (Camera *camera, GPPortInfo info)
 {
 	CHECK_NULL (camera);
+	char	*name, *path;
 
 	/*
 	 * If the camera is currently initialized, terminate that connection.
@@ -442,8 +443,10 @@ gp_camera_set_port_info (Camera *camera, GPPortInfo info)
 	if (camera->pc->lh)
 		gp_camera_exit (camera, NULL);
 
+	gp_port_info_get_name (info, &name);
+	gp_port_info_get_name (info, &path);
 	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Setting port info for "
-		"port '%s' at '%s'...", info.name, info.path);
+		"port '%s' at '%s'...", name, path);
 	CR (camera, gp_port_set_info (camera->port, info), NULL);
 
 	return (GP_OK);

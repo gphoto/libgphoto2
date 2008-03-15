@@ -1,11 +1,10 @@
-LIBGPHOTO2_0_0 {
+LIBGPHOTO2_5_0 {
     global:
 	gp_log;
 	gp_log_add_func;
 	gp_log_data;
 	gp_log_remove_func;
 	gp_logv;
-	gp_port_message_codeset;
 	gp_port_check_int;
 	gp_port_check_int_fast;
 	gp_port_close;
@@ -16,6 +15,9 @@ LIBGPHOTO2_0_0 {
 	gp_port_get_pin;
 	gp_port_get_settings;
 	gp_port_get_timeout;
+	gp_port_info_get_name;
+	gp_port_info_get_path;
+	gp_port_info_get_type;
 	gp_port_info_list_append;
 	gp_port_info_list_count;
 	gp_port_info_list_free;
@@ -25,6 +27,7 @@ LIBGPHOTO2_0_0 {
 	gp_port_info_list_lookup_path;
 	gp_port_info_list_new;
 	gp_port_library_version;
+	gp_port_message_codeset;
 	gp_port_new;
 	gp_port_open;
 	gp_port_read;
@@ -42,21 +45,27 @@ LIBGPHOTO2_0_0 {
 	gp_port_usb_clear_halt;
 	gp_port_usb_find_device;
 	gp_port_usb_find_device_by_class;
+	gp_port_usb_msg_class_read;
+	gp_port_usb_msg_class_write;
 	gp_port_usb_msg_interface_read;
 	gp_port_usb_msg_interface_write;
 	gp_port_usb_msg_read;
 	gp_port_usb_msg_write;
-	gp_port_usb_msg_class_write;
-	gp_port_usb_msg_class_read;
 	gp_port_write;
+	gp_system_closedir;
+	gp_system_filename;
+	gp_system_is_dir;
+	gp_system_is_file;
 	gp_system_mkdir;
-	gp_system_rmdir;
 	gp_system_opendir;
 	gp_system_readdir;
-	gp_system_filename;
-	gp_system_closedir;
-	gp_system_is_file;
-	gp_system_is_dir;
+	gp_system_rmdir;
+    local:
+	*;
+};
+
+# These are only supposed to be used by libgphoto2 internally.
+LIBGPHOTO2_INTERNAL {
 	gpi_gphoto_port_type_map;
 	gpi_enum_to_string;
 	gpi_string_to_enum;
@@ -64,18 +73,22 @@ LIBGPHOTO2_0_0 {
 	gpi_string_or_to_flags;
 	gpi_string_list_to_flags;
 	gpi_flags_to_string_list;
-    local:
-	*;
+
+	gp_port_info_new;
+	gp_port_info_set_name;
+	gp_port_info_set_path;
+	gp_port_info_set_type;
 };
 
-LIBGPHOTO2_5_0 {
-	# The asm(".symver ...") constructs will put stuff into this node,
-	# it needs to stay.
-	# Currently used by:
-	#	gp_port_set_info, gp_port_get_info, 
-	#	gp_port_info_list_append, gp_port_info_list_get_info
-
-	# Add new exported functions here too!
-} LIBGPHOTO2_0_0;
+#LIBGPHOTO2_6_0 {
+#    global:
+#	# The asm(".symver ...") constructs will put stuff into this node,
+#	# it needs to stay.
+#	# Currently used by:
+#	#	gp_port_set_info, gp_port_get_info, 
+#	#	gp_port_info_list_append, gp_port_info_list_get_info
+#
+#	# Add new exported functions here too!
+#} LIBGPHOTO2_5_0;
 
 # here comes the next version...

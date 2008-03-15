@@ -5,7 +5,7 @@ dnl NOTE: Be version style _higher_ than the last release.
 dnl       So lastversion.X.trunk for instance. Bump X if necessary.
 
 dnl ******* THE NEXT RELEASE VERSION MUST BE 2.4.1 at least or higher!
-AC_INIT([libgphoto2 photo camera library], [2.4.0.4], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
+AC_INIT([libgphoto2 photo camera library], [2.4.0.5], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
 AC_CONFIG_SRCDIR([libgphoto2/gphoto2-version.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([auto-m4])
@@ -32,14 +32,14 @@ dnl   * libtool.info chapter "Versioning"
 dnl   * libtool.info chapter "Updating library version information"
 dnl ---------------------------------------------------------------------------
 dnl Versioning:
-dnl  - CURRENT (Major):  Increment if the interface has changes. AGE is always
-dnl                      *changed* at the same time.
 dnl  - AGE (Micro):      Increment if any interfaces have been added; set to 0
 dnl		         if any interfaces have been removed. Removal has 
 dnl                      precedence over adding, so set to 0 if both happened.
 dnl                      It denotes upward compatibility.
 dnl  - REVISION (Minor): Increment any time the source changes; set to 
 dnl			 0 if you incremented CURRENT.
+dnl  - CURRENT (Major):  Increment if the interface has changes. AGE is always
+dnl                      *changed* at the same time.
 dnl
 dnl  To summarize. Any interface *change* increment CURRENT. If that interface
 dnl  change does not break upward compatibility (ie it is an addition), 
@@ -52,7 +52,7 @@ dnl A:R:C=2:1:4  libgphoto2-2.3.1 (since libgphoto2-2.3.0.1.trunk)
 dnl A:R:C=3:0:5  libgphoto2-2.3.0.3.trunk (new gp_file_new_from_fd() function)
 dnl              libgphoto2-2.3.1.1.trunk (new gp_file_slurp() function)
 dnl              libgphoto2-2.3.1.2.trunk (new gp_camera_get_storageinfo() function + enums + struct)
-dnl A:R:C=0:0:6  libgphoto2-3.0.1	(fixed CameraList API, ... )
+dnl A:R:C=0:0:6  libgphoto2-2.5.0	(fixed CameraList API, ... )
 AC_SUBST([LIBGPHOTO2_AGE],      [0])
 AC_SUBST([LIBGPHOTO2_REVISION], [0])
 AC_SUBST([LIBGPHOTO2_CURRENT],  [6])
@@ -247,6 +247,25 @@ AC_SUBST([localedir],["\$(datadir)/locale"])
 AM_CPPFLAGS="$AM_CPPFLAGS -DLOCALEDIR=\\\"${localedir}\\\""
 
 AC_SYS_LARGEFILE
+
+AC_MSG_CHECKING([for asm .symver support])
+AC_COMPILE_IFELSE([dnl
+	AC_LANG_PROGRAM([[]],[[
+		int f1() { }
+		int f2() { }
+		asm(".symver f1, f@VER1");
+		asm(".symver f2, f@@VER2");
+		int main(int argc, char **argv) { }
+	]])dnl
+],[
+	AC_DEFINE([HAVE_ASM_SYMVERS],1,[Define if there is asm .symver support.])
+	VERSIONMAPLDFLAGS="-Wl,--version-script=\$(srcdir)/libgphoto2.ver"
+	AC_MSG_RESULT(yes)
+],[
+	VERSIONMAPLDFLAGS=""
+	AC_MSG_RESULT(no)
+])
+AC_SUBST(VERSIONMAPLDFLAGS)
 
 dnl ---------------------------------------------------------------------------
 dnl FIXME: What is this good for?

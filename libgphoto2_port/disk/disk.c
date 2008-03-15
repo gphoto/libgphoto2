@@ -152,6 +152,7 @@ gp_port_library_list (GPPortInfoList *list)
 		{
 			char *mountpoint = NULL;
 			char *mediainfo = NULL;
+			char *s;
 
 			if (!libhal_device_property_exists (ctx, udi,
 							   "volume.mount_point",
@@ -173,11 +174,19 @@ gp_port_library_list (GPPortInfoList *list)
 			mediainfo = libhal_device_get_property_string(ctx, udi,
 								       "info.product",
 								       &error);
-			info.type = GP_PORT_DISK;
-			snprintf (info.name, sizeof(info.name), _("Media '%s'"), 
-				  (mediainfo?mediainfo:_("(unknown)")));
-			snprintf (info.path, sizeof(info.path), "disk:%s",
-				  mountpoint);
+			gp_port_info_new (&info);
+			gp_port_info_set_type (info, GP_PORT_DISK);
+
+			s = malloc (strlen(_("Media '%s'"))+strlen(mediainfo?mediainfo:_("(unknown)"))+1);
+			sprintf (s, _("Media '%s'"), (mediainfo?mediainfo:_("(unknown)")));
+			gp_port_info_set_name (info, s);
+			free (s);
+
+			s = malloc (strlen("disk:")+strlen(mountpoint)+1);
+			sprintf (s, "disk:%s", mountpoint);
+			gp_port_info_set_path (info, s);
+			free (s);
+
 			CHECK (gp_port_info_list_append (list, info));
 			libhal_free_string(mountpoint);
 			if (mediainfo) {
@@ -323,9 +332,10 @@ gp_port_library_list (GPPortInfoList *list)
 # endif
 #endif
 	/* generic disk:/xxx/ matcher */
-	info.type = GP_PORT_DISK;
-	memset (info.name, 0, sizeof(info.name));
-	snprintf (info.path, sizeof(info.path), "^disk:");
+	gp_port_info_new (&info);
+	gp_port_info_set_type (info, GP_PORT_DISK);
+	gp_port_info_set_name (info, "");
+	gp_port_info_set_path (info, "^disk:");
 	CHECK (gp_port_info_list_append (list, info));
 	return GP_OK;
 }

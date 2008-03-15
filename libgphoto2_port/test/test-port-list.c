@@ -37,23 +37,6 @@
 #endif
 
 
-
-/** C equivalent of basename(1) */
-static const char *
-basename (const char *pathname)
-{
-	char *result, *tmp;
-	/* remove path part from camlib name */
-	for (result=tmp=(char *)pathname; (*tmp!='\0'); tmp++) {
-		if ((*tmp == gp_system_dir_delim) 
-		    && (*(tmp+1) != '\0')) {
-			result = tmp+1;
-		}
-	}
-	return (const char *)result;
-}
-
-
 static void
 log_func (GPLogLevel level, const char *domain __unused__,
 	  const char *format, va_list args, void *data __unused__)
@@ -105,14 +88,19 @@ run_test ()
 
 	for (i = 0; i < count; i++) {
 		const char *port_type_str;
-		GPPortInfo info;
+		char *name, *path;
+		GPPortInfo	info;
+		GPPortType	type;
 		ret = gp_port_info_list_get_info (il, i, &info);
 		if (ret < 0) {
 		  	printf ("ERROR getting iolib info: %s\n",
 				gp_port_result_as_string (ret));
 			return (1);
 		}
-		switch (info.type) {
+		gp_port_info_get_type (info, &type);
+		gp_port_info_get_name (info, &name);
+		gp_port_info_get_path (info, &path);
+		switch (type) {
 		case GP_PORT_NONE:   port_type_str = "NONE"; break;
 		case GP_PORT_SERIAL: port_type_str = "SERIAL"; break;
 		case GP_PORT_USB:    port_type_str = "USB"; break;
@@ -123,15 +111,11 @@ run_test ()
 		printf ("No:    %d\n"
 			"Type:  %s\n"
 			"Name:  %s\n"
-			"Path:  %s\n"
-			"iolib: %s\n"
-			"file:  %s\n\n",
+			"Path:  %s\n",
 			i,
 			port_type_str,
-			info.name,
-			info.path,
-			basename(info.library_filename),
-			info.library_filename
+			name,
+			path
 			);
 	}
 

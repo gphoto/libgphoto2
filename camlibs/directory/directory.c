@@ -176,6 +176,39 @@ int camera_abilities (CameraAbilitiesList *list)
 }
 
 static int
+_get_mountpoint(GPPort *port, char **path) {
+	GPPortInfo	info;
+	int ret;
+	char *p;
+
+	ret = gp_port_get_info (port, &info);
+	if (ret < GP_OK)
+		return ret;
+	ret = gp_port_info_get_path (info, path);
+	if (ret < GP_OK)
+		return ret;
+	p = strchr (*path, ':');
+	if (p) *path = p+1;
+	return GP_OK;
+}
+
+static int
+_get_path (GPPort *port, const char *folder, const char *file, char *path, unsigned int size) {
+	if (port->type == GP_PORT_DISK) {
+		int ret;
+		char *xpath;
+
+		ret = _get_mountpoint (port, &xpath);
+		snprintf (path, size, "%s/%s/%s", xpath, folder, file);
+	} else {
+		/* old style access */
+		snprintf (path, size, "%s/%s", folder, file);
+	}
+	return GP_OK;
+}
+
+
+static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data, GPContext *context)
 {
@@ -183,19 +216,18 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	gp_system_dirent de;
 	char buf[1024], f[1024];
 	unsigned int id, n;
+	int ret;
 	Camera *camera = (Camera*)data;
 
 	if (camera->port->type == GP_PORT_DISK) {
-		GPPortSettings settings;
+		char *path;
 
-		gp_port_get_settings (camera->port, &settings);
-		snprintf (f, sizeof(f), "%s/%s/",
-			settings.disk.mountpoint, 
-			folder
-		);
+		ret = _get_mountpoint (camera->port, &path);
+		if (ret < GP_OK)
+			return ret;
+		snprintf (f, sizeof(f), "%s/%s/", path, folder);
 		/* UNIX / is empty, or we recurse through the whole fs */
-		if (	(!strcmp(settings.disk.mountpoint, "") ||
-			 !strcmp(settings.disk.mountpoint, "/")) &&
+		if (	(!strcmp(path, "") || !strcmp(path, "/")) &&
 			!strcmp(folder,"/")
 		)
 			return GP_OK;
@@ -203,8 +235,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		/* old style access */
 		if (folder[strlen(folder)-1] != '/') {
 			snprintf (f, sizeof(f), "%s%c", folder, '/');
-		}
-		else {
+		} else {
 			strncpy (f, folder, sizeof(f));
 		}
 	}
@@ -263,16 +294,16 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	Camera *camera = (Camera*)data;
 
 	if (camera->port->type == GP_PORT_DISK) {
-		GPPortSettings settings;
+		char *path;
+		int ret;
 
-		gp_port_get_settings (camera->port, &settings);
-		snprintf (f, sizeof(f), "%s/%s/",
-			settings.disk.mountpoint, 
-			folder
-		);
+		ret = _get_mountpoint (camera->port, &path);
+		if (ret < GP_OK)
+			return ret;
+
+		snprintf (f, sizeof(f), "%s/%s/", path, folder);
 		/* UNIX / is empty, or we recurse through the whole fs */
-		if (	(!strcmp(settings.disk.mountpoint, "") ||
-			 !strcmp(settings.disk.mountpoint, "/")) &&
+		if (	(!strcmp(path, "") || !strcmp(path, "/")) &&
 			!strcmp(folder,"/")
 		)
 			return GP_OK;
@@ -281,8 +312,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		/* Make sure we have 1 delimiter */
 		if (folder[strlen(folder)-1] != '/') {
 			snprintf (f, sizeof(f), "%s%c", folder, '/');
-		}
-		else {
+		} else {
 			strncpy (f, folder, sizeof(f));
 		}
 	}
@@ -340,20 +370,11 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	const char *mime_type;
 	struct stat st;
 	Camera *camera = (Camera*)data;
+	int result;
 
-	if (camera->port->type == GP_PORT_DISK) {
-		GPPortSettings settings;
-
-		gp_port_get_settings (camera->port, &settings);
-		snprintf (path, sizeof(path), "%s/%s/%s",
-			settings.disk.mountpoint, 
-			folder,
-			file
-		);
-	} else {
-		/* old style access */
-		snprintf (path, sizeof (path), "%s/%s", folder, file);
-	}
+	result = _get_path (camera->port, folder, file, path, sizeof(path));
+	if (result < GP_OK)
+		return result;
 
 	if (lstat (path, &st) != 0) {
 		gp_context_error (context, _("Could not get information "
@@ -390,19 +411,9 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	char path_old[1024], path_new[1024], path[1024];
 	Camera *camera = (Camera*)data;
 
-	if (camera->port->type == GP_PORT_DISK) {
-		GPPortSettings settings;
-
-		gp_port_get_settings (camera->port, &settings);
-		snprintf (path, sizeof(path), "%s/%s/%s",
-			settings.disk.mountpoint, 
-			folder,
-			file
-		);
-	} else {
-		/* old style access */
-		snprintf (path, sizeof (path), "%s/%s", folder, file);
-	}
+	retval = _get_path (camera->port, folder, file, path, sizeof(path));
+	if (retval < GP_OK)
+		return retval;
 
 	/* We don't support updating permissions (yet) */
 	if (info.file.fields & GP_FILE_INFO_PERMISSIONS)
@@ -478,19 +489,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 #endif /* HAVE_LIBEXIF */
 	Camera *camera = (Camera*)user_data;
 
-	if (camera->port->type == GP_PORT_DISK) {
-		GPPortSettings settings;
-
-		gp_port_get_settings (camera->port, &settings);
-		snprintf (path, sizeof(path), "%s/%s/%s",
-			settings.disk.mountpoint, 
-			folder,
-			filename
-		);
-	} else {
-		/* old style access */
-		snprintf (path, sizeof (path), "%s/%s", folder, filename);
-	}
+	result = _get_path (camera->port, folder, filename, path, sizeof(path));
+	if (result < GP_OK)
+		return result;
 
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
@@ -590,21 +591,12 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *name,
 {
 	char path[2048];
 	Camera *camera = (Camera*)data;
+	int result;
 
-	if (camera->port->type == GP_PORT_DISK) {
-		GPPortSettings settings;
-
-		gp_port_get_settings (camera->port, &settings);
-		snprintf (path, sizeof(path), "%s/%s/%s",
-			settings.disk.mountpoint, 
-			folder,
-			name
-		);
-	} else {
-		/* old style access */
-		snprintf (path, sizeof (path), "%s/%s", folder, name);
-	}
-	return (gp_system_mkdir (path));
+	result = _get_path (camera->port, folder, name, path, sizeof(path));
+	if (result < GP_OK)
+		return result;
+	return gp_system_mkdir (path);
 }
 
 static int
@@ -613,21 +605,12 @@ remove_dir_func (CameraFilesystem *fs, const char *folder, const char *name,
 {
 	char path[2048];
 	Camera *camera = (Camera*)data;
+	int result;
 
-	if (camera->port->type == GP_PORT_DISK) {
-		GPPortSettings settings;
-
-		gp_port_get_settings (camera->port, &settings);
-		snprintf (path, sizeof(path), "%s/%s/%s",
-			settings.disk.mountpoint, 
-			folder,
-			name
-		);
-	} else {
-		/* old style access */
-		snprintf (path, sizeof (path), "%s/%s", folder, name);
-	}
-	return (gp_system_rmdir (path));
+	result = _get_path (camera->port, folder, name, path, sizeof(path));
+	if (result < GP_OK)
+		return result;
+	return gp_system_rmdir (path);
 }
 
 static int
@@ -638,19 +621,9 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	int result;
 	Camera *camera = (Camera*)data;
 
-	if (camera->port->type == GP_PORT_DISK) {
-		GPPortSettings settings;
-
-		gp_port_get_settings (camera->port, &settings);
-		snprintf (path, sizeof(path), "%s/%s/%s",
-			settings.disk.mountpoint, 
-			folder,
-			file
-		);
-	} else {
-		/* old style access */
-		snprintf (path, sizeof (path), "%s/%s", folder, file);
-	}
+	result = _get_path (camera->port, folder, file, path, sizeof(path));
+	if (result < GP_OK)
+		return result;
 	result = unlink (path);
 	if (result) {
 		gp_context_error (context, _("Could not delete file '%s' "
@@ -676,19 +649,9 @@ put_file_func (CameraFilesystem *fs, const char *folder,
 
 	gp_file_get_name (file, &name);
 
-	if (camera->port->type == GP_PORT_DISK) {
-		GPPortSettings settings;
-
-		gp_port_get_settings (camera->port, &settings);
-		snprintf (path, sizeof(path), "%s/%s/%s",
-			settings.disk.mountpoint, 
-			folder,
-			name
-		);
-	} else {
-		/* old style access */
-		snprintf (path, sizeof (path), "%s/%s", folder, name);
-	}
+	result = _get_path (camera->port, folder, name, path, sizeof(path));
+	if (result < GP_OK)
+		return result;
 
 	result = gp_file_save (file, path);
 	if (result < 0)
@@ -741,15 +704,18 @@ storage_info_func (CameraFilesystem *fs,
                 int *nrofsinfos,
                 void *data, GPContext *context
 ) {
-	Camera 		*camera          = data;
-	GPPortSettings	settings;
+	Camera 				*camera = data;
 	CameraStorageInformation	*sfs;
 
 #if defined(linux) && defined(HAVE_STATFS)
 	struct	statfs		stfs;
+	char *xpath;
+	int ret;
 
-	gp_port_get_settings (camera->port, &settings);
-	if (-1 == statfs (settings.disk.mountpoint, &stfs))
+	ret = _get_mountpoint (camera->port, &xpath);
+	if (ret < GP_OK)
+		return ret;
+	if (-1 == statfs (xpath, &stfs))
 		return GP_ERROR_NOT_SUPPORTED;
 
 	sfs = malloc (sizeof (CameraStorageInformation));

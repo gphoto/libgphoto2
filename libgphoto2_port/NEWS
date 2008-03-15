@@ -1,4 +1,20 @@
-libgphoto2_port 0.8.2
+libgphoto2_port 0.9.0
+
+API:
+   * GPPortInfo is now abstract, and a pointer in the background.
+
+     Use gp_port_info_get_* functions to access variables.
+
+	info.type -> gp_port_info_get_path(info, &type);
+	info.path -> gp_port_info_get_path(info, &path);
+	info.name -> gp_port_info_get_name(info, &name);
+
+     (gp_port_info_get_type(), gp_port_info_get_name() and
+      gp_port_info_get_path() should be the only ones necessary,
+      if at all.)
+
+     The gp_port_info_set_* and gp_port_info_new are internal to
+     libgphoto2_port.
 
 Build:
    * Switch build to use ELF symbol versions to avoid

@@ -1,3 +1,20 @@
+2008-03-15  Marcus Meissner  <meissner@suse.de>
+
+	* libgphoto2_port/gphoto2-port-info.h: The internal GPPortInfo
+	  structure definition. Only shared within libgphoto2_port/
+
+	* libgphoto2_port/gphoto2-port-info-list.c: Added new abstract
+	  GPPortInfo implementation, with accessor functions.
+
+	* removed DiskSettings, let it get handled in directory using
+	  the GPPortInfo (as it should have been done before).
+
+	* libgphoto2_port/libgphoto2_port.ver: mark some symbols INTERNAL
+	  through symbolversions.
+
+	* Do not start symbol versions with 2.0.0, but with this release.
+	
+
 2008-02-13  Marcus Meissner  <meissner@suse.de>
 
 	* disk/disk.c: Do not check "gphotofs" filesystems, to avoid

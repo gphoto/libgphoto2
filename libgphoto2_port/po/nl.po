@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_2.1.6-8_libgphoto2_port-0_nl\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2008-02-11 10:54+0100\n"
+"POT-Creation-Date: 2008-03-15 22:41+0100\n"
 "PO-Revision-Date: 2006-06-20 20:46+0100\n"
 "Last-Translator: Kurt De Bree <kdebree(AT)telenet(DOT)be>\n"
 "Language-Team: Dutch <debian-l10n-dutch@lists.debian.org>\n"
@@ -28,89 +28,89 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.1\n"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:225
+#: libgphoto2_port/gphoto2-port-info-list.c:207
 #, c-format
 msgid "Called for filename '%s'."
 msgstr "Gevraagde bestandsnaam '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:230
+#: libgphoto2_port/gphoto2-port-info-list.c:212
 #, c-format
 msgid "Could not load '%s': '%s'."
 msgstr "Kon '%s' niet laden: '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:238
+#: libgphoto2_port/gphoto2-port-info-list.c:220
 #, c-format
 msgid "Could not find some functions in '%s': '%s'."
 msgstr "Kon sommige functies niet vinden in '%s': '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:250
+#: libgphoto2_port/gphoto2-port-info-list.c:232
 #, c-format
 msgid "'%s' already loaded"
 msgstr "'%s' reeds geladen"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:259
+#: libgphoto2_port/gphoto2-port-info-list.c:241
 #, c-format
 msgid "Could not load port driver list: '%s'."
 msgstr "Kon poortstuurprogrammalijst niet laden: '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:272
+#: libgphoto2_port/gphoto2-port-info-list.c:254
 #, c-format
 msgid "Loaded '%s' ('%s') from '%s'."
 msgstr "'%s' ('%s') geladen van '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:305
+#: libgphoto2_port/gphoto2-port-info-list.c:287
 #, c-format
 msgid "Using ltdl to load io-drivers from '%s'..."
 msgstr "Bezig met io-stuurprogramma's te laden van '%s' met ltdl..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:335
+#: libgphoto2_port/gphoto2-port-info-list.c:317
 #, c-format
 msgid "Counting entries (%i available)..."
 msgstr "Bezig met items te tellen (%i beschikbaar)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:344
+#: libgphoto2_port/gphoto2-port-info-list.c:326
 #, c-format
 msgid "%i regular entries available."
 msgstr "%i reguliere items beschikbaar."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:374
+#: libgphoto2_port/gphoto2-port-info-list.c:356
 #, c-format
 msgid "Looking for path '%s' (%i entries available)..."
 msgstr "Bezig met zoeken naar pad '%s' (%i items beschikbaar)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:386
+#: libgphoto2_port/gphoto2-port-info-list.c:368
 #, c-format
 msgid "Starting regex search for '%s'..."
 msgstr "Start met zoeken volgens regex voor '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:394
+#: libgphoto2_port/gphoto2-port-info-list.c:376
 #, c-format
 msgid "Trying '%s'..."
 msgstr "Probeer '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:415
+#: libgphoto2_port/gphoto2-port-info-list.c:397
 msgid "regcomp failed"
 msgstr "regcomp mislukt"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:426
+#: libgphoto2_port/gphoto2-port-info-list.c:408
 #, c-format
 msgid "re_match failed (%i)"
 msgstr "re_match mislukt (%i)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:434
+#: libgphoto2_port/gphoto2-port-info-list.c:416
 msgid "regexec failed"
 msgstr "regexec mislukt"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:440
+#: libgphoto2_port/gphoto2-port-info-list.c:423
 msgid "Generic Port"
 msgstr "Generische poort"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:464
+#: libgphoto2_port/gphoto2-port-info-list.c:448
 #, c-format
 msgid "Looking up entry '%s'..."
 msgstr "Bezig met zoeken van item '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:494
+#: libgphoto2_port/gphoto2-port-info-list.c:478
 #, c-format
 msgid "Getting info of entry %i (%i available)..."
 msgstr "Bezig met ontvangen van info over %i (%i beschikbaar)..."
@@ -208,258 +208,258 @@ msgstr ""
 msgid "Unknown error"
 msgstr "Ongekende fout"
 
-#: libgphoto2_port/gphoto2-port.c:60
+#: libgphoto2_port/gphoto2-port.c:57
 #, c-format
 msgid "The operation '%s' is not supported by this device"
 msgstr "De actie '%s' is niet ondersteund bij dit toestel"
 
-#: libgphoto2_port/gphoto2-port.c:61
+#: libgphoto2_port/gphoto2-port.c:58
 msgid "The port has not yet been initialized"
 msgstr "De poort is nog niet geïnitialiseerd"
 
-#: libgphoto2_port/gphoto2-port.c:92
+#: libgphoto2_port/gphoto2-port.c:89
 msgid "Creating new device..."
 msgstr "Bezig met het aanmaken van een nieuw toestel..."
 
-#: libgphoto2_port/gphoto2-port.c:170
+#: libgphoto2_port/gphoto2-port.c:171
 #, c-format
 msgid "Could not load '%s' ('%s')."
 msgstr "Kon '%s' niet laden ('%s')."
 
-#: libgphoto2_port/gphoto2-port.c:180
+#: libgphoto2_port/gphoto2-port.c:181
 #, c-format
 msgid "Could not find 'gp_port_library_operations' in '%s' ('%s')"
 msgstr "Kon 'gp_port_library_operations' niet vinden in '%s' ('%s')"
 
-#: libgphoto2_port/gphoto2-port.c:292
+#: libgphoto2_port/gphoto2-port.c:253
 #, c-format
 msgid "Opening %s port..."
 msgstr "Bezig met het openen van de %s-poort..."
 
-#: libgphoto2_port/gphoto2-port.c:314
+#: libgphoto2_port/gphoto2-port.c:275
 msgid "Closing port..."
 msgstr "Poort aan het sluiten..."
 
-#: libgphoto2_port/gphoto2-port.c:336
+#: libgphoto2_port/gphoto2-port.c:297
 msgid "Freeing port..."
 msgstr "Poort aan het vrijmaken..."
 
-#: libgphoto2_port/gphoto2-port.c:383
+#: libgphoto2_port/gphoto2-port.c:344
 #, c-format
 msgid "Writing %i=0x%x byte(s) to port..."
 msgstr "Bezig met schrijven van %i=0x%x byte(s) naar de poort..."
 
-#: libgphoto2_port/gphoto2-port.c:396
+#: libgphoto2_port/gphoto2-port.c:357
 #, c-format
 msgid "Could only write %i out of %i byte(s)"
 msgstr "Kon maar %i van %i byte(s) schrijven"
 
-#: libgphoto2_port/gphoto2-port.c:419
+#: libgphoto2_port/gphoto2-port.c:380
 #, c-format
 msgid "Reading %i=0x%x bytes from port..."
 msgstr "Bezig met lezen van %i=0x%x bytes van de poort..."
 
-#: libgphoto2_port/gphoto2-port.c:430 libgphoto2_port/gphoto2-port.c:467
-#: libgphoto2_port/gphoto2-port.c:507 libgphoto2_port/gphoto2-port.c:932
+#: libgphoto2_port/gphoto2-port.c:391 libgphoto2_port/gphoto2-port.c:428
+#: libgphoto2_port/gphoto2-port.c:468 libgphoto2_port/gphoto2-port.c:893
 #, c-format
 msgid "Could only read %i out of %i byte(s)"
 msgstr "Kon maar %i van %i byte(s) lezen"
 
-#: libgphoto2_port/gphoto2-port.c:456
+#: libgphoto2_port/gphoto2-port.c:417
 #, c-format
 msgid "Reading %i=0x%x bytes from interrupt endpoint..."
 msgstr "Bezig met lezen van %i=0x%x bytes van de interrupt eindpunt..."
 
-#: libgphoto2_port/gphoto2-port.c:517
+#: libgphoto2_port/gphoto2-port.c:478
 #, c-format
 msgid "Reading %i=0x%x bytes from interrupt endpoint (fast)..."
 msgstr "Bezig met lezen van %i=0x%x bytes van de interrupt eindpunt (snel)..."
 
-#: libgphoto2_port/gphoto2-port.c:542
+#: libgphoto2_port/gphoto2-port.c:503
 #, c-format
 msgid "Setting timeout to %i millisecond(s)..."
 msgstr "Stel tijdslimiet in op %i millisecond(en)..."
 
-#: libgphoto2_port/gphoto2-port.c:578
+#: libgphoto2_port/gphoto2-port.c:539
 msgid "Getting timeout..."
 msgstr "Bezig met ophalen van tijdslimiet..."
 
-#: libgphoto2_port/gphoto2-port.c:582
+#: libgphoto2_port/gphoto2-port.c:543
 #, c-format
 msgid "Current timeout: %i milliseconds"
 msgstr "Hiudig tijdslimiet: %i milliseconden"
 
-#: libgphoto2_port/gphoto2-port.c:604
+#: libgphoto2_port/gphoto2-port.c:565
 msgid "Setting settings..."
 msgstr "Bezig met instellingen in te stellen..."
 
-#: libgphoto2_port/gphoto2-port.c:665
+#: libgphoto2_port/gphoto2-port.c:626
 #, c-format
 msgid "Getting level of pin %i..."
 msgstr "Bezig met ophalen van het niveau van pin %i..."
 
-#: libgphoto2_port/gphoto2-port.c:674
+#: libgphoto2_port/gphoto2-port.c:635
 #, c-format
 msgid "Level of pin %i: %i"
 msgstr "Niveau van pin %i: %i"
 
-#: libgphoto2_port/gphoto2-port.c:700
+#: libgphoto2_port/gphoto2-port.c:661
 msgid "low"
 msgstr "laag"
 
-#: libgphoto2_port/gphoto2-port.c:701
+#: libgphoto2_port/gphoto2-port.c:662
 msgid "high"
 msgstr "hoog"
 
-#: libgphoto2_port/gphoto2-port.c:727
+#: libgphoto2_port/gphoto2-port.c:688
 #, c-format
 msgid "Setting pin %i (%s: '%s') to '%s'..."
 msgstr "Bezig met instellen van pin %i (%s: '%s') naar '%s'..."
 
-#: libgphoto2_port/gphoto2-port.c:754
+#: libgphoto2_port/gphoto2-port.c:715
 #, c-format
 msgid "Sending break (%i milliseconds)..."
 msgstr "Verzend een pauze (%i milliseconden)..."
 
-#: libgphoto2_port/gphoto2-port.c:780
+#: libgphoto2_port/gphoto2-port.c:741
 msgid "Flushing port..."
 msgstr "Bezig met poort leeg te maken..."
 
-#: libgphoto2_port/gphoto2-port.c:854
+#: libgphoto2_port/gphoto2-port.c:815
 msgid "Clear halt..."
 msgstr "Bezig met verwijderen van halt..."
 
-#: libgphoto2_port/gphoto2-port.c:885
+#: libgphoto2_port/gphoto2-port.c:846
 #, c-format
 msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
 msgstr ""
 "Schrijven van bericht (verzoek=0x%x waarde=0x%x index=0x%x omvang=%i=0x%x)..."
 
-#: libgphoto2_port/gphoto2-port.c:920
+#: libgphoto2_port/gphoto2-port.c:881
 #, c-format
 msgid "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
 msgstr "Bericht lezen (verzoek=0x%x waarde=0x%x index=0x%x omvang=%i=0x%x)..."
 
-#: libgphoto2_port/gphoto2-port.c:927
+#: libgphoto2_port/gphoto2-port.c:888
 msgid "msg_read"
 msgstr "msg_read"
 
-#: libgphoto2_port/gphoto2-port.c:1154
+#: libgphoto2_port/gphoto2-port.c:1115
 msgid "No error description available"
 msgstr "Geen foutbeschrijving beschikbaar"
 
-#: serial/unix.c:233
+#: serial/unix.c:221
 #, c-format
 msgid "Could not lock device '%s'"
 msgstr "Kon het toestel niet vergrendelen '%s'"
 
-#: serial/unix.c:243
+#: serial/unix.c:231
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr "Het toestel '%s' is vergrendeld door pid %d"
 
-#: serial/unix.c:246
+#: serial/unix.c:234
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr "Het toestel '%s' kon niet worden vergrendeld (dev_lock gaf %d terug)"
 
-#: serial/unix.c:280
+#: serial/unix.c:263
 #, c-format
 msgid "Device '%s' could not be unlocked."
 msgstr "Het toestel '%s' kon niet worden ontgrendeld."
 
-#: serial/unix.c:292
+#: serial/unix.c:275
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr ""
 "Het toestel '%s' kon niet worden ontgrendeld aangezien het vergrendeld is "
 "door pid %d."
 
-#: serial/unix.c:296
+#: serial/unix.c:279
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr "Het toestel '%s' kon niet worden ontgrendeld (dev_unlock gaf %d terug)"
 
-#: serial/unix.c:374
+#: serial/unix.c:355
 #, c-format
 msgid "Serial Port %i"
 msgstr "Seriële poort %i"
 
-#: serial/unix.c:465
+#: serial/unix.c:444
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Mislukt om '%s' te openen (%m)."
 
-#: serial/unix.c:483
+#: serial/unix.c:462
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Kon '%s' niet sluiten (%m)."
 
-#: serial/unix.c:537
+#: serial/unix.c:516
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "Kon niet naar de poort schrijven (%m)"
 
-#: serial/unix.c:609
+#: serial/unix.c:588
 msgid "Parity error."
 msgstr "Pariteitsfout"
 
-#: serial/unix.c:613
+#: serial/unix.c:592
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Onverwachte pariteits-reactievolgorde  0xff 0x%02x."
 
-#: serial/unix.c:656
+#: serial/unix.c:635
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Onbekende pin %i."
 
-#: serial/unix.c:678
+#: serial/unix.c:657
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Kon het niveau van de pin %i niet ophalen (%m)."
 
-#: serial/unix.c:713
+#: serial/unix.c:692
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "Kon het niveau van de pin %i naar %i niet instellen (%m)."
 
-#: serial/unix.c:738
+#: serial/unix.c:717
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "Kon '%s' niet leegmaken (%m)."
 
-#: serial/unix.c:851
+#: serial/unix.c:830
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Kon de baudrate niet instellen naar %d"
 
-#: usb/libusb.c:240
+#: usb/libusb.c:246
 #, c-format
 msgid "Could not open USB device (%m)."
 msgstr "Kon het USB-toestel niet openen (%m)."
 
-#: usb/libusb.c:250
+#: usb/libusb.c:256
 msgid "Camera is already in use."
 msgstr "Camera is reeds in gebruik."
 
-#: usb/libusb.c:255
+#: usb/libusb.c:261
 #, c-format
 msgid "Device has driver '%s' attached, detaching it now."
 msgstr ""
 "Het toestel heeft het stuurprogramma '%s' aangehecht, het wordt nu "
 "losgemaakt."
 
-#: usb/libusb.c:258
+#: usb/libusb.c:264
 #, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
 msgstr "Kon het kernelstuurprogramma '%s' van het cameratoestel niet losmaken."
 
-#: usb/libusb.c:261
+#: usb/libusb.c:267
 msgid "Could not query kernel driver of device."
 msgstr "Kon het kernelstuurprogramma van het toestel niet opvragen."
 
-#: usb/libusb.c:269
+#: usb/libusb.c:275
 #, c-format
 msgid ""
 "Could not claim interface %d (%m). Make sure no other program or kernel "
@@ -470,37 +470,37 @@ msgstr ""
 "of kernelmodule (zoals %s) het toestel gebruikt en dat u lees- en "
 "schrijfrechten voor dit toestel heeft"
 
-#: usb/libusb.c:289
+#: usb/libusb.c:293
 #, c-format
 msgid "Could not release interface %d (%m)."
 msgstr "Kon de interface %d niet vrijgeven (%m)."
 
-#: usb/libusb.c:302
+#: usb/libusb.c:306
 #, fuzzy, c-format
 msgid "Could not reset USB port (%m)."
 msgstr "Kon de USB-poort niet sluiten (%m)."
 
-#: usb/libusb.c:308
+#: usb/libusb.c:312
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr "Kon de USB-poort niet sluiten (%m)."
 
-#: usb/libusb.c:557
+#: usb/libusb.c:561
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "Kon de configuratie %d/%d niet instellen (%m)"
 
-#: usb/libusb.c:590
+#: usb/libusb.c:594
 #, fuzzy, c-format
 msgid "Could not set altsetting from %d to %d (%m)"
 msgstr "Kon 'alt'-instelling %d/%d niet instellen (%m)"
 
-#: usb/libusb.c:682
+#: usb/libusb.c:686
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr "Het geleverde handelaars-ID of produkt-ID (0x%x,0x%x) is niet geldig."
 
-#: usb/libusb.c:718
+#: usb/libusb.c:722
 #, c-format
 msgid ""
 "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
@@ -509,7 +509,7 @@ msgstr ""
 "Het USB-toestel (handelaar 0x%x, product 0x%x) is een massa-opslagmedium en "
 "kan misschien niet werken met gphoto2. Referentie: %s"
 
-#: usb/libusb.c:760
+#: usb/libusb.c:764
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
@@ -518,7 +518,7 @@ msgstr ""
 "Kon het USB-toestel niet vinden (handelaar 0x%x, product 0x%x). Zorg ervoor "
 "dat het toestel aan de computer aangesloten is."
 
-#: usb/libusb.c:990
+#: usb/libusb.c:994
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
@@ -527,13 +527,13 @@ msgstr ""
 "Kon het USB-toestel niet vinden (klasse 0x%x, subklasse 0x%x, protocol 0x%"
 "x). Zorg ervoor dat het toestel aan de computer aangesloten is."
 
-#: disk/disk.c:177 disk/disk.c:221 disk/disk.c:257 disk/disk.c:289
-#: disk/disk.c:312
+#: disk/disk.c:180 disk/disk.c:181 disk/disk.c:231 disk/disk.c:268
+#: disk/disk.c:300 disk/disk.c:323
 #, c-format
 msgid "Media '%s'"
 msgstr ""
 
-#: disk/disk.c:178
+#: disk/disk.c:180 disk/disk.c:181
 msgid "(unknown)"
 msgstr ""
 

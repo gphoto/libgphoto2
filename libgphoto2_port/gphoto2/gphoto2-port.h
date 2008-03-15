@@ -92,13 +92,6 @@ typedef struct _GPPortSettingsUSB {
 } GPPortSettingsUSB;
 
 /**
- * \brief Port settings for the local disk (directories) port.
- */
-typedef struct _GPPortSettingsDisk {
-	char mountpoint[128];	/**< \brief Path in the UNIX fs which corresponds to gphoto2 / */
-} GPPortSettingsDisk;
-
-/**
  * \brief Union of port settings.
  *
  * This contains a shared union of possible settings for ports needing
@@ -107,7 +100,6 @@ typedef struct _GPPortSettingsDisk {
 typedef union _GPPortSettings {
 	GPPortSettingsSerial serial;	/**< \brief Serial specific settings */
 	GPPortSettingsUSB usb;		/**< \brief USB specific settings */
-	GPPortSettingsDisk disk;	/**< \brief Disk port specific settings */
 } GPPortSettings;
 
 enum {
@@ -148,7 +140,7 @@ typedef struct _GPPort {
 int gp_port_new         (GPPort **port);
 int gp_port_free        (GPPort *port);
 
-int gp_port_set_info    (GPPort *port, GPPortInfo  info);
+int gp_port_set_info    (GPPort *port, GPPortInfo info);
 int gp_port_get_info    (GPPort *port, GPPortInfo *info);
 
 int gp_port_open        (GPPort *port);
@@ -219,22 +211,6 @@ int         gp_port_set_error (GPPort *port, const char *format, ...)
 #endif
 ;
 const char *gp_port_get_error (GPPort *port);
-
-#ifdef __LIBGPHOTO2_INCLUDE_OLD_VERSIONS
-int gp_port_set_info_v240    (GPPort *port, GPPortInfo_v240  info);
-int gp_port_set_info_v250    (GPPort *port, GPPortInfo  info);
-int gp_port_get_info_v240    (GPPort *port, GPPortInfo_v240 *info);
-int gp_port_get_info_v250    (GPPort *port, GPPortInfo *info);
-
-#ifdef __LIBGPHOTO2_INCLUDE_OLD_VERSIONS_PORT
-asm(".symver gp_port_set_info_v240, gp_port_set_info@LIBGPHOTO2_0_0");
-asm(".symver gp_port_set_info_v250, gp_port_set_info@@LIBGPHOTO2_5_0");
-#define gp_port_set_info gp_port_set_info_v250
-asm(".symver gp_port_get_info_v240, gp_port_get_info@LIBGPHOTO2_0_0");
-asm(".symver gp_port_get_info_v250, gp_port_get_info@@LIBGPHOTO2_5_0");
-#define gp_port_get_info gp_port_get_info_v250
-#endif
-#endif
 
 /* DEPRECATED */
 /** \deprecated internal typedef */

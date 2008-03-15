@@ -308,6 +308,8 @@ gp_port_library_list (GPPortInfoList *list)
 #endif
 
         for (x=GP_PORT_SERIAL_RANGE_LOW; x<=GP_PORT_SERIAL_RANGE_HIGH; x++) {
+		char *xname;
+
 		sprintf (path, prefix, x);
 
 		/* OS/2 seems to need an additional check */
@@ -340,12 +342,19 @@ gp_port_library_list (GPPortInfoList *list)
 		 * it to the list.
 		 */
 		close (fd);
+
 		gp_port_serial_unlock (NULL, path);
-		info.type = GP_PORT_SERIAL;
-		strncpy (info.path, "serial:", sizeof (info.path));
-		strncat (info.path, path, sizeof (info.path) - strlen (info.path) - 1);
-		snprintf (info.name, sizeof (info.name),
-			  _("Serial Port %i"), x);
+		gp_port_info_new (&info);
+		gp_port_info_set_type (info, GP_PORT_SERIAL);
+		xname = malloc (strlen("serial:")+strlen(path)+1);
+		strcpy (xname, "serial:");
+		strcat (xname, path);
+		gp_port_info_set_path (info, xname);
+		free (xname);
+		xname = malloc (100);
+		snprintf (xname, 100, _("Serial Port %i"), x);
+		gp_port_info_set_name (info, xname);
+		free (xname);
 		CHECK (gp_port_info_list_append (list, info));
         }
 
@@ -353,12 +362,12 @@ gp_port_library_list (GPPortInfoList *list)
 	 * Generic support. Append it to the list without checking for
 	 * return values, because this entry will not be counted.
 	 */
-	info.type = GP_PORT_SERIAL;
-	strncpy (info.path, "^serial", sizeof (info.path));
-	memset (info.name, 0, sizeof (info.name));
+	gp_port_info_new (&info);
+	gp_port_info_set_type (info, GP_PORT_SERIAL);
+	gp_port_info_set_path (info, "^serial");
+	gp_port_info_set_name (info, "");
 	gp_port_info_list_append (list, info);
-
-        return (GP_OK);
+	return GP_OK;
 }
 
 static int
