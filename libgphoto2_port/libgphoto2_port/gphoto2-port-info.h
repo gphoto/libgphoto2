@@ -1,0 +1,40 @@
+/** \file
+ *
+ * \author Copyright 2001 Lutz Mueller <lutz@users.sf.net>
+ *
+ * \par License
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * \par
+ * This library is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details. 
+ *
+ * \par
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+#ifndef GPHOTO_PORT_INFO_H
+#define GPHOTO_PORT_INFO_H
+
+/**
+ * \internal GPPortInfo:
+ *
+ * The internals of this list are private.
+ **/
+struct _GPPortInfo {
+	GPPortType type;	/**< \brief The type of this port. */
+	char *name;		/**< \brief The name of this port (usb:) */
+	char *path;		/**< \brief The path of this port (whatever is after the :) */
+
+	/* Private */
+	char *library_filename;	/**< \brief Internal pathname of the port driver. Do not use outside of the port library. */
+};
+#endif
