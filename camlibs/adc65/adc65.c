@@ -44,7 +44,7 @@ typedef struct {
 } colorspaceRGB;
 
 static int
-adc65_exchange (Camera *camera, char *cmd, int cmd_size, char *resp, int resp_size) {
+adc65_exchange (Camera *camera, const unsigned char *cmd, int cmd_size, unsigned char *resp, int resp_size) {
 	int ret;
 
 	ret = gp_port_write (camera->port, cmd, cmd_size);
@@ -55,7 +55,7 @@ adc65_exchange (Camera *camera, char *cmd, int cmd_size, char *resp, int resp_si
 
 static int
 adc65_ping(Camera *camera) {
-	char cmd, resp[3];
+	unsigned char cmd, resp[3];
 	int ret;
 
 	GP_DEBUG("Pinging the camera.");
@@ -74,7 +74,7 @@ adc65_ping(Camera *camera) {
 
 static int
 adc65_file_count (Camera *camera) {
-        char cmd, resp[65538];
+        unsigned char cmd, resp[65538];
 	int ret;
 
         GP_DEBUG("Getting the number of pictures.");
@@ -86,12 +86,12 @@ adc65_file_count (Camera *camera) {
 }
 
 static char *
-adc65_read_data (Camera *camera, char *cmd, int cmd_size, int data_type, int *size) {
-	char resp[2], temp;
+adc65_read_data (Camera *camera, unsigned char *cmd, int cmd_size, int data_type, int *size) {
+	unsigned char resp[2], temp;
 	int x, y, x1, y1, z;
 	unsigned char ul, ur, bl, br, ret;
 	colorspaceRGB rgb;
-	char *us = NULL;
+	unsigned char *us = NULL;
 	char *s = NULL;
 	char *ppmhead = "P6\n# test.ppm\n256 256\n255\n";
 
@@ -104,7 +104,7 @@ adc65_read_data (Camera *camera, char *cmd, int cmd_size, int data_type, int *si
 			if (ret < 2)
 			    return NULL;
 
-			us = (char *)malloc (65536);
+			us = malloc (65536);
 			if (!us)
 				return NULL;
 			if (gp_port_read (camera->port, us, 65536) < 0) {
@@ -184,7 +184,7 @@ adc65_read_data (Camera *camera, char *cmd, int cmd_size, int data_type, int *si
 
 static char *
 adc65_read_picture(Camera *camera, int picture_number, int *size) {
-	char cmd = picture_number + 1;
+	unsigned char cmd = picture_number + 1;
 
 	return (adc65_read_data(camera, &cmd, 1, ADC65_DATA_PICTURE, size));
 }
