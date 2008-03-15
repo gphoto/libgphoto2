@@ -23,7 +23,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
+#include <math.h>
 #include <bayer.h>
 #include <gamma.h>
 
@@ -298,8 +298,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (compressed) {
 		mars_decompress (data + 12, p_data, w, h);
 	}
-	else memcpy (p_data, data + 12, w*h);		 	
-	gamma_factor = (float)data[7]/128.; 
+	else memcpy (p_data, data + 12, w*h);
+	gamma_factor = sqrt((float)data[7]/100.); 
+	if (gamma_factor <= .60)
+		gamma_factor = .60;
 	free(data);
 
 	/* Now put the data into a PPM image file. */
@@ -315,14 +317,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	ptr = ppm + strlen ((char *)ppm);	
 	size = strlen ((char *)ppm) + (w * h * 3);
 	GP_DEBUG ("size = %i\n", size);
-
 	gp_bayer_decode (p_data, w , h , ptr, BAYER_TILE_RGGB);
-
-	if (gamma_factor < .4) gamma_factor = .4;
-	if (gamma_factor > .6) gamma_factor = .6;
 	gp_gamma_fill_table (gtable, gamma_factor );
 	gp_gamma_correct_single (gtable, ptr, w * h);
-
+	mars_white_balance (ptr, w*h, 1.4, gamma_factor);
         gp_file_set_mime_type (file, GP_MIME_PPM);
         gp_file_set_name (file, filename); 
 	gp_file_set_data_and_size (file, (char *)ppm, size);

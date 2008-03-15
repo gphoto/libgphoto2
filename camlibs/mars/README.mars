@@ -1,6 +1,6 @@
 MARS MR97310 STILLCAM DRIVER
 Copyright Theodore Kilgore <kilgota@auburn.edu> April, 2004. Latest revision
-of this README November 15, 2007.
+of this README March 15, 2008.
 
 (Everything in libgphoto2/camlibs/mars is LGPL-licensed, including this README; 
 see any of the source files for a more complete statement of the license.)
@@ -227,6 +227,16 @@ compatibility in other than a Microsoft Windows (trademark) environment. If
 you would like to see this file and it is not included for some reason in a 
 "released" version of libgphoto2, then it can be found in the SVN source 
 repository.
+
+THE mars_white_balance() FUNCTION
+
+This function first of all does what its name implies. It also re-computes a 
+better gamma factor for the individual image, based upon internal 
+characteristics detected in the image, and does color enhancement. If you do 
+not like what it is doing, then you can turn it off by commenting out the line
+in library.c where it is called, but I expect that the user will not want to 
+do that, because it seems to me that the image quality is much, much better.
+
 
 WARRANTY?
 
