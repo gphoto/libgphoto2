@@ -208,7 +208,8 @@ typedef enum {
 	ISO_800 = 0x60,
 	ISO_1000 = 0x63,
 	ISO_1250 = 0x65,
-	ISO_1600 = 0x68
+	ISO_1600 = 0x68,
+	ISO_3200 = 0x70
 } canonIsoState;
 
 struct canonIsoStateStruct {
@@ -217,6 +218,12 @@ struct canonIsoStateStruct {
 };
 
 typedef enum {
+	APERTURE_F1_4 = 0x10,
+	APERTURE_F1_6 = 0x13,
+	APERTURE_F1_8 = 0x15,
+	APERTURE_F2_0 = 0x18,
+	APERTURE_F2_2 = 0x1b,
+	APERTURE_F2_5 = 0x1d,
 	APERTURE_F2_8 = 0x20,
 	APERTURE_F3_2 = 0x23,
 	APERTURE_F3_5 = 0x25,
@@ -235,7 +242,10 @@ typedef enum {
 	APERTURE_F16 = 0x48,
 	APERTURE_F18 = 0x4b,
 	APERTURE_F20 = 0x4d,
-	APERTURE_F22 = 0x50
+	APERTURE_F22 = 0x50,
+	APERTURE_F25 = 0x53,
+	APERTURE_F29 = 0x55,
+	APERTURE_F32 = 0x58,
 } canonApertureState;
 
 struct canonApertureStateStruct {
@@ -564,7 +574,7 @@ typedef enum {
 #define GP_PORT_DEFAULT_RETURN_INTERNAL(return_statement) \
 		default: \
 			gp_context_error (context, _("Don't know how to handle " \
-					     "camera->port->type value %i aka 0x%x" \
+					     "camera->port->type value %i aka 0x%x " \
 					     "in %s line %i."), camera->port->type, \
 					     camera->port->type, __FILE__, __LINE__); \
 			return_statement; \

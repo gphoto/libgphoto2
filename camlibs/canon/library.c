@@ -113,6 +113,7 @@ static const struct canonIsoStateStruct isoStateArray[] = {
         {ISO_1000, "ISO 1000"},
         {ISO_1250, "ISO 1250"},
         {ISO_1600, "ISO 1600"},
+        {ISO_3200, "ISO 3200"},
 	{0, NULL},
 };
 
@@ -174,6 +175,12 @@ static const struct canonShutterSpeedStateStruct shutterSpeedStateArray[] = {
 };
 
 static const struct canonApertureStateStruct apertureStateArray[] = {
+        {APERTURE_F1_4, "f1.4"},
+        {APERTURE_F1_6, "f1.6"},
+        {APERTURE_F1_8, "f1.8"},
+        {APERTURE_F2_0, "f2.0"},
+        {APERTURE_F2_2, "f2.2"},
+        {APERTURE_F2_5, "f2.5"},
         {APERTURE_F2_8, "f2.8"},
         {APERTURE_F3_2, "f3.2"},
         {APERTURE_F3_5, "f3.5"},
@@ -193,6 +200,9 @@ static const struct canonApertureStateStruct apertureStateArray[] = {
         {APERTURE_F18, "f18"},
         {APERTURE_F20, "f20"},
         {APERTURE_F22, "f22"},
+        {APERTURE_F25, "f25"},
+        {APERTURE_F29, "f29"},
+        {APERTURE_F32, "f32"},
 	{0, NULL},
 };
 
