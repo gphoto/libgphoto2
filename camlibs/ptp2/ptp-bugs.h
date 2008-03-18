@@ -30,6 +30,8 @@
 #define PTP_CAP				(1<<4)
 #define PTP_CAP_PREVIEW			(1<<5)
 #define PTP_MTP_PROPLIST_WORKS		(1<<6)
+#define PTP_NIKON_BROKEN_CAP		(1<<7)
+#define PTP_MTP_ZEN_BROKEN_HEADER	(1<<8)
 
 #define DCIM_WRONG_PARENT_BUG(x) \
   ((x)->bugs & PTPBUG_DCIM_WRONG_PARENT)
@@ -37,5 +39,9 @@
   ((x)->bugs & PTPBUG_DELETE_SENDS_EVENT)
 #define CAN_HAVE_DUPE_FILE(x) \
   ((x)->bugs & (PTPBUG_DUPE_FILE | PTP_MTP))
+#define NIKON_BROKEN_CAP(x) \
+  ((x)->bugs & (PTP_NIKON_BROKEN_CAP))
+#define MTP_ZEN_BROKEN_HEADER(x) \
+  ((x)->bugs & (PTP_MTP_ZEN_BROKEN_HEADER))
 
 #endif

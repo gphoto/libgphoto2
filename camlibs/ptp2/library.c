@@ -316,6 +316,8 @@ static struct {
 	{"Kodak:Z612",   0x040a, 0x059d, 0},
 	/* David D. Huff Jr. <David.Huff@computer-critters.com> */
 	{"Kodak:Z650",   0x040a, 0x059e, 0},
+	/* Sonja Krause-Harder */
+	{"Kodak:M753",   0x040a, 0x059f, 0},
 	/* irc reporter */
 	{"Kodak:V603",   0x040a, 0x05a0, 0},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1547142&group_id=8874&atid=358874 */
@@ -330,18 +332,26 @@ static struct {
 	{"Kodak:V705",   0x040a, 0x05ab, 0},
 	/* https://launchpad.net/bugs/67532 */
 	{"Kodak:V610",   0x040a, 0x05ac, 0},
+	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1861193&group_id=8874&atid=358874 */
+	{"Kodak:M883",   0x040a, 0x05ad, 0},
 	/* from Thomas <tomtechguy@gmail.com> */
 	{"Kodak:C743",   0x040a, 0x05ae, 0},
 	/* via IRC */
 	{"Kodak:C653",   0x040a, 0x05af, 0},
 	/* Nicolas Brodu <nicolas.brodu@free.fr> */
 	{"Kodak:Z712 IS",0x040a, 0x05b4, 0},
+	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1904224&group_id=8874&atid=358874 */
+	{"Kodak:Z812 IS",0x040a, 0x05b5, 0},
 	/* */
 	{"Kodak:C613",   0x040a, 0x05b7, 0},
 	/* via IRC */
 	{"Kodak:C633",   0x040a, 0x05ba, 0},
+	/* https://bugs.launchpad.net/bugs/203402 */
+	{"Kodak:ZD710",	 0x040a, 0x05c0, 0},
 
 	/* HP PTP cameras */
+	/* found in random web forum */
+	{"HP:PhotoSmart M407 (PTP mode)", 0x03f0, 0x4002, 0},
 	{"HP:PhotoSmart 812 (PTP mode)", 0x03f0, 0x4202, 0},
 	{"HP:PhotoSmart 850 (PTP mode)", 0x03f0, 0x4302, PTPBUG_DUPE_FILE},
 	/* HP PhotoSmart 935: T. Kaproncai, 25 Jul 2003*/
@@ -392,6 +402,12 @@ static struct {
 	{"HP:PhotoSmart E327 (PTP mode)", 0x03f0, 0x8b02, 0},
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1589879&group_id=8874  */
 	{"HP:PhotoSmart E427 (PTP mode)", 0x03f0, 0x8c02, 0},
+	/* Martin Laberge <mlsoft@videotron.ca> */
+	{"HP:PhotoSmart M737 (PTP mode)", 0x03f0, 0x9602, 0},
+	/* https://bugs.launchpad.net/bugs/178916 */
+	{"HP:PhotoSmart R742 (PTP mode)", 0x03f0, 0x9702, 0},
+	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1814147&group_id=8874&atid=358874 */
+	{"HP:PhotoSmart M547 (PTP mode)", 0x03f0, 0x9b02, 0},
 
 	/* Most Sony PTP cameras use the same product/vendor IDs. */
 	{"Sony:PTP",                  0x054c, 0x004e, 0},
@@ -434,6 +450,7 @@ static struct {
 	{"Sony:DSC-W1 (PTP mode)",    0x054c, 0x004e, 0},
 	{"Sony:DSC-W12 (PTP mode)",   0x054c, 0x004e, 0},
 	{"Sony:DSC-W35 (PTP mode)",   0x054c, 0x004e, 0},
+	{"Sony:DSC-W55 (PTP mode)",   0x054c, 0x004e, 0},
 	{"Sony:MVC-CD300 (PTP mode)", 0x054c, 0x004e, 0},
 	{"Sony:MVC-CD500 (PTP mode)", 0x054c, 0x004e, 0},
 	{"Sony:DSC-U10 (PTP mode)",   0x054c, 0x004e, 0},
@@ -471,20 +488,29 @@ static struct {
 	/* Nikon Coolpix SQ: M. Holzbauer, 07 Jul 2003 */
 	{"Nikon:Coolpix 4100 (PTP mode)", 0x04b0, 0x012d, 0},
 	/* Nikon Coolpix 5600: Andy Shevchenko, 11 Aug 2005 */
-	{"Nikon:Coolpix 5600 (PTP mode)", 0x04b0, 0x012e, PTP_CAP},
+	{"Nikon:Coolpix 5600 (PTP mode)", 0x04b0, 0x012e, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	/* 4600: Martin Klaffenboeck <martin.klaffenboeck@gmx.at> */
 	{"Nikon:Coolpix 4600 (PTP mode)", 0x04b0, 0x0130, 0},
 	/* 4600: Roberto Costa <roberto.costa@ensta.org>, 22 Oct 2006 */
 	{"Nikon:Coolpix 4600a (PTP mode)", 0x04b0, 0x0131, 0},
-	{"Nikon:Coolpix 5900 (PTP mode)", 0x04b0, 0x0135, PTP_CAP},
-	{"Nikon:Coolpix P1 (PTP mode)",   0x04b0, 0x0140, PTP_CAP},
+	{"Nikon:Coolpix 5900 (PTP mode)", 0x04b0, 0x0135, PTP_CAP|PTP_NIKON_BROKEN_CAP},
+	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1846012&group_id=8874&atid=358874 */
+	{"Nikon:Coolpix 7900 (PTP mode)", 0x04b0, 0x0137, PTP_CAP|PTP_NIKON_BROKEN_CAP},
+	{"Nikon:Coolpix P1 (PTP mode)",   0x04b0, 0x0140, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	/* Marcus Meissner */
-	{"Nikon:Coolpix P2 (PTP mode)",   0x04b0, 0x0142, PTP_CAP},
+	{"Nikon:Coolpix P2 (PTP mode)",   0x04b0, 0x0142, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	/* Richard SCHNEIDER <Richard.SCHNEIDER@tilak.at> */
 	{"Nikon:Coolpix S4 (PTP mode)",   0x04b0, 0x0144, 0},
 	/* Lowe, John Michael <jomlowe@iupui.edu> */
 	{"Nikon:Coolpix S2 (PTP mode)",   0x04b0, 0x014e, 0},
 	{"Nikon:Coolpix S6 (PTP mode)",   0x04b0, 0x014e, 0},
+	/* Ole Aamot <ole@gnome.org> */
+	{"Nikon:Coolpix P5000 (PTP mode)",0x04b0, 0x015b, PTP_CAP|PTP_NIKON_BROKEN_CAP},
+	/* Peter Pregler <Peter_Pregler@email.com> */
+	{"Nikon:Coolpix S500 (PTP mode)", 0x04b0, 0x015d, 0},
+	{"Nikon:Coolpix L12 (PTP mode)",  0x04b0, 0x015f, 0},
+	/* Marius Groeger <marius.groeger@web.de> */
+	{"Nikon:Coolpix S200 (PTP mode)", 0x04b0, 0x0161, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	{"Nikon:Coolpix SQ (PTP mode)",   0x04b0, 0x0202, 0},
 	/* lars marowski bree, 16.8.2004 */
 	{"Nikon:Coolpix 4200 (PTP mode)", 0x04b0, 0x0204, 0},
@@ -495,9 +521,10 @@ static struct {
 	{"Nikon:Coolpix P4 (PTP mode)",   0x04b0, 0x020c, 0},
 	/* Nikon Coolpix 2000 */
 	{"Nikon:Coolpix 2000 (PTP mode)", 0x04b0, 0x0302, 0},
-
 	/* From IRC reporter. */
 	{"Nikon:Coolpix L4 (PTP mode)",   0x04b0, 0x0305, 0},
+	/* from Magnus Larsson */
+	{"Nikon:Coolpix L11 (PTP mode)",  0x04b0, 0x0309, 0},
 	/* From IRC reporter. */
 	{"Nikon:Coolpix L10 (PTP mode)",  0x04b0, 0x030b, 0},
 	/* Nikon D100 has a PTP mode: westin 2002.10.16 */
@@ -505,13 +532,10 @@ static struct {
 	/* D2H SLR in PTP mode from Steve Drew <stevedrew@gmail.com> */
 	{"Nikon:D2H SLR (PTP mode)",      0x04b0, 0x0404, 0},
 	{"Nikon:DSC D70 (PTP mode)",      0x04b0, 0x0406, PTP_CAP},
-
 	/* Justin Case <justin_case@gmx.net> */
 	{"Nikon:D2X SLR (PTP mode)",      0x04b0, 0x0408, PTP_CAP},
-
 	/* Niclas Gustafsson (nulleman @ sf) */
 	{"Nikon:D50 (PTP mode)",          0x04b0, 0x040a, PTP_CAP},
-
 	{"Nikon:DSC D70s (PTP mode)",     0x04b0, 0x040e, PTP_CAP},
 	/* Jana Jaeger <jjaeger.suse.de> */
 	{"Nikon:DSC D200 (PTP mode)",     0x04b0, 0x0410, PTP_CAP},
@@ -519,12 +543,16 @@ static struct {
 	{"Nikon:DSC D80 (PTP mode)",      0x04b0, 0x0412, PTP_CAP},
 	/* Huy Hoang <hoang027@umn.edu> */
 	{"Nikon:DSC D40 (PTP mode)",      0x04b0, 0x0414, PTP_CAP},
-
+	/* Luca Gervasi <luca.gervasi@gmail.com> */
+	{"Nikon:DSC D40x (PTP mode)",     0x04b0, 0x0418, PTP_CAP},
+	/* Andreas Jaeger <aj@suse.de> */
+	{"Nikon:DSC D300 (PTP mode)",	  0x04b0, 0x041a, PTP_CAP},
 	/* Sridharan Rengaswamy <sridhar@stsci.edu>, Coolpix L3 */
 	{"Nikon:Coolpix L3 (PTP mode)",   0x04b0, 0x041a, 0},
 
 	/* Thomas Luzat <thomas.luzat@gmx.net> */
-	/* disable it, it is mass storage and made quite a lot of problems.
+	/* this was reported as not working, mass storage only:
+	 * http://sourceforge.net/tracker/index.php?func=detail&aid=1847471&group_id=8874&atid=108874
 	{"Panasonic:DMC-FZ20 (alternate id)", 0x04da, 0x2372, 0},
 	*/
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1350226&group_id=8874&atid=208874 */
@@ -539,6 +567,7 @@ static struct {
 	{"Panasonic:Lumix FZ5",           0x04da, 0x2372, 0},
 
 	{"Panasonic:DMC-FZ20",            0x04da, 0x2374, 0},
+	{"Panasonic:DMC-FZ50",            0x04da, 0x2374, 0},
 	/* from Tomas Herrdin <tomas.herrdin@swipnet.se> */
 	{"Panasonic:DMC-LS3",             0x04da, 0x2374, 0},
 
@@ -561,6 +590,8 @@ static struct {
 
 	/* IRC report */
 	{"Casio:EX-Z120",                 0x07cf, 0x1042, 0},
+	/* Andrej Semen (at suse) */
+	{"Casio:EX-S770",                 0x07cf, 0x1049, 0},
 	/* https://launchpad.net/bugs/64146 */
 	{"Casio:EX-Z700",                 0x07cf, 0x104c, 0},
 
@@ -587,6 +618,7 @@ static struct {
 	{"Canon:PowerShot S50 (PTP mode)",      0x04a9, 0x3077, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot G5 (PTP mode)",       0x04a9, 0x3085, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:Elura 50 (PTP mode)",           0x04a9, 0x3087, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:MVX3i (PTP mode)",              0x04a9, 0x308d, PTPBUG_DELETE_SENDS_EVENT},
 		/* 0x3084 is the EOS 300D/Digital Rebel in normal (canon) mode */
 	{"Canon:EOS 300D (PTP mode)",           0x04a9, 0x3099, PTPBUG_DCIM_WRONG_PARENT},
 	{"Canon:EOS Digital Rebel (PTP mode)",  0x04a9, 0x3099, PTPBUG_DCIM_WRONG_PARENT},
@@ -631,6 +663,8 @@ static struct {
 	{"Canon:Digital IXUS Wireless (PTP mode)",0x04a9, 0x30f1, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:Digital IXUS 700 (PTP mode)",   0x04a9, 0x30f2, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot SD500 (PTP mode)",    0x04a9, 0x30f2, PTPBUG_DELETE_SENDS_EVENT},
+	/* reported by Gilles Dartiguelongue <dartigug@esiee.fr> */
+	{"Canon:Digital IXUS iZ (PTP mode)",    0x04a9, 0x30f4, PTPBUG_DELETE_SENDS_EVENT},
 	/* A340, Andreas Stempfhuber <andi@afulinux.de> */
 	{"Canon:PowerShot A430 (PTP mode)",     0x04a9, 0x30f8, PTPBUG_DELETE_SENDS_EVENT},
 	/* Conan Colx, A410, gphoto-Feature Requests-1342538 */
@@ -645,8 +679,8 @@ static struct {
 	{"Canon:PowerShot SD630 (PTP mode)",	0x04a9, 0x30fe, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:Digital IXUS 65 (PTP mode)",	0x04a9, 0x30fe, PTPBUG_DELETE_SENDS_EVENT},
 	/* Rob Lensen <rob@bsdfreaks.nl> */
-	{"Canon:Digital IXUS 55 (PTP mode)",    0x04a9, 0x30ff, PTPBUG_DELETE_SENDS_EVENT},
-	{"Canon:PowerShot SD450 (PTP mode)",    0x04a9, 0x30ff, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:Digital IXUS 55 (PTP mode)",    0x04a9, 0x30ff, 0},
+	{"Canon:PowerShot SD450 (PTP mode)",    0x04a9, 0x30ff, 0},
  	{"Canon:Optura 600 (PTP mode)",         0x04a9, 0x3105, 0},
 	/* Jeff Mock <jeff@mock.com> */
  	{"Canon:EOS 5D (PTP mode)",             0x04a9, 0x3102, PTPBUG_DCIM_WRONG_PARENT},
@@ -667,7 +701,7 @@ static struct {
 	{"Canon:PowerShot SD700 (PTP mode)",    0x04a9, 0x3119, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:Digital IXUS 800 (PTP mode)",   0x04a9, 0x3119, PTPBUG_DELETE_SENDS_EVENT},
 	/* Gert Vervoort <gert.vervoort@hccnet.nl> */
-	{"Canon:PowerShot S3 IS (PTP mode)",    0x04a9, 0x311a, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:PowerShot S3 IS (PTP mode)",    0x04a9, 0x311a, PTP_CAP|PTP_CAP_PREVIEW},
 	/* David Goodenough <david.goodenough at linkchoose.co.uk> */
 	{"Canon:PowerShot A540 (PTP mode)",     0x04a9, 0x311b, PTPBUG_DELETE_SENDS_EVENT},
 	/* Irc reporter */
@@ -685,7 +719,13 @@ static struct {
 	{"Canon:PowerShot A710 IS (PTP mode)",  0x04a9, 0x3138, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot A640 (PTP mode)",     0x04a9, 0x3139, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:PowerShot A630 (PTP mode)",     0x04a9, 0x313a, PTPBUG_DELETE_SENDS_EVENT},
+	/* reported by Ferry Huberts */
+	{"Canon:EOS 40D (PTP mode)",    	0x04a9, 0x3146, 0}, /* user had it working without problem */
 	{"Canon:PowerShot S5 IS (PTP mode)",    0x04a9, 0x3148, PTP_CAP|PTP_CAP_PREVIEW},
+	/* AlannY <alanny@starlink.ru> */
+	{"Canon:PowerShot A460 (PTP mode)",	0x04a9, 0x3149, PTP_CAP|PTP_CAP_PREVIEW},
+	/* Tobias Blaser <tblaser@gmx.ch> */
+	{"Canon:Digital IXUS 950 IS (PTP mode)",0x04a9, 0x314b, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot A570 IS (PTP mode)",  0x04a9, 0x314c, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot A560 (PTP mode)",  0x04a9, 0x314d, PTPBUG_DELETE_SENDS_EVENT},
 	/* mailreport from sec@dschroeder.info */
@@ -696,7 +736,16 @@ static struct {
 	{"Canon:PowerShot A550 (PTP mode)",     0x04a9, 0x3150, PTPBUG_DELETE_SENDS_EVENT},
 	/* https://launchpad.net/bugs/64146 */
 	{"Canon:PowerShot A450 (PTP mode)",     0x04a9, 0x3155, PTPBUG_DELETE_SENDS_EVENT},
-
+	/* Harald Dunkel <harald.dunkel@t-online.de> */                                                        
+	{"Canon:PowerShot G9 (PTP mode)",       0x04a9, 0x315a, PTPBUG_DELETE_SENDS_EVENT},
+	/* Roger Lynn <roger@rilynn.demon.co.uk> */
+	{"Canon:PowerShot A720 IS (PTP mode)",	0x04a9, 0x315d, PTPBUG_DELETE_SENDS_EVENT},
+	/* Mats Petersson <mats.petersson@ltu.se> */
+	{"Canon:Powershot SX100 IS (PTP mode)",	0x04a9, 0x315e, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
+	/* Ruben Vandamme <vandamme.ruben@belgacom.net> */
+	{"Canon:Digital IXUS 860 IS",		0x04a9, 0x3160, PTPBUG_DELETE_SENDS_EVENT},
+	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1910010&group_id=8874 */
+	{"Canon:Digital IXUS 80 IS",		0x04a9, 0x3184, PTPBUG_DELETE_SENDS_EVENT},
 
 
 	/* Konica-Minolta PTP cameras */
@@ -704,6 +753,7 @@ static struct {
 	{"Konica-Minolta:DiMAGE Z2 (PictBridge mode)", 0x132b, 0x0007, 0},
 	{"Konica-Minolta:DiMAGE X21 (PictBridge mode)",0x132b, 0x0009, 0},
 	{"Konica-Minolta:DiMAGE Z3 (PictBridge mode)", 0x132b, 0x0018, 0},
+	{"Konica-Minolta:DiMAGE A200 (PictBridge mode)",0x132b, 0x0019, 0},
 	{"Konica-Minolta:DiMAGE Z5 (PictBridge mode)", 0x132b, 0x0022, 0},
 
 	/* Fuji PTP cameras */
@@ -719,11 +769,23 @@ static struct {
 	{"Fuji:FinePix F20",			0x04cb, 0x01c0, 0},
 	/* launchpad 67532 */
 	{"Fuji:FinePix F31fd",			0x04cb, 0x01c1, 0},
-	{"Fuji:FinePix F40fd", 0x04cb, 0x01c5, 0},
+	{"Fuji:FinePix S5700",			0x04cb, 0x01c4, 0},
+	{"Fuji:FinePix F40fd",			0x04cb, 0x01c5, 0},
+	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1800289&group_id=8874&atid=358874 */
+	{"Fuji:FinePix A820",			0x04cb, 0x01c6, 0},
+	/* g4@catking.net */
+	{"Fuji:FinePix A800",			0x04cb, 0x01d2, 0},
+	/* Teppo Jalava <tjjalava@gmail.com> */
+	{"Fuji:FinePix F50fd",			0x04cb, 0x01d4, 0},
 
-	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
-	{"Ricoh:Caplio R3 (PTP mode)",          0x05ca, 0x032f, 0},
 	{"Ricoh:Caplio R5 (PTP mode)",          0x05ca, 0x0110, 0},
+	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
+	{"Sea & Sea:5000G (PTP mode)",		0x05ca, 0x0327, 0},
+	/* Michael Steinhauser <mistr@online.de> */
+	{"Ricoh Caplio:R1v (PTP mode)",		0x05ca, 0x032b, 0},
+	{"Ricoh:Caplio R3 (PTP mode)",          0x05ca, 0x032f, 0},
+	/* Arthur Butler <arthurbutler@otters.ndo.co.uk> */
+	{"Ricoh:Caplio RR750 (PTP mode)",	0x05ca, 0x033d, 0},
 
 	/* Rollei dr5  */
 	{"Rollei:dr5 (PTP mode)",               0x05ca, 0x220f, 0},
@@ -1725,10 +1787,13 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	 */
 
 	/* The Nikon way: Does not send AddObject event ... so try else */
-	if (params->deviceinfo.VendorExtensionID==PTP_VENDOR_NIKON) {
+	if ((params->deviceinfo.VendorExtensionID==PTP_VENDOR_NIKON) &&
+		NIKON_BROKEN_CAP(camera->pl)
+	) {
 		PTPObjectHandles	handles;
 		int tries = 5;
 
+            	GP_DEBUG("PTPBUG_NIKON_BROKEN_CAPTURE bug workaround");
 		while (tries--) {
 			int i;
 			uint16_t ret = ptp_getobjecthandles (params, 0xffffffff, 0x000000, 0x000000, &handles);
@@ -1769,7 +1834,6 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 			/* we're not setting *path on error! */
 			return GP_ERROR;
 		}
-		fprintf (stderr, "event %x\n", event.Code);
 		switch (event.Code) {
 		case PTP_EC_ObjectRemoved:
 			/* Perhaps from previous Canon based capture + delete. Ignore. */
