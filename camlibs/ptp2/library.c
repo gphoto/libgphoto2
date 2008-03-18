@@ -352,6 +352,8 @@ static struct {
 	{"Kodak:C613",   0x040a, 0x05b7, 0},
 	/* via IRC */
 	{"Kodak:C633",   0x040a, 0x05ba, 0},
+	/* https://bugs.launchpad.net/bugs/203402 */
+	{"Kodak:ZD710",	 0x040a, 0x05c0, 0},
 
 	/* HP PTP cameras */
 	/* found in random web forum */
