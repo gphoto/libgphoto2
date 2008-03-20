@@ -750,6 +750,10 @@ static struct {
 	{"Canon:Powershot SX100 IS (PTP mode)",	0x04a9, 0x315e, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	/* Ruben Vandamme <vandamme.ruben@belgacom.net> */
 	{"Canon:Digital IXUS 860 IS",		0x04a9, 0x3160, PTPBUG_DELETE_SENDS_EVENT},
+
+	/* Olaf Hering at SUSE */
+	{"Canon:PowerShot A590 IS",		0x04a9, 0x3176, PTPBUG_DELETE_SENDS_EVENT},
+
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1910010&group_id=8874 */
 	{"Canon:Digital IXUS 80 IS",		0x04a9, 0x3184, PTPBUG_DELETE_SENDS_EVENT},
 
@@ -3908,29 +3912,36 @@ init_ptp_fs (Camera *camera, GPContext *context)
 				i++;
 				lasthandle = xpl->ObjectHandle;
 				params->handles.Handler[i] = xpl->ObjectHandle;
+				gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "objectid %u", xpl->ObjectHandle);
 			}
 			switch (xpl->property) {
 			case PTP_OPC_ParentObject:
 				oinfos[i].ParentObject = xpl->propval.u32;
+				gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "parent %u", xpl->propval.u32);
 				break;
 			case PTP_OPC_ObjectFormat:
 				oinfos[i].ObjectFormat = xpl->propval.u16;
+				gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "ofc %u", xpl->propval.u16);
 				break;
 			case PTP_OPC_ObjectSize:
 				oinfos[i].ObjectCompressedSize = xpl->propval.u32;
+				gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "objectsize %u", xpl->propval.u32);
 				break;
 			case PTP_OPC_StorageID:
 				oinfos[i].StorageID = xpl->propval.u32;
+				gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "storageid %u", xpl->propval.u32);
 				break;
 			case PTP_OPC_ObjectFileName:
-				if (xpl->propval.str)
+				if (xpl->propval.str) {
+					gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "filename %s", xpl->propval.str);
 					oinfos[i].Filename = strdup(xpl->propval.str);
-				else
+				} else {
 					oinfos[i].Filename = NULL;
+				}
 				break;
 			default:
 				if ((xpl->property & 0xfff0) == 0xdc00)
-					gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "case %x type %x unhandled.\n", xpl->property, xpl->datatype);
+					gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "case %x type %x unhandled", xpl->property, xpl->datatype);
 				break;
 			}
 		}
