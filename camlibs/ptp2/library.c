@@ -4282,7 +4282,7 @@ camera_init (Camera *camera, GPContext *context)
 	}
 	
         gp_camera_get_abilities(camera, &a);
-        for (i = 0; sizeof(models)/sizeof(models[0]); i++) {
+        for (i = 0; i<sizeof(models)/sizeof(models[0]); i++) {
             if ((a.usb_vendor == models[i].usb_vendor) &&
                 (a.usb_product == models[i].usb_product)){
                 camera->pl->bugs = models[i].known_bugs;
