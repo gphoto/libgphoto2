@@ -44,6 +44,9 @@ int mars_read_picture_data (Camera *camera, Info *info,
 				GPPort *port, char *data, int size, int n);
 
 int mars_decompress (unsigned char *inp ,unsigned char *outp, int w, int h);
-
+int histogram (unsigned char *data, unsigned int size, int *htable_r, 
+                                        int *htable_g, int *htable_b);
+int mars_white_balance (unsigned char *data, unsigned int size, float saturation,
+                                        float image_gamma);
 #endif
 

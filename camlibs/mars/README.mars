@@ -1,6 +1,6 @@
 MARS MR97310 STILLCAM DRIVER
 Copyright Theodore Kilgore <kilgota@auburn.edu> April, 2004. Latest revision
-of this README April 7, 2007.
+of this README March 15, 2008.
 
 (Everything in libgphoto2/camlibs/mars is LGPL-licensed, including this README; 
 see any of the source files for a more complete statement of the license.)
@@ -33,6 +33,10 @@ Update 08/28/06: Decompression algorithm much improved, after much trial
 and error. I would say it is somewhere between 90% to 100% good now. Seems to
 work almost perfectly outdoors and in strong light. Works even better at low 
 resolution settings, that is, 352x288 or lower. 
+
+Update 08/21/07: Decompression issues essentially resolved, for the "0x50"
+compression algorithm. However, another, different compression algorithm is 
+also used in some of the cameras. 
 
 The camera uses a configuration "block," as do the sq905 cameras. However, 
 here the information can be used to run options such as gphoto2 -p 3 and 
@@ -69,7 +73,10 @@ conditions. After the tweaks I have added as of August 2006, though, the
 situation with compression mode is improved quite a bit.
 
 Here is a report on the cameras which I own. I can not say anything 
-about the others unless their performance in compressed mode is reported to me:
+about the others unless their performance is reported to me. This especially 
+applies in case that the camera uses compressed mode, since there are two 
+compression algorithms in use and we can handle only one of them to any extent
+at all. 
 
 Aiptek Pencam VGA+: Compressed mode is very sensitive to bad lighting, 
 especially when there are dark colors in the image (08/27/06: better now). 
@@ -89,13 +96,17 @@ a very high cutoff threshold and will not take photos in the evening, even if
 one points it at a bright monitor screen. Color mapping is cruddy, though, even 
 running in uncompressed mode. 640x480 and 320x240 resolution.
 
-Philips Keychain, INNOVAGE Mini Digital: These seem to be clones, even 
-having very similar cases. They will do max resolution 352x488. But for what 
-they are they work very well. It seems that these shoot clips in compressed 
-mode (no matter if you otherwise turned compression on, or not), but at the 
-resolution settings these cameras use the decompression works nicely, too. 
-Probably the CD302N and the Pixart Gemini are the same, too, but I do not have
-direct experience. 
+Philips Keychain, INNOVAGE Mini Digital Vivitar Mini Digital: These seem to be 
+clones, even having very similar cases. They will do max resolution 352x488. 
+But for what they are they work very well. It seems that these shoot clips in 
+compressed mode (no matter if you otherwise turned compression on, or not), but 
+at the resolution settings these cameras use the decompression works nicely, 
+too. Probably the CD302N and the Pixart Gemini are the same, too, but I do not 
+have direct experience. Trust SpyC@m 100: Reported as working, seems from 
+manufacturer's description to be another camera similar to the Philips KeyChain. 
+Furthermore, www.trust.com (the manufacturer) says that the Trust SpyC@m 100s 
+is the same camera inside, too, so it is also presumed to work. 
+
 
 Sakar Digital 56379 "Spy Shot": Another keychain camera, but also contains a 
 microphone and will capture sound. There is a toggle switch on the camera, 
@@ -111,6 +122,12 @@ ION digital camera: Compression optional. High cutoff threshold for what the
 camera considers bad light; will not take photos indoors, sometimes, even on a 
 bright day. Color mapping is unspectacular. Camera case looks like there is a 
 microphone on it, but there isn't.
+
+Sakar no. 1638x CyberPix: Usable in uncompressed mode. Compression algorithm 
+appears to be the same as that for the Argus QuickClix (see next listing) and 
+is unknown. WARNING! When turned on the camera comes up in compressed mode !!!
+The user can change this by hand by choosing "nP" in the camera's LCD. Do this
+before you shoot photos, else the photos will be useless !!! 
 
 Argus QuickClix: Compressed mode only. The compression algorithm is different 
 from the compression algorithm in the other known Mars cameras, too. I have 
@@ -134,6 +151,9 @@ cameras use the same USB Vendor:Product number and do not give any
 identification string after they are connected, either. So, unless the new 
 compression algorithm is unlocked, there is a real problem here. 
 
+The Sakar CyberPix also uses this unknown compression, which is turned on by 
+default. The user must turn it off in order to get usable photos. See notes
+about this camera, above. 
 
 USABILITY OF DRIVER WITH GUI FRONTENDS
 
@@ -207,6 +227,16 @@ compatibility in other than a Microsoft Windows (trademark) environment. If
 you would like to see this file and it is not included for some reason in a 
 "released" version of libgphoto2, then it can be found in the SVN source 
 repository.
+
+THE mars_white_balance() FUNCTION
+
+This function first of all does what its name implies. It also re-computes a 
+better gamma factor for the individual image, based upon internal 
+characteristics detected in the image, and does color enhancement. If you do 
+not like what it is doing, then you can turn it off by commenting out the line
+in library.c where it is called, but I expect that the user will not want to 
+do that, because it seems to me that the image quality is much, much better.
+
 
 WARRANTY?
 

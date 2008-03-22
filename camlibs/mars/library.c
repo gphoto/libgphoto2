@@ -23,7 +23,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
+#include <math.h>
 #include <bayer.h>
 #include <gamma.h>
 
@@ -41,6 +41,7 @@
 #else
 #  define _(String) (String)
 #  define N_(String) (String)
+#  define ngettext(String1,String2,Count) ((Count==1)?String1:String2)
 #endif
 
 #include "mars.h"
@@ -59,6 +60,7 @@ static const struct {
    	unsigned short idProduct;
 } models[] = {
         {"Aiptek PenCam VGA+", GP_DRIVER_STATUS_TESTING, 0x08ca, 0x0111},
+	{"Trust Spyc@m 100", GP_DRIVER_STATUS_TESTING, 0x08ca, 0x0110},
  	{"Emprex PCD3600", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f},
 	{"Vivitar Vivicam 55", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f},
 	{"Haimei Electronics HE-501A", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010e},
@@ -73,7 +75,9 @@ static const struct {
 	{"ION digital camera", GP_DRIVER_STATUS_TESTING, 0x093a, 0x010f}, 
 	{"Argus QuickClix", GP_DRIVER_STATUS_DEPRECATED, 0x093a, 0x010f},
 	{"Pixart Gemini Keychain Camera", GP_DRIVER_STATUS_TESTING, 0x093a, 0x010e},
-	{"Sakar Digital no. 56379 Spyshot", GP_DRIVER_STATUS_TESTING, 0x093a, 0x010e},	
+	{"Sakar Digital no. 56379 Spyshot", GP_DRIVER_STATUS_TESTING, 0x093a, 0x010e},
+	{"Sakar no. 1638x CyberPix", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f},	
+	{"Vivitar Mini Digital Camera", GP_DRIVER_STATUS_TESTING, 0x093a, 0x010e},	
 	{NULL,0,0,0}
 };
 
@@ -113,18 +117,13 @@ camera_abilities (CameraAbilitiesList *list)
 static int
 camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
-	int num_pics;
-	num_pics = mars_get_num_pics(camera->pl->info);
-	switch(num_pics) {
-	case 1:
-    	sprintf (summary->text,_("Mars MR97310 camera.\n" 
-			"There is %i photo in it. \n"), num_pics);  
-	break;
-	default:
-    	sprintf (summary->text,_("Mars MR97310 camera.\n" 
-			"There are %i photos in it. \n"), num_pics);  
-	}	
+	int num_pics = mars_get_num_pics(camera->pl->info);
 
+    	sprintf (summary->text,ngettext(
+		"Mars MR97310 camera.\nThere is %i photo in it.\n",
+    		"Mars MR97310 camera.\nThere are %i photos in it.\n",
+		num_pics), num_pics
+	);  
     	return GP_OK;
 }
 
@@ -135,7 +134,7 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
         "This driver supports cameras with Mars MR97310 chip (and direct\n"
         "equivalents ??Pixart PACx07?\?).\n"
 	"These cameras do not support deletion of photos, nor uploading\n"
-	"of data. \n"
+	"of data.\n"
 	"Decoding of compressed photos may or may not work well\n" 
 	"and does not work equally well for all supported cameras.\n"
 	"Photo data processing for Argus QuickClix is NOT SUPPORTED.\n"
@@ -299,8 +298,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (compressed) {
 		mars_decompress (data + 12, p_data, w, h);
 	}
-	else memcpy (p_data, data + 12, w*h);		 	
-	gamma_factor = (float)data[7]/128.; 
+	else memcpy (p_data, data + 12, w*h);
+	gamma_factor = sqrt((float)data[7]/100.); 
+	if (gamma_factor <= .60)
+		gamma_factor = .60;
 	free(data);
 
 	/* Now put the data into a PPM image file. */
@@ -316,14 +317,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	ptr = ppm + strlen ((char *)ppm);	
 	size = strlen ((char *)ppm) + (w * h * 3);
 	GP_DEBUG ("size = %i\n", size);
-
 	gp_bayer_decode (p_data, w , h , ptr, BAYER_TILE_RGGB);
-
-	if (gamma_factor < .4) gamma_factor = .4;
-	if (gamma_factor > .6) gamma_factor = .6;
 	gp_gamma_fill_table (gtable, gamma_factor );
 	gp_gamma_correct_single (gtable, ptr, w * h);
-
+	mars_white_balance (ptr, w*h, 1.4, gamma_factor);
         gp_file_set_mime_type (file, GP_MIME_PPM);
         gp_file_set_name (file, filename); 
 	gp_file_set_data_and_size (file, (char *)ppm, size);
