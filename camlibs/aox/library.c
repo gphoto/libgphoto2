@@ -344,6 +344,7 @@ camera_init(Camera *camera, GPContext *context)
 	switch(abilities.usb_product) {
 	case 0x2130:
 		camera->pl->model = AOX_MODEL_DMAX;
+		break;
 	default:
 		camera->pl->model = AOX_MODEL_MINI;
 	}
