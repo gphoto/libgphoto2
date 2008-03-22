@@ -1,3 +1,50 @@
+2008-01-23   Theodore Kilgore <kilgota@auburn.edu>  
+	* library.c: camera_capture_preview() revised to be in line with recent
+	revisions of gphoto2. Also digi_init() is now not called unless needed,
+	because camera_capture_preview() does not need it. Functions which need
+	it now check init_done and ask for digi_init() if init_done is still 0.
+	* digigr8.c: init_done parameter is set now to 1 in digi_init().
+	* digigr8.h: init_done parameter added to CameraPrivateLibrary.
+
+2008-01-22   Theodore Kilgore <kilgota@auburn.edu>  
+	* digi_postprocess.c: Fixed memory leak in second-stage decompression
+	function. 
+	* README.*: Refers to the raw file converter, added today in 
+	gphoto/trunk/playground/raw_converters/sq_raw_converter 
+
+2008-01-21   Theodore Kilgore <kilgota@auburn.edu>  
+	* library.c: Raw files now carry a 16 byte footer consisting of the 
+	allocation table's line for the corresponding photo. This is done to
+	facilitate development of a standalone raw processor; information is 
+	now saved in the raw file concerning the compression and resolution 
+	settings, as well as certain information which may become useful for 
+	doing color balance, brightness, and contrast adjustments. 
+	* README.digigr8: Renamed README.905C.
+	* README.9050: Split from README.digigr8.
+
+
+2007-12-27   Theodore Kilgore <kilgota@auburn.edu>  
+	* library.c: Added Jazz JDC9, reported by 
+	Victor Hodge <vhodge@sympatico.ca>.
+
+2007-12-23   Theodore Kilgore <kilgota@auburn.edu>  
+	* library.c: Added Sakar no. 92045 Spiderman, reported by 
+	Martin Laberge <mlsoft@videotron.ca>.
+
+2007-10-16   Theodore Kilgore <kilgota@auburn.edu>  
+	* library.c: Several cameras from Sakar added to list.
+
+2007-09-04   Theodore Kilgore <kilgota@auburn.edu>  
+	* library.c: ZINA Mini Digital Keychain Camera, reported by 
+	 Alvin Austin <alvin.austin@gmail.com>
+
+2007-08-24   Theodore Kilgore <kilgota@auburn.edu>  
+	* library.c: Suprema Digital Keychain Camera added, which has 
+	new product ID 0x913D, and is able to delete individual photos. 
+	* digigr8.c: changes required here, too, to support individual 
+	photo deletion. 
+
+
 2007-07-23   Theodore Kilgore <kilgota@auburn.edu>
 	* README.digigr8: Notes on how to change the capture-preview 
 	resolution setting added. 

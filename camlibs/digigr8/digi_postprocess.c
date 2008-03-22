@@ -207,6 +207,9 @@ digi_second_decompress (unsigned char *uncomp, unsigned char *in,
 			templine_blue[i] = tempval;
 		}
 	}
+	free(templine_green);
+	free(templine_red);
+	free(templine_blue);
 	return 0;
 }
 

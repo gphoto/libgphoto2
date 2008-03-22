@@ -60,10 +60,28 @@ static const struct {
 	{"Che-Ez Snap SNAP-U",  GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
         {"DC-N130t",            GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905C},	
         {"Soundstar TDC-35",    GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
-	{"Nexxtech Mini Digital Camera", GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
+	{"Nexxtech Mini Digital Camera", GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 
+									0x905c},
         {"Vivitar Vivicam35",   GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
         {"Praktica Slimpix",    GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
+        {"ZINA Mini Digital Keychain Camera",    GP_DRIVER_STATUS_EXPERIMENTAL, 
+    							    0x2770, 0x905c},        
+        {"Pixie Princess Jelly-Soft",    GP_DRIVER_STATUS_EXPERIMENTAL, 
+    							    0x2770, 0x905c},
+        {"Sakar Micro Digital 2428x",    GP_DRIVER_STATUS_EXPERIMENTAL, 
+    							    0x2770, 0x905c},
+        {"Jazz JDC9",    GP_DRIVER_STATUS_EXPERIMENTAL, 
+    							    0x2770, 0x905c},
         {"Disney pix micro",    GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9050}, 
+        {"Suprema Digital Keychain Camera",    GP_DRIVER_STATUS_EXPERIMENTAL, 
+    								0x2770, 0x913d},
+        {"Sakar 28290 and 28292  Digital Concepts Styleshot",    
+    						GP_DRIVER_STATUS_EXPERIMENTAL, 
+    								0x2770, 0x913d},
+        {"Sakar 23070  Crayola Digital Camera",    GP_DRIVER_STATUS_EXPERIMENTAL, 
+    								0x2770, 0x913d},
+        {"Sakar 92045  Spiderman",    GP_DRIVER_STATUS_EXPERIMENTAL, 
+    								0x2770, 0x913d},
 	{NULL,0,0,0}
 };
 
@@ -106,6 +124,8 @@ camera_abilities (CameraAbilitiesList *list)
 static int
 camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
+	if(!camera->pl->init_done)
+		digi_init (camera->port, camera->pl);
     	sprintf (summary->text,_("Your USB camera seems to have an SQ905C chipset.\n" 
 				"The total number of pictures in it is %i\n"
 				), 
@@ -119,24 +139,26 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
 {
 	strcpy(manual->text, 
 	_(
-	"For cameras with SQ905C Technologies chip.\n"
-	"Photos will be saved in PPM format.\n\n"
+	"For cameras with insides from S&Q Technologies, which have the \n"
+	"USB Vendor ID 0x2770 and Product ID 0x905C, 0x9050, or 0x913D\n"
+	"Photos are saved in PPM format.\n\n"
 	"Some of these cameras allow software deletion of all photos.\n"
-	"Others do not, depending on the chip revision. \n" 
-	"If deletion does work, then gphoto2 -- capture image will \n"
-	"have the side-effect that it also deletes what is on the camera.\n"
-	"Uploading of data to the camera not supported by hardware.\n"
+	"Others do not. No supported camera can do capture-image. All\n"
+	"can do capture-preview (image captured and sent to computer).\n"
+	"If deletion does work for your camera, then capture-preview will\n"
+	"have the side-effect that it also deletes what is on the camera.\n\n"
+	"File uploading and deletion of individual photos by use of a\n"
+	"software command are not supported by the hardware in these\n"
+	"cameras.\n"
 	)); 
-
 	return (GP_OK);
 }
-
 
 
 static int
 camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
-    	strcpy (about->text, _("sq905C generic driver\n"
+	strcpy (about->text, _("sq905C generic driver\n"
 			    "Theodore Kilgore <kilgota@auburn.edu>\n"));
 
     	return GP_OK;
@@ -151,6 +173,8 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 {
         Camera *camera = data; 
 	int n;
+	if(!camera->pl->init_done)
+		digi_init (camera->port, camera->pl);
 	GP_DEBUG ("List files in %s\n", folder);
     	n = camera->pl->nb_entries;	
 	gp_list_populate(list, "pict%03i.ppm", n);
@@ -174,6 +198,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	unsigned char *ptr;
 	unsigned char gtable[256];
 	int size;
+
+	if(!camera->pl->init_done)
+		digi_init (camera->port, camera->pl);
+
 
 	/* Get the entry number of the photo on the camera */
     	k = gp_filesystem_number (camera->fs, "/", filename, context); 
@@ -205,6 +233,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	default:  h = 288; break;
 	}
 	b = digi_get_data_size (camera->pl, k);
+	if (!b) {
+		GP_DEBUG("Photo number %i deleted?\n",k+1);
+		camera->pl->last_fetched_entry = k;
+		return GP_OK;
+	}	
 	data = malloc (w*h);
 	if(!data) return GP_ERROR_NO_MEMORY;
 
@@ -216,17 +249,21 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		size = b; 
 		gp_file_set_mime_type (file, GP_MIME_RAW);
 		gp_file_set_name (file, filename);
-	        gp_file_set_data_and_size (file, (char *)data, size);  
+		gp_file_append(file, (char *)data, size);
+		/* Save photo's catalog entry as a footer for the raw file */
+		gp_file_append(file, (char *)camera->pl->catalog + k*0x10, 0x10);
 		/* Reset camera when done, for more graceful exit. */
 		if (k +1 == camera->pl->nb_entries) {
-	    		digi_rewind (camera->port, camera->pl);	
+			digi_rewind (camera->port, camera->pl);	
 		}
+		free(data);
 		return(GP_OK);
 	}
-		
+
 	/*
 	 * Now put the data into a PPM image file. 
 	 */
+
 	ppm = malloc (w * h * 3 + 256); /* room for data + header */
 	if (!ppm) { 
 		status = GP_ERROR_NO_MEMORY; 
@@ -240,7 +277,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	size = strlen ((char *)ppm);
 	ptr = ppm + size;
 	size = size + (w * h * 3);
-	GP_DEBUG ("size = %i\n", size);				
+	GP_DEBUG ("size = %i\n", size);
 	p_data = malloc( w*h );
 	if (!p_data) {
 		status =  GP_ERROR_NO_MEMORY;
@@ -262,7 +299,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	gp_file_set_data_and_size (file, (char *)ppm, size);
 	/* Reset camera when done, for more graceful exit. */
 	if (k +1 == camera->pl->nb_entries) {
-    		digi_rewind (camera->port, camera->pl);
+		digi_rewind (camera->port, camera->pl);
 	}
  end:
 	free(data);
@@ -283,7 +320,6 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 static int
 camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 
-
 {
 	unsigned char get_size[0x50];
 	unsigned char *raw_data; 
@@ -296,51 +332,47 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	int h = 240;
 	int b;
 
-        digi_reset (camera->port);                                                      
-        gp_port_usb_msg_write (camera->port, 0x0c, 0x1440, 0x110f, NULL, 0);                          
-        gp_port_read(camera->port, (char *)get_size, 0x50);                       
-        GP_DEBUG("get_size[0x40] = 0x%x\n", get_size[0x40]);                    
-        b = get_size[0x40]+(get_size[0x41]*0x100);         
+        digi_reset (camera->port);
+        gp_port_usb_msg_write (camera->port, 0x0c, 0x1440, 0x110f, NULL, 0);
+        gp_port_read(camera->port, (char *)get_size, 0x50);
+        GP_DEBUG("get_size[0x40] = 0x%x\n", get_size[0x40]);
+        b = get_size[0x40]+(get_size[0x41]*0x100);
 	GP_DEBUG("b = 0x%x\n", b);
         raw_data = malloc(b);
         if(!raw_data) { 
-    		free(raw_data); 
-    		return GP_ERROR_NO_MEMORY;
-    	}
-    	gp_port_read(camera->port, (char *)raw_data, b);
+		free(raw_data); 
+		return GP_ERROR_NO_MEMORY;
+	}
+	gp_port_read(camera->port, (char *)raw_data, b);
 	frame_data = malloc(w*h);
 	if (!frame_data) {
 		free(frame_data);
 		return GP_ERROR_NO_MEMORY;
-	}	
-	digi_decompress (frame_data, raw_data, w, h);	
-
+	}
+	digi_decompress (frame_data, raw_data, w, h);
+	free(raw_data);
 	/* Now put the data into a PPM image file. */
-
 	ppm = malloc (w * h * 3 + 256); 
 	if (!ppm) { return GP_ERROR_NO_MEMORY; }
-    	sprintf ((char *)ppm,
+	sprintf ((char *)ppm,
 		"P6\n"
 		"# CREATOR: gphoto2, SQ905C library\n"
 		"%d %d\n"
 		"255\n", w, h);
-	ptr = ppm + strlen ((char*)ppm);	
+	ptr = ppm + strlen ((char*)ppm);
 	size = strlen ((char*)ppm) + (w * h * 3);
 	GP_DEBUG ("size = %i\n", size);
 	gp_bayer_decode (frame_data, w , h , ptr, BAYER_TILE_BGGR);
-	
-
-	gp_gamma_fill_table (gtable, .5); 
+	free(frame_data);
+	gp_gamma_fill_table (gtable, .65); 
 	gp_gamma_correct_single (gtable, ptr, w * h); 
-	gp_file_set_mime_type (file, GP_MIME_PPM);
-	gp_file_set_name (file, filename); 
-	gp_file_set_data_and_size (file, (char *)ppm, size);
 
+        gp_file_set_mime_type (file, GP_MIME_PPM);
+        gp_file_set_name (file, filename);
+        gp_file_set_data_and_size (file, (char *)ppm, size);
 	digi_reset(camera->port);
-
 	return (GP_OK);
 }
-
 
 /*************** Exit and Initialization Functions ******************/
 
@@ -355,7 +387,6 @@ camera_exit (Camera *camera, GPContext *context)
 		free (camera->pl);
 		camera->pl = NULL;
 	}
-
 	return GP_OK;
 }
 
@@ -383,7 +414,7 @@ camera_init(Camera *camera, GPContext *context)
 	camera->functions->capture_preview	
 					= camera_capture_preview;
 	camera->functions->exit	    	= camera_exit;
-   
+
 	GP_DEBUG ("Initializing the camera\n");
 
 	ret = gp_port_get_settings(camera->port,&settings);
@@ -405,15 +436,9 @@ camera_init(Camera *camera, GPContext *context)
 		default:
 			camera->pl->delete_all = 0;
 	}
+	camera->pl->init_done=0;
 
-
-	/* Connect to the camera */
-	ret = digi_init (camera->port, camera->pl);
-	if (ret != GP_OK) {
-		free(camera->pl);
-		return ret;
-	};
-
+	/* Do digi_init() only if needed for the requested operation. */
 
 	return GP_OK;
 }
