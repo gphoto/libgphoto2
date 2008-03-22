@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2007-07-29 19:38-0400\n"
+"POT-Creation-Date: 2008-03-20 09:41+0100\n"
 "PO-Revision-Date: 2002-12-03 17:00+0100\n"
 "Last-Translator: Evandro Gardenali <evandro@fasternet.com.br>\n"
 "Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
@@ -457,32 +457,32 @@ msgstr ""
 msgid "Could not release interface %d (%m)."
 msgstr "Não foi possível liberar a interface %d (%m)."
 
-#: usb/libusb.c:298
+#: usb/libusb.c:300
 #, fuzzy, c-format
 msgid "Could not reset USB port (%m)."
 msgstr "Não foi possível fechar a porta USB"
 
-#: usb/libusb.c:304
+#: usb/libusb.c:306
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr "Não foi possível fechar a porta USB"
 
-#: usb/libusb.c:553
+#: usb/libusb.c:555
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "Não foi possível ajustar a configuração %d/%d (%m)"
 
-#: usb/libusb.c:586
+#: usb/libusb.c:588
 #, fuzzy, c-format
 msgid "Could not set altsetting from %d to %d (%m)"
 msgstr "Não foi possível ajustar a configuração alternativa %d/%d (%m)"
 
-#: usb/libusb.c:678
+#: usb/libusb.c:680
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr "O fabricante ou o ID do produto (0x%x,0x%x) não é valido"
 
-#: usb/libusb.c:714
+#: usb/libusb.c:716
 #, fuzzy, c-format
 msgid ""
 "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
@@ -491,7 +491,7 @@ msgstr ""
 "Não foi possível encontrar dispostivos USB (fabricante 0x%x, produto 0x%x),"
 "Tenha certeza que esse dispositivo está conectado ao computador."
 
-#: usb/libusb.c:756
+#: usb/libusb.c:758
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
@@ -500,7 +500,7 @@ msgstr ""
 "Não foi possível encontrar dispostivos USB (fabricante 0x%x, produto 0x%x),"
 "Tenha certeza que esse dispositivo está conectado ao computador."
 
-#: usb/libusb.c:986
+#: usb/libusb.c:988
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
@@ -509,8 +509,8 @@ msgstr ""
 "Não foi possível encontrar dispositivo USB (classe 0x%x, subclasse 0x%x, "
 "protocolo 0x%x)"
 
-#: disk/disk.c:177 disk/disk.c:221 disk/disk.c:257 disk/disk.c:289
-#: disk/disk.c:312
+#: disk/disk.c:177 disk/disk.c:227 disk/disk.c:268 disk/disk.c:300
+#: disk/disk.c:323
 #, c-format
 msgid "Media '%s'"
 msgstr ""

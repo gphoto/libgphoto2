@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_2.1.6-8_libgphoto2_port-0_nl\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2007-07-29 19:38-0400\n"
+"POT-Creation-Date: 2008-03-20 09:41+0100\n"
 "PO-Revision-Date: 2006-06-20 20:46+0100\n"
 "Last-Translator: Kurt De Bree <kdebree(AT)telenet(DOT)be>\n"
 "Language-Team: Dutch <debian-l10n-dutch@lists.debian.org>\n"
@@ -475,32 +475,32 @@ msgstr ""
 msgid "Could not release interface %d (%m)."
 msgstr "Kon de interface %d niet vrijgeven (%m)."
 
-#: usb/libusb.c:298
+#: usb/libusb.c:300
 #, fuzzy, c-format
 msgid "Could not reset USB port (%m)."
 msgstr "Kon de USB-poort niet sluiten (%m)."
 
-#: usb/libusb.c:304
+#: usb/libusb.c:306
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr "Kon de USB-poort niet sluiten (%m)."
 
-#: usb/libusb.c:553
+#: usb/libusb.c:555
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "Kon de configuratie %d/%d niet instellen (%m)"
 
-#: usb/libusb.c:586
+#: usb/libusb.c:588
 #, fuzzy, c-format
 msgid "Could not set altsetting from %d to %d (%m)"
 msgstr "Kon 'alt'-instelling %d/%d niet instellen (%m)"
 
-#: usb/libusb.c:678
+#: usb/libusb.c:680
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr "Het geleverde handelaars-ID of produkt-ID (0x%x,0x%x) is niet geldig."
 
-#: usb/libusb.c:714
+#: usb/libusb.c:716
 #, c-format
 msgid ""
 "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
@@ -509,7 +509,7 @@ msgstr ""
 "Het USB-toestel (handelaar 0x%x, product 0x%x) is een massa-opslagmedium en "
 "kan misschien niet werken met gphoto2. Referentie: %s"
 
-#: usb/libusb.c:756
+#: usb/libusb.c:758
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
@@ -518,7 +518,7 @@ msgstr ""
 "Kon het USB-toestel niet vinden (handelaar 0x%x, product 0x%x). Zorg ervoor "
 "dat het toestel aan de computer aangesloten is."
 
-#: usb/libusb.c:986
+#: usb/libusb.c:988
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
@@ -527,8 +527,8 @@ msgstr ""
 "Kon het USB-toestel niet vinden (klasse 0x%x, subklasse 0x%x, protocol 0x%"
 "x). Zorg ervoor dat het toestel aan de computer aangesloten is."
 
-#: disk/disk.c:177 disk/disk.c:221 disk/disk.c:257 disk/disk.c:289
-#: disk/disk.c:312
+#: disk/disk.c:177 disk/disk.c:227 disk/disk.c:268 disk/disk.c:300
+#: disk/disk.c:323
 #, c-format
 msgid "Media '%s'"
 msgstr ""
