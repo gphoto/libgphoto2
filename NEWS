@@ -1,4 +1,4 @@
-libgphoto2 2.4.0.5 release
+libgphoto2 2.4.1.1 development state
 
 PTP2 driver:
    * Fixed bugs in packing of PTP arrays, unpack / pack 64 bit entities.
