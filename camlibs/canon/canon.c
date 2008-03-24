@@ -177,7 +177,7 @@ const struct canonCamModelData models[] = {
         {"Canon:Digital IXUS v3 (normal mode)", CANON_CLASS_4,  0x04A9, 0x3070, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         /* 0x3071 is S230/IXUS v3 in PTP mode */
         /* Following cameras share the ID for PTP and Canon modes */
-#if 1 /* served better by PTP2 driver ... I own one of them too. -Marcus */
+#if 0 /* served better by PTP2 driver ... I own one of them too. -Marcus */
         {"Canon:PowerShot SD100 (normal mode)", CANON_CLASS_5,  0x04A9, 0x3072, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:Digital IXUS II (normal mode)", CANON_CLASS_5,  0x04A9, 0x3072, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 #endif
