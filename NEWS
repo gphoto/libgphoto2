@@ -1,3 +1,43 @@
+libgphoto2 2.4.0.99
+
+This is a 2.4 release branch update.
+
+Package / System integration:
+   * HAL FDI files now use "info.subsystem" instead of "info.bus", required
+     by hal after March 2008.
+
+   * Suppress another Olympus camera in FDI file that is better of done
+     using Mass Storage only.
+
+libgphoto2_port:
+   * Suppress more known network filesystems in "disk" autodetection
+   * disabled usb_reset for Canon cameras in "usb", broke EOS cameras.
+
+PTP2 driver:
+   * Merged all new Camera IDs from TRUNK.
+   * Configuration bugfix for multiple options with the same name.
+   * Capture bugfix for Nikon Coolpix
+   * Various small bugfixes.
+
+Canon driver:
+   * Increased the event timeout, so operations work again.
+   * some additional configuration values for newer cameras
+
+Mars driver:
+   * Synced with SVN TRUNK (1:1 copy).
+	   * Better whitebalance postprocessing
+	   * Camera ids added
+	   * Decompression fixes
+
+Digigr8 driver:
+   * Synced with SVN TRUNK (1:1 copy).
+	   * bugfixes
+
+Sonix driver:
+   * Synced with SVN TRUNK (1:1 copy).
+	   * bugfixes
+
+
 libgphoto2 2.4.0
 
 Build:
