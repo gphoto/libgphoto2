@@ -104,90 +104,112 @@ int sonix_init (GPPort *port, CameraPrivateLibrary *priv)
 	 * string ought to start with the command byte c[0], plus 0x80
 	 */
 	memset(reading, 0, 4);
-	SONIX_READ4 (port, (char *)reading);	
+	SONIX_READ4 (port, (char *)reading);
 	SONIX_READ(port, &status);
 
 	memset (c, 0, 6);
 
 	while (!reading[1]&&!reading[2]&&!reading[3]) {
-	c[0]=0x16; 
-
-	SONIX_COMMAND ( port, c );
-
-	/*
-	 * For the Vivicam 3350b this always gives
-	 * 96 0a 76 07. This could be a firmware version. The  
-	 * webcam-osx driver says the 0x0a gives the sensor type, which 
-	 * is OV7630. For the Sakar Digital Keychain 11199 the string is 
-	 * 96 03 31 08, instead. For the Mini-Shotz ms350 it is 
-	 * 96 08 26 09. Since the cameras have different 
-	 * abilities, we ought to distinguish. 
-	 */
-	 
-	SONIX_READ4 (port, (char *)reading);
+		c[0]=0x16; 
+		SONIX_COMMAND ( port, c );
+		/*
+		 * For the Vivicam 3350b this always gives
+		 * 96 0a 76 07. This is apparently the firmware version. 
+		 * The webcam-osx comments that the 0x0a gives the sensor 
+		 * type, which is OV7630. For the Sakar Digital Keychain 
+		 * 11199 the string is 96 03 31 08, instead. For the 
+		 * Mini-Shotz ms350 it is 96 08 26 09. For the Genius 
+		 * Smart 300 it is 96 00 67 09 and for the Digital
+		 * Spy Camera 70137 it is 96 01 31 09.  Since the cameras
+		 * have different abilities, we ought to distinguish. 
+		 */
+		SONIX_READ4 (port, (char *)reading);
 	}
-	GP_DEBUG("Above is the 4-byte ID string of your camera.");
-	GP_DEBUG("Please report if it is anything other than");
-	GP_DEBUG("96 0a 76 07   or   96 03 31 08  or  96 08 26 09\n");
-	GP_DEBUG("Thanks!\n" );		
-	priv->fwversion = reading[1];
+	GP_DEBUG("%02x %02x %02x %02x\n", reading[0], reading[1],
+		 reading[2], reading[3]);
+	GP_DEBUG("Above is the 4-byte ID string of your camera. ");
+	GP_DEBUG("Please report if it is anything other than\n");
+	GP_DEBUG("96 0a 76 07  or  96 03 31 08  or  96 08 26 09\n");
+	GP_DEBUG("or  96 00 67 09  or  96 01 31 09\n");
+	GP_DEBUG("Thanks!\n" );
+	for(i=0;i<4;i++)
+		priv->fwversion[i] = reading[i];
+	GP_DEBUG("fwversion[1] is %#02x\n", reading[1]);
 	SONIX_READ(port, &status);
+	/* case 0x03: uses the default settings, above. */
+	switch(priv->fwversion[1]) {
+	case 0x08:
+		priv->offset=0;
+		priv->avi_offset=0;
+		priv->can_do_capture=1;
+		priv->post = DECOMP;
+		break;
+	case 0x0a:
+		priv->offset=8;
+		priv->avi_offset=8;
+		priv->can_do_capture=0;
+		priv->post = DECOMP|REVERSE;
+		break;
+	case 0x00:
+		priv->offset=0;
+		priv->avi_offset=0;
+		priv->can_do_capture=0;
+		priv->post=0;
+		break;
+	case 0x01:
+		priv->offset=8;
+		priv->avi_offset=8;
+		priv->can_do_capture=0;
+		priv->post=0;
+		break;
+	case 0x03:
+	default:
+		priv->offset=8;
+		priv->avi_offset=8;
+		priv->can_do_capture=1;
+		priv->post=0;
+	}
 
 	/*
 	 * This sequence gives the photos in the camera and sets a flag 
-	 * in reading[3] if the camera is full. Alas, it does not count 
-	 * clip frames separately on the Sakar Digital Keychain camera. 
+	 * in reading[3] if the camera is full. Alas, clip frames are 
+	 * not counted; the AVI constructor will need to count them 
 	 */
-
 	memset (c,0,6);
 	c[0]=0x18;
-
 	SONIX_READ(port, &status);
 	SONIX_COMMAND ( port, c );
-
 	SONIX_READ(port, &status);
-
 	SONIX_READ4 (port, (char *)reading);		
 	if (reading[0] != 0x98)
 		return GP_ERROR_CAMERA_ERROR;	
-	
 	GP_DEBUG ("number of photos is %d\n", reading[1]+ 256*reading[2]);
-
 	/* 
-	 * If reading[3] = 0x01, it means the camera is full.  
-	 * Not much use here if capture doesn't work, but for some models 
-	 * capture does work. So we store this information.  
+	 * If reading[3] = 0x01, it means the camera is full of data. 
+	 * The capture_image() function must then be disabled.
 	 */
-
 	if (!(reading[3])) priv->full = 0;
-	
 	SONIX_READ(port, &status);
-
 	priv->num_pics = 	(reading[1] + 256*reading[2]);
-
 	memset(c,0,sizeof(c));
-
 	for (i = 0; i < priv->num_pics; i++) {
 		GP_DEBUG("getting size_code for picture %i\n", i+1);
 		/* Gets the resolution setting, also flags a multi-frame entry. */
 		c[0] = 0x19;
 		c[1] = (i+1)%256;
 		c[2] = (i+1)/256;
-	
 		SONIX_COMMAND ( port, c );
 		SONIX_READ(port, &status);
-		SONIX_READ4 (port, (char *)reading);		
+		SONIX_READ4 (port, (char *)reading);
 		if (reading[0] != 0x99)
-			return GP_ERROR_CAMERA_ERROR;	
+			return GP_ERROR_CAMERA_ERROR;
 		SONIX_READ(port, &status);
 		/* For the code meanings, see get_file_func() in library.c */
 		priv->size_code[i] = (reading[1]&0x0f);
 	}
-
 	priv->sonix_init_done = 1;
 	GP_DEBUG("Leaving sonix_init\n");
-
-        return GP_OK;
+	return GP_OK;
 }
 
 int 
@@ -196,7 +218,6 @@ sonix_read_data_size (GPPort *port, int n)
 	char status;
 	unsigned char c[6];
 	unsigned char reading[4];
-
 	GP_DEBUG("running sonix_read_data_size for picture %i\n", n+1);
 	memset (c, 0, 6);
 	c[0] = 0x1a;
@@ -204,9 +225,9 @@ sonix_read_data_size (GPPort *port, int n)
 	c[2] = (n+1)/256;
 	SONIX_COMMAND ( port, (char *)c );
 	SONIX_READ(port, &status);
-	SONIX_READ4 (port, (char *)reading);	
+	SONIX_READ4 (port, (char *)reading);
 	if (reading[0] != 0x9a)
-		return GP_ERROR_CAMERA_ERROR;	
+		return GP_ERROR_CAMERA_ERROR;
 	return (reading[1] + reading[2]*0x100 + reading[3] *0x10000);
 }
 
@@ -216,17 +237,14 @@ sonix_delete_all_pics      (GPPort *port)
 	char status;
 	char c[6];
 	unsigned char reading[4];
-
 	memset (c,0,6);
-
-	c[0]=0x05; 	
+	c[0]=0x05; 
 	SONIX_READ(port, &status);
 	SONIX_COMMAND ( port, c );
 	SONIX_READ(port, &status);
-	SONIX_READ4 (port, (char *)reading);	
+	SONIX_READ4 (port, (char *)reading);
 	if (reading[0] != 0x85)
-		return GP_ERROR_CAMERA_ERROR;	
-
+		return GP_ERROR_CAMERA_ERROR;
 	return GP_OK;
 }
 
@@ -236,34 +254,32 @@ sonix_delete_last      (GPPort *port)
 	char status;
 	char c[6];
 	unsigned char reading[4];
-	
 	memset (c,0,6);
-
 	c[0]= 0x05; c[1] = 0x01;
 	SONIX_READ(port, &status);
 	SONIX_COMMAND ( port, c );
 	SONIX_READ(port, &status);
-	SONIX_READ4 (port, (char *)reading);	
+	SONIX_READ4 (port, (char *)reading);
 	if (reading[0] != 0x85)
-		return GP_ERROR_CAMERA_ERROR;	
-
+		return GP_ERROR_CAMERA_ERROR;
 	return GP_OK;
-}
+	}
 
 int 
-sonix_capture_image      (GPPort *port) 
+sonix_capture_image      (GPPort *port)
 {
 	char status;
 	char c[6];
 	unsigned char reading[4];
+	GP_DEBUG("Running sonix_capture_image\n");
 	memset (c,0,6);
 	c[0]=0x0e; 
 	SONIX_READ(port, &status);
 	SONIX_COMMAND ( port, c );
 	SONIX_READ(port, &status);
-	SONIX_READ4 (port, (char *)reading);	
+	SONIX_READ4 (port, (char *)reading);
 	if (reading[0] != 0x8e)
-		return GP_ERROR_CAMERA_ERROR;	
+		return GP_ERROR_CAMERA_ERROR;
 	return GP_OK;
 }
 
@@ -289,10 +305,10 @@ sonix_exit      (GPPort *port)
 /* Four defines for bitstream operations, for the decode function */
 
 #define PEEK_BITS(num,to) {\
-    	if (bitBufCount<num){\
-    		do {\
-    			bitBuf=(bitBuf<<8)|(*(src++));\
-    			bitBufCount+=8; \
+	if (bitBufCount<num){\
+		do {\
+			bitBuf=(bitBuf<<8)|(*(src++));\
+			bitBufCount+=8; \
 		}\
 		while(bitBufCount<24);\
 	}\
@@ -314,52 +330,52 @@ sonix_exit      (GPPort *port)
  */
   
 #define PARSE_PIXEL(val) {\
-    PEEK_BITS(10,bits);\
-    if ((bits&0x200)==0) { \
-	EAT_BITS(1); \
-    } \
-    else if ((bits&0x380)==0x280) { \
-	EAT_BITS(3); \
-	val+=3; \
-	if (val>255) val=255; \
-    }\
-    else if ((bits&0x380)==0x300) { \
-	EAT_BITS(3); \
-	val-=3; \
-	if (val<0) val=0; \
-    }\
-    else if ((bits&0x3c0)==0x200) { \
-	EAT_BITS(4); \
-	val+=8; \
-	if (val>255) val=255;\
-    }\
-    else if ((bits&0x3c0)==0x240) { \
-	EAT_BITS(4); \
-	val-=8; \
-	if (val<0) val=0;\
-    }\
-    else if ((bits&0x3c0)==0x3c0) { \
-	EAT_BITS(4); \
-	val-=20; \
-	if (val<0) val=0;\
-    }\
-    else if ((bits&0x3e0)==0x380) { \
-	EAT_BITS(5); \
-	val+=20; \
-	if (val>255) val=255;\
-    }\
-    else { \
-	EAT_BITS(10); \
-	val=8*(bits&0x1f)+0; \
-    }\
+	PEEK_BITS(10,bits);\
+	if ((bits&0x200)==0) { \
+		EAT_BITS(1); \
+	} \
+	else if ((bits&0x380)==0x280) { \
+		EAT_BITS(3); \
+		val+=3; \
+		if (val>255) val=255; \
+	}\
+	else if ((bits&0x380)==0x300) { \
+		EAT_BITS(3); \
+		val-=3; \
+		if (val<0) val=0; \
+	}\
+	else if ((bits&0x3c0)==0x200) { \
+		EAT_BITS(4); \
+		val+=8; \
+		if (val>255) val=255;\
+	}\
+	else if ((bits&0x3c0)==0x240) { \
+		EAT_BITS(4); \
+		val-=8; \
+		if (val<0) val=0;\
+	}\
+	else if ((bits&0x3c0)==0x3c0) { \
+		EAT_BITS(4); \
+		val-=20; \
+		if (val<0) val=0;\
+	}\
+	else if ((bits&0x3e0)==0x380) { \
+		EAT_BITS(5); \
+		val+=20; \
+		if (val>255) val=255;\
+	}\
+	else { \
+		EAT_BITS(10); \
+		val=8*(bits&0x1f)+0; \
+	}\
 }
 
 
 #define PUT_PIXEL_PAIR {\
-    long pp;\
-    pp=(c1val<<8)+c2val;\
-    *((unsigned short *) (dst+dst_index))=pp;\
-    dst_index+=2; }
+	long pp;\
+	pp=(c1val<<8)+c2val;\
+	*((unsigned short *) (dst+dst_index))=pp;\
+	dst_index+=2; }
 
 /* Now the decode function itself */
 
@@ -374,7 +390,6 @@ sonix_decode(unsigned char * dst, unsigned char * src, int width, int height)
 	int x, y;
 	unsigned long bitBuf = 0;
 	unsigned long bitBufCount = 0;
-
 	/* Columns were reversed during compression ! */
 	for (y = starting_row; y < height; y++) {
 		PEEK_BITS(8, bits);
@@ -384,13 +399,10 @@ sonix_decode(unsigned char * dst, unsigned char * src, int width, int height)
 		EAT_BITS(8);
 		c1val = bits & 0xff;
 		PUT_PIXEL_PAIR;
-
 		for (x = 2; x < width ; x += 2) {
-
  			PARSE_PIXEL(c2val);
-    			PARSE_PIXEL(c1val);
-
-    			PUT_PIXEL_PAIR;
+			PARSE_PIXEL(c1val);
+			PUT_PIXEL_PAIR;
 		}
 	}
 	return GP_OK;
@@ -400,12 +412,12 @@ int sonix_byte_reverse (unsigned char *imagedata, int datasize)
 {
 	int i;
 	unsigned char temp;
-	for (i=0; i< datasize/2 ; ++i) {                            
-                temp = imagedata[i];                               
-                imagedata[i] = imagedata[datasize - 1 - i];                
-                imagedata[datasize - 1 - i] = temp;                     
-        }
-        return GP_OK;
+	for (i=0; i< datasize/2 ; ++i) {
+		temp = imagedata[i];
+		imagedata[i] = imagedata[datasize - 1 - i];
+		imagedata[datasize - 1 - i] = temp;
+	}
+	return GP_OK;
 }
 
 int sonix_rows_reverse (unsigned char *imagedata, int width, int height) 
@@ -414,12 +426,12 @@ int sonix_rows_reverse (unsigned char *imagedata, int width, int height)
 	unsigned char temp;
 	for (col = 0; col < width; col++)
 		for (row=0; row< height /2 ; row++) {
-	                temp = imagedata[row*width+col];
-    	        	imagedata[row*width+col] = 
-    	        		    imagedata[(height-row-1)*width +col];
-        	        imagedata[(height-row-1)*width + col] = temp; 
-        }
-        return GP_OK;
+			temp = imagedata[row*width+col];
+			imagedata[row*width+col] = 
+			imagedata[(height-row-1)*width +col];
+			imagedata[(height-row-1)*width + col] = temp; 
+	}
+	return GP_OK;
 }
 
 int sonix_cols_reverse (unsigned char *imagedata, int width, int height) 
@@ -427,11 +439,12 @@ int sonix_cols_reverse (unsigned char *imagedata, int width, int height)
 	int col, row;
 	unsigned char temp;
 	for (row=0; row < height ; row++) {
-		for (col =0; col< width/2 ; col++) {                            
-    	            temp = imagedata[row*width + col];                               
-        	        imagedata[row*width + col] = imagedata[row*width - 1 - col];                
-	                imagedata[row*width - 1 - col] = temp;                     
-	        }
-        }
-        return GP_OK;
+		for (col =0; col< width/2 ; col++) {
+			temp = imagedata[row*width + col];
+			imagedata[row*width + col] = 
+			    imagedata[row*width + width - 1 - col];
+			imagedata[row*width + width - 1 - col] = temp;
+		}
+	}
+	return GP_OK;
 }

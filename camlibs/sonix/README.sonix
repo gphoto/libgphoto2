@@ -33,6 +33,7 @@ Please inform if you get a different ID number!
 Here we give a brief description both of currently-supported cameras and of the 
 supported gphoto2 functions for each.
 
+
 Vivicam 3350b:
 
 Uses an OV7630 sensor. Produces a maximum resolution of 640x480 and an option 
@@ -54,7 +55,7 @@ Features of the camera include the ability to delete all photos. The "delete
 last" function and the "capture-image" function, which will work for some
 other Sonix sn9c2028 cameras and are thus supported in this library, do not 
 seem to work with the my Vivicam 3350B and are therefore disabled for this 
-camera. The camera will also shoot "movie clips" which are saved as AVI files.
+camera. These cameras can all shoot "movie clips" which are saved as AVI files.
 Webcam functionality uses isochronous transfer; thus it lies outside the scope 
 of libgphoto2 and is therefore not supported here. 
 
@@ -65,9 +66,7 @@ Yet another camera which the macam driver also supports has been listed here
 as a supported camera. It apparently uses 352x288 and 176x144 resolution 
 settings. I know of it only second hand, have not personally tested it, and 
 would appreciate any reports about it (I suspect it is similar to the Sakar
-Digital Keychain camera). These cameras also can act as pccam or webcam. 
-They use isochronous transfer to do that. Support for this feature in Linux 
-requires a kernel module and lies outside of gphoto2. 
+Digital Keychain camera). 
 
 
 Sakar Digital Keychain #11199:
@@ -92,6 +91,14 @@ This camera has 640x480 and 320x240 resolution settings. Its features are
 otherwise quite similar to those of the Sakar Digital Keychain #11199, except 
 that it exclusively uses the compressed mode. 
 
+Genius Smart 300:
+
+This camera has 640x480 and 320x240 resolution settings. Its features are 
+otherwise quite similar to those of the Sakar Digital Keychain #11199 and the 
+Mini-Shotz ms350, except that it uses compressed mode for multiframe shooting, 
+but offers both compressed and uncompressed modes as options for still photos. 
+It does not support gphoto2 --capture-image. It does support deletion of 
+the last entry on the camera. 
 
 GUI frontends:
 
@@ -115,4 +122,4 @@ put the AVI file into an "album." Well, perhaps not. But not to worry.
 It will save the AVI file anyway, even while protesting. 
 
 
-(This file revised 05/05/2007)
+(Most recent revision of this file is on  12/18/2007)
