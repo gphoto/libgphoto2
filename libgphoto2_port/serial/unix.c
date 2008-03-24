@@ -30,6 +30,9 @@
 #include "config.h"
 #include <gphoto2/gphoto2-port-library.h>
 
+/* Solaris needs this */
+#define __EXTENSIONS__
+
 #include <stdlib.h>
 #include <stdio.h>
 #ifdef HAVE_UNISTD_H
@@ -584,10 +587,15 @@ gp_port_serial_read (GPPort *dev, char *bytes, int size)
 			return (GP_ERROR_TIMEOUT);
 
 		if (dev->settings.serial.parity != GP_PORT_SERIAL_PARITY_OFF) {
+		    unsigned char ffchar[1];
+		    unsigned char nullchar[1];
+
+		    ffchar[0] = 0xff;
+		    nullchar[0] = 0;
 		    now = read (dev->pl->fd, bytes, 1);
 		    if (now < 0)
 			    return GP_ERROR_IO_READ;
-		    if (bytes[0] == (char)-1) {
+		    if (!memcmp(bytes,ffchar,1)) {
 			now = read (dev->pl->fd, bytes, 1);
 			if (now < 0)
 				return GP_ERROR_IO_READ;
@@ -602,12 +610,12 @@ gp_port_serial_read (GPPort *dev, char *bytes, int size)
 			 *
 			 * cf. man tcsetattr, description of PARMRK.
 			 */
-			if (bytes[0] == 0x00) {
+			if (!memcmp(bytes,nullchar,1)) {
 			    gp_port_set_error (dev, _("Parity error."));
 			    return GP_ERROR_IO_READ;
 			}
-			if (bytes[0] != (char)-1) {
-			    gp_port_set_error (dev, _("Unexpected parity response sequence 0xff 0x%02x."), bytes[0]);
+			if (!memcmp(bytes,ffchar,1)) {
+			    gp_port_set_error (dev, _("Unexpected parity response sequence 0xff 0x%02x."), ((unsigned char*)bytes)[0]);
 			    return GP_ERROR_IO_READ;
 			}
 			/* Ok, we read 1 byte and it is 0xff */
