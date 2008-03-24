@@ -56,6 +56,8 @@
 
 #define CPR(context,result) {short r=(result); if (r!=PTP_RC_OK) {report_result ((context), r, params->deviceinfo.VendorExtensionID); return (translate_ptp_result (r));}}
 
+#define SET_CONTEXT(camera, ctx) ((PTPData *) camera->pl->params.data)->context = ctx
+
 static int
 camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 	PTPUSBEventContainer	event;
@@ -1086,6 +1088,7 @@ static struct deviceproptableu8 canon_flash[] = {
 	{ N_("off"),	0, 0 },
 	{ N_("auto"),	1, 0 },
 	{ N_("on"),	2, 0 },
+	{ N_("fill in"), 4, 0 },
 	{ N_("auto red eye"), 5, 0 },
 	{ N_("on red eye"), 6, 0 },
 };
@@ -1136,6 +1139,7 @@ GENERIC8TABLE(Canon_EOS_PictureStyle,canon_eos_picturestyle)
 
 static struct deviceproptableu16 canon_shutterspeed[] = {
       {  "auto",0x0000,0 },
+      {  "bulb",0x0004,0 },
       {  "30\"",0x0010,0 },
       {  "25\"",0x0013,0 },
       {  "20\"",0x0015,0 },
@@ -1217,6 +1221,7 @@ static struct deviceproptableu16 canon_isospeed[] = {
 	{ "400",		0x0058, 0 },
 	{ "800",		0x0060, 0 },
 	{ "1600",		0x0068, 0 },
+	{ "3200",		0x0070, 0 },
 	{ N_("Auto"),		0x0000, 0 },
 };
 GENERIC16TABLE(Canon_ISO,canon_isospeed)
@@ -1747,6 +1752,8 @@ GENERIC16TABLE(Canon_PhotoEffect,canon_photoeffect)
 
 static struct deviceproptableu16 canon_aperture[] = {
       { N_("auto"),	0xffff, 0 },
+      { "1.4",		0x0010, 0 },
+      { "1.6",		0x0013, 0 },
       { "1.8",		0x0015, 0 },
       { "2.0",		0x0018, 0 },
       { "2.2",		0x001b, 0 },
@@ -1770,6 +1777,9 @@ static struct deviceproptableu16 canon_aperture[] = {
       { "18",		0x004b, 0 },
       { "20",		0x004d, 0 },
       { "22",		0x0050, 0 },
+      { "25",		0x0053, 0 },
+      { "29",		0x0055, 0 },
+      { "32",		0x0058, 0 },
 };
 GENERIC16TABLE(Canon_Aperture,canon_aperture)
 
@@ -1872,6 +1882,20 @@ _put_UINT32_as_time(CONFIG_PUT_ARGS) {
 	if (ret != GP_OK)
 		return ret;
 	propval->u32 = camtime;
+	return (GP_OK);
+}
+
+static int
+_get_Canon_SyncTime(CONFIG_GET_ARGS) {
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+	return (GP_OK);
+}
+
+static int
+_put_Canon_SyncTime(CONFIG_PUT_ARGS) {
+	/* Just set the time if the entry changes. */
+	propval->u32 = time(NULL);
 	return (GP_OK);
 }
 
@@ -2583,7 +2607,9 @@ static struct submenu camera_settings_menu[] = {
 	{ N_("Camera Model"), "model", PTP_DPC_CANON_CameraModel, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_None },
 	{ N_("Firmware Version"), "firmwareversion", PTP_DPC_CANON_FirmwareVersion, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_CANON_FirmwareVersion, _put_None },
 	{ N_("Camera Time"),  "time", PTP_DPC_CANON_UnixTime,     PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_UINT32_as_time, _put_UINT32_as_time },
+	{ N_("Set camera time to PC time"),  "synctime", PTP_DPC_CANON_UnixTime,     PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
 	{ N_("Camera Time"),  "eos-time", PTP_DPC_CANON_EOS_CameraTime,     PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_UINT32_as_time, _put_UINT32_as_time },
+	{ N_("Set camera time to PC time"),  "eos-synctime", PTP_DPC_CANON_EOS_CameraTime,     PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
 	{ N_("Camera Time"),  "time", PTP_DPC_DateTime,           0,                PTP_DTC_STR, _get_STR_as_time, _put_STR_as_time },
 	{ N_("Beep Mode"),  "beep",   PTP_DPC_CANON_BeepMode,     PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_BeepMode, _put_Canon_BeepMode },
         { N_("Image Comment"), "imgcomment", PTP_DPC_NIKON_ImageCommentString, PTP_VENDOR_NIKON, PTP_DTC_STR, _get_STR, _put_STR },
@@ -2700,6 +2726,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 {
 	CameraWidget *section, *widget;
 	int menuno, submenuno, ret;
+	SET_CONTEXT(camera, context);
 
 	gp_widget_new (GP_WIDGET_WINDOW, _("Camera and Driver Configuration"), window);
 	gp_widget_set_name (*window, "main");
@@ -2759,6 +2786,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 {
 	CameraWidget *section, *widget, *subwindow;
 	int menuno, submenuno, ret;
+	SET_CONTEXT(camera, context);
 
 	ret = gp_widget_get_child_by_label (window, _("Camera and Driver Configuration"), &subwindow);
 	if (ret != GP_OK)
