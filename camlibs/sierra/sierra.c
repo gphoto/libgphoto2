@@ -1590,17 +1590,17 @@ camera_get_config_epson (Camera *camera, CameraWidget **window, GPContext *conte
 	ret = sierra_get_int_register (camera, 1, &value, context);
         if (ret >= 0) {
 		gp_widget_new (GP_WIDGET_RADIO, _("Resolution"), &child);
-		gp_widget_add_choice (child, _("Standard"));
-		gp_widget_add_choice (child, _("Fine"));
-		gp_widget_add_choice (child, _("SuperFine"));
+		gp_widget_add_choice (child, _("standard"));
+		gp_widget_add_choice (child, _("fine"));
+		gp_widget_add_choice (child, _("superfine"));
 		gp_widget_add_choice (child, _("HyPict"));
 		
                 switch (value) {
-		case 1: strcpy (t, _("Standard"));
+		case 1: strcpy (t, _("standard"));
 			break;
-                case 2: strcpy (t, _("Fine"));
+                case 2: strcpy (t, _("fine"));
 			break;
-                case 3: strcpy (t, _("SuperFine"));
+                case 3: strcpy (t, _("superfine"));
 			break;
                 case 34: strcpy (t, _("HyPict"));
 			break;
@@ -1801,11 +1801,11 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 	if ((gp_widget_get_child_by_label (window, _("Resolution"), &child)
 	     >= 0) && gp_widget_changed (child)) {
 		gp_widget_get_value (child, &value);
-		if (strcmp (value, _("Standard")) == 0) {
+		if (strcmp (value, _("standard")) == 0) {
 			i = 1;
-		} else if (strcmp (value, _("Fine")) == 0) {
+		} else if (strcmp (value, _("fine")) == 0) {
 			i = 2;
-		} else if (strcmp (value, _("SuperFine")) == 0) {
+		} else if (strcmp (value, _("superfine")) == 0) {
 			i = 3;
 		} else if (strcmp (value, _("HyPict")) == 0) {
 			i = 34;
@@ -1931,39 +1931,37 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *c)
 	/* Get all the string-related info */
 
 	if (sierra_get_string_register (camera, 27, 0, NULL, t, &v, c) >= 0)
-		sprintf (buf, _("%sCamera Model: %s\n"), buf, t);
+		sprintf (buf+strlen(buf), _("Camera Model: %s\n"), t);
 	if (sierra_get_string_register (camera, 48, 0, NULL, t, &v, c) >= 0)
-		sprintf (buf, _("%sManufacturer: %s\n"), buf, t);
+		sprintf (buf+strlen(buf), _("Manufacturer: %s\n"), t);
 	if (sierra_get_string_register (camera, 22, 0, NULL, t, &v, c) >= 0)
-		sprintf (buf, _("%sCamera ID: %s\n"), buf, t);
+		sprintf (buf+strlen(buf), _("Camera ID: %s\n"), t);
 	if (sierra_get_string_register (camera, 25, 0, NULL, t, &v, c) >= 0)
-		sprintf (buf, _("%sSerial Number: %s\n"), buf, t);
+		sprintf (buf+strlen(buf), _("Serial Number: %s\n"), t);
 	if (sierra_get_string_register (camera, 26, 0, NULL, t, &v, c) >= 0)
-		sprintf (buf, _("%sSoftware Rev.: %s\n"), buf, t);
+		sprintf (buf+strlen(buf), _("Software Rev.: %s\n"), t);
 
 	/* Get all the integer information */
 	if (camera->pl->flags & SIERRA_NO_REGISTER_40) {
 		if (sierra_get_int_register(camera, 10, &v, c) >= 0)
-			sprintf (buf, _("%sFrames Taken: %i\n"), buf, v);
+			sprintf (buf+strlen(buf), _("Frames Taken: %i\n"), v);
 	} else {
 		if (sierra_get_int_register(camera, 40, &v, c) >= 0)
-			sprintf (buf, _("%sFrames Taken: %i\n"), buf, v);
+			sprintf (buf+strlen(buf), _("Frames Taken: %i\n"), v);
 	}
 	if (sierra_get_int_register(camera, 11, &v, c) >= 0)
-		sprintf (buf, _("%sFrames Left: %i\n"), buf, v);
+		sprintf (buf+strlen(buf), _("Frames Left: %i\n"), v);
 	if (sierra_get_int_register(camera, 16, &v, c) >= 0)
-		sprintf (buf, _("%sBattery Life: %i\n"), buf, v);
+		sprintf (buf+strlen(buf), _("Battery Life: %i\n"), v);
 	if (sierra_get_int_register(camera, 28, &v, c) >= 0)
-		sprintf (buf, _("%sMemory Left: %i bytes\n"), buf, v);
+		sprintf (buf+strlen(buf), _("Memory Left: %i bytes\n"), v);
 
 	/* Get date */
 	if (sierra_get_int_register (camera, 2, &v, c) >= 0) {
 		time_t vtime = v;
-		sprintf (buf, _("%sDate: %s"), buf, ctime (&vtime));
+		sprintf (buf+strlen(buf), _("Date: %s"), ctime (&vtime));
 	}
-
 	strcpy (summary->text, buf);
-
 	return (camera_stop (camera, c));
 }
 
@@ -1998,17 +1996,15 @@ camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 		    "(1) Camera Configuration:\n"
 		    "    A value of 0 will take the default one (auto).\n"
 		    "(2) Olympus C-3040Z (and possibly also the C-2040Z\n"
-		    "    and others) have a USB PC Control mode. In order\n"
-		    "    to use this mode, the camera must be switched\n"
-		    "    into 'USB PC control mode'. To get to the menu\n"
-		    "    for switching modes, turn on the camera, open\n"
+		    "    and others) have a USB PC Control mode. To switch\n"
+		    "    to this mode, turn on the camera, open\n"
 		    "    the memory card access door and then press and\n"
 		    "    hold both of the menu and LCD buttons until the\n"
 		    "    camera control menu appears. Set it to ON.\n"
 		    "(3) If you switch the 'LCD mode' to 'Monitor' or\n"
 		    "    'Normal', don't forget to switch it back to 'Off'\n"
 		    "    before disconnecting. Otherwise you cannot use\n"
-		    "    the camera's buttons. If you end up with this\n"
+		    "    the camera's buttons. If you end up in this\n"
 		    "    state, you should reconnect the camera to the\n"
 		    "    PC and switch LCD to 'Off'."));
 		break;
@@ -2026,7 +2022,7 @@ camera_about (Camera *camera, CameraText *about, GPContext *context)
 		_("sierra SPARClite library\n"
 		"Scott Fritzinger <scottf@unr.edu>\n"
 		"Support for sierra-based digital cameras\n"
-		"including Olympus, Nikon, Epson, Pentax, and others.\n"
+		"including Olympus, Nikon, Epson, and Pentax.\n"
 		"\n"
 		"Thanks to Data Engines (www.dataengines.com)\n"
 		"for the use of their Olympus C-3030Z for USB\n"

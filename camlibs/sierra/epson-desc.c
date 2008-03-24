@@ -42,7 +42,7 @@
  * the name/value union, and so it is the default value initialized.
  *
  * To init to a range, use:
- *	{ range: { 100.1, 2000.0, 10 } }, NULL 
+ *	{ .range = { 100.1, 2000.0, 10 } }, NULL 
  *
  * Casts are used to avoid warnings about using a const.
  *
@@ -185,7 +185,7 @@ static const RegisterDescriptorType ep3000z_reg_20[] = {
  * I have previously set 0,255,1 is old camera_get_config_epson()
  */
 static const ValueNameType ep3000z_reg_23_val_names[] = {
-	{ { range: { 30, 600, 30  } }, NULL },
+	{ { .range = { 30, 600, 30  } }, NULL },
 };
 static const RegisterDescriptorType ep3000z_reg_23[] = { 
 	{
@@ -201,7 +201,7 @@ static const RegisterDescriptorType ep3000z_reg_23[] = {
  * I have previously set 0,255,1 is old camera_get_config_epson()
  */
 static const ValueNameType ep3000z_reg_24_val_names[] = {
-	{ { range: { 30, 600, 30  } }, NULL },
+	{ { .range = { 30, 600, 30  } }, NULL },
 };
 static const RegisterDescriptorType ep3000z_reg_24[] = { 
 	{

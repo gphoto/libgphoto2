@@ -43,7 +43,7 @@
  * the name/value union, and so it is the default value initialized.
  *
  * To init to a range, use:
- *	{ range: { 100.1, 2000.0, 10 } }, NULL 
+ *	{ .range = { 100.1, 2000.0, 10 } }, NULL 
  *
  * Casts are used to avoid warnings about using a const.
  *
@@ -352,7 +352,7 @@ static const RegisterDescriptorType olysp500uz_reg_03[] = {
  */
 static const ValueNameType olyrange_reg_03_val_names[] = { 
 	{
-		{ range: { 0, 16000000, 100 } }, NULL 
+		{ .range = { 0, 16000000, 100 } }, NULL 
 	}
 };
 static const RegisterDescriptorType olyrange_reg_03[] = { 
@@ -593,9 +593,9 @@ static const ValueNameType oly750uz_reg_20_val_names[] = {
 	{ { 0x00 }, N_("Auto") },
 	{ { 0x01 }, N_("Daylight") },
 	{ { 0x03 }, N_("Tungsten") },
-	{ { 0x04 }, N_("Flourescent-1-home-6700K") },
-	{ { 0x05 }, N_("Flourescent-2-desk-5000K") },
-	{ { 0x06 }, N_("Flourescent-3-office-4200K") },
+	{ { 0x04 }, N_("Fluorescent-1-home-6700K") },
+	{ { 0x05 }, N_("Fluorescent-2-desk-5000K") },
+	{ { 0x06 }, N_("Fluorescent-3-office-4200K") },
 	{ { 0xff }, N_("Cloudy") },
 };
 static const RegisterDescriptorType oly750uz_reg_20[] = { 
@@ -672,7 +672,7 @@ static const RegisterDescriptorType oly3040_reg_34[] = {
  * Register 35: lcd brightness.
  */
 static const ValueNameType oly3040_reg_35_val_names[] = {
-	{ { range: { 0, 7 } }, NULL },
+	{ { .range = { 0, 7 } }, NULL },
 };
 static const RegisterDescriptorType oly3040_reg_35[] = { 
 	{
@@ -686,7 +686,7 @@ static const RegisterDescriptorType oly3040_reg_35[] = {
  * Register 24: camera power save (idle time before entering power save mode)
  */
 static const ValueNameType oly3040_reg_24_val_names[] = {
-	{ { range: { 30, 600, 30  } }, NULL },
+	{ { .range = { 30, 600, 30  } }, NULL },
 };
 static const RegisterDescriptorType oly3040_reg_24[] = { 
 	{
@@ -701,7 +701,7 @@ static const RegisterDescriptorType oly3040_reg_24[] = {
  * (idle time before entering power save mode)
  */
 static const ValueNameType oly3040_reg_23_val_names[] = {
-	{ { range: { 30, 600, 30  } }, NULL },
+	{ { .range = { 30, 600, 30  } }, NULL },
 };
 static const RegisterDescriptorType oly3040_reg_23[] = { 
 	{
@@ -714,7 +714,7 @@ static const RegisterDescriptorType oly3040_reg_23[] = {
  * Register 38: lcd auto shut off time
  */
 static const ValueNameType oly3040_reg_38_val_names[] = {
-	{ { range: { 30, 600, 30  } }, NULL },
+	{ { .range = { 30, 600, 30  } }, NULL },
 };
 static const RegisterDescriptorType oly3040_reg_38[] = { 
 	{
@@ -806,7 +806,7 @@ static const RegisterDescriptorType olysp500uz_reg_70[] = {
  */
 static const ValueNameType oly750uz_reg_71_val_names[] = {
 	{
-		{ range: { 6.3, 63.0, .1 } }, NULL
+		{ .range = { 6.3, 63.0, .1 } }, NULL
 	}
 };
 static const RegisterDescriptorType oly750uz_reg_71[] = { 
@@ -822,7 +822,7 @@ static const RegisterDescriptorType oly750uz_reg_71[] = {
  */
 static const ValueNameType olysp500uz_reg_71_val_names[] = {
 	{
-		{ range: { 6.3, 63.0, .3 } }, NULL
+		{ .range = { 6.3, 63.0, .3 } }, NULL
 	}
 };
 static const RegisterDescriptorType olysp500uz_reg_71[] = { 
@@ -838,7 +838,7 @@ static const RegisterDescriptorType olysp500uz_reg_71[] = {
  */
 static const ValueNameType oly3040_reg_71_val_names[] = {
 	{
-		{ range: { 7.3, 21.0, .1 } }, NULL
+		{ .range = { 7.3, 21.0, .1 } }, NULL
 	}
 };
 static const RegisterDescriptorType oly3040_reg_71[] = { 
@@ -907,7 +907,7 @@ static const RegisterDescriptorType oly750uz_reg_85[] = {
  *   121 to 240: normal positions
  */
 static const ValueNameType oly3040_reg_103_val_names[] = {
-	{ { range: { 1, 240, 1 } }, NULL },
+	{ { .range = { 1, 240, 1 } }, NULL },
 };
 static const RegisterDescriptorType oly3040_reg_103[] = { 
 	{
@@ -923,7 +923,7 @@ static const RegisterDescriptorType oly3040_reg_103[] = {
  *      0 to 120: non-macro mode
  */
 static const ValueNameType oly750uz_reg_103_val_names[] = {
-	{ { range: { 1, 120, 1 } }, NULL },
+	{ { .range = { 1, 120, 1 } }, NULL },
 };
 static const RegisterDescriptorType oly750uz_reg_103[] = { 
 	{
@@ -1146,39 +1146,35 @@ static const char oly3040_manual[] =
 N_(
 "Some notes about Olympus cameras:\n"
 "(1) Camera Configuration:\n"
-"    A value of 0 will take the default one (auto).\n"
+"    A zero value will take the default one (auto).\n"
 "(2) Olympus C-3040Z (and possibly also the C-2040Z\n"
-"    and others) have a USB PC Control mode. In order\n"
-"    to use this mode, the camera must be switched\n"
-"    into 'USB PC control mode'. To get to the menu\n"
-"    for switching modes, turn on the camera, open\n"
+"    and others) have a USB PC Control mode. To switch\n"
+"    into 'USB PC control mode', turn on the camera, open\n"
 "    the memory card access door and then press and\n"
 "    hold both of the menu and LCD buttons until the\n"
 "    camera control menu appears. Set it to ON.\n"
 "(3) If you switch the 'LCD mode' to 'Monitor' or\n"
 "    'Normal', don't forget to switch it back to 'Off'\n"
-"    before disconnecting. Otherwise you cannot use\n"
-"    the camera's buttons. If you end up with this\n"
+"    before disconnecting. Otherwise you can't use\n"
+"    the camera buttons. If you end up in this\n"
 "    state, you should reconnect the camera to the\n"
-"    PC and switch LCD to 'Off'."
+"    PC, then switch LCD to 'Off'."
 );
 
 static const char oly750uz_manual[] =
 N_(
 "Olympus 750 Ultra Zoom:\n"
-"(1) Olympus 750UZ has a USB PC Control mode. In order\n"
-"    to use this mode, the camera must be switched\n"
-"    into 'USB PC control mode'. To get to the menu\n"
-"    for switching modes, turn on the camera, open\n"
+"(1) Olympus 750UZ has a USB PC Control mode. To switch\n"
+"    into 'USB PC control mode', turn on the camera, open\n"
 "    the memory card access door and then press and\n"
 "    hold both the 'OK' and 'quickview' buttons until the\n"
 "    camera control menu appears. Set it to control mode.\n"
 "(2) If you switch the 'LCD mode' to 'Monitor' or\n"
 "    'Normal', don't forget to switch it back to 'Off'\n"
-"    before disconnecting. Otherwise you cannot use\n"
-"    the camera's buttons. If you end up with this\n"
+"    before disconnecting. Otherwise you can't use\n"
+"    the camera buttons. If you end up in this\n"
 "    state, you should reconnect the camera to the\n"
-"    PC and switch LCD to 'Off'."
+"    PC, then switch LCD to 'Off'."
 );
 
 static const char default_manual[] = 
