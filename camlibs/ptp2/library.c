@@ -4057,6 +4057,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 					gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "case %x type %x unhandled", xpl->property, xpl->datatype);
 				break;
 			}
+			xpl = xpl->next;
 		}
 		return PTP_RC_OK;
 	}
