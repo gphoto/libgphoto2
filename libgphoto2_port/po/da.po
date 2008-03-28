@@ -1,19 +1,19 @@
-# translation of libgphoto2_port-2.3.0.po to Danish
+# translation of libgphoto2_port-2.4.0.po to Danish
 # Copyright (C) 2005, 2007 Free Software Foundation, Inc.
 #
 # Mogens Jaeger <mogens@jaeger.tf>, 2005, 2007.
 msgid ""
 msgstr ""
-"Project-Id-Version: libgphoto2_port 2.3.0\n"
+"Project-Id-Version: libgphoto2_port 2.4.0\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2008-03-20 09:41+0100\n"
-"PO-Revision-Date: 2007-03-27 12:46+0200\n"
+"POT-Creation-Date: 2008-03-28 20:37+0100\n"
+"PO-Revision-Date: 2007-08-15 12:45+0200\n"
 "Last-Translator: Mogens Jaeger <mogens@jaeger.tf>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.11.2\n"
+"X-Generator: KBabel 1.11.4\n"
 
 #: libgphoto2_port/gphoto2-port-info-list.c:211
 #, c-format
@@ -336,86 +336,86 @@ msgstr "msg_read"
 msgid "No error description available"
 msgstr "Ingen fejlbeskrivelse tilgængelig"
 
-#: serial/unix.c:230
+#: serial/unix.c:233
 #, c-format
 msgid "Could not lock device '%s'"
 msgstr "Kunne ikke låse enhed '%s'"
 
-#: serial/unix.c:240
+#: serial/unix.c:243
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr "Enheden '%s' er låst af pid %d"
 
-#: serial/unix.c:243
+#: serial/unix.c:246
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr "Enheden '%s' kunne ikke låses (dev_lock returnerede %d)"
 
-#: serial/unix.c:277
+#: serial/unix.c:280
 #, c-format
 msgid "Device '%s' could not be unlocked."
 msgstr "Enheden '%s' kunne ikke låses op."
 
-#: serial/unix.c:289
+#: serial/unix.c:292
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr "Enheden '%s' kunne ikke låses op da den er låst af pid %d."
 
-#: serial/unix.c:293
+#: serial/unix.c:296
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr "Enheden '%s' kunne ikke låses op (dev_unlock returnerede %d)"
 
-#: serial/unix.c:371
+#: serial/unix.c:374
 #, c-format
 msgid "Serial Port %i"
 msgstr "Seriel-port %i"
 
-#: serial/unix.c:462
+#: serial/unix.c:465
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Åbning af '%s' (%m) fejlede."
 
-#: serial/unix.c:480
+#: serial/unix.c:483
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Kunne ikke lukke '%s' (%m)."
 
-#: serial/unix.c:534
+#: serial/unix.c:537
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "Kunne ikke skrive til port (%m)"
 
-#: serial/unix.c:606
+#: serial/unix.c:614
 msgid "Parity error."
 msgstr "Paritetsfejl."
 
-#: serial/unix.c:610
+#: serial/unix.c:618
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Uventet paritetssvar-sekvens 0xff 0x%02x."
 
-#: serial/unix.c:653
+#: serial/unix.c:661
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Ukendt pin %i."
 
-#: serial/unix.c:675
+#: serial/unix.c:683
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Kunne ikke hente niveau af pin %i (%m)."
 
-#: serial/unix.c:710
+#: serial/unix.c:718
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "Kunne ikke sætte niveau af pin %i til %i (%m)."
 
-#: serial/unix.c:735
+#: serial/unix.c:743
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "Kunne ikke tømme '%s' (%m)."
 
-#: serial/unix.c:848
+#: serial/unix.c:856
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Kunne ikke sætte baudrate til %d"
@@ -460,9 +460,9 @@ msgid "Could not release interface %d (%m)."
 msgstr "Kunne ikke frigøre grænseflade %d (%m)."
 
 #: usb/libusb.c:300
-#, fuzzy, c-format
+#, c-format
 msgid "Could not reset USB port (%m)."
-msgstr "Kunne ikke lukke USB-port (%m)."
+msgstr "Kunne ikke resette USB-port (%m)."
 
 #: usb/libusb.c:306
 #, c-format
@@ -475,9 +475,9 @@ msgid "Could not set config %d/%d (%m)"
 msgstr "Kunne ikke sætte konfiguration %d/%d (%m)"
 
 #: usb/libusb.c:588
-#, fuzzy, c-format
+#, c-format
 msgid "Could not set altsetting from %d to %d (%m)"
-msgstr "Kunne ikke sætte alt-indstillinger %d/%d (%m)"
+msgstr "Kunne ikke sætte alt-indstillinger %d til /%d (%m)"
 
 #: usb/libusb.c:680
 #, c-format
